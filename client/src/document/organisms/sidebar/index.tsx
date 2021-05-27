@@ -2,8 +2,31 @@ import { Link } from "react-router-dom";
 
 import "./index.scss";
 import { Doc, RelatedContent } from "../../types";
+import React from "react";
 
-function SidebarContainer({ children }) {
+function ScrollTopLink({
+  to,
+  children,
+}: {
+  to: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <Link
+      to={to}
+      onClick={() => {
+        // TODO is this a good idea?!
+        setTimeout(() => {
+          window.scrollTo(0, 0);
+        }, 100);
+      }}
+    >
+      {children}
+    </Link>
+  );
+}
+
+function SidebarContainer({ children }: { children: React.ReactNode }) {
   return (
     <nav id="sidebar-quicklinks" className="sidebar">
       {children}
@@ -16,9 +39,9 @@ export function RenderSideBar({ doc }: { doc: Doc }) {
     return (
       <SidebarContainer>
         <h4>Related Topics</h4>
-        {doc.related_content.map((node) => (
-          <SidebarLeaf key={node.url} parent={node} />
-        ))}
+        {doc.related_content.map((node) => {
+          return <SidebarLeaf key={node.url || node.title} parent={node} />;
+        })}
       </SidebarContainer>
     );
   }
@@ -42,7 +65,7 @@ function SidebarLeaf({ parent }: { parent: RelatedContent }) {
     <>
       <h5>
         {parent.url ? (
-          <Link to={parent.url}>{parent.title}</Link>
+          <ScrollTopLink to={parent.url}>{parent.title}</ScrollTopLink>
         ) : (
           parent.title
         )}
@@ -58,10 +81,10 @@ function SidebarLeaf({ parent }: { parent: RelatedContent }) {
           } else {
             return (
               <li
-                key={node.url || node.title}
+                key={node.url}
                 className={node.isActive ? "active" : undefined}
               >
-                <Link to={node.url}>{node.title}</Link>
+                <ScrollTopLink to={node.url}>{node.title}</ScrollTopLink>
               </li>
             );
           }
@@ -80,8 +103,10 @@ function SidebarLeaflets({ node }: { node: RelatedContent }) {
       <ol>
         {node.content.map((childNode) => {
           if (childNode.content) {
+            console.log(childNode.url || childNode.title);
+
             return (
-              <li key={childNode.url}>
+              <li key={childNode.url || childNode.title}>
                 <SidebarLeaflets node={childNode} />
               </li>
             );
@@ -91,7 +116,18 @@ function SidebarLeaflets({ node }: { node: RelatedContent }) {
                 key={childNode.url}
                 className={childNode.isActive ? "active" : undefined}
               >
-                <Link to={childNode.url}>{childNode.title}</Link>
+                {/* Figure out how to set 'aria-current'
+                https://reactrouter.com/web/api/NavLink/aria-current-string
+                 */}
+                {childNode.url.startsWith("http") ? (
+                  <a href={childNode.url} className="external">
+                    {childNode.title}
+                  </a>
+                ) : (
+                  <ScrollTopLink to={childNode.url}>
+                    {childNode.title}
+                  </ScrollTopLink>
+                )}
               </li>
             );
           }

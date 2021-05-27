@@ -11,6 +11,8 @@ const { Document } = require("../../content");
 const getRelatedByLocale = (locale) => {
   const baseURL = `/${locale}/docs/Learn`;
 
+  // XXX TODO!
+  // Of the 260 keys here in 'en-US' only 59 are actually ever used!
   const text = {
     "en-US": {
       Complete_beginners: "Complete beginners start here!",
@@ -2209,7 +2211,7 @@ const getRelatedByLocale = (locale) => {
   // "Complete beginners"
   related.push({
     title: getText("Complete_beginners"),
-    url: `${baseURL}/Getting_started_with_the_web`,
+    slug: "Getting_started_with_the_web",
     content: [
       {
         title: getText("Getting_started_with_the_web"),
@@ -2250,7 +2252,7 @@ const getRelatedByLocale = (locale) => {
   // "HTML - Structuring the web"
   related.push({
     title: getText("HTML_structuring_the_Web"),
-    url: `${baseURL}/HTML`,
+    slug: "HTML",
     content: [
       {
         title: getText("Introduction_to_HTML"),
@@ -2484,7 +2486,7 @@ const getRelatedByLocale = (locale) => {
 
   // "JavaScript — Dynamic client-side scripting"
   related.push({
-    title: getText("JavaScript_dynamic_client-side_scripting"),
+    // title: getText("JavaScript_dynamic_client-side_scripting"),
     slug: "JavaScript",
     content: [
       {
@@ -2614,7 +2616,6 @@ const getRelatedByLocale = (locale) => {
         title: getText("Client-side_web_APIs"),
         content: [
           {
-            title: getText("Client-side_web_APIs"),
             slug: "JavaScript/Client-side_web_APIs",
           },
           {
@@ -2645,7 +2646,6 @@ const getRelatedByLocale = (locale) => {
 
   // "Web forms — Working with user data"
   related.push({
-    title: getText("Web_forms"),
     slug: "Forms",
     content: [
       {
@@ -2691,7 +2691,6 @@ const getRelatedByLocale = (locale) => {
         title: getText("Web_forms_advanced"),
         content: [
           {
-            title: getText("How_to_build_custom_form_controls"),
             slug: "Forms/How_to_build_custom_form_controls",
           },
           {
@@ -2741,7 +2740,7 @@ const getRelatedByLocale = (locale) => {
         title: getText("Accessibility_assessment"),
         content: [
           {
-            title: getText("Assessment_Accessibility_troubleshooting"),
+            // title: getText("Assessment_Accessibility_troubleshooting"),
             slug: "Accessibility/Accessibility_troubleshooting",
           },
         ],
@@ -2749,10 +2748,379 @@ const getRelatedByLocale = (locale) => {
     ],
   });
 
-  // TODO! CONTINUE HERE WITH Tools_and_testing
+  // Tools and testing
+  related.push({
+    slug: "Tools_and_testing",
+    content: [
+      {
+        title: getText("Client-side_web_development_tools"),
+        content: [
+          {
+            title: getText("Client-side_web_development_tools_index"),
+            slug: "Tools_and_testing/Understanding_client-side_tools",
+          },
+          {
+            slug: "Tools_and_testing/Understanding_client-side_tools/Overview",
+          },
+          {
+            slug: "Tools_and_testing/Understanding_client-side_tools/Command_line",
+          },
+          {
+            slug: "Tools_and_testing/Understanding_client-side_tools/Package_management",
+          },
+          {
+            slug: "Tools_and_testing/Understanding_client-side_tools/Introducing_complete_toolchain",
+          },
+          {
+            slug: "Tools_and_testing/Understanding_client-side_tools/Deployment",
+          },
+        ],
+      },
+      {
+        title: getText("Introduction_to_client-side_frameworks"),
+        content: [
+          {
+            title: getText("Client-side_frameworks_overview"),
+            slug: "Tools_and_testing/Client-side_JavaScript_frameworks/Introduction",
+          },
+          {
+            slug: "Tools_and_testing/Client-side_JavaScript_frameworks/Main_features",
+          },
+        ],
+      },
+      {
+        title: getText("React"),
+        content: [
+          {
+            slug: "Tools_and_testing/Client-side_JavaScript_frameworks/React_getting_started",
+          },
+          {
+            slug: "Tools_and_testing/Client-side_JavaScript_frameworks/React_todo_list_beginning",
+          },
+          {
+            slug: "Tools_and_testing/Client-side_JavaScript_frameworks/React_components",
+          },
+          {
+            slug: "Tools_and_testing/Client-side_JavaScript_frameworks/React_interactivity_events_state",
+          },
+          {
+            slug: "Tools_and_testing/Client-side_JavaScript_frameworks/React_interactivity_filtering_conditional_rendering",
+          },
+          {
+            slug: "Tools_and_testing/Client-side_JavaScript_frameworks/React_accessibility",
+          },
+          {
+            slug: "Tools_and_testing/Client-side_JavaScript_frameworks/React_resources",
+          },
+        ],
+      },
+      {
+        title: getText("Ember"),
+        content: [
+          {
+            slug: "Tools_and_testing/Client-side_JavaScript_frameworks/Ember_getting_started",
+          },
+          {
+            slug: "Tools_and_testing/Client-side_JavaScript_frameworks/Ember_structure_componentization",
+          },
+          {
+            slug: "Tools_and_testing/Client-side_JavaScript_frameworks/Ember_interactivity_events_state",
+          },
+          {
+            slug: "Tools_and_testing/Client-side_JavaScript_frameworks/Ember_conditional_footer",
+          },
+          {
+            slug: "Tools_and_testing/Client-side_JavaScript_frameworks/Ember_routing",
+          },
+          {
+            slug: "Tools_and_testing/Client-side_JavaScript_frameworks/Ember_resources",
+          },
+        ],
+      },
+      {
+        title: getText("Vue"),
+        content: [
+          {
+            slug: "Tools_and_testing/Client-side_JavaScript_frameworks/Vue_getting_started",
+          },
+          {
+            slug: "Tools_and_testing/Client-side_JavaScript_frameworks/Vue_first_component",
+          },
+          {
+            slug: "Tools_and_testing/Client-side_JavaScript_frameworks/Vue_rendering_lists",
+          },
+          {
+            slug: "Tools_and_testing/Client-side_JavaScript_frameworks/Vue_methods_events_models",
+          },
+          {
+            slug: "Tools_and_testing/Client-side_JavaScript_frameworks/Vue_styling",
+          },
+          {
+            slug: "Tools_and_testing/Client-side_JavaScript_frameworks/Vue_computed_properties",
+          },
+          {
+            slug: "Tools_and_testing/Client-side_JavaScript_frameworks/Vue_conditional_rendering",
+          },
+          {
+            slug: "Tools_and_testing/Client-side_JavaScript_frameworks/Vue_refs_focus_management",
+          },
+          {
+            slug: "Tools_and_testing/Client-side_JavaScript_frameworks/Vue_resources",
+          },
+        ],
+      },
+      {
+        title: getText("Svelte"),
+        content: [
+          {
+            slug: "Tools_and_testing/Client-side_JavaScript_frameworks/Svelte_getting_started",
+          },
+          {
+            slug: "Tools_and_testing/Client-side_JavaScript_frameworks/Svelte_Todo_list_beginning",
+          },
+          {
+            slug: "Tools_and_testing/Client-side_JavaScript_frameworks/Svelte_variables_props",
+          },
+          {
+            slug: "Tools_and_testing/Client-side_JavaScript_frameworks/Svelte_components",
+          },
+          {
+            slug: "Tools_and_testing/Client-side_JavaScript_frameworks/Svelte_reactivity_lifecycle_accessibility",
+          },
+          {
+            slug: "Tools_and_testing/Client-side_JavaScript_frameworks/Svelte_stores",
+          },
+          {
+            slug: "Tools_and_testing/Client-side_JavaScript_frameworks/Svelte_TypeScript",
+          },
+          {
+            slug: "Tools_and_testing/Client-side_JavaScript_frameworks/Svelte_deployment_next",
+          },
+        ],
+      },
+      {
+        title: getText("Git_and_GitHub"),
+        content: [
+          {
+            title: getText("Git_and_GitHub_overview"),
+            slug: "Tools_and_testing/GitHub",
+          },
+          {
+            title: "Hello World",
+            url: "https://guides.github.com/activities/hello-world/",
+          },
+          {
+            title: "Git Handbook",
+            url: "https://guides.github.com/introduction/git-handbook/",
+          },
+          {
+            title: "Forking Projects",
+            url: "https://guides.github.com/activities/forking/",
+          },
+          {
+            title: "About pull requests",
+            url: "https://help.github.com/en/github/collaborating-with-issues-and-pull-requests/about-pull-requests",
+          },
+          {
+            title: "Mastering Issues",
+            url: "https://guides.github.com/features/issues/",
+          },
+        ],
+      },
+      {
+        title: getText("Cross_browser_testing"),
+        content: [
+          {
+            title: getText("Cross_browser_testing_overview"),
+            slug: "Tools_and_testing/Cross_browser_testing",
+          },
+          {
+            slug: "Tools_and_testing/Cross_browser_testing/Introduction",
+          },
+          {
+            slug: "Tools_and_testing/Cross_browser_testing/Testing_strategies",
+          },
+          {
+            slug: "Tools_and_testing/Cross_browser_testing/HTML_and_CSS",
+          },
+          {
+            slug: "Tools_and_testing/Cross_browser_testing/JavaScript",
+          },
+          {
+            slug: "Tools_and_testing/Cross_browser_testing/Accessibility",
+          },
+          {
+            slug: "Tools_and_testing/Cross_browser_testing/Feature_detection",
+          },
+          {
+            slug: "Tools_and_testing/Cross_browser_testing/Automated_testing",
+          },
+          {
+            slug: "Tools_and_testing/Cross_browser_testing/Your_own_automation_environment",
+          },
+        ],
+      },
+    ],
+  });
 
-  setTitleFromURL(related, locale);
+  // Server-side website programming
+  related.push({
+    slug: "Server-side",
+    content: [
+      {
+        title: getText("First_steps"),
+        content: [
+          {
+            title: getText("First_steps_overview"),
+            slug: "Server-side/First_steps",
+          },
+          {
+            slug: "Server-side/First_steps/Introduction",
+          },
+          {
+            slug: "Server-side/First_steps/Client-Server_overview",
+          },
+          {
+            slug: "Server-side/First_steps/Web_frameworks",
+          },
+          {
+            slug: "Server-side/First_steps/Website_security",
+          },
+        ],
+      },
+      {
+        title: getText("Django_web_framework_(Python)"),
+        content: [
+          {
+            title: getText("Django_web_framework_(Python)_overview"),
+            slug: "Server-side/Django",
+          },
+          {
+            slug: "Server-side/Django/Introduction",
+          },
+          {
+            slug: "Server-side/Django/development_environment",
+          },
+          {
+            slug: "Server-side/Django/Tutorial_local_library_website",
+          },
+          {
+            slug: "Server-side/Django/skeleton_website",
+          },
+          {
+            slug: "Server-side/Django/Models",
+          },
+          {
+            slug: "Server-side/Django/Admin_site",
+          },
+          {
+            slug: "Server-side/Django/Home_page",
+          },
+          {
+            slug: "Server-side/Django/Generic_views",
+          },
+          {
+            slug: "Server-side/Django/Sessions",
+          },
+          {
+            slug: "Server-side/Django/Authentication",
+          },
+          {
+            slug: "Server-side/Django/Forms",
+          },
+          {
+            slug: "Server-side/Django/Testing",
+          },
+          {
+            slug: "Server-side/Django/Deployment",
+          },
+          {
+            slug: "Server-side/Django/web_application_security",
+          },
+          {
+            slug: "Server-side/Django/django_assessment_blog",
+          },
+        ],
+      },
+      {
+        title: getText("Express_Web_Framework_(Node.js_JavaScript)"),
+        content: [
+          {
+            title: getText(
+              "Express_Web_Framework_(Node.js_JavaScript)_overview"
+            ),
+            slug: "Server-side/Express_Nodejs",
+          },
+          {
+            slug: "Server-side/Express_Nodejs/Introduction",
+          },
+          {
+            slug: "Server-side/Express_Nodejs/development_environment",
+          },
+          {
+            slug: "Server-side/Express_Nodejs/Tutorial_local_library_website",
+          },
+          {
+            slug: "Server-side/Express_Nodejs/skeleton_website",
+          },
+          {
+            slug: "Server-side/Express_Nodejs/mongoose",
+          },
+          {
+            slug: "Server-side/Express_Nodejs/routes",
+          },
+          {
+            slug: "Server-side/Express_Nodejs/Displaying_data",
+          },
+          {
+            slug: "Server-side/Express_Nodejs/forms",
+          },
+          {
+            slug: "Server-side/Express_Nodejs/deployment",
+          },
+        ],
+      },
+    ],
+  });
+
+  // Further resources
+  related.push({
+    title: getText("Further_resources"),
+    content: [
+      {
+        title: getText("Common_questions"),
+        content: [
+          {
+            title: getText("HTML_questions"),
+            slug: "HTML/Howto",
+          },
+          {
+            title: getText("CSS_questions"),
+            slug: "CSS/Howto",
+          },
+          {
+            title: getText("JavaScript_questions"),
+            slug: "JavaScript/Howto",
+          },
+          {
+            title: getText("Web_mechanics"),
+            slug: "Common_questions#Web_mechanics",
+          },
+          {
+            title: getText("Tools_and_setup"),
+            slug: "Common_questions#Tools_and_setup",
+          },
+          {
+            title: getText("Design_and_accessibility"),
+            slug: "Common_questions#Design_and_accessibility",
+          },
+        ],
+      },
+    ],
+  });
+
   setURLFromSlug(related, baseURL);
+  setTitleFromURL(related, locale);
 
   return related;
 };
@@ -2760,7 +3128,7 @@ const getRelatedByLocale = (locale) => {
 function setActive(related, url) {
   let foundActive = false;
   for (const content of related) {
-    if (content.url === url) {
+    if (content.url && content.url.split("#")[0] === url) {
       content.isActive = true;
       foundActive = true;
     } else if (content.content) {
