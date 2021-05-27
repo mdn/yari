@@ -61,6 +61,7 @@ const ACTIVE_LOCALES = new Set([
   "fr",
   "ja",
   "ko",
+  "pt-br",
   "ru",
   "zh-cn",
   "zh-tw",

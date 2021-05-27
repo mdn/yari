@@ -28,8 +28,9 @@ async function catchall(req, res) {
   const origin = {};
   origin.custom = {};
   // This always pretends to proceed and do a S3 lookup
+  console.log(req.headers);
   origin.custom.domainName =
-    req.headers["ORIGIN_DOMAIN_NAME"] || "s3.fakey.fake";
+    req.headers["origin_domain_name"] || "s3.fakey.fake";
   const cf = {};
   const headers = {};
   headers.host = [{ value: req.hostname }];

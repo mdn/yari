@@ -86,6 +86,7 @@ def test_analyze_pr_dangerous_content():
                         "content": """
             <p>
             <a href="https://www.peterbe.com">Peterbe.com</a>
+            <a href="">Empty href</a>
             </p>
             """
                     },

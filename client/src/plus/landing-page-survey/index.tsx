@@ -31,7 +31,13 @@ function getSessionStorageData(key: string) {
   }
 }
 
-export function LandingPageSurvey({ variant }: { variant: number }) {
+export function LandingPageSurvey({
+  variant,
+  onJoined,
+}: {
+  variant: number;
+  onJoined?: () => void;
+}) {
   const [email, setEmail] = React.useState(
     getSessionStorageData(SESSIONSTORAGE_KEY_EMAIL) || ""
   );
@@ -182,6 +188,9 @@ export function LandingPageSurvey({ variant }: { variant: number }) {
             try {
               await sendWaitlistSubmission(email.trim());
               setWaitlistSubmissionError(null);
+              if (onJoined) {
+                onJoined();
+              }
               setPage("features");
             } catch (error) {
               setWaitlistSubmissionError(error);
@@ -232,7 +241,7 @@ export function LandingPageSurvey({ variant }: { variant: number }) {
         <div className="features">
           <h2>
             {
-              "Thanks! Before you go, help us by answering some optional questions (2/2)"
+              "Thanks! Before you go, help us by answering some optional questions (2/2)."
             }
           </h2>
 
@@ -268,7 +277,7 @@ export function LandingPageSurvey({ variant }: { variant: number }) {
               value={priceComment}
               onChange={(e) => setPriceComment(e.target.value)}
               placeholder="Let us know what you think"
-              rows={2}
+              rows={3}
               cols={80}
             ></textarea>
             <button type="submit">Submit</button>
@@ -279,7 +288,7 @@ export function LandingPageSurvey({ variant }: { variant: number }) {
         <div className="features">
           <h2>
             {
-              "Thanks! Before you go, help us by answering some optional questions (1/2)"
+              "Thanks! Before you go, help us by answering some optional questions (1/2)."
             }
           </h2>
 
@@ -329,7 +338,7 @@ export function LandingPageSurvey({ variant }: { variant: number }) {
               value={featuresComment}
               onChange={(e) => setFeaturesComment(e.target.value)}
               placeholder="Let us know what you think"
-              rows={2}
+              rows={3}
               cols={80}
             ></textarea>
           </div>
@@ -360,7 +369,8 @@ export function LandingPageSurvey({ variant }: { variant: number }) {
                 >
                   Privacy Policy
                 </a>
-                .
+                . Your information will only be used to notify you about
+                platform availability.
               </small>
             </p>
           </div>

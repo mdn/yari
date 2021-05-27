@@ -640,4 +640,5 @@ module.exports = {
   options: buildOptions,
   gatherGitHistory,
   buildSPAs,
+  getLastCommitURL,
 };
