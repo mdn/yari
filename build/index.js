@@ -228,6 +228,24 @@ function makeTOC(doc) {
     .filter(Boolean);
 }
 
+/**
+ * Return an array of all images that are inside the documents source folder.
+ *
+ * @param {Document} document
+ */
+function getAdjacentImages(documentDirectory) {
+  const dirents = fs.readdirSync(documentDirectory, { withFileTypes: true });
+  return dirents
+    .filter((dirent) => {
+      // This needs to match what we do in filecheck/checker.py
+      return (
+        !dirent.isDirectory() &&
+        /\.(png|jpeg|jpg|gif|svg|webp)$/i.test(dirent.name)
+      );
+    })
+    .map((dirent) => path.join(documentDirectory, dirent.name));
+}
+
 async function buildDocument(document, documentOptions = {}) {
   // Important that the "local" document options comes last.
   // And use Object.assign to create a new object instead of mutating the
@@ -399,6 +417,14 @@ async function buildDocument(document, documentOptions = {}) {
 
   // Check and scrutinize any local image references
   const fileAttachments = checkImageReferences(doc, $, options, document);
+  // Not all images are referenced as `<img>` tags. Some are just sitting in the
+  // current document's folder and they might be referenced in live samples.
+  // The checkImageReferences() does 2 things. Checks image *references* and
+  // it returns which images it checked. But we'll need to complement any
+  // other images in the folder.
+  getAdjacentImages(path.dirname(document.fileInfo.path)).forEach((fp) =>
+    fileAttachments.add(fp)
+  );
 
   // Check the img tags for possible flaws and possible build-time rewrites
   checkImageWidths(doc, $, options, document);
@@ -542,7 +568,13 @@ async function buildDocument(document, documentOptions = {}) {
 }
 
 async function buildLiveSamplePageFromURL(url) {
-  const [documentURL, sampleID] = url.split("/_samples_/");
+  // The 'url' is expected to be something
+  // like '/en-us/docs/foo/bar/_sample_.myid.html' and from that we want to
+  // extract '/en-us/docs/foo/bar' and 'myid'. But only if it matches.
+  if (!url.endsWith(".html") || !url.includes("/_sample_.")) {
+    throw new Error(`Unexpected URL format to extract live sample ('${url}')`);
+  }
+  const [documentURL, sampleID] = url.split(/\.html$/)[0].split("/_sample_.");
   const document = Document.findByURL(documentURL);
   if (!document) {
     throw new Error(`No document found for ${documentURL}`);
@@ -584,24 +616,40 @@ function renderContributorsTxt(wikiContributorNames = null, githubURL = null) {
   return txt;
 }
 
-function* fastKSParser(s) {
-  // for (const match of s.matchAll(/\{\{\s*([\w-]+)\s*(\((.*?)\)|)\s*\}\}/gms)) {
+function* fastKSParser(s, includeArgs = false) {
   for (const match of s.matchAll(
-    /\{\{\s*(\w+[\w-\.]*\w+)\s*(\((.*?)\)|)\s*\}\}/gms
+    /\{\{\s*(\w+[\w-.]*\w+)\s*(\((.*?)\)|)\s*\}\}/gms
   )) {
     const { index } = match;
     if (s.charAt(index - 1) === "\\") {
       continue;
     }
 
-    yield {
-      type: "MACRO",
-      name: match[1],
-      args: (match[3] || "")
-        .split(",")
+    const split = (match[3] || "").trim().split(",");
+    const found = { name: match[1] };
+    if (includeArgs) {
+      found.args = split
         .map((s) => s.trim())
-        .filter(Boolean),
-    };
+        .map((s) => {
+          if (s.startsWith('"') && s.endsWith('"')) {
+            return s.slice(1, -1);
+          }
+          if (s.startsWith("'") && s.endsWith("'")) {
+            return s.slice(1, -1);
+          }
+          return s;
+        })
+        .filter((s, i) => {
+          if (!s) {
+            // Only return false if it's NOT first
+            if (i === 0) {
+              return Boolean(s);
+            }
+          }
+          return true;
+        });
+    }
+    yield found;
   }
 }
 
@@ -617,13 +665,11 @@ async function analyzeDocument(document) {
 
   doc.normalizedMacrosCount = {};
   for (const token of fastKSParser(document.rawBody)) {
-    if (token.type === "MACRO") {
-      const normalizedMacroName = normalizeMacroName(token.name);
-      if (!(normalizedMacroName in doc.normalizedMacrosCount)) {
-        doc.normalizedMacrosCount[normalizedMacroName] = 0;
-      }
-      doc.normalizedMacrosCount[normalizedMacroName]++;
+    const normalizedMacroName = normalizeMacroName(token.name);
+    if (!(normalizedMacroName in doc.normalizedMacrosCount)) {
+      doc.normalizedMacrosCount[normalizedMacroName] = 0;
     }
+    doc.normalizedMacrosCount[normalizedMacroName]++;
   }
   doc.tags = document.metadata.tags || [];
 
@@ -701,4 +747,5 @@ module.exports = {
   options: buildOptions,
   gatherGitHistory,
   buildSPAs,
+  getLastCommitURL,
 };

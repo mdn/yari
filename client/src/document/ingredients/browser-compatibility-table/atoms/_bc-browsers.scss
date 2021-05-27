@@ -1,3 +1,5 @@
+@use "sass:math";
+
 .bc-browsers {
   th {
     border-top: 0;
@@ -15,7 +17,7 @@
     display: inline-block;
     font-weight: normal;
     height: 20px;
-    margin: 0 0 $base-spacing ($base-spacing / 2);
+    margin: 0 0 $base-spacing math.div($base-spacing, 2);
     padding: 0;
     text-align: left;
     transform: rotate(-90deg);

@@ -23,6 +23,7 @@ const {
 } = require("../content");
 // eslint-disable-next-line node/no-missing-require
 const { prepareDoc, renderDocHTML } = require("../ssr/dist/main");
+const { CSP_VALUE_DEV } = require("../libs/constants");
 
 const { STATIC_ROOT, PROXY_HOSTNAME, FAKE_V1_API } = require("./constants");
 const documentRouter = require("./document");
@@ -30,6 +31,7 @@ const documentTraitsRouter = require("./traits");
 const fakeV1APIRouter = require("./fake-v1-api");
 const { searchIndexRoute } = require("./search-index");
 const flawsRoute = require("./flaws");
+const { translationsRoute } = require("./translations");
 const { staticMiddlewares, originRequestMiddleware } = require("./middlewares");
 const { getRoot } = require("../content/utils");
 
@@ -78,8 +80,8 @@ const proxy = FAKE_V1_API
           : "http://"
       }${PROXY_HOSTNAME}`,
       changeOrigin: true,
-      proxyTimeout: 10000,
-      timeout: 10000,
+      // proxyTimeout: 20000,
+      // timeout: 20000,
     });
 
 app.use("/api/v1", proxy);
@@ -90,6 +92,23 @@ app.post("/:locale/users/account/signup", proxy);
 // middleware for `/api/v1` above.
 // See https://github.com/chimurai/http-proxy-middleware/issues/40#issuecomment-163398924
 app.use(express.urlencoded({ extended: true }));
+
+app.post(
+  "/csp-violation-capture",
+  express.json({ type: "application/csp-report" }),
+  (req, res) => {
+    const report = req.body["csp-report"];
+    console.warn(
+      chalk.yellow(
+        "CSP violation for directive",
+        report["violated-directive"],
+        "which blocked:",
+        report["blocked-uri"]
+      )
+    );
+    res.sendStatus(200);
+  }
+);
 
 app.use("/_document", documentRouter);
 
@@ -142,6 +161,8 @@ app.use("/:locale/search-index.json", searchIndexRoute);
 
 app.get("/_flaws", flawsRoute);
 
+app.get("/_translations", translationsRoute);
+
 app.get("/*/contributors.txt", async (req, res) => {
   const url = req.path.replace(/\/contributors\.txt$/, "");
   const document = Document.findByURL(url);
@@ -176,7 +197,7 @@ app.get("/*", async (req, res) => {
     return res.status(404).send("Page not found");
   }
 
-  if (req.url.includes("/_samples_/")) {
+  if (req.url.includes("/_sample_.")) {
     try {
       return res.send(await buildLiveSamplePageFromURL(req.path));
     } catch (e) {
@@ -266,6 +287,7 @@ app.get("/*", async (req, res) => {
   if (isJSONRequest) {
     res.json({ doc: document });
   } else {
+    res.header("Content-Security-Policy", CSP_VALUE_DEV);
     res.send(renderDocHTML(document, lookupURL));
   }
 });

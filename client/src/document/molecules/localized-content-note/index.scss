@@ -1,3 +1,5 @@
+@use "sass:math";
+
 @import "~@mdn/minimalist/sass/vars/layout";
 
 .localized-content-note {
@@ -5,6 +7,6 @@
 
   &.inline {
     margin: 0;
-    padding: ($base-spacing / 2) $base-spacing;
+    padding: math.div($base-spacing, 2) $base-spacing;
   }
 }

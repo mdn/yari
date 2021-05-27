@@ -1,8 +1,40 @@
-const LRU = require("lru-cache");
-
 const Parser = require("../kumascript/src/parser.js");
 
-const cacheKSMacros = new LRU({ max: 2000 });
+function* fastKSParser(s) {
+  for (const match of s.matchAll(
+    /\{\{\s*(\w+[\w-.]*\w+)\s*(\((.*?)\)|)\s*\}\}/gms
+  )) {
+    const { index } = match;
+    if (s.charAt(index - 1) === "\\") {
+      continue;
+    }
+
+    const split = (match[3] || "").trim().split(",");
+    yield {
+      name: match[1],
+      args: split
+        .map((s) => s.trim())
+        .map((s) => {
+          if (s.startsWith('"') && s.endsWith('"')) {
+            return s.slice(1, -1);
+          }
+          if (s.startsWith("'") && s.endsWith("'")) {
+            return s.slice(1, -1);
+          }
+          return s;
+        })
+        .filter((s, i) => {
+          if (!s) {
+            // Only return false if it's NOT first
+            if (i === 0) {
+              return Boolean(s);
+            }
+          }
+          return true;
+        }),
+    };
+  }
+}
 
 const IMPORTANT_MACROS = new Map(
   [
@@ -38,11 +70,11 @@ const IMPORTANT_MACROS = new Map(
   ].map((name) => [name.toLowerCase(), name])
 );
 
-function getKSMacros(content, cacheKey = null) {
-  if (cacheKey && cacheKSMacros.has(cacheKey)) {
-    return cacheKSMacros.get(cacheKey);
-  }
+function getKSMacros(content, fast = false) {
+  return fast ? getMacrosFast(content) : getMacrosSlow(content);
+}
 
+function getMacrosSlow(content) {
   const tokens = Parser.parse(content);
   const macros = new Set();
 
@@ -68,20 +100,43 @@ function getKSMacros(content, cacheKey = null) {
     }
     macros.add(string);
   }
+  return macros;
+}
 
-  if (cacheKey) {
-    cacheKSMacros.set(cacheKey, macros);
+function getMacrosFast(content) {
+  const tokens = fastKSParser(content);
+  const macros = new Set();
+
+  for (const token of tokens) {
+    const macroName = token.name.toLowerCase();
+    if (!IMPORTANT_MACROS.has(macroName)) {
+      continue;
+    }
+    const macroArgs = token.args;
+    let string = IMPORTANT_MACROS.get(macroName);
+    if (macroArgs.length) {
+      string += `(${macroArgs
+        .map((x) => {
+          if (typeof x === "object") {
+            return JSON.stringify(x);
+          }
+          return `'${x}'`;
+        })
+        .join(", ")})`;
+    }
+    macros.add(string);
   }
   return macros;
 }
 
-function* getTranslationDifferences(englishDocument, translatedDocument) {
+function* getTranslationDifferences(
+  englishDocument,
+  translatedDocument,
+  fast = false
+) {
   // Compare key KS macros presence
-  const translatedMacros = getKSMacros(translatedDocument.rawBody);
-  const englishMacros = getKSMacros(
-    englishDocument.rawBody,
-    englishDocument.url
-  );
+  const translatedMacros = getKSMacros(translatedDocument.rawBody, fast);
+  const englishMacros = getKSMacros(englishDocument.rawBody, fast);
   if (!equalSets(translatedMacros, englishMacros)) {
     const inCommon = setIntersection(translatedMacros, englishMacros);
     const union = setUnion(translatedMacros, englishMacros);

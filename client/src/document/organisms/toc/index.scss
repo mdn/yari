@@ -1,10 +1,12 @@
+@use "sass:math";
+
 @import "~@mdn/minimalist/sass/vars/layout";
 @import "~@mdn/minimalist/sass/vars/color-palette";
 @import "~@mdn/minimalist/sass/vars/typography";
 
 .document-toc {
   font-size: $default-font-size;
-  padding: ($base-spacing / 4) $base-spacing;
+  padding: math.div($base-spacing, 4) $base-spacing;
   position: relative;
 
   @media #{$mq-tablet-and-up} {
@@ -28,7 +30,7 @@
     border: 0;
     color: $link-color;
     font-weight: normal;
-    padding: ($base-spacing / 2) 0;
+    padding: math.div($base-spacing, 2) 0;
     text-align: left;
     width: 100%;
 

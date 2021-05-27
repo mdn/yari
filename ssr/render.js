@@ -1,15 +1,14 @@
 import fs from "fs";
 import path from "path";
-
-import jsesc from "jsesc";
 import { renderToString } from "react-dom/server";
 import cheerio from "cheerio";
 
 import {
-  SPEEDCURVE_LUX_ID,
   ALWAYS_NO_ROBOTS,
   BUILD_OUT_ROOT,
+  SPEEDCURVE_LUX_ID,
 } from "../build/constants";
+
 const { DEFAULT_LOCALE } = require("../libs/constants");
 
 // When there are multiple options for a given language, this gives the
@@ -130,13 +129,6 @@ function* extractCSSURLs(css, filterFunction) {
   }
 }
 
-function serializeDocumentData(data) {
-  return jsesc(JSON.stringify(data), {
-    json: true,
-    isScriptContext: true,
-  });
-}
-
 export default function render(
   renderApp,
   {
@@ -146,6 +138,7 @@ export default function render(
     pageTitle = null,
     possibleLocales = null,
     locale = null,
+    noIndexing = null,
   } = {}
 ) {
   const buildHtml = readBuildHTML();
@@ -165,15 +158,12 @@ export default function render(
 
   let pageDescription = "";
 
+  const hydrationData = {};
   if (pageNotFound) {
     pageTitle = `🤷🏽‍♀️ Page not found | ${pageTitle}`;
-    const documentDataTag = `<script>window.__pageNotFound__ = true;</script>`;
-    $("#root").after(documentDataTag);
+    hydrationData.pageNotFound = true;
   } else if (feedEntries) {
-    const feedEntriesTag = `<script>window.__feedEntries__ = JSON.parse(${serializeDocumentData(
-      feedEntries
-    )});</script>`;
-    $("#root").after(feedEntriesTag);
+    hydrationData.feedEntries = feedEntries;
   } else if (doc) {
     // Use the doc's title instead
     pageTitle = doc.pageTitle;
@@ -183,10 +173,7 @@ export default function render(
       pageDescription = doc.summary;
     }
 
-    const documentDataTag = `<script>window.__data__ = JSON.parse(${serializeDocumentData(
-      doc
-    )});</script>`;
-    $("#root").after(documentDataTag);
+    hydrationData.doc = doc;
 
     if (doc.other_translations) {
       const allOtherLocales = doc.other_translations.map((t) => t.locale);
@@ -215,11 +202,14 @@ export default function render(
   }
 
   if (possibleLocales) {
-    const possibleLocalesTag = `<script>window.__possibleLocales__ = JSON.parse(${serializeDocumentData(
-      possibleLocales
-    )});</script>`;
-    $("#root").after(possibleLocalesTag);
+    hydrationData.possibleLocales = possibleLocales;
   }
+
+  $("#root").after(
+    `<script type="application/json" id="hydration">${JSON.stringify(
+      hydrationData
+    )}</script>`
+  );
 
   if (pageDescription) {
     // This overrides the default description. Also assumes there's always
@@ -229,7 +219,7 @@ export default function render(
   }
 
   const robotsContent =
-    ALWAYS_NO_ROBOTS || (doc && doc.noIndexing) || pageNotFound
+    ALWAYS_NO_ROBOTS || (doc && doc.noIndexing) || pageNotFound || noIndexing
       ? "noindex, nofollow"
       : "index, follow";
   $(`<meta name="robots" content="${robotsContent}">`).insertAfter(
@@ -244,7 +234,7 @@ export default function render(
     // The snippet is always the same, if it's present, but the ID varies
     // See LUX settings here https://speedcurve.com/mozilla-add-ons/mdn/settings/lux/
     const speedcurveJS = getSpeedcurveJS();
-    $("<script>").text(`\n${speedcurveJS}\n`).appendTo($("head"));
+    $("<script>").text(speedcurveJS).appendTo($("head"));
     $(
       `<script src="https://cdn.speedcurve.com/js/lux.js?id=${SPEEDCURVE_LUX_ID}" async defer crossorigin="anonymous"></script>`
     ).appendTo($("head"));

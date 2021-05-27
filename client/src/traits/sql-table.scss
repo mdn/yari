@@ -1,6 +1,15 @@
 .sql-table {
   padding-bottom: 50px;
 
+  div.help {
+    pre {
+      margin-bottom: 4px;
+    }
+    div button {
+      margin-bottom: 25px;
+    }
+  }
+
   form.query {
     .query-buttons {
       margin-top: 10px;

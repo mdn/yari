@@ -45,6 +45,10 @@ FROM ?
 WHERE mdn_url like '%/Web/http%'
 ORDER BY fileSize desc
 LIMIT 25`);
+ADVANCED_QUERIES.push(`SELECT mdn_url, tags
+FROM ?
+WHERE "Experimental" in tags
+ORDER BY popularity DESC LIMIT 10`);
 
 function storageDump(key: string, value: any, session = false) {
   const storage = session ? window.sessionStorage : window.localStorage;
@@ -121,10 +125,8 @@ export function SQLTable({ documents }: { documents: Document[] }) {
     }
   }, [query, documents]);
 
-  const [
-    parsedStatement,
-    setParsedStatement,
-  ] = useState<FauxAlaSQLStatement | null>(null);
+  const [parsedStatement, setParsedStatement] =
+    useState<FauxAlaSQLStatement | null>(null);
 
   useEffect(() => {
     if (queryDraftDebounced) {

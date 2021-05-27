@@ -1,3 +1,5 @@
+@use "sass:math";
+
 @import "~@mdn/minimalist/sass/vars/layout";
 @import "~@mdn/minimalist/sass/vars/typography";
 
@@ -19,7 +21,7 @@
 
   select {
     display: inline-block;
-    margin-right: $base-spacing / 4;
+    margin-right: math.div($base-spacing, 4);
 
     @media #{$mq-tablet-and-up} {
       display: inline-block;

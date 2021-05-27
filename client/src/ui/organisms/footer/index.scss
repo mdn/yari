@@ -1,3 +1,5 @@
+@use "sass:math";
+
 @import "~@mdn/minimalist/sass/vars/color-palette";
 @import "~@mdn/minimalist/sass/vars/layout";
 @import "~@mdn/minimalist/sass/vars/typography";
@@ -10,6 +12,8 @@
   background-color: $neutral-100;
   color: $text-color-inverted;
   padding: ($base-spacing * 2) $base-spacing;
+  z-index: $bring-to-front;
+  position: relative;
 
   .content-container {
     margin: 0 auto;
@@ -45,7 +49,7 @@
     }
 
     ul {
-      padding-inline-start: $base-spacing / 4;
+      padding-inline-start: math.div($base-spacing, 4);
     }
   }
 

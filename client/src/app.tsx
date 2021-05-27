@@ -5,22 +5,24 @@ import { Routes, Route, useLocation } from "react-router-dom";
 // and applied before any component specific style
 import "./app.scss";
 
-import { CRUD_MODE, ENABLE_MDNPLUSPLUS } from "./constants";
+import { CRUD_MODE, ENABLE_PLUS } from "./constants";
 import { Homepage } from "./homepage";
 import { Document } from "./document";
 import { A11yNav } from "./ui/molecules/a11y-nav";
 import { Footer } from "./ui/organisms/footer";
 import { Header } from "./ui/organisms/header";
 import { SiteSearch } from "./site-search";
+import { Loading } from "./ui/atoms/loading";
 import { PageContentContainer } from "./ui/atoms/page-content";
 import { PageNotFound } from "./page-not-found";
 import { Banner } from "./banners";
 import { SignIn, SignUp } from "./auth";
 import { Settings } from "./settings";
-import { MDNplusplus } from "./mdnplusplus";
+import { Plus } from "./plus";
 
 const AllFlaws = React.lazy(() => import("./flaws"));
 const AllTraits = React.lazy(() => import("./traits"));
+const AllTranslations = React.lazy(() => import("./translations"));
 const DocumentEdit = React.lazy(() => import("./document/forms/edit"));
 const DocumentCreate = React.lazy(() => import("./document/forms/create"));
 const DocumentManage = React.lazy(() => import("./document/forms/manage"));
@@ -33,12 +35,13 @@ function Layout({ pageType, children }) {
   return (
     <>
       <A11yNav />
+      {!isServer && <Banner />}
       <div className={`page-wrapper ${pageType}`}>
         <Header />
         {children}
       </div>
       <Footer />
-      {!isServer && <Banner />}
+
       {/* Shown on mobile when main navigation is expanded to provide a clear distinction between the foreground menu and the page content */}
       <div className="page-overlay hidden"></div>
     </>
@@ -86,7 +89,7 @@ function LoadingFallback({ message }: { message?: string }) {
       <PageContentContainer>
         {/* This extra minHeight is just so that the footer doesn't flicker
           in and out as the fallback appears. */}
-        <p style={{ minHeight: 800 }}>{message || "Loading..."}</p>
+        <Loading minHeight={800} message={message || "Loading…"} />
       </PageContentContainer>
     </StandardLayout>
   );
@@ -129,6 +132,14 @@ export function App(appProps) {
                   element={
                     <StandardLayout>
                       <AllFlaws />
+                    </StandardLayout>
+                  }
+                />
+                <Route
+                  path="/_translations"
+                  element={
+                    <StandardLayout>
+                      <AllTranslations />
                     </StandardLayout>
                   }
                 />
@@ -244,12 +255,12 @@ export function App(appProps) {
                 </StandardLayout>
               }
             />
-            {ENABLE_MDNPLUSPLUS && (
+            {ENABLE_PLUS && (
               <Route
-                path="/mdn++"
+                path="/plus"
                 element={
                   <StandardLayout>
-                    <MDNplusplus {...appProps} />
+                    <Plus />
                   </StandardLayout>
                 }
               />
