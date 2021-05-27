@@ -242,7 +242,9 @@ function Settings({
             <a href={window.location.pathname}>Reload page to try again.</a>
           </div>
         )}
-        <label htmlFor="id_locale" className="visually-hidden">Change language</label>
+        <label htmlFor="id_locale" className="visually-hidden">
+          Change language
+        </label>
         <select
           id="id_locale"
           name="locale"
