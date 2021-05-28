@@ -1,5 +1,3 @@
-const web = require("../src/api/web");
-
 <%
 // API Sidebar
 //
@@ -206,7 +204,7 @@ function buildSublist(pages, title) {
     if (slug == aPage.slug) {
         result += '<em><code>' + title + '</code></em>'
     } else {
-        result += web.smartLink(url, null, `<code>${title}</code>`, APIHref);
+        result += web.smartLink(url, null, `<code>${title}</code>`, APIHref, null, "APIRef");
     }
 
     if (rtlLocales.indexOf(locale) != -1) {
@@ -230,7 +228,7 @@ function buildIFList(interfaces, title) {
 
   for (var i = 0; i < interfaces.length; i++) {
     var url = interfaces[i].replace('()', '').replace('.', '/');
-    result += `<li>${web.smartLink(APIHref + '/' + url, null, `<code>${interfaces[i]}</code>`, APIHref)}</li>`;
+    result += `<li>${web.smartLink(APIHref + '/' + url, null, `<code>${interfaces[i]}</code>`, APIHref, null, "APIRef")}</li>`;
   }
 
   result += '</ol></details></li>';
@@ -241,10 +239,10 @@ function buildIFList(interfaces, title) {
 // output
 output = '<section class="Quick_links" id="Quick_Links"><ol>';
 if (group && webAPIGroups[0][group] && webAPIGroups[0][group].overview) {
-  output += `<li><strong>${web.smartLink(APIHref + '/' + webAPIGroups[0][group].overview[0].replace(/ /g, '_'), null, webAPIGroups[0][group].overview[0], APIHref)}</strong></li>`;
+  output += `<li><strong>${web.smartLink(APIHref + '/' + webAPIGroups[0][group].overview[0].replace(/ /g, '_'), null, webAPIGroups[0][group].overview[0], APIHref, null, "APIRef")}</strong></li>`;
 }
 
-output += `<li><strong>${web.smartLink(APIHref + '/' + mainIF, null, `<code>${mainIF}</code>`, APIHref)}</strong></li>`;
+output += `<li><strong>${web.smartLink(APIHref + '/' + mainIF, null, `<code>${mainIF}</code>`, APIHref, null, "APIRef")}</strong></li>`;
 
 if (ctors.length > 0) {
   output += buildSublist(ctors, text['Constructor']);
