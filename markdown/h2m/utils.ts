@@ -3,6 +3,7 @@ import { Element } from "hast";
 import { MDNodeUnion } from "./h";
 
 export type Options = Partial<{
+  rowIndex: number;
   shouldWrap: boolean;
   singleLine: boolean;
   summary: string;
