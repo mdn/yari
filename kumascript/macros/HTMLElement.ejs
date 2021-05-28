@@ -9,7 +9,6 @@
   $2 - Anchor within the page (optional)
 */
 const elementName = $0.toString().toLowerCase();
-const disableFlawChecks = $3 || false;
 let linkText = ($1 || elementName);
 switch (env.locale) {
     case 'ja':
@@ -32,5 +31,5 @@ if (linkText === elementName && elementName.indexOf(" ") === -1) {
     linkText = "<code>&lt;" + linkText + "&gt;</code>";
 }
 
-const link = web.smartLink(url, null, linkText, sectionName + '/' + elementName, baseURL, disableFlawChecks);
+const link = web.smartLink(url, null, linkText, sectionName + '/' + elementName, baseURL);
 %><%- link %>
