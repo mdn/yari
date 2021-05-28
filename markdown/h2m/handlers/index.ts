@@ -107,16 +107,7 @@ export const handlers: QueryAndTransform[] = [
 
   [
     { is: "div", canHaveClass: ["twocolumns", "threecolumns", "noinclude"] },
-    // TODO: attach noinclude to MD node
-    (node) =>
-      h(
-        "html",
-        toHTML(
-          (node.children || []).length == 1 && node.children[0].type == "text"
-            ? node.children[0]
-            : node
-        )
-      ),
+    (node, t) => t(node),
   ],
 
   [
