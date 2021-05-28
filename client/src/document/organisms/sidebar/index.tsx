@@ -4,28 +4,6 @@ import "./index.scss";
 import { Doc, RelatedContent } from "../../types";
 import React from "react";
 
-function ScrollTopLink({
-  to,
-  children,
-}: {
-  to: string;
-  children: React.ReactNode;
-}) {
-  return (
-    <Link
-      to={to}
-      onClick={() => {
-        // TODO is this a good idea?!
-        setTimeout(() => {
-          window.scrollTo(0, 0);
-        }, 100);
-      }}
-    >
-      {children}
-    </Link>
-  );
-}
-
 function SidebarContainer({ children }: { children: React.ReactNode }) {
   return (
     <nav id="sidebar-quicklinks" className="sidebar">
@@ -64,11 +42,7 @@ function SidebarLeaf({ parent }: { parent: RelatedContent }) {
   return (
     <>
       <h5>
-        {parent.url ? (
-          <ScrollTopLink to={parent.url}>{parent.title}</ScrollTopLink>
-        ) : (
-          parent.title
-        )}
+        {parent.url ? <a href={parent.url}>{parent.title}</a> : parent.title}
       </h5>
       <ol>
         {parent.content.map((node) => {
@@ -84,7 +58,7 @@ function SidebarLeaf({ parent }: { parent: RelatedContent }) {
                 key={node.url}
                 className={node.isActive ? "active" : undefined}
               >
-                <ScrollTopLink to={node.url}>{node.title}</ScrollTopLink>
+                <a href={node.url}>{node.title}</a>
               </li>
             );
           }
@@ -124,9 +98,7 @@ function SidebarLeaflets({ node }: { node: RelatedContent }) {
                     {childNode.title}
                   </a>
                 ) : (
-                  <ScrollTopLink to={childNode.url}>
-                    {childNode.title}
-                  </ScrollTopLink>
+                  <a href={childNode.url}>{childNode.title}</a>
                 )}
               </li>
             );
