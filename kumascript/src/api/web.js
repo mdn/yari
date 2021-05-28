@@ -26,7 +26,9 @@ function warnBrokenFlawByMacro(macro, href, extra = "") {
   if (!_warned.get(macro).has(href)) {
     _warned.get(macro).add(href);
     console.warn(
-      `In ${macro} the smartLink to ${href} is broken${extra ? ` (${extra})` : ""}`
+      `In ${macro} the smartLink to ${href} is broken${
+        extra ? ` (${extra})` : ""
+      }`
     );
   }
 }
@@ -98,6 +100,9 @@ module.exports = {
                 suggested,
               }
             );
+            flawAttribute = ` data-flaw-src="${util.htmlEscape(
+              flaw.macroSource
+            )}"`;
           }
         } else {
           flaw = this.env.recordNonFatalError(
