@@ -718,7 +718,10 @@ function Macros({
                 aria-label="Click to highlight broken link"
                 title="Click to highlight broken link anchor"
                 style={{ cursor: "zoom-in" }}
-                onClick={() => {
+                onClick={(event) => {
+                  // Otherwise, since this is part of the `<details><summary>...`
+                  // we would here also be expanding the `<details>` tag.
+                  event.preventDefault();
                   focus(flaw.id);
                 }}
               >
