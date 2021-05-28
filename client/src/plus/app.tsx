@@ -1,4 +1,5 @@
 import React from "react";
+import { useLocale } from "./../hooks";
 
 import "./fonts/metropolis.css";
 import "./fonts/inter.css";
@@ -6,10 +7,48 @@ import "./index.scss";
 
 export default function App() {
   const [showDeepDive, setShowDeepDive] = React.useState(false);
+  const [showModal, setShowModal] = React.useState(true);
+  const locale = useLocale();
 
   return (
     <div className="plus">
       <main>
+        {showModal && (
+          <style
+            dangerouslySetInnerHTML={{
+              __html: " html {position:fixed; width: 100%} ",
+            }}
+          />
+        )}
+
+        {showModal && (
+          <div className="modal" aria-expanded={showModal}>
+            <div className="modal-inner">
+              <div className="modal-content">
+                <figure className="dino" />
+                <h1>Thank you for your interest in MDN Plus</h1>
+                <p>
+                  We are grateful for all the feedback you sent our way. The
+                  waitlist signup and survey are now closed, and we’re beginning
+                  work towards an initial release.
+                </p>
+                <p>We'll be in touch soon.</p>
+                <a href={`/${locale}/`}>Back to MDN</a>
+              </div>
+              <button
+                type="button"
+                onClick={() => {
+                  setShowModal(!showModal);
+                }}
+                aria-label="Close modal"
+              >
+                ✖
+              </button>
+              <figure className="mandala" aria-hidden="true" />
+            </div>
+          </div>
+        )}
+
         <header>
           <div className="header-wrapper">
             <div className="header-content">
@@ -24,7 +63,7 @@ export default function App() {
               </p>
             </div>
             <div className="header-illustration">
-              <div className="mandala" />
+              <div className="mandala" aria-hidden="true" />
             </div>
           </div>
         </header>
