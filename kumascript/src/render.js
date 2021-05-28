@@ -61,6 +61,14 @@ function normalizeMacroName(name) {
   return name.replace(/:/g, "-").toLowerCase();
 }
 
+// A global that increments every time it's used.
+// The purpose is to assign relatively unique "flaw IDs" for each non-fatal
+// flaw error instance we generate.
+// This is probably not fully thread-safe but the context is that the
+// non-fatal flaw IDs don't need to be globally unique. And since
+// each document's flaws are recorded in the same thread, it's safe enough.
+let nonFatalFlawIncr = 0;
+
 async function render(
   source,
   pageEnvironment,
@@ -132,6 +140,7 @@ async function render(
       currentResult.errors.nonFatal = [];
     }
     currentResult.errors.nonFatal.push(macroError);
+    macroError.id = `${kind}-${nonFatalFlawIncr++}`;
     return macroError;
   }
 

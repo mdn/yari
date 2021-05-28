@@ -692,6 +692,8 @@ function Macros({
     fetch(`/_open?${sp.toString()}`);
   }
 
+  const { focus } = useAnnotations(flaws);
+
   return (
     <div className="flaw flaw__macros">
       <h3>{humanizeFlawName("macros")}</h3>
@@ -711,6 +713,17 @@ function Macros({
           >
             <summary>
               <code>{flaw.name}</code> from <code>{flaw.macroName}</code>{" "}
+              <span
+                role="img"
+                aria-label="Click to highlight broken link"
+                title="Click to highlight broken link anchor"
+                style={{ cursor: "zoom-in" }}
+                onClick={() => {
+                  focus(flaw.id);
+                }}
+              >
+                👀
+              </span>{" "}
               {isReadOnly ? (
                 <>
                   line {flaw.line}:{flaw.column}
