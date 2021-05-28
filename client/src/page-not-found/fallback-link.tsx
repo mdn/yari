@@ -22,9 +22,8 @@ export default function FallbackLink({ url }: { url: string }) {
   const { locale } = useParams();
   const location = useLocation();
 
-  const [fallbackCheckURL, setFallbackCheckURL] = React.useState<null | string>(
-    null
-  );
+  const [fallbackCheckURL, setFallbackCheckURL] =
+    React.useState<null | string>(null);
 
   const { error, data: document } = useSWR<null | Doc>(
     fallbackCheckURL,
@@ -42,7 +41,7 @@ export default function FallbackLink({ url }: { url: string }) {
   );
 
   React.useEffect(() => {
-    if (url && locale.toLowerCase() !== "en-us") {
+    if (url && url.includes("/docs/") && locale.toLowerCase() !== "en-us") {
       // What if we attempt to see if it would be something there in English?
       // We'll use the `index.json` version of the URL
       let enUSURL = url.replace(`/${locale}/`, "/en-US/");

@@ -1,0 +1,18 @@
+@import "~@mdn/minimalist/sass/vars/layout";
+
+.avatar {
+  margin: 0 auto;
+}
+
+.auth-page-container {
+  .avatar {
+    height: 60px;
+    margin-bottom: $base-spacing;
+    width: 60px;
+
+    @media #{$mq-tablet-and-up} {
+      height: 80px;
+      width: 80px;
+    }
+  }
+}

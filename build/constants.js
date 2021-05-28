@@ -31,6 +31,8 @@ const VALID_FLAW_CHECKS = new Set([
   "bad_pre_tags",
   "sectioning",
   "heading_links",
+  "translation_differences",
+  "unsafe_html",
 ]);
 
 // TODO (far future): Switch to "error" when number of flaws drops.

@@ -2,3 +2,5 @@
 # yarn lockfile v1
 
 
+"@yari-internal/constants@file:../../../libs/constants":
+  version "0.0.1"

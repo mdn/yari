@@ -2,6 +2,7 @@ const fs = require("fs");
 const path = require("path");
 const zlib = require("zlib");
 
+const chalk = require("chalk");
 const cliProgress = require("cli-progress");
 const program = require("@caporal/core").default;
 const { prompt } = require("inquirer");
@@ -10,12 +11,13 @@ const {
   Document,
   slugToFolder,
   translationsOf,
+  CONTENT_ROOT,
   CONTENT_TRANSLATED_ROOT,
+  CONTENT_ARCHIVED_ROOT,
 } = require("../content");
-
+const { VALID_LOCALES } = require("../libs/constants");
 // eslint-disable-next-line node/no-missing-require
 const { renderDocHTML } = require("../ssr/dist/main");
-
 const options = require("./build-options");
 const { buildDocument, renderContributorsTxt } = require("./index");
 const SearchIndex = require("./search-index");
@@ -32,6 +34,10 @@ async function buildDocumentInteractive(
     const document = invalidate
       ? Document.read(documentPath, Document.MEMOIZE_INVALIDATE)
       : Document.read(documentPath);
+
+    if (!document) {
+      throw new Error(`${documentPath} could not be read`);
+    }
 
     if (!interactive) {
       const translations = translationsOf(document.metadata);
@@ -74,13 +80,15 @@ async function buildDocumentInteractive(
 async function buildDocuments(
   files = null,
   quiet = false,
-  interactive = false
+  interactive = false,
+  locales = new Map()
 ) {
   // If a list of files was set, it came from the CLI.
   // Override whatever was in the build options.
-  const findAllOptions = files
-    ? Object.assign({}, options, { files: new Set(files) })
-    : options;
+  const findAllOptions = Object.assign({}, options, { locales });
+  if (files) {
+    findAllOptions.files = new Set(files);
+  }
 
   const documents = Document.findAll(findAllOptions);
   const progressBar = new cliProgress.SingleBar(
@@ -174,8 +182,7 @@ async function buildDocuments(
     }
 
     for (const { id, html } of liveSamples) {
-      const liveSamplePath = path.join(outPath, "_samples_", id, "index.html");
-      fs.mkdirSync(path.dirname(liveSamplePath), { recursive: true });
+      const liveSamplePath = path.join(outPath, `_sample_.${id}.html`);
       fs.writeFileSync(liveSamplePath, html);
     }
 
@@ -187,7 +194,7 @@ async function buildDocuments(
 
     // Collect non-archived documents' slugs to be used in sitemap building and
     // search index building.
-    if (!document.noIndexing) {
+    if (!builtDocument.noIndexing) {
       const { locale, slug } = document.metadata;
       if (!docPerLocale[locale]) {
         docPerLocale[locale] = [];
@@ -275,18 +282,46 @@ program
   .option("-i, --interactive", "Ask what to do when encountering flaws", {
     default: false,
   })
+  .option("-l, --locale <locale...>", "Filtered specific locales", {
+    default: [],
+    validator: [...VALID_LOCALES.keys()],
+  })
   .argument("[files...]", "specific files to build")
   .action(async ({ args, options }) => {
     try {
       if (!options.quiet) {
-        console.log("\nBuilding Documents...");
+        const roots = [
+          ["CONTENT_ROOT", CONTENT_ROOT],
+          ["CONTENT_TRANSLATED_ROOT", CONTENT_TRANSLATED_ROOT],
+          ["CONTENT_ARCHIVED_ROOT", CONTENT_ARCHIVED_ROOT],
+        ];
+        for (const [key, value] of roots) {
+          console.log(
+            `${chalk.grey((key + ":").padEnd(25, " "))}${
+              value ? chalk.white(value) : chalk.grey("not set")
+            }`
+          );
+        }
       }
       const { files } = args;
+
+      // 'true' means we include this locale and all others get excluded.
+      // Some day we might make it an option to set `--not-locale` to
+      // filter out specific locales.
+      const locales = new Map(
+        // The `options.locale` is either an empty array (e.g. no --locale used),
+        // a string (e.g. one single --locale) or an array of strings
+        // (e.g. multiple --locale options).
+        (Array.isArray(options.locale) ? options.locale : [options.locale]).map(
+          (locale) => [locale, true]
+        )
+      );
       const t0 = new Date();
       const { slugPerLocale, peakHeapBytes, totalFlaws } = await buildDocuments(
         files,
         Boolean(options.quiet),
-        Boolean(options.interactive)
+        Boolean(options.interactive),
+        locales
       );
       const t1 = new Date();
       const count = Object.values(slugPerLocale).reduce(

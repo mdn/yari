@@ -9,6 +9,7 @@ const sizeOf = require("image-size");
 const { Document, Image } = require("../content");
 const { FLAW_LEVELS } = require("./constants");
 const { findMatchesInText } = require("./matches-in-text");
+const { DEFAULT_LOCALE } = require("../libs/constants");
 
 /**
  * Mutate the `$` instance for image reference and if appropriate,
@@ -86,7 +87,7 @@ function checkImageReferences(doc, $, options, { url, rawContent }) {
     // a new function dedicated to that.
     let finalSrc = null;
 
-    if (!src.trim()) {
+    if (!src.split("#")[0].trim()) {
       if (checkImages) {
         addImageFlaw(img, src, {
           explanation: "Empty img 'src' attribute",
@@ -119,9 +120,24 @@ function checkImageReferences(doc, $, options, { url, rawContent }) {
           // it now, we still want the full relative URL.
           img.attr("src", absoluteURL.pathname);
         } else {
+          let suggestion = null;
+          // If this document is *not* en-US, perhaps the external image has already
+          // been downloaded by the en-US equivalent. If so, make that the suggestion.
+          if (doc.locale !== DEFAULT_LOCALE) {
+            const filePath = Image.findByURL(
+              [
+                doc.mdn_url.replace(`/${doc.locale}/`, `/${DEFAULT_LOCALE}/`),
+                path.basename(src),
+              ].join("/")
+            );
+            if (filePath) {
+              suggestion = path.basename(filePath);
+            }
+          }
           addImageFlaw(img, src, {
             explanation: "External image URL",
             externalImage: true,
+            suggestion,
           });
         }
       }
@@ -133,16 +149,38 @@ function checkImageReferences(doc, $, options, { url, rawContent }) {
       // We can use the `finalSrc` to look up and find the image independent
       // of the correct case because `Image.findByURL` operates case
       // insensitively.
-      const filePath = Image.findByURL(finalSrc);
+      let filePath = Image.findByURL(finalSrc);
+      let enUSFallback = false;
+      if (
+        !filePath &&
+        doc.locale !== DEFAULT_LOCALE &&
+        !finalSrc.startsWith(`/${DEFAULT_LOCALE.toLowerCase()}/`)
+      ) {
+        const enUSFinalSrc = finalSrc.replace(
+          new RegExp(`^/${doc.locale}/`, "i"),
+          `/${DEFAULT_LOCALE}/`
+        );
+        if (Image.findByURL(enUSFinalSrc)) {
+          // Use the en-US src instead
+          finalSrc = enUSFinalSrc;
+          // Note that this `<img src="...">` value can work if you use the
+          // en-US equivalent URL instead.
+          enUSFallback = true;
+        }
+      }
       if (filePath) {
         filePaths.add(filePath);
       }
 
       if (checkImages) {
-        if (!filePath) {
+        if (enUSFallback) {
+          // If it worked by switching to the en-US src, don't do anything more.
+          // Do nothing! I.e. don't try to perfect the spelling.
+        } else if (!filePath) {
           // E.g. <img src="doesnotexist.png"
           addImageFlaw(img, src, {
-            explanation: "File not present on disk",
+            explanation:
+              "File not present on disk, an empty file, or not an image",
           });
         } else if (!src.includes("/") || src.startsWith("./")) {
           // Always build the `finalSrc` based on correct case.

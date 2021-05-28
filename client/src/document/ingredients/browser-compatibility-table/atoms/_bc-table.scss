@@ -1,3 +1,5 @@
+@use "sass:math";
+
 .bc-table {
   background-color: $neutral-550;
   border: 0;
@@ -18,7 +20,7 @@
     border-left: 1px solid $neutral-100;
     border-right: 0;
     border-top: 1px solid $neutral-100;
-    padding: $base-unit;
+    padding: 0;
     position: relative;
     text-align: center;
   }
@@ -51,7 +53,7 @@
   }
 
   .bc-table-row-header {
-    padding: ($base-spacing / 2) ($base-spacing / 4);
+    padding: math.div($base-spacing, 2) math.div($base-spacing, 4);
 
     code {
       text-decoration: none;
@@ -86,7 +88,7 @@
         border-right: 1px solid $neutral-100;
         display: table-cell;
         overflow: hidden;
-        padding: ($base-spacing / 2) $base-unit;
+        padding: math.div($base-spacing, 2) $base-unit;
         text-align: center;
         vertical-align: middle;
       }
@@ -95,10 +97,15 @@
     tr:nth-child(even) {
       background-color: $neutral-550;
     }
+
+    dl {
+      max-width: 100%;
+    }
   }
 
   .bc-browser-name {
     display: inline-block;
+    padding: math.div($base-spacing, 4);
     width: 75%;
 
     @media #{$mq-small-desktop-and-up} {

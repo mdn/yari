@@ -49,6 +49,17 @@ function redirect(location, { status = 302, cacheControlSeconds = 0 } = {}) {
   } else {
     cacheControlValue = "no-store";
   }
+  // We need to URL encode the pathname, but leave the query string as is.
+  // Suppose the old URL was `/search?q=text%2Dshadow` and all we need to do
+  // is to inject the locale to that URL, we should not URL encode the whole
+  // new URL otherwise you'd end up with `/en-US/search?q=text%252Dshadow`
+  // since the already encoded `%2D` would become `%252D` which is wrong and
+  // different.
+  const [pathname, querystring] = location.split("?", 2);
+  let newLocation = encodeURI(pathname);
+  if (querystring) {
+    newLocation += `?${querystring}`;
+  }
   return {
     status,
     statusDescription,
@@ -56,7 +67,7 @@ function redirect(location, { status = 302, cacheControlSeconds = 0 } = {}) {
       location: [
         {
           key: "Location",
-          value: encodeURI(location),
+          value: newLocation,
         },
       ],
       "cache-control": [
@@ -78,12 +89,30 @@ exports.handler = async (event) => {
   const host = request.headers.host[0].value.toLowerCase();
   const qs = request.querystring ? `?${request.querystring}` : "";
 
-  const { url, status } = resolveFundamental(request.uri);
+  // If the URL was something like `https://domain/en-US/search/`, our code
+  // would make a that a redirect to `/en-US/search` (stripping the trailing slash).
+  // But if it was `https://domain//en-US/search/` it *would* make a redirect
+  // to `//en-US/search`.
+  // However, if pathname starts with `//` the Location header might look
+  // relative but it's actually an absolute URL.
+  // A 302 redirect from `https://domain//evil.com/` actually ends open
+  // opening `https://evil.com/` in the browser, because the browser will
+  // treat `//evil.com/ == https://evil.com/`.
+  // Prevent any pathnames that start with a double //.
+  // This essentially means that a request for `GET /////anything` becomes
+  // 302 with `Location: /anything`.
+  if (request.uri.startsWith("//")) {
+    return redirect(`/${request.uri.replace(/^\/+/g, "")}`);
+  }
+
+  let { url, status } = resolveFundamental(request.uri);
   if (url) {
-    // TODO: Do we want to add the query string to the redirect?
-    //       If we decide we do, then we probably need to change
-    //       the caching policy on the "*/docs/* behavior" to
-    //       cache based on the query strings as well.
+    // NOTE: The query string is not forwarded for document requests,
+    //       as directed by their origin request policy, so it's safe to
+    //       assume "request.querystring" is empty for document requests.
+    if (request.querystring) {
+      url += (url.includes("?") ? "&" : "?") + request.querystring;
+    }
     return redirect(url, {
       status,
       cacheControlSeconds: THIRTY_DAYS,
@@ -100,6 +129,7 @@ exports.handler = async (event) => {
     const path = request.uri.endsWith("/")
       ? request.uri.slice(0, -1)
       : request.uri;
+    // Note that "getLocale" only returns valid locales, never a retired locale.
     const locale = getLocale(request);
     // The only time we actually want a trailing slash is when the URL is just
     // the locale. E.g. `/en-US/` (not `/en-US`)

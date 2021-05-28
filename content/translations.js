@@ -1,5 +1,12 @@
 const Document = require("./document");
 const { VALID_LOCALES } = require("./constants");
+const LANGUAGES_RAW = require("./languages.json");
+
+const LANGUAGES = new Map(
+  Object.entries(LANGUAGES_RAW).map(([locale, data]) => {
+    return [locale.toLowerCase(), data];
+  })
+);
 
 const TRANSLATIONS_OF = new Map();
 
@@ -7,12 +14,11 @@ function gatherTranslations() {
   const iter = Document.findAll().iter();
   for (const {
     metadata: { slug, locale, title },
-    url,
   } of iter) {
     const translation = {
       title,
-      url,
       locale,
+      native: LANGUAGES.get(locale.toLowerCase()).native,
     };
     const translations = TRANSLATIONS_OF.get(slug.toLowerCase());
     if (translations) {
@@ -30,7 +36,10 @@ function gatherTranslations() {
 
 function translationsOf({ slug, locale: currentLocale }) {
   if (TRANSLATIONS_OF.size === 0) {
+    const label = "Time to gather all translations";
+    console.time(label);
     gatherTranslations();
+    console.timeEnd(label);
   }
   const translations = TRANSLATIONS_OF.get(slug.toLowerCase());
   if (translations && currentLocale) {
@@ -57,7 +66,7 @@ function findDocumentTranslations(document) {
       translations.push({
         locale,
         title: translatedDocument.metadata.title,
-        url: translatedDocument.url,
+        native: LANGUAGES.get(locale.toLowerCase()).native,
       });
     }
   }

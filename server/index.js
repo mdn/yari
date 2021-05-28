@@ -23,13 +23,16 @@ const {
 } = require("../content");
 // eslint-disable-next-line node/no-missing-require
 const { prepareDoc, renderDocHTML } = require("../ssr/dist/main");
+const { CSP_VALUE_DEV } = require("../libs/constants");
 
 const { STATIC_ROOT, PROXY_HOSTNAME, FAKE_V1_API } = require("./constants");
 const documentRouter = require("./document");
 const fakeV1APIRouter = require("./fake-v1-api");
-const { searchRoute } = require("./document-watch");
+const { searchIndexRoute } = require("./search-index");
 const flawsRoute = require("./flaws");
+const { translationsRoute } = require("./translations");
 const { staticMiddlewares, originRequestMiddleware } = require("./middlewares");
+const { getRoot } = require("../content/utils");
 
 async function buildDocumentFromURL(url) {
   const document = Document.findByURL(url);
@@ -63,36 +66,53 @@ app.use(originRequestMiddleware);
 
 app.use(staticMiddlewares);
 
+// Depending on if FAKE_V1_API is set, we either respond with JSON based
+// on `.json` files on disk or we proxy the requests to Kuma.
+const proxy = FAKE_V1_API
+  ? fakeV1APIRouter
+  : createProxyMiddleware({
+      target: `${
+        ["developer.mozilla.org", "developer.allizom.org"].includes(
+          PROXY_HOSTNAME
+        )
+          ? "https://"
+          : "http://"
+      }${PROXY_HOSTNAME}`,
+      changeOrigin: true,
+      // proxyTimeout: 20000,
+      // timeout: 20000,
+    });
+
+app.use("/api/v1", proxy);
+// This is an exception and it's only ever relevant in development.
+app.post("/:locale/users/account/signup", proxy);
+
+// It's important that this line comes *after* the setting up for the proxy
+// middleware for `/api/v1` above.
+// See https://github.com/chimurai/http-proxy-middleware/issues/40#issuecomment-163398924
 app.use(express.urlencoded({ extended: true }));
 
-app.use(
-  "/api/v1",
-  // Depending on if FAKE_V1_API is set, we either respond with JSON based
-  // on `.json` files on disk or we proxy the requests to Kuma.
-  FAKE_V1_API
-    ? fakeV1APIRouter
-    : createProxyMiddleware({
-        target: `${
-          ["developer.mozilla.org", "developer.allizom.org"].includes(
-            PROXY_HOSTNAME
-          )
-            ? "https://"
-            : "http://"
-        }${PROXY_HOSTNAME}`,
-        changeOrigin: true,
-        proxyTimeout: 3000,
-        timeout: 3000,
-      })
+app.post(
+  "/csp-violation-capture",
+  express.json({ type: "application/csp-report" }),
+  (req, res) => {
+    const report = req.body["csp-report"];
+    console.warn(
+      chalk.yellow(
+        "CSP violation for directive",
+        report["violated-directive"],
+        "which blocked:",
+        report["blocked-uri"]
+      )
+    );
+    res.sendStatus(200);
+  }
 );
 
 app.use("/_document", documentRouter);
 
 app.get("/_open", (req, res) => {
-  const { line, column, filepath } = req.query;
-  if (!filepath) {
-    throw new Error("No .filepath in the request query");
-  }
-
+  const { line, column, filepath, url } = req.query;
   // Sometimes that 'filepath' query string parameter is a full absolute
   // filepath (e.g. /Users/peterbe/yari/content.../index.html), which usually
   // happens when you this is used from the displayed flaws on a preview
@@ -100,10 +120,22 @@ app.get("/_open", (req, res) => {
   // But sometimes, it's a relative path and if so, it's always relative
   // to the main builder source.
   let absoluteFilepath;
-  if (fs.existsSync(filepath)) {
-    absoluteFilepath = filepath;
+  if (filepath) {
+    if (fs.existsSync(filepath)) {
+      absoluteFilepath = filepath;
+    } else {
+      const [locale] = filepath.split(path.sep);
+      const root = getRoot(locale);
+      absoluteFilepath = path.join(root, filepath);
+    }
+  } else if (url) {
+    const document = Document.findByURL(url);
+    if (!document) {
+      res.status(410).send(`No known document by the URL '${url}'\n`);
+    }
+    absoluteFilepath = document.fileInfo.path;
   } else {
-    absoluteFilepath = path.join(CONTENT_ROOT, filepath);
+    throw new Error("No .filepath or .url in the request query");
   }
 
   // Double-check that the file can be found.
@@ -122,12 +154,14 @@ app.get("/_open", (req, res) => {
   res.status(200).send(`Tried to open ${spec} in ${process.env.EDITOR}`);
 });
 
-app.use("/:locale/search-index.json", searchRoute);
+app.use("/:locale/search-index.json", searchIndexRoute);
 
 app.get("/_flaws", flawsRoute);
 
+app.get("/_translations", translationsRoute);
+
 app.get("/*/contributors.txt", async (req, res) => {
-  const url = req.url.replace(/\/contributors\.txt$/, "");
+  const url = req.path.replace(/\/contributors\.txt$/, "");
   const document = Document.findByURL(url);
   res.setHeader("content-type", "text/plain");
   if (!document) {
@@ -149,7 +183,7 @@ app.get("/*/contributors.txt", async (req, res) => {
 });
 
 app.get("/*", async (req, res) => {
-  if (req.url.startsWith("_")) {
+  if (req.url.startsWith("/_")) {
     // URLs starting with _ is exclusively for the meta-work and if there
     // isn't already a handler, it's something wrong.
     return res.status(404).send("Page not found");
@@ -160,28 +194,29 @@ app.get("/*", async (req, res) => {
     return res.status(404).send("Page not found");
   }
 
-  if (req.url.includes("/_samples_/")) {
+  if (req.url.includes("/_sample_.")) {
     try {
-      return res.send(await buildLiveSamplePageFromURL(req.url));
+      return res.send(await buildLiveSamplePageFromURL(req.path));
     } catch (e) {
       return res.status(404).send(e.toString());
     }
   }
 
   if (!req.url.includes("/docs/")) {
-    // This should really only be expected for "single page apps".
-    // All *documents* should be handled by the
-    // `if (req.url.includes("/docs/"))` test above.
-    res.sendFile(path.join(STATIC_ROOT, "/index.html"));
-    return;
+    // If it's a known SPA, like `/en-US/search` then that should have been
+    // matched to its file and not end up here in the catchall handler.
+    // Simulate what we do in the Lambda@Edge.
+    return res
+      .status(404)
+      .sendFile(path.join(STATIC_ROOT, "en-us", "_spas", "404.html"));
   }
 
   // TODO: Would be nice to have a list of all supported file extensions
   // in a constants file.
-  if (/\.(png|webp|gif|jpe?g|svg)$/.test(req.url)) {
+  if (/\.(png|webp|gif|jpe?g|svg)$/.test(req.path)) {
     // Remember, Image.findByURL() will return the absolute file path
     // iff it exists on disk.
-    const filePath = Image.findByURL(req.url);
+    const filePath = Image.findByURL(req.path);
     if (filePath) {
       // The second parameter to `send()` has to be either a full absolute
       // path or a path that doesn't start with `../` otherwise you'd
@@ -192,12 +227,12 @@ app.get("/*", async (req, res) => {
     return res.status(404).send("File not found on disk");
   }
 
-  let lookupURL = decodeURI(req.url);
+  let lookupURL = decodeURI(req.path);
   let extraSuffix = "";
   let bcdDataURL = "";
   const bcdDataURLRegex = /\/(bcd-\d+|bcd)\.json$/;
 
-  if (req.url.endsWith("index.json")) {
+  if (req.path.endsWith("index.json")) {
     // It's a bit special then.
     // The URL like me something like
     // /en-US/docs/HTML/Global_attributes/index.json
@@ -206,8 +241,8 @@ app.get("/*", async (req, res) => {
     // temporarily remove it and remember to but it back when we're done.
     extraSuffix = "/index.json";
     lookupURL = lookupURL.replace(extraSuffix, "");
-  } else if (bcdDataURLRegex.test(req.url)) {
-    bcdDataURL = req.url;
+  } else if (bcdDataURLRegex.test(req.path)) {
+    bcdDataURL = req.path;
     lookupURL = lookupURL.replace(bcdDataURLRegex, "");
   }
 
@@ -249,6 +284,7 @@ app.get("/*", async (req, res) => {
   if (isJSONRequest) {
     res.json({ doc: document });
   } else {
+    res.header("Content-Security-Policy", CSP_VALUE_DEV);
     res.send(renderDocHTML(document, lookupURL));
   }
 });

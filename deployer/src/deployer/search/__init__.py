@@ -2,14 +2,19 @@ import json
 import re
 import time
 from pathlib import Path
-from collections import defaultdict
+from collections import Counter
 
 import click
-from elasticsearch.helpers import streaming_bulk
+from elasticsearch.helpers import parallel_bulk
+from elasticsearch_dsl import Index
 from elasticsearch_dsl.connections import connections
 from selectolax.parser import HTMLParser
 
-from .models import Document
+from .models import Document, INDEX_ALIAS_NAME
+
+
+class IndexAliasError(Exception):
+    """When there's something wrong with finding the index alias."""
 
 
 def index(
@@ -17,11 +22,10 @@ def index(
     url: str,
     update=False,
     no_progressbar=False,
-    priority_prefixes: (str) = (),
 ):
     # We can confidently use a single host here because we're not searching
     # a cluster.
-    connections.create_connection(hosts=[url])
+    connections.create_connection(hosts=[url], retry_on_timeout=True)
     connection = connections.get_connection()
     health = connection.cluster.health()
     status = health["status"]
@@ -34,63 +38,110 @@ def index(
 
     click.echo(f"Found {count_todo:,} (potential) documents to index")
 
-    # Confusingly, `._index` is actually not a private API.
-    # It's the documented way you're supposed to reach it.
-    document_index = Document._index
-    if not update:
+    if update:
+        for name in connection.indices.get_alias():
+            if name.startswith(f"{INDEX_ALIAS_NAME}_"):
+                document_index = Index(name)
+                break
+        else:
+            raise IndexAliasError(
+                f"Unable to find an index called {INDEX_ALIAS_NAME}_*"
+            )
+
+    else:
+        # Confusingly, `._index` is actually not a private API.
+        # It's the documented way you're supposed to reach it.
+        document_index = Document._index
         click.echo(
             "Deleting any possible existing index "
-            f"and creating a new one called {document_index._name}"
+            f"and creating a new one called {document_index._name!r}"
         )
         document_index.delete(ignore=404)
         document_index.create()
 
-    search_prefixes = [None]
-    for prefix in reversed(priority_prefixes):
-        search_prefixes.insert(0, prefix)
-
-    count_by_prefix = defaultdict(int)
-
-    already = set()
-
     skipped = []
 
     def generator():
-        for prefix in search_prefixes:
-            root = Path(buildroot)
-            if prefix:
-                root /= prefix
-            for doc in walk(root):
-                if doc in already:
-                    continue
-                already.add(doc)
-                search_doc = to_search(doc)
-                if search_doc:
-                    count_by_prefix[prefix] += 1
-                    yield search_doc.to_dict(True)
-                else:
-                    # The reason something might be chosen to be skipped is because
-                    # there's logic that kicks in only when the `index.json` file
-                    # has been opened and parsed.
-                    # Keep a count of all of these. It's used to make sure the
-                    # progressbar, if used, ticks as many times as the estimate
-                    # count was.
-                    skipped.append(1)
+        root = Path(buildroot)
+        for doc in walk(root):
+            # The reason for specifying the exact index name is that we might
+            # be doing an update and if you don't specify it, elasticsearch_dsl
+            # will fall back to using whatever Document._meta.Index automatically
+            # becomes in this moment.
+            search_doc = to_search(doc, _index=document_index._name)
+            if search_doc:
+                yield search_doc.to_dict(True)
+            else:
+                # The reason something might be chosen to be skipped is because
+                # there's logic that kicks in only when the `index.json` file
+                # has been opened and parsed.
+                # Keep a count of all of these. It's used to make sure the
+                # progressbar, if used, ticks as many times as the estimate
+                # count was.
+                skipped.append(1)
 
     def get_progressbar():
         if no_progressbar:
             return VoidProgressBar()
         return click.progressbar(length=count_todo, label="Indexing", width=0)
 
-    count_done = 0
+    count_done = count_worked = count_errors = 0
+    count_shards_worked = count_shards_failed = 0
+    errors_counter = Counter()
     t0 = time.time()
     with get_progressbar() as bar:
-        for x in streaming_bulk(connection, generator(), index=document_index._name):
+        for success, info in parallel_bulk(
+            connection,
+            generator(),
+            # If the bulk indexing failed, it will by default raise a BulkIndexError.
+            # Setting this to 'False' will suppress that.
+            raise_on_exception=False,
+            # If the bulk operation failed for some other reason like a ReadTimeoutError
+            # it will raise whatever the error but default.
+            # We prefer to swallow all errors under the assumption that the holes
+            # will hopefully be fixed in the next attempt.
+            raise_on_error=False,
+        ):
+            if success:
+                count_shards_worked += info["index"]["_shards"]["successful"]
+                count_shards_failed += info["index"]["_shards"]["failed"]
+                count_worked += 1
+            else:
+                count_errors += 1
+                errors_counter[info["index"]["error"]] += 1
             count_done += 1
             bar.update(1)
 
         for skip in skipped:
             bar.update(1)
+
+    # Now when the index has been filled, we need to make sure we
+    # correct any previous indexes.
+    if update:
+        # When you do an update, Elasticsearch will internally delete the
+        # previous docs (based on the _id primary key we set).
+        # Normally, Elasticsearch will do this when you restart the cluster
+        # but that's not something we usually do.
+        # See https://www.elastic.co/guide/en/elasticsearch/reference/current/indices-forcemerge.html
+        document_index.forcemerge()
+    else:
+        # Now we're going to bundle the change to set the alias to point
+        # to the new index and delete all old indexes.
+        # The reason for doing this together in one update is to make it atomic.
+        alias_updates = [
+            {"add": {"index": document_index._name, "alias": INDEX_ALIAS_NAME}}
+        ]
+        for index_name in connection.indices.get_alias():
+            if index_name.startswith(f"{INDEX_ALIAS_NAME}_"):
+                if index_name != document_index._name:
+                    alias_updates.append({"remove_index": {"index": index_name}})
+                    click.echo(f"Delete old index {index_name!r}")
+
+        connection.indices.update_aliases({"actions": alias_updates})
+        click.echo(
+            f"Reassign the {INDEX_ALIAS_NAME!r} alias from old index "
+            f"to {document_index._name}"
+        )
 
     t1 = time.time()
     took = t1 - t0
@@ -99,14 +150,15 @@ def index(
         f"Took {format_time(took)} to index {count_done:,} documents. "
         f"Approximately {rate:.1f} docs/second"
     )
-    if priority_prefixes:
-        click.echo("Counts per priority prefixes:")
-        rest = sum(v for v in count_by_prefix.values())
-        for prefix in priority_prefixes:
-            click.echo(f"\t{prefix:<30} {count_by_prefix[prefix]:,}")
-            rest -= count_by_prefix[prefix]
-        prefix = "*rest*"
-        click.echo(f"\t{prefix:<30} {rest:,}")
+    click.echo(
+        f"Count shards - successful: {count_shards_worked:,} "
+        f"failed: {count_shards_failed:,}"
+    )
+    click.echo(f"Counts - worked: {count_worked:,} errors: {count_errors:,}")
+    if errors_counter:
+        click.echo("Most common errors....")
+        for error, count in errors_counter.most_common():
+            click.echo(f"{count:,}\t{error[:80]}")
 
 
 class VoidProgressBar:
@@ -144,7 +196,7 @@ def walk(root):
             yield path
 
 
-def to_search(file):
+def to_search(file, _index=None):
     with open(file) as f:
         data = json.load(f)
     if "doc" not in data:
@@ -168,6 +220,7 @@ def to_search(file):
         return
     locale = locale[1:]
     return Document(
+        _index=_index,
         _id=doc["mdn_url"],
         title=doc["title"],
         # This is confusing. But it's worth hacking around for now until
@@ -265,7 +318,7 @@ def analyze(
 ):
     # We can confidently use a single host here because we're not searching a cluster.
     connections.create_connection(hosts=[url])
-    index = Document._index
+    index = Index(INDEX_ALIAS_NAME)
     analysis = index.analyze(body={"text": text, "analyzer": analyzer})
     print(f"For text: {text!r}")
     if "tokens" in analysis:

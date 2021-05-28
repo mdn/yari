@@ -131,6 +131,30 @@ This is to make it convenient in GitHub Actions to control the
 execution purely based on the presence of the
 environment variable.
 
+### About Elasticsearch aliases
+
+The default behavior is that each day you get a different index name.
+E.g. `mdn_docs_20210331093714`. And then there's an alias with a more "generic" name.
+E.g. `mdn_docs`. It's the alias name that Kuma uses to send search queries to.
+
+The way indexing works is that we leave the existing index and its alias in place,
+then we fill up a new index and once that works, we atomically "move the alias" and
+delete the old index. To demonstrate, consider this example timeline:
+
+- Yesterday: index `mdn_docs_20210330093714` and `mdn_docs --> mdn_docs_20210330093714`
+- Today:
+  - create new index `mdn_docs_20210331094500`
+  - populate `mdn_docs_20210331094500` (could take a long time)
+  - atomically re-assign alias `mdn_docs --> mdn_docs_20210331094500` and delete old index `mdn_docs_20210330093714`
+  - delete old index `mdn_docs_20210330`
+
+Note, this only applies if you _don't_ use `--update`.
+If you use `--update` it will just keep adding to the existing index whose
+name is based on today's date.
+
+What this means it that **there is zero downtime for the search queries**. Nothing
+needs to be reconfigured on the Kuma side.
+
 ### To update or not start a fresh
 
 The default behavior is that it deletes the index first and immediately creates
@@ -148,25 +172,99 @@ only from time to time omit it for a fresh new start.
 But note, if you omit the `--update` (i.e. recreating the index), search
 will work. It just may find less that it finds when it's fully indexed.
 
-### Priority prefixes
+## Analyze PR builds
 
-When you index without `--update` it will delete and recreate the index.
-That means that during the time you're indexing, the searches that are happening
-concurrently will not find much. That's probably OK in most cases but you
-can adjust the priority of what gets indexed first. This has the advantage
-that most searches, that are expecting to find content in the popular document,
-will get something useful while the indexing is going on.
-
-To set up one or multiple priority prefixes use the `--priority-prefixes`
-(or just `-p` for short). Best described with an example:
+When you've built files you can analyze those built files to produce a Markdown
+comment that you can post as a PR issue comment. To do that, run:
 
 ```sh
-poetry run deployer search-index ../client/build -p en-us/docs/web -p en-us/docs
+poetry run deployer analyze-pr-build ../client/build
 ```
 
-This will first index all the files whose `index.json` file path (relative
-to the root) matches `en-us/docs/web`. Then it does all that match `en-us/docs`.
-And lastly, it does all the files that don't match any of the prefixes.
+But the actions are controlled by various options. You can mix and match these:
+
+### `--analyze-flaws`
+
+This will open each built `index.json` and look through the `.flaws` and try to
+convert each flaw into a list.
+
+### `--analyze-dangerous-content`
+
+It will analyze all the content and look for content that could be "dangerous".
+For example, it will list all external URLs found in the content.
+
+### `--prefix`
+
+The `prefix` refers to a prefix in the Deployer upload. I.e. what you set when
+you run `poetry run deployer upload --prefix=THIS`.
+The `prefix` is used to specify the proper Dev subdomain (`{prefix}.content.dev.mdn.mozit.cloud`) for the URLs of the built documents. For example,
+if `--prefix experiment1` is specified, it will list:
+
+```md
+## Preview URLs
+
+- <https://experiment1.content.dev.mdn.mozit.cloud/en-US/docs/MDN/Kitchensink>
+```
+
+...assuming the only page that was built was `build/en-us/docs/mdn/kitchensink`.
+Note that this assumes the PR build has been deployed to the Dev server.
+
+### `--repo`
+
+This is useful for debugging when the PR you made wasn't on `mdn/content`. For example:
+
+```sh
+poetry run deployer analyze-pr-build ../client/build --repo peterbe/content ...
+```
+
+### `--github-token`
+
+By default it will pick up the `$GITHUB_TOKEN` environment variable but with this
+option you can override it.
+
+### `--pr-number`
+
+This is needed to be able to find the PR (on <https://github.com/mdn/content/pulls>)
+to post the comment to.
+
+### `--verbose`
+
+This is mostly useful for local development or when debugging. It determines whether
+to print to `stdout` what it would post as a PR issue comment.
+
+This option, just like the `--dry-run` is technically part of the `deployer` command
+and not the `analyze-pr-build` sub-command. So put it before the `analyze-pr-build`.
+
+### A complete example
+
+This example demonstrates all options.
+
+```sh
+poetry run deployer --verbose --dry-run analyze-pr-build ../client/build \
+  --analyze-flaws --analyze-dangerous-content --github-token="xxx" \
+  --repo=peterbe/content --pr-number=3
+```
+
+## Debugging Analyze PR builds
+
+An important part of the `analyze-pr-builds` command is that it must be easy to
+debug and develop further without having to rely on landing code in `main`
+and seeing how it worked.
+
+The first thing you need to do is to download a `build` artifact or to simply
+run `yarn build` and use the `../client/build` directory. To download the artifact
+go to a finished "PR Test" workflow,
+like <https://github.com/mdn/content/pull/3381/checks?check_run_id=2169672013> for
+example. Near the upper right-hand corner of the content (near the "Re-run jobs"
+button) it says "Artifacts (1)". Download that `build.zip` file somewhere and unpack
+it. Now you can run:
+
+```sh
+poetry run deployer --verbose analyze-pr-build ~/Downloads/build ...
+```
+
+You can even go and get a personal access token and set `$GITHUB_TOKEN`
+(assuming it has the right scopes) and have it actually post the comment.
 
 ## Environment variables
 
