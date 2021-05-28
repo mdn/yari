@@ -484,7 +484,7 @@
         }
 
         p {
-          font-size: clamp(15px, calc(2vw * 0.5), 18px);
+          font-size: clamp(16px, calc(2vw * 0.6), 17px);
 
           @media #{$mq-large-desktop-and-up} {
             font-size: clamp(16px, calc(2vw * 0.6), 18px);
