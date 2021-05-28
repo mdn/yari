@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useLocale } from "./../hooks";
 
 import "./fonts/metropolis.css";
@@ -10,17 +10,21 @@ export default function App() {
   const [showModal, setShowModal] = React.useState(true);
   const locale = useLocale();
 
+  useEffect(() => {
+    if (!showModal) {
+      return;
+    }
+    const root = document.documentElement;
+    const { position, width } = root.style;
+    Object.assign(root.style, { position: "fixed", width: "100%" });
+    return () => {
+      Object.assign(root.style, { position, width });
+    };
+  }, [showModal]);
+
   return (
     <div className="plus">
       <main>
-        {showModal && (
-          <style
-            dangerouslySetInnerHTML={{
-              __html: " html {position:fixed; width: 100%} ",
-            }}
-          />
-        )}
-
         {showModal && (
           <div className="modal" aria-expanded={showModal}>
             <div className="modal-inner">
