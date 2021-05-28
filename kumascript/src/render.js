@@ -231,9 +231,6 @@ async function render(
           macroError = new MacroNotFoundError(e, source, token);
         } else if (e.name === "SyntaxError") {
           // There was a syntax error compiling the macro
-          console.log(e);
-          console.log(token);
-          console.log(source);
           macroError = new MacroCompilationError(e, source, token);
         } else {
           // There was a runtime error executing the macro
