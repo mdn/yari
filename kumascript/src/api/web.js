@@ -102,7 +102,7 @@ module.exports = {
             );
             flawAttribute = ` data-flaw="${
               flaw.id
-            } data-flaw-src="${util.htmlEscape(flaw.macroSource)}"`;
+            }" data-flaw-src="${util.htmlEscape(flaw.macroSource)}"`;
           }
         } else {
           flaw = this.env.recordNonFatalError(
