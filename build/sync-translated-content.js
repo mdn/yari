@@ -40,13 +40,8 @@ function syncAllTranslatedContent(locale) {
   };
 
   for (const f of files) {
-    const {
-      moved,
-      conflicting,
-      redirect,
-      orphaned,
-      followed,
-    } = syncTranslatedContent(f, locale);
+    const { moved, conflicting, redirect, orphaned, followed } =
+      syncTranslatedContent(f, locale);
     if (redirect) {
       redirects.set(redirect[0], redirect[1]);
     }
@@ -78,17 +73,11 @@ function resolve(slug) {
   const url = buildURL("en-us", slug);
   const resolved = Redirect.resolve(url);
   if (url !== resolved) {
-    const filePath = path.join(
-      CONTENT_ROOT,
-      Document.urlToFolderPath(resolved),
-      "index.html"
-    );
-    if (!fs.existsSync(filePath)) {
+    const doc = Document.read(resolved);
+    if (!doc) {
       return slug;
     }
-    const {
-      attributes: { slug: resolvedSlug },
-    } = fm(fs.readFileSync(filePath, "utf8"));
+    const resolvedSlug = doc.url;
     if (slug !== resolvedSlug) {
       return resolvedSlug;
     }
@@ -111,7 +100,8 @@ function syncTranslatedContent(inFilePath, locale) {
   };
 
   const rawDoc = fs.readFileSync(inFilePath, "utf8");
-  const { attributes: oldMetadata, body: rawHTML } = fm(rawDoc);
+  const fileName = path.basename(inFilePath);
+  const { attributes: oldMetadata, body: rawBody } = fm(rawDoc);
   const resolvedSlug = resolve(oldMetadata.slug);
   const metadata = {
     ...oldMetadata,
@@ -150,7 +140,7 @@ function syncTranslatedContent(inFilePath, locale) {
       slugToFolder(metadata.slug)
     );
 
-    const filePath = path.join(folderPath, "index.html");
+    const filePath = path.join(folderPath, fileName);
     return filePath;
   };
 
@@ -158,7 +148,7 @@ function syncTranslatedContent(inFilePath, locale) {
   let filePath = getFilePath();
 
   status.orphaned = !fs.existsSync(
-    path.join(CONTENT_ROOT, "en-us", slugToFolder(metadata.slug), "index.html")
+    path.join(CONTENT_ROOT, "en-us", slugToFolder(metadata.slug), fileName)
   );
 
   if (!status.moved && !status.orphaned) {
@@ -204,7 +194,7 @@ function syncTranslatedContent(inFilePath, locale) {
   fs.mkdirSync(path.dirname(filePath), { recursive: true });
   execGit(["mv", inFilePath, filePath], { cwd: CONTENT_TRANSLATED_ROOT });
   metadata.original_slug = oldMetadata.slug;
-  Document.saveHTMLFile(filePath, Document.trimLineEndings(rawHTML), metadata);
+  Document.saveFile(filePath, Document.trimLineEndings(rawBody), metadata);
   try {
     fs.rmdirSync(path.dirname(inFilePath));
   } catch (e) {

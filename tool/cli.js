@@ -10,6 +10,7 @@ const {
   syncAllTranslatedContent,
 } = require("../build/sync-translated-content");
 const log = require("loglevel");
+const cheerio = require("cheerio");
 
 const { DEFAULT_LOCALE, VALID_LOCALES } = require("../libs/constants");
 const {
@@ -19,6 +20,7 @@ const {
   Redirect,
   Document,
   buildURL,
+  getRoot,
 } = require("../content");
 const { buildDocument, gatherGitHistory, buildSPAs } = require("../build");
 const {
@@ -26,7 +28,10 @@ const {
   GOOGLE_ANALYTICS_ACCOUNT,
   GOOGLE_ANALYTICS_DEBUG,
 } = require("../build/constants");
+const { runArchive } = require("./archive");
 const { runMakePopularitiesFile } = require("./popularities");
+const { runOptimizeClientBuild } = require("./optimize-client-build");
+const kumascript = require("../kumascript");
 
 const PORT = parseInt(process.env.SERVER_PORT || "5000");
 
@@ -381,14 +386,11 @@ program
     "gather-git-history",
     "Extract all last-modified dates from the git logs"
   )
-  .option("--root <directory>", "Which content root", {
-    default: CONTENT_ROOT,
-  })
   .option("--save-history <path>", "File to save all previous history")
   .option("--load-history <path>", "Optional file to load all previous history")
   .action(
     tryOrExit(async ({ options }) => {
-      const { root, saveHistory, loadHistory } = options;
+      const { saveHistory, loadHistory, verbose } = options;
       if (loadHistory) {
         if (fs.existsSync(loadHistory)) {
           console.log(
@@ -396,8 +398,12 @@ program
           );
         }
       }
+      const roots = [CONTENT_ROOT];
+      if (CONTENT_TRANSLATED_ROOT) {
+        roots.push(CONTENT_TRANSLATED_ROOT);
+      }
       const map = gatherGitHistory(
-        root,
+        roots,
         loadHistory && fs.existsSync(loadHistory) ? loadHistory : null
       );
       const historyPerLocale = {};
@@ -405,24 +411,33 @@ program
       // Someplace to put the map into an object so it can be saved into `saveHistory`
       const allHistory = {};
       for (const [relPath, value] of map) {
-        allHistory[relPath] = value;
         const locale = relPath.split(path.sep)[0];
+        if (!VALID_LOCALES.has(locale)) {
+          continue;
+        }
+        allHistory[relPath] = value;
         if (!historyPerLocale[locale]) {
           historyPerLocale[locale] = {};
         }
         historyPerLocale[locale][relPath] = value;
       }
+      let filesWritten = 0;
       for (const [locale, history] of Object.entries(historyPerLocale)) {
+        const root = getRoot(locale);
         const outputFile = path.join(root, locale, "_githistory.json");
         fs.writeFileSync(outputFile, JSON.stringify(history, null, 2), "utf-8");
-        console.log(
-          chalk.green(
-            `Wrote '${locale}' ${Object.keys(
-              history
-            ).length.toLocaleString()} paths into ${outputFile}`
-          )
-        );
+        filesWritten += 1;
+        if (verbose) {
+          console.log(
+            chalk.green(
+              `Wrote '${locale}' ${Object.keys(
+                history
+              ).length.toLocaleString()} paths into ${outputFile}`
+            )
+          );
+        }
       }
+      console.log(chalk.green(`Wrote ${filesWritten} _githistory.json files`));
       if (saveHistory) {
         fs.writeFileSync(
           saveHistory,
@@ -577,6 +592,42 @@ program
     })
   )
 
+  .command("archive", "Render and copy to archived-content repo")
+  .option("--remove", "Also delete from active repos", { default: false })
+  .option(
+    "--redirect-to-github",
+    "Put in a redirect to browsing it on github.com/mdn/archived-content",
+    {
+      default: false,
+    }
+  )
+  .argument("<slugs...>", "slug trees (e.g. 'Mozilla/Virtualenv')")
+  .action(
+    tryOrExit(async ({ args, options, logger }) => {
+      if (!CONTENT_ARCHIVED_ROOT) {
+        throw new Error("CONTENT_ARCHIVED_ROOT not set");
+      }
+      if (!CONTENT_TRANSLATED_ROOT) {
+        throw new Error("CONTENT_TRANSLATED_ROOT not set");
+      }
+      const { slugs } = args;
+      const { verbose } = options;
+      const archivedResults = await runArchive(slugs, options);
+      if (verbose) {
+        for (const result of archivedResults) {
+          // console.log(result);
+          logger.info(
+            `${chalk.grey(result.document.fileInfo.path)} --> ${chalk.green(
+              result.folderPath
+            )} ${result.removed ? chalk.yellow(" also removed!") : ""}`
+          );
+        }
+      } else {
+        logger.info(`Archived ${archivedResults.length} documents`);
+      }
+    })
+  )
+
   .command(
     "unarchive",
     "Move content from CONTENT_ARCHIVED_ROOT to CONTENT_ROOT"
@@ -624,37 +675,18 @@ program
 
   .command(
     "popularities",
-    "Convert a Google Analytics pageviews CSV into a popularities.json file"
+    "Convert an AWS Athena log aggregation CSV into a popularities.json file"
   )
-  .option(
-    "--outfile <path>",
-    "export from Google Analytics containing pageview counts",
-    {
-      default: path.join(CONTENT_ROOT, "popularities.json"),
-    }
-  )
-  .option(
-    "--max-uris <number>",
-    "export from Google Analytics containing pageview counts",
-    {
-      default: MAX_GOOGLE_ANALYTICS_URIS,
-    }
-  )
-  .argument("csvfile", "Google Analytics pageviews CSV file", {
-    validator: (value) => {
-      if (!fs.existsSync(value)) {
-        throw new Error(`${value} does not exist`);
-      }
-      return value;
-    },
+  .option("--outfile <path>", "output file", {
+    default: path.join(CONTENT_ROOT, "popularities.json"),
+  })
+  .option("--max-uris <number>", "limit to top <number> entries", {
+    default: MAX_GOOGLE_ANALYTICS_URIS,
   })
   .action(
-    tryOrExit(async ({ args, options, logger }) => {
-      const {
-        rowCount,
-        popularities,
-        pageviews,
-      } = await runMakePopularitiesFile(args.csvfile, options);
+    tryOrExit(async ({ options, logger }) => {
+      const { rowCount, popularities, pageviews } =
+        await runMakePopularitiesFile(options);
       logger.info(chalk.green(`Parsed ${rowCount.toLocaleString()} rows.`));
 
       const numberKeys = Object.keys(popularities).length;
@@ -747,6 +779,171 @@ if (Mozilla && !Mozilla.dntEnabled()) {
   .action(
     tryOrExit(async ({ options }) => {
       await buildSPAs(options);
+    })
+  )
+
+  .command(
+    "macros",
+    "Render and/or remove one or more macros from one or more documents"
+  )
+  .option("-f, --force", "Render even if there are non-fixable flaws", {
+    default: false,
+  })
+  .argument("<cmd>", 'must be either "render" or "remove"')
+  .argument("<foldersearch>", "folder of documents to target")
+  .argument("<macros...>", "one or more macro names")
+  .action(
+    tryOrExit(async ({ args, options }) => {
+      if (!CONTENT_ROOT) {
+        throw new Error("CONTENT_ROOT not set");
+      }
+      if (!CONTENT_TRANSLATED_ROOT) {
+        throw new Error("CONTENT_TRANSLATED_ROOT not set");
+      }
+      const { force } = options;
+      const { cmd, foldersearch, macros } = args;
+      const cmdLC = cmd.toLowerCase();
+      if (!["render", "remove"].includes(cmdLC)) {
+        throw new Error(`invalid macros command "${cmd}"`);
+      }
+      console.log(
+        `${cmdLC} the macro(s) ${macros
+          .map((m) => `"${m}"`)
+          .join(", ")} within content folder(s) matching "${foldersearch}"`
+      );
+      const documents = Document.findAll({
+        folderSearch: foldersearch,
+        quiet: true,
+      });
+      if (!documents.count) {
+        throw new Error("no documents found");
+      }
+
+      async function renderOrRemoveMacros(document) {
+        try {
+          return await kumascript.render(document.url, {
+            invalidateCache: true,
+            selective_mode: [cmdLC, macros],
+          });
+        } catch (error) {
+          if (error.name === "MacroInvocationError") {
+            error.updateFileInfo(document.fileInfo);
+            throw new Error(
+              `error trying to parse ${error.filepath}, line ${error.line} column ${error.column} (${error.error.message})`
+            );
+          }
+          // Any other unexpected error re-thrown.
+          throw error;
+        }
+      }
+
+      let countTotal = 0;
+      let countSkipped = 0;
+      let countModified = 0;
+      let countNoChange = 0;
+      for (const document of documents.iter()) {
+        countTotal++;
+        console.group(`${document.fileInfo.path}:`);
+        const originalRawBody = document.rawBody;
+        let [renderedHTML, flaws] = await renderOrRemoveMacros(document);
+        if (flaws.length) {
+          const fixableFlaws = flaws.filter((f) => f.redirectInfo);
+          const nonFixableFlaws = flaws.filter((f) => !f.redirectInfo);
+          const nonFixableFlawNames = [
+            ...new Set(nonFixableFlaws.map((f) => f.name)).values(),
+          ].join(", ");
+          if (force || nonFixableFlaws.length === 0) {
+            // They're all fixable or we don't care if some or all are
+            // not, but let's at least fix any that we can.
+            if (nonFixableFlaws.length > 0) {
+              console.log(
+                `ignoring ${nonFixableFlaws.length} non-fixable flaw(s) (${nonFixableFlawNames})`
+              );
+            }
+            if (fixableFlaws.length) {
+              console.group(
+                `fixing ${fixableFlaws.length} fixable flaw(s) before proceeding:`
+              );
+              // Let's start fresh so we don't keep the "data-flaw-src"
+              // attributes that may have been injected during the rendering.
+              document.rawBody = originalRawBody;
+              for (const flaw of fixableFlaws) {
+                const suggestion = flaw.macroSource.replace(
+                  flaw.redirectInfo.current,
+                  flaw.redirectInfo.suggested
+                );
+                document.rawBody = document.rawBody.replace(
+                  flaw.macroSource,
+                  suggestion
+                );
+                console.log(`${flaw.macroSource} --> ${suggestion}`);
+              }
+              console.groupEnd();
+              Document.update(
+                document.url,
+                document.rawBody,
+                document.metadata
+              );
+              // Ok, we've fixed the fixable flaws, now let's render again.
+              [renderedHTML, flaws] = await renderOrRemoveMacros(document);
+            }
+          } else {
+            // There are one or more flaws that we can't fix, and we're not
+            // going to ignore them, so let's skip this document.
+            console.log(
+              `skipping, has ${nonFixableFlaws.length} non-fixable flaw(s) (${nonFixableFlawNames})`
+            );
+            console.groupEnd();
+            countSkipped++;
+            continue;
+          }
+        }
+        // The Kumascript rendering wraps the result with a "body" tag
+        // (and more), so let's extract the HTML content of the "body"
+        // to get what we'll store in the document.
+        const $ = cheerio.load(renderedHTML);
+        const newRawHTML = $("body").html();
+        if (newRawHTML !== originalRawBody) {
+          Document.update(document.url, newRawHTML, document.metadata);
+          console.log(`modified`);
+          countModified++;
+        } else {
+          console.log(`no change`);
+          countNoChange++;
+        }
+        console.groupEnd();
+      }
+      console.log(
+        `modified: ${countModified} | no-change: ${countNoChange} | skipped: ${countSkipped} | total: ${countTotal}`
+      );
+    })
+  )
+
+  .command(
+    "optimize-client-build",
+    "After the client code has been built there are things to do that react-scripts can't."
+  )
+  .argument("<buildroot>", "directory where react-scripts built", {
+    default: path.join("client", "build"),
+  })
+  .action(
+    tryOrExit(async ({ args, options, logger }) => {
+      const { buildroot } = args;
+      const { results } = await runOptimizeClientBuild(buildroot);
+      if (options.verbose) {
+        for (const result of results) {
+          logger.info(`${result.filePath} -> ${result.hashedHref}`);
+        }
+      } else {
+        logger.info(
+          chalk.green(
+            `Hashed ${results.length} files in ${path.join(
+              buildroot,
+              "index.html"
+            )}`
+          )
+        );
+      }
     })
   );
 

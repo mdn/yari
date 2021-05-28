@@ -12,6 +12,9 @@
 //      appearance of the link.
 
 var spec   = $0;
+if (spec.includes('\n')) {
+  throw new Error("SpecName first argument can't have a newline character in it");
+}
 var anchor = $1;
 var name;
 var url;

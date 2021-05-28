@@ -1,5 +1,5 @@
 import React from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useSearchParams, useParams, useNavigate } from "react-router-dom";
 import useSWR, { mutate } from "swr";
 
 import { CRUD_MODE } from "../constants";
@@ -9,17 +9,19 @@ import { Doc } from "./types";
 // Ingredients
 import { Prose, ProseWithHeading } from "./ingredients/prose";
 import { LazyBrowserCompatibilityTable } from "./lazy-bcd-table";
+import { SpecificationSection } from "./ingredients/spec-section";
 
 // Misc
 // Sub-components
 import { Breadcrumbs } from "../ui/molecules/breadcrumbs";
 import { LanguageToggle } from "../ui/molecules/language-toggle";
+import { LocalizedContentNote } from "./molecules/localized-content-note";
 import { TOC } from "./organisms/toc";
 import { RenderSideBar } from "./organisms/sidebar";
+import { RetiredLocaleNote } from "./molecules/retired-locale-note";
 import { MainContentContainer } from "../ui/atoms/page-content";
+import { Loading } from "../ui/atoms/loading";
 import { Metadata } from "./organisms/metadata";
-
-import { ReactComponent as Dino } from "../assets/dino.svg";
 
 import "./index.scss";
 
@@ -39,6 +41,8 @@ export function Document(props /* TODO: define a TS interface for this */) {
   const mountCounter = React.useRef(0);
   const documentURL = useDocumentURL();
   const { locale } = useParams();
+  const [searchParams] = useSearchParams();
+
   const navigate = useNavigate();
 
   const dataURL = `${documentURL}/index.json`;
@@ -101,6 +105,7 @@ export function Document(props /* TODO: define a TS interface for this */) {
 
   React.useEffect(() => {
     const location = document.location;
+
     // Did you arrive on this page with a location hash?
     if (location.hash && location.hash !== location.hash.toLowerCase()) {
       // The location hash isn't lowercase. That probably means it's from before
@@ -126,7 +131,7 @@ export function Document(props /* TODO: define a TS interface for this */) {
   }, []);
 
   if (!doc && !error) {
-    return <LoadingDocumentPlaceholder />;
+    return <Loading minHeight={600} message="Loading document..." />;
   }
 
   if (error) {
@@ -145,7 +150,7 @@ export function Document(props /* TODO: define a TS interface for this */) {
     <>
       {doc.isArchive && !doc.isTranslated && <Archived />}
 
-      {/* if we have either breadcrumbs or translations for the current page, 
+      {/* if we have either breadcrumbs or translations for the current page,
       continue rendering the section */}
       {(doc.parents || !!translations.length) && (
         <div className="breadcrumb-locale-container">
@@ -156,13 +161,17 @@ export function Document(props /* TODO: define a TS interface for this */) {
         </div>
       )}
 
+      {doc.isTranslated ? (
+        <LocalizedContentNote isActive={doc.isActive} locale={locale} />
+      ) : (
+        searchParams.get("retiredLocale") && <RetiredLocaleNote />
+      )}
+
       {doc.toc && !!doc.toc.length && <TOC toc={doc.toc} />}
 
       <MainContentContainer>
-        {!isServer && CRUD_MODE && !props.isPreview && !doc.isArchive && (
-          <React.Suspense
-            fallback={<p className="loading-toolbar">Loading toolbar</p>}
-          >
+        {!isServer && CRUD_MODE && !props.isPreview && doc.isActive && (
+          <React.Suspense fallback={<Loading message={"Loading toolbar"} />}>
             <Toolbar
               doc={doc}
               reloadPage={() => {
@@ -171,7 +180,7 @@ export function Document(props /* TODO: define a TS interface for this */) {
             />
           </React.Suspense>
         )}
-        <article className="article" lang={doc.locale}>
+        <article className="main-page-content" lang={doc.locale}>
           <h1>{doc.title}</h1>
           <RenderDocumentBody doc={doc} />
         </article>
@@ -179,14 +188,6 @@ export function Document(props /* TODO: define a TS interface for this */) {
       </MainContentContainer>
 
       {doc.sidebarHTML && <RenderSideBar doc={doc} />}
-    </>
-  );
-}
-
-function LoadingDocumentPlaceholder() {
-  return (
-    <>
-      <Dino className="main-content loading-document-placeholder" />
     </>
   );
 }
@@ -231,6 +232,10 @@ function RenderDocumentBody({ doc }) {
           key={`browser_compatibility${i}`}
           {...section.value}
         />
+      );
+    } else if (section.type === "specifications") {
+      return (
+        <SpecificationSection key={`specifications${i}`} {...section.value} />
       );
     } else {
       console.warn(section);

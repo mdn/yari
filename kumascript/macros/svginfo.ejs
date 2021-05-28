@@ -49,8 +49,6 @@ if (name === "preview-wiki-content") {
             } else {
                 var anchor = element.replace(/[A-Z]/g, function(match) {
                         return "_" + match.toLowerCase();
-                    }).replace(/^./, function(match) {
-                        return match.toUpperCase();
                     });
                 elementGroups.push("<a href=\"/" + env.locale +
                     "/docs/Web/SVG/Element#" + anchor + "\">" +

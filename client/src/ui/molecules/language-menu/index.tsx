@@ -1,18 +1,10 @@
 import React from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 import { useGA } from "../../../ga-context";
-
-import LANGUAGES_RAW from "../../../languages.json";
 import { Translation } from "../../../document/types";
 
 import "./index.scss";
-
-const LANGUAGES = new Map(
-  Object.entries(LANGUAGES_RAW).map(([locale, data]) => {
-    return [locale.toLowerCase(), data];
-  })
-);
 
 // This needs to match what's set in 'libs/constants.js' on the server/builder!
 const PREFERRED_LOCALE_COOKIE_NAME = "preferredlocale";
@@ -20,21 +12,20 @@ const PREFERRED_LOCALE_COOKIE_NAME = "preferredlocale";
 export function LanguageMenu({
   locale,
   translations,
+  native,
 }: {
   locale: string;
   translations: Translation[];
+  native: string;
 }) {
   const ga = useGA();
+  const { pathname } = useLocation();
   const navigate = useNavigate();
-  const [localeURL, setLocaleURL] = React.useState(locale);
+  const [preferredLocale, setPreferredLocale] = React.useState(locale);
 
-  // For the menu label, we want to use the name of the document language.
-  // We need a special case for English because English documents can
-  // appear in pages for other locales, and in that case we need a
-  // translation for the word "English". In all other cases, the
-  // locale of the page and the locale of the document should match
-  // and we can just use the document language string without translation.
-  const verbose = LANGUAGES.get(locale.toLowerCase());
+  function translateURL(destinationLocale: string) {
+    return pathname.replace(`/${locale}/`, `/${destinationLocale}/`);
+  }
 
   return (
     <form
@@ -43,13 +34,26 @@ export function LanguageMenu({
         event.preventDefault();
         // The default is the current locale itself. If that's what's chosen,
         // don't bother redirecting.
-        if (localeURL !== locale) {
+        if (preferredLocale !== locale) {
+          const localeURL = translateURL(preferredLocale);
+          let cookieValueBefore = document.cookie
+            .split("; ")
+            .find((row) => row.startsWith(`${PREFERRED_LOCALE_COOKIE_NAME}=`));
+          if (cookieValueBefore && cookieValueBefore.includes("=")) {
+            cookieValueBefore = cookieValueBefore.split("=")[1];
+          }
+
           for (const translation of translations) {
-            if (translation.url === localeURL) {
+            if (translation.locale === preferredLocale) {
               let cookieValue = `${PREFERRED_LOCALE_COOKIE_NAME}=${
                 translation.locale
               };max-age=${60 * 60 * 24 * 365 * 3};path=/`;
-              if (document.location.hostname !== "localhost") {
+              if (
+                !(
+                  document.location.hostname === "localhost" ||
+                  document.location.hostname === "localhost.org"
+                )
+              ) {
                 cookieValue += ";secure";
               }
               document.cookie = cookieValue;
@@ -59,7 +63,9 @@ export function LanguageMenu({
           ga("send", {
             hitType: "event",
             eventCategory: "Language",
-            eventAction: "Change preferred language",
+            eventAction: `Change preferred language (cookie before: ${
+              cookieValueBefore || "none"
+            })`,
             eventLabel: `${window.location.pathname} to ${localeURL}`,
           });
 
@@ -76,10 +82,10 @@ export function LanguageMenu({
         <select
           id="language-selector"
           name="language"
-          value={localeURL}
+          value={preferredLocale}
           onChange={(event) => {
             const { value } = event.target;
-            setLocaleURL(value);
+            setPreferredLocale(value);
           }}
         >
           {/*
@@ -90,12 +96,11 @@ export function LanguageMenu({
           The onChange callback is a protection for doing nothing if the
           already current locale is chosen.
          */}
-          <option value={locale}>{verbose ? verbose.native : locale}</option>
+          <option value={locale}>{native}</option>
           {translations.map((t) => {
-            const verbose = LANGUAGES.get(t.locale.toLowerCase());
             return (
-              <option key={t.url} value={t.url}>
-                {verbose ? verbose.native : t.locale}
+              <option key={t.locale} value={t.locale}>
+                {t.native}
               </option>
             );
           })}

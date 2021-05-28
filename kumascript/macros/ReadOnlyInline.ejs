@@ -1,34 +1,21 @@
 <%
-var str = "Read only ";
-var title = "This value may not be changed.";
+var str = mdn.localString({
+    "de": "Schreibgeschützt ",
+    "fr": "Lecture seule ",
+    "ja": "読取専用 ",
+    "ru": "Только для чтения ",
+    "pt-BR": "Somente leitura ",
+    "zh-CN": "只读 ",
+    "en-US": "Read only "
+});
 
-switch(env.locale) {
-    case "de":
-        str = "Schreibgeschützt ";
-        title = "Dieser Wert kann nicht verändert werden.";
-        break;
-    case "fr":
-        str = "Lecture seule ";
-        title = "Cette valeur ne peut pas être changée.";
-        break;
-    case "ja":
-        str = "読取専用 ";
-        break;
-    case "pt-BR":
-        str = "Somente leitura ";
-        title = "Este valor não pode ser alterado.";
-        break;
-    case "ru":
-        str = "Только для чтения ";
-        title = "Это значение изменять нельзя.";
-        break;
-    case "zh-CN":
-        str = "只读 ";
-        title = "该属性的值无法更改";
-        break;
-    default:
-        break;
-}
-
+var title = mdn.localString({
+    "de": "Dieser Wert kann nicht verändert werden.",
+    "fr": "Cette valeur ne peut pas être changée.",
+    "ru": "Это значение изменять нельзя.",
+    "pt-BR": "Este valor não pode ser alterado.",
+    "zh-CN": "该属性的值无法更改",
+    "en-US": "This value may not be changed."
+});
 %>
 <span title="<%= title %>" class="badge inline readonly"><%= str %></span>

@@ -78,22 +78,6 @@ class HTMLTool {
     return this;
   }
 
-  removeOnEventHandlers() {
-    // Remove ALL on-event handlers.
-    this.$("*").each((i, e) => {
-      // Since "e.attribs" is an object with a "null"
-      // prototype, "key in e.attribs" is equivalent to
-      // "key of Object.keys(e.attribs)" since we don't
-      // have to worry about keys from the prototype.
-      for (const key in e.attribs) {
-        if (key.startsWith("on")) {
-          delete e.attribs[key];
-        }
-      }
-    });
-    return this;
-  }
-
   injectSectionIDs() {
     let idCount = 0;
     const $ = this.$;
@@ -157,9 +141,19 @@ class HTMLTool {
     // so let's simplify this as well as make it much faster.
     const sectionStart = $(`#${cssesc(sectionID, { isIdentifier: true })}`);
     if (!sectionStart.length) {
-      throw new KumascriptError(
-        `unable to find an HTML element with an "id" of "${sectionID}" within ${this.pathDescription}`
+      let errorMessage = `unable to find an HTML element with an "id" of "${sectionID}" within ${this.pathDescription}`;
+      const hasMoreThanAscii = [...sectionID].some(
+        (char) => char.charCodeAt(0) > 127
       );
+      if (hasMoreThanAscii) {
+        const cleanedSectionID = [...sectionID]
+          .filter((char) => char.charCodeAt(0) <= 127)
+          .join("");
+        errorMessage +=
+          ' -- hint! removing all non-ASCII characters in the "id" may fix this, so try ' +
+          `'id="${cleanedSectionID}"' and 'EmbedLiveSample("${cleanedSectionID}", ...)'`;
+      }
+      throw new KumascriptError(errorMessage);
     }
     let result;
     const sectionTag = sectionStart.get(0).tagName;

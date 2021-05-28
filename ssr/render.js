@@ -1,15 +1,14 @@
 import fs from "fs";
 import path from "path";
-
-import jsesc from "jsesc";
 import { renderToString } from "react-dom/server";
 import cheerio from "cheerio";
 
 import {
-  SPEEDCURVE_LUX_ID,
   ALWAYS_NO_ROBOTS,
   BUILD_OUT_ROOT,
+  SPEEDCURVE_LUX_ID,
 } from "../build/constants";
+
 const { DEFAULT_LOCALE } = require("../libs/constants");
 
 // When there are multiple options for a given language, this gives the
@@ -130,16 +129,17 @@ function* extractCSSURLs(css, filterFunction) {
   }
 }
 
-function serializeDocumentData(data) {
-  return jsesc(JSON.stringify(data), {
-    json: true,
-    isScriptContext: true,
-  });
-}
-
 export default function render(
   renderApp,
-  { doc = null, pageNotFound = false, feedEntries = null } = {}
+  {
+    doc = null,
+    pageNotFound = false,
+    feedEntries = null,
+    pageTitle = null,
+    possibleLocales = null,
+    locale = null,
+    noIndexing = null,
+  } = {}
 ) {
   const buildHtml = readBuildHTML();
   const webfontURLs = extractWebFontURLs();
@@ -151,20 +151,19 @@ export default function render(
 
   const rendered = renderToString(renderApp);
 
-  let pageTitle = "MDN Web Docs"; // default
+  if (!pageTitle) {
+    pageTitle = "MDN Web Docs"; // default
+  }
   let canonicalURL = "https://developer.mozilla.org";
 
   let pageDescription = "";
 
+  const hydrationData = {};
   if (pageNotFound) {
     pageTitle = `🤷🏽‍♀️ Page not found | ${pageTitle}`;
-    const documentDataTag = `<script>window.__pageNotFound__ = true;</script>`;
-    $("#root").after(documentDataTag);
+    hydrationData.pageNotFound = true;
   } else if (feedEntries) {
-    const feedEntriesTag = `<script>window.__feedEntries__ = JSON.parse(${serializeDocumentData(
-      feedEntries
-    )});</script>`;
-    $("#root").after(feedEntriesTag);
+    hydrationData.feedEntries = feedEntries;
   } else if (doc) {
     // Use the doc's title instead
     pageTitle = doc.pageTitle;
@@ -174,10 +173,7 @@ export default function render(
       pageDescription = doc.summary;
     }
 
-    const documentDataTag = `<script>window.__data__ = JSON.parse(${serializeDocumentData(
-      doc
-    )});</script>`;
-    $("#root").after(documentDataTag);
+    hydrationData.doc = doc;
 
     if (doc.other_translations) {
       const allOtherLocales = doc.other_translations.map((t) => t.locale);
@@ -189,26 +185,41 @@ export default function render(
         url: doc.mdn_url,
       };
       for (const translation of [...doc.other_translations, thisLocale]) {
+        const translationURL = doc.mdn_url.replace(
+          `/${doc.locale}/`,
+          `/${translation.locale}/`
+        );
         // The locale used in `<link rel="alternate">` needs to be the ISO-639-1
         // code. For example, it's "en", not "en-US". And it's "sv" not "sv-SE".
         // See https://developers.google.com/search/docs/advanced/crawling/localized-versions?hl=en&visit_id=637411409912568511-3980844248&rd=1#language-codes
         $('<link rel="alternate">')
           .attr("title", translation.title)
-          .attr("href", `https://developer.mozilla.org${translation.url}`)
+          .attr("href", `https://developer.mozilla.org${translationURL}`)
           .attr("hreflang", getHrefLang(translation.locale, allOtherLocales))
           .insertAfter("title");
       }
     }
   }
 
+  if (possibleLocales) {
+    hydrationData.possibleLocales = possibleLocales;
+  }
+
+  $("#root").after(
+    `<script type="application/json" id="hydration">${JSON.stringify(
+      hydrationData
+    )}</script>`
+  );
+
   if (pageDescription) {
     // This overrides the default description. Also assumes there's always
     // one tag there already.
     $('meta[name="description"]').attr("content", pageDescription);
+    $('meta[property="og:description"]').attr("content", pageDescription);
   }
 
   const robotsContent =
-    ALWAYS_NO_ROBOTS || (doc && doc.noIndexing) || pageNotFound
+    ALWAYS_NO_ROBOTS || (doc && doc.noIndexing) || pageNotFound || noIndexing
       ? "noindex, nofollow"
       : "index, follow";
   $(`<meta name="robots" content="${robotsContent}">`).insertAfter(
@@ -223,7 +234,7 @@ export default function render(
     // The snippet is always the same, if it's present, but the ID varies
     // See LUX settings here https://speedcurve.com/mozilla-add-ons/mdn/settings/lux/
     const speedcurveJS = getSpeedcurveJS();
-    $("<script>").text(`\n${speedcurveJS}\n`).appendTo($("head"));
+    $("<script>").text(speedcurveJS).appendTo($("head"));
     $(
       `<script src="https://cdn.speedcurve.com/js/lux.js?id=${SPEEDCURVE_LUX_ID}" async defer crossorigin="anonymous"></script>`
     ).appendTo($("head"));
@@ -248,6 +259,12 @@ export default function render(
 
   const $title = $("title");
   $title.text(pageTitle);
+  $('meta[property="og:url"]').attr("content", canonicalURL);
+  $('meta[property="og:title"]').attr("content", pageTitle);
+  $('meta[property="og:locale"]').attr(
+    "content",
+    locale ? locale : doc ? doc.locale : "en-US"
+  );
 
   for (const webfontURL of webfontURLs) {
     $('<link rel="preload" as="font" type="font/woff2" crossorigin>')

@@ -1,15 +1,21 @@
 import React, { useEffect, useState } from "react";
 import { Link, useLocation, useParams } from "react-router-dom";
+import { CRUD_MODE_HOSTNAMES } from "../../constants";
 
 import "./edit-actions.scss";
 
-export function EditActions({ folder }: { folder: string }) {
+export function EditActions({
+  folder,
+  filename,
+}: {
+  folder: string;
+  filename: string;
+}) {
   const location = useLocation();
 
   const [opening, setOpening] = useState(false);
-  const [editorOpeningError, setEditorOpeningError] = useState<Error | null>(
-    null
-  );
+  const [editorOpeningError, setEditorOpeningError] =
+    useState<Error | null>(null);
 
   useEffect(() => {
     let unsetOpeningTimer: ReturnType<typeof setTimeout>;
@@ -28,7 +34,7 @@ export function EditActions({ folder }: { folder: string }) {
   async function openInEditorHandler(event: React.MouseEvent) {
     event.preventDefault();
 
-    const filepath = folder + "/index.html";
+    const filepath = `${folder}/${filename}`;
     console.log(`Going to try to open ${filepath} in your editor`);
     setOpening(true);
     try {
@@ -54,18 +60,24 @@ export function EditActions({ folder }: { folder: string }) {
     return null;
   }
 
+  // If window.location.host is 'localhost:3000` then
+  // window.location.hostname is 'localhost'
+  const isReadOnly = !CRUD_MODE_HOSTNAMES.includes(window.location.hostname);
+
   return (
     <ul className="edit-actions">
-      <li>
-        <button
-          type="button"
-          className="button"
-          title={`Folder: ${folder}`}
-          onClick={openInEditorHandler}
-        >
-          Open in your <b>editor</b>
-        </button>
-      </li>
+      {!isReadOnly && (
+        <li>
+          <button
+            type="button"
+            className="button"
+            title={`Folder: ${folder}`}
+            onClick={openInEditorHandler}
+          >
+            Open in your <b>editor</b>
+          </button>
+        </li>
+      )}
 
       <li>
         <a
@@ -76,14 +88,16 @@ export function EditActions({ folder }: { folder: string }) {
         </a>
       </li>
 
-      <li>
-        <Link
-          to={location.pathname.replace("/docs/", "/_edit/")}
-          className="button"
-        >
-          Quick-edit
-        </Link>
-      </li>
+      {!isReadOnly && (
+        <li>
+          <Link
+            to={location.pathname.replace("/docs/", "/_edit/")}
+            className="button"
+          >
+            Quick-edit
+          </Link>
+        </li>
+      )}
 
       {editorOpeningError ? (
         <p className="error-message editor-opening-error">

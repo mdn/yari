@@ -51,10 +51,13 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
-    steps:
-      - uses: actions/checkout@v2
+    # Only run the scheduled workflows on the main repo.
+    if: github.repository == 'mdn/yari'
 
-      - uses: actions/checkout@v2
+    steps:
+      - uses: actions/checkout@v2.3.4
+
+      - uses: actions/checkout@v2.3.4
         with:
           repository: mdn/content
           path: mdn/content
@@ -77,13 +80,13 @@ jobs:
           echo "DEPLOYER_BUCKET_PREFIX=${{ github.event.inputs.deployment_prefix || env.DEFAULT_DEPLOYMENT_PREFIX }}" >> $GITHUB_ENV
           echo "DEPLOYER_LOG_EACH_SUCCESSFUL_UPLOAD=${{ github.event.inputs.log_each_successful_upload || env.DEFAULT_LOG_EACH_SUCCESSFUL_UPLOAD }}" >> $GITHUB_ENV
 
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v2.3.4
         if: "contains(env.BUILD_ARCHIVED_CONTENT, 'true')"
         with:
           repository: mdn/archived-content
           path: mdn/archived-content
 
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v2.3.4
         with:
           repository: mdn/translated-content
           path: mdn/translated-content
@@ -94,7 +97,7 @@ jobs:
           node-version: "12"
 
       - name: Cache node_modules
-        uses: actions/cache@v2.1.4
+        uses: actions/cache@v2.1.6
         id: cached-node_modules
         with:
           path: |
@@ -108,12 +111,12 @@ jobs:
         run: yarn --frozen-lockfile
 
       - name: Install Python
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v2.2.2
         with:
           python-version: "3.8"
 
       - name: Install Python poetry
-        uses: snok/install-poetry@v1.1.1
+        uses: snok/install-poetry@v1.1.6
 
       - name: Install deployer
         run: |
@@ -164,6 +167,10 @@ jobs:
           # '<meta name="robots" content="noindex, nofollow">' nomatter what
           # kind of document it is.
           BUILD_ALWAYS_NO_ROBOTS: true
+
+          # This enables the Plus call-to-action banner and the Plus landing page
+          REACT_APP_ENABLE_PLUS: true
+
         run: |
           if [ ${{ env.BUILD_ARCHIVED_CONTENT }} == "true" ]; then
             echo "Will build mdn/archived-content too"
@@ -225,19 +232,15 @@ jobs:
 
           poetry run deployer whatsdeployed --output ../client/build/_whatsdeployed/code.json
           poetry run deployer whatsdeployed --output ../client/build/_whatsdeployed/content.json $CONTENT_ROOT
+          poetry run deployer whatsdeployed --output ../client/build/_whatsdeployed/translated-content.json $CONTENT_TRANSLATED_ROOT
           # XXX would be nice to validate here that $DEPLOYER_BUCKET_PREFIX is truthy
           echo "DEPLOYER_BUCKET_PREFIX=$DEPLOYER_BUCKET_PREFIX"
 
+          # Prune again once https://github.com/mdn/yari/issues/3323 is resolved.
+          # poetry run deployer upload --prune --archived-files ../content/archived.txt ../client/build
           poetry run deployer upload ../client/build
           poetry run deployer update-lambda-functions ./aws-lambda
-
-          # TODO: Depending on how long the upload takes, consider switching to
-          # use `--update` in this command. It will skip the index re-creation
-          # and "cake on". This is slightly faster and means no window of time
-          # where the Elasticsearch server is nearly empty.
-          # Consider doing something like a clean indexing on Sundays and
-          # use `--update` on all the other week days.
-          poetry run deployer search-index ../client/build --priority-prefix=en-us/docs/web
+          poetry run deployer search-index ../client/build
 
           # Record the deployment in our Speedcurve account. This should always
           # be done after the upload of the documents and Lambda functions, as well

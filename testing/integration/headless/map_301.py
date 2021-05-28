@@ -983,6 +983,23 @@ FIREFOX_SOURCE_DOCS_URLS = list(
 )
 
 MISC_REDIRECT_URLS = [
+    url_test("/fr/account", "/fr/settings", status_code=302),
+    url_test("/en-US/account", "/en-US/settings", status_code=302),
+    url_test("/en-US/account/", "/en-US/settings", status_code=302),
+    url_test("/ja/profile", "/ja/settings", status_code=302),
+    url_test("/en-US/profile", "/en-US/settings", status_code=302),
+    url_test("/en-US/profile/", "/en-US/settings", status_code=302),
+    url_test("/en-US/profile/edit", "/en-US/settings", status_code=302),
+    url_test("/en-US/profile/edit/", "/en-US/settings", status_code=302),
+    url_test("/en-US/profile/stripe_subscription", "/en-US/settings", status_code=302),
+    url_test("/en-US/profile/stripe_subscription/", "/en-US/settings", status_code=302),
+    url_test("/zh-CN/profiles/sheppy", "/zh-CN/settings", status_code=302),
+    url_test("/en-US/profiles/sheppy", "/en-US/settings", status_code=302),
+    url_test("/en-US/profiles/sheppy/", "/en-US/settings", status_code=302),
+    url_test("/en-US/profiles/sheppy/edit", "/en-US/settings", status_code=302),
+    url_test("/en-US/profiles/sheppy/edit/", "/en-US/settings", status_code=302),
+    url_test("/en-US/profiles/sheppy/delete", "/en-US/settings", status_code=302),
+    url_test("/en-US/profiles/sheppy/delete/", "/en-US/settings", status_code=302),
     url_test("/en-US/DOM", "/en-US/docs/DOM"),
     url_test("/en-US/DOM/", "/en-US/docs/DOM"),
     url_test(
@@ -1035,8 +1052,11 @@ MISC_REDIRECT_URLS = [
     url_test("/en-US/XMLHttpRequest", "/en-US/docs/XMLHttpRequest"),
     url_test("/en-US/XMLHttpRequest/", "/en-US/docs/XMLHttpRequest"),
     url_test("/en-US/XMLHttpRequest/FormData/", "/en-US/docs/XMLHttpRequest/FormData"),
+    url_test("/en-US/Security", "/en-US/docs/Security"),
+    url_test("/en-US/Security/", "/en-US/docs/Security"),
+    url_test("/en-US/Security/CSP/", "/en-US/docs/Security/CSP"),
     # Add trailing slash for the home page.
-    url_test("/en-US", "/en-US/"),
+    url_test("/en-US", "/en-US/", status_code=302),
     # Some special cases for "/docs".
     url_test("/docs", "/docs/Web"),
     url_test("/docs/", "/docs/Web"),
@@ -1049,8 +1069,8 @@ MISC_REDIRECT_URLS = [
     url_test("/EN-US/?next=FOO", "/en-US/?next=FOO", status_code=302),
     url_test("/eN-us/docs/Web", "/en-US/docs/Web", status_code=302),
     url_test("/eN-us/docs/Web/", "/en-US/docs/Web", status_code=302),
-    url_test("/eN-us/docs/Web?next=FOO", "/en-US/docs/Web?next=FOO", status_code=302),
-    url_test("/eN-us/docs/Web/?next=FOO", "/en-US/docs/Web?next=FOO", status_code=302),
+    url_test("/eN-us/docs/Web?next=FOO", "/en-US/docs/Web", status_code=302),
+    url_test("/eN-us/docs/Web/?next=FOO", "/en-US/docs/Web", status_code=302),
     url_test("/en-uS/search", "/en-US/search", status_code=302),
     url_test("/en-uS/search/", "/en-US/search", status_code=302),
     url_test("/en-Us/search?q=video", "/en-US/search?q=video", status_code=302),

@@ -133,11 +133,10 @@ LOCALE_SELECTORS = {
         "/search?q=video",
         "/search/?q=video",
         "/events",
-        "/profile",
-        "/profiles/sheppy",
+        "/signup",
+        "/signin",
+        "/settings",
         "/users/signin",
-        "/promote",
-        "/account",
     ],
 )
 def test_locale_selection(base_url, slug, expected, cookie, accept):
