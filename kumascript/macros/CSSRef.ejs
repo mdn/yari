@@ -343,6 +343,14 @@ const badges = {
   DeprecatedBadge : await template("DeprecatedBadge"),
 }
 
+function smartLink(...args) {
+  while (args.length < 5) {
+    args.push(undefined);
+  }
+  args.push("CSSRef");
+  return web.smartLink(...args);
+}
+
 function buildSublist(pages, title) {
   let result = `<li class="toggle"><details><summary>${title}</summary><ol>`;
 
@@ -372,7 +380,7 @@ function buildSublist(pages, title) {
       result += '<bdi>';
     }
 
-    result += web.smartLink(url, null, title, cssURL);
+    result += smartLink(url, null, title, cssURL);
 
     if (rtlLocales.indexOf(locale) != -1) {
       result += '</bdi>';
@@ -396,12 +404,12 @@ function buildSublist(pages, title) {
       <details>
           <summary><%=text['CSS_first_steps']%></summary>
           <ol>
-            <li><%-web.smartLink(`${learnURL}CSS/First_steps`, null, text['CSS_first_steps_overview'], learnURL)%></li>
-            <li><%-web.smartLink(`${learnURL}CSS/First_steps/What_is_CSS`, null, text['What_is_CSS'], learnURL)%></li>
-            <li><%-web.smartLink(`${learnURL}CSS/First_steps/Getting_started`, null, text['Getting_started_with_CSS'], learnURL)%></li>
-            <li><%-web.smartLink(`${learnURL}CSS/First_steps/How_CSS_is_structured`, null, text['How_CSS_is_structured'], learnURL)%></li>
-            <li><%-web.smartLink(`${learnURL}CSS/First_steps/How_CSS_works`, null, text['How_CSS_works'], learnURL)%></li>
-            <li><%-web.smartLink(`${learnURL}CSS/First_steps/Using_your_new_knowledge`, null, text['Using_your_new_knowledge'], learnURL)%></li>
+            <li><%-smartLink(`${learnURL}CSS/First_steps`, null, text['CSS_first_steps_overview'], learnURL)%></li>
+            <li><%-smartLink(`${learnURL}CSS/First_steps/What_is_CSS`, null, text['What_is_CSS'], learnURL)%></li>
+            <li><%-smartLink(`${learnURL}CSS/First_steps/Getting_started`, null, text['Getting_started_with_CSS'], learnURL)%></li>
+            <li><%-smartLink(`${learnURL}CSS/First_steps/How_CSS_is_structured`, null, text['How_CSS_is_structured'], learnURL)%></li>
+            <li><%-smartLink(`${learnURL}CSS/First_steps/How_CSS_works`, null, text['How_CSS_works'], learnURL)%></li>
+            <li><%-smartLink(`${learnURL}CSS/First_steps/Using_your_new_knowledge`, null, text['Using_your_new_knowledge'], learnURL)%></li>
           </ol>
       </details>
   </li>
@@ -409,31 +417,31 @@ function buildSublist(pages, title) {
       <details>
           <summary><%=text['CSS_building_blocks']%></summary>
           <ol>
-            <li><%-web.smartLink(`${learnURL}CSS/Building_blocks`, null, text['CSS_building_blocks_overview'], learnURL)%></li>
-            <li><%-web.smartLink(`${learnURL}CSS/Building_blocks/Cascade_and_inheritance`, null, text['Cascade_and_inheritance'], learnURL)%></li>
-            <li><%-web.smartLink(`${learnURL}CSS/Building_blocks/Selectors`, null, text['CSS_selectors'], learnURL)%></li>
-            <li><%-web.smartLink(`${learnURL}CSS/Building_blocks/The_box_model`, null, text['The_box_model'], learnURL)%></li>
-            <li><%-web.smartLink(`${learnURL}CSS/Building_blocks/Backgrounds_and_borders`, null, text['Backgrounds_and_borders'], learnURL)%></li>
-            <li><%-web.smartLink(`${learnURL}CSS/Building_blocks/Handling_different_text_directions`, null, text['Handling_different_text_directions'], learnURL)%></li>
-            <li><%-web.smartLink(`${learnURL}CSS/Building_blocks/Overflowing_content`, null, text['Overflowing_content'], learnURL)%></li>
-            <li><%-web.smartLink(`${learnURL}CSS/Building_blocks/Values_and_units`, null, text['Values_and_units'], learnURL)%></li>
-            <li><%-web.smartLink(`${learnURL}CSS/Building_blocks/Sizing_items_in_CSS`, null, text['Sizing_items_in_CSS'], learnURL)%></li>
-            <li><%-web.smartLink(`${learnURL}CSS/Building_blocks/Images_media_form_elements`, null, text['Images_media_and_form_elements'], learnURL)%></li>
-            <li><%-web.smartLink(`${learnURL}CSS/Building_blocks/Styling_tables`, null, text['Styling_tables'], learnURL)%></li>
-            <li><%-web.smartLink(`${learnURL}CSS/Building_blocks/Debugging_CSS`, null, text['Debugging_CSS'], learnURL)%></li>
-            <li><%-web.smartLink(`${learnURL}CSS/Building_blocks/Organizing`, null, text['Organizing_your_CSS'], learnURL)%></li>
+            <li><%-smartLink(`${learnURL}CSS/Building_blocks`, null, text['CSS_building_blocks_overview'], learnURL)%></li>
+            <li><%-smartLink(`${learnURL}CSS/Building_blocks/Cascade_and_inheritance`, null, text['Cascade_and_inheritance'], learnURL)%></li>
+            <li><%-smartLink(`${learnURL}CSS/Building_blocks/Selectors`, null, text['CSS_selectors'], learnURL)%></li>
+            <li><%-smartLink(`${learnURL}CSS/Building_blocks/The_box_model`, null, text['The_box_model'], learnURL)%></li>
+            <li><%-smartLink(`${learnURL}CSS/Building_blocks/Backgrounds_and_borders`, null, text['Backgrounds_and_borders'], learnURL)%></li>
+            <li><%-smartLink(`${learnURL}CSS/Building_blocks/Handling_different_text_directions`, null, text['Handling_different_text_directions'], learnURL)%></li>
+            <li><%-smartLink(`${learnURL}CSS/Building_blocks/Overflowing_content`, null, text['Overflowing_content'], learnURL)%></li>
+            <li><%-smartLink(`${learnURL}CSS/Building_blocks/Values_and_units`, null, text['Values_and_units'], learnURL)%></li>
+            <li><%-smartLink(`${learnURL}CSS/Building_blocks/Sizing_items_in_CSS`, null, text['Sizing_items_in_CSS'], learnURL)%></li>
+            <li><%-smartLink(`${learnURL}CSS/Building_blocks/Images_media_form_elements`, null, text['Images_media_and_form_elements'], learnURL)%></li>
+            <li><%-smartLink(`${learnURL}CSS/Building_blocks/Styling_tables`, null, text['Styling_tables'], learnURL)%></li>
+            <li><%-smartLink(`${learnURL}CSS/Building_blocks/Debugging_CSS`, null, text['Debugging_CSS'], learnURL)%></li>
+            <li><%-smartLink(`${learnURL}CSS/Building_blocks/Organizing`, null, text['Organizing_your_CSS'], learnURL)%></li>
       </details>
   </li>
   <li class="toggle">
       <details>
           <summary><%=text['Styling_text']%></summary>
           <ol>
-            <li><%-web.smartLink(`${learnURL}CSS/Styling_text`, null, text['Styling_text_overview'], learnURL)%></li>
-            <li><%-web.smartLink(`${learnURL}CSS/Styling_text/Fundamentals`, null, text['Fundamental_text_and_font_styling'], learnURL)%></li>
-            <li><%-web.smartLink(`${learnURL}CSS/Styling_text/Styling_lists`, null, text['Styling_lists'], learnURL)%></li>
-            <li><%-web.smartLink(`${learnURL}CSS/Styling_text/Styling_links`, null, text['Styling_links'], learnURL)%></li>
-            <li><%-web.smartLink(`${learnURL}CSS/Styling_text/Web_fonts`, null, text['Web_fonts'], learnURL)%></li>
-            <li><%-web.smartLink(`${learnURL}CSS/Styling_text/Typesetting_a_homepage`, null, text['Assessment_typesetting_a_community_school_homepage'], learnURL)%></li>
+            <li><%-smartLink(`${learnURL}CSS/Styling_text`, null, text['Styling_text_overview'], learnURL)%></li>
+            <li><%-smartLink(`${learnURL}CSS/Styling_text/Fundamentals`, null, text['Fundamental_text_and_font_styling'], learnURL)%></li>
+            <li><%-smartLink(`${learnURL}CSS/Styling_text/Styling_lists`, null, text['Styling_lists'], learnURL)%></li>
+            <li><%-smartLink(`${learnURL}CSS/Styling_text/Styling_links`, null, text['Styling_links'], learnURL)%></li>
+            <li><%-smartLink(`${learnURL}CSS/Styling_text/Web_fonts`, null, text['Web_fonts'], learnURL)%></li>
+            <li><%-smartLink(`${learnURL}CSS/Styling_text/Typesetting_a_homepage`, null, text['Assessment_typesetting_a_community_school_homepage'], learnURL)%></li>
           </ol>
       </details>
   </li>
@@ -441,19 +449,19 @@ function buildSublist(pages, title) {
       <details>
           <summary><%=text['CSS_layout']%></summary>
           <ol>
-            <li><%-web.smartLink(`${learnURL}CSS/CSS_layout`, null, text['CSS_layout_overview'], learnURL)%></li>
-            <li><%-web.smartLink(`${learnURL}CSS/CSS_layout/Introduction`, null, text['Layout_introduction'], learnURL)%></li>
-            <li><%-web.smartLink(`${learnURL}CSS/CSS_layout/Normal_Flow`, null, text['Normal_Flow'], learnURL)%></li>
-            <li><%-web.smartLink(`${learnURL}CSS/CSS_layout/Flexbox`, null, text['Flexbox'], learnURL)%></li>
-            <li><%-web.smartLink(`${learnURL}CSS/CSS_layout/Grids`, null, text['Grids'], learnURL)%></li>
-            <li><%-web.smartLink(`${learnURL}CSS/CSS_layout/Floats`, null, text['Floats'], learnURL)%></li>
-            <li><%-web.smartLink(`${learnURL}CSS/CSS_layout/Positioning`, null, text['Positioning'], learnURL)%></li>
-            <li><%-web.smartLink(`${learnURL}CSS/CSS_layout/Multiple-column_Layout`, null, text['Multiple-column_Layout'], learnURL)%></li>
-            <li><%-web.smartLink(`${learnURL}CSS/CSS_layout/Responsive_Design`, null, text['Responsive_design'], learnURL)%></li>
-            <li><%-web.smartLink(`${learnURL}CSS/CSS_layout/Media_queries`, null, text['Media_queries'], learnURL)%></li>
-            <li><%-web.smartLink(`${learnURL}CSS/CSS_layout/Legacy_Layout_Methods`, null, text['Legacy_Layout_Methods'], learnURL)%></li>
-            <li><%-web.smartLink(`${learnURL}CSS/CSS_layout/Supporting_Older_Browsers`, null, text['Supporting_Older_Browsers'], learnURL)%></li>
-            <li><%-web.smartLink(`${learnURL}CSS/CSS_layout/Fundamental_Layout_Comprehension`, null, text['Fundamental_Layout_Comprehension'], learnURL)%></li>
+            <li><%-smartLink(`${learnURL}CSS/CSS_layout`, null, text['CSS_layout_overview'], learnURL)%></li>
+            <li><%-smartLink(`${learnURL}CSS/CSS_layout/Introduction`, null, text['Layout_introduction'], learnURL)%></li>
+            <li><%-smartLink(`${learnURL}CSS/CSS_layout/Normal_Flow`, null, text['Normal_Flow'], learnURL)%></li>
+            <li><%-smartLink(`${learnURL}CSS/CSS_layout/Flexbox`, null, text['Flexbox'], learnURL)%></li>
+            <li><%-smartLink(`${learnURL}CSS/CSS_layout/Grids`, null, text['Grids'], learnURL)%></li>
+            <li><%-smartLink(`${learnURL}CSS/CSS_layout/Floats`, null, text['Floats'], learnURL)%></li>
+            <li><%-smartLink(`${learnURL}CSS/CSS_layout/Positioning`, null, text['Positioning'], learnURL)%></li>
+            <li><%-smartLink(`${learnURL}CSS/CSS_layout/Multiple-column_Layout`, null, text['Multiple-column_Layout'], learnURL)%></li>
+            <li><%-smartLink(`${learnURL}CSS/CSS_layout/Responsive_Design`, null, text['Responsive_design'], learnURL)%></li>
+            <li><%-smartLink(`${learnURL}CSS/CSS_layout/Media_queries`, null, text['Media_queries'], learnURL)%></li>
+            <li><%-smartLink(`${learnURL}CSS/CSS_layout/Legacy_Layout_Methods`, null, text['Legacy_Layout_Methods'], learnURL)%></li>
+            <li><%-smartLink(`${learnURL}CSS/CSS_layout/Supporting_Older_Browsers`, null, text['Supporting_Older_Browsers'], learnURL)%></li>
+            <li><%-smartLink(`${learnURL}CSS/CSS_layout/Fundamental_Layout_Comprehension`, null, text['Fundamental_Layout_Comprehension'], learnURL)%></li>
           </ol>
       </details>
   </li>
@@ -472,7 +480,7 @@ function buildSublist(pages, title) {
       <details>
           <summary>Animations</summary>
           <ol>
-            <li><%-web.smartLink(`${cssURL}CSS_Animations/Using_CSS_animations`, null, "Using CSS animations", cssURL)%></li>
+            <li><%-smartLink(`${cssURL}CSS_Animations/Using_CSS_animations`, null, "Using CSS animations", cssURL)%></li>
           </ol>
       </details>
   </li>
@@ -480,8 +488,8 @@ function buildSublist(pages, title) {
       <details>
           <summary>Backgrounds and Borders</summary>
           <ol>
-            <li><%-web.smartLink(`${cssURL}CSS_Backgrounds_and_Borders/Using_multiple_backgrounds`, null, "Using multiple backgrounds", cssURL)%></li>
-            <li><%-web.smartLink(`${cssURL}CSS_Backgrounds_and_Borders/Resizing_background_images`, null, "Resizing background images", cssURL)%></li>
+            <li><%-smartLink(`${cssURL}CSS_Backgrounds_and_Borders/Using_multiple_backgrounds`, null, "Using multiple backgrounds", cssURL)%></li>
+            <li><%-smartLink(`${cssURL}CSS_Backgrounds_and_Borders/Resizing_background_images`, null, "Resizing background images", cssURL)%></li>
           </ol>
       </details>
   </li>
@@ -489,10 +497,10 @@ function buildSublist(pages, title) {
       <details>
           <summary>Box alignment</summary>
           <ol>
-            <li><%-web.smartLink(`${cssURL}CSS_Box_Alignment/Box_Alignment_In_Block_Abspos_Tables`, null, "Box alignment in block layout", cssURL)%></li>
-            <li><%-web.smartLink(`${cssURL}CSS_Box_Alignment/Box_Alignment_in_Flexbox`, null, "Box alignment in flexbox", cssURL)%></li>
-            <li><%-web.smartLink(`${cssURL}CSS_Box_Alignment/Box_Alignment_In_Grid_Layout`, null, "Box alignment in grid layout", cssURL)%></li>
-            <li><%-web.smartLink(`${cssURL}CSS_Box_Alignment/Box_Alignment_in_Multi-column_Layout`, null, "Box alignment in multi-column layout", cssURL)%></li>
+            <li><%-smartLink(`${cssURL}CSS_Box_Alignment/Box_Alignment_In_Block_Abspos_Tables`, null, "Box alignment in block layout", cssURL)%></li>
+            <li><%-smartLink(`${cssURL}CSS_Box_Alignment/Box_Alignment_in_Flexbox`, null, "Box alignment in flexbox", cssURL)%></li>
+            <li><%-smartLink(`${cssURL}CSS_Box_Alignment/Box_Alignment_In_Grid_Layout`, null, "Box alignment in grid layout", cssURL)%></li>
+            <li><%-smartLink(`${cssURL}CSS_Box_Alignment/Box_Alignment_in_Multi-column_Layout`, null, "Box alignment in multi-column layout", cssURL)%></li>
           </ol>
       </details>
   </li>
@@ -500,8 +508,8 @@ function buildSublist(pages, title) {
       <details>
           <summary>Box model</summary>
           <ol>
-            <li><%-web.smartLink(`${cssURL}CSS_Box_Model/Introduction_to_the_CSS_box_model`, null, "Introduction to the CSS basic box model", cssURL)%></li>
-            <li><%-web.smartLink(`${cssURL}CSS_Box_Model/Mastering_margin_collapsing`, null, "Mastering margin collapsing", cssURL)%></li>
+            <li><%-smartLink(`${cssURL}CSS_Box_Model/Introduction_to_the_CSS_box_model`, null, "Introduction to the CSS basic box model", cssURL)%></li>
+            <li><%-smartLink(`${cssURL}CSS_Box_Model/Mastering_margin_collapsing`, null, "Mastering margin collapsing", cssURL)%></li>
           </ol>
       </details>
   </li>
@@ -509,11 +517,11 @@ function buildSublist(pages, title) {
       <details>
           <summary>Columns</summary>
           <ol>
-            <li><%-web.smartLink(`${cssURL}CSS_Columns/Basic_Concepts_of_Multicol`, null, "Basic concepts of Multicol", cssURL)%></li>
-            <li><%-web.smartLink(`${cssURL}CSS_Columns/Styling_Columns`, null, "Styling columns", cssURL)%></li>
-            <li><%-web.smartLink(`${cssURL}CSS_Columns/Spanning_Columns`, null, "Spanning and balancing", cssURL)%></li>
-            <li><%-web.smartLink(`${cssURL}CSS_Columns/Handling_Overflow_in_Multicol`, null, "Handling overflow in Multicol", cssURL)%></li>
-            <li><%-web.smartLink(`${cssURL}CSS_Columns/Handling_content_breaks_in_multicol`, null, "Content breaks in Multicol", cssURL)%></li>
+            <li><%-smartLink(`${cssURL}CSS_Columns/Basic_Concepts_of_Multicol`, null, "Basic concepts of Multicol", cssURL)%></li>
+            <li><%-smartLink(`${cssURL}CSS_Columns/Styling_Columns`, null, "Styling columns", cssURL)%></li>
+            <li><%-smartLink(`${cssURL}CSS_Columns/Spanning_Columns`, null, "Spanning and balancing", cssURL)%></li>
+            <li><%-smartLink(`${cssURL}CSS_Columns/Handling_Overflow_in_Multicol`, null, "Handling overflow in Multicol", cssURL)%></li>
+            <li><%-smartLink(`${cssURL}CSS_Columns/Handling_content_breaks_in_multicol`, null, "Content breaks in Multicol", cssURL)%></li>
           </ol>
       </details>
   </li>
@@ -521,7 +529,7 @@ function buildSublist(pages, title) {
       <details>
           <summary>Conditional rules</summary>
           <ol>
-            <li><%-web.smartLink(`${cssURL}CSS_Conditional_Rules/Using_Feature_Queries`, null, "Using feature queries", cssURL)%></li>
+            <li><%-smartLink(`${cssURL}CSS_Conditional_Rules/Using_Feature_Queries`, null, "Using feature queries", cssURL)%></li>
           </ol>
       </details>
   </li>
@@ -529,7 +537,7 @@ function buildSublist(pages, title) {
       <details>
           <summary>CSSOM view</summary>
           <ol>
-            <li><%-web.smartLink(`${cssURL}CSSOM_View/Coordinate_systems`, null, "Coordinate systems", cssURL)%></li>
+            <li><%-smartLink(`${cssURL}CSSOM_View/Coordinate_systems`, null, "Coordinate systems", cssURL)%></li>
           </ol>
       </details>
   </li>
@@ -537,14 +545,14 @@ function buildSublist(pages, title) {
       <details>
           <summary>Flexbox</summary>
           <ol>
-            <li><%-web.smartLink(`${cssURL}CSS_Flexible_Box_Layout/Basic_Concepts_of_Flexbox`, null, "Basic concepts of Flexbox", cssURL)%></li>
-            <li><%-web.smartLink(`${cssURL}CSS_Flexible_Box_Layout/Relationship_of_Flexbox_to_Other_Layout_Methods`, null, "Comparison with other layout methods", cssURL)%></li>
-            <li><%-web.smartLink(`${cssURL}CSS_Flexible_Box_Layout/Aligning_Items_in_a_Flex_Container`, null, "Aligning items in a flex container", cssURL)%></li>
-            <li><%-web.smartLink(`${cssURL}CSS_Flexible_Box_Layout/Ordering_Flex_Items`, null, "Ordering flex items", cssURL)%></li>
-            <li><%-web.smartLink(`${cssURL}CSS_Flexible_Box_Layout/Controlling_Ratios_of_Flex_Items_Along_the_Main_Ax`, null, "Controlling flex item ratios", cssURL)%></li>
-            <li><%-web.smartLink(`${cssURL}CSS_Flexible_Box_Layout/Mastering_Wrapping_of_Flex_Items`, null, "Mastering wrapping of flex items", cssURL)%></li>
-            <li><%-web.smartLink(`${cssURL}CSS_Flexible_Box_Layout/Typical_Use_Cases_of_Flexbox`, null, "Typical use cases of Flexbox", cssURL)%></li>
-            <li><%-web.smartLink(`${cssURL}CSS_Flexible_Box_Layout/Backwards_Compatibility_of_Flexbox`, null, "Backwards compatibility of Flexbox", cssURL)%></li>
+            <li><%-smartLink(`${cssURL}CSS_Flexible_Box_Layout/Basic_Concepts_of_Flexbox`, null, "Basic concepts of Flexbox", cssURL)%></li>
+            <li><%-smartLink(`${cssURL}CSS_Flexible_Box_Layout/Relationship_of_Flexbox_to_Other_Layout_Methods`, null, "Comparison with other layout methods", cssURL)%></li>
+            <li><%-smartLink(`${cssURL}CSS_Flexible_Box_Layout/Aligning_Items_in_a_Flex_Container`, null, "Aligning items in a flex container", cssURL)%></li>
+            <li><%-smartLink(`${cssURL}CSS_Flexible_Box_Layout/Ordering_Flex_Items`, null, "Ordering flex items", cssURL)%></li>
+            <li><%-smartLink(`${cssURL}CSS_Flexible_Box_Layout/Controlling_Ratios_of_Flex_Items_Along_the_Main_Ax`, null, "Controlling flex item ratios", cssURL)%></li>
+            <li><%-smartLink(`${cssURL}CSS_Flexible_Box_Layout/Mastering_Wrapping_of_Flex_Items`, null, "Mastering wrapping of flex items", cssURL)%></li>
+            <li><%-smartLink(`${cssURL}CSS_Flexible_Box_Layout/Typical_Use_Cases_of_Flexbox`, null, "Typical use cases of Flexbox", cssURL)%></li>
+            <li><%-smartLink(`${cssURL}CSS_Flexible_Box_Layout/Backwards_Compatibility_of_Flexbox`, null, "Backwards compatibility of Flexbox", cssURL)%></li>
           </ol>
       </details>
   </li>
@@ -552,11 +560,11 @@ function buildSublist(pages, title) {
       <details>
           <summary>Flow layout</summary>
           <ol>
-            <li><%-web.smartLink(`${cssURL}CSS_Flow_Layout/Block_and_Inline_Layout_in_Normal_Flow`, null, "Block and Inline layout in normal flow", cssURL)%></li>
-            <li><%-web.smartLink(`${cssURL}CSS_Flow_Layout/In_Flow_and_Out_of_Flow`, null, "In flow and Out of flow", cssURL)%></li>
-            <li><%-web.smartLink(`${cssURL}CSS_Flow_Layout/Intro_to_formatting_contexts`, null, "Formatting contexts explained", cssURL)%></li>
-            <li><%-web.smartLink(`${cssURL}CSS_Flow_Layout/Flow_Layout_and_Writing_Modes`, null, "Flow layout and writing modes", cssURL)%></li>
-            <li><%-web.smartLink(`${cssURL}CSS_Flow_Layout/Flow_Layout_and_Overflow`, null, "Flow layout and overflow", cssURL)%></li>
+            <li><%-smartLink(`${cssURL}CSS_Flow_Layout/Block_and_Inline_Layout_in_Normal_Flow`, null, "Block and Inline layout in normal flow", cssURL)%></li>
+            <li><%-smartLink(`${cssURL}CSS_Flow_Layout/In_Flow_and_Out_of_Flow`, null, "In flow and Out of flow", cssURL)%></li>
+            <li><%-smartLink(`${cssURL}CSS_Flow_Layout/Intro_to_formatting_contexts`, null, "Formatting contexts explained", cssURL)%></li>
+            <li><%-smartLink(`${cssURL}CSS_Flow_Layout/Flow_Layout_and_Writing_Modes`, null, "Flow layout and writing modes", cssURL)%></li>
+            <li><%-smartLink(`${cssURL}CSS_Flow_Layout/Flow_Layout_and_Overflow`, null, "Flow layout and overflow", cssURL)%></li>
           </ol>
       </details>
   </li>
@@ -564,8 +572,8 @@ function buildSublist(pages, title) {
       <details>
           <summary>Fonts</summary>
           <ol>
-            <li><%-web.smartLink(`${cssURL}CSS_Fonts/OpenType_fonts_guide`, null, "OpenType font features guide", cssURL)%></li>
-            <li><%-web.smartLink(`${cssURL}CSS_Fonts/Variable_Fonts_Guide`, null, "Variable fonts guide", cssURL)%></li>
+            <li><%-smartLink(`${cssURL}CSS_Fonts/OpenType_fonts_guide`, null, "OpenType font features guide", cssURL)%></li>
+            <li><%-smartLink(`${cssURL}CSS_Fonts/Variable_Fonts_Guide`, null, "Variable fonts guide", cssURL)%></li>
           </ol>
       </details>
   </li>
@@ -573,19 +581,19 @@ function buildSublist(pages, title) {
       <details>
           <summary>Grid</summary>
           <ol>
-            <li><%-web.smartLink(`${cssURL}CSS_Grid_Layout/Basic_Concepts_of_Grid_Layout`, null, "Basics concepts of grid layout", cssURL)%></li>
-            <li><%-web.smartLink(`${cssURL}CSS_Grid_Layout/Relationship_of_Grid_Layout`, null, "Relationship to other layout methods", cssURL)%></li>
-            <li><%-web.smartLink(`${cssURL}CSS_Grid_Layout/Line-based_Placement_with_CSS_Grid`, null, "Line-based placement", cssURL)%></li>
-            <li><%-web.smartLink(`${cssURL}CSS_Grid_Layout/Grid_Template_Areas`, null, "Grid template areas", cssURL)%></li>
-            <li><%-web.smartLink(`${cssURL}CSS_Grid_Layout/Layout_using_Named_Grid_Lines`, null, "Layout using named grid lines", cssURL)%></li>
-            <li><%-web.smartLink(`${cssURL}CSS_Grid_Layout/Auto-placement_in_CSS_Grid_Layout`, null, "Auto-placement in grid layout", cssURL)%></li>
-            <li><%-web.smartLink(`${cssURL}CSS_Grid_Layout/Box_Alignment_in_CSS_Grid_Layout`, null, "Box alignment in grid layout", cssURL)%></li>
-            <li><%-web.smartLink(`${cssURL}CSS_Grid_Layout/CSS_Grid_Logical_Values_and_Writing_Modes`, null, "Grids, logical values and writing modes", cssURL)%></li>
-            <li><%-web.smartLink(`${cssURL}CSS_Grid_Layout/CSS_Grid_Layout_and_Accessibility`, null, "Grid layout and accessibility", cssURL)%></li>
-            <li><%-web.smartLink(`${cssURL}CSS_Grid_Layout/CSS_Grid_and_Progressive_Enhancement`, null, "Grid Layout and progressive enhancement", cssURL)%></li>
-            <li><%-web.smartLink(`${cssURL}CSS_Grid_Layout/Realizing_common_layouts_using_CSS_Grid_Layout`, null, "Realizing common layouts using grids", cssURL)%></li>
-            <li><%-web.smartLink(`${cssURL}CSS_Grid_Layout/Subgrid`, null, "Subgrid", cssURL)%></li>
-            <li><%-web.smartLink(`${cssURL}CSS_Grid_Layout/Masonry_Layout`, null, "Masonry layout", cssURL)%></li>
+            <li><%-smartLink(`${cssURL}CSS_Grid_Layout/Basic_Concepts_of_Grid_Layout`, null, "Basics concepts of grid layout", cssURL)%></li>
+            <li><%-smartLink(`${cssURL}CSS_Grid_Layout/Relationship_of_Grid_Layout`, null, "Relationship to other layout methods", cssURL)%></li>
+            <li><%-smartLink(`${cssURL}CSS_Grid_Layout/Line-based_Placement_with_CSS_Grid`, null, "Line-based placement", cssURL)%></li>
+            <li><%-smartLink(`${cssURL}CSS_Grid_Layout/Grid_Template_Areas`, null, "Grid template areas", cssURL)%></li>
+            <li><%-smartLink(`${cssURL}CSS_Grid_Layout/Layout_using_Named_Grid_Lines`, null, "Layout using named grid lines", cssURL)%></li>
+            <li><%-smartLink(`${cssURL}CSS_Grid_Layout/Auto-placement_in_CSS_Grid_Layout`, null, "Auto-placement in grid layout", cssURL)%></li>
+            <li><%-smartLink(`${cssURL}CSS_Grid_Layout/Box_Alignment_in_CSS_Grid_Layout`, null, "Box alignment in grid layout", cssURL)%></li>
+            <li><%-smartLink(`${cssURL}CSS_Grid_Layout/CSS_Grid_Logical_Values_and_Writing_Modes`, null, "Grids, logical values and writing modes", cssURL)%></li>
+            <li><%-smartLink(`${cssURL}CSS_Grid_Layout/CSS_Grid_Layout_and_Accessibility`, null, "Grid layout and accessibility", cssURL)%></li>
+            <li><%-smartLink(`${cssURL}CSS_Grid_Layout/CSS_Grid_and_Progressive_Enhancement`, null, "Grid Layout and progressive enhancement", cssURL)%></li>
+            <li><%-smartLink(`${cssURL}CSS_Grid_Layout/Realizing_common_layouts_using_CSS_Grid_Layout`, null, "Realizing common layouts using grids", cssURL)%></li>
+            <li><%-smartLink(`${cssURL}CSS_Grid_Layout/Subgrid`, null, "Subgrid", cssURL)%></li>
+            <li><%-smartLink(`${cssURL}CSS_Grid_Layout/Masonry_Layout`, null, "Masonry layout", cssURL)%></li>
          </ol>
       </details>
   </li>
@@ -593,7 +601,7 @@ function buildSublist(pages, title) {
       <details>
           <summary>Images</summary>
           <ol>
-            <li><%-web.smartLink(`${cssURL}CSS_Images/Using_CSS_gradients`, null, "Using CSS gradients", cssURL)%></li>
+            <li><%-smartLink(`${cssURL}CSS_Images/Using_CSS_gradients`, null, "Using CSS gradients", cssURL)%></li>
           </ol>
       </details>
   </li>
@@ -601,8 +609,8 @@ function buildSublist(pages, title) {
       <details>
           <summary>Lists and counters</summary>
           <ol>
-            <li><%-web.smartLink(`${cssURL}CSS_Lists_and_Counters/Using_CSS_counters`, null, "Using CSS counters", cssURL)%></li>
-            <li><%-web.smartLink(`${cssURL}CSS_Lists_and_Counters/Consistent_list_indentation`, null, "Consistent list indentation", cssURL)%></li>
+            <li><%-smartLink(`${cssURL}CSS_Lists_and_Counters/Using_CSS_counters`, null, "Using CSS counters", cssURL)%></li>
+            <li><%-smartLink(`${cssURL}CSS_Lists_and_Counters/Consistent_list_indentation`, null, "Consistent list indentation", cssURL)%></li>
           </ol>
       </details>
   </li>
@@ -610,10 +618,10 @@ function buildSublist(pages, title) {
       <details>
           <summary>Logical properties</summary>
           <ol>
-            <li><%-web.smartLink(`${cssURL}CSS_Logical_Properties/Basic_concepts`, null, "Basic concepts", cssURL)%></li>
-            <li><%-web.smartLink(`${cssURL}CSS_Logical_Properties/Floating_and_positioning`, null, "Floating and positioning", cssURL)%></li>
-            <li><%-web.smartLink(`${cssURL}CSS_Logical_Properties/Margins_borders_padding`, null, "Margins, borders and padding", cssURL)%></li>
-            <li><%-web.smartLink(`${cssURL}CSS_Logical_Properties/Sizing`, null, "Sizing", cssURL)%></li>
+            <li><%-smartLink(`${cssURL}CSS_Logical_Properties/Basic_concepts`, null, "Basic concepts", cssURL)%></li>
+            <li><%-smartLink(`${cssURL}CSS_Logical_Properties/Floating_and_positioning`, null, "Floating and positioning", cssURL)%></li>
+            <li><%-smartLink(`${cssURL}CSS_Logical_Properties/Margins_borders_padding`, null, "Margins, borders and padding", cssURL)%></li>
+            <li><%-smartLink(`${cssURL}CSS_Logical_Properties/Sizing`, null, "Sizing", cssURL)%></li>
           </ol>
       </details>
   </li>
@@ -621,9 +629,9 @@ function buildSublist(pages, title) {
       <details>
           <summary>Media queries</summary>
           <ol>
-            <li><%-web.smartLink(`${cssURL}Media_Queries/Using_media_queries`, null, "Using media queries", cssURL)%></li>
-            <li><%-web.smartLink(`${cssURL}Media_Queries/Using_Media_Queries_for_Accessibility`, null, "Using media queries for accessibility", cssURL)%></li>
-            <li><%-web.smartLink(`${cssURL}Media_Queries/Testing_media_queries`, null, "Testing media queries programmatically", cssURL)%></li>
+            <li><%-smartLink(`${cssURL}Media_Queries/Using_media_queries`, null, "Using media queries", cssURL)%></li>
+            <li><%-smartLink(`${cssURL}Media_Queries/Using_Media_Queries_for_Accessibility`, null, "Using media queries for accessibility", cssURL)%></li>
+            <li><%-smartLink(`${cssURL}Media_Queries/Testing_media_queries`, null, "Testing media queries programmatically", cssURL)%></li>
           </ol>
       </details>
   </li>
@@ -631,7 +639,7 @@ function buildSublist(pages, title) {
       <details>
           <summary>Positioning</summary>
           <ol>
-            <li><%-web.smartLink(`${cssURL}CSS_Positioning/Understanding_z_index`, null, "Understanding CSS z-index", cssURL)%></li>
+            <li><%-smartLink(`${cssURL}CSS_Positioning/Understanding_z_index`, null, "Understanding CSS z-index", cssURL)%></li>
           </ol>
       </details>
   </li>
@@ -639,8 +647,8 @@ function buildSublist(pages, title) {
       <details>
           <summary>Scroll snap</summary>
           <ol>
-            <li><%-web.smartLink(`${cssURL}CSS_Scroll_Snap/Basic_concepts`, null, "Basic concepts of scroll snap", cssURL)%></li>
-            <li><%-web.smartLink(`${cssURL}CSS_Scroll_Snap/Browser_compat`, null, "Browser compatibility and scroll snap", cssURL)%></li>
+            <li><%-smartLink(`${cssURL}CSS_Scroll_Snap/Basic_concepts`, null, "Basic concepts of scroll snap", cssURL)%></li>
+            <li><%-smartLink(`${cssURL}CSS_Scroll_Snap/Browser_compat`, null, "Browser compatibility and scroll snap", cssURL)%></li>
           </ol>
       </details>
   </li>
@@ -648,10 +656,10 @@ function buildSublist(pages, title) {
       <details>
           <summary>Shapes</summary>
           <ol>
-            <li><%-web.smartLink(`${cssURL}CSS_Shapes/Overview_of_CSS_Shapes`, null, "Overview of shapes", cssURL)%></li>
-            <li><%-web.smartLink(`${cssURL}CSS_Shapes/From_box_values`, null, "Shapes from box values", cssURL)%></li>
-            <li><%-web.smartLink(`${cssURL}CSS_Shapes/Basic_Shapes`, null, "Basic shapes", cssURL)%></li>
-            <li><%-web.smartLink(`${cssURL}CSS_Shapes/Shapes_From_Images`, null, "Shapes from images", cssURL)%></li>
+            <li><%-smartLink(`${cssURL}CSS_Shapes/Overview_of_CSS_Shapes`, null, "Overview of shapes", cssURL)%></li>
+            <li><%-smartLink(`${cssURL}CSS_Shapes/From_box_values`, null, "Shapes from box values", cssURL)%></li>
+            <li><%-smartLink(`${cssURL}CSS_Shapes/Basic_Shapes`, null, "Basic shapes", cssURL)%></li>
+            <li><%-smartLink(`${cssURL}CSS_Shapes/Shapes_From_Images`, null, "Shapes from images", cssURL)%></li>
           </ol>
       </details>
   </li>
@@ -659,7 +667,7 @@ function buildSublist(pages, title) {
       <details>
           <summary>Text</summary>
           <ol>
-            <li><%-web.smartLink(`${cssURL}CSS_Text/Wrapping_Text`, null, "Wrapping and breaking text", cssURL)%></li>
+            <li><%-smartLink(`${cssURL}CSS_Text/Wrapping_Text`, null, "Wrapping and breaking text", cssURL)%></li>
           </ol>
       </details>
   </li>
@@ -667,7 +675,7 @@ function buildSublist(pages, title) {
       <details>
           <summary>Transforms</summary>
           <ol>
-            <li><%-web.smartLink(`${cssURL}CSS_Transforms/Using_CSS_transforms`, null, "Using transforms", cssURL)%></li>
+            <li><%-smartLink(`${cssURL}CSS_Transforms/Using_CSS_transforms`, null, "Using transforms", cssURL)%></li>
           </ol>
       </details>
   </li>
@@ -675,7 +683,7 @@ function buildSublist(pages, title) {
       <details>
           <summary>Transitions</summary>
           <ol>
-            <li><%-web.smartLink(`${cssURL}CSS_Transitions/Using_CSS_transitions`, null, "Using transitions", cssURL)%></li>
+            <li><%-smartLink(`${cssURL}CSS_Transitions/Using_CSS_transitions`, null, "Using transitions", cssURL)%></li>
           </ol>
       </details>
   </li>
@@ -683,25 +691,25 @@ function buildSublist(pages, title) {
   <li><strong>Layout cookbook</strong></li>
   <li class="toggle">
     <ol>
-      <li><%-web.smartLink(`${cssURL}Layout_cookbook/Media_objects`, null, "Media objects", cssURL)%></li>
-      <li><%-web.smartLink(`${cssURL}Layout_cookbook/Column_layouts`, null, "Columns", cssURL)%></li>
-      <li><%-web.smartLink(`${cssURL}Layout_cookbook/Center_an_element`, null, "Center an element", cssURL)%></li>
-      <li><%-web.smartLink(`${cssURL}Layout_cookbook/Sticky_footers`, null, "Sticky footers", cssURL)%></li>
-      <li><%-web.smartLink(`${cssURL}Layout_cookbook/Split_Navigation`, null, "Split navigation", cssURL)%></li>
-      <li><%-web.smartLink(`${cssURL}Layout_cookbook/Breadcrumb_Navigation`, null, "Breadcrumb navigation", cssURL)%></li>
-      <li><%-web.smartLink(`${cssURL}Layout_cookbook/List_group_with_badges`, null, "List group with badges", cssURL)%></li>
-      <li><%-web.smartLink(`${cssURL}Layout_cookbook/Pagination`, null, "Pagination", cssURL)%></li>
-      <li><%-web.smartLink(`${cssURL}Layout_cookbook/Card`, null, "Card", cssURL)%></li>
-      <li><%-web.smartLink(`${cssURL}Layout_cookbook/Grid_wrapper`, null, "Grid wrapper", cssURL)%></li>
+      <li><%-smartLink(`${cssURL}Layout_cookbook/Media_objects`, null, "Media objects", cssURL)%></li>
+      <li><%-smartLink(`${cssURL}Layout_cookbook/Column_layouts`, null, "Columns", cssURL)%></li>
+      <li><%-smartLink(`${cssURL}Layout_cookbook/Center_an_element`, null, "Center an element", cssURL)%></li>
+      <li><%-smartLink(`${cssURL}Layout_cookbook/Sticky_footers`, null, "Sticky footers", cssURL)%></li>
+      <li><%-smartLink(`${cssURL}Layout_cookbook/Split_Navigation`, null, "Split navigation", cssURL)%></li>
+      <li><%-smartLink(`${cssURL}Layout_cookbook/Breadcrumb_Navigation`, null, "Breadcrumb navigation", cssURL)%></li>
+      <li><%-smartLink(`${cssURL}Layout_cookbook/List_group_with_badges`, null, "List group with badges", cssURL)%></li>
+      <li><%-smartLink(`${cssURL}Layout_cookbook/Pagination`, null, "Pagination", cssURL)%></li>
+      <li><%-smartLink(`${cssURL}Layout_cookbook/Card`, null, "Card", cssURL)%></li>
+      <li><%-smartLink(`${cssURL}Layout_cookbook/Grid_wrapper`, null, "Grid wrapper", cssURL)%></li>
     </ol>
   </li>
 
   <li><strong>Tools</strong></li>
   <li class="toggle">
     <ol>
-      <li><%-web.smartLink(`${cssURL}CSS_Colors/Color_picker_tool`, null, text['Color_picker_tool'], cssURL)%></li>
-      <li><%-web.smartLink(`${cssURL}CSS_Background_and_Borders/Box-shadow_generator`, null, text['Box-shadow_generator'], cssURL)%></li>
-      <li><%-web.smartLink(`${cssURL}CSS_Background_and_Borders/Border-image_generator`, null, text['Border-image_generator'], cssURL)%></li>
+      <li><%-smartLink(`${cssURL}CSS_Colors/Color_picker_tool`, null, text['Color_picker_tool'], cssURL)%></li>
+      <li><%-smartLink(`${cssURL}CSS_Background_and_Borders/Box-shadow_generator`, null, text['Box-shadow_generator'], cssURL)%></li>
+      <li><%-smartLink(`${cssURL}CSS_Background_and_Borders/Border-image_generator`, null, text['Border-image_generator'], cssURL)%></li>
     </ol>
   </li>
 

@@ -7,6 +7,32 @@ const Templates = require("../templates.js");
 const DUMMY_BASE_URL = "https://example.com";
 const L10N_COMMON_STRINGS = new Templates().getLocalizedCommonStrings();
 
+const _warned = new Map();
+// The purpose of this function is to make sure `console.warn` is only called once
+// per 'macro' per 'href'.
+// There are some macros that use `smartLink` within themselves and these macros
+// might be buggy and that's not the fault of the person using the wrapping
+// macro. And because these might be used over and over and over we don't want
+// to bombard stdout with warnings more than once.
+// For example, there are X pages that use the CSS sidebar macro `CSSRef` and it
+// might contain something like `smartLink(URL + 'oops', ...)` which leads to a
+// broken link. But that problem lies with the `CSSRef.ejs` macro, which we
+// don't entirely want to swallow and forget. But we don't want to point this
+// out on every single page that *uses* that `CSSRef` macro.
+function warnBrokenFlawByMacro(macro, href, extra = "") {
+  if (!_warned.has(macro)) {
+    _warned.set(macro, new Set());
+  }
+  if (!_warned.get(macro).has(href)) {
+    _warned.get(macro).add(href);
+    console.warn(
+      `In ${macro} the smartLink to ${href} is broken${
+        extra ? ` (${extra})` : ""
+      }`
+    );
+  }
+}
+
 module.exports = {
   // Insert a hyperlink.
   link(uri, text, title, target) {
@@ -21,7 +47,7 @@ module.exports = {
     return out.join("");
   },
 
-  smartLink(href, title, content, subpath, basepath) {
+  smartLink(href, title, content, subpath, basepath, ignoreFlawMacro = null) {
     let flaw;
     let flawAttribute = "";
     const page = this.info.getPageByURL(href);
@@ -59,14 +85,25 @@ module.exports = {
             // So those with titles we ignore.
             suggested = suggested.replace(/\//g, ".");
           }
-          flaw = this.env.recordNonFatalError(
-            "redirected-link",
-            `${hrefpath} redirects to ${page.url}`,
-            {
-              current: subpath,
-              suggested,
-            }
-          );
+          if (ignoreFlawMacro) {
+            warnBrokenFlawByMacro(
+              ignoreFlawMacro,
+              href,
+              `redirects to ${page.url}`
+            );
+          } else {
+            flaw = this.env.recordNonFatalError(
+              "redirected-link",
+              `${hrefpath} redirects to ${page.url}`,
+              {
+                current: subpath,
+                suggested,
+              }
+            );
+            flawAttribute = ` data-flaw-src="${util.htmlEscape(
+              flaw.macroSource
+            )}"`;
+          }
         } else {
           flaw = this.env.recordNonFatalError(
             "wrong-xref-macro",
@@ -75,8 +112,10 @@ module.exports = {
               current: subpath,
             }
           );
+          flawAttribute = ` data-flaw-src="${util.htmlEscape(
+            flaw.macroSource
+          )}"`;
         }
-        flawAttribute = ` data-flaw-src="${util.htmlEscape(flaw.macroSource)}"`;
       }
       const titleAttribute = title ? ` title="${title}"` : "";
       return `<a href="${
@@ -92,11 +131,17 @@ module.exports = {
       if (enUSPage.url) {
         // But it's still a flaw. Record it so that translators can write a
         // translated document to "fill the hole".
-        flaw = this.env.recordNonFatalError(
-          "broken-link",
-          `${hrefpath} does not exist but fallbacked on ${enUSPage.url}`
-        );
-        flawAttribute = ` data-flaw-src="${util.htmlEscape(flaw.macroSource)}"`;
+        if (ignoreFlawMacro) {
+          warnBrokenFlawByMacro(ignoreFlawMacro, href);
+        } else {
+          flaw = this.env.recordNonFatalError(
+            "broken-link",
+            `${hrefpath} does not exist but fallbacked on ${enUSPage.url}`
+          );
+          flawAttribute = ` data-flaw-src="${util.htmlEscape(
+            flaw.macroSource
+          )}"`;
+        }
         return (
           '<a class="only-in-en-us" ' +
           'title="Currently only available in English (US)" ' +
@@ -104,11 +149,15 @@ module.exports = {
         );
       }
     }
-    flaw = this.env.recordNonFatalError(
-      "broken-link",
-      `${hrefpath} does not exist`
-    );
-    flawAttribute = ` data-flaw-src="${util.htmlEscape(flaw.macroSource)}"`;
+    if (ignoreFlawMacro) {
+      warnBrokenFlawByMacro(ignoreFlawMacro, href);
+    } else {
+      flaw = this.env.recordNonFatalError(
+        "broken-link",
+        `${hrefpath} does not exist`
+      );
+      flawAttribute = ` data-flaw-src="${util.htmlEscape(flaw.macroSource)}"`;
+    }
     // Let's get a potentially localized title for when the document is missing.
     const titleWhenMissing = this.mdn.getLocalString(
       L10N_COMMON_STRINGS,
