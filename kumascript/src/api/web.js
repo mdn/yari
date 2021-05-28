@@ -16,7 +16,7 @@ const _warned = new Map();
 // to bombard stdout with warnings more than once.
 // For example, there are X pages that use the CSS sidebar macro `CSSRef` and it
 // might contain something like `smartLink(URL + 'oops', ...)` which leads to a
-// broken link. But thath problem lies with the `CSSRef.ejs` macro, which we
+// broken link. But that problem lies with the `CSSRef.ejs` macro, which we
 // don't entirely want to swallow and forget. But we don't want to point this
 // out on every single page that *uses* that `CSSRef` macro.
 function warnBrokenFlawByMacro(macro, href, extra = "") {
@@ -26,7 +26,7 @@ function warnBrokenFlawByMacro(macro, href, extra = "") {
   if (!_warned.get(macro).has(href)) {
     _warned.get(macro).add(href);
     console.warn(
-      `In ${macro} smartLink to ${href} is broken${extra ? ` (${extra})` : ""}`
+      `In ${macro} the smartLink to ${href} is broken${extra ? ` (${extra})` : ""}`
     );
   }
 }
