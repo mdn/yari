@@ -44,6 +44,7 @@ if (anchor && anchor[0] != '#') {
 if (!$3) {
   str = `<code>${str}</code>`;
 }
+
 const link = web.smartLink(URL + anchor, null, str, $0, basePath);
 
 %><%- link %>
