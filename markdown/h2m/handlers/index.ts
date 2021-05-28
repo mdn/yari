@@ -166,10 +166,7 @@ export const handlers: QueryAndTransform[] = [
     { is: ["ul", "ol"], canHaveClass: ["threecolumns"] },
     function list(node, t) {
       const ordered = node.tagName == "ol";
-      const children = asArray(t(node)).map((child) =>
-        child.type === "listItem" ? child : h("listItem", child)
-      );
-      return h("list", children, {
+      return h("list", t(node), {
         ordered,
         start: ordered ? node.properties.start || 1 : null,
         spread: false,

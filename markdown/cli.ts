@@ -52,6 +52,10 @@ program
     default: "keep",
     validator: ["dry", "keep", "replace"],
   })
+  .option("--print-ast", "Prints MD AST", {
+    default: false,
+    validator: program.BOOLEAN,
+  })
   .argument("[folder]", "convert by folder")
   .action(
     tryOrExit(async ({ args, options }) => {
@@ -78,7 +82,9 @@ program
             continue;
           }
           const { body: h, frontmatter } = fm(doc.rawContent);
-          const [markdown, { invalid, unhandled }] = await h2m(h);
+          const [markdown, { invalid, unhandled }] = await h2m(h, {
+            printAST: options.printAst,
+          });
 
           if (invalid.length > 0 || unhandled.length > 0) {
             problems.set(doc.url, {

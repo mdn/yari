@@ -1,24 +1,49 @@
 import * as cheerio from "cheerio";
 import * as unified from "unified";
-import * as parse from "rehype-parse";
-import * as remarkPrettier from "remark-prettier";
+import * as parseHTML from "rehype-parse";
 import * as gfm from "remark-gfm";
+import * as parseMD from "remark-parse";
+import * as remarkPrettier from "remark-prettier";
+import * as stringify from "remark-stringify";
 import {
   extractSections,
   extractSummary,
 } from "../../build/document-extractor";
 
-import { decodeKS, encodeKS } from "../utils";
+import { decodeKS, encodeKS, prettyAST } from "../utils";
+import { MDNodeUnion } from "./h";
 import { transform } from "./transform";
 
 const getTransformProcessor = (options) =>
   unified()
-    .use(parse)
+    .use(parseHTML)
     .use(transform, options)
     .use(gfm)
     .use(remarkPrettier, { report: false, options: { proseWrap: "always" } });
 
-export async function h2m(html) {
+const stripPrettierIgnore = (node: MDNodeUnion) => ({
+  ...node,
+  ...(Array.isArray(node.children)
+    ? {
+        children: node.children
+          .filter(
+            (node) =>
+              !(
+                node.type == "html" &&
+                node.value.trim() == "<!-- prettier-ignore -->"
+              )
+          )
+          .map((node) => stripPrettierIgnore(node)),
+      }
+    : {}),
+});
+
+const stripPrettierIgnoreProcesser = unified()
+  .use(parseMD)
+  .use(() => (result: any) => stripPrettierIgnore(result))
+  .use(stringify);
+
+export async function h2m(html, { printAST }: { printAST?: boolean } = {}) {
   const encodedHTML = encodeKS(html);
   const summary = extractSummary(
     extractSections(cheerio.load(`<div id="_body">${encodedHTML}</div>`))[0]
@@ -30,15 +55,16 @@ export async function h2m(html) {
     .use(() => (result: any) => {
       invalid = result.invalid;
       unhandled = result.unhandled;
+      if (printAST) {
+        console.log(prettyAST(result.transformed));
+      }
       return result.transformed;
     })
     .process(encodedHTML);
 
-  return [
-    decodeKS(String(file))
-      .split("\n")
-      .filter((line) => !line.includes("<!-- prettier-ignore -->"))
-      .join("\n"),
-    { invalid, unhandled },
-  ];
+  const result = String(
+    await stripPrettierIgnoreProcesser.process(String(file))
+  );
+
+  return [decodeKS(result), { invalid, unhandled }];
 }
