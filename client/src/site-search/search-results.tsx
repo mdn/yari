@@ -2,6 +2,7 @@ import React from "react";
 import { Link, createSearchParams, useSearchParams } from "react-router-dom";
 import useSWR from "swr";
 
+import { Loading } from "../ui/atoms/loading";
 import { CRUD_MODE } from "../constants";
 import { useLocale } from "../hooks";
 import { appendURL } from "./utils";
@@ -184,11 +185,7 @@ export default function SearchResults() {
     );
   }
   // else...
-  return (
-    <div className="loading-wrapper">
-      <p>Loading search results...</p>
-    </div>
-  );
+  return <Loading minHeight={500} message="Loading search results..." />;
 }
 
 function RemoteSearchWarning() {

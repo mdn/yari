@@ -12,14 +12,16 @@ import { A11yNav } from "./ui/molecules/a11y-nav";
 import { Footer } from "./ui/organisms/footer";
 import { Header } from "./ui/organisms/header";
 import { SiteSearch } from "./site-search";
+import { Loading } from "./ui/atoms/loading";
 import { PageContentContainer } from "./ui/atoms/page-content";
 import { PageNotFound } from "./page-not-found";
-import { Banner } from "./banners";
+// import { Banner } from "./banners";
 import { SignIn, SignUp } from "./auth";
 import { Settings } from "./settings";
 import { Plus } from "./plus";
 
 const AllFlaws = React.lazy(() => import("./flaws"));
+const AllTranslations = React.lazy(() => import("./translations"));
 const DocumentEdit = React.lazy(() => import("./document/forms/edit"));
 const DocumentCreate = React.lazy(() => import("./document/forms/create"));
 const DocumentManage = React.lazy(() => import("./document/forms/manage"));
@@ -32,12 +34,19 @@ function Layout({ pageType, children }) {
   return (
     <>
       <A11yNav />
+      {/* Commented out for now. Kept as a record/reminder of how we implement
+       banners. As of May 27, 2021 we don't have any banners to show. At all.
+
+       Note, if you do uncomment banners again (because there's one to possible
+       display), remember to go to
+       */}
+      {/* {!isServer && <Banner />} */}
       <div className={`page-wrapper ${pageType}`}>
         <Header />
         {children}
       </div>
       <Footer />
-      {!isServer && <Banner />}
+
       {/* Shown on mobile when main navigation is expanded to provide a clear distinction between the foreground menu and the page content */}
       <div className="page-overlay hidden"></div>
     </>
@@ -85,7 +94,7 @@ function LoadingFallback({ message }: { message?: string }) {
       <PageContentContainer>
         {/* This extra minHeight is just so that the footer doesn't flicker
           in and out as the fallback appears. */}
-        <p style={{ minHeight: 800 }}>{message || "Loading..."}</p>
+        <Loading minHeight={800} message={message || "Loading…"} />
       </PageContentContainer>
     </StandardLayout>
   );
@@ -128,6 +137,14 @@ export function App(appProps) {
                   element={
                     <StandardLayout>
                       <AllFlaws />
+                    </StandardLayout>
+                  }
+                />
+                <Route
+                  path="/_translations"
+                  element={
+                    <StandardLayout>
+                      <AllTranslations />
                     </StandardLayout>
                   }
                 />

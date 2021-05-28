@@ -95,6 +95,9 @@ export default function WritersHomepage() {
         <h3>Tools</h3>
         <ul>
           <li>
+            <Link to={`/${locale}/_translations`}>Translations</Link>
+          </li>
+          <li>
             <Link to={`/${locale}/_sitemap`}>Sitemap</Link>
           </li>
           <li>

@@ -210,7 +210,7 @@
     "status": "ED"
   },
   "CSS3 Box": {
-    "name": "CSS Basic Box Model",
+    "name": "CSS Box Model",
     "url": "https://drafts.csswg.org/css-box-3/",
     "status": "CR"
   },
@@ -1098,6 +1098,11 @@
     "name": "Web App Manifest",
     "url": "https://w3c.github.io/manifest/",
     "status": "WD"
+  },
+  "ManifestAppInfo": {
+    "name": "Web App Manifest - Application Information",
+    "url": "https://w3c.github.io/manifest-app-info/",
+    "status": "ED"
   },
   "MathML2": {
     "name": "MathML 2.0",
