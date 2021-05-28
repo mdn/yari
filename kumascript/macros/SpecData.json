@@ -1544,6 +1544,16 @@
     "url": "https://w3c.github.io/uievents/",
     "status": "WD"
   },
+  "UI Events Code": {
+    "name": "UI Events KeyboardEvent code Values",
+    "url": "https://www.w3.org/TR/uievents-code/",
+    "status": "CR"
+  },
+  "UI Events Key": {
+    "name": "UI Events KeyboardEvent key Values",
+    "url": "https://www.w3.org/TR/uievents-key/",
+    "status": "CR"
+  },
   "Undo Manager": {
     "name": "UndoManager and DOMTransaction",
     "url": "https://dvcs.w3.org/hg/undomanager/raw-file/tip/undomanager.html",
