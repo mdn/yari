@@ -371,7 +371,6 @@ async function buildDocument(document, documentOptions = {}) {
               flaw.redirectInfo.suggested
             );
           }
-          // const id = flaw.id;
           const explanation = flaw.error.message;
           return Object.assign({ fixable, suggestion, explanation }, flaw);
         });
