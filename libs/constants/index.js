@@ -85,7 +85,12 @@ const CSP_DIRECTIVES = {
   "style-src": ["'report-sample'", "'self'", "'unsafe-inline'"],
   "object-src": ["'none'"],
   "base-uri": ["'self'"],
-  "connect-src": ["'self'"],
+  "connect-src": [
+    "'self'",
+
+    "www.google-analytics.com",
+    "stats.g.doubleclick.net",
+  ],
   "font-src": ["'self'"],
   "frame-src": [
     "'self'",
@@ -108,6 +113,9 @@ const CSP_DIRECTIVES = {
     "media.stage.mdn.mozit.cloud",
     "interactive-examples.mdn.mozilla.net",
     "wikipedia.org",
+
+    "www.google-analytics.com",
+    "www.gstatic.com",
   ],
   "manifest-src": ["'self'"],
   "media-src": ["'self'", "archive.org", "videos.cdn.mozilla.net"],
