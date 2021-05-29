@@ -73,6 +73,60 @@ export function Document(props /* TODO: define a TS interface for this */) {
     }
   );
 
+  function copyToClipboard(content) {
+    navigator.clipboard.writeText(content);
+  }
+
+  React.useEffect(() => {
+    if (!error) {
+      [...document.querySelectorAll("#content pre")].forEach((element) => {
+        const code = element.textContent;
+        const userMessage = document.createElement("span");
+        const button = document.createElement("button");
+        const span = document.createElement("span");
+        userMessage.textContent = "Copied!";
+        span.textContent = "Copy to Clipboard";
+
+        userMessage.setAttribute("class", "user-message");
+        userMessage.setAttribute("aria-hidden", "true");
+        button.setAttribute("aria-hidden", "true");
+        button.setAttribute("type", "button");
+        button.setAttribute("class", "copy-icon");
+        span.setAttribute("class", "visually-hidden");
+
+        button.appendChild(span);
+        element.appendChild(button);
+        element.appendChild(userMessage);
+
+        element.addEventListener("mouseover", () => {
+          button.setAttribute("aria-hidden", "false");
+        });
+
+        element.addEventListener("mouseout", () => {
+          button.setAttribute("aria-hidden", "true");
+        });
+
+        button.onclick = () => {
+          userMessage.classList.add("show");
+          element.classList.add("support");
+          userMessage.setAttribute("aria-hidden", "false");
+          copyToClipboard(code);
+          button.classList.add("copied");
+          userMessage.style.top = "53px";
+
+          // Or could use keyframes in CSS to fade
+          // the user message after 1-1.5s, but
+          // the aria-* attributes will have to be handled with JS
+          setTimeout(() => {
+            element.classList.remove("support");
+            userMessage.classList.remove("show");
+            userMessage.setAttribute("aria-hidden", "true");
+          }, 1000);
+        };
+      });
+    }
+  }, [doc, error]);
+
   React.useEffect(() => {
     if (!doc && !error) {
       document.title = "⏳ Loading…";
