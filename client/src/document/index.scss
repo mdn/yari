@@ -35,6 +35,67 @@ a.new {
 .main-page-content {
   padding: math.div($base-spacing, 2) $base-spacing $base-spacing;
 
+  pre {
+    position: relative;
+    z-index: 4;
+  }
+
+  /* Since pre has overflow: auto, the absolutely positioned
+    elements in a relatively positioned container that is 
+    auto overflowing, the z-index stacking context wont let
+    elements out of the pre, so with initial, unset, visible, revert 
+    inherit the "Copied!" message is able to display appropriately */
+  .support {
+    overflow: initial;
+  }
+
+  .copy-icon {
+    position: absolute;
+    background: #eee url("../assets/clippy.svg") 50% 50% no-repeat;
+    background-position: 60% 50%;
+    background-size: 17px 17px;
+    display: none;
+    vertical-align: middle;
+    border: 1px solid lightgray;
+    top: math.div($base-spacing, 3);
+    right: math.div($base-spacing, 3);
+    width: 33px;
+    height: 38px;
+    margin: 0;
+    padding: 7px math.div($base-spacing, 4);
+    border-radius: 5px;
+  }
+
+  pre:focus .copy-icon,
+  pre:hover .copy-icon {
+    display: block;
+  }
+
+  .copy-icon:focus,
+  .copy-icon:hover {
+    background-color: rgb(231, 231, 231);
+    cursor: pointer;
+  }
+
+  .user-message {
+    position: absolute;
+    top: 20px;
+    right: math.div($base-spacing, 3);
+    display: none;
+    background: #333;
+    padding: 0.4em 0.5em;
+    border-radius: math.div($base-spacing, 6);
+    color: #fff;
+    opacity: 1;
+    z-index: -1;
+    font: 16px/1.5 sans-serif;
+    font-size: 14px;
+  }
+
+  .show {
+    display: block;
+  }
+
   @media #{$mq-small-desktop-and-up} {
     margin-bottom: $base-spacing * 2;
     padding: 0 $base-spacing $base-spacing;
