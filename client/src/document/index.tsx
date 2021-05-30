@@ -79,51 +79,71 @@ export function Document(props /* TODO: define a TS interface for this */) {
 
   React.useEffect(() => {
     if (!error) {
-      [...document.querySelectorAll("#content pre")].forEach((element) => {
-        const code = element.textContent;
-        const userMessage = document.createElement("span");
-        const button = document.createElement("button");
-        const span = document.createElement("span");
-        userMessage.textContent = "Copied!";
-        span.textContent = "Copy to Clipboard";
+      // '#content pre' works but also selects <pre>
+      // tags without class="brush:*", like class="notranslate"
+      // which represent 'formal_syntax' <pre> content, and
+      // syntax highlight isn't targeting <pre class="notranslate">
+      // its getting $(pre[class*=brush]), this is in regards to wrapping
+      // <pre> tags with a <div> to absolutely position the
+      // copy-to-clipboard <button> relatively in the newly added parent div,
+      // instead of selecting #content pre which grabs
+      // class="notranslate" formal syntax tags, just grab
+      // the <pre class="brush"> tags which are injected into
+      // a `<div class="code-example">` from syntax highlighter
+      [...document.querySelectorAll("#content .code-example pre")].forEach(
+        (element) => {
+          const code = element.textContent;
+          const userMessage = document.createElement("span");
+          const button = document.createElement("button");
+          const span = document.createElement("span");
+          userMessage.textContent = "Copied!";
+          span.textContent = "Copy to Clipboard";
 
-        userMessage.setAttribute("class", "user-message");
-        userMessage.setAttribute("aria-hidden", "true");
-        button.setAttribute("aria-hidden", "true");
-        button.setAttribute("type", "button");
-        button.setAttribute("class", "copy-icon");
-        span.setAttribute("class", "visually-hidden");
+          // With the syntaxHighlight macro changes to wrap
+          // each <pre> in a <div> for layout reasons,
+          // each parentNode will now be the div with the
+          // <pre class="brush"> tag as its only child
+          const wrapper = element.parentElement;
 
-        button.appendChild(span);
-        element.appendChild(button);
-        element.appendChild(userMessage);
-
-        element.addEventListener("mouseover", () => {
-          button.setAttribute("aria-hidden", "false");
-        });
-
-        element.addEventListener("mouseout", () => {
+          userMessage.setAttribute("class", "user-message");
+          userMessage.setAttribute("aria-hidden", "true");
           button.setAttribute("aria-hidden", "true");
-        });
+          button.setAttribute("type", "button");
+          button.setAttribute("class", "copy-icon");
+          span.setAttribute("class", "visually-hidden");
 
-        button.onclick = () => {
-          userMessage.classList.add("show");
-          element.classList.add("support");
-          userMessage.setAttribute("aria-hidden", "false");
-          copyToClipboard(code);
-          button.classList.add("copied");
-          userMessage.style.top = "53px";
+          button.appendChild(span);
+          wrapper?.appendChild(button);
+          wrapper?.appendChild(userMessage);
 
-          // Or could use keyframes in CSS to fade
-          // the user message after 1-1.5s, but
-          // the aria-* attributes will have to be handled with JS
-          setTimeout(() => {
-            element.classList.remove("support");
-            userMessage.classList.remove("show");
-            userMessage.setAttribute("aria-hidden", "true");
-          }, 1000);
-        };
-      });
+          element.addEventListener("mouseover", () => {
+            button.setAttribute("aria-hidden", "false");
+          });
+
+          element.addEventListener("mouseout", () => {
+            button.setAttribute("aria-hidden", "true");
+          });
+
+          button.onclick = () => {
+            userMessage.classList.add("show");
+            element.classList.add("support");
+            userMessage.setAttribute("aria-hidden", "false");
+            copyToClipboard(code);
+            button.classList.add("copied");
+            userMessage.style.top = "52px";
+
+            // Could probably use keyframes in CSS to fade
+            // the user message after 1-1.5s, but
+            // the aria-* attr and class add/removing will
+            // have to be handled with JS
+            setTimeout(() => {
+              element.classList.remove("support");
+              userMessage.classList.remove("show");
+              userMessage.setAttribute("aria-hidden", "true");
+            }, 1000);
+          };
+        }
+      );
     }
   }, [doc, error]);
 
