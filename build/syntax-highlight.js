@@ -80,7 +80,10 @@ function syntaxHighlight($, doc) {
     const code = $pre.text();
     const html = Prism.highlight(code, grammar, name);
     const $code = $("<code>").html(html);
+    const wrap = $("<div class='code-example'></div>");
+
     $pre.empty().append($code);
+    $pre.wrapAll(wrap);
   });
 }
 
