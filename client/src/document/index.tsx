@@ -73,8 +73,26 @@ export function Document(props /* TODO: define a TS interface for this */) {
     }
   );
 
-  function copyToClipboard(content) {
-    navigator.clipboard.writeText(content);
+  function copyToClipboard(element) {
+    const browser = navigator.userAgent;
+    const code = element.textContent;
+    // expect window.clipboardData to not exist unless browser is IE
+    // @ts-expect-error
+    const windowClipboard = window.clipboardData;
+
+    // If browswer is IE use window.clipboardData.setData
+    // could use window.execCommand('copy') but it is deprecated
+    if (
+      windowClipboard &&
+      windowClipboard.setData &&
+      browser.indexOf("Microsoft Internet Explorer") > -1
+    ) {
+      windowClipboard.setData("text/plain", code);
+    } else {
+      // A browser that isn't IE (Chrome, Edge, Firefox, etc)
+      // Support for the Clipboard API's navigator.clipboard.writeText() method was added in Firefox 63.
+      navigator.clipboard.writeText(code);
+    }
   }
 
   React.useEffect(() => {
@@ -92,7 +110,6 @@ export function Document(props /* TODO: define a TS interface for this */) {
       // a `<div class="code-example">` from syntax highlighter
       [...document.querySelectorAll("#content .code-example pre")].forEach(
         (element) => {
-          const code = element.textContent;
           const userMessage = document.createElement("span");
           const button = document.createElement("button");
           const span = document.createElement("span");
@@ -103,7 +120,9 @@ export function Document(props /* TODO: define a TS interface for this */) {
           // each <pre> in a <div> for layout reasons,
           // each parentNode will now be the div with the
           // <pre class="brush"> tag as its only child
-          const wrapper = element.parentElement;
+          // could use wrapper : any without wrapper? but a bit stronger typing
+          // doesnt hurt
+          const wrapper: HTMLElement | null = element.parentElement;
 
           userMessage.setAttribute("class", "user-message");
           userMessage.setAttribute("aria-hidden", "true");
@@ -126,9 +145,8 @@ export function Document(props /* TODO: define a TS interface for this */) {
 
           button.onclick = () => {
             userMessage.classList.add("show");
-            element.classList.add("support");
             userMessage.setAttribute("aria-hidden", "false");
-            copyToClipboard(code);
+            copyToClipboard(element);
             button.classList.add("copied");
             userMessage.style.top = "52px";
 
@@ -137,7 +155,6 @@ export function Document(props /* TODO: define a TS interface for this */) {
             // the aria-* attr and class add/removing will
             // have to be handled with JS
             setTimeout(() => {
-              element.classList.remove("support");
               userMessage.classList.remove("show");
               userMessage.setAttribute("aria-hidden", "true");
             }, 1000);
