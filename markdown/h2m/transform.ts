@@ -1,79 +1,13 @@
 import * as toHTML from "hast-util-to-html";
-import { Element } from "hast";
 import { Node } from "unist";
 
 import { handlers } from "./handlers";
 
 import { h, MDNodeUnion } from "./h";
-import {
-  asArray,
-  InvalidASTError,
-  Options,
-  toSelector,
-  wrapText,
-} from "./utils";
-import { Query } from "./handlers/utils";
+import { InvalidASTError, Options, wrapText } from "./utils";
+import { matchesQuery } from "./handlers/utils";
 
 const minify = require("rehype-minify-whitespace");
-
-const isExhaustive = (
-  source: string[],
-  required: undefined | string | string[],
-  optional: undefined | string | string[] | ((str: string) => boolean)
-) => {
-  const sourceSet = new Set(source);
-  for (const key of asArray(required)) {
-    if (!sourceSet.delete(key)) {
-      return false;
-    }
-  }
-  for (const key of asArray(optional)) {
-    if (typeof key == "function") {
-      const matches = Array.from(sourceSet).filter((k) => key(k));
-      for (const match of matches) {
-        sourceSet.delete(match);
-      }
-    } else {
-      sourceSet.delete(key);
-    }
-  }
-  return sourceSet.size == 0;
-};
-
-const matchesQuery = (node: Element, check: Query) => {
-  if (typeof check == "function") {
-    return check(node);
-  }
-
-  if (node.type !== "element") {
-    return false;
-  }
-
-  if (Array.isArray(check) || typeof check == "string") {
-    return asArray(check).includes(toSelector(node));
-  }
-
-  if (typeof check !== "object") {
-    return false;
-  }
-
-  if (
-    "is" in check &&
-    !asArray(check.is).some((tagName) => node.tagName == tagName)
-  ) {
-    return false;
-  }
-
-  const { className, ...props } = node.properties;
-  return (
-    isExhaustive(Object.keys(props), check.has, check.canHave) &&
-    isExhaustive(
-      asArray(className) as string[],
-      check.hasClass,
-      check.canHaveClass
-    )
-  );
-};
 
 function transformNode(node, options: Options = {}) {
   const invalid: {

@@ -9,6 +9,7 @@ const repeat = require("repeat-string");
 const findAfter = require("unist-util-find-after");
 
 import { InvalidASTError } from "../utils";
+import { matchesQuery, Query } from "./utils";
 
 const searchLineFeeds = /\n/g;
 const searchTabOrSpaces = /[\t ]+/g;
@@ -21,11 +22,20 @@ const row = convert("tr");
 // See: <https://html.spec.whatwg.org/#the-css-user-agent-style-sheet-and-presentational-hints>
 const isBlock = convert(["html", "body", "div", "p"]);
 
+type Options = Partial<{ throw: boolean; allowedElements?: Query[] }>;
+
 // Implementation of the `innerText` getter:
 // <https://html.spec.whatwg.org/#the-innertext-idl-attribute>
 // Note that we act as if `node` is being rendered, and as if we’re a
 // CSS-supporting user agent.
-export function toText(node, options = { throw: true }) {
+export function toText(node, options: Options = { throw: true }) {
+  options.allowedElements = [
+    ...(options.allowedElements || []),
+    "html",
+    "body",
+    "div",
+    "p",
+  ];
   const children = node.children || [];
   const block = isBlock(node);
   const whiteSpace = inferWhiteSpace(node, {});
@@ -127,7 +137,7 @@ function innerTextCollection(node, index, parent, options) {
 }
 
 // Collect an element.
-function collectElement(node, _, parent, options) {
+function collectElement(node, _, parent, options: Options) {
   // First we infer the `white-space` property.
   const whiteSpace = inferWhiteSpace(node, options);
   const children = node.children || [];
@@ -157,8 +167,8 @@ function collectElement(node, _, parent, options) {
   }
 
   if (
-    (options.throw && !isBlock(node)) ||
-    Object.keys(node.properties).length > 0
+    options.throw &&
+    !(options.allowedElements || []).some((query) => matchesQuery(node, query))
   ) {
     throw new InvalidASTError("text", [node]);
   }

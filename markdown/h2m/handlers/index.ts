@@ -243,14 +243,20 @@ export const handlers: QueryAndTransform[] = [
             },
             (node, t, opts) => [
               h("html", "<!-- prettier-ignore -->\n"),
-              h("code", trimTrailingLines(wrapText(toText(node), opts)), {
-                lang,
-                meta: asArray(node.properties.className)
-                  .filter(
-                    (c) => typeof c == "string" && c.startsWith("example-")
-                  )
-                  .join(" "),
-              }),
+              h(
+                "code",
+                trimTrailingLines(
+                  wrapText(toText(node, { allowedElements: ["var"] }), opts)
+                ),
+                {
+                  lang,
+                  meta: asArray(node.properties.className)
+                    .filter(
+                      (c) => typeof c == "string" && c.startsWith("example-")
+                    )
+                    .join(" "),
+                }
+              ),
             ],
           ] as QueryAndTransform
       )

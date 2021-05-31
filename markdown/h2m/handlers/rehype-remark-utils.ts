@@ -135,7 +135,7 @@ export function code(node, opts) {
     }
   }
 
-  return h("code", trim(wrapText(toText(node), opts)), {
+  return h("code", trim(wrapText(toText(node, opts), opts)), {
     lang: lang || null,
     meta: null,
   });
