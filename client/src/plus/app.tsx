@@ -1,10 +1,12 @@
-import React, { useEffect } from "react";
+import React from "react";
 import Modal from "react-modal";
 import { useLocale } from "../hooks";
 
 import "./fonts/metropolis.css";
 import "./fonts/inter.css";
 import "./index.scss";
+
+Modal.setAppElement("main");
 
 function BackToMDNModal({ onRequestClose }) {
   const locale = useLocale();
@@ -48,18 +50,6 @@ function BackToMDNModal({ onRequestClose }) {
 export default function App() {
   const [showDeepDive, setShowDeepDive] = React.useState(false);
   const [showModal, setShowModal] = React.useState(true);
-
-  useEffect(() => {
-    if (!showModal) {
-      return;
-    }
-    const root = document.documentElement;
-    const { position, width } = root.style;
-    Object.assign(root.style, { position: "fixed", width: "100%" });
-    return () => {
-      Object.assign(root.style, { position, width });
-    };
-  }, [showModal]);
 
   return (
     <div className="plus">

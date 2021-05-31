@@ -1,5 +1,10 @@
 @import "~@mdn/minimalist/sass/vars/layout";
 
+.ReactModal__Body--open {
+  position: fixed;
+  width: 100%;
+}
+
 .page-content-container.plus {
   $grid-gap: 12px;
   $page-width: 1160px;
