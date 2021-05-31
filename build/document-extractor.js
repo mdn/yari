@@ -424,15 +424,17 @@ function _addSingleSpecialSection($) {
             specURL.startsWith(spec.nightly.url) ||
             specURL.startsWith(spec.series.nightlyUrl)
         );
+        const specificationsData = {
+          bcdSpecificationURL: specURL,
+          title: "Unknown specification",
+          shortTitle: "Unknown specification",
+        };
         if (spec) {
-          // We only want to return exactly the keys that we will use in the
-          // client code that renders this in React.
-          return {
-            bcdSpecificationURL: specURL,
-            title: spec.title,
-            shortTitle: spec.shortTitle,
-          };
+          specificationsData.title = spec.title;
+          specificationsData.shortTitle = spec.shortTitle;
         }
+
+        return specificationsData;
       })
       .filter(Boolean);
 
