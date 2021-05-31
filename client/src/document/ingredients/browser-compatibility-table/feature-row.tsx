@@ -277,31 +277,31 @@ function getNotes(
       const supportNotes = [
         item.version_removed
           ? {
-              iconName: "none",
+              iconName: "footnote",
               label: `Removed in version ${item.version_removed} and later`,
             }
           : null,
         item.partial_implementation
           ? {
-              iconName: "none",
+              iconName: "footnote",
               label: "Partial support",
             }
           : null,
         item.prefix
           ? {
-              iconName: "prefix",
+              iconName: "footnote",
               label: `Implemented with the vendor prefix: ${item.prefix}`,
             }
           : null,
         item.alternative_name
           ? {
-              iconName: "altname",
+              iconName: "footnote",
               label: `Alternate name: ${item.alternative_name}`,
             }
           : null,
         item.flags
           ? {
-              iconName: "disabled",
+              iconName: "footnote",
               label: <FlagsNote browser={browser} supportItem={item} />,
             }
           : null,
@@ -316,7 +316,7 @@ function getNotes(
           (x) => !["version_added", "release_date"].includes(x)
         ).length === 0
           ? {
-              iconName: "none",
+              iconName: "footnote",
               label: "Full support",
             }
           : null,
