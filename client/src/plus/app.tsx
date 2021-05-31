@@ -1,14 +1,53 @@
 import React, { useEffect } from "react";
-import { useLocale } from "./../hooks";
+import Modal from "react-modal";
+import { useLocale } from "../hooks";
 
 import "./fonts/metropolis.css";
 import "./fonts/inter.css";
 import "./index.scss";
 
+function BackToMDNModal({ onRequestClose }) {
+  const locale = useLocale();
+
+  return (
+    <Modal
+      overlayClassName="modal"
+      className="modal-inner"
+      aria-expanded
+      onRequestClose={onRequestClose}
+      isOpen
+      parentSelector={() => document.querySelector(".plus main")!}
+    >
+      <div className="modal-inner">
+        <div className="modal-content">
+          <figure className="dino" />
+          <h1>Thank you for your interest in MDN Plus</h1>
+          <p>
+            We are grateful for all the feedback you sent our way. The waitlist
+            signup and survey are now closed, and we’re beginning work towards
+            an initial release.
+          </p>
+          <p>We'll be in touch soon.</p>
+          <a href={`/${locale}/`}>Back to MDN</a>
+        </div>
+        <button
+          type="button"
+          onClick={() => {
+            onRequestClose();
+          }}
+          aria-label="Close modal"
+        >
+          ✖
+        </button>
+        <figure className="mandala" aria-hidden="true" />
+      </div>
+    </Modal>
+  );
+}
+
 export default function App() {
   const [showDeepDive, setShowDeepDive] = React.useState(false);
   const [showModal, setShowModal] = React.useState(true);
-  const locale = useLocale();
 
   useEffect(() => {
     if (!showModal) {
@@ -26,31 +65,11 @@ export default function App() {
     <div className="plus">
       <main>
         {showModal && (
-          <div className="modal" aria-expanded={showModal}>
-            <div className="modal-inner">
-              <div className="modal-content">
-                <figure className="dino" />
-                <h1>Thank you for your interest in MDN Plus</h1>
-                <p>
-                  We are grateful for all the feedback you sent our way. The
-                  waitlist signup and survey are now closed, and we’re beginning
-                  work towards an initial release.
-                </p>
-                <p>We'll be in touch soon.</p>
-                <a href={`/${locale}/`}>Back to MDN</a>
-              </div>
-              <button
-                type="button"
-                onClick={() => {
-                  setShowModal(!showModal);
-                }}
-                aria-label="Close modal"
-              >
-                ✖
-              </button>
-              <figure className="mandala" aria-hidden="true" />
-            </div>
-          </div>
+          <BackToMDNModal
+            onRequestClose={() => {
+              setShowModal(false);
+            }}
+          />
         )}
 
         <header>
