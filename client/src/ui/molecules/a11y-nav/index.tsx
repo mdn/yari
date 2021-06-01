@@ -1,4 +1,4 @@
-import * as React from "react";
+import { useLocation } from "react-router-dom";
 
 import { useGA } from "../../../ga-context";
 
@@ -6,6 +6,8 @@ import "./index.scss";
 
 export function A11yNav() {
   const ga = useGA();
+  const { pathname } = useLocation();
+  const showLangMenuSkiplink = pathname.includes("/docs/");
 
   /**
    * Send a signal to GA when there is an interaction on one
@@ -33,7 +35,7 @@ export function A11yNav() {
           onClick={sendAccessMenuItemClick}
           onContextMenu={sendAccessMenuItemClick}
         >
-          {"Skip to main content"}
+          Skip to main content
         </a>
       </li>
       <li>
@@ -43,9 +45,21 @@ export function A11yNav() {
           onClick={sendAccessMenuItemClick}
           onContextMenu={sendAccessMenuItemClick}
         >
-          {"Skip to search"}
+          Skip to search
         </a>
       </li>
+      {showLangMenuSkiplink && (
+        <li>
+          <a
+            id="skip-select-language"
+            href="#select-language"
+            onClick={sendAccessMenuItemClick}
+            onContextMenu={sendAccessMenuItemClick}
+          >
+            Skip to select language
+          </a>
+        </li>
+      )}
     </ul>
   );
 }

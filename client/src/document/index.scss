@@ -166,6 +166,15 @@ a.new {
     @media #{$mq-small-desktop-and-up} {
       margin-bottom: $base-spacing * 2;
     }
+
+    .icon-experimental,
+    .icon-nonstandard {
+      color: $primary-50;
+    }
+
+    .icon-deprecated {
+      color: $red-100;
+    }
   }
 
   iframe {

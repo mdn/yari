@@ -1,92 +1,58 @@
-import React from "react";
-import useSWR from "swr";
+import React, { useEffect } from "react";
+import { useLocale } from "./../hooks";
 
 import "./fonts/metropolis.css";
 import "./fonts/inter.css";
 import "./index.scss";
-import { useGA } from "../ga-context";
-import { LandingPageSurvey } from "./landing-page-survey";
-
-const API_URL = "/api/v1/plus/landing-page/variant/";
-
-interface VariantData {
-  variant: number;
-  price: string;
-}
 
 export default function App() {
-  const { data, error } = useSWR<VariantData>(
-    API_URL,
-    async (url) => {
-      const response = await fetch(url);
-      if (!response.ok) {
-        throw new Error(`${response.status} on ${url}`);
-      }
-      return await response.json();
-    },
-    {
-      revalidateOnFocus: false,
-    }
-  );
-
-  const ga = useGA();
-  const surveyRef = React.createRef<HTMLDivElement>();
-  const [triggeredGASurveyIntersection, setTriggeredGASurveyIntersection] =
-    React.useReducer(() => true, false);
-  React.useEffect(() => {
-    try {
-      let observer = new IntersectionObserver((entries) => {
-        for (const entry of entries) {
-          if (entry.isIntersecting) {
-            setTriggeredGASurveyIntersection();
-          }
-        }
-      });
-      if (surveyRef.current) {
-        observer.observe(surveyRef.current);
-      }
-      return () => {
-        observer.disconnect();
-      };
-    } catch (error) {
-      console.warn(
-        `Error settings up IntersectionObserver (${error.toString()})`
-      );
-    }
-  }, [surveyRef]);
-  React.useEffect(() => {
-    if (triggeredGASurveyIntersection) {
-      ga("send", {
-        hitType: "event",
-        eventCategory: "Plus Landing page",
-        eventAction: "Intersection observed",
-        eventLabel: "waitlist",
-      });
-    }
-  }, [triggeredGASurveyIntersection, ga]);
-
   const [showDeepDive, setShowDeepDive] = React.useState(false);
+  const [showModal, setShowModal] = React.useState(true);
+  const locale = useLocale();
 
-  const [hasSubmittedSurvey, setHasSubmittedSurvey] = React.useState(false);
+  useEffect(() => {
+    if (!showModal) {
+      return;
+    }
+    const root = document.documentElement;
+    const { position, width } = root.style;
+    Object.assign(root.style, { position: "fixed", width: "100%" });
+    return () => {
+      Object.assign(root.style, { position, width });
+    };
+  }, [showModal]);
 
   return (
     <div className="plus">
       <main>
-        {!hasSubmittedSurvey && (
-          <a
-            href="#waitlist"
-            className="mobile-cta"
-            onClick={(event) => {
-              const element = document.querySelector("#waitlist");
-              if (element) {
-                event.preventDefault();
-                element.scrollIntoView({ behavior: "smooth" });
-              }
-            }}
-          >
-            Join the waitlist
-          </a>
+        {showModal && (
+          <div className="modal" aria-expanded={showModal}>
+            <div className="modal-inner">
+              <div className="modal-content">
+                <figure className="dino" />
+                <h1>Thank you for your interest in MDN Plus</h1>
+                <p>
+                  We are grateful for all the feedback you sent our way. The
+                  waitlist signup and survey are now closed, and we’re beginning
+                  work towards an initial release.
+                </p>
+                <p>We'll be in touch soon.</p>
+                <a href={`/${locale}/`}>Back to MDN</a>
+              </div>
+              <button
+                type="button"
+                onClick={() => {
+                  setShowModal(!showModal);
+                }}
+                aria-label="Close modal"
+              >
+                ✖
+              </button>
+              <figure className="mandala" aria-hidden="true" />
+            </div>
+          </div>
         )}
+
         <header>
           <div className="header-wrapper">
             <div className="header-content">
@@ -99,14 +65,9 @@ export default function App() {
                 technical deep dives written by industry experts and powerful
                 new features to personalize your MDN experience.
               </p>
-              {data && data.variant && (
-                <a href="#waitlist" className="button">
-                  Join the waitlist
-                </a>
-              )}
             </div>
             <div className="header-illustration">
-              <div className="mandala" />
+              <div className="mandala" aria-hidden="true" />
             </div>
           </div>
         </header>
@@ -455,55 +416,6 @@ export default function App() {
                 need to support.
               </div>
             </div>
-          </div>
-        </section>
-
-        {data && data.variant && (
-          <section>
-            <div className="feature-wrapper">
-              <h2>How much will it cost?</h2>
-              <p>
-                {data.price}
-                <sup>*</sup>. Your subscription includes full access to the
-                premium content and features.
-              </p>
-              <p className="disclaimer">
-                <small>* Price is subject to change</small>
-              </p>
-            </div>
-          </section>
-        )}
-
-        <section
-          className="purple-bg"
-          id="waitlist"
-          style={{ zIndex: 1001 }}
-          ref={surveyRef}
-        >
-          <div className="feature-wrapper waitlist">
-            {error ? (
-              <>
-                <h3>Error loading waitlist form</h3>
-                <p>
-                  Sorry. There was an error (<code>{error.toString()}</code>)
-                  loading the waitlist form.
-                  <br />
-                  Try to refresh this page.
-                </p>
-              </>
-            ) : (
-              data &&
-              data.variant && (
-                <LandingPageSurvey
-                  variant={data.variant}
-                  onJoined={() => {
-                    // This fires when someone has submitted their email on the first
-                    // portion of the survey.
-                    setHasSubmittedSurvey(true);
-                  }}
-                />
-              )
-            )}
           </div>
         </section>
       </main>
