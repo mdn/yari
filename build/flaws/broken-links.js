@@ -43,7 +43,7 @@ function mutateLink(
   }
 ) {
   if (isSelfLink) {
-    $element.addClass("self-link");
+    $element.attr("aria-current", "page");
   } else if (suggestion) {
     $element.attr("href", suggestion);
   } else if (enUSFallback) {
