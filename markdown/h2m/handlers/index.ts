@@ -5,6 +5,7 @@ import type { Node } from "unist";
 import { h, MDNode } from "../h";
 import { asArray, wrapText } from "../utils";
 import { cards } from "./cards";
+import { dl } from "./dl";
 import { tables } from "./tables";
 import { code, wrap } from "./rehype-remark-utils";
 import { toText } from "./to-text";
@@ -51,30 +52,11 @@ const extractSpacing = (node: MDNode<"emphasis" | "strong">) => {
     .filter(Boolean)
     .map((s) => (typeof s == "string" ? h("text", s) : s));
 };
-const toDefinitionItem = (node, terms, definitions) => {
-  const definitionStart = h("text", ": ");
-  if (definitions[0].type == "paragraph") {
-    definitions[0].children.unshift(definitionStart);
-  } else {
-    definitions.unshift(definitionStart);
-    definitions = h("paragraph", definitions);
-  }
-  return h(
-    "listItem",
-    [
-      ...terms,
-      h("list", h("listItem", definitions, { spread: false }), {
-        spread: false,
-      }),
-    ],
-    { spread: false }
-  );
-};
 
 export const handlers: QueryAndTransform[] = [
   // Start of non-element types
-  // Need to stay over the other handlers, to ensure others only receive
-  // elements as arguments
+  // Need to stay above the other handlers, to ensure others only receive
+  // elements as arguments (as all other `node.type`s are filtered out here)
   [(node: Node) => node.type == "root", "root"],
 
   [
@@ -295,24 +277,7 @@ export const handlers: QueryAndTransform[] = [
     ],
   ],
 
-  [
-    "dl",
-    (node, t) => {
-      const children = [];
-      let terms = [];
-      for (const child of node.children) {
-        if (child.tagName == "dt") {
-          terms.push(h("paragraph", t(child)));
-        } else if (child.tagName == "dd" && terms.length > 0) {
-          children.push(toDefinitionItem(node, terms, t(child as any)));
-          terms = [];
-        } else {
-          return null;
-        }
-      }
-      return h("list", children, { spread: false });
-    },
-  ],
+  dl,
 
   ...["summary", "seoSummary"].map(
     (className) =>

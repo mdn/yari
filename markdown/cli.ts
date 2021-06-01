@@ -29,17 +29,6 @@ function tryOrExit(f) {
   };
 }
 
-const toCountMap = (occurences: string[]) => {
-  const countMap = new Map<string, number>();
-  for (const key of occurences) {
-    if (!countMap.has(key)) {
-      countMap.set(key, 0);
-    }
-    countMap.set(key, countMap.get(key) + 1);
-  }
-  return countMap;
-};
-
 program
   .bin("yarn md")
   .name("md")

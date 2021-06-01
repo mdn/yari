@@ -35,7 +35,7 @@ const prettyAST = (node, depth = 0) => {
     return "";
   }
   if (typeof node == "string") {
-    return "  ".repeat(depth) + `'${node}'`;
+    return "  ".repeat(depth) + `${JSON.stringify(node)}`;
   }
   return Object.entries(node)
     .filter(([key]) => key != "position")
@@ -48,7 +48,7 @@ const prettyAST = (node, depth = 0) => {
           ? "\n" + value.map((node) => prettyAST(node, depth + 1)).join("\n")
           : typeof value == "object"
           ? "\n" + prettyAST(value, depth + 1)
-          : `'${value}'`)
+          : JSON.stringify(value))
     )
     .join("\n");
 };

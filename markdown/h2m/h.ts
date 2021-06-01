@@ -93,6 +93,8 @@ const CHILDREN_TYPES: Partial<
   footnote: PHRASING_CONTENT,
 };
 
+export const isBlockContent = (node) => BLOCK_CONTENT.includes(node.type);
+
 function assertCorrectChildren<Type extends MDNodesWithChildren["type"]>(
   type: Type,
   children: MDNodeUnion[]

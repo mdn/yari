@@ -1,4 +1,5 @@
 const code = require("./code");
+const { asDefinitionList, isDefinitionList } = require("./dl");
 const { one, all, wrap } = require("./mdast-util-to-hast-utils");
 
 function getNotecardType(node) {
@@ -15,63 +16,6 @@ function getNotecardType(node) {
   }
   const type = grandChild.children[0].value.replace(":", "").toLowerCase();
   return type == "warning" || type == "note" || type == "callout" ? type : null;
-}
-
-function isDefinitionList(node) {
-  return (
-    !node.ordered &&
-    node.children.every((listItem) => {
-      if (!listItem.children || listItem.children.length < 2) {
-        return false;
-      }
-      const definitions = listItem.children[listItem.children.length - 1];
-      return (
-        definitions.type == "list" &&
-        definitions.children.length == 1 &&
-        definitions.children.every((definition) => {
-          const [paragraph] = definition.children || [];
-          return (
-            paragraph &&
-            paragraph.type == "paragraph" &&
-            paragraph.children &&
-            paragraph.children[0] &&
-            (paragraph.children[0].value || "").startsWith(": ")
-          );
-        })
-      );
-    })
-  );
-}
-
-function asDefinitionList(h, node) {
-  const children = node.children.flatMap((listItem) => {
-    const terms = listItem.children.slice(0, -1);
-    const definition =
-      listItem.children[listItem.children.length - 1].children[0];
-    const [paragraph, ...rest] = definition.children;
-    paragraph.children[0].value = paragraph.children[0].value.slice(2); // removes the leading colon
-    return [
-      h(
-        node,
-        "dt",
-        {},
-        all(h, {
-          ...node,
-          children:
-            terms.length == 1 && terms[0].type == "paragraph"
-              ? terms[0].children
-              : terms,
-        })
-      ),
-      h(
-        node,
-        "dd",
-        {},
-        all(h, { ...definition, children: [paragraph, ...rest] })
-      ),
-    ];
-  });
-  return h(node, "dl", {}, wrap(children, true));
 }
 
 module.exports = {
