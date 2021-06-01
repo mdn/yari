@@ -28,7 +28,7 @@ export function useCopyExamplesToClipboard(doc: Doc | undefined) {
     // class="notranslate" formal syntax tags, just grab
     // the <pre class="brush"> tags which are injected into
     // a `<div class="code-example">` from syntax highlighter
-    [...document.querySelectorAll("#content .code-example pre")].forEach(
+    [...document.querySelectorAll("div.code-example pre")].forEach(
       (element) => {
         const userMessage = document.createElement("span");
         const button = document.createElement("button");
