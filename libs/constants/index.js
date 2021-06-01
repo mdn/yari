@@ -70,15 +70,15 @@ const ACTIVE_LOCALES = new Set([
 const scriptSrcValues = [
   "'report-sample'",
   "'self'",
-  
+
   "*.speedcurve.com",
   "'sha256-q7cJjDqNO2e1L5UltvJ1LhvnYN7yJXgGO7b6h9xkL1o='", // LUX
-  
+
   "www.google-analytics.com/analytics.js",
-  
+
   "'sha256-JEt9Nmc3BP88wxuTZm9aKNu87vEgGmKW1zzy/vb1KPs='", // polyfill check
   "polyfill.io/v3/polyfill.min.js",
-  
+
   "assets.codepen.io",
   "production-assets.codepen.io",
 ];
@@ -104,7 +104,7 @@ const CSP_DIRECTIVES = {
     "yari-demos.prod.mdn.mozit.cloud",
     "mdn.mozillademos.org",
     "yari-demos.stage.mdn.mozit.cloud",
-    
+
     "jsfiddle.net",
     "www.youtube-nocookie.com",
     "codepen.io",
@@ -117,12 +117,12 @@ const CSP_DIRECTIVES = {
     "*.googleusercontent.com",
 
     "lux.speedcurve.com",
-    
+
     "mdn.mozillademos.org",
     "media.prod.mdn.mozit.cloud",
     "media.stage.mdn.mozit.cloud",
     "interactive-examples.mdn.mozilla.net",
-    
+
     "wikipedia.org",
 
     "www.google-analytics.com",
