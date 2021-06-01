@@ -39,7 +39,7 @@
       height: 100%;
       z-index: 10000;
       overflow: auto;
-      background-color: #201139c4;
+      background-color: #291f35c4;
       -webkit-box-sizing: border-box;
       box-sizing: border-box;
       display: flex;
@@ -55,13 +55,8 @@
         flex-direction: column;
         justify-content: center;
         align-items: center;
-        padding: 64px 32px;
         overflow: hidden;
-        box-shadow: 0px 0px 7px rgba(0, 0, 0, 0.25);
-
-        @media #{$mq-tablet-and-up} {
-          padding: 64px;
-        }
+        box-shadow: 0px 0px 7px rgba(0, 0, 0, 0.548);
 
         button {
           position: absolute;
@@ -73,6 +68,7 @@
           border: none;
           font-size: 20px;
           padding: 7px 15px 9px;
+          z-index: 10001;
         }
 
         button:hover {
@@ -84,6 +80,11 @@
         .modal-content {
           position: relative;
           z-index: 10001;
+          padding: 64px 12px;
+
+          @media #{$mq-tablet-and-up} {
+            padding: 64px;
+          }
 
           .dino {
             background-image: url("./svgs/dino.svg");
@@ -492,7 +493,7 @@
           font-size: clamp(16px, calc(2vw * 0.6), 17px);
 
           @media #{$mq-large-desktop-and-up} {
-            font-size: clamp(16px, calc(2vw * 0.6), 18px);
+            font-size: clamp(16px, calc(2vw * 0.6), 17px);
           }
 
           b {
