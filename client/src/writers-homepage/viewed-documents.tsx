@@ -1,9 +1,13 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { Link } from "react-router-dom";
+import dayjs from "dayjs";
+import relativeTime from "dayjs/plugin/relativeTime";
 
 import { usePageVisibility } from "./hooks";
 
 import "./viewed-documents.scss";
+
+dayjs.extend(relativeTime);
 
 type Entry = {
   url: string;
@@ -11,32 +15,11 @@ type Entry = {
   timestamp: number;
 };
 
-// Simpler and cheaper than a proper library
-function friendlyDateDisplay(date: Date): string {
-  const today = new Date();
-  const dateString = date.toDateString();
-  const secondsDiff = (today.getTime() - date.getTime()) / 1000;
-  if (secondsDiff < 60) {
-    return "seconds ago";
-  }
-  if (secondsDiff < 60 * 15) {
-    return "minutes ago";
-  }
-  if (today.toDateString() === dateString) {
-    return "today";
-  }
-  const yesterday = new Date(today.getTime() - 1000 * 3600 * 24);
-  if (yesterday.toDateString() === dateString) {
-    return "yesterday";
-  }
-  return dateString;
-}
-
 export default function ViewedDocuments() {
   const isVisible = usePageVisibility();
-  const [entries, setEntries] = useState<Entry[] | null>(null);
+  const [entries, setEntries] = React.useState<Entry[] | null>(null);
 
-  useEffect(() => {
+  React.useEffect(() => {
     if (isVisible) {
       const localStorageKey = "viewed-documents";
       const previousVisits = JSON.parse(
@@ -82,7 +65,7 @@ export default function ViewedDocuments() {
                       {entry.title} <small>{entry.url}</small>
                     </Link>
                   </td>
-                  <td>{friendlyDateDisplay(new Date(entry.timestamp))}</td>
+                  <td>{dayjs(new Date(entry.timestamp)).fromNow()}</td>
                 </tr>
               );
             })}
