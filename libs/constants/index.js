@@ -61,6 +61,7 @@ const ACTIVE_LOCALES = new Set([
   "fr",
   "ja",
   "ko",
+  "pt-br",
   "ru",
   "zh-cn",
   "zh-tw",
@@ -99,7 +100,6 @@ const CSP_DIRECTIVES = {
   ],
   "img-src": [
     "'self'",
-    "data:",
     "*.githubusercontent.com",
     "*.googleusercontent.com",
     "lux.speedcurve.com",
@@ -110,12 +110,7 @@ const CSP_DIRECTIVES = {
     "wikipedia.org",
   ],
   "manifest-src": ["'self'"],
-  "media-src": [
-    "'self'",
-    "archive.org",
-    "*.archive.org",
-    "videos.cdn.mozilla.net",
-  ],
+  "media-src": ["'self'", "archive.org", "videos.cdn.mozilla.net"],
   "worker-src": ["'none'"],
   "report-uri": ["/csp-violation-capture"],
 };

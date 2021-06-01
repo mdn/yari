@@ -704,6 +704,47 @@ test("broken http:// link that is not a valid URL", () => {
   expect(map.get("link1").fixable).toBeFalsy();
 });
 
+test("broken links that are links to the current page", () => {
+  const builtFolder = path.join(
+    buildRoot,
+    "en-us",
+    "docs",
+    "web",
+    "brokenlinks",
+    "self_links"
+  );
+  const jsonFile = path.join(builtFolder, "index.json");
+  const { doc } = JSON.parse(fs.readFileSync(jsonFile));
+  const { flaws } = doc;
+  expect(flaws.broken_links.length).toBe(4);
+
+  const map = new Map(flaws.broken_links.map((x) => [x.id, x]));
+  expect(map.size).toBe(4);
+  expect(map.get("link1").suggestion).toBeNull();
+  expect(map.get("link1").explanation).toBe(
+    "Link points to the page it's already on"
+  );
+  expect(map.get("link2").suggestion).toBe("#anchored");
+  expect(map.get("link2").explanation).toBe(
+    "No need for the pathname in anchor links if it's the same page"
+  );
+  expect(map.get("link3").suggestion).toBeNull();
+  expect(map.get("link3").explanation).toBe(
+    "Link points to the page it's already on"
+  );
+  expect(map.get("link4").suggestion).toBe("#hash");
+  expect(map.get("link4").explanation).toBe(
+    "No need for the pathname in anchor links if it's the same page"
+  );
+
+  const htmlFile = path.join(builtFolder, "index.html");
+  const html = fs.readFileSync(htmlFile, "utf-8");
+  const $ = cheerio.load(html);
+
+  expect($("#content a.page-not-created").length).toBe(0);
+  expect($("#content a.self-link").length).toBe(4);
+});
+
 test("without locale prefix broken links flaws", () => {
   // This fixture has the same broken link, that redirects, 3 times.
   const builtFolder = path.join(

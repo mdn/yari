@@ -1,41 +1,58 @@
-import React from "react";
-import useSWR from "swr";
+import React, { useEffect } from "react";
+import { useLocale } from "./../hooks";
 
 import "./fonts/metropolis.css";
 import "./fonts/inter.css";
 import "./index.scss";
-import { LandingPageSurvey } from "./landing-page-survey";
-
-const API_URL = "/api/v1/plus/landing-page/variant/";
-
-interface VariantData {
-  variant: number;
-  price: string;
-}
 
 export default function App() {
-  const { data, error } = useSWR<VariantData>(
-    API_URL,
-    async (url) => {
-      const response = await fetch(url);
-      if (!response.ok) {
-        throw new Error(`${response.status} on ${url}`);
-      }
-      return await response.json();
-    },
-    {
-      revalidateOnFocus: false,
-    }
-  );
-
   const [showDeepDive, setShowDeepDive] = React.useState(false);
+  const [showModal, setShowModal] = React.useState(true);
+  const locale = useLocale();
+
+  useEffect(() => {
+    if (!showModal) {
+      return;
+    }
+    const root = document.documentElement;
+    const { position, width } = root.style;
+    Object.assign(root.style, { position: "fixed", width: "100%" });
+    return () => {
+      Object.assign(root.style, { position, width });
+    };
+  }, [showModal]);
 
   return (
     <div className="plus">
       <main>
-        <a href="#waitlist" className="mobile-cta">
-          Join the waitlist
-        </a>
+        {showModal && (
+          <div className="modal" aria-expanded={showModal}>
+            <div className="modal-inner">
+              <div className="modal-content">
+                <figure className="dino" />
+                <h1>Thank you for your interest in MDN Plus</h1>
+                <p>
+                  We are grateful for all the feedback you sent our way. The
+                  waitlist signup and survey are now closed, and we’re beginning
+                  work towards an initial release.
+                </p>
+                <p>We'll be in touch soon.</p>
+                <a href={`/${locale}/`}>Back to MDN</a>
+              </div>
+              <button
+                type="button"
+                onClick={() => {
+                  setShowModal(!showModal);
+                }}
+                aria-label="Close modal"
+              >
+                ✖
+              </button>
+              <figure className="mandala" aria-hidden="true" />
+            </div>
+          </div>
+        )}
+
         <header>
           <div className="header-wrapper">
             <div className="header-content">
@@ -44,19 +61,13 @@ export default function App() {
                 More MDN. <span>Your MDN.</span>
               </h1>
               <p>
-                <b>Coming soon</b> — our new premium service with deep dives
-                written by industry experts and new ways of customizing your MDN
-                experience
+                <b>Coming soon</b> — a new premium service with monthly
+                technical deep dives written by industry experts and powerful
+                new features to personalize your MDN experience.
               </p>
-
-              {data && data.variant && (
-                <a href="#waitlist" className="button">
-                  Join the waitlist
-                </a>
-              )}
             </div>
             <div className="header-illustration">
-              <div className="mandala" />
+              <div className="mandala" aria-hidden="true" />
             </div>
           </div>
         </header>
@@ -67,23 +78,22 @@ export default function App() {
                 <h2>What is MDN Plus</h2>
                 <p>
                   MDN Plus builds on top of your much-loved core content,
-                  providing constantly-updated guides to highly-requested topics
-                  and helping you keep your knowledge fresh and your skills
-                  sharp. In addition, it will include a raft of tools to make
-                  MDN more powerful for you, creating a more valuable and
-                  personal experience.
+                  providing constantly-updated guides to highly-requested
+                  topics, helping you keep your knowledge fresh and your skills
+                  sharp. In addition, MDN Plus includes tools to make MDN more
+                  powerful for you, creating a more personalized experience.
                 </p>
               </div>
 
               <div>
-                <h2>What this means for MDN Web Docs</h2>
+                <h2>What does this mean for MDN Web Docs</h2>
                 <p>
-                  <b>Nothing</b> is changing with existing MDN Web Docs content
-                  — this will continue to be free and available to everyone in
-                  the future. We want to provide extra value through premium
+                  <b>Nothing</b> is changing with the existing MDN Web Docs
+                  content — this content will continue to be free and available
+                  to everyone. We want to provide extra value through premium
                   content and features to help make MDN self-sustaining, on a
-                  completely opt-in basis. Again,<b> nothing is changing </b>
-                  with MDN Web Docs.
+                  completely opt-in basis. Again,<b> nothing is changing </b>{" "}
+                  with the existing MDN Web Docs!
                 </p>
               </div>
             </div>
@@ -139,14 +149,14 @@ export default function App() {
                 <hr />
                 <ul>
                   <li>This three part series includes:</li>
-                  <li>+ Planning for browser support</li>
+                  <li>Planning for browser support</li>
                   <li>
                     {" "}
                     <span className="magenta-bg">
-                      + Your browser support toolkit
+                      Your browser support toolkit
                     </span>
                   </li>
-                  <li>+ Practical browser support</li>
+                  <li>Practical browser support</li>
                 </ul>
               </div>
               <div>
@@ -288,7 +298,7 @@ export default function App() {
                     <p>
                       Introducing a Feature Query into our demo means that we
                       can wrap up all of our grid code with a test to see if the
-                      browser supports `display: grid`.
+                      browser supports <code>display: grid</code>.
                     </p>
                     <div className="code-snippet">
                       <div className="codepen">
@@ -379,7 +389,7 @@ export default function App() {
                 <h2>What's included</h2>
                 <h1>Make MDN your own</h1>
                 <p style={{ fontSize: 20 }}>
-                  Unlock premium features that you can use across all of MDN
+                  Unlock premium features that you can use across all of MDN.
                 </p>
               </div>
             </div>
@@ -392,55 +402,20 @@ export default function App() {
                 <figure className="bookmark" />
                 <h1>Build a permanent library</h1>
                 Bookmark and annotate free and paid content for reference across
-                devices
+                devices.
               </div>
               <div className="tile">
                 <figure className="offline" />
                 <h1>Take MDN with you</h1>
-                Download MDN documentation and deep dives for access offline
+                Download MDN documentation and deep dives for access offline.
               </div>
               <div className="tile">
                 <figure className="bcdtable" />
                 <h1>Customize compat tables</h1>
                 Display customised data sets based on the browsers your projects
-                need to support
+                need to support.
               </div>
             </div>
-          </div>
-        </section>
-
-        {data && data.variant && (
-          <section>
-            <div className="feature-wrapper">
-              <h2>How much will it cost?</h2>
-              <p>
-                We’re asking {data.price}
-                <sup>*</sup>. Your subscription includes full access to the
-                premium content and features.
-              </p>
-              <p className="disclaimer">
-                <small>* Price is subject to change</small>
-              </p>
-            </div>
-          </section>
-        )}
-
-        <section className="purple-bg" id="waitlist" style={{ zIndex: 1001 }}>
-          <div className="feature-wrapper waitlist">
-            {error ? (
-              <>
-                <h3>Error loading waitlist form</h3>
-                <p>
-                  Sorry. There was an error (<code>{error.toString()}</code>)
-                  loading the waitlist form.
-                  <br />
-                  Try to refresh this page.
-                </p>
-              </>
-            ) : (
-              data &&
-              data.variant && <LandingPageSurvey variant={data.variant} />
-            )}
           </div>
         </section>
       </main>

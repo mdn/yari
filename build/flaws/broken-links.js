@@ -34,6 +34,31 @@ function isHomepageURL(url) {
   return split.length === 3 && VALID_LOCALES.has(split[1].toLowerCase());
 }
 
+function mutateLink(
+  $element,
+  { suggestion, enUSFallback, isSelfLink } = {
+    suggestion: null,
+    enUSFallback: null,
+    isSelfLink: false,
+  }
+) {
+  if (isSelfLink) {
+    $element.addClass("self-link");
+  } else if (suggestion) {
+    $element.attr("href", suggestion);
+  } else if (enUSFallback) {
+    $element.attr("href", enUSFallback);
+    // This functionality here should match what we do inside
+    // the `web.smartLink()` function in kumascript rendering.
+    $element.text(`${$element.text()} (${DEFAULT_LOCALE})`);
+    $element.addClass("only-in-en-us");
+    $element.attr("title", "Currently only available in English (US)");
+  } else {
+    $element.addClass("page-not-created");
+    $element.attr("title", "This is a link to an unwritten page");
+  }
+}
+
 // The 'broken_links' flaw check looks for internal links that
 // link to a document that's going to fail with a 404 Not Found.
 function getBrokenLinksFlaws(doc, $, { rawContent }, level) {
@@ -54,22 +79,6 @@ function getBrokenLinksFlaws(doc, $, { rawContent }, level) {
   // us from calling `findMatchesInText()` more than once.
   const matches = new Map();
 
-  function mutateLink($element, suggestion, enUSFallback) {
-    if (suggestion) {
-      $element.attr("href", suggestion);
-    } else if (enUSFallback) {
-      $element.attr("href", enUSFallback);
-      // This functionality here should match what we do inside
-      // the `web.smartLink()` function in kumascript rendering.
-      $element.text(`${$element.text()} (${DEFAULT_LOCALE})`);
-      $element.addClass("only-in-en-us");
-      $element.attr("title", "Currently only available in English (US)");
-    } else {
-      $element.addClass("page-not-created");
-      $element.attr("title", "This is a link to an unwritten page");
-    }
-  }
-
   // A closure function to help making it easier to append flaws
   function addBrokenLink(
     $element,
@@ -77,16 +86,18 @@ function getBrokenLinksFlaws(doc, $, { rawContent }, level) {
     href,
     suggestion = null,
     explanation = null,
-    enUSFallback = null
+    enUSFallback = null,
+    isSelfLink = false
   ) {
+    mutateLink($element, { suggestion, enUSFallback, isSelfLink });
     if (level === FLAW_LEVELS.IGNORE) {
       // Note, even if not interested in flaws, we still need to apply the
       // suggestion. For example, in production builds, we don't care about
       // logging flaws, but because not all `broken_links` flaws have been
       // manually fixed at the source.
-      mutateLink($element);
       return;
     }
+
     explanation = explanation || `Can't resolve ${href}`;
 
     if (!matches.has(href)) {
@@ -108,7 +119,6 @@ function getBrokenLinksFlaws(doc, $, { rawContent }, level) {
       }
       const id = `link${flaws.length + 1}`;
       const fixable = !!suggestion;
-      mutateLink($element, suggestion, enUSFallback);
       $element.attr("data-flaw", id);
       flaws.push(
         Object.assign({ explanation, id, href, suggestion, fixable }, match)
@@ -202,14 +212,16 @@ function getBrokenLinksFlaws(doc, $, { rawContent }, level) {
           `/${VALID_LOCALES.get(homepageLocale.toLowerCase())}/`
         );
       }
-    } else if (hrefNormalized === doc.mdn_url) {
+    } else if (hrefNormalized.toLowerCase() === doc.mdn_url.toLowerCase()) {
       if (hrefSplit.length > 1) {
         addBrokenLink(
           a,
           checked.get(href),
           href,
           `#${hrefSplit[1]}`,
-          "No need for the pathname in anchor links if it's the same page"
+          "No need for the pathname in anchor links if it's the same page",
+          null,
+          true
         );
       } else {
         addBrokenLink(
@@ -217,7 +229,9 @@ function getBrokenLinksFlaws(doc, $, { rawContent }, level) {
           checked.get(href),
           href,
           null,
-          "Link points to the page it's already on"
+          "Link points to the page it's already on",
+          null,
+          true
         );
       }
     } else if (href.startsWith("/") && !href.startsWith("//")) {

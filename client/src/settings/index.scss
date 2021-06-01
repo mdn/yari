@@ -19,16 +19,6 @@
 
   .field-group {
     margin: math.div($base-spacing, 2) 0;
-
-    label {
-      font-size: $large-font-size-mobile;
-      line-height: $heading-line-height;
-      margin-bottom: $base-spacing;
-
-      @media #{$mq-tablet-and-up} {
-        font-size: $large-font-size;
-      }
-    }
   }
 
   .notecard {
