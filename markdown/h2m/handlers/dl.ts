@@ -6,8 +6,26 @@ const { prettyAST } = require("../../utils");
 
 const DEFINITION_START = h("text", DEFINITION_PREFIX);
 
-const wrapNonBlocks = (nodes) =>
-  nodes.map((node) => (isBlockContent(node) ? node : h("paragraph", node)));
+const wrapNonBlocks = (nodes) => {
+  let openParagraph = null;
+  const result = [];
+  for (const node of nodes) {
+    if (isBlockContent(node)) {
+      if (openParagraph) {
+        result.push(openParagraph);
+        openParagraph = null;
+      }
+      result.push(node);
+    } else {
+      openParagraph ||= h("paragraph", []);
+      openParagraph.children.push(node);
+    }
+  }
+  if (openParagraph) {
+    result.push(openParagraph);
+  }
+  return result;
+};
 
 function prefixDefinitions([first, ...rest]) {
   switch (first.type) {
