@@ -40,7 +40,7 @@ export function useCopyExamplesToClipboard(doc: Doc | undefined) {
 
         userMessage.setAttribute("class", "user-message");
         userMessage.setAttribute("aria-hidden", "true");
-        button.setAttribute("aria-hidden", "true");
+        button.setAttribute("aria-hidden", "false");
         button.setAttribute("type", "button");
         button.setAttribute("class", "copy-icon");
         span.setAttribute("class", "visually-hidden");
@@ -48,14 +48,6 @@ export function useCopyExamplesToClipboard(doc: Doc | undefined) {
         button.appendChild(span);
         wrapper?.appendChild(button);
         wrapper?.appendChild(userMessage);
-
-        wrapper?.addEventListener("mouseover", () => {
-          button.setAttribute("aria-hidden", "false");
-        });
-
-        wrapper?.addEventListener("mouseout", () => {
-          button.setAttribute("aria-hidden", "true");
-        });
 
         button.onclick = () => {
           userMessage.classList.add("show");
