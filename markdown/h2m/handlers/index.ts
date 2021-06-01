@@ -95,7 +95,7 @@ export const handlers: QueryAndTransform[] = [
   [
     {
       is: ["span", "small"],
-      canHave: ["id"],
+      canHave: "id",
       canHaveClass: [
         "pl-s",
         "highlight-span",
@@ -136,7 +136,7 @@ export const handlers: QueryAndTransform[] = [
   ],
 
   [
-    { is: ["ul", "ol"], canHaveClass: ["threecolumns"] },
+    { is: ["ul", "ol"], canHaveClass: "threecolumns" },
     function list(node, t) {
       const ordered = node.tagName == "ol";
       return h("list", t(node), {

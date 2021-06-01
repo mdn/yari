@@ -9,8 +9,9 @@ export type Options = Partial<{
   summary: string;
 }>;
 
-export const asArray = <T>(v: T | T[]) =>
-  v ? (Array.isArray(v) ? v : [v]) : [];
+export const asArray = <T extends undefined | unknown | unknown[]>(
+  v: T | T[]
+): T[] => (v ? (Array.isArray(v) ? v : [v]) : []);
 
 export const wrapText = (value, { shouldWrap }: Options) =>
   shouldWrap ? value.replace(/\r?\n|\r/g, " ") : value;

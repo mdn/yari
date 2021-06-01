@@ -2,17 +2,26 @@ import { Comment, Element, Text } from "hast";
 import { MDNodeUnion } from "../h";
 import { asArray, Options, toSelector } from "../utils";
 
-export type Query =
+type OneOrMany<T> = T | [T, ...T[]];
+
+type AttributeValue = string | number | boolean | (string | number)[];
+type AttributeQuery = OneOrMany<string | object>;
+
+type OptionalClassQuery = OneOrMany<string | ((str: string) => boolean)>;
+
+export type Query = OneOrMany<
   | string
-  | [string, string, ...string[]]
   | Partial<{
       is: string | string[];
-      has: string | string[];
-      canHave: string | string[];
-      hasClass: string | string[];
-      canHaveClass: string | string[];
+
+      has: AttributeQuery;
+      canHave: AttributeQuery;
+
+      hasClass: OneOrMany<string>;
+      canHaveClass: OptionalClassQuery;
     }>
-  | ((node: Element) => boolean);
+  | ((node: Element, options: Options) => boolean | Query)
+>;
 
 type HTMLNode = Element | Comment | Text;
 
@@ -26,61 +35,115 @@ type Transform =
 
 export type QueryAndTransform = readonly [Query, Transform];
 
-const isExhaustive = (
-  source: string[],
-  required: undefined | string | string[],
-  optional: undefined | string | string[] | ((str: string) => boolean)
+const exhaustsProps = (
+  props: Record<string, AttributeValue>,
+  required: undefined | AttributeQuery,
+  optional: undefined | AttributeQuery
 ) => {
-  const sourceSet = new Set(source);
+  const remaining = new Map(
+    Object.entries(props).map(([key, value]) => [key, new Set(asArray(value))])
+  );
+  for (const keyOrObject of asArray(required)) {
+    if (typeof keyOrObject == "object") {
+      for (const [key, value] of Object.entries(keyOrObject)) {
+        const valueSet = remaining.get(key);
+        if (!valueSet || !valueSet.delete(value)) {
+          return false;
+        }
+        if (valueSet && valueSet.size == 0) {
+          remaining.delete(key);
+        }
+      }
+    } else {
+      if (!remaining.delete(keyOrObject)) {
+        return false;
+      }
+    }
+  }
+  for (const keyOrObject of asArray(optional)) {
+    if (typeof keyOrObject == "object") {
+      for (const [key, value] of Object.entries(keyOrObject)) {
+        const valueSet = remaining.get(key);
+        if (valueSet) {
+          valueSet.delete(value);
+          if (valueSet.size == 0) {
+            remaining.delete(key);
+          }
+        }
+      }
+    } else {
+      remaining.delete(keyOrObject);
+    }
+  }
+  return remaining.size == 0;
+};
+
+const exhaustsClasses = (
+  classes: string[],
+  required: undefined | string[],
+  optional: undefined | OptionalClassQuery
+) => {
+  const remaining = new Set(classes);
   for (const key of asArray(required)) {
-    if (!sourceSet.delete(key)) {
+    if (!remaining.delete(key)) {
       return false;
     }
   }
   for (const key of asArray(optional)) {
     if (typeof key == "function") {
-      const matches = Array.from(sourceSet).filter((k) => key(k));
+      const matches = Array.from(remaining).filter((k) => key(k));
       for (const match of matches) {
-        sourceSet.delete(match);
+        remaining.delete(match);
       }
     } else {
-      sourceSet.delete(key);
+      remaining.delete(key);
     }
   }
-  return sourceSet.size == 0;
+  return remaining.size == 0;
 };
 
-export const matchesQuery = (node: Element, check: Query) => {
-  if (typeof check == "function") {
-    return check(node);
+export const matchesQuery = (
+  node: Element,
+  query: Query,
+  options: Options = {}
+) => {
+  if (Array.isArray(query)) {
+    return query.some((q) => matchesQuery(node, q, options));
+  }
+
+  if (typeof query == "function") {
+    const result = query(node, options);
+    return typeof result == "boolean"
+      ? result
+      : matchesQuery(node, result, options);
   }
 
   if (node.type !== "element") {
     return false;
   }
 
-  if (Array.isArray(check) || typeof check == "string") {
-    return asArray(check).includes(toSelector(node));
+  if (typeof query == "string") {
+    return query == toSelector(node);
   }
 
-  if (typeof check !== "object") {
+  if (typeof query !== "object") {
     return false;
   }
 
   if (
-    "is" in check &&
-    !asArray(check.is).some((tagName) => node.tagName == tagName)
+    "is" in query &&
+    !asArray(query.is).some((tagName) => node.tagName == tagName)
   ) {
     return false;
   }
 
   const { className, ...props } = node.properties;
   return (
-    isExhaustive(Object.keys(props), check.has, check.canHave) &&
-    isExhaustive(
+    exhaustsProps(props, query.has, query.canHave) &&
+    exhaustsClasses(
       asArray(className) as string[],
-      check.hasClass,
-      check.canHaveClass
+      asArray(query.hasClass),
+      query.canHaveClass
     )
   );
 };

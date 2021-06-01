@@ -34,7 +34,9 @@ function transformNode(node, options: Options = {}) {
   }
 
   let transformed = null;
-  const handler = handlers.find(([check]) => matchesQuery(node, check));
+  const handler = handlers.find(([check]) =>
+    matchesQuery(node, check, options)
+  );
   if (handler) {
     const handle = handler[1];
     try {

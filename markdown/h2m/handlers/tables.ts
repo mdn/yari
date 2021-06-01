@@ -25,10 +25,15 @@ export const tables: QueryAndTransform[] = [
   ["tr", "tableRow"],
 
   [
-    ["th", "td"],
-    (node, t, { rowIndex }) =>
-      (node.tagName == "th" ? rowIndex == 0 : rowIndex > 0)
-        ? h("tableCell", t(node, { shouldWrap: true }))
-        : null,
+    [
+      (node, options) =>
+        options.rowIndex == 0 && {
+          is: "th",
+          canHaveClass: "header",
+          canHave: { scope: "col" },
+        },
+      (node, options) => options.rowIndex > 0 && "td",
+    ],
+    (node, t) => h("tableCell", t(node, { shouldWrap: true })),
   ],
 ];
