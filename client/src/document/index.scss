@@ -43,13 +43,13 @@ a.new {
       background: #eee url("../assets/clippy.svg") 50% 50% no-repeat;
       background-position: 61% 45%;
       background-size: 17px 17px;
-      display: none;
       vertical-align: middle;
       border: 1px solid lightgray;
       top: math.div($base-spacing, 3);
       right: math.div($base-spacing, 3);
       width: 33px;
       height: 36px;
+      opacity: 0.4;
       margin: 0;
       padding: 7px math.div($base-spacing, 4);
       border-radius: 5px;
@@ -59,7 +59,7 @@ a.new {
 
   .code-example:focus .copy-icon,
   .code-example:hover .copy-icon {
-    display: block;
+    opacity: 1;
   }
 
   .copy-icon:hover {
