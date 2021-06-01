@@ -36,12 +36,6 @@ export function useCopyExamplesToClipboard(doc: Doc | undefined) {
         userMessage.textContent = "Copied!";
         span.textContent = "Copy to Clipboard";
 
-        // With the syntaxHighlight macro changes to wrap
-        // each <pre> in a <div> for layout reasons,
-        // each parentNode will now be the div with the
-        // <pre class="brush"> tag as its only child
-        // could use wrapper : any without wrapper? but a bit stronger typing
-        // doesnt hurt
         const wrapper: HTMLElement | null = element.parentElement;
 
         userMessage.setAttribute("class", "user-message");
@@ -55,11 +49,11 @@ export function useCopyExamplesToClipboard(doc: Doc | undefined) {
         wrapper?.appendChild(button);
         wrapper?.appendChild(userMessage);
 
-        element.addEventListener("mouseover", () => {
+        wrapper?.addEventListener("mouseover", () => {
           button.setAttribute("aria-hidden", "false");
         });
 
-        element.addEventListener("mouseout", () => {
+        wrapper?.addEventListener("mouseout", () => {
           button.setAttribute("aria-hidden", "true");
         });
 
@@ -70,10 +64,6 @@ export function useCopyExamplesToClipboard(doc: Doc | undefined) {
           button.classList.add("copied");
           userMessage.style.top = "52px";
 
-          // Could probably use keyframes in CSS to fade
-          // the user message after 1-1.5s, but
-          // the aria-* attr and class add/removing will
-          // have to be handled with JS
           setTimeout(() => {
             userMessage.classList.remove("show");
             userMessage.setAttribute("aria-hidden", "true");
