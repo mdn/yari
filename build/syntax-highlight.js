@@ -58,7 +58,7 @@ function syntaxHighlight($, doc) {
   $("pre[class*=brush]").each((_, element) => {
     // The language is whatever string comes after the `brush(:)`
     // portion of the class name.
-    const $pre = $(element);
+    const $pre = $(element).wrapAll("<div class='code-example'>");
 
     const className = $pre.attr("class").toLowerCase();
     const match = className.match(/brush:?\s*([\w_-]+)/);
@@ -80,10 +80,8 @@ function syntaxHighlight($, doc) {
     const code = $pre.text();
     const html = Prism.highlight(code, grammar, name);
     const $code = $("<code>").html(html);
-    const wrap = $("<div class='code-example'></div>");
 
     $pre.empty().append($code);
-    $pre.wrapAll(wrap);
   });
 }
 
