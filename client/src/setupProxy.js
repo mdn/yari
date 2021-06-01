@@ -7,7 +7,10 @@ module.exports = function (app) {
     changeOrigin: true,
   });
   app.use("/api", proxy);
-  app.use("**/index.json", proxy);
+  app.use("/_+(flaws|translations|open|document)", proxy);
+  app.use("**/+(index|search-index).json", proxy);
   // This has to match what we do in server/index.js in the catchall handler
   app.use("**/*.(png|webp|gif|jpe?g|svg)", proxy);
+  // All those root-level images like /favicon-48x48.png
+  app.use("/*.(png|webp|gif|jpe?g|svg)", proxy);
 };
