@@ -76,7 +76,7 @@ export function useCopyExamplesToClipboard(doc: Doc | undefined) {
 
 function copyToClipboard(element) {
   const browser = navigator.userAgent;
-  const code = element.textContent;
+  const code = element.textContent || "";
   // expect window.clipboardData to not exist unless browser is IE
   // @ts-expect-error
   const windowClipboard = window.clipboardData;
