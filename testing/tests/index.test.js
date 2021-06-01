@@ -742,7 +742,7 @@ test("broken links that are links to the current page", () => {
   const $ = cheerio.load(html);
 
   expect($("#content a.page-not-created").length).toBe(0);
-  expect($("#content a.self-link").length).toBe(4);
+  expect($('#content a[aria-current="page"]').length).toBe(4);
 });
 
 test("without locale prefix broken links flaws", () => {
