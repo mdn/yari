@@ -45,7 +45,7 @@
     "accept-language-parser": "1.5.0",
     "browser-specs": "^1.38.1",
     "chalk": "4.1.1",
-    "cheerio": "1.0.0-rc.6",
+    "cheerio": "1.0.0-rc.9",
     "cli-progress": "^3.9.0",
     "compression": "1.7.4",
     "cookie": "0.4.1",
