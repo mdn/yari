@@ -1084,6 +1084,31 @@ test("image flaws with bad images", () => {
   ).toBe(4);
 });
 
+test("linked to local files", () => {
+  const builtFolder = path.join(
+    buildRoot,
+    "en-us",
+    "docs",
+    "web",
+    "images",
+    "linked_to"
+  );
+  const htmlFile = path.join(builtFolder, "index.html");
+  const html = fs.readFileSync(htmlFile, "utf-8");
+  const $ = cheerio.load(html);
+  expect.assertions(1);
+  $('a[href*="dino.svg"]').each((i, element) => {
+    const link = $(element);
+    // The point of this test is to prove that the link becomes
+    // "absolute" (i.e. starting with /)
+    // If it didn't do this a link `<a href=dino.svg>`, when clicked,
+    // would actually be a link to `/en-US/docs/Web/Images/dino.svg`
+    // because the page `/en-US/docs/Web/Images/Linked_to` is served
+    // without a trailing /.
+    expect(link.attr("href")).toBe("/en-US/docs/Web/Images/Linked_to/dino.svg");
+  });
+});
+
 test("image flaws with repeated external images", () => {
   // This test exists because of https://github.com/mdn/yari/issues/2247
   // which showed that if a document has an external URL repeated more than
