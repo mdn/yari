@@ -17,17 +17,15 @@ export function useCopyExamplesToClipboard(doc: Doc | undefined) {
     if (!doc) {
       return;
     }
-    // '#content pre' works but also selects <pre>
-    // tags without class="brush:*", like class="notranslate"
-    // which represent 'formal_syntax' <pre> content, and
-    // syntax highlight isn't targeting <pre class="notranslate">
-    // its getting $(pre[class*=brush]), this is in regards to wrapping
-    // <pre> tags with a <div> to absolutely position the
-    // copy-to-clipboard <button> relatively in the newly added parent div,
-    // instead of selecting #content pre which grabs
-    // class="notranslate" formal syntax tags, just grab
-    // the <pre class="brush"> tags which are injected into
-    // a `<div class="code-example">` from syntax highlighter
+
+    if (!isClipboardSupported()) {
+      console.log(
+        "Copy-to-clipboard disabled because your browser does not appear to support it"
+      );
+      // bail and don't inject buttons to DOM
+      return;
+    }
+
     [...document.querySelectorAll("div.code-example pre")].forEach(
       (element) => {
         const userMessage = document.createElement("span");
@@ -66,24 +64,34 @@ export function useCopyExamplesToClipboard(doc: Doc | undefined) {
   }, [doc]);
 }
 
-function copyToClipboard(element) {
+function isClipboardSupported() {
   const browser = navigator.userAgent;
-  const code = element.textContent || "";
-  // expect window.clipboardData to not exist unless browser is IE
+  let isSupported = true;
   // @ts-expect-error
   const windowClipboard = window.clipboardData;
 
-  // If browswer is IE use window.clipboardData.setData
-  // could use window.execCommand('copy') but it is deprecated
   if (
     windowClipboard &&
     windowClipboard.setData &&
     browser.indexOf("Microsoft Internet Explorer") > -1
   ) {
-    windowClipboard.setData("text/plain", code);
-  } else {
-    // A browser that isn't IE (Chrome, Edge, Firefox, etc)
-    // Support for the Clipboard API's navigator.clipboard.writeText() method was added in Firefox 63.
+    // Clipboard Web API is not supported in IE
+    isSupported = false;
+  }
+  return isSupported;
+}
+
+function copyToClipboard(element) {
+  const code = element.textContent || "";
+
+  // Since we bail early in the custom hook if the Clipboard Web API
+  // isn't supported, I don't see a reason to include an else branch
+  // here for window.clipboardData.setData() which is supported in IE
+  // but is experimental, also since we bail if Clibpoard API
+  // isn't supported, is this extra check even necessary since we wont
+  // reach the copyToClipboard function invocation in the custom hook if
+  // !isClipboardSupported() since we log a message to console and return
+  if (isClipboardSupported()) {
     navigator.clipboard.writeText(code);
   }
 }
