@@ -1,0 +1,99 @@
+# This starts up a simulator that tries to do what our Lambda@Edge does.
+
+name: AWS Lambda@Edge
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - deployer/aws-lambda/**
+      - libs/**
+      - .github/workflows/aws-lambda.yml
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2.3.4
+
+      - name: Setup Node.js environment
+        uses: actions/setup-node@v2.1.5
+        with:
+          node-version: "12"
+
+      # Note!
+      # We need to install all node modules in each of the 3 directories.
+      # 1. content-origin-request
+      # 2. content-origin-response
+      # 3. tests
+      #
+      # If we don't do this, you can't do things like:
+      #
+      #    const { handler } = require("../content-origin-request");
+      #
+      # The reason `yarn install` won't pick up the sub-dependencies
+      # is because these 3 directories don't share a common root.
+
+      - name: Cache node_modules content-origin-request
+        uses: actions/cache@v2.1.6
+        id: cached-node_modules-content-origin-request
+        with:
+          path: |
+            deployer/aws-lambda/content-origin-request/node_modules
+          key: ${{ runner.os }}-${{ hashFiles('deployer/aws-lambda/**/yarn.lock') }}-${{ hashFiles('libs/**/*.js') }}
+      - name: Install all yarn packages
+        if: steps.cached-node_modules-content-origin-request.outputs.cache-hit != 'true'
+        working-directory: deployer/aws-lambda/content-origin-request
+        run: yarn --frozen-lockfile
+
+      - name: Cache node_modules content-origin-response
+        uses: actions/cache@v2.1.6
+        id: cached-node_modules-content-origin-response
+        with:
+          path: |
+            deployer/aws-lambda/content-origin-response/node_modules
+          key: ${{ runner.os }}-${{ hashFiles('deployer/aws-lambda/**/yarn.lock') }}-${{ hashFiles('libs/**/*.js') }}
+      - name: Install all yarn packages
+        if: steps.cached-node_modules-content-origin-response.outputs.cache-hit != 'true'
+        working-directory: deployer/aws-lambda/content-origin-response
+        run: yarn --frozen-lockfile
+
+      - name: Cache node_modules
+        uses: actions/cache@v2.1.6
+        id: cached-node_modules
+        with:
+          path: |
+            deployer/aws-lambda/tests/node_modules
+          key: ${{ runner.os }}-${{ hashFiles('deployer/aws-lambda/**/yarn.lock') }}-${{ hashFiles('libs/**/*.js') }}
+      - name: Install all yarn packages
+        if: steps.cached-node_modules.outputs.cache-hit != 'true'
+        working-directory: deployer/aws-lambda/tests
+        run: yarn --frozen-lockfile
+
+      - name: Run test server
+        working-directory: deployer/aws-lambda/tests
+        run: |
+          yarn serve > /tmp/stdout.log 2> /tmp/stderr.log &
+
+      - name: Check that the server started
+        run: curl --retry-connrefused --retry 5 -I http://localhost:7000/ping
+
+      - name: Preflight the integration tests
+        run: |
+          curl -I http://localhost:7000/docs/Web
+          curl -I http://localhost:7000/en-US/docs/Web/
+
+      - name: End-to-end test
+        working-directory: deployer/aws-lambda/tests
+        run: |
+          yarn test-server
+
+      - name: Debug any server outputs
+        if: failure()
+        run: |
+          echo "____STDOUT____"
+          cat /tmp/stdout.log
+          echo "____STDERR____"
+          cat /tmp/stderr.log

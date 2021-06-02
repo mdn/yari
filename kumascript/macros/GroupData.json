@@ -419,7 +419,7 @@
       ],
       "properties": [
         "HTMLMediaElement.mediaKeys",
-        "HMTLMediaElement.onencrypted"
+        "HTMLMediaElement.onencrypted"
       ],
       "events": []
     },

@@ -182,8 +182,7 @@ async function buildDocuments(
     }
 
     for (const { id, html } of liveSamples) {
-      const liveSamplePath = path.join(outPath, "_samples_", id, "index.html");
-      fs.mkdirSync(path.dirname(liveSamplePath), { recursive: true });
+      const liveSamplePath = path.join(outPath, `_sample_.${id}.html`);
       fs.writeFileSync(liveSamplePath, html);
     }
 
@@ -195,7 +194,7 @@ async function buildDocuments(
 
     // Collect non-archived documents' slugs to be used in sitemap building and
     // search index building.
-    if (!document.noIndexing) {
+    if (!builtDocument.noIndexing) {
       const { locale, slug } = document.metadata;
       if (!docPerLocale[locale]) {
         docPerLocale[locale] = [];
@@ -313,10 +312,9 @@ program
         // The `options.locale` is either an empty array (e.g. no --locale used),
         // a string (e.g. one single --locale) or an array of strings
         // (e.g. multiple --locale options).
-        (Array.isArray(options.locale)
-          ? options.locale
-          : [options.locale]
-        ).map((locale) => [locale, true])
+        (Array.isArray(options.locale) ? options.locale : [options.locale]).map(
+          (locale) => [locale, true]
+        )
       );
       const t0 = new Date();
       const { slugPerLocale, peakHeapBytes, totalFlaws } = await buildDocuments(

@@ -1,5 +1,6 @@
 import React from "react";
 
+import { Loading } from "../ui/atoms/loading";
 import { PageContentContainer } from "../ui/atoms/page-content";
 
 const SettingsApp = React.lazy(() => import("./app"));
@@ -22,7 +23,14 @@ export function Settings() {
        */}
         <h1 className="slab-highlight">{pageTitle}</h1>
         {!isServer && (
-          <React.Suspense fallback={<p>Loading...</p>}>
+          <React.Suspense
+            fallback={
+              <Loading
+                message="Loading account settings app…"
+                minHeight={400}
+              />
+            }
+          >
             <SettingsApp />
           </React.Suspense>
         )}

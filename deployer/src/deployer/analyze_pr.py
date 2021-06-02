@@ -112,19 +112,7 @@ def post_about_dangerous_content(
 
     comments = []
 
-    patch_lines = {}
-    if patch:
-        for patched_file in patch:
-            # This value is the file path as it would appear in `git diff`
-            # so for example: `files/en-us/mdn/kitchensink/index.html`
-            file_path = patched_file.path
-            new_lines = []
-            for hunk in patched_file:
-                for line in hunk:
-                    if line.line_type == "+":
-                        new_lines.append(line.value)
-
-            patch_lines[file_path] = "".join(new_lines)
+    patch_lines = get_patch_lines(patch) if patch else {}
 
     for doc in get_built_docs(build_directory):
         rendered_html = "\n".join(
@@ -145,6 +133,12 @@ def post_about_dangerous_content(
         external_urls = defaultdict(int)
         for node in tree.css("a[href]"):
             href = node.attributes.get("href")
+            # If you have `<a href="">bla</a>` it will match the above CSS selector.
+            # But when iterated over, `node.attributes.get("href")` will
+            # become `None`, not `""`.
+            if not href:
+                continue
+
             href = href.split("#")[0]
 
             # We're only interested in external URLs at the moment
@@ -290,3 +284,36 @@ def get_build_hash(build_directory: Path):
         with open(path, "rb") as f:
             hash_.update(f.read())
     return hash_.hexdigest()
+
+
+def get_patch_lines(patch: PatchSet):
+    patch_lines = {}
+    for patched_file in patch:
+        # This value is the file path as it would appear in `git diff`
+        # so for example: `files/en-us/mdn/kitchensink/index.html`
+        if patched_file.is_binary_file:
+            continue
+        file_path = patched_file.path
+        if patched_file.is_rename:
+            # If the file was a rename, the `.target_file` will be prefixed
+            # with `b/` because the diff looks like this:
+            #
+            # ...
+            # rename from files/en-us/web/api/transitionevent/animationname/index.html
+            # rename to files/en-us/web/api/transitionevent/propertyname/index.html
+            # index e644c304b..d39c14b92 100644
+            # --- a/files/en-us/web/api/transitionevent/animationname/index.html
+            # +++ b/files/en-us/web/api/transitionevent/propertyname/index.html
+            # @@ -1,6 +1,6 @@
+            # ...
+            # Boy I wish there was a better way to get to that new name!
+            # See https://github.com/matiasb/python-unidiff/blob/9a473c8ca2cc71614b6e1470019d30065941cafe/unidiff/patch.py#L457
+            file_path = patched_file.target_file[2:]
+        new_lines = []
+        for hunk in patched_file:
+            for line in hunk:
+                if line.line_type == "+":
+                    new_lines.append(line.value)
+
+        patch_lines[file_path] = "".join(new_lines)
+    return patch_lines

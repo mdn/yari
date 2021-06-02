@@ -2,6 +2,7 @@ import React from "react";
 import { Link, useNavigate } from "react-router-dom";
 import useSWR, { mutate } from "swr";
 
+import { Loading } from "../ui/atoms/loading";
 import { DISABLE_AUTH } from "../constants";
 import { useUserData } from "../user-context";
 import { useLocale } from "../hooks";
@@ -69,7 +70,7 @@ export default function SettingsApp({ ...appProps }) {
   if (!userData) {
     // The XHR request hasn't finished yet so we don't know if the user is
     // signed in or not.
-    return <Loading />;
+    return <Loading message="Loading user data…" />;
   }
   if (!userData.isAuthenticated) {
     return <NotSignedIn />;
@@ -89,7 +90,7 @@ export default function SettingsApp({ ...appProps }) {
   }
 
   if (!data) {
-    return <Loading />;
+    return <Loading message="Loading user settings…" />;
   }
 
   if (settingsError) {
@@ -135,10 +136,6 @@ function AuthDisabled() {
   );
 }
 
-function Loading() {
-  return <p style={{ minHeight: 200 }}>Loading...</p>;
-}
-
 function NotSignedIn() {
   const locale = useLocale();
   const sp = new URLSearchParams();
@@ -179,10 +176,8 @@ function Settings({
 
   const [sent, setSent] = React.useState(false);
   const [sendError, setSendError] = React.useState<Error | null>(null);
-  const [
-    validationErrors,
-    setValidationErrors,
-  ] = React.useState<ValidationErrors | null>(null);
+  const [validationErrors, setValidationErrors] =
+    React.useState<ValidationErrors | null>(null);
 
   async function sendSettings() {
     const formData = new URLSearchParams();
@@ -230,9 +225,7 @@ function Settings({
       )}
 
       <div className="field-group">
-        <label htmlFor="id_locale" className="slab-highlight">
-          Change language
-        </label>
+        <h3>Default language</h3>
 
         {sent && !sendError && (
           <div className="notecard success">
@@ -249,7 +242,9 @@ function Settings({
             <a href={window.location.pathname}>Reload page to try again.</a>
           </div>
         )}
-
+        <label htmlFor="id_locale" className="visually-hidden">
+          Change language
+        </label>
         <select
           id="id_locale"
           name="locale"

@@ -1,5 +1,5 @@
 import React from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useSearchParams, useParams, useNavigate } from "react-router-dom";
 import useSWR, { mutate } from "swr";
 
 import { CRUD_MODE } from "../constants";
@@ -18,10 +18,10 @@ import { LanguageToggle } from "../ui/molecules/language-toggle";
 import { LocalizedContentNote } from "./molecules/localized-content-note";
 import { TOC } from "./organisms/toc";
 import { RenderSideBar } from "./organisms/sidebar";
+import { RetiredLocaleNote } from "./molecules/retired-locale-note";
 import { MainContentContainer } from "../ui/atoms/page-content";
+import { Loading } from "../ui/atoms/loading";
 import { Metadata } from "./organisms/metadata";
-
-import { ReactComponent as Dino } from "../assets/dino.svg";
 
 import "./index.scss";
 
@@ -41,6 +41,8 @@ export function Document(props /* TODO: define a TS interface for this */) {
   const mountCounter = React.useRef(0);
   const documentURL = useDocumentURL();
   const { locale } = useParams();
+  const [searchParams] = useSearchParams();
+
   const navigate = useNavigate();
 
   const dataURL = `${documentURL}/index.json`;
@@ -103,6 +105,7 @@ export function Document(props /* TODO: define a TS interface for this */) {
 
   React.useEffect(() => {
     const location = document.location;
+
     // Did you arrive on this page with a location hash?
     if (location.hash && location.hash !== location.hash.toLowerCase()) {
       // The location hash isn't lowercase. That probably means it's from before
@@ -128,7 +131,7 @@ export function Document(props /* TODO: define a TS interface for this */) {
   }, []);
 
   if (!doc && !error) {
-    return <LoadingDocumentPlaceholder />;
+    return <Loading minHeight={600} message="Loading document..." />;
   }
 
   if (error) {
@@ -158,17 +161,17 @@ export function Document(props /* TODO: define a TS interface for this */) {
         </div>
       )}
 
-      {doc.isTranslated && (
+      {doc.isTranslated ? (
         <LocalizedContentNote isActive={doc.isActive} locale={locale} />
+      ) : (
+        searchParams.get("retiredLocale") && <RetiredLocaleNote />
       )}
 
       {doc.toc && !!doc.toc.length && <TOC toc={doc.toc} />}
 
       <MainContentContainer>
         {!isServer && CRUD_MODE && !props.isPreview && doc.isActive && (
-          <React.Suspense
-            fallback={<p className="loading-toolbar">Loading toolbar</p>}
-          >
+          <React.Suspense fallback={<Loading message={"Loading toolbar"} />}>
             <Toolbar
               doc={doc}
               reloadPage={() => {
@@ -185,14 +188,6 @@ export function Document(props /* TODO: define a TS interface for this */) {
       </MainContentContainer>
 
       {doc.sidebarHTML && <RenderSideBar doc={doc} />}
-    </>
-  );
-}
-
-function LoadingDocumentPlaceholder() {
-  return (
-    <>
-      <Dino className="main-content loading-document-placeholder" />
     </>
   );
 }

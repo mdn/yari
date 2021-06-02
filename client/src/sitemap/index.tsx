@@ -4,6 +4,7 @@ import useSWR from "swr";
 
 import { CRUD_MODE, CRUD_MODE_HOSTNAMES } from "../constants";
 import { useLocale } from "../hooks";
+import { Loading } from "../ui/atoms/loading";
 import { PageContentContainer } from "../ui/atoms/page-content";
 
 import "./index.scss";
@@ -146,10 +147,8 @@ export default function Sitemap() {
   }
 
   const [opening, setOpening] = React.useState<string | null>(null);
-  const [
-    editorOpeningError,
-    setEditorOpeningError,
-  ] = React.useState<Error | null>(null);
+  const [editorOpeningError, setEditorOpeningError] =
+    React.useState<Error | null>(null);
   React.useEffect(() => {
     let unsetOpeningTimer: ReturnType<typeof setTimeout>;
     if (opening) {
@@ -207,7 +206,7 @@ export default function Sitemap() {
           </div>
         )}
 
-        {!data && !error && <p>Loading loading loading...</p>}
+        {!data && !error && <Loading />}
         <div className="opening-in-your-editor">
           {opening && (
             <>
