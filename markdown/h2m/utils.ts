@@ -1,4 +1,6 @@
 import { Element } from "hast";
+import * as toHTML from "hast-util-to-html";
+import * as prettier from "prettier";
 
 import { MDNodeUnion } from "./h";
 
@@ -26,6 +28,18 @@ export class InvalidASTError extends Error {
     this.nodes = nodes;
   }
 }
+
+export const toPrettyHTML = (...args: Parameters<typeof toHTML>) => {
+  const result = prettier.format(toHTML(...args), {
+    semi: false,
+    parser: "html",
+  });
+  // Workaround for Prettier issue https://github.com/prettier/prettier/issues/10950
+  if (result.endsWith("\n>\n")) {
+    return result.slice(0, -3) + ">";
+  }
+  return result;
+};
 
 export const toSelector = ({
   tagName,

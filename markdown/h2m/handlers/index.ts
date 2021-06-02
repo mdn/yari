@@ -1,9 +1,8 @@
-import * as toHTML from "hast-util-to-html";
 const trimTrailingLines = require("trim-trailing-lines");
 import type { Node } from "unist";
 
 import { h, MDNode } from "../h";
-import { asArray, wrapText } from "../utils";
+import { asArray, toPrettyHTML, wrapText } from "../utils";
 import { cards } from "./cards";
 import { dl } from "./dl";
 import { tables } from "./tables";
@@ -116,7 +115,7 @@ export const handlers: QueryAndTransform[] = [
     (node, t, { shouldWrap, singleLine }) =>
       shouldWrap
         ? singleLine
-          ? h("html", toHTML(node))
+          ? h("html", toPrettyHTML(node))
           : h("break")
         : h("text", "\n"),
   ],
@@ -261,7 +260,7 @@ export const handlers: QueryAndTransform[] = [
     },
   ],
 
-  [{ is: "math", canHave: "display" }, (node) => h("html", toHTML(node))],
+  [{ is: "math", canHave: "display" }, (node) => h("html", toPrettyHTML(node))],
 
   ["blockquote", (node, t) => h("blockquote", wrap(t(node)))],
 

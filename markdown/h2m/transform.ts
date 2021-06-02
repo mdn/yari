@@ -1,10 +1,9 @@
-import * as toHTML from "hast-util-to-html";
 import { Node } from "unist";
 
 import { handlers } from "./handlers";
 
 import { h, MDNodeUnion } from "./h";
-import { InvalidASTError, Options, wrapText } from "./utils";
+import { InvalidASTError, Options, toPrettyHTML, wrapText } from "./utils";
 import { matchesQuery } from "./handlers/utils";
 
 const minify = require("rehype-minify-whitespace");
@@ -63,7 +62,7 @@ function transformNode(node, options: Options = {}) {
   }
 
   return {
-    transformed: transformed || h("html", toHTML(node)),
+    transformed: transformed || h("html", toPrettyHTML(node)),
     unhandled,
     invalid,
   };
