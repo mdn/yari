@@ -254,6 +254,29 @@ test("content built French foo page", () => {
   );
 });
 
+test("French translation using English front-matter bits", () => {
+  const builtFolder = path.join(
+    buildRoot,
+    "fr",
+    "docs",
+    "web",
+    "spec_section_extraction"
+  );
+  const jsonFile = path.join(builtFolder, "index.json");
+  const { doc } = JSON.parse(fs.readFileSync(jsonFile));
+  expect(doc.title).toBe("Extraction de sections de spécifications");
+  const specifications = doc.body.find(
+    (section) => section.type === "specifications"
+  );
+  expect(specifications.value.query).toBe(
+    "javascript.builtins.Array.toLocaleString"
+  );
+  const bcd = doc.body.find(
+    (section) => section.type === "browser_compatibility"
+  );
+  expect(bcd.value.query).toBe("javascript.builtins.Array.toLocaleString");
+});
+
 test("content built zh-TW page with en-US fallback image", () => {
   const builtFolder = path.join(buildRoot, "zh-tw", "docs", "web", "foo");
   const jsonFile = path.join(builtFolder, "index.json");
