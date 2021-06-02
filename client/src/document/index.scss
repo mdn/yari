@@ -55,6 +55,25 @@ a.new {
       border-radius: 5px;
       z-index: 5;
     }
+
+    .user-message {
+      position: absolute;
+      top: 15px;
+      right: math.div($base-spacing, 3);
+      display: none;
+      background: #292929;
+      padding: 0.55em 0.5em;
+      border-radius: math.div($base-spacing, 6);
+      color: #fff;
+      opacity: 1;
+      z-index: 5;
+      font: 16px/1.25 arial, sans-serif;
+      font-size: 14px;
+    }
+
+    .show {
+      display: block;
+    }
   }
 
   .code-example:focus .copy-icon,
@@ -65,25 +84,6 @@ a.new {
   .copy-icon:hover {
     background-color: rgb(225, 225, 225);
     cursor: pointer;
-  }
-
-  .user-message {
-    position: absolute;
-    top: 15px;
-    right: math.div($base-spacing, 3);
-    display: none;
-    background: #292929;
-    padding: 0.55em 0.5em;
-    border-radius: math.div($base-spacing, 6);
-    color: #fff;
-    opacity: 1;
-    z-index: 5;
-    font: 16px/1.25 arial, sans-serif;
-    font-size: 14px;
-  }
-
-  .show {
-    display: block;
   }
 
   @media #{$mq-small-desktop-and-up} {
