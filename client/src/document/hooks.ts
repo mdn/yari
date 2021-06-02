@@ -48,11 +48,15 @@ export function useCopyExamplesToClipboard(doc: Doc | undefined) {
         wrapper?.appendChild(userMessage);
 
         button.onclick = () => {
-          userMessage.classList.add("show");
-          userMessage.setAttribute("aria-hidden", "false");
-          copyToClipboard(element);
-          button.classList.add("copied");
-          userMessage.style.top = "52px";
+          const copiedSuccessfully = copyToClipboard(element);
+          if (copiedSuccessfully) {
+            userMessage.classList.add("show");
+            userMessage.setAttribute("aria-hidden", "false");
+            button.classList.add("copied");
+            userMessage.style.top = "52px";
+          } else {
+            button.classList.add("failed");
+          }
 
           setTimeout(() => {
             userMessage.classList.remove("show");
@@ -83,15 +87,19 @@ function isClipboardSupported() {
 
 function copyToClipboard(element) {
   const code = element.textContent || "";
+  let isCopySuccessful = false;
 
-  // Since we bail early in the custom hook if the Clipboard Web API
-  // isn't supported, I don't see a reason to include an else branch
-  // here for window.clipboardData.setData() which is supported in IE
-  // but is experimental, also since we bail if Clibpoard API
-  // isn't supported, is this extra check even necessary since we wont
-  // reach the copyToClipboard function invocation in the custom hook if
-  // !isClipboardSupported() since we log a message to console and return
-  if (isClipboardSupported()) {
+  // navigator.clipboard.writeText returns Promise<void> which
+  // is rejected if the caller does not have permission to
+  // write to the clipboard, ie if the Clipboard API is supported
+  // and Permissions object can be verified and allowed by Permissions API.
+  try {
     navigator.clipboard.writeText(code);
+    isCopySuccessful = true;
+  } catch (err) {
+    console.error(err);
+    // just to be safe
+    isCopySuccessful = false;
   }
+  return isCopySuccessful;
 }
