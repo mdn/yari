@@ -93,11 +93,10 @@ a.new {
     }
   }
 
-  a.self-link {
+  [aria-current] {
+    color: $neutral-100;
     font-weight: bold;
-    // font-style: italic;
     text-decoration: none;
-    color: black;
   }
 
   h2,
@@ -161,6 +160,11 @@ a.new {
   */
   .index {
     columns: 300px;
+    margin-bottom: $base-spacing;
+
+    @media #{$mq-small-desktop-and-up} {
+      margin-bottom: $base-spacing * 2;
+    }
 
     .icon-experimental,
     .icon-nonstandard {

@@ -2682,15 +2682,15 @@
   resolved "https://registry.yarnpkg.com/@sideway/pinpoint/-/pinpoint-2.0.0.tgz#cff8ffadc372ad29fd3f78277aeb29e632cc70df"
   integrity sha512-RNiOoTPkptFtSVzQevY/yWtZwf/RxyVnPy/OcA9HBM3MlGDnBEYL5B41H0MTn0Uec8Hi+2qUtTfG2WWZBmMejQ==
 
-"@sidvind/better-ajv-errors@^0.8.0":
-  version "0.8.0"
-  resolved "https://registry.yarnpkg.com/@sidvind/better-ajv-errors/-/better-ajv-errors-0.8.0.tgz#b173358ad318d42f779b8f7b062115968996796d"
-  integrity sha512-GHNHkyHpCWjMENEJZ1ScsGOUvy41GVPd9SSSK/h7d9hYdKbpzSgFeXCB2g7XTswNKJD/G5GU5KLlZspLkb/Myg==
+"@sidvind/better-ajv-errors@^0.9.0":
+  version "0.9.0"
+  resolved "https://registry.yarnpkg.com/@sidvind/better-ajv-errors/-/better-ajv-errors-0.9.0.tgz#fcc84df0d2a68b100a4d6b9b2cc7066525c42dee"
+  integrity sha512-GeeIsUsq8eUB7kvDq+fS0wpD0hZ56xrqsaVTiJEmSWqEK+BvTd29mah3AWDublvRx2dWQ/qMbvb3Ml98Huedcw==
   dependencies:
     "@babel/code-frame" "^7.0.0"
     chalk "^4.0.0"
     json-to-ast "^2.0.3"
-    jsonpointer "^4.0.1"
+    jsonpointer "^4.1.0"
     leven "^3.1.0"
 
 "@sindresorhus/is@^0.7.0":
@@ -5884,10 +5884,10 @@ browser-process-hrtime@^1.0.0:
   resolved "https://registry.yarnpkg.com/browser-process-hrtime/-/browser-process-hrtime-1.0.0.tgz#3c9b4b7d782c8121e56f10106d84c0d0ffc94626"
   integrity sha512-9o5UecI3GhkpM6DrXr69PblIuWxPKk9Y0jHBRhdocZ2y7YECBFCsHm79Pr3OyR2AvjhDkabFJaDJMYRazHgsow==
 
-browser-specs@^1.38.0:
-  version "1.38.0"
-  resolved "https://registry.yarnpkg.com/browser-specs/-/browser-specs-1.38.0.tgz#82fe393dad2e6e8cf490fd9e3937d56b41103281"
-  integrity sha512-0Gz9dq536oGZHbwFOxqhaTABoFts92zpmBRcpfkGqRX/837WmXzuBtdpEmN4x9OG+ct050TUmlFp492dWifaaA==
+browser-specs@^1.38.1:
+  version "1.38.1"
+  resolved "https://registry.yarnpkg.com/browser-specs/-/browser-specs-1.38.1.tgz#118287e660d4d8c0bc5ca3241d4c39f9eba33e87"
+  integrity sha512-AlsiRTsTepSTPg6+GaMBh0fKOuwl02np4jBg8oPFrR6K5l+N7f0SsR7daIOGFC36zzB4aeYFcp6rG468EbMYsw==
 
 browserify-aes@^1.0.0, browserify-aes@^1.0.4:
   version "1.2.0"
@@ -9225,15 +9225,14 @@ file-system-cache@^1.0.5:
     fs-extra "^0.30.0"
     ramda "^0.21.0"
 
-file-type@16.4.0:
-  version "16.4.0"
-  resolved "https://registry.yarnpkg.com/file-type/-/file-type-16.4.0.tgz#464197e44bd94a452d77b09085d977ae0dad2df4"
-  integrity sha512-MDAkwha3wHg11Lp++2T3Gu347eC/DB4r7nYj6iZaf1l7UhGBh2746QKxg0BWC8w2dJsxUEmH8KvLueX+GthN2w==
+file-type@16.5.0:
+  version "16.5.0"
+  resolved "https://registry.yarnpkg.com/file-type/-/file-type-16.5.0.tgz#16a2626f3b33bac612f6e81e52216f3a7c8e12a2"
+  integrity sha512-OxgWA9tbL8N/WP00GD1z8O0MiwQKFyWRs1q+3FhjdvcGgKqwxcejyGWso3n4/IMU6DdwV+ARZ4A7TTnPkDcSiw==
   dependencies:
     readable-web-to-node-stream "^3.0.0"
     strtok3 "^6.0.3"
     token-types "^2.0.0"
-    typedarray-to-buffer "^3.1.5"
 
 file-type@5.2.0, file-type@^5.2.0:
   version "5.2.0"
@@ -10580,14 +10579,14 @@ html-tags@^3.1.0:
   resolved "https://registry.yarnpkg.com/html-tags/-/html-tags-3.1.0.tgz#7b5e6f7e665e9fb41f30007ed9e0d41e97fb2140"
   integrity sha512-1qYz89hW3lFDEazhjW0yVAV87lw8lVkrJocr72XmBkMKsoSVJCQx3W8BXsC7hO2qAt8BoVjYjtAcZ9perqGnNg==
 
-html-validate@4.12.0:
-  version "4.12.0"
-  resolved "https://registry.yarnpkg.com/html-validate/-/html-validate-4.12.0.tgz#a7ace26b1f8426161935aef83c1a1c11855e66e3"
-  integrity sha512-9XKcGbx6dOKmHIFb6I9qPVuGoqFXiNkSKTlECy1xkljMLN8Rs52d/i6OZmOmHa02QOv5RdqwR3GXiVv9CEKKsg==
+html-validate@4.13.1:
+  version "4.13.1"
+  resolved "https://registry.yarnpkg.com/html-validate/-/html-validate-4.13.1.tgz#b4cbe9a3e9b7f7591586f219e42f92cebadad314"
+  integrity sha512-HCx9saspLiI9uL1XHpqEpV+yc/td5A4HR9HHNffuody4WNDuLDpLe4Sx6PXoBMIjdgozoiBrFSJqKMa3vwprBg==
   dependencies:
     "@babel/code-frame" "^7.10.0"
     "@html-validate/stylish" "^1.0.0"
-    "@sidvind/better-ajv-errors" "^0.8.0"
+    "@sidvind/better-ajv-errors" "^0.9.0"
     acorn-walk "^8.0.0"
     ajv "^7.0.0"
     deepmerge "^4.2.0"
@@ -12525,7 +12524,7 @@ jsonfile@^6.0.1:
   optionalDependencies:
     graceful-fs "^4.1.6"
 
-jsonpointer@^4.0.1:
+jsonpointer@^4.1.0:
   version "4.1.0"
   resolved "https://registry.yarnpkg.com/jsonpointer/-/jsonpointer-4.1.0.tgz#501fb89986a2389765ba09e6053299ceb4f2c2cc"
   integrity sha512-CXcRvMyTlnR53xMcKnuMzfCA5i/nfblTnnr74CZb6C4vG39eu6w51t7nKmU5MfLfbTgGItliNyjO/ciNPDqClg==
