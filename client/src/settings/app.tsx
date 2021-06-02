@@ -225,9 +225,7 @@ function Settings({
       )}
 
       <div className="field-group">
-        <label htmlFor="id_locale" className="slab-highlight">
-          Change language
-        </label>
+        <h3>Default language</h3>
 
         {sent && !sendError && (
           <div className="notecard success">
@@ -244,7 +242,9 @@ function Settings({
             <a href={window.location.pathname}>Reload page to try again.</a>
           </div>
         )}
-
+        <label htmlFor="id_locale" className="visually-hidden">
+          Change language
+        </label>
         <select
           id="id_locale"
           name="locale"
