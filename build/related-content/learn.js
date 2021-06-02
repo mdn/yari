@@ -1,3 +1,5 @@
+const clonedeep = require("lodash.clonedeep");
+
 const { setActive, setTitleFromURL, setURLFromSlug } = require("./utils");
 // This is a pure Node port of the `macros/LearnSidebar.ejs` macro.
 
@@ -3117,10 +3119,15 @@ const getRelatedByLocale = (locale) => {
   return related;
 };
 
+const _cache = new Map();
+
 function getRelatedContent(doc) {
   const { locale, mdn_url } = doc;
   // First get it purely dependent on the locale
-  const related = getRelatedByLocale(locale);
+  if (!_cache.has(locale)) {
+    _cache.set(locale, getRelatedByLocale(locale));
+  }
+  const related = clonedeep(_cache.get(locale));
 
   // Now we can inject which page we're currently on based on the doc.
   setActive(related, mdn_url);

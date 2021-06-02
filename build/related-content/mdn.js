@@ -321,7 +321,6 @@ const getRelatedByLocale = (locale) => {
   });
 
   setURLFromSlug(related, baseURL);
-  // setTitleFromURL(related, locale, true);
   setTitleFromURL(related, locale);
 
   return related;
