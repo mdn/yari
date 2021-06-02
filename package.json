@@ -115,7 +115,7 @@
     "@testing-library/react": "^11.2.7",
     "@types/jest": "^26.0.23",
     "@types/react": "^17.0.9",
-    "@types/react-dom": "^17.0.5",
+    "@types/react-dom": "^17.0.6",
     "babel-loader": "8.1.0",
     "benchmark": "2.1.4",
     "braces": "^3.0.2",
