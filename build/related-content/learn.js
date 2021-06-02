@@ -1,5 +1,4 @@
-const { DEFAULT_LOCALE } = require("../../libs/constants");
-const { Document } = require("../../content");
+const { setActive, setTitleFromURL, setURLFromSlug } = require("./utils");
 // This is a pure Node port of the `macros/LearnSidebar.ejs` macro.
 
 // This could be memoized.
@@ -3117,55 +3116,6 @@ const getRelatedByLocale = (locale) => {
 
   return related;
 };
-
-function setActive(related, url) {
-  let foundActive = false;
-  for (const content of related) {
-    if (content.url && content.url.split("#")[0] === url) {
-      content.isActive = true;
-      foundActive = true;
-    } else if (content.content) {
-      if (setActive(content.content, url)) {
-        content.containsActive = true;
-      }
-    }
-  }
-  return foundActive;
-}
-
-function setURLFromSlug(related, baseURL) {
-  for (const content of related) {
-    if (content.slug && !content.url) {
-      content.url = `${baseURL}/${content.slug}`;
-      delete content.slug;
-    }
-    if (content.content) {
-      setURLFromSlug(content.content, baseURL);
-    }
-  }
-}
-
-function setTitleFromURL(related, locale) {
-  for (const content of related) {
-    if (content.url && !content.title) {
-      let doc = Document.findByURL(content.url);
-      if (!doc && locale !== DEFAULT_LOCALE) {
-        doc = Document.findByURL(
-          content.url.replace(`/${locale}/`, `/${DEFAULT_LOCALE}/`)
-        );
-      }
-      if (doc) {
-        content.title = doc.metadata.title;
-      } else {
-        console.warn(`Can't find a document by URL ${content.url}`);
-        content.title = "<i>Document not found</i>";
-      }
-    }
-    if (content.content) {
-      setTitleFromURL(content.content, locale);
-    }
-  }
-}
 
 function getRelatedContent(doc) {
   const { locale, mdn_url } = doc;

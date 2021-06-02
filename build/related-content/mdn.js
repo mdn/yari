@@ -1,3 +1,5 @@
+const { setActive, setTitleFromURL, setURLFromSlug } = require("./utils");
+
 // This is a pure Node port of the `macros/MDNSidebar.ejs` macro.
 
 // This could be memoized.
@@ -283,56 +285,47 @@ const getRelatedByLocale = (locale) => {
     const strings = text[locale] || text["en-US"];
     return strings[key] || text["en-US"][key];
   }
+
   const related = [];
   related.push({
     title: getText("About_MDN"),
-    url: `${baseURL}/About`,
+    slug: "About",
     content: [
       {
         title: getText("Contributing_to_MDN"),
         content: [
           {
             title: getText("Get_started_on_MDN"),
-            url: `${baseURL}/Contribute/Getting_started`,
+            slug: "Contribute/Getting_started",
           },
           {
             title: getText("Contributing_to_MDN"),
-            url: `${baseURL}/Contribute`,
+            slug: "Contribute",
           },
           {
             title: getText("Other_things_you_can_do"),
-            url: `${baseURL}/Contribute/Howto`,
+            slug: "Contribute/Howto",
           },
           {
             title: getText("Localizing_MDN"),
-            url: `${baseURL}/Contribute/Localize`,
+            slug: "Contribute/Localize",
           },
-          { title: getText("Guidelines"), url: `${baseURL}/Guidelines` },
+          { title: getText("Guidelines"), slug: "Guidelines" },
           {
             title: getText("Content_structures"),
-            url: `${baseURL}/Structures`,
+            slug: "Structures",
           },
         ],
       },
     ],
   });
+
+  setURLFromSlug(related, baseURL);
+  // setTitleFromURL(related, locale, true);
+  setTitleFromURL(related, locale);
+
   return related;
 };
-
-function setActive(related, url) {
-  let foundActive = false;
-  for (const content of related) {
-    if (content.url === url) {
-      content.isActive = true;
-      foundActive = true;
-    } else if (content.content) {
-      if (setActive(content.content, url)) {
-        content.containsActive = true;
-      }
-    }
-  }
-  return foundActive;
-}
 
 function getRelatedContent(doc) {
   const { locale, mdn_url } = doc;

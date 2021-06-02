@@ -58,7 +58,17 @@ function SidebarLeaf({ parent }: { parent: RelatedContent }) {
                 key={node.url}
                 className={node.isActive ? "active" : undefined}
               >
-                <a href={node.url}>{node.title}</a>
+                <a
+                  title={
+                    node.fallback
+                      ? `Currently only available in ${node.fallback}`
+                      : undefined
+                  }
+                  href={node.url}
+                >
+                  {node.title}
+                </a>{" "}
+                {node.fallback && <small>({node.fallback})</small>}
               </li>
             );
           }
@@ -77,8 +87,6 @@ function SidebarLeaflets({ node }: { node: RelatedContent }) {
       <ol>
         {node.content.map((childNode) => {
           if (childNode.content) {
-            console.log(childNode.url || childNode.title);
-
             return (
               <li key={childNode.url || childNode.title}>
                 <SidebarLeaflets node={childNode} />
@@ -90,21 +98,66 @@ function SidebarLeaflets({ node }: { node: RelatedContent }) {
                 key={childNode.url}
                 className={childNode.isActive ? "active" : undefined}
               >
-                {/* Figure out how to set 'aria-current'
-                https://reactrouter.com/web/api/NavLink/aria-current-string
-                 */}
-                {childNode.url.startsWith("http") ? (
-                  <a href={childNode.url} className="external">
-                    {childNode.title}
-                  </a>
-                ) : (
-                  <a href={childNode.url}>{childNode.title}</a>
-                )}
+                <Hyperlink
+                  url={childNode.url}
+                  text={childNode.title}
+                  fallback={childNode.fallback}
+                  notFound={childNode.notFound}
+                />
               </li>
             );
           }
         })}
       </ol>
     </details>
+  );
+}
+
+function Hyperlink({
+  url,
+  text,
+  fallback,
+  notFound,
+}: {
+  url: string;
+  text: string;
+  fallback?: string;
+  notFound?: boolean;
+}) {
+  if (url.startsWith("http")) {
+    return (
+      <a href={url} className="external">
+        {text}
+      </a>
+    );
+  }
+
+  if (notFound) {
+    return (
+      <span
+        className="page-not-created"
+        // XXX Would be nice to localize this using `macros/L10n-Common.json`
+        title="The documentation about this has not yet been written; please consider contributing!"
+      >
+        {text}
+      </span>
+    );
+  }
+
+  // XXX
+  // Figure out how to set 'aria-current'
+  // https://reactrouter.com/web/api/NavLink/aria-current-string
+
+  return (
+    <>
+      <a
+        title={fallback ? `Currently only available in ${fallback}` : undefined}
+        className={fallback ? "only-in-en-us" : undefined}
+        href={url}
+      >
+        {text}
+      </a>{" "}
+      {fallback && <small>({fallback})</small>}
+    </>
   );
 }
