@@ -192,7 +192,9 @@ export const handlers: QueryAndTransform[] = [
           : node;
       return h(
         "inlineCode",
-        trimTrailingLines(wrapText(toText(targetNode), opts))
+        trimTrailingLines(
+          wrapText(toText(targetNode, { allowedElements: ["var"] }), opts)
+        )
       );
     },
   ],
@@ -303,4 +305,6 @@ export const handlers: QueryAndTransform[] = [
         },
       ] as QueryAndTransform
   ),
+
+  ["var", (node, t) => h("emphasis", t(node))],
 ];
