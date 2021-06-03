@@ -1671,7 +1671,7 @@
   },
   "WebOTP": {
     "name": "WebOTP",
-    "url": "https://w3c.github.io/web-otp/",
+    "url": "https://wicg.github.io/web-otp/",
     "status": "Draft"
   },
   "EXT_blend_minmax": {
