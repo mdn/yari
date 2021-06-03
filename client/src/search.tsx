@@ -300,7 +300,8 @@ function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
       <>
         {resultItems.length === 0 && inputValue !== "/" ? (
           <div className="nothing-found">
-            No document titles found.<br />
+            No document titles found.
+            <br />
             <Link to={searchPath}>
               Site search for <code>{inputValue}</code>
             </Link>
