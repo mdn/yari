@@ -443,12 +443,28 @@ async function buildDocument(document, documentOptions = {}) {
   // Also note, these operations mutate the `$`.
   if (metadata.sidebar) {
     doc.related_content = getRelatedContent(metadata.sidebar, doc);
-  } else if (metadata.slug === "Learn" || metadata.slug.startsWith("Learn/")) {
-    // XXX is this safe and sane??
+  } else if (
+    (metadata.slug === "Learn" || metadata.slug.startsWith("Learn/")) &&
+    document.rawBody.includes("{{LearnSidebar}}")
+  ) {
+    // Some pages in the 'files/*/learn/*` tree(s) don't use `{{LearnSidebar}}`.
+    // Instead they use things
+    // like `{{QuickLinksWithSubpages("/en-US/docs/Web/Security")}}`.
+    // If these pages some day decide they want the dynamic related content
+    // sidebar, they can delete that macro and add `{{LearnSidebar}}` or
+    // set the `sidebar:` key in the front-matter.
     extractSidebar($);
     doc.related_content = getRelatedContent("learn", doc);
-  } else if (metadata.slug === "MDN" || metadata.slug.startsWith("MDN/")) {
-    // XXX is this safe and sane??
+  } else if (
+    (metadata.slug === "MDN" || metadata.slug.startsWith("MDN/")) &&
+    !document.rawBody.toLowerCase().includes('id="quick_links"')
+  ) {
+    // Some pages in the 'files/*/mdn/*' tree(s) don't use `{{MDNSidebar}}`.
+    // Some have hardcoded sidebars like `<section id="Quick_links"><ol>...`.
+    // Some have neither.
+    // E.g. https://developer.mozilla.org/en-US/docs/MDN/At_ten/History_of_MDN
+    // It's worth questioning if perhaps they should all "forcibly" have
+    // to get the dynamic related-content sidebar.
     extractSidebar($);
     doc.related_content = getRelatedContent("mdn", doc);
   } else {
