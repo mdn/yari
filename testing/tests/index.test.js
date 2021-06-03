@@ -1563,15 +1563,16 @@ test("basic markdown rendering", () => {
   expect($("article ul li").length).toBe(6);
   expect($('article a[href^="/"]').length).toBe(2);
   expect($('article a[href^="#"]').length).toBe(5);
-  expect($("article pre").length).toBe(3);
-  expect($("article pre.notranslate").length).toBe(3);
+  expect($("article pre").length).toBe(4);
+  expect($("article pre.notranslate").length).toBe(4);
   expect($("article pre.css").hasClass("brush:")).toBe(true);
   expect($("article pre.javascript").hasClass("brush:")).toBe(true);
   expect($("article .fancy strong").length).toBe(1);
 
   const jsonFile = path.join(builtFolder, "index.json");
   const { doc } = JSON.parse(fs.readFileSync(jsonFile));
-  expect(Object.keys(doc.flaws).length).toBe(0);
+  expect(Object.keys(doc.flaws).length).toBe(1);
+  expect(doc.flaws.bad_pre_tags.length).toBe(1);
 });
 
 test("unsafe HTML gets flagged as flaws and replace with its raw HTML", () => {
