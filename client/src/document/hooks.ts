@@ -26,6 +26,8 @@ export function useCopyExamplesToClipboard(doc: Doc | undefined) {
       return;
     }
 
+    const clipboard = navigator.clipboard;
+
     [...document.querySelectorAll("div.code-example pre")].forEach(
       (element) => {
         const userMessage = document.createElement("span");
@@ -48,7 +50,22 @@ export function useCopyExamplesToClipboard(doc: Doc | undefined) {
         wrapper?.appendChild(userMessage);
 
         button.onclick = () => {
-          const copiedSuccessfully = copyToClipboard(element);
+          let copiedSuccessfully = true;
+          try {
+            // If navigator.clipboard is 'undefined' which is falsy
+            // then Clipboard API for whatever reason was undefined so
+            // we can just bail early
+            if (clipboard) {
+              copyToClipboard(element);
+            } else {
+              console.log("Clipboard API is undefined");
+              return; // bail
+            }
+          } catch (err) {
+            console.error(err);
+            copiedSuccessfully = false;
+          }
+
           if (copiedSuccessfully) {
             userMessage.classList.add("show");
             userMessage.setAttribute("aria-hidden", "false");
@@ -86,20 +103,6 @@ function isClipboardSupported() {
 }
 
 function copyToClipboard(element) {
-  const code = element.textContent || "";
-  let isCopySuccessful = false;
-
-  // navigator.clipboard.writeText returns Promise<void> which
-  // is rejected if the caller does not have permission to
-  // write to the clipboard, ie if the Clipboard API is supported
-  // and Permissions object can be verified and allowed by Permissions API.
-  try {
-    navigator.clipboard.writeText(code);
-    isCopySuccessful = true;
-  } catch (err) {
-    console.error(err);
-    // just to be safe
-    isCopySuccessful = false;
-  }
-  return isCopySuccessful;
+  const text = element.textContent || "";
+  navigator.clipboard.writeText(text);
 }
