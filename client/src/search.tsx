@@ -233,6 +233,7 @@ function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
     isOpen,
 
     reset,
+    toggleMenu,
   } = useCombobox({
     items: resultItems,
     inputValue,
@@ -241,6 +242,7 @@ function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
       if (selectedItem) {
         navigate(selectedItem.url);
         reset();
+        toggleMenu();
         if (onResultPicked) {
           onResultPicked();
         }
