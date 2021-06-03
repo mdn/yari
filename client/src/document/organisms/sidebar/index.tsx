@@ -4,6 +4,8 @@ import "./index.scss";
 import { Doc, RelatedContent } from "../../types";
 import React from "react";
 
+const isServer = typeof window === "undefined";
+
 function SidebarContainer({ children }: { children: React.ReactNode }) {
   return (
     <nav id="sidebar-quicklinks" className="sidebar">
@@ -84,31 +86,38 @@ function SidebarLeaflets({ node }: { node: RelatedContent }) {
       <summary>
         {node.url ? <Link to={node.url}>{node.title}</Link> : node.title}
       </summary>
-      <ol>
-        {node.content.map((childNode) => {
-          if (childNode.content) {
-            return (
-              <li key={childNode.url || childNode.title}>
-                <SidebarLeaflets node={childNode} />
-              </li>
-            );
-          } else {
-            return (
-              <li
-                key={childNode.url}
-                className={childNode.isActive ? "active" : undefined}
-              >
-                <Hyperlink
-                  url={childNode.url}
-                  text={childNode.title}
-                  fallback={childNode.fallback}
-                  notFound={childNode.notFound}
-                />
-              </li>
-            );
-          }
-        })}
-      </ol>
+      {/* When server-side rendering, the HTML doesn't need to include all
+        <details> content because it's not open by default. This makes the SSR
+        HTML smaller for initial load. When React hydrates, it overrides that
+        so that all `<details>` nodes are expanded.
+       */}
+      {(!isServer || node.containsActive) && (
+        <ol>
+          {node.content.map((childNode) => {
+            if (childNode.content) {
+              return (
+                <li key={childNode.url || childNode.title}>
+                  <SidebarLeaflets node={childNode} />
+                </li>
+              );
+            } else {
+              return (
+                <li
+                  key={childNode.url}
+                  className={childNode.isActive ? "active" : undefined}
+                >
+                  <Hyperlink
+                    url={childNode.url}
+                    text={childNode.title}
+                    fallback={childNode.fallback}
+                    notFound={childNode.notFound}
+                  />
+                </li>
+              );
+            }
+          })}
+        </ol>
+      )}
     </details>
   );
 }
