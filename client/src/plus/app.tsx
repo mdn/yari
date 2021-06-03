@@ -378,13 +378,6 @@ export default function App() {
                 )}
               </div>
             </div>
-            {showDeepDive && (
-              <h3>
-                Liked what you read? Want more? Sign up for the waitlist and be
-                the first notified when we launch!{" "}
-                <a href="#waitlist"> To waitlist » </a>
-              </h3>
-            )}
           </div>
         </section>
         <section className="purple-bg secondary-feature">
