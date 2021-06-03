@@ -1312,6 +1312,10 @@
       "inh": "AudioNode",
       "impl": ["AudioNodePassThrough"]
     },
+    "OTPCredential": {
+      "inh": "Credential",
+      "impl": []
+    },
     "PageTransitionEvent": {
       "inh": "Event",
       "impl": []
