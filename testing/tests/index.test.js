@@ -254,6 +254,29 @@ test("content built French foo page", () => {
   );
 });
 
+test("French translation using English front-matter bits", () => {
+  const builtFolder = path.join(
+    buildRoot,
+    "fr",
+    "docs",
+    "web",
+    "spec_section_extraction"
+  );
+  const jsonFile = path.join(builtFolder, "index.json");
+  const { doc } = JSON.parse(fs.readFileSync(jsonFile));
+  expect(doc.title).toBe("Extraction de sections de spécifications");
+  const specifications = doc.body.find(
+    (section) => section.type === "specifications"
+  );
+  expect(specifications.value.query).toBe(
+    "javascript.builtins.Array.toLocaleString"
+  );
+  const bcd = doc.body.find(
+    (section) => section.type === "browser_compatibility"
+  );
+  expect(bcd.value.query).toBe("javascript.builtins.Array.toLocaleString");
+});
+
 test("content built zh-TW page with en-US fallback image", () => {
   const builtFolder = path.join(buildRoot, "zh-tw", "docs", "web", "foo");
   const jsonFile = path.join(builtFolder, "index.json");
@@ -1082,6 +1105,31 @@ test("image flaws with bad images", () => {
         "File not present on disk, an empty file, or not an image"
     ).length
   ).toBe(4);
+});
+
+test("linked to local files", () => {
+  const builtFolder = path.join(
+    buildRoot,
+    "en-us",
+    "docs",
+    "web",
+    "images",
+    "linked_to"
+  );
+  const htmlFile = path.join(builtFolder, "index.html");
+  const html = fs.readFileSync(htmlFile, "utf-8");
+  const $ = cheerio.load(html);
+  expect.assertions(1);
+  $('a[href*="dino.svg"]').each((i, element) => {
+    const link = $(element);
+    // The point of this test is to prove that the link becomes
+    // "absolute" (i.e. starting with /)
+    // If it didn't do this a link `<a href=dino.svg>`, when clicked,
+    // would actually be a link to `/en-US/docs/Web/Images/dino.svg`
+    // because the page `/en-US/docs/Web/Images/Linked_to` is served
+    // without a trailing /.
+    expect(link.attr("href")).toBe("/en-US/docs/Web/Images/Linked_to/dino.svg");
+  });
 });
 
 test("image flaws with repeated external images", () => {
