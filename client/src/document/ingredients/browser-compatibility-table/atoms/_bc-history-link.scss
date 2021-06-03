@@ -1,3 +1,5 @@
+@use "sass:math";
+
 .bc-history-link {
   display: none;
 
@@ -14,7 +16,7 @@
     display: block;
     font-size: $tiny-text;
     height: 16px;
-    padding: $base-spacing / 2;
+    padding: math.div($base-spacing, 2);
     position: relative;
     transform: rotate(180deg);
     width: 100%;
@@ -23,7 +25,7 @@
   @media #{$mq-small-desktop-and-up} {
     bottom: 0;
     left: 0;
-    margin: ($base-spacing / 2) 0 0;
+    margin: math.div($base-spacing, 2) 0 0;
     padding: 0;
     position: absolute;
     z-index: $top-layer;

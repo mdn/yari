@@ -210,7 +210,7 @@
     "status": "ED"
   },
   "CSS3 Box": {
-    "name": "CSS Basic Box Model",
+    "name": "CSS Box Model",
     "url": "https://drafts.csswg.org/css-box-3/",
     "status": "CR"
   },
@@ -1099,6 +1099,11 @@
     "url": "https://w3c.github.io/manifest/",
     "status": "WD"
   },
+  "ManifestAppInfo": {
+    "name": "Web App Manifest - Application Information",
+    "url": "https://w3c.github.io/manifest-app-info/",
+    "status": "ED"
+  },
   "MathML2": {
     "name": "MathML 2.0",
     "url": "https://www.w3.org/TR/MathML2/",
@@ -1538,6 +1543,16 @@
     "name": "UI Events",
     "url": "https://w3c.github.io/uievents/",
     "status": "WD"
+  },
+  "UI Events Code": {
+    "name": "UI Events KeyboardEvent code Values",
+    "url": "https://www.w3.org/TR/uievents-code/",
+    "status": "CR"
+  },
+  "UI Events Key": {
+    "name": "UI Events KeyboardEvent key Values",
+    "url": "https://www.w3.org/TR/uievents-key/",
+    "status": "CR"
   },
   "Undo Manager": {
     "name": "UndoManager and DOMTransaction",

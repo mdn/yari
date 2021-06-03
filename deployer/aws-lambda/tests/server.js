@@ -3,7 +3,8 @@
 const polka = require("polka");
 const kleur = require("kleur");
 
-const { handler } = require("./index");
+const requestHandler = require("../content-origin-request").handler;
+const responseHandler = require("../content-origin-response").handler;
 
 const PORT = parseInt(process.env.PORT || "7000");
 
@@ -27,8 +28,9 @@ async function catchall(req, res) {
   const origin = {};
   origin.custom = {};
   // This always pretends to proceed and do a S3 lookup
+  console.log(req.headers);
   origin.custom.domainName =
-    req.headers["ORIGIN_DOMAIN_NAME"] || "s3.fakey.fake";
+    req.headers["origin_domain_name"] || "s3.fakey.fake";
   const cf = {};
   const headers = {};
   headers.host = [{ value: req.hostname }];
@@ -42,8 +44,28 @@ async function catchall(req, res) {
     headers,
   };
 
+  const responseHeaders = {};
+  if (
+    uri.endsWith(".html") ||
+    !uri.split("/")[uri.split("/").length - 1].includes(".")
+  ) {
+    // Let's pretend the S3 lookup returned HTML
+    responseHeaders["content-type"] = [{ value: "text/html" }];
+  }
+  cf.response = {
+    headers: responseHeaders,
+  };
+
   event.Records = [{ cf }];
-  const handle = await handler(event);
+  const handle = await requestHandler(event);
+
+  if (handle === cf.request || handle.status) {
+    const response = await responseHandler(event);
+    Object.entries(response.headers).forEach(([key, value]) => {
+      res.setHeader(key, value[0].value);
+    });
+  }
+
   if (handle === cf.request) {
     // The request is allowed to pass through.
     // The URL might have been mutated.

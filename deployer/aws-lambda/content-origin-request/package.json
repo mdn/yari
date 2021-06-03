@@ -1,12 +1,12 @@
 {
+  "name": "@yari-internal/content-origin-request",
+  "version": "0.0.1",
   "private": true,
   "description": "Defines the deployment package for this AWS Lambda function.",
   "license": "MPL-2.0",
   "main": "index.js",
   "scripts": {
-    "make-package": "yarn install --production && zip -r -X function.zip . -i index.js 'node_modules/*'",
-    "serve": "nodemon server.js",
-    "test-server": "jest"
+    "make-package": "yarn install --production && zip -r -X function.zip . -i index.js 'node_modules/*'"
   },
   "dependencies": {
     "@yari-internal/constants": "file:../../../libs/constants",
@@ -17,13 +17,7 @@
     "cookie": "0.4.1",
     "sanitize-filename": "^1.6.3"
   },
-  "devDependencies": {
-    "got": "11.8.2",
-    "jest": "26.6.3",
-    "kleur": "4.1.4",
-    "nodemon": "2.0.7",
-    "polka": "0.5.2"
-  },
+  "devDependencies": {},
   "engines": {
     "node": ">=12.x"
   },

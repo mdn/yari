@@ -704,6 +704,47 @@ test("broken http:// link that is not a valid URL", () => {
   expect(map.get("link1").fixable).toBeFalsy();
 });
 
+test("broken links that are links to the current page", () => {
+  const builtFolder = path.join(
+    buildRoot,
+    "en-us",
+    "docs",
+    "web",
+    "brokenlinks",
+    "self_links"
+  );
+  const jsonFile = path.join(builtFolder, "index.json");
+  const { doc } = JSON.parse(fs.readFileSync(jsonFile));
+  const { flaws } = doc;
+  expect(flaws.broken_links.length).toBe(4);
+
+  const map = new Map(flaws.broken_links.map((x) => [x.id, x]));
+  expect(map.size).toBe(4);
+  expect(map.get("link1").suggestion).toBeNull();
+  expect(map.get("link1").explanation).toBe(
+    "Link points to the page it's already on"
+  );
+  expect(map.get("link2").suggestion).toBe("#anchored");
+  expect(map.get("link2").explanation).toBe(
+    "No need for the pathname in anchor links if it's the same page"
+  );
+  expect(map.get("link3").suggestion).toBeNull();
+  expect(map.get("link3").explanation).toBe(
+    "Link points to the page it's already on"
+  );
+  expect(map.get("link4").suggestion).toBe("#hash");
+  expect(map.get("link4").explanation).toBe(
+    "No need for the pathname in anchor links if it's the same page"
+  );
+
+  const htmlFile = path.join(builtFolder, "index.html");
+  const html = fs.readFileSync(htmlFile, "utf-8");
+  const $ = cheerio.load(html);
+
+  expect($("#content a.page-not-created").length).toBe(0);
+  expect($('#content a[aria-current="page"]').length).toBe(4);
+});
+
 test("without locale prefix broken links flaws", () => {
   // This fixture has the same broken link, that redirects, 3 times.
   const builtFolder = path.join(
@@ -756,6 +797,16 @@ test("broken links to archived content", () => {
   expect(flaw.suggestion).toBeNull();
   expect(flaw.fixable).toBeFalsy();
   expect(flaw.href).toBe("/en-US/docs/The_Mozilla_platform");
+
+  const htmlFile = path.join(builtFolder, "index.html");
+  const html = fs.readFileSync(htmlFile, "utf-8");
+  const $ = cheerio.load(html);
+
+  expect($("#content a.page-not-created").length).toBe(1);
+  expect($("#content a.page-not-created").attr("href")).toBeTruthy();
+  expect($("#content a.page-not-created").attr("title")).toBe(
+    "This is a link to an unwritten page"
+  );
 });
 
 test("broken anchor links flaws", () => {
@@ -1062,6 +1113,19 @@ test("image flaws with repeated external images", () => {
   expect(flaw3.line).toBe(18);
 });
 
+test("images that are in the folder but not in <img> tags", () => {
+  const builtFolder = path.join(
+    buildRoot,
+    "en-us",
+    "docs",
+    "web",
+    "images",
+    "images_in_samples"
+  );
+  expect(fs.existsSync(path.join(builtFolder, "pic.gif")));
+  expect(fs.existsSync(path.join(builtFolder, "image.png")));
+});
+
 test("chicken_and_egg page should build with flaws", () => {
   const builtFolder = path.join(buildRoot, "en-us", "docs", "chicken_and_egg");
   expect(fs.existsSync(builtFolder)).toBeTruthy();
@@ -1103,6 +1167,7 @@ test("sign in page", () => {
   expect($("title").text()).toContain("Sign in");
   expect($('meta[property="og:locale"]').attr("content")).toBe("en-US");
   expect($('meta[property="og:title"]').attr("content")).toBe("Sign in");
+  expect($('meta[name="robots"]').attr("content")).toBe("noindex, nofollow");
 });
 
 test("French sign in page", () => {
@@ -1125,6 +1190,7 @@ test("sign up page", () => {
   const $ = cheerio.load(html);
   expect($("h1").text()).toContain("Sign in to MDN Web Docs");
   expect($("title").text()).toContain("Sign up");
+  expect($('meta[name="robots"]').attr("content")).toBe("noindex, nofollow");
 });
 
 test("settings page", () => {
@@ -1135,6 +1201,7 @@ test("settings page", () => {
   const $ = cheerio.load(html);
   expect($("h1").text()).toBe("Account settings");
   expect($("title").text()).toContain("Account settings");
+  expect($('meta[name="robots"]').attr("content")).toBe("noindex, nofollow");
 
   const jsonFile = path.join(builtFolder, "index.json");
   const data = JSON.parse(fs.readFileSync(jsonFile));
@@ -1143,6 +1210,16 @@ test("settings page", () => {
   const possibleLocale = data.possibleLocales.find((p) => p.locale === "en-US");
   expect(possibleLocale.English).toBe("English (US)");
   expect(possibleLocale.native).toBe("English (US)");
+});
+
+test("plus page", () => {
+  const builtFolder = path.join(buildRoot, "en-us", "plus");
+  expect(fs.existsSync(builtFolder)).toBeTruthy();
+  const htmlFile = path.join(builtFolder, "index.html");
+  const html = fs.readFileSync(htmlFile, "utf-8");
+  const $ = cheerio.load(html);
+  expect($("title").text()).toContain("Plus");
+  expect($('meta[name="robots"]').attr("content")).toBe("noindex, nofollow");
 });
 
 test("bcd table extraction followed by h3", () => {
@@ -1178,16 +1255,7 @@ test("specifications and bcd extraction", () => {
   const { doc } = JSON.parse(fs.readFileSync(jsonFile));
   expect(doc.body[0].type).toBe("prose");
   expect(doc.body[1].type).toBe("specifications");
-  expect(doc.body[1].value.specifications[0].shortTitle).toBe("ECMAScript");
-  expect(doc.body[1].value.specifications[0].bcdSpecificationURL).toBe(
-    "https://tc39.es/ecma262/#sec-array.prototype.tolocalestring"
-  );
-  expect(doc.body[1].value.specifications[1].shortTitle).toBe(
-    "ECMAScript Internationalization API"
-  );
-  expect(doc.body[1].value.specifications[1].bcdSpecificationURL).toBe(
-    "https://tc39.es/ecma402/#sup-array.prototype.tolocalestring"
-  );
+  expect(doc.body[1].value.specifications[0].bcdSpecificationURL).toBeDefined();
   expect(doc.body[2].type).toBe("prose");
   expect(doc.body[3].type).toBe("browser_compatibility");
   expect(doc.body[4].type).toBe("prose");
@@ -1332,8 +1400,7 @@ test("/Web/Embeddable should have 3 valid live samples", () => {
   const { doc } = JSON.parse(fs.readFileSync(jsonFile));
   expect(Object.keys(doc.flaws).length).toBe(0);
 
-  const samplesRoot = path.join(builtFolder, "_samples_");
-  const found = glob.sync(path.join(samplesRoot, "**", "index.html"));
+  const found = glob.sync(path.join(builtFolder, "_sample_.*.html"));
   expect(found.length).toBe(3);
 });
 
@@ -1568,4 +1635,13 @@ test("homepage links and flaws", () => {
   expect(map.get("/JA/").suggestion).toBe("/ja/");
   expect(map.get("/ZH-CN").suggestion).toBe("/zh-CN/");
   expect(map.get("/notalocale/").suggestion).toBeFalsy();
+});
+
+test("built search-index.json (en-US)", () => {
+  const searchIndexFile = path.join(buildRoot, "en-us", "search-index.json");
+  const searchIndex = JSON.parse(fs.readFileSync(searchIndexFile));
+  const urlToTitle = new Map(searchIndex.map((o) => [o.url, o.title]));
+  expect(urlToTitle.get("/en-US/docs/Web/Foo")).toBe("<foo>: A test tag");
+  // an archived page should not be in there.
+  expect(urlToTitle.has("/en-US/docs/XUL")).toBeFalsy();
 });
