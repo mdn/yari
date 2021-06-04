@@ -17,16 +17,12 @@ export function useCopyExamplesToClipboard(doc: Doc | undefined) {
     if (!doc) {
       return;
     }
-
-    if (!isClipboardSupported()) {
+    if (!navigator.clipboard) {
       console.log(
-        "Copy-to-clipboard disabled because your browser does not appear to support it"
+        "Copy-to-clipboard disabled because your browser does not appear to support it."
       );
-      // bail and don't inject buttons to DOM
       return;
     }
-
-    const clipboard = navigator.clipboard;
 
     [...document.querySelectorAll("div.code-example pre")].forEach(
       (element) => {
@@ -52,17 +48,13 @@ export function useCopyExamplesToClipboard(doc: Doc | undefined) {
         button.onclick = () => {
           let copiedSuccessfully = true;
           try {
-            // If navigator.clipboard is 'undefined' which is falsy
-            // then Clipboard API for whatever reason was undefined so
-            // we can just bail early
-            if (clipboard) {
-              copyToClipboard(element);
-            } else {
-              console.log("Clipboard API is undefined");
-              return; // bail
-            }
+            const text = element.textContent || "";
+            navigator.clipboard.writeText(text);
           } catch (err) {
-            console.error(err);
+            console.error(
+              "Error when trying to use navigator.clipboard.writeText()",
+              err
+            );
             copiedSuccessfully = false;
           }
 
@@ -83,26 +75,4 @@ export function useCopyExamplesToClipboard(doc: Doc | undefined) {
       }
     );
   }, [doc]);
-}
-
-function isClipboardSupported() {
-  const browser = navigator.userAgent;
-  let isSupported = true;
-  // @ts-expect-error
-  const windowClipboard = window.clipboardData;
-
-  if (
-    windowClipboard &&
-    windowClipboard.setData &&
-    browser.indexOf("Microsoft Internet Explorer") > -1
-  ) {
-    // Clipboard Web API is not supported in IE
-    isSupported = false;
-  }
-  return isSupported;
-}
-
-function copyToClipboard(element) {
-  const text = element.textContent || "";
-  navigator.clipboard.writeText(text);
 }
