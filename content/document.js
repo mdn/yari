@@ -526,7 +526,7 @@ function findAll({
         }
 
         if (locales.size) {
-          const locale = filePath.replace(root, "").split("/")[1];
+          const locale = filePath.replace(root, "").split(path.sep)[1];
           if (!locales.get(locale)) {
             return false;
           }
