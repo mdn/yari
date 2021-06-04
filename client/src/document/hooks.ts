@@ -45,11 +45,11 @@ export function useCopyExamplesToClipboard(doc: Doc | undefined) {
         wrapper?.appendChild(button);
         wrapper?.appendChild(userMessage);
 
-        button.onclick = () => {
+        button.onclick = async () => {
           let copiedSuccessfully = true;
           try {
             const text = element.textContent || "";
-            navigator.clipboard.writeText(text);
+            await navigator.clipboard.writeText(text);
           } catch (err) {
             console.error(
               "Error when trying to use navigator.clipboard.writeText()",
