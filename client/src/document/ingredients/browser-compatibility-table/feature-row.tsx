@@ -141,7 +141,7 @@ const CellText = React.memo(
         label: (
           <>
             {labelFromString(added)}
-            <NonBreakingSpace />— {labelFromString(removed)}
+            <NonBreakingSpace />– {labelFromString(removed)}
           </>
         ),
       };
