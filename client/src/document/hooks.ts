@@ -71,10 +71,13 @@ export function useCopyExamplesToClipboard(doc: Doc | undefined) {
             userMessage.textContent = "Error trying to copy to clipboard!";
           }
 
-          setTimeout(() => {
-            userMessage.classList.remove("show");
-            userMessage.setAttribute("aria-hidden", "true");
-          }, 1000);
+          setTimeout(
+            () => {
+              userMessage.classList.remove("show");
+              userMessage.setAttribute("aria-hidden", "true");
+            },
+            copiedSuccessfully ? 1000 : 3000
+          );
         };
       }
     );
