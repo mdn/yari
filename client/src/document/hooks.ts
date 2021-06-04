@@ -65,6 +65,10 @@ export function useCopyExamplesToClipboard(doc: Doc | undefined) {
             userMessage.style.top = "52px";
           } else {
             button.classList.add("failed");
+            userMessage.classList.add("show");
+            userMessage.setAttribute("aria-hidden", "false");
+            userMessage.style.top = "52px";
+            userMessage.textContent = "Error trying to copy to clipboard!";
           }
 
           setTimeout(() => {
