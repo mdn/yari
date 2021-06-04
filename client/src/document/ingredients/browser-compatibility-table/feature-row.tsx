@@ -93,8 +93,8 @@ function StatusIcons({ status }: { status: bcd.StatusBlock }) {
   );
 }
 
-function NonBreakingSpace() {
-  return <>{"\u00A0"}</>;
+function HairSpace() {
+  return <>{"\u200A"}</>;
 }
 
 function labelFromString(version: string | boolean | null | undefined) {
@@ -140,8 +140,7 @@ const CellText = React.memo(
         isSupported: "no",
         label: (
           <>
-            {labelFromString(added)}
-            <NonBreakingSpace />– {labelFromString(removed)}
+            {labelFromString(added)}<HairSpace />–<HairSpace />{labelFromString(removed)}
           </>
         ),
       };
