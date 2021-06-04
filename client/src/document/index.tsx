@@ -22,6 +22,7 @@ import { RetiredLocaleNote } from "./molecules/retired-locale-note";
 import { MainContentContainer } from "../ui/atoms/page-content";
 import { Loading } from "../ui/atoms/loading";
 import { Metadata } from "./organisms/metadata";
+import { NotesToggle } from "./organisms/notes";
 
 import "./index.scss";
 
@@ -155,6 +156,7 @@ export function Document(props /* TODO: define a TS interface for this */) {
       {(doc.parents || !!translations.length) && (
         <div className="breadcrumb-locale-container">
           {doc.parents && <Breadcrumbs parents={doc.parents} />}
+          <NotesToggle doc={doc} />
           {translations && !!translations.length && (
             <LanguageToggle locale={locale} translations={translations} />
           )}
