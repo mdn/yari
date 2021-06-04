@@ -93,10 +93,6 @@ function StatusIcons({ status }: { status: bcd.StatusBlock }) {
   );
 }
 
-function HairSpace() {
-  return <>{"\u200A"}</>;
-}
-
 function labelFromString(version: string | boolean | null | undefined) {
   if (typeof version !== "string") {
     return <>{"?"}</>;
@@ -140,7 +136,8 @@ const CellText = React.memo(
         isSupported: "no",
         label: (
           <>
-            {labelFromString(added)}<HairSpace />–<HairSpace />{labelFromString(removed)}
+            {labelFromString(added)}&#8202;&ndash;&#8202;
+            {labelFromString(removed)}
           </>
         ),
       };
