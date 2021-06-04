@@ -32,7 +32,7 @@ export function useCopyExamplesToClipboard(doc: Doc | undefined) {
         userMessage.textContent = "Copied!";
         span.textContent = "Copy to Clipboard";
 
-        const wrapper: HTMLElement | null = element.parentElement;
+        const wrapper = element.parentElement;
 
         userMessage.setAttribute("class", "user-message");
         userMessage.setAttribute("aria-hidden", "true");
