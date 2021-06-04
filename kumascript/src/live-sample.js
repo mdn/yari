@@ -1,3 +1,4 @@
+const cheerio = require("cheerio");
 const ejs = require("ejs");
 
 const Parser = require("./parser.js");
@@ -68,26 +69,34 @@ const LIVE_SAMPLE_HTML = `
 
 const liveSampleTemplate = ejs.compile(LIVE_SAMPLE_HTML);
 
-function buildLiveSamplePage(uri, title, source, sampleIDObject) {
+function buildLiveSamplePages(uri, title, renderedHTML) {
   // Given the URI, title, and rendered HTML of a document, build
-  // and return the HTML of the live-sample page for the given
-  // sampleID that this document or another references, or else
-  // return an instance of MacroLiveSampleError.
-  const result = { html: null, flaw: null };
-  const tool = new HTMLTool(source, uri);
-  let sampleData;
-  try {
-    sampleData = tool.extractLiveSampleObject(sampleIDObject.id);
-  } catch (e) {
-    if (e instanceof KumascriptError) {
-      result.flaw = sampleIDObject.createFlaw(e);
+  // and return the HTML of the live-sample pages for the given
+  // document or else collect flaws
+
+  const $ = cheerio.load(renderedHTML);
+  return $("iframe")
+    .filter((i, iframe) => $(iframe).attr("src").includes("/_sample_."))
+    .map((i, iframe) => {
+      const iframeId = $(iframe).attr("id");
+      const id = $(iframe).attr("id").substr("frame_".length);
+      const result = { id, html: null, flaw: null };
+      const tool = new HTMLTool(renderedHTML, uri);
+      let sampleData;
+      try {
+        sampleData = tool.extractLiveSampleObject(iframeId);
+      } catch (e) {
+        if (e instanceof KumascriptError) {
+          // result.flaw = sampleIDObject.createFlaw(e);
+          return result;
+        }
+        throw e;
+      }
+      sampleData.sampleTitle = `${title} - ${id} - code sample`;
+      result.html = liveSampleTemplate(sampleData);
       return result;
-    }
-    throw e;
-  }
-  sampleData.sampleTitle = `${title} - ${sampleIDObject.id} - code sample`;
-  result.html = liveSampleTemplate(sampleData);
-  return result;
+    })
+    .get();
 }
 
 function normalizeSlug(slug) {
@@ -164,4 +173,4 @@ function getLiveSampleIDs(slug, source) {
   return result;
 }
 
-module.exports = { buildLiveSamplePage, getLiveSampleIDs };
+module.exports = { buildLiveSamplePages, getLiveSampleIDs };

@@ -297,43 +297,33 @@ async function buildDocument(document, documentOptions = {}) {
       throw error;
     }
 
-    const sampleIds = kumascript.getLiveSampleIDs(
-      document.metadata.slug,
-      document.rawBody
+    const liveSamplePages = kumascript.buildLiveSamplePages(
+      document.url,
+      document.metadata.title,
+      renderedHtml
     );
-    for (const sampleIdObject of sampleIds) {
-      const liveSamplePage = kumascript.buildLiveSamplePage(
-        document.url,
-        document.metadata.title,
-        renderedHtml,
-        sampleIdObject
-      );
-      if (liveSamplePage.flaw) {
-        const flaw = liveSamplePage.flaw.updateFileInfo(fileInfo);
-        if (flaw.name === "MacroLiveSampleError") {
-          // As of April 2021 there are 0 pages in mdn/content that trigger
-          // a MacroLiveSampleError. So we can be a lot more strict with en-US
-          // until the translated-content has had a chance to clean up all
-          // their live sample errors.
-          // See https://github.com/mdn/yari/issues/2489
-          if (document.metadata.locale === "en-US") {
-            throw new Error(
-              `MacroLiveSampleError within ${flaw.filepath}, line ${flaw.line} column ${flaw.column} (${flaw.error.message})`
-            );
-          } else {
-            console.warn(
-              `MacroLiveSampleError within ${flaw.filepath}, line ${flaw.line} column ${flaw.column} (${flaw.error.message})`
-            );
-          }
-        }
-        flaws.push(flaw);
-        continue;
-      }
-      liveSamples.push({
-        id: sampleIdObject.id.toLowerCase(),
-        html: liveSamplePage.html,
-      });
-    }
+    // if (liveSamplePage.flaw) {
+    //   const flaw = liveSamplePage.flaw.updateFileInfo(fileInfo);
+    //   if (flaw.name === "MacroLiveSampleError") {
+    //     // As of April 2021 there are 0 pages in mdn/content that trigger
+    //     // a MacroLiveSampleError. So we can be a lot more strict with en-US
+    //     // until the translated-content has had a chance to clean up all
+    //     // their live sample errors.
+    //     // See https://github.com/mdn/yari/issues/2489
+    //     if (document.metadata.locale === "en-US") {
+    //       throw new Error(
+    //         `MacroLiveSampleError within ${flaw.filepath}, line ${flaw.line} column ${flaw.column} (${flaw.error.message})`
+    //       );
+    //     } else {
+    //       console.warn(
+    //         `MacroLiveSampleError within ${flaw.filepath}, line ${flaw.line} column ${flaw.column} (${flaw.error.message})`
+    //       );
+    //     }
+    //   }
+    //   flaws.push(flaw);
+    //   continue;
+    // }
+    liveSamples.push(...liveSamplePages);
 
     if (flaws.length) {
       if (options.flawLevels.get("macros") === FLAW_LEVELS.ERROR) {
@@ -573,25 +563,23 @@ async function buildLiveSamplePageFromURL(url) {
   if (!document) {
     throw new Error(`No document found for ${documentURL}`);
   }
-  // Convert the lower-case sampleID we extract from the incoming URL into
-  // the actual sampleID object with the properly-cased live-sample ID.
-  for (const sampleIDObject of kumascript.getLiveSampleIDs(
-    document.metadata.slug,
-    document.rawBody
-  )) {
-    if (sampleIDObject.id.toLowerCase() === sampleID) {
-      const liveSamplePage = kumascript.buildLiveSamplePage(
-        document.url,
-        document.metadata.title,
-        (await kumascript.render(document.url))[0],
-        sampleIDObject
-      );
-      if (liveSamplePage.flaw) {
-        throw new Error(liveSamplePage.flaw.toString());
-      }
+  const liveSamplePage = kumascript
+    .buildLiveSamplePages(
+      document.url,
+      document.metadata.title,
+      (await kumascript.render(document.url))[0]
+    )
+    .find((page) => page.id.toLowerCase() == sampleID.toLowerCase());
+
+  if (liveSamplePage) {
+    if (liveSamplePage.flaw) {
+      throw new Error(liveSamplePage.flaw.toString());
+    }
+    if (liveSamplePage.html) {
       return liveSamplePage.html;
     }
   }
+
   throw new Error(`No live-sample "${sampleID}" found within ${documentURL}`);
 }
 

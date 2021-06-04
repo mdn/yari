@@ -67,6 +67,64 @@ function safeDecodeURIComponent(text) {
   }
 }
 
+function findTopLevelParent($el) {
+  while ($el.siblings(":header").length == 0 && $el.parent().length > 0) {
+    $el = $el.parent();
+  }
+  return $el;
+}
+
+const getLevel = ($header) => parseInt($header[0].name[1], 10);
+
+const getHigherHeaderSelectors = (upTo) =>
+  Array.from({ length: upTo }, (_, i) => "h" + (i + 1)).join(", ");
+
+function collectLevels($el) {
+  const $levels = [];
+
+  // Initialized to 7 so that we pick up the lowest heading level which is <h6>
+  let level = 7;
+  let $prev = $el;
+  while (level !== 1) {
+    const nextHigherLevel = getHigherHeaderSelectors(level - 1);
+    const $header = $prev.prevAll(nextHigherLevel).first();
+    if ($header.length == 0) {
+      return $levels;
+    }
+    level = getLevel($header);
+    $prev = $header;
+    $levels.push($header.nextUntil(nextHigherLevel));
+  }
+
+  return $levels;
+}
+
+function collectClosestCode($start) {
+  const $el = findTopLevelParent($start);
+  for (const $level of collectLevels($el)) {
+    const pairs = LIVE_SAMPLE_PARTS.map((part) => {
+      const selector = `.${part}, pre[class*="brush:${part}"], pre[class*="${part};"]`;
+      const $filtered = $level.find(selector).add($level.filter(selector));
+      console.log("___");
+      console.log($level.toString());
+      console.log("___");
+      console.log($filtered.toString());
+
+      return [
+        part,
+        $filtered
+          .map((i, element) => cheerio(element).text())
+          .get()
+          .join("\n"),
+      ];
+    });
+    if (pairs.some(([_, code]) => !!code)) {
+      return Object.fromEntries(pairs);
+    }
+  }
+  return null;
+}
+
 class HTMLTool {
   constructor(html, pathDescription) {
     this.$ = cheerio.load(html, { decodeEntities: true });
@@ -183,32 +241,42 @@ class HTMLTool {
 
   extractLiveSampleObject(sampleID) {
     const result = Object.create(null);
-    const sample = this.getSection(sampleID);
-    // We have to wrap the collection of elements from the section
-    // we've just aquired because we're going to search among all
-    // descendants and we want to include the elements themselves
-    // as well as their descendants.
-    const $ = cheerio.load(`<div>${cheerio.html(sample)}</div>`);
-    for (const part of LIVE_SAMPLE_PARTS) {
-      const src = $(
-        `.${part},pre[class*="brush:${part}"],pre[class*="${part};"]`
-      )
-        .map((i, element) => {
-          return $(element).text();
-        })
-        .get()
-        .join("\n");
-      // The string replacements below have been carried forward from Kuma:
-      //   * Bugzilla 819999: &nbsp; gets decoded to \xa0, which trips up CSS.
-      //   * Bugzilla 1284781: &nbsp; is incorrectly parsed on embed sample.
-      result[part] = src ? src.replace(/\u00a0/g, " ") : null;
+    try {
+      const sample = this.getSection(sampleID.substr("frame_".length));
+      // We have to wrap the collection of elements from the section
+      // we've just aquired because we're going to search among all
+      // descendants and we want to include the elements themselves
+      // as well as their descendants.
+      const $ = cheerio.load(`<div>${cheerio.html(sample)}</div>`);
+      for (const part of LIVE_SAMPLE_PARTS) {
+        const src = $(
+          `.${part}, pre[class*="brush:${part}"], pre[class*="${part};"]`
+        )
+          .map((i, element) => {
+            return $(element).text();
+          })
+          .get()
+          .join("\n");
+        // The string replacements below have been carried forward from Kuma:
+        //   * Bugzilla 819999: &nbsp; gets decoded to \xa0, which trips up CSS.
+        //   * Bugzilla 1284781: &nbsp; is incorrectly parsed on embed sample.
+        result[part] = src ? src.replace(/\u00a0/g, " ") : null;
+      }
+      if (!LIVE_SAMPLE_PARTS.some((part) => result[part])) {
+        throw new KumascriptError(
+          `unable to find any live code samples for "${sampleID}" within ${this.pathDescription}`
+        );
+      }
+      return result;
+    } catch (error) {
+      if (error instanceof KumascriptError) {
+        const result = collectClosestCode(this.$("#" + sampleID));
+        if (result) {
+          return result;
+        }
+      }
+      throw error;
     }
-    if (!LIVE_SAMPLE_PARTS.some((part) => result[part])) {
-      throw new KumascriptError(
-        `unable to find any live code samples for "${sampleID}" within ${this.pathDescription}`
-      );
-    }
-    return result;
   }
 
   html() {
