@@ -76,7 +76,7 @@ describe("Basic viewing of functional pages", () => {
     await expect(page).toMatchElement(
       `iframe.sample-code-frame[src$="${gridSample1Uri}"]`
     );
-    await expect(page).toMatchElement("#Grid_2 > pre.css.notranslate", {
+    await expect(page).toMatchElement("#Grid_2 pre.css.notranslate", {
       text: /\.wrapper\s*\{\s*display:\s*grid;/,
     });
     await expect(page).toMatchElement(
@@ -114,13 +114,13 @@ describe("Basic viewing of functional pages", () => {
     await expect(page).toMatchElement("#flexbox", {
       text: "Flexbox",
     });
-    await expect(page).toMatchElement("#Flex_1 > pre.css.notranslate", {
+    await expect(page).toMatchElement("#Flex_1 pre.css.notranslate", {
       text: /\.wrapper\s*\{\s*display:\s*flex;\s*\}/,
     });
     await expect(page).toMatchElement(
       `iframe.sample-code-frame[src$="${flexSample1Uri}"]`
     );
-    await expect(page).toMatchElement("#Flex_2 > pre.css.notranslate", {
+    await expect(page).toMatchElement("#Flex_2 pre.css.notranslate", {
       text: /\.wrapper\s*\{\s*display:\s*flex;\s*\}.+flex:\s*1;/,
     });
     await expect(page).toMatchElement(
@@ -140,13 +140,13 @@ describe("Basic viewing of functional pages", () => {
     await expect(page).toMatchElement("#grid_layout", {
       text: "Grid Layout",
     });
-    await expect(page).toMatchElement("#Grid_1 > pre.css.notranslate", {
+    await expect(page).toMatchElement("#Grid_1 pre.css.notranslate", {
       text: /\.wrapper\s*\{\s*display:\s*grid;/,
     });
     await expect(page).toMatchElement(
       `iframe.sample-code-frame[src$="${gridSample1Uri}"]`
     );
-    await expect(page).toMatchElement("#Grid_2 > pre.css.notranslate", {
+    await expect(page).toMatchElement("#Grid_2 pre.css.notranslate", {
       text: /\.wrapper\s*\{\s*display:\s*grid;.+\.box1\s*\{/,
     });
     await expect(page).toMatchElement(

@@ -43,6 +43,15 @@ describe("Testing the kitchensink page", () => {
     await expect(page).toMatch("No known flaws at the moment");
   });
 
+  withCrud("open a file attachement directly in the dev URL", async () => {
+    await page.goto(devURL("/en-US/docs/MDN/Kitchensink/iceberg.jpg"));
+    // This is how Chromium makes a document title when viewing an image.
+    expect(await page.title()).toBe("iceberg.jpg (1400×1050)");
+    // Unfortunately, there's no API in puppeteer to test that the image URL
+    // you opened of correct type or file size or even HTTP status code.
+    expect(page.url()).toBe(devURL("/en-US/docs/MDN/Kitchensink/iceberg.jpg"));
+  });
+
   withDeveloping("server-side render HTML", async () => {
     // You can go to the page directly via the server
     await page.goto(serverURL("/en-US/docs/MDN/Kitchensink"), {
