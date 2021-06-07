@@ -220,9 +220,9 @@ function Flaws({
 
   const isReadOnly = !CRUD_MODE_HOSTNAMES.includes(window.location.hostname);
 
-  // Note! This will work on Windows. The filename can be sent to 
+  // Note! This will work on Windows. The filename can be sent to
   // the server in POSIX style and the `open-editor` program will make
-  // this work for Windows automatically. 
+  // this work for Windows automatically.
   const filePath = doc.source.folder + "/" + doc.source.filename;
   return (
     <div id="document-flaws">
