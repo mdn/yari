@@ -26,24 +26,23 @@ export function useCopyExamplesToClipboard(doc: Doc | undefined) {
 
     [...document.querySelectorAll("div.code-example pre:not(.hidden)")].forEach(
       (element) => {
-        const userMessage = document.createElement("span");
+        const wrapper = element.parentElement;
+        // No idea how a parentElement could be falsy in practice, but it can
+        // in theory and hence in TypeScript. So to having to test for it, bail
+        // early if we have to.
+        if (!wrapper) return;
+
         const button = document.createElement("button");
         const span = document.createElement("span");
-        userMessage.textContent = "Copied!";
         span.textContent = "Copy to Clipboard";
 
-        const wrapper = element.parentElement;
-
-        userMessage.setAttribute("class", "user-message");
-        userMessage.setAttribute("aria-hidden", "true");
         button.setAttribute("aria-hidden", "false");
         button.setAttribute("type", "button");
         button.setAttribute("class", "copy-icon");
         span.setAttribute("class", "visually-hidden");
 
         button.appendChild(span);
-        wrapper?.appendChild(button);
-        wrapper?.appendChild(userMessage);
+        wrapper.appendChild(button);
 
         button.onclick = async () => {
           let copiedSuccessfully = true;
@@ -59,22 +58,16 @@ export function useCopyExamplesToClipboard(doc: Doc | undefined) {
           }
 
           if (copiedSuccessfully) {
-            userMessage.classList.add("show");
-            userMessage.setAttribute("aria-hidden", "false");
             button.classList.add("copied");
-            userMessage.style.top = "52px";
+            showCopiedMessage(wrapper, "Copied!");
           } else {
             button.classList.add("failed");
-            userMessage.classList.add("show");
-            userMessage.setAttribute("aria-hidden", "false");
-            userMessage.style.top = "52px";
-            userMessage.textContent = "Error trying to copy to clipboard!";
+            showCopiedMessage(wrapper, "Error trying to copy to clipboard!");
           }
 
           setTimeout(
             () => {
-              userMessage.classList.remove("show");
-              userMessage.setAttribute("aria-hidden", "true");
+              hideCopiedMessage(wrapper);
             },
             copiedSuccessfully ? 1000 : 3000
           );
@@ -82,4 +75,34 @@ export function useCopyExamplesToClipboard(doc: Doc | undefined) {
       }
     );
   }, [doc]);
+}
+
+function showCopiedMessage(wrapper: HTMLElement, msg: string) {
+  const element = getCopiedMessageElement(wrapper);
+  element.textContent = msg;
+  element.classList.add("show");
+  element.setAttribute("aria-hidden", "false");
+}
+
+function hideCopiedMessage(wrapper: HTMLElement) {
+  const element = getCopiedMessageElement(wrapper);
+  if (element) {
+    element.classList.remove("show");
+    element.setAttribute("aria-hidden", "true");
+  }
+}
+
+function getCopiedMessageElement(wrapper: HTMLElement) {
+  const className = "copy-icon-message";
+  let element: HTMLSpanElement | null = wrapper.querySelector(
+    `span.${className}`
+  );
+  if (!element) {
+    element = document.createElement("span");
+    element.classList.add(className);
+    element.setAttribute("aria-hidden", "true");
+    element.style.top = "52px";
+    wrapper.appendChild(element);
+  }
+  return element;
 }
