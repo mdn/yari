@@ -1,0 +1,29 @@
+@use "sass:math";
+
+@import "~@mdn/minimalist/sass/mixins/utils";
+@import "~@mdn/minimalist/sass/vars/color-palette";
+@import "~@mdn/minimalist/sass/vars/layout";
+@import "~@mdn/minimalist/sass/vars/typography";
+
+.contribute {
+  @media #{$mq-small-desktop-and-up} {
+    flex-basis: 35%;
+  }
+
+  h2 {
+    margin-bottom: $base-spacing;
+
+    @media #{$mq-tablet-and-up} {
+      font-size: $large-font-size;
+    }
+  }
+
+  ul {
+    @include reset-list();
+
+    li {
+      border-bottom: 1px solid $neutral-550;
+      margin-bottom: math.div($base-spacing, 2);
+    }
+  }
+}

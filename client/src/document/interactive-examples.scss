@@ -1,0 +1,13 @@
+@import "~@mdn/minimalist/sass/vars/color-palette";
+@import "~@mdn/minimalist/sass/vars/layout";
+
+.interactive {
+  background-color: $neutral-550;
+  border: 1px solid #eaf2f4;
+  color: $text-color;
+  padding: 10px;
+  width: 100%;
+  // Note! The height is set as a regular pixel height number
+  // on the <iframe> itself and that's done in the EmbedInteractiveExample.ejs
+  // macro.
+}

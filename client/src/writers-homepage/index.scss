@@ -1,0 +1,25 @@
+@import "~@mdn/minimalist/sass/vars/color-palette";
+
+#writers-homepage {
+  .header-search {
+    margin-bottom: 60px;
+  }
+
+  h3 {
+    a:link,
+    a:visited {
+      color: $neutral-100;
+      text-decoration: none;
+    }
+
+    a:hover,
+    a:focus {
+      color: $neutral-100;
+      text-decoration: underline;
+    }
+
+    a:active {
+      background-color: transparent;
+    }
+  }
+}

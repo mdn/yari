@@ -34,7 +34,7 @@ const globalsPrototype = {
    *
    * @type {NodeRequireFunction}
    */
-  require: require,
+  require,
 };
 
 const kumaPrototype = require("./api/kuma.js");
@@ -96,7 +96,8 @@ class Environment {
      * macros from modifying the execution environment.
      */
     function prepareProto(o, binding) {
-      let p = {};
+      const p = {};
+      // eslint-disable-next-line prefer-const
       for (let [key, value] of Object.entries(o)) {
         if (binding && typeof value === "function") {
           value = value.bind(binding);
@@ -109,15 +110,15 @@ class Environment {
     }
 
     this.templates = templates;
-    let globals = Object.create(prepareProto(globalsPrototype));
+    const globals = Object.create(prepareProto(globalsPrototype));
 
-    let kuma = Object.create(prepareProto(kumaPrototype, globals));
-    let mdn = Object.create(prepareProto(mdnPrototype, globals));
-    let string = Object.create(prepareProto(stringPrototype, globals));
-    let wiki = Object.create(prepareProto(wikiPrototype, globals));
-    let web = Object.create(prepareProto(webPrototype, globals));
-    let page = Object.create(prepareProto(pagePrototype, globals));
-    let env = Object.create(prepareProto(perPageContext));
+    const kuma = Object.create(prepareProto(kumaPrototype, globals));
+    const mdn = Object.create(prepareProto(mdnPrototype, globals));
+    const string = Object.create(prepareProto(stringPrototype, globals));
+    const wiki = Object.create(prepareProto(wikiPrototype, globals));
+    const web = Object.create(prepareProto(webPrototype, globals));
+    const page = Object.create(prepareProto(pagePrototype, globals));
+    const env = Object.create(prepareProto(perPageContext));
 
     // The page object also gets some properties copied from
     // the per-page context object
@@ -159,7 +160,7 @@ class Environment {
   // Get a customized environment object that is specific to a single
   // macro on a page by including the arguments to be passed to that macro.
   getExecutionContext(args) {
-    let context = Object.create(this.prototypeEnvironment);
+    const context = Object.create(this.prototypeEnvironment);
 
     // Make a defensive copy of the arguments so that macros can't
     // modify the originals. Use an empty array if no args provided.
@@ -175,16 +176,16 @@ class Environment {
     // The array of arguments will be available to macros as the
     // globals "arguments" and "$$". Individual arguments will be $0,
     // $1 and so on.
-    context["arguments"] = context["$$"] = args;
+    context.arguments = context.$$ = args;
     for (let i = 0; i < args.length; i++) {
-      context["$" + i] = args[i];
+      context[`$${i}`] = args[i];
     }
 
     // Set any unused arguments up to $9 to the empty string
     // NOTE: old KumaScript went up to $99, but we don't have any
     // macros that use two digit argument numbers
     for (let i = args.length; i < 10; i++) {
-      context["$" + i] = "";
+      context[`$${i}`] = "";
     }
 
     return context;

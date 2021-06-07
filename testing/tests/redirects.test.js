@@ -2,7 +2,7 @@ const got = require("got");
 const braces = require("braces");
 
 function serverURL(pathname = "/") {
-  return "http://localhost:5000" + pathname;
+  return `http://localhost:5000${pathname}`;
 }
 
 function url_test(from, to, { statusCode = 301 } = {}) {
@@ -16,10 +16,11 @@ function url_test(from, to, { statusCode = 301 } = {}) {
         throwHttpErrors: false,
       });
       expect(res.statusCode).toBe(statusCode);
-      to &&
+      if (to) {
         expect((res.headers.location || "").toLowerCase()).toBe(
           encodeURI(to).toLowerCase()
         );
+      }
     },
   ]);
 }
@@ -561,25 +562,25 @@ const LEGACY_URLS = [].concat(
     { statusCode: 302 }
   )
   // TODO: implement locale redirects
-  //url_test(
-  //  "/en/docs/Web/CSS/Attribute_selectors",
-  //  "/en-US/docs/Web/CSS/Attribute_selectors",
-  //  { statusCode: 302 },
-  //),
-  //url_test(
-  //  "/en/docs/Web/CSS/Attribute_selectors",
-  //  "/en-US/docs/Web/CSS/Attribute_selectors",
-  //  { statusCode: 302 },
-  //),
-  //url_test("/cn/docs/Talk:Kakurady", "/zh-CN/docs/Talk:Kakurady", {
-  //  statusCode: 302,
-  //}),
-  //url_test(
-  //  "/zh_cn/docs/Web/API/RTCPeerConnection/addTrack",
-  //  "/zh-CN/docs/Web/API/RTCPeerConnection/addTrack",
-  //  { statusCode: 302 },
-  //),
-  //url_test("/zh_tw/docs/AJAX", "/zh-TW/docs/AJAX", { statusCode: 302 }),
+  // url_test(
+  //   "/en/docs/Web/CSS/Attribute_selectors",
+  //   "/en-US/docs/Web/CSS/Attribute_selectors",
+  //   { statusCode: 302 }
+  // ),
+  // url_test(
+  //   "/en/docs/Web/CSS/Attribute_selectors",
+  //   "/en-US/docs/Web/CSS/Attribute_selectors",
+  //   { statusCode: 302 }
+  // ),
+  // url_test("/cn/docs/Talk:Kakurady", "/zh-CN/docs/Talk:Kakurady", {
+  //   statusCode: 302,
+  // }),
+  // url_test(
+  //   "/zh_cn/docs/Web/API/RTCPeerConnection/addTrack",
+  //   "/zh-CN/docs/Web/API/RTCPeerConnection/addTrack",
+  //   { statusCode: 302 }
+  // ),
+  // url_test("/zh_tw/docs/AJAX", "/zh-TW/docs/AJAX", { statusCode: 302 })
 );
 
 const ZONE_REDIRECTS = [
@@ -665,7 +666,7 @@ const ZONE_REDIRECTS = [
   ["Apps", "Web/Aplicaciones", "Tutorials", ["es"]],
   ["Apps", "Apps", "Tutorials", ["bn", "de", "it", "ko", "pt-BR", "ru"]],
   // TODO: inconsistent also in SCL3
-  //["Learn", "Learn", "JavaScript", ["ca", "de", null]],
+  // ["Learn", "Learn", "JavaScript", ["ca", "de", null]],
   ["Apprendre", "Apprendre", "JavaScript", ["fr"]],
   [
     "Marketplace",
@@ -679,12 +680,12 @@ const ZONE_REDIRECTS = [
 const ZONE_REDIRECT_URLS = [];
 for (const [zoneRoot, wikiSlug, childPath, locales] of ZONE_REDIRECTS) {
   for (const locale of locales) {
-    const prefix = locale ? "/" + locale : "";
-    const redirectPath = prefix + "/docs/" + wikiSlug;
-    const paths = [prefix + "/" + zoneRoot];
+    const prefix = locale ? `/${locale}` : "";
+    const redirectPath = `${prefix}/docs/${wikiSlug}`;
+    const paths = [`${prefix}/${zoneRoot}`];
     // Test with a "docs" based path as well if it makes sense.
     if (zoneRoot != wikiSlug) {
-      paths.push(prefix + "/docs/" + zoneRoot);
+      paths.push(`${prefix}/docs/${zoneRoot}`);
     }
     for (const path of paths) {
       // The zone root without a trailing slash.
@@ -693,25 +694,25 @@ for (const [zoneRoot, wikiSlug, childPath, locales] of ZONE_REDIRECTS) {
       );
       // The zone root with a trailing slash.
       ZONE_REDIRECT_URLS.push(
-        ...url_test(path + "/", redirectPath, { statusCode: 302 })
+        ...url_test(`${path}/`, redirectPath, { statusCode: 302 })
       );
       // A zone child page with query parameters.
       ZONE_REDIRECT_URLS.push(
         ...url_test(
-          path + "/" + childPath + "?raw&macros",
-          redirectPath + "/" + childPath + "?raw&macros",
+          `${path}/${childPath}?raw&macros`,
+          `${redirectPath}/${childPath}?raw&macros`,
           { statusCode: 302 }
         )
       );
       // The zone root with $edit.
       ZONE_REDIRECT_URLS.push(
-        ...url_test(path + "$edit", redirectPath + "$edit", {
+        ...url_test(`${path}$edit`, `${redirectPath}$edit`, {
           statusCode: 302,
         })
       );
       // A zone path with curly braces {}
       ZONE_REDIRECT_URLS.push(
-        ...url_test(path + "/{test}", redirectPath + "/{test}", {
+        ...url_test(`${path}/{test}`, `${redirectPath}/{test}`, {
           statusCode: 302,
         })
       );
@@ -731,47 +732,46 @@ const marionette_client_docs_url =
 const marionette_docs_root_url =
   "https://firefox-source-docs.mozilla.org/testing/marionette/marionette/";
 const marionette_locales = "{/en-US,/fr,/ja,/pl,/pt-BR,/ru,/zh-CN,}";
-const marionette_base = marionette_locales + "/docs/Mozilla/QA/Marionette";
-const marionette_multi_base =
-  marionette_locales + "/docs/{Mozilla/QA/,}Marionette";
+const marionette_base = `${marionette_locales}/docs/Mozilla/QA/Marionette`;
+const marionette_multi_base = `${marionette_locales}/docs/{Mozilla/QA/,}Marionette`;
 const marionette_python_tests =
   "{MarionetteTestCase,Marionette_Python_Tests,Running_Tests,Tests}";
 
 const MARIONETTE_URLS = [].concat(
-  url_test(marionette_multi_base, marionette_docs_root_url + "index.html"),
+  url_test(marionette_multi_base, `${marionette_docs_root_url}index.html`),
   url_test(
-    marionette_multi_base + "/Builds",
-    marionette_docs_root_url + "Building.html"
+    `${marionette_multi_base}/Builds`,
+    `${marionette_docs_root_url}Building.html`
   ),
-  url_test(marionette_multi_base + "/Client", marionette_client_docs_url),
+  url_test(`${marionette_multi_base}/Client`, marionette_client_docs_url),
   url_test(
-    marionette_multi_base + "/Developer_setup",
-    marionette_docs_root_url + "Contributing.html"
-  ),
-  url_test(
-    marionette_multi_base + "/" + marionette_python_tests,
-    marionette_docs_root_url + "PythonTests.html"
+    `${marionette_multi_base}/Developer_setup`,
+    `${marionette_docs_root_url}Contributing.html`
   ),
   url_test(
-    marionette_locales + "/docs/Marionette_Test_Runner",
-    marionette_docs_root_url + "PythonTests.html"
+    `${marionette_multi_base}/${marionette_python_tests}`,
+    `${marionette_docs_root_url}PythonTests.html`
   ),
   url_test(
-    marionette_base + "/Marionette_Test_Runner",
-    marionette_docs_root_url + "PythonTests.html"
+    `${marionette_locales}/docs/Marionette_Test_Runner`,
+    `${marionette_docs_root_url}PythonTests.html`
   ),
   url_test(
-    marionette_base + "/Protocol",
-    marionette_docs_root_url + "Protocol.html"
+    `${marionette_base}/Marionette_Test_Runner`,
+    `${marionette_docs_root_url}PythonTests.html`
   ),
-  url_test(marionette_base + "/Python_Client", marionette_client_docs_url),
   url_test(
-    marionette_base + "/WebDriver/status",
+    `${marionette_base}/Protocol`,
+    `${marionette_docs_root_url}Protocol.html`
+  ),
+  url_test(`${marionette_base}/Python_Client`, marionette_client_docs_url),
+  url_test(
+    `${marionette_base}/WebDriver/status`,
     "https://bugzilla.mozilla.org/showdependencytree.cgi?id=721859&hide_resolved=1"
   ),
   url_test(
-    marionette_locales + "/docs/Marionette/Debugging",
-    marionette_docs_root_url + "Debugging.html"
+    `${marionette_locales}/docs/Marionette/Debugging`,
+    `${marionette_docs_root_url}Debugging.html`
   )
 );
 
@@ -919,8 +919,8 @@ const WEBEXT_URLS = [].concat(
     ["AMO/Policy/Featured", "publish/recommended-extensions/"],
   ].flatMap(([aoPath, ewPath]) =>
     url_test(
-      "{/en-US,/fr,}/docs/Mozilla/Add-ons/" + aoPath,
-      "https://extensionworkshop.com/documentation/" + ewPath
+      `{/en-US,/fr,}/docs/Mozilla/Add-ons/${aoPath}`,
+      `https://extensionworkshop.com/documentation/${ewPath}`
     )
   )
 );
@@ -978,12 +978,14 @@ const LOCALE_ALIAS_URLS = [].concat(
   url_test("/en-gb/docs/Foo/bar", null, { statusCode: 404 }),
   url_test("/en_gb/docs/Foo/bar", null, { statusCode: 404 }),
 
-  url_test("/PT-PT/docs/Foo/bar", null, { statusCode: 404 }),
+  url_test("/PT-PT/docs/Foo/bar", "/en-US/docs/Foo/bar?retiredLocale=pt-PT", {
+    statusCode: 302,
+  }),
   url_test("/XY-PQ/docs/Foo/bar", null, { statusCode: 404 }),
 
   url_test("/en/docs/Foo/bar", "/en-US/docs/Foo/bar"),
   url_test("/En_uS/docs/Foo/bar", "/en-US/docs/Foo/bar"),
-  url_test("/pt/docs/Foo/bar", "/pt-PT/docs/Foo/bar"),
+  url_test("/pt/docs/Foo/bar", "/pt-BR/docs/Foo/bar"),
   url_test("/Fr-FR/docs/Foo/bar", "/fr/docs/Foo/bar"),
   url_test("/JA-JP/docs/Foo/bar", "/ja/docs/Foo/bar"),
   url_test("/JA-JA/docs/Foo/bar", "/ja/docs/Foo/bar"),
@@ -1000,6 +1002,284 @@ const LOCALE_ALIAS_URLS = [].concat(
   url_test("/En_uS", "/en-US/"),
   url_test("/Fr-FR", "/fr/"),
   url_test("/zh", "/zh-CN/")
+);
+
+const RETIRED_LOCALE_URLS = [].concat(
+  url_test("/ar", "/en-US/?retiredLocale=ar", { statusCode: 302 }),
+  url_test("/ar/", "/en-US/?retiredLocale=ar", { statusCode: 302 }),
+  url_test("/bg", "/en-US/?retiredLocale=bg", { statusCode: 302 }),
+  url_test("/bg/", "/en-US/?retiredLocale=bg", { statusCode: 302 }),
+  url_test("/bn", "/en-US/?retiredLocale=bn", { statusCode: 302 }),
+  url_test("/bn/", "/en-US/?retiredLocale=bn", { statusCode: 302 }),
+  url_test("/ca", "/en-US/?retiredLocale=ca", { statusCode: 302 }),
+  url_test("/ca/", "/en-US/?retiredLocale=ca", { statusCode: 302 }),
+  url_test("/el", "/en-US/?retiredLocale=el", { statusCode: 302 }),
+  url_test("/el/", "/en-US/?retiredLocale=el", { statusCode: 302 }),
+  url_test("/fa", "/en-US/?retiredLocale=fa", { statusCode: 302 }),
+  url_test("/FA/", "/en-US/?retiredLocale=fa", { statusCode: 302 }),
+  url_test("/fi", "/en-US/?retiredLocale=fi", { statusCode: 302 }),
+  url_test("/fi/", "/en-US/?retiredLocale=fi", { statusCode: 302 }),
+  url_test("/he", "/en-US/?retiredLocale=he", { statusCode: 302 }),
+  url_test("/he/", "/en-US/?retiredLocale=he", { statusCode: 302 }),
+  url_test("/hi-In", "/en-US/?retiredLocale=hi-IN", { statusCode: 302 }),
+  url_test("/hi-IN/", "/en-US/?retiredLocale=hi-IN", { statusCode: 302 }),
+  url_test("/hu", "/en-US/?retiredLocale=hu", { statusCode: 302 }),
+  url_test("/hu/", "/en-US/?retiredLocale=hu", { statusCode: 302 }),
+  url_test("/id", "/en-US/?retiredLocale=id", { statusCode: 302 }),
+  url_test("/ID/", "/en-US/?retiredLocale=id", { statusCode: 302 }),
+  url_test("/it", "/en-US/?retiredLocale=it", { statusCode: 302 }),
+  url_test("/it/", "/en-US/?retiredLocale=it", { statusCode: 302 }),
+  url_test("/kab", "/en-US/?retiredLocale=kab", { statusCode: 302 }),
+  url_test("/KaB/", "/en-US/?retiredLocale=kab", { statusCode: 302 }),
+  url_test("/ms", "/en-US/?retiredLocale=ms", { statusCode: 302 }),
+  url_test("/ms/", "/en-US/?retiredLocale=ms", { statusCode: 302 }),
+  url_test("/my", "/en-US/?retiredLocale=my", { statusCode: 302 }),
+  url_test("/my/", "/en-US/?retiredLocale=my", { statusCode: 302 }),
+  url_test("/nl", "/en-US/?retiredLocale=nl", { statusCode: 302 }),
+  url_test("/nl/", "/en-US/?retiredLocale=nl", { statusCode: 302 }),
+  url_test("/pt-Pt", "/en-US/?retiredLocale=pt-PT", { statusCode: 302 }),
+  url_test("/pt-PT/", "/en-US/?retiredLocale=pt-PT", { statusCode: 302 }),
+  url_test("/sv-SE", "/en-US/?retiredLocale=sv-SE", { statusCode: 302 }),
+  url_test("/sv-se/", "/en-US/?retiredLocale=sv-SE", { statusCode: 302 }),
+  url_test("/th", "/en-US/?retiredLocale=th", { statusCode: 302 }),
+  url_test("/th/", "/en-US/?retiredLocale=th", { statusCode: 302 }),
+  url_test("/tr", "/en-US/?retiredLocale=tr", { statusCode: 302 }),
+  url_test("/tr/", "/en-US/?retiredLocale=tr", { statusCode: 302 }),
+  url_test("/uk", "/en-US/?retiredLocale=uk", { statusCode: 302 }),
+  url_test("/uk/", "/en-US/?retiredLocale=uk", { statusCode: 302 }),
+  url_test("/vi", "/en-US/?retiredLocale=vi", { statusCode: 302 }),
+  url_test("/vi/", "/en-US/?retiredLocale=vi", { statusCode: 302 }),
+  url_test("/ar/docs/Web", "/en-US/docs/Web?retiredLocale=ar", {
+    statusCode: 302,
+  }),
+  url_test("/bg/docs/Web/", "/en-US/docs/Web/?retiredLocale=bg", {
+    statusCode: 302,
+  }),
+  url_test("/bn/docs/Web", "/en-US/docs/Web?retiredLocale=bn", {
+    statusCode: 302,
+  }),
+  url_test("/Ca/docs/Web/", "/en-US/docs/Web/?retiredLocale=ca", {
+    statusCode: 302,
+  }),
+  url_test("/el/docs/Web", "/en-US/docs/Web?retiredLocale=el", {
+    statusCode: 302,
+  }),
+  url_test("/FA/docs/Web", "/en-US/docs/Web?retiredLocale=fa", {
+    statusCode: 302,
+  }),
+  url_test("/fi/docs/Web", "/en-US/docs/Web?retiredLocale=fi", {
+    statusCode: 302,
+  }),
+  url_test("/he/docs/Web", "/en-US/docs/Web?retiredLocale=he", {
+    statusCode: 302,
+  }),
+  url_test("/hi-IN/docs/Web", "/en-US/docs/Web?retiredLocale=hi-IN", {
+    statusCode: 302,
+  }),
+  url_test("/hu/docs/Web", "/en-US/docs/Web?retiredLocale=hu", {
+    statusCode: 302,
+  }),
+  url_test("/ID/docs/Web", "/en-US/docs/Web?retiredLocale=id", {
+    statusCode: 302,
+  }),
+  url_test("/it/docs/Web", "/en-US/docs/Web?retiredLocale=it", {
+    statusCode: 302,
+  }),
+  url_test("/KaB/docs/Web", "/en-US/docs/Web?retiredLocale=kab", {
+    statusCode: 302,
+  }),
+  url_test("/ms/docs/Web", "/en-US/docs/Web?retiredLocale=ms", {
+    statusCode: 302,
+  }),
+  url_test("/my/docs/Web", "/en-US/docs/Web?retiredLocale=my", {
+    statusCode: 302,
+  }),
+  url_test("/nl/docs/Web", "/en-US/docs/Web?retiredLocale=nl", {
+    statusCode: 302,
+  }),
+  url_test("/pt-PT/docs/Web", "/en-US/docs/Web?retiredLocale=pt-PT", {
+    statusCode: 302,
+  }),
+  url_test("/sv-se/docs/Web", "/en-US/docs/Web?retiredLocale=sv-SE", {
+    statusCode: 302,
+  }),
+  url_test("/th/docs/Web", "/en-US/docs/Web?retiredLocale=th", {
+    statusCode: 302,
+  }),
+  url_test("/tr/docs/Web", "/en-US/docs/Web?retiredLocale=tr", {
+    statusCode: 302,
+  }),
+  url_test("/uk/docs/Web", "/en-US/docs/Web?retiredLocale=uk", {
+    statusCode: 302,
+  }),
+  url_test("/vi/docs/Web", "/en-US/docs/Web?retiredLocale=vi", {
+    statusCode: 302,
+  }),
+  url_test("/ar/search?q=video", "/en-US/search?q=video&retiredLocale=ar", {
+    statusCode: 302,
+  }),
+  url_test("/bg/search?q=video", "/en-US/search?q=video&retiredLocale=bg", {
+    statusCode: 302,
+  }),
+  url_test("/bn/search?q=video", "/en-US/search?q=video&retiredLocale=bn", {
+    statusCode: 302,
+  }),
+  url_test("/Ca/search?q=video", "/en-US/search?q=video&retiredLocale=ca", {
+    statusCode: 302,
+  }),
+  url_test("/el/search?q=video", "/en-US/search?q=video&retiredLocale=el", {
+    statusCode: 302,
+  }),
+  url_test("/FA/search?q=video", "/en-US/search?q=video&retiredLocale=fa", {
+    statusCode: 302,
+  }),
+  url_test("/fi/search?q=video", "/en-US/search?q=video&retiredLocale=fi", {
+    statusCode: 302,
+  }),
+  url_test("/he/search?q=video", "/en-US/search?q=video&retiredLocale=he", {
+    statusCode: 302,
+  }),
+  url_test(
+    "/hi-IN/search?q=video",
+    "/en-US/search?q=video&retiredLocale=hi-IN",
+    { statusCode: 302 }
+  ),
+  url_test("/hu/search?q=video", "/en-US/search?q=video&retiredLocale=hu", {
+    statusCode: 302,
+  }),
+  url_test("/ID/search?q=video", "/en-US/search?q=video&retiredLocale=id", {
+    statusCode: 302,
+  }),
+  url_test("/it/search?q=video", "/en-US/search?q=video&retiredLocale=it", {
+    statusCode: 302,
+  }),
+  url_test("/KaB/search?q=video", "/en-US/search?q=video&retiredLocale=kab", {
+    statusCode: 302,
+  }),
+  url_test("/ms/search?q=video", "/en-US/search?q=video&retiredLocale=ms", {
+    statusCode: 302,
+  }),
+  url_test("/my/search?q=video", "/en-US/search?q=video&retiredLocale=my", {
+    statusCode: 302,
+  }),
+  url_test("/nl/search?q=video", "/en-US/search?q=video&retiredLocale=nl", {
+    statusCode: 302,
+  }),
+  url_test(
+    "/pt-PT/search?q=video",
+    "/en-US/search?q=video&retiredLocale=pt-PT",
+    { statusCode: 302 }
+  ),
+  url_test(
+    "/sv-se/search?q=video",
+    "/en-US/search?q=video&retiredLocale=sv-SE",
+    { statusCode: 302 }
+  ),
+  url_test("/th/search?q=video", "/en-US/search?q=video&retiredLocale=th", {
+    statusCode: 302,
+  }),
+  url_test("/tr/search?q=video", "/en-US/search?q=video&retiredLocale=tr", {
+    statusCode: 302,
+  }),
+  url_test("/uk/search?q=video", "/en-US/search?q=video&retiredLocale=uk", {
+    statusCode: 302,
+  }),
+  url_test("/vi/search?q=video", "/en-US/search?q=video&retiredLocale=vi", {
+    statusCode: 302,
+  })
+);
+
+const MISC_REDIRECT_URLS = [].concat(
+  url_test("/fr/account", "/fr/settings", { statusCode: 302 }),
+  url_test("/en-US/account", "/en-US/settings", { statusCode: 302 }),
+  url_test("/en-US/account/", "/en-US/settings", { statusCode: 302 }),
+  url_test("/ja/profile", "/ja/settings", { statusCode: 302 }),
+  url_test("/en-US/profile", "/en-US/settings", { statusCode: 302 }),
+  url_test("/en-US/profile/", "/en-US/settings", { statusCode: 302 }),
+  url_test("/en-US/profile/edit", "/en-US/settings", { statusCode: 302 }),
+  url_test("/en-US/profile/edit/", "/en-US/settings", { statusCode: 302 }),
+  url_test("/en-US/profile/stripe_subscription", "/en-US/settings", {
+    statusCode: 302,
+  }),
+  url_test("/en-US/profile/stripe_subscription/", "/en-US/settings", {
+    statusCode: 302,
+  }),
+  url_test("/zh-CN/profiles/sheppy", "/zh-CN/settings", { statusCode: 302 }),
+  url_test("/en-US/profiles/sheppy", "/en-US/settings", { statusCode: 302 }),
+  url_test("/en-US/profiles/sheppy/", "/en-US/settings", { statusCode: 302 }),
+  url_test("/en-US/profiles/sheppy/edit", "/en-US/settings", {
+    statusCode: 302,
+  }),
+  url_test("/en-US/profiles/sheppy/edit/", "/en-US/settings", {
+    statusCode: 302,
+  }),
+  url_test("/en-US/profiles/sheppy/delete", "/en-US/settings", {
+    statusCode: 302,
+  }),
+  url_test("/en-US/profiles/sheppy/delete/", "/en-US/settings", {
+    statusCode: 302,
+  }),
+  url_test("/en-US/DOM", "/en-US/docs/DOM"),
+  url_test("/en-US/DOM/", "/en-US/docs/DOM"),
+  url_test(
+    "/en-US/DOM/element.addEventListener",
+    "/en-US/docs/DOM/element.addEventListener"
+  ),
+  url_test("/en-US/DOM/CSSRule/cssText/", "/en-US/docs/DOM/CSSRule/cssText"),
+  url_test("/fr/DOM", "/fr/docs/DOM"),
+  url_test("/fr/DOM/", "/fr/docs/DOM"),
+  url_test(
+    "/fr/DOM/element.addEventListener",
+    "/fr/docs/DOM/element.addEventListener"
+  ),
+  url_test("/fr/DOM/CSSRule/cssText/", "/fr/docs/DOM/CSSRule/cssText"),
+  url_test("/en-US/AJAX", "/en-US/docs/AJAX"),
+  url_test("/en-US/AJAX/", "/en-US/docs/AJAX"),
+  url_test("/en-US/AJAX/Getting_Started/", "/en-US/docs/AJAX/Getting_Started"),
+  url_test("/en-US/CSS", "/en-US/docs/CSS"),
+  url_test("/en-US/CSS/", "/en-US/docs/CSS"),
+  url_test("/en-US/CSS/time/", "/en-US/docs/CSS/time"),
+  url_test("/en-US/DragDrop", "/en-US/docs/DragDrop"),
+  url_test("/en-US/DragDrop/", "/en-US/docs/DragDrop"),
+  url_test(
+    "/en-US/DragDrop/Drag_and_Drop/",
+    "/en-US/docs/DragDrop/Drag_and_Drop"
+  ),
+  url_test("/en-US/HTML", "/en-US/docs/HTML"),
+  url_test("/en-US/HTML/", "/en-US/docs/HTML"),
+  url_test("/en-US/HTML/Canvas/", "/en-US/docs/HTML/Canvas"),
+  url_test("/en-US/JavaScript", "/en-US/docs/JavaScript"),
+  url_test("/en-US/JavaScript/", "/en-US/docs/JavaScript"),
+  url_test(
+    "/en-US/JavaScript/Reference/About/",
+    "/en-US/docs/JavaScript/Reference/About"
+  ),
+  url_test("/en-US/SVG", "/en-US/docs/SVG"),
+  url_test("/en-US/SVG/", "/en-US/docs/SVG"),
+  url_test("/en-US/SVG/Element/font/", "/en-US/docs/SVG/Element/font"),
+  url_test("/en-US/Tools", "/en-US/docs/Tools"),
+  url_test("/en-US/Tools/", "/en-US/docs/Tools"),
+  url_test(
+    "/en-US/Tools/Memory/Treemap_view/",
+    "/en-US/docs/Tools/Memory/Treemap_view"
+  ),
+  url_test(
+    "/en-US/Using_files_from_web_applications",
+    "/en-US/docs/Using_files_from_web_applications"
+  ),
+  url_test(
+    "/en-US/Using_files_from_web_applications/",
+    "/en-US/docs/Using_files_from_web_applications"
+  ),
+  url_test("/en-US/Web", "/en-US/docs/Web"),
+  url_test("/en-US/Web/", "/en-US/docs/Web"),
+  url_test("/en-US/Web/API/ArrayBuffer/", "/en-US/docs/Web/API/ArrayBuffer"),
+  url_test("/en-US/XMLHttpRequest", "/en-US/docs/XMLHttpRequest"),
+  url_test("/en-US/XMLHttpRequest/", "/en-US/docs/XMLHttpRequest"),
+  url_test(
+    "/en-US/XMLHttpRequest/FormData/",
+    "/en-US/docs/XMLHttpRequest/FormData"
+  )
 );
 
 describe("scl3 redirects", () => {
@@ -1074,6 +1354,12 @@ describe("locale alias redirects", () => {
   }
 });
 
+describe("retired locale redirects", () => {
+  for (const [url, t] of RETIRED_LOCALE_URLS) {
+    it(url, t);
+  }
+});
+
 const CORE_JAVASCRIPT_1_5_URLs = [].concat(
   url_test(
     "/en-US/docs/Core_JavaScript_1.5_Reference/Operators/Special_Operators/typeof_Operator",
@@ -1091,6 +1377,12 @@ const CORE_JAVASCRIPT_1_5_URLs = [].concat(
 
 describe("Core_JavaScript_1.5 redirects", () => {
   for (const [url, t] of CORE_JAVASCRIPT_1_5_URLs) {
+    it(url, t);
+  }
+});
+
+describe("misc redirects", () => {
+  for (const [url, t] of MISC_REDIRECT_URLS) {
     it(url, t);
   }
 });

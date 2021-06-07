@@ -1,3 +1,5 @@
+@use "sass:math";
+
 /*
 Keyboard & screen reader skip link menu
 ********************************************************************** */
@@ -15,7 +17,7 @@ Keyboard & screen reader skip link menu
     background-color: rgba(255, 255, 255, 0.9);
     font-weight: bold;
     left: 0;
-    padding: ($base-spacing / 2);
+    padding: math.div($base-spacing, 2);
     position: absolute;
     right: 0;
     text-align: center;

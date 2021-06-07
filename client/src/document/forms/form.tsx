@@ -6,7 +6,7 @@ import "./form.scss";
 import useSWR from "swr";
 
 type DocumentFormData = {
-  rawHTML: string;
+  rawBody: string;
   metadata: { slug: string; title: string };
 };
 
@@ -34,7 +34,7 @@ export function DocumentForm({
     initialSlug ? initialSlug + "/" : doc ? doc.metadata.slug : ""
   );
   const [title, setTitle] = useState(doc ? doc.metadata.title : "");
-  const [rawHTML, setRawHtml] = useState(doc ? doc.rawHTML : "");
+  const [rawBody, setRawBody] = useState(doc ? doc.rawBody : "");
 
   const [autosaveEnabled, setAutoSaveEnabled] = useLocalStorage(
     "autosaveEdit",
@@ -71,13 +71,13 @@ export function DocumentForm({
     setAutoSaveEnabled(!autosaveEnabled);
   }
 
-  const { callback: debounceCallback } = useDebouncedCallback(onSave, 1000);
+  const debounceCallback = useDebouncedCallback(onSave, 1000);
 
   useEffect(() => {
     if (willAutosave) {
       debounceCallback(
         {
-          rawHTML,
+          rawBody,
           metadata: { slug, title, locale },
         },
         didSlugChange
@@ -88,7 +88,7 @@ export function DocumentForm({
     debounceCallback,
     slug,
     title,
-    rawHTML,
+    rawBody,
     didSlugChange,
     locale,
   ]);
@@ -100,7 +100,7 @@ export function DocumentForm({
         event.preventDefault();
         onSave(
           {
-            rawHTML,
+            rawBody,
             metadata: { slug, title, locale },
           },
           didSlugChange
@@ -152,15 +152,15 @@ export function DocumentForm({
 
       <textarea
         disabled={disableInputs}
-        value={rawHTML}
-        onChange={(event) => setRawHtml(event.target.value)}
+        value={rawBody}
+        onChange={(event) => setRawBody(event.target.value)}
         rows={20}
         style={{ width: "100%" }}
       />
       <p>
         <button
           type="submit"
-          disabled={disableInputs || !title || !slug || invalidSlug || !rawHTML}
+          disabled={disableInputs || !title || !slug || invalidSlug || !rawBody}
         >
           {isNew ? "Create" : "Save"}
         </button>

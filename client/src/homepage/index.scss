@@ -1,16 +1,15 @@
-#writers-homepage {
-  .header-search,
-  h2.header {
-    margin-bottom: 40px;
-  }
-  td a small {
-    color: grey;
-  }
+@import "~@mdn/minimalist/sass/mixins/utils";
+@import "~@mdn/minimalist/sass/vars/layout";
 
-  table.compact tr {
-    th,
-    td {
-      padding: 6px;
-    }
+.home-content-container {
+  margin: 0 auto;
+  max-width: $max-width-default;
+  padding: $base-spacing;
+  position: relative;
+
+  @media #{$mq-small-desktop-and-up} {
+    @include gap($base-spacing);
+    display: flex;
+    margin: ($base-spacing * 2) auto;
   }
 }

@@ -30,6 +30,9 @@ const VALID_FLAW_CHECKS = new Set([
   "image_widths",
   "bad_pre_tags",
   "sectioning",
+  "heading_links",
+  "translation_differences",
+  "unsafe_html",
 ]);
 
 // TODO (far future): Switch to "error" when number of flaws drops.
@@ -61,6 +64,13 @@ const ALWAYS_NO_ROBOTS = JSON.parse(
   process.env.BUILD_ALWAYS_NO_ROBOTS || "false"
 );
 
+const HOMEPAGE_FEED_URL =
+  process.env.BUILD_HOMEPAGE_FEED_URL || "https://hacks.mozilla.org/feed/";
+
+const HOMEPAGE_FEED_DISPLAY_MAX = JSON.parse(
+  process.env.BUILD_HOMEPAGE_FEED_DISPLAY_MAX || "5"
+);
+
 module.exports = {
   BUILD_OUT_ROOT,
   DEFAULT_FLAW_LEVELS,
@@ -76,4 +86,6 @@ module.exports = {
   FIX_FLAWS_DRY_RUN,
   FIX_FLAWS_VERBOSE,
   ALWAYS_NO_ROBOTS,
+  HOMEPAGE_FEED_URL,
+  HOMEPAGE_FEED_DISPLAY_MAX,
 };

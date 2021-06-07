@@ -56,11 +56,11 @@ const mandatoryGroupProperties = [
  * @param {string[]} mandatory
  */
 function checkProperties(obj, permitted, mandatory) {
-  let props = Object.keys(obj);
-  for (let prop of props) {
+  const props = Object.keys(obj);
+  for (const prop of props) {
     expect(permitted).toContain(prop);
   }
-  for (let prop of mandatory) {
+  for (const prop of mandatory) {
     expect(props).toContain(prop);
   }
 }
@@ -74,7 +74,7 @@ function checkProperties(obj, permitted, mandatory) {
  */
 function checkStringArray(strings, permitted) {
   expect(Array.isArray(strings)).toBe(true);
-  for (let string of strings) {
+  for (const string of strings) {
     expect(string).toMatch(permitted);
   }
 }
@@ -95,7 +95,7 @@ function checkGroupData(groupDataJson) {
   // the property's key is the group name
   const groupNames = Object.keys(groupData[0]);
 
-  for (let groupName of groupNames) {
+  for (const groupName of groupNames) {
     // the group name contains only the permitted characters
     expect(groupName).toMatch(permittedCharacters.group);
 

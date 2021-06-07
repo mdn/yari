@@ -1,0 +1,106 @@
+@use "sass:math";
+
+@import "~@mdn/minimalist/sass/mixins/utils";
+@import "~@mdn/minimalist/sass/vars/color-palette";
+@import "~@mdn/minimalist/sass/vars/layout";
+@import "~@mdn/minimalist/sass/vars/typography";
+
+.hero {
+  background-color: $primary-300;
+  padding: $base-spacing;
+  position: relative;
+
+  @media #{$mq-tablet-and-up} {
+    background: $primary-300 url("../../../assets/home-masthead-background.svg")
+      0 0 repeat;
+    background-size: cover;
+    padding: $base-spacing * 2;
+    padding-top: 125px;
+
+    &::before {
+      background: transparent url("../../../assets/hero-dino.png") 0 0 no-repeat;
+      background-size: 245px 200px;
+      content: "";
+      display: block;
+      height: 200px;
+      /* 50% minus half of the image size */
+      left: calc(50% - 122px);
+      position: absolute;
+      top: 24px;
+      width: 245px;
+    }
+  }
+
+  @media #{$mq-small-desktop-and-up} {
+    padding-bottom: $base-spacing * 3;
+  }
+}
+
+.hero-content {
+  margin: 0 auto;
+  max-width: $max-width-small-desktop;
+  position: relative;
+
+  h1 {
+    background-color: $neutral-100;
+    color: $text-color-inverted;
+    font-size: $xl-font-size-mobile;
+    font-weight: normal;
+    margin: 0 auto;
+    margin-bottom: $base-spacing;
+    text-align: center;
+
+    @media #{$mq-small-desktop-and-up} {
+      font-size: $xl-font-size;
+      margin-bottom: $base-spacing * 2;
+      max-width: 750px;
+    }
+  }
+
+  ul {
+    @include reset-list();
+
+    @media #{$mq-small-desktop-and-up} {
+      display: flex;
+      justify-content: space-around;
+    }
+
+    li {
+      flex-basis: 35%;
+      position: relative;
+
+      @media #{$mq-small-desktop-and-up} {
+        flex-basis: 25%;
+      }
+    }
+  }
+
+  a {
+    border-bottom: 2px solid $neutral-100;
+    color: $neutral-100;
+    display: inline-block;
+    padding: math.div($base-spacing, 2) 0;
+    width: 100%;
+
+    &::after {
+      background: transparent url("~@mdn/dinocons/arrows/arrow.svg") 0 0
+        no-repeat;
+      background-size: 16px;
+      content: "";
+      display: inline-block;
+      height: 16px;
+      position: absolute;
+      right: 6px;
+      top: 19px;
+      transform: rotate(90deg);
+      width: 16px;
+    }
+
+    &:hover,
+    &:focus {
+      &::after {
+        right: 4px;
+      }
+    }
+  }
+}

@@ -71,7 +71,7 @@ def test_hreflang_basic(base_url):
     resp = request("get", url)
     assert resp.status_code == 200
     html = PyQuery(resp.text)
-    assert html.attr("lang") == "en"
+    assert html.attr("lang") == "en-US"
     assert html.find(
         'head > link[hreflang="en"][href="https://developer.mozilla.org/en-US/docs/Web/HTTP"]'
     )
@@ -107,12 +107,12 @@ LOCALE_SELECTORS = {
     "en-US-2": ("en-US", None, "en-US"),
     "en-US-3": ("en-US", "en-US", None),
     "en-US-4": ("en-US", "en-US", "fr"),
-    "es-1": ("es", "es", None),
-    "es-2": ("es", "es", "en-US"),
-    "es-3": ("es", None, "es"),
-    "de-1": ("de", "de", None),
-    "de-2": ("de", "de", "en-US"),
-    "de-3": ("de", None, "de"),
+    "fr-1": ("fr", "fr", None),
+    "fr-2": ("fr", "fr", "en-US"),
+    "fr-3": ("fr", None, "fr"),
+    "ja-1": ("ja", "ja", None),
+    "ja-2": ("ja", "ja", "en-US"),
+    "ja-3": ("ja", None, "ja"),
 }
 
 
@@ -124,17 +124,19 @@ LOCALE_SELECTORS = {
 @pytest.mark.parametrize(
     "slug",
     [
+        "",
         "/",
         "/docs/Web",
+        "/docs/Web/",
         "/search",
+        "/search/",
+        "/search?q=video",
+        "/search/?q=video",
         "/events",
-        "/profile",
-        "/profiles/sheppy",
+        "/signup",
+        "/signin",
+        "/settings",
         "/users/signin",
-        "/promote",
-        "/account",
-        "/docs/Web/HTML",
-        "/docs/Learn/CSS/Styling_text/Fundamentals#Color",
     ],
 )
 def test_locale_selection(base_url, slug, expected, cookie, accept):
@@ -151,4 +153,7 @@ def test_locale_selection(base_url, slug, expected, cookie, accept):
         request_kwargs["cookies"] = {"preferredlocale": cookie}
     response = request("get", url, **request_kwargs)
     assert response.status_code == 302
-    assert response.headers["location"].startswith(f"/{expected}/")
+    extra = "?".join(p.strip("/") for p in slug.split("?"))
+    assert response.headers["location"].startswith(
+        f"/{expected}/{extra}"
+    ), f"{response.headers['location']} does not start with {f'/{expected}/{extra}'}"

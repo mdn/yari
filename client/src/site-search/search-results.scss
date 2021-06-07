@@ -1,0 +1,141 @@
+@use "sass:math";
+
+@import "~@mdn/minimalist/sass/vars/color-palette";
+@import "~@mdn/minimalist/sass/vars/layout";
+@import "~@mdn/minimalist/sass/vars/typography";
+
+.search-results {
+  .highlight,
+  .summary {
+    color: $neutral-200;
+    display: block;
+  }
+
+  .highlight {
+    font-style: italic;
+  }
+
+  .nerd-data {
+    font-size: $small-font-size;
+    margin-left: $base-spacing;
+  }
+}
+
+.pagination {
+  @media #{$mq-small-desktop-and-up} {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  li {
+    display: inline;
+  }
+
+  a {
+    display: inline-block;
+  }
+}
+
+.search-results-list {
+  margin-bottom: $base-spacing;
+
+  .title {
+    background-color: inherit;
+    color: $neutral-100;
+    display: inline-block;
+    margin: 0;
+    margin-bottom: math.div($base-spacing, 4);
+    padding: 0;
+
+    a {
+      &:link,
+      &:visited {
+        color: $neutral-100;
+      }
+    }
+  }
+
+  .search-result-url {
+    margin-bottom: math.div($base-spacing, 4);
+  }
+
+  // Used to indicate that a search result link is in a different locale
+  .locale-indicator {
+    background-color: $neutral-550;
+    cursor: help;
+    display: block;
+    font-size: $small-font-size;
+    margin-top: $base-unit;
+    max-width: max-content;
+    padding: math.div($base-unit, 2) $base-unit;
+    position: relative;
+    top: -3px;
+
+    @media #{$mq-tablet-and-up} {
+      display: inline-block;
+      margin: 0;
+      margin-left: math.div($base-spacing, 4);
+      padding: $base-unit;
+    }
+  }
+
+  mark {
+    background-color: $yellow-400;
+    font-style: italic;
+  }
+}
+
+.search-result-entry {
+  margin-bottom: $base-spacing * 2;
+  word-wrap: break-word;
+
+  @media #{$mq-tablet-and-up} {
+    margin-bottom: $base-spacing * 2.5;
+  }
+}
+
+.language-options,
+.sort-options {
+  margin-top: math.div($base-spacing, 2);
+
+  h2 {
+    font-family: $site-font-family;
+    font-size: $default-font-size;
+
+    @media #{$mq-tablet-and-up} {
+      display: inline;
+    }
+  }
+
+  .language-option-list,
+  .sort-option-list {
+    display: inline-block;
+
+    @media #{$mq-tablet-and-up} {
+      margin-left: $base-unit;
+    }
+
+    li {
+      display: inline-block;
+      padding: 0;
+      padding-right: math.div($base-spacing, 4);
+
+      &::after {
+        content: " | ";
+        display: inline;
+      }
+
+      &:last-child::after {
+        display: none;
+      }
+    }
+  }
+}
+
+.search-suggestions {
+  margin-bottom: $base-spacing;
+
+  p {
+    margin-bottom: math.div($base-unit, 2);
+  }
+}

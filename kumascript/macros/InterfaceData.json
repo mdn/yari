@@ -310,7 +310,7 @@
     },
     "CharacterData": {
       "inh": "Node",
-      "impl": ["ChildNode", "NonDocumentTypeChildNode"]
+      "impl": ["ChildNode"]
     },
     "ChromeWorker": {
       "inh": "Worker",
@@ -489,11 +489,8 @@
       "impl": [
         "XPathEvaluator",
         "GlobalEventHandlers",
-        "TouchEventHandlers",
         "ParentNode",
-        "OnErrorEventHandlerForNodes",
-        "GeometryUtils",
-        "FontFaceSource"
+        "GeometryUtils"
       ]
     },
     "DocumentFragment": {
@@ -518,13 +515,7 @@
     },
     "Element": {
       "inh": "Node",
-      "impl": [
-        "ChildNode",
-        "NonDocumentTypeChildNode",
-        "ParentNode",
-        "Animatable",
-        "GeometryUtils"
-      ]
+      "impl": ["ChildNode", "ParentNode", "Animatable", "GeometryUtils"]
     },
     "EngineeringMode": {
       "inh": "EventTarget",
@@ -608,7 +599,7 @@
     },
     "HTMLAnchorElement": {
       "inh": "HTMLElement",
-      "impl": ["HTMLHyperlinkElementUtils", "URLUtilsSearchParams"]
+      "impl": []
     },
     "HTMLAppletElement": {
       "inh": "HTMLElement",
@@ -620,7 +611,7 @@
     },
     "HTMLAreaElement": {
       "inh": "HTMLElement",
-      "impl": ["HTMLHyperlinkElementUtils", "URLUtilsSearchParams"]
+      "impl": []
     },
     "HTMLAudioElement": {
       "inh": "HTMLMediaElement",
@@ -680,11 +671,7 @@
     },
     "HTMLElement": {
       "inh": "Element",
-      "impl": [
-        "GlobalEventHandlers",
-        "TouchEventHandlers",
-        "OnErrorEventHandlerForNodes"
-      ]
+      "impl": ["GlobalEventHandlers"]
     },
     "HTMLEmbedElement": {
       "inh": "HTMLElement",
@@ -1325,6 +1312,10 @@
       "inh": "AudioNode",
       "impl": ["AudioNodePassThrough"]
     },
+    "OTPCredential": {
+      "inh": "Credential",
+      "impl": []
+    },
     "PageTransitionEvent": {
       "inh": "Event",
       "impl": []
@@ -1363,6 +1354,10 @@
     },
     "Performance": {
       "inh": "",
+      "impl": []
+    },
+    "PerformanceElementTiming": {
+      "inh": "PerformanceEntry",
       "impl": []
     },
     "PerformanceLongTaskTiming": {
@@ -1599,11 +1594,7 @@
     },
     "SVGElement": {
       "inh": "Element",
-      "impl": [
-        "GlobalEventHandlers",
-        "TouchEventHandlers",
-        "OnErrorEventHandlerForNodes"
-      ]
+      "impl": ["GlobalEventHandlers"]
     },
     "SVGEllipseElement": {
       "inh": "SVGGeometryElement",
@@ -2257,7 +2248,6 @@
         "GlobalCrypto",
         "SpeechSynthesisGetter",
         "WindowModal",
-        "TouchEventHandlers",
         "OnErrorEventHandlerForWindow",
         "ChromeWindow",
         "WindowOrWorkerGlobalScope"
@@ -2281,7 +2271,7 @@
     },
     "WorkerLocation": {
       "inh": "",
-      "impl": ["URLUtilsReadOnly"]
+      "impl": []
     },
     "WorkerNavigator": {
       "inh": "",
@@ -2406,12 +2396,7 @@
     },
     "XULElement": {
       "inh": "Element",
-      "impl": [
-        "GlobalEventHandlers",
-        "TouchEventHandlers",
-        "MozFrameLoaderOwner",
-        "OnErrorEventHandlerForNodes"
-      ]
+      "impl": ["GlobalEventHandlers", "MozFrameLoaderOwner"]
     }
   }
 ]

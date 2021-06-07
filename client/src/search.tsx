@@ -1,5 +1,5 @@
-import React, { useCallback, useEffect, useRef, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import React, { useEffect, useMemo, useRef, useState } from "react";
+import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { useCombobox } from "downshift";
 import FlexSearch from "flexsearch";
 import useSWR from "swr";
@@ -172,60 +172,60 @@ function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
 
   const navigate = useNavigate();
   const locale = useLocale();
+  const [searchParams] = useSearchParams();
 
-  const [
-    searchIndex,
-    searchIndexError,
-    initializeSearchIndex,
-  ] = useSearchIndex();
-  const [resultItems, setResultItems] = useState<ResultItem[]>([]);
+  const [searchIndex, searchIndexError, initializeSearchIndex] =
+    useSearchIndex();
+
   const [isFocused, setIsFocused] = useState(false);
 
   const inputRef = useRef<null | HTMLInputElement>(null);
 
-  const updateResults = useCallback(
-    (inputValue: string | undefined) => {
-      if (!searchIndex || !inputValue) {
-        // This can happen if the initialized hasn't completed yet or
-        // completed un-successfully.
-        setResultItems([]);
-        return;
-      }
+  const initialQuery = searchParams.get("q") || "";
+  const [inputValue, setInputValue] = useState(initialQuery);
 
-      // The iPhone X series is 812px high.
-      // If the window isn't very high, show fewer matches so that the
-      // overlaying search results don't trigger a scroll.
-      const limit = window.innerHeight < 850 ? 5 : 10;
+  // The input value to the `useCombobox()` is controlled. This way, we can
+  // listen to the `useSearchIndex()` hook for new values.
+  // For example, the site-search page might trigger an update to the current
+  // `?q=...` value and if that happens we want to be reflected here in the
+  // combobox.
+  React.useEffect(() => {
+    setInputValue(initialQuery);
+  }, [setInputValue, initialQuery]);
 
-      let results: ResultItem[] | null = null;
-      if (isFuzzySearchString(inputValue)) {
-        if (inputValue === "/") {
-          setResultItems([]);
-          return;
-        } else {
-          const fuzzyResults = searchIndex.fuzzy.search(inputValue, { limit });
-          results = fuzzyResults.map((fuzzyResult) => ({
-            url: fuzzyResult.url,
-            title: fuzzyResult.title,
-            substrings: fuzzyResult.substrings,
-          }));
-        }
+  const resultItems: ResultItem[] = useMemo(() => {
+    if (!searchIndex || !inputValue || searchIndexError) {
+      // This can happen if the initialized hasn't completed yet or
+      // completed un-successfully.
+      return [];
+    }
+
+    // The iPhone X series is 812px high.
+    // If the window isn't very high, show fewer matches so that the
+    // overlaying search results don't trigger a scroll.
+    const limit = window.innerHeight < 850 ? 5 : 10;
+
+    if (isFuzzySearchString(inputValue)) {
+      if (inputValue === "/") {
+        return [];
       } else {
-        // Full-Text search
-        const indexResults = searchIndex.flex.search(inputValue, {
-          limit,
-          suggest: true, // This can give terrible result suggestions
-        });
-
-        results = indexResults.map((index) => (searchIndex.items || [])[index]);
+        const fuzzyResults = searchIndex.fuzzy.search(inputValue, { limit });
+        return fuzzyResults.map((fuzzyResult) => ({
+          url: fuzzyResult.url,
+          title: fuzzyResult.title,
+          substrings: fuzzyResult.substrings,
+        }));
       }
+    } else {
+      // Full-Text search
+      const indexResults = searchIndex.flex.search(inputValue, {
+        limit,
+        suggest: true, // This can give terrible result suggestions
+      });
 
-      if (results) {
-        setResultItems(results);
-      }
-    },
-    [searchIndex, setResultItems]
-  );
+      return indexResults.map((index) => (searchIndex.items || [])[index]);
+    }
+  }, [inputValue, searchIndex, searchIndexError]);
 
   const {
     getInputProps,
@@ -234,15 +234,14 @@ function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
     getComboboxProps,
 
     highlightedIndex,
-    inputValue,
     isOpen,
 
     reset,
   } = useCombobox({
-    defaultHighlightedIndex: 0,
     items: resultItems,
+    inputValue,
     onInputValueChange: ({ inputValue }) => {
-      updateResults(inputValue);
+      setInputValue(inputValue ? inputValue : "");
     },
     onSelectedItemChange: ({ selectedItem }) => {
       if (selectedItem) {
@@ -257,17 +256,24 @@ function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
 
   useFocusOnSlash(inputRef);
 
+  const formAction = `/${locale}/search`;
+
   return (
     <form
-      action={`/${locale}/search`}
+      action={formAction}
       className="search-form"
       {...getComboboxProps({
         className: "search-widget",
         id: "nav-main-search",
         role: "search",
-        // onSubmit: (e) => {
-        //   e.preventDefault();
-        // },
+        onSubmit: (e) => {
+          // This comes into effect if the input is completely empty and the
+          // user hits Enter, which triggers the native form submission.
+          // When something *is* entered, the onKeyDown event is triggered
+          // on the <input> and within that handler you can
+          // access `event.key === 'Enter'` as a signal to submit the form.
+          e.preventDefault();
+        },
       })}
     >
       <label htmlFor="main-q" className="visually-hidden">
@@ -292,6 +298,22 @@ function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
           onKeyDown: (event) => {
             if (event.key === "Escape" && inputRef.current) {
               inputRef.current.blur();
+            } else if (
+              event.key === "Enter" &&
+              inputValue.trim() &&
+              highlightedIndex === -1
+            ) {
+              // Redirect to the search page!
+              if (inputRef.current) {
+                inputRef.current.blur();
+              }
+              const sp = new URLSearchParams();
+              sp.set("q", inputValue.trim());
+              // We need to simulate that you're submitting the form.
+              // That means, we need to not only change the current query string
+              // but the pathname too. Remember, the `setSearchParams()` only
+              // changes the `?...` portion of the URL.
+              navigate(`${formAction}?${sp.toString()}`);
             }
           },
           ref: (input) => {

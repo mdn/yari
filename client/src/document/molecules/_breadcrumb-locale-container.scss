@@ -1,0 +1,47 @@
+@use "sass:math";
+
+.breadcrumb-locale-container {
+  align-items: center;
+  background-color: $neutral-550;
+  display: flex;
+  padding: math.div($base-spacing, 2) $base-spacing;
+
+  @media #{$mq-small-desktop-and-up} {
+    margin: $base-spacing 0 0;
+  }
+
+  .breadcrumbs-container {
+    flex-basis: 80%;
+
+    @media #{$mq-tablet-and-up} {
+      flex-basis: 55%;
+    }
+
+    @media #{$mq-large-desktop-and-up} {
+      flex-basis: 75%;
+    }
+  }
+
+  .language-toggle {
+    flex-basis: 20%;
+
+    @media #{$mq-tablet-and-up} {
+      flex-basis: 45%;
+    }
+
+    @media #{$mq-large-desktop-and-up} {
+      flex-basis: 25%;
+    }
+  }
+
+  // when the breadcrumbs is the only item in the container
+  .breadcrumbs-container:last-child {
+    flex-basis: 100%;
+  }
+
+  // when the language toggle is the only item in the container
+  .language-toggle:only-child {
+    flex-basis: 100%;
+    justify-content: flex-end;
+  }
+}

@@ -10,6 +10,7 @@ CI = config("CI", default=False, cast=bool)
 
 CONTENT_ROOT = config("CONTENT_ROOT", default=None)
 CONTENT_TRANSLATED_ROOT = config("CONTENT_TRANSLATED_ROOT", default=None)
+CONTENT_ARCHIVED_ROOT = config("CONTENT_ARCHIVED_ROOT", default=None)
 
 DEFAULT_BUCKET_NAME = config("DEPLOYER_BUCKET_NAME", default="mdn-content-dev")
 DEFAULT_BUCKET_PREFIX = config("DEPLOYER_BUCKET_PREFIX", default="main")
@@ -48,3 +49,8 @@ SPEEDCURVE_DEPLOY_SITE_ID = config("SPEEDCURVE_DEPLOY_SITE_ID", default=None)
 # instance of Elasticsearch 7 and start it. Then set this environment variable
 # value to `http://localhost:9200`
 ELASTICSEARCH_URL = config("DEPLOYER_ELASTICSEARCH_URL", default=None)
+
+
+DEFAULT_REPO = config("GITHUB_REPOSITORY", default=None)
+
+DEFAULT_GITHUB_TOKEN = config("GITHUB_TOKEN", default=None)

@@ -1,0 +1,79 @@
+/* 
+This is based on node_modules/prismjs/themes/prism.css as of Mar 26, 2021.
+
+The reason we're not importing all of their CSS is because it contains a lot of
+selectors that we never use. In particular, it has (lots!) CSS for selectors
+like `pre[class*="language-"]` and `code[class*="language-"]` but because we
+don't use any of that, we can safely ignore it.
+*/
+
+@import "~@mdn/minimalist/sass/vars/color-palette";
+
+.token.comment,
+.token.prolog,
+.token.doctype,
+.token.cdata,
+.token.punctuation {
+  color: $neutral-300;
+}
+
+.token.namespace {
+  opacity: 0.7;
+}
+
+.token.property,
+.token.tag,
+.token.boolean,
+.token.number,
+.token.constant,
+.token.symbol,
+.token.deleted {
+  color: $red-100;
+}
+
+.token.selector,
+.token.attr-name,
+.token.string,
+.token.char,
+.token.builtin,
+.token.inserted {
+  color: $green-100;
+}
+
+.token.operator,
+.token.entity,
+.token.url,
+.language-css .token.string,
+.style .token.string {
+  color: $neutral-100;
+}
+
+.token.atrule,
+.token.attr-value,
+.token.keyword {
+  color: $primary-50;
+}
+
+.token.function,
+.token.class-name {
+  color: $red-200;
+}
+
+.token.regex,
+.token.important,
+.token.variable {
+  color: $orange-200;
+}
+
+.token.important,
+.token.bold {
+  font-weight: bold;
+}
+
+.token.italic {
+  font-style: italic;
+}
+
+.token.entity {
+  cursor: help;
+}

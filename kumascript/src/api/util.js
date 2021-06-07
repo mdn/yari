@@ -78,22 +78,6 @@ class HTMLTool {
     return this;
   }
 
-  removeOnEventHandlers() {
-    // Remove ALL on-event handlers.
-    this.$("*").each((i, e) => {
-      // Since "e.attribs" is an object with a "null"
-      // prototype, "key in e.attribs" is equivalent to
-      // "key of Object.keys(e.attribs)" since we don't
-      // have to worry about keys from the prototype.
-      for (const key in e.attribs) {
-        if (key.startsWith("on")) {
-          delete e.attribs[key];
-        }
-      }
-    });
-    return this;
-  }
-
   injectSectionIDs() {
     let idCount = 0;
     const $ = this.$;
@@ -157,9 +141,19 @@ class HTMLTool {
     // so let's simplify this as well as make it much faster.
     const sectionStart = $(`#${cssesc(sectionID, { isIdentifier: true })}`);
     if (!sectionStart.length) {
-      throw new KumascriptError(
-        `unable to find an HTML element with an "id" of "${sectionID}" within ${this.pathDescription}`
+      let errorMessage = `unable to find an HTML element with an "id" of "${sectionID}" within ${this.pathDescription}`;
+      const hasMoreThanAscii = [...sectionID].some(
+        (char) => char.charCodeAt(0) > 127
       );
+      if (hasMoreThanAscii) {
+        const cleanedSectionID = [...sectionID]
+          .filter((char) => char.charCodeAt(0) <= 127)
+          .join("");
+        errorMessage +=
+          ' -- hint! removing all non-ASCII characters in the "id" may fix this, so try ' +
+          `'id="${cleanedSectionID}"' and 'EmbedLiveSample("${cleanedSectionID}", ...)'`;
+      }
+      throw new KumascriptError(errorMessage);
     }
     let result;
     const sectionTag = sectionStart.get(0).tagName;
@@ -231,8 +225,8 @@ module.exports = {
   //
   // Stolen from http://underscorejs.org/#defaults
   defaults(obj, ...sources) {
-    for (let source of sources) {
-      for (var prop in source) {
+    for (const source of sources) {
+      for (const prop in source) {
         if (obj[prop] === void 0) obj[prop] = source[prop];
       }
     }
@@ -247,13 +241,13 @@ module.exports = {
    */
   preparePath(path) {
     if (path.charAt(0) != "/") {
-      path = "/" + path;
+      path = `/${path}`;
     }
     if (path.indexOf("/docs") == -1) {
       // HACK: If this looks like a legacy wiki URL, throw /en-US/docs
       // in front of it. That will trigger the proper redirection logic
       // until/unless URLs are corrected in templates
-      path = "/en-US/docs" + path;
+      path = `/en-US/docs${path}`;
     }
     return spacesToUnderscores(path);
   },
@@ -266,7 +260,7 @@ module.exports = {
    * @return {string}
    */
   htmlEscape(s) {
-    return ("" + s)
+    return `${s}`
       .replace(/&/g, "&amp;")
       .replace(/>/g, "&gt;")
       .replace(/</g, "&lt;")
@@ -274,9 +268,9 @@ module.exports = {
   },
 
   escapeQuotes(a) {
-    var b = "";
-    for (var i = 0, len = a.length; i < len; i++) {
-      var c = a[i];
+    let b = "";
+    for (let i = 0, len = a.length; i < len; i++) {
+      let c = a[i];
       if (c == '"') {
         c = "&quot;";
       }

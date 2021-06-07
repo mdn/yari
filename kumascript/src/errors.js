@@ -52,7 +52,7 @@ class SourceCodeError {
       this.sourceContext = this.sourceContext.replace(
         /^\s{0,4}(\d{1,5}) \| /gm,
         (match, p1) => {
-          return (parseInt(p1) + offsetDelta).toString().padStart(5) + " | ";
+          return `${(parseInt(p1) + offsetDelta).toString().padStart(5)} | `;
         }
       );
     }
@@ -76,26 +76,26 @@ class SourceCodeError {
       for (let i = 0; i < column + 7; i++) {
         arrow += "-";
       }
-      return arrow + "^";
+      return `${arrow}^`;
     }
 
     function formatLine(i, line) {
-      let lnum = ("      " + (i + 1)).substr(-5);
-      return lnum + " | " + line;
+      const lnum = `      ${i + 1}`.substr(-5);
+      return `${lnum} | ${line}`;
     }
 
-    let lines = source.split("\n");
+    const lines = source.split("\n");
 
     // Work out a range of lines to show for context around the error,
     // 2 before and after.
-    let errorLine = this.line - 1;
-    let startLine = Math.max(errorLine - 2, 0);
-    let endLine = Math.min(errorLine + 3, lines.length);
+    const errorLine = this.line - 1;
+    const startLine = Math.max(errorLine - 2, 0);
+    const endLine = Math.min(errorLine + 3, lines.length);
 
     // Assemble the lines of error context, inject the column pointer
     // at the appropriate spot after the error line.
-    var context = [];
-    for (var i = startLine; i < endLine; i++) {
+    const context = [];
+    for (let i = startLine; i < endLine; i++) {
       context.push(formatLine(i, lines[i]));
       if (i == errorLine) {
         context.push(arrow(this.column));

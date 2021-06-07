@@ -44,6 +44,9 @@ let data = {
 let slug = env.slug;
 let locale = env.locale;
 let name = $0 || (slug ? slug.split("/").pop().toLowerCase() : "preview-wiki-content");
+// "Conflicting" documents have an MD5 postfix to deal with multiple conflicting documents.
+// In here we need a clean name so remove the MD5 part.
+name = name.replace(/(.*)_[a-f0-9]{32}$/, (_, x) => x);
 let atRule = $1;
 let rawSyntax = "";
 let formattedSyntax = "";
@@ -138,7 +141,7 @@ let typeInfo = {
 
 let operators = [
     {
-        regexp: /\#/g,
+        regexp: /#/g,
         title: mdn.localString({
             "en-US": "Hash mark: the entity is repeated one or several times, each occurence separated by a comma",
             "de": "Rautensymbol: Die Entität wird einmal oder mehrmals wiederholt, wobei jedes Vorkommen durch ein Komma getrennt wird"
@@ -160,7 +163,7 @@ let operators = [
         })
     },
     {
-        regexp: /[^\|](\|)[^\|]/g,
+        regexp: /[^|](\|)[^|]/g,
         title: mdn.localString({
             "en-US": "Single bar: exactly one of the entities must be present",
             "de"   : "Einfacher Balken: Genau eine der Entitäten muss angegeben werden"
@@ -193,7 +196,7 @@ let operators = [
         })
     },
     {
-        regexp: /([^\/])\*(?!\/)/g,
+        regexp: /([^/])\*(?!\/)/g,
         title: mdn.localString({
             "en-US": "Asterisk: the entity may occur zero, one or several times",
             "de"   : "Asterisk: Die Entität kann keinmal, einmal oder mehrmals vorkommen"
@@ -252,7 +255,7 @@ let operators = [
 async function buildLink(match, type) {
     var link = "/" + locale + "/docs/Web/CSS/";
     var title = "";
-    var propertyName = type.match(/\'(.+?)\'/);
+    var propertyName = type.match(/'(.+?)'/);
 
     // Handle property references like <'color'>
     if (propertyName) {
@@ -330,7 +333,7 @@ async function formatSyntax(rawSyntax) {
     });
     formattedSyntax = await string.asyncReplace(
         formattedSyntax,
-        /<([a-z0-9\(\)\'\-]+?)>/gi,
+        /<([a-z0-9()'-]+?)>/gi,
         buildLink
     );
 
@@ -407,11 +410,11 @@ if (name === "preview-wiki-content") {
         localize(localStrings, "info_in_preview_not_available") + "</span>";
 } else {
     if (atRule) {
-        if (data.atRules[atRule] && data.atRules[atRule].descriptors) {
+        if (data.atRules[atRule] && data.atRules[atRule].descriptors && data.atRules[atRule].descriptors[name]) {
             rawSyntax = data.atRules[atRule].descriptors[name].syntax;
         }
     } else if (name[0] === "@") {
-        if (data.atRules[name].syntax) {
+        if (data.atRules[name] && data.atRules[name].syntax) {
             rawSyntax = data.atRules[name].syntax;
         }
     } else if (name[0] === ":" && typeof data.selectors[name] !== 'undefined') {
@@ -430,4 +433,8 @@ if (!formattedSyntax) {
     throw new Error(`No syntax found in DB for '${name}'`);
 }
 
-%><%- formattedSyntax %>
+const rtlLocales = ['ar', 'he', 'fa'];
+const rtl = rtlLocales.includes(env.locale);
+const out = `<pre${rtl ? ' dir="rtl"' : ""}>${formattedSyntax}</pre>`
+
+%><%- out %>

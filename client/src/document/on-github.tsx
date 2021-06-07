@@ -105,8 +105,7 @@ function NewIssueOnGitHubLink({ doc }: { doc: Doc }) {
     doc.title.length > maxLength
       ? `${doc.title.slice(0, maxLength)}…`
       : doc.title;
-  sp.set("title", `Issue with "${titleShort}": …`);
-  sp.append("labels", "needs triage");
+  sp.set("title", `Issue with "${titleShort}": (short summary here please)`);
 
   const slug = doc.mdn_url.split("/docs/")[1].toLowerCase();
   let contentLabel = "";
@@ -119,7 +118,7 @@ function NewIssueOnGitHubLink({ doc }: { doc: Doc }) {
   if (!contentLabel) {
     contentLabel = "Other";
   }
-  sp.append("labels", `Content: ${contentLabel}`);
+  sp.set("labels", `Content:${contentLabel},needs-triage`);
 
   const href = `${baseURL}?${sp.toString()}`;
 

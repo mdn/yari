@@ -2,6 +2,7 @@ const cheerio = require("cheerio");
 
 const Parser = require("./parser.js");
 const { VALID_LOCALES, Document, Redirect } = require("../../content");
+const { m2hSync } = require("../../markdown");
 
 const DUMMY_BASE_URL = "https://example.com";
 
@@ -34,7 +35,7 @@ function repairURL(url) {
   url = url.trim().toLowerCase();
   if (!url.startsWith("/")) {
     // Ensure the URI starts with a "/".
-    url = "/" + url;
+    url = `/${url}`;
   }
   // Remove redundant forward slashes, like "//".
   url = url.replace(/\/{2,}/g, "/");
@@ -47,7 +48,7 @@ function repairURL(url) {
     } else {
       // Converts URI's like "/web/..." to "/en-us/web/...", or
       // URI's like "/docs/..." to "/en-us/docs/...".
-      url = "/en-us" + url;
+      url = `/en-us${url}`;
     }
   }
   // Ensure the locale is followed by "/docs".
@@ -190,13 +191,14 @@ const info = {
     }
 
     const { locale, slug, title, tags } = document.metadata;
+    const { rawBody, isMarkdown } = document;
     return {
       url: document.url,
       locale,
       slug,
       title,
       tags: tags || [],
-      translations: [], //TODO Object.freeze(buildTranslationObjects(data)),
+      translations: [], // TODO Object.freeze(buildTranslationObjects(data)),
       get summary() {
         // Back in the old Kuma days we used to store the summary as another piece
         // of metadata on each document. It was always available, with any kumascript
@@ -204,8 +206,8 @@ const info = {
         // In Yari, this is not possible. We don't duplicate the summary in every
         // document. Instead, we extract it from the document when we build it.
         // So, to avoid the whole chicken-and-egg problem, instead, we're going to
-        //  try to extract it on-the-fly, from raw HTML.
-        // Note, we can't always use Cheerio here because the `document.rawHTML` is
+        // try to extract it on-the-fly, from raw HTML or Markdown.
+        // Note, we can't always use Cheerio here because the `document.rawBody` is
         // actually not valid HTML, hence the desperate fall back on regex.
         // A lot of times, you'll actually find that the first paragraph isn't
         // a <p> tag. But often, in those cases it'll have that `seoSummary`
@@ -217,7 +219,7 @@ const info = {
         let $ = null;
         let summary = "";
         try {
-          $ = cheerio.load(document.rawHTML);
+          $ = cheerio.load(isMarkdown ? m2hSync(rawBody) : rawBody);
           $("span.seoSummary, .summary").each((i, element) => {
             if (!summary) {
               const html = $(element)
@@ -243,7 +245,7 @@ const info = {
           }
         } catch (er) {
           console.warn(
-            `Cheerio on document.rawHTML (${document.url}) failed to parse`,
+            `Cheerio on document.rawBody (${document.url}) failed to parse`,
             er
           );
         }
@@ -289,7 +291,7 @@ function postProcessSummaryHTMLSnippet(text, document) {
 
   let output = "";
 
-  for (let token of tokens) {
+  for (const token of tokens) {
     if (token.type !== "MACRO") {
       // If it isn't a MACRO token, it's a TEXT token.
       output += token.chars;
@@ -305,7 +307,7 @@ function postProcessSummaryHTMLSnippet(text, document) {
       continue;
     }
 
-    let macroName = token.name.toLowerCase();
+    const macroName = token.name.toLowerCase();
 
     // Some macros do have arguments, but there's no good reason to render them out
     // for the benefit of a summary, in this context.

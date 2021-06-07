@@ -1,0 +1,78 @@
+@use "sass:math";
+
+@import "~@mdn/minimalist/sass/mixins/utils";
+@import "~@mdn/minimalist/sass/vars/color-palette";
+@import "~@mdn/minimalist/sass/vars/layout";
+
+ul.language-toggle {
+  display: flex;
+  position: relative;
+  text-align: right;
+  top: -3px;
+
+  @media #{$mq-tablet-and-up} {
+    justify-content: flex-end;
+    text-align: inherit;
+    top: -2px;
+  }
+
+  .icon {
+    margin: 0;
+  }
+
+  li {
+    max-height: 24px;
+  }
+
+  .language-icon {
+    display: inline-block;
+    min-width: 50px;
+    width: auto;
+
+    // always set min-width for the English link
+    &.default {
+      min-width: 100px;
+    }
+
+    // set the same min-width as above for both the English
+    // and change language link on tablet and larger
+    @media #{$mq-tablet-and-up} {
+      min-width: 100px;
+    }
+
+    &::before {
+      background: transparent url("~@mdn/dinocons/general/language.svg") 0 0
+        no-repeat;
+      content: "";
+      display: inline-block;
+      height: 29px;
+      vertical-align: middle;
+      width: 28px;
+    }
+
+    &::after {
+      content: "|";
+      display: inline-block;
+      margin: 0 math.div($base-spacing, 4);
+    }
+  }
+
+  &.single-option {
+    justify-content: flex-end;
+
+    .language-icon {
+      &::after {
+        display: none;
+      }
+    }
+  }
+}
+
+.show-desktop {
+  @include visually-hidden();
+
+  @media #{$mq-tablet-and-up} {
+    @include reset-visually-hidden();
+    margin: 0;
+  }
+}

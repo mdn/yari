@@ -1,9 +1,13 @@
+const fs = require("fs");
+const path = require("path");
+
 const chalk = require("chalk");
 const cheerio = require("cheerio");
 
 const {
   Document,
   CONTENT_ROOT,
+  Image,
   REPOSITORY_URLS,
   execGit,
 } = require("../content");
@@ -24,7 +28,15 @@ const { getPageTitle } = require("./page-title");
 const { syntaxHighlight } = require("./syntax-highlight");
 const buildOptions = require("./build-options");
 const { gather: gatherGitHistory } = require("./git-history");
+const { buildSPAs } = require("./spas");
 const { renderCache: renderKumascriptCache } = require("../kumascript");
+const LANGUAGES_RAW = require("../content/languages.json");
+
+const LANGUAGES = new Map(
+  Object.entries(LANGUAGES_RAW).map(([locale, data]) => {
+    return [locale.toLowerCase(), data];
+  })
+);
 
 const DEFAULT_BRANCH_NAME = "main"; // That's what we use for github.com/mdn/content
 
@@ -104,14 +116,76 @@ function injectLoadingLazyAttributes($) {
 }
 
 /**
- * Find all `in-page-callout` div elements and rewrite
- * to be just `callout`, no more need to mark them as `webdev`
+ * For every `<a href="http...">` make it
+ * `<a href="http..." class="external" and rel="noopener">`
+ *
+ *
  * @param {Cheerio document instance} $
  */
-function injectInPageCallout($) {
-  $("div.in-page-callout")
-    .addClass("callout")
-    .removeClass("in-page-callout webdev");
+function postProcessExternalLinks($) {
+  $("a[href^=http]").each((i, element) => {
+    const $a = $(element);
+    if ($a.attr("href").startsWith("https://developer.mozilla.org")) {
+      // This should have been removed since it's considered a flaw.
+      // But we haven't applied all fixable flaws yet and we still have to
+      // support translated content which is quite a long time away from
+      // being entirely treated with the fixable flaws cleanup.
+      return;
+    }
+    $a.addClass("external");
+    const rel = ($a.attr("rel") || "").split(" ");
+    if (!rel.includes("noopener")) {
+      rel.push("noopener");
+      $a.attr("rel", rel.join(" "));
+    }
+  });
+}
+
+/**
+ * For every `<a href="THING">`, where 'THING' is not a http or / link, make it
+ * `<a href="$CURRENT_PATH/THING">`
+ *
+ *
+ * @param {Cheerio document instance} $
+ */
+function postLocalFileLinks($, doc) {
+  $("a[href]").each((i, element) => {
+    const href = element.attribs.href;
+
+    // This test is merely here to quickly bail if there's no hope to find the
+    // image as a local file link. `Image.findByURL()` is fast but there are
+    // a LOT of hyperlinks throughout the content and this simple if statement
+    // means we can skip 99% of the links, so it's presumed to be worth it.
+    if (
+      !href ||
+      /^(\/|\.\.|http|#|mailto:|about:|ftp:|news:|irc:|ftp:)/i.test(href)
+    ) {
+      return;
+    }
+    // There are a lot of links that don't match. E.g. `<a href="SubPage">`
+    // So we'll look-up a lot "false positives" that are not images.
+    // Thankfully, this lookup is fast.
+    const url = `${doc.mdn_url}/${href}`;
+    const image = Image.findByURL(url);
+    if (image) {
+      $(element).attr("href", url);
+    }
+  });
+}
+
+/**
+ * Fix the heading IDs so they're all lower case.
+ *
+ * @param {Cheerio document instance} $
+ */
+function postProcessSmallerHeadingIDs($) {
+  $("h4[id], h5[id], h6[id]").each((i, element) => {
+    const id = element.attribs.id;
+    const lcID = id.toLowerCase();
+    if (id !== lcID) {
+      $(element).attr("id", lcID);
+    }
+  });
 }
 
 /**
@@ -131,11 +205,11 @@ function injectNotecardOnWarnings($) {
  * Return the full URL directly to the file in GitHub based on this folder.
  * @param {String} folder - the current folder we're processing.
  */
-function getGitHubURL(root, folder) {
+function getGitHubURL(root, folder, filename) {
   const baseURL = `https://github.com/${REPOSITORY_URLS[root]}`;
   return `${baseURL}/blob/${getCurrentGitBranch(
     root
-  )}/files/${folder}/index.html`;
+  )}/files/${folder}/${filename}`;
 }
 
 /**
@@ -150,10 +224,12 @@ function getLastCommitURL(root, hash) {
 function injectSource(doc, document, metadata) {
   const folder = document.fileInfo.folder;
   const root = document.fileInfo.root;
+  const filename = path.basename(document.fileInfo.path);
   doc.source = {
     folder,
-    github_url: getGitHubURL(root, folder),
+    github_url: getGitHubURL(root, folder, filename),
     last_commit_url: getLastCommitURL(root, metadata.hash),
+    filename,
   };
 }
 
@@ -170,7 +246,8 @@ function makeTOC(doc) {
     .map((section) => {
       if (
         (section.type === "prose" ||
-          section.type === "browser_compatibility") &&
+          section.type === "browser_compatibility" ||
+          section.type === "specifications") &&
         section.value.id &&
         section.value.title &&
         !section.value.isH3
@@ -182,6 +259,24 @@ function makeTOC(doc) {
     .filter(Boolean);
 }
 
+/**
+ * Return an array of all images that are inside the documents source folder.
+ *
+ * @param {Document} document
+ */
+function getAdjacentImages(documentDirectory) {
+  const dirents = fs.readdirSync(documentDirectory, { withFileTypes: true });
+  return dirents
+    .filter((dirent) => {
+      // This needs to match what we do in filecheck/checker.py
+      return (
+        !dirent.isDirectory() &&
+        /\.(png|jpeg|jpg|gif|svg|webp)$/i.test(dirent.name)
+      );
+    })
+    .map((dirent) => path.join(documentDirectory, dirent.name));
+}
+
 async function buildDocument(document, documentOptions = {}) {
   // Important that the "local" document options comes last.
   // And use Object.assign to create a new object instead of mutating the
@@ -189,9 +284,16 @@ async function buildDocument(document, documentOptions = {}) {
   const options = Object.assign({}, buildOptions, documentOptions);
   const { metadata, fileInfo } = document;
 
+  if (Document.urlToFolderPath(document.url) !== document.fileInfo.folder) {
+    throw new Error(
+      `The document's slug (${metadata.slug}) doesn't match its disk folder name (${document.fileInfo.folder})`
+    );
+  }
+
   const doc = {
     isArchive: document.isArchive,
     isTranslated: document.isTranslated,
+    isActive: document.isActive,
   };
 
   doc.flaws = {};
@@ -201,10 +303,13 @@ async function buildDocument(document, documentOptions = {}) {
   const liveSamples = [];
 
   if (doc.isArchive) {
-    renderedHtml = document.rawHTML;
+    if (document.isMarkdown) {
+      throw new Error("Markdown not supported for archived content");
+    }
+    renderedHtml = document.rawBody;
   } else {
     if (options.clearKumascriptRenderCache) {
-      renderKumascriptCache.clear();
+      renderKumascriptCache.reset();
     }
     try {
       [renderedHtml, flaws] = await kumascript.render(document.url);
@@ -227,7 +332,7 @@ async function buildDocument(document, documentOptions = {}) {
 
     const sampleIds = kumascript.getLiveSampleIDs(
       document.metadata.slug,
-      document.rawHTML
+      document.rawBody
     );
     for (const sampleIdObject of sampleIds) {
       const liveSamplePage = kumascript.buildLiveSamplePage(
@@ -237,7 +342,24 @@ async function buildDocument(document, documentOptions = {}) {
         sampleIdObject
       );
       if (liveSamplePage.flaw) {
-        flaws.push(liveSamplePage.flaw.updateFileInfo(fileInfo));
+        const flaw = liveSamplePage.flaw.updateFileInfo(fileInfo);
+        if (flaw.name === "MacroLiveSampleError") {
+          // As of April 2021 there are 0 pages in mdn/content that trigger
+          // a MacroLiveSampleError. So we can be a lot more strict with en-US
+          // until the translated-content has had a chance to clean up all
+          // their live sample errors.
+          // See https://github.com/mdn/yari/issues/2489
+          if (document.metadata.locale === "en-US") {
+            throw new Error(
+              `MacroLiveSampleError within ${flaw.filepath}, line ${flaw.line} column ${flaw.column} (${flaw.error.message})`
+            );
+          } else {
+            console.warn(
+              `MacroLiveSampleError within ${flaw.filepath}, line ${flaw.line} column ${flaw.column} (${flaw.error.message})`
+            );
+          }
+        }
+        flaws.push(flaw);
         continue;
       }
       liveSamples.push({
@@ -267,15 +389,21 @@ async function buildDocument(document, documentOptions = {}) {
         // kumascript rendering, so we "beef it up" to have convenient
         // attributes needed.
         doc.flaws.macros = flaws.map((flaw, i) => {
-          const fixable =
+          let fixable = false;
+          let suggestion = null;
+          if (flaw.name === "MacroDeprecatedError") {
+            fixable = true;
+            suggestion = "";
+          } else if (
             flaw.name === "MacroRedirectedLinkError" &&
-            (!flaw.filepath || flaw.filepath === document.fileInfo.path);
-          const suggestion = fixable
-            ? flaw.macroSource.replace(
-                flaw.redirectInfo.current,
-                flaw.redirectInfo.suggested
-              )
-            : null;
+            (!flaw.filepath || flaw.filepath === document.fileInfo.path)
+          ) {
+            fixable = true;
+            suggestion = flaw.macroSource.replace(
+              flaw.redirectInfo.current,
+              flaw.redirectInfo.suggested
+            );
+          }
           const id = `macro${i}`;
           const explanation = flaw.error.message;
           return Object.assign({ id, fixable, suggestion, explanation }, flaw);
@@ -293,13 +421,21 @@ async function buildDocument(document, documentOptions = {}) {
 
   const $ = cheerio.load(`<div id="_body">${renderedHtml}</div>`);
 
-  // Remove those '<span class="alllinks"><a href="/en-US/docs/tag/Web">View All...</a></span>' links.
-  // If a document has them, they don't make sense in a Yari world anyway.
-  $("span.alllinks").remove();
+  // Kumascript rendering can't know about FLAW_LEVELS when it's building,
+  // because injecting it there would cause a circular dependency.
+  // So, let's post-process the rendered HTML now afterwards.
+  // If the flaw levels for `macros` was to ignore, we can delete all the
+  // injected `data-flaw-src="..."` attributes.
+  if (options.flawLevels.get("macros") === FLAW_LEVELS.IGNORE) {
+    // This helps the final production built HTML since there `data-flaw-src`
+    // attributes on the HTML is useless.
+    $("[data-flaw-src]").removeAttr("data-flaw-src");
+  }
 
   doc.title = metadata.title;
   doc.mdn_url = document.url;
   doc.locale = metadata.locale;
+  doc.native = LANGUAGES.get(doc.locale.toLowerCase()).native;
 
   // Note that 'extractSidebar' will always return a string.
   // And if it finds a sidebar section, it gets removed from '$' too.
@@ -308,6 +444,14 @@ async function buildDocument(document, documentOptions = {}) {
 
   // Check and scrutinize any local image references
   const fileAttachments = checkImageReferences(doc, $, options, document);
+  // Not all images are referenced as `<img>` tags. Some are just sitting in the
+  // current document's folder and they might be referenced in live samples.
+  // The checkImageReferences() does 2 things. Checks image *references* and
+  // it returns which images it checked. But we'll need to complement any
+  // other images in the folder.
+  getAdjacentImages(path.dirname(document.fileInfo.path)).forEach((fp) =>
+    fileAttachments.add(fp)
+  );
 
   // Check the img tags for possible flaws and possible build-time rewrites
   checkImageWidths(doc, $, options, document);
@@ -346,11 +490,11 @@ async function buildDocument(document, documentOptions = {}) {
     throw error;
   }
 
-  // Now that live samples have been extracted, lets remove all the `pre` tags
-  // that were used for that. If we don't do this, the `pre` tags will be
+  // Now that live samples have been extracted, lets remove all the `div.hidden` tags
+  // that were used for that. If we don't do this, for example, the `pre` tags will be
   // syntax highligted, which is a waste because they're going to be invisible
   // anyway.
-  $("div.hidden pre").remove();
+  $("div.hidden").remove();
 
   // Apply syntax highlighting all <pre> tags.
   syntaxHighlight($, doc);
@@ -362,13 +506,18 @@ async function buildDocument(document, documentOptions = {}) {
   // Add the `loading=lazy` HTML attribute to the appropriate elements.
   injectLoadingLazyAttributes($);
 
-  // All content that uses `<div class="in-page-callout">` needs to
-  // become `<div class="callout">`
-  // Some day, we can hopefully do a mass search-and-replace so we never
-  // need to do this code here.
-  // We might want to delete this injection in 2021 some time when all content's
-  // raw HTML has been fixed to always have it in there already.
-  injectInPageCallout($);
+  // All external hyperlinks should have the `external` class name.
+  postProcessExternalLinks($);
+
+  // All internal hyperlinks to a file should become "absolute" URLs
+  postLocalFileLinks($, doc);
+
+  // Since all anchor links are forced into lower case, and `<h2>` and `<h3>`
+  // is taken care of by the React rendering itself, we have to post-process
+  // any possible headings whose ID might not be perfect.
+  // The reason we can't do this as part of the kumascript rendering is because
+  // the old
+  postProcessSmallerHeadingIDs($);
 
   // All content that uses `<div class="warning">` needs to become
   // `<div class="warning notecard">` instead.
@@ -419,9 +568,8 @@ async function buildDocument(document, documentOptions = {}) {
     if (translationOf) {
       otherTranslations.push({
         locale: "en-US",
-        // slug: translationOf.metadata.slug,
-        url: translationOf.url,
         title: translationOf.metadata.title,
+        native: LANGUAGES.get("en-us").native,
       });
     }
   }
@@ -439,19 +587,24 @@ async function buildDocument(document, documentOptions = {}) {
 
   doc.pageTitle = getPageTitle(doc);
 
+  // Decide whether it should be indexed (sitemaps, robots meta tag, search-index)
+  doc.noIndexing =
+    (doc.isArchive && !doc.isTranslated) ||
+    metadata.slug === "MDN/Kitchensink" ||
+    document.metadata.slug.startsWith("orphaned/") ||
+    document.metadata.slug.startsWith("conflicting/");
+
   return { doc, liveSamples, fileAttachments, bcdData };
 }
 
-async function buildDocumentFromURL(url, documentOptions = {}) {
-  const document = Document.findByURL(url);
-  if (!document) {
-    return null;
-  }
-  return await buildDocument(document, documentOptions);
-}
-
 async function buildLiveSamplePageFromURL(url) {
-  const [documentURL, sampleID] = url.split("/_samples_/");
+  // The 'url' is expected to be something
+  // like '/en-us/docs/foo/bar/_sample_.myid.html' and from that we want to
+  // extract '/en-us/docs/foo/bar' and 'myid'. But only if it matches.
+  if (!url.endsWith(".html") || !url.includes("/_sample_.")) {
+    throw new Error(`Unexpected URL format to extract live sample ('${url}')`);
+  }
+  const [documentURL, sampleID] = url.split(/\.html$/)[0].split("/_sample_.");
   const document = Document.findByURL(documentURL);
   if (!document) {
     throw new Error(`No document found for ${documentURL}`);
@@ -460,7 +613,7 @@ async function buildLiveSamplePageFromURL(url) {
   // the actual sampleID object with the properly-cased live-sample ID.
   for (const sampleIDObject of kumascript.getLiveSampleIDs(
     document.metadata.slug,
-    document.rawHTML
+    document.rawBody
   )) {
     if (sampleIDObject.id.toLowerCase() === sampleID) {
       const liveSamplePage = kumascript.buildLiveSamplePage(
@@ -498,7 +651,6 @@ module.exports = {
 
   buildDocument,
 
-  buildDocumentFromURL,
   buildLiveSamplePageFromURL,
   renderContributorsTxt,
 
@@ -506,4 +658,6 @@ module.exports = {
 
   options: buildOptions,
   gatherGitHistory,
+  buildSPAs,
+  getLastCommitURL,
 };

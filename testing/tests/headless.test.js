@@ -6,7 +6,7 @@ const { setDefaultOptions } = require("expect-puppeteer");
 setDefaultOptions({ timeout: 1500 });
 
 function testURL(pathname = "/") {
-  return "http://localhost:5000" + pathname;
+  return `http://localhost:5000${pathname}`;
 }
 
 describe("Basic viewing of functional pages", () => {
@@ -29,14 +29,15 @@ describe("Basic viewing of functional pages", () => {
     await expect(page).toMatchElement("h1", {
       text: "<foo>: Une page de test",
     });
-    await expect(page).toSelect('select[name="language"]', "English (US)");
-    await expect(page).toClick("button", { text: "Change language" });
+    await expect(page).toClick("a.view-in-english", {
+      text: "View in English",
+    });
     await expect(page).toMatchElement("h1", { text: "<foo>: A test tag" });
     // Should have been redirected too...
     // Note! It's important that this happens *after* the `.toMatchElement`
     // on the line above because expect-puppeteer doesn't have a wait to
     // properly wait for the (pushState) URL to have changed.
-    expect(page.url()).toBe(testURL("/en-US/docs/Web/Foo"));
+    expect(page.url()).toBe(testURL("/en-US/docs/Web/Foo/"));
   });
 
   it("open the /en-US/docs/Web/InteractiveExample page", async () => {
@@ -51,10 +52,10 @@ describe("Basic viewing of functional pages", () => {
 
   it("open the /en-US/docs/Learn/CSS/CSS_layout/Introduction page", async () => {
     const uri = "/en-US/docs/Learn/CSS/CSS_layout/Introduction";
-    const flexSample1Uri = `${uri}/Flex/_samples_/Flex_1`;
-    const flexSample2Uri = `${uri}/Flex/_samples_/Flex_2`;
-    const gridSample1Uri = `${uri}/Grid/_samples_/Grid_1`;
-    const gridSample2Uri = `${uri}/_samples_/Grid_2`;
+    const flexSample1Uri = `${uri}/Flex/_sample_.Flex_1.html`;
+    const flexSample2Uri = `${uri}/Flex/_sample_.Flex_2.html`;
+    const gridSample1Uri = `${uri}/Grid/_sample_.Grid_1.html`;
+    const gridSample2Uri = `${uri}/_sample_.Grid_2.html`;
     await page.goto(testURL(uri));
     await expect(page).toMatch("A Test Introduction to CSS layout");
     await expect(page).toMatchElement("h1", {
@@ -64,22 +65,22 @@ describe("Basic viewing of functional pages", () => {
       text: "Flexbox",
     });
     await expect(page).toMatchElement(
-      `iframe.live-sample-frame.sample-code-frame[src$="${flexSample1Uri}"]`
+      `iframe.sample-code-frame[src$="${flexSample1Uri}"]`
     );
     await expect(page).toMatchElement(
-      `iframe.live-sample-frame.sample-code-frame[src$="${flexSample2Uri}"]`
+      `iframe.sample-code-frame[src$="${flexSample2Uri}"]`
     );
     await expect(page).toMatchElement("#grid_layout", {
       text: "Grid Layout",
     });
     await expect(page).toMatchElement(
-      `iframe.live-sample-frame.sample-code-frame[src$="${gridSample1Uri}"]`
+      `iframe.sample-code-frame[src$="${gridSample1Uri}"]`
     );
-    await expect(page).toMatchElement("#Grid_2 > pre.css.notranslate", {
+    await expect(page).toMatchElement("#Grid_2 pre.css.notranslate", {
       text: /\.wrapper\s*\{\s*display:\s*grid;/,
     });
     await expect(page).toMatchElement(
-      `iframe.live-sample-frame.sample-code-frame[src$="${gridSample2Uri}"]`
+      `iframe.sample-code-frame[src$="${gridSample2Uri}"]`
     );
     // Ensure that the live-sample pages were built.
     for (const sampleUri of [
@@ -103,8 +104,8 @@ describe("Basic viewing of functional pages", () => {
 
   it("open the /en-US/docs/Learn/CSS/CSS_layout/Introduction/Flex page", async () => {
     const uri = "/en-US/docs/Learn/CSS/CSS_layout/Introduction/Flex";
-    const flexSample1Uri = `${uri}/_samples_/Flex_1`;
-    const flexSample2Uri = `${uri}/_samples_/Flex_2`;
+    const flexSample1Uri = `${uri}/_sample_.Flex_1.html`;
+    const flexSample2Uri = `${uri}/_sample_.Flex_2.html`;
     await page.goto(testURL(uri));
     await expect(page).toMatch("A Test Introduction to CSS Flexbox Layout");
     await expect(page).toMatchElement("h1", {
@@ -113,24 +114,24 @@ describe("Basic viewing of functional pages", () => {
     await expect(page).toMatchElement("#flexbox", {
       text: "Flexbox",
     });
-    await expect(page).toMatchElement("#Flex_1 > pre.css.notranslate", {
+    await expect(page).toMatchElement("#Flex_1 pre.css.notranslate", {
       text: /\.wrapper\s*\{\s*display:\s*flex;\s*\}/,
     });
     await expect(page).toMatchElement(
-      `iframe.live-sample-frame.sample-code-frame[src$="${flexSample1Uri}"]`
+      `iframe.sample-code-frame[src$="${flexSample1Uri}"]`
     );
-    await expect(page).toMatchElement("#Flex_2 > pre.css.notranslate", {
+    await expect(page).toMatchElement("#Flex_2 pre.css.notranslate", {
       text: /\.wrapper\s*\{\s*display:\s*flex;\s*\}.+flex:\s*1;/,
     });
     await expect(page).toMatchElement(
-      `iframe.live-sample-frame.sample-code-frame[src$="${flexSample2Uri}"]`
+      `iframe.sample-code-frame[src$="${flexSample2Uri}"]`
     );
   });
 
   it("open the /en-US/docs/Learn/CSS/CSS_layout/Introduction/Grid page", async () => {
     const uri = "/en-US/docs/Learn/CSS/CSS_layout/Introduction/Grid";
-    const gridSample1Uri = `${uri}/_samples_/Grid_1`;
-    const gridSample2Uri = `${uri}/_samples_/Grid_2`;
+    const gridSample1Uri = `${uri}/_sample_.Grid_1.html`;
+    const gridSample2Uri = `${uri}/_sample_.Grid_2.html`;
     await page.goto(testURL(uri));
     await expect(page).toMatch("A Test Introduction to CSS Grid Layout");
     await expect(page).toMatchElement("h1", {
@@ -139,17 +140,17 @@ describe("Basic viewing of functional pages", () => {
     await expect(page).toMatchElement("#grid_layout", {
       text: "Grid Layout",
     });
-    await expect(page).toMatchElement("#Grid_1 > pre.css.notranslate", {
+    await expect(page).toMatchElement("#Grid_1 pre.css.notranslate", {
       text: /\.wrapper\s*\{\s*display:\s*grid;/,
     });
     await expect(page).toMatchElement(
-      `iframe.live-sample-frame.sample-code-frame[src$="${gridSample1Uri}"]`
+      `iframe.sample-code-frame[src$="${gridSample1Uri}"]`
     );
-    await expect(page).toMatchElement("#Grid_2 > pre.css.notranslate", {
+    await expect(page).toMatchElement("#Grid_2 pre.css.notranslate", {
       text: /\.wrapper\s*\{\s*display:\s*grid;.+\.box1\s*\{/,
     });
     await expect(page).toMatchElement(
-      `iframe.live-sample-frame.sample-code-frame[src$="${gridSample2Uri}"]`
+      `iframe.sample-code-frame[src$="${gridSample2Uri}"]`
     );
     // Ensure that the live-sample page "gridSample2Uri" was built.
     await page.goto(testURL(gridSample2Uri));
@@ -184,7 +185,7 @@ describe("Basic viewing of functional pages", () => {
     // For more information, see
     // https://github.com/puppeteer/puppeteer/issues/2977#issuecomment-412807613
     await page.evaluate(() => {
-      document.querySelector(".breadcrumbs a").click();
+      document.querySelector(".breadcrumbs-container a").click();
     });
     await expect(page).toMatchElement("h1", {
       text: "Web technology for developers",
@@ -217,15 +218,156 @@ describe("Basic viewing of functional pages", () => {
   });
 
   it("should suggest the en-US equivalent on non-en-US pages not found", async () => {
-    await page.goto(testURL("/sv-SE/docs/Web/foo"));
+    await page.goto(testURL("/ja/docs/Web/foo"));
     await expect(page).toMatch("Page not found");
-    await expect(page).toMatch("/sv-SE/docs/Web/foo could not be found");
-    // Simply by swapping the "sv-SE" for "en-US" it's able to find the index.json
+    await expect(page).toMatch("/ja/docs/Web/foo could not be found");
+    // Simply by swapping the "ja" for "en-US" it's able to find the index.json
     // for that slug and present a link to it.
     await expect(page).toMatch("Good news!");
     await expect(page).toMatchElement("a", {
       text: "<foo>: A test tag",
       href: "/en-US/docs/Web/Foo",
     });
+  });
+
+  it("should give the home page and see Hacks blog posts", async () => {
+    await page.goto(testURL("/en-US/"));
+    await expect(page).toMatch("Resources for developers, by developers.");
+    await expect(page).toMatch("Hacks Blog");
+
+    // One home page for every built locale
+    await page.goto(testURL("/fr/"));
+    await expect(page).toMatch("Resources for developers, by developers.");
+  });
+
+  it("should be able to switch from French to English, set a cookie, and back again", async () => {
+    await page.goto(testURL("/fr/docs/Web/Foo"));
+    await expect(page).toMatch("<foo>: Une page de test");
+    await expect(page).toSelect('select[name="language"]', "English (US)");
+    await expect(page).toClick("button", { text: "Change language" });
+    await expect(page).toMatch("<foo>: A test tag");
+    expect(page.url()).toBe(testURL("/en-US/docs/Web/Foo/"));
+
+    // And change back to French
+    await expect(page).toSelect('select[name="language"]', "Français");
+    await expect(page).toClick("button", { text: "Change language" });
+    await expect(page).toMatch("<foo>: Une page de test");
+    expect(page.url()).toBe(testURL("/fr/docs/Web/Foo/"));
+  });
+
+  it("clicking 'Sign in' should offer links to all identity providers", async () => {
+    await page.goto(testURL("/en-US/docs/Web/Foo"));
+    await expect(page).toClick("a", { text: "Sign in" });
+    await expect(page).toMatchElement("h1", { text: "Sign in" });
+    expect(page.url()).toContain(
+      testURL(
+        `/en-US/signin?${new URLSearchParams(
+          "next=/en-US/docs/Web/Foo"
+        ).toString()}`
+      )
+    );
+    await expect(page).toMatchElement("a", { text: "Google" });
+    await expect(page).toMatchElement("a", { text: "GitHub" });
+  });
+
+  it("going to 'Sign up' page without query string", async () => {
+    await page.goto(testURL("/en-US/signup"));
+    await expect(page).toMatchElement("h1", {
+      text: "Sign in to MDN Web Docs",
+    });
+    await expect(page).toMatch("Invalid URL");
+    await expect(page).toMatchElement("a", {
+      text: "Please retry the sign-in process",
+    });
+  });
+
+  it("going to 'Sign up' page with realistic (fake) query string", async () => {
+    const sp = new URLSearchParams();
+    sp.set("csrfmiddlewaretoken", "abc");
+    sp.set("provider", "github");
+    sp.set(
+      "user_details",
+      JSON.stringify({
+        name: "Peter B",
+      })
+    );
+
+    await page.goto(testURL(`/en-US/signup?${sp.toString()}`));
+    await expect(page).toMatchElement("h1", {
+      text: "Sign in to MDN Web Docs",
+    });
+    await expect(page).not.toMatch("Invalid URL");
+    await expect(page).toMatch(
+      "You are signing in to MDN Web Docs with GitHub as Peter B."
+    );
+    await expect(page).toMatch(
+      "I agree to Mozilla's Terms and Privacy Notice."
+    );
+    await expect(page).toMatchElement("button", { text: "Complete sign-in" });
+  });
+
+  it("should say you're not signed in on the settings page", async () => {
+    await page.goto(testURL("/en-US/settings"));
+    await expect(page).toMatchElement("h1", { text: "Account settings" });
+    await expect(page).toMatchElement("a", {
+      text: "Please sign in to continue",
+    });
+  });
+
+  it("should show your settings page", async () => {
+    const url = testURL("/en-US/settings");
+    // A `fakesessionid` is a special trick to tell the static server we use
+    // for mocking the `/api/v1`.
+    await page.setCookie({
+      name: "fakesessionid",
+      value: "peterbe",
+      domain: new URL(url).host,
+    });
+
+    await page.goto(url);
+    await expect(page).toMatchElement("h1", { text: "Account settings" });
+    await expect(page).toMatchElement("button", { text: "Close account" });
+
+    // Change locale to French
+    await expect(page).toSelect('select[name="locale"]', "French");
+    await expect(page).toClick("button", { text: "Update language" });
+    await expect(page).toMatch("Yay! Updated settings successfully saved.");
+  });
+
+  it("should redirect retired locale to English (document)", async () => {
+    await page.goto(testURL("/ar/docs/Web/Foo"));
+    await expect(page.url()).toMatch(
+      testURL("/en-US/docs/Web/Foo/?retiredLocale=ar")
+    );
+    await expect(page).toMatch("<foo>: A test tag");
+  });
+
+  it("should redirect retired locale to English (index.json)", async () => {
+    await page.goto(testURL("/ar/docs/Web/Foo/index.json"));
+    await expect(page.url()).toMatch(
+      testURL("/en-US/docs/Web/Foo/index.json?retiredLocale=ar")
+    );
+    await expect(page).toMatch("<foo>: A test tag");
+  });
+
+  it("should redirect retired locale to English (search with query string)", async () => {
+    await page.goto(testURL("/ar/search?q=video"));
+    await expect(page.url()).toMatch(
+      testURL("/en-US/search/?q=video&retiredLocale=ar")
+    );
+    await expect(page).toMatch("Search results for: video");
+  });
+
+  it("should say the locale was retired", async () => {
+    await page.goto(testURL("/en-US/docs/Web/Foo/?retiredLocale=ar"));
+    await expect(page).toMatch("The page you requested has been retired");
+    // sanity check that it goes away
+    await page.goto(testURL("/en-US/docs/Web/Foo/"));
+    await expect(page).not.toMatch("The page you requested has been retired");
+  });
+
+  it("should not say the locale was retired if viewing a translated page", async () => {
+    await page.goto(testURL("/fr/docs/Web/Foo/?retiredLocale=sv-SE"));
+    await expect(page).not.toMatch("The page you requested has been retired");
   });
 });

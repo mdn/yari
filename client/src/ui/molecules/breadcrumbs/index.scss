@@ -1,3 +1,5 @@
+@use "sass:math";
+
 @import "~@mdn/minimalist/sass/mixins/utils";
 @import "~@mdn/minimalist/sass/mixins/links";
 
@@ -5,23 +7,18 @@
 @import "~@mdn/minimalist/sass/vars/layout";
 @import "~@mdn/minimalist/sass/vars/typography";
 
-.breadcrumbs {
-  font-size: $small-font-size;
-  padding: $base-unit $base-spacing;
+.breadcrumbs-container {
+  @media #{$mq-small-desktop-and-up} {
+    padding: math.div($base-spacing, 2) $base-spacing;
+  }
 
   @media #{$mq-small-desktop-and-up} {
-    padding: $base-spacing;
+    padding: 0;
   }
 
   a {
-    display: flex;
     align-items: center;
-
-    &:active {
-      span {
-        @include highlighted-link-state();
-      }
-    }
+    display: flex;
   }
 
   ol {
@@ -49,7 +46,6 @@
         background-size: 12px;
         content: "";
         height: 12px;
-        margin: 0 5px;
         transform: rotate(90deg);
         width: 12px;
       }
@@ -61,6 +57,11 @@
       }
     }
 
+    [property="name"] {
+      display: inline-block;
+      margin: 0 math.div($base-unit, 2);
+    }
+
     .breadcrumb-penultimate {
       &::before {
         background: transparent url("~@mdn/dinocons/arrows/chevron.svg") 0 0
@@ -69,7 +70,7 @@
         content: "";
         display: inline-block;
         height: 16px;
-        margin-right: $base-spacing / 4;
+        margin-right: math.div($base-spacing, 4);
         transform: rotate(-90deg);
         width: 16px;
 

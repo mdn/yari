@@ -2,7 +2,7 @@ import React, { lazy, Suspense, useEffect, useState } from "react";
 import useSWR from "swr";
 
 import { DisplayH2, DisplayH3 } from "./ingredients/utils";
-
+import { Loading } from "../ui/atoms/loading";
 // Because it's bad for web performance to lazy-load CSS during the initial render
 // (because the page is saying "Wait! Stop rendering, now that I've downloaded
 // some JS I decided I need more CSSOM to block the rendering.")
@@ -30,24 +30,32 @@ export function LazyBrowserCompatibilityTable({
   title: string;
   isH3: boolean;
   query: string;
-  dataURL: string;
+  dataURL: string | null;
 }) {
   return (
     <>
       {title && !isH3 && <DisplayH2 id={id} title={title} />}
       {title && isH3 && <DisplayH3 id={id} title={title} />}
-      <LazyBrowserCompatibilityTableInner dataURL={dataURL} query={query} />
+      {dataURL ? (
+        <LazyBrowserCompatibilityTableInner dataURL={dataURL} />
+      ) : (
+        <div className="notecard warning">
+          <p>
+            No compatibility data found for <code>{query}</code>.<br />
+            <a href="#on-github">Check for problems with this page</a> or
+            contribute missing data to{" "}
+            <a href="https://github.com/mdn/browser-compat-data">
+              mdn/browser-compat-data
+            </a>
+            .
+          </p>
+        </div>
+      )}
     </>
   );
 }
 
-function LazyBrowserCompatibilityTableInner({
-  dataURL,
-  query,
-}: {
-  dataURL: string;
-  query: string;
-}) {
+function LazyBrowserCompatibilityTableInner({ dataURL }: { dataURL: string }) {
   const locale = useLocale();
   const [bcdDataURL, setBCDDataURL] = useState("");
 
@@ -76,26 +84,10 @@ function LazyBrowserCompatibilityTableInner({
   if (error) {
     return <p>Error loading BCD data</p>;
   }
-  if (!data.data) {
-    return (
-      <p>
-        No compatibility data found for <code>{query}</code>. Check the spelling
-        or contribute data to{" "}
-        <a href="https://github.com/mdn/browser-compat-data">
-          mdn/browser-compat-data
-        </a>
-        .
-      </p>
-    );
-  }
 
   return (
-    <Suspense fallback={<Loading />}>
+    <Suspense fallback={<Loading message="Loading BCD table" />}>
       <BrowserCompatibilityTable locale={locale} {...data} />
     </Suspense>
   );
-}
-
-function Loading() {
-  return <p>Loading BCD table...</p>;
 }

@@ -1,3 +1,5 @@
+@use "sass:math";
+
 @import "~@mdn/minimalist/sass/vars/color-palette";
 @import "~@mdn/minimalist/sass/vars/layout";
 @import "~@mdn/minimalist/sass/vars/typography";
@@ -10,6 +12,8 @@
   background-color: $neutral-100;
   color: $text-color-inverted;
   padding: ($base-spacing * 2) $base-spacing;
+  z-index: $bring-to-front;
+  position: relative;
 
   .content-container {
     margin: 0 auto;
@@ -45,18 +49,33 @@
     }
 
     ul {
-      padding-inline-start: $base-spacing / 4;
+      padding-inline-start: math.div($base-spacing, 4);
     }
+  }
 
-    svg {
-      height: 18px;
-      vertical-align: sub;
-      width: 18px;
+  .social-icon::before {
+    background-size: 18px;
+    content: "";
+    display: inline-block;
+    filter: invert(1);
+    height: 18px;
+    vertical-align: sub;
+    width: 18px;
+  }
 
-      path {
-        fill: #fff;
-      }
-    }
+  .twitter::before {
+    background: transparent url("~@mdn/dinocons/social/twitter.svg") 0 0
+      no-repeat;
+  }
+
+  .github::before {
+    background: transparent url("~@mdn/dinocons/brands/github-mark-small.svg") 0
+      0 no-repeat;
+  }
+
+  .instagram::before {
+    background: transparent url("~@mdn/dinocons/social/instagram.svg") 0 0
+      no-repeat;
   }
 
   .footer-license {
@@ -113,27 +132,27 @@
       grid-row: 3/4;
 
       @media #{$mq-tablet-and-up} {
-        grid-row: 2/3;
         grid-column: 2/3;
+        grid-row: 2/3;
       }
     }
 
     .social-mdn {
-      grid-row: 4/5;
       grid-column: 1/2;
+      grid-row: 4/5;
     }
 
     .social-moz {
-      grid-row: 4/5;
       grid-column: 2/3;
+      grid-row: 4/5;
     }
 
     .footer-license {
-      grid-row: 5/6;
+      grid-row: 6/7;
     }
 
     .footer-legal {
-      grid-row: 6/7;
+      grid-row: 7/8;
     }
   }
 }

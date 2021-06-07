@@ -552,9 +552,11 @@ LEGACY_URLS = list(
             url_test("/patches", status_code=404),
             url_test("/patches/foo", status_code=404),
             url_test("/web-tech", status_code=404),
-            url_test("/web-tech/feed/atom/", status_code=404),
-            url_test("/css/wiki.css", status_code=404),
-            url_test("/css/base.css", status_code=404),
+            url_test(
+                "/web-tech/feed/atom/", follow_redirects=True, final_status_code=404
+            ),
+            url_test("/css/wiki.css", follow_redirects=True, final_status_code=404),
+            url_test("/css/base.css", follow_redirects=True, final_status_code=404),
             url_test("/contests", "http://www.mozillalabs.com/", status_code=302),
             url_test("/contests/", "http://www.mozillalabs.com/", status_code=302),
             url_test(
@@ -979,3 +981,98 @@ FIREFOX_SOURCE_DOCS_URLS = list(
         )
     )
 )
+
+MISC_REDIRECT_URLS = [
+    url_test("/fr/account", "/fr/settings", status_code=302),
+    url_test("/en-US/account", "/en-US/settings", status_code=302),
+    url_test("/en-US/account/", "/en-US/settings", status_code=302),
+    url_test("/ja/profile", "/ja/settings", status_code=302),
+    url_test("/en-US/profile", "/en-US/settings", status_code=302),
+    url_test("/en-US/profile/", "/en-US/settings", status_code=302),
+    url_test("/en-US/profile/edit", "/en-US/settings", status_code=302),
+    url_test("/en-US/profile/edit/", "/en-US/settings", status_code=302),
+    url_test("/en-US/profile/stripe_subscription", "/en-US/settings", status_code=302),
+    url_test("/en-US/profile/stripe_subscription/", "/en-US/settings", status_code=302),
+    url_test("/zh-CN/profiles/sheppy", "/zh-CN/settings", status_code=302),
+    url_test("/en-US/profiles/sheppy", "/en-US/settings", status_code=302),
+    url_test("/en-US/profiles/sheppy/", "/en-US/settings", status_code=302),
+    url_test("/en-US/profiles/sheppy/edit", "/en-US/settings", status_code=302),
+    url_test("/en-US/profiles/sheppy/edit/", "/en-US/settings", status_code=302),
+    url_test("/en-US/profiles/sheppy/delete", "/en-US/settings", status_code=302),
+    url_test("/en-US/profiles/sheppy/delete/", "/en-US/settings", status_code=302),
+    url_test("/en-US/DOM", "/en-US/docs/DOM"),
+    url_test("/en-US/DOM/", "/en-US/docs/DOM"),
+    url_test(
+        "/en-US/DOM/element.addEventListener",
+        "/en-US/docs/DOM/element.addEventListener",
+    ),
+    url_test("/en-US/DOM/CSSRule/cssText/", "/en-US/docs/DOM/CSSRule/cssText"),
+    url_test("/fr/DOM", "/fr/docs/DOM"),
+    url_test("/fr/DOM/", "/fr/docs/DOM"),
+    url_test(
+        "/fr/DOM/element.addEventListener", "/fr/docs/DOM/element.addEventListener"
+    ),
+    url_test("/fr/DOM/CSSRule/cssText/", "/fr/docs/DOM/CSSRule/cssText"),
+    url_test("/en-US/AJAX", "/en-US/docs/AJAX"),
+    url_test("/en-US/AJAX/", "/en-US/docs/AJAX"),
+    url_test("/en-US/AJAX/Getting_Started/", "/en-US/docs/AJAX/Getting_Started"),
+    url_test("/en-US/CSS", "/en-US/docs/CSS"),
+    url_test("/en-US/CSS/", "/en-US/docs/CSS"),
+    url_test("/en-US/CSS/time/", "/en-US/docs/CSS/time"),
+    url_test("/en-US/DragDrop", "/en-US/docs/DragDrop"),
+    url_test("/en-US/DragDrop/", "/en-US/docs/DragDrop"),
+    url_test("/en-US/DragDrop/Drag_and_Drop/", "/en-US/docs/DragDrop/Drag_and_Drop"),
+    url_test("/en-US/HTML", "/en-US/docs/HTML"),
+    url_test("/en-US/HTML/", "/en-US/docs/HTML"),
+    url_test("/en-US/HTML/Canvas/", "/en-US/docs/HTML/Canvas"),
+    url_test("/en-US/JavaScript", "/en-US/docs/JavaScript"),
+    url_test("/en-US/JavaScript/", "/en-US/docs/JavaScript"),
+    url_test(
+        "/en-US/JavaScript/Reference/About/", "/en-US/docs/JavaScript/Reference/About"
+    ),
+    url_test("/en-US/SVG", "/en-US/docs/SVG"),
+    url_test("/en-US/SVG/", "/en-US/docs/SVG"),
+    url_test("/en-US/SVG/Element/font/", "/en-US/docs/SVG/Element/font"),
+    url_test("/en-US/Tools", "/en-US/docs/Tools"),
+    url_test("/en-US/Tools/", "/en-US/docs/Tools"),
+    url_test(
+        "/en-US/Tools/Memory/Treemap_view/", "/en-US/docs/Tools/Memory/Treemap_view"
+    ),
+    url_test(
+        "/en-US/Using_files_from_web_applications",
+        "/en-US/docs/Using_files_from_web_applications",
+    ),
+    url_test(
+        "/en-US/Using_files_from_web_applications/",
+        "/en-US/docs/Using_files_from_web_applications",
+    ),
+    url_test("/en-US/Web", "/en-US/docs/Web"),
+    url_test("/en-US/Web/", "/en-US/docs/Web"),
+    url_test("/en-US/Web/API/ArrayBuffer/", "/en-US/docs/Web/API/ArrayBuffer"),
+    url_test("/en-US/XMLHttpRequest", "/en-US/docs/XMLHttpRequest"),
+    url_test("/en-US/XMLHttpRequest/", "/en-US/docs/XMLHttpRequest"),
+    url_test("/en-US/XMLHttpRequest/FormData/", "/en-US/docs/XMLHttpRequest/FormData"),
+    url_test("/en-US/Security", "/en-US/docs/Security"),
+    url_test("/en-US/Security/", "/en-US/docs/Security"),
+    url_test("/en-US/Security/CSP/", "/en-US/docs/Security/CSP"),
+    # Add trailing slash for the home page.
+    url_test("/en-US", "/en-US/", status_code=302),
+    # Some special cases for "/docs".
+    url_test("/docs", "/docs/Web"),
+    url_test("/docs/", "/docs/Web"),
+    url_test("/en-us/docs", "/en-us/docs/Web"),
+    url_test("/en-us/docs/", "/en-us/docs/Web"),
+    # Locale and trailing-slash correction redirect tests.
+    url_test("/EN-us", "/en-US/", status_code=302),
+    url_test("/EN-us?next=FOO", "/en-US/?next=FOO", status_code=302),
+    url_test("/EN-US/", "/en-US/", status_code=302),
+    url_test("/EN-US/?next=FOO", "/en-US/?next=FOO", status_code=302),
+    url_test("/eN-us/docs/Web", "/en-US/docs/Web", status_code=302),
+    url_test("/eN-us/docs/Web/", "/en-US/docs/Web", status_code=302),
+    url_test("/eN-us/docs/Web?next=FOO", "/en-US/docs/Web", status_code=302),
+    url_test("/eN-us/docs/Web/?next=FOO", "/en-US/docs/Web", status_code=302),
+    url_test("/en-uS/search", "/en-US/search", status_code=302),
+    url_test("/en-uS/search/", "/en-US/search", status_code=302),
+    url_test("/en-Us/search?q=video", "/en-US/search?q=video", status_code=302),
+    url_test("/en-Us/search/?q=video", "/en-US/search?q=video", status_code=302),
+]

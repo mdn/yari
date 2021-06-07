@@ -8,6 +8,6 @@ module.exports = {
   /**
    * Expose url from node.js to templates
    */
-  url: url,
+  url,
   htmlEscape: util.htmlEscape,
 };

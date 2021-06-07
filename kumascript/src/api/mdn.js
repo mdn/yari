@@ -14,7 +14,7 @@ module.exports = {
    * associated with the names.
    */
   htmlEscapeArgs(names, args) {
-    var e = {};
+    const e = {};
     names.forEach(function (name, idx) {
       e[name] = util.htmlEscape(args[idx]);
     });
@@ -27,7 +27,7 @@ module.exports = {
    * Return the one which matches the current locale.
    */
   localString(strings) {
-    var lang = this.env.locale;
+    let lang = this.env.locale;
     if (!(lang in strings)) lang = "en-US";
     return strings[lang];
   },
@@ -39,14 +39,14 @@ module.exports = {
    * properties when the localized map contains partial properties.
    */
   localStringMap(maps) {
-    var lang = this.env.locale;
-    var defaultMap = maps["en-US"];
+    const lang = this.env.locale;
+    const defaultMap = maps["en-US"];
     if (lang == "en-US" || !(lang in maps)) {
       return defaultMap;
     }
-    var localizedMap = maps[lang];
-    var map = {};
-    for (var name in defaultMap) {
+    const localizedMap = maps[lang];
+    const map = {};
+    for (const name in defaultMap) {
       if (name in localizedMap) {
         map[name] = localizedMap[name];
       } else {
@@ -74,7 +74,7 @@ module.exports = {
       return key;
     }
 
-    var lang = this.env.locale;
+    let lang = this.env.locale;
     if (!(lang in strings[key])) {
       lang = "en-US";
     }
@@ -106,7 +106,7 @@ module.exports = {
    */
   replacePlaceholders(string, replacements) {
     function replacePlaceholder(placeholder) {
-      var index = placeholder.substring(1, placeholder.length - 1);
+      let index = placeholder.substring(1, placeholder.length - 1);
       if (!Number.isNaN(Number(index))) {
         index--;
       }

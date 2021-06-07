@@ -1,8 +1,20 @@
 const path = require("path");
 const childProcess = require("child_process");
 
-const { CONTENT_ROOT } = require("./constants");
+const { CONTENT_ROOT, CONTENT_TRANSLATED_ROOT } = require("./constants");
 const { slugToFolder } = require("../libs/slug-utils");
+const LRU = require("lru-cache");
+
+const MEMOIZE_INVALIDATE = Symbol("force cache update");
+
+function getRoot(locale, throws = "") {
+  const root =
+    locale.toLowerCase() === "en-us" ? CONTENT_ROOT : CONTENT_TRANSLATED_ROOT;
+  if (throws && !root) {
+    throw new Error(throws);
+  }
+  return root;
+}
 
 function buildURL(locale, slug) {
   if (!locale) throw new Error("locale falsy!");
@@ -26,21 +38,21 @@ function memoize(fn) {
     return fn;
   }
 
-  const cache = new Map();
+  const cache = new LRU({ max: 2000 });
   return (...args) => {
+    let invalidate = false;
+    if (args.includes(MEMOIZE_INVALIDATE)) {
+      args.splice(args.indexOf(MEMOIZE_INVALIDATE), 1);
+      invalidate = true;
+    }
     const key = JSON.stringify(args);
 
     if (cache.has(key)) {
-      return cache.get(key);
-    }
-
-    // Before proceeding, what might happen when building a huge swath of documents,
-    // the cache starts to fill up too much. So let's clear it every now and then.
-    // This avoids unnecessary out-of-memory crashes.
-    // See https://github.com/mdn/yari/issues/2030
-    if (cache.size > 10000) {
-      console.warn("Cache size limit reached. Clearing the cache.");
-      cache.clear();
+      if (invalidate) {
+        cache.del(key);
+      } else {
+        return cache.get(key);
+      }
     }
 
     const value = fn(...args);
@@ -76,6 +88,7 @@ function execGit(args, opts = {}, root = null) {
   );
   if (error || status !== 0) {
     if (stderr) {
+      console.log(args);
       console.log(`Error running git ${args}`);
       console.error(stderr);
     }
@@ -96,8 +109,10 @@ function urlToFolderPath(url) {
 
 module.exports = {
   buildURL,
+  getRoot,
   slugToFolder: (slug) => slugToFolder(slug, path.sep),
   memoize,
   execGit,
   urlToFolderPath,
+  MEMOIZE_INVALIDATE,
 };

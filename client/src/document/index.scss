@@ -1,3 +1,5 @@
+@use "sass:math";
+
 @import "~@mdn/minimalist/sass/vars/layout";
 @import "~@mdn/minimalist/sass/vars/color-palette";
 @import "~@mdn/minimalist/sass/vars/borders";
@@ -6,27 +8,97 @@
 @import "~@mdn/minimalist/sass/mixins/animation";
 @import "~@mdn/minimalist/sass/mixins/utils";
 
-.page-content-container {
-  &.loading-document-placeholder {
-    @include slow-pulse();
-    fill: $neutral-550;
-    min-height: 55vh;
-    width: 100%;
+@import "./molecules/breadcrumb-locale-container";
+@import "./molecules/notecards";
+@import "./molecules/localized-content-note";
 
-    @media #{$mq-small-desktop-and-up} {
-      margin: $base-spacing auto;
-      max-width: $max-width-default;
-      min-height: 75vh;
-      width: 50%;
-    }
+.main-content {
+  @media #{$mq-small-desktop-and-up} {
+    margin-top: $base-spacing;
   }
 }
 
-.article {
-  padding: ($base-spacing / 2) $base-spacing $base-spacing;
+.only-in-en-us {
+  span {
+    font-size: $small-font-size;
+  }
+}
 
+/* page-not-created is the preferred class name, `new` is
+   here for backwards compatibility */
+a.page-not-created,
+a.new {
+  color: $red-300;
+  cursor: not-allowed;
+}
+
+.main-page-content {
+  padding: math.div($base-spacing, 2) $base-spacing $base-spacing;
+
+  .code-example {
+    position: relative;
+
+    .copy-icon {
+      background: $neutral-550 url("../assets/clippy.svg") center center
+        no-repeat;
+      background-position: 61% 45%;
+      background-size: 16px;
+      border: 1px solid $neutral-550;
+      border-radius: $default-border-radius;
+      cursor: pointer;
+      height: 36px;
+      margin: 0;
+      padding: math.div($base-spacing, 4);
+      position: absolute;
+      right: math.div($base-spacing, 3);
+      top: math.div($base-spacing, 3);
+      vertical-align: middle;
+      width: 33px;
+      z-index: $bottom-layer;
+
+      @media #{$mq-large-desktop-and-up} {
+        opacity: 0.4;
+
+        &:hover,
+        &:focus {
+          background-color: $neutral-525;
+          opacity: 1;
+        }
+      }
+    }
+
+    .user-message {
+      background: $neutral-100;
+      border-radius: $default-border-radius;
+      color: $neutral-600;
+      display: none;
+      font-size: $small-font-size;
+      opacity: 1;
+      padding: math.div($base-spacing, 4);
+      position: absolute;
+      right: math.div($base-spacing, 3);
+      top: 15px;
+      z-index: $bottom-layer;
+    }
+
+    &:focus,
+    &:hover {
+      .copy-icon {
+        opacity: 1;
+      }
+    }
+
+    .show {
+      display: block;
+    }
+  }
   @media #{$mq-small-desktop-and-up} {
-    margin-bottom: $large-spacing;
+    margin-bottom: $base-spacing * 2;
+    padding: 0 $base-spacing $base-spacing;
+  }
+
+  h1 {
+    word-break: break-word;
   }
 
   h2,
@@ -44,69 +116,69 @@
   }
 
   a {
+    text-decoration: underline;
+
+    &:hover,
+    &:focus {
+      text-decoration: none;
+    }
+
     &:active {
       background-color: $primary-50;
       color: $text-color-inverted;
+
+      code {
+        background-color: transparent;
+      }
     }
+
+    &[id^="attr-"] {
+      &:link,
+      &:visited {
+        color: $neutral-100;
+        text-decoration: none;
+      }
+
+      &:hover,
+      &:focus {
+        text-decoration: underline;
+      }
+
+      &:active {
+        color: $text-color-inverted;
+      }
+    }
+  }
+
+  [aria-current] {
+    color: $neutral-100;
+    font-weight: bold;
+    text-decoration: none;
   }
 
   h2,
   h3 {
-    code {
-      background-color: transparent;
+    margin-bottom: ($base-unit * 2);
+
+    a:link,
+    a:visited {
       color: $neutral-100;
       text-decoration: none;
     }
-  }
 
-  h2 {
-    margin-bottom: ($base-unit * 2);
-
-    @media #{$mq-tablet-and-up} {
-      margin-bottom: ($base-unit * 6);
-    }
-
-    code {
+    a:hover,
+    a:focus {
       color: $neutral-100;
-    }
-
-    a:link,
-    a:visited {
-      color: $neutral-100;
+      text-decoration: underline;
     }
 
     a:active {
       background-color: transparent;
-      color: $link-color;
-    }
-  }
-
-  h3 {
-    code {
-      color: $neutral-600;
-    }
-
-    a:link,
-    a:visited {
-      color: $neutral-600;
-    }
-
-    a:active {
-      background-color: transparent;
-      color: $neutral-600;
     }
   }
 
   table {
     margin-bottom: $base-spacing * 2;
-  }
-
-  /* page-not-created is the preferred class name, `new` is
-     here for backwards compatibility */
-  .page-not-created,
-  .new {
-    color: $red-300;
-    cursor: not-allowed;
   }
 
   /* readonly inline badges needs a slightly darker background color in general article content  */
@@ -117,8 +189,8 @@
     }
   }
 
-  /* 
-   * top navigational elements on tutorial pages 
+  /*
+   * top navigational elements on tutorial pages
    * prevnext is added for backwards compatibility
    */
   .prevnext,
@@ -130,7 +202,7 @@
     }
 
     a.button {
-      margin-bottom: ($base-spacing / 2);
+      margin-bottom: math.div($base-spacing, 2);
       max-width: inherit;
 
       @media #{$mq-tablet-and-up} {
@@ -145,6 +217,28 @@
   */
   .index {
     columns: 300px;
+    margin-bottom: $base-spacing;
+
+    @media #{$mq-small-desktop-and-up} {
+      margin-bottom: $base-spacing * 2;
+    }
+
+    .icon-experimental,
+    .icon-nonstandard {
+      color: $primary-50;
+    }
+
+    .icon-deprecated {
+      color: $red-100;
+    }
+  }
+
+  iframe {
+    max-width: 100%;
+  }
+
+  iframe:not(.sample-code-frame) {
+    border: 0;
   }
 }
 
@@ -154,7 +248,7 @@
  */
 .archived {
   background-color: $yellow-400;
-  padding: $base-spacing / 4;
+  padding: math.div($base-spacing, 4);
   position: fixed;
   text-align: center;
   top: 0;

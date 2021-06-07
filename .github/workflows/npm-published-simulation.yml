@@ -1,0 +1,113 @@
+# Instead of waiting for Yari to be published to npmjs.com and be upgraded
+# inside mdn/content by Dependabot, we do all those steps here using `npm pack`.
+
+name: NPM Publish simulation
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2.3.4
+
+      - uses: actions/checkout@v2.3.4
+        with:
+          repository: mdn/content
+          path: mdn/content
+
+      - name: Setup Node.js environment
+        uses: actions/setup-node@v2.1.5
+        with:
+          node-version: "12"
+
+      - name: Cache node_modules
+        uses: actions/cache@v2.1.6
+        id: cached-node_modules
+        with:
+          path: |
+            node_modules
+          key: ${{ runner.os }}-${{ hashFiles('yarn.lock') }}
+
+      - name: Install all yarn packages
+        if: steps.cached-node_modules.outputs.cache-hit != 'true'
+        env:
+          PUPPETEER_SKIP_CHROMIUM_DOWNLOAD: 1
+        run: yarn --frozen-lockfile
+
+      - name: Setup kernel for react native, increase watchers
+        run: |
+          # When running Yari on Linux, you might get the
+          # "Error: ENOSPC: System limit for number of file watchers reached" error.
+          # This, resolves that.
+          # Source https://github.com/expo/expo-github-action/issues/20#issuecomment-541676895
+          echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf && sudo sysctl -p
+
+      - name: Prepare to build
+        env:
+          # The following env vars is what we do in npm-publish.yml
+          # Each variable set is documented there.
+
+          REACT_APP_CRUD_MODE: true
+          REACT_APP_DISABLE_AUTH: true
+          CONTENT_ROOT: testing/content/files
+        run: |
+          yarn prepare-build
+
+      - name: Build and install tarball
+        run: |
+          echo mdn/content/ >> .npmignore
+          npm pack
+          TARBALL=`ls mdn-yari-*.tgz`
+          echo $TARBALL
+          ls -lh $TARBALL
+          mv $TARBALL mdn/content/
+          cd mdn/content
+          yarn add file:$TARBALL
+
+      - name: Start Yari from mock content repo
+        working-directory: mdn/content
+        run: |
+          yarn start > /tmp/stdout.log 2> /tmp/stderr.log &
+
+      - name: View some URLs on localhost:5000
+        run: |
+          curl --retry-connrefused --retry 5 -I http://localhost:5000
+
+          # Basically, test if it 200 OKs. If not, this'll exit non-zero.
+          curl http://localhost:5000/en-US/ > /dev/null
+          curl http://localhost:5000/en-US/docs/MDN/Kitchensink > /dev/null
+
+      - name: Test viewing the dev server
+        env:
+          # This will make sure the tests in `testing/tests/*.test.js` only run
+          # if the development server is up and ready to be tested.
+          TESTING_DEVELOPING: true
+          # Use local chrome installs since we skip downloading it as part
+          # of the yarn installs above
+          PUPPETEER_EXECUTABLE_PATH: /usr/bin/google-chrome
+          # When running Yari from within mdn/content it only starts 1 server;
+          # the one on localhost:5000. No React dev server; the one
+          # on localhost:3000.
+          # Testing that dev server is not relevant or important in this context.
+          DEVELOPING_SKIP_DEV_URL: true
+        run: |
+          yarn test:testing developing
+
+      - name: Debug server's stdout and stderr if tests failed
+        if: failure()
+        run: |
+          echo "STDOUT..................................................."
+          cat /tmp/stdout.log
+          echo ""
+          echo "STDERR..................................................."
+          cat /tmp/stderr.log
+
+      - name: SSR build a page
+        working-directory: mdn/content
+        run: |
+          yarn build files/en-us/mdn/kitchensink/index.html

@@ -1,0 +1,31 @@
+@use "sass:math";
+
+@import "~@mdn/minimalist/sass/mixins/utils";
+@import "~@mdn/minimalist/sass/vars/color-palette";
+@import "~@mdn/minimalist/sass/vars/layout";
+@import "~@mdn/minimalist/sass/vars/typography";
+
+.blog-feed {
+  @media #{$mq-small-desktop-and-up} {
+    flex-basis: 65%;
+  }
+
+  h3 {
+    background-color: transparent;
+    padding: 0;
+  }
+
+  ul {
+    @include reset-list();
+
+    li {
+      border-bottom: 1px solid $neutral-550;
+      margin-bottom: math.div($base-spacing, 2);
+    }
+  }
+
+  .post-meta {
+    font-size: $small-font-size;
+    font-style: italic;
+  }
+}

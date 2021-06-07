@@ -1,5 +1,6 @@
 const cheerio = require("cheerio");
 const { packageBCD } = require("./resolve-bcd");
+const specs = require("browser-specs");
 
 /** Extract and mutate the $ if it as a "Quick_Links" section.
  * But only if it exists.
@@ -39,7 +40,7 @@ function extractSidebar($) {
 function extractSections($) {
   const flaws = [];
   const sections = [];
-  let section = cheerio
+  const section = cheerio
     .load("<div></div>", {
       // decodeEntities: false
     })("div")
@@ -110,16 +111,28 @@ function extractSections($) {
  *        data: {....}
  *   }]
  *
- * At the time of writing (Jan 2020), there is only one single special type of
- * section and that's BCD. The idea is we look for a bunch of special sections
- * and if all else fails, just leave it as HTML as is.
+ * Another example is for the specification section. If the input is this:
+ *
+ *   <h2 id="Specifications">Specifications</h2>
+ *   <div class="bc-specs" data-bcd-query="foo.bar.thing">...</div>
+ *
+ * Then, extract the data-bcd-query and return this:
+ *
+ *   [{
+ *     type: "specifications",
+ *     value: {
+ *        query: "foo.bar.thing",
+ *        id: "specifications",
+ *        title: "Specifications",
+ *        specifications: {....}
+ *   }]
  */
 function addSections($) {
   const flaws = [];
 
-  const countPotentialBCDDataDivs = $.find("div.bc-data").length;
-  if (countPotentialBCDDataDivs) {
-    /** If there's exactly 1 BCD table the only section to add is something
+  const countPotentialSpecialDivs = $.find("div.bc-data, div.bc-specs").length;
+  if (countPotentialSpecialDivs) {
+    /** If there's exactly 1 special table the only section to add is something
      * like this:
      *    {
      *     "type": "browser_compatibility",
@@ -132,8 +145,8 @@ function addSections($) {
      *
      * Where the 'title' and 'id' values comes from the <h2> tag (if available).
      *
-     * However, if there are **multiple BCD tables**, which is rare, the it
-     * needs to return something like this:
+     * However, if there are **multiple special tables**,
+     * it needs to return something like this:
      *
      *   [{
      *     "type": "prose",
@@ -154,38 +167,43 @@ function addSections($) {
      *       "content": "Any other stuff before table maybe"
      *    },
      */
-    if (countPotentialBCDDataDivs > 1) {
+    if (countPotentialSpecialDivs > 1) {
       const subSections = [];
-      let section = cheerio
+      const section = cheerio
         .load("<div></div>", {
           // decodeEntities: false
         })("div")
         .eq(0);
 
       // Loop over each and every "root element" in the node and keep piling
-      // them up in a buffer, until you encounter a `div.bc-table` then
+      // them up in a buffer, until you encounter a `div.bc-data` or `div.bc-specs` then
       // add that to the stack, clear and repeat.
-      let iterable = [...$[0].childNodes];
+      const iterable = [...$[0].childNodes];
       let c = 0;
-      let countBCDDataDivsFound = 0;
+      let countSpecialDivsFound = 0;
       iterable.forEach((child) => {
         if (
           child.tagName === "div" &&
           child.attribs &&
           child.attribs.class &&
-          /bc-data/.test(child.attribs.class)
+          (child.attribs.class.includes("bc-data") ||
+            child.attribs.class.includes("bc-specs"))
         ) {
-          countBCDDataDivsFound++;
+          countSpecialDivsFound++;
           if (c) {
-            subSections.push(..._addSectionProse(section.clone()));
+            const [proseSections, proseFlaws] = _addSectionProse(
+              section.clone()
+            );
+            subSections.push(...proseSections);
+            flaws.push(...proseFlaws);
             section.empty();
             c = 0; // reset the counter
           }
           section.append(child);
-          // XXX That `_addSingleSectionBCD(section.clone())` might return a
+          // XXX That `_addSingleSpecialSection(section.clone())` might return a
           // and empty array and that means it failed and we should
           // bail.
-          subSections.push(..._addSingleSectionBCD(section.clone()));
+          subSections.push(..._addSingleSpecialSection(section.clone()));
           section.empty();
         } else {
           section.append(child);
@@ -193,37 +211,44 @@ function addSections($) {
         }
       });
       if (c) {
-        subSections.push(..._addSectionProse(section.clone()));
+        const [proseSections, proseFlaws] = _addSectionProse(section.clone());
+        subSections.push(...proseSections);
+        flaws.push(...proseFlaws);
       }
-      if (countBCDDataDivsFound !== countPotentialBCDDataDivs) {
-        const leftoverCount = countPotentialBCDDataDivs - countBCDDataDivsFound;
-        const explanation = `${leftoverCount} 'div.bc-data' element${
+      if (countSpecialDivsFound !== countPotentialSpecialDivs) {
+        const leftoverCount = countPotentialSpecialDivs - countSpecialDivsFound;
+        const explanation = `${leftoverCount} 'div.bc-data' or 'div.bc-specs' element${
           leftoverCount > 1 ? "s" : ""
         } found but deeply nested.`;
         flaws.push(explanation);
       }
       return [subSections, flaws];
-    } else {
-      const bcdSections = _addSingleSectionBCD($);
+    }
+    const specialSections = _addSingleSpecialSection($);
 
-      // The _addSingleSectionBCD() function will have sucked up the <h2> or <h3>
-      // and the `div.bc-data` to turn it into a BCD section.
-      // First remove that, then put whatever HTML is left as a prose
-      // section underneath.
-      $.find("div.bc-data, h2, h3").remove();
-      bcdSections.push(..._addSectionProse($));
+    // The _addSingleSpecialSection() function will have sucked up the <h2> or <h3>
+    // and the `div.bc-data` or `div.bc-specs` to turn it into a special section.
+    // First remove that, then put whatever HTML is left as a prose
+    // section underneath.
+    $.find("div.bc-data, h2, h3").remove();
+    $.find("div.bc-specs, h2, h3").remove();
+    const [proseSections, proseFlaws] = _addSectionProse($);
+    specialSections.push(...proseSections);
+    flaws.push(...proseFlaws);
 
-      if (bcdSections.length) {
-        return [bcdSections, flaws];
-      }
+    if (specialSections.length) {
+      return [specialSections, flaws];
     }
   }
 
   // all else, leave as is
-  return [_addSectionProse($), flaws];
+  const [proseSections, proseFlaws] = _addSectionProse($);
+  flaws.push(...proseFlaws);
+
+  return [proseSections, flaws];
 }
 
-function _addSingleSectionBCD($) {
+function _addSingleSpecialSection($) {
   let id = null;
   let title = null;
   let isH3 = false;
@@ -241,79 +266,191 @@ function _addSingleSectionBCD($) {
     }
   }
 
-  const dataQuery = $.find("div.bc-data").attr("id");
+  let dataQuery = null;
+  let specialSectionType = null;
+  if ($.find("div.bc-data").length) {
+    specialSectionType = "browser_compatibility";
+    dataQuery = $.find("div.bc-data").attr("id");
+  } else if ($.find("div.bc-specs").length) {
+    specialSectionType = "specifications";
+    dataQuery = $.find("div.bc-specs").attr("data-bcd-query");
+  }
+
   // Some old legacy documents haven't been re-rendered yet, since it
   // was added, so the `div.bc-data` tag doesn't have a `id="bcd:..."`
   // attribute. If that's the case, bail and fail back on a regular
   // prose section :(
   if (!dataQuery) {
     // I wish there was a good place to log this!
-    return _addSectionProse($);
+    const [proseSections] = _addSectionProse($);
+    return proseSections;
   }
   const query = dataQuery.replace(/^bcd:/, "");
   const { browsers, data } = packageBCD(query);
-  if (data === undefined) {
-    return [];
+
+  if (specialSectionType === "browser_compatibility") {
+    if (data === undefined) {
+      return [
+        {
+          type: specialSectionType,
+          value: {
+            title,
+            id,
+            isH3,
+            data: null,
+            query,
+            browsers: null,
+          },
+        },
+      ];
+    }
+    return _buildSpecialBCDSection();
+  } else if (specialSectionType === "specifications") {
+    if (data === undefined) {
+      return [
+        {
+          type: specialSectionType,
+          value: {
+            title,
+            id,
+            isH3,
+            query,
+            specifications: [],
+          },
+        },
+      ];
+    }
+    return _buildSpecialSpecSection();
   }
 
-  // First extract a map of all release data, keyed by (normalized) browser
-  // name and the versions.
-  // You'll have a map that looks like this:
-  //
-  //   'chrome_android': {
-  //      '28': {
-  //        release_data: '2012-06-01',
-  //        release_notes: '...',
-  //        ...
-  //
-  // The reason we extract this to a locally scoped map, is so we can
-  // use it to augment the `__compat` blocks for the latest version
-  // when (if known) it was added.
-  const browserReleaseData = new Map();
-  for (const [name, browser] of Object.entries(browsers)) {
-    const releaseData = new Map();
-    for (const [version, data] of Object.entries(browser.releases || [])) {
-      if (data) {
-        releaseData.set(version, data);
+  throw new Error(`Unrecognized special section type '${specialSectionType}'`);
+
+  function _buildSpecialBCDSection() {
+    // First extract a map of all release data, keyed by (normalized) browser
+    // name and the versions.
+    // You'll have a map that looks like this:
+    //
+    //   'chrome_android': {
+    //      '28': {
+    //        release_data: '2012-06-01',
+    //        release_notes: '...',
+    //        ...
+    //
+    // The reason we extract this to a locally scoped map, is so we can
+    // use it to augment the `__compat` blocks for the latest version
+    // when (if known) it was added.
+    const browserReleaseData = new Map();
+    for (const [name, browser] of Object.entries(browsers)) {
+      const releaseData = new Map();
+      for (const [version, data] of Object.entries(browser.releases || [])) {
+        if (data) {
+          releaseData.set(version, data);
+        }
       }
+      browserReleaseData.set(name, releaseData);
     }
-    browserReleaseData.set(name, releaseData);
-  }
 
-  for (const [key, compat] of Object.entries(data)) {
-    let block;
-    if (key === "__compat") {
-      block = compat;
-    } else if (compat.__compat) {
-      block = compat.__compat;
-    }
-    if (block) {
-      for (const [browser, info] of Object.entries(block.support)) {
-        const added = info.version_added;
-        if (browserReleaseData.has(browser)) {
-          if (browserReleaseData.get(browser).has(added)) {
-            info.release_date = browserReleaseData
-              .get(browser)
-              .get(added).release_date;
+    for (const [key, compat] of Object.entries(data)) {
+      let block;
+      if (key === "__compat") {
+        block = compat;
+      } else if (compat.__compat) {
+        block = compat.__compat;
+      }
+      if (block) {
+        for (let [browser, info] of Object.entries(block.support)) {
+          // `info` here will be one of the following:
+          //  - a single simple_support_statement:
+          //    { version_added: 42 }
+          //  - an array of simple_support_statements:
+          //    [ { version_added: 42 }, { prefix: '-moz', version_added: 35 } ]
+          //
+          // Standardize the first version to an array of one, so we don't have
+          // to deal with two different forms below
+          if (!Array.isArray(info)) {
+            info = [info];
+          }
+          for (const infoEntry of info) {
+            const added = infoEntry.version_added;
+            if (browserReleaseData.has(browser)) {
+              if (browserReleaseData.get(browser).has(added)) {
+                infoEntry.release_date = browserReleaseData
+                  .get(browser)
+                  .get(added).release_date;
+              }
+            }
           }
         }
       }
     }
+
+    return [
+      {
+        type: "browser_compatibility",
+        value: {
+          title,
+          id,
+          isH3,
+          data,
+          query,
+          browsers,
+        },
+      },
+    ];
   }
 
-  return [
-    {
-      type: "browser_compatibility",
-      value: {
-        title,
-        id,
-        isH3,
-        data,
-        query,
-        browsers,
+  function _buildSpecialSpecSection() {
+    // Collect spec_urls from a BCD feature.
+    // Can either be a string or an array of strings.
+    let specURLs = [];
+
+    for (const [key, compat] of Object.entries(data)) {
+      if (key === "__compat" && compat.spec_url) {
+        if (Array.isArray(compat.spec_url)) {
+          specURLs = compat.spec_url;
+        } else {
+          specURLs.push(compat.spec_url);
+        }
+      }
+    }
+
+    // Use BCD specURLs to look up more specification data
+    // from the browser-specs package
+    const specifications = specURLs
+      .map((specURL) => {
+        const spec = specs.find(
+          (spec) =>
+            specURL.startsWith(spec.url) ||
+            specURL.startsWith(spec.nightly.url) ||
+            specURL.startsWith(spec.series.nightlyUrl)
+        );
+        const specificationsData = {
+          bcdSpecificationURL: specURL,
+          title: "Unknown specification",
+          shortTitle: "Unknown specification",
+        };
+        if (spec) {
+          specificationsData.title = spec.title;
+          specificationsData.shortTitle = spec.shortTitle;
+        }
+
+        return specificationsData;
+      })
+      .filter(Boolean);
+
+    return [
+      {
+        type: "specifications",
+        value: {
+          title,
+          id,
+          isH3,
+          specifications,
+          query,
+        },
       },
-    },
-  ];
+    ];
+  }
 }
 
 function _addSectionProse($) {
@@ -322,22 +459,50 @@ function _addSectionProse($) {
   let titleAsText = null;
   let isH3 = false;
 
-  // Maybe this should check that the h2 is first??
+  const flaws = [];
+
+  // The way this works...
+  // Given a section of HTML, try to extract a id, title,
+
+  let h2found = false;
   const h2s = $.find("h2");
-  if (h2s.length === 1) {
-    id = h2s.attr("id");
-    title = h2s.html();
-    titleAsText = h2s.text();
-    h2s.remove();
-  } else {
+  for (const i of [...Array(h2s.length).keys()]) {
+    if (i) {
+      // Excess!
+      flaws.push(
+        `Excess <h2> tag that is NOT at root-level (id='${h2s
+          .eq(i)
+          .attr("id")}', text='${h2s.eq(i).text()}')`
+      );
+    } else {
+      // First element
+      id = h2s.eq(i).attr("id");
+      title = h2s.eq(i).html();
+      titleAsText = h2s.eq(i).text();
+      h2s.eq(i).remove();
+    }
+    h2found = true;
+  }
+
+  // If there was no <h2>, look through all the <h3>s.
+  if (!h2found) {
     const h3s = $.find("h3");
-    if (h3s.length === 1) {
-      id = h3s.attr("id");
-      title = h3s.html();
-      titleAsText = h3s.text();
-      if (id && title) {
-        isH3 = true;
-        h3s.remove();
+    for (const i of [...Array(h3s.length).keys()]) {
+      if (i) {
+        // Excess!
+        flaws.push(
+          `Excess <h3> tag that is NOT at root-level (id='${h3s
+            .eq(i)
+            .attr("id")}', text='${h3s.eq(i).text()}')`
+        );
+      } else {
+        id = h3s.eq(i).attr("id");
+        title = h3s.eq(i).html();
+        titleAsText = h3s.eq(i).text();
+        if (id && title) {
+          isH3 = true;
+          h3s.eq(i).remove();
+        }
       }
     }
   }
@@ -354,12 +519,13 @@ function _addSectionProse($) {
     value.titleAsText = titleAsText;
   }
 
-  return [
+  const sections = [
     {
       type: "prose",
       value,
     },
   ];
+  return [sections, flaws];
 }
 
 /**
@@ -370,7 +536,7 @@ function extractSummary(sections) {
   let summary = ""; // default and fallback is an empty string.
 
   function extractFirstGoodParagraph($) {
-    const seoSummary = $(".seoSummary");
+    const seoSummary = $("span.seoSummary, .summary");
     if (seoSummary.length && seoSummary.text()) {
       return seoSummary.text();
     }
@@ -406,7 +572,7 @@ function extractSummary(sections) {
       }
       const $ = cheerio.load(section.value.content);
       // Remove non-p tags that we should not be looking inside.
-      $(".notecard").remove();
+      $("div.notecard, div.note, div.blockIndicator").remove();
       summary = extractFirstGoodParagraph($);
       if (summary) {
         break;

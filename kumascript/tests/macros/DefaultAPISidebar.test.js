@@ -91,11 +91,11 @@ const expectedGuides = {
   },
   fr: {
     "A Guide in another place": {
-      text: "A Guide in another place [Traduire]",
+      text: "A Guide in another place",
       target: "/fr/docs/Web/AnotherPlace/A_guide",
     },
     "A Guide listed in GroupData and also a subpage": {
-      text: "A Guide listed in GroupData and also a subpage [Traduire]",
+      text: "A Guide listed in GroupData and also a subpage",
       target: "/fr/docs/Web/API/TestInterface_API/MyGuidePage1",
       title: "The MyGuidePage1 ...",
     },
@@ -280,7 +280,7 @@ function checkResult(html, config) {
  */
 function testMacro(config) {
   for (const locale of ["en-US", "fr", "ja"]) {
-    let testName = `${config.name}; locale: ${locale}`;
+    const testName = `${config.name}; locale: ${locale}`;
     itMacro(testName, function (macro) {
       config.locale = locale;
       macro.ctx.env.locale = locale;

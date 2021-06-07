@@ -57,12 +57,12 @@ assert.sameMembers = (a1, a2) => {
 };
 
 function createMacroTestObject(macroName) {
-  let templates = new Templates(__dirname + "/../../macros/");
-  let pageContext = {
+  const templates = new Templates(`${__dirname}/../../macros/`);
+  const pageContext = {
     locale: "en-US",
     url: "",
   };
-  let environment = new Environment(pageContext, templates, null, true);
+  const environment = new Environment(pageContext, templates, null, true);
 
   return {
     /**
@@ -79,7 +79,7 @@ function createMacroTestObject(macroName) {
      * macro. It returns a promise.
      */
     async call(...args) {
-      let rendered = await templates.render(
+      const rendered = await templates.render(
         macroName,
         environment.getExecutionContext(args)
       );
@@ -180,12 +180,13 @@ function lintHTML(html) {
   if (report.valid) {
     return null;
   }
+  let result = "";
   for (const messages of report.results.map((result) => result.messages)) {
     for (const message of messages) {
-      // console.log(message);
-      return message.message;
+      result += message.message;
     }
   }
+  return result;
 }
 
 // ### Exported public API

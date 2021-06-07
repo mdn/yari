@@ -1,3 +1,5 @@
+@use "sass:math";
+
 @import "~@mdn/minimalist/sass/vars/color-palette";
 @import "~@mdn/minimalist/sass/vars/layout";
 
@@ -37,6 +39,7 @@
   @media #{$mq-tablet-and-up} {
     display: flex;
     flex-flow: column;
+    padding-bottom: math.div($base-spacing, 2);
   }
 
   @media #{$mq-large-desktop-and-up} {
