@@ -24,7 +24,7 @@ export function useCopyExamplesToClipboard(doc: Doc | undefined) {
       return;
     }
 
-    [...document.querySelectorAll("div.code-example pre")].forEach(
+    [...document.querySelectorAll("div.code-example pre:not(.hidden)")].forEach(
       (element) => {
         const userMessage = document.createElement("span");
         const button = document.createElement("button");
