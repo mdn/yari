@@ -186,7 +186,6 @@ async function buildDocuments(
       fs.writeFileSync(liveSamplePath, html);
     }
 
-    console.log({ fileAttachments });
     for (const filePath of fileAttachments) {
       // We *could* use symlinks instead. But, there's no point :)
       // Yes, a symlink is less disk I/O but it's nominal.
