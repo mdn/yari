@@ -110,6 +110,7 @@ function useAnnotations(genericFlaws: GenericFlaw[]) {
 }
 
 const FLAWS_HASH = "#_flaws";
+
 export function ToggleDocumentFlaws({
   doc,
   reloadPage,
@@ -1075,7 +1076,9 @@ function UnsafeHTML({ flaws }: { flaws: UnsafeHTMLFlaw[] }) {
                 </>
               )}{" "}
               {flaw.fixable && <FixableFlawBadge />} <br />
-              <b>HTML:</b> <pre className="example-bad">{flaw.html}</pre> <br />
+              <b>HTML:</b>
+              <pre className="example-bad">{flaw.html}</pre>
+              <br />
             </li>
           );
         })}
