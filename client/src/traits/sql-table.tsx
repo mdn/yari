@@ -49,6 +49,10 @@ ADVANCED_QUERIES.push(`SELECT mdn_url, tags
 FROM ?
 WHERE "Experimental" in tags
 ORDER BY popularity DESC LIMIT 10`);
+ADVANCED_QUERIES.push(`SELECT mdn_url, tags
+FROM ?
+WHERE "Experimental" in tags
+ORDER BY popularity DESC LIMIT 10`);
 
 function storageDump(key: string, value: any, session = false) {
   const storage = session ? window.sessionStorage : window.localStorage;
@@ -316,6 +320,8 @@ function ShowHelp({
   document: Document;
   loadQuery: (s: string) => void;
 }) {
+  console.log(document);
+
   return (
     <div className="help">
       <h4>List of keys you can select from</h4>

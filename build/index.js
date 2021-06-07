@@ -717,6 +717,7 @@ async function analyzeDocument(document) {
   doc.internalImages = imageCounts.internal;
   doc.h2s = $("h2").length;
   doc.h3s = $("h3").length;
+  doc.pres = $("pre").length;
   doc.title = metadata.title;
   doc.mdn_url = document.url;
   doc.depth = document.url.split("/").length - 3;
