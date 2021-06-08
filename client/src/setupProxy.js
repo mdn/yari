@@ -7,6 +7,7 @@ module.exports = function (app) {
     changeOrigin: true,
   });
   app.use("/api", proxy);
+  app.use("/*/users/account/signup", proxy);
   app.use("/_+(flaws|translations|open|document)", proxy);
   // E.g. search-index.json or index.json
   app.use("**/*.json", proxy);
