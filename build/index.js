@@ -291,6 +291,7 @@ async function buildDocument(document, documentOptions = {}) {
   }
 
   const doc = {
+    isMarkdown: document.isMarkdown,
     isArchive: document.isArchive,
     isTranslated: document.isTranslated,
     isActive: document.isActive,

@@ -4,7 +4,7 @@ import useSWR, { mutate } from "swr";
 
 import { CRUD_MODE } from "../constants";
 import { useGA } from "../ga-context";
-import { useDocumentURL } from "./hooks";
+import { useDocumentURL, useCopyExamplesToClipboard } from "./hooks";
 import { Doc } from "./types";
 // Ingredients
 import { Prose, ProseWithHeading } from "./ingredients/prose";
@@ -73,6 +73,8 @@ export function Document(props /* TODO: define a TS interface for this */) {
       revalidateOnFocus: CRUD_MODE,
     }
   );
+
+  useCopyExamplesToClipboard(doc);
 
   React.useEffect(() => {
     if (!doc && !error) {
