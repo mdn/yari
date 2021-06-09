@@ -105,11 +105,6 @@ function collectClosestCode($start) {
     const pairs = LIVE_SAMPLE_PARTS.map((part) => {
       const selector = `.${part}, pre[class*="brush:${part}"], pre[class*="${part};"]`;
       const $filtered = $level.find(selector).add($level.filter(selector));
-      console.log("___");
-      console.log($level.toString());
-      console.log("___");
-      console.log($filtered.toString());
-
       return [
         part,
         $filtered
