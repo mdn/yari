@@ -95,7 +95,7 @@ app.get("/api/v1/search", async (req, res) => {
 });
 
 app.get("/api/v1/whoami", async (req, res) => {
-  const context = { waffle: { flags: {}, switches: {} } };
+  const context = {};
   if (req.cookies.fakesessionid) {
     context.username = req.cookies.fakesessionid;
     context.is_authenticated = true;
