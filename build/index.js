@@ -302,27 +302,31 @@ async function buildDocument(document, documentOptions = {}) {
       document.metadata.title,
       renderedHtml
     );
-    // if (liveSamplePage.flaw) {
-    //   const flaw = liveSamplePage.flaw.updateFileInfo(fileInfo);
-    //   if (flaw.name === "MacroLiveSampleError") {
-    //     // As of April 2021 there are 0 pages in mdn/content that trigger
-    //     // a MacroLiveSampleError. So we can be a lot more strict with en-US
-    //     // until the translated-content has had a chance to clean up all
-    //     // their live sample errors.
-    //     // See https://github.com/mdn/yari/issues/2489
-    //     if (document.metadata.locale === "en-US") {
-    //       throw new Error(
-    //         `MacroLiveSampleError within ${flaw.filepath}, line ${flaw.line} column ${flaw.column} (${flaw.error.message})`
-    //       );
-    //     } else {
-    //       console.warn(
-    //         `MacroLiveSampleError within ${flaw.filepath}, line ${flaw.line} column ${flaw.column} (${flaw.error.message})`
-    //       );
-    //     }
-    //   }
-    //   flaws.push(flaw);
-    //   continue;
-    // }
+    for (const { flaw } of liveSamplePages) {
+      if (!flaw) {
+        continue;
+      }
+
+      flaw.updateFileInfo(fileInfo);
+      if (flaw.name === "MacroLiveSampleError") {
+        // As of April 2021 there are 0 pages in mdn/content that trigger
+        // a MacroLiveSampleError. So we can be a lot more strict with en-US
+        // until the translated-content has had a chance to clean up all
+        // their live sample errors.
+        // See https://github.com/mdn/yari/issues/2489
+        if (document.metadata.locale === "en-US") {
+          throw new Error(
+            `MacroLiveSampleError within ${flaw.filepath}, line ${flaw.line} column ${flaw.column} (${flaw.error.message})`
+          );
+        } else {
+          console.warn(
+            `MacroLiveSampleError within ${flaw.filepath}, line ${flaw.line} column ${flaw.column} (${flaw.error.message})`
+          );
+        }
+      }
+      flaws.push(flaw);
+    }
+
     liveSamples.push(...liveSamplePages);
 
     if (flaws.length) {
@@ -377,6 +381,10 @@ async function buildDocument(document, documentOptions = {}) {
   validateSlug(metadata.slug);
 
   const $ = cheerio.load(`<div id="_body">${renderedHtml}</div>`);
+
+  // EmbedLiveSamples carry their token information to enrich flaw error
+  // messages, these should not be in the final output
+  $("[data-token]").removeAttr("data-token");
 
   // Kumascript rendering can't know about FLAW_LEVELS when it's building,
   // because injecting it there would cause a circular dependency.

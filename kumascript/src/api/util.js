@@ -118,7 +118,7 @@ function collectClosestCode($start) {
           .join("\n"),
       ];
     });
-    if (pairs.some(([_, code]) => !!code)) {
+    if (pairs.some(([, code]) => !!code)) {
       return Object.fromEntries(pairs);
     }
   }
@@ -270,7 +270,9 @@ class HTMLTool {
       return result;
     } catch (error) {
       if (error instanceof KumascriptError) {
-        const result = collectClosestCode(this.$("#" + sampleID));
+        const result = collectClosestCode(
+          this.$("#" + cssesc(sampleID, { isIdentifier: true }))
+        );
         if (result) {
           return result;
         }

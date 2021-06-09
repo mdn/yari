@@ -219,10 +219,7 @@ async function render(
       try {
         currentResult.output = await templates.render(
           macroName,
-          environment.getExecutionContext(
-            token.args,
-            token.location.start.offset
-          )
+          environment.getExecutionContext(token.args, token)
         );
       } catch (e) {
         let macroError;
