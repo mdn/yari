@@ -14,8 +14,9 @@ export function EditActions({
   const location = useLocation();
 
   const [opening, setOpening] = useState(false);
-  const [editorOpeningError, setEditorOpeningError] =
-    useState<Error | null>(null);
+  const [editorOpeningError, setEditorOpeningError] = useState<Error | null>(
+    null
+  );
 
   useEffect(() => {
     let unsetOpeningTimer: ReturnType<typeof setTimeout>;
