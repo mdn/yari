@@ -83,7 +83,6 @@ def test_api_whoami(base_url):
     assert resp.status_code == 200
     assert resp.headers.get("content-type") == "application/json"
     data = resp.json()
-    assert len(data) == 1
     assert "geo" in data
     assert "country" in data["geo"]
 
@@ -94,7 +93,6 @@ def test_api_search(base_url):
     assert resp.status_code == 200
     assert resp.headers.get("content-type") == "application/json"
     data = resp.json()
-    assert len(data) == 3
     assert "documents" in data
     assert "metadata" in data
     assert "suggestions" in data
