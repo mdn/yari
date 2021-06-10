@@ -45,3 +45,10 @@ export const ENABLE_PLUS = JSON.parse(
 
 export const DEFAULT_GEO_COUNTRY =
   process.env.REACT_APP_DEFAULT_GEO_COUNTRY || "United States";
+
+export const STRIPE_PUBLIC_KEY =
+  process.env.REACT_APP_STRIPE_PUBLIC_KEY || null;
+export const STRIPE_MONTHLY_PLAN_ID =
+  process.env.REACT_APP_STRIPE_MONTHLY_PLAN_ID || null;
+export const STRIPE_ANNUALLY_PLAN_ID =
+  process.env.REACT_APP_STRIPE_ANNUALLY_PLAN_ID || null;

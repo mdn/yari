@@ -3,15 +3,17 @@ import { Link, useNavigate } from "react-router-dom";
 import useSWR, { mutate } from "swr";
 
 import { Loading } from "../ui/atoms/loading";
-import { DISABLE_AUTH } from "../constants";
+import { DISABLE_AUTH, STRIPE_PUBLIC_KEY } from "../constants";
 import { useUserData } from "../user-context";
 import { useLocale } from "../hooks";
+import { Subscription, SubscriptionData } from "./subscription";
 
 import "./index.scss";
 
 interface UserSettings {
   csrfmiddlewaretoken: string;
   locale: string;
+  subscription: SubscriptionData;
 }
 
 interface Locale {
@@ -123,6 +125,12 @@ export default function SettingsApp({ ...appProps }) {
           />
         )}
       <CloseAccount userSettings={data} />
+      {STRIPE_PUBLIC_KEY && (
+        <Subscription
+          csrfmiddlewaretoken={data.csrfmiddlewaretoken}
+          current={data.subscription}
+        />
+      )}
     </div>
   );
 }
