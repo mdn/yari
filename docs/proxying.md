@@ -49,23 +49,7 @@ cat ./fake-v1-api/whoami.json
   "avatar_url": "https://api.adorable.io/avatars/45/peter",
   "email": "peter@example.com",
   "subscriber_number": 2,
-  "is_subscriber": true,
-  "waffle": {
-    "flags": {
-      "kumaediting": true,
-      "section_edit": true,
-      "spam_checks_enabled": true,
-      "subscription": true,
-      "subscription_banner": true,
-      "subscription_form": true
-    },
-    "switches": {
-      "welcome_email": true,
-      "application_ACAO": true,
-      "store_revision_ips": true
-    },
-    "samples": {}
-  }
+  "is_subscriber": true
 }
 ```
 
