@@ -575,7 +575,12 @@ function findChildren(url, recursive = false) {
   const folder = urlToFolderPath(url);
   const globber = recursive ? ["*", "**"] : ["*"];
   const childPaths = glob.sync(
-    path.join(root, folder, ...globber, HTML_FILENAME)
+    path.join(
+      root,
+      folder,
+      ...globber,
+      `+(${HTML_FILENAME}|${MARKDOWN_FILENAME})`
+    )
   );
   return childPaths
     .map((childFilePath) => path.relative(root, path.dirname(childFilePath)))
