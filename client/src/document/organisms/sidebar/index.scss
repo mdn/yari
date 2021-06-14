@@ -58,9 +58,13 @@
   .icon-experimental,
   .icon-nonstandard {
     color: $primary-50;
+    float: left;
+    margin-top: 3px;
   }
 
   .icon-deprecated {
     color: $red-100;
+    float: left;
+    margin-top: 3px;
   }
 }
