@@ -1,44 +1,46 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import useSWR from "swr";
+import dayjs from "dayjs";
+import relativeTime from "dayjs/plugin/relativeTime";
 
 import { Loading } from "../../ui/atoms/loading";
 import { useUserData } from "../../user-context";
 import { useLocale } from "../../hooks";
 import "./index.scss";
 
-interface Note {
+dayjs.extend(relativeTime);
+
+interface Bookmark {
   id: number;
   url: string;
   title: string;
-  modified: string;
-  text: string;
-  textHTML: string;
+  created: string;
 }
 
-interface NotesData {
-  notes: Note[];
+interface BookmarksData {
+  items: Bookmark[];
   count: number;
 }
 
-export default function Notes() {
+export default function Bookmarks() {
   const userData = useUserData();
 
-  const pageTitle = "Your notes";
+  const pageTitle = "Your bookmarks";
   React.useEffect(() => {
     document.title = pageTitle;
   }, []);
 
-  const { data, error } = useSWR<NotesData | null, Error | null>(
+  const { data, error } = useSWR<BookmarksData | null, Error | null>(
     userData && userData.isAuthenticated && userData.isSubscriber
-      ? "/api/v1/plus/notes/"
+      ? "/api/v1/plus/bookmarks/"
       : null,
     async (url) => {
       const response = await fetch(url);
       if (!response.ok) {
         throw new Error(`${response.status} on ${response.url}`);
       }
-      const data = (await response.json()) as NotesData;
+      const data = (await response.json()) as BookmarksData;
       return data;
     }
   );
@@ -59,19 +61,29 @@ export default function Notes() {
   return <DisplayData data={data} />;
 }
 
-function DisplayData({ data }: { data: NotesData }) {
+function DisplayData({ data }: { data: BookmarksData }) {
   return (
     <section>
-      <h3>Your notes ({data.count.toLocaleString()})</h3>
-      {data.notes.map((note) => {
+      <h3>Your bookmarks ({data.count.toLocaleString()})</h3>
+
+      {data.count === 0 && (
+        <p className="nothing-bookmarked">
+          Nothing bookmarked yet. Go out there an explore!
+        </p>
+      )}
+
+      {data.items.map((bookmark) => {
+        const created = dayjs(bookmark.created);
         return (
-          <div key={note.id}>
+          <div key={bookmark.id} className="bookmark">
             <h4>
-              On <a href={note.url}>{note.title}</a>
+              <a href={bookmark.url}>{bookmark.title}</a>
             </h4>
-            <p dangerouslySetInnerHTML={{ __html: note.textHTML }}></p>
+            <p className="breadcrumb">
+              <a href={bookmark.url}>{bookmark.url}</a>
+            </p>
             <p>
-              <small>{note.modified}</small> - delete?
+              <small>{created.fromNow()}</small>
             </p>
           </div>
         );
@@ -84,7 +96,7 @@ function DataError({ error }: { error: Error }) {
   return (
     <div className="notecard negative">
       <h3>Server error</h3>
-      <p>A server error occurred trying to get your notes.</p>
+      <p>A server error occurred trying to get your bookmarks.</p>
       <p>
         <code>{error.toString()}</code>
       </p>

@@ -1,10 +1,11 @@
 import React from "react";
 import { Routes, Route } from "react-router-dom";
 
+import { Loading } from "../ui/atoms/loading";
 import { PageContentContainer } from "../ui/atoms/page-content";
 import { PageNotFound } from "../page-not-found";
 const App = React.lazy(() => import("./app"));
-const Notes = React.lazy(() => import("./notes"));
+const Bookmarks = React.lazy(() => import("./bookmarks"));
 
 export function Plus() {
   const pageTitle = "MDN Plus";
@@ -18,16 +19,24 @@ export function Plus() {
       <Route
         path="/"
         element={
-          <React.Suspense fallback={<p>Loading...</p>}>
+          <React.Suspense
+            fallback={<Loading minHeight={800} message={"Loading plus…"} />}
+          >
             <App />
           </React.Suspense>
         }
       />
       <Route
-        path="notes"
+        path="bookmarks"
         element={
-          <React.Suspense fallback={<p>Loading...</p>}>
-            <Notes />
+          <React.Suspense
+            fallback={
+              <Loading minHeight={800} message={"Loading bookmarks app…"} />
+            }
+          >
+            <div className="bookmarks">
+              <Bookmarks />
+            </div>
           </React.Suspense>
         }
       />

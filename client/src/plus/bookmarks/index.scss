@@ -1,0 +1,27 @@
+@import "~@mdn/minimalist/sass/vars/color-palette";
+
+.plus {
+  .bookmarks {
+    h3 {
+      margin-bottom: 40px;
+    }
+    p.nothing-bookmarked {
+      margin: 100px 50px;
+      font-style: italic;
+    }
+
+    div.bookmark {
+      margin-bottom: 20px;
+      p.breadcrumb {
+        margin-bottom: 0;
+
+        a {
+          &:link,
+          &:visited {
+            color: $neutral-100;
+          }
+        }
+      }
+    }
+  }
+}
