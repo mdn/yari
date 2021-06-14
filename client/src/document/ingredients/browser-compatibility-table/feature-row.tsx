@@ -93,10 +93,6 @@ function StatusIcons({ status }: { status: bcd.StatusBlock }) {
   );
 }
 
-function NonBreakingSpace() {
-  return <>{"\u00A0"}</>;
-}
-
 function labelFromString(version: string | boolean | null | undefined) {
   if (typeof version !== "string") {
     return <>{"?"}</>;
@@ -140,8 +136,8 @@ const CellText = React.memo(
         isSupported: "no",
         label: (
           <>
-            {labelFromString(added)}
-            <NonBreakingSpace />— {labelFromString(removed)}
+            {labelFromString(added)}&#8202;&ndash;&#8202;
+            {labelFromString(removed)}
           </>
         ),
       };
@@ -209,9 +205,9 @@ function CellIcons({ support }: { support: bcd.SupportStatement | undefined }) {
   return (
     <div className="bc-icons">
       {supportItem.prefix && <Icon name="prefix" />}
-      {supportItem.notes && <Icon name="footnote" />}
       {supportItem.alternative_name && <Icon name="altname" />}
       {supportItem.flags && <Icon name="disabled" />}
+      {supportItem.notes && <Icon name="footnote" />}
     </div>
   );
 }
@@ -275,10 +271,34 @@ function getNotes(
   return asList(support)
     .flatMap((item, i) => {
       const supportNotes = [
+        item.version_removed
+          ? {
+              iconName: "footnote",
+              label: `Removed in version ${item.version_removed} and later`,
+            }
+          : null,
+        item.partial_implementation
+          ? {
+              iconName: "footnote",
+              label: "Partial support",
+            }
+          : null,
         item.prefix
           ? {
-              iconName: "prefix",
+              iconName: "footnote",
               label: `Implemented with the vendor prefix: ${item.prefix}`,
+            }
+          : null,
+        item.alternative_name
+          ? {
+              iconName: "footnote",
+              label: `Alternate name: ${item.alternative_name}`,
+            }
+          : null,
+        item.flags
+          ? {
+              iconName: "footnote",
+              label: <FlagsNote browser={browser} supportItem={item} />,
             }
           : null,
         item.notes
@@ -286,16 +306,14 @@ function getNotes(
               (note) => ({ iconName: "footnote", label: note })
             )
           : null,
-        item.alternative_name
+        // If we encounter nothing else than the required `version_added` and
+        // `release_date` properties, assume full support
+        Object.keys(item).filter(
+          (x) => !["version_added", "release_date"].includes(x)
+        ).length === 0
           ? {
-              iconName: "altname",
-              label: item.alternative_name,
-            }
-          : null,
-        item.flags
-          ? {
-              iconName: "disabled",
-              label: <FlagsNote browser={browser} supportItem={item} />,
+              iconName: "footnote",
+              label: "Full support",
             }
           : null,
       ]
@@ -351,11 +369,16 @@ function CompatCell({
 }) {
   const supportClassName = getSupportClassName(support);
   const browserReleaseDate = getSupportBrowserReleaseDate(support);
+  // Whenever the support statement is complex (array with more than one entry)
+  // or if a single entry is complex (prefix, notes, etc.),
+  // we need to render support details in `bc-history`
   const hasNotes =
     support &&
-    asList(support).some(
-      (item) => item.prefix || item.notes || item.alternative_name || item.flags
-    );
+    (asList(support).length > 1 ||
+      asList(support).some(
+        (item) =>
+          item.prefix || item.notes || item.alternative_name || item.flags
+      ));
   return (
     <>
       <td

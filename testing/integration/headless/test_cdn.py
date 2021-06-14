@@ -132,34 +132,13 @@ def assert_cached(
 @pytest.mark.parametrize(
     "slug,status,expected_location",
     [
-        ("/miel", 500, None),
         ("/_kuma_status.json", 200, None),
         ("/_whatsdeployed/code.json", 200, None),
         ("/_whatsdeployed/content.json", 200, None),
         ("/healthz", 204, None),
         ("/readiness", 204, None),
         ("/api/v1/whoami", 200, None),
-        ("/csp-violation-capture", 405, None),
-        ("/en-US/users/signin", 200, None),
-        ("/en-US/users/signup", 200, None),
         ("/en-US/users/signout", 302, "/"),
-        ("/en-US/users/account/inactive", 200, None),
-        ("/en-US/users/account/signup", 302, "/en-US/users/signin"),
-        ("/en-US/users/account/signin/error", 200, None),
-        ("/en-US/users/account/signin/cancelled", 200, None),
-        (
-            "/en-US/users/account/email",
-            302,
-            "/en-US/users/account/signup-landing?next=/en-US/users/account/email",
-        ),
-        ("/en-US/users/account/email/confirm", 200, None),
-        ("/en-US/users/account/email/confirm/1", 200, None),
-        ("/en-US/users/account/recover/sent", 200, None),
-        (
-            "/en-US/users/account/recover/done",
-            302,
-            "/en-US/users/signin?next=/en-US/users/account/recover/done",
-        ),
         (
             "/users/github/login/?next=/en-US/",
             302,
@@ -184,7 +163,6 @@ def test_not_cached(base_url, is_behind_cdn, slug, status, expected_location):
     "slug,status,expected_location",
     [
         ("/en-US/", 200, None),
-        ("/en-US/events", 302, "https://mozilla.org/contribute/events"),
         ("/robots.txt", 200, None),
         ("/favicon.ico", 200, None),
         ("/contribute.json", 200, None),

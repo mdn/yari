@@ -271,7 +271,6 @@ const read = memoize((folderOrFilePath, roots = ROOTS) => {
   } else {
     folder = folderOrFilePath;
     for (const possibleRoot of roots) {
-      const possibleHTMLFilePath = path.join(possibleRoot, getHTMLPath(folder));
       const possibleMarkdownFilePath = path.join(
         possibleRoot,
         getMarkdownPath(folder)
@@ -281,6 +280,7 @@ const read = memoize((folderOrFilePath, roots = ROOTS) => {
         filePath = possibleMarkdownFilePath;
         break;
       }
+      const possibleHTMLFilePath = path.join(possibleRoot, getHTMLPath(folder));
       if (fs.existsSync(possibleHTMLFilePath)) {
         root = possibleRoot;
         filePath = possibleHTMLFilePath;
@@ -524,7 +524,7 @@ function findAll({
         }
 
         if (locales.size) {
-          const locale = filePath.replace(root, "").split("/")[1];
+          const locale = filePath.replace(root, "").split(path.sep)[1];
           if (!locales.get(locale)) {
             return false;
           }

@@ -23,7 +23,7 @@ const {
 } = require("../content");
 // eslint-disable-next-line node/no-missing-require
 const { prepareDoc, renderDocHTML } = require("../ssr/dist/main");
-const { CSP_VALUE_DEV } = require("../libs/constants");
+const { CSP_VALUE_DEV, DEFAULT_LOCALE } = require("../libs/constants");
 
 const { STATIC_ROOT, PROXY_HOSTNAME, FAKE_V1_API } = require("./constants");
 const documentRouter = require("./document");
@@ -256,6 +256,18 @@ app.get("/*", async (req, res) => {
     if (built) {
       document = built.doc;
       bcdData = built.bcdData;
+    } else if (
+      lookupURL.split("/")[1] &&
+      lookupURL.split("/")[1].toLowerCase() !== DEFAULT_LOCALE.toLowerCase() &&
+      !CONTENT_TRANSLATED_ROOT
+    ) {
+      // Such a common mistake. You try to view a URL that is not en-US but
+      // you forgot to set CONTENT_TRANSLATED_ROOT.
+      console.warn(
+        `URL is for locale '${
+          lookupURL.split("/")[1]
+        }' but CONTENT_TRANSLATED_ROOT is not set. URL will 404.`
+      );
     }
   } catch (error) {
     console.error(`Error in buildDocumentFromURL(${lookupURL})`, error);

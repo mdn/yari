@@ -1779,6 +1779,7 @@
       ]
     },
     "Web MIDI API": {
+      "overview": ["Web MIDI API"],
       "interfaces": [
         "MIDIInputMap",
         "MIDIOutputMap",
