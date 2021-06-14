@@ -67,7 +67,13 @@ program
       try {
         for (let doc of documents.iter()) {
           progressBar.increment();
-          if (doc.isMarkdown) {
+          if (
+            doc.isMarkdown ||
+            // findAll's folderSearch is fuzzy which we don't want here
+            !doc.metadata.slug
+              .toLowerCase()
+              .startsWith(args.folder.toLowerCase())
+          ) {
             continue;
           }
           const { body: h, frontmatter } = fm(doc.rawContent);
