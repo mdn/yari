@@ -30,6 +30,29 @@ function formatH(html) {
   return decodeKS(String(file));
 }
 
+const prettyAST = (node, depth = 0) => {
+  if (!node) {
+    return "";
+  }
+  if (typeof node == "string") {
+    return "  ".repeat(depth) + `${JSON.stringify(node)}`;
+  }
+  return Object.entries(node)
+    .filter(([key]) => key != "position")
+    .map(
+      ([key, value]) =>
+        "  ".repeat(depth) +
+        key +
+        ": " +
+        (Array.isArray(value)
+          ? "\n" + value.map((node) => prettyAST(node, depth + 1)).join("\n")
+          : typeof value == "object"
+          ? "\n" + prettyAST(value, depth + 1)
+          : JSON.stringify(value))
+    )
+    .join("\n");
+};
+
 function withFm(frontmatter, content) {
   if (frontmatter) {
     return `---\n${frontmatter}\n---\n${content}`;
@@ -37,19 +60,10 @@ function withFm(frontmatter, content) {
   return content;
 }
 
-function trimTrailingNewLines(value) {
-  return String(value).replace(/\n+$/, "");
-}
-
-function wrapText(h, value) {
-  return h.wrapText ? value : value.replace(/\r?\n|\r/g, " ");
-}
-
 module.exports = {
   encodeKS,
   decodeKS,
   formatH,
+  prettyAST,
   withFm,
-  trimTrailingNewLines,
-  wrapText,
 };

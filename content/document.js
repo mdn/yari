@@ -271,12 +271,6 @@ const read = memoize((folderOrFilePath, roots = ROOTS) => {
   } else {
     folder = folderOrFilePath;
     for (const possibleRoot of roots) {
-      const possibleHTMLFilePath = path.join(possibleRoot, getHTMLPath(folder));
-      if (fs.existsSync(possibleHTMLFilePath)) {
-        root = possibleRoot;
-        filePath = possibleHTMLFilePath;
-        break;
-      }
       const possibleMarkdownFilePath = path.join(
         possibleRoot,
         getMarkdownPath(folder)
@@ -284,6 +278,12 @@ const read = memoize((folderOrFilePath, roots = ROOTS) => {
       if (fs.existsSync(possibleMarkdownFilePath)) {
         root = possibleRoot;
         filePath = possibleMarkdownFilePath;
+        break;
+      }
+      const possibleHTMLFilePath = path.join(possibleRoot, getHTMLPath(folder));
+      if (fs.existsSync(possibleHTMLFilePath)) {
+        root = possibleRoot;
+        filePath = possibleHTMLFilePath;
         break;
       }
     }
