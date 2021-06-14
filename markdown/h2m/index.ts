@@ -21,27 +21,48 @@ const getTransformProcessor = (options) =>
     .use(gfm)
     .use(remarkPrettier, { report: false, options: { proseWrap: "always" } });
 
-const stripPrettierIgnore = (node: MDNodeUnion) => ({
-  ...node,
-  ...(Array.isArray(node.children)
-    ? {
-        children: node.children
-          .filter(
-            (node) =>
-              !(
-                node.type == "html" &&
-                node.value.trim() == "<!-- prettier-ignore -->"
-              )
-          )
-          .map((node) => stripPrettierIgnore(node)),
+function findPrettierIgnoreRanges(node: MDNodeUnion): [number, number][] {
+  const ignoreRanges = [];
+  if (Array.isArray(node.children)) {
+    for (let i = 0; i < node.children.length; i++) {
+      const child = node.children[i];
+      const nextChild = node.children[i + 1];
+      if (
+        child.type == "html" &&
+        child.value.trim() == "<!-- prettier-ignore -->" &&
+        nextChild
+      ) {
+        ignoreRanges.push([
+          child.position.start.offset,
+          nextChild.position.start.offset,
+        ]);
       }
-    : {}),
-});
+      ignoreRanges.push(...findPrettierIgnoreRanges(child));
+    }
+  }
+  return ignoreRanges;
+}
 
-const stripPrettierIgnoreProcesser = unified()
-  .use(parseMD)
-  .use(() => (result: any) => stripPrettierIgnore(result))
-  .use(stringify);
+async function stripPrettierIgnoreRanges(source: string) {
+  let ast;
+  const parse = unified()
+    .use(parseMD)
+    .use(() => (result: any) => {
+      ast = result;
+      return result;
+    })
+    .use(stringify);
+
+  await parse.process(source);
+
+  let cutCount = 0;
+  for (const [start, end] of findPrettierIgnoreRanges(ast)) {
+    source = source.slice(0, start - cutCount) + source.slice(end - cutCount);
+    cutCount += end - start;
+  }
+
+  return source;
+}
 
 export async function h2m(html, { printAST }: { printAST?: boolean } = {}) {
   const encodedHTML = encodeKS(html);
@@ -62,9 +83,7 @@ export async function h2m(html, { printAST }: { printAST?: boolean } = {}) {
     })
     .process(encodedHTML);
 
-  const result = String(
-    await stripPrettierIgnoreProcesser.process(String(file))
-  );
+  const result = await stripPrettierIgnoreRanges(String(file));
 
   return [decodeKS(result), { invalid, unhandled }];
 }
