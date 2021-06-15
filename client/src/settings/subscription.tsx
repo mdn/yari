@@ -1,20 +1,13 @@
 import { useCallback, useState } from "react";
 import { loadStripe } from "@stripe/stripe-js";
 
-import {
-  STRIPE_ANNUALLY_PLAN_ID,
-  STRIPE_MONTHLY_PLAN_ID,
-  STRIPE_PUBLIC_KEY,
-} from "../constants";
+import { STRIPE_PRICE_ID, STRIPE_PUBLIC_KEY } from "../constants";
 
-export type SubscriptionData = null | {
-  interval: "month" | "year";
-  next_billing_at: null | string;
-};
+export type SubscriptionData = null | object;
 
-async function redirectToStripeCheckout(priceId: string, csrfToken: string) {
+async function redirectToStripeCheckout(csrfToken: string) {
   const formData = new URLSearchParams();
-  formData.set("priceId", priceId);
+  formData.set("priceId", STRIPE_PRICE_ID!);
   const [stripe, response] = await Promise.all([
     loadStripe(STRIPE_PUBLIC_KEY!),
 
@@ -71,13 +64,10 @@ export function Subscription({
 }) {
   const [isLoading, setIsLoading] = useState(false);
 
-  const checkout = useCallback(
-    (priceId: string) => {
-      setIsLoading(true);
-      return redirectToStripeCheckout(priceId, csrfmiddlewaretoken);
-    },
-    [csrfmiddlewaretoken]
-  );
+  const checkout = useCallback(() => {
+    setIsLoading(true);
+    return redirectToStripeCheckout(csrfmiddlewaretoken);
+  }, [csrfmiddlewaretoken]);
 
   const manage = useCallback(() => {
     setIsLoading(true);
@@ -95,22 +85,9 @@ export function Subscription({
           <pre>{JSON.stringify(current, null, 2)}</pre>
         </>
       ) : (
-        <>
-          Create{" "}
-          <button
-            disabled={isLoading}
-            onClick={() => checkout(STRIPE_MONTHLY_PLAN_ID!)}
-          >
-            month
-          </button>{" "}
-          /{" "}
-          <button
-            disabled={isLoading}
-            onClick={() => checkout(STRIPE_ANNUALLY_PLAN_ID!)}
-          >
-            year
-          </button>
-        </>
+        <button disabled={isLoading} onClick={() => checkout()}>
+          Create
+        </button>
       )}
     </div>
   );

@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import useSWR, { mutate } from "swr";
 
 import { Loading } from "../ui/atoms/loading";
-import { DISABLE_AUTH, STRIPE_PUBLIC_KEY } from "../constants";
+import { DISABLE_AUTH, STRIPE_PRICE_ID, STRIPE_PUBLIC_KEY } from "../constants";
 import { useUserData } from "../user-context";
 import { useLocale } from "../hooks";
 import { Subscription, SubscriptionData } from "./subscription";
@@ -125,7 +125,7 @@ export default function SettingsApp({ ...appProps }) {
           />
         )}
       <CloseAccount userSettings={data} />
-      {STRIPE_PUBLIC_KEY && (
+      {STRIPE_PUBLIC_KEY && STRIPE_PRICE_ID && (
         <Subscription
           csrfmiddlewaretoken={data.csrfmiddlewaretoken}
           current={data.subscription}

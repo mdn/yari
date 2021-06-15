@@ -48,7 +48,4 @@ export const DEFAULT_GEO_COUNTRY =
 
 export const STRIPE_PUBLIC_KEY =
   process.env.REACT_APP_STRIPE_PUBLIC_KEY || null;
-export const STRIPE_MONTHLY_PLAN_ID =
-  process.env.REACT_APP_STRIPE_MONTHLY_PLAN_ID || null;
-export const STRIPE_ANNUALLY_PLAN_ID =
-  process.env.REACT_APP_STRIPE_ANNUALLY_PLAN_ID || null;
+export const STRIPE_PRICE_ID = process.env.REACT_APP_STRIPE_PRICE_ID || null;
