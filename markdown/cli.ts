@@ -4,6 +4,7 @@ import { program } from "@caporal/core";
 import * as chalk from "chalk";
 import * as cliProgress from "cli-progress";
 import { Document } from "../content";
+import { VALID_LOCALES } from "../libs/constants";
 
 import { h2m } from "./h2m";
 const { prettyAST } = require("./utils");
@@ -45,14 +46,24 @@ program
     default: false,
     validator: program.BOOLEAN,
   })
+  .option("--locale", "Targets a specific locale", {
+    default: "all",
+    validator: (Array.from(VALID_LOCALES.values()) as string[]).concat("all"),
+  })
   .argument("[folder]", "convert by folder")
   .action(
     tryOrExit(async ({ args, options }) => {
       console.log(
         `Starting HTML to Markdown conversion in ${options.mode} mode`
       );
-
-      const documents = Document.findAll({ folderSearch: args.folder });
+      let localesMap = new Map();
+      if (options.locale !== "all") {
+        localesMap = new Map([[options.locale.toLowerCase(), options.locale]]);
+      }
+      const documents = Document.findAll({
+        folderSearch: args.folder,
+        locales: localesMap,
+      });
 
       const progressBar = new cliProgress.SingleBar(
         {},
