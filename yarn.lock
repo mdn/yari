@@ -9585,10 +9585,10 @@ flatten@^1.0.2:
   resolved "https://registry.yarnpkg.com/flatten/-/flatten-1.0.3.tgz#c1283ac9f27b368abc1e36d1ff7b04501a30356b"
   integrity sha512-dVsPA/UwQ8+2uoFe5GHtiBMu48dWLTdsuEd7CKGlZlD78r1TTWBvDuFaFGKCo/ZfEr95Uk56vZoX86OsHkUeIg==
 
-flexsearch@0.6.32:
-  version "0.6.32"
-  resolved "https://registry.yarnpkg.com/flexsearch/-/flexsearch-0.6.32.tgz#1e20684d317af65baa445cdd9864a5f5b320f510"
-  integrity sha512-EF1BWkhwoeLtbIlDbY/vDSLBen/E5l/f1Vg7iX5CDymQCamcx1vhlc3tIZxIDplPjgi0jhG37c67idFbjg+v+Q==
+flexsearch@0.7.1:
+  version "0.7.1"
+  resolved "https://registry.yarnpkg.com/flexsearch/-/flexsearch-0.7.1.tgz#9bba80582193e2bbeef73fdeee578acddb7fe31f"
+  integrity sha512-+nuTYgqWMA8JawcReboPniMuvy0ClxqU66oMh4YzNiQQrbzH6VdJZMF/kzAEPnpL64FiZfbGRixv+cz5YponhA==
 
 flush-write-stream@^1.0.0:
   version "1.1.1"
