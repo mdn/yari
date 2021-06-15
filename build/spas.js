@@ -1,6 +1,8 @@
 const fs = require("fs");
 const path = require("path");
 
+const got = require("got");
+
 const {
   CONTENT_ROOT,
   CONTENT_TRANSLATED_ROOT,
@@ -10,6 +12,7 @@ const {
   BUILD_OUT_ROOT,
   HOMEPAGE_FEED_URL,
   HOMEPAGE_FEED_DISPLAY_MAX,
+  SUBSCRIPTION_CONFIG_URL,
 } = require("./constants");
 const { getFeedEntries } = require("./feedparser");
 // eslint-disable-next-line node/no-missing-require
@@ -36,6 +39,10 @@ async function buildSPAs(options) {
   if (options.verbose) {
     console.log("Wrote", path.join(outPath, path.basename(url)));
   }
+
+  const subscriptionConfig = SUBSCRIPTION_CONFIG_URL
+    ? (await got(SUBSCRIPTION_CONFIG_URL, { responseType: "json" })).body
+    : null;
 
   // Basically, this builds one (for example) `search/index.html` for every
   // locale we intend to build.
@@ -81,7 +88,10 @@ async function buildSPAs(options) {
         }
         if (prefix === "settings") {
           const filePathContext = path.join(outPath, "index.json");
-          fs.writeFileSync(filePathContext, JSON.stringify(context));
+          fs.writeFileSync(
+            filePathContext,
+            JSON.stringify({ ...context, subscriptionConfig })
+          );
           buildCount++;
           if (options.verbose) {
             console.log("Wrote", filePathContext);
@@ -137,6 +147,7 @@ async function buildSPAs(options) {
       }
     }
   }
+
   if (!options.quiet) {
     console.log(`Built ${buildCount} SPA related files`);
   }

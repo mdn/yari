@@ -1,17 +1,25 @@
 import { useCallback, useState } from "react";
 import { loadStripe } from "@stripe/stripe-js";
 
-import { STRIPE_PRICE_ID, STRIPE_PUBLIC_KEY } from "../constants";
+export type SubscriptionConfig = {
+  public_key: string;
+  prices: {
+    id: string;
+    currency: string;
+    unit_amount: number;
+  }[];
+};
 
-export type SubscriptionData = null | object;
-
-async function redirectToStripeCheckout(csrfToken: string) {
+async function redirectToStripeCheckout(
+  config: SubscriptionConfig,
+  csrfToken: string
+) {
   const formData = new URLSearchParams();
-  formData.set("priceId", STRIPE_PRICE_ID!);
+  formData.set("priceId", config.prices[0].id);
   const [stripe, response] = await Promise.all([
-    loadStripe(STRIPE_PUBLIC_KEY!),
+    loadStripe(config.public_key),
 
-    fetch("/api/v1/subscriptions/checkout", {
+    fetch("/api/v1/subscriptions/checkout/", {
       method: "POST",
       headers: {
         "X-CSRFToken": csrfToken,
@@ -24,18 +32,12 @@ async function redirectToStripeCheckout(csrfToken: string) {
     const { sessionId } = await response.json();
     stripe!.redirectToCheckout({ sessionId });
   } else {
-    console.error(
-      "error while creating checkout",
-      response.status,
-      " - ",
-      response.statusText,
-      await response.text()
-    );
+    throw new Error(await response.text());
   }
 }
 
 async function redirectToStripeCustomerPortal(csrfToken: string) {
-  const response = await fetch("/api/v1/subscriptions/customer_portal", {
+  const response = await fetch("/api/v1/subscriptions/customer_portal/", {
     method: "POST",
     headers: {
       "X-CSRFToken": csrfToken,
@@ -45,38 +47,44 @@ async function redirectToStripeCustomerPortal(csrfToken: string) {
     const { url } = await response.json();
     window.location.href = url;
   } else {
-    console.error(
-      "error while creating customer portal",
-      response.status,
-      " - ",
-      response.statusText,
-      await response.text()
-    );
+    throw new Error(await response.text());
   }
 }
 
 export function Subscription({
+  config,
   csrfmiddlewaretoken,
   current,
 }: {
+  config: SubscriptionConfig;
   csrfmiddlewaretoken: string;
-  current: SubscriptionData;
+  current: object;
 }) {
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<Error | null>(null);
 
-  const checkout = useCallback(() => {
+  const checkout = useCallback(async () => {
     setIsLoading(true);
-    return redirectToStripeCheckout(csrfmiddlewaretoken);
+    try {
+      await redirectToStripeCheckout(config, csrfmiddlewaretoken);
+    } catch (error) {
+      setError(error);
+    }
   }, [csrfmiddlewaretoken]);
 
-  const manage = useCallback(() => {
+  const manage = useCallback(async () => {
     setIsLoading(true);
-    return redirectToStripeCustomerPortal(csrfmiddlewaretoken);
+    try {
+      await redirectToStripeCustomerPortal(csrfmiddlewaretoken);
+    } catch (error) {
+      setError(error);
+    }
   }, [csrfmiddlewaretoken]);
 
   return (
     <div>
       <h3>Subscription</h3>
+      {error && <div className="notecard negative">{error.toString()}</div>}
       {current ? (
         <>
           <button disabled={isLoading} onClick={() => manage()}>
@@ -86,7 +94,7 @@ export function Subscription({
         </>
       ) : (
         <button disabled={isLoading} onClick={() => checkout()}>
-          Create
+          Create {JSON.stringify(config.prices[0])}
         </button>
       )}
     </div>
