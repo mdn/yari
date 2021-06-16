@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { useCombobox } from "downshift";
 import FlexSearch from "flexsearch";
 import useSWR from "swr";
@@ -166,7 +166,6 @@ function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
     defaultSelection,
   } = props;
 
-  const navigate = useNavigate();
   const locale = useLocale();
 
   const [searchIndex, searchIndexError, initializeSearchIndex] =
@@ -252,7 +251,7 @@ function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
     defaultIsOpen: isFocused,
     onSelectedItemChange: ({ selectedItem }) => {
       if (selectedItem) {
-        navigate(selectedItem.url);
+        window.location.href = selectedItem.url;
         reset();
         toggleMenu();
         if (onResultPicked) {
