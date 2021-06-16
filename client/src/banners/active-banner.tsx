@@ -15,8 +15,7 @@ import { useLocale } from "../hooks";
 // the banner configurable through props like these. For now, however,
 // that is hardcoded into the stylesheet.
 export type BannerProps = {
-  // A unique string associated with this banner. It must match the
-  // name of the waffle flag that controls the banner, and is also
+  // A unique string associated with this banner. Is also
   // used as part of a localStorage key.
   id: string;
   // class name used on main banner container. Exclusively used

@@ -35,6 +35,63 @@ a.new {
 .main-page-content {
   padding: math.div($base-spacing, 2) $base-spacing $base-spacing;
 
+  .code-example {
+    position: relative;
+
+    .copy-icon {
+      background: $neutral-550 url("../assets/clippy.svg") center center
+        no-repeat;
+      background-position: 61% 45%;
+      background-size: 16px;
+      border: 1px solid $neutral-550;
+      border-radius: $default-border-radius;
+      cursor: pointer;
+      height: 36px;
+      margin: 0;
+      padding: math.div($base-spacing, 4);
+      position: absolute;
+      right: math.div($base-spacing, 3);
+      top: math.div($base-spacing, 3);
+      vertical-align: middle;
+      width: 33px;
+      z-index: $bottom-layer;
+
+      @media #{$mq-large-desktop-and-up} {
+        opacity: 0.4;
+
+        &:hover,
+        &:focus {
+          background-color: $neutral-525;
+          opacity: 1;
+        }
+      }
+    }
+
+    .copy-icon-message {
+      background: $neutral-100;
+      border-radius: $default-border-radius;
+      color: $neutral-600;
+      display: none;
+      font-size: $small-font-size;
+      opacity: 1;
+      padding: math.div($base-spacing, 4);
+      position: absolute;
+      right: math.div($base-spacing, 3);
+      top: 15px;
+      z-index: $bottom-layer;
+    }
+
+    &:focus,
+    &:hover {
+      .copy-icon {
+        opacity: 1;
+      }
+    }
+
+    .show {
+      display: block;
+    }
+  }
   @media #{$mq-small-desktop-and-up} {
     margin-bottom: $base-spacing * 2;
     padding: 0 $base-spacing $base-spacing;

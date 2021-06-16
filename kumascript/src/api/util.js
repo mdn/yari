@@ -239,7 +239,7 @@ class HTMLTool {
     try {
       const sample = this.getSection(sampleID.substr("frame_".length));
       // We have to wrap the collection of elements from the section
-      // we've just aquired because we're going to search among all
+      // we've just acquired because we're going to search among all
       // descendants and we want to include the elements themselves
       // as well as their descendants.
       const $ = cheerio.load(`<div>${cheerio.html(sample)}</div>`);
