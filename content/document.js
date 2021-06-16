@@ -239,7 +239,6 @@ const read = memoize((folderOrFilePath, roots = ROOTS) => {
   let filePath = null;
   let folder = null;
   let root = null;
-  let isMarkdown = false;
   let locale = null;
 
   if (fs.existsSync(folderOrFilePath)) {
@@ -272,12 +271,6 @@ const read = memoize((folderOrFilePath, roots = ROOTS) => {
   } else {
     folder = folderOrFilePath;
     for (const possibleRoot of roots) {
-      const possibleHTMLFilePath = path.join(possibleRoot, getHTMLPath(folder));
-      if (fs.existsSync(possibleHTMLFilePath)) {
-        root = possibleRoot;
-        filePath = possibleHTMLFilePath;
-        break;
-      }
       const possibleMarkdownFilePath = path.join(
         possibleRoot,
         getMarkdownPath(folder)
@@ -285,7 +278,12 @@ const read = memoize((folderOrFilePath, roots = ROOTS) => {
       if (fs.existsSync(possibleMarkdownFilePath)) {
         root = possibleRoot;
         filePath = possibleMarkdownFilePath;
-        isMarkdown = true;
+        break;
+      }
+      const possibleHTMLFilePath = path.join(possibleRoot, getHTMLPath(folder));
+      if (fs.existsSync(possibleHTMLFilePath)) {
+        root = possibleRoot;
+        filePath = possibleHTMLFilePath;
         break;
       }
     }
@@ -388,7 +386,7 @@ const read = memoize((folderOrFilePath, roots = ROOTS) => {
     // ...{ rawContent },
     rawContent, // HTML or Markdown whole string with all the front-matter
     rawBody, // HTML or Markdown string without the front-matter
-    isMarkdown,
+    isMarkdown: filePath.endsWith(MARKDOWN_FILENAME),
     isArchive,
     isTranslated,
     isActive,
@@ -526,7 +524,7 @@ function findAll({
         }
 
         if (locales.size) {
-          const locale = filePath.replace(root, "").split("/")[1];
+          const locale = filePath.replace(root, "").split(path.sep)[1];
           if (!locales.get(locale)) {
             return false;
           }
@@ -577,7 +575,12 @@ function findChildren(url, recursive = false) {
   const folder = urlToFolderPath(url);
   const globber = recursive ? ["*", "**"] : ["*"];
   const childPaths = glob.sync(
-    path.join(root, folder, ...globber, HTML_FILENAME)
+    path.join(
+      root,
+      folder,
+      ...globber,
+      `+(${HTML_FILENAME}|${MARKDOWN_FILENAME})`
+    )
   );
   return childPaths
     .map((childFilePath) => path.relative(root, path.dirname(childFilePath)))

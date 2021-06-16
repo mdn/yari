@@ -254,6 +254,29 @@ test("content built French foo page", () => {
   );
 });
 
+test("French translation using English front-matter bits", () => {
+  const builtFolder = path.join(
+    buildRoot,
+    "fr",
+    "docs",
+    "web",
+    "spec_section_extraction"
+  );
+  const jsonFile = path.join(builtFolder, "index.json");
+  const { doc } = JSON.parse(fs.readFileSync(jsonFile));
+  expect(doc.title).toBe("Extraction de sections de spécifications");
+  const specifications = doc.body.find(
+    (section) => section.type === "specifications"
+  );
+  expect(specifications.value.query).toBe(
+    "javascript.builtins.Array.toLocaleString"
+  );
+  const bcd = doc.body.find(
+    (section) => section.type === "browser_compatibility"
+  );
+  expect(bcd.value.query).toBe("javascript.builtins.Array.toLocaleString");
+});
+
 test("content built zh-TW page with en-US fallback image", () => {
   const builtFolder = path.join(buildRoot, "zh-tw", "docs", "web", "foo");
   const jsonFile = path.join(builtFolder, "index.json");
@@ -1084,6 +1107,31 @@ test("image flaws with bad images", () => {
   ).toBe(4);
 });
 
+test("linked to local files", () => {
+  const builtFolder = path.join(
+    buildRoot,
+    "en-us",
+    "docs",
+    "web",
+    "images",
+    "linked_to"
+  );
+  const htmlFile = path.join(builtFolder, "index.html");
+  const html = fs.readFileSync(htmlFile, "utf-8");
+  const $ = cheerio.load(html);
+  expect.assertions(1);
+  $('a[href*="dino.svg"]').each((i, element) => {
+    const link = $(element);
+    // The point of this test is to prove that the link becomes
+    // "absolute" (i.e. starting with /)
+    // If it didn't do this a link `<a href=dino.svg>`, when clicked,
+    // would actually be a link to `/en-US/docs/Web/Images/dino.svg`
+    // because the page `/en-US/docs/Web/Images/Linked_to` is served
+    // without a trailing /.
+    expect(link.attr("href")).toBe("/en-US/docs/Web/Images/Linked_to/dino.svg");
+  });
+});
+
 test("image flaws with repeated external images", () => {
   // This test exists because of https://github.com/mdn/yari/issues/2247
   // which showed that if a document has an external URL repeated more than
@@ -1563,15 +1611,16 @@ test("basic markdown rendering", () => {
   expect($("article ul li").length).toBe(6);
   expect($('article a[href^="/"]').length).toBe(2);
   expect($('article a[href^="#"]').length).toBe(5);
-  expect($("article pre").length).toBe(3);
-  expect($("article pre.notranslate").length).toBe(3);
+  expect($("article pre").length).toBe(4);
+  expect($("article pre.notranslate").length).toBe(4);
   expect($("article pre.css").hasClass("brush:")).toBe(true);
   expect($("article pre.javascript").hasClass("brush:")).toBe(true);
   expect($("article .fancy strong").length).toBe(1);
 
   const jsonFile = path.join(builtFolder, "index.json");
   const { doc } = JSON.parse(fs.readFileSync(jsonFile));
-  expect(Object.keys(doc.flaws).length).toBe(0);
+  expect(Object.keys(doc.flaws).length).toBe(1);
+  expect(doc.flaws.bad_pre_tags.length).toBe(1);
 });
 
 test("unsafe HTML gets flagged as flaws and replace with its raw HTML", () => {

@@ -138,7 +138,6 @@ export function Banner() {
   // THIS CODE IS LEFT COMMENTED-OUT UNTIL WE'RE CERTAIN WE'RE NOT GOING TO USE THIS.
   // IT'S KEPT AS REMINDER HOW TO IMPLEMENT THESE.
   // const isEnabled = (id: string) =>
-  //   (userData.waffle.flags[id] || userData.waffle.switches[id]) &&
   //   !isEmbargoed(id);
 
   // if (isEnabled(COMMON_SURVEY_ID)) {
