@@ -70,7 +70,7 @@ export function Subscription({
     } catch (error) {
       setError(error);
     }
-  }, [csrfmiddlewaretoken]);
+  }, [config, csrfmiddlewaretoken]);
 
   const manage = useCallback(async () => {
     setIsLoading(true);
