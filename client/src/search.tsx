@@ -247,7 +247,7 @@ function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
     reset,
     toggleMenu,
   } = useCombobox({
-    items: resultItems.length == 0 ? [nothingFoundItem] : resultItems,
+    items: resultItems.length === 0 ? [nothingFoundItem] : resultItems,
     inputValue,
     defaultIsOpen: isFocused,
     onSelectedItemChange: ({ selectedItem }) => {
