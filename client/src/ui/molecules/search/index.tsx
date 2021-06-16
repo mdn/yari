@@ -89,7 +89,11 @@ export function BasicSearchWidget({
   useFocusOnSlash(inputRef);
 
   return (
-    <form action={`/${locale}/search`} className="search-form" role="search">
+    <form
+      action={`/${locale}/search`}
+      className="search-form search-widget"
+      role="search"
+    >
       <label htmlFor="main-q" className="visually-hidden">
         Search MDN
       </label>

@@ -346,10 +346,9 @@ function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
   return (
     <form
       action={formAction}
-      className="search-form"
       {...getComboboxProps({
         ref: formRef as any, // downshift's types hardcode it as a div
-        className: "search-widget",
+        className: "search-form search-widget",
         id: "nav-main-search",
         role: "search",
         onSubmit: (e) => {
