@@ -84,7 +84,7 @@
     "open": "^8.2.0",
     "open-editor": "3.0.0",
     "prismjs": "1.23.0",
-    "react-modal": "^3.14.2",
+    "react-modal": "^3.14.3",
     "read-chunk": "3.2.0",
     "rehype-format": "^3.1.0",
     "rehype-parse": "^7.0.1",
