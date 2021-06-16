@@ -194,16 +194,6 @@ export function Document(props /* TODO: define a TS interface for this */) {
   );
 }
 
-function Archived() {
-  return (
-    <div className="archived">
-      <p>
-        <b>This is an archived page.</b> It's not actively maintained.
-      </p>
-    </div>
-  );
-}
-
 /** These prose sections should be rendered WITHOUT a heading. */
 const PROSE_NO_HEADING = ["short_description", "overview"];
 
