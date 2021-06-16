@@ -150,7 +150,7 @@ export function Document(props /* TODO: define a TS interface for this */) {
 
   return (
     <>
-      {doc.isArchive && !doc.isTranslated && <Archived />}
+      {doc.isArchive && !doc.isTranslated}
 
       {/* if we have either breadcrumbs or translations for the current page,
       continue rendering the section */}
