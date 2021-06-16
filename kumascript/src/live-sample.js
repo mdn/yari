@@ -68,7 +68,7 @@ function buildLiveSamplePages(uri, title, renderedHTML) {
   // document or else collect flaws
   const $ = cheerio.load(renderedHTML);
   return $("iframe")
-    .filter((i, iframe) => $(iframe).attr("src").includes("/_sample_."))
+    .filter((i, iframe) => $(iframe).attr("src").includes(`${uri}/_sample_.`))
     .map((i, iframe) => {
       const iframeId = $(iframe).attr("id");
       const id = iframeId.substr("frame_".length);
