@@ -223,6 +223,18 @@ function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
     }
   }, [inputValue, searchIndex, searchIndexError]);
 
+  const formAction = `/${locale}/search`;
+  const searchPath = useMemo(() => {
+    const sp = new URLSearchParams();
+    sp.set("q", inputValue.trim());
+    return `${formAction}?${sp.toString()}`;
+  }, [formAction, inputValue]);
+
+  const nothingFoundItem = useMemo(
+    () => ({ url: searchPath, title: "", substrings: [] }),
+    [searchPath]
+  );
+
   const {
     getInputProps,
     getItemProps,
@@ -235,7 +247,7 @@ function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
     reset,
     toggleMenu,
   } = useCombobox({
-    items: resultItems,
+    items: resultItems.length == 0 ? [nothingFoundItem] : resultItems,
     inputValue,
     defaultIsOpen: isFocused,
     onSelectedItemChange: ({ selectedItem }) => {
@@ -270,13 +282,6 @@ function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
     }
   }, [highlightedIndex, resultItems]);
 
-  const formAction = `/${locale}/search`;
-  const searchPath = useMemo(() => {
-    const sp = new URLSearchParams();
-    sp.set("q", inputValue.trim());
-    return `${formAction}?${sp.toString()}`;
-  }, [formAction, inputValue]);
-
   const searchResults = (() => {
     if (!isOpen || !inputValue.trim()) {
       return null;
@@ -299,7 +304,15 @@ function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
     return (
       <>
         {resultItems.length === 0 && inputValue !== "/" ? (
-          <div className="nothing-found">
+          <div
+            {...getItemProps({
+              className:
+                "nothing-found result-item " +
+                (highlightedIndex === 0 ? "highlight" : ""),
+              item: nothingFoundItem,
+              index: 0,
+            })}
+          >
             No document titles found.
             <br />
             <Link to={searchPath}>
