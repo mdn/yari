@@ -21,6 +21,7 @@ describe("Autocomplete search", () => {
     await expect(page).toMatch("<foo>: A test tag");
     // There's only 1 and this clicks on the first one anyway.
     await expect(page).toClick("div.result-item");
+    await page.waitForNavigation();
     await expect(page).toMatchElement("h1", { text: "<foo>: A test tag" });
     // Should have been redirected too...
     // Note! It's important that this happens *after* the `.toMatchElement`
@@ -47,6 +48,7 @@ describe("Autocomplete search", () => {
     await expect(page).toFill(SEARCH_SELECTOR, "/wboo");
     await expect(page).toMatch("<foo>: A test tag");
     await expect(page).toClick("div.result-item");
+    await page.waitForNavigation();
     await expect(page).toMatchElement("h1", { text: "<foo>: A test tag" });
   });
 
