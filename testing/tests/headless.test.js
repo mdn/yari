@@ -3,7 +3,7 @@ const { setDefaultOptions } = require("expect-puppeteer");
 // The default it 500ms. It has happened and it can happen again, that sometimes
 // it just takes a little longer than 500ms. Give it a healthy margin of a
 // timeout so as to reduce the risk of it failing when there's nothing wrong.
-setDefaultOptions({ timeout: 1500 });
+setDefaultOptions({ timeout: 3000 });
 
 function testURL(pathname = "/") {
   return `http://localhost:5000${pathname}`;
@@ -92,7 +92,6 @@ describe("Basic viewing of functional pages", () => {
       await page.goto(testURL(sampleUri));
       await expect(page).toMatchElement("body > div.wrapper > div.box1", {
         text: "One",
-        timeout: 10000,
       });
       await expect(page).toMatchElement("body > div.wrapper > div.box2", {
         text: "Two",
