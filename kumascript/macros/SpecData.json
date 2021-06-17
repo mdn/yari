@@ -1632,7 +1632,7 @@
   "Web Audio API": {
     "name": "Web Audio API",
     "url": "https://webaudio.github.io/web-audio-api/",
-    "status": "WD"
+    "status": "REC"
   },
   "Web Bluetooth": {
     "name": "Web Bluetooth",
