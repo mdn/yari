@@ -1,6 +1,8 @@
 const fs = require("fs");
 const path = require("path");
 
+const got = require("got");
+
 const {
   CONTENT_ROOT,
   CONTENT_TRANSLATED_ROOT,
@@ -10,6 +12,7 @@ const {
   BUILD_OUT_ROOT,
   HOMEPAGE_FEED_URL,
   HOMEPAGE_FEED_DISPLAY_MAX,
+  BUILD_SUBSCRIPTION_CONFIG_URL,
 } = require("./constants");
 const { getFeedEntries } = require("./feedparser");
 // eslint-disable-next-line node/no-missing-require
@@ -35,6 +38,23 @@ async function buildSPAs(options) {
   buildCount++;
   if (options.verbose) {
     console.log("Wrote", path.join(outPath, path.basename(url)));
+  }
+
+  let subscriptionConfig = null;
+  if (BUILD_SUBSCRIPTION_CONFIG_URL) {
+    try {
+      subscriptionConfig = (
+        await got(BUILD_SUBSCRIPTION_CONFIG_URL, { responseType: "json" })
+      ).body;
+    } catch (error) {
+      console.error(
+        "Error while fetching subscription config for",
+        BUILD_SUBSCRIPTION_CONFIG_URL,
+        ":",
+        error
+      );
+      throw error;
+    }
   }
 
   // Basically, this builds one (for example) `search/index.html` for every
@@ -81,7 +101,10 @@ async function buildSPAs(options) {
         }
         if (prefix === "settings") {
           const filePathContext = path.join(outPath, "index.json");
-          fs.writeFileSync(filePathContext, JSON.stringify(context));
+          fs.writeFileSync(
+            filePathContext,
+            JSON.stringify({ ...context, subscriptionConfig })
+          );
           buildCount++;
           if (options.verbose) {
             console.log("Wrote", filePathContext);
@@ -137,6 +160,7 @@ async function buildSPAs(options) {
       }
     }
   }
+
   if (!options.quiet) {
     console.log(`Built ${buildCount} SPA related files`);
   }
