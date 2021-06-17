@@ -193,7 +193,7 @@ How many RSS feed entries to display on the home page.
 
 ### `BUILD_SUBSCRIPTION_CONFIG_URL`
 
-**Default: `'''``**
+**Default: `''`**
 
 URL from which to fetch the subscription config. You need Kuma running and for local
 dev you will likely want to point it to
