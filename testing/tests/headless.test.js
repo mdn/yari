@@ -92,6 +92,7 @@ describe("Basic viewing of functional pages", () => {
       await page.goto(testURL(sampleUri));
       await expect(page).toMatchElement("body > div.wrapper > div.box1", {
         text: "One",
+        timeout: 10000,
       });
       await expect(page).toMatchElement("body > div.wrapper > div.box2", {
         text: "Two",
