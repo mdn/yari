@@ -149,7 +149,7 @@
     "pegjs": "^0.10.0",
     "prettier": "2.3.1",
     "prettier-plugin-packagejson": "^2.2.11",
-    "pretty-quick": "3.1.0",
+    "pretty-quick": "3.1.1",
     "puppeteer": "9.0.0",
     "react": "17.0.2",
     "react-dom": "17.0.2",
