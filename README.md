@@ -255,3 +255,14 @@ sub-dependencies. A sure way to solve it is to run:
 
     rm -fr node_modules
     yarn install
+
+### `Error: listen EADDRINUSE: address already in use :::5000`
+
+The default server port is conflicting with another running process
+(e.g., ControlCenter.app in macOS >= 12). To resolve this, you can pick any
+unused port (e.g., 6000) and run the following:
+
+```
+echo SERVER_PORT=6000 >> .env
+echo BUILD_LIVE_SAMPLES_BASE_URL=http://localhost:6000 >> .env
+```
