@@ -104,6 +104,8 @@ export const handlers: QueryAndTransform[] = [
         "message-body",
         "message-flex-body",
         "message-body-wrapper",
+        "blob-code-inner",
+        "blob-code-marker",
       ],
     },
     (node, t) => t(node),
