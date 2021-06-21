@@ -37,8 +37,8 @@ export const toPrettyHTML = (...args: Parameters<typeof toHTML>) => {
     })
     .trim();
   // Workaround for Prettier issue https://github.com/prettier/prettier/issues/10950
-  if (result.endsWith("\n>\n")) {
-    return result.slice(0, -3) + ">";
+  if (result.endsWith("\n>")) {
+    return result.slice(0, -2) + ">";
   }
   return result;
 };
