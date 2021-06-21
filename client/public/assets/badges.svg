@@ -1,5 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg">
-  <symbol id="icon-experimental" viewBox="0 0 100 100">
+  <symbol id="icon-experimental" viewBox="0 0 100 100" role="img">
     <title>Experimental</title>
     <path
       fill="currentColor"
@@ -7,7 +7,7 @@
     />
   </symbol>
 
-  <symbol id="icon-nonstandard" viewBox="0 0 100 100">
+  <symbol id="icon-nonstandard" viewBox="0 0 100 100" role="img">
     <title>Non-Standard</title>
     <path
       fill="currentColor"
@@ -15,7 +15,7 @@
     />
   </symbol>
 
-  <symbol id="icon-deprecated" viewBox="0 0 100 100">
+  <symbol id="icon-deprecated" viewBox="0 0 100 100" role="img">
     <title>Deprecated</title>
     <path
       fill="currentColor"
