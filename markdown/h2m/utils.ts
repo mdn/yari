@@ -30,10 +30,12 @@ export class InvalidASTError extends Error {
 }
 
 export const toPrettyHTML = (...args: Parameters<typeof toHTML>) => {
-  const result = prettier.format(toHTML(...args), {
-    semi: false,
-    parser: "html",
-  });
+  const result = prettier
+    .format(toHTML(...args), {
+      semi: false,
+      parser: "html",
+    })
+    .trim();
   // Workaround for Prettier issue https://github.com/prettier/prettier/issues/10950
   if (result.endsWith("\n>\n")) {
     return result.slice(0, -3) + ">";
