@@ -307,4 +307,5 @@ export const handlers: QueryAndTransform[] = [
   ),
 
   ["var", (node, t) => h("emphasis", t(node))],
+  ["dfn", (node, t) => h("inlineCode", toText(node))],
 ];
