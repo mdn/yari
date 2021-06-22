@@ -3,6 +3,7 @@ const fm = require("front-matter");
 import { program } from "@caporal/core";
 import * as chalk from "chalk";
 import * as cliProgress from "cli-progress";
+import * as yaml from "js-yaml";
 import { Document } from "../content";
 import { VALID_LOCALES } from "../libs/constants";
 
@@ -101,9 +102,10 @@ program
           }
 
           if (options.mode == "replace" || options.mode == "keep") {
+            const frontmatterFormatted = yaml.dump(yaml.load(frontmatter));
             fs.writeFileSync(
               doc.fileInfo.path.replace(/\.html$/, ".md"),
-              withFm(frontmatter, markdown)
+              withFm(frontmatterFormatted, markdown)
             );
             if (options.mode == "replace") {
               fs.unlinkSync(doc.fileInfo.path);
