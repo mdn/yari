@@ -10,6 +10,10 @@ function testURL(pathname = "/") {
 }
 
 describe("Basic viewing of functional pages", () => {
+  beforeEach(() => {
+    page.setDefaultTimeout(3000);
+  });
+
   it("open the temporary home page", async () => {
     await page.goto(testURL("/"));
     await expect(page).toMatch("MDN Web Docs");
