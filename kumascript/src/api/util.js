@@ -79,9 +79,7 @@ const getLevel = ($header) => parseInt($header[0].name[1], 10);
 const getHigherHeaderSelectors = (upTo) =>
   Array.from({ length: upTo }, (_, i) => "h" + (i + 1)).join(", ");
 
-function collectLevels($el) {
-  const $levels = [];
-
+function* collectLevels($el) {
   // Initialized to 7 so that we pick up the lowest heading level which is <h6>
   let level = 7;
   let $prev = $el;
@@ -89,14 +87,12 @@ function collectLevels($el) {
     const nextHigherLevel = getHigherHeaderSelectors(level - 1);
     const $header = $prev.prevAll(nextHigherLevel).first();
     if ($header.length == 0) {
-      return $levels;
+      return;
     }
     level = getLevel($header);
     $prev = $header;
-    $levels.push($header.nextUntil(nextHigherLevel));
+    yield $header.nextUntil(nextHigherLevel);
   }
-
-  return $levels;
 }
 
 function collectClosestCode($start) {
