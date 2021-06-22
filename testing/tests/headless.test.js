@@ -10,10 +10,6 @@ function testURL(pathname = "/") {
 }
 
 describe("Basic viewing of functional pages", () => {
-  beforeEach(() => {
-    page.setDefaultTimeout(3000);
-  });
-
   it("open the temporary home page", async () => {
     await page.goto(testURL("/"));
     await expect(page).toMatch("MDN Web Docs");
@@ -60,6 +56,7 @@ describe("Basic viewing of functional pages", () => {
     const flexSample2Uri = `${uri}/Flex/_sample_.Flex_2.html`;
     const gridSample1Uri = `${uri}/Grid/_sample_.Grid_1.html`;
     const gridSample2Uri = `${uri}/_sample_.Grid_2.html`;
+    page.setDefaultTimeout(3000);
     await page.goto(testURL(uri));
     await expect(page).toMatch("A Test Introduction to CSS layout");
     await expect(page).toMatchElement("h1", {
@@ -136,6 +133,7 @@ describe("Basic viewing of functional pages", () => {
     const uri = "/en-US/docs/Learn/CSS/CSS_layout/Introduction/Grid";
     const gridSample1Uri = `${uri}/_sample_.Grid_1.html`;
     const gridSample2Uri = `${uri}/_sample_.Grid_2.html`;
+    page.setDefaultTimeout(3000);
     await page.goto(testURL(uri));
     await expect(page).toMatch("A Test Introduction to CSS Grid Layout");
     await expect(page).toMatchElement("h1", {
