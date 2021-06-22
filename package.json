@@ -44,7 +44,7 @@
     "@mdn/browser-compat-data": "3.3.8",
     "@stripe/stripe-js": "^1.15.1",
     "accept-language-parser": "1.5.0",
-    "browser-specs": "^1.40.0",
+    "browser-specs": "^1.41.0",
     "chalk": "4.1.1",
     "cheerio": "1.0.0-rc.6",
     "cli-progress": "^3.9.0",
