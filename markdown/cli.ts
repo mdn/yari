@@ -3,8 +3,8 @@ const fm = require("front-matter");
 import { program } from "@caporal/core";
 import * as chalk from "chalk";
 import * as cliProgress from "cli-progress";
-import * as yaml from "js-yaml";
 import { Document } from "../content";
+import { saveFile } from "../content/document";
 import { VALID_LOCALES } from "../libs/constants";
 
 import { h2m } from "./h2m";
@@ -88,7 +88,7 @@ program
           ) {
             continue;
           }
-          const { body: h, frontmatter } = fm(doc.rawContent);
+          const { body: h, attributes: metadata } = fm(doc.rawContent);
           const [markdown, { invalid, unhandled }] = await h2m(h, {
             printAST: options.printAst,
           });
@@ -102,10 +102,10 @@ program
           }
 
           if (options.mode == "replace" || options.mode == "keep") {
-            const frontmatterFormatted = yaml.dump(yaml.load(frontmatter));
-            fs.writeFileSync(
+            saveFile(
               doc.fileInfo.path.replace(/\.html$/, ".md"),
-              withFm(frontmatterFormatted, markdown)
+              markdown,
+              metadata
             );
             if (options.mode == "replace") {
               fs.unlinkSync(doc.fileInfo.path);
