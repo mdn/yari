@@ -67,6 +67,12 @@ function safeDecodeURIComponent(text) {
   }
 }
 
+const findSectionStart = ($, sectionID) =>
+  $(`#${cssesc(sectionID, { isIdentifier: true })}`);
+
+const hasHeading = ($, sampleID) =>
+  !sampleID ? false : findSectionStart($, sampleID).length > 0;
+
 function findTopLevelParent($el) {
   while ($el.siblings(":header").length == 0 && $el.parent().length > 0) {
     $el = $el.parent();
@@ -188,7 +194,7 @@ class HTMLTool {
     // Kuma looks for the first HTML tag of a limited set of section tags with ANY
     // attribute equal to the "sectionID", but in practice it's always an "id" attribute,
     // so let's simplify this as well as make it much faster.
-    const sectionStart = $(`#${cssesc(sectionID, { isIdentifier: true })}`);
+    const sectionStart = findSectionStart($, sectionID);
     if (!sectionStart.length) {
       let errorMessage = `unable to find an HTML element with an "id" of "${sectionID}" within ${this.pathDescription}`;
       const hasMoreThanAscii = [...sectionID].some(
@@ -231,9 +237,10 @@ class HTMLTool {
   }
 
   extractLiveSampleObject(sampleID) {
-    const result = Object.create(null);
-    try {
-      const sample = this.getSection(sampleID.substr("frame_".length));
+    const sectionID = sampleID.substr("frame_".length);
+    if (hasHeading(this.$, sectionID)) {
+      const result = Object.create(null);
+      const sample = this.getSection(sectionID);
       // We have to wrap the collection of elements from the section
       // we've just acquired because we're going to search among all
       // descendants and we want to include the elements themselves
@@ -243,9 +250,7 @@ class HTMLTool {
         const src = $(
           `.${part}, pre[class*="brush:${part}"], pre[class*="${part};"]`
         )
-          .map((i, element) => {
-            return $(element).text();
-          })
+          .map((i, element) => $(element).text())
           .get()
           .join("\n");
         // The string replacements below have been carried forward from Kuma:
@@ -259,16 +264,16 @@ class HTMLTool {
         );
       }
       return result;
-    } catch (error) {
-      if (error instanceof KumascriptError) {
-        const result = collectClosestCode(
-          this.$("#" + cssesc(sampleID, { isIdentifier: true }))
+    } else {
+      const result = collectClosestCode(
+        this.$("#" + cssesc(sampleID, { isIdentifier: true }))
+      );
+      if (!result) {
+        throw new KumascriptError(
+          `unable to find any live code samples for "${sampleID}" within ${this.pathDescription}`
         );
-        if (result) {
-          return result;
-        }
       }
-      throw error;
+      return result;
     }
   }
 
