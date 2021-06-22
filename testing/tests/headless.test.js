@@ -56,7 +56,6 @@ describe("Basic viewing of functional pages", () => {
     const flexSample2Uri = `${uri}/Flex/_sample_.Flex_2.html`;
     const gridSample1Uri = `${uri}/Grid/_sample_.Grid_1.html`;
     const gridSample2Uri = `${uri}/_sample_.Grid_2.html`;
-    page.setDefaultTimeout(3000);
     await page.goto(testURL(uri));
     await expect(page).toMatch("A Test Introduction to CSS layout");
     await expect(page).toMatchElement("h1", {
@@ -91,14 +90,18 @@ describe("Basic viewing of functional pages", () => {
       gridSample2Uri,
     ]) {
       await page.goto(testURL(sampleUri));
+      const timeout = 5000;
       await expect(page).toMatchElement("body > div.wrapper > div.box1", {
         text: "One",
+        timeout,
       });
       await expect(page).toMatchElement("body > div.wrapper > div.box2", {
         text: "Two",
+        timeout,
       });
       await expect(page).toMatchElement("body > div.wrapper > div.box3", {
         text: "Three",
+        timeout,
       });
     }
   });
@@ -133,7 +136,6 @@ describe("Basic viewing of functional pages", () => {
     const uri = "/en-US/docs/Learn/CSS/CSS_layout/Introduction/Grid";
     const gridSample1Uri = `${uri}/_sample_.Grid_1.html`;
     const gridSample2Uri = `${uri}/_sample_.Grid_2.html`;
-    page.setDefaultTimeout(3000);
     await page.goto(testURL(uri));
     await expect(page).toMatch("A Test Introduction to CSS Grid Layout");
     await expect(page).toMatchElement("h1", {
