@@ -9,9 +9,8 @@ import { VALID_LOCALES } from "../libs/constants";
 
 import { h2m } from "./h2m";
 const { prettyAST } = require("./utils");
-import { m2h, withFm } from ".";
+import { m2h } from ".";
 import { toSelector } from "./h2m/utils";
-import { h } from "./h2m/h";
 
 function tryOrExit(f) {
   return async ({
@@ -199,12 +198,9 @@ program
         if (!doc.isMarkdown) {
           continue;
         }
-        const { body: m, frontmatter } = fm(doc.rawContent);
+        const { body: m, attributes: metadata } = fm(doc.rawContent);
         const h = await m2h(m);
-        fs.writeFileSync(
-          doc.fileInfo.path.replace(/\.md$/, ".html"),
-          withFm(frontmatter, h)
-        );
+        saveFile(doc.fileInfo.path.replace(/\.md$/, ".html"), h, metadata);
       }
     })
   );
