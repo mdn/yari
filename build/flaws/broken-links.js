@@ -1,10 +1,23 @@
 const fs = require("fs");
 const path = require("path");
 
+const fromMarkdown = require("mdast-util-from-markdown");
+const visit = require("unist-util-visit");
+
 const { Archive, Document, Redirect, Image } = require("../../content");
 const { FLAW_LEVELS } = require("../constants");
 const { findMatchesInText } = require("../matches-in-text");
 const { DEFAULT_LOCALE, VALID_LOCALES } = require("../../libs/constants");
+
+function findMatchesInMarkdown(rawContent, href) {
+  const matches = [];
+  visit(fromMarkdown(rawContent), "link", (node) => {
+    if (node.url == href) {
+      matches.push(node.position.start);
+    }
+  });
+  return matches;
+}
 
 const _safeToHttpsDomains = new Map();
 function getSafeToHttpDomains() {
@@ -103,11 +116,14 @@ function getBrokenLinksFlaws(doc, $, { rawContent }, level) {
     if (!matches.has(href)) {
       matches.set(
         href,
-        Array.from(
-          findMatchesInText(href, rawContent, {
-            attribute: "href",
-          })
-        )
+
+        doc.isMarkdown
+          ? findMatchesInMarkdown(rawContent, href)
+          : Array.from(
+              findMatchesInText(href, rawContent, {
+                attribute: "href",
+              })
+            )
       );
     }
     // findMatchesInText() is a generator function so use `Array.from()`
