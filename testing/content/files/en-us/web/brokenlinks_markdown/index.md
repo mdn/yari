@@ -26,9 +26,7 @@ slug: Web/BrokenLinks_Markdown
 
 [Will not have a suggestion](/en-US/docs/Hopeless/Case)
 
-[](/en-US/docs/Hopeless/Case)
-
-[](/en-US/docs/Hopeless/Case)[Leave me alone! I'm actually external](//www.peterbe.com)
+[Leave me alone! I'm actually external](www.peterbe.com)
 
 [Link to itself (bad)](/en-US/docs/Web/BrokenLinks_Markdown)
 [Link to itself for anchor (good)](/en-US/docs/Web/BrokenLinks_Markdown#anchor)

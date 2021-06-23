@@ -13,7 +13,8 @@ function findMatchesInMarkdown(rawContent, href) {
   const matches = [];
   visit(fromMarkdown(rawContent), "link", (node) => {
     if (node.url == href) {
-      matches.push(node.position.start);
+      const { line, column } = node.position.start;
+      matches.push({ line, column });
     }
   });
   return matches;
@@ -144,7 +145,7 @@ function getBrokenLinksFlaws(doc, $, { rawContent }, level) {
 
   $("a[href]").each((i, element) => {
     const a = $(element);
-    const href = a.attr("href");
+    const href = decodeURI(a.attr("href"));
 
     // This gives us insight into how many times this exact `href`
     // has been encountered in the doc.

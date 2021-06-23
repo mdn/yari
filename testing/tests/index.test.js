@@ -699,8 +699,8 @@ test("broken links markdown flaws", () => {
   // Map them by 'href'
   const map = new Map(flaws.broken_links.map((x) => [x.href, x]));
   expect(map.get("/en-US/docs/Hopeless/Case").suggestion).toBeNull();
-  expect(map.get("/en-US/docs/Web/CSS/dumber").line).toBe(10);
-  expect(map.get("/en-US/docs/Web/CSS/dumber").column).toBe(13);
+  expect(map.get("/en-US/docs/Web/CSS/dumber").line).toBe(9);
+  expect(map.get("/en-US/docs/Web/CSS/dumber").column).toBe(1);
   expect(
     map.get("https://developer.mozilla.org/en-US/docs/Web/API/Blob").suggestion
   ).toBe("/en-US/docs/Web/API/Blob");
@@ -721,15 +721,15 @@ test("broken links markdown flaws", () => {
   expect(
     map.get("/en-US/docs/glossary/bézier_curve#identifier").suggestion
   ).toBe("/en-US/docs/Glossary/Bézier_curve#identifier");
-  expect(map.get("/en-US/docs/Web/BrokenLinks").explanation).toBe(
+  expect(map.get("/en-US/docs/Web/BrokenLinks_Markdown").explanation).toBe(
     "Link points to the page it's already on"
   );
-  expect(map.get("/en-US/docs/Web/BrokenLinks#anchor").explanation).toBe(
-    "No need for the pathname in anchor links if it's the same page"
-  );
-  expect(map.get("/en-US/docs/Web/BrokenLinks#anchor").suggestion).toBe(
-    "#anchor"
-  );
+  expect(
+    map.get("/en-US/docs/Web/BrokenLinks_Markdown#anchor").explanation
+  ).toBe("No need for the pathname in anchor links if it's the same page");
+  expect(
+    map.get("/en-US/docs/Web/BrokenLinks_Markdown#anchor").suggestion
+  ).toBe("#anchor");
   expect(map.get("http://www.mozilla.org").explanation).toBe(
     "Is currently http:// but can become https://"
   );
