@@ -17,7 +17,7 @@ const {
 } = require("../content");
 const { VALID_LOCALES } = require("../libs/constants");
 // eslint-disable-next-line node/no-missing-require
-const { renderDocHTML } = require("../ssr/dist/main");
+const { renderHTML } = require("../ssr/dist/main");
 const options = require("./build-options");
 const { buildDocument, renderContributorsTxt } = require("./index");
 const SearchIndex = require("./search-index");
@@ -141,11 +141,11 @@ async function buildDocuments(
 
     fs.writeFileSync(
       path.join(outPath, "index.html"),
-      renderDocHTML(builtDocument, document.url)
+      renderHTML(document.url, { doc: builtDocument })
     );
     fs.writeFileSync(
       path.join(outPath, "index.json"),
-      // This is exploiting the fact that renderDocHTML has the side-effect of
+      // This is exploiting the fact that renderHTML has the side-effect of
       // mutating the built document which makes this not great and refactor-worthy.
       JSON.stringify({ doc: builtDocument })
     );
