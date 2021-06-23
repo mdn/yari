@@ -15,6 +15,9 @@ function gatherTranslations() {
   for (const {
     metadata: { slug, locale, title },
   } of iter) {
+    if (!slug) {
+      continue;
+    }
     const translation = {
       title,
       locale,
