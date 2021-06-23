@@ -53,17 +53,9 @@ const prettyAST = (node, depth = 0) => {
     .join("\n");
 };
 
-function withFm(frontmatter, content) {
-  if (frontmatter) {
-    return `---\n${frontmatter}\n---\n${content}`;
-  }
-  return content;
-}
-
 module.exports = {
   encodeKS,
   decodeKS,
   formatH,
   prettyAST,
-  withFm,
 };

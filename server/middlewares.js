@@ -1,6 +1,6 @@
 const express = require("express");
 
-const { CSP_VALUE_DEV } = require("../libs/constants");
+const { CSP_VALUE } = require("../libs/constants");
 const { resolveFundamental } = require("../libs/fundamental-redirects");
 const { getLocale } = require("../libs/get-locale");
 const { STATIC_ROOT } = require("./constants");
@@ -53,7 +53,7 @@ module.exports = {
     slugRewrite,
     express.static(STATIC_ROOT, {
       setHeaders: (res) => {
-        res.setHeader("Content-Security-Policy", CSP_VALUE_DEV);
+        res.setHeader("Content-Security-Policy", CSP_VALUE);
       },
     }),
   ],

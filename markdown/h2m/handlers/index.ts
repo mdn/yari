@@ -104,6 +104,8 @@ export const handlers: QueryAndTransform[] = [
         "message-body",
         "message-flex-body",
         "message-body-wrapper",
+        "blob-code-inner",
+        "blob-code-marker",
       ],
     },
     (node, t) => t(node),
@@ -222,6 +224,8 @@ export const handlers: QueryAndTransform[] = [
                 "line-numbers",
                 "notranslate",
                 (className) => className.startsWith("highlight"),
+                (className) =>
+                  className.startsWith("[") && className.endsWith("]"),
               ],
             },
             (node, t, opts) => [
@@ -307,4 +311,6 @@ export const handlers: QueryAndTransform[] = [
   ),
 
   ["var", (node, t) => h("emphasis", t(node))],
+  ["dfn", (node, t) => h("emphasis", t(node))],
+  [{ is: "abbr", canHave: "title" }, (node, t) => t(node)],
 ];

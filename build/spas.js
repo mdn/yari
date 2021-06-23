@@ -1,8 +1,6 @@
 const fs = require("fs");
 const path = require("path");
 
-const got = require("got");
-
 const {
   CONTENT_ROOT,
   CONTENT_TRANSLATED_ROOT,
@@ -15,6 +13,7 @@ const {
   BUILD_SUBSCRIPTION_CONFIG_URL,
 } = require("./constants");
 const { getFeedEntries } = require("./feedparser");
+const { getSubscriptionConfig } = require("./subscriptionconfig");
 // eslint-disable-next-line node/no-missing-require
 const { renderHTML } = require("../ssr/dist/main");
 
@@ -40,22 +39,9 @@ async function buildSPAs(options) {
     console.log("Wrote", path.join(outPath, path.basename(url)));
   }
 
-  let subscriptionConfig = null;
-  if (BUILD_SUBSCRIPTION_CONFIG_URL) {
-    try {
-      subscriptionConfig = (
-        await got(BUILD_SUBSCRIPTION_CONFIG_URL, { responseType: "json" })
-      ).body;
-    } catch (error) {
-      console.error(
-        "Error while fetching subscription config for",
-        BUILD_SUBSCRIPTION_CONFIG_URL,
-        ":",
-        error
-      );
-      throw error;
-    }
-  }
+  const subscriptionConfig = BUILD_SUBSCRIPTION_CONFIG_URL
+    ? await getSubscriptionConfig(BUILD_SUBSCRIPTION_CONFIG_URL)
+    : null;
 
   // Basically, this builds one (for example) `search/index.html` for every
   // locale we intend to build.

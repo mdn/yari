@@ -23,7 +23,7 @@ const {
 } = require("../content");
 // eslint-disable-next-line node/no-missing-require
 const { renderHTML } = require("../ssr/dist/main");
-const { CSP_VALUE_DEV, DEFAULT_LOCALE } = require("../libs/constants");
+const { CSP_VALUE, DEFAULT_LOCALE } = require("../libs/constants");
 
 const { STATIC_ROOT, PROXY_HOSTNAME, FAKE_V1_API } = require("./constants");
 const documentRouter = require("./document");
@@ -295,7 +295,7 @@ app.get("/*", async (req, res) => {
   if (isJSONRequest) {
     res.json({ doc: document });
   } else {
-    res.header("Content-Security-Policy", CSP_VALUE_DEV);
+    res.header("Content-Security-Policy", CSP_VALUE);
     res.send(renderHTML(lookupURL, { doc: document }));
   }
 });

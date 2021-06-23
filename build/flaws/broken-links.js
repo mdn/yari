@@ -1,10 +1,24 @@
 const fs = require("fs");
 const path = require("path");
 
+const fromMarkdown = require("mdast-util-from-markdown");
+const visit = require("unist-util-visit");
+
 const { Archive, Document, Redirect, Image } = require("../../content");
 const { FLAW_LEVELS } = require("../constants");
 const { findMatchesInText } = require("../matches-in-text");
 const { DEFAULT_LOCALE, VALID_LOCALES } = require("../../libs/constants");
+
+function findMatchesInMarkdown(rawContent, href) {
+  const matches = [];
+  visit(fromMarkdown(rawContent), "link", (node) => {
+    if (node.url == href) {
+      const { line, column } = node.position.start;
+      matches.push({ line, column });
+    }
+  });
+  return matches;
+}
 
 const _safeToHttpsDomains = new Map();
 function getSafeToHttpDomains() {
@@ -103,11 +117,14 @@ function getBrokenLinksFlaws(doc, $, { rawContent }, level) {
     if (!matches.has(href)) {
       matches.set(
         href,
-        Array.from(
-          findMatchesInText(href, rawContent, {
-            attribute: "href",
-          })
-        )
+
+        doc.isMarkdown
+          ? findMatchesInMarkdown(rawContent, href)
+          : Array.from(
+              findMatchesInText(href, rawContent, {
+                attribute: "href",
+              })
+            )
       );
     }
     // findMatchesInText() is a generator function so use `Array.from()`
@@ -128,7 +145,7 @@ function getBrokenLinksFlaws(doc, $, { rawContent }, level) {
 
   $("a[href]").each((i, element) => {
     const a = $(element);
-    const href = a.attr("href");
+    const href = decodeURI(a.attr("href"));
 
     // This gives us insight into how many times this exact `href`
     // has been encountered in the doc.
