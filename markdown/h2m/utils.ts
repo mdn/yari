@@ -39,18 +39,12 @@ export const toPrettyHTML = (...args: Parameters<typeof toHTML>) => {
     return source;
   }
 
-  const result = prettier
+  return prettier
     .format(source, {
       semi: false,
       parser: "html",
     })
     .trim();
-
-  // Workaround for Prettier issue https://github.com/prettier/prettier/issues/10950
-  if (result.endsWith("\n>")) {
-    return result.slice(0, -2) + ">";
-  }
-  return result;
 };
 
 export const toSelector = ({
