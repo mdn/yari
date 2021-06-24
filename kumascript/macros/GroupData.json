@@ -184,8 +184,9 @@
       "properties": [],
       "events": []
     },
-    "CSS Typed OM API": {
+    "CSS Typed Object Model API": {
       "overview": ["CSS Typed OM API"],
+      "guides": ["/docs/Web/API/CSS_Typed_OM_API/Guide"],
       "interfaces": [
         "CSSKeywordValue",
         "CSSImageValue",
