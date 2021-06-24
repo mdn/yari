@@ -47,7 +47,9 @@ export default function App({ doc }: { doc: Doc }) {
       throw new Error(`${response.status} on ${response.url}`);
     }
   }
+
   const [toggleError, setToggleError] = React.useState<Error | null>(null);
+
   if (error) {
     return <span>🚨</span>;
   }

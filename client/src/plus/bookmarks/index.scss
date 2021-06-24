@@ -12,16 +12,26 @@
 
     div.bookmark {
       margin-bottom: 20px;
-      p.breadcrumb {
+      ol.breadcrumbs {
         margin-bottom: 0;
+        list-style: none;
 
-        a {
-          &:link,
-          &:visited {
-            color: $neutral-100;
+        li {
+          display: inline-block;
+          margin: 0 3px;
+
+          a {
+            &:link,
+            &:visited {
+              color: $neutral-100;
+            }
           }
         }
       }
+    }
+
+    .notecard.unbookmark {
+      float: right;
     }
   }
 }
