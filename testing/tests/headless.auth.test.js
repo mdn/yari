@@ -10,6 +10,12 @@ function testURL(pathname = "/") {
 }
 
 describe("Visiting pages related and requiring authentication", () => {
+  beforeEach(async () => {
+    // Necessary hack to make sure any existing 'sessionid' cookies don't
+    // interfere on the re-used `page` across tests.
+    await page.deleteCookie({ name: "sessionid", url: testURL() });
+  });
+
   it("clicking 'Sign in' should offer links to all identity providers", async () => {
     await page.goto(testURL("/en-US/docs/Web/Foo"));
     await expect(page).toClick("a", { text: "Sign in" });
@@ -62,8 +68,6 @@ describe("Visiting pages related and requiring authentication", () => {
   });
 
   it("should show your settings page", async () => {
-    await page.deleteCookie({ name: "sessionid" });
-
     const url = testURL("/en-US/settings");
     await page.goto(url);
     await expect(page).toMatchElement("h1", { text: "Account settings" });
@@ -92,8 +96,6 @@ describe("Visiting pages related and requiring authentication", () => {
   });
 
   it("should ask you to checkbox to sign up with Google", async () => {
-    await page.deleteCookie({ name: "sessionid" });
-
     const url = testURL("/en-US/");
     await page.goto(url);
     // Wait for it to figure out that you're not signed in.
