@@ -7,16 +7,14 @@ const parser = require("fast-xml-parser");
 const cheerio = require("cheerio");
 const tempy = require("tempy");
 
-const exists = promisify(fs.exists);
 const readFile = promisify(fs.readFile);
 const writeFile = promisify(fs.writeFile);
 
 async function getFeedEntries(url) {
   const savedFeedEntriesFilePath = path.join(tempy.root, url2filename(url));
-  const saved = await exists(savedFeedEntriesFilePath);
 
   let feedText;
-  if (saved) {
+  if (fs.existsSync(savedFeedEntriesFilePath)) {
     console.log(
       `Reusing previously downloaded feed entries from ${savedFeedEntriesFilePath}`
     );
