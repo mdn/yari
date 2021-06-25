@@ -1,0 +1,119 @@
+const { setDefaultOptions } = require("expect-puppeteer");
+
+// The default it 500ms. It has happened and it can happen again, that sometimes
+// it just takes a little longer than 500ms. Give it a healthy margin of a
+// timeout so as to reduce the risk of it failing when there's nothing wrong.
+setDefaultOptions({ timeout: 1500 });
+
+function testURL(pathname = "/") {
+  return `http://localhost:5000${pathname}`;
+}
+
+describe("Visiting pages related and requiring authentication", () => {
+  it("clicking 'Sign in' should offer links to all identity providers", async () => {
+    await page.goto(testURL("/en-US/docs/Web/Foo"));
+    await expect(page).toClick("a", { text: "Sign in" });
+    await expect(page).toMatchElement("h1", { text: "Sign in" });
+    expect(page.url()).toContain(
+      testURL(
+        `/en-US/signin?${new URLSearchParams(
+          "next=/en-US/docs/Web/Foo"
+        ).toString()}`
+      )
+    );
+    await expect(page).toMatchElement("a", { text: "Google" });
+    await expect(page).toMatchElement("a", { text: "GitHub" });
+  });
+
+  it("going to 'Sign up' page without query string", async () => {
+    await page.goto(testURL("/en-US/signup"));
+    await expect(page).toMatchElement("h1", {
+      text: "Sign in to MDN Web Docs",
+    });
+    await expect(page).toMatch("Invalid URL");
+    await expect(page).toMatchElement("a", {
+      text: "Please retry the sign-in process",
+    });
+  });
+
+  it("going to 'Sign up' page with realistic (fake) query string", async () => {
+    const sp = new URLSearchParams();
+    sp.set("csrfmiddlewaretoken", "abc");
+    sp.set("provider", "github");
+    sp.set(
+      "user_details",
+      JSON.stringify({
+        name: "Peter B",
+      })
+    );
+
+    await page.goto(testURL(`/en-US/signup?${sp.toString()}`));
+    await expect(page).toMatchElement("h1", {
+      text: "Sign in to MDN Web Docs",
+    });
+    await expect(page).not.toMatch("Invalid URL");
+    await expect(page).toMatch(
+      "You are signing in to MDN Web Docs with GitHub as Peter B."
+    );
+    await expect(page).toMatch(
+      "I agree to Mozilla's Terms and Privacy Notice."
+    );
+    await expect(page).toMatchElement("button", { text: "Complete sign-in" });
+  });
+
+  it("should show your settings page", async () => {
+    await page.deleteCookie({ name: "sessionid" });
+
+    const url = testURL("/en-US/settings");
+    await page.goto(url);
+    await expect(page).toMatchElement("h1", { text: "Account settings" });
+    await expect(page).toMatch("You have not signed in");
+    await expect(page).toMatch("Sign in");
+
+    // First sign in with GitHub (happy path)
+    await page.goto(testURL("/en-US/signin"));
+    await expect(page).toMatch("Sign in with GitHub");
+    await expect(page).toClick("a", {
+      text: /Sign in with GitHub/,
+    });
+    await expect(page.url()).toMatch(testURL("/en-US/"));
+    // This is important otherwise it won't wait for the XHR where the
+    // cookie gets set!
+    await page.waitForNavigation({ waitUntil: "networkidle2" });
+
+    await page.goto(testURL("/en-US/settings"));
+    await expect(page).toMatchElement("h1", { text: "Account settings" });
+    await expect(page).toMatchElement("button", { text: "Close account" });
+
+    // Change locale to French
+    await expect(page).toSelect('select[name="locale"]', "French");
+    await expect(page).toClick("button", { text: "Update language" });
+    await expect(page).toMatch("Yay! Updated settings successfully saved.");
+  });
+
+  it("should ask you to checkbox to sign up with Google", async () => {
+    await page.deleteCookie({ name: "sessionid" });
+
+    const url = testURL("/en-US/");
+    await page.goto(url);
+    // Wait for it to figure out that you're not signed in.
+    await expect(page).toClick("a", { text: /Sign in/ });
+    await page.waitForNavigation({ waitUntil: "networkidle2" });
+    await expect(page.url()).toMatch(testURL("/en-US/signin"));
+
+    await expect(page).toMatch("Sign in with Google");
+    await expect(page).toClick("a", {
+      text: /Sign in with Google/,
+    });
+    await expect(page.url()).toMatch(testURL("/en-US/signin"));
+    await page.waitForNavigation({ waitUntil: "networkidle2" });
+    const checkbox = await page.$('input[type="checkbox"]');
+    await checkbox.click();
+
+    await expect(page).toClick("button", {
+      text: /Complete sign-in/,
+    });
+    await expect(page.url()).toMatch(testURL("/en-US/"));
+    await expect(page).toMatch("Googler-username");
+  });
+});
