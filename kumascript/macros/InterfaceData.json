@@ -1982,7 +1982,7 @@
     },
     "ServiceWorker": {
       "inh": "EventTarget",
-      "impl": ["AbstractWorker"]
+      "impl": []
     },
     "ServiceWorkerContainer": {
       "inh": "EventTarget",
@@ -2010,7 +2010,7 @@
     },
     "SharedWorker": {
       "inh": "EventTarget",
-      "impl": ["AbstractWorker"]
+      "impl": []
     },
     "SharedWorkerGlobalScope": {
       "inh": "WorkerGlobalScope",
@@ -2263,7 +2263,7 @@
     },
     "Worker": {
       "inh": "EventTarget",
-      "impl": ["AbstractWorker"]
+      "impl": []
     },
     "WorkerGlobalScope": {
       "inh": "EventTarget",
