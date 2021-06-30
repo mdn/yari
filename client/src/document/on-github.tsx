@@ -3,7 +3,7 @@ import { Doc } from "./types";
 export function OnGitHubLink({ doc }: { doc: Doc }) {
   return (
     <div id="on-github" className="on-github">
-      <h4>Found a problem with this page?</h4>
+      <OnGitHubHeading doc={doc} />
       <ul>
         <li>
           <SourceOnGitHubLink doc={doc} />
@@ -38,6 +38,18 @@ function SourceOnGitHubLink({ doc }: { doc: Doc }) {
       Source on <b>GitHub</b>
     </a>
   );
+}
+function OnGitHubHeading({ doc }: { doc: Doc }) {
+  // The last object of doc.body is either an h2 or h3 element
+  // with text content "See Also", and we can check whether its
+  // an h3 with the isH3 property of `doc` then create the
+  // "Found a problem with this page?" heading appropriately
+  // based on the heading level for last object in doc.body
+  // to ensure the headings are in sequentially-descending order
+  const { body } = doc;
+  const lastHeading = body[body.length - 1]["value"];
+  const text = "Found a problem with this page?";
+  return !lastHeading.isH3 ? <h3>{text}</h3> : <h4>{text}</h4>;
 }
 
 const NEW_ISSUE_TEMPLATE = `
