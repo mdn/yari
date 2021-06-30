@@ -145,7 +145,12 @@ function getBrokenLinksFlaws(doc, $, { rawContent }, level) {
 
   $("a[href]").each((i, element) => {
     const a = $(element);
-    const href = decodeURI(a.attr("href"));
+    let href = a.attr("href");
+    try {
+      href = decodeURI(href);
+    } catch (error) {
+      console.warn(`Unable to decodeURI '${href}'. Will proceed without.`);
+    }
 
     // This gives us insight into how many times this exact `href`
     // has been encountered in the doc.
