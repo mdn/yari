@@ -145,7 +145,20 @@ function getBrokenLinksFlaws(doc, $, { rawContent }, level) {
 
   $("a[href]").each((i, element) => {
     const a = $(element);
-    const href = decodeURI(a.attr("href"));
+    let href = a.attr("href");
+    try {
+      // When Markdown turns into HTML it will encode the `href` values in the
+      // links. To be able to treat it as if it was from its raw value,
+      // we first decode it. That way we can find out it was originally written
+      // in the `index.md` file, for example.
+      // But not all URLs can be applied with `decodeURI`. For example:
+      // https://www.ecma-international.org/ecma-262/6.0/#sec-get-%typedarray%.prototype.buffer
+      // can't be decoded in Node.
+      // So that's why we do this decoding very defensively.
+      href = decodeURI(href);
+    } catch (error) {
+      console.warn(`Unable to decodeURI '${href}'. Will proceed without.`);
+    }
 
     // This gives us insight into how many times this exact `href`
     // has been encountered in the doc.
