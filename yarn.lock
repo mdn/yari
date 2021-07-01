@@ -16819,11 +16819,14 @@ rehype-raw@^5.1.0:
   dependencies:
     hast-util-raw "^6.1.0"
 
-rehype-remark@^8.0.0:
-  version "8.0.0"
-  resolved "https://registry.yarnpkg.com/rehype-remark/-/rehype-remark-8.0.0.tgz#66233e5b6e096419353f4c5c0fb6808f7924dd57"
-  integrity sha512-d1EmgsqWc1v9E/URuzozU8pa4AYHIcfOMLhgzQRHeaxYyMHJKIrpBMdRhl+IbqcHLD699Ho/vO+DpSZgKsGM8Q==
+rehype-remark@^8.1.0:
+  version "8.1.0"
+  resolved "https://registry.yarnpkg.com/rehype-remark/-/rehype-remark-8.1.0.tgz#b5c7c274462a9c3a2f707985762640142abe014f"
+  integrity sha512-ylKgoeANK93Uan5HeNOci86X+vUh9EwXimF2XzU80vunID/rZSP0hh/dCpSRaHL4/lFYtnrKPc3yUVElpMSoYg==
   dependencies:
+    "@types/hast" "^2.0.0"
+    "@types/mdast" "^3.0.0"
+    "@types/unist" "^2.0.0"
     hast-util-to-mdast "^7.0.0"
 
 rehype-stringify@^8.0.0:
