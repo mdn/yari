@@ -1,12 +1,5 @@
 [
   {
-    "Ambient Light Events": {
-      "overview": ["Ambient Light Events"],
-      "interfaces": ["DeviceLightEvent"],
-      "methods": [],
-      "properties": ["Window.ondevicelight"],
-      "events": ["Window: devicelight"]
-    },
     "Background Tasks": {
       "overview": ["Background Tasks API"],
       "interfaces": ["IdleDeadline"],

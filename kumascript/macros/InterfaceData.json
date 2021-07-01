@@ -460,10 +460,6 @@
       "inh": "EventTarget",
       "impl": []
     },
-    "DeviceLightEvent": {
-      "inh": "Event",
-      "impl": []
-    },
     "DeviceMotionEvent": {
       "inh": "Event",
       "impl": []
