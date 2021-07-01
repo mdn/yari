@@ -1251,14 +1251,22 @@
     },
     "Sensor API": {
       "overview": ["Sensor APIs"],
-      "interfaces": ["Sensor"],
-      "properties": [
-        "Sensor.activated",
-        "Sensor.hasReading",
-        "Sensor.timestamp"
+      "interfaces": [
+        "AbsoluteOrientationSensor",
+        "Accelerometer",
+        "AmbientLightSensor",
+        "GravitySensor",
+        "Gyroscope",
+        "LinearAccelerationSensor",
+        "Magnetometer",
+        "OrientationSensor",
+        "RelativeOrientationSensor",
+        "Sensor",
+        "SensorErrorEvent"
       ],
-      "methods": ["Sensor.start()", "Sensor.stop()"],
-      "events": ["Sensor: error", "Sensor: reading", "Sensor: activate"]
+      "properties": [],
+      "methods": [],
+      "events": []
     },
     "Server Sent Events": {
       "overview": ["Server-sent events"],
