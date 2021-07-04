@@ -1,5 +1,18 @@
 [
   {
+    "Background Fetch API": {
+      "overview": ["Background Fetch API"],
+      "interfaces": [
+        "BackgroundFetchManager",
+        "BackgroundFetchRegistration",
+        "BackgroundFetchRecord",
+        "BackgroundFetchEvent",
+        "BackgroundFetchUpdateUIEvent"
+      ],
+      "methods": [],
+      "properties": [],
+      "events": []
+    },
     "Background Tasks": {
       "overview": ["Background Tasks API"],
       "interfaces": ["IdleDeadline"],
