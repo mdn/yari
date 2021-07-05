@@ -289,7 +289,7 @@ requests = ">=2.9"
 
 [[package]]
 name = "pytest-rerunfailures"
-version = "10.0"
+version = "10.1"
 description = "pytest plugin to re-run tests to eliminate flaky failures"
 category = "main"
 optional = false
@@ -384,7 +384,7 @@ testing = ["pytest (>=3.5,!=3.7.3)", "pytest-checkdocs (>=1.2.3)", "pytest-flake
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.7"
-content-hash = "3e649d0843bae8580bd17dadc8888d45ef0ba6536e9dcc44922822175182299e"
+content-hash = "c85da2f40a7a3a9794bf3f87be1a7baf53300f17f595de5903a2258d09d9949e"
 
 [metadata.files]
 appdirs = [
@@ -531,8 +531,8 @@ pytest-base-url = [
     {file = "pytest_base_url-1.4.2-py2.py3-none-any.whl", hash = "sha256:8b6523a1a3af73c317bdae97b722dfb55a7336733d1ad411eb4a4931347ba77a"},
 ]
 pytest-rerunfailures = [
-    {file = "pytest-rerunfailures-10.0.tar.gz", hash = "sha256:3906e611f962e3bdf15501e8a24ad2d12a703eff7d2030ea88acf68ad8d6b391"},
-    {file = "pytest_rerunfailures-10.0-py3-none-any.whl", hash = "sha256:fb5f276df942944da80f3c7a84507ac4f92cc3f462fe6bd4bbcbef94de22db8b"},
+    {file = "pytest-rerunfailures-10.1.tar.gz", hash = "sha256:7617c06de13ee6dd2df9add7e275bfb2bcebbaaf3e450f5937cd0200df824273"},
+    {file = "pytest_rerunfailures-10.1-py3-none-any.whl", hash = "sha256:53db94acf7499c75c5257c79d8a1dc22c3db4bc8d32ec3a713ea91eda3f98359"},
 ]
 regex = [
     {file = "regex-2020.11.13-cp36-cp36m-macosx_10_9_x86_64.whl", hash = "sha256:8b882a78c320478b12ff024e81dc7d43c1462aa4a3341c754ee65d857a521f85"},
