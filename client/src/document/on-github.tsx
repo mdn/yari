@@ -74,13 +74,17 @@ MDN URL: https://developer.mozilla.org$PATHNAME
 // The labels do not not needs to exist in advance on the GitHub repo.
 // If not matched to any of these labels, it will default to "Other" as the label.
 const CONTENT_LABELS_PREFIXES = [
-  ["web/javascript", "JavaScript"],
+  ["web/javascript", "JS"],
   ["web/css", "CSS"],
   ["web/html", "HTML"],
   ["web/api", "WebAPI"],
   ["web/http", "HTTP"],
+  ["web/svg", "SVG"],
+  ["web/media", "Media"],
+  ["web/mathml", "MathML"],
+  ["webassembly", "wasm"],
   ["mozilla/add-ons/webextensions", "WebExt"],
-  ["web/accessibility", "A11y"],
+  ["web/accessibility", "Accessibility"],
   ["learn", "Learn"],
   ["tools", "DevTools"],
 ];
