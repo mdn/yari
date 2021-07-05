@@ -89,7 +89,8 @@ describe("Basic viewing of functional pages", () => {
       gridSample1Uri,
       gridSample2Uri,
     ]) {
-      await page.goto(testURL(sampleUri), { waitUntil: "networkidle1" });
+      await page.goto(testURL(sampleUri));
+      await page.waitForNavigation({ waitUntil: "networkidle1" });
       await expect(page).toMatchElement("body > div.wrapper > div.box1", {
         text: "One",
       });
