@@ -2662,10 +2662,10 @@
     "@types/yargs" "^16.0.0"
     chalk "^4.0.0"
 
-"@mdn/browser-compat-data@3.3.8":
-  version "3.3.8"
-  resolved "https://registry.yarnpkg.com/@mdn/browser-compat-data/-/browser-compat-data-3.3.8.tgz#1d236cc4b127584ece97db593a1b0ba5e4e00fba"
-  integrity sha512-0Yb0nvzo9dvb0a3wer907Ouc6vHyt4R2vtRY8rFYVo8WoXlRBsblWxW2cYY9nNRRXrNLq5alBMgcXb22S8fccQ==
+"@mdn/browser-compat-data@3.3.10":
+  version "3.3.10"
+  resolved "https://registry.yarnpkg.com/@mdn/browser-compat-data/-/browser-compat-data-3.3.10.tgz#10299e35ee07b2a78e58731939a5f35d926db622"
+  integrity sha512-3pUDpaS17YjM0yCUyZCzNGVd+p9ig4UUTw0RI5EDpiLlwwDiiSmU+31fhEqv7gHAxkW7X1TUP8z7YXsWY2SJsg==
 
 "@mdn/dinocons@^0.3.2":
   version "0.3.2"
@@ -4599,10 +4599,10 @@
   dependencies:
     "@types/react" "*"
 
-"@types/react@*", "@types/react@^17.0.11":
-  version "17.0.11"
-  resolved "https://registry.yarnpkg.com/@types/react/-/react-17.0.11.tgz#67fcd0ddbf5a0b083a0f94e926c7d63f3b836451"
-  integrity sha512-yFRQbD+whVonItSk7ZzP/L+gPTJVBkL/7shLEF+i9GC/1cV3JmUxEQz6+9ylhUpWSDuqo1N9qEvqS6vTj4USUA==
+"@types/react@*", "@types/react@^17.0.13":
+  version "17.0.13"
+  resolved "https://registry.yarnpkg.com/@types/react/-/react-17.0.13.tgz#6b7c9a8f2868586ad87d941c02337c6888fb874f"
+  integrity sha512-D/G3PiuqTfE3IMNjLn/DCp6umjVCSvtZTPdtAFy5+Ved6CsdRvivfKeCzw79W4AatShtU4nGqgvOv5Gro534vQ==
   dependencies:
     "@types/prop-types" "*"
     "@types/scheduler" "*"
@@ -6122,10 +6122,10 @@ browser-process-hrtime@^1.0.0:
   resolved "https://registry.yarnpkg.com/browser-process-hrtime/-/browser-process-hrtime-1.0.0.tgz#3c9b4b7d782c8121e56f10106d84c0d0ffc94626"
   integrity sha512-9o5UecI3GhkpM6DrXr69PblIuWxPKk9Y0jHBRhdocZ2y7YECBFCsHm79Pr3OyR2AvjhDkabFJaDJMYRazHgsow==
 
-browser-specs@^1.41.1:
-  version "1.41.1"
-  resolved "https://registry.yarnpkg.com/browser-specs/-/browser-specs-1.41.1.tgz#8e8ecf71fb1994eb1eddb4c38af47d6385438a6b"
-  integrity sha512-iN9Ej4r68wrEF+CzW5wWcxOpyaUhwSoRIplD6T0tyLWm8Ax+nfGPV/CuX59dWT9dOAP+Ew5pCfq6P67SgEK6dQ==
+browser-specs@^1.43.0:
+  version "1.43.0"
+  resolved "https://registry.yarnpkg.com/browser-specs/-/browser-specs-1.43.0.tgz#338eda6d724f710c72386a0692d6f377a8ad61cc"
+  integrity sha512-x4yXZOrP1U9GRG3ZfjM8tgmEF0SCN9H2s59+aMN/bKxKr9t+ZBZTAMtBzRq237DgtQzyouyAlLg+KepCvjhIwA==
 
 browserify-aes@^1.0.0, browserify-aes@^1.0.4:
   version "1.2.0"
@@ -11005,10 +11005,10 @@ http-proxy-middleware@0.19.1:
     lodash "^4.17.11"
     micromatch "^3.1.10"
 
-http-proxy-middleware@2.0.0:
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/http-proxy-middleware/-/http-proxy-middleware-2.0.0.tgz#20d1ac3409199c83e5d0383ba6436b04e7acb9fe"
-  integrity sha512-S+RN5njuyvYV760aiVKnyuTXqUMcSIvYOsHA891DOVQyrdZOwaXtBHpt9FUVPEDAsOvsPArZp6VXQLs44yvkow==
+http-proxy-middleware@2.0.1:
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/http-proxy-middleware/-/http-proxy-middleware-2.0.1.tgz#7ef3417a479fb7666a571e09966c66a39bd2c15f"
+  integrity sha512-cfaXRVoZxSed/BmkA7SwBVNI9Kj7HFltaE5rqYOub5kWzWZ+gofV2koVN1j2rMW7pEfSSlCHGJ31xmuyFyfLOg==
   dependencies:
     "@types/http-proxy" "^1.17.5"
     http-proxy "^1.18.1"
@@ -16013,10 +16013,10 @@ prettier-plugin-packagejson@^2.2.10, prettier-plugin-packagejson@^2.2.11:
   dependencies:
     sort-package-json "1.50.0"
 
-prettier@2.3.1:
-  version "2.3.1"
-  resolved "https://registry.yarnpkg.com/prettier/-/prettier-2.3.1.tgz#76903c3f8c4449bc9ac597acefa24dc5ad4cbea6"
-  integrity sha512-p+vNbgpLjif/+D+DwAZAbndtRrR0md0MwfmOVN9N+2RgyACMT+7tfaRnT+WDPkqnuVwleyuBIG2XBxKDme3hPA==
+prettier@2.3.2:
+  version "2.3.2"
+  resolved "https://registry.yarnpkg.com/prettier/-/prettier-2.3.2.tgz#ef280a05ec253712e486233db5c6f23441e7342d"
+  integrity sha512-lnJzDfJ66zkMy58OL5/NY5zp70S7Nz6KqcKkXYzn2tMVrNxvbqaBpg7H3qHaLxCJ5lNMsGuM8+ohS7cZrthdLQ==
 
 prettier@~2.2.1:
   version "2.2.1"
@@ -16083,12 +16083,10 @@ pretty-quick@3.1.1:
     mri "^1.1.5"
     multimatch "^4.0.0"
 
-prismjs@1.23.0, prismjs@^1.21.0:
-  version "1.23.0"
-  resolved "https://registry.yarnpkg.com/prismjs/-/prismjs-1.23.0.tgz#d3b3967f7d72440690497652a9d40ff046067f33"
-  integrity sha512-c29LVsqOaLbBHuIbsTxaKENh1N2EQBOHaWv7gkHN4dgRbxSREqDnDbtFJYdpPauS4YCplMSNCABQ6Eeor69bAA==
-  optionalDependencies:
-    clipboard "^2.0.0"
+prismjs@1.24.1, prismjs@^1.21.0:
+  version "1.24.1"
+  resolved "https://registry.yarnpkg.com/prismjs/-/prismjs-1.24.1.tgz#c4d7895c4d6500289482fa8936d9cdd192684036"
+  integrity sha512-mNPsedLuk90RVJioIky8ANZEwYm5w9LcvCXrxHlwf4fNVSn8jEipMybMkWUyyF0JhnC+C4VcOVSBuHRKs1L5Ow==
 
 prismjs@~1.22.0:
   version "1.22.0"
@@ -17002,11 +17000,14 @@ rehype-raw@^5.1.0:
   dependencies:
     hast-util-raw "^6.1.0"
 
-rehype-remark@^8.0.0:
-  version "8.0.0"
-  resolved "https://registry.yarnpkg.com/rehype-remark/-/rehype-remark-8.0.0.tgz#66233e5b6e096419353f4c5c0fb6808f7924dd57"
-  integrity sha512-d1EmgsqWc1v9E/URuzozU8pa4AYHIcfOMLhgzQRHeaxYyMHJKIrpBMdRhl+IbqcHLD699Ho/vO+DpSZgKsGM8Q==
+rehype-remark@^8.1.1:
+  version "8.1.1"
+  resolved "https://registry.yarnpkg.com/rehype-remark/-/rehype-remark-8.1.1.tgz#aa2e7a9b454aaf498788982e3095a0535241e7fa"
+  integrity sha512-8HCmub9Fcy208A7RGbjmVlxTMYZXGaF7jsUE2tuvNKuaGFrk9yrYuKAXoTVC7QFwBPzTvEc5AOZKpUiWRkamlw==
   dependencies:
+    "@types/hast" "^2.0.0"
+    "@types/mdast" "^3.0.0"
+    "@types/unist" "^2.0.0"
     hast-util-to-mdast "^7.0.0"
 
 rehype-stringify@^8.0.0:
@@ -19277,10 +19278,10 @@ typedarray@^0.0.6:
   resolved "https://registry.yarnpkg.com/typedarray/-/typedarray-0.0.6.tgz#867ac74e3864187b1d3d47d996a78ec5c8830777"
   integrity sha1-hnrHTjhkGHsdPUfZlqeOxciDB3c=
 
-typescript@^4.3.4:
-  version "4.3.4"
-  resolved "https://registry.yarnpkg.com/typescript/-/typescript-4.3.4.tgz#3f85b986945bcf31071decdd96cf8bfa65f9dcbc"
-  integrity sha512-uauPG7XZn9F/mo+7MrsRjyvbxFpzemRjKEZXS4AK83oP2KKOJPvb+9cO/gmnv8arWZvhnjVOXz7B49m1l0e9Ew==
+typescript@^4.3.5:
+  version "4.3.5"
+  resolved "https://registry.yarnpkg.com/typescript/-/typescript-4.3.5.tgz#4d1c37cc16e893973c45a06886b7113234f119f4"
+  integrity sha512-DqQgihaQ9cUrskJo9kIyW/+g0Vxsk8cDtZ52a3NGh0YNTfpUSArXSohyUGnvbPazEPLu398C0UxmKSOrPumUzA==
 
 unbzip2-stream@^1.0.9, unbzip2-stream@^1.3.3:
   version "1.4.3"
