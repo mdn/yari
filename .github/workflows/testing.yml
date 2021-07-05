@@ -11,7 +11,8 @@ on:
 
 jobs:
   build:
-    runs-on: mcr.microsoft.com/playwright:v1.10.0-focal
+    runs-on: ubuntu-latest
+    container:
 
     steps:
       - uses: actions/checkout@v2.3.4
@@ -58,6 +59,9 @@ jobs:
           # Needed for the puppeteer tests that start a static Express server,
           # but it starts it from within the testing/ path.
           echo "CONTENT_ROOT=content/files" >> .env
+
+          yarn playwright install-deps chromium
+          yarn playwright install chromium
 
           # In terms of the --maxWorkers option, it's not yet clear which
           # is best.

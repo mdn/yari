@@ -26,7 +26,8 @@
     "test:client": "cd client && tsc --noEmit && react-scripts test --env=jest-environment-jsdom-sixteen",
     "test:content": "jest content",
     "test:kumascript": "jest kumascript",
-    "test:testing": "cd testing && jest && playwright test **/*.playwright.test.js",
+    "test:playwright": "yarn playwright test \"(.*)playwright.test.js\"",
+    "test:testing": "cd testing && jest",
     "tool": "node tool/cli.js",
     "watch:ssr": "cd ssr && webpack --mode=production --watch",
     "prepare": "husky install"
