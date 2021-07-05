@@ -299,19 +299,20 @@ async function buildDocument(document, documentOptions = {}) {
 
   doc.flaws = {};
 
-  let renderedHtml = "";
-  let flaws = [];
+  let $;
   const liveSamples = [];
 
   if (doc.isArchive) {
     if (document.isMarkdown) {
       throw new Error("Markdown not supported for archived content");
     }
-    renderedHtml = document.rawBody;
+    $ = cheerio.load(`<div id="_body">${document.rawBody}</div>`);
   } else {
     if (options.clearKumascriptRenderCache) {
       renderKumascriptCache.reset();
     }
+    let renderedHtml;
+    let flaws;
     try {
       [renderedHtml, flaws] = await kumascript.render(document.url);
     } catch (error) {
@@ -331,10 +332,12 @@ async function buildDocument(document, documentOptions = {}) {
       throw error;
     }
 
+    $ = cheerio.load(`<div id="_body">${renderedHtml}</div>`);
+
     const liveSamplePages = kumascript.buildLiveSamplePages(
       document.url,
       document.metadata.title,
-      renderedHtml
+      $
     );
     for (const { flaw } of liveSamplePages) {
       if (!flaw) {
@@ -413,8 +416,6 @@ async function buildDocument(document, documentOptions = {}) {
   // We can use the utils.slugToFolder() function and compare
   // its output with the `folder`.
   validateSlug(metadata.slug);
-
-  const $ = cheerio.load(`<div id="_body">${renderedHtml}</div>`);
 
   // EmbedLiveSamples carry their token information to enrich flaw error
   // messages, these should not be in the final output

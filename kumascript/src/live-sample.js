@@ -62,18 +62,20 @@ const LIVE_SAMPLE_HTML = `
 
 const liveSampleTemplate = ejs.compile(LIVE_SAMPLE_HTML);
 
-function buildLiveSamplePages(uri, title, renderedHTML) {
+function buildLiveSamplePages(uri, title, $) {
   // Given the URI, title, and rendered HTML of a document, build
   // and return the HTML of the live-sample pages for the given
   // document or else collect flaws
-  const $ = cheerio.load(renderedHTML);
+  if (typeof $ == "string") {
+    $ = cheerio.load($);
+  }
   return $("iframe")
     .filter((i, iframe) => $(iframe).attr("src").includes(`${uri}/_sample_.`))
     .map((i, iframe) => {
       const iframeId = $(iframe).attr("id");
       const id = iframeId.substr("frame_".length);
       const result = { id, html: null, flaw: null };
-      const tool = new HTMLTool(renderedHTML, uri);
+      const tool = new HTMLTool($, uri);
       let sampleData;
       try {
         sampleData = tool.extractLiveSampleObject(iframeId);
@@ -81,7 +83,7 @@ function buildLiveSamplePages(uri, title, renderedHTML) {
         if (error instanceof KumascriptError) {
           result.flaw = new MacroLiveSampleError(
             error,
-            renderedHTML,
+            $.html(),
             JSON.parse($(iframe).attr("data-token"))
           );
           return result;

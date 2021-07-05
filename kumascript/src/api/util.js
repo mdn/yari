@@ -97,7 +97,7 @@ function* collectLevels($el) {
     }
     level = getLevel($header);
     $prev = $header;
-    yield $header.nextUntil(nextHigherLevel);
+    yield $header.add($header.nextUntil(nextHigherLevel));
   }
 }
 
@@ -116,6 +116,7 @@ function collectClosestCode($start) {
       ];
     });
     if (pairs.some(([, code]) => !!code)) {
+      $start.prop("title", $level.first(":header").text());
       return Object.fromEntries(pairs);
     }
   }
@@ -124,7 +125,10 @@ function collectClosestCode($start) {
 
 class HTMLTool {
   constructor(html, pathDescription) {
-    this.$ = cheerio.load(html, { decodeEntities: true });
+    this.$ =
+      typeof html == "string"
+        ? cheerio.load(html, { decodeEntities: true })
+        : html;
     this.pathDescription = pathDescription;
   }
 
