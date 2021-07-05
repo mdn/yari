@@ -191,6 +191,14 @@ Which RSS feed URL to parse for displaying feed entries on the home page.
 
 How many RSS feed entries to display on the home page.
 
+### `BUILD_SUBSCRIPTION_CONFIG_URL`
+
+**Default: `''`**
+
+URL from which to fetch the subscription config. You need Kuma running and for local
+dev you will likely want to point it to
+`http://localhost.org:8000/api/v1/subscriptions/config/`
+
 ## Server
 
 ### `SERVER_PORT`

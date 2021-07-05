@@ -255,3 +255,10 @@ sub-dependencies. A sure way to solve it is to run:
 
     rm -fr node_modules
     yarn install
+
+### `Error: listen EADDRINUSE: address already in use :::5000`
+
+The default server port `:5000` might be in use by another process. To resolve this,
+you can pick any unused port (e.g., 6000) and run the following:
+
+    echo SERVER_PORT=6000 >> .env
