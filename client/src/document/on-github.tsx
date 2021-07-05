@@ -85,6 +85,15 @@ const CONTENT_LABELS_PREFIXES = [
   ["tools", "DevTools"],
 ];
 
+const L10N_LABELS_PREFIXES = [
+  ["zh-cn", "zh"],
+  ["zh-tw", "zh"],
+  ["fr", "fr"],
+  ["ko", "ko"],
+  ["ja", "ja"],
+  ["pt-br", "pt-br"]
+];
+
 function NewIssueOnGitHubLink({ doc }: { doc: Doc }) {
   const baseURL = "https://github.com/mdn/content/issues/new";
   const sp = new URLSearchParams();
@@ -107,7 +116,8 @@ function NewIssueOnGitHubLink({ doc }: { doc: Doc }) {
       : doc.title;
   sp.set("title", `Issue with "${titleShort}": (short summary here please)`);
 
-  const slug = doc.mdn_url.split("/docs/")[1].toLowerCase();
+  const [lang, slug] = doc.mdn_url.toLowerCase().split("/docs/");
+  let labels = ["needs-triage"];
   let contentLabel = "";
   for (const [prefix, label] of CONTENT_LABELS_PREFIXES) {
     if (slug.startsWith(prefix)) {
@@ -118,7 +128,19 @@ function NewIssueOnGitHubLink({ doc }: { doc: Doc }) {
   if (!contentLabel) {
     contentLabel = "Other";
   }
-  sp.set("labels", `Content:${contentLabel},needs-triage`);
+  labels.push(`Content:${contentLabel}`);
+  let l10nLabel ;
+  for (const [prefix, label] of L10N_LABELS_PREFIXES) {
+    if (lang === prefix) {
+      l10nLabel = `l10n-${label}`;
+      break;
+    }
+  }
+  if (l10nLabel) {
+    labels.push(l10nLabel);
+  } // Maybe a l10n-unsupported label would be useful to add?
+
+  sp.set("labels", labels.join(','));
 
   const href = `${baseURL}?${sp.toString()}`;
 
