@@ -89,7 +89,7 @@ describe("Basic viewing of functional pages", () => {
       gridSample1Uri,
       gridSample2Uri,
     ]) {
-      await page.goto(testURL(sampleUri), { waitUntil: "networkidle2" });
+      await page.goto(testURL(sampleUri), { waitUntil: "networkidle0" });
       await expect(page).toMatchElement("body > div.wrapper > div.box1", {
         text: "One",
       });
@@ -153,7 +153,7 @@ describe("Basic viewing of functional pages", () => {
       `iframe.sample-code-frame[src$="${gridSample2Uri}"]`
     );
     // Ensure that the live-sample page "gridSample2Uri" was built.
-    await page.goto(testURL(gridSample2Uri));
+    await page.goto(testURL(gridSample2Uri), { waitUntil: "networkidle0" });
     await expect(page).toMatchElement("body > div.wrapper > div.box1", {
       text: "One",
     });
