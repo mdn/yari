@@ -90,7 +90,7 @@ describe("Basic viewing of functional pages", () => {
       gridSample2Uri,
     ]) {
       await page.goto(testURL(sampleUri), { waitUntil: "networkidle0" });
-      await page.waitForTimeout(1000);
+      await page.waitForTimeout(5000);
       await expect(page).toMatchElement("body > div.wrapper > div.box1", {
         text: "One",
       });
@@ -155,7 +155,7 @@ describe("Basic viewing of functional pages", () => {
     );
     // Ensure that the live-sample page "gridSample2Uri" was built.
     await page.goto(testURL(gridSample2Uri), { waitUntil: "networkidle0" });
-    await page.waitForTimeout(1000);
+    await page.waitForTimeout(5000);
     await expect(page).toMatchElement("body > div.wrapper > div.box1", {
       text: "One",
     });
