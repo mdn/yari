@@ -154,11 +154,6 @@ describe("Basic viewing of functional pages", () => {
     );
     // Ensure that the live-sample page "gridSample2Uri" was built.
     await page.goto(testURL(gridSample2Uri));
-    console.log(
-      require("fs").readdirSync(
-        "../client/build/en-us/docs/learn/css/css_layout/introduction/grid"
-      )
-    );
     await expect(page).toMatchElement("body > div.wrapper > div.box1", {
       text: "One",
     });
