@@ -154,6 +154,7 @@ describe("Basic viewing of functional pages", () => {
     );
     // Ensure that the live-sample page "gridSample2Uri" was built.
     await page.goto(testURL(gridSample2Uri));
+    await page.screenshot({ path: "grid.png" });
     await expect(page).toMatchElement("body > div.wrapper > div.box1", {
       text: "One",
     });
