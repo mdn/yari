@@ -46,6 +46,11 @@
     li {
       display: inline-block;
       margin-right: 10px;
+
+      .social-icon {
+        padding-right: math.div($base-spacing, 4);
+        padding-left: math.div($base-spacing, 4);
+      }
     }
 
     ul {
