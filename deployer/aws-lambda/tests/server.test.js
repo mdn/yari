@@ -244,14 +244,14 @@ describe("response headers", () => {
     const r = await get("/en-US/docs/Web/HTTP/_samples_/Foo/index.html");
     expect(r.statusCode).toBe(200);
     expect(r.headers["x-frame-options"]).toBeFalsy();
-    expect(r.headers["content-security-policy-report-only"]).toBeFalsy();
+    expect(r.headers["content-security-policy"]).toBeFalsy();
   });
 
   it("should not set CSP or X-Frame-Options for /_sample.*", async () => {
     const r = await get("/en-US/docs/Web/HTTP/_sample_.Foo.html");
     expect(r.statusCode).toBe(200);
     expect(r.headers["x-frame-options"]).toBeFalsy();
-    expect(r.headers["content-security-policy-report-only"]).toBeFalsy();
+    expect(r.headers["content-security-policy"]).toBeFalsy();
   });
 
   it("should set CSP and other security headers for non-samples (stage)", async () => {
@@ -263,11 +263,7 @@ describe("response headers", () => {
     expect(r.headers["x-frame-options"]).toBeTruthy();
     expect(r.headers["strict-transport-security"]).toBeTruthy();
     expect(r.headers["x-xss-protection"]).toBeTruthy();
-    expect(r.headers["content-security-policy-report-only"]).toEqual(
-      expect.stringContaining(
-        "report-uri https://sentry.prod.mozaws.net/api/72/security/"
-      )
-    );
+    expect(r.headers["content-security-policy"]).toBeTruthy();
   });
   it("should set CSP and other security headers for non-samples (prod)", async () => {
     const r = await get("/en-US/docs/Web/HTTP", {
@@ -277,11 +273,7 @@ describe("response headers", () => {
     expect(r.headers["x-frame-options"]).toBeTruthy();
     expect(r.headers["strict-transport-security"]).toBeTruthy();
     expect(r.headers["x-xss-protection"]).toBeTruthy();
-    expect(r.headers["content-security-policy-report-only"]).toEqual(
-      expect.stringContaining(
-        "report-uri https://sentry.prod.mozaws.net/api/73/security/"
-      )
-    );
+    expect(r.headers["content-security-policy"]).toBeTruthy();
   });
   it("should not set CSP but other security headers non-HTML", async () => {
     const r = await get("/en-US/docs/Web/HTTP/screenshot.png");
@@ -289,6 +281,6 @@ describe("response headers", () => {
     expect(r.headers["x-frame-options"]).toBeTruthy();
     expect(r.headers["strict-transport-security"]).toBeTruthy();
     expect(r.headers["x-xss-protection"]).toBeTruthy();
-    expect(r.headers["content-security-policy-report-only"]).toBeFalsy();
+    expect(r.headers["content-security-policy"]).toBeFalsy();
   });
 });

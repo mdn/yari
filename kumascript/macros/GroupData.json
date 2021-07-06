@@ -1,12 +1,5 @@
 [
   {
-    "Ambient Light Events": {
-      "overview": ["Ambient Light Events"],
-      "interfaces": ["DeviceLightEvent"],
-      "methods": [],
-      "properties": ["Window.ondevicelight"],
-      "events": ["Window: devicelight"]
-    },
     "Background Tasks": {
       "overview": ["Background Tasks API"],
       "interfaces": ["IdleDeadline"],
@@ -184,8 +177,9 @@
       "properties": [],
       "events": []
     },
-    "CSS Typed OM API": {
+    "CSS Typed Object Model API": {
       "overview": ["CSS Typed OM API"],
+      "guides": ["/docs/Web/API/CSS_Typed_OM_API/Guide"],
       "interfaces": [
         "CSSKeywordValue",
         "CSSImageValue",
@@ -1257,14 +1251,22 @@
     },
     "Sensor API": {
       "overview": ["Sensor APIs"],
-      "interfaces": ["Sensor"],
-      "properties": [
-        "Sensor.activated",
-        "Sensor.hasReading",
-        "Sensor.timestamp"
+      "interfaces": [
+        "AbsoluteOrientationSensor",
+        "Accelerometer",
+        "AmbientLightSensor",
+        "GravitySensor",
+        "Gyroscope",
+        "LinearAccelerationSensor",
+        "Magnetometer",
+        "OrientationSensor",
+        "RelativeOrientationSensor",
+        "Sensor",
+        "SensorErrorEvent"
       ],
-      "methods": ["Sensor.start()", "Sensor.stop()"],
-      "events": ["Sensor: error", "Sensor: reading", "Sensor: activate"]
+      "properties": [],
+      "methods": [],
+      "events": []
     },
     "Server Sent Events": {
       "overview": ["Server-sent events"],

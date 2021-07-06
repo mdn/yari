@@ -95,6 +95,7 @@ function saveFile(filePath, rawBody, metadata, frontMatterKeys = null) {
     "translation_of",
     "translation_of_original",
     "original_slug",
+    "browser-compat",
   ];
 
   const saveMetadata = {};
@@ -271,12 +272,6 @@ const read = memoize((folderOrFilePath, roots = ROOTS) => {
   } else {
     folder = folderOrFilePath;
     for (const possibleRoot of roots) {
-      const possibleHTMLFilePath = path.join(possibleRoot, getHTMLPath(folder));
-      if (fs.existsSync(possibleHTMLFilePath)) {
-        root = possibleRoot;
-        filePath = possibleHTMLFilePath;
-        break;
-      }
       const possibleMarkdownFilePath = path.join(
         possibleRoot,
         getMarkdownPath(folder)
@@ -284,6 +279,12 @@ const read = memoize((folderOrFilePath, roots = ROOTS) => {
       if (fs.existsSync(possibleMarkdownFilePath)) {
         root = possibleRoot;
         filePath = possibleMarkdownFilePath;
+        break;
+      }
+      const possibleHTMLFilePath = path.join(possibleRoot, getHTMLPath(folder));
+      if (fs.existsSync(possibleHTMLFilePath)) {
+        root = possibleRoot;
+        filePath = possibleHTMLFilePath;
         break;
       }
     }
@@ -575,7 +576,12 @@ function findChildren(url, recursive = false) {
   const folder = urlToFolderPath(url);
   const globber = recursive ? ["*", "**"] : ["*"];
   const childPaths = glob.sync(
-    path.join(root, folder, ...globber, HTML_FILENAME)
+    path.join(
+      root,
+      folder,
+      ...globber,
+      `+(${HTML_FILENAME}|${MARKDOWN_FILENAME})`
+    )
   );
   return childPaths
     .map((childFilePath) => path.relative(root, path.dirname(childFilePath)))
