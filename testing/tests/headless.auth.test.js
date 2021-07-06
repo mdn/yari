@@ -95,27 +95,39 @@ describe("Visiting pages related and requiring authentication", () => {
     await expect(page).toMatch("Yay! Updated settings successfully saved.");
   });
 
-  it("should ask you to checkbox to sign up with Google", async () => {
-    const url = testURL("/en-US/");
-    await page.goto(url);
-    // Wait for it to figure out that you're not signed in.
-    await expect(page).toClick("a", { text: /Sign in/ });
-    await page.waitForNavigation({ waitUntil: "networkidle2" });
-    await expect(page.url()).toMatch(testURL("/en-US/signin"));
+  // This test has turned out to be fragile. It's failing sporadically and
+  // we're not sure why or how. We've seen several times where the PR (on
+  // something entirely unrelated) passes but when tested on the main branch
+  // it then fails.
+  // Example:
+  // https://github.com/mdn/yari/actions/runs/1005504856
+  // Clearly, there's something fragile about it.
+  // But as of July 6 2021, there's an offline discussion that we might
+  // revamp how auth works, so instead of trying to unbreak this fragile
+  // test, let's comment it out. At least it'll unbreak our sporadically
+  // failing CI but we can keep it around in case we really do need it
+  // and find the time to work on fixing what's fragile about it.
+  // it("should ask you to checkbox to sign up with Google", async () => {
+  //   const url = testURL("/en-US/");
+  //   await page.goto(url);
+  //   // Wait for it to figure out that you're not signed in.
+  //   await expect(page).toClick("a", { text: /Sign in/ });
+  //   await page.waitForNavigation({ waitUntil: "networkidle2" });
+  //   await expect(page.url()).toMatch(testURL("/en-US/signin"));
 
-    await expect(page).toMatch("Sign in with Google");
-    await expect(page).toClick("a", {
-      text: /Sign in with Google/,
-    });
-    await expect(page.url()).toMatch(testURL("/en-US/signin"));
-    await page.waitForNavigation({ waitUntil: "networkidle2" });
-    const checkbox = await page.$('input[type="checkbox"]');
-    await checkbox.click();
+  //   await expect(page).toMatch("Sign in with Google");
+  //   await expect(page).toClick("a", {
+  //     text: /Sign in with Google/,
+  //   });
+  //   await expect(page.url()).toMatch(testURL("/en-US/signin"));
+  //   await page.waitForNavigation({ waitUntil: "networkidle2" });
+  //   const checkbox = await page.$('input[type="checkbox"]');
+  //   await checkbox.click();
 
-    await expect(page).toClick("button", {
-      text: /Complete sign-in/,
-    });
-    await expect(page.url()).toMatch(testURL("/en-US/"));
-    await expect(page).toMatch("Googler-username");
-  });
+  //   await expect(page).toClick("button", {
+  //     text: /Complete sign-in/,
+  //   });
+  //   await expect(page.url()).toMatch(testURL("/en-US/"));
+  //   await expect(page).toMatch("Googler-username");
+  // });
 });
