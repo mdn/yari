@@ -68,10 +68,3 @@ jobs:
           # Also note that `--runInBand` is the same as `--maxWorkers=1`
 
           ./testing/scripts/functional-test.sh --runInBand
-
-      - uses: actions/upload-artifact@v2
-        if: always()
-        with:
-          name: screenshot
-          path: |
-            ./testing/grid.png
