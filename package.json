@@ -52,7 +52,7 @@
     "cookie": "0.4.1",
     "cookie-parser": "1.4.5",
     "cssesc": "^3.0.0",
-    "dayjs": "1.10.5",
+    "dayjs": "1.10.6",
     "dotenv": "10.0.0",
     "ejs": "3.1.6",
     "express": "4.17.1",
