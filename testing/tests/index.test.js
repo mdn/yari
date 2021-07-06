@@ -2,7 +2,6 @@ const fs = require("fs");
 const path = require("path");
 
 const cheerio = require("cheerio");
-const glob = require("glob");
 const sizeOf = require("image-size");
 
 const buildRoot = path.join("..", "client", "build");
