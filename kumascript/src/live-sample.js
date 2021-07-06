@@ -2,7 +2,7 @@ const cheerio = require("cheerio");
 const ejs = require("ejs");
 
 const { MacroLiveSampleError } = require("./errors.js");
-const { HTMLTool, KumascriptError } = require("./api/util.js");
+const { HTMLTool, KumascriptError, slugify } = require("./api/util.js");
 
 const LIVE_SAMPLE_HTML = `
 <!DOCTYPE html>
@@ -73,7 +73,7 @@ function buildLiveSamplePages(uri, title, $) {
     .filter((i, iframe) => $(iframe).attr("src").includes(`${uri}/_sample_.`))
     .map((i, iframe) => {
       const iframeId = $(iframe).attr("id");
-      const id = iframeId.substr("frame_".length);
+      const id = slugify(iframeId.substr("frame_".length));
       const result = { id, html: null, flaw: null };
       const tool = new HTMLTool($, uri);
       let sampleData;

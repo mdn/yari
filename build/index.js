@@ -364,7 +364,12 @@ async function buildDocument(document, documentOptions = {}) {
       flaws.push(flaw);
     }
 
-    liveSamples.push(...liveSamplePages);
+    liveSamples.push(
+      ...liveSamplePages.map((sample) => ({
+        ...sample,
+        id: sample.id.toLowerCase(),
+      }))
+    );
 
     if (flaws.length) {
       if (options.flawLevels.get("macros") === FLAW_LEVELS.ERROR) {
