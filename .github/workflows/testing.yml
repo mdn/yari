@@ -70,6 +70,9 @@ jobs:
           ./testing/scripts/functional-test.sh --runInBand
 
       - uses: actions/upload-artifact@v2
+        if: always()
         with:
           name: built-test-docs
-          path: ./build/en-us
+          path: |
+            ./client/build/en-us
+            ./testing/grid.png
