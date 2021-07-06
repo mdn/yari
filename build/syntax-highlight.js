@@ -145,18 +145,19 @@ function syntaxHighlight($, doc) {
         const slug = JS_KEYWORD_DOCS[keyword];
         if (slug) {
           hasLinks = true;
-          $el
-            .empty()
-            .append(
-              $("<a>")
-                .attr(
-                  "href",
-                  `/${doc.locale}/docs/Web/JavaScript/Reference/${slug}`
-                )
-                .css("text-decoration", "none")
-                .css("border-bottom", "1px dashed rgba(0,0,0,0.4)")
-                .text(keyword)
-            );
+          $el.empty().append(
+            $("<a>")
+              .attr({
+                href: `/${doc.locale}/docs/Web/JavaScript/Reference/${slug}`,
+                draggable: false,
+              })
+              .css({
+                "text-decoration": "none",
+                "border-bottom": "1px dashed rgba(0,0,0,0.4)",
+                "user-select": "text",
+              })
+              .text(keyword)
+          );
         }
       });
     }
