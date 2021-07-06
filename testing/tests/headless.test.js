@@ -50,6 +50,59 @@ describe("Basic viewing of functional pages", () => {
     await expect(page).toMatch("I Have an Interactive Example");
   });
 
+  it("open the /en-US/docs/Learn/CSS/CSS_layout/Introduction page", async () => {
+    const uri = "/en-US/docs/Learn/CSS/CSS_layout/Introduction";
+    const flexSample1Uri = `${uri}/Flex/_sample_.Flex_1.html`;
+    const flexSample2Uri = `${uri}/Flex/_sample_.Flex_2.html`;
+    const gridSample1Uri = `${uri}/Grid/_sample_.Grid_1.html`;
+    const gridSample2Uri = `${uri}/_sample_.Grid_2.html`;
+    await page.goto(testURL(uri));
+    await expect(page).toMatch("A Test Introduction to CSS layout");
+    await expect(page).toMatchElement("h1", {
+      text: "A Test Introduction to CSS layout",
+    });
+    await expect(page).toMatchElement("#flexbox", {
+      text: "Flexbox",
+    });
+    await expect(page).toMatchElement(
+      `iframe.sample-code-frame[src$="${flexSample1Uri}"]`
+    );
+    await expect(page).toMatchElement(
+      `iframe.sample-code-frame[src$="${flexSample2Uri}"]`
+    );
+    await expect(page).toMatchElement("#grid_layout", {
+      text: "Grid Layout",
+    });
+    await expect(page).toMatchElement(
+      `iframe.sample-code-frame[src$="${gridSample1Uri}"]`
+    );
+    await expect(page).toMatchElement("#Grid_2 pre.css.notranslate", {
+      text: /\.wrapper\s*\{\s*display:\s*grid;/,
+    });
+    await expect(page).toMatchElement(
+      `iframe.sample-code-frame[src$="${gridSample2Uri}"]`
+    );
+    // Ensure that the live-sample pages were built.
+    for (const sampleUri of [
+      flexSample1Uri,
+      flexSample2Uri,
+      gridSample1Uri,
+      gridSample2Uri,
+    ]) {
+      await page.goto(testURL(sampleUri), { waitUntil: "networkidle0" });
+      await page.waitForTimeout(5000);
+      await expect(page).toMatchElement("body > div.wrapper > div.box1", {
+        text: "One",
+      });
+      await expect(page).toMatchElement("body > div.wrapper > div.box2", {
+        text: "Two",
+      });
+      await expect(page).toMatchElement("body > div.wrapper > div.box3", {
+        text: "Three",
+      });
+    }
+  });
+
   it("open the /en-US/docs/Learn/CSS/CSS_layout/Introduction/Flex page", async () => {
     const uri = "/en-US/docs/Learn/CSS/CSS_layout/Introduction/Flex";
     const flexSample1Uri = `${uri}/_sample_.Flex_1.html`;
@@ -74,6 +127,44 @@ describe("Basic viewing of functional pages", () => {
     await expect(page).toMatchElement(
       `iframe.sample-code-frame[src$="${flexSample2Uri}"]`
     );
+  });
+
+  it("open the /en-US/docs/Learn/CSS/CSS_layout/Introduction/Grid page", async () => {
+    const uri = "/en-US/docs/Learn/CSS/CSS_layout/Introduction/Grid";
+    const gridSample1Uri = `${uri}/_sample_.Grid_1.html`;
+    const gridSample2Uri = `${uri}/_sample_.Grid_2.html`;
+    await page.goto(testURL(uri));
+    await expect(page).toMatch("A Test Introduction to CSS Grid Layout");
+    await expect(page).toMatchElement("h1", {
+      text: "A Test Introduction to CSS Grid Layout",
+    });
+    await expect(page).toMatchElement("#grid_layout", {
+      text: "Grid Layout",
+    });
+    await expect(page).toMatchElement("#Grid_1 pre.css.notranslate", {
+      text: /\.wrapper\s*\{\s*display:\s*grid;/,
+    });
+    await expect(page).toMatchElement(
+      `iframe.sample-code-frame[src$="${gridSample1Uri}"]`
+    );
+    await expect(page).toMatchElement("#Grid_2 pre.css.notranslate", {
+      text: /\.wrapper\s*\{\s*display:\s*grid;.+\.box1\s*\{/,
+    });
+    await expect(page).toMatchElement(
+      `iframe.sample-code-frame[src$="${gridSample2Uri}"]`
+    );
+    // Ensure that the live-sample page "gridSample2Uri" was built.
+    await page.goto(testURL(gridSample2Uri), { waitUntil: "networkidle0" });
+    await page.waitForTimeout(5000);
+    await expect(page).toMatchElement("body > div.wrapper > div.box1", {
+      text: "One",
+    });
+    await expect(page).toMatchElement("body > div.wrapper > div.box2", {
+      text: "Two",
+    });
+    await expect(page).toMatchElement("body > div.wrapper > div.box3", {
+      text: "Three",
+    });
   });
 
   it("should return to previous page on back-button press", async () => {

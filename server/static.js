@@ -144,20 +144,4 @@ app.get("/*", async (req, res) => {
 });
 
 const PORT = parseInt(process.env.SERVER_PORT || "5000");
-const startServer = () =>
-  new Promise((resolve, reject) => {
-    try {
-      const server = app.listen(PORT, () => {
-        console.log(`Listening on port ${PORT}`);
-        resolve(server);
-      });
-    } catch (e) {
-      reject(e);
-    }
-  });
-
-module.exports = { startServer };
-
-if (require.main === module) {
-  startServer();
-}
+app.listen(PORT, () => console.log(`Listening on port ${PORT}`));

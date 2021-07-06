@@ -10,5 +10,3 @@ yarn prepare-build
 yarn build
 
 yarn test:testing $@
-
-yarn test:playwright
