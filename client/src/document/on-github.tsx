@@ -122,7 +122,7 @@ function NewIssueOnGitHubLink({ doc }: { doc: Doc }) {
   const slug = doc.mdn_url.split("/docs/")[1].toLowerCase();
   const { locale } = doc;
 
-  let labels = ["needs-triage"];
+  const labels = ["needs-triage"];
   let contentLabel = "";
   for (const [prefix, label] of CONTENT_LABELS_PREFIXES) {
     if (slug.startsWith(prefix)) {
