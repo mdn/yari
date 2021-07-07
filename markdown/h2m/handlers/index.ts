@@ -206,47 +206,58 @@ export const handlers: QueryAndTransform[] = [
     (node, t, opts) => code(node, opts),
   ],
 
-  ...["js", "html", "css", "json", "plain", "cpp", "java", "bash"].flatMap(
-    (lang) =>
-      // shows up with/without semicolon
-      ["brush:" + lang, `brush:${lang};`, lang, lang + ";"].map(
-        (hasClass) =>
-          [
-            {
-              is: "pre",
-              hasClass,
-              canHaveClass: [
-                "brush:",
-                "brush",
-                "example-good",
-                "example-bad",
-                "no-line-numbers",
-                "line-numbers",
-                "notranslate",
-                (className) => className.startsWith("highlight"),
-                (className) =>
-                  className.startsWith("[") && className.endsWith("]"),
-              ],
-            },
-            (node, t, opts) => [
-              h("html", "<!-- prettier-ignore -->\n"),
-              h(
-                "code",
-                trimTrailingLines(
-                  wrapText(toText(node, { allowedElements: ["var"] }), opts)
-                ),
-                {
-                  lang,
-                  meta: asArray(node.properties.className)
-                    .filter(
-                      (c) => typeof c == "string" && c.startsWith("example-")
-                    )
-                    .join(" "),
-                }
-              ),
+  ...[
+    "js",
+    "html",
+    "css",
+    "json",
+    "plain",
+    "cpp",
+    "java",
+    "bash",
+    "example-good",
+    "example-bad",
+  ].flatMap((lang) =>
+    // shows up with/without semicolon
+    ["brush:" + lang, `brush:${lang};`, lang, lang + ";"].map(
+      (hasClass) =>
+        [
+          {
+            is: "pre",
+            hasClass,
+            canHaveClass: [
+              "brush:",
+              "brush",
+              "example-good",
+              "example-bad",
+              "no-line-numbers",
+              "line-numbers",
+              "notranslate",
+              "language-css",
+              (className) => className.startsWith("highlight"),
+              (className) =>
+                className.startsWith("[") && className.endsWith("]"),
             ],
-          ] as QueryAndTransform
-      )
+          },
+          (node, t, opts) => [
+            h("html", "<!-- prettier-ignore -->\n"),
+            h(
+              "code",
+              trimTrailingLines(
+                wrapText(toText(node, { allowedElements: ["var"] }), opts)
+              ),
+              {
+                lang: lang.startsWith("example") ? "plain" : lang,
+                meta: asArray(node.properties.className)
+                  .filter(
+                    (c) => typeof c == "string" && c.startsWith("example-")
+                  )
+                  .join(" "),
+              }
+            ),
+          ],
+        ] as QueryAndTransform
+    )
   ),
 
   [

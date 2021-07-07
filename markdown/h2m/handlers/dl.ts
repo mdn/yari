@@ -28,6 +28,10 @@ const wrapNonBlocks = (nodes) => {
 };
 
 function prefixDefinitions([first, ...rest]) {
+  if (!first) {
+    return h("text", "");
+  }
+
   switch (first.type) {
     case "paragraph":
       return wrapNonBlocks([
