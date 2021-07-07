@@ -98,7 +98,7 @@ const LOCALE_LABEL_ALIASES = new Map([
 ]);
 
 function NewIssueOnGitHubLink({ doc }: { doc: Doc }) {
-  const baseURL = "https://github.com/mdn/content/issues/new";
+  let baseURL = "https://github.com/mdn/content/issues/new";
   const sp = new URLSearchParams();
 
   const { folder, github_url, last_commit_url } = doc.source;
@@ -133,8 +133,10 @@ function NewIssueOnGitHubLink({ doc }: { doc: Doc }) {
   if (!contentLabel) {
     contentLabel = "Other";
   }
-  labels.push(`Content:${contentLabel}`);
-  if (locale !== "en-US") {
+  if (locale === "en-US") {
+    labels.push(`Content:${contentLabel}`);
+  } else {
+    baseURL = "https://github.com/mdn/translated-content/issues/new";
     const localeLabel =
       LOCALE_LABEL_ALIASES.get(locale.toLowerCase()) || locale.toLowerCase();
     labels.push(`l10n-${localeLabel}`);
