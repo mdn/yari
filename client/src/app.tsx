@@ -18,6 +18,8 @@ import { PageNotFound } from "./page-not-found";
 // import { Banner } from "./banners";
 import { SignIn, SignUp } from "./auth";
 import { Settings } from "./settings";
+
+import { DeepDives } from "./deep-dives";
 import { Plus } from "./plus";
 
 const AllFlaws = React.lazy(() => import("./flaws"));
@@ -258,6 +260,16 @@ export function App(appProps) {
                 element={
                   <StandardLayout>
                     <Plus />
+                  </StandardLayout>
+                }
+              />
+            )}
+            {ENABLE_PLUS && (
+              <Route
+                path="/deep-dives/article/"
+                element={
+                  <StandardLayout>
+                    <DeepDives />
                   </StandardLayout>
                 }
               />
