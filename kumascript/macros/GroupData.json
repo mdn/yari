@@ -865,7 +865,6 @@
       "overview": ["Media Streams API"],
       "guides": ["/docs/Web/API/Media_Streams_API/Constraints"],
       "interfaces": [
-        "AudioStreamTrack",
         "BlobEvent",
         "CanvasCaptureMediaStream",
         "MediaDevices",
