@@ -89,14 +89,13 @@ const CONTENT_LABELS_PREFIXES = [
   ["tools", "DevTools"],
 ];
 
-const L10N_LABELS_PREFIXES = [
+// For all locales that as spelled differently as a issue label, map the locale
+// to the proper label name. For locales not mentioned here, we keep the locale
+// as is.
+const LOCALE_LABEL_ALIASES = new Map([
   ["zh-cn", "zh"],
   ["zh-tw", "zh"],
-  ["fr", "fr"],
-  ["ko", "ko"],
-  ["ja", "ja"],
-  ["pt-br", "pt-br"]
-];
+]);
 
 function NewIssueOnGitHubLink({ doc }: { doc: Doc }) {
   const baseURL = "https://github.com/mdn/content/issues/new";
@@ -120,7 +119,9 @@ function NewIssueOnGitHubLink({ doc }: { doc: Doc }) {
       : doc.title;
   sp.set("title", `Issue with "${titleShort}": (short summary here please)`);
 
-  const [lang, slug] = doc.mdn_url.toLowerCase().split("/docs/");
+  const slug = doc.mdn_url.split("/docs/")[1].toLowerCase();
+  const { locale } = doc;
+
   let labels = ["needs-triage"];
   let contentLabel = "";
   for (const [prefix, label] of CONTENT_LABELS_PREFIXES) {
@@ -133,18 +134,14 @@ function NewIssueOnGitHubLink({ doc }: { doc: Doc }) {
     contentLabel = "Other";
   }
   labels.push(`Content:${contentLabel}`);
-  let l10nLabel ;
-  for (const [prefix, label] of L10N_LABELS_PREFIXES) {
-    if (lang === prefix) {
-      l10nLabel = `l10n-${label}`;
-      break;
-    }
+  if (locale !== "en-US") {
+    const localeLabel =
+      LOCALE_LABEL_ALIASES.get(locale.toLowerCase()) || locale.toLowerCase();
+    labels.push(`l10n-${localeLabel}`);
+    // Maybe a l10n-unsupported label would be useful to add?
   }
-  if (l10nLabel) {
-    labels.push(l10nLabel);
-  } // Maybe a l10n-unsupported label would be useful to add?
 
-  sp.set("labels", labels.join(','));
+  sp.set("labels", labels.join(","));
 
   const href = `${baseURL}?${sp.toString()}`;
 
