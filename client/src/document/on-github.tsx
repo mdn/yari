@@ -6,6 +6,9 @@ export function OnGitHubLink({ doc }: { doc: Doc }) {
       <h4>Found a problem with this page?</h4>
       <ul>
         <li>
+          <EditOnGitHubLink doc={doc} />
+        </li>
+        <li>
           <SourceOnGitHubLink doc={doc} />
         </li>
         <li>
@@ -26,6 +29,7 @@ export function OnGitHubLink({ doc }: { doc: Doc }) {
     </div>
   );
 }
+
 function SourceOnGitHubLink({ doc }: { doc: Doc }) {
   const { github_url, folder } = doc.source;
   return (
@@ -36,6 +40,20 @@ function SourceOnGitHubLink({ doc }: { doc: Doc }) {
       rel="noopener noreferrer"
     >
       Source on <b>GitHub</b>
+    </a>
+  );
+}
+
+function EditOnGitHubLink({ doc }: { doc: Doc }) {
+  const { github_url } = doc.source;
+  return (
+    <a
+      href={github_url.replace("/blob/", "/edit/")}
+      title={`You're going to need to sign in to GitHub first (Opens in a new tab)`}
+      target="_blank"
+      rel="noopener noreferrer"
+    >
+      Edit on <b>GitHub</b>
     </a>
   );
 }
