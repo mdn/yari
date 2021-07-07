@@ -151,11 +151,7 @@ function syntaxHighlight($, doc) {
                 href: `/${doc.locale}/docs/Web/JavaScript/Reference/${slug}`,
                 draggable: false,
               })
-              .css({
-                "text-decoration": "none",
-                "border-bottom": "1px dashed rgba(0,0,0,0.4)",
-                "user-select": "text",
-              })
+              .addClass("code-reference-link")
               .text(keyword)
           );
         }
