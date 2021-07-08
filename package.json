@@ -162,7 +162,7 @@
     "rehype-minify-whitespace": "^4.0.5",
     "remark-prettier": "^1.2.0",
     "rough-notation": "0.5.1",
-    "sass": "^1.35.1",
+    "sass": "^1.35.2",
     "stylelint": "^13.13.1",
     "stylelint-a11y": "^1.2.3",
     "stylelint-config-prettier": "^8.0.2",
