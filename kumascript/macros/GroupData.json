@@ -1,5 +1,18 @@
 [
   {
+    "Background Fetch API": {
+      "overview": ["Background Fetch API"],
+      "interfaces": [
+        "BackgroundFetchManager",
+        "BackgroundFetchRegistration",
+        "BackgroundFetchRecord",
+        "BackgroundFetchEvent",
+        "BackgroundFetchUpdateUIEvent"
+      ],
+      "methods": [],
+      "properties": [],
+      "events": []
+    },
     "Background Tasks": {
       "overview": ["Background Tasks API"],
       "interfaces": ["IdleDeadline"],
@@ -80,7 +93,6 @@
         "ImageData",
         "OffscreenCanvas",
         "Path2D",
-        "RenderingContext",
         "TextMetrics"
       ],
       "methods": [],
@@ -141,7 +153,8 @@
         "Credential",
         "CredentialsContainer",
         "FederatedCredential",
-        "PasswordCredential"
+        "PasswordCredential",
+        "PublicKeyCredential"
       ],
       "methods": [],
       "properties": [],
@@ -284,15 +297,9 @@
         "Document",
         "DocumentFragment",
         "DocumentType",
-        "DOMConfiguration",
         "DOMError",
-        "DOMErrorHandler",
         "DOMException",
         "DOMImplementation",
-        "DOMImplementationList",
-        "DOMImplementationRegistry",
-        "DOMImplementationSource",
-        "DOMLocator",
         "DOMObject",
         "DOMParser",
         "DOMPoint",
@@ -302,7 +309,6 @@
         "DOMString",
         "DOMTimeStamp",
         "DOMTokenList",
-        "DOMUserData",
         "Element",
         "ElementTraversal",
         "Entity",
@@ -324,8 +330,6 @@
         "TextEncoder",
         "TimeRanges",
         "TreeWalker",
-        "TypeInfo",
-        "UserDataHandler",
         "USVString",
         "XMLDocument"
       ],
@@ -875,7 +879,6 @@
       "overview": ["Media Streams API"],
       "guides": ["/docs/Web/API/Media_Streams_API/Constraints"],
       "interfaces": [
-        "AudioStreamTrack",
         "BlobEvent",
         "CanvasCaptureMediaStream",
         "MediaDevices",
@@ -912,7 +915,6 @@
       "dictionaries": [
         "MediaImage",
         "MediaMetadataInit",
-        "MediaPositionState",
         "MediaSessionActionDetails"
       ],
       "types": ["MediaSessionAction", "MediaSessionPlaybackState"],
@@ -993,7 +995,6 @@
         "BasicCardResponse",
         "PaymentMethodData",
         "PaymentCurrencyAmount",
-        "PaymentDetailsBase",
         "PaymentDetailsModifier",
         "PaymentDetailsUpdate",
         "PaymentItem",
@@ -2018,7 +2019,6 @@
         "/docs/Web/API/Web_Workers_API/Structured_clone_algorithm"
       ],
       "interfaces": [
-        "AbstractWorker",
         "ChromeWorker",
         "DedicatedWorkerGlobalScope",
         "ServiceWorker",

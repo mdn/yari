@@ -30,6 +30,79 @@ function tryOrExit(f) {
   };
 }
 
+function saveProblemsReport(problems: Map<any, any>) {
+  const now = new Date();
+  const report = [
+    `# Report from ${now.toLocaleString()}`,
+
+    "## Top 20 unhandled elements",
+    ...Array.from(
+      Array.from(problems)
+        .flatMap(([, { invalid, unhandled }]) => [
+          ...invalid.map((e: any) => e.source),
+          ...unhandled,
+        ])
+        .map((node) => (node.type == "element" ? toSelector(node) : node.type))
+        .reduce(
+          (top, label) => top.set(label, (top.get(label) || 0) + 1),
+          new Map()
+        )
+    )
+      .sort(([, c1], [, c2]) => (c1 > c2 ? -1 : 1))
+      .slice(0, 20)
+      .map(([label, count]) => `- ${label} (${count})`),
+
+    "## Details per Document",
+  ];
+  let problemCount = 0;
+  for (const [url, { offset, invalid, unhandled }] of Array.from(problems)) {
+    problemCount += invalid.length + unhandled.length;
+    report.push(`### [${url}](https://developer.mozilla.org${url})`);
+
+    const elementWithPosition = (node) => {
+      const { type, position } = node;
+      const label = type == "element" ? toSelector(node) : type;
+      if (position) {
+        const {
+          start: { line, column },
+        } = position;
+        return `${label} (${line + offset}:${column})`;
+      }
+      return label;
+    };
+
+    if (invalid.length > 0) {
+      report.push(
+        "#### Invalid AST transformations",
+        ...invalid
+          .filter(({ source }) => !!source)
+          .map(({ source, targetType, unexpectedChildren }: any) =>
+            [
+              `##### ${elementWithPosition(source)} => ${targetType}`,
+              "```",
+              unexpectedChildren.map((node) => prettyAST(node)),
+              "```",
+            ].join("\n")
+          )
+      );
+    }
+
+    if (unhandled.length > 0) {
+      report.push(
+        "### Missing conversion rules",
+        ...unhandled.map((node) => "- " + elementWithPosition(node))
+      );
+    }
+  }
+  if (problemCount > 0) {
+    const reportFileName = `md-conversion-problems-report-${now.toISOString()}.md`;
+    console.log(
+      `Could not automatically convert ${problemCount} elements. Saving report to ${reportFileName}`
+    );
+    fs.writeFileSync(reportFileName, report.join("\n"));
+  }
+}
+
 program
   .bin("yarn md")
   .name("md")
@@ -87,6 +160,9 @@ program
           ) {
             continue;
           }
+          if (options.verbose) {
+            console.log(doc.metadata.slug);
+          }
           const { body: h, attributes: metadata } = fm(doc.rawContent);
           const [markdown, { invalid, unhandled }] = await h2m(h, {
             printAST: options.printAst,
@@ -115,77 +191,7 @@ program
         progressBar.stop();
       }
 
-      const now = new Date();
-      const report = [
-        `# Report from ${now.toLocaleString()}`,
-
-        "## Top 20 unhandled elements",
-        ...Array.from(
-          Array.from(problems)
-            .flatMap(([, { invalid, unhandled }]) => [
-              ...invalid.map((e: any) => e.source),
-              ...unhandled,
-            ])
-            .map((node) =>
-              node.type == "element" ? toSelector(node) : node.type
-            )
-            .reduce(
-              (top, label) => top.set(label, (top.get(label) || 0) + 1),
-              new Map()
-            )
-        )
-          .sort(([, c1], [, c2]) => (c1 > c2 ? -1 : 1))
-          .slice(0, 20)
-          .map(([label, count]) => `- ${label} (${count})`),
-
-        "## Details per Document",
-      ];
-      let problemCount = 0;
-      for (const [url, { offset, invalid, unhandled }] of Array.from(
-        problems
-      )) {
-        problemCount += invalid.length + unhandled.length;
-        report.push(`### [${url}](https://developer.mozilla.org${url})`);
-
-        const elementWithPosition = (node) => {
-          const {
-            type,
-            position: {
-              start: { line, column },
-            },
-          } = node;
-          const label = type == "element" ? toSelector(node) : type;
-          return `${label} (${line + offset}:${column})`;
-        };
-
-        if (invalid.length > 0) {
-          report.push(
-            "#### Invalid AST transformations",
-            ...invalid.map(({ source, targetType, unexpectedChildren }: any) =>
-              [
-                `##### ${elementWithPosition(source)} => ${targetType}`,
-                "```",
-                unexpectedChildren.map((node) => prettyAST(node)),
-                "```",
-              ].join("\n")
-            )
-          );
-        }
-
-        if (unhandled.length > 0) {
-          report.push(
-            "### Missing conversion rules",
-            ...unhandled.map((node) => "- " + elementWithPosition(node))
-          );
-        }
-      }
-      if (problemCount > 0) {
-        const reportFileName = `md-conversion-problems-report-${now.toISOString()}.md`;
-        console.log(
-          `Could not automatically convert ${problemCount} elements. Saving report to ${reportFileName}`
-        );
-        fs.writeFileSync(reportFileName, report.join("\n"));
-      }
+      saveProblemsReport(problems);
     })
   )
 
