@@ -30,15 +30,21 @@ export class InvalidASTError extends Error {
 }
 
 export const toPrettyHTML = (...args: Parameters<typeof toHTML>) => {
-  const result = prettier.format(toHTML(...args), {
-    semi: false,
-    parser: "html",
-  });
-  // Workaround for Prettier issue https://github.com/prettier/prettier/issues/10950
-  if (result.endsWith("\n>\n")) {
-    return result.slice(0, -3) + ">";
+  const source = toHTML(...args);
+
+  // Prettier often breaks starting tags but that does not seem to be an issue for
+  // our <table> tags for which we are mainly interested in prettier HTML, hence
+  // we only prettify those.
+  if (!source.startsWith("<table")) {
+    return source;
   }
-  return result;
+
+  return prettier
+    .format(source, {
+      semi: false,
+      parser: "html",
+    })
+    .trim();
 };
 
 export const toSelector = ({
