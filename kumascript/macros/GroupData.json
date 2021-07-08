@@ -140,7 +140,8 @@
         "Credential",
         "CredentialsContainer",
         "FederatedCredential",
-        "PasswordCredential"
+        "PasswordCredential",
+        "PublicKeyCredential"
       ],
       "methods": [],
       "properties": [],
