@@ -995,7 +995,6 @@
         "BasicCardResponse",
         "PaymentMethodData",
         "PaymentCurrencyAmount",
-        "PaymentDetailsBase",
         "PaymentDetailsModifier",
         "PaymentDetailsUpdate",
         "PaymentItem",
