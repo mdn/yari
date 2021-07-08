@@ -250,7 +250,6 @@ class MacroDeprecatedError extends MacroExecutionError {
 class MacroLiveSampleError extends MacroExecutionError {
   constructor(error, source, token) {
     super(error, source, token, true);
-    console.log({ source });
     this.name = "MacroLiveSampleError";
     this.macroSource = source.slice(
       token.location.start.offset,

@@ -334,7 +334,6 @@ async function buildDocument(document, documentOptions = {}) {
 
     $ = cheerio.load(`<div id="_body">${renderedHtml}</div>`);
 
-    console.log(doc);
     const liveSamplePages = kumascript.buildLiveSamplePages(
       document.url,
       document.metadata.title,
