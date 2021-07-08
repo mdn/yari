@@ -334,10 +334,12 @@ async function buildDocument(document, documentOptions = {}) {
 
     $ = cheerio.load(`<div id="_body">${renderedHtml}</div>`);
 
+    console.log(doc);
     const liveSamplePages = kumascript.buildLiveSamplePages(
       document.url,
       document.metadata.title,
-      $
+      $,
+      document.rawBody
     );
     for (const { flaw } of liveSamplePages) {
       if (!flaw) {
@@ -618,17 +620,16 @@ async function buildLiveSamplePageFromURL(url) {
     .buildLiveSamplePages(
       document.url,
       document.metadata.title,
-      (await kumascript.render(document.url))[0]
+      (await kumascript.render(document.url))[0],
+      document.rawBody
     )
-    .find((page) => page.id.toLowerCase() == sampleID.toLowerCase());
+    .find((page) => page.id.toLowerCase() == sampleID);
 
   if (liveSamplePage) {
     if (liveSamplePage.flaw) {
       throw new Error(liveSamplePage.flaw.toString());
     }
-    if (liveSamplePage.html) {
-      return liveSamplePage.html;
-    }
+    return liveSamplePage.html;
   }
 
   throw new Error(`No live-sample "${sampleID}" found within ${documentURL}`);

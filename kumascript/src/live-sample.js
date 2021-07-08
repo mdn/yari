@@ -62,7 +62,7 @@ const LIVE_SAMPLE_HTML = `
 
 const liveSampleTemplate = ejs.compile(LIVE_SAMPLE_HTML);
 
-function buildLiveSamplePages(uri, title, $) {
+function buildLiveSamplePages(uri, title, $, rawBody) {
   // Given the URI, title, and rendered HTML of a document, build
   // and return the HTML of the live-sample pages for the given
   // document or else collect flaws
@@ -83,7 +83,7 @@ function buildLiveSamplePages(uri, title, $) {
         if (error instanceof KumascriptError) {
           result.flaw = new MacroLiveSampleError(
             error,
-            $.html(),
+            rawBody,
             JSON.parse($(iframe).attr("data-token"))
           );
           return result;
