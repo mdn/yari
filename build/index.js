@@ -340,37 +340,30 @@ async function buildDocument(document, documentOptions = {}) {
       $,
       document.rawBody
     );
-    for (const { flaw } of liveSamplePages) {
-      if (!flaw) {
-        continue;
-      }
-
-      flaw.updateFileInfo(fileInfo);
-      if (flaw.name === "MacroLiveSampleError") {
-        // As of April 2021 there are 0 pages in mdn/content that trigger
-        // a MacroLiveSampleError. So we can be a lot more strict with en-US
-        // until the translated-content has had a chance to clean up all
-        // their live sample errors.
-        // See https://github.com/mdn/yari/issues/2489
-        if (document.metadata.locale === "en-US") {
-          throw new Error(
-            `MacroLiveSampleError within ${flaw.filepath}, line ${flaw.line} column ${flaw.column} (${flaw.error.message})`
-          );
-        } else {
-          console.warn(
-            `MacroLiveSampleError within ${flaw.filepath}, line ${flaw.line} column ${flaw.column} (${flaw.error.message})`
-          );
+    for (const { id, html, flaw } of liveSamplePages) {
+      if (flaw) {
+        flaw.updateFileInfo(fileInfo);
+        if (flaw.name === "MacroLiveSampleError") {
+          // As of April 2021 there are 0 pages in mdn/content that trigger
+          // a MacroLiveSampleError. So we can be a lot more strict with en-US
+          // until the translated-content has had a chance to clean up all
+          // their live sample errors.
+          // See https://github.com/mdn/yari/issues/2489
+          if (document.metadata.locale === "en-US") {
+            throw new Error(
+              `MacroLiveSampleError within ${flaw.filepath}, line ${flaw.line} column ${flaw.column} (${flaw.error.message})`
+            );
+          } else {
+            console.warn(
+              `MacroLiveSampleError within ${flaw.filepath}, line ${flaw.line} column ${flaw.column} (${flaw.error.message})`
+            );
+          }
         }
+        flaws.push(flaw);
+      } else {
+        liveSamples.push({ id: id.toLowerCase(), html });
       }
-      flaws.push(flaw);
     }
-
-    liveSamples.push(
-      ...liveSamplePages.map((sample) => ({
-        ...sample,
-        id: sample.id.toLowerCase(),
-      }))
-    );
 
     if (flaws.length) {
       if (options.flawLevels.get("macros") === FLAW_LEVELS.ERROR) {
