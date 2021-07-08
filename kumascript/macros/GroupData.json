@@ -915,7 +915,6 @@
       "dictionaries": [
         "MediaImage",
         "MediaMetadataInit",
-        "MediaPositionState",
         "MediaSessionActionDetails"
       ],
       "types": ["MediaSessionAction", "MediaSessionPlaybackState"],
