@@ -27,6 +27,24 @@ if (
 let CONTENT_ARCHIVED_ROOT = process.env.CONTENT_ARCHIVED_ROOT;
 let CONTENT_TRANSLATED_ROOT = process.env.CONTENT_TRANSLATED_ROOT;
 
+// If CONTENT_TRANSLATED_ROOT is set, but it lacks the `/files` part, let's
+// deal with that.
+if (CONTENT_TRANSLATED_ROOT) {
+  CONTENT_TRANSLATED_ROOT = fs.realpathSync(CONTENT_TRANSLATED_ROOT);
+  if (
+    path.basename(CONTENT_TRANSLATED_ROOT) !== "files" &&
+    fs.existsSync(path.join(CONTENT_TRANSLATED_ROOT, "files"))
+  ) {
+    // It can be "corrected"
+    CONTENT_TRANSLATED_ROOT = path.join(CONTENT_TRANSLATED_ROOT, "files");
+    console.warn(
+      `Corrected the CONTENT_TRANSLATED_ROOT environment variable to ${CONTENT_TRANSLATED_ROOT}`
+    );
+  } else if (!fs.existsSync(CONTENT_TRANSLATED_ROOT)) {
+    throw new Error(`${path.resolve(CONTENT_TRANSLATED_ROOT)} does not exist`);
+  }
+}
+
 // This makes it possible to know, give a root folder, what is the name of
 // the repository on GitHub.
 // E.g. `'https://github.com/' + REPOSITORY_URLS[document.fileInfo.root]`
