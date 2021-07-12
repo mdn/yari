@@ -2,6 +2,7 @@
 
 @import "~@mdn/minimalist/sass/vars/layout";
 @import "~@mdn/minimalist/sass/vars/color-palette";
+@import "~@mdn/minimalist/sass/vars/mdn-web-docs-palette";
 @import "~@mdn/minimalist/sass/vars/borders";
 @import "~@mdn/minimalist/sass/vars/typography";
 
@@ -92,9 +93,38 @@ a.new {
       display: block;
     }
   }
+
   @media #{$mq-small-desktop-and-up} {
     margin-bottom: $base-spacing * 2;
     padding: 0 $base-spacing $base-spacing;
+  }
+
+  .example-good,
+  .example-bad {
+    &::after {
+      background-size: 24px;
+      content: "";
+      display: block;
+      height: 24px;
+      position: absolute;
+      right: 44px;
+      top: 13px;
+      width: 24px;
+    }
+  }
+
+  .example-bad {
+    &::after {
+      background-color: $mdn-red700;
+      mask-image: url("~@mdn/dinocons/emojis/frown.svg");
+    }
+  }
+
+  .example-good {
+    &::after {
+      background-color: $mdn-green700;
+      mask-image: url("~@mdn/dinocons/emojis/smiley.svg");
+    }
   }
 
   h1 {
