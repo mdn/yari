@@ -80,9 +80,10 @@ export default function Bookmarks() {
   }, [data]);
 
   async function saveBookmarked(url: string) {
-    const apiPostURL = `${API_BASE}bookmarked/?${new URLSearchParams({
+    const sp = new URLSearchParams({
       url,
-    }).toString()}`;
+    });
+    const apiPostURL = `${API_BASE}bookmarked/?${sp.toString()}`;
     if (!data) {
       return false;
     }
@@ -210,8 +211,6 @@ function DisplayData({
 
       {data.items.map((bookmark) => {
         const created = dayjs(bookmark.created);
-        console.log(bookmark);
-
         return (
           <div key={bookmark.id} className="bookmark">
             {bookmark.parents.length > 0 && (
