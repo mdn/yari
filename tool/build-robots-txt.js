@@ -27,7 +27,7 @@ async function runBuildRobotsTxt(outfile) {
   let content = ALWAYS_ALLOW_ROBOTS ? ALLOW_TEXT : DISALLOW_TEXT;
   if (ALWAYS_ALLOW_ROBOTS) {
     // Append extra lines specifically when we do allow robots.
-    for (locale of VALID_LOCALES.values()) {
+    for (const locale of VALID_LOCALES.values()) {
       content += `Disallow: /${locale}/search\n`;
     }
   }
