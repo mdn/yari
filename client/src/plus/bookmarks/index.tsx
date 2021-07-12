@@ -45,17 +45,17 @@ const API_BASE = "/api/v1/plus/bookmarks/";
 
 export default function Bookmarks() {
   const userData = useUserData();
-  const [searchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
 
   const pageTitle = "Your bookmarks";
   React.useEffect(() => {
     document.title = pageTitle;
   }, []);
 
-  const apiURL =
-    userData && userData.isAuthenticated && userData.isSubscriber
-      ? `${API_BASE}?${searchParams.toString()}`
-      : null;
+  const isSubscriber =
+    userData && userData.isAuthenticated && userData.isSubscriber;
+
+  const apiURL = isSubscriber ? `${API_BASE}?${searchParams.toString()}` : null;
 
   const { data, error } = useSWR<BookmarksData | null, Error | null>(
     apiURL,
@@ -78,6 +78,24 @@ export default function Bookmarks() {
       document.title = newTitle;
     }
   }, [data]);
+
+  React.useEffect(() => {
+    if (data) {
+      // If you're on ?page=3 and the per_page number is 10 and you have
+      // 31 bookmarks. If you delete the only bookmark there on page 3,
+      // it no longer makes sense to be on that page. So we force a
+      // change to `?page={3 - 1}`.
+      if (data.metadata.page > 1 && data.items.length === 0) {
+        const newSearchParams = createSearchParams(searchParams);
+        if (data.metadata.page === 2) {
+          newSearchParams.delete("page");
+        } else {
+          newSearchParams.set("page", `${data.metadata.page - 1}`);
+        }
+        setSearchParams(newSearchParams);
+      }
+    }
+  }, [data, setSearchParams, searchParams]);
 
   async function saveBookmarked(url: string) {
     const sp = new URLSearchParams({

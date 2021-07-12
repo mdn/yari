@@ -48,31 +48,139 @@ export default function App({ doc }: { doc: Doc }) {
     }
   }
 
+  const [hideLoadingError, setHideLoadingError] = React.useState(false);
+
   const [toggleError, setToggleError] = React.useState<Error | null>(null);
 
-  if (error) {
-    return <span>🚨</span>;
-  }
+  // This is an optimization. When you view this page for the very first time
+  // there is no way of knowing if the user has previously bookmarked it. All
+  // you can do is patiently wait for the XHR to come in.
+  // If this local state is NOT undefined, we can use it while waiting for
+  // the data from the XHR request.
+  const [localBookmarked, setLocalBookmarked] = React.useState<string | null>(
+    null
+  );
+
+  React.useEffect(() => {
+    if (data && !error) {
+      setLocalBookmarked(data.bookmarked);
+    }
+  }, [data, error]);
+
+  const [isSaving, setSaving] = React.useState(false);
+
+  const loading = !data;
 
   return (
-    <Button
-      bookmarked={(data && data.bookmarked) || null}
-      loading={!data}
-      error={toggleError}
-      toggle={async () => {
-        try {
-          await saveBookmarked();
-          if (toggleError) {
-            setToggleError(null);
+    <div>
+      {error && !hideLoadingError ? (
+        <ShowLoadingError
+          error={error}
+          clear={() => {
+            setHideLoadingError(true);
+          }}
+        />
+      ) : (
+        toggleError && (
+          <ShowToggleError
+            error={toggleError}
+            clear={() => {
+              setToggleError(null);
+            }}
+          />
+        )
+      )}
+      <Button
+        bookmarked={localBookmarked}
+        loading={loading}
+        disabled={error || toggleError || isSaving}
+        toggle={async () => {
+          // The first thing we do when the user has toggled it is to store it
+          // in local state so that the UI feels responsive.
+          // Once this is done, we can take care of sending the local state to
+          // the server.
+          setLocalBookmarked((before) =>
+            before ? null : new Date().toString()
+          );
+
+          // Ultra-basic throttle to prevent multiple calls to saveBookmarked()
+          setSaving(true);
+          try {
+            await saveBookmarked();
+            if (toggleError) {
+              setToggleError(null);
+            }
+            mutate(apiURL);
+            return true;
+          } catch (err) {
+            setToggleError(err);
+            return false;
+          } finally {
+            setSaving(false);
           }
-          mutate(apiURL);
-          return true;
-        } catch (err) {
-          setToggleError(err);
-          return false;
-        }
-      }}
-    />
+        }}
+      />
+    </div>
+  );
+}
+
+function ShowToggleError({
+  error,
+  clear,
+}: {
+  error: Error;
+  clear: () => void;
+}) {
+  const style = {
+    backgroundColor: "white",
+    border: "1px solid #ccc",
+    padding: 20,
+    position: "absolute",
+    bottom: 20,
+    right: 20,
+  } as React.CSSProperties;
+  return (
+    <div style={style}>
+      <button type="button" onClick={() => clear()}>
+        X
+      </button>
+      <p>
+        <b>Bookmark toggle error</b>
+      </p>
+      <p>
+        <code>{error.toString()}</code>
+      </p>
+    </div>
+  );
+}
+
+function ShowLoadingError({
+  error,
+  clear,
+}: {
+  error: Error;
+  clear: () => void;
+}) {
+  const style = {
+    backgroundColor: "white",
+    border: "1px solid #ccc",
+    padding: 20,
+    position: "absolute",
+    bottom: 20,
+    right: 20,
+  } as React.CSSProperties;
+  return (
+    <div style={style}>
+      <button type="button" onClick={() => clear()}>
+        X
+      </button>
+      <p>
+        <b>Bookmark loading error</b>
+      </p>
+      <p>
+        <code>{error.toString()}</code>
+      </p>
+    </div>
   );
 }
 
@@ -80,12 +188,12 @@ function Button({
   bookmarked,
   loading,
   toggle,
-  error,
+  disabled,
 }: {
   bookmarked: string | null;
   loading: boolean;
-  toggle: () => Promise<boolean>;
-  error: Error | null;
+  toggle: () => void;
+  disabled: boolean;
 }) {
   const style: { [key: string]: string | number } = {
     cursor: "pointer",
@@ -93,9 +201,8 @@ function Button({
   };
 
   let title = "Not been bookmarked";
-  if (error) {
-    title = error.toString();
-    style.border = "1px solid red";
+  if (disabled) {
+    title = "Disabled";
   } else if (bookmarked) {
     title = `Bookmarked ${dayjs(bookmarked).fromNow()}`;
     style.color = "orange";
@@ -104,8 +211,15 @@ function Button({
     style.opacity = 0.5;
   }
   return (
-    <button style={style} title={title} onClick={toggle}>
-      {error ? "🙀" : !bookmarked || loading ? "☆" : "★"}
+    <button
+      style={style}
+      title={title}
+      onClick={toggle}
+      disabled={disabled || loading}
+    >
+      {/* Note! We're displaying the state as if you have NOT bookmarked
+      it even if we still don't know yet. */}
+      {!bookmarked || loading ? "☆" : "★"}
     </button>
   );
 }
