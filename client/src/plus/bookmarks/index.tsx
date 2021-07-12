@@ -21,7 +21,7 @@ interface Breadcrumb {
   title: string;
 }
 
-interface Bookmark {
+interface BookmarkData {
   id: number;
   url: string;
   title: string;
@@ -36,7 +36,7 @@ interface BookmarksMetadata {
 }
 
 interface BookmarksData {
-  items: Bookmark[];
+  items: BookmarkData[];
   metadata: BookmarksMetadata;
   csrfmiddlewaretoken: string;
 }
@@ -145,7 +145,9 @@ function DisplayData({
   const [searchParams] = useSearchParams();
   const { pathname } = useLocation();
   const [toggleError, setToggleError] = React.useState<Error | null>(null);
-  const [unbookmarked, setUnbookmarked] = React.useState<Bookmark | null>(null);
+  const [unbookmarked, setUnbookmarked] = React.useState<BookmarkData | null>(
+    null
+  );
 
   React.useEffect(() => {
     let mounted = true;
@@ -194,7 +196,7 @@ function DisplayData({
 
       {toggleError && (
         <div className="notecard negative">
-          <h3>Server rror</h3>
+          <h3>Server error</h3>
           <p>Unable to save your bookmark toggle on the server.</p>
           <p>
             <code>{toggleError.toString()}</code>
@@ -228,37 +230,22 @@ function DisplayData({
       )}
 
       {data.items.map((bookmark) => {
-        const created = dayjs(bookmark.created);
         return (
-          <div key={bookmark.id} className="bookmark">
-            {bookmark.parents.length > 0 && (
-              <Breadcrumbs parents={bookmark.parents} />
-            )}
-            <h4>
-              <a href={bookmark.url}>{bookmark.title}</a>
-            </h4>
-            <p>
-              <small>{created.fromNow()}</small>{" "}
-              <button
-                type="button"
-                className="remove-bookmark"
-                title="Click to remove this bookmark"
-                onClick={async () => {
-                  try {
-                    await saveBookmarked(bookmark.url);
-                    setUnbookmarked(bookmark);
-                    if (toggleError) {
-                      setToggleError(null);
-                    }
-                  } catch (err) {
-                    setToggleError(err);
-                  }
-                }}
-              >
-                <span>☆</span>
-              </button>
-            </p>
-          </div>
+          <Bookmark
+            key={bookmark.id}
+            bookmark={bookmark}
+            toggle={async () => {
+              try {
+                await saveBookmarked(bookmark.url);
+                setUnbookmarked(bookmark);
+                if (toggleError) {
+                  setToggleError(null);
+                }
+              } catch (err) {
+                setToggleError(err);
+              }
+            }}
+          />
         );
       })}
       {(nextPage !== 0 || previousPage !== 0) && (
@@ -272,6 +259,51 @@ function DisplayData({
         </div>
       )}
     </section>
+  );
+}
+
+function Bookmark({
+  bookmark,
+  toggle,
+}: {
+  bookmark: BookmarkData;
+  toggle: () => Promise<void>;
+}) {
+  const created = dayjs(bookmark.created);
+  const [doomed, setDoomed] = React.useState(false);
+
+  let className = "bookmark";
+  if (doomed) {
+    className += " doomed";
+  }
+
+  return (
+    <div key={bookmark.id} className={className}>
+      {bookmark.parents.length > 0 && (
+        <Breadcrumbs parents={bookmark.parents} />
+      )}
+      <h4>
+        <a href={bookmark.url}>{bookmark.title}</a>
+      </h4>
+      <p>
+        <small>{created.fromNow()}</small>{" "}
+        <button
+          type="button"
+          className="remove-bookmark"
+          title="Click to remove this bookmark"
+          onClick={async () => {
+            setDoomed(true);
+            try {
+              await toggle();
+            } catch (error) {
+              setDoomed(false);
+            }
+          }}
+        >
+          <span>☆</span>
+        </button>
+      </p>
+    </div>
   );
 }
 
