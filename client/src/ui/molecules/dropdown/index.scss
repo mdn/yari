@@ -1,8 +1,8 @@
-@import "~@mdn/minimalist/sass/vars/color-palette";
+@import "~@mdn/minimalist/sass/vars/mdn-web-docs-palette";
 @import "~@mdn/minimalist/sass/vars/layout";
 
-$menu-box-shadow: 0 2px 8px 0 $neutral-500;
-$menu-border: solid 1px $neutral-400;
+$menu-box-shadow: 0 2px 8px 0 $mdn-neutral500;
+$menu-border: solid 1px $mdn-neutral400;
 $menu-border-radius: 4px;
 
 .dropdown-container {
@@ -24,7 +24,7 @@ $menu-border-radius: 4px;
   }
 
   .dropdown-menu-items {
-    background-color: $neutral-600;
+    background-color: $white;
     display: none;
     flex-direction: column;
     margin: ($base-unit * 2) 0;
@@ -41,7 +41,7 @@ $menu-border-radius: 4px;
 
     a,
     button {
-      color: $neutral-100;
+      color: $mdn-neutral900;
       display: inline-block;
       padding: $base-unit ($base-unit * 2);
       /* buttons have centered text by default */
@@ -51,8 +51,8 @@ $menu-border-radius: 4px;
 
       &:hover,
       &:focus {
-        background-color: $primary-200;
-        color: $neutral-600;
+        background-color: $mdn-blue600;
+        color: $white;
         text-decoration: none;
       }
     }

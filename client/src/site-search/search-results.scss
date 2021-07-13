@@ -1,13 +1,13 @@
 @use "sass:math";
 
-@import "~@mdn/minimalist/sass/vars/color-palette";
+@import "~@mdn/minimalist/sass/vars/mdn-web-docs-palette";
 @import "~@mdn/minimalist/sass/vars/layout";
 @import "~@mdn/minimalist/sass/vars/typography";
 
 .search-results {
   .highlight,
   .summary {
-    color: $neutral-200;
+    color: $mdn-neutral800;
     display: block;
   }
 
@@ -41,7 +41,7 @@
 
   .title {
     background-color: inherit;
-    color: $neutral-100;
+    color: $mdn-neutral900;
     display: inline-block;
     margin: 0;
     margin-bottom: math.div($base-spacing, 4);
@@ -50,7 +50,7 @@
     a {
       &:link,
       &:visited {
-        color: $neutral-100;
+        color: $mdn-neutral900;
       }
     }
   }
@@ -61,7 +61,7 @@
 
   // Used to indicate that a search result link is in a different locale
   .locale-indicator {
-    background-color: $neutral-550;
+    background-color: $mdn-neutral100;
     cursor: help;
     display: block;
     font-size: $small-font-size;
@@ -80,7 +80,7 @@
   }
 
   mark {
-    background-color: $yellow-400;
+    background-color: $mdn-yellow100;
     font-style: italic;
   }
 }
