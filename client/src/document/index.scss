@@ -1,7 +1,6 @@
 @use "sass:math";
 
 @import "~@mdn/minimalist/sass/vars/layout";
-@import "~@mdn/minimalist/sass/vars/color-palette";
 @import "~@mdn/minimalist/sass/vars/mdn-web-docs-palette";
 @import "~@mdn/minimalist/sass/vars/borders";
 @import "~@mdn/minimalist/sass/vars/typography";
@@ -29,7 +28,7 @@
    here for backwards compatibility */
 a.page-not-created,
 a.new {
-  color: $red-300;
+  color: $mdn-red700;
   cursor: not-allowed;
 }
 
@@ -40,11 +39,11 @@ a.new {
     position: relative;
 
     .copy-icon {
-      background: $neutral-550 url("../assets/clippy.svg") center center
+      background: $mdn-neutral100 url("../assets/clippy.svg") center center
         no-repeat;
       background-position: 61% 45%;
       background-size: 16px;
-      border: 1px solid $neutral-550;
+      border: 1px solid $mdn-neutral100;
       border-radius: $default-border-radius;
       cursor: pointer;
       height: 36px;
@@ -62,16 +61,16 @@ a.new {
 
         &:hover,
         &:focus {
-          background-color: $neutral-525;
+          background-color: $mdn-neutral200;
           opacity: 1;
         }
       }
     }
 
     .copy-icon-message {
-      background: $neutral-100;
+      background: $mdn-neutral900;
       border-radius: $default-border-radius;
-      color: $neutral-600;
+      color: $white;
       display: none;
       font-size: $small-font-size;
       opacity: 1;
@@ -101,6 +100,8 @@ a.new {
 
   .example-good,
   .example-bad {
+    position: realtive;
+
     &::after {
       background-size: 24px;
       content: "";
@@ -154,7 +155,7 @@ a.new {
     }
 
     &:active {
-      background-color: $primary-50;
+      background-color: $mdn-blue700;
       color: $text-color-inverted;
 
       code {
@@ -165,7 +166,7 @@ a.new {
     &[id^="attr-"] {
       &:link,
       &:visited {
-        color: $neutral-100;
+        color: $mdn-neutral900;
         text-decoration: none;
       }
 
@@ -181,7 +182,7 @@ a.new {
   }
 
   [aria-current] {
-    color: $neutral-100;
+    color: $mdn-neutral900;
     font-weight: bold;
     text-decoration: none;
   }
@@ -192,13 +193,13 @@ a.new {
 
     a:link,
     a:visited {
-      color: $neutral-100;
+      color: $mdn-neutral900;
       text-decoration: none;
     }
 
     a:hover,
     a:focus {
-      color: $neutral-100;
+      color: $mdn-neutral900;
       text-decoration: underline;
     }
 
@@ -215,7 +216,7 @@ a.new {
   .inline {
     &.optional,
     &.readonly {
-      background-color: $neutral-550;
+      background-color: $mdn-neutral100;
     }
   }
 
@@ -255,11 +256,11 @@ a.new {
 
     .icon-experimental,
     .icon-nonstandard {
-      color: $primary-50;
+      color: $mdn-blue700;
     }
 
     .icon-deprecated {
-      color: $red-100;
+      color: $mdn-red700;
     }
   }
 
@@ -277,7 +278,7 @@ a.new {
  * http://localhost:3000/en-us/docs/BrowserID/Specify_an_Email_Address
  */
 .archived {
-  background-color: $yellow-400;
+  background-color: $mdn-yellow100;
   padding: math.div($base-spacing, 4);
   position: fixed;
   text-align: center;
