@@ -24,10 +24,7 @@
   }
 }
 
-/* page-not-created is the preferred class name, `new` is
-   here for backwards compatibility */
-a.page-not-created,
-a.new {
+a.page-not-created {
   color: $mdn-red700;
   cursor: not-allowed;
 }
