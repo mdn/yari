@@ -2,12 +2,14 @@ import React from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 
 import { useGA } from "../../../ga-context";
+import {
+  LOCALE_OVERRIDE_HASH,
+  getPreferredCookieLocale,
+  setPreferredCookieLocale,
+} from "../../../preferred-locale";
 import { Translation } from "../../../document/types";
 
 import "./index.scss";
-
-// This needs to match what's set in 'libs/constants.js' on the server/builder!
-const PREFERRED_LOCALE_COOKIE_NAME = "preferredlocale";
 
 export function LanguageMenu({
   locale,
@@ -19,7 +21,7 @@ export function LanguageMenu({
   native: string;
 }) {
   const ga = useGA();
-  const { pathname } = useLocation();
+  const { hash, pathname } = useLocation();
   const navigate = useNavigate();
   const [preferredLocale, setPreferredLocale] = React.useState(locale);
 
@@ -27,11 +29,16 @@ export function LanguageMenu({
   // prefers if the current page's locale isn't what you prefer and the
   // locale you prefer is one of the valid translations.
   React.useEffect(() => {
-    const cookieLocale = getCookie(document.cookie);
+    const cookieLocale = getPreferredCookieLocale(document);
     if (
       locale &&
       cookieLocale &&
       locale.toLowerCase() !== cookieLocale.toLowerCase() &&
+      // If the URL is something like `#localeOverride` we omit this
+      // automatic "redirect" because the user has most likely clicked
+      // a link that means that want to "peek" at a locale that is
+      // different from what their cookie prefers.
+      !hash.toLowerCase().includes(LOCALE_OVERRIDE_HASH.toLowerCase()) &&
       translations
         .map((t) => t.locale.toLowerCase())
         .includes(cookieLocale.toLowerCase())
@@ -43,7 +50,7 @@ export function LanguageMenu({
         navigate(newPathname);
       }
     }
-  }, [locale, pathname, navigate, translations]);
+  }, [locale, hash, pathname, navigate, translations]);
 
   return (
     <form
@@ -54,22 +61,11 @@ export function LanguageMenu({
         // don't bother redirecting.
         if (preferredLocale !== locale) {
           const localeURL = translateURL(pathname, locale, preferredLocale);
-          const cookieValueBefore = getCookie(document.cookie);
+          const cookieValueBefore = getPreferredCookieLocale(document);
 
           for (const translation of translations) {
             if (translation.locale === preferredLocale) {
-              let cookieValue = `${PREFERRED_LOCALE_COOKIE_NAME}=${
-                translation.locale
-              };max-age=${60 * 60 * 24 * 365 * 3};path=/`;
-              if (
-                !(
-                  document.location.hostname === "localhost" ||
-                  document.location.hostname === "localhost.org"
-                )
-              ) {
-                cookieValue += ";secure";
-              }
-              document.cookie = cookieValue;
+              setPreferredCookieLocale(document, translation.locale);
             }
           }
 
@@ -124,16 +120,6 @@ export function LanguageMenu({
       </fieldset>
     </form>
   );
-}
-
-function getCookie(cookie: string) {
-  let value = cookie
-    .split("; ")
-    .find((row) => row.startsWith(`${PREFERRED_LOCALE_COOKIE_NAME}=`));
-  if (value && value.includes("=")) {
-    value = value.split("=")[1];
-  }
-  return value;
 }
 
 function translateURL(
