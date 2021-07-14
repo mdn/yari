@@ -1,12 +1,12 @@
 @use "sass:math";
 
-@import "~@mdn/minimalist/sass/vars/color-palette";
+@import "~@mdn/minimalist/sass/vars/mdn-web-docs-palette";
 @import "~@mdn/minimalist/sass/vars/layout";
 @import "~@mdn/minimalist/sass/vars/typography";
 @import "~@mdn/minimalist/sass/mixins/utils";
 
 .header-search {
-  background-color: $neutral-600;
+  background-color: $white;
 
   @media #{$mq-tablet-and-up} {
     height: 40px;
@@ -38,17 +38,17 @@
   }
 
   .server-error {
-    color: $red-100;
+    color: $mdn-red700;
     font-size: $small-font-size;
     margin: 0;
   }
 
   .search-results {
-    background-color: $neutral-600;
-    border: 2px solid $neutral-100;
+    background-color: $white;
+    border: 2px solid $mdn-neutral900;
     border-radius: 0 0 $base-unit $base-unit;
     border-top: 0;
-    box-shadow: 0 2px 8px 0 $neutral-500;
+    box-shadow: 0 2px 8px 0 $mdn-neutral500;
     left: 0;
     position: absolute;
     top: 42px;
@@ -56,7 +56,7 @@
     z-index: $top-layer;
 
     .indexing-warning {
-      color: $yellow-100;
+      color: $mdn-yellow400;
     }
 
     div {
@@ -72,13 +72,13 @@
     }
 
     .result-item {
-      border-bottom: 1px solid $neutral-550;
+      border-bottom: 1px solid $mdn-neutral100;
       word-break: break-word;
     }
 
     .result-item:hover,
     .result-item.highlight {
-      background-color: $neutral-550;
+      background-color: $mdn-neutral100;
     }
 
     .result-item:hover,
@@ -91,7 +91,7 @@
     }
 
     mark {
-      background-color: $yellow-300;
+      background-color: $mdn-yellow200;
     }
 
     small {
@@ -103,7 +103,7 @@
     }
 
     div.searchindex-error {
-      color: $red-100;
+      color: $mdn-red700;
     }
   }
 }

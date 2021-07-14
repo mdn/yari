@@ -8,10 +8,10 @@
       center no-repeat;
     background-size: 16px;
     border: 0;
-    border-bottom: 1px solid $neutral-100;
+    border-bottom: 1px solid $mdn-neutral900;
     border-radius: 0;
     box-shadow: none;
-    color: $neutral-100;
+    color: $mdn-neutral900;
     cursor: pointer;
     display: block;
     font-size: $tiny-text;
@@ -34,6 +34,6 @@
 
 .bc-history-link-inverse {
   border: 0;
-  border-top: 1px solid $neutral-100;
+  border-top: 1px solid $mdn-neutral900;
   transform: rotate(0deg);
 }
