@@ -150,6 +150,19 @@ this line (temporarily) into your test code:
 await jestPuppeteer.debug();
 ```
 
+Note that when you use `await jestPuppeteer.debug()` the real browser window will
+close as soon as the test failed with only a tiny timeout. To resolve that, add
+a third option to the test with the number of seconds you want it to wait. E.g.
+
+```javascript
+it("should show your settings page", async () => {
+  const url = testURL("/en-US/settings");
+  await page.goto(url);
+  await jestPuppeteer.debug();
+  await expect(page).toMatchElement("h1", { text: "Account settings" });
+}, 9999);
+```
+
 Another useful trick is to dump the DOM HTML on the console. You can
 put this in anywhere:
 

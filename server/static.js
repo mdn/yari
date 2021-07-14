@@ -94,13 +94,14 @@ app.get("/api/v1/search", async (req, res) => {
   });
 });
 
+const mockWhoamiDatabase = new Map();
+
 app.get("/api/v1/whoami", async (req, res) => {
-  const context = { waffle: { flags: {}, switches: {} } };
-  if (req.cookies.fakesessionid) {
-    context.username = req.cookies.fakesessionid;
-    context.is_authenticated = true;
-    context.email = `${req.cookies.fakesessionid}@example.com`;
-  }
+  const sessionid = req.cookies.sessionid;
+  const context =
+    sessionid && mockWhoamiDatabase.has(sessionid)
+      ? mockWhoamiDatabase.get(sessionid)
+      : {};
   res.json(context);
 });
 
@@ -108,15 +109,15 @@ const mockSettingsDatabase = new Map();
 
 app.get("/api/v1/settings", async (req, res) => {
   const defaultContext = { locale: "en-US" };
-  if (!req.cookies.fakesessionid) {
+  if (!req.cookies.sessionid) {
     res.status(403).send("oh no you don't");
   } else {
-    if (mockSettingsDatabase.has(req.cookies.fakesessionid)) {
+    if (mockSettingsDatabase.has(req.cookies.sessionid)) {
       res.json(
         Object.assign(
           {},
           defaultContext,
-          mockSettingsDatabase.get(req.cookies.fakesessionid)
+          mockSettingsDatabase.get(req.cookies.sessionid)
         )
       );
     } else {
@@ -126,18 +127,63 @@ app.get("/api/v1/settings", async (req, res) => {
 });
 
 app.post("/api/v1/settings", async (req, res) => {
-  if (!req.cookies.fakesessionid) {
+  if (!req.cookies.sessionid) {
     res.status(403).send("oh no you don't");
   } else {
-    mockSettingsDatabase.set(req.cookies.fakesessionid, {
+    mockSettingsDatabase.set(req.cookies.sessionid, {
       locale: req.body.locale,
     });
     res.json({ ok: true });
   }
 });
 
+app.get("/users/github/login/", async (req, res) => {
+  const userId = `${Math.ceil(10000 * Math.random())}`;
+  res.cookie("sessionid", userId, {
+    maxAge: 60 * 1000,
+  });
+  mockWhoamiDatabase.set(userId, {
+    username: `my-${userId}`,
+    is_authenticated: true,
+    email: `${userId}@example.com`,
+  });
+  res.redirect(req.query.next);
+});
+
+app.get("/users/google/login/", async (req, res) => {
+  const userDetails = {
+    name: "Peter",
+  };
+  const sp = new URLSearchParams();
+  sp.set("next", req.query.next || "/en-US/");
+  sp.set("user_details", JSON.stringify(userDetails));
+  sp.set("csrfmiddlewaretoken", `${Math.random()}`);
+  sp.set("provider", "google");
+
+  res.redirect(`/en-US/signup?${sp.toString()}`);
+});
+
+app.post("/:locale/users/account/signup", async (req, res) => {
+  const userId = `${Math.ceil(10000 * Math.random())}`;
+  res.cookie("sessionid", userId, {
+    maxAge: 60 * 1000,
+  });
+  mockWhoamiDatabase.set(userId, {
+    username: `Googler-username-${userId}`,
+    is_authenticated: true,
+    email: `${userId}@gmail.com`,
+  });
+  res.redirect(req.query.next || `/${req.params.locale}/`);
+});
+
+app.post("/:locale/users/signout", async (req, res) => {
+  res.clearCookie("sessionid");
+  res.redirect(`/${req.params.locale}/`);
+});
+
 // To mimic what CloudFront does.
 app.get("/*", async (req, res) => {
+  console.log(`Don't know how to mock: ${req.path}`, req.query);
   res
     .status(404)
     .sendFile(path.join(STATIC_ROOT, "en-us", "_spas", "404.html"));

@@ -282,7 +282,8 @@ test("content built zh-TW page with en-US fallback image", () => {
   const jsonFile = path.join(builtFolder, "index.json");
   expect(fs.existsSync(jsonFile)).toBeTruthy();
   const { doc } = JSON.parse(fs.readFileSync(jsonFile));
-  expect(Object.keys(doc.flaws).length).toBe(0);
+  expect(Object.keys(doc.flaws).length).toBe(1);
+  expect(doc.flaws.translation_differences.length).toBe(1);
   expect(doc.title).toBe("<foo>: 測試網頁");
   expect(doc.isTranslated).toBe(true);
   expect(doc.other_translations[0].locale).toBe("en-US");
@@ -673,6 +674,63 @@ test("broken links flaws", () => {
   expect(map.get("/en-US/docs/Web/BrokenLinks#anchor").suggestion).toBe(
     "#anchor"
   );
+  expect(map.get("http://www.mozilla.org").explanation).toBe(
+    "Is currently http:// but can become https://"
+  );
+  expect(map.get("http://www.mozilla.org").suggestion).toBe(
+    "https://www.mozilla.org"
+  );
+  expect(map.get("http://www.mozilla.org").fixable).toBeTruthy();
+});
+
+test("broken links markdown flaws", () => {
+  const builtFolder = path.join(
+    buildRoot,
+    "en-us",
+    "docs",
+    "web",
+    "brokenlinks_markdown"
+  );
+  const jsonFile = path.join(builtFolder, "index.json");
+  const { doc } = JSON.parse(fs.readFileSync(jsonFile));
+  const { flaws } = doc;
+  // You have to be intimately familiar with the fixture to understand
+  // why these flaws come out as they do.
+  expect(flaws.broken_links.length).toBe(12);
+  // Map them by 'href'
+  const map = new Map(flaws.broken_links.map((x) => [x.href, x]));
+  expect(map.get("/en-US/docs/Hopeless/Case").suggestion).toBeNull();
+  expect(map.get("/en-US/docs/Web/CSS/dumber").line).toBe(9);
+  expect(map.get("/en-US/docs/Web/CSS/dumber").column).toBe(1);
+  expect(
+    map.get("https://developer.mozilla.org/en-US/docs/Web/API/Blob").suggestion
+  ).toBe("/en-US/docs/Web/API/Blob");
+  expect(
+    map.get("https://developer.mozilla.org/en-US/docs/Web/API/Blob#Anchor")
+      .suggestion
+  ).toBe("/en-US/docs/Web/API/Blob#Anchor");
+  expect(
+    map.get("https://developer.mozilla.org/en-US/docs/Web/API/Blob?a=b")
+      .suggestion
+  ).toBe("/en-US/docs/Web/API/Blob?a=b");
+  expect(map.get("/en-us/DOCS/Web/api/BLOB").suggestion).toBe(
+    "/en-US/docs/Web/API/Blob"
+  );
+  expect(
+    map.get("/en-US/docs/Web/HTML/Element/anchor#fragment").suggestion
+  ).toBe("/en-US/docs/Web/HTML/Element/a#fragment");
+  expect(
+    map.get("/en-US/docs/glossary/bézier_curve#identifier").suggestion
+  ).toBe("/en-US/docs/Glossary/Bézier_curve#identifier");
+  expect(map.get("/en-US/docs/Web/BrokenLinks_Markdown").explanation).toBe(
+    "Link points to the page it's already on"
+  );
+  expect(
+    map.get("/en-US/docs/Web/BrokenLinks_Markdown#anchor").explanation
+  ).toBe("No need for the pathname in anchor links if it's the same page");
+  expect(
+    map.get("/en-US/docs/Web/BrokenLinks_Markdown#anchor").suggestion
+  ).toBe("#anchor");
   expect(map.get("http://www.mozilla.org").explanation).toBe(
     "Is currently http:// but can become https://"
   );
@@ -1611,15 +1669,16 @@ test("basic markdown rendering", () => {
   expect($("article ul li").length).toBe(6);
   expect($('article a[href^="/"]').length).toBe(2);
   expect($('article a[href^="#"]').length).toBe(5);
-  expect($("article pre").length).toBe(3);
-  expect($("article pre.notranslate").length).toBe(3);
+  expect($("article pre").length).toBe(4);
+  expect($("article pre.notranslate").length).toBe(4);
   expect($("article pre.css").hasClass("brush:")).toBe(true);
   expect($("article pre.javascript").hasClass("brush:")).toBe(true);
   expect($("article .fancy strong").length).toBe(1);
 
   const jsonFile = path.join(builtFolder, "index.json");
   const { doc } = JSON.parse(fs.readFileSync(jsonFile));
-  expect(Object.keys(doc.flaws).length).toBe(0);
+  expect(Object.keys(doc.flaws).length).toBe(1);
+  expect(doc.flaws.bad_pre_tags.length).toBe(1);
 });
 
 test("unsafe HTML gets flagged as flaws and replace with its raw HTML", () => {

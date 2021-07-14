@@ -6,7 +6,7 @@ const glob = require("glob");
 const { getPopularities } = require("../content");
 const { FLAW_LEVELS, options: buildOptions } = require("../build");
 
-const BUILD_OUT_ROOT = path.join(__dirname, "..", "client", "build");
+const { BUILD_OUT_ROOT } = require("../build/constants");
 
 // Module-level cache
 const allPopularityValues = [];

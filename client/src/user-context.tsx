@@ -17,17 +17,6 @@ export type UserData = {
   geo: {
     country: string;
   };
-  waffle: {
-    flags: {
-      [flag_name: string]: boolean;
-    };
-    switches: {
-      [switch_name: string]: boolean;
-    };
-    samples: {
-      [sample_name: string]: boolean;
-    };
-  };
 };
 
 const UserDataContext = React.createContext<UserData | null>(null);
@@ -103,10 +92,6 @@ export function UserDataProvider(props: { children: React.ReactNode }) {
         geo: {
           country: (data.geo && data.geo.country) || DEFAULT_GEO_COUNTRY,
         },
-        // NOTE: if we ever decide that waffle data should
-        // be re-fetched on client-side navigation, we'll
-        // have to create a separate context for it.
-        waffle: data.waffle,
       };
     }
   );
