@@ -1,6 +1,6 @@
 @use "sass:math";
 
-@import "~@mdn/minimalist/sass/vars/color-palette";
+@import "~@mdn/minimalist/sass/vars/mdn-web-docs-palette";
 @import "~@mdn/minimalist/sass/vars/layout";
 @import "~@mdn/minimalist/sass/vars/typography";
 
@@ -9,11 +9,11 @@
 }
 
 .page-footer {
-  background-color: $neutral-100;
+  background-color: $mdn-neutral900;
   color: $text-color-inverted;
   padding: ($base-spacing * 2) $base-spacing;
-  z-index: $bring-to-front;
   position: relative;
+  z-index: $bring-to-front;
 
   .content-container {
     margin: 0 auto;
@@ -82,7 +82,7 @@
     margin: 10px 0;
 
     @media #{$mq-tablet-and-up} {
-      border-top: 1px solid $neutral-550;
+      border-top: 1px solid $mdn-neutral100;
       margin: 50px 0 30px;
       padding: 30px 0 0;
     }

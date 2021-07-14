@@ -1,5 +1,5 @@
 @import "~@mdn/minimalist/sass/vars/layout";
-@import "~@mdn/minimalist/sass/vars/color-palette";
+@import "~@mdn/minimalist/sass/vars/mdn-web-docs-palette";
 
 .auth-container {
   margin-top: $base-unit * 2;
@@ -27,6 +27,6 @@
 }
 
 a.signin-link {
-  color: $neutral-100;
+  color: $mdn-neutral900;
   font-weight: bold;
 }
