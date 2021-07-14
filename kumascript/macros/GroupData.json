@@ -1,5 +1,18 @@
 [
   {
+    "Background Fetch API": {
+      "overview": ["Background Fetch API"],
+      "interfaces": [
+        "BackgroundFetchManager",
+        "BackgroundFetchRegistration",
+        "BackgroundFetchRecord",
+        "BackgroundFetchEvent",
+        "BackgroundFetchUpdateUIEvent"
+      ],
+      "methods": [],
+      "properties": [],
+      "events": []
+    },
     "Background Tasks": {
       "overview": ["Background Tasks API"],
       "interfaces": ["IdleDeadline"],
@@ -140,7 +153,8 @@
         "Credential",
         "CredentialsContainer",
         "FederatedCredential",
-        "PasswordCredential"
+        "PasswordCredential",
+        "PublicKeyCredential"
       ],
       "methods": [],
       "properties": [],
@@ -667,11 +681,6 @@
         "MessageEvent",
         "MessagePort",
         "Navigator",
-        "NavigatorGeolocation",
-        "NavigatorID",
-        "NavigatorLanguage",
-        "NavigatorOnLine",
-        "NavigatorPlugins",
         "PageTransitionEvent",
         "Plugin",
         "PluginArray",
@@ -875,8 +884,6 @@
         "MediaTrackConstraints",
         "MediaTrackSettings",
         "MediaTrackSupportedConstraints",
-        "NavigatorUserMedia",
-        "NavigatorUserMediaError",
         "VideoStreamTrack",
         "DoubleRange",
         "ConstrainDouble",
@@ -901,7 +908,6 @@
       "dictionaries": [
         "MediaImage",
         "MediaMetadataInit",
-        "MediaPositionState",
         "MediaSessionActionDetails"
       ],
       "types": ["MediaSessionAction", "MediaSessionPlaybackState"],
@@ -982,7 +988,6 @@
         "BasicCardResponse",
         "PaymentMethodData",
         "PaymentCurrencyAmount",
-        "PaymentDetailsBase",
         "PaymentDetailsModifier",
         "PaymentDetailsUpdate",
         "PaymentItem",
@@ -1295,7 +1300,7 @@
     },
     "Storage": {
       "overview": ["Storage API"],
-      "interfaces": ["StorageManager", "NavigatorStorage", "StorageEstimate"],
+      "interfaces": ["StorageManager", "StorageEstimate"],
       "methods": [],
       "properties": ["Navigator.storage", "WorkerNavigator.storage"],
       "events": []
