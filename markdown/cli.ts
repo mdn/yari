@@ -119,6 +119,10 @@ program
     default: false,
     validator: program.BOOLEAN,
   })
+  .option("--nobar", "No progress bar", {
+    default: false,
+    validator: program.BOOLEAN,
+  })
   .option("--locale", "Targets a specific locale", {
     default: "all",
     validator: (Array.from(VALID_LOCALES.values()) as string[]).concat("all"),
@@ -138,11 +142,14 @@ program
         locales: localesMap,
       });
 
-      const progressBar = new cliProgress.SingleBar(
-        {},
-        cliProgress.Presets.shades_classic
-      );
-      progressBar.start(documents.count);
+      let progressBar;
+      if (!options.nobar) {
+        const progressBar = new cliProgress.SingleBar(
+          {},
+          cliProgress.Presets.shades_classic
+        );
+        progressBar.start(documents.count);
+      }
 
       const problems = new Map<
         string,
@@ -150,7 +157,7 @@ program
       >();
       try {
         for (let doc of documents.iter()) {
-          progressBar.increment();
+          progressBar?.increment();
           if (
             doc.isMarkdown ||
             // findAll's folderSearch is fuzzy which we don't want here
@@ -188,7 +195,7 @@ program
           }
         }
       } finally {
-        progressBar.stop();
+        progressBar?.stop();
       }
 
       saveProblemsReport(problems);

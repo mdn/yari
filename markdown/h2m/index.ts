@@ -3,7 +3,6 @@ import * as unified from "unified";
 import * as parseHTML from "rehype-parse";
 import * as gfm from "remark-gfm";
 import * as parseMD from "remark-parse";
-import * as remarkPrettier from "remark-prettier";
 import * as stringify from "remark-stringify";
 import {
   extractSections,
@@ -15,11 +14,7 @@ import { MDNodeUnion } from "./h";
 import { transform } from "./transform";
 
 const getTransformProcessor = (options) =>
-  unified()
-    .use(parseHTML)
-    .use(transform, options)
-    .use(gfm)
-    .use(remarkPrettier, { report: false, options: { proseWrap: "always" } });
+  unified().use(parseHTML).use(transform, options).use(gfm).use(stringify);
 
 function findPrettierIgnoreRanges(node: MDNodeUnion): [number, number][] {
   const ignoreRanges = [];

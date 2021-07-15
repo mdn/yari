@@ -13413,7 +13413,7 @@ mdast-util-to-markdown@^0.5.0:
     repeat-string "^1.0.0"
     zwitch "^1.0.0"
 
-mdast-util-to-markdown@^0.6.0, mdast-util-to-markdown@^0.6.1, mdast-util-to-markdown@^0.6.5, mdast-util-to-markdown@~0.6.0:
+mdast-util-to-markdown@^0.6.0, mdast-util-to-markdown@^0.6.1, mdast-util-to-markdown@~0.6.0:
   version "0.6.5"
   resolved "https://registry.yarnpkg.com/mdast-util-to-markdown/-/mdast-util-to-markdown-0.6.5.tgz#b33f67ca820d69e6cc527a93d4039249b504bebe"
   integrity sha512-XeV9sDE7ZlOQvs45C9UKMtfTcctcaj/pGwH8YLbMHoMOXNNCn2LsqVQOqrF1+/NU8lKDAqozme9SCXWyo9oAcQ==
@@ -15834,7 +15834,7 @@ prettier-linter-helpers@^1.0.0:
   dependencies:
     fast-diff "^1.1.2"
 
-prettier-plugin-packagejson@^2.2.10, prettier-plugin-packagejson@^2.2.11:
+prettier-plugin-packagejson@^2.2.11:
   version "2.2.11"
   resolved "https://registry.yarnpkg.com/prettier-plugin-packagejson/-/prettier-plugin-packagejson-2.2.11.tgz#640b6301da3a58c489889b3d315255e18153daf0"
   integrity sha512-oJCBCEkHIKScEv6qNQC47S39NXlevbzwvoJE3gflmBB8/3BEsC6ZRi+hwFVajw32b4tDI9hFXPIzmVd/T8Rm9w==
@@ -16897,15 +16897,6 @@ remark-parse@^9.0.0:
   integrity sha512-geKatMwSzEXKHuzBNU1z676sGcDcFoChMK38TgdHJNAYfFtsfHDQG7MoJAjs6sgYMqyLduCYWDIWZIxiPeafEw==
   dependencies:
     mdast-util-from-markdown "^0.8.0"
-
-remark-prettier@^1.2.0:
-  version "1.2.0"
-  resolved "https://registry.yarnpkg.com/remark-prettier/-/remark-prettier-1.2.0.tgz#6083d7282334d27feb8ef9733df22f6a886f13ef"
-  integrity sha512-ijOcZDeDDfSKKPY157l39gzV2lwtRTwrn+w++QGika0X8hZkj+lzHXHnD2vt1QZP6kPm0Bc/y8zYOSPTZ22INg==
-  dependencies:
-    mdast-util-to-markdown "^0.6.5"
-    prettier-linter-helpers "^1.0.0"
-    prettier-plugin-packagejson "^2.2.10"
 
 remark-rehype@^8.1.0:
   version "8.1.0"
