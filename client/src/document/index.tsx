@@ -35,6 +35,7 @@ import "./interactive-examples.scss";
 
 // Lazy sub-components
 const Toolbar = React.lazy(() => import("./toolbar"));
+const MathMLPolyfillMaybe = React.lazy(() => import("./mathml-polyfill"));
 
 export function Document(props /* TODO: define a TS interface for this */) {
   const ga = useGA();
@@ -180,6 +181,11 @@ export function Document(props /* TODO: define a TS interface for this */) {
                 mutate(dataURL);
               }}
             />
+          </React.Suspense>
+        )}
+        {!isServer && doc.hasMathML && (
+          <React.Suspense fallback={null}>
+            <MathMLPolyfillMaybe />
           </React.Suspense>
         )}
         <article className="main-page-content" lang={doc.locale}>

@@ -438,6 +438,12 @@ async function buildDocument(document, documentOptions = {}) {
   doc.locale = metadata.locale;
   doc.native = LANGUAGES.get(doc.locale.toLowerCase()).native;
 
+  // If the document contains <math> HTML, it will set `doc.hasMathML=true`.
+  // The client (<Document/> component) needs to know this for loading polyfills.
+  if ($("math").length > 0) {
+    doc.hasMathML = true;
+  }
+
   // Note that 'extractSidebar' will always return a string.
   // And if it finds a sidebar section, it gets removed from '$' too.
   // Also note, these operations mutate the `$`.
