@@ -44,6 +44,7 @@ export function Header() {
           }}
         />
         <Search
+          preload={showMainMenu}
           onResultPicked={() => {
             toggleMainMenu();
           }}

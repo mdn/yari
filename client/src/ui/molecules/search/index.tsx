@@ -20,8 +20,6 @@ import {
 } from "../../../search-utils";
 const LazySearchNavigateWidget = lazy(() => import("../../../search"));
 
-// Peter testing
-
 function useQueryParamState() {
   const [searchParams] = useSearchParams();
   const queryState = searchParams.get("q") || "";
@@ -36,7 +34,13 @@ function useQueryParamState() {
   return [value, setValue] as const;
 }
 
-export function Search(props) {
+export function Search({
+  preload,
+  onResultPicked,
+}: {
+  preload?: boolean;
+  onResultPicked?: () => void;
+}) {
   const [value, setValue] = useQueryParamState();
   const [isFocused, setIsFocused] = useState(false);
   const [defaultSelection, setDefaultSelection] = useState([0, 0] as const);
@@ -56,16 +60,19 @@ export function Search(props) {
   );
 
   useEffect(() => {
-    if (isFocused) {
+    if (isFocused || preload) {
       setShouldUpgradeSearch(true);
     }
-  }, [isFocused, setShouldUpgradeSearch]);
+  }, [isFocused, setShouldUpgradeSearch, preload]);
 
   return (
     <div className="header-search">
       {shouldUpgradeSearch ? (
         <Suspense fallback={<BasicSearchWidget {...searchProps} />}>
-          <LazySearchNavigateWidget {...searchProps} {...props} />
+          <LazySearchNavigateWidget
+            {...searchProps}
+            onResultPicked={onResultPicked}
+          />
         </Suspense>
       ) : (
         <BasicSearchWidget {...searchProps} />
