@@ -71,10 +71,6 @@ const HOMEPAGE_FEED_DISPLAY_MAX = JSON.parse(
   process.env.BUILD_HOMEPAGE_FEED_DISPLAY_MAX || "5"
 );
 
-// If you want to enable this on local development use http://localhost.org:8000/api/v1/subscriptions/config/
-const BUILD_SUBSCRIPTION_CONFIG_URL =
-  process.env.BUILD_SUBSCRIPTION_CONFIG_URL || null;
-
 module.exports = {
   BUILD_OUT_ROOT,
   DEFAULT_FLAW_LEVELS,
@@ -92,5 +88,4 @@ module.exports = {
   ALWAYS_ALLOW_ROBOTS,
   HOMEPAGE_FEED_URL,
   HOMEPAGE_FEED_DISPLAY_MAX,
-  BUILD_SUBSCRIPTION_CONFIG_URL,
 };
