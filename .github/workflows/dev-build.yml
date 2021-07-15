@@ -67,7 +67,7 @@ jobs:
           path: mdn/translated-content
 
       - name: Setup Node.js environment
-        uses: actions/setup-node@v2.1.5
+        uses: actions/setup-node@v2.2.0
         with:
           node-version: "12"
 
@@ -136,10 +136,6 @@ jobs:
           # Same with the Speedcurve LUX
           BUILD_SPEEDCURVE_LUX_ID: 000000000
 
-          # Make sure every built page always has
-          # '<meta name="robots" content="noindex, nofollow">' nomatter what
-          # kind of document it is.
-          BUILD_ALWAYS_NO_ROBOTS: true
         run: |
           if [ ${{ github.event.inputs.archived_content }} == "true" ]; then
             echo "Will build mdn/archived-content too"
@@ -153,6 +149,11 @@ jobs:
           echo "CONTENT_ARCHIVED_ROOT=$CONTENT_ARCHIVED_ROOT"
           echo "CONTENT_TRANSLATED_ROOT=$CONTENT_TRANSLATED_ROOT"
           yarn prepare-build
+
+          # (July 15, 2021) This is a temporary solution. This should become an
+          # integrated part of 'prepare-build'.
+          # See https://github.com/mdn/yari/issues/4217
+          yarn tool popularities
 
           yarn tool sync-translated-content
           yarn build
@@ -204,9 +205,7 @@ jobs:
           # XXX would be nice to validate here that $DEPLOYER_BUCKET_PREFIX is truthy
           echo "DEPLOYER_BUCKET_PREFIX=$DEPLOYER_BUCKET_PREFIX"
 
-          # Prune again once https://github.com/mdn/yari/issues/3323 is resolved.
-          # poetry run deployer upload --prune --archived-files ../content/archived.txt ../client/build
-          poetry run deployer upload ../client/build
+          poetry run deployer upload --prune --archived-files ../content/archived.txt ../client/build
           poetry run deployer update-lambda-functions ./aws-lambda
           # TODO
           # Execute command to tell the Dev CloudFront distribution to use the

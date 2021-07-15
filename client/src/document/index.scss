@@ -1,7 +1,7 @@
 @use "sass:math";
 
 @import "~@mdn/minimalist/sass/vars/layout";
-@import "~@mdn/minimalist/sass/vars/color-palette";
+@import "~@mdn/minimalist/sass/vars/mdn-web-docs-palette";
 @import "~@mdn/minimalist/sass/vars/borders";
 @import "~@mdn/minimalist/sass/vars/typography";
 
@@ -24,26 +24,62 @@
   }
 }
 
-/* page-not-created is the preferred class name, `new` is
-   here for backwards compatibility */
-a.page-not-created,
-a.new {
-  color: $red-300;
+a.page-not-created {
+  color: $mdn-red700;
   cursor: not-allowed;
 }
 
 .main-page-content {
   padding: math.div($base-spacing, 2) $base-spacing $base-spacing;
 
+  figure {
+    margin-bottom: $base-spacing;
+  }
+
+  ul li {
+    margin-bottom: 8px;
+  }
+
+  .example-good,
+  .example-bad {
+    padding: 0 $base-spacing;
+    position: relative;
+
+    &::after {
+      background-size: 24px;
+      content: "";
+      display: block;
+      height: 24px;
+      position: absolute;
+      right: 13px;
+      top: 3px;
+      width: 24px;
+    }
+  }
+
+  .example-bad {
+    &::after {
+      background-color: $mdn-red700;
+      mask-image: url("~@mdn/dinocons/emojis/frown.svg");
+    }
+  }
+
+  .example-good {
+    &::after {
+      background-color: $mdn-green900;
+      mask-image: url("~@mdn/dinocons/emojis/smiley.svg");
+    }
+  }
+
   .code-example {
     position: relative;
 
     .copy-icon {
-      background: $neutral-550 url("../assets/clippy.svg") center center
+      background: $mdn-neutral100 url("../assets/clippy.svg") center center
         no-repeat;
       background-position: 61% 45%;
       background-size: 16px;
-      border: 1px solid $neutral-550;
+      border: 1px solid $mdn-neutral100;
       border-radius: $default-border-radius;
       cursor: pointer;
       height: 36px;
@@ -61,16 +97,16 @@ a.new {
 
         &:hover,
         &:focus {
-          background-color: $neutral-525;
+          background-color: $mdn-neutral200;
           opacity: 1;
         }
       }
     }
 
     .copy-icon-message {
-      background: $neutral-100;
+      background: $mdn-neutral900;
       border-radius: $default-border-radius;
-      color: $neutral-600;
+      color: $white;
       display: none;
       font-size: $small-font-size;
       opacity: 1;
@@ -91,7 +127,18 @@ a.new {
     .show {
       display: block;
     }
+
+    .example-good,
+    .example-bad {
+      padding: $base-spacing;
+
+      &::after {
+        right: 44px;
+        top: 13px;
+      }
+    }
   }
+
   @media #{$mq-small-desktop-and-up} {
     margin-bottom: $base-spacing * 2;
     padding: 0 $base-spacing $base-spacing;
@@ -124,7 +171,7 @@ a.new {
     }
 
     &:active {
-      background-color: $primary-50;
+      background-color: $mdn-blue700;
       color: $text-color-inverted;
 
       code {
@@ -135,7 +182,7 @@ a.new {
     &[id^="attr-"] {
       &:link,
       &:visited {
-        color: $neutral-100;
+        color: $mdn-neutral900;
         text-decoration: none;
       }
 
@@ -151,7 +198,7 @@ a.new {
   }
 
   [aria-current] {
-    color: $neutral-100;
+    color: $mdn-neutral900;
     font-weight: bold;
     text-decoration: none;
   }
@@ -162,13 +209,13 @@ a.new {
 
     a:link,
     a:visited {
-      color: $neutral-100;
+      color: $mdn-neutral900;
       text-decoration: none;
     }
 
     a:hover,
     a:focus {
-      color: $neutral-100;
+      color: $mdn-neutral900;
       text-decoration: underline;
     }
 
@@ -185,7 +232,7 @@ a.new {
   .inline {
     &.optional,
     &.readonly {
-      background-color: $neutral-550;
+      background-color: $mdn-neutral100;
     }
   }
 
@@ -225,11 +272,11 @@ a.new {
 
     .icon-experimental,
     .icon-nonstandard {
-      color: $primary-50;
+      color: $mdn-blue700;
     }
 
     .icon-deprecated {
-      color: $red-100;
+      color: $mdn-red700;
     }
   }
 

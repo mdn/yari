@@ -282,7 +282,8 @@ test("content built zh-TW page with en-US fallback image", () => {
   const jsonFile = path.join(builtFolder, "index.json");
   expect(fs.existsSync(jsonFile)).toBeTruthy();
   const { doc } = JSON.parse(fs.readFileSync(jsonFile));
-  expect(Object.keys(doc.flaws).length).toBe(0);
+  expect(Object.keys(doc.flaws).length).toBe(1);
+  expect(doc.flaws.translation_differences.length).toBe(1);
   expect(doc.title).toBe("<foo>: 測試網頁");
   expect(doc.isTranslated).toBe(true);
   expect(doc.other_translations[0].locale).toBe("en-US");
@@ -682,6 +683,63 @@ test("broken links flaws", () => {
   expect(map.get("http://www.mozilla.org").fixable).toBeTruthy();
 });
 
+test("broken links markdown flaws", () => {
+  const builtFolder = path.join(
+    buildRoot,
+    "en-us",
+    "docs",
+    "web",
+    "brokenlinks_markdown"
+  );
+  const jsonFile = path.join(builtFolder, "index.json");
+  const { doc } = JSON.parse(fs.readFileSync(jsonFile));
+  const { flaws } = doc;
+  // You have to be intimately familiar with the fixture to understand
+  // why these flaws come out as they do.
+  expect(flaws.broken_links.length).toBe(12);
+  // Map them by 'href'
+  const map = new Map(flaws.broken_links.map((x) => [x.href, x]));
+  expect(map.get("/en-US/docs/Hopeless/Case").suggestion).toBeNull();
+  expect(map.get("/en-US/docs/Web/CSS/dumber").line).toBe(9);
+  expect(map.get("/en-US/docs/Web/CSS/dumber").column).toBe(1);
+  expect(
+    map.get("https://developer.mozilla.org/en-US/docs/Web/API/Blob").suggestion
+  ).toBe("/en-US/docs/Web/API/Blob");
+  expect(
+    map.get("https://developer.mozilla.org/en-US/docs/Web/API/Blob#Anchor")
+      .suggestion
+  ).toBe("/en-US/docs/Web/API/Blob#Anchor");
+  expect(
+    map.get("https://developer.mozilla.org/en-US/docs/Web/API/Blob?a=b")
+      .suggestion
+  ).toBe("/en-US/docs/Web/API/Blob?a=b");
+  expect(map.get("/en-us/DOCS/Web/api/BLOB").suggestion).toBe(
+    "/en-US/docs/Web/API/Blob"
+  );
+  expect(
+    map.get("/en-US/docs/Web/HTML/Element/anchor#fragment").suggestion
+  ).toBe("/en-US/docs/Web/HTML/Element/a#fragment");
+  expect(
+    map.get("/en-US/docs/glossary/bézier_curve#identifier").suggestion
+  ).toBe("/en-US/docs/Glossary/Bézier_curve#identifier");
+  expect(map.get("/en-US/docs/Web/BrokenLinks_Markdown").explanation).toBe(
+    "Link points to the page it's already on"
+  );
+  expect(
+    map.get("/en-US/docs/Web/BrokenLinks_Markdown#anchor").explanation
+  ).toBe("No need for the pathname in anchor links if it's the same page");
+  expect(
+    map.get("/en-US/docs/Web/BrokenLinks_Markdown#anchor").suggestion
+  ).toBe("#anchor");
+  expect(map.get("http://www.mozilla.org").explanation).toBe(
+    "Is currently http:// but can become https://"
+  );
+  expect(map.get("http://www.mozilla.org").suggestion).toBe(
+    "https://www.mozilla.org"
+  );
+  expect(map.get("http://www.mozilla.org").fixable).toBeTruthy();
+});
+
 test("repeated broken links flaws", () => {
   // This fixture has the same broken link, that redirects, 3 times.
   const builtFolder = path.join(
@@ -791,45 +849,6 @@ test("without locale prefix broken links flaws", () => {
   expect(map.get("link1").suggestion).toBe("/en-US/docs/Web/CSS/number");
   expect(map.get("link2").suggestion).toBe("/en-US/docs/Web/CSS/number");
   expect(map.get("link3").suggestion).toBeNull();
-});
-
-test("broken links to archived content", () => {
-  // Links to URLs that are archived
-  const builtFolder = path.join(
-    buildRoot,
-    "en-us",
-    "docs",
-    "web",
-    "brokenlinks",
-    "archived"
-  );
-  const jsonFile = path.join(builtFolder, "index.json");
-  const { doc } = JSON.parse(fs.readFileSync(jsonFile));
-  const { flaws } = doc;
-  // The page has 2 links:
-  //  * one to an archived page (see `content/archived.txt`)
-  //  * one to an archived redirect
-  // When the link points to an archived page, we can figure out that it's
-  // actually not a broken link.
-  // But unfortunately, for redirects, we simply don't have this information
-  // available at all.
-  // See https://github.com/mdn/yari/issues/2675#issuecomment-767124481
-  expect(flaws.broken_links.length).toBe(1);
-
-  const flaw = flaws.broken_links[0];
-  expect(flaw.suggestion).toBeNull();
-  expect(flaw.fixable).toBeFalsy();
-  expect(flaw.href).toBe("/en-US/docs/The_Mozilla_platform");
-
-  const htmlFile = path.join(builtFolder, "index.html");
-  const html = fs.readFileSync(htmlFile, "utf-8");
-  const $ = cheerio.load(html);
-
-  expect($("#content a.page-not-created").length).toBe(1);
-  expect($("#content a.page-not-created").attr("href")).toBeTruthy();
-  expect($("#content a.page-not-created").attr("title")).toBe(
-    "This is a link to an unwritten page"
-  );
 });
 
 test("broken anchor links flaws", () => {
@@ -1693,4 +1712,15 @@ test("built search-index.json (en-US)", () => {
   expect(urlToTitle.get("/en-US/docs/Web/Foo")).toBe("<foo>: A test tag");
   // an archived page should not be in there.
   expect(urlToTitle.has("/en-US/docs/XUL")).toBeFalsy();
+});
+
+test("the robots.txt file was created", () => {
+  const filePath = path.join(buildRoot, "robots.txt");
+  const text = fs.readFileSync(filePath, "utf-8");
+  // The content of robots file when it's in production mode is
+  // to ONLY say `Disallow: /api/`.
+  // When the robots file is for disallowing everything it
+  // will ONLY say `Disallow: /`.
+  expect(text).toContain("Disallow: /api/");
+  expect(text).not.toContain("Disallow: /\n");
 });
