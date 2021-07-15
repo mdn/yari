@@ -669,13 +669,13 @@ def upload_content(build_directory, content_roots, config):
         now = datetime.datetime.utcnow().replace(tzinfo=UTC)
         delete_keys = []
 
+        # We can delete the following lines when archived content is completely
+        # swept away.
         archived_files_as_keys = set()
         if archived_txt_file:
             for file in parse_archived_txt_file(archived_txt_file):
                 locale, slug = file.replace("/index.html", "").split("/", 1)
                 archived_files_as_keys.add(f"{bucket_prefix}/{locale}/docs/{slug}")
-            if not archived_files_as_keys:
-                raise Exception(f"found no entries inside {archived_txt_file}")
 
         for key in existing_bucket_objects:
             if key.startswith(f"{bucket_prefix}/_whatsdeployed/"):

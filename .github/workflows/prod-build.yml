@@ -240,9 +240,7 @@ jobs:
           # XXX would be nice to validate here that $DEPLOYER_BUCKET_PREFIX is truthy
           echo "DEPLOYER_BUCKET_PREFIX=$DEPLOYER_BUCKET_PREFIX"
 
-          # Prune again once https://github.com/mdn/yari/issues/3323 is resolved.
-          # poetry run deployer upload --prune --archived-files ../content/archived.txt ../client/build
-          poetry run deployer upload ../client/build
+          poetry run deployer upload --prune --archived-files ../content/archived.txt ../client/build
           poetry run deployer update-lambda-functions ./aws-lambda
           poetry run deployer search-index ../client/build
 
