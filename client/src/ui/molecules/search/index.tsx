@@ -20,6 +20,8 @@ import {
 } from "../../../search-utils";
 const LazySearchNavigateWidget = lazy(() => import("../../../search"));
 
+// Peter testing
+
 function useQueryParamState() {
   const [searchParams] = useSearchParams();
   const queryState = searchParams.get("q") || "";
