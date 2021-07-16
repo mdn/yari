@@ -3988,10 +3988,10 @@
   dependencies:
     "@types/react" "*"
 
-"@types/mdast@^3.0.0", "@types/mdast@^3.0.4":
-  version "3.0.4"
-  resolved "https://registry.yarnpkg.com/@types/mdast/-/mdast-3.0.4.tgz#8ee6b5200751b6cadb9a043ca39612693ad6cb9e"
-  integrity sha512-gIdhbLDFlspL53xzol2hVzrXAbzt71erJHoOwQZWssjaiouOotf03lNtMmFm9VfFkvnLWccSVjUAZGQ5Kqw+jA==
+"@types/mdast@^3.0.0", "@types/mdast@^3.0.6":
+  version "3.0.6"
+  resolved "https://registry.yarnpkg.com/@types/mdast/-/mdast-3.0.6.tgz#d03647a76e6c94b47c319d526826e391cde6e86d"
+  integrity sha512-1a/QZGYe7cavCvv4OwByerPbCoIwSL3XHH+ajE4SlqWXqwSeGTMbML5we5PpYV2uLmpKPTGOacmcMt5R+w2l0w==
   dependencies:
     "@types/unist" "*"
 
