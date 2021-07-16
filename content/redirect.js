@@ -40,6 +40,7 @@ function resolveDocumentPath(url) {
   const relativeFilePath = path.join(relativeFolderPath, "index.html");
 
   if (isArchivedFilePath(relativeFilePath)) {
+    console.log("YES!", relativeFilePath);
     return `$ARCHIVED/${relativeFilePath}`;
   }
 

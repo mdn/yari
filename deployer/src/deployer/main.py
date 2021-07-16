@@ -150,13 +150,6 @@ def whatsdeployed(ctx, directory: Path, output: str):
     callback=validate_optional_directory,
 )
 @click.option(
-    "--content-archived-root",
-    help="The path to the root folder of the archived content (defaults to CONTENT_ARCHIVED_ROOT)",
-    default=CONTENT_ARCHIVED_ROOT,
-    show_default=True,
-    callback=validate_optional_directory,
-)
-@click.option(
     "--no-progressbar",
     help="Don't show the progress bar",
     default=DEFAULT_NO_PROGRESSBAR,
@@ -179,15 +172,6 @@ def whatsdeployed(ctx, directory: Path, output: str):
     is_flag=True,
 )
 @click.option(
-    "--archived-files",
-    help=(
-        "The path to the file that lists which files are archived. "
-        "(Only relevant in conjunction with --prune)"
-    ),
-    default=None,
-    callback=validate_optional_file,
-)
-@click.option(
     "--default-cache-control",
     help="The default Cache-Control value used when uploading files (0 to disable)",
     default=DEFAULT_CACHE_CONTROL,
@@ -202,8 +186,6 @@ def upload(ctx, directory: Path, **kwargs):
         content_roots.append(kwargs["content_root"])
     if kwargs["content_translated_root"]:
         content_roots.append(kwargs["content_translated_root"])
-    if kwargs["content_archived_root"]:
-        content_roots.append(kwargs["content_archived_root"])
     if not kwargs["no_redirects"] and not content_roots:
         raise Exception(
             "if you don't use --no-redirects you have to have at least one content root"
