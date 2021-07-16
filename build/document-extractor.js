@@ -71,6 +71,45 @@ function extractSections($) {
     sections.push(...subSections);
     flaws.push(...subFlaws);
   }
+
+  // Check for an mutate possible duplicated IDs.
+  // If a HTML document has...:
+  //
+  //   <h2 id="Examples">Check these examples</h2>
+  //   ...
+  //   <h2 id="examples">Examples</h2>
+  //
+  // then this can cause various problems. For example, the anchor links
+  // won't work. The Table of Contents won't be able to do a loop with unique
+  // `key={section.id}` values.
+  // If we do see a duplicated IDs, first complain about it, then try to do
+  // something about it.
+  const seenIDs = new Map();
+  for (const section of sections) {
+    const originalID = section.value.id;
+    if (!originalID) {
+      // Not all sections have an ID. For example, prose sections that don't
+      // start with a <h2>.
+      // Since we're primarily concerned about *uniqueness* here, let's just
+      // skip worrying about these.
+      continue;
+    }
+    // We normalize all IDs to lowercase so that `id="Foo"` === `id="foo"`.
+    const id = originalID.toLowerCase();
+    if (seenIDs.has(id)) {
+      // That's bad!
+      let newID = `${id}_${seenIDs.get(id) + 1}`;
+      while (seenIDs.get(newID)) {
+        seenIDs.set(id, seenIDs.get(id) + 1);
+        newID = `${id}_${seenIDs.get(id) + 1}`;
+      }
+      section.value.id = newID;
+      flaws.push(
+        `'${originalID}' is not a unique ID in this HTML (temporarily changed to ${section.value.id})`
+      );
+    }
+    seenIDs.set(id, (seenIDs.get(id) || 0) + 1);
+  }
   return [sections, flaws];
 }
 
