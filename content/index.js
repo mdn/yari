@@ -11,7 +11,6 @@ const Translation = require("./translation");
 const { getPopularities } = require("./popularities");
 const Redirect = require("./redirect");
 const Image = require("./image");
-const Archive = require("./archive");
 const {
   buildURL,
   memoize,
@@ -35,7 +34,6 @@ module.exports = {
   Document,
   Redirect,
   Image,
-  Archive,
   Translation,
 
   buildURL,
