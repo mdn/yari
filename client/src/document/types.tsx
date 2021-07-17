@@ -138,4 +138,5 @@ export interface Doc {
   isArchive: boolean;
   isTranslated: boolean;
   isActive: boolean;
+  hasMathML?: boolean;
 }
