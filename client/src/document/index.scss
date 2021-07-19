@@ -1,12 +1,290 @@
-.loading-toolbar {
-  position: absolute;
-  font-size: 70%;
-  top: 0;
-  right: 5px;
+@use "sass:math";
+
+@import "~@mdn/minimalist/sass/vars/layout";
+@import "~@mdn/minimalist/sass/vars/mdn-web-docs-palette";
+@import "~@mdn/minimalist/sass/vars/borders";
+@import "~@mdn/minimalist/sass/vars/typography";
+
+@import "~@mdn/minimalist/sass/mixins/animation";
+@import "~@mdn/minimalist/sass/mixins/utils";
+
+@import "./molecules/breadcrumb-locale-container";
+@import "./molecules/notecards";
+@import "./molecules/localized-content-note";
+
+.main-content {
+  @media #{$mq-small-desktop-and-up} {
+    margin-top: $base-spacing;
+  }
 }
 
-#content h2 a {
-  color: rgb(51, 51, 51);
+.only-in-en-us {
+  span {
+    font-size: $small-font-size;
+  }
 }
 
-@import "./prism-overrides.scss";
+a.page-not-created {
+  color: $mdn-red700;
+  cursor: not-allowed;
+}
+
+.main-page-content {
+  padding: math.div($base-spacing, 2) $base-spacing $base-spacing;
+
+  figure {
+    margin-bottom: $base-spacing;
+  }
+
+  ul li {
+    margin-bottom: 8px;
+  }
+
+  .example-good,
+  .example-bad {
+    padding: 0 $base-spacing;
+    position: relative;
+
+    &::after {
+      background-size: 24px;
+      content: "";
+      display: block;
+      height: 24px;
+      position: absolute;
+      right: 13px;
+      top: 3px;
+      width: 24px;
+    }
+  }
+
+  .example-bad {
+    &::after {
+      background-color: $mdn-red700;
+      mask-image: url("~@mdn/dinocons/emojis/frown.svg");
+    }
+  }
+
+  .example-good {
+    &::after {
+      background-color: $mdn-green900;
+      mask-image: url("~@mdn/dinocons/emojis/smiley.svg");
+    }
+  }
+
+  .code-example {
+    position: relative;
+
+    .copy-icon {
+      background: $mdn-neutral100 url("../assets/clippy.svg") center center
+        no-repeat;
+      background-position: 61% 45%;
+      background-size: 16px;
+      border: 1px solid $mdn-neutral100;
+      border-radius: $default-border-radius;
+      cursor: pointer;
+      height: 36px;
+      margin: 0;
+      padding: math.div($base-spacing, 4);
+      position: absolute;
+      right: math.div($base-spacing, 3);
+      top: math.div($base-spacing, 3);
+      vertical-align: middle;
+      width: 33px;
+      z-index: $bottom-layer;
+
+      @media #{$mq-large-desktop-and-up} {
+        opacity: 0.4;
+
+        &:hover,
+        &:focus {
+          background-color: $mdn-neutral200;
+          opacity: 1;
+        }
+      }
+    }
+
+    .copy-icon-message {
+      background: $mdn-neutral900;
+      border-radius: $default-border-radius;
+      color: $white;
+      display: none;
+      font-size: $small-font-size;
+      opacity: 1;
+      padding: math.div($base-spacing, 4);
+      position: absolute;
+      right: math.div($base-spacing, 3);
+      top: 15px;
+      z-index: $bottom-layer;
+    }
+
+    &:focus,
+    &:hover {
+      .copy-icon {
+        opacity: 1;
+      }
+    }
+
+    .show {
+      display: block;
+    }
+
+    .example-good,
+    .example-bad {
+      padding: $base-spacing;
+
+      &::after {
+        right: 44px;
+        top: 13px;
+      }
+    }
+  }
+
+  @media #{$mq-small-desktop-and-up} {
+    margin-bottom: $base-spacing * 2;
+    padding: 0 $base-spacing $base-spacing;
+  }
+
+  h1 {
+    word-break: break-word;
+  }
+
+  h2,
+  h3,
+  h4,
+  h5 {
+    margin-top: 0;
+  }
+
+  p,
+  ul,
+  ol,
+  dl {
+    @include readable-line-length();
+  }
+
+  a {
+    text-decoration: underline;
+
+    &:hover,
+    &:focus {
+      text-decoration: none;
+    }
+
+    &:active {
+      background-color: $mdn-blue700;
+      color: $text-color-inverted;
+
+      code {
+        background-color: transparent;
+      }
+    }
+
+    &[id^="attr-"] {
+      &:link,
+      &:visited {
+        color: $mdn-neutral900;
+        text-decoration: none;
+      }
+
+      &:hover,
+      &:focus {
+        text-decoration: underline;
+      }
+
+      &:active {
+        color: $text-color-inverted;
+      }
+    }
+  }
+
+  [aria-current] {
+    color: $mdn-neutral900;
+    font-weight: bold;
+    text-decoration: none;
+  }
+
+  h2,
+  h3 {
+    margin-bottom: ($base-unit * 2);
+
+    a:link,
+    a:visited {
+      color: $mdn-neutral900;
+      text-decoration: none;
+    }
+
+    a:hover,
+    a:focus {
+      color: $mdn-neutral900;
+      text-decoration: underline;
+    }
+
+    a:active {
+      background-color: transparent;
+    }
+  }
+
+  table {
+    margin-bottom: $base-spacing * 2;
+  }
+
+  /* readonly inline badges needs a slightly darker background color in general article content  */
+  .inline {
+    &.optional,
+    &.readonly {
+      background-color: $mdn-neutral100;
+    }
+  }
+
+  /*
+   * top navigational elements on tutorial pages
+   * prevnext is added for backwards compatibility
+   */
+  .prevnext,
+  .prev-next {
+    @media #{$mq-tablet-and-up} {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: $base-spacing;
+    }
+
+    a.button {
+      margin-bottom: math.div($base-spacing, 2);
+      max-width: inherit;
+
+      @media #{$mq-tablet-and-up} {
+        margin-bottom: inherit;
+      }
+    }
+  }
+
+  /*
+   * multi-column layout on pages with an index such as
+   * https://developer.mozilla.org/en-US/docs/Web/API#Specifications
+  */
+  .index {
+    columns: 300px;
+    margin-bottom: $base-spacing;
+
+    @media #{$mq-small-desktop-and-up} {
+      margin-bottom: $base-spacing * 2;
+    }
+
+    .icon-experimental,
+    .icon-nonstandard {
+      color: $mdn-blue700;
+    }
+
+    .icon-deprecated {
+      color: $mdn-red700;
+    }
+  }
+
+  iframe {
+    max-width: 100%;
+  }
+
+  iframe:not(.sample-code-frame) {
+    border: 0;
+  }
+}

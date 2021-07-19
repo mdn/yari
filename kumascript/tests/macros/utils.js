@@ -2,11 +2,7 @@
  * @prettier
  */
 
-// Provides utilities that as a whole constitute the macro test framework.
-const { execSync } = require("child_process");
-const os = require("os");
-
-const vnu = require("vnu-jar");
+const { HtmlValidate } = require("html-validate");
 
 const Environment = require("../../src/environment.js");
 const Templates = require("../../src/templates.js");
@@ -61,12 +57,12 @@ assert.sameMembers = (a1, a2) => {
 };
 
 function createMacroTestObject(macroName) {
-  let templates = new Templates(__dirname + "/../../macros/");
-  let pageContext = {
+  const templates = new Templates(`${__dirname}/../../macros/`);
+  const pageContext = {
     locale: "en-US",
     url: "",
   };
-  let environment = new Environment(pageContext, templates, null, true);
+  const environment = new Environment(pageContext, templates, null, true);
 
   return {
     /**
@@ -83,7 +79,7 @@ function createMacroTestObject(macroName) {
      * macro. It returns a promise.
      */
     async call(...args) {
-      let rendered = await templates.render(
+      const rendered = await templates.render(
         macroName,
         environment.getExecutionContext(args)
       );
@@ -167,42 +163,30 @@ function afterEachMacro(teardown) {
  * @param {string} html
  * @param {boolean} fragment
  */
-function lintHTML(html, fragment = true) {
-  if (fragment) {
-    html = `<!DOCTYPE html>
-                <html>
-                <head><title>test</title></head>
-                <body>${html}</body>
-                </html>`;
-  }
-  try {
-    /**
-     * Without `JSON.stringify(…)`, spaces in the file path would be treated
-     * as argument separators, e.g.:
-     * `C:\Mozilla Sources\kumascript\node_modules\...\vnu-jar\...\vnu.jar`
-     * would be interpreted as:
-     *
-     * - Argument 1: `C:\Mozilla`
-     * - Argument 2: `Sources\kumascript\node_modules\...\vnu-jar\...\vnu.jar`
-     */
-    execSync(`java -jar ${JSON.stringify(vnu)} --errors-only --format text -`, {
-      input: html,
-      stdio: "pipe",
-      timeout: 15000,
+let htmlValidator = null; // global cache
+function lintHTML(html) {
+  if (!htmlValidator) {
+    htmlValidator = new HtmlValidate({
+      extends: ["html-validate:recommended"],
+      rules: {
+        "no-inline-style": "off",
+        "svg-focusable": "off",
+        "no-trailing-whitespace": "off",
+        "attr-quotes": "off",
+      },
     });
-    return null;
-  } catch (error) {
-    const error_message = error.message
-      // `vnu` always uses `\n`, even on Windows.
-      .split(/\r?\n/g)
-      .filter((line) => /^\s*Error: /.test(line))
-      .join(os.EOL);
-    if (!error_message) {
-      // In case `vnu` fails due to other reasons.
-      throw error;
-    }
-    return error_message;
   }
+  const report = htmlValidator.validateString(html);
+  if (report.valid) {
+    return null;
+  }
+  let result = "";
+  for (const messages of report.results.map((result) => result.messages)) {
+    for (const message of messages) {
+      result += message.message;
+    }
+  }
+  return result;
 }
 
 // ### Exported public API

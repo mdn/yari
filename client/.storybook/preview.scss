@@ -1,0 +1,65 @@
+@import "~@mdn/minimalist/sass/mdn-minimalist";
+
+/* This makes Storybook's background changer and grid work */
+html,
+body {
+  background-color: initial;
+  padding: 0 !important; /* stylelint-disable-line declaration-no-important */
+}
+
+.color-palette,
+.color-names {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.swatch {
+  margin: ($base-unit * 2) 0;
+  padding: $base-spacing;
+  width: 100%;
+
+  code {
+    background-color: transparent;
+  }
+}
+
+/* Grids */
+.docs {
+  .document-page {
+    .page-header,
+    .breadcrumbs-container,
+    .locale-container,
+    .main-content,
+    .document-toc-container,
+    .sidebar,
+    .page-footer {
+      min-height: 100px;
+    }
+
+    .page-header {
+      background-color: #fabba7;
+    }
+
+    .main-content {
+      background-color: #d2e4b7;
+    }
+
+    .breadcrumbs-container {
+      background-color: #a7dddb;
+    }
+
+    .locale-container {
+      background-color: #c8f1f0;
+    }
+
+    .document-toc-container,
+    .sidebar {
+      background-color: #fffabc;
+    }
+
+    .page-footer {
+      background-color: #5e799a;
+    }
+  }
+}

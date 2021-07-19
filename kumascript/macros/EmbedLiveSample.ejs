@@ -23,14 +23,39 @@ var className = $5 || "sample-code-frame";
 var allowedFeatures = $6;
 
 var hasScreenshot = (screenshotUrl && (screenshotUrl.length > 0));
+var title = $0.replace(/[_]+/gm, " ");
+
+var MIN_HEIGHT = 60;
+// Forcibly make sure the height is at least `MIN_HEIGHT` pixels.
+// In old MDN, there was less padding in the live samples so it was then OK
+// to have a iframe height of 30px. This is too cramped and it's easier
+// and safer to make sure the height is at least 60px to make sure it
+// looks presently "uncramped" within our design system.
+// Note that if the 'height' is a string like '100%' it won't be a
+// problem because `parseInt('100%') := 100` which is more than `MIN_HEIGHT`
+// assuming it's value is less than 100.
+if (height && parseInt(height) < MIN_HEIGHT) {
+  height = MIN_HEIGHT;
+}
 
 var sampleUrl = "";
 if (sampleSlug) {
+    // We're asking for the live sample from a different page than
+    // the one we're rendering.
     sampleUrl = `/${env.locale}/docs`;
-    if (sampleSlug.charAt(0) != "/") {
-        sampleUrl += "/";
+    if (sampleSlug.charAt(0) !== "/") {
+      sampleSlug = "/" + sampleSlug;
     }
     sampleUrl += sampleSlug;
+    if (env.locale.toLowerCase() !== "en-us") {
+      const samplePage = wiki.getPage(sampleUrl);
+      if (!(samplePage && samplePage.url)) {
+        // The page from which we're being asked to get the live sample
+        // doesn't exist in this locale, so most likely it only exists
+        // in English.
+        sampleUrl = `/en-US/docs${sampleSlug}`;
+      }
+    }
 }
 var url = await template('LiveSampleURL', [sampleId, sampleUrl]);
 
@@ -49,9 +74,8 @@ if (hasScreenshot) {
       %></td><%
       %><td><%
 } // end hasScreenshot
-%><iframe class="live-sample-frame <%= className %>"<%
-%> id="frame_<%= web.slugify(web.safeDecodeURIComponent(sampleId)) %>"<%
-%> frameborder="0"<%
+%><iframe class="<%= className %>"<%
+%> title="<%= title %> sample" id="frame_<%= web.slugify(web.safeDecodeURIComponent(sampleId)) %>"<%
 if (width) { %> width="<%= width %>"<% }
 if (height) { %> height="<%= height %>"<% }
 %> src="<%- url %>"<%

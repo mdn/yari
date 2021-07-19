@@ -1,5 +1,4 @@
 <%
-var currentSection = $0;
 var locale = env.locale;
 var slug = env.slug;
 var baseURL = "/" + locale + "/docs/Learn/";
@@ -9,7 +8,7 @@ function currentPageIsUnder(root) {
   if (slug.indexOf(rootSlug) != -1) {
     return "open";
   }
-  return "closed";
+  return "";
 }
 
 var text = mdn.localStringMap({
@@ -81,7 +80,7 @@ var text = mdn.localStringMap({
         'Assessment_typesetting_a_community_school_homepage': 'Assessment: Typesetting a community school homepage',
       'CSS_layout': 'CSS layout',
         'CSS_layout_overview': 'CSS layout overview',
-        'Introduction' : 'Introduction to CSS layout',
+        'Layout_introduction' : 'Introduction to CSS layout',
         'Normal_Flow' : 'Normal Flow',
         'Flexbox': 'Flexbox',
         'Grids' : 'Grids',
@@ -180,13 +179,57 @@ var text = mdn.localStringMap({
         'Setting_up_your_own_test_automation_environment' : 'Setting up your own test automation environment',
       'Git_and_GitHub' : 'Git and GitHub',
         'Git_and_GitHub_overview' : 'Git and GitHub overview',
-      'Understanding_client-side_web_development_tools' : 'Understanding client-side web development tools',
+      'Client-side_web_development_tools' : 'Client-side web development tools',
         'Client-side_web_development_tools_index' : 'Client-side web development tools index',
         'Client-side_tooling_overview' : 'Client-side tooling overview',
         'Command_line_crash_course' : 'Command line crash course',
         'Package_management_basics' : 'Package management basics',
         'Introducing_a_complete_toolchain' : 'Introducing a complete toolchain',
         'Deploying_our_app' : 'Deploying our app',
+      'Introduction_to_client-side_frameworks': 'Introduction to client-side frameworks',
+        'Client-side_frameworks_overview': 'Client-side frameworks overview',
+        'Framework_main_features': 'Framework main features',
+      'React': 'React',
+        'Getting_started_with_React': 'Getting started with React',
+        'Beginning_our_React_todo_list': 'Beginning our React todo list',
+        'Componentizing_our_React_app': 'Componentizing our React app',
+        'React_interactivity:_Events_and_state': 'React interactivity: Events and state',
+        'React_interactivity:_Editing_filtering_conditional_rendering': 'React interactivity: Editing, filtering, conditional rendering',
+        'Accessibility_in_React': 'Accessibility in React',
+        'React_resources': 'React resources',
+      'Ember': 'Ember',
+        'Getting_started_with_Ember': 'Getting started with Ember',
+        'Ember_app_structure_and_componentization': 'Ember app structure and componentization',
+        'Ember_interactivity:_Events_classes_and_state': 'Ember interactivity: Events, classes and state',
+        'Ember_Interactivity:_Footer_functionality_conditional_rendering': 'Ember Interactivity: Footer functionality, conditional rendering',
+        'Routing_in_Ember': 'Routing in Ember',
+        'Ember_resources_and_troubleshooting': 'Ember resources and troubleshooting',
+      'Vue': 'Vue',
+        'Getting_started_with_Vue': 'Getting started with Vue',
+        'Creating_our_first_Vue_component': 'Creating our first Vue component',
+        'Rendering_a_list_of_Vue_components': 'Rendering a list of Vue components',
+        'Adding_a_new_todo_form:_Vue_events_methods_and_models': 'Adding a new todo form: Vue events, methods, and models',
+        'Styling_Vue_components_with_CSS': 'Styling Vue components with CSS',
+        'Using_Vue_computed_properties': 'Using Vue computed properties',
+        'Vue_conditional_rendering:_editing_existing_todos': 'Vue conditional rendering: editing existing todos',
+        'Focus_management_with_Vue_refs': 'Focus management with Vue refs',
+        'Vue_resources': 'Vue resources',
+      'Svelte': 'Svelte',
+        'Getting_started_with_Svelte': 'Getting started with Svelte',
+        'Starting_our_Svelte_Todo_list_app': 'Starting our Svelte Todo list app',
+        'Dynamic_behavior_in_Svelte:_working_with_variables_and_props': 'Dynamic behavior in Svelte: working with variables and props',
+        'Componentizing_our_Svelte_app': 'Componentizing our Svelte app',
+        'Advanced_Svelte:_Reactivity_lifecycle_accessibility': 'Advanced Svelte: Reactivity, lifecycle, accessibility',
+        'Working_with_Svelte_stores': 'Working with Svelte stores',
+        'TypeScript_support_in_Svelte': 'TypeScript support in Svelte',
+        'Deployment_and_next_steps': 'Deployment and next steps',
+      'Angular': 'Angular',
+        'Getting_started_with_Angular': 'Getting started with Angular',
+        'Beginning_our_Angular_todo_list_app': 'Beginning our Angular todo list app',
+        'Styling_our_Angular_app': 'Styling our Angular app',
+        'Creating_an_item_component': 'Creating an item component',
+        'Filtering_our_to-do_items': 'Filtering our to-do items',
+        'Building_Angular_applications_and_further_resources': 'Building Angular applications and further resources',
     'Server-side_website_programming' : 'Server-side website programming',
       'First_steps' : 'First steps',
         'First_steps_overview' : 'First steps overview',
@@ -196,7 +239,7 @@ var text = mdn.localStringMap({
         'Website_security' : 'Website security',
       'Django_web_framework_(Python)' : 'Django web framework (Python)',
         'Django_web_framework_(Python)_overview' : 'Django web framework (Python) overview',
-        'Introduction' : 'Introduction',
+        'Django_introduction' : 'Introduction',
         'Setting_up_a_development_environment' : 'Setting up a development environment',
         'Tutorial_The_Local_Library_website' : 'Tutorial: The Local Library website',
         'Tutorial_Part_2_Creating_a_skeleton_website' : 'Tutorial Part 2: Creating a skeleton website',
@@ -227,10 +270,9 @@ var text = mdn.localStringMap({
       'HTML_questions': 'HTML questions',
       'CSS_questions': 'CSS questions',
       'JavaScript_questions': 'JavaScript questions',
-      'How_the_Web_works': 'How the Web works',
+      'Web_mechanics': 'Web mechanics',
       'Tools_and_setup': 'Tools and setup',
       'Design_and_accessibility': 'Design and accessibility',
-    'How_to_contribute': 'How to contribute'
   },
   'de': {
     'Complete_beginners': 'Anfänger starten hier!',
@@ -398,13 +440,50 @@ var text = mdn.localStringMap({
         'Setting_up_your_own_test_automation_environment' : 'Setze deine eigene Testumgebung auf',
       'Git_and_GitHub' : 'Git and GitHub',
         'Git_and_GitHub_overview' : 'Git and GitHub overview',
-      'Understanding_client-side_web_development_tools' : 'Understanding client-side web development tools',
+      'Client-side_web_development_tools' : 'Client-side web development tools',
         'Client-side_web_development_tools_index' : 'Client-side web development tools index',
         'Client-side_tooling_overview' : 'Client-side tooling overview',
         'Command_line_crash_course' : 'Command line crash course',
         'Package_management_basics' : 'Package management basics',
         'Introducing_a_complete_toolchain' : 'Introducing a complete toolchain',
         'Deploying_our_app' : 'Deploying our app',
+      'Introduction_to_client-side_frameworks': 'Introduction to client-side frameworks',
+        'Client-side_frameworks_overview': 'Client-side frameworks overview',
+        'Framework_main_features': 'Framework main features',
+      'React': 'React',
+        'Getting_started_with_React': 'Getting started with React',
+        'Beginning_our_React_todo_list': 'Beginning our React todo list',
+        'Componentizing_our_React_app': 'Componentizing our React app',
+        'React_interactivity:_Events_and_state': 'React interactivity: Events and state',
+        'React_interactivity:_Editing_filtering_conditional_rendering': 'React interactivity: Editing, filtering, conditional rendering',
+        'Accessibility_in_React': 'Accessibility in React',
+        'React_resources': 'React resources',
+      'Ember': 'Ember',
+        'Getting_started_with_Ember': 'Getting started with Ember',
+        'Ember_app_structure_and_componentization': 'Ember app structure and componentization',
+        'Ember_interactivity:_Events_classes_and_state': 'Ember interactivity: Events, classes and state',
+        'Ember_Interactivity:_Footer_functionality_conditional_rendering': 'Ember Interactivity: Footer functionality, conditional rendering',
+        'Routing_in_Ember': 'Routing in Ember',
+        'Ember_resources_and_troubleshooting': 'Ember resources and troubleshooting',
+      'Vue': 'Vue',
+        'Getting_started_with_Vue': 'Getting started with Vue',
+        'Creating_our_first_Vue_component': 'Creating our first Vue component',
+        'Rendering_a_list_of_Vue_components': 'Rendering a list of Vue components',
+        'Adding_a_new_todo_form:_Vue_events_methods_and_models': 'Adding a new todo form: Vue events, methods, and models',
+        'Styling_Vue_components_with_CSS': 'Styling Vue components with CSS',
+        'Using_Vue_computed_properties': 'Using Vue computed properties',
+        'Vue_conditional_rendering:_editing_existing_todos': 'Vue conditional rendering: editing existing todos',
+        'Focus_management_with_Vue_refs': 'Focus management with Vue refs',
+        'Vue_resources': 'Vue resources',
+      'Svelte': 'Svelte',
+        'Getting_started_with_Svelte': 'Getting started with Svelte',
+        'Starting_our_Svelte_Todo_list_app': 'Starting our Svelte Todo list app',
+        'Dynamic_behavior_in_Svelte:_working_with_variables_and_props': 'Dynamic behavior in Svelte: working with variables and props',
+        'Componentizing_our_Svelte_app': 'Componentizing our Svelte app',
+        'Advanced_Svelte:_Reactivity_lifecycle_accessibility': 'Advanced Svelte: Reactivity, lifecycle, accessibility',
+        'Working_with_Svelte_stores': 'Working with Svelte stores',
+        'TypeScript_support_in_Svelte': 'TypeScript support in Svelte',
+        'Deployment_and_next_steps': 'Deployment and next steps',
     'Server-side_website_programming' : 'Serverseitige Webseitenprogrammierung',
       'First_steps' : 'Erste Schritte',
         'First_steps_overview' : 'Erste Schritte — Übersicht',
@@ -414,7 +493,7 @@ var text = mdn.localStringMap({
         'Website_security' : 'Sicherheit auf Webseiten',
       'Django_web_framework_(Python)' : 'Django Webframework (Python)',
         'Django_web_framework_(Python)_overview' : 'Django Webframework (Python) — Übersicht',
-        'Introduction' : 'Einführung',
+        'Django_introduction' : 'Einführung',
         'Setting_up_a_development_environment' : 'Entwicklungsumgebung aufsetzen',
         'Tutorial_The_Local_Library_website' : 'Tutorial Teil 1: Die lokale Bibliothek',
         'Tutorial_Part_2_Creating_a_skeleton_website' : 'Tutorial Teil 2: Grundgerüst der Webseite',
@@ -444,10 +523,9 @@ var text = mdn.localStringMap({
     'Common_questions': 'Häufige Fragen',
       'HTML_questions': 'Fragen zu HTML',
       'CSS_questions': 'Fragen zu CSS',
-      'How_the_Web_works': 'Wie das Internet funktioniert',
+      'Web_mechanics': 'Wie das Internet funktioniert',
       'Tools_and_setup': 'Werkzeuge und Arbeitsumgebungen',
       'Design_and_accessibility': 'Design und Zugänglichkeit',
-    'How_to_contribute': 'Wie kannst Du zu MDN beitragen?'
   },
   'pt-BR': {
     'Complete_beginners': 'Completos iniciantes, comecem por aqui!',
@@ -487,29 +565,29 @@ var text = mdn.localStringMap({
         'HTML_table_advanced' : 'Funcionalidades avançadas e acessibilidade de Tabelas HTML',
         'Assessment_Structuring_planet_data' : 'Avaliação: Estruturação dos dados do planenta',
     'CSS_styling_the_Web': 'CSS — Estilizando a Web',
-      'CSS_first_steps': 'CSS first steps',
-        'CSS_first_steps_overview': 'CSS first steps overview',
-        'What_is_CSS':  'What is CSS?',
-        'Getting_started_with_CSS': 'Getting started with CSS',
-        'How_CSS_is_structured': 'How CSS is structured',
-        'How_CSS_works': 'How CSS works',
-        'Using_your_new_knowledge': 'Using your new knowledge',
+      'CSS_first_steps': 'CSS - primeiros passos',
+        'CSS_first_steps_overview': 'Visão geral das primeiras etapas com CSS',
+        'What_is_CSS':  'O que é CSS?',
+        'Getting_started_with_CSS': 'Iniciando com CSS',
+        'How_CSS_is_structured': 'como CSS é estruturado',
+        'How_CSS_works': 'Como CSS funciona',
+        'Using_your_new_knowledge': 'Usando seu novo Conhecimento',
       'CSS_building_blocks': 'CSS building blocks',
         'CSS_building_blocks_overview': 'CSS building blocks overview',
         'Cascade_and_inheritance': 'Cascade and inheritance',
-        'CSS_selectors': 'CSS selectors',
+        'CSS_selectors': 'seletores CSS',
         'The_box_model': 'The box model',
         'Backgrounds_and_borders': 'Backgrounds and borders',
-        'Handling_different_text_directions': 'Handling different text directions',
+        'Handling_different_text_directions': 'Tratamento de diferentes direções de texto',
         'Overflowing_content': 'Overflowing content',
-        'Values_and_units': 'Values and units',
-        'Sizing_items_in_CSS': 'Sizing items in CSS',
+        'Values_and_units': 'Valores e unidades',
+        'Sizing_items_in_CSS': 'Dimensionando itens em CSS',
         'Images_media_and_form_elements': 'Images, media, and form elements',
-        'Styling_tables': 'Styling tables',
+        'Styling_tables': 'Estilização de tabelas',
         'Debugging_CSS': 'Debugging CSS',
-        'Organizing_your_CSS': 'Organizing your CSS',
+        'Organizing_your_CSS': 'Organize seu CSS',
       'Styling_text': 'Estilização de textos',
-        'Styling_text_overview': 'Visão geral da Estilizaço de textos',
+        'Styling_text_overview': 'Visão geral da Estilização de textos',
         'Fundamental_text_and_font_styling': 'Fundamentos da estilização de textos e fontes',
         'Styling_lists': 'Estilização de listas',
         'Styling_links': 'Estilização de links',
@@ -517,7 +595,7 @@ var text = mdn.localStringMap({
         'Assessment_typesetting_a_community_school_homepage': 'Avaliação: Tipografia para a página inicial da escola pública local',
       'CSS_layout': 'Esquemas CSS',
         'CSS_layout_overview': 'Visão geral de esquemas CSS',
-        'Introduction' : 'Introdução a esquemas CSS',
+        'Layout_introduction' : 'Introdução a esquemas CSS',
         'Normal_Flow': 'Normal Flow',
         'Flexbox': 'Flexbox',
         'Grids' : 'Grids',
@@ -616,13 +694,50 @@ var text = mdn.localStringMap({
         'Setting_up_your_own_test_automation_environment' : 'Configurando seu próprio ambiente de testes automatizados',
       'Git_and_GitHub' : 'Git and GitHub',
         'Git_and_GitHub_overview' : 'Git and GitHub overview',
-      'Understanding_client-side_web_development_tools' : 'Understanding client-side web development tools',
+      'Client-side_web_development_tools' : 'Client-side web development tools',
         'Client-side_web_development_tools_index' : 'Client-side web development tools index',
         'Client-side_tooling_overview' : 'Client-side tooling overview',
         'Command_line_crash_course' : 'Command line crash course',
         'Package_management_basics' : 'Package management basics',
         'Introducing_a_complete_toolchain' : 'Introducing a complete toolchain',
         'Deploying_our_app' : 'Deploying our app',
+      'Introduction_to_client-side_frameworks': 'Introduction to client-side frameworks',
+        'Client-side_frameworks_overview': 'Client-side frameworks overview',
+        'Framework_main_features': 'Framework main features',
+      'React': 'React',
+        'Getting_started_with_React': 'Getting started with React',
+        'Beginning_our_React_todo_list': 'Beginning our React todo list',
+        'Componentizing_our_React_app': 'Componentizing our React app',
+        'React_interactivity:_Events_and_state': 'React interactivity: Events and state',
+        'React_interactivity:_Editing_filtering_conditional_rendering': 'React interactivity: Editing, filtering, conditional rendering',
+        'Accessibility_in_React': 'Accessibility in React',
+        'React_resources': 'React resources',
+      'Ember': 'Ember',
+        'Getting_started_with_Ember': 'Getting started with Ember',
+        'Ember_app_structure_and_componentization': 'Ember app structure and componentization',
+        'Ember_interactivity:_Events_classes_and_state': 'Ember interactivity: Events, classes and state',
+        'Ember_Interactivity:_Footer_functionality_conditional_rendering': 'Ember Interactivity: Footer functionality, conditional rendering',
+        'Routing_in_Ember': 'Routing in Ember',
+        'Ember_resources_and_troubleshooting': 'Ember resources and troubleshooting',
+      'Vue': 'Vue',
+        'Getting_started_with_Vue': 'Getting started with Vue',
+        'Creating_our_first_Vue_component': 'Creating our first Vue component',
+        'Rendering_a_list_of_Vue_components': 'Rendering a list of Vue components',
+        'Adding_a_new_todo_form:_Vue_events_methods_and_models': 'Adding a new todo form: Vue events, methods, and models',
+        'Styling_Vue_components_with_CSS': 'Styling Vue components with CSS',
+        'Using_Vue_computed_properties': 'Using Vue computed properties',
+        'Vue_conditional_rendering:_editing_existing_todos': 'Vue conditional rendering: editing existing todos',
+        'Focus_management_with_Vue_refs': 'Focus management with Vue refs',
+        'Vue_resources': 'Vue resources',
+      'Svelte': 'Svelte',
+        'Getting_started_with_Svelte': 'Getting started with Svelte',
+        'Starting_our_Svelte_Todo_list_app': 'Starting our Svelte Todo list app',
+        'Dynamic_behavior_in_Svelte:_working_with_variables_and_props': 'Dynamic behavior in Svelte: working with variables and props',
+        'Componentizing_our_Svelte_app': 'Componentizing our Svelte app',
+        'Advanced_Svelte:_Reactivity_lifecycle_accessibility': 'Advanced Svelte: Reactivity, lifecycle, accessibility',
+        'Working_with_Svelte_stores': 'Working with Svelte stores',
+        'TypeScript_support_in_Svelte': 'TypeScript support in Svelte',
+        'Deployment_and_next_steps': 'Deployment and next steps',
     'Server-side_website_programming' : 'Programação de servidores de Aplicação',
       'First_steps' : 'Primeiros passos',
         'First_steps_overview' : 'Visão geral para os primeiros passos',
@@ -632,7 +747,7 @@ var text = mdn.localStringMap({
         'Website_security' : 'Segurança de sites',
       'Django_web_framework_(Python)' : 'Framework Web Django (Python)',
         'Django_web_framework_(Python)_overview' : 'Visão geral do Framework Web Django (Python)',
-        'Introduction' : 'Introdução',
+        'Django_introduction' : 'Introdução',
         'Setting_up_a_development_environment' : 'Configurando um ambiente de desenvolvimento para aplicações Django',
         'Tutorial_The_Local_Library_website' : 'Tutorial: Um site para a Biblioteca Local',
         'Tutorial_Part_2_Creating_a_skeleton_website' : 'Tutorial Parte 2: Criando o esqueleto de um site',
@@ -663,10 +778,9 @@ var text = mdn.localStringMap({
       'HTML_questions': 'Questões sobre HTML',
       'CSS_questions': 'Questões sobre CSS',
       'JavaScript_questions': 'Questões sobre JavaScript',
-      'How_the_Web_works': 'Como a Internet funciona',
+      'Web_mechanics': 'Como a Internet funciona',
       'Tools_and_setup': 'Ferramentas e configuração',
       'Design_and_accessibility': 'Projeto e acessibilidade',
-    'How_to_contribute': 'Como contribuir'
   },
   'ru': {
     'Complete_beginners': 'Новички начинают здесь!',
@@ -818,13 +932,57 @@ var text = mdn.localStringMap({
         'Setting_up_your_own_test_automation_environment' : 'Установка вашей автоматической среды тестирования',
       'Git_and_GitHub' : 'Git and GitHub',
         'Git_and_GitHub_overview' : 'Git and GitHub overview',
-      'Understanding_client-side_web_development_tools' : 'Understanding client-side web development tools',
+      'Client-side_web_development_tools' : 'Client-side web development tools',
         'Client-side_web_development_tools_index' : 'Client-side web development tools index',
         'Client-side_tooling_overview' : 'Client-side tooling overview',
         'Command_line_crash_course' : 'Command line crash course',
         'Package_management_basics' : 'Package management basics',
         'Introducing_a_complete_toolchain' : 'Introducing a complete toolchain',
         'Deploying_our_app' : 'Deploying our app',
+      'Introduction_to_client-side_frameworks': 'Introduction to client-side frameworks',
+        'Client-side_frameworks_overview': 'Client-side frameworks overview',
+        'Framework_main_features': 'Framework main features',
+      'React': 'React',
+        'Getting_started_with_React': 'Getting started with React',
+        'Beginning_our_React_todo_list': 'Beginning our React todo list',
+        'Componentizing_our_React_app': 'Componentizing our React app',
+        'React_interactivity:_Events_and_state': 'React interactivity: Events and state',
+        'React_interactivity:_Editing_filtering_conditional_rendering': 'React interactivity: Editing, filtering, conditional rendering',
+        'Accessibility_in_React': 'Accessibility in React',
+        'React_resources': 'React resources',
+      'Ember': 'Ember',
+        'Getting_started_with_Ember': 'Getting started with Ember',
+        'Ember_app_structure_and_componentization': 'Ember app structure and componentization',
+        'Ember_interactivity:_Events_classes_and_state': 'Ember interactivity: Events, classes and state',
+        'Ember_Interactivity:_Footer_functionality_conditional_rendering': 'Ember Interactivity: Footer functionality, conditional rendering',
+        'Routing_in_Ember': 'Routing in Ember',
+        'Ember_resources_and_troubleshooting': 'Ember resources and troubleshooting',
+      'Vue': 'Vue',
+        'Getting_started_with_Vue': 'Getting started with Vue',
+        'Creating_our_first_Vue_component': 'Creating our first Vue component',
+        'Rendering_a_list_of_Vue_components': 'Rendering a list of Vue components',
+        'Adding_a_new_todo_form:_Vue_events_methods_and_models': 'Adding a new todo form: Vue events, methods, and models',
+        'Styling_Vue_components_with_CSS': 'Styling Vue components with CSS',
+        'Using_Vue_computed_properties': 'Using Vue computed properties',
+        'Vue_conditional_rendering:_editing_existing_todos': 'Vue conditional rendering: editing existing todos',
+        'Focus_management_with_Vue_refs': 'Focus management with Vue refs',
+        'Vue_resources': 'Vue resources',
+      'Svelte': 'Svelte',
+        'Getting_started_with_Svelte': 'Getting started with Svelte',
+        'Starting_our_Svelte_Todo_list_app': 'Starting our Svelte Todo list app',
+        'Dynamic_behavior_in_Svelte:_working_with_variables_and_props': 'Dynamic behavior in Svelte: working with variables and props',
+        'Componentizing_our_Svelte_app': 'Componentizing our Svelte app',
+        'Advanced_Svelte:_Reactivity_lifecycle_accessibility': 'Advanced Svelte: Reactivity, lifecycle, accessibility',
+        'Working_with_Svelte_stores': 'Working with Svelte stores',
+        'TypeScript_support_in_Svelte': 'TypeScript support in Svelte',
+        'Deployment_and_next_steps': 'Deployment and next steps',
+      'Angular': 'Angular',
+        'Getting_started_with_Angular': 'Getting started with Angular',
+        'Beginning_our_Angular_todo_list_app': 'Beginning our Angular todo list app',
+        'Styling_our_Angular_app': 'Styling our Angular app',
+        'Creating_an_item_component': 'Creating an item component',
+        'Filtering_our_to-do_items': 'Filtering our to-do items',
+        'Building_Angular_applications_and_further_resources': 'Building Angular applications and further resources',
     'Server-side_website_programming' : 'Программирование серверной части сайта',
       'First_steps' : 'Первые шаги',
         'First_steps_overview' : 'Первые шаги',
@@ -834,7 +992,7 @@ var text = mdn.localStringMap({
         'Website_security' : 'Защищённость веб-сайтов',
       'Django_web_framework_(Python)' : 'Веб-фреймворк Django (Python)',
         'Django_web_framework_(Python)_overview' : 'Веб-фреймворк Django (Python)',
-        'Introduction' : 'Вступление',
+        'Django_introduction' : 'Вступление',
         'Setting_up_a_development_environment' : 'Установка среды разработки',
         'Tutorial_The_Local_Library_website' : 'Руководство: Сайт местной библиотеки',
         'Tutorial_Part_2_Creating_a_skeleton_website' : 'Руководство часть 2: Создаём набросок сайта',
@@ -853,10 +1011,9 @@ var text = mdn.localStringMap({
     'Common_questions': 'Общие вопросы',
       'HTML_questions': 'Вопросы по HTML',
       'CSS_questions': 'Вопросы по CSS',
-      'How_the_Web_works': 'Как работает Веб',
+      'Web_mechanics': 'Как работает Веб',
       'Tools_and_setup': 'Инструменты и установка',
       'Design_and_accessibility': 'Дизайн и доступность',
-    'How_to_contribute': 'Как помочь?'
   },
   'zh-CN': {
     'Complete_beginners': '新手请从这开始！',
@@ -890,33 +1047,33 @@ var text = mdn.localStringMap({
         'Adding_vector_graphics_to_the_Web': '为 Web 新增向量图',
         'Responsive_images': '自适应图片',
         'Assessment_Mozilla_splash_page': '作业：Mozilla 醒目页面',
-	  'HTML_tables' : 'HTML 表格',
+      'HTML_tables' : 'HTML 表格',
         'HTML_tables_overview' : 'HTML 表格概览',
         'HTML_table_basics' : 'HTML 表格基础',
         'HTML_table_advanced' : 'HTML 高级表格特性和可访问性',
         'Assessment_Structuring_planet_data' : '作业：构建行星数据',
     'CSS_styling_the_Web': 'CSS — 设计 Web',
-      'CSS_first_steps': 'CSS first steps',
-        'CSS_first_steps_overview': 'CSS first steps overview',
-        'What_is_CSS':  'What is CSS?',
-        'Getting_started_with_CSS': 'Getting started with CSS',
-        'How_CSS_is_structured': 'How CSS is structured',
-        'How_CSS_works': 'How CSS works',
-        'Using_your_new_knowledge': 'Using your new knowledge',
-      'CSS_building_blocks': 'CSS building blocks',
-        'CSS_building_blocks_overview': 'CSS building blocks overview',
-        'Cascade_and_inheritance': 'Cascade and inheritance',
-        'CSS_selectors': 'CSS selectors',
-        'The_box_model': 'The box model',
-        'Backgrounds_and_borders': 'Backgrounds and borders',
-        'Handling_different_text_directions': 'Handling different text directions',
-        'Overflowing_content': 'Overflowing content',
-        'Values_and_units': 'Values and units',
-        'Sizing_items_in_CSS': 'Sizing items in CSS',
-        'Images_media_and_form_elements': 'Images, media, and form elements',
-        'Styling_tables': 'Styling tables',
-        'Debugging_CSS': 'Debugging CSS',
-        'Organizing_your_CSS': 'Organizing your CSS',
+      'CSS_first_steps': 'CSS 第一步',
+        'CSS_first_steps_overview': 'CSS第一步概览',
+        'What_is_CSS':  '什么是CSS',
+        'Getting_started_with_CSS': '让我们开始CSS之旅',
+        'How_CSS_is_structured': '如何让构建CSS',
+        'How_CSS_works': 'CSS如何运行',
+        'Using_your_new_knowledge': '运用你的新知识',
+      'CSS_building_blocks': 'CSS 构建基础',
+        'CSS_building_blocks_overview': 'CSS构建基础概览',
+        'Cascade_and_inheritance': '层叠与继承',
+        'CSS_selectors': 'CSS选择器',
+        'The_box_model': '盒模型',
+        'Backgrounds_and_borders': '背景与边框',
+        'Handling_different_text_directions': '处理不同方向的文本',
+        'Overflowing_content': '溢出的内容',
+        'Values_and_units': '值与单位',
+        'Sizing_items_in_CSS': '在CSS中调整大小',
+        'Images_media_and_form_elements': '图像、媒体和表单元素',
+        'Styling_tables': '样式化表格',
+        'Debugging_CSS': '调试CSS',
+        'Organizing_your_CSS': '组织你的CSS',
       'Styling_text': '样式化文字',
         'Styling_text_overview': '样式化文字概述',
         'Fundamental_text_and_font_styling': '基础文字与字体样式化',
@@ -924,19 +1081,19 @@ var text = mdn.localStringMap({
         'Styling_links': '样式化链接',
         'Web_fonts': 'Web 字体',
         'Assessment_typesetting_a_community_school_homepage': '作业：排版社区大学首页',
-      'CSS_layout': 'CSS 排版概述',
-        'CSS_layout_overview': 'CSS 版面配置概述',
-        'Normal_Flow': 'Normal Flow',
+      'CSS_layout': 'CSS 排版',
+        'CSS_layout_overview': 'CSS 排版概述',
+        'Normal_Flow': '正常布局流',
         'Flexbox': '弹性区块',
         'Grids' : '网格',
         'Floats': '浮动',
         'Positioning': '定位',
-        'Multiple-column_Layout': 'Multiple-column Layout',
-        'Responsive_design': 'Responsive design',
-        'Media_queries': 'Beginner\'s guide to media queries',
-        'Legacy_Layout_Methods': 'Legacy Layout Methods',
-        'Supporting_Older_Browsers': 'Supporting Older Browsers',
-        'Fundamental_Layout_Comprehension': 'Fundamental Layout Comprehension',
+        'Multiple-column_Layout': '多列布局',
+        'Responsive_design': '响应式布局',
+        'Media_queries': '媒体查询',
+        'Legacy_Layout_Methods': '传统的布局方法',
+        'Supporting_Older_Browsers': '支持旧的浏览器',
+        'Fundamental_Layout_Comprehension': '基础布局练习',
     'JavaScript_dynamic_client-side_scripting': 'JavaScript — 用户端动态脚本',
       'JavaScript_first_steps': 'JavaScript 第一步',
         'JavaScript_first_steps_overview': 'JavaScript 第一步概述',
@@ -967,14 +1124,14 @@ var text = mdn.localStringMap({
         'Working_with_JSON_data' : '使用 JSON 资料',
         'Object_building_practice' : '对象构建实践',
         'Assessment_Adding_features_to_our_bouncing_balls_demo' : '作业：为弹跳球展示新增功能',
-      'Asynchronous_JavaScript': 'Asynchronous JavaScript',
-        'Asynchronous_JavaScript_overview': 'Asynchronous JavaScript overview',
-        'General_asynchronous_programming_concepts': 'General asynchronous programming concepts',
-        'Introducing_asynchronous_JavaScript': 'Introducing asynchronous JavaScript',
-        'Timeouts_intervals': 'Cooperative asynchronous Java​Script: Timeouts and intervals',
-        'Promises': 'Graceful asynchronous programming with Promises',
-        'Async_await': 'Making asynchronous programming easier with async and await',
-        'Choosing_the_right_approach': 'Choosing the right approach',
+      'Asynchronous_JavaScript': '异步JavaScript',
+        'Asynchronous_JavaScript_overview': '异步JavaScript概览',
+        'General_asynchronous_programming_concepts': '通用异步编程概念',
+        'Introducing_asynchronous_JavaScript': '异步JavaScript简介',
+        'Timeouts_intervals': '合作异步JavaScript: 超时和间隔',
+        'Promises': 'Promises: 优雅的异步处理',
+        'Async_await': 'async和await:让异步编程更简单',
+        'Choosing_the_right_approach': '选择正确的方法',
       'Client-side_web_APIs': '客户端网页 API',
         'Client-side_web_APIs_Introduction': '网页 API 介绍',
         'Client-side_web_APIs_Manipulating_documents': '操纵文档',
@@ -983,24 +1140,24 @@ var text = mdn.localStringMap({
         'Client-side_web_APIs_Drawing_graphics': '画图',
         'Client-side_web_APIs_Video_and_audio_APIs': '视频与音频 API',
         'Client-side_web_APIs_client-side_storage': '客户端存储',
-    'Web_forms' : 'Web forms — Working with user data',
-      'Web_forms_core' : 'Core forms learning pathway',
-        'Web_forms_overview' : 'Web forms overview',
-        'Your_first_form' : 'Your first form',
-        'How_to_structure_a_web_form' : 'How to structure a web form',
-        'Basic_native_form_controls' : 'Basic native form controls',
-        'The_HTML5_input_types': 'The HTML5 input types',
-        'Other_form_controls': 'Other form controls',
-        'Styling_web_forms' : 'Styling web forms',
-        'Advanced_form_styling' : 'Advanced form styling',
-        'UI_pseudo-classes': 'UI pseudo-classes',
-        'Client-side_form_validation' : 'Client-side form validation',
-        'Sending_form_data' : 'Sending form data',
-      'Web_forms_advanced': 'Advanced forms articles',
-        'How_to_build_custom_form_controls' : 'How to build custom form controls',
-        'Sending_forms_through_JavaScript' : 'Sending forms through JavaScript',
-        'CSS_property_compatibility_table_for_form_controls' : 'CSS property compatibility table for form controls',
-	'Accessibility_—_Make_the_web_usable_by_everyone' : '可访问性 — 使每个人都能使用 Web',
+    'Web_forms' : 'Web表单 — 与用户数据打交道',
+      'Web_forms_core' : 'Web表单核心',
+        'Web_forms_overview' : 'Web表单概览',
+        'Your_first_form' : '你的第一个表单',
+        'How_to_structure_a_web_form' : '如何构造Web表单',
+        'Basic_native_form_controls' : '原生表单控件',
+        'The_HTML5_input_types': 'HTML5的input类型',
+        'Other_form_controls': '其它表单控件',
+        'Styling_web_forms' : '样式化Web表单',
+        'Advanced_form_styling' : '高级表单样式',
+        'UI_pseudo-classes': 'UI 伪类',
+        'Client-side_form_validation' : '客户端表单验证',
+        'Sending_form_data' : '发送表单数据',
+      'Web_forms_advanced': 'Web表单进阶',
+        'How_to_build_custom_form_controls' : '如何构造自定义表单控件',
+        'Sending_forms_through_JavaScript' : '使用JavaScript发送表单',
+        'CSS_property_compatibility_table_for_form_controls' : '表单组件兼容性列表',
+    'Accessibility_—_Make_the_web_usable_by_everyone' : '可访问性 — 使每个人都能使用 Web',
     'Accessibility_guides' : '可访问性指南',
     'Accessibility_assessment' : '可访问性测评',
       'Accessibility_overview' : '可访问性概览',
@@ -1022,15 +1179,59 @@ var text = mdn.localStringMap({
         'Implementing_feature_detection' : '建置功能侦测',
         'Introduction_to_automated_testing' : '自动测试介绍',
         'Setting_up_your_own_test_automation_environment' : '设置您的自动测试环境',
-      'Git_and_GitHub' : 'Git and GitHub',
-        'Git_and_GitHub_overview' : 'Git and GitHub overview',
-      'Understanding_client-side_web_development_tools' : 'Understanding client-side web development tools',
-        'Client-side_web_development_tools_index' : 'Client-side web development tools index',
-        'Client-side_tooling_overview' : 'Client-side tooling overview',
-        'Command_line_crash_course' : 'Command line crash course',
-        'Package_management_basics' : 'Package management basics',
-        'Introducing_a_complete_toolchain' : 'Introducing a complete toolchain',
-        'Deploying_our_app' : 'Deploying our app',
+      'Git_and_GitHub' : 'Git 和 GitHub',
+        'Git_and_GitHub_overview' : 'Git和GitHub 概览',
+      'Client-side_web_development_tools' : '客户端web开发工具',
+        'Client-side_web_development_tools_index' : '客户端web开发工具索引',
+        'Client-side_tooling_overview' : '客户端工具概览',
+        'Command_line_crash_course' : '命令行速成课',
+        'Package_management_basics' : '包管理基础',
+        'Introducing_a_complete_toolchain' : '一个完整的工具链',
+        'Deploying_our_app' : '发布你的应用',
+      'Introduction_to_client-side_frameworks': '客户端框架介绍',
+        'Client-side_frameworks_overview': '客户端框架概览',
+        'Framework_main_features': '框架的主要特性',
+      'React': 'React',
+        'Getting_started_with_React': 'Getting started with React',
+        'Beginning_our_React_todo_list': 'Beginning our React todo list',
+        'Componentizing_our_React_app': 'Componentizing our React app',
+        'React_interactivity:_Events_and_state': 'React interactivity: Events and state',
+        'React_interactivity:_Editing_filtering_conditional_rendering': 'React interactivity: Editing, filtering, conditional rendering',
+        'Accessibility_in_React': 'Accessibility in React',
+        'React_resources': 'React resources',
+      'Ember': 'Ember',
+        'Getting_started_with_Ember': 'Getting started with Ember',
+        'Ember_app_structure_and_componentization': 'Ember app structure and componentization',
+        'Ember_interactivity:_Events_classes_and_state': 'Ember interactivity: Events, classes and state',
+        'Ember_Interactivity:_Footer_functionality_conditional_rendering': 'Ember Interactivity: Footer functionality, conditional rendering',
+        'Routing_in_Ember': 'Routing in Ember',
+        'Ember_resources_and_troubleshooting': 'Ember resources and troubleshooting',
+      'Vue': 'Vue',
+        'Getting_started_with_Vue': '开始使用Vue',
+        'Creating_our_first_Vue_component': '创建第一个Vue组件',
+        'Rendering_a_list_of_Vue_components': '渲染一个Vue组件列表',
+        'Adding_a_new_todo_form:_Vue_events_methods_and_models': '添加一个新的TODO表单: Vue事件、方法、模型',
+        'Styling_Vue_components_with_CSS': '用CSS样式化Vue组件',
+        'Using_Vue_computed_properties': 'Using Vue computed properties',
+        'Vue_conditional_rendering:_editing_existing_todos': 'Vue conditional rendering: editing existing todos',
+        'Focus_management_with_Vue_refs': 'Focus management with Vue refs',
+        'Vue_resources': 'Vue resources',
+      'Svelte': 'Svelte',
+        'Getting_started_with_Svelte': 'Getting started with Svelte',
+        'Starting_our_Svelte_Todo_list_app': 'Starting our Svelte Todo list app',
+        'Dynamic_behavior_in_Svelte:_working_with_variables_and_props': 'Dynamic behavior in Svelte: working with variables and props',
+        'Componentizing_our_Svelte_app': 'Componentizing our Svelte app',
+        'Advanced_Svelte:_Reactivity_lifecycle_accessibility': 'Advanced Svelte: Reactivity, lifecycle, accessibility',
+        'Working_with_Svelte_stores': 'Working with Svelte stores',
+        'TypeScript_support_in_Svelte': 'TypeScript support in Svelte',
+        'Deployment_and_next_steps': 'Deployment and next steps',
+      'Angular': 'Angular',
+        'Getting_started_with_Angular': 'Getting started with Angular',
+        'Beginning_our_Angular_todo_list_app': 'Beginning our Angular todo list app',
+        'Styling_our_Angular_app': 'Styling our Angular app',
+        'Creating_an_item_component': 'Creating an item component',
+        'Filtering_our_to-do_items': 'Filtering our to-do items',
+        'Building_Angular_applications_and_further_resources': 'Building Angular applications and further resources',
     'Server-side_website_programming' : '服务端网页编程',
       'First_steps' : '第一步',
         'First_steps_overview' : '第一步概述',
@@ -1040,7 +1241,7 @@ var text = mdn.localStringMap({
         'Website_security' : '网站安全',
       'Django_web_framework_(Python)' : 'Django 网站框架 (Python)',
         'Django_web_framework_(Python)_overview' : 'Django 网站框架 (Python) 概述',
-        'Introduction' : '介绍',
+        'Django_introduction' : '介绍',
         'Setting_up_a_development_environment' : '搭建开发环境',
         'Tutorial_The_Local_Library_website' : '在线教学：本地图书馆网站',
         'Tutorial_Part_2_Creating_a_skeleton_website' : '在线教学 2：建立网站框架',
@@ -1055,7 +1256,7 @@ var text = mdn.localStringMap({
         'Tutorial_Part_11_Deploying_Django_to_production' : '在线教学 11：部署 Django 至产品',
         'Web_application_security' : 'Web 应用安全性',
         'Assessment_DIY_mini_blog' : '作业：DIY 博客',
-	  'Express_Web_Framework_(Node.js_JavaScript)' : 'Express 网页框架 (node.js/JavaScript)',
+        'Express_Web_Framework_(Node.js_JavaScript)' : 'Express 网页框架 (node.js/JavaScript)',
         'Express_Web_Framework_(Node.js_JavaScript)_overview' : 'Express 网页框架 (Node.js/JavaScript) 概览',
         'Express_Node_introduction' : 'Express/Node 介绍',
         'Setting_up_a_Node_(Express)_development_environment' : '架设 Node (Express) 开发环境',
@@ -1070,10 +1271,9 @@ var text = mdn.localStringMap({
     'Common_questions': '常见问题',
       'HTML_questions': 'HTML 问题',
       'CSS_questions': 'CSS 问题',
-      'How_the_Web_works': 'Web 是如何运作的',
+      'Web_mechanics': 'Web 是如何运作的',
       'Tools_and_setup': '工具与安装',
       'Design_and_accessibility': '设计与可访问性',
-    'How_to_contribute': '如何贡献'
   },
   'zh-TW': {
     'Complete_beginners': '全新手請從這開始！',
@@ -1107,15 +1307,20 @@ var text = mdn.localStringMap({
         'Adding_vector_graphics_to_the_Web': '為 Web 新增向量圖',
         'Responsive_images': '適應性圖片',
         'Assessment_Mozilla_splash_page': '親和度：Mozilla 形象頁面',
+      'HTML_tables' : 'HTML 表格',
+        'HTML_tables_overview' : 'HTML 表格概述',
+        'HTML_table_basics' : 'HTML表格基礎',
+        'HTML_table_advanced' : 'HTML Table advanced features and accessibility',
+        'Assessment_Structuring_planet_data' : 'Assessment: Structuring planet data',
     'CSS_styling_the_Web': 'CSS — 設計 Web 的風格',
-      'CSS_first_steps': 'CSS first steps',
-        'CSS_first_steps_overview': 'CSS first steps overview',
-        'What_is_CSS':  'What is CSS?',
-        'Getting_started_with_CSS': 'Getting started with CSS',
+      'CSS_first_steps': '初探 CSS',
+        'CSS_first_steps_overview': '初探 CSS（概述）',
+        'What_is_CSS':  'CSS 是什麼？',
+        'Getting_started_with_CSS': 'CSS 入門',
         'How_CSS_is_structured': 'How CSS is structured',
-        'How_CSS_works': 'How CSS works',
+        'How_CSS_works': 'CSS 怎麼運作',
         'Using_your_new_knowledge': 'Using your new knowledge',
-      'CSS_building_blocks': 'CSS building blocks',
+      'CSS_building_blocks': 'CSS 組件',
         'CSS_building_blocks_overview': 'CSS building blocks overview',
         'Cascade_and_inheritance': 'Cascade and inheritance',
         'CSS_selectors': 'CSS selectors',
@@ -1179,7 +1384,7 @@ var text = mdn.localStringMap({
         'Working_with_JSON_data' : '使用 JSON 資料',
         'Object_building_practice' : '物件建構實作',
         'Assessment_Adding_features_to_our_bouncing_balls_demo' : '親合度：為彈跳球展示新增功能',
-      'Asynchronous_JavaScript': 'Asynchronous JavaScript',
+      'Asynchronous_JavaScript': '非同步的 JavaScript',
         'Asynchronous_JavaScript_overview': 'Asynchronous JavaScript overview',
         'General_asynchronous_programming_concepts': 'General asynchronous programming concepts',
         'Introducing_asynchronous_JavaScript': 'Introducing asynchronous JavaScript',
@@ -1187,19 +1392,19 @@ var text = mdn.localStringMap({
         'Promises': 'Graceful asynchronous programming with Promises',
         'Async_await': 'Making asynchronous programming easier with async and await',
         'Choosing_the_right_approach': 'Choosing the right approach',
-      'Client-side_web_APIs': 'Client-side web APIs',
+      'Client-side_web_APIs': '客戶端 web APIs',
         'Client-side_web_APIs_Introduction': 'Introduction to web APIs',
-        'Client-side_web_APIs_Manipulating_documents': 'Manipulating documents',
+        'Client-side_web_APIs_Manipulating_documents': '文件操作',
         'Client-side_web_APIs_Fetching_data': 'Fetching data from the server',
         'Client-side_web_APIs_Third_party_APIs': 'Third party APIs',
         'Client-side_web_APIs_Drawing_graphics': 'Drawing graphics',
         'Client-side_web_APIs_Video_and_audio_APIs': 'Video and audio APIs',
         'Client-side_web_APIs_client-side_storage': 'Client-side storage',
-    'Web_forms' : 'Web forms — Working with user data',
-      'Web_forms_core' : 'Core forms learning pathway',
-        'Web_forms_overview' : 'Web forms overview',
+    'Web_forms' : '網頁表單-與使用者資料合作',
+      'Web_forms_core' : '核心的表單學習途徑',
+        'Web_forms_overview' : '網頁表單概述',
         'Your_first_form' : 'Your first form',
-        'How_to_structure_a_web_form' : 'How to structure a web form',
+        'How_to_structure_a_web_form' : '如何建構網頁表單',
         'Basic_native_form_controls' : 'Basic native form controls',
         'The_HTML5_input_types': 'The HTML5 input types',
         'Other_form_controls': 'Other form controls',
@@ -1208,10 +1413,21 @@ var text = mdn.localStringMap({
         'UI_pseudo-classes': 'UI pseudo-classes',
         'Client-side_form_validation' : 'Client-side form validation',
         'Sending_form_data' : 'Sending form data',
-      'Web_forms_advanced': 'Advanced forms articles',
+      'Web_forms_advanced': '深入網頁表單',
         'How_to_build_custom_form_controls' : 'How to build custom form controls',
         'Sending_forms_through_JavaScript' : 'Sending forms through JavaScript',
         'CSS_property_compatibility_table_for_form_controls' : 'CSS property compatibility table for form controls',
+    'Accessibility_—_Make_the_web_usable_by_everyone' : '無障礙網頁 — 每個人都可以使用的網頁',
+    'Accessibility_guides' : '無障礙網頁指南',
+    'Accessibility_assessment' : '無障礙網頁評估',
+      'Accessibility_overview' : '無障礙網頁概述',
+      'What_is_accessibility' : '何謂無障礙網頁？',
+      'HTML_a_good_basis_for_accessibility' : 'HTML: A good basis for accessibility',
+      'CSS_and_JavaScript_accessibility_best_practices' : 'CSS and JavaScript accessibility best practices',
+      'WAI-ARIA_basics' : 'WAI-ARIA 基礎',
+      'Accessible_multimedia' : 'Accessible multimedia',
+      'Mobile_accessibility' : '行動裝置上的無障礙',
+      'Assessment_Accessibility_troubleshooting' : 'Assessment: Accessibility troubleshooting',
     'Tools_and_testing' : '工具與測試',
       'Cross_browser_testing' : '跨瀏覽器測試',
         'Cross_browser_testing_overview' : '跨瀏覽器測試概述',
@@ -1224,14 +1440,58 @@ var text = mdn.localStringMap({
         'Introduction_to_automated_testing' : '自動化測試介紹',
         'Setting_up_your_own_test_automation_environment' : '設定自己的自動化測試環境',
       'Git_and_GitHub' : 'Git and GitHub',
-        'Git_and_GitHub_overview' : 'Git and GitHub overview',
-      'Understanding_client-side_web_development_tools' : 'Understanding client-side web development tools',
+        'Git_and_GitHub_overview' : 'Git and GitHub 概述',
+      'Client-side_web_development_tools' : 'Client-side web development tools',
         'Client-side_web_development_tools_index' : 'Client-side web development tools index',
         'Client-side_tooling_overview' : 'Client-side tooling overview',
         'Command_line_crash_course' : 'Command line crash course',
         'Package_management_basics' : 'Package management basics',
         'Introducing_a_complete_toolchain' : 'Introducing a complete toolchain',
         'Deploying_our_app' : 'Deploying our app',
+      'Introduction_to_client-side_frameworks': '介紹前端框架',
+        'Client-side_frameworks_overview': '前端框架簡介',
+        'Framework_main_features': 'Framework main features',
+      'React': 'React',
+        'Getting_started_with_React': 'Getting started with React',
+        'Beginning_our_React_todo_list': 'Beginning our React todo list',
+        'Componentizing_our_React_app': 'Componentizing our React app',
+        'React_interactivity:_Events_and_state': 'React interactivity: Events and state',
+        'React_interactivity:_Editing_filtering_conditional_rendering': 'React interactivity: Editing, filtering, conditional rendering',
+        'Accessibility_in_React': 'Accessibility in React',
+        'React_resources': 'React resources',
+      'Ember': 'Ember',
+        'Getting_started_with_Ember': 'Getting started with Ember',
+        'Ember_app_structure_and_componentization': 'Ember app structure and componentization',
+        'Ember_interactivity:_Events_classes_and_state': 'Ember interactivity: Events, classes and state',
+        'Ember_Interactivity:_Footer_functionality_conditional_rendering': 'Ember Interactivity: Footer functionality, conditional rendering',
+        'Routing_in_Ember': 'Routing in Ember',
+        'Ember_resources_and_troubleshooting': 'Ember resources and troubleshooting',
+      'Vue': 'Vue',
+        'Getting_started_with_Vue': '開始學 Vue',
+        'Creating_our_first_Vue_component': 'Creating our first Vue component',
+        'Rendering_a_list_of_Vue_components': 'Rendering a list of Vue components',
+        'Adding_a_new_todo_form:_Vue_events_methods_and_models': 'Adding a new todo form: Vue events, methods, and models',
+        'Styling_Vue_components_with_CSS': 'Styling Vue components with CSS',
+        'Using_Vue_computed_properties': 'Using Vue computed properties',
+        'Vue_conditional_rendering:_editing_existing_todos': 'Vue conditional rendering: editing existing todos',
+        'Focus_management_with_Vue_refs': 'Focus management with Vue refs',
+        'Vue_resources': 'Vue resources',
+      'Svelte': 'Svelte',
+        'Getting_started_with_Svelte': 'Svelte 入門',
+        'Starting_our_Svelte_Todo_list_app': 'Starting our Svelte Todo list app',
+        'Dynamic_behavior_in_Svelte:_working_with_variables_and_props': 'Dynamic behavior in Svelte: working with variables and props',
+        'Componentizing_our_Svelte_app': 'Componentizing our Svelte app',
+        'Advanced_Svelte:_Reactivity_lifecycle_accessibility': 'Advanced Svelte: Reactivity, lifecycle, accessibility',
+        'Working_with_Svelte_stores': 'Working with Svelte stores',
+        'TypeScript_support_in_Svelte': 'TypeScript support in Svelte',
+        'Deployment_and_next_steps': 'Deployment and next steps',
+      'Angular': 'Angular',
+        'Getting_started_with_Angular': 'Angular 新手入門',
+        'Beginning_our_Angular_todo_list_app': '開始開發我們的 Angular 待辦事項應用程式',
+        'Styling_our_Angular_app': '使用樣式點綴我們的 Angular 應用程式',
+        'Creating_an_item_component': '建立一個 item 元件',
+        'Filtering_our_to-do_items': '篩選我們的待辦事項項目',
+        'Building_Angular_applications_and_further_resources': '建構 Angular 應用程式與更多資源',
     'Server-side_website_programming' : '伺服端網站程式設計',
       'First_steps' : '第一步',
         'First_steps_overview' : '第一步概述',
@@ -1241,7 +1501,7 @@ var text = mdn.localStringMap({
         'Website_security' : '網站安全',
       'Django_web_framework_(Python)' : 'Django 網站框架 (Python)',
         'Django_web_framework_(Python)_overview' : 'Django 網站框架 (Python) 概述',
-        'Introduction' : '介紹',
+        'Django_introduction' : '介紹',
         'Setting_up_a_development_environment' : '設定開發環境',
         'Tutorial_The_Local_Library_website' : '線上教學：本地圖書館網站',
         'Tutorial_Part_2_Creating_a_skeleton_website' : '線上教學 2：建立網站骨架',
@@ -1256,14 +1516,24 @@ var text = mdn.localStringMap({
         'Tutorial_Part_11_Deploying_Django_to_production' : '線上教學 11：佈署 Django 至產品',
         'Web_application_security' : 'Web App 安全性',
         'Assessment_DIY_mini_blog' : '親合度：DIY 迷你部落格',
+      'Express_Web_Framework_(Node.js_JavaScript)' : 'Express 網站框架 (node.js/JavaScript)',
+        'Express_Web_Framework_(Node.js_JavaScript)_overview' : 'Express 網站框架 (Node.js/JavaScript) 概述',
+        'Express_Node_introduction' : 'Express/Node 介紹',
+        'Setting_up_a_Node_(Express)_development_environment' : '設定 Node (Express) 的開發環境',
+        'Express_Tutorial_The_Local_Library_website' : 'Express 教學 1: 本地圖書館網站',
+        'Express_Tutorial_Part_2_Creating_a_skeleton_website' : 'Express 教學 2: 建立骨架網站',
+        'Express_Tutorial_Part_3_Using_a_database_(with_Mongoose)' : 'Express 教學 3: 使用資料庫 (Mongoose)',
+        'Express_Tutorial_Part_4_Routes_and_controllers' : 'Express 教學 4: 路由與控制器',
+        'Express_Tutorial_Part_5_Displaying_library_data' : 'Express 教程 5: 呈現圖書館的資料',
+        'Express_Tutorial_Part_6_Working_with_forms' : 'Express 教學 6: 使用表單',
+        'Express_Tutorial_Part_7_Deploying_to_production' : 'Express 教學 7: 佈署到正式環境',
     'Further_resources': '更多資源',
     'Common_questions': '常見問題',
       'HTML_questions': 'HTML 問題',
       'CSS_questions': 'CSS 問題',
-      'How_the_Web_works': 'Web 的運作方式',
+      'Web_mechanics': 'Web 的運作方式',
       'Tools_and_setup': '工具與設定',
       'Design_and_accessibility': '設計與親合度',
-    'How_to_contribute': '如何貢獻'
   },
   'fr': {
     'Complete_beginners': 'Bienvenue aux débutants !',
@@ -1358,7 +1628,7 @@ var text = mdn.localStringMap({
         'Assessment_typesetting_a_community_school_homepage': 'Assessment: Typesetting a community school homepage',
       'CSS_layout': 'CSS layout',
         'CSS_layout_overview': 'CSS layout overview',
-        'Introduction' : 'Introduction to CSS layout',
+        'Layout_introduction' : 'Introduction to CSS layout',
         'Normal_Flow' : 'Normal Flow',
         'Flexbox': 'Flexbox',
         'Grids' : 'Grids',
@@ -1457,13 +1727,57 @@ var text = mdn.localStringMap({
         'Setting_up_your_own_test_automation_environment' : 'Setting up your own test automation environment',
       'Git_and_GitHub' : 'Git and GitHub',
         'Git_and_GitHub_overview' : 'Git and GitHub overview',
-      'Understanding_client-side_web_development_tools' : 'Understanding client-side web development tools',
+      'Client-side_web_development_tools' : 'Client-side web development tools',
         'Client-side_web_development_tools_index' : 'Client-side web development tools index',
         'Client-side_tooling_overview' : 'Client-side tooling overview',
         'Command_line_crash_course' : 'Command line crash course',
         'Package_management_basics' : 'Package management basics',
         'Introducing_a_complete_toolchain' : 'Introducing a complete toolchain',
         'Deploying_our_app' : 'Deploying our app',
+      'Introduction_to_client-side_frameworks': 'Introduction to client-side frameworks',
+        'Client-side_frameworks_overview': 'Client-side frameworks overview',
+        'Framework_main_features': 'Framework main features',
+      'React': 'React',
+        'Getting_started_with_React': 'Getting started with React',
+        'Beginning_our_React_todo_list': 'Beginning our React todo list',
+        'Componentizing_our_React_app': 'Componentizing our React app',
+        'React_interactivity:_Events_and_state': 'React interactivity: Events and state',
+        'React_interactivity:_Editing_filtering_conditional_rendering': 'React interactivity: Editing, filtering, conditional rendering',
+        'Accessibility_in_React': 'Accessibility in React',
+        'React_resources': 'React resources',
+      'Ember': 'Ember',
+        'Getting_started_with_Ember': 'Getting started with Ember',
+        'Ember_app_structure_and_componentization': 'Ember app structure and componentization',
+        'Ember_interactivity:_Events_classes_and_state': 'Ember interactivity: Events, classes and state',
+        'Ember_Interactivity:_Footer_functionality_conditional_rendering': 'Ember Interactivity: Footer functionality, conditional rendering',
+        'Routing_in_Ember': 'Routing in Ember',
+        'Ember_resources_and_troubleshooting': 'Ember resources and troubleshooting',
+      'Vue': 'Vue',
+        'Getting_started_with_Vue': 'Getting started with Vue',
+        'Creating_our_first_Vue_component': 'Creating our first Vue component',
+        'Rendering_a_list_of_Vue_components': 'Rendering a list of Vue components',
+        'Adding_a_new_todo_form:_Vue_events_methods_and_models': 'Adding a new todo form: Vue events, methods, and models',
+        'Styling_Vue_components_with_CSS': 'Styling Vue components with CSS',
+        'Using_Vue_computed_properties': 'Using Vue computed properties',
+        'Vue_conditional_rendering:_editing_existing_todos': 'Vue conditional rendering: editing existing todos',
+        'Focus_management_with_Vue_refs': 'Focus management with Vue refs',
+        'Vue_resources': 'Vue resources',
+      'Svelte': 'Svelte',
+        'Getting_started_with_Svelte': 'Getting started with Svelte',
+        'Starting_our_Svelte_Todo_list_app': 'Starting our Svelte Todo list app',
+        'Dynamic_behavior_in_Svelte:_working_with_variables_and_props': 'Dynamic behavior in Svelte: working with variables and props',
+        'Componentizing_our_Svelte_app': 'Componentizing our Svelte app',
+        'Advanced_Svelte:_Reactivity_lifecycle_accessibility': 'Advanced Svelte: Reactivity, lifecycle, accessibility',
+        'Working_with_Svelte_stores': 'Working with Svelte stores',
+        'TypeScript_support_in_Svelte': 'TypeScript support in Svelte',
+        'Deployment_and_next_steps': 'Deployment and next steps',
+      'Angular': 'Angular',
+        'Getting_started_with_Angular': 'Getting started with Angular',
+        'Beginning_our_Angular_todo_list_app': 'Beginning our Angular todo list app',
+        'Styling_our_Angular_app': 'Styling our Angular app',
+        'Creating_an_item_component': 'Creating an item component',
+        'Filtering_our_to-do_items': 'Filtering our to-do items',
+        'Building_Angular_applications_and_further_resources': 'Building Angular applications and further resources',
     'Server-side_website_programming' : 'Server-side website programming',
       'First_steps' : 'First steps',
         'First_steps_overview' : 'First steps overview',
@@ -1473,7 +1787,7 @@ var text = mdn.localStringMap({
         'Website_security' : 'Website security',
       'Django_web_framework_(Python)' : 'Django web framework (Python)',
         'Django_web_framework_(Python)_overview' : 'Django web framework (Python) overview',
-        'Introduction' : 'Introduction',
+        'Django_introduction' : 'Introduction',
         'Setting_up_a_development_environment' : 'Setting up a development environment',
         'Tutorial_The_Local_Library_website' : 'Tutorial: The Local Library website',
         'Tutorial_Part_2_Creating_a_skeleton_website' : 'Tutorial Part 2: Creating a skeleton website',
@@ -1504,10 +1818,9 @@ var text = mdn.localStringMap({
       'HTML_questions': 'HTML questions',
       'CSS_questions': 'CSS questions',
       'JavaScript_questions': 'JavaScript questions',
-      'How_the_Web_works': 'How the Web works',
+      'Web_mechanics': 'Web mechanics',
       'Tools_and_setup': 'Tools and setup',
       'Design_and_accessibility': 'Design and accessibility',
-    'How_to_contribute': 'How to contribute'
   }
 });
 %>
@@ -1626,7 +1939,7 @@ var text = mdn.localStringMap({
           <summary><%=text['CSS_layout']%></summary>
           <ol>
             <li><a href="<%=baseURL%>CSS/CSS_layout"><%=text['CSS_layout_overview']%></a></li>
-            <li><a href="<%=baseURL%>CSS/CSS_layout/Introduction"><%=text['Introduction']%></a></li>
+            <li><a href="<%=baseURL%>CSS/CSS_layout/Introduction"><%=text['Layout_introduction']%></a></li>
             <li><a href="<%=baseURL%>CSS/CSS_layout/Normal_Flow"><%=text['Normal_Flow']%></a></li>
             <li><a href="<%=baseURL%>CSS/CSS_layout/Flexbox"><%=text['Flexbox']%></a></li>
             <li><a href="<%=baseURL%>CSS/CSS_layout/Grids"><%=text['Grids']%></a></li>
@@ -1772,18 +2085,95 @@ var text = mdn.localStringMap({
   </li>
   <li><a href="<%=baseURL%>Tools_and_testing"><strong><%=text['Tools_and_testing']%></strong></a></li>
   <li class="toggle">
-    <details <%=currentPageIsUnder('Tools_and_testing/Cross_browser_testing')%>>
-        <summary><%=text['Cross_browser_testing']%></summary>
+    <details <%=currentPageIsUnder('Tools_and_testing/Understanding_client-side_tools')%>>
+        <summary><%=text['Client-side_web_development_tools']%></summary>
         <ol>
-          <li><a href="<%=baseURL%>Tools_and_testing/Cross_browser_testing"><%=text['Cross_browser_testing_overview']%></a></li>
-          <li><a href="<%=baseURL%>Tools_and_testing/Cross_browser_testing/Introduction"><%=text['Introduction_to_cross_browser_testing']%></a></li>
-          <li><a href="<%=baseURL%>Tools_and_testing/Cross_browser_testing/Testing_strategies"><%=text['Strategies_for_carrying_out_testing']%></a></li>
-          <li><a href="<%=baseURL%>Tools_and_testing/Cross_browser_testing/HTML_and_CSS"><%=text['Handling_common_HTML_and_CSS_problems']%></a></li>
-          <li><a href="<%=baseURL%>Tools_and_testing/Cross_browser_testing/JavaScript"><%=text['Handling_common_JavaScript_problems']%></a></li>
-          <li><a href="<%=baseURL%>Tools_and_testing/Cross_browser_testing/Accessibility"><%=text['Handling_common_accessibility_problems']%></a></li>
-          <li><a href="<%=baseURL%>Tools_and_testing/Cross_browser_testing/Feature_detection"><%=text['Implementing_feature_detection']%></a></li>
-          <li><a href="<%=baseURL%>Tools_and_testing/Cross_browser_testing/Automated_testing"><%=text['Introduction_to_automated_testing']%></a></li>
-          <li><a href="<%=baseURL%>Tools_and_testing/Cross_browser_testing/Your_own_automation_environment"><%=text['Setting_up_your_own_test_automation_environment']%></a></li>
+          <li><a href="<%=baseURL%>Tools_and_testing/Understanding_client-side_tools"><%=text['Client-side_web_development_tools_index']%></a></li>
+          <li><a href="<%=baseURL%>Tools_and_testing/Understanding_client-side_tools/Overview"><%=text['Client-side_tooling_overview']%></a></li>
+          <li><a href="<%=baseURL%>Tools_and_testing/Understanding_client-side_tools/Command_line"><%=text['Command_line_crash_course']%></a></li>
+          <li><a href="<%=baseURL%>Tools_and_testing/Understanding_client-side_tools/Package_management"><%=text['Package_management_basics']%></a></li>
+          <li><a href="<%=baseURL%>Tools_and_testing/Understanding_client-side_tools/Introducing_complete_toolchain"><%=text['Introducing_a_complete_toolchain']%></a></li>
+          <li><a href="<%=baseURL%>Tools_and_testing/Understanding_client-side_tools/Deployment"><%=text['Deploying_our_app']%></a></li>
+        </ol>
+    </details>
+  </li>
+  <li class="toggle">
+    <details <%=currentPageIsUnder('Tools_and_testing/Client-side_JavaScript_frameworks')%>>
+        <summary><%=text['Introduction_to_client-side_frameworks']%></summary>
+        <ol>
+          <li><a href="<%=baseURL%>Tools_and_testing/Client-side_JavaScript_frameworks/Introduction"><%=text['Client-side_frameworks_overview']%></a></li>
+          <li><a href="<%=baseURL%>Tools_and_testing/Client-side_JavaScript_frameworks/Main_features"><%=text['Framework_main_features']%></a></li>
+        </ol>
+    </details>
+  </li>
+  <li class="toggle">
+    <details <%=currentPageIsUnder('Tools_and_testing/Client-side_JavaScript_frameworks')%>>
+        <summary><%=text['React']%></summary>
+        <ol>
+          <li><a href="<%=baseURL%>Tools_and_testing/Client-side_JavaScript_frameworks/React_getting_started"><%=text['Getting_started_with_React']%></a></li>
+          <li><a href="<%=baseURL%>Tools_and_testing/Client-side_JavaScript_frameworks/React_todo_list_beginning"><%=text['Beginning_our_React_todo_list']%></a></li>
+          <li><a href="<%=baseURL%>Tools_and_testing/Client-side_JavaScript_frameworks/React_components"><%=text['Componentizing_our_React_app']%></a></li>
+          <li><a href="<%=baseURL%>Tools_and_testing/Client-side_JavaScript_frameworks/React_interactivity_events_state"><%=text['React_interactivity:_Events_and_state']%></a></li>
+          <li><a href="<%=baseURL%>Tools_and_testing/Client-side_JavaScript_frameworks/React_interactivity_filtering_conditional_rendering"><%=text['React_interactivity:_Editing_filtering_conditional_rendering']%></a></li>
+          <li><a href="<%=baseURL%>Tools_and_testing/Client-side_JavaScript_frameworks/React_accessibility"><%=text['Accessibility_in_React']%></a></li>
+          <li><a href="<%=baseURL%>Tools_and_testing/Client-side_JavaScript_frameworks/React_resources"><%=text['React_resources']%></a></li>
+        </ol>
+    </details>
+  </li>
+  <li class="toggle">
+    <details <%=currentPageIsUnder('Tools_and_testing/Client-side_JavaScript_frameworks')%>>
+        <summary><%=text['Ember']%></summary>
+        <ol>
+          <li><a href="<%=baseURL%>Tools_and_testing/Client-side_JavaScript_frameworks/Ember_getting_started"><%=text['Getting_started_with_Ember']%></a></li>
+          <li><a href="<%=baseURL%>Tools_and_testing/Client-side_JavaScript_frameworks/Ember_structure_componentization"><%=text['Ember_app_structure_and_componentization']%></a></li>
+          <li><a href="<%=baseURL%>Tools_and_testing/Client-side_JavaScript_frameworks/Ember_interactivity_events_state"><%=text['Ember_interactivity:_Events_classes_and_state']%></a></li>
+          <li><a href="<%=baseURL%>Tools_and_testing/Client-side_JavaScript_frameworks/Ember_conditional_footer"><%=text['Ember_Interactivity:_Footer_functionality_conditional_rendering']%></a></li>
+          <li><a href="<%=baseURL%>Tools_and_testing/Client-side_JavaScript_frameworks/Ember_routing"><%=text['Routing_in_Ember']%></a></li>
+          <li><a href="<%=baseURL%>Tools_and_testing/Client-side_JavaScript_frameworks/Ember_resources"><%=text['Ember_resources_and_troubleshooting']%></a></li>
+        </ol>
+    </details>
+  </li>
+  <li class="toggle">
+    <details <%=currentPageIsUnder('Tools_and_testing/Client-side_JavaScript_frameworks')%>>
+        <summary><%=text['Vue']%></summary>
+        <ol>
+          <li><a href="<%=baseURL%>Tools_and_testing/Client-side_JavaScript_frameworks/Vue_getting_started"><%=text['Getting_started_with_Vue']%></a></li>
+          <li><a href="<%=baseURL%>Tools_and_testing/Client-side_JavaScript_frameworks/Vue_first_component"><%=text['Creating_our_first_Vue_component']%></a></li>
+          <li><a href="<%=baseURL%>Tools_and_testing/Client-side_JavaScript_frameworks/Vue_rendering_lists"><%=text['Rendering_a_list_of_Vue_components']%></a></li>
+          <li><a href="<%=baseURL%>Tools_and_testing/Client-side_JavaScript_frameworks/Vue_methods_events_models"><%=text['Adding_a_new_todo_form:_Vue_events_methods_and_models']%></a></li>
+          <li><a href="<%=baseURL%>Tools_and_testing/Client-side_JavaScript_frameworks/Vue_styling"><%=text['Styling_Vue_components_with_CSS']%></a></li>
+          <li><a href="<%=baseURL%>Tools_and_testing/Client-side_JavaScript_frameworks/Vue_computed_properties"><%=text['Using_Vue_computed_properties']%></a></li>
+          <li><a href="<%=baseURL%>Tools_and_testing/Client-side_JavaScript_frameworks/Vue_conditional_rendering  "><%=text['Vue_conditional_rendering:_editing_existing_todos']%></a></li>
+          <li><a href="<%=baseURL%>Tools_and_testing/Client-side_JavaScript_frameworks/Vue_refs_focus_management"><%=text['Focus_management_with_Vue_refs']%></a></li>
+          <li><a href="<%=baseURL%>Tools_and_testing/Client-side_JavaScript_frameworks/Vue_resources"><%=text['Vue_resources']%></a></li>
+        </ol>
+    </details>
+  </li>
+  <li class="toggle">
+    <details <%=currentPageIsUnder('Tools_and_testing/Client-side_JavaScript_frameworks')%>>
+        <summary><%=text['Svelte']%></summary>
+        <ol>
+          <li><a href="<%=baseURL%>Tools_and_testing/Client-side_JavaScript_frameworks/Svelte_getting_started"><%=text['Getting_started_with_Svelte']%></a></li>
+          <li><a href="<%=baseURL%>Tools_and_testing/Client-side_JavaScript_frameworks/Svelte_Todo_list_beginning"><%=text['Starting_our_Svelte_Todo_list_app']%></a></li>
+          <li><a href="<%=baseURL%>Tools_and_testing/Client-side_JavaScript_frameworks/Svelte_variables_props"><%=text['Dynamic_behavior_in_Svelte:_working_with_variables_and_props']%></a></li>
+          <li><a href="<%=baseURL%>Tools_and_testing/Client-side_JavaScript_frameworks/Svelte_components"><%=text['Componentizing_our_Svelte_app']%></a></li>
+          <li><a href="<%=baseURL%>Tools_and_testing/Client-side_JavaScript_frameworks/Svelte_reactivity_lifecycle_accessibility"><%=text['Advanced_Svelte:_Reactivity_lifecycle_accessibility']%></a></li>
+          <li><a href="<%=baseURL%>Tools_and_testing/Client-side_JavaScript_frameworks/Svelte_stores"><%=text['Working_with_Svelte_stores']%></a></li>
+          <li><a href="<%=baseURL%>Tools_and_testing/Client-side_JavaScript_frameworks/Svelte_TypeScript  "><%=text['TypeScript_support_in_Svelte']%></a></li>
+          <li><a href="<%=baseURL%>Tools_and_testing/Client-side_JavaScript_frameworks/Svelte_deployment_next"><%=text['Deployment_and_next_steps']%></a></li>
+        </ol>
+    </details>
+  </li>
+  <li class="toggle">
+    <details <%=currentPageIsUnder('Tools_and_testing/Client-side_JavaScript_frameworks')%>>
+        <summary><%=text['Angular']%></summary>
+        <ol>
+          <li><a href="<%=baseURL%>Tools_and_testing/Client-side_JavaScript_frameworks/Angular_getting_started"><%=text['Getting_started_with_Angular']%></a></li>
+          <li><a href="<%=baseURL%>Tools_and_testing/Client-side_JavaScript_frameworks/Angular_todo_list_beginning"><%=text['Beginning_our_Angular_todo_list_app']%></a></li>
+          <li><a href="<%=baseURL%>Tools_and_testing/Client-side_JavaScript_frameworks/Angular_styling"><%=text['Styling_our_Angular_app']%></a></li>
+          <li><a href="<%=baseURL%>Tools_and_testing/Client-side_JavaScript_frameworks/Angular_item_component"><%=text['Creating_an_item_component']%></a></li>
+          <li><a href="<%=baseURL%>Tools_and_testing/Client-side_JavaScript_frameworks/Angular_filtering"><%=text['Filtering_our_to-do_items']%></a></li>
+          <li><a href="<%=baseURL%>Tools_and_testing/Client-side_JavaScript_frameworks/Angular_building"><%=text['Building_Angular_applications_and_further_resources']%></a></li>
         </ol>
     </details>
   </li>
@@ -1801,15 +2191,18 @@ var text = mdn.localStringMap({
     </details>
   </li>
   <li class="toggle">
-    <details <%=currentPageIsUnder('Tools_and_testing/Understanding_client-side_tools')%>>
-        <summary><%=text['Understanding_client-side_web_development_tools']%></summary>
+    <details <%=currentPageIsUnder('Tools_and_testing/Cross_browser_testing')%>>
+        <summary><%=text['Cross_browser_testing']%></summary>
         <ol>
-          <li><a href="<%=baseURL%>Tools_and_testing/Understanding_client-side_tools"><%=text['Client-side_web_development_tools_index']%></a></li>
-          <li><a href="<%=baseURL%>Tools_and_testing/Understanding_client-side_tools/Overview"><%=text['Client-side_tooling_overview']%></a></li>
-          <li><a href="<%=baseURL%>Tools_and_testing/Understanding_client-side_tools/Command_line"><%=text['Command_line_crash_course']%></a></li>
-          <li><a href="<%=baseURL%>Tools_and_testing/Understanding_client-side_tools/Package_management"><%=text['Package_management_basics']%></a></li>
-          <li><a href="<%=baseURL%>Tools_and_testing/Understanding_client-side_tools/Introducing_complete_toolchain"><%=text['Introducing_a_complete_toolchain']%></a></li>
-          <li><a href="<%=baseURL%>Tools_and_testing/Understanding_client-side_tools/Deployment"><%=text['Deploying_our_app']%></a></li>
+          <li><a href="<%=baseURL%>Tools_and_testing/Cross_browser_testing"><%=text['Cross_browser_testing_overview']%></a></li>
+          <li><a href="<%=baseURL%>Tools_and_testing/Cross_browser_testing/Introduction"><%=text['Introduction_to_cross_browser_testing']%></a></li>
+          <li><a href="<%=baseURL%>Tools_and_testing/Cross_browser_testing/Testing_strategies"><%=text['Strategies_for_carrying_out_testing']%></a></li>
+          <li><a href="<%=baseURL%>Tools_and_testing/Cross_browser_testing/HTML_and_CSS"><%=text['Handling_common_HTML_and_CSS_problems']%></a></li>
+          <li><a href="<%=baseURL%>Tools_and_testing/Cross_browser_testing/JavaScript"><%=text['Handling_common_JavaScript_problems']%></a></li>
+          <li><a href="<%=baseURL%>Tools_and_testing/Cross_browser_testing/Accessibility"><%=text['Handling_common_accessibility_problems']%></a></li>
+          <li><a href="<%=baseURL%>Tools_and_testing/Cross_browser_testing/Feature_detection"><%=text['Implementing_feature_detection']%></a></li>
+          <li><a href="<%=baseURL%>Tools_and_testing/Cross_browser_testing/Automated_testing"><%=text['Introduction_to_automated_testing']%></a></li>
+          <li><a href="<%=baseURL%>Tools_and_testing/Cross_browser_testing/Your_own_automation_environment"><%=text['Setting_up_your_own_test_automation_environment']%></a></li>
         </ol>
     </details>
   </li>
@@ -1831,7 +2224,7 @@ var text = mdn.localStringMap({
         <summary><%=text['Django_web_framework_(Python)']%></summary>
         <ol>
           <li><a href="<%=baseURL%>Server-side/Django"><%=text['Django_web_framework_(Python)_overview']%></a></li>
-          <li><a href="<%=baseURL%>Server-side/Django/Introduction"><%=text['Introduction']%></a></li>
+          <li><a href="<%=baseURL%>Server-side/Django/Introduction"><%=text['Django_introduction']%></a></li>
           <li><a href="<%=baseURL%>Server-side/Django/development_environment"><%=text['Setting_up_a_development_environment']%></a></li>
           <li><a href="<%=baseURL%>Server-side/Django/Tutorial_local_library_website"><%=text['Tutorial_The_Local_Library_website']%></a></li>
           <li><a href="<%=baseURL%>Server-side/Django/skeleton_website"><%=text['Tutorial_Part_2_Creating_a_skeleton_website']%></a></li>
@@ -1874,13 +2267,13 @@ var text = mdn.localStringMap({
           <li><a href="<%=baseURL%>HTML/Howto"><%=text['HTML_questions']%></a></li>
           <li><a href="<%=baseURL%>CSS/Howto"><%=text['CSS_questions']%></a></li>
           <li><a href="<%=baseURL%>JavaScript/Howto"><%=text['JavaScript_questions']%></a></li>
-          <li><a href="<%=baseURL%>Common_questions#How_the_Web_works"><%=text['How_the_Web_works']%></a></li>
+          <li><a href="<%=baseURL%>Common_questions#Web_mechanics"><%=text['Web_mechanics']%></a></li>
           <li><a href="<%=baseURL%>Common_questions#Tools_and_setup"><%=text['Tools_and_setup']%></a></li>
           <li><a href="<%=baseURL%>Common_questions#Design_and_accessibility"><%=text['Design_and_accessibility']%></a></li>
         </ol>
     </details>
   </li>
-  <li data-default-state="<%=currentPageIsUnder('How_to_contribute')%>"><a href="<%=baseURL%>How_to_contribute"><%=text['How_to_contribute']%></a></li>
 </ol>
 
 </section>
+

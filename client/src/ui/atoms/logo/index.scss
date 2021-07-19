@@ -1,0 +1,17 @@
+@import "~@mdn/minimalist/sass/vars/layout";
+
+.logo {
+  display: block;
+  height: 35px;
+  width: 170px;
+
+  @media #{$mq-tablet-and-up} {
+    height: 55px;
+    width: 200px;
+  }
+
+  @media #{$mq-large-desktop-and-up} {
+    flex-basis: 250px;
+    height: inherit;
+  }
+}

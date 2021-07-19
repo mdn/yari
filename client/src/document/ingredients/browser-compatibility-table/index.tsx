@@ -7,10 +7,9 @@ import { FeatureRow } from "./feature-row";
 import { PLATFORM_BROWSERS, Headers } from "./headers";
 import { Legend } from "./legend";
 import { listFeatures } from "./utils";
-import { DisplayH2 } from "../utils";
 
-import "./bcd.scss";
-// import "../../../kumastyles/wiki-compat-tables.scss";
+// Note! Don't import any SCSS here inside *this* component.
+// It's done in the component that lazy-loads this component.
 
 // This string is used to prefill the body when clicking to file a new BCD
 // issue over on github.com/mdn/browser-compat-data
@@ -35,9 +34,15 @@ const NEW_ISSUE_TEMPLATE = `
 </details>
 `;
 
-function gatherPlatformsAndBrowsers(category): [string[], bcd.BrowserNames[]] {
+function gatherPlatformsAndBrowsers(
+  category: string,
+  data: bcd.Identifier
+): [string[], bcd.BrowserNames[]] {
   let platforms = ["desktop", "mobile"];
-  if (category === "javascript") {
+  if (
+    category === "javascript" ||
+    (data.__compat && data.__compat.support.nodejs)
+  ) {
     platforms.push("server");
   } else if (category === "webextensions") {
     platforms = ["webextensions-desktop", "webextensions-mobile"];
@@ -53,9 +58,11 @@ type CellIndex = [number, number];
 function FeatureListAccordion({
   features,
   browsers,
+  locale,
 }: {
   features: ReturnType<typeof listFeatures>;
   browsers: bcd.BrowserNames[];
+  locale: string;
 }) {
   const [[activeRow, activeColumn], dispatchCellToggle] = useReducer<
     React.Reducer<CellIndex | [null, null], CellIndex>
@@ -75,25 +82,26 @@ function FeatureListAccordion({
           {...{ feature, browsers }}
           index={i}
           activeCell={activeRow === i ? activeColumn : null}
-          onToggleCell={dispatchCellToggle}
+          onToggleCell={([row, column]: [number, number]) => {
+            dispatchCellToggle([row, column]);
+          }}
+          locale={locale}
         />
       ))}
     </>
   );
 }
 
-export function BrowserCompatibilityTable({
-  id,
-  title,
+export default function BrowserCompatibilityTable({
   query,
   data,
   browsers: browserInfo,
+  locale,
 }: {
-  id: string;
-  title: string;
   query: string;
   data: bcd.Identifier;
   browsers: bcd.Browsers;
+  locale: string;
 }) {
   const location = useLocation();
 
@@ -107,7 +115,7 @@ export function BrowserCompatibilityTable({
   const category = breadcrumbs[0];
   const name = breadcrumbs[breadcrumbs.length - 1];
 
-  const [platforms, browsers] = gatherPlatformsAndBrowsers(category);
+  const [platforms, browsers] = gatherPlatformsAndBrowsers(category, data);
 
   function getNewIssueURL() {
     const url = "https://github.com/mdn/browser-compat-data/issues/new";
@@ -124,7 +132,6 @@ export function BrowserCompatibilityTable({
   return (
     <BrowserCompatibilityErrorBoundary>
       <BrowserInfoContext.Provider value={browserInfo}>
-        {title && <DisplayH2 id={id} title={title} />}
         <a
           className="bc-github-link external external-icon"
           href={getNewIssueURL()}
@@ -132,18 +139,19 @@ export function BrowserCompatibilityTable({
           rel="noopener noreferrer"
           title="Report an issue with this compatibility data"
         >
-          Report problems with this data on GitHub
+          Report problems with this compatibility data on GitHub
         </a>
         <table key="bc-table" className="bc-table bc-table-web">
           <Headers {...{ platforms, browsers }} />
           <tbody>
             <FeatureListAccordion
               browsers={browsers}
-              features={listFeatures(data, name)}
+              features={listFeatures(data, "", name)}
+              locale={locale}
             />
           </tbody>
         </table>
-        <Legend compat={data} />
+        <Legend compat={data} name={name} />
 
         {/* https://github.com/mdn/yari/issues/1191 */}
         <div className="hidden">

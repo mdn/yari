@@ -1,0 +1,103 @@
+@use "sass:math";
+
+@import "~@mdn/minimalist/sass/vars/layout";
+@import "~@mdn/minimalist/sass/vars/mdn-web-docs-palette";
+@import "~@mdn/minimalist/sass/vars/typography";
+
+.document-toc {
+  font-size: $default-font-size;
+  padding: math.div($base-spacing, 4) $base-spacing;
+  position: relative;
+
+  @media #{$mq-tablet-and-up} {
+    padding: 0 $base-spacing;
+  }
+
+  @media #{$mq-small-desktop-and-up} {
+    margin-top: $base-spacing;
+  }
+
+  h2 {
+    display: none;
+
+    @media #{$mq-large-desktop-and-up} {
+      display: block;
+      font-size: $medium-font-size;
+    }
+  }
+
+  .toc-trigger-mobile {
+    border: 0;
+    color: $link-color;
+    font-weight: normal;
+    padding: math.div($base-spacing, 2) 0;
+    text-align: left;
+    width: 100%;
+
+    @media #{$mq-large-desktop-and-up} {
+      display: none;
+    }
+
+    /* we already disable all animation and transitions globally via a reset so */
+    &::before {
+      /* stylelint-disable-line a11y/media-prefers-reduced-motion */
+      background: transparent url("~@mdn/dinocons/arrows/triangle.svg") 0 0
+        no-repeat;
+      background-size: 16px;
+      content: "";
+      display: inline-block;
+      height: 16px;
+      margin-right: $base-unit;
+      transform: rotate(90deg);
+      transform-origin: 50%;
+      transition: transform 0.2s ease-in;
+      vertical-align: sub;
+      width: 16px;
+
+      @media #{$mq-large-desktop-and-up} {
+        display: none;
+      }
+    }
+
+    &[aria-expanded="true"] {
+      &::before {
+        transform: rotate(180deg);
+      }
+    }
+  }
+
+  ul {
+    background-color: #fff;
+    border: 2px solid $mdn-blue700;
+    display: none;
+    list-style: none;
+    padding: 0 $base-spacing;
+    position: absolute;
+    top: 65px;
+    z-index: $top-layer;
+
+    @media #{$mq-large-desktop-and-up} {
+      background-color: inherit;
+      border: 0;
+      display: block;
+      padding-left: 0;
+      position: inherit;
+      top: inherit;
+      width: auto;
+      z-index: inherit;
+    }
+
+    li {
+      line-height: 1.2;
+      margin: 20px 0;
+
+      @media #{$mq-large-desktop-and-up} {
+        margin: 10px 0;
+      }
+    }
+  }
+
+  .show-toc {
+    display: block;
+  }
+}

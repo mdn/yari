@@ -1,8 +1,6 @@
 /**
  * @prettier
  */
-const url = require("url");
-
 const { JSDOM } = require("jsdom");
 
 const {
@@ -18,13 +16,10 @@ const SUMMARIES = {
     "Concepts",
     "User interface",
     "How to",
-    "Porting",
-    "Firefox workflow",
+    "Firefox differentiators",
     "JavaScript APIs",
     "Manifest keys",
-    "Browser themes",
-    "Publishing add-ons",
-    "Distributing add-ons",
+    "Extension Workshop",
     "Channels",
   ],
   fr: [
@@ -32,13 +27,10 @@ const SUMMARIES = {
     "Concepts",
     "Interface Utilisateur",
     "Mode d'emploi",
-    "Portage",
-    "Déroulement avec Firefox",
+    "Firefox differentiators",
     "Les API JavaScript",
     "Clés de manifeste",
-    "Thème de navigateur",
-    "Publication de votre extension",
-    "Distribuer votre module",
+    "Extension Workshop",
     "Canaux de discussions",
   ],
   ja: [
@@ -46,13 +38,10 @@ const SUMMARIES = {
     "概念",
     "ユーザーインターフェイス",
     "逆引きリファレンス",
-    "移行",
-    "Firefox でのワークフロー",
+    "Firefox differentiators",
     "JavaScript API 群",
     "Manifest keys",
-    "ブラウザのテーマ",
-    "アドオンを公開する",
-    "アドオンの配布",
+    "Extension Workshop",
     "チャンネル",
   ],
   "zh-CN": [
@@ -60,13 +49,10 @@ const SUMMARIES = {
     "概念",
     "用户界面",
     "怎么做",
-    "移植",
-    "Firefox工作流程",
+    "Firefox differentiators",
     "JavaScript APIs",
     "Manifest keys",
-    "浏览器主题",
-    "发布附加程序",
-    "分发附加程序",
+    "Extension Workshop",
     "渠道",
   ],
 };
@@ -74,7 +60,7 @@ const SUMMARIES = {
 const MANIFEST_SLUG = "Mozilla/Add-ons/WebExtensions/manifest.json";
 
 function getMockResultForGetChildren(doc_url) {
-  const locale = url.parse(doc_url).pathname.split("/")[1];
+  const locale = new URL(doc_url, "http://example.com").pathname.split("/")[1];
   return [
     {
       locale: `${locale}`,
@@ -150,7 +136,7 @@ function checkSidebarResult(html, locale, isUnderWebExtAPI = false) {
 describeMacro("AddonSidebar", function () {
   beforeEachMacro(function (macro) {
     // Mock the call to template('WebExtAPISidebar', []).
-    macro.ctx.template = jest.fn((macro, args) => {
+    macro.ctx.template = jest.fn(() => {
       // This template will be tested on its own, so nothing needed here.
       return "";
     });

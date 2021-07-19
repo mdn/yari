@@ -70,8 +70,9 @@ switch (env.locale) {
         s_draft = 'Черновик';
         s_not_complete = 'Эта страница не завершена.';
 }
-%><div class="blockIndicator draft">
-    <p><strong><%=s_draft%></strong><br/>
-    <%=s_not_complete%></p>
+%>
+<div class="notecard draft">
+    <h4><%=s_draft%></h4>
+    <p><%=s_not_complete%></p>
     <%-s_details%>
 </div>

@@ -2,49 +2,58 @@ name: Performance
 
 on:
   pull_request:
+    paths:
+      - client/src/**
+      - .github/workflows/performance.yml
+      - package.json
+      - yarn.lock
 
 jobs:
   lighthouse:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v2.3.4
         with:
           # Needed because of
           # https://github.com/GoogleChrome/lighthouse-ci/issues/172
           ref: ${{ github.event.pull_request.head.sha }}
 
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v2.3.4
         with:
           repository: mdn/content
           path: mdn/content
 
       - name: Setup Node.js environment
-        uses: actions/setup-node@v2.1.2
+        uses: actions/setup-node@v2.2.0
         with:
           node-version: "12"
 
-      - name: Get yarn cache directory path
-        id: yarn-cache-dir-path
-        run: echo "::set-output name=dir::$(yarn cache dir)"
-      - uses: actions/cache@v2.1.2
-        id: yarn-cache # use this to check for `cache-hit` (`steps.yarn-cache.outputs.cache-hit != 'true'`)
+      - name: Cache node_modules
+        uses: actions/cache@v2.1.6
+        id: cached-node_modules
         with:
-          path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
-          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-yarn-
+          path: |
+            node_modules
+          key: ${{ runner.os }}-${{ hashFiles('yarn.lock') }}
 
       - name: Install all yarn packages
+        if: steps.cached-node_modules.outputs.cache-hit != 'true'
+        env:
+          PUPPETEER_SKIP_CHROMIUM_DOWNLOAD: 1
         run: |
-          ./testing/scripts/yarn-install.sh
+          yarn --frozen-lockfile
 
       - name: Build select important pages
-        run: |
+        env:
           # Remember, the mdn/content repo got cloned into `pwd` into a
           # sub-folder called "mdn/content"
-          export CONTENT_ROOT=$(pwd)/mdn/content/files
+          CONTENT_ROOT: "${{ github.workspace }}/mdn/content/files"
 
+          # Make sure it's set to something so that the build uses the
+          # Google Analytics tag which is most realistic.
+          BUILD_GOOGLE_ANALYTICS_ACCOUNT: UA-00000000-0
+        run: |
           yarn prepare-build
           # BUILD_FOLDERSEARCH=mdn/kitchensink yarn build
           BUILD_FOLDERSEARCH=web/javascript/reference/global_objects/array/foreach yarn build

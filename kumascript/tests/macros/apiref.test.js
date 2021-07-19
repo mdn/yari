@@ -74,7 +74,7 @@ const expectedProperties = {
   fr: [
     {
       badges: [],
-      text: "MyTestProperty1 [Traduire]",
+      text: "MyTestProperty1",
       target: "/fr/docs/Web/API/TestInterface/TestProperty1",
       title:
         "The MyTestProperty1 property of the TestInterface interface has no badges.",
@@ -94,27 +94,27 @@ const expectedProperties = {
 const expectedMethods = {
   "en-US": [
     {
-      badges: ["icon-beaker"],
-      text: " MyTestMethod1",
+      badges: ["icon-experimental"],
+      text: "MyTestMethod1",
       target: "/en-US/docs/Web/API/TestInterface/TestMethod1",
       title:
         "The MyTestMethod1 property of the TestInterface interface is experimental.",
     },
     {
-      badges: ["icon-thumbs-down-alt", "icon-warning-sign"],
-      text: "  MyTestMethod2",
+      badges: ["icon-deprecated", "icon-nonstandard"],
+      text: "MyTestMethod2",
       target: "/en-US/docs/Web/API/TestInterface/TestMethod2",
       title:
         "The MyTestMethod2 property of the TestInterface interface is deprecated and non-standard.",
     },
     {
       badges: [
-        "icon-beaker",
-        "icon-thumbs-down-alt",
-        "icon-warning-sign",
-        "icon-trash",
+        "icon-experimental",
+        "icon-deprecated",
+        "icon-nonstandard",
+        "obsolete",
       ],
-      text: "    MyTestMethod3",
+      text: "MyTestMethod3",
       target: "/en-US/docs/Web/API/TestInterface/TestMethod3",
       title:
         "The MyTestMethod3 property of the TestInterface interface has all the badges.",
@@ -122,27 +122,27 @@ const expectedMethods = {
   ],
   fr: [
     {
-      badges: ["icon-beaker"],
-      text: " MyTestMethod1 [Traduire]",
+      badges: ["icon-experimental"],
+      text: "MyTestMethod1",
       target: "/fr/docs/Web/API/TestInterface/TestMethod1",
       title:
         "The MyTestMethod1 property of the TestInterface interface is experimental.",
     },
     {
-      badges: ["icon-thumbs-down-alt", "icon-warning-sign"],
-      text: "  MyTestMethod2 [Traduire]",
+      badges: ["icon-deprecated", "icon-nonstandard"],
+      text: "MyTestMethod2",
       target: "/fr/docs/Web/API/TestInterface/TestMethod2",
       title:
         "The MyTestMethod2 property of the TestInterface interface is deprecated and non-standard.",
     },
     {
       badges: [
-        "icon-beaker",
-        "icon-thumbs-down-alt",
-        "icon-warning-sign",
-        "icon-trash",
+        "icon-experimental",
+        "icon-deprecated",
+        "icon-nonstandard",
+        "obsolete",
       ],
-      text: "    MyTestMethod3 [Traduire]",
+      text: "MyTestMethod3",
       target: "/fr/docs/Web/API/TestInterface/TestMethod3",
       title:
         "The MyTestMethod3 property of the TestInterface interface has all the badges.",
@@ -150,27 +150,27 @@ const expectedMethods = {
   ],
   ja: [
     {
-      badges: ["icon-beaker"],
-      text: " MyTestMethod1",
+      badges: ["icon-experimental"],
+      text: "MyTestMethod1",
       target: "/ja/docs/Web/API/TestInterface/TestMethod1",
       title:
         "The MyTestMethod1 property of the TestInterface interface is experimental (ja translation).",
     },
     {
-      badges: ["icon-thumbs-down-alt", "icon-warning-sign"],
-      text: "  MyTestMethod2",
+      badges: ["icon-deprecated", "icon-nonstandard"],
+      text: "MyTestMethod2",
       target: "/ja/docs/Web/API/TestInterface/TestMethod2",
       title:
         "The MyTestMethod2 property of the TestInterface interface is deprecated and non-standard (ja translation).",
     },
     {
       badges: [
-        "icon-beaker",
-        "icon-thumbs-down-alt",
-        "icon-warning-sign",
-        "icon-trash",
+        "icon-experimental",
+        "icon-deprecated",
+        "icon-nonstandard",
+        "obsolete",
       ],
-      text: "    MyTestMethod3",
+      text: "MyTestMethod3",
       target: "/ja/docs/Web/API/TestInterface/TestMethod3",
       title:
         "The MyTestMethod3 property of the TestInterface interface has all the badges (ja translation).",
@@ -188,8 +188,8 @@ const expectedEvents = {
         "The MyTestEvent1 event of the TestInterface interface has no badges.",
     },
     {
-      badges: ["icon-thumbs-down-alt", "icon-warning-sign"],
-      text: "  TestEvent2",
+      badges: ["icon-deprecated", "icon-nonstandard"],
+      text: "TestEvent2",
       target: "/en-US/docs/Web/API/TestInterface/TestEvent2",
       title:
         "The MyTestEvent2 event of the TestInterface interface is deprecated and non-standard.",
@@ -205,21 +205,21 @@ const expectedEvents = {
   fr: [
     {
       badges: [],
-      text: "TestEvent1 [Traduire]",
+      text: "TestEvent1",
       target: "/fr/docs/Web/API/TestInterface/TestEvent1",
       title:
         "The MyTestEvent1 event of the TestInterface interface has no badges.",
     },
     {
-      badges: ["icon-thumbs-down-alt", "icon-warning-sign"],
-      text: "  TestEvent2 [Traduire]",
+      badges: ["icon-deprecated", "icon-nonstandard"],
+      text: "TestEvent2",
       target: "/fr/docs/Web/API/TestInterface/TestEvent2",
       title:
         "The MyTestEvent2 event of the TestInterface interface is deprecated and non-standard.",
     },
     {
       badges: [],
-      text: "TestEvent3_another_suffix [Traduire]",
+      text: "TestEvent3_another_suffix",
       target: "/fr/docs/Web/API/TestInterface/TestEvent3",
       title:
         "The MyTestEvent3 event of the TestInterface interface has no badges.",
@@ -234,8 +234,8 @@ const expectedEvents = {
         "The MyTestEvent1 event of the TestInterface interface has no badges (ja translation).",
     },
     {
-      badges: ["icon-thumbs-down-alt", "icon-warning-sign"],
-      text: "  TestEvent2",
+      badges: ["icon-deprecated", "icon-nonstandard"],
+      text: "TestEvent2",
       target: "/ja/docs/Web/API/TestInterface/TestEvent2",
       title:
         "The MyTestEvent2 event of the TestInterface interface is deprecated and non-standard (ja translation).",
@@ -328,7 +328,7 @@ function checkInterfaceItem(actual, expected, config) {
     // If we are not on this page, the item contains a link
     // and the text contents includes a CTA if one should be present
     // (CTA is specified in the test data in the cases where it is expected)
-    expect(actual.textContent).toEqual(expected.text);
+    expect(actual.textContent).toContain(expected.text);
     const methodLink = actual.querySelector("a");
     expect(methodLink.href).toEqual(expected.target);
   } else {
@@ -336,15 +336,19 @@ function checkInterfaceItem(actual, expected, config) {
     // and the text contents omits the CTA
     const methodLink = actual.querySelector("a");
     expect(methodLink).toBeNull();
-    const methodName = actual.querySelector("i");
+    const methodName = actual.querySelector("svg");
     expect(actual.textContent).toContain(methodName.textContent);
   }
 
   // Test that the badges are what we expect
-  const badgeClasses = actual.querySelectorAll("i");
+  const badgeClasses = actual.querySelectorAll("svg");
   expect(badgeClasses.length).toEqual(expected.badges.length);
-  for (let badgeClass of badgeClasses) {
-    expect(expected.badges).toContain(badgeClass.getAttribute("class"));
+  for (const badgeClass of badgeClasses) {
+    badgeClass.classList.forEach((value) => {
+      if (value !== "icon") {
+        expect(expected.badges).toContain(value);
+      }
+    });
   }
 }
 
@@ -405,7 +409,7 @@ function checkResult(html, config) {
   expect(details.length).toEqual(Object.keys(config.expected.details).length);
 
   // Test the properties sublist
-  const expectedPropertySummary = commonL10nJSON["Properties"][config.locale];
+  const expectedPropertySummary = commonL10nJSON.Properties[config.locale];
   const expectedPropertyItems =
     config.expected.details.properties[config.locale];
   const properties = details[0];
@@ -418,7 +422,7 @@ function checkResult(html, config) {
   );
 
   // Test the methods sublist
-  const expectedMethodSummary = commonL10nJSON["Methods"][config.locale];
+  const expectedMethodSummary = commonL10nJSON.Methods[config.locale];
   const expectedMethodItems = config.expected.details.methods[config.locale];
   const methods = details[1];
   checkItemList(
@@ -430,7 +434,7 @@ function checkResult(html, config) {
   );
 
   // Test the events sublist
-  const expectedEventSummary = commonL10nJSON["Events"][config.locale];
+  const expectedEventSummary = commonL10nJSON.Events[config.locale];
   const expectedEventItems = config.expected.details.events[config.locale];
   const events = details[2];
   checkItemList(
@@ -444,8 +448,7 @@ function checkResult(html, config) {
   const hasInherited = config.expected.details.inherited;
   if (hasInherited) {
     // Test the inherited sublist
-    const expectedInheritedSummary =
-      commonL10nJSON["Inheritance"][config.locale];
+    const expectedInheritedSummary = commonL10nJSON.Inheritance[config.locale];
     const expectedInheritedItems = config.expected.details.inherited;
     const inherited = details[3];
     checkItemList(
@@ -461,7 +464,7 @@ function checkResult(html, config) {
   if (hasImplemented) {
     // Test the implemented_by sublist
     const expectedImplementedSummary =
-      commonL10nJSON["Implemented_by"][config.locale];
+      commonL10nJSON.Implemented_by[config.locale];
     const expectedImplementedItems = config.expected.details.implemented;
     const implemented = details[4];
     checkItemList(
@@ -476,7 +479,7 @@ function checkResult(html, config) {
   const hasRelated = config.expected.details.related;
   if (hasRelated) {
     // Test the related sublist
-    const expectedRelatedSummary = commonL10nJSON["Related_pages"][
+    const expectedRelatedSummary = commonL10nJSON.Related_pages[
       config.locale
     ].replace("$1", config.argument);
     const expectedRelatedItems = config.expected.details.related;
@@ -493,7 +496,7 @@ function checkResult(html, config) {
 
 function testMacro(config) {
   for (const locale of ["en-US", "fr", "ja"]) {
-    let testName = `${config.name}; locale: ${locale}`;
+    const testName = `${config.name}; locale: ${locale}`;
     itMacro(testName, function (macro) {
       config.locale = locale;
       macro.ctx.env.slug = config.currentSlug;
@@ -516,11 +519,10 @@ function testMacro(config) {
         return macro.call(config.argument).then(function (result) {
           checkResult(result, config);
         });
-      } else {
-        return macro.call().then(function (result) {
-          checkResult(result, config);
-        });
       }
+      return macro.call().then(function (result) {
+        checkResult(result, config);
+      });
     });
   }
 }
@@ -536,8 +538,7 @@ describeMacro("APIRef", function () {
 
   // Test with current page as main interface page
   testMacro({
-    name:
-      "slug: 'Web/API/TestInterface'; no InterfaceData entries; no argument",
+    name: "slug: 'Web/API/TestInterface'; no InterfaceData entries; no argument",
     currentSlug: "Web/API/TestInterface",
     argument: null,
     interfaceData: interfaceDataNoEntriesFixture,
@@ -546,8 +547,7 @@ describeMacro("APIRef", function () {
 
   // Test with current page as a subpage
   testMacro({
-    name:
-      "slug: 'Web/API/TestInterface/TestMethod1'; no InterfaceData entries; no argument",
+    name: "slug: 'Web/API/TestInterface/TestMethod1'; no InterfaceData entries; no argument",
     currentSlug: "Web/API/TestInterface/TestMethod1",
     argument: null,
     interfaceData: interfaceDataNoEntriesFixture,
@@ -556,8 +556,7 @@ describeMacro("APIRef", function () {
 
   // Test with an argument to use in GroupData
   testMacro({
-    name:
-      "slug: 'Web/API/TestInterface'; no InterfaceData entries; argument: 'TestInterface'",
+    name: "slug: 'Web/API/TestInterface'; no InterfaceData entries; argument: 'TestInterface'",
     currentSlug: "Web/API/TestInterface",
     argument: "TestInterface",
     interfaceData: interfaceDataNoEntriesFixture,
@@ -566,8 +565,7 @@ describeMacro("APIRef", function () {
 
   // Test with a nonexistent but non-null argument to use in GroupData
   testMacro({
-    name:
-      "slug: 'Web/API/TestInterface'; no InterfaceData entries; argument: 'I don't exist'",
+    name: "slug: 'Web/API/TestInterface'; no InterfaceData entries; argument: 'I don't exist'",
     currentSlug: "Web/API/TestInterface",
     argument: "I don't exist",
     interfaceData: interfaceDataNoEntriesFixture,
@@ -576,8 +574,7 @@ describeMacro("APIRef", function () {
 
   // Test with an InterfaceData that contains data for TestInterface
   testMacro({
-    name:
-      "slug: 'Web/API/TestInterface'; InterfaceData entries expected; no argument",
+    name: "slug: 'Web/API/TestInterface'; InterfaceData entries expected; no argument",
     currentSlug: "Web/API/TestInterface",
     argument: null,
     interfaceData: interfaceDataFixture,

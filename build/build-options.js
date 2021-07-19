@@ -15,7 +15,7 @@ const {
 const options = Object.freeze({
   flawLevels: parseFlawLevels(DEFAULT_FLAW_LEVELS),
   files: parseFiles(FILES),
-  folderSearch: parseFoldersearch(FOLDERSEARCH),
+  folderSearch: parseFolderSearch(FOLDERSEARCH),
   // Obviously false if the env var for NO_PROGRESSBAR was set but also,
   // if you're going to display flaws, it's going to use stdout anyway.
   noProgressbar: NO_PROGRESSBAR || FIX_FLAWS_DRY_RUN || FIX_FLAWS_VERBOSE,
@@ -31,7 +31,7 @@ function parseFiles(filesStringList) {
   // so we need to turn that into an array:
   // ["content/files/en-us/a/index.html", "content/files/en-us/b/index.html"]`
   // Note, when you use get-diff-action in GitHub Actions, it's a comma
-  // but if you use the manualy `git diff --name-only ...` on your command
+  // but if you use the manually `git diff --name-only ...` on your command
   // line it's a newline.
   return new Set(
     filesStringList
@@ -44,7 +44,7 @@ function parseFiles(filesStringList) {
   );
 }
 
-function parseFoldersearch(searchpattern) {
+function parseFolderSearch(searchpattern) {
   if (searchpattern) {
     // TODO: Consider turning it into a regex if there are * or $ or ^ in it
     return searchpattern.toLowerCase();
@@ -53,7 +53,7 @@ function parseFoldersearch(searchpattern) {
 }
 
 // Override based on env vars but only for options that are *not*
-// exclusive to building everyhing.
+// exclusive to building everything.
 function parseFlawLevels(flawChecks) {
   const checks = flawChecks
     .split(",")

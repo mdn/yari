@@ -43,29 +43,22 @@ let data = {
 };
 let slug = env.slug;
 let locale = env.locale;
-let localWiki = wiki;
-let escapeQuotes = mdn.escapeQuotes;
 let name = $0 || (slug ? slug.split("/").pop().toLowerCase() : "preview-wiki-content");
+// "Conflicting" documents have an MD5 postfix to deal with multiple conflicting documents.
+// In here we need a clean name so remove the MD5 part.
+name = name.replace(/(.*)_[a-f0-9]{32}$/, (_, x) => x);
 let atRule = $1;
 let rawSyntax = "";
 let formattedSyntax = "";
 let localize = mdn.getLocalString;
 
-let commonLocalStrings = string.deserialize(await template("L10n:Common"));
-let localStrings = string.deserialize(await template("L10n:CSS"));
-
-let s_missing = mdn.localString({
-    "en-US": "Syntax not found in DB!",
-    "fr"   : "La syntaxe n'a pas été trouvée !",
-    "de"   : "Syntax nicht in der Datenbank gefunden!",
-    "zh-CN": "该属性的语法尚未添加",
-    "ru"   : "Синтаксис не найден в базе данных"
-});
+let localStrings = JSON.parse(await template("L10n:CSS"));
 
 let s_where = mdn.localString({
     "en-US": "where ",
     "de"   : "wobei ",
     "fr"   : "où ",
+    "ja"   : "ここで",
     "ru"   : "где "
 });
 
@@ -73,14 +66,6 @@ let s_syntax_value_definition = mdn.localString({
     "en-US": "Value_definition_syntax",
     "de"   : "Wertdefinitionssyntax",
     "fr"   : "Syntaxe_de_d%C3%A9finition_des_valeurs"
-});
-
-let s_and = mdn.localString({
-    "en-US": "and ",
-    "de"   : "und ",
-    "fr"   : "et ",
-	"ja"   : "と",
-    "ru"   : "и "
 });
 
 let s_or = mdn.localString({
@@ -92,6 +77,7 @@ let s_or = mdn.localString({
 let s_possible_values = mdn.localString({
     "en-US": "Possible values: ",
     "de"   : "Mögliche Werte: ",
+    "ja"   : "使用可能な値: ",
     "ru"   : "Возможные значения: "
 });
 
@@ -155,13 +141,13 @@ let typeInfo = {
 
 let operators = [
     {
-        regexp: /\#/g,
+        regexp: /#/g,
         title: mdn.localString({
             "en-US": "Hash mark: the entity is repeated one or several times, each occurence separated by a comma",
             "de": "Rautensymbol: Die Entität wird einmal oder mehrmals wiederholt, wobei jedes Vorkommen durch ein Komma getrennt wird"
         }),
         anchor: mdn.localString({
-            "en-US": "Hash_mark_()",
+            "en-US": "Hash_mark",
             "de"   : "Rautensymbol_()"
         })
     },
@@ -177,7 +163,7 @@ let operators = [
         })
     },
     {
-        regexp: /[^\|](\|)[^\|]/g,
+        regexp: /[^|](\|)[^|]/g,
         title: mdn.localString({
             "en-US": "Single bar: exactly one of the entities must be present",
             "de"   : "Einfacher Balken: Genau eine der Entitäten muss angegeben werden"
@@ -205,18 +191,18 @@ let operators = [
             "de"   : "Fragezeichen: Die Entität ist optional"
         }),
         anchor: mdn.localString({
-            "en-US": "Question_mark_()",
+            "en-US": "Question_mark",
             "de"   : "Fragezeichen_()"
         })
     },
     {
-        regexp: /([^\/])\*(?!\/)/g,
+        regexp: /([^/])\*(?!\/)/g,
         title: mdn.localString({
             "en-US": "Asterisk: the entity may occur zero, one or several times",
             "de"   : "Asterisk: Die Entität kann keinmal, einmal oder mehrmals vorkommen"
         }),
         anchor: mdn.localString({
-            "en-US": "Asterisk_(*)",
+            "en-US": "Asterisk",
             "de"   : "Asterisk_(*)"
         })
     },
@@ -227,7 +213,7 @@ let operators = [
             "de"   : "Plus: Die Entität kann einmal oder mehrmals vorkommen"
         }),
         anchor: mdn.localString({
-            "en-US": "Plus_()",
+            "en-US": "Plus",
             "de"   : "Plus_()"
         })
     },
@@ -249,7 +235,7 @@ let operators = [
             "de"   : "Geschweifte Klammern: umschließen zwei Ganzzahlen, die die Minimal- und Maximalanzahl an Vorkommen der Entität angeben"
         }),
         anchor: mdn.localString({
-            "en-US": "Curly_braces_(_)",
+            "en-US": "Curly_braces",
             "de"   : "Geschweifte_Klammern_(_)"
         })
     },
@@ -260,7 +246,7 @@ let operators = [
             "de"   : "Ausrufezeichen: die Gruppe muss mindestens einen Wert erzeugen"
         }),
         anchor: mdn.localString({
-            "en-US": "#Exclamation_point_(!)",
+            "en-US": "Exclamation_point",
             "de"   : "Ausrufezeichen_(!)"
         })
     },
@@ -269,7 +255,7 @@ let operators = [
 async function buildLink(match, type) {
     var link = "/" + locale + "/docs/Web/CSS/";
     var title = "";
-    var propertyName = type.match(/\'(.+?)\'/);
+    var propertyName = type.match(/'(.+?)'/);
 
     // Handle property references like <'color'>
     if (propertyName) {
@@ -279,7 +265,7 @@ async function buildLink(match, type) {
         return "<a href=\"" + link + propertyName[1] + "\" title=\"" + title + "\">&lt;" + propertyName[0] + "&gt;</a>";
 
     // Handle basic types
-    } else if (typeInfo.hasOwnProperty(type)) {
+    } else if (Object.prototype.hasOwnProperty.call(typeInfo, type)) {
         var typeLinkName = typeInfo[type].typeLinkName || type;
 
         link += typeLinkName;
@@ -287,12 +273,11 @@ async function buildLink(match, type) {
         if (typeInfo[type].title) {
             title = typeInfo[type].title;
         } else {
-            let page = await localWiki.getPage(link);
             title = "";
         }
 
     // Handle types which we want to describe using a link to a different page
-    }  else if (data.externallyDescribedTypes.hasOwnProperty(type)) {
+    }  else if (Object.prototype.hasOwnProperty.call(data.externallyDescribedTypes, type)) {
              return "<a href=\"/" + locale + data.externallyDescribedTypes[type].link + "\">&lt;" + type + "&gt;</a>";
 
     // Handle advanced types having their syntax defined within the 'CSSData' template
@@ -320,7 +305,7 @@ async function formatSyntax(rawSyntax) {
     operators.forEach(function(operator) {
         if (formattedSyntax.indexOf("\n") !== -1 &&
             operator.title === "Curly braces") {
-		    return "";
+            return "";
         }
 
         formattedSyntax = formattedSyntax.replace(operator.regexp,
@@ -348,7 +333,7 @@ async function formatSyntax(rawSyntax) {
     });
     formattedSyntax = await string.asyncReplace(
         formattedSyntax,
-        /<([a-z0-9\(\)\'\-]+?)>/gi,
+        /<([a-z0-9()'-]+?)>/gi,
         buildLink
     );
 
@@ -369,8 +354,8 @@ async function formatTypesSyntax(formattedSyntax, describedTypes) {
                 var subType = type[1].replace("_value", "");
                 // Describe this type if it exists in "syntaxes" and
                 // it *does not* exist in externallyDescribedTypes
-                if ((data.syntaxes.hasOwnProperty(subType)) &&
-                    (!data.externallyDescribedTypes.hasOwnProperty(subType))) {
+                if ((Object.prototype.hasOwnProperty.call(data.syntaxes, subType)) &&
+                    (!Object.prototype.hasOwnProperty.call(data.externallyDescribedTypes, subType))) {
                     types.push(subType);
                 }
             }
@@ -392,7 +377,7 @@ async function formatTypesSyntax(formattedSyntax, describedTypes) {
                     }
                     describedTypes.push(type);
                 }
-            };
+            }
 
             if (typesSyntax !== "") {
                 formattedTypesSyntax += "<p style=\"font-family:Open Sans,Arial," +
@@ -425,11 +410,11 @@ if (name === "preview-wiki-content") {
         localize(localStrings, "info_in_preview_not_available") + "</span>";
 } else {
     if (atRule) {
-        if (data.atRules[atRule] && data.atRules[atRule].descriptors) {
-    	    rawSyntax = data.atRules[atRule].descriptors[name].syntax;
+        if (data.atRules[atRule] && data.atRules[atRule].descriptors && data.atRules[atRule].descriptors[name]) {
+            rawSyntax = data.atRules[atRule].descriptors[name].syntax;
         }
     } else if (name[0] === "@") {
-        if (data.atRules[name].syntax) {
+        if (data.atRules[name] && data.atRules[name].syntax) {
             rawSyntax = data.atRules[name].syntax;
         }
     } else if (name[0] === ":" && typeof data.selectors[name] !== 'undefined') {
@@ -444,6 +429,12 @@ if (name === "preview-wiki-content") {
     formattedSyntax += await formatTypesSyntax(formattedSyntax, []);
 }
 
-var result = formattedSyntax || s_missing;
+if (!formattedSyntax) {
+    throw new Error(`No syntax found in DB for '${name}'`);
+}
 
-%><%- result %>
+const rtlLocales = ['ar', 'he', 'fa'];
+const rtl = rtlLocales.includes(env.locale);
+const out = `<pre${rtl ? ' dir="rtl"' : ""}>${formattedSyntax}</pre>`
+
+%><%- out %>

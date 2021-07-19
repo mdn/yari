@@ -50,8 +50,8 @@ export default function DocumentEdit() {
   }
 
   return (
-    <div className="document-edit">
-      <h2>
+    <main className="page-content-container document-edit" role="main">
+      <h2 className="edit-header">
         Edit view
         <Link to={documentURL} className="close">
           close
@@ -65,14 +65,18 @@ export default function DocumentEdit() {
           <code>{error.toString()}</code>
         </div>
       )}
-      {data && (
-        <DocumentForm
-          doc={data}
-          {...{ isSaving, savingError }}
-          onSave={handleSave}
-        />
-      )}
-      <Document />
-    </div>
+      <div className="document-edit-forms">
+        {data && (
+          <DocumentForm
+            doc={data}
+            {...{ isSaving, savingError }}
+            onSave={handleSave}
+          />
+        )}
+      </div>
+      <div className="document-preview">
+        <Document isPreview={true} />
+      </div>
+    </main>
   );
 }

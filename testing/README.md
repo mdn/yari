@@ -25,11 +25,11 @@ Also, you can start the full development environment with:
 yarn start:static-server
 ```
 
-That will start the `watcher` (long-running), the `server` (Express
-serve on `localhost:5000`), and the client (`create-react-app` on
-`localhost:3000`).
+That will start the `server` (Express
+serve on <http://localhost:5000>), and the client (`create-react-app` on
+<http://localhost:3000>).
 To test it go to:
-[http://localhost:3000/en-US/docs/Web/Foo](http://localhost:3000/en-US/docs/Web/Foo)
+<http://localhost:3000/en-US/docs/Web/Foo>
 for example.
 
 Now you should be able to make edits and notice automatic reloading.
@@ -60,7 +60,7 @@ In GitHub Actions, instead of trying to optimize certain tests, just skip
 them if none of the files that affect the tests have changed.
 
 One such example is the tests for the `kumascript` source code plus macros.
-Use this technique heartly to speed up the continous integration.
+Use this technique heartily to speed up the continuous integration.
 
 ## Caveats
 
@@ -111,7 +111,7 @@ assets, builds the actual documents, and it runs _all_ `jest` tests.
 To just run all `jest` tests, just run the last command:
 
 ```sh
-yarn test;testing
+yarn test:testing
 ```
 
 Which is just an alias to start `jest` which means you can apply your own
@@ -121,7 +121,7 @@ parameters. For example, this starts the `jest` watcher:
 yarn test:testing --watch
 ```
 
-Once the `jest` watcher has started press <kbd>p</kbd> and type `headless`
+Once the `jest` watcher has started press "p" and type `headless`
 and now it only (re-runs) tests the headless tests.
 
 **Note!** that only in local development do you need to start the functional
@@ -148,6 +148,19 @@ this line (temporarily) into your test code:
 
 ```javascript
 await jestPuppeteer.debug();
+```
+
+Note that when you use `await jestPuppeteer.debug()` the real browser window will
+close as soon as the test failed with only a tiny timeout. To resolve that, add
+a third option to the test with the number of seconds you want it to wait. E.g.
+
+```javascript
+it("should show your settings page", async () => {
+  const url = testURL("/en-US/settings");
+  await page.goto(url);
+  await jestPuppeteer.debug();
+  await expect(page).toMatchElement("h1", { text: "Account settings" });
+}, 9999);
 ```
 
 Another useful trick is to dump the DOM HTML on the console. You can

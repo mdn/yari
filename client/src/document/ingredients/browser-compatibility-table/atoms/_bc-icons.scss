@@ -1,0 +1,76 @@
+@use "sass:math";
+
+.bc-icons {
+  display: inline-block;
+  vertical-align: text-top;
+}
+
+.bc-icons i,
+.legend-icons {
+  &::before {
+    background-size: $base-unit * 3;
+    display: inline-block;
+    height: $base-unit * 3;
+    line-height: 1;
+    margin-left: math.div($base-unit, 1.2);
+    margin-right: math.div($base-unit, 1.5);
+    width: $base-unit * 3;
+  }
+}
+
+.ic-footnote {
+  &::before {
+    background-image: url("~@mdn/dinocons/general/asterisk.svg");
+    content: "";
+  }
+}
+
+.ic-non-standard {
+  &::before {
+    background-image: url("~@mdn/dinocons/notifications/exclamation-triangle.svg");
+    content: "";
+  }
+}
+
+.ic-deprecated {
+  &::before {
+    background-image: url("~@mdn/dinocons/emojis/thumbs-down.svg");
+    content: "";
+  }
+}
+
+.ic-experimental {
+  &::before {
+    background-image: url("~@mdn/dinocons/general/flask.svg");
+    content: "";
+  }
+}
+
+.ic-prefix {
+  display: inline-block;
+  margin-right: 5px;
+
+  &::before {
+    color: $mdn-neutral900;
+    content: "-x-";
+    font-size: $small-medium-font-size;
+    font-style: normal;
+    font-weight: bold;
+    text-decoration: none;
+    white-space: nowrap;
+  }
+}
+
+.ic-disabled {
+  &::before {
+    background-image: url("~@mdn/dinocons/general/flag.svg");
+    content: "";
+  }
+}
+
+.ic-altname {
+  &::before {
+    background-image: url("~@mdn/dinocons/general/fork.svg");
+    content: "";
+  }
+}

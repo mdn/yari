@@ -40,8 +40,6 @@
  *
  * @prettier
  */
-const fs = require("fs");
-
 const Parser = require("./parser.js");
 const Templates = require("./templates.js");
 const Environment = require("./environment.js");
@@ -52,6 +50,7 @@ const {
   MacroExecutionError,
   MacroRedirectedLinkError,
   MacroBrokenLinkError,
+  MacroWrongXRefError,
   MacroDeprecatedError,
   MacroPagesError,
 } = require("./errors.js");
@@ -68,17 +67,20 @@ async function render(
   renderPrerequisiteFromURL,
   { templates = null } = {}
 ) {
-  // Parse the source document.
+  pageEnvironment.slug = pageEnvironment.slug.replace(
+    /^(orphaned)|(conflicting)\//,
+    ""
+  );
   let tokens;
   try {
     tokens = Parser.parse(source);
   } catch (e) {
     // If there are any parsing errors in the input document
-    // we can't process any of the macros, and just return the
-    // source document unmodified, along with the error.
+    // we can't process any of the macros. Return early with a MacroInvocationError
+    // which contains useful information to the caller.
     // Note that rendering errors in the macros are different;
     // we handle these individually below.
-    return [source, [new MacroInvocationError(e, source)]];
+    throw new MacroInvocationError(e, source);
   }
 
   // The default templates are only overridden during testing.
@@ -110,7 +112,7 @@ async function render(
 
   function recordNonFatalError(kind, message, redirectInfo = null) {
     let NonFatalErrorClass;
-    let args = [new Error(message), source, currentToken];
+    const args = [new Error(message), source, currentToken];
     if (kind === "deprecated") {
       NonFatalErrorClass = MacroDeprecatedError;
     } else if (kind === "broken-link") {
@@ -120,6 +122,8 @@ async function render(
       args.push(redirectInfo);
     } else if (kind === "bad-pages") {
       NonFatalErrorClass = MacroPagesError;
+    } else if (kind === "wrong-xref-macro") {
+      NonFatalErrorClass = MacroWrongXRefError;
     } else {
       throw Error(`unsupported kind of non-fatal error requested: "${kind}"`);
     }
@@ -134,7 +138,7 @@ async function render(
   // Create the Environment object that we'll use to render all of
   // the macros on the page, and provide a way for macros or the
   // utilities they call to record non-fatal errors.
-  let environment = new Environment(
+  const environment = new Environment(
     {
       ...pageEnvironment,
       recordNonFatalError,
@@ -144,7 +148,7 @@ async function render(
   );
 
   // Loop through the tokens
-  for (let token of tokens) {
+  for (const token of tokens) {
     // We only care about macros; skip anything else
     if (token.type !== "MACRO") {
       // If it isn't a MACRO token, it's a TEXT token.
@@ -152,7 +156,7 @@ async function render(
       continue;
     }
 
-    let macroName = normalizeMacroName(token.name);
+    const macroName = normalizeMacroName(token.name);
 
     if (selectiveMode) {
       if (selectMacros.includes(macroName)) {
@@ -177,7 +181,7 @@ async function render(
     // here in that case.
     if (token.args.length === 1 && typeof token.args[0] === "object") {
       // the json args case
-      let keys = Object.keys(token.args[0]);
+      const keys = Object.keys(token.args[0]);
       keys.sort();
       token.signature = macroName + JSON.stringify(token.args[0], keys);
     } else {

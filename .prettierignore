@@ -6,6 +6,9 @@ Dockerfile
 Makefile
 Procfile
 content/_all-titles.json
+_githistory.json
+/client/src/serviceWorker.js
+/fake-v1-api/*.json
 # exclude these directories
 /client/build/
 /ssr/dist/
@@ -21,7 +24,4 @@ content/_all-titles.json
 /testing/content/
 /testing/archivecontent/
 /kumascript/coverage/
-/client/src/kumastyles/
-
-# Misc files to ignore
-/client/src/serviceWorker.js
+/ssr/mozilla.dnthelper.min.js

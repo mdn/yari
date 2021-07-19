@@ -1,0 +1,39 @@
+/* standard page grid */
+@supports (display: grid) {
+  .page-wrapper {
+    display: grid;
+    grid-template-columns: 100%;
+  }
+
+  .standard-page {
+    max-width: inherit;
+
+    .page-header,
+    .page-content-container {
+      grid-column: 1/2;
+    }
+
+    .page-header {
+      grid-row: 1/2;
+    }
+
+    .titlebar-container {
+      grid-row: 2/3;
+    }
+
+    .page-content-container {
+      display: grid;
+      grid-row: 3/4;
+      grid-template-columns: 100%;
+      padding: $base-spacing;
+    }
+
+    @media #{$mq-large-desktop-and-up} {
+      .page-content-container {
+        margin: 0 auto;
+        max-width: $max-width-default;
+        width: 100%;
+      }
+    }
+  }
+}

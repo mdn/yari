@@ -9,22 +9,31 @@ var slug = env.slug;
 var locale = env.locale;
 var APIHref = '/' + locale + '/docs/Web/API';
 var output = "";
+
+// This is a hack. But to be able to use this macro in the /MDN/Kitchensink page
+// we have to, unfortunately, pretend that our current slug is something
+// that it's not. Otherwise you'll always get a `MacroPagesError` when using
+// this macro on the kitchensink page.
+if (slug.toLowerCase().startsWith('mdn/kitchensink')) {
+  // Sorry, but it's important to be able to run this macro for CI.
+  slug = 'Web/API/ServiceWorker';
+}
+
 // slug is not available in preview mode.
 if (slug) {
 var mainIF = slug.replace('Web/API/','').split('/')[0];
 mainIF = mainIF.charAt(0).toUpperCase() + mainIF.slice(1);
 var group = $0;
 var hasTag = page.hasTag;
-var escapeQuotes = mdn.escapeQuotes;
 var htmlEscape = kuma.htmlEscape;
 var rtlLocales = ['ar', 'he', 'fa'];
 
-var webAPIData = string.deserialize(await template("InterfaceData"));
+var webAPIData = JSON.parse(await template("InterfaceData"));
 if (group) {
-  var webAPIGroups = string.deserialize(await template("GroupData"));
+  var webAPIGroups = JSON.parse(await template("GroupData"));
 }
 
-var commonl10n = string.deserialize(await template('L10n:Common'));
+var commonl10n = JSON.parse(await template('L10n:Common'));
 
 var text = {
     'Methods': mdn.getLocalString(commonl10n, 'Methods'),
@@ -56,8 +65,6 @@ if (group && webAPIGroups[0][group]) {
   }
   related.sort();
 }
-
-var pageList = mainIFPages;
 
 var properties = [];
 var methods = [];
@@ -110,7 +117,7 @@ events.sort(APISort);
 function getInheritance(inh) {
   if (inh.length > 0) {
     inheritedIF.push(inh);
-    if (webAPIData[0].hasOwnProperty(inh)) {
+    if (Object.prototype.hasOwnProperty.call(webAPIData[0], inh)) {
         var inh = webAPIData[0][inh].inh;
         getInheritance(inh);
     }
@@ -120,7 +127,7 @@ getInheritance(inh);
 
 function getImplementedBy(data) {
   for (var key in data) {
-    if (data.hasOwnProperty(key)
+    if (Object.prototype.hasOwnProperty.call(data, key)
         && data[key].impl
         && data[key].impl.indexOf(mainIF) != -1) {
       implementedBy.push(key);
@@ -133,10 +140,10 @@ getImplementedBy(webAPIData[0]);
 // output helpers
 
 var badges = {
-  ExperimentalBadge : '<span class="sidebar-icon">' + await template("ExperimentalBadge", [1]) + '</span>',
-  NonStandardBadge  : '<span class="sidebar-icon">' + await template("NonStandardBadge", [1]) + '</span>',
-  DeprecatedBadge   : '<span class="sidebar-icon">' + await template("DeprecatedBadge", [1]) + '</span>',
-  ObsoleteBadge     : '<span class="sidebar-icon">' + await template("ObsoleteBadge", [1]) + '</span>',
+  ExperimentalBadge : await template("ExperimentalBadge"),
+  NonStandardBadge : await template("NonStandardBadge"),
+  DeprecatedBadge : await template("DeprecatedBadge"),
+  ObsoleteBadge : await template("ObsoleteBadge"),
 }
 
 function buildSublist(pages, title) {
@@ -171,12 +178,6 @@ function buildSublist(pages, title) {
         }
     }
 
-    var cta = '';
-     if (!translated && locale != 'en-US') {
-        cta += ' <a href="'+ url +'$translate" style="opacity:0.5" title="'+ text['title'] + '">' + text['translate'] + '</a>';
-    }
-
-
     result += '<li>';
 
     if (hasTag(aPage, 'Experimental')) {
@@ -203,7 +204,7 @@ function buildSublist(pages, title) {
     if (slug == aPage.slug) {
         result += '<em><code>' + title + '</code></em>'
     } else {
-        result += '<a href="' + url + '"><code>' + title + '</code></a>' + cta;
+        result += '<a href="' + url + '"><code>' + title + '</code></a>';
     }
 
     if (rtlLocales.indexOf(locale) != -1) {

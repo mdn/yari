@@ -6,7 +6,7 @@ name: Testing Yari
 on:
   push:
     branches:
-      - master
+      - main
   pull_request:
 
 jobs:
@@ -14,60 +14,50 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v2
-
-      - uses: technote-space/get-diff-action@v4
-        id: git_diff_kumascript
-        with:
-          PATTERNS: |
-            kumascript/**
-
-      - name: Display Git diffs
-        run: echo ${{ steps.git_diff_kumascript.outputs.diff }}
+      - uses: actions/checkout@v2.3.4
 
       - name: Setup Node.js environment
-        uses: actions/setup-node@v2.1.2
+        uses: actions/setup-node@v2.2.0
         with:
           node-version: "12"
-      - name: Display Node & Yarn version
-        run: |
-          node --version
-          yarn --version
 
-      - name: Get yarn cache directory path
-        id: yarn-cache-dir-path
-        run: echo "::set-output name=dir::$(yarn cache dir)"
-      - uses: actions/cache@v2.1.2
-        id: yarn-cache # use this to check for `cache-hit` (`steps.yarn-cache.outputs.cache-hit != 'true'`)
+      - name: Cache node_modules
+        uses: actions/cache@v2.1.6
+        id: cached-node_modules
         with:
-          path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
-          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-yarn-
+          path: |
+            node_modules
+          key: ${{ runner.os }}-${{ hashFiles('yarn.lock') }}
 
       - name: Install all yarn packages
+        if: steps.cached-node_modules.outputs.cache-hit != 'true'
+        env:
+          PUPPETEER_SKIP_CHROMIUM_DOWNLOAD: 1
         run: |
-          ./testing/scripts/yarn-install.sh
-          ./testing/scripts/yarn-lockfile-check.sh
+          yarn --frozen-lockfile
 
-      - name: Lint checking
-        run: ./testing/scripts/lint-check.sh
+      - name: Lint prettier
+        run: yarn prettier-check
+
+      - name: Lint ESLint
+        run: yarn eslint
 
       - name: Unit testing client
         run: yarn test:client
 
-      - name: Unit testing kumascript
-        if: steps.git_diff_kumascript.outputs.diff
-        run: |
-          export CONTENT_ROOT=testing/content/files
-          yarn test:kumascript
-
       - name: Functional testing
-        run: |
+        env:
           # Make this env var explicit for GitHub Actions because in local
           # dev/debug you're encouraged to start it yourself in a separate
           # terminal.
-          export TESTING_START_SERVER=true
+          TESTING_START_SERVER: true
+          # Use local chrome installs since we skip downloading it as part
+          # of the yarn installs above
+          PUPPETEER_EXECUTABLE_PATH: /usr/bin/google-chrome
+        run: |
+          # Needed for the puppeteer tests that start a static Express server,
+          # but it starts it from within the testing/ path.
+          echo "CONTENT_ROOT=content/files" >> .env
 
           # In terms of the --maxWorkers option, it's not yet clear which
           # is best.
@@ -78,73 +68,3 @@ jobs:
           # Also note that `--runInBand` is the same as `--maxWorkers=1`
 
           ./testing/scripts/functional-test.sh --runInBand
-
-  deployer:
-    runs-on: ubuntu-latest
-
-    steps:
-      - uses: actions/checkout@v2
-
-      - uses: technote-space/get-diff-action@v4
-        with:
-          PATTERNS: deployer/**
-
-      - name: Install Python
-        if: env.GIT_DIFF
-        uses: actions/setup-python@v2
-        with:
-          python-version: "3.8"
-
-      - name: Install Python poetry
-        if: env.GIT_DIFF
-        uses: dschep/install-poetry-action@v1.3
-
-      - name: Install deployer
-        if: env.GIT_DIFF
-        run: |
-          cd deployer
-          poetry install
-
-      - name: Display Python & Poetry version
-        if: env.GIT_DIFF
-        run: |
-          python --version
-          poetry --version
-
-      - name: Lint Python code
-        if: env.GIT_DIFF
-        run: |
-          flake8 deployer
-          black --check deployer
-
-      - name: Basic run of deployer
-        if: env.GIT_DIFF
-        run: |
-          cd deployer
-          poetry run deployer --help
-
-  docs:
-    runs-on: ubuntu-latest
-
-    steps:
-      - uses: actions/checkout@v2
-
-      - uses: technote-space/get-diff-action@v4
-        with:
-          PATTERNS: docs/**/*.md
-          FILES: |
-            README.md
-
-      - name: Setup Node.js environment
-        if: env.GIT_DIFF
-        uses: actions/setup-node@v2.1.2
-        with:
-          node-version: "12"
-
-      - name: Lint markdown files
-        if: env.GIT_DIFF
-        run: |
-          echo "GIT DIFF:"
-          echo "${{ env.GIT_DIFF }}"
-          echo ""
-          npx markdownlint-cli ${{ env.GIT_DIFF }}

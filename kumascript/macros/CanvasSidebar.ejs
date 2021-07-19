@@ -6,7 +6,7 @@ function state(section) {
   if (section == currentSection) {
     return "open";
   }
-  return "closed";
+  return "";
 }
 
 var text = mdn.localStringMap({
@@ -33,9 +33,7 @@ var text = mdn.localStringMap({
     'Interfaces': 'Interfaces',
     'Documentation': 'Documentation:',
     'Useful_lists': 'Useful lists',
-    'Canvas_tag': 'Pages tagged "Canvas"',
     'Contribute': 'Contribute',
-    'Doc_status': 'Canvas doc status',
     'The_MDN_project': 'The MDN project',
   },
   'zh-CN': {
@@ -61,9 +59,7 @@ var text = mdn.localStringMap({
     'Interfaces': '接口',
     'Documentation': '文档:',
     'Useful_lists': '常用页面列表',
-    'Canvas_tag': '拥有 "Canvas" 标签的页面',
     'Contribute': '贡献',
-    'Doc_status': 'Canvas 文档翻译状态',
     'The_MDN_project': 'MDN 项目',
   },
   'ru': {
@@ -89,10 +85,34 @@ var text = mdn.localStringMap({
     'Interfaces': 'Интерфейсы',
     'Documentation': 'Документация:',
     'Useful_lists': 'Полезные списки',
-    'Canvas_tag': 'Страницы отмеченные "Canvas"',
     'Contribute': 'Внести свой вклад',
-    'Doc_status': 'Статус документации по Canvas',
     'The_MDN_project': 'Проект MDN',
+  },
+  'ja': {
+    'Canvas_API': 'Canvas API',
+    'Canvas_tutorial': 'Canvas チュートリアル',
+    'Basic_usage': '基本的な使用',
+    'Drawing_shapes': '図形の描画',
+    'Applying': 'スタイルと色の適用',
+    'Text': 'テキストの描画',
+    'Using_images': '画像の使用',
+    'Transformations': '変換',
+    'Compositing': '合成とクリッピング',
+    'Basic_animations': '基本的なアニメーション',
+    'Advanced_animations': '高度なアニメーション',
+    'Pixel_manipulation': 'ピクセル操作',
+    'Hitregions': 'ヒット領域とアクセシビリティ',
+    'Optimizing': 'canvas の最適化',
+    'Finale': '最後に',
+    'Examples': '例',
+    'raycaster': 'A basic raycaster',
+    'snippets': 'Canvas コードスニペット',
+    'video_canvas': 'canvas を用いた動画の操作',
+    'Interfaces': 'インターフェイス',
+    'Documentation': 'ドキュメント:',
+    'Useful_lists': '有益なリスト',
+    'Contribute': '貢献',
+    'The_MDN_project': 'MDN プロジェクト',
   },
   'ko': {
     'Canvas_API': 'Canvas API',
@@ -117,9 +137,7 @@ var text = mdn.localStringMap({
     'Interfaces': '인터페이스',
     'Documentation': '문서:',
     'Useful_lists': '유용한 리스트',
-    'Canvas_tag': '"Canvas"가 태그된 페이지',
     'Contribute': '기여하기',
-    'Doc_status': 'Canvas 문서 상태',
     'The_MDN_project': 'MDN 프로젝트',
   }
 });
@@ -168,24 +186,15 @@ var text = mdn.localStringMap({
         <li><%-await template("domxref", ["ImageBitmap"])%></li>
         <li><%-await template("domxref", ["ImageData"])%></li>
         <li><%-await template("domxref", ["TextMetrics"])%></li>
-        <li><span class="sidebar-icon"><%-await template("ExperimentalBadge", [1])%></span> <%-await template("domxref", ["Path2D"])%></li>
+        <li><%-await template("ExperimentalBadge")%> <%-await template("domxref", ["Path2D"])%></li>
       </ol>
     </details>
   </li>
   <li><strong><a href="/<%=locale%>/docs/MDN"><%=text['Documentation']%></a></strong></li>
   <li class="toggle">
-    <details <%=state('Useful_lists')%>>
-      <summary><%=text['Useful_lists']%></summary>
-      <ol>
-        <li><a href="/<%=locale%>/docs/tag/Canvas"><%=text['Canvas_tag']%></a></li>
-      </ol>
-    </details>
-  </li>
-  <li class="toggle">
     <details <%=state('Contribute')%>>
       <summary><%=text['Contribute']%></summary>
       <ol>
-        <li><a href="/<%=locale%>/docs/MDN/Doc_status/API/Canvas"><%=text['Doc_status']%></a></li>
         <li><a href="/<%=locale%>/docs/MDN"><%=text['The_MDN_project']%></a></li>
       </ol>
     </details>

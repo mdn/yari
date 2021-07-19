@@ -41,7 +41,7 @@
       "impl": []
     },
     "AudioContext": {
-      "inh": "EventTarget",
+      "inh": "BaseAudioContext",
       "impl": []
     },
     "AudioDestinationNode": {
@@ -168,7 +168,23 @@
       "inh": "Event",
       "impl": []
     },
+    "CSSConditionRule": {
+      "inh": "CSSGroupingRule",
+      "impl": []
+    },
     "CSSCounterStyleRule": {
+      "inh": "CSSRule",
+      "impl": []
+    },
+    "CSSFontFaceRule": {
+      "inh": "CSSRule",
+      "impl": []
+    },
+    "CSSFontFeatureValuesRule": {
+      "inh": "CSSRule",
+      "impl": []
+    },
+    "CSSFontPaletteValuesRule": {
       "inh": "CSSRule",
       "impl": []
     },
@@ -176,24 +192,76 @@
       "inh": "Event",
       "impl": []
     },
+    "CSSGroupingRule": {
+      "inh": "CSSRule",
+      "impl": []
+    },
+    "CSSImportRule": {
+      "inh": "CSSRule",
+      "impl": []
+    },
+    "CSSKeyframeRule": {
+      "inh": "CSSRule",
+      "impl": []
+    },
+    "CSSKeyframesRule": {
+      "inh": "CSSRule",
+      "impl": []
+    },
+    "CSSMarginRule": {
+      "inh": "CSSRule",
+      "impl": []
+    },
+    "CSSMediaRule": {
+      "inh": "CSSConditionRule",
+      "impl": []
+    },
+    "CSSNamespaceRule": {
+      "inh": "CSSRule",
+      "impl": []
+    },
+    "CSSPageRule": {
+      "inh": "CSSRule",
+      "impl": []
+    },
     "CSSPrimitiveValue": {
       "inh": "CSSValue",
+      "impl": []
+    },
+    "CSSPropertyRule": {
+      "inh": "CSSRule",
       "impl": []
     },
     "CSSPseudoElement": {
       "inh": "EventTarget",
       "impl": []
     },
+    "CSSRule": {
+      "inh": "",
+      "impl": []
+    },
     "CSSStyleDeclaration": {
       "inh": "",
+      "impl": []
+    },
+    "CSSStyleRule": {
+      "inh": "CSSRule",
       "impl": []
     },
     "CSSStyleSheet": {
       "inh": "StyleSheet",
       "impl": []
     },
+    "CSSSupportsRule": {
+      "inh": "CSSConditionRule",
+      "impl": []
+    },
     "CSSValueList": {
       "inh": "CSSValue",
+      "impl": []
+    },
+    "CSSViewportRule": {
+      "inh": "CSSRule",
       "impl": []
     },
     "CallEvent": {
@@ -242,7 +310,7 @@
     },
     "CharacterData": {
       "inh": "Node",
-      "impl": ["ChildNode", "NonDocumentTypeChildNode"]
+      "impl": ["ChildNode"]
     },
     "ChromeWorker": {
       "inh": "Worker",
@@ -392,10 +460,6 @@
       "inh": "EventTarget",
       "impl": []
     },
-    "DeviceLightEvent": {
-      "inh": "Event",
-      "impl": []
-    },
     "DeviceMotionEvent": {
       "inh": "Event",
       "impl": []
@@ -421,11 +485,8 @@
       "impl": [
         "XPathEvaluator",
         "GlobalEventHandlers",
-        "TouchEventHandlers",
         "ParentNode",
-        "OnErrorEventHandlerForNodes",
-        "GeometryUtils",
-        "FontFaceSource"
+        "GeometryUtils"
       ]
     },
     "DocumentFragment": {
@@ -450,13 +511,7 @@
     },
     "Element": {
       "inh": "Node",
-      "impl": [
-        "ChildNode",
-        "NonDocumentTypeChildNode",
-        "ParentNode",
-        "Animatable",
-        "GeometryUtils"
-      ]
+      "impl": ["ChildNode", "ParentNode", "Animatable", "GeometryUtils"]
     },
     "EngineeringMode": {
       "inh": "EventTarget",
@@ -540,7 +595,7 @@
     },
     "HTMLAnchorElement": {
       "inh": "HTMLElement",
-      "impl": ["HTMLHyperlinkElementUtils", "URLUtilsSearchParams"]
+      "impl": []
     },
     "HTMLAppletElement": {
       "inh": "HTMLElement",
@@ -552,7 +607,7 @@
     },
     "HTMLAreaElement": {
       "inh": "HTMLElement",
-      "impl": ["HTMLHyperlinkElementUtils", "URLUtilsSearchParams"]
+      "impl": []
     },
     "HTMLAudioElement": {
       "inh": "HTMLMediaElement",
@@ -612,11 +667,7 @@
     },
     "HTMLElement": {
       "inh": "Element",
-      "impl": [
-        "GlobalEventHandlers",
-        "TouchEventHandlers",
-        "OnErrorEventHandlerForNodes"
-      ]
+      "impl": ["GlobalEventHandlers"]
     },
     "HTMLEmbedElement": {
       "inh": "HTMLElement",
@@ -759,6 +810,10 @@
       "impl": []
     },
     "HTMLPictureElement": {
+      "inh": "HTMLElement",
+      "impl": []
+    },
+    "HTMLPortalElement": {
       "inh": "HTMLElement",
       "impl": []
     },
@@ -1234,7 +1289,7 @@
       "impl": []
     },
     "OfflineAudioContext": {
-      "inh": "AudioContext",
+      "inh": "BaseAudioContext",
       "impl": []
     },
     "OfflineResourceList": {
@@ -1252,6 +1307,10 @@
     "OscillatorNode": {
       "inh": "AudioNode",
       "impl": ["AudioNodePassThrough"]
+    },
+    "OTPCredential": {
+      "inh": "Credential",
+      "impl": []
     },
     "PageTransitionEvent": {
       "inh": "Event",
@@ -1291,6 +1350,10 @@
     },
     "Performance": {
       "inh": "",
+      "impl": []
+    },
+    "PerformanceElementTiming": {
+      "inh": "PerformanceEntry",
       "impl": []
     },
     "PerformanceLongTaskTiming": {
@@ -1527,11 +1590,7 @@
     },
     "SVGElement": {
       "inh": "Element",
-      "impl": [
-        "GlobalEventHandlers",
-        "TouchEventHandlers",
-        "OnErrorEventHandlerForNodes"
-      ]
+      "impl": ["GlobalEventHandlers"]
     },
     "SVGEllipseElement": {
       "inh": "SVGGeometryElement",
@@ -1919,7 +1978,7 @@
     },
     "ServiceWorker": {
       "inh": "EventTarget",
-      "impl": ["AbstractWorker"]
+      "impl": []
     },
     "ServiceWorkerContainer": {
       "inh": "EventTarget",
@@ -1947,7 +2006,7 @@
     },
     "SharedWorker": {
       "inh": "EventTarget",
-      "impl": ["AbstractWorker"]
+      "impl": []
     },
     "SharedWorkerGlobalScope": {
       "inh": "WorkerGlobalScope",
@@ -2185,7 +2244,6 @@
         "GlobalCrypto",
         "SpeechSynthesisGetter",
         "WindowModal",
-        "TouchEventHandlers",
         "OnErrorEventHandlerForWindow",
         "ChromeWindow",
         "WindowOrWorkerGlobalScope"
@@ -2201,7 +2259,7 @@
     },
     "Worker": {
       "inh": "EventTarget",
-      "impl": ["AbstractWorker"]
+      "impl": []
     },
     "WorkerGlobalScope": {
       "inh": "EventTarget",
@@ -2209,7 +2267,7 @@
     },
     "WorkerLocation": {
       "inh": "",
-      "impl": ["URLUtilsReadOnly"]
+      "impl": []
     },
     "WorkerNavigator": {
       "inh": "",
@@ -2334,12 +2392,7 @@
     },
     "XULElement": {
       "inh": "Element",
-      "impl": [
-        "GlobalEventHandlers",
-        "TouchEventHandlers",
-        "MozFrameLoaderOwner",
-        "OnErrorEventHandlerForNodes"
-      ]
+      "impl": ["GlobalEventHandlers", "MozFrameLoaderOwner"]
     }
   }
 ]

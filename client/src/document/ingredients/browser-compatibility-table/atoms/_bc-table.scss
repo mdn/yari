@@ -1,0 +1,146 @@
+@use "sass:math";
+
+.bc-table {
+  background-color: $mdn-neutral100;
+  border: 0;
+  border-collapse: separate;
+  border-spacing: 0;
+  margin-bottom: 0;
+  table-layout: fixed;
+  width: 100%;
+
+  abbr {
+    cursor: help;
+    text-decoration: none;
+  }
+
+  td,
+  th {
+    border-bottom: 0 solid transparent;
+    border-left: 1px solid $mdn-neutral900;
+    border-right: 0;
+    border-top: 1px solid $mdn-neutral900;
+    padding: 0;
+    position: relative;
+    text-align: center;
+  }
+
+  th {
+    background-color: transparent;
+    border-left: 0;
+    border-right: 1px solid $mdn-neutral900;
+    overflow: hidden;
+    padding: $base-unit;
+  }
+
+  thead {
+    display: none;
+
+    @media #{$mq-small-desktop-and-up} {
+      display: table-header-group;
+    }
+
+    td {
+      border-left: 0;
+      border-right: 2px solid $mdn-neutral900;
+      border-top: 0;
+      overflow: hidden;
+
+      @media #{$mq-small-desktop-and-up} {
+        width: 200px;
+      }
+    }
+  }
+
+  .bc-table-row-header {
+    padding: math.div($base-spacing, 2) math.div($base-spacing, 4);
+
+    code {
+      text-decoration: none;
+    }
+  }
+
+  tbody {
+    th,
+    td {
+      border-left: 0;
+      border-right: 0;
+      display: block;
+      max-width: 100%;
+      text-align: left;
+      width: 100%;
+    }
+
+    th {
+      padding: 0;
+
+      @media #{$mq-small-desktop-and-up} {
+        border-right: 2px solid $mdn-neutral900;
+        display: table-cell;
+        font-weight: normal;
+        overflow: hidden;
+        width: 200px;
+      }
+    }
+
+    td {
+      @media #{$mq-small-desktop-and-up} {
+        border-right: 1px solid $mdn-neutral900;
+        display: table-cell;
+        overflow: hidden;
+        padding: math.div($base-spacing, 2) $base-unit;
+        text-align: center;
+        vertical-align: middle;
+      }
+    }
+
+    tr:nth-child(even) {
+      background-color: $mdn-neutral100;
+    }
+
+    dl {
+      max-width: 100%;
+    }
+  }
+
+  .bc-browser-name {
+    display: inline-block;
+    padding: math.div($base-spacing, 4);
+    width: 75%;
+
+    @media #{$mq-small-desktop-and-up} {
+      display: none;
+    }
+  }
+
+  /*
+   * In the BCD table, in the first column we link to other MDN pages
+   * based on the APIs that it links to. Sometimes, these links refer to
+   * a `mdn_url` that doesn't actually, exist. Instead of making a link to
+   * page that will just 404, we annotate it so it's clear that it's not
+   * going to work. So it needs to stand out a bit.
+   * This color comes from the old Kuma code which is used for all links
+   * that link to page that doesn't exist.
+   */
+  .new {
+    color: $mdn-red700;
+  }
+}
+
+@media #{$mq-small-desktop-and-up} {
+  .bc-table-web {
+    thead {
+      th:nth-child(7) {
+        border-right: 1px solid $mdn-neutral900;
+      }
+
+      th:nth-child(8) {
+        border-left: 1px solid $mdn-neutral900;
+      }
+    }
+
+    td:nth-child(8) {
+      border-left: 1px solid $mdn-neutral900;
+    }
+  }
+}

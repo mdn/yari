@@ -4,67 +4,115 @@ const path = require("path");
 const chalk = require("chalk");
 const express = require("express");
 const send = require("send");
-const proxy = require("express-http-proxy");
+const { createProxyMiddleware } = require("http-proxy-middleware");
+const cookieParser = require("cookie-parser");
 const openEditor = require("open-editor");
 
 const {
-  buildDocumentFromURL,
   buildDocument,
   buildLiveSamplePageFromURL,
   renderContributorsTxt,
 } = require("../build");
+const { findDocumentTranslations } = require("../content/translations");
 const {
   CONTENT_ROOT,
   Document,
   Redirect,
   Image,
-  resolveFundamental,
+  CONTENT_TRANSLATED_ROOT,
 } = require("../content");
-const { prepareDoc, renderHTML } = require("../ssr/dist/main");
+// eslint-disable-next-line node/no-missing-require
+const { renderHTML } = require("../ssr/dist/main");
+const { CSP_VALUE, DEFAULT_LOCALE } = require("../libs/constants");
 
 const { STATIC_ROOT, PROXY_HOSTNAME, FAKE_V1_API } = require("./constants");
 const documentRouter = require("./document");
 const fakeV1APIRouter = require("./fake-v1-api");
-const { searchRoute } = require("./document-watch");
+const { searchIndexRoute } = require("./search-index");
 const flawsRoute = require("./flaws");
-const { staticMiddlewares } = require("./middlewares");
+const { translationsRoute } = require("./translations");
+const { staticMiddlewares, originRequestMiddleware } = require("./middlewares");
+const { getRoot } = require("../content/utils");
+
+async function buildDocumentFromURL(url) {
+  const document = Document.findByURL(url);
+  if (!document) {
+    return null;
+  }
+  const documentOptions = {
+    // The only times the server builds on the fly is basically when
+    // you're in "development mode". And when you're not building
+    // to ship you don't want the cache to stand have any hits
+    // since it might prevent reading fresh data from disk.
+    clearKumascriptRenderCache: true,
+  };
+  if (CONTENT_TRANSLATED_ROOT) {
+    // When you're running the dev server and build documents
+    // every time a URL is requested, you won't have had the chance to do
+    // the phase that happens when you do a regular `yarn build`.
+    document.translations = findDocumentTranslations(document);
+  }
+  return await buildDocument(document, documentOptions);
+}
 
 const app = express();
+
 app.use(express.json());
 
-app.use((req, res, next) => {
-  // If we have a fundamental redirect mimic out Lambda@Edge and redirect.
-  const { url: fundamentalRedirectUrl, status } = resolveFundamental(req.url);
-  if (fundamentalRedirectUrl && status) {
-    return res.redirect(status, fundamentalRedirectUrl);
-  }
-  return next();
-});
+// Needed because we read cookies in the code that mimics what we do in Lambda@Edge.
+app.use(cookieParser());
+
+app.use(originRequestMiddleware);
+
 app.use(staticMiddlewares);
 
+// Depending on if FAKE_V1_API is set, we either respond with JSON based
+// on `.json` files on disk or we proxy the requests to Kuma.
+const proxy = FAKE_V1_API
+  ? fakeV1APIRouter
+  : createProxyMiddleware({
+      target: `${
+        ["developer.mozilla.org", "developer.allizom.org"].includes(
+          PROXY_HOSTNAME
+        )
+          ? "https://"
+          : "http://"
+      }${PROXY_HOSTNAME}`,
+      changeOrigin: true,
+      // proxyTimeout: 20000,
+      // timeout: 20000,
+    });
+
+app.use("/api/v1", proxy);
+// This is an exception and it's only ever relevant in development.
+app.post("/:locale/users/account/signup", proxy);
+
+// It's important that this line comes *after* the setting up for the proxy
+// middleware for `/api/v1` above.
+// See https://github.com/chimurai/http-proxy-middleware/issues/40#issuecomment-163398924
 app.use(express.urlencoded({ extended: true }));
 
-app.use(
-  "/api/v1",
-  // Depending on if FAKE_V1_API is set, we either respond with JSON based
-  // on `.json` files on disk or we proxy the requests to Kuma.
-  FAKE_V1_API
-    ? fakeV1APIRouter
-    : proxy(PROXY_HOSTNAME, {
-        // More options are available on
-        // https://www.npmjs.com/package/express-http-proxy#options
-        proxyReqPathResolver: (req) => "/api/v1" + req.url,
-      })
+app.post(
+  "/csp-violation-capture",
+  express.json({ type: "application/csp-report" }),
+  (req, res) => {
+    const report = req.body["csp-report"];
+    console.warn(
+      chalk.yellow(
+        "CSP violation for directive",
+        report["violated-directive"],
+        "which blocked:",
+        report["blocked-uri"]
+      )
+    );
+    res.sendStatus(200);
+  }
 );
 
 app.use("/_document", documentRouter);
 
 app.get("/_open", (req, res) => {
-  const { line, column, filepath } = req.query;
-  if (!filepath) {
-    throw new Error("No .filepath in the request query");
-  }
-
+  const { line, column, filepath, url } = req.query;
   // Sometimes that 'filepath' query string parameter is a full absolute
   // filepath (e.g. /Users/peterbe/yari/content.../index.html), which usually
   // happens when you this is used from the displayed flaws on a preview
@@ -72,10 +120,22 @@ app.get("/_open", (req, res) => {
   // But sometimes, it's a relative path and if so, it's always relative
   // to the main builder source.
   let absoluteFilepath;
-  if (fs.existsSync(filepath)) {
-    absoluteFilepath = filepath;
+  if (filepath) {
+    if (fs.existsSync(filepath)) {
+      absoluteFilepath = filepath;
+    } else {
+      const [locale] = filepath.split(path.sep);
+      const root = getRoot(locale);
+      absoluteFilepath = path.join(root, filepath);
+    }
+  } else if (url) {
+    const document = Document.findByURL(url);
+    if (!document) {
+      res.status(410).send(`No known document by the URL '${url}'\n`);
+    }
+    absoluteFilepath = document.fileInfo.path;
   } else {
-    absoluteFilepath = path.join(CONTENT_ROOT, filepath);
+    throw new Error("No .filepath or .url in the request query");
   }
 
   // Double-check that the file can be found.
@@ -94,36 +154,20 @@ app.get("/_open", (req, res) => {
   res.status(200).send(`Tried to open ${spec} in ${process.env.EDITOR}`);
 });
 
-// Return about redirects based on a list of URLs.
-// This is used by the "<Flaws/>" component which displays information
-// about broken links in a page, as some of those broken links might just
-// be redirects.
-app.post("/_redirects", (req, res) => {
-  if (req.body === undefined) {
-    throw new Error("express.json middleware not installed");
-  }
-  const redirects = {};
-  if (!req.body.urls) {
-    return res.status(400).send("No .urls array sent in JSON");
-  }
-  for (const url of req.body.urls) {
-    redirects[url] = getRedirectURL(url);
-  }
-  res.json({ redirects });
-});
-
-app.use("/:locale/search-index.json", searchRoute);
+app.use("/:locale/search-index.json", searchIndexRoute);
 
 app.get("/_flaws", flawsRoute);
 
+app.get("/_translations", translationsRoute);
+
 app.get("/*/contributors.txt", async (req, res) => {
-  const url = req.url.replace(/\/contributors\.txt$/, "");
+  const url = req.path.replace(/\/contributors\.txt$/, "");
   const document = Document.findByURL(url);
   res.setHeader("content-type", "text/plain");
   if (!document) {
     return res.status(404).send(`Document not found by URL (${url})`);
   }
-  const [builtDocument] = await buildDocument(document);
+  const { doc: builtDocument } = await buildDocument(document);
   if (document.metadata.contributors || !document.isArchive) {
     res.send(
       renderContributorsTxt(
@@ -139,7 +183,7 @@ app.get("/*/contributors.txt", async (req, res) => {
 });
 
 app.get("/*", async (req, res) => {
-  if (req.url.startsWith("_")) {
+  if (req.url.startsWith("/_")) {
     // URLs starting with _ is exclusively for the meta-work and if there
     // isn't already a handler, it's something wrong.
     return res.status(404).send("Page not found");
@@ -150,43 +194,45 @@ app.get("/*", async (req, res) => {
     return res.status(404).send("Page not found");
   }
 
-  if (req.url.includes("/_samples_/")) {
+  if (req.url.includes("/_sample_.")) {
     try {
-      return res.send(await buildLiveSamplePageFromURL(req.url));
+      return res.send(await buildLiveSamplePageFromURL(req.path));
     } catch (e) {
       return res.status(404).send(e.toString());
     }
   }
 
   if (!req.url.includes("/docs/")) {
-    // This should really only be expected for "single page apps".
-    // All *documents* should be handled by the
-    // `if (req.url.includes("/docs/"))` test above.
-    res.sendFile(path.join(STATIC_ROOT, "/index.html"));
-    return;
+    // If it's a known SPA, like `/en-US/search` then that should have been
+    // matched to its file and not end up here in the catchall handler.
+    // Simulate what we do in the Lambda@Edge.
+    return res
+      .status(404)
+      .sendFile(path.join(STATIC_ROOT, "en-us", "_spas", "404.html"));
   }
 
   // TODO: Would be nice to have a list of all supported file extensions
   // in a constants file.
-  if (/\.(png|webp|gif|jpeg|svg)$/.test(req.url)) {
+  if (/\.(png|webp|gif|jpe?g|svg)$/.test(req.path)) {
     // Remember, Image.findByURL() will return the absolute file path
     // iff it exists on disk.
-    const filePath = Image.findByURL(req.url);
+    const filePath = Image.findByURL(req.path);
     if (filePath) {
       // The second parameter to `send()` has to be either a full absolute
       // path or a path that doesn't start with `../` otherwise you'd
       // get a 403 Forbidden.
       // See https://github.com/mdn/yari/issues/1297
       return send(req, path.resolve(filePath)).pipe(res);
-    } else {
-      return res.status(404).send("File not found on disk");
     }
+    return res.status(404).send("File not found on disk");
   }
 
-  let lookupURL = req.url;
+  let lookupURL = decodeURI(req.path);
   let extraSuffix = "";
+  let bcdDataURL = "";
+  const bcdDataURLRegex = /\/(bcd-\d+|bcd)\.json$/;
 
-  if (req.url.endsWith("index.json")) {
+  if (req.path.endsWith("index.json")) {
     // It's a bit special then.
     // The URL like me something like
     // /en-US/docs/HTML/Global_attributes/index.json
@@ -195,55 +241,67 @@ app.get("/*", async (req, res) => {
     // temporarily remove it and remember to but it back when we're done.
     extraSuffix = "/index.json";
     lookupURL = lookupURL.replace(extraSuffix, "");
+  } else if (bcdDataURLRegex.test(req.path)) {
+    bcdDataURL = req.path;
+    lookupURL = lookupURL.replace(bcdDataURLRegex, "");
   }
 
   const isJSONRequest = extraSuffix.endsWith(".json");
 
   let document;
+  let bcdData;
   try {
     console.time(`buildDocumentFromURL(${lookupURL})`);
-    document = await buildDocumentFromURL(lookupURL, {
-      // The only times the server builds on the fly is basically when
-      // you're in "development mode". And when you're not building
-      // to ship you don't want the cache to stand have any hits
-      // since it might prevent reading fresh data from disk.
-      clearKumascriptRenderCache: true,
-    });
-    console.timeEnd(`buildDocumentFromURL(${lookupURL})`);
+    const built = await buildDocumentFromURL(lookupURL);
+    if (built) {
+      document = built.doc;
+      bcdData = built.bcdData;
+    } else if (
+      lookupURL.split("/")[1] &&
+      lookupURL.split("/")[1].toLowerCase() !== DEFAULT_LOCALE.toLowerCase() &&
+      !CONTENT_TRANSLATED_ROOT
+    ) {
+      // Such a common mistake. You try to view a URL that is not en-US but
+      // you forgot to set CONTENT_TRANSLATED_ROOT.
+      console.warn(
+        `URL is for locale '${
+          lookupURL.split("/")[1]
+        }' but CONTENT_TRANSLATED_ROOT is not set. URL will 404.`
+      );
+    }
   } catch (error) {
     console.error(`Error in buildDocumentFromURL(${lookupURL})`, error);
     return res.status(500).send(error.toString());
+  } finally {
+    console.timeEnd(`buildDocumentFromURL(${lookupURL})`);
   }
 
   if (!document) {
-    // redirect resolving can take some time, so we only do it when there's no document
-    // for the current route
     const redirectURL = Redirect.resolve(lookupURL);
     if (redirectURL !== lookupURL) {
       return res.redirect(301, redirectURL + extraSuffix);
     }
-
-    // It doesn't resolve to a file on disk and it's not a redirect.
-    // Try to send a slightly better error at least.
     return res
       .status(404)
-      .send(
-        `From URL ${lookupURL} no folder on disk could be found. ` +
-          `Tried to find a folder called ${Document.urlToFolderPath(lookupURL)}`
-      );
+      .sendFile(path.join(STATIC_ROOT, "en-us", "_spas", "404.html"));
   }
 
-  prepareDoc(document);
+  if (bcdDataURL) {
+    return res.json(
+      bcdData.find((data) => data.url.toLowerCase() === bcdDataURL).data
+    );
+  }
+
   if (isJSONRequest) {
     res.json({ doc: document });
   } else {
-    res.send(renderHTML(document, lookupURL));
+    res.header("Content-Security-Policy", CSP_VALUE);
+    res.send(renderHTML(lookupURL, { doc: document }));
   }
 });
 
 if (!fs.existsSync(path.resolve(CONTENT_ROOT))) {
-  console.log(chalk.red(`${path.resolve(CONTENT_ROOT)} does not exist!`));
-  process.exit(1);
+  throw new Error(`${path.resolve(CONTENT_ROOT)} does not exist!`);
 }
 
 console.log(
@@ -262,7 +320,7 @@ app.listen(PORT, () => {
     console.warn(
       chalk.yellow(
         "Warning! You have not set an EDITOR environment variable. " +
-          'Using the "Edit in your editor" button will probably fail.'
+          'Using the "Open in your editor" button will probably fail.'
       )
     );
   }

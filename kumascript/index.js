@@ -1,4 +1,7 @@
+const LRU = require("lru-cache");
+
 const { Document } = require("../content");
+const { m2h } = require("../markdown");
 
 const {
   INTERACTIVE_EXAMPLES_BASE_URL,
@@ -12,16 +15,24 @@ const {
   LiveSampleError,
 } = require("./src/live-sample.js");
 const { HTMLTool } = require("./src/api/util.js");
+const { DEFAULT_LOCALE } = require("../libs/constants");
 
 const DEPENDENCY_LOOP_INTRO =
   'The following documents form a circular dependency when rendering (via the "page" and/or "IncludeSubnav" macros):';
 
-const renderCache = new Map();
+const renderCache = new LRU({ max: 2000 });
 
-const renderFromURL = async (url, urlsSeen = null) => {
+const renderFromURL = async (
+  url,
+  { urlsSeen = null, selective_mode = false, invalidateCache = false } = {}
+) => {
   const urlLC = url.toLowerCase();
   if (renderCache.has(urlLC)) {
-    return renderCache.get(urlLC);
+    if (invalidateCache) {
+      renderCache.del(urlLC);
+    } else {
+      return renderCache.get(urlLC);
+    }
   }
 
   urlsSeen = urlsSeen || new Set([]);
@@ -32,35 +43,49 @@ const renderFromURL = async (url, urlsSeen = null) => {
   }
   urlsSeen.add(urlLC);
   const prerequisiteErrorsByKey = new Map();
-  const document = Document.findByURL(url);
+  const document = invalidateCache
+    ? Document.findByURL(url, Document.MEMOIZE_INVALIDATE)
+    : Document.findByURL(url);
   if (!document) {
     throw new Error(
       `From URL ${url} no folder on disk could be found. ` +
         `Tried to find a folder called ${Document.urlToFolderPath(url)}`
     );
   }
-  const { rawHTML, metadata, fileInfo } = document;
+  let { metadata } = document;
+  // If we're rendering a translation, merge in the parent document's
+  // metadata into this metadata.
+  if (metadata.locale !== DEFAULT_LOCALE) {
+    const parentURL = url
+      .toLowerCase()
+      .replace(`/${metadata.locale.toLowerCase()}/`, `/${DEFAULT_LOCALE}/`);
+
+    const parentDocument = invalidateCache
+      ? Document.findByURL(parentURL, Document.MEMOIZE_INVALIDATE)
+      : Document.findByURL(parentURL);
+    if (parentDocument) {
+      metadata = { ...parentDocument.metadata, ...metadata };
+    }
+  }
+
+  const { rawBody, fileInfo, isMarkdown } = document;
+  const rawHTML = isMarkdown ? await m2h(rawBody) : rawBody;
   const [renderedHtml, errors] = await renderMacros(
     rawHTML,
     {
-      ...{
-        url,
-        locale: metadata.locale,
-        slug: metadata.slug,
-        title: metadata.title,
-        tags: metadata.tags || [],
-        selective_mode: false,
-      },
+      ...metadata,
+      url,
+      tags: metadata.tags || [],
+      selective_mode,
       interactive_examples: {
         base_url: INTERACTIVE_EXAMPLES_BASE_URL,
       },
       live_samples: { base_url: LIVE_SAMPLES_BASE_URL || url },
     },
     async (url) => {
-      const [renderedHtml, errors] = await renderFromURL(
-        info.cleanURL(url),
-        urlsSeen
-      );
+      const [renderedHtml, errors] = await renderFromURL(info.cleanURL(url), {
+        urlsSeen,
+      });
       // Remove duplicate flaws. During the rendering process, it's possible for identical
       // flaws to be introduced when different dependency paths share common prerequisites.
       // For example, document A may have prerequisite documents B and C, and in turn,

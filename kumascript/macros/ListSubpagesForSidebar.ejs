@@ -28,7 +28,6 @@ if (path.substr(-1, 1) === '/') {
 
 var pages = await page.subpagesExpand(path, -1, parent);
 var containsTag = page.hasTag;
-var escapeQuotes = mdn.escapeQuotes;
 var htmlEscape = kuma.htmlEscape;
 
 var output = '';
@@ -38,18 +37,18 @@ var code    = !$1 ? '<code>'  : '';
 var endcode = !$1 ? '</code>' : '';
 
 // Strings
-var commonl10n = string.deserialize(await template('L10n:Common'));
+var commonl10n = JSON.parse(await template('L10n:Common'));
 var text = {
     'translate': mdn.getLocalString(commonl10n, '[Translate]'),
     'title': mdn.getLocalString(commonl10n, 'TranslationCTA'),
 };
 
 var badges = {
-    ExperimentalBadge      : '<span class="sidebar-icon">' + await template("ExperimentalBadge", [1]) + '</span>',
-    NonStandardBadge       : '<span class="sidebar-icon">' + await template("NonStandardBadge", [1]) + '</span>',
-    DeprecatedBadge        : '<span class="sidebar-icon">' + await template("DeprecatedBadge", [1]) + '</span>',
-    ObsoleteBadge          : '<span class="sidebar-icon">' + await template("ObsoleteBadge", [1]) + '</span>',
-};
+  ExperimentalBadge : await template("ExperimentalBadge"),
+  NonStandardBadge : await template("NonStandardBadge"),
+  DeprecatedBadge : await template("DeprecatedBadge"),
+  ObsoleteBadge : await template("ObsoleteBadge"),
+}
 
 // Trims the title, returning only the text
 // between the start and end delimiter characters.
@@ -86,20 +85,13 @@ function createLink(item) {
     var url = item.url.replace('en-US', locale);
     var title = htmlEscape(trimTitle(item.title));
 
-    var translated = false;
     if (locale != 'en-US') {
         item.translations.forEach(function(translation){
             if(translation.locale === locale) {
                 url = translation.url;
                 title = htmlEscape(trimTitle(translation.title));
-                translated = true;
             }
         });
-    }
-
-    var cta = '';
-     if (!translated && locale != 'en-US') {
-        cta += ' <a href="'+ url +'$translate" style="opacity:0.5" title="'+ text['title'] + '">' + text['translate'] + '</a>';
     }
 
     result += '<li>';
@@ -120,7 +112,7 @@ function createLink(item) {
         result += badges.ObsoleteBadge;
     }
 
-    result += '<a href="' + url + '">' + code + title + endcode + '</a>' + cta + '</li>';
+    result += '<a href="' + url + '">' + code + title + endcode + '</a></li>';
     return result;
 }
 

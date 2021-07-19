@@ -1,36 +1,25 @@
 const path = require("path");
+const childProcess = require("child_process");
 
-const sanitizeFilename = require("sanitize-filename");
+const { CONTENT_ROOT, CONTENT_TRANSLATED_ROOT } = require("./constants");
+const { slugToFolder } = require("../libs/slug-utils");
+const LRU = require("lru-cache");
+
+const MEMOIZE_INVALIDATE = Symbol("force cache update");
+
+function getRoot(locale, throws = "") {
+  const root =
+    locale.toLowerCase() === "en-us" ? CONTENT_ROOT : CONTENT_TRANSLATED_ROOT;
+  if (throws && !root) {
+    throw new Error(throws);
+  }
+  return root;
+}
 
 function buildURL(locale, slug) {
   if (!locale) throw new Error("locale falsy!");
   if (!slug) throw new Error("slug falsy!");
-  return `/${locale}/docs/${slug}`.toLowerCase();
-}
-
-/*
- * NOTE: A nearly identical copy of this function is used within
- *       ./lambda/content-origin-request/index.js. If you make a
- *       change to this function, you must replicate the change
- *       there as well.
- */
-function slugToFolder(slug) {
-  return (
-    slug
-      // We have slugs with these special characters that would be
-      // removed by the sanitizeFilename() function. What might then
-      // happen is that it leads to two *different slugs* becoming
-      // *same* folder name.
-      .replace(/\*/g, "_star_")
-      .replace(/::/g, "_doublecolon_")
-      .replace(/:/g, "_colon_")
-      .replace(/\?/g, "_question_")
-
-      .toLowerCase()
-      .split("/")
-      .map(sanitizeFilename)
-      .join(path.sep)
-  );
+  return `/${locale}/docs/${slug}`;
 }
 
 function isPromise(p) {
@@ -49,12 +38,21 @@ function memoize(fn) {
     return fn;
   }
 
-  const cache = new Map();
+  const cache = new LRU({ max: 2000 });
   return (...args) => {
+    let invalidate = false;
+    if (args.includes(MEMOIZE_INVALIDATE)) {
+      args.splice(args.indexOf(MEMOIZE_INVALIDATE), 1);
+      invalidate = true;
+    }
     const key = JSON.stringify(args);
 
     if (cache.has(key)) {
-      return cache.get(key);
+      if (invalidate) {
+        cache.del(key);
+      } else {
+        return cache.get(key);
+      }
     }
 
     const value = fn(...args);
@@ -69,8 +67,52 @@ function memoize(fn) {
   };
 }
 
+function execGit(args, opts = {}, root = null) {
+  let gitRoot = root;
+  if (!gitRoot) {
+    gitRoot = execGit(
+      ["rev-parse", "--show-toplevel"],
+      opts,
+      opts.cwd || CONTENT_ROOT
+    );
+  }
+  const { status, error, stdout, stderr } = childProcess.spawnSync(
+    "git",
+    args,
+    {
+      cwd: gitRoot,
+      // Default is 1MB
+      // That's rarely big enough for what we're using Yari for.
+      maxBuffer: 1024 * 1024 * 100, // 100MB
+    }
+  );
+  if (error || status !== 0) {
+    if (stderr) {
+      console.log(args);
+      console.log(`Error running git ${args}`);
+      console.error(stderr);
+    }
+    if (error) {
+      throw error;
+    }
+    throw new Error(
+      `git command failed: ${stderr.toString() || stdout.toString()}`
+    );
+  }
+  return stdout.toString().trim();
+}
+
+function urlToFolderPath(url) {
+  const [, locale, , ...slugParts] = url.split("/");
+  return path.join(locale.toLowerCase(), slugToFolder(slugParts.join("/")));
+}
+
 module.exports = {
   buildURL,
-  slugToFolder,
+  getRoot,
+  slugToFolder: (slug) => slugToFolder(slug, path.sep),
   memoize,
+  execGit,
+  urlToFolderPath,
+  MEMOIZE_INVALIDATE,
 };

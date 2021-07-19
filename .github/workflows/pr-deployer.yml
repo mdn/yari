@@ -1,0 +1,59 @@
+name: Deployer testing
+
+on:
+  pull_request:
+    paths:
+      - deployer/**
+      - .github/workflows/pr-deployer.yml
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2.3.4
+
+      - name: Install Python
+        uses: actions/setup-python@v2.2.2
+        with:
+          python-version: "3.8"
+
+      - name: Install Python poetry
+        uses: snok/install-poetry@v1.1.6
+        with:
+          virtualenvs-create: true
+          virtualenvs-in-project: true
+
+      - name: Load cached venv
+        id: cached-poetry-dependencies
+        uses: actions/cache@v2.1.6
+        with:
+          path: deployer/.venv
+          key: venv-${{ runner.os }}-${{ hashFiles('**/poetry.lock') }}
+
+      - name: Install deployer
+        run: |
+          cd deployer
+          poetry install
+        if: steps.cached-poetry-dependencies.outputs.cache-hit != 'true'
+
+      - name: Display Python & Poetry version
+        run: |
+          python --version
+          poetry --version
+
+      - name: Lint Python code
+        run: |
+          source deployer/.venv/bin/activate
+          flake8 deployer/src
+          black --check deployer/src
+
+      - name: Basic run of deployer
+        run: |
+          cd deployer
+          poetry run deployer --help
+
+      - name: Run deployer unit tests
+        run: |
+          cd deployer
+          poetry run pytest

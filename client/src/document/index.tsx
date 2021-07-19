@@ -1,34 +1,48 @@
-import React, { lazy, Suspense, useEffect } from "react";
-import { Link, useParams, useNavigate } from "react-router-dom";
+import React from "react";
+import { useSearchParams, useParams, useNavigate } from "react-router-dom";
 import useSWR, { mutate } from "swr";
 
 import { CRUD_MODE } from "../constants";
-import { useWebSocketMessageHandler } from "../web-socket";
-import { NoMatch } from "../routing";
-import { useDocumentURL } from "./hooks";
-import { Doc, DocParent } from "./types";
+import { useGA } from "../ga-context";
+import { useDocumentURL, useCopyExamplesToClipboard } from "./hooks";
+import { Doc } from "./types";
 // Ingredients
 import { Prose, ProseWithHeading } from "./ingredients/prose";
-import { InteractiveExample } from "./ingredients/interactive-example";
-import { Attributes } from "./ingredients/attributes";
-import { Examples } from "./ingredients/examples";
-import { LinkList, LinkLists } from "./ingredients/link-lists";
-import { Specifications } from "./ingredients/specifications";
-import { BrowserCompatibilityTable } from "./ingredients/browser-compatibility-table";
+import { LazyBrowserCompatibilityTable } from "./lazy-bcd-table";
+import { SpecificationSection } from "./ingredients/spec-section";
+
 // Misc
 // Sub-components
-import LanguageMenu from "../header/language-menu";
-import { TOC } from "./toc";
-import { OnGitHubLink } from "./on-github";
+import { Breadcrumbs } from "../ui/molecules/breadcrumbs";
+import { LanguageToggle } from "../ui/molecules/language-toggle";
+import { LocalizedContentNote } from "./molecules/localized-content-note";
+import { TOC } from "./organisms/toc";
+import { RenderSideBar } from "./organisms/sidebar";
+import { RetiredLocaleNote } from "./molecules/retired-locale-note";
+import { MainContentContainer } from "../ui/atoms/page-content";
+import { Loading } from "../ui/atoms/loading";
+import { Metadata } from "./organisms/metadata";
 
 import "./index.scss";
 
+// It's unfortunate but it is what it is at the moment. Not every page has an
+// interactive example (in its HTML blob) but we don't know that in advance.
+// But just in case it does, we need to have the CSS ready in the main bundle.
+// Perhaps a more ideal solution would be that the interactive example <iframe>
+// code could come with its own styling rather than it having to be part of the
+// main bundle all the time.
+import "./interactive-examples.scss";
+
 // Lazy sub-components
-const Toolbar = lazy(() => import("./toolbar"));
+const Toolbar = React.lazy(() => import("./toolbar"));
 
 export function Document(props /* TODO: define a TS interface for this */) {
+  const ga = useGA();
+  const mountCounter = React.useRef(0);
   const documentURL = useDocumentURL();
   const { locale } = useParams();
+  const [searchParams] = useSearchParams();
+
   const navigate = useNavigate();
 
   const dataURL = `${documentURL}/index.json`;
@@ -37,6 +51,9 @@ export function Document(props /* TODO: define a TS interface for this */) {
     async (url) => {
       const response = await fetch(url);
       if (!response.ok) {
+        if (response.status === 404) {
+          throw new Error(`${response.status} on ${url}: Page not found`);
+        }
         const text = await response.text();
         throw new Error(`${response.status} on ${url}: ${text}`);
       }
@@ -52,40 +69,75 @@ export function Document(props /* TODO: define a TS interface for this */) {
         props.doc.mdn_url.toLowerCase() === documentURL.toLowerCase()
           ? props.doc
           : null,
-      revalidateOnFocus: false,
+      revalidateOnFocus: CRUD_MODE,
     }
   );
 
-  useWebSocketMessageHandler((message) => {
-    if (
-      message.type === "DOCUMENT_CHANGE" &&
-      message.change.document?.url === documentURL
-    ) {
-      mutate(dataURL);
-    }
-  });
+  useCopyExamplesToClipboard(doc);
 
-  useEffect(() => {
-    if (doc) {
+  React.useEffect(() => {
+    if (!doc && !error) {
+      document.title = "⏳ Loading…";
+    } else if (error) {
+      document.title = "💔 Loading error";
+    } else if (doc) {
       document.title = doc.pageTitle;
     }
-  }, [doc]);
+  }, [doc, error]);
+
+  React.useEffect(() => {
+    if (doc && !error) {
+      if (mountCounter.current > 0) {
+        // 'dimension19' means it's a client-side navigation.
+        // I.e. not the initial load but the location has now changed.
+        // Note that in local development, where you use `localhost:3000`
+        // this will always be true because it's always client-side navigation.
+        ga("set", "dimension19", "Yes");
+        ga("send", {
+          hitType: "pageview",
+          location: window.location.toString(),
+        });
+      }
+
+      // By counting every time a document is mounted, we can use this to know if
+      // a client-side navigation happened.
+      mountCounter.current++;
+    }
+  }, [ga, doc, error]);
+
+  React.useEffect(() => {
+    const location = document.location;
+
+    // Did you arrive on this page with a location hash?
+    if (location.hash && location.hash !== location.hash.toLowerCase()) {
+      // The location hash isn't lowercase. That probably means it's from before
+      // we made all `<h2 id>` and `<h3 id>` values always lowercase.
+      // Let's see if it can easily be fixed, but let's be careful and
+      // only do this if there is an element that matches.
+      try {
+        if (document.querySelector(location.hash.toLowerCase())) {
+          location.hash = location.hash.toLowerCase();
+        }
+      } catch (error) {
+        if (error instanceof DOMException) {
+          // You can't assume that the anchor on the page is a valid string
+          // for `document.querySelector()`.
+          // E.g. /en-US/docs/Web/HTML/Element/input#Form_<input>_types
+          // So if that the case, just ignore the error.
+          // It's not that critical to correct anyway.
+        } else {
+          throw error;
+        }
+      }
+    }
+  }, []);
 
   if (!doc && !error) {
-    return <p>Loading...</p>;
+    return <Loading minHeight={600} message="Loading document..." />;
   }
 
   if (error) {
-    // Was it because of a 404?
-    if (
-      typeof window !== "undefined" &&
-      error instanceof Response &&
-      error.status === 404
-    ) {
-      return <NoMatch />;
-    } else {
-      return <LoadingError error={error} />;
-    }
+    return <LoadingError error={error} />;
   }
 
   if (!doc) {
@@ -97,213 +149,46 @@ export function Document(props /* TODO: define a TS interface for this */) {
   const isServer = typeof window === "undefined";
 
   return (
-    <main>
-      {doc.isArchive && <Archived doc={doc} />}
-      {!isServer && CRUD_MODE && !doc.isArchive && (
-        <Suspense fallback={<p className="loading-toolbar">Loading toolbar</p>}>
-          <Toolbar doc={doc} />
-        </Suspense>
-      )}
-      <header className="documentation-page-header">
-        <div className="titlebar-container">
-          <div className="titlebar">
-            <h1 className="title">{doc.title}</h1>
-          </div>
-        </div>
-        <div className="full-width-row-container">
-          <div className="max-content-width-container">
-            <nav className="breadcrumbs" role="navigation">
-              {doc.parents && <Breadcrumbs parents={doc.parents} />}
-            </nav>
-
-            {translations && !!translations.length && (
-              <LanguageMenu translations={translations} locale={locale} />
-            )}
-          </div>
-        </div>
-      </header>
-
-      <div
-        className={
-          (doc.toc && doc.toc.length) || doc.sidebarHTML
-            ? "wiki-left-present content-layout"
-            : "content-layout"
-        }
-      >
-        {doc.toc && !!doc.toc.length && <TOC toc={doc.toc} />}
-
-        <div id="content" className="article text-content">
-          <article id="wikiArticle">
-            <RenderDocumentBody doc={doc} />
-          </article>
-
-          <div className="metadata">
-            <section className="document-meta">
-              <header className="visually-hidden">
-                <h4>Metadata</h4>
-              </header>
-              <ul>
-                <li className="last-modified">
-                  <LastModified value={doc.modified} locale={locale} />,{" "}
-                  <a href={`${doc.mdn_url}/contributors.txt`}>
-                    by MDN contributors
-                  </a>
-                </li>
-              </ul>
-              {!doc.isArchive && <OnGitHubLink doc={doc} />}
-            </section>
-          </div>
-        </div>
-
-        {doc.sidebarHTML && (
-          <div id="sidebar-quicklinks" className="sidebar">
-            <RenderSideBar doc={doc} />
-          </div>
-        )}
-      </div>
-    </main>
-  );
-}
-
-function LastModified({ value, locale }) {
-  if (!value) {
-    return <span>Last modified date not known</span>;
-  }
-  const date = new Date(value);
-  // Justification for these is to match historically
-  const dateStringOptions = {
-    year: "numeric",
-    month: "short",
-    day: "numeric",
-  };
-  return (
     <>
-      <b>Last modified:</b>{" "}
-      <time dateTime={value}>
-        {date.toLocaleString(locale, dateStringOptions)}
-      </time>
-    </>
-  );
-}
-
-function Archived({ doc }: { doc: Doc }) {
-  return (
-    <div className={`archived ${doc.isTranslated ? "translated" : ""}`}>
-      {doc.isTranslated ? (
-        <p>
-          <b>This is an archived translation.</b>{" "}
-          <a
-            href="https://blogpost.example.com/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            No more edits are being accepted.
-          </a>
-        </p>
-      ) : (
-        <p>
-          <b>This is an archived page.</b> It's not actively maintained.
-        </p>
+      {/* if we have either breadcrumbs or translations for the current page,
+      continue rendering the section */}
+      {(doc.parents || !!translations.length) && (
+        <div className="breadcrumb-locale-container">
+          {doc.parents && <Breadcrumbs parents={doc.parents} />}
+          {translations && !!translations.length && (
+            <LanguageToggle locale={locale} translations={translations} />
+          )}
+        </div>
       )}
-    </div>
-  );
-}
 
-// XXX Move this component to its own file. index.tsx is already too large.
-function Breadcrumbs({ parents }: { parents: DocParent[] }) {
-  if (!parents.length) {
-    throw new Error("Empty parents array");
-  }
-  return (
-    <ol
-      typeof="BreadcrumbList"
-      vocab="https://schema.org/"
-      aria-label="breadcrumbs"
-    >
-      {parents.map((parent, i) => {
-        const isLast = i + 1 === parents.length;
-        return (
-          <li key={parent.uri} property="itemListElement" typeof="ListItem">
-            <Link
-              to={parent.uri}
-              className={isLast ? "crumb-current-page" : "breadcrumb-chevron"}
-              property="item"
-              typeof="WebPage"
-            >
-              <span property="name">{parent.title}</span>
-            </Link>
-            <meta property="position" content={`${i + 1}`} />
-          </li>
-        );
-      })}
-    </ol>
-  );
-}
+      {doc.isTranslated ? (
+        <LocalizedContentNote isActive={doc.isActive} locale={locale} />
+      ) : (
+        searchParams.get("retiredLocale") && <RetiredLocaleNote />
+      )}
 
-function RenderSideBar({ doc }) {
-  if (!doc.related_content) {
-    if (doc.sidebarHTML) {
-      return <div dangerouslySetInnerHTML={{ __html: doc.sidebarHTML }} />;
-    }
-    return null;
-  }
-  return doc.related_content.map((node) => (
-    <SidebarLeaf key={node.title} parent={node} />
-  ));
-}
+      {doc.toc && !!doc.toc.length && <TOC toc={doc.toc} />}
 
-function SidebarLeaf({ parent }) {
-  return (
-    <div>
-      <h3>{parent.title}</h3>
-      <ul>
-        {parent.content.map((node) => {
-          if (node.content) {
-            return (
-              <li key={node.title}>
-                <SidebarLeaflets node={node} />
-              </li>
-            );
-          } else {
-            return (
-              <li key={node.uri}>
-                <Link to={node.uri}>{node.title}</Link>
-              </li>
-            );
-          }
-        })}
-      </ul>
-    </div>
-  );
-}
+      <MainContentContainer>
+        {!isServer && CRUD_MODE && !props.isPreview && doc.isActive && (
+          <React.Suspense fallback={<Loading message={"Loading toolbar"} />}>
+            <Toolbar
+              doc={doc}
+              reloadPage={() => {
+                mutate(dataURL);
+              }}
+            />
+          </React.Suspense>
+        )}
+        <article className="main-page-content" lang={doc.locale}>
+          <h1>{doc.title}</h1>
+          <RenderDocumentBody doc={doc} />
+        </article>
+        <Metadata doc={doc} locale={locale} />
+      </MainContentContainer>
 
-function SidebarLeaflets({ node }) {
-  return (
-    <details open={node.open}>
-      <summary>
-        {node.uri ? <Link to={node.uri}>{node.title}</Link> : node.title}
-      </summary>
-      <ol>
-        {node.content.map((childNode) => {
-          if (childNode.content) {
-            return (
-              <li key={childNode.title}>
-                <SidebarLeaflets node={childNode} />
-              </li>
-            );
-          } else {
-            return (
-              <li
-                key={childNode.uri}
-                className={childNode.isActive && "active"}
-              >
-                <Link to={childNode.uri}>{childNode.title}</Link>
-              </li>
-            );
-          }
-        })}
-      </ol>
-    </details>
+      {doc.sidebarHTML && <RenderSideBar doc={doc} />}
+    </>
   );
 }
 
@@ -331,52 +216,17 @@ function RenderDocumentBody({ doc }) {
           />
         );
       }
-    } else if (section.type === "interactive_example") {
-      return (
-        <InteractiveExample
-          key={section.value.url}
-          url={section.value.url}
-          height={section.value.height}
-          title={doc.title}
-        />
-      );
-    } else if (section.type === "attributes") {
-      return <Attributes key={`attributes${i}`} attributes={section.value} />;
-    } else if (section.type === "specifications") {
-      return (
-        <Specifications
-          key={`specifications${i}`}
-          specifications={section.value}
-        />
-      );
     } else if (section.type === "browser_compatibility") {
       return (
-        <BrowserCompatibilityTable
+        <LazyBrowserCompatibilityTable
           key={`browser_compatibility${i}`}
           {...section.value}
         />
       );
-    } else if (section.type === "examples") {
-      return <Examples key={`examples${i}`} examples={section.value} />;
-    } else if (section.type === "info_box") {
-      // XXX Unfinished!
-      // https://github.com/mdn/stumptown-content/issues/106
-      console.warn("Don't know how to deal with info_box!");
-      return null;
-    } else if (
-      section.type === "class_constructor" ||
-      section.type === "static_methods" ||
-      section.type === "instance_methods"
-    ) {
+    } else if (section.type === "specifications") {
       return (
-        <LinkList
-          key={`${section.type}${i}`}
-          title={section.value.title}
-          links={section.value.content}
-        />
+        <SpecificationSection key={`specifications${i}`} {...section.value} />
       );
-    } else if (section.type === "link_lists") {
-      return <LinkLists key={`linklists${i}`} lists={section.value} />;
     } else {
       console.warn(section);
       throw new Error(`No idea how to handle a '${section.type}' section`);
@@ -386,7 +236,7 @@ function RenderDocumentBody({ doc }) {
 
 function LoadingError({ error }) {
   return (
-    <div className="loading-error">
+    <div className="page-content-container loading-error">
       <h3>Loading Error</h3>
       {error instanceof window.Response ? (
         <p>

@@ -27,7 +27,12 @@ const VALID_FLAW_CHECKS = new Set([
   "bad_bcd_queries",
   "bad_bcd_links",
   "images",
-  "pre_with_html",
+  "image_widths",
+  "bad_pre_tags",
+  "sectioning",
+  "heading_links",
+  "translation_differences",
+  "unsafe_html",
 ]);
 
 // TODO (far future): Switch to "error" when number of flaws drops.
@@ -35,6 +40,12 @@ const DEFAULT_FLAW_LEVELS = process.env.BUILD_FLAW_LEVELS || "*:warn";
 
 const FILES = process.env.BUILD_FILES || "";
 const FOLDERSEARCH = process.env.BUILD_FOLDERSEARCH || "";
+const GOOGLE_ANALYTICS_ACCOUNT =
+  process.env.BUILD_GOOGLE_ANALYTICS_ACCOUNT || "";
+const GOOGLE_ANALYTICS_DEBUG = JSON.parse(
+  process.env.BUILD_GOOGLE_ANALYTICS_DEBUG || "false"
+);
+const SPEEDCURVE_LUX_ID = process.env.BUILD_SPEEDCURVE_LUX_ID || "";
 const NO_PROGRESSBAR = Boolean(
   JSON.parse(process.env.BUILD_NO_PROGRESSBAR || process.env.CI || "false")
 );
@@ -48,15 +59,38 @@ const FIX_FLAWS_VERBOSE = JSON.parse(
   process.env.BUILD_FIX_FLAWS_VERBOSE || "true"
 );
 
+// See explanation in docs/envvars.md
+const ALWAYS_ALLOW_ROBOTS = JSON.parse(
+  process.env.BUILD_ALWAYS_ALLOW_ROBOTS || "false"
+);
+
+const HOMEPAGE_FEED_URL =
+  process.env.BUILD_HOMEPAGE_FEED_URL || "https://hacks.mozilla.org/feed/";
+
+const HOMEPAGE_FEED_DISPLAY_MAX = JSON.parse(
+  process.env.BUILD_HOMEPAGE_FEED_DISPLAY_MAX || "5"
+);
+
+// If you want to enable this on local development use http://localhost.org:8000/api/v1/subscriptions/config/
+const BUILD_SUBSCRIPTION_CONFIG_URL =
+  process.env.BUILD_SUBSCRIPTION_CONFIG_URL || null;
+
 module.exports = {
   BUILD_OUT_ROOT,
   DEFAULT_FLAW_LEVELS,
   FILES,
   FLAW_LEVELS,
   FOLDERSEARCH,
+  GOOGLE_ANALYTICS_ACCOUNT,
+  GOOGLE_ANALYTICS_DEBUG,
+  SPEEDCURVE_LUX_ID,
   NO_PROGRESSBAR,
   VALID_FLAW_CHECKS,
   FIX_FLAWS,
   FIX_FLAWS_DRY_RUN,
   FIX_FLAWS_VERBOSE,
+  ALWAYS_ALLOW_ROBOTS,
+  HOMEPAGE_FEED_URL,
+  HOMEPAGE_FEED_DISPLAY_MAX,
+  BUILD_SUBSCRIPTION_CONFIG_URL,
 };

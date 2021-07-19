@@ -1,4 +1,11 @@
-const startRe = /^\^\/?/;
+const {
+  DEFAULT_LOCALE,
+  VALID_LOCALES,
+  LOCALE_ALIASES,
+  RETIRED_LOCALES,
+} = require("../constants");
+
+const startRe = /^\^?\/?/;
 const startTemplate = /^\//;
 
 function redirect(pattern, template, options = {}) {
@@ -11,8 +18,14 @@ function redirect(pattern, template, options = {}) {
     if (typeof template === "string") {
       return { url: template, status };
     }
-    const { groups } = match;
-    return { url: template({ ...groups }), status };
+    const { [0]: subString, index, groups } = match;
+    const before = path.substring(0, index);
+    let after = path.substring(index + subString.length);
+    if (options.colonToSlash) {
+      after = after.replace(/:/g, "/");
+    }
+    const to = template({ ...groups });
+    return { url: `${before}${to}${after}`, status };
   };
 }
 
@@ -44,6 +57,62 @@ function externalRedirect(pattern, template, options = {}) {
     ...options,
   });
 }
+
+const fixableLocales = new Map();
+for (const locale of VALID_LOCALES.keys()) {
+  if (locale.includes("-")) {
+    // E.g. `en-US` becomes alias `en_US`
+    fixableLocales.set(locale.replace("-", "_").toLowerCase(), locale);
+  } else {
+    // E.g. `fr` becomes alias `fr-XX`
+    fixableLocales.set(`${locale}-\\w{2}`.toLowerCase(), locale);
+  }
+}
+
+for (const [alias, correct] of LOCALE_ALIASES) {
+  // E.g. things like `en` -> `en-us` or `pt` -> `pt-br`
+  fixableLocales.set(alias, correct);
+}
+
+const LOCALE_PATTERNS = [
+  // All things like `/en_Us/docs/...` -> `/en-US/docs/...`
+  redirect(
+    new RegExp(
+      `^(?<locale>${Array.from(fixableLocales.keys()).join(
+        "|"
+      )})(/(?<suffix>.*)|$)`,
+      "i"
+    ),
+    ({ locale, suffix }) => {
+      locale = locale.toLowerCase();
+      if (fixableLocales.has(locale)) {
+        // E.g. it was something like `en_Us`
+        locale = VALID_LOCALES.get(fixableLocales.get(locale).toLowerCase());
+      } else {
+        // E.g. it was something like `Fr-sW` (Swiss French)
+        locale = locale.split("-")[0];
+        locale = VALID_LOCALES.get(locale);
+      }
+      return `/${locale}/${suffix || ""}`;
+    },
+    { permanent: true }
+  ),
+  // Retired locales
+  redirect(
+    new RegExp(
+      `^(?<locale>${Array.from(RETIRED_LOCALES.keys()).join(
+        "|"
+      )})(/(?<suffix>.*)|$)`,
+      "i"
+    ),
+    ({ locale, suffix }) => {
+      const join = suffix && suffix.includes("?") ? "&" : "?";
+      return `/${DEFAULT_LOCALE}/${
+        (suffix || "") + join
+      }retiredLocale=${RETIRED_LOCALES.get(locale.toLowerCase())}`;
+    }
+  ),
+];
 
 // Redirects/rewrites/aliases migrated from SCL3 httpd config
 const SCL3_REDIRECT_PATTERNS = [
@@ -720,14 +789,14 @@ const SCL3_REDIRECT_PATTERNS = [
   // All other Demo Studio and Dev Derby paths (bug 1238037)
   // RewriteRule ^(\w{2,3}(?:-\w{2})?/)?demos
   // /$1docs/Web/Demos_of_open_web_technologies? [R=301,L]
-  localeRedirect(/^demos/i, "/docs/Web/Demos_of_open_web_technologies", {
+  localeRedirect(/^demos.*/i, "/docs/Web/Demos_of_open_web_technologies", {
     permanent: true,
   }),
   // Legacy off-site redirects (bug 1362438)
   // RewriteRule ^contests/ http://www.mozillalabs.com/ [R=302,L]
-  redirect(/^contests/i, "http://www.mozillalabs.com/", { permanent: false }),
+  redirect(/^contests.*/i, "http://www.mozillalabs.com/", { permanent: false }),
   // RewriteRule ^es4 http://www.ecma-international.org/memento/TC39.htm [R=302,L]
-  redirect(/^es4/i, "http://www.ecma-international.org/memento/TC39.htm", {
+  redirect(/^es4.*/i, "http://www.ecma-international.org/memento/TC39.htm", {
     permanent: false,
   }),
 ];
@@ -810,7 +879,7 @@ const zoneRedirects = [
     ["en-US", "fa", "fr", "ja", "th", "zh-CN", "zh-TW", null],
   ],
   ["Apps", "Web/Aplicaciones", ["es"]],
-  ["Apps", "Apps", ["bn", "de", "it", "ko", "pt-Br", "ru"]],
+  ["Apps", "Apps", ["bn", "de", "it", "ko", "pt-BR", "ru"]],
   ["Learn", "Learn", ["ca", "de", null]],
   ["Apprendre", "Apprendre", ["fr"]],
   [
@@ -823,8 +892,10 @@ const zoneRedirects = [
 
 const zonePatternFmt = (prefix, zoneRootPattern) =>
   new RegExp(`^${prefix}${zoneRootPattern}(?:\\/?|(?<subPath>[\\/$].+))$`, "i");
-const subPathFmt = (prefix, wikiSlug) => ({ subPath = "" } = {}) =>
-  `/${prefix}docs/${wikiSlug}${subPath}`;
+const subPathFmt =
+  (prefix, wikiSlug) =>
+  ({ subPath = "" } = {}) =>
+    `/${prefix}docs/${wikiSlug}${subPath}`;
 
 const ZONE_REDIRECT_PATTERNS = [];
 for (const [zoneRoot, wikiSlug, locales] of zoneRedirects) {
@@ -1101,6 +1172,46 @@ for (const [pattern, path] of [
   );
 }
 
+const MISC_REDIRECT_PATTERNS = [
+  localeRedirect(/^account\/?$/i, "/settings", {
+    permanent: false,
+  }),
+  localeRedirect(
+    /^profile(?:|\/stripe_subscription|\/edit)\/?$/i,
+    "/settings",
+    {
+      permanent: false,
+    }
+  ),
+  localeRedirect(
+    /^profiles\/(?:[^\/]+)(?:|\/edit|\/delete)\/?$/i,
+    "/settings",
+    {
+      permanent: false,
+    }
+  ),
+  localeRedirect(/^docs\/Core_JavaScript_1.5_/i, "/docs/Web/JavaScript/", {
+    permanent: true,
+    // This will convert :
+    //   /en-US/docs/Core_JavaScript_1.5_Reference:Statements:block
+    // to:
+    //   /en-US/docs/Core_JavaScript_1.5_Reference/Statements/block
+    // It's needed because back in the day when this prefix was used a
+    // there are a lot of old URLs that delimited with a `:` instead of a `/`
+    // which is what we use today.
+    colonToSlash: true,
+  }),
+  // This takes care of a majority of the 404's that we see in Yari by
+  // simply inserting "/docs/" between the locale and the slug. Further
+  // redirects often take over from there, so let's only insert "/docs/"
+  // and let any other redirect rules work from that point onwards.
+  localeRedirect(
+    /^(?<prefix>AJAX|CSS|DOM|DragDrop|HTML|JavaScript|SVG|Tools|Using_files_from_web_applications|Web|XMLHttpRequest|Security)(?<subPath>\/.+?)?\/?$/i,
+    ({ prefix, subPath = "" }) => `/docs/${prefix}${subPath}`,
+    { permanent: true }
+  ),
+];
+
 const REDIRECT_PATTERNS = [].concat(
   SCL3_REDIRECT_PATTERNS,
   ZONE_REDIRECT_PATTERNS,
@@ -1110,7 +1221,7 @@ const REDIRECT_PATTERNS = [].concat(
   FIREFOX_SOURCE_DOCS_REDIRECT_PATTERNS,
   [
     localeRedirect(
-      /^fellowship/i,
+      /^fellowship.*/i,
       "/docs/Archive/2015_MDN_Fellowship_Program",
       {
         permanent: true,
@@ -1121,7 +1232,9 @@ const REDIRECT_PATTERNS = [].concat(
       ({ subPath }) => `https://wiki.mozilla.org/docs/ServerJS${subPath}`,
       { prependLocale: false, permanent: true }
     ),
-  ]
+  ],
+  LOCALE_PATTERNS,
+  MISC_REDIRECT_PATTERNS
 );
 
 const STARTING_SLASH = /^\//;

@@ -19,14 +19,12 @@ switch (env.locale) {
     default: break;
 }
 
-let commonLocalStrings = string.deserialize(await template("L10n:Common"));
 let sectionName = mdn.localString({
     "es": "Elemento",
     "en-US": "Element"
 });
 let url = "/" + env.locale + "/docs/Web/HTML/" + sectionName + "/" +
     elementName;
-let page = await wiki.getPage(url);
 
 // Add anchor after fetching the page contents
 url += $2;
