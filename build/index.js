@@ -342,6 +342,8 @@ async function buildDocument(document, documentOptions = {}) {
         renderedHtml,
         sampleIdObject
       );
+
+      let liveSampleHTML = liveSamplePage.html;
       if (liveSamplePage.flaw) {
         const flaw = liveSamplePage.flaw.updateFileInfo(fileInfo);
         if (flaw.name === "MacroLiveSampleError") {
@@ -361,11 +363,35 @@ async function buildDocument(document, documentOptions = {}) {
           }
         }
         flaws.push(flaw);
-        continue;
+        liveSampleHTML = `<!doctype html>
+        <html>
+          <head>
+            <meta charset="utf-8">
+            <title>Live sample failed!</title>
+            <style type="text/css">
+              body {
+                background-color: #fae4e5;
+              }
+            </style>
+          </head>
+          <body>
+            <h1>Live sample failed!</h1>
+            <p>
+              An error occurred trying to render this live sample.
+              <br>
+              Consider filing an issue or trying your hands at a fix of your own.
+            </p>
+            <p><b>Error details:</b></p>
+            <p>
+              <code>${flaw.error.toString()}</code>
+            </p>
+          </body>
+        </html>
+        `;
       }
       liveSamples.push({
         id: sampleIdObject.id.toLowerCase(),
-        html: liveSamplePage.html,
+        html: liveSampleHTML,
       });
     }
 
