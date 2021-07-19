@@ -9,7 +9,6 @@ const {
   VALID_LOCALES,
 } = require("./constants");
 const { getRoot } = require("./utils");
-const { isArchivedFilePath } = require("./archive");
 
 const FORBIDDEN_URL_SYMBOLS = ["\n", "\t"];
 const VALID_LOCALES_SET = new Set([...VALID_LOCALES.values()]);
@@ -38,10 +37,6 @@ function resolveDocumentPath(url) {
 
   const relativeFolderPath = path.join(locale, slugToFolder(slug.join("/")));
   const relativeFilePath = path.join(relativeFolderPath, "index.html");
-
-  if (isArchivedFilePath(relativeFilePath)) {
-    return `$ARCHIVED/${relativeFilePath}`;
-  }
 
   const root = getRoot(locale);
 
