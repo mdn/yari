@@ -531,10 +531,22 @@ async function buildDocument(document, documentOptions = {}) {
   // Turn the $ instance into an array of section blocks. Most of the
   // section blocks are of type "prose" and their value is a string blob
   // of HTML.
-  const [sections, sectionFlaws] = extractSections($);
-  doc.body = sections;
-  if (sectionFlaws.length) {
-    injectSectionFlaws(doc, sectionFlaws, options);
+  try {
+    const [sections, sectionFlaws] = extractSections($);
+    doc.body = sections;
+    if (sectionFlaws.length) {
+      injectSectionFlaws(doc, sectionFlaws, options);
+    }
+  } catch (error) {
+    // If you run `yarn build` and an error is thrown inside `extractSections()`
+    // you won't know which file it was in the middle processing because
+    // the error won't be able to mention that.
+    // So we catch the error, log which file it happened to and then
+    // rethrow the error. Now you get a clue at least as to where to look.
+    console.error(
+      `Extracting sections failed in ${doc.mdn_url} (${document.fileInfo.path})`
+    );
+    throw error;
   }
 
   // Extract all the <h2> tags as they appear into an array.

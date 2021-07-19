@@ -1724,3 +1724,32 @@ test("the robots.txt file was created", () => {
   expect(text).toContain("Disallow: /api/");
   expect(text).not.toContain("Disallow: /\n");
 });
+
+test("duplicate IDs are de-duplicated", () => {
+  const builtFolder = path.join(
+    buildRoot,
+    "en-us",
+    "docs",
+    "web",
+    "duplicate_ids"
+  );
+  const jsonFile = path.join(builtFolder, "index.json");
+  const { doc } = JSON.parse(fs.readFileSync(jsonFile));
+  const sectionIDs = doc.body.map((section) => section.value.id);
+  // The section IDs aren't normalized to lowercase but the should be
+  // unique if they were case normalized.
+  expect(new Set(sectionIDs.map((id) => id.toLowerCase())).size).toEqual(
+    sectionIDs.length
+  );
+
+  const htmlFile = path.join(builtFolder, "index.html");
+  const html = fs.readFileSync(htmlFile, "utf-8");
+  const $ = cheerio.load(html);
+  const h2IDs = [];
+  $("#content h2").each((i, element) => {
+    h2IDs.push($(element).attr("id"));
+  });
+  expect(new Set(h2IDs.map((id) => id.toLowerCase())).size).toEqual(
+    h2IDs.length
+  );
+});
