@@ -1,7 +1,12 @@
+import React from "react";
 import { Link, useLocation } from "react-router-dom";
 
 import { Translation } from "../../../document/types";
 import { useGA } from "../../../ga-context";
+import {
+  LOCALE_OVERRIDE_HASH,
+  getPreferredCookieLocale,
+} from "../../../preferred-locale";
 
 import "./index.scss";
 
@@ -14,6 +19,17 @@ export function LanguageToggle({
 }) {
   const ga = useGA();
   const { pathname } = useLocation();
+
+  const [preventLocaleOverride, setPreventLocaleOverride] =
+    React.useState(false);
+
+  React.useEffect(() => {
+    const cookieValue = getPreferredCookieLocale(document);
+    if (cookieValue && cookieValue.toLowerCase() !== "en-us") {
+      setPreventLocaleOverride(true);
+    }
+  }, [locale]);
+
   function translateURL(destinationLocale: string) {
     return pathname.replace(`/${locale}/`, `/${destinationLocale}/`);
   }
@@ -21,7 +37,10 @@ export function LanguageToggle({
   function getEnglishLink() {
     for (const translation of translations) {
       if (translation.locale.toLowerCase() === "en-us") {
-        const translationURL = translateURL(translation.locale);
+        let translationURL = translateURL(translation.locale);
+        if (preventLocaleOverride) {
+          translationURL += LOCALE_OVERRIDE_HASH;
+        }
         return (
           <Link
             to={translationURL}
