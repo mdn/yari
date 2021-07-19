@@ -82,8 +82,25 @@ function extractSections($) {
   // then this can cause various problems. For example, the anchor links
   // won't work. The Table of Contents won't be able to do a loop with unique
   // `key={section.id}` values.
-  // If we do see a duplicated IDs, first complain about it, then try to do
-  // something about it.
+  // The reason we need to loop through to get a list of all existing IDs
+  // first is because we might have this:
+  //
+  //  <h2 id="foo">Foo X</h2>
+  //  <h2 id="foo">Foo Y</h2>
+  //  <h2 id="foo_2">Foo Z</h2>
+  //
+  // So when you encounter `<h2 id="foo">Foo Y</h2>` you'll know that you
+  // can't suggest it to be `<h2 id="foo_2">Foo Y</h2>` because that ID
+  // is taken by another one, later.
+  const allIDs = new Map();
+  sections
+    .map((section) => section.value.id)
+    .filter(Boolean)
+    .map((id) => id.toLowerCase())
+    .forEach((id) => {
+      allIDs.set(id, (allIDs.get(id) || 0) + 1);
+    });
+
   const seenIDs = new Map();
   for (const section of sections) {
     const originalID = section.value.id;
@@ -96,20 +113,27 @@ function extractSections($) {
     }
     // We normalize all IDs to lowercase so that `id="Foo"` === `id="foo"`.
     const id = originalID.toLowerCase();
-    if (seenIDs.has(id)) {
-      // That's bad!
-      let newID = `${id}_${seenIDs.get(id) + 1}`;
-      while (seenIDs.get(newID)) {
-        seenIDs.set(id, seenIDs.get(id) + 1);
-        newID = `${id}_${seenIDs.get(id) + 1}`;
+    if (seenIDs.get(id)) {
+      // That's bad! We have to come up with a new ID but it can't be one
+      // that's used by another other section.
+      let increment = 2;
+      let newID = `${originalID}_${increment}`;
+      while (
+        seenIDs.get(newID.toLowerCase()) ||
+        allIDs.get(newID.toLowerCase())
+      ) {
+        increment++;
+        newID = `${originalID}_${increment}`;
       }
       section.value.id = newID;
+      seenIDs.set(newID.toLowerCase(), 1);
       flaws.push(
         `'${originalID}' is not a unique ID in this HTML (temporarily changed to ${section.value.id})`
       );
     }
     seenIDs.set(id, (seenIDs.get(id) || 0) + 1);
   }
+
   return [sections, flaws];
 }
 
