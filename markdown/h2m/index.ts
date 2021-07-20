@@ -19,7 +19,7 @@ const getTransformProcessor = (options) =>
     .use(parseHTML)
     .use(transform, options)
     .use(gfm)
-    .use(remarkPrettier, { report: false, options: { proseWrap: "always" } });
+    .use(remarkPrettier, { report: false });
 
 function findPrettierIgnoreRanges(node: MDNodeUnion): [number, number][] {
   const ignoreRanges = [];
