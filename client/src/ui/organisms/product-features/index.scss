@@ -36,6 +36,12 @@
     }
   }
 
+  .features-intro-copy {
+    @media #{layout.$mq-small-desktop-and-up} {
+      margin-left: 450px;
+    }
+  }
+
   h3 {
     font-size: typography.$xxl-font-size;
     margin: layout.$base-spacing 0;

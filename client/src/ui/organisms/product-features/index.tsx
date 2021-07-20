@@ -6,11 +6,13 @@ const ProductFeatures = ({ withIntro }) => {
       {withIntro && (
         <div className="product-features-intro">
           <div className="girdle">
-            <div className="heading-group">
-              <h3>Make MDN your own</h3>
-              <h4 className="gradient-clip-text">What’s included</h4>
+            <div className="features-intro-copy">
+              <div className="heading-group">
+                <h3>Make MDN your own</h3>
+                <h4 className="gradient-clip-text">What’s included</h4>
+              </div>
+              <p>Unlock premium features that you can use across all of MDN.</p>
             </div>
-            <p>Unlock premium features that you can use across all of MDN.</p>
           </div>
         </div>
       )}
