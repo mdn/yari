@@ -1173,6 +1173,13 @@ for (const [pattern, path] of [
 }
 
 const MISC_REDIRECT_PATTERNS = [
+  redirect(/^events\/?$/i, "https://community.mozilla.org/events/", {
+    permanent: false,
+  }),
+  localeRedirect(/^events\/?$/i, "https://community.mozilla.org/events/", {
+    prependLocale: false,
+    permanent: false,
+  }),
   localeRedirect(/^account\/?$/i, "/settings", {
     permanent: false,
   }),
