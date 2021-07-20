@@ -1,0 +1,16 @@
+@use "../color-palette/index" as palette;
+
+.heading-group {
+  display: flex;
+  flex-direction: column-reverse;
+}
+
+.gradient-clip-text {
+  background: palette.$gradient-accent;
+  background-clip: text;
+  color: transparent;
+}
+
+.pink-highlighter {
+  background: rgba(226, 21, 135, 0.2); /* uses $mdn-pink600 as a base */
+}

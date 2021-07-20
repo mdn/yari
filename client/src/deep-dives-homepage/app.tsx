@@ -1,8 +1,11 @@
+import { useParams } from "react-router-dom";
+
 import Hero from "../ui/organisms/hero";
 
 import "./index.scss";
 
 export default function App() {
+  const { locale } = useParams();
   return (
     <>
       <Hero />
@@ -58,12 +61,12 @@ export default function App() {
         <p>This in the intro to the expriment</p>
         <ul>
           <li>
-            <a href="/plus/deep-dives/planning-for-browser-support">
+            <a href={`/${locale}/plus/deep-dives/planning-for-browser-support`}>
               Planning for browser support
             </a>
           </li>
           <li>
-            <a href="/plus/deep-dives/your-browser-support-toolkit">
+            <a href={`/${locale}/plus/deep-dives/your-browser-support-toolkit`}>
               Your browser support toolkit
             </a>
           </li>

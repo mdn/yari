@@ -5,7 +5,7 @@ const Hero = () => {
     <header className="plus-hero">
       <div className="header-wrapper">
         <div className="header-content">
-          <div className="hero-heading-group">
+          <div className="heading-group">
             <h1>
               More MDN. <span className="gradient-clip-text">Your MDN.</span>
             </h1>

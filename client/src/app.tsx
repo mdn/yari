@@ -19,7 +19,8 @@ import { PageNotFound } from "./page-not-found";
 import { SignIn, SignUp } from "./auth";
 import { Settings } from "./settings";
 
-import { DeepDives } from "./deep-dives";
+import { DeepDivesHomepage } from "./deep-dives-homepage";
+import { DeepDive } from "./deep-dive";
 import { Plus } from "./plus";
 
 const AllFlaws = React.lazy(() => import("./flaws"));
@@ -269,7 +270,17 @@ export function App(appProps) {
                 path="/plus/deep-dives"
                 element={
                   <StandardLayout>
-                    <DeepDives />
+                    <DeepDivesHomepage />
+                  </StandardLayout>
+                }
+              />
+            )}
+            {ENABLE_PLUS && (
+              <Route
+                path="/plus/deep-dives/*"
+                element={
+                  <StandardLayout>
+                    <DeepDive />
                   </StandardLayout>
                 }
               />

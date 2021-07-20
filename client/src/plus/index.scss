@@ -29,11 +29,6 @@
     }
   }
 
-  .heading-group {
-    display: flex;
-    flex-direction: column-reverse;
-  }
-
   .sample-deep-dive {
     .deep-dive-lead {
       font-size: $small-medium-font-size;
@@ -51,39 +46,6 @@
   h4 {
     font-size: $default-font-size;
     margin: $base-spacing 0;
-  }
-
-  .code-snippet {
-    background-color: $mdn-neutral900;
-    border-radius: $default-border-radius;
-    margin: $base-spacing 0;
-    max-width: 100%;
-    overflow: scroll;
-    padding: $base-spacing;
-
-    code {
-      background-color: transparent;
-      color: $white;
-      font-family: $code-inline-font-family;
-      font-size: $small-font-size;
-    }
-
-    .code-c {
-      color: $mdn-blue200;
-    }
-
-    .code-m {
-      color: $mdn-pink300;
-    }
-
-    .code-y {
-      color: $mdn-yellow300;
-    }
-
-    .codepen {
-      border: 0;
-      height: 450px;
-    }
   }
 
   .primary {

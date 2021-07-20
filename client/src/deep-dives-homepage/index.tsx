@@ -4,7 +4,7 @@ import { PageContentContainer } from "../ui/atoms/page-content";
 
 const App = React.lazy(() => import("./app"));
 
-export function DeepDives() {
+export function DeepDivesHomepage() {
   const pageTitle = "MDN Plus Deep Dives";
   React.useEffect(() => {
     document.title = pageTitle;
