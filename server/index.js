@@ -168,13 +168,11 @@ app.get("/*/contributors.txt", async (req, res) => {
     return res.status(404).send(`Document not found by URL (${url})`);
   }
   const { doc: builtDocument } = await buildDocument(document);
-  if (document.metadata.contributors || !document.isArchive) {
+  if (document.metadata.contributors) {
     res.send(
       renderContributorsTxt(
         document.metadata.contributors,
-        !document.isArchive
-          ? builtDocument.source.github_url.replace("/blob/", "/commits/")
-          : null
+        builtDocument.source.github_url.replace("/blob/", "/commits/")
       )
     );
   } else {

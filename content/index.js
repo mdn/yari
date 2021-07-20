@@ -1,6 +1,5 @@
 const {
   CONTENT_ROOT,
-  CONTENT_ARCHIVED_ROOT,
   CONTENT_TRANSLATED_ROOT,
   REPOSITORY_URLS,
   ROOTS,
@@ -23,7 +22,6 @@ const { translationsOf } = require("./translations");
 
 module.exports = {
   CONTENT_ROOT,
-  CONTENT_ARCHIVED_ROOT,
   CONTENT_TRANSLATED_ROOT,
   REPOSITORY_URLS,
   ROOTS,

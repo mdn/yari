@@ -232,8 +232,6 @@ const read = memoize((folderOrFilePath, roots = ROOTS) => {
   const isTranslated = Boolean(
     CONTENT_TRANSLATED_ROOT && filePath.startsWith(CONTENT_TRANSLATED_ROOT)
   );
-  const isArchive =
-    CONTENT_ARCHIVED_ROOT && filePath.startsWith(CONTENT_ARCHIVED_ROOT);
 
   const rawContent = fs.readFileSync(filePath, "utf8");
   if (!rawContent) {
@@ -261,7 +259,7 @@ const read = memoize((folderOrFilePath, roots = ROOTS) => {
 
   const url = `/${locale}/docs/${metadata.slug}`;
 
-  const isActive = !isArchive && ACTIVE_LOCALES.has(locale.toLowerCase());
+  const isActive = ACTIVE_LOCALES.has(locale.toLowerCase());
 
   // The last-modified is always coming from the git logs. Independent of
   // which root it is.
@@ -313,7 +311,6 @@ const read = memoize((folderOrFilePath, roots = ROOTS) => {
     rawContent, // HTML or Markdown whole string with all the front-matter
     rawBody, // HTML or Markdown string without the front-matter
     isMarkdown: filePath.endsWith(MARKDOWN_FILENAME),
-    isArchive,
     isTranslated,
     isActive,
     fileInfo: {
@@ -427,9 +424,6 @@ function findAll({
 
   const filePaths = [];
   const roots = [];
-  if (CONTENT_ARCHIVED_ROOT) {
-    roots.push(CONTENT_ARCHIVED_ROOT);
-  }
   if (CONTENT_TRANSLATED_ROOT) {
     roots.push(CONTENT_TRANSLATED_ROOT);
   }
@@ -579,8 +573,6 @@ function remove(
   const root = getRoot(locale);
   const url = buildURL(locale, slug);
 
-  // If we don't explicitly set the `roots` it might read from $CONTENT_ARCHIVED_ROOT
-  // which might find the files.
   // The reason is when you're running archive CLI tool. When you run that,
   // it will first *add* files to the archived root and then, after that's run,
   // it will start removing files. If it then finds the files in the archived

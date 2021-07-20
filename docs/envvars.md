@@ -30,15 +30,6 @@ all prefixed with `CONTENT_`. E.g. `CONTENT_ROOT`
 
 Where the files are.
 
-### `CONTENT_ARCHIVED_ROOT`
-
-**Default: `null`** (meaning, not set nor included)
-
-If you want to build archive content (no KumaScript rendering) you
-can say where the location to the folder is.
-
-**Example: `/tmp/mdn-archive-content`**
-
 ### `BUILD_FOLDERSEARCH`
 
 **Default: ``** (meaning, none)
