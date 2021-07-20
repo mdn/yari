@@ -7,7 +7,6 @@ const yaml = require("js-yaml");
 const { fdir } = require("fdir");
 
 const {
-  CONTENT_ARCHIVED_ROOT,
   CONTENT_TRANSLATED_ROOT,
   CONTENT_ROOT,
   ACTIVE_LOCALES,
@@ -160,80 +159,6 @@ function getFolderPath(metadata, root = null) {
     path.join(root, metadata.locale.toLowerCase()),
     metadata.slug
   );
-}
-
-function archive(
-  renderedHTML,
-  rawBody,
-  metadata,
-  isMarkdown = false,
-  root = null,
-  sourceFolder = null
-) {
-  if (!root) {
-    root = CONTENT_ARCHIVED_ROOT;
-  }
-  if (!root) {
-    throw new Error("Can't archive when CONTENT_ARCHIVED_ROOT is not set");
-  }
-  const folderPath = buildPath(
-    path.join(root, metadata.locale.toLowerCase()),
-    metadata.slug
-  );
-
-  fs.mkdirSync(folderPath, { recursive: true });
-
-  // The `rawBody` is only applicable in the importer when it saves
-  // archived content. The archived content gets the *rendered* html
-  // saved but by storing the raw HTML/Markdown too we can potentially resurrect
-  // the document if we decide to NOT archive it in the future.
-  if (rawBody) {
-    fs.writeFileSync(
-      path.join(folderPath, isMarkdown ? "raw.md" : "raw.html"),
-      trimLineEndings(rawBody)
-    );
-  }
-
-  saveFile(getHTMLPath(folderPath), trimLineEndings(renderedHTML), metadata);
-
-  // Next we need to copy every single file that isn't index.html or index.md
-  // which basically means all the images.
-  if (sourceFolder) {
-    const files = fs.readdirSync(sourceFolder);
-    for (const fileName of files) {
-      if (fileName === "index.html" || fileName === "index.md") {
-        continue;
-      }
-      const filePath = path.join(sourceFolder, fileName);
-      if (!fs.statSync(filePath).isDirectory()) {
-        fs.copyFileSync(
-          filePath,
-          path.join(folderPath, path.basename(filePath))
-        );
-      }
-    }
-  }
-  return folderPath;
-}
-
-function unarchive(document, move) {
-  // You can't use `document.rawBody` because, rather confusingly,
-  // it's actually the rendered (from the migration) HTML. Instead,
-  // you need seek out the `raw.html` equivalent and use that.
-  // This is because when we ran the migration, for every document we
-  // archived, we created a `index.html` file (front-matter and rendered
-  // HTML) and a `raw.html` file (kumascript raw HTML).
-  const rawFilePath = path.join(
-    path.dirname(document.fileInfo.path),
-    "raw.html"
-  );
-  const rawHTML = fs.readFileSync(rawFilePath, "utf-8");
-  const created = createHTML(rawHTML, document.metadata);
-  if (move) {
-    execGit(["rm", document.fileInfo.path], {}, CONTENT_ARCHIVED_ROOT);
-    execGit(["rm", rawFilePath], {}, CONTENT_ARCHIVED_ROOT);
-  }
-  return created;
 }
 
 const read = memoize((folderOrFilePath, roots = ROOTS) => {

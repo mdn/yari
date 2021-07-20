@@ -590,7 +590,6 @@ async function buildDocument(document, documentOptions = {}) {
 
   // Decide whether it should be indexed (sitemaps, robots meta tag, search-index)
   doc.noIndexing =
-    (doc.isArchive && !doc.isTranslated) ||
     metadata.slug === "MDN/Kitchensink" ||
     document.metadata.slug.startsWith("orphaned/") ||
     document.metadata.slug.startsWith("conflicting/");
