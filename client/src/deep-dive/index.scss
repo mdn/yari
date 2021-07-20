@@ -5,7 +5,9 @@
 @use "../ui/theme/index" as theme;
 
 .page-content-container.deep-dives {
+  background-color: theme.$mdn-neutral050;
   display: block;
+  max-width: inherit;
   padding: 0;
 }
 
@@ -15,6 +17,7 @@
 }
 
 .deep-dive-article-container {
+  @include theme.readable-line-length();
   margin-bottom: layout.$base-spacing * 3;
 
   .main-heading-group {
