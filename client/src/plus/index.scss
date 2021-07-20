@@ -1,15 +1,16 @@
 @use "sass:math";
 
-@import "~@mdn/minimalist/sass/vars/layout";
-@import "~@mdn/minimalist/sass/vars/typography";
+@use "~@mdn/minimalist/sass/vars/layout";
+@use "~@mdn/minimalist/sass/vars/typography";
 
-@import "../ui/theme/index";
+@use "../ui/theme/index" as theme;
 
 .page-content-container.plus {
-  color: $mdn-neutral900;
+  color: theme.$mdn-neutral900;
   display: block;
-  font-family: "Inter", sans-serif;
-  margin: $base-spacing 0 0;
+  font-family: theme.$inter-font-family;
+  margin: layout.$base-spacing 0 0;
+  max-width: inherit;
   padding: 0;
   position: relative;
 
@@ -20,36 +21,90 @@
   .overview-wrapper,
   .product-cost,
   .sample-deep-dive {
-    padding: ($base-spacing * 2) $base-spacing;
+    padding: (layout.$base-spacing * 2) layout.$base-spacing;
+  }
+
+  .main-article-content-container,
+  .overview-wrapper {
+    @media #{layout.$mq-small-desktop-and-up} {
+      display: flex;
+      gap: layout.$base-spacing;
+      justify-content: space-between;
+    }
   }
 
   .overview-wrapper {
+    @media #{layout.$mq-small-desktop-and-up} {
+      margin: 0 auto;
+      max-width: layout.$max-width-default;
+      padding: (layout.$base-spacing * 4) 0;
+    }
+
+    h2 {
+      @media #{layout.$mq-small-desktop-and-up} {
+        font-size: typography.$medium-font-size;
+      }
+    }
+
     .overview-mdn-plus {
-      margin-bottom: $base-spacing * 3;
+      margin-bottom: layout.$base-spacing * 3;
+    }
+
+    .overview-mdn-plus,
+    .overview-mdn-web-docs {
+      @media #{layout.$mq-small-desktop-and-up} {
+        flex: 0 1 45%;
+      }
+    }
+  }
+
+  .main-article-content-container {
+    @media #{layout.$mq-small-desktop-and-up} {
+      gap: layout.$base-spacing * 2;
+    }
+  }
+
+  .sample-deep-dive-sidebar {
+    @media #{layout.$mq-small-desktop-and-up} {
+      flex: 0 1 30%;
     }
   }
 
   .sample-deep-dive {
+    @media #{layout.$mq-small-desktop-and-up} {
+      flex: 0 1 65%;
+      padding: (layout.$base-spacing * 4) 0;
+    }
+
     .deep-dive-lead {
-      font-size: $small-medium-font-size;
+      @include theme.readable-line-length();
+      font-size: typography.$small-medium-font-size;
       font-weight: bold;
-      margin-bottom: $base-spacing * 2;
+
+      @media #{layout.$mq-small-desktop-and-up} {
+        margin: 0 auto (layout.$base-spacing * 3);
+        text-align: center;
+      }
     }
   }
 
   .product-cost {
-    background-color: $mdn-neutral100;
+    background-color: theme.$mdn-neutral100;
   }
 }
 
 .sample-deep-dive-article {
+  @media #{layout.$mq-small-desktop-and-up} {
+    flex: 0 1 65%;
+  }
+
   h4 {
-    font-size: $default-font-size;
-    margin: $base-spacing 0;
+    font-size: typography.$default-font-size;
+    margin: layout.$base-spacing 0;
   }
 
   .primary {
     display: block;
-    margin: ($base-spacing * 2) auto 0;
+    margin: (layout.$base-spacing * 2) auto 0;
   }
 }

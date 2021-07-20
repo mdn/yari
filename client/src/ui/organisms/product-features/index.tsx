@@ -5,14 +5,16 @@ const ProductFeatures = ({ withIntro }) => {
     <>
       {withIntro && (
         <div className="product-features-intro">
-          <div className="heading-group">
-            <h3>Make MDN your own</h3>
-            <h4 className="gradient-clip-text">What’s included</h4>
+          <div className="girdle">
+            <div className="heading-group">
+              <h3>Make MDN your own</h3>
+              <h4 className="gradient-clip-text">What’s included</h4>
+            </div>
+            <p>Unlock premium features that you can use across all of MDN.</p>
           </div>
-          <p>Unlock premium features that you can use across all of MDN.</p>
         </div>
       )}
-      <div className="product-features">
+      <div className="product-features girdle">
         <ul>
           <li className="bookmark">
             <h3>Build a permanent library</h3>

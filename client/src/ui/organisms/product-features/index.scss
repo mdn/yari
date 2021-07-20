@@ -11,16 +11,29 @@
   position: relative;
   text-align: center;
 
-  &::before {
-    background: transparent url("../../atoms/svg/premium-features.svg") center
-      center no-repeat;
-    content: "";
-    display: block;
-    height: calc(90vw * 1.1);
-    margin: 0 auto;
-    position: relative;
-    top: -40px;
-    width: 90vw;
+  @media #{layout.$mq-small-desktop-and-up} {
+    padding: (layout.$base-spacing * 4) layout.$base-spacing;
+    text-align: inherit;
+  }
+
+  .girdle {
+    &::before {
+      background: transparent url("../../atoms/svg/premium-features.svg") center
+        center no-repeat;
+      content: "";
+      display: block;
+      height: 464px;
+      margin: 0 auto;
+      position: relative;
+      top: -40px;
+      width: 417px;
+
+      @media #{layout.$mq-small-desktop-and-up} {
+        left: 0;
+        position: absolute;
+        top: -140px;
+      }
+    }
   }
 
   h3 {
@@ -43,6 +56,13 @@
   ul {
     list-style: none;
     padding: 0 layout.$base-spacing (layout.$base-spacing * 2);
+
+    @media #{layout.$mq-small-desktop-and-up} {
+      display: flex;
+      gap: layout.$base-spacing;
+      justify-content: space-between;
+      padding: (layout.$base-spacing * 4) layout.$base-spacing;
+    }
   }
 
   .bookmark,
