@@ -18,3 +18,28 @@
 .only-icon span {
   @include visually-hidden();
 }
+
+.bc-table-row-header {
+  code {
+    display: flex;
+    overflow: hidden;
+  }
+
+  .left-side,
+  .right-side {
+    white-space: pre;
+    overflow: hidden;
+  }
+
+  /* Can only flex-shrink and not flex-grow 
+  ie the "slider" in a sliding glass door */
+  .left-side {
+    flex: 0 1 auto;
+    text-overflow: ellipsis;
+  }
+  /* Can flex-grow and not flex-shrink as
+  its the stationary portion */
+  .right-side {
+    flex: 1 0 auto;
+  }
+}

@@ -425,6 +425,29 @@ function CompatCell({
   );
 }
 
+function ShrinkText(props: { text: string }) {
+  const text: string = props.text || "";
+  // 75% of the string text is a reasonable
+  // cutoff point, but could be improved
+  // if we find that 75% of string isn't
+  // looking nice
+  const rate: number = 0.75;
+  let cutoff: number = Math.floor(text.length * rate);
+  // split the original string into two strings
+  // 1: 75% of original string
+  // 2: remaining 25%
+  let leftSide: string = text.slice(0, cutoff);
+  let rightSide: string = text.slice(cutoff);
+  return (
+    <>
+      <code title={text}>
+        <span className="left-side">{leftSide}</span>
+        <span className="right-side">{rightSide}</span>
+      </code>
+    </>
+  );
+}
+
 export const FeatureRow = React.memo(
   ({
     index,
@@ -449,7 +472,7 @@ export const FeatureRow = React.memo(
     const title = compat.description ? (
       <span dangerouslySetInnerHTML={{ __html: compat.description }} />
     ) : (
-      <code>{name}</code>
+      <ShrinkText text={name} />
     );
     const activeBrowser = activeCell !== null ? browsers[activeCell] : null;
 
