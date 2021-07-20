@@ -68,6 +68,35 @@ $mdn-violet700: #592acb;
 $mdn-violet800: #45278d;
 $mdn-violet900: #321c64;
 
+$mdn-pink050: #ffdff0;
+$mdn-pink100: #ffb4db;
+$mdn-pink200: #ff8ac5;
+$mdn-pink300: #ff6bba;
+$mdn-pink400: #ff4aa2;
+$mdn-pink500: #ff298a;
+$mdn-pink600: #e21587;
+$mdn-pink700: #c60084;
+$mdn-pink800: #7f145b;
+$mdn-pink900: #50134b;
+
+$mdn-ink050: #393473;
+$mdn-ink100: #342f6d;
+$mdn-ink200: #312a64;
+$mdn-ink300: #2e255d;
+$mdn-ink400: #2b2156;
+$mdn-ink500: #291d4f;
+$mdn-ink600: #271948;
+$mdn-ink700: #20123a;
+$mdn-ink800: #20133a;
+$mdn-ink900: #1d1133;
+
 $link-color: $mdn-blue700;
 $text-color: $mdn-neutral900;
 $text-color-inverted: $white;
+
+$cta-button-gradient: linear-gradient(to right, $mdn-violet500, $mdn-blue200);
+$gradient-accent: linear-gradient(90deg, $mdn-blue200, $mdn-green200);
+$gradient-secondary: linear-gradient(90deg, $mdn-violet500, $mdn-blue400);
+
+$page-overlay: rgba(66, 67, 90, 0.4);
+$card-box-shadow: 0 0 6px rgba(20, 20, 34, 0.25);

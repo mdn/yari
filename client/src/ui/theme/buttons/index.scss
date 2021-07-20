@@ -1,0 +1,28 @@
+@use "sass:math";
+@use "~@mdn/minimalist/sass/vars/layout";
+@use "../color-palette/index" as palette;
+@use "../typography/index" as typography;
+
+button,
+.button {
+  border: 0;
+  border-radius: 0;
+  cursor: pointer;
+  font-family: typography.$default-font-family;
+  font-size: typography.$small-font-size;
+  font-weight: normal;
+  padding: math.div(layout.$base-spacing, 4) math.div(layout.$base-spacing, 1.5);
+  text-align: center;
+  text-decoration: none;
+}
+
+.primary {
+  background: palette.$gradient-secondary;
+  color: palette.$white;
+  display: inline-block;
+
+  &:hover,
+  &:focus {
+    background: #5b3cc2;
+  }
+}

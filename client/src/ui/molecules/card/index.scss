@@ -1,0 +1,70 @@
+@use "sass:math";
+
+@import "~@mdn/minimalist/sass/vars/layout";
+@import "~@mdn/minimalist/sass/vars/typography";
+
+@import "../../theme/borders-shadows/index";
+@import "../../theme/color-palette/index";
+
+.card {
+  background-color: $white;
+  border-radius: $default-border-radius;
+  box-shadow: $card-box-shadow;
+  margin: 0 auto ($base-spacing * 2);
+  max-width: 95%;
+  padding: $base-spacing;
+
+  @media #{$mq-tablet-and-up} {
+    max-width: 320px;
+  }
+
+  &.featured {
+    border-top: 18px solid $mdn-pink600;
+  }
+
+  .card-type-heading {
+    color: $mdn-pink600;
+    font-weight: bold;
+    margin-bottom: math.div($base-spacing, 2);
+  }
+
+  h2 {
+    font-size: $medium-font-size;
+    line-height: $heading-line-height;
+    margin: math.div($base-spacing, 2) 0;
+
+    @media #{$mq-small-desktop-and-up} {
+      margin-top: 0;
+    }
+
+    @media #{$mq-large-desktop-and-up} {
+      font-size: $large-font-size;
+    }
+  }
+
+  h3 {
+    font-size: $small-medium-font-size;
+    font-weight: bold;
+    margin-bottom: math.div($base-spacing, 2);
+  }
+
+  .author {
+    border-bottom: $standard-light-border;
+    margin: math.div($base-spacing, 2) 0;
+    padding-bottom: math.div($base-spacing, 2);
+  }
+
+  ul,
+  li {
+    font-size: $small-font-size;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+}
+
+.deep-dive-card {
+  @media #{$mq-small-desktop-and-up} {
+    position: sticky;
+  }
+}

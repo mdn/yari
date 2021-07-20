@@ -1,0 +1,35 @@
+@import "~@mdn/minimalist/sass/vars/layout";
+@import "~@mdn/minimalist/sass/vars/typography";
+
+@import "~@mdn/minimalist/sass/mixins/utils";
+
+@import "../ui/theme/index";
+
+.page-content-container.deep-dives {
+  margin: $base-spacing 0;
+  max-width: initial;
+  padding: 0;
+
+  .simple-content-container,
+  .mdn-history {
+    padding: ($base-spacing * 2) $base-spacing;
+  }
+
+  .simple-content-container {
+    @include readable-line-length();
+  }
+
+  .mdn-history {
+    background-color: $mdn-ink900;
+    color: $text-color-inverted;
+
+    dt {
+      font-size: $large-font-size;
+    }
+
+    dd {
+      font-size: $small-medium-font-size;
+      margin-left: 0;
+    }
+  }
+}

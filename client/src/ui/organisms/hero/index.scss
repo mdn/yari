@@ -1,0 +1,96 @@
+@use "sass:math";
+
+@import "~@mdn/minimalist/sass/vars/layout";
+@import "~@mdn/minimalist/sass/vars/typography";
+@import "~@mdn/minimalist/sass/mixins/utils";
+
+@import "../../theme/color-palette/index";
+
+.plus-hero {
+  background-color: $mdn-ink900;
+  color: $text-color-inverted;
+  overflow: hidden;
+  padding: ($base-spacing * 2.5) 0;
+
+  .header-wrapper {
+    height: 100%;
+    margin: auto;
+    max-width: $max-width-default;
+    padding: ($base-spacing * 2) math.div($base-spacing, 2);
+    position: relative;
+    z-index: $bottom-layer;
+
+    @media #{$mq-tablet-and-up} {
+      display: grid;
+      gap: 0 math.div($base-spacing, 2);
+      gap: 0 ($base-spacing * 2.5);
+      grid-template-columns: 1fr 0;
+      padding: ($base-spacing * 2) $base-spacing;
+    }
+
+    &::after {
+      /* stylelint-disable-line a11y/media-prefers-reduced-motion */
+      animation: spin 1200s linear infinite; /* we already disable all animation and transitions globally via a reset */
+      background-image: url("../../atoms/svg/mandala.svg");
+      background-repeat: no-repeat;
+      content: "";
+      display: block;
+      height: 800px;
+      opacity: 0.5;
+      position: absolute;
+      right: 0;
+      top: -220px;
+      width: 800px;
+    }
+  }
+
+  .hero-heading-group {
+    display: flex;
+    flex-direction: column-reverse;
+  }
+
+  .header-content {
+    position: relative;
+    z-index: $top-layer;
+
+    h1 {
+      font-size: $xxl-font-size;
+      line-height: $heading-line-height;
+
+      margin-block-end: 0.67em;
+      margin-block-start: 0.67em;
+      margin-inline-end: 0;
+      margin-inline-start: 0;
+
+      @media #{$mq-small-desktop-and-up} {
+        margin: $base-spacing 0;
+      }
+    }
+
+    h2 {
+      background: $gradient-accent;
+      background-clip: text;
+      font-size: $medium-font-size;
+      margin-top: 0;
+    }
+
+    a {
+      display: none;
+
+      @media #{$mq-tablet-and-up} {
+        display: block;
+      }
+    }
+
+    p {
+      @include readable-line-length();
+      font-size: $small-medium-font-size;
+    }
+  }
+}
+
+@keyframes spin {
+  100% {
+    transform: rotate(360deg);
+  }
+}

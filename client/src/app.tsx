@@ -266,7 +266,7 @@ export function App(appProps) {
             )}
             {ENABLE_PLUS && (
               <Route
-                path="/deep-dives/article/"
+                path="/plus/deep-dives"
                 element={
                   <StandardLayout>
                     <DeepDives />

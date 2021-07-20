@@ -1,0 +1,69 @@
+@use "../color-palette/index" as palette;
+
+@font-face {
+  font-display: swap;
+  font-family: "Metropolis";
+  font-style: normal;
+  font-weight: normal;
+  src: url("../../../assets/fonts/Metropolis-Bold.woff2") format("woff2"),
+    url("../../../assets/fonts/Metropolis-Bold.woff") format("woff");
+}
+
+@font-face {
+  font-display: swap;
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 300;
+  src: local(""),
+    url("../../../assets/fonts/inter-v3-latin-300.woff2") format("woff2"),
+    url("../../../assets/fonts/inter-v3-latin-300.woff") format("woff");
+}
+
+@font-face {
+  font-display: swap;
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: normal;
+  src: local(""),
+    url("../../../assets/fonts/inter-v3-latin-regular.woff2") format("woff2"),
+    url("../../../assets/fonts/inter-v3-latin-regular.woff") format("woff");
+}
+
+@font-face {
+  font-display: swap;
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 600;
+  src: local(""),
+    url("../../../assets/fonts/inter-v3-latin-600.woff2") format("woff2"),
+    url("../../../assets/fonts/inter-v3-latin-600.woff") format("woff");
+}
+
+$default-font-family: "Metropolis", sans-serif;
+$heading-font-family: "Inter", sans-serif;
+
+$small-font-size: 0.9rem; /* 16px */
+
+h1,
+h2 {
+  font-family: $default-font-family;
+  font-weight: normal;
+  line-height: 1.5;
+}
+
+h3,
+h4,
+h5 {
+  font-family: $heading-font-family;
+  font-weight: bold;
+}
+
+.gradient-clip-text {
+  background: palette.$gradient-accent;
+  background-clip: text;
+  color: transparent;
+}
+
+.pink-highlighter {
+  background: rgba(226, 21, 135, 0.2); /* uses $mdn-pink600 as a base */
+}
