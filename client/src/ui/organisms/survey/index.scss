@@ -26,19 +26,47 @@
     margin-bottom: layout.$base-spacing;
   }
 
+  .form-radio-input-group {
+    @media #{layout.$mq-tablet-and-up} {
+      display: flex;
+      gap: layout.$base-spacing;
+      justify-content: space-between;
+      max-width: 90%;
+
+      label {
+        display: flex;
+        flex-flow: column;
+      }
+    }
+
+    @media #{layout.$mq-small-desktop-and-up} {
+      max-width: 70%;
+    }
+  }
+
   .custom-label {
     font-weight: bold;
   }
 
   [type="text"] {
     margin: layout.$base-spacing 0;
-    max-width: 480px;
+    max-width: 90%;
     width: 100%;
+
+    @media #{layout.$mq-small-desktop-and-up} {
+      max-width: 70%;
+    }
   }
 
   [type="radio"],
   [type="checkbox"] {
     margin-right: math.div(layout.$base-spacing, 2);
+  }
+
+  [type="radio"] {
+    @media #{layout.$mq-tablet-and-up} {
+      display: block;
+    }
   }
 
   textarea {

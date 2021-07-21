@@ -65,7 +65,7 @@ const Survey = () => {
             </legend>
             <div className="survey-question">
               <h3>How often do you use MDN?</h3>
-              <div className="form-input-group">
+              <div className="form-radio-input-group">
                 <label htmlFor="daily">
                   <input
                     id="daily"
@@ -107,7 +107,7 @@ const Survey = () => {
             <h3>How would you rate the articles?</h3>
             <div className="survey-question">
               <h4>Planning for browser support</h4>
-              <div className="form-input-group">
+              <div className="form-radio-input-group">
                 <label htmlFor="pfbs-notread">
                   <input
                     id="pfbs-notread"
@@ -158,7 +158,7 @@ const Survey = () => {
             </div>
             <div className="survey-question">
               <h4>Your browser support toolkit</h4>
-              <div className="form-input-group">
+              <div className="form-radio-input-group">
                 <label htmlFor="ybst-notread">
                   <input
                     id="ybst-notread"
