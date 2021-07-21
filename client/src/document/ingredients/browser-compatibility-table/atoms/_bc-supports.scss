@@ -1,10 +1,10 @@
-@import "~@mdn/minimalist/sass/vars/color-palette";
+@import "~@mdn/minimalist/sass/vars/mdn-web-docs-palette";
 
 $bc-no-support-cross: rgba(94, 3, 6, 0.1);
 $bc-partial-support-cross: rgba(144, 99, 18, 0.2);
 
 .bc-supports {
-  border: 1px solid $neutral-100;
+  border: 1px solid $mdn-neutral900;
   display: inline-block;
   min-width: 120px;
   padding: $base-unit;
@@ -13,11 +13,11 @@ $bc-partial-support-cross: rgba(144, 99, 18, 0.2);
 }
 
 .bc-supports-yes {
-  background-color: $green-400;
+  background-color: $mdn-green100;
 }
 
 .bc-supports-partial {
-  background-color: $orange-400;
+  background-color: $mdn-orange200;
   background-image: linear-gradient(
     to bottom right,
     $bc-partial-support-cross 0,
@@ -42,11 +42,11 @@ $bc-partial-support-cross: rgba(144, 99, 18, 0.2);
 .bc-supports-unknown,
 .bc-supports-yes,
 .bc-table .bc-history {
-  color: $neutral-100;
+  color: $mdn-neutral900;
 }
 
 .bc-supports-no {
-  background-color: $red-400;
+  background-color: $mdn-red200;
   background-image: linear-gradient(
       to bottom right,
       $bc-no-support-cross 0,
@@ -82,5 +82,5 @@ $bc-partial-support-cross: rgba(144, 99, 18, 0.2);
 }
 
 .bc-supports-unknown {
-  background-color: $neutral-550;
+  background-color: $mdn-neutral100;
 }

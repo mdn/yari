@@ -1247,18 +1247,7 @@
     },
     "Navigator": {
       "inh": "",
-      "impl": [
-        "NavigatorID",
-        "NavigatorLanguage",
-        "NavigatorOnLine",
-        "NavigatorContentUtils",
-        "NavigatorStorageUtils",
-        "NavigatorFeatures",
-        "NavigatorGeolocation",
-        "NavigatorBattery",
-        "NavigatorDataStore",
-        "NavigatorMobileId"
-      ]
+      "impl": []
     },
     "NetworkInformation": {
       "inh": "EventTarget",
@@ -2271,12 +2260,7 @@
     },
     "WorkerNavigator": {
       "inh": "",
-      "impl": [
-        "NavigatorID",
-        "NavigatorLanguage",
-        "NavigatorOnLine",
-        "NavigatorDataStore"
-      ]
+      "impl": []
     },
     "XMLDocument": {
       "inh": "Document",

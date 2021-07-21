@@ -1,29 +1,29 @@
-@import "~@mdn/minimalist/sass/vars/color-palette";
+@import "~@mdn/minimalist/sass/vars/mdn-web-docs-palette";
 @import "~@mdn/minimalist/sass/vars/layout";
 @import "~@mdn/minimalist/sass/vars/typography";
 
 .document-edit {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+
   .edit-header {
     .close {
       font-size: $tiny-text;
       margin-left: $base-spacing;
     }
   }
-
-  display: grid;
-  grid-template-columns: 1fr 1fr;
 }
 
 .document-edit-forms {
-  margin: 1em;
-  grid-row: 2/3;
   grid-column: 1/2;
+  grid-row: 2/3;
+  margin: 1em;
 }
 
 .document-preview {
-  border: 2px solid $red-300;
-  grid-row: 2/3;
+  border: 2px solid $mdn-red400;
   grid-column: 2/3;
+  grid-row: 2/3;
   max-height: 90vh;
   overflow-y: scroll;
 }

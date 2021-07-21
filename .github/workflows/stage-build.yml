@@ -92,7 +92,7 @@ jobs:
           path: mdn/translated-content
 
       - name: Setup Node.js environment
-        uses: actions/setup-node@v2.2.0
+        uses: actions/setup-node@v2.3.0
         with:
           node-version: "12"
 
@@ -163,13 +163,11 @@ jobs:
           # https://speedcurve.com/mozilla-add-ons/mdn/settings/updated/#lux
           BUILD_SPEEDCURVE_LUX_ID: 108906238
 
-          # Make sure every built page always has
-          # '<meta name="robots" content="noindex, nofollow">' nomatter what
-          # kind of document it is.
-          BUILD_ALWAYS_NO_ROBOTS: true
-
           # This enables the Plus call-to-action banner and the Plus landing page
           REACT_APP_ENABLE_PLUS: true
+
+          # This removes the ability to sign in
+          REACT_APP_DISABLE_AUTH: true
 
         run: |
           if [ ${{ env.BUILD_ARCHIVED_CONTENT }} == "true" ]; then
@@ -184,6 +182,11 @@ jobs:
           echo "CONTENT_ARCHIVED_ROOT=$CONTENT_ARCHIVED_ROOT"
           echo "CONTENT_TRANSLATED_ROOT=$CONTENT_TRANSLATED_ROOT"
           yarn prepare-build
+
+          # (July 15, 2021) This is a temporary solution. This should become an
+          # integrated part of 'prepare-build'.
+          # See https://github.com/mdn/yari/issues/4217
+          yarn tool popularities
 
           yarn tool sync-translated-content
           yarn build
@@ -237,8 +240,7 @@ jobs:
           echo "DEPLOYER_BUCKET_PREFIX=$DEPLOYER_BUCKET_PREFIX"
 
           # Prune again once https://github.com/mdn/yari/issues/3323 is resolved.
-          # poetry run deployer upload --prune --archived-files ../content/archived.txt ../client/build
-          poetry run deployer upload ../client/build
+          poetry run deployer upload --prune --archived-files ../content/archived.txt ../client/build
           poetry run deployer update-lambda-functions ./aws-lambda
           poetry run deployer search-index ../client/build
 
@@ -248,3 +250,15 @@ jobs:
           poetry run deployer speedcurve-deploy \
             --note "${GITHUB_SHA}" \
             --detail "run_id=${GITHUB_RUN_ID} action=${GITHUB_ACTION}"
+
+      - name: Slack Notification
+        if: failure()
+        uses: rtCamp/action-slack-notify@v2
+        env:
+          SLACK_CHANNEL: mdn-notifications
+          SLACK_COLOR: ${{ job.status }}
+          SLACK_ICON: https://avatars.slack-edge.com/2020-11-17/1513880588420_fedd7f0e9456888e69ff_96.png
+          SLACK_TITLE: "Stage"
+          SLACK_MESSAGE: "Build failed :collision:"
+          SLACK_FOOTER: "Powered by stage-build.yml"
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}

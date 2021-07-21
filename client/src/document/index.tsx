@@ -151,8 +151,6 @@ export function Document(props /* TODO: define a TS interface for this */) {
 
   return (
     <>
-      {doc.isArchive && !doc.isTranslated && <Archived />}
-
       {/* if we have either breadcrumbs or translations for the current page,
       continue rendering the section */}
       {(doc.parents || !!translations.length) && (
@@ -193,16 +191,6 @@ export function Document(props /* TODO: define a TS interface for this */) {
 
       {doc.sidebarHTML && <RenderSideBar doc={doc} />}
     </>
-  );
-}
-
-function Archived() {
-  return (
-    <div className="archived">
-      <p>
-        <b>This is an archived page.</b> It's not actively maintained.
-      </p>
-    </div>
   );
 }
 

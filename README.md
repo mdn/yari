@@ -23,7 +23,7 @@ Before you can start working with Yari, you need to:
     [Node.js](https://nodejs.org) (>= 12.0.0), and [Yarn 1](https://classic.yarnpkg.com/en/docs/install).
 
 1.  [Fork](https://docs.github.com/en/github/getting-started-with-github/fork-a-repo)
-    the MDN [content](https://github.com/mdn/content) and [yari](https://github.com/mdn/content)
+    the MDN [content](https://github.com/mdn/content) and [yari](https://github.com/mdn/yari)
     repositories using the Fork button on GitHub.
 
 1.  Clone the forked repositories to your computer using the following commands
