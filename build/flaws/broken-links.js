@@ -227,6 +227,22 @@ function getBrokenLinksFlaws(doc, $, { rawContent }, level) {
         href,
         absoluteURL.pathname + absoluteURL.search + absoluteURL.hash
       );
+    } else if (
+      href.startsWith("http") &&
+      (href.includes("fxsitecompat.com") || href.includes("fxsitecompat.dev"))
+    ) {
+      const domain = new URL(href).hostname;
+      // See https://github.com/mdn/content/issues/7124
+      if (["www.fxsitecompat.com", "www.fxsitecompat.dev"].includes(domain)) {
+        addBrokenLink(
+          a,
+          checked.get(href),
+          href,
+          null,
+          `All external links pointing to ${domain} should be deleted.
+      See https://github.com/mdn/content/issues/7124`
+        );
+      }
     } else if (isHomepageURL(hrefNormalized)) {
       // But did you spell it perfectly?
       const homepageLocale = hrefNormalized.split("/")[1];

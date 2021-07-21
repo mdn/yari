@@ -469,6 +469,10 @@ async function buildDocument(document, documentOptions = {}) {
 
   // Some hyperlinks are not easily fixable and we should never include them
   // because they're potentially evil.
+  // NOTE! The day we've cleaned all of these links from all content we can delete
+  // the following code. And we can also delete the broken_links flaw check for it.
+  // See https://github.com/mdn/content/issues/7124
+  // and https://github.com/mdn/translated-content/issues/1634
   $("a[href]").each((i, a) => {
     // See https://github.com/mdn/kuma/issues/7647
     // Ideally we should manually remove this from all sources (archived or not)
