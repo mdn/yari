@@ -5,25 +5,51 @@ import "./index.scss";
 const Survey = () => {
   const [showInitialQuestionSet, setShowInitialQuestionSet] =
     React.useState(true);
+  const [showOtherTopicsInput, setShowOtherTopicsInput] = React.useState(false);
   const [showSecondaryQuestionSet, setShowSecondaryQuestionSet] =
     React.useState(false);
-  const [showOtherTopicsInput, setShowOtherTopicsInput] = React.useState(false);
+  const [showSuccess, setShowSuccess] = React.useState(false);
+  const [showSurvey, setShowSurvey] = React.useState(true);
 
   function progressSurvey() {
     setShowInitialQuestionSet(false);
     setShowSecondaryQuestionSet(true);
   }
 
+  function handleSubmit(event) {
+    event.preventDefault();
+    sessionStorage.setItem("survey-completed", "true");
+    setShowSurvey(false);
+    setShowSuccess(true);
+  }
+
+  React.useEffect(() => {
+    if (sessionStorage.getItem("survey-completed") === "true") {
+      setShowSurvey(false);
+      setShowSuccess(true);
+    }
+  }, []);
+
   return (
     <div className="survey-wrapper">
-      <form
-        name="survey-form"
-        action=""
-        method="post"
-        className="survey-container girdle"
-      >
-        {showInitialQuestionSet && (
-          <fieldset className="survey-section">
+      {showSuccess && (
+        <h3 className="survey-success">Thank you for your feedback!</h3>
+      )}
+      {showSurvey && (
+        <form
+          name="survey-form"
+          action=""
+          method="post"
+          className="survey-container girdle"
+          onSubmit={handleSubmit}
+        >
+          <fieldset
+            className={
+              showInitialQuestionSet
+                ? "survey-section"
+                : "survey-section hidden"
+            }
+          >
             <legend className="survey-heading">
               Please help us by answering some questions (1/2)
             </legend>
@@ -52,24 +78,24 @@ const Survey = () => {
             <div className="survey-question">
               <h4>Planning for browser support</h4>
               <div className="form-input-group">
-                <label htmlFor="notread">
-                  <input id="notread" type="radio" name="pfbs" />
+                <label htmlFor="pfbs-notread">
+                  <input id="pfbs-notread" type="radio" name="pfbs" />
                   Didn’t read
                 </label>
-                <label htmlFor="bad">
-                  <input id="bad" type="radio" name="pfbs" />
+                <label htmlFor="pfbs-bad">
+                  <input id="pfbs-bad" type="radio" name="pfbs" />
                   Bad
                 </label>
-                <label htmlFor="neutral">
-                  <input id="neutral" type="radio" name="pfbs" />
+                <label htmlFor="pfbs-neutral">
+                  <input id="pfbs-neutral" type="radio" name="pfbs" />
                   Neutral
                 </label>
-                <label htmlFor="good">
-                  <input id="good" type="radio" name="pfbs" />
+                <label htmlFor="pfbs-good">
+                  <input id="pfbs-good" type="radio" name="pfbs" />
                   Good
                 </label>
-                <label htmlFor="verygood">
-                  <input id="verygood" type="radio" name="pfbs" />
+                <label htmlFor="pfbs-verygood">
+                  <input id="pfbs-verygood" type="radio" name="pfbs" />
                   Very Good
                 </label>
               </div>
@@ -88,24 +114,24 @@ const Survey = () => {
             <div className="survey-question">
               <h4>Your browser support toolkit</h4>
               <div className="form-input-group">
-                <label htmlFor="notread">
-                  <input id="notread" type="radio" name="ybst" />
+                <label htmlFor="ybst-notread">
+                  <input id="ybst-notread" type="radio" name="ybst" />
                   Didn’t read
                 </label>
-                <label htmlFor="bad">
-                  <input id="bad" type="radio" name="ybst" />
+                <label htmlFor="ybst-bad">
+                  <input id="ybst-bad" type="radio" name="ybst" />
                   Bad
                 </label>
-                <label htmlFor="neutral">
-                  <input id="neutral" type="radio" name="ybst" />
+                <label htmlFor="ybst-neutral">
+                  <input id="ybst-neutral" type="radio" name="ybst" />
                   Neutral
                 </label>
-                <label htmlFor="good">
-                  <input id="good" type="radio" name="ybst" />
+                <label htmlFor="ybst-good">
+                  <input id="ybst-good" type="radio" name="ybst" />
                   Good
                 </label>
-                <label htmlFor="verygood">
-                  <input id="verygood" type="radio" name="ybst" />
+                <label htmlFor="ybst-verygood">
+                  <input id="ybst-verygood" type="radio" name="ybst" />
                   Very Good
                 </label>
               </div>
@@ -129,9 +155,13 @@ const Survey = () => {
               Continue
             </button>
           </fieldset>
-        )}
-        {showSecondaryQuestionSet && (
-          <fieldset className="survey-section">
+          <fieldset
+            className={
+              showSecondaryQuestionSet
+                ? "survey-section"
+                : "survey-section hidden"
+            }
+          >
             <legend className="survey-heading">
               Please help us by answering some questions (2/2)
             </legend>
@@ -189,9 +219,11 @@ const Survey = () => {
                   >
                     Enter your suggestions
                   </label>
-                  <textarea id="other-suggestions" name="other-suggestions">
-                    Enter your suggestions
-                  </textarea>
+                  <textarea
+                    id="other-suggestions"
+                    name="other-suggestions"
+                    defaultValue="Enter your suggestions"
+                  />
                 </div>
               )}
             </div>
@@ -200,17 +232,19 @@ const Survey = () => {
                 <label htmlFor="comments" className="custom-label">
                   Is there anything else you’d like to share with us?
                 </label>
-                <textarea id="comments" name="comments">
-                  Enter your response
-                </textarea>
+                <textarea
+                  id="comments"
+                  name="comments"
+                  defaultValue="Enter your response"
+                />
               </div>
             </div>
-            <button type="button" className="button primary">
+            <button type="submit" className="button primary">
               Submit
             </button>
           </fieldset>
-        )}
-      </form>
+        </form>
+      )}
     </div>
   );
 };
