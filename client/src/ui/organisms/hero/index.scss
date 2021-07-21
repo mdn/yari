@@ -1,31 +1,30 @@
 @use "sass:math";
 
-@import "~@mdn/minimalist/sass/vars/layout";
-@import "~@mdn/minimalist/sass/vars/typography";
-@import "~@mdn/minimalist/sass/mixins/utils";
+@use "~@mdn/minimalist/sass/vars/layout";
+@use "~@mdn/minimalist/sass/vars/typography";
 
-@import "../../theme/color-palette/index";
+@use "../../theme/index" as theme;
 
 .plus-hero {
-  background-color: $mdn-ink900;
-  color: $text-color-inverted;
+  background-color: theme.$mdn-ink900;
+  color: theme.$text-color-inverted;
   overflow: hidden;
-  padding: ($base-spacing * 2.5) 0;
+  padding: (layout.$base-spacing * 2.5) 0;
 
   .header-wrapper {
     height: 100%;
     margin: auto;
-    max-width: $max-width-default;
-    padding: ($base-spacing * 2) math.div($base-spacing, 2);
+    max-width: layout.$max-width-default;
+    padding: (layout.$base-spacing * 2) math.div(layout.$base-spacing, 2);
     position: relative;
-    z-index: $bottom-layer;
+    z-index: layout.$bottom-layer;
 
-    @media #{$mq-tablet-and-up} {
+    @media #{layout.$mq-tablet-and-up} {
       display: grid;
-      gap: 0 math.div($base-spacing, 2);
-      gap: 0 ($base-spacing * 2.5);
+      gap: 0 math.div(layout.$base-spacing, 2);
+      gap: 0 (layout.$base-spacing * 2.5);
       grid-template-columns: 1fr 0;
-      padding: ($base-spacing * 2) $base-spacing;
+      padding: (layout.$base-spacing * 2) layout.$base-spacing;
     }
 
     &::after {
@@ -46,40 +45,40 @@
 
   .header-content {
     position: relative;
-    z-index: $top-layer;
+    z-index: layout.$top-layer;
 
     h1 {
-      font-size: $xxl-font-size;
-      line-height: $heading-line-height;
+      font-size: typography.$xxl-font-size;
+      line-height: typography.$heading-line-height;
 
       margin-block-end: 0.67em;
       margin-block-start: 0.67em;
       margin-inline-end: 0;
       margin-inline-start: 0;
 
-      @media #{$mq-small-desktop-and-up} {
-        margin: $base-spacing 0;
+      @media #{layout.$mq-small-desktop-and-up} {
+        margin: layout.$base-spacing 0;
       }
     }
 
     h2 {
-      background: $gradient-accent;
+      background: theme.$gradient-accent;
       background-clip: text;
-      font-size: $medium-font-size;
+      font-size: typography.$medium-font-size;
       margin-top: 0;
     }
 
     a {
       display: none;
 
-      @media #{$mq-tablet-and-up} {
+      @media #{layout.$mq-tablet-and-up} {
         display: block;
       }
     }
 
     p {
-      @include readable-line-length();
-      font-size: $small-medium-font-size;
+      @include theme.readable-line-length();
+      font-size: typography.$small-medium-font-size;
     }
   }
 }

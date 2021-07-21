@@ -1,11 +1,9 @@
 @use "sass:math";
 
 @use "~@mdn/minimalist/sass/vars/layout";
-@import "~@mdn/minimalist/sass/vars/typography";
+@use "~@mdn/minimalist/sass/vars/typography";
 
-@import "~@mdn/minimalist/sass/mixins/utils";
-
-@import "../ui/theme/index";
+@use "../ui/theme/index" as theme;
 
 .page-content-container.deep-dives {
   margin: layout.$base-spacing 0;
@@ -31,21 +29,21 @@
   }
 
   .mdn-history {
-    background-color: $mdn-ink900;
-    color: $text-color-inverted;
+    background-color: theme.$mdn-ink900;
+    color: theme.$text-color-inverted;
 
     dt {
-      font-size: $large-font-size;
+      font-size: typography.$large-font-size;
 
       @media #{layout.$mq-small-desktop-and-up} {
         display: inline-block;
-        font-size: $xl-font-size;
+        font-size: typography.$xl-font-size;
         margin-right: layout.$base-spacing * 2;
       }
     }
 
     dd {
-      font-size: $small-medium-font-size;
+      font-size: typography.$small-medium-font-size;
       margin-left: 0;
 
       @media #{layout.$mq-small-desktop-and-up} {
