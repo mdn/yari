@@ -1,4 +1,4 @@
-@import "~@mdn/minimalist/sass/vars/color-palette";
+@import "~@mdn/minimalist/sass/vars/mdn-web-docs-palette";
 
 @keyframes fadeOutNearly {
   0% {
@@ -32,7 +32,7 @@
           a {
             &:link,
             &:visited {
-              color: $neutral-100;
+              color: $mdn-neutral900;
             }
           }
         }
