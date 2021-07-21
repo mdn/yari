@@ -1,8 +1,13 @@
 @use "sass:math";
+
 @use "~@mdn/minimalist/sass/vars/layout";
+
 @use "../../theme/index" as theme;
 
-.article-meta {
+ul.article-meta {
+  border-top: theme.$standard-light-border;
+  padding-top: math.div(layout.$base-spacing, 2);
+
   li {
     color: theme.$mdn-neutral700;
     display: inline-block;
