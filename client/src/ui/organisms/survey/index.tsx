@@ -23,7 +23,7 @@ const Survey = () => {
     const surveyForm = surveyFormRef.current;
 
     if (surveyForm) {
-      const formData = new FormData(surveyForm);
+      //const formData = new FormData(surveyForm);
       // send formData to back-end
     }
 
