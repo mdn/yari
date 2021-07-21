@@ -136,6 +136,9 @@ jobs:
           # Same with the Speedcurve LUX
           BUILD_SPEEDCURVE_LUX_ID: 000000000
 
+          # This removes the ability to sign in
+          REACT_APP_DISABLE_AUTH: true
+
         run: |
           if [ ${{ github.event.inputs.archived_content }} == "true" ]; then
             echo "Will build mdn/archived-content too"
