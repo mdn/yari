@@ -266,7 +266,7 @@ export default function App() {
             )}
             {!showDeepDive && (
               <button
-                className="button primary"
+                className="button primary-gradient"
                 type="button"
                 onClick={() => {
                   setShowDeepDive(!showDeepDive);

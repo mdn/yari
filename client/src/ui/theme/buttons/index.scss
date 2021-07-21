@@ -1,5 +1,7 @@
 @use "sass:math";
+
 @use "~@mdn/minimalist/sass/vars/layout";
+
 @use "../color-palette/index" as palette;
 @use "../typography/index" as typography;
 
@@ -16,13 +18,24 @@ button,
   text-decoration: none;
 }
 
-.primary {
+.primary-gradient {
   background: palette.$gradient-secondary;
   color: palette.$white;
   display: inline-block;
 
   &:hover,
   &:focus {
-    background: #5b3cc2;
+    background: palette.$mdn-violet700;
+  }
+}
+
+.primary {
+  background: palette.$mdn-blue500;
+  color: palette.$white;
+  display: inline-block;
+
+  &:hover,
+  &:focus {
+    background: palette.$mdn-blue700;
   }
 }
