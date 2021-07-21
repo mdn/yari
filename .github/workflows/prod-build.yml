@@ -164,7 +164,7 @@ jobs:
           BUILD_SPEEDCURVE_LUX_ID: 108906238
 
           # This enables the Plus call-to-action banner and the Plus landing page
-          REACT_APP_ENABLE_PLUS: true
+          REACT_APP_ENABLE_PLUS: false
 
           # The default is to always set no to robots. This deployment is the only
           # exception in the world where we actually want to welcome robots.

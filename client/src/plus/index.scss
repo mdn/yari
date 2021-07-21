@@ -37,7 +37,7 @@
     @media #{layout.$mq-small-desktop-and-up} {
       margin: 0 auto;
       max-width: layout.$max-width-default;
-      padding: (layout.$base-spacing * 4) 0;
+      padding: (layout.$base-spacing * 4) layout.$base-spacing;
     }
 
     h2 {
@@ -73,7 +73,7 @@
   .sample-deep-dive {
     @media #{layout.$mq-small-desktop-and-up} {
       flex: 0 1 65%;
-      padding: (layout.$base-spacing * 4) 0;
+      padding: (layout.$base-spacing * 4) layout.$base-spacing;
     }
 
     .deep-dive-lead {

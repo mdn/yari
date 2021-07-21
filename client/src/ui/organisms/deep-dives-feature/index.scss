@@ -18,13 +18,19 @@
       content: "";
       display: block;
       height: 380px;
-      margin: -80px auto 0;
+      margin: -110px auto 0;
       width: 90%;
 
       @media #{layout.$mq-small-desktop-and-up} {
-        height: 650px;
+        height: 530px;
         position: absolute;
         right: 0;
+        top: -20px;
+        width: 460px;
+      }
+
+      @media #{layout.$mq-large-desktop-and-up} {
+        height: 650px;
         width: 560px;
       }
     }
