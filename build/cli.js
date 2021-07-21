@@ -148,17 +148,13 @@ async function buildDocuments(
       // mutating the built document which makes this not great and refactor-worthy.
       JSON.stringify({ doc: builtDocument })
     );
-    // There are some documents that, due to possible corruption or other
-    // unknown reasons, don't have a list of contributors.
-    if (document.metadata.contributors) {
-      fs.writeFileSync(
-        path.join(outPath, "contributors.txt"),
-        renderContributorsTxt(
-          document.metadata.contributors,
-          builtDocument.source.github_url.replace("/blob/", "/commits/")
-        )
-      );
-    }
+    fs.writeFileSync(
+      path.join(outPath, "contributors.txt"),
+      renderContributorsTxt(
+        document.metadata.contributors,
+        builtDocument.source.github_url.replace("/blob/", "/commits/")
+      )
+    );
     for (const { url, data } of bcdData) {
       fs.writeFileSync(
         path.join(outPath, path.basename(url)),
