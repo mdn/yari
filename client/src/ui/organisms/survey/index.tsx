@@ -3,6 +3,7 @@ import * as React from "react";
 import "./index.scss";
 
 const Survey = () => {
+  const surveyFormRef = React.useRef(null);
   const [showInitialQuestionSet, setShowInitialQuestionSet] =
     React.useState(true);
   const [showOtherTopicsInput, setShowOtherTopicsInput] = React.useState(false);
@@ -18,6 +19,14 @@ const Survey = () => {
 
   function handleSubmit(event) {
     event.preventDefault();
+
+    const surveyForm = surveyFormRef.current;
+
+    if (surveyForm) {
+      const formData = new FormData(surveyForm);
+      // send formData to back-end
+    }
+
     sessionStorage.setItem("survey-completed", "true");
     setShowSurvey(false);
     setShowSuccess(true);
@@ -42,6 +51,7 @@ const Survey = () => {
           method="post"
           className="survey-container girdle"
           onSubmit={handleSubmit}
+          ref={surveyFormRef}
         >
           <fieldset
             className={
@@ -57,20 +67,40 @@ const Survey = () => {
               <h3>How often do you use MDN?</h3>
               <div className="form-input-group">
                 <label htmlFor="daily">
-                  <input id="daily" type="radio" name="mdn-usage" />
+                  <input
+                    id="daily"
+                    type="radio"
+                    name="mdn-usage"
+                    value="daily"
+                  />
                   Every day
                 </label>
                 <label htmlFor="weekly">
-                  <input id="weekly" type="radio" name="mdn-usage" />
+                  <input
+                    id="weekly"
+                    type="radio"
+                    name="mdn-usage"
+                    value="weekly"
+                  />
                   Weekly
                 </label>
                 <label htmlFor="biweekly">
-                  <input id="biweekly" type="radio" name="mdn-usage" />
+                  <input
+                    id="biweekly"
+                    type="radio"
+                    name="mdn-usage"
+                    value="biweekly"
+                  />
                   Every few weeks
                 </label>
                 <label htmlFor="never">
-                  <input id="never" type="radio" name="mdn-usage" />I do not use
-                  MDN
+                  <input
+                    id="never"
+                    type="radio"
+                    name="mdn-usage"
+                    value="never"
+                  />
+                  I do not use MDN
                 </label>
               </div>
             </div>
@@ -79,23 +109,38 @@ const Survey = () => {
               <h4>Planning for browser support</h4>
               <div className="form-input-group">
                 <label htmlFor="pfbs-notread">
-                  <input id="pfbs-notread" type="radio" name="pfbs" />
+                  <input
+                    id="pfbs-notread"
+                    type="radio"
+                    name="pfbs"
+                    value="not-read"
+                  />
                   Didn’t read
                 </label>
                 <label htmlFor="pfbs-bad">
-                  <input id="pfbs-bad" type="radio" name="pfbs" />
+                  <input id="pfbs-bad" type="radio" name="pfbs" value="bad" />
                   Bad
                 </label>
                 <label htmlFor="pfbs-neutral">
-                  <input id="pfbs-neutral" type="radio" name="pfbs" />
+                  <input
+                    id="pfbs-neutral"
+                    type="radio"
+                    name="pfbs"
+                    value="neutral"
+                  />
                   Neutral
                 </label>
                 <label htmlFor="pfbs-good">
-                  <input id="pfbs-good" type="radio" name="pfbs" />
+                  <input id="pfbs-good" type="radio" name="pfbs" value="good" />
                   Good
                 </label>
                 <label htmlFor="pfbs-verygood">
-                  <input id="pfbs-verygood" type="radio" name="pfbs" />
+                  <input
+                    id="pfbs-verygood"
+                    type="radio"
+                    name="pfbs"
+                    value="very-good"
+                  />
                   Very Good
                 </label>
               </div>
@@ -115,23 +160,38 @@ const Survey = () => {
               <h4>Your browser support toolkit</h4>
               <div className="form-input-group">
                 <label htmlFor="ybst-notread">
-                  <input id="ybst-notread" type="radio" name="ybst" />
+                  <input
+                    id="ybst-notread"
+                    type="radio"
+                    name="ybst"
+                    value="not-read"
+                  />
                   Didn’t read
                 </label>
                 <label htmlFor="ybst-bad">
-                  <input id="ybst-bad" type="radio" name="ybst" />
+                  <input id="ybst-bad" type="radio" name="ybst" value="bad" />
                   Bad
                 </label>
                 <label htmlFor="ybst-neutral">
-                  <input id="ybst-neutral" type="radio" name="ybst" />
+                  <input
+                    id="ybst-neutral"
+                    type="radio"
+                    name="ybst"
+                    value="neutral"
+                  />
                   Neutral
                 </label>
                 <label htmlFor="ybst-good">
-                  <input id="ybst-good" type="radio" name="ybst" />
+                  <input id="ybst-good" type="radio" name="ybst" value="good" />
                   Good
                 </label>
                 <label htmlFor="ybst-verygood">
-                  <input id="ybst-verygood" type="radio" name="ybst" />
+                  <input
+                    id="ybst-verygood"
+                    type="radio"
+                    name="ybst"
+                    value="very-good"
+                  />
                   Very Good
                 </label>
               </div>
@@ -179,6 +239,7 @@ const Survey = () => {
                     id="responsive"
                     type="checkbox"
                     name="responsive-design"
+                    value="responsive-design"
                   />
                   Deep dive: Modern responsive web design
                 </label>
@@ -187,16 +248,27 @@ const Survey = () => {
                     id="pattern-library"
                     type="checkbox"
                     name="pattern-library"
+                    value="css-pattern-library"
                   />
                   Deep dive: A robust CSS pattern library
                 </label>
                 <label htmlFor="laws">
-                  <input id="laws" type="checkbox" name="laws" />
+                  <input
+                    id="laws"
+                    type="checkbox"
+                    name="laws"
+                    value="privacy-laws"
+                  />
                   Deep dive: GDPR, DSAR, CCPA, and COPPA. So many acronyms!
                   Learn Mozilla's framework to handle privacy laws
                 </label>
                 <label htmlFor="modernjs">
-                  <input id="modernjs" type="checkbox" name="modernjs" />
+                  <input
+                    id="modernjs"
+                    type="checkbox"
+                    name="modernjs"
+                    value="modern-js"
+                  />
                   Deep dive: Stop using jQuery and start using JavaScript!
                 </label>
                 <label htmlFor="other">
@@ -204,6 +276,7 @@ const Survey = () => {
                     id="other"
                     type="checkbox"
                     name="other"
+                    value="other"
                     onChange={() =>
                       setShowOtherTopicsInput(!showOtherTopicsInput)
                     }
