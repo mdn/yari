@@ -7,6 +7,7 @@ import { DISABLE_AUTH } from "../constants";
 import { useUserData } from "../user-context";
 import { useLocale } from "../hooks";
 import { Subscription, SubscriptionConfig } from "./subscription";
+import { AuthDisabled } from "../ui/atoms/auth-disabled";
 
 import "./index.scss";
 
@@ -136,15 +137,6 @@ export default function SettingsApp({ ...appProps }) {
           current={data.subscription}
         />
       )}
-    </div>
-  );
-}
-
-function AuthDisabled() {
-  return (
-    <div className="notecard warning">
-      <h4>Authentication disabled</h4>
-      <p>Authentication and the user settings app is currently disabled.</p>
     </div>
   );
 }

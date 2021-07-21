@@ -1,7 +1,9 @@
 import { useSearchParams } from "react-router-dom";
 
+import { DISABLE_AUTH } from "../constants";
 import { useUserData, removeSessionStorageData } from "../user-context";
 import { useLocale } from "../hooks";
+import { AuthDisabled } from "../ui/atoms/auth-disabled";
 
 import { ReactComponent as GithubLogo } from "@mdn/dinocons/brands/github-mark-small.svg";
 import { ReactComponent as GoogleLogo } from "@mdn/dinocons/brands/google-mono.svg";
@@ -45,6 +47,10 @@ export default function SignInApp() {
   // Kuma front-end (HTML) Yari (redirects).
   // Delete this line once Kuma ONLY deals with Yari in the signup view.
   sp.set("yarisignup", "1");
+
+  if (DISABLE_AUTH) {
+    return <AuthDisabled />;
+  }
 
   return (
     <>
