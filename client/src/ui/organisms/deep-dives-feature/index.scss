@@ -17,13 +17,15 @@
         no-repeat;
       content: "";
       display: block;
-      height: 650px;
+      height: 380px;
       margin: -80px auto 0;
-      width: 560px;
+      width: 90%;
 
       @media #{layout.$mq-small-desktop-and-up} {
+        height: 650px;
         position: absolute;
         right: 0;
+        width: 560px;
       }
     }
   }

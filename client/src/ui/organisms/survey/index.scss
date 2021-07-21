@@ -1,0 +1,46 @@
+@use "sass:math";
+@use "~@mdn/minimalist/sass/vars/layout";
+@use "~@mdn/minimalist/sass/vars/typography";
+
+@use "../../theme/index" as theme;
+
+.survey-wrapper {
+  background-color: theme.$mdn-neutral050;
+  padding: (layout.$base-spacing * 2) layout.$base-spacing;
+
+  legend {
+    color: theme.$mdn-violet700;
+    font-size: typography.$medium-font-size;
+    font-weight: bold;
+    line-height: typography.$heading-line-height;
+  }
+
+  h3,
+  .custom-label {
+    font-size: typography.$small-medium-font-size;
+    margin: layout.$base-spacing 0;
+  }
+
+  h4 {
+    font-size: typography.$default-font-size;
+    margin-bottom: layout.$base-spacing;
+  }
+
+  .custom-label {
+    font-weight: bold;
+  }
+
+  [type="text"] {
+    margin: layout.$base-spacing 0;
+    width: 100%;
+  }
+
+  [type="radio"],
+  [type="checkbox"] {
+    margin-right: math.div(layout.$base-spacing, 2);
+  }
+
+  textarea {
+    margin-bottom: layout.$base-spacing;
+  }
+}

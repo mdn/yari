@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 import ArticleMeta from "../ui/molecules/article-meta";
 import Byline from "../ui/organisms/byline";
 import DeepDivesFeature from "../ui/organisms/deep-dives-feature";
+import Survey from "../ui/organisms/survey";
 
 import "./index.scss";
 
@@ -603,6 +604,7 @@ export default function YourBrowserSupportToolkit() {
         </article>
       </div>
       <DeepDivesFeature />
+      <Survey />
       <div className="deep-dive-article-footer previous">
         <p className="girdle">
           <a href={`/${locale}/plus/deep-dives/planning-for-browser-support`}>
