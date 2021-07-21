@@ -216,3 +216,15 @@ jobs:
           # (Or, make it an optional flag to the `update-lambda-functions` command)
 
           poetry run deployer search-index ../client/build
+
+      - name: Slack Notification
+        if: failure()
+        uses: rtCamp/action-slack-notify@v2
+        env:
+          SLACK_CHANNEL: mdn-notifications
+          SLACK_COLOR: ${{ job.status }}
+          SLACK_ICON: https://avatars.slack-edge.com/2020-11-17/1513880588420_fedd7f0e9456888e69ff_96.png
+          SLACK_TITLE: "Dev"
+          SLACK_MESSAGE: "Build failed :broken_heart:"
+          SLACK_FOOTER: "Powered by dev-build.yml"
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
