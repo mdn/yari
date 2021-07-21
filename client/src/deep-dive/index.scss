@@ -20,6 +20,10 @@
   @include theme.readable-line-length();
   margin-bottom: layout.$base-spacing * 3;
 
+  @media #{layout.$mq-small-desktop-and-up} {
+    padding: (layout.$base-spacing * 2) 0;
+  }
+
   .main-heading-group {
     h1 {
       font-size: typography.$xl-font-size;
@@ -101,6 +105,36 @@
       transform: rotate(-90deg);
       vertical-align: sub;
       width: 16px;
+    }
+  }
+}
+
+.main-article-page-content-container {
+  @media #{layout.$mq-small-desktop-and-up} {
+    display: flex;
+    gap: layout.$base-spacing;
+    justify-content: space-between;
+    padding: 0 layout.$base-spacing;
+
+    .deep-dive-article-container {
+      flex: 0 1 65%;
+    }
+
+    .series-card {
+      flex: 0 1 35%;
+      margin-top: layout.$base-spacing * 2;
+
+      @media #{layout.$mq-large-desktop-and-up} {
+        margin-right: layout.$base-spacing * 3;
+      }
+    }
+  }
+
+  .deep-dive-article-sidebar {
+    display: none;
+
+    @media #{layout.$mq-small-desktop-and-up} {
+      display: block;
     }
   }
 }

@@ -3,16 +3,33 @@ import { useParams } from "react-router-dom";
 import ArticleMeta from "../ui/molecules/article-meta";
 import Byline from "../ui/organisms/byline";
 import DeepDivesFeature from "../ui/organisms/deep-dives-feature";
+import SeriesCard from "../ui/molecules/series-card";
 import Survey from "../ui/organisms/survey";
 
 import "./index.scss";
 
 export default function YourBrowserSupportToolkit() {
   const { locale } = useParams();
+  const seriesList = [
+    {
+      displayName: "Planning for browser support",
+      url: "planning-for-browser-support",
+    },
+    {
+      displayName: "Your browser support toolkit",
+      url: "your-browser-support-toolkit",
+      state: "active",
+    },
+    {
+      displayName: "Practical browser support",
+      url: "#",
+      state: "unavailable",
+    },
+  ];
 
   return (
     <>
-      <div className="girdle">
+      <div className="main-article-page-content-container girdle">
         <article className="deep-dive-article-container">
           <header className="main-heading-group heading-group">
             <h1>Your browser support toolkit</h1>
@@ -602,6 +619,12 @@ export default function YourBrowserSupportToolkit() {
             components, with practical examples.
           </p>
         </article>
+        <div className="deep-dive-article-sidebar">
+          <SeriesCard
+            title="Modern CSS in the real world"
+            seriesList={seriesList}
+          />
+        </div>
       </div>
       <DeepDivesFeature />
       <Survey />
