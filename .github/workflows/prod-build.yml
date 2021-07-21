@@ -250,3 +250,15 @@ jobs:
           poetry run deployer speedcurve-deploy \
             --note "${GITHUB_SHA}" \
             --detail "run_id=${GITHUB_RUN_ID} action=${GITHUB_ACTION}"
+
+      - name: Slack Notification
+        if: failure()
+        uses: rtCamp/action-slack-notify@v2
+        env:
+          SLACK_CHANNEL: mdn-notifications
+          SLACK_COLOR: ${{ job.status }}
+          SLACK_ICON: https://avatars.slack-edge.com/2020-11-17/1513880588420_fedd7f0e9456888e69ff_96.png
+          SLACK_TITLE: ":rotating_light: Prod :rotating_light:"
+          SLACK_MESSAGE: "Build failed :collision:"
+          SLACK_FOOTER: "Powered by prod-build.yml"
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}

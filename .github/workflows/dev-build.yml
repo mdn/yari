@@ -103,8 +103,6 @@ jobs:
           python --version
           poetry --version
 
-          exit 123
-
       - name: Print information about build
         run: |
           echo "notes: ${{ github.event.inputs.notes }}"
@@ -221,10 +219,9 @@ jobs:
         uses: rtCamp/action-slack-notify@v2
         env:
           SLACK_CHANNEL: mdn-notifications
-          SLACK_COLOR: ${{ job.status }} # or a specific color like 'good' or '#ff00ff'
+          SLACK_COLOR: ${{ job.status }}
           SLACK_ICON: https://avatars.slack-edge.com/2020-11-17/1513880588420_fedd7f0e9456888e69ff_96.png
-          SLACK_ICON_EMOJI: ":bell:"
-          SLACK_MESSAGE: "Dev build failed :collision:"
-          SLACK_TITLE: "Sample TItle here! :bell:"
+          SLACK_TITLE: "Dev"
+          SLACK_MESSAGE: "Build failed :broken_heart:"
           SLACK_FOOTER: "Powered by dev-build.yml"
           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
