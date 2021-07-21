@@ -246,16 +246,17 @@ function loadLocaleAndAdd(
       const [a1, a2] = a[i] || [];
       const [b1, b2] = b[i] || [];
       if (a1 !== b1 || a2 !== b2) {
-        return true;
+        return [a1, b1, a2, b2];
       }
     }
-    return false;
+    return null;
   };
+  const changed = pairsChanged(pairs, simplifiedPairs);
 
   return {
     pairs: simplifiedPairs,
     root,
-    changed: pairsChanged(pairs, simplifiedPairs),
+    changed,
   };
 }
 
@@ -289,7 +290,8 @@ function validateLocale(locale, strict = false) {
   // To validate strict we check if there is something to fix.
   const { changed } = loadLocaleAndAdd(localeLC, [], { fix: strict, strict });
   if (changed) {
-    throw new Error(` _redirects.txt for ${localeLC} is flawed`);
+    const [a1, b1, a2, b2] = changed;
+    throw new Error(`Invalid redirect for ${a1} -> ${b1} or ${a2} -> ${b2}`);
   }
 }
 

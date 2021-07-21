@@ -67,7 +67,7 @@ jobs:
           path: mdn/translated-content
 
       - name: Setup Node.js environment
-        uses: actions/setup-node@v2.2.0
+        uses: actions/setup-node@v2.3.0
         with:
           node-version: "12"
 
@@ -135,6 +135,9 @@ jobs:
           BUILD_GOOGLE_ANALYTICS_ACCOUNT: UA-00000000-0
           # Same with the Speedcurve LUX
           BUILD_SPEEDCURVE_LUX_ID: 000000000
+
+          # This removes the ability to sign in
+          REACT_APP_DISABLE_AUTH: true
 
         run: |
           if [ ${{ github.event.inputs.archived_content }} == "true" ]; then
@@ -205,9 +208,7 @@ jobs:
           # XXX would be nice to validate here that $DEPLOYER_BUCKET_PREFIX is truthy
           echo "DEPLOYER_BUCKET_PREFIX=$DEPLOYER_BUCKET_PREFIX"
 
-          # Prune again once https://github.com/mdn/yari/issues/3323 is resolved.
-          # poetry run deployer upload --prune --archived-files ../content/archived.txt ../client/build
-          poetry run deployer upload ../client/build
+          poetry run deployer upload --prune --archived-files ../content/archived.txt ../client/build
           poetry run deployer update-lambda-functions ./aws-lambda
           # TODO
           # Execute command to tell the Dev CloudFront distribution to use the
@@ -215,3 +216,15 @@ jobs:
           # (Or, make it an optional flag to the `update-lambda-functions` command)
 
           poetry run deployer search-index ../client/build
+
+      - name: Slack Notification
+        if: failure()
+        uses: rtCamp/action-slack-notify@v2
+        env:
+          SLACK_CHANNEL: mdn-notifications
+          SLACK_COLOR: ${{ job.status }}
+          SLACK_ICON: https://avatars.slack-edge.com/2020-11-17/1513880588420_fedd7f0e9456888e69ff_96.png
+          SLACK_TITLE: "Dev"
+          SLACK_MESSAGE: "Build failed :broken_heart:"
+          SLACK_FOOTER: "Powered by dev-build.yml"
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
