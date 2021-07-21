@@ -217,6 +217,7 @@ jobs:
           poetry run deployer search-index ../client/build
 
       - name: Slack Notification
+        if: failure()
         uses: rtCamp/action-slack-notify@v2
         env:
           SLACK_CHANNEL: mdn-notifications
