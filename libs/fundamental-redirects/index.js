@@ -1210,6 +1210,13 @@ const MISC_REDIRECT_PATTERNS = [
     ({ prefix, subPath = "" }) => `/docs/${prefix}${subPath}`,
     { permanent: true }
   ),
+  // In the olden days this used to be part of Kuma. What Kuma used to do was
+  //
+  localeRedirect(
+    /^(?<prefix>events)\/?$/i,
+    () => "https://community.mozilla.org/events/",
+    { permanent: false, prependLocale: false }
+  ),
 ];
 
 const REDIRECT_PATTERNS = [].concat(
