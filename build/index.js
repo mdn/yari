@@ -480,7 +480,8 @@ async function buildDocument(document, documentOptions = {}) {
     // present the link in any rendered HTML.
     if (
       a.attribs.href.startsWith("http") &&
-      a.attribs.href.includes("fxsitecompat.com")
+      (a.attribs.href.includes("fxsitecompat.com") ||
+        a.attribs.href.includes("fxsitecompat.dev"))
     ) {
       $(a).attr("href", "https://github.com/mdn/kuma/issues/7647");
     }
