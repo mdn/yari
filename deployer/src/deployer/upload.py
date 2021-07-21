@@ -572,14 +572,6 @@ class BucketManager:
         return timer
 
 
-def parse_archived_txt_file(file: Path):
-    with open(file) as f:
-        for line in f:
-            line = line.strip()
-            if line and not line.startswith("#"):
-                yield line
-
-
 def upload_content(build_directory, content_roots, config):
     full_timer = StopWatch().start()
 

@@ -190,11 +190,6 @@ def upload(ctx, directory: Path, **kwargs):
             "if you don't use --no-redirects you have to have at least one content root"
         )
 
-    if kwargs["prune"] and not kwargs["archived_files"]:
-        log.warning(
-            "Warning! Running with --prune but NOT ----archived-files will "
-            "possibly delete all archived content."
-        )
     ctx.obj.update(kwargs)
     upload_content(directory, content_roots, ctx.obj)
 

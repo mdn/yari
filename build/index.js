@@ -463,7 +463,7 @@ async function buildDocument(document, documentOptions = {}) {
   // because they're potentially evil.
   $("a[href]").each((i, a) => {
     // See https://github.com/mdn/kuma/issues/7647
-    // Ideally we should manually remove this from all sources (archived or not)
+    // Ideally we should manually remove this from all sources
     // but that's not immediately feasible. So at least make sure we never
     // present the link in any rendered HTML.
     if (

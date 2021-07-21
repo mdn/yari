@@ -573,10 +573,6 @@ function remove(
   const root = getRoot(locale);
   const url = buildURL(locale, slug);
 
-  // The reason is when you're running archive CLI tool. When you run that,
-  // it will first *add* files to the archived root and then, after that's run,
-  // it will start removing files. If it then finds the files in the archived
-  // root it will confuse the git command.
   const roots = [CONTENT_ROOT];
   if (CONTENT_TRANSLATED_ROOT) {
     roots.push(CONTENT_TRANSLATED_ROOT);
@@ -623,8 +619,6 @@ function remove(
 module.exports = {
   createHTML,
   createMarkdown,
-  archive,
-  unarchive,
   read,
   update,
   exists,
