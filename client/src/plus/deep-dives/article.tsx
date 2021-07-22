@@ -24,6 +24,13 @@ const SERIES = [
 ];
 
 export default function Article({ slug }: { slug: string }) {
+  // Only when served via static Express does it force a trailing
+  // slash to the end of the URL. So we have to, for testing reasons,
+  // remove any trailing slashes.
+  if (slug.endsWith("/")) {
+    slug = slug.slice(0, -1);
+  }
+
   useEffect(() => {
     const serie = SERIES.find(
       (serie) => serie.slug.toLowerCase() === slug.toLowerCase()
@@ -54,6 +61,7 @@ export default function Article({ slug }: { slug: string }) {
   const serie = SERIES.find(
     (serie) => serie.slug.toLowerCase() === slug.toLowerCase()
   );
+
   if (!serie) {
     return (
       <div className="main-article-page-content-container girdle">
@@ -68,6 +76,7 @@ export default function Article({ slug }: { slug: string }) {
       <YourBrowserSupportToolkit />
     ) : null;
 
+  // XXX rewrite so it's dynamic based on .findIndex() based on 'slug'
   const previousArticle =
     serie.slug === "your-browser-support-toolkit" ? SERIES[0] : null;
   const nextArticle =
