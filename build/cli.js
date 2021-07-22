@@ -80,6 +80,7 @@ async function buildDocuments(
   files = null,
   quiet = false,
   interactive = false,
+  noHTML = false,
   locales = new Map()
 ) {
   // If a list of files was set, it came from the CLI.
@@ -138,10 +139,13 @@ async function buildDocuments(
       appendTotalFlaws(builtDocument.flaws);
     }
 
-    fs.writeFileSync(
-      path.join(outPath, "index.html"),
-      renderHTML(document.url, { doc: builtDocument })
-    );
+    if (!noHTML) {
+      fs.writeFileSync(
+        path.join(outPath, "index.html"),
+        renderHTML(document.url, { doc: builtDocument })
+      );
+    }
+
     fs.writeFileSync(
       path.join(outPath, "index.json"),
       // This is exploiting the fact that renderHTML has the side-effect of
@@ -275,6 +279,9 @@ program
   .option("-i, --interactive", "Ask what to do when encountering flaws", {
     default: false,
   })
+  .option("-n, --nohtml", "Do not build index.html", {
+    default: false,
+  })
   .option("-l, --locale <locale...>", "Filtered specific locales", {
     default: [],
     validator: [...VALID_LOCALES.keys()],
@@ -313,6 +320,7 @@ program
         files,
         Boolean(options.quiet),
         Boolean(options.interactive),
+        Boolean(options.nohtml),
         locales
       );
       const t1 = new Date();
