@@ -1,5 +1,6 @@
 import React from "react";
 
+import { Loading } from "../ui/atoms/loading";
 import { PageContentContainer } from "../ui/atoms/page-content";
 
 const App = React.lazy(() => import("./app"));
@@ -13,7 +14,9 @@ export function Plus() {
   return (
     <PageContentContainer extraClasses="plus">
       {!isServer && (
-        <React.Suspense fallback={<p>Loading...</p>}>
+        <React.Suspense
+          fallback={<Loading message="Loading MDN Plus…" minHeight={600} />}
+        >
           <App />
         </React.Suspense>
       )}

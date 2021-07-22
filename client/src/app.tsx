@@ -269,7 +269,7 @@ export function App(appProps) {
                 path="/plus/deep-dives/*"
                 element={
                   <StandardLayout>
-                    <DeepDive />
+                    <DeepDive {...appProps} />
                   </StandardLayout>
                 }
               />

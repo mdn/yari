@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { useParams } from "react-router-dom";
 
 import ArticleMeta from "../ui/molecules/article-meta";
@@ -9,6 +10,9 @@ import Survey from "../ui/organisms/survey";
 import "./index.scss";
 
 export default function YourBrowserSupportToolkit() {
+  useEffect(() => {
+    document.title = "Your browser support toolkit ~ Plus";
+  }, []);
   const { locale } = useParams();
   const seriesList = [
     {
