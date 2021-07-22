@@ -4,12 +4,12 @@ import { useParams } from "react-router-dom";
 import { Loading } from "../ui/atoms/loading";
 import { PageContentContainer } from "../ui/atoms/page-content";
 
-interface DeepDiveProps {
+interface DeepDivesProps {
   pageTitle?: string;
   locale?: string;
 }
 
-export function DeepDive(props: DeepDiveProps) {
+export function DeepDives(props: DeepDivesProps) {
   React.useEffect(() => {
     document.title = props.pageTitle || "MDN Plus Deep Dives";
   }, [props.pageTitle]);
