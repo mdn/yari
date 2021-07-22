@@ -2,7 +2,7 @@ import { useEffect } from "react";
 
 import "./index.scss";
 
-export default function DeepDiveNotFound({ slug }: { slug: string }) {
+export function DeepDiveNotFound({ slug }: { slug: string }) {
   useEffect(() => {
     document.title = "Sorry. Deep dive article not found ~ Plus";
   }, []);

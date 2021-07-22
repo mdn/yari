@@ -4,6 +4,8 @@ import { useParams } from "react-router-dom";
 import { Loading } from "../../ui/atoms/loading";
 import { PageContentContainer } from "../../ui/atoms/page-content";
 
+const Article = React.lazy(() => import("./article"));
+
 interface DeepDivesProps {
   pageTitle?: string;
   locale?: string;
@@ -17,18 +19,18 @@ export function DeepDives(props: DeepDivesProps) {
 
   const isServer = typeof window === "undefined";
 
-  const Article =
-    slug === "planning-for-browser-support"
-      ? React.lazy(() => import("./planning-for-browser-support"))
-      : slug === "your-browser-support-toolkit"
-      ? React.lazy(() => import("./your-browser-support-toolkit"))
-      : slug
-      ? React.lazy(() => import("./not-found"))
-      : null;
+  // const Article =
+  //   slug === "planning-for-browser-support"
+  //     ? React.lazy(() => import("./planning-for-browser-support"))
+  //     : slug === "your-browser-support-toolkit"
+  //     ? React.lazy(() => import("./your-browser-support-toolkit"))
+  //     : slug
+  //     ? React.lazy(() => import("./not-found"))
+  //     : null;
 
   return (
     <PageContentContainer extraClasses="plus deep-dives">
-      {!isServer && Article && (
+      {!isServer && (
         <React.Suspense
           fallback={<Loading message="Loading deep dive…" minHeight={600} />}
         >
