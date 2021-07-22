@@ -1,6 +1,6 @@
 import React from "react";
 
-import { PageContentContainer } from "../ui/atoms/page-content";
+import { PageContentContainer } from "../../../ui/atoms/page-content";
 
 const App = React.lazy(() => import("./app"));
 

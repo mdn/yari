@@ -1,14 +1,18 @@
+import { useEffect } from "react";
 import { useParams } from "react-router-dom";
 
-import ArticleMeta from "../ui/molecules/article-meta";
-import Byline from "../ui/organisms/byline";
-import DeepDivesFeature from "../ui/organisms/deep-dives-feature";
-import SeriesCard from "../ui/molecules/series-card";
-import Survey from "../ui/organisms/survey";
+import ArticleMeta from "../../ui/molecules/article-meta";
+import Byline from "../../ui/organisms/byline";
+import DeepDivesFeature from "../../ui/organisms/deep-dives-feature";
+import SeriesCard from "../../ui/molecules/series-card";
+import Survey from "../../ui/organisms/survey";
 
 import "./index.scss";
 
 export default function YourBrowserSupportToolkit() {
+  useEffect(() => {
+    document.title = "Your browser support toolkit ~ Plus";
+  }, []);
   const { locale } = useParams();
   const seriesList = [
     {
