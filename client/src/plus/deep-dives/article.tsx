@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { useParams } from "react-router-dom";
 
 import { DeepDivesFeature } from "../../ui/organisms/deep-dives-feature";
-import { SeriesCard } from "../../ui/molecules/series-card";
+import { SeriesCard, SerieData } from "./series-card";
 
 import "./index.scss";
 import { DeepDiveNotFound } from "./not-found";
@@ -22,13 +22,6 @@ const SERIES = [
     title: "Your browser support toolkit",
   },
 ];
-// const SERIES_MAP = new Map(SERIES.map((serie) => [serie.slug, serie.title]));
-
-interface SeriesList {
-  displayName: string;
-  url: string; // XXX rename to 'slug'
-  state: "" | "active" | "unavailable";
-}
 
 export default function Article({ slug }: { slug: string }) {
   useEffect(() => {
@@ -36,26 +29,23 @@ export default function Article({ slug }: { slug: string }) {
       (serie) => serie.slug.toLowerCase() === slug.toLowerCase()
     );
     const title = serie ? serie.title : "Article not found";
-    // const title = SERIES_MAP.has(slug.toLowerCase())
-    //   ? SERIES_MAP.get(slug.toLowerCase()).title
-    //   : "Article not found";
     document.title = title;
   }, [slug]);
   const { locale } = useParams();
 
-  function getSeriesList(): SeriesList[] {
-    const list: SeriesList[] = [];
+  function getSeriesList(): SerieData[] {
+    const list: SerieData[] = [];
     for (const serie of SERIES) {
       list.push({
         displayName: serie.title,
-        url: serie.slug,
+        slug: serie.slug,
         state: serie.slug === slug.toLowerCase() ? "active" : "",
       });
     }
     // Cheating a bit here manually adding one that *could be*.
     list.push({
       displayName: "Practical browser support",
-      url: "#",
+      slug: "#",
       state: "unavailable",
     });
     return list;

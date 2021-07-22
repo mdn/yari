@@ -1,5 +1,5 @@
-import { ArticleMeta } from "../../ui/molecules/article-meta";
-import { Byline } from "../../ui/molecules/byline";
+import { ArticleMeta } from "./article-meta";
+import { Byline } from "./byline";
 
 export function PlanningForBrowserSupport() {
   return (
