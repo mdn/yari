@@ -27,9 +27,6 @@ yarn-error.log*
 /client/build/
 /ssr/dist/
 
-# Can be removed once content lives in its own repo
-/archivecontent/files
-
 # These are an effect of the dumper still producing all locales
 # We haven't decided what to do with them but for now we're *not*
 # going to check them into git.

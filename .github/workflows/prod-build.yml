@@ -12,7 +12,6 @@ name: Prod Build
 env:
   DEFAULT_DEPLOYMENT_PREFIX: "main"
   DEFAULT_NOTES: ""
-  DEFAULT_ARCHIVED_CONTENT: "false"
   DEFAULT_LOG_EACH_SUCCESSFUL_UPLOAD: "false"
 
 on:
@@ -26,10 +25,6 @@ on:
         description: "Notes"
         required: false
         default: ${DEFAULT_NOTES}
-      archived_content:
-        description: "Build archived content"
-        required: false
-        default: ${DEFAULT_ARCHIVED_CONTENT}
 
       # This is very useful when combined with the "Use workflow from"
       # feature that is built into the "Run workflow" button on
@@ -76,15 +71,8 @@ jobs:
       # can refer to later in `if: ....` lines or in bash with the `run: ...` blocks.
       - name: Merge dispatch inputs with default env vars
         run: |
-          echo "BUILD_ARCHIVED_CONTENT=${{ github.event.inputs.archived_content || env.DEFAULT_ARCHIVED_CONTENT }}" >> $GITHUB_ENV
           echo "DEPLOYER_BUCKET_PREFIX=${{ github.event.inputs.deployment_prefix || env.DEFAULT_DEPLOYMENT_PREFIX }}" >> $GITHUB_ENV
           echo "DEPLOYER_LOG_EACH_SUCCESSFUL_UPLOAD=${{ github.event.inputs.log_each_successful_upload || env.DEFAULT_LOG_EACH_SUCCESSFUL_UPLOAD }}" >> $GITHUB_ENV
-
-      - uses: actions/checkout@v2.3.4
-        if: "contains(env.BUILD_ARCHIVED_CONTENT, 'true')"
-        with:
-          repository: mdn/archived-content
-          path: mdn/archived-content
 
       - uses: actions/checkout@v2.3.4
         with:
@@ -131,10 +119,8 @@ jobs:
       - name: Print information about build
         run: |
           echo "notes: ${{ github.event.inputs.notes || env.DEFAULT_NOTES }}"
-          echo "archived_content: ${{ github.event.inputs.archived_content || env.DEFAULT_ARCHIVED_CONTENT }}"
           echo "log_each_successful_upload: ${{ github.event.inputs.log_each_successful_upload || env.DEFAULT_LOG_EACH_SUCCESSFUL_UPLOAD }}"
           echo "deployment_prefix: ${{ github.event.inputs.deployment_prefix || env.DEFAULT_DEPLOYMENT_PREFIX }}"
-          echo "BUILD_ARCHIVED_CONTENT: ${{ env.BUILD_ARCHIVED_CONTENT }}"
 
       - name: Build everything
         env:
@@ -174,16 +160,9 @@ jobs:
           BUILD_ALWAYS_ALLOW_ROBOTS: true
 
         run: |
-          if [ ${{ env.BUILD_ARCHIVED_CONTENT }} == "true" ]; then
-            echo "Will build mdn/archived-content too"
-            export CONTENT_ARCHIVED_ROOT=${{ github.workspace }}/mdn/archived-content/files
-          else
-            echo "Will NOT build mdn/archived-content too"
-          fi
 
           # Info about which CONTENT_* environment variables were set and to what.
           echo "CONTENT_ROOT=$CONTENT_ROOT"
-          echo "CONTENT_ARCHIVED_ROOT=$CONTENT_ARCHIVED_ROOT"
           echo "CONTENT_TRANSLATED_ROOT=$CONTENT_TRANSLATED_ROOT"
           yarn prepare-build
 
@@ -223,16 +202,8 @@ jobs:
 
         run: |
 
-          if [ ${{ env.BUILD_ARCHIVED_CONTENT }} == "true" ]; then
-            echo "Will build mdn/archived-content too"
-            export CONTENT_ARCHIVED_ROOT=${{ github.workspace }}/mdn/archived-content/files
-          else
-            echo "Will NOT build mdn/archived-content too"
-          fi
-
           # Info about which CONTENT_* environment variables were set and to what.
           echo "CONTENT_ROOT=$CONTENT_ROOT"
-          echo "CONTENT_ARCHIVED_ROOT=$CONTENT_ARCHIVED_ROOT"
           echo "CONTENT_TRANSLATED_ROOT=$CONTENT_TRANSLATED_ROOT"
 
           cd deployer
@@ -243,7 +214,7 @@ jobs:
           # XXX would be nice to validate here that $DEPLOYER_BUCKET_PREFIX is truthy
           echo "DEPLOYER_BUCKET_PREFIX=$DEPLOYER_BUCKET_PREFIX"
 
-          poetry run deployer upload --prune --archived-files ../content/archived.txt ../client/build
+          poetry run deployer upload --prune ../client/build
           poetry run deployer update-lambda-functions ./aws-lambda
           poetry run deployer search-index ../client/build
 

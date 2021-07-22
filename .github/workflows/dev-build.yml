@@ -17,10 +17,6 @@ on:
         description: "Notes"
         required: false
         default: ""
-      archived_content:
-        description: "Build archived content"
-        required: false
-        default: "false"
 
       # This is very useful when combined with the "Use workflow from"
       # feature that is built into the "Run workflow" button on
@@ -54,12 +50,6 @@ jobs:
           # but for now it's good enough. We'll need all the history
           # so we can figure out each document's last-modified date.
           fetch-depth: 0
-
-      - uses: actions/checkout@v2.3.4
-        if: "contains(github.event.inputs.archived_content, 'true')"
-        with:
-          repository: mdn/archived-content
-          path: mdn/archived-content
 
       - uses: actions/checkout@v2.3.4
         with:
@@ -106,7 +96,6 @@ jobs:
       - name: Print information about build
         run: |
           echo "notes: ${{ github.event.inputs.notes }}"
-          echo "archived_content: ${{ github.event.inputs.archived_content }}"
           echo "log_each_successful_upload: ${{ github.event.inputs.log_each_successful_upload }}"
           echo "deployment_prefix: ${{ github.event.inputs.deployment_prefix }}"
 
@@ -140,16 +129,8 @@ jobs:
           REACT_APP_DISABLE_AUTH: true
 
         run: |
-          if [ ${{ github.event.inputs.archived_content }} == "true" ]; then
-            echo "Will build mdn/archived-content too"
-            export CONTENT_ARCHIVED_ROOT=${{ github.workspace }}/mdn/archived-content/files
-          else
-            echo "Will NOT build mdn/archived-content too"
-          fi
-
           # Info about which CONTENT_* environment variables were set and to what.
           echo "CONTENT_ROOT=$CONTENT_ROOT"
-          echo "CONTENT_ARCHIVED_ROOT=$CONTENT_ARCHIVED_ROOT"
           echo "CONTENT_TRANSLATED_ROOT=$CONTENT_TRANSLATED_ROOT"
           yarn prepare-build
 
@@ -181,13 +162,6 @@ jobs:
           DEPLOYER_ELASTICSEARCH_URL: ${{ secrets.DEPLOYER_DEV_ELASTICSEARCH_URL }}
 
         run: |
-
-          if [ ${{ github.event.inputs.archived_content }} == "true" ]; then
-            echo "Will build mdn/archived-content too"
-            export CONTENT_ARCHIVED_ROOT=${{ github.workspace }}/mdn/archived-content/files
-          else
-            echo "Will NOT build mdn/archived-content too"
-          fi
           if [ ${{ github.event.inputs.translated_content }} == "true" ]; then
             echo "Will build mdn/translated-content too"
             export CONTENT_TRANSLATED_ROOT=${{ github.workspace }}/mdn/translated-content/files
@@ -197,7 +171,6 @@ jobs:
 
           # Info about which CONTENT_* environment variables were set and to what.
           echo "CONTENT_ROOT=$CONTENT_ROOT"
-          echo "CONTENT_ARCHIVED_ROOT=$CONTENT_ARCHIVED_ROOT"
           echo "CONTENT_TRANSLATED_ROOT=$CONTENT_TRANSLATED_ROOT"
 
           cd deployer
@@ -208,7 +181,7 @@ jobs:
           # XXX would be nice to validate here that $DEPLOYER_BUCKET_PREFIX is truthy
           echo "DEPLOYER_BUCKET_PREFIX=$DEPLOYER_BUCKET_PREFIX"
 
-          poetry run deployer upload --prune --archived-files ../content/archived.txt ../client/build
+          poetry run deployer upload --prune ../client/build
           poetry run deployer update-lambda-functions ./aws-lambda
           # TODO
           # Execute command to tell the Dev CloudFront distribution to use the

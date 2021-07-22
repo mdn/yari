@@ -18,7 +18,6 @@ const { DEFAULT_LOCALE } = require("../libs/constants");
  */
 function checkImageReferences(doc, $, options, { url, rawContent }) {
   const filePaths = new Set();
-  if (doc.isArchive) return filePaths;
 
   const checkImages = options.flawLevels.get("images") !== FLAW_LEVELS.IGNORE;
 
@@ -243,9 +242,6 @@ function checkImageReferences(doc, $, options, { url, rawContent }) {
  * best to set "centrally" with a style sheet.
  */
 function checkImageWidths(doc, $, options, { rawContent }) {
-  const filePaths = new Set();
-  if (doc.isArchive) return filePaths;
-
   const checkImages =
     options.flawLevels.get("image_widths") !== FLAW_LEVELS.IGNORE;
 
