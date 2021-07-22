@@ -1,8 +1,8 @@
 import React from "react";
 import { useParams } from "react-router-dom";
 
-import { Loading } from "../ui/atoms/loading";
-import { PageContentContainer } from "../ui/atoms/page-content";
+import { Loading } from "../../ui/atoms/loading";
+import { PageContentContainer } from "../../ui/atoms/page-content";
 
 interface DeepDivesProps {
   pageTitle?: string;
