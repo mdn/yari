@@ -5614,10 +5614,10 @@ browser-process-hrtime@^1.0.0:
   resolved "https://registry.yarnpkg.com/browser-process-hrtime/-/browser-process-hrtime-1.0.0.tgz#3c9b4b7d782c8121e56f10106d84c0d0ffc94626"
   integrity sha512-9o5UecI3GhkpM6DrXr69PblIuWxPKk9Y0jHBRhdocZ2y7YECBFCsHm79Pr3OyR2AvjhDkabFJaDJMYRazHgsow==
 
-browser-specs@^2.3.0:
-  version "2.3.0"
-  resolved "https://registry.yarnpkg.com/browser-specs/-/browser-specs-2.3.0.tgz#fa30d48d3a3978039196c1f7465c1754bc62b506"
-  integrity sha512-6bF7WWEDG7d+z3cLIwHVKA6FBzLuwOa4OhzDPRya+akWKEpBqTqHfR+inqJP6nEldW0XhmfpfqDhB4aBj7+v3A==
+browser-specs@^2.4.0:
+  version "2.4.0"
+  resolved "https://registry.yarnpkg.com/browser-specs/-/browser-specs-2.4.0.tgz#b9b234920b944c2c7e614b3ff81e48b0fb2d1547"
+  integrity sha512-akHID8mE9Ju6W7/fIh88d84ofdrfLEXo248QjoiLWEE0NyI8LbM1KAqvt71ywToVGrUEZVPwwVzy24DcChIJzA==
 
 browserify-aes@^1.0.0, browserify-aes@^1.0.4:
   version "1.2.0"
