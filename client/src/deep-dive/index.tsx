@@ -3,31 +3,27 @@ import { useParams } from "react-router-dom";
 
 import { PageContentContainer } from "../ui/atoms/page-content";
 
-const PlanningForBrowserSupport = React.lazy(
-  () => import("./planning-for-browser-support")
-);
-const YourBrowserSupportToolkit = React.lazy(
-  () => import("./your-browser-support-toolkit")
-);
-
 export function DeepDive() {
   const pageTitle = "MDN Plus Deep Dives";
   React.useEffect(() => {
     document.title = pageTitle;
   }, []);
-  const { "*": slug, locale } = useParams();
+  const { "*": slug } = useParams();
   const isServer = typeof window === "undefined";
-  console.log(slug, locale);
+
+  let Article;
+
+  if (slug === "planning-for-browser-support") {
+    Article = React.lazy(() => import("./planning-for-browser-support"));
+  } else if (slug === "your-browser-support-toolkit") {
+    Article = React.lazy(() => import("./your-browser-support-toolkit"));
+  }
+
   return (
     <PageContentContainer extraClasses="plus deep-dives">
       {!isServer && (
         <React.Suspense fallback={<p>Loading...</p>}>
-          {slug === "planning-for-browser-support" && (
-            <PlanningForBrowserSupport />
-          )}
-          {slug === "your-browser-support-toolkit" && (
-            <YourBrowserSupportToolkit />
-          )}
+          <Article />
         </React.Suspense>
       )}
     </PageContentContainer>
