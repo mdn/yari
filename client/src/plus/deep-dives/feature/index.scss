@@ -3,7 +3,7 @@
 @use "~@mdn/minimalist/sass/vars/layout";
 @use "~@mdn/minimalist/sass/vars/typography";
 
-@use "../../theme/index" as theme;
+@use "../../../ui/theme/index" as theme;
 
 .deep-dives-feature-wrapper {
   background-color: theme.$mdn-violet900;
@@ -13,8 +13,7 @@
 
   .girdle {
     &::before {
-      background: transparent url("../../atoms/svg/deepdive.svg") center center
-        no-repeat;
+      background: transparent url("./deepdive.svg") center center no-repeat;
       content: "";
       display: block;
       height: 380px;

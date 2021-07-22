@@ -19,15 +19,6 @@ export function DeepDives(props: DeepDivesProps) {
 
   const isServer = typeof window === "undefined";
 
-  // const Article =
-  //   slug === "planning-for-browser-support"
-  //     ? React.lazy(() => import("./planning-for-browser-support"))
-  //     : slug === "your-browser-support-toolkit"
-  //     ? React.lazy(() => import("./your-browser-support-toolkit"))
-  //     : slug
-  //     ? React.lazy(() => import("./not-found"))
-  //     : null;
-
   return (
     <PageContentContainer extraClasses="plus deep-dives">
       {!isServer && (

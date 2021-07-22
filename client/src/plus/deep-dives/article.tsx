@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useParams } from "react-router-dom";
 
-import { DeepDivesFeature } from "../../ui/organisms/deep-dives-feature";
+import { Feature } from "./feature";
 import { SeriesCard, SerieData } from "./series-card";
 
 import "./index.scss";
@@ -85,7 +85,7 @@ export default function Article({ slug }: { slug: string }) {
           />
         </div>
       </div>
-      <DeepDivesFeature />
+      <Feature />
       <Survey slug={slug} />
       <div className="deep-dive-article-footer">
         <p className="girdle">

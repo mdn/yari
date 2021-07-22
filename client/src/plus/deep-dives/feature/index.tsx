@@ -1,6 +1,6 @@
 import "./index.scss";
 
-export function DeepDivesFeature() {
+export function Feature() {
   return (
     <div className="deep-dives-feature-wrapper">
       <div className="girdle">
