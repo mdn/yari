@@ -1,7 +1,6 @@
 import datetime
 
 from elasticsearch_dsl import (
-    Boolean,
     Document as ESDocument,
     Float,
     Keyword,
@@ -252,7 +251,6 @@ class Document(ESDocument):
     )
     summary = Text(analyzer=text_analyzer)
     locale = Keyword()
-    archived = Boolean()
     slug = Keyword()
     popularity = Float()
 

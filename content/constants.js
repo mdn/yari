@@ -11,9 +11,6 @@ if (!CONTENT_ROOT) {
   throw new Error("Env var CONTENT_ROOT must be set");
 }
 
-const CONTENT_ARCHIVED_ROOT = correctContentPathFromEnv(
-  "CONTENT_ARCHIVED_ROOT"
-);
 const CONTENT_TRANSLATED_ROOT = correctContentPathFromEnv(
   "CONTENT_TRANSLATED_ROOT"
 );
@@ -26,13 +23,9 @@ const REPOSITORY_URLS = {
 };
 
 // Make a combined array of all truthy roots. This way, you don't
-// need to constantly worry about CONTENT_ARCHIVED_ROOT potentially being
+// need to constantly worry about CONTENT_TRANSLATED_ROOT potentially being
 // null.
 const ROOTS = [CONTENT_ROOT];
-if (CONTENT_ARCHIVED_ROOT) {
-  ROOTS.push(CONTENT_ARCHIVED_ROOT);
-  REPOSITORY_URLS[CONTENT_ARCHIVED_ROOT] = "mdn/archived-content";
-}
 if (CONTENT_TRANSLATED_ROOT) {
   ROOTS.push(CONTENT_TRANSLATED_ROOT);
   REPOSITORY_URLS[CONTENT_TRANSLATED_ROOT] = "mdn/translated-content";
@@ -61,7 +54,6 @@ function correctContentPathFromEnv(envVarName) {
 
 module.exports = {
   CONTENT_ROOT,
-  CONTENT_ARCHIVED_ROOT,
   CONTENT_TRANSLATED_ROOT,
   REPOSITORY_URLS,
   ROOTS,

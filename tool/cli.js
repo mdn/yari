@@ -16,7 +16,6 @@ const { DEFAULT_LOCALE, VALID_LOCALES } = require("../libs/constants");
 const {
   CONTENT_ROOT,
   CONTENT_TRANSLATED_ROOT,
-  CONTENT_ARCHIVED_ROOT,
   Redirect,
   Document,
   buildURL,
@@ -29,7 +28,6 @@ const {
   GOOGLE_ANALYTICS_ACCOUNT,
   GOOGLE_ANALYTICS_DEBUG,
 } = require("../build/constants");
-const { runArchive } = require("./archive");
 const { runMakePopularitiesFile } = require("./popularities");
 const { runOptimizeClientBuild } = require("./optimize-client-build");
 const { runBuildRobotsTxt } = require("./build-robots-txt");
@@ -591,87 +589,6 @@ program
       console.log(
         `In total, ${sumTotal} translations that share the same translation_of`
       );
-    })
-  )
-
-  .command("archive", "Render and copy to archived-content repo")
-  .option("--remove", "Also delete from active repos", { default: false })
-  .option(
-    "--redirect-to-github",
-    "Put in a redirect to browsing it on github.com/mdn/archived-content",
-    {
-      default: false,
-    }
-  )
-  .argument("<slugs...>", "slug trees (e.g. 'Mozilla/Virtualenv')")
-  .action(
-    tryOrExit(async ({ args, options, logger }) => {
-      if (!CONTENT_ARCHIVED_ROOT) {
-        throw new Error("CONTENT_ARCHIVED_ROOT not set");
-      }
-      if (!CONTENT_TRANSLATED_ROOT) {
-        throw new Error("CONTENT_TRANSLATED_ROOT not set");
-      }
-      const { slugs } = args;
-      const { verbose } = options;
-      const archivedResults = await runArchive(slugs, options);
-      if (verbose) {
-        for (const result of archivedResults) {
-          // console.log(result);
-          logger.info(
-            `${chalk.grey(result.document.fileInfo.path)} --> ${chalk.green(
-              result.folderPath
-            )} ${result.removed ? chalk.yellow(" also removed!") : ""}`
-          );
-        }
-      } else {
-        logger.info(`Archived ${archivedResults.length} documents`);
-      }
-    })
-  )
-
-  .command(
-    "unarchive",
-    "Move content from CONTENT_ARCHIVED_ROOT to CONTENT_ROOT"
-  )
-  .option("--foldersearch <pattern>", "simple pattern for folders", {
-    default: "",
-  })
-  .option("--move", "(git) delete from archive repo", { default: false })
-  .argument("[files...]", "specific files")
-  .action(
-    tryOrExit(async ({ args, options }) => {
-      if (!CONTENT_ARCHIVED_ROOT) {
-        throw new Error("CONTENT_ARCHIVED_ROOT not set");
-      }
-      if (!CONTENT_TRANSLATED_ROOT) {
-        throw new Error("CONTENT_TRANSLATED_ROOT not set");
-      }
-      const { files } = args;
-      const { foldersearch, move } = options;
-      if (!foldersearch && !files) {
-        throw new Error("Must specify either files or --foldersearch pattern");
-      }
-      const filters = {
-        folderSearch: foldersearch || null,
-        files: new Set(files || []),
-      };
-      const documents = Document.findAll(filters);
-      if (!documents.count) {
-        throw new Error("No documents found");
-      }
-      let countCreated = 0;
-      for (const document of documents.iter()) {
-        console.assert(document.isArchive, document.fileInfo);
-        console.assert(!document.isTranslated, document.fileInfo);
-        if (document.metadata.locale !== "en-US") {
-          continue;
-        }
-        const created = Document.unarchive(document, move);
-        console.log(`Created ${created}`);
-        countCreated++;
-      }
-      console.log(`Created ${countCreated} new files`);
     })
   )
 

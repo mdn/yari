@@ -288,7 +288,6 @@
         "ByteString",
         "CDATASection",
         "CharacterData",
-        "ChildNode",
         "CSSPrimitiveValue",
         "CSSValue",
         "CSSValueList",
