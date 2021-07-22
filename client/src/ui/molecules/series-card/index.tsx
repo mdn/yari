@@ -1,6 +1,16 @@
 import "./index.scss";
 
-const SeriesCard = ({ title, seriesList }) => {
+export function SeriesCard({
+  title,
+  seriesList,
+}: {
+  title: string;
+  seriesList: Array<{
+    displayName: string;
+    url: string;
+    state?: string;
+  }>;
+}) {
   return (
     <section className="series-card" aria-labelledby="series-card-title">
       <p className="card-type">In this series</p>
@@ -8,7 +18,7 @@ const SeriesCard = ({ title, seriesList }) => {
       <ul>
         {seriesList.map((item) => {
           return (
-            <li key={item.displayName} className={item.state || null}>
+            <li key={item.displayName} className={item.state || undefined}>
               {item.state !== "unavailable" ? (
                 <a href={item.url}>{item.displayName}</a>
               ) : (
@@ -20,6 +30,4 @@ const SeriesCard = ({ title, seriesList }) => {
       </ul>
     </section>
   );
-};
-
-export default SeriesCard;
+}

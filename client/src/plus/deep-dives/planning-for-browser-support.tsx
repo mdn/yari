@@ -1,11 +1,11 @@
 import { useEffect } from "react";
 import { useParams } from "react-router-dom";
 
-import ArticleMeta from "../../ui/molecules/article-meta";
-import Byline from "../../ui/organisms/byline";
-import DeepDivesFeature from "../../ui/organisms/deep-dives-feature";
-import SeriesCard from "../../ui/molecules/series-card";
-import Survey from "../../ui/organisms/survey";
+import { ArticleMeta } from "../../ui/molecules/article-meta";
+import { Byline } from "../../ui/molecules/byline";
+import { DeepDivesFeature } from "../../ui/organisms/deep-dives-feature";
+import { SeriesCard } from "../../ui/molecules/series-card";
+import { Survey } from "../../ui/organisms/survey";
 
 import "./index.scss";
 
@@ -47,7 +47,7 @@ export default function PlanningForBrowserSupport() {
           <Byline
             avatar="rachel-andrew.png"
             author="Rachel Andrew"
-            authorDescription="MDN Editor &amp; Writer, Former Editor in Chief of Smashing Magazine"
+            authorDescription="MDN Editor & Writer, Former Editor in Chief of Smashing Magazine"
           />
           <ArticleMeta
             publishDate="March 29th, 2021"
@@ -56,7 +56,7 @@ export default function PlanningForBrowserSupport() {
           <p>
             <img
               className="feature-image"
-              src="/assets/article-images/planning-for-browser-support.svg"
+              src="/assets/deepdives/planning-for-browser-support.svg"
               width="782"
               height="440"
               alt="illustration of various tech devices and browser windows"

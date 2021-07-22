@@ -1,6 +1,6 @@
 import { useParams } from "react-router-dom";
 
-import Hero from "../../../ui/organisms/hero";
+import { Hero } from "../../../ui/organisms/hero";
 
 import "./index.scss";
 

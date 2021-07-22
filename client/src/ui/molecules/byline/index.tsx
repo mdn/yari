@@ -1,6 +1,14 @@
 import "./index.scss";
 
-const Byline = ({ avatar, author, authorDescription }) => {
+export function Byline({
+  avatar,
+  author,
+  authorDescription,
+}: {
+  avatar: string;
+  author: string;
+  authorDescription: string;
+}) {
   return (
     <div className="byline">
       <div className="author-avatar">
@@ -17,5 +25,4 @@ const Byline = ({ avatar, author, authorDescription }) => {
       </div>
     </div>
   );
-};
-export default Byline;
+}

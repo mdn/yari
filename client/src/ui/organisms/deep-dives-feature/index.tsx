@@ -1,6 +1,6 @@
 import "./index.scss";
 
-const DeepDivesFeature = () => {
+export function DeepDivesFeature() {
   return (
     <div className="deep-dives-feature-wrapper">
       <div className="girdle">
@@ -27,6 +27,4 @@ const DeepDivesFeature = () => {
       </div>
     </div>
   );
-};
-
-export default DeepDivesFeature;
+}

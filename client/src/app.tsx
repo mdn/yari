@@ -265,16 +265,16 @@ export function App(appProps) {
                 }
               />
             )}
-            {/* {ENABLE_PLUS && (
+            {ENABLE_PLUS && (
               <Route
                 path="/plus/deep-dives"
                 element={
                   <StandardLayout>
-                    <DeepDivesHomepage {...appProps} />
+                    <Plus />
                   </StandardLayout>
                 }
               />
-            )} */}
+            )}
             {ENABLE_PLUS && (
               <Route
                 path="/plus/deep-dives/*"

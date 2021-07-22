@@ -1,9 +1,9 @@
 import React from "react";
 
-import Card from "../ui/molecules/card";
-import DeepDivesFeature from "../ui/organisms/deep-dives-feature";
-import Hero from "../ui/organisms/hero";
-import ProductFeatures from "../ui/organisms/product-features";
+import { Card } from "../ui/molecules/card";
+import { DeepDivesFeature } from "../ui/organisms/deep-dives-feature";
+import { Hero } from "../ui/organisms/hero";
+import { ProductFeatures } from "../ui/organisms/product-features";
 
 import "./index.scss";
 
@@ -52,7 +52,7 @@ export default function App() {
 
         <div className="main-article-content-container">
           <div className="sample-deep-dive-sidebar">
-            <Card featured="true">
+            <Card featured={true}>
               <p className="card-type-heading">Featured Deep Dive</p>
               <h2 id="card-title">
                 Modern CSS in the real world: Your browser support toolkit

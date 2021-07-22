@@ -1,11 +1,11 @@
 import { useEffect } from "react";
 import { useParams } from "react-router-dom";
 
-import ArticleMeta from "../../ui/molecules/article-meta";
-import Byline from "../../ui/organisms/byline";
-import DeepDivesFeature from "../../ui/organisms/deep-dives-feature";
-import SeriesCard from "../../ui/molecules/series-card";
-import Survey from "../../ui/organisms/survey";
+import { ArticleMeta } from "../../ui/molecules/article-meta";
+import { Byline } from "../../ui/molecules/byline";
+import { DeepDivesFeature } from "../../ui/organisms/deep-dives-feature";
+import { SeriesCard } from "../../ui/molecules/series-card";
+import { Survey } from "../../ui/organisms/survey";
 
 import "./index.scss";
 
@@ -55,7 +55,7 @@ export default function YourBrowserSupportToolkit() {
           <p>
             <img
               className="feature-image"
-              src="/assets/article-images/your-browser-support-toolkit.svg"
+              src="/assets/deepdives/your-browser-support-toolkit.svg"
               width="782"
               height="440"
               alt="illustration of various tech devices and browser windows"
@@ -79,7 +79,7 @@ export default function YourBrowserSupportToolkit() {
           </p>
           <figure>
             <img
-              src="/assets/article-images/ybst001.png"
+              src="/assets/deepdives/ybst001.png"
               width="783"
               height="426"
               alt=""
@@ -103,7 +103,7 @@ export default function YourBrowserSupportToolkit() {
           </p>
           <figure>
             <img
-              src="/assets/article-images/bcd001.png"
+              src="/assets/deepdives/bcd001.png"
               width="783"
               height="459"
               alt=""

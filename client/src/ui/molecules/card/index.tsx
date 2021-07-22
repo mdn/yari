@@ -1,6 +1,12 @@
 import "./index.scss";
 
-const Card = ({ featured, children }) => {
+export function Card({
+  featured,
+  children,
+}: {
+  featured: boolean;
+  children: React.ReactNode;
+}) {
   return (
     <section
       className={featured ? "card featured" : "card"}
@@ -9,6 +15,4 @@ const Card = ({ featured, children }) => {
       {children}
     </section>
   );
-};
-
-export default Card;
+}

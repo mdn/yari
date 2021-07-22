@@ -2,7 +2,7 @@ import * as React from "react";
 
 import "./index.scss";
 
-const Survey = () => {
+export function Survey() {
   const surveyFormRef = React.useRef(null);
   const [showInitialQuestionSet, setShowInitialQuestionSet] =
     React.useState(true);
@@ -320,6 +320,4 @@ const Survey = () => {
       )}
     </div>
   );
-};
-
-export default Survey;
+}

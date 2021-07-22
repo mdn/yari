@@ -1,6 +1,6 @@
 import "./index.scss";
 
-const ProductFeatures = ({ withIntro }) => {
+export function ProductFeatures({ withIntro }: { withIntro: boolean }) {
   return (
     <>
       {withIntro && (
@@ -37,6 +37,4 @@ const ProductFeatures = ({ withIntro }) => {
       </div>
     </>
   );
-};
-
-export default ProductFeatures;
+}

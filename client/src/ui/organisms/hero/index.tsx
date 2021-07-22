@@ -1,6 +1,6 @@
 import "./index.scss";
 
-const Hero = () => {
+export function Hero() {
   return (
     <header className="plus-hero">
       <div className="header-wrapper">
@@ -20,6 +20,4 @@ const Hero = () => {
       </div>
     </header>
   );
-};
-
-export default Hero;
+}
