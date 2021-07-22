@@ -1183,13 +1183,9 @@ const MISC_REDIRECT_PATTERNS = [
   localeRedirect(/^account\/?$/i, "/settings", {
     permanent: false,
   }),
-  localeRedirect(
-    /^profile(?:|\/stripe_subscription|\/edit)\/?$/i,
-    "/settings",
-    {
-      permanent: false,
-    }
-  ),
+  localeRedirect(/^profile(?:|\/edit)\/?$/i, "/settings", {
+    permanent: false,
+  }),
   localeRedirect(
     /^profiles\/(?:[^\/]+)(?:|\/edit|\/delete)\/?$/i,
     "/settings",
