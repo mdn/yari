@@ -1,5 +1,6 @@
 import React from "react";
 
+import { Loading } from "../ui/atoms/loading";
 import { PageContentContainer } from "../ui/atoms/page-content";
 
 const App = React.lazy(() => import("./app"));
@@ -11,14 +12,14 @@ export function Plus() {
   }, []);
   const isServer = typeof window === "undefined";
   return (
-    <div className="settings">
-      <PageContentContainer extraClasses="plus">
-        {!isServer && (
-          <React.Suspense fallback={<p>Loading...</p>}>
-            <App />
-          </React.Suspense>
-        )}
-      </PageContentContainer>
-    </div>
+    <PageContentContainer extraClasses="plus">
+      {!isServer && (
+        <React.Suspense
+          fallback={<Loading message="Loading MDN Plus…" minHeight={600} />}
+        >
+          <App />
+        </React.Suspense>
+      )}
+    </PageContentContainer>
   );
 }

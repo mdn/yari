@@ -1,0 +1,24 @@
+@use "./fonts";
+
+$default-line-height: 1.5;
+$heading-line-height: 1.2;
+
+$metropolis-font-family: "Metropolis", sans-serif;
+$inter-font-family: "Inter", sans-serif;
+$code-inline-font-family: consolas, "Liberation Mono", courier, monospace;
+
+$small-font-size: 0.9rem; /* 16px */
+
+h1,
+h2 {
+  font-family: $metropolis-font-family;
+  font-weight: normal;
+  line-height: $heading-line-height;
+}
+
+h3,
+h4,
+h5 {
+  font-family: $inter-font-family;
+  font-weight: bold;
+}
