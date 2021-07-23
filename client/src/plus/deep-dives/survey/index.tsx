@@ -57,7 +57,7 @@ export function Survey({ slug }: { slug: string }) {
             className={
               showInitialQuestionSet
                 ? "survey-section"
-                : "survey-section hidden"
+                : "survey-section visually-hidden"
             }
           >
             <legend className="survey-heading">
@@ -219,7 +219,7 @@ export function Survey({ slug }: { slug: string }) {
             className={
               showSecondaryQuestionSet
                 ? "survey-section"
-                : "survey-section hidden"
+                : "survey-section visually-hidden"
             }
           >
             <legend className="survey-heading">

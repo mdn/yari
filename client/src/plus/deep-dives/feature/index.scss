@@ -17,19 +17,20 @@
       content: "";
       display: block;
       height: 380px;
-      margin: -110px auto 0;
+      margin: -69px auto 0;
       width: 90%;
 
       @media #{layout.$mq-small-desktop-and-up} {
         height: 530px;
         position: absolute;
         right: 0;
-        top: -20px;
+        top: -8px;
         width: 460px;
       }
 
       @media #{layout.$mq-large-desktop-and-up} {
         height: 650px;
+        top: -18px;
         width: 560px;
       }
     }
@@ -49,10 +50,11 @@
   }
 
   h2 {
-    margin-top: 36px;
+    font-size: typography.$medium-font-size;
+    margin-top: layout.$base-spacing * 2;
 
     @media #{layout.$mq-small-desktop-and-up} {
-      margin-top: 24px;
+      margin-top: layout.$base-spacing;
     }
   }
 

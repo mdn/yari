@@ -72,6 +72,16 @@
       padding: (layout.$base-spacing * 4) layout.$base-spacing;
     }
 
+    h3 {
+      font-size: typography.$medium-font-size;
+      margin-bottom: layout.$base-spacing;
+    }
+
+    p {
+      margin: 0 auto;
+      max-width: 320px;
+    }
+
     li {
       @media #{layout.$mq-small-desktop-and-up} {
         flex: 0 1 30%;
