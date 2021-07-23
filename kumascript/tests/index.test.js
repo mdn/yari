@@ -110,6 +110,7 @@ describe("testing the main render() function", () => {
       expect.stringContaining('{{page("/en-US/docs/Web/B", "bogus-section")}}')
     );
     const $ = cheerio.load(result);
+    console.log(result);
     const brokenLink = $(
       'a.page-not-created[title^="The documentation about this has not yet been written"]'
     );
