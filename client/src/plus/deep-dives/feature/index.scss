@@ -11,14 +11,18 @@
   padding: (layout.$base-spacing * 2) layout.$base-spacing;
   position: relative;
 
+  @media #{layout.$mq-small-desktop-and-up} {
+    padding: layout.$base-spacing (layout.$base-spacing * 5);
+  }
+
   .girdle {
     &::before {
       background: transparent url("./deepdive.svg") center center no-repeat;
       content: "";
       display: block;
-      height: 380px;
+      height: 400px;
       margin: -69px auto 0;
-      width: 90%;
+      width: 95%;
 
       @media #{layout.$mq-small-desktop-and-up} {
         height: 530px;
@@ -30,7 +34,7 @@
 
       @media #{layout.$mq-large-desktop-and-up} {
         height: 650px;
-        top: -18px;
+        top: 8px;
         width: 560px;
       }
     }
@@ -45,17 +49,17 @@
   }
 
   h1 {
-    font-size: typography.$xl-font-size;
-    margin: 0;
+    font-size: theme.$marketing-feature-h1-font-size;
+    margin: 0 0 layout.$base-spacing 0;
+
+    @media #{layout.$mq-small-desktop-and-up} {
+      margin-bottom: layout.$base-spacing * 2;
+    }
   }
 
   h2 {
     font-size: typography.$medium-font-size;
-    margin-top: layout.$base-spacing * 2;
-
-    @media #{layout.$mq-small-desktop-and-up} {
-      margin-top: layout.$base-spacing;
-    }
+    margin: layout.$base-spacing 0;
   }
 
   p,
@@ -63,7 +67,7 @@
     font-size: typography.$small-medium-font-size-mobile;
 
     @media #{layout.$mq-tablet-and-up} {
-      font-size: typography.$small-medium-font-size;
+      font-size: typography.$default-font-size;
     }
   }
 
@@ -79,7 +83,7 @@
     content: "\002B";
     font-style: normal;
     font-weight: bold;
-    margin-right: math.div(layout.$base-spacing, 2);
+    margin-left: -(math.div(layout.$base-spacing, 2));
     position: relative;
   }
 

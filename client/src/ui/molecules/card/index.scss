@@ -14,7 +14,7 @@
   padding: layout.$base-spacing;
 
   @media #{layout.$mq-tablet-and-up} {
-    max-width: 320px;
+    max-width: 340px;
   }
 
   &.featured {
@@ -23,7 +23,7 @@
 
   .card-type-heading {
     color: theme.$mdn-pink600;
-    font-weight: bold;
+    font-family: theme.$metropolis-font-family;
     margin-bottom: math.div(layout.$base-spacing, 2);
   }
 
@@ -33,18 +33,19 @@
     margin: math.div(layout.$base-spacing, 2) 0;
 
     @media #{layout.$mq-small-desktop-and-up} {
-      margin-top: 0;
-    }
-
-    @media #{layout.$mq-large-desktop-and-up} {
       font-size: typography.$large-font-size;
+      margin-top: 0;
     }
   }
 
   h3 {
-    font-size: typography.$small-medium-font-size;
+    font-size: typography.$default-font-size;
     font-weight: bold;
     margin-bottom: math.div(layout.$base-spacing, 2);
+
+    @media #{layout.$mq-small-desktop-and-up} {
+      font-size: typography.$small-medium-font-size;
+    }
   }
 
   .author {
@@ -59,11 +60,5 @@
     list-style: none;
     margin: 0;
     padding: 0;
-  }
-}
-
-.deep-dive-card {
-  @media #{layout.$mq-small-desktop-and-up} {
-    position: sticky;
   }
 }
