@@ -2,7 +2,7 @@ import "./index.scss";
 
 export interface SerieData {
   displayName: string;
-  slug: string;
+  slug?: string;
   state: "" | "active" | "unavailable";
 }
 
@@ -21,7 +21,7 @@ export function SeriesCard({
         {seriesList.map((item) => {
           return (
             <li key={item.displayName} className={item.state || undefined}>
-              {item.state !== "unavailable" ? (
+              {item.slug && item.state !== "unavailable" ? (
                 <a href={item.slug}>{item.displayName}</a>
               ) : (
                 item.displayName

@@ -52,7 +52,6 @@ export default function Article({ slug }: { slug: string }) {
     // Cheating a bit here manually adding one that *could be*.
     list.push({
       displayName: "Practical browser support",
-      slug: "#",
       state: "unavailable",
     });
     return list;
