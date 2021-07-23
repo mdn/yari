@@ -396,7 +396,7 @@ export function YourBrowserSupportToolkit() {
       </header>
       <p className="article-lead">
         In this article discover the resources available, to help you develop a
-        site that will perform well across browsers and devices.
+        site that will perform well across browsers and devices
       </p>
       <Byline
         avatar="rachel-andrew.png"
