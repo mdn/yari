@@ -1,321 +1,448 @@
 import React from "react";
+import useSWR from "swr";
 
 import "./index.scss";
 
+const API_URL = "/api/v1/plus/landing-page/survey/";
+const SESSIONSTORAGE_KEY_UUID = "plus-landing-page-survey-uuid";
+
+interface PingData {
+  csrfmiddlewaretoken: string;
+  uuid: string;
+}
+
+interface ResponseData {
+  usage?: string;
+  pfbs?: string;
+  pfbsMotivation?: string;
+  ybst?: string;
+  ybstMotivation?: string;
+  futureTopics?: string[];
+  futureTopicsSuggestions?: string;
+  comments?: string;
+}
+
+const SESSION_KEY = "market-research-survey-page";
+
+function setSessionStorageData(key: string, value: string) {
+  try {
+    sessionStorage.setItem(key, value);
+  } catch (err) {
+    console.warn("Unable to set sessionStorage key");
+  }
+}
+
+function getSessionStorageData(key: string) {
+  try {
+    return sessionStorage.getItem(key);
+  } catch (err) {
+    console.warn("Unable to get sessionStorage key");
+  }
+}
+
 export function Survey({ slug }: { slug: string }) {
-  const surveyFormRef = React.useRef(null);
-  const [showInitialQuestionSet, setShowInitialQuestionSet] =
-    React.useState(true);
-  const [showOtherTopicsInput, setShowOtherTopicsInput] = React.useState(false);
-  const [showSecondaryQuestionSet, setShowSecondaryQuestionSet] =
-    React.useState(false);
-  const [showSuccess, setShowSuccess] = React.useState(false);
-  const [showSurvey, setShowSurvey] = React.useState(true);
-
-  function progressSurvey() {
-    setShowInitialQuestionSet(false);
-    setShowSecondaryQuestionSet(true);
-  }
-
-  function handleSubmit(event) {
-    event.preventDefault();
-
-    const surveyForm = surveyFormRef.current;
-
-    if (surveyForm) {
-      //const formData = new FormData(surveyForm);
-      // send formData to back-end
+  const previousPage = getSessionStorageData(SESSION_KEY) || "";
+  const [page, setPage] = React.useState<"start" | "second" | "success">(
+    previousPage === "second" || previousPage === "success"
+      ? previousPage
+      : "start"
+  );
+  React.useEffect(() => {
+    if (page !== "start") {
+      setSessionStorageData(SESSION_KEY, page);
     }
+  }, [page]);
 
-    sessionStorage.setItem("survey-completed", "true");
-    setShowSurvey(false);
-    setShowSuccess(true);
-  }
+  const [surveySubmissionError, setSurveySubmissionError] =
+    React.useState<Error | null>(null);
+
+  const [responseData, setResponseData] = React.useState<ResponseData>({});
+
+  const [submitting, setSubmitting] = React.useState(false);
+
+  // Use a useMemo(() => {...}, []) so that you don't get a different
+  // response if there's a re-render because in a re-render you might get
+  // something different (from the first render) from getSessionStorageData().
+  const pingURL = React.useMemo(() => {
+    const pingSP = new URLSearchParams();
+    const previousUUID = getSessionStorageData(SESSIONSTORAGE_KEY_UUID);
+    if (previousUUID) {
+      pingSP.set("uuid", previousUUID);
+    }
+    return `${API_URL}?${pingSP.toString()}`;
+  }, []);
+
+  const { data: pingData, error: pingError } = useSWR<PingData>(
+    pingURL,
+    async (url) => {
+      const response = await fetch(url);
+      if (!response.ok) {
+        throw new Error(`${response.status} on ${url}`);
+      }
+      return await response.json();
+    },
+    {
+      revalidateOnFocus: false,
+    }
+  );
 
   React.useEffect(() => {
-    if (sessionStorage.getItem("survey-completed") === "true") {
-      setShowSurvey(false);
-      setShowSuccess(true);
+    if (pingData) {
+      setSessionStorageData(SESSIONSTORAGE_KEY_UUID, pingData.uuid);
     }
-  }, []);
+  }, [pingData]);
+
+  async function submitSurvey() {
+    if (!pingData) {
+      throw new Error("Can't send survey if ping didn't work");
+    }
+
+    const formData = new URLSearchParams();
+    formData.set(
+      "response",
+      JSON.stringify(Object.assign({ slug }, responseData))
+    );
+    formData.set("uuid", pingData.uuid);
+
+    const response = await fetch(API_URL, {
+      method: "POST",
+      headers: {
+        "X-CSRFToken": pingData.csrfmiddlewaretoken,
+        "Content-Type": "application/x-www-form-urlencoded",
+      },
+      body: formData,
+    });
+    if (!response.ok) {
+      throw new Error(`${response.status} on ${API_URL}`);
+    }
+    return response;
+  }
+
+  if (!pingData && !pingError) {
+    // Still loading
+    return null;
+  }
 
   return (
     <div className="survey-wrapper">
-      {showSuccess && (
+      {pingError && (
+        <div className="notecard danger">
+          <p>
+            <strong>Oh no!</strong> Unable to connect to the server for
+            preparing your survey.
+          </p>
+          <code>{pingError.toString()}</code>
+        </div>
+      )}
+
+      {surveySubmissionError && (
+        <div className="notecard danger">
+          <p>
+            <strong>Oh no!</strong> Your survey submission unfortunately failed.
+          </p>
+          <code>{surveySubmissionError.toString()}</code>
+        </div>
+      )}
+
+      {page === "success" && (
         <h3 className="survey-success">Thank you for your feedback!</h3>
       )}
-      {showSurvey && (
+
+      {page !== "success" && !pingError && (
         <form
           name="survey-form"
           action=""
           method="post"
           className="survey-container girdle"
-          onSubmit={handleSubmit}
-          ref={surveyFormRef}
+          onSubmit={async (event) => {
+            event.preventDefault();
+            setSubmitting(true);
+            try {
+              await submitSurvey();
+              if (page === "second") {
+                setPage("success");
+              } else {
+                setPage("second");
+              }
+            } catch (error) {
+              setSurveySubmissionError(error);
+            } finally {
+              setSubmitting(false);
+            }
+          }}
         >
-          <fieldset
-            className={
-              showInitialQuestionSet
-                ? "survey-section"
-                : "survey-section visually-hidden"
-            }
-          >
-            <legend className="survey-heading">
-              Please help us by answering some questions (1/2)
-            </legend>
-            <div className="survey-question">
-              <h3>How often do you use MDN?</h3>
-              <div className="form-radio-input-group">
-                <label htmlFor="daily">
-                  <input
-                    id="daily"
-                    type="radio"
-                    name="mdn-usage"
-                    value="daily"
-                  />
-                  Every day
-                </label>
-                <label htmlFor="weekly">
-                  <input
-                    id="weekly"
-                    type="radio"
-                    name="mdn-usage"
-                    value="weekly"
-                  />
-                  Weekly
-                </label>
-                <label htmlFor="biweekly">
-                  <input
-                    id="biweekly"
-                    type="radio"
-                    name="mdn-usage"
-                    value="biweekly"
-                  />
-                  Every few weeks
-                </label>
-                <label htmlFor="never">
-                  <input
-                    id="never"
-                    type="radio"
-                    name="mdn-usage"
-                    value="never"
-                  />
-                  I do not use MDN
-                </label>
+          {page === "start" && (
+            <fieldset className="survey-section">
+              <legend className="survey-heading">
+                Please help us by answering some questions (1/2)
+              </legend>
+              <div className="survey-question">
+                <h3>How often do you use MDN?</h3>
+                <div className="form-radio-input-group">
+                  {[
+                    ["daily", "Every day"],
+                    ["weekly", "Weekly"],
+                    ["biweekly", "Every few weeks"],
+                    ["never", "I do not use MDN"],
+                  ].map(([id, label]) => {
+                    return (
+                      <label key={id} htmlFor={`id_${id}`}>
+                        <input
+                          id={`id_${id}`}
+                          type="radio"
+                          name="mdn-usage"
+                          value={id}
+                          checked={responseData.usage === id}
+                          onChange={(event) => {
+                            if (event.target.checked) {
+                              setResponseData((state) =>
+                                Object.assign({}, state, {
+                                  usage: event.target.value,
+                                })
+                              );
+                            }
+                          }}
+                        />
+                        {label}
+                      </label>
+                    );
+                  })}
+                </div>
               </div>
-            </div>
-            <h3>How would you rate the articles?</h3>
-            <div className="survey-question">
-              <h4>Planning for browser support</h4>
-              <div className="form-radio-input-group">
-                <label htmlFor="pfbs-notread">
-                  <input
-                    id="pfbs-notread"
-                    type="radio"
-                    name="pfbs"
-                    value="not-read"
-                  />
-                  Didn’t read
-                </label>
-                <label htmlFor="pfbs-bad">
-                  <input id="pfbs-bad" type="radio" name="pfbs" value="bad" />
-                  Bad
-                </label>
-                <label htmlFor="pfbs-neutral">
-                  <input
-                    id="pfbs-neutral"
-                    type="radio"
-                    name="pfbs"
-                    value="neutral"
-                  />
-                  Neutral
-                </label>
-                <label htmlFor="pfbs-good">
-                  <input id="pfbs-good" type="radio" name="pfbs" value="good" />
-                  Good
-                </label>
-                <label htmlFor="pfbs-verygood">
-                  <input
-                    id="pfbs-verygood"
-                    type="radio"
-                    name="pfbs"
-                    value="very-good"
-                  />
-                  Very Good
-                </label>
-              </div>
-              <div className="form-input-group">
-                <label htmlFor="pfbs-motivation" className="visually-hidden">
-                  What motivated your selection?
-                </label>
-                <input
-                  id="pfbs-motivation"
-                  type="text"
-                  name=""
-                  placeholder="What motivated your selection?"
-                />
-              </div>
-            </div>
-            <div className="survey-question">
-              <h4>Your browser support toolkit</h4>
-              <div className="form-radio-input-group">
-                <label htmlFor="ybst-notread">
-                  <input
-                    id="ybst-notread"
-                    type="radio"
-                    name="ybst"
-                    value="not-read"
-                  />
-                  Didn’t read
-                </label>
-                <label htmlFor="ybst-bad">
-                  <input id="ybst-bad" type="radio" name="ybst" value="bad" />
-                  Bad
-                </label>
-                <label htmlFor="ybst-neutral">
-                  <input
-                    id="ybst-neutral"
-                    type="radio"
-                    name="ybst"
-                    value="neutral"
-                  />
-                  Neutral
-                </label>
-                <label htmlFor="ybst-good">
-                  <input id="ybst-good" type="radio" name="ybst" value="good" />
-                  Good
-                </label>
-                <label htmlFor="ybst-verygood">
-                  <input
-                    id="ybst-verygood"
-                    type="radio"
-                    name="ybst"
-                    value="very-good"
-                  />
-                  Very Good
-                </label>
-              </div>
-              <div className="form-input-group">
-                <label htmlFor="ybst-motivation" className="visually-hidden">
-                  What motivated your selection?
-                </label>
-                <input
-                  id="ybst-motivation"
-                  type="text"
-                  name=""
-                  placeholder="What motivated your selection?"
-                />
-              </div>
-            </div>
-            <button
-              type="button"
-              className="button primary"
-              onClick={() => progressSurvey()}
-            >
-              Continue
-            </button>
-          </fieldset>
-          <fieldset
-            className={
-              showSecondaryQuestionSet
-                ? "survey-section"
-                : "survey-section visually-hidden"
-            }
-          >
-            <legend className="survey-heading">
-              Please help us by answering some questions (2/2)
-            </legend>
-            <div className="survey-question">
-              <h3>
-                What future deep dive topics would you consider paying for?
-              </h3>
-              <div className="form-input-group">
-                <label htmlFor="security">
-                  <input id="security" type="checkbox" name="security" />
-                  Deep dive: Security considerations in web development
-                </label>
-                <label htmlFor="responsive">
-                  <input
-                    id="responsive"
-                    type="checkbox"
-                    name="responsive-design"
-                    value="responsive-design"
-                  />
-                  Deep dive: Modern responsive web design
-                </label>
-                <label htmlFor="pattern-library">
-                  <input
-                    id="pattern-library"
-                    type="checkbox"
-                    name="pattern-library"
-                    value="css-pattern-library"
-                  />
-                  Deep dive: A robust CSS pattern library
-                </label>
-                <label htmlFor="laws">
-                  <input
-                    id="laws"
-                    type="checkbox"
-                    name="laws"
-                    value="privacy-laws"
-                  />
-                  Deep dive: GDPR, DSAR, CCPA, and COPPA. So many acronyms!
-                  Learn Mozilla's framework to handle privacy laws
-                </label>
-                <label htmlFor="modernjs">
-                  <input
-                    id="modernjs"
-                    type="checkbox"
-                    name="modernjs"
-                    value="modern-js"
-                  />
-                  Deep dive: Stop using jQuery and start using JavaScript!
-                </label>
-                <label htmlFor="other">
-                  <input
-                    id="other"
-                    type="checkbox"
-                    name="other"
-                    value="other"
-                    onChange={() =>
-                      setShowOtherTopicsInput(!showOtherTopicsInput)
-                    }
-                  />
-                  Other
-                </label>
-              </div>
-              {showOtherTopicsInput && (
+              <h3>How would you rate the articles?</h3>
+              <div className="survey-question">
+                <h4>Planning for browser support</h4>
+                <div className="form-radio-input-group">
+                  {[
+                    ["not-read", "Didn’t read"],
+                    ["bad", "Bad"],
+                    ["neutral", "Neutral"],
+                    ["good", "Good"],
+                    ["very-good", "Very good"],
+                  ].map(([id, label]) => {
+                    return (
+                      <label key={id} htmlFor={`id_${id}`}>
+                        <input
+                          id={`id_${id}`}
+                          type="radio"
+                          name="pfbs"
+                          value={id}
+                          checked={responseData.pfbs === id}
+                          onChange={(event) => {
+                            if (event.target.checked) {
+                              setResponseData((state) =>
+                                Object.assign({}, state, {
+                                  pfbs: event.target.value,
+                                })
+                              );
+                            }
+                          }}
+                        />
+                        {label}
+                      </label>
+                    );
+                  })}
+                </div>
                 <div className="form-input-group">
-                  <label
-                    htmlFor="other-suggestions"
-                    className="visually-hidden"
-                  >
-                    Enter your suggestions
+                  <label htmlFor="pfbs-motivation" className="visually-hidden">
+                    What motivated your selection?
                   </label>
-                  <textarea
-                    id="other-suggestions"
-                    name="other-suggestions"
-                    defaultValue="Enter your suggestions"
+                  <input
+                    id="pfbs-motivation"
+                    type="text"
+                    value={responseData.pfbsMotivation || ""}
+                    placeholder="What motivated your selection?"
+                    onChange={(event) => {
+                      setResponseData((state) =>
+                        Object.assign({}, state, {
+                          pfbsMotivation: event.target.value,
+                        })
+                      );
+                    }}
                   />
                 </div>
-              )}
-            </div>
-            <div className="survey-question">
-              <div className="form-input-group">
-                <label htmlFor="comments" className="custom-label">
-                  Is there anything else you’d like to share with us?
-                </label>
-                <textarea
-                  id="comments"
-                  name="comments"
-                  defaultValue="Enter your response"
-                />
               </div>
-            </div>
-            <button type="submit" className="button primary">
-              Submit
-            </button>
-          </fieldset>
+              <div className="survey-question">
+                <h4>Your browser support toolkit</h4>
+                <div className="form-radio-input-group">
+                  {[
+                    ["not-read", "Didn’t read"],
+                    ["bad", "Bad"],
+                    ["neutral", "Neutral"],
+                    ["good", "Good"],
+                    ["very-good", "Very good"],
+                  ].map(([id, label]) => {
+                    return (
+                      <label key={id} htmlFor={`id_${id}`}>
+                        <input
+                          id={`id_${id}`}
+                          type="radio"
+                          name="ybst"
+                          value={id}
+                          checked={responseData.ybst === id}
+                          onChange={(event) => {
+                            if (event.target.checked) {
+                              setResponseData((state) =>
+                                Object.assign({}, state, {
+                                  ybst: event.target.value,
+                                })
+                              );
+                            }
+                          }}
+                        />
+                        {label}
+                      </label>
+                    );
+                  })}
+                </div>
+                <div className="form-input-group">
+                  <label htmlFor="ybst-motivation" className="visually-hidden">
+                    What motivated your selection?
+                  </label>
+
+                  <input
+                    id="ybst-motivation"
+                    type="text"
+                    value={responseData.ybstMotivation || ""}
+                    placeholder="What motivated your selection?"
+                    onChange={(event) => {
+                      setResponseData((state) =>
+                        Object.assign({}, state, {
+                          ybstMotivation: event.target.value,
+                        })
+                      );
+                    }}
+                  />
+                </div>
+              </div>
+              <button
+                type="submit"
+                className="button primary"
+                disabled={submitting}
+              >
+                Continue
+              </button>{" "}
+              {submitting && <small>Submitting</small>}
+            </fieldset>
+          )}
+
+          {page === "second" && (
+            <fieldset className="survey-section">
+              <legend className="survey-heading">
+                Please help us by answering some questions (2/2)
+              </legend>
+              <div className="survey-question">
+                <h3>
+                  What future deep dive topics would you consider paying for?
+                </h3>
+                <div className="form-input-group">
+                  {[
+                    [
+                      "security",
+                      "Deep dive: Security considerations in web development",
+                    ],
+                    ["responsive", "Deep dive: Modern responsive web design"],
+                    [
+                      "pattern-library",
+                      "Deep dive: A robust CSS pattern library",
+                    ],
+                    [
+                      "laws",
+                      "Deep dive: GDPR, DSAR, CCPA, and COPPA. So many acronyms! Learn Mozilla's framework to handle privacy laws",
+                    ],
+                    [
+                      "modernjs",
+                      "Deep dive: Stop using jQuery and start using JavaScript!",
+                    ],
+                    ["other", "Other"],
+                  ].map(([id, label]) => {
+                    return (
+                      <label key={id} htmlFor={`id_${id}`}>
+                        <input
+                          id={`id_${id}`}
+                          type="checkbox"
+                          name="futureTopics"
+                          value={id}
+                          checked={
+                            responseData.futureTopics
+                              ? responseData.futureTopics.includes(id)
+                              : false
+                          }
+                          onChange={(event) => {
+                            setResponseData((state) => {
+                              const futureTopicsSet = new Set(
+                                state.futureTopics || []
+                              );
+                              if (event.target.checked) {
+                                futureTopicsSet.add(id);
+                              } else {
+                                futureTopicsSet.delete(id);
+                              }
+                              return Object.assign({}, state, {
+                                futureTopics: Array.from(futureTopicsSet),
+                              });
+                            });
+                          }}
+                        />
+                        {label}
+                      </label>
+                    );
+                  })}
+                </div>
+                {responseData.futureTopics &&
+                  responseData.futureTopics.includes("other") && (
+                    <div className="form-input-group">
+                      <label
+                        htmlFor="other-suggestions"
+                        className="visually-hidden"
+                      >
+                        Enter your suggestions
+                      </label>
+                      <textarea
+                        id="other-suggestions"
+                        placeholder="Enter your suggestions"
+                        value={responseData.futureTopicsSuggestions || ""}
+                        onChange={(event) => {
+                          setResponseData((state) =>
+                            Object.assign({}, state, {
+                              futureTopicsSuggestions: event.target.value,
+                            })
+                          );
+                        }}
+                      />
+                    </div>
+                  )}
+              </div>
+              <div className="survey-question">
+                <div className="form-input-group">
+                  <label htmlFor="comments" className="custom-label">
+                    Is there anything else you’d like to share with us?
+                  </label>
+                  <textarea
+                    id="comments"
+                    name="comments"
+                    placeholder="Enter your response"
+                    value={responseData.comments || ""}
+                    onChange={(event) => {
+                      setResponseData((state) =>
+                        Object.assign({}, state, {
+                          comments: event.target.value,
+                        })
+                      );
+                    }}
+                  />
+                </div>
+              </div>
+              <button
+                type="submit"
+                className="button primary"
+                disabled={submitting}
+              >
+                Submit
+              </button>{" "}
+              {submitting && <small>Submitting</small>}
+            </fieldset>
+          )}
         </form>
       )}
     </div>
