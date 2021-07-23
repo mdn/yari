@@ -96,11 +96,9 @@ export default function Article({ slug }: { slug: string }) {
       <Feature />
       <Survey slug={slug} />
       <div
-        className={
-          previousArticle
-            ? "deep-dive-article-footer previous"
-            : "deep-dive-article-footer"
-        }
+        className={`deep-dive-article-footer ${
+          previousArticle ? "previous" : ""
+        }`}
       >
         <p className="girdle">
           {nextArticle && (
