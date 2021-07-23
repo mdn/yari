@@ -1429,6 +1429,10 @@
       "inh": "OrientationSensor",
       "impl": []
     },
+    "RTCDtlsTransport": {
+      "inh": "EventTarget",
+      "impl": []
+    },
     "RTCDTMFSender": {
       "inh": "EventTarget",
       "impl": []
