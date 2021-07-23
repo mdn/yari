@@ -43,6 +43,7 @@
     h2 {
       @media #{layout.$mq-small-desktop-and-up} {
         font-size: typography.$medium-font-size;
+        margin-bottom: layout.$base-spacing;
       }
     }
 
@@ -81,9 +82,8 @@
       font-size: typography.$small-medium-font-size;
       font-weight: bold;
 
-      @media #{layout.$mq-small-desktop-and-up} {
-        margin: 0 auto (layout.$base-spacing * 3);
-        text-align: center;
+      @media #{layout.$mq-large-desktop-and-up} {
+        margin: 0 0 (layout.$base-spacing * 3) (layout.$base-spacing * 1.5);
       }
     }
   }
@@ -103,7 +103,7 @@
     margin: layout.$base-spacing 0;
   }
 
-  .primary-gradient {
+  .primary {
     display: block;
     margin: (layout.$base-spacing * 2) auto 0;
   }

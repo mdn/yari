@@ -10,14 +10,14 @@ $code-inline-font-family: consolas, "Liberation Mono", courier, monospace;
 $small-font-size: 0.9rem; /* 16px */
 
 h1,
-h2 {
+h2,
+h3,
+h4 {
   font-family: $metropolis-font-family;
-  font-weight: normal;
+  font-weight: 600;
   line-height: $heading-line-height;
 }
 
-h3,
-h4,
 h5 {
   font-family: $inter-font-family;
   font-weight: bold;

@@ -95,7 +95,13 @@ export default function Article({ slug }: { slug: string }) {
       </div>
       <Feature />
       <Survey slug={slug} />
-      <div className="deep-dive-article-footer">
+      <div
+        className={
+          previousArticle
+            ? "deep-dive-article-footer previous"
+            : "deep-dive-article-footer"
+        }
+      >
         <p className="girdle">
           {nextArticle && (
             <a href={`/${locale}/plus/deep-dives/${nextArticle.slug}`}>

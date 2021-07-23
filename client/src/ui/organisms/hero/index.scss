@@ -77,8 +77,8 @@
     }
 
     p {
-      @include theme.readable-line-length();
       font-size: typography.$small-medium-font-size;
+      max-width: 620px;
     }
   }
 }
