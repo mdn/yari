@@ -12,7 +12,7 @@
   position: relative;
 
   @media #{layout.$mq-small-desktop-and-up} {
-    padding: (layout.$base-spacing * 4) (layout.$base-spacing * 5);
+    padding: layout.$base-spacing (layout.$base-spacing * 5);
   }
 
   .girdle {
@@ -34,7 +34,7 @@
 
       @media #{layout.$mq-large-desktop-and-up} {
         height: 650px;
-        top: -65px;
+        top: 8px;
         width: 560px;
       }
     }
