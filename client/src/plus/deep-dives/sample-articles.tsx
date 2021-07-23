@@ -11,7 +11,7 @@ export function PlanningForBrowserSupport() {
       <p className="article-lead">
         Learn about the types of CSS issues you’ll be facing when working with
         your team in a web-based environment and tips for developing a
-        future-proof support strategy.
+        future-proof support strategy
       </p>
       <Byline
         avatar="rachel-andrew.png"
@@ -395,8 +395,8 @@ export function YourBrowserSupportToolkit() {
         <h2>Modern CSS in the real world : Part two</h2>
       </header>
       <p className="article-lead">
-        Viverra neque eget tellus, gravida pellentesque non. Purus, venenatis
-        sit ac nam nec. At vitae facilisi in mi amet aliquam.
+        In this article discover the resources available, to help you develop a
+        site that will perform well across browsers and devices
       </p>
       <Byline
         avatar="rachel-andrew.png"
