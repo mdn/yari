@@ -395,7 +395,7 @@ export function YourBrowserSupportToolkit() {
         <h2>Modern CSS in the real world : Part two</h2>
       </header>
       <p className="article-lead">
-        In this article discover the resources available, to help you develop a 
+        In this article discover the resources available, to help you develop a
         site that will perform well across browsers and devices.
       </p>
       <Byline
