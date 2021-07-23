@@ -62,7 +62,7 @@
   text-align: center;
 
   @media #{layout.$mq-small-desktop-and-up} {
-    padding: (layout.$base-spacing * 4) 0;
+    padding: (layout.$base-spacing * 2) 0;
   }
 
   ul {

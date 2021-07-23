@@ -40,6 +40,10 @@
     background-color: theme.$mdn-neutral050;
     padding: (layout.$base-spacing * 2) layout.$base-spacing;
 
+    @media #{layout.$mq-small-desktop-and-up} {
+      padding: 0 layout.$base-spacing;
+    }
+
     .overview-content-wrapper {
       @media #{layout.$mq-small-desktop-and-up} {
         margin: 0 auto;
