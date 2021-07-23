@@ -7,7 +7,6 @@ const yaml = require("js-yaml");
 const { fdir } = require("fdir");
 
 const {
-  CONTENT_ARCHIVED_ROOT,
   CONTENT_TRANSLATED_ROOT,
   CONTENT_ROOT,
   ACTIVE_LOCALES,
@@ -162,80 +161,6 @@ function getFolderPath(metadata, root = null) {
   );
 }
 
-function archive(
-  renderedHTML,
-  rawBody,
-  metadata,
-  isMarkdown = false,
-  root = null,
-  sourceFolder = null
-) {
-  if (!root) {
-    root = CONTENT_ARCHIVED_ROOT;
-  }
-  if (!root) {
-    throw new Error("Can't archive when CONTENT_ARCHIVED_ROOT is not set");
-  }
-  const folderPath = buildPath(
-    path.join(root, metadata.locale.toLowerCase()),
-    metadata.slug
-  );
-
-  fs.mkdirSync(folderPath, { recursive: true });
-
-  // The `rawBody` is only applicable in the importer when it saves
-  // archived content. The archived content gets the *rendered* html
-  // saved but by storing the raw HTML/Markdown too we can potentially resurrect
-  // the document if we decide to NOT archive it in the future.
-  if (rawBody) {
-    fs.writeFileSync(
-      path.join(folderPath, isMarkdown ? "raw.md" : "raw.html"),
-      trimLineEndings(rawBody)
-    );
-  }
-
-  saveFile(getHTMLPath(folderPath), trimLineEndings(renderedHTML), metadata);
-
-  // Next we need to copy every single file that isn't index.html or index.md
-  // which basically means all the images.
-  if (sourceFolder) {
-    const files = fs.readdirSync(sourceFolder);
-    for (const fileName of files) {
-      if (fileName === "index.html" || fileName === "index.md") {
-        continue;
-      }
-      const filePath = path.join(sourceFolder, fileName);
-      if (!fs.statSync(filePath).isDirectory()) {
-        fs.copyFileSync(
-          filePath,
-          path.join(folderPath, path.basename(filePath))
-        );
-      }
-    }
-  }
-  return folderPath;
-}
-
-function unarchive(document, move) {
-  // You can't use `document.rawBody` because, rather confusingly,
-  // it's actually the rendered (from the migration) HTML. Instead,
-  // you need seek out the `raw.html` equivalent and use that.
-  // This is because when we ran the migration, for every document we
-  // archived, we created a `index.html` file (front-matter and rendered
-  // HTML) and a `raw.html` file (kumascript raw HTML).
-  const rawFilePath = path.join(
-    path.dirname(document.fileInfo.path),
-    "raw.html"
-  );
-  const rawHTML = fs.readFileSync(rawFilePath, "utf-8");
-  const created = createHTML(rawHTML, document.metadata);
-  if (move) {
-    execGit(["rm", document.fileInfo.path], {}, CONTENT_ARCHIVED_ROOT);
-    execGit(["rm", rawFilePath], {}, CONTENT_ARCHIVED_ROOT);
-  }
-  return created;
-}
-
 const read = memoize((folderOrFilePath, roots = ROOTS) => {
   let filePath = null;
   let folder = null;
@@ -307,8 +232,6 @@ const read = memoize((folderOrFilePath, roots = ROOTS) => {
   const isTranslated = Boolean(
     CONTENT_TRANSLATED_ROOT && filePath.startsWith(CONTENT_TRANSLATED_ROOT)
   );
-  const isArchive =
-    CONTENT_ARCHIVED_ROOT && filePath.startsWith(CONTENT_ARCHIVED_ROOT);
 
   const rawContent = fs.readFileSync(filePath, "utf8");
   if (!rawContent) {
@@ -336,7 +259,7 @@ const read = memoize((folderOrFilePath, roots = ROOTS) => {
 
   const url = `/${locale}/docs/${metadata.slug}`;
 
-  const isActive = !isArchive && ACTIVE_LOCALES.has(locale.toLowerCase());
+  const isActive = ACTIVE_LOCALES.has(locale.toLowerCase());
 
   // The last-modified is always coming from the git logs. Independent of
   // which root it is.
@@ -388,7 +311,6 @@ const read = memoize((folderOrFilePath, roots = ROOTS) => {
     rawContent, // HTML or Markdown whole string with all the front-matter
     rawBody, // HTML or Markdown string without the front-matter
     isMarkdown: filePath.endsWith(MARKDOWN_FILENAME),
-    isArchive,
     isTranslated,
     isActive,
     fileInfo: {
@@ -502,9 +424,6 @@ function findAll({
 
   const filePaths = [];
   const roots = [];
-  if (CONTENT_ARCHIVED_ROOT) {
-    roots.push(CONTENT_ARCHIVED_ROOT);
-  }
   if (CONTENT_TRANSLATED_ROOT) {
     roots.push(CONTENT_TRANSLATED_ROOT);
   }
@@ -654,12 +573,6 @@ function remove(
   const root = getRoot(locale);
   const url = buildURL(locale, slug);
 
-  // If we don't explicitly set the `roots` it might read from $CONTENT_ARCHIVED_ROOT
-  // which might find the files.
-  // The reason is when you're running archive CLI tool. When you run that,
-  // it will first *add* files to the archived root and then, after that's run,
-  // it will start removing files. If it then finds the files in the archived
-  // root it will confuse the git command.
   const roots = [CONTENT_ROOT];
   if (CONTENT_TRANSLATED_ROOT) {
     roots.push(CONTENT_TRANSLATED_ROOT);
@@ -676,6 +589,7 @@ function remove(
   const docs = [slug, ...children.map(({ metadata }) => metadata.slug)];
 
   if (dry) {
+    Redirect.add(locale, [[url, redirect]], { dry });
     return docs;
   }
 
@@ -705,8 +619,6 @@ function remove(
 module.exports = {
   createHTML,
   createMarkdown,
-  archive,
-  unarchive,
   read,
   update,
   exists,

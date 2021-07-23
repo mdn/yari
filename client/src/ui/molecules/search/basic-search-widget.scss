@@ -2,7 +2,7 @@
 
 // This file just exists to make the temporary basic search widget
 // look and act like Kuma.
-@import "~@mdn/minimalist/sass/vars/color-palette";
+@import "~@mdn/minimalist/sass/vars/mdn-web-docs-palette";
 @import "~@mdn/minimalist/sass/vars/layout";
 
 .search-form {
@@ -24,12 +24,15 @@ input.search-input-field {
 }
 
 .search-button {
-  background: $neutral-600 url("~@mdn/dinocons/general/search.svg") 0 0
-    no-repeat;
+  background: $white url("~@mdn/dinocons/general/search.svg") 0 0 no-repeat;
   height: 21px;
   padding: math.div($base-spacing, 2);
   position: absolute;
   right: 10px;
   top: 10px;
   width: 21px;
+
+  &:active {
+    background-color: transparent;
+  }
 }

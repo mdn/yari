@@ -71,9 +71,9 @@ describe("root URL redirects", () => {
 });
 
 describe("URLs that need a locale injected", () => {
-  const spaPrefixes = ["search", "signin", "signup", "settings"];
+  const spaPrefixes = ["search", "signin", "signup", "settings", "plus"];
   it("should inject the locale depending on first prefix", async () => {
-    expect.assertions(4 * 2);
+    expect.assertions(spaPrefixes.length * 2);
     for (const prefix of spaPrefixes) {
       const r = await get(`/${prefix}`);
       expect(r.statusCode).toBe(302);
@@ -81,7 +81,7 @@ describe("URLs that need a locale injected", () => {
     }
   });
   it("should inject the locale depending on first prefix by header", async () => {
-    expect.assertions(4 * 2);
+    expect.assertions(spaPrefixes.length * 2);
     for (const prefix of spaPrefixes) {
       const r = await get(`/${prefix}`, {
         "Accept-language": "zh-Cn",
@@ -91,7 +91,7 @@ describe("URLs that need a locale injected", () => {
     }
   });
   it("should inject the locale depending on first prefix by cookie", async () => {
-    expect.assertions(4 * 2);
+    expect.assertions(spaPrefixes.length * 2);
     for (const prefix of spaPrefixes) {
       const r = await get(`/${prefix}`, {
         Cookie: "preferredlocale=fr",
@@ -101,7 +101,7 @@ describe("URLs that need a locale injected", () => {
     }
   });
   it("should inject the locale depending on first prefix by cookie over header", async () => {
-    expect.assertions(4 * 2);
+    expect.assertions(spaPrefixes.length * 2);
     for (const prefix of spaPrefixes) {
       const r = await get(`/${prefix}`, {
         "Accept-language": "zh-Cn",
@@ -117,7 +117,7 @@ describe("URLs that need a locale injected", () => {
     expect(r.headers["location"]).toBe(`/en-US/search?q=foo`);
   });
   it("should inject the locale depending on first prefix and drop any trailing slash", async () => {
-    expect.assertions(4 * 2);
+    expect.assertions(spaPrefixes.length * 2);
     for (const prefix of spaPrefixes) {
       const r = await get(`/${prefix}/`);
       expect(r.statusCode).toBe(302);

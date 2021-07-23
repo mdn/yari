@@ -30,15 +30,6 @@ all prefixed with `CONTENT_`. E.g. `CONTENT_ROOT`
 
 Where the files are.
 
-### `CONTENT_ARCHIVED_ROOT`
-
-**Default: `null`** (meaning, not set nor included)
-
-If you want to build archive content (no KumaScript rendering) you
-can say where the location to the folder is.
-
-**Example: `/tmp/mdn-archive-content`**
-
 ### `BUILD_FOLDERSEARCH`
 
 **Default: ``** (meaning, none)
@@ -165,14 +156,16 @@ You can get it here on [this settings page](https://speedcurve.com/mozilla-add-o
 which will give you the ID in the snippet shown there. Also, try to match
 this with the domains in those settings to match where we deploy it.
 
-### `BUILD_ALWAYS_NO_ROBOTS`
+### `BUILD_ALWAYS_ALLOW_ROBOTS`
 
 **Default: `false`**
 
 This exists so we can forcibly always include
 `<meta name="robots" content="noindex, nofollow">` into the HTML no matter what.
-For example, on our stage or dev builds, none of the documents should be indexed,
-so we'll set `BUILD_ALWAYS_NO_ROBOTS` to `true`.
+For example, on our stage or dev builds, we never want robots.
+
+The only place where we want robots is in prod. That's explicitly always
+set in `prod-build.yml`.
 
 We use this to make absolutely sure that no dev or stage build ever gets into
 the Google index. Thankfully we _always_ used a canonical URL
@@ -190,14 +183,6 @@ Which RSS feed URL to parse for displaying feed entries on the home page.
 **Default: `5`**
 
 How many RSS feed entries to display on the home page.
-
-### `BUILD_SUBSCRIPTION_CONFIG_URL`
-
-**Default: `''`**
-
-URL from which to fetch the subscription config. You need Kuma running and for local
-dev you will likely want to point it to
-`http://localhost.org:8000/api/v1/subscriptions/config/`
 
 ## Server
 

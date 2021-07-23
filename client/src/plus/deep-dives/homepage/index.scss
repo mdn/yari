@@ -1,0 +1,54 @@
+@use "sass:math";
+
+@use "~@mdn/minimalist/sass/vars/layout";
+@use "~@mdn/minimalist/sass/vars/typography";
+
+@use "../../../ui/theme/index" as theme;
+
+.page-content-container.deep-dives {
+  margin: layout.$base-spacing 0;
+  max-width: initial;
+  padding: 0;
+
+  .simple-content-container,
+  .mdn-history {
+    padding: (layout.$base-spacing * 2) layout.$base-spacing;
+  }
+
+  .simple-content-container {
+    @media #{layout.$mq-small-desktop-and-up} {
+      display: flex;
+      gap: layout.$base-spacing;
+      justify-content: space-between;
+      padding: (layout.$base-spacing * 4) layout.$base-spacing;
+
+      .content-block {
+        flex: 0 1 45%;
+      }
+    }
+  }
+
+  .mdn-history {
+    background-color: theme.$mdn-ink900;
+    color: theme.$text-color-inverted;
+
+    dt {
+      font-size: typography.$large-font-size;
+
+      @media #{layout.$mq-small-desktop-and-up} {
+        display: inline-block;
+        font-size: typography.$xl-font-size;
+        margin-right: layout.$base-spacing * 2;
+      }
+    }
+
+    dd {
+      font-size: typography.$small-medium-font-size;
+      margin-left: 0;
+
+      @media #{layout.$mq-small-desktop-and-up} {
+        display: inline-block;
+      }
+    }
+  }
+}
