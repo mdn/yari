@@ -25,6 +25,23 @@
   background: rgba(226, 21, 135, 0.2); /* uses $mdn-pink600 as a base */
 }
 
+/* Force text to break to a new line on tablet or mobile */
+.break-tablet {
+  display: block;
+
+  @media #{layout.$mq-small-desktop-and-up} {
+    display: inline-block;
+  }
+}
+
+.break-mobile {
+  display: block;
+
+  @media #{layout.$mq-tablet-and-up} {
+    display: inline-block;
+  }
+}
+
 /*
  * A simply utility for setting a max width on an element that constrains its
  * width to what is commonly known to be a readable line length for prose.

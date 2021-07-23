@@ -7,7 +7,8 @@ export function Hero() {
         <div className="header-content">
           <div className="heading-group">
             <h1>
-              More MDN. <span className="gradient-clip-text">Your MDN.</span>
+              More MDN.{" "}
+              <span className="gradient-clip-text break-tablet">Your MDN.</span>
             </h1>
             <h2 className="gradient-clip-text">MDN Plus</h2>
           </div>

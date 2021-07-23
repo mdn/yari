@@ -18,14 +18,17 @@
     font-weight: 300;
   }
 
-  .overview-wrapper,
   .product-cost,
   .sample-deep-dive {
     padding: (layout.$base-spacing * 2) layout.$base-spacing;
+
+    @media #{layout.$mq-small-desktop-and-up} {
+      padding: (layout.$base-spacing * 4) (layout.$base-spacing * 5);
+    }
   }
 
   .main-article-content-container,
-  .overview-wrapper {
+  .overview-content-wrapper {
     @media #{layout.$mq-small-desktop-and-up} {
       display: flex;
       gap: layout.$base-spacing;
@@ -34,17 +37,32 @@
   }
 
   .overview-wrapper {
-    @media #{layout.$mq-small-desktop-and-up} {
-      margin: 0 auto;
-      max-width: layout.$max-width-default;
-      padding: (layout.$base-spacing * 4) layout.$base-spacing;
+    background-color: theme.$mdn-neutral050;
+    padding: (layout.$base-spacing * 2) layout.$base-spacing;
+
+    .overview-content-wrapper {
+      @media #{layout.$mq-small-desktop-and-up} {
+        margin: 0 auto;
+        max-width: layout.$max-width-default;
+        padding: (layout.$base-spacing * 4) (layout.$base-spacing * 5);
+      }
     }
 
     h2 {
+      margin-bottom: layout.$base-spacing;
+
       @media #{layout.$mq-small-desktop-and-up} {
         font-size: typography.$medium-font-size;
-        margin-bottom: layout.$base-spacing;
       }
+    }
+
+    p {
+      margin-bottom: 0;
+      max-width: 460px;
+    }
+
+    b {
+      font-weight: 600;
     }
 
     .overview-mdn-plus {
@@ -54,7 +72,7 @@
     .overview-mdn-plus,
     .overview-mdn-web-docs {
       @media #{layout.$mq-small-desktop-and-up} {
-        flex: 0 1 45%;
+        flex: 0 1 50%;
       }
     }
   }
@@ -72,9 +90,10 @@
   }
 
   .sample-deep-dive {
+    background-color: theme.$mdn-neutral050;
+
     @media #{layout.$mq-small-desktop-and-up} {
-      flex: 0 1 65%;
-      padding: (layout.$base-spacing * 4) layout.$base-spacing;
+      flex: 0 1 70%;
     }
 
     .deep-dive-lead {
@@ -84,6 +103,13 @@
 
       @media #{layout.$mq-large-desktop-and-up} {
         margin: 0 0 (layout.$base-spacing * 3) (layout.$base-spacing * 1.5);
+      }
+    }
+
+    .card.featured {
+      @media #{layout.$mq-small-desktop-and-up} {
+        position: sticky;
+        top: layout.$base-spacing;
       }
     }
   }

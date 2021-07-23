@@ -12,7 +12,7 @@
   text-align: center;
 
   @media #{layout.$mq-small-desktop-and-up} {
-    padding: (layout.$base-spacing * 4) layout.$base-spacing;
+    padding: (layout.$base-spacing * 4) (layout.$base-spacing * 5);
     text-align: inherit;
   }
 
@@ -25,14 +25,14 @@
       height: 374px;
       margin: 0 auto;
       position: relative;
-      top: -40px;
+      top: -28px;
       width: 337px;
 
       @media #{layout.$mq-small-desktop-and-up} {
         height: 464px;
         left: 0;
         position: absolute;
-        top: -140px;
+        top: -130px;
         width: 417px;
       }
     }
@@ -40,7 +40,7 @@
 
   .features-intro-copy {
     @media #{layout.$mq-small-desktop-and-up} {
-      margin-left: 450px;
+      margin-left: 500px;
     }
   }
 
@@ -61,15 +61,18 @@
 .product-features {
   text-align: center;
 
+  @media #{layout.$mq-small-desktop-and-up} {
+    padding: (layout.$base-spacing * 4) 0;
+  }
+
   ul {
     list-style: none;
     padding: 0 layout.$base-spacing (layout.$base-spacing * 2);
 
     @media #{layout.$mq-small-desktop-and-up} {
       display: flex;
-      gap: layout.$base-spacing;
       justify-content: space-between;
-      padding: (layout.$base-spacing * 4) layout.$base-spacing;
+      padding: (layout.$base-spacing * 4) 0;
     }
 
     h3 {
@@ -83,8 +86,11 @@
     }
 
     li {
+      margin: (layout.$base-spacing * 2) 0;
+
       @media #{layout.$mq-small-desktop-and-up} {
-        flex: 0 1 30%;
+        flex: 0 1 32%;
+        margin: 0;
       }
     }
   }
