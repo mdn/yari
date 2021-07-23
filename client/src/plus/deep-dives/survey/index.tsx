@@ -43,7 +43,7 @@ function getSessionStorageData(key: string) {
 export function Survey({ slug }: { slug: string }) {
   const previousPage = getSessionStorageData(SESSION_KEY) || "";
   const [page, setPage] = React.useState<"start" | "second" | "success">(
-    previousPage == "second" || previousPage === "success"
+    previousPage === "second" || previousPage === "success"
       ? previousPage
       : "start"
   );
