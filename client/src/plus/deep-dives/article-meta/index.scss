@@ -2,7 +2,7 @@
 
 @use "~@mdn/minimalist/sass/vars/layout";
 
-@use "../../theme/index" as theme;
+@use "../../../ui/theme/index" as theme;
 
 ul.article-meta {
   border-top: theme.$standard-light-border;

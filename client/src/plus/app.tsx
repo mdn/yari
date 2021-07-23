@@ -1,9 +1,9 @@
 import React from "react";
 
 import { Card } from "../ui/molecules/card";
-import { DeepDivesFeature } from "../ui/organisms/deep-dives-feature";
 import { Hero } from "../ui/organisms/hero";
 import { ProductFeatures } from "../ui/organisms/product-features";
+import { Feature } from "./deep-dives/feature";
 
 import "./index.scss";
 
@@ -38,7 +38,7 @@ export default function App() {
         </div>
       </div>
 
-      <DeepDivesFeature />
+      <Feature />
 
       <div className="sample-deep-dive girdle">
         <p className="deep-dive-lead">

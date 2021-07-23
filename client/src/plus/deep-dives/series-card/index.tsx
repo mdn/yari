@@ -1,15 +1,17 @@
 import "./index.scss";
 
+export interface SerieData {
+  displayName: string;
+  slug?: string;
+  state: "" | "active" | "unavailable";
+}
+
 export function SeriesCard({
   title,
   seriesList,
 }: {
   title: string;
-  seriesList: Array<{
-    displayName: string;
-    url: string;
-    state?: string;
-  }>;
+  seriesList: SerieData[];
 }) {
   return (
     <section className="series-card" aria-labelledby="series-card-title">
@@ -19,8 +21,8 @@ export function SeriesCard({
         {seriesList.map((item) => {
           return (
             <li key={item.displayName} className={item.state || undefined}>
-              {item.state !== "unavailable" ? (
-                <a href={item.url}>{item.displayName}</a>
+              {item.slug && item.state !== "unavailable" ? (
+                <a href={item.slug}>{item.displayName}</a>
               ) : (
                 item.displayName
               )}

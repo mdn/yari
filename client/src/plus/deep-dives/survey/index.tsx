@@ -1,8 +1,8 @@
-import * as React from "react";
+import React from "react";
 
 import "./index.scss";
 
-export function Survey() {
+export function Survey({ slug }: { slug: string }) {
   const surveyFormRef = React.useRef(null);
   const [showInitialQuestionSet, setShowInitialQuestionSet] =
     React.useState(true);
