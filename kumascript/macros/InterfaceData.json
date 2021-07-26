@@ -310,7 +310,7 @@
     },
     "CharacterData": {
       "inh": "Node",
-      "impl": ["ChildNode"]
+      "impl": []
     },
     "ChromeWorker": {
       "inh": "Worker",
@@ -482,20 +482,15 @@
     },
     "Document": {
       "inh": "Node",
-      "impl": [
-        "XPathEvaluator",
-        "GlobalEventHandlers",
-        "ParentNode",
-        "GeometryUtils"
-      ]
+      "impl": ["XPathEvaluator", "GlobalEventHandlers"]
     },
     "DocumentFragment": {
       "inh": "Node",
-      "impl": ["ParentNode"]
+      "impl": []
     },
     "DocumentType": {
       "inh": "Node",
-      "impl": ["ChildNode"]
+      "impl": []
     },
     "DownloadEvent": {
       "inh": "Event",
@@ -511,7 +506,7 @@
     },
     "Element": {
       "inh": "Node",
-      "impl": ["ChildNode", "ParentNode", "Animatable", "GeometryUtils"]
+      "impl": []
     },
     "EngineeringMode": {
       "inh": "EventTarget",
@@ -743,7 +738,7 @@
     },
     "HTMLLinkElement": {
       "inh": "HTMLElement",
-      "impl": ["LinkStyle"]
+      "impl": []
     },
     "HTMLMapElement": {
       "inh": "HTMLElement",
@@ -855,7 +850,7 @@
     },
     "HTMLStyleElement": {
       "inh": "HTMLElement",
-      "impl": ["LinkStyle"]
+      "impl": []
     },
     "HTMLTableCaptionElement": {
       "inh": "HTMLElement",
@@ -1487,11 +1482,11 @@
     },
     "Request": {
       "inh": "",
-      "impl": ["Body"]
+      "impl": []
     },
     "Response": {
       "inh": "",
-      "impl": ["Body"]
+      "impl": []
     },
     "SensorErrorEvent": {
       "inh": "Event",
@@ -2115,7 +2110,7 @@
     },
     "Text": {
       "inh": "CharacterData",
-      "impl": ["GeometryUtils"]
+      "impl": []
     },
     "TextTrack": {
       "inh": "EventTarget",
