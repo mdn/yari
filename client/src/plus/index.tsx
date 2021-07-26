@@ -20,7 +20,7 @@ export function Plus() {
         path="/"
         element={
           <React.Suspense
-            fallback={<Loading minHeight={800} message={"Loading plus…"} />}
+            fallback={<Loading minHeight={800} message={"Loading MDN plus…"} />}
           >
             <App />
           </React.Suspense>

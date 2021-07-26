@@ -2,8 +2,10 @@ import React from "react";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { mutate } from "swr";
 
+import { DISABLE_AUTH } from "../constants";
 import { useLocale } from "../hooks";
 import { useUserData } from "../user-context";
+import { AuthDisabled } from "../ui/atoms/auth-disabled";
 
 import "./index.scss";
 import "./sign-up.scss";
@@ -21,6 +23,10 @@ export default function SignUpApp() {
 
   const [checkedTerms, setCheckedTerms] = React.useState(false);
   const [signupError, setSignupError] = React.useState<Error | null>(null);
+
+  if (DISABLE_AUTH) {
+    return <AuthDisabled />;
+  }
 
   if (!userData) {
     return <div>Loading...</div>;

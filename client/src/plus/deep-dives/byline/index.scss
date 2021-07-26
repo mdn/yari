@@ -1,0 +1,20 @@
+@use "sass:math";
+@use "~@mdn/minimalist/sass/vars/layout";
+@use "~@mdn/minimalist/sass/vars/typography";
+
+@use "../../../ui/theme/index" as theme;
+
+.byline {
+  @media #{layout.$mq-small-desktop-and-up} {
+    display: flex;
+    gap: math.div(layout.$base-spacing, 2);
+  }
+
+  .author-name {
+    font-size: typography.$small-font-size;
+  }
+
+  .author-description {
+    color: theme.$mdn-neutral700;
+  }
+}

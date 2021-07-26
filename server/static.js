@@ -56,7 +56,6 @@ app.get("/api/v1/search", async (req, res) => {
       locale: "en-US",
       slug: "Web/Foo",
       popularity: 0.1,
-      archived: false,
       summary: "No summary",
       highlight: {
         body: null,
@@ -77,7 +76,6 @@ app.get("/api/v1/search", async (req, res) => {
         locale: "en-US",
         slug: `Web/Serial${i}`,
         popularity: 1 - i / 10,
-        archived: false,
         summary: "No summary",
         highlight: {
           body: null,

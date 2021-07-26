@@ -1,0 +1,130 @@
+@use "~@mdn/minimalist/sass/vars/layout";
+@use "~@mdn/minimalist/sass/vars/typography";
+
+@use "../../theme/color-palette/index" as palette;
+
+.product-features-intro {
+  background-color: palette.$mdn-violet900;
+  color: palette.$white;
+  margin-top: layout.$base-spacing * 4;
+  padding: 0 layout.$base-spacing (layout.$base-spacing * 2);
+  position: relative;
+  text-align: center;
+
+  @media #{layout.$mq-small-desktop-and-up} {
+    padding: (layout.$base-spacing * 4) (layout.$base-spacing * 5);
+    text-align: inherit;
+  }
+
+  .girdle {
+    &::before {
+      background: transparent url("../../atoms/svg/premium-features.svg") center
+        center no-repeat;
+      content: "";
+      display: block;
+      height: 374px;
+      margin: 0 auto;
+      position: relative;
+      top: -28px;
+      width: 337px;
+
+      @media #{layout.$mq-small-desktop-and-up} {
+        height: 464px;
+        left: 0;
+        position: absolute;
+        top: -130px;
+        width: 417px;
+      }
+    }
+  }
+
+  .features-intro-copy {
+    @media #{layout.$mq-small-desktop-and-up} {
+      margin-left: 500px;
+    }
+  }
+
+  h3 {
+    font-size: typography.$xxl-font-size;
+    margin: layout.$base-spacing 0;
+  }
+
+  h4 {
+    font-size: typography.$medium-font-size;
+  }
+
+  p {
+    font-size: typography.$small-medium-font-size;
+  }
+}
+
+.product-features {
+  text-align: center;
+
+  @media #{layout.$mq-small-desktop-and-up} {
+    padding: (layout.$base-spacing * 2) 0;
+  }
+
+  ul {
+    list-style: none;
+    padding: 0 layout.$base-spacing (layout.$base-spacing * 2);
+
+    @media #{layout.$mq-small-desktop-and-up} {
+      display: flex;
+      justify-content: space-between;
+      padding: (layout.$base-spacing * 4) 0;
+    }
+
+    h3 {
+      font-size: typography.$medium-font-size;
+      margin-bottom: layout.$base-spacing;
+    }
+
+    p {
+      margin: 0 auto;
+      max-width: 320px;
+    }
+
+    li {
+      margin: (layout.$base-spacing * 2) 0;
+
+      @media #{layout.$mq-small-desktop-and-up} {
+        flex: 0 1 32%;
+        margin: 0;
+      }
+    }
+  }
+
+  .bookmark,
+  .offline,
+  .themes {
+    &::before {
+      background-size: 253px 213px;
+      content: "";
+      display: block;
+      height: 213px;
+      margin: auto;
+      width: 253px;
+    }
+  }
+
+  .bookmark {
+    &::before {
+      background: transparent url("../../atoms/svg/bookmark.svg") center center
+        no-repeat;
+    }
+  }
+
+  .offline {
+    &::before {
+      background: transparent url("../../atoms/svg/offline.svg") center center
+        no-repeat;
+    }
+  }
+  .themes {
+    &::before {
+      background: transparent url("../../atoms/svg/darkmode.svg") center center
+        no-repeat;
+    }
+  }
+}

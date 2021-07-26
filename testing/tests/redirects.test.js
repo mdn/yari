@@ -1213,12 +1213,6 @@ const MISC_REDIRECT_URLS = [].concat(
   url_test("/en-US/profile/", "/en-US/settings", { statusCode: 302 }),
   url_test("/en-US/profile/edit", "/en-US/settings", { statusCode: 302 }),
   url_test("/en-US/profile/edit/", "/en-US/settings", { statusCode: 302 }),
-  url_test("/en-US/profile/stripe_subscription", "/en-US/settings", {
-    statusCode: 302,
-  }),
-  url_test("/en-US/profile/stripe_subscription/", "/en-US/settings", {
-    statusCode: 302,
-  }),
   url_test("/zh-CN/profiles/sheppy", "/zh-CN/settings", { statusCode: 302 }),
   url_test("/en-US/profiles/sheppy", "/en-US/settings", { statusCode: 302 }),
   url_test("/en-US/profiles/sheppy/", "/en-US/settings", { statusCode: 302 }),

@@ -13,7 +13,6 @@ const {
   translationsOf,
   CONTENT_ROOT,
   CONTENT_TRANSLATED_ROOT,
-  CONTENT_ARCHIVED_ROOT,
 } = require("../content");
 const { VALID_LOCALES } = require("../libs/constants");
 // eslint-disable-next-line node/no-missing-require
@@ -81,6 +80,7 @@ async function buildDocuments(
   files = null,
   quiet = false,
   interactive = false,
+  noHTML = false,
   locales = new Map()
 ) {
   // If a list of files was set, it came from the CLI.
@@ -139,29 +139,26 @@ async function buildDocuments(
       appendTotalFlaws(builtDocument.flaws);
     }
 
-    fs.writeFileSync(
-      path.join(outPath, "index.html"),
-      renderHTML(document.url, { doc: builtDocument })
-    );
+    if (!noHTML) {
+      fs.writeFileSync(
+        path.join(outPath, "index.html"),
+        renderHTML(document.url, { doc: builtDocument })
+      );
+    }
+
     fs.writeFileSync(
       path.join(outPath, "index.json"),
       // This is exploiting the fact that renderHTML has the side-effect of
       // mutating the built document which makes this not great and refactor-worthy.
       JSON.stringify({ doc: builtDocument })
     );
-    // There are some archived documents that, due to possible corruption or other
-    // unknown reasons, don't have a list of contributors.
-    if (document.metadata.contributors || !document.isArchive) {
-      fs.writeFileSync(
-        path.join(outPath, "contributors.txt"),
-        renderContributorsTxt(
-          document.metadata.contributors,
-          !document.isArchive
-            ? builtDocument.source.github_url.replace("/blob/", "/commits/")
-            : null
-        )
-      );
-    }
+    fs.writeFileSync(
+      path.join(outPath, "contributors.txt"),
+      renderContributorsTxt(
+        document.metadata.contributors,
+        builtDocument.source.github_url.replace("/blob/", "/commits/")
+      )
+    );
     for (const { url, data } of bcdData) {
       fs.writeFileSync(
         path.join(outPath, path.basename(url)),
@@ -192,7 +189,7 @@ async function buildDocuments(
       fs.copyFileSync(filePath, path.join(outPath, path.basename(filePath)));
     }
 
-    // Collect non-archived documents' slugs to be used in sitemap building and
+    // Collect active documents' slugs to be used in sitemap building and
     // search index building.
     if (!builtDocument.noIndexing) {
       const { locale, slug } = document.metadata;
@@ -282,6 +279,9 @@ program
   .option("-i, --interactive", "Ask what to do when encountering flaws", {
     default: false,
   })
+  .option("-n, --nohtml", "Do not build index.html", {
+    default: false,
+  })
   .option("-l, --locale <locale...>", "Filtered specific locales", {
     default: [],
     validator: [...VALID_LOCALES.keys()],
@@ -293,7 +293,6 @@ program
         const roots = [
           ["CONTENT_ROOT", CONTENT_ROOT],
           ["CONTENT_TRANSLATED_ROOT", CONTENT_TRANSLATED_ROOT],
-          ["CONTENT_ARCHIVED_ROOT", CONTENT_ARCHIVED_ROOT],
         ];
         for (const [key, value] of roots) {
           console.log(
@@ -321,6 +320,7 @@ program
         files,
         Boolean(options.quiet),
         Boolean(options.interactive),
+        Boolean(options.nohtml),
         locales
       );
       const t1 = new Date();
