@@ -120,7 +120,9 @@ export function PlanningForBrowserSupport() {
         for working round it, and report the issue to a browser vendor to get it
         fixed!
       </p>
-      <h4>Browsers which don’t support a feature yet</h4>
+      <h4>
+        Browsers which don’t support a feature <em>yet</em>
+      </h4>
       <p>
         The biggest category of compatibility issues is never going to go away.
         New CSS will never land in all browsers at the same time, nor will all
@@ -159,7 +161,7 @@ export function PlanningForBrowserSupport() {
       <p>
         Make sure that, before you begin to plan your support strategy, you are
         all talking about the same thing when you talk about{" "}
-        <strong>supporting a browser</strong>.
+        <strong>supporting a browser.</strong>
       </p>
       <div className="article-sidebar">
         <p>
@@ -238,6 +240,13 @@ export function PlanningForBrowserSupport() {
         many are on mobile devices, and which versions of evergreen browsers
         that are in use.
       </p>
+      <figure>
+        <img src="" width="" height="" alt="" />
+        <figcaption>
+          Good Analytics dashboard showing browser usage statistics for a
+          website
+        </figcaption>
+      </figure>
       <p>
         If you don’t have your own analytics information then you could look at
         general statistics for the locations your users are likely to be in.
@@ -251,18 +260,10 @@ export function PlanningForBrowserSupport() {
         interviews to find out if this audience is more likely to be locked into
         an old browser.
       </p>
-      <div className="notecard note">
-        <p>
-          Provide some kind of well-designed summary chart graphic, which people
-          can use to refresh their memories quickly, and grab and adapt for
-          their own support chart.
-        </p>
-        <p>
-          Something like "Full support browsers: Last 3 versions of Fx
-          desktop/mobile, Chrome desktop/mobile, Safari desktop/mobile ....etc.
-          Limited semantic HTML: IE 11 etc."
-        </p>
-      </div>
+      <figure>
+        <img src="" width="" height="" alt="" />
+        <figcaption>TBD</figcaption>
+      </figure>
       <h4>Where is it best to spend your time and money?</h4>
       <p>
         The fact is that, even if you don’t want to use all the new bells and
@@ -339,7 +340,7 @@ export function PlanningForBrowserSupport() {
         only available in Firefox. You might decide that relying on this feature
         is not appropriate, but be happy to use it to get better alignment
         across some components, knowing that as it ships in Chrome and other
-        browsers they will get the better experience too.
+        browsers they will get a better experience too.
       </p>
       <div className="article-sidebar">
         <p>
@@ -396,7 +397,7 @@ export function YourBrowserSupportToolkit() {
       </header>
       <p className="article-lead">
         In this article discover the resources available, to help you develop a
-        site that will perform well across browsers and devices
+        site that will perform well across browsers and devices.
       </p>
       <Byline
         avatar="rachel-andrew.png"
@@ -752,23 +753,28 @@ export function YourBrowserSupportToolkit() {
       <h4>Vendor prefixes</h4>
       <p>
         The browser compat tables on MDN will also tell you if the property or
-        value you want to use needs to be prefixed. Vendor prefixes are a way
-        for browsers to ship their own experimental CSS features that won’t
-        interfere with the standard version of the property, as well as
+        value you want to use needs to be <em>prefixed</em>. Vendor prefixes are
+        a way for browsers to ship their own experimental CSS features that
+        won't interfere with the standard version of the property, as well as
         browser-specific proprietary features, using a prepended prefix.
       </p>
       <p>Prefixes used in major browsers are as follows:</p>
       <ul>
         <li>
-          -webkit- (Chrome, Safari, newer versions of Opera, Edge after version
-          79, almost all iOS browsers including Firefox for iOS, any other
-          Chromium-based browsers not already mentioned — including Brave,
-          Samsung Internet, etc.)
+          <code>-webkit-</code> (Chrome, Safari, newer versions of Opera, Edge
+          after version 79, almost all iOS browsers including Firefox for iOS,
+          any other Chromium-based browsers not already mentioned &mdash;
+          including Brave, Samsung Internet, etc.)
         </li>
-        <li>-moz- (Firefox)</li>
-        <li>-o- (old pre-Chromium versions of Opera)</li>
         <li>
-          -ms- (Internet Explorer and Microsoft Edge prior to version 79.)
+          <code>-moz-</code> (Firefox)
+        </li>
+        <li>
+          <code>-o-</code> (old pre-Chromium versions of Opera)
+        </li>
+        <li>
+          <code>-ms-</code> (Internet Explorer and Microsoft Edge prior to
+          version 79.)
         </li>
       </ul>
       <p>
@@ -776,7 +782,7 @@ export function YourBrowserSupportToolkit() {
         a long time, and web developers saw the functionality and began using
         them in production code. There are still a few properties and values
         that are used with prefixed names, and this is indicated in the browser
-        compat tables with a star, for example see the data for
+        compat tables with a star, for example see the data for{" "}
         <code>background-clip: text</code>, which indicates you should use a
         prefix.
       </p>
@@ -812,7 +818,7 @@ export function YourBrowserSupportToolkit() {
         fallbacks. Using built-in features of the web platform is the best way
         to create a resilient site. However, sometimes you will need to reach
         for other tools built on top of the web platform by the community. Here
-        we’ll look specifically at the PostCSS tool, and more generally at the
+        we'll look specifically at the PostCSS tool, and more generally at the
         concept of Polyfills.
       </p>
       <h4>PostCSS</h4>
@@ -951,8 +957,12 @@ export function YourBrowserSupportToolkit() {
         useful tool if you get a bug report on your site from an unusual or
         particularly old browser that you do not have access to.
       </p>
+      <figure>
+        <img src="" width="" height="" alt="" />
+        <figcaption>TBD</figcaption>
+      </figure>
       <p>
-        n this article you have learned that we have many tools available to
+        In this article you have learned that we have many tools available to
         help support and test in browsers. The last section of this guide will
         demonstrate how to use these when developing some common components,
         with practical examples.
