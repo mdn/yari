@@ -286,6 +286,10 @@ program
     default: [],
     validator: [...VALID_LOCALES.keys()],
   })
+  .option("--not-locale <locale...>", "Exclude specific locales", {
+    default: [],
+    validator: [...VALID_LOCALES.keys()],
+  })
   .argument("[files...]", "specific files to build")
   .action(async ({ args, options }) => {
     try {
@@ -304,17 +308,37 @@ program
       }
       const { files } = args;
 
-      // 'true' means we include this locale and all others get excluded.
-      // Some day we might make it an option to set `--not-locale` to
-      // filter out specific locales.
-      const locales = new Map(
-        // The `options.locale` is either an empty array (e.g. no --locale used),
-        // a string (e.g. one single --locale) or an array of strings
-        // (e.g. multiple --locale options).
-        (Array.isArray(options.locale) ? options.locale : [options.locale]).map(
-          (locale) => [locale, true]
-        )
-      );
+      let locales = new Map();
+      if (options.notLocale && options.notLocale.length > 0) {
+        if (options.locale && options.locale.length) {
+          throw new Error(
+            "Can't use --not-locale and --locale at the same time"
+          );
+        }
+        const notLocales = Array.isArray(options.notLocale)
+          ? options.notLocale
+          : [options.notLocale];
+
+        locales = new Map(
+          [...VALID_LOCALES.keys()]
+            .filter((locale) => !notLocales.includes(locale))
+            .map((locale) => [locale, true])
+        );
+      } else {
+        // 'true' means we include this locale and all others get excluded.
+        // Some day we might make it an option to set `--not-locale` to
+        // filter out specific locales.
+        locales = new Map(
+          // The `options.locale` is either an empty array (e.g. no --locale used),
+          // a string (e.g. one single --locale) or an array of strings
+          // (e.g. multiple --locale options).
+          (Array.isArray(options.locale)
+            ? options.locale
+            : [options.locale]
+          ).map((locale) => [locale, true])
+        );
+      }
+
       const t0 = new Date();
       const { slugPerLocale, peakHeapBytes, totalFlaws } = await buildDocuments(
         files,
@@ -335,10 +359,19 @@ program
           : `${seconds.toFixed(1)} seconds`;
       if (!options.quiet) {
         console.log(
-          `Built ${count.toLocaleString()} pages in ${took}, at a rate of ${(
-            count / seconds
-          ).toFixed(1)} documents per second.`
+          chalk.green(
+            `Built ${count.toLocaleString()} pages in ${took}, at a rate of ${(
+              count / seconds
+            ).toFixed(1)} documents per second.`
+          )
         );
+        if (locales.size) {
+          console.log(
+            chalk.yellow(
+              `(only builing locales: ${[...locales.keys()].join(", ")})`
+            )
+          );
+        }
         console.log(`Peak heap memory usage: ${humanFileSize(peakHeapBytes)}`);
         console.log(formatTotalFlaws(totalFlaws));
       }
