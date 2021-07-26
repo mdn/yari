@@ -368,7 +368,7 @@ program
         if (locales.size) {
           console.log(
             chalk.yellow(
-              `(only builing locales: ${[...locales.keys()].join(", ")})`
+              `(only building locales: ${[...locales.keys()].join(", ")})`
             )
           );
         }
