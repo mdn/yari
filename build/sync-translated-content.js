@@ -77,7 +77,7 @@ function resolve(slug) {
     if (!doc) {
       return slug;
     }
-    const resolvedSlug = doc.url;
+    const resolvedSlug = doc.metadata.slug;
     if (slug !== resolvedSlug) {
       return resolvedSlug;
     }
