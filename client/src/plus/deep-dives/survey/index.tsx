@@ -126,21 +126,21 @@ export function Survey({ slug }: { slug: string }) {
   return (
     <div className="survey-wrapper">
       {pingError && (
-        <div className="notecard danger">
+        <div>
           <p>
-            <strong>Oh no!</strong> Unable to connect to the server for
-            preparing your survey.
+            <b>Oh no!</b> Unable to connect to the server for preparing your
+            survey.
           </p>
-          <code>{pingError.toString()}</code>
+          <p>Refresh the page or try again later.</p>
         </div>
       )}
 
       {surveySubmissionError && (
-        <div className="notecard danger">
+        <div>
           <p>
-            <strong>Oh no!</strong> Your survey submission unfortunately failed.
+            <b>Oh no!</b> Your survey submission unfortunately failed.
           </p>
-          <code>{surveySubmissionError.toString()}</code>
+          <p>Refresh the page or try again later.</p>
         </div>
       )}
 

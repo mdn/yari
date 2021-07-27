@@ -5,19 +5,25 @@
 @use "../../../ui/theme/index" as theme;
 
 .survey-wrapper {
-  background-color: theme.$mdn-neutral050;
+  background-color: #f9f9fb;
   padding: (layout.$base-spacing * 2) layout.$base-spacing;
 
   legend {
     color: theme.$mdn-violet700;
-    font-size: typography.$medium-font-size;
+    font-family: theme.$metropolis-font-family;
+    font-size: 24px;
     font-weight: bold;
-    line-height: typography.$heading-line-height;
+    letter-spacing: 0;
+    line-height: 24px;
   }
 
   h3,
-  .custom-label {
-    font-size: typography.$small-medium-font-size;
+  .custom-label,
+  h4 {
+    font-family: theme.$inter-font-family;
+    font-size: 22px;
+    letter-spacing: 0;
+    line-height: 27px;
     margin: layout.$base-spacing 0;
   }
 

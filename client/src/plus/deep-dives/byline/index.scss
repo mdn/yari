@@ -5,13 +5,14 @@
 @use "../../../ui/theme/index" as theme;
 
 .byline {
-  @media #{layout.$mq-small-desktop-and-up} {
+  @media #{layout.$mq-tablet-and-up} {
     display: flex;
     gap: math.div(layout.$base-spacing, 2);
   }
 
   .author-name {
-    font-size: typography.$small-font-size;
+    font-family: theme.$inter-font-family;
+    font-size: 16px;
   }
 
   .author-description {

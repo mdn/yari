@@ -5,7 +5,7 @@
 @use "../../ui/theme/index" as theme;
 
 .page-content-container.deep-dives {
-  background-color: theme.$mdn-neutral050;
+  background-color: #f9f9fb;
   display: block;
   max-width: inherit;
   padding: 0;
@@ -13,16 +13,21 @@
 
 .deep-dive-article-container {
   @include theme.readable-line-length();
+  font-family: theme.$inter-font-family;
+  font-size: 18px;
+  line-height: 32px;
   margin-bottom: layout.$base-spacing * 3;
   padding: (layout.$base-spacing * 2) layout.$base-spacing;
 
-  @media #{layout.$mq-small-desktop-and-up} {
-    padding: (layout.$base-spacing * 2) 0;
+  code {
+    background-color: rgba(224, 224, 230, 0.5);
   }
 
   .main-heading-group {
     h1 {
-      font-size: typography.$xl-font-size;
+      font-size: 48px;
+      letter-spacing: -0.5px;
+      line-height: 58px;
     }
 
     h2 {
@@ -33,18 +38,36 @@
     }
   }
 
+  h3,
+  h4 {
+    font-size: 24px;
+    letter-spacing: 0.5px;
+    line-height: 48px;
+  }
+
+  h4 {
+    font-size: 22px;
+    line-height: 44px;
+  }
+
+  figcaption {
+    color: theme.$mdn-neutral700;
+    font-size: 14px;
+    line-height: 32px;
+  }
+
   .article-lead {
     color: theme.$mdn-neutral700;
     font-size: typography.$small-medium-font-size;
   }
 
   .article-sidebar {
-    border: theme.$standard-light-border;
+    border: 1px solid rgba(32, 17, 57, 0.1);
     border-radius: theme.$default-border-radius;
     font-style: italic;
     padding: math.div(layout.$base-spacing, 2);
 
-    @media #{layout.$mq-small-desktop-and-up} {
+    @media #{layout.$mq-tablet-and-up} {
       padding: layout.$base-spacing;
     }
 
@@ -123,7 +146,7 @@
     display: flex;
     gap: layout.$base-spacing;
     justify-content: space-between;
-    padding: 0 layout.$base-spacing;
+    padding: 0;
 
     .deep-dive-article-container {
       flex: 0 1 65%;
@@ -132,10 +155,6 @@
     .series-card {
       flex: 0 1 35%;
       margin-top: layout.$base-spacing * 2;
-
-      @media #{layout.$mq-large-desktop-and-up} {
-        margin-right: layout.$base-spacing * 3;
-      }
     }
   }
 
@@ -146,4 +165,8 @@
       display: block;
     }
   }
+}
+
+.main-article-page-content-container.girdle {
+  max-width: 1126px;
 }

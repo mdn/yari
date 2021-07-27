@@ -8,12 +8,13 @@
 .series-card {
   display: none;
 
-  @media #{layout.$mq-small-desktop-and-up} {
+  @media #{layout.$mq-large-desktop-and-up} {
     background-color: theme.$white;
     border-radius: theme.$default-border-radius;
     border-top: 18px solid theme.$mdn-violet600;
     box-shadow: theme.$card-box-shadow;
     display: block;
+    font-family: theme.$inter-font-family;
     max-width: 320px;
     padding: layout.$base-spacing;
 
@@ -25,6 +26,7 @@
     }
 
     h3 {
+      font-family: theme.$inter-font-family;
       font-weight: 500;
       margin-bottom: layout.$base-spacing;
     }
