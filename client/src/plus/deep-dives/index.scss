@@ -50,6 +50,12 @@
     line-height: 44px;
   }
 
+  figcaption {
+    color: theme.$mdn-neutral700;
+    font-size: 14px;
+    line-height: 32px;
+  }
+
   .article-lead {
     color: theme.$mdn-neutral700;
     font-size: typography.$small-medium-font-size;
