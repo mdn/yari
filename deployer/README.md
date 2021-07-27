@@ -13,7 +13,7 @@ their corresponding AWS S3 keys.
 
 ## Getting started
 
-You can install it globally or in a virtualenv environment. Whichever you
+You can install it globally or in a `virtualenv` environment. Whichever you
 prefer.
 
 ```sh
