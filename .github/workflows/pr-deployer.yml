@@ -18,11 +18,9 @@ jobs:
         with:
           python-version: "3.8"
 
-      - name: Install Python poetry
-        uses: snok/install-poetry@v1.1.6
-        with:
-          virtualenvs-create: true
-          virtualenvs-in-project: true
+      - name: Debug pip cache dir
+        run: |
+          pip cache dir
 
       - name: Load cached venv
         id: cached-poetry-dependencies
@@ -30,6 +28,12 @@ jobs:
         with:
           path: deployer/.venv
           key: venv-${{ runner.os }}-${{ hashFiles('**/poetry.lock') }}
+
+      - name: Install Python poetry
+        uses: snok/install-poetry@v1.1.6
+        with:
+          virtualenvs-create: true
+          virtualenvs-in-project: true
 
       - name: Install deployer
         run: |
