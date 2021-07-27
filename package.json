@@ -32,6 +32,12 @@
     "watch:ssr": "cd ssr && webpack --mode=production --watch",
     "prepare": "husky install"
   },
+  "jest": {
+    "testPathIgnorePatterns": [
+      "headless*",
+      "kumascript/tests/*"
+    ]
+  },
   "resolutions": {
     "@typescript-eslint/typescript-estree": ">=4.15.2",
     "babel-loader": "8.1.0",
