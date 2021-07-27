@@ -310,7 +310,7 @@ That should have installed the CLI:
 poetry run deployer
 ```
 
-If you wanna make a PR, make sure it's formatted with `black` and
+If you want to make a PR, make sure it's formatted with `black` and
 passes `flake8`.
 
 You can check that all files are `flake8` fine by running:
