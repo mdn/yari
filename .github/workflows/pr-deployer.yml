@@ -23,8 +23,6 @@ jobs:
         with:
           path: ~/.cache/pip
           key: ${{ runner.os }}-pip-${{ hashFiles('.github/workflows/pr-deployer.yml') }}
-          restore-keys: |
-            ${{ runner.os }}-pip-${{ hashFiles('.github/workflows/pr-deployer.yml') }}
 
       - name: Debug pip cache dir
         run: |
