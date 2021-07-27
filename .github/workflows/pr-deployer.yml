@@ -56,10 +56,12 @@ jobs:
 
       - name: Basic run of deployer
         run: |
+          source deployer/.venv/bin/activate
           cd deployer
           poetry run deployer --help
 
       - name: Run deployer unit tests
         run: |
+          source deployer/.venv/bin/activate
           cd deployer
           poetry run pytest
