@@ -165,7 +165,7 @@
     }
 
     h4 {
-      margin: 0 0 math.div(layout.$base-spacing, 2);
+      margin: math.div(layout.$base-spacing, 2) 0;
     }
 
     p {
