@@ -18,15 +18,15 @@ jobs:
         with:
           python-version: "3.8"
 
-      - name: Cache pip
-        uses: actions/cache@v2.1.6
-        with:
-          path: ~/.cache/pip
-          key: ${{ runner.os }}-pip-${{ hashFiles('.github/workflows/pr-deployer.yml') }}
+      # - name: Cache pip
+      #   uses: actions/cache@v2.1.6
+      #   with:
+      #     path: ~/.cache/pip
+      #     key: ${{ runner.os }}-pip-${{ hashFiles('.github/workflows/pr-deployer.yml') }}
 
-      - name: Debug pip cache dir
-        run: |
-          pip cache dir
+      # - name: Debug pip cache dir
+      #   run: |
+      #     pip cache dir
 
       - name: Load cached venv
         id: cached-poetry-dependencies
@@ -37,6 +37,7 @@ jobs:
 
       - name: Install Python poetry
         uses: snok/install-poetry@v1.1.6
+        if: steps.cached-poetry-dependencies.outputs.cache-hit != 'true'
         with:
           virtualenvs-create: true
           virtualenvs-in-project: true
