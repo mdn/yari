@@ -5,10 +5,6 @@ function testURL(pathname = "/") {
 }
 
 test.describe("Basic viewing of functional pages", () => {
-  // test.beforeAll(async ({ context }) => {
-  //   console.log("Before tests");
-  //   context.clearCookies();
-  // });
   test("open the temporary home page", async ({ page }) => {
     await page.goto(testURL("/"));
     expect(await page.title()).toContain("MDN Web Docs");
@@ -155,9 +151,7 @@ test.describe("Basic viewing of functional pages", () => {
     expect(await page.innerText("body > div.wrapper > div.box3")).toBe("Three");
   });
 
-  test("should return to previous page on back-button press", async ({
-    page,
-  }) => {
+  test("return to previous page on back-button press", async ({ page }) => {
     await page.goto(testURL("/en-US/docs/Web/Foo"));
     expect(await page.title()).toContain("<foo>: A test tag");
     expect(await page.innerText("h1")).toBe("<foo>: A test tag");
@@ -169,9 +163,7 @@ test.describe("Basic viewing of functional pages", () => {
     expect(await page.innerText("h1")).toBe("<foo>: A test tag");
   });
 
-  test("should have a semantically valid breadcrumb trail", async ({
-    page,
-  }) => {
+  test("have a semantically valid breadcrumb trail", async ({ page }) => {
     await page.goto(testURL("/en-US/docs/Web/Foo"));
     // Let's not get too technical about the name of the selectors and
     // stuff but do note that the page you're on is always a valid link
@@ -213,17 +205,17 @@ test.describe("Basic viewing of functional pages", () => {
     );
   });
 
-  test("should give the home page and see Hacks blog posts", async ({
-    page,
-  }) => {
+  test("give the home page and see Hacks blog posts", async ({ page }) => {
     await page.goto(testURL("/en-US/"));
     expect(
       await page.isVisible("text=Resources for developers, by developers.")
     ).toBeTruthy();
     expect(await page.isVisible("text=Hacks Blog")).toBeTruthy();
   });
+});
 
-  test("be able to switch from French to English, set a cookie, and back again", async ({
+test.describe("changing language", () => {
+  test("from French to English, set a cookie, and back again", async ({
     page,
   }) => {
     await page.goto(testURL("/fr/docs/Web/Foo"));
@@ -248,42 +240,53 @@ test.describe("Basic viewing of functional pages", () => {
     expect(await page.isVisible("text=<foo>: Une page de test")).toBeTruthy();
     expect(page.url()).toBe(testURL("/fr/docs/Web/Foo/"));
   });
+});
 
-  //   it("should redirect retired locale to English (document)", async () => {
-  //     await page.goto(testURL("/ar/docs/Web/Foo"));
-  //     await expect(page.url()).toMatch(
-  //       testURL("/en-US/docs/Web/Foo/?retiredLocale=ar")
-  //     );
-  //     await expect(page).toMatch("<foo>: A test tag");
-  //   });
+test.describe("viewing retired locales", () => {
+  test("redirect retired locale to English (document)", async ({ page }) => {
+    await page.goto(testURL("/ar/docs/Web/Foo"));
+    expect(page.url()).toMatch(
+      testURL("/en-US/docs/Web/Foo/?retiredLocale=ar")
+    );
+    expect(await page.innerText("h1")).toBe("<foo>: A test tag");
+  });
 
-  //   it("should redirect retired locale to English (index.json)", async () => {
-  //     await page.goto(testURL("/ar/docs/Web/Foo/index.json"));
-  //     await expect(page.url()).toMatch(
-  //       testURL("/en-US/docs/Web/Foo/index.json?retiredLocale=ar")
-  //     );
-  //     await expect(page).toMatch("<foo>: A test tag");
-  //   });
+  test("redirect retired locale to English (index.json)", async ({ page }) => {
+    await page.goto(testURL("/ar/docs/Web/Foo/index.json"));
+    expect(page.url()).toMatch(
+      testURL("/en-US/docs/Web/Foo/index.json?retiredLocale=ar")
+    );
+    expect(await page.isVisible("text=<foo>: A test tag")).toBeTruthy();
+  });
 
-  //   it("should redirect retired locale to English (search with query string)", async () => {
-  //     await page.goto(testURL("/ar/search?q=video"));
-  //     await expect(page.url()).toMatch(
-  //       testURL("/en-US/search/?q=video&retiredLocale=ar")
-  //     );
-  //     await expect(page).toMatch("Search results for: video");
-  //   });
+  test("redirect retired locale to English (search with query string)", async ({
+    page,
+  }) => {
+    await page.goto(testURL("/ar/search?q=video"));
+    expect(page.url()).toMatch(
+      testURL("/en-US/search/?q=video&retiredLocale=ar")
+    );
+    expect(await page.isVisible("text=Search results for: video")).toBeTruthy();
+  });
 
-  //   it("should say the locale was retired", async () => {
-  //     await page.goto(testURL("/en-US/docs/Web/Foo/?retiredLocale=ar"));
-  //     await expect(page).toMatch("The page you requested has been retired");
-  //     // sanity check that it goes away
-  //     await page.goto(testURL("/en-US/docs/Web/Foo/"));
-  //     await expect(page).not.toMatch("The page you requested has been retired");
-  //   });
+  test("say the locale was retired", async ({ page }) => {
+    await page.goto(testURL("/en-US/docs/Web/Foo/?retiredLocale=ar"));
+    expect(
+      await page.isVisible("text=The page you requested has been retired")
+    ).toBeTruthy();
+    // sanity check that it goes away
+    await page.goto(testURL("/en-US/docs/Web/Foo/"));
+    expect(
+      await page.isVisible("text=The page you requested has been retired")
+    ).toBeFalsy();
+  });
 
-  //   it("should not say the locale was retired if viewing a translated page", async () => {
-  //     await page.goto(testURL("/fr/docs/Web/Foo/?retiredLocale=sv-SE"));
-  //     await expect(page).not.toMatch("The page you requested has been retired");
-  //   });
-  // });
+  test("not say the locale was retired if viewing a translated page", async ({
+    page,
+  }) => {
+    await page.goto(testURL("/fr/docs/Web/Foo/?retiredLocale=sv-SE"));
+    expect(
+      await page.isVisible("text=The page you requested has been retired")
+    ).toBeFalsy();
+  });
 });
