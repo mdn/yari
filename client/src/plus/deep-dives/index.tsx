@@ -6,15 +6,11 @@ import { PageContentContainer } from "../../ui/atoms/page-content";
 
 const Article = React.lazy(() => import("./article"));
 
-interface DeepDivesProps {
-  pageTitle?: string;
-  locale?: string;
-}
-
-export function DeepDives(props: DeepDivesProps) {
+export function DeepDives({ pageTitle }: { pageTitle?: string }) {
+  const defaultTitle = "MDN Plus Deep Dives";
   React.useEffect(() => {
-    document.title = props.pageTitle || "MDN Plus Deep Dives";
-  }, [props.pageTitle]);
+    document.title = pageTitle || defaultTitle;
+  }, [pageTitle]);
   const { "*": slug } = useParams();
 
   const isServer = typeof window === "undefined";
