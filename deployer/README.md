@@ -307,7 +307,7 @@ poetry install
 That should have installed the CLI:
 
 ```sh
-poetry run deployer
+poetry run deployer --help
 ```
 
 If you want to make a PR, make sure it's formatted with `black` and
