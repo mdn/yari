@@ -18,16 +18,6 @@ jobs:
         with:
           python-version: "3.8"
 
-      # - name: Cache pip
-      #   uses: actions/cache@v2.1.6
-      #   with:
-      #     path: ~/.cache/pip
-      #     key: ${{ runner.os }}-pip-${{ hashFiles('.github/workflows/pr-deployer.yml') }}
-
-      # - name: Debug pip cache dir
-      #   run: |
-      #     pip cache dir
-
       - name: Load cached venv
         id: cached-poetry-dependencies
         uses: actions/cache@v2.1.6
@@ -41,11 +31,6 @@ jobs:
           path: ~/.local
           key: dotlocal-${{ runner.os }}-${{ hashFiles('.github/workflows/pr-deployer.yml') }}
 
-      # - name: Custom install Poetry
-      #   run: |
-      #     curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/install-poetry.py | python - -y --path deployer/.venv
-      #     poetry --version
-
       - name: Install Python poetry
         uses: snok/install-poetry@v1.1.6
         with:
@@ -57,13 +42,6 @@ jobs:
           cd deployer
           poetry install
         if: steps.cached-poetry-dependencies.outputs.cache-hit != 'true'
-
-      - name: Debug poetry install
-        run: |
-          which poetry
-          cat `which poetry`
-          echo "POETRY_HOME??"
-          echo $POETRY_HOME
 
       - name: Lint Python code
         run: |
