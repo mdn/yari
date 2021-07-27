@@ -164,6 +164,10 @@
       margin-left: 185px;
     }
 
+    h4 {
+      margin: 0 0 math.div(layout.$base-spacing, 2);
+    }
+
     p {
       margin-bottom: 0;
     }
