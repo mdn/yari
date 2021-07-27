@@ -140,7 +140,13 @@ jobs:
           yarn tool popularities
 
           yarn tool sync-translated-content
-          yarn build
+
+          # Spread the work across 2 processes. Why 2? Because that's what you
+          # get in the default GitHub hosting Linux runners.
+          # See https://docs.github.com/en/actions/using-github-hosted-runners/about-github-hosted-runners#supported-runners-and-hardware-resources
+          yarn build --locale     en-us --locale     ja --locale     fr &
+          yarn build --not-locale en-us --not-locale ja --not-locale fr &
+          wait
 
           # TODO: When the deployer is available this is where we
           # would upload the whole content of client/build
