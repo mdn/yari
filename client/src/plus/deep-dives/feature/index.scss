@@ -12,6 +12,10 @@
   position: relative;
 
   @media #{layout.$mq-small-desktop-and-up} {
+    padding: layout.$base-spacing;
+  }
+
+  @media #{layout.$mq-large-desktop-and-up} {
     padding: layout.$base-spacing (layout.$base-spacing * 5);
   }
 
@@ -28,14 +32,14 @@
         height: 530px;
         position: absolute;
         right: 0;
-        top: -8px;
+        top: 15px;
         width: 460px;
       }
 
       @media #{layout.$mq-large-desktop-and-up} {
-        height: 650px;
-        top: 8px;
-        width: 560px;
+        height: 600px;
+        top: 5px;
+        width: 510px;
       }
     }
   }
@@ -51,20 +55,32 @@
   h1 {
     font-size: theme.$marketing-feature-h1-font-size;
     margin: 0 0 layout.$base-spacing 0;
+
+    @media #{layout.$mq-small-desktop-and-up} {
+      font-size: typography.$large-font-size;
+    }
+
+    @media #{layout.$mq-large-desktop-and-up} {
+      font-size: theme.$marketing-feature-h1-font-size;
+    }
   }
 
   h2 {
     font-size: typography.$medium-font-size;
     margin: layout.$base-spacing 0;
+
+    @media #{layout.$mq-small-desktop-and-up} {
+      font-size: typography.$small-medium-font-size;
+    }
+
+    @media #{layout.$mq-large-desktop-and-up} {
+      font-size: typography.$medium-font-size;
+    }
   }
 
   p,
   ul {
-    font-size: typography.$small-medium-font-size-mobile;
-
-    @media #{layout.$mq-tablet-and-up} {
-      font-size: typography.$default-font-size;
-    }
+    font-size: typography.$default-font-size;
   }
 
   ul {
