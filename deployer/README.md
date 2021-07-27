@@ -1,6 +1,6 @@
 # Deployer
 
-The Yari deployer does two things. First, it's used to upload document
+The Yari Deployer does two things. First, it's used to upload document
 redirects, pre-built document pages, static files (e.g. JS, CSS, and
 image files), and sitemap files into an existing AWS S3 bucket. Since
 we serve MDN document pages from an S3 bucket via a CloudFront CDN,
@@ -46,7 +46,7 @@ most likely what you'll want for uploads to the `mdn-content-stage` and
 bucket, the prefix is often used to specify a different folder for each
 variation of the site that is being reviewed/considered.
 
-When uploading files (not redirects), the deployer is intelligent about
+When uploading files (not redirects), the Deployer is intelligent about
 what it uploads. If only uploads files whose content has changed, skipping
 the rest. However, since the `cache-control` attribute of a file is not
 considered part of its content, if you'd like to change the `cache-control`
