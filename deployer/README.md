@@ -1,4 +1,4 @@
-# Deployer
+# Deployer.
 
 The Yari Deployer does two things. First, it's used to upload document
 redirects, pre-built document pages, static files (e.g. JS, CSS, and
