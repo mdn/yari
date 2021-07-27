@@ -188,10 +188,12 @@
   }
 
   .unavailable {
+    color: theme.$mdn-neutral600;
     min-height: 140px;
 
     &::before {
-      background: transparent url("./assets/unavailable.svg") center center
+      background: transparent
+        url("./assets/practical-browser-support-solutions.png") center center
         no-repeat;
       background-size: cover;
       content: "";
