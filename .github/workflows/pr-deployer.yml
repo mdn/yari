@@ -41,6 +41,7 @@ jobs:
           virtualenvs-create: true
           virtualenvs-in-project: true
           virtualenvs-path: deployer/.venv
+        if: steps.cached-poetry-dependencies.outputs.cache-hit != 'true'
 
       - name: Install deployer
         run: |
