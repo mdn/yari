@@ -9,7 +9,7 @@ this is the way we upload a new version of the site.
 Second, it is used to update and publish changes to existing AWS Lambda
 functions. For example, we use it to update and publish new versions of
 a Lambda function that we use to transform incoming document URL's into
-their corresponding S3 keys.
+their corresponding AWS S3 keys.
 
 ## Getting started
 
