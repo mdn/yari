@@ -48,6 +48,10 @@ jobs:
           poetry install
         if: steps.cached-poetry-dependencies.outputs.cache-hit != 'true'
 
+      - name: Debug poetry install
+        run: |
+          which poetry
+
       - name: Lint Python code
         run: |
           source deployer/.venv/bin/activate
