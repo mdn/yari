@@ -25,6 +25,7 @@
     "test": "yarn prettier-check && yarn test:client && yarn test:kumascript && yarn test:content && yarn test:testing",
     "test:client": "cd client && tsc --noEmit && react-scripts test --env=jest-environment-jsdom-sixteen",
     "test:content": "jest content",
+    "test:headless": "playwright test headless",
     "test:kumascript": "jest kumascript",
     "test:testing": "cd testing && jest",
     "tool": "node tool/cli.js",
