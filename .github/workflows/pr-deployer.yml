@@ -36,7 +36,6 @@ jobs:
           key: venv-${{ runner.os }}-${{ hashFiles('**/poetry.lock') }}-${{ hashFiles('.github/workflows/pr-deployer.yml') }}
 
       - name: Load cached .local
-        id: cached-poetry-dependencies
         uses: actions/cache@v2.1.6
         with:
           path: ~/.local
