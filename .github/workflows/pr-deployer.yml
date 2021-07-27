@@ -23,10 +23,7 @@ jobs:
         uses: actions/cache@v2.1.6
         with:
           path: $(pip cache dir)
-          # CORRECTx
-          # key: pipcache-${{ runner.os }}-${{ hashFiles('.github/workflows/pr-deployer.yml') }}
-          # OLDx
-          key: pipcache-${{ runner.os }}
+          key: pipcache-${{ runner.os }}-${{ hashFiles('.github/workflows/pr-deployer.yml') }}
 
       - name: Debug pip cache dir
         run: |
@@ -37,10 +34,7 @@ jobs:
         uses: actions/cache@v2.1.6
         with:
           path: deployer/.venv
-          # CORRECT
-          # key: venv-${{ runner.os }}-${{ hashFiles('**/poetry.lock') }}-${{ hashFiles('.github/workflows/pr-deployer.yml') }}
-          # OLD
-          key: venv-${{ runner.os }}-${{ hashFiles('**/poetry.lock') }}
+          key: venv-${{ runner.os }}-${{ hashFiles('**/poetry.lock') }}-${{ hashFiles('.github/workflows/pr-deployer.yml') }}
 
       - name: Install Python poetry
         uses: snok/install-poetry@v1.1.6
