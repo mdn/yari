@@ -16,10 +16,6 @@
   padding: 0;
   position: relative;
 
-  @media #{layout.$mq-large-desktop-and-up} {
-    padding: 0 0 (layout.$base-spacing * 2.5);
-  }
-
   &::before {
     background: transparent url("./assets/hero.svg") center center no-repeat;
     background-size: cover;
@@ -30,7 +26,7 @@
     width: 100%;
 
     @media #{layout.$mq-small-desktop-and-up} {
-      height: 529px;
+      height: 100%;
     }
   }
 
@@ -44,11 +40,12 @@
     z-index: layout.$bottom-layer;
 
     @media #{layout.$mq-small-desktop-and-up} {
+      background-color: transparent;
       display: grid;
       gap: 0 math.div(layout.$base-spacing, 2);
       gap: 0 (layout.$base-spacing * 2.5);
       grid-template-columns: 1fr 0;
-      padding: (layout.$base-spacing * 2);
+      padding: (layout.$base-spacing * 2) 120px;
     }
   }
 
@@ -76,12 +73,10 @@
       background: theme.$gradient-accent;
       background-clip: text;
       color: theme.$mdn-green400;
-      font-size: typography.$medium-font-size;
+      font-size: 18px;
+      line-height: 160%;
       margin-top: 0;
-
-      @media #{layout.$mq-small-desktop-and-up} {
-        font-size: theme.$marketing-hero-h2-font-size;
-      }
+      text-transform: uppercase;
     }
 
     a {
@@ -105,10 +100,10 @@
 }
 
 .overview-content-container {
-  padding: math.div(layout.$base-spacing, 2) layout.$base-spacing;
+  padding: 0 layout.$base-spacing math.div(layout.$base-spacing, 2);
 
   @media #{layout.$mq-small-desktop-and-up} {
-    padding: layout.$base-spacing 120px;
+    padding: 0 120px 36px;
   }
 
   @media #{layout.$mq-large-desktop-and-up} {
@@ -123,8 +118,8 @@
   }
 
   h4 {
-    font-size: typography.$default-font-size;
-    margin: math.div(layout.$base-spacing, 2) 0;
+    font-size: 18px;
+    margin: 36px 0;
   }
 
   li {

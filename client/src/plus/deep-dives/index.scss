@@ -20,6 +20,10 @@
     padding: (layout.$base-spacing * 2) 0;
   }
 
+  code {
+    background-color: rgba(224, 224, 230, 0.5);
+  }
+
   .main-heading-group {
     h1 {
       font-size: typography.$xl-font-size;

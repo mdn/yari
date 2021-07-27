@@ -711,7 +711,7 @@ export function YourBrowserSupportToolkit() {
       </p>
       <p>
         Introducing a Feature Query into our demo means that we can wrap up all
-        of our grid code with a test to see if the browser supports
+        of our grid code with a test to see if the browser supports{" "}
         <code>display: grid</code>.
       </p>
       <div className="code-snippet">
