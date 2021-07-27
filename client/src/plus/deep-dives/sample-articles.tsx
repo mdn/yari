@@ -16,7 +16,7 @@ export function PlanningForBrowserSupport() {
       <Byline
         avatar="rachel-andrew.png"
         author="Rachel Andrew"
-        authorDescription="CSS WG Invited Expert, "
+        authorDescription="CSS WG Invited Expert,"
         authorBioURL="https://twitter.com/rachelandrew"
         authorBioURLText="@rachelandrew"
       />
@@ -416,7 +416,7 @@ export function YourBrowserSupportToolkit() {
       <Byline
         avatar="rachel-andrew.png"
         author="Rachel Andrew"
-        authorDescription="CSS WG Invited Expert, "
+        authorDescription="CSS WG Invited Expert,"
         authorBioURL="https://twitter.com/rachelandrew"
         authorBioURLText="@rachelandrew"
       />
