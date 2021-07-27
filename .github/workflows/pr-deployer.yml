@@ -40,6 +40,7 @@ jobs:
         with:
           virtualenvs-create: true
           virtualenvs-in-project: true
+          virtualenvs-path: deployer/.venv
 
       - name: Install deployer
         run: |
@@ -55,6 +56,7 @@ jobs:
 
       - name: Basic run of deployer
         run: |
+          source deployer/.venv/bin/activate
           cd deployer
           poetry run deployer --help
 
