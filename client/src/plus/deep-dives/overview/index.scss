@@ -1,0 +1,204 @@
+@use "sass:math";
+
+@use "~@mdn/minimalist/sass/vars/layout";
+@use "~@mdn/minimalist/sass/vars/typography";
+
+@use "../../../ui/theme/index" as theme;
+
+.page-content-container.plus {
+  max-width: inherit;
+  padding: layout.$base-spacing 0;
+}
+
+.overview-hero {
+  color: theme.$text-color-inverted;
+  overflow: hidden;
+  padding: 0;
+  position: relative;
+
+  @media #{layout.$mq-large-desktop-and-up} {
+    padding: 0 0 (layout.$base-spacing * 2.5);
+  }
+
+  &::before {
+    background: transparent url("./assets/hero.svg") center center no-repeat;
+    background-size: cover;
+    content: "";
+    display: block;
+    min-height: 365px;
+    position: absolute;
+    width: 100%;
+
+    @media #{layout.$mq-small-desktop-and-up} {
+      height: 529px;
+    }
+  }
+
+  .header-wrapper {
+    background-color: rgba(0, 0, 0, 0.4);
+    height: 100%;
+    margin: auto;
+    max-width: layout.$max-width-default;
+    padding: (layout.$base-spacing * 2) layout.$base-spacing;
+    position: relative;
+    z-index: layout.$bottom-layer;
+
+    @media #{layout.$mq-small-desktop-and-up} {
+      display: grid;
+      gap: 0 math.div(layout.$base-spacing, 2);
+      gap: 0 (layout.$base-spacing * 2.5);
+      grid-template-columns: 1fr 0;
+      padding: (layout.$base-spacing * 2);
+    }
+  }
+
+  .header-content {
+    max-width: 550px;
+    position: relative;
+    z-index: layout.$top-layer;
+
+    h1 {
+      font-size: typography.$xxl-font-size;
+      line-height: typography.$heading-line-height;
+
+      margin-block-end: 0.67em;
+      margin-block-start: 0.67em;
+      margin-inline-end: 0;
+      margin-inline-start: 0;
+
+      @media #{layout.$mq-small-desktop-and-up} {
+        font-size: theme.$marketing-hero-h1-font-size;
+        margin: layout.$base-spacing 0;
+      }
+    }
+
+    h2 {
+      background: theme.$gradient-accent;
+      background-clip: text;
+      color: theme.$mdn-green400;
+      font-size: typography.$medium-font-size;
+      margin-top: 0;
+
+      @media #{layout.$mq-small-desktop-and-up} {
+        font-size: theme.$marketing-hero-h2-font-size;
+      }
+    }
+
+    a {
+      display: none;
+
+      @media #{layout.$mq-tablet-and-up} {
+        display: block;
+      }
+    }
+
+    p {
+      font-size: typography.$default-font-size;
+      margin-bottom: 0;
+      max-width: 400px;
+
+      @media #{layout.$mq-small-desktop-and-up} {
+        font-size: typography.$small-medium-font-size;
+      }
+    }
+  }
+}
+
+.overview-content-container {
+  padding: math.div(layout.$base-spacing, 2) layout.$base-spacing;
+
+  @media #{layout.$mq-small-desktop-and-up} {
+    padding: layout.$base-spacing 120px;
+  }
+
+  @media #{layout.$mq-large-desktop-and-up} {
+    margin: 0 auto layout.$base-spacing;
+    max-width: layout.$max-width-default;
+  }
+
+  h3,
+  h4 {
+    font-size: typography.$small-medium-font-size;
+    margin: layout.$base-spacing 0;
+  }
+
+  h4 {
+    font-size: typography.$default-font-size;
+    margin: math.div(layout.$base-spacing, 2) 0;
+  }
+
+  li {
+    margin-bottom: layout.$base-spacing;
+  }
+
+  a.overview-series-list-item {
+    border-radius: 4px;
+    display: block;
+    min-height: 140px;
+    padding: math.div(layout.$base-spacing, 4);
+    position: relative;
+
+    &:link,
+    &:visited {
+      color: theme.$mdn-neutral900;
+    }
+
+    &:hover,
+    &:focus {
+      background-color: theme.$mdn-neutral100;
+      text-decoration: none;
+    }
+
+    &::before {
+      background-size: cover;
+      content: "";
+      display: inline-block;
+      height: 128px;
+      width: 164px;
+
+      @media #{layout.$mq-small-desktop-and-up} {
+        position: absolute;
+      }
+    }
+  }
+
+  .item-content {
+    @media #{layout.$mq-small-desktop-and-up} {
+      margin-left: 185px;
+    }
+
+    p {
+      margin-bottom: 0;
+    }
+  }
+
+  .planning-for-browser-support {
+    &::before {
+      background: transparent url("./assets/planning-for-browser-support.svg")
+        center center no-repeat;
+    }
+  }
+
+  .your-browser-support-toolkit {
+    &::before {
+      background: transparent url("./assets/your-browser-support-toolkit.svg")
+        center center no-repeat;
+    }
+  }
+
+  .unavailable {
+    &::before {
+      background: transparent url("./assets/unavailable.svg") center center
+        no-repeat;
+      background-size: 164px 129px;
+      content: "";
+      display: inline-block;
+      height: 128px;
+      width: 164px;
+
+      @media #{layout.$mq-small-desktop-and-up} {
+        position: absolute;
+      }
+    }
+  }
+}

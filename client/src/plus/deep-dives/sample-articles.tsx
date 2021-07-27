@@ -16,7 +16,9 @@ export function PlanningForBrowserSupport() {
       <Byline
         avatar="rachel-andrew.png"
         author="Rachel Andrew"
-        authorDescription="MDN Editor & Writer, Former Editor in Chief of Smashing Magazine"
+        authorDescription="CSS WG Invited Expert, "
+        authorBioURL="https://twitter.com/rachelandrew"
+        authorBioURLText="@rachelandrew"
       />
       <ArticleMeta publishDate="March 29th, 2021" readTime="12 minute read" />
       <p>
@@ -250,10 +252,9 @@ export function PlanningForBrowserSupport() {
       <p>
         If you don’t have your own analytics information then you could look at
         general statistics for the locations your users are likely to be in.
-        Statcounter (
-        <a href="https://gs.statcounter.com/">https://gs.statcounter.com/</a>)
-        is a good place to look at the browser versions currently in use, and
-        can be filtered by location
+        <a href="https://gs.statcounter.com/">Statcounter</a> is a good place to
+        look at the browser versions currently in use, and can be filtered by
+        location
       </p>
       <p>
         If you have a narrow audience, then you may be able to use user
@@ -402,7 +403,9 @@ export function YourBrowserSupportToolkit() {
       <Byline
         avatar="rachel-andrew.png"
         author="Rachel Andrew"
-        authorDescription="MDN Editor &amp; Writer, Former Editor in Chief of Smashing Magazine"
+        authorDescription="CSS WG Invited Expert, "
+        authorBioURL="https://twitter.com/rachelandrew"
+        authorBioURLText="@rachelandrew"
       />
       <ArticleMeta publishDate="March 29th, 2021" readTime="18 minute read" />
       <p>
@@ -442,7 +445,6 @@ export function YourBrowserSupportToolkit() {
           <a href="https://caniuse.com/?search=css%20grid">
             css grid on Can I Use
           </a>
-          .
         </figcaption>
       </figure>
       <p>
@@ -465,7 +467,6 @@ export function YourBrowserSupportToolkit() {
           <a href="https://developer.mozilla.org/docs/Web/CSS/grid-template-columns#browser_compatibility">
             grid-template-columns
           </a>
-          .
         </figcaption>
       </figure>
       <p>
@@ -958,8 +959,22 @@ export function YourBrowserSupportToolkit() {
         particularly old browser that you do not have access to.
       </p>
       <figure>
-        <img src="" width="" height="" alt="" />
-        <figcaption>TBD</figcaption>
+        <img
+          src="/assets/deepdives/your-browser-support-toolkit-003.png"
+          width="782"
+          height="440"
+          alt=""
+        />
+        <figcaption>
+          Operating systems available on{" "}
+          <a
+            href="https://browserstack.com"
+            className="external"
+            rel="external"
+          >
+            Browserstack
+          </a>
+        </figcaption>
       </figure>
       <p>
         In this article you have learned that we have many tools available to
