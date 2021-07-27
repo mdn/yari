@@ -139,7 +139,7 @@ jobs:
           # See https://github.com/mdn/yari/issues/4217
           yarn tool popularities
 
-          # yarn tool sync-translated-content
+          yarn tool sync-translated-content
           yarn build
 
           # TODO: When the deployer is available this is where we
