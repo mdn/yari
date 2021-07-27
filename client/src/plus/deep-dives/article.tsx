@@ -89,6 +89,7 @@ export default function Article({ slug }: { slug: string }) {
         <div className="deep-dive-article-sidebar">
           <SeriesCard
             title="Modern CSS in the real world"
+            titleLink={`/${locale}/plus/deep-dives`}
             seriesList={getSeriesList()}
           />
         </div>
