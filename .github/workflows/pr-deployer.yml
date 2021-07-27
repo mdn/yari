@@ -51,6 +51,7 @@ jobs:
       - name: Debug poetry install
         run: |
           which poetry
+          cat `which poetry`
 
       - name: Lint Python code
         run: |
