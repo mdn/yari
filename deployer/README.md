@@ -28,7 +28,7 @@ with regards to configuring AWS access credentials.
 ## Uploads
 
 The `poetry run deployer upload DIRECTORY` command uploads files as well as redirects
-into an existing S3 bucket. Currently, we have three main S3 buckets that we
+into an existing S3 bucket. Currently, we have three S3 buckets that we
 upload into: `mdn-content-dev` (for variations or experimental versions of
 the site), `mdn-content-stage`, and `mdn-content-prod`.
 
