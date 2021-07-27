@@ -18,6 +18,16 @@ jobs:
         with:
           python-version: "3.8"
 
+      - name: Load cached venv
+        id: cached-pip-cache
+        uses: actions/cache@v2.1.6
+        with:
+          path: $(pip cache dir)
+          # CORRECT
+          # key: pipcache-${{ runner.os }}-${{ hashFiles('.github/workflows/pr-deployer.yml') }}
+          # OLD
+          key: pipcache-${{ runner.os }}
+
       - name: Debug pip cache dir
         run: |
           pip cache dir
@@ -27,6 +37,9 @@ jobs:
         uses: actions/cache@v2.1.6
         with:
           path: deployer/.venv
+          # CORRECT
+          # key: venv-${{ runner.os }}-${{ hashFiles('**/poetry.lock') }}-${{ hashFiles('.github/workflows/pr-deployer.yml') }}
+          # OLD
           key: venv-${{ runner.os }}-${{ hashFiles('**/poetry.lock') }}
 
       - name: Install Python poetry
@@ -40,11 +53,6 @@ jobs:
           cd deployer
           poetry install
         if: steps.cached-poetry-dependencies.outputs.cache-hit != 'true'
-
-      - name: Display Python & Poetry version
-        run: |
-          python --version
-          poetry --version
 
       - name: Lint Python code
         run: |
