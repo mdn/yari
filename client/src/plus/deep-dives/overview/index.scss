@@ -188,6 +188,8 @@
   }
 
   .unavailable {
+    min-height: 140px;
+
     &::before {
       background: transparent url("./assets/unavailable.svg") center center
         no-repeat;
@@ -202,6 +204,14 @@
         position: absolute;
         width: 164px;
       }
+    }
+
+    h4 {
+      margin: math.div(layout.$base-spacing, 2) 0;
+    }
+
+    .item-content {
+      padding: math.div(layout.$base-spacing, 4);
     }
   }
 }
