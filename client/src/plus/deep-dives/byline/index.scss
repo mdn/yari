@@ -1,21 +1,25 @@
 @use "sass:math";
 @use "~@mdn/minimalist/sass/vars/layout";
-@use "~@mdn/minimalist/sass/vars/typography";
 
 @use "../../../ui/theme/index" as theme;
 
 .byline {
+  font-family: theme.$inter-font-family;
+  font-size: 16px;
+
   @media #{layout.$mq-tablet-and-up} {
     display: flex;
     gap: math.div(layout.$base-spacing, 2);
   }
 
-  .author-name {
-    font-family: theme.$inter-font-family;
+  h3 {
     font-size: 16px;
+    line-height: 1;
+    margin-top: math.div(layout.$base-spacing, 4);
   }
 
   .author-description {
     color: theme.$mdn-neutral700;
+    margin-bottom: 0;
   }
 }

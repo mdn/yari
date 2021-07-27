@@ -8,15 +8,19 @@ export interface SerieData {
 
 export function SeriesCard({
   title,
+  titleLink,
   seriesList,
 }: {
   title: string;
+  titleLink: string;
   seriesList: SerieData[];
 }) {
   return (
     <section className="series-card" aria-labelledby="series-card-title">
       <p className="card-type">In this series</p>
-      <h3 id="series-card-title">{title}</h3>
+      <h3 id="series-card-title">
+        <a href={titleLink}>{title}</a>
+      </h3>
       <ul>
         {seriesList.map((item) => {
           return (

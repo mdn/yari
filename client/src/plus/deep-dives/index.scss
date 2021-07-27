@@ -64,7 +64,9 @@
   .article-sidebar {
     border: 1px solid rgba(32, 17, 57, 0.1);
     border-radius: theme.$default-border-radius;
+    font-size: 14px;
     font-style: italic;
+    line-height: 24px;
     padding: math.div(layout.$base-spacing, 2);
 
     @media #{layout.$mq-tablet-and-up} {

@@ -6,6 +6,7 @@
 
 ul.article-meta {
   border-top: theme.$standard-light-border;
+  margin-top: math.div(layout.$base-spacing, 2);
   padding-top: math.div(layout.$base-spacing, 2);
 
   li {
