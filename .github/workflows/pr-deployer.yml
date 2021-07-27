@@ -37,7 +37,6 @@ jobs:
 
       - name: Install Python poetry
         uses: snok/install-poetry@v1.1.6
-        if: steps.cached-poetry-dependencies.outputs.cache-hit != 'true'
         with:
           virtualenvs-create: true
           virtualenvs-in-project: true
@@ -56,12 +55,10 @@ jobs:
 
       - name: Basic run of deployer
         run: |
-          source deployer/.venv/bin/activate
           cd deployer
           poetry run deployer --help
 
       - name: Run deployer unit tests
         run: |
-          source deployer/.venv/bin/activate
           cd deployer
           poetry run pytest
