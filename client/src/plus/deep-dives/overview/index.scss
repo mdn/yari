@@ -188,6 +188,7 @@
   }
 
   .unavailable {
+    color: theme.$mdn-neutral600;
     min-height: 140px;
 
     &::before {
