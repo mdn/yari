@@ -62,6 +62,8 @@ jobs:
         run: |
           which poetry
           cat `which poetry`
+          echo "POETRY_HOME??"
+          echo $POETRY_HOME
 
       - name: Lint Python code
         run: |
