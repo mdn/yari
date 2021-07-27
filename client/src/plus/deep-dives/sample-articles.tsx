@@ -163,7 +163,7 @@ export function PlanningForBrowserSupport() {
       <p>
         Make sure that, before you begin to plan your support strategy, you are
         all talking about the same thing when you talk about{" "}
-        <strong>supporting a browser.</strong>
+        <strong>supporting a browser</strong>.
       </p>
       <div className="article-sidebar">
         <p>
@@ -243,7 +243,12 @@ export function PlanningForBrowserSupport() {
         that are in use.
       </p>
       <figure>
-        <img src="" width="" height="" alt="" />
+        <img
+          src="/assets/deepdives/planning-for-browser-support01.png"
+          width="782"
+          height="346"
+          alt=""
+        />
         <figcaption>
           Good Analytics dashboard showing browser usage statistics for a
           website
@@ -251,7 +256,7 @@ export function PlanningForBrowserSupport() {
       </figure>
       <p>
         If you don’t have your own analytics information then you could look at
-        general statistics for the locations your users are likely to be in.
+        general statistics for the locations your users are likely to be in.{" "}
         <a href="https://gs.statcounter.com/">Statcounter</a> is a good place to
         look at the browser versions currently in use, and can be filtered by
         location
@@ -262,8 +267,16 @@ export function PlanningForBrowserSupport() {
         an old browser.
       </p>
       <figure>
-        <img src="" width="" height="" alt="" />
-        <figcaption>TBD</figcaption>
+        <img
+          src="/assets/deepdives/planning-for-browser-support02.png"
+          width="782"
+          height="346"
+          alt=""
+        />
+        <figcaption>
+          Table showing a list of fully supported browsers and a list of browser
+          that will get a gracefully degraded experience
+        </figcaption>
       </figure>
       <h4>Where is it best to spend your time and money?</h4>
       <p>
@@ -398,7 +411,7 @@ export function YourBrowserSupportToolkit() {
       </header>
       <p className="article-lead">
         In this article discover the resources available, to help you develop a
-        site that will perform well across browsers and devices.
+        site that will perform well across browsers and devices
       </p>
       <Byline
         avatar="rachel-andrew.png"
