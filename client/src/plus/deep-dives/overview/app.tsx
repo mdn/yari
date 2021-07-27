@@ -75,7 +75,7 @@ export default function App() {
           </li>
           <li>
             <a
-              href={`/${locale}/plus/deep-dives/planning-for-browser-support`}
+              href={`/${locale}/plus/deep-dives/your-browser-support-toolkit`}
               className="overview-series-list-item your-browser-support-toolkit"
             >
               <div className="item-content">

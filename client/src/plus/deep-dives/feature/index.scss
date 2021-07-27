@@ -51,10 +51,6 @@
   h1 {
     font-size: theme.$marketing-feature-h1-font-size;
     margin: 0 0 layout.$base-spacing 0;
-
-    @media #{layout.$mq-small-desktop-and-up} {
-      margin-bottom: layout.$base-spacing * 2;
-    }
   }
 
   h2 {
@@ -83,7 +79,8 @@
     content: "\002B";
     font-style: normal;
     font-weight: bold;
-    margin-left: -(math.div(layout.$base-spacing, 2));
+    margin-left: 0;
+    padding-right: 18px;
     position: relative;
   }
 

@@ -148,11 +148,13 @@
       background-size: cover;
       content: "";
       display: inline-block;
-      height: 128px;
-      width: 164px;
+      height: 270px;
+      width: 100%;
 
       @media #{layout.$mq-small-desktop-and-up} {
+        height: 128px;
         position: absolute;
+        width: 164px;
       }
     }
   }
@@ -185,14 +187,16 @@
     &::before {
       background: transparent url("./assets/unavailable.svg") center center
         no-repeat;
-      background-size: 164px 129px;
+      background-size: cover;
       content: "";
       display: inline-block;
-      height: 128px;
-      width: 164px;
+      height: 200px;
+      width: 100%;
 
       @media #{layout.$mq-small-desktop-and-up} {
+        height: 128px;
         position: absolute;
+        width: 164px;
       }
     }
   }
