@@ -23,9 +23,9 @@ jobs:
         uses: actions/cache@v2.1.6
         with:
           path: $(pip cache dir)
-          # CORRECT
+          # CORRECTx
           # key: pipcache-${{ runner.os }}-${{ hashFiles('.github/workflows/pr-deployer.yml') }}
-          # OLD
+          # OLDx
           key: pipcache-${{ runner.os }}
 
       - name: Debug pip cache dir
