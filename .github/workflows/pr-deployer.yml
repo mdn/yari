@@ -18,11 +18,11 @@ jobs:
         with:
           python-version: "3.8"
 
-      - name: Cache pip
-        uses: actions/cache@v2.1.6
-        with:
-          path: ~/.cache/pip
-          key: ${{ runner.os }}-pip-${{ hashFiles('.github/workflows/pr-deployer.yml') }}
+      # - name: Cache pip
+      #   uses: actions/cache@v2.1.6
+      #   with:
+      #     path: ~/.cache/pip
+      #     key: ${{ runner.os }}-pip-${{ hashFiles('.github/workflows/pr-deployer.yml') }}
 
       # - name: Debug pip cache dir
       #   run: |
@@ -35,17 +35,23 @@ jobs:
           path: deployer/.venv
           key: venv-${{ runner.os }}-${{ hashFiles('**/poetry.lock') }}-${{ hashFiles('.github/workflows/pr-deployer.yml') }}
 
-      - name: Custom install Poetry
-        run: |
-          curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/install-poetry.py | python - -y --path deployer/.venv
-          poetry --version
+      - name: Load cached .local
+        id: cached-poetry-dependencies
+        uses: actions/cache@v2.1.6
+        with:
+          path: ~/.local
+          key: dotlocal-${{ runner.os }}-${{ hashFiles('.github/workflows/pr-deployer.yml') }}
 
-      # - name: Install Python poetry
-      #   uses: snok/install-poetry@v1.1.6
-      #   with:
-      #     virtualenvs-create: true
-      #     virtualenvs-in-project: true
-      #     # virtualenvs-path: deployer/.venv
+      # - name: Custom install Poetry
+      #   run: |
+      #     curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/install-poetry.py | python - -y --path deployer/.venv
+      #     poetry --version
+
+      - name: Install Python poetry
+        uses: snok/install-poetry@v1.1.6
+        with:
+          virtualenvs-create: true
+          virtualenvs-in-project: true
 
       - name: Install deployer
         run: |
