@@ -62,7 +62,7 @@
       text-align: center;
       width: 125px;
 
-      @media #{layout.$mq-large-desktop-and-up} {
+      @media #{layout.$mq-small-desktop-and-up} {
         margin: layout.$base-spacing 0;
       }
     }
