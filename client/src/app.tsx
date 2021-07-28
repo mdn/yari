@@ -256,16 +256,14 @@ export function App(appProps) {
                 </StandardLayout>
               }
             />
-            {ENABLE_PLUS && (
-              <Route
-                path="/plus"
-                element={
-                  <StandardLayout>
-                    <PlusV1 {...appProps} />
-                  </StandardLayout>
-                }
-              />
-            )}
+            <Route
+              path="/plus"
+              element={
+                <StandardLayout>
+                  <PlusV1 {...appProps} />
+                </StandardLayout>
+              }
+            />
             {ENABLE_PLUS && (
               <Route
                 path="/plus/deep-dives"
