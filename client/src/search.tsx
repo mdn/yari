@@ -208,10 +208,22 @@ function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
       if (inputValue === "/") {
         return [];
       } else {
+        console.time("fuzzy");
         const fuzzyResults = searchIndex.fuzzy.search(inputValue, { limit });
-        console.log({ fuzzyResults: fuzzyResults.map((r) => r.url) });
+        console.timeEnd("fuzzy");
+        console.log(
+          "fuzzyResults:",
+          fuzzyResults.length,
+          fuzzyResults.map((r) => r.url)
+        );
+        console.time("fuzzy2");
         const fuzzyResults2 = searchIndex.fuzzy2.search(inputValue, { limit });
-        console.log({ fuzzyResults2: fuzzyResults2.map((r) => r.item.url) });
+        console.timeEnd("fuzzy2");
+        console.log(
+          "fuzzyResults2:",
+          fuzzyResults2.length,
+          fuzzyResults2.map((r) => r.item.url)
+        );
         console.log({ FOUND: fuzzyResults2.length });
 
         return fuzzyResults.map((fuzzyResult) => ({
