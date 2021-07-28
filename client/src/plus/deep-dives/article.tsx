@@ -5,6 +5,7 @@ import { SeriesCard, SerieData } from "./series-card";
 
 import "./index.scss";
 import { DeepDiveNotFound } from "./not-found";
+import { ProductTeaser } from "../../ui/organisms/product-teaser";
 import { Survey } from "./survey";
 import {
   YourBrowserSupportToolkit,
@@ -93,6 +94,7 @@ export default function Article({ slug }: { slug: string }) {
           />
         </div>
       </div>
+      <ProductTeaser />
       <Survey slug={slug} />
       <div
         className={`deep-dive-article-footer ${

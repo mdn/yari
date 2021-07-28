@@ -338,14 +338,16 @@ export function Survey({ slug }: { slug: string }) {
                   />
                 </div>
               </div>
-              <button
-                type="submit"
-                className="button primary"
-                disabled={submitting}
-              >
-                Continue
-              </button>{" "}
-              {submitting && <small>Submitting</small>}
+              <div className="button-container">
+                <button
+                  type="submit"
+                  className="button primary"
+                  disabled={submitting}
+                >
+                  Continue
+                </button>{" "}
+                {submitting && <small>Submitting</small>}
+              </div>
             </fieldset>
           )}
 
@@ -456,17 +458,25 @@ export function Survey({ slug }: { slug: string }) {
                   />
                 </div>
               </div>
-              <button type="button" className="button primary">
-                Previous
-              </button>{" "}
-              <button
-                type="submit"
-                className="button primary"
-                disabled={submitting}
-              >
-                Submit
-              </button>{" "}
-              {submitting && <small>Submitting</small>}
+              <div className="button-container">
+                <button
+                  type="button"
+                  className="button primary"
+                  onClick={() => {
+                    setPage("start");
+                  }}
+                >
+                  Previous
+                </button>{" "}
+                <button
+                  type="submit"
+                  className="button primary"
+                  disabled={submitting}
+                >
+                  Submit
+                </button>{" "}
+                {submitting && <small>Submitting</small>}
+              </div>
             </fieldset>
           )}
         </form>
