@@ -26,7 +26,7 @@ export function Byline({
       <div className="author-byline">
         <h3 className="author-name">{author}</h3>
         <p className="author-description">
-          {authorDescription}
+          {authorDescription}{" "}
           {authorBioURL && <a href={authorBioURL}>{authorBioURLText}</a>}
         </p>
       </div>
