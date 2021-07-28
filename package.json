@@ -134,6 +134,7 @@
     "foreman": "3.0.1",
     "fuzzyjs": "4.0.4",
     "fuzzysearch": "1.0.3",
+    "fzf": "0.3.1",
     "history": "5.0.0",
     "html-validate": "4.14.0",
     "husky": "^6.0.0",

@@ -9485,6 +9485,11 @@ fuzzysearch@1.0.3:
   resolved "https://registry.yarnpkg.com/fuzzysearch/-/fuzzysearch-1.0.3.tgz#dffc80f6d6b04223f2226aa79dd194231096d008"
   integrity sha1-3/yA9tawQiPyImqnndGUIxCW0Ag=
 
+fzf@0.3.1:
+  version "0.3.1"
+  resolved "https://registry.yarnpkg.com/fzf/-/fzf-0.3.1.tgz#0ca05ca483684e550c2f84c7e6d0caa7db359bcc"
+  integrity sha512-uZqQpYgjs3TZmy2wkNE+5gaHi1ceCy37flKZN7kT7tTIOlB/06AHwFISRx6moUW/4w53XoEUEZY5812x0bnxbw==
+
 gauge@~2.7.3:
   version "2.7.4"
   resolved "https://registry.yarnpkg.com/gauge/-/gauge-2.7.4.tgz#2c03405c7538c39d7eb37b317022e325fb018bf7"

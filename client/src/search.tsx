@@ -5,6 +5,7 @@ import FlexSearch from "flexsearch";
 import useSWR from "swr";
 
 import { Doc, FuzzySearch, Substring } from "./fuzzy-search";
+import { FuzzySearch as FuzzySearch2 } from "./fuzzy-search2";
 import { preload, preloadSupported } from "./document/preloading";
 
 import { useLocale } from "./hooks";
@@ -21,6 +22,7 @@ type Item = {
 type SearchIndex = {
   flex: any;
   fuzzy: FuzzySearch;
+  fuzzy2: FuzzySearch2;
   items: null | Item[];
 };
 
@@ -64,8 +66,9 @@ function useSearchIndex(): readonly [
       flex.add(i, title);
     });
     const fuzzy = new FuzzySearch(data as Doc[]);
+    const fuzzy2 = new FuzzySearch2(data as Doc[]);
 
-    setSearchIndex({ flex, fuzzy, items: data! });
+    setSearchIndex({ flex, fuzzy, fuzzy2, items: data! });
   }, [searchIndex, shouldInitialize, data]);
 
   return useMemo(
@@ -206,6 +209,11 @@ function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
         return [];
       } else {
         const fuzzyResults = searchIndex.fuzzy.search(inputValue, { limit });
+        console.log({ fuzzyResults: fuzzyResults.map((r) => r.url) });
+        const fuzzyResults2 = searchIndex.fuzzy2.search(inputValue, { limit });
+        console.log({ fuzzyResults2: fuzzyResults2.map((r) => r.item.url) });
+        console.log({ FOUND: fuzzyResults2.length });
+
         return fuzzyResults.map((fuzzyResult) => ({
           url: fuzzyResult.url,
           title: fuzzyResult.title,
