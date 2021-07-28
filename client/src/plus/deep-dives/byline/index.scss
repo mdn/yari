@@ -4,18 +4,19 @@
 @use "../../../ui/theme/index" as theme;
 
 .byline {
+  display: flex;
   font-family: theme.$inter-font-family;
   font-size: 16px;
-
-  @media #{layout.$mq-tablet-and-up} {
-    display: flex;
-    gap: 20px;
-  }
+  gap: 20px;
 
   h3 {
-    font-size: 16px;
+    font-size: 14px;
     line-height: 1;
     margin-top: math.div(layout.$base-spacing, 4);
+
+    @media #{layout.$mq-tablet-and-up} {
+      font-size: 16px;
+    }
   }
 
   .author-links {
@@ -33,6 +34,12 @@
     li {
       display: inline-block;
       margin-right: math.div(layout.$base-spacing, 4);
+    }
+  }
+
+  .author-avatar {
+    img {
+      max-width: 50px;
     }
   }
 }
