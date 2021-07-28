@@ -1,11 +1,11 @@
 import { useEffect } from "react";
 import { useParams } from "react-router-dom";
 
-import { Feature } from "./feature";
 import { SeriesCard, SerieData } from "./series-card";
 
 import "./index.scss";
 import { DeepDiveNotFound } from "./not-found";
+import { ProductTeaser } from "../../ui/organisms/product-teaser";
 import { Survey } from "./survey";
 import {
   YourBrowserSupportToolkit,
@@ -88,13 +88,13 @@ export default function Article({ slug }: { slug: string }) {
 
         <div className="deep-dive-article-sidebar">
           <SeriesCard
-            title="Modern CSS in the real world"
+            title="Modern CSS in the Real World"
             titleLink={`/${locale}/plus/deep-dives`}
             seriesList={getSeriesList()}
           />
         </div>
       </div>
-      <Feature />
+      <ProductTeaser />
       <Survey slug={slug} />
       <div
         className={`deep-dive-article-footer ${
@@ -115,6 +115,11 @@ export default function Article({ slug }: { slug: string }) {
             </a>
           )}
         </p>
+      </div>
+      <div className="take-survey-mobile">
+        <a href="#survey-form" className="take-survey-link">
+          Take our survey
+        </a>
       </div>
     </>
   );

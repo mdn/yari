@@ -34,6 +34,11 @@ export function SeriesCard({
           );
         })}
       </ul>
+      <p className="take-survey">
+        <a href="#survey-form" className="take-survey-link">
+          Take our survey
+        </a>
+      </p>
     </section>
   );
 }
