@@ -21,13 +21,10 @@
     background-size: cover;
     content: "";
     display: block;
+    height: 100%;
     min-height: 365px;
     position: absolute;
     width: 100%;
-
-    @media #{layout.$mq-small-desktop-and-up} {
-      height: 100%;
-    }
   }
 
   .header-wrapper {
