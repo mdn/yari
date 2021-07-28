@@ -224,7 +224,6 @@ function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
           fuzzyResults2.length,
           fuzzyResults2.map((r) => r.item.url)
         );
-        console.log({ FOUND: fuzzyResults2.length });
 
         return fuzzyResults.map((fuzzyResult) => ({
           url: fuzzyResult.url,
