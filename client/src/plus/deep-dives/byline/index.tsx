@@ -4,14 +4,15 @@ export function Byline({
   avatar,
   author,
   authorDescription,
-  authorBioURLS,
-  authorBioURLSText,
+  authorBioURLs,
 }: {
   avatar: string;
   author: string;
   authorDescription: string;
-  authorBioURLS?: Array<string>;
-  authorBioURLSText?: Array<string>;
+  authorBioURLs?: Array<{
+    url: string;
+    text: string;
+  }>;
 }) {
   return (
     <div className="byline">
@@ -26,13 +27,13 @@ export function Byline({
       <div className="author-byline">
         <h3 className="author-name">{`${author}, ${authorDescription}`}</h3>
 
-        {authorBioURLS && (
+        {authorBioURLs && authorBioURLs.length > 0 && (
           <ul className="author-links">
-            {authorBioURLS.map((url, index) => {
+            {authorBioURLs.map(({ url, text }) => {
               return (
-                <li>
+                <li key={url}>
                   <a href={url} rel="external">
-                    {authorBioURLSText && authorBioURLSText[index]}
+                    {text}
                   </a>
                 </li>
               );

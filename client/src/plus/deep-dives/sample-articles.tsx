@@ -25,11 +25,10 @@ export function PlanningForBrowserSupport() {
         avatar="rachel-andrew.png"
         author="Rachel Andrew"
         authorDescription="CSS WG Invited Expert"
-        authorBioURLS={[
-          "https://twitter.com/rachelandrew",
-          "https://rachelandrew.co.uk",
+        authorBioURLs={[
+          { url: "https://twitter.com/rachelandrew", text: "@rachelandrew" },
+          { url: "https://rachelandrew.co.uk", text: "rachelandrew.co.uk" },
         ]}
-        authorBioURLSText={["@rachelandrew", "rachelandrew.co.uk"]}
       />
       <ArticleMeta publishDate="March 29th, 2021" readTime="12 minute read" />
       <p>
@@ -434,11 +433,10 @@ export function YourBrowserSupportToolkit() {
         avatar="rachel-andrew.png"
         author="Rachel Andrew"
         authorDescription="CSS WG Invited Expert"
-        authorBioURLS={[
-          "https://twitter.com/rachelandrew",
-          "https://rachelandrew.co.uk",
+        authorBioURLs={[
+          { url: "https://twitter.com/rachelandrew", text: "@rachelandrew" },
+          { url: "https://rachelandrew.co.uk", text: "rachelandrew.co.uk" },
         ]}
-        authorBioURLSText={["@rachelandrew", "rachelandrew.co.uk"]}
       />
       <ArticleMeta publishDate="March 29th, 2021" readTime="18 minute read" />
       <p>
