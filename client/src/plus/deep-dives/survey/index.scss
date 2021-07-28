@@ -77,8 +77,12 @@
   }
 
   .survey-success {
+    align-items: center;
+    display: flex;
     font-size: typography.$xl-font-size;
+    justify-content: center;
     line-height: 150%;
+    min-height: 250px;
     text-align: center;
   }
 
