@@ -3,7 +3,15 @@ import React from "react";
 import { Loading } from "../ui/atoms/loading";
 import { PageContentContainer } from "../ui/atoms/page-content";
 
-const App = React.lazy(() => import("./app"));
+const App = React.lazy(() =>
+  import("./app").then((module) => {
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        resolve(module as any);
+      }, 30000);
+    });
+  })
+);
 
 export function Plus() {
   const pageTitle = "MDN Plus";
