@@ -4,8 +4,7 @@ import { useCombobox } from "downshift";
 import FlexSearch from "flexsearch";
 import useSWR from "swr";
 
-import { Doc, FuzzySearch, Substring } from "./fuzzy-search";
-import { FuzzySearch as FuzzySearch2 } from "./fuzzy-search2";
+import { Doc, FuzzySearch } from "./fuzzy-search";
 import { preload, preloadSupported } from "./document/preloading";
 
 import { useLocale } from "./hooks";
@@ -22,14 +21,13 @@ type Item = {
 type SearchIndex = {
   flex: any;
   fuzzy: FuzzySearch;
-  fuzzy2: FuzzySearch2;
   items: null | Item[];
 };
 
 type ResultItem = {
   title: string;
   url: string;
-  substrings: Substring[];
+  positions: number[];
 };
 
 function useSearchIndex(): readonly [
@@ -66,9 +64,8 @@ function useSearchIndex(): readonly [
       flex.add(i, title);
     });
     const fuzzy = new FuzzySearch(data as Doc[]);
-    const fuzzy2 = new FuzzySearch2(data as Doc[]);
 
-    setSearchIndex({ flex, fuzzy, fuzzy2, items: data! });
+    setSearchIndex({ flex, fuzzy, items: data! });
   }, [searchIndex, shouldInitialize, data]);
 
   return useMemo(
@@ -109,16 +106,22 @@ function HighlightMatch({ title, q }) {
   );
 }
 
-function BreadcrumbURI({ uri, substrings }) {
-  if (substrings) {
+function BreadcrumbURI({
+  uri,
+  positions,
+}: {
+  uri: string;
+  positions: number[];
+}) {
+  if (positions) {
+    const chars = uri.split("");
     return (
       <small>
-        {substrings.map((part, i) => {
-          const key = `${part.str}:${i}`;
-          if (part.match) {
-            return <mark key={key}>{part.str}</mark>;
+        {chars.map((char, i) => {
+          if (positions.includes(i)) {
+            return <mark key={i}>{char}</mark>;
           } else {
-            return <span key={key}>{part.str}</span>;
+            return <span key={i}>{char}</span>;
           }
         })}
       </small>
@@ -208,27 +211,13 @@ function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
       if (inputValue === "/") {
         return [];
       } else {
-        console.time("fuzzy");
-        const fuzzyResults = searchIndex.fuzzy.search(inputValue, { limit });
-        console.timeEnd("fuzzy");
-        console.log(
-          "fuzzyResults:",
-          fuzzyResults.length,
-          fuzzyResults.map((r) => r.url)
-        );
-        console.time("fuzzy2");
-        const fuzzyResults2 = searchIndex.fuzzy2.search(inputValue, { limit });
-        console.timeEnd("fuzzy2");
-        console.log(
-          "fuzzyResults2:",
-          fuzzyResults2.length,
-          fuzzyResults2.map((r) => r.item.url)
-        );
-
+        const fuzzyResults = searchIndex.fuzzy.search(inputValue.slice(1), {
+          limit,
+        });
         return fuzzyResults.map((fuzzyResult) => ({
-          url: fuzzyResult.url,
-          title: fuzzyResult.title,
-          substrings: fuzzyResult.substrings,
+          url: fuzzyResult.item.url,
+          title: fuzzyResult.item.title,
+          positions: fuzzyResult.positions,
         }));
       }
     } else {
@@ -250,7 +239,7 @@ function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
   }, [formAction, inputValue]);
 
   const nothingFoundItem = useMemo(
-    () => ({ url: searchPath, title: "", substrings: [] }),
+    () => ({ url: searchPath, title: "", positions: [] }),
     [searchPath]
   );
 
@@ -358,7 +347,7 @@ function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
             >
               <HighlightMatch title={item.title} q={inputValue} />
               <br />
-              <BreadcrumbURI uri={item.url} substrings={item.substrings} />
+              <BreadcrumbURI uri={item.url} positions={item.positions} />
             </div>
           ))
         )}
