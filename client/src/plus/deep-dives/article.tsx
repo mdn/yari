@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 
 import { SeriesCard, SerieData } from "./series-card";
@@ -24,6 +24,8 @@ const SERIES = [
 ];
 
 export default function Article({ slug }: { slug: string }) {
+  const [hasFinishedSurvey, setHasFinishedSurvey] = useState(false);
+
   // Only when served via static Express does it force a trailing
   // slash to the end of the URL. So we have to, for testing reasons,
   // remove any trailing slashes.
@@ -91,11 +93,17 @@ export default function Article({ slug }: { slug: string }) {
             title="Modern CSS in the Real World"
             titleLink={`/${locale}/plus/deep-dives`}
             seriesList={getSeriesList()}
+            linkToSurvey={!hasFinishedSurvey}
           />
         </div>
       </div>
       <ProductTeaser />
-      <Survey slug={slug} />
+      <Survey
+        slug={slug}
+        hasFinished={() => {
+          setHasFinishedSurvey(true);
+        }}
+      />
       <div
         className={`deep-dive-article-footer ${
           previousArticle ? "previous" : ""
@@ -116,11 +124,13 @@ export default function Article({ slug }: { slug: string }) {
           )}
         </p>
       </div>
-      <div className="take-survey-mobile">
-        <a href="#survey-form" className="take-survey-link">
-          Take our survey
-        </a>
-      </div>
+      {!hasFinishedSurvey && (
+        <div className="take-survey-mobile">
+          <a href="#survey-form" className="take-survey-link">
+            Take our survey
+          </a>
+        </div>
+      )}
     </>
   );
 }

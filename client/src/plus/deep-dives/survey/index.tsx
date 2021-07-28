@@ -41,7 +41,13 @@ function getSessionStorageData(key: string) {
   }
 }
 
-export function Survey({ slug }: { slug: string }) {
+export function Survey({
+  slug,
+  hasFinished,
+}: {
+  slug: string;
+  hasFinished: () => void;
+}) {
   const { locale } = useParams();
   const previousPage = getSessionStorageData(SESSION_KEY) || "";
   const [page, setPage] = React.useState<"start" | "second" | "success">(
@@ -53,7 +59,10 @@ export function Survey({ slug }: { slug: string }) {
     if (page !== "start") {
       setSessionStorageData(SESSION_KEY, page);
     }
-  }, [page]);
+    if (page === "success") {
+      hasFinished();
+    }
+  }, [page, hasFinished]);
 
   const [surveySubmissionError, setSurveySubmissionError] =
     React.useState<Error | null>(null);

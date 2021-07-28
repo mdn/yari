@@ -10,10 +10,12 @@ export function SeriesCard({
   title,
   titleLink,
   seriesList,
+  linkToSurvey,
 }: {
   title: string;
   titleLink: string;
   seriesList: SerieData[];
+  linkToSurvey: boolean;
 }) {
   return (
     <section className="series-card" aria-labelledby="series-card-title">
@@ -34,11 +36,13 @@ export function SeriesCard({
           );
         })}
       </ul>
-      <p className="take-survey">
-        <a href="#survey-form" className="take-survey-link">
-          Take our survey
-        </a>
-      </p>
+      {linkToSurvey && (
+        <p className="take-survey">
+          <a href="#survey-form" className="take-survey-link">
+            Take our survey
+          </a>
+        </p>
+      )}
     </section>
   );
 }
