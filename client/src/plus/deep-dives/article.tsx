@@ -1,7 +1,6 @@
 import { useEffect } from "react";
 import { useParams } from "react-router-dom";
 
-import { Feature } from "./feature";
 import { SeriesCard, SerieData } from "./series-card";
 
 import "./index.scss";
@@ -94,7 +93,6 @@ export default function Article({ slug }: { slug: string }) {
           />
         </div>
       </div>
-      <Feature />
       <Survey slug={slug} />
       <div
         className={`deep-dive-article-footer ${
@@ -115,6 +113,11 @@ export default function Article({ slug }: { slug: string }) {
             </a>
           )}
         </p>
+      </div>
+      <div className="take-survey-mobile">
+        <a href="#survey-form" className="take-survey-link">
+          Take our survey
+        </a>
       </div>
     </>
   );

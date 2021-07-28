@@ -8,7 +8,7 @@ export function Feature() {
           <h1>
             Boost your learning <span>with MDN Deep Dives</span>
           </h1>
-          <h2 className="gradient-clip-text">What's included</h2>
+          <h2 className="gradient-clip-text">Coming up next</h2>
         </div>
         <p>
           Receive access to new deep dives every month, written by Mozilla and

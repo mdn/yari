@@ -15,9 +15,10 @@
   @include theme.readable-line-length();
   font-family: theme.$inter-font-family;
   font-size: 18px;
-  line-height: 32px;
+  line-height: 200%;
   margin-bottom: layout.$base-spacing * 3;
   padding: (layout.$base-spacing * 2) layout.$base-spacing;
+  text-align: justify;
 
   code {
     background-color: rgba(224, 224, 230, 0.5);
@@ -28,6 +29,7 @@
       font-size: 48px;
       letter-spacing: -0.5px;
       line-height: 58px;
+      text-align: left;
     }
 
     h2 {
@@ -58,7 +60,8 @@
 
   .article-lead {
     color: theme.$mdn-neutral700;
-    font-size: typography.$small-medium-font-size;
+    font-size: 24px;
+    line-height: 150%;
   }
 
   .article-sidebar {
@@ -89,6 +92,10 @@
     display: block;
     padding: layout.$base-spacing;
 
+    @media #{layout.$mq-small-desktop-and-up} {
+      width: 50%;
+    }
+
     &:link,
     &:visited {
       color: theme.$white;
@@ -101,8 +108,17 @@
     }
   }
 
+  .girdle {
+    margin-bottom: 0;
+  }
+
   &.previous {
     text-align: right;
+
+    .girdle {
+      display: flex;
+      justify-content: flex-end;
+    }
   }
 
   .next-article,
@@ -165,10 +181,39 @@
 
     @media #{layout.$mq-small-desktop-and-up} {
       display: block;
+      padding-right: layout.$base-spacing;
     }
   }
 }
 
-.main-article-page-content-container.girdle {
-  max-width: 1126px;
+.take-survey-mobile {
+  bottom: 0;
+  position: fixed;
+  width: 100%;
+  z-index: 99999;
+
+  @media #{layout.$mq-large-desktop-and-up} {
+    display: none;
+  }
+
+  a.take-survey-link {
+    &:link,
+    &:visited {
+      background: linear-gradient(to right, #8565ff, #0dcbff);
+      color: theme.$white;
+      display: block;
+      font-size: 14px;
+      font-weight: bold;
+      margin-top: layout.$base-spacing;
+      min-height: 40px;
+      padding: math.div(layout.$base-spacing, 2);
+      text-align: center;
+    }
+
+    &:hover,
+    &:focus {
+      background: theme.$mdn-violet700;
+      text-decoration: none;
+    }
+  }
 }

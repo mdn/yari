@@ -15,19 +15,23 @@
     box-shadow: theme.$card-box-shadow;
     display: block;
     font-family: theme.$inter-font-family;
+    margin-bottom: layout.$base-spacing * 2;
     max-width: 320px;
     padding: layout.$base-spacing;
+    position: sticky;
+    top: 24px;
 
     .card-type {
       color: theme.$mdn-violet600;
       font-size: typography.$small-font-size;
       font-weight: bold;
+      letter-spacing: 1.5px;
       text-transform: uppercase;
     }
 
     h3 {
       font-family: theme.$inter-font-family;
-      font-weight: 500;
+      font-weight: 600;
       margin-bottom: layout.$base-spacing;
     }
 
@@ -52,7 +56,7 @@
           content: "";
           display: inline-block;
           height: 12px;
-          margin-right: math.div(layout.$base-spacing, 4);
+          margin-right: 20px;
           width: 12px;
         }
 
@@ -66,12 +70,43 @@
 
         &.unavailable {
           color: theme.$mdn-neutral500;
+          margin-bottom: 0;
 
           &::before {
             background-image: url("./unavailable.svg");
           }
         }
       }
+    }
+  }
+}
+
+.take-survey {
+  display: none;
+
+  @media #{layout.$mq-large-desktop-and-up} {
+    display: block;
+  }
+
+  a.take-survey-link {
+    &:link,
+    &:visited {
+      background: linear-gradient(to right, #8565ff, #0dcbff);
+      border-radius: 4px;
+      color: theme.$white;
+      display: block;
+      font-size: 14px;
+      font-weight: bold;
+      margin-top: layout.$base-spacing;
+      min-height: 40px;
+      padding: math.div(layout.$base-spacing, 2);
+      text-align: center;
+    }
+
+    &:hover,
+    &:focus {
+      background: theme.$mdn-violet700;
+      text-decoration: none;
     }
   }
 }

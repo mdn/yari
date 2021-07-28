@@ -16,9 +16,12 @@ export function PlanningForBrowserSupport() {
       <Byline
         avatar="rachel-andrew.png"
         author="Rachel Andrew"
-        authorDescription="CSS WG Invited Expert,"
-        authorBioURL="https://twitter.com/rachelandrew"
-        authorBioURLText="@rachelandrew"
+        authorDescription="CSS WG Invited Expert"
+        authorBioURLS={[
+          "https://twitter.com/rachelandrew",
+          "https://rachelandrew.co.uk",
+        ]}
+        authorBioURLSText={["@rachelandrew", "rachelandrew.co.uk"]}
       />
       <ArticleMeta publishDate="March 29th, 2021" readTime="12 minute read" />
       <p>
@@ -416,9 +419,12 @@ export function YourBrowserSupportToolkit() {
       <Byline
         avatar="rachel-andrew.png"
         author="Rachel Andrew"
-        authorDescription="CSS WG Invited Expert,"
-        authorBioURL="https://twitter.com/rachelandrew"
-        authorBioURLText="@rachelandrew"
+        authorDescription="CSS WG Invited Expert"
+        authorBioURLS={[
+          "https://twitter.com/rachelandrew",
+          "https://rachelandrew.co.uk",
+        ]}
+        authorBioURLSText={["@rachelandrew", "rachelandrew.co.uk"]}
       />
       <ArticleMeta publishDate="March 29th, 2021" readTime="18 minute read" />
       <p>

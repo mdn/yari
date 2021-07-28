@@ -1,4 +1,5 @@
 import React from "react";
+import { useParams } from "react-router-dom";
 import useSWR from "swr";
 
 import "./index.scss";
@@ -41,6 +42,7 @@ function getSessionStorageData(key: string) {
 }
 
 export function Survey({ slug }: { slug: string }) {
+  const { locale } = useParams();
   const previousPage = getSessionStorageData(SESSION_KEY) || "";
   const [page, setPage] = React.useState<"start" | "second" | "success">(
     previousPage === "second" || previousPage === "success"
@@ -126,9 +128,9 @@ export function Survey({ slug }: { slug: string }) {
   return (
     <div className="survey-wrapper">
       {pingError && (
-        <div>
+        <div className="girdle">
           <p>
-            <b>Oh no!</b> Unable to connect to the server for preparing your
+            <b>Oh no!</b> Unable to connect to the server to prepare your
             survey.
           </p>
           <p>Refresh the page or try again later.</p>
@@ -136,7 +138,7 @@ export function Survey({ slug }: { slug: string }) {
       )}
 
       {surveySubmissionError && (
-        <div>
+        <div className="girdle">
           <p>
             <b>Oh no!</b> Your survey submission unfortunately failed.
           </p>
@@ -150,6 +152,7 @@ export function Survey({ slug }: { slug: string }) {
 
       {page !== "success" && !pingError && (
         <form
+          id="survey-form"
           name="survey-form"
           action=""
           method="post"
@@ -211,14 +214,23 @@ export function Survey({ slug }: { slug: string }) {
               </div>
               <h3>How would you rate the articles?</h3>
               <div className="survey-question">
-                <h4>Planning for browser support</h4>
+                <h4>
+                  Article 1:{" "}
+                  <a
+                    href={`/${locale}/plus/deep-dives/planning-for-browser-support`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    Planning for browser support
+                  </a>
+                </h4>
                 <div className="form-radio-input-group">
                   {[
-                    ["not-read", "Didn’t read"],
-                    ["bad", "Bad"],
-                    ["neutral", "Neutral"],
-                    ["good", "Good"],
-                    ["very-good", "Very good"],
+                    ["pfbs-not-read", "Didn’t read"],
+                    ["pfbs-bad", "Bad"],
+                    ["pfbs-neutral", "Neutral"],
+                    ["pfbs-good", "Good"],
+                    ["pfbs-very-good", "Very good"],
                   ].map(([id, label]) => {
                     return (
                       <label key={id} htmlFor={`id_${id}`}>
@@ -237,6 +249,7 @@ export function Survey({ slug }: { slug: string }) {
                               );
                             }
                           }}
+                          required
                         />
                         {label}
                       </label>
@@ -263,7 +276,16 @@ export function Survey({ slug }: { slug: string }) {
                 </div>
               </div>
               <div className="survey-question">
-                <h4>Your browser support toolkit</h4>
+                <h4>
+                  Article 2:{" "}
+                  <a
+                    href={`/${locale}/plus/deep-dives/your-browser-support-toolkit`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    Your browser support toolkit
+                  </a>
+                </h4>
                 <div className="form-radio-input-group">
                   {[
                     ["not-read", "Didn’t read"],
@@ -289,6 +311,7 @@ export function Survey({ slug }: { slug: string }) {
                               );
                             }
                           }}
+                          required
                         />
                         {label}
                       </label>
@@ -433,6 +456,9 @@ export function Survey({ slug }: { slug: string }) {
                   />
                 </div>
               </div>
+              <button type="button" className="button primary">
+                Previous
+              </button>{" "}
               <button
                 type="submit"
                 className="button primary"

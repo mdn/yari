@@ -14,9 +14,20 @@ export default function App() {
               <h1>Modern CSS in the Real World</h1>
               <h2>Featured Deep Dive</h2>
             </div>
-            <p>
-              Read a sneek peak of Rachel Andrew’s forthcoming deep dive series
-            </p>
+            <p className="author">Rachel Andrew, CSS WG Invited Expert</p>
+            <ul className="author-links">
+              <li>
+                <a href="https://twitter.com/rachelandrew" rel="external">
+                  @rachelandrew
+                </a>
+                ,
+              </li>
+              <li>
+                <a href="https://rachelandrew.co.uk" rel="external">
+                  rachelandrew.co.uk
+                </a>
+              </li>
+            </ul>
           </div>
         </div>
       </header>
@@ -90,7 +101,7 @@ export default function App() {
           </li>
           <li className="unavailable">
             <div className="item-content">
-              <h4>Practical browser support</h4>
+              <h4>Practical browser support &mdash; Comming soon</h4>
               <p>
                 Tips for dealing with very old browsers, in particular IE11, an
                 explanation of how to diagnose bugs, and a walkthrough of
