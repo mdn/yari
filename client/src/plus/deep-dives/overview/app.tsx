@@ -48,7 +48,7 @@ export default function App() {
           older browsers behind.
         </p>
         <p>
-          "Modern CSS in the real world" begins by applying this formula to CSS.
+          "Modern CSS in the Real World" begins by applying this formula to CSS.
           We will be covering the tools at your disposal to cope with browser
           compatibility, from those which help you identify bugs and find out
           what is supported where, to those which help create fallbacks, or
@@ -101,7 +101,7 @@ export default function App() {
           </li>
           <li className="unavailable">
             <div className="item-content">
-              <h4>Practical browser support &mdash; Comming soon</h4>
+              <h4>Practical browser support &mdash; Coming soon</h4>
               <p>
                 Tips for dealing with very old browsers, in particular IE11, an
                 explanation of how to diagnose bugs, and a walkthrough of

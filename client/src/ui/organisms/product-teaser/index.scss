@@ -39,7 +39,7 @@
     max-width: 542px;
     text-align: center;
 
-    @media #{layout.$mq-large-desktop-and-up} {
+    @media #{layout.$mq-small-desktop-and-up} {
       text-align: left;
     }
   }

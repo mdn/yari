@@ -1,12 +1,20 @@
+import { useParams } from "react-router-dom";
+
 import { ArticleMeta } from "./article-meta";
 import { Byline } from "./byline";
 
 export function PlanningForBrowserSupport() {
+  const { locale } = useParams();
   return (
     <article className="deep-dive-article-container">
       <header className="main-heading-group heading-group">
         <h1>Planning for browser support</h1>
-        <h2>Modern CSS in the real world : Part one</h2>
+        <h2>
+          <a href={`/${locale}/plus/deep-dives`}>
+            Modern CSS in the Real World
+          </a>{" "}
+          : Part one
+        </h2>
       </header>
       <p className="article-lead">
         Learn about the types of CSS issues you’ll be facing when working with
@@ -406,11 +414,17 @@ export function PlanningForBrowserSupport() {
 }
 
 export function YourBrowserSupportToolkit() {
+  const { locale } = useParams();
   return (
     <article className="deep-dive-article-container">
       <header className="main-heading-group heading-group">
         <h1>Your browser support toolkit</h1>
-        <h2>Modern CSS in the real world : Part two</h2>
+        <h2>
+          <a href={`/${locale}/plus/deep-dives`}>
+            Modern CSS in the Real World
+          </a>{" "}
+          : Part two
+        </h2>
       </header>
       <p className="article-lead">
         In this article discover the resources available, to help you develop a

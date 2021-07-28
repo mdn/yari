@@ -51,7 +51,7 @@ export default function App() {
               "Your browser support toolkit",
             </span>{" "}
             the second article from the forthcoming deep dive{" "}
-            <i>Modern CSS in the real world</i> by Rachel Andrew.
+            <i>Modern CSS in the Real World</i> by Rachel Andrew.
           </p>
 
           <div className="main-article-content-container">
@@ -59,7 +59,7 @@ export default function App() {
               <Card featured={true}>
                 <p className="card-type-heading">Featured Deep Dive</p>
                 <h2 id="card-title">
-                  Modern CSS in the real world: Your browser support toolkit
+                  Modern CSS in the Real World: Your browser support toolkit
                 </h2>
                 <p className="author">By Rachel Andrew</p>
 

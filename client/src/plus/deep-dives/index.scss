@@ -49,6 +49,13 @@
       margin-bottom: layout.$base-spacing;
       text-transform: uppercase;
     }
+
+    a {
+      &:link,
+      &:visited {
+        color: theme.$mdn-neutral700;
+      }
+    }
   }
 
   h3,

@@ -15,7 +15,7 @@ export function Feature() {
           industry insiders. Upcoming titles include:
         </p>
         <ul>
-          <li>Modern CSS in the real world</li>
+          <li>Modern CSS in the Real World</li>
           <li>A robust CSS pattern library</li>
           <li>Modern responsive web design</li>
           <li>Security considerations in web development</li>

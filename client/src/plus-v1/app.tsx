@@ -70,7 +70,7 @@ export default function App() {
                   Mozilla and industry insiders. Upcoming titles include:
                 </p>
                 <ul>
-                  <li>Modern CSS in the real world</li>
+                  <li>Modern CSS in the Real World</li>
                   <li>A robust CSS pattern library</li>
                   <li>Modern responsive web design</li>
                   <li>Security considerations in web development</li>
@@ -94,13 +94,13 @@ export default function App() {
                 "Your browser support toolkit",
               </span>{" "}
               the second article from the forthcoming deep dive{" "}
-              <i>Modern CSS in the real world</i> by Rachel Andrew.
+              <i>Modern CSS in the Real World</i> by Rachel Andrew.
             </h3>
             <div className="section-feature-1-2-col">
               <div className="deep-dive-card">
                 <h4>Featured Deep Dive</h4>
                 <h2>
-                  Modern CSS in the real world: Your browser support toolkit
+                  Modern CSS in the Real World: Your browser support toolkit
                 </h2>
                 By Rachel Andrew
                 <hr />
