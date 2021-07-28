@@ -8,7 +8,7 @@
 .series-card {
   display: none;
 
-  @media #{layout.$mq-large-desktop-and-up} {
+  @media #{layout.$mq-small-desktop-and-up} {
     background-color: theme.$white;
     border-radius: theme.$default-border-radius;
     border-top: 18px solid theme.$mdn-violet600;
@@ -84,7 +84,7 @@
 .take-survey {
   display: none;
 
-  @media #{layout.$mq-large-desktop-and-up} {
+  @media #{layout.$mq-small-desktop-and-up} {
     display: block;
     margin-bottom: 0;
   }

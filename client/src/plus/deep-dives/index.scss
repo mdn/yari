@@ -203,7 +203,7 @@
   width: 100%;
   z-index: 99999;
 
-  @media #{layout.$mq-large-desktop-and-up} {
+  @media #{layout.$mq-small-desktop-and-up} {
     display: none;
   }
 
