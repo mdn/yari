@@ -32,6 +32,17 @@ function populateSearchIndex(searchIndex, localeLC) {
   }
 }
 
+// The reason it's somewhat short is if you're using Yari for content-writing,
+// and not doing local dev of Yari itself, then you might have changed
+// something in the content (e.g. checked out a different branch) which
+// wouldn't restart the Node Express server.
+// But having a module-level in-memory cache makes the autocomplete search,
+// massively much faster which is helpful when working on the autocomplete
+// search functionality itself, or you're just using it for your
+// localhost:5000 preview server and you search often in new/differen tabs.
+const SEARCH_INDEX_CACHE_TIMEOUT = 5 * 60 * 1000;
+const searchIndexItemsCache = new Map();
+
 async function searchIndexRoute(req, res) {
   // Remember, this is always in lowercase because of a middleware
   // that lowercases all incoming requests' pathname.
@@ -43,6 +54,19 @@ async function searchIndexRoute(req, res) {
   if (!VALID_LOCALES.has(locale)) {
     res.status(500).send(`unrecognized locale ${locale}`);
     return;
+  }
+
+  // Exit early using the module-level cache possibly.
+  const cached = searchIndexItemsCache.get(locale);
+  if (cached) {
+    const label = `Using temporarily cached search-index: ${locale}`;
+    console.time(label);
+    const age = new Date().getTime() - cached[0].getTime();
+    if (age < SEARCH_INDEX_CACHE_TIMEOUT && cached[1].length) {
+      res.json(cached[1]);
+      console.timeEnd(label);
+      return;
+    }
   }
 
   // The advantage of creating the search index over and over on every
@@ -63,7 +87,9 @@ async function searchIndexRoute(req, res) {
   populateSearchIndex(searchIndex, locale);
   searchIndex.sort();
   console.timeEnd(label);
-  res.json(searchIndex.getItems()[locale]);
+  const items = searchIndex.getItems()[locale];
+  res.json(items);
+  searchIndexItemsCache.set(locale, [new Date(), items]);
 }
 
 module.exports = {
