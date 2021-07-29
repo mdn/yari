@@ -1180,6 +1180,13 @@ const MISC_REDIRECT_PATTERNS = [
     prependLocale: false,
     permanent: false,
   }),
+  redirect(
+    /^communities\/mozilla-tech-speakers\/?$/i,
+    "https://community.mozilla.org/en/groups/tech-speakers/",
+    {
+      permanent: false,
+    }
+  ),
   localeRedirect(/^account\/?$/i, "/settings", {
     permanent: false,
   }),
