@@ -41,7 +41,7 @@ module.exports = {
     if (type) {
       const isCallout = type == "callout";
       if (isCallout) {
-        node.children[0].children.splice(0, 1);
+        node.children.splice(0, 1);
       }
       return h(
         node,
