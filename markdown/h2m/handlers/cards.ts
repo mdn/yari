@@ -47,16 +47,11 @@ export const cards: QueryAndTransform[] = [
   [
     (node) =>
       node.tagName == "div" &&
-      ((node.properties.className as string[]) || "").includes("callout") &&
-      node.children[0].tagName == "h4",
+      ((node.properties.className as string[]) || "").includes("callout"),
     (node, t) =>
       h("blockquote", [
-        h("paragraph", [
-          h("strong", [h("text", "Callout:")]),
-          h("text", " "),
-          h("strong", [h("text", toText(node.children[0]))]),
-        ]),
-        ...asArray(t(node.children.slice(1) as any)),
+        h("paragraph", [h("strong", [h("text", "Callout:")]), h("text", " ")]),
+        ...asArray(t(node.children as any)),
       ]),
   ],
 ];
