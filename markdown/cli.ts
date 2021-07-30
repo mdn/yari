@@ -165,11 +165,9 @@ program
             console.log(doc.metadata.slug);
           }
           const { body: h, attributes: metadata } = fm(doc.rawContent);
-          const concreteLocale =
-            options.locale === "all" ? "en-US" : options.locale;
           const [markdown, { invalid, unhandled }] = await h2m(h, {
             printAST: options.printAst,
-            locale: concreteLocale,
+            locale: doc.metadata.locale,
           });
 
           if (invalid.length > 0 || unhandled.length > 0) {

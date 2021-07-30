@@ -1,26 +1,36 @@
 import * as Gettext from "node-gettext";
+import * as fs from "fs";
+import * as path from "path";
 import { h } from "../h";
 import { asArray } from "../utils";
 import { toText } from "./to-text";
 import { QueryAndTransform } from "./utils";
 
-const getTextDefaultDomainName = "messages";
+const defaultLocale = "en-US";
 
-function initLocalizations(locale) {
-  const translations = require("../../localizations/" + locale + ".json");
-  const gt = new Gettext();
-  gt.addTranslations(locale, getTextDefaultDomainName, translations);
-  gt.setLocale(locale);
-  return gt;
-}
+const gettextLocalizationMap = (function initLocalizationsMap() {
+  const getTextDefaultDomainName = "messages";
+  let gtLocalizationMap = new Map();
+  let localesOnFS = fs
+    .readdirSync(path.join(__dirname, "../../localizations"))
+    .map((str) => str.split(".")[0]);
+  localesOnFS.forEach((localeStr) => {
+    const translations = require("../../localizations/" + localeStr + ".json");
+    const gt = new Gettext();
+    gt.addTranslations(localeStr, getTextDefaultDomainName, translations);
+    gt.setLocale(localeStr);
+    gtLocalizationMap.set(localeStr, gt);
+  });
+  return gtLocalizationMap;
+})();
 
 export const cards: QueryAndTransform[] = [
   ...["note", "warning"].map(
     (className) =>
       [
         (node, opts) => {
-          const locale = opts.locale;
-          const gt = initLocalizations(locale);
+          const locale = opts.locale || defaultLocale;
+          const gt = gettextLocalizationMap.get(locale);
           if (
             !((node.properties.className as string[]) || []).some(
               (c) => c == className
@@ -42,8 +52,8 @@ export const cards: QueryAndTransform[] = [
           );
         },
         (node, t, opts) => {
-          const locale = opts.locale;
-          const gt = initLocalizations(locale);
+          const locale = opts.locale || defaultLocale;
+          const gt = gettextLocalizationMap.get(locale);
           return h("blockquote", [
             h("paragraph", [
               h("strong", [
@@ -63,8 +73,8 @@ export const cards: QueryAndTransform[] = [
       ((node.properties.className as string[]) || "").includes("callout") &&
       node.children[0].tagName == "h4",
     (node, t, opts) => {
-      const locale = opts.locale;
-      const gt = initLocalizations(locale);
+      const locale = opts.locale || defaultLocale;
+      const gt = gettextLocalizationMap.get(locale);
       return h("blockquote", [
         h("paragraph", [
           h("strong", [h("text", gt.gettext("card_callout_label"))]),
