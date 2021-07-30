@@ -41,7 +41,7 @@ interface BookmarksData {
   csrfmiddlewaretoken: string;
 }
 
-const API_BASE = "/api/v1/plus/bookmarks/";
+const API_URL = "/api/v1/plus/bookmarks/";
 
 export default function Bookmarks() {
   const userData = useUserData();
@@ -55,7 +55,7 @@ export default function Bookmarks() {
   const isSubscriber =
     userData && userData.isAuthenticated && userData.isSubscriber;
 
-  const apiURL = isSubscriber ? `${API_BASE}?${searchParams.toString()}` : null;
+  const apiURL = isSubscriber ? `${API_URL}?${searchParams.toString()}` : null;
 
   const { data, error } = useSWR<BookmarksData | null, Error | null>(
     apiURL,
@@ -101,7 +101,7 @@ export default function Bookmarks() {
     const sp = new URLSearchParams({
       url,
     });
-    const apiPostURL = `${API_BASE}bookmarked/?${sp.toString()}`;
+    const apiPostURL = `${API_URL}?${sp.toString()}`;
     if (!data) {
       return false;
     }

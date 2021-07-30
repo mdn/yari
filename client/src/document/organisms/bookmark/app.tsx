@@ -11,10 +11,9 @@ interface BookmarkedData {
   bookmarked: string | null;
   csrfmiddlewaretoken: string;
 }
-const API_BASE = "/api/v1/plus/bookmarks/";
 
 export default function App({ doc }: { doc: Doc }) {
-  const apiURL = `${API_BASE}bookmarked/?${new URLSearchParams({
+  const apiURL = `/api/v1/plus/bookmarks/?${new URLSearchParams({
     url: doc.mdn_url,
   }).toString()}`;
   const { data, error } = useSWR<BookmarkedData>(
