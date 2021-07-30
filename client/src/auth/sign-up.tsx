@@ -66,11 +66,6 @@ export default function SignUpApp() {
     const formData = new URLSearchParams();
     formData.set("terms", "1");
 
-    // This is just a temporary thing needed to tell Kuma's signup view
-    // that the request came from (the jamstack) Yari and not the existing
-    // Kuma front-end. Then Kuma knows to certainly only respond with redirects.
-    formData.set("yarisignup", "1");
-
     // In local development, after you've signed in the `next` query string
     // might be a full absolute URL that points to `http://localhost.org:3000/...`.
     // We can safely remove this and just keep the pathname. In production

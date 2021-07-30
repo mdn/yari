@@ -1,4 +1,6 @@
+import React from "react";
 import { useSearchParams } from "react-router-dom";
+import useSWR from "swr";
 
 import { DISABLE_AUTH } from "../constants";
 import { useUserData, removeSessionStorageData } from "../user-context";
@@ -11,11 +13,31 @@ import { AuthDisabled } from "../ui/atoms/auth-disabled";
 import "./index.scss";
 import "./sign-in.scss";
 
+interface UserSettings {
+  csrfmiddlewaretoken: string;
+}
+
 export default function SignInApp() {
   const [searchParams] = useSearchParams();
   const locale = useLocale();
   const userData = useUserData();
   const sp = new URLSearchParams();
+
+  // If it turns out that you're signed in already, the sign-out will require
+  // a CSRF token to be able to submit the POST to `/users/*/login/logout`.
+  const userSettingsAPIURL = React.useMemo(() => {
+    return userData && userData.isAuthenticated ? "/api/v1/settings" : null;
+  }, [userData]);
+  const { data, error } = useSWR<UserSettings>(
+    userSettingsAPIURL,
+    async (url) => {
+      const response = await fetch(url);
+      if (!response.ok) {
+        throw new Error(`${response.status} on ${url}`);
+      }
+      return await response.json();
+    }
+  );
 
   // This is the `?next=` parameter we send into the redirect loop IF you did
   // not click into this page from an existing one.
@@ -64,12 +86,31 @@ export default function SignInApp() {
             action="/users/fxa/login/logout/"
           >
             <h2>You're already signed in.</h2>
+            {data && data.csrfmiddlewaretoken && (
+              <input
+                type="hidden"
+                name="csrfmiddlewaretoken"
+                value={data.csrfmiddlewaretoken}
+              />
+            )}
             {/* XXX Here it would be great to link to the account settings page */}
             <input type="hidden" name="next" value={next} />
-            <button type="submit" className="ghost">
-              Sign out
-            </button>
-            or, <a href="/">return to the home page</a>.
+            {error && (
+              <div className="notecard negative">
+                <p>
+                  <strong>Server error</strong> Unable to connect to the server.
+                </p>
+              </div>
+            )}
+            {data && data.csrfmiddlewaretoken && (
+              <>
+                <button type="submit" className="ghost">
+                  Sign out
+                </button>
+                or, <a href="/">return to the home page</a>
+              </>
+            )}
+            .
           </form>
         ) : (
           <>

@@ -49,10 +49,12 @@ function LoginInner() {
       <span className="avatar-username">{userData.username}</span>
     </>
   );
+  console.log("In LoginInner:", userData);
+
   // Note that this component is never rendered server-side so it's safe to
   // rely on `window.location`.
   let next = window.location.pathname;
-  let signOutURL = `/${locale}/users/signout`;
+  let signOutURL = `/${locale}/signout`;
   if (
     process.env.NODE_ENV === "development" &&
     process.env.REACT_APP_KUMA_HOST
