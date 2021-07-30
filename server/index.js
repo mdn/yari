@@ -30,7 +30,7 @@ const documentRouter = require("./document");
 const fakeV1APIRouter = require("./fake-v1-api");
 const { searchIndexRoute } = require("./search-index");
 const flawsRoute = require("./flaws");
-const { translationsRoute } = require("./translations");
+const { router: translationsRouter } = require("./translations");
 const { staticMiddlewares, originRequestMiddleware } = require("./middlewares");
 const { getRoot } = require("../content/utils");
 
@@ -158,7 +158,7 @@ app.use("/:locale/search-index.json", searchIndexRoute);
 
 app.get("/_flaws", flawsRoute);
 
-app.get("/_translations", translationsRoute);
+app.use("/_translations", translationsRouter);
 
 app.get("/*/contributors.txt", async (req, res) => {
   const url = req.path.replace(/\/contributors\.txt$/, "");

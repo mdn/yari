@@ -1,10 +1,15 @@
 const fs = require("fs");
+const path = require("path");
+
+const express = require("express");
+const router = express.Router();
 
 const {
   getPopularities,
   VALID_LOCALES,
   Document,
   Translation,
+  CONTENT_ROOT,
   CONTENT_TRANSLATED_ROOT,
 } = require("../content");
 const { getLastCommitURL } = require("../build");
@@ -42,55 +47,6 @@ function packageTranslationDifferences(translationDifferences) {
     }
   });
   return { total, countByType };
-}
-
-function packageEdits(document, parentDocument) {
-  const commitURL = getLastCommitURL(
-    document.fileInfo.root,
-    document.metadata.hash
-  );
-  const parentCommitURL = getLastCommitURL(
-    parentDocument.fileInfo.root,
-    parentDocument.metadata.hash
-  );
-  const modified = document.metadata.modified;
-  const parentModified = parentDocument.metadata.modified;
-  return {
-    commitURL,
-    parentCommitURL,
-    modified,
-    parentModified,
-  };
-}
-
-function packagePopularity(document, parentDocument) {
-  return {
-    value: document.metadata.popularity,
-    ranking: document.metadata.popularity
-      ? 1 +
-        getAllPopularityValues().filter((p) => p > document.metadata.popularity)
-          .length
-      : NaN,
-    parentValue: parentDocument.metadata.popularity,
-    parentRanking: parentDocument.metadata.popularity
-      ? 1 +
-        getAllPopularityValues().filter(
-          (p) => p > parentDocument.metadata.popularity
-        ).length
-      : NaN,
-  };
-}
-
-// We can't just open the `index.json` and return it like that in the XHR
-// payload. It's too much stuff and some values need to be repackaged/
-// serialized or some other transformation computation.
-function packageDocument(document, englishDocument, translationDifferences) {
-  const mdn_url = document.url;
-  const { title } = document.metadata;
-  const popularity = packagePopularity(document, englishDocument);
-  const differences = packageTranslationDifferences(translationDifferences);
-  const edits = packageEdits(document, englishDocument);
-  return { popularity, differences, edits, mdn_url, title };
 }
 
 const _foundDocumentsCache = new Map();
@@ -156,6 +112,56 @@ function findDocuments({ locale }) {
 }
 
 function getDocument(filePath) {
+  function packagePopularity(document, parentDocument) {
+    return {
+      value: document.metadata.popularity,
+      ranking: document.metadata.popularity
+        ? 1 +
+          getAllPopularityValues().filter(
+            (p) => p > document.metadata.popularity
+          ).length
+        : NaN,
+      parentValue: parentDocument.metadata.popularity,
+      parentRanking: parentDocument.metadata.popularity
+        ? 1 +
+          getAllPopularityValues().filter(
+            (p) => p > parentDocument.metadata.popularity
+          ).length
+        : NaN,
+    };
+  }
+
+  function packageEdits(document, parentDocument) {
+    const commitURL = getLastCommitURL(
+      document.fileInfo.root,
+      document.metadata.hash
+    );
+    const parentCommitURL = getLastCommitURL(
+      parentDocument.fileInfo.root,
+      parentDocument.metadata.hash
+    );
+    const modified = document.metadata.modified;
+    const parentModified = parentDocument.metadata.modified;
+    return {
+      commitURL,
+      parentCommitURL,
+      modified,
+      parentModified,
+    };
+  }
+
+  // We can't just open the `index.json` and return it like that in the XHR
+  // payload. It's too much stuff and some values need to be repackaged/
+  // serialized or some other transformation computation.
+  function packageDocument(document, englishDocument, translationDifferences) {
+    const mdn_url = document.url;
+    const { title } = document.metadata;
+    const popularity = packagePopularity(document, englishDocument);
+    const differences = packageTranslationDifferences(translationDifferences);
+    const edits = packageEdits(document, englishDocument);
+    return { popularity, differences, edits, mdn_url, title };
+  }
+
   const document = Document.read(filePath);
   const englishDocument = Document.read(
     document.fileInfo.folder.replace(
@@ -178,7 +184,148 @@ function getDocument(filePath) {
   return packageDocument(document, englishDocument, differences);
 }
 
-function translationsRoute(req, res) {
+const _missingDocumentsCache = new Map();
+
+function findMissingDocuments({ locale }) {
+  function packagePopularity(document) {
+    return {
+      value: document.metadata.popularity,
+      ranking: document.metadata.popularity
+        ? 1 +
+          getAllPopularityValues().filter(
+            (p) => p > document.metadata.popularity
+          ).length
+        : NaN,
+    };
+  }
+
+  function packageEdits(document) {
+    const commitURL = getLastCommitURL(
+      document.fileInfo.root,
+      document.metadata.hash
+    );
+    const modified = document.metadata.modified;
+    return {
+      commitURL,
+      modified,
+    };
+  }
+
+  function packageDocument(document) {
+    const mdn_url = document.url;
+    const { title } = document.metadata;
+    const popularity = packagePopularity(document);
+    const edits = packageEdits(document);
+    return { mdn_url, title, popularity, edits };
+  }
+
+  const counts = {
+    // Number of not-yet translated documents
+    missing: 0,
+    // Number of not-missing translated documents
+    translated: 0,
+    // Number missing and translated combined
+    total: 0,
+    // Because the function uses the filepath and the file modification time,
+    // it can be useful to know how much the cache failed or succeeded.
+    cacheMisses: 0,
+  };
+  if (locale === DEFAULT_LOCALE) {
+    throw new Error("Can't run this for the default locale");
+  }
+
+  const documents = [];
+
+  const t1 = new Date();
+  const foundTranslations = Document.findAll({
+    locales: new Map([[locale, true]]),
+  });
+
+  const translatedFolderNames = new Set();
+  for (const filePath of foundTranslations.iter({ pathOnly: true })) {
+    const asFolder = path.relative(
+      CONTENT_TRANSLATED_ROOT,
+      path.dirname(filePath)
+    );
+    const asFolderWithoutLocale = asFolder
+      .split(path.sep)
+      .slice(1)
+      .join(path.sep);
+    translatedFolderNames.add(asFolderWithoutLocale);
+  }
+  const foundDefaultLocale = Document.findAll({
+    locales: new Map([[DEFAULT_LOCALE.toLowerCase(), true]]),
+  });
+
+  if (!_missingDocumentsCache.has(locale)) {
+    _missingDocumentsCache.set(locale, new Map());
+  }
+  const cache = _missingDocumentsCache.get(locale);
+
+  for (const filePath of foundDefaultLocale.iter({ pathOnly: true })) {
+    const asFolder = path.relative(CONTENT_ROOT, path.dirname(filePath));
+    const asFolderWithoutLocale = asFolder
+      .split(path.sep)
+      .slice(1)
+      .join(path.sep);
+
+    counts.total++;
+
+    if (!translatedFolderNames.has(asFolderWithoutLocale)) {
+      counts.missing++;
+
+      const mtime = fs.statSync(filePath).mtime;
+      if (!cache.has(filePath) || cache.get(filePath).mtime < mtime) {
+        counts.cacheMisses++;
+        const document = packageDocument(Document.read(filePath));
+        cache.set(filePath, {
+          document,
+          mtime,
+        });
+      }
+
+      const { document } = cache.get(filePath);
+      documents.push(document);
+    } else {
+      counts.translated++;
+    }
+  }
+
+  counts.total = counts.translated + counts.missing;
+
+  const t2 = new Date();
+  const took = t2.getTime() - t1.getTime();
+
+  const times = {
+    took,
+  };
+
+  return {
+    counts,
+    times,
+    documents,
+  };
+}
+
+router.get("/", async (req, res) => {
+  if (!CONTENT_TRANSLATED_ROOT) {
+    return res.status(500).send("CONTENT_TRANSLATED_ROOT not set");
+  }
+  const locales = [...VALID_LOCALES]
+    .map(([localeLC, locale]) => {
+      if (locale === DEFAULT_LOCALE) return;
+      const language = LANGUAGES_RAW[locale];
+      return {
+        locale,
+        language,
+        isActive: ACTIVE_LOCALES.has(localeLC),
+      };
+    })
+    .filter(Boolean);
+  res.json({ locales });
+});
+
+router.get("/differences", async (req, res) => {
   if (!CONTENT_TRANSLATED_ROOT) {
     return res.status(500).send("CONTENT_TRANSLATED_ROOT not set");
   }
@@ -190,26 +337,36 @@ function translationsRoute(req, res) {
     return res.status(400).send(`'${locale}' not a valid locale`);
   }
   if (locale === DEFAULT_LOCALE.toLowerCase()) {
-    const locales = [...VALID_LOCALES]
-      .map(([localeLC, locale]) => {
-        if (locale === DEFAULT_LOCALE) return;
-        const language = LANGUAGES_RAW[locale];
-        return {
-          locale,
-          language,
-          isActive: ACTIVE_LOCALES.has(localeLC),
-        };
-      })
-      .filter(Boolean);
-    return res.json({ locales });
+    return res.status(400).send(`'${locale}' is the default locale`);
   }
 
   const label = `Find all translated documents (${locale})`;
   console.time(label);
   const found = findDocuments({ locale });
   console.timeEnd(label);
-  // console.log(found.documents[0]);
   res.json(found);
-}
+});
 
-module.exports = { translationsRoute, findDocuments };
+router.get("/missing", async (req, res) => {
+  if (!CONTENT_TRANSLATED_ROOT) {
+    return res.status(500).send("CONTENT_TRANSLATED_ROOT not set");
+  }
+  const locale = req.query.locale && req.query.locale.toLowerCase();
+  if (!locale) {
+    return res.status(400).send("'locale' is always required");
+  }
+  if (!VALID_LOCALES.has(locale)) {
+    return res.status(400).send(`'${locale}' not a valid locale`);
+  }
+  if (locale === DEFAULT_LOCALE.toLowerCase()) {
+    return res.status(400).send(`'${locale}' is the default locale`);
+  }
+
+  const label = `Find all missing translations (${locale})`;
+  console.time(label);
+  const found = findMissingDocuments({ locale });
+  console.timeEnd(label);
+  res.json(found);
+});
+
+module.exports = { router };

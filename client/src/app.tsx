@@ -25,7 +25,7 @@ import { Overview as DeepDivesOverview } from "./plus/deep-dives/overview";
 import { PlusV1 } from "./plus-v1";
 
 const AllFlaws = React.lazy(() => import("./flaws"));
-const AllTranslations = React.lazy(() => import("./translations"));
+const Translations = React.lazy(() => import("./translations"));
 const DocumentEdit = React.lazy(() => import("./document/forms/edit"));
 const DocumentCreate = React.lazy(() => import("./document/forms/create"));
 const DocumentManage = React.lazy(() => import("./document/forms/manage"));
@@ -145,10 +145,10 @@ export function App(appProps) {
                   }
                 />
                 <Route
-                  path="/_translations"
+                  path="/_translations/*"
                   element={
                     <StandardLayout>
-                      <AllTranslations />
+                      <Translations />
                     </StandardLayout>
                   }
                 />
