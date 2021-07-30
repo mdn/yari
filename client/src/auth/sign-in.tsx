@@ -43,11 +43,6 @@ export default function SignInApp() {
   }
   sp.set("next", next);
 
-  // Temporary just long as Kuma still needs to support sign-up both as
-  // Kuma front-end (HTML) Yari (redirects).
-  // Delete this line once Kuma ONLY deals with Yari in the signup view.
-  sp.set("yarisignup", "1");
-
   if (DISABLE_AUTH) {
     return <AuthDisabled />;
   }
@@ -63,8 +58,12 @@ export default function SignInApp() {
       */}
       {userData ? (
         userData.isAuthenticated ? (
-          <form className="sign-out-form" action="/users/fxa/login/logout/">
-            <h2>You’re already signed in.</h2>
+          <form
+            className="sign-out-form"
+            method="post"
+            action="/users/fxa/login/logout/"
+          >
+            <h2>You're already signed in.</h2>
             {/* XXX Here it would be great to link to the account settings page */}
             <input type="hidden" name="next" value={next} />
             <button type="submit" className="ghost">
@@ -88,7 +87,7 @@ export default function SignInApp() {
                     removeSessionStorageData();
                   }}
                 >
-                  {/* <GithubLogo /> */}
+                  {/* <FxALogo /> */}
                   Sign in with Firefox Accounts
                 </a>
               </li>
