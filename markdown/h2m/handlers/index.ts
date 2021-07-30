@@ -230,6 +230,7 @@ export const handlers: QueryAndTransform[] = [
               "brush",
               "example-good",
               "example-bad",
+              "hidden",
               "no-line-numbers",
               "line-numbers",
               "notranslate",
@@ -250,7 +251,9 @@ export const handlers: QueryAndTransform[] = [
                 lang: lang.startsWith("example") ? "plain" : lang,
                 meta: asArray(node.properties.className)
                   .filter(
-                    (c) => typeof c == "string" && c.startsWith("example-")
+                    (c) =>
+                      typeof c == "string" &&
+                      (c.startsWith("example-") || c === "hidden")
                   )
                   .join(" "),
               }
