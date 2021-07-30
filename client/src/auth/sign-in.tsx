@@ -5,8 +5,8 @@ import { useUserData, removeSessionStorageData } from "../user-context";
 import { useLocale } from "../hooks";
 import { AuthDisabled } from "../ui/atoms/auth-disabled";
 
-import { ReactComponent as GithubLogo } from "@mdn/dinocons/brands/github-mark-small.svg";
-import { ReactComponent as GoogleLogo } from "@mdn/dinocons/brands/google-mono.svg";
+// import { ReactComponent as GithubLogo } from "@mdn/dinocons/brands/github-mark-small.svg";
+// import { ReactComponent as GoogleLogo } from "@mdn/dinocons/brands/google-mono.svg";
 
 import "./index.scss";
 import "./sign-in.scss";
@@ -63,11 +63,7 @@ export default function SignInApp() {
       */}
       {userData ? (
         userData.isAuthenticated ? (
-          <form
-            className="sign-out-form"
-            method="post"
-            action={`${prefix}/${locale}/users/signout`}
-          >
+          <form className="sign-out-form" action="/users/fxa/login/logout/">
             <h2>You’re already signed in.</h2>
             {/* XXX Here it would be great to link to the account settings page */}
             <input type="hidden" name="next" value={next} />
@@ -78,13 +74,25 @@ export default function SignInApp() {
           </form>
         ) : (
           <>
-            <p className="lead">
+            {/* <p className="lead">
               Sign in to your MDN Web Docs account. If you haven’t already
               created an account, you will be prompted to do so after signing
               in.
-            </p>
+            </p> */}
             <ul className="auth-buttons">
               <li>
+                <a
+                  href={`${prefix}/users/fxa/login/authenticate/?${sp.toString()}`}
+                  className="button icon-button outline"
+                  onClick={() => {
+                    removeSessionStorageData();
+                  }}
+                >
+                  {/* <GithubLogo /> */}
+                  Sign in with Firefox Accounts
+                </a>
+              </li>
+              {/* <li>
                 <a
                   href={`${prefix}/users/github/login/?${sp.toString()}`}
                   className="button icon-button outline"
@@ -95,8 +103,8 @@ export default function SignInApp() {
                   <GithubLogo />
                   Sign in with GitHub&trade;
                 </a>
-              </li>
-              <li>
+              </li> */}
+              {/* <li>
                 <a
                   href={`${prefix}/users/google/login/?${sp.toString()}`}
                   className="button icon-button outline"
@@ -107,7 +115,7 @@ export default function SignInApp() {
                   <GoogleLogo />
                   Sign in with Google&trade;
                 </a>
-              </li>
+              </li> */}
             </ul>
           </>
         )
