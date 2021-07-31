@@ -104,6 +104,14 @@ function saveProblemsReport(problems: Map<any, any>) {
   }
 }
 
+function buildLocaleMap(locale) {
+  let localesMap = new Map();
+  if (locale !== "all") {
+    localesMap = new Map([[locale.toLowerCase(), locale]]);
+  }
+  return localesMap;
+}
+
 program
   .bin("yarn md")
   .name("md")
@@ -130,13 +138,9 @@ program
       console.log(
         `Starting HTML to Markdown conversion in ${options.mode} mode`
       );
-      let localesMap = new Map();
-      if (options.locale !== "all") {
-        localesMap = new Map([[options.locale.toLowerCase(), options.locale]]);
-      }
       const documents = Document.findAll({
         folderSearch: args.folder,
-        locales: localesMap,
+        locales: buildLocaleMap(options.locale),
       });
 
       const progressBar = new cliProgress.SingleBar(
@@ -202,16 +206,23 @@ program
   )
 
   .command("m2h", "Convert Markdown to HTML")
+  .option("--locale", "Targets a specific locale", {
+    default: "all",
+    validator: (Array.from(VALID_LOCALES.values()) as string[]).concat("all"),
+  })
   .argument("[folder]", "convert by folder")
   .action(
-    tryOrExit(async ({ args }) => {
-      const all = Document.findAll({ folderSearch: args.folder });
+    tryOrExit(async ({ args, options }) => {
+      const all = Document.findAll({
+        folderSearch: args.folder,
+        locales: buildLocaleMap(options.locale),
+      });
       for (let doc of all.iter()) {
         if (!doc.isMarkdown) {
           continue;
         }
         const { body: m, attributes: metadata } = fm(doc.rawContent);
-        const h = await m2h(m);
+        const h = await m2h(m, { locale: doc.metadata.locale });
         saveFile(doc.fileInfo.path.replace(/\.md$/, ".html"), h, metadata);
       }
     })
