@@ -10,10 +10,8 @@ const {
   BUILD_OUT_ROOT,
   HOMEPAGE_FEED_URL,
   HOMEPAGE_FEED_DISPLAY_MAX,
-  BUILD_SUBSCRIPTION_CONFIG_URL,
 } = require("./constants");
 const { getFeedEntries } = require("./feedparser");
-const { getSubscriptionConfig } = require("./subscriptionconfig");
 // eslint-disable-next-line node/no-missing-require
 const { renderHTML } = require("../ssr/dist/main");
 
@@ -39,10 +37,6 @@ async function buildSPAs(options) {
     console.log("Wrote", path.join(outPath, path.basename(url)));
   }
 
-  const subscriptionConfig = BUILD_SUBSCRIPTION_CONFIG_URL
-    ? await getSubscriptionConfig(BUILD_SUBSCRIPTION_CONFIG_URL)
-    : null;
-
   // Basically, this builds one (for example) `search/index.html` for every
   // locale we intend to build.
   for (const root of [CONTENT_ROOT, CONTENT_TRANSLATED_ROOT]) {
@@ -59,6 +53,21 @@ async function buildSPAs(options) {
         { prefix: "signup", pageTitle: "Sign up", noIndexing: true },
         { prefix: "settings", pageTitle: "Account settings", noIndexing: true },
         { prefix: "plus", pageTitle: "Plus", noIndexing: true },
+        {
+          prefix: "plus/deep-dives",
+          pageTitle: "Modern CSS in the Real World",
+          noIndexing: true,
+        },
+        {
+          prefix: "plus/deep-dives/planning-for-browser-support",
+          pageTitle: "Planning for browser support ~ Plus",
+          noIndexing: true,
+        },
+        {
+          prefix: "plus/deep-dives/your-browser-support-toolkit",
+          pageTitle: "Your browser support toolkit ~ Plus",
+          noIndexing: true,
+        },
       ];
       for (const { prefix, pageTitle, noIndexing } of SPAs) {
         const url = `/${locale}/${prefix}`;
@@ -87,10 +96,7 @@ async function buildSPAs(options) {
         }
         if (prefix === "settings") {
           const filePathContext = path.join(outPath, "index.json");
-          fs.writeFileSync(
-            filePathContext,
-            JSON.stringify({ ...context, subscriptionConfig })
-          );
+          fs.writeFileSync(filePathContext, JSON.stringify(context));
           buildCount++;
           if (options.verbose) {
             console.log("Wrote", filePathContext);

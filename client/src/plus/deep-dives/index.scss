@@ -1,0 +1,237 @@
+@use "sass:math";
+@use "~@mdn/minimalist/sass/vars/layout";
+@use "~@mdn/minimalist/sass/vars/typography";
+
+@use "../../ui/theme/index" as theme;
+
+.page-content-container.deep-dives {
+  background-color: #f9f9fb;
+  display: block;
+  max-width: inherit;
+  padding: 0;
+}
+
+.deep-dive-article-container {
+  @include theme.readable-line-length();
+  font-family: theme.$inter-font-family;
+  font-size: 18px;
+  line-height: 200%;
+  margin-bottom: layout.$base-spacing * 3;
+  padding: (layout.$base-spacing * 2) layout.$base-spacing;
+  text-align: justify;
+
+  code {
+    background-color: rgba(224, 224, 230, 0.5);
+  }
+
+  img {
+    width: 100%;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    text-align: left;
+  }
+
+  .main-heading-group {
+    h1 {
+      font-size: 48px;
+      letter-spacing: -0.5px;
+      line-height: 58px;
+      text-align: left;
+    }
+
+    h2 {
+      color: theme.$mdn-neutral700;
+      font: bold typography.$small-font-size theme.$inter-font-family;
+      margin-bottom: layout.$base-spacing;
+      text-transform: uppercase;
+    }
+
+    a {
+      &:link,
+      &:visited {
+        color: theme.$mdn-neutral700;
+      }
+    }
+  }
+
+  h3,
+  h4 {
+    font-size: 24px;
+    letter-spacing: 0.5px;
+    line-height: 48px;
+  }
+
+  h4 {
+    font-size: 22px;
+    line-height: 44px;
+  }
+
+  figcaption {
+    color: theme.$mdn-neutral700;
+    font-size: 14px;
+    line-height: 32px;
+  }
+
+  .article-lead {
+    color: theme.$mdn-neutral700;
+    font-size: 24px;
+    line-height: 150%;
+  }
+
+  .article-sidebar {
+    border: 1px solid rgba(32, 17, 57, 0.1);
+    border-radius: theme.$default-border-radius;
+    font-size: 14px;
+    font-style: italic;
+    line-height: 24px;
+    padding: math.div(layout.$base-spacing, 2);
+
+    @media #{layout.$mq-tablet-and-up} {
+      padding: layout.$base-spacing;
+    }
+
+    p:last-child {
+      margin-bottom: 0;
+    }
+  }
+}
+
+.deep-dive-article-footer {
+  background-color: theme.$mdn-violet900;
+  font-size: typography.$small-medium-font-size;
+  font-weight: bold;
+  padding: 0 layout.$base-spacing;
+
+  a {
+    display: block;
+    padding: (layout.$base-spacing * 2) layout.$base-spacing;
+
+    @media #{layout.$mq-small-desktop-and-up} {
+      width: 50%;
+    }
+
+    &:link,
+    &:visited {
+      color: theme.$white;
+    }
+
+    &:hover,
+    &:focus {
+      background-color: rgba(255, 255, 255, 0.1);
+      text-decoration: none;
+    }
+  }
+
+  .girdle {
+    margin-bottom: 0;
+  }
+
+  &.previous {
+    text-align: right;
+
+    .girdle {
+      display: flex;
+      justify-content: flex-end;
+    }
+  }
+
+  .next-article,
+  .previous-article {
+    color: theme.$mdn-green400;
+    display: block;
+    font-size: typography.$default-font-size;
+  }
+
+  .next-article {
+    &::after {
+      background-color: theme.$mdn-green400;
+      background-size: 16px;
+      content: "";
+      display: inline-block;
+      height: 16px;
+      margin-left: math.div(layout.$base-spacing, 4);
+      mask-image: url("~@mdn/dinocons/arrows/arrow.svg");
+      transform: rotate(90deg);
+      vertical-align: middle;
+      width: 16px;
+    }
+  }
+
+  .previous-article {
+    &::before {
+      background-color: theme.$mdn-green400;
+      background-size: 16px;
+      content: "";
+      display: inline-block;
+      height: 16px;
+      margin-right: math.div(layout.$base-spacing, 4);
+      mask-image: url("~@mdn/dinocons/arrows/arrow.svg");
+      transform: rotate(-90deg);
+      vertical-align: sub;
+      width: 16px;
+    }
+  }
+}
+
+.main-article-page-content-container {
+  @media #{layout.$mq-small-desktop-and-up} {
+    display: flex;
+    gap: layout.$base-spacing;
+    justify-content: space-between;
+    padding: 0;
+
+    .deep-dive-article-container {
+      flex: 0 1 65%;
+    }
+
+    .series-card {
+      flex: 0 1 35%;
+      margin-top: layout.$base-spacing * 2;
+    }
+  }
+
+  .deep-dive-article-sidebar {
+    display: none;
+
+    @media #{layout.$mq-small-desktop-and-up} {
+      display: block;
+      padding-right: layout.$base-spacing;
+    }
+  }
+}
+
+.take-survey-mobile {
+  bottom: 0;
+  position: fixed;
+  width: 100%;
+  z-index: 99999;
+
+  @media #{layout.$mq-small-desktop-and-up} {
+    display: none;
+  }
+
+  a.take-survey-link {
+    &:link,
+    &:visited {
+      background: linear-gradient(to right, #8565ff, #6581ff);
+      color: theme.$white;
+      display: block;
+      font-size: 18px;
+      font-weight: bold;
+      margin-top: layout.$base-spacing;
+      min-height: 40px;
+      padding: 20px;
+      text-align: center;
+    }
+
+    &:hover,
+    &:focus {
+      background: theme.$mdn-violet700;
+      text-decoration: none;
+    }
+  }
+}

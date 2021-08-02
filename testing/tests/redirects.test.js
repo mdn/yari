@@ -1190,6 +1190,21 @@ const RETIRED_LOCALE_URLS = [].concat(
 );
 
 const MISC_REDIRECT_URLS = [].concat(
+  url_test("/events", "https://community.mozilla.org/events/", {
+    statusCode: 302,
+  }),
+  url_test("/events/", "https://community.mozilla.org/events/", {
+    statusCode: 302,
+  }),
+  url_test("/fr/events", "https://community.mozilla.org/events/", {
+    statusCode: 302,
+  }),
+  url_test("/en-US/events", "https://community.mozilla.org/events/", {
+    statusCode: 302,
+  }),
+  url_test("/en-US/events/", "https://community.mozilla.org/events/", {
+    statusCode: 302,
+  }),
   url_test("/fr/account", "/fr/settings", { statusCode: 302 }),
   url_test("/en-US/account", "/en-US/settings", { statusCode: 302 }),
   url_test("/en-US/account/", "/en-US/settings", { statusCode: 302 }),
@@ -1198,12 +1213,6 @@ const MISC_REDIRECT_URLS = [].concat(
   url_test("/en-US/profile/", "/en-US/settings", { statusCode: 302 }),
   url_test("/en-US/profile/edit", "/en-US/settings", { statusCode: 302 }),
   url_test("/en-US/profile/edit/", "/en-US/settings", { statusCode: 302 }),
-  url_test("/en-US/profile/stripe_subscription", "/en-US/settings", {
-    statusCode: 302,
-  }),
-  url_test("/en-US/profile/stripe_subscription/", "/en-US/settings", {
-    statusCode: 302,
-  }),
   url_test("/zh-CN/profiles/sheppy", "/zh-CN/settings", { statusCode: 302 }),
   url_test("/en-US/profiles/sheppy", "/en-US/settings", { statusCode: 302 }),
   url_test("/en-US/profiles/sheppy/", "/en-US/settings", { statusCode: 302 }),

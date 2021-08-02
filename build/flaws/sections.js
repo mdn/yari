@@ -1,7 +1,7 @@
 const { FLAW_LEVELS } = require("../constants");
 
 function injectSectionFlaws(doc, flaws, options) {
-  if (doc.isArchive || !flaws.length) {
+  if (!flaws.length) {
     return;
   }
 

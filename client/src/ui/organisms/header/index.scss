@@ -1,6 +1,6 @@
 @use "sass:math";
 
-@import "~@mdn/minimalist/sass/vars/color-palette";
+@import "~@mdn/minimalist/sass/vars/mdn-web-docs-palette";
 @import "~@mdn/minimalist/sass/vars/layout";
 
 .main-menu-toggle {
@@ -48,7 +48,7 @@
 }
 
 .page-header-main {
-  background-color: $neutral-600;
+  background-color: $white;
   display: none;
   left: 0;
   padding: 0 $base-spacing $base-spacing;
@@ -67,18 +67,17 @@
     z-index: inherit;
 
     @supports (display: grid) {
-      display: grid;
       align-items: center;
+      display: grid;
     }
   }
 
   @media #{$mq-large-desktop-and-up} {
-    grid-template-columns: 2fr 1fr 70px;
+    grid-template-columns: 2fr 1fr;
   }
 
   .main-nav,
-  .header-search,
-  .auth-container {
+  .header-search {
     grid-column: 1/2;
   }
 
@@ -88,10 +87,6 @@
 
   .header-search {
     grid-row: 1/2;
-  }
-
-  .auth-container {
-    grid-row: 3/4;
   }
 
   @media #{$mq-tablet-and-up} {
@@ -104,18 +99,11 @@
       grid-column: 1/2;
       grid-row: 2/3;
     }
-
-    .auth-container {
-      grid-column: 2/3;
-      grid-row: 2/3;
-      justify-self: flex-end;
-    }
   }
 
   @media #{$mq-large-desktop-and-up} {
     .main-nav,
-    .header-search,
-    .auth-container {
+    .header-search {
       grid-row: 1/2;
     }
 
@@ -125,10 +113,6 @@
 
     .header-search {
       grid-column: 2/3;
-    }
-
-    .auth-container {
-      grid-column: 3/4;
     }
   }
 }
