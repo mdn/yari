@@ -30,6 +30,22 @@ export function DisplayH3({
   );
 }
 
+export function DisplayH4({
+  id,
+  title,
+  titleAsText,
+}: {
+  id: string;
+  title: string;
+  titleAsText?: string;
+}) {
+  return (
+    <h4 id={id.toLowerCase()}>
+      <Permalink title={title} titleAsText={titleAsText} id={id} />
+    </h4>
+  );
+}
+
 function Permalink({
   id,
   title,
