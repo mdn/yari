@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 
 import Dropdown from "../dropdown";
 import { useLocale } from "../../../hooks";
@@ -24,6 +24,7 @@ export default function Login() {
 
 function LoginInner() {
   const locale = useLocale();
+  const { pathname } = useLocation();
   const userData = useUserData();
 
   // if we don't have the user data yet, don't render anything
@@ -35,6 +36,12 @@ function LoginInner() {
     // Otherwise, show a login prompt
     return <SignInLink className="signin-link" />;
   }
+
+  // If pathname === '/en-US/sigin', i.e. you're already on the sign in page
+  // itself, then discard that as a 'next' parameter.
+  // Otherwise, you might get redirected back to the sign in page after you've
+  // successfully signed in.
+  const next = pathname === `/${locale}/signin` ? `/${locale}/` : pathname;
 
   // If we have user data and the user is logged in, show their
   // profile pic, defaulting to the dino head if the avatar
@@ -56,7 +63,11 @@ function LoginInner() {
         <Link to={`/${locale}/settings`}>Account settings</Link>
       </li>
       <li>
-        <Link to={`/${locale}/signout`}>Sign out</Link>
+        <Link
+          to={`/${locale}/signout?${new URLSearchParams({ next }).toString()}`}
+        >
+          Sign out
+        </Link>
       </li>
     </Dropdown>
   );

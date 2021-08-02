@@ -79,7 +79,7 @@ export default function SignOutApp() {
           <form
             className="sign-out-form"
             method="post"
-            action="/users/fxa/login/logout/"
+            action={`${prefix}/users/fxa/login/logout/`}
             onSubmit={() => {
               removeSessionStorageData();
             }}

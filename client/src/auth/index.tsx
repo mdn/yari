@@ -20,7 +20,8 @@ function Container({
 
   React.useEffect(() => {
     document.title = pageTitle;
-  }, []);
+  }, [pageTitle]);
+
   return (
     <PageContentContainer extraClasses={`auth-page-container ${className}`}>
       {/* The reason for displaying this <h1> here (and for SignUp too)
