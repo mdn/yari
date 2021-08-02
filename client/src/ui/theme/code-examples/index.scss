@@ -5,7 +5,7 @@
   border-radius: $default-border-radius;
   margin: layout.$base-spacing 0;
   max-width: 100%;
-  overflow: scroll;
+  overflow: auto;
   padding: layout.$base-spacing;
 
   code {

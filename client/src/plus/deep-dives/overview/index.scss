@@ -21,13 +21,10 @@
     background-size: cover;
     content: "";
     display: block;
+    height: 100%;
     min-height: 365px;
     position: absolute;
     width: 100%;
-
-    @media #{layout.$mq-small-desktop-and-up} {
-      height: 100%;
-    }
   }
 
   .header-wrapper {
@@ -45,7 +42,7 @@
       gap: 0 math.div(layout.$base-spacing, 2);
       gap: 0 (layout.$base-spacing * 2.5);
       grid-template-columns: 1fr 0;
-      padding: (layout.$base-spacing * 2) 120px;
+      padding: 120px;
     }
   }
 
@@ -80,21 +77,47 @@
     }
 
     a {
-      display: none;
+      &:link,
+      &:visited {
+        color: theme.$white;
+        text-decoration: none;
+      }
 
-      @media #{layout.$mq-tablet-and-up} {
-        display: block;
+      &:hover,
+      &:focus {
+        text-decoration: underline;
       }
     }
 
     p {
       font-size: typography.$default-font-size;
       margin-bottom: 0;
-      max-width: 400px;
+      max-width: 450px;
 
       @media #{layout.$mq-small-desktop-and-up} {
         font-size: typography.$small-medium-font-size;
       }
+    }
+  }
+
+  p.author,
+  .author-links {
+    font-size: 24px;
+  }
+
+  .author {
+    font-weight: bold;
+    line-height: 150%;
+  }
+
+  .author-links {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+
+    li {
+      display: inline-block;
+      margin-right: math.div(layout.$base-spacing, 4);
     }
   }
 }
@@ -113,13 +136,18 @@
 
   h3,
   h4 {
-    font-size: typography.$small-medium-font-size;
-    margin: layout.$base-spacing 0;
+    font-size: 24px;
+    margin: 36px 0;
   }
 
   h4 {
     font-size: 18px;
     margin: 36px 0;
+  }
+
+  p {
+    font-size: 18px;
+    line-height: 200%;
   }
 
   li {
@@ -146,6 +174,7 @@
 
     &::before {
       background-size: cover;
+      border-radius: 4px;
       content: "";
       display: inline-block;
       height: 270px;
@@ -190,14 +219,17 @@
   .unavailable {
     color: theme.$mdn-neutral600;
     min-height: 140px;
+    padding: math.div(layout.$base-spacing, 4);
 
     &::before {
       background: transparent
         url("./assets/practical-browser-support-solutions.png") center center
         no-repeat;
       background-size: cover;
+      border-radius: 4px;
       content: "";
       display: inline-block;
+      filter: saturate(0);
       height: 200px;
       width: 100%;
 
@@ -210,10 +242,6 @@
 
     h4 {
       margin: math.div(layout.$base-spacing, 2) 0;
-    }
-
-    .item-content {
-      padding: math.div(layout.$base-spacing, 4);
     }
   }
 }

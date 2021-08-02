@@ -2225,7 +2225,7 @@
       "impl": []
     },
     "Window": {
-      "inh": "",
+      "inh": "EventTarget",
       "impl": [
         "GlobalEventHandlers",
         "WindowEventHandlers",

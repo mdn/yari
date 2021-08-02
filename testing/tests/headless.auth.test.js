@@ -16,21 +16,6 @@ describe("Visiting pages related and requiring authentication", () => {
     await page.deleteCookie({ name: "sessionid", url: testURL() });
   });
 
-  it("clicking 'Sign in' should offer links to all identity providers", async () => {
-    await page.goto(testURL("/en-US/docs/Web/Foo"));
-    await expect(page).toClick("a", { text: "Sign in" });
-    await expect(page).toMatchElement("h1", { text: "Sign in" });
-    expect(page.url()).toContain(
-      testURL(
-        `/en-US/signin?${new URLSearchParams(
-          "next=/en-US/docs/Web/Foo"
-        ).toString()}`
-      )
-    );
-    await expect(page).toMatchElement("a", { text: "Google" });
-    await expect(page).toMatchElement("a", { text: "GitHub" });
-  });
-
   it("going to 'Sign up' page without query string", async () => {
     await page.goto(testURL("/en-US/signup"));
     await expect(page).toMatchElement("h1", {
@@ -65,34 +50,6 @@ describe("Visiting pages related and requiring authentication", () => {
       "I agree to Mozilla's Terms and Privacy Notice."
     );
     await expect(page).toMatchElement("button", { text: "Complete sign-in" });
-  });
-
-  it("should show your settings page", async () => {
-    const url = testURL("/en-US/settings");
-    await page.goto(url);
-    await expect(page).toMatchElement("h1", { text: "Account settings" });
-    await expect(page).toMatch("You have not signed in");
-    await expect(page).toMatch("Sign in");
-
-    // First sign in with GitHub (happy path)
-    await page.goto(testURL("/en-US/signin"));
-    await expect(page).toMatch("Sign in with GitHub");
-    await expect(page).toClick("a", {
-      text: /Sign in with GitHub/,
-    });
-    await expect(page.url()).toMatch(testURL("/en-US/"));
-    // This is important otherwise it won't wait for the XHR where the
-    // cookie gets set!
-    await page.waitForNavigation({ waitUntil: "networkidle2" });
-
-    await page.goto(testURL("/en-US/settings"));
-    await expect(page).toMatchElement("h1", { text: "Account settings" });
-    await expect(page).toMatchElement("button", { text: "Close account" });
-
-    // Change locale to French
-    await expect(page).toSelect('select[name="locale"]', "French");
-    await expect(page).toClick("button", { text: "Update language" });
-    await expect(page).toMatch("Yay! Updated settings successfully saved.");
   });
 
   // This test has turned out to be fragile. It's failing sporadically and

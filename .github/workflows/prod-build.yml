@@ -104,7 +104,7 @@ jobs:
           python-version: "3.8"
 
       - name: Install Python poetry
-        uses: snok/install-poetry@v1.1.6
+        uses: snok/install-poetry@v1.1.7
 
       - name: Install deployer
         run: |
@@ -150,7 +150,7 @@ jobs:
           BUILD_SPEEDCURVE_LUX_ID: 108906238
 
           # This enables the Plus call-to-action banner and the Plus landing page
-          REACT_APP_ENABLE_PLUS: false
+          REACT_APP_ENABLE_PLUS: true
 
           # This removes the ability to sign in
           REACT_APP_DISABLE_AUTH: true

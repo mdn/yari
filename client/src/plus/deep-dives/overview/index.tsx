@@ -11,17 +11,18 @@ export function Overview({ pageTitle }: { pageTitle?: string }) {
     document.title = pageTitle || defaultTitle;
   }, [pageTitle]);
   const isServer = typeof window === "undefined";
+  const loading = (
+    <Loading
+      message={`Loading ${pageTitle || defaultTitle}…`}
+      minHeight={800}
+    />
+  );
   return (
     <PageContentContainer extraClasses="plus">
-      {!isServer && (
-        <React.Suspense
-          fallback={
-            <Loading
-              message={`Loading ${pageTitle || defaultTitle}…`}
-              minHeight={600}
-            />
-          }
-        >
+      {isServer ? (
+        loading
+      ) : (
+        <React.Suspense fallback={loading}>
           <App />
         </React.Suspense>
       )}

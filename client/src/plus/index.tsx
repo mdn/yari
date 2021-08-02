@@ -11,12 +11,13 @@ export function Plus() {
     document.title = pageTitle;
   }, []);
   const isServer = typeof window === "undefined";
+  const loading = <Loading message={`Loading ${pageTitle}…`} minHeight={800} />;
   return (
     <PageContentContainer extraClasses="plus">
-      {!isServer && (
-        <React.Suspense
-          fallback={<Loading message="Loading MDN Plus…" minHeight={600} />}
-        >
+      {isServer ? (
+        loading
+      ) : (
+        <React.Suspense fallback={loading}>
           <App />
         </React.Suspense>
       )}

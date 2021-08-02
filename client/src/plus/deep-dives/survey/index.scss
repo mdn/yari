@@ -56,12 +56,7 @@
 
   [type="text"] {
     margin: layout.$base-spacing 0;
-    max-width: 90%;
     width: 100%;
-
-    @media #{layout.$mq-small-desktop-and-up} {
-      max-width: 70%;
-    }
   }
 
   [type="radio"],
@@ -72,15 +67,28 @@
   [type="radio"] {
     @media #{layout.$mq-tablet-and-up} {
       display: block;
+      margin: 0 auto;
     }
   }
 
   textarea {
     margin-bottom: layout.$base-spacing;
+    width: 100%;
   }
 
   .survey-success {
+    align-items: center;
+    display: flex;
     font-size: typography.$xl-font-size;
+    justify-content: center;
+    line-height: 150%;
+    min-height: 250px;
     text-align: center;
+  }
+
+  .button-container {
+    display: flex;
+    gap: 36px;
+    justify-content: flex-end;
   }
 }
