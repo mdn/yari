@@ -26,7 +26,7 @@ export class FuzzySearch {
       // already sorted by popularity.
       // So if someone searches for something short like `x` we just take
       // the top 'limit' docs that have an `x` in the `.url`. This is
-      // faster than going through
+      // faster than going through every doc with Fzf.
       const shortlistDocs: Doc[] = [];
       for (const doc of this.docs) {
         if (doc.url.toLowerCase().includes(needleLowerCase)) {
