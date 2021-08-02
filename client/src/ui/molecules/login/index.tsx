@@ -1,3 +1,4 @@
+import React from "react";
 import { Link, useLocation } from "react-router-dom";
 
 import Dropdown from "../dropdown";
@@ -26,6 +27,8 @@ function LoginInner() {
   const locale = useLocale();
   const { pathname } = useLocation();
   const userData = useUserData();
+
+  const [forceCloseDropdown, setForceCloseDropdown] = React.useState(false);
 
   // if we don't have the user data yet, don't render anything
   if (!userData || typeof window === "undefined") {
@@ -58,13 +61,29 @@ function LoginInner() {
   );
 
   return (
-    <Dropdown id="user-avatar-menu" label={label} right={true} hideArrow={true}>
+    <Dropdown
+      id="user-avatar-menu"
+      label={label}
+      right={true}
+      hideArrow={true}
+      forceClose={forceCloseDropdown}
+    >
       <li>
-        <Link to={`/${locale}/settings`}>Account settings</Link>
+        <Link
+          to={`/${locale}/settings`}
+          onClick={() => {
+            setForceCloseDropdown(true);
+          }}
+        >
+          Account settings
+        </Link>
       </li>
       <li>
         <Link
           to={`/${locale}/signout?${new URLSearchParams({ next }).toString()}`}
+          onClick={() => {
+            setForceCloseDropdown(true);
+          }}
         >
           Sign out
         </Link>
