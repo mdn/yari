@@ -15,12 +15,13 @@ export function DeepDives({ pageTitle }: { pageTitle?: string }) {
 
   const isServer = typeof window === "undefined";
 
+  const loading = <Loading message="Loading deep dive…" minHeight={800} />;
   return (
     <PageContentContainer extraClasses="plus deep-dives">
-      {!isServer && (
-        <React.Suspense
-          fallback={<Loading message="Loading deep dive…" minHeight={600} />}
-        >
+      {isServer ? (
+        loading
+      ) : (
+        <React.Suspense fallback={loading}>
           <Article slug={slug} />
         </React.Suspense>
       )}
