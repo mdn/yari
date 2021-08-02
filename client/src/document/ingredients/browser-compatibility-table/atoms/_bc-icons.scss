@@ -2,7 +2,14 @@
 
 .bc-icons {
   display: inline-block;
-  vertical-align: text-top;
+
+  .only-icon {
+    vertical-align: middle;
+
+    .ic-footnote {
+      vertical-align: sub;
+    }
+  }
 }
 
 .bc-icons i,
