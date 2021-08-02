@@ -1,9 +1,9 @@
-import * as React from "react";
+import { Link } from "react-router-dom";
 
 import Dropdown from "../dropdown";
 import { useLocale } from "../../../hooks";
 import SignInLink from "../../atoms/signin-link";
-import { useUserData, removeSessionStorageData } from "../../../user-context";
+import { useUserData } from "../../../user-context";
 
 import { DISABLE_AUTH } from "../../../constants";
 
@@ -49,44 +49,14 @@ function LoginInner() {
       <span className="avatar-username">{userData.username}</span>
     </>
   );
-  console.log("In LoginInner:", userData);
-
-  // Note that this component is never rendered server-side so it's safe to
-  // rely on `window.location`.
-  let next = window.location.pathname;
-  let signOutURL = `/${locale}/signout`;
-  if (
-    process.env.NODE_ENV === "development" &&
-    process.env.REACT_APP_KUMA_HOST
-  ) {
-    const combined = new URL(next, window.location.href);
-    next = combined.toString();
-    signOutURL = `http://${process.env.REACT_APP_KUMA_HOST}${signOutURL}`;
-  }
 
   return (
     <Dropdown id="user-avatar-menu" label={label} right={true} hideArrow={true}>
       <li>
-        <a href={`/${locale}/settings`}>Account settings</a>
+        <Link to={`/${locale}/settings`}>Account settings</Link>
       </li>
       <li>
-        <form
-          action={signOutURL}
-          method="post"
-          onSubmit={() => {
-            // Because sign out happens externally, our user-context might have
-            // cached the fact that the user was signed in. It will not have any
-            // chance of knowing, that the user signed out, until they're
-            // redirected back (after the successful signout POST in Kuma).
-            // So we take this opportunity to invalidate any such caching.
-            removeSessionStorageData();
-          }}
-        >
-          <input name="next" type="hidden" value={next} />
-          <button className="ghost signout-button" type="submit">
-            Sign out
-          </button>
-        </form>
+        <Link to={`/${locale}/signout`}>Sign out</Link>
       </li>
     </Dropdown>
   );

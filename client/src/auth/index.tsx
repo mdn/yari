@@ -5,16 +5,19 @@ import { PageContentContainer } from "../ui/atoms/page-content";
 
 const SignInApp = React.lazy(() => import("./sign-in"));
 const SignUpApp = React.lazy(() => import("./sign-up"));
+const SignOutApp = React.lazy(() => import("./sign-out"));
 
 function Container({
+  pageTitle,
   children,
   className,
 }: {
+  pageTitle: string;
   children: React.ReactNode;
   className: string;
 }) {
   const isServer = typeof window === "undefined";
-  const pageTitle = "Sign in to MDN Web Docs";
+
   React.useEffect(() => {
     document.title = pageTitle;
   }, []);
@@ -34,7 +37,7 @@ function Container({
 }
 export function SignIn() {
   return (
-    <Container className="sign-in">
+    <Container className="sign-in" pageTitle="Sign in to MDN Web Docs">
       <React.Suspense
         fallback={<Loading message="Loading sign in…" minHeight={400} />}
       >
@@ -43,13 +46,26 @@ export function SignIn() {
     </Container>
   );
 }
+
 export function SignUp() {
   return (
-    <Container className="sign-up">
+    <Container className="sign-up" pageTitle="Sign up to MDN Web Docs">
       <React.Suspense
         fallback={<Loading message="Loading sign up…" minHeight={400} />}
       >
         <SignUpApp />
+      </React.Suspense>
+    </Container>
+  );
+}
+
+export function SignOut() {
+  return (
+    <Container className="sign-out" pageTitle="Sign out">
+      <React.Suspense
+        fallback={<Loading message="Loading sign out…" minHeight={400} />}
+      >
+        <SignOutApp />
       </React.Suspense>
     </Container>
   );
