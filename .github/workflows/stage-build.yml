@@ -104,7 +104,7 @@ jobs:
           python-version: "3.8"
 
       - name: Install Python poetry
-        uses: snok/install-poetry@v1.1.6
+        uses: snok/install-poetry@v1.1.7
 
       - name: Install deployer
         run: |
@@ -167,8 +167,14 @@ jobs:
           # See https://github.com/mdn/yari/issues/4217
           yarn tool popularities
 
-          # yarn tool sync-translated-content
-          yarn build
+          yarn tool sync-translated-content
+
+          # Spread the work across 2 processes. Why 2? Because that's what you
+          # get in the default GitHub hosting Linux runners.
+          # See https://docs.github.com/en/actions/using-github-hosted-runners/about-github-hosted-runners#supported-runners-and-hardware-resources
+          yarn build --locale     en-us --locale     ja --locale     fr &
+          yarn build --not-locale en-us --not-locale ja --not-locale fr &
+          wait
 
           du -sh client/build
 

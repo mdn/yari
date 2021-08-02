@@ -8,14 +8,14 @@ export function Feature() {
           <h1>
             Boost your learning <span>with MDN Deep Dives</span>
           </h1>
-          <h2 className="gradient-clip-text">What's included</h2>
+          <h2 className="gradient-clip-text">Coming up next</h2>
         </div>
         <p>
           Receive access to new deep dives every month, written by Mozilla and
           industry insiders. Upcoming titles include:
         </p>
         <ul>
-          <li>Modern CSS in the real world</li>
+          <li>Modern CSS in the Real World</li>
           <li>A robust CSS pattern library</li>
           <li>Modern responsive web design</li>
           <li>Security considerations in web development</li>

@@ -7,37 +7,48 @@ import { PageNotFound } from "../page-not-found";
 const App = React.lazy(() => import("./app"));
 const Bookmarks = React.lazy(() => import("./bookmarks"));
 
-export function Plus() {
-  const pageTitle = "MDN Plus";
+export function Plus({ pageTitle }: { pageTitle?: string }) {
+  console.log({ pageTitle });
+
+  const defaultPageTitle = "MDN Plus";
   React.useEffect(() => {
-    document.title = pageTitle;
-  }, []);
+    document.title = pageTitle || defaultPageTitle;
+  }, [pageTitle]);
+
   const isServer = typeof window === "undefined";
+  const loading = (
+    <Loading
+      message={`Loading ${pageTitle || defaultPageTitle}…`}
+      minHeight={800}
+    />
+  );
 
   const routes = (
     <Routes>
       <Route
         path="/"
         element={
-          <React.Suspense
-            fallback={<Loading minHeight={800} message={"Loading MDN plus…"} />}
-          >
-            <App />
-          </React.Suspense>
+          isServer ? (
+            loading
+          ) : (
+            <React.Suspense fallback={loading}>
+              <App />
+            </React.Suspense>
+          )
         }
       />
       <Route
         path="bookmarks"
         element={
-          <React.Suspense
-            fallback={
-              <Loading minHeight={800} message={"Loading bookmarks app…"} />
-            }
-          >
-            <div className="bookmarks">
-              <Bookmarks />
-            </div>
-          </React.Suspense>
+          isServer ? (
+            loading
+          ) : (
+            <React.Suspense fallback={loading}>
+              <div className="bookmarks">
+                <Bookmarks />
+              </div>
+            </React.Suspense>
+          )
         }
       />
       <Route path="*" element={<PageNotFound />} />

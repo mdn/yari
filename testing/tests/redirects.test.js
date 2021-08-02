@@ -1205,6 +1205,13 @@ const MISC_REDIRECT_URLS = [].concat(
   url_test("/en-US/events/", "https://community.mozilla.org/events/", {
     statusCode: 302,
   }),
+  url_test(
+    "/communities/mozilla-tech-speakers",
+    "https://community.mozilla.org/en/groups/tech-speakers/",
+    {
+      statusCode: 302,
+    }
+  ),
   url_test("/fr/account", "/fr/settings", { statusCode: 302 }),
   url_test("/en-US/account", "/en-US/settings", { statusCode: 302 }),
   url_test("/en-US/account/", "/en-US/settings", { statusCode: 302 }),

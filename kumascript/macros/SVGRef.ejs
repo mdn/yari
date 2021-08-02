@@ -36,7 +36,7 @@ if (found_tag != undefined && found_tag != null && found_tag.length) {
 
     for (aPage in pageList) {
         if (page.hasTag(pageList[aPage], found_tag)) {
-            resultSVG.push(pageList[aPage].slug.split("/").pop(-1).toLowerCase());
+            resultSVG.push(pageList[aPage].slug.split("/").pop(-1));
         }
     }
 }
