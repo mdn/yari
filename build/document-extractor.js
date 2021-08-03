@@ -48,12 +48,9 @@ function extractSections($) {
   const iterable = [...$("#_body")[0].childNodes];
 
   let c = 0;
+  let tagNames = ["h2", "h3", "h4"];
   iterable.forEach((child) => {
-    if (
-      child.tagName === "h2" ||
-      child.tagName === "h3" ||
-      child.tagName === "h4"
-    ) {
+    if (tagNames.includes(child.tagName)) {
       if (c) {
         const [subSections, subFlaws] = addSections(section.clone());
         sections.push(...subSections);
