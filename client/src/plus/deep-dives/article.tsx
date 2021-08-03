@@ -1,11 +1,11 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 
-import { Feature } from "./feature";
 import { SeriesCard, SerieData } from "./series-card";
 
 import "./index.scss";
 import { DeepDiveNotFound } from "./not-found";
+import { ProductTeaser } from "../../ui/organisms/product-teaser";
 import { Survey } from "./survey";
 import {
   YourBrowserSupportToolkit,
@@ -24,6 +24,8 @@ const SERIES = [
 ];
 
 export default function Article({ slug }: { slug: string }) {
+  const [hasFinishedSurvey, setHasFinishedSurvey] = useState(false);
+
   // Only when served via static Express does it force a trailing
   // slash to the end of the URL. So we have to, for testing reasons,
   // remove any trailing slashes.
@@ -88,13 +90,20 @@ export default function Article({ slug }: { slug: string }) {
 
         <div className="deep-dive-article-sidebar">
           <SeriesCard
-            title="Modern CSS in the real world"
+            title="Modern CSS in the Real World"
+            titleLink={`/${locale}/plus/deep-dives`}
             seriesList={getSeriesList()}
+            linkToSurvey={!hasFinishedSurvey}
           />
         </div>
       </div>
-      <Feature />
-      <Survey slug={slug} />
+      <ProductTeaser />
+      <Survey
+        slug={slug}
+        hasFinished={() => {
+          setHasFinishedSurvey(true);
+        }}
+      />
       <div
         className={`deep-dive-article-footer ${
           previousArticle ? "previous" : ""
@@ -115,6 +124,13 @@ export default function Article({ slug }: { slug: string }) {
           )}
         </p>
       </div>
+      {!hasFinishedSurvey && (
+        <div className="take-survey-mobile">
+          <a href="#survey-form" className="take-survey-link">
+            Take our survey
+          </a>
+        </div>
+      )}
     </>
   );
 }

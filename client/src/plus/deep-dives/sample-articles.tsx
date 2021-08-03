@@ -1,12 +1,20 @@
+import { useParams } from "react-router-dom";
+
 import { ArticleMeta } from "./article-meta";
 import { Byline } from "./byline";
 
 export function PlanningForBrowserSupport() {
+  const { locale } = useParams();
   return (
     <article className="deep-dive-article-container">
       <header className="main-heading-group heading-group">
         <h1>Planning for browser support</h1>
-        <h2>Modern CSS in the real world : Part one</h2>
+        <h2>
+          <a href={`/${locale}/plus/deep-dives`}>
+            Modern CSS in the Real World
+          </a>{" "}
+          : Part one
+        </h2>
       </header>
       <p className="article-lead">
         Learn about the types of CSS issues you’ll be facing when working with
@@ -16,7 +24,11 @@ export function PlanningForBrowserSupport() {
       <Byline
         avatar="rachel-andrew.png"
         author="Rachel Andrew"
-        authorDescription="MDN Editor & Writer, Former Editor in Chief of Smashing Magazine"
+        authorDescription="CSS WG Invited Expert"
+        authorBioURLs={[
+          { url: "https://twitter.com/rachelandrew", text: "@rachelandrew" },
+          { url: "https://rachelandrew.co.uk", text: "rachelandrew.co.uk" },
+        ]}
       />
       <ArticleMeta publishDate="March 29th, 2021" readTime="12 minute read" />
       <p>
@@ -120,7 +132,9 @@ export function PlanningForBrowserSupport() {
         for working round it, and report the issue to a browser vendor to get it
         fixed!
       </p>
-      <h4>Browsers which don’t support a feature yet</h4>
+      <h4>
+        Browsers which don’t support a feature <em>yet</em>
+      </h4>
       <p>
         The biggest category of compatibility issues is never going to go away.
         New CSS will never land in all browsers at the same time, nor will all
@@ -238,31 +252,42 @@ export function PlanningForBrowserSupport() {
         many are on mobile devices, and which versions of evergreen browsers
         that are in use.
       </p>
+      <figure>
+        <img
+          src="/assets/deepdives/planning-for-browser-support01.png"
+          width="782"
+          height="346"
+          alt=""
+        />
+        <figcaption>
+          Good Analytics dashboard showing browser usage statistics for a
+          website
+        </figcaption>
+      </figure>
       <p>
         If you don’t have your own analytics information then you could look at
-        general statistics for the locations your users are likely to be in.
-        Statcounter (
-        <a href="https://gs.statcounter.com/">https://gs.statcounter.com/</a>)
-        is a good place to look at the browser versions currently in use, and
-        can be filtered by location
+        general statistics for the locations your users are likely to be in.{" "}
+        <a href="https://gs.statcounter.com/">Statcounter</a> is a good place to
+        look at the browser versions currently in use, and can be filtered by
+        location
       </p>
       <p>
         If you have a narrow audience, then you may be able to use user
         interviews to find out if this audience is more likely to be locked into
         an old browser.
       </p>
-      <div className="notecard note">
-        <p>
-          Provide some kind of well-designed summary chart graphic, which people
-          can use to refresh their memories quickly, and grab and adapt for
-          their own support chart.
-        </p>
-        <p>
-          Something like "Full support browsers: Last 3 versions of Fx
-          desktop/mobile, Chrome desktop/mobile, Safari desktop/mobile ....etc.
-          Limited semantic HTML: IE 11 etc."
-        </p>
-      </div>
+      <figure>
+        <img
+          src="/assets/deepdives/planning-for-browser-support02.png"
+          width="782"
+          height="346"
+          alt=""
+        />
+        <figcaption>
+          Table showing a list of fully supported browsers and a list of browser
+          that will get a gracefully degraded experience
+        </figcaption>
+      </figure>
       <h4>Where is it best to spend your time and money?</h4>
       <p>
         The fact is that, even if you don’t want to use all the new bells and
@@ -339,7 +364,7 @@ export function PlanningForBrowserSupport() {
         only available in Firefox. You might decide that relying on this feature
         is not appropriate, but be happy to use it to get better alignment
         across some components, knowing that as it ships in Chrome and other
-        browsers they will get the better experience too.
+        browsers they will get a better experience too.
       </p>
       <div className="article-sidebar">
         <p>
@@ -388,11 +413,17 @@ export function PlanningForBrowserSupport() {
 }
 
 export function YourBrowserSupportToolkit() {
+  const { locale } = useParams();
   return (
     <article className="deep-dive-article-container">
       <header className="main-heading-group heading-group">
         <h1>Your browser support toolkit</h1>
-        <h2>Modern CSS in the real world : Part two</h2>
+        <h2>
+          <a href={`/${locale}/plus/deep-dives`}>
+            Modern CSS in the Real World
+          </a>{" "}
+          : Part two
+        </h2>
       </header>
       <p className="article-lead">
         In this article discover the resources available, to help you develop a
@@ -401,7 +432,11 @@ export function YourBrowserSupportToolkit() {
       <Byline
         avatar="rachel-andrew.png"
         author="Rachel Andrew"
-        authorDescription="MDN Editor &amp; Writer, Former Editor in Chief of Smashing Magazine"
+        authorDescription="CSS WG Invited Expert"
+        authorBioURLs={[
+          { url: "https://twitter.com/rachelandrew", text: "@rachelandrew" },
+          { url: "https://rachelandrew.co.uk", text: "rachelandrew.co.uk" },
+        ]}
       />
       <ArticleMeta publishDate="March 29th, 2021" readTime="18 minute read" />
       <p>
@@ -441,7 +476,6 @@ export function YourBrowserSupportToolkit() {
           <a href="https://caniuse.com/?search=css%20grid">
             css grid on Can I Use
           </a>
-          .
         </figcaption>
       </figure>
       <p>
@@ -464,7 +498,6 @@ export function YourBrowserSupportToolkit() {
           <a href="https://developer.mozilla.org/docs/Web/CSS/grid-template-columns#browser_compatibility">
             grid-template-columns
           </a>
-          .
         </figcaption>
       </figure>
       <p>
@@ -696,7 +729,7 @@ export function YourBrowserSupportToolkit() {
       </p>
       <p>
         Introducing a Feature Query into our demo means that we can wrap up all
-        of our grid code with a test to see if the browser supports
+        of our grid code with a test to see if the browser supports{" "}
         <code>display: grid</code>.
       </p>
       <div className="code-snippet">
@@ -752,23 +785,28 @@ export function YourBrowserSupportToolkit() {
       <h4>Vendor prefixes</h4>
       <p>
         The browser compat tables on MDN will also tell you if the property or
-        value you want to use needs to be prefixed. Vendor prefixes are a way
-        for browsers to ship their own experimental CSS features that won’t
-        interfere with the standard version of the property, as well as
+        value you want to use needs to be <em>prefixed</em>. Vendor prefixes are
+        a way for browsers to ship their own experimental CSS features that
+        won't interfere with the standard version of the property, as well as
         browser-specific proprietary features, using a prepended prefix.
       </p>
       <p>Prefixes used in major browsers are as follows:</p>
       <ul>
         <li>
-          -webkit- (Chrome, Safari, newer versions of Opera, Edge after version
-          79, almost all iOS browsers including Firefox for iOS, any other
-          Chromium-based browsers not already mentioned — including Brave,
-          Samsung Internet, etc.)
+          <code>-webkit-</code> (Chrome, Safari, newer versions of Opera, Edge
+          after version 79, almost all iOS browsers including Firefox for iOS,
+          any other Chromium-based browsers not already mentioned &mdash;
+          including Brave, Samsung Internet, etc.)
         </li>
-        <li>-moz- (Firefox)</li>
-        <li>-o- (old pre-Chromium versions of Opera)</li>
         <li>
-          -ms- (Internet Explorer and Microsoft Edge prior to version 79.)
+          <code>-moz-</code> (Firefox)
+        </li>
+        <li>
+          <code>-o-</code> (old pre-Chromium versions of Opera)
+        </li>
+        <li>
+          <code>-ms-</code> (Internet Explorer and Microsoft Edge prior to
+          version 79.)
         </li>
       </ul>
       <p>
@@ -776,7 +814,7 @@ export function YourBrowserSupportToolkit() {
         a long time, and web developers saw the functionality and began using
         them in production code. There are still a few properties and values
         that are used with prefixed names, and this is indicated in the browser
-        compat tables with a star, for example see the data for
+        compat tables with a star, for example see the data for{" "}
         <code>background-clip: text</code>, which indicates you should use a
         prefix.
       </p>
@@ -812,7 +850,7 @@ export function YourBrowserSupportToolkit() {
         fallbacks. Using built-in features of the web platform is the best way
         to create a resilient site. However, sometimes you will need to reach
         for other tools built on top of the web platform by the community. Here
-        we’ll look specifically at the PostCSS tool, and more generally at the
+        we'll look specifically at the PostCSS tool, and more generally at the
         concept of Polyfills.
       </p>
       <h4>PostCSS</h4>
@@ -951,8 +989,26 @@ export function YourBrowserSupportToolkit() {
         useful tool if you get a bug report on your site from an unusual or
         particularly old browser that you do not have access to.
       </p>
+      <figure>
+        <img
+          src="/assets/deepdives/your-browser-support-toolkit-003.png"
+          width="782"
+          height="440"
+          alt=""
+        />
+        <figcaption>
+          Operating systems available on{" "}
+          <a
+            href="https://browserstack.com"
+            className="external"
+            rel="external"
+          >
+            Browserstack
+          </a>
+        </figcaption>
+      </figure>
       <p>
-        n this article you have learned that we have many tools available to
+        In this article you have learned that we have many tools available to
         help support and test in browsers. The last section of this guide will
         demonstrate how to use these when developing some common components,
         with practical examples.

@@ -2225,15 +2225,10 @@
       "impl": []
     },
     "Window": {
-      "inh": "",
+      "inh": "EventTarget",
       "impl": [
         "GlobalEventHandlers",
         "WindowEventHandlers",
-        "GlobalCrypto",
-        "SpeechSynthesisGetter",
-        "WindowModal",
-        "OnErrorEventHandlerForWindow",
-        "ChromeWindow",
         "WindowOrWorkerGlobalScope"
       ]
     },

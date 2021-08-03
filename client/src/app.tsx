@@ -20,6 +20,7 @@ import { SignIn, SignUp } from "./auth";
 import { Settings } from "./settings";
 
 import { DeepDives } from "./plus/deep-dives";
+import { Overview as DeepDivesOverview } from "./plus/deep-dives/overview";
 // import { DeepDivesHomepage } from "./plus/deep-dives/homepage";
 import { PlusV1 } from "./plus-v1";
 
@@ -257,10 +258,10 @@ export function App(appProps) {
             />
             {ENABLE_PLUS && (
               <Route
-                path="/plus"
+                path="/plus/*"
                 element={
                   <StandardLayout>
-                    <PlusV1 />
+                    <PlusV1 {...appProps} />
                   </StandardLayout>
                 }
               />
@@ -270,7 +271,7 @@ export function App(appProps) {
                 path="/plus/deep-dives"
                 element={
                   <StandardLayout>
-                    <PlusV1 />
+                    <DeepDivesOverview {...appProps} />
                   </StandardLayout>
                 }
               />

@@ -1,4 +1,5 @@
 import React from "react";
+import { useParams } from "react-router-dom";
 import useSWR from "swr";
 
 import "./index.scss";
@@ -40,7 +41,14 @@ function getSessionStorageData(key: string) {
   }
 }
 
-export function Survey({ slug }: { slug: string }) {
+export function Survey({
+  slug,
+  hasFinished,
+}: {
+  slug: string;
+  hasFinished: () => void;
+}) {
+  const { locale } = useParams();
   const previousPage = getSessionStorageData(SESSION_KEY) || "";
   const [page, setPage] = React.useState<"start" | "second" | "success">(
     previousPage === "second" || previousPage === "success"
@@ -51,7 +59,10 @@ export function Survey({ slug }: { slug: string }) {
     if (page !== "start") {
       setSessionStorageData(SESSION_KEY, page);
     }
-  }, [page]);
+    if (page === "success") {
+      hasFinished();
+    }
+  }, [page, hasFinished]);
 
   const [surveySubmissionError, setSurveySubmissionError] =
     React.useState<Error | null>(null);
@@ -126,21 +137,21 @@ export function Survey({ slug }: { slug: string }) {
   return (
     <div className="survey-wrapper">
       {pingError && (
-        <div className="notecard danger">
+        <div className="girdle">
           <p>
-            <strong>Oh no!</strong> Unable to connect to the server for
-            preparing your survey.
+            <b>Oh no!</b> Unable to connect to the server to prepare your
+            survey.
           </p>
-          <code>{pingError.toString()}</code>
+          <p>Refresh the page or try again later.</p>
         </div>
       )}
 
       {surveySubmissionError && (
-        <div className="notecard danger">
+        <div className="girdle">
           <p>
-            <strong>Oh no!</strong> Your survey submission unfortunately failed.
+            <b>Oh no!</b> Your survey submission unfortunately failed.
           </p>
-          <code>{surveySubmissionError.toString()}</code>
+          <p>Refresh the page or try again later.</p>
         </div>
       )}
 
@@ -150,6 +161,7 @@ export function Survey({ slug }: { slug: string }) {
 
       {page !== "success" && !pingError && (
         <form
+          id="survey-form"
           name="survey-form"
           action=""
           method="post"
@@ -211,14 +223,23 @@ export function Survey({ slug }: { slug: string }) {
               </div>
               <h3>How would you rate the articles?</h3>
               <div className="survey-question">
-                <h4>Planning for browser support</h4>
+                <h4>
+                  Article 1:{" "}
+                  <a
+                    href={`/${locale}/plus/deep-dives/planning-for-browser-support`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    Planning for browser support
+                  </a>
+                </h4>
                 <div className="form-radio-input-group">
                   {[
-                    ["not-read", "Didn’t read"],
-                    ["bad", "Bad"],
-                    ["neutral", "Neutral"],
-                    ["good", "Good"],
-                    ["very-good", "Very good"],
+                    ["pfbs-not-read", "Didn’t read"],
+                    ["pfbs-bad", "Bad"],
+                    ["pfbs-neutral", "Neutral"],
+                    ["pfbs-good", "Good"],
+                    ["pfbs-very-good", "Very good"],
                   ].map(([id, label]) => {
                     return (
                       <label key={id} htmlFor={`id_${id}`}>
@@ -237,6 +258,7 @@ export function Survey({ slug }: { slug: string }) {
                               );
                             }
                           }}
+                          required
                         />
                         {label}
                       </label>
@@ -263,7 +285,16 @@ export function Survey({ slug }: { slug: string }) {
                 </div>
               </div>
               <div className="survey-question">
-                <h4>Your browser support toolkit</h4>
+                <h4>
+                  Article 2:{" "}
+                  <a
+                    href={`/${locale}/plus/deep-dives/your-browser-support-toolkit`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    Your browser support toolkit
+                  </a>
+                </h4>
                 <div className="form-radio-input-group">
                   {[
                     ["not-read", "Didn’t read"],
@@ -289,6 +320,7 @@ export function Survey({ slug }: { slug: string }) {
                               );
                             }
                           }}
+                          required
                         />
                         {label}
                       </label>
@@ -315,14 +347,16 @@ export function Survey({ slug }: { slug: string }) {
                   />
                 </div>
               </div>
-              <button
-                type="submit"
-                className="button primary"
-                disabled={submitting}
-              >
-                Continue
-              </button>{" "}
-              {submitting && <small>Submitting</small>}
+              <div className="button-container">
+                <button
+                  type="submit"
+                  className="button primary"
+                  disabled={submitting}
+                >
+                  Continue
+                </button>{" "}
+                {submitting && <small>Submitting</small>}
+              </div>
             </fieldset>
           )}
 
@@ -433,14 +467,25 @@ export function Survey({ slug }: { slug: string }) {
                   />
                 </div>
               </div>
-              <button
-                type="submit"
-                className="button primary"
-                disabled={submitting}
-              >
-                Submit
-              </button>{" "}
-              {submitting && <small>Submitting</small>}
+              <div className="button-container">
+                <button
+                  type="button"
+                  className="button primary"
+                  onClick={() => {
+                    setPage("start");
+                  }}
+                >
+                  Previous
+                </button>{" "}
+                <button
+                  type="submit"
+                  className="button primary"
+                  disabled={submitting}
+                >
+                  Submit
+                </button>{" "}
+                {submitting && <small>Submitting</small>}
+              </div>
             </fieldset>
           )}
         </form>
