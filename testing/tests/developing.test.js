@@ -1,10 +1,5 @@
+const { test, expect } = require("@playwright/test");
 const got = require("got");
-const { setDefaultOptions } = require("expect-puppeteer");
-
-// The default it 500ms. Building and running these pages can be pretty slow
-// since the rendering both involves create-react-app bundling the test page,
-// and then the server building of the page can be pretty heavy.
-setDefaultOptions({ timeout: 5000 });
 
 const DEV_BASE_URL =
   process.env.DEVELOPING_DEV_BASE_URL || "http://localhost:3000";
@@ -27,23 +22,26 @@ const SKIP_DEV_URL = JSON.parse(process.env.DEVELOPING_SKIP_DEV_URL || "false");
 // prepared to do so.
 // The source of this idea comes from https://github.com/facebook/jest/issues/7245
 const isTesting = JSON.parse(process.env.TESTING_DEVELOPING || "false");
-const withDeveloping = isTesting ? it : it.skip;
-// If the test suite runs in a way that there's no separate dev server,
-// don't bother using the `DEV_BASE_URL`.
-// For example, when it tests the `npm pack` tarball, it's starting only
-// the one server (on `localhost:5000`) that suite will set the `DEV_BASE_URL`
-// to be the same as `SAME_BASE_URL`.
-// In conclusion, if there's only 1 base URL to test again; don't test both.
-const withCrud = isTesting && !SKIP_DEV_URL ? it : it.skip;
+// const withDeveloping = isTesting ? it : it.skip;
+// // If the test suite runs in a way that there's no separate dev server,
+// // don't bother using the `DEV_BASE_URL`.
+// // For example, when it tests the `npm pack` tarball, it's starting only
+// // the one server (on `localhost:5000`) that suite will set the `DEV_BASE_URL`
+// // to be the same as `SAME_BASE_URL`.
+// // In conclusion, if there's only 1 base URL to test again; don't test both.
+// const withCrud = isTesting && !SKIP_DEV_URL ? it : it.skip;
 
-describe("Testing the kitchensink page", () => {
-  withCrud("open the page", async () => {
+test.describe("Testing the kitchensink page", () => {
+  test("open the page", async ({ page }) => {
+    test.skip(!isTesting || SKIP_DEV_URL);
+
     await page.goto(devURL("/en-US/docs/MDN/Kitchensink"));
     await expect(page).toMatch("The MDN Content Kitchensink");
     await expect(page).toMatch("No known flaws at the moment");
   });
 
-  withCrud("open a file attachement directly in the dev URL", async () => {
+  test("open a file attachement directly in the dev URL", async ({ page }) => {
+    test.skip(!isTesting || SKIP_DEV_URL);
     await page.goto(devURL("/en-US/docs/MDN/Kitchensink/iceberg.jpg"));
     // This is how Chromium makes a document title when viewing an image.
     expect(await page.title()).toBe("iceberg.jpg (1400×1050)");
@@ -52,7 +50,8 @@ describe("Testing the kitchensink page", () => {
     expect(page.url()).toBe(devURL("/en-US/docs/MDN/Kitchensink/iceberg.jpg"));
   });
 
-  withDeveloping("server-side render HTML", async () => {
+  test("server-side render HTML", async ({ page }) => {
+    test.skip(!isTesting);
     // You can go to the page directly via the server
     await page.goto(serverURL("/en-US/docs/MDN/Kitchensink"), {
       // This is necessary because the page contains lazy loading iframes
@@ -62,7 +61,9 @@ describe("Testing the kitchensink page", () => {
     await expect(page).toMatch("The MDN Content Kitchensink");
   });
 
-  withDeveloping("server-side render HTML", async () => {
+  test("server-side render HTML", async ({ page }) => {
+    test.skip(!isTesting);
+
     // Loading the index.json doesn't require a headless browser
     const { doc } = await got(
       serverURL("/en-US/docs/MDN/Kitchensink/index.json")
@@ -77,8 +78,9 @@ describe("Testing the kitchensink page", () => {
 
 // Note, some of these tests cover some of the core code that we use in
 // the Lambda@Edge origin-request handler.
-describe("Testing the Express server", () => {
-  withDeveloping("redirect without any useful headers", async () => {
+test.describe("Testing the Express server", () => {
+  test("redirect without any useful headers", async ({ page }) => {
+    test.skip(!isTesting);
     let response = await got(serverURL("/"), { followRedirect: false });
     expect(response.statusCode).toBe(302);
     expect(response.headers.location).toBe("/en-US/");
@@ -97,7 +99,8 @@ describe("Testing the Express server", () => {
     expect(response.headers.location).toBe("/en-US/docs/Web");
   });
 
-  withDeveloping("redirect based on _redirects.txt", async () => {
+  test("redirect based on _redirects.txt", async ({ page }) => {
+    test.skip(!isTesting);
     // Yes, this is a bit delicate since it depends on non-fixtures, but
     // it's realistic and it's a good end-to-end test.
     // See mdn/content/files/en-us/_redirects.txt
@@ -127,7 +130,9 @@ describe("Testing the Express server", () => {
     );
   });
 
-  withDeveloping("redirect by preferred locale cookie", async () => {
+  test("redirect by preferred locale cookie", async ({ page }) => {
+    test.skip(!isTesting);
+
     let response = await got(serverURL("/"), {
       followRedirect: false,
       headers: {
@@ -149,7 +154,9 @@ describe("Testing the Express server", () => {
     expect(response.headers.location).toBe("/en-US/");
   });
 
-  withDeveloping("redirect by 'Accept-Language' header", async () => {
+  test("redirect by 'Accept-Language' header", async ({ page }) => {
+    test.skip(!isTesting);
+
     let response = await got(serverURL("/"), {
       followRedirect: false,
       headers: {
@@ -171,7 +178,9 @@ describe("Testing the Express server", () => {
     expect(response.headers.location).toBe("/en-US/");
   });
 
-  withDeveloping("redirect by cookie trumps", async () => {
+  test("redirect by cookie trumps", async ({ page }) => {
+    test.skip(!isTesting);
+
     const response = await got(serverURL("/"), {
       followRedirect: false,
       headers: {
@@ -184,20 +193,26 @@ describe("Testing the Express server", () => {
   });
 });
 
-describe("Testing the CRUD apps", () => {
-  withCrud("open the writer's home page", async () => {
+test.describe("Testing the CRUD apps", () => {
+  test("open the writer's home page", async ({ page }) => {
+    test.skip(!isTesting || SKIP_DEV_URL);
+
     await page.goto(devURL("/"));
     await expect(page).toMatch("Writer's home page");
     await expect(page).toMatchElement("a", { text: "Flaws Dashboard" });
   });
 
-  withCrud("open the Flaws Dashboard", async () => {
+  test("open the Flaws Dashboard", async ({ page }) => {
+    test.skip(!isTesting || SKIP_DEV_URL);
+
     await page.goto(devURL("/"));
     await expect(page).toClick("a", { text: "Flaws Dashboard" });
     await expect(page).toMatch("Documents with flaws found (0)");
   });
 
-  withCrud("open the sitemap app", async () => {
+  test("open the sitemap app", async ({ page }) => {
+    test.skip(!isTesting || SKIP_DEV_URL);
+
     await page.goto(devURL("/"));
     await expect(page).toMatch("Writer's home page");
     await expect(page).toClick("a", { text: "Sitemap" });
