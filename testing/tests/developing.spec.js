@@ -10,38 +10,39 @@ function devURL(pathname = "/") {
 
 const SERVER_BASE_URL =
   process.env.DEVELOPING_SERVER_BASE_URL || "http://localhost:5000";
+
 function serverURL(pathname = "/") {
   return `${SERVER_BASE_URL}${pathname}`;
 }
 
-const SKIP_DEV_URL = JSON.parse(process.env.DEVELOPING_SKIP_DEV_URL || "false");
+function withCrud() {
+  return (
+    withDevelop() || JSON.parse(process.env.DEVELOPING_SKIP_DEV_URL || "false")
+  );
+}
 
-// This "trick" is to force every test to be skipped if the environment
-// variable hasn't been set. This way, when you run `jest ...`, and it finds
-// all `**/*.test.js` it doesn't actually run these tests unless explicitly
-// prepared to do so.
-// The source of this idea comes from https://github.com/facebook/jest/issues/7245
-const isTesting = JSON.parse(process.env.TESTING_DEVELOPING || "false");
-// const withDeveloping = isTesting ? it : it.skip;
-// // If the test suite runs in a way that there's no separate dev server,
-// // don't bother using the `DEV_BASE_URL`.
-// // For example, when it tests the `npm pack` tarball, it's starting only
-// // the one server (on `localhost:5000`) that suite will set the `DEV_BASE_URL`
-// // to be the same as `SAME_BASE_URL`.
-// // In conclusion, if there's only 1 base URL to test again; don't test both.
-// const withCrud = isTesting && !SKIP_DEV_URL ? it : it.skip;
+function withDevelop() {
+  return !JSON.parse(process.env.TESTING_DEVELOPING || "false");
+}
 
 test.describe("Testing the kitchensink page", () => {
   test("open the page", async ({ page }) => {
-    test.skip(!isTesting || SKIP_DEV_URL);
+    test.skip(withCrud());
 
     await page.goto(devURL("/en-US/docs/MDN/Kitchensink"));
-    await expect(page).toMatch("The MDN Content Kitchensink");
-    await expect(page).toMatch("No known flaws at the moment");
+    await page.waitForLoadState("networkidle");
+    expect(await page.title()).toContain("The MDN Content Kitchensink");
+    expect(
+      await page.isVisible("text=The MDN Content Kitchensink")
+    ).toBeTruthy();
+    expect(
+      await page.isVisible("text=No known flaws at the moment")
+    ).toBeTruthy();
   });
 
   test("open a file attachement directly in the dev URL", async ({ page }) => {
-    test.skip(!isTesting || SKIP_DEV_URL);
+    test.skip(withCrud());
+
     await page.goto(devURL("/en-US/docs/MDN/Kitchensink/iceberg.jpg"));
     // This is how Chromium makes a document title when viewing an image.
     expect(await page.title()).toBe("iceberg.jpg (1400×1050)");
@@ -51,18 +52,18 @@ test.describe("Testing the kitchensink page", () => {
   });
 
   test("server-side render HTML", async ({ page }) => {
-    test.skip(!isTesting);
+    test.skip(withDevelop());
+
     // You can go to the page directly via the server
-    await page.goto(serverURL("/en-US/docs/MDN/Kitchensink"), {
-      // This is necessary because the page contains lazy loading iframes
-      // to external domains.
-      waitUntil: "networkidle0",
-    });
-    await expect(page).toMatch("The MDN Content Kitchensink");
+    await page.goto(serverURL("/en-US/docs/MDN/Kitchensink"));
+    await page.waitForLoadState("networkidle");
+    expect(
+      await page.isVisible("text=The MDN Content Kitchensink")
+    ).toBeTruthy();
   });
 
-  test("server-side render HTML", async ({ page }) => {
-    test.skip(!isTesting);
+  test("server-side render JSON", async () => {
+    test.skip(withDevelop());
 
     // Loading the index.json doesn't require a headless browser
     const { doc } = await got(
@@ -79,8 +80,9 @@ test.describe("Testing the kitchensink page", () => {
 // Note, some of these tests cover some of the core code that we use in
 // the Lambda@Edge origin-request handler.
 test.describe("Testing the Express server", () => {
-  test("redirect without any useful headers", async ({ page }) => {
-    test.skip(!isTesting);
+  test("redirect without any useful headers", async () => {
+    test.skip(withDevelop());
+
     let response = await got(serverURL("/"), { followRedirect: false });
     expect(response.statusCode).toBe(302);
     expect(response.headers.location).toBe("/en-US/");
@@ -99,8 +101,9 @@ test.describe("Testing the Express server", () => {
     expect(response.headers.location).toBe("/en-US/docs/Web");
   });
 
-  test("redirect based on _redirects.txt", async ({ page }) => {
-    test.skip(!isTesting);
+  test("redirect based on _redirects.txt", async () => {
+    test.skip(withDevelop());
+
     // Yes, this is a bit delicate since it depends on non-fixtures, but
     // it's realistic and it's a good end-to-end test.
     // See mdn/content/files/en-us/_redirects.txt
@@ -130,8 +133,8 @@ test.describe("Testing the Express server", () => {
     );
   });
 
-  test("redirect by preferred locale cookie", async ({ page }) => {
-    test.skip(!isTesting);
+  test("redirect by preferred locale cookie", async () => {
+    test.skip(withDevelop());
 
     let response = await got(serverURL("/"), {
       followRedirect: false,
@@ -154,8 +157,8 @@ test.describe("Testing the Express server", () => {
     expect(response.headers.location).toBe("/en-US/");
   });
 
-  test("redirect by 'Accept-Language' header", async ({ page }) => {
-    test.skip(!isTesting);
+  test("redirect by 'Accept-Language' header", async () => {
+    test.skip(withDevelop());
 
     let response = await got(serverURL("/"), {
       followRedirect: false,
@@ -178,8 +181,8 @@ test.describe("Testing the Express server", () => {
     expect(response.headers.location).toBe("/en-US/");
   });
 
-  test("redirect by cookie trumps", async ({ page }) => {
-    test.skip(!isTesting);
+  test("redirect by cookie trumps", async () => {
+    test.skip(withDevelop());
 
     const response = await got(serverURL("/"), {
       followRedirect: false,
@@ -195,30 +198,35 @@ test.describe("Testing the Express server", () => {
 
 test.describe("Testing the CRUD apps", () => {
   test("open the writer's home page", async ({ page }) => {
-    test.skip(!isTesting || SKIP_DEV_URL);
+    test.skip(withCrud());
 
     await page.goto(devURL("/"));
-    await expect(page).toMatch("Writer's home page");
-    await expect(page).toMatchElement("a", { text: "Flaws Dashboard" });
+    expect(await page.title()).toContain("MDN Web Docs");
+    expect(await page.isVisible("text=Writer's home page")).toBeTruthy();
+    expect(await page.isVisible('a:has-text("Flaws Dashboard")')).toBeTruthy();
   });
 
   test("open the Flaws Dashboard", async ({ page }) => {
-    test.skip(!isTesting || SKIP_DEV_URL);
+    test.skip(withCrud());
 
     await page.goto(devURL("/"));
-    await expect(page).toClick("a", { text: "Flaws Dashboard" });
-    await expect(page).toMatch("Documents with flaws found (0)");
+    await page.click('a:has-text("Flaws Dashboard")');
+    await page.waitForLoadState("networkidle");
+    expect(
+      await page.isVisible("text=Documents with flaws found (0)")
+    ).toBeTruthy();
   });
 
   test("open the sitemap app", async ({ page }) => {
-    test.skip(!isTesting || SKIP_DEV_URL);
+    test.skip(withCrud());
 
     await page.goto(devURL("/"));
-    await expect(page).toMatch("Writer's home page");
-    await expect(page).toClick("a", { text: "Sitemap" });
-    await expect(page).toMatchElement("a", { text: "Web" });
-    await expect(page).toMatchElement("a", { text: "Learn" });
-    await expect(page).toClick("a", { text: "Glossary" });
-    await expect(page).toMatchElement("a", { text: "Glossary/PNG" });
+    expect(await page.isVisible("text=Writer's home page")).toBeTruthy();
+    await page.click('a:has-text("Sitemap")');
+    await page.waitForLoadState("networkidle");
+    expect(await page.isVisible('a:has-text("/Web")')).toBeTruthy();
+    expect(await page.isVisible('a:has-text("/Learn")')).toBeTruthy();
+    await page.click('a:has-text("/Glossary")');
+    expect(await page.isVisible('a:has-text("Glossary/PNG")')).toBeTruthy();
   });
 });
