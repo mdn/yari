@@ -20,9 +20,6 @@ jobs:
         with:
           node-version: "12"
 
-      # - name: Install operating system dependencies
-      #   run: npx playwright install-deps
-
       - name: Cache node_modules
         uses: actions/cache@v2.1.6
         id: cached-node_modules
@@ -79,6 +76,7 @@ jobs:
           # Use local chrome installs since we skip downloading it as part
           # of the yarn installs above
           # PUPPETEER_EXECUTABLE_PATH: /usr/bin/google-chrome
+          CONTENT_ROOT: mdn/content/files
         run: |
           yarn test:developing
 
