@@ -597,13 +597,29 @@ program
     "Convert an AWS Athena log aggregation CSV into a popularities.json file"
   )
   .option("--outfile <path>", "output file", {
-    default: path.join(CONTENT_ROOT, "popularities.json"),
+    default: path.resolve(path.join(__dirname, "..", "popularities.json")),
   })
   .option("--max-uris <number>", "limit to top <number> entries", {
     default: MAX_GOOGLE_ANALYTICS_URIS,
   })
+  .option("--refresh", "download again even if exists", {
+    default: false,
+  })
   .action(
     tryOrExit(async ({ options, logger }) => {
+      const { refresh, outfile } = options;
+      if (!refresh && fs.existsSync(outfile)) {
+        const stat = fs.statSync(outfile);
+        logger.info(
+          chalk.yellow(
+            `Reusing exising ${outfile} (${stat.mtime}) for popularities.`
+          )
+        );
+        logger.info(
+          `Reset ${outfile} by running: yarn tool popularities --refresh`
+        );
+        return;
+      }
       const { rowCount, popularities, pageviews } =
         await runMakePopularitiesFile(options);
       logger.info(chalk.green(`Parsed ${rowCount.toLocaleString()} rows.`));
