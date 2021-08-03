@@ -5,7 +5,7 @@ const cheerio = require("cheerio");
 const glob = require("glob");
 const sizeOf = require("image-size");
 
-const buildRoot = path.join("..", "client", "build");
+const buildRoot = path.join("client", "build");
 
 test("all favicons on the home page", () => {
   // The home page SPA is built, in terms of the index.html template,
