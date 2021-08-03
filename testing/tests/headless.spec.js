@@ -137,7 +137,6 @@ test.describe("Basic viewing of functional pages", () => {
     ).toBeTruthy();
 
     expect(await page.innerText("#Grid_2 pre.css.notranslate")).toMatch(
-      // /\.wrapper\s*\{\s*display:\s*grid;.+\.box1\s*\{/
       /grid-template-columns: 1fr 1fr 1fr;/
     );
     expect(

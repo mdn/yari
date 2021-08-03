@@ -1,61 +1,79 @@
+const { test, expect } = require("@playwright/test");
+
 function testURL(pathname = "/") {
   return "http://localhost:5000" + pathname;
 }
 
-describe("Site search", () => {
+test.describe("Site search", () => {
   const SEARCH_SELECTOR = 'form input[type="search"]';
 
-  test("Submit the autocomplete search form will redirect to site search", async () => {
+  test("submit the autocomplete search form will redirect to site search", async ({
+    page,
+  }) => {
     await page.goto(testURL("/"));
-    await expect(page).toFill(SEARCH_SELECTOR, "foo");
+    await page.fill(SEARCH_SELECTOR, "foo");
+    await page.waitForSelector("#nav-main-search"); // autocomplete search form
     await page.$eval('form[role="search"]', (form) => form.submit());
     // Force a wait for the lazy-loading
-    await page.waitForNavigation({ waitUntil: "networkidle2" });
+    await page.waitForLoadState("networkidle");
+    expect(await page.isVisible("text=Search results for:")).toBeTruthy();
     expect(page.url()).toBe(testURL("/en-US/search/?q=foo"));
   });
 
-  test("Go to site-search page without query", async () => {
-    await page.goto(testURL("/en-us/search/"));
-    await expect(page).toMatch("No query, no results");
+  test("go to site-search page without query", async ({ page }) => {
+    await page.goto(testURL("/en-US/search/"));
+    expect(await page.isVisible("text=No query, no results")).toBeTruthy();
     // See server/static.js for how fixtures are hardcoded
-    await expect(page).toFill(SEARCH_SELECTOR, "FOO");
+    await page.fill(SEARCH_SELECTOR, "FOO");
+    await page.waitForSelector("#nav-main-search"); // autocomplete search form
     await page.$eval('form[role="search"]', (form) => form.submit());
     // Force a wait for the lazy-loading
-    await page.waitForNavigation({ waitUntil: "networkidle2" });
-    await expect(page).toMatch("Search results for: FOO");
-    await expect(page).toMatch("Found 1 match");
+    await page.waitForLoadState("networkidle");
+    expect(page.url()).toBe(testURL("/en-US/search/?q=FOO"));
+    expect(await page.isVisible("text=Search results for: FOO")).toBeTruthy();
+    expect(await page.isVisible("text=Found 1 match")).toBeTruthy();
   });
 
-  test("Search and find nothing", async () => {
-    await page.goto(testURL("/en-us/search/"));
-    await expect(page).toMatch("No query, no results");
+  test("search and find nothing", async ({ page }) => {
+    await page.goto(testURL("/en-US/search/"));
+    expect(await page.isVisible("text=No query, no results")).toBeTruthy();
     // See server/static.js for how fixtures are hardcoded
-    await expect(page).toFill(SEARCH_SELECTOR, "NOTHING");
+    await page.fill(SEARCH_SELECTOR, "NOTHING");
+    await page.waitForSelector("#nav-main-search"); // autocomplete search form
     await page.$eval('form[role="search"]', (form) => form.submit());
-    await page.waitForNavigation({ waitUntil: "networkidle2" });
-    await expect(page).toMatch("Search results for: NOTHING");
-    await expect(page).toMatch("Found 0 matches");
+    await page.waitForLoadState("networkidle");
+    expect(page.url()).toBe(testURL("/en-US/search/?q=NOTHING"));
+    expect(
+      await page.isVisible("text=Search results for: NOTHING")
+    ).toBeTruthy();
+    expect(await page.isVisible("text=Found 0 matches")).toBeTruthy();
   });
 
-  test("Search and go to page 2", async () => {
+  test("search and go to page 2", async ({ page }) => {
     await page.goto(testURL("/en-US/search/"));
     // See server/static.js for how fixtures are hardcoded
-    await expect(page).toFill(SEARCH_SELECTOR, "SERIAL(20)");
+    await page.fill(SEARCH_SELECTOR, "SERIAL(20)");
+    await page.waitForSelector("#nav-main-search"); // autocomplete search form
     await page.$eval('form[role="search"]', (form) => form.submit());
-    await page.waitForNavigation({ waitUntil: "networkidle2" });
-    await expect(page).toMatch("Search results for: SERIAL(20)");
+    await page.waitForLoadState("networkidle");
+    expect(
+      await page.isVisible("text=Search results for: SERIAL(20)")
+    ).toBeTruthy();
     expect(page.url()).toBe(testURL("/en-US/search/?q=SERIAL%2820%29"));
-    await expect(page).toMatch("Found 20 matches in 0.1 milliseconds");
-    await expect(page).toMatch("Serial 0");
-    await expect(page).toMatch("Serial 9");
-    await expect(page).toMatchElement("a", { text: "Next" });
-    await expect(page).not.toMatchElement("a", { text: "Previous" });
-    await expect(page).toClick(".pagination a");
-    await expect(page).toMatch("(page 2)");
-    await expect(page).toMatch("Serial 10");
-    await expect(page).toMatch("Serial 19");
-    await expect(page).toMatchElement("a", { text: "Previous" });
-    await expect(page).not.toMatchElement("a", { text: "Next" });
+    expect(
+      await page.isVisible("text=Found 20 matches in 0.1 milliseconds")
+    ).toBeTruthy();
+    expect(await page.isVisible("text=Serial 0")).toBeTruthy();
+    expect(await page.isVisible("text=Serial 9")).toBeTruthy();
+    expect(await page.isVisible('a:has-text("Next")')).toBeTruthy();
+    expect(await page.isVisible("text=Serial 9")).toBeTruthy();
+    expect(await page.isVisible('a:has-text("Previous")')).toBeFalsy();
+    await page.click('a:has-text("Next")');
+    expect(await page.isVisible("text=(page 2)")).toBeTruthy();
+    expect(await page.isVisible("text=Serial 10")).toBeTruthy();
+    expect(await page.isVisible("text=Serial 19")).toBeTruthy();
+    expect(await page.isVisible('a:has-text("Previous")')).toBeTruthy();
+    expect(await page.isVisible('a:has-text("Next")')).toBeFalsy();
     expect(page.url()).toBe(testURL("/en-US/search?q=SERIAL%2820%29&page=2"));
   });
 });

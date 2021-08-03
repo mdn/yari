@@ -34,8 +34,7 @@
   },
   "jest": {
     "testPathIgnorePatterns": [
-      "headless*",
-      "kumascript/tests/*"
+      "headless*"
     ]
   },
   "resolutions": {
