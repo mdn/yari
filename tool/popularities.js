@@ -1,6 +1,6 @@
 /**
  * This script exists only to periodically generate a
- * 'content/popularities.json' file from a Cloudfront access CSV export.
+ * 'popularities.json' file from a Cloudfront access CSV export.
  *
  * Generally, only the core MDN Web Docs team needs to run this. The output
  * file gets checked into git so it's easily available to everyone.
@@ -18,8 +18,8 @@ const CURRENT_URL =
   "https://mdn-popularities-prod.s3.amazonaws.com/current.txt";
 
 async function fetchPopularities() {
-  let { body: csvURL } = await got(CURRENT_URL);
-  let { body: csv } = await got(csvURL);
+  const { body: csvURL } = await got(CURRENT_URL);
+  const { body: csv } = await got(csvURL);
   return csv;
 }
 
