@@ -18,6 +18,7 @@ test.describe("Autocomplete search", () => {
 
     await page.goto(testURL("/"));
     await page.fill(SEARCH_SELECTOR, "foo");
+    await page.waitForLoadState("networkidle");
     await page.waitForSelector("#nav-main-search"); // autocomplete search form
     expect(await page.isVisible("text=<foo>: A test tag")).toBeTruthy();
     // There's only 1 and this clicks on the first one anyway.
