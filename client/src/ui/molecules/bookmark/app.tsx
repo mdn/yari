@@ -3,7 +3,9 @@ import useSWR, { mutate } from "swr";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 
-import { Doc } from "../../types";
+import { Doc } from "../../../document/types";
+
+import "./index.scss";
 
 dayjs.extend(relativeTime);
 
@@ -71,7 +73,7 @@ export default function App({ doc }: { doc: Doc }) {
   const loading = !data;
 
   return (
-    <div>
+    <div className="bookmark-button-container">
       {error && !hideLoadingError ? (
         <ShowLoadingError
           error={error}
@@ -210,15 +212,19 @@ function Button({
     style.opacity = 0.5;
   }
   return (
+    /* Note! We're displaying the state as if you have NOT bookmarked
+    it even if we still don't know yet. */
     <button
-      style={style}
+      className={`button ghost bookmark-button ${
+        !bookmarked || loading ? "" : "bookmarked"
+      }`}
       title={title}
       onClick={toggle}
       disabled={disabled || loading}
     >
-      {/* Note! We're displaying the state as if you have NOT bookmarked
-      it even if we still don't know yet. */}
-      {!bookmarked || loading ? "☆" : "★"}
+      <span className="visually-hidden">
+        {!bookmarked || loading ? "Add bookmark" : "Remove bookmark"}
+      </span>
     </button>
   );
 }

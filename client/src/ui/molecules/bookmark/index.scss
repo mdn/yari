@@ -1,0 +1,30 @@
+@use "sass:math";
+
+@use "~@mdn/minimalist/sass/vars/layout";
+
+@use "../../theme/index" as theme;
+
+.bookmark-button {
+  border-radius: math.div(theme.$default-border-radius, 3);
+  height: 35px;
+  max-width: inherit;
+  min-height: inherit;
+  padding: 0;
+  width: 35px;
+
+  &:hover,
+  &:focus {
+    background-color: theme.$mdn-light-grey300;
+  }
+
+  &::before {
+    background-color: theme.$mdn-light-grey900;
+    content: "";
+    display: block;
+    height: 25px;
+    margin: 0 auto;
+    mask-image: url("~@mdn/dinocons/general/bookmark.svg");
+    padding: math.div(layout.$base-spacing, 2);
+    width: 25px;
+  }
+}

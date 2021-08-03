@@ -1,77 +1,71 @@
 @use "sass:math";
 
-@import "~@mdn/minimalist/sass/mixins/utils";
-@import "~@mdn/minimalist/sass/vars/layout";
+@use "~@mdn/minimalist/sass/vars/layout";
+
+@use "../../theme/index" as theme;
 
 ul.language-toggle {
   display: flex;
-  position: relative;
-  text-align: right;
-  top: -3px;
+  gap: math.div(layout.$base-spacing, 2);
+  height: 35px;
 
-  @media #{$mq-tablet-and-up} {
-    justify-content: flex-end;
+  @media #{layout.$mq-tablet-and-up} {
     text-align: inherit;
-    top: -2px;
+  }
+
+  li {
+    height: 35px;
   }
 
   .icon {
     margin: 0;
   }
 
-  li {
-    max-height: 24px;
-  }
-
   .language-icon {
+    border-radius: math.div(theme.$default-border-radius, 3);
     display: inline-block;
-    min-width: 50px;
-    width: auto;
+    height: 35px;
+    width: 35px;
+
+    &:hover,
+    &:focus {
+      background-color: theme.$mdn-light-grey300;
+    }
 
     // always set min-width for the English link
     &.default {
       min-width: 100px;
     }
 
-    // set the same min-width as above for both the English
-    // and change language link on tablet and larger
-    @media #{$mq-tablet-and-up} {
-      min-width: 100px;
-    }
-
     &::before {
-      background: transparent url("~@mdn/dinocons/general/language.svg") 0 0
-        no-repeat;
+      background-color: theme.$mdn-light-grey900;
       content: "";
-      display: inline-block;
-      height: 29px;
-      vertical-align: middle;
-      width: 28px;
-    }
-
-    &::after {
-      content: "|";
-      display: inline-block;
-      margin: 0 math.div($base-spacing, 4);
+      display: block;
+      height: 25px;
+      margin: 0 auto;
+      mask-image: url("~@mdn/dinocons/general/language.svg");
+      padding: math.div(layout.$base-spacing, 2);
+      position: relative;
+      top: 4px;
+      width: 25px;
     }
   }
 
-  &.single-option {
-    justify-content: flex-end;
+  .view-in-english {
+    display: none;
 
-    .language-icon {
-      &::after {
-        display: none;
-      }
+    @media #{layout.$mq-tablet-and-up} {
+      display: block;
+      position: relative;
+      top: 3px;
     }
   }
-}
 
-.show-desktop {
-  @include visually-hidden();
+  .show-desktop {
+    display: none;
 
-  @media #{$mq-tablet-and-up} {
-    @include reset-visually-hidden();
-    margin: 0;
+    @media #{layout.$mq-small-desktop-and-up} {
+      display: inline;
+    }
   }
 }
