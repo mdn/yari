@@ -27,14 +27,15 @@
     "test:content": "jest content",
     "test:headless": "playwright test headless",
     "test:kumascript": "jest kumascript",
-    "test:testing": "cd testing && jest",
+    "test:testing": "cd testing && jest --rootDir ../testing",
     "tool": "node tool/cli.js",
     "watch:ssr": "cd ssr && webpack --mode=production --watch",
     "prepare": "husky install"
   },
   "jest": {
     "testPathIgnorePatterns": [
-      "headless*"
+      "headless*",
+      "kumascript"
     ]
   },
   "resolutions": {
