@@ -2,13 +2,17 @@
 
 .bc-icons {
   display: inline-block;
-
   .only-icon {
     vertical-align: middle;
-
     .ic-footnote {
       vertical-align: sub;
     }
+  }
+}
+
+.bc-level-no + .bc-icons {
+  .only-icon {
+    vertical-align: baseline;
   }
 }
 
