@@ -20,8 +20,8 @@ jobs:
         with:
           node-version: "12"
 
-      - name: Install operating system dependencies
-        run: npx playwright install-deps
+      # - name: Install operating system dependencies
+      #   run: npx playwright install-deps
 
       - name: Cache node_modules
         uses: actions/cache@v2.1.6
@@ -29,12 +29,13 @@ jobs:
         with:
           path: |
             node_modules
-          key: ${{ runner.os }}-${{ hashFiles('yarn.lock') }}
+          key: ${{ runner.os }}-${{ hashFiles('yarn.lock') }}-${{ hashFiles('.github/workflows/developing.yml') }}
 
       - name: Install all yarn packages
         if: steps.cached-node_modules.outputs.cache-hit != 'true'
-        # env:
-        #   PUPPETEER_SKIP_CHROMIUM_DOWNLOAD: 1
+        env:
+          # PUPPETEER_SKIP_CHROMIUM_DOWNLOAD: 1
+          PLAYWRIGHT_BROWSERS_PATH: $HOME/pw-browsers
         run: |
           yarn --frozen-lockfile
 
