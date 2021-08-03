@@ -1005,13 +1005,13 @@
     "status": "PR"
   },
   "IndexedDB": {
-    "name": "Indexed Database API 2.0",
-    "url": "https://www.w3.org/TR/IndexedDB/",
+    "name": "Indexed Database API",
+    "url": "https://www.w3.org/TR/2015/REC-IndexedDB-20150108/",
     "status": "REC"
   },
   "IndexedDB 2": {
     "name": "Indexed Database API 2.0",
-    "url": "https://www.w3.org/TR/IndexedDB/",
+    "url": "https://www.w3.org/TR/2018/REC-IndexedDB-2-20180130/",
     "status": "REC"
   },
   "IndexedDB 3": {
