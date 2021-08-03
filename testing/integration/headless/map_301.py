@@ -990,6 +990,11 @@ MISC_REDIRECT_URLS = [
     url_test(
         "/en-US/events/", "https://community.mozilla.org/events/", status_code=302
     ),
+    url_test(
+        "/communities/mozilla-tech-speakers",
+        "https://community.mozilla.org/en/groups/tech-speakers",
+        status_code=302
+    ),
     url_test("/fr/account", "/fr/settings", status_code=302),
     url_test("/en-US/account", "/en-US/settings", status_code=302),
     url_test("/en-US/account/", "/en-US/settings", status_code=302),

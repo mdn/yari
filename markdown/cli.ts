@@ -36,7 +36,7 @@ function saveProblemsReport(problems: Map<any, any>) {
   const report = [
     `# Report from ${now.toLocaleString()}`,
 
-    "## Top 20 unhandled elements",
+    "## All unhandled elements",
     ...Array.from(
       Array.from(problems)
         .flatMap(([, { invalid, unhandled }]) => [
@@ -50,7 +50,6 @@ function saveProblemsReport(problems: Map<any, any>) {
         )
     )
       .sort(([, c1], [, c2]) => (c1 > c2 ? -1 : 1))
-      .slice(0, 20)
       .map(([label, count]) => `- ${label} (${count})`),
 
     "## Details per Document",
