@@ -20,6 +20,9 @@ jobs:
         with:
           node-version: "12"
 
+      - name: Install operating system dependencies
+        run: npx playwright install-deps
+
       - name: Cache node_modules
         uses: actions/cache@v2.1.6
         id: cached-node_modules
