@@ -27,13 +27,14 @@ jobs:
         with:
           path: |
             node_modules
-          key: ${{ runner.os }}-${{ hashFiles('yarn.lock') }}
+          key: ${{ runner.os }}-${{ hashFiles('yarn.lock') }}-${{ hashFiles('.github/workflows/testing.yml') }}
 
       - name: Install all yarn packages
         if: steps.cached-node_modules.outputs.cache-hit != 'true'
         env:
-          # XXX rewrite for playwright
-          PUPPETEER_SKIP_CHROMIUM_DOWNLOAD: 1
+          # # XXX rewrite for playwright
+          # PUPPETEER_SKIP_CHROMIUM_DOWNLOAD: 1
+          PLAYWRIGHT_BROWSERS_PATH: $HOME/pw-browsers
         run: |
           yarn --frozen-lockfile
 
