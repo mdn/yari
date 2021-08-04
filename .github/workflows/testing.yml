@@ -31,7 +31,6 @@ jobs:
 
       - name: Debug something
         run: |
-          ls /usr/bin
           ls -l /usr/bin | grep -i chrom
 
       - name: Install all yarn packages
@@ -39,7 +38,7 @@ jobs:
         env:
           # # XXX rewrite for playwright
           # PUPPETEER_SKIP_CHROMIUM_DOWNLOAD: 1
-          PLAYWRIGHT_BROWSERS_PATH: /usr/bin/google-chrome
+          PLAYWRIGHT_BROWSERS_PATH: /usr/bin
           # PLAYWRIGHT_BROWSERS_PATH: $HOME/pw-browsers
         run: |
           yarn --frozen-lockfile
