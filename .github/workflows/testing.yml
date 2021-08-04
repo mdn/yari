@@ -30,18 +30,10 @@ jobs:
             node_modules
           key: ${{ runner.os }}-${{ hashFiles('yarn.lock') }}-${{ hashFiles('.github/workflows/testing.yml') }}
 
-      - name: Debug something
-        run: |
-          ls -l /usr/bin | grep -i chrom
-
       - name: Install all yarn packages
         if: steps.cached-node_modules.outputs.cache-hit != 'true'
         run: |
           yarn --frozen-lockfile
-
-      - name: Debug node_modules
-        run: |
-          du -sh node_modules/@playwright
 
       - name: Lint prettier
         run: yarn prettier-check

@@ -19,6 +19,7 @@ jobs:
         uses: actions/setup-node@v2.3.0
         with:
           node-version: "12"
+          cache: "yarn"
 
       - name: Cache node_modules
         uses: actions/cache@v2.1.6
@@ -30,11 +31,7 @@ jobs:
 
       - name: Install all yarn packages
         if: steps.cached-node_modules.outputs.cache-hit != 'true'
-        env:
-          # PUPPETEER_SKIP_CHROMIUM_DOWNLOAD: 1
-          PLAYWRIGHT_BROWSERS_PATH: $HOME/pw-browsers
-        run: |
-          yarn --frozen-lockfile
+        run: yarn --frozen-lockfile
 
       - name: Setup kernel for react native, increase watchers
         run: |

@@ -16,6 +16,8 @@ test.describe("Site search", () => {
     await page.$eval('form[role="search"]', (form) => form.submit());
     // Force a wait for the lazy-loading
     await page.waitForLoadState("networkidle");
+    // For a wait for the search results
+    await page.waitForSelector("div.search-results");
     expect(await page.isVisible("text=Search results for:")).toBeTruthy();
     expect(page.url()).toBe(testURL("/en-US/search/?q=foo"));
   });
