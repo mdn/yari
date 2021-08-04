@@ -17,9 +17,13 @@ test.describe("Autocomplete search", () => {
     expect(await page.isVisible("text=<foo>: A test tag")).toBeTruthy();
 
     await page.goto(testURL("/"));
-    await page.fill(SEARCH_SELECTOR, "foo");
-    await page.waitForLoadState("networkidle");
+
+    // This will activate the fancy autocomplete search and it should start
+    // a download of the `/en-US/search-index.json` too.
+    await page.focus(SEARCH_SELECTOR);
     await page.waitForSelector("#nav-main-search"); // autocomplete search form
+    await page.waitForLoadState("networkidle");
+    await page.fill(SEARCH_SELECTOR, "foo");
     expect(await page.isVisible("text=<foo>: A test tag")).toBeTruthy();
     // There's only 1 and this clicks on the first one anyway.
     await page.click("div.result-item");

@@ -73,9 +73,6 @@ jobs:
           # This will make sure the tests in `testing/tests/*.test.js` only run
           # if the development server is up and ready to be tested.
           TESTING_DEVELOPING: true
-          # Use local chrome installs since we skip downloading it as part
-          # of the yarn installs above
-          # PUPPETEER_EXECUTABLE_PATH: /usr/bin/google-chrome
           CONTENT_ROOT: mdn/content/files
         run: |
           yarn test:developing
