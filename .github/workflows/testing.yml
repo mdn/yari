@@ -86,6 +86,5 @@ jobs:
         run: |
           yarn test:testing
 
-          time playwright install chromium
-
+          time node_modules/.bin/playwright install chromium
           yarn test:headless
