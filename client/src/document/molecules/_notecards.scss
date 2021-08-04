@@ -7,7 +7,8 @@
 
 @mixin set-notecard-icon($icon) {
   h3,
-  h4 &.inline {
+  h4,
+  &.inline {
     &::before {
       background: transparent url($icon) 0 0 no-repeat;
     }
@@ -65,7 +66,8 @@
   }
 
   h3,
-  h4 &.inline {
+  h4,
+  &.inline {
     &::before {
       background-repeat: no-repeat;
       background-size: 18px;
