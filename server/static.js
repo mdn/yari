@@ -7,7 +7,6 @@ const cookieParser = require("cookie-parser");
 const { staticMiddlewares } = require("./middlewares");
 const { resolveFundamental } = require("../content");
 const { STATIC_ROOT } = require("./constants");
-const { getLocale } = require("../libs/get-locale");
 
 const app = express();
 app.use(express.json());
@@ -25,8 +24,7 @@ app.use((req, res, next) => {
 });
 
 app.get("/", async (req, res) => {
-  const locale = getLocale(req);
-  res.redirect(302, `/${locale}/`);
+  res.redirect(302, "/en-US/");
 });
 
 app.use(staticMiddlewares);
