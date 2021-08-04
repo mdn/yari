@@ -26,7 +26,7 @@
     "test:client": "cd client && tsc --noEmit && react-scripts test --env=jest-environment-jsdom-sixteen",
     "test:content": "jest content",
     "test:headless": "playwright test headless",
-    "test:developing": "playwright test ",
+    "test:developing": "playwright test developing",
     "test:kumascript": "jest kumascript",
     "test:testing": "jest --rootDir testing",
     "tool": "node tool/cli.js",

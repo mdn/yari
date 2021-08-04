@@ -46,8 +46,8 @@ test.describe("Testing the kitchensink page", () => {
     await page.goto(devURL("/en-US/docs/MDN/Kitchensink/iceberg.jpg"));
     // This is how Chromium makes a document title when viewing an image.
     expect(await page.title()).toBe("iceberg.jpg (1400×1050)");
-    // Unfortunately, there's no API in puppeteer to test that the image URL
-    // you opened of correct type or file size or even HTTP status code.
+    // TODO: It would be nice to know what you opened is of correct type
+    // or file size.
     expect(page.url()).toBe(devURL("/en-US/docs/MDN/Kitchensink/iceberg.jpg"));
   });
 

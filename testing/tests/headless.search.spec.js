@@ -30,9 +30,6 @@ test.describe("Autocomplete search", () => {
     await page.waitForLoadState("networkidle");
     expect(await page.innerText("h1")).toBe("<foo>: A test tag");
     // Should have been redirected too...
-    // Note! It's important that this happens *after* the `.toMatchElement`
-    // on the line above because expect-puppeteer doesn't have a wait to
-    // properly wait for the (pushState) URL to have changed.
     expect(page.url()).toBe(testURL("/en-US/docs/Web/Foo"));
   });
 
