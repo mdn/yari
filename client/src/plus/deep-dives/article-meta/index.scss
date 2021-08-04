@@ -1,0 +1,22 @@
+@use "sass:math";
+
+@use "~@mdn/minimalist/sass/vars/layout";
+
+@use "../../../ui/theme/index" as theme;
+
+ul.article-meta {
+  border-top: theme.$standard-light-border;
+  margin-top: 20px;
+  padding-top: 18px;
+
+  li {
+    color: theme.$mdn-neutral700;
+    display: inline-block;
+
+    &:first-child::after {
+      content: "·";
+      display: inline-block;
+      margin: 0 math.div(layout.$base-spacing, 2);
+    }
+  }
+}

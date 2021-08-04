@@ -1710,8 +1710,6 @@ test("built search-index.json (en-US)", () => {
   const searchIndex = JSON.parse(fs.readFileSync(searchIndexFile));
   const urlToTitle = new Map(searchIndex.map((o) => [o.url, o.title]));
   expect(urlToTitle.get("/en-US/docs/Web/Foo")).toBe("<foo>: A test tag");
-  // an archived page should not be in there.
-  expect(urlToTitle.has("/en-US/docs/XUL")).toBeFalsy();
 });
 
 test("the robots.txt file was created", () => {

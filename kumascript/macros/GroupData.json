@@ -288,7 +288,6 @@
         "ByteString",
         "CDATASection",
         "CharacterData",
-        "ChildNode",
         "CSSPrimitiveValue",
         "CSSValue",
         "CSSValueList",
@@ -428,7 +427,7 @@
         "/docs/Web/API/Fetch_API/Basic_concepts",
         "/docs/Web/API/Fetch_API/Cross-global_fetch_usage"
       ],
-      "interfaces": ["Body", "Headers", "Request", "Response"],
+      "interfaces": ["Headers", "Request", "Response"],
       "methods": ["WindowOrWorkerGlobalScope.fetch()"],
       "properties": [],
       "events": []

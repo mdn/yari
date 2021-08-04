@@ -1,0 +1,104 @@
+@use "sass:math";
+
+@use "~@mdn/minimalist/sass/vars/layout";
+@use "~@mdn/minimalist/sass/vars/typography";
+
+@use "../../theme/index" as theme;
+
+.plus-hero {
+  background-color: theme.$mdn-ink900;
+  color: theme.$text-color-inverted;
+  overflow: hidden;
+  padding: layout.$base-spacing 0;
+
+  @media #{layout.$mq-small-desktop-and-up} {
+    padding: (layout.$base-spacing * 2.5) 0;
+  }
+
+  .header-wrapper {
+    height: 100%;
+    margin: auto;
+    max-width: layout.$max-width-default;
+    padding: (layout.$base-spacing * 2) layout.$base-spacing;
+    position: relative;
+    z-index: layout.$bottom-layer;
+
+    @media #{layout.$mq-small-desktop-and-up} {
+      display: grid;
+      gap: 0 math.div(layout.$base-spacing, 2);
+      gap: 0 (layout.$base-spacing * 2.5);
+      grid-template-columns: 1fr 0;
+      padding: (layout.$base-spacing * 2) (layout.$base-spacing * 5);
+    }
+
+    &::after {
+      /* stylelint-disable-line a11y/media-prefers-reduced-motion */
+      animation: spin 1200s linear infinite; /* we already disable all animation and transitions globally via a reset */
+      background-image: url("../../atoms/svg/mandala.svg");
+      background-repeat: no-repeat;
+      content: "";
+      display: block;
+      height: 800px;
+      opacity: 0.5;
+      position: absolute;
+      right: 0;
+      top: -220px;
+      width: 800px;
+    }
+  }
+
+  .header-content {
+    position: relative;
+    z-index: layout.$top-layer;
+
+    h1 {
+      font-size: typography.$xxl-font-size;
+      line-height: typography.$heading-line-height;
+
+      margin-block-end: 0.67em;
+      margin-block-start: 0.67em;
+      margin-inline-end: 0;
+      margin-inline-start: 0;
+
+      @media #{layout.$mq-small-desktop-and-up} {
+        font-size: theme.$marketing-hero-h1-font-size;
+        margin: layout.$base-spacing 0;
+      }
+    }
+
+    h2 {
+      background: theme.$gradient-accent;
+      background-clip: text;
+      font-size: typography.$medium-font-size;
+      margin-top: 0;
+
+      @media #{layout.$mq-small-desktop-and-up} {
+        font-size: theme.$marketing-hero-h2-font-size;
+      }
+    }
+
+    a {
+      display: none;
+
+      @media #{layout.$mq-tablet-and-up} {
+        display: block;
+      }
+    }
+
+    p {
+      font-size: typography.$default-font-size;
+      margin-bottom: 0;
+      max-width: 620px;
+
+      @media #{layout.$mq-small-desktop-and-up} {
+        font-size: typography.$small-medium-font-size;
+      }
+    }
+  }
+}
+
+@keyframes spin {
+  100% {
+    transform: rotate(360deg);
+  }
+}

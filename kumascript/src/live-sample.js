@@ -15,6 +15,7 @@ const LIVE_SAMPLE_HTML = `
 <html>
     <head>
         <meta charset="utf-8">
+        <meta name="robots" content="noindex, nofollow">
         <style type="text/css">
             body {
               padding: 0;

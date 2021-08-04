@@ -29,7 +29,7 @@ function syncAllTranslatedContent(locale) {
   }
   const redirects = new Map();
   const files = glob.sync(
-    path.join(CONTENT_TRANSLATED_ROOT, locale, "**", "index.html")
+    path.join(CONTENT_TRANSLATED_ROOT, locale, "**", "index.{html,md}")
   );
   const stats = {
     movedDocs: 0,
@@ -73,11 +73,11 @@ function resolve(slug) {
   const url = buildURL("en-us", slug);
   const resolved = Redirect.resolve(url);
   if (url !== resolved) {
-    const doc = Document.read(resolved);
+    const doc = Document.read(Document.urlToFolderPath(resolved));
     if (!doc) {
       return slug;
     }
-    const resolvedSlug = doc.url;
+    const resolvedSlug = doc.metadata.slug;
     if (slug !== resolvedSlug) {
       return resolvedSlug;
     }
@@ -101,6 +101,8 @@ function syncTranslatedContent(inFilePath, locale) {
 
   const rawDoc = fs.readFileSync(inFilePath, "utf8");
   const fileName = path.basename(inFilePath);
+  const extension = path.extname(fileName);
+  const bareFileName = path.basename(inFilePath, extension);
   const { attributes: oldMetadata, body: rawBody } = fm(rawDoc);
   const resolvedSlug = resolve(oldMetadata.slug);
   const metadata = {
@@ -147,9 +149,21 @@ function syncTranslatedContent(inFilePath, locale) {
   dehash();
   let filePath = getFilePath();
 
-  status.orphaned = !fs.existsSync(
-    path.join(CONTENT_ROOT, "en-us", slugToFolder(metadata.slug), fileName)
-  );
+  status.orphaned =
+    !fs.existsSync(
+      path.join(
+        CONTENT_ROOT,
+        "en-us",
+        slugToFolder(metadata.slug),
+        bareFileName + ".md"
+      )
+    ) &&
+    !fs.existsSync(
+      CONTENT_ROOT,
+      "en-us",
+      slugToFolder(metadata.slug),
+      bareFileName + ".html"
+    );
 
   if (!status.moved && !status.orphaned) {
     return status;

@@ -1,0 +1,34 @@
+@use "~@mdn/minimalist/sass/vars/layout";
+
+.code-snippet {
+  background-color: $mdn-neutral900;
+  border-radius: $default-border-radius;
+  margin: layout.$base-spacing 0;
+  max-width: 100%;
+  overflow: auto;
+  padding: layout.$base-spacing;
+
+  code {
+    background-color: transparent;
+    color: $white;
+    font-family: $code-inline-font-family;
+    font-size: $small-font-size;
+  }
+
+  .code-c {
+    color: $mdn-blue200;
+  }
+
+  .code-m {
+    color: $mdn-pink300;
+  }
+
+  .code-y {
+    color: $mdn-yellow300;
+  }
+
+  .codepen {
+    border: 0;
+    height: 450px;
+  }
+}

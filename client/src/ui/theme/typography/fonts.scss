@@ -1,0 +1,38 @@
+@font-face {
+  font-display: swap;
+  font-family: "Metropolis";
+  font-style: normal;
+  font-weight: 600;
+  src: url("../../../assets/fonts/Metropolis-Bold.woff2") format("woff2"),
+    url("../../../assets/fonts/Metropolis-Bold.woff") format("woff");
+}
+
+@font-face {
+  font-display: swap;
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 300;
+  src: local(""),
+    url("../../../assets/fonts/inter-v3-latin-300.woff2") format("woff2"),
+    url("../../../assets/fonts/inter-v3-latin-300.woff") format("woff");
+}
+
+@font-face {
+  font-display: swap;
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: normal;
+  src: local(""),
+    url("../../../assets/fonts/inter-v3-latin-regular.woff2") format("woff2"),
+    url("../../../assets/fonts/inter-v3-latin-regular.woff") format("woff");
+}
+
+@font-face {
+  font-display: swap;
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 600;
+  src: local(""),
+    url("../../../assets/fonts/inter-v3-latin-600.woff2") format("woff2"),
+    url("../../../assets/fonts/inter-v3-latin-600.woff") format("woff");
+}

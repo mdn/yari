@@ -30,15 +30,6 @@ all prefixed with `CONTENT_`. E.g. `CONTENT_ROOT`
 
 Where the files are.
 
-### `CONTENT_ARCHIVED_ROOT`
-
-**Default: `null`** (meaning, not set nor included)
-
-If you want to build archive content (no KumaScript rendering) you
-can say where the location to the folder is.
-
-**Example: `/tmp/mdn-archive-content`**
-
 ### `BUILD_FOLDERSEARCH`
 
 **Default: ``** (meaning, none)
@@ -192,14 +183,6 @@ Which RSS feed URL to parse for displaying feed entries on the home page.
 **Default: `5`**
 
 How many RSS feed entries to display on the home page.
-
-### `BUILD_SUBSCRIPTION_CONFIG_URL`
-
-**Default: `''`**
-
-URL from which to fetch the subscription config. You need Kuma running and for local
-dev you will likely want to point it to
-`http://localhost.org:8000/api/v1/subscriptions/config/`
 
 ## Server
 

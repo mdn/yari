@@ -223,43 +223,6 @@ def to_search(file, _index=None):
         _index=_index,
         _id=doc["mdn_url"],
         title=doc["title"],
-        # This is confusing. But it's worth hacking around for now until
-        # localizations are uplifted (and unfrozen maybe).
-        # A document that is definitely archived E.g. /en-us/docs/Thunderbird/XUL
-        # will look like this:
-        #
-        #       "isArchive": true,
-        #       "isTranslated": false,
-        #       "locale": "en-US",
-        #
-        # A document that is a translation and is definitely archived
-        # E.g. /fr/docs/Mozilla/Gecko/Gecko_Embedding_Basics
-        # will look like this:
-        #
-        #       "isArchive": true,
-        #       "isTranslated": false,
-        #       "locale": "fr",
-        #
-        # Now, the really confusing one is translated documents that are
-        # not archived. E.g. /fr/docs/CSS/Premiers_pas/Fonctionnement_de_CSS
-        # will look like this:
-        #
-        #       "isArchive": true,
-        #       "isTranslated": true,
-        #       "locale": "fr",
-        #
-        # Which actually makes sense because in Yari, here "isArchive" is (ab)used
-        # to do things like deciding not to show the Toolbar.
-        # And for the record, here's what a perfectly maintained en-US document looks
-        # like. E.g. /en-US/docs/Web/CSS
-        #
-        #       "isArchive": true,
-        #       "isTranslated": false,
-        #       "locale": "en-US",
-        #
-        # When searching though, we don't necessary want to think of all (for example)
-        # French documents to be archived. Hence the following logic.
-        archived=(doc.get("isArchive") and not doc.get("isTranslated")) or False,
         body=html_strip(
             "\n".join(
                 x["value"]["content"]

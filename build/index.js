@@ -292,7 +292,6 @@ async function buildDocument(document, documentOptions = {}) {
 
   const doc = {
     isMarkdown: document.isMarkdown,
-    isArchive: document.isArchive,
     isTranslated: document.isTranslated,
     isActive: document.isActive,
   };
@@ -303,113 +302,132 @@ async function buildDocument(document, documentOptions = {}) {
   let flaws = [];
   const liveSamples = [];
 
-  if (doc.isArchive) {
-    if (document.isMarkdown) {
-      throw new Error("Markdown not supported for archived content");
-    }
-    renderedHtml = document.rawBody;
-  } else {
-    if (options.clearKumascriptRenderCache) {
-      renderKumascriptCache.reset();
-    }
-    try {
-      [renderedHtml, flaws] = await kumascript.render(document.url);
-    } catch (error) {
-      if (error.name === "MacroInvocationError") {
-        // The source HTML couldn't even be parsed! There's no point allowing
-        // anything else move on.
-        // But considering that this might just be one of many documents you're
-        // building, let's at least help by setting a more user-friendly error
-        // message.
-        error.updateFileInfo(document.fileInfo);
-        throw new Error(
-          `MacroInvocationError trying to parse ${error.filepath}, line ${error.line} column ${error.column} (${error.error.message})`
-        );
-      }
-
-      // Any other unexpected error re-thrown.
-      throw error;
-    }
-
-    const sampleIds = kumascript.getLiveSampleIDs(
-      document.metadata.slug,
-      document.rawBody
-    );
-    for (const sampleIdObject of sampleIds) {
-      const liveSamplePage = kumascript.buildLiveSamplePage(
-        document.url,
-        document.metadata.title,
-        renderedHtml,
-        sampleIdObject
+  if (options.clearKumascriptRenderCache) {
+    renderKumascriptCache.reset();
+  }
+  try {
+    [renderedHtml, flaws] = await kumascript.render(document.url);
+  } catch (error) {
+    if (error.name === "MacroInvocationError") {
+      // The source HTML couldn't even be parsed! There's no point allowing
+      // anything else move on.
+      // But considering that this might just be one of many documents you're
+      // building, let's at least help by setting a more user-friendly error
+      // message.
+      error.updateFileInfo(document.fileInfo);
+      throw new Error(
+        `MacroInvocationError trying to parse ${error.filepath}, line ${error.line} column ${error.column} (${error.error.message})`
       );
-      if (liveSamplePage.flaw) {
-        const flaw = liveSamplePage.flaw.updateFileInfo(fileInfo);
-        if (flaw.name === "MacroLiveSampleError") {
-          // As of April 2021 there are 0 pages in mdn/content that trigger
-          // a MacroLiveSampleError. So we can be a lot more strict with en-US
-          // until the translated-content has had a chance to clean up all
-          // their live sample errors.
-          // See https://github.com/mdn/yari/issues/2489
-          if (document.metadata.locale === "en-US") {
-            throw new Error(
-              `MacroLiveSampleError within ${flaw.filepath}, line ${flaw.line} column ${flaw.column} (${flaw.error.message})`
-            );
-          } else {
-            console.warn(
-              `MacroLiveSampleError within ${flaw.filepath}, line ${flaw.line} column ${flaw.column} (${flaw.error.message})`
-            );
-          }
-        }
-        flaws.push(flaw);
-        continue;
-      }
-      liveSamples.push({
-        id: sampleIdObject.id.toLowerCase(),
-        html: liveSamplePage.html,
-      });
     }
 
-    if (flaws.length) {
-      if (options.flawLevels.get("macros") === FLAW_LEVELS.ERROR) {
-        // Report and exit immediately on the first document with flaws.
-        console.error(
-          chalk.red.bold(
-            `Flaws (${flaws.length}) within ${document.metadata.slug} while rendering macros:`
-          )
-        );
-        flaws.forEach((flaw, i) => {
-          console.error(chalk.bold.red(`${i + 1}: ${flaw.name}`));
-          console.error(chalk.red(`${flaw}\n`));
-        });
-        // // XXX This is probably the wrong way to bubble up.
-        // process.exit(1);
-        throw new Error("Flaw error encountered");
-      } else if (options.flawLevels.get("macros") === FLAW_LEVELS.WARN) {
-        // doc.flaws.macros = flaws;
-        // The 'flaws' array don't have everything we need from the
-        // kumascript rendering, so we "beef it up" to have convenient
-        // attributes needed.
-        doc.flaws.macros = flaws.map((flaw, i) => {
-          let fixable = false;
-          let suggestion = null;
-          if (flaw.name === "MacroDeprecatedError") {
-            fixable = true;
-            suggestion = "";
-          } else if (
-            flaw.name === "MacroRedirectedLinkError" &&
-            (!flaw.filepath || flaw.filepath === document.fileInfo.path)
-          ) {
-            fixable = true;
-            suggestion = flaw.macroSource.replace(
-              flaw.redirectInfo.current,
-              flaw.redirectInfo.suggested
-            );
-          }
-          const id = `macro${i}`;
-          const explanation = flaw.error.message;
-          return Object.assign({ id, fixable, suggestion, explanation }, flaw);
-        });
+    // Any other unexpected error re-thrown.
+    throw error;
+  }
+
+  const sampleIds = kumascript.getLiveSampleIDs(
+    document.metadata.slug,
+    document.rawBody
+  );
+  for (const sampleIdObject of sampleIds) {
+    const liveSamplePage = kumascript.buildLiveSamplePage(
+      document.url,
+      document.metadata.title,
+      renderedHtml,
+      sampleIdObject
+    );
+
+    let liveSampleHTML = liveSamplePage.html;
+    if (liveSamplePage.flaw) {
+      const flaw = liveSamplePage.flaw.updateFileInfo(fileInfo);
+      if (flaw.name === "MacroLiveSampleError") {
+        // As of April 2021 there are 0 pages in mdn/content that trigger
+        // a MacroLiveSampleError. So we can be a lot more strict with en-US
+        // until the translated-content has had a chance to clean up all
+        // their live sample errors.
+        // See https://github.com/mdn/yari/issues/2489
+        if (document.metadata.locale === "en-US") {
+          throw new Error(
+            `MacroLiveSampleError within ${flaw.filepath}, line ${flaw.line} column ${flaw.column} (${flaw.error.message})`
+          );
+        } else {
+          console.warn(
+            `MacroLiveSampleError within ${flaw.filepath}, line ${flaw.line} column ${flaw.column} (${flaw.error.message})`
+          );
+        }
       }
+      flaws.push(flaw);
+      liveSampleHTML = `<!doctype html>
+        <html>
+          <head>
+            <meta charset="utf-8">
+            <title>Live sample failed!</title>
+            <style type="text/css">
+              body {
+                background-color: #fae4e5;
+              }
+            </style>
+          </head>
+          <body>
+            <h1>Live sample failed!</h1>
+            <p>
+              An error occurred trying to render this live sample.
+              <br>
+              Consider filing an issue or trying your hands at a fix of your own.
+            </p>
+            <p><b>Error details:</b></p>
+            <p>
+              <code>${flaw.error.toString()}</code>
+            </p>
+          </body>
+        </html>
+        `;
+    }
+    liveSamples.push({
+      id: sampleIdObject.id.toLowerCase(),
+      html: liveSampleHTML,
+    });
+  }
+
+  if (flaws.length) {
+    if (options.flawLevels.get("macros") === FLAW_LEVELS.ERROR) {
+      // Report and exit immediately on the first document with flaws.
+      console.error(
+        chalk.red.bold(
+          `Flaws (${flaws.length}) within ${document.metadata.slug} while rendering macros:`
+        )
+      );
+      flaws.forEach((flaw, i) => {
+        console.error(chalk.bold.red(`${i + 1}: ${flaw.name}`));
+        console.error(chalk.red(`${flaw}\n`));
+      });
+      // // XXX This is probably the wrong way to bubble up.
+      // process.exit(1);
+      throw new Error("Flaw error encountered");
+    } else if (options.flawLevels.get("macros") === FLAW_LEVELS.WARN) {
+      // doc.flaws.macros = flaws;
+      // The 'flaws' array don't have everything we need from the
+      // kumascript rendering, so we "beef it up" to have convenient
+      // attributes needed.
+      doc.flaws.macros = flaws.map((flaw, i) => {
+        let fixable = false;
+        let suggestion = null;
+        if (flaw.name === "MacroDeprecatedError") {
+          fixable = true;
+          suggestion = "";
+        } else if (
+          flaw.name === "MacroRedirectedLinkError" &&
+          (!flaw.filepath || flaw.filepath === document.fileInfo.path)
+        ) {
+          fixable = true;
+          suggestion = flaw.macroSource.replace(
+            flaw.redirectInfo.current,
+            flaw.redirectInfo.suggested
+          );
+        }
+        const id = `macro${i}`;
+        const explanation = flaw.error.message;
+        return Object.assign({ id, fixable, suggestion, explanation }, flaw);
+      });
     }
   }
 
@@ -471,7 +489,7 @@ async function buildDocument(document, documentOptions = {}) {
   // because they're potentially evil.
   $("a[href]").each((i, a) => {
     // See https://github.com/mdn/kuma/issues/7647
-    // Ideally we should manually remove this from all sources (archived or not)
+    // Ideally we should manually remove this from all sources
     // but that's not immediately feasible. So at least make sure we never
     // present the link in any rendered HTML.
     if (
@@ -602,7 +620,6 @@ async function buildDocument(document, documentOptions = {}) {
 
   // Decide whether it should be indexed (sitemaps, robots meta tag, search-index)
   doc.noIndexing =
-    (doc.isArchive && !doc.isTranslated) ||
     metadata.slug === "MDN/Kitchensink" ||
     document.metadata.slug.startsWith("orphaned/") ||
     document.metadata.slug.startsWith("conflicting/");
