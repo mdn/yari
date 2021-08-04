@@ -71,7 +71,7 @@ function extractSections($) {
     flaws.push(...subFlaws);
   }
 
-  // Check for an mutate possible duplicated IDs.
+  // Check for and mutate possible duplicated IDs.
   // If a HTML document has...:
   //
   //   <h2 id="Examples">Check these examples</h2>
