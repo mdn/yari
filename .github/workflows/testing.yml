@@ -29,12 +29,18 @@ jobs:
             node_modules
           key: ${{ runner.os }}-${{ hashFiles('yarn.lock') }}-${{ hashFiles('.github/workflows/testing.yml') }}
 
+      - name: Debug something
+        run: |
+          ls /usr/bin
+          ls -l /usr/bin | grep -i chrom
+
       - name: Install all yarn packages
         if: steps.cached-node_modules.outputs.cache-hit != 'true'
         env:
           # # XXX rewrite for playwright
           # PUPPETEER_SKIP_CHROMIUM_DOWNLOAD: 1
-          PLAYWRIGHT_BROWSERS_PATH: $HOME/pw-browsers
+          PLAYWRIGHT_BROWSERS_PATH: /usr/bin/google-chrome
+          # PLAYWRIGHT_BROWSERS_PATH: $HOME/pw-browsers
         run: |
           yarn --frozen-lockfile
 
