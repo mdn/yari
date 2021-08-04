@@ -10,13 +10,13 @@ test.describe("Site search", () => {
   test("submit the autocomplete search form will redirect to site search", async ({
     page,
   }) => {
-    await page.goto(testURL("/"));
+    await page.goto(testURL("/en-US/search/"));
     await page.fill(SEARCH_SELECTOR, "foo");
     await page.waitForSelector("#nav-main-search"); // autocomplete search form
     await page.$eval('form[role="search"]', (form) => form.submit());
     // Force a wait for the lazy-loading
     await page.waitForLoadState("networkidle");
-    // For a wait for the search results
+    // Force a wait for the search results
     await page.waitForSelector("div.search-results");
     expect(await page.isVisible("text=Search results for:")).toBeTruthy();
     expect(page.url()).toBe(testURL("/en-US/search/?q=foo"));
