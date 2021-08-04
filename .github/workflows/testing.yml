@@ -77,7 +77,7 @@ jobs:
           # # XXX rewrite for playwright
           # PUPPETEER_SKIP_CHROMIUM_DOWNLOAD: 1
           # PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: 1
-          PLAYWRIGHT_BROWSERS_PATH: /usr/bin
+          # PLAYWRIGHT_BROWSERS_PATH: /usr/bin
         run: |
           yarn test:testing
-          yarn test:headless --browser=google-chrome
+          yarn test:headless --browser=chromium
