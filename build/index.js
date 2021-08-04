@@ -26,7 +26,6 @@ const { normalizeBCDURLs, extractBCDData } = require("./bcd-urls");
 const { checkImageReferences, checkImageWidths } = require("./check-images");
 const { getPageTitle } = require("./page-title");
 const { syntaxHighlight } = require("./syntax-highlight");
-const { formatNotecards } = require("./format-notecards");
 const buildOptions = require("./build-options");
 const { gather: gatherGitHistory } = require("./git-history");
 const { buildSPAs } = require("./spas");
@@ -520,8 +519,6 @@ async function buildDocument(document, documentOptions = {}) {
   // We might want to delete this injection in 2021 some time when all content's
   // raw HTML has been fixed to always have it in there already.
   injectNotecardOnWarnings($);
-
-  formatNotecards($);
 
   // Turn the $ instance into an array of section blocks. Most of the
   // section blocks are of type "prose" and their value is a string blob

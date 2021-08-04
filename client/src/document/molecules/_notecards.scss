@@ -7,9 +7,7 @@
 
 @mixin set-notecard-icon($icon) {
   h3,
-  h4,
-  strong,
-  &.inline {
+  h4 &.inline {
     &::before {
       background: transparent url($icon) 0 0 no-repeat;
     }
@@ -18,8 +16,7 @@
 
 @mixin set-notecard-icon-only($icon) {
   h3,
-  h4,
-  strong {
+  h4 {
     &::before {
       background-image: url($icon);
     }
@@ -46,8 +43,7 @@
   }
 
   h3,
-  h4,
-  #note {
+  h4 {
     /* 
      * Because we also allow h3, we need to undo some of its styling here.
      * This relates specifically to `background-color`, `color`, 
@@ -69,9 +65,7 @@
   }
 
   h3,
-  h4,
-  #note,
-  &.inline {
+  h4 &.inline {
     &::before {
       background-repeat: no-repeat;
       background-size: 18px;
@@ -83,12 +77,6 @@
       top: 2px;
       width: 20px;
     }
-  }
-
-  /* Mimic an <h4> block-level context for <strong> tags 
-   with <h4 id="note"> otherwise let it be */
-  #note {
-    display: block;
   }
 
   p {
