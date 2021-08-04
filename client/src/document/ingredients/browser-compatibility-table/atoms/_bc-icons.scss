@@ -1,18 +1,33 @@
 @use "sass:math";
 
-.bc-icons {
-  display: inline-block;
-  .only-icon {
-    vertical-align: middle;
-    .ic-footnote {
-      vertical-align: sub;
+.bc-notes-wrapper {
+  .bc-supports {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+}
+
+.bc-level-yes {
+  & + {
+    span {
+      vertical-align: middle;
+      .bc-icons {
+        .only-icon {
+          vertical-align: middle;
+        }
+      }
     }
   }
 }
 
-.bc-level-no + .bc-icons {
+.bc-icons {
+  display: inline-block;
   .only-icon {
     vertical-align: baseline;
+    .ic-footnote {
+      vertical-align: sub;
+    }
   }
 }
 
