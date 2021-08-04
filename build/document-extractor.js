@@ -129,8 +129,9 @@ function extractSections($) {
       flaws.push(
         `'${originalID}' is not a unique ID in this HTML (temporarily changed to ${section.value.id})`
       );
+    } else {
+      seenIDs.add(id);
     }
-    seenIDs.add(id);
   }
 
   return [sections, flaws];
