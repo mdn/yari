@@ -525,11 +525,16 @@ function _addSectionProse($) {
     for (const i of [...Array(h4s.length).keys()]) {
       if (i) {
         // Excess!
-        flaws.push(
-          `Excess <h4> tag that is NOT at root-level (id='${h4s
-            .eq(i)
-            .attr("id")}', text='${h4s.eq(i).text()}')`
-        );
+        // In light of the transition to Markdown
+        // and converting any <h4> elements within
+        // <div class="note notecard"> containers to <strong>,
+        // we don't need to push a flaw at the moment for h4
+        // tags that aren't at root-level
+        // flaws.push(
+        //   `Excess <h4> tag that is NOT at root-level (id='${h4s
+        //     .eq(i)
+        //     .attr("id")}', text='${h4s.eq(i).text()}')`
+        // );
       } else {
         id = h4s.eq(i).attr("id");
         title = h4s.eq(i).html();
