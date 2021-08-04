@@ -91,16 +91,16 @@ function extractSections($) {
   // So when you encounter `<h2 id="foo">Foo Y</h2>` you'll know that you
   // can't suggest it to be `<h2 id="foo_2">Foo Y</h2>` because that ID
   // is taken by another one, later.
-  const allIDs = new Map();
+  const allIDs = new Set();
   sections
     .map((section) => section.value.id)
     .filter(Boolean)
     .map((id) => id.toLowerCase())
     .forEach((id) => {
-      allIDs.set(id, (allIDs.get(id) || 0) + 1);
+      allIDs.add(id);
     });
 
-  const seenIDs = new Map();
+  const seenIDs = new Set();
   for (const section of sections) {
     const originalID = section.value.id;
     if (!originalID) {
@@ -112,25 +112,25 @@ function extractSections($) {
     }
     // We normalize all IDs to lowercase so that `id="Foo"` === `id="foo"`.
     const id = originalID.toLowerCase();
-    if (seenIDs.get(id)) {
+    if (seenIDs.has(id)) {
       // That's bad! We have to come up with a new ID but it can't be one
       // that's used by another other section.
       let increment = 2;
       let newID = `${originalID}_${increment}`;
       while (
-        seenIDs.get(newID.toLowerCase()) ||
-        allIDs.get(newID.toLowerCase())
+        seenIDs.has(newID.toLowerCase()) ||
+        allIDs.has(newID.toLowerCase())
       ) {
         increment++;
         newID = `${originalID}_${increment}`;
       }
       section.value.id = newID;
-      seenIDs.set(newID.toLowerCase(), 1);
+      seenIDs.add(newID.toLowerCase());
       flaws.push(
         `'${originalID}' is not a unique ID in this HTML (temporarily changed to ${section.value.id})`
       );
     }
-    seenIDs.set(id, (seenIDs.get(id) || 0) + 1);
+    seenIDs.add(id);
   }
 
   return [sections, flaws];
