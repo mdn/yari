@@ -91,14 +91,12 @@ function extractSections($) {
   // So when you encounter `<h2 id="foo">Foo Y</h2>` you'll know that you
   // can't suggest it to be `<h2 id="foo_2">Foo Y</h2>` because that ID
   // is taken by another one, later.
-  const allIDs = new Set();
-  sections
-    .map((section) => section.value.id)
-    .filter(Boolean)
-    .map((id) => id.toLowerCase())
-    .forEach((id) => {
-      allIDs.add(id);
-    });
+  const allIDs = new Set(
+    sections
+      .map((section) => section.value.id)
+      .filter(Boolean)
+      .map((id) => id.toLowerCase())
+  );
 
   const seenIDs = new Set();
   for (const section of sections) {
