@@ -224,15 +224,27 @@ function Flaws({
   // the server in POSIX style and the `open-editor` program will make
   // this work for Windows automatically.
   const filePath = doc.source.folder + "/" + doc.source.filename;
+
   return (
     <div id="document-flaws">
-      {!!fixableFlaws.length && !isReadOnly && (
-        <FixableFlawsAction
-          count={fixableFlaws.length}
-          reloadPage={reloadPage}
-        />
-      )}
-
+      {!!fixableFlaws.length && !isReadOnly && fixableFlaws.length > 0 && (
+        <>
+          {doc.isMarkdown ? (
+            <small>
+              Automatic fixing fixable flaws not yet enabled for Markdown
+              documents. See{" "}
+              <a href="https://github.com/mdn/yari/issues/4333">
+                mdn/yari#4333
+              </a>
+            </small>
+          ) : (
+            <FixableFlawsAction
+              count={fixableFlaws.length}
+              reloadPage={reloadPage}
+            />
+          )}
+        </>
+      )}{" "}
       {flaws.map((flaw) => {
         switch (flaw.name) {
           case "broken_links":
@@ -360,9 +372,6 @@ function FixableFlawsAction({
     }
   }
 
-  if (!count) {
-    return null;
-  }
   return (
     <div>
       {fixingError && (
