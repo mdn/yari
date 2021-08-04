@@ -35,11 +35,11 @@ jobs:
 
       - name: Install all yarn packages
         if: steps.cached-node_modules.outputs.cache-hit != 'true'
-        env:
-          # # XXX rewrite for playwright
-          # PUPPETEER_SKIP_CHROMIUM_DOWNLOAD: 1
-          PLAYWRIGHT_BROWSERS_PATH: /usr/bin
-          # PLAYWRIGHT_BROWSERS_PATH: $HOME/pw-browsers
+        # env:
+        #   # # XXX rewrite for playwright
+        #   # PUPPETEER_SKIP_CHROMIUM_DOWNLOAD: 1
+        #   PLAYWRIGHT_BROWSERS_PATH: /usr/bin
+        #   # PLAYWRIGHT_BROWSERS_PATH: $HOME/pw-browsers
         run: |
           yarn --frozen-lockfile
 
@@ -73,6 +73,10 @@ jobs:
           cat /tmp/stderr.log
 
       - name: Functional testing
+        env:
+          # # XXX rewrite for playwright
+          # PUPPETEER_SKIP_CHROMIUM_DOWNLOAD: 1
+          PLAYWRIGHT_BROWSERS_PATH: /usr/bin
         run: |
           yarn test:testing
           yarn test:headless
