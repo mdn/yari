@@ -547,9 +547,6 @@ async function buildDocument(document, documentOptions = {}) {
   // raw HTML has been fixed to always have it in there already.
   injectNotecardOnWarnings($);
 
-  // Remove h4s from any existing notecards and transform them
-  // from <div class="note notecard"><h4>Note:</h4>foobar</div> to
-  // <div class="note notecard"><p><strong>Note:</strong>foobar</p></div>
   formatNotecards($);
 
   // Turn the $ instance into an array of section blocks. Most of the
