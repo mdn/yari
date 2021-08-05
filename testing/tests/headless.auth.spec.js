@@ -79,7 +79,7 @@ test.describe("Visiting pages related and requiring authentication", () => {
     await page.click('button:has-text("Complete sign-in")');
   });
 
-  test("should show your settings page", async ({ page }) => {
+  test("show your settings page", async ({ page }) => {
     await page.goto(testURL("/en-US/settings"));
     expect(await page.innerText("h1")).toBe("Account settings");
     expect(await page.isVisible("text=You have not signed in")).toBeTruthy();
