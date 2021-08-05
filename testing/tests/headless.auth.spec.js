@@ -60,4 +60,26 @@ test.describe("Visiting pages related and requiring authentication", () => {
       await page.isVisible("text=Updated settings successfully")
     ).toBeTruthy();
   });
+
+  test("signing out", async ({ page }) => {
+    // First sign in
+    await page.goto(testURL("/en-US/signin"));
+    await page.click('a:has-text("Sign in with Firefox Accounts")');
+    expect(page.url()).toMatch(testURL("/en-US/"));
+    // This is important otherwise it won't wait for the XHR where the
+    // cookie gets set!
+    await page.waitForLoadState("networkidle");
+
+    await page.goto(testURL("/en-US/signout"));
+    await page.waitForLoadState("networkidle");
+
+    expect(await page.isVisible('button:has-text("Sign out")')).toBeTruthy();
+    await page.click('button:has-text("Sign out")');
+
+    await page.goto(testURL("/en-US/settings"));
+    await page.waitForLoadState("networkidle");
+    expect(await page.innerText("h1")).toBe("Account settings");
+    expect(await page.isVisible("text=You have not signed in")).toBeTruthy();
+    expect(await page.isVisible("text=Sign in")).toBeTruthy();
+  });
 });

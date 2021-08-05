@@ -110,7 +110,7 @@ app.get("/api/v1/whoami", async (req, res) => {
 const mockSettingsDatabase = new Map();
 
 app.get("/api/v1/settings", async (req, res) => {
-  const defaultContext = { locale: "en-US" };
+  const defaultContext = { locale: "en-US", csrfmiddlewaretoken: "xyz123" };
   if (!req.cookies.sessionid) {
     res.status(403).send("oh no you don't");
   } else {
@@ -152,9 +152,14 @@ app.get("/users/fxa/login/authenticate/", async (req, res) => {
   res.redirect(req.query.next);
 });
 
-app.post("/:locale/users/signout", async (req, res) => {
-  res.clearCookie("sessionid");
-  res.redirect(`/${req.params.locale}/`);
+app.post("/users/fxa/login/logout/", async (req, res) => {
+  if (!req.cookies.sessionid) {
+    res.status(403).send("oh no you don't");
+  } else {
+    res.clearCookie("sessionid");
+    mockWhoamiDatabase.delete(req.cookies.sessionid);
+    res.redirect(`/en-US/`);
+  }
 });
 
 // To mimic what CloudFront does.
