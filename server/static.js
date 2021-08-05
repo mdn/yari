@@ -23,6 +23,10 @@ app.use((req, res, next) => {
   return next();
 });
 
+app.get("/", async (req, res) => {
+  res.redirect(302, "/en-US/");
+});
+
 app.use(staticMiddlewares);
 
 app.use(cookieParser());
