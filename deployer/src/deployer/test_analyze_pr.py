@@ -13,6 +13,7 @@ DEFAULT_CONFIG = {
     "prefix": None,
     "analyze_flaws": False,
     "analyze_dangerous_content": False,
+    "check_external_links": False,
     "repo": "mdn/content",
     "pr_number": None,
     "dry_run": False,
