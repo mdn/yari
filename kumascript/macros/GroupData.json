@@ -1,11 +1,17 @@
 [
   {
-    "Ambient Light Events": {
-      "overview": ["Ambient Light Events"],
-      "interfaces": ["DeviceLightEvent"],
+    "Background Fetch API": {
+      "overview": ["Background Fetch API"],
+      "interfaces": [
+        "BackgroundFetchManager",
+        "BackgroundFetchRegistration",
+        "BackgroundFetchRecord",
+        "BackgroundFetchEvent",
+        "BackgroundFetchUpdateUIEvent"
+      ],
       "methods": [],
-      "properties": ["Window.ondevicelight"],
-      "events": ["Window: devicelight"]
+      "properties": [],
+      "events": []
     },
     "Background Tasks": {
       "overview": ["Background Tasks API"],
@@ -87,7 +93,6 @@
         "ImageData",
         "OffscreenCanvas",
         "Path2D",
-        "RenderingContext",
         "TextMetrics"
       ],
       "methods": [],
@@ -148,7 +153,8 @@
         "Credential",
         "CredentialsContainer",
         "FederatedCredential",
-        "PasswordCredential"
+        "PasswordCredential",
+        "PublicKeyCredential"
       ],
       "methods": [],
       "properties": [],
@@ -184,8 +190,9 @@
       "properties": [],
       "events": []
     },
-    "CSS Typed OM API": {
+    "CSS Typed Object Model API": {
       "overview": ["CSS Typed OM API"],
+      "guides": ["/docs/Web/API/CSS_Typed_OM_API/Guide"],
       "interfaces": [
         "CSSKeywordValue",
         "CSSImageValue",
@@ -281,7 +288,6 @@
         "ByteString",
         "CDATASection",
         "CharacterData",
-        "ChildNode",
         "CSSPrimitiveValue",
         "CSSValue",
         "CSSValueList",
@@ -290,15 +296,9 @@
         "Document",
         "DocumentFragment",
         "DocumentType",
-        "DOMConfiguration",
         "DOMError",
-        "DOMErrorHandler",
         "DOMException",
         "DOMImplementation",
-        "DOMImplementationList",
-        "DOMImplementationRegistry",
-        "DOMImplementationSource",
-        "DOMLocator",
         "DOMObject",
         "DOMParser",
         "DOMPoint",
@@ -308,7 +308,6 @@
         "DOMString",
         "DOMTimeStamp",
         "DOMTokenList",
-        "DOMUserData",
         "Element",
         "ElementTraversal",
         "Entity",
@@ -330,8 +329,6 @@
         "TextEncoder",
         "TimeRanges",
         "TreeWalker",
-        "TypeInfo",
-        "UserDataHandler",
         "USVString",
         "XMLDocument"
       ],
@@ -430,7 +427,7 @@
         "/docs/Web/API/Fetch_API/Basic_concepts",
         "/docs/Web/API/Fetch_API/Cross-global_fetch_usage"
       ],
-      "interfaces": ["Body", "Headers", "Request", "Response"],
+      "interfaces": ["Headers", "Request", "Response"],
       "methods": ["WindowOrWorkerGlobalScope.fetch()"],
       "properties": [],
       "events": []
@@ -683,11 +680,6 @@
         "MessageEvent",
         "MessagePort",
         "Navigator",
-        "NavigatorGeolocation",
-        "NavigatorID",
-        "NavigatorLanguage",
-        "NavigatorOnLine",
-        "NavigatorPlugins",
         "PageTransitionEvent",
         "Plugin",
         "PluginArray",
@@ -881,7 +873,6 @@
       "overview": ["Media Streams API"],
       "guides": ["/docs/Web/API/Media_Streams_API/Constraints"],
       "interfaces": [
-        "AudioStreamTrack",
         "BlobEvent",
         "CanvasCaptureMediaStream",
         "MediaDevices",
@@ -892,8 +883,6 @@
         "MediaTrackConstraints",
         "MediaTrackSettings",
         "MediaTrackSupportedConstraints",
-        "NavigatorUserMedia",
-        "NavigatorUserMediaError",
         "VideoStreamTrack",
         "DoubleRange",
         "ConstrainDouble",
@@ -918,7 +907,6 @@
       "dictionaries": [
         "MediaImage",
         "MediaMetadataInit",
-        "MediaPositionState",
         "MediaSessionActionDetails"
       ],
       "types": ["MediaSessionAction", "MediaSessionPlaybackState"],
@@ -999,7 +987,6 @@
         "BasicCardResponse",
         "PaymentMethodData",
         "PaymentCurrencyAmount",
-        "PaymentDetailsBase",
         "PaymentDetailsModifier",
         "PaymentDetailsUpdate",
         "PaymentItem",
@@ -1257,14 +1244,22 @@
     },
     "Sensor API": {
       "overview": ["Sensor APIs"],
-      "interfaces": ["Sensor"],
-      "properties": [
-        "Sensor.activated",
-        "Sensor.hasReading",
-        "Sensor.timestamp"
+      "interfaces": [
+        "AbsoluteOrientationSensor",
+        "Accelerometer",
+        "AmbientLightSensor",
+        "GravitySensor",
+        "Gyroscope",
+        "LinearAccelerationSensor",
+        "Magnetometer",
+        "OrientationSensor",
+        "RelativeOrientationSensor",
+        "Sensor",
+        "SensorErrorEvent"
       ],
-      "methods": ["Sensor.start()", "Sensor.stop()"],
-      "events": ["Sensor: error", "Sensor: reading", "Sensor: activate"]
+      "properties": [],
+      "methods": [],
+      "events": []
     },
     "Server Sent Events": {
       "overview": ["Server-sent events"],
@@ -1304,7 +1299,7 @@
     },
     "Storage": {
       "overview": ["Storage API"],
-      "interfaces": ["StorageManager", "NavigatorStorage", "StorageEstimate"],
+      "interfaces": ["StorageManager", "StorageEstimate"],
       "methods": [],
       "properties": ["Navigator.storage", "WorkerNavigator.storage"],
       "events": []
@@ -1779,6 +1774,7 @@
       ]
     },
     "Web MIDI API": {
+      "overview": ["Web MIDI API"],
       "interfaces": [
         "MIDIInputMap",
         "MIDIOutputMap",
@@ -2015,7 +2011,6 @@
         "/docs/Web/API/Web_Workers_API/Structured_clone_algorithm"
       ],
       "interfaces": [
-        "AbstractWorker",
         "ChromeWorker",
         "DedicatedWorkerGlobalScope",
         "ServiceWorker",

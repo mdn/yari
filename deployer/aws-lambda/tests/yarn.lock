@@ -644,10 +644,10 @@
 "@yari-internal/content-origin-request@file:../content-origin-request":
   version "0.0.1"
   dependencies:
-    "@yari-internal/constants" "file:../../../../../../../Library/Caches/Yarn/v6/npm-@yari-internal-content-origin-request-0.0.1-992d54e5-502f-4e96-98ff-e995a630ece4-1621344255198/libs/constants"
-    "@yari-internal/fundamental-redirects" "file:../../../../../../../Library/Caches/Yarn/v6/npm-@yari-internal-content-origin-request-0.0.1-992d54e5-502f-4e96-98ff-e995a630ece4-1621344255198/libs/fundamental-redirects"
-    "@yari-internal/get-locale" "file:../../../../../../../Library/Caches/Yarn/v6/npm-@yari-internal-content-origin-request-0.0.1-992d54e5-502f-4e96-98ff-e995a630ece4-1621344255198/libs/get-locale"
-    "@yari-internal/slug-utils" "file:../../../../../../../Library/Caches/Yarn/v6/npm-@yari-internal-content-origin-request-0.0.1-992d54e5-502f-4e96-98ff-e995a630ece4-1621344255198/libs/slug-utils"
+    "@yari-internal/constants" "file:../../../libs/constants"
+    "@yari-internal/fundamental-redirects" "file:../../../libs/fundamental-redirects"
+    "@yari-internal/get-locale" "file:../../../libs/get-locale"
+    "@yari-internal/slug-utils" "file:../../../libs/slug-utils"
     accept-language-parser "^1.5.0"
     cookie "0.4.1"
     sanitize-filename "^1.6.3"
@@ -655,7 +655,7 @@
 "@yari-internal/content-origin-response@file:../content-origin-response":
   version "0.0.1"
   dependencies:
-    "@yari-internal/constants" "file:../../../../../../../Library/Caches/Yarn/v6/npm-@yari-internal-content-origin-response-0.0.1-2b5b9e04-07c7-4f0f-a8c7-c02155ee9400-1621344255764/libs/constants"
+    "@yari-internal/constants" "file:../../../libs/constants"
 
 "@yari-internal/fundamental-redirects@file:../../../libs/fundamental-redirects":
   version "0.0.1"
@@ -2821,9 +2821,9 @@ normalize-path@^3.0.0:
   integrity sha512-6eZs5Ls3WtCisHWp9S2GUy8dqkpGi4BVSz3GaqiE6ezub0512ESztXUwUB6C6IKbQkY2Pnb/mD4WYojCRwcwLA==
 
 normalize-url@^4.1.0:
-  version "4.5.0"
-  resolved "https://registry.yarnpkg.com/normalize-url/-/normalize-url-4.5.0.tgz#453354087e6ca96957bd8f5baf753f5982142129"
-  integrity sha512-2s47yzUxdexf1OhyRi4Em83iQk0aPvwTddtFz4hnSSw9dCEsLEGf6SwIO8ss/19S9iBb5sJaOuTvTGDeZI00BQ==
+  version "4.5.1"
+  resolved "https://registry.yarnpkg.com/normalize-url/-/normalize-url-4.5.1.tgz#0dd90cf1288ee1d1313b87081c9a5932ee48518a"
+  integrity sha512-9UZCFRHQdNrfTpGg8+1INIg93B6zE0aXMVFkw1WFwvO4SlZywU6aLg5Of0Ap/PgcbSw4LNxvMWXMeugwMCX0AA==
 
 npm-run-path@^2.0.0:
   version "2.0.2"
@@ -3883,9 +3883,9 @@ write-file-atomic@^3.0.0:
     typedarray-to-buffer "^3.1.5"
 
 ws@^7.4.4:
-  version "7.4.5"
-  resolved "https://registry.yarnpkg.com/ws/-/ws-7.4.5.tgz#a484dd851e9beb6fdb420027e3885e8ce48986c1"
-  integrity sha512-xzyu3hFvomRfXKH8vOFMU3OguG6oOvhXMo3xsGy3xWExqaM2dxBbVxuD99O7m3ZUFMvvscsZDqxfgMaRr/Nr1g==
+  version "7.4.6"
+  resolved "https://registry.yarnpkg.com/ws/-/ws-7.4.6.tgz#5654ca8ecdeee47c33a9a4bf6d28e2be2980377c"
+  integrity sha512-YmhHDO4MzaDLB+M9ym/mDA5z0naX8j7SIlT8f8z+I0VtzsRbekxEutHSme7NPS2qE8StCYQNUnfWdXta/Yu85A==
 
 xml-name-validator@^3.0.0:
   version "3.0.0"

@@ -115,6 +115,7 @@ function useAnnotations(genericFlaws: GenericFlaw[]) {
 }
 
 const FLAWS_HASH = "#_flaws";
+
 export function ToggleDocumentFlaws({
   doc,
   reloadPage,
@@ -224,22 +225,38 @@ function Flaws({
 
   const isReadOnly = !CRUD_MODE_HOSTNAMES.includes(window.location.hostname);
 
+  // Note! This will work on Windows. The filename can be sent to
+  // the server in POSIX style and the `open-editor` program will make
+  // this work for Windows automatically.
+  const filePath = doc.source.folder + "/" + doc.source.filename;
+
   return (
     <div id="document-flaws">
-      {!!fixableFlaws.length && !isReadOnly && (
-        <FixableFlawsAction
-          count={fixableFlaws.length}
-          reloadPage={reloadPage}
-        />
-      )}
-
+      {!!fixableFlaws.length && !isReadOnly && fixableFlaws.length > 0 && (
+        <>
+          {doc.isMarkdown ? (
+            <small>
+              Automatic fixing fixable flaws not yet enabled for Markdown
+              documents. See{" "}
+              <a href="https://github.com/mdn/yari/issues/4333">
+                mdn/yari#4333
+              </a>
+            </small>
+          ) : (
+            <FixableFlawsAction
+              count={fixableFlaws.length}
+              reloadPage={reloadPage}
+            />
+          )}
+        </>
+      )}{" "}
       {flaws.map((flaw) => {
         switch (flaw.name) {
           case "broken_links":
             return (
               <BrokenLinks
                 key="broken_links"
-                sourceFolder={doc.source.folder}
+                sourceFilePath={filePath}
                 links={doc.flaws.broken_links}
                 isReadOnly={isReadOnly}
               />
@@ -262,7 +279,7 @@ function Flaws({
             return (
               <BadPreTag
                 key="bad_pre_tags"
-                sourceFolder={doc.source.folder}
+                sourceFilePath={filePath}
                 flaws={doc.flaws.bad_pre_tags}
                 isReadOnly={isReadOnly}
               />
@@ -271,7 +288,7 @@ function Flaws({
             return (
               <Macros
                 key="macros"
-                sourceFolder={doc.source.folder}
+                sourceFilePath={filePath}
                 flaws={doc.flaws.macros}
                 isReadOnly={isReadOnly}
               />
@@ -280,7 +297,7 @@ function Flaws({
             return (
               <Images
                 key="images"
-                sourceFolder={doc.source.folder}
+                sourceFilePath={filePath}
                 images={doc.flaws.images}
                 isReadOnly={isReadOnly}
               />
@@ -289,7 +306,7 @@ function Flaws({
             return (
               <ImageWidths
                 key="image_widths"
-                sourceFolder={doc.source.folder}
+                sourceFilePath={filePath}
                 flaws={doc.flaws.image_widths}
                 isReadOnly={isReadOnly}
               />
@@ -298,7 +315,7 @@ function Flaws({
             return (
               <HeadingLinks
                 key="heading_links"
-                sourceFolder={doc.source.folder}
+                sourceFilePath={filePath}
                 flaws={doc.flaws.heading_links}
                 isReadOnly={isReadOnly}
               />
@@ -360,9 +377,6 @@ function FixableFlawsAction({
     }
   }
 
-  if (!count) {
-    return null;
-  }
   return (
     <div>
       {fixingError && (
@@ -416,11 +430,11 @@ function ShowDiff({ before, after }: { before: string; after: string }) {
 }
 
 function BrokenLinks({
-  sourceFolder,
+  sourceFilePath,
   links,
   isReadOnly,
 }: {
-  sourceFolder: string;
+  sourceFilePath: string;
   links: BrokenLink[];
   isReadOnly: boolean;
 }) {
@@ -439,15 +453,13 @@ function BrokenLinks({
     };
   }, [opening]);
 
-  const filepath = sourceFolder + "/index.html";
-
   function openInEditor(key: string, line: number, column: number) {
     const sp = new URLSearchParams();
-    sp.set("filepath", filepath);
+    sp.set("filepath", sourceFilePath);
     sp.set("line", `${line}`);
     sp.set("column", `${column}`);
     console.log(
-      `Going to try to open ${filepath}:${line}:${column} in your editor`
+      `Going to try to open ${sourceFilePath}:${line}:${column} in your editor`
     );
     setOpening(key);
     fetch(`/_open?${sp.toString()}`).catch((err) => {
@@ -493,7 +505,7 @@ function BrokenLinks({
                 </>
               ) : (
                 <a
-                  href={`file://${filepath}`}
+                  href={`file://${sourceFilePath}`}
                   onClick={(event: React.MouseEvent) => {
                     event.preventDefault();
                     openInEditor(key, flaw.line, flaw.column);
@@ -576,16 +588,14 @@ function Sectioning({ flaws }: { flaws: SectioningFlaw[] }) {
 
 function BadPreTag({
   flaws,
-  sourceFolder,
+  sourceFilePath,
   isReadOnly,
 }: {
   flaws: BadPreTagFlaw[];
-  sourceFolder: string;
+  sourceFilePath: string;
   isReadOnly: boolean;
 }) {
   const { focus } = useAnnotations(flaws);
-
-  const filepath = sourceFolder + "/index.html";
 
   const [opening, setOpening] = React.useState<string | null>(null);
   useEffect(() => {
@@ -604,11 +614,11 @@ function BadPreTag({
 
   function openInEditor(key: string, line: number, column: number) {
     const sp = new URLSearchParams();
-    sp.set("filepath", filepath);
+    sp.set("filepath", sourceFilePath);
     sp.set("line", `${line}`);
     sp.set("column", `${column}`);
     console.log(
-      `Going to try to open ${filepath}:${line}:${column} in your editor`
+      `Going to try to open ${sourceFilePath}:${line}:${column} in your editor`
     );
     setOpening(key);
     fetch(`/_open?${sp.toString()}`).catch((err) => {
@@ -641,7 +651,7 @@ function BadPreTag({
                 </>
               ) : (
                 <a
-                  href={`file://${filepath}`}
+                  href={`file://${sourceFilePath}`}
                   onClick={(event: React.MouseEvent) => {
                     event.preventDefault();
                     if (flaw.line && flaw.column)
@@ -663,11 +673,11 @@ function BadPreTag({
 
 function Macros({
   flaws,
-  sourceFolder,
+  sourceFilePath,
   isReadOnly,
 }: {
   flaws: MacroErrorMessage[];
-  sourceFolder: string;
+  sourceFilePath: string;
   isReadOnly: boolean;
 }) {
   const [opening, setOpening] = React.useState<string | null>(null);
@@ -703,9 +713,7 @@ function Macros({
     <div className="flaw flaw__macros">
       <h3>{humanizeFlawName("macros")}</h3>
       {flaws.map((flaw) => {
-        const inPrerequisiteMacro = !flaw.filepath.includes(
-          `${sourceFolder}/index.html`
-        );
+        const inPrerequisiteMacro = !flaw.filepath.includes(sourceFilePath);
         return (
           <details
             key={flaw.id}
@@ -799,11 +807,11 @@ function Macros({
 }
 
 function Images({
-  sourceFolder,
+  sourceFilePath,
   images,
   isReadOnly,
 }: {
-  sourceFolder: string;
+  sourceFilePath: string;
   images: ImageReferenceFlaw[];
   isReadOnly: boolean;
 }) {
@@ -823,15 +831,13 @@ function Images({
     };
   }, [opening]);
 
-  const filepath = sourceFolder + "/index.html";
-
   function openInEditor(key: string, line: number, column: number) {
     const sp = new URLSearchParams();
-    sp.set("filepath", filepath);
+    sp.set("filepath", sourceFilePath);
     sp.set("line", `${line}`);
     sp.set("column", `${column}`);
     console.log(
-      `Going to try to open ${filepath}:${line}:${column} in your editor`
+      `Going to try to open ${sourceFilePath}:${line}:${column} in your editor`
     );
     setOpening(key);
     fetch(`/_open?${sp.toString()}`).catch((err) => {
@@ -867,7 +873,7 @@ function Images({
                 </>
               ) : (
                 <a
-                  href={`file://${filepath}`}
+                  href={`file://${sourceFilePath}`}
                   onClick={(event: React.MouseEvent) => {
                     event.preventDefault();
                     openInEditor(key, flaw.line, flaw.column);
@@ -895,11 +901,11 @@ function Images({
 }
 
 function ImageWidths({
-  sourceFolder,
+  sourceFilePath,
   flaws,
   isReadOnly,
 }: {
-  sourceFolder: string;
+  sourceFilePath: string;
   flaws: ImageWidthFlaw[];
   isReadOnly: boolean;
 }) {
@@ -919,15 +925,13 @@ function ImageWidths({
     };
   }, [opening]);
 
-  const filepath = sourceFolder + "/index.html";
-
   function openInEditor(key: string, line: number, column: number) {
     const sp = new URLSearchParams();
-    sp.set("filepath", filepath);
+    sp.set("filepath", sourceFilePath);
     sp.set("line", `${line}`);
     sp.set("column", `${column}`);
     console.log(
-      `Going to try to open ${filepath}:${line}:${column} in your editor`
+      `Going to try to open ${sourceFilePath}:${line}:${column} in your editor`
     );
     setOpening(key);
     fetch(`/_open?${sp.toString()}`).catch((err) => {
@@ -963,7 +967,7 @@ function ImageWidths({
                 </>
               ) : (
                 <a
-                  href={`file://${filepath}`}
+                  href={`file://${sourceFilePath}`}
                   onClick={(event: React.MouseEvent) => {
                     event.preventDefault();
                     openInEditor(key, flaw.line, flaw.column);
@@ -1002,11 +1006,11 @@ function ImageWidths({
 }
 
 function HeadingLinks({
-  sourceFolder,
+  sourceFilePath,
   flaws,
   isReadOnly,
 }: {
-  sourceFolder: string;
+  sourceFilePath: string;
   flaws: HeadingLinksFlaw[];
   isReadOnly: boolean;
 }) {
@@ -1026,15 +1030,13 @@ function HeadingLinks({
     };
   }, [opening]);
 
-  const filepath = sourceFolder + "/index.html";
-
   function openInEditor(key: string, line: number, column: number) {
     const sp = new URLSearchParams();
-    sp.set("filepath", filepath);
+    sp.set("filepath", sourceFilePath);
     sp.set("line", `${line}`);
     sp.set("column", `${column}`);
     console.log(
-      `Going to try to open ${filepath}:${line}:${column} in your editor`
+      `Going to try to open ${sourceFilePath}:${line}:${column} in your editor`
     );
     setOpening(key);
     fetch(`/_open?${sp.toString()}`).catch((err) => {
@@ -1058,7 +1060,7 @@ function HeadingLinks({
                   </>
                 ) : (
                   <a
-                    href={`file://${filepath}`}
+                    href={`file://${sourceFilePath}`}
                     onClick={(event: React.MouseEvent) => {
                       event.preventDefault();
                       openInEditor(
@@ -1111,7 +1113,9 @@ function UnsafeHTML({ flaws }: { flaws: UnsafeHTMLFlaw[] }) {
                 </>
               )}{" "}
               {flaw.fixable && <FixableFlawBadge />} <br />
-              <b>HTML:</b> <pre className="example-bad">{flaw.html}</pre> <br />
+              <b>HTML:</b>
+              <pre className="example-bad">{flaw.html}</pre>
+              <br />
             </li>
           );
         })}

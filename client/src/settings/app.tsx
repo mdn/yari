@@ -6,6 +6,7 @@ import { Loading } from "../ui/atoms/loading";
 import { DISABLE_AUTH } from "../constants";
 import { useUserData } from "../user-context";
 import { useLocale } from "../hooks";
+import { AuthDisabled } from "../ui/atoms/auth-disabled";
 
 import "./index.scss";
 
@@ -44,7 +45,9 @@ export default function SettingsApp({ ...appProps }) {
     },
     {
       initialData: appProps.possibleLocales
-        ? { possibleLocales: appProps.possibleLocales }
+        ? {
+            possibleLocales: appProps.possibleLocales,
+          }
         : undefined,
       revalidateOnFocus: false,
     }
@@ -123,15 +126,6 @@ export default function SettingsApp({ ...appProps }) {
           />
         )}
       <CloseAccount userSettings={data} />
-    </div>
-  );
-}
-
-function AuthDisabled() {
-  return (
-    <div className="notecard warning">
-      <h4>Authentication disabled</h4>
-      <p>Authentication and the user settings app is currently disabled.</p>
     </div>
   );
 }
@@ -225,9 +219,7 @@ function Settings({
       )}
 
       <div className="field-group">
-        <label htmlFor="id_locale" className="slab-highlight">
-          Change language
-        </label>
+        <h3>Default language</h3>
 
         {sent && !sendError && (
           <div className="notecard success">
@@ -244,7 +236,9 @@ function Settings({
             <a href={window.location.pathname}>Reload page to try again.</a>
           </div>
         )}
-
+        <label htmlFor="id_locale" className="visually-hidden">
+          Change language
+        </label>
         <select
           id="id_locale"
           name="locale"

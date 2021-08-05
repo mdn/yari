@@ -1544,6 +1544,16 @@
     "url": "https://w3c.github.io/uievents/",
     "status": "WD"
   },
+  "UI Events Code": {
+    "name": "UI Events KeyboardEvent code Values",
+    "url": "https://www.w3.org/TR/uievents-code/",
+    "status": "CR"
+  },
+  "UI Events Key": {
+    "name": "UI Events KeyboardEvent key Values",
+    "url": "https://www.w3.org/TR/uievents-key/",
+    "status": "CR"
+  },
   "Undo Manager": {
     "name": "UndoManager and DOMTransaction",
     "url": "https://dvcs.w3.org/hg/undomanager/raw-file/tip/undomanager.html",
@@ -1621,8 +1631,8 @@
   },
   "Web Audio API": {
     "name": "Web Audio API",
-    "url": "https://webaudio.github.io/web-audio-api/",
-    "status": "WD"
+    "url": "https://www.w3.org/TR/webaudio/",
+    "status": "REC"
   },
   "Web Bluetooth": {
     "name": "Web Bluetooth",
@@ -1657,6 +1667,11 @@
   "Web NFC": {
     "name": "Web NFC",
     "url": "https://w3c.github.io/web-nfc/",
+    "status": "Draft"
+  },
+  "WebOTP": {
+    "name": "WebOTP",
+    "url": "https://wicg.github.io/web-otp/",
     "status": "Draft"
   },
   "EXT_blend_minmax": {

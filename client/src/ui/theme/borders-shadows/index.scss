@@ -1,0 +1,12 @@
+@use "../color-palette/index" as palette;
+
+$default-border-radius: 12px;
+$standard-light-border: 1px solid palette.$mdn-neutral200;
+
+.fade {
+  mask-image: linear-gradient(
+    to bottom,
+    palette.$mdn-neutral900 65%,
+    transparent 100%
+  );
+}

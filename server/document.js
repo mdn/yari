@@ -29,9 +29,6 @@ function withDocument(req, res, next) {
 }
 
 router.put("/fixfixableflaws", withDocument, async (req, res) => {
-  if (req.document.isArchive) {
-    return res.status(400).send("Can't fix archived documents");
-  }
   // To get the 'doc' we have to find the built art
   try {
     await buildDocument(req.document, {

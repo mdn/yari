@@ -1,10 +1,24 @@
 const fs = require("fs");
 const path = require("path");
 
-const { Archive, Document, Redirect, Image } = require("../../content");
+const fromMarkdown = require("mdast-util-from-markdown");
+const visit = require("unist-util-visit");
+
+const { Document, Redirect, Image } = require("../../content");
 const { FLAW_LEVELS } = require("../constants");
 const { findMatchesInText } = require("../matches-in-text");
 const { DEFAULT_LOCALE, VALID_LOCALES } = require("../../libs/constants");
+
+function findMatchesInMarkdown(rawContent, href) {
+  const matches = [];
+  visit(fromMarkdown(rawContent), "link", (node) => {
+    if (node.url == href) {
+      const { line, column } = node.position.start;
+      matches.push({ line, column });
+    }
+  });
+  return matches;
+}
 
 const _safeToHttpsDomains = new Map();
 function getSafeToHttpDomains() {
@@ -43,7 +57,7 @@ function mutateLink(
   }
 ) {
   if (isSelfLink) {
-    $element.addClass("self-link");
+    $element.attr("aria-current", "page");
   } else if (suggestion) {
     $element.attr("href", suggestion);
   } else if (enUSFallback) {
@@ -103,11 +117,14 @@ function getBrokenLinksFlaws(doc, $, { rawContent }, level) {
     if (!matches.has(href)) {
       matches.set(
         href,
-        Array.from(
-          findMatchesInText(href, rawContent, {
-            attribute: "href",
-          })
-        )
+
+        doc.isMarkdown
+          ? findMatchesInMarkdown(rawContent, href)
+          : Array.from(
+              findMatchesInText(href, rawContent, {
+                attribute: "href",
+              })
+            )
       );
     }
     // findMatchesInText() is a generator function so use `Array.from()`
@@ -128,7 +145,20 @@ function getBrokenLinksFlaws(doc, $, { rawContent }, level) {
 
   $("a[href]").each((i, element) => {
     const a = $(element);
-    const href = a.attr("href");
+    let href = a.attr("href");
+    try {
+      // When Markdown turns into HTML it will encode the `href` values in the
+      // links. To be able to treat it as if it was from its raw value,
+      // we first decode it. That way we can find out it was originally written
+      // in the `index.md` file, for example.
+      // But not all URLs can be applied with `decodeURI`. For example:
+      // https://www.ecma-international.org/ecma-262/6.0/#sec-get-%typedarray%.prototype.buffer
+      // can't be decoded in Node.
+      // So that's why we do this decoding very defensively.
+      href = decodeURI(href);
+    } catch (error) {
+      console.warn(`Unable to decodeURI '${href}'. Will proceed without.`);
+    }
 
     // This gives us insight into how many times this exact `href`
     // has been encountered in the doc.
@@ -240,10 +270,7 @@ function getBrokenLinksFlaws(doc, $, { rawContent }, level) {
       const found = Document.findByURL(hrefNormalized);
       if (!found) {
         // Before we give up, check if it's an image.
-        if (
-          !Image.findByURL(hrefNormalized) &&
-          !Archive.isArchivedURL(hrefNormalized)
-        ) {
+        if (!Image.findByURL(hrefNormalized)) {
           // Even if it's a redirect, it's still a flaw, but it'll be nice to
           // know what it *should* be.
           const resolved = Redirect.resolve(hrefNormalized);

@@ -24,6 +24,9 @@ A bullet point list:
 
 This paragraph as a [link](/en-US/docs/Web).
 
+<pre class="brush: html notranslate"><code><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>pre</span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>code</span><span class="token punctuation">&gt;</span></span>code
+</code></pre>
+
 ### To-do
 
 - [ ] One

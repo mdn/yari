@@ -77,25 +77,29 @@ def test_hreflang_basic(base_url):
     )
 
 
-@pytest.mark.parametrize(
-    "uri,expected_keys",
-    [["/api/v1/whoami", [("waffle", ("flags", "switches"))]]],
-    ids=("whoami",),
-)
-def test_api_basic(base_url, uri, expected_keys):
-    """Basic test of site's api endpoints."""
-    resp = request("get", base_url + uri)
+def test_api_whoami(base_url):
+    """Basic test of site's whoami API."""
+    resp = request("get", f"{base_url}/api/v1/whoami")
     assert resp.status_code == 200
     assert resp.headers.get("content-type") == "application/json"
     data = resp.json()
-    for item in expected_keys:
-        if isinstance(item, tuple):
-            key, sub_keys = item
-        else:
-            key, sub_keys = item, ()
-        assert key in data
-        for sub_key in sub_keys:
-            assert sub_key in data[key]
+    assert "geo" in data
+    assert "country" in data["geo"]
+
+
+def test_api_search(base_url):
+    """Basic test of site's search API."""
+    resp = request("get", f"{base_url}/api/v1/search?q=video")
+    assert resp.status_code == 200
+    assert resp.headers.get("content-type") == "application/json"
+    data = resp.json()
+    assert "documents" in data
+    assert "metadata" in data
+    assert "suggestions" in data
+    assert "took_ms" in data["metadata"]
+    assert "total" in data["metadata"]
+    assert "size" in data["metadata"]
+    assert "page" in data["metadata"]
 
 
 # Test value tuple is:
@@ -132,11 +136,9 @@ LOCALE_SELECTORS = {
         "/search/",
         "/search?q=video",
         "/search/?q=video",
-        "/events",
         "/signup",
         "/signin",
         "/settings",
-        "/users/signin",
     ],
 )
 def test_locale_selection(base_url, slug, expected, cookie, accept):

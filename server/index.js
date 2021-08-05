@@ -22,8 +22,8 @@ const {
   CONTENT_TRANSLATED_ROOT,
 } = require("../content");
 // eslint-disable-next-line node/no-missing-require
-const { prepareDoc, renderDocHTML } = require("../ssr/dist/main");
-const { CSP_VALUE_DEV } = require("../libs/constants");
+const { renderHTML } = require("../ssr/dist/main");
+const { CSP_VALUE, DEFAULT_LOCALE } = require("../libs/constants");
 
 const { STATIC_ROOT, PROXY_HOSTNAME, FAKE_V1_API } = require("./constants");
 const documentRouter = require("./document");
@@ -168,18 +168,12 @@ app.get("/*/contributors.txt", async (req, res) => {
     return res.status(404).send(`Document not found by URL (${url})`);
   }
   const { doc: builtDocument } = await buildDocument(document);
-  if (document.metadata.contributors || !document.isArchive) {
-    res.send(
-      renderContributorsTxt(
-        document.metadata.contributors,
-        !document.isArchive
-          ? builtDocument.source.github_url.replace("/blob/", "/commits/")
-          : null
-      )
-    );
-  } else {
-    res.status(410).send("Contributors not known for this document.\n");
-  }
+  res.send(
+    renderContributorsTxt(
+      document.metadata.contributors,
+      builtDocument.source.github_url.replace("/blob/", "/commits/")
+    )
+  );
 });
 
 app.get("/*", async (req, res) => {
@@ -256,6 +250,18 @@ app.get("/*", async (req, res) => {
     if (built) {
       document = built.doc;
       bcdData = built.bcdData;
+    } else if (
+      lookupURL.split("/")[1] &&
+      lookupURL.split("/")[1].toLowerCase() !== DEFAULT_LOCALE.toLowerCase() &&
+      !CONTENT_TRANSLATED_ROOT
+    ) {
+      // Such a common mistake. You try to view a URL that is not en-US but
+      // you forgot to set CONTENT_TRANSLATED_ROOT.
+      console.warn(
+        `URL is for locale '${
+          lookupURL.split("/")[1]
+        }' but CONTENT_TRANSLATED_ROOT is not set. URL will 404.`
+      );
     }
   } catch (error) {
     console.error(`Error in buildDocumentFromURL(${lookupURL})`, error);
@@ -280,12 +286,11 @@ app.get("/*", async (req, res) => {
     );
   }
 
-  prepareDoc(document);
   if (isJSONRequest) {
     res.json({ doc: document });
   } else {
-    res.header("Content-Security-Policy", CSP_VALUE_DEV);
-    res.send(renderDocHTML(document, lookupURL));
+    res.header("Content-Security-Policy", CSP_VALUE);
+    res.send(renderHTML(lookupURL, { doc: document }));
   }
 });
 

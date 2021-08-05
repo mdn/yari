@@ -53,6 +53,22 @@ async function buildSPAs(options) {
         { prefix: "signup", pageTitle: "Sign up", noIndexing: true },
         { prefix: "settings", pageTitle: "Account settings", noIndexing: true },
         { prefix: "plus", pageTitle: "Plus", noIndexing: true },
+        { prefix: "plus/bookmarks", pageTitle: "Bookmarks", noIndexing: true },
+        {
+          prefix: "plus/deep-dives",
+          pageTitle: "Modern CSS in the Real World",
+          noIndexing: true,
+        },
+        {
+          prefix: "plus/deep-dives/planning-for-browser-support",
+          pageTitle: "Planning for browser support ~ Plus",
+          noIndexing: true,
+        },
+        {
+          prefix: "plus/deep-dives/your-browser-support-toolkit",
+          pageTitle: "Your browser support toolkit ~ Plus",
+          noIndexing: true,
+        },
       ];
       for (const { prefix, pageTitle, noIndexing } of SPAs) {
         const url = `/${locale}/${prefix}`;
@@ -137,6 +153,7 @@ async function buildSPAs(options) {
       }
     }
   }
+
   if (!options.quiet) {
     console.log(`Built ${buildCount} SPA related files`);
   }

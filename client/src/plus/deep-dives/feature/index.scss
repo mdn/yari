@@ -1,0 +1,110 @@
+@use "sass:math";
+
+@use "~@mdn/minimalist/sass/vars/layout";
+@use "~@mdn/minimalist/sass/vars/typography";
+
+@use "../../../ui/theme/index" as theme;
+
+.deep-dives-feature-wrapper {
+  background-color: theme.$mdn-violet900;
+  color: theme.$white;
+  padding: (layout.$base-spacing * 2) layout.$base-spacing;
+  position: relative;
+
+  @media #{layout.$mq-small-desktop-and-up} {
+    padding: layout.$base-spacing;
+  }
+
+  @media #{layout.$mq-large-desktop-and-up} {
+    padding: layout.$base-spacing (layout.$base-spacing * 5);
+  }
+
+  .girdle {
+    &::before {
+      background: transparent url("./deepdive.svg") center center no-repeat;
+      content: "";
+      display: block;
+      height: 400px;
+      margin: -69px auto 0;
+      width: 95%;
+
+      @media #{layout.$mq-small-desktop-and-up} {
+        height: 530px;
+        position: absolute;
+        right: 0;
+        top: 15px;
+        width: 460px;
+      }
+
+      @media #{layout.$mq-large-desktop-and-up} {
+        height: 600px;
+        top: 5px;
+        width: 510px;
+      }
+    }
+  }
+
+  .heading-group,
+  p,
+  ul {
+    @media #{layout.$mq-small-desktop-and-up} {
+      max-width: 45%;
+    }
+  }
+
+  h1 {
+    font-size: theme.$marketing-feature-h1-font-size;
+    margin: 0 0 layout.$base-spacing 0;
+
+    @media #{layout.$mq-small-desktop-and-up} {
+      font-size: typography.$large-font-size;
+    }
+
+    @media #{layout.$mq-large-desktop-and-up} {
+      font-size: theme.$marketing-feature-h1-font-size;
+    }
+  }
+
+  h2 {
+    font-size: typography.$medium-font-size;
+    margin: layout.$base-spacing 0;
+
+    @media #{layout.$mq-small-desktop-and-up} {
+      font-size: typography.$small-medium-font-size;
+    }
+
+    @media #{layout.$mq-large-desktop-and-up} {
+      font-size: typography.$medium-font-size;
+    }
+  }
+
+  p,
+  ul {
+    font-size: typography.$default-font-size;
+  }
+
+  ul {
+    font-style: italic;
+    font-weight: 300;
+    list-style: none;
+    padding: 0;
+  }
+
+  li::before {
+    color: theme.$mdn-pink600;
+    content: "\002B";
+    font-style: normal;
+    font-weight: bold;
+    margin-left: 0;
+    padding-right: 18px;
+    position: relative;
+  }
+
+  li:nth-child(3n)::before {
+    color: theme.$mdn-yellow300;
+  }
+
+  li:nth-child(3n + 1)::before {
+    color: theme.$mdn-blue200;
+  }
+}
