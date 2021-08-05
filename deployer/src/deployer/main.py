@@ -233,6 +233,13 @@ def upload(ctx, directory: Path, **kwargs):
     is_flag=True,
 )
 @click.option(
+    "--check-external-links",
+    help="HTTP get each external link",
+    default=False,
+    show_default=True,
+    is_flag=True,
+)
+@click.option(
     "--diff-file",
     help=(
         "The path to the file that is a diff output. "

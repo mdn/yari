@@ -11,10 +11,33 @@ from selectolax.parser import HTMLParser
 from unidiff import PatchSet
 
 from .utils import log
+from .urlchecker import check_urls
 
 hidden_comment_regex = re.compile(
     r"<!-- build_hash: ([a-f0-9]+) date: ([\d:\.\- ]+) -->"
 )
+
+
+def get_built_docs(build_directory: Path):
+    assert build_directory.exists, f"{build_directory} does not exist"
+    docs = []
+    for path in build_directory.rglob("index.json"):
+        with open(path) as f:
+            data = json.load(f)
+            if "doc" not in data:
+                # Not every build index.json file is for a document.
+                continue
+            doc = data["doc"]
+            docs.append(doc)
+    return docs
+
+
+def get_build_hash(build_directory: Path):
+    hash_ = hashlib.md5()
+    for path in build_directory.rglob("index.json"):
+        with open(path, "rb") as f:
+            hash_.update(f.read())
+    return hash_.hexdigest()
 
 
 def analyze_pr(build_directory: Path, config):
@@ -38,6 +61,9 @@ def analyze_pr(build_directory: Path, config):
         combined_comments.append(
             post_about_dangerous_content(build_directory, patch, **config)
         )
+
+    if config["check_external_links"]:
+        combined_comments.append(post_about_external_links(build_directory, **config))
 
     combined_comment = "\n\n".join(x for x in combined_comments if x)
 
@@ -264,26 +290,65 @@ def post_about_flaws(build_directory: Path, **config):
         return heading + "*None!* 🎉"
 
 
-def get_built_docs(build_directory: Path):
-    assert build_directory.exists, f"{build_directory} does not exist"
-    docs = []
-    for path in build_directory.rglob("index.json"):
-        with open(path) as f:
-            data = json.load(f)
-            if "doc" not in data:
-                # Not every build index.json file is for a document.
+def post_about_external_links(build_directory: Path, **config):
+
+    comments = []
+
+    checked = {}
+
+    for doc in get_built_docs(build_directory):
+        rendered_html = "\n".join(
+            x["value"]["content"]
+            for x in doc["body"]
+            if x["type"] == "prose" and x["value"]["content"]
+        )
+        tree = HTMLParser(rendered_html)
+        hrefs = {}
+        for node in tree.css("a[href]"):
+            href = node.attributes.get("href")
+            if not href:
                 continue
-            doc = data["doc"]
-            docs.append(doc)
-    return docs
+            if not href or not href.startswith("http") or "://" not in href:
+                continue
 
+            hrefs[href] = checked.get(href)
+        if hrefs:
+            checked_hrefs = check_urls(
+                [href for href, error in hrefs.items() if not error],
+                verbose=config["verbose"],
+            )
+            doc_comments = []
+            for url, result in checked_hrefs.items():
+                if result.get("error"):
+                    doc_comments.append(
+                        f"- <{url}> ==> **{result['error'].__class__.__name__}**"
+                    )
+                elif result.get("status_code") != 200:
+                    doc_comments.append(f"- <{url}> --> **{result['status_code']}**")
+            if doc_comments:
+                comments.append((doc, "\n".join(doc_comments)))
+            checked.update(checked_hrefs)
 
-def get_build_hash(build_directory: Path):
-    hash_ = hashlib.md5()
-    for path in build_directory.rglob("index.json"):
-        with open(path, "rb") as f:
-            hash_.update(f.read())
-    return hash_.hexdigest()
+    heading = "## External links checks\n\n"
+
+    if comments:
+        per_doc_comments = []
+        for doc, comment in comments:
+            lines = []
+            if config["prefix"]:
+                url = mdn_url_to_dev_url(config["prefix"], doc["mdn_url"])
+                lines.append(f"URL: [`{doc['mdn_url']}`]({url})")
+            else:
+                lines.append(f"URL: `{doc['mdn_url']}`")
+            lines.append(f"Title: `{doc['title']}`")
+            lines.append("")
+            lines.append(comment)
+
+            per_doc_comments.append("\n".join(lines))
+
+        return heading + "\n\n---\n\n".join(per_doc_comments)
+    else:
+        return heading + "*None!* 🥳"
 
 
 def get_patch_lines(patch: PatchSet):
