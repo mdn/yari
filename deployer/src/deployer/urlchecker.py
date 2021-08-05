@@ -59,7 +59,13 @@ def check_urls(urls, verbose=False):
     return results
 
 
-operational_errors = (requests.exceptions.SSLError,)
+operational_errors = (
+    requests.exceptions.SSLError,
+    requests.exceptions.ReadTimeout,
+    requests.exceptions.ConnectionError,
+    requests.exceptions.RetryError,
+    requests.exceptions.TooManyRedirects,
+)
 
 
 def check_url(url, session, verbose=False):
