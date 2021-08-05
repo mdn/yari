@@ -63,11 +63,7 @@ function isEmbargoed(id: string) {
 
 function isPathnameIncluded(id: string, pathname: string) {
   if (id === PLUS_IDv1) {
-    return !(
-      pathname.includes("/plus") ||
-      pathname.includes("/signin") ||
-      pathname.includes("/signup")
-    );
+    return !(pathname.includes("/plus") || pathname.includes("/signin"));
   }
   return false;
 }

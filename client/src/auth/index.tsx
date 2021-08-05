@@ -4,7 +4,6 @@ import { Loading } from "../ui/atoms/loading";
 import { PageContentContainer } from "../ui/atoms/page-content";
 
 const SignInApp = React.lazy(() => import("./sign-in"));
-const SignUpApp = React.lazy(() => import("./sign-up"));
 const SignOutApp = React.lazy(() => import("./sign-out"));
 
 function Container({
@@ -24,7 +23,7 @@ function Container({
 
   return (
     <PageContentContainer extraClasses={`auth-page-container ${className}`}>
-      {/* The reason for displaying this <h1> here (and for SignUp too)
+      {/* The reason for displaying this <h1> here
           is to avoid an unnecessary "flicker".
           component here is loaded SSR and is immediately present.
           Only the "guts" below is lazy loaded. By having the header already
@@ -43,18 +42,6 @@ export function SignIn() {
         fallback={<Loading message="Loading sign in…" minHeight={400} />}
       >
         <SignInApp />
-      </React.Suspense>
-    </Container>
-  );
-}
-
-export function SignUp() {
-  return (
-    <Container className="sign-up" pageTitle="Sign up to MDN Web Docs">
-      <React.Suspense
-        fallback={<Loading message="Loading sign up…" minHeight={400} />}
-      >
-        <SignUpApp />
       </React.Suspense>
     </Container>
   );

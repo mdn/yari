@@ -139,7 +139,7 @@ app.post("/api/v1/settings", async (req, res) => {
   }
 });
 
-app.get("/users/github/login/", async (req, res) => {
+app.get("/users/fxa/login/authenticate/", async (req, res) => {
   const userId = `${Math.ceil(10000 * Math.random())}`;
   res.cookie("sessionid", userId, {
     maxAge: 60 * 1000,
@@ -150,32 +150,6 @@ app.get("/users/github/login/", async (req, res) => {
     email: `${userId}@example.com`,
   });
   res.redirect(req.query.next);
-});
-
-app.get("/users/google/login/", async (req, res) => {
-  const userDetails = {
-    name: "Peter",
-  };
-  const sp = new URLSearchParams();
-  sp.set("next", req.query.next || "/en-US/");
-  sp.set("user_details", JSON.stringify(userDetails));
-  sp.set("csrfmiddlewaretoken", `${Math.random()}`);
-  sp.set("provider", "google");
-
-  res.redirect(`/en-US/signup?${sp.toString()}`);
-});
-
-app.post("/:locale/users/account/signup", async (req, res) => {
-  const userId = `${Math.ceil(10000 * Math.random())}`;
-  res.cookie("sessionid", userId, {
-    maxAge: 60 * 1000,
-  });
-  mockWhoamiDatabase.set(userId, {
-    username: `Googler-username-${userId}`,
-    is_authenticated: true,
-    email: `${userId}@gmail.com`,
-  });
-  res.redirect(req.query.next || `/${req.params.locale}/`);
 });
 
 app.post("/:locale/users/signout", async (req, res) => {

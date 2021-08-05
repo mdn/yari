@@ -1249,17 +1249,6 @@ test("French sign in page", () => {
   expect($('meta[property="og:locale"]').attr("content")).toBe("fr");
 });
 
-test("sign up page", () => {
-  const builtFolder = path.join(buildRoot, "en-us", "signup");
-  expect(fs.existsSync(builtFolder)).toBeTruthy();
-  const htmlFile = path.join(builtFolder, "index.html");
-  const html = fs.readFileSync(htmlFile, "utf-8");
-  const $ = cheerio.load(html);
-  expect($("h1").text()).toContain("Sign in to MDN Web Docs");
-  expect($("title").text()).toContain("Sign up");
-  expect($('meta[name="robots"]').attr("content")).toBe("noindex, nofollow");
-});
-
 test("settings page", () => {
   const builtFolder = path.join(buildRoot, "en-us", "settings");
   expect(fs.existsSync(builtFolder)).toBeTruthy();
