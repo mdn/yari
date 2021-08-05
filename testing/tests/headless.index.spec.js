@@ -196,6 +196,8 @@ test.describe("Basic viewing of functional pages", () => {
     await page.goto(testURL("/ja/docs/Web/foo"));
     expect(await page.isVisible("text=Page not found")).toBeTruthy();
     expect(await page.isVisible("text=could not be found")).toBeTruthy();
+    // Wait for XHR loading of the whole document
+    await page.waitForLoadState("networkidle");
     // Simply by swapping the "ja" for "en-US" it's able to find the index.json
     // for that slug and present a link to it.
     expect(await page.isVisible("text=Good news!")).toBeTruthy();
