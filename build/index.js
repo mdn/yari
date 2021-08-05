@@ -335,6 +335,8 @@ async function buildDocument(document, documentOptions = {}) {
       renderedHtml,
       sampleIdObject
     );
+
+    let liveSampleHTML = liveSamplePage.html;
     if (liveSamplePage.flaw) {
       const flaw = liveSamplePage.flaw.updateFileInfo(fileInfo);
       if (flaw.name === "MacroLiveSampleError") {
@@ -354,11 +356,35 @@ async function buildDocument(document, documentOptions = {}) {
         }
       }
       flaws.push(flaw);
-      continue;
+      liveSampleHTML = `<!doctype html>
+        <html>
+          <head>
+            <meta charset="utf-8">
+            <title>Live sample failed!</title>
+            <style type="text/css">
+              body {
+                background-color: #fae4e5;
+              }
+            </style>
+          </head>
+          <body>
+            <h1>Live sample failed!</h1>
+            <p>
+              An error occurred trying to render this live sample.
+              <br>
+              Consider filing an issue or trying your hands at a fix of your own.
+            </p>
+            <p><b>Error details:</b></p>
+            <p>
+              <code>${flaw.error.toString()}</code>
+            </p>
+          </body>
+        </html>
+        `;
     }
     liveSamples.push({
       id: sampleIdObject.id.toLowerCase(),
-      html: liveSamplePage.html,
+      html: liveSampleHTML,
     });
   }
 
@@ -459,21 +485,6 @@ async function buildDocument(document, documentOptions = {}) {
     throw error;
   }
 
-  // Some hyperlinks are not easily fixable and we should never include them
-  // because they're potentially evil.
-  $("a[href]").each((i, a) => {
-    // See https://github.com/mdn/kuma/issues/7647
-    // Ideally we should manually remove this from all sources
-    // but that's not immediately feasible. So at least make sure we never
-    // present the link in any rendered HTML.
-    if (
-      a.attribs.href.startsWith("http") &&
-      a.attribs.href.includes("fxsitecompat.com")
-    ) {
-      $(a).attr("href", "https://github.com/mdn/kuma/issues/7647");
-    }
-  });
-
   // If fixFlaws is on and the doc has fixable flaws, this returned
   // raw HTML string will be different.
   try {
@@ -523,10 +534,22 @@ async function buildDocument(document, documentOptions = {}) {
   // Turn the $ instance into an array of section blocks. Most of the
   // section blocks are of type "prose" and their value is a string blob
   // of HTML.
-  const [sections, sectionFlaws] = extractSections($);
-  doc.body = sections;
-  if (sectionFlaws.length) {
-    injectSectionFlaws(doc, sectionFlaws, options);
+  try {
+    const [sections, sectionFlaws] = extractSections($);
+    doc.body = sections;
+    if (sectionFlaws.length) {
+      injectSectionFlaws(doc, sectionFlaws, options);
+    }
+  } catch (error) {
+    // If you run `yarn build` and an error is thrown inside `extractSections()`
+    // you won't know which file it was in the middle processing because
+    // the error won't be able to mention that.
+    // So we catch the error, log which file it happened to and then
+    // rethrow the error. Now you get a clue at least as to where to look.
+    console.error(
+      `Extracting sections failed in ${doc.mdn_url} (${document.fileInfo.path})`
+    );
+    throw error;
   }
 
   // Extract all the <h2> tags as they appear into an array.
