@@ -3,6 +3,8 @@ import useSWR, { mutate } from "swr";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 
+import { ErrorContainer } from "../error-container";
+
 import { Doc } from "../../../document/types";
 
 import "./index.scss";
@@ -132,16 +134,8 @@ function ShowToggleError({
   error: Error;
   clear: () => void;
 }) {
-  const style = {
-    backgroundColor: "white",
-    border: "1px solid #ccc",
-    padding: 20,
-    position: "absolute",
-    bottom: 20,
-    right: 20,
-  } as React.CSSProperties;
   return (
-    <div style={style}>
+    <ErrorContainer>
       <button type="button" onClick={() => clear()}>
         X
       </button>
@@ -151,7 +145,7 @@ function ShowToggleError({
       <p>
         <code>{error.toString()}</code>
       </p>
-    </div>
+    </ErrorContainer>
   );
 }
 
@@ -162,16 +156,8 @@ function ShowLoadingError({
   error: Error;
   clear: () => void;
 }) {
-  const style = {
-    backgroundColor: "white",
-    border: "1px solid #ccc",
-    padding: 20,
-    position: "absolute",
-    bottom: 20,
-    right: 20,
-  } as React.CSSProperties;
   return (
-    <div style={style}>
+    <ErrorContainer>
       <button type="button" onClick={() => clear()}>
         X
       </button>
@@ -181,7 +167,7 @@ function ShowLoadingError({
       <p>
         <code>{error.toString()}</code>
       </p>
-    </div>
+    </ErrorContainer>
   );
 }
 

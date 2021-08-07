@@ -27,4 +27,11 @@
     padding: math.div(layout.$base-spacing, 2);
     width: 25px;
   }
+
+  &.bookmarked {
+    &::before {
+      background-color: theme.$mdn-blue500;
+      mask-image: url("~@mdn/dinocons/general/bookmark-filled.svg");
+    }
+  }
 }
