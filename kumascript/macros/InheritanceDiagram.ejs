@@ -80,7 +80,7 @@ var viewbox = 'viewbox="-'+ offset + ' 0 '+ width + ' ' + height +'"';
 if (rtl) {
   viewbox = 'viewbox="510 0 '+ width + ' ' + height +'" transform="scale(-1 1)"';
 }
-result = '<div id="interfaceDiagram" style="display: inline-block; position: relative; padding-bottom: '+ padding +'%; vertical-align: middle; overflow: hidden;">' +
+result = '<div id="interfaceDiagram" style="display: inline-block; position: relative; width: 100%; padding-bottom: '+ padding +'%; vertical-align: middle; overflow: hidden;">' +
              '<svg style="display: inline-block; position: absolute; top: 0; left: 0;" '+ viewbox +' preserveAspectRatio="xMinYMin meet">';
 
 for (var i = 0; i < inheritanceChain.length; i++) {
