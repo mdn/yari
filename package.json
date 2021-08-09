@@ -96,7 +96,7 @@
     "react-modal": "^3.14.3",
     "read-chunk": "3.2.0",
     "rehype-format": "^3.1.0",
-    "rehype-parse": "^7.0.1",
+    "rehype-parse": "^8.0.2",
     "rehype-raw": "^5.1.0",
     "rehype-remark": "^8.1.1",
     "rehype-stringify": "^8.0.0",
