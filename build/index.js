@@ -31,6 +31,7 @@ const { gather: gatherGitHistory } = require("./git-history");
 const { buildSPAs } = require("./spas");
 const { renderCache: renderKumascriptCache } = require("../kumascript");
 const LANGUAGES_RAW = require("../content/languages.json");
+const { safeDecodeURIComponent } = require("../kumascript/src/api/util");
 
 const LANGUAGES = new Map(
   Object.entries(LANGUAGES_RAW).map(([locale, data]) => {
@@ -630,7 +631,7 @@ async function buildLiveSamplePageFromURL(url) {
     document.metadata.slug,
     document.rawBody
   )) {
-    if (sampleIDObject.id.toLowerCase() === sampleID) {
+    if (sampleIDObject.id.toLowerCase() === safeDecodeURIComponent(sampleID)) {
       const liveSamplePage = kumascript.buildLiveSamplePage(
         document.url,
         document.metadata.title,
