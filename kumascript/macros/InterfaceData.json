@@ -98,7 +98,7 @@
     },
     "BiquadFilterNode": {
       "inh": "AudioNode",
-      "impl": [ ]
+      "impl": []
     },
     "BlobEvent": {
       "inh": "Event",
