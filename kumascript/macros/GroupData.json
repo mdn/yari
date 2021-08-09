@@ -2074,7 +2074,7 @@
     "WebXR Device API": {
       "overview": ["WebXR Device API"],
       "interfaces": [
-        "XR",
+        "XRAnchor",
         "XRBoundedReferenceSpace",
         "XRFrame",
         "XRInputSource",
@@ -2089,6 +2089,7 @@
         "XRSession",
         "XRSessionEvent",
         "XRSpace",
+        "XRSystem",
         "XRView",
         "XRViewerPose",
         "XRViewport",
@@ -2097,7 +2098,7 @@
       "methods": ["WebGLRenderingContext.makeXRCompatible()"],
       "properties": ["Navigator.xr"],
       "events": [
-        "XR: devicechange",
+        "XRSystem: devicechange",
         "XRSession: end",
         "XRSession: inputsourceschange",
         "XRReferenceSpace: reset",
@@ -2105,27 +2106,7 @@
         "XRSession: selectend",
         "XRSession: selectstart",
         "XRSession: visibilitychange"
-      ],
-      "dictionaries": [
-        "XRInputSourcesChangeEventInit",
-        "XRInputSourceEventInit",
-        "XRReferencespaceEventInit",
-        "XRRenderStateInit",
-        "XRSessionEventInit",
-        "XRSessionInit",
-        "XRWebGLLayerInit"
-      ],
-      "types": [
-        "XREnvironmentBlendMode",
-        "XREye",
-        "XRHandedness",
-        "XRReferenceSpaceType",
-        "XRSessionMode",
-        "XRTargetRayMode",
-        "XRVisibilityState",
-        "XRWebGLRenderingContext"
-      ],
-      "callbacks": ["XRFrameRequestCallback"]
+      ]
     },
     "XDomain": {
       "interfaces": ["XDomainRequest"],
