@@ -2074,7 +2074,7 @@
     "WebXR Device API": {
       "overview": ["WebXR Device API"],
       "interfaces": [
-        "XRSystem",
+        "XRAnchor",
         "XRBoundedReferenceSpace",
         "XRFrame",
         "XRInputSource",
@@ -2089,6 +2089,7 @@
         "XRSession",
         "XRSessionEvent",
         "XRSpace",
+        "XRSystem",
         "XRView",
         "XRViewerPose",
         "XRViewport",
