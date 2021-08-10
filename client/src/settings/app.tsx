@@ -166,7 +166,10 @@ function Settings({
   settingsData: SettingsData;
   refreshUserSettings: () => void;
 }) {
-  const [locale, setLocale] = React.useState(userSettings.locale);
+  // It only becomes 'en-US' if the userprofile doesn't have a 'locale'
+  // set in its profile from before at all. But it also makes sure that
+  // the value is always a string.
+  const [locale, setLocale] = React.useState(userSettings.locale || "en-US");
 
   const [sent, setSent] = React.useState(false);
   const [sendError, setSendError] = React.useState<Error | null>(null);

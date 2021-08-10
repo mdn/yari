@@ -136,7 +136,6 @@ LOCALE_SELECTORS = {
         "/search/",
         "/search?q=video",
         "/search/?q=video",
-        "/signup",
         "/signin",
         "/settings",
     ],
