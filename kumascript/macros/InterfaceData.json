@@ -2292,6 +2292,10 @@
       "inh": "XRReferenceSpace",
       "impl": []
     },
+    "XRCPUDepthInformation": {
+      "inh": "XRDepthInformation",
+      "impl": []
+    },
     "XRFrame": {
       "inh": "",
       "impl": []
@@ -2354,6 +2358,10 @@
     },
     "XRViewport": {
       "inh": "",
+      "impl": []
+    },
+    "XRWebGLDepthInformation": {
+      "inh": "XRDepthInformation",
       "impl": []
     },
     "XRWebGLLayer": {
