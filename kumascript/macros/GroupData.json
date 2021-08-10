@@ -2076,6 +2076,8 @@
       "interfaces": [
         "XRAnchor",
         "XRBoundedReferenceSpace",
+        "XRCPUDepthInformation",
+        "XRDepthInformation",
         "XRFrame",
         "XRInputSource",
         "XRInputSourceArray",
@@ -2093,6 +2095,8 @@
         "XRView",
         "XRViewerPose",
         "XRViewport",
+        "XRWebGLBinding",
+        "XRWebGLDepthInformation",
         "XRWebGLLayer"
       ],
       "methods": ["WebGLRenderingContext.makeXRCompatible()"],
