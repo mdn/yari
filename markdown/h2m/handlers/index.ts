@@ -211,6 +211,7 @@ export const handlers: QueryAndTransform[] = [
     "html",
     "css",
     "json",
+    "svg",
     "plain",
     "cpp",
     "java",
