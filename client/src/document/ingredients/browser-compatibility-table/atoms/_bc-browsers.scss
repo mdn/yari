@@ -40,6 +40,7 @@
 /* stylelint-disable selector-class-pattern */
 .bc-head-icon-chrome,
 .bc-head-icon-chrome_android,
+.bc-head-icon-deno,
 .bc-head-icon-edge,
 .bc-head-icon-edge_mobile,
 .bc-head-icon-firefox,
@@ -63,6 +64,14 @@
 .bc-browsers .bc-head-icon-chrome_android {
   &::before {
     background-image: url("~@mdn/dinocons/browsers/chrome.svg");
+  }
+}
+
+.bc-browsers .bc-head-icon-deno {
+  &::before {
+    // TODO(lucacasonato): should probably be replaced with an icon from
+    // @mdn/dinocons.
+    background-image: url("/assets/deno-logo.svg");
   }
 }
 

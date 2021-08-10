@@ -41,7 +41,8 @@ function gatherPlatformsAndBrowsers(
   let platforms = ["desktop", "mobile"];
   if (
     category === "javascript" ||
-    (data.__compat && data.__compat.support.nodejs)
+    (data.__compat &&
+      (data.__compat.support.nodejs || data.__compat.support.deno))
   ) {
     platforms.push("server");
   } else if (category === "webextensions") {
