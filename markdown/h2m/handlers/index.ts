@@ -240,7 +240,6 @@ export const handlers: QueryAndTransform[] = [
             ],
           },
           (node, t, opts) => [
-            h("html", "<!-- prettier-ignore -->\n"),
             h(
               "code",
               trimTrailingLines(
