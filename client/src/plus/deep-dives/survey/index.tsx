@@ -50,10 +50,8 @@ export function Survey({
 }) {
   const { locale } = useParams();
   const previousPage = getSessionStorageData(SESSION_KEY) || "";
-  const [page, setPage] = React.useState<"start" | "second" | "success">(
-    previousPage === "second" || previousPage === "success"
-      ? previousPage
-      : "start"
+  const [page, setPage] = React.useState<"start" | "success">(
+    previousPage === "success" ? "success" : "start"
   );
   React.useEffect(() => {
     if (page !== "start") {
@@ -171,11 +169,7 @@ export function Survey({
             setSubmitting(true);
             try {
               await submitSurvey();
-              if (page === "second") {
-                setPage("success");
-              } else {
-                setPage("second");
-              }
+              setPage("success");
             } catch (error) {
               setSurveySubmissionError(error);
             } finally {
@@ -186,7 +180,7 @@ export function Survey({
           {page === "start" && (
             <fieldset className="survey-section">
               <legend className="survey-heading">
-                Please help us by answering some questions (1/2)
+                Please help us by answering some questions
               </legend>
               <div className="survey-question">
                 <h3>How often do you use MDN?</h3>
@@ -348,135 +342,6 @@ export function Survey({
                 </div>
               </div>
               <div className="button-container">
-                <button
-                  type="submit"
-                  className="button primary"
-                  disabled={submitting}
-                >
-                  Continue
-                </button>{" "}
-                {submitting && <small>Submitting</small>}
-              </div>
-            </fieldset>
-          )}
-
-          {page === "second" && (
-            <fieldset className="survey-section">
-              <legend className="survey-heading">
-                Please help us by answering some questions (2/2)
-              </legend>
-              <div className="survey-question">
-                <h3>
-                  What future deep dive topics would you consider paying for?
-                </h3>
-                <div className="form-input-group">
-                  {[
-                    [
-                      "security",
-                      "Deep dive: Security considerations in web development",
-                    ],
-                    ["responsive", "Deep dive: Modern responsive web design"],
-                    [
-                      "pattern-library",
-                      "Deep dive: A robust CSS pattern library",
-                    ],
-                    [
-                      "laws",
-                      "Deep dive: GDPR, DSAR, CCPA, and COPPA. So many acronyms! Learn Mozilla's framework to handle privacy laws",
-                    ],
-                    [
-                      "modernjs",
-                      "Deep dive: Stop using jQuery and start using JavaScript!",
-                    ],
-                    ["other", "Other"],
-                  ].map(([id, label]) => {
-                    return (
-                      <label key={id} htmlFor={`id_${id}`}>
-                        <input
-                          id={`id_${id}`}
-                          type="checkbox"
-                          name="futureTopics"
-                          value={id}
-                          checked={
-                            responseData.futureTopics
-                              ? responseData.futureTopics.includes(id)
-                              : false
-                          }
-                          onChange={(event) => {
-                            setResponseData((state) => {
-                              const futureTopicsSet = new Set(
-                                state.futureTopics || []
-                              );
-                              if (event.target.checked) {
-                                futureTopicsSet.add(id);
-                              } else {
-                                futureTopicsSet.delete(id);
-                              }
-                              return Object.assign({}, state, {
-                                futureTopics: Array.from(futureTopicsSet),
-                              });
-                            });
-                          }}
-                        />
-                        {label}
-                      </label>
-                    );
-                  })}
-                </div>
-                {responseData.futureTopics &&
-                  responseData.futureTopics.includes("other") && (
-                    <div className="form-input-group">
-                      <label
-                        htmlFor="other-suggestions"
-                        className="visually-hidden"
-                      >
-                        Enter your suggestions
-                      </label>
-                      <textarea
-                        id="other-suggestions"
-                        placeholder="Enter your suggestions"
-                        value={responseData.futureTopicsSuggestions || ""}
-                        onChange={(event) => {
-                          setResponseData((state) =>
-                            Object.assign({}, state, {
-                              futureTopicsSuggestions: event.target.value,
-                            })
-                          );
-                        }}
-                      />
-                    </div>
-                  )}
-              </div>
-              <div className="survey-question">
-                <div className="form-input-group">
-                  <label htmlFor="comments" className="custom-label">
-                    Is there anything else you’d like to share with us?
-                  </label>
-                  <textarea
-                    id="comments"
-                    name="comments"
-                    placeholder="Enter your response"
-                    value={responseData.comments || ""}
-                    onChange={(event) => {
-                      setResponseData((state) =>
-                        Object.assign({}, state, {
-                          comments: event.target.value,
-                        })
-                      );
-                    }}
-                  />
-                </div>
-              </div>
-              <div className="button-container">
-                <button
-                  type="button"
-                  className="button primary"
-                  onClick={() => {
-                    setPage("start");
-                  }}
-                >
-                  Previous
-                </button>{" "}
                 <button
                   type="submit"
                   className="button primary"
