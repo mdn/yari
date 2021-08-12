@@ -396,7 +396,7 @@ function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
           onBlur: () => onChangeIsFocused(false),
           onKeyDown(event) {
             if (event.key === "Escape" && inputRef.current) {
-              inputRef.current.blur();
+              toggleMenu();
             } else if (
               event.key === "Enter" &&
               inputValue.trim() &&
