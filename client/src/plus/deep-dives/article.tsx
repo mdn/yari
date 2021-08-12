@@ -127,7 +127,7 @@ export default function Article({ slug }: { slug: string }) {
       {!hasFinishedSurvey && (
         <div className="take-survey-mobile">
           <a href="#survey-form" className="take-survey-link">
-            Take our survey
+            Take our 1 minute survey
           </a>
         </div>
       )}

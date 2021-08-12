@@ -35,9 +35,15 @@
     text-align: left;
   }
 
+  h2,
+  h3,
+  h4 {
+    font-family: theme.$inter-font-family;
+  }
+
   .main-heading-group {
     h1 {
-      font-size: 48px;
+      font-size: 36px;
       letter-spacing: -0.5px;
       line-height: 58px;
       text-align: left;
@@ -49,24 +55,23 @@
       margin-bottom: layout.$base-spacing;
       text-transform: uppercase;
     }
-
-    a {
-      &:link,
-      &:visited {
-        color: theme.$mdn-neutral700;
-      }
-    }
   }
 
   h3,
   h4 {
-    font-size: 24px;
     letter-spacing: 0.5px;
-    line-height: 48px;
+  }
+
+  h3 {
+    border-left: 5px solid theme.$mdn-green400;
+    font-size: 24px;
+    line-height: 36px;
+    margin-bottom: 24px;
+    padding-left: 16px;
   }
 
   h4 {
-    font-size: 22px;
+    font-size: 18px;
     line-height: 44px;
   }
 
@@ -76,9 +81,17 @@
     line-height: 32px;
   }
 
+  button.ghost {
+    color: theme.$mdn-neutral900;
+    font-size: 18px;
+    font-weight: bold;
+    padding: 0;
+    text-decoration: none;
+  }
+
   .article-lead {
     color: theme.$mdn-neutral700;
-    font-size: 24px;
+    font-size: 18px;
     line-height: 150%;
   }
 
