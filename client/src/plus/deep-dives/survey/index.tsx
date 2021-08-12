@@ -347,9 +347,8 @@ export function Survey({
                   className="button primary"
                   disabled={submitting}
                 >
-                  Submit
-                </button>{" "}
-                {submitting && <small>Submitting</small>}
+                  {submitting ? "Submitting" : "Submit"}
+                </button>
               </div>
             </fieldset>
           )}
