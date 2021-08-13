@@ -264,7 +264,7 @@ class HTMLTool {
       }
       if (!LIVE_SAMPLE_PARTS.some((part) => result[part])) {
         throw new KumascriptError(
-          `unable to find any live code samples for "${sampleID}" within ${this.pathDescription}`
+          `unable to find any live code samples for "${sectionID}" within ${this.pathDescription}`
         );
       }
       return result;
@@ -274,7 +274,7 @@ class HTMLTool {
       );
       if (!result) {
         throw new KumascriptError(
-          `unable to find any live code samples for "${sampleID}" within ${this.pathDescription}`
+          `unable to find any live code samples for "${sectionID}" within ${this.pathDescription}`
         );
       }
       return result;
