@@ -31,6 +31,7 @@ const { gather: gatherGitHistory } = require("./git-history");
 const { buildSPAs } = require("./spas");
 const { renderCache: renderKumascriptCache } = require("../kumascript");
 const LANGUAGES_RAW = require("../content/languages.json");
+const { safeDecodeURIComponent } = require("../kumascript/src/api/util");
 
 const LANGUAGES = new Map(
   Object.entries(LANGUAGES_RAW).map(([locale, data]) => {
@@ -614,6 +615,7 @@ async function buildLiveSamplePageFromURL(url) {
     throw new Error(`Unexpected URL format to extract live sample ('${url}')`);
   }
   const [documentURL, sampleID] = url.split(/\.html$/)[0].split("/_sample_.");
+  const decodedSampleID = safeDecodeURIComponent(sampleID).toLowerCase();
   const document = Document.findByURL(documentURL);
   if (!document) {
     throw new Error(`No document found for ${documentURL}`);
@@ -625,7 +627,7 @@ async function buildLiveSamplePageFromURL(url) {
       (await kumascript.render(document.url))[0],
       document.rawBody
     )
-    .find((page) => page.id.toLowerCase() == sampleID);
+    .find((page) => page.id.toLowerCase() == decodedSampleID);
 
   if (liveSamplePage) {
     if (liveSamplePage.flaw) {
@@ -634,7 +636,7 @@ async function buildLiveSamplePageFromURL(url) {
     return liveSamplePage.html;
   }
 
-  throw new Error(`No live-sample "${sampleID}" found within ${documentURL}`);
+  throw new Error(`No live-sample "${decodedSampleID}" found within ${documentURL}`);
 }
 
 // This is used by the builder (yarn build) and by the server (JIT).
