@@ -7,14 +7,14 @@ like `pre[class*="language-"]` and `code[class*="language-"]` but because we
 don't use any of that, we can safely ignore it.
 */
 
-@import "~@mdn/minimalist/sass/vars/color-palette";
+@import "~@mdn/minimalist/sass/vars/mdn-web-docs-palette";
 
 .token.comment,
 .token.prolog,
 .token.doctype,
 .token.cdata,
 .token.punctuation {
-  color: $neutral-300;
+  color: $mdn-neutral600;
 }
 
 .token.namespace {
@@ -28,7 +28,7 @@ don't use any of that, we can safely ignore it.
 .token.constant,
 .token.symbol,
 .token.deleted {
-  color: $red-100;
+  color: $mdn-red700;
 }
 
 .token.selector,
@@ -37,7 +37,7 @@ don't use any of that, we can safely ignore it.
 .token.char,
 .token.builtin,
 .token.inserted {
-  color: $green-100;
+  color: $mdn-green700;
 }
 
 .token.operator,
@@ -45,24 +45,24 @@ don't use any of that, we can safely ignore it.
 .token.url,
 .language-css .token.string,
 .style .token.string {
-  color: $neutral-100;
+  color: $mdn-neutral900;
 }
 
 .token.atrule,
 .token.attr-value,
 .token.keyword {
-  color: $primary-50;
+  color: $mdn-blue700;
 }
 
 .token.function,
 .token.class-name {
-  color: $red-200;
+  color: $mdn-red600;
 }
 
 .token.regex,
 .token.important,
 .token.variable {
-  color: $orange-200;
+  color: $mdn-orange600;
 }
 
 .token.important,

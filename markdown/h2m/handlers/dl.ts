@@ -28,6 +28,10 @@ const wrapNonBlocks = (nodes) => {
 };
 
 function prefixDefinitions([first, ...rest]) {
+  if (!first) {
+    return h("text", "");
+  }
+
   switch (first.type) {
     case "paragraph":
       return wrapNonBlocks([
@@ -53,7 +57,7 @@ const toDefinitionItem = (node, terms, definitions): ListItem =>
       ...terms,
       h(
         "list",
-        h("listItem", prefixDefinitions(definitions), { spread: false }),
+        h("listItem", prefixDefinitions(definitions), { spread: true }),
         {
           spread: false,
         }

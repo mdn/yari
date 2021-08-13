@@ -1,0 +1,247 @@
+@use "sass:math";
+
+@use "~@mdn/minimalist/sass/vars/layout";
+@use "~@mdn/minimalist/sass/vars/typography";
+
+@use "../../../ui/theme/index" as theme;
+
+.page-content-container.plus {
+  max-width: inherit;
+  padding: layout.$base-spacing 0;
+}
+
+.overview-hero {
+  color: theme.$text-color-inverted;
+  overflow: hidden;
+  padding: 0;
+  position: relative;
+
+  &::before {
+    background: transparent url("./assets/hero.svg") center center no-repeat;
+    background-size: cover;
+    content: "";
+    display: block;
+    height: 100%;
+    min-height: 365px;
+    position: absolute;
+    width: 100%;
+  }
+
+  .header-wrapper {
+    background-color: rgba(0, 0, 0, 0.4);
+    height: 100%;
+    margin: auto;
+    max-width: layout.$max-width-default;
+    padding: (layout.$base-spacing * 2) layout.$base-spacing;
+    position: relative;
+    z-index: layout.$bottom-layer;
+
+    @media #{layout.$mq-small-desktop-and-up} {
+      background-color: transparent;
+      display: grid;
+      gap: 0 math.div(layout.$base-spacing, 2);
+      gap: 0 (layout.$base-spacing * 2.5);
+      grid-template-columns: 1fr 0;
+      padding: 120px;
+    }
+  }
+
+  .header-content {
+    max-width: 550px;
+    position: relative;
+    z-index: layout.$top-layer;
+
+    h1 {
+      font-size: typography.$xxl-font-size;
+      line-height: typography.$heading-line-height;
+
+      margin-block-end: 0.67em;
+      margin-block-start: 0.67em;
+      margin-inline-end: 0;
+      margin-inline-start: 0;
+
+      @media #{layout.$mq-small-desktop-and-up} {
+        font-size: theme.$marketing-hero-h1-font-size;
+        margin: layout.$base-spacing 0;
+      }
+    }
+
+    h2 {
+      background: theme.$gradient-accent;
+      background-clip: text;
+      color: theme.$mdn-green400;
+      font-size: 18px;
+      line-height: 160%;
+      margin-top: 0;
+      text-transform: uppercase;
+    }
+
+    a {
+      &:link,
+      &:visited {
+        color: theme.$white;
+        text-decoration: none;
+      }
+
+      &:hover,
+      &:focus {
+        text-decoration: underline;
+      }
+    }
+
+    p {
+      font-size: typography.$default-font-size;
+      margin-bottom: 0;
+      max-width: 450px;
+
+      @media #{layout.$mq-small-desktop-and-up} {
+        font-size: typography.$small-medium-font-size;
+      }
+    }
+  }
+
+  p.author,
+  .author-links {
+    font-size: 24px;
+  }
+
+  .author {
+    font-weight: bold;
+    line-height: 150%;
+  }
+
+  .author-links {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+
+    li {
+      display: inline-block;
+      margin-right: math.div(layout.$base-spacing, 4);
+    }
+  }
+}
+
+.overview-content-container {
+  padding: 0 layout.$base-spacing math.div(layout.$base-spacing, 2);
+
+  @media #{layout.$mq-small-desktop-and-up} {
+    padding: 0 120px 36px;
+  }
+
+  @media #{layout.$mq-large-desktop-and-up} {
+    margin: 36px auto layout.$base-spacing;
+    max-width: layout.$max-width-default;
+  }
+
+  h3,
+  h4 {
+    font-size: 24px;
+    margin: 36px 0;
+  }
+
+  h4 {
+    font-size: 18px;
+    margin: 36px 0;
+  }
+
+  p {
+    font-size: 18px;
+    line-height: 200%;
+  }
+
+  li {
+    margin-bottom: layout.$base-spacing;
+  }
+
+  a.overview-series-list-item {
+    border-radius: 4px;
+    display: block;
+    min-height: 140px;
+    padding: math.div(layout.$base-spacing, 4);
+    position: relative;
+
+    &:link,
+    &:visited {
+      color: theme.$mdn-neutral900;
+    }
+
+    &:hover,
+    &:focus {
+      background-color: theme.$mdn-neutral100;
+      text-decoration: none;
+    }
+
+    &::before {
+      background-size: cover;
+      border-radius: 4px;
+      content: "";
+      display: inline-block;
+      height: 270px;
+      width: 100%;
+
+      @media #{layout.$mq-small-desktop-and-up} {
+        height: 128px;
+        position: absolute;
+        width: 164px;
+      }
+    }
+  }
+
+  .item-content {
+    @media #{layout.$mq-small-desktop-and-up} {
+      margin-left: 185px;
+    }
+
+    h4 {
+      margin: math.div(layout.$base-spacing, 2) 0;
+    }
+
+    p {
+      margin-bottom: 0;
+    }
+  }
+
+  .planning-for-browser-support {
+    &::before {
+      background: transparent url("./assets/planning-for-browser-support.svg")
+        center center no-repeat;
+    }
+  }
+
+  .your-browser-support-toolkit {
+    &::before {
+      background: transparent url("./assets/your-browser-support-toolkit.svg")
+        center center no-repeat;
+    }
+  }
+
+  .unavailable {
+    color: theme.$mdn-neutral600;
+    min-height: 140px;
+    padding: math.div(layout.$base-spacing, 4);
+
+    &::before {
+      background: transparent
+        url("./assets/practical-browser-support-solutions.png") center center
+        no-repeat;
+      background-size: cover;
+      border-radius: 4px;
+      content: "";
+      display: inline-block;
+      filter: saturate(0);
+      height: 200px;
+      width: 100%;
+
+      @media #{layout.$mq-small-desktop-and-up} {
+        height: 128px;
+        position: absolute;
+        width: 164px;
+      }
+    }
+
+    h4 {
+      margin: math.div(layout.$base-spacing, 2) 0;
+    }
+  }
+}

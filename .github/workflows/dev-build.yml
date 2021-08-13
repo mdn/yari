@@ -17,10 +17,6 @@ on:
         description: "Notes"
         required: false
         default: ""
-      archived_content:
-        description: "Build archived content"
-        required: false
-        default: "false"
 
       # This is very useful when combined with the "Use workflow from"
       # feature that is built into the "Run workflow" button on
@@ -56,18 +52,12 @@ jobs:
           fetch-depth: 0
 
       - uses: actions/checkout@v2.3.4
-        if: "contains(github.event.inputs.archived_content, 'true')"
-        with:
-          repository: mdn/archived-content
-          path: mdn/archived-content
-
-      - uses: actions/checkout@v2.3.4
         with:
           repository: mdn/translated-content
           path: mdn/translated-content
 
       - name: Setup Node.js environment
-        uses: actions/setup-node@v2.2.0
+        uses: actions/setup-node@v2.4.0
         with:
           node-version: "12"
 
@@ -81,8 +71,6 @@ jobs:
 
       - name: Install all yarn packages
         if: steps.cached-node_modules.outputs.cache-hit != 'true'
-        env:
-          PUPPETEER_SKIP_CHROMIUM_DOWNLOAD: 1
         run: yarn --frozen-lockfile
 
       - name: Install Python
@@ -91,7 +79,7 @@ jobs:
           python-version: "3.8"
 
       - name: Install Python poetry
-        uses: snok/install-poetry@v1.1.6
+        uses: snok/install-poetry@v1.1.8
 
       - name: Install deployer
         run: |
@@ -106,7 +94,6 @@ jobs:
       - name: Print information about build
         run: |
           echo "notes: ${{ github.event.inputs.notes }}"
-          echo "archived_content: ${{ github.event.inputs.archived_content }}"
           echo "log_each_successful_upload: ${{ github.event.inputs.log_each_successful_upload }}"
           echo "deployment_prefix: ${{ github.event.inputs.deployment_prefix }}"
 
@@ -136,26 +123,28 @@ jobs:
           # Same with the Speedcurve LUX
           BUILD_SPEEDCURVE_LUX_ID: 000000000
 
-          # Make sure every built page always has
-          # '<meta name="robots" content="noindex, nofollow">' nomatter what
-          # kind of document it is.
-          BUILD_ALWAYS_NO_ROBOTS: true
-        run: |
-          if [ ${{ github.event.inputs.archived_content }} == "true" ]; then
-            echo "Will build mdn/archived-content too"
-            export CONTENT_ARCHIVED_ROOT=${{ github.workspace }}/mdn/archived-content/files
-          else
-            echo "Will NOT build mdn/archived-content too"
-          fi
+          # This removes the ability to sign in
+          REACT_APP_DISABLE_AUTH: true
 
+        run: |
           # Info about which CONTENT_* environment variables were set and to what.
           echo "CONTENT_ROOT=$CONTENT_ROOT"
-          echo "CONTENT_ARCHIVED_ROOT=$CONTENT_ARCHIVED_ROOT"
           echo "CONTENT_TRANSLATED_ROOT=$CONTENT_TRANSLATED_ROOT"
           yarn prepare-build
 
+          # (July 15, 2021) This is a temporary solution. This should become an
+          # integrated part of 'prepare-build'.
+          # See https://github.com/mdn/yari/issues/4217
+          yarn tool popularities
+
           yarn tool sync-translated-content
-          yarn build
+
+          # Spread the work across 2 processes. Why 2? Because that's what you
+          # get in the default GitHub hosting Linux runners.
+          # See https://docs.github.com/en/actions/using-github-hosted-runners/about-github-hosted-runners#supported-runners-and-hardware-resources
+          yarn build --locale     en-us --locale     ja --locale     fr &
+          yarn build --not-locale en-us --not-locale ja --not-locale fr &
+          wait
 
           # TODO: When the deployer is available this is where we
           # would upload the whole content of client/build
@@ -177,13 +166,6 @@ jobs:
           DEPLOYER_ELASTICSEARCH_URL: ${{ secrets.DEPLOYER_DEV_ELASTICSEARCH_URL }}
 
         run: |
-
-          if [ ${{ github.event.inputs.archived_content }} == "true" ]; then
-            echo "Will build mdn/archived-content too"
-            export CONTENT_ARCHIVED_ROOT=${{ github.workspace }}/mdn/archived-content/files
-          else
-            echo "Will NOT build mdn/archived-content too"
-          fi
           if [ ${{ github.event.inputs.translated_content }} == "true" ]; then
             echo "Will build mdn/translated-content too"
             export CONTENT_TRANSLATED_ROOT=${{ github.workspace }}/mdn/translated-content/files
@@ -193,7 +175,6 @@ jobs:
 
           # Info about which CONTENT_* environment variables were set and to what.
           echo "CONTENT_ROOT=$CONTENT_ROOT"
-          echo "CONTENT_ARCHIVED_ROOT=$CONTENT_ARCHIVED_ROOT"
           echo "CONTENT_TRANSLATED_ROOT=$CONTENT_TRANSLATED_ROOT"
 
           cd deployer
@@ -204,9 +185,7 @@ jobs:
           # XXX would be nice to validate here that $DEPLOYER_BUCKET_PREFIX is truthy
           echo "DEPLOYER_BUCKET_PREFIX=$DEPLOYER_BUCKET_PREFIX"
 
-          # Prune again once https://github.com/mdn/yari/issues/3323 is resolved.
-          # poetry run deployer upload --prune --archived-files ../content/archived.txt ../client/build
-          poetry run deployer upload ../client/build
+          poetry run deployer upload --prune ../client/build
           poetry run deployer update-lambda-functions ./aws-lambda
           # TODO
           # Execute command to tell the Dev CloudFront distribution to use the
@@ -214,3 +193,15 @@ jobs:
           # (Or, make it an optional flag to the `update-lambda-functions` command)
 
           poetry run deployer search-index ../client/build
+
+      - name: Slack Notification
+        if: failure()
+        uses: rtCamp/action-slack-notify@v2
+        env:
+          SLACK_CHANNEL: mdn-notifications
+          SLACK_COLOR: ${{ job.status }}
+          SLACK_ICON: https://avatars.slack-edge.com/2020-11-17/1513880588420_fedd7f0e9456888e69ff_96.png
+          SLACK_TITLE: "Dev"
+          SLACK_MESSAGE: "Build failed :broken_heart:"
+          SLACK_FOOTER: "Powered by dev-build.yml"
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}

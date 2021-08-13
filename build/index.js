@@ -292,120 +292,134 @@ async function buildDocument(document, documentOptions = {}) {
 
   const doc = {
     isMarkdown: document.isMarkdown,
-    isArchive: document.isArchive,
     isTranslated: document.isTranslated,
     isActive: document.isActive,
   };
 
   doc.flaws = {};
 
-  let $;
+  let flaws = [];
+  let renderedHtml = "";
   const liveSamples = [];
 
-  if (doc.isArchive) {
-    if (document.isMarkdown) {
-      throw new Error("Markdown not supported for archived content");
+  if (options.clearKumascriptRenderCache) {
+    renderKumascriptCache.reset();
+  }
+  try {
+    [renderedHtml, flaws] = await kumascript.render(document.url);
+  } catch (error) {
+    if (error.name === "MacroInvocationError") {
+      // The source HTML couldn't even be parsed! There's no point allowing
+      // anything else move on.
+      // But considering that this might just be one of many documents you're
+      // building, let's at least help by setting a more user-friendly error
+      // message.
+      error.updateFileInfo(document.fileInfo);
+      throw new Error(
+        `MacroInvocationError trying to parse ${error.filepath}, line ${error.line} column ${error.column} (${error.error.message})`
+      );
     }
-    $ = cheerio.load(`<div id="_body">${document.rawBody}</div>`);
-  } else {
-    if (options.clearKumascriptRenderCache) {
-      renderKumascriptCache.reset();
-    }
-    let renderedHtml;
-    let flaws;
-    try {
-      [renderedHtml, flaws] = await kumascript.render(document.url);
-    } catch (error) {
-      if (error.name === "MacroInvocationError") {
-        // The source HTML couldn't even be parsed! There's no point allowing
-        // anything else move on.
-        // But considering that this might just be one of many documents you're
-        // building, let's at least help by setting a more user-friendly error
-        // message.
-        error.updateFileInfo(document.fileInfo);
-        throw new Error(
-          `MacroInvocationError trying to parse ${error.filepath}, line ${error.line} column ${error.column} (${error.error.message})`
-        );
-      }
+    // Any other unexpected error re-thrown.
+    throw error;
+  }
 
-      // Any other unexpected error re-thrown.
-      throw error;
-    }
+  let $ = cheerio.load(`<div id="_body">${renderedHtml}</div>`);
 
-    $ = cheerio.load(`<div id="_body">${renderedHtml}</div>`);
-
-    const liveSamplePages = kumascript.buildLiveSamplePages(
-      document.url,
-      document.metadata.title,
-      $,
-      document.rawBody
-    );
-    for (const { id, html, flaw } of liveSamplePages) {
-      if (flaw) {
-        flaw.updateFileInfo(fileInfo);
-        if (flaw.name === "MacroLiveSampleError") {
-          // As of April 2021 there are 0 pages in mdn/content that trigger
-          // a MacroLiveSampleError. So we can be a lot more strict with en-US
-          // until the translated-content has had a chance to clean up all
-          // their live sample errors.
-          // See https://github.com/mdn/yari/issues/2489
-          if (document.metadata.locale === "en-US") {
-            throw new Error(
-              `MacroLiveSampleError within ${flaw.filepath}, line ${flaw.line} column ${flaw.column} (${flaw.error.message})`
-            );
-          } else {
-            console.warn(
-              `MacroLiveSampleError within ${flaw.filepath}, line ${flaw.line} column ${flaw.column} (${flaw.error.message})`
-            );
-          }
+  const liveSamplePages = kumascript.buildLiveSamplePages(
+    document.url,
+    document.metadata.title,
+    $,
+    document.rawBody
+  );
+  for (let { id, html, flaw } of liveSamplePages) {
+    if (flaw) {
+      flaw.updateFileInfo(fileInfo);
+      if (flaw.name === "MacroLiveSampleError") {
+        // As of April 2021 there are 0 pages in mdn/content that trigger
+        // a MacroLiveSampleError. So we can be a lot more strict with en-US
+        // until the translated-content has had a chance to clean up all
+        // their live sample errors.
+        // See https://github.com/mdn/yari/issues/2489
+        if (document.metadata.locale === "en-US") {
+          throw new Error(
+            `MacroLiveSampleError within ${flaw.filepath}, line ${flaw.line} column ${flaw.column} (${flaw.error.message})`
+          );
+        } else {
+          console.warn(
+            `MacroLiveSampleError within ${flaw.filepath}, line ${flaw.line} column ${flaw.column} (${flaw.error.message})`
+          );
         }
-        flaws.push(flaw);
-      } else {
-        liveSamples.push({ id: id.toLowerCase(), html });
       }
+      flaws.push(flaw);
+      html = `<!doctype html>
+        <html>
+          <head>
+            <meta charset="utf-8">
+            <title>Live sample failed!</title>
+            <style type="text/css">
+              body {
+                background-color: #fae4e5;
+              }
+            </style>
+          </head>
+          <body>
+            <h1>Live sample failed!</h1>
+            <p>
+              An error occurred trying to render this live sample.
+              <br>
+              Consider filing an issue or trying your hands at a fix of your own.
+            </p>
+            <p><b>Error details:</b></p>
+            <p>
+              <code>${flaw.error.toString()}</code>
+            </p>
+          </body>
+        </html>
+        `;
     }
+    liveSamples.push({ id: id.toLowerCase(), html });
+  }
 
-    if (flaws.length) {
-      if (options.flawLevels.get("macros") === FLAW_LEVELS.ERROR) {
-        // Report and exit immediately on the first document with flaws.
-        console.error(
-          chalk.red.bold(
-            `Flaws (${flaws.length}) within ${document.metadata.slug} while rendering macros:`
-          )
-        );
-        flaws.forEach((flaw, i) => {
-          console.error(chalk.bold.red(`${i + 1}: ${flaw.name}`));
-          console.error(chalk.red(`${flaw}\n`));
-        });
-        // // XXX This is probably the wrong way to bubble up.
-        // process.exit(1);
-        throw new Error("Flaw error encountered");
-      } else if (options.flawLevels.get("macros") === FLAW_LEVELS.WARN) {
-        // doc.flaws.macros = flaws;
-        // The 'flaws' array don't have everything we need from the
-        // kumascript rendering, so we "beef it up" to have convenient
-        // attributes needed.
-        doc.flaws.macros = flaws.map((flaw, i) => {
-          let fixable = false;
-          let suggestion = null;
-          if (flaw.name === "MacroDeprecatedError") {
-            fixable = true;
-            suggestion = "";
-          } else if (
-            flaw.name === "MacroRedirectedLinkError" &&
-            (!flaw.filepath || flaw.filepath === document.fileInfo.path)
-          ) {
-            fixable = true;
-            suggestion = flaw.macroSource.replace(
-              flaw.redirectInfo.current,
-              flaw.redirectInfo.suggested
-            );
-          }
-          const id = `macro${i}`;
-          const explanation = flaw.error.message;
-          return Object.assign({ id, fixable, suggestion, explanation }, flaw);
-        });
-      }
+  if (flaws.length) {
+    if (options.flawLevels.get("macros") === FLAW_LEVELS.ERROR) {
+      // Report and exit immediately on the first document with flaws.
+      console.error(
+        chalk.red.bold(
+          `Flaws (${flaws.length}) within ${document.metadata.slug} while rendering macros:`
+        )
+      );
+      flaws.forEach((flaw, i) => {
+        console.error(chalk.bold.red(`${i + 1}: ${flaw.name}`));
+        console.error(chalk.red(`${flaw}\n`));
+      });
+      // // XXX This is probably the wrong way to bubble up.
+      // process.exit(1);
+      throw new Error("Flaw error encountered");
+    } else if (options.flawLevels.get("macros") === FLAW_LEVELS.WARN) {
+      // doc.flaws.macros = flaws;
+      // The 'flaws' array don't have everything we need from the
+      // kumascript rendering, so we "beef it up" to have convenient
+      // attributes needed.
+      doc.flaws.macros = flaws.map((flaw, i) => {
+        let fixable = false;
+        let suggestion = null;
+        if (flaw.name === "MacroDeprecatedError") {
+          fixable = true;
+          suggestion = "";
+        } else if (
+          flaw.name === "MacroRedirectedLinkError" &&
+          (!flaw.filepath || flaw.filepath === document.fileInfo.path)
+        ) {
+          fixable = true;
+          suggestion = flaw.macroSource.replace(
+            flaw.redirectInfo.current,
+            flaw.redirectInfo.suggested
+          );
+        }
+        const id = `macro${i}`;
+        const explanation = flaw.error.message;
+        return Object.assign({ id, fixable, suggestion, explanation }, flaw);
+      });
     }
   }
 
@@ -465,21 +479,6 @@ async function buildDocument(document, documentOptions = {}) {
     throw error;
   }
 
-  // Some hyperlinks are not easily fixable and we should never include them
-  // because they're potentially evil.
-  $("a[href]").each((i, a) => {
-    // See https://github.com/mdn/kuma/issues/7647
-    // Ideally we should manually remove this from all sources (archived or not)
-    // but that's not immediately feasible. So at least make sure we never
-    // present the link in any rendered HTML.
-    if (
-      a.attribs.href.startsWith("http") &&
-      a.attribs.href.includes("fxsitecompat.com")
-    ) {
-      $(a).attr("href", "https://github.com/mdn/kuma/issues/7647");
-    }
-  });
-
   // If fixFlaws is on and the doc has fixable flaws, this returned
   // raw HTML string will be different.
   try {
@@ -529,10 +528,22 @@ async function buildDocument(document, documentOptions = {}) {
   // Turn the $ instance into an array of section blocks. Most of the
   // section blocks are of type "prose" and their value is a string blob
   // of HTML.
-  const [sections, sectionFlaws] = extractSections($);
-  doc.body = sections;
-  if (sectionFlaws.length) {
-    injectSectionFlaws(doc, sectionFlaws, options);
+  try {
+    const [sections, sectionFlaws] = extractSections($);
+    doc.body = sections;
+    if (sectionFlaws.length) {
+      injectSectionFlaws(doc, sectionFlaws, options);
+    }
+  } catch (error) {
+    // If you run `yarn build` and an error is thrown inside `extractSections()`
+    // you won't know which file it was in the middle processing because
+    // the error won't be able to mention that.
+    // So we catch the error, log which file it happened to and then
+    // rethrow the error. Now you get a clue at least as to where to look.
+    console.error(
+      `Extracting sections failed in ${doc.mdn_url} (${document.fileInfo.path})`
+    );
+    throw error;
   }
 
   // Extract all the <h2> tags as they appear into an array.
@@ -588,7 +599,6 @@ async function buildDocument(document, documentOptions = {}) {
 
   // Decide whether it should be indexed (sitemaps, robots meta tag, search-index)
   doc.noIndexing =
-    (doc.isArchive && !doc.isTranslated) ||
     metadata.slug === "MDN/Kitchensink" ||
     document.metadata.slug.startsWith("orphaned/") ||
     document.metadata.slug.startsWith("conflicting/");

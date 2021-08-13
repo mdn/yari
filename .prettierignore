@@ -19,9 +19,7 @@ _githistory.json
 /cli/node_modules/
 /deployment/node_modules/
 /client/src/water.css/
-/archivecontent/
 /content/files/
 /testing/content/
-/testing/archivecontent/
 /kumascript/coverage/
 /ssr/mozilla.dnthelper.min.js

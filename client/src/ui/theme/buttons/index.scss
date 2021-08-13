@@ -1,0 +1,50 @@
+@use "sass:math";
+
+@use "~@mdn/minimalist/sass/vars/layout";
+
+@use "../color-palette/index" as palette;
+@use "../typography/index" as typography;
+
+button,
+.button {
+  border: 0;
+  border-radius: 0;
+  cursor: pointer;
+  font-family: typography.$metropolis-font-family;
+  font-size: typography.$small-font-size;
+  font-weight: normal;
+  min-height: inherit;
+  padding: math.div(layout.$base-spacing, 4) math.div(layout.$base-spacing, 1.5);
+  text-align: center;
+  text-decoration: none;
+}
+
+.primary-gradient {
+  background: palette.$gradient-secondary;
+  color: palette.$white;
+  display: inline-block;
+
+  &:hover,
+  &:focus {
+    background: palette.$mdn-violet700;
+  }
+}
+
+.primary {
+  background: palette.$mdn-blue500;
+  color: palette.$white;
+  display: inline-block;
+
+  &:hover,
+  &:focus {
+    background: palette.$mdn-blue700;
+  }
+}
+
+/* prevent new font families from affecting
+ * the main menu font family
+ */
+button.top-level-entry {
+  font-family: Arial, Helvetica, sans-serif;
+  font-weight: bold;
+}

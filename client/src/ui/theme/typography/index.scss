@@ -1,0 +1,28 @@
+@use "./fonts";
+
+$default-line-height: 1.5;
+$heading-line-height: 1.2;
+
+$metropolis-font-family: "Metropolis", sans-serif;
+$inter-font-family: "Inter", sans-serif;
+$code-inline-font-family: consolas, "Liberation Mono", courier, monospace;
+
+$small-font-size: 0.9rem; /* 16px */
+
+$marketing-hero-h1-font-size: 4rem; /* 64px */
+$marketing-feature-h1-font-size: 3rem; /* 48px */
+$marketing-hero-h2-font-size: 2rem; /* 32px */
+
+h1,
+h2,
+h3,
+h4 {
+  font-family: $metropolis-font-family;
+  font-weight: 600;
+  line-height: $heading-line-height;
+}
+
+h5 {
+  font-family: $inter-font-family;
+  font-weight: bold;
+}

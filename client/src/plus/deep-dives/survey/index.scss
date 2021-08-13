@@ -1,0 +1,94 @@
+@use "sass:math";
+@use "~@mdn/minimalist/sass/vars/layout";
+@use "~@mdn/minimalist/sass/vars/typography";
+
+@use "../../../ui/theme/index" as theme;
+
+.survey-wrapper {
+  background-color: #f9f9fb;
+  padding: (layout.$base-spacing * 2) layout.$base-spacing;
+
+  legend {
+    color: theme.$mdn-violet700;
+    font-family: theme.$metropolis-font-family;
+    font-size: 24px;
+    font-weight: bold;
+    letter-spacing: 0;
+    line-height: 24px;
+  }
+
+  h3,
+  .custom-label,
+  h4 {
+    font-family: theme.$inter-font-family;
+    font-size: 22px;
+    letter-spacing: 0;
+    line-height: 27px;
+    margin: layout.$base-spacing 0;
+  }
+
+  h4 {
+    font-size: typography.$default-font-size;
+    margin-bottom: layout.$base-spacing;
+  }
+
+  .form-radio-input-group {
+    @media #{layout.$mq-tablet-and-up} {
+      display: flex;
+      gap: layout.$base-spacing;
+      justify-content: space-between;
+      max-width: 90%;
+
+      label {
+        display: flex;
+        flex-flow: column;
+      }
+    }
+
+    @media #{layout.$mq-small-desktop-and-up} {
+      max-width: 70%;
+    }
+  }
+
+  .custom-label {
+    font-weight: bold;
+  }
+
+  [type="text"] {
+    margin: layout.$base-spacing 0;
+    width: 100%;
+  }
+
+  [type="radio"],
+  [type="checkbox"] {
+    margin-right: math.div(layout.$base-spacing, 2);
+  }
+
+  [type="radio"] {
+    @media #{layout.$mq-tablet-and-up} {
+      display: block;
+      margin: 0 auto;
+    }
+  }
+
+  textarea {
+    margin-bottom: layout.$base-spacing;
+    width: 100%;
+  }
+
+  .survey-success {
+    align-items: center;
+    display: flex;
+    font-size: typography.$xl-font-size;
+    justify-content: center;
+    line-height: 150%;
+    min-height: 250px;
+    text-align: center;
+  }
+
+  .button-container {
+    display: flex;
+    gap: 36px;
+    justify-content: flex-end;
+  }
+}

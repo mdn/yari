@@ -4,7 +4,7 @@ const path = require("path");
 const cheerio = require("cheerio");
 const sizeOf = require("image-size");
 
-const buildRoot = path.join("..", "client", "build");
+const buildRoot = path.join("client", "build");
 
 test("all favicons on the home page", () => {
   // The home page SPA is built, in terms of the index.html template,
@@ -281,7 +281,8 @@ test("content built zh-TW page with en-US fallback image", () => {
   const jsonFile = path.join(builtFolder, "index.json");
   expect(fs.existsSync(jsonFile)).toBeTruthy();
   const { doc } = JSON.parse(fs.readFileSync(jsonFile));
-  expect(Object.keys(doc.flaws).length).toBe(0);
+  expect(Object.keys(doc.flaws).length).toBe(1);
+  expect(doc.flaws.translation_differences.length).toBe(1);
   expect(doc.title).toBe("<foo>: 測試網頁");
   expect(doc.isTranslated).toBe(true);
   expect(doc.other_translations[0].locale).toBe("en-US");
@@ -849,45 +850,6 @@ test("without locale prefix broken links flaws", () => {
   expect(map.get("link3").suggestion).toBeNull();
 });
 
-test("broken links to archived content", () => {
-  // Links to URLs that are archived
-  const builtFolder = path.join(
-    buildRoot,
-    "en-us",
-    "docs",
-    "web",
-    "brokenlinks",
-    "archived"
-  );
-  const jsonFile = path.join(builtFolder, "index.json");
-  const { doc } = JSON.parse(fs.readFileSync(jsonFile));
-  const { flaws } = doc;
-  // The page has 2 links:
-  //  * one to an archived page (see `content/archived.txt`)
-  //  * one to an archived redirect
-  // When the link points to an archived page, we can figure out that it's
-  // actually not a broken link.
-  // But unfortunately, for redirects, we simply don't have this information
-  // available at all.
-  // See https://github.com/mdn/yari/issues/2675#issuecomment-767124481
-  expect(flaws.broken_links.length).toBe(1);
-
-  const flaw = flaws.broken_links[0];
-  expect(flaw.suggestion).toBeNull();
-  expect(flaw.fixable).toBeFalsy();
-  expect(flaw.href).toBe("/en-US/docs/The_Mozilla_platform");
-
-  const htmlFile = path.join(builtFolder, "index.html");
-  const html = fs.readFileSync(htmlFile, "utf-8");
-  const $ = cheerio.load(html);
-
-  expect($("#content a.page-not-created").length).toBe(1);
-  expect($("#content a.page-not-created").attr("href")).toBeTruthy();
-  expect($("#content a.page-not-created").attr("title")).toBe(
-    "This is a link to an unwritten page"
-  );
-});
-
 test("broken anchor links flaws", () => {
   const builtFolder = path.join(
     buildRoot,
@@ -1284,17 +1246,6 @@ test("French sign in page", () => {
   expect($("h1").text()).toContain("Sign in to MDN Web Docs");
   expect($("title").text()).toContain("Sign in");
   expect($('meta[property="og:locale"]').attr("content")).toBe("fr");
-});
-
-test("sign up page", () => {
-  const builtFolder = path.join(buildRoot, "en-us", "signup");
-  expect(fs.existsSync(builtFolder)).toBeTruthy();
-  const htmlFile = path.join(builtFolder, "index.html");
-  const html = fs.readFileSync(htmlFile, "utf-8");
-  const $ = cheerio.load(html);
-  expect($("h1").text()).toContain("Sign in to MDN Web Docs");
-  expect($("title").text()).toContain("Sign up");
-  expect($('meta[name="robots"]').attr("content")).toBe("noindex, nofollow");
 });
 
 test("settings page", () => {
@@ -1754,6 +1705,44 @@ test("built search-index.json (en-US)", () => {
   const searchIndex = JSON.parse(fs.readFileSync(searchIndexFile));
   const urlToTitle = new Map(searchIndex.map((o) => [o.url, o.title]));
   expect(urlToTitle.get("/en-US/docs/Web/Foo")).toBe("<foo>: A test tag");
-  // an archived page should not be in there.
-  expect(urlToTitle.has("/en-US/docs/XUL")).toBeFalsy();
+});
+
+test("the robots.txt file was created", () => {
+  const filePath = path.join(buildRoot, "robots.txt");
+  const text = fs.readFileSync(filePath, "utf-8");
+  // The content of robots file when it's in production mode is
+  // to ONLY say `Disallow: /api/`.
+  // When the robots file is for disallowing everything it
+  // will ONLY say `Disallow: /`.
+  expect(text).toContain("Disallow: /api/");
+  expect(text).not.toContain("Disallow: /\n");
+});
+
+test("duplicate IDs are de-duplicated", () => {
+  const builtFolder = path.join(
+    buildRoot,
+    "en-us",
+    "docs",
+    "web",
+    "duplicate_ids"
+  );
+  const jsonFile = path.join(builtFolder, "index.json");
+  const { doc } = JSON.parse(fs.readFileSync(jsonFile));
+  const sectionIDs = doc.body.map((section) => section.value.id);
+  // The section IDs aren't normalized to lowercase but the should be
+  // unique if they were case normalized.
+  expect(new Set(sectionIDs.map((id) => id.toLowerCase())).size).toEqual(
+    sectionIDs.length
+  );
+
+  const htmlFile = path.join(builtFolder, "index.html");
+  const html = fs.readFileSync(htmlFile, "utf-8");
+  const $ = cheerio.load(html);
+  const h2IDs = [];
+  $("#content h2").each((i, element) => {
+    h2IDs.push($(element).attr("id"));
+  });
+  expect(new Set(h2IDs.map((id) => id.toLowerCase())).size).toEqual(
+    h2IDs.length
+  );
 });

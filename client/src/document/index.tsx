@@ -22,6 +22,7 @@ import { RetiredLocaleNote } from "./molecules/retired-locale-note";
 import { MainContentContainer } from "../ui/atoms/page-content";
 import { Loading } from "../ui/atoms/loading";
 import { Metadata } from "./organisms/metadata";
+import { BookmarkToggle } from "./organisms/bookmark";
 
 import "./index.scss";
 
@@ -151,13 +152,12 @@ export function Document(props /* TODO: define a TS interface for this */) {
 
   return (
     <>
-      {doc.isArchive && !doc.isTranslated && <Archived />}
-
       {/* if we have either breadcrumbs or translations for the current page,
       continue rendering the section */}
       {(doc.parents || !!translations.length) && (
         <div className="breadcrumb-locale-container">
           {doc.parents && <Breadcrumbs parents={doc.parents} />}
+          <BookmarkToggle doc={doc} />
           {translations && !!translations.length && (
             <LanguageToggle locale={locale} translations={translations} />
           )}
@@ -192,16 +192,6 @@ export function Document(props /* TODO: define a TS interface for this */) {
 
       {doc.sidebarHTML && <RenderSideBar doc={doc} />}
     </>
-  );
-}
-
-function Archived() {
-  return (
-    <div className="archived">
-      <p>
-        <b>This is an archived page.</b> It's not actively maintained.
-      </p>
-    </div>
   );
 }
 
