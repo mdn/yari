@@ -323,7 +323,7 @@ async function buildDocument(document, documentOptions = {}) {
     throw error;
   }
 
-  let $ = cheerio.load(`<div id="_body">${renderedHtml}</div>`);
+  const $ = cheerio.load(`<div id="_body">${renderedHtml}</div>`);
 
   const liveSamplePages = kumascript.buildLiveSamplePages(
     document.url,
