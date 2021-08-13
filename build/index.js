@@ -636,7 +636,9 @@ async function buildLiveSamplePageFromURL(url) {
     return liveSamplePage.html;
   }
 
-  throw new Error(`No live-sample "${decodedSampleID}" found within ${documentURL}`);
+  throw new Error(
+    `No live-sample "${decodedSampleID}" found within ${documentURL}`
+  );
 }
 
 // This is used by the builder (yarn build) and by the server (JIT).
