@@ -80,7 +80,7 @@ function isFuzzySearchString(str: string) {
   return str.startsWith("/") && !/\s/.test(str);
 }
 
-function HighlightMatch({ title, q }) {
+function HighlightMatch({ title, q }: { title: string; q: string }) {
   // FlexSearch doesn't support finding out which "typo corrections"
   // were done unfortunately.
   // See https://github.com/nextapps-de/flexsearch/issues/99
