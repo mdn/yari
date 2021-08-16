@@ -4,23 +4,26 @@ import { Loading } from "../ui/atoms/loading";
 import { PageContentContainer } from "../ui/atoms/page-content";
 
 const SignInApp = React.lazy(() => import("./sign-in"));
-const SignUpApp = React.lazy(() => import("./sign-up"));
+const SignOutApp = React.lazy(() => import("./sign-out"));
 
 function Container({
+  pageTitle,
   children,
   className,
 }: {
+  pageTitle: string;
   children: React.ReactNode;
   className: string;
 }) {
   const isServer = typeof window === "undefined";
-  const pageTitle = "Sign in to MDN Web Docs";
+
   React.useEffect(() => {
     document.title = pageTitle;
-  }, []);
+  }, [pageTitle]);
+
   return (
     <PageContentContainer extraClasses={`auth-page-container ${className}`}>
-      {/* The reason for displaying this <h1> here (and for SignUp too)
+      {/* The reason for displaying this <h1> here
           is to avoid an unnecessary "flicker".
           component here is loaded SSR and is immediately present.
           Only the "guts" below is lazy loaded. By having the header already
@@ -34,7 +37,7 @@ function Container({
 }
 export function SignIn() {
   return (
-    <Container className="sign-in">
+    <Container className="sign-in" pageTitle="Sign in to MDN Web Docs">
       <React.Suspense
         fallback={<Loading message="Loading sign in…" minHeight={400} />}
       >
@@ -43,13 +46,14 @@ export function SignIn() {
     </Container>
   );
 }
-export function SignUp() {
+
+export function SignOut() {
   return (
-    <Container className="sign-up">
+    <Container className="sign-out" pageTitle="Sign out">
       <React.Suspense
-        fallback={<Loading message="Loading sign up…" minHeight={400} />}
+        fallback={<Loading message="Loading sign out…" minHeight={400} />}
       >
-        <SignUpApp />
+        <SignOutApp />
       </React.Suspense>
     </Container>
   );

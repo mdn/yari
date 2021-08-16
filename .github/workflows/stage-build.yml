@@ -80,7 +80,7 @@ jobs:
           path: mdn/translated-content
 
       - name: Setup Node.js environment
-        uses: actions/setup-node@v2.3.0
+        uses: actions/setup-node@v2.4.0
         with:
           node-version: "12"
 
@@ -94,8 +94,6 @@ jobs:
 
       - name: Install all yarn packages
         if: steps.cached-node_modules.outputs.cache-hit != 'true'
-        env:
-          PUPPETEER_SKIP_CHROMIUM_DOWNLOAD: 1
         run: yarn --frozen-lockfile
 
       - name: Install Python
@@ -104,7 +102,7 @@ jobs:
           python-version: "3.8"
 
       - name: Install Python poetry
-        uses: snok/install-poetry@v1.1.7
+        uses: snok/install-poetry@v1.1.8
 
       - name: Install deployer
         run: |

@@ -25,7 +25,7 @@ jobs:
           path: mdn/content
 
       - name: Setup Node.js environment
-        uses: actions/setup-node@v2.3.0
+        uses: actions/setup-node@v2.4.0
         with:
           node-version: "12"
 
@@ -39,8 +39,6 @@ jobs:
 
       - name: Install all yarn packages
         if: steps.cached-node_modules.outputs.cache-hit != 'true'
-        env:
-          PUPPETEER_SKIP_CHROMIUM_DOWNLOAD: 1
         run: |
           yarn --frozen-lockfile
 

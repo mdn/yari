@@ -18,7 +18,7 @@
     },
     "AnalyserNode": {
       "inh": "AudioNode",
-      "impl": ["AudioNodePassThrough"]
+      "impl": []
     },
     "AnimationEvent": {
       "inh": "Event",
@@ -34,7 +34,7 @@
     },
     "AudioBufferSourceNode": {
       "inh": "AudioScheduledSourceNode",
-      "impl": ["AudioNodePassThrough"]
+      "impl": []
     },
     "AudioChannelManager": {
       "inh": "EventTarget",
@@ -98,7 +98,7 @@
     },
     "BiquadFilterNode": {
       "inh": "AudioNode",
-      "impl": ["AudioNodePassThrough"]
+      "impl": []
     },
     "BlobEvent": {
       "inh": "Event",
@@ -354,7 +354,7 @@
     },
     "ConvolverNode": {
       "inh": "AudioNode",
-      "impl": ["AudioNodePassThrough"]
+      "impl": []
     },
     "Crypto": {
       "inh": "",
@@ -454,7 +454,7 @@
     },
     "DelayNode": {
       "inh": "AudioNode",
-      "impl": ["AudioNodePassThrough"]
+      "impl": []
     },
     "DesktopNotification": {
       "inh": "EventTarget",
@@ -502,7 +502,7 @@
     },
     "DynamicsCompressorNode": {
       "inh": "AudioNode",
-      "impl": ["AudioNodePassThrough"]
+      "impl": []
     },
     "Element": {
       "inh": "Node",
@@ -566,7 +566,7 @@
     },
     "GainNode": {
       "inh": "AudioNode",
-      "impl": ["AudioNodePassThrough"]
+      "impl": []
     },
     "GamepadAxisMoveEvent": {
       "inh": "GamepadEvent",
@@ -1014,7 +1014,7 @@
     },
     "MediaElementAudioSourceNode": {
       "inh": "AudioNode",
-      "impl": ["AudioNodePassThrough"]
+      "impl": []
     },
     "MediaEncryptedEvent": {
       "inh": "Event",
@@ -1050,7 +1050,7 @@
     },
     "MediaStreamAudioSourceNode": {
       "inh": "AudioNode",
-      "impl": ["AudioNodePassThrough"]
+      "impl": []
     },
     "MediaStreamEvent": {
       "inh": "Event",
@@ -1290,7 +1290,7 @@
     },
     "OscillatorNode": {
       "inh": "AudioNode",
-      "impl": ["AudioNodePassThrough"]
+      "impl": []
     },
     "OTPCredential": {
       "inh": "Credential",
@@ -1310,7 +1310,7 @@
     },
     "PannerNode": {
       "inh": "AudioNode",
-      "impl": ["AudioNodePassThrough"]
+      "impl": []
     },
     "PaymentAddress": {
       "inh": "",
@@ -1942,7 +1942,7 @@
     },
     "ScriptProcessorNode": {
       "inh": "AudioNode",
-      "impl": ["AudioNodePassThrough"]
+      "impl": []
     },
     "ScrollAreaEvent": {
       "inh": "UIEvent",
@@ -2034,7 +2034,7 @@
     },
     "StereoPannerNode": {
       "inh": "AudioNode",
-      "impl": ["AudioNodePassThrough"]
+      "impl": []
     },
     "StorageEvent": {
       "inh": "Event",
@@ -2206,7 +2206,7 @@
     },
     "WaveShaperNode": {
       "inh": "AudioNode",
-      "impl": ["AudioNodePassThrough"]
+      "impl": []
     },
     "WebGL2RenderingContext": {
       "inh": "WebGLRenderingContext",
@@ -2292,6 +2292,10 @@
       "inh": "XRReferenceSpace",
       "impl": []
     },
+    "XRCPUDepthInformation": {
+      "inh": "XRDepthInformation",
+      "impl": []
+    },
     "XRFrame": {
       "inh": "",
       "impl": []
@@ -2354,6 +2358,10 @@
     },
     "XRViewport": {
       "inh": "",
+      "impl": []
+    },
+    "XRWebGLDepthInformation": {
+      "inh": "XRDepthInformation",
       "impl": []
     },
     "XRWebGLLayer": {

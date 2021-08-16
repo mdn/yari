@@ -39,7 +39,7 @@ export function SeriesCard({
       {linkToSurvey && (
         <p className="take-survey">
           <a href="#survey-form" className="take-survey-link">
-            Take our survey
+            Take our 1 minute survey
           </a>
         </p>
       )}

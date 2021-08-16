@@ -7,6 +7,7 @@ import { Document } from "../content";
 import { saveFile } from "../content/document";
 import { VALID_LOCALES } from "../libs/constants";
 import { execGit } from "../content";
+import { getRoot } from "../content/utils";
 
 import { h2m } from "./h2m";
 const { prettyAST } = require("./utils");
@@ -178,11 +179,16 @@ program
 
           if (options.mode == "replace" || options.mode == "keep") {
             if (options.mode == "replace") {
-              execGit([
-                "mv",
-                doc.fileInfo.path,
-                doc.fileInfo.path.replace(/\.html$/, ".md"),
-              ]);
+              const gitRoot = getRoot(options.locale);
+              execGit(
+                [
+                  "mv",
+                  doc.fileInfo.path,
+                  doc.fileInfo.path.replace(/\.html$/, ".md"),
+                ],
+                {},
+                gitRoot
+              );
             }
             saveFile(
               doc.fileInfo.path.replace(/\.html$/, ".md"),

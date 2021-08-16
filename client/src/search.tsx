@@ -4,7 +4,7 @@ import { useCombobox } from "downshift";
 import FlexSearch from "flexsearch";
 import useSWR from "swr";
 
-import { Doc, FuzzySearch, Substring } from "./fuzzy-search";
+import { Doc, FuzzySearch } from "./fuzzy-search";
 import { preload, preloadSupported } from "./document/preloading";
 
 import { useLocale } from "./hooks";
@@ -27,7 +27,7 @@ type SearchIndex = {
 type ResultItem = {
   title: string;
   url: string;
-  substrings: Substring[];
+  positions: number[];
 };
 
 function useSearchIndex(): readonly [
@@ -106,16 +106,22 @@ function HighlightMatch({ title, q }) {
   );
 }
 
-function BreadcrumbURI({ uri, substrings }) {
-  if (substrings) {
+function BreadcrumbURI({
+  uri,
+  positions,
+}: {
+  uri: string;
+  positions: number[];
+}) {
+  if (positions) {
+    const chars = uri.split("");
     return (
       <small>
-        {substrings.map((part, i) => {
-          const key = `${part.str}:${i}`;
-          if (part.match) {
-            return <mark key={key}>{part.str}</mark>;
+        {chars.map((char, i) => {
+          if (positions.includes(i)) {
+            return <mark key={i}>{char}</mark>;
           } else {
-            return <span key={key}>{part.str}</span>;
+            return <span key={i}>{char}</span>;
           }
         })}
       </small>
@@ -205,11 +211,13 @@ function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
       if (inputValue === "/") {
         return [];
       } else {
-        const fuzzyResults = searchIndex.fuzzy.search(inputValue, { limit });
+        const fuzzyResults = searchIndex.fuzzy.search(inputValue.slice(1), {
+          limit,
+        });
         return fuzzyResults.map((fuzzyResult) => ({
-          url: fuzzyResult.url,
-          title: fuzzyResult.title,
-          substrings: fuzzyResult.substrings,
+          url: fuzzyResult.item.url,
+          title: fuzzyResult.item.title,
+          positions: fuzzyResult.positions,
         }));
       }
     } else {
@@ -231,7 +239,7 @@ function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
   }, [formAction, inputValue]);
 
   const nothingFoundItem = useMemo(
-    () => ({ url: searchPath, title: "", substrings: [] }),
+    () => ({ url: searchPath, title: "", positions: [] }),
     [searchPath]
   );
 
@@ -339,7 +347,7 @@ function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
             >
               <HighlightMatch title={item.title} q={inputValue} />
               <br />
-              <BreadcrumbURI uri={item.url} substrings={item.substrings} />
+              <BreadcrumbURI uri={item.url} positions={item.positions} />
             </div>
           ))
         )}
@@ -388,7 +396,7 @@ function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
           onBlur: () => onChangeIsFocused(false),
           onKeyDown(event) {
             if (event.key === "Escape" && inputRef.current) {
-              inputRef.current.blur();
+              toggleMenu();
             } else if (
               event.key === "Enter" &&
               inputValue.trim() &&

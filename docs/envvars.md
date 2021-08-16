@@ -205,31 +205,6 @@ This is the port for the WebSocket server, which is started when you run `yarn s
 
 If you want to serve static files some a completely different directory.
 
-## Testing
-
-### `TESTING_OPEN_BROWSER`
-
-**Default: `false`**
-
-When running the `jest-puppeteer` test suites, if you set this to `true`,
-it will open a browser on every page navigation.
-
-It might just flash by too quickly, so consider putting in
-`await jestPuppeteer.debug()` inside the test function to slow it down.
-
-### `TESTING_START_SERVER`
-
-**Default: `false`**
-
-When `jest-puppeteer` starts the `jest` tests, if this variable is set
-to `true` it will execute `node ../server/index.js` to start the `server`
-on `localhost:5000`.
-
-In most cases, on your laptop it's better to start the server yourself
-in a separate terminal and then run the headless tests in another.
-
-For more information, see the `testing/README.md`.
-
 ## Client
 
 NOTE! Due to a quirk of how we build the client, anything `REACT_APP_*` environment
