@@ -111,9 +111,9 @@ function BreadcrumbURI({
   positions,
 }: {
   uri: string;
-  positions: Set<number>;
+  positions?: Set<number>;
 }) {
-  if (positions.size) {
+  if (positions && positions.size) {
     const chars = uri.split("");
     return (
       <small>
@@ -222,12 +222,13 @@ function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
       }
     } else {
       // Full-Text search
-      const indexResults = searchIndex.flex.search(inputValue, {
+      const indexResults: number[] = searchIndex.flex.search(inputValue, {
         limit,
         suggest: true, // This can give terrible result suggestions
       });
-
-      return indexResults.map((index) => (searchIndex.items || [])[index]);
+      return indexResults.map(
+        (index: number) => (searchIndex.items || [])[index] as ResultItem
+      );
     }
   }, [inputValue, searchIndex, searchIndexError]);
 
