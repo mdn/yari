@@ -42,9 +42,9 @@ function useSearchIndex(): readonly [
   // Default to 'en-US' if you're on the home page without the locale prefix.
   const url = `/${locale || "en-US"}/search-index.json`;
 
-  const { error, data } = useSWR<null | Item[]>(
+  const { error, data } = useSWR<null | Item[], Error | undefined>(
     shouldInitialize ? url : null,
-    async (url) => {
+    async (url: string) => {
       const response = await fetch(url);
       if (!response.ok) {
         throw new Error(await response.text());
@@ -69,7 +69,7 @@ function useSearchIndex(): readonly [
   }, [searchIndex, shouldInitialize, data]);
 
   return useMemo(
-    () => [searchIndex, error, () => setShouldInitialize(true)],
+    () => [searchIndex, error || null, () => setShouldInitialize(true)],
     [searchIndex, error, setShouldInitialize]
   );
 }
@@ -435,7 +435,7 @@ function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
 class SearchErrorBoundary extends React.Component {
   state = { hasError: false };
 
-  static getDerivedStateFromError(error) {
+  static getDerivedStateFromError(error: Error) {
     console.error("There was an error while trying to render search", error);
     return { hasError: true };
   }
