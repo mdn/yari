@@ -6,7 +6,7 @@
 @use "../../../ui/theme/index" as theme;
 
 .page-content-container.plus {
-  background-color: theme.$mdn-neutral050;
+  background-color: #fbfbfe;
   max-width: inherit;
   padding: 0;
 
@@ -17,6 +17,7 @@
 
 .deep-dives-overview {
   background-color: theme.$white;
+  font-family: theme.$inter-font-family;
   margin: 0 auto;
   max-width: 600px;
 
@@ -74,7 +75,7 @@
 
     h1 {
       font-size: 36px;
-      line-height: typography.$heading-line-height;
+      line-height: 100%;
     }
   }
 
@@ -94,6 +95,7 @@
   }
 
   h3 {
+    font-family: theme.$inter-font-family;
     font-size: 18px;
     margin: 16px 0;
 
@@ -104,7 +106,7 @@
 
   p {
     font-size: 18px;
-    line-height: 200%;
+    line-height: 150%;
   }
 
   button.ghost {
