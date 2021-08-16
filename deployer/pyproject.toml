@@ -14,7 +14,7 @@ boto3 = "^1.18.16"
 python-decouple = "^3.4"
 requests = {extras = ["security"], version = "^2.26.0"}
 elasticsearch-dsl = "^7.4.0"
-selectolax = "^0.2.13"
+selectolax = "^0.2.14"
 PyGithub = "^1.55"
 unidiff = "^0.6.0"
 
