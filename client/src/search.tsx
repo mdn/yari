@@ -27,7 +27,7 @@ type SearchIndex = {
 type ResultItem = {
   title: string;
   url: string;
-  positions: number[];
+  positions: Set<number>;
 };
 
 function useSearchIndex(): readonly [
@@ -111,14 +111,14 @@ function BreadcrumbURI({
   positions,
 }: {
   uri: string;
-  positions: number[];
+  positions: Set<number>;
 }) {
-  if (positions) {
+  if (positions.size) {
     const chars = uri.split("");
     return (
       <small>
         {chars.map((char, i) => {
-          if (positions.includes(i)) {
+          if (positions.has(i)) {
             return <mark key={i}>{char}</mark>;
           } else {
             return <span key={i}>{char}</span>;
@@ -239,7 +239,7 @@ function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
   }, [formAction, inputValue]);
 
   const nothingFoundItem = useMemo(
-    () => ({ url: searchPath, title: "", positions: [] }),
+    () => ({ url: searchPath, title: "", positions: new Set() }),
     [searchPath]
   );
 
