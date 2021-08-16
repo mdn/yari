@@ -71,7 +71,7 @@
   &::before {
     // TODO(lucacasonato): should probably be replaced with an icon from
     // @mdn/dinocons.
-    background-image: url("/assets/deno-logo.svg");
+    background-image: url("~@mdn/dinocons/platforms/deno.svg");
   }
 }
 
