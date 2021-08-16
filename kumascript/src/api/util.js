@@ -67,8 +67,20 @@ function safeDecodeURIComponent(text) {
   }
 }
 
-const findSectionStart = ($, sectionID) =>
-  $(`#${cssesc(sectionID, { isIdentifier: true })}`);
+const minimalIDEscape = (string) => {
+  string = string.replace(/\./g, "\\.");
+  const firstChar = string.charAt(0);
+  if (/^-[-\d]/.test(string)) {
+    string = "\\-" + string.slice(1);
+  } else if (/\d/.test(firstChar)) {
+    string = "\\3" + firstChar + " " + string.slice(1);
+  }
+  return string;
+};
+
+const findSectionStart = ($, sectionID) => {
+  return $(`#${minimalIDEscape(sectionID)}`);
+};
 
 const hasHeading = ($, sampleID) =>
   !sampleID ? false : findSectionStart($, sampleID).length > 0;
@@ -270,7 +282,7 @@ class HTMLTool {
       return result;
     } else {
       const result = collectClosestCode(
-        this.$("#" + cssesc(sampleID, { isIdentifier: true }))
+        this.$(`#${minimalIDEscape(sampleID)}`)
       );
       if (!result) {
         throw new KumascriptError(
