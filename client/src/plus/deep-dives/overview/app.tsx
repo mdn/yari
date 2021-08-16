@@ -33,7 +33,7 @@ export default function App() {
               setShowFullArticle(true);
             }}
           >
-            show more
+            see more
           </button>
         </p>
         {showFullArticle && (
@@ -100,71 +100,71 @@ export default function App() {
                   See contents
                 </button>
               )}
-              {showPFBSContents && (
-                <div className="deep-dive-toc">
-                  <h4>
-                    <a href="deep-dives/planning-for-browser-support#types-of-compatibility-problems">
-                      Types of compatibility problems
-                    </a>
-                  </h4>
-                  <ul>
-                    <li>
-                      <a href="deep-dives/planning-for-browser-support#browsers-that-are-locked-in-the-past">
-                        Browsers that are locked in the past
-                      </a>
-                    </li>
-                    <li>
-                      <a href="deep-dives/planning-for-browser-support#browsers-that-support-a-feature-but-have-bugs">
-                        Browsers that support a feature but have bugs
-                      </a>
-                    </li>
-                    <li>
-                      <a href="deep-dives/planning-for-browser-support#browsers-which-dont-support-a-feature-yet">
-                        Browsers which don’t support a feature yet
-                      </a>
-                    </li>
-                  </ul>
-                  <h4>
-                    <a href="deep-dives/planning-for-browser-support#what-does-supporting-a-browser-mean">
-                      What does “supporting a browser” mean to you?
-                    </a>
-                  </h4>
-                  <h4>
-                    <a href="deep-dives/planning-for-browser-support#creating-a-browser-support-strategy">
-                      Creating a browser support strategy for your project
-                    </a>
-                  </h4>
-                  <ul>
-                    <li>
-                      <a href="deep-dives/planning-for-browser-support#what-do-you-know-about-your-users">
-                        What do you know about your users?
-                      </a>
-                    </li>
-                    <li>
-                      <a href="deep-dives/planning-for-browser-support#where-is-it-best-to-spend-time-and-money">
-                        Where is it best to spend your time and money?
-                      </a>
-                    </li>
-                    <li>
-                      <a href="deep-dives/planning-for-browser-support#core-design-elements-vs-enhancements">
-                        Core design elements vs. enhancements
-                      </a>
-                    </li>
-                    <li>
-                      <a href="deep-dives/planning-for-browser-support#show-dont-tell">
-                        Show, don’t tell
-                      </a>
-                    </li>
-                  </ul>
-                  <h4>
-                    <a href="deep-dives/planning-for-browser-support#keep-your-strategy-up-to-date">
-                      Keep your strategy up-to-date
-                    </a>
-                  </h4>
-                </div>
-              )}
             </div>
           </li>
+          {showPFBSContents && (
+            <li className="deep-dive-toc">
+              <h4>
+                <a href="deep-dives/planning-for-browser-support#types-of-compatibility-problems">
+                  Types of compatibility problems
+                </a>
+              </h4>
+              <ul>
+                <li>
+                  <a href="deep-dives/planning-for-browser-support#browsers-that-are-locked-in-the-past">
+                    Browsers that are locked in the past
+                  </a>
+                </li>
+                <li>
+                  <a href="deep-dives/planning-for-browser-support#browsers-that-support-a-feature-but-have-bugs">
+                    Browsers that support a feature but have bugs
+                  </a>
+                </li>
+                <li>
+                  <a href="deep-dives/planning-for-browser-support#browsers-which-dont-support-a-feature-yet">
+                    Browsers which don’t support a feature yet
+                  </a>
+                </li>
+              </ul>
+              <h4>
+                <a href="deep-dives/planning-for-browser-support#what-does-supporting-a-browser-mean">
+                  What does “supporting a browser” mean to you?
+                </a>
+              </h4>
+              <h4>
+                <a href="deep-dives/planning-for-browser-support#creating-a-browser-support-strategy">
+                  Creating a browser support strategy for your project
+                </a>
+              </h4>
+              <ul>
+                <li>
+                  <a href="deep-dives/planning-for-browser-support#what-do-you-know-about-your-users">
+                    What do you know about your users?
+                  </a>
+                </li>
+                <li>
+                  <a href="deep-dives/planning-for-browser-support#where-is-it-best-to-spend-time-and-money">
+                    Where is it best to spend your time and money?
+                  </a>
+                </li>
+                <li>
+                  <a href="deep-dives/planning-for-browser-support#core-design-elements-vs-enhancements">
+                    Core design elements vs. enhancements
+                  </a>
+                </li>
+                <li>
+                  <a href="deep-dives/planning-for-browser-support#show-dont-tell">
+                    Show, don’t tell
+                  </a>
+                </li>
+              </ul>
+              <h4>
+                <a href="deep-dives/planning-for-browser-support#keep-your-strategy-up-to-date">
+                  Keep your strategy up-to-date
+                </a>
+              </h4>
+            </li>
+          )}
           <li className="series-item your-browser-support-toolkit">
             <div className="series-item-content">
               <h3>
@@ -191,73 +191,73 @@ export default function App() {
                   See contents
                 </button>
               )}
-              {showYBSTContents && (
-                <div className="deep-dive-toc">
-                  <h4>
-                    <a href="deep-dives/your-browser-support-toolkit#resources-for-browser-support-information">
-                      Resources for browser support information
-                    </a>
-                  </h4>
-                  <ul>
-                    <li>
-                      <a href="deep-dives/your-browser-support-toolkit#looking-up-browser-bugs">
-                        Looking up browser bugs
-                      </a>
-                    </li>
-                    <li>
-                      <a href="deep-dives/your-browser-support-toolkit#learning-about-features-that-are-coming-soon">
-                        Learning about features that are coming soon
-                      </a>
-                    </li>
-                  </ul>
-                  <h4>
-                    <a href="deep-dives/your-browser-support-toolkit#web-platform-features-and-fallbacks">
-                      Web platform features and fallbacks
-                    </a>
-                  </h4>
-                  <ul>
-                    <li>
-                      <a href="deep-dives/your-browser-support-toolkit#using-the-cascade">
-                        Using the cascade
-                      </a>
-                    </li>
-                    <li>
-                      <a href="deep-dives/your-browser-support-toolkit#feature-queries">
-                        Feature queries
-                      </a>
-                    </li>
-                    <li>
-                      <a href="deep-dives/your-browser-support-toolkit#vendor-prefixes">
-                        Vendor prefixes
-                      </a>
-                    </li>
-                  </ul>
-                  <h4>
-                    <a href="deep-dives/your-browser-support-toolkit#third-party-tools">
-                      Third party tools
-                    </a>
-                  </h4>
-                  <ul>
-                    <li>
-                      <a href="deep-dives/your-browser-support-toolkit#postcss">
-                        PostCSS
-                      </a>
-                    </li>
-                    <li>
-                      <a href="deep-dives/your-browser-support-toolkit#polyfills">
-                        Polyfills
-                      </a>
-                    </li>
-                  </ul>
-                  <h4>
-                    <a href="deep-dives/your-browser-support-toolkit#testing">
-                      Testing
-                    </a>
-                  </h4>
-                </div>
-              )}
             </div>
           </li>
+          {showYBSTContents && (
+            <li className="deep-dive-toc">
+              <h4>
+                <a href="deep-dives/your-browser-support-toolkit#resources-for-browser-support-information">
+                  Resources for browser support information
+                </a>
+              </h4>
+              <ul>
+                <li>
+                  <a href="deep-dives/your-browser-support-toolkit#looking-up-browser-bugs">
+                    Looking up browser bugs
+                  </a>
+                </li>
+                <li>
+                  <a href="deep-dives/your-browser-support-toolkit#learning-about-features-that-are-coming-soon">
+                    Learning about features that are coming soon
+                  </a>
+                </li>
+              </ul>
+              <h4>
+                <a href="deep-dives/your-browser-support-toolkit#web-platform-features-and-fallbacks">
+                  Web platform features and fallbacks
+                </a>
+              </h4>
+              <ul>
+                <li>
+                  <a href="deep-dives/your-browser-support-toolkit#using-the-cascade">
+                    Using the cascade
+                  </a>
+                </li>
+                <li>
+                  <a href="deep-dives/your-browser-support-toolkit#feature-queries">
+                    Feature queries
+                  </a>
+                </li>
+                <li>
+                  <a href="deep-dives/your-browser-support-toolkit#vendor-prefixes">
+                    Vendor prefixes
+                  </a>
+                </li>
+              </ul>
+              <h4>
+                <a href="deep-dives/your-browser-support-toolkit#third-party-tools">
+                  Third party tools
+                </a>
+              </h4>
+              <ul>
+                <li>
+                  <a href="deep-dives/your-browser-support-toolkit#postcss">
+                    PostCSS
+                  </a>
+                </li>
+                <li>
+                  <a href="deep-dives/your-browser-support-toolkit#polyfills">
+                    Polyfills
+                  </a>
+                </li>
+              </ul>
+              <h4>
+                <a href="deep-dives/your-browser-support-toolkit#testing">
+                  Testing
+                </a>
+              </h4>
+            </li>
+          )}
           <li className="series-item unavailable">
             <div className="series-item-content">
               <h3>3. Practical browser support &mdash; Coming soon</h3>

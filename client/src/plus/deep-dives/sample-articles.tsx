@@ -69,7 +69,7 @@ export function PlanningForBrowserSupport() {
             setShowFullArticle(true);
           }}
         >
-          show more
+          see more
         </button>
       </p>
       {showFullArticle && (
@@ -538,7 +538,7 @@ export function YourBrowserSupportToolkit() {
             setShowFullArticle(true);
           }}
         >
-          show more
+          see more
         </button>
       </p>
       {showFullArticle && (

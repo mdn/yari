@@ -21,7 +21,7 @@
   .custom-label,
   h4 {
     font-family: theme.$inter-font-family;
-    font-size: 22px;
+    font-size: 18px;
     letter-spacing: 0;
     line-height: 27px;
     margin: layout.$base-spacing 0;
@@ -30,6 +30,7 @@
   h4 {
     font-size: typography.$default-font-size;
     margin-bottom: layout.$base-spacing;
+    margin-top: 0;
   }
 
   .form-radio-input-group {
