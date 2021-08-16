@@ -85,6 +85,13 @@ export default function Article({ slug }: { slug: string }) {
 
   return (
     <>
+      <div className="girdle">
+        <div className="intro-banner">
+          Find below the first article of the 'Modern CSS in the Real World'
+          deep-dive. Use the <a href="#survey-form">one minute long survey</a>{" "}
+          to let us know what you think.
+        </div>
+      </div>
       <div className="main-article-page-content-container girdle">
         {article}
 
@@ -97,13 +104,6 @@ export default function Article({ slug }: { slug: string }) {
           />
         </div>
       </div>
-      <ProductTeaser />
-      <Survey
-        slug={slug}
-        hasFinished={() => {
-          setHasFinishedSurvey(true);
-        }}
-      />
       <div
         className={`deep-dive-article-footer ${
           previousArticle ? "previous" : ""
@@ -124,6 +124,15 @@ export default function Article({ slug }: { slug: string }) {
           )}
         </p>
       </div>
+      <Survey
+        slug={slug}
+        hasFinished={() => {
+          setHasFinishedSurvey(true);
+        }}
+      />
+
+      <ProductTeaser />
+
       {!hasFinishedSurvey && (
         <div className="take-survey-mobile">
           <a href="#survey-form" className="take-survey-link">

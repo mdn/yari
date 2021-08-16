@@ -54,14 +54,14 @@ uvloop = ["uvloop (>=0.15.2)"]
 
 [[package]]
 name = "boto3"
-version = "1.18.16"
+version = "1.18.21"
 description = "The AWS SDK for Python"
 category = "main"
 optional = false
 python-versions = ">= 3.6"
 
 [package.dependencies]
-botocore = ">=1.21.16,<1.22.0"
+botocore = ">=1.21.21,<1.22.0"
 jmespath = ">=0.7.1,<1.0.0"
 s3transfer = ">=0.5.0,<0.6.0"
 
@@ -70,7 +70,7 @@ crt = ["botocore[crt] (>=1.21.0,<2.0a0)"]
 
 [[package]]
 name = "botocore"
-version = "1.21.16"
+version = "1.21.21"
 description = "Low-level, data-driven core of boto 3."
 category = "main"
 optional = false
@@ -459,7 +459,7 @@ crt = ["botocore[crt] (>=1.20.29,<2.0a.0)"]
 
 [[package]]
 name = "selectolax"
-version = "0.2.13"
+version = "0.2.14"
 description = "Fast HTML5 parser with CSS selectors."
 category = "main"
 optional = false
@@ -552,7 +552,7 @@ testing = ["pytest (>=4.6)", "pytest-checkdocs (>=1.2.3)", "pytest-flake8", "pyt
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.7"
-content-hash = "97c5035fb0ee148b355501e69fd319da5d57fc188d57eaba871ca65cab5874a4"
+content-hash = "6f8b71a15e77332b375b1831f40c603a3f5145f479b5d845d6328f433d2394d3"
 
 [metadata.files]
 appdirs = [
@@ -572,12 +572,12 @@ black = [
     {file = "black-21.7b0.tar.gz", hash = "sha256:c8373c6491de9362e39271630b65b964607bc5c79c83783547d76c839b3aa219"},
 ]
 boto3 = [
-    {file = "boto3-1.18.16-py3-none-any.whl", hash = "sha256:23e55b7cde2b35c79c63d4d52c761fdc2141f70f02df76f68882776a33dfcb63"},
-    {file = "boto3-1.18.16.tar.gz", hash = "sha256:806111acfb70715dfbe9d9f0d6089e7a9661a6d6bb422b17e035fc32e17f3f37"},
+    {file = "boto3-1.18.21-py3-none-any.whl", hash = "sha256:59b6e8e79b2114e21388288a06a004f2a9378b1e0fc58466a35da8fb74fe2dd8"},
+    {file = "boto3-1.18.21.tar.gz", hash = "sha256:00748c760dc30be61c6db4b092718f6a9f8d27c767da0e232695a65adb75cde8"},
 ]
 botocore = [
-    {file = "botocore-1.21.16-py3-none-any.whl", hash = "sha256:697b577d62a8893bce56c74ee53e54f04e69b14e42a6591e109c49b5675c19ed"},
-    {file = "botocore-1.21.16.tar.gz", hash = "sha256:b0e342b8c554f34f9f1cb028fbc20aff535fefe0c86a4e2cae7201846cd6aa4a"},
+    {file = "botocore-1.21.21-py3-none-any.whl", hash = "sha256:fa5ac13829d24fcdd385e82c3b6d78e22d93f427cca8dac38158cae84a8cc2f5"},
+    {file = "botocore-1.21.21.tar.gz", hash = "sha256:12cfe74b0a5c44afb34bdd86c1f8ad74bc2ad9ec168eaed9040ef70cb3db944f"},
 ]
 certifi = [
     {file = "certifi-2020.12.5-py2.py3-none-any.whl", hash = "sha256:719a74fb9e33b9bd44cc7f3a8d94bc35e4049deebe19ba7d8e108280cfd59830"},
@@ -852,33 +852,33 @@ s3transfer = [
     {file = "s3transfer-0.5.0.tar.gz", hash = "sha256:50ed823e1dc5868ad40c8dc92072f757aa0e653a192845c94a3b676f4a62da4c"},
 ]
 selectolax = [
-    {file = "selectolax-0.2.13-cp36-cp36m-macosx_10_9_x86_64.whl", hash = "sha256:39856c195c0e4594a4dc52deeb00bf42f7fca91ab33546baec26b7ff358ef931"},
-    {file = "selectolax-0.2.13-cp36-cp36m-manylinux_2_5_i686.manylinux1_i686.manylinux_2_12_i686.manylinux2010_i686.whl", hash = "sha256:864877c9d44a91c1132c5d4f4bf3ca1c5d457080bbef2234b09cf4fe8d7ec719"},
-    {file = "selectolax-0.2.13-cp36-cp36m-manylinux_2_5_x86_64.manylinux1_x86_64.manylinux_2_12_x86_64.manylinux2010_x86_64.whl", hash = "sha256:b29589b3423c9de99a2c1404bcf8a8b7a38243570b65bea3a08f9afc237567e0"},
-    {file = "selectolax-0.2.13-cp36-cp36m-win32.whl", hash = "sha256:658c6daea98f5386c1f1fd70d82884717ee1f44a09cf6b40838a94d0ea24505e"},
-    {file = "selectolax-0.2.13-cp36-cp36m-win_amd64.whl", hash = "sha256:d5434c4fafb58627376bf0f2acc1dd233f3409d63d015eadba4ecbaa81f05b5f"},
-    {file = "selectolax-0.2.13-cp37-cp37m-macosx_10_9_x86_64.whl", hash = "sha256:17393008d5e565a8aa568668e19a5515503233ebea67bf9509ea868b9a657d80"},
-    {file = "selectolax-0.2.13-cp37-cp37m-manylinux_2_5_i686.manylinux1_i686.manylinux_2_12_i686.manylinux2010_i686.whl", hash = "sha256:dc33909737e8b640c82c5da9f5a0228b72c267f3fb059ef9697728d10635005a"},
-    {file = "selectolax-0.2.13-cp37-cp37m-manylinux_2_5_x86_64.manylinux1_x86_64.manylinux_2_12_x86_64.manylinux2010_x86_64.whl", hash = "sha256:2cb08425c709d8eb749562f8606a96697c3dd6be7ef1ff1927756d007e8269f8"},
-    {file = "selectolax-0.2.13-cp37-cp37m-win32.whl", hash = "sha256:e9eac7a15a8195f39cb9609d29672db89013f3f5d8391cae77230d91804e865f"},
-    {file = "selectolax-0.2.13-cp37-cp37m-win_amd64.whl", hash = "sha256:723f79e9a9300f2bf2e2ea4886ae0fb5579beee7b6d1673dfaedc4ca7884c5ce"},
-    {file = "selectolax-0.2.13-cp38-cp38-macosx_10_9_universal2.whl", hash = "sha256:9abe78afc33e3cd63f79f0571b190841ad918bee462dc9bf5d4e8301ea59c5f3"},
-    {file = "selectolax-0.2.13-cp38-cp38-macosx_10_9_x86_64.whl", hash = "sha256:052c66cccbd908ab2eb1d72408c31b3f5a36da087414f0cb3c720630e056adef"},
-    {file = "selectolax-0.2.13-cp38-cp38-manylinux_2_5_i686.manylinux1_i686.manylinux_2_12_i686.manylinux2010_i686.whl", hash = "sha256:f442b6ac51ae9e08509e3df218a5e95df665dfadbbf6e87605096fd86e7742ab"},
-    {file = "selectolax-0.2.13-cp38-cp38-manylinux_2_5_x86_64.manylinux1_x86_64.manylinux_2_12_x86_64.manylinux2010_x86_64.whl", hash = "sha256:a562ed0e17425a2d6e388856a1832bd74c75f433979664d0ec4059b6aeea7eda"},
-    {file = "selectolax-0.2.13-cp38-cp38-win32.whl", hash = "sha256:4c7bfb92f11abdd8542464fcfce310df120b4a574feb3baafaf065c7153720cf"},
-    {file = "selectolax-0.2.13-cp38-cp38-win_amd64.whl", hash = "sha256:675db3ef8fa3569747425ab4fee41e03d71bc1e9e3c44b2369a5d38b0ece09e8"},
-    {file = "selectolax-0.2.13-cp39-cp39-macosx_10_9_universal2.whl", hash = "sha256:73904ae9a7ac73661b0f298967e75564c58de1648663e2628ec9d29cd6914efb"},
-    {file = "selectolax-0.2.13-cp39-cp39-macosx_10_9_x86_64.whl", hash = "sha256:014c03eb46b147b5fd7111885d17204b00b7903dd0b606d6332e0769f1e561c9"},
-    {file = "selectolax-0.2.13-cp39-cp39-manylinux_2_5_i686.manylinux1_i686.manylinux_2_12_i686.manylinux2010_i686.whl", hash = "sha256:7a2f724f7b65de1a0531a89cf64dd1a59539432cfa7899fe3fd5d470fdd7ae0f"},
-    {file = "selectolax-0.2.13-cp39-cp39-manylinux_2_5_x86_64.manylinux1_x86_64.manylinux_2_12_x86_64.manylinux2010_x86_64.whl", hash = "sha256:6abd47e389aa5f1d98a25587ea328fe0ace0bc98c2f051fca0234ae1aa250e02"},
-    {file = "selectolax-0.2.13-cp39-cp39-win32.whl", hash = "sha256:9ef3fac67f883ca03a8dbdf547fe3f024f8b8b5f44acbb05a962578400693e96"},
-    {file = "selectolax-0.2.13-cp39-cp39-win_amd64.whl", hash = "sha256:18e54ab7766898d5795e230e6e1acefb215636ebb22cf8dc0b0511e745b33f57"},
-    {file = "selectolax-0.2.13-pp37-pypy37_pp73-macosx_10_9_x86_64.whl", hash = "sha256:2806e7ca3d57618a61b9f617260f3cf2b856d9be3a22a442ec827bba5cb8ea90"},
-    {file = "selectolax-0.2.13-pp37-pypy37_pp73-manylinux_2_5_i686.manylinux1_i686.manylinux_2_12_i686.manylinux2010_i686.whl", hash = "sha256:a1ea2de3ac2170f3181fca3ebb07f2404f16567dc82571b9e8aaac365d208f8a"},
-    {file = "selectolax-0.2.13-pp37-pypy37_pp73-manylinux_2_5_x86_64.manylinux1_x86_64.manylinux_2_12_x86_64.manylinux2010_x86_64.whl", hash = "sha256:2aa598465f5dd333f447ec8552c7610a91b578c205672d4c4decbe7e245d574b"},
-    {file = "selectolax-0.2.13-pp37-pypy37_pp73-win_amd64.whl", hash = "sha256:c0e32401378e9b048c8d1b639dea5d16399287aedf5d292edaff6f7c7538b9e2"},
-    {file = "selectolax-0.2.13.tar.gz", hash = "sha256:8a182131bd3bf9aa3a4d4825f1c16a6f1290578159e04cdf5a39fb93cd73b194"},
+    {file = "selectolax-0.2.14-cp36-cp36m-macosx_10_9_x86_64.whl", hash = "sha256:a52e2a68651ee2b018ebfea24390c6b6a0ee60548ea7e899bf85403bc51265a2"},
+    {file = "selectolax-0.2.14-cp36-cp36m-manylinux_2_5_i686.manylinux1_i686.manylinux_2_12_i686.manylinux2010_i686.whl", hash = "sha256:1142a2cbdcf75de6052fdc5e7df09570541c53a707084c3ee16e24e18384a804"},
+    {file = "selectolax-0.2.14-cp36-cp36m-manylinux_2_5_x86_64.manylinux1_x86_64.manylinux_2_12_x86_64.manylinux2010_x86_64.whl", hash = "sha256:b1877d676ce059ac871f494bbc2aef0d1c1884579bc56b90ca8ef19951004ea3"},
+    {file = "selectolax-0.2.14-cp36-cp36m-win32.whl", hash = "sha256:c277d758dedbdf982d7c8853e96599cb48b16b52e5faa11f365a394903dbb9a8"},
+    {file = "selectolax-0.2.14-cp36-cp36m-win_amd64.whl", hash = "sha256:42cf8a3b856168754fa081e1a63ee543dcf79ca418e9b3ae30a23604285399fd"},
+    {file = "selectolax-0.2.14-cp37-cp37m-macosx_10_9_x86_64.whl", hash = "sha256:78dfcd83a930d22a1fe02ea31b16499a3f307f5b795f21bb01d27b0fa8cb5cd3"},
+    {file = "selectolax-0.2.14-cp37-cp37m-manylinux_2_5_i686.manylinux1_i686.manylinux_2_12_i686.manylinux2010_i686.whl", hash = "sha256:d0eaf96c53ca231e3bfa151f3fd037f28b0d4b35659563633d20e2e22e220a8e"},
+    {file = "selectolax-0.2.14-cp37-cp37m-manylinux_2_5_x86_64.manylinux1_x86_64.manylinux_2_12_x86_64.manylinux2010_x86_64.whl", hash = "sha256:5f5d9c7b035fd727f6ff5780e16cf643002fef93a7c2150a81372f670637c335"},
+    {file = "selectolax-0.2.14-cp37-cp37m-win32.whl", hash = "sha256:91e23b3d20bf9849c4e630de695210fb697b54baffadc1350048b3426abca3f6"},
+    {file = "selectolax-0.2.14-cp37-cp37m-win_amd64.whl", hash = "sha256:e2324b54c00cbe7a454015cb48cf8b85ac7e030915c5ea3bb1a2c9d56306742f"},
+    {file = "selectolax-0.2.14-cp38-cp38-macosx_10_9_universal2.whl", hash = "sha256:cd577696be63f80421b5c4504500a344e8209a175b71521b12cfb85f062ae9f2"},
+    {file = "selectolax-0.2.14-cp38-cp38-macosx_10_9_x86_64.whl", hash = "sha256:b583d1ab4312e3e3757759242daa4eeace231e34995b0a160fda9935a895425f"},
+    {file = "selectolax-0.2.14-cp38-cp38-manylinux_2_5_i686.manylinux1_i686.manylinux_2_12_i686.manylinux2010_i686.whl", hash = "sha256:95397408168535f54f717222e151910643a4fdff111584763660953afa18516c"},
+    {file = "selectolax-0.2.14-cp38-cp38-manylinux_2_5_x86_64.manylinux1_x86_64.manylinux_2_12_x86_64.manylinux2010_x86_64.whl", hash = "sha256:14ee822ea16492c9da6c62d3f6c8a8c76414ace4a9e177aad8b4ff3564301e3b"},
+    {file = "selectolax-0.2.14-cp38-cp38-win32.whl", hash = "sha256:2ba15b305fcc4c6ffc2f138c47c2122765277bbda5fc6b4639ea446d815ba411"},
+    {file = "selectolax-0.2.14-cp38-cp38-win_amd64.whl", hash = "sha256:c8cb20c1c353a8e68509e0f7d985f34dc232d55db3050cbeb3cb1c766ef1fbc0"},
+    {file = "selectolax-0.2.14-cp39-cp39-macosx_10_9_universal2.whl", hash = "sha256:08990e0a71766fac5cb69cd97ce8b41ad1324a7c42edde63cd401af0dad590e3"},
+    {file = "selectolax-0.2.14-cp39-cp39-macosx_10_9_x86_64.whl", hash = "sha256:42072396de88afade6d8a79555085fe5c49084f4d73ccccdeb364a43082fbf44"},
+    {file = "selectolax-0.2.14-cp39-cp39-manylinux_2_5_i686.manylinux1_i686.manylinux_2_12_i686.manylinux2010_i686.whl", hash = "sha256:aacf3cda7283f1ef1ba0edd2ac362251200e186ede0c3a0ecc31095fb6a4408f"},
+    {file = "selectolax-0.2.14-cp39-cp39-manylinux_2_5_x86_64.manylinux1_x86_64.manylinux_2_12_x86_64.manylinux2010_x86_64.whl", hash = "sha256:2c8e085361e47fe3efc5f62a14717a0532762004163cb1e106f8410175a9709a"},
+    {file = "selectolax-0.2.14-cp39-cp39-win32.whl", hash = "sha256:eb4715ca933d7f4dbdc85bf5d9cd23ed65b63021d496dc53f960b417d0790d30"},
+    {file = "selectolax-0.2.14-cp39-cp39-win_amd64.whl", hash = "sha256:4dde8d0ad6fd3289a284e0bd5eedb0544cdf9d42fa158cdfec08c1726473165f"},
+    {file = "selectolax-0.2.14-pp37-pypy37_pp73-macosx_10_9_x86_64.whl", hash = "sha256:5acdd7cc417685668b7d07e4c840b58158f074ec627c7c8cb5ea1ea753c4bceb"},
+    {file = "selectolax-0.2.14-pp37-pypy37_pp73-manylinux_2_5_i686.manylinux1_i686.manylinux_2_12_i686.manylinux2010_i686.whl", hash = "sha256:cd9695b6bd8ad984c45cce9779f618704ba2064471b6af318acc6f01a7c8006d"},
+    {file = "selectolax-0.2.14-pp37-pypy37_pp73-manylinux_2_5_x86_64.manylinux1_x86_64.manylinux_2_12_x86_64.manylinux2010_x86_64.whl", hash = "sha256:38065013165ba13ecc001d4fd5b05985ee6bc9e02ddf1ec0cd61451498254c03"},
+    {file = "selectolax-0.2.14-pp37-pypy37_pp73-win_amd64.whl", hash = "sha256:ec6f46b370ac3753d9ee4299a2b032e33a5a6ab44761afeac4612f55fddf5c3d"},
+    {file = "selectolax-0.2.14.tar.gz", hash = "sha256:a32d9966414db6ee0e480f1686a88a79c57ed9da6305345334e27a301ebb6dcd"},
 ]
 six = [
     {file = "six-1.15.0-py2.py3-none-any.whl", hash = "sha256:8b74bedcbbbaca38ff6d7491d76f2b06b3592611af620f8426e82dddb04a5ced"},

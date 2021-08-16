@@ -1,11 +1,18 @@
 import React from "react";
-import { useParams } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
 
 import { Byline } from "./byline";
 
 export function PlanningForBrowserSupport() {
+  const { hash } = useLocation();
   const { locale } = useParams();
   const [showFullArticle, setShowFullArticle] = React.useState(false);
+
+  React.useEffect(() => {
+    if (hash) {
+      setShowFullArticle(true);
+    }
+  }, [hash]);
 
   return (
     <article className="deep-dive-article-container">
@@ -62,7 +69,7 @@ export function PlanningForBrowserSupport() {
             setShowFullArticle(true);
           }}
         >
-          show more
+          see more
         </button>
       </p>
       {showFullArticle && (
@@ -82,14 +89,18 @@ export function PlanningForBrowserSupport() {
             way you can ensure that everyone can get a great experience on your
             site.
           </p>
-          <h3>Types of compatibility problems</h3>
+          <h3 id="types-of-compatibility-problems">
+            Types of compatibility problems
+          </h3>
           <p>
             There are three distinct groups of compatibility issues you are
             likely to encounter in your work. It’s worth identifying which ones
             you are facing early on in the planning process, as the approaches
             for dealing with them can differ somewhat.
           </p>
-          <h4>Browsers that are locked in the past</h4>
+          <h4 id="browsers-that-are-locked-in-the-past">
+            Browsers that are locked in the past
+          </h4>
           <p>
             In the past, browsers were released on a cycle that meant new
             versions appeared very slowly. If you consider that version 1 of
@@ -123,7 +134,9 @@ export function PlanningForBrowserSupport() {
             creates a fallback for Internet Explorer, which it can use when
             presented with code it does not understand.
           </p>
-          <h4>Browsers that support a feature but have bugs</h4>
+          <h4 id="browsers-that-support-a-feature-but-have-bugs">
+            Browsers that support a feature but have bugs
+          </h4>
           <p>
             CSS is defined by the CSS specifications (specs); you’ll find a link
             to the spec for any feature at the bottom of its MDN page. These
@@ -150,7 +163,7 @@ export function PlanningForBrowserSupport() {
             a strategy for working round it, and report the issue to a browser
             vendor to get it fixed!
           </p>
-          <h4>
+          <h4 id="browsers-which-dont-support-a-feature-yet">
             Browsers which don’t support a feature <em>yet</em>
           </h4>
           <p>
@@ -165,7 +178,9 @@ export function PlanningForBrowserSupport() {
             the ability to use these new features before there is widespread
             support.
           </p>
-          <h3>What does “supporting a browser” mean to you?</h3>
+          <h3 id="what-does-supporting-a-browser-mean">
+            What does “supporting a browser” mean to you?
+          </h3>
           <p>
             When having discussions with a client, your boss, or your team,
             about browser support, it’s vital that you are all talking about the
@@ -228,7 +243,9 @@ export function PlanningForBrowserSupport() {
               strategies can be seen as an evolution of this idea.
             </p>
           </div>
-          <h3>Creating a browser support strategy for your project</h3>
+          <h3 id="creating-a-browser-support-strategy">
+            Creating a browser support strategy for your project
+          </h3>
           <p>
             Along with performance and accessibility, considering browser
             support from the beginning of your project will make the process far
@@ -264,7 +281,9 @@ export function PlanningForBrowserSupport() {
             you argue your case when faced with team members who want things to
             “look the same” in all browsers, consider the following points.
           </p>
-          <h4>What do you know about your users?</h4>
+          <h4 id="what-do-you-know-about-your-users">
+            What do you know about your users?
+          </h4>
           <p>
             If you are redesigning or adding to an existing site, you may
             already have a good amount of information about the browsers and
@@ -309,7 +328,9 @@ export function PlanningForBrowserSupport() {
               browser that will get a gracefully degraded experience
             </figcaption>
           </figure>
-          <h4>Where is it best to spend your time and money?</h4>
+          <h4 id="where-is-it-best-to-spend-time-and-money">
+            Where is it best to spend your time and money?
+          </h4>
           <p>
             The fact is that, even if you don’t want to use all the new bells
             and whistles in CSS, basing your design on new features such as
@@ -370,7 +391,9 @@ export function PlanningForBrowserSupport() {
               for example, is likely to rank poorly in some of these metrics.
             </p>
           </div>
-          <h4>Core design elements vs. enhancements</h4>
+          <h4 id="core-design-elements-vs-enhancements">
+            Core design elements vs. enhancements
+          </h4>
           <p>
             As you build your site you will be testing your support policy
             against big things, such as using CSS grid for your layout, and
@@ -403,7 +426,7 @@ export function PlanningForBrowserSupport() {
               feature, users will get the full effect.
             </p>
           </div>
-          <h4>Show, don’t tell</h4>
+          <h4 id="show-dont-tell">Show, don’t tell</h4>
           <p>
             Even after talking things through and creating what you believe is a
             solid policy for browser support, there is always the chance that
@@ -421,7 +444,9 @@ export function PlanningForBrowserSupport() {
             simpler layout as you do with the modern layout will help calm any
             concerns.
           </p>
-          <h3>Keep your strategy up-to-date</h3>
+          <h3 id="keep-your-strategy-up-to-date">
+            Keep your strategy up-to-date
+          </h3>
           <p>
             Unless your site is a one-off, handed over to a client and never
             seen again, it is likely that you will be adding new features to the
@@ -445,8 +470,15 @@ export function PlanningForBrowserSupport() {
 }
 
 export function YourBrowserSupportToolkit() {
+  const { hash } = useLocation();
   const { locale } = useParams();
   const [showFullArticle, setShowFullArticle] = React.useState(false);
+
+  React.useEffect(() => {
+    if (hash) {
+      setShowFullArticle(true);
+    }
+  }, [hash]);
 
   return (
     <article className="deep-dive-article-container">
@@ -489,7 +521,9 @@ export function YourBrowserSupportToolkit() {
         this article you can find out the tools that are available to help with
         this.
       </p>
-      <h3>Resources for browser support information</h3>
+      <h3 id="resources-for-browser-support-information">
+        Resources for browser support information
+      </h3>
       <p>
         Being able to understand how well a feature is supported by browsers can
         help you decide which methods to use when building your site.
@@ -504,7 +538,7 @@ export function YourBrowserSupportToolkit() {
             setShowFullArticle(true);
           }}
         >
-          show more
+          see more
         </button>
       </p>
       {showFullArticle && (
@@ -566,7 +600,7 @@ export function YourBrowserSupportToolkit() {
             quick look at that property on MDN can quickly tell you if the
             problem is lack of support rather than anything you are doing wrong!
           </p>
-          <h4>Looking up browser bugs</h4>
+          <h4 id="looking-up-browser-bugs">Looking up browser bugs</h4>
           <p>
             MDN lists some major known bugs as part of BCD, however if you think
             you are seeing buggy behavior not listed on MDN then there are some
@@ -619,7 +653,9 @@ export function YourBrowserSupportToolkit() {
             to go about identifying exactly what is causing the problem, to help
             make this easier.
           </p>
-          <h4>Learning about features that are coming soon</h4>
+          <h4 id="learning-about-features-that-are-coming-soon">
+            Learning about features that are coming soon
+          </h4>
           <p>
             A large website project might take several months to complete, in
             which time a large number of CSS features could have become
@@ -657,7 +693,9 @@ export function YourBrowserSupportToolkit() {
             terms of your browser support strategy at the time of coding, but is
             likely to by launch.
           </p>
-          <h3>Web platform features and fallbacks</h3>
+          <h3 id="web-platform-features-and-fallbacks">
+            Web platform features and fallbacks
+          </h3>
           <p>
             If you have discovered that a feature isn’t supported in a browser,
             but still intend to use it, you might need to create a fallback for
@@ -673,7 +711,7 @@ export function YourBrowserSupportToolkit() {
             Later on we'll also look at how vendor prefixes can be a useful tool
             as long as they are used carefully.
           </p>
-          <h4>Using the cascade</h4>
+          <h4 id="using-the-cascade">Using the cascade</h4>
           <p>
             The first thing to look at is how the cascade works with properties
             and values that are not understood by a browser. We can create
@@ -737,7 +775,7 @@ export function YourBrowserSupportToolkit() {
               ></iframe>
             </div>
           </div>
-          <h4>Feature Queries</h4>
+          <h4 id="feature-queries">Feature Queries</h4>
           <p>
             For very simple fallbacks, the overriding method shown previously
             may work. It can however require that you order the declarations and
@@ -838,7 +876,7 @@ export function YourBrowserSupportToolkit() {
               does or does not have support.
             </p>
           </div>
-          <h4>Vendor prefixes</h4>
+          <h4 id="vendor-prefixes">Vendor prefixes</h4>
           <p>
             The browser compat tables on MDN will also tell you if the property
             or value you want to use needs to be <em>prefixed</em>. Vendor
@@ -901,7 +939,7 @@ export function YourBrowserSupportToolkit() {
             want &mdash; all browsers using the standard version wherever
             possible.
           </p>
-          <h3>Third party tools</h3>
+          <h3 id="third-party-tools">Third party tools</h3>
           <p>
             If you can create fallbacks and support browsers using the
             techniques outlined above, this is likely to be the most robust way
@@ -911,7 +949,7 @@ export function YourBrowserSupportToolkit() {
             by the community. Here we'll look specifically at the PostCSS tool,
             and more generally at the concept of Polyfills.
           </p>
-          <h4>PostCSS</h4>
+          <h4 id="postcss">PostCSS</h4>
           <p>
             <a href="https://postcss.org/">PostCSS</a> is a JavaScript utility
             that you run on your CSS files to perform various tasks. We’ll be
@@ -960,7 +998,7 @@ export function YourBrowserSupportToolkit() {
             extra element of risk, although these tools can be great timesavers
             when used carefully.
           </p>
-          <h4>Polyfills</h4>
+          <h4 id="polyfills">Polyfills</h4>
           <p>
             A polyfill is a piece of code that implements a feature in a browser
             that does not natively support it. This will usually be in the form
@@ -1003,7 +1041,7 @@ export function YourBrowserSupportToolkit() {
             browser could quickly have a polyfill making it work in others,
             prior to them implementing their own support.
           </p>
-          <h3>Testing</h3>
+          <h3 id="testing">Testing</h3>
           <p>
             Testing in various browsers and devices should be part of your
             development workflow. Don’t leave it right until the end &mdash;
