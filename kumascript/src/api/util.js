@@ -4,7 +4,6 @@
  *
  * @prettier
  */
-const cssesc = require("cssesc");
 const sanitizeFilename = require("sanitize-filename");
 const cheerio = require("cheerio");
 
