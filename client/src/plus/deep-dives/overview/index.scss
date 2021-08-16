@@ -22,8 +22,13 @@
   max-width: 600px;
 
   &::before {
-    background: transparent url("./assets/deep-dive-hero.svg") center center
-      no-repeat;
+    background: linear-gradient(
+        0deg,
+        #fff 13%,
+        rgba(255, 255, 255, 0.41) 25.05%,
+        rgba(255, 255, 255, 0) 29.17%
+      ),
+      transparent url("./assets/deep-dive-hero.svg") center center no-repeat;
     background-size: cover;
     content: "";
     display: block;
@@ -80,22 +85,31 @@
   }
 
   .author {
+    font-size: 14px;
     font-weight: bold;
-    line-height: 150%;
+    line-height: 175%;
   }
 }
 
 .overview-content-container {
   padding: 0 layout.$base-spacing math.div(layout.$base-spacing, 2);
 
+  h2,
+  h3,
+  button.ghost {
+    font-family: theme.$inter-font-family;
+  }
+
   h2 {
     font-size: 14px;
+    font-weight: normal;
+    letter-spacing: 1.5px;
+    line-height: 20px;
     margin-bottom: 16px;
     text-transform: uppercase;
   }
 
   h3 {
-    font-family: theme.$inter-font-family;
     font-size: 18px;
     margin: 16px 0;
 
@@ -105,13 +119,13 @@
   }
 
   p {
-    font-size: 18px;
-    line-height: 150%;
+    font-size: 16px;
+    line-height: 175%;
   }
 
   button.ghost {
     color: theme.$mdn-neutral900;
-    font-size: 16px;
+    font-size: 14px;
     font-weight: bold;
     margin: 8px 0;
     padding: 0;
@@ -222,12 +236,13 @@
   h4,
   li {
     border-left: 5px solid theme.$mdn-green400;
+    font-family: theme.$inter-font-family;
+    font-size: 14px;
     margin: 0;
     padding: 8px;
   }
 
   h4 {
-    font-size: 14px;
     margin-top: 24px;
   }
 
