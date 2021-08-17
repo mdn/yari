@@ -53,4 +53,6 @@ jobs:
         env:
           CONTENT_ROOT: mdn/content/files
         run: |
+          echo $CONTENT_ROOT
+          ls -l $CONTENT_ROOT
           yarn test:kumascript
