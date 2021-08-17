@@ -18,29 +18,30 @@ jobs:
         with:
           python-version: "3.8"
 
-      - name: Install Python poetry
-        uses: snok/install-poetry@v1.1.6
-        with:
-          virtualenvs-create: true
-          virtualenvs-in-project: true
-
       - name: Load cached venv
         id: cached-poetry-dependencies
         uses: actions/cache@v2.1.6
         with:
           path: deployer/.venv
-          key: venv-${{ runner.os }}-${{ hashFiles('**/poetry.lock') }}
+          key: venv-${{ runner.os }}-${{ hashFiles('**/poetry.lock') }}-${{ hashFiles('.github/workflows/pr-deployer.yml') }}
+
+      - name: Load cached .local
+        uses: actions/cache@v2.1.6
+        with:
+          path: ~/.local
+          key: dotlocal-${{ runner.os }}-${{ hashFiles('.github/workflows/pr-deployer.yml') }}
+
+      - name: Install Python poetry
+        uses: snok/install-poetry@v1.1.8
+        with:
+          virtualenvs-create: true
+          virtualenvs-in-project: true
 
       - name: Install deployer
         run: |
           cd deployer
           poetry install
         if: steps.cached-poetry-dependencies.outputs.cache-hit != 'true'
-
-      - name: Display Python & Poetry version
-        run: |
-          python --version
-          poetry --version
 
       - name: Lint Python code
         run: |

@@ -15,10 +15,6 @@ export const CRUD_MODE_HOSTNAMES = (
   .map((x) => x.trim())
   .filter(Boolean);
 
-export const AUTOCOMPLETE_SEARCH_WIDGET = JSON.parse(
-  process.env.REACT_APP_AUTOCOMPLETE_SEARCH_WIDGET || JSON.stringify(CRUD_MODE)
-);
-
 // Remember to keep this in sync with the list inside the Node code.
 // E.g. libs/constants.js
 // Hardcoding the list in both places is most convenient and most performant.

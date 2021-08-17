@@ -8,15 +8,21 @@ export interface SerieData {
 
 export function SeriesCard({
   title,
+  titleLink,
   seriesList,
+  linkToSurvey,
 }: {
   title: string;
+  titleLink: string;
   seriesList: SerieData[];
+  linkToSurvey: boolean;
 }) {
   return (
     <section className="series-card" aria-labelledby="series-card-title">
       <p className="card-type">In this series</p>
-      <h3 id="series-card-title">{title}</h3>
+      <h3 id="series-card-title">
+        <a href={titleLink}>{title}</a>
+      </h3>
       <ul>
         {seriesList.map((item) => {
           return (
@@ -30,6 +36,13 @@ export function SeriesCard({
           );
         })}
       </ul>
+      {linkToSurvey && (
+        <p className="take-survey">
+          <a href="#survey-form" className="take-survey-link">
+            Take our 1 minute survey
+          </a>
+        </p>
+      )}
     </section>
   );
 }

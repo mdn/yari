@@ -23,6 +23,10 @@ app.use((req, res, next) => {
   return next();
 });
 
+app.get("/", async (req, res) => {
+  res.redirect(302, "/en-US/");
+});
+
 app.use(staticMiddlewares);
 
 app.use(cookieParser());
@@ -106,7 +110,7 @@ app.get("/api/v1/whoami", async (req, res) => {
 const mockSettingsDatabase = new Map();
 
 app.get("/api/v1/settings", async (req, res) => {
-  const defaultContext = { locale: "en-US" };
+  const defaultContext = { locale: "en-US", csrfmiddlewaretoken: "xyz123" };
   if (!req.cookies.sessionid) {
     res.status(403).send("oh no you don't");
   } else {
@@ -135,7 +139,7 @@ app.post("/api/v1/settings", async (req, res) => {
   }
 });
 
-app.get("/users/github/login/", async (req, res) => {
+app.get("/users/fxa/login/authenticate/", async (req, res) => {
   const userId = `${Math.ceil(10000 * Math.random())}`;
   res.cookie("sessionid", userId, {
     maxAge: 60 * 1000,
@@ -148,35 +152,14 @@ app.get("/users/github/login/", async (req, res) => {
   res.redirect(req.query.next);
 });
 
-app.get("/users/google/login/", async (req, res) => {
-  const userDetails = {
-    name: "Peter",
-  };
-  const sp = new URLSearchParams();
-  sp.set("next", req.query.next || "/en-US/");
-  sp.set("user_details", JSON.stringify(userDetails));
-  sp.set("csrfmiddlewaretoken", `${Math.random()}`);
-  sp.set("provider", "google");
-
-  res.redirect(`/en-US/signup?${sp.toString()}`);
-});
-
-app.post("/:locale/users/account/signup", async (req, res) => {
-  const userId = `${Math.ceil(10000 * Math.random())}`;
-  res.cookie("sessionid", userId, {
-    maxAge: 60 * 1000,
-  });
-  mockWhoamiDatabase.set(userId, {
-    username: `Googler-username-${userId}`,
-    is_authenticated: true,
-    email: `${userId}@gmail.com`,
-  });
-  res.redirect(req.query.next || `/${req.params.locale}/`);
-});
-
-app.post("/:locale/users/signout", async (req, res) => {
-  res.clearCookie("sessionid");
-  res.redirect(`/${req.params.locale}/`);
+app.post("/users/fxa/login/logout/", async (req, res) => {
+  if (!req.cookies.sessionid) {
+    res.status(403).send("oh no you don't");
+  } else {
+    res.clearCookie("sessionid");
+    mockWhoamiDatabase.delete(req.cookies.sessionid);
+    res.redirect(`/en-US/`);
+  }
 });
 
 // To mimic what CloudFront does.

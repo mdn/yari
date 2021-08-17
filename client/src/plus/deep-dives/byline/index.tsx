@@ -3,11 +3,18 @@ import "./index.scss";
 export function Byline({
   avatar,
   author,
-  authorDescription,
+  authorBioURL,
+  publishDate,
+  readTime,
 }: {
   avatar: string;
   author: string;
-  authorDescription: string;
+  authorBioURL: {
+    url: string;
+    text: string;
+  };
+  publishDate: string;
+  readTime: string;
 }) {
   return (
     <div className="byline">
@@ -20,8 +27,15 @@ export function Byline({
         />
       </div>
       <div className="author-byline">
-        <h3 className="author-name">{author}</h3>
-        <p className="author-description">{authorDescription}</p>
+        <h3 className="author-name">
+          <a href={authorBioURL.url} rel="external">
+            {authorBioURL.text}
+          </a>
+        </h3>
+        <ul className="article-meta">
+          <li>{publishDate}</li>
+          <li>{readTime}</li>
+        </ul>
       </div>
     </div>
   );

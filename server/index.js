@@ -85,7 +85,7 @@ const proxy = FAKE_V1_API
 
 app.use("/api/v1", proxy);
 // This is an exception and it's only ever relevant in development.
-app.post("/:locale/users/account/signup", proxy);
+app.use("/users/*", proxy);
 
 // It's important that this line comes *after* the setting up for the proxy
 // middleware for `/api/v1` above.

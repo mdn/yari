@@ -44,9 +44,10 @@ ul.language-toggle {
         no-repeat;
       content: "";
       display: inline-block;
-      height: 29px;
+      height: 25px;
+      margin-right: math.div($base-spacing, 4);
       vertical-align: middle;
-      width: 28px;
+      width: 24px;
     }
 
     &::after {

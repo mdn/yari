@@ -5,25 +5,32 @@
 @use "../../../ui/theme/index" as theme;
 
 .survey-wrapper {
-  background-color: theme.$mdn-neutral050;
+  background-color: #f9f9fb;
   padding: (layout.$base-spacing * 2) layout.$base-spacing;
 
   legend {
     color: theme.$mdn-violet700;
-    font-size: typography.$medium-font-size;
+    font-family: theme.$metropolis-font-family;
+    font-size: 24px;
     font-weight: bold;
-    line-height: typography.$heading-line-height;
+    letter-spacing: 0;
+    line-height: 24px;
   }
 
   h3,
-  .custom-label {
-    font-size: typography.$small-medium-font-size;
+  .custom-label,
+  h4 {
+    font-family: theme.$inter-font-family;
+    font-size: 18px;
+    letter-spacing: 0;
+    line-height: 27px;
     margin: layout.$base-spacing 0;
   }
 
   h4 {
     font-size: typography.$default-font-size;
     margin-bottom: layout.$base-spacing;
+    margin-top: 0;
   }
 
   .form-radio-input-group {
@@ -50,12 +57,7 @@
 
   [type="text"] {
     margin: layout.$base-spacing 0;
-    max-width: 90%;
     width: 100%;
-
-    @media #{layout.$mq-small-desktop-and-up} {
-      max-width: 70%;
-    }
   }
 
   [type="radio"],
@@ -66,15 +68,28 @@
   [type="radio"] {
     @media #{layout.$mq-tablet-and-up} {
       display: block;
+      margin: 0 auto;
     }
   }
 
   textarea {
     margin-bottom: layout.$base-spacing;
+    width: 100%;
   }
 
   .survey-success {
+    align-items: center;
+    display: flex;
     font-size: typography.$xl-font-size;
+    justify-content: center;
+    line-height: 150%;
+    min-height: 250px;
     text-align: center;
+  }
+
+  .button-container {
+    display: flex;
+    gap: 36px;
+    justify-content: flex-end;
   }
 }

@@ -5,7 +5,7 @@
 @use "../../ui/theme/index" as theme;
 
 .page-content-container.deep-dives {
-  background-color: theme.$mdn-neutral050;
+  background-color: #f9f9fb;
   display: block;
   max-width: inherit;
   padding: 0;
@@ -13,16 +13,40 @@
 
 .deep-dive-article-container {
   @include theme.readable-line-length();
+  font-family: theme.$inter-font-family;
+  font-size: 18px;
+  line-height: 200%;
   margin-bottom: layout.$base-spacing * 3;
-  padding: (layout.$base-spacing * 2) layout.$base-spacing;
+  padding: layout.$base-spacing layout.$base-spacing (layout.$base-spacing * 2);
+  text-align: justify;
 
-  @media #{layout.$mq-small-desktop-and-up} {
-    padding: (layout.$base-spacing * 2) 0;
+  code {
+    background-color: rgba(224, 224, 230, 0.5);
+  }
+
+  img {
+    width: 100%;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    text-align: left;
+  }
+
+  h2,
+  h3,
+  h4 {
+    font-family: theme.$inter-font-family;
   }
 
   .main-heading-group {
     h1 {
-      font-size: typography.$xl-font-size;
+      font-size: 36px;
+      letter-spacing: -0.5px;
+      line-height: 58px;
+      text-align: left;
     }
 
     h2 {
@@ -33,23 +57,79 @@
     }
   }
 
+  h3,
+  h4 {
+    letter-spacing: 0.5px;
+  }
+
+  h3 {
+    border-left: 5px solid theme.$mdn-green400;
+    font-size: 24px;
+    line-height: 36px;
+    margin-bottom: 24px;
+    padding-left: 16px;
+  }
+
+  h4 {
+    font-size: 18px;
+    line-height: 44px;
+  }
+
+  figcaption {
+    color: theme.$mdn-neutral700;
+    font-size: 14px;
+    line-height: 32px;
+  }
+
+  button.ghost {
+    color: theme.$mdn-neutral900;
+    font-size: 18px;
+    font-weight: bold;
+    padding: 0;
+    text-decoration: none;
+  }
+
   .article-lead {
     color: theme.$mdn-neutral700;
-    font-size: typography.$small-medium-font-size;
+    font-size: 18px;
+    line-height: 150%;
   }
 
   .article-sidebar {
-    border: theme.$standard-light-border;
+    border: 1px solid rgba(32, 17, 57, 0.1);
     border-radius: theme.$default-border-radius;
+    font-size: 14px;
     font-style: italic;
+    line-height: 24px;
     padding: math.div(layout.$base-spacing, 2);
 
-    @media #{layout.$mq-small-desktop-and-up} {
+    @media #{layout.$mq-tablet-and-up} {
       padding: layout.$base-spacing;
     }
 
     p:last-child {
       margin-bottom: 0;
+    }
+  }
+}
+
+.intro-banner {
+  background-color: theme.$mdn-violet900;
+  border-radius: 4px;
+  color: theme.$white;
+  font-family: theme.$inter-font-family;
+  margin: 24px 24px 0;
+  padding: 18px;
+
+  @media #{layout.$mq-small-desktop-and-up} {
+    margin: 24px;
+  }
+
+  a {
+    &:link,
+    &:visited {
+      color: theme.$white;
+      font-weight: bold;
     }
   }
 }
@@ -62,7 +142,11 @@
 
   a {
     display: block;
-    padding: layout.$base-spacing;
+    padding: 32px layout.$base-spacing;
+
+    @media #{layout.$mq-small-desktop-and-up} {
+      width: 50%;
+    }
 
     &:link,
     &:visited {
@@ -76,8 +160,17 @@
     }
   }
 
+  .girdle {
+    margin-bottom: 0;
+  }
+
   &.previous {
     text-align: right;
+
+    .girdle {
+      display: flex;
+      justify-content: flex-end;
+    }
   }
 
   .next-article,
@@ -123,7 +216,7 @@
     display: flex;
     gap: layout.$base-spacing;
     justify-content: space-between;
-    padding: 0 layout.$base-spacing;
+    padding: 0;
 
     .deep-dive-article-container {
       flex: 0 1 65%;
@@ -132,10 +225,6 @@
     .series-card {
       flex: 0 1 35%;
       margin-top: layout.$base-spacing * 2;
-
-      @media #{layout.$mq-large-desktop-and-up} {
-        margin-right: layout.$base-spacing * 3;
-      }
     }
   }
 
@@ -144,6 +233,39 @@
 
     @media #{layout.$mq-small-desktop-and-up} {
       display: block;
+      padding-right: layout.$base-spacing;
+    }
+  }
+}
+
+.take-survey-mobile {
+  bottom: 0;
+  position: fixed;
+  width: 100%;
+  z-index: 99999;
+
+  @media #{layout.$mq-small-desktop-and-up} {
+    display: none;
+  }
+
+  a.take-survey-link {
+    &:link,
+    &:visited {
+      background: linear-gradient(to right, #8565ff, #6581ff);
+      color: theme.$white;
+      display: block;
+      font-size: 18px;
+      font-weight: bold;
+      margin-top: layout.$base-spacing;
+      min-height: 40px;
+      padding: 20px;
+      text-align: center;
+    }
+
+    &:hover,
+    &:focus {
+      background: theme.$mdn-violet700;
+      text-decoration: none;
     }
   }
 }
