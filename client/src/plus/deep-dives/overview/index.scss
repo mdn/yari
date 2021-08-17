@@ -68,7 +68,7 @@
   .header-content {
     margin-top: -36px;
     position: relative;
-    z-index: layout.$top-layer;
+    z-index: 100;
 
     @media #{layout.$mq-small-desktop-and-up} {
       margin-top: -24px;
