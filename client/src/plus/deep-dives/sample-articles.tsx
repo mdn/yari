@@ -64,12 +64,12 @@ export function PlanningForBrowserSupport() {
         older, less capable browsers
         <button
           type="button"
-          className={`ghost ${showFullArticle ? "hidden" : undefined}`}
+          className={`ghost ${showFullArticle ? "hidden" : ""}`}
           onClick={() => {
             setShowFullArticle(true);
           }}
         >
-          &hellip; see more
+          <span>&hellip;</span> see more
         </button>
       </p>
       {showFullArticle && (
@@ -533,12 +533,12 @@ export function YourBrowserSupportToolkit() {
         CSS Grid?”, the Can I Use website is helpful
         <button
           type="button"
-          className={`ghost ${showFullArticle ? "hidden" : undefined}`}
+          className={`ghost ${showFullArticle ? "hidden" : ""}`}
           onClick={() => {
             setShowFullArticle(true);
           }}
         >
-          &hellip; see more
+          <span>&hellip;</span> see more
         </button>
       </p>
       {showFullArticle && (
