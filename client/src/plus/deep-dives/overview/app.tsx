@@ -10,10 +10,6 @@ export default function App() {
   const [showYBSTContents, setShowYBSTContents] = React.useState(false);
   const [showFullArticle, setShowFullArticle] = React.useState(false);
 
-  console.log(searchParams.toString());
-
-  const campaign = searchParams.get("utm-campaign");
-
   return (
     <div className="deep-dives-overview">
       <header className="overview-hero">
