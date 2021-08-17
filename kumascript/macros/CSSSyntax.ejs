@@ -430,7 +430,8 @@ if (name === "preview-wiki-content") {
 }
 
 if (!formattedSyntax) {
-    throw new Error(`No syntax found in DB for '${name}'`);
+  formattedSyntax = "<span style=\"color:red;\">" +
+    `No syntax found in DB for '${name}'` + "</span>";
 }
 
 const rtlLocales = ['ar', 'he', 'fa'];
