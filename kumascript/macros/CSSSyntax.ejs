@@ -429,12 +429,14 @@ if (name === "preview-wiki-content") {
     formattedSyntax += await formatTypesSyntax(formattedSyntax, []);
 }
 
+let out = '';
+
 if (!formattedSyntax) {
-  out = "<div class=\"notecard warning\"><h4>No syntax available</h4><p>No value found in the database.</p></div>";
+    out = "<div class=\"notecard warning\"><h4>No syntax available</h4><p>No value found in the database.</p></div>";
 } else {
     const rtlLocales = ['ar', 'he', 'fa'];
     const rtl = rtlLocales.includes(env.locale);
-    const out = `<pre${rtl ? ' dir="rtl"' : ""}>${formattedSyntax}</pre>`
+    out = `<pre${rtl ? ' dir="rtl"' : ""}>${formattedSyntax}</pre>`
 }
 
 %><%- out %>
