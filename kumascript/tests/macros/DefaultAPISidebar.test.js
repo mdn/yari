@@ -28,12 +28,16 @@ const commonl10nFixturePath = path.resolve(
   __dirname,
   "fixtures/defaultapisidebar/commonl10n.json"
 );
-const commonl10nFixture = fs.readFileSync(commonl10nFixturePath, "utf8");
+const commonl10nFixture = JSON.parse(
+  fs.readFileSync(commonl10nFixturePath, "utf8")
+);
 const groupDataFixturePath = path.resolve(
   __dirname,
   "fixtures/defaultapisidebar/groupdata.json"
 );
-const groupDataFixture = fs.readFileSync(groupDataFixturePath, "utf8");
+const groupDataFixture = JSON.parse(
+  fs.readFileSync(groupDataFixturePath, "utf8")
+);
 
 /**
  * All the const objects that follow define bits of the data we expect.
@@ -301,16 +305,15 @@ describeMacro("DefaultAPISidebar", function () {
   beforeEachMacro(function (macro) {
     // env.slug only has to be truthy
     macro.ctx.env.slug = "not undefined";
-    // Mock calls to L10n-Common and GroupData
-    const originalTemplate = macro.ctx.template;
-    macro.ctx.template = jest.fn(async (name, ...args) => {
-      if (name === "L10n:Common") {
-        return commonl10nFixture;
-      }
+    // Mock calls to getJSONData()
+    macro.ctx.web.getJSONData = jest.fn((name) => {
       if (name === "GroupData") {
         return groupDataFixture;
       }
-      return await originalTemplate(name, ...args);
+      if (name === "L10n-Common") {
+        return commonl10nFixture;
+      }
+      throw new Error(`Unimplmeneted mock fixture ${name}`);
     });
     // Mock calls to wiki.getPage()
     macro.ctx.wiki.getPage = jest.fn(async (url) => {

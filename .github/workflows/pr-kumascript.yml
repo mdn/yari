@@ -23,6 +23,11 @@ jobs:
     steps:
       - uses: actions/checkout@v2.3.4
 
+      - uses: actions/checkout@v2.3.4
+        with:
+          repository: mdn/content
+          path: mdn/content
+
       - name: Setup Node.js environment
         uses: actions/setup-node@v2.4.0
         with:
@@ -43,6 +48,6 @@ jobs:
 
       - name: Unit testing kumascript
         env:
-          CONTENT_ROOT: testing/content/files
+          CONTENT_ROOT: mdn/content/files
         run: |
           yarn test:kumascript

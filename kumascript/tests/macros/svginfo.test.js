@@ -1,126 +1,23 @@
 /**
  * @prettier
  */
+const path = require("path");
 
 const { assert, itMacro, describeMacro, beforeEachMacro } = require("./utils");
 
+const CONTENT_ROOT = process.env.CONTENT_ROOT;
+if (!CONTENT_ROOT) {
+  throw new Error("These tests assume you point to the real content root.");
+}
 // Basic const
-// const L10N_SVG = require("../../macros/L10n-SVG.json");
-// const L10N_COMMON = require("../../macros/L10n-Common.json");
+const SVG_DATA = require(path.join(CONTENT_ROOT, "jsondata", "SVGData.json"));
+const L10N_SVG = require(path.join(CONTENT_ROOT, "jsondata", "L10n-SVG.json"));
 
-const SVG_DATA = {
-  elements: {
-    defs: {
-      categories: ["containerElement", "structuralElement"],
-      content: {
-        description: "anyNumberOfElementsAnyOrder",
-        elements: [
-          "animationElements",
-          "descriptiveElements",
-          "shapeElements",
-          "structuralElements",
-          "gradientElements",
-          "&lt;a&gt;",
-          "&lt;altGlyphDef&gt;",
-          "&lt;clipPath&gt;",
-          "&lt;color-profile&gt;",
-          "&lt;cursor&gt;",
-          "&lt;filter&gt;",
-          "&lt;font&gt;",
-          "&lt;font-face&gt;",
-          "&lt;foreignObject&gt;",
-          "&lt;image&gt;",
-          "&lt;marker&gt;",
-          "&lt;mask&gt;",
-          "&lt;pattern&gt;",
-          "&lt;script&gt;",
-          "&lt;style&gt;",
-          "&lt;switch&gt;",
-          "&lt;text&gt;",
-          "&lt;view&gt;",
-        ],
-      },
-      attributes: [
-        "conditionalProccessingAttributes",
-        "coreAttributes",
-        "graphicalEventAttributes",
-        "presentationAttributes",
-        "'class'",
-        "'style'",
-        "'externalResourcesRequired'",
-        "'transform'",
-      ],
-      interfaces: ["SVGDefsElement"],
-    },
-    altGlyphDef: {
-      categories: ["textContentElement"],
-      content: {
-        description: {
-          "en-US":
-            'Either:<br>\n    one or more <a href="/en-US/docs/Web/SVG/Element/glyphRef" title="The glyphRef element provides a single possible glyph to the referencing &lt;altGlyph> substitution.">',
-          // "fr": "L'un ou l'autre:<br>\n    un \u00e9l\u00e9ments ou plus <a class=\"new\" href=\"/fr/docs/Web/SVG/Element/glyphRef\" title=\"This page hasn't been written yet. Please consider contributing to MDN $
-          // "pt-BR": "Ambos:<br>\n    um ou mais elementos <a class=\"new\" href=\"/pt-BR/docs/Web/SVG/Element/glyphRef\" title=\"This page hasn't been written yet. Please consider contributing to MDN by writing it$
-          // "zh-CN": "\u4e24\u8005\u4e4b\u4e00\uff1a<br>\n    \u4e00\u4e2a\u6216\u591a\u4e2a<a href=\"/zh-CN/docs/Web/SVG/Element/glyphRef\" title=\"glyphRef\u5143\u7d20\u4e3a\u5f15\u7528\u7684&lt;altGlyph>\u00a0\u$
-        },
-      },
-      attributes: ["coreAttributes"],
-      interfaces: ["SVGAltGlyphDefElement"],
-    },
-  },
-};
-const L10N_SVG = {
-  categories: {
-    "en-US": "Categories",
-    de: "Kategorien",
-    es: "Categorias",
-    ja: "カテゴリー",
-    "pt-BR": "Categorias",
-    fr: "Catégories",
-    "zh-CN": "类别",
-    ru: "Категории",
-  },
-  textContentElement: {
-    "en-US": "Text content element",
-    de: "Textinhaltselement",
-    es: "Elemento de contenido de texto",
-    fr: "Elément conteneur de texte",
-    ja: "テキストコンテンツ要素",
-    "pt-BR": "Elemento de conteúdo textual",
-    "zh-CN": "文本内容元素",
-    ru: "Текстосодержащий элемент",
-  },
-  permittedContent: {
-    "en-US": "Permitted content",
-    de: "Erlaubter Inhalt",
-    es: "Contenido permitido",
-    ja: "許可されている内容",
-    "pt-BR": "Conteúdo permitido",
-    fr: "Contenu autorisé",
-    "zh-CN": "允许的内容物",
-    ru: "Разрешённый контент",
-  },
-  containerElement: {
-    "en-US": "Container element",
-    de: "Containerelement",
-    es: "Elemento contenedor",
-    fr: "Élément conteneur",
-    ja: "コンテナー要素",
-    "pt-BR": "Elemento recipiente",
-    "zh-CN": "容器元素",
-    ru: "Контейнеры",
-  },
-  structuralElement: {
-    "en-US": "Structural element",
-    de: "Strukturelement",
-    es: "Elemento estructural",
-    fr: "Élément structurel",
-    ja: "構造的要素",
-    "pt-BR": "elemento estrutural",
-    "zh-CN": "结构元素",
-    ru: "Структурный элемент",
-  },
-};
-const L10N_COMMON = {};
+const L10N_COMMON = require(path.join(
+  CONTENT_ROOT,
+  "jsondata",
+  "L10n-Common.json"
+));
 
 const SVG_BASE_SLUG = "docs/Web/SVG";
 
