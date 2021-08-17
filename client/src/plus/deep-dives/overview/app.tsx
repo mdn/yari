@@ -25,7 +25,7 @@ export default function App() {
         <p>
           One thing is clear about the web - the technology moves fast. There
           are new features and tools coming out all the time, and a pressure to
-          try to keep up with the latest and greatest.{" "}
+          try to keep up with the latest and greatest
           <button
             type="button"
             className={`ghost ${showFullArticle ? "hidden" : undefined}`}
@@ -33,7 +33,7 @@ export default function App() {
               setShowFullArticle(true);
             }}
           >
-            see more
+            &hellip; see more
           </button>
         </p>
         {showFullArticle && (
