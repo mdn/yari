@@ -16,7 +16,7 @@ import { Loading } from "./ui/atoms/loading";
 import { PageContentContainer } from "./ui/atoms/page-content";
 import { PageNotFound } from "./page-not-found";
 // import { Banner } from "./banners";
-import { SignIn, SignOut } from "./auth";
+import { SignIn, SignOut, Subscribe } from "./auth";
 import { Settings } from "./settings";
 
 import { DeepDives } from "./plus/deep-dives";
@@ -229,6 +229,14 @@ export function App(appProps) {
               element={
                 <StandardLayout>
                   <SiteSearch />
+                </StandardLayout>
+              }
+            />
+            <Route
+              path="/subscribe"
+              element={
+                <StandardLayout>
+                  <Subscribe />
                 </StandardLayout>
               }
             />

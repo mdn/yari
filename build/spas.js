@@ -51,6 +51,11 @@ async function buildSPAs(options) {
         { prefix: "search", pageTitle: "Search" },
         { prefix: "signin", pageTitle: "Sign in", noIndexing: true },
         { prefix: "signout", pageTitle: "Sign out", noIndexing: true },
+        {
+          prefix: "subscribe",
+          pageTitle: "Subscribe to MDN Plus",
+          noIndexing: true,
+        },
         { prefix: "settings", pageTitle: "Account settings", noIndexing: true },
         { prefix: "plus", pageTitle: "Plus", noIndexing: true },
         { prefix: "plus/bookmarks", pageTitle: "Bookmarks", noIndexing: true },

@@ -80,6 +80,16 @@ function LoginInner() {
       </li>
       <li>
         <Link
+          to={`/${locale}/subscribe`}
+          onClick={() => {
+            setForceCloseDropdown(true);
+          }}
+        >
+          {userData.isSubscriber ? "Your paid subscription" : "Subscribe"}
+        </Link>
+      </li>
+      <li>
+        <Link
           to={`/${locale}/signout?${new URLSearchParams({ next }).toString()}`}
           onClick={() => {
             setForceCloseDropdown(true);

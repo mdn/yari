@@ -5,6 +5,7 @@ import { PageContentContainer } from "../ui/atoms/page-content";
 
 const SignInApp = React.lazy(() => import("./sign-in"));
 const SignOutApp = React.lazy(() => import("./sign-out"));
+const SubscribeApp = React.lazy(() => import("./subscribe"));
 
 function Container({
   pageTitle,
@@ -54,6 +55,18 @@ export function SignOut() {
         fallback={<Loading message="Loading sign out…" minHeight={400} />}
       >
         <SignOutApp />
+      </React.Suspense>
+    </Container>
+  );
+}
+
+export function Subscribe() {
+  return (
+    <Container className="subscribe" pageTitle="Subscribe">
+      <React.Suspense
+        fallback={<Loading message="Loading subscribe app…" minHeight={400} />}
+      >
+        <SubscribeApp />
       </React.Suspense>
     </Container>
   );
