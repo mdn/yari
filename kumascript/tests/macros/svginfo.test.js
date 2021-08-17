@@ -9,10 +9,6 @@ const CONTENT_ROOT = process.env.CONTENT_ROOT;
 if (!CONTENT_ROOT) {
   throw new Error("These tests assume you point to the real content root.");
 }
-console.warn(
-  "XXXX",
-  path.resolve(path.join(CONTENT_ROOT, "jsondata", "SVGData.json"))
-);
 // Basic const
 const SVG_DATA = require(path.resolve(
   path.join(CONTENT_ROOT, "jsondata", "SVGData.json")
