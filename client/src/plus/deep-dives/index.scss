@@ -11,108 +11,6 @@
   padding: 0;
 }
 
-.deep-dive-article-container {
-  @include theme.readable-line-length();
-  font-family: theme.$inter-font-family;
-  font-size: 18px;
-  line-height: 200%;
-  margin-bottom: layout.$base-spacing * 3;
-  padding: layout.$base-spacing layout.$base-spacing (layout.$base-spacing * 2);
-  text-align: justify;
-
-  code {
-    background-color: rgba(224, 224, 230, 0.5);
-  }
-
-  img {
-    width: 100%;
-  }
-
-  h1,
-  h2,
-  h3,
-  h4 {
-    text-align: left;
-  }
-
-  h2,
-  h3,
-  h4 {
-    font-family: theme.$inter-font-family;
-  }
-
-  .main-heading-group {
-    h1 {
-      font-size: 36px;
-      letter-spacing: -0.5px;
-      line-height: 58px;
-      text-align: left;
-    }
-
-    h2 {
-      color: theme.$mdn-neutral700;
-      font: bold typography.$small-font-size theme.$inter-font-family;
-      margin-bottom: layout.$base-spacing;
-      text-transform: uppercase;
-    }
-  }
-
-  h3,
-  h4 {
-    letter-spacing: 0.5px;
-  }
-
-  h3 {
-    border-left: 5px solid theme.$mdn-green400;
-    font-size: 24px;
-    line-height: 36px;
-    margin-bottom: 24px;
-    padding-left: 16px;
-  }
-
-  h4 {
-    font-size: 18px;
-    line-height: 44px;
-  }
-
-  figcaption {
-    color: theme.$mdn-neutral700;
-    font-size: 14px;
-    line-height: 32px;
-  }
-
-  button.ghost {
-    color: theme.$mdn-neutral900;
-    font-size: 18px;
-    font-weight: bold;
-    padding: 0;
-    text-decoration: none;
-  }
-
-  .article-lead {
-    color: theme.$mdn-neutral700;
-    font-size: 18px;
-    line-height: 150%;
-  }
-
-  .article-sidebar {
-    border: 1px solid rgba(32, 17, 57, 0.1);
-    border-radius: theme.$default-border-radius;
-    font-size: 14px;
-    font-style: italic;
-    line-height: 24px;
-    padding: math.div(layout.$base-spacing, 2);
-
-    @media #{layout.$mq-tablet-and-up} {
-      padding: layout.$base-spacing;
-    }
-
-    p:last-child {
-      margin-bottom: 0;
-    }
-  }
-}
-
 .intro-banner {
   background-color: theme.$mdn-violet900;
   border-radius: 4px;
@@ -132,10 +30,130 @@
       font-weight: bold;
     }
   }
+
+  p {
+    font-size: 14px;
+    margin-bottom: 0;
+  }
+}
+
+.deep-dive-article-container {
+  @include theme.readable-line-length();
+  font-family: theme.$inter-font-family;
+  font-size: 18px;
+  line-height: 175%;
+  margin-bottom: layout.$base-spacing * 3;
+  padding: layout.$base-spacing 16px (layout.$base-spacing * 2);
+  text-align: justify;
+
+  @media #{layout.$mq-small-desktop-and-up} {
+    padding: layout.$base-spacing layout.$base-spacing
+      (layout.$base-spacing * 2);
+  }
+
+  code {
+    background-color: rgba(224, 224, 230, 0.5);
+  }
+
+  img {
+    width: 100%;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    line-height: 100%;
+    text-align: left;
+  }
+
+  h2,
+  h3,
+  h4 {
+    font-family: theme.$inter-font-family;
+  }
+
+  .main-heading-group {
+    h1 {
+      font-size: 36px;
+      letter-spacing: -0.5px;
+      text-align: left;
+    }
+
+    h2 {
+      color: theme.$mdn-neutral700;
+      font: bold typography.$small-font-size theme.$inter-font-family;
+      margin-bottom: layout.$base-spacing;
+      text-transform: uppercase;
+    }
+  }
+
+  h3,
+  h4 {
+    letter-spacing: 0.5px;
+  }
+
+  h3 {
+    border-left: 5px solid theme.$mdn-green500;
+    font-size: 24px;
+    line-height: 36px;
+    margin-bottom: 24px;
+    padding-left: 16px;
+  }
+
+  h4 {
+    font-size: 18px;
+    line-height: 44px;
+  }
+
+  figcaption {
+    color: theme.$mdn-neutral700;
+    font-size: 14px;
+    line-height: 20px;
+    padding: 8px 0;
+  }
+
+  button.ghost {
+    color: theme.$mdn-neutral900;
+    font-family: theme.$inter-font-family;
+    font-size: 18px;
+    font-weight: bold;
+    margin: 0;
+    padding: 0;
+    text-decoration: none;
+
+    span {
+      font-weight: normal;
+    }
+  }
+
+  .article-lead {
+    color: theme.$mdn-neutral700;
+    font-size: 18px;
+    line-height: 175%;
+  }
+
+  .article-sidebar {
+    border: 1px solid rgba(32, 17, 57, 0.1);
+    border-radius: theme.$default-border-radius;
+    font-size: 14px;
+    font-style: italic;
+    line-height: 24px;
+    padding: layout.$base-spacing;
+
+    ul {
+      padding: 8px;
+    }
+
+    p:last-child {
+      margin-bottom: 0;
+    }
+  }
 }
 
 .deep-dive-article-footer {
   background-color: theme.$mdn-violet900;
+  font-family: theme.$metropolis-font-family;
   font-size: typography.$small-medium-font-size;
   font-weight: bold;
   padding: 0 layout.$base-spacing;
@@ -177,6 +195,7 @@
   .previous-article {
     color: theme.$mdn-green400;
     display: block;
+    font-family: theme.$inter-font-family;
     font-size: typography.$default-font-size;
   }
 

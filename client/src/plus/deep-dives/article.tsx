@@ -85,13 +85,19 @@ export default function Article({ slug }: { slug: string }) {
 
   return (
     <>
-      <div className="girdle">
-        <div className="intro-banner">
-          Find below the first article of the 'Modern CSS in the Real World'
-          deep-dive. Use the <a href="#survey-form">one minute long survey</a>{" "}
-          to let us know what you think.
+      {!hasFinishedSurvey && (
+        <div className="girdle">
+          <div className="intro-banner">
+            <p>
+              Find below the first article of the 'Modern CSS in the Real World'
+              deep-dive. Use the{" "}
+              <a href="#survey-form">one minute long survey</a> to let us know
+              what you think.
+            </p>
+          </div>
         </div>
-      </div>
+      )}
+
       <div className="main-article-page-content-container girdle">
         {article}
 
