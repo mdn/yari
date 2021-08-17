@@ -58,7 +58,7 @@
 }
 
 .overview-hero {
-  padding: 0 layout.$base-spacing math.div(layout.$base-spacing, 2);
+  padding: 0 layout.$base-spacing;
 
   @media #{layout.$mq-large-desktop-and-up} {
     margin: 36px auto layout.$base-spacing;
@@ -101,10 +101,11 @@
   }
 
   h2 {
-    font-size: 14px;
-    font-weight: normal;
+    font-size: 12px;
+    font-style: normal;
+    font-weight: bold;
     letter-spacing: 1.5px;
-    line-height: 20px;
+    line-height: 14px;
     margin-bottom: 16px;
     text-transform: uppercase;
   }
@@ -119,7 +120,7 @@
   }
 
   p {
-    font-size: 16px;
+    font-size: 14px;
     line-height: 175%;
   }
 
@@ -127,12 +128,15 @@
     color: theme.$mdn-neutral900;
     font-size: 14px;
     font-weight: bold;
+    line-height: 175%;
     margin: 8px 0;
     padding: 0;
     text-decoration: none;
   }
 
   .show-contents-button {
+    margin: 12px 0;
+
     &::before {
       background: transparent url("./assets/plus.svg") center center no-repeat;
       background-size: 18px;
@@ -154,7 +158,7 @@
 
   .series-item {
     border-top: 1px solid theme.$mdn-neutral100;
-    padding: 24px 0;
+    padding: 24px 0 0;
 
     @media #{layout.$mq-small-desktop-and-up} {
       display: flex;
@@ -175,8 +179,9 @@
       width: 100%;
 
       @media #{layout.$mq-small-desktop-and-up} {
-        flex: 0 0 30%;
+        flex: 0 0 100px;
         height: 100px;
+        margin-bottom: 0;
       }
     }
   }
@@ -196,7 +201,7 @@
       background-size: cover;
 
       @media #{layout.$mq-small-desktop-and-up} {
-        background-size: 100%;
+        // background-size: 100%;
       }
     }
   }
@@ -206,10 +211,6 @@
       background: transparent url("./assets/your-browser-support-toolkit.svg")
         center center no-repeat;
       background-size: cover;
-
-      @media #{layout.$mq-small-desktop-and-up} {
-        background-size: 100%;
-      }
     }
   }
 
@@ -223,19 +224,16 @@
         no-repeat;
       background-size: cover;
       filter: saturate(0);
-      width: 100%;
-
-      @media #{layout.$mq-small-desktop-and-up} {
-        background-size: 100%;
-      }
     }
   }
 }
 
 .deep-dive-toc {
+  margin-bottom: math.div(layout.$base-spacing, 2);
+
   h4,
   li {
-    border-left: 5px solid theme.$mdn-green400;
+    border-left: 5px solid theme.$mdn-green500;
     font-family: theme.$inter-font-family;
     font-size: 14px;
     margin: 0;

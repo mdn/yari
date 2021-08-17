@@ -61,7 +61,7 @@ export function PlanningForBrowserSupport() {
         point out that it isn’t usable yet due to lack of support in other
         browsers. We are often caught between wanting to learn and be excited
         about new possibilities, and the reality of needing to support users on
-        older, less capable browsers.{" "}
+        older, less capable browsers
         <button
           type="button"
           className={`ghost ${showFullArticle ? "hidden" : undefined}`}
@@ -69,7 +69,7 @@ export function PlanningForBrowserSupport() {
             setShowFullArticle(true);
           }}
         >
-          see more
+          &hellip; see more
         </button>
       </p>
       {showFullArticle && (
@@ -530,7 +530,7 @@ export function YourBrowserSupportToolkit() {
       </p>
       <p>
         For broad support information, for example “does this browser support
-        CSS Grid?”, the Can I Use website is helpful.{" "}
+        CSS Grid?”, the Can I Use website is helpful
         <button
           type="button"
           className={`ghost ${showFullArticle ? "hidden" : undefined}`}
@@ -538,7 +538,7 @@ export function YourBrowserSupportToolkit() {
             setShowFullArticle(true);
           }}
         >
-          see more
+          &hellip; see more
         </button>
       </p>
       {showFullArticle && (
