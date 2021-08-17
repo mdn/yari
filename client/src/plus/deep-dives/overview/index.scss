@@ -24,9 +24,9 @@
   &::before {
     background: linear-gradient(
         0deg,
-        #fff 13%,
-        rgba(255, 255, 255, 0.41) 25.05%,
-        rgba(255, 255, 255, 0) 29.17%
+        #fff 0%,
+        hsla(0, 0%, 100%, 0.41) 21.05%,
+        hsla(0, 0%, 100%, 0) 33.17%
       ),
       transparent url("./assets/deep-dive-hero.svg") center center no-repeat;
     background-size: cover;
@@ -129,13 +129,16 @@
     font-size: 14px;
     font-weight: bold;
     line-height: 175%;
-    margin: 8px 0;
     padding: 0;
     text-decoration: none;
+
+    span {
+      font-weight: normal;
+    }
   }
 
   .show-contents-button {
-    margin: 12px 0;
+    margin: 24px 0;
 
     &::before {
       background: transparent url("./assets/plus.svg") center center no-repeat;
@@ -209,7 +212,7 @@
   .your-browser-support-toolkit {
     &::before {
       background: transparent url("./assets/your-browser-support-toolkit.svg")
-        center center no-repeat;
+        41% 41% no-repeat;
       background-size: cover;
     }
   }
@@ -220,7 +223,7 @@
     padding: math.div(layout.$base-spacing, 4);
 
     &::before {
-      background: transparent url("./assets/unavailable0001.svg") center center
+      background: transparent url("./assets/unavailable0001.svg") 9% 9%
         no-repeat;
       background-size: cover;
       filter: saturate(0);

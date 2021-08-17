@@ -1,5 +1,5 @@
 import React from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useSearchParams } from "react-router-dom";
 import useSWR from "swr";
 
 import "./index.scss";
@@ -49,10 +49,12 @@ export function Survey({
   hasFinished: () => void;
 }) {
   const { locale } = useParams();
+  const [searchParams] = useSearchParams();
   const previousPage = getSessionStorageData(SESSION_KEY) || "";
   const [page, setPage] = React.useState<"start" | "success">(
     previousPage === "success" ? "success" : "start"
   );
+
   React.useEffect(() => {
     if (page !== "start") {
       setSessionStorageData(SESSION_KEY, page);
@@ -109,7 +111,13 @@ export function Survey({
     const formData = new URLSearchParams();
     formData.set(
       "response",
-      JSON.stringify(Object.assign({ slug }, responseData))
+      JSON.stringify(
+        Object.assign(
+          { slug },
+          { querystring: searchParams.toString() },
+          responseData
+        )
+      )
     );
     formData.set("uuid", pingData.uuid);
 
