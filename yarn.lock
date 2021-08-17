@@ -2546,9 +2546,9 @@
     "@types/yargs" "^16.0.0"
     chalk "^4.0.0"
 
-"@mdn/browser-compat-data@lucacasonato/browser-compat-data#deno":
+"@mdn/browser-compat-data@mdn/browser-compat-data#main":
   version "3.3.14"
-  resolved "https://codeload.github.com/lucacasonato/browser-compat-data/tar.gz/1fa4cb43eaca3fcc34f6f2576269f18357730b90"
+  resolved "https://codeload.github.com/mdn/browser-compat-data/tar.gz/a371e85321753447992c0a6e07e8c8c33daab9b7"
 
 "@mdn/dinocons@lucacasonato/mdn-dinocons#add_deno_dinocon":
   version "0.3.4"
