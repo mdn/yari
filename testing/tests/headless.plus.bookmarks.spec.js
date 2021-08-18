@@ -28,7 +28,6 @@ test.describe("Bookmarking pages", () => {
     expect(
       await page.isVisible('button[title="Not been bookmarked"]')
     ).toBeTruthy();
-    // Click it!
     await page.click('button[title="Not been bookmarked"]');
     await page.waitForLoadState("networkidle");
     expect(
@@ -52,9 +51,7 @@ test.describe("Bookmarking pages", () => {
     await page.click('a:has-text("Sign in with Firefox Accounts")');
 
     await page.goto(testURL("/en-US/plus/bookmarks"));
-    await page.waitForLoadState("networkidle");
-    await page.waitForSelector("div.bookmarks");
-    expect(await page.isVisible("text=Nothing bookmarked yet.")).toBeTruthy();
+    await page.waitForSelector("text=Nothing bookmarked yet.");
 
     // Open a bunch of pages
     const urls = [
@@ -72,15 +69,10 @@ test.describe("Bookmarking pages", () => {
     }
 
     await page.goto(testURL("/en-US/plus/bookmarks"));
-    await page.waitForLoadState("networkidle");
-    await page.waitForSelector("div.bookmarks");
-    expect(await page.isVisible("text=You have not signed in")).toBeFalsy();
-    expect(await page.isVisible("text=Your bookmarks (6)")).toBeTruthy();
+    await page.waitForSelector("text=Your bookmarks (6)");
 
+    // This picks one of the un-toggle buttons
     await page.click('button[title="Click to remove this bookmark"]');
-    await page.waitForLoadState("networkidle");
-    // await page.waitForTimeout(100); // Gives a chance to re-render after XHR finishes
-    await page.waitForSelector("text=Your bookmarks (x5)");
-    // expect(await page.isVisible("text=Your bookmarks (5)")).toBeTruthy();
+    await page.waitForSelector("text=Your bookmarks (5)");
   });
 });
