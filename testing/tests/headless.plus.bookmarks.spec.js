@@ -44,9 +44,7 @@ test.describe("Bookmarking pages", () => {
   test("view your listing of all bookmarks", async ({ page }) => {
     await page.goto(testURL("/en-US/plus/bookmarks"));
     await page.waitForLoadState("networkidle");
-    await page.waitForSelector("main.plus");
     await page.waitForSelector("text=You have not signed in");
-    expect(await page.isVisible("text=You have not signed in")).toBeTruthy();
 
     await page.goto(testURL("/en-US/signin"));
     await page.click('a:has-text("Sign in with Firefox Accounts")');
