@@ -87,6 +87,7 @@ async function buildSPAs(options) {
           );
         }
         const html = renderHTML(url, context);
+        console.log({ url });
         const outPath = path.join(BUILD_OUT_ROOT, locale, prefix);
         fs.mkdirSync(outPath, { recursive: true });
         const filePath = path.join(outPath, "index.html");
