@@ -3,7 +3,7 @@ import { Routes, Route, useLocation } from "react-router-dom";
 
 import { Loading } from "../ui/atoms/loading";
 import { PageContentContainer } from "../ui/atoms/page-content";
-import { PageNotFound } from "../page-not-found";
+// import { PageNotFound } from "../page-not-found";
 const App = React.lazy(() => import("./app"));
 // XXX temporary hack while we still have this plus-v1 dupe.
 const Bookmarks = React.lazy(() => import("../plus/bookmarks"));
