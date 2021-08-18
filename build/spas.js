@@ -87,11 +87,7 @@ async function buildSPAs(options) {
           );
         }
         const html = renderHTML(url, context);
-        // TEMPORARY HACK
-        url === "/en-us/plus/bookmarks" && console.log(html);
-
         const outPath = path.join(BUILD_OUT_ROOT, locale, prefix);
-        console.log("URL", url, context, { outPath });
         fs.mkdirSync(outPath, { recursive: true });
         const filePath = path.join(outPath, "index.html");
         fs.writeFileSync(filePath, html);

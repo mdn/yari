@@ -1,17 +1,14 @@
 import React from "react";
-import { Routes, Route, useLocation } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 
 import { Loading } from "../ui/atoms/loading";
 import { PageContentContainer } from "../ui/atoms/page-content";
-// import { PageNotFound } from "../page-not-found";
+import { PageNotFound } from "../page-not-found";
 const App = React.lazy(() => import("./app"));
 // XXX temporary hack while we still have this plus-v1 dupe.
 const Bookmarks = React.lazy(() => import("../plus/bookmarks"));
 
 export function PlusV1({ pageTitle }: { pageTitle?: string }) {
-  // TEMPORARY
-  const location = useLocation();
-
   const defaultPageTitle = "MDN Plus";
   React.useEffect(() => {
     document.title = pageTitle || defaultPageTitle;
@@ -45,17 +42,7 @@ export function PlusV1({ pageTitle }: { pageTitle?: string }) {
           </React.Suspense>
         }
       />
-      {/* <Route path="*" element={<PageNotFound />} /> */}
-      <Route
-        path="*"
-        element={
-          <div>
-            PAGE NOT FOUND
-            <br />
-            LOCATION:<code>{location.pathname}</code>
-          </div>
-        }
-      />
+      <Route path="*" element={<PageNotFound />} />
     </Routes>
   );
 

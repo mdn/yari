@@ -26,27 +26,19 @@ export function Plus({ pageTitle }: { pageTitle?: string }) {
       <Route
         path="/"
         element={
-          isServer ? (
-            loading
-          ) : (
-            <React.Suspense fallback={loading}>
-              <App />
-            </React.Suspense>
-          )
+          <React.Suspense fallback={loading}>
+            <App />
+          </React.Suspense>
         }
       />
       <Route
-        path="/bookmarks"
+        path="bookmarks"
         element={
-          isServer ? (
-            <div className="bookmarks">{loading}</div>
-          ) : (
-            <React.Suspense fallback={loading}>
-              <div className="bookmarks">
-                <Bookmarks />
-              </div>
-            </React.Suspense>
-          )
+          <React.Suspense fallback={loading}>
+            <div className="bookmarks">
+              <Bookmarks />
+            </div>
+          </React.Suspense>
         }
       />
       <Route path="*" element={<PageNotFound />} />
@@ -54,6 +46,8 @@ export function Plus({ pageTitle }: { pageTitle?: string }) {
   );
 
   return (
-    <PageContentContainer extraClasses="plus">{routes}</PageContentContainer>
+    <PageContentContainer extraClasses="plus">
+      {isServer ? loading : routes}
+    </PageContentContainer>
   );
 }
