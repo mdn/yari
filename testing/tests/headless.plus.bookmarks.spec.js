@@ -44,6 +44,7 @@ test.describe("Bookmarking pages", () => {
   test("view your listing of all bookmarks", async ({ page }) => {
     await page.goto(testURL("/en-US/plus/bookmarks"));
     await page.waitForLoadState("networkidle");
+    console.log(await page.content());
     await page.waitForSelector("text=You have not signed in");
 
     await page.goto(testURL("/en-US/signin"));
