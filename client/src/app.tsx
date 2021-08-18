@@ -121,6 +121,8 @@ export function App(appProps) {
       </PageOrPageNotFound>
     );
 
+  console.log({ CRUD_MODE, ENABLE_PLUS });
+
   const routes = (
     <Routes>
       {/*
