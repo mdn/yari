@@ -131,13 +131,13 @@ export function App(appProps) {
        */}
       <Route path="/" element={homePage} />
       <Route
-        path=":locale/*"
+        path="/:locale/*"
         element={
           <Routes>
             {CRUD_MODE && (
               <>
                 <Route
-                  path="_flaws"
+                  path="/_flaws"
                   element={
                     <StandardLayout>
                       <AllFlaws />
@@ -145,7 +145,7 @@ export function App(appProps) {
                   }
                 />
                 <Route
-                  path="_translations"
+                  path="/_translations"
                   element={
                     <StandardLayout>
                       <AllTranslations />
@@ -153,7 +153,7 @@ export function App(appProps) {
                   }
                 />
                 <Route
-                  path="_edit/*"
+                  path="/_edit/*"
                   element={
                     <StandardLayout>
                       <DocumentEdit />
@@ -165,7 +165,7 @@ export function App(appProps) {
                     See https://github.com/mdn/yari/issues/1614
                  */}
                 <Route
-                  path="_create/*"
+                  path="/_create/*"
                   element={
                     <StandardLayout>
                       <DocumentCreate />
@@ -173,7 +173,7 @@ export function App(appProps) {
                   }
                 />
                 <Route
-                  path="_manage/*"
+                  path="/_manage/*"
                   element={
                     <StandardLayout>
                       <DocumentManage />
@@ -189,7 +189,7 @@ export function App(appProps) {
                 to simulate it.
                  */}
                 <Route
-                  path="_404/*"
+                  path="/_404/*"
                   element={
                     <StandardLayout>
                       <PageNotFound />
@@ -205,7 +205,7 @@ export function App(appProps) {
                 to be able to run it locally
                  */}
                 <Route
-                  path="_homepage/*"
+                  path="/_homepage/*"
                   element={
                     <StandardLayout>
                       <Homepage />
@@ -214,7 +214,7 @@ export function App(appProps) {
                 />
 
                 <Route
-                  path="_sitemap/*"
+                  path="/_sitemap/*"
                   element={
                     <StandardLayout>
                       <Sitemap />
@@ -225,7 +225,7 @@ export function App(appProps) {
             )}
             <Route path="/" element={homePage} />
             <Route
-              path="search"
+              path="/search"
               element={
                 <StandardLayout>
                   <SiteSearch />
@@ -233,7 +233,7 @@ export function App(appProps) {
               }
             />
             <Route
-              path="signin"
+              path="/signin"
               element={
                 <StandardLayout>
                   <SignIn />
@@ -241,7 +241,7 @@ export function App(appProps) {
               }
             />
             <Route
-              path="signout"
+              path="/signout"
               element={
                 <StandardLayout>
                   <SignOut />
@@ -249,7 +249,7 @@ export function App(appProps) {
               }
             />
             <Route
-              path="settings"
+              path="/settings"
               element={
                 <StandardLayout>
                   <Settings {...appProps} />
@@ -258,7 +258,7 @@ export function App(appProps) {
             />
             {ENABLE_PLUS && (
               <Route
-                path="plus/*"
+                path="/plus/*"
                 element={
                   <StandardLayout>
                     <PlusV1 {...appProps} />
@@ -268,7 +268,7 @@ export function App(appProps) {
             )}
             {ENABLE_PLUS && (
               <Route
-                path="plus/deep-dives"
+                path="/plus/deep-dives"
                 element={
                   <StandardLayout>
                     <DeepDivesOverview {...appProps} />
@@ -278,7 +278,7 @@ export function App(appProps) {
             )}
             {ENABLE_PLUS && (
               <Route
-                path="plus/deep-dives/*"
+                path="/plus/deep-dives/*"
                 element={
                   <StandardLayout>
                     <DeepDives {...appProps} />
@@ -287,7 +287,7 @@ export function App(appProps) {
               />
             )}
             <Route
-              path="docs/*"
+              path="/docs/*"
               element={
                 <PageOrPageNotFound pageNotFound={appProps.pageNotFound}>
                   <DocumentLayout>
