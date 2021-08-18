@@ -139,6 +139,82 @@ app.post("/api/v1/settings", async (req, res) => {
   }
 });
 
+const mockBookmarksDatabase = new Map();
+
+app.post("/api/v1/plus/bookmarks/", async (req, res) => {
+  // Toggle
+  const url = req.query.url;
+  if (!url) {
+    return res.status(400).send("missing url");
+  }
+  const bookmarks = mockBookmarksDatabase.get(req.cookies.sessionid) || [];
+  const found = bookmarks.find((bookmark) => bookmark.url === req.query.url);
+  if (found) {
+    const newBookmarks = bookmarks.filter((bookmark) => bookmark.url !== url);
+    mockBookmarksDatabase.set(req.cookies.sessionid, newBookmarks);
+  } else {
+    const makeTitle = (url) =>
+      `Title of ${url.charAt(0).toUpperCase()}${url.slice(1).toLowerCase()}`;
+    bookmarks.push({
+      id: Math.max(...[0, ...bookmarks.map((b) => b.id)]) + 1,
+      url,
+      created: new Date(),
+      parents: url
+        .split("/")
+        .slice(3)
+        .map((uri, i) => {
+          const prefix = url
+            .split("/")
+            .slice(0, 3 + i)
+            .join("/");
+          return { uri: `${prefix}/${uri}`, title: makeTitle(uri) };
+        }),
+      title: makeTitle(url),
+    });
+    mockBookmarksDatabase.set(req.cookies.sessionid, bookmarks);
+  }
+  res.status(201).json({ OK: true });
+});
+
+app.get("/api/v1/plus/bookmarks/", async (req, res) => {
+  if (!req.cookies.sessionid) {
+    res.status(403).send("oh no you don't");
+  } else {
+    const bookmarks = mockBookmarksDatabase.get(req.cookies.sessionid) || [];
+    if (req.query.url) {
+      // Toggled?
+      const found = bookmarks.find(
+        (bookmark) => bookmark.url === req.query.url
+      );
+      res.json({
+        csrfmiddlewaretoken: "xyz123",
+        bookmarked: found
+          ? { id: found.id, created: found.created.toISOString() }
+          : null,
+      });
+    } else {
+      // Return all (paginated)
+      const page = parseInt(req.query.page || "1", 10);
+      const pageSize = 5;
+      let m = 0;
+      let n = pageSize;
+      res.json({
+        items: bookmarks.slice(m, n).map((bookmark) => {
+          return {
+            ...bookmark,
+            created: bookmark.created.toISOString(),
+          };
+        }),
+        metadata: {
+          total: bookmarks.length,
+          page: page,
+          per_page: pageSize,
+        },
+      });
+    }
+  }
+});
+
 app.get("/users/fxa/login/authenticate/", async (req, res) => {
   const userId = `${Math.ceil(10000 * Math.random())}`;
   res.cookie("sessionid", userId, {
@@ -148,6 +224,12 @@ app.get("/users/fxa/login/authenticate/", async (req, res) => {
     username: `my-${userId}`,
     is_authenticated: true,
     email: `${userId}@example.com`,
+    // Note! Everyone who manages to sign in becomes a subscriber.
+    // This is probably not ideal. Perhaps more ideal would be that
+    // they sign in and become a subscriber later. But as of Aug 2021, it's
+    // not obvious how we are going to integrate authentication with
+    // with authorization. I.e. use of the subscription platform and FxA.
+    is_subscriber: true,
   });
   res.redirect(req.query.next);
 });

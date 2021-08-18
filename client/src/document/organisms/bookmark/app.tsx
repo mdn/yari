@@ -215,6 +215,9 @@ function Button({
       title={title}
       onClick={toggle}
       disabled={disabled || loading}
+      // This exists so that the headless tests can refer to this button
+      // without having to rely on a `class` or the text it self.
+      data-testid="bookmark-toggle"
     >
       {/* Note! We're displaying the state as if you have NOT bookmarked
       it even if we still don't know yet. */}
