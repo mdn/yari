@@ -36,7 +36,7 @@ export function Plus({ pageTitle }: { pageTitle?: string }) {
         }
       />
       <Route
-        path="bookmarks"
+        path="/bookmarks"
         element={
           isServer ? (
             <div className="bookmarks">{loading}</div>

@@ -1,5 +1,5 @@
 import React from "react";
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, useLocation } from "react-router-dom";
 
 import { Loading } from "../ui/atoms/loading";
 import { PageContentContainer } from "../ui/atoms/page-content";
@@ -9,6 +9,9 @@ const App = React.lazy(() => import("./app"));
 const Bookmarks = React.lazy(() => import("../plus/bookmarks"));
 
 export function PlusV1({ pageTitle }: { pageTitle?: string }) {
+  // TEMPORARY
+  const location = useLocation();
+
   const defaultPageTitle = "MDN Plus";
   React.useEffect(() => {
     document.title = pageTitle || defaultPageTitle;
@@ -37,7 +40,7 @@ export function PlusV1({ pageTitle }: { pageTitle?: string }) {
         }
       />
       <Route
-        path="/bookmarks"
+        path="bookmarks"
         element={
           isServer ? (
             <div className="bookmarks">{loading}</div>
@@ -50,7 +53,17 @@ export function PlusV1({ pageTitle }: { pageTitle?: string }) {
           )
         }
       />
-      <Route path="*" element={<PageNotFound />} />
+      {/* <Route path="*" element={<PageNotFound />} /> */}
+      <Route
+        path="*"
+        element={
+          <div>
+            PAGE NOT FOUND
+            <br />
+            LOCATION:<code>{location.pathname}</code>
+          </div>
+        }
+      />
     </Routes>
   );
 
