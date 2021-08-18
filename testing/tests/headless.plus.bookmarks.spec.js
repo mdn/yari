@@ -44,6 +44,7 @@ test.describe("Bookmarking pages", () => {
 
   test("view your listing of all bookmarks", async ({ page }) => {
     await page.goto(testURL("/en-US/plus/bookmarks"));
+    await page.waitForLoadState("networkidle");
     await page.waitForSelector("div.bookmarks");
     expect(await page.isVisible("text=You have not signed in")).toBeTruthy();
 
@@ -51,6 +52,7 @@ test.describe("Bookmarking pages", () => {
     await page.click('a:has-text("Sign in with Firefox Accounts")');
 
     await page.goto(testURL("/en-US/plus/bookmarks"));
+    await page.waitForLoadState("networkidle");
     await page.waitForSelector("div.bookmarks");
     expect(await page.isVisible("text=Nothing bookmarked yet.")).toBeTruthy();
 
@@ -70,6 +72,7 @@ test.describe("Bookmarking pages", () => {
     }
 
     await page.goto(testURL("/en-US/plus/bookmarks"));
+    await page.waitForLoadState("networkidle");
     await page.waitForSelector("div.bookmarks");
     expect(await page.isVisible("text=You have not signed in")).toBeFalsy();
     expect(await page.isVisible("text=Your bookmarks (6)")).toBeTruthy();
