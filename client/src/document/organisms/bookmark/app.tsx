@@ -7,8 +7,13 @@ import { Doc } from "../../types";
 
 dayjs.extend(relativeTime);
 
+interface Bookmarked {
+  id: number;
+  created: string;
+}
+
 interface BookmarkedData {
-  bookmarked: string | null;
+  bookmarked: Bookmarked | null;
   csrfmiddlewaretoken: string;
 }
 
@@ -56,13 +61,12 @@ export default function App({ doc }: { doc: Doc }) {
   // you can do is patiently wait for the XHR to come in.
   // If this local state is NOT undefined, we can use it while waiting for
   // the data from the XHR request.
-  const [localBookmarked, setLocalBookmarked] = React.useState<string | null>(
-    null
-  );
+  const [localBookmarked, setLocalBookmarked] =
+    React.useState<Bookmarked | null>(null);
 
   React.useEffect(() => {
     if (data && !error) {
-      setLocalBookmarked(data.bookmarked);
+      setLocalBookmarked(data.bookmarked as Bookmarked);
     }
   }, [data, error]);
 
@@ -99,7 +103,7 @@ export default function App({ doc }: { doc: Doc }) {
           // Once this is done, we can take care of sending the local state to
           // the server.
           setLocalBookmarked((before) =>
-            before ? null : new Date().toString()
+            before ? null : { created: new Date().toString(), id: 0 }
           );
 
           // Ultra-basic throttle to prevent multiple calls to saveBookmarked()
@@ -189,7 +193,7 @@ function Button({
   toggle,
   disabled,
 }: {
-  bookmarked: string | null;
+  bookmarked: Bookmarked | null;
   loading: boolean;
   toggle: () => void;
   disabled: boolean;
@@ -203,7 +207,7 @@ function Button({
   if (disabled) {
     title = "Disabled";
   } else if (bookmarked) {
-    title = `Bookmarked ${dayjs(bookmarked).fromNow()}`;
+    title = `Bookmarked ${dayjs(bookmarked.created).fromNow()}`;
     style.color = "orange";
   } else if (loading) {
     title = "Loading";
