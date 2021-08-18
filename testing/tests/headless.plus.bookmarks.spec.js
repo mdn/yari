@@ -48,6 +48,9 @@ test.describe("Bookmarking pages", () => {
     await page.goto(testURL("/en-US/signin"));
     await page.click('a:has-text("Sign in with Firefox Accounts")');
 
+    await page.goto(testURL("/en-US/plus/bookmarks"));
+    expect(await page.isVisible("text=Nothing bookmarked yet.")).toBeTruthy();
+
     // Open a bunch of pages
     const urls = [
       "/en-US/docs/Web/Foo",
@@ -66,5 +69,9 @@ test.describe("Bookmarking pages", () => {
     await page.goto(testURL("/en-US/plus/bookmarks"));
     expect(await page.isVisible("text=You have not signed in")).toBeFalsy();
     expect(await page.isVisible("text=Your bookmarks (6)")).toBeTruthy();
+
+    await page.click('button[title="Click to remove this bookmark"]');
+    await page.waitForLoadState("networkidle");
+    expect(await page.isVisible("text=Your bookmarks (5)")).toBeTruthy();
   });
 });

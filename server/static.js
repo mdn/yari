@@ -218,7 +218,7 @@ app.get("/api/v1/plus/bookmarks/", async (req, res) => {
 app.get("/users/fxa/login/authenticate/", async (req, res) => {
   const userId = `${Math.ceil(10000 * Math.random())}`;
   res.cookie("sessionid", userId, {
-    maxAge: 60 * 1000,
+    maxAge: 5 * 60 * 1000,
   });
   mockWhoamiDatabase.set(userId, {
     username: `my-${userId}`,
