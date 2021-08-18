@@ -1277,6 +1277,17 @@ test("plus page", () => {
   expect($('meta[name="robots"]').attr("content")).toBe("noindex, nofollow");
 });
 
+test("plus bookmarks page", () => {
+  const builtFolder = path.join(buildRoot, "en-us", "plus", "bookmarks");
+  expect(fs.existsSync(builtFolder)).toBeTruthy();
+  const htmlFile = path.join(builtFolder, "index.html");
+  const html = fs.readFileSync(htmlFile, "utf-8");
+  const $ = cheerio.load(html);
+  expect($("title").text()).toMatch(/Bookmarks/);
+  expect($('meta[name="robots"]').attr("content")).toBe("noindex, nofollow");
+  expect($("div.bookmarks").length).toBe(1);
+});
+
 test("bcd table extraction followed by h3", () => {
   const builtFolder = path.join(
     buildRoot,
