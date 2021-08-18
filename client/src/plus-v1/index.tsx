@@ -40,7 +40,7 @@ export function PlusV1({ pageTitle }: { pageTitle?: string }) {
         path="bookmarks"
         element={
           isServer ? (
-            loading
+            <div className="bookmarks">{loading}</div>
           ) : (
             <React.Suspense fallback={loading}>
               <div className="bookmarks">
@@ -55,8 +55,6 @@ export function PlusV1({ pageTitle }: { pageTitle?: string }) {
   );
 
   return (
-    <PageContentContainer extraClasses="plus">
-      {!isServer && routes}
-    </PageContentContainer>
+    <PageContentContainer extraClasses="plus">{routes}</PageContentContainer>
   );
 }

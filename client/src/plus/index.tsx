@@ -8,8 +8,6 @@ const App = React.lazy(() => import("./app"));
 const Bookmarks = React.lazy(() => import("./bookmarks"));
 
 export function Plus({ pageTitle }: { pageTitle?: string }) {
-  console.log({ pageTitle });
-
   const defaultPageTitle = "MDN Plus";
   React.useEffect(() => {
     document.title = pageTitle || defaultPageTitle;
@@ -41,7 +39,7 @@ export function Plus({ pageTitle }: { pageTitle?: string }) {
         path="bookmarks"
         element={
           isServer ? (
-            loading
+            <div className="bookmarks">{loading}</div>
           ) : (
             <React.Suspense fallback={loading}>
               <div className="bookmarks">
@@ -56,8 +54,6 @@ export function Plus({ pageTitle }: { pageTitle?: string }) {
   );
 
   return (
-    <PageContentContainer extraClasses="plus">
-      {!isServer && routes}
-    </PageContentContainer>
+    <PageContentContainer extraClasses="plus">{routes}</PageContentContainer>
   );
 }
