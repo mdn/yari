@@ -120,6 +120,7 @@ export function App(appProps) {
         </Layout>
       </PageOrPageNotFound>
     );
+  console.log({ CRUD_MODE, ENABLE_PLUS });
 
   const routes = (
     <Routes>
