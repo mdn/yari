@@ -80,7 +80,7 @@ test.describe("Bookmarking pages", () => {
     await page.click('button[title="Click to remove this bookmark"]');
     await page.waitForLoadState("networkidle");
     // await page.waitForTimeout(100); // Gives a chance to re-render after XHR finishes
-    await page.waitForSelector("text=Your bookmarks (5)");
+    await page.waitForSelector("text=Your bookmarks (x5)");
     // expect(await page.isVisible("text=Your bookmarks (5)")).toBeTruthy();
   });
 });
