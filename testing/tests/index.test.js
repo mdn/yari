@@ -1218,10 +1218,9 @@ test("404 page", () => {
   const html = fs.readFileSync(htmlFile, "utf-8");
   const $ = cheerio.load(html);
   expect($("title").text()).toContain("Page not found");
-  // XXX TEMPORARY WHILST DEBUGGING
-  // expect($("h1").text()).toContain("Page not found");
-  // expect($('meta[name="robots"]').attr("content")).toBe("noindex, nofollow");
-  // expect($('meta[property="og:locale"]').attr("content")).toBe("en-US");
+  expect($("h1").text()).toContain("Page not found");
+  expect($('meta[name="robots"]').attr("content")).toBe("noindex, nofollow");
+  expect($('meta[property="og:locale"]').attr("content")).toBe("en-US");
 });
 
 test("sign in page", () => {

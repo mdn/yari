@@ -36,11 +36,6 @@ export const VALID_LOCALES = new Set([
   "zh-TW",
 ]);
 
-console.log("CONSTANTS", {
-  "process.env.REACT_APP_ENABLE_PLUS": process.env.REACT_APP_ENABLE_PLUS,
-  "process.env.NODE_ENV": process.env.NODE_ENV,
-});
-
 export const ENABLE_PLUS = Boolean(
   JSON.parse(
     process.env.REACT_APP_ENABLE_PLUS ||

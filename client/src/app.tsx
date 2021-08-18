@@ -120,11 +120,6 @@ export function App(appProps) {
         </Layout>
       </PageOrPageNotFound>
     );
-  console.log({ CRUD_MODE, ENABLE_PLUS });
-  console.log("APP", {
-    "process.env.REACT_APP_ENABLE_PLUS": process.env.REACT_APP_ENABLE_PLUS,
-    "process.env.NODE_ENV": process.env.NODE_ENV,
-  });
 
   const routes = (
     <Routes>

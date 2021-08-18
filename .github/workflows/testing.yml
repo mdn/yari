@@ -64,8 +64,6 @@ jobs:
           sleep 1
           curl --fail --retry-connrefused --retry 5 http://localhost:5000 > /dev/null
 
-          curl http://localhost:5000/en-us/plus/bookmarks/
-
       - name: Functional testing
         run: |
           yarn test:testing

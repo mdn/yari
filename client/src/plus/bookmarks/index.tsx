@@ -121,8 +121,6 @@ export default function Bookmarks() {
     return true;
   }
 
-  console.log({ DISABLE_AUTH });
-
   if (DISABLE_AUTH) {
     return <AuthDisabled />;
   }
