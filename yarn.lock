@@ -2550,9 +2550,10 @@
   version "3.3.14"
   resolved "https://codeload.github.com/mdn/browser-compat-data/tar.gz/a371e85321753447992c0a6e07e8c8c33daab9b7"
 
-"@mdn/dinocons@lucacasonato/mdn-dinocons#add_deno_dinocon":
-  version "0.3.4"
-  resolved "https://codeload.github.com/lucacasonato/mdn-dinocons/tar.gz/78b674fc91ccf45fafafefc0b6b4e81c0fcc9999"
+"@mdn/dinocons@^0.3.5":
+  version "0.3.5"
+  resolved "https://registry.yarnpkg.com/@mdn/dinocons/-/dinocons-0.3.5.tgz#3c3e9cb2877c4449c224134cf29b2658f4614576"
+  integrity sha512-LIM66Ylm26YE/fYc0IquszpE2rcta2gaBrKLWO5HH0CnlQP7HLwh6D6SrErIgGnXzMCw3kc5t4YX/QgwcPFvEA==
 
 "@mdn/minimalist@^2.0.2":
   version "2.0.2"

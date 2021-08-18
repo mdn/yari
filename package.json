@@ -114,7 +114,7 @@
   },
   "devDependencies": {
     "@babel/core": "^7.15.0",
-    "@mdn/dinocons": "lucacasonato/mdn-dinocons#add_deno_dinocon",
+    "@mdn/dinocons": "^0.3.5",
     "@mdn/minimalist": "^2.0.2",
     "@playwright/test": "1.13.1",
     "@storybook/addon-a11y": "^6.3.4",
