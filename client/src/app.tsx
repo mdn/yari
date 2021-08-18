@@ -300,7 +300,12 @@ export function App(appProps) {
               path="*"
               element={
                 <StandardLayout>
-                  <PageNotFound />
+                  {/* <PageNotFound /> */}
+                  <div>
+                    PAGE NOT FOUND! WHY?
+                    <br />
+                    <pre>{JSON.stringify({ CRUD_MODE, ENABLE_PLUS })}</pre>
+                  </div>
                 </StandardLayout>
               }
             />
