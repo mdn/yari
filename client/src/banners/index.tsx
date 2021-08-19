@@ -63,11 +63,7 @@ function isEmbargoed(id: string) {
 
 function isPathnameIncluded(id: string, pathname: string) {
   if (id === PLUS_IDv1) {
-    return !(
-      pathname.includes("/plus") ||
-      pathname.includes("/signin") ||
-      pathname.includes("/signup")
-    );
+    return !(pathname.includes("/plus") || pathname.includes("/signin"));
   }
   return false;
 }
@@ -138,7 +134,6 @@ export function Banner() {
   // THIS CODE IS LEFT COMMENTED-OUT UNTIL WE'RE CERTAIN WE'RE NOT GOING TO USE THIS.
   // IT'S KEPT AS REMINDER HOW TO IMPLEMENT THESE.
   // const isEnabled = (id: string) =>
-  //   (userData.waffle.flags[id] || userData.waffle.switches[id]) &&
   //   !isEmbargoed(id);
 
   // if (isEnabled(COMMON_SURVEY_ID)) {

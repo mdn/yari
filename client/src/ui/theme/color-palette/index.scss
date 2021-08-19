@@ -1,0 +1,102 @@
+/* mdn color palette v2 */
+$black: #000;
+$white: #fff;
+
+$mdn-neutral050: #f9f9fa;
+$mdn-neutral100: #ededf0;
+$mdn-neutral200: #cdcdd4;
+$mdn-neutral300: #b1b1bc;
+$mdn-neutral400: #9595a2;
+$mdn-neutral500: #7a7a8b;
+$mdn-neutral600: #5e5e72;
+$mdn-neutral700: #42435a;
+$mdn-neutral800: #1f2033;
+$mdn-neutral900: #141422;
+
+$mdn-blue050: #aaf2ff;
+$mdn-blue100: #80ebff;
+$mdn-blue200: #0df;
+$mdn-blue300: #00b3f4;
+$mdn-blue400: #0090ed;
+$mdn-blue500: #0060df;
+$mdn-blue600: #0250bb;
+$mdn-blue700: #054096;
+$mdn-blue800: #073072;
+$mdn-blue900: #09204d;
+
+$mdn-green050: #e3fff3;
+$mdn-green100: #d1ffee;
+$mdn-green200: #b3ffe3;
+$mdn-green300: #87ffd1;
+$mdn-green400: #54ffbd;
+$mdn-green500: #3fe1b0;
+$mdn-green600: #2ac3a2;
+$mdn-green700: #008787;
+$mdn-green800: #005e5e;
+$mdn-green900: #08403f;
+
+$mdn-yellow050: #ffc;
+$mdn-yellow100: #ffff98;
+$mdn-yellow200: #ffea80;
+$mdn-yellow300: #ffd567;
+$mdn-yellow400: #ffbd4f;
+$mdn-yellow500: #ffa436;
+$mdn-yellow600: #e27f2e;
+$mdn-yellow700: #c45a27;
+$mdn-yellow800: #a7341f;
+$mdn-yellow900: #960e18;
+
+$mdn-red050: #ffdfe7;
+$mdn-red100: #ffbdc5;
+$mdn-red200: #ff9aa2;
+$mdn-red300: #ff848b;
+$mdn-red400: #ff6a75;
+$mdn-red500: #ff4f5e;
+$mdn-red600: #e22850;
+$mdn-red700: #c50042;
+$mdn-red800: #810220;
+$mdn-red900: #440306;
+
+$mdn-violet050: #e7dfff;
+$mdn-violet100: #d9bfff;
+$mdn-violet200: #cb9eff;
+$mdn-violet300: #c688ff;
+$mdn-violet400: #ab71ff;
+$mdn-violet500: #9059ff;
+$mdn-violet600: #7542e4;
+$mdn-violet700: #592acb;
+$mdn-violet800: #45278d;
+$mdn-violet900: #321c64;
+
+$mdn-pink050: #ffdff0;
+$mdn-pink100: #ffb4db;
+$mdn-pink200: #ff8ac5;
+$mdn-pink300: #ff6bba;
+$mdn-pink400: #ff4aa2;
+$mdn-pink500: #ff298a;
+$mdn-pink600: #e21587;
+$mdn-pink700: #c60084;
+$mdn-pink800: #7f145b;
+$mdn-pink900: #50134b;
+
+$mdn-ink050: #393473;
+$mdn-ink100: #342f6d;
+$mdn-ink200: #312a64;
+$mdn-ink300: #2e255d;
+$mdn-ink400: #2b2156;
+$mdn-ink500: #291d4f;
+$mdn-ink600: #271948;
+$mdn-ink700: #20123a;
+$mdn-ink800: #20133a;
+$mdn-ink900: #1d1133;
+
+$link-color: $mdn-blue700;
+$text-color: $mdn-neutral900;
+$text-color-inverted: $white;
+
+$cta-button-gradient: linear-gradient(to right, $mdn-violet500, $mdn-blue200);
+$gradient-accent: linear-gradient(90deg, $mdn-blue200, $mdn-green200);
+$gradient-secondary: linear-gradient(90deg, $mdn-violet500, $mdn-blue400);
+
+$page-overlay: rgba(66, 67, 90, 0.4);
+$card-box-shadow: 0 0 6px rgba(20, 20, 34, 0.25);

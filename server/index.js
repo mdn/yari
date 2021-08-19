@@ -22,8 +22,8 @@ const {
   CONTENT_TRANSLATED_ROOT,
 } = require("../content");
 // eslint-disable-next-line node/no-missing-require
-const { prepareDoc, renderDocHTML } = require("../ssr/dist/main");
-const { CSP_VALUE_DEV, DEFAULT_LOCALE } = require("../libs/constants");
+const { renderHTML } = require("../ssr/dist/main");
+const { CSP_VALUE, DEFAULT_LOCALE } = require("../libs/constants");
 
 const { STATIC_ROOT, PROXY_HOSTNAME, FAKE_V1_API } = require("./constants");
 const documentRouter = require("./document");
@@ -85,7 +85,7 @@ const proxy = FAKE_V1_API
 
 app.use("/api/v1", proxy);
 // This is an exception and it's only ever relevant in development.
-app.post("/:locale/users/account/signup", proxy);
+app.use("/users/*", proxy);
 
 // It's important that this line comes *after* the setting up for the proxy
 // middleware for `/api/v1` above.
@@ -168,18 +168,12 @@ app.get("/*/contributors.txt", async (req, res) => {
     return res.status(404).send(`Document not found by URL (${url})`);
   }
   const { doc: builtDocument } = await buildDocument(document);
-  if (document.metadata.contributors || !document.isArchive) {
-    res.send(
-      renderContributorsTxt(
-        document.metadata.contributors,
-        !document.isArchive
-          ? builtDocument.source.github_url.replace("/blob/", "/commits/")
-          : null
-      )
-    );
-  } else {
-    res.status(410).send("Contributors not known for this document.\n");
-  }
+  res.send(
+    renderContributorsTxt(
+      document.metadata.contributors,
+      builtDocument.source.github_url.replace("/blob/", "/commits/")
+    )
+  );
 });
 
 app.get("/*", async (req, res) => {
@@ -292,12 +286,11 @@ app.get("/*", async (req, res) => {
     );
   }
 
-  prepareDoc(document);
   if (isJSONRequest) {
     res.json({ doc: document });
   } else {
-    res.header("Content-Security-Policy", CSP_VALUE_DEV);
-    res.send(renderDocHTML(document, lookupURL));
+    res.header("Content-Security-Policy", CSP_VALUE);
+    res.send(renderHTML(lookupURL, { doc: document }));
   }
 });
 

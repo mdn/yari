@@ -214,7 +214,7 @@ const CellText = React.memo(
         >
           <span>{title}</span>
         </abbr>
-        {label}
+        <span>{label}</span>
       </>
     );
   }

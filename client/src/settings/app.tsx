@@ -6,6 +6,7 @@ import { Loading } from "../ui/atoms/loading";
 import { DISABLE_AUTH } from "../constants";
 import { useUserData } from "../user-context";
 import { useLocale } from "../hooks";
+import { AuthDisabled } from "../ui/atoms/auth-disabled";
 
 import "./index.scss";
 
@@ -44,7 +45,9 @@ export default function SettingsApp({ ...appProps }) {
     },
     {
       initialData: appProps.possibleLocales
-        ? { possibleLocales: appProps.possibleLocales }
+        ? {
+            possibleLocales: appProps.possibleLocales,
+          }
         : undefined,
       revalidateOnFocus: false,
     }
@@ -127,15 +130,6 @@ export default function SettingsApp({ ...appProps }) {
   );
 }
 
-function AuthDisabled() {
-  return (
-    <div className="notecard warning">
-      <h4>Authentication disabled</h4>
-      <p>Authentication and the user settings app is currently disabled.</p>
-    </div>
-  );
-}
-
 function NotSignedIn() {
   const locale = useLocale();
   const sp = new URLSearchParams();
@@ -172,7 +166,10 @@ function Settings({
   settingsData: SettingsData;
   refreshUserSettings: () => void;
 }) {
-  const [locale, setLocale] = React.useState(userSettings.locale);
+  // It only becomes 'en-US' if the userprofile doesn't have a 'locale'
+  // set in its profile from before at all. But it also makes sure that
+  // the value is always a string.
+  const [locale, setLocale] = React.useState(userSettings.locale || "en-US");
 
   const [sent, setSent] = React.useState(false);
   const [sendError, setSendError] = React.useState<Error | null>(null);

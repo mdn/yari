@@ -132,44 +132,15 @@ def assert_cached(
 @pytest.mark.parametrize(
     "slug,status,expected_location",
     [
-        ("/miel", 500, None),
         ("/_kuma_status.json", 200, None),
         ("/_whatsdeployed/code.json", 200, None),
         ("/_whatsdeployed/content.json", 200, None),
         ("/healthz", 204, None),
         ("/readiness", 204, None),
         ("/api/v1/whoami", 200, None),
-        ("/csp-violation-capture", 405, None),
-        ("/en-US/users/signin", 200, None),
-        ("/en-US/users/signup", 200, None),
-        ("/en-US/users/signout", 302, "/"),
-        ("/en-US/users/account/inactive", 200, None),
-        ("/en-US/users/account/signup", 302, "/en-US/users/signin"),
-        ("/en-US/users/account/signin/error", 200, None),
-        ("/en-US/users/account/signin/cancelled", 200, None),
-        (
-            "/en-US/users/account/email",
-            302,
-            "/en-US/users/account/signup-landing?next=/en-US/users/account/email",
-        ),
-        ("/en-US/users/account/email/confirm", 200, None),
-        ("/en-US/users/account/email/confirm/1", 200, None),
-        ("/en-US/users/account/recover/sent", 200, None),
-        (
-            "/en-US/users/account/recover/done",
-            302,
-            "/en-US/users/signin?next=/en-US/users/account/recover/done",
-        ),
-        (
-            "/users/github/login/?next=/en-US/",
-            302,
-            lambda loc: loc.startswith("https://github.com/login/oauth/authorize"),
-        ),
-        (
-            "/users/google/login/?next=/en-US/",
-            302,
-            lambda loc: loc.startswith("https://accounts.google.com/o/oauth2/auth"),
-        ),
+        ("/en-US/users/signout", 404, None),
+        ("/users/github/login/?next=/en-US/", 404, None),
+        ("/users/google/login/?next=/en-US/", 404, None),
         ("/admin/login/", 200, None),
         ("/admin/users/user/1/", 302, "/admin/login/?next=/admin/users/user/1/"),
         ("/en-US/docs/Learn/CSS/Styling_text/Fundamentals$samples/Color", 403, None),
@@ -184,7 +155,6 @@ def test_not_cached(base_url, is_behind_cdn, slug, status, expected_location):
     "slug,status,expected_location",
     [
         ("/en-US/", 200, None),
-        ("/en-US/events", 302, "https://mozilla.org/contribute/events"),
         ("/robots.txt", 200, None),
         ("/favicon.ico", 200, None),
         ("/contribute.json", 200, None),
@@ -215,7 +185,7 @@ def test_cached(base_url, is_behind_cdn, slug, status, expected_location):
 )
 def test_cached_attachments(base_url, attachment_url, is_behind_cdn, slug, status):
     """Ensure that these file-attachment requests are cached."""
-    expected_location = attachment_url + "/files/2767/hut.jpg"
+    expected_location = attachment_url + slug
     assert_cached(base_url + slug, status, expected_location, is_behind_cdn)
 
 

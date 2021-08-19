@@ -157,7 +157,6 @@ def test_misc_redirects(url, base_url):
         "/search/",
         "/search?q=video",
         "/search/?q=video",
-        "/signup",
         "/settings",
     ],
 )

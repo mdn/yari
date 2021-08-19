@@ -23,7 +23,7 @@ Before you can start working with Yari, you need to:
     [Node.js](https://nodejs.org) (>= 12.0.0), and [Yarn 1](https://classic.yarnpkg.com/en/docs/install).
 
 1.  [Fork](https://docs.github.com/en/github/getting-started-with-github/fork-a-repo)
-    the MDN [content](https://github.com/mdn/content) and [yari](https://github.com/mdn/content)
+    the MDN [content](https://github.com/mdn/content) and [yari](https://github.com/mdn/yari)
     repositories using the Fork button on GitHub.
 
 1.  Clone the forked repositories to your computer using the following commands
@@ -255,3 +255,10 @@ sub-dependencies. A sure way to solve it is to run:
 
     rm -fr node_modules
     yarn install
+
+### `Error: listen EADDRINUSE: address already in use :::5000`
+
+The default server port `:5000` might be in use by another process. To resolve this,
+you can pick any unused port (e.g., 6000) and run the following:
+
+    echo SERVER_PORT=6000 >> .env

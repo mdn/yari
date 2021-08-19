@@ -23,6 +23,10 @@ app.use((req, res, next) => {
   return next();
 });
 
+app.get("/", async (req, res) => {
+  res.redirect(302, "/en-US/");
+});
+
 app.use(staticMiddlewares);
 
 app.use(cookieParser());
@@ -56,7 +60,6 @@ app.get("/api/v1/search", async (req, res) => {
       locale: "en-US",
       slug: "Web/Foo",
       popularity: 0.1,
-      archived: false,
       summary: "No summary",
       highlight: {
         body: null,
@@ -77,7 +80,6 @@ app.get("/api/v1/search", async (req, res) => {
         locale: "en-US",
         slug: `Web/Serial${i}`,
         popularity: 1 - i / 10,
-        archived: false,
         summary: "No summary",
         highlight: {
           body: null,
@@ -94,29 +96,30 @@ app.get("/api/v1/search", async (req, res) => {
   });
 });
 
+const mockWhoamiDatabase = new Map();
+
 app.get("/api/v1/whoami", async (req, res) => {
-  const context = { waffle: { flags: {}, switches: {} } };
-  if (req.cookies.fakesessionid) {
-    context.username = req.cookies.fakesessionid;
-    context.is_authenticated = true;
-    context.email = `${req.cookies.fakesessionid}@example.com`;
-  }
+  const sessionid = req.cookies.sessionid;
+  const context =
+    sessionid && mockWhoamiDatabase.has(sessionid)
+      ? mockWhoamiDatabase.get(sessionid)
+      : {};
   res.json(context);
 });
 
 const mockSettingsDatabase = new Map();
 
 app.get("/api/v1/settings", async (req, res) => {
-  const defaultContext = { locale: "en-US" };
-  if (!req.cookies.fakesessionid) {
+  const defaultContext = { locale: "en-US", csrfmiddlewaretoken: "xyz123" };
+  if (!req.cookies.sessionid) {
     res.status(403).send("oh no you don't");
   } else {
-    if (mockSettingsDatabase.has(req.cookies.fakesessionid)) {
+    if (mockSettingsDatabase.has(req.cookies.sessionid)) {
       res.json(
         Object.assign(
           {},
           defaultContext,
-          mockSettingsDatabase.get(req.cookies.fakesessionid)
+          mockSettingsDatabase.get(req.cookies.sessionid)
         )
       );
     } else {
@@ -126,18 +129,124 @@ app.get("/api/v1/settings", async (req, res) => {
 });
 
 app.post("/api/v1/settings", async (req, res) => {
-  if (!req.cookies.fakesessionid) {
+  if (!req.cookies.sessionid) {
     res.status(403).send("oh no you don't");
   } else {
-    mockSettingsDatabase.set(req.cookies.fakesessionid, {
+    mockSettingsDatabase.set(req.cookies.sessionid, {
       locale: req.body.locale,
     });
     res.json({ ok: true });
   }
 });
 
+const mockBookmarksDatabase = new Map();
+
+app.post("/api/v1/plus/bookmarks/", async (req, res) => {
+  // Toggle
+  const url = req.query.url;
+  if (!url) {
+    return res.status(400).send("missing url");
+  }
+  const bookmarks = mockBookmarksDatabase.get(req.cookies.sessionid) || [];
+  const found = bookmarks.find((bookmark) => bookmark.url === req.query.url);
+  if (found) {
+    const newBookmarks = bookmarks.filter((bookmark) => bookmark.url !== url);
+    mockBookmarksDatabase.set(req.cookies.sessionid, newBookmarks);
+  } else {
+    const makeTitle = (url) =>
+      `Title of ${url.charAt(0).toUpperCase()}${url.slice(1).toLowerCase()}`;
+    bookmarks.push({
+      id: Math.max(...[0, ...bookmarks.map((b) => b.id)]) + 1,
+      url,
+      created: new Date(),
+      parents: url
+        .split("/")
+        .slice(3)
+        .map((uri, i) => {
+          const prefix = url
+            .split("/")
+            .slice(0, 3 + i)
+            .join("/");
+          return { uri: `${prefix}/${uri}`, title: makeTitle(uri) };
+        }),
+      title: makeTitle(url),
+    });
+    mockBookmarksDatabase.set(req.cookies.sessionid, bookmarks);
+  }
+  res.status(201).json({ OK: true });
+});
+
+app.get("/api/v1/plus/bookmarks/", async (req, res) => {
+  if (!req.cookies.sessionid) {
+    res.status(403).send("oh no you don't");
+  } else {
+    const bookmarks = mockBookmarksDatabase.get(req.cookies.sessionid) || [];
+    if (req.query.url) {
+      // Toggled?
+      const found = bookmarks.find(
+        (bookmark) => bookmark.url === req.query.url
+      );
+      res.json({
+        csrfmiddlewaretoken: "xyz123",
+        bookmarked: found
+          ? { id: found.id, created: found.created.toISOString() }
+          : null,
+      });
+    } else {
+      // Return all (paginated)
+      const page = parseInt(req.query.page || "1", 10);
+      const pageSize = 5;
+      let m = 0;
+      let n = pageSize;
+      res.json({
+        items: bookmarks.slice(m, n).map((bookmark) => {
+          return {
+            ...bookmark,
+            created: bookmark.created.toISOString(),
+          };
+        }),
+        metadata: {
+          total: bookmarks.length,
+          page: page,
+          per_page: pageSize,
+        },
+      });
+    }
+  }
+});
+
+app.get("/users/fxa/login/authenticate/", async (req, res) => {
+  const userId = `${Math.ceil(10000 * Math.random())}`;
+  res.cookie("sessionid", userId, {
+    maxAge: 5 * 60 * 1000,
+  });
+  mockWhoamiDatabase.set(userId, {
+    username: `my-${userId}`,
+    is_authenticated: true,
+    email: `${userId}@example.com`,
+    // Note! Everyone who manages to sign in becomes a subscriber.
+    // This is probably not ideal. Perhaps more ideal would be that
+    // they sign in and become a subscriber later. But as of Aug 2021, it's
+    // not obvious how we are going to integrate authentication with
+    // with authorization. I.e. use of the subscription platform and FxA.
+    is_subscriber: true,
+  });
+  res.redirect(req.query.next);
+});
+
+app.post("/users/fxa/login/logout/", async (req, res) => {
+  if (!req.cookies.sessionid) {
+    res.status(403).send("oh no you don't");
+  } else {
+    res.clearCookie("sessionid");
+    mockWhoamiDatabase.delete(req.cookies.sessionid);
+    res.redirect(`/en-US/`);
+  }
+});
+
 // To mimic what CloudFront does.
 app.get("/*", async (req, res) => {
+  console.log(`Don't know how to mock: ${req.path}`, req.query);
   res
     .status(404)
     .sendFile(path.join(STATIC_ROOT, "en-us", "_spas", "404.html"));

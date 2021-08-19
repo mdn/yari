@@ -1,0 +1,64 @@
+@use "sass:math";
+
+@use "~@mdn/minimalist/sass/vars/layout";
+@use "~@mdn/minimalist/sass/vars/typography";
+
+@use "../../theme/index" as theme;
+
+.card {
+  background-color: theme.$white;
+  border-radius: theme.$default-border-radius;
+  box-shadow: theme.$card-box-shadow;
+  margin: 0 auto (layout.$base-spacing * 2);
+  max-width: 95%;
+  padding: layout.$base-spacing;
+
+  @media #{layout.$mq-tablet-and-up} {
+    max-width: 340px;
+  }
+
+  &.featured {
+    border-top: 18px solid theme.$mdn-pink600;
+  }
+
+  .card-type-heading {
+    color: theme.$mdn-pink600;
+    font-family: theme.$metropolis-font-family;
+    margin-bottom: math.div(layout.$base-spacing, 2);
+  }
+
+  h2 {
+    font-size: typography.$medium-font-size;
+    line-height: typography.$heading-line-height;
+    margin: math.div(layout.$base-spacing, 2) 0;
+
+    @media #{layout.$mq-small-desktop-and-up} {
+      font-size: typography.$large-font-size;
+      margin-top: 0;
+    }
+  }
+
+  h3 {
+    font-size: typography.$default-font-size;
+    font-weight: bold;
+    margin-bottom: math.div(layout.$base-spacing, 2);
+
+    @media #{layout.$mq-small-desktop-and-up} {
+      font-size: typography.$small-medium-font-size;
+    }
+  }
+
+  .author {
+    border-bottom: theme.$standard-light-border;
+    margin: math.div(layout.$base-spacing, 2) 0;
+    padding-bottom: math.div(layout.$base-spacing, 2);
+  }
+
+  ul,
+  li {
+    font-size: typography.$small-font-size;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+}

@@ -572,14 +572,6 @@ class BucketManager:
         return timer
 
 
-def parse_archived_txt_file(file: Path):
-    with open(file) as f:
-        for line in f:
-            line = line.strip()
-            if line and not line.startswith("#"):
-                yield line
-
-
 def upload_content(build_directory, content_roots, config):
     full_timer = StopWatch().start()
 
@@ -590,7 +582,6 @@ def upload_content(build_directory, content_roots, config):
     show_progress_bar = not config["no_progressbar"]
     upload_redirects = not config["no_redirects"]
     prune = config["prune"]
-    archived_txt_file = config["archived_files"]
     default_cache_control = config["default_cache_control"]
 
     log.info(f"Upload files from: {build_directory}")
@@ -669,14 +660,6 @@ def upload_content(build_directory, content_roots, config):
         now = datetime.datetime.utcnow().replace(tzinfo=UTC)
         delete_keys = []
 
-        archived_files_as_keys = set()
-        if archived_txt_file:
-            for file in parse_archived_txt_file(archived_txt_file):
-                locale, slug = file.replace("/index.html", "").split("/", 1)
-                archived_files_as_keys.add(f"{bucket_prefix}/{locale}/docs/{slug}")
-            if not archived_files_as_keys:
-                raise Exception(f"found no entries inside {archived_txt_file}")
-
         for key in existing_bucket_objects:
             if key.startswith(f"{bucket_prefix}/_whatsdeployed/"):
                 # These are special and wouldn't have been uploaded
@@ -703,35 +686,6 @@ def upload_content(build_directory, content_roots, config):
             # But every page usually has a `index.json` file, which might look
             # something like this: `main/en-us/docs/web/api/index.json` or
             # `main/en-us/docs/web/api/screenshot.png`
-
-            # This if statement protects against possible deleting anything that
-            # isn't a document.
-            if "/docs/" in key:
-                is_archived = False
-                # Trying to avoid having to do another for-loop with key.startswith()
-                # so first look for the low-hanging fruit.
-                if key in archived_files_as_keys:
-                    # This is the easiest and fastest lookup
-                    is_archived = True
-                elif (
-                    re.sub(r"/(index\.json|contributors\.txt|bcd\.json)$", "", key)
-                    in archived_files_as_keys
-                ):
-                    # This is easy and fast too and covers 99% of the other
-                    # possible keys.
-                    is_archived = True
-                else:
-                    # This is for things like:
-                    # `main/en-us/docs/web/api/screenshot.png` where you can't
-                    # confidently use `path.dirname()` because the key could
-                    # be something like `main/fr/docs/web/api/manifest.json` which
-                    # is actually a "folder".
-                    for archive_file_as_key in archived_files_as_keys:
-                        if key.startswith(archive_file_as_key):
-                            is_archived = True
-                            break
-                if is_archived:
-                    continue
 
             assert key.startswith(bucket_prefix)
 

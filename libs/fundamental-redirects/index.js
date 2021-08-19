@@ -1173,16 +1173,26 @@ for (const [pattern, path] of [
 }
 
 const MISC_REDIRECT_PATTERNS = [
-  localeRedirect(/^account\/?$/i, "/settings", {
+  redirect(/^events\/?$/i, "https://community.mozilla.org/events/", {
     permanent: false,
   }),
-  localeRedirect(
-    /^profile(?:|\/stripe_subscription|\/edit)\/?$/i,
-    "/settings",
+  localeRedirect(/^events\/?$/i, "https://community.mozilla.org/events/", {
+    prependLocale: false,
+    permanent: false,
+  }),
+  redirect(
+    /^communities\/mozilla-tech-speakers\/?$/i,
+    "https://community.mozilla.org/en/groups/tech-speakers/",
     {
       permanent: false,
     }
   ),
+  localeRedirect(/^account\/?$/i, "/settings", {
+    permanent: false,
+  }),
+  localeRedirect(/^profile(?:|\/edit)\/?$/i, "/settings", {
+    permanent: false,
+  }),
   localeRedirect(
     /^profiles\/(?:[^\/]+)(?:|\/edit|\/delete)\/?$/i,
     "/settings",
