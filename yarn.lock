@@ -2546,9 +2546,10 @@
     "@types/yargs" "^16.0.0"
     chalk "^4.0.0"
 
-"@mdn/browser-compat-data@mdn/browser-compat-data#main":
-  version "3.3.14"
-  resolved "https://codeload.github.com/mdn/browser-compat-data/tar.gz/a371e85321753447992c0a6e07e8c8c33daab9b7"
+"@mdn/browser-compat-data@4.0.0":
+  version "4.0.0"
+  resolved "https://registry.yarnpkg.com/@mdn/browser-compat-data/-/browser-compat-data-4.0.0.tgz#a947660f0601fc2cf208fbddff6a94fec9fcc675"
+  integrity sha512-Yn5Xf+LyH+KZ0wz0XXzD1C7uGKF29RMrcXLaRHwzH3Uo5fRtnPTdWJIyT8kCrvxt8Wq8MQpMDByk/AufmPWL1A==
 
 "@mdn/dinocons@lucacasonato/mdn-dinocons#add_deno_dinocon":
   version "0.3.4"
