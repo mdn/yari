@@ -34,7 +34,7 @@ export default function App() {
               setShowFullArticle(true);
             }}
           >
-            <span>&hellip;</span> see more
+            <span>&hellip;</span> Read more
           </button>
         </p>
         {showFullArticle && (
