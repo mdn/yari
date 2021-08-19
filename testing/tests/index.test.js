@@ -1698,7 +1698,7 @@ test("notecards are correctly transformed by the formatNotecards utility", () =>
 
   const jsonFile = path.join(builtFolder, "index.json");
   const { doc } = JSON.parse(fs.readFileSync(jsonFile));
-  expect(doc.flaws.length).toBe(undefined);
+  expect(doc.flaws.length).toBeFalsy();
   expect(doc.title).toBe(
     "A page representing some edge cases of div.notecard that we might encounter"
   );
