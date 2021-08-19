@@ -15,12 +15,6 @@ const locales = {
 };
 
 function checkSidebarDom(dom, locale) {
-  const section = dom.querySelector("section");
-  assert(
-    section.classList.contains("Quick_links"),
-    "Section does not contain Quick_links class"
-  );
-
   const listItems = dom.querySelectorAll("li");
   assert.equal(listItems[0].textContent, locales[locale].Page_Inspector);
 }

@@ -2,32 +2,26 @@ const cheerio = require("cheerio");
 const { packageBCD } = require("./resolve-bcd");
 const specs = require("browser-specs");
 
-/** Extract and mutate the $ if it as a "Quick_Links" section.
+/** Extract and mutate the $ if it as a "Quick_links" section.
  * But only if it exists.
  *
  * If you had this:
  *
  *   const $ = cheerio.load(`
- *      <div id="Quick_Links">Stuff</div>
+ *      <div id="Quick_links">Stuff</div>
  *      <h2>Headline<h2>
  *      <p>Text</p>
  *    `)
  *   const sidebar = extractSidebar($);
  *   console.log(sidebar);
- *   // '<div id="Quick_Links">Stuff</div>'
+ *   // '<div id="Quick_links">Stuff</div>'
  *   console.log($.html());
  *   // '<h2>Headline<h2>\n<p>Text</p>'
  *
  * ...give or take some whitespace.
  */
 function extractSidebar($) {
-  // Have to use both spellings because unfortunately, some sidebars don't come
-  // from macros but have it hardcoded into the content. Perhaps it was the
-  // result of someone once rendering out some sidebar macros.
-  // We could consolidate it to just exactly one spelling (`quick_links`) but
-  // that would require having to fix 29 macros and hundreds of translated content.
-  // By selecting for either spelling we're being defensive and safe.
-  const search = $("#Quick_Links, #Quick_links");
+  const search = $("#Quick_links");
   if (!search.length) {
     return "";
   }
