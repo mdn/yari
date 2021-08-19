@@ -594,11 +594,7 @@
     },
     "HTMLAppletElement": {
       "inh": "HTMLElement",
-      "impl": [
-        "MozImageLoadingContent",
-        "MozFrameLoaderOwner",
-        "MozObjectLoadingContent"
-      ]
+      "impl": []
     },
     "HTMLAreaElement": {
       "inh": "HTMLElement",
@@ -666,11 +662,7 @@
     },
     "HTMLEmbedElement": {
       "inh": "HTMLElement",
-      "impl": [
-        "MozImageLoadingContent",
-        "MozFrameLoaderOwner",
-        "MozObjectLoadingContent"
-      ]
+      "impl": []
     },
     "HTMLFieldSetElement": {
       "inh": "HTMLElement",
@@ -690,7 +682,7 @@
     },
     "HTMLFrameElement": {
       "inh": "HTMLElement",
-      "impl": ["MozFrameLoaderOwner"]
+      "impl": []
     },
     "HTMLFrameSetElement": {
       "inh": "HTMLElement",
@@ -714,15 +706,15 @@
     },
     "HTMLIFrameElement": {
       "inh": "HTMLElement",
-      "impl": ["MozFrameLoaderOwner", "BrowserElement"]
+      "impl": ["BrowserElement"]
     },
     "HTMLImageElement": {
       "inh": "HTMLElement",
-      "impl": ["MozImageLoadingContent"]
+      "impl": []
     },
     "HTMLInputElement": {
       "inh": "HTMLElement",
-      "impl": ["MozImageLoadingContent", "MozPhonetic"]
+      "impl": []
     },
     "HTMLLIElement": {
       "inh": "HTMLElement",
@@ -774,11 +766,7 @@
     },
     "HTMLObjectElement": {
       "inh": "HTMLElement",
-      "impl": [
-        "MozImageLoadingContent",
-        "MozFrameLoaderOwner",
-        "MozObjectLoadingContent"
-      ]
+      "impl": []
     },
     "HTMLOptGroupElement": {
       "inh": "HTMLElement",
@@ -1086,142 +1074,6 @@
     },
     "MouseScrollEvent": {
       "inh": "MouseEvent",
-      "impl": []
-    },
-    "MozAbortablePromise": {
-      "inh": "_Promise",
-      "impl": []
-    },
-    "MozActivity": {
-      "inh": "DOMRequest",
-      "impl": []
-    },
-    "MozApplicationEvent": {
-      "inh": "Event",
-      "impl": []
-    },
-    "MozCdmaIccInfo": {
-      "inh": "MozIccInfo",
-      "impl": []
-    },
-    "MozCellBroadcast": {
-      "inh": "EventTarget",
-      "impl": []
-    },
-    "MozCellBroadcastEvent": {
-      "inh": "Event",
-      "impl": []
-    },
-    "MozClirModeEvent": {
-      "inh": "Event",
-      "impl": []
-    },
-    "MozContactChangeEvent": {
-      "inh": "Event",
-      "impl": []
-    },
-    "MozEmergencyCbModeEvent": {
-      "inh": "Event",
-      "impl": []
-    },
-    "MozGsmIccInfo": {
-      "inh": "MozIccInfo",
-      "impl": []
-    },
-    "MozIcc": {
-      "inh": "EventTarget",
-      "impl": []
-    },
-    "MozIccManager": {
-      "inh": "EventTarget",
-      "impl": []
-    },
-    "MozInputMethod": {
-      "inh": "EventTarget",
-      "impl": []
-    },
-    "MozInterAppMessageEvent": {
-      "inh": "Event",
-      "impl": []
-    },
-    "MozInterAppMessagePort": {
-      "inh": "EventTarget",
-      "impl": []
-    },
-    "MozMessageDeletedEvent": {
-      "inh": "Event",
-      "impl": []
-    },
-    "MozMmsEvent": {
-      "inh": "Event",
-      "impl": []
-    },
-    "MozMobileConnection": {
-      "inh": "EventTarget",
-      "impl": []
-    },
-    "MozMobileMessageManager": {
-      "inh": "EventTarget",
-      "impl": []
-    },
-    "MozNFC": {
-      "inh": "EventTarget",
-      "impl": ["MozNFCManager"]
-    },
-    "MozNFCPeerEvent": {
-      "inh": "Event",
-      "impl": []
-    },
-    "MozNFCTagEvent": {
-      "inh": "Event",
-      "impl": []
-    },
-    "MozOtaStatusEvent": {
-      "inh": "Event",
-      "impl": []
-    },
-    "MozSettingsEvent": {
-      "inh": "Event",
-      "impl": []
-    },
-    "MozSettingsTransactionEvent": {
-      "inh": "Event",
-      "impl": []
-    },
-    "MozSmsEvent": {
-      "inh": "Event",
-      "impl": []
-    },
-    "MozSpeakerManager": {
-      "inh": "EventTarget",
-      "impl": []
-    },
-    "MozStkCommandEvent": {
-      "inh": "Event",
-      "impl": []
-    },
-    "MozVoicemail": {
-      "inh": "EventTarget",
-      "impl": []
-    },
-    "MozVoicemailEvent": {
-      "inh": "Event",
-      "impl": []
-    },
-    "MozWifiConnectionInfoEvent": {
-      "inh": "Event",
-      "impl": []
-    },
-    "MozWifiManager": {
-      "inh": "EventTarget",
-      "impl": []
-    },
-    "MozWifiStationInfoEvent": {
-      "inh": "Event",
-      "impl": []
-    },
-    "MozWifiStatusChangeEvent": {
-      "inh": "Event",
       "impl": []
     },
     "MutationEvent": {
@@ -1710,7 +1562,7 @@
     },
     "SVGImageElement": {
       "inh": "SVGGraphicsElement",
-      "impl": ["MozImageLoadingContent", "SVGURIReference"]
+      "impl": ["SVGURIReference"]
     },
     "SVGLengthList": {
       "inh": "",
@@ -2292,6 +2144,10 @@
       "inh": "XRReferenceSpace",
       "impl": []
     },
+    "XRCPUDepthInformation": {
+      "inh": "XRDepthInformation",
+      "impl": []
+    },
     "XRFrame": {
       "inh": "",
       "impl": []
@@ -2356,6 +2212,10 @@
       "inh": "",
       "impl": []
     },
+    "XRWebGLDepthInformation": {
+      "inh": "XRDepthInformation",
+      "impl": []
+    },
     "XRWebGLLayer": {
       "inh": "",
       "impl": []
@@ -2370,7 +2230,7 @@
     },
     "XULElement": {
       "inh": "Element",
-      "impl": ["GlobalEventHandlers", "MozFrameLoaderOwner"]
+      "impl": ["GlobalEventHandlers"]
     }
   }
 ]

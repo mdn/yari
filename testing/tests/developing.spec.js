@@ -31,6 +31,7 @@ test.describe("Testing the kitchensink page", () => {
 
     await page.goto(devURL("/en-US/docs/MDN/Kitchensink"));
     await page.waitForLoadState("networkidle");
+    await page.waitForSelector("text=The MDN Content Kitchensink");
     expect(await page.title()).toContain("The MDN Content Kitchensink");
     expect(
       await page.isVisible("text=The MDN Content Kitchensink")
@@ -57,9 +58,7 @@ test.describe("Testing the kitchensink page", () => {
     // You can go to the page directly via the server
     await page.goto(serverURL("/en-US/docs/MDN/Kitchensink"));
     await page.waitForLoadState("networkidle");
-    expect(
-      await page.isVisible("text=The MDN Content Kitchensink")
-    ).toBeTruthy();
+    await page.waitForSelector("text=The MDN Content Kitchensink");
   });
 
   test("server-side render JSON", async () => {

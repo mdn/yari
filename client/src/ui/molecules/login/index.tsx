@@ -1,9 +1,10 @@
-import * as React from "react";
+import React from "react";
+import { Link, useLocation } from "react-router-dom";
 
 import Dropdown from "../dropdown";
 import { useLocale } from "../../../hooks";
 import SignInLink from "../../atoms/signin-link";
-import { useUserData, removeSessionStorageData } from "../../../user-context";
+import { useUserData } from "../../../user-context";
 
 import { DISABLE_AUTH } from "../../../constants";
 
@@ -24,7 +25,10 @@ export default function Login() {
 
 function LoginInner() {
   const locale = useLocale();
+  const { pathname } = useLocation();
   const userData = useUserData();
+
+  const [forceCloseDropdown, setForceCloseDropdown] = React.useState(false);
 
   // if we don't have the user data yet, don't render anything
   if (!userData || typeof window === "undefined") {
@@ -35,6 +39,12 @@ function LoginInner() {
     // Otherwise, show a login prompt
     return <SignInLink className="signin-link" />;
   }
+
+  // If pathname === '/en-US/sigin', i.e. you're already on the sign in page
+  // itself, then discard that as a 'next' parameter.
+  // Otherwise, you might get redirected back to the sign in page after you've
+  // successfully signed in.
+  const next = pathname === `/${locale}/signin` ? `/${locale}/` : pathname;
 
   // If we have user data and the user is logged in, show their
   // profile pic, defaulting to the dino head if the avatar
@@ -49,42 +59,34 @@ function LoginInner() {
       <span className="avatar-username">{userData.username}</span>
     </>
   );
-  // Note that this component is never rendered server-side so it's safe to
-  // rely on `window.location`.
-  let next = window.location.pathname;
-  let signOutURL = `/${locale}/users/signout`;
-  if (
-    process.env.NODE_ENV === "development" &&
-    process.env.REACT_APP_KUMA_HOST
-  ) {
-    const combined = new URL(next, window.location.href);
-    next = combined.toString();
-    signOutURL = `http://${process.env.REACT_APP_KUMA_HOST}${signOutURL}`;
-  }
 
   return (
-    <Dropdown id="user-avatar-menu" label={label} right={true} hideArrow={true}>
+    <Dropdown
+      id="user-avatar-menu"
+      label={label}
+      right={true}
+      hideArrow={true}
+      forceClose={forceCloseDropdown}
+    >
       <li>
-        <a href={`/${locale}/settings`}>Account settings</a>
-      </li>
-      <li>
-        <form
-          action={signOutURL}
-          method="post"
-          onSubmit={() => {
-            // Because sign out happens externally, our user-context might have
-            // cached the fact that the user was signed in. It will not have any
-            // chance of knowing, that the user signed out, until they're
-            // redirected back (after the successful signout POST in Kuma).
-            // So we take this opportunity to invalidate any such caching.
-            removeSessionStorageData();
+        <Link
+          to={`/${locale}/settings`}
+          onClick={() => {
+            setForceCloseDropdown(true);
           }}
         >
-          <input name="next" type="hidden" value={next} />
-          <button className="ghost signout-button" type="submit">
-            Sign out
-          </button>
-        </form>
+          Account settings
+        </Link>
+      </li>
+      <li>
+        <Link
+          to={`/${locale}/signout?${new URLSearchParams({ next }).toString()}`}
+          onClick={() => {
+            setForceCloseDropdown(true);
+          }}
+        >
+          Sign out
+        </Link>
       </li>
     </Dropdown>
   );

@@ -125,7 +125,7 @@
     "@types/hast": "^2.3.2",
     "@types/jest": "^26.0.24",
     "@types/mdast": "^3.0.7",
-    "@types/react": "^17.0.16",
+    "@types/react": "^17.0.18",
     "@types/react-dom": "^17.0.9",
     "@types/react-modal": "^3.12.1",
     "babel-loader": "8.1.0",
@@ -141,8 +141,7 @@
     "extend": "^3.0.2",
     "flexsearch": "0.6.32",
     "foreman": "3.0.1",
-    "fuzzyjs": "4.0.4",
-    "fuzzysearch": "1.0.3",
+    "fzf": "0.4.1",
     "history": "5.0.0",
     "html-validate": "5.2.1",
     "husky": "^6.0.0",
@@ -179,7 +178,7 @@
     "typescript": "^4.3.5",
     "use-debounce": "^7.0.0",
     "webpack": "^4.44.2",
-    "webpack-cli": "^4.7.2",
+    "webpack-cli": "^4.8.0",
     "webpack-node-externals": "^3.0.0"
   },
   "engines": {

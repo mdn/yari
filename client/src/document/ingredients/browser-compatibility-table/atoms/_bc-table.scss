@@ -54,9 +54,11 @@
 
   .bc-table-row-header {
     padding: math.div($base-spacing, 2) math.div($base-spacing, 4);
+    display: flex;
 
     code {
       text-decoration: none;
+      white-space: normal;
     }
   }
 

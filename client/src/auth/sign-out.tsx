@@ -1,5 +1,5 @@
 import React from "react";
-import { useSearchParams } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import useSWR from "swr";
 
 import { DISABLE_AUTH } from "../constants";
@@ -7,24 +7,20 @@ import { useUserData, removeSessionStorageData } from "../user-context";
 import { useLocale } from "../hooks";
 import { AuthDisabled } from "../ui/atoms/auth-disabled";
 
-// import { ReactComponent as GithubLogo } from "@mdn/dinocons/brands/github-mark-small.svg";
-// import { ReactComponent as GoogleLogo } from "@mdn/dinocons/brands/google-mono.svg";
-
 import "./index.scss";
-import "./sign-in.scss";
+import "./sign-out.scss";
 
 interface UserSettings {
   csrfmiddlewaretoken: string;
 }
 
-export default function SignInApp() {
+export default function SignOutApp() {
   const [searchParams] = useSearchParams();
   const locale = useLocale();
   const userData = useUserData();
   const sp = new URLSearchParams();
 
-  // If it turns out that you're signed in already, the sign-out will require
-  // a CSRF token to be able to submit the POST to `/users/*/login/logout`.
+  // First check that you're signed in and if you are, get a CSRF token.
   const userSettingsAPIURL = React.useMemo(() => {
     return userData && userData.isAuthenticated ? "/api/v1/settings" : null;
   }, [userData]);
@@ -83,9 +79,11 @@ export default function SignInApp() {
           <form
             className="sign-out-form"
             method="post"
-            action="/users/fxa/login/logout/"
+            action={`${prefix}/users/fxa/login/logout/`}
+            onSubmit={() => {
+              removeSessionStorageData();
+            }}
           >
-            <h2>You're already signed in.</h2>
             {data && data.csrfmiddlewaretoken && (
               <input
                 type="hidden"
@@ -103,60 +101,19 @@ export default function SignInApp() {
               </div>
             )}
             {data && data.csrfmiddlewaretoken && (
-              <>
-                <button type="submit" className="ghost">
-                  Sign out
-                </button>
-                or, <a href="/">return to the home page</a>
-              </>
+              <button type="submit" className="button icon-button outline">
+                Sign out
+              </button>
             )}
-            .
           </form>
         ) : (
           <>
-            {/* <p className="lead">
-              Sign in to your MDN Web Docs account. If you haven’t already
-              created an account, you will be prompted to do so after signing
-              in.
-            </p> */}
-            <ul className="auth-buttons">
-              <li>
-                <a
-                  href={`${prefix}/users/fxa/login/authenticate/?${sp.toString()}`}
-                  className="button icon-button outline"
-                  onClick={() => {
-                    removeSessionStorageData();
-                  }}
-                >
-                  {/* <FxALogo /> */}
-                  Sign in with Firefox Accounts
-                </a>
-              </li>
-              {/* <li>
-                <a
-                  href={`${prefix}/users/github/login/?${sp.toString()}`}
-                  className="button icon-button outline"
-                  onClick={() => {
-                    removeSessionStorageData();
-                  }}
-                >
-                  <GithubLogo />
-                  Sign in with GitHub&trade;
-                </a>
-              </li> */}
-              {/* <li>
-                <a
-                  href={`${prefix}/users/google/login/?${sp.toString()}`}
-                  className="button icon-button outline"
-                  onClick={() => {
-                    removeSessionStorageData();
-                  }}
-                >
-                  <GoogleLogo />
-                  Sign in with Google&trade;
-                </a>
-              </li> */}
-            </ul>
+            <p>
+              <b>You're not signed in.</b> Yet.
+            </p>
+            <p>
+              <Link to={`/${locale}/signin`}>Click here to sign in</Link>
+            </p>
           </>
         )
       ) : (
