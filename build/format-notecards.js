@@ -11,7 +11,7 @@ function formatNotecards($) {
     // Return filtered collection of elements that are
     // text nodes and remove the node while were at it,
     // also trimming away any leading/trailing space
-    var textNodes = div
+    const textNodes = div
       .contents()
       .filter((_, element) => {
         return element.nodeType === 3;
