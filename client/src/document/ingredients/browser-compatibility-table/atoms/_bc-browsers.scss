@@ -69,8 +69,6 @@
 
 .bc-browsers .bc-head-icon-deno {
   &::before {
-    // TODO(lucacasonato): should probably be replaced with an icon from
-    // @mdn/dinocons.
     background-image: url("~@mdn/dinocons/platforms/deno.svg");
   }
 }
