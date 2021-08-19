@@ -2551,9 +2551,10 @@
   resolved "https://registry.yarnpkg.com/@mdn/browser-compat-data/-/browser-compat-data-4.0.0.tgz#a947660f0601fc2cf208fbddff6a94fec9fcc675"
   integrity sha512-Yn5Xf+LyH+KZ0wz0XXzD1C7uGKF29RMrcXLaRHwzH3Uo5fRtnPTdWJIyT8kCrvxt8Wq8MQpMDByk/AufmPWL1A==
 
-"@mdn/dinocons@lucacasonato/mdn-dinocons#add_deno_dinocon":
-  version "0.3.4"
-  resolved "https://codeload.github.com/lucacasonato/mdn-dinocons/tar.gz/78b674fc91ccf45fafafefc0b6b4e81c0fcc9999"
+"@mdn/dinocons@^0.3.5":
+  version "0.3.5"
+  resolved "https://registry.yarnpkg.com/@mdn/dinocons/-/dinocons-0.3.5.tgz#3c3e9cb2877c4449c224134cf29b2658f4614576"
+  integrity sha512-LIM66Ylm26YE/fYc0IquszpE2rcta2gaBrKLWO5HH0CnlQP7HLwh6D6SrErIgGnXzMCw3kc5t4YX/QgwcPFvEA==
 
 "@mdn/minimalist@^2.0.2":
   version "2.0.2"
