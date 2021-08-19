@@ -1687,7 +1687,7 @@ test("translated content broken links can fall back to en-us", () => {
   );
 });
 
-test("notecards are being transformed by formatNotecards correctly", () => {
+test("notecards are correctly transformed by the formatNotecards utility", () => {
   const builtFolder = path.join(
     buildRoot,
     "en-us",
@@ -1707,13 +1707,10 @@ test("notecards are being transformed by formatNotecards correctly", () => {
   const html = fs.readFileSync(htmlFile, "utf-8");
   const $ = cheerio.load(html);
 
-  // There shouldnt be any div.notecard h4 elements
   expect($("div.notecard h4").length).toBe(0);
-  // when a h4 has its immediate adjacent sibiling as a text node
   expect($("div.notecard.note").html()).toBe(
     "<p><strong>Some heading:</strong> No paragraph here.</p><p>Paragraph 2</p>"
   );
-  // when a h4's immediate adjacent sibling is a <p> tag
   expect($("div.notecard.warning").html()).toBe(
     "<p><strong>Some heading:</strong> Paragraph 1</p><p>Paragraph 2</p>"
   );
