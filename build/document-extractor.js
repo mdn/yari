@@ -70,6 +70,68 @@ function extractSections($) {
     sections.push(...subSections);
     flaws.push(...subFlaws);
   }
+
+  // Check for and mutate possible duplicated IDs.
+  // If a HTML document has...:
+  //
+  //   <h2 id="Examples">Check these examples</h2>
+  //   ...
+  //   <h2 id="examples">Examples</h2>
+  //
+  // then this can cause various problems. For example, the anchor links
+  // won't work. The Table of Contents won't be able to do a loop with unique
+  // `key={section.id}` values.
+  // The reason we need to loop through to get a list of all existing IDs
+  // first is because we might have this:
+  //
+  //  <h2 id="foo">Foo X</h2>
+  //  <h2 id="foo">Foo Y</h2>
+  //  <h2 id="foo_2">Foo Z</h2>
+  //
+  // So when you encounter `<h2 id="foo">Foo Y</h2>` you'll know that you
+  // can't suggest it to be `<h2 id="foo_2">Foo Y</h2>` because that ID
+  // is taken by another one, later.
+  const allIDs = new Set(
+    sections
+      .map((section) => section.value.id)
+      .filter(Boolean)
+      .map((id) => id.toLowerCase())
+  );
+
+  const seenIDs = new Set();
+  for (const section of sections) {
+    const originalID = section.value.id;
+    if (!originalID) {
+      // Not all sections have an ID. For example, prose sections that don't
+      // start with a <h2>.
+      // Since we're primarily concerned about *uniqueness* here, let's just
+      // skip worrying about these.
+      continue;
+    }
+    // We normalize all IDs to lowercase so that `id="Foo"` === `id="foo"`.
+    const id = originalID.toLowerCase();
+    if (seenIDs.has(id)) {
+      // That's bad! We have to come up with a new ID but it can't be one
+      // that's used by another other section.
+      let increment = 2;
+      let newID = `${originalID}_${increment}`;
+      while (
+        seenIDs.has(newID.toLowerCase()) ||
+        allIDs.has(newID.toLowerCase())
+      ) {
+        increment++;
+        newID = `${originalID}_${increment}`;
+      }
+      section.value.id = newID;
+      seenIDs.add(newID.toLowerCase());
+      flaws.push(
+        `'${originalID}' is not a unique ID in this HTML (temporarily changed to ${section.value.id})`
+      );
+    } else {
+      seenIDs.add(id);
+    }
+  }
+
   return [sections, flaws];
 }
 

@@ -320,7 +320,7 @@ async function formatSyntax(rawSyntax) {
             }
 
             var output = "<a href=\"/" + locale + "/docs/CSS/" +
-                s_syntax_value_definition + "#" + operator.anchor +
+                s_syntax_value_definition + "#" + operator.anchor.toLowerCase() +
                 "\" title=\"" + operator.title + "\">" + linkText + "</a>";
             if (linkText === "|") {
                 output = " " + output + " ";
@@ -429,12 +429,14 @@ if (name === "preview-wiki-content") {
     formattedSyntax += await formatTypesSyntax(formattedSyntax, []);
 }
 
-if (!formattedSyntax) {
-    throw new Error(`No syntax found in DB for '${name}'`);
-}
+let out = '';
 
-const rtlLocales = ['ar', 'he', 'fa'];
-const rtl = rtlLocales.includes(env.locale);
-const out = `<pre${rtl ? ' dir="rtl"' : ""}>${formattedSyntax}</pre>`
+if (!formattedSyntax) {
+    out = "<div class=\"notecard warning\"><h4>No syntax available</h4><p>No value found in the database.</p></div>";
+} else {
+    const rtlLocales = ['ar', 'he', 'fa'];
+    const rtl = rtlLocales.includes(env.locale);
+    out = `<pre${rtl ? ' dir="rtl"' : ""}>${formattedSyntax}</pre>`
+}
 
 %><%- out %>

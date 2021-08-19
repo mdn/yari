@@ -69,18 +69,13 @@ export const cards: QueryAndTransform[] = [
   [
     (node) =>
       node.tagName == "div" &&
-      ((node.properties.className as string[]) || "").includes("callout") &&
-      node.children[0].tagName == "h4",
+      ((node.properties.className as string[]) || "").includes("callout"),
     (node, t, opts) => {
       const locale = opts.locale || DEFAULT_LOCALE;
       const gt = gettextLocalizationMap.get(locale);
       return h("blockquote", [
-        h("paragraph", [
-          h("strong", [h("text", gt.gettext("card_callout_label"))]),
-          h("text", " "),
-          h("strong", [h("text", toText(node.children[0]))]),
-        ]),
-        ...asArray(t(node.children.slice(1) as any)),
+        h("paragraph", [h("strong", [h("text", gt.gettext("card_callout_label"))])]),
+        ...asArray(t(node.children as any)),
       ]);
     },
   ],

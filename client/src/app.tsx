@@ -16,7 +16,7 @@ import { Loading } from "./ui/atoms/loading";
 import { PageContentContainer } from "./ui/atoms/page-content";
 import { PageNotFound } from "./page-not-found";
 // import { Banner } from "./banners";
-import { SignIn, SignUp } from "./auth";
+import { SignIn, SignOut } from "./auth";
 import { Settings } from "./settings";
 
 import { DeepDives } from "./plus/deep-dives";
@@ -241,10 +241,10 @@ export function App(appProps) {
               }
             />
             <Route
-              path="/signup"
+              path="/signout"
               element={
                 <StandardLayout>
-                  <SignUp />
+                  <SignOut />
                 </StandardLayout>
               }
             />
@@ -258,7 +258,7 @@ export function App(appProps) {
             />
             {ENABLE_PLUS && (
               <Route
-                path="/plus"
+                path="/plus/*"
                 element={
                   <StandardLayout>
                     <PlusV1 {...appProps} />

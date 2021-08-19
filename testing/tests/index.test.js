@@ -2,10 +2,9 @@ const fs = require("fs");
 const path = require("path");
 
 const cheerio = require("cheerio");
-const glob = require("glob");
 const sizeOf = require("image-size");
 
-const buildRoot = path.join("..", "client", "build");
+const buildRoot = path.join("client", "build");
 
 test("all favicons on the home page", () => {
   // The home page SPA is built, in terms of the index.html template,
@@ -1249,17 +1248,6 @@ test("French sign in page", () => {
   expect($('meta[property="og:locale"]').attr("content")).toBe("fr");
 });
 
-test("sign up page", () => {
-  const builtFolder = path.join(buildRoot, "en-us", "signup");
-  expect(fs.existsSync(builtFolder)).toBeTruthy();
-  const htmlFile = path.join(builtFolder, "index.html");
-  const html = fs.readFileSync(htmlFile, "utf-8");
-  const $ = cheerio.load(html);
-  expect($("h1").text()).toContain("Sign in to MDN Web Docs");
-  expect($("title").text()).toContain("Sign up");
-  expect($('meta[name="robots"]').attr("content")).toBe("noindex, nofollow");
-});
-
 test("settings page", () => {
   const builtFolder = path.join(buildRoot, "en-us", "settings");
   expect(fs.existsSync(builtFolder)).toBeTruthy();
@@ -1287,6 +1275,22 @@ test("plus page", () => {
   const $ = cheerio.load(html);
   expect($("title").text()).toContain("Plus");
   expect($('meta[name="robots"]').attr("content")).toBe("noindex, nofollow");
+  expect($("main.plus").length).toBe(1);
+  // because, by default, it just loads the blank skeleton page
+  expect($("main.plus h1").length).toBe(0);
+});
+
+test("plus bookmarks page", () => {
+  const builtFolder = path.join(buildRoot, "en-us", "plus", "bookmarks");
+  expect(fs.existsSync(builtFolder)).toBeTruthy();
+  const htmlFile = path.join(builtFolder, "index.html");
+  const html = fs.readFileSync(htmlFile, "utf-8");
+  const $ = cheerio.load(html);
+  expect($("title").text()).toMatch(/Bookmarks/);
+  expect($('meta[name="robots"]').attr("content")).toBe("noindex, nofollow");
+  expect($("main.plus").length).toBe(1);
+  // because, by default, it just loads the blank skeleton page
+  expect($("main.plus h1").length).toBe(0);
 });
 
 test("bcd table extraction followed by h3", () => {
@@ -1467,8 +1471,15 @@ test("/Web/Embeddable should have 3 valid live samples", () => {
   const { doc } = JSON.parse(fs.readFileSync(jsonFile));
   expect(Object.keys(doc.flaws).length).toBe(0);
 
-  const found = glob.sync(path.join(builtFolder, "_sample_.*.html"));
-  expect(found.length).toBe(3);
+  const builtFiles = fs.readdirSync(path.join(builtFolder));
+  expect(
+    builtFiles
+      .filter((f) => f.includes("_sample_."))
+      .map((f) => {
+        const startOffset = "_sample_.".length;
+        return f.substr(startOffset, f.length - startOffset - ".html".length);
+      })
+  ).toEqual(expect.arrayContaining(["colorpicker_tool", "keyboard", "meter"]));
 });
 
 test("headings with HTML should be rendered as HTML", () => {
@@ -1721,4 +1732,33 @@ test("the robots.txt file was created", () => {
   // will ONLY say `Disallow: /`.
   expect(text).toContain("Disallow: /api/");
   expect(text).not.toContain("Disallow: /\n");
+});
+
+test("duplicate IDs are de-duplicated", () => {
+  const builtFolder = path.join(
+    buildRoot,
+    "en-us",
+    "docs",
+    "web",
+    "duplicate_ids"
+  );
+  const jsonFile = path.join(builtFolder, "index.json");
+  const { doc } = JSON.parse(fs.readFileSync(jsonFile));
+  const sectionIDs = doc.body.map((section) => section.value.id);
+  // The section IDs aren't normalized to lowercase but the should be
+  // unique if they were case normalized.
+  expect(new Set(sectionIDs.map((id) => id.toLowerCase())).size).toEqual(
+    sectionIDs.length
+  );
+
+  const htmlFile = path.join(builtFolder, "index.html");
+  const html = fs.readFileSync(htmlFile, "utf-8");
+  const $ = cheerio.load(html);
+  const h2IDs = [];
+  $("#content h2").each((i, element) => {
+    h2IDs.push($(element).attr("id"));
+  });
+  expect(new Set(h2IDs.map((id) => id.toLowerCase())).size).toEqual(
+    h2IDs.length
+  );
 });

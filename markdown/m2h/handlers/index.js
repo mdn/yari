@@ -80,16 +80,9 @@ function buildLocalizedHandlers(locale) {
       if (type) {
         const isCallout = type == "callout";
         if (isCallout) {
-          node.children[0].children.splice(0, 1);
+          node.children.splice(0, 1);
         }
-        return h(
-          node,
-          "div",
-          { className: isCallout ? [type] : ["notecard", type] },
-          wrap(all(h, node), true)
-        );
-      }
-      return h(node, "blockquote", wrap(all(h, node), true));
+        return h(node, "blockquote", wrap(all(h, node), true));
     },
 
     list(h, node) {
