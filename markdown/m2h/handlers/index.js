@@ -82,7 +82,14 @@ function buildLocalizedHandlers(locale) {
         if (isCallout) {
           node.children.splice(0, 1);
         }
-        return h(node, "blockquote", wrap(all(h, node), true));
+        return h(
+          node,
+          "div",
+          { className: isCallout ? [type] : ["notecard", type] },
+          wrap(all(h, node), true)
+        );
+      }
+      return h(node, "blockquote", wrap(all(h, node), true));
     },
 
     list(h, node) {

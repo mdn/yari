@@ -74,7 +74,9 @@ export const cards: QueryAndTransform[] = [
       const locale = opts.locale || DEFAULT_LOCALE;
       const gt = gettextLocalizationMap.get(locale);
       return h("blockquote", [
-        h("paragraph", [h("strong", [h("text", gt.gettext("card_callout_label"))])]),
+        h("paragraph", [
+          h("strong", [h("text", gt.gettext("card_callout_label"))]),
+        ]),
         ...asArray(t(node.children as any)),
       ]);
     },
