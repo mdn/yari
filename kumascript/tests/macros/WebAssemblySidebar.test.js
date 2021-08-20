@@ -1,7 +1,8 @@
 /**
  * @prettier
  */
-const { assert, itMacro, describeMacro, beforeEachMacro } = require("./utils");
+import { jest } from "@jest/globals";
+import { assert, itMacro, describeMacro, beforeEachMacro } from "./utils.js";
 
 const expected = `\
 <section class="Quick_links" id="Quick_Links">

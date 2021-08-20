@@ -2,7 +2,7 @@
  * @prettier
  */
 
-const { itMacro, describeMacro } = require("./utils");
+import { itMacro, describeMacro } from "./utils.js";
 
 /**
  * Different strings in GroupData objects have different sets of

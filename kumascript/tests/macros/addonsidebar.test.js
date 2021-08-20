@@ -1,14 +1,9 @@
 /**
  * @prettier
  */
-const { JSDOM } = require("jsdom");
-
-const {
-  beforeEachMacro,
-  describeMacro,
-  itMacro,
-  lintHTML,
-} = require("./utils");
+import { JSDOM } from "jsdom";
+import { jest } from "@jest/globals";
+import { beforeEachMacro, describeMacro, itMacro, lintHTML } from "./utils.js";
 
 const SUMMARIES = {
   "en-US": [

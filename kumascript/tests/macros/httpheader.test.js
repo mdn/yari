@@ -2,7 +2,8 @@
  * @prettier
  */
 
-const { assert, itMacro, describeMacro } = require("./utils");
+import { jest } from "@jest/globals";
+import { assert, itMacro, describeMacro } from "./utils.js";
 
 describeMacro("httpheader", function () {
   itMacro("No arguments (en-US)", function (macro) {

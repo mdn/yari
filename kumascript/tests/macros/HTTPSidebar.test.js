@@ -1,17 +1,21 @@
 /**
  * @prettier
  */
-const fs = require("fs");
-const path = require("path");
-const jsdom = require("jsdom");
-const { Document } = require("../../../content");
-const {
+import fs from "fs";
+import path from "path";
+import jsdom from "jsdom";
+import { jest } from "@jest/globals";
+import { Document } from "../../../content/index.js";
+import {
   assert,
   itMacro,
   beforeEachMacro,
   describeMacro,
   lintHTML,
-} = require("./utils");
+} from "./utils.js";
+
+import { fileURLToPath } from "url";
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 // Load fixture data.
 const fixtureData = JSON.parse(

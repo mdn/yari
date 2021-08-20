@@ -1,20 +1,19 @@
 /**
  * @prettier
  */
-const { JSDOM } = require("jsdom");
+import fs from "fs";
+import path from "path";
+import { JSDOM } from "jsdom";
 
-const {
-  beforeEachMacro,
-  describeMacro,
-  itMacro,
-  lintHTML,
-} = require("./utils");
+import { fileURLToPath } from "url";
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+
+import { beforeEachMacro, describeMacro, itMacro, lintHTML } from "./utils.js";
 
 /**
  * Load all the fixtures.
  */
-const fs = require("fs");
-const path = require("path");
+
 const subpagesFixturePath = path.resolve(
   __dirname,
   "fixtures/apiref/subpages.json"

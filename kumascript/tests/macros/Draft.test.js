@@ -1,8 +1,8 @@
 /**
  * @prettier
  */
-const { assert, itMacro, describeMacro } = require("./utils");
-const { JSDOM } = require("jsdom");
+import { assert, itMacro, describeMacro } from "./utils.js";
+import { JSDOM } from "jsdom";
 
 describeMacro("Draft", () => {
   itMacro("No arguments (en-US)", function (macro) {

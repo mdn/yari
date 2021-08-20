@@ -28,7 +28,7 @@
     "test:content": "jest content",
     "test:headless": "playwright test headless",
     "test:developing": "playwright test developing",
-    "test:kumascript": "jest kumascript --env=node",
+    "test:kumascript": "NODE_OPTIONS=--experimental-vm-modules jest kumascript --env=node",
     "test:testing": "jest --rootDir testing",
     "tool": "node tool/cli.js",
     "watch:ssr": "cd ssr && webpack --mode=production --watch",

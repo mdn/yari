@@ -1,6 +1,6 @@
 import fs from "fs";
 import path from "path";
-import { fileURLToPath } from "node:url";
+import { fileURLToPath } from "url";
 
 import { ACTIVE_LOCALES, VALID_LOCALES } from "../libs/constants/index.js";
 import dotenv from "dotenv";

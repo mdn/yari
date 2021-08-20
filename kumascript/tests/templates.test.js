@@ -1,9 +1,16 @@
 /**
  * @prettier
  */
+import path from "path";
 
-const Templates = require("../src/templates.js");
-const path = require("path");
+import Templates from "../src/templates.js";
+
+import { fileURLToPath } from "url";
+import { jest } from "@jest/globals";
+
+import { createRequire } from "module";
+const require = createRequire(import.meta.url);
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 describe("Templates class", () => {
   it("has the expected methods", () => {

@@ -2,12 +2,16 @@
  * @prettier
  */
 
-const { assert, itMacro, describeMacro, beforeEachMacro } = require("./utils");
+import { jest } from "@jest/globals";
+import { assert, itMacro, describeMacro, beforeEachMacro } from "./utils.js";
 
 // Basic const
+import { createRequire } from "module";
+const require = createRequire(import.meta.url);
 const SVG_DATA = require("../../macros/SVGData.json");
 const L10N_SVG = require("../../macros/L10n-SVG.json");
 const L10N_COMMON = require("../../macros/L10n-Common.json");
+
 const SVG_BASE_SLUG = "docs/Web/SVG";
 
 // UTILITIES

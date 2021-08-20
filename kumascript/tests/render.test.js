@@ -2,15 +2,20 @@
  * @prettier
  */
 
-const fs = require("fs");
-const Templates = require("../src/templates.js");
-const { render } = require("../src/render.js");
-const {
+import fs from "fs";
+import path from "path";
+import { jest } from "@jest/globals";
+import Templates from "../src/templates.js";
+import { render } from "../src/render.js";
+import {
   MacroInvocationError,
   MacroNotFoundError,
   MacroCompilationError,
   MacroExecutionError,
-} = require("../src/errors.js");
+} from "../src/errors.js";
+
+import { fileURLToPath } from "url";
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 const PAGE_ENV = { slug: "" };
 
