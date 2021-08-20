@@ -1,11 +1,11 @@
-const fs = require("fs");
-const path = require("path");
+import fs from "fs";
+import path from "path";
 
-const express = require("express");
+import express from "express";
 
-const { Document, slugToFolder } = require("../content");
-const { buildDocument } = require("../build");
-const { BUILD_OUT_ROOT } = require("../build/constants");
+import { Document, slugToFolder } from "../content/index.js";
+import { buildDocument } from "../build/index.js";
+import { BUILD_OUT_ROOT } from "../build/constants.js";
 
 const router = express();
 
@@ -82,4 +82,4 @@ router.delete("/", (req, res) => {
   res.sendStatus(200);
 });
 
-module.exports = router;
+export default router;

@@ -1,14 +1,17 @@
-const fs = require("fs");
+import fs from "fs";
 
-const {
+import {
   getPopularities,
   VALID_LOCALES,
   Document,
   Translation,
   CONTENT_TRANSLATED_ROOT,
-} = require("../content");
-const { getLastCommitURL } = require("../build");
-const { ACTIVE_LOCALES, DEFAULT_LOCALE } = require("../libs/constants");
+} from "../content/index.js";
+import { getLastCommitURL } from "../build/index.js";
+import { ACTIVE_LOCALES, DEFAULT_LOCALE } from "../libs/constants/index.js";
+// import LANGUAGES_RAW from "../content/languages.json";
+import { createRequire } from "module";
+const require = createRequire(import.meta.url);
 const LANGUAGES_RAW = require("../content/languages.json");
 
 // Module-level cache
@@ -94,7 +97,7 @@ function packageDocument(document, englishDocument, translationDifferences) {
 }
 
 const _foundDocumentsCache = new Map();
-function findDocuments({ locale }) {
+export function findDocuments({ locale }) {
   const counts = {
     // Number of documents found that aren't skipped
     found: 0,
@@ -178,7 +181,7 @@ function getDocument(filePath) {
   return packageDocument(document, englishDocument, differences);
 }
 
-function translationsRoute(req, res) {
+export function translationsRoute(req, res) {
   if (!CONTENT_TRANSLATED_ROOT) {
     return res.status(500).send("CONTENT_TRANSLATED_ROOT not set");
   }
@@ -211,5 +214,3 @@ function translationsRoute(req, res) {
   // console.log(found.documents[0]);
   res.json(found);
 }
-
-module.exports = { translationsRoute, findDocuments };

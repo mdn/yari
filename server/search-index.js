@@ -1,15 +1,15 @@
-const fs = require("fs");
-const path = require("path");
+import fs from "fs";
+import path from "path";
 
-const { fdir } = require("fdir");
-const fm = require("front-matter");
+import { fdir } from "fdir";
+import fm from "front-matter";
 
-const {
+import {
   CONTENT_ROOT,
   CONTENT_TRANSLATED_ROOT,
   VALID_LOCALES,
-} = require("../content");
-const { SearchIndex } = require("../build");
+} from "../content/index.js";
+import { SearchIndex } from "../build/index.js";
 
 function populateSearchIndex(searchIndex, localeLC) {
   const root = path.join(
@@ -32,7 +32,7 @@ function populateSearchIndex(searchIndex, localeLC) {
   }
 }
 
-async function searchIndexRoute(req, res) {
+export async function searchIndexRoute(req, res) {
   // Remember, this is always in lowercase because of a middleware
   // that lowercases all incoming requests' pathname.
   const locale = req.params.locale;
@@ -65,7 +65,3 @@ async function searchIndexRoute(req, res) {
   console.timeEnd(label);
   res.json(searchIndex.getItems()[locale]);
 }
-
-module.exports = {
-  searchIndexRoute,
-};
