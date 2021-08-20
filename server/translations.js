@@ -314,10 +314,7 @@ router.get("/", async (req, res) => {
     return res.status(500).send("CONTENT_TRANSLATED_ROOT not set");
   }
 
-  console.time("countFilesByLocale");
   const countsByLocale = countFilesByLocale();
-  console.timeEnd("countFilesByLocale");
-  console.log(countsByLocale);
 
   const locales = [...VALID_LOCALES]
     .map(([localeLC, locale]) => {
