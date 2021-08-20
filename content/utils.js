@@ -2,10 +2,8 @@ import path from "path";
 import childProcess from "child_process";
 
 import { CONTENT_ROOT, CONTENT_TRANSLATED_ROOT } from "./constants.js";
-// import { slugToFolder as slugToFolderActual } from "../libs/slug-utils/index.js";
-import pkg from "../libs/slug-utils/index.js";
+import { slugToFolder as slugToFolderActual } from "../libs/slug-utils/index.js";
 import LRU from "lru-cache";
-const { slugToFolder: slugToFolderActual } = pkg;
 
 const MEMOIZE_INVALIDATE = Symbol("force cache update");
 

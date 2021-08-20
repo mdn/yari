@@ -1,8 +1,8 @@
 /**
  * @prettier
  */
-const util = require("./util.js");
-const Templates = require("../templates.js");
+import * as util from "./util.js";
+import Templates from "../templates.js";
 
 const DUMMY_BASE_URL = "https://example.com";
 const L10N_COMMON_STRINGS = new Templates().getLocalizedCommonStrings();
@@ -33,7 +33,7 @@ function warnBrokenFlawByMacro(macro, href, extra = "") {
   }
 }
 
-module.exports = {
+export default {
   // Insert a hyperlink.
   link(uri, text, title, target) {
     const out = [`<a href="${util.spacesToUnderscores(util.htmlEscape(uri))}"`];

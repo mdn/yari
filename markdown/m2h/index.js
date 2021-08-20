@@ -1,13 +1,13 @@
-const unified = require("unified");
-const parse = require("remark-parse");
-const remark2rehype = require("remark-rehype");
-const stringify = require("rehype-stringify");
-const gfm = require("remark-gfm");
-const raw = require("rehype-raw");
-const format = require("rehype-format");
+import unified from "unified";
+import parse from "remark-parse";
+import remark2rehype from "remark-rehype";
+import stringify from "rehype-stringify";
+import gfm from "remark-gfm";
+import raw from "rehype-raw";
+import format from "rehype-format";
 
-const handlers = require("./handlers");
-const { decodeKS, encodeKS } = require("../utils");
+import * as handlers from "./handlers/index.js";
+import { decodeKS, encodeKS } from "../utils/index.js";
 
 function makeProcessor() {
   const processor = unified()
@@ -21,7 +21,7 @@ function makeProcessor() {
   return processor;
 }
 
-async function m2h(md) {
+export async function m2h(md) {
   const ksEncoded = encodeKS(md);
   const processor = makeProcessor();
 
@@ -29,15 +29,10 @@ async function m2h(md) {
   return decodeKS(String(file));
 }
 
-function m2hSync(md) {
+export function m2hSync(md) {
   const ksEncoded = encodeKS(md);
   const processor = makeProcessor();
 
   const file = processor.processSync(ksEncoded);
   return decodeKS(String(file));
 }
-
-module.exports = {
-  m2h,
-  m2hSync,
-};

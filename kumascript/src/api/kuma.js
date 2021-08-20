@@ -1,13 +1,14 @@
 /**
  * @prettier
  */
-const url = require("url");
-const util = require("./util.js");
+export * from "url";
+export * from "./util.js";
 
-module.exports = {
-  /**
-   * Expose url from node.js to templates
-   */
-  url,
-  htmlEscape: util.htmlEscape,
-};
+// export htmlEscape =
+// module.exports = {
+//   /**
+//    * Expose url from node.js to templates
+//    */
+//   url,
+//   htmlEscape: util.htmlEscape,
+// };

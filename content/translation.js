@@ -1,4 +1,4 @@
-const Parser = require("../kumascript/src/parser.js");
+import * as Parser from "../kumascript/src/parser.js";
 
 function* fastKSParser(s) {
   for (const match of s.matchAll(
@@ -130,7 +130,7 @@ function getMacrosFast(content) {
   return macros;
 }
 
-function* getTranslationDifferences(
+export function* getTranslationDifferences(
   englishDocument,
   translatedDocument,
   fast = false
@@ -195,7 +195,3 @@ function setUnion(setA, setB) {
   }
   return union;
 }
-
-module.exports = {
-  getTranslationDifferences,
-};

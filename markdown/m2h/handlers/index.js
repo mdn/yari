@@ -1,6 +1,6 @@
-const code = require("./code");
-const { asDefinitionList, isDefinitionList } = require("./dl");
-const { one, all, wrap } = require("./mdast-util-to-hast-utils");
+import code from "./code.js";
+import { asDefinitionList, isDefinitionList } from "./dl.js";
+import { one, all, wrap } from "./mdast-util-to-hast-utils.js";
 
 function getNotecardType(node) {
   if (!node.children) {
@@ -18,7 +18,7 @@ function getNotecardType(node) {
   return type == "warning" || type == "note" || type == "callout" ? type : null;
 }
 
-module.exports = {
+export default {
   code,
 
   paragraph(h, node) {

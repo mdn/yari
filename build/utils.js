@@ -1,4 +1,4 @@
-function humanFileSize(size) {
+export function humanFileSize(size) {
   if (size < 1024) return `${size} B`;
   const i = Math.floor(Math.log(size) / Math.log(1024));
   let num = size / 1024 ** i;
@@ -12,5 +12,3 @@ function humanFileSize(size) {
   }
   return `${num} ${"KMGTPEZY"[i - 1]}B`;
 }
-
-module.exports = { humanFileSize };

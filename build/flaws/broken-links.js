@@ -1,13 +1,16 @@
-const fs = require("fs");
-const path = require("path");
+import fs from "fs";
+import path from "path";
+import { fileURLToPath } from "node:url";
 
-const fromMarkdown = require("mdast-util-from-markdown");
-const visit = require("unist-util-visit");
+import fromMarkdown from "mdast-util-from-markdown";
+import visit from "unist-util-visit";
 
-const { Document, Redirect, Image } = require("../../content");
-const { FLAW_LEVELS } = require("../constants");
-const { findMatchesInText } = require("../matches-in-text");
-const { DEFAULT_LOCALE, VALID_LOCALES } = require("../../libs/constants");
+import { Document, Redirect, Image } from "../../content/index.js";
+import { FLAW_LEVELS } from "../constants.js";
+import { findMatchesInText } from "../matches-in-text.js";
+import { DEFAULT_LOCALE, VALID_LOCALES } from "../../libs/constants/index.js";
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 function findMatchesInMarkdown(rawContent, href) {
   const matches = [];
@@ -75,7 +78,7 @@ function mutateLink(
 
 // The 'broken_links' flaw check looks for internal links that
 // link to a document that's going to fail with a 404 Not Found.
-function getBrokenLinksFlaws(doc, $, { rawContent }, level) {
+export function getBrokenLinksFlaws(doc, $, { rawContent }, level) {
   const flaws = [];
 
   // This is needed because the same href can occur multiple time.
@@ -361,5 +364,3 @@ function getBrokenLinksFlaws(doc, $, { rawContent }, level) {
 
   return flaws;
 }
-
-module.exports = { getBrokenLinksFlaws };

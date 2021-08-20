@@ -1,25 +1,25 @@
-const unified = require("unified");
-const parse = require("rehype-parse");
-const format = require("rehype-format");
-const stringify = require("rehype-stringify");
+import unified from "unified";
+import parse from "rehype-parse";
+import format from "rehype-format";
+import stringify from "rehype-stringify";
 
 const KS_RE = /{{([^}]*)}}/g;
 
-function encodeKS(raw) {
+export function encodeKS(raw) {
   return raw.replace(
     KS_RE,
     (_, ks) => `{{${Buffer.from(ks).toString("base64")}}}`
   );
 }
 
-function decodeKS(raw) {
+export function decodeKS(raw) {
   return raw.replace(
     KS_RE,
     (_, ks) => `{{${Buffer.from(ks, "base64").toString()}}}`
   );
 }
 
-function formatH(html) {
+export function formatH(html) {
   const ksEncoded = encodeKS(html);
   const processor = unified()
     .use(parse, { fragment: true })
@@ -30,7 +30,7 @@ function formatH(html) {
   return decodeKS(String(file));
 }
 
-const prettyAST = (node, depth = 0) => {
+export const prettyAST = (node, depth = 0) => {
   if (!node) {
     return "";
   }
@@ -51,11 +51,4 @@ const prettyAST = (node, depth = 0) => {
           : JSON.stringify(value))
     )
     .join("\n");
-};
-
-module.exports = {
-  encodeKS,
-  decodeKS,
-  formatH,
-  prettyAST,
 };

@@ -1,13 +1,14 @@
 import fs from "fs";
 import path from "path";
-import pkg from "../libs/constants/index.js";
+import { fileURLToPath } from "node:url";
+
+import { ACTIVE_LOCALES, VALID_LOCALES } from "../libs/constants/index.js";
 import dotenv from "dotenv";
 
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 dotenv.config({
   path: path.join(__dirname, "..", process.env.ENV_FILE || ".env"),
 });
-
-const { ACTIVE_LOCALES, VALID_LOCALES } = pkg;
 
 const CONTENT_ROOT = correctContentPathFromEnv("CONTENT_ROOT");
 if (!CONTENT_ROOT) {

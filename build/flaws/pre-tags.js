@@ -1,4 +1,5 @@
-const { getFirstMatchInText } = require("../matches-in-text");
+import { getFirstMatchInText } from "../matches-in-text.js";
+
 const escapeHTML = (s) =>
   s
     .replace(/&/g, "&amp;")
@@ -6,7 +7,7 @@ const escapeHTML = (s) =>
     .replace(/</g, "&lt;")
     .replace(/>/g, "&gt;");
 
-function getPreTagFlaws(doc, $, { rawContent }) {
+export function getPreTagFlaws(doc, $, { rawContent }) {
   const flaws = [];
 
   // Over the years, we've accumulated a lot of Kuma-HTML where the <pre> tags
@@ -101,5 +102,3 @@ function getPreTagFlaws(doc, $, { rawContent }) {
 
   return flaws;
 }
-
-module.exports = { getPreTagFlaws };

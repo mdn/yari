@@ -1,6 +1,10 @@
-const path = require("path");
+import path from "path";
+import { fileURLToPath } from "node:url";
 
-require("dotenv").config({
+import dotenv from "dotenv";
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+dotenv.config({
   path: path.join(__dirname, "..", process.env.ENV_FILE || ".env"),
 });
 
@@ -71,7 +75,7 @@ const HOMEPAGE_FEED_DISPLAY_MAX = JSON.parse(
   process.env.BUILD_HOMEPAGE_FEED_DISPLAY_MAX || "5"
 );
 
-module.exports = {
+export {
   BUILD_OUT_ROOT,
   DEFAULT_FLAW_LEVELS,
   FILES,

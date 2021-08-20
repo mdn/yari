@@ -2,7 +2,7 @@
  * @prettier
  */
 
-module.exports = {
+export default {
   // Determines whether or not the page has the specified tag. Returns
   // true if it does, otherwise false. This is case-insensitive.
   //

@@ -1,4 +1,4 @@
-const { packageBCD } = require("../resolve-bcd");
+import { packageBCD } from "../resolve-bcd.js";
 
 // Bad BCD queries are when the `<div class="bc-data">` tags have an
 // ID (or even lack the `id` attribute) that don't match anything in the
@@ -6,7 +6,7 @@ const { packageBCD } = require("../resolve-bcd");
 //
 //    <div class="bc-data" id="bcd:never.ever.heard.of">
 
-function getBadBCDQueriesFlaws(doc, $) {
+export function getBadBCDQueriesFlaws(doc, $) {
   return $("div.bc-data")
     .map((i, element) => {
       const dataQuery = $(element).attr("id");
@@ -24,5 +24,3 @@ function getBadBCDQueriesFlaws(doc, $) {
       suggestion: null,
     }));
 }
-
-module.exports = { getBadBCDQueriesFlaws };

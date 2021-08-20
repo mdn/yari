@@ -1,12 +1,12 @@
 #!/usr/bin/env node
-const path = require("path");
+import path from "path";
 
-const program = require("@caporal/core").default;
+import program from "@caporal/core";
 
-const { runChecker } = require("./checker");
-const { MAX_COMPRESSION_DIFFERENCE_PERCENTAGE } = require("./constants");
+import { runChecker } from "./checker.js";
+import { MAX_COMPRESSION_DIFFERENCE_PERCENTAGE } from "./constants.js";
 
-program
+program.default
   .version("0.0.0")
   .option("--cwd <path>", "Explicit current-working-directory", {
     validator: program.PATH,
@@ -33,4 +33,4 @@ program
     });
   });
 
-program.run();
+program.default.run();

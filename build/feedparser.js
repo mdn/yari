@@ -1,16 +1,16 @@
-const fs = require("fs");
-const path = require("path");
-const { promisify } = require("util");
+import fs from "fs";
+import path from "path";
+import { promisify } from "util";
 
-const got = require("got");
-const parser = require("fast-xml-parser");
-const cheerio = require("cheerio");
-const tempy = require("tempy");
+import got from "got";
+import parser from "fast-xml-parser";
+import cheerio from "cheerio";
+import tempy from "tempy";
 
 const readFile = promisify(fs.readFile);
 const writeFile = promisify(fs.writeFile);
 
-async function getFeedEntries(url) {
+export async function getFeedEntries(url) {
   const savedFeedEntriesFilePath = path.join(tempy.root, url2filename(url));
 
   let feedText;
@@ -52,5 +52,3 @@ function url2filename(url, suffix = "txt", prefix = "feedentries") {
   const pathnameParts = parsed.pathname.split("/").filter(Boolean);
   return `${prefix}-${parsed.hostname}-${pathnameParts.join("-")}.${suffix}`;
 }
-
-module.exports = { getFeedEntries };

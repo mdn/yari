@@ -1,8 +1,8 @@
-const { all, wrap } = require("./mdast-util-to-hast-utils");
+import { all, wrap } from "./mdast-util-to-hast-utils.js";
 
-const DEFINITION_PREFIX = ": ";
+export const DEFINITION_PREFIX = ": ";
 
-function isDefinitionList(node) {
+export function isDefinitionList(node) {
   return (
     !node.ordered &&
     node.children.every((listItem) => {
@@ -28,7 +28,7 @@ function isDefinitionList(node) {
   );
 }
 
-function asDefinitionList(h, node) {
+export function asDefinitionList(h, node) {
   const children = node.children.flatMap((listItem) => {
     const terms = listItem.children.slice(0, -1);
     const definition =
@@ -60,5 +60,3 @@ function asDefinitionList(h, node) {
   });
   return h(node, "dl", {}, wrap(children, true));
 }
-
-module.exports = { DEFINITION_PREFIX, isDefinitionList, asDefinitionList };

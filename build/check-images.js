@@ -2,21 +2,21 @@
 // Or, something. Checking for flaws should be very different from checking
 // for images.
 
-const path = require("path");
+import path from "path";
 
-const sizeOf = require("image-size");
+import sizeOf from "image-size";
 
-const { Document, Image } = require("../content");
-const { FLAW_LEVELS } = require("./constants");
-const { findMatchesInText } = require("./matches-in-text");
-const { DEFAULT_LOCALE } = require("../libs/constants");
+import { Document, Image } from "../content/index.js";
+import { FLAW_LEVELS } from "./constants.js";
+import { findMatchesInText } from "./matches-in-text.js";
+import { DEFAULT_LOCALE } from "../libs/constants/index.js";
 
 /**
  * Mutate the `$` instance for image reference and if appropriate,
  * log them as flaws if they're not passing linting.
  *
  */
-function checkImageReferences(doc, $, options, { url, rawContent }) {
+export function checkImageReferences(doc, $, options, { url, rawContent }) {
   const filePaths = new Set();
 
   const checkImages = options.flawLevels.get("images") !== FLAW_LEVELS.IGNORE;
@@ -241,7 +241,7 @@ function checkImageReferences(doc, $, options, { url, rawContent }) {
  * has some hardcoded patterns for margins and borders that would be
  * best to set "centrally" with a style sheet.
  */
-function checkImageWidths(doc, $, options, { rawContent }) {
+export function checkImageWidths(doc, $, options, { rawContent }) {
   const checkImages =
     options.flawLevels.get("image_widths") !== FLAW_LEVELS.IGNORE;
 
@@ -380,5 +380,3 @@ function checkImageWidths(doc, $, options, { rawContent }) {
     );
   }
 }
-
-module.exports = { checkImageReferences, checkImageWidths };

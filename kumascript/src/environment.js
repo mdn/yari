@@ -24,6 +24,9 @@
  * @prettier
  */
 
+import { createRequire } from "module";
+const require = createRequire(import.meta.url);
+
 // The properties of this object will be globals in the macro
 // execution environment.
 const globalsPrototype = {
@@ -37,15 +40,15 @@ const globalsPrototype = {
   require,
 };
 
-const kumaPrototype = require("./api/kuma.js");
-const mdnPrototype = require("./api/mdn.js");
-const stringPrototype = require("./api/string.js");
-const wikiPrototype = require("./api/wiki.js");
-const webPrototype = require("./api/web.js");
-const pagePrototype = require("./api/page.js");
-const info = require("./info");
+import * as kumaPrototype from "./api/kuma.js";
+import * as mdnPrototype from "./api/mdn.js";
+import * as stringPrototype from "./api/string.js";
+import * as wikiPrototype from "./api/wiki.js";
+import * as webPrototype from "./api/web.js";
+import * as pagePrototype from "./api/page.js";
+import { info } from "./info.js";
 
-class Environment {
+export default class Environment {
   // Initialize an environment object that will be used to render
   // all of the macros in one document or page. We pass in a context
   // object (which may come from HTTP request headers) that gives
@@ -195,5 +198,3 @@ class Environment {
     return context;
   }
 }
-
-module.exports = Environment;

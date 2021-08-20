@@ -1,8 +1,8 @@
-const {
+import {
   INTERACTIVE_EXAMPLES_BASE_URL,
   LIVE_SAMPLES_BASE_URL,
-} = require("../../kumascript/src/constants");
-const { findMatchesInText } = require("../matches-in-text");
+} from "../../kumascript/src/constants.js";
+import { findMatchesInText } from "../matches-in-text.js";
 
 const safeIFrameSrcs = [
   // EmbedGHLiveSample.ejs
@@ -21,7 +21,7 @@ if (INTERACTIVE_EXAMPLES_BASE_URL) {
   safeIFrameSrcs.push(INTERACTIVE_EXAMPLES_BASE_URL.toLowerCase());
 }
 
-function getAndMarkupUnsafeHTMLFlaws(doc, $, { rawContent, fileInfo }) {
+export function getUnsafeHTMLFlaws(doc, $, { rawContent, fileInfo }) {
   const flaws = [];
 
   function addFlaw(element, explanation) {
@@ -106,5 +106,3 @@ function getAndMarkupUnsafeHTMLFlaws(doc, $, { rawContent, fileInfo }) {
 
   return flaws;
 }
-
-module.exports = { getUnsafeHTMLFlaws: getAndMarkupUnsafeHTMLFlaws };

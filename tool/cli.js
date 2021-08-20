@@ -1,10 +1,11 @@
 import fs from "fs";
 import path from "path";
+import { fileURLToPath } from "node:url";
 
-// import {default: program} program = require("@caporal/core").default;
 import program from "@caporal/core";
 import chalk from "chalk";
-import { prompt } from "inquirer";
+import inquirer from "inquirer";
+const { prompt } = inquirer;
 import openEditor from "open-editor";
 import open from "open";
 import { syncAllTranslatedContent } from "../build/sync-translated-content.js";
@@ -30,9 +31,10 @@ import {
 import { runMakePopularitiesFile } from "./popularities.js";
 import { runOptimizeClientBuild } from "./optimize-client-build.js";
 import { runBuildRobotsTxt } from "./build-robots-txt.js";
-import kumascript from "../kumascript/index.js";
+import * as kumascript from "../kumascript/index.js";
 
 const PORT = parseInt(process.env.SERVER_PORT || "5000");
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 // The Google Analytics pageviews CSV file parsed, sorted (most pageviews
 // first), and sliced to this number of URIs that goes into the JSON file.
@@ -53,7 +55,7 @@ function tryOrExit(f) {
   };
 }
 
-program
+program.default
   .bin("yarn tool")
   .name("tool")
   .version("0.0.0")
@@ -903,4 +905,4 @@ if (Mozilla && !Mozilla.dntEnabled()) {
     })
   );
 
-program.run();
+program.default.run();

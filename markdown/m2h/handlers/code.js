@@ -1,10 +1,10 @@
-const u = require("unist-builder");
+import u from "unist-builder";
 
 /**
  * Transform a markdown code block into a <pre>.
  * Adding the highlight tags as classes prefixed by "brush:"
  */
-function code(h, node) {
+export default function code(h, node) {
   var value = node.value ? node.value + "\n" : "";
   const lang = node.lang;
   const meta = (node.meta || "").split(" ");
@@ -28,5 +28,3 @@ function code(h, node) {
 
   return h(node.position, "pre", props, [u("text", value)]);
 }
-
-module.exports = code;

@@ -273,7 +273,7 @@ class MacroPagesError extends MacroExecutionError {
   }
 }
 
-module.exports = {
+export {
   SourceCodeError,
   MacroInvocationError,
   MacroNotFoundError,

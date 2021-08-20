@@ -1,4 +1,4 @@
-const { Document } = require("../content");
+import { Document } from "../content/index.js";
 
 /**
  * Return the appropriate document title to go into the HTML <title>
@@ -12,7 +12,7 @@ const { Document } = require("../content");
  * done when Kuma was the platform.
  *
  */
-function getPageTitle(doc) {
+export function getPageTitle(doc) {
   const docURL = doc.mdn_url;
   const rootParentURL = getRootURL(docURL);
   let title = doc.title;
@@ -48,5 +48,3 @@ function getRootURL(url) {
   }
   return split.slice(0, index).join("/");
 }
-
-module.exports = { getPageTitle };

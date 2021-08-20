@@ -1,5 +1,8 @@
-const cheerio = require("cheerio");
-const { packageBCD } = require("./resolve-bcd");
+import cheerio from "cheerio";
+import { packageBCD } from "./resolve-bcd.js";
+// import specs from "browser-specs";
+import { createRequire } from "module";
+const require = createRequire(import.meta.url);
 const specs = require("browser-specs");
 
 /** Extract and mutate the $ if it as a "Quick_Links" section.
@@ -20,7 +23,7 @@ const specs = require("browser-specs");
  *
  * ...give or take some whitespace.
  */
-function extractSidebar($) {
+export function extractSidebar($) {
   // Have to use both spellings because unfortunately, some sidebars don't come
   // from macros but have it hardcoded into the content. Perhaps it was the
   // result of someone once rendering out some sidebar macros.
@@ -36,7 +39,7 @@ function extractSidebar($) {
   return sidebarHtml;
 }
 
-function extractSections($) {
+export function extractSections($) {
   const flaws = [];
   const sections = [];
   const section = cheerio
@@ -593,7 +596,7 @@ function _addSectionProse($) {
  * Given an array of sections, return a plain text
  * string of a summary. No HTML or Kumascript allowed.
  */
-function extractSummary(sections) {
+export function extractSummary(sections) {
   let summary = ""; // default and fallback is an empty string.
 
   function extractFirstGoodParagraph($) {
@@ -642,9 +645,3 @@ function extractSummary(sections) {
   }
   return summary;
 }
-
-module.exports = {
-  extractSidebar,
-  extractSections,
-  extractSummary,
-};

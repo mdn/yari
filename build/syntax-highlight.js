@@ -1,5 +1,5 @@
-const Prism = require("prismjs");
-const loadLanguages = require("prismjs/components/index");
+import Prism from "prismjs";
+import loadLanguages from "prismjs/components/index.js";
 
 const lazy = (creator) => {
   let res;
@@ -47,7 +47,7 @@ const IGNORE = new Set(["none", "text", "plain", "unix"]);
  * syntax highlighted with Prism.
  *
  */
-function syntaxHighlight($, doc) {
+export function syntaxHighlight($, doc) {
   loadAllLanguages();
 
   // Our content will be like this: `<pre class="brush:js">` or
@@ -84,5 +84,3 @@ function syntaxHighlight($, doc) {
     $pre.empty().append($code);
   });
 }
-
-module.exports = { syntaxHighlight };

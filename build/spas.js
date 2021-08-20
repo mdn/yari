@@ -1,19 +1,24 @@
-const fs = require("fs");
-const path = require("path");
+import fs from "fs";
+import path from "path";
+import { fileURLToPath } from "node:url";
 
-const {
+import {
   CONTENT_ROOT,
   CONTENT_TRANSLATED_ROOT,
   VALID_LOCALES,
-} = require("../content");
-const {
+} from "../content/index.js";
+import {
   BUILD_OUT_ROOT,
   HOMEPAGE_FEED_URL,
   HOMEPAGE_FEED_DISPLAY_MAX,
-} = require("./constants");
-const { getFeedEntries } = require("./feedparser");
+} from "./constants.js";
+import { getFeedEntries } from "./feedparser.js";
 // eslint-disable-next-line node/no-missing-require
-const { renderHTML } = require("../ssr/dist/main");
+import { createRequire } from "module";
+const require = createRequire(import.meta.url);
+const { renderHTML } = require("../ssr/dist/main.cjs");
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 function getLanguages() {
   return new Map(
@@ -23,7 +28,7 @@ function getLanguages() {
   );
 }
 
-async function buildSPAs(options) {
+export async function buildSPAs(options) {
   let buildCount = 0;
 
   // The URL isn't very important as long as it triggers the right route in the <App/>
@@ -158,5 +163,3 @@ async function buildSPAs(options) {
     console.log(`Built ${buildCount} SPA related files`);
   }
 }
-
-module.exports = { buildSPAs };

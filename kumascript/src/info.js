@@ -1,8 +1,8 @@
-const cheerio = require("cheerio");
+import cheerio from "cheerio";
 
-const Parser = require("./parser.js");
-const { VALID_LOCALES, Document, Redirect } = require("../../content");
-const { m2hSync } = require("../../markdown");
+import * as Parser from "./parser.js";
+import { VALID_LOCALES, Document, Redirect } from "../../content/index.js";
+import { m2hSync } from "../../markdown/index.js";
 
 const DUMMY_BASE_URL = "https://example.com";
 
@@ -60,7 +60,7 @@ function repairURL(url) {
   return url;
 }
 
-const info = {
+export const info = {
   getPathname(url) {
     // This function returns just the pathname of the given "url", removing
     // any trailing "/".
@@ -327,5 +327,3 @@ function postProcessSummaryHTMLSnippet(text, document) {
   }
   return output.trim();
 }
-
-module.exports = info;

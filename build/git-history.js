@@ -1,7 +1,7 @@
-const fs = require("fs");
-const path = require("path");
+import fs from "fs";
+import path from "path";
 
-const { CONTENT_ROOT, execGit } = require("../content");
+import { CONTENT_ROOT, execGit } from "../content/index.js";
 
 function getFromGit(contentRoot = CONTENT_ROOT) {
   // If `contentRoot` was a symlink, the `repoRoot` won't be. That'll make it
@@ -63,7 +63,7 @@ function getFromGit(contentRoot = CONTENT_ROOT) {
   return [map, parents];
 }
 
-function gather(contentRoots, previousFile = null) {
+export function gather(contentRoots, previousFile = null) {
   const map = new Map();
   if (previousFile) {
     const previous = JSON.parse(fs.readFileSync(previousFile, "utf-8"));
@@ -89,7 +89,3 @@ function gather(contentRoots, previousFile = null) {
   }
   return map;
 }
-
-module.exports = {
-  gather,
-};

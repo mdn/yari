@@ -1,5 +1,9 @@
-const Document = require("./document");
-const { VALID_LOCALES } = require("./constants");
+import * as Document from "./document.js";
+import { VALID_LOCALES } from "./constants.js";
+
+// import LANGUAGES_RAW from "./languages.json";
+import { createRequire } from "module";
+const require = createRequire(import.meta.url);
 const LANGUAGES_RAW = require("./languages.json");
 
 const LANGUAGES = new Map(
@@ -34,7 +38,7 @@ function gatherTranslations() {
   }
 }
 
-function translationsOf({ slug, locale: currentLocale }) {
+export function translationsOf({ slug, locale: currentLocale }) {
   if (TRANSLATIONS_OF.size === 0) {
     const label = "Time to gather all translations";
     console.time(label);
@@ -50,7 +54,7 @@ function translationsOf({ slug, locale: currentLocale }) {
   return translations;
 }
 
-function findDocumentTranslations(document) {
+export function findDocumentTranslations(document) {
   const translations = [];
 
   for (const locale of VALID_LOCALES.values()) {
@@ -72,8 +76,3 @@ function findDocumentTranslations(document) {
   }
   return translations;
 }
-
-module.exports = {
-  translationsOf,
-  findDocumentTranslations,
-};

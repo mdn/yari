@@ -27,7 +27,7 @@ import {
   urlToFolderPath,
   MEMOIZE_INVALIDATE,
 } from "./utils.js";
-import Redirect from "./redirect.js";
+import * as Redirect from "./redirect.js";
 
 function buildPath(localeFolder, slug) {
   return path.join(localeFolder, slugToFolder(slug));

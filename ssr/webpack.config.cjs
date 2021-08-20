@@ -8,7 +8,7 @@ module.exports = {
   entry: "./index.js",
   output: {
     path: path.resolve(__dirname, "dist"),
-    filename: "[name].js",
+    filename: "[name].cjs",
     sourceMapFilename: "[name].js.map",
     libraryTarget: "commonjs2",
   },
