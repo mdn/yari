@@ -41,11 +41,11 @@ const globalsPrototype = {
 };
 
 import * as kumaPrototype from "./api/kuma.js";
-import * as mdnPrototype from "./api/mdn.js";
-import * as stringPrototype from "./api/string.js";
-import * as wikiPrototype from "./api/wiki.js";
-import * as webPrototype from "./api/web.js";
-import * as pagePrototype from "./api/page.js";
+import mdnPrototype from "./api/mdn.js";
+import stringPrototype from "./api/string.js";
+import wikiPrototype from "./api/wiki.js";
+import webPrototype from "./api/web.js";
+import pagePrototype from "./api/page.js";
 import { info } from "./info.js";
 
 export default class Environment {
