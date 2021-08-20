@@ -17,9 +17,10 @@ jobs:
       - uses: actions/checkout@v2.3.4
 
       - name: Setup Node.js environment
-        uses: actions/setup-node@v2.3.0
+        uses: actions/setup-node@v2.4.0
         with:
           node-version: "12"
+          cache: "yarn"
 
       - name: Cache node_modules
         uses: actions/cache@v2.1.6
@@ -27,12 +28,10 @@ jobs:
         with:
           path: |
             node_modules
-          key: ${{ runner.os }}-${{ hashFiles('yarn.lock') }}
+          key: ${{ runner.os }}-${{ hashFiles('yarn.lock') }}-${{ hashFiles('.github/workflows/testing.yml') }}
 
       - name: Install all yarn packages
         if: steps.cached-node_modules.outputs.cache-hit != 'true'
-        env:
-          PUPPETEER_SKIP_CHROMIUM_DOWNLOAD: 1
         run: |
           yarn --frozen-lockfile
 
@@ -45,26 +44,36 @@ jobs:
       - name: Unit testing client
         run: yarn test:client
 
-      - name: Functional testing
+      - name: Build and start server
         env:
-          # Make this env var explicit for GitHub Actions because in local
-          # dev/debug you're encouraged to start it yourself in a separate
-          # terminal.
-          TESTING_START_SERVER: true
-          # Use local chrome installs since we skip downloading it as part
-          # of the yarn installs above
-          PUPPETEER_EXECUTABLE_PATH: /usr/bin/google-chrome
+          ENV_FILE: testing/.env
         run: |
-          # Needed for the puppeteer tests that start a static Express server,
-          # but it starts it from within the testing/ path.
-          echo "CONTENT_ROOT=content/files" >> .env
 
-          # In terms of the --maxWorkers option, it's not yet clear which
-          # is best.
-          # See https://jestjs.io/docs/en/troubleshooting#tests-are-extremely-slow-on-docker-andor-continuous-integration-ci-server
-          # and https://www.peterbe.com/plog/ideal-number-of-workers-in-jest-maxWorkers
-          # CI tends to have fewer CPUs than laptops so let's stay conservative
-          # for now.
-          # Also note that `--runInBand` is the same as `--maxWorkers=1`
+          # because `yarn prepare-build` is a wrapper for `yarn build:client` and
+          # `yarn build:client` can't respect the `$ENV_FILE` environment variable,
+          # because it has to build from the `./client/` directory, we have to
+          # manually copy the `testing/.env` file into `client/` so that when
+          # `yarn build:client` runs, it gets the same environment variables
+          # as you'd get when doing `yarn build:ssr`.
+          cp testing/.env client/
 
-          ./testing/scripts/functional-test.sh --runInBand
+          yarn prepare-build
+          yarn build
+
+          yarn start:static-server > /tmp/stdout.log 2> /tmp/stderr.log &
+          sleep 1
+          curl --fail --retry-connrefused --retry 5 http://localhost:5000 > /dev/null
+
+      - name: Functional testing
+        run: |
+          yarn test:testing
+          yarn test:headless
+
+      - name: Debug server's stdout and stderr if tests failed
+        if: failure()
+        run: |
+          echo "STDOUT..................................................."
+          cat /tmp/stdout.log
+          echo ""
+          echo "STDERR..................................................."
+          cat /tmp/stderr.log
