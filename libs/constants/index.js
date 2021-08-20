@@ -140,13 +140,12 @@ const cspToString = (csp) =>
 
 const CSP_VALUE = cspToString(CSP_DIRECTIVES);
 
-module.exports = {
+export {
   ACTIVE_LOCALES,
   VALID_LOCALES,
   RETIRED_LOCALES,
   DEFAULT_LOCALE,
   LOCALE_ALIASES,
   PREFERRED_LOCALE_COOKIE_NAME,
-
   CSP_VALUE,
 };

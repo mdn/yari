@@ -7,11 +7,11 @@ import chalk from "chalk";
 import { prompt } from "inquirer";
 import openEditor from "open-editor";
 import open from "open";
-import { syncAllTranslatedContent } from "../build/sync-translated-content";
+import { syncAllTranslatedContent } from "../build/sync-translated-content.js";
 import log from "loglevel";
 import cheerio from "cheerio";
 
-import { DEFAULT_LOCALE, VALID_LOCALES } from "../libs/constants";
+import { DEFAULT_LOCALE, VALID_LOCALES } from "../libs/constants/index.js";
 import {
   CONTENT_ROOT,
   CONTENT_TRANSLATED_ROOT,
@@ -19,18 +19,18 @@ import {
   Document,
   buildURL,
   getRoot,
-} from "../content";
-import { buildDocument, gatherGitHistory, buildSPAs } from "../build";
+} from "../content/index.js";
+import { buildDocument, gatherGitHistory, buildSPAs } from "../build/index.js";
 import {
   ALWAYS_ALLOW_ROBOTS,
   BUILD_OUT_ROOT,
   GOOGLE_ANALYTICS_ACCOUNT,
   GOOGLE_ANALYTICS_DEBUG,
-} from "../build/constants";
-import { runMakePopularitiesFile } from "./popularities";
-import { runOptimizeClientBuild } from "./optimize-client-build";
-import { runBuildRobotsTxt } from "./build-robots-txt";
-import kumascript from "../kumascript";
+} from "../build/constants.js";
+import { runMakePopularitiesFile } from "./popularities.js";
+import { runOptimizeClientBuild } from "./optimize-client-build.js";
+import { runBuildRobotsTxt } from "./build-robots-txt.js";
+import kumascript from "../kumascript/index.js";
 
 const PORT = parseInt(process.env.SERVER_PORT || "5000");
 

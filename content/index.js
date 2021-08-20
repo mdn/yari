@@ -1,39 +1,30 @@
-const {
+import {
   CONTENT_ROOT,
   CONTENT_TRANSLATED_ROOT,
   REPOSITORY_URLS,
   ROOTS,
   VALID_LOCALES,
-} = require("./constants");
-const Document = require("./document");
-const Translation = require("./translation");
-const { getPopularities } = require("./popularities");
-const Redirect = require("./redirect");
-const Image = require("./image");
-const {
-  buildURL,
-  memoize,
-  slugToFolder,
-  execGit,
-  getRoot,
-} = require("./utils");
-const { resolveFundamental } = require("../libs/fundamental-redirects");
-const { translationsOf } = require("./translations");
+} from "./constants.js";
+import Document from "./document.js";
+import Translation from "./translation.js";
+import { getPopularities } from "./popularities.js";
+import Redirect from "./redirect.js";
+import Image from "./image.js";
+import { buildURL, memoize, slugToFolder, execGit, getRoot } from "./utils.js";
+import { resolveFundamental } from "../libs/fundamental-redirects/index.js";
+import { translationsOf } from "./translations.js";
 
-module.exports = {
+export {
   CONTENT_ROOT,
   CONTENT_TRANSLATED_ROOT,
   REPOSITORY_URLS,
   ROOTS,
   VALID_LOCALES,
-
   getPopularities,
-
   Document,
   Redirect,
   Image,
   Translation,
-
   buildURL,
   memoize,
   slugToFolder,

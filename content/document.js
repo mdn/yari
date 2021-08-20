@@ -1,24 +1,24 @@
-const fs = require("fs");
-const path = require("path");
-const util = require("util");
+import fs from "fs";
+import path from "path";
+import util from "util";
 
-const fm = require("front-matter");
-const glob = require("glob");
-const yaml = require("js-yaml");
-const { fdir } = require("fdir");
+import fm from "front-matter";
+import glob from "glob";
+import yaml from "js-yaml";
+import { fdir } from "fdir";
 
-const {
+import {
   CONTENT_TRANSLATED_ROOT,
   CONTENT_ROOT,
   ACTIVE_LOCALES,
   VALID_LOCALES,
   ROOTS,
-} = require("./constants");
-const { getPopularities } = require("./popularities");
-const { getWikiHistories } = require("./wikihistories");
-const { getGitHistories } = require("./githistories");
+} from "./constants.js";
+import { getPopularities } from "./popularities.js";
+import { getWikiHistories } from "./wikihistories.js";
+import { getGitHistories } from "./githistories.js";
 
-const {
+import {
   buildURL,
   getRoot,
   memoize,
@@ -26,8 +26,8 @@ const {
   execGit,
   urlToFolderPath,
   MEMOIZE_INVALIDATE,
-} = require("./utils");
-const Redirect = require("./redirect");
+} from "./utils.js";
+import Redirect from "./redirect.js";
 
 function buildPath(localeFolder, slug) {
   return path.join(localeFolder, slugToFolder(slug));
@@ -623,7 +623,7 @@ function remove(
   return docs;
 }
 
-module.exports = {
+export {
   createHTML,
   createMarkdown,
   read,
@@ -632,19 +632,15 @@ module.exports = {
   remove,
   move,
   validate,
-
   urlToFolderPath,
   getFolderPath,
   fileForSlug,
   parentSlug,
-
   updateWikiHistory,
   trimLineEndings,
   saveFile,
-
   findByURL,
   findAll,
   findChildren,
-
   MEMOIZE_INVALIDATE,
 };

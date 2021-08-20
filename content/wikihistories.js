@@ -1,10 +1,10 @@
-const fs = require("fs");
-const path = require("path");
+import fs from "fs";
+import path from "path";
 
 // Module-level cache
 const wikiHistoryMaps = new Map();
 
-function getWikiHistories(root, locale) {
+export function getWikiHistories(root, locale) {
   const localeLC = locale.toLowerCase();
   const folder = path.join(root, localeLC);
   if (!wikiHistoryMaps.has(folder)) {
@@ -22,5 +22,3 @@ function getWikiHistories(root, locale) {
   }
   return wikiHistoryMaps.get(folder);
 }
-
-module.exports = { getWikiHistories };

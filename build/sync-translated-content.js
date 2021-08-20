@@ -16,7 +16,7 @@ import {
   CONTENT_ROOT,
   CONTENT_TRANSLATED_ROOT,
   VALID_LOCALES,
-} from "../content";
+} from "../content/index.js";
 
 const CONFLICTING = "conflicting";
 const ORPHANED = "orphaned";

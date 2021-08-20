@@ -1,10 +1,13 @@
-const fs = require("fs");
-const path = require("path");
-const { ACTIVE_LOCALES, VALID_LOCALES } = require("../libs/constants");
+import fs from "fs";
+import path from "path";
+import pkg from "../libs/constants/index.js";
+import dotenv from "dotenv";
 
-require("dotenv").config({
+dotenv.config({
   path: path.join(__dirname, "..", process.env.ENV_FILE || ".env"),
 });
+
+const { ACTIVE_LOCALES, VALID_LOCALES } = pkg;
 
 const CONTENT_ROOT = correctContentPathFromEnv("CONTENT_ROOT");
 if (!CONTENT_ROOT) {
@@ -52,7 +55,7 @@ function correctContentPathFromEnv(envVarName) {
   return pathName;
 }
 
-module.exports = {
+export {
   CONTENT_ROOT,
   CONTENT_TRANSLATED_ROOT,
   REPOSITORY_URLS,

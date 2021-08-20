@@ -1,4 +1,4 @@
-const sanitizeFilename = require("sanitize-filename");
+import sanitizeFilename from "sanitize-filename";
 
 function slugToFolder(slug, joiner = "/") {
   return (
@@ -29,8 +29,4 @@ function encodePath(path) {
   return decoded;
 }
 
-module.exports = {
-  slugToFolder,
-  decodePath,
-  encodePath,
-};
+export { slugToFolder, decodePath, encodePath };
