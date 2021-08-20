@@ -17,6 +17,7 @@ interface Locale {
     native: string;
   };
   isActive: boolean;
+  count: number;
 }
 
 interface LocalesData {
@@ -106,6 +107,7 @@ function ShowLocales({ locales }: { locales: Locale[] }) {
                   </b>{" "}
                   {!locale.isActive && <small>not active</small>}
                 </td>
+                <td>{locale.count.toLocaleString()} documents</td>
                 <td>
                   <Link to={`/${locale.locale}/_translations/differences`}>
                     Translation differences

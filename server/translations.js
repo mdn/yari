@@ -1,6 +1,8 @@
 const fs = require("fs");
 const path = require("path");
 
+const { fdir } = require("fdir");
+
 const express = require("express");
 const router = express.Router();
 
@@ -311,19 +313,49 @@ router.get("/", async (req, res) => {
   if (!CONTENT_TRANSLATED_ROOT) {
     return res.status(500).send("CONTENT_TRANSLATED_ROOT not set");
   }
+
+  console.time("countFilesByLocale");
+  const countsByLocale = countFilesByLocale();
+  console.timeEnd("countFilesByLocale");
+  console.log(countsByLocale);
+
   const locales = [...VALID_LOCALES]
     .map(([localeLC, locale]) => {
       if (locale === DEFAULT_LOCALE) return;
       const language = LANGUAGES_RAW[locale];
+      const count = countsByLocale.get(localeLC) || null;
       return {
         locale,
         language,
         isActive: ACTIVE_LOCALES.has(localeLC),
+        count,
       };
     })
     .filter(Boolean);
   res.json({ locales });
 });
+
+function countFilesByLocale() {
+  const counts = new Map();
+  let strip = CONTENT_TRANSLATED_ROOT;
+  if (!strip.endsWith(path.sep)) {
+    strip += path.sep;
+  }
+  new fdir()
+    .withErrors()
+    .withBasePath()
+    .filter((filePath) => {
+      if (!/\.(md|html)$/.test(filePath)) {
+        return false;
+      }
+      const locale = filePath.replace(strip, "").split(path.sep)[0];
+      counts.set(locale, (counts.get(locale) || 0) + 1);
+      return false;
+    })
+    .crawl(CONTENT_TRANSLATED_ROOT)
+    .sync();
+  return counts;
+}
 
 router.get("/differences", async (req, res) => {
   if (!CONTENT_TRANSLATED_ROOT) {
