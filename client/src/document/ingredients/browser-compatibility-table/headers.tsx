@@ -11,7 +11,7 @@ export const PLATFORM_BROWSERS: { [key: string]: bcd.BrowserNames[] } = {
     "safari_ios",
     "samsunginternet_android",
   ],
-  server: ["nodejs"],
+  server: ["deno", "nodejs"],
   "webextensions-desktop": ["chrome", "edge", "firefox", "opera", "safari"],
   "webextensions-mobile": ["firefox_android"],
 };

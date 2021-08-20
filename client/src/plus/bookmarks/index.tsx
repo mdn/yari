@@ -9,6 +9,8 @@ import {
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 
+import { DISABLE_AUTH } from "../../constants";
+import { AuthDisabled } from "../../ui/atoms/auth-disabled";
 import { Loading } from "../../ui/atoms/loading";
 import { useUserData } from "../../user-context";
 import { useLocale } from "../../hooks";
@@ -117,6 +119,10 @@ export default function Bookmarks() {
     }
     mutate(apiURL);
     return true;
+  }
+
+  if (DISABLE_AUTH) {
+    return <AuthDisabled />;
   }
 
   if (!userData) {
