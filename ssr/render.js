@@ -7,9 +7,9 @@ import {
   ALWAYS_ALLOW_ROBOTS,
   BUILD_OUT_ROOT,
   SPEEDCURVE_LUX_ID,
-} from "../build/constants";
+} from "../build/constants.js";
 
-const { DEFAULT_LOCALE } = require("../libs/constants");
+const { DEFAULT_LOCALE } = require("../libs/constants/index.js");
 
 // When there are multiple options for a given language, this gives the
 // preferred locale for that language (language => preferred locale).
