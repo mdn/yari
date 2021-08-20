@@ -132,16 +132,24 @@
 @media #{$mq-small-desktop-and-up} {
   .bc-table-web {
     thead {
-      th:nth-child(7) {
-        border-right: 1px solid $mdn-neutral900;
+      /** Border between desktop and mobile sections. */
+      th:nth-child(8) {
+        border-left: 1px solid $mdn-neutral900;
       }
 
-      th:nth-child(8) {
+      /** Border between mobile and server sections. */
+      th:nth-child(14) {
         border-left: 1px solid $mdn-neutral900;
       }
     }
 
+    /** Border between desktop and mobile sections. */
     td:nth-child(8) {
+      border-left: 1px solid $mdn-neutral900;
+    }
+
+    /** Border between mobile and server sections. */
+    td:nth-child(14) {
       border-left: 1px solid $mdn-neutral900;
     }
   }
