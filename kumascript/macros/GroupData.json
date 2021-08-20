@@ -1773,6 +1773,18 @@
         "HTMLCanvasElement: webglcontextcreationerror"
       ]
     },
+    "WebHID API": {
+      "overview": ["WebHID API"],
+      "interfaces": [
+        "HID",
+        "HIDDevice",
+        "HIDInputReportEvent",
+        "HIDConnectionEvent"
+      ],
+      "methods": [],
+      "properties": ["Navigator.hid"],
+      "events": []
+    },
     "Web MIDI API": {
       "overview": ["Web MIDI API"],
       "interfaces": [
@@ -2074,8 +2086,10 @@
     "WebXR Device API": {
       "overview": ["WebXR Device API"],
       "interfaces": [
-        "XR",
+        "XRAnchor",
         "XRBoundedReferenceSpace",
+        "XRCPUDepthInformation",
+        "XRDepthInformation",
         "XRFrame",
         "XRInputSource",
         "XRInputSourceArray",
@@ -2089,15 +2103,18 @@
         "XRSession",
         "XRSessionEvent",
         "XRSpace",
+        "XRSystem",
         "XRView",
         "XRViewerPose",
         "XRViewport",
+        "XRWebGLBinding",
+        "XRWebGLDepthInformation",
         "XRWebGLLayer"
       ],
       "methods": ["WebGLRenderingContext.makeXRCompatible()"],
       "properties": ["Navigator.xr"],
       "events": [
-        "XR: devicechange",
+        "XRSystem: devicechange",
         "XRSession: end",
         "XRSession: inputsourceschange",
         "XRReferenceSpace: reset",
@@ -2105,27 +2122,7 @@
         "XRSession: selectend",
         "XRSession: selectstart",
         "XRSession: visibilitychange"
-      ],
-      "dictionaries": [
-        "XRInputSourcesChangeEventInit",
-        "XRInputSourceEventInit",
-        "XRReferencespaceEventInit",
-        "XRRenderStateInit",
-        "XRSessionEventInit",
-        "XRSessionInit",
-        "XRWebGLLayerInit"
-      ],
-      "types": [
-        "XREnvironmentBlendMode",
-        "XREye",
-        "XRHandedness",
-        "XRReferenceSpaceType",
-        "XRSessionMode",
-        "XRTargetRayMode",
-        "XRVisibilityState",
-        "XRWebGLRenderingContext"
-      ],
-      "callbacks": ["XRFrameRequestCallback"]
+      ]
     },
     "XDomain": {
       "interfaces": ["XDomainRequest"],

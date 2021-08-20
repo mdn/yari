@@ -71,7 +71,7 @@ describe("root URL redirects", () => {
 });
 
 describe("URLs that need a locale injected", () => {
-  const spaPrefixes = ["search", "signin", "signup", "settings", "plus"];
+  const spaPrefixes = ["search", "signin", "settings", "plus"];
   it("should inject the locale depending on first prefix", async () => {
     expect.assertions(spaPrefixes.length * 2);
     for (const prefix of spaPrefixes) {

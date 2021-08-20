@@ -26,11 +26,13 @@ const { normalizeBCDURLs, extractBCDData } = require("./bcd-urls");
 const { checkImageReferences, checkImageWidths } = require("./check-images");
 const { getPageTitle } = require("./page-title");
 const { syntaxHighlight } = require("./syntax-highlight");
+const { formatNotecards } = require("./format-notecards");
 const buildOptions = require("./build-options");
 const { gather: gatherGitHistory } = require("./git-history");
 const { buildSPAs } = require("./spas");
 const { renderCache: renderKumascriptCache } = require("../kumascript");
 const LANGUAGES_RAW = require("../content/languages.json");
+const { safeDecodeURIComponent } = require("../kumascript/src/api/util");
 
 const LANGUAGES = new Map(
   Object.entries(LANGUAGES_RAW).map(([locale, data]) => {
@@ -298,8 +300,8 @@ async function buildDocument(document, documentOptions = {}) {
 
   doc.flaws = {};
 
-  let renderedHtml = "";
   let flaws = [];
+  let renderedHtml = "";
   const liveSamples = [];
 
   if (options.clearKumascriptRenderCache) {
@@ -319,24 +321,21 @@ async function buildDocument(document, documentOptions = {}) {
         `MacroInvocationError trying to parse ${error.filepath}, line ${error.line} column ${error.column} (${error.error.message})`
       );
     }
-
     // Any other unexpected error re-thrown.
     throw error;
   }
 
-  const sampleIds = kumascript.getLiveSampleIDs(
-    document.metadata.slug,
+  const $ = cheerio.load(`<div id="_body">${renderedHtml}</div>`);
+
+  const liveSamplePages = kumascript.buildLiveSamplePages(
+    document.url,
+    document.metadata.title,
+    $,
     document.rawBody
   );
-  for (const sampleIdObject of sampleIds) {
-    const liveSamplePage = kumascript.buildLiveSamplePage(
-      document.url,
-      document.metadata.title,
-      renderedHtml,
-      sampleIdObject
-    );
-    if (liveSamplePage.flaw) {
-      const flaw = liveSamplePage.flaw.updateFileInfo(fileInfo);
+  for (let { id, html, flaw } of liveSamplePages) {
+    if (flaw) {
+      flaw.updateFileInfo(fileInfo);
       if (flaw.name === "MacroLiveSampleError") {
         // As of April 2021 there are 0 pages in mdn/content that trigger
         // a MacroLiveSampleError. So we can be a lot more strict with en-US
@@ -354,12 +353,33 @@ async function buildDocument(document, documentOptions = {}) {
         }
       }
       flaws.push(flaw);
-      continue;
+      html = `<!doctype html>
+        <html>
+          <head>
+            <meta charset="utf-8">
+            <title>Live sample failed!</title>
+            <style type="text/css">
+              body {
+                background-color: #fae4e5;
+              }
+            </style>
+          </head>
+          <body>
+            <h1>Live sample failed!</h1>
+            <p>
+              An error occurred trying to render this live sample.
+              <br>
+              Consider filing an issue or trying your hands at a fix of your own.
+            </p>
+            <p><b>Error details:</b></p>
+            <p>
+              <code>${flaw.error.toString()}</code>
+            </p>
+          </body>
+        </html>
+        `;
     }
-    liveSamples.push({
-      id: sampleIdObject.id.toLowerCase(),
-      html: liveSamplePage.html,
-    });
+    liveSamples.push({ id: id.toLowerCase(), html });
   }
 
   if (flaws.length) {
@@ -412,7 +432,9 @@ async function buildDocument(document, documentOptions = {}) {
   // its output with the `folder`.
   validateSlug(metadata.slug);
 
-  const $ = cheerio.load(`<div id="_body">${renderedHtml}</div>`);
+  // EmbedLiveSamples carry their token information to enrich flaw error
+  // messages, these should not be in the final output
+  $("[data-token]").removeAttr("data-token");
 
   // Kumascript rendering can't know about FLAW_LEVELS when it's building,
   // because injecting it there would cause a circular dependency.
@@ -458,21 +480,6 @@ async function buildDocument(document, documentOptions = {}) {
     );
     throw error;
   }
-
-  // Some hyperlinks are not easily fixable and we should never include them
-  // because they're potentially evil.
-  $("a[href]").each((i, a) => {
-    // See https://github.com/mdn/kuma/issues/7647
-    // Ideally we should manually remove this from all sources
-    // but that's not immediately feasible. So at least make sure we never
-    // present the link in any rendered HTML.
-    if (
-      a.attribs.href.startsWith("http") &&
-      a.attribs.href.includes("fxsitecompat.com")
-    ) {
-      $(a).attr("href", "https://github.com/mdn/kuma/issues/7647");
-    }
-  });
 
   // If fixFlaws is on and the doc has fixable flaws, this returned
   // raw HTML string will be different.
@@ -520,13 +527,27 @@ async function buildDocument(document, documentOptions = {}) {
   // raw HTML has been fixed to always have it in there already.
   injectNotecardOnWarnings($);
 
+  formatNotecards($);
+
   // Turn the $ instance into an array of section blocks. Most of the
   // section blocks are of type "prose" and their value is a string blob
   // of HTML.
-  const [sections, sectionFlaws] = extractSections($);
-  doc.body = sections;
-  if (sectionFlaws.length) {
-    injectSectionFlaws(doc, sectionFlaws, options);
+  try {
+    const [sections, sectionFlaws] = extractSections($);
+    doc.body = sections;
+    if (sectionFlaws.length) {
+      injectSectionFlaws(doc, sectionFlaws, options);
+    }
+  } catch (error) {
+    // If you run `yarn build` and an error is thrown inside `extractSections()`
+    // you won't know which file it was in the middle processing because
+    // the error won't be able to mention that.
+    // So we catch the error, log which file it happened to and then
+    // rethrow the error. Now you get a clue at least as to where to look.
+    console.error(
+      `Extracting sections failed in ${doc.mdn_url} (${document.fileInfo.path})`
+    );
+    throw error;
   }
 
   // Extract all the <h2> tags as they appear into an array.
@@ -597,30 +618,30 @@ async function buildLiveSamplePageFromURL(url) {
     throw new Error(`Unexpected URL format to extract live sample ('${url}')`);
   }
   const [documentURL, sampleID] = url.split(/\.html$/)[0].split("/_sample_.");
+  const decodedSampleID = safeDecodeURIComponent(sampleID).toLowerCase();
   const document = Document.findByURL(documentURL);
   if (!document) {
     throw new Error(`No document found for ${documentURL}`);
   }
-  // Convert the lower-case sampleID we extract from the incoming URL into
-  // the actual sampleID object with the properly-cased live-sample ID.
-  for (const sampleIDObject of kumascript.getLiveSampleIDs(
-    document.metadata.slug,
-    document.rawBody
-  )) {
-    if (sampleIDObject.id.toLowerCase() === sampleID) {
-      const liveSamplePage = kumascript.buildLiveSamplePage(
-        document.url,
-        document.metadata.title,
-        (await kumascript.render(document.url))[0],
-        sampleIDObject
-      );
-      if (liveSamplePage.flaw) {
-        throw new Error(liveSamplePage.flaw.toString());
-      }
-      return liveSamplePage.html;
+  const liveSamplePage = kumascript
+    .buildLiveSamplePages(
+      document.url,
+      document.metadata.title,
+      (await kumascript.render(document.url))[0],
+      document.rawBody
+    )
+    .find((page) => page.id.toLowerCase() == decodedSampleID);
+
+  if (liveSamplePage) {
+    if (liveSamplePage.flaw) {
+      throw new Error(liveSamplePage.flaw.toString());
     }
+    return liveSamplePage.html;
   }
-  throw new Error(`No live-sample "${sampleID}" found within ${documentURL}`);
+
+  throw new Error(
+    `No live-sample "${decodedSampleID}" found within ${documentURL}`
+  );
 }
 
 // This is used by the builder (yarn build) and by the server (JIT).
