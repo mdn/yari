@@ -48,12 +48,21 @@ jobs:
         env:
           ENV_FILE: testing/.env
         run: |
+
+          # because `yarn prepare-build` is a wrapper for `yarn build:client` and
+          # `yarn build:client` can't respect the `$ENV_FILE` environment variable,
+          # because it has to build from the `./client/` directory, we have to
+          # manually copy the `testing/.env` file into `client/` so that when
+          # `yarn build:client` runs, it gets the same environment variables
+          # as you'd get when doing `yarn build:ssr`.
+          cp testing/.env client/
+
           yarn prepare-build
           yarn build
 
           yarn start:static-server > /tmp/stdout.log 2> /tmp/stderr.log &
           sleep 1
-          curl --retry-connrefused --retry 5 http://localhost:5000 > /dev/null
+          curl --fail --retry-connrefused --retry 5 http://localhost:5000 > /dev/null
 
       - name: Functional testing
         run: |
