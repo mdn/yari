@@ -15818,11 +15818,6 @@ react-router-dom@6.0.0-beta.2:
   dependencies:
     react-router "6.0.0-beta.2"
 
-react-router@6.0.0-beta.1:
-  version "6.0.0-beta.1"
-  resolved "https://registry.yarnpkg.com/react-router/-/react-router-6.0.0-beta.1.tgz#6121539bb0af0558bbfb01cc031fe388638bb0e5"
-  integrity sha512-Y0Pkb9/lYVKl+DGu8a9ZGXFmwczRZrCvoWIIej128wyjXtPrmcraPCy7VHQEgeQ3ps2+YbgIZcTro4FjOoN7HQ==
-
 react-router@6.0.0-beta.2:
   version "6.0.0-beta.2"
   resolved "https://registry.yarnpkg.com/react-router/-/react-router-6.0.0-beta.2.tgz#7c804e4d1f86ebfd397ed8b1e05a63d24bf3313f"
