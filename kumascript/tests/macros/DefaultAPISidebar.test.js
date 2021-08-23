@@ -313,7 +313,7 @@ describeMacro("DefaultAPISidebar", function () {
       if (name === "L10n-Common") {
         return commonl10nFixture;
       }
-      throw new Error(`Unimplmeneted mock fixture ${name}`);
+      throw new Error(`Unimplemented mock fixture ${name}`);
     });
     // Mock calls to wiki.getPage()
     macro.ctx.wiki.getPage = jest.fn(async (url) => {
