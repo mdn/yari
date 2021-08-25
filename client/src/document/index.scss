@@ -204,7 +204,8 @@ a.page-not-created {
   }
 
   h2,
-  h3 {
+  h3,
+  h4 {
     margin-bottom: ($base-unit * 2);
 
     a:link,
@@ -282,7 +283,7 @@ a.page-not-created {
 
   iframe {
     max-width: 100%;
-    width: 100;
+    width: 100%;
   }
 
   iframe:not(.sample-code-frame) {

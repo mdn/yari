@@ -1,15 +1,17 @@
-import { DisplayH2, DisplayH3 } from "./utils";
+import { DisplayHeading } from "./utils";
 
 export function SpecificationSection({
   id,
   title,
   isH3,
+  isH4,
   specifications,
   query,
 }: {
   id: string;
   title: string;
   isH3: boolean;
+  isH4: boolean;
   specifications: Array<{
     title: string;
     bcdSpecificationURL: string;
@@ -19,8 +21,7 @@ export function SpecificationSection({
 }) {
   return (
     <>
-      {title && !isH3 && <DisplayH2 id={id} title={title} />}
-      {title && isH3 && <DisplayH3 id={id} title={title} />}
+      {<DisplayHeading level={isH4 ? 4 : isH3 ? 3 : 2} id={id} title={title} />}
 
       {specifications.length > 0 ? (
         <table className="standard-table">

@@ -1773,6 +1773,18 @@
         "HTMLCanvasElement: webglcontextcreationerror"
       ]
     },
+    "WebHID API": {
+      "overview": ["WebHID API"],
+      "interfaces": [
+        "HID",
+        "HIDDevice",
+        "HIDInputReportEvent",
+        "HIDConnectionEvent"
+      ],
+      "methods": [],
+      "properties": ["Navigator.hid"],
+      "events": []
+    },
     "Web MIDI API": {
       "overview": ["Web MIDI API"],
       "interfaces": [

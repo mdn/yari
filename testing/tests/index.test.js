@@ -2,7 +2,6 @@ const fs = require("fs");
 const path = require("path");
 
 const cheerio = require("cheerio");
-const glob = require("glob");
 const sizeOf = require("image-size");
 
 const buildRoot = path.join("client", "build");
@@ -1276,6 +1275,22 @@ test("plus page", () => {
   const $ = cheerio.load(html);
   expect($("title").text()).toContain("Plus");
   expect($('meta[name="robots"]').attr("content")).toBe("noindex, nofollow");
+  expect($("main.plus").length).toBe(1);
+  // because, by default, it just loads the blank skeleton page
+  expect($("main.plus h1").length).toBe(0);
+});
+
+test("plus bookmarks page", () => {
+  const builtFolder = path.join(buildRoot, "en-us", "plus", "bookmarks");
+  expect(fs.existsSync(builtFolder)).toBeTruthy();
+  const htmlFile = path.join(builtFolder, "index.html");
+  const html = fs.readFileSync(htmlFile, "utf-8");
+  const $ = cheerio.load(html);
+  expect($("title").text()).toMatch(/Bookmarks/);
+  expect($('meta[name="robots"]').attr("content")).toBe("noindex, nofollow");
+  expect($("main.plus").length).toBe(1);
+  // because, by default, it just loads the blank skeleton page
+  expect($("main.plus h1").length).toBe(0);
 });
 
 test("bcd table extraction followed by h3", () => {
@@ -1456,8 +1471,15 @@ test("/Web/Embeddable should have 3 valid live samples", () => {
   const { doc } = JSON.parse(fs.readFileSync(jsonFile));
   expect(Object.keys(doc.flaws).length).toBe(0);
 
-  const found = glob.sync(path.join(builtFolder, "_sample_.*.html"));
-  expect(found.length).toBe(3);
+  const builtFiles = fs.readdirSync(path.join(builtFolder));
+  expect(
+    builtFiles
+      .filter((f) => f.includes("_sample_."))
+      .map((f) => {
+        const startOffset = "_sample_.".length;
+        return f.substr(startOffset, f.length - startOffset - ".html".length);
+      })
+  ).toEqual(expect.arrayContaining(["colorpicker_tool", "keyboard", "meter"]));
 });
 
 test("headings with HTML should be rendered as HTML", () => {
@@ -1673,6 +1695,73 @@ test("translated content broken links can fall back to en-us", () => {
   expect($("article a.only-in-en-us").length).toBe(2);
   expect($("article a.only-in-en-us").attr("title")).toBe(
     "Currently only available in English (US)"
+  );
+});
+
+test("notecards are correctly transformed by the formatNotecards utility", () => {
+  const builtFolder = path.join(
+    buildRoot,
+    "en-us",
+    "docs",
+    "web",
+    "check_notecards"
+  );
+
+  const jsonFile = path.join(builtFolder, "index.json");
+  const { doc } = JSON.parse(fs.readFileSync(jsonFile));
+  expect(doc.flaws.length).toBeFalsy();
+  expect(doc.title).toBe(
+    "A page representing some edge cases of div.notecard that we might encounter"
+  );
+
+  const htmlFile = path.join(builtFolder, "index.html");
+  const html = fs.readFileSync(htmlFile, "utf-8");
+  const $ = cheerio.load(html);
+
+  expect($("div.notecard h4").length).toBe(0);
+  expect($("div.notecard.note").html()).toBe(
+    "<p><strong>Some heading:</strong> No paragraph here.</p><p>Paragraph 2</p>"
+  );
+  expect($("div.notecard.warning").html()).toBe(
+    "<p><strong>Some heading:</strong> Paragraph 1</p><p>Paragraph 2</p>"
+  );
+  expect($("div.notecard.extra").html()).toBe(
+    "<p><strong>Some heading:</strong> Paragraph 1</p><span>Foo bar</span><p>Paragraph 2</p>"
+  );
+});
+
+test("sections should be split by h2, h3 or h4", () => {
+  const builtFolder = path.join(
+    buildRoot,
+    "en-us",
+    "docs",
+    "web",
+    "split_section_by_heading"
+  );
+
+  const jsonFile = path.join(builtFolder, "index.json");
+  const { doc } = JSON.parse(fs.readFileSync(jsonFile));
+  expect(doc.flaws.length).toBeFalsy();
+  expect(doc.title).toBe("Split section by heading");
+
+  const htmlFile = path.join(builtFolder, "index.html");
+  const html = fs.readFileSync(htmlFile, "utf-8");
+  const $ = cheerio.load(html);
+
+  expect($("h2#some_heading").text()).toBe("Some heading");
+  expect($("h2#some_heading").attr("id")).toBe("some_heading");
+  expect($("h2#some_heading").html()).toBe(
+    '<a href="#some_heading" title="Permalink to Some heading">Some heading</a>'
+  );
+  expect($("h3#another_heading").text()).toBe("Another heading");
+  expect($("h3#another_heading").attr("id")).toBe("another_heading");
+  expect($("h3#another_heading").html()).toBe(
+    '<a href="#another_heading" title="Permalink to Another heading">Another heading</a>'
+  );
+  expect($("h4#final_heading").text()).toBe("Final heading");
+  expect($("h4#final_heading").attr("id")).toBe("final_heading");
+  expect($("h4#final_heading").html()).toBe(
+    '<a href="#final_heading" title="Permalink to Final heading">Final heading</a>'
   );
 });
 
