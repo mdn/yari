@@ -8,6 +8,10 @@
   padding: math.div($base-spacing, 2) $base-spacing;
   padding-left: $base-spacing;
 
+  @media #{$mq-tablet-and-up} {
+    margin: $base-spacing 0 0;
+  }
+
   @media #{$mq-small-desktop-and-up} {
     margin: $base-spacing 0 0;
   }

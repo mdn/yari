@@ -343,12 +343,10 @@ const badges = {
   DeprecatedBadge : await template("DeprecatedBadge"),
 }
 
-function smartLink(...args) {
-  while (args.length < 5) {
-    args.push(undefined);
-  }
-  args.push("CSSRef");
-  return web.smartLink(...args);
+function smartLink(href, title, content, subpath) {
+  let basepath = subpath;
+  let ignoreFlawMacro = "CSSRef";
+  return web.smartLink(href, title, content, subpath, basepath, ignoreFlawMacro);
 }
 
 function buildSublist(pages, title) {
