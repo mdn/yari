@@ -48,8 +48,9 @@ function extractSections($) {
   const iterable = [...$("#_body")[0].childNodes];
 
   let c = 0;
+  const tagNames = new Set(["h2", "h3", "h4"]);
   iterable.forEach((child) => {
-    if (child.tagName === "h2" || child.tagName === "h3") {
+    if (tagNames.has(child.tagName)) {
       if (c) {
         const [subSections, subFlaws] = addSections(section.clone());
         sections.push(...subSections);
@@ -288,11 +289,11 @@ function addSections($) {
     const specialSections = _addSingleSpecialSection($);
 
     // The _addSingleSpecialSection() function will have sucked up the <h2> or <h3>
-    // and the `div.bc-data` or `div.bc-specs` to turn it into a special section.
+    // or <h4> and the `div.bc-data` or `div.bc-specs` to turn it into a special section.
     // First remove that, then put whatever HTML is left as a prose
     // section underneath.
-    $.find("div.bc-data, h2, h3").remove();
-    $.find("div.bc-specs, h2, h3").remove();
+    $.find("div.bc-data, h2, h3, h4").remove();
+    $.find("div.bc-specs, h2, h3, h4").remove();
     const [proseSections, proseFlaws] = _addSectionProse($);
     specialSections.push(...proseSections);
     flaws.push(...proseFlaws);
@@ -313,18 +314,23 @@ function _addSingleSpecialSection($) {
   let id = null;
   let title = null;
   let isH3 = false;
+  let isH4 = false;
 
   const h2s = $.find("h2");
+  const h3s = $.find("h3");
   if (h2s.length === 1) {
     id = h2s.attr("id");
     title = h2s.text();
+  } else if (h3s.length === 1) {
+    id = h3s.attr("id");
+    title = h3s.text();
+    isH3 = true;
   } else {
-    const h3s = $.find("h3");
-    if (h3s.length === 1) {
-      id = h3s.attr("id");
-      title = h3s.text();
-      isH3 = true;
-    }
+    // Look for <h4>s
+    const h4s = $.find("h4");
+    id = h4s.attr("id");
+    title = h4s.text();
+    isH4 = true;
   }
 
   let dataQuery = null;
@@ -358,6 +364,7 @@ function _addSingleSpecialSection($) {
             title,
             id,
             isH3,
+            isH4,
             data: null,
             query,
             browsers: null,
@@ -375,6 +382,7 @@ function _addSingleSpecialSection($) {
             title,
             id,
             isH3,
+            isH4,
             query,
             specifications: [],
           },
@@ -452,6 +460,7 @@ function _addSingleSpecialSection($) {
           title,
           id,
           isH3,
+          isH4,
           data,
           query,
           browsers,
@@ -506,6 +515,7 @@ function _addSingleSpecialSection($) {
           title,
           id,
           isH3,
+          isH4,
           specifications,
           query,
         },
@@ -519,6 +529,7 @@ function _addSectionProse($) {
   let title = null;
   let titleAsText = null;
   let isH3 = false;
+  let isH4 = false;
 
   const flaws = [];
 
@@ -546,6 +557,7 @@ function _addSectionProse($) {
   }
 
   // If there was no <h2>, look through all the <h3>s.
+  let h3found = false;
   if (!h2found) {
     const h3s = $.find("h3");
     for (const i of [...Array(h3s.length).keys()]) {
@@ -565,12 +577,42 @@ function _addSectionProse($) {
           h3s.eq(i).remove();
         }
       }
+      h3found = true;
+    }
+  }
+
+  // if there was no <h3>, look through all the <h4>s.
+  if (!h3found) {
+    const h4s = $.find("h4");
+    for (const i of [...Array(h4s.length).keys()]) {
+      if (i) {
+        // Excess!
+        // In light of the transition to Markdown
+        // and converting any <h4> elements within
+        // <div class="note notecard"> containers to <strong>,
+        // we don't need to push a flaw at the moment for h4
+        // tags that aren't at root-level
+        // flaws.push(
+        //   `Excess <h4> tag that is NOT at root-level (id='${h4s
+        //     .eq(i)
+        //     .attr("id")}', text='${h4s.eq(i).text()}')`
+        // );
+      } else {
+        id = h4s.eq(i).attr("id");
+        title = h4s.eq(i).html();
+        titleAsText = h4s.eq(i).text();
+        if (id && title) {
+          isH4 = true;
+          h4s.eq(i).remove();
+        }
+      }
     }
   }
   const value = {
     id,
     title,
     isH3,
+    isH4,
     content: $.html().trim(),
   };
 
