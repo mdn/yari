@@ -252,8 +252,7 @@ function makeTOC(doc) {
           section.type === "specifications") &&
         section.value.id &&
         section.value.title &&
-        !section.value.isH3 &&
-        !section.value.isH4
+        !section.value.isH3
       ) {
         return { text: section.value.title, id: section.value.id };
       }

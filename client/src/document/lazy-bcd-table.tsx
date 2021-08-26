@@ -1,7 +1,7 @@
 import React, { lazy, Suspense, useEffect, useState } from "react";
 import useSWR from "swr";
 
-import { DisplayHeading } from "./ingredients/utils";
+import { DisplayH2, DisplayH3 } from "./ingredients/utils";
 import { Loading } from "../ui/atoms/loading";
 // Because it's bad for web performance to lazy-load CSS during the initial render
 // (because the page is saying "Wait! Stop rendering, now that I've downloaded
@@ -26,21 +26,19 @@ export function LazyBrowserCompatibilityTable({
   id,
   title,
   isH3,
-  isH4,
   query,
   dataURL,
 }: {
   id: string;
   title: string;
   isH3: boolean;
-  isH4: boolean;
   query: string;
   dataURL: string | null;
 }) {
   return (
     <>
-      {<DisplayHeading level={isH4 ? 4 : isH3 ? 3 : 2} id={id} title={title} />}
-
+      {title && !isH3 && <DisplayH2 id={id} title={title} />}
+      {title && isH3 && <DisplayH3 id={id} title={title} />}
       {dataURL ? (
         <LazyBrowserCompatibilityTableInner dataURL={dataURL} />
       ) : (
