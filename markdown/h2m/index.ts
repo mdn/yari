@@ -2,16 +2,13 @@ import * as cheerio from "cheerio";
 import * as unified from "unified";
 import * as parseHTML from "rehype-parse";
 import * as gfm from "remark-gfm";
-import * as parseMD from "remark-parse";
 import * as remarkPrettier from "remark-prettier";
-import * as stringify from "remark-stringify";
 import {
   extractSections,
   extractSummary,
 } from "../../build/document-extractor";
 
 import { decodeKS, encodeKS, prettyAST } from "../utils";
-import { MDNodeUnion } from "./h";
 import { transform } from "./transform";
 
 const getTransformProcessor = (options) =>
@@ -19,50 +16,10 @@ const getTransformProcessor = (options) =>
     .use(parseHTML)
     .use(transform, options)
     .use(gfm)
-    .use(remarkPrettier, { report: false, options: { proseWrap: "always" } });
-
-function findPrettierIgnoreRanges(node: MDNodeUnion): [number, number][] {
-  const ignoreRanges = [];
-  if (Array.isArray(node.children)) {
-    for (let i = 0; i < node.children.length; i++) {
-      const child = node.children[i];
-      const nextChild = node.children[i + 1];
-      if (
-        child.type == "html" &&
-        child.value.trim() == "<!-- prettier-ignore -->" &&
-        nextChild
-      ) {
-        ignoreRanges.push([
-          child.position.start.offset,
-          nextChild.position.start.offset,
-        ]);
-      }
-      ignoreRanges.push(...findPrettierIgnoreRanges(child));
-    }
-  }
-  return ignoreRanges;
-}
-
-async function stripPrettierIgnoreRanges(source: string) {
-  let ast;
-  const parse = unified()
-    .use(parseMD)
-    .use(() => (result: any) => {
-      ast = result;
-      return result;
-    })
-    .use(stringify);
-
-  await parse.process(source);
-
-  let cutCount = 0;
-  for (const [start, end] of findPrettierIgnoreRanges(ast)) {
-    source = source.slice(0, start - cutCount) + source.slice(end - cutCount);
-    cutCount += end - start;
-  }
-
-  return source;
-}
+    .use(remarkPrettier, {
+      report: false,
+      options: { embeddedLanguageFormatting: "off" },
+    });
 
 export async function h2m(html, { printAST }: { printAST?: boolean } = {}) {
   const encodedHTML = encodeKS(html);
@@ -83,7 +40,7 @@ export async function h2m(html, { printAST }: { printAST?: boolean } = {}) {
     })
     .process(encodedHTML);
 
-  const result = await stripPrettierIgnoreRanges(String(file));
+  const result = String(file);
 
   return [decodeKS(result), { invalid, unhandled }];
 }

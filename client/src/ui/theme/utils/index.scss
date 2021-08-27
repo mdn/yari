@@ -1,0 +1,52 @@
+@use "~@mdn/minimalist/sass/vars/layout";
+
+@use "../color-palette/index" as palette;
+
+.heading-group {
+  display: flex;
+  flex-direction: column-reverse;
+}
+
+.gradient-clip-text {
+  background: palette.$gradient-accent;
+  background-clip: text;
+  color: transparent;
+}
+
+.girdle {
+  @media #{layout.$mq-small-desktop-and-up} {
+    margin: 0 auto;
+    max-width: layout.$max-width-default;
+    position: relative;
+  }
+}
+
+.pink-highlighter {
+  background: rgba(226, 21, 135, 0.2); /* uses $mdn-pink600 as a base */
+}
+
+/* Force text to break to a new line on tablet or mobile */
+.break-tablet {
+  display: block;
+
+  @media #{layout.$mq-small-desktop-and-up} {
+    display: inline-block;
+  }
+}
+
+.break-mobile {
+  display: block;
+
+  @media #{layout.$mq-tablet-and-up} {
+    display: inline-block;
+  }
+}
+
+/*
+ * A simply utility for setting a max width on an element that constrains its
+ * width to what is commonly known to be a readable line length for prose.
+ */
+@mixin readable-line-length() {
+  max-width: 45rem;
+  max-width: 85ch;
+}

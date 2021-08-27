@@ -1,7 +1,7 @@
 @use "sass:math";
 
 tr.bc-history {
-  background-color: $neutral-550;
+  background-color: $mdn-neutral100;
   display: none;
 
   td {
@@ -24,7 +24,7 @@ tr.bc-history {
   }
 
   dl.bc-notes-list {
-    background-color: $neutral-550;
+    background-color: $mdn-neutral100;
     display: flex;
     flex-flow: column;
     gap: $base-spacing;
@@ -54,7 +54,7 @@ tr.bc-history {
 }
 
 dl.bc-history-mobile {
-  background-color: $neutral-550;
+  background-color: $mdn-neutral100;
   display: block;
   padding: math.div($base-spacing, 2);
 

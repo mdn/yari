@@ -10,7 +10,7 @@ export function getPreferredCookieLocale(document: Document) {
   let value = document.cookie
     .split("; ")
     .find((row) => row.startsWith(`${PREFERRED_LOCALE_COOKIE_NAME}=`));
-  if (value && value.includes("=")) {
+  if (value?.includes("=")) {
     value = value.split("=")[1];
   }
   return value;
@@ -20,12 +20,7 @@ export function setPreferredCookieLocale(document: Document, value: string) {
   let cookieValue = `${PREFERRED_LOCALE_COOKIE_NAME}=${value};max-age=${
     60 * 60 * 24 * 365 * 3
   };path=/`;
-  if (
-    !(
-      document.location.hostname === "localhost" ||
-      document.location.hostname === "localhost.org"
-    )
-  ) {
+  if (document.location.hostname !== "localhost") {
     cookieValue += ";secure";
   }
   document.cookie = cookieValue;

@@ -1,7 +1,7 @@
 @use "sass:math";
 
 .bc-table {
-  background-color: $neutral-550;
+  background-color: $mdn-neutral100;
   border: 0;
   border-collapse: separate;
   border-spacing: 0;
@@ -17,9 +17,9 @@
   td,
   th {
     border-bottom: 0 solid transparent;
-    border-left: 1px solid $neutral-100;
+    border-left: 1px solid $mdn-neutral900;
     border-right: 0;
-    border-top: 1px solid $neutral-100;
+    border-top: 1px solid $mdn-neutral900;
     padding: 0;
     position: relative;
     text-align: center;
@@ -28,7 +28,7 @@
   th {
     background-color: transparent;
     border-left: 0;
-    border-right: 1px solid $neutral-100;
+    border-right: 1px solid $mdn-neutral900;
     overflow: hidden;
     padding: $base-unit;
   }
@@ -42,7 +42,7 @@
 
     td {
       border-left: 0;
-      border-right: 2px solid $neutral-100;
+      border-right: 2px solid $mdn-neutral900;
       border-top: 0;
       overflow: hidden;
 
@@ -54,9 +54,11 @@
 
   .bc-table-row-header {
     padding: math.div($base-spacing, 2) math.div($base-spacing, 4);
+    display: flex;
 
     code {
       text-decoration: none;
+      white-space: normal;
     }
   }
 
@@ -75,7 +77,7 @@
       padding: 0;
 
       @media #{$mq-small-desktop-and-up} {
-        border-right: 2px solid $neutral-100;
+        border-right: 2px solid $mdn-neutral900;
         display: table-cell;
         font-weight: normal;
         overflow: hidden;
@@ -85,7 +87,7 @@
 
     td {
       @media #{$mq-small-desktop-and-up} {
-        border-right: 1px solid $neutral-100;
+        border-right: 1px solid $mdn-neutral900;
         display: table-cell;
         overflow: hidden;
         padding: math.div($base-spacing, 2) $base-unit;
@@ -95,7 +97,7 @@
     }
 
     tr:nth-child(even) {
-      background-color: $neutral-550;
+      background-color: $mdn-neutral100;
     }
 
     dl {
@@ -123,24 +125,32 @@
    * that link to page that doesn't exist.
    */
   .new {
-    color: $red-100;
+    color: $mdn-red700;
   }
 }
 
 @media #{$mq-small-desktop-and-up} {
   .bc-table-web {
     thead {
-      th:nth-child(7) {
-        border-right: 1px solid $neutral-100;
+      /** Border between desktop and mobile sections. */
+      th:nth-child(8) {
+        border-left: 1px solid $mdn-neutral900;
       }
 
-      th:nth-child(8) {
-        border-left: 1px solid $neutral-100;
+      /** Border between mobile and server sections. */
+      th:nth-child(14) {
+        border-left: 1px solid $mdn-neutral900;
       }
     }
 
+    /** Border between desktop and mobile sections. */
     td:nth-child(8) {
-      border-left: 1px solid $neutral-100;
+      border-left: 1px solid $mdn-neutral900;
+    }
+
+    /** Border between mobile and server sections. */
+    td:nth-child(14) {
+      border-left: 1px solid $mdn-neutral900;
     }
   }
 }

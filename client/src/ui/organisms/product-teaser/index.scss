@@ -1,0 +1,76 @@
+@use "~@mdn/minimalist/sass/vars/layout";
+
+@use "../../theme/index" as theme;
+
+.product-teaser {
+  background-color: theme.$mdn-violet900;
+  padding: (layout.$base-spacing * 2) layout.$base-spacing;
+
+  .teaser-content-container {
+    color: theme.$white;
+    font-family: theme.$metropolis-font-family;
+    font-size: 28px;
+    font-weight: bold;
+    line-height: 150%;
+
+    @media #{layout.$mq-small-desktop-and-up} {
+      align-items: center;
+      display: flex;
+    }
+
+    &::before {
+      background: transparent url("../../atoms/svg/mdn-plus-features.svg")
+        center center no-repeat;
+      content: "";
+      display: block;
+      height: 270px;
+      margin-bottom: layout.$base-spacing;
+      width: 100%;
+
+      @media #{layout.$mq-small-desktop-and-up} {
+        display: inline-block;
+        width: 650px;
+      }
+    }
+  }
+
+  .teaser-copy {
+    margin: 0 auto;
+    max-width: 542px;
+    text-align: center;
+
+    @media #{layout.$mq-small-desktop-and-up} {
+      text-align: left;
+    }
+  }
+
+  a.learn-more {
+    display: block;
+
+    &:link,
+    &:visited {
+      background: linear-gradient(to right, #8565ff, #6581ff);
+      border-radius: 4px;
+      color: theme.$white;
+      display: block;
+      font-size: 14px;
+      font-weight: bold;
+      line-height: 116%;
+      margin: layout.$base-spacing auto;
+      min-height: 40px;
+      padding: 16px 8px;
+      text-align: center;
+      width: 125px;
+
+      @media #{layout.$mq-small-desktop-and-up} {
+        margin: layout.$base-spacing 0;
+      }
+    }
+
+    &:hover,
+    &:focus {
+      background: theme.$mdn-violet700;
+      text-decoration: none;
+    }
+  }
+}

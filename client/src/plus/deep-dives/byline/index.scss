@@ -1,0 +1,50 @@
+@use "sass:math";
+@use "~@mdn/minimalist/sass/vars/layout";
+
+@use "../../../ui/theme/index" as theme;
+
+.byline {
+  display: flex;
+  font-family: theme.$inter-font-family;
+  font-size: 16px;
+  gap: 20px;
+
+  h3 {
+    border-left: 0;
+    font-size: 14px;
+    line-height: 1;
+    margin-bottom: 0;
+    margin-top: math.div(layout.$base-spacing, 4);
+    padding: 0;
+
+    @media #{layout.$mq-tablet-and-up} {
+      font-size: 16px;
+    }
+
+    a {
+      &:link,
+      &:visited {
+        color: theme.$mdn-neutral700;
+      }
+    }
+  }
+
+  .author-avatar {
+    img {
+      max-width: 50px;
+    }
+  }
+}
+
+ul.article-meta {
+  li {
+    color: theme.$mdn-neutral700;
+    display: inline-block;
+
+    &:first-child::after {
+      content: "·";
+      display: inline-block;
+      margin: 0 math.div(layout.$base-spacing, 2);
+    }
+  }
+}

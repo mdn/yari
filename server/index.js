@@ -85,7 +85,7 @@ const proxy = FAKE_V1_API
 
 app.use("/api/v1", proxy);
 // This is an exception and it's only ever relevant in development.
-app.post("/:locale/users/account/signup", proxy);
+app.use("/users/*", proxy);
 
 // It's important that this line comes *after* the setting up for the proxy
 // middleware for `/api/v1` above.
@@ -168,18 +168,12 @@ app.get("/*/contributors.txt", async (req, res) => {
     return res.status(404).send(`Document not found by URL (${url})`);
   }
   const { doc: builtDocument } = await buildDocument(document);
-  if (document.metadata.contributors || !document.isArchive) {
-    res.send(
-      renderContributorsTxt(
-        document.metadata.contributors,
-        !document.isArchive
-          ? builtDocument.source.github_url.replace("/blob/", "/commits/")
-          : null
-      )
-    );
-  } else {
-    res.status(410).send("Contributors not known for this document.\n");
-  }
+  res.send(
+    renderContributorsTxt(
+      document.metadata.contributors,
+      builtDocument.source.github_url.replace("/blob/", "/commits/")
+    )
+  );
 });
 
 app.get("/*", async (req, res) => {

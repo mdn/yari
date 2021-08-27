@@ -45,7 +45,7 @@ export function LanguageMenu({
     ) {
       const newPathname = translateURL(pathname, locale, cookieLocale);
       // Just to be absolutely paranoidly certain it's not going to redirect
-      // to the URL you're already don, we're doing this extra check.
+      // to the URL you're already on, we're doing this extra check.
       if (newPathname !== pathname) {
         navigate(newPathname);
       }

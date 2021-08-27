@@ -1,7 +1,6 @@
 @use "sass:math";
 
 @import "~@mdn/minimalist/sass/mixins/utils";
-@import "~@mdn/minimalist/sass/vars/color-palette";
 @import "~@mdn/minimalist/sass/vars/layout";
 
 ul.language-toggle {
@@ -45,9 +44,10 @@ ul.language-toggle {
         no-repeat;
       content: "";
       display: inline-block;
-      height: 29px;
+      height: 25px;
+      margin-right: math.div($base-spacing, 4);
       vertical-align: middle;
-      width: 28px;
+      width: 24px;
     }
 
     &::after {

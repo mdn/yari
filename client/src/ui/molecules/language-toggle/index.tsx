@@ -25,7 +25,7 @@ export function LanguageToggle({
 
   React.useEffect(() => {
     const cookieValue = getPreferredCookieLocale(document);
-    if (cookieValue && cookieValue.toLowerCase() !== "en-us") {
+    if (cookieValue?.toLowerCase() !== "en-us") {
       setPreventLocaleOverride(true);
     }
   }, [locale]);

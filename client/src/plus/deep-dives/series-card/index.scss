@@ -1,0 +1,113 @@
+@use "sass:math";
+
+@use "~@mdn/minimalist/sass/vars/layout";
+@use "~@mdn/minimalist/sass/vars/typography";
+
+@use "../../../ui/theme/index" as theme;
+
+.series-card {
+  display: none;
+
+  @media #{layout.$mq-small-desktop-and-up} {
+    background-color: theme.$white;
+    border-radius: theme.$default-border-radius;
+    border-top: 18px solid theme.$mdn-violet600;
+    box-shadow: theme.$card-box-shadow;
+    display: block;
+    font-family: theme.$inter-font-family;
+    margin-bottom: layout.$base-spacing * 2;
+    max-width: 320px;
+    padding: layout.$base-spacing;
+    position: sticky;
+    top: 24px;
+
+    .card-type {
+      color: theme.$mdn-violet600;
+      font-size: typography.$small-font-size;
+      font-weight: bold;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+    }
+
+    h3 {
+      font-family: theme.$inter-font-family;
+      font-weight: 600;
+      margin-bottom: layout.$base-spacing;
+    }
+
+    a {
+      &:link,
+      &:visited {
+        color: theme.$mdn-neutral900;
+      }
+    }
+
+    ul {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+
+      li {
+        margin-bottom: math.div(layout.$base-spacing, 2);
+
+        &::before {
+          background: transparent url("./default.svg") center center no-repeat;
+          background-size: 12px;
+          content: "";
+          display: inline-block;
+          height: 12px;
+          margin-right: 20px;
+          width: 12px;
+        }
+
+        &.active {
+          font-weight: bold;
+
+          &::before {
+            background-image: url("./active.svg");
+          }
+        }
+
+        &.unavailable {
+          color: theme.$mdn-neutral500;
+          margin-bottom: 0;
+
+          &::before {
+            background-image: url("./unavailable.svg");
+          }
+        }
+      }
+    }
+  }
+}
+
+.take-survey {
+  display: none;
+
+  @media #{layout.$mq-small-desktop-and-up} {
+    display: block;
+    margin-bottom: 0;
+  }
+
+  a.take-survey-link {
+    &:link,
+    &:visited {
+      background: linear-gradient(to right, #8565ff, #6581ff);
+      border-radius: 4px;
+      color: theme.$white;
+      display: block;
+      font-size: 18px;
+      font-weight: bold;
+      margin-top: layout.$base-spacing;
+      min-height: 40px;
+      padding: 10px;
+      text-align: center;
+    }
+
+    &:hover,
+    &:focus {
+      background: theme.$mdn-violet700;
+      text-decoration: none;
+    }
+  }
+}
