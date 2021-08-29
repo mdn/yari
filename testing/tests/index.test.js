@@ -1698,6 +1698,38 @@ test("translated content broken links can fall back to en-us", () => {
   );
 });
 
+test("notecards are correctly transformed by the formatNotecards utility", () => {
+  const builtFolder = path.join(
+    buildRoot,
+    "en-us",
+    "docs",
+    "web",
+    "check_notecards"
+  );
+
+  const jsonFile = path.join(builtFolder, "index.json");
+  const { doc } = JSON.parse(fs.readFileSync(jsonFile));
+  expect(doc.flaws.length).toBeFalsy();
+  expect(doc.title).toBe(
+    "A page representing some edge cases of div.notecard that we might encounter"
+  );
+
+  const htmlFile = path.join(builtFolder, "index.html");
+  const html = fs.readFileSync(htmlFile, "utf-8");
+  const $ = cheerio.load(html);
+
+  expect($("div.notecard h4").length).toBe(0);
+  expect($("div.notecard.note").html()).toBe(
+    "<p><strong>Some heading:</strong> No paragraph here.</p><p>Paragraph 2</p>"
+  );
+  expect($("div.notecard.warning").html()).toBe(
+    "<p><strong>Some heading:</strong> Paragraph 1</p><p>Paragraph 2</p>"
+  );
+  expect($("div.notecard.extra").html()).toBe(
+    "<p><strong>Some heading:</strong> Paragraph 1</p><span>Foo bar</span><p>Paragraph 2</p>"
+  );
+});
+
 test("homepage links and flaws", () => {
   const builtFolder = path.join(
     buildRoot,

@@ -93,6 +93,51 @@ const text = mdn.localStringMap({
         'Supporting_Older_Browsers': 'Supporting Older Browsers',
         'Fundamental_Layout_Comprehension': 'Fundamental Layout Comprehension',
   },
+  'ja': {
+    'Learn_CSS': 'CSS を学ぶ',
+      'CSS_first_steps': 'CSS の第一歩',
+        'CSS_first_steps_overview': 'CSS の第一歩の概要',
+        'What_is_CSS':  'CSS とは何か',
+        'Getting_started_with_CSS': 'CSS 入門',
+        'How_CSS_is_structured': 'CSS の全体像',
+        'How_CSS_works': 'CSS の働き',
+        'Using_your_new_knowledge': '新しい知識を使う',
+      'CSS_building_blocks': 'CSS の構成要素',
+        'CSS_building_blocks_overview': 'CSS の構成要素の概要',
+        'Cascade_and_inheritance': 'カスケードと継承',
+        'CSS_selectors': 'CSS セレクター',
+        'The_box_model': 'ボックスモデル',
+        'Backgrounds_and_borders': '背景と境界',
+        'Handling_different_text_directions': '書字方向の操作',
+        'Overflowing_content': '内容のはみ出し',
+        'Values_and_units': '値と単位',
+        'Sizing_items_in_CSS': 'CSS における大きさの指定',
+        'Images_media_and_form_elements': '画像、メディア、フォームの要素',
+        'Styling_tables': '表のスタイル付け',
+        'Debugging_CSS': 'CSS のデバッグ',
+        'Organizing_your_CSS': 'CSS の整理',
+      'Styling_text': 'テキストの装飾',
+        'Styling_text_overview': 'テキストの装飾の概要',
+        'Fundamental_text_and_font_styling': '基本的なテキストとフォントの装飾',
+        'Styling_lists': 'リストの装飾',
+        'Styling_links': 'リンクの装飾',
+        'Web_fonts': 'ウェブフォント',
+        'Assessment_typesetting_a_community_school_homepage': '演習: コミュニティスクールのホームページの組版',
+      'CSS_layout': 'CSS レイアウト',
+        'CSS_layout_overview': 'CSS レイアウトの概要',
+        'Layout_introduction' : 'CSS レイアウト入門',
+        'Normal_Flow' : '通常フロー',
+        'Flexbox': 'フレックスボックス',
+        'Grids' : 'グリッド',
+        'Floats': '浮動',
+        'Positioning': '位置指定',
+        'Multiple-column_Layout': '段組みレイアウト',
+        'Responsive_design': 'レスポンシブデザイン',
+        'Media_queries': 'メディアクエリーの初心者向けガイド',
+        'Legacy_Layout_Methods': '古いレイアウト方法',
+        'Supporting_Older_Browsers': '古いブラウザーの対応',
+        'Fundamental_Layout_Comprehension': '基礎的なレイアウトの理解',
+  },
   'pt-BR': {
     'Learn_CSS': 'Learn CSS',
       'CSS_first_steps': 'CSS - primeiros passos',
@@ -269,51 +314,6 @@ const text = mdn.localStringMap({
         'Legacy_Layout_Methods': 'Legacy Layout Methods',
         'Supporting_Older_Browsers': 'Supporting Older Browsers',
         'Fundamental_Layout_Comprehension': 'Fundamental Layout Comprehension',
-  },
-  'ja': {
-    'Learn_CSS': 'Learn CSS',
-      'CSS_first_steps': 'CSS first steps',
-        'CSS_first_steps_overview': 'CSS first steps overview',
-        'What_is_CSS':  'What is CSS?',
-        'Getting_started_with_CSS': 'Getting started with CSS',
-        'How_CSS_is_structured': 'How CSS is structured',
-        'How_CSS_works': 'How CSS works',
-        'Using_your_new_knowledge': 'Using your new knowledge',
-      'CSS_building_blocks': 'CSS building blocks',
-        'CSS_building_blocks_overview': 'CSS building blocks overview',
-        'Cascade_and_inheritance': 'Cascade and inheritance',
-        'CSS_selectors': 'CSS selectors',
-        'The_box_model': 'The box model',
-        'Backgrounds_and_borders': 'Backgrounds and borders',
-        'Handling_different_text_directions': 'Handling different text directions',
-        'Overflowing_content': 'Overflowing content',
-        'Values_and_units': 'Values and units',
-        'Sizing_items_in_CSS': 'Sizing items in CSS',
-        'Images_media_and_form_elements': 'Images, media, and form elements',
-        'Styling_tables': 'Styling tables',
-        'Debugging_CSS': 'Debugging CSS',
-        'Organizing_your_CSS': 'Organizing your CSS',
-      'Styling_text': 'Styling text',
-        'Styling_text_overview': 'Styling text overview',
-        'Fundamental_text_and_font_styling': 'Fundamental text and font styling',
-        'Styling_lists': 'Styling lists',
-        'Styling_links': 'Styling links',
-        'Web_fonts': 'Web fonts',
-        'Assessment_typesetting_a_community_school_homepage': 'Assessment: Typesetting a community school homepage',
-      'CSS_layout': 'CSS layout',
-        'CSS_layout_overview': 'CSS layout overview',
-        'Layout_introduction' : 'Introduction to CSS layout',
-        'Normal_Flow' : 'Normal Flow',
-        'Flexbox': 'Flexbox',
-        'Grids' : 'Grids',
-        'Floats': 'Floats',
-        'Positioning': 'Positioning',
-        'Multiple-column_Layout': 'Multiple-column Layout',
-        'Responsive_design': 'Responsive design',
-        'Media_queries': 'Beginner\'s guide to media queries',
-        'Legacy_Layout_Methods': 'Legacy Layout Methods',
-        'Supporting_Older_Browsers': 'Supporting Older Browsers',
-        'Fundamental_Layout_Comprehension': 'Fundamental Layout Comprehension',
   }
 });
 
@@ -343,12 +343,10 @@ const badges = {
   DeprecatedBadge : await template("DeprecatedBadge"),
 }
 
-function smartLink(...args) {
-  while (args.length < 5) {
-    args.push(undefined);
-  }
-  args.push("CSSRef");
-  return web.smartLink(...args);
+function smartLink(href, title, content, subpath) {
+  let basepath = subpath;
+  let ignoreFlawMacro = "CSSRef";
+  return web.smartLink(href, title, content, subpath, basepath, ignoreFlawMacro);
 }
 
 function buildSublist(pages, title) {
@@ -708,8 +706,8 @@ function buildSublist(pages, title) {
   <li class="toggle">
     <ol>
       <li><%-smartLink(`${cssURL}CSS_Colors/Color_picker_tool`, null, text['Color_picker_tool'], cssURL)%></li>
-      <li><%-smartLink(`${cssURL}CSS_Background_and_Borders/Box-shadow_generator`, null, text['Box-shadow_generator'], cssURL)%></li>
-      <li><%-smartLink(`${cssURL}CSS_Background_and_Borders/Border-image_generator`, null, text['Border-image_generator'], cssURL)%></li>
+      <li><%-smartLink(`${cssURL}CSS_Backgrounds_and_Borders/Box-shadow_generator`, null, text['Box-shadow_generator'], cssURL)%></li>
+      <li><%-smartLink(`${cssURL}CSS_Backgrounds_and_Borders/Border-image_generator`, null, text['Border-image_generator'], cssURL)%></li>
     </ol>
   </li>
 
