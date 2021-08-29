@@ -7,7 +7,7 @@ import { asArray } from "../utils";
 import { toText } from "./to-text";
 import { QueryAndTransform } from "./utils";
 
-const gettextLocalizationMap = (function initLocalizationsMap() {
+const gettextLocalizationMap = (() => {
   const getTextDefaultDomainName = "messages";
   let gtLocalizationMap = new Map();
   let localesOnFS = fs
@@ -27,8 +27,7 @@ export const cards: QueryAndTransform[] = [
   ...["note", "warning"].map(
     (className) =>
       [
-        (node, opts) => {
-          const locale = opts.locale || DEFAULT_LOCALE;
+        (node, { locale = DEFAULT_LOCALE }) => {
           const gt = gettextLocalizationMap.get(locale);
           if (
             !((node.properties.className as string[]) || []).some(
@@ -50,8 +49,7 @@ export const cards: QueryAndTransform[] = [
             toText(grandChild) == gt.gettext("card_" + className + "_label")
           );
         },
-        (node, t, opts) => {
-          const locale = opts.locale || DEFAULT_LOCALE;
+        (node, t, { locale = DEFAULT_LOCALE }) => {
           const gt = gettextLocalizationMap.get(locale);
           return h("blockquote", [
             h("paragraph", [
@@ -70,8 +68,7 @@ export const cards: QueryAndTransform[] = [
     (node) =>
       node.tagName == "div" &&
       ((node.properties.className as string[]) || "").includes("callout"),
-    (node, t, opts) => {
-      const locale = opts.locale || DEFAULT_LOCALE;
+    (node, t, { locale = DEFAULT_LOCALE }) => {
       const gt = gettextLocalizationMap.get(locale);
       return h("blockquote", [
         h("paragraph", [
