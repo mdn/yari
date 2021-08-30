@@ -67,7 +67,7 @@ test.describe("Bookmarking pages", () => {
     await page.waitForSelector("text=Your bookmarks (6)");
 
     // This picks one of the un-toggle buttons
-    await page.click('button[title="Click to remove this bookmark"]');
+    await page.click('button[title="Remove bookmark"]');
     await page.waitForSelector("text=Your bookmarks (5)");
   });
 });
