@@ -25,14 +25,10 @@ test.describe("Bookmarking pages", () => {
     await page.click('a:has-text("Sign in with Firefox Accounts")');
     await page.goto(testURL("/en-US/docs/Web/Foo"));
     await page.waitForSelector(SELECTOR);
-    expect(
-      await page.isVisible('button[title="Not been bookmarked"]')
-    ).toBeTruthy();
-    await page.click('button[title="Not been bookmarked"]');
+    expect(await page.isVisible('button[title="Add bookmark"]')).toBeTruthy();
+    await page.click('button[title="Add bookmark"]');
     await page.waitForLoadState("networkidle");
-    expect(
-      await page.isVisible('button[title="Not been bookmarked"]')
-    ).toBeFalsy();
+    expect(await page.isVisible('button[title="Add bookmark"]')).toBeFalsy();
     expect(await page.isVisible('button[title^="Bookmarked"]')).toBeTruthy();
 
     // Reload the page to prove that it sticks
