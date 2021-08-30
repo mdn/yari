@@ -60,7 +60,7 @@ test.describe("Bookmarking pages", () => {
     for (const url of urls) {
       await page.goto(testURL(url));
       await page.waitForSelector(SELECTOR);
-      await page.click('button[title="Not been bookmarked"]');
+      await page.click('button[title="Add bookmark"]');
     }
 
     await page.goto(testURL("/en-US/plus/bookmarks"));
