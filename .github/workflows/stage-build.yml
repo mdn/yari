@@ -150,7 +150,7 @@ jobs:
           # This enables the Plus call-to-action banner and the Plus landing page
           REACT_APP_ENABLE_PLUS: true
 
-          # This removes the ability to sign in
+          # This adds the ability to sign in (stage only for now)
           REACT_APP_DISABLE_AUTH: false
 
         run: |
