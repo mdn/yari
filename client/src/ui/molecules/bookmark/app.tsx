@@ -191,7 +191,7 @@ function Button({
     border: "0",
   };
 
-  let title = "Not been bookmarked";
+  let title = "Add bookmark";
   if (disabled) {
     title = "Disabled";
   } else if (bookmarked) {

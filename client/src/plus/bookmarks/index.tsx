@@ -14,7 +14,9 @@ import { AuthDisabled } from "../../ui/atoms/auth-disabled";
 import { Loading } from "../../ui/atoms/loading";
 import { useUserData } from "../../user-context";
 import { useLocale } from "../../hooks";
+
 import "./index.scss";
+import "../../ui/molecules/bookmark/index.scss";
 
 dayjs.extend(relativeTime);
 
@@ -292,11 +294,10 @@ function Bookmark({
         <a href={bookmark.url}>{bookmark.title}</a>
       </h4>
       <p>
-        <small>{created.fromNow()}</small>{" "}
         <button
           type="button"
-          className="remove-bookmark"
-          title="Click to remove this bookmark"
+          className="bookmark-button bookmarked"
+          title="Remove bookmark"
           onClick={async () => {
             setDoomed(true);
             try {
@@ -306,8 +307,9 @@ function Bookmark({
             }
           }}
         >
-          <span>☆</span>
+          <span className="visually-hidden">Remove bookmark</span>
         </button>
+        <small>{created.fromNow()}</small>{" "}
       </p>
     </div>
   );
