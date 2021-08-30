@@ -75,3 +75,6 @@ testing/translated-content/files/**/_githistory.json
 # eslintcache
 client/.eslintcache
 popularities.json
+
+#linariacache
+client/src/.linaria_cache

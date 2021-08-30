@@ -4,7 +4,9 @@
   align-items: center;
   background-color: $mdn-neutral100;
   display: flex;
+  gap: math.div($base-spacing, 2);
   padding: math.div($base-spacing, 2) $base-spacing;
+  padding-left: $base-spacing;
 
   @media #{$mq-tablet-and-up} {
     margin: $base-spacing 0 0;
@@ -15,27 +17,15 @@
   }
 
   .breadcrumbs-container {
-    flex-basis: 80%;
+    flex: 1 1 90%;
+  }
 
-    @media #{$mq-tablet-and-up} {
-      flex-basis: 55%;
-    }
-
-    @media #{$mq-large-desktop-and-up} {
-      flex-basis: 75%;
-    }
+  .bookmark-button-container {
+    flex: 0 0 40px;
   }
 
   .language-toggle {
-    flex-basis: 20%;
-
-    @media #{$mq-tablet-and-up} {
-      flex-basis: 45%;
-    }
-
-    @media #{$mq-large-desktop-and-up} {
-      flex-basis: 25%;
-    }
+    flex: 1 1 fit-content;
   }
 
   // when the breadcrumbs is the only item in the container

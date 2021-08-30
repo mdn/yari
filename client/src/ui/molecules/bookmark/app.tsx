@@ -3,7 +3,11 @@ import useSWR, { mutate } from "swr";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 
-import { Doc } from "../../types";
+import { ErrorContainer } from "../error-container";
+
+import { Doc } from "../../../document/types";
+
+import "./index.scss";
 
 dayjs.extend(relativeTime);
 
@@ -75,7 +79,7 @@ export default function App({ doc }: { doc: Doc }) {
   const loading = !data;
 
   return (
-    <div>
+    <div className="bookmark-button-container">
       {error && !hideLoadingError ? (
         <ShowLoadingError
           error={error}
@@ -134,16 +138,8 @@ function ShowToggleError({
   error: Error;
   clear: () => void;
 }) {
-  const style = {
-    backgroundColor: "white",
-    border: "1px solid #ccc",
-    padding: 20,
-    position: "absolute",
-    bottom: 20,
-    right: 20,
-  } as React.CSSProperties;
   return (
-    <div style={style}>
+    <ErrorContainer>
       <button type="button" onClick={() => clear()}>
         X
       </button>
@@ -153,7 +149,7 @@ function ShowToggleError({
       <p>
         <code>{error.toString()}</code>
       </p>
-    </div>
+    </ErrorContainer>
   );
 }
 
@@ -164,16 +160,8 @@ function ShowLoadingError({
   error: Error;
   clear: () => void;
 }) {
-  const style = {
-    backgroundColor: "white",
-    border: "1px solid #ccc",
-    padding: 20,
-    position: "absolute",
-    bottom: 20,
-    right: 20,
-  } as React.CSSProperties;
   return (
-    <div style={style}>
+    <ErrorContainer>
       <button type="button" onClick={() => clear()}>
         X
       </button>
@@ -183,7 +171,7 @@ function ShowLoadingError({
       <p>
         <code>{error.toString()}</code>
       </p>
-    </div>
+    </ErrorContainer>
   );
 }
 
@@ -203,7 +191,7 @@ function Button({
     border: "0",
   };
 
-  let title = "Not been bookmarked";
+  let title = "Add bookmark";
   if (disabled) {
     title = "Disabled";
   } else if (bookmarked) {
@@ -214,8 +202,12 @@ function Button({
     style.opacity = 0.5;
   }
   return (
+    /* Note! We're displaying the state as if you have NOT bookmarked
+    it even if we still don't know yet. */
     <button
-      style={style}
+      className={`button ghost bookmark-button ${
+        !bookmarked || loading ? "" : "bookmarked"
+      }`}
       title={title}
       onClick={toggle}
       disabled={disabled || loading}
@@ -223,9 +215,9 @@ function Button({
       // without having to rely on a `class` or the text it self.
       data-testid="bookmark-toggle"
     >
-      {/* Note! We're displaying the state as if you have NOT bookmarked
-      it even if we still don't know yet. */}
-      {!bookmarked || loading ? "☆" : "★"}
+      <span className="visually-hidden">
+        {!bookmarked || loading ? "Add bookmark" : "Remove bookmark"}
+      </span>
     </button>
   );
 }

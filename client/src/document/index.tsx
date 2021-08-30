@@ -22,7 +22,7 @@ import { RetiredLocaleNote } from "./molecules/retired-locale-note";
 import { MainContentContainer } from "../ui/atoms/page-content";
 import { Loading } from "../ui/atoms/loading";
 import { Metadata } from "./organisms/metadata";
-import { BookmarkToggle } from "./organisms/bookmark";
+import { BookmarkToggle } from "../ui/molecules/bookmark";
 
 import "./index.scss";
 

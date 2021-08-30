@@ -1,6 +1,6 @@
 import React from "react";
 import { useUserData } from "../../../user-context";
-import { Doc } from "../../types";
+import { Doc } from "../../../document/types";
 
 const App = React.lazy(() => import("./app"));
 

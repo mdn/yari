@@ -25,14 +25,10 @@ test.describe("Bookmarking pages", () => {
     await page.click('a:has-text("Sign in with Firefox Accounts")');
     await page.goto(testURL("/en-US/docs/Web/Foo"));
     await page.waitForSelector(SELECTOR);
-    expect(
-      await page.isVisible('button[title="Not been bookmarked"]')
-    ).toBeTruthy();
-    await page.click('button[title="Not been bookmarked"]');
+    expect(await page.isVisible('button[title="Add bookmark"]')).toBeTruthy();
+    await page.click('button[title="Add bookmark"]');
     await page.waitForLoadState("networkidle");
-    expect(
-      await page.isVisible('button[title="Not been bookmarked"]')
-    ).toBeFalsy();
+    expect(await page.isVisible('button[title="Add bookmark"]')).toBeFalsy();
     expect(await page.isVisible('button[title^="Bookmarked"]')).toBeTruthy();
 
     // Reload the page to prove that it sticks
@@ -64,14 +60,14 @@ test.describe("Bookmarking pages", () => {
     for (const url of urls) {
       await page.goto(testURL(url));
       await page.waitForSelector(SELECTOR);
-      await page.click('button[title="Not been bookmarked"]');
+      await page.click('button[title="Add bookmark"]');
     }
 
     await page.goto(testURL("/en-US/plus/bookmarks"));
     await page.waitForSelector("text=Your bookmarks (6)");
 
     // This picks one of the un-toggle buttons
-    await page.click('button[title="Click to remove this bookmark"]');
+    await page.click('button[title="Remove bookmark"]');
     await page.waitForSelector("text=Your bookmarks (5)");
   });
 });
