@@ -151,7 +151,7 @@ jobs:
           REACT_APP_ENABLE_PLUS: true
 
           # This removes the ability to sign in
-          REACT_APP_DISABLE_AUTH: true
+          REACT_APP_DISABLE_AUTH: false
 
         run: |
 
