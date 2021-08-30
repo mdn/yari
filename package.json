@@ -49,7 +49,7 @@
   "dependencies": {
     "@caporal/core": "2.0.2",
     "@fast-csv/parse": "4.3.6",
-    "@mdn/browser-compat-data": "4.0.0",
+    "@mdn/browser-compat-data": "4.0.1",
     "accept-language-parser": "1.5.0",
     "browser-specs": "^2.7.1",
     "chalk": "4.1.2",
