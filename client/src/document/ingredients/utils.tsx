@@ -1,19 +1,32 @@
-export function DisplayHeading({
-  level,
+export function DisplayH2({
   id,
   title,
   titleAsText,
 }: {
-  level: number;
   id: string;
   title: string;
   titleAsText?: string;
 }) {
-  const Tag = `h${level}` as keyof JSX.IntrinsicElements;
   return (
-    <Tag id={id.toLowerCase()}>
-      <Permalink id={id} title={title} titleAsText={titleAsText} />
-    </Tag>
+    <h2 id={id.toLowerCase()}>
+      <Permalink title={title} titleAsText={titleAsText} id={id} />
+    </h2>
+  );
+}
+
+export function DisplayH3({
+  id,
+  title,
+  titleAsText,
+}: {
+  id: string;
+  title: string;
+  titleAsText?: string;
+}) {
+  return (
+    <h3 id={id.toLowerCase()}>
+      <Permalink title={title} titleAsText={titleAsText} id={id} />
+    </h3>
   );
 }
 
