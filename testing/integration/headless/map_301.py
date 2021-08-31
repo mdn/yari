@@ -983,6 +983,26 @@ FIREFOX_SOURCE_DOCS_URLS = list(
 )
 
 MISC_REDIRECT_URLS = [
+    url_test(
+        "/fr/{plus,plus/,plus/bookmarks,plus/bookmarks/,plus/deep-dives,plus/deep-dives/}",
+        "/fr/",
+        status_code=302,
+    ),
+    url_test(
+        "/en-US/{plus,plus/,plus/bookmarks,plus/bookmarks/,plus/deep-dives,plus/deep-dives/}",
+        "/en-US/",
+        status_code=302,
+    ),
+    url_test(
+        "/fr/{plus/deep-dives/planning-for-browser-support,plus/deep-dives/your-browser-support-toolkit}",
+        "/fr/",
+        status_code=302,
+    ),
+    url_test(
+        "/en-US/{plus/deep-dives/planning-for-browser-support,plus/deep-dives/your-browser-support-toolkit}",
+        "/en-US/",
+        status_code=302,
+    ),
     url_test("/events", "https://community.mozilla.org/events/", status_code=302),
     url_test("/events/", "https://community.mozilla.org/events/", status_code=302),
     url_test("/fr/events", "https://community.mozilla.org/events/", status_code=302),
@@ -993,7 +1013,7 @@ MISC_REDIRECT_URLS = [
     url_test(
         "/communities/mozilla-tech-speakers",
         "https://community.mozilla.org/en/groups/tech-speakers",
-        status_code=302
+        status_code=302,
     ),
     url_test("/fr/account", "/fr/settings", status_code=302),
     url_test("/en-US/account", "/en-US/settings", status_code=302),
