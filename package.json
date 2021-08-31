@@ -102,7 +102,7 @@
     "rehype-stringify": "^8.0.0",
     "remark-gfm": "^1.0.0",
     "remark-parse": "^9.0.0",
-    "remark-rehype": "^8.1.0",
+    "remark-rehype": "^9.0.0",
     "remark-stringify": "^9.0.1",
     "sanitize-filename": "^1.6.3",
     "send": "0.17.1",
