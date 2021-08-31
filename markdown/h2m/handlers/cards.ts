@@ -28,7 +28,11 @@ export const cards: QueryAndTransform[] = [
     (className) =>
       [
         (node, { locale = DEFAULT_LOCALE }) => {
-          const gt = gettextLocalizationMap.get(locale);
+          const defaultLocaleGt = gettextLocalizationMap.get(DEFAULT_LOCALE);
+          let currentLocaleGt = gettextLocalizationMap.get(DEFAULT_LOCALE);
+          if (gettextLocalizationMap.has(locale)) {
+            currentLocaleGt = gettextLocalizationMap.get(locale);
+          }
           if (
             !((node.properties.className as string[]) || []).some(
               (c) => c == className
@@ -46,11 +50,17 @@ export const cards: QueryAndTransform[] = [
           const grandChild = child.children[0];
           return (
             grandChild.tagName == "strong" &&
-            toText(grandChild) == gt.gettext("card_" + className + "_label")
+            (toText(grandChild) ==
+              currentLocaleGt.gettext("card_" + className + "_label") ||
+              toText(grandChild) ==
+                defaultLocaleGt.gettext("card_" + className + "_label"))
           );
         },
         (node, t, { locale = DEFAULT_LOCALE }) => {
-          const gt = gettextLocalizationMap.get(locale);
+          let gt = gettextLocalizationMap.get(DEFAULT_LOCALE);
+          if (gettextLocalizationMap.has(locale)) {
+            gt = gettextLocalizationMap.get(locale);
+          }
           return h("blockquote", [
             h("paragraph", [
               h("strong", [
@@ -69,7 +79,10 @@ export const cards: QueryAndTransform[] = [
       node.tagName == "div" &&
       ((node.properties.className as string[]) || "").includes("callout"),
     (node, t, { locale = DEFAULT_LOCALE }) => {
-      const gt = gettextLocalizationMap.get(locale);
+      let gt = gettextLocalizationMap.get(DEFAULT_LOCALE);
+      if (gettextLocalizationMap.has(locale)) {
+        gt = gettextLocalizationMap.get(locale);
+      }
       return h("blockquote", [
         h("paragraph", [
           h("strong", [h("text", gt.gettext("card_callout_label"))]),
