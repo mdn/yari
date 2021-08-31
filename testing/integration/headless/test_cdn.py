@@ -138,12 +138,12 @@ def assert_cached(
         ("/healthz", 204, None),
         ("/readiness", 204, None),
         ("/api/v1/whoami", 200, None),
+        ("/en-US/signup", 404, None),
         ("/en-US/users/signout", 404, None),
         ("/users/github/login/?next=/en-US/", 404, None),
         ("/users/google/login/?next=/en-US/", 404, None),
         ("/admin/login/", 200, None),
         ("/admin/users/user/1/", 302, "/admin/login/?next=/admin/users/user/1/"),
-        ("/en-US/docs/Learn/CSS/Styling_text/Fundamentals$samples/Color", 403, None),
     ],
 )
 def test_not_cached(base_url, is_behind_cdn, slug, status, expected_location):
@@ -163,7 +163,6 @@ def test_not_cached(base_url, is_behind_cdn, slug, status, expected_location):
         ("/sitemaps/en-US/sitemap.xml.gz", 200, None),
         ("/diagrams/workflow/workflow.svg", 200, None),
         ("/presentations/microsummaries/index.html", 200, None),
-        ("/en-US/signup", 200, None),
         ("/en-US/signin", 200, None),
         ("/en-US/settings", 200, None),
         ("/en-US/search?q=css", 200, None),
