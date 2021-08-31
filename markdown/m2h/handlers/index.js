@@ -50,8 +50,11 @@ function getNotecardType(node, locale) {
   // E.g. in en-US magicKeyword === Note:
   const magicKeyword = grandChild.children[0].value;
   const l10nCardMap = getL10nCardMap(locale);
-  const msgId = l10nCardMap.get(magicKeyword);
-  const type = msgId.split("_")[1];
+  let type;
+  if (l10nCardMap.has(magicKeyword)) {
+    const msgId = l10nCardMap.get(magicKeyword);
+    type = msgId.split("_")[1];
+  }
   return type == "warning" || type == "note" || type == "callout" ? type : null;
 }
 
