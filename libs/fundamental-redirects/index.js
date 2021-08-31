@@ -1173,6 +1173,21 @@ for (const [pattern, path] of [
 }
 
 const MISC_REDIRECT_PATTERNS = [
+  // Temporarily redirect localized plus URLs to the home page.
+  redirect(
+    new RegExp(
+      `^(?<locale>${Array.from(VALID_LOCALES.keys()).join(
+        "|"
+      )})/plus(?:|\/bookmarks|\/deep-dives|\/deep-dives\/[^\/]+)\/?$`,
+      "i"
+    ),
+    ({ locale }) => {
+      return `/${VALID_LOCALES.get(locale.toLowerCase())}/`;
+    },
+    {
+      permanent: false,
+    }
+  ),
   redirect(/^events\/?$/i, "https://community.mozilla.org/events/", {
     permanent: false,
   }),
