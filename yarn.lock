@@ -2651,10 +2651,10 @@
   dependencies:
     mkdirp "^1.0.4"
 
-"@playwright/test@1.14.0":
-  version "1.14.0"
-  resolved "https://registry.yarnpkg.com/@playwright/test/-/test-1.14.0.tgz#8df90c554c3d10895bab1b3e921e417fdb61f416"
-  integrity sha512-8jCS6fmzGZTW7e/Tri0tfxhl5bYpsQSDmCA7TtU6F4WV3CgxnOh44KOynol623p5ftVQ08Jdodu/x4WJ1dNqrg==
+"@playwright/test@1.14.1":
+  version "1.14.1"
+  resolved "https://registry.yarnpkg.com/@playwright/test/-/test-1.14.1.tgz#b2c6b76b8bf5958da307c80895847844b7fd172c"
+  integrity sha512-yL/808TEvUmsXxKMPf/Hf6Tajx666QFr8g+hCUZbRy2cbmQOPt7xhwGvXb1cpwMwIlJ4gBx/AiOpnnppsuLgTA==
   dependencies:
     "@babel/code-frame" "^7.14.5"
     "@babel/core" "^7.14.8"
