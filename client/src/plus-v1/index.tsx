@@ -5,8 +5,6 @@ import { Loading } from "../ui/atoms/loading";
 import { PageContentContainer } from "../ui/atoms/page-content";
 import { PageNotFound } from "../page-not-found";
 const App = React.lazy(() => import("./app"));
-// XXX temporary hack while we still have this plus-v1 dupe.
-const Bookmarks = React.lazy(() => import("../plus/bookmarks"));
 
 export function PlusV1({ pageTitle }: { pageTitle?: string }) {
   const defaultPageTitle = "MDN Plus";
@@ -29,16 +27,6 @@ export function PlusV1({ pageTitle }: { pageTitle?: string }) {
         element={
           <React.Suspense fallback={loading}>
             <App />
-          </React.Suspense>
-        }
-      />
-      <Route
-        path="bookmarks"
-        element={
-          <React.Suspense fallback={loading}>
-            <div className="bookmarks">
-              <Bookmarks />
-            </div>
           </React.Suspense>
         }
       />
