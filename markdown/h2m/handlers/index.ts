@@ -216,6 +216,10 @@ export const handlers: QueryAndTransform[] = [
     "cpp",
     "java",
     "bash",
+    "php",
+    "xml",
+    "glsl",
+    "python",
     "example-good",
     "example-bad",
   ].flatMap((lang) =>
