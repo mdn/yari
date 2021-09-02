@@ -69,7 +69,9 @@ const renderFromURL = async (
   }
 
   const { rawBody, fileInfo, isMarkdown } = document;
-  const rawHTML = isMarkdown ? await m2h(rawBody) : rawBody;
+  const rawHTML = isMarkdown
+    ? await m2h(rawBody, { locale: metadata.locale })
+    : rawBody;
   const [renderedHtml, errors] = await renderMacros(
     rawHTML,
     {
