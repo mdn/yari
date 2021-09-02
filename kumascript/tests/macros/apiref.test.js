@@ -8,6 +8,8 @@ import { JSDOM } from "jsdom";
 import { fileURLToPath } from "url";
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
+import { jest } from "@jest/globals";
+
 import { beforeEachMacro, describeMacro, itMacro, lintHTML } from "./utils.js";
 
 /**

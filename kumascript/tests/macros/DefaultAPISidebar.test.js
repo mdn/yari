@@ -1,7 +1,9 @@
 /**
  * @prettier
  */
+import fs from "fs";
 import path from "path";
+
 import { JSDOM } from "jsdom";
 import { beforeEachMacro, describeMacro, itMacro, lintHTML } from "./utils.js";
 
@@ -11,8 +13,6 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 /**
  * Load all the fixtures.
  */
-import fs from "fs";
-import path from "path";
 const pagesFixturePath = path.resolve(
   __dirname,
   "fixtures/defaultapisidebar/pages.json"
