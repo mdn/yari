@@ -7,11 +7,14 @@
 .bookmark-button {
   background-color: transparent;
   border-radius: math.div(theme.$default-border-radius, 3);
-  height: 35px;
+  height: 100%;
   max-width: inherit;
   min-height: inherit;
-  padding: 0;
-  width: 35px;
+  padding: 8px;
+
+  @media #{layout.$mq-small-desktop-and-up} {
+    width: 150px;
+  }
 
   &:hover,
   &:focus {
@@ -21,11 +24,12 @@
   &::before {
     background-color: theme.$mdn-light-grey900;
     content: "";
-    display: block;
+    display: inline-block;
     height: 25px;
-    margin: 0 auto;
+    margin: 0 8px 0 auto;
     mask-image: url("~@mdn/dinocons/general/bookmark.svg");
     padding: math.div(layout.$base-spacing, 2);
+    vertical-align: middle;
     width: 25px;
   }
 

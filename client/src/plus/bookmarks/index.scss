@@ -1,4 +1,135 @@
-@import "~@mdn/minimalist/sass/vars/mdn-web-docs-palette";
+@use "sass:math";
+@use "~@mdn/minimalist/sass/vars/layout" as layout;
+@use "../../ui/theme/index.scss" as theme;
+
+.page-content-container.plus {
+  background-color: theme.$default-page-background-color;
+  max-width: inherit;
+}
+
+.bookmarks {
+  padding: 48px 6px;
+  position: relative;
+  width: 100%;
+
+  @media #{layout.$mq-tablet-and-up} {
+    padding: 48px 24px;
+  }
+
+  h3 {
+    border-bottom: theme.$standard-light-border;
+    padding-bottom: 24px;
+  }
+}
+
+.bookmark {
+  align-items: center;
+  background-color: theme.$white;
+  border: theme.$standard-primary-border;
+  border-radius: theme.$component-border-radius;
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 8px;
+  margin-top: 16px;
+  padding: 16px;
+
+  a {
+    &:link,
+    &:visited {
+      color: theme.$mdn-neutral900;
+    }
+  }
+
+  .bookmark-icon {
+    display: none;
+
+    @media #{layout.$mq-tablet-and-up} {
+      background-color: theme.$mdn-green600;
+      border-radius: math.div(theme.$default-border-radius, 3);
+      color: theme.$white;
+      display: block;
+      font-style: italic;
+      margin-right: 12px;
+      padding: 8px;
+    }
+  }
+
+  .bookmark-content {
+    flex: 1 1 80%;
+    overflow: hidden;
+
+    @media #{layout.$mq-tablet-and-up} {
+      flex-basis: 95%;
+    }
+
+    h4 {
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+  }
+
+  .bookmark-actions {
+    flex: 0 1 20%;
+
+    @media #{layout.$mq-tablet-and-up} {
+      flex-basis: 5%;
+    }
+  }
+
+  .breadcrumbs {
+    list-style: none;
+    margin-bottom: 0;
+
+    li {
+      display: inline-block;
+      margin: 0;
+
+      &::after {
+        background-color: theme.$text-secondary;
+        content: "";
+        display: inline-block;
+        height: 8px;
+        margin: 0 4px;
+        mask-image: url("~@mdn/dinocons/arrows/chevron.svg");
+        transform: rotate(90deg);
+        vertical-align: middle;
+        width: 8px;
+      }
+    }
+  }
+}
+
+.remove-bookmark-button {
+  background-color: transparent;
+  border-radius: math.div(theme.$default-border-radius, 3);
+  padding: 8px;
+
+  &:hover,
+  &:focus {
+    background-color: theme.$mdn-light-grey200;
+  }
+
+  &::before {
+    background-color: theme.$icon-primary;
+    content: "";
+    display: inline-block;
+    height: 25px;
+    mask-image: url("~@mdn/dinocons/general/trash.svg");
+    vertical-align: middle;
+    width: 25px;
+  }
+}
+
+.doomed {
+  /* stylelint-disable-line a11y/media-prefers-reduced-motion */
+  animation: fadeOutNearly 0.5s ease-out; /* we already disable all animation and transitions globally via a reset */
+}
+
+.unbookmark {
+  position: absolute;
+  right: 24px;
+  top: 0;
+}
 
 @keyframes fadeOutNearly {
   0% {
@@ -6,46 +137,5 @@
   }
   100% {
     opacity: 0.1;
-  }
-}
-
-.plus {
-  .bookmarks {
-    h3 {
-      margin-bottom: 40px;
-    }
-    p.nothing-bookmarked {
-      margin: 100px 50px;
-      font-style: italic;
-    }
-
-    div.bookmark {
-      margin-bottom: 20px;
-      ol.breadcrumbs {
-        margin-bottom: 0;
-        list-style: none;
-
-        li {
-          display: inline-block;
-          margin: 0 3px;
-
-          a {
-            &:link,
-            &:visited {
-              color: $mdn-neutral900;
-            }
-          }
-        }
-      }
-    }
-    div.bookmark.doomed {
-      // Hey Schalk! How do I get it to stay at 'opacity:0.1' after the animation
-      // has run for its 0.5s?
-      animation: fadeOutNearly 0.5s ease-out;
-    }
-
-    .notecard.unbookmark {
-      float: right;
-    }
   }
 }

@@ -16,7 +16,6 @@ import { useUserData } from "../../user-context";
 import { useLocale } from "../../hooks";
 
 import "./index.scss";
-import "../../ui/molecules/bookmark/index.scss";
 
 dayjs.extend(relativeTime);
 
@@ -51,7 +50,7 @@ export default function Bookmarks() {
   const userData = useUserData();
   const [searchParams, setSearchParams] = useSearchParams();
 
-  const pageTitle = "Your bookmarks";
+  const pageTitle = "My Bookmarks";
   React.useEffect(() => {
     document.title = pageTitle;
   }, []);
@@ -190,22 +189,19 @@ function DisplayData({
   }
 
   return (
-    <section>
-      <h3>
-        Your bookmarks ({data.metadata.total.toLocaleString()}){" "}
-        {data.metadata.page > 1 && <small>Page {data.metadata.page}</small>}
-      </h3>
+    <>
+      <h3>My Bookmarks</h3>
 
       {data.metadata.total === 0 && (
         <p className="nothing-bookmarked">
-          Nothing bookmarked yet. Go out there an explore!
+          Nothing bookmarked yet. Go out there and explore!
         </p>
       )}
 
       {toggleError && (
         <div className="notecard negative">
           <h3>Server error</h3>
-          <p>Unable to save your bookmark toggle on the server.</p>
+          <p>Unable to save your bookmark to the server.</p>
           <p>
             <code>{toggleError.toString()}</code>
           </p>
@@ -214,7 +210,7 @@ function DisplayData({
       )}
 
       {unbookmarked && (
-        <div className="notecard unbookmark">
+        <div className="unbookmark">
           <p>
             Bookmark removed{" "}
             <button
@@ -266,7 +262,7 @@ function DisplayData({
           )}
         </div>
       )}
-    </section>
+    </>
   );
 }
 
@@ -277,7 +273,6 @@ function Bookmark({
   bookmark: BookmarkData;
   toggle: () => Promise<void>;
 }) {
-  const created = dayjs(bookmark.created);
   const [doomed, setDoomed] = React.useState(false);
 
   let className = "bookmark";
@@ -287,16 +282,19 @@ function Bookmark({
 
   return (
     <div key={bookmark.id} className={className}>
-      {bookmark.parents.length > 0 && (
-        <Breadcrumbs parents={bookmark.parents} />
-      )}
-      <h4>
-        <a href={bookmark.url}>{bookmark.title}</a>
-      </h4>
-      <p>
+      <div className="bookmark-icon">docs</div>
+      <div className="bookmark-content">
+        {bookmark.parents.length > 0 && (
+          <Breadcrumbs parents={bookmark.parents} />
+        )}
+        <h4>
+          <a href={bookmark.url}>{bookmark.title}</a>
+        </h4>
+      </div>
+      <div className="bookmark-actions">
         <button
           type="button"
-          className="bookmark-button bookmarked"
+          className="remove-bookmark-button"
           title="Remove bookmark"
           onClick={async () => {
             setDoomed(true);
@@ -309,8 +307,7 @@ function Bookmark({
         >
           <span className="visually-hidden">Remove bookmark</span>
         </button>
-        <small>{created.fromNow()}</small>{" "}
-      </p>
+      </div>
     </div>
   );
 }

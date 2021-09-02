@@ -20,10 +20,6 @@
 
 .avatar-username {
   margin-left: $base-unit;
-
-  @media #{$mq-large-desktop-and-up} {
-    display: none;
-  }
 }
 
 a.signin-link {

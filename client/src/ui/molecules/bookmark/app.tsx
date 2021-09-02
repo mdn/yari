@@ -214,10 +214,9 @@ function Button({
       // This exists so that the headless tests can refer to this button
       // without having to rely on a `class` or the text it self.
       data-testid="bookmark-toggle"
+      aria-label={!bookmarked || loading ? "Add Bookmark" : "Remove Bookmark"}
     >
-      <span className="visually-hidden">
-        {!bookmarked || loading ? "Add bookmark" : "Remove bookmark"}
-      </span>
+      <span>{!bookmarked || loading ? "Bookmark" : "Bookmarked"}</span>
     </button>
   );
 }
