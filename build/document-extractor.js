@@ -622,12 +622,14 @@ function _addSectionProse($) {
     value.titleAsText = titleAsText;
   }
 
-  const sections = [
-    {
+  const sections = [];
+  if (value.content || value.title) {
+    sections.push({
       type: "prose",
       value,
-    },
-  ];
+    });
+  }
+
   return [sections, flaws];
 }
 

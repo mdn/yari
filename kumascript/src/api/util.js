@@ -280,9 +280,7 @@ class HTMLTool {
       }
       return result;
     } else {
-      const result = collectClosestCode(
-        this.$(`#${minimalIDEscape(sampleID)}`)
-      );
+      const result = collectClosestCode(findSectionStart(this.$, sectionID));
       if (!result) {
         throw new KumascriptError(
           `unable to find any live code samples for "${sectionID}" within ${this.pathDescription}`

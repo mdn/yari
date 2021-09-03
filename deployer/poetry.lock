@@ -1,12 +1,4 @@
 [[package]]
-name = "appdirs"
-version = "1.4.4"
-description = "A small Python module for determining appropriate platform-specific dirs, e.g. a \"user data dir\"."
-category = "dev"
-optional = false
-python-versions = "*"
-
-[[package]]
 name = "atomicwrites"
 version = "1.4.0"
 description = "Atomic file writes."
@@ -30,38 +22,42 @@ tests_no_zope = ["coverage[toml] (>=5.0.2)", "hypothesis", "pympler", "pytest (>
 
 [[package]]
 name = "black"
-version = "21.7b0"
+version = "21.8b0"
 description = "The uncompromising code formatter."
 category = "dev"
 optional = false
 python-versions = ">=3.6.2"
 
 [package.dependencies]
-appdirs = "*"
 click = ">=7.1.2"
 mypy-extensions = ">=0.4.3"
-pathspec = ">=0.8.1,<1"
+pathspec = ">=0.9.0,<1"
+platformdirs = ">=2"
 regex = ">=2020.1.8"
 tomli = ">=0.2.6,<2.0.0"
 typed-ast = {version = ">=1.4.2", markers = "python_version < \"3.8\""}
-typing-extensions = {version = ">=3.7.4", markers = "python_version < \"3.8\""}
+typing-extensions = [
+    {version = ">=3.10.0.0", markers = "python_version < \"3.10\""},
+    {version = "!=3.10.0.1", markers = "python_version >= \"3.10\""},
+]
 
 [package.extras]
 colorama = ["colorama (>=0.4.3)"]
 d = ["aiohttp (>=3.6.0)", "aiohttp-cors (>=0.4.0)"]
+jupyter = ["ipython (>=7.8.0)", "tokenize-rt (>=3.2.0)"]
 python2 = ["typed-ast (>=1.4.2)"]
 uvloop = ["uvloop (>=0.15.2)"]
 
 [[package]]
 name = "boto3"
-version = "1.18.24"
+version = "1.18.31"
 description = "The AWS SDK for Python"
 category = "main"
 optional = false
 python-versions = ">= 3.6"
 
 [package.dependencies]
-botocore = ">=1.21.24,<1.22.0"
+botocore = ">=1.21.31,<1.22.0"
 jmespath = ">=0.7.1,<1.0.0"
 s3transfer = ">=0.5.0,<0.6.0"
 
@@ -70,7 +66,7 @@ crt = ["botocore[crt] (>=1.21.0,<2.0a0)"]
 
 [[package]]
 name = "botocore"
-version = "1.21.24"
+version = "1.21.31"
 description = "Low-level, data-driven core of boto 3."
 category = "main"
 optional = false
@@ -116,17 +112,21 @@ unicode_backport = ["unicodedata2"]
 
 [[package]]
 name = "click"
-version = "7.1.2"
+version = "8.0.1"
 description = "Composable command line interface toolkit"
 category = "main"
 optional = false
-python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*"
+python-versions = ">=3.6"
+
+[package.dependencies]
+colorama = {version = "*", markers = "platform_system == \"Windows\""}
+importlib-metadata = {version = "*", markers = "python_version < \"3.8\""}
 
 [[package]]
 name = "colorama"
 version = "0.4.4"
 description = "Cross-platform colored terminal text."
-category = "dev"
+category = "main"
 optional = false
 python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*"
 
@@ -212,7 +212,7 @@ python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*"
 name = "importlib-metadata"
 version = "3.7.3"
 description = "Read metadata from Python packages"
-category = "dev"
+category = "main"
 optional = false
 python-versions = ">=3.6"
 
@@ -269,11 +269,23 @@ pyparsing = ">=2.0.2"
 
 [[package]]
 name = "pathspec"
-version = "0.8.1"
+version = "0.9.0"
 description = "Utility library for gitignore style pattern matching of file paths."
 category = "dev"
 optional = false
-python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*"
+python-versions = "!=3.0.*,!=3.1.*,!=3.2.*,!=3.3.*,!=3.4.*,>=2.7"
+
+[[package]]
+name = "platformdirs"
+version = "2.2.0"
+description = "A small Python module for determining appropriate platform-specific dirs, e.g. a \"user data dir\"."
+category = "dev"
+optional = false
+python-versions = ">=3.6"
+
+[package.extras]
+docs = ["Sphinx (>=4)", "furo (>=2021.7.5b38)", "proselint (>=0.10.2)", "sphinx-autodoc-typehints (>=1.12)"]
+test = ["appdirs (==1.4.4)", "pytest (>=6)", "pytest-cov (>=2.7)", "pytest-mock (>=3.6)"]
 
 [[package]]
 name = "pluggy"
@@ -459,7 +471,7 @@ crt = ["botocore[crt] (>=1.20.29,<2.0a.0)"]
 
 [[package]]
 name = "selectolax"
-version = "0.2.14"
+version = "0.3.2"
 description = "Fast HTML5 parser with CSS selectors."
 category = "main"
 optional = false
@@ -502,9 +514,9 @@ python-versions = "*"
 
 [[package]]
 name = "typing-extensions"
-version = "3.7.4.3"
+version = "3.10.0.2"
 description = "Backported and Experimental Type Hints for Python 3.5+"
-category = "dev"
+category = "main"
 optional = false
 python-versions = "*"
 
@@ -541,7 +553,7 @@ python-versions = "*"
 name = "zipp"
 version = "3.4.1"
 description = "Backport of pathlib-compatible object wrapper for zip files"
-category = "dev"
+category = "main"
 optional = false
 python-versions = ">=3.6"
 
@@ -552,13 +564,9 @@ testing = ["pytest (>=4.6)", "pytest-checkdocs (>=1.2.3)", "pytest-flake8", "pyt
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.7"
-content-hash = "5e7833bc076370e4e2bf583e1a15a5e05968b4cb29a26a97f6acd75a6c91424f"
+content-hash = "a5ccf11bd893e2f6e49fc231705a270971682105073ced44118625f695dd502f"
 
 [metadata.files]
-appdirs = [
-    {file = "appdirs-1.4.4-py2.py3-none-any.whl", hash = "sha256:a841dacd6b99318a741b166adb07e19ee71a274450e68237b4650ca1055ab128"},
-    {file = "appdirs-1.4.4.tar.gz", hash = "sha256:7d5d0167b2b1ba821647616af46a749d1c653740dd0d2415100fe26e27afdf41"},
-]
 atomicwrites = [
     {file = "atomicwrites-1.4.0-py2.py3-none-any.whl", hash = "sha256:6d1784dea7c0c8d4a5172b6c620f40b6e4cbfdf96d783691f2e1302a7b88e197"},
     {file = "atomicwrites-1.4.0.tar.gz", hash = "sha256:ae70396ad1a434f9c7046fd2dd196fc04b12f9e91ffb859164193be8b6168a7a"},
@@ -568,16 +576,16 @@ attrs = [
     {file = "attrs-20.3.0.tar.gz", hash = "sha256:832aa3cde19744e49938b91fea06d69ecb9e649c93ba974535d08ad92164f700"},
 ]
 black = [
-    {file = "black-21.7b0-py3-none-any.whl", hash = "sha256:1c7aa6ada8ee864db745b22790a32f94b2795c253a75d6d9b5e439ff10d23116"},
-    {file = "black-21.7b0.tar.gz", hash = "sha256:c8373c6491de9362e39271630b65b964607bc5c79c83783547d76c839b3aa219"},
+    {file = "black-21.8b0-py3-none-any.whl", hash = "sha256:2a0f9a8c2b2a60dbcf1ccb058842fb22bdbbcb2f32c6cc02d9578f90b92ce8b7"},
+    {file = "black-21.8b0.tar.gz", hash = "sha256:570608d28aa3af1792b98c4a337dbac6367877b47b12b88ab42095cfc1a627c2"},
 ]
 boto3 = [
-    {file = "boto3-1.18.24-py3-none-any.whl", hash = "sha256:ca0d576138b7c38d7fc214716a47e6394c4e9a10fdf337d8a125961eefdc25cc"},
-    {file = "boto3-1.18.24.tar.gz", hash = "sha256:d6c030dbc08f2c0b6daff9fd26b87f4c029d984781b9b48b21c112d4a76ee081"},
+    {file = "boto3-1.18.31-py3-none-any.whl", hash = "sha256:203e86311253d291d39588ae2e8dce82eecc10b9f4567ef765d7c54ec02a3e2b"},
+    {file = "boto3-1.18.31.tar.gz", hash = "sha256:59445d0e1d55c8c9675697ea41c98a0d82089a4be3076ea60e3a87cbe94dc141"},
 ]
 botocore = [
-    {file = "botocore-1.21.24-py3-none-any.whl", hash = "sha256:9f896207e46580a1a720a85261f516fe60c2209f7b8b918bc330b1cb8b4a2afb"},
-    {file = "botocore-1.21.24.tar.gz", hash = "sha256:ec1c0a3f18ae6062285cc8dac747826baebe9b238bc2720ad6ce4d03bb645ec3"},
+    {file = "botocore-1.21.31-py3-none-any.whl", hash = "sha256:8bc35ae34256cac76828ab96c80bc6653b942f85ad1898e7e265196fe92b659e"},
+    {file = "botocore-1.21.31.tar.gz", hash = "sha256:58cd315e2ae0971acdb3d7cda9c9c36b41c73181f41943a7443812d6d3c9ad18"},
 ]
 certifi = [
     {file = "certifi-2020.12.5-py2.py3-none-any.whl", hash = "sha256:719a74fb9e33b9bd44cc7f3a8d94bc35e4049deebe19ba7d8e108280cfd59830"},
@@ -639,8 +647,8 @@ charset-normalizer = [
     {file = "charset_normalizer-2.0.3-py3-none-any.whl", hash = "sha256:88fce3fa5b1a84fdcb3f603d889f723d1dd89b26059d0123ca435570e848d5e1"},
 ]
 click = [
-    {file = "click-7.1.2-py2.py3-none-any.whl", hash = "sha256:dacca89f4bfadd5de3d7489b7c8a566eee0d3676333fbb50030263894c38c0dc"},
-    {file = "click-7.1.2.tar.gz", hash = "sha256:d2b5255c7c6349bc1bd1e59e08cd12acbbd63ce649f2588755783aa94dfb6b1a"},
+    {file = "click-8.0.1-py3-none-any.whl", hash = "sha256:fba402a4a47334742d782209a7c79bc448911afe1149d07bdabdf480b3e2f4b6"},
+    {file = "click-8.0.1.tar.gz", hash = "sha256:8c04c11192119b1ef78ea049e0a6f0463e4c48ef00a30160c704337586f3ad7a"},
 ]
 colorama = [
     {file = "colorama-0.4.4-py2.py3-none-any.whl", hash = "sha256:9f47eda37229f68eee03b24b9748937c7dc3868f906e8ba69fbcbdd3bc5dc3e2"},
@@ -733,8 +741,12 @@ packaging = [
     {file = "packaging-20.9.tar.gz", hash = "sha256:5b327ac1320dc863dca72f4514ecc086f31186744b84a230374cc1fd776feae5"},
 ]
 pathspec = [
-    {file = "pathspec-0.8.1-py2.py3-none-any.whl", hash = "sha256:aa0cb481c4041bf52ffa7b0d8fa6cd3e88a2ca4879c533c9153882ee2556790d"},
-    {file = "pathspec-0.8.1.tar.gz", hash = "sha256:86379d6b86d75816baba717e64b1a3a3469deb93bb76d613c9ce79edc5cb68fd"},
+    {file = "pathspec-0.9.0-py2.py3-none-any.whl", hash = "sha256:7d15c4ddb0b5c802d161efc417ec1a2558ea2653c2e8ad9c19098201dc1c993a"},
+    {file = "pathspec-0.9.0.tar.gz", hash = "sha256:e564499435a2673d586f6b2130bb5b95f04a3ba06f81b8f895b651a3c76aabb1"},
+]
+platformdirs = [
+    {file = "platformdirs-2.2.0-py3-none-any.whl", hash = "sha256:4666d822218db6a262bdfdc9c39d21f23b4cfdb08af331a81e92751daf6c866c"},
+    {file = "platformdirs-2.2.0.tar.gz", hash = "sha256:632daad3ab546bd8e6af0537d09805cec458dce201bccfe23012df73332e181e"},
 ]
 pluggy = [
     {file = "pluggy-0.13.1-py2.py3-none-any.whl", hash = "sha256:966c145cd83c96502c3c3868f50408687b38434af77734af1e9ca461a4081d2d"},
@@ -852,33 +864,33 @@ s3transfer = [
     {file = "s3transfer-0.5.0.tar.gz", hash = "sha256:50ed823e1dc5868ad40c8dc92072f757aa0e653a192845c94a3b676f4a62da4c"},
 ]
 selectolax = [
-    {file = "selectolax-0.2.14-cp36-cp36m-macosx_10_9_x86_64.whl", hash = "sha256:a52e2a68651ee2b018ebfea24390c6b6a0ee60548ea7e899bf85403bc51265a2"},
-    {file = "selectolax-0.2.14-cp36-cp36m-manylinux_2_5_i686.manylinux1_i686.manylinux_2_12_i686.manylinux2010_i686.whl", hash = "sha256:1142a2cbdcf75de6052fdc5e7df09570541c53a707084c3ee16e24e18384a804"},
-    {file = "selectolax-0.2.14-cp36-cp36m-manylinux_2_5_x86_64.manylinux1_x86_64.manylinux_2_12_x86_64.manylinux2010_x86_64.whl", hash = "sha256:b1877d676ce059ac871f494bbc2aef0d1c1884579bc56b90ca8ef19951004ea3"},
-    {file = "selectolax-0.2.14-cp36-cp36m-win32.whl", hash = "sha256:c277d758dedbdf982d7c8853e96599cb48b16b52e5faa11f365a394903dbb9a8"},
-    {file = "selectolax-0.2.14-cp36-cp36m-win_amd64.whl", hash = "sha256:42cf8a3b856168754fa081e1a63ee543dcf79ca418e9b3ae30a23604285399fd"},
-    {file = "selectolax-0.2.14-cp37-cp37m-macosx_10_9_x86_64.whl", hash = "sha256:78dfcd83a930d22a1fe02ea31b16499a3f307f5b795f21bb01d27b0fa8cb5cd3"},
-    {file = "selectolax-0.2.14-cp37-cp37m-manylinux_2_5_i686.manylinux1_i686.manylinux_2_12_i686.manylinux2010_i686.whl", hash = "sha256:d0eaf96c53ca231e3bfa151f3fd037f28b0d4b35659563633d20e2e22e220a8e"},
-    {file = "selectolax-0.2.14-cp37-cp37m-manylinux_2_5_x86_64.manylinux1_x86_64.manylinux_2_12_x86_64.manylinux2010_x86_64.whl", hash = "sha256:5f5d9c7b035fd727f6ff5780e16cf643002fef93a7c2150a81372f670637c335"},
-    {file = "selectolax-0.2.14-cp37-cp37m-win32.whl", hash = "sha256:91e23b3d20bf9849c4e630de695210fb697b54baffadc1350048b3426abca3f6"},
-    {file = "selectolax-0.2.14-cp37-cp37m-win_amd64.whl", hash = "sha256:e2324b54c00cbe7a454015cb48cf8b85ac7e030915c5ea3bb1a2c9d56306742f"},
-    {file = "selectolax-0.2.14-cp38-cp38-macosx_10_9_universal2.whl", hash = "sha256:cd577696be63f80421b5c4504500a344e8209a175b71521b12cfb85f062ae9f2"},
-    {file = "selectolax-0.2.14-cp38-cp38-macosx_10_9_x86_64.whl", hash = "sha256:b583d1ab4312e3e3757759242daa4eeace231e34995b0a160fda9935a895425f"},
-    {file = "selectolax-0.2.14-cp38-cp38-manylinux_2_5_i686.manylinux1_i686.manylinux_2_12_i686.manylinux2010_i686.whl", hash = "sha256:95397408168535f54f717222e151910643a4fdff111584763660953afa18516c"},
-    {file = "selectolax-0.2.14-cp38-cp38-manylinux_2_5_x86_64.manylinux1_x86_64.manylinux_2_12_x86_64.manylinux2010_x86_64.whl", hash = "sha256:14ee822ea16492c9da6c62d3f6c8a8c76414ace4a9e177aad8b4ff3564301e3b"},
-    {file = "selectolax-0.2.14-cp38-cp38-win32.whl", hash = "sha256:2ba15b305fcc4c6ffc2f138c47c2122765277bbda5fc6b4639ea446d815ba411"},
-    {file = "selectolax-0.2.14-cp38-cp38-win_amd64.whl", hash = "sha256:c8cb20c1c353a8e68509e0f7d985f34dc232d55db3050cbeb3cb1c766ef1fbc0"},
-    {file = "selectolax-0.2.14-cp39-cp39-macosx_10_9_universal2.whl", hash = "sha256:08990e0a71766fac5cb69cd97ce8b41ad1324a7c42edde63cd401af0dad590e3"},
-    {file = "selectolax-0.2.14-cp39-cp39-macosx_10_9_x86_64.whl", hash = "sha256:42072396de88afade6d8a79555085fe5c49084f4d73ccccdeb364a43082fbf44"},
-    {file = "selectolax-0.2.14-cp39-cp39-manylinux_2_5_i686.manylinux1_i686.manylinux_2_12_i686.manylinux2010_i686.whl", hash = "sha256:aacf3cda7283f1ef1ba0edd2ac362251200e186ede0c3a0ecc31095fb6a4408f"},
-    {file = "selectolax-0.2.14-cp39-cp39-manylinux_2_5_x86_64.manylinux1_x86_64.manylinux_2_12_x86_64.manylinux2010_x86_64.whl", hash = "sha256:2c8e085361e47fe3efc5f62a14717a0532762004163cb1e106f8410175a9709a"},
-    {file = "selectolax-0.2.14-cp39-cp39-win32.whl", hash = "sha256:eb4715ca933d7f4dbdc85bf5d9cd23ed65b63021d496dc53f960b417d0790d30"},
-    {file = "selectolax-0.2.14-cp39-cp39-win_amd64.whl", hash = "sha256:4dde8d0ad6fd3289a284e0bd5eedb0544cdf9d42fa158cdfec08c1726473165f"},
-    {file = "selectolax-0.2.14-pp37-pypy37_pp73-macosx_10_9_x86_64.whl", hash = "sha256:5acdd7cc417685668b7d07e4c840b58158f074ec627c7c8cb5ea1ea753c4bceb"},
-    {file = "selectolax-0.2.14-pp37-pypy37_pp73-manylinux_2_5_i686.manylinux1_i686.manylinux_2_12_i686.manylinux2010_i686.whl", hash = "sha256:cd9695b6bd8ad984c45cce9779f618704ba2064471b6af318acc6f01a7c8006d"},
-    {file = "selectolax-0.2.14-pp37-pypy37_pp73-manylinux_2_5_x86_64.manylinux1_x86_64.manylinux_2_12_x86_64.manylinux2010_x86_64.whl", hash = "sha256:38065013165ba13ecc001d4fd5b05985ee6bc9e02ddf1ec0cd61451498254c03"},
-    {file = "selectolax-0.2.14-pp37-pypy37_pp73-win_amd64.whl", hash = "sha256:ec6f46b370ac3753d9ee4299a2b032e33a5a6ab44761afeac4612f55fddf5c3d"},
-    {file = "selectolax-0.2.14.tar.gz", hash = "sha256:a32d9966414db6ee0e480f1686a88a79c57ed9da6305345334e27a301ebb6dcd"},
+    {file = "selectolax-0.3.2-cp36-cp36m-macosx_10_9_x86_64.whl", hash = "sha256:a4f541fe536a8d17cee3bf11a24a9c6ac8338b5174f26ba83e860a7be9bc1168"},
+    {file = "selectolax-0.3.2-cp36-cp36m-manylinux_2_5_i686.manylinux1_i686.manylinux_2_12_i686.manylinux2010_i686.whl", hash = "sha256:2bee4fe36ab51dd0dec7b4130829e73f24d7edd4abf168d9f74409ff328addf9"},
+    {file = "selectolax-0.3.2-cp36-cp36m-manylinux_2_5_x86_64.manylinux1_x86_64.manylinux_2_12_x86_64.manylinux2010_x86_64.whl", hash = "sha256:0c634f6ad9a0aae6a349a0deaa42eb0f271056c72a78dc5e69e773cc19cc0066"},
+    {file = "selectolax-0.3.2-cp36-cp36m-win32.whl", hash = "sha256:83451175341b75c9e24a9ade0f7a8ea3223c527ce2741827739e4f3556e7d87b"},
+    {file = "selectolax-0.3.2-cp36-cp36m-win_amd64.whl", hash = "sha256:72df4289875ead18f29605f604abcc13b13a7f234d8f5852096e6434ed873f65"},
+    {file = "selectolax-0.3.2-cp37-cp37m-macosx_10_9_x86_64.whl", hash = "sha256:27be6f3c10f5fce8f5cf316cc94825d0b3ca7d46c9a2db930b6cb00e54c35317"},
+    {file = "selectolax-0.3.2-cp37-cp37m-manylinux_2_5_i686.manylinux1_i686.manylinux_2_12_i686.manylinux2010_i686.whl", hash = "sha256:6efb7754f5eb6c71236ba9028a190a4c092ad8345b79314f82b12c2e2ccddfa2"},
+    {file = "selectolax-0.3.2-cp37-cp37m-manylinux_2_5_x86_64.manylinux1_x86_64.manylinux_2_12_x86_64.manylinux2010_x86_64.whl", hash = "sha256:836ed34566f6b6485452f712ade1e2097e01225cd2f361280f7656df0704f98c"},
+    {file = "selectolax-0.3.2-cp37-cp37m-win32.whl", hash = "sha256:afa9862095f4879580663b9c579e662b4aa775c71af9e65c9211da8077173fd3"},
+    {file = "selectolax-0.3.2-cp37-cp37m-win_amd64.whl", hash = "sha256:188b1db9322cbad700c172fd6ab74f30f604efe1761833f779880f136525de1a"},
+    {file = "selectolax-0.3.2-cp38-cp38-macosx_10_9_universal2.whl", hash = "sha256:22fb8ef0b616401a38d76ed859002b0818e2609392c4d5f711633e3055cfff51"},
+    {file = "selectolax-0.3.2-cp38-cp38-macosx_10_9_x86_64.whl", hash = "sha256:da32185d7d6286604a009cf3c8ebb1cf2a6e2ff0e14cd396a6caecb50e476b56"},
+    {file = "selectolax-0.3.2-cp38-cp38-manylinux_2_5_i686.manylinux1_i686.manylinux_2_12_i686.manylinux2010_i686.whl", hash = "sha256:633f95bae28261330a1711cbe6f7b01f799be3be9c6c2db487be06653505fc13"},
+    {file = "selectolax-0.3.2-cp38-cp38-manylinux_2_5_x86_64.manylinux1_x86_64.manylinux_2_12_x86_64.manylinux2010_x86_64.whl", hash = "sha256:d2a2373da941cba85f88e3276761817a5684e0a25530e8ea91171d0a56a240d8"},
+    {file = "selectolax-0.3.2-cp38-cp38-win32.whl", hash = "sha256:7c37f36deb87391887f9d32537bfa0025311a324112b0c906b9c0cc5e761389c"},
+    {file = "selectolax-0.3.2-cp38-cp38-win_amd64.whl", hash = "sha256:f6b70bdcb6f6ab677c048a103821097cfb58238a0a8aa5ad274f4e3954ffa1a9"},
+    {file = "selectolax-0.3.2-cp39-cp39-macosx_10_9_universal2.whl", hash = "sha256:61e634f7edcbd99284206e08dd98657a756f1facf7aeb902090f83abeb471bfc"},
+    {file = "selectolax-0.3.2-cp39-cp39-macosx_10_9_x86_64.whl", hash = "sha256:e85999686a8aa8767684d37c5e7c5776d269bb4c49cc96008fa54801babe5e79"},
+    {file = "selectolax-0.3.2-cp39-cp39-manylinux_2_5_i686.manylinux1_i686.manylinux_2_12_i686.manylinux2010_i686.whl", hash = "sha256:c0095a08cc2e154475d1528c30393a96067bb43ec7d54c44eb3b201834f7bbd7"},
+    {file = "selectolax-0.3.2-cp39-cp39-manylinux_2_5_x86_64.manylinux1_x86_64.manylinux_2_12_x86_64.manylinux2010_x86_64.whl", hash = "sha256:b964dc393df3218daedde6a4b79a9ff350ae5bc93be506030f50498d6c05e63f"},
+    {file = "selectolax-0.3.2-cp39-cp39-win32.whl", hash = "sha256:6d0d79eb03225cbf2ae95ac15f9502b8c799fad9efa96791b5477c3ebb0d8cc0"},
+    {file = "selectolax-0.3.2-cp39-cp39-win_amd64.whl", hash = "sha256:c6ca32595260e4f373da31dedc07a00189caa8c3d6838633845fb06578525c61"},
+    {file = "selectolax-0.3.2-pp37-pypy37_pp73-macosx_10_9_x86_64.whl", hash = "sha256:74480b2f009ee69928f61ab7567aac2811466646afe1d1c49f7853dd6496f631"},
+    {file = "selectolax-0.3.2-pp37-pypy37_pp73-manylinux_2_5_i686.manylinux1_i686.manylinux_2_12_i686.manylinux2010_i686.whl", hash = "sha256:f74112a1936447939f1324a2a6c089e460d93cfc90cea0e64f2c48175b297af2"},
+    {file = "selectolax-0.3.2-pp37-pypy37_pp73-manylinux_2_5_x86_64.manylinux1_x86_64.manylinux_2_12_x86_64.manylinux2010_x86_64.whl", hash = "sha256:9eb825e4eee4dde6a1e02a5df25389435444cd97cba3d0a65b72edfe0f338deb"},
+    {file = "selectolax-0.3.2-pp37-pypy37_pp73-win_amd64.whl", hash = "sha256:af4ccd5fe1c7cddf3a63ab40bc937f7aca8d2c0c9c56f9e90b4d2cd765fc2092"},
+    {file = "selectolax-0.3.2.tar.gz", hash = "sha256:46cbfca15c9c5bf2b4ecaf00911174df3d8cea7c998824ec9a254e248c807c4e"},
 ]
 six = [
     {file = "six-1.15.0-py2.py3-none-any.whl", hash = "sha256:8b74bedcbbbaca38ff6d7491d76f2b06b3592611af620f8426e82dddb04a5ced"},
@@ -925,9 +937,9 @@ typed-ast = [
     {file = "typed_ast-1.4.2.tar.gz", hash = "sha256:9fc0b3cb5d1720e7141d103cf4819aea239f7d136acf9ee4a69b047b7986175a"},
 ]
 typing-extensions = [
-    {file = "typing_extensions-3.7.4.3-py2-none-any.whl", hash = "sha256:dafc7639cde7f1b6e1acc0f457842a83e722ccca8eef5270af2d74792619a89f"},
-    {file = "typing_extensions-3.7.4.3-py3-none-any.whl", hash = "sha256:7cb407020f00f7bfc3cb3e7881628838e69d8f3fcab2f64742a5e76b2f841918"},
-    {file = "typing_extensions-3.7.4.3.tar.gz", hash = "sha256:99d4073b617d30288f569d3f13d2bd7548c3a7e4c8de87db09a9d29bb3a4a60c"},
+    {file = "typing_extensions-3.10.0.2-py2-none-any.whl", hash = "sha256:d8226d10bc02a29bcc81df19a26e56a9647f8b0a6d4a83924139f4a8b01f17b7"},
+    {file = "typing_extensions-3.10.0.2-py3-none-any.whl", hash = "sha256:f1d25edafde516b146ecd0613dabcc61409817af4766fbbcfb8d1ad4ec441a34"},
+    {file = "typing_extensions-3.10.0.2.tar.gz", hash = "sha256:49f75d16ff11f1cd258e1b988ccff82a3ca5570217d7ad8c5f48205dd99a677e"},
 ]
 unidiff = [
     {file = "unidiff-0.7.0-py2.py3-none-any.whl", hash = "sha256:ae4a9dacb2fba7297dbd85c4d629728ca4b3a6c2606a53a419b53b0388857c89"},

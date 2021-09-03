@@ -5,7 +5,7 @@ import { Routes, Route, useLocation } from "react-router-dom";
 // and applied before any component specific style
 import "./app.scss";
 
-import { CRUD_MODE, ENABLE_PLUS } from "./constants";
+import { CRUD_MODE } from "./constants";
 import { Homepage } from "./homepage";
 import { Document } from "./document";
 import { A11yNav } from "./ui/molecules/a11y-nav";
@@ -15,14 +15,9 @@ import { SiteSearch } from "./site-search";
 import { Loading } from "./ui/atoms/loading";
 import { PageContentContainer } from "./ui/atoms/page-content";
 import { PageNotFound } from "./page-not-found";
-// import { Banner } from "./banners";
+
 import { SignIn, SignOut } from "./auth";
 import { Settings } from "./settings";
-
-import { DeepDives } from "./plus/deep-dives";
-import { Overview as DeepDivesOverview } from "./plus/deep-dives/overview";
-// import { DeepDivesHomepage } from "./plus/deep-dives/homepage";
-import { PlusV1 } from "./plus-v1";
 
 const AllFlaws = React.lazy(() => import("./flaws"));
 const AllTranslations = React.lazy(() => import("./translations"));
@@ -256,36 +251,6 @@ export function App(appProps) {
                 </StandardLayout>
               }
             />
-            {ENABLE_PLUS && (
-              <Route
-                path="/plus/*"
-                element={
-                  <StandardLayout>
-                    <PlusV1 {...appProps} />
-                  </StandardLayout>
-                }
-              />
-            )}
-            {ENABLE_PLUS && (
-              <Route
-                path="/plus/deep-dives"
-                element={
-                  <StandardLayout>
-                    <DeepDivesOverview {...appProps} />
-                  </StandardLayout>
-                }
-              />
-            )}
-            {ENABLE_PLUS && (
-              <Route
-                path="/plus/deep-dives/*"
-                element={
-                  <StandardLayout>
-                    <DeepDives {...appProps} />
-                  </StandardLayout>
-                }
-              />
-            )}
             <Route
               path="/docs/*"
               element={
