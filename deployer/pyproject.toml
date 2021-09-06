@@ -21,11 +21,10 @@ unidiff = "^0.7.0"
 [tool.poetry.dev-dependencies]
 black = "^21.9b0"
 flake8 = "^4.0.0"
-pytest = "^6.2.4"
+pytest = "^6.2.5"
 
 [tool.poetry.scripts]
 deployer = "deployer.main:cli"
 [build-system]
 requires = ["poetry>=0.12"]
 build-backend = "poetry.masonry.api"
-
