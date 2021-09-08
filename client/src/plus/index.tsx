@@ -35,7 +35,7 @@ export function Plus({ pageTitle }: { pageTitle?: string }) {
         path="bookmarks"
         element={
           <React.Suspense fallback={loading}>
-            <div className="bookmarks">
+            <div className="bookmarks girdle">
               <Bookmarks />
             </div>
           </React.Suspense>

@@ -1,7 +1,11 @@
+@use "sass:math";
 @use "../color-palette/index" as palette;
 
 $default-border-radius: 12px;
-$standard-light-border: 1px solid palette.$mdn-neutral200;
+$component-border-radius: math.div($default-border-radius, 3);
+
+$standard-light-border: 1px solid palette.$mdn-light-grey300;
+$standard-primary-border: 1px solid palette.$mdn-light-grey300;
 
 .fade {
   mask-image: linear-gradient(
