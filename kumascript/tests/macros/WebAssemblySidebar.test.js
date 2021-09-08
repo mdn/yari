@@ -4,7 +4,7 @@
 const { assert, itMacro, describeMacro, beforeEachMacro } = require("./utils");
 
 const expected = `\
-<section class="Quick_links" id="Quick_Links">
+<section id="Quick_links">
 
 <ol>
   <li data-default-state="open"><a href="/en-US/docs/WebAssembly"><strong>WebAssembly home page</strong></a>
