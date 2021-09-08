@@ -182,6 +182,6 @@
     "webpack-node-externals": "^3.0.0"
   },
   "engines": {
-    "node": ">=12.11"
+    "node": ">=14.13.1"
   }
 }
