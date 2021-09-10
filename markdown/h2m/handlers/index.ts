@@ -220,6 +220,7 @@ export const handlers: QueryAndTransform[] = [
     "xml",
     "glsl",
     "python",
+    "sql",
     "example-good",
     "example-bad",
   ].flatMap((lang) =>
