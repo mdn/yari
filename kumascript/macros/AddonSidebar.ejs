@@ -72,6 +72,7 @@ var text = mdn.localStringMap({
     'WebExtensions/Best_practices_for_updating_your_extension': 'Best practices for updating your extension',
     'WebExtensions/API': 'JavaScript APIs',
     'WebExtensions/manifest.json': 'Manifest keys',
+    'WebExtensions/manifest.json_intro': 'Introduction',
     'extension_workshop': 'Extension Workshop',
     'extension_workshop_develop': 'Develop',
     'extension_workshop_publish': 'Publish',
@@ -142,6 +143,7 @@ var text = mdn.localStringMap({
     'WebExtensions/Best_practices_for_updating_your_extension': 'Bonnes pratiques pour la mise à jour de votre extension',
     'WebExtensions/API': 'Les API JavaScript',
     'WebExtensions/manifest.json': 'Clés de manifeste',
+    'WebExtensions/manifest.json_intro': 'Introduction',
     'extension_workshop': 'Extension Workshop',
     'extension_workshop_develop': 'Develop',
     'extension_workshop_publish': 'Publish',
@@ -212,6 +214,7 @@ var text = mdn.localStringMap({
     'WebExtensions/Best_practices_for_updating_your_extension': 'Best practices for updating your extension',
     'WebExtensions/API': 'JavaScript API 群',
     'WebExtensions/manifest.json': 'Manifest keys',
+    'WebExtensions/manifest.json_intro': 'Introduction',
     'extension_workshop': 'Extension Workshop',
     'extension_workshop_develop': 'Develop',
     'extension_workshop_publish': 'Publish',
@@ -268,6 +271,7 @@ var text = mdn.localStringMap({
     'WebExtensions/Firefox_differentiators': 'Firefox의 차별화',
     'WebExtensions/API': 'JavaScript APIs',
     'WebExtensions/manifest.json': 'Manifest 키',
+    'WebExtensions/manifest.json_intro': 'Introduction',
     'extension_workshop': 'Extension Workshop',
     'extension_workshop_develop': 'Develop',
     'extension_workshop_publish': 'Publish',
@@ -325,6 +329,7 @@ var text = mdn.localStringMap({
     'WebExtensions/Firefox_differentiators': 'Firefox的优势',
     'WebExtensions/API': 'JavaScript APIs',
     'WebExtensions/manifest.json': 'Manifest keys',
+    'WebExtensions/manifest.json_intro': 'Introduction',
     'extension_workshop': 'Extension Workshop',
     'extension_workshop_develop': 'Develop',
     'extension_workshop_publish': 'Publish',
@@ -396,6 +401,7 @@ var text = mdn.localStringMap({
     'WebExtensions/Best_practices_for_updating_your_extension': 'Práticas recomendadas para atualizar sua extensão',
     'WebExtensions/API': 'APIs JavaScript',
     'WebExtensions/manifest.json': 'Chaves Manifest',
+    'WebExtensions/manifest.json_intro': 'Introduction',
     'extension_workshop': 'Workshop de extensões',
     'extension_workshop_develop': 'Desenvolver',
     'extension_workshop_publish': 'Publicar',
@@ -492,6 +498,9 @@ var text = mdn.localStringMap({
     <li class="toggle">
       <details>
       <summary><%=text['WebExtensions/manifest.json']%></summary>
+        <ol>
+          <li><a href="<%=baseURL%>WebExtensions/manifest.json"><%=text['WebExtensions/manifest.json_intro']%></a></li>
+        </ol>
       <%-
         await wiki.tree(baseURL + "WebExtensions/manifest.json", 1, 0, 0, 1)
       %>
