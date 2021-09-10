@@ -1,0 +1,185 @@
+---
+title: This is a test page
+slug: Markdown/Tool/M2H
+tags:
+  - Tag1
+---
+<p>This page is for testing the m2h tool. It's going to concentrate on areas where we implement custom stuff on top of the GFM conversion which is handled by Unified.</p>
+<h2>Hello</h2>
+<p>Let's test some Markdown.</p>
+<h2>Definition lists</h2>
+<p>We have our own syntax for <code>&#x3C;dl></code>.</p>
+<dl>
+  <dt>a term</dt>
+  <dd>
+    <p>a definition</p>
+  </dd>
+  <dt>another term</dt>
+  <dd>
+    <p>another definition</p>
+    <p>Definitions can include block elements:</p>
+    <pre class="brush: js">const suchAsCodeBlocks = true;
+</pre>
+    <p>And of course <code>&#x3C;dl></code> elements can be nested inside <code>&#x3C;dd></code>:</p>
+    <dl>
+      <dt>a nested term</dt>
+      <dd>
+        <p>a definition</p>
+      </dd>
+      <dt>another nested term</dt>
+      <dd>
+        <p>another nested definition</p>
+      </dd>
+    </dl>
+  </dd>
+</dl>
+<p>Our <code>&#x3C;dl></code> syntax does not support multiple <code>&#x3C;dd></code> elements for a single <code>&#x3C;dt></code>:</p>
+<ul>
+  <li>so this
+    <ul>
+      <li>: will look</li>
+      <li>: like a weird list</li>
+    </ul>
+  </li>
+</ul>
+<h2>Callouts, notes, and warnings</h2>
+<div class="notecard note">
+  <p><strong>Note:</strong> This should be a note.</p>
+</div>
+<div class="notecard note">
+  <p><strong>Note:</strong></p>
+  <p>This should <strong>also</strong> be a note.</p>
+</div>
+<div class="notecard note">
+  <p><strong>Note:</strong> Notes can have block elements, like:</p>
+  <pre class="brush: js">const codeBlocks = true;
+</pre>
+  <p>...and lists</p>
+  <ul>
+    <li>of things</li>
+    <li>and more things</li>
+  </ul>
+  <p>...and even definition lists:</p>
+  <dl>
+    <dt>with terms</dt>
+    <dd>
+      <p>that have definitions</p>
+    </dd>
+    <dt>and more terms</dt>
+    <dd>
+      <p>and as usual, the definitions can include block elements:</p>
+      <pre class="brush: css">.likeCodeBlocks {
+}
+</pre>
+    </dd>
+  </dl>
+</div>
+<blockquote>
+  <p>
+    Note: But if the node isn't quite properly formatted,
+    it will just look like a blockquote.
+  </p>
+</blockquote>
+<div class="notecard warning">
+  <p><strong>Warning:</strong> This should be a warning.</p>
+</div>
+<div class="callout">
+  <p>This should be a callout</p>
+</div>
+<div class="callout">
+  <p>This should also be a callout.</p>
+</div>
+<div class="callout">
+  <h4>Callouts can have headings, like notes and warnings</h4>
+  <p>(Although that's not very good practice.)</p>
+</div>
+<h2>Code blocks</h2>
+<p>We support syntax highlighting of course, and a couple of other special features.</p>
+<pre class="brush: js">const language = "js";
+console.log(`Look at this lovely ${language}!`);
+</pre>
+<p>You can hide code blocks:</p>
+<pre class="brush: css hidden">div.youCantSeeMe: {
+}
+</pre>
+<p>And show good and bad practice:</p>
+<pre class="brush: js example-bad">eval(evilCode);
+</pre>
+<pre class="brush: js example-good">console.error(evilCode);
+</pre>
+<h2>Tables</h2>
+<p>We support standard GFM table syntax:</p>
+<table>
+  <thead>
+    <tr>
+      <th>Heading 1</th>
+      <th>Heading 2</th>
+      <th>Heading 3</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>cell 1</td>
+      <td>cell 2</td>
+      <td>cell 3</td>
+    </tr>
+    <tr>
+      <td>cell 4</td>
+      <td>cell 5</td>
+      <td>cell 6</td>
+    </tr>
+  </tbody>
+</table>
+<p>Technically we also support:</p>
+<table>
+  <thead>
+    <tr>
+      <th>Heading 1</th>
+      <th>Heading 2</th>
+      <th>Heading 3</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>cell 1</td>
+      <td>cell 2</td>
+      <td>cell 3</td>
+    </tr>
+    <tr>
+      <td>cell 4</td>
+      <td>cell 5</td>
+      <td>cell 6</td>
+    </tr>
+  </tbody>
+</table>
+<p>...but it's not allowed.</p>
+<h2>Raw HTML</h2>
+<p>Of course you can use raw HTML for anything. For instance if you really need two definitions for one term:</p>
+<dl>
+  <dt>term</dt>
+  <dd>definition1</dd>
+  <dd>definition2</dd>
+</dl>
+<p>...or a table with a header row:</p>
+<table>
+  <thead>
+    <tr>
+      <th></th>
+      <th>Col 1 heading</th>
+      <th>Col 2 heading</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th scope="row">Row 1 heading</th>
+      <td>Toucan</td>
+      <td>Rattlesnake</td>
+    </tr>
+    <tr>
+      <th scope="row">Row 2 heading</th>
+      <td>Echidna</td>
+      <td>Ostrich</td>
+    </tr>
+  </tbody>
+</table>
+<p>We especially use inline raw HTML for things like<sub>sub</sub> or<sup>sup</sup> and also <kbd>&#x3C;kbd></kbd>.</p>
