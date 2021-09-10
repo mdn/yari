@@ -1,442 +1,229 @@
 <%
-/*
-  Displays the syntax of a CSS property or descriptor
 
-  $0 - property/descriptor name - defaults to the slug name
-  $1 - @-rule - defaults to the @-rule within the URL
-*/
+const slug = env.slug;
+const locale = env.locale;
+const name = $0 || slug.split('/').pop().toLowerCase();
 
-const mdnDataCSS = require('mdn-data/css');
-// List types for which we want to link to a description instead of
-// including it in the formal syntax block
-let s_named_color_link = mdn.localString({
-    "en-US": "/docs/Web/CSS/color_value#Color_keywords",
-    "fr"   : "/docs/Web/CSS/Type_color#Les_mots-clés",
-    "de"   : "/docs/Web/CSS/Farben#Farbschlüsselwörter",
-    "es"   : "/docs/Web/CSS/color_value#Color_keywords",
-    "ja"   : "/docs/Web/CSS/color_value#Color_keywords",
-    "nl"   : "/docs/Web/CSS/kleur_waarde#Color_keywords",
-    "pt-BR": "/docs/Web/CSS/color_value#Palavras-chave_de_cores",
-    "zh-CN": "/docs/Web/CSS/color_value#色彩关键字"
-});
-let s_system_color_link = mdn.localString({
-  "en-US": "/docs/Web/CSS/color_value#Color_keywords",
-  "fr"   : "/docs/Web/CSS/Type_color#Couleurs_système",
-  "de"   : "/docs/Web/CSS/Farben#Systemfarben",
-  "es"   : "/docs/Web/CSS/color_value#Colores_de_Sistema",
-  "ja"   : "/docs/Web/CSS/color_value#System_Colors",
-  "nl"   : "/docs/Web/CSS/kleur_waarde#System_Colors",
-  "pt-BR": "/docs/Web/CSS/color_value#System_Colors",
-  "zh-CN": "/docs/Web/CSS/color_value#系统颜色"
-});
-let externallyDescribedTypesData = {
-  "named-color": {
-    link: s_named_color_link
+/**
+ * Populate `properties` and `valuespaces` from webref
+ */
+const webRefData = require('@webref/css');
+const { definitionSyntax } = require('css-tree');
+
+const parsedFiles = await webRefData.listAll();
+const allData = Object.values(parsedFiles);
+
+let properties = {};
+for (const spec of allData) {
+  properties = {...properties, ...spec.properties};
+}
+
+let valuespaces = {};
+for (const spec of allData) {
+  valuespaces = {...valuespaces, ...spec.valuespaces};
+}
+
+/**
+ * Used for building links and tooltips for multipliers
+ */
+const multiplierInfo = {
+  '*': {
+    fragment: 'asterisk_',
+    tooltip: 'Asterisk: the entity may occur zero, one or several times'
   },
-  "deprecated-system-color": {
-    link: s_system_color_link
+  '+': {
+    fragment: 'plus_',
+    tooltip: 'Plus: the entity may occur one or several times'
+  },
+  '?': {
+    fragment: 'question_mark_',
+    tooltip: 'Question mark: the entity is optional'
+  },
+  '{}': {
+    fragment: 'curly_braces_',
+    tooltip: 'Curly braces: encloses two integers defining the minimal and maximal numbers of occurrences of the entity'
+  },
+  '#': {
+    fragment: 'hash_mark_',
+    tooltip: 'Hash mark: the entity is repeated one or several times, each occurence separated by a comma'
+  },
+  '!': {
+    fragment: 'exclamation_point_!',
+    tooltip: 'Exclamation point: the group must produce at least one value'
   }
-};
-let data = {
-    ...mdnDataCSS,
-    externallyDescribedTypes: externallyDescribedTypesData,
-};
-let slug = env.slug;
-let locale = env.locale;
-let name = $0 || (slug ? slug.split("/").pop().toLowerCase() : "preview-wiki-content");
-// "Conflicting" documents have an MD5 postfix to deal with multiple conflicting documents.
-// In here we need a clean name so remove the MD5 part.
-name = name.replace(/(.*)_[a-f0-9]{32}$/, (_, x) => x);
-let atRule = $1;
-let rawSyntax = "";
-let formattedSyntax = "";
-let localize = mdn.getLocalString;
-
-let localStrings = web.getJSONData("L10n-CSS");
-
-let s_where = mdn.localString({
-    "en-US": "where ",
-    "de"   : "wobei ",
-    "fr"   : "où ",
-    "ja"   : "ここで",
-    "ru"   : "где "
-});
-
-let s_syntax_value_definition = mdn.localString({
-    "en-US": "Value_definition_syntax",
-    "de"   : "Wertdefinitionssyntax",
-    "fr"   : "Syntaxe_de_d%C3%A9finition_des_valeurs"
-});
-
-let s_or = mdn.localString({
-    "en-US": "or",
-    "de"   : "oder",
-    "ru"   : "или"
-});
-
-let s_possible_values = mdn.localString({
-    "en-US": "Possible values: ",
-    "de"   : "Mögliche Werte: ",
-    "ja"   : "使用可能な値: ",
-    "ru"   : "Возможные значения: "
-});
-
-let s_number_followed_by = mdn.localString({
-    "en-US": "a number followed by",
-    "de"   : "eine Nummer gefolgt von",
-});
-
-let s_like = mdn.localString({
-    "en-US": "like",
-    "de"   : "wie",
-    "ru"   : "как"
-});
-
-let typeInfo = {
-    "angle": {
-        "title": s_possible_values + s_number_followed_by + "'deg', 'grad', 'rad' " + s_or + " 'turn', " + s_like + " 2turn, 1.3rad, -60deg " + s_or + " 0grad."
-    },
-    "blend-mode": {
-        "title": s_possible_values + "normal, multiply, screen, overlay, darken, lighten, color-dodge, color-burn, hard-light, soft-light, difference, exclusion, hue, saturation, color, luminosity"
-    },
-    "color": {
-        "typeLinkName": "color_value"
-    },
-    "custom-ident": {},
-    "filter-function": {
-        "title": s_possible_values + "blur(), brightness(), contrast(), drop-shadow(), grayscale(), hue-rotate(), invert(), opacity(), saturate(), sepia()"
-    },
-    "flex": {
-        "typeLinkName": "flex_value"
-    },
-    "frequency": {},
-    "ident": {},
-    "image": {},
-    "integer": {},
-    "length": {
-        "title": s_possible_values + s_number_followed_by + "'em', 'ex', 'ch', 'rem', 'px', 'cm', 'mm', 'in', 'vh', 'vw', 'vmin', 'vmax', 'pt', 'pc' " + s_or + " 'px', " + s_like + " 3px, 1.5cm, -0.5em " + s_or + " 0"
-    },
-    "number": {},
-    "percentage": {},
-    "position": {
-        "typeLinkName": "position_value"
-    },
-    "resolution": {},
-    "single-transition-timing-function": {
-        "title": s_possible_values + "cubic-bezier(), steps(), linear, ease, ease-in, ease-out, east-in-out, step-start-step-end"
-    },
-    "string": {},
-    "time": {
-        "title": s_possible_values + s_number_followed_by + "'s' " + s_or + " 'ms', " + s_like + " 3s, -2.5ms " + s_or + " 0s."
-    },
-    "timing-function": {
-        "title": s_possible_values + "cubic-bezier(), steps(), linear, ease, ease-in, ease-out, east-in-out, step-start-step-end"
-    },
-    "url": {},
-    "uri": {},
-    "transform-function": {
-        "title": s_possible_values + "matrix(), matrix3d(), rotate(), rotate3d(), rotateX(), rotateY(), rotateZ(), scale(), scale3d(), scaleX(), scaleY(), scaleZ(), skewX(), skewY(), translate(), translate3d(), translateX(), translateY(), translateZ()"
-    }
-};
-
-let operators = [
-    {
-        regexp: /#/g,
-        title: mdn.localString({
-            "en-US": "Hash mark: the entity is repeated one or several times, each occurence separated by a comma",
-            "de": "Rautensymbol: Die Entität wird einmal oder mehrmals wiederholt, wobei jedes Vorkommen durch ein Komma getrennt wird"
-        }),
-        anchor: mdn.localString({
-            "en-US": "Hash_mark",
-            "de"   : "Rautensymbol_()"
-        })
-    },
-    {
-        regexp: /\|\|/g,
-        title: mdn.localString({
-            "en-US": "Double bar: one or several of the entities must be present, in any order",
-            "de"   : "Doppelter Balken: Eine oder mehrere der Entitäten muss angegeben werden, in beliebiger Reihenfolge"
-        }),
-        anchor: mdn.localString({
-            "en-US": "Double_bar",
-            "de"   : "Doppelter_Balken"
-        })
-    },
-    {
-        regexp: /[^|](\|)[^|]/g,
-        title: mdn.localString({
-            "en-US": "Single bar: exactly one of the entities must be present",
-            "de"   : "Einfacher Balken: Genau eine der Entitäten muss angegeben werden"
-        }),
-        anchor: mdn.localString({
-            "en-US": "Single_bar",
-            "de"   : "Einfacher_Balken"
-        })
-    },
-    {
-        regexp: /&&/g,
-        title: mdn.localString({
-            "en-US": "Double ampersand: all of the entities must be present, in any order",
-            "de"   : "Doppeltes Und-Zeichen: Alle Entitäten müssen angegeben werden, in beliebiger Reihenfolge"
-        }),
-        anchor: mdn.localString({
-            "en-US": "Double_ampersand",
-            "de"   : "Doppeltes_Und-Zeichen"
-        })
-    },
-    {
-        regexp: /\?/g,
-        title: mdn.localString({
-            "en-US": "Question mark: the entity is optional",
-            "de"   : "Fragezeichen: Die Entität ist optional"
-        }),
-        anchor: mdn.localString({
-            "en-US": "Question_mark",
-            "de"   : "Fragezeichen_()"
-        })
-    },
-    {
-        regexp: /([^/])\*(?!\/)/g,
-        title: mdn.localString({
-            "en-US": "Asterisk: the entity may occur zero, one or several times",
-            "de"   : "Asterisk: Die Entität kann keinmal, einmal oder mehrmals vorkommen"
-        }),
-        anchor: mdn.localString({
-            "en-US": "Asterisk",
-            "de"   : "Asterisk_(*)"
-        })
-    },
-    {
-        regexp: /\+/g,
-        title: mdn.localString({
-            "en-US": "Plus: the entity may occur one or several times",
-            "de"   : "Plus: Die Entität kann einmal oder mehrmals vorkommen"
-        }),
-        anchor: mdn.localString({
-            "en-US": "Plus",
-            "de"   : "Plus_()"
-        })
-    },
-    {
-        regexp: /\[|\]/g,
-        title: mdn.localString({
-            "en-US": "Brackets: enclose several entities, combinators, and multipliers to transform them as a single component",
-            "de"   : "Eckige Klammern: umschließen mehrere Entitäten, Kombinatoren und Multiplikatoren, um diese als eine gesamte Komponente zu behandeln"
-        }),
-        anchor: mdn.localString({
-            "en-US": "Brackets",
-            "de"   : "Eckige_Klammern"
-        })
-    },
-    {
-        regexp: /\{(?!\s)|(\d)\}/g,
-        title: mdn.localString({
-            "en-US": "Curly braces: encloses two integers defining the minimal and maximal numbers of occurrences of the entity",
-            "de"   : "Geschweifte Klammern: umschließen zwei Ganzzahlen, die die Minimal- und Maximalanzahl an Vorkommen der Entität angeben"
-        }),
-        anchor: mdn.localString({
-            "en-US": "Curly_braces",
-            "de"   : "Geschweifte_Klammern_(_)"
-        })
-    },
-    {
-        regexp: /!/g,
-        title: mdn.localString({
-            "en-US": "Exclamation point: the group must produce at least one value",
-            "de"   : "Ausrufezeichen: die Gruppe muss mindestens einen Wert erzeugen"
-        }),
-        anchor: mdn.localString({
-            "en-US": "Exclamation_point",
-            "de"   : "Ausrufezeichen_(!)"
-        })
-    },
-];
-
-async function buildLink(match, type) {
-    var link = "/" + locale + "/docs/Web/CSS/";
-    var title = "";
-    var propertyName = type.match(/'(.+?)'/);
-
-    // Handle property references like <'color'>
-    if (propertyName) {
-        if (data.properties[propertyName[1]]) {
-            title = data.properties[propertyName[1]].syntax;
-        }
-        return "<a href=\"" + link + propertyName[1] + "\" title=\"" + title + "\">&lt;" + propertyName[0] + "&gt;</a>";
-
-    // Handle basic types
-    } else if (Object.prototype.hasOwnProperty.call(typeInfo, type)) {
-        var typeLinkName = typeInfo[type].typeLinkName || type;
-
-        link += typeLinkName;
-
-        if (typeInfo[type].title) {
-            title = typeInfo[type].title;
-        } else {
-            title = "";
-        }
-
-    // Handle types which we want to describe using a link to a different page
-    }  else if (Object.prototype.hasOwnProperty.call(data.externallyDescribedTypes, type)) {
-             return "<a href=\"/" + locale + data.externallyDescribedTypes[type].link + "\">&lt;" + type + "&gt;</a>";
-
-    // Handle advanced types having their syntax defined within the 'CSSData' template
-    } else if (data.syntaxes[type]) {
-        return "<a href=\"#" + type + "\">&lt;" + type + "&gt;</a>";
-
-    // Handled advanced types having their syntax not defined
-    } else {
-        return "&lt;" + type + "&gt;";
-    }
-
-    return "<a href=\"" + link + "\" title=\"" + title + "\">&lt;" + type + "&gt;</a>";
 }
 
-function addBrackets(str) {
-    return str.match(/\(\)$/) ? str : str + "()";
+/**
+ * CSS classes for nodes, to apply syntax highlighting
+ */
+const cssClasses = {
+  'Type': ' class=\'token property\'',
+  'Keyword': ' class=\'token keyword\'',
+  'Function': ' class=\'token function\''
 }
 
-async function formatSyntax(rawSyntax) {
-    if (rawSyntax === "") {
-        return "";
+/**
+ * Determines the markup to generate for a single node.
+ */
+function renderNode(name, node) {
+  switch (node.type) {
+    case 'Type': {
+      // encode < and >
+      name = name.replaceAll('<', '&lt;');
+      name = name.replaceAll('>', '&gt;');
+      // add CSS class
+      return `<span${cssClasses['Type']}>${name}</span>`;
+    }
+    case 'Multiplier': {
+      // link to the Value Definition Symtax and provide a tooltip
+      let key = name;
+      if (name.startsWith('{')) {
+        key = '{}';
+      }
+      const info = multiplierInfo[key];
+      return `<a href="/${locale}/docs/Web/CSS/Value_definition_syntax#${info.fragment}" title="${info.tooltip}">${name}</a>`;
+    }
+    case 'Keyword':
+    case 'Function': {
+      return `<span${cssClasses[node.type]}>${name}</span>`;
+    }
+    case 'Token': {
+      if (name === ')') {
+        // this is probably a closing bracket
+        return `<span${cssClasses['Function']}>${name}</span>`;
+      }
+    }
+  }
+  return name;
+}
+
+/**
+ * Generate the markup for every term in a syntax definition,
+ * ensuring that the terms are visually aligned
+ */
+function renderTerms(terms, combinator) {
+  let output = '';
+  const termArray = [];
+  const termTextLengths = [];
+
+  for (const term of terms) {
+    // figure out the lengths of the translated terms, without markup
+    // this is just so we can align the terms properly
+    const termTextLength = definitionSyntax.generate(term).length;
+    termTextLengths.push(termTextLength);
+
+    // get the translated terms, with markup
+    const termText = definitionSyntax.generate(term, { decorate: renderNode});
+    termArray.push(termText);
+  }
+
+  let maxTermLength = Math.max(...termTextLengths);
+
+  // write out the translated terms, padding with spaces for alignment
+  // and separating terms using their combinator symbol
+  for (let i = 0; i < termArray.length; i++) {
+    const termText = termArray[i];
+    const spaceCount = (maxTermLength + 2) - termTextLengths[i];
+    // omit the combinator for the final term
+    const combinatorText = (i < termArray.length-1 ? combinator : '');
+    output += `  ${termText}${Array(spaceCount).join(' ')}${combinatorText}<br/>`;
+  }
+
+  return output;
+}
+
+/**
+ * Render the syntax for a single type
+ */
+function renderSyntax(type, syntax) {
+  // write out the name of this type
+  const typeName = `&lt;${type}&gt;`;
+  let output = `<span${cssClasses['Type']} id="${typeName}">${typeName} = </span><br/>`;
+
+  const ast = definitionSyntax.parse(syntax);
+  // if the combinator is ' ', write the complete type syntax in a single line
+  if (ast.combinator === ' ') {
+    output += renderTerms([ast], ast.combinator);
+  } else {
+  // otherwise write out each direct child in its own line
+    output += renderTerms(ast.terms, ast.combinator);
+  }
+
+  return output;
+}
+
+/**
+ * Get names of all the types in a given set of syntaxes
+ */
+function getTypesForSyntaxes(syntaxes, constituents) {
+
+  function processNode(node) {
+    if (node.type == 'Type' &&
+       (constituents.indexOf(node.name) === -1)) {
+      constituents.push(node.name);
+    }
+  }
+
+  for (const syntax of syntaxes) {
+    let ast = definitionSyntax.parse(syntax);
+    definitionSyntax.walk(ast, processNode);
+  }
+
+}
+
+/**
+ * Given an item (such as a CSS property), fetch all the types that participate
+ * in its formal syntax definition, either directly or transitively.
+ */
+function getConstituentTypes(item) {
+  const allConstituents = [];
+  let oldConstituentsLength = allConstituents.length;
+  // get all the types in the top-level syntax
+  let constituentSyntaxes = [properties[item].value];
+  getTypesForSyntaxes(constituentSyntaxes, allConstituents);
+
+  // while an iteration added more types...
+  while (allConstituents.length > oldConstituentsLength) {
+    // get the syntaxes for all newly added constituents,
+    // and then get the types in those syntaxes
+    constituentSyntaxes = [];
+    for (let constituent of allConstituents.slice(oldConstituentsLength)) {
+
+      let constituentSyntaxEntry = valuespaces[`<${constituent}>`];
+
+      if (constituentSyntaxEntry && constituentSyntaxEntry.value) {
+        constituentSyntaxes.push(constituentSyntaxEntry.value);
+      }
     }
 
-    var formattedSyntax = rawSyntax;
-    operators.forEach(function(operator) {
-        if (formattedSyntax.indexOf("\n") !== -1 &&
-            operator.title === "Curly braces") {
-            return "";
-        }
-
-        formattedSyntax = formattedSyntax.replace(operator.regexp,
-            function(match, text) {
-            var linkText = match;
-            if (match.indexOf("*") !== -1) {
-                linkText = "*";
-            } else if (match.indexOf("}") !== -1) {
-                linkText = "}";
-            } else if (typeof text === "string") {
-                linkText = text;
-            }
-
-            var output = "<a href=\"/" + locale + "/docs/CSS/" +
-                s_syntax_value_definition + "#" + operator.anchor.toLowerCase() +
-                "\" title=\"" + operator.title + "\">" + linkText + "</a>";
-            if (linkText === "|") {
-                output = " " + output + " ";
-            } else if (linkText === "*" || linkText === "}") {
-                output = text + output;
-            }
-
-            return output;
-        });
-    });
-    formattedSyntax = await string.asyncReplace(
-        formattedSyntax,
-        /<([a-z0-9()'-]+?)>/gi,
-        buildLink
-    );
-
-    return formattedSyntax;
+    oldConstituentsLength = allConstituents.length;
+    getTypesForSyntaxes(constituentSyntaxes, allConstituents);
+  }
+  return allConstituents;
 }
 
-async function formatTypesSyntax(formattedSyntax, describedTypes) {
-    var formattedTypesSyntax = "";
-    var types = [];
-    var typeAnchorAttributes = formattedSyntax.match(/href=".+?"/g);
-    if (typeAnchorAttributes) {
-        typeAnchorAttributes.forEach(function(typeAnchorAttribute) {
-            var type = typeAnchorAttribute.match(/href="(?:#|.*\/)(.+?)"/);
-            if (types.indexOf(type[1]) === -1 &&
-                type[1].indexOf(s_syntax_value_definition) === -1) {
-                // Some data type page names have '_value' appended,
-                // which needs to be removed in order to find the syntax
-                var subType = type[1].replace("_value", "");
-                // Describe this type if it exists in "syntaxes" and
-                // it *does not* exist in externallyDescribedTypes
-                if ((Object.prototype.hasOwnProperty.call(data.syntaxes, subType)) &&
-                    (!Object.prototype.hasOwnProperty.call(data.externallyDescribedTypes, subType))) {
-                    types.push(subType);
-                }
-            }
-        });
+function writeFormalSyntax(item) {
+  let output = '';
+  output += '<pre>';
 
-        var typesSyntax = "";
-        if (types.length > 0) {
-            for(let index = 0; index < types.length; index++) {
-                let type = types[index];
-                // Avoid recursions by checking whether a type was already
-                // described before
-                // check whether https://github.com/mdn/data/pull/66 was merged
-                var syntax = data.syntaxes[type].syntax || data.syntaxes[type];
-                if (describedTypes.indexOf(type) === -1) {
-                    typesSyntax += "<span id=\"" + type + "\">&lt;" + type +
-                        "&gt;</span> = " + await formatSyntax(syntax);
-                    if (index < types.length - 1) {
-                        typesSyntax += "<br/>";
-                    }
-                    describedTypes.push(type);
-                }
-            }
+  // write the syntax for the property
+  output += renderSyntax(item, properties[item].value);
+  output += '<br/>';
 
-            if (typesSyntax !== "") {
-                formattedTypesSyntax += "<p style=\"font-family:Open Sans,Arial," +
-                    "sans-serif; margin: 10px 0 0 0;\">" + s_where +
-                    "<br/><code style=\"font-family:Consolas,Monaco," +
-                    "&quot;Andale Mono&quot;,monospace;\">" + typesSyntax +
-                    "</code></p>";
-            }
-        }
-
-        return formattedTypesSyntax + await formatTypesSyntax(typesSyntax, describedTypes);
+  // collect all the constituent types for the property
+  const types = getConstituentTypes(item);
+  // and write each one out
+  for (const type of types) {
+    if (valuespaces[`<${type}>`] && valuespaces[`<${type}>`].value) {
+      output += renderSyntax(type, valuespaces[`<${type}>`].value);
+      output += '<br/>';
     }
+  }
 
-    return formattedTypesSyntax;
+  output += '</pre>';
+  return output;
 }
 
-if (!atRule) {
-    var matches = null;
-    if (slug) {
-        matches = slug.match(/\/CSS\/(@.+?)(?=\/)/);
-    }
-
-    if (matches) {
-        atRule = matches[1];
-    }
-}
-
-if (name === "preview-wiki-content") {
-    formattedSyntax = "<span style=\"color:red;\">" +
-        localize(localStrings, "info_in_preview_not_available") + "</span>";
-} else {
-    if (atRule) {
-        if (data.atRules[atRule] && data.atRules[atRule].descriptors && data.atRules[atRule].descriptors[name]) {
-            rawSyntax = data.atRules[atRule].descriptors[name].syntax;
-        }
-    } else if (name[0] === "@") {
-        if (data.atRules[name] && data.atRules[name].syntax) {
-            rawSyntax = data.atRules[name].syntax;
-        }
-    } else if (name[0] === ":" && typeof data.selectors[name] !== 'undefined') {
-        rawSyntax = data.selectors[name].syntax;
-    } else if (data.properties[name]) {
-        rawSyntax = data.properties[name].syntax;
-    } else if (data.syntaxes[addBrackets(name)]) {
-        rawSyntax = data.syntaxes[addBrackets(name)].syntax;
-    }
-
-    formattedSyntax = await formatSyntax(rawSyntax);
-    formattedSyntax += await formatTypesSyntax(formattedSyntax, []);
-}
-
-let out = '';
-
-if (!formattedSyntax) {
-    out = "<div class=\"notecard warning\"><h4>No syntax available</h4><p>No value found in the database.</p></div>";
-} else {
-    const rtlLocales = ['ar', 'he', 'fa'];
-    const rtl = rtlLocales.includes(env.locale);
-    out = `<pre${rtl ? ' dir="rtl"' : ""}>${formattedSyntax}</pre>`
-}
-
-%><%- out %>
+let output = writeFormalSyntax(name);
+%>
+<%-output%>
