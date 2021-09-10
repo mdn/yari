@@ -74,9 +74,9 @@ jobs:
           ENV_FILE: testing/.env
         run: |
           yarn md m2h markdown/tool/m2h --locale en-US
-          diff testing/content/files/en-us/markdown/tool/m2h/index.html testing/content/files/en-us/markdown/tool/m2h/expected.html
+          diff -s testing/content/files/en-us/markdown/tool/m2h/index.html testing/content/files/en-us/markdown/tool/m2h/expected.html
           yarn md h2m markdown/tool/h2m --locale en-US
-          diff testing/content/files/en-us/markdown/tool/h2m/index.md testing/content/files/en-us/markdown/tool/h2m/expected.md
+          diff -s testing/content/files/en-us/markdown/tool/h2m/index.md testing/content/files/en-us/markdown/tool/h2m/expected.md
 
       - name: Debug server's stdout and stderr if tests failed
         if: failure()
