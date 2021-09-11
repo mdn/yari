@@ -67,6 +67,9 @@ const cssClasses = {
  */
 function renderNode(name, node) {
   switch (node.type) {
+    case 'Property': {
+      return `<span${cssClasses['Type']}>${name}</span>`;
+    }
     case 'Type': {
       // encode < and >
       name = name.replaceAll('<', '&lt;');
