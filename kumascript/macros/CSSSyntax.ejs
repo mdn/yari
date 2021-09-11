@@ -57,7 +57,7 @@ const multiplierInfo = {
  * CSS classes for nodes, to apply syntax highlighting
  */
 const cssClasses = {
-  'Type': ' class=\'token property\'',
+  'Property': ' class=\'token property\'',
   'Keyword': ' class=\'token keyword\'',
   'Function': ' class=\'token function\''
 }
@@ -68,14 +68,15 @@ const cssClasses = {
 function renderNode(name, node) {
   switch (node.type) {
     case 'Property': {
-      return `<span${cssClasses['Type']}>${name}</span>`;
+      return `<span${cssClasses['Property']}>${name}</span>`;
     }
     case 'Type': {
       // encode < and >
       name = name.replaceAll('<', '&lt;');
       name = name.replaceAll('>', '&gt;');
       // add CSS class
-      return `<span${cssClasses['Type']}>${name}</span>`;
+      // we use "property" because there isn't one for types
+      return `<span${cssClasses['Property']}>${name}</span>`;
     }
     case 'Multiplier': {
       // link to the Value Definition Symtax and provide a tooltip
@@ -141,7 +142,7 @@ function renderTerms(terms, combinator) {
 function renderSyntax(type, syntax) {
   // write out the name of this type
   const typeName = `&lt;${type}&gt;`;
-  let output = `<span${cssClasses['Type']} id="${typeName}">${typeName} = </span><br/>`;
+  let output = `<span${cssClasses['Property']} id="${typeName}">${typeName} = </span><br/>`;
 
   const ast = definitionSyntax.parse(syntax);
   // if the combinator is ' ', write the complete type syntax in a single line
