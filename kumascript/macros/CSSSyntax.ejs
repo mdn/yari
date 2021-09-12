@@ -63,11 +63,15 @@ function renderNode(name, node) {
     }
     case 'Type': {
       // encode < and >
-      name = name.replaceAll('<', '&lt;');
-      name = name.replaceAll('>', '&gt;');
-      // add CSS class
-      // we use "property" because there isn't one for types
-      return `<span class="token property">${name}</span>`;
+      let encoded = name.replaceAll('<', '&lt;');
+      encoded = encoded.replaceAll('>', '&gt;');
+      // add CSS class: we use "property" because there isn't one for types
+      const span = `<span class="token property">${encoded}</span>`;
+      // if this type is not included in the synax, link to its dedicated page
+      if (valuespaces[name] && valuespaces[name].value) {
+        return span;
+      }
+      return `<a href="/${locale}/docs/Web/CSS/${encoded}">${span}</a>`;
     }
     case 'Multiplier': {
       // link to the Value Definition Symtax and provide a tooltip
@@ -155,7 +159,7 @@ function renderSyntax(type, syntax) {
 function getTypesForSyntaxes(syntaxes, constituents) {
 
   function processNode(node) {
-    if (node.type == 'Type' &&
+    if (node.type === 'Type' &&
        (constituents.indexOf(node.name) === -1)) {
       constituents.push(node.name);
     }
@@ -213,7 +217,6 @@ function writeFormalSyntax(item) {
   for (const type of types) {
     if (valuespaces[`<${type}>`] && valuespaces[`<${type}>`].value) {
       output += renderSyntax(type, valuespaces[`<${type}>`].value);
-      output += '<br/>';
     }
   }
 
