@@ -1,6 +1,6 @@
 /**
  * Do not edit directly
- * Generated on Fri, 10 Sep 2021 15:26:13 GMT
+ * Generated on Mon, 13 Sep 2021 14:39:54 GMT
  */
 
 export const mqTabletAndUp = "all and (min-width: 47.9375em)";
