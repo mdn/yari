@@ -121,7 +121,7 @@ function collectClosestCode($start) {
       return [
         part,
         $filtered
-          .map((i, element) => cheerio(element).text())
+          .map((i, element) => cheerio.load(element).text())
           .get()
           .join("\n"),
       ];
@@ -248,7 +248,7 @@ class HTMLTool {
 
   extractSection(section) {
     const result = this.getSection(section).not(".noinclude");
-    return cheerio.html(result);
+    return this.$.html(result);
   }
 
   extractLiveSampleObject(sampleID) {
@@ -260,7 +260,7 @@ class HTMLTool {
       // we've just acquired because we're going to search among all
       // descendants and we want to include the elements themselves
       // as well as their descendants.
-      const $ = cheerio.load(`<div>${cheerio.html(sample)}</div>`);
+      const $ = cheerio.load(`<div>${this.$.html(sample)}</div>`);
       for (const part of LIVE_SAMPLE_PARTS) {
         const src = $(
           `.${part}, pre[class*="brush:${part}"], pre[class*="${part};"]`
