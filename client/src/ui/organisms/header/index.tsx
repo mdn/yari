@@ -1,6 +1,6 @@
 import { useRef, useState } from "react";
 
-import Login from "../../molecules/login";
+import HeaderAuthContainer from "../../molecules/header-auth-container";
 import { Logo } from "../../atoms/logo";
 import MainMenu from "../../molecules/main-menu";
 import { Search } from "../../molecules/search";
@@ -96,9 +96,7 @@ export function Header() {
             toggleMainMenu();
           }}
         />
-        <div className="auth-container">
-          <Login />
-        </div>
+        <HeaderAuthContainer />
       </div>
     </header>
   );

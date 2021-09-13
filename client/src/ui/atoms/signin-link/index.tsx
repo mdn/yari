@@ -1,24 +1,20 @@
-import { Link, useLocation } from "react-router-dom";
+import { styled } from "linaria/react";
 
-import { useLocale } from "../../../hooks";
+import { FXA_SIGNIN_URL } from "../../../constants";
+import { lightModeTextSecondary } from "../../vars/js/variables";
 
-export default function SignInLink({ className }: { className?: string }) {
-  const locale = useLocale();
-  const { pathname } = useLocation();
-  const sp = new URLSearchParams();
-  // If pathname === '/en-US/sigin', i.e. you're already on the sign in page
-  // itself, then discard that as a 'next' parameter.
-  // Otherwise, you might get redirected back to the sign in page after you've
-  // successfully signed in.
-  sp.set("next", pathname === `/${locale}/signin` ? `/${locale}/` : pathname);
+export default function SignInLink() {
+  const SignIn = styled.a`
+    font-weight: bold;
 
+    &:link,
+    &:visited {
+      color: ${lightModeTextSecondary};
+    }
+  `;
   return (
-    <Link
-      to={`/${locale}/signin?${sp.toString()}`}
-      rel="nofollow"
-      className={className ? className : undefined}
-    >
-      Sign in
-    </Link>
+    <SignIn href={FXA_SIGNIN_URL} rel="nofollow">
+      Already a subscriber?
+    </SignIn>
   );
 }

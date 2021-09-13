@@ -22,7 +22,7 @@ import { Settings } from "./settings";
 import { DeepDives } from "./plus/deep-dives";
 import { Overview as DeepDivesOverview } from "./plus/deep-dives/overview";
 // import { DeepDivesHomepage } from "./plus/deep-dives/homepage";
-import { PlusV1 } from "./plus-v1";
+import { Plus } from "./plus";
 
 const AllFlaws = React.lazy(() => import("./flaws"));
 const AllTranslations = React.lazy(() => import("./translations"));
@@ -261,7 +261,7 @@ export function App(appProps) {
                 path="/plus/*"
                 element={
                   <StandardLayout>
-                    <PlusV1 {...appProps} />
+                    <Plus {...appProps} />
                   </StandardLayout>
                 }
               />

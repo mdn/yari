@@ -1,8 +1,11 @@
 /**
  * Do not edit directly
- * Generated on Thu, 09 Sep 2021 08:46:46 GMT
+ * Generated on Fri, 10 Sep 2021 15:26:13 GMT
  */
 
+export const mqTabletAndUp = "all and (min-width: 47.9375em)";
+export const mqSmallDesktopAndUp = "all and (min-width: 63.9375em)";
+export const mqLargeDesktopAndUp = "all and (min-width: 74.9375em)";
 export const lightModeTextPrimary = "#15141a";
 export const lightModeTextSecondary = "#5b5b66";
 export const lightModeTextInactive = "#5b5b66a6";

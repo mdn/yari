@@ -116,6 +116,10 @@
   },
   "devDependencies": {
     "@babel/core": "^7.15.0",
+    "@linaria/core": "^3.0.0-beta.13",
+    "@linaria/react": "^3.0.0-beta.13",
+    "@linaria/shaker": "^3.0.0-beta.13",
+    "@linaria/webpack-loader": "^3.0.0-beta.13",
     "@mdn/dinocons": "^0.3.5",
     "@mdn/minimalist": "^2.0.2",
     "@playwright/test": "1.14.1",

@@ -1,5 +1,5 @@
 // Do not edit directly
-// Generated on Thu, 09 Sep 2021 08:46:46 GMT
+// Generated on Fri, 10 Sep 2021 15:26:13 GMT
 
 $token-full-color-ramp-black-white-white: #ffffff;
 $token-full-color-ramp-black-white-black: #000000;
@@ -203,3 +203,15 @@ $token-light-mode-text-link: #0060df;
 $token-light-mode-text-inactive: #5b5b66a6;
 $token-light-mode-text-secondary: #5b5b66;
 $token-light-mode-text-primary: #15141a;
+$token-mq-large-desktop-and-up: all and
+  (
+    min-width: 74.9375em,
+  );
+$token-mq-small-desktop-and-up: all and
+  (
+    min-width: 63.9375em,
+  );
+$token-mq-tablet-and-up: all and
+  (
+    min-width: 47.9375em,
+  );

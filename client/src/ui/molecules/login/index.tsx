@@ -37,7 +37,7 @@ function LoginInner() {
 
   if (!(userData.isAuthenticated && userData.username)) {
     // Otherwise, show a login prompt
-    return <SignInLink className="signin-link" />;
+    return <SignInLink />;
   }
 
   // If pathname === '/en-US/sigin', i.e. you're already on the sign in page
