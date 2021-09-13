@@ -42,7 +42,7 @@ export const ENABLE_PLUS = Boolean(
       JSON.stringify(process.env.NODE_ENV === "development")
   )
 );
-export const MDN_PLUS_SUBSCRIBE_MONTHLY_URL = `${process.env.MDN_PLUS_SUBSCRIBE_URL}?plan=${process.env.MDN_PLUS_MONTHLY_PLAN}`;
+export const MDN_PLUS_SUBSCRIBE_MONTHLY_URL = `${process.env.REACT_APP_MDN_PLUS_SUBSCRIBE_URL}?plan=${process.env.REACT_APP_MDN_PLUS_MONTHLY_PLAN}`;
 
 export const FXA_SIGNIN_URL = process.env.REACT_APP_FXA_SIGNIN_URL || "";
 export const FXA_SETTINGS_URL = process.env.REACT_APP_FXA_SETTINGS_URL || "";
