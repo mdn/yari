@@ -177,6 +177,9 @@ class UploadFileTask(UploadTask):
 
     @property
     def content_type(self):
+        if self.file_path.name == "opensearch.xml":
+            return "application/opensearchdescription+xml"
+
         mime_type = (
             mimetypes.guess_type(str(self.file_path))[0] or "binary/octet-stream"
         )

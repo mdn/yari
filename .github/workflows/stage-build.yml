@@ -102,7 +102,7 @@ jobs:
           python-version: "3.8"
 
       - name: Install Python poetry
-        uses: snok/install-poetry@v1.1.8
+        uses: snok/install-poetry@v1.2
 
       - name: Install deployer
         run: |
@@ -152,6 +152,12 @@ jobs:
 
           # This adds the ability to sign in (stage only for now)
           REACT_APP_DISABLE_AUTH: false
+
+          # Firefox Accounts and SubPlat settings
+          REACT_APP_FXA_SIGNIN_URL: /users/fxa/login/authenticate/
+          REACT_APP_FXA_SETTINGS_URL: https://accounts.stage.mozaws.net/settings/
+          REACT_APP_MDN_PLUS_SUBSCRIBE_URL: https://accounts.stage.mozaws.net/subscriptions/products/prod_Jtbg9tyGyLRuB0
+          REACT_APP_MDN_PLUS_MONTHLY_PLAN: price_1JFoTYKb9q6OnNsLalexa03p
 
         run: |
 
