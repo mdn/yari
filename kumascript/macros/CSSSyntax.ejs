@@ -4,6 +4,7 @@ const slug = env.slug;
 const locale = env.locale;
 const name = $0 || slug.split('/').pop().toLowerCase();
 
+const valueDefinitionUrl = `/${locale}/docs/Web/CSS/Value_definition_syntax`;
 /**
  * Populate `properties` and `valuespaces` from webref
  */
@@ -24,9 +25,9 @@ for (const spec of allData) {
 }
 
 /**
- * Used for building links and tooltips for multipliers
+ * Used for building links and tooltips for parts of the value definition syntax
  */
-const multiplierInfo = {
+const syntaxDescriptions = {
   '*': {
     fragment: 'asterisk_',
     tooltip: 'Asterisk: the entity may occur zero, one or several times'
@@ -50,6 +51,22 @@ const multiplierInfo = {
   '!': {
     fragment: 'exclamation_point_!',
     tooltip: 'Exclamation point: the group must produce at least one value'
+  },
+  '[]': {
+    fragment: 'brackets',
+    tooltip: 'Brackets: enclose several entities, combinators, and multipliers to transform them as a single component'
+  },
+  '|': {
+    fragment: 'single_bar',
+    tooltip: 'Single bar: exactly one of the entities must be present'
+  },
+  '||': {
+    fragment: 'double_bar',
+    tooltip: 'Double bar: one or several of the entities must be present, in any order'
+  },
+  '&&': {
+    fragment: 'double_ampersand',
+    tooltip: 'Double ampersand: all of the entities must be present, in any order'
   }
 }
 
@@ -79,8 +96,8 @@ function renderNode(name, node) {
       if (name.startsWith('{')) {
         key = '{}';
       }
-      const info = multiplierInfo[key];
-      return `<a href="/${locale}/docs/Web/CSS/Value_definition_syntax#${info.fragment}" title="${info.tooltip}">${name}</a>`;
+      const info = syntaxDescriptions[key];
+      return `<a href="${valueDefinitionUrl}#${info.fragment}" title="${info.tooltip}">${name}</a>`;
     }
     case 'Keyword': {
       return `<span class="token keyword">${name}</span>`;
@@ -93,6 +110,21 @@ function renderNode(name, node) {
         // this is probably a closing bracket
         return `<span class="token function">${name}</span>`;
       }
+    }
+    case 'Group': {
+      // link from brackets to the value definition syntax docs
+      const info = syntaxDescriptions['[]'];
+      name = name.replace(/^\[/, `<a href="${valueDefinitionUrl}#${info.fragment}" title="${info.tooltip}">[</a>`);
+      name = name.replace(/\]$/, `<a href="${valueDefinitionUrl}#${info.fragment}" title="${info.tooltip}">]</a>`);
+
+      // link from combinators (except " ") to the value definition syntax docs
+      if (node.combinator && (node.combinator !== ' ')) {
+        const info = syntaxDescriptions[node.combinator];
+        // note that we are replacing the combinator surrounded by spaces, like " | "
+        name = name.replaceAll(` ${node.combinator} `, ` <a href="${valueDefinitionUrl}#${info.fragment}" title="${info.tooltip}">${node.combinator}</a> `);
+      }
+
+      return name;
     }
   }
   return name;
@@ -125,8 +157,14 @@ function renderTerms(terms, combinator) {
   for (let i = 0; i < termArray.length; i++) {
     const termText = termArray[i];
     const spaceCount = (maxTermLength + 2) - termTextLengths[i];
+    let combinatorText = '';
+    if (combinator && combinator !== " ") {
+      const info = syntaxDescriptions[combinator];
+      // link from combinators (except " ") to the value definition syntax docs
+      combinatorText = `<a href="${valueDefinitionUrl}#${info.fragment}" title="${info.tooltip}">${combinator}</a>`;
+    }
     // omit the combinator for the final term
-    const combinatorText = (i < termArray.length-1 ? combinator : '');
+    combinatorText = (i < termArray.length-1 ? combinatorText : '');
     output += `  ${termText}${Array(spaceCount).join(' ')}${combinatorText}<br/>`;
   }
 
@@ -217,6 +255,7 @@ function writeFormalSyntax(item) {
   for (const type of types) {
     if (valuespaces[`<${type}>`] && valuespaces[`<${type}>`].value) {
       output += renderSyntax(type, valuespaces[`<${type}>`].value);
+      output += '<br/>';
     }
   }
 
