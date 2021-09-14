@@ -16,7 +16,6 @@ import { Loading } from "./ui/atoms/loading";
 import { PageContentContainer } from "./ui/atoms/page-content";
 import { PageNotFound } from "./page-not-found";
 
-import { SignOut } from "./auth";
 import { Settings } from "./settings";
 
 import { DeepDives } from "./plus/deep-dives";
@@ -229,14 +228,6 @@ export function App(appProps) {
               element={
                 <StandardLayout>
                   <SiteSearch />
-                </StandardLayout>
-              }
-            />
-            <Route
-              path="/signout"
-              element={
-                <StandardLayout>
-                  <SignOut />
                 </StandardLayout>
               }
             />
