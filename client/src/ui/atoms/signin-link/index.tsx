@@ -18,9 +18,22 @@ export default function SignInLink() {
   `;
 
   let next = pathname || `/${locale}/`;
+  let prefix = "";
+  // When doing local development with Yari, the link to authenticate in Kuma
+  // needs to be absolute. And we also need to send the absolute URL as the
+  // `next` query string parameter so Kuma sends us back when the user has
+  // authenticated there.
+  if (
+    process.env.NODE_ENV === "development" &&
+    process.env.REACT_APP_KUMA_HOST
+  ) {
+    const combined = new URL(next, window.location.href);
+    next = combined.toString();
+    prefix = `http://${process.env.REACT_APP_KUMA_HOST}`;
+  }
 
   return (
-    <SignIn href={`${FXA_SIGNIN_URL}?next=${next}`} rel="nofollow">
+    <SignIn href={`${prefix}${FXA_SIGNIN_URL}?next=${next}`} rel="nofollow">
       Already a subscriber?
     </SignIn>
   );
