@@ -1,5 +1,5 @@
 import React from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 import Dropdown from "../dropdown";
 import { useLocale } from "../../../hooks";
@@ -26,7 +26,6 @@ export default function Login() {
 
 function LoginInner() {
   const locale = useLocale();
-  const { pathname } = useLocation();
   const userData = useUserData();
 
   const [forceCloseDropdown, setForceCloseDropdown] = React.useState(false);
@@ -40,12 +39,6 @@ function LoginInner() {
     // Otherwise, show a login prompt
     return <SignInLink />;
   }
-
-  // If pathname === '/en-US/sigin', i.e. you're already on the sign in page
-  // itself, then discard that as a 'next' parameter.
-  // Otherwise, you might get redirected back to the sign in page after you've
-  // successfully signed in.
-  const next = pathname === `/${locale}/signin` ? `/${locale}/` : pathname;
 
   // If we have user data and the user is logged in, show their
   // profile pic, defaulting to the dino head if the avatar

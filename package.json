@@ -24,7 +24,7 @@
     "start:server": "node server",
     "start:static-server": "cross-env ENV_FILE=testing/.env node server/static.js",
     "test": "yarn prettier-check && yarn test:client && yarn test:kumascript && yarn test:content && yarn test:testing",
-    "test:client": "cd client && tsc --noEmit && craco test --env=jest-environment-jsdom-sixteen",
+    "test:client": "cd client && tsc --noEmit && craco test --env=jsdom",
     "test:content": "jest content",
     "test:headless": "playwright test headless",
     "test:developing": "playwright test developing",
@@ -35,6 +35,11 @@
     "prepare": "husky install"
   },
   "jest": {
+    "globals": {
+      "ts-test": {
+        "babelConfig": true
+      }
+    },
     "testPathIgnorePatterns": [
       "headless*",
       "developing.spec.js"
@@ -153,7 +158,6 @@
     "html-validate": "5.2.1",
     "husky": "^6.0.0",
     "ignore-loader": "^0.1.2",
-    "jest-environment-jsdom-sixteen": "^2.0.0",
     "jest-junit-reporter": "^1.1.0",
     "jest-puppeteer": "5.0.4",
     "jsdom": "^17.0.0",
