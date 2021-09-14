@@ -4,6 +4,7 @@ import { Link, useLocation } from "react-router-dom";
 import Dropdown from "../dropdown";
 import { useLocale } from "../../../hooks";
 import SignInLink from "../../atoms/signin-link";
+import SignOut from "../../atoms/signout";
 import { useUserData } from "../../../user-context";
 
 import { DISABLE_AUTH } from "../../../constants";
@@ -81,14 +82,7 @@ function LoginInner() {
         </Link>
       </li>
       <li>
-        <Link
-          to={`/${locale}/signout?${new URLSearchParams({ next }).toString()}`}
-          onClick={() => {
-            setForceCloseDropdown(true);
-          }}
-        >
-          Sign out
-        </Link>
+        <SignOut />
       </li>
     </Dropdown>
   );

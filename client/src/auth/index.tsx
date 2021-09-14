@@ -3,7 +3,6 @@ import React from "react";
 import { Loading } from "../ui/atoms/loading";
 import { PageContentContainer } from "../ui/atoms/page-content";
 
-const SignInApp = React.lazy(() => import("./sign-in"));
 const SignOutApp = React.lazy(() => import("./sign-out"));
 
 function Container({
@@ -33,17 +32,6 @@ function Container({
       <h1 className="slab-highlight">{pageTitle}</h1>
       {!isServer && children}
     </PageContentContainer>
-  );
-}
-export function SignIn() {
-  return (
-    <Container className="sign-in" pageTitle="Sign in to MDN Web Docs">
-      <React.Suspense
-        fallback={<Loading message="Loading sign in…" minHeight={400} />}
-      >
-        <SignInApp />
-      </React.Suspense>
-    </Container>
   );
 }
 

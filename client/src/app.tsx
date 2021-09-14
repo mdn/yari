@@ -15,8 +15,8 @@ import { SiteSearch } from "./site-search";
 import { Loading } from "./ui/atoms/loading";
 import { PageContentContainer } from "./ui/atoms/page-content";
 import { PageNotFound } from "./page-not-found";
-// import { Banner } from "./banners";
-import { SignIn, SignOut } from "./auth";
+
+import { SignOut } from "./auth";
 import { Settings } from "./settings";
 
 import { DeepDives } from "./plus/deep-dives";
@@ -229,14 +229,6 @@ export function App(appProps) {
               element={
                 <StandardLayout>
                   <SiteSearch />
-                </StandardLayout>
-              }
-            />
-            <Route
-              path="/signin"
-              element={
-                <StandardLayout>
-                  <SignIn />
                 </StandardLayout>
               }
             />

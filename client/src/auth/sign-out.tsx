@@ -4,8 +4,9 @@ import useSWR from "swr";
 
 import { DISABLE_AUTH } from "../constants";
 import { useUserData, removeSessionStorageData } from "../user-context";
-import { useLocale } from "../hooks";
+import { useCSRFMiddlewareToken, useLocale } from "../hooks";
 import { AuthDisabled } from "../ui/atoms/auth-disabled";
+import SignOut from "../ui/atoms/signout";
 
 import "./index.scss";
 import "./sign-out.scss";
@@ -19,21 +20,7 @@ export default function SignOutApp() {
   const locale = useLocale();
   const userData = useUserData();
   const sp = new URLSearchParams();
-
-  // First check that you're signed in and if you are, get a CSRF token.
-  const userSettingsAPIURL = React.useMemo(() => {
-    return userData && userData.isAuthenticated ? "/api/v1/settings" : null;
-  }, [userData]);
-  const { data, error } = useSWR<UserSettings>(
-    userSettingsAPIURL,
-    async (url) => {
-      const response = await fetch(url);
-      if (!response.ok) {
-        throw new Error(`${response.status} on ${url}`);
-      }
-      return await response.json();
-    }
-  );
+  const csrfMiddlewareToken = useCSRFMiddlewareToken();
 
   // This is the `?next=` parameter we send into the redirect loop IF you did
   // not click into this page from an existing one.
@@ -76,36 +63,7 @@ export default function SignOutApp() {
       */}
       {userData ? (
         userData.isAuthenticated ? (
-          <form
-            className="sign-out-form"
-            method="post"
-            action={`${prefix}/users/fxa/login/logout/`}
-            onSubmit={() => {
-              removeSessionStorageData();
-            }}
-          >
-            {data && data.csrfmiddlewaretoken && (
-              <input
-                type="hidden"
-                name="csrfmiddlewaretoken"
-                value={data.csrfmiddlewaretoken}
-              />
-            )}
-            {/* XXX Here it would be great to link to the account settings page */}
-            <input type="hidden" name="next" value={next} />
-            {error && (
-              <div className="notecard negative">
-                <p>
-                  <strong>Server error</strong> Unable to connect to the server.
-                </p>
-              </div>
-            )}
-            {data && data.csrfmiddlewaretoken && (
-              <button type="submit" className="button icon-button outline">
-                Sign out
-              </button>
-            )}
-          </form>
+          <SignOut />
         ) : (
           <>
             <p>
