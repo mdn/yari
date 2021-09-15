@@ -126,7 +126,7 @@
     "@types/hast": "^2.3.4",
     "@types/jest": "^27.0.1",
     "@types/mdast": "^3.0.10",
-    "@types/react": "^17.0.20",
+    "@types/react": "^17.0.21",
     "@types/react-dom": "^17.0.9",
     "@types/react-modal": "^3.12.1",
     "babel-loader": "8.1.0",
