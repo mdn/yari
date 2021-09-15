@@ -8,6 +8,8 @@ import { lightModeTextSecondary } from "../../vars/js/variables";
 export default function SignInLink() {
   const locale = useLocale();
   const { pathname } = useLocation();
+  const sp = new URLSearchParams();
+
   const SignIn = styled.a`
     font-weight: bold;
 
@@ -18,6 +20,8 @@ export default function SignInLink() {
   `;
 
   let next = pathname || `/${locale}/`;
+  sp.set("next", next);
+
   let prefix = "";
   // When doing local development with Yari, the link to authenticate in Kuma
   // needs to be absolute. And we also need to send the absolute URL as the
@@ -33,7 +37,7 @@ export default function SignInLink() {
   }
 
   return (
-    <SignIn href={`${prefix}${FXA_SIGNIN_URL}?next=${next}`} rel="nofollow">
+    <SignIn href={`${prefix}${FXA_SIGNIN_URL}?${sp.toString()}`} rel="nofollow">
       Already a subscriber?
     </SignIn>
   );

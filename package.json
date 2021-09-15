@@ -29,6 +29,7 @@
     "test:headless": "playwright test headless",
     "test:developing": "playwright test developing",
     "test:kumascript": "jest kumascript --env=node",
+    "test:prepare": "yarn prepare-build && yarn build && yarn start:static-server",
     "test:testing": "jest --rootDir testing",
     "tool": "node tool/cli.js",
     "watch:ssr": "cd ssr && webpack --mode=production --watch",
