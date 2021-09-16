@@ -1,13 +1,11 @@
 import React from "react";
-import { Link } from "react-router-dom";
 
 import Dropdown from "../dropdown";
-import { useLocale } from "../../../hooks";
 import SignInLink from "../../atoms/signin-link";
 import SignOut from "../../atoms/signout";
 import { useUserData } from "../../../user-context";
 
-import { DISABLE_AUTH } from "../../../constants";
+import { DISABLE_AUTH, FXA_SETTINGS_URL } from "../../../constants";
 
 import "./index.scss";
 
@@ -25,7 +23,6 @@ export default function Login() {
 }
 
 function LoginInner() {
-  const locale = useLocale();
   const userData = useUserData();
 
   const [forceCloseDropdown, setForceCloseDropdown] = React.useState(false);
@@ -65,14 +62,14 @@ function LoginInner() {
       forceClose={forceCloseDropdown}
     >
       <li>
-        <Link
-          to={`/${locale}/settings`}
+        <a
+          href={FXA_SETTINGS_URL}
           onClick={() => {
             setForceCloseDropdown(true);
           }}
         >
           Account settings
-        </Link>
+        </a>
       </li>
       <li>
         <SignOut />

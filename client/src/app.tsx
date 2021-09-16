@@ -16,8 +16,6 @@ import { Loading } from "./ui/atoms/loading";
 import { PageContentContainer } from "./ui/atoms/page-content";
 import { PageNotFound } from "./page-not-found";
 
-import { Settings } from "./settings";
-
 import { DeepDives } from "./plus/deep-dives";
 import { Overview as DeepDivesOverview } from "./plus/deep-dives/overview";
 // import { DeepDivesHomepage } from "./plus/deep-dives/homepage";
@@ -228,14 +226,6 @@ export function App(appProps) {
               element={
                 <StandardLayout>
                   <SiteSearch />
-                </StandardLayout>
-              }
-            />
-            <Route
-              path="/settings"
-              element={
-                <StandardLayout>
-                  <Settings {...appProps} />
                 </StandardLayout>
               }
             />

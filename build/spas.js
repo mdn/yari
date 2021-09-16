@@ -15,14 +15,6 @@ const { getFeedEntries } = require("./feedparser");
 // eslint-disable-next-line node/no-missing-require
 const { renderHTML } = require("../ssr/dist/main");
 
-function getLanguages() {
-  return new Map(
-    Object.entries(
-      JSON.parse(fs.readFileSync(path.join(__dirname, "languages.json")))
-    )
-  );
-}
-
 async function buildSPAs(options) {
   let buildCount = 0;
 
@@ -49,7 +41,6 @@ async function buildSPAs(options) {
       }
       const SPAs = [
         { prefix: "search", pageTitle: "Search" },
-        { prefix: "settings", pageTitle: "Account settings", noIndexing: true },
         { prefix: "plus", pageTitle: "Plus", noIndexing: true },
         { prefix: "plus/bookmarks", pageTitle: "Bookmarks", noIndexing: true },
         {
@@ -75,15 +66,7 @@ async function buildSPAs(options) {
           locale: VALID_LOCALES.get(locale) || locale,
           noIndexing,
         };
-        if (prefix === "settings") {
-          // This SPA needs a list of all valid locales
-          const languages = getLanguages();
-          context.possibleLocales = [...VALID_LOCALES.values()].map(
-            (locale) => {
-              return Object.assign({ locale }, languages.get(locale));
-            }
-          );
-        }
+
         const html = renderHTML(url, context);
         const outPath = path.join(BUILD_OUT_ROOT, locale, prefix);
         fs.mkdirSync(outPath, { recursive: true });
@@ -92,14 +75,6 @@ async function buildSPAs(options) {
         buildCount++;
         if (options.verbose) {
           console.log("Wrote", filePath);
-        }
-        if (prefix === "settings") {
-          const filePathContext = path.join(outPath, "index.json");
-          fs.writeFileSync(filePathContext, JSON.stringify(context));
-          buildCount++;
-          if (options.verbose) {
-            console.log("Wrote", filePathContext);
-          }
         }
       }
     }
