@@ -29,10 +29,20 @@ module.exports = {
       {
         test: /\.tsx?$/,
         exclude: /node_modules/,
-        loader: "ts-loader",
-        options: {
-          transpileOnly: true,
-        },
+        use: [
+          {
+            loader: "@linaria/webpack-loader",
+            options: {
+              sourceMap: process.env.NODE_ENV !== "production",
+            },
+          },
+          {
+            loader: "ts-loader",
+            options: {
+              transpileOnly: true,
+            },
+          },
+        ],
       },
       {
         test: /\.svg$/,

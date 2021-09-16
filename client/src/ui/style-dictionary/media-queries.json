@@ -1,0 +1,22 @@
+{
+  "mq": {
+    "tablet-and-up": {
+      "value": "all and (min-width: 47.9375em)",
+      "attributes": {
+        "category": "media-queries"
+      }
+    },
+    "small-desktop-and-up": {
+      "value": "all and (min-width: 63.9375em)",
+      "attributes": {
+        "category": "media-queries"
+      }
+    },
+    "large-desktop-and-up": {
+      "value": "all and (min-width: 74.9375em)",
+      "attributes": {
+        "category": "media-queries"
+      }
+    }
+  }
+}

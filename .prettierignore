@@ -23,3 +23,6 @@ _githistory.json
 /testing/content/
 /kumascript/coverage/
 /ssr/mozilla.dnthelper.min.js
+client/src/.linaria_cache
+ssr/.linaria-cache
+popularities.json

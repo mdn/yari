@@ -15,14 +15,13 @@ import { SiteSearch } from "./site-search";
 import { Loading } from "./ui/atoms/loading";
 import { PageContentContainer } from "./ui/atoms/page-content";
 import { PageNotFound } from "./page-not-found";
-// import { Banner } from "./banners";
-import { SignIn, SignOut } from "./auth";
+
 import { Settings } from "./settings";
 
 import { DeepDives } from "./plus/deep-dives";
 import { Overview as DeepDivesOverview } from "./plus/deep-dives/overview";
 // import { DeepDivesHomepage } from "./plus/deep-dives/homepage";
-import { PlusV1 } from "./plus-v1";
+import { Plus } from "./plus";
 
 const AllFlaws = React.lazy(() => import("./flaws"));
 const AllTranslations = React.lazy(() => import("./translations"));
@@ -233,22 +232,6 @@ export function App(appProps) {
               }
             />
             <Route
-              path="/signin"
-              element={
-                <StandardLayout>
-                  <SignIn />
-                </StandardLayout>
-              }
-            />
-            <Route
-              path="/signout"
-              element={
-                <StandardLayout>
-                  <SignOut />
-                </StandardLayout>
-              }
-            />
-            <Route
               path="/settings"
               element={
                 <StandardLayout>
@@ -261,7 +244,7 @@ export function App(appProps) {
                 path="/plus/*"
                 element={
                   <StandardLayout>
-                    <PlusV1 {...appProps} />
+                    <Plus {...appProps} />
                   </StandardLayout>
                 }
               />

@@ -12,12 +12,23 @@ StyleDictionary.registerTransform({
   },
 });
 
+StyleDictionary.registerTransform({
+  name: "value/tostring",
+  type: "value",
+  matcher: function (token) {
+    return token.attributes.category === "media-queries";
+  },
+  transformer: function (token) {
+    return `"${token.value}"`;
+  },
+});
+
 module.exports = {
   source: ["./client/src/ui/style-dictionary/**/*.json"],
   platforms: {
     scss: {
       transformGroup: "scss",
-      transforms: ["value/rewrite", "name/cti/kebab"],
+      transforms: ["value/rewrite", "value/tostring", "name/cti/kebab"],
       buildPath: "./client/src/ui/vars/sass/",
       prefix: "token",
       files: [

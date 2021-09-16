@@ -78,3 +78,4 @@ popularities.json
 
 #linariacache
 client/src/.linaria_cache
+ssr/.linaria-cache

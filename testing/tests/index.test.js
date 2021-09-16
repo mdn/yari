@@ -1223,31 +1223,6 @@ test("404 page", () => {
   expect($('meta[property="og:locale"]').attr("content")).toBe("en-US");
 });
 
-test("sign in page", () => {
-  const builtFolder = path.join(buildRoot, "en-us", "signin");
-  expect(fs.existsSync(builtFolder)).toBeTruthy();
-  const htmlFile = path.join(builtFolder, "index.html");
-  const html = fs.readFileSync(htmlFile, "utf-8");
-  const $ = cheerio.load(html);
-  expect($("h1").text()).toContain("Sign in to MDN Web Docs");
-  expect($("title").text()).toContain("Sign in");
-  expect($('meta[property="og:locale"]').attr("content")).toBe("en-US");
-  expect($('meta[property="og:title"]').attr("content")).toBe("Sign in");
-  expect($('meta[name="robots"]').attr("content")).toBe("noindex, nofollow");
-});
-
-test("French sign in page", () => {
-  const builtFolder = path.join(buildRoot, "fr", "signin");
-  expect(fs.existsSync(builtFolder)).toBeTruthy();
-  const htmlFile = path.join(builtFolder, "index.html");
-  const html = fs.readFileSync(htmlFile, "utf-8");
-  const $ = cheerio.load(html);
-  // This will be translated the day we support localized chrome.
-  expect($("h1").text()).toContain("Sign in to MDN Web Docs");
-  expect($("title").text()).toContain("Sign in");
-  expect($('meta[property="og:locale"]').attr("content")).toBe("fr");
-});
-
 test("settings page", () => {
   const builtFolder = path.join(buildRoot, "en-us", "settings");
   expect(fs.existsSync(builtFolder)).toBeTruthy();

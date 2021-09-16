@@ -1,19 +1,52 @@
 import React from "react";
+import { styled } from "linaria/react";
 
 import { Card } from "../ui/molecules/card";
 import { Hero } from "../ui/organisms/hero";
 import { ProductFeatures } from "../ui/organisms/product-features";
 import { Feature } from "./deep-dives/feature";
 
+import {
+  lightModeButtonPrimaryDefault,
+  mqTabletAndUp,
+} from "../ui/vars/js/variables";
+
+import { MDN_PLUS_SUBSCRIBE_MONTHLY_URL } from "../constants";
+
 import "./index.scss";
 
 export default function App() {
   const [showDeepDive, setShowDeepDive] = React.useState(false);
 
+  // temporary
+  const SubscribeLink = styled.a`
+    background-color: ${lightModeButtonPrimaryDefault};
+    border-radius: 4px;
+    display: block;
+    margin: 8px auto 0;
+    padding: 8px 16px;
+    text-align: center;
+
+    @media ${mqTabletAndUp} {
+      margin: 18px auto 16px;
+      width: 360px;
+    }
+
+    &:link,
+    &:visited {
+      color: #fff;
+    }
+  `;
+
   return (
     <div className="plus">
       <Hero />
 
+      <p>
+        <SubscribeLink href={MDN_PLUS_SUBSCRIBE_MONTHLY_URL}>
+          Sign-up for MDN Plus
+        </SubscribeLink>
+      </p>
       <div className="overview-wrapper">
         <div className="overview-content-wrapper">
           <div className="overview-mdn-plus">

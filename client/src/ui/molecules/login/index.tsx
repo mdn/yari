@@ -1,9 +1,10 @@
 import React from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 import Dropdown from "../dropdown";
 import { useLocale } from "../../../hooks";
 import SignInLink from "../../atoms/signin-link";
+import SignOut from "../../atoms/signout";
 import { useUserData } from "../../../user-context";
 
 import { DISABLE_AUTH } from "../../../constants";
@@ -25,7 +26,6 @@ export default function Login() {
 
 function LoginInner() {
   const locale = useLocale();
-  const { pathname } = useLocation();
   const userData = useUserData();
 
   const [forceCloseDropdown, setForceCloseDropdown] = React.useState(false);
@@ -37,14 +37,8 @@ function LoginInner() {
 
   if (!(userData.isAuthenticated && userData.username)) {
     // Otherwise, show a login prompt
-    return <SignInLink className="signin-link" />;
+    return <SignInLink />;
   }
-
-  // If pathname === '/en-US/sigin', i.e. you're already on the sign in page
-  // itself, then discard that as a 'next' parameter.
-  // Otherwise, you might get redirected back to the sign in page after you've
-  // successfully signed in.
-  const next = pathname === `/${locale}/signin` ? `/${locale}/` : pathname;
 
   // If we have user data and the user is logged in, show their
   // profile pic, defaulting to the dino head if the avatar
@@ -81,14 +75,7 @@ function LoginInner() {
         </Link>
       </li>
       <li>
-        <Link
-          to={`/${locale}/signout?${new URLSearchParams({ next }).toString()}`}
-          onClick={() => {
-            setForceCloseDropdown(true);
-          }}
-        >
-          Sign out
-        </Link>
+        <SignOut />
       </li>
     </Dropdown>
   );

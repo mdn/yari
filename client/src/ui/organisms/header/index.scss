@@ -59,7 +59,7 @@
 
   @media #{$mq-tablet-and-up} {
     display: block;
-    grid-template-columns: 70% 30%;
+    grid-template-columns: 1fr;
     left: inherit;
     padding: 0;
     position: relative;
@@ -73,7 +73,7 @@
   }
 
   @media #{$mq-large-desktop-and-up} {
-    grid-template-columns: 2fr 1fr 70px;
+    grid-template-columns: 2fr 120px 1fr;
   }
 
   .main-nav,

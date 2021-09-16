@@ -21,19 +21,27 @@ test.describe("Bookmarking pages", () => {
   });
 
   test("view a document and being a signed in subscriber", async ({ page }) => {
-    await page.goto(testURL("/en-US/signin"));
-    await page.click('a:has-text("Sign in with Firefox Accounts")');
+    await page.goto(testURL("/en-US/docs/Web/Foo"));
+
+    // Sign in
+    await page.click("text='Already a subscriber?'");
+    await page.waitForLoadState("networkidle");
+
     await page.goto(testURL("/en-US/docs/Web/Foo"));
     await page.waitForSelector(SELECTOR);
+
     expect(await page.isVisible('button[title="Add bookmark"]')).toBeTruthy();
+
     await page.click('button[title="Add bookmark"]');
     await page.waitForLoadState("networkidle");
+
     expect(await page.isVisible('button[title="Add bookmark"]')).toBeFalsy();
     expect(await page.isVisible('button[title^="Bookmarked"]')).toBeTruthy();
 
     // Reload the page to prove that it sticks
     await page.goto(testURL("/en-US/docs/Web/Foo"));
     await page.waitForSelector(SELECTOR);
+
     expect(await page.isVisible('button[title^="Bookmarked"]')).toBeTruthy();
   });
 
@@ -42,8 +50,9 @@ test.describe("Bookmarking pages", () => {
     await page.waitForLoadState("networkidle");
     await page.waitForSelector("text=You have not signed in");
 
-    await page.goto(testURL("/en-US/signin"));
-    await page.click('a:has-text("Sign in with Firefox Accounts")');
+    // Sign in
+    await page.click("text='Already a subscriber?'");
+    await page.waitForLoadState("networkidle");
 
     await page.goto(testURL("/en-US/plus/bookmarks"));
     await page.waitForSelector("text=Nothing bookmarked yet.");
@@ -63,11 +72,17 @@ test.describe("Bookmarking pages", () => {
       await page.click('button[title="Add bookmark"]');
     }
 
+    const locator = page.locator(".pagination");
+
     await page.goto(testURL("/en-US/plus/bookmarks"));
-    await page.waitForSelector("text=Your bookmarks (6)");
+    await page.waitForSelector("text=My bookmarks");
+
+    await expect(locator).toBeVisible();
 
     // This picks one of the un-toggle buttons
     await page.click('button[title="Remove bookmark"]');
-    await page.waitForSelector("text=Your bookmarks (5)");
+    await page.waitForLoadState("networkidle");
+
+    await expect(locator).not.toBeVisible();
   });
 });
