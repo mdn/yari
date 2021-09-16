@@ -5,6 +5,7 @@
   "license": "MPL-2.0",
   "author": "MDN Web Docs",
   "scripts": {
+    "analyze": "source-map-explorer 'client/build/static/js/*.js'",
     "build": "cross-env NODE_ENV=production node build/cli.js",
     "build:client": "cd client && cross-env INLINE_RUNTIME_CHUNK=false react-scripts build",
     "build:ssr": "cd ssr && webpack --mode=production",
@@ -166,6 +167,7 @@
     "remark-prettier": "^1.2.0",
     "rough-notation": "0.5.1",
     "sass": "^1.40.1",
+    "source-map-explorer": "^2.5.2",
     "stylelint": "^13.13.1",
     "stylelint-a11y": "^1.2.3",
     "stylelint-config-prettier": "^8.0.2",
