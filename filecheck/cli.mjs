@@ -1,11 +1,11 @@
-import { path } from "path";
+import path from "path";
 
-import { program } from "@caporal/core";
+import program from "@caporal/core";
 
 import { runChecker } from "./checker.mjs";
-import { MAX_COMPRESSION_DIFFERENCE_PERCENTAGE } from "./constants";
+import { MAX_COMPRESSION_DIFFERENCE_PERCENTAGE } from "./constants.js";
 
-program
+program.default
   .version("0.0.0")
   .option("--cwd <path>", "Explicit current-working-directory", {
     validator: program.PATH,
@@ -32,4 +32,4 @@ program
     });
   });
 
-program.run();
+program.default.run();

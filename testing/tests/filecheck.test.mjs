@@ -1,8 +1,12 @@
-const fs = require("fs");
-const path = require("path");
+import fs from "fs";
+import { fileURLToPath } from "url";
+import path from "path";
 
-const { checkFile } = require("../../filecheck/checker");
+import { checkFile } from "../../filecheck/checker.mjs";
 
+const __dirname = path.dirname(
+  fileURLToPath(path.dirname(import.meta.url)))
+);
 const SAMPLES_DIRECTORY = path.join(
   __dirname,
   "filechecker",
