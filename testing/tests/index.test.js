@@ -1223,25 +1223,6 @@ test("404 page", () => {
   expect($('meta[property="og:locale"]').attr("content")).toBe("en-US");
 });
 
-test("settings page", () => {
-  const builtFolder = path.join(buildRoot, "en-us", "settings");
-  expect(fs.existsSync(builtFolder)).toBeTruthy();
-  const htmlFile = path.join(builtFolder, "index.html");
-  const html = fs.readFileSync(htmlFile, "utf-8");
-  const $ = cheerio.load(html);
-  expect($("h1").text()).toBe("Account settings");
-  expect($("title").text()).toContain("Account settings");
-  expect($('meta[name="robots"]').attr("content")).toBe("noindex, nofollow");
-
-  const jsonFile = path.join(builtFolder, "index.json");
-  const data = JSON.parse(fs.readFileSync(jsonFile));
-  expect(data.pageTitle).toBe("Account settings");
-  expect(data.possibleLocales).toBeTruthy();
-  const possibleLocale = data.possibleLocales.find((p) => p.locale === "en-US");
-  expect(possibleLocale.English).toBe("English (US)");
-  expect(possibleLocale.native).toBe("English (US)");
-});
-
 test("plus page", () => {
   const builtFolder = path.join(buildRoot, "en-us", "plus");
   expect(fs.existsSync(builtFolder)).toBeTruthy();
