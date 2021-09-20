@@ -77,5 +77,5 @@ client/.eslintcache
 popularities.json
 
 #linariacache
-client/src/.linaria_cache
+client/src/**/.linaria_cache
 ssr/.linaria-cache
