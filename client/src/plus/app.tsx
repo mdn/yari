@@ -1,5 +1,8 @@
 import React from "react";
+import { useSearchParams } from "react-router-dom";
 import { styled } from "linaria/react";
+
+import Notification from "../ui/atoms/notification";
 
 import { Card } from "../ui/molecules/card";
 import { Hero } from "../ui/organisms/hero";
@@ -16,6 +19,7 @@ import { MDN_PLUS_SUBSCRIBE_MONTHLY_URL } from "../constants";
 import "./index.scss";
 
 export default function App() {
+  const [searchParams] = useSearchParams();
   const [showDeepDive, setShowDeepDive] = React.useState(false);
 
   // temporary
@@ -42,11 +46,18 @@ export default function App() {
     <div className="plus">
       <Hero />
 
+      {searchParams.get("reason") === "no-active-subscription-found" && (
+        <Notification>
+          <p>You are not a subscriber yet.</p>
+        </Notification>
+      )}
+
       <p>
         <SubscribeLink href={MDN_PLUS_SUBSCRIBE_MONTHLY_URL}>
           Sign-up for MDN Plus
         </SubscribeLink>
       </p>
+
       <div className="overview-wrapper">
         <div className="overview-content-wrapper">
           <div className="overview-mdn-plus">
