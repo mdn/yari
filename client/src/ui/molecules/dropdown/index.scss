@@ -9,11 +9,8 @@ $menu-border-radius: 4px;
   position: relative;
 
   .dropdown-menu-label {
-    align-items: center;
     border: 0;
     color: $text-color;
-    display: flex;
-    flex-direction: row;
     font-weight: bold;
     padding: 0;
     white-space: nowrap;
