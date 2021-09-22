@@ -115,7 +115,7 @@
     "remark-stringify": "^9.0.1",
     "sanitize-filename": "^1.6.3",
     "send": "0.17.1",
-    "source-map-support": "0.5.19",
+    "source-map-support": "0.5.20",
     "tempy": "1.0.1",
     "unified": "^9.2.1",
     "unist-builder": "^2.0.3",
