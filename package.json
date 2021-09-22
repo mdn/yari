@@ -56,7 +56,7 @@
   },
   "dependencies": {
     "@caporal/core": "2.0.2",
-    "@craco/craco": "^6.2.0",
+    "@craco/craco": "^6.3.0",
     "@fast-csv/parse": "4.3.6",
     "@mdn/browser-compat-data": "4.0.4",
     "accept-language-parser": "1.5.0",
