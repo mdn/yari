@@ -2705,10 +2705,10 @@
   dependencies:
     mkdirp "^1.0.4"
 
-"@playwright/test@1.14.1":
-  version "1.14.1"
-  resolved "https://registry.yarnpkg.com/@playwright/test/-/test-1.14.1.tgz#b2c6b76b8bf5958da307c80895847844b7fd172c"
-  integrity sha512-yL/808TEvUmsXxKMPf/Hf6Tajx666QFr8g+hCUZbRy2cbmQOPt7xhwGvXb1cpwMwIlJ4gBx/AiOpnnppsuLgTA==
+"@playwright/test@1.15.0":
+  version "1.15.0"
+  resolved "https://registry.yarnpkg.com/@playwright/test/-/test-1.15.0.tgz#fd9b5748ad9fb61d96a98d09135f412e800e5343"
+  integrity sha512-iDTD2Y3SwyFD6xHNbipyH6O/e0OQ/dJsrsiI8uz4YsRN1aeH1EJs+2qBveVtKW1nR/r0Ml/r3/VPCEi91JWPsw==
   dependencies:
     "@babel/code-frame" "^7.14.5"
     "@babel/core" "^7.14.8"
@@ -2737,6 +2737,7 @@
     mime "^2.4.6"
     minimatch "^3.0.3"
     ms "^2.1.2"
+    open "^8.2.1"
     pirates "^4.0.1"
     pixelmatch "^5.2.1"
     pngjs "^5.0.0"
