@@ -1,0 +1,72 @@
+@use "sass:math";
+@use "../mixins/" as *;
+@use "../vars/" as *;
+
+table {
+  border: $standard-light-border;
+  font-size: $small-font-size;
+  overflow-x: auto;
+  width: 100%;
+
+  @media #{$mq-tablet-and-up} {
+    font-size: $default-font-size;
+  }
+
+  th {
+    background-color: $mdn-neutral200;
+    border: 0;
+    border-bottom: $standard-light-border;
+  }
+
+  td {
+    background-color: $mdn-neutral100;
+    border: 0;
+    border-bottom: $standard-light-border;
+  }
+
+  th,
+  td {
+    border-left: $standard-light-border;
+    padding: math.div($base-spacing, 2);
+    text-align: left;
+
+    &:first-child {
+      border-left: 0;
+      min-width: 150px;
+
+      @media #{$mq-small-desktop-and-up} {
+        min-width: 200px;
+      }
+    }
+  }
+
+  tr:last-child td {
+    border-bottom: 0;
+  }
+
+  pre {
+    background-color: $lightgray;
+  }
+
+  caption {
+    @include heading-5();
+    @include headings-common-base();
+    font-weight: bold;
+    margin-bottom: math.div($base-spacing, 2);
+  }
+}
+
+/*
+ * Standard table styles. For an example see:
+ * https://developer.mozilla.org/en-US/docs/Web/HTML/Element/video#Events
+ */
+table,
+.properties {
+  border-collapse: collapse;
+  margin-bottom: $base-spacing;
+
+  code {
+    background-color: transparent;
+    hyphens: auto;
+  }
+}

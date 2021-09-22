@@ -15,7 +15,6 @@
   background-color: theme.$mdn-violet900;
   border-radius: 4px;
   color: theme.$white;
-  font-family: theme.$inter-font-family;
   margin: 24px 24px 0;
   padding: 18px;
 
@@ -39,7 +38,6 @@
 
 .deep-dive-article-container {
   @include theme.readable-line-length();
-  font-family: theme.$inter-font-family;
   font-size: 18px;
   line-height: 175%;
   margin-bottom: layout.$base-spacing * 3;
@@ -67,12 +65,6 @@
     text-align: left;
   }
 
-  h2,
-  h3,
-  h4 {
-    font-family: theme.$inter-font-family;
-  }
-
   .main-heading-group {
     h1 {
       font-size: 36px;
@@ -82,7 +74,6 @@
 
     h2 {
       color: theme.$mdn-neutral700;
-      font: bold typography.$small-font-size theme.$inter-font-family;
       margin-bottom: layout.$base-spacing;
       text-transform: uppercase;
     }
@@ -115,7 +106,6 @@
 
   button.ghost {
     color: theme.$mdn-neutral900;
-    font-family: theme.$inter-font-family;
     font-size: 18px;
     font-weight: bold;
     margin: 0;
@@ -153,8 +143,6 @@
 
 .deep-dive-article-footer {
   background-color: theme.$mdn-violet900;
-  font-family: theme.$metropolis-font-family;
-  font-size: typography.$small-medium-font-size;
   font-weight: bold;
   padding: 0 layout.$base-spacing;
 
@@ -195,7 +183,6 @@
   .previous-article {
     color: theme.$mdn-green400;
     display: block;
-    font-family: theme.$inter-font-family;
     font-size: typography.$default-font-size;
   }
 
