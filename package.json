@@ -153,7 +153,7 @@
     "jsdom": "^17.0.0",
     "node-dev": "7.0.0",
     "pegjs": "^0.10.0",
-    "prettier": "2.3.2",
+    "prettier": "2.4.1",
     "prettier-plugin-packagejson": "^2.2.12",
     "pretty-quick": "3.1.1",
     "react": "17.0.2",
