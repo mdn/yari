@@ -1,0 +1,38 @@
+@use "../../vars/sass/variables" as style-disctionary;
+
+$light-mode: (
+  "accent-primary": style-disctionary.$token-light-mode-accent-primary,
+  "accent-secondary": style-disctionary.$token-light-mode-accent-secondary,
+  "icon-success": style-disctionary.$token-light-mode-icon-success,
+  "icon-critical": style-disctionary.$token-light-mode-icon-critical,
+  "icon-warning": style-disctionary.$token-light-mode-icon-warning,
+  "icon-information": style-disctionary.$token-light-mode-icon-information,
+  "icon-primary": style-disctionary.$token-light-mode-icon-primary,
+  "icon-secondary": style-disctionary.$token-light-mode-icon-secondary,
+  "button-primary-inactive":
+    style-disctionary.$token-light-mode-button-primary-inactive,
+  "button-primary-pressed":
+    style-disctionary.$token-light-mode-button-primary-pressed,
+  "button-primary-hover":
+    style-disctionary.$token-light-mode-button-primary-hover,
+  "button-primary-default":
+    style-disctionary.$token-light-mode-button-primary-default,
+  "button-secondary-inactive":
+    style-disctionary.$token-light-mode-button-secondary-inactive,
+  "button-secondary-pressed":
+    style-disctionary.$token-light-mode-button-secondary-pressed,
+  "button-secondary-hover":
+    style-disctionary.$token-light-mode-button-secondary-hover,
+  "button-secondary-default":
+    style-disctionary.$token-light-mode-button-secondary-default,
+  "border-primary": style-disctionary.$token-light-mode-border-primary,
+  "border-secondary": style-disctionary.$token-light-mode-border-secondary,
+  "background-primary": style-disctionary.$token-light-mode-background-primary,
+  "background-secondary":
+    style-disctionary.$token-light-mode-background-secondary,
+  "background-tertiary": style-disctionary.$token-light-mode-background-tertiary,
+  "text-link": style-disctionary.$token-light-mode-text-link,
+  "text-inactive": style-disctionary.$token-light-mode-text-inactive,
+  "text-primary": style-disctionary.$token-light-mode-text-primary,
+  "text-secondary": style-disctionary.$token-light-mode-text-secondary,
+);

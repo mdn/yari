@@ -1,0 +1,26 @@
+@use "sass:math";
+@use "../vars/" as *;
+
+/* https://developer.mozilla.org/en-US/docs/Web/HTML/Element/kbd */
+kbd {
+  background: $light-gray-gradient;
+  background-color: $mdn-neutral100;
+  border: 1px solid $mdn-neutral200;
+  border-radius: $default-border-radius;
+  box-shadow: $light-gray-shadow;
+  font-weight: bold;
+  line-height: 1;
+  margin: math.div($base-unit, 2);
+  padding: math.div($base-spacing, 6) math.div($base-spacing, 4);
+  white-space: nowrap;
+}
+
+/*
+ * When used inside a table, give it a little more margin
+ * see: https://developer.mozilla.org/en-US/docs/Tools/Page_Inspector/Keyboard_shortcuts
+ */
+table {
+  kbd {
+    margin: math.div($base-spacing, 4);
+  }
+}

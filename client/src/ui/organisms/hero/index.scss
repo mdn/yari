@@ -61,7 +61,6 @@
       margin-inline-start: 0;
 
       @media #{layout.$mq-small-desktop-and-up} {
-        font-size: theme.$marketing-hero-h1-font-size;
         margin: layout.$base-spacing 0;
       }
     }
@@ -71,10 +70,6 @@
       background-clip: text;
       font-size: typography.$medium-font-size;
       margin-top: 0;
-
-      @media #{layout.$mq-small-desktop-and-up} {
-        font-size: theme.$marketing-hero-h2-font-size;
-      }
     }
 
     a {

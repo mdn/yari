@@ -17,7 +17,6 @@
 
 .deep-dives-overview {
   background-color: theme.$white;
-  font-family: theme.$inter-font-family;
   margin: 0 auto;
   max-width: 600px;
 
@@ -93,12 +92,6 @@
 
 .overview-content-container {
   padding: 0 layout.$base-spacing math.div(layout.$base-spacing, 2);
-
-  h2,
-  h3,
-  button.ghost {
-    font-family: theme.$inter-font-family;
-  }
 
   h2 {
     font-size: 12px;
@@ -237,7 +230,6 @@
   h4,
   li {
     border-left: 5px solid theme.$mdn-green500;
-    font-family: theme.$inter-font-family;
     font-size: 14px;
     margin: 0;
     padding: 8px;

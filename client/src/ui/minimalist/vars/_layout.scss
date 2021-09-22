@@ -1,0 +1,44 @@
+@use "sass:math";
+
+$browser-default-font-size: 16px;
+$base-unit: 6px;
+
+$base-spacing: $base-unit * 4;
+$medium-spacing: $base-spacing * 2;
+$large-spacing: $medium-spacing * 2;
+
+$base-section-spacing: ($base-spacing * 2) $base-spacing;
+$base-section-spacing-mobile: math.div($base-spacing, 2) $base-spacing;
+$content-block-margin: $base-spacing;
+
+$max-width-default: 1400px;
+$max-width-small-desktop: math.div(1023px, $browser-default-font-size) * 1em;
+
+$small-mobile-ends: math.div(479px, $browser-default-font-size) * 1em;
+$mobile-starts: $small-mobile-ends + 0.001em;
+$mobile-ends: math.div(767px, $browser-default-font-size) * 1em;
+
+$tablet-starts: $mobile-ends + 0.001em;
+$tablet-ends: math.div(1023px, $browser-default-font-size) * 1em;
+
+$small-desktop-starts: $tablet-ends + 0.001em;
+$small-desktop-ends: math.div(1199px, $browser-default-font-size) * 1em;
+
+/*
+ * media queries
+ * - MDN should be coded "mobile first"
+ * - when coding features, begin by coding the mobile presentation as default
+ */
+$mq-large-desktop-and-up: "all and (min-width: #{$small-desktop-ends})";
+$mq-small-desktop-and-up: "all and (min-width: #{$small-desktop-starts})";
+$mq-tablet-and-up: "all and (min-width: #{$tablet-starts})";
+$mq-mobile-and-up: "all and (min-width: #{$mobile-starts})";
+
+/*
+ * z-index scale
+ */
+$send-to-back: -1;
+$bring-to-front: 9999;
+$bottom-layer: 100;
+$middle-layer: 200;
+$top-layer: 300;

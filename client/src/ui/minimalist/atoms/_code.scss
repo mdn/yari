@@ -1,0 +1,30 @@
+@use "sass:math";
+@use "../vars/" as *;
+
+code {
+  background-color: $mdn-neutral100;
+  box-decoration-break: clone;
+  padding: 0 math.div($base-unit, 2);
+  white-space: nowrap;
+  word-wrap: break-word;
+}
+
+pre code {
+  white-space: pre;
+}
+
+.notranslate {
+  code {
+    background-color: transparent;
+  }
+}
+
+.example-bad {
+  background-color: $mdn-red100;
+  border-color: $mdn-red400;
+}
+
+.example-good {
+  background-color: $mdn-green100;
+  border-color: $mdn-green500;
+}

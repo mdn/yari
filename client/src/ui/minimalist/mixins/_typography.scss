@@ -1,0 +1,71 @@
+@use "../vars/" as *;
+@use "./utils" as *;
+
+@mixin set-heading-font-family() {
+  font-family: $heading-font-family;
+}
+
+@mixin set-site-font-family() {
+  font-family: $site-font-family;
+  letter-spacing: -0.0027777778rem;
+}
+
+@mixin headings-common-base() {
+  @include set-heading-font-family();
+  letter-spacing: 0.035rem;
+  line-height: $heading-line-height;
+}
+
+@mixin heading-1() {
+  font-size: $xxl-font-size-mobile;
+
+  @media #{$mq-tablet-and-up} {
+    font-size: $xxl-font-size;
+  }
+}
+
+@mixin heading-2() {
+  font-size: $xl-font-size-mobile;
+
+  @media #{$mq-tablet-and-up} {
+    font-size: $xl-font-size;
+  }
+}
+
+@mixin heading-3() {
+  font-size: $large-font-size-mobile;
+
+  @media #{$mq-tablet-and-up} {
+    font-size: $large-font-size;
+  }
+}
+
+@mixin heading-4() {
+  font-size: $medium-font-size-mobile;
+
+  @media #{$mq-tablet-and-up} {
+    font-size: $medium-font-size;
+  }
+}
+
+@mixin heading-5() {
+  font-size: $small-medium-font-size-mobile;
+
+  @media #{$mq-tablet-and-up} {
+    font-size: $small-medium-font-size;
+  }
+}
+
+@mixin blockquote() {
+  @include readable-line-length();
+  font-size: inherit;
+
+  @media #{$mq-tablet-and-up} {
+    font-size: inherit;
+  }
+}
+
+@mixin font-smoothing() {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}

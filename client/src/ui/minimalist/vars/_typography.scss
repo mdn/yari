@@ -1,0 +1,38 @@
+/* Fonts */
+$heading-font-family-fallback: palatino, "Palatino Linotype", serif;
+$heading-font-family: Montserrat, $heading-font-family-fallback;
+$site-font-family-fallback: x-locale-body, sans-serif;
+$site-font-family: Inter, $site-font-family-fallback;
+
+$code-inline-font-family: consolas, "Liberation Mono", courier, monospace;
+$code-base-font-size: 1rem;
+
+$base-font-size: 100%;
+$document-line-height: 1.75;
+$code-example-line-height: 1.4;
+$heading-line-height: 1.2;
+
+/* Desktop and tablet typescale based on major third typescale with a base of 
+   100% of base font size set by the user. */
+$xxl-font-size: 3.052rem; /* 54.93px */
+$xl-font-size: 2.441rem; /* 43.95px */
+$large-font-size: 1.953rem; /* 35.16px */
+$medium-font-size: 1.563rem; /* 28.13px */
+$small-medium-font-size: 1.25rem; /* 22.50px */
+
+/* Mobile typescale based on a major second typescale with a base of 
+ * 100% as set by the user
+ * https://bit.ly/2VUrOJm
+ */
+$xxl-font-size-mobile: 1.802rem;
+$xl-font-size-mobile: 1.602rem;
+$large-font-size-mobile: 1.424rem;
+$medium-font-size-mobile: 1.266rem;
+$small-medium-font-size-mobile: 1.125rem;
+
+$default-font-size: 1rem; /* 18px */
+$small-font-size: 0.9rem; /* 16px */
+$tiny-text: 0.75rem; /* 13.5px */
+
+/* approx 72ch for base font size and HHGTTG reference */
+$max-line-length-fallback: 45rem;

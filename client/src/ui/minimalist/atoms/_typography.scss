@@ -1,0 +1,101 @@
+@use "../mixins/" as *;
+@use "../vars/" as *;
+
+@font-face {
+  font-display: swap;
+  font-family: Montserrat;
+  font-style: normal;
+  font-weight: bold;
+  src: url("../../../assets/fonts/Montserrat-VF.woff2")
+      format("woff2-variations"),
+    url("../../../assets/fonts/Montserrat-SemiBold.woff2") format("woff2"),
+    url("../../../assets/fonts/Montserrat-SemiBold.woff") format("woff");
+}
+
+@font-face {
+  font-display: swap;
+  font-family: Inter;
+  font-style: normal;
+  font-weight: bold;
+  src: url("../../../assets/fonts/Inter.var.woff2") format("woff2-variations"),
+    url("../../../assets/fonts/inter-v3-latin-600.woff2") format("woff2"),
+    url("../../../assets/fonts/inter-v3-latin-600.woff") format("woff");
+}
+
+@font-face {
+  font-display: swap;
+  font-family: Inter;
+  font-style: normal;
+  font-weight: normal;
+  src: url("../../../assets/fonts/Inter.var.woff2") format("woff2-variations"),
+    url("../../../assets/fonts/inter-v3-latin-regular.woff2") format("woff2"),
+    url("../../../assets/fonts/inter-v3-latin-regular.woff") format("woff");
+}
+
+h1,
+h2,
+h3,
+h4,
+h5 {
+  @include headings-common-base();
+}
+
+h3,
+h4,
+h5 {
+  font-weight: normal;
+}
+
+h4,
+h5 {
+  line-height: $heading-line-height;
+}
+
+h1 {
+  @include heading-1();
+}
+
+h2 {
+  @include heading-2();
+}
+
+h3 {
+  @include heading-3();
+}
+
+h4 {
+  @include heading-4();
+}
+
+h5 {
+  @include heading-5();
+}
+
+p {
+  margin-bottom: $content-block-margin;
+}
+
+.smaller-text {
+  font-size: $small-font-size;
+}
+
+.tiny-text {
+  font-size: $tiny-text;
+}
+
+.readable-line-length {
+  @include readable-line-length();
+}
+
+/* text links */
+a:link,
+a:visited {
+  color: $link-color;
+  text-decoration: none;
+
+  &:hover,
+  &:focus,
+  &:active {
+    text-decoration: underline;
+  }
+}

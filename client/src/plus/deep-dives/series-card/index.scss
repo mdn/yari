@@ -14,7 +14,6 @@
     border-top: 18px solid theme.$mdn-violet600;
     box-shadow: theme.$card-box-shadow;
     display: block;
-    font-family: theme.$inter-font-family;
     margin-bottom: layout.$base-spacing * 2;
     max-width: 320px;
     padding: layout.$base-spacing;
@@ -30,8 +29,6 @@
     }
 
     h3 {
-      font-family: theme.$inter-font-family;
-      font-weight: 600;
       margin-bottom: layout.$base-spacing;
     }
 

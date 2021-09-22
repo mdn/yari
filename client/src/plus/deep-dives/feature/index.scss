@@ -53,15 +53,10 @@
   }
 
   h1 {
-    font-size: theme.$marketing-feature-h1-font-size;
     margin: 0 0 layout.$base-spacing 0;
 
     @media #{layout.$mq-small-desktop-and-up} {
       font-size: typography.$large-font-size;
-    }
-
-    @media #{layout.$mq-large-desktop-and-up} {
-      font-size: theme.$marketing-feature-h1-font-size;
     }
   }
 
