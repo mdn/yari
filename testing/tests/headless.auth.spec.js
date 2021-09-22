@@ -31,7 +31,9 @@ test.describe("Visiting pages related and requiring authentication", () => {
     await page.waitForLoadState("networkidle");
 
     expect(page.url()).toMatch(testURL("/en-US/docs/Web/Foo"));
-    await expect(page.locator(".auth-container .avatar")).toBeVisible();
+    await expect(
+      page.locator(".auth-container #user-avatar-menu")
+    ).toBeVisible();
 
     await page.click("#user-avatar-menu");
     await page.click(".sign-out-form button[type='submit']");
@@ -48,7 +50,9 @@ test.describe("Visiting pages related and requiring authentication", () => {
     await page.waitForLoadState("networkidle");
 
     expect(page.url()).toMatch(testURL("/en-US/docs/Web/Foo"));
-    await expect(page.locator(".auth-container .avatar")).toBeVisible();
+    await expect(
+      page.locator(".auth-container #user-avatar-menu")
+    ).toBeVisible();
 
     // open up user menu
     await page.click("#user-avatar-menu");
