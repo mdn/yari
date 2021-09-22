@@ -222,7 +222,7 @@ function DisplayData({
                   if (toggleError) {
                     setToggleError(null);
                   }
-                } catch (err) {
+                } catch (err: any) {
                   setToggleError(err);
                 }
               }}
@@ -245,7 +245,7 @@ function DisplayData({
                 if (toggleError) {
                   setToggleError(null);
                 }
-              } catch (err) {
+              } catch (err: any) {
                 setToggleError(err);
               }
             }}

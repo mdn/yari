@@ -25,7 +25,7 @@ export default function DocumentCreate() {
       }
       // Hack! We do a full-page transition so that the search index refreshes itself
       window.location.href = `/${data.metadata.locale}/docs/${data.metadata.slug}`;
-    } catch (err) {
+    } catch (err: any) {
       setSavingError(err);
     }
   }

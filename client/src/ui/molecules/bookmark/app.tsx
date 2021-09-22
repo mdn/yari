@@ -119,7 +119,7 @@ export default function App({ doc }: { doc: Doc }) {
             }
             mutate(apiURL);
             return true;
-          } catch (err) {
+          } catch (err: any) {
             setToggleError(err);
             return false;
           } finally {

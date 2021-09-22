@@ -178,7 +178,7 @@ export function Survey({
             try {
               await submitSurvey();
               setPage("success");
-            } catch (error) {
+            } catch (error: any) {
               setSurveySubmissionError(error);
             } finally {
               setSubmitting(false);

@@ -363,7 +363,7 @@ function FixableFlawsAction({
         throw new Error(`${response.status} on ${response.url}`);
       }
       setFixed(true);
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error trying to fix fixable flaws");
 
       setFixingError(error);
