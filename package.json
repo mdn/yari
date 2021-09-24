@@ -161,7 +161,7 @@
     "husky": "^6.0.0",
     "ignore-loader": "^0.1.2",
     "jest-junit-reporter": "^1.1.0",
-    "jest-puppeteer": "5.0.4",
+    "jest-puppeteer": "6.0.0",
     "jsdom": "^17.0.0",
     "linaria": "^2.1.0",
     "node-dev": "7.0.0",
