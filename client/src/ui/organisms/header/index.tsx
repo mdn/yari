@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 
 import Login from "../../molecules/login";
 import { Logo } from "../../atoms/logo";
@@ -52,7 +52,13 @@ export function Header() {
   }
 
   const [isProgressBarVisible, setProgressBarVisible] = useState(false);
-  window.addEventListener("beforeunload", () => setProgressBarVisible(true));
+  useEffect(
+    () =>
+      window.addEventListener("beforeunload", () =>
+        setProgressBarVisible(true)
+      ),
+    []
+  );
 
   return (
     <header className="page-header">
