@@ -51,8 +51,16 @@ export function Header() {
     return false;
   }
 
+  const [isProgressBarVisible, setProgressBarVisible] = useState(false);
+  window.addEventListener("beforeunload", () => setProgressBarVisible(true));
+
   return (
     <header className="page-header">
+      <div className={isProgressBarVisible ? "" : "hide"} id="progress-bar">
+        <span className="progress-bar-wrapper" role="progressbar">
+          <span className="progress-bar-internal"></span>
+        </span>
+      </div>
       <Logo />
       <button
         ref={mainMenuToggleRef}
