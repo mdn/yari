@@ -14,7 +14,7 @@ export function useFocusOnSlash(
     function focusOnSearchMaybe(event) {
       const input = inputRef.current;
       if (
-        event.code === "Slash" &&
+        event.key === "/" &&
         !["TEXTAREA", "INPUT"].includes(event.target.tagName)
       ) {
         if (input && document.activeElement !== input) {
