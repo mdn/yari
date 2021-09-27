@@ -1,7 +1,7 @@
 import * as React from "react";
 import { useEffect, useRef, useState } from "react";
 
-import { css } from "linaria";
+import { styled } from "linaria/react";
 import { lightModeTextSecondary } from "../../vars/js/variables";
 
 import { useLocale } from "../../../hooks";
@@ -210,7 +210,7 @@ export default function MainMenu({
     },
   ];
 
-  const mdnPlusLink = css`
+  const MDNPlusLink = styled.a`
     display: block;
     font-weight: normal;
     padding: 12px;
@@ -286,9 +286,9 @@ export default function MainMenu({
           </li>
         ))}
         <li>
-          <a href={`/${locale}/plus`} className={mdnPlusLink} role="menuitem">
+          <MDNPlusLink href={`/${locale}/plus`} role="menuitem">
             MDN Plus
-          </a>
+          </MDNPlusLink>
         </li>
       </ul>
     </nav>
