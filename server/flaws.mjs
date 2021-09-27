@@ -4,7 +4,7 @@ import path from "path";
 import glob from "glob";
 
 import { getPopularities } from "../content/index.js";
-import { FLAW_LEVELS, buildOptions } from "../build/index.mjs";
+import { FLAW_LEVELS, options as buildOptions } from "../build/index.mjs";
 
 import { BUILD_OUT_ROOT } from "../build/constants.js";
 
