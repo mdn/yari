@@ -254,7 +254,7 @@ export async function fixFixableFlaws(doc, options, document) {
         // Before writing to disk, run it through the same imagemin
         // compression we do in the filecheck CLI.
         const compressedImageBuffer = await imagemin.buffer(imageBuffer, {
-          plugins: [getImageminPlugin(url.pathname)],
+          plugins: [getImageminPlugin(url.pathname, fileType)],
         });
         if (compressedImageBuffer.length < imageBuffer.length) {
           console.log(
@@ -347,8 +347,14 @@ export async function fixFixableFlaws(doc, options, document) {
   }
 }
 
-function getImageminPlugin(fileName) {
-  const extension = path.extname(fileName).toLowerCase();
+function getImageminPlugin(fileName, fileType) {
+  let extension = path.extname(fileName).toLowerCase();
+  if (extension === "") {
+    // for githubusercontent the filename will be something like
+    // /u/94519 so, extension will be an empty string. Use
+    // fileType.ext instead.
+    extension = `.${fileType.ext}`;
+  }
   if (extension === ".jpg" || extension === ".jpeg") {
     return imageminMozjpeg();
   }
@@ -361,7 +367,7 @@ function getImageminPlugin(fileName) {
   if (extension === ".svg") {
     return imageminSvgo();
   }
-  throw new Error(`No imagemin plugin for ${fileName}`);
+  throw new Error(`No imagemin plugin for ${extension} or ${fileType.ext}`);
 }
 
 export { injectSectionFlaws };
