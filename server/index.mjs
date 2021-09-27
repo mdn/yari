@@ -34,7 +34,7 @@ import { searchIndexRoute } from "./search-index.mjs";
 
 import flawsRoute from "./flaws.mjs";
 
-import { translationsRoute } from "./translations.js";
+import { translationsRoute } from "./translations.mjs";
 
 import middleware from "./middlewares.js";
 const { staticMiddlewares, originRequestMiddleware } = middleware;
