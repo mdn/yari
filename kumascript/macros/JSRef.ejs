@@ -10,8 +10,8 @@
 //  $2 - Related objects to display (comma separated) – OBSOLETE
 
 // Strings
-var commonl10n = JSON.parse(await template('L10n:Common'));
-var jsl10n = JSON.parse(await template('L10n:JavaScript'));
+var commonl10n = web.getJSONData('L10n-Common');
+var jsl10n = web.getJSONData('L10n-JavaScript');
 
 var text = {
     'stdlib': mdn.getLocalString(jsl10n, 'stdlib'),
@@ -225,7 +225,7 @@ var len = 0;
 
 // Output
 
-output  = '<section class="Quick_links" id="Quick_Links"><ol>';
+output  = '<section id="Quick_links"><ol>';
 output += '<li><strong><a href="'+slug_stdlib+'">'+text['stdlib']+'</a></strong></li>';
 
     for (object in result) {

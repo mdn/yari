@@ -1,13 +1,26 @@
 /**
  * @prettier
  */
+const path = require("path");
 
 const { assert, itMacro, describeMacro, beforeEachMacro } = require("./utils");
 
+const CONTENT_ROOT = process.env.CONTENT_ROOT;
+if (!CONTENT_ROOT) {
+  throw new Error("These tests assume you point to the real content root.");
+}
 // Basic const
-const SVG_DATA = require("../../macros/SVGData.json");
-const L10N_SVG = require("../../macros/L10n-SVG.json");
-const L10N_COMMON = require("../../macros/L10n-Common.json");
+const SVG_DATA = require(path.resolve(
+  path.join(CONTENT_ROOT, "jsondata", "SVGData.json")
+));
+const L10N_SVG = require(path.resolve(
+  path.join(CONTENT_ROOT, "jsondata", "L10n-SVG.json")
+));
+
+const L10N_COMMON = require(path.resolve(
+  path.join(CONTENT_ROOT, "jsondata", "L10n-Common.json")
+));
+
 const SVG_BASE_SLUG = "docs/Web/SVG";
 
 // UTILITIES

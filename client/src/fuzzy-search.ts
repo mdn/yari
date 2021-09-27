@@ -48,7 +48,7 @@ export class FuzzySearch {
     }
 
     const haystack = new Fzf(docs, {
-      maxResultItems: limit,
+      limit,
       selector: (item: Doc) => item.url,
     });
     // All longer strings, default to using the already initialized `Fzf()` instance.

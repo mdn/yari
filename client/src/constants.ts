@@ -1,10 +1,12 @@
-export const DISABLE_AUTH = JSON.parse(
-  process.env.REACT_APP_DISABLE_AUTH || "false"
+export const DISABLE_AUTH = Boolean(
+  JSON.parse(process.env.REACT_APP_DISABLE_AUTH || "false")
 );
 
-export const CRUD_MODE = JSON.parse(
-  process.env.REACT_APP_CRUD_MODE ||
-    JSON.stringify(process.env.NODE_ENV === "development")
+export const CRUD_MODE = Boolean(
+  JSON.parse(
+    process.env.REACT_APP_CRUD_MODE ||
+      JSON.stringify(process.env.NODE_ENV === "development")
+  )
 );
 
 export const CRUD_MODE_HOSTNAMES = (
@@ -33,11 +35,6 @@ export const VALID_LOCALES = new Set([
   "zh-CN",
   "zh-TW",
 ]);
-
-export const ENABLE_PLUS = JSON.parse(
-  process.env.REACT_APP_ENABLE_PLUS ||
-    JSON.stringify(process.env.NODE_ENV === "development")
-);
 
 export const DEFAULT_GEO_COUNTRY =
   process.env.REACT_APP_DEFAULT_GEO_COUNTRY || "United States";

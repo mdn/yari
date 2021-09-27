@@ -112,7 +112,7 @@ var text = mdn.localStringMap({
   }
 });
 %>
-<section class="Quick_links" id="Quick_Links">
+<section id="Quick_links">
  <ol>
   <li><a href="/<%=locale%>/docs/Web/HTML"><strong><em>HTML</em></strong></a></li>
   <li><strong><%=text['Tutorials']%></strong></li>
@@ -171,7 +171,9 @@ var text = mdn.localStringMap({
   <li class="toggle">
     <details <%=state('Useful_lists')%>>
       <summary><%=text['Useful_lists']%></summary>
-      <li><a href="/<%=locale%>/docs/Web/HTML/Index"><%=text['Index']%></a></li>
+      <ol>
+        <li><a href="/<%=locale%>/docs/Web/HTML/Index"><%=text['Index']%></a></li>
+      </ol>
     </details>
   </li>
   <li class="toggle">

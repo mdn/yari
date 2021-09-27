@@ -1,5 +1,6 @@
 const fs = require("fs");
 const path = require("path");
+const util = require("util");
 
 const fm = require("front-matter");
 const glob = require("glob");
@@ -220,7 +221,11 @@ const read = memoize((folderOrFilePath, roots = ROOTS) => {
   }
 
   if (filePath.includes(" ")) {
-    throw new Error("Folder contains whitespace which is not allowed.");
+    throw new Error(
+      `Folder contains whitespace which is not allowed (${util.inspect(
+        filePath
+      )})`
+    );
   }
   if (filePath.includes("\u200b")) {
     throw new Error(

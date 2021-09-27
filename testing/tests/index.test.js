@@ -2,7 +2,6 @@ const fs = require("fs");
 const path = require("path");
 
 const cheerio = require("cheerio");
-const glob = require("glob");
 const sizeOf = require("image-size");
 
 const buildRoot = path.join("client", "build");
@@ -1268,16 +1267,6 @@ test("settings page", () => {
   expect(possibleLocale.native).toBe("English (US)");
 });
 
-test("plus page", () => {
-  const builtFolder = path.join(buildRoot, "en-us", "plus");
-  expect(fs.existsSync(builtFolder)).toBeTruthy();
-  const htmlFile = path.join(builtFolder, "index.html");
-  const html = fs.readFileSync(htmlFile, "utf-8");
-  const $ = cheerio.load(html);
-  expect($("title").text()).toContain("Plus");
-  expect($('meta[name="robots"]').attr("content")).toBe("noindex, nofollow");
-});
-
 test("bcd table extraction followed by h3", () => {
   const builtFolder = path.join(
     buildRoot,
@@ -1456,8 +1445,15 @@ test("/Web/Embeddable should have 3 valid live samples", () => {
   const { doc } = JSON.parse(fs.readFileSync(jsonFile));
   expect(Object.keys(doc.flaws).length).toBe(0);
 
-  const found = glob.sync(path.join(builtFolder, "_sample_.*.html"));
-  expect(found.length).toBe(3);
+  const builtFiles = fs.readdirSync(path.join(builtFolder));
+  expect(
+    builtFiles
+      .filter((f) => f.includes("_sample_."))
+      .map((f) => {
+        const startOffset = "_sample_.".length;
+        return f.substr(startOffset, f.length - startOffset - ".html".length);
+      })
+  ).toEqual(expect.arrayContaining(["colorpicker_tool", "keyboard", "meter"]));
 });
 
 test("headings with HTML should be rendered as HTML", () => {
@@ -1673,6 +1669,38 @@ test("translated content broken links can fall back to en-us", () => {
   expect($("article a.only-in-en-us").length).toBe(2);
   expect($("article a.only-in-en-us").attr("title")).toBe(
     "Currently only available in English (US)"
+  );
+});
+
+test("notecards are correctly transformed by the formatNotecards utility", () => {
+  const builtFolder = path.join(
+    buildRoot,
+    "en-us",
+    "docs",
+    "web",
+    "check_notecards"
+  );
+
+  const jsonFile = path.join(builtFolder, "index.json");
+  const { doc } = JSON.parse(fs.readFileSync(jsonFile));
+  expect(doc.flaws.length).toBeFalsy();
+  expect(doc.title).toBe(
+    "A page representing some edge cases of div.notecard that we might encounter"
+  );
+
+  const htmlFile = path.join(builtFolder, "index.html");
+  const html = fs.readFileSync(htmlFile, "utf-8");
+  const $ = cheerio.load(html);
+
+  expect($("div.notecard h4").length).toBe(0);
+  expect($("div.notecard.note").html()).toBe(
+    "<p><strong>Some heading:</strong> No paragraph here.</p><p>Paragraph 2</p>"
+  );
+  expect($("div.notecard.warning").html()).toBe(
+    "<p><strong>Some heading:</strong> Paragraph 1</p><p>Paragraph 2</p>"
+  );
+  expect($("div.notecard.extra").html()).toBe(
+    "<p><strong>Some heading:</strong> Paragraph 1</p><span>Foo bar</span><p>Paragraph 2</p>"
   );
 });
 

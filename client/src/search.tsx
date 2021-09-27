@@ -27,7 +27,7 @@ type SearchIndex = {
 type ResultItem = {
   title: string;
   url: string;
-  positions: number[];
+  positions: Set<number>;
 };
 
 function useSearchIndex(): readonly [
@@ -42,9 +42,9 @@ function useSearchIndex(): readonly [
   // Default to 'en-US' if you're on the home page without the locale prefix.
   const url = `/${locale || "en-US"}/search-index.json`;
 
-  const { error, data } = useSWR<null | Item[]>(
+  const { error, data } = useSWR<null | Item[], Error | undefined>(
     shouldInitialize ? url : null,
-    async (url) => {
+    async (url: string) => {
       const response = await fetch(url);
       if (!response.ok) {
         throw new Error(await response.text());
@@ -69,7 +69,7 @@ function useSearchIndex(): readonly [
   }, [searchIndex, shouldInitialize, data]);
 
   return useMemo(
-    () => [searchIndex, error, () => setShouldInitialize(true)],
+    () => [searchIndex, error || null, () => setShouldInitialize(true)],
     [searchIndex, error, setShouldInitialize]
   );
 }
@@ -80,7 +80,7 @@ function isFuzzySearchString(str: string) {
   return str.startsWith("/") && !/\s/.test(str);
 }
 
-function HighlightMatch({ title, q }) {
+function HighlightMatch({ title, q }: { title: string; q: string }) {
   // FlexSearch doesn't support finding out which "typo corrections"
   // were done unfortunately.
   // See https://github.com/nextapps-de/flexsearch/issues/99
@@ -111,14 +111,14 @@ function BreadcrumbURI({
   positions,
 }: {
   uri: string;
-  positions: number[];
+  positions?: Set<number>;
 }) {
-  if (positions) {
+  if (positions && positions.size) {
     const chars = uri.split("");
     return (
       <small>
         {chars.map((char, i) => {
-          if (positions.includes(i)) {
+          if (positions.has(i)) {
             return <mark key={i}>{char}</mark>;
           } else {
             return <span key={i}>{char}</span>;
@@ -222,12 +222,13 @@ function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
       }
     } else {
       // Full-Text search
-      const indexResults = searchIndex.flex.search(inputValue, {
+      const indexResults: number[] = searchIndex.flex.search(inputValue, {
         limit,
         suggest: true, // This can give terrible result suggestions
       });
-
-      return indexResults.map((index) => (searchIndex.items || [])[index]);
+      return indexResults.map(
+        (index: number) => (searchIndex.items || [])[index] as ResultItem
+      );
     }
   }, [inputValue, searchIndex, searchIndexError]);
 
@@ -239,7 +240,7 @@ function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
   }, [formAction, inputValue]);
 
   const nothingFoundItem = useMemo(
-    () => ({ url: searchPath, title: "", positions: [] }),
+    () => ({ url: searchPath, title: "", positions: new Set() }),
     [searchPath]
   );
 
@@ -434,7 +435,7 @@ function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
 class SearchErrorBoundary extends React.Component {
   state = { hasError: false };
 
-  static getDerivedStateFromError(error) {
+  static getDerivedStateFromError(error: Error) {
     console.error("There was an error while trying to render search", error);
     return { hasError: true };
   }

@@ -265,6 +265,7 @@ describe("response headers", () => {
     expect(r.headers["x-xss-protection"]).toBeTruthy();
     expect(r.headers["content-security-policy"]).toBeTruthy();
   });
+
   it("should set CSP and other security headers for non-samples (prod)", async () => {
     const r = await get("/en-US/docs/Web/HTTP", {
       origin_domain_name: "mdn-content-prod.s3-website-us-west-2.amazonaws.com",
@@ -275,6 +276,7 @@ describe("response headers", () => {
     expect(r.headers["x-xss-protection"]).toBeTruthy();
     expect(r.headers["content-security-policy"]).toBeTruthy();
   });
+
   it("should not set CSP but other security headers non-HTML", async () => {
     const r = await get("/en-US/docs/Web/HTTP/screenshot.png");
     expect(r.statusCode).toBe(200);
@@ -282,5 +284,21 @@ describe("response headers", () => {
     expect(r.headers["strict-transport-security"]).toBeTruthy();
     expect(r.headers["x-xss-protection"]).toBeTruthy();
     expect(r.headers["content-security-policy"]).toBeFalsy();
+  });
+
+  it("temporaily redirect localized plus URLs", async () => {
+    for (const locale of ["en-US", "fr"]) {
+      for (const slug of [
+        "plus",
+        "plus/",
+        "plus/bookmarks",
+        "plus/deep-dives",
+        "plus/deep-dives/your-browser-support-toolkit",
+      ]) {
+        const r = await get(`/${locale}/${slug}`);
+        expect(r.statusCode).toBe(302);
+        expect(r.headers["location"]).toBe(`/${locale}/`);
+      }
+    }
   });
 });

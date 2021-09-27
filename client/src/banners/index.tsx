@@ -2,7 +2,6 @@ import * as React from "react";
 import { useLocation } from "react-router";
 
 import { useUserData } from "../user-context";
-import { ENABLE_PLUS } from "../constants";
 
 // We may or may not load any active banner. But if there's a small chance
 // that we might, it's best practice to not have to lazy-load the CSS
@@ -113,7 +112,6 @@ export function Banner() {
   // 5. Have you seen a different PLUS_IDvN banner before
   // 6. Is your locale en-US?
   if (
-    ENABLE_PLUS &&
     isPathnameIncluded(PLUS_IDv1, location.pathname) &&
     isGeoLocationIncluded(PLUS_IDv1, userData.geo.country) &&
     isRandomlyIncluded(PLUS_IDv1, 10) &&

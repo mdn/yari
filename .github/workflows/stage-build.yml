@@ -102,7 +102,7 @@ jobs:
           python-version: "3.8"
 
       - name: Install Python poetry
-        uses: snok/install-poetry@v1.1.8
+        uses: snok/install-poetry@v1.2
 
       - name: Install deployer
         run: |
@@ -150,8 +150,14 @@ jobs:
           # This enables the Plus call-to-action banner and the Plus landing page
           REACT_APP_ENABLE_PLUS: true
 
-          # This removes the ability to sign in
-          REACT_APP_DISABLE_AUTH: true
+          # This adds the ability to sign in (stage only for now)
+          REACT_APP_DISABLE_AUTH: false
+
+          # Firefox Accounts and SubPlat settings
+          REACT_APP_FXA_SIGNIN_URL: /users/fxa/login/authenticate/
+          REACT_APP_FXA_SETTINGS_URL: https://accounts.stage.mozaws.net/settings/
+          REACT_APP_MDN_PLUS_SUBSCRIBE_URL: https://accounts.stage.mozaws.net/subscriptions/products/prod_Jtbg9tyGyLRuB0
+          REACT_APP_MDN_PLUS_MONTHLY_PLAN: price_1JFoTYKb9q6OnNsLalexa03p
 
         run: |
 
@@ -171,8 +177,15 @@ jobs:
           # get in the default GitHub hosting Linux runners.
           # See https://docs.github.com/en/actions/using-github-hosted-runners/about-github-hosted-runners#supported-runners-and-hardware-resources
           yarn build --locale     en-us --locale     ja --locale     fr &
+          build1=$!
           yarn build --not-locale en-us --not-locale ja --not-locale fr &
-          wait
+          build2=$!
+
+          # You must explicitly specify the job you're waiting-on to ensure
+          # that the exit status of the wait command reflects the exit status
+          # of the job it's waiting-on.
+          wait $build1
+          wait $build2
 
           du -sh client/build
 

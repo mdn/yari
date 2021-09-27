@@ -115,6 +115,8 @@ const CSP_DIRECTIVES = {
     // Avatars
     "*.githubusercontent.com",
     "*.googleusercontent.com",
+    "profile.stage.mozaws.net",
+    "profile.accounts.firefox.com",
 
     "lux.speedcurve.com",
 

@@ -56,7 +56,9 @@ function LoginInner() {
         className="avatar"
         alt={userData.username}
       />
-      <span className="avatar-username">{userData.username}</span>
+      <span className="avatar-username visually-hidden">
+        {userData.username}
+      </span>
     </>
   );
 
