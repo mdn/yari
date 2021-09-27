@@ -29,6 +29,7 @@ export default function HeaderAuthContainer() {
       align-items: center;
       display: flex;
       gap: 12px;
+      justify-content: flex-end;
     }
 
     @media ${mqLargeDesktopAndUp} {
