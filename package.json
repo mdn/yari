@@ -157,7 +157,7 @@
     "foreman": "3.0.1",
     "fzf": "0.4.1",
     "history": "5.0.1",
-    "html-validate": "5.2.1",
+    "html-validate": "6.0.2",
     "husky": "^6.0.0",
     "ignore-loader": "^0.1.2",
     "jest-junit-reporter": "^1.1.0",
