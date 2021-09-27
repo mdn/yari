@@ -1,39 +1,43 @@
-const fs = require("fs");
-const path = require("path");
+import fs from "fs";
+import path from "path";
+import { fileURLToPath } from "node:url";
 
-const program = require("@caporal/core").default;
-const chalk = require("chalk");
-const { prompt } = require("inquirer");
-const openEditor = require("open-editor");
-const open = require("open");
-const {
-  syncAllTranslatedContent,
-} = require("../build/sync-translated-content");
-const log = require("loglevel");
-const cheerio = require("cheerio");
+import program from "@caporal/core";
+import chalk from "chalk";
+import inquirer from "inquirer";
 
-const { DEFAULT_LOCALE, VALID_LOCALES } = require("../libs/constants");
-const {
+import openEditor from "open-editor";
+import open from "open";
+import log from "loglevel";
+import cheerio from "cheerio";
+
+import { syncAllTranslatedContent } from "../build/sync-translated-content.js";
+
+const { prompt } = inquirer;
+
+import { DEFAULT_LOCALE, VALID_LOCALES } from "../libs/constants/index.js";
+import {
   CONTENT_ROOT,
   CONTENT_TRANSLATED_ROOT,
   Redirect,
   Document,
   buildURL,
   getRoot,
-} = require("../content");
-const { buildDocument, gatherGitHistory, buildSPAs } = require("../build");
-const {
+} from "../content/index.js";
+import { buildDocument, gatherGitHistory, buildSPAs } from "../build/index.mjs";
+import {
   ALWAYS_ALLOW_ROBOTS,
   BUILD_OUT_ROOT,
   GOOGLE_ANALYTICS_ACCOUNT,
   GOOGLE_ANALYTICS_DEBUG,
-} = require("../build/constants");
-const { runMakePopularitiesFile } = require("./popularities");
-const { runOptimizeClientBuild } = require("./optimize-client-build");
-const { runBuildRobotsTxt } = require("./build-robots-txt");
-const kumascript = require("../kumascript");
+} from "../build/constants.js";
+import { runMakePopularitiesFile } from "./popularities.js";
+import { runOptimizeClientBuild } from "./optimize-client-build.js";
+import { runBuildRobotsTxt } from "./build-robots-txt.js";
+import kumascript from "../kumascript/index.js";
 
 const PORT = parseInt(process.env.SERVER_PORT || "5000");
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 // The Google Analytics pageviews CSV file parsed, sorted (most pageviews
 // first), and sliced to this number of URIs that goes into the JSON file.
@@ -54,7 +58,7 @@ function tryOrExit(f) {
   };
 }
 
-program
+program.default
   .bin("yarn tool")
   .name("tool")
   .version("0.0.0")
@@ -904,4 +908,4 @@ if (Mozilla && !Mozilla.dntEnabled()) {
     })
   );
 
-program.run();
+program.default.run();

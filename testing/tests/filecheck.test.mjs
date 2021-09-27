@@ -4,9 +4,7 @@ import path from "path";
 
 import { checkFile } from "../../filecheck/checker.mjs";
 
-const __dirname = path.dirname(
-  fileURLToPath(path.dirname(import.meta.url)))
-);
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const SAMPLES_DIRECTORY = path.join(
   __dirname,
   "filechecker",
