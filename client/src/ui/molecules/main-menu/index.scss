@@ -63,7 +63,6 @@ ul.main-menu {
         background-color: $dropdown-item-background-color;
         color: #fff;
         text-decoration: none;
-        outline: none;
       }
 
       @media #{$mq-tablet-and-up} {
@@ -104,25 +103,6 @@ ul.main-menu {
       padding: ($base-unit * 2);
       padding-left: 0;
       width: unset;
-    }
-
-    &::before {
-      background: transparent url("~@mdn/dinocons/arrows/triangle.svg") 0 0
-        no-repeat;
-      background-size: ($base-unit * 2);
-      content: "";
-      display: inline-block;
-      font-size: $tiny-text;
-      height: ($base-unit * 2);
-      margin-right: $base-unit;
-      transform: rotate(90deg);
-      width: ($base-unit * 2);
-    }
-
-    &[aria-expanded="true"] {
-      &::before {
-        transform: rotate(180deg);
-      }
     }
   }
 

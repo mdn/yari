@@ -1,6 +1,9 @@
 import * as React from "react";
 import { useEffect, useRef, useState } from "react";
 
+import { styled } from "linaria/react";
+import { lightModeTextSecondary } from "../../vars/js/variables";
+
 import { useLocale } from "../../../hooks";
 
 import "./index.scss";
@@ -130,8 +133,8 @@ export default function MainMenu({
 
   const menus = [
     {
-      label: "Technologies",
-      id: "technologies",
+      label: "References",
+      id: "references",
       items: [
         {
           url: `/${locale}/docs/Web`,
@@ -172,8 +175,8 @@ export default function MainMenu({
       ],
     },
     {
-      label: "References & Guides",
-      id: "references-guides",
+      label: "Guides",
+      id: "guides",
       items: [
         {
           url: `/${locale}/docs/Learn`,
@@ -205,41 +208,24 @@ export default function MainMenu({
         },
       ],
     },
-    {
-      label: "Feedback",
-      id: "feedback",
-      items: [
-        {
-          url: `/${locale}/docs/MDN/Contribute/Feedback`,
-          label: "Send Feedback",
-        },
-        {
-          url: `/${locale}/docs/MDN/Contribute`,
-          label: "Contribute to MDN",
-        },
-        {
-          label: "Report a content issue",
-          external: true,
-          url: "https://github.com/mdn/content/issues/new",
-          onClick: (event) => {
-            const onGithubElement = document.querySelector("#on-github");
-            if (onGithubElement) {
-              event.preventDefault();
-              if (toggleMainMenu) {
-                toggleMainMenu();
-              }
-              onGithubElement.scrollIntoView({ behavior: "smooth" });
-            }
-          },
-        },
-        {
-          label: "Report a platform issue",
-          external: true,
-          url: "https://github.com/mdn/yari/issues/new",
-        },
-      ],
-    },
   ];
+
+  const MDNPlusLink = styled.a`
+    display: block;
+    font-weight: normal;
+    padding: 12px;
+    padding-left: 0;
+
+    &:link,
+    &:visited {
+      color: ${lightModeTextSecondary};
+    }
+
+    &:hover,
+    &:focus {
+      text-decoration: none;
+    }
+  `;
 
   return (
     <nav className="main-nav" aria-label="Main menu">
@@ -249,7 +235,9 @@ export default function MainMenu({
             key={menuEntry.id}
             className="top-level-entry-container"
             onKeyDown={(event) => {
-              onSubmenuKeydown(event, menuEntry.id, menuEntry.items.length);
+              if (menuEntry.items) {
+                onSubmenuKeydown(event, menuEntry.id, menuEntry.items.length);
+              }
             }}
           >
             <button
@@ -276,47 +264,32 @@ export default function MainMenu({
               role="menu"
               aria-labelledby={`${menuEntry.id}-button`}
             >
-              {menuEntry.items.map((item, index) => (
-                <li
-                  key={item.url}
-                  role="none"
-                  onBlur={() => onSubmenuItemBlur(menuEntry.id, index)}
-                  onMouseOver={() => setFocusedSubmenuItemIndex(index)}
-                >
-                  {item.external ? (
-                    <a
-                      tabIndex={index === focusedSubmenuItemIndex ? 0 : -1}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      href={item.url}
-                      onClick={(event) => {
-                        if (item.onClick) {
-                          item.onClick(event);
-                        }
-                      }}
-                      role="menuitem"
-                    >
-                      {item.label} &#x1f310;
-                    </a>
-                  ) : (
+              {menuEntry.items &&
+                menuEntry.items.map((item, index) => (
+                  <li
+                    key={item.url}
+                    role="none"
+                    onBlur={() => onSubmenuItemBlur(menuEntry.id, index)}
+                    onMouseOver={() => setFocusedSubmenuItemIndex(index)}
+                    onFocus={() => setFocusedSubmenuItemIndex(index)}
+                  >
                     <a
                       tabIndex={index === focusedSubmenuItemIndex ? 0 : -1}
                       href={item.url}
-                      onClick={(event) => {
-                        if (item.onClick) {
-                          item.onClick(event);
-                        }
-                      }}
                       role="menuitem"
                     >
                       {item.label}
                     </a>
-                  )}
-                </li>
-              ))}
+                  </li>
+                ))}
             </ul>
           </li>
         ))}
+        <li>
+          <MDNPlusLink href={`/${locale}/plus`} role="menuitem">
+            MDN Plus
+          </MDNPlusLink>
+        </li>
       </ul>
     </nav>
   );

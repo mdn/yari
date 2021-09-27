@@ -86,16 +86,3 @@ p {
 .readable-line-length {
   @include readable-line-length();
 }
-
-/* text links */
-a:link,
-a:visited {
-  color: $link-color;
-  text-decoration: none;
-
-  &:hover,
-  &:focus,
-  &:active {
-    text-decoration: underline;
-  }
-}
