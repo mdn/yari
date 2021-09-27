@@ -3,7 +3,7 @@ import path from "path";
 import program from "@caporal/core";
 
 import { runChecker } from "./checker.mjs";
-import { MAX_COMPRESSION_DIFFERENCE_PERCENTAGE } from "./constants.js";
+import { MAX_COMPRESSION_DIFFERENCE_PERCENTAGE } from "./constants.mjs";
 
 program.default
   .version("0.0.0")
@@ -28,6 +28,7 @@ program.default
     }
     return runChecker(allFilePaths, options).catch((error) => {
       console.error(error);
+      // eslint-disable-next-line no-process-exit
       process.exit(1);
     });
   });

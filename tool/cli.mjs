@@ -1,5 +1,6 @@
 import fs from "fs";
 import path from "path";
+// eslint-disable-next-line node/no-missing-import
 import { fileURLToPath } from "node:url";
 
 import program from "@caporal/core";

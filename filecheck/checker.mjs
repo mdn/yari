@@ -17,7 +17,7 @@ import {
   MAX_FILE_SIZE,
   VALID_MIME_TYPES,
   MAX_COMPRESSION_DIFFERENCE_PERCENTAGE,
-} from "./constants.js";
+} from "./constants.mjs";
 
 function formatSize(bytes) {
   if (bytes > 1024 * 1024) {
