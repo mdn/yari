@@ -361,7 +361,7 @@ function getImageminPlugin(fileName) {
   if (extension === ".svg") {
     return imageminSvgo();
   }
-  throw new Error(`No imagemin plugin for ${extension}`);
+  throw new Error(`No imagemin plugin for ${fileName}`);
 }
 
 export { injectSectionFlaws };
