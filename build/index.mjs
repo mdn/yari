@@ -28,9 +28,13 @@ import {
 } from "./flaws/index.mjs";
 import { normalizeBCDURLs, extractBCDData } from "./bcd-urls.js";
 import { checkImageReferences, checkImageWidths } from "./check-images.js";
+import formatNotecards from "./format-notecards.js";
 import { getPageTitle } from "./page-title.js";
 import { syntaxHighlight } from "./syntax-highlight.js";
-import options from "./build-options.js";
+
+import pkgBuildOptions from "./build-options.js";
+const buildOptions = pkgBuildOptions;
+
 import { gather as gatherGitHistory } from "./git-history.js";
 import { buildSPAs } from "./spas.js";
 import { renderCache as renderKumascriptCache } from "../kumascript/index.js";
@@ -39,8 +43,6 @@ import { createRequire } from "module";
 const require = createRequire(import.meta.url);
 const LANGUAGES_RAW = require("../content/languages.json");
 const { safeDecodeURIComponent } = require("../kumascript/src/api/util");
-
-const { options: buildOptions } = options;
 
 const LANGUAGES = new Map(
   Object.entries(LANGUAGES_RAW).map(([locale, data]) => {
@@ -667,9 +669,10 @@ function renderContributorsTxt(wikiContributorNames = null, githubURL = null) {
   return txt;
 }
 
+export const options = buildOptions;
+
 export {
   FLAW_LEVELS,
-  buildOptions,
   buildDocument,
   buildLiveSamplePageFromURL,
   renderContributorsTxt,

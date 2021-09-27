@@ -1,28 +1,31 @@
-const fs = require("fs");
-const path = require("path");
-const zlib = require("zlib");
+import fs from "fs";
+import path from "path";
+import zlib from "zlib";
 
-const chalk = require("chalk");
-const cliProgress = require("cli-progress");
-const program = require("@caporal/core").default;
-const { prompt } = require("inquirer");
+import chalk from "chalk";
+import cliProgress from "cli-progress";
+import program from "@caporal/core";
+import inquirer from "inquirer";
+const { prompt } = inquirer;
 
-const {
+import {
   Document,
   slugToFolder,
   translationsOf,
   CONTENT_ROOT,
   CONTENT_TRANSLATED_ROOT,
-} = require("../content");
-const { VALID_LOCALES } = require("../libs/constants");
-// eslint-disable-next-line node/no-missing-require
-const { renderHTML } = require("../ssr/dist/main");
-const options = require("./build-options");
-const { buildDocument, renderContributorsTxt } = require("./index");
-const SearchIndex = require("./search-index");
-const { BUILD_OUT_ROOT } = require("./constants");
-const { makeSitemapXML, makeSitemapIndexXML } = require("./sitemaps");
-const { humanFileSize } = require("./utils");
+} from "../content/index.js";
+import { VALID_LOCALES } from "../libs/constants/index.js";
+
+import ssr from "../ssr/dist/main.js";
+const { renderHTML } = ssr;
+
+import * as options from "./build-options.js";
+import { buildDocument, renderContributorsTxt } from "./index.mjs";
+import SearchIndex from "./search-index.js";
+import { BUILD_OUT_ROOT } from "./constants.js";
+import { makeSitemapXML, makeSitemapIndexXML } from "./sitemaps.js";
+import { humanFileSize } from "./utils.js";
 
 async function buildDocumentInteractive(
   documentPath,
@@ -274,7 +277,7 @@ function formatTotalFlaws(flawsCountMap, header = "Total_Flaws_Count") {
   return out.join("\n");
 }
 
-program
+program.default
   .name("build")
   .option("-i, --interactive", "Ask what to do when encountering flaws", {
     default: false,
@@ -383,4 +386,4 @@ program
     }
   });
 
-program.run();
+program.default.run();

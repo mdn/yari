@@ -31,4 +31,4 @@ function formatNotecards($) {
   });
 }
 
-module.exports = { formatNotecards };
+module.exports = formatNotecards;
