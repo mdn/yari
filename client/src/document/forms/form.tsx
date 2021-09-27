@@ -12,7 +12,7 @@ type DocumentFormData = {
 
 // Same as DocumentFormData but metadata also includes the locale
 export type DocumentOutData = DocumentFormData & {
-  metadata: DocumentFormData["metadata"] & { locale: string };
+  metadata: DocumentFormData["metadata"] & { locale: string | undefined };
 };
 
 export function DocumentForm({
