@@ -1,4 +1,7 @@
 @use "sass:math";
+@use "sass:map";
+@use "../../theme/index" as theme;
+@use "../../theme/themes/_color-map-light-mode" as light-mode-color-map;
 
 @import "~@mdn/minimalist/sass/vars/mdn-web-docs-palette";
 @import "~@mdn/minimalist/sass/vars/layout";
@@ -7,12 +10,6 @@
 
 .header-search {
   background-color: $white;
-
-  @media #{$mq-tablet-and-up} {
-    height: 40px;
-    min-width: 80px;
-    width: inherit;
-  }
 
   .search-widget {
     margin: $base-spacing 0;
@@ -30,11 +27,18 @@
   }
 
   input.search-input-field {
-    border: 2px solid $text-color;
+    // make webkit play nice with search input types
+    -webkit-appearance: none; /* stylelint-disable-line property-no-vendor-prefix */
+    border: 1px solid map.get(light-mode-color-map.$colors, border-primary);
+    border-radius: theme.$default-border-radius;
     color: $text-color;
     min-width: 60px;
     padding: $base-unit ($base-unit * 2);
     width: 100%;
+
+    &:focus {
+      outline: map.get(light-mode-color-map.$colors, border-primary);
+    }
   }
 
   .server-error {
@@ -105,5 +109,31 @@
     div.searchindex-error {
       color: $mdn-red700;
     }
+  }
+}
+
+.search-form {
+  position: relative;
+}
+
+.search-button {
+  background: $white url("~@mdn/dinocons/general/search.svg") center center
+    no-repeat;
+  background-size: 16px;
+  height: 16px;
+  padding: 18px;
+  position: absolute;
+  right: 1px;
+  top: 1px;
+  width: 16px;
+
+  &:hover,
+  &:focus,
+  &:active {
+    background-color: map.get(
+      light-mode-color-map.$colors,
+      button-secondary-hover
+    );
+    outline: theme.$white;
   }
 }

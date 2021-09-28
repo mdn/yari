@@ -1,0 +1,8 @@
+{
+  "spacing": {
+    "base": {
+      "value": "8px",
+      "group": "spacing"
+    }
+  }
+}
