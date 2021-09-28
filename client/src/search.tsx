@@ -8,7 +8,7 @@ import { Doc, FuzzySearch } from "./fuzzy-search";
 import { preload, preloadSupported } from "./document/preloading";
 
 import { useLocale } from "./hooks";
-import { getPlaceholder, SearchProps, useFocusOnSlash } from "./search-utils";
+import { SearchProps, useFocusOnSlash } from "./search-utils";
 
 const PRELOAD_WAIT_MS = 500;
 const SHOW_INDEXING_AFTER_MS = 500;
@@ -389,7 +389,7 @@ function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
             : "search-input-field",
           id: "main-q",
           name: "q",
-          placeholder: getPlaceholder(isFocused),
+          placeholder: "Search MDN",
           onMouseOver: initializeSearchIndex,
           onFocus: () => {
             onChangeIsFocused(true);

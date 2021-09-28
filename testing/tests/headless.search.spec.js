@@ -98,19 +98,4 @@ test.describe("Autocomplete search", () => {
     await page.waitForSelector("#nav-main-search"); // autocomplete search form
     expect(await page.isVisible("text=No document titles found")).toBeTruthy();
   });
-
-  test("input placeholder changes when focused", async ({ page }) => {
-    await page.goto(testURL("/"));
-
-    // this will show the search input
-    await page.click(SEARCH_TOGGLE_SELECTOR);
-
-    expect(await page.getAttribute(SEARCH_SELECTOR, "placeholder")).toMatch(
-      /Site search/
-    );
-    await page.focus(SEARCH_SELECTOR);
-    expect(await page.getAttribute(SEARCH_SELECTOR, "placeholder")).toMatch(
-      /Go ahead/
-    );
-  });
 });
