@@ -1,7 +1,8 @@
 @use "sass:math";
+@use "../../vars/sass/variables" as style-dictionary;
 @use "../color-palette/index" as palette;
 
-$default-border-radius: 12px;
+$default-border-radius: style-dictionary.$token-border-default-radius;
 $component-border-radius: math.div($default-border-radius, 3);
 
 $standard-light-border: 1px solid palette.$mdn-light-grey300;
