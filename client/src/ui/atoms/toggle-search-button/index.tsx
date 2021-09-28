@@ -12,7 +12,11 @@ const ToggleSeachButton: React.FC<{
     width: 16px;
   `;
   return (
-    <ToggleSearch className="ghost-button" onClick={onClick}>
+    <ToggleSearch
+      id="header-toggle-search"
+      className="ghost-button"
+      onClick={onClick}
+    >
       <span className="visually-hidden">Show search input</span>
     </ToggleSearch>
   );

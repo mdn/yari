@@ -5,6 +5,7 @@ function testURL(pathname = "/") {
 }
 
 test.describe("Autocomplete search", () => {
+  const SEARCH_TOGGLE_SELECTOR = "#header-toggle-search";
   const SEARCH_SELECTOR = 'form input[type="search"]';
 
   test("find Foo page by title search", async ({ page }) => {
@@ -17,6 +18,9 @@ test.describe("Autocomplete search", () => {
     expect(await page.isVisible("text=<foo>: A test tag")).toBeTruthy();
 
     await page.goto(testURL("/"));
+
+    // this will show the search input
+    await page.click(SEARCH_TOGGLE_SELECTOR);
 
     // This will activate the fancy autocomplete search and it should start
     // a download of the `/en-US/search-index.json` too.
@@ -37,6 +41,9 @@ test.describe("Autocomplete search", () => {
   test("find nothing by title search", async ({ page }) => {
     await page.goto(testURL("/"));
 
+    // this will show the search input
+    await page.click(SEARCH_TOGGLE_SELECTOR);
+
     // This will activate the fancy autocomplete search and it should start
     // a download of the `/en-US/search-index.json` too.
     await page.focus(SEARCH_SELECTOR);
@@ -51,6 +58,9 @@ test.describe("Autocomplete search", () => {
 
   test("find Foo page by fuzzy-search", async ({ page }) => {
     await page.goto(testURL("/"));
+
+    // this will show the search input
+    await page.click(SEARCH_TOGGLE_SELECTOR);
 
     // This will activate the fancy autocomplete search and it should start
     // a download of the `/en-US/search-index.json` too.
@@ -75,6 +85,9 @@ test.describe("Autocomplete search", () => {
   test("find nothing by fuzzy-search", async ({ page }) => {
     await page.goto(testURL("/"));
 
+    // this will show the search input
+    await page.click(SEARCH_TOGGLE_SELECTOR);
+
     // This will activate the fancy autocomplete search and it should start
     // a download of the `/en-US/search-index.json` too.
     await page.focus(SEARCH_SELECTOR);
@@ -88,6 +101,10 @@ test.describe("Autocomplete search", () => {
 
   test("input placeholder changes when focused", async ({ page }) => {
     await page.goto(testURL("/"));
+
+    // this will show the search input
+    await page.click(SEARCH_TOGGLE_SELECTOR);
+
     expect(await page.getAttribute(SEARCH_SELECTOR, "placeholder")).toMatch(
       /Site search/
     );
