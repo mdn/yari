@@ -1,16 +1,44 @@
-import * as React from "react";
+import { useLocation } from "react-router-dom";
+import { styled } from "linaria/react";
 
 import { useLocale } from "../../../hooks";
-import { ReactComponent as LogoSVG } from "../../../assets/logo.svg";
 
-import "./index.scss";
+import { mqTabletAndUp, mqLargeDesktopAndUp } from "../../vars/js/variables";
 
 export function Logo({ mode }: { mode?: string }) {
   const locale = useLocale();
+  const location = useLocation();
+
+  let DocsHeaderLogo = styled.a`
+    background: transparent url("../../../assets/mdn-docs-logo.svg") center
+      center no-repeat;
+    background-size: 170px auto;
+    display: block;
+    height: 55px;
+    width: 170px;
+
+    @media ${mqTabletAndUp} {
+      background-size: 200px auto;
+      height: 65px;
+      width: 200px;
+    }
+
+    @media ${mqLargeDesktopAndUp} {
+      background-size: contain;
+      flex-basis: 200px;
+    }
+  `;
+
+  const PlusHeaderLogo = styled(DocsHeaderLogo)`
+    background-image: url("../../../assets/mdn-plus-logo.svg");
+  `;
+
+  const Logo =
+    location.pathname.indexOf("/plus") > -1 ? PlusHeaderLogo : DocsHeaderLogo;
 
   return (
-    <a href={`/${locale}/`} className="logo" aria-label="MDN Web Docs">
-      <LogoSVG fill={mode === "dark" ? "#fff" : undefined} />
-    </a>
+    <Logo href={`/${locale}/`}>
+      <span className="visually-hidden">MDN Web Docs</span>
+    </Logo>
   );
 }
