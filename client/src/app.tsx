@@ -54,8 +54,14 @@ function Layout({ pageType, children }) {
   );
 }
 
-function StandardLayout({ children }) {
-  return <Layout pageType="standard-page">{children}</Layout>;
+function StandardLayout({
+  extraClasses,
+  children,
+}: {
+  extraClasses?: string;
+  children: React.ReactNode;
+}) {
+  return <Layout pageType={`standard-page ${extraClasses}`}>{children}</Layout>;
 }
 function DocumentLayout({ children }) {
   return <Layout pageType="document-page">{children}</Layout>;
@@ -233,7 +239,7 @@ export function App(appProps) {
               <Route
                 path="/plus/*"
                 element={
-                  <StandardLayout>
+                  <StandardLayout extraClasses="plus">
                     <Plus {...appProps} />
                   </StandardLayout>
                 }
@@ -243,7 +249,7 @@ export function App(appProps) {
               <Route
                 path="/plus/deep-dives"
                 element={
-                  <StandardLayout>
+                  <StandardLayout extraClasses="plus">
                     <DeepDivesOverview {...appProps} />
                   </StandardLayout>
                 }
@@ -253,7 +259,7 @@ export function App(appProps) {
               <Route
                 path="/plus/deep-dives/*"
                 element={
-                  <StandardLayout>
+                  <StandardLayout extraClasses="plus">
                     <DeepDives {...appProps} />
                   </StandardLayout>
                 }
