@@ -26,7 +26,7 @@
     background-image: url("~@mdn/dinocons/navigation/menu-close.svg");
   }
 
-  @media #{$mq-tablet-and-up} {
+  @media #{$mq-large-desktop-and-up} {
     display: none;
   }
 }
@@ -38,14 +38,9 @@
   position: relative;
   width: 100%;
 
-  @media #{$mq-tablet-and-up} {
-    display: flex;
-    flex-flow: column;
-    padding-bottom: math.div($base-spacing, 2);
-  }
-
   @media #{$mq-large-desktop-and-up} {
-    flex-flow: row;
+    display: flex;
+    padding-bottom: math.div($base-spacing, 2);
   }
 }
 
@@ -59,13 +54,13 @@
   width: 100%;
   z-index: $bring-to-front;
 
-  @media #{$mq-tablet-and-up} {
+  @media #{$mq-large-desktop-and-up} {
     align-items: center;
     display: flex;
     gap: vars.$token-spacing-base * 2;
     left: inherit;
     padding: 0;
-    position: relative;
+    position: initial;
     top: inherit;
     z-index: inherit;
 

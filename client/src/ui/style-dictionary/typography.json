@@ -1,0 +1,88 @@
+{
+  "typography": {
+    "base-font-size": {
+      "value": "100%"
+    },
+    "heading-line-height": {
+      "value": "1.3"
+    },
+    "heading-display-font-size": {
+      "value": "3.052rem"
+    },
+    "heading-extra-large-font-size": {
+      "value": "2.441rem"
+    },
+    "heading-large-font-size": {
+      "value": "1.953rem"
+    },
+    "heading-medium-font-size": {
+      "value": "1.563rem"
+    },
+    "heading-small-medium-font-size": {
+      "value": "1.25rem"
+    },
+    "header-larger-font-size": {
+      "value": "16px"
+    },
+    "header-larger-line-height": {
+      "value": "19px"
+    },
+    "header-larger-font-family": {
+      "value": "Montserrat"
+    },
+    "body-larger-font-size": {
+      "value": "16px"
+    },
+    "body-larger-line-height": {
+      "value": "19px"
+    },
+    "body-larger-font-family": {
+      "value": "Inter"
+    },
+    "body-medium-font-size": {
+      "value": "13px"
+    },
+    "body-medium-line-height": {
+      "value": "16px"
+    },
+    "body-medium-font-family": {
+      "value": "Inter"
+    },
+    "body-small-font-size": {
+      "value": "11px"
+    },
+    "body-small-line-height": {
+      "value": "14px"
+    },
+    "body-small-font-family": {
+      "value": "Inter"
+    },
+    "emphasis-large-font-size": {
+      "value": "16px"
+    },
+    "emphasis-large-line-height": {
+      "value": "19px"
+    },
+    "emphasis-large-font-family": {
+      "value": "Inter"
+    },
+    "emphasis-medium-font-size": {
+      "value": "13px"
+    },
+    "emphasis-medium-line-height": {
+      "value": "16px"
+    },
+    "emphasis-medium-font-family": {
+      "value": "Inter"
+    },
+    "label-small-font-size": {
+      "value": "10px"
+    },
+    "label-small-line-height": {
+      "value": "12px"
+    },
+    "label-small-font-family": {
+      "value": "Montserrat"
+    }
+  }
+}

@@ -1,6 +1,6 @@
 /**
  * Do not edit directly
- * Generated on Tue, 28 Sep 2021 09:54:09 GMT
+ * Generated on Thu, 30 Sep 2021 09:10:49 GMT
  */
 
 export const borderDefaultRadius = "4px";
@@ -210,3 +210,31 @@ export const fullColorRampMarketingGrey90 = "#141422";
 export const fullColorRampMarketingGrey05 = "#f9f9fa";
 export const fullColorRampBlackWhiteBlack = "#000000";
 export const fullColorRampBlackWhiteWhite = "#ffffff";
+export const typographyBaseFontSize = "100%";
+export const typographyHeadingLineHeight = "1.3";
+export const typographyHeadingDisplayFontSize = "3.052rem";
+export const typographyHeadingExtraLargeFontSize = "2.441rem";
+export const typographyHeadingLargeFontSize = "1.953rem";
+export const typographyHeadingMediumFontSize = "1.563rem";
+export const typographyHeadingSmallMediumFontSize = "1.25rem";
+export const typographyHeaderLargerFontSize = "16px";
+export const typographyHeaderLargerLineHeight = "19px";
+export const typographyHeaderLargerFontFamily = "Montserrat";
+export const typographyBodyLargerFontSize = "16px";
+export const typographyBodyLargerLineHeight = "19px";
+export const typographyBodyLargerFontFamily = "Inter";
+export const typographyBodyMediumFontSize = "13px";
+export const typographyBodyMediumLineHeight = "16px";
+export const typographyBodyMediumFontFamily = "Inter";
+export const typographyBodySmallFontSize = "11px";
+export const typographyBodySmallLineHeight = "14px";
+export const typographyBodySmallFontFamily = "Inter";
+export const typographyEmphasisLargeFontSize = "16px";
+export const typographyEmphasisLargeLineHeight = "19px";
+export const typographyEmphasisLargeFontFamily = "Inter";
+export const typographyEmphasisMediumFontSize = "13px";
+export const typographyEmphasisMediumLineHeight = "16px";
+export const typographyEmphasisMediumFontFamily = "Inter";
+export const typographyLabelSmallFontSize = "10px";
+export const typographyLabelSmallLineHeight = "12px";
+export const typographyLabelSmallFontFamily = "Montserrat";

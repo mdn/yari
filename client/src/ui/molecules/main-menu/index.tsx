@@ -137,80 +137,40 @@ export default function MainMenu({
       id: "references",
       items: [
         {
-          url: `/${locale}/docs/Web`,
-          label: "Technologies Overview",
-        },
-        {
           url: `/${locale}/docs/Web/HTML`,
           label: "HTML",
+          description: "Most basic building block of the Web",
         },
         {
           url: `/${locale}/docs/Web/CSS`,
           label: "CSS",
+          description: "Code used for describing document styling",
         },
         {
           url: `/${locale}/docs/Web/JavaScript`,
           label: "JavaScript",
-        },
-        {
-          url: `/${locale}/docs/Web/Guide/Graphics`,
-          label: "Graphics",
+          description: "Lightweight, interpreted, object-oriented language",
         },
         {
           url: `/${locale}/docs/Web/HTTP`,
           label: "HTTP",
+          description: "Protocol for transmitting hypermedia documents",
         },
         {
           url: `/${locale}/docs/Web/API`,
           label: "APIs",
+          description: "Software interface that connects software",
         },
         {
           url: `/${locale}/docs/Mozilla/Add-ons/WebExtensions`,
-          label: "Browser Extensions",
-        },
-        {
-          url: `/${locale}/docs/Web/MathML`,
-          label: "MathML",
-        },
-      ],
-    },
-    {
-      label: "Guides",
-      id: "guides",
-      items: [
-        {
-          url: `/${locale}/docs/Learn`,
-          label: "Learn web development",
-        },
-        {
-          url: `/${locale}/docs/Web/Tutorials`,
-          label: "Tutorials",
-        },
-        {
-          url: `/${locale}/docs/Web/Reference`,
-          label: "References",
-        },
-        {
-          url: `/${locale}/docs/Web/Guide`,
-          label: "Developer Guides",
-        },
-        {
-          url: `/${locale}/docs/Web/Accessibility`,
-          label: "Accessibility",
-        },
-        {
-          url: `/${locale}/docs/Games`,
-          label: "Game development",
-        },
-        {
-          url: `/${locale}/docs/Web`,
-          label: "...more docs",
+          label: "More…",
+          description: "Discover more of what the web has to offer",
         },
       ],
     },
   ];
 
-  const MDNPlusLink = styled.a`
+  const TopLevelLink = styled.a`
     display: block;
     font-weight: normal;
     padding: 12px;
@@ -258,7 +218,7 @@ export default function MainMenu({
               {menuEntry.label}
             </button>
             <ul
-              className={`${menuEntry.id} ${
+              className={`submenu ${menuEntry.id} ${
                 menuEntry.id === visibleSubMenuId ? "show" : ""
               }`}
               role="menu"
@@ -278,7 +238,17 @@ export default function MainMenu({
                       href={item.url}
                       role="menuitem"
                     >
-                      {item.label}
+                      <div
+                        className={`tech-icon ${item.label
+                          .replace("…", "")
+                          .toLowerCase()}`}
+                      ></div>
+                      <div className="tile-technology-heading">
+                        {item.label}
+                      </div>
+                      <p className="tile-technology-description">
+                        {item.description}
+                      </p>
                     </a>
                   </li>
                 ))}
@@ -286,9 +256,14 @@ export default function MainMenu({
           </li>
         ))}
         <li>
-          <MDNPlusLink href={`/${locale}/plus`} role="menuitem">
+          <TopLevelLink href={`/${locale}/docs/Learn`} role="menuitem">
+            Guides
+          </TopLevelLink>
+        </li>
+        <li>
+          <TopLevelLink href={`/${locale}/plus`} role="menuitem">
             MDN Plus
-          </MDNPlusLink>
+          </TopLevelLink>
         </li>
       </ul>
     </nav>
