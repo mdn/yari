@@ -62,7 +62,7 @@ interface FlawLevel {
 
 interface Data {
   counts: Counts;
-  documents: Document[];
+  missingDocuments: Document[];
   times: Times;
   flawLevels: FlawLevel[];
 }
@@ -226,7 +226,7 @@ export function MissingTranslations() {
           <FilterControls />
           <DocumentsTable
             counts={lastData.counts}
-            documents={lastData.documents}
+            documents={lastData.missingDocuments}
             sort={sort}
             sortReverse={sortReverse}
           />

@@ -9,6 +9,7 @@ import { PageContentContainer } from "../ui/atoms/page-content";
 
 import { TranslationDifferences } from "./differences";
 import { MissingTranslations } from "./missing";
+import { TranslationDashboard } from "./dashboard";
 
 interface Locale {
   locale: string;
@@ -31,6 +32,7 @@ export default function Translations() {
         <Route path="/" element={<PickLocale />} />
         <Route path="differences" element={<TranslationDifferences />} />
         <Route path="missing" element={<MissingTranslations />} />
+        <Route path="dashboard" element={<TranslationDashboard />} />
       </Routes>
     </Container>
   );
@@ -79,6 +81,9 @@ function PickLocale() {
       </Link>{" "}
       <Link to={`/${locale}/_translations/missing`} className="button">
         Missing translations
+      </Link>{" "}
+      <Link to={`/${locale}/_translations/dashboard`} className="button">
+        Dashboard
       </Link>
     </div>
   );
@@ -116,6 +121,11 @@ function ShowLocales({ locales }: { locales: Locale[] }) {
                 <td>
                   <Link to={`/${locale.locale}/_translations/missing`}>
                     Missing translations
+                  </Link>{" "}
+                </td>
+                <td>
+                  <Link to={`/${locale.locale}/_translations/dashboard`}>
+                    Dashboard
                   </Link>{" "}
                 </td>
               </tr>
