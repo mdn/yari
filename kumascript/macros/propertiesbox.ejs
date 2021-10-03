@@ -5,7 +5,7 @@
   $0 - String containing a serialized array of properties of the structure
        {"label": "foo", "value": "bar"}
 */
-var properties = string.deserialize($0);
+var properties = JSON.parse($0);
 var result = "<table class=\"properties\">" +
     "<tbody>";
 properties.forEach(function(property) {

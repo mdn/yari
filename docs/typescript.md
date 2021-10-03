@@ -37,7 +37,7 @@ They can even be used to "trick" the type checker into believing untrue things:
 ```typescript
 const n1: number = "text"; // Error!
 const n2: number = "text" as number; // Error!
-const n3: number = ("text" as any) as number; // Works!
+const n3: number = "text" as any as number; // Works!
 ```
 
 Considering whether this is generally a good idea is left as an exercise to the
@@ -55,8 +55,8 @@ the TypeScript syntax.
 
 ### `import` is throwing `Cannot find module 'x'` despite it being installed
 
-What TS means to say is that it is not finding types for it. For some dependecies
-this can be solved by running `yarn add @types/x` (`x` being the dependecy's name).
+What TS means to say is that it is not finding types for it. For some dependencies
+this can be solved by running `yarn add @types/x` (`x` being the dependency's name).
 Some dependencies might not have type declarations though, in which case you can
 either [write your own](https://www.typescriptlang.org/docs/handbook/modules.html#ambient-modules)
 (if you feel excited about types) or use `require` instead, which types your

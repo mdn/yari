@@ -6,18 +6,6 @@ if ($1) {
   dispApi = $1;
 }
 
-var attrName = mdn.localString({
-    "en-US":    "Attribute",
-    "de":       "Attribute",
-    "es":       "Attribute",
-    "fr":       "Attributs",
-    "ja":       "Attribute",
-    "ko":       "Attribute",
-    "pl":       "Atrybut",
-    "zh-CN":    "Attribute",
-    "ru":       "Атрибуты"
-});
-
 var newPath = mdn.localString({
     "en-US":    "Mozilla/Tech/XUL/Attribute",
     "de":       "Mozilla/Tech/XUL/Attribute",
@@ -30,16 +18,6 @@ var newPath = mdn.localString({
     "ru":       "Mozilla/Tech/XUL/Атрибуты"
 });
 
-var destOldest = lang + '/docs/XUL:' + attrName + ':' + $0;
-var destOld = lang + '/docs/XUL/' + attrName + '/' + $0;
 var destNew = lang + "/docs/" + newPath + "/" + $0;
 
-if (wiki.pageExists(destNew)) {
-    %><code id="<%= anch %>"><%-(web.link(wiki.uri(destNew), dispApi))%></code><%
-} else if (wiki.pageExists(destOld)) {
-    %><code id="<%= anch %>"><%-(web.link(wiki.uri(destOld), dispApi))%></code><%
-} else if (wiki.pageExists(destOldest)) {
-    %><code id="<%= anch %>"><%-(web.link(wiki.uri(destOldest), dispApi))%></code><%
-} else {
-    %><code id="<%= anch %>"><%-(web.link(wiki.uri(destNew), dispApi))%></code><%
-}%>
+%><code id="<%= anch %>"><%-(web.link(wiki.uri(destNew), dispApi))%></code>

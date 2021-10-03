@@ -44,7 +44,7 @@ async function checkFile(filePath, options) {
   }
   if (stat.size > MAX_FILE_SIZE) {
     const formatted =
-      stats.size > 1024 * 1024
+      stat.size > 1024 * 1024
         ? `${(stat.size / 1024.0 / 1024).toFixed(1)}MB`
         : `${(stat.size / 1024.0).toFixed(1)}KB`;
     const formattedMax = `${(MAX_FILE_SIZE / 1024.0 / 1024).toFixed(1)}MB`;
@@ -62,9 +62,20 @@ async function checkFile(filePath, options) {
       throw new Error(`${filePath} does not appear to be an SVG`);
     }
     const $ = cheerio.load(content);
-    if ($("script").length) {
-      throw new Error(`${filePath} contains a <script> tag`);
-    }
+    const disallowedTagNames = new Set(["script", "object", "iframe", "embed"]);
+    $("*").each((i, element) => {
+      const { tagName } = element;
+      if (disallowedTagNames.has(tagName)) {
+        throw new Error(`${filePath} contains a <${tagName}> tag`);
+      }
+      for (const key in element.attribs) {
+        if (/(\\x[a-f0-9]{2}|\b)on\w+/.test(key)) {
+          throw new Error(
+            `${filePath} <${tagName}> contains an unsafe attribute: '${key}'`
+          );
+        }
+      }
+    });
   } else {
     // Check that the file extension matches the file header.
     const fileType = await FileType.fromFile(filePath);
@@ -93,29 +104,35 @@ async function checkFile(filePath, options) {
   }
 
   // The image has to be mentioned in the adjacent index.html document
-  const htmlFilePath = path.join(path.dirname(filePath), "index.html");
-  if (!fs.existsSync(htmlFilePath)) {
+  const parentPath = path.dirname(filePath);
+  const htmlFilePath = path.join(parentPath, "index.html");
+  const mdFilePath = path.join(parentPath, "index.md");
+  const rawContent = fs.existsSync(htmlFilePath)
+    ? fs.readFileSync(htmlFilePath, "utf-8")
+    : fs.existsSync(mdFilePath)
+    ? fs.readFileSync(mdFilePath, "utf-8")
+    : null;
+  if (!rawContent) {
     throw new Error(
-      `${filePath} is not located in a folder with an 'index.html' file.`
+      `${filePath} is not located in a folder with a document file.`
     );
   }
 
-  // The image must be mentioned (as a string) in the 'index.html' file.
+  // The image must be mentioned (as a string) in the content
   // Note that it might not be in a <img src> attribute but it could be
   // used in a code example. Either way, it needs to be mentioned by
   // name at least once.
   // Yes, this is pretty easy to fake if you really wanted to, but why
   // bother?
-  const html = fs.readFileSync(htmlFilePath, "utf-8");
-  if (!html.includes(path.basename(filePath))) {
+  if (!rawContent.includes(path.basename(filePath))) {
     throw new Error(`${filePath} is not mentioned in ${htmlFilePath}`);
   }
 
   const tempdir = tempy.directory();
-  const extension = path.extname(filePath);
+  const extension = path.extname(filePath).toLowerCase();
   try {
     const plugins = [];
-    if ((extension === ".jpg") | (extension === ".jpeg")) {
+    if (extension === ".jpg" || extension === ".jpeg") {
       plugins.push(imageminMozjpeg());
     } else if (extension === ".png") {
       plugins.push(imageminPngquant());
@@ -129,11 +146,15 @@ async function checkFile(filePath, options) {
     const files = await imagemin([filePath], {
       destination: tempdir,
       plugins,
+      // Needed because otherwise start trying to find files using
+      // `globby()` which chokes on file paths that contain brackets.
+      // E.g. `/web/css/transform-function/rotate3d()/transform.png`
+      // Setting this to false tells imagemin() to just accept what
+      // it's given instead of trying to search for the image.
+      glob: false,
     });
     if (!files.length) {
-      throw new Error(
-        `${filePath} could not be compressed with plugin: ${plugins[0]}`
-      );
+      throw new Error(`${filePath} could not be compressed`);
     }
     const compressed = files[0];
     const sizeBefore = fs.statSync(filePath).size;
@@ -159,6 +180,12 @@ async function checkFile(filePath, options) {
           "Consider running again with '--save-compression' and run again " +
             "to automatically save the newly compressed file."
         );
+        const relPath =
+          process.env.CI === "true"
+            ? path.relative(process.cwd(), filePath)
+            : filePath;
+        const cliCommand = `yarn filecheck "${relPath}" --save-compression`;
+        console.log(`HINT! Type the following command:\n\n\t${cliCommand}\n`);
         throw new Error(
           `${filePath} can be compressed by ~${reductionPercentage.toFixed(0)}%`
         );

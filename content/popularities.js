@@ -1,20 +1,20 @@
 const fs = require("fs");
 const path = require("path");
 
-const { CONTENT_ROOT } = require("./constants");
-
 // Module-level cache
 const popularities = new Map();
 
 function getPopularities() {
   if (!popularities.size) {
-    Object.entries(
-      JSON.parse(
-        fs.readFileSync(path.join(CONTENT_ROOT, "popularities.json"), "utf-8")
-      )
-    ).forEach(([url, value]) => {
-      popularities.set(url, value);
-    });
+    // This is the file that's *not* checked into git.
+    const filePath = path.resolve(
+      path.join(__dirname, "..", "popularities.json")
+    );
+    Object.entries(JSON.parse(fs.readFileSync(filePath, "utf-8"))).forEach(
+      ([url, value]) => {
+        popularities.set(url, value);
+      }
+    );
   }
   return popularities;
 }

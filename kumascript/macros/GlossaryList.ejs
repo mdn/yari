@@ -13,7 +13,11 @@
 
 var URL    = "/en-US/docs/Glossary";
 
-var i, l, c, splitTitle, startWithDigit = /^\d/;
+var i;
+var l;
+var c;
+var splitTitle;
+var startWithDigit = /^\d/;
 var csscl  = $0 && $0.css ? $0.css : "";
 var pages  = page.subPagesFlatten(await page.subpagesExpand(URL, 2));
 var locale = env.locale;

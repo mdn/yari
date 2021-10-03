@@ -1,14 +1,17 @@
 import React, { useEffect, useState } from "react";
-import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
-
-import { useDocumentURL } from "../hooks";
+import { Link, useLocation, useParams } from "react-router-dom";
+import { CRUD_MODE_HOSTNAMES } from "../../constants";
 
 import "./edit-actions.scss";
 
-export function EditActions({ folder }: { folder: string }) {
+export function EditActions({
+  folder,
+  filename,
+}: {
+  folder: string;
+  filename: string;
+}) {
   const location = useLocation();
-  const documentURL = useDocumentURL();
-  const navigate = useNavigate();
 
   const [opening, setOpening] = useState(false);
   const [editorOpeningError, setEditorOpeningError] = useState<Error | null>(
@@ -32,7 +35,7 @@ export function EditActions({ folder }: { folder: string }) {
   async function openInEditorHandler(event: React.MouseEvent) {
     event.preventDefault();
 
-    const filepath = folder + "/index.html";
+    const filepath = `${folder}/${filename}`;
     console.log(`Going to try to open ${filepath} in your editor`);
     setOpening(true);
     try {
@@ -52,51 +55,51 @@ export function EditActions({ folder }: { folder: string }) {
     }
   }
 
-  async function deleteDocument() {
-    if (!window.confirm("Are you sure you want to delete this document?")) {
-      return;
-    }
-    const response = await fetch(
-      `/_document?url=${encodeURIComponent(documentURL)}`,
-      {
-        method: "DELETE",
-        headers: { "Content-Type": "application/json" },
-      }
-    );
-    if (response.ok) {
-      window.alert("Document successfully deleted");
-      navigate("/");
-    } else {
-      window.alert(`Error while deleting document: ${response.statusText}`);
-    }
-  }
-
   const { locale, "*": slug } = useParams();
 
   if (!folder) {
     return null;
   }
 
+  // If window.location.host is 'localhost:3000` then
+  // window.location.hostname is 'localhost'
+  const isReadOnly = !CRUD_MODE_HOSTNAMES.includes(window.location.hostname);
+
   return (
-    <div className="edit-actions">
-      <a href={`https://developer.mozilla.org/${locale}/docs/${slug}`}>
-        View on MDN
-      </a>{" "}
-      Edit{" "}
-      <Link to={location.pathname.replace("/docs/", "/_edit/")}>
-        in your <b>browser</b>
-      </Link>
-      {" or "}
-      <button title={`Folder: ${folder}`} onClick={openInEditorHandler}>
-        in your <b>editor</b>
-      </button>
-      <button className="delete" onClick={deleteDocument}>
-        Delete document
-      </button>
-      <Link to={`/en-US/_create?initial_slug=${encodeURIComponent(slug)}`}>
-        Create new document
-      </Link>
-      <br />
+    <ul className="edit-actions">
+      {!isReadOnly && (
+        <li>
+          <button
+            type="button"
+            className="button"
+            title={`Folder: ${folder}`}
+            onClick={openInEditorHandler}
+          >
+            Open in your <b>editor</b>
+          </button>
+        </li>
+      )}
+
+      <li>
+        <a
+          href={`https://developer.mozilla.org/${locale}/docs/${slug}`}
+          className="button"
+        >
+          View on MDN
+        </a>
+      </li>
+
+      {!isReadOnly && (
+        <li>
+          <Link
+            to={location.pathname.replace("/docs/", "/_edit/")}
+            className="button"
+          >
+            Quick-edit
+          </Link>
+        </li>
+      )}
+
       {editorOpeningError ? (
         <p className="error-message editor-opening-error">
           <b>Error opening page in your editor!</b>
@@ -106,6 +109,6 @@ export function EditActions({ folder }: { folder: string }) {
       ) : (
         opening && <small>Trying to your editor now...</small>
       )}
-    </div>
+    </ul>
   );
 }

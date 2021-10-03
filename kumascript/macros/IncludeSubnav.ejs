@@ -1,14 +1,8 @@
 <%
-// Inserts the contents of a sub navigation into the document.
-//
-// Parameters:
-//
-//  $0 - URL of a page with a "Subnav" section to insert.
-//       Example: "/en-US/docs/Games".
-//       Do not use https://etc.
-//  
-
-var url = web.spacesToUnderscores($0);
-
+// The IncludeSubnav macro is considered deprecated.
+// As of today, Feb 2021, no content in the en-US repo uses it.
+// The few translated-content files that were using it were buggy and
+// we decided it wasn't worth even trying to recover that because no
+// content should be using it anyway.
+mdn.deprecated();
 %>
-<%- await wiki.page(url, 'Subnav', '', 1) %>

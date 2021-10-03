@@ -6,14 +6,14 @@ const { assert, itMacro, describeMacro } = require("./utils");
 
 describeMacro("httpheader", function () {
   itMacro("No arguments (en-US)", function (macro) {
-    macro.ctx.wiki.getPage = jest.fn((url) => undefined);
+    macro.ctx.wiki.getPage = jest.fn(() => undefined);
     return assert.eventually.equal(
       macro.call(),
       `<a href="/en-US/docs/Web/HTTP/Headers/"><code></code></a>`
     );
   });
   itMacro("One argument (en-US)", function (macro) {
-    macro.ctx.wiki.getPage = jest.fn((url) => ({
+    macro.ctx.wiki.getPage = jest.fn(() => ({
       summary:
         "The <strong><code>Accept</code></strong> request HTTP header...",
     }));
@@ -24,7 +24,7 @@ describeMacro("httpheader", function () {
   });
   itMacro("One argument (ko)", function (macro) {
     macro.ctx.env.locale = "ko";
-    macro.ctx.wiki.getPage = jest.fn((url) => ({
+    macro.ctx.wiki.getPage = jest.fn(() => ({
       summary:
         "<strong><code>Date</code></strong> 일반 HTTP 헤더는 메시지가 만들어진 날짜와 시간을 포함합니다.",
     }));
@@ -34,14 +34,14 @@ describeMacro("httpheader", function () {
     );
   });
   itMacro("One unknown argument (en-US)", function (macro) {
-    macro.ctx.wiki.getPage = jest.fn((url) => {});
+    macro.ctx.wiki.getPage = jest.fn(() => {});
     return assert.eventually.equal(
       macro.call("fleetwood-mac"),
       `<a href="/en-US/docs/Web/HTTP/Headers/fleetwood-mac"><code>fleetwood-mac</code></a>`
     );
   });
   itMacro("Two arguments (en-US)", function (macro) {
-    macro.ctx.wiki.getPage = jest.fn((url) => ({
+    macro.ctx.wiki.getPage = jest.fn(() => ({
       summary:
         "The <strong><code>Accept-Language</code></strong> request HTTP header...",
     }));
@@ -51,7 +51,7 @@ describeMacro("httpheader", function () {
     );
   });
   itMacro("Three arguments (en-US)", function (macro) {
-    macro.ctx.wiki.getPage = jest.fn((url) => ({
+    macro.ctx.wiki.getPage = jest.fn(() => ({
       summary:
         "The <strong><code>Accept-Language</code></strong> request HTTP header...",
     }));
@@ -61,7 +61,7 @@ describeMacro("httpheader", function () {
     );
   });
   itMacro("Four arguments (code) (en-US)", function (macro) {
-    macro.ctx.wiki.getPage = jest.fn((url) => ({
+    macro.ctx.wiki.getPage = jest.fn(() => ({
       summary:
         "The <strong><code>Accept-Language</code></strong> request HTTP header...",
     }));
@@ -71,7 +71,7 @@ describeMacro("httpheader", function () {
     );
   });
   itMacro("Four arguments (not code) (en-US)", function (macro) {
-    macro.ctx.wiki.getPage = jest.fn((url) => ({
+    macro.ctx.wiki.getPage = jest.fn(() => ({
       summary:
         "The <strong><code>Accept-Language</code></strong> request HTTP header...",
     }));

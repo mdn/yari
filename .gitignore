@@ -15,6 +15,7 @@ node_modules/
 .env.test.local
 .env.production.local
 /.env
+/client/.env
 __pycache__/
 
 npm-debug.log*
@@ -25,9 +26,6 @@ yarn-error.log*
 /testing/node_modules/
 /client/build/
 /ssr/dist/
-
-# Can be removed once content lives in its own repo
-/archivecontent/files
 
 # These are an effect of the dumper still producing all locales
 # We haven't decided what to do with them but for now we're *not*
@@ -70,3 +68,10 @@ yarn-error.log*
 fake-v1-api/
 mdn-yari-*.tgz
 function.zip
+md-conversion-problems-report*.md
+
+testing/content/files/en-us/_githistory.json
+testing/translated-content/files/**/_githistory.json
+# eslintcache
+client/.eslintcache
+popularities.json

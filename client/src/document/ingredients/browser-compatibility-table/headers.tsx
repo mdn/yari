@@ -1,4 +1,3 @@
-import React from "react";
 import type bcd from "@mdn/browser-compat-data/types";
 import { BrowserName } from "./browser-info";
 
@@ -12,24 +11,33 @@ export const PLATFORM_BROWSERS: { [key: string]: bcd.BrowserNames[] } = {
     "safari_ios",
     "samsunginternet_android",
   ],
-  server: ["nodejs"],
-  "webextensions-desktop": ["chrome", "edge", "firefox", "opera"],
+  server: ["deno", "nodejs"],
+  "webextensions-desktop": ["chrome", "edge", "firefox", "opera", "safari"],
   "webextensions-mobile": ["firefox_android"],
 };
 
-function PlatformHeaders({ platforms }) {
+function PlatformHeaders({ platforms, browsers }) {
   return (
     <tr className="bc-platforms">
       <td />
-      {platforms.map((platform) => (
-        <th
-          key={platform}
-          className={`bc-platform-${platform}`}
-          colSpan={Object.keys(PLATFORM_BROWSERS[platform]).length}
-        >
-          <span>{platform}</span>
-        </th>
-      ))}
+      {platforms.map((platform) => {
+        // Get the intersection of browsers in the `browsers` array and the
+        // `PLATFORM_BROWSERS[platform]`.
+        const browsersInPlatform = PLATFORM_BROWSERS[platform].filter(
+          (browser) => browsers.includes(browser)
+        );
+        const browserCount = Object.keys(browsersInPlatform).length;
+        const platformId = platform.replace("webextensions-", "");
+        return (
+          <th
+            key={platform}
+            className={`bc-platform-${platformId}`}
+            colSpan={browserCount}
+          >
+            <span>{platform}</span>
+          </th>
+        );
+      })}
     </tr>
   );
 }
@@ -52,7 +60,7 @@ function BrowserHeaders({ browsers }: { browsers }) {
 export function Headers({ platforms, browsers }) {
   return (
     <thead>
-      <PlatformHeaders platforms={platforms} />
+      <PlatformHeaders platforms={platforms} browsers={browsers} />
       <BrowserHeaders browsers={browsers} />
     </thead>
   );

@@ -6,7 +6,7 @@ const Parser = require("../src/parser.js");
 
 describe("Parser", function () {
   it("input with no macros", () => {
-    let input = "<p>This is a test.\n<h1>Hello world!</h1>";
+    const input = "<p>This is a test.\n<h1>Hello world!</h1>";
     expect(Parser.parse(input)).toEqual([
       {
         type: "TEXT",
@@ -80,7 +80,7 @@ describe("Parser", function () {
   });
 
   it("whitespace is ignored", () => {
-    let input = "{{ \n \t bar('zero', \n\t \"one\" ) \n\t }}";
+    const input = "{{ \n \t bar('zero', \n\t \"one\" ) \n\t }}";
     expect(Parser.parse(input)).toEqual([
       {
         type: "MACRO",
@@ -96,7 +96,7 @@ describe("Parser", function () {
 
   it("JSON values are parsed correctly", () => {
     "use strict";
-    let input =
+    const input =
       '{{ f({ "a": "x", "b": -1e2, "c": 0.5, "d": [1,2, 3], "e":true, "f":false }) }}';
     expect(Parser.parse(input)).toEqual([
       {
@@ -122,7 +122,7 @@ describe("Parser", function () {
 
   it("JSON parameter should allow a single-item list", () => {
     "use strict";
-    var tokens = Parser.parse('{{ f({ "a": ["one"] }) }}');
+    const tokens = Parser.parse('{{ f({ "a": ["one"] }) }}');
     expect(tokens).toEqual([
       {
         type: "MACRO",
@@ -160,7 +160,7 @@ describe("Parser", function () {
 
   it("JSON strings should be able to contain ')'", () => {
     "use strict";
-    var tokens = Parser.parse('{{ f({ "a": "f)" }) }}');
+    const tokens = Parser.parse('{{ f({ "a": "f)" }) }}');
     expect(tokens).toEqual([
       {
         type: "MACRO",
@@ -176,7 +176,7 @@ describe("Parser", function () {
 
   it("Empty JSON values are allowed", () => {
     "use strict";
-    var tokens = Parser.parse("{{ f({}) }}");
+    let tokens = Parser.parse("{{ f({}) }}");
     expect(tokens).toEqual([
       {
         type: "MACRO",

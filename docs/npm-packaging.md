@@ -13,8 +13,8 @@ what Content depends on. This package should contain everything you need to
 start a server that contains all the editing and previewing features, plus
 the ability to Yari build a document to its final `index.html` form.
 
-In Yari, a [GitHub Action](https://github.com/mdn/yari/blob/master/.github/workflows/npm-publish.yml)
-runs on every commit to `master` and that creates
+In Yari, a [GitHub Action](https://github.com/mdn/yari/blob/main/.github/workflows/npm-publish.yml)
+runs on every commit to `main` and that creates
 [a `git` tag](https://github.com/mdn/yari/tags) and a tarball release
 on npmjs.com.
 
@@ -81,5 +81,5 @@ Now, go to `~/content` and run:
 Make sure you actually test it out fully. For example, just because
 `yarn start` starts the server OK, doesn't mean it can do all things
 it needs to do. The best place to start is to navigate into
-[http://localhost:5000](http://localhost:5000) to an actual page which
+<http://localhost:5000> to an actual page which
 will need to built-on-the-fly.

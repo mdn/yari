@@ -1,0 +1,24 @@
+{
+  "private": true,
+  "description": "End-to-end test AWS Lambda functions",
+  "license": "MPL-2.0",
+  "main": "index.js",
+  "scripts": {
+    "serve": "node-dev server.js",
+    "test-server": "jest"
+  },
+  "dependencies": {
+    "@yari-internal/content-origin-request": "file:../content-origin-request",
+    "@yari-internal/content-origin-response": "file:../content-origin-response"
+  },
+  "devDependencies": {
+    "got": "11.8.2",
+    "jest": "26.6.3",
+    "kleur": "4.1.4",
+    "node-dev": "7.0.0",
+    "polka": "0.5.2"
+  },
+  "engines": {
+    "node": ">=12.x"
+  }
+}

@@ -37,9 +37,9 @@ const MOCK_PAGES = {
     },
   },
   attr: {
-    url: [CSS_BASE_URL, "attr"].join("/"),
+    url: [CSS_BASE_URL, "attr()"].join("/"),
     data: {
-      url: [CSS_BASE_URL, "attr"].join("/"),
+      url: [CSS_BASE_URL, "attr()"].join("/"),
       summary:
         'The <strong><code>attr()</code></strong> <a href="/en-US/docs/Web/CSS">CSS</a> function is used to retrieve the value of an attribute of the selected element and use it in the style sheet.',
       tags: ["CSS", "Reference", "Web", "CSS Function", "Layout"],
@@ -107,7 +107,7 @@ const TEST_CASE = [
   },
   {
     title: "One argument (CSS function)",
-    input: ["attr"],
+    input: ["attr()"],
     output: makeExpect(
       MOCK_PAGES.attr.url,
       MOCK_PAGES.attr.data.summary,
@@ -144,7 +144,7 @@ const TEST_CASE = [
   {
     title: "Three arguments (Custom link text, with anchor)",
     input: ["display", "display flex", "#flex"],
-    output: makeExpect(MOCK_PAGES.display.url + "#flex", "", "display flex"),
+    output: makeExpect(`${MOCK_PAGES.display.url}#flex`, "", "display flex"),
   },
   {
     title: "Special CSS Data Type: <color>",
@@ -182,7 +182,7 @@ describeMacro("cssxref", () => {
   beforeEachMacro((macro) => {
     // let's make sure we have a clean calls to wiki.getPage
     macro.ctx.info.getPageByURL = jest.fn((url) => {
-      for (let page of Object.values(MOCK_PAGES)) {
+      for (const page of Object.values(MOCK_PAGES)) {
         if (page.url === getPathname(url)) {
           return page.data;
         }

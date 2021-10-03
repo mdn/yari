@@ -1,0 +1,50 @@
+@use "sass:math";
+
+@import "~@mdn/minimalist/sass/vars/color-palette";
+@import "~@mdn/minimalist/sass/vars/color-gradients";
+@import "~@mdn/minimalist/sass/vars/layout";
+@import "~@mdn/minimalist/sass/vars/typography";
+
+.mdn-cta-container {
+  background-color: #212121;
+  color: white;
+  display: flex;
+  z-index: $bring-to-front;
+  align-items: center;
+  font-family: $heading-font-family;
+  min-height: 40px;
+  height: 100%;
+  padding: 0 $base-spacing;
+
+  .mdn-cta-copy {
+    margin: 0;
+    padding: 8px 0px;
+  }
+
+  button {
+    background: none;
+    border: none;
+    opacity: 0.6;
+
+    &:hover,
+    &:focus,
+    &:active {
+      cursor: pointer;
+      opacity: 1;
+    }
+
+    .icon {
+      height: 16px;
+      color: white;
+    }
+  }
+
+  .mdn-cta-content {
+    margin: 0 auto;
+  }
+
+  a {
+    min-height: 0px;
+    color: #31d2f7;
+  }
+}

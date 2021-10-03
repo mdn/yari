@@ -1,5 +1,3 @@
-import React from "react";
-
 // localStorage mock for tests
 const mockLocalStorage = () => {
   let store = {};

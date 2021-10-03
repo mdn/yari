@@ -1,0 +1,107 @@
+diff --git a/files/en-us/_redirects.txt b/files/en-us/_redirects.txt
+index 99a2388ff..46d0ed430 100644
+--- a/files/en-us/_redirects.txt
++++ b/files/en-us/_redirects.txt
+@@ -8995,10 +8995,11 @@
+ /en-US/docs/Web/API/Transaction	/en-US/docs/Web/API/IDBTransaction
+ /en-US/docs/Web/API/TransactionSync	/en-US/docs/Web/API/IDBTransactionSync
+ /en-US/docs/Web/API/TransitionEvent.TransitionEvent	/en-US/docs/Web/API/TransitionEvent/TransitionEvent
+-/en-US/docs/Web/API/TransitionEvent.animationName	/en-US/docs/Web/API/TransitionEvent/animationName
++/en-US/docs/Web/API/TransitionEvent.animationName	/en-US/docs/Web/API/TransitionEvent/propertyName
+ /en-US/docs/Web/API/TransitionEvent.elapsedTime	/en-US/docs/Web/API/TransitionEvent/elapsedTime
+ /en-US/docs/Web/API/TransitionEvent.initTransitionEvent	/en-US/docs/Web/API/TransitionEvent/initTransitionEvent
+ /en-US/docs/Web/API/TransitionEvent.pseudoElement	/en-US/docs/Web/API/TransitionEvent/pseudoElement
++/en-US/docs/Web/API/TransitionEvent/animationName	/en-US/docs/Web/API/TransitionEvent/propertyName
+ /en-US/docs/Web/API/TreeWalker.currentNode	/en-US/docs/Web/API/TreeWalker/currentNode
+ /en-US/docs/Web/API/TreeWalker.expandEntityReferences	/en-US/docs/Web/API/TreeWalker/expandEntityReferences
+ /en-US/docs/Web/API/TreeWalker.firstChild	/en-US/docs/Web/API/TreeWalker/firstChild
+diff --git a/files/en-us/_wikihistory.json b/files/en-us/_wikihistory.json
+index 87d77001a..72607eb68 100644
+--- a/files/en-us/_wikihistory.json
++++ b/files/en-us/_wikihistory.json
+@@ -83644,15 +83644,6 @@
+       "kscarfone"
+     ]
+   },
+-  "Web/API/TransitionEvent/animationName": {
+-    "modified": "2020-10-15T21:24:41.563Z",
+-    "contributors": [
+-      "matt-curtis",
+-      "fscholz",
+-      "teoli",
+-      "kscarfone"
+-    ]
+-  },
+   "Web/API/TransitionEvent/elapsedTime": {
+     "modified": "2020-10-15T21:24:39.846Z",
+     "contributors": [
+@@ -83673,6 +83664,15 @@
+       "kscarfone"
+     ]
+   },
++  "Web/API/TransitionEvent/propertyName": {
++    "modified": "2020-10-15T21:24:41.563Z",
++    "contributors": [
++      "matt-curtis",
++      "fscholz",
++      "teoli",
++      "kscarfone"
++    ]
++  },
+   "Web/API/TransitionEvent/pseudoElement": {
+     "modified": "2020-10-15T21:24:41.770Z",
+     "contributors": [
+diff --git a/files/en-us/web/api/transitionevent/animationname/index.html b/files/en-us/web/api/transitionevent/propertyname/index.html
+similarity index 60%
+rename from files/en-us/web/api/transitionevent/animationname/index.html
+rename to files/en-us/web/api/transitionevent/propertyname/index.html
+index e644c304b..d39c14b92 100644
+--- a/files/en-us/web/api/transitionevent/animationname/index.html
++++ b/files/en-us/web/api/transitionevent/propertyname/index.html
+@@ -1,6 +1,6 @@
+ ---
+-title: TransitionEvent.transitionName
+-slug: Web/API/TransitionEvent/animationName
++title: TransitionEvent.propertyName
++slug: Web/API/TransitionEvent/propertyName
+ tags:
+   - API
+   - CSS
+@@ -10,16 +10,14 @@ tags:
+   - Reference
+   - TransitionEvent
+ ---
+-<p>{{ apiref("CSSOM") }} {{SeeCompatTable}}</p>
++<p>{{ apiref("CSSOM") }}</p>
+ 
+-<p>The <code><strong>TransitionEvent.transitionName</strong></code> read-only property is
+-  a {{domxref("DOMString")}} containing the name of the CSS property associated with the
+-  transition.</p>
++<p>The <code><strong>propertyName</strong></code> read-only property of {{domxref("TransitionEvent")}} objects is a {{domxref("DOMString")}} containing the name of the CSS property associated with the transition.</p>
+ 
+ <h2 id="Syntax">Syntax</h2>
+ 
+ <pre
+-  class="brush: js"><em>name</em> = <em>TransitionEvent</em>.transitionName</pre>
++  class="brush: js"><em>name</em> = <em>TransitionEvent</em>.propertyName</pre>
+ 
+ <h2 id="Specifications">Specifications</h2>
+ 
+@@ -34,7 +32,7 @@ tags:
+   <tbody>
+     <tr>
+       <td>{{ SpecName('CSS3 Transitions', '#Events-TransitionEvent-propertyName',
+-        'TransitionEvent.transitionName') }}</td>
++        'TransitionEvent.propertyName') }}</td>
+       <td>{{ Spec2('CSS3 Transitions')}}</td>
+       <td>Initial definition.</td>
+     </tr>
+@@ -43,7 +41,7 @@ tags:
+ 
+ <h2 id="Browser_compatibility">Browser compatibility</h2>
+ 
+-<p>{{Compat("api.TransitionEvent.transitionName")}}</p>
++<p>{{Compat("api.TransitionEvent.propertyName")}}</p>
+ 
+ <h2 id="See_also">See also</h2>
+ 

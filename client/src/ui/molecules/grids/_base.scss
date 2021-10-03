@@ -1,0 +1,7 @@
+@import "~@mdn/minimalist/sass/vars/layout";
+
+.page-wrapper {
+  margin: 0 auto;
+  max-width: $max-width-default;
+  width: 100%;
+}

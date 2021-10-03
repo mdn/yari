@@ -1,0 +1,98 @@
+@use "sass:math";
+
+@import "~@mdn/minimalist/sass/mixins/utils";
+@import "~@mdn/minimalist/sass/mixins/links";
+
+@import "~@mdn/minimalist/sass/vars/mdn-web-docs-palette";
+@import "~@mdn/minimalist/sass/vars/layout";
+@import "~@mdn/minimalist/sass/vars/typography";
+
+.breadcrumbs-container {
+  @media #{$mq-small-desktop-and-up} {
+    padding: math.div($base-spacing, 2) $base-spacing;
+  }
+
+  @media #{$mq-small-desktop-and-up} {
+    padding: 0;
+  }
+
+  a {
+    align-items: center;
+    display: flex;
+  }
+
+  ol {
+    @include reset-list();
+  }
+
+  li {
+    display: inline-flex;
+    hyphens: auto;
+
+    .breadcrumb,
+    .breadcrumb-current-page {
+      @include visually-hidden();
+
+      @media #{$mq-small-desktop-and-up} {
+        @include reset-visually-hidden();
+      }
+    }
+
+    .breadcrumb,
+    .breadcrumb-penultimate {
+      &::after {
+        background: transparent url("~@mdn/dinocons/arrows/chevron.svg") 0 0
+          no-repeat;
+        background-size: 12px;
+        content: "";
+        height: 12px;
+        transform: rotate(90deg);
+        width: 12px;
+      }
+    }
+
+    .breadcrumb {
+      &::after {
+        display: inline-block;
+      }
+    }
+
+    [property="name"] {
+      display: inline-block;
+      margin: 0 math.div($base-unit, 2);
+    }
+
+    .breadcrumb-penultimate {
+      &::before {
+        background: transparent url("~@mdn/dinocons/arrows/chevron.svg") 0 0
+          no-repeat;
+        background-size: auto;
+        content: "";
+        display: inline-block;
+        height: 16px;
+        margin-right: math.div($base-spacing, 4);
+        transform: rotate(-90deg);
+        width: 16px;
+
+        @media #{$mq-small-desktop-and-up} {
+          display: none;
+        }
+      }
+
+      &::after {
+        display: none;
+
+        @media #{$mq-small-desktop-and-up} {
+          display: inline-block;
+        }
+      }
+    }
+
+    &:last-child {
+      a:link,
+      a:visited {
+        color: $mdn-neutral900;
+      }
+    }
+  }
+}

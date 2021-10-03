@@ -1,0 +1,25 @@
+<%
+/*
+Placeholder to render a specification section with spec_urls from BCD
+
+Parameters
+
+$0 – A query string indicating for which feature to retrieve specification URLs for.
+
+Example calls
+
+{{Specifications}}
+{{Specifications("html.element.abbr")}}
+
+*/
+
+var query = $0 || env['browser-compat'];
+if (!query) {
+  throw new Error("No first query argument or 'browser-compat' front-matter value passed");
+}
+var output = `<div class="bc-specs" data-bcd-query="${query}">
+  If you're able to see this, something went wrong on this page.
+</div>`;
+%>
+
+<%-output%>

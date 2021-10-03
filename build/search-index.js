@@ -4,7 +4,9 @@ const { getPopularities } = require("../content");
 const getPopularity = (item) => getPopularities().get(item.url) || 0;
 
 module.exports = class SearchIndex {
-  _itemsByLocale = {};
+  constructor() {
+    this._itemsByLocale = {};
+  }
 
   add({ metadata: { locale, title }, url }) {
     const localeLC = locale.toLowerCase();
@@ -16,7 +18,15 @@ module.exports = class SearchIndex {
 
   sort() {
     for (const items of Object.values(this._itemsByLocale)) {
-      items.sort((a, b) => getPopularity(b) - getPopularity(a));
+      items.sort((a, b) => {
+        const popularityA = getPopularity(a);
+        const popularityB = getPopularity(b);
+        const diff = popularityB - popularityA;
+        if (diff === 0) {
+          return a.url < b.url ? -1 : a.url > b.url ? 1 : 0;
+        }
+        return diff;
+      });
     }
   }
 

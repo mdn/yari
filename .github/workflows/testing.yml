@@ -6,7 +6,7 @@ name: Testing Yari
 on:
   push:
     branches:
-      - master
+      - main
   pull_request:
 
 jobs:
@@ -14,137 +14,75 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v2
-
-      - uses: technote-space/get-diff-action@v4
-        id: git_diff_kumascript
-        with:
-          PATTERNS: |
-            kumascript/**
-
-      - name: Display Git diffs
-        run: echo ${{ steps.git_diff_kumascript.outputs.diff }}
+      - uses: actions/checkout@v2.3.4
 
       - name: Setup Node.js environment
-        uses: actions/setup-node@v2.1.2
+        uses: actions/setup-node@v2.4.1
         with:
           node-version: "12"
-      - name: Display Node & Yarn version
-        run: |
-          node --version
-          yarn --version
+          cache: "yarn"
 
-      - name: Get yarn cache directory path
-        id: yarn-cache-dir-path
-        run: echo "::set-output name=dir::$(yarn cache dir)"
-      - uses: actions/cache@v2.1.2
-        id: yarn-cache # use this to check for `cache-hit` (`steps.yarn-cache.outputs.cache-hit != 'true'`)
+      - name: Cache node_modules
+        uses: actions/cache@v2.1.6
+        id: cached-node_modules
         with:
-          path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
-          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-yarn-
+          path: |
+            node_modules
+          key: ${{ runner.os }}-${{ hashFiles('yarn.lock') }}-${{ hashFiles('.github/workflows/testing.yml') }}
 
       - name: Install all yarn packages
+        if: steps.cached-node_modules.outputs.cache-hit != 'true'
         run: |
-          ./testing/scripts/yarn-install.sh
-          ./testing/scripts/yarn-lockfile-check.sh
+          yarn --frozen-lockfile
 
-      - name: Lint checking
-        run: ./testing/scripts/lint-check.sh
+      - name: Lint prettier
+        run: yarn prettier-check
+
+      - name: Lint ESLint
+        run: yarn eslint
 
       - name: Unit testing client
         run: yarn test:client
 
-      - name: Unit testing kumascript
-        if: steps.git_diff_kumascript.outputs.diff
+      - name: Build and start server
+        env:
+          ENV_FILE: testing/.env
         run: |
-          export CONTENT_ROOT=testing/content/files
-          yarn test:kumascript
+
+          # because `yarn prepare-build` is a wrapper for `yarn build:client` and
+          # `yarn build:client` can't respect the `$ENV_FILE` environment variable,
+          # because it has to build from the `./client/` directory, we have to
+          # manually copy the `testing/.env` file into `client/` so that when
+          # `yarn build:client` runs, it gets the same environment variables
+          # as you'd get when doing `yarn build:ssr`.
+          cp testing/.env client/
+
+          yarn prepare-build
+          yarn build
+
+          yarn start:static-server > /tmp/stdout.log 2> /tmp/stderr.log &
+          sleep 1
+          curl --fail --retry-connrefused --retry 5 http://localhost:5000 > /dev/null
 
       - name: Functional testing
         run: |
-          # Make this env var explicit for GitHub Actions because in local
-          # dev/debug you're encouraged to start it yourself in a separate
-          # terminal.
-          export TESTING_START_SERVER=true
+          yarn test:testing
+          yarn test:headless
 
-          # In terms of the --maxWorkers option, it's not yet clear which
-          # is best.
-          # See https://jestjs.io/docs/en/troubleshooting#tests-are-extremely-slow-on-docker-andor-continuous-integration-ci-server
-          # and https://www.peterbe.com/plog/ideal-number-of-workers-in-jest-maxWorkers
-          # CI tends to have fewer CPUs than laptops so let's stay conservative
-          # for now.
-          # Also note that `--runInBand` is the same as `--maxWorkers=1`
-
-          ./testing/scripts/functional-test.sh --runInBand
-
-  deployer:
-    runs-on: ubuntu-latest
-
-    steps:
-      - uses: actions/checkout@v2
-
-      - uses: technote-space/get-diff-action@v4
-        with:
-          PATTERNS: deployer/**
-
-      - name: Install Python
-        if: env.GIT_DIFF
-        uses: actions/setup-python@v2
-        with:
-          python-version: "3.8"
-
-      - name: Install Python poetry
-        if: env.GIT_DIFF
-        uses: dschep/install-poetry-action@v1.3
-
-      - name: Install deployer
-        if: env.GIT_DIFF
+      - name: Basic m2h/h2m tool testing
+        env:
+          ENV_FILE: testing/.env
         run: |
-          cd deployer
-          poetry install
+          yarn md m2h markdown/tool/m2h --locale en-US
+          diff -s testing/content/files/en-us/markdown/tool/m2h/index.html testing/content/files/en-us/markdown/tool/m2h/expected.html
+          yarn md h2m markdown/tool/h2m --locale en-US
+          diff -s testing/content/files/en-us/markdown/tool/h2m/index.md testing/content/files/en-us/markdown/tool/h2m/expected.md
 
-      - name: Display Python & Poetry version
-        if: env.GIT_DIFF
+      - name: Debug server's stdout and stderr if tests failed
+        if: failure()
         run: |
-          python --version
-          poetry --version
-
-      - name: Lint Python code
-        if: env.GIT_DIFF
-        run: |
-          flake8 deployer
-          black --check deployer
-
-      - name: Basic run of deployer
-        if: env.GIT_DIFF
-        run: |
-          cd deployer
-          poetry run deployer --help
-
-  docs:
-    runs-on: ubuntu-latest
-
-    steps:
-      - uses: actions/checkout@v2
-
-      - uses: technote-space/get-diff-action@v4
-        with:
-          PATTERNS: docs/**/*.md
-          FILES: |
-            README.md
-
-      - name: Setup Node.js environment
-        if: env.GIT_DIFF
-        uses: actions/setup-node@v2.1.2
-        with:
-          node-version: "12"
-
-      - name: Lint markdown files
-        if: env.GIT_DIFF
-        run: |
-          echo "GIT DIFF:"
-          echo "${{ env.GIT_DIFF }}"
+          echo "STDOUT..................................................."
+          cat /tmp/stdout.log
           echo ""
-          npx markdownlint-cli ${{ env.GIT_DIFF }}
+          echo "STDERR..................................................."
+          cat /tmp/stderr.log

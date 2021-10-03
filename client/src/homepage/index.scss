@@ -1,15 +1,15 @@
-#homepage {
-  margin: 40px;
-  .header-search {
-    width: 750px;
-  }
-  .search-widget .search-results {
-    width: 705px;
-  }
-  ul {
-    margin-bottom: 10px;
-  }
-  ul li {
-    padding-left: 20px;
+@import "~@mdn/minimalist/sass/mixins/utils";
+@import "~@mdn/minimalist/sass/vars/layout";
+
+.home-content-container {
+  margin: 0 auto;
+  max-width: $max-width-default;
+  padding: $base-spacing;
+  position: relative;
+
+  @media #{$mq-small-desktop-and-up} {
+    @include gap($base-spacing);
+    display: flex;
+    margin: ($base-spacing * 2) auto;
   }
 }

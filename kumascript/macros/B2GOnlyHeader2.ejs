@@ -1,4 +1,5 @@
-<%/*
+<%
+/*
 
 one parameter:
     Level of security allow to the API:
@@ -6,8 +7,6 @@ one parameter:
 
 */
 
-
-var lang = env.locale;
 
 var secString = {
     'web+' : mdn.localString({
@@ -67,6 +66,8 @@ var secLevel = $0 && $0.toLowerCase() || 'certified';
 if ( !(secLevel in secString) ) secLevel = 'certified';
 
 
-%><div class="blockIndicator warning">
-    <p style="text-align:center"><%- secString[secLevel] %></p>
+%>
+<div class="notecard warning">
+    <h4>Warning</h4>
+    <p><%- secString[secLevel] %></p>
 </div>

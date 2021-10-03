@@ -28,13 +28,16 @@ const commonl10nFixturePath = path.resolve(
   __dirname,
   "fixtures/defaultapisidebar/commonl10n.json"
 );
-const commonl10nFixture = fs.readFileSync(commonl10nFixturePath, "utf8");
-const commonL10nJSON = JSON.parse(commonl10nFixture);
+const commonl10nFixture = JSON.parse(
+  fs.readFileSync(commonl10nFixturePath, "utf8")
+);
 const groupDataFixturePath = path.resolve(
   __dirname,
   "fixtures/defaultapisidebar/groupdata.json"
 );
-const groupDataFixture = fs.readFileSync(groupDataFixturePath, "utf8");
+const groupDataFixture = JSON.parse(
+  fs.readFileSync(groupDataFixturePath, "utf8")
+);
 
 /**
  * All the const objects that follow define bits of the data we expect.
@@ -92,11 +95,11 @@ const expectedGuides = {
   },
   fr: {
     "A Guide in another place": {
-      text: "A Guide in another place [Traduire]",
+      text: "A Guide in another place",
       target: "/fr/docs/Web/AnotherPlace/A_guide",
     },
     "A Guide listed in GroupData and also a subpage": {
-      text: "A Guide listed in GroupData and also a subpage [Traduire]",
+      text: "A Guide listed in GroupData and also a subpage",
       target: "/fr/docs/Web/API/TestInterface_API/MyGuidePage1",
       title: "The MyGuidePage1 ...",
     },
@@ -281,12 +284,12 @@ function checkResult(html, config) {
  */
 function testMacro(config) {
   for (const locale of ["en-US", "fr", "ja"]) {
-    let testName = `${config.name}; locale: ${locale}`;
+    const testName = `${config.name}; locale: ${locale}`;
     itMacro(testName, function (macro) {
       config.locale = locale;
       macro.ctx.env.locale = locale;
       // Mock calls to MDN.subpagesExpand
-      macro.ctx.page.subpagesExpand = jest.fn((page) => {
+      macro.ctx.page.subpagesExpand = jest.fn(() => {
         return config.subpages;
       });
       return macro.call(config.argument).then(function (result) {
@@ -302,16 +305,15 @@ describeMacro("DefaultAPISidebar", function () {
   beforeEachMacro(function (macro) {
     // env.slug only has to be truthy
     macro.ctx.env.slug = "not undefined";
-    // Mock calls to L10n-Common and GroupData
-    const originalTemplate = macro.ctx.template;
-    macro.ctx.template = jest.fn(async (name, ...args) => {
-      if (name === "L10n:Common") {
-        return commonl10nFixture;
-      }
+    // Mock calls to getJSONData()
+    macro.ctx.web.getJSONData = jest.fn((name) => {
       if (name === "GroupData") {
         return groupDataFixture;
       }
-      return await originalTemplate(name, ...args);
+      if (name === "L10n-Common") {
+        return commonl10nFixture;
+      }
+      throw new Error(`Unimplemented mock fixture ${name}`);
     });
     // Mock calls to wiki.getPage()
     macro.ctx.wiki.getPage = jest.fn(async (url) => {

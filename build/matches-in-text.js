@@ -18,24 +18,39 @@ function* findMatchesInText(needle, haystack, { attribute = null } = {}) {
   }
 }
 
+function getFirstMatchInText(needle, haystack) {
+  const index = haystack.indexOf(needle);
+  const left = haystack.substring(0, index);
+  const line = left.split("\n").length;
+  const column = left.length - left.lastIndexOf("\n");
+  return { line, column };
+}
+
 function replaceMatchesInText(
   needle,
   haystack,
   replacement,
-  { inAttribute = null }
+  { inAttribute = null, removeEntireAttribute = false }
 ) {
   // Need to remove any characters that can affect a regex if we're going
   // use the string in a manually constructed regex.
   const escaped = needle.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
   let rex;
   if (inAttribute) {
-    rex = new RegExp(`${inAttribute}=['"](${escaped})['"]`, "g");
+    rex = new RegExp(`\\s*${inAttribute}=['"](${escaped})['"]`, "g");
   } else {
     rex = new RegExp(`(${escaped})`, "g");
   }
   return haystack.replace(rex, (match, p1) => {
+    if (removeEntireAttribute) {
+      return "";
+    }
     return match.replace(p1, replacement);
   });
 }
 
-module.exports = { findMatchesInText, replaceMatchesInText };
+module.exports = {
+  findMatchesInText,
+  getFirstMatchInText,
+  replaceMatchesInText,
+};

@@ -16,7 +16,7 @@ const {
 describe("testing the main render() function", () => {
   it("non-fatal errors in macros are returned by render()", async () => {
     info.cleanURL = jest.fn((url) => {
-      let result = url.toLowerCase();
+      const result = url.toLowerCase();
       if (result === "/en-us/docs/web/css/dumber") {
         return "/en-us/docs/web/css/number";
       }
@@ -46,7 +46,8 @@ describe("testing the main render() function", () => {
             slug: "Web/A",
             tags: ["Web"],
           },
-          rawHTML: source,
+          rawBody: source,
+          isMarkdown: false,
           fileInfo: {
             path: "testing/content/files/en-us/web/a",
             frontMatterOffset: 8,
@@ -60,7 +61,8 @@ describe("testing the main render() function", () => {
             slug: "Web/B",
             tags: ["Web"],
           },
-          rawHTML: '<p>{{cssxref("bigfoot")}}</p>',
+          rawBody: '<p>{{cssxref("bigfoot")}}</p>',
+          isMarkdown: false,
           fileInfo: {
             path: "testing/content/files/en-us/web/b",
             frontMatterOffset: 4,
@@ -74,7 +76,8 @@ describe("testing the main render() function", () => {
             slug: "Web/C",
             tags: ["Web"],
           },
-          rawHTML: '{{page("/en-US/docs/Web/B")}}',
+          rawBody: '{{page("/en-US/docs/Web/B")}}',
+          isMarkdown: false,
           fileInfo: {
             path: "testing/content/files/en-us/web/c",
             frontMatterOffset: 5,
@@ -88,7 +91,8 @@ describe("testing the main render() function", () => {
             slug: "Web/Number",
             tags: ["Web", "CSS", "CSS Data Type", "Layout", "Reference"],
           },
-          rawHTML: "<p>This is the number test page.</p>",
+          rawBody: "<p>This is the number test page.</p>",
+          isMarkdown: false,
           fileInfo: {
             path: "testing/content/files/en-us/web/css/number",
             frontMatterOffset: 12,
@@ -96,22 +100,18 @@ describe("testing the main render() function", () => {
         },
       }[url];
     });
-    let [result, errors] = await render("/en-us/docs/web/a");
+    const [result, errors] = await render("/en-us/docs/web/a");
     // First, let's check the result.
     expect(result).toEqual(
-      expect.stringContaining("{{nonExistentMacro(&quot;yada&quot;)}}")
+      expect.stringContaining('{{nonExistentMacro("yada")}}')
     );
+    expect(result).toEqual(expect.stringContaining('{{page("bogus")}}'));
     expect(result).toEqual(
-      expect.stringContaining("{{page(&quot;bogus&quot;)}}")
-    );
-    expect(result).toEqual(
-      expect.stringContaining(
-        "{{page(&quot;/en-US/docs/Web/B&quot;, &quot;bogus-section&quot;)}}"
-      )
+      expect.stringContaining('{{page("/en-US/docs/Web/B", "bogus-section")}}')
     );
     const $ = cheerio.load(result);
     const brokenLink = $(
-      'a.new[title^="The documentation about this has not yet been written"]'
+      'a.page-not-created[title^="The documentation about this has not yet been written"]'
     );
     expect(brokenLink.length).toBe(3);
     expect(brokenLink.html()).toBe("<code>bigfoot</code>");
@@ -119,7 +119,7 @@ describe("testing the main render() function", () => {
     expect(otherLinks.length).toBe(2);
     expect(otherLinks.eq(0).html()).toBe("<code>&lt;dumber&gt;</code>");
     expect(otherLinks.eq(1).html()).toBe("<code>&lt;number&gt;</code>");
-    for (deprecatedID of [
+    for (const deprecatedID of [
       "fx-header",
       "fx-inline",
       "gecko-header",

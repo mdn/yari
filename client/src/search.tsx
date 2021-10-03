@@ -1,29 +1,17 @@
-import React, { useCallback, useEffect, useRef, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import React, { useEffect, useMemo, useRef, useState } from "react";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { useCombobox } from "downshift";
 import FlexSearch from "flexsearch";
-import useSWR, { mutate } from "swr";
-import FuzzySearch from "./fuzzy-search";
-import "./search.scss";
-import { useWebSocketMessageHandler } from "./web-socket";
+import useSWR from "swr";
+
+import { Doc, FuzzySearch } from "./fuzzy-search";
+import { preload, preloadSupported } from "./document/preloading";
 
 import { useLocale } from "./hooks";
-import SearchIcon from "./kumastyles/general/search.svg";
+import { getPlaceholder, SearchProps, useFocusOnSlash } from "./search-utils";
 
-function isMobileUserAgent() {
-  return (
-    typeof window !== "undefined" &&
-    (typeof window.orientation !== "undefined" ||
-      navigator.userAgent.indexOf("IEMobile") !== -1)
-  );
-}
-
-const ACTIVE_PLACEHOLDER = "Go ahead. Type your search...";
-// Make this one depend on figuring out if you're on a mobile device
-// because there you can't really benefit from keyboard shortcuts.
-const INACTIVE_PLACEHOLDER = isMobileUserAgent()
-  ? "Site search..."
-  : 'Site search... (Press "/" to focus)';
+const PRELOAD_WAIT_MS = 500;
+const SHOW_INDEXING_AFTER_MS = 500;
 
 type Item = {
   url: string;
@@ -36,7 +24,17 @@ type SearchIndex = {
   items: null | Item[];
 };
 
-function useSearchIndex(): [null | SearchIndex, null | Error, () => void] {
+type ResultItem = {
+  title: string;
+  url: string;
+  positions: Set<number>;
+};
+
+function useSearchIndex(): readonly [
+  null | SearchIndex,
+  null | Error,
+  () => void
+] {
   const [shouldInitialize, setShouldInitialize] = useState(false);
   const [searchIndex, setSearchIndex] = useState<null | SearchIndex>(null);
   const { locale } = useParams();
@@ -44,9 +42,9 @@ function useSearchIndex(): [null | SearchIndex, null | Error, () => void] {
   // Default to 'en-US' if you're on the home page without the locale prefix.
   const url = `/${locale || "en-US"}/search-index.json`;
 
-  const { error, data } = useSWR<null | Item[]>(
+  const { error, data } = useSWR<null | Item[], Error | undefined>(
     shouldInitialize ? url : null,
-    async (url) => {
+    async (url: string) => {
       const response = await fetch(url);
       if (!response.ok) {
         throw new Error(await response.text());
@@ -56,32 +54,24 @@ function useSearchIndex(): [null | SearchIndex, null | Error, () => void] {
     { revalidateOnFocus: false }
   );
 
-  useWebSocketMessageHandler((event) => {
-    if (event.type === "SEARCH_INDEX_READY") {
-      mutate(url);
-    }
-  });
-
   useEffect(() => {
-    if (!data) {
+    if (!data || searchIndex) {
       return;
     }
-    const flex = new (FlexSearch as any)({
-      suggest: true,
-      tokenize: "forward",
-    });
-    const urls = data.map(({ url, title }, i) => {
-      // XXX investigate if it's faster to add all at once
-      // https://github.com/nextapps-de/flexsearch/#addupdateremove-documents-tofrom-the-index
+
+    const flex = FlexSearch.create({ tokenize: "forward" });
+    data!.forEach(({ title }, i) => {
       flex.add(i, title);
-      return url;
     });
-    const fuzzy = new FuzzySearch(urls);
+    const fuzzy = new FuzzySearch(data as Doc[]);
 
-    setSearchIndex({ flex, fuzzy, items: data });
-  }, [shouldInitialize, data]);
+    setSearchIndex({ flex, fuzzy, items: data! });
+  }, [searchIndex, shouldInitialize, data]);
 
-  return [searchIndex, error, () => setShouldInitialize(true)];
+  return useMemo(
+    () => [searchIndex, error || null, () => setShouldInitialize(true)],
+    [searchIndex, error, setShouldInitialize]
+  );
 }
 
 // The fuzzy search is engaged if the search term starts with a '/'
@@ -90,7 +80,7 @@ function isFuzzySearchString(str: string) {
   return str.startsWith("/") && !/\s/.test(str);
 }
 
-function HighlightMatch({ title, q }) {
+function HighlightMatch({ title, q }: { title: string; q: string }) {
   // FlexSearch doesn't support finding out which "typo corrections"
   // were done unfortunately.
   // See https://github.com/nextapps-de/flexsearch/issues/99
@@ -116,16 +106,22 @@ function HighlightMatch({ title, q }) {
   );
 }
 
-function BreadcrumbURI({ uri, substrings }) {
-  if (substrings) {
+function BreadcrumbURI({
+  uri,
+  positions,
+}: {
+  uri: string;
+  positions?: Set<number>;
+}) {
+  if (positions && positions.size) {
+    const chars = uri.split("");
     return (
       <small>
-        {substrings.map((part, i) => {
-          const key = `${part.str}:${i}`;
-          if (part.match) {
-            return <mark key={key}>{part.str}</mark>;
+        {chars.map((char, i) => {
+          if (positions.has(i)) {
+            return <mark key={i}>{char}</mark>;
           } else {
-            return <span key={key}>{part.str}</span>;
+            return <span key={i}>{char}</span>;
           }
         })}
       </small>
@@ -138,88 +134,114 @@ function BreadcrumbURI({ uri, substrings }) {
   return <small>{keep.join(" / ")}</small>;
 }
 
-type ResultItem = {
-  title: string;
-  url: string;
-  substrings: string[];
+type InnerSearchNavigateWidgetProps = SearchProps & {
+  onResultPicked?: () => void;
+  defaultSelection: [number, number];
 };
 
-function useFocusOnSlash(inputRef: React.RefObject<null | HTMLInputElement>) {
+function useHasNotChangedFor(value: string, ms: number) {
+  const [hasNotChanged, setHasNotChanged] = useState(false);
+  const previousValue = useRef(value);
   useEffect(() => {
-    function focusOnSearchMaybe(event) {
-      const input = inputRef.current;
-      if (
-        event.code === "Slash" &&
-        !["TEXTAREA", "INPUT"].includes(event.target.tagName)
-      ) {
-        if (input && document.activeElement !== input) {
-          event.preventDefault();
-          input.focus();
-        }
-      }
+    if (previousValue.current === value) {
+      return;
     }
-    document.addEventListener("keydown", focusOnSearchMaybe);
+    previousValue.current = value;
+    setHasNotChanged(false);
+    // while timeouts are not accurate for counting time there error is only
+    // upwards, meaning they might trigger after more time than specified,
+    // which is fine in this case
+    const timeout = setTimeout(() => {
+      setHasNotChanged(true);
+    }, ms);
     return () => {
-      document.removeEventListener("keydown", focusOnSearchMaybe);
+      clearTimeout(timeout);
     };
-  }, [inputRef]);
+  }, [value, ms]);
+
+  return hasNotChanged;
 }
 
-function InnerSearchNavigateWidget() {
+function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
+  const {
+    inputValue,
+    onChangeInputValue,
+    isFocused,
+    onChangeIsFocused,
+    onResultPicked,
+    defaultSelection,
+  } = props;
+
   const navigate = useNavigate();
   const locale = useLocale();
 
-  const [
-    searchIndex,
-    searchIndexError,
-    initializeSearchIndex,
-  ] = useSearchIndex();
-  const [resultItems, setResultItems] = useState<ResultItem[]>([]);
-  const [isFocused, setIsFocused] = useState(false);
+  const [searchIndex, searchIndexError, initializeSearchIndex] =
+    useSearchIndex();
 
   const inputRef = useRef<null | HTMLInputElement>(null);
+  const formRef = useRef<null | HTMLFormElement>(null);
+  const isSelectionInitialized = useRef(false);
 
-  const updateResults = useCallback(
-    (inputValue: string | undefined) => {
-      if (!searchIndex || !inputValue) {
-        // This can happen if the initialized hasn't completed yet or
-        // completed un-successfully.
-        setResultItems([]);
-        return;
-      }
+  const showIndexing = useHasNotChangedFor(inputValue, SHOW_INDEXING_AFTER_MS);
 
-      // The iPhone X series is 812px high.
-      // If the window isn't very high, show fewer matches so that the
-      // overlaying search results don't trigger a scroll.
-      const limit = window.innerHeight < 850 ? 5 : 10;
+  useEffect(() => {
+    if (!inputRef.current || isSelectionInitialized.current) {
+      return;
+    }
+    if (isFocused) {
+      inputRef.current.selectionStart = defaultSelection[0];
+      inputRef.current.selectionEnd = defaultSelection[1];
+    }
+    isSelectionInitialized.current = true;
+  }, [isFocused, defaultSelection]);
 
-      let results: ResultItem[] | null = null;
-      if (isFuzzySearchString(inputValue)) {
-        if (inputValue === "/") {
-          setResultItems([]);
-          return;
-        } else {
-          const fuzzyResults = searchIndex.fuzzy.search(inputValue, { limit });
-          results = fuzzyResults.map((fuzzyResult) => ({
-            ...(searchIndex.items || [])[fuzzyResult.index],
-            substrings: fuzzyResult.substrings,
-          }));
-        }
+  const resultItems: ResultItem[] = useMemo(() => {
+    if (!searchIndex || !inputValue || searchIndexError) {
+      // This can happen if the initialized hasn't completed yet or
+      // completed un-successfully.
+      return [];
+    }
+
+    // The iPhone X series is 812px high.
+    // If the window isn't very high, show fewer matches so that the
+    // overlaying search results don't trigger a scroll.
+    const limit = window.innerHeight < 850 ? 5 : 10;
+
+    if (isFuzzySearchString(inputValue)) {
+      if (inputValue === "/") {
+        return [];
       } else {
-        // Full-Text search
-        const indexResults = searchIndex.flex.search(inputValue, {
+        const fuzzyResults = searchIndex.fuzzy.search(inputValue.slice(1), {
           limit,
-          suggest: true, // This can give terrible result suggestions
         });
-
-        results = indexResults.map((index) => (searchIndex.items || [])[index]);
+        return fuzzyResults.map((fuzzyResult) => ({
+          url: fuzzyResult.item.url,
+          title: fuzzyResult.item.title,
+          positions: fuzzyResult.positions,
+        }));
       }
+    } else {
+      // Full-Text search
+      const indexResults: number[] = searchIndex.flex.search(inputValue, {
+        limit,
+        suggest: true, // This can give terrible result suggestions
+      });
+      return indexResults.map(
+        (index: number) => (searchIndex.items || [])[index] as ResultItem
+      );
+    }
+  }, [inputValue, searchIndex, searchIndexError]);
 
-      if (results) {
-        setResultItems(results);
-      }
-    },
-    [searchIndex, setResultItems]
+  const formAction = `/${locale}/search`;
+  const searchPath = useMemo(() => {
+    const sp = new URLSearchParams();
+    sp.set("q", inputValue.trim());
+    return `${formAction}?${sp.toString()}`;
+  }, [formAction, inputValue]);
+
+  const nothingFoundItem = useMemo(
+    () => ({ url: searchPath, title: "", positions: new Set() }),
+    [searchPath]
   );
 
   const {
@@ -229,40 +251,132 @@ function InnerSearchNavigateWidget() {
     getComboboxProps,
 
     highlightedIndex,
-    inputValue,
     isOpen,
 
     reset,
+    toggleMenu,
   } = useCombobox({
-    defaultHighlightedIndex: 0,
-    items: resultItems,
-    onInputValueChange: ({ inputValue }) => {
-      updateResults(inputValue);
-    },
+    items: resultItems.length === 0 ? [nothingFoundItem] : resultItems,
+    inputValue,
+    defaultIsOpen: isFocused,
     onSelectedItemChange: ({ selectedItem }) => {
       if (selectedItem) {
         navigate(selectedItem.url);
+        onChangeInputValue("");
         reset();
+        toggleMenu();
+        inputRef.current?.blur();
+        if (onResultPicked) {
+          onResultPicked();
+        }
+        window.scroll({
+          top: 0,
+          left: 0,
+          behavior: "smooth",
+        });
       }
     },
   });
 
   useFocusOnSlash(inputRef);
 
+  useEffect(() => {
+    if (isFocused) {
+      initializeSearchIndex();
+    }
+  }, [initializeSearchIndex, isFocused]);
+
+  useEffect(() => {
+    const item = resultItems[highlightedIndex];
+    if (item && preloadSupported()) {
+      const timeout = setTimeout(() => {
+        preload(`${item.url}/index.json`);
+      }, PRELOAD_WAIT_MS);
+      return () => {
+        clearTimeout(timeout);
+      };
+    }
+  }, [highlightedIndex, resultItems]);
+
+  const searchResults = (() => {
+    if (!isOpen || !inputValue.trim()) {
+      return null;
+    }
+
+    if (searchIndexError) {
+      return (
+        <div className="searchindex-error">Error initializing search index</div>
+      );
+    }
+
+    if (!searchIndex) {
+      return showIndexing ? (
+        <div className="indexing-warning">
+          <em>Initializing index</em>
+        </div>
+      ) : null;
+    }
+
+    return (
+      <>
+        {resultItems.length === 0 && inputValue !== "/" ? (
+          <div
+            {...getItemProps({
+              className:
+                "nothing-found result-item " +
+                (highlightedIndex === 0 ? "highlight" : ""),
+              item: nothingFoundItem,
+              index: 0,
+            })}
+          >
+            No document titles found.
+            <br />
+            <Link to={searchPath}>
+              Site search for <code>{inputValue}</code>
+            </Link>
+          </div>
+        ) : (
+          resultItems.map((item, i) => (
+            <div
+              {...getItemProps({
+                key: item.url,
+                className:
+                  "result-item " + (i === highlightedIndex ? "highlight" : ""),
+                item,
+                index: i,
+              })}
+            >
+              <HighlightMatch title={item.title} q={inputValue} />
+              <br />
+              <BreadcrumbURI uri={item.url} positions={item.positions} />
+            </div>
+          ))
+        )}
+        {isFuzzySearchString(inputValue) && (
+          <div className="fuzzy-engaged">Fuzzy searching by URI</div>
+        )}
+      </>
+    );
+  })();
+
   return (
     <form
-      action={`/${locale}/search`}
+      action={formAction}
       {...getComboboxProps({
-        className: "search-widget",
+        ref: formRef as any, // downshift's types hardcode it as a div
+        className: "search-form search-widget",
         id: "nav-main-search",
         role: "search",
-        // onSubmit: (e) => {
-        //   e.preventDefault();
-        // },
+        onSubmit: (e) => {
+          // This comes into effect if the input is completely empty and the
+          // user hits Enter, which triggers the native form submission.
+          // When something *is* entered, the onKeyDown event is triggered
+          // on the <input> and within that handler you can
+          // access `event.key === 'Enter'` as a signal to submit the form.
+          e.preventDefault();
+        },
       })}
     >
-      <img src={SearchIcon} alt="search" className="search-icon" />
-
       <label htmlFor="main-q" className="visually-hidden">
         Search MDN
       </label>
@@ -275,16 +389,27 @@ function InnerSearchNavigateWidget() {
             : "search-input-field",
           id: "main-q",
           name: "q",
-          placeholder: isFocused ? ACTIVE_PLACEHOLDER : INACTIVE_PLACEHOLDER,
+          placeholder: getPlaceholder(isFocused),
           onMouseOver: initializeSearchIndex,
           onFocus: () => {
-            initializeSearchIndex();
-            setIsFocused(true);
+            onChangeIsFocused(true);
           },
-          onBlur: () => setIsFocused(false),
-          onKeyDown: (event) => {
+          onBlur: () => onChangeIsFocused(false),
+          onKeyDown(event) {
             if (event.key === "Escape" && inputRef.current) {
-              inputRef.current.blur();
+              toggleMenu();
+            } else if (
+              event.key === "Enter" &&
+              inputValue.trim() &&
+              highlightedIndex === -1
+            ) {
+              inputRef.current!.blur();
+              formRef.current!.submit();
+            }
+          },
+          onChange(event) {
+            if (event.target instanceof HTMLInputElement) {
+              onChangeInputValue(event.target.value);
             }
           },
           ref: (input) => {
@@ -293,43 +418,15 @@ function InnerSearchNavigateWidget() {
         })}
       />
 
+      <input
+        type="submit"
+        className="ghost search-button"
+        value=""
+        aria-label="Search"
+      />
+
       <div {...getMenuProps()}>
-        {isOpen && (
-          <div className="search-results">
-            {!searchIndex && !searchIndexError && (
-              <div className="indexing-warning">
-                <em>Initializing index</em>
-              </div>
-            )}
-            {searchIndexError ? (
-              <div className="searchindex-error">
-                Error initializing search index
-              </div>
-            ) : (
-              resultItems.length === 0 &&
-              inputValue &&
-              searchIndex && <div className="nothing-found">nothing found</div>
-            )}
-            {resultItems.map((item, i) => (
-              <div
-                {...getItemProps({
-                  key: item.url,
-                  className:
-                    "result-item " + (i === highlightedIndex ? "highlit" : ""),
-                  item,
-                  index: i,
-                })}
-              >
-                <HighlightMatch title={item.title} q={inputValue} />
-                <br />
-                <BreadcrumbURI uri={item.url} substrings={item.substrings} />
-              </div>
-            ))}
-            {isFuzzySearchString(inputValue) && (
-              <div className="fuzzy-engaged">Fuzzy searching by URI</div>
-            )}
-          </div>
-        )}
+        {searchResults && <div className="search-results">{searchResults}</div>}
       </div>
     </form>
   );
@@ -338,7 +435,7 @@ function InnerSearchNavigateWidget() {
 class SearchErrorBoundary extends React.Component {
   state = { hasError: false };
 
-  static getDerivedStateFromError(error) {
+  static getDerivedStateFromError(error: Error) {
     console.error("There was an error while trying to render search", error);
     return { hasError: true };
   }
@@ -351,10 +448,10 @@ class SearchErrorBoundary extends React.Component {
   }
 }
 
-export function SearchNavigateWidget() {
+export default function SearchNavigateWidget(props) {
   return (
     <SearchErrorBoundary>
-      <InnerSearchNavigateWidget />
+      <InnerSearchNavigateWidget {...props} />
     </SearchErrorBoundary>
   );
 }

@@ -3,8 +3,6 @@ import { useContext, useEffect, useState } from "react";
 
 export type GAFunction = (...any) => void;
 
-export const CATEGORY_MONTHLY_PAYMENTS = "monthly payments";
-
 const GA_SESSION_STORAGE_KEY = "ga";
 
 function getPostponedEvents() {
@@ -43,8 +41,6 @@ declare global {
 function ga(...args) {
   if (typeof window === "object" && typeof window.ga === "function") {
     window.ga(...args);
-  } else {
-    console.debug("analytics (not sent)", ...args);
   }
 }
 
@@ -84,7 +80,7 @@ export function GAProvider(props: { children: React.ReactNode }) {
 }
 
 // This is a custom hook to return the GA client id. It returns the
-// emtpy string until (and unless) it can determine that id from the GA object.
+// empty string until (and unless) it can determine that id from the GA object.
 export function useClientId() {
   const [clientId, setClientId] = useState<string>("");
   const ga = useContext(GAContext);

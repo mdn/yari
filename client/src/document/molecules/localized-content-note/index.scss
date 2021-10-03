@@ -1,0 +1,12 @@
+@use "sass:math";
+
+@import "~@mdn/minimalist/sass/vars/layout";
+
+.localized-content-note {
+  border-left: 0;
+
+  &.inline {
+    margin: 0;
+    padding: math.div($base-spacing, 2) $base-spacing;
+  }
+}

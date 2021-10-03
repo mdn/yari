@@ -9,13 +9,13 @@ const Templates = require("../src/templates.js");
 
 describe("macros/ directory", () => {
   describe("compile all macros", () => {
-    let templates = new Templates(`${__dirname}/../macros`);
-    let templateMap = templates.getTemplateMap();
-    let macroNames = Array.from(templateMap.keys());
+    const templates = new Templates(`${__dirname}/../macros`);
+    const templateMap = templates.getTemplateMap();
+    const macroNames = Array.from(templateMap.keys());
 
     it.each(macroNames)("%s", (macro) => {
-      let filename = templateMap.get(macro);
-      let source = fs.readFileSync(filename, "utf-8");
+      const filename = templateMap.get(macro);
+      const source = fs.readFileSync(filename, "utf-8");
       ejs.compile(source, { async: true });
     });
   });

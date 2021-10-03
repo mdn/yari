@@ -1,0 +1,40 @@
+@use "sass:math";
+
+@import "~@mdn/minimalist/sass/vars/layout";
+@import "~@mdn/minimalist/sass/vars/typography";
+
+.language-menu {
+  margin-top: $base-spacing;
+
+  fieldset {
+    padding: 0;
+  }
+
+  legend {
+    font-size: $medium-font-size-mobile;
+    font-weight: bold;
+
+    @media #{$mq-small-desktop-and-up} {
+      font-size: $medium-font-size;
+    }
+  }
+
+  select {
+    display: inline-block;
+    margin-right: math.div($base-spacing, 3);
+    margin-bottom: math.div($base-spacing, 3);
+
+    @media #{$mq-tablet-and-up} {
+      display: inline-block;
+      vertical-align: text-top;
+    }
+
+    @media #{$mq-small-desktop-and-up} {
+      width: inherit;
+    }
+  }
+
+  .button {
+    max-width: inherit;
+  }
+}

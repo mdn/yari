@@ -28,7 +28,7 @@ const titles = [
 ];
 
 function getProps(items, prop_name) {
-  var result = [];
+  const result = [];
   for (const item of items) {
     result.push(item[prop_name]);
   }
@@ -117,7 +117,7 @@ describeMacro("page API tests", function () {
     });
   });
   itMacro("dummy", function (macro) {
-    let pkg = macro.ctx.page;
+    const pkg = macro.ctx.page;
     assert.isObject(pkg);
     assert.isFunction(pkg.hasTag);
     assert.isFunction(pkg.subpages);

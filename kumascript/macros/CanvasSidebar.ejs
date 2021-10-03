@@ -6,7 +6,7 @@ function state(section) {
   if (section == currentSection) {
     return "open";
   }
-  return "closed";
+  return "";
 }
 
 var text = mdn.localStringMap({
@@ -23,19 +23,15 @@ var text = mdn.localStringMap({
     'Basic_animations': 'Basic animations',
     'Advanced_animations': 'Advanced animations',
     'Pixel_manipulation': 'Pixel manipulation',
-    'Hitregions': 'Hit regions and accessibility',
     'Optimizing': 'Optimizing the canvas',
     'Finale': 'Finale',
     'Examples': 'Examples',
     'raycaster': 'A basic raycaster',
-    'snippets': 'Canvas code snippets',
     'video_canvas': 'Manipulating video using canvas',
     'Interfaces': 'Interfaces',
     'Documentation': 'Documentation:',
     'Useful_lists': 'Useful lists',
-    'Canvas_tag': 'Pages tagged "Canvas"',
     'Contribute': 'Contribute',
-    'Doc_status': 'Canvas doc status',
     'The_MDN_project': 'The MDN project',
   },
   'zh-CN': {
@@ -51,19 +47,15 @@ var text = mdn.localStringMap({
     'Basic_animations': '基本动画',
     'Advanced_animations': '高级动画',
     'Pixel_manipulation': '像素操作',
-    'Hitregions': '点击区域和无障碍访问',
     'Optimizing': 'canvas 的优化',
     'Finale': '终极',
     'Examples': '示例',
     'raycaster': '一个基本的光线投射例子',
-    'snippets': 'Canvas 代码片段',
     'video_canvas': '在 canvas 中操作视频',
     'Interfaces': '接口',
     'Documentation': '文档:',
     'Useful_lists': '常用页面列表',
-    'Canvas_tag': '拥有 "Canvas" 标签的页面',
     'Contribute': '贡献',
-    'Doc_status': 'Canvas 文档翻译状态',
     'The_MDN_project': 'MDN 项目',
   },
   'ru': {
@@ -79,20 +71,40 @@ var text = mdn.localStringMap({
     'Basic_animations': 'Простые анимации',
     'Advanced_animations': 'Расширенные анимации',
     'Pixel_manipulation': 'Манипуляция пикселями',
-    'Hitregions': 'Достижение областей и доступность',
     'Optimizing': 'Оптимизация canvas',
     'Finale': 'Заключение',
     'Examples': 'Примеры',
     'raycaster': 'Простой излучатель лучей',
-    'snippets': 'Спиппеты кода Canvas',
     'video_canvas': 'Манипяция видео с помощью canvas',
     'Interfaces': 'Интерфейсы',
     'Documentation': 'Документация:',
     'Useful_lists': 'Полезные списки',
-    'Canvas_tag': 'Страницы отмеченные "Canvas"',
     'Contribute': 'Внести свой вклад',
-    'Doc_status': 'Статус документации по Canvas',
     'The_MDN_project': 'Проект MDN',
+  },
+  'ja': {
+    'Canvas_API': 'Canvas API',
+    'Canvas_tutorial': 'Canvas チュートリアル',
+    'Basic_usage': '基本的な使用',
+    'Drawing_shapes': '図形の描画',
+    'Applying': 'スタイルと色の適用',
+    'Text': 'テキストの描画',
+    'Using_images': '画像の使用',
+    'Transformations': '変換',
+    'Compositing': '合成とクリッピング',
+    'Basic_animations': '基本的なアニメーション',
+    'Advanced_animations': '高度なアニメーション',
+    'Pixel_manipulation': 'ピクセル操作',
+    'Optimizing': 'canvas の最適化',
+    'Finale': '最後に',
+    'Examples': '例',
+    'raycaster': 'A basic raycaster',
+    'video_canvas': 'canvas を用いた動画の操作',
+    'Interfaces': 'インターフェイス',
+    'Documentation': 'ドキュメント:',
+    'Useful_lists': '有益なリスト',
+    'Contribute': '貢献',
+    'The_MDN_project': 'MDN プロジェクト',
   },
   'ko': {
     'Canvas_API': 'Canvas API',
@@ -107,24 +119,20 @@ var text = mdn.localStringMap({
     'Basic_animations': '기본 애니메이션',
     'Advanced_animations': '고급 애니메이션',
     'Pixel_manipulation': '픽셀 조작',
-    'Hitregions': '히트 영역 및 접근성',
     'Optimizing': 'Canvas 최적화하기',
     'Finale': 'Finale',
     'Examples': '예제',
     'raycaster': '기본 raycaster',
-    'snippets': 'Canvas 코드 스니펫',
     'video_canvas': 'Canvas를 사용해 비디오 조작하기',
     'Interfaces': '인터페이스',
     'Documentation': '문서:',
     'Useful_lists': '유용한 리스트',
-    'Canvas_tag': '"Canvas"가 태그된 페이지',
     'Contribute': '기여하기',
-    'Doc_status': 'Canvas 문서 상태',
     'The_MDN_project': 'MDN 프로젝트',
   }
 });
 %>
-<section id="Quick_Links">
+<section id="Quick_links">
  <ol>
   <li><a href="/<%=locale%>/docs/Web/API/Canvas_API"><strong><%=text['Canvas_API']%></strong></a></li>
   <li class="toggle">
@@ -141,7 +149,6 @@ var text = mdn.localStringMap({
         <li><a href="/<%=locale%>/docs/Web/API/Canvas_API/Tutorial/Basic_animations"><%=text['Basic_animations']%></a></li>
         <li><a href="/<%=locale%>/docs/Web/API/Canvas_API/Tutorial/Advanced_animations"><%=text['Advanced_animations']%></a></li>
         <li><a href="/<%=locale%>/docs/Web/API/Canvas_API/Tutorial/Pixel_manipulation_with_canvas"><%=text['Pixel_manipulation']%></a></li>
-        <li><a href="/<%=locale%>/docs/Web/API/Canvas_API/Tutorial/Hit_regions_and_accessibility"><%=text['Hitregions']%></a></li>
         <li><a href="/<%=locale%>/docs/Web/API/Canvas_API/Tutorial/Optimizing_canvas"><%=text['Optimizing']%></a></li>
         <li><a href="/<%=locale%>/docs/Web/API/Canvas_API/Tutorial/Finale"><%=text['Finale']%></a></li>
         </ol>
@@ -152,7 +159,6 @@ var text = mdn.localStringMap({
       <summary><%=text['Examples']%></summary>
       <ol>
         <li><a href="/<%=locale%>/docs/Web/API/Canvas_API/A_basic_ray-caster"><%=text['raycaster']%></a></li>
-        <li><a href="/<%=locale%>/Add-ons/Code_snippets/Canvas"><%=text['snippets']%></a></li>
         <li><a href="/<%=locale%>/docs/Web/API/Canvas_API/Manipulating_video_using_canvas"><%=text['video_canvas']%></a></li>
       </ol>
     </details>
@@ -168,24 +174,15 @@ var text = mdn.localStringMap({
         <li><%-await template("domxref", ["ImageBitmap"])%></li>
         <li><%-await template("domxref", ["ImageData"])%></li>
         <li><%-await template("domxref", ["TextMetrics"])%></li>
-        <li><span class="sidebar-icon"><%-await template("ExperimentalBadge", [1])%></span> <%-await template("domxref", ["Path2D"])%></li>
+        <li><%-await template("ExperimentalBadge")%> <%-await template("domxref", ["Path2D"])%></li>
       </ol>
     </details>
   </li>
   <li><strong><a href="/<%=locale%>/docs/MDN"><%=text['Documentation']%></a></strong></li>
   <li class="toggle">
-    <details <%=state('Useful_lists')%>>
-      <summary><%=text['Useful_lists']%></summary>
-      <ol>
-        <li><a href="/<%=locale%>/docs/tag/Canvas"><%=text['Canvas_tag']%></a></li>
-      </ol>
-    </details>
-  </li>
-  <li class="toggle">
     <details <%=state('Contribute')%>>
       <summary><%=text['Contribute']%></summary>
       <ol>
-        <li><a href="/<%=locale%>/docs/MDN/Doc_status/API/Canvas"><%=text['Doc_status']%></a></li>
         <li><a href="/<%=locale%>/docs/MDN"><%=text['The_MDN_project']%></a></li>
       </ol>
     </details>

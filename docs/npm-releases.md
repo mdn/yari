@@ -1,6 +1,6 @@
 # NPM Releases
 
-In essence, every commit to master triggers a new build which gets
+In essence, every commit to `main` triggers a new build which gets
 published on [npmjs.com as
 `@mdn/yari`](https://www.npmjs.com/package/@mdn/yari).
 
@@ -29,9 +29,9 @@ First of all, the version numbers don't matter. We're basically using NPM
 releases instead of relying on `git submodule` because tools like
 `yarn` is easier to use.
 
-For every commit to `master` our GitHub Action for NPM publishing will
+For every commit to `main` our GitHub Action for NPM publishing will
 make a patch release. I.e. from `0.9.1` to `0.9.2`. This will happen no
-matter how trivial the `master` commit changeset is.
+matter how trivial the `main` commit changeset is.
 
 If you want to trigger a release with minor increment (i.e. from `0.9.2`
 to `0.10.0`) you make a commit with a message that contains the

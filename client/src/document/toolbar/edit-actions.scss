@@ -1,5 +1,19 @@
+@import "~@mdn/minimalist/sass/vars/layout";
+
 .edit-actions {
-  text-align: center;
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
+  // width: 100%;
+
+  li {
+    margin-right: $base-spacing;
+
+    .button {
+      max-width: unset;
+    }
+  }
+
   p.editor-opening-error {
     font-weight: bold;
   }

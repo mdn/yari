@@ -3,8 +3,8 @@
  */
 const { assert, itMacro, describeMacro, beforeEachMacro } = require("./utils");
 
-var expected = `\
-<section class="Quick_links" id="Quick_Links">
+const expected = `\
+<section id="Quick_links">
 
 <ol>
   <li data-default-state="open"><a href="/en-US/docs/WebAssembly"><strong>WebAssembly home page</strong></a>
@@ -50,9 +50,9 @@ describeMacro("WebAssemblySidebar", function () {
 
     // Mock calls to template("jsxref", [partialSlug])
     macro.ctx.template = jest.fn((macro, args) => {
-      let jsSlug = args[0];
-      let partialSlug = jsSlug.replace(".", "/");
-      let url = baseURL + partialSlug;
+      const jsSlug = args[0];
+      const partialSlug = jsSlug.replace(".", "/");
+      const url = baseURL + partialSlug;
       return `<a href="${url}" title="Title for ${jsSlug}"><code>${jsSlug}</code></a>`;
     });
   });

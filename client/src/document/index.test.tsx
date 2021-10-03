@@ -1,14 +1,14 @@
+import { Document } from "./index";
+import { Route, Routes, MemoryRouter } from "react-router-dom";
 import React from "react";
 const { render, waitFor } = require("@testing-library/react");
-import { Route, Routes, MemoryRouter } from "react-router-dom";
-
-import { Document } from "./index";
 
 declare var global: Window;
 
 const sampleDocumentState = Object.freeze({
   doc: Object.freeze({
     title: "Sample Page",
+    locale: "en-US",
     summary: "This is the summary",
     mdn_url: "/en-US/docs/Sample/Page",
     sidebarHTML: "<ul><li>One</li></ul>",
@@ -25,6 +25,8 @@ const sampleDocumentState = Object.freeze({
     source: {
       folder: "en-us/sample/page",
       github_url: "http://github.com/mdn/yari/yada/yada",
+      last_commit_url:
+        "https://github.com/mdn/yari/commit/0102030405060708091011121314151617181920",
     },
   }),
 });

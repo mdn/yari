@@ -19,7 +19,9 @@ const groupDataFixturePath = path.resolve(
   __dirname,
   "fixtures/listgroups/groupdata.json"
 );
-const groupDataFixture = fs.readFileSync(groupDataFixturePath, "utf8");
+const groupDataFixture = JSON.parse(
+  fs.readFileSync(groupDataFixturePath, "utf8")
+);
 
 /**
  * Used to mock wiki.getPage()
@@ -41,9 +43,9 @@ const expectedHTML = `<div class="index">
         <li>
             <a href='/en-US/docs/Web/API/A2TestInterface_overview'>A2TestInterface</a>
             <span class='indexListBadges'>
-                <span title="This is an experimental API that should not be used in production code." class="icon-only-inline">
-                    <i class="icon-beaker"></i>
-                </span>
+              <svg class="icon icon-experimental" tabindex="0">
+                <use xlink:href="/assets/badges.svg#icon-experimental"></use>
+              </svg>
             </span>
         </li>
         <li>
@@ -74,7 +76,7 @@ function compareNode(actual, expected) {
     actual.nodeName === "A" ||
     (actual.nodeName === "SPAN" && expected.textContent.trim())
   ) {
-    expect(actual.textContent).toEqual(expected.textContent);
+    expect(actual.textContent.trim()).toEqual(expected.textContent.trim());
   }
 }
 
@@ -109,12 +111,13 @@ describeMacro("ListGroups", () => {
       return overviewPages[name];
     });
     // Mock calls to GroupData
-    const originalTemplate = macro.ctx.template;
-    macro.ctx.template = jest.fn(async (name, ...args) => {
+    const originalgetJSONData = macro.ctx.web.getJSONData;
+    macro.ctx.web.getJSONData = jest.fn((name) => {
       if (name === "GroupData") {
         return groupDataFixture;
+      } else {
+        return originalgetJSONData(name);
       }
-      return await originalTemplate(name, ...args);
     });
   });
 

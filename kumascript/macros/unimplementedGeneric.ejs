@@ -60,17 +60,18 @@ if ($1 && $0 != 'method') {
 
 switch($0) {
   case 'inline':
-    %><span class="inlineIndicator unimplemented unimplementedInline"><%-str%></span><%
+    %><span class="notecard inline warning"><%-str%></span><%
     break;
   case 'header':
-    %><div class="blockIndicator unimplemented unimplementedHeader">
+    %><div class="notecard warning">
+      <h4>Warning</h4>
       <p><%-str%></p>
       </div><%
     break;
   case 'method':
     %><div>
-      <span class="indicatorInHeadline unimplemented unimplementedMethod"><%- str %></span>
-      <h3><%= $2 %>()</h3>
+      <span class="notecard inline warning"><%- str %></span>
+      <h4><%= $2 %>()</h4>
       </div><%
     break;
 }

@@ -1,0 +1,68 @@
+@use "sass:math";
+
+tr.bc-history {
+  background-color: $mdn-neutral100;
+  display: none;
+
+  td {
+    border-right: 0;
+  }
+
+  @media #{$mq-small-desktop-and-up} {
+    display: table-row;
+  }
+
+  .bc-notes-wrapper {
+    text-align: left;
+
+    @media #{$mq-large-desktop-and-up} {
+      align-items: flex-start;
+      display: flex;
+      flex-wrap: wrap;
+      gap: $base-spacing;
+    }
+  }
+
+  dl.bc-notes-list {
+    background-color: $mdn-neutral100;
+    display: flex;
+    flex-flow: column;
+    gap: $base-spacing;
+    justify-content: space-between;
+    max-width: 100%;
+    padding: math.div($base-spacing, 2);
+  }
+
+  dt {
+    @media #{$mq-large-desktop-and-up} {
+      flex: 0 1 10%;
+    }
+  }
+
+  dd {
+    font-weight: normal;
+    margin: math.div($base-spacing, 2) 0;
+    min-height: 24px;
+    text-align: left;
+
+    @media #{$mq-large-desktop-and-up} {
+      flex: 1 1 25%;
+      margin: inherit;
+      padding: 0;
+    }
+  }
+}
+
+dl.bc-history-mobile {
+  background-color: $mdn-neutral100;
+  display: block;
+  padding: math.div($base-spacing, 2);
+
+  @media #{$mq-small-desktop-and-up} {
+    display: none;
+  }
+
+  dd {
+    margin: math.div($base-spacing, 2) 0;
+  }
+}

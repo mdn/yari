@@ -1,4 +1,3 @@
-import React from "react";
 import type bcd from "@mdn/browser-compat-data/types";
 import { asList, listFeatures } from "./utils";
 
@@ -9,7 +8,7 @@ const LEGEND_LABELS = {
   no: "No support",
   unknown: "Compatibility unknown",
   experimental: "Experimental. Expect behavior to change in the future.",
-  "non-standard": "Non-standard. Expect poor cross-browser support.",
+  "non-standard": "Non-standard. Check cross-browser support before using.",
   deprecated: "Deprecated. Not for use in new websites.",
   footnote: "See implementation notes.",
   disabled: "User must explicitly enable this feature.",
@@ -18,10 +17,10 @@ const LEGEND_LABELS = {
 };
 type LEGEND_KEY = keyof typeof LEGEND_LABELS;
 
-function getActiveLegendItems(compat: bcd.Identifier) {
+function getActiveLegendItems(compat: bcd.Identifier, name: string) {
   const legendItems = new Set<LEGEND_KEY>();
 
-  for (const feature of listFeatures(compat)) {
+  for (const feature of listFeatures(compat, "", name)) {
     const { status } = feature.compat;
 
     if (status) {
@@ -44,7 +43,11 @@ function getActiveLegendItems(compat: bcd.Identifier) {
 
       for (const versionSupport of asList(browserSupport)) {
         if (versionSupport.version_added) {
-          legendItems.add("yes");
+          if (versionSupport.flags && versionSupport.flags.length) {
+            legendItems.add("no");
+          } else {
+            legendItems.add("yes");
+          }
         } else if (versionSupport.version_added == null) {
           legendItems.add("unknown");
         } else {
@@ -74,16 +77,22 @@ function getActiveLegendItems(compat: bcd.Identifier) {
     .map((key) => [key, LEGEND_LABELS[key]]);
 }
 
-export function Legend({ compat }: { compat: bcd.Identifier }) {
+export function Legend({
+  compat,
+  name,
+}: {
+  compat: bcd.Identifier;
+  name: string;
+}) {
   return (
     <section className="bc-legend">
-      <h3 className="offscreen highlight-spanned" id="Legend">
-        <span className="highlight-span">Legend</span>
+      <h3 className="visually-hidden" id="Legend">
+        Legend
       </h3>
-      <dl>
-        {getActiveLegendItems(compat).map(([key, label]) =>
+      <dl className="bc-legend-items-container">
+        {getActiveLegendItems(compat, name).map(([key, label]) =>
           ["yes", "partial", "no", "unknown"].includes(key) ? (
-            <React.Fragment key={key}>
+            <div className="bc-legend-item" key={key}>
               <dt key={key}>
                 <span className={`bc-supports-${key} bc-supports`}>
                   <abbr
@@ -95,17 +104,17 @@ export function Legend({ compat }: { compat: bcd.Identifier }) {
                 </span>
               </dt>
               <dd>{label}</dd>
-            </React.Fragment>
+            </div>
           ) : (
-            <React.Fragment key={key}>
+            <div className="bc-legend-item" key={key}>
               <dt>
-                <abbr className="only-icon" title={label}>
-                  <span>{label}</span>
-                  <i className={`ic-${key}`} />
-                </abbr>
+                <abbr
+                  className={`only-icon legend-icons ic-${key}`}
+                  title={label}
+                ></abbr>
               </dt>
               <dd>{label}</dd>
-            </React.Fragment>
+            </div>
           )
         )}
       </dl>

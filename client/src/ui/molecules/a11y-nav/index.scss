@@ -1,0 +1,32 @@
+@use "sass:math";
+
+/*
+Keyboard & screen reader skip link menu
+********************************************************************** */
+
+@import "~@mdn/minimalist/sass/vars/layout";
+@import "~@mdn/minimalist/sass/vars/mdn-web-docs-palette";
+
+.a11y-nav {
+  position: absolute;
+  top: -20em;
+  width: 100%;
+  z-index: $top-layer;
+
+  a {
+    background-color: rgba(255, 255, 255, 0.9);
+    font-weight: bold;
+    left: 0;
+    padding: math.div($base-spacing, 2);
+    position: absolute;
+    right: 0;
+    text-align: center;
+
+    &:hover,
+    &:focus {
+      box-shadow: 3px 3px 5px $mdn-neutral100;
+      text-decoration: none;
+      top: 20em;
+    }
+  }
+}
