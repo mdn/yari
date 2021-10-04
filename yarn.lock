@@ -11492,10 +11492,10 @@ html-tags@^3.1.0:
   resolved "https://registry.yarnpkg.com/html-tags/-/html-tags-3.1.0.tgz#7b5e6f7e665e9fb41f30007ed9e0d41e97fb2140"
   integrity sha512-1qYz89hW3lFDEazhjW0yVAV87lw8lVkrJocr72XmBkMKsoSVJCQx3W8BXsC7hO2qAt8BoVjYjtAcZ9perqGnNg==
 
-html-validate@6.0.2:
-  version "6.0.2"
-  resolved "https://registry.yarnpkg.com/html-validate/-/html-validate-6.0.2.tgz#52d5b2d3faf5559bdca86db2cd43f5dd8733a32e"
-  integrity sha512-FZCNKhukEktRgbIBzJHgWh3dwRPupdVhS/WP7sjovIKpeOswYko+L34ewbZrPvTKraZdq7/ipZsxFkoe1XEPbg==
+html-validate@6.1.0:
+  version "6.1.0"
+  resolved "https://registry.yarnpkg.com/html-validate/-/html-validate-6.1.0.tgz#e1f923acf6d5e2a5a82ef2726ecff81694ec0d9c"
+  integrity sha512-TLlN2GkC/m4nlcFP9U/KEQiVtxZdAwF6qrAosMdobmVCs2bVF1og4p9J+JUVZCC99jjbH1r+qR/BZZE0TZc6xw==
   dependencies:
     "@babel/code-frame" "^7.10.0"
     "@html-validate/stylish" "^2.0.0"
