@@ -123,7 +123,7 @@
     "@storybook/addon-essentials": "^6.3.4",
     "@storybook/preset-create-react-app": "^3.2.0",
     "@storybook/react": "^6.3.4",
-    "@testing-library/react": "^12.1.1",
+    "@testing-library/react": "^12.1.2",
     "@types/hast": "^2.3.4",
     "@types/jest": "^27.0.2",
     "@types/mdast": "^3.0.10",
