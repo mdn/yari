@@ -127,7 +127,7 @@
     "@linaria/react": "^3.0.0-beta.13",
     "@linaria/shaker": "^3.0.0-beta.13",
     "@linaria/webpack-loader": "^3.0.0-beta.13",
-    "@mdn/dinocons": "^0.3.5",
+    "@mdn/dinocons": "^0.4.0",
     "@mdn/minimalist": "^2.0.2",
     "@playwright/test": "1.15.1",
     "@storybook/addon-a11y": "^6.3.8",
