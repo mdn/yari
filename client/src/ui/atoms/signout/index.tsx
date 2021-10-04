@@ -43,7 +43,7 @@ export default function SignOut() {
       {/* XXX Here it would be great to link to the account settings page */}
       <input type="hidden" name="next" value={next} />
       {csrfMiddlewareToken && (
-        <button type="submit" className="button icon-button outline">
+        <button type="submit" className="button ghost signout-button">
           Sign out
         </button>
       )}

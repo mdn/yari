@@ -51,6 +51,7 @@ export default function UserMenu() {
       hideArrow={true}
       forceClose={forceCloseDropdown}
     >
+      <li>{userData.email}</li>
       <li>
         <a
           href={FXA_SETTINGS_URL}
@@ -58,10 +59,30 @@ export default function UserMenu() {
             setForceCloseDropdown(true);
           }}
         >
-          Account settings
+          Manage account
         </a>
       </li>
       <li>
+        <a
+          href="https://accounts.stage.mozaws.net/subscriptions/"
+          onClick={() => {
+            setForceCloseDropdown(true);
+          }}
+        >
+          Manage subscription
+        </a>
+      </li>
+      <li>
+        <a
+          href="support.mozilla.org/"
+          onClick={() => {
+            setForceCloseDropdown(true);
+          }}
+        >
+          Help
+        </a>
+      </li>
+      <li className="signout-button-container">
         <SignOut />
       </li>
     </Dropdown>

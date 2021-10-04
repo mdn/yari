@@ -38,7 +38,9 @@ export function Header() {
         aria-label="Show Menu"
         onClick={toggleMainMenu}
       />
-      <div className={`page-header-main ${showMainMenu ? "show" : ""}`}>
+      <div
+        className={`page-header-main ${showMainMenu ? "show-block-flex" : ""}`}
+      >
         <MainMenu
           toggleMainMenu={() => {
             toggleMainMenu();

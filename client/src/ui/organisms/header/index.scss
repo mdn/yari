@@ -1,5 +1,6 @@
 @use "sass:math";
 
+@use "../../theme/index" as theme;
 @use "../../vars/sass/variables" as vars;
 
 @import "~@mdn/minimalist/sass/vars/mdn-web-docs-palette";
@@ -78,6 +79,12 @@
   }
 }
 
-.show {
+/* displays element using `display:block;` and then
+   `display: flex;` on large desktop and up */
+.show-block-flex {
   display: block;
+
+  @media #{$mq-large-desktop-and-up} {
+    display: flex;
+  }
 }
