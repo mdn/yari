@@ -118,7 +118,7 @@
     "@babel/core": "^7.15.5",
     "@mdn/dinocons": "^0.4.1",
     "@mdn/minimalist": "^2.0.2",
-    "@playwright/test": "1.15.1",
+    "@playwright/test": "1.15.2",
     "@storybook/addon-a11y": "^6.3.4",
     "@storybook/addon-essentials": "^6.3.4",
     "@storybook/preset-create-react-app": "^3.2.0",
