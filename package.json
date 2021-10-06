@@ -124,7 +124,7 @@
   },
   "devDependencies": {
     "@babel/core": "^7.15.8",
-    "@mdn/dinocons": "^0.5.5",
+    "@mdn/dinocons": "^0.3.5",
     "@mdn/minimalist": "^2.0.2",
     "@playwright/test": "1.15.2",
     "@storybook/addon-a11y": "^6.3.8",
