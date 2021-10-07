@@ -423,6 +423,9 @@ function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
         className="ghost search-button"
         value=""
         aria-label="Search"
+        onClick={() => {
+          history.push(searchPath)
+        }}
       />
 
       <div {...getMenuProps()}>
