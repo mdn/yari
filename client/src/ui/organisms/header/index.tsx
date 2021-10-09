@@ -51,18 +51,16 @@ export function Header() {
     return false;
   }
 
-  const [isProgressBarVisible, setProgressBarVisible] = useState(false);
+  const [showProgressBar, setShowProgressBar] = useState(false);
   useEffect(
     () =>
-      window.addEventListener("beforeunload", () =>
-        setProgressBarVisible(true)
-      ),
+      window.addEventListener("beforeunload", () => setShowProgressBar(true)),
     []
   );
 
   return (
     <header className="page-header">
-      <div className={isProgressBarVisible ? "" : "hide"} id="progress-bar">
+      <div className={showProgressBar ? "" : "hide"} id="progress-bar">
         <span className="progress-bar-wrapper" role="progressbar">
           <span className="progress-bar-internal"></span>
         </span>
