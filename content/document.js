@@ -612,7 +612,7 @@ function remove(
   if (redirect) {
     Redirect.add(locale, [
       [url, redirect],
-      ...children.map(({ url: childUrl }) => [childUrl, redirect])
+      ...children.map(({ url: childUrl }) => [childUrl, redirect]),
     ]);
   } else {
     Redirect.remove(locale, [url, ...removed]);
