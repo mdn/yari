@@ -610,9 +610,10 @@ function remove(
   execGit(["rm", "-r", path.dirname(fileInfo.path)], { cwd: root });
 
   if (redirect) {
-    Redirect.add(locale, [[url, redirect], ...children.map(
-      ({url: childUrl}) => [childUrl, redirect]
-    )]);
+    Redirect.add(locale, [
+      [url, redirect],
+      ...children.map(({ url: childUrl }) => [childUrl, redirect])
+    ]);
   } else {
     Redirect.remove(locale, [url, ...removed]);
   }
