@@ -424,7 +424,9 @@ function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
         value=""
         aria-label="Search"
         onClick={() => {
-          history.push(searchPath)
+          if (inputValue.trim() && inputValue !== '/') {
+            history.push(searchPath)
+          }
         }}
       />
 
