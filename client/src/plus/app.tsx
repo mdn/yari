@@ -7,7 +7,6 @@ import Notification from "../ui/atoms/notification";
 import { Card } from "../ui/molecules/card";
 import { Hero } from "../ui/organisms/hero";
 import { ProductFeatures } from "../ui/organisms/product-features";
-import { Feature } from "./deep-dives/feature";
 
 import {
   lightModeButtonPrimaryDefault,
@@ -84,8 +83,6 @@ export default function App() {
           </div>
         </div>
       </div>
-
-      <Feature />
 
       <div className="sample-deep-dive">
         <div className="girdle">
