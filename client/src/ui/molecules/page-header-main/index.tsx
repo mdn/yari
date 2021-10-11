@@ -22,7 +22,7 @@ export const PageHeaderMain = ({ showMainMenu }) => {
   }
 
   React.useEffect(() => {
-    if (typeof window !== "undefined") {
+    if (typeof window !== "undefined" && window.matchMedia) {
       const mql = window.matchMedia("(max-width: 74.9375em)");
 
       // add an event listener to report as the viewport changes
