@@ -1,0 +1,14 @@
+@use "../../minimalist/vars/layout";
+@use "../spacing/index" as spacing;
+
+@mixin submenu-base-desktop() {
+  display: flex;
+  flex-flow: column;
+  gap: spacing.$base-spacing * 2;
+  justify-content: space-between;
+  left: -20px;
+  position: absolute;
+  top: 50px;
+  width: max-content;
+  z-index: layout.$top-layer;
+}

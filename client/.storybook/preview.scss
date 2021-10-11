@@ -1,4 +1,5 @@
-@import "~@mdn/minimalist/sass/mdn-minimalist";
+@use "../src/ui/minimalist/mdn-minimalist" as *;
+@use "../src/ui/theme/index" as *;
 
 /* This makes Storybook's background changer and grid work */
 html,

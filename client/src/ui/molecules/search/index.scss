@@ -1,27 +1,22 @@
 @use "sass:math";
 @use "sass:map";
-@use "../../theme/index" as theme;
-@use "../../theme/themes/_color-map-light-mode" as light-mode-color-map;
 
-@import "~@mdn/minimalist/sass/vars/mdn-web-docs-palette";
-@import "~@mdn/minimalist/sass/vars/layout";
-@import "~@mdn/minimalist/sass/vars/typography";
-@import "~@mdn/minimalist/sass/mixins/utils";
+@use "../../minimalist/vars/layout";
+@use "../../minimalist/vars/typography";
+@use "../../theme/index" as theme;
 
 .header-search {
-  background-color: $white;
+  background-color: theme.$white;
 
   .search-widget {
-    margin: $base-spacing 0;
+    margin: theme.$base-spacing 0;
     position: relative;
     width: 100%;
 
-    @media #{$mq-tablet-and-up} {
-      margin: math.div($base-spacing, 2) 0;
-      min-width: 80px;
-    }
-
-    @media #{$mq-large-desktop-and-up} {
+    @media #{layout.$mq-large-desktop-and-up} {
+      align-items: center;
+      display: flex;
+      gap: theme.$base-spacing;
       margin: 0;
     }
   }
@@ -29,42 +24,42 @@
   input.search-input-field {
     // make webkit play nice with search input types
     -webkit-appearance: none; /* stylelint-disable-line property-no-vendor-prefix */
-    border: 1px solid map.get(light-mode-color-map.$colors, border-primary);
+    border: 1px solid map.get(theme.$light-mode, border-primary);
     border-radius: theme.$default-border-radius;
-    color: $text-color;
+    color: theme.$mdn-neutral900;
     min-width: 60px;
-    padding: $base-unit ($base-unit * 2);
+    padding: theme.$base-spacing (theme.$base-spacing * 2) theme.$base-spacing
+      46px;
     width: 100%;
 
     &:focus {
-      outline: map.get(light-mode-color-map.$colors, border-primary);
+      outline: map.get(theme.$light-mode, border-primary);
     }
   }
 
   .server-error {
-    color: $mdn-red700;
-    font-size: $small-font-size;
+    color: theme.$mdn-red700;
     margin: 0;
   }
 
   .search-results {
-    background-color: $white;
-    border: 2px solid $mdn-neutral900;
-    border-radius: 0 0 $base-unit $base-unit;
+    background-color: theme.$white;
+    border: 2px solid theme.$mdn-neutral900;
+    border-radius: 0 0 theme.$base-spacing theme.$base-spacing;
     border-top: 0;
-    box-shadow: 0 2px 8px 0 $mdn-neutral500;
+    box-shadow: 0 2px theme.$base-spacing 0 theme.$mdn-neutral500;
     left: 0;
     position: absolute;
     top: 42px;
     width: 100%;
-    z-index: $top-layer;
+    z-index: layout.$top-layer;
 
     .indexing-warning {
-      color: $mdn-yellow400;
+      color: theme.$mdn-yellow400;
     }
 
     div {
-      padding: $base-unit;
+      padding: theme.$base-spacing;
     }
 
     .nothing-found {
@@ -72,17 +67,17 @@
     }
 
     .fuzzy-engaged {
-      font-size: $tiny-text;
+      font-size: typography.$tiny-text;
     }
 
     .result-item {
-      border-bottom: 1px solid $mdn-neutral100;
+      border-bottom: 1px solid theme.$mdn-neutral100;
       word-break: break-word;
     }
 
     .result-item:hover,
     .result-item.highlight {
-      background-color: $mdn-neutral100;
+      background-color: theme.$mdn-neutral100;
     }
 
     .result-item:hover,
@@ -95,7 +90,7 @@
     }
 
     mark {
-      background-color: $mdn-yellow200;
+      background-color: theme.$mdn-yellow200;
     }
 
     small {
@@ -107,7 +102,7 @@
     }
 
     div.searchindex-error {
-      color: $mdn-red700;
+      color: theme.$mdn-red700;
     }
   }
 }
@@ -117,23 +112,39 @@
 }
 
 .search-button {
-  background: $white url("~@mdn/dinocons/general/search.svg") center center
-    no-repeat;
+  background: theme.$white url("~@mdn/dinocons/general/search.svg") center
+    center no-repeat;
   background-size: 16px;
   height: 16px;
-  padding: 18px;
+  left: 1px;
+  padding: 22px;
   position: absolute;
-  right: 1px;
   top: 1px;
   width: 16px;
+}
 
+.close-search-button {
+  display: none;
+
+  @media #{layout.$mq-large-desktop-and-up} {
+    background: transparent url("~@mdn/dinocons/general/close.svg") center
+      center no-repeat;
+    background-size: 12px;
+    border-radius: theme.$default-border-radius;
+    display: block;
+    height: 12px;
+    padding: 20px;
+    position: relative;
+    width: 12px;
+  }
+}
+
+.close-search-button,
+.search-button {
   &:hover,
   &:focus,
   &:active {
-    background-color: map.get(
-      light-mode-color-map.$colors,
-      button-secondary-hover
-    );
+    background-color: map.get(theme.$light-mode, button-secondary-hover);
     outline: theme.$white;
   }
 }

@@ -1,0 +1,110 @@
+@use "sass:map";
+
+@use "../../minimalist/vars/layout";
+@use "../../theme/index" as theme;
+
+.submenu {
+  background-color: theme.$white;
+  display: none;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+
+  @media #{layout.$mq-large-desktop-and-up} {
+    border-radius: theme.$default-border-radius * 2;
+    box-shadow: theme.$menu-box-shadow;
+    padding: theme.$base-spacing * 2;
+  }
+
+  a {
+    align-items: center;
+    border-bottom: 1px solid map.get(theme.$light-mode, border-secondary);
+    display: flex;
+    gap: theme.$base-spacing;
+    height: 100%;
+    padding: theme.$base-spacing;
+    width: 100%;
+
+    @media #{layout.$mq-tablet-and-up} {
+      width: unset;
+    }
+
+    @media #{layout.$mq-large-desktop-and-up} {
+      border-bottom: 0;
+      border-radius: theme.$default-border-radius;
+      padding: theme.$base-spacing * 2;
+    }
+
+    &:link,
+    &:visited {
+      color: map.get(theme.$light-mode, text-secondary);
+    }
+
+    &:hover,
+    &:focus {
+      background-color: map.get(theme.$light-mode, background-secondary);
+      text-decoration: none;
+    }
+  }
+
+  &.show {
+    display: block;
+
+    @media #{layout.$mq-large-desktop-and-up} {
+      @include theme.submenu-base-desktop();
+    }
+  }
+
+  li {
+    width: 100%;
+
+    @media #{layout.$mq-tablet-and-up} {
+      width: unset;
+    }
+  }
+
+  .submenu-icon {
+    background-color: theme.$mdn-light-grey400;
+    background-size: 10px;
+    border-radius: 4px;
+    height: 16px;
+    margin-bottom: theme.$base-spacing;
+    padding: theme.$base-spacing * 2;
+    position: relative;
+    width: 16px;
+
+    &::before {
+      background-color: theme.$mdn-neutral900;
+      content: "";
+      display: block;
+      height: 16px;
+      /* half the width */
+      left: 8px;
+      mask-image: url("~@mdn/dinocons/general/asterisk.svg");
+      position: absolute;
+      /* half the height */
+      top: 8px;
+      width: 16px;
+    }
+  }
+
+  .submenu-item-heading {
+    font-weight: normal;
+    margin-bottom: theme.$base-spacing;
+
+    @media #{layout.$mq-large-desktop-and-up} {
+      font-weight: bold;
+      margin-bottom: 0;
+    }
+  }
+
+  .submenu-item-description {
+    display: none;
+
+    @media #{layout.$mq-large-desktop-and-up} {
+      display: block;
+      font-weight: normal;
+      margin-bottom: 0;
+    }
+  }
+}

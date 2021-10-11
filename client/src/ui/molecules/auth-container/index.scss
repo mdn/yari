@@ -1,0 +1,17 @@
+@use "../../minimalist/vars/_layout.scss" as layout;
+
+.auth-container {
+  display: flex;
+  flex-flow: column-reverse;
+  gap: 12px;
+  margin-top: 48px;
+  text-align: center;
+
+  @media #{layout.$mq-large-desktop-and-up} {
+    align-items: center;
+    flex-flow: row;
+    justify-content: flex-end;
+    margin-top: 0;
+    text-align: initial;
+  }
+}

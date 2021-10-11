@@ -1,24 +1,20 @@
-import { useRef, useState } from "react";
+import { useState } from "react";
 
-import HeaderAuthContainer from "../../molecules/header-auth-container";
 import { Logo } from "../../atoms/logo";
-import MainMenu from "../../molecules/main-menu";
-import ToggleSeachButton from "../../atoms/toggle-search-button";
-import { Search } from "../../molecules/search";
+import { IconButton } from "../../atoms/icon-button";
+import { PageHeaderMain } from "../../molecules/page-header-main";
 
 import "./index.scss";
 
 export function Header() {
   const [showMainMenu, setShowMainMenu] = useState(false);
-  const [showSearch, setShowSearch] = useState(false);
-  const mainMenuToggleRef = useRef<null | HTMLButtonElement>(null);
 
-  function toggleMainMenu() {
+  function toggleMainMenu(event) {
     const pageOverlay = document.querySelector(".page-overlay");
-    const mainMenuButton = mainMenuToggleRef.current;
+    const mainMenuButton = event.target;
 
     if (mainMenuButton) {
-      mainMenuButton.classList.toggle("expanded");
+      mainMenuButton.classList.toggle("menu-close");
       setShowMainMenu(!showMainMenu);
     }
 
@@ -30,37 +26,16 @@ export function Header() {
   return (
     <header className="page-header">
       <Logo />
-      <button
-        ref={mainMenuToggleRef}
-        type="button"
-        className="ghost main-menu-toggle"
-        aria-haspopup="true"
-        aria-label="Show Menu"
-        onClick={toggleMainMenu}
-      />
-      <div
-        className={`page-header-main ${showMainMenu ? "show-block-flex" : ""}`}
+      <IconButton
+        ariaHasPopup={"menu"}
+        clickHandler={toggleMainMenu}
+        extraClasses="main-menu-toggle"
+        iconClassName="menu-open"
       >
-        <MainMenu
-          toggleMainMenu={() => {
-            toggleMainMenu();
-          }}
-        />
-        {showSearch ? (
-          <Search />
-        ) : (
-          <>
-            <div className="header-search">
-              <ToggleSeachButton
-                onClick={() => {
-                  setShowSearch(true);
-                }}
-              />
-            </div>
-            <HeaderAuthContainer />
-          </>
-        )}
-      </div>
+        <span className="visually-hidden">Show Menu</span>
+      </IconButton>
+
+      <PageHeaderMain showMainMenu={showMainMenu} />
     </header>
   );
 }

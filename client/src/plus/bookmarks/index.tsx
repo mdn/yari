@@ -55,8 +55,7 @@ export default function Bookmarks() {
     document.title = pageTitle;
   }, []);
 
-  const isSubscriber =
-    userData && userData.isAuthenticated && userData.isSubscriber;
+  const isSubscriber = userData && userData.isSubscriber;
 
   const apiURL = isSubscriber ? `${API_URL}?${searchParams.toString()}` : null;
 

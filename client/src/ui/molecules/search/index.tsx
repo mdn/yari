@@ -1,9 +1,9 @@
-import React, { lazy, useState, useMemo } from "react";
+import React, { useState, useMemo } from "react";
 import { useSearchParams } from "react-router-dom";
 
-import "./index.scss";
+import SearchNavigateWidget from "../../../search";
 
-const LazySearchNavigateWidget = lazy(() => import("../../../search"));
+import "./index.scss";
 
 function useQueryParamState() {
   const [searchParams] = useSearchParams();
@@ -19,7 +19,13 @@ function useQueryParamState() {
   return [value, setValue] as const;
 }
 
-export function Search({ onResultPicked }: { onResultPicked?: () => void }) {
+export function Search({
+  onCloseSearch,
+  onResultPicked,
+}: {
+  onCloseSearch?: () => void;
+  onResultPicked?: () => void;
+}) {
   const [value, setValue] = useQueryParamState();
   const [isFocused, setIsFocused] = useState(false);
   const [defaultSelection, setDefaultSelection] = useState([0, 0] as const);
@@ -40,9 +46,10 @@ export function Search({ onResultPicked }: { onResultPicked?: () => void }) {
 
   return (
     <div className="header-search">
-      <LazySearchNavigateWidget
+      <SearchNavigateWidget
         {...searchProps}
         onResultPicked={onResultPicked}
+        onCloseSearch={onCloseSearch}
       />
     </div>
   );

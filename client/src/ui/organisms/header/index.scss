@@ -1,90 +1,28 @@
 @use "sass:math";
 
+@use "../../minimalist/vars/layout";
 @use "../../theme/index" as theme;
-@use "../../vars/sass/variables" as vars;
-
-@import "~@mdn/minimalist/sass/vars/mdn-web-docs-palette";
-@import "~@mdn/minimalist/sass/vars/layout";
 
 .main-menu-toggle {
-  background: none;
   padding: 10px 20px;
   position: absolute;
   right: 0;
-  top: $base-spacing;
+  top: 24px;
 
-  &::before {
-    background: transparent url("~@mdn/dinocons/navigation/menu-open.svg") 0 0
-      no-repeat;
-    background-size: 21px;
-    content: "";
-    display: block;
-    height: 21px;
-    width: 21px;
-  }
-
-  &.expanded::before {
-    background-image: url("~@mdn/dinocons/navigation/menu-close.svg");
-  }
-
-  @media #{$mq-large-desktop-and-up} {
+  @media #{layout.$mq-large-desktop-and-up} {
     display: none;
   }
 }
 
 .page-header {
   margin: 0 auto;
-  max-width: $max-width-default;
-  padding: ($base-unit * 6) $base-spacing $base-spacing;
+  max-width: layout.$max-width-default;
+  padding: theme.$base-spacing * 2;
   position: relative;
   width: 100%;
 
-  @media #{$mq-large-desktop-and-up} {
+  @media #{layout.$mq-large-desktop-and-up} {
     display: flex;
-    padding-bottom: math.div($base-spacing, 2);
-  }
-}
-
-.page-header-main {
-  background-color: $white;
-  display: none;
-  left: 0;
-  padding: 0 $base-spacing $base-spacing;
-  position: absolute;
-  top: 90px;
-  width: 100%;
-  z-index: $bring-to-front;
-
-  @media #{$mq-large-desktop-and-up} {
-    align-items: center;
-    display: flex;
-    gap: vars.$token-spacing-base * 2;
-    left: inherit;
-    padding: 0;
-    position: initial;
-    top: inherit;
-    z-index: inherit;
-
-    .main-nav {
-      flex: 3 1 40%;
-    }
-
-    .header-search {
-      flex: 0 1 auto;
-    }
-
-    .auth-container {
-      flex: 0 1 auto;
-    }
-  }
-}
-
-/* displays element using `display:block;` and then
-   `display: flex;` on large desktop and up */
-.show-block-flex {
-  display: block;
-
-  @media #{$mq-large-desktop-and-up} {
-    display: flex;
+    gap: theme.$base-spacing * 2;
   }
 }

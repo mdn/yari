@@ -4,7 +4,7 @@ StyleDictionary.registerTransform({
   name: "value/rewrite",
   type: "value",
   transformer: function (token) {
-    if (token.value.startsWith("$")) {
+    if (token.value && token.value.startsWith("$")) {
       const baseTokenValue = token.value.replace("$", "");
       return `{${baseTokenValue}.value}`;
     }
@@ -23,12 +23,39 @@ StyleDictionary.registerTransform({
   },
 });
 
+StyleDictionary.registerTransform({
+  name: "value/topx",
+  type: "value",
+  matcher: function (token) {
+    return token.attributes.category === "spacing";
+  },
+  transformer: function (token) {
+    return `${token.value}px`;
+  },
+});
+
+StyleDictionary.registerTransform({
+  name: "value/toint",
+  type: "value",
+  matcher: function (token) {
+    return token.attributes.category === "spacing";
+  },
+  transformer: function (token) {
+    return Number.parseInt(token.value, 10);
+  },
+});
+
 module.exports = {
   source: ["./client/src/ui/style-dictionary/**/*.json"],
   platforms: {
     scss: {
       transformGroup: "scss",
-      transforms: ["value/rewrite", "value/tostring", "name/cti/kebab"],
+      transforms: [
+        "value/rewrite",
+        "value/tostring",
+        "value/topx",
+        "name/cti/kebab",
+      ],
       buildPath: "./client/src/ui/vars/sass/",
       prefix: "token",
       files: [
@@ -43,7 +70,7 @@ module.exports = {
     },
     js: {
       transformGroup: "js",
-      transforms: ["name/cti/camel", "value/rewrite"],
+      transforms: ["name/cti/camel", "value/rewrite", "value/toint"],
       buildPath: "./client/src/ui/vars/js/",
       files: [
         {

@@ -1,13 +1,13 @@
 /**
  * Do not edit directly
- * Generated on Thu, 30 Sep 2021 09:10:49 GMT
+ * Generated on Tue, 05 Oct 2021 15:17:56 GMT
  */
 
 export const borderDefaultRadius = "4px";
 export const mqTabletAndUp = "all and (min-width: 47.9375em)";
 export const mqSmallDesktopAndUp = "all and (min-width: 63.9375em)";
 export const mqLargeDesktopAndUp = "all and (min-width: 74.9375em)";
-export const spacingBase = "8px";
+export const spacingBase = 8;
 export const lightModeTextPrimary = "#15141a";
 export const lightModeTextSecondary = "#5b5b66";
 export const lightModeTextInactive = "#5b5b66a6";

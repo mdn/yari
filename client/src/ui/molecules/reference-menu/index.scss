@@ -1,0 +1,31 @@
+@use "../../theme/index" as theme;
+
+.submenu-icon {
+  &.html {
+    background-color: theme.$mdn-red600;
+  }
+
+  &.css {
+    background-color: theme.$mdn-yellow500;
+  }
+
+  &.javascript {
+    background-color: theme.$mdn-green600;
+  }
+
+  &.http {
+    background-color: theme.$mdn-blue500;
+  }
+
+  &.apis {
+    background-color: theme.$mdn-violet600;
+  }
+
+  &.apis,
+  &.http,
+  &.html {
+    &::before {
+      background-color: theme.$white;
+    }
+  }
+}

@@ -1,0 +1,23 @@
+@use "sass:map";
+@use "../../minimalist/vars/_layout.scss" as layout;
+@use "../../theme/index" as theme;
+
+.mdn-plus-subscribe-link {
+  background-color: map.get(theme.$light-mode, button-primary-default);
+  border-radius: theme.$default-border-radius;
+  display: block;
+  font-weight: bold;
+  margin: 0 auto;
+  max-width: 150px;
+  padding: theme.$base-spacing (theme.$base-spacing * 2);
+  text-align: center;
+
+  @media #{layout.$mq-large-desktop-and-up} {
+    margin-top: 0;
+  }
+
+  &:link,
+  &:visited {
+    color: theme.$white;
+  }
+}

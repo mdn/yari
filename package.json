@@ -6,6 +6,7 @@
   "author": "MDN Web Docs",
   "scripts": {
     "analyze": "source-map-explorer 'client/build/static/js/*.js'",
+    "analyze:css": "source-map-explorer 'client/build/static/css/*.css'",
     "build": "cross-env NODE_ENV=production node build/cli.js",
     "build:client": "cd client && cross-env INLINE_RUNTIME_CHUNK=false craco build",
     "build:ssr": "cd ssr && webpack --mode=production",
@@ -127,7 +128,7 @@
     "@linaria/react": "^3.0.0-beta.13",
     "@linaria/shaker": "^3.0.0-beta.13",
     "@linaria/webpack-loader": "^3.0.0-beta.13",
-    "@mdn/dinocons": "^0.4.1",
+    "@mdn/dinocons": "^0.5.1",
     "@mdn/minimalist": "^2.0.2",
     "@playwright/test": "1.15.1",
     "@storybook/addon-a11y": "^6.3.8",

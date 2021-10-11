@@ -1,0 +1,61 @@
+@use "sass:map";
+
+@use "../../minimalist/vars/layout";
+@use "../../theme/index" as theme;
+
+.user-menu {
+  position: relative;
+
+  .user-menu-toggle {
+    align-items: center;
+    background: none;
+    color: map.get(theme.$light-mode, text-secondary);
+    display: flex;
+    margin: theme.$base-spacing 0;
+    padding: 0;
+    position: relative;
+    width: 100%;
+
+    &[aria-haspopup="menu"] {
+      &::after {
+        position: absolute;
+        right: 0;
+      }
+    }
+  }
+}
+
+.submenu.my-mdn-plus.show {
+  @media #{layout.$mq-large-desktop-and-up} {
+    left: initial;
+    right: 0;
+    top: 60px;
+  }
+
+  a,
+  .usermenu-email-desktop {
+    padding: theme.$base-spacing;
+  }
+
+  .usermenu-email-desktop {
+    border-bottom: theme.$standard-primary-border;
+  }
+
+  .submenu-item-heading {
+    font-weight: normal;
+  }
+}
+
+.show-desktop-inline-block {
+  display: none;
+
+  @media #{layout.$mq-large-desktop-and-up} {
+    display: inline-block;
+  }
+}
+
+@media #{layout.$mq-large-desktop-and-up} {
+  .hide-desktop {
+    display: none;
+  }
+}
