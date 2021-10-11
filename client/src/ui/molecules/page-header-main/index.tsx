@@ -22,13 +22,15 @@ export const PageHeaderMain = ({ showMainMenu }) => {
   }
 
   React.useEffect(() => {
-    const mql = window.matchMedia("(max-width: 74.9375em)");
+    if (typeof window !== "undefined") {
+      const mql = window.matchMedia("(max-width: 74.9375em)");
 
-    // add an event listener to report as the viewport changes
-    mql.addEventListener("change", updateViewportState);
+      // add an event listener to report as the viewport changes
+      mql.addEventListener("change", updateViewportState);
 
-    // immediately report our initial state
-    updateViewportState(mql);
+      // immediately report our initial state
+      updateViewportState(mql);
+    }
   }, []);
 
   return (
