@@ -31,11 +31,9 @@ test.describe("Visiting pages related and requiring authentication", () => {
     await page.waitForLoadState("networkidle");
 
     expect(page.url()).toMatch(testURL("/en-US/docs/Web/Foo"));
-    await expect(
-      page.locator(".auth-container #user-avatar-menu")
-    ).toBeVisible();
+    await expect(page.locator(".user-menu")).toBeVisible();
 
-    await page.click("#user-avatar-menu");
+    await page.click("#my-mdn-plus-button");
     await page.click(".sign-out-form button[type='submit']");
     await page.waitForLoadState("networkidle");
 
@@ -50,12 +48,10 @@ test.describe("Visiting pages related and requiring authentication", () => {
     await page.waitForLoadState("networkidle");
 
     expect(page.url()).toMatch(testURL("/en-US/docs/Web/Foo"));
-    await expect(
-      page.locator(".auth-container #user-avatar-menu")
-    ).toBeVisible();
+    await expect(page.locator(".user-menu")).toBeVisible();
 
     // open up user menu
-    await page.click("#user-avatar-menu");
+    await page.click("#my-mdn-plus-button");
     // Sign out
     await page.click(".sign-out-form button[type='submit']");
     await page.waitForLoadState("networkidle");
