@@ -15,10 +15,6 @@ import { SiteSearch } from "./site-search";
 import { Loading } from "./ui/atoms/loading";
 import { PageContentContainer } from "./ui/atoms/page-content";
 import { PageNotFound } from "./page-not-found";
-
-import { DeepDives } from "./plus/deep-dives";
-import { Overview as DeepDivesOverview } from "./plus/deep-dives/overview";
-// import { DeepDivesHomepage } from "./plus/deep-dives/homepage";
 import { Plus } from "./plus";
 
 const AllFlaws = React.lazy(() => import("./flaws"));
@@ -241,26 +237,6 @@ export function App(appProps) {
                 element={
                   <StandardLayout extraClasses="plus">
                     <Plus {...appProps} />
-                  </StandardLayout>
-                }
-              />
-            )}
-            {ENABLE_PLUS && (
-              <Route
-                path="/plus/deep-dives"
-                element={
-                  <StandardLayout extraClasses="plus">
-                    <DeepDivesOverview {...appProps} />
-                  </StandardLayout>
-                }
-              />
-            )}
-            {ENABLE_PLUS && (
-              <Route
-                path="/plus/deep-dives/*"
-                element={
-                  <StandardLayout extraClasses="plus">
-                    <DeepDives {...appProps} />
                   </StandardLayout>
                 }
               />
