@@ -7,6 +7,8 @@ import useSWR from "swr";
 import { Doc, FuzzySearch } from "./fuzzy-search";
 import { preload, preloadSupported } from "./document/preloading";
 
+import { Button } from "./ui/atoms/button";
+
 import { useLocale } from "./hooks";
 import { SearchProps, useFocusOnSlash } from "./search-utils";
 
@@ -135,6 +137,7 @@ function BreadcrumbURI({
 }
 
 type InnerSearchNavigateWidgetProps = SearchProps & {
+  onCloseSearch?: () => void;
   onResultPicked?: () => void;
   defaultSelection: [number, number];
 };
@@ -168,6 +171,7 @@ function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
     onChangeInputValue,
     isFocused,
     onChangeIsFocused,
+    onCloseSearch,
     onResultPicked,
     defaultSelection,
   } = props;
@@ -417,6 +421,10 @@ function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
           },
         })}
       />
+
+      <Button extraClasses="close-search-button" onClickHandler={onCloseSearch}>
+        <span className="visually-hidden">Close search</span>
+      </Button>
 
       <input
         type="submit"

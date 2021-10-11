@@ -8,6 +8,8 @@ $component-border-radius: math.div($default-border-radius, 3);
 $standard-light-border: 1px solid palette.$mdn-light-grey300;
 $standard-primary-border: 1px solid palette.$mdn-light-grey300;
 
+$menu-box-shadow: 0 2px 8px 0 palette.$mdn-neutral500;
+
 .fade {
   mask-image: linear-gradient(
     to bottom,

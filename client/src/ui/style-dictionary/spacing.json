@@ -1,8 +1,10 @@
 {
   "spacing": {
     "base": {
-      "value": "8px",
-      "group": "spacing"
+      "value": "8",
+      "attributes": {
+        "category": "spacing"
+      }
     }
   }
 }

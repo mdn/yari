@@ -14,7 +14,7 @@ const ToggleSeachButton: React.FC<{
   return (
     <ToggleSearch
       id="header-toggle-search"
-      className="ghost-button"
+      className="search-toggle ghost-button"
       onClick={onClick}
     >
       <span className="visually-hidden">Show search input</span>

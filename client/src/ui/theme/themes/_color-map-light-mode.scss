@@ -1,6 +1,6 @@
 @use "../../vars/sass/variables" as style-disctionary;
 
-$colors: (
+$light-mode: (
   "accent-primary": style-disctionary.$token-light-mode-accent-primary,
   "accent-secondary": style-disctionary.$token-light-mode-accent-secondary,
   "icon-success": style-disctionary.$token-light-mode-icon-success,

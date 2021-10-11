@@ -8,6 +8,7 @@ ul.language-toggle {
   display: flex;
   gap: math.div(layout.$base-spacing, 2);
   height: 35px;
+  list-style: none;
 
   @media #{layout.$mq-tablet-and-up} {
     text-align: inherit;

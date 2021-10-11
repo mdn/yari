@@ -1,0 +1,12 @@
+@use "../../theme/index" as theme;
+
+.submenu-icon {
+  &.bookmarks-icon,
+  &.notifications-icon {
+    background-color: theme.$mdn-green700;
+
+    &::before {
+      background-color: theme.$white;
+    }
+  }
+}

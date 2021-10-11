@@ -1,10 +1,18 @@
+@forward "./themes/color-map-light-mode";
+@forward "./themes/color-map-dark-mode";
+@forward "./themes/color-map-high-contrast";
+
+@forward "./mixins/navigation";
+
 @import "./borders-shadows/index";
 @import "./buttons/index";
 @import "./color-palette/index";
 @import "./color-palette/icons";
 @import "./color-palette/text";
+@import "./icons/index";
 @import "./links/index";
 @import "./code-examples/index";
 @import "./page/index";
 @import "./spacing/index";
+
 @import "./utils/index";

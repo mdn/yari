@@ -3,6 +3,8 @@ import { useLocation } from "react-router-dom";
 import { removeSessionStorageData } from "../../../user-context";
 import { useCSRFMiddlewareToken, useLocale } from "../../../hooks";
 
+import "./index.scss";
+
 export default function SignOut() {
   const csrfMiddlewareToken = useCSRFMiddlewareToken();
   const locale = useLocale();
