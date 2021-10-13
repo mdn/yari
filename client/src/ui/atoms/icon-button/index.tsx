@@ -26,7 +26,7 @@ export const IconButton = (props) => {
       aria-haspopup={ariaHasPopup}
       type={buttonType}
       onClick={clickHandler}
-      className={`${extraClasses} icon-button ${iconClassName}`}
+      className={`${extraClasses || ""} icon-button ${iconClassName || ""}`}
     >
       {props.children}
     </button>

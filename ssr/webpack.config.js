@@ -31,12 +31,6 @@ module.exports = {
         exclude: /node_modules/,
         use: [
           {
-            loader: "@linaria/webpack-loader",
-            options: {
-              sourceMap: process.env.NODE_ENV !== "production",
-            },
-          },
-          {
             loader: "ts-loader",
             options: {
               transpileOnly: true,

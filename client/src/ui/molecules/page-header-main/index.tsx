@@ -3,7 +3,7 @@ import * as React from "react";
 import { AuthContainer } from "../auth-container";
 import MainMenu from "../main-menu";
 import { HeaderNotificationsMenu } from "../header-notifications-menu";
-import ToggleSeachButton from "../../atoms/toggle-search-button";
+import { IconButton } from "../../atoms/icon-button";
 import { UserMenu } from "../user-menu";
 import { Search } from "../search";
 
@@ -47,11 +47,14 @@ export const PageHeaderMain = ({ showMainMenu }) => {
           }}
         />
       ) : (
-        <ToggleSeachButton
-          onClick={() => {
+        <IconButton
+          clickHandler={() => {
             setShowSearch(true);
           }}
-        />
+          extraClasses="toggle-search-button"
+        >
+          <span className="visually-hidden">Show search</span>
+        </IconButton>
       )}
       {isSubscriber && (!showSearch || isMobile) && (
         <>
