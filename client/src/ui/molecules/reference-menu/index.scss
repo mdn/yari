@@ -1,4 +1,41 @@
+@use "sass:color";
+
 @use "../../theme/index" as theme;
+
+.html-link-container {
+  a:hover,
+  a:focus {
+    background-color: color.adjust(theme.$mdn-red600, $alpha: -0.9);
+  }
+}
+
+.css-link-container {
+  a:hover,
+  a:focus {
+    background-color: color.adjust(theme.$mdn-yellow500, $alpha: -0.9);
+  }
+}
+
+.javascript-link-container {
+  a:hover,
+  a:focus {
+    background-color: color.adjust(theme.$mdn-green600, $alpha: -0.9);
+  }
+}
+
+.http-link-container {
+  a:hover,
+  a:focus {
+    background-color: color.adjust(theme.$mdn-blue500, $alpha: -0.9);
+  }
+}
+
+.apis-link-container {
+  a:hover,
+  a:focus {
+    background-color: color.adjust(theme.$mdn-violet600, $alpha: -0.9);
+  }
+}
 
 .submenu-icon {
   &.html {

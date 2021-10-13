@@ -6,7 +6,7 @@
 
 .notifications-menu {
   .notifications-button {
-    color: map.get(theme.$light-mode, text-secondary);
+    color: map.get(theme.$light-mode, text-primary);
     margin: 12px 0;
     padding: 0;
 
@@ -14,9 +14,13 @@
       display: flex;
       margin: initial;
     }
+
+    @media (prefers-color-scheme: dark) {
+      color: map.get(theme.$dark-mode, text-primary);
+    }
   }
 
-  .notifications-count {
+  .notifications-count-container {
     background-color: map.get(theme.$light-mode, icon-secondary);
     border-radius: 50%;
     color: theme.$white;
@@ -33,31 +37,41 @@
       padding: 0;
 
       &::before {
-        background: transparent url("~@mdn/dinocons/plus/bell.svg") center
-          center no-repeat;
+        background-color: map.get(theme.$light-mode, icon-primary);
         background-size: 21px 21px;
         content: "";
         display: block;
         height: 21px;
+        mask-image: url("~@mdn/dinocons/plus/bell.svg");
         width: 21px;
+
+        @media (prefers-color-scheme: dark) {
+          background-color: map.get(theme.$dark-mode, icon-primary);
+        }
       }
     }
 
     &.unread-notifications {
-      background-color: map.get(theme.$light-mode, icon-information);
+      background-color: map.get(theme.$light-mode, icon-seondary);
 
       @media #{layout.$mq-large-desktop-and-up} {
         background-color: transparent;
 
         &::before {
-          background-image: url("~@mdn/dinocons/plus/notification.svg");
+          background-color: map.get(theme.$light-mode, accent-primary);
+          mask-image: url("~@mdn/dinocons/plus/notification.svg");
+
+          @media (prefers-color-scheme: dark) {
+            background-color: map.get(theme.$dark-mode, accent-primary);
+          }
         }
       }
     }
   }
 
   @media #{layout.$mq-large-desktop-and-up} {
-    .notifications-label {
+    .notifications-label,
+    .notifications-count {
       display: none;
     }
   }

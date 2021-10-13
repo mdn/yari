@@ -19,6 +19,7 @@ export const ReferenceMenu = () => {
     items: [
       {
         description: "Most basic building block of the Web",
+        extraClasses: "html-link-container",
         hasIcon: true,
         iconClasses: "submenu-icon html",
         label: "HTML",
@@ -26,6 +27,7 @@ export const ReferenceMenu = () => {
       },
       {
         description: "Code used for describing document styling",
+        extraClasses: "css-link-container",
         hasIcon: true,
         iconClasses: "submenu-icon css",
         label: "CSS",
@@ -33,6 +35,7 @@ export const ReferenceMenu = () => {
       },
       {
         description: "Lightweight, interpreted, object-oriented language",
+        extraClasses: "javascript-link-container",
         hasIcon: true,
         iconClasses: "submenu-icon javascript",
         label: "JavaScript",
@@ -40,6 +43,7 @@ export const ReferenceMenu = () => {
       },
       {
         description: "Protocol for transmitting hypermedia documents",
+        extraClasses: "http-link-container",
         hasIcon: true,
         iconClasses: "submenu-icon http",
         label: "HTTP",
@@ -47,6 +51,7 @@ export const ReferenceMenu = () => {
       },
       {
         description: "Software interface that connects software",
+        extraClasses: "apis-link-container",
         hasIcon: true,
         iconClasses: "submenu-icon apis",
         label: "APIs",

@@ -426,12 +426,9 @@ function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
         <span className="visually-hidden">Close search</span>
       </Button>
 
-      <input
-        type="submit"
-        className="ghost search-button"
-        value=""
-        aria-label="Search"
-      />
+      <Button buttonType="submit" extraClasses="ghost search-button">
+        <span className="visually-hidden">Search</span>
+      </Button>
 
       <div {...getMenuProps()}>
         {searchResults && <div className="search-results">{searchResults}</div>}

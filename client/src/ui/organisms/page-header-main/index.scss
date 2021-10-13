@@ -1,8 +1,9 @@
+@use "sass:map";
+
 @use "../../minimalist/vars/layout";
 @use "../../theme/index" as theme;
 
 .page-header-main {
-  background-color: theme.$white;
   display: none;
   left: 0;
   padding: 0 (theme.$base-spacing * 3) (theme.$base-spacing * 3);
@@ -12,7 +13,12 @@
   z-index: layout.$bring-to-front;
 
   &.show-grid {
+    background-color: map.get(theme.$light-mode, background-primary);
     display: block;
+
+    @media (prefers-color-scheme: dark) {
+      background-color: map.get(theme.$dark-mode, background-primary);
+    }
 
     @supports (display: grid) {
       display: grid;

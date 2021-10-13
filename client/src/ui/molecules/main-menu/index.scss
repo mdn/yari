@@ -5,7 +5,6 @@
 @use "../../theme/index" as theme;
 
 ul.main-menu {
-  background-color: theme.$white;
   box-sizing: border-box;
   font-weight: bold;
   list-style: none;
@@ -35,7 +34,7 @@ ul.main-menu {
     border: 0;
     color: map.get(theme.$light-mode, text-secondary);
     cursor: pointer;
-    padding: (theme.$base-spacing * 2) 0;
+    padding: (theme.$base-spacing * 2) theme.$base-spacing;
     text-align: left;
     width: 100%;
 
@@ -44,10 +43,18 @@ ul.main-menu {
       padding: theme.$base-spacing;
     }
 
+    @media (prefers-color-scheme: dark) {
+      color: map.get(theme.$dark-mode, text-secondary);
+    }
+
     &:hover,
     &:focus {
       background-color: color.adjust(theme.$mdn-green700, $alpha: -0.9);
       color: theme.$mdn-green700;
+
+      @media (prefers-color-scheme: dark) {
+        color: map.get(theme.$dark-mode, text-primary);
+      }
     }
   }
 
@@ -62,7 +69,7 @@ ul.main-menu {
   .top-level-link {
     display: block;
     font-weight: normal;
-    padding: (theme.$base-spacing * 2) 0;
+    padding: (theme.$base-spacing * 2) theme.$base-spacing;
 
     @media #{layout.$mq-large-desktop-and-up} {
       border-radius: theme.$default-border-radius;
@@ -72,6 +79,10 @@ ul.main-menu {
     &:link,
     &:visited {
       color: map.get(theme.$light-mode, text-secondary);
+
+      @media (prefers-color-scheme: dark) {
+        color: map.get(theme.$dark-mode, text-secondary);
+      }
     }
 
     &:hover,
@@ -79,6 +90,10 @@ ul.main-menu {
       background-color: color.adjust(theme.$mdn-green700, $alpha: -0.9);
       color: theme.$mdn-green700;
       text-decoration: none;
+
+      @media (prefers-color-scheme: dark) {
+        color: map.get(theme.$dark-mode, text-primary);
+      }
     }
   }
 }

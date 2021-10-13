@@ -1,4 +1,5 @@
 @use "sass:color";
+@use "sass:map";
 
 @use "../../minimalist/vars/layout";
 @use "../../theme/index" as theme;
@@ -16,7 +17,10 @@
     margin: initial;
   }
 
-  &:hover,
+  @media (prefers-color-scheme: dark) {
+    border-color: map.get(theme.$dark-mode, background-primary);
+  }
+
   &:focus {
     border: 5px solid color.adjust(theme.$mdn-blue400, $alpha: -0.6);
   }

@@ -1,3 +1,6 @@
+@use "sass:map";
+@use "../../theme/index" as theme;
+
 .icon-button {
   background: none;
 
@@ -18,22 +21,32 @@
 }
 
 .toggle-search-button {
-  background: transparent url("~@mdn/dinocons/general/search.svg") center center
-    no-repeat;
-  background-size: 16px;
-  height: 16px;
-  vertical-align: middle;
-  width: 16px;
+  &::before {
+    background-color: map.get(theme.$light-mode, icon-primary);
+    background-size: 16px;
+    height: 16px;
+    mask-image: url("~@mdn/dinocons/general/search.svg");
+    width: 16px;
+
+    @media (prefers-color-scheme: dark) {
+      background-color: map.get(theme.$dark-mode, icon-primary);
+    }
+  }
 }
 
 .menu-open {
   &::before {
-    background-image: url("~@mdn/dinocons/navigation/menu-open.svg");
+    background-color: map.get(theme.$light-mode, icon-primary);
+    mask-image: url("~@mdn/dinocons/navigation/menu-open.svg");
+
+    @media (prefers-color-scheme: dark) {
+      background-color: map.get(theme.$dark-mode, icon-primary);
+    }
   }
 
   &.menu-close {
     &::before {
-      background-image: url("~@mdn/dinocons/navigation/menu-close.svg");
+      mask-image: url("~@mdn/dinocons/navigation/menu-close.svg");
     }
   }
 }
