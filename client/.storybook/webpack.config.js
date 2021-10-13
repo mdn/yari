@@ -4,13 +4,6 @@ module.exports = async ({ config }) => {
     exclude: /node_modules/,
     use: [
       {
-        loader: "@linaria/webpack-loader",
-        options: {
-          sourceMap: process.env.NODE_ENV !== "production",
-          cacheDirectory: "./src/stories/.linaria_cache",
-        },
-      },
-      {
         loader: "ts-loader",
         options: {
           transpileOnly: true,

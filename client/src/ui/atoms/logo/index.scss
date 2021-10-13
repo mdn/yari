@@ -1,0 +1,25 @@
+@use "../../minimalist/vars/_layout.scss" as layout;
+
+.logo {
+  background: transparent url("../../../assets/mdn-docs-logo.svg") center center
+    no-repeat;
+  background-size: 170px auto;
+  display: block;
+  height: 55px;
+  width: 170px;
+
+  &.plus-logo {
+    background-image: url("../../../assets/mdn-plus-logo.svg");
+  }
+
+  @media #{layout.$mq-small-desktop-and-up} {
+    background-size: 200px auto;
+    height: 65px;
+    width: 200px;
+  }
+
+  @media #{layout.$mq-large-desktop-and-up} {
+    background-size: contain;
+    flex-basis: 200px;
+  }
+}

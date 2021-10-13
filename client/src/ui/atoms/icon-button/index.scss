@@ -17,6 +17,15 @@
   }
 }
 
+.toggle-search-button {
+  background: transparent url("~@mdn/dinocons/general/search.svg") center center
+    no-repeat;
+  background-size: 16px;
+  height: 16px;
+  vertical-align: middle;
+  width: 16px;
+}
+
 .menu-open {
   &::before {
     background-image: url("~@mdn/dinocons/navigation/menu-open.svg");

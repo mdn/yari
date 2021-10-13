@@ -3,8 +3,6 @@ import useSWR, { mutate } from "swr";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 
-import { ErrorContainer } from "../error-container";
-
 import { Doc } from "../../../document/types";
 
 import "./index.scss";
@@ -139,7 +137,7 @@ function ShowToggleError({
   clear: () => void;
 }) {
   return (
-    <ErrorContainer>
+    <div className="notification error">
       <button type="button" onClick={() => clear()}>
         X
       </button>
@@ -149,7 +147,7 @@ function ShowToggleError({
       <p>
         <code>{error.toString()}</code>
       </p>
-    </ErrorContainer>
+    </div>
   );
 }
 
@@ -161,7 +159,7 @@ function ShowLoadingError({
   clear: () => void;
 }) {
   return (
-    <ErrorContainer>
+    <div className="notification error">
       <button type="button" onClick={() => clear()}>
         X
       </button>
@@ -171,7 +169,7 @@ function ShowLoadingError({
       <p>
         <code>{error.toString()}</code>
       </p>
-    </ErrorContainer>
+    </div>
   );
 }
 

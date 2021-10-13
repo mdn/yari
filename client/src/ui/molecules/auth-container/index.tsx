@@ -1,5 +1,5 @@
 import SignInLink from "../../atoms/signin-link";
-import SubscribeLink from "../../atoms/subscribe-link";
+import { SubscribeLink } from "../../atoms/subscribe-link";
 
 import "./index.scss";
 

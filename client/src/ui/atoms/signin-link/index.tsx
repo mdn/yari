@@ -1,23 +1,14 @@
 import { useLocation } from "react-router-dom";
-import { styled } from "linaria/react";
 
 import { useLocale } from "../../../hooks";
 import { FXA_SIGNIN_URL } from "../../../constants";
-import { lightModeTextSecondary } from "../../vars/js/variables";
+
+import "./index.scss";
 
 export default function SignInLink() {
   const locale = useLocale();
   const { pathname } = useLocation();
   const sp = new URLSearchParams();
-
-  const SignIn = styled.a`
-    font-weight: bold;
-
-    &:link,
-    &:visited {
-      color: ${lightModeTextSecondary};
-    }
-  `;
 
   let next = pathname || `/${locale}/`;
   sp.set("next", next);
@@ -37,8 +28,12 @@ export default function SignInLink() {
   }
 
   return (
-    <SignIn href={`${prefix}${FXA_SIGNIN_URL}?${sp.toString()}`} rel="nofollow">
+    <a
+      href={`${prefix}${FXA_SIGNIN_URL}?${sp.toString()}`}
+      className="signin-link"
+      rel="nofollow"
+    >
       Already a subscriber?
-    </SignIn>
+    </a>
   );
 }

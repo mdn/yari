@@ -4,14 +4,16 @@
   display: flex;
   flex-flow: column-reverse;
   gap: 12px;
+  list-style: none;
   margin-top: 48px;
+  padding: 0;
   text-align: center;
 
   @media #{layout.$mq-large-desktop-and-up} {
     align-items: center;
     flex-flow: row;
     justify-content: flex-end;
-    margin-top: 0;
+    margin: 0;
     text-align: initial;
   }
 }

@@ -10,7 +10,7 @@ export function Footer() {
     <footer id="nav-footer" className="page-footer">
       <div className="content-container">
         <div className="page-footer-logo">
-          <Logo mode="dark" />
+          <Logo />
         </div>
         <ul className="link-list-mdn">
           <li>

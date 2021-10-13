@@ -5,7 +5,7 @@ function testURL(pathname = "/") {
 }
 
 test.describe("Site search", () => {
-  const SEARCH_TOGGLE_SELECTOR = "#header-toggle-search";
+  const SEARCH_TOGGLE_SELECTOR = ".toggle-search-button";
   const SEARCH_SELECTOR = 'form input[type="search"]';
 
   test("submit the autocomplete search form will redirect to site search", async ({

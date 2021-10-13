@@ -1,0 +1,12 @@
+@use "../../theme/index" as theme;
+
+.notification-container {
+  background-color: theme.$mdn-violet700;
+  color: theme.$white;
+  padding: 12px;
+  text-align: center;
+
+  p {
+    margin-bottom: 0;
+  }
+}

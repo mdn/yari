@@ -1,0 +1,13 @@
+@use "sass:map";
+@use "../../theme/index" as theme;
+
+.auth-container {
+  .signin-link {
+    font-weight: bold;
+
+    &:link,
+    &:visited {
+      color: map.get(theme.$light-mode, text-secondary);
+    }
+  }
+}

@@ -5,7 +5,7 @@ function testURL(pathname = "/") {
 }
 
 test.describe("Autocomplete search", () => {
-  const SEARCH_TOGGLE_SELECTOR = "#header-toggle-search";
+  const SEARCH_TOGGLE_SELECTOR = ".toggle-search-button";
   const SEARCH_SELECTOR = 'form input[type="search"]';
 
   test("find Foo page by title search", async ({ page }) => {
