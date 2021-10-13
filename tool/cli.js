@@ -148,7 +148,7 @@ program
     validator: [...VALID_LOCALES.values()],
   })
   .option("-r, --recursive", "Delete content recursively", { default: false })
-  .option("--redirect <redirect>", "Redirect document to <redirect>")
+  .option("--redirect <redirect>", "Redirect document (and its children, if --recursive is true) to <redirect>")
   .option("-y, --yes", "Assume yes", { default: false })
   .action(
     tryOrExit(async ({ args, options }) => {
