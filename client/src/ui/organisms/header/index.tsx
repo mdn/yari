@@ -2,7 +2,7 @@ import { useState } from "react";
 
 import { Logo } from "../../atoms/logo";
 import { IconButton } from "../../atoms/icon-button";
-import { PageHeaderMain } from "../../molecules/page-header-main";
+import { PageHeaderMain } from "../page-header-main";
 
 import "./index.scss";
 

@@ -6,8 +6,6 @@
 @use "../../theme/index" as theme;
 
 .header-search {
-  background-color: theme.$white;
-
   .search-widget {
     margin: theme.$base-spacing 0;
     position: relative;
@@ -31,6 +29,12 @@
     padding: theme.$base-spacing (theme.$base-spacing * 2) theme.$base-spacing
       46px;
     width: 100%;
+
+    @media (prefers-color-scheme: dark) {
+      background-color: map.get(theme.$dark-mode, background-primary);
+      border: 1px solid map.get(theme.$dark-mode, border-primary);
+      color: theme.$white;
+    }
 
     &:focus {
       outline: map.get(theme.$light-mode, border-primary);
@@ -112,39 +116,67 @@
 }
 
 .search-button {
-  background: theme.$white url("~@mdn/dinocons/general/search.svg") center
-    center no-repeat;
-  background-size: 16px;
-  height: 16px;
+  height: 44px;
   left: 1px;
-  padding: 22px;
+  padding: 16px;
   position: absolute;
   top: 1px;
-  width: 16px;
+  width: 42px;
+
+  &::before {
+    background-color: map.get(theme.$light-mode, icon-primary);
+    background-size: 16px;
+    content: "";
+    display: block;
+    height: 16px;
+    left: -3px;
+    mask-image: url("~@mdn/dinocons/general/search.svg");
+    position: relative;
+    top: -1px;
+    width: 16px;
+
+    @media (prefers-color-scheme: dark) {
+      background-color: map.get(theme.$dark-mode, icon-primary);
+    }
+  }
 }
 
 .close-search-button {
   display: none;
 
   @media #{layout.$mq-large-desktop-and-up} {
-    background: transparent url("~@mdn/dinocons/general/close.svg") center
-      center no-repeat;
-    background-size: 12px;
+    background: none;
     border-radius: theme.$default-border-radius;
     display: block;
-    height: 12px;
-    padding: 20px;
-    position: relative;
-    width: 12px;
+    padding: theme.$base-spacing * 2;
+
+    &::before {
+      background-color: map.get(theme.$light-mode, icon-primary);
+      background-size: 12px;
+      content: "";
+      display: block;
+      height: 12px;
+      mask-image: url("~@mdn/dinocons/general/close.svg");
+      position: relative;
+      width: 12px;
+
+      @media (prefers-color-scheme: dark) {
+        background-color: map.get(theme.$dark-mode, icon-primary);
+      }
+    }
   }
 }
 
-.close-search-button,
-.search-button {
+.search-button,
+.close-search-button {
   &:hover,
   &:focus,
   &:active {
     background-color: map.get(theme.$light-mode, button-secondary-hover);
     outline: theme.$white;
+
+    @media (prefers-color-scheme: dark) {
+      background-color: map.get(theme.$dark-mode, button-secondary-hover);
+    }
   }
 }

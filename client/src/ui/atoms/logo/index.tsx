@@ -2,6 +2,9 @@ import { useLocation } from "react-router-dom";
 
 import { useLocale } from "../../../hooks";
 
+import { ReactComponent as MDNDocsLogo } from "../../../assets/mdn-docs-logo.svg";
+import { ReactComponent as MDNPlusLogo } from "../../../assets/mdn-plus-logo.svg";
+
 import "./index.scss";
 
 export function Logo() {
@@ -11,8 +14,8 @@ export function Logo() {
   const isPlus = location.pathname.indexOf("/plus") > -1 ? true : false;
 
   return (
-    <a href={`/${locale}/`} className={isPlus ? "logo plus-logo" : "logo"}>
-      <span className="visually-hidden">MDN Web Docs</span>
+    <a href={`/${locale}/`} className="logo">
+      {isPlus ? <MDNPlusLogo /> : <MDNDocsLogo />}
     </a>
   );
 }

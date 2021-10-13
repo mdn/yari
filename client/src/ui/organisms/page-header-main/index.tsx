@@ -1,11 +1,11 @@
 import * as React from "react";
 
-import { AuthContainer } from "../auth-container";
-import MainMenu from "../main-menu";
-import { HeaderNotificationsMenu } from "../header-notifications-menu";
+import { AuthContainer } from "../../molecules/auth-container";
+import MainMenu from "../../molecules/main-menu";
+import { HeaderNotificationsMenu } from "../../molecules/header-notifications-menu";
 import { IconButton } from "../../atoms/icon-button";
-import { UserMenu } from "../user-menu";
-import { Search } from "../search";
+import { UserMenu } from "../../molecules/user-menu";
+import { Search } from "../../molecules/search";
 
 import { useUserData } from "../../../user-context";
 

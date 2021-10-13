@@ -1,4 +1,13 @@
+@use "sass:color";
+
 @use "../../theme/index" as theme;
+
+.submenu.mdn-plus {
+  a:hover,
+  a:focus {
+    background-color: color.adjust(theme.$mdn-green700, $alpha: -0.9);
+  }
+}
 
 .submenu-icon {
   &.bookmarks-icon,

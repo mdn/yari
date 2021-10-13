@@ -1,4 +1,8 @@
+@use "sass:map";
+
 @use "../../minimalist/vars/layout";
+@use "../themes/color-map-light-mode";
+@use "../themes/color-map-dark-mode";
 
 .with-icon,
 .with-icon-flex {
@@ -37,7 +41,13 @@
 
 [aria-haspopup="menu"] {
   &::after {
-    background-image: url("~@mdn/dinocons/arrows/chevron.svg");
+    background-color: map.get(color-map-light-mode.$light-mode, icon-primary);
+    height: 8px;
+    mask-image: url("~@mdn/dinocons/arrows/chevron.svg");
+
+    @media (prefers-color-scheme: dark) {
+      background-color: map.get(color-map-dark-mode.$dark-mode, icon-primary);
+    }
   }
 
   &[aria-expanded="true"] {

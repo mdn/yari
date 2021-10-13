@@ -10,10 +10,20 @@
   margin: 0;
   padding: 0;
 
+  @media (prefers-color-scheme: dark) {
+    background-color: map.get(theme.$dark-mode, background-primary);
+  }
+
   @media #{layout.$mq-large-desktop-and-up} {
+    border: 1px solid map.get(theme.$light-mode, border-primary);
     border-radius: theme.$default-border-radius * 2;
-    box-shadow: theme.$menu-box-shadow;
+    box-shadow: map.get(theme.$light-mode, shadow01);
     padding: theme.$base-spacing * 2;
+
+    @media (prefers-color-scheme: dark) {
+      border: 1px solid map.get(theme.$dark-mode, border-primary);
+      box-shadow: map.get(theme.$dark-mode, shadow01);
+    }
   }
 
   a {
@@ -24,6 +34,10 @@
     height: 100%;
     padding: theme.$base-spacing;
     width: 100%;
+
+    @media (prefers-color-scheme: dark) {
+      border-bottom: 1px solid map.get(theme.$dark-mode, border-secondary);
+    }
 
     @media #{layout.$mq-tablet-and-up} {
       width: unset;
@@ -37,13 +51,21 @@
 
     &:link,
     &:visited {
-      color: map.get(theme.$light-mode, text-secondary);
+      color: map.get(theme.$light-mode, text-primary);
+
+      @media (prefers-color-scheme: dark) {
+        color: map.get(theme.$dark-mode, text-primary);
+      }
     }
 
     &:hover,
     &:focus {
       background-color: map.get(theme.$light-mode, background-secondary);
       text-decoration: none;
+
+      @media (prefers-color-scheme: dark) {
+        background-color: map.get(theme.$dark-mode, background-secondary);
+      }
     }
   }
 
@@ -69,6 +91,7 @@
     border-radius: 4px;
     height: 16px;
     margin-bottom: theme.$base-spacing;
+    margin-right: theme.$base-spacing * 2;
     padding: theme.$base-spacing * 2;
     position: relative;
     width: 16px;
@@ -95,6 +118,10 @@
     @media #{layout.$mq-large-desktop-and-up} {
       font-weight: bold;
       margin-bottom: 0;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      color: map.get(theme.$dark-mode, text-secondary);
     }
   }
 

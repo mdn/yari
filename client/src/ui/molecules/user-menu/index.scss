@@ -22,6 +22,10 @@
         right: 0;
       }
     }
+
+    @media (prefers-color-scheme: dark) {
+      color: map.get(theme.$dark-mode, text-primary);
+    }
   }
 }
 
@@ -38,7 +42,11 @@
   }
 
   .usermenu-email-desktop {
-    border-bottom: theme.$standard-primary-border;
+    border-bottom: 1px solid map.get(theme.$light-mode, border-primary);
+
+    @media (prefers-color-scheme: dark) {
+      border-bottom: 1px solid map.get(theme.$dark-mode, border-primary);
+    }
   }
 
   .submenu-item-heading {

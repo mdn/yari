@@ -8,6 +8,10 @@
     &:link,
     &:visited {
       color: map.get(theme.$light-mode, text-secondary);
+
+      @media (prefers-color-scheme: dark) {
+        color: map.get(theme.$dark-mode, text-secondary);
+      }
     }
   }
 }
