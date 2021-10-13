@@ -3212,10 +3212,10 @@
     mkdirp "^0.5.1"
     normalize-path "^3.0.0"
 
-"@mdn/browser-compat-data@4.0.5":
-  version "4.0.5"
-  resolved "https://registry.yarnpkg.com/@mdn/browser-compat-data/-/browser-compat-data-4.0.5.tgz#21905dcc1520f095631a0d72a9f15605039ac7ff"
-  integrity sha512-KPSNaHUl5aikqsQU7LpBntFzaPbhm5OJxD88Wv00OKDc4wudyid2wDFqLeb7VcYT9x5bND8PPFloWdK5DY0pHA==
+"@mdn/browser-compat-data@4.0.6":
+  version "4.0.6"
+  resolved "https://registry.yarnpkg.com/@mdn/browser-compat-data/-/browser-compat-data-4.0.6.tgz#544daa41ba7308903ee7b7b35620c18754d45b52"
+  integrity sha512-sjwvUfaKRKHNgOgEOgIEOnYc8iNeRlcFYdUzCFejN5bJUe0ob4C9VNIzNMtQ2Qb/UAOopSjWX/YyupxQFm36/g==
 
 "@mdn/dinocons@^0.5.1":
   version "0.5.1"
