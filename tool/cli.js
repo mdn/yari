@@ -165,7 +165,13 @@ program
       console.log(chalk.green(`Will remove ${changes.length} documents:`));
       console.log(chalk.red(changes.join("\n")));
       if (redirect) {
-        console.log(chalk.green(`redirecting to: ${redirect}`));
+        console.log(
+          chalk.green(
+            `Redirecting ${
+              recursive ? "document" : "each document"
+            } to: ${redirect}`
+          )
+        );
       }
       const { run } = yes
         ? { run: true }
