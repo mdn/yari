@@ -168,7 +168,7 @@ program
         console.log(
           chalk.green(
             `Redirecting ${
-              recursive ? "document" : "each document"
+              recursive ? "each document" : "document"
             } to: ${redirect}`
           )
         );
