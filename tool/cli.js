@@ -148,7 +148,10 @@ program
     validator: [...VALID_LOCALES.values()],
   })
   .option("-r, --recursive", "Delete content recursively", { default: false })
-  .option("--redirect <redirect>", "Redirect document to <redirect>")
+  .option(
+    "--redirect <redirect>",
+    "Redirect document (and its children, if --recursive is true) to the URL <redirect>"
+  )
   .option("-y, --yes", "Assume yes", { default: false })
   .action(
     tryOrExit(async ({ args, options }) => {
@@ -162,7 +165,13 @@ program
       console.log(chalk.green(`Will remove ${changes.length} documents:`));
       console.log(chalk.red(changes.join("\n")));
       if (redirect) {
-        console.log(chalk.green(`redirecting to: ${redirect}`));
+        console.log(
+          chalk.green(
+            `Redirecting ${
+              recursive ? "each document" : "document"
+            } to: ${redirect}`
+          )
+        );
       }
       const { run } = yes
         ? { run: true }
