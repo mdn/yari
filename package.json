@@ -136,7 +136,7 @@
     "@types/mdast": "^3.0.9",
     "@types/react": "^17.0.30",
     "@types/react-dom": "^17.0.9",
-    "@types/react-modal": "^3.12.1",
+    "@types/react-modal": "^3.13.0",
     "babel-loader": "8.1.0",
     "benchmark": "2.1.4",
     "braces": "^3.0.2",
