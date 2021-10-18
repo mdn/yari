@@ -108,6 +108,8 @@ def index(
                 count_worked += 1
             else:
                 count_errors += 1
+                print("Error dictionary:")
+                print(json.dumps(info["index"]["error"]))
                 errors_counter[info["index"]["error"]] += 1
             count_done += 1
             bar.update(1)
