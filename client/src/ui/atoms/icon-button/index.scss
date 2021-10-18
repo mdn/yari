@@ -37,7 +37,10 @@
 .menu-open {
   &::before {
     background-color: map.get(theme.$light-mode, icon-primary);
+    background-size: 16px 12px;
+    height: 12px;
     mask-image: url("~@mdn/dinocons/navigation/menu-open.svg");
+    width: 16px;
 
     @media (prefers-color-scheme: dark) {
       background-color: map.get(theme.$dark-mode, icon-primary);
@@ -46,6 +49,8 @@
 
   &.menu-close {
     &::before {
+      background-size: 16px;
+      height: 16px;
       mask-image: url("~@mdn/dinocons/navigation/menu-close.svg");
     }
   }

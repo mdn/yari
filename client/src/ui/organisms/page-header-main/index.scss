@@ -8,9 +8,13 @@
   left: 0;
   padding: 0 (theme.$base-spacing * 3) (theme.$base-spacing * 3);
   position: absolute;
-  top: 85px;
+  top: 64px;
   width: 100%;
   z-index: layout.$bring-to-front;
+
+  @media #{layout.$mq-tablet-and-up} {
+    top: 89px;
+  }
 
   &.show-grid {
     background-color: map.get(theme.$light-mode, background-primary);

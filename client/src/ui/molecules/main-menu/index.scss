@@ -41,20 +41,20 @@ ul.main-menu {
     @media #{layout.$mq-large-desktop-and-up} {
       border-radius: theme.$default-border-radius;
       padding: theme.$base-spacing;
+
+      &:hover,
+      &:focus {
+        background-color: color.adjust(theme.$mdn-green700, $alpha: -0.9);
+        color: theme.$mdn-green700;
+
+        @media (prefers-color-scheme: dark) {
+          color: map.get(theme.$dark-mode, text-primary);
+        }
+      }
     }
 
     @media (prefers-color-scheme: dark) {
       color: map.get(theme.$dark-mode, text-secondary);
-    }
-
-    &:hover,
-    &:focus {
-      background-color: color.adjust(theme.$mdn-green700, $alpha: -0.9);
-      color: theme.$mdn-green700;
-
-      @media (prefers-color-scheme: dark) {
-        color: map.get(theme.$dark-mode, text-primary);
-      }
     }
   }
 
@@ -74,6 +74,17 @@ ul.main-menu {
     @media #{layout.$mq-large-desktop-and-up} {
       border-radius: theme.$default-border-radius;
       padding: theme.$base-spacing;
+
+      &:hover,
+      &:focus {
+        background-color: color.adjust(theme.$mdn-green700, $alpha: -0.9);
+        color: theme.$mdn-green700;
+        text-decoration: none;
+
+        @media (prefers-color-scheme: dark) {
+          color: map.get(theme.$dark-mode, text-primary);
+        }
+      }
     }
 
     &:link,
@@ -82,17 +93,6 @@ ul.main-menu {
 
       @media (prefers-color-scheme: dark) {
         color: map.get(theme.$dark-mode, text-secondary);
-      }
-    }
-
-    &:hover,
-    &:focus {
-      background-color: color.adjust(theme.$mdn-green700, $alpha: -0.9);
-      color: theme.$mdn-green700;
-      text-decoration: none;
-
-      @media (prefers-color-scheme: dark) {
-        color: map.get(theme.$dark-mode, text-primary);
       }
     }
   }
