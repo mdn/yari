@@ -10,7 +10,7 @@
     margin: 12px 0;
     padding: 0;
 
-    @media #{layout.$mq-large-desktop-and-up} {
+    @media #{layout.$mq-small-desktop-and-up} {
       display: flex;
       margin: initial;
     }
@@ -32,7 +32,7 @@
     text-align: center;
     width: 21px;
 
-    @media #{layout.$mq-large-desktop-and-up} {
+    @media #{layout.$mq-small-desktop-and-up} {
       background-color: transparent;
       padding: 0;
 
@@ -54,7 +54,7 @@
     &.unread-notifications {
       background-color: map.get(theme.$light-mode, icon-seondary);
 
-      @media #{layout.$mq-large-desktop-and-up} {
+      @media #{layout.$mq-small-desktop-and-up} {
         background-color: transparent;
 
         &::before {
@@ -69,7 +69,7 @@
     }
   }
 
-  @media #{layout.$mq-large-desktop-and-up} {
+  @media #{layout.$mq-small-desktop-and-up} {
     .notifications-label,
     .notifications-count {
       display: none;

@@ -12,10 +12,6 @@
   width: 100%;
   z-index: layout.$bring-to-front;
 
-  @media #{layout.$mq-tablet-and-up} {
-    top: 89px;
-  }
-
   &.show-grid {
     background-color: map.get(theme.$light-mode, background-primary);
     display: block;
@@ -51,7 +47,7 @@
     }
   }
 
-  @media #{layout.$mq-large-desktop-and-up} {
+  @media #{layout.$mq-small-desktop-and-up} {
     align-items: center;
     display: flex;
     gap: theme.$base-spacing * 2;
@@ -81,7 +77,7 @@
   display: flex;
   flex-flow: column-reverse;
 
-  @media #{layout.$mq-large-desktop-and-up} {
+  @media #{layout.$mq-small-desktop-and-up} {
     flex-flow: row;
   }
 }

@@ -11,7 +11,7 @@ ul.main-menu {
   padding: 0;
   width: 100%;
 
-  @media #{layout.$mq-large-desktop-and-up} {
+  @media #{layout.$mq-small-desktop-and-up} {
     align-items: center;
     display: flex;
     justify-content: space-around;
@@ -38,7 +38,7 @@ ul.main-menu {
     text-align: left;
     width: 100%;
 
-    @media #{layout.$mq-large-desktop-and-up} {
+    @media #{layout.$mq-small-desktop-and-up} {
       border-radius: theme.$default-border-radius;
       padding: theme.$base-spacing;
 
@@ -61,7 +61,7 @@ ul.main-menu {
   &.show {
     display: block;
 
-    @media #{layout.$mq-large-desktop-and-up} {
+    @media #{layout.$mq-small-desktop-and-up} {
       display: flex;
     }
   }
@@ -71,7 +71,7 @@ ul.main-menu {
     font-weight: normal;
     padding: (theme.$base-spacing * 2) theme.$base-spacing;
 
-    @media #{layout.$mq-large-desktop-and-up} {
+    @media #{layout.$mq-small-desktop-and-up} {
       border-radius: theme.$default-border-radius;
       padding: theme.$base-spacing;
 
@@ -99,7 +99,7 @@ ul.main-menu {
 }
 
 /* enable hover interaction if javascript is not available */
-@media #{layout.$mq-large-desktop-and-up} {
+@media #{layout.$mq-small-desktop-and-up} {
   ul.main-menu.nojs {
     .top-level-entry-container:hover,
     .top-level-entry-container:focus {
@@ -111,7 +111,7 @@ ul.main-menu {
   }
 }
 
-@media #{layout.$mq-large-desktop-and-up} {
+@media #{layout.$mq-small-desktop-and-up} {
   .page-overlay {
     display: none;
   }
