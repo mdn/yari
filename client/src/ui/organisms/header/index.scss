@@ -10,7 +10,7 @@
   right: 0;
   top: 14px;
 
-  @media #{layout.$mq-large-desktop-and-up} {
+  @media #{layout.$mq-small-desktop-and-up} {
     display: none;
   }
 }
@@ -22,7 +22,7 @@
   position: relative;
   width: 100%;
 
-  @media #{layout.$mq-large-desktop-and-up} {
+  @media #{layout.$mq-small-desktop-and-up} {
     display: flex;
     gap: theme.$base-spacing * 2;
   }

@@ -12,7 +12,7 @@
   margin-right: theme.$base-spacing;
   width: 32px;
 
-  @media #{layout.$mq-large-desktop-and-up} {
+  @media #{layout.$mq-small-desktop-and-up} {
     margin: initial;
   }
 }

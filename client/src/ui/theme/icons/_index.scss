@@ -17,7 +17,7 @@
   }
 
   &.mobile-only {
-    @media #{layout.$mq-large-desktop-and-up} {
+    @media #{layout.$mq-small-desktop-and-up} {
       &::after {
         display: none;
       }

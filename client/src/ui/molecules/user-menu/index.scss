@@ -18,7 +18,7 @@
     position: relative;
     width: 100%;
 
-    @media #{layout.$mq-large-desktop-and-up} {
+    @media #{layout.$mq-small-desktop-and-up} {
       border: 5px solid theme.$white;
     }
 
@@ -33,7 +33,7 @@
       }
     }
 
-    @media #{layout.$mq-large-desktop-and-up} {
+    @media #{layout.$mq-small-desktop-and-up} {
       &:focus {
         border: 5px solid color.adjust(theme.$mdn-blue400, $alpha: -0.6);
 
@@ -46,7 +46,7 @@
 }
 
 .submenu.my-mdn-plus.show {
-  @media #{layout.$mq-large-desktop-and-up} {
+  @media #{layout.$mq-small-desktop-and-up} {
     left: initial;
     right: 0;
     top: 50px;
@@ -73,12 +73,12 @@
 .show-desktop-inline-block {
   display: none;
 
-  @media #{layout.$mq-large-desktop-and-up} {
+  @media #{layout.$mq-small-desktop-and-up} {
     display: inline-block;
   }
 }
 
-@media #{layout.$mq-large-desktop-and-up} {
+@media #{layout.$mq-small-desktop-and-up} {
   .hide-desktop {
     display: none;
   }

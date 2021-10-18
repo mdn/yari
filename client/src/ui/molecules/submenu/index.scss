@@ -14,7 +14,7 @@
     background-color: map.get(theme.$dark-mode, background-primary);
   }
 
-  @media #{layout.$mq-large-desktop-and-up} {
+  @media #{layout.$mq-small-desktop-and-up} {
     border: 1px solid map.get(theme.$light-mode, border-primary);
     border-radius: theme.$default-border-radius * 2;
     box-shadow: map.get(theme.$light-mode, shadow01);
@@ -43,7 +43,7 @@
       width: unset;
     }
 
-    @media #{layout.$mq-large-desktop-and-up} {
+    @media #{layout.$mq-small-desktop-and-up} {
       border-bottom: 0;
       border-radius: theme.$default-border-radius;
       padding: theme.$base-spacing * 2;
@@ -72,7 +72,7 @@
   &.show {
     display: block;
 
-    @media #{layout.$mq-large-desktop-and-up} {
+    @media #{layout.$mq-small-desktop-and-up} {
       @include theme.submenu-base-desktop();
     }
   }
@@ -115,7 +115,7 @@
     font-weight: normal;
     margin-bottom: theme.$base-spacing;
 
-    @media #{layout.$mq-large-desktop-and-up} {
+    @media #{layout.$mq-small-desktop-and-up} {
       font-weight: bold;
       margin-bottom: 0;
     }
@@ -128,7 +128,7 @@
   .submenu-item-description {
     display: none;
 
-    @media #{layout.$mq-large-desktop-and-up} {
+    @media #{layout.$mq-small-desktop-and-up} {
       display: block;
       font-weight: normal;
       margin-bottom: 0;
