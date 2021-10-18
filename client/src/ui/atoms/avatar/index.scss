@@ -1,27 +1,18 @@
-@use "sass:color";
 @use "sass:map";
 
 @use "../../minimalist/vars/layout";
 @use "../../theme/index" as theme;
 
 .avatar {
-  border: 5px solid theme.$white;
   border-radius: 50%;
-  height: 50px;
+  height: 32px;
   /* pull the avatar into the space on the left
      introduced by the border */
   margin-left: -7px;
-  width: 50px;
+  margin-right: theme.$base-spacing;
+  width: 32px;
 
-  @media #{layout.$mq-large-desktop-and-up} {
+  @media #{layout.$mq-small-desktop-and-up} {
     margin: initial;
-  }
-
-  @media (prefers-color-scheme: dark) {
-    border-color: map.get(theme.$dark-mode, background-primary);
-  }
-
-  &:focus {
-    border: 5px solid color.adjust(theme.$mdn-blue400, $alpha: -0.6);
   }
 }

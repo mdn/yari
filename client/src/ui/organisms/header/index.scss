@@ -8,9 +8,9 @@
   padding: 10px 20px;
   position: absolute;
   right: 0;
-  top: 24px;
+  top: 14px;
 
-  @media #{layout.$mq-large-desktop-and-up} {
+  @media #{layout.$mq-small-desktop-and-up} {
     display: none;
   }
 }
@@ -22,7 +22,7 @@
   position: relative;
   width: 100%;
 
-  @media #{layout.$mq-large-desktop-and-up} {
+  @media #{layout.$mq-small-desktop-and-up} {
     display: flex;
     gap: theme.$base-spacing * 2;
   }

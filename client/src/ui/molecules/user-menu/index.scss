@@ -1,3 +1,4 @@
+@use "sass:color";
 @use "sass:map";
 
 @use "../../minimalist/vars/layout";
@@ -9,12 +10,21 @@
   .user-menu-toggle {
     align-items: center;
     background: none;
+    border-radius: 50%;
     color: map.get(theme.$light-mode, text-secondary);
     display: flex;
     margin: theme.$base-spacing 0;
     padding: 0;
     position: relative;
     width: 100%;
+
+    @media #{layout.$mq-small-desktop-and-up} {
+      border: 5px solid theme.$white;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      color: map.get(theme.$dark-mode, text-primary);
+    }
 
     &[aria-haspopup="menu"] {
       &::after {
@@ -23,17 +33,23 @@
       }
     }
 
-    @media (prefers-color-scheme: dark) {
-      color: map.get(theme.$dark-mode, text-primary);
+    @media #{layout.$mq-small-desktop-and-up} {
+      &:focus {
+        border: 5px solid color.adjust(theme.$mdn-blue400, $alpha: -0.6);
+
+        @media (prefers-color-scheme: dark) {
+          border-color: map.get(theme.$dark-mode, background-primary);
+        }
+      }
     }
   }
 }
 
 .submenu.my-mdn-plus.show {
-  @media #{layout.$mq-large-desktop-and-up} {
+  @media #{layout.$mq-small-desktop-and-up} {
     left: initial;
     right: 0;
-    top: 60px;
+    top: 50px;
   }
 
   a,
@@ -57,12 +73,12 @@
 .show-desktop-inline-block {
   display: none;
 
-  @media #{layout.$mq-large-desktop-and-up} {
+  @media #{layout.$mq-small-desktop-and-up} {
     display: inline-block;
   }
 }
 
-@media #{layout.$mq-large-desktop-and-up} {
+@media #{layout.$mq-small-desktop-and-up} {
   .hide-desktop {
     display: none;
   }

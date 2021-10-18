@@ -8,7 +8,7 @@
   left: 0;
   padding: 0 (theme.$base-spacing * 3) (theme.$base-spacing * 3);
   position: absolute;
-  top: 85px;
+  top: 64px;
   width: 100%;
   z-index: layout.$bring-to-front;
 
@@ -47,7 +47,7 @@
     }
   }
 
-  @media #{layout.$mq-large-desktop-and-up} {
+  @media #{layout.$mq-small-desktop-and-up} {
     align-items: center;
     display: flex;
     gap: theme.$base-spacing * 2;
@@ -77,7 +77,7 @@
   display: flex;
   flex-flow: column-reverse;
 
-  @media #{layout.$mq-large-desktop-and-up} {
+  @media #{layout.$mq-small-desktop-and-up} {
     flex-flow: row;
   }
 }
