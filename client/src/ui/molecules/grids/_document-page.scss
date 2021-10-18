@@ -12,7 +12,7 @@
   .document-page {
     .page-header,
     .generic-loading,
-    .breadcrumb-locale-container,
+    .utilitybar,
     .localized-content-note,
     .document-toc-container,
     .main-content,
@@ -25,7 +25,7 @@
       grid-row: 1/2;
     }
 
-    .breadcrumb-locale-container {
+    .utilitybar {
       grid-row: 2/3;
     }
 

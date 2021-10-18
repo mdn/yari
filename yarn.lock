@@ -2640,10 +2640,10 @@
   resolved "https://registry.yarnpkg.com/@mdn/browser-compat-data/-/browser-compat-data-4.0.6.tgz#544daa41ba7308903ee7b7b35620c18754d45b52"
   integrity sha512-sjwvUfaKRKHNgOgEOgIEOnYc8iNeRlcFYdUzCFejN5bJUe0ob4C9VNIzNMtQ2Qb/UAOopSjWX/YyupxQFm36/g==
 
-"@mdn/dinocons@^0.5.1":
-  version "0.5.1"
-  resolved "https://registry.yarnpkg.com/@mdn/dinocons/-/dinocons-0.5.1.tgz#a73f1bd4f71eb0f3eca31ab6040fa3a047d1511d"
-  integrity sha512-jfHa3RUX0HRXV+z9hWMDIS0Gt5Z6UAKZXU+GzuBQevZID7ns9BHWoqkTf1g0GTaDBVl61aCTwpO73bF5HBOzYQ==
+"@mdn/dinocons@^0.5.2":
+  version "0.5.2"
+  resolved "https://registry.yarnpkg.com/@mdn/dinocons/-/dinocons-0.5.2.tgz#0dcb5307f8c5829f9af2bfaee9e2481c5b5b7310"
+  integrity sha512-q7xqw62kmcxbz9WhS3nb9JuoYvj5Gl/4mtyZmupm941g7DEZGrIJw6IimrgeaEOyKOADWiUoSiFsoUUrZjzGhw==
 
 "@mdn/minimalist@^2.0.2":
   version "2.0.2"

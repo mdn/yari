@@ -13,8 +13,7 @@ import { SpecificationSection } from "./ingredients/spec-section";
 
 // Misc
 // Sub-components
-import { Breadcrumbs } from "../ui/molecules/breadcrumbs";
-import { LanguageToggle } from "../ui/molecules/language-toggle";
+import { UtilityBar } from "../ui/organisms/utilitybar";
 import { LocalizedContentNote } from "./molecules/localized-content-note";
 import { TOC } from "./organisms/toc";
 import { RenderSideBar } from "./organisms/sidebar";
@@ -22,7 +21,6 @@ import { RetiredLocaleNote } from "./molecules/retired-locale-note";
 import { MainContentContainer } from "../ui/atoms/page-content";
 import { Loading } from "../ui/atoms/loading";
 import { Metadata } from "./organisms/metadata";
-import { BookmarkToggle } from "../ui/molecules/bookmark";
 
 import "./index.scss";
 
@@ -152,17 +150,7 @@ export function Document(props /* TODO: define a TS interface for this */) {
 
   return (
     <>
-      {/* if we have either breadcrumbs or translations for the current page,
-      continue rendering the section */}
-      {(doc.parents || !!translations.length) && (
-        <div className="breadcrumb-locale-container">
-          {doc.parents && <Breadcrumbs parents={doc.parents} />}
-          <BookmarkToggle doc={doc} />
-          {translations && !!translations.length && (
-            <LanguageToggle locale={locale} translations={translations} />
-          )}
-        </div>
-      )}
+      <UtilityBar doc={doc} />
 
       {doc.isTranslated ? (
         <LocalizedContentNote isActive={doc.isActive} locale={locale} />
