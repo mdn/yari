@@ -11,7 +11,7 @@ $base-section-spacing: ($base-spacing * 2) $base-spacing;
 $base-section-spacing-mobile: math.div($base-spacing, 2) $base-spacing;
 $content-block-margin: $base-spacing;
 
-$max-width-default: 1400px;
+$max-width-default: 1440px;
 $max-width-small-desktop: math.div(1023px, $browser-default-font-size) * 1em;
 
 $small-mobile-ends: math.div(479px, $browser-default-font-size) * 1em;
