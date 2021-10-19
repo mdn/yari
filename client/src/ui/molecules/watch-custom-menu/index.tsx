@@ -10,6 +10,13 @@ const WatchCustomMenu = () => {
       aria-labelledby="WatchMenu-button"
     >
       <Button>Customize Notifications</Button>
+
+      <input type="checkbox" name="WatchContentUpdates" />
+      <label htmlFor="">Content Updates</label>
+
+      <fieldset>
+        <label htmlFor="">Browser Compatability Data</label>
+      </fieldset>
     </form>
   );
 };

@@ -1,10 +1,13 @@
 @use "sass:math";
 @use "sass:map";
 
+@use "../../minimalist/vars/typography" as type;
 @use "../../minimalist/vars/layout";
 @use "../../theme/index" as theme;
 
 .notifications-menu {
+  position: relative;
+
   .notifications-button {
     color: map.get(theme.$light-mode, text-primary);
     margin: 12px 0;
@@ -73,6 +76,55 @@
     .notifications-label,
     .notifications-count {
       display: none;
+    }
+  }
+
+  @media #{layout.$mq-tablet-and-up} {
+    .my-notifications {
+      left: initial;
+      padding: 0;
+      right: 0;
+      top: 28px;
+
+      &.submenu {
+        gap: 0;
+      }
+
+      .submenu-header,
+      .submenu-item-heading,
+      .submenu-item-description {
+        font-size: type.$small-font-size;
+      }
+
+      .submenu-content-container {
+        border-top: 1px solid map.get(theme.$light-mode, border-primary);
+
+        @media (prefers-color-scheme: dark) {
+          border-top: 1px solid map.get(theme.$dark-mode, border-primary);
+        }
+
+        padding: theme.$base-spacing theme.$base-spacing * 2;
+      }
+
+      .submenu-header .submenu-content-container {
+        border-top: none;
+      }
+
+      .submenu-header .submenu-content-container {
+        display: flex;
+        gap: theme.$base-spacing;
+        justify-content: space-between;
+      }
+
+      .submenu-header-action {
+        border-radius: unset;
+        padding: unset;
+      }
+
+      // !!!
+      .submenu-header-action:hover {
+        background-color: transparent;
+      }
     }
   }
 }

@@ -7,6 +7,7 @@ type SubmenuItem = {
   hasIcon?: boolean;
   iconClasses?: string;
   label?: string;
+  subText?: string;
   url?: string;
 };
 
@@ -52,6 +53,9 @@ export const Submenu = ({
                       {item.description}
                     </p>
                   )}
+                  {item.subText && (
+                    <span className="submenu-item-subtext">{item.subText}</span>
+                  )}
                 </div>
               </a>
             ) : (
@@ -63,6 +67,9 @@ export const Submenu = ({
                     <p className="submenu-item-description">
                       {item.description}
                     </p>
+                  )}
+                  {item.subText && (
+                    <span className="submenu-item-subtext">{item.subText}</span>
                   )}
                 </div>
               </>

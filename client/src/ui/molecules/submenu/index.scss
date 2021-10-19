@@ -1,6 +1,7 @@
 @use "sass:map";
 
 @use "../../minimalist/vars/layout";
+@use "../../minimalist/vars/typography" as type;
 @use "../../theme/index" as theme;
 
 .submenu {
@@ -23,6 +24,7 @@
     @media (prefers-color-scheme: dark) {
       border: 1px solid map.get(theme.$dark-mode, border-primary);
       box-shadow: map.get(theme.$dark-mode, shadow01);
+      color: map.get(theme.$dark-mode, text-secondary);
     }
   }
 
@@ -119,10 +121,6 @@
       font-weight: bold;
       margin-bottom: 0;
     }
-
-    @media (prefers-color-scheme: dark) {
-      color: map.get(theme.$dark-mode, text-secondary);
-    }
   }
 
   .submenu-item-description {
@@ -133,5 +131,9 @@
       font-weight: normal;
       margin-bottom: 0;
     }
+  }
+
+  .submenu-item-subtext {
+    font-size: type.$tiny-text;
   }
 }
