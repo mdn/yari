@@ -23,6 +23,7 @@ import { MainContentContainer } from "../ui/atoms/page-content";
 import { Loading } from "../ui/atoms/loading";
 import { Metadata } from "./organisms/metadata";
 import { BookmarkToggle } from "../ui/molecules/bookmark";
+import WatchMenu from "../ui/molecules/watch-menu";
 
 import "./index.scss";
 
@@ -161,6 +162,8 @@ export function Document(props /* TODO: define a TS interface for this */) {
           {translations && !!translations.length && (
             <LanguageToggle locale={locale} translations={translations} />
           )}
+
+          <WatchMenu />
         </div>
       )}
 
