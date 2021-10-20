@@ -4129,10 +4129,10 @@
   dependencies:
     "@types/react" "*"
 
-"@types/react-modal@^3.13.0":
-  version "3.13.0"
-  resolved "https://registry.yarnpkg.com/@types/react-modal/-/react-modal-3.13.0.tgz#880122e12e3ed28b930c5dd7f2f166fa5050c102"
-  integrity sha512-1jmHSG1g0J8/uop2rxNHpR8KrXF8f7uxQ8gYN9Ie06wy8GBphucCCuIsY6FwoNlReCXgKH0WPvMHxCPuGvEQ+g==
+"@types/react-modal@^3.13.1":
+  version "3.13.1"
+  resolved "https://registry.yarnpkg.com/@types/react-modal/-/react-modal-3.13.1.tgz#5b9845c205fccc85d9a77966b6e16dc70a60825a"
+  integrity sha512-iY/gPvTDIy6Z+37l+ibmrY+GTV4KQTHcCyR5FIytm182RQS69G5ps4PH2FxtC7bAQ2QRHXMevsBgck7IQruHNg==
   dependencies:
     "@types/react" "*"
 
