@@ -37,19 +37,22 @@ export const HeaderNotificationsMenu = () => {
         },
       },
       {
-        id: "Notification2",
+        id: "Notification1",
+        url: "/notifications/1",
         label: "border-block",
         description: "Now available in multiple browsers",
         subText: dayjs(Date.now()).fromNow(),
       },
       {
         id: "Notification2",
+        url: "/notifications/2",
         label: "AggregateError",
         description: "Available now for Deno 1.2",
         subText: dayjs(new Date("10/19/2021")).fromNow(),
       },
       {
         id: "Notification3",
+        url: "/notifications/3",
         label: "decodeURI()",
         description: "Deprecated for Node.js 0.09.0",
         subText: dayjs(new Date("10/18/2021")).fromNow(),
