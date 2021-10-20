@@ -3,6 +3,8 @@ import useSWR, { mutate } from "swr";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 
+import { IconButton } from "../../atoms/icon-button";
+
 import { Doc } from "../../../document/types";
 
 import "./index.scss";
@@ -74,10 +76,8 @@ export default function App({ doc }: { doc: Doc }) {
 
   const [isSaving, setSaving] = React.useState(false);
 
-  const loading = !data;
-
   return (
-    <div className="bookmark-button-container">
+    <>
       {error && !hideLoadingError ? (
         <ShowLoadingError
           error={error}
@@ -95,11 +95,10 @@ export default function App({ doc }: { doc: Doc }) {
           />
         )
       )}
-      <Button
-        bookmarked={localBookmarked}
-        loading={loading}
-        disabled={error || toggleError || isSaving}
-        toggle={async () => {
+      <IconButton
+        iconClassName={`bookmark-button ${localBookmarked ? "bookmarked" : ""}`}
+        isDisabled={isSaving}
+        clickHandler={async () => {
           // The first thing we do when the user has toggled it is to store it
           // in local state so that the UI feels responsive.
           // Once this is done, we can take care of sending the local state to
@@ -124,8 +123,12 @@ export default function App({ doc }: { doc: Doc }) {
             setSaving(false);
           }
         }}
-      />
-    </div>
+      >
+        <span className="bookmark-button-label">
+          {localBookmarked ? "Bookmarked" : "Bookmark"}
+        </span>
+      </IconButton>
+    </>
   );
 }
 
@@ -170,51 +173,5 @@ function ShowLoadingError({
         <code>{error.toString()}</code>
       </p>
     </div>
-  );
-}
-
-function Button({
-  bookmarked,
-  loading,
-  toggle,
-  disabled,
-}: {
-  bookmarked: Bookmarked | null;
-  loading: boolean;
-  toggle: () => void;
-  disabled: boolean;
-}) {
-  const style: { [key: string]: string | number } = {
-    cursor: "pointer",
-    border: "0",
-  };
-
-  let title = "Add bookmark";
-  if (disabled) {
-    title = "Disabled";
-  } else if (bookmarked) {
-    title = `Bookmarked ${dayjs(bookmarked.created).fromNow()}`;
-    style.color = "orange";
-  } else if (loading) {
-    title = "Loading";
-    style.opacity = 0.5;
-  }
-  return (
-    /* Note! We're displaying the state as if you have NOT bookmarked
-    it even if we still don't know yet. */
-    <button
-      className={`button ghost bookmark-button ${
-        !bookmarked || loading ? "" : "bookmarked"
-      }`}
-      title={title}
-      onClick={toggle}
-      disabled={disabled || loading}
-      // This exists so that the headless tests can refer to this button
-      // without having to rely on a `class` or the text it self.
-      data-testid="bookmark-toggle"
-      aria-label={!bookmarked || loading ? "Add Bookmark" : "Remove Bookmark"}
-    >
-      <span>{!bookmarked || loading ? "Bookmark" : "Bookmarked"}</span>
-    </button>
   );
 }

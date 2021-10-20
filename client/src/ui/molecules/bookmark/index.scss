@@ -1,42 +1,38 @@
-@use "sass:math";
+@use "sass:map";
 
-@use "~@mdn/minimalist/sass/vars/layout";
-
+@use "../../minimalist/vars/layout";
 @use "../../theme/index" as theme;
 
 .bookmark-button {
+  align-items: center;
   background-color: transparent;
-  border-radius: math.div(theme.$default-border-radius, 3);
-  height: 100%;
-  max-width: inherit;
-  min-height: inherit;
-  padding: 8px;
+  border-bottom: 1px solid map.get(theme.$light-mode, border-secondary);
+  display: flex;
+  gap: theme.$base-spacing;
+  padding: theme.$base-spacing * 2;
+  width: 100%;
 
   @media #{layout.$mq-small-desktop-and-up} {
-    width: 150px;
-  }
-
-  &:hover,
-  &:focus {
-    background-color: theme.$mdn-light-grey300;
+    border-radius: theme.$default-border-radius;
   }
 
   &::before {
-    background-color: theme.$mdn-light-grey900;
-    content: "";
-    display: inline-block;
-    height: 25px;
-    margin: 0 8px 0 auto;
-    mask-image: url("~@mdn/dinocons/general/bookmark.svg");
-    padding: math.div(layout.$base-spacing, 2);
-    vertical-align: middle;
-    width: 25px;
+    background-color: map.get(theme.$light-mode, icon-primary);
+    height: 16px;
+    mask-image: url("~@mdn/dinocons/plus/bookmark.svg");
+    padding: theme.$base-spacing;
+    width: 16px;
   }
 
   &.bookmarked {
     &::before {
-      background-color: theme.$mdn-blue500;
-      mask-image: url("~@mdn/dinocons/general/bookmark-filled.svg");
+      background-color: map.get(theme.$light-mode, accent-secondary);
+      mask-image: url("~@mdn/dinocons/plus/bookmark-filled.svg");
     }
+  }
+
+  &:hover,
+  &:focus {
+    background-color: map.get(theme.$light-mode, button-secondary-hover);
   }
 }

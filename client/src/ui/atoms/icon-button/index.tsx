@@ -10,6 +10,10 @@ type IconButtonType = {
   ) => void;
   extraClasses?: string;
   iconClassName?: string;
+  /**
+   * Should the button be disabled? This is optional with a default of false
+   */
+  isDisabled?: boolean;
 };
 
 export const IconButton = (props) => {
@@ -19,6 +23,7 @@ export const IconButton = (props) => {
     clickHandler,
     extraClasses,
     iconClassName,
+    isDisabled = false,
   }: IconButtonType = props;
 
   return (
@@ -27,6 +32,7 @@ export const IconButton = (props) => {
       type={buttonType}
       onClick={clickHandler}
       className={`${extraClasses || ""} icon-button ${iconClassName || ""}`}
+      disabled={isDisabled}
     >
       {props.children}
     </button>
