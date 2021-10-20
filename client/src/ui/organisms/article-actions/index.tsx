@@ -42,6 +42,9 @@ export const ArticleActions = ({
     setIsMobile(state.matches);
   }
 
+  // @TODO we will need the following when including the language drop-down
+  // const translations = doc.other_translations || [];
+
   React.useEffect(() => {
     if (typeof window !== "undefined" && window.matchMedia) {
       const mql = window.matchMedia("(max-width: 63.9375em)");

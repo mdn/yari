@@ -144,8 +144,6 @@ export function Document(props /* TODO: define a TS interface for this */) {
     return null;
   }
 
-  const translations = doc.other_translations || [];
-
   const isServer = typeof window === "undefined";
 
   return (
