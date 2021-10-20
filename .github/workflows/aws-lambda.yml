@@ -1,6 +1,6 @@
 # This starts up a simulator that tries to do what our Lambda@Edge does.
 
-name: AWS Lambda@Edge
+name: AWS Lambda@Edge 
 
 on:
   pull_request:
