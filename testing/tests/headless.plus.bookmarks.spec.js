@@ -5,7 +5,7 @@ function testURL(pathname = "/") {
 }
 
 test.describe("Bookmarking pages", () => {
-  const SELECTOR = '[data-testid="bookmark-toggle"]';
+  const SELECTOR = ".bookmark-button";
 
   test.beforeEach(async ({ context }) => {
     // Necessary hack to make sure any existing 'sessionid' cookies don't
@@ -30,19 +30,25 @@ test.describe("Bookmarking pages", () => {
     await page.goto(testURL("/en-US/docs/Web/Foo"));
     await page.waitForSelector(SELECTOR);
 
-    expect(await page.isVisible('button[title="Add bookmark"]')).toBeTruthy();
+    expect(await page.isVisible(SELECTOR)).toBeTruthy();
 
-    await page.click('button[title="Add bookmark"]');
+    await page.click(SELECTOR);
     await page.waitForLoadState("networkidle");
 
-    expect(await page.isVisible('button[title="Add bookmark"]')).toBeFalsy();
-    expect(await page.isVisible('button[title^="Bookmarked"]')).toBeTruthy();
+    expect(
+      await page.isVisible('.bookmark-button-label:text-is("Bookmark")')
+    ).toBeFalsy();
+    expect(
+      await page.isVisible('.bookmark-button-label:text-is("Bookmarked")')
+    ).toBeTruthy();
 
     // Reload the page to prove that it sticks
     await page.goto(testURL("/en-US/docs/Web/Foo"));
     await page.waitForSelector(SELECTOR);
 
-    expect(await page.isVisible('button[title^="Bookmarked"]')).toBeTruthy();
+    expect(
+      await page.isVisible('.bookmark-button-label:text-is("Bookmarked")')
+    ).toBeTruthy();
   });
 
   test("view your listing of all bookmarks", async ({ page }) => {
@@ -69,7 +75,7 @@ test.describe("Bookmarking pages", () => {
     for (const url of urls) {
       await page.goto(testURL(url));
       await page.waitForSelector(SELECTOR);
-      await page.click('button[title="Add bookmark"]');
+      await page.click(SELECTOR);
     }
 
     const locator = page.locator(".pagination");

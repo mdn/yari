@@ -20,16 +20,17 @@ test.describe("Basic viewing of functional pages", () => {
     expect(await page.isVisible(".metadata time")).toBeTruthy();
   });
 
-  test("open the French /fr/docs/Web/Foo page and navigate to English", async ({
-    page,
-  }) => {
-    await page.goto(testURL("/fr/docs/Web/Foo"));
-    expect(await page.innerText("h1")).toBe("<foo>: Une page de test");
-    await page.click("text=View in English");
-    expect(await page.innerText("h1")).toBe("<foo>: A test tag");
-    // Should have been redirected too...
-    expect(page.url()).toBe(testURL("/en-US/docs/Web/Foo/"));
-  });
+  // @TODO Temporarily disabled until we reintroduce the language selector
+  // test("open the French /fr/docs/Web/Foo page and navigate to English", async ({
+  //   page,
+  // }) => {
+  //   await page.goto(testURL("/fr/docs/Web/Foo"));
+  //   expect(await page.innerText("h1")).toBe("<foo>: Une page de test");
+  //   await page.click("text=View in English");
+  //   expect(await page.innerText("h1")).toBe("<foo>: A test tag");
+  //   // Should have been redirected too...
+  //   expect(page.url()).toBe(testURL("/en-US/docs/Web/Foo/"));
+  // });
 
   test("open the /en-US/docs/Web/InteractiveExample page", async ({ page }) => {
     await page.goto(testURL("/en-US/docs/Web/InteractiveExample"));
@@ -166,14 +167,6 @@ test.describe("Basic viewing of functional pages", () => {
     await page.goto(testURL("/en-US/docs/Web/Foo"));
     // Let's not get too technical about the name of the selectors and
     // stuff but do note that the page you're on is always a valid link
-    expect(
-      await page.innerText(
-        "nav a.breadcrumb-penultimate[property=item][typeof=WebPage]"
-      )
-    ).toBe(
-      // You gotta know your fixture documents
-      "Web technology for developers"
-    );
     expect(
       await page.innerText(
         "nav a.breadcrumb-current-page[property=item][typeof=WebPage]"
