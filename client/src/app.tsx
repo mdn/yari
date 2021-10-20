@@ -18,7 +18,7 @@ import { PageNotFound } from "./page-not-found";
 import { Plus } from "./plus";
 
 const AllFlaws = React.lazy(() => import("./flaws"));
-const AllTranslations = React.lazy(() => import("./translations"));
+const Translations = React.lazy(() => import("./translations"));
 const DocumentEdit = React.lazy(() => import("./document/forms/edit"));
 const DocumentCreate = React.lazy(() => import("./document/forms/create"));
 const DocumentManage = React.lazy(() => import("./document/forms/manage"));
@@ -144,10 +144,10 @@ export function App(appProps) {
                   }
                 />
                 <Route
-                  path="/_translations"
+                  path="/_translations/*"
                   element={
                     <StandardLayout>
-                      <AllTranslations />
+                      <Translations />
                     </StandardLayout>
                   }
                 />
