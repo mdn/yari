@@ -57,7 +57,7 @@ export const HeaderNotificationsMenu = () => {
     ],
   };
 
-  const notificationCount = 3;
+  const notificationCount = notificationsMenuItems.items.length;
 
   function hideSubMenuIfVisible() {
     if (visibleSubMenuId) {
