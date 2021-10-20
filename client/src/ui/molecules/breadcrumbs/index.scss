@@ -1,17 +1,25 @@
 @use "sass:math";
+@use "sass:map";
 
 @use "../../theme/index" as theme;
 @use "../../minimalist/vars/layout";
+@use "../../minimalist/vars/typography";
 @use "../../minimalist/mixins/utils" as mx-utils;
 
 .breadcrumbs-container {
   a {
     align-items: center;
     display: flex;
+
+    &:link,
+    &:visited {
+      color: map.get(theme.$light-mode, text-secondary);
+    }
   }
 
   ol {
     @include mx-utils.reset-list();
+    line-height: typography.$default-line-height;
   }
 
   li {

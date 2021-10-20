@@ -13,7 +13,7 @@ import { SpecificationSection } from "./ingredients/spec-section";
 
 // Misc
 // Sub-components
-import { UtilityBar } from "../ui/organisms/utilitybar";
+import { ArticleActionsContainer } from "../ui/organisms/article-actions-container";
 import { LocalizedContentNote } from "./molecules/localized-content-note";
 import { TOC } from "./organisms/toc";
 import { RenderSideBar } from "./organisms/sidebar";
@@ -150,7 +150,7 @@ export function Document(props /* TODO: define a TS interface for this */) {
 
   return (
     <>
-      <UtilityBar doc={doc} />
+      <ArticleActionsContainer doc={doc} />
 
       {doc.isTranslated ? (
         <LocalizedContentNote isActive={doc.isActive} locale={locale} />

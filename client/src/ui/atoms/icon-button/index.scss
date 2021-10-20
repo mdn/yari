@@ -3,9 +3,14 @@
 
 .icon-button {
   background: none;
+  color: map.get(theme.$light-mode, text-primary);
+
+  @media (prefers-color-scheme: dark) {
+    color: map.get(theme.$dark-mode, text-primary);
+  }
 
   &::before {
-    background-color: transparent;
+    background-color: map.get(theme.$light-mode, icon-primary);
     background-position: center center;
     background-repeat: no-repeat;
     background-size: 16px;
@@ -13,6 +18,10 @@
     display: block;
     height: 16px;
     width: 16px;
+
+    @media (prefers-color-scheme: dark) {
+      background-color: map.get(theme.$dark-mode, icon-primary);
+    }
   }
 
   &.inline-block {
@@ -22,29 +31,34 @@
 
 .toggle-search-button {
   &::before {
-    background-color: map.get(theme.$light-mode, icon-primary);
-    background-size: 16px;
-    height: 16px;
     mask-image: url("~@mdn/dinocons/general/search.svg");
-    width: 16px;
+  }
+}
 
-    @media (prefers-color-scheme: dark) {
-      background-color: map.get(theme.$dark-mode, icon-primary);
-    }
+.article-actions-open {
+  &::before {
+    mask-image: url("~@mdn/dinocons/general/kebab-menu.svg");
+  }
+}
+
+.article-actions-close {
+  align-items: center;
+  border-bottom: 1px solid map.get(theme.$light-mode, border-secondary);
+  display: flex;
+  gap: theme.$base-spacing;
+  padding: theme.$base-spacing * 2;
+  width: 100%;
+
+  &::before {
+    mask-image: url("~@mdn/dinocons/navigation/menu-close.svg");
   }
 }
 
 .menu-open {
   &::before {
-    background-color: map.get(theme.$light-mode, icon-primary);
     background-size: 16px 12px;
     height: 12px;
     mask-image: url("~@mdn/dinocons/navigation/menu-open.svg");
-    width: 16px;
-
-    @media (prefers-color-scheme: dark) {
-      background-color: map.get(theme.$dark-mode, icon-primary);
-    }
   }
 
   &.menu-close {

@@ -1,5 +1,8 @@
 {
   "typography": {
+    "base-line-height": {
+      "value": "1.5"
+    },
     "base-font-size": {
       "value": "100%"
     },
