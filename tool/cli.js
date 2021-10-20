@@ -172,7 +172,7 @@ program
             } to: ${redirect}`
           )
         );
-      } else if (!redirect) {
+      } else {
         console.error(
           chalk.yellow(
             "Deleting without a redirect. Consider using the --redirect option with a related page instead."
