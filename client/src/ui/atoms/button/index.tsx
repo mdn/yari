@@ -9,6 +9,10 @@ type ButtonProps = {
   buttonType?: "button" | "submit" | "reset";
   extraClasses?: string;
   id?: string;
+  /**
+   * Should the button be disabled? This is optional with a default of false
+   */
+  isDisabled?: boolean;
   onClickHandler?: (event: React.MouseEvent<HTMLButtonElement>) => void;
   onFocusHandler?: (event: React.FocusEvent<HTMLButtonElement>) => void;
   /**
@@ -28,6 +32,7 @@ export const Button = ({
   buttonType = "button",
   extraClasses,
   id,
+  isDisabled = false,
   onClickHandler,
   onFocusHandler,
   state,
@@ -37,6 +42,7 @@ export const Button = ({
     <button
       aria-expanded={ariaExpanded}
       aria-haspopup={ariaHasPopup}
+      disabled={isDisabled}
       id={id}
       type={buttonType}
       className={`${state ? state : ""} ${extraClasses ? extraClasses : ""}`}

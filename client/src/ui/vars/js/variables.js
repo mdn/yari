@@ -1,6 +1,6 @@
 /**
  * Do not edit directly
- * Generated on Wed, 13 Oct 2021 13:36:13 GMT
+ * Generated on Mon, 18 Oct 2021 10:34:04 GMT
  */
 
 export const borderDefaultRadius = "4px";
@@ -214,6 +214,7 @@ export const fullColorRampMarketingGrey90 = "#141422";
 export const fullColorRampMarketingGrey05 = "#f9f9fa";
 export const fullColorRampBlackWhiteBlack = "#000000";
 export const fullColorRampBlackWhiteWhite = "#ffffff";
+export const typographyBaseLineHeight = "1.5";
 export const typographyBaseFontSize = "100%";
 export const typographyHeadingLineHeight = "1.3";
 export const typographyHeadingDisplayFontSize = "3.052rem";

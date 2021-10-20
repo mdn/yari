@@ -1,0 +1,17 @@
+@use "sass:map";
+
+@use "../../theme/index" as theme;
+
+.theme-switcher-menu {
+  align-items: center;
+  border-bottom: 1px solid map.get(theme.$light-mode, border-secondary);
+  display: flex;
+  gap: theme.$base-spacing;
+  padding: theme.$base-spacing * 2;
+  width: 100%;
+  /* base style for an icon buttons is defined by `.icon-button`
+     in client/src/ui/atoms/icon-button/index.scss */
+  &::before {
+    mask-image: url("~@mdn/dinocons/plus/theme.svg");
+  }
+}
