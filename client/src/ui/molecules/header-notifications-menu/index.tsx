@@ -6,8 +6,6 @@ import { Submenu } from "../submenu";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 
-import { useUserData } from "../../../user-context";
-
 import "./index.scss";
 
 dayjs.extend(relativeTime);
