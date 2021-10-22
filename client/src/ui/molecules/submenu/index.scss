@@ -19,7 +19,7 @@
     border: 1px solid map.get(theme.$light-mode, border-primary);
     border-radius: theme.$default-border-radius * 2;
     box-shadow: map.get(theme.$light-mode, shadow01);
-    padding: theme.$base-spacing * 2;
+    padding: theme.$base-spacing;
 
     @media (prefers-color-scheme: dark) {
       border: 1px solid map.get(theme.$dark-mode, border-primary);
@@ -28,7 +28,8 @@
     }
   }
 
-  a {
+  a,
+  button {
     align-items: center;
     border-bottom: 1px solid map.get(theme.$light-mode, border-secondary);
     display: flex;

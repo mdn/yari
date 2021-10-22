@@ -21,10 +21,23 @@
   @media #{layout.$mq-small-desktop-and-up} {
     display: block;
   }
+
+  .submenu.show {
+    left: initial;
+    right: -15px;
+  }
 }
 
 .article-actions-entries {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+
   @media #{layout.$mq-small-desktop-and-up} {
     display: flex;
   }
+}
+
+.article-actions-entry {
+  position: relative;
 }

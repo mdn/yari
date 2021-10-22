@@ -1,6 +1,6 @@
 /**
  * Do not edit directly
- * Generated on Mon, 18 Oct 2021 10:34:04 GMT
+ * Generated on Fri, 22 Oct 2021 12:43:35 GMT
  */
 
 export const borderDefaultRadius = "4px";
@@ -12,7 +12,7 @@ export const lightModeShadowsShadow02 = "0 1px 6px rgba(43, 42, 51, 0.1)";
 export const lightModeTextPrimary = "#15141a";
 export const lightModeTextSecondary = "#5b5b66";
 export const lightModeTextInactive = "#5b5b66a6";
-export const lightModeTextLink = "#0060df";
+export const lightModeTextLink = "#008787";
 export const lightModeBackgroundPrimary = "#ffffff";
 export const lightModeBackgroundSecondary = "#f9f9fb";
 export const lightModeBackgroundTertiary = "#fbfbfe";
@@ -39,7 +39,7 @@ export const darkModeShadowsShadow02 = "0 1px 6px rgba(251, 251, 254, 0.2)";
 export const darkModeTextPrimary = "#fbfbfe";
 export const darkModeTextSecondary = "#cfcfd8";
 export const darkModeTextInactive = "#cfcfd8a6";
-export const darkModeTextLink = "#00ddff";
+export const darkModeTextLink = "#3FE1B0";
 export const darkModeBackgroundPrimary = "#15141a";
 export const darkModeBackgroundSecondary = "#23222b";
 export const darkModeBackgroundTertiary = "#2b2a33";
@@ -65,7 +65,7 @@ export const spacingBase = 8;
 export const highContrastWhiteTextPrimary = "#000000";
 export const highContrastWhiteTextSecondary = "#000000";
 export const highContrastWhiteTextInactive = "#000000a6";
-export const highContrastWhiteTextLink = "#0060df";
+export const highContrastWhiteTextLink = "#0060DF";
 export const highContrastWhiteBackgroundPrimary = "#ffffff";
 export const highContrastWhiteBackgroundSecondary = "#ffffff";
 export const highContrastWhiteBackgroundTertiary = "#ffffff";
@@ -89,7 +89,7 @@ export const highContrastWhiteAccentPrimary = "#0060df";
 export const highContrastWhiteAccentSecondary = "#0060df";
 export const highContrastBlackTextPrimary = "#ffffff";
 export const highContrastBlackTextSecondary = "#ffffff";
-export const highContrastBlackTextLink = "#00ddff";
+export const highContrastBlackTextLink = "#00DDFF";
 export const highContrastBlackTextInactive = "#ffffffa6";
 export const highContrastBlackBackgroundPrimary = "#000000";
 export const highContrastBlackBackgroundSecondary = "#000000";

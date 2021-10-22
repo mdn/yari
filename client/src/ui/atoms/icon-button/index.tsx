@@ -4,6 +4,7 @@ import "./index.scss";
 
 type IconButtonType = {
   ariaHasPopup?: "true" | "false" | "menu" | "dialog" | "listbox";
+  ariaExpanded?: "true" | "false";
   buttonType?: "button" | "submit" | "reset";
   clickHandler?: (
     event: React.MouseEvent<HTMLButtonElement, MouseEvent>
@@ -19,6 +20,7 @@ type IconButtonType = {
 export const IconButton = (props) => {
   const {
     ariaHasPopup,
+    ariaExpanded,
     buttonType = "button",
     clickHandler,
     extraClasses,
@@ -29,6 +31,7 @@ export const IconButton = (props) => {
   return (
     <button
       aria-haspopup={ariaHasPopup}
+      aria-expanded={ariaExpanded}
       type={buttonType}
       onClick={clickHandler}
       className={`${extraClasses || ""} icon-button ${iconClassName || ""}`}

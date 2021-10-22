@@ -25,14 +25,12 @@ export const HeaderNotificationsMenu = () => {
       {
         component: () => {
           return (
-            <li role="none" className="submenu-header">
-              <div className="submenu-content-container">
-                <div className="submenu-item-heading">Notifications</div>
-                <a href="/notifications/" className="submenu-header-action">
-                  View all
-                </a>
-              </div>
-            </li>
+            <div className="submenu-content-container">
+              <div className="submenu-item-heading">Notifications</div>
+              <a href="/notifications/" className="submenu-header-action">
+                View all
+              </a>
+            </div>
           );
         },
       },
