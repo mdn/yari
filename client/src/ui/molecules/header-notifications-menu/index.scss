@@ -80,7 +80,7 @@
   }
 
   @media #{layout.$mq-tablet-and-up} {
-    .my-notifications {
+    .my-notifications.show {
       left: initial;
       padding: 0;
       right: 0;
@@ -111,11 +111,8 @@
         padding: theme.$base-spacing theme.$base-spacing * 2;
       }
 
-      .submenu-header .submenu-content-container {
+      .submenu-header {
         border-top: none;
-      }
-
-      .submenu-header .submenu-content-container {
         display: flex;
         gap: theme.$base-spacing;
         justify-content: space-between;
@@ -126,7 +123,6 @@
         padding: unset;
       }
 
-      // !!!
       .submenu-header-action:hover {
         background-color: transparent;
       }

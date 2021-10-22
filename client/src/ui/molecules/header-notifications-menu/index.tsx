@@ -6,6 +6,8 @@ import { Submenu } from "../submenu";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 
+import { useLocale } from "../../../hooks";
+
 import "./index.scss";
 import useSWR from "swr";
 
@@ -16,6 +18,7 @@ interface Notification {
   title: string;
   text: string;
   created: string;
+  read: boolean;
 }
 
 interface NotificationData {
@@ -28,6 +31,8 @@ export const HeaderNotificationsMenu = () => {
   const [visibleSubMenuId, setVisibleSubMenuId] = React.useState<string | null>(
     null
   );
+
+  const locale = useLocale();
 
   const apiURL = "/api/v1/plus/notifications/?per_page=5";
   const { data, error } = useSWR<NotificationData>(
@@ -46,7 +51,7 @@ export const HeaderNotificationsMenu = () => {
   );
 
   if (error) {
-    return <div>API Error (ToDo)</div>;
+    return null;
   }
 
   if (!data) {
@@ -62,30 +67,32 @@ export const HeaderNotificationsMenu = () => {
       {
         component: () => {
           return (
-            <li role="none" className="submenu-header">
-              <div className="submenu-content-container">
-                <div className="submenu-item-heading">Notifications</div>
-                <a href="/notifications/" className="submenu-header-action">
-                  View all
-                </a>
-              </div>
-            </li>
+            <div className="submenu-header submenu-content-container">
+              <div className="submenu-item-heading">Notifications</div>
+              <a
+                href={`/${locale}/plus/notifications/`}
+                className="submenu-header-action"
+              >
+                View all
+              </a>
+            </div>
           );
         },
       },
       ...data.items.map((item) => {
         return {
           id: item.id,
-          url: `/notifications/${item.id}/`,
+          url: `/${locale}/plus/notifications/${item.id}/`,
           label: item.text,
           description: item.title,
           subText: dayjs(item.created).toString(),
+          extraClasses: !item.read ? "unread-notification" : "",
         };
       }),
     ],
   };
 
-  const notificationCount = notificationsMenuItems.items.length;
+  const notificationCount = notificationsMenuItems.items.length - 1;
 
   function hideSubMenuIfVisible() {
     if (visibleSubMenuId) {
