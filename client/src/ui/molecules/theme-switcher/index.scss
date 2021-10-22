@@ -1,3 +1,4 @@
+@use "sass:color";
 @use "sass:map";
 
 @use "../../theme/index" as theme;
@@ -13,5 +14,34 @@
      in client/src/ui/atoms/icon-button/index.scss */
   &::before {
     mask-image: url("~@mdn/dinocons/plus/theme.svg");
+  }
+}
+
+.themes-menu {
+  button {
+    background: none;
+    padding: theme.$base-spacing;
+    width: 100%;
+
+    &:hover,
+    &:focus {
+      background-color: color.adjust(
+        map.get(theme.$light-mode, accent-primary),
+        $alpha: -0.9
+      );
+      text-decoration: none;
+
+      @media (prefers-color-scheme: dark) {
+        background-color: color.adjust(
+          map.get(theme.$dark-mode, accent-primary),
+          $alpha: -0.9
+        );
+        color: theme.$white;
+      }
+    }
+  }
+
+  &.submenu.show {
+    gap: 0;
   }
 }

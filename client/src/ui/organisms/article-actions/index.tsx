@@ -74,15 +74,21 @@ export const ArticleActions = ({
           </span>
         </IconButton>
       )}
-      <div className="article-actions-entries">
+      <ul className="article-actions-entries">
         {isSubscriber && (
           <>
-            <BookmarkToggle doc={doc} />
-            <NotificationsWatchMenu />
-            <ThemeSwitcher />
+            <li className="article-actions-entry">
+              <BookmarkToggle doc={doc} />
+            </li>
+            <li className="article-actions-entry">
+              <NotificationsWatchMenu />
+            </li>
+            <li className="article-actions-entry">
+              <ThemeSwitcher />
+            </li>
           </>
         )}
-      </div>
+      </ul>
     </div>
   );
 };
