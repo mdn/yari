@@ -7,14 +7,53 @@ import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 
 import "./index.scss";
+import useSWR from "swr";
 
 dayjs.extend(relativeTime);
+
+interface Notification {
+  id: number;
+  title: string;
+  text: string;
+  created: string;
+}
+
+interface NotificationData {
+  items: Array<Notification>;
+  csrfmiddlewaretoken: string;
+}
 
 export const HeaderNotificationsMenu = () => {
   const previousActiveElement = React.useRef<null | HTMLButtonElement>(null);
   const [visibleSubMenuId, setVisibleSubMenuId] = React.useState<string | null>(
     null
   );
+
+  const apiURL = "/api/v1/plus/notifications/?per_page=5";
+  const { data, error } = useSWR<NotificationData>(
+    apiURL,
+    async (url) => {
+      const response = await fetch(url);
+      if (!response.ok) {
+        const text = await response.text();
+        throw new Error(`${response.status} on ${url}: ${text}`);
+      }
+      return await response.json();
+    },
+    {
+      revalidateOnFocus: true,
+    }
+  );
+
+  if (error) {
+    return <div>API Error (ToDo)</div>;
+  }
+
+  if (!data) {
+    return <div>No data yet (ToDo)</div>;
+  }
+
+  console.log(data.items);
 
   const notificationsMenuItems = {
     label: "Notifications",
@@ -23,36 +62,26 @@ export const HeaderNotificationsMenu = () => {
       {
         component: () => {
           return (
-            <div className="submenu-content-container">
-              <div className="submenu-item-heading">Notifications</div>
-              <a href="/notifications/" className="submenu-header-action">
-                View all
-              </a>
-            </div>
+            <li role="none" className="submenu-header">
+              <div className="submenu-content-container">
+                <div className="submenu-item-heading">Notifications</div>
+                <a href="/notifications/" className="submenu-header-action">
+                  View all
+                </a>
+              </div>
+            </li>
           );
         },
       },
-      {
-        id: "Notification1",
-        url: "/notifications/1",
-        label: "border-block",
-        description: "Now available in multiple browsers",
-        subText: dayjs(Date.now()).fromNow(),
-      },
-      {
-        id: "Notification2",
-        url: "/notifications/2",
-        label: "AggregateError",
-        description: "Available now for Deno 1.2",
-        subText: dayjs(new Date("10/19/2021")).fromNow(),
-      },
-      {
-        id: "Notification3",
-        url: "/notifications/3",
-        label: "decodeURI()",
-        description: "Deprecated for Node.js 0.09.0",
-        subText: dayjs(new Date("10/18/2021")).fromNow(),
-      },
+      ...data.items.map((item) => {
+        return {
+          id: item.id,
+          url: `/notifications/${item.id}/`,
+          label: item.text,
+          description: item.title,
+          subText: dayjs(item.created).toString(),
+        };
+      }),
     ],
   };
 
