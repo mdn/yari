@@ -15,9 +15,16 @@
   &::before {
     mask-image: url("~@mdn/dinocons/plus/theme.svg");
   }
+
+  &::after {
+    position: absolute;
+    right: theme.$base-spacing * 2;
+  }
 }
 
 .themes-menu {
+  padding: theme.$base-spacing;
+
   button {
     background: none;
     padding: theme.$base-spacing;

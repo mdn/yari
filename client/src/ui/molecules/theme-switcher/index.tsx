@@ -73,7 +73,7 @@ export const ThemeSwitcher = () => {
       <IconButton
         ariaHasPopup={"menu"}
         ariaExpanded={themesMenu.id === visibleSubMenuId}
-        extraClasses="theme-switcher-menu"
+        extraClasses="theme-switcher-menu with-icon-flex mobile-only"
         clickHandler={(event) => {
           toggleSubMenu(event, themesMenu.id);
         }}
