@@ -83,6 +83,7 @@ export const HeaderNotificationsMenu = () => {
         return {
           id: item.id,
           url: `/${locale}/plus/notifications/${item.id}/`,
+          read: item.read,
           label: item.text,
           description: item.title,
           subText: dayjs(item.created).toString(),
@@ -92,7 +93,11 @@ export const HeaderNotificationsMenu = () => {
     ],
   };
 
-  const notificationCount = notificationsMenuItems.items.length - 1;
+  // Remove the header from counts
+  const notificationCount = data.items.reduce(
+    (n, item) => (item.read === false ? ++n : n),
+    0
+  );
 
   function hideSubMenuIfVisible() {
     if (visibleSubMenuId) {
@@ -133,7 +138,7 @@ export const HeaderNotificationsMenu = () => {
         </span>
       </Button>
 
-      {notificationsMenuItems.items.length > 0 ? (
+      {data.items.length > 0 ? (
         <Submenu
           menuEntry={notificationsMenuItems}
           visibleSubMenuId={visibleSubMenuId}
@@ -147,7 +152,11 @@ export const HeaderNotificationsMenu = () => {
           role="menu"
           aria-labelledby={`${notificationsMenuItems.id}-button`}
         >
-          <span>No notifications yet. Get started.</span>
+          <div className="submenu-empty-message">
+            <a href={`/${locale}/plus/notifications/`}>
+              No notifications yet. Get started.
+            </a>
+          </div>
         </div>
       )}
     </div>
