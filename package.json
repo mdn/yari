@@ -151,7 +151,7 @@
     "jest-environment-jsdom-sixteen": "^2.0.0",
     "jest-junit-reporter": "^1.1.0",
     "jsdom": "^18.0.0",
-    "node-dev": "7.0.0",
+    "node-dev": "7.1.0",
     "pegjs": "^0.10.0",
     "prettier": "2.4.1",
     "prettier-plugin-packagejson": "^2.2.12",
