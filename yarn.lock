@@ -14131,10 +14131,10 @@ no-case@^3.0.4:
     lower-case "^2.0.2"
     tslib "^2.0.3"
 
-node-dev@7.0.0:
-  version "7.0.0"
-  resolved "https://registry.yarnpkg.com/node-dev/-/node-dev-7.0.0.tgz#e8896d4814025a8d79483008c69143b055e92408"
-  integrity sha512-8aImF9IQBedQqABGjxd7SkjniFaVBLnRyvUGHF5MN39SjuBqLsCYmSN052QCsFFptE304VXgZbHH16lmuim0lg==
+node-dev@7.1.0:
+  version "7.1.0"
+  resolved "https://registry.yarnpkg.com/node-dev/-/node-dev-7.1.0.tgz#b3294e4171b3cd7caa894480e006cd9e4d16ff0c"
+  integrity sha512-wvlX+XQVGdwin0CQrWWCNvhb6Sf2FB/zNLFleg3o5Ml6jhAwWXKMX1JSP/1RSyf0atLXxD/L3vl7pNVJgClv/w==
   dependencies:
     dateformat "^3.0.3"
     dynamic-dedupe "^0.3.0"
@@ -14207,19 +14207,7 @@ node-modules-regexp@^1.0.0:
   resolved "https://registry.yarnpkg.com/node-modules-regexp/-/node-modules-regexp-1.0.0.tgz#8d9dbe28964a4ac5712e9131642107c71e90ec40"
   integrity sha1-jZ2+KJZKSsVxLpExZCEHxx6Q7EA=
 
-node-notifier@^8.0.0:
-  version "8.0.0"
-  resolved "https://registry.yarnpkg.com/node-notifier/-/node-notifier-8.0.0.tgz#a7eee2d51da6d0f7ff5094bc7108c911240c1620"
-  integrity sha512-46z7DUmcjoYdaWyXouuFNNfUo6eFa94t23c53c+lG/9Cvauk4a98rAUp9672X5dxGdQmLpPzTxzu8f/OeEPaFA==
-  dependencies:
-    growly "^1.3.0"
-    is-wsl "^2.2.0"
-    semver "^7.3.2"
-    shellwords "^0.1.1"
-    uuid "^8.3.0"
-    which "^2.0.2"
-
-node-notifier@^8.0.1:
+node-notifier@^8.0.0, node-notifier@^8.0.1:
   version "8.0.2"
   resolved "https://registry.yarnpkg.com/node-notifier/-/node-notifier-8.0.2.tgz#f3167a38ef0d2c8a866a83e318c1ba0efeb702c5"
   integrity sha512-oJP/9NAdd9+x2Q+rfphB2RJCHjod70RcRLjosiPMMu5gjIfwVnOUGq2nbTjTUbmy0DJ/tFIVT30+Qe3nzl4TJg==
