@@ -1,5 +1,5 @@
 // Do not edit directly
-// Generated on Mon, 25 Oct 2021 10:13:12 GMT
+// Generated on Tue, 26 Oct 2021 09:17:22 GMT
 
 $token-typography-label-small-font-family: Montserrat;
 $token-typography-label-small-line-height: 12px;
@@ -192,11 +192,11 @@ $token-dark-mode-icon-information: #80ebff;
 $token-dark-mode-icon-secondary: #afafba;
 $token-dark-mode-icon-primary: #fbfbfe;
 $token-dark-mode-button-secondary-inactive: #2b2a33;
-$token-dark-mode-button-secondary-pressed: #23222b;
+$token-dark-mode-button-secondary-active: #5b5b66;
 $token-dark-mode-button-secondary-hover: #52525e;
 $token-dark-mode-button-secondary-default: #2b2a33;
 $token-dark-mode-button-primary-inactive: #008787;
-$token-dark-mode-button-primary-pressed: #2ac3a2;
+$token-dark-mode-button-primary-active: #2ac3a2;
 $token-dark-mode-button-primary-hover: #2ac3a2;
 $token-dark-mode-button-primary-default: #008787;
 $token-dark-mode-border-secondary: #3a3944;
@@ -205,9 +205,10 @@ $token-dark-mode-background-tertiary: #2b2a33;
 $token-dark-mode-background-secondary: #23222b;
 $token-dark-mode-background-primary: #15141a;
 $token-dark-mode-text-link: #3fe1b0;
-$token-dark-mode-text-inactive: #cfcfd8a6;
+$token-dark-mode-text-inactive: #cfcfd8;
 $token-dark-mode-text-secondary: #cfcfd8;
 $token-dark-mode-text-primary: #fbfbfe;
+$token-dark-mode-focus-focus01: 0 0 0 3px rgba(42, 195, 162, 0.4);
 $token-dark-mode-shadows-shadow02: 0 1px 6px rgba(251, 251, 254, 0.2);
 $token-dark-mode-shadows-shadow01: 0 1px 2px rgba(251, 251, 254, 0.2);
 $token-light-mode-accent-secondary: #005e5e;
