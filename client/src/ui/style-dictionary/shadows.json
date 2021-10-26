@@ -60,5 +60,27 @@
         "type": "shadows"
       }
     }
+  },
+  "High Contrast Black": {
+    "shadows": {
+      "shadow01": {
+        "value": "none",
+        "type": "shadows"
+      },
+      "shadow02": {
+        "value": "none",
+        "type": "shadows"
+      }
+    },
+    "focus": {
+      "focus01": {
+        "value": "0 0 0 3px #80EBFF",
+        "type": "shadows"
+      },
+      "focus02": {
+        "value": "0 0 0 1px #FFFFFF, 0 0 0 4px #000000, 0 0 0 7px #FFFFFF",
+        "type": "shadows"
+      }
+    }
   }
 }

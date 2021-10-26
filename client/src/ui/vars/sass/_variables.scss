@@ -1,5 +1,5 @@
 // Do not edit directly
-// Generated on Tue, 26 Oct 2021 09:59:56 GMT
+// Generated on Tue, 26 Oct 2021 10:19:24 GMT
 
 $token-typography-label-small-font-family: Montserrat;
 $token-typography-label-small-line-height: 12px;
@@ -132,6 +132,7 @@ $token-full-color-ramp-light-grey-40: #cfcfd8;
 $token-full-color-ramp-light-grey-30: #e0e0e6;
 $token-full-color-ramp-light-grey-20: #f0f0f4;
 $token-full-color-ramp-light-grey-10: #f9f9fb;
+$token-spacing-base: 8px;
 $token-high-contrast-black-accent-secondary: #00ddff;
 $token-high-contrast-black-accent-primary: #00ddff;
 $token-high-contrast-black-icon-success: #87ffd1;
@@ -141,11 +142,11 @@ $token-high-contrast-black-icon-information: #80ebff;
 $token-high-contrast-black-icon-secondary: #ffffff;
 $token-high-contrast-black-icon-primary: #ffffff;
 $token-high-contrast-black-button-secondary-inactive: #000000;
-$token-high-contrast-black-button-secondary-pressed: #000000;
+$token-high-contrast-black-button-secondary-active: #000000;
 $token-high-contrast-black-button-secondary-hover: #000000;
 $token-high-contrast-black-button-secondary-default: #000000;
 $token-high-contrast-black-button-primary-inactive: #00ddff;
-$token-high-contrast-black-button-primary-pressed: #00ddff;
+$token-high-contrast-black-button-primary-active: #00ddff;
 $token-high-contrast-black-button-primary-hover: #00ddff;
 $token-high-contrast-black-button-primary-default: #00ddff;
 $token-high-contrast-black-border-secondary: #ffffff;
@@ -153,11 +154,15 @@ $token-high-contrast-black-border-primary: #ffffff;
 $token-high-contrast-black-background-tertiary: #000000;
 $token-high-contrast-black-background-secondary: #000000;
 $token-high-contrast-black-background-primary: #000000;
-$token-high-contrast-black-text-inactive: #ffffffa6;
 $token-high-contrast-black-text-link: #00ddff;
+$token-high-contrast-black-text-inactive: #ffffff;
 $token-high-contrast-black-text-secondary: #ffffff;
 $token-high-contrast-black-text-primary: #ffffff;
-$token-spacing-base: 8px;
+$token-high-contrast-black-focus-focus02: 0 0 0 1px #ffffff, 0 0 0 4px #000000,
+  0 0 0 7px #ffffff;
+$token-high-contrast-black-focus-focus01: 0 0 0 3px #80ebff;
+$token-high-contrast-black-shadows-shadow02: none;
+$token-high-contrast-black-shadows-shadow01: none;
 $token-high-contrast-white-accent-secondary: #0060df;
 $token-high-contrast-white-accent-primary: #0060df;
 $token-high-contrast-white-icon-success: #008787;

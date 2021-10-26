@@ -1,6 +1,6 @@
 /**
  * Do not edit directly
- * Generated on Tue, 26 Oct 2021 09:59:56 GMT
+ * Generated on Tue, 26 Oct 2021 10:19:24 GMT
  */
 
 export const borderDefaultRadius = "4px";
@@ -94,11 +94,15 @@ export const highContrastWhiteIconCritical = "#C50042";
 export const highContrastWhiteIconSuccess = "#008787";
 export const highContrastWhiteAccentPrimary = "#0060DF";
 export const highContrastWhiteAccentSecondary = "#0060DF";
-export const spacingBase = 8;
+export const highContrastBlackShadowsShadow01 = "none";
+export const highContrastBlackShadowsShadow02 = "none";
+export const highContrastBlackFocusFocus01 = "0 0 0 3px #80EBFF";
+export const highContrastBlackFocusFocus02 =
+  "0 0 0 1px #FFFFFF, 0 0 0 4px #000000, 0 0 0 7px #FFFFFF";
 export const highContrastBlackTextPrimary = "#ffffff";
 export const highContrastBlackTextSecondary = "#ffffff";
+export const highContrastBlackTextInactive = "#ffffff";
 export const highContrastBlackTextLink = "#00DDFF";
-export const highContrastBlackTextInactive = "#ffffffa6";
 export const highContrastBlackBackgroundPrimary = "#000000";
 export const highContrastBlackBackgroundSecondary = "#000000";
 export const highContrastBlackBackgroundTertiary = "#000000";
@@ -106,20 +110,21 @@ export const highContrastBlackBorderPrimary = "#ffffff";
 export const highContrastBlackBorderSecondary = "#ffffff";
 export const highContrastBlackButtonPrimaryDefault = "#00ddff";
 export const highContrastBlackButtonPrimaryHover = "#00ddff";
-export const highContrastBlackButtonPrimaryPressed = "#00ddff";
+export const highContrastBlackButtonPrimaryActive = "#00ddff";
 export const highContrastBlackButtonPrimaryInactive = "#00ddff";
 export const highContrastBlackButtonSecondaryDefault = "#000000";
 export const highContrastBlackButtonSecondaryHover = "#000000";
-export const highContrastBlackButtonSecondaryPressed = "#000000";
+export const highContrastBlackButtonSecondaryActive = "#000000";
 export const highContrastBlackButtonSecondaryInactive = "#000000";
 export const highContrastBlackIconPrimary = "#ffffff";
 export const highContrastBlackIconSecondary = "#ffffff";
-export const highContrastBlackIconInformation = "#80ebff";
-export const highContrastBlackIconWarning = "#ffea80";
-export const highContrastBlackIconCritical = "#ffbdc5";
-export const highContrastBlackIconSuccess = "#87ffd1";
-export const highContrastBlackAccentPrimary = "#00ddff";
-export const highContrastBlackAccentSecondary = "#00ddff";
+export const highContrastBlackIconInformation = "#80EBFF";
+export const highContrastBlackIconWarning = "#FFEA80";
+export const highContrastBlackIconCritical = "#FFBDC5";
+export const highContrastBlackIconSuccess = "#87FFD1";
+export const highContrastBlackAccentPrimary = "#00DDFF";
+export const highContrastBlackAccentSecondary = "#00DDFF";
+export const spacingBase = 8;
 export const fullColorRampLightGrey10 = "#f9f9fb";
 export const fullColorRampLightGrey20 = "#f0f0f4";
 export const fullColorRampLightGrey30 = "#e0e0e6";
