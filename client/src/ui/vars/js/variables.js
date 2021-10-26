@@ -1,6 +1,6 @@
 /**
  * Do not edit directly
- * Generated on Mon, 25 Oct 2021 10:13:12 GMT
+ * Generated on Tue, 26 Oct 2021 09:17:22 GMT
  */
 
 export const borderDefaultRadius = "4px";
@@ -9,8 +9,8 @@ export const mqSmallDesktopAndUp = "all and (min-width: 63.9375em)";
 export const mqLargeDesktopAndUp = "all and (min-width: 74.9375em)";
 export const lightModeShadowsShadow01 = "0 1px 2px rgba(43, 42, 51, 0.05)";
 export const lightModeShadowsShadow02 = "0 1px 6px rgba(43, 42, 51, 0.1)";
-export const lightModeFocusFocus01 = "0 0 0 3px rgba(42, 195, 162, 0.4);";
-export const lightModeFocusFocus02 = "inset 0 0 0 3px rgba(42, 195, 162, 0.4);";
+export const lightModeFocusFocus01 = "0 0 0 3px rgba(42, 195, 162, 0.4)";
+export const lightModeFocusFocus02 = "inset 0 0 0 3px rgba(42, 195, 162, 0.4)";
 export const lightModeTextPrimary = "#15141A";
 export const lightModeTextSecondary = "#5B5B66";
 export const lightModeTextInactive = "#5B5B66";
@@ -38,31 +38,32 @@ export const lightModeAccentPrimary = "#008787";
 export const lightModeAccentSecondary = "#005E5E";
 export const darkModeShadowsShadow01 = "0 1px 2px rgba(251, 251, 254, 0.2)";
 export const darkModeShadowsShadow02 = "0 1px 6px rgba(251, 251, 254, 0.2)";
-export const darkModeTextPrimary = "#fbfbfe";
-export const darkModeTextSecondary = "#cfcfd8";
-export const darkModeTextInactive = "#cfcfd8a6";
+export const darkModeFocusFocus01 = "0 0 0 3px rgba(42, 195, 162, 0.4)";
+export const darkModeTextPrimary = "#FBFBFE";
+export const darkModeTextSecondary = "#CFCFD8";
+export const darkModeTextInactive = "#CFCFD8";
 export const darkModeTextLink = "#3FE1B0";
-export const darkModeBackgroundPrimary = "#15141a";
-export const darkModeBackgroundSecondary = "#23222b";
-export const darkModeBackgroundTertiary = "#2b2a33";
-export const darkModeBorderPrimary = "#52525e";
-export const darkModeBorderSecondary = "#3a3944";
+export const darkModeBackgroundPrimary = "#15141A";
+export const darkModeBackgroundSecondary = "#23222B";
+export const darkModeBackgroundTertiary = "#2B2A33";
+export const darkModeBorderPrimary = "#52525E";
+export const darkModeBorderSecondary = "#3A3944";
 export const darkModeButtonPrimaryDefault = "#008787";
-export const darkModeButtonPrimaryHover = "#2ac3a2";
-export const darkModeButtonPrimaryPressed = "#2ac3a2";
+export const darkModeButtonPrimaryHover = "#2AC3A2";
+export const darkModeButtonPrimaryActive = "#2AC3A2";
 export const darkModeButtonPrimaryInactive = "#008787";
-export const darkModeButtonSecondaryDefault = "#2b2a33";
-export const darkModeButtonSecondaryHover = "#52525e";
-export const darkModeButtonSecondaryPressed = "#23222b";
-export const darkModeButtonSecondaryInactive = "#2b2a33";
-export const darkModeIconPrimary = "#fbfbfe";
-export const darkModeIconSecondary = "#afafba";
-export const darkModeIconInformation = "#80ebff";
-export const darkModeIconWarning = "#ffbd4f";
-export const darkModeIconCritical = "#ff9aa2";
-export const darkModeIconSuccess = "#2ac3a2";
-export const darkModeAccentPrimary = "#2ac3a2";
-export const darkModeAccentSecondary = "#3fe1b0";
+export const darkModeButtonSecondaryDefault = "#2B2A33";
+export const darkModeButtonSecondaryHover = "#52525E";
+export const darkModeButtonSecondaryActive = "#5B5B66";
+export const darkModeButtonSecondaryInactive = "#2B2A33";
+export const darkModeIconPrimary = "#FBFBFE";
+export const darkModeIconSecondary = "#AFAFBA";
+export const darkModeIconInformation = "#80EBFF";
+export const darkModeIconWarning = "#FFBD4F";
+export const darkModeIconCritical = "#FF9AA2";
+export const darkModeIconSuccess = "#2AC3A2";
+export const darkModeAccentPrimary = "#2AC3A2";
+export const darkModeAccentSecondary = "#3FE1B0";
 export const spacingBase = 8;
 export const highContrastWhiteTextPrimary = "#000000";
 export const highContrastWhiteTextSecondary = "#000000";
