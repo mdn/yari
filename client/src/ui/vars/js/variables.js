@@ -1,6 +1,6 @@
 /**
  * Do not edit directly
- * Generated on Tue, 26 Oct 2021 09:17:22 GMT
+ * Generated on Tue, 26 Oct 2021 09:59:56 GMT
  */
 
 export const borderDefaultRadius = "4px";
@@ -64,32 +64,37 @@ export const darkModeIconCritical = "#FF9AA2";
 export const darkModeIconSuccess = "#2AC3A2";
 export const darkModeAccentPrimary = "#2AC3A2";
 export const darkModeAccentSecondary = "#3FE1B0";
-export const spacingBase = 8;
+export const highContrastWhiteShadowsShadow01 = "none";
+export const highContrastWhiteShadowsShadow02 = "none";
+export const highContrastWhiteFocusFocus01 = "0 0 0 3px #0060DF";
+export const highContrastWhiteFocusFocus02 =
+  "0 0 0 1px #000000, 0 0 0 4px #FFFFFF, 0 0 0 7px #000000";
 export const highContrastWhiteTextPrimary = "#000000";
 export const highContrastWhiteTextSecondary = "#000000";
-export const highContrastWhiteTextInactive = "#000000a6";
+export const highContrastWhiteTextInactive = "#000000";
 export const highContrastWhiteTextLink = "#0060DF";
 export const highContrastWhiteBackgroundPrimary = "#ffffff";
 export const highContrastWhiteBackgroundSecondary = "#ffffff";
 export const highContrastWhiteBackgroundTertiary = "#ffffff";
 export const highContrastWhiteBorderPrimary = "#000000";
 export const highContrastWhiteBorderSecondary = "#000000";
-export const highContrastWhiteButtonPrimaryDefault = "#0060df";
-export const highContrastWhiteButtonPrimaryHover = "#0060df";
-export const highContrastWhiteButtonPrimaryPressed = "#0060df";
-export const highContrastWhiteButtonPrimaryInactive = "#0060df";
+export const highContrastWhiteButtonPrimaryDefault = "#0060DF";
+export const highContrastWhiteButtonPrimaryHover = "#0060DF";
+export const highContrastWhiteButtonPrimaryActive = "#0060DF";
+export const highContrastWhiteButtonPrimaryInactive = "#0060DF";
 export const highContrastWhiteButtonSecondaryDefault = "#ffffff";
 export const highContrastWhiteButtonSecondaryHover = "#ffffff";
-export const highContrastWhiteButtonSecondaryPressed = "#ffffff";
+export const highContrastWhiteButtonSecondaryActive = "#ffffff";
 export const highContrastWhiteButtonSecondaryInactive = "#ffffff";
 export const highContrastWhiteIconPrimary = "#000000";
 export const highContrastWhiteIconSecondary = "#000000";
-export const highContrastWhiteIconInformation = "#0060df";
-export const highContrastWhiteIconWarning = "#e27f2e";
-export const highContrastWhiteIconCritical = "#c50042";
+export const highContrastWhiteIconInformation = "#0060DF";
+export const highContrastWhiteIconWarning = "#E27F2E";
+export const highContrastWhiteIconCritical = "#C50042";
 export const highContrastWhiteIconSuccess = "#008787";
-export const highContrastWhiteAccentPrimary = "#0060df";
-export const highContrastWhiteAccentSecondary = "#0060df";
+export const highContrastWhiteAccentPrimary = "#0060DF";
+export const highContrastWhiteAccentSecondary = "#0060DF";
+export const spacingBase = 8;
 export const highContrastBlackTextPrimary = "#ffffff";
 export const highContrastBlackTextSecondary = "#ffffff";
 export const highContrastBlackTextLink = "#00DDFF";
