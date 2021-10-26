@@ -1,3 +1,5 @@
+@use "../../vars/sass/variables" as style-dictionary;
+
 /* mdn color palette v2 */
 $black: #000;
 $white: #fff;
@@ -63,6 +65,6 @@ $mdn-orange700: #922a00;
 $mdn-orange800: #641a00;
 $mdn-orange900: #380a00;
 
-$link-color: $mdn-blue700;
+$link-color: style-dictionary.$token-light-mode-text-link;
 $text-color: $mdn-neutral900;
 $text-color-inverted: $white;

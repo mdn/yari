@@ -1,16 +1,12 @@
-@use "sass:map";
 @use "../../theme/index" as theme;
+@use "../../theme/themes/light-mode" as light-mode;
 
 .icon-button {
   background: none;
-  color: map.get(theme.$light-mode, text-primary);
-
-  @media (prefers-color-scheme: dark) {
-    color: map.get(theme.$dark-mode, text-primary);
-  }
+  color: light-mode.$mdn-light-color-text-primary;
 
   &::before {
-    background-color: map.get(theme.$light-mode, icon-primary);
+    background-color: light-mode.$mdn-light-color-icon-primary;
     background-position: center center;
     background-repeat: no-repeat;
     background-size: 16px;
@@ -18,10 +14,6 @@
     display: block;
     height: 16px;
     width: 16px;
-
-    @media (prefers-color-scheme: dark) {
-      background-color: map.get(theme.$dark-mode, icon-primary);
-    }
   }
 
   &.inline-block {
@@ -43,7 +35,7 @@
 
 .article-actions-close {
   align-items: center;
-  border-bottom: 1px solid map.get(theme.$light-mode, border-secondary);
+  border-bottom: 1px solid light-mode.$mdn-light-color-border-secondary;
   display: flex;
   gap: theme.$base-spacing;
   padding: theme.$base-spacing * 2;

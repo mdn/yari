@@ -1,6 +1,6 @@
 /**
  * Do not edit directly
- * Generated on Fri, 22 Oct 2021 12:43:35 GMT
+ * Generated on Mon, 25 Oct 2021 10:13:12 GMT
  */
 
 export const borderDefaultRadius = "4px";
@@ -9,31 +9,33 @@ export const mqSmallDesktopAndUp = "all and (min-width: 63.9375em)";
 export const mqLargeDesktopAndUp = "all and (min-width: 74.9375em)";
 export const lightModeShadowsShadow01 = "0 1px 2px rgba(43, 42, 51, 0.05)";
 export const lightModeShadowsShadow02 = "0 1px 6px rgba(43, 42, 51, 0.1)";
-export const lightModeTextPrimary = "#15141a";
-export const lightModeTextSecondary = "#5b5b66";
-export const lightModeTextInactive = "#5b5b66a6";
+export const lightModeFocusFocus01 = "0 0 0 3px rgba(42, 195, 162, 0.4);";
+export const lightModeFocusFocus02 = "inset 0 0 0 3px rgba(42, 195, 162, 0.4);";
+export const lightModeTextPrimary = "#15141A";
+export const lightModeTextSecondary = "#5B5B66";
+export const lightModeTextInactive = "#5B5B66";
 export const lightModeTextLink = "#008787";
 export const lightModeBackgroundPrimary = "#ffffff";
-export const lightModeBackgroundSecondary = "#f9f9fb";
-export const lightModeBackgroundTertiary = "#fbfbfe";
-export const lightModeBorderPrimary = "#e0e0e6";
-export const lightModeBorderSecondary = "#f0f0f4";
-export const lightModeButtonPrimaryDefault = "#005e5e";
-export const lightModeButtonPrimaryHover = "#08403f";
-export const lightModeButtonPrimaryPressed = "#08403f";
-export const lightModeButtonPrimaryInactive = "#005e5e";
-export const lightModeButtonSecondaryDefault = "#fbfbfe";
-export const lightModeButtonSecondaryHover = "#e0e0e6";
-export const lightModeButtonSecondaryPressed = "#cfcfd8";
-export const lightModeButtonSecondaryInactive = "#fbfbfe";
-export const lightModeIconPrimary = "#5b5b66";
-export const lightModeIconSecondary = "#afafba";
-export const lightModeIconInformation = "#0090ed";
-export const lightModeIconWarning = "#ffa436";
-export const lightModeIconCritical = "#e22850";
-export const lightModeIconSuccess = "#2ac3a2";
+export const lightModeBackgroundSecondary = "#F9F9FB";
+export const lightModeBackgroundTertiary = "#FBFBFE";
+export const lightModeBorderPrimary = "#E0E0E6";
+export const lightModeBorderSecondary = "#F0F0F4";
+export const lightModeButtonPrimaryDefault = "#005E5E";
+export const lightModeButtonPrimaryHover = "#08403F";
+export const lightModeButtonPrimaryActive = "#08403F";
+export const lightModeButtonPrimaryInactive = "#005E5E";
+export const lightModeButtonSecondaryDefault = "#FBFBFE";
+export const lightModeButtonSecondaryHover = "#E0E0E6";
+export const lightModeButtonSecondaryActive = "#E0E0E6";
+export const lightModeButtonSecondaryInactive = "#FBFBFE";
+export const lightModeIconPrimary = "#5B5B66";
+export const lightModeIconSecondary = "#AFAFBA";
+export const lightModeIconInformation = "#0090ED";
+export const lightModeIconWarning = "#FFA436";
+export const lightModeIconCritical = "#E22850";
+export const lightModeIconSuccess = "#2AC3A2";
 export const lightModeAccentPrimary = "#008787";
-export const lightModeAccentSecondary = "#005e5e";
+export const lightModeAccentSecondary = "#005E5E";
 export const darkModeShadowsShadow01 = "0 1px 2px rgba(251, 251, 254, 0.2)";
 export const darkModeShadowsShadow02 = "0 1px 6px rgba(251, 251, 254, 0.2)";
 export const darkModeTextPrimary = "#fbfbfe";
