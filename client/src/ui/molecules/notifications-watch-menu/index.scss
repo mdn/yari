@@ -1,10 +1,9 @@
-@use "sass:map";
-
 @use "../../theme/index" as theme;
+@use "../../theme/themes/light-mode" as light-mode;
 
 .watch-menu {
   align-items: center;
-  border-bottom: 1px solid map.get(theme.$light-mode, border-secondary);
+  border-bottom: 1px solid light-mode.$mdn-light-color-border-secondary;
   display: flex;
   gap: theme.$base-spacing;
   padding: theme.$base-spacing * 2;

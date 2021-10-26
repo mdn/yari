@@ -1,11 +1,11 @@
 @use "sass:color";
-@use "sass:map";
 
 @use "../../theme/index" as theme;
+@use "../../theme/themes/light-mode" as light-mode;
 
 .theme-switcher-menu {
   align-items: center;
-  border-bottom: 1px solid map.get(theme.$light-mode, border-secondary);
+  border-bottom: 1px solid light-mode.$mdn-light-color-border-secondary;
   display: flex;
   gap: theme.$base-spacing;
   padding: theme.$base-spacing * 2;
@@ -15,9 +15,16 @@
   &::before {
     mask-image: url("~@mdn/dinocons/plus/theme.svg");
   }
+
+  &::after {
+    position: absolute;
+    right: theme.$base-spacing * 2;
+  }
 }
 
 .themes-menu {
+  padding: theme.$base-spacing;
+
   button {
     background: none;
     padding: theme.$base-spacing;
@@ -26,18 +33,10 @@
     &:hover,
     &:focus {
       background-color: color.adjust(
-        map.get(theme.$light-mode, accent-primary),
+        light-mode.$mdn-light-color-accent-primary,
         $alpha: -0.9
       );
       text-decoration: none;
-
-      @media (prefers-color-scheme: dark) {
-        background-color: color.adjust(
-          map.get(theme.$dark-mode, accent-primary),
-          $alpha: -0.9
-        );
-        color: theme.$white;
-      }
     }
   }
 

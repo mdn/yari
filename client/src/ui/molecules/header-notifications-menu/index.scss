@@ -1,15 +1,16 @@
 @use "sass:math";
-@use "sass:map";
 
 @use "../../minimalist/vars/typography" as type;
 @use "../../minimalist/vars/layout";
 @use "../../theme/index" as theme;
 
+@use "../../theme/themes/light-mode" as light-mode;
+
 .notifications-menu {
   position: relative;
 
   .notifications-button {
-    color: map.get(theme.$light-mode, text-primary);
+    color: light-mode.$mdn-light-color-text-primary;
     margin: 12px 0;
     padding: 0;
 
@@ -17,14 +18,10 @@
       display: flex;
       margin: initial;
     }
-
-    @media (prefers-color-scheme: dark) {
-      color: map.get(theme.$dark-mode, text-primary);
-    }
   }
 
   .notifications-count-container {
-    background-color: map.get(theme.$light-mode, icon-secondary);
+    background-color: light-mode.$mdn-light-color-icon-secondary;
     border-radius: 50%;
     color: theme.$white;
     display: inline-block;
@@ -40,33 +37,25 @@
       padding: 0;
 
       &::before {
-        background-color: map.get(theme.$light-mode, icon-primary);
+        background-color: light-mode.$mdn-light-color-icon-primary;
         background-size: 21px 21px;
         content: "";
         display: block;
         height: 21px;
         mask-image: url("~@mdn/dinocons/plus/bell.svg");
         width: 21px;
-
-        @media (prefers-color-scheme: dark) {
-          background-color: map.get(theme.$dark-mode, icon-primary);
-        }
       }
     }
 
     &.unread-notifications {
-      background-color: map.get(theme.$light-mode, icon-seondary);
+      background-color: light-mode.$mdn-light-color-icon-secondary;
 
       @media #{layout.$mq-small-desktop-and-up} {
         background-color: transparent;
 
         &::before {
-          background-color: map.get(theme.$light-mode, accent-primary);
+          background-color: light-mode.$mdn-light-color-accent-primary;
           mask-image: url("~@mdn/dinocons/plus/notification.svg");
-
-          @media (prefers-color-scheme: dark) {
-            background-color: map.get(theme.$dark-mode, accent-primary);
-          }
         }
       }
     }
@@ -102,11 +91,7 @@
       }
 
       .submenu-content-container {
-        border-top: 1px solid map.get(theme.$light-mode, border-primary);
-
-        @media (prefers-color-scheme: dark) {
-          border-top: 1px solid map.get(theme.$dark-mode, border-primary);
-        }
+        border-top: 1px solid light-mode.$mdn-light-color-border-primary;
 
         padding: theme.$base-spacing theme.$base-spacing * 2;
       }

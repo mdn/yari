@@ -1,11 +1,11 @@
-@use "sass:map";
 @use "../../theme/index" as theme;
+@use "../../theme/themes/light-mode" as light-mode;
 
 .auth-disabled {
   border: 1px solid theme.$standard-light-border;
   border-radius: theme.$default-border-radius;
   box-shadow: theme.$menu-box-shadow;
-  color: map.get(theme.$light-mode, text-seconday);
+  color: light-mode.$mdn-light-color-text-secondary;
   padding: 16px;
 
   p {

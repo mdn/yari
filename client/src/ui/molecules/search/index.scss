@@ -1,9 +1,10 @@
 @use "sass:math";
-@use "sass:map";
 
 @use "../../minimalist/vars/layout";
 @use "../../minimalist/vars/typography";
+
 @use "../../theme/index" as theme;
+@use "../../theme/themes/light-mode" as light-mode;
 
 .header-search {
   .search-widget {
@@ -22,7 +23,7 @@
   input.search-input-field {
     // make webkit play nice with search input types
     -webkit-appearance: none; /* stylelint-disable-line property-no-vendor-prefix */
-    border: 1px solid map.get(theme.$light-mode, border-primary);
+    border: 1px solid light-mode.$mdn-light-color-border-primary;
     border-radius: theme.$default-border-radius;
     color: theme.$mdn-neutral900;
     min-width: 60px;
@@ -30,14 +31,8 @@
       46px;
     width: 100%;
 
-    @media (prefers-color-scheme: dark) {
-      background-color: map.get(theme.$dark-mode, background-primary);
-      border: 1px solid map.get(theme.$dark-mode, border-primary);
-      color: theme.$white;
-    }
-
     &:focus {
-      outline: map.get(theme.$light-mode, border-primary);
+      outline: light-mode.$mdn-light-color-border-primary;
     }
   }
 
@@ -124,7 +119,7 @@
   width: 42px;
 
   &::before {
-    background-color: map.get(theme.$light-mode, icon-primary);
+    background-color: light-mode.$mdn-light-color-icon-primary;
     background-size: 16px;
     content: "";
     display: block;
@@ -134,10 +129,6 @@
     position: relative;
     top: -1px;
     width: 16px;
-
-    @media (prefers-color-scheme: dark) {
-      background-color: map.get(theme.$dark-mode, icon-primary);
-    }
   }
 }
 
@@ -151,7 +142,7 @@
     padding: theme.$base-spacing * 2;
 
     &::before {
-      background-color: map.get(theme.$light-mode, icon-primary);
+      background-color: light-mode.$mdn-light-color-icon-primary;
       background-size: 12px;
       content: "";
       display: block;
@@ -159,10 +150,6 @@
       mask-image: url("~@mdn/dinocons/general/close.svg");
       position: relative;
       width: 12px;
-
-      @media (prefers-color-scheme: dark) {
-        background-color: map.get(theme.$dark-mode, icon-primary);
-      }
     }
   }
 }
@@ -172,11 +159,7 @@
   &:hover,
   &:focus,
   &:active {
-    background-color: map.get(theme.$light-mode, button-secondary-hover);
+    background-color: light-mode.$mdn-light-color-button-secondary-hover;
     outline: theme.$white;
-
-    @media (prefers-color-scheme: dark) {
-      background-color: map.get(theme.$dark-mode, button-secondary-hover);
-    }
   }
 }

@@ -1,0 +1,49 @@
+@use "sass:color";
+@use "../../vars/sass/variables" as style-dictionary;
+
+$mdn-light-color-text-primary: style-dictionary.$token-light-mode-text-primary;
+$mdn-light-color-text-secondary: style-dictionary.$token-light-mode-text-secondary;
+$mdn-light-color-text-inactive: color.adjust(
+  style-dictionary.$token-light-mode-text-inactive,
+  $alpha: -0.35
+);
+$mdn-light-color-text-link: style-dictionary.$token-light-mode-text-link;
+
+$mdn-light-color-background-primary: style-dictionary.$token-light-mode-background-primary;
+$mdn-light-color-background-secondary: style-dictionary.$token-light-mode-background-secondary;
+$mdn-light-color-background-tertiary: style-dictionary.$token-light-mode-background-tertiary;
+
+$mdn-light-color-border-primary: style-dictionary.$token-light-mode-border-primary;
+$mdn-light-color-border-secondary: style-dictionary.$token-light-mode-border-secondary;
+
+$mdn-light-color-button-primary-default: style-dictionary.$token-light-mode-button-primary-default;
+$mdn-light-color-button-primary-hover: style-dictionary.$token-light-mode-button-primary-hover;
+$mdn-light-color-button-primary-active: style-dictionary.$token-light-mode-button-primary-active;
+$mdn-light-color-button-primary-inactive: color.adjust(
+  style-dictionary.$token-light-mode-button-primary-inactive,
+  $alpha: -0.35
+);
+
+$mdn-light-color-button-secondary-default: style-dictionary.$token-light-mode-button-secondary-default;
+$mdn-light-color-button-secondary-hover: style-dictionary.$token-light-mode-button-secondary-hover;
+$mdn-light-color-button-secondary-active: style-dictionary.$token-light-mode-button-secondary-active;
+$mdn-light-color-button-secondary-inactive: color.adjust(
+  style-dictionary.$token-light-mode-button-secondary-inactive,
+  $alpha: -0.35
+);
+
+$mdn-light-color-icon-primary: style-dictionary.$token-light-mode-icon-primary;
+$mdn-light-color-icon-secondary: style-dictionary.$token-light-mode-icon-secondary;
+$mdn-light-color-icon-information: style-dictionary.$token-light-mode-icon-information;
+$mdn-light-color-icon-warning: style-dictionary.$token-light-mode-icon-warning;
+$mdn-light-color-icon-critical: style-dictionary.$token-light-mode-icon-critical;
+$mdn-light-color-icon-success: style-dictionary.$token-light-mode-icon-success;
+
+$mdn-light-color-accent-primary: style-dictionary.$token-light-mode-accent-primary;
+$mdn-light-color-accent-secondary: style-dictionary.$token-light-mode-accent-secondary;
+
+$mdn-light-color-shadow01: style-dictionary.$token-light-mode-shadows-shadow01;
+$mdn-light-color-shadow02: style-dictionary.$token-light-mode-shadows-shadow02;
+
+$mdn-light-color-focus01: style-dictionary.$token-light-mode-focus-focus01;
+$mdn-light-color-focus02: style-dictionary.$token-light-mode-focus-focus02;

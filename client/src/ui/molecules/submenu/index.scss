@@ -1,8 +1,8 @@
-@use "sass:map";
-
 @use "../../minimalist/vars/layout";
 @use "../../minimalist/vars/typography" as type;
+
 @use "../../theme/index" as theme;
+@use "../../theme/themes/light-mode" as light-mode;
 
 .submenu {
   background-color: theme.$white;
@@ -11,36 +11,22 @@
   margin: 0;
   padding: 0;
 
-  @media (prefers-color-scheme: dark) {
-    background-color: map.get(theme.$dark-mode, background-primary);
-  }
-
   @media #{layout.$mq-small-desktop-and-up} {
-    border: 1px solid map.get(theme.$light-mode, border-primary);
+    border: 1px solid light-mode.$mdn-light-color-border-primary;
     border-radius: theme.$default-border-radius * 2;
-    box-shadow: map.get(theme.$light-mode, shadow01);
+    box-shadow: light-mode.$mdn-light-color-shadow01;
     padding: theme.$base-spacing;
-
-    @media (prefers-color-scheme: dark) {
-      border: 1px solid map.get(theme.$dark-mode, border-primary);
-      box-shadow: map.get(theme.$dark-mode, shadow01);
-      color: map.get(theme.$dark-mode, text-secondary);
-    }
   }
 
   a,
   button {
     align-items: center;
-    border-bottom: 1px solid map.get(theme.$light-mode, border-secondary);
+    border-bottom: 1px solid light-mode.$mdn-light-color-border-secondary;
     display: flex;
     gap: theme.$base-spacing;
     height: 100%;
     padding: theme.$base-spacing;
     width: 100%;
-
-    @media (prefers-color-scheme: dark) {
-      border-bottom: 1px solid map.get(theme.$dark-mode, border-secondary);
-    }
 
     @media #{layout.$mq-tablet-and-up} {
       width: unset;
@@ -54,21 +40,13 @@
 
     &:link,
     &:visited {
-      color: map.get(theme.$light-mode, text-primary);
-
-      @media (prefers-color-scheme: dark) {
-        color: map.get(theme.$dark-mode, text-primary);
-      }
+      color: light-mode.$mdn-light-color-text-primary;
     }
 
     &:hover,
     &:focus {
-      background-color: map.get(theme.$light-mode, background-secondary);
+      background-color: light-mode.$mdn-light-color-background-secondary;
       text-decoration: none;
-
-      @media (prefers-color-scheme: dark) {
-        background-color: map.get(theme.$dark-mode, background-secondary);
-      }
     }
   }
 

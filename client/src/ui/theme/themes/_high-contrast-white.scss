@@ -1,0 +1,48 @@
+@use "../../vars/sass/variables" as style-dictionary;
+
+$mdn-high-contrast-white-color-text-primary: style-dictionary.$token-high-contrast-white-mode-text-primary;
+$mdn-high-contrast-white-color-text-secondary: style-dictionary.$token-high-contrast-white-mode-text-secondary;
+$mdn-high-contrast-white-color-text-inactive: color.adjust(
+  style-dictionary.$token-high-contrast-white-mode-text-inactive,
+  $alpha: -0.35
+);
+$mdn-high-contrast-white-color-text-link: style-dictionary.$token-high-contrast-white-mode-text-link;
+
+$mdn-high-contrast-white-color-background-primary: style-dictionary.$token-high-contrast-white-mode-background-primary;
+$mdn-high-contrast-white-color-background-secondary: style-dictionary.$token-high-contrast-white-mode-background-secondary;
+$mdn-high-contrast-white-color-background-tertiary: style-dictionary.$token-high-contrast-white-mode-background-tertiary;
+
+$mdn-high-contrast-white-color-border-primary: style-dictionary.$token-high-contrast-white-mode-border-primary;
+$mdn-high-contrast-white-color-border-secondary: style-dictionary.$token-high-contrast-white-mode-border-secondary;
+
+$mdn-high-contrast-white-color-button-primary-default: style-dictionary.$token-high-contrast-white-mode-button-primary-default;
+$mdn-high-contrast-white-color-button-primary-hover: style-dictionary.$token-high-contrast-white-mode-button-primary-hover;
+$mdn-high-contrast-white-color-button-primary-active: style-dictionary.$token-high-contrast-white-mode-button-primary-active;
+$mdn-high-contrast-white-color-button-primary-inactive: color.adjust(
+  style-dictionary.$token-high-contrast-white-mode-button-primary-inactive,
+  $alpha: -0.35
+);
+
+$mdn-high-contrast-white-color-button-secondary-default: style-dictionary.$token-high-contrast-white-mode-button-secondary-default;
+$mdn-high-contrast-white-color-button-secondary-hover: style-dictionary.$token-high-contrast-white-mode-button-secondary-hover;
+$mdn-high-contrast-white-color-button-secondary-active: style-dictionary.$token-high-contrast-white-mode-button-secondary-active;
+$mdn-high-contrast-white-color-button-secondary-inactive: color.adjust(
+  style-dictionary.$token-high-contrast-white-mode-button-secondary-inactive,
+  $alpha: -0.35
+);
+
+$mdn-high-contrast-white-color-icon-primary: style-dictionary.$token-high-contrast-white-mode-icon-primary;
+$mdn-high-contrast-white-color-icon-secondary: style-dictionary.$token-high-contrast-white-mode-icon-secondary;
+$mdn-high-contrast-white-color-icon-information: style-dictionary.$token-high-contrast-white-mode-icon-information;
+$mdn-high-contrast-white-color-icon-warning: style-dictionary.$token-high-contrast-white-mode-icon-warning;
+$mdn-high-contrast-white-color-icon-critical: style-dictionary.$token-high-contrast-white-mode-icon-critical;
+$mdn-high-contrast-white-color-icon-success: style-dictionary.$token-high-contrast-white-mode-icon-success;
+
+$mdn-high-contrast-white-color-accent-primary: style-dictionary.$token-high-contrast-white-mode-accent-primary;
+$mdn-high-contrast-white-color-accent-secondary: style-dictionary.$token-high-contrast-white-mode-accent-secondary;
+
+$mdn-high-contrast-white-color-shadow01: style-dictionary.$token-high-contrast-white-mode-shadows-shadow01;
+$mdn-high-contrast-white-color-shadow02: style-dictionary.$token-high-contrast-white-mode-shadows-shadow02;
+
+$mdn-high-contrast-white-color-focus01: style-dictionary.$token-high-contrast-white-mode-focus-focus01;
+$mdn-high-contrast-white-color-focus02: style-dictionary.$token-high-contrast-white-mode-focus-focus02;
