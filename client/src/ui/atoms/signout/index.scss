@@ -1,20 +1,16 @@
-@use "sass:map";
-
 @use "../../minimalist/vars/layout";
+
 @use "../../theme/index" as theme;
+@use "../../theme/themes/light-mode" as light-mode;
 
 .sign-out-form {
   @media #{layout.$mq-large-desktop-and-up} {
-    border-top: 1px solid map.get(theme.$light-mode, border-primary);
-
-    @media (prefers-color-scheme: dark) {
-      border-top: 1px solid map.get(theme.$dark-mode, border-primary);
-    }
+    border-top: 1px solid light-mode.$mdn-light-color-border-primary;
   }
 }
 
 button.signout-button {
-  color: map.get(theme.$light-mode, text-primary);
+  color: light-mode.$mdn-light-color-text-primary;
   padding: theme.$base-spacing;
   width: 100%;
 
@@ -24,16 +20,8 @@ button.signout-button {
     padding: theme.$base-spacing;
   }
 
-  @media (prefers-color-scheme: dark) {
-    color: map.get(theme.$dark-mode, text-primary);
-  }
-
   &:hover,
   &:focus {
-    background-color: map.get(theme.$light-mode, background-secondary);
-
-    @media (prefers-color-scheme: dark) {
-      background-color: map.get(theme.$dark-mode, background-secondary);
-    }
+    background-color: light-mode.$mdn-light-color-background-secondary;
   }
 }

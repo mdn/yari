@@ -1,8 +1,9 @@
 @use "sass:color";
-@use "sass:map";
 
 @use "../../minimalist/vars/layout";
+
 @use "../../theme/index" as theme;
+@use "../../theme/themes/light-mode" as light-mode;
 
 .user-menu {
   position: relative;
@@ -11,7 +12,7 @@
     align-items: center;
     background: none;
     border-radius: 50%;
-    color: map.get(theme.$light-mode, text-secondary);
+    color: light-mode.$mdn-light-color-text-secondary;
     display: flex;
     margin: theme.$base-spacing 0;
     padding: 0;
@@ -20,10 +21,6 @@
 
     @media #{layout.$mq-small-desktop-and-up} {
       border: 5px solid theme.$white;
-    }
-
-    @media (prefers-color-scheme: dark) {
-      color: map.get(theme.$dark-mode, text-primary);
     }
 
     &[aria-haspopup="menu"] {
@@ -36,10 +33,6 @@
     @media #{layout.$mq-small-desktop-and-up} {
       &:focus {
         border: 5px solid color.adjust(theme.$mdn-blue400, $alpha: -0.6);
-
-        @media (prefers-color-scheme: dark) {
-          border-color: map.get(theme.$dark-mode, background-primary);
-        }
       }
     }
   }
@@ -58,11 +51,7 @@
   }
 
   .usermenu-email-desktop {
-    border-bottom: 1px solid map.get(theme.$light-mode, border-primary);
-
-    @media (prefers-color-scheme: dark) {
-      border-bottom: 1px solid map.get(theme.$dark-mode, border-primary);
-    }
+    border-bottom: 1px solid light-mode.$mdn-light-color-border-primary;
   }
 
   .submenu-item-heading {

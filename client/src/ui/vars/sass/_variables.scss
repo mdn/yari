@@ -1,5 +1,5 @@
 // Do not edit directly
-// Generated on Fri, 22 Oct 2021 12:43:35 GMT
+// Generated on Mon, 25 Oct 2021 10:13:12 GMT
 
 $token-typography-label-small-font-family: Montserrat;
 $token-typography-label-small-line-height: 12px;
@@ -219,11 +219,11 @@ $token-light-mode-icon-information: #0090ed;
 $token-light-mode-icon-secondary: #afafba;
 $token-light-mode-icon-primary: #5b5b66;
 $token-light-mode-button-secondary-inactive: #fbfbfe;
-$token-light-mode-button-secondary-pressed: #cfcfd8;
+$token-light-mode-button-secondary-active: #e0e0e6;
 $token-light-mode-button-secondary-hover: #e0e0e6;
 $token-light-mode-button-secondary-default: #fbfbfe;
 $token-light-mode-button-primary-inactive: #005e5e;
-$token-light-mode-button-primary-pressed: #08403f;
+$token-light-mode-button-primary-active: #08403f;
 $token-light-mode-button-primary-hover: #08403f;
 $token-light-mode-button-primary-default: #005e5e;
 $token-light-mode-border-secondary: #f0f0f4;
@@ -232,9 +232,11 @@ $token-light-mode-background-tertiary: #fbfbfe;
 $token-light-mode-background-secondary: #f9f9fb;
 $token-light-mode-background-primary: #ffffff;
 $token-light-mode-text-link: #008787;
-$token-light-mode-text-inactive: #5b5b66a6;
+$token-light-mode-text-inactive: #5b5b66;
 $token-light-mode-text-secondary: #5b5b66;
 $token-light-mode-text-primary: #15141a;
+$token-light-mode-focus-focus02: inset 0 0 0 3px rgba(42, 195, 162, 0.4);
+$token-light-mode-focus-focus01: 0 0 0 3px rgba(42, 195, 162, 0.4);
 $token-light-mode-shadows-shadow02: 0 1px 6px rgba(43, 42, 51, 0.1);
 $token-light-mode-shadows-shadow01: 0 1px 2px rgba(43, 42, 51, 0.05);
 $token-mq-large-desktop-and-up: "all and (min-width: 74.9375em)";

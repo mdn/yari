@@ -1,8 +1,9 @@
 @use "sass:color";
-@use "sass:map";
 
 @use "../../minimalist/vars/layout";
+
 @use "../../theme/index" as theme;
+@use "../../theme/themes/light-mode" as light-mode;
 
 ul.main-menu {
   box-sizing: border-box;
@@ -32,7 +33,7 @@ ul.main-menu {
   .top-level-entry {
     background: none;
     border: 0;
-    color: map.get(theme.$light-mode, text-secondary);
+    color: light-mode.$mdn-light-color-text-secondary;
     cursor: pointer;
     padding: (theme.$base-spacing * 2) theme.$base-spacing;
     text-align: left;
@@ -46,15 +47,7 @@ ul.main-menu {
       &:focus {
         background-color: color.adjust(theme.$mdn-green700, $alpha: -0.9);
         color: theme.$mdn-green700;
-
-        @media (prefers-color-scheme: dark) {
-          color: map.get(theme.$dark-mode, text-primary);
-        }
       }
-    }
-
-    @media (prefers-color-scheme: dark) {
-      color: map.get(theme.$dark-mode, text-secondary);
     }
   }
 
@@ -80,20 +73,12 @@ ul.main-menu {
         background-color: color.adjust(theme.$mdn-green700, $alpha: -0.9);
         color: theme.$mdn-green700;
         text-decoration: none;
-
-        @media (prefers-color-scheme: dark) {
-          color: map.get(theme.$dark-mode, text-primary);
-        }
       }
     }
 
     &:link,
     &:visited {
-      color: map.get(theme.$light-mode, text-secondary);
-
-      @media (prefers-color-scheme: dark) {
-        color: map.get(theme.$dark-mode, text-secondary);
-      }
+      color: light-mode.$mdn-light-color-text-secondary;
     }
   }
 }

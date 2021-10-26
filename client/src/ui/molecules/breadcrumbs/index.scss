@@ -1,10 +1,11 @@
 @use "sass:math";
-@use "sass:map";
 
-@use "../../theme/index" as theme;
 @use "../../minimalist/vars/layout";
 @use "../../minimalist/vars/typography";
 @use "../../minimalist/mixins/utils" as mx-utils;
+
+@use "../../theme/index" as theme;
+@use "../../theme/themes/light-mode" as light-mode;
 
 .breadcrumbs-container {
   a {
@@ -13,11 +14,7 @@
 
     &:link,
     &:visited {
-      color: map.get(theme.$light-mode, text-secondary);
-
-      @media (prefers-color-scheme: dark) {
-        color: map.get(theme.$dark-mode, text-secondary);
-      }
+      color: light-mode.$mdn-light-color-text-secondary;
     }
   }
 

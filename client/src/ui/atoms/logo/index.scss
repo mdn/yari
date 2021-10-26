@@ -16,10 +16,4 @@
     position: relative;
     top: -2px;
   }
-
-  @media (prefers-color-scheme: dark) {
-    .logo-text {
-      fill: theme.$white;
-    }
-  }
 }

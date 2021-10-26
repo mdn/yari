@@ -1,9 +1,10 @@
-@use "sass:map";
 @use "../../minimalist/vars/_layout.scss" as layout;
+
 @use "../../theme/index" as theme;
+@use "../../theme/themes/light-mode" as light-mode;
 
 .mdn-plus-subscribe-link {
-  background-color: map.get(theme.$light-mode, button-primary-default);
+  background-color: light-mode.$mdn-light-color-button-primary-default;
   border-radius: theme.$default-border-radius;
   display: block;
   font-weight: bold;

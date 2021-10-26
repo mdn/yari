@@ -9,6 +9,16 @@
         "value": "0 1px 6px rgba(43, 42, 51, 0.1)",
         "type": "shadows"
       }
+    },
+    "focus": {
+      "focus01": {
+        "value": "0 0 0 3px rgba(42, 195, 162, 0.4);",
+        "type": "shadows"
+      },
+      "focus02": {
+        "value": "inset 0 0 0 3px rgba(42, 195, 162, 0.4);",
+        "type": "shadows"
+      }
     }
   },
   "Dark Mode": {
