@@ -4,11 +4,10 @@
 @mixin submenu-base-desktop() {
   display: flex;
   flex-flow: column;
-  gap: spacing.$base-spacing * 2;
   justify-content: space-between;
   left: -20px;
   position: absolute;
-  top: 50px;
+  top: 32px;
   width: max-content;
   z-index: layout.$bring-to-front;
 }

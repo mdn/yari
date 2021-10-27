@@ -44,7 +44,7 @@ ul.main-menu {
 
     @media #{layout.$mq-small-desktop-and-up} {
       border-radius: theme.$default-border-radius;
-      padding: theme.$base-spacing;
+      padding: 0 (theme.$base-spacing * 1.5);
 
       &:hover,
       &:focus {
