@@ -5,7 +5,10 @@
 @use "../../minimalist/mixins/utils" as mx-utils;
 
 @use "../../theme/index" as theme;
-@use "../../theme/themes/light-mode" as light-mode;
+@use "../../theme/themes/light-mode" as light;
+@use "../../theme/themes/dark-mode" as dark;
+@use "../../theme/themes/high-contrast-white";
+@use "../../theme/themes/high-contrast-black";
 
 .breadcrumbs-container {
   a {
@@ -14,7 +17,7 @@
 
     &:link,
     &:visited {
-      color: light-mode.$mdn-light-color-text-secondary;
+      color: light.$mdn-light-color-text-secondary;
     }
   }
 
@@ -29,12 +32,12 @@
 
     .breadcrumb {
       &::after {
-        background: transparent url("~@mdn/dinocons/arrows/chevron.svg") 0 0
-          no-repeat;
+        background-color: light.$mdn-light-color-icon-secondary;
         background-size: 12px;
         content: "";
         display: block;
         height: 12px;
+        mask-image: url("~@mdn/dinocons/arrows/chevron.svg");
         transform: rotate(-90deg);
         width: 12px;
       }
@@ -43,6 +46,60 @@
     [property="name"] {
       display: inline-block;
       margin: 0 theme.$base-spacing;
+    }
+  }
+}
+
+/* DARK MODE */
+.dark {
+  .breadcrumbs-container {
+    a {
+      &:link,
+      &:visited {
+        color: dark.$mdn-dark-color-text-secondary;
+      }
+    }
+
+    .breadcrumb {
+      &::after {
+        background-color: dark.$mdn-dark-color-icon-secondary;
+      }
+    }
+  }
+}
+
+/* HIGH CONTRAST WHITE MODE */
+.high-contrast-white {
+  .breadcrumbs-container {
+    a {
+      &:link,
+      &:visited {
+        color: high-contrast-white.$mdn-high-contrast-white-color-text-secondary;
+      }
+    }
+
+    .breadcrumb {
+      &::after {
+        background-color: high-contrast-white.$mdn-high-contrast-white-color-icon-secondary;
+      }
+    }
+  }
+}
+
+/* HIGH CONTRAST BLACK MODE */
+.high-contrast-black {
+  .breadcrumbs-container {
+    a {
+      &:link,
+      &:visited {
+        color: high-contrast-black.$mdn-high-contrast-black-color-text-secondary;
+      }
+    }
+
+    .breadcrumb {
+      &::after {
+        background-color: high-contrast-black.$mdn-high-contrast-black-color-icon-secondary;
+      }
     }
   }
 }

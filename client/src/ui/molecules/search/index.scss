@@ -4,7 +4,10 @@
 @use "../../minimalist/vars/typography";
 
 @use "../../theme/index" as theme;
-@use "../../theme/themes/light-mode" as light-mode;
+@use "../../theme/themes/light-mode" as light;
+@use "../../theme/themes/dark-mode" as dark;
+@use "../../theme/themes/high-contrast-white";
+@use "../../theme/themes/high-contrast-black";
 
 .header-search {
   .search-widget {
@@ -23,7 +26,7 @@
   input.search-input-field {
     // make webkit play nice with search input types
     -webkit-appearance: none; /* stylelint-disable-line property-no-vendor-prefix */
-    border: 1px solid light-mode.$mdn-light-color-border-primary;
+    border: 1px solid light.$mdn-light-color-border-primary;
     border-radius: theme.$default-border-radius;
     color: theme.$mdn-neutral900;
     min-width: 60px;
@@ -32,7 +35,7 @@
     width: 100%;
 
     &:focus {
-      outline: light-mode.$mdn-light-color-border-primary;
+      outline: light.$mdn-light-color-border-primary;
     }
   }
 
@@ -119,7 +122,7 @@
   width: 42px;
 
   &::before {
-    background-color: light-mode.$mdn-light-color-icon-primary;
+    background-color: light.$mdn-light-color-icon-primary;
     background-size: 16px;
     content: "";
     display: block;
@@ -142,7 +145,7 @@
     padding: theme.$base-spacing * 2;
 
     &::before {
-      background-color: light-mode.$mdn-light-color-icon-primary;
+      background-color: light.$mdn-light-color-icon-primary;
       background-size: 12px;
       content: "";
       display: block;
@@ -159,7 +162,145 @@
   &:hover,
   &:focus,
   &:active {
-    background-color: light-mode.$mdn-light-color-button-secondary-hover;
+    background-color: light.$mdn-light-color-button-secondary-hover;
     outline: theme.$white;
+  }
+}
+
+/* DARK MODE */
+.dark {
+  .header-search {
+    input.search-input-field {
+      border-color: dark.$mdn-dark-color-border-primary;
+      color: theme.$mdn-neutral900;
+
+      &:focus {
+        outline: dark.$mdn-dark-color-border-primary;
+      }
+    }
+  }
+
+  .search-button {
+    &::before {
+      background-color: dark.$mdn-dark-color-icon-secondary;
+    }
+
+    &:hover,
+    &:focus,
+    &:active {
+      background-color: dark.$mdn-dark-color-button-secondary-hover;
+      outline: theme.$white;
+
+      &::before {
+        background-color: dark.$mdn-dark-color-icon-primary;
+      }
+    }
+  }
+
+  .close-search-button {
+    &:hover,
+    &:focus,
+    &:active {
+      background-color: dark.$mdn-dark-color-button-secondary-hover;
+      outline: theme.$white;
+    }
+
+    @media #{layout.$mq-large-desktop-and-up} {
+      &::before {
+        background-color: dark.$mdn-dark-color-icon-primary;
+      }
+    }
+  }
+}
+
+/* HIGH CONTRAST WHITE MODE */
+.high-contrast-white {
+  .header-search {
+    input.search-input-field {
+      border-color: high-contrast-white.$mdn-high-contrast-white-color-border-primary;
+      color: theme.$mdn-neutral900;
+
+      &:focus {
+        outline: high-contrast-white.$mdn-high-contrast-white-color-border-primary;
+      }
+    }
+  }
+
+  .search-button {
+    &::before {
+      background-color: high-contrast-white.$mdn-high-contrast-white-color-icon-secondary;
+    }
+
+    &:hover,
+    &:focus,
+    &:active {
+      background-color: high-contrast-white.$mdn-high-contrast-white-color-button-secondary-hover;
+      outline: theme.$white;
+
+      &::before {
+        background-color: high-contrast-white.$mdn-high-contrast-white-color-icon-primary;
+      }
+    }
+  }
+
+  .close-search-button {
+    &:hover,
+    &:focus,
+    &:active {
+      background-color: high-contrast-white.$mdn-high-contrast-white-color-button-secondary-hover;
+      outline: theme.$white;
+    }
+
+    @media #{layout.$mq-large-desktop-and-up} {
+      &::before {
+        background-color: high-contrast-white.$mdn-high-contrast-white-color-icon-primary;
+      }
+    }
+  }
+}
+
+/* HIGH CONTRAST BLACK MODE */
+.high-contrast-black {
+  .header-search {
+    input.search-input-field {
+      border-color: high-contrast-black.$mdn-high-contrast-black-color-border-primary;
+      color: theme.$mdn-neutral900;
+
+      &:focus {
+        outline: high-contrast-black.$mdn-high-contrast-black-color-border-primary;
+      }
+    }
+  }
+
+  .search-button {
+    &::before {
+      background-color: high-contrast-black.$mdn-high-contrast-black-color-icon-secondary;
+    }
+
+    &:hover,
+    &:focus,
+    &:active {
+      background-color: high-contrast-black.$mdn-high-contrast-black-color-button-secondary-hover;
+      outline: theme.$black;
+
+      &::before {
+        background-color: high-contrast-black.$mdn-high-contrast-black-color-icon-primary;
+      }
+    }
+  }
+
+  .close-search-button {
+    &:hover,
+    &:focus,
+    &:active {
+      background-color: high-contrast-black.$mdn-high-contrast-black-color-button-secondary-hover;
+      outline: theme.$black;
+    }
+
+    @media #{layout.$mq-large-desktop-and-up} {
+      &::before {
+        background-color: high-contrast-black.$mdn-high-contrast-black-color-icon-primary;
+      }
+    }
   }
 }

@@ -6,6 +6,10 @@
   height: 32px;
   width: 116.35px;
 
+  svg {
+    width: 100%;
+  }
+
   @media #{layout.$mq-small-desktop-and-up} {
     height: 65px;
     width: 200px;
@@ -15,5 +19,13 @@
     flex-basis: 200px;
     position: relative;
     top: -2px;
+  }
+}
+
+/* DARK AND HIGH CONTRACT BLACK MODE */
+.dark,
+.high-contrast-black {
+  .logo-text {
+    fill: theme.$white;
   }
 }

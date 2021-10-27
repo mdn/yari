@@ -1,10 +1,12 @@
 @use "sass:math";
-@use "sass:map";
 
 @use "../../minimalist/vars/layout";
 
 @use "../../theme/index" as theme;
-@use "../../theme/themes/light-mode" as light-mode;
+@use "../../theme/themes/light-mode" as light;
+@use "../../theme/themes/dark-mode" as dark;
+@use "../../theme/themes/high-contrast-white";
+@use "../../theme/themes/high-contrast-black";
 
 .main-menu-toggle {
   padding: 10px 20px;
@@ -18,6 +20,7 @@
 }
 
 .page-header {
+  background-color: light.$mdn-light-color-background-primary;
   margin: 0 auto;
   max-width: layout.$max-width-default;
   padding: theme.$base-spacing * 2;
@@ -27,5 +30,26 @@
   @media #{layout.$mq-small-desktop-and-up} {
     display: flex;
     gap: theme.$base-spacing * 2;
+  }
+}
+
+/* DARK MODE */
+.dark {
+  .page-header {
+    background-color: dark.$mdn-dark-color-background-primary;
+  }
+}
+
+/* HIGH CONTRAST WHITE MODE */
+.high-contrast-white {
+  .page-header {
+    background-color: high-contrast-white.$mdn-high-contrast-white-color-background-primary;
+  }
+}
+
+/* HIGH CONTRAST BLACK MODE */
+.high-contrast-black {
+  .page-header {
+    background-color: high-contrast-black.$mdn-high-contrast-black-color-background-primary;
   }
 }

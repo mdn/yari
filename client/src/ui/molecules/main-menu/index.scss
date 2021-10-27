@@ -3,7 +3,10 @@
 @use "../../minimalist/vars/layout";
 
 @use "../../theme/index" as theme;
-@use "../../theme/themes/light-mode" as light-mode;
+@use "../../theme/themes/light-mode" as light;
+@use "../../theme/themes/dark-mode" as dark;
+@use "../../theme/themes/high-contrast-white";
+@use "../../theme/themes/high-contrast-black";
 
 ul.main-menu {
   box-sizing: border-box;
@@ -33,7 +36,7 @@ ul.main-menu {
   .top-level-entry {
     background: none;
     border: 0;
-    color: light-mode.$mdn-light-color-text-secondary;
+    color: light.$mdn-light-color-text-secondary;
     cursor: pointer;
     padding: (theme.$base-spacing * 2) theme.$base-spacing;
     text-align: left;
@@ -41,7 +44,7 @@ ul.main-menu {
 
     @media #{layout.$mq-small-desktop-and-up} {
       border-radius: theme.$default-border-radius;
-      padding: theme.$base-spacing;
+      padding: 0 (theme.$base-spacing * 1.5);
 
       &:hover,
       &:focus {
@@ -78,7 +81,7 @@ ul.main-menu {
 
     &:link,
     &:visited {
-      color: light-mode.$mdn-light-color-text-secondary;
+      color: light.$mdn-light-color-text-secondary;
     }
   }
 }
@@ -99,5 +102,53 @@ ul.main-menu {
 @media #{layout.$mq-small-desktop-and-up} {
   .page-overlay {
     display: none;
+  }
+}
+
+/* DARK MODE */
+.dark {
+  ul.main-menu {
+    .top-level-entry {
+      color: dark.$mdn-dark-color-text-secondary;
+    }
+
+    .top-level-link {
+      &:link,
+      &:visited {
+        color: dark.$mdn-dark-color-text-secondary;
+      }
+    }
+  }
+}
+
+/* HIGH CONTRAST WHITE MODE */
+.high-contrast-white {
+  ul.main-menu {
+    .top-level-entry {
+      color: high-contrast-white.$mdn-high-contrast-white-color-text-secondary;
+    }
+
+    .top-level-link {
+      &:link,
+      &:visited {
+        color: high-contrast-white.$mdn-high-contrast-white-color-text-secondary;
+      }
+    }
+  }
+}
+
+/* HIGH CONTRAST BLACK MODE */
+.high-contrast-black {
+  ul.main-menu {
+    .top-level-entry {
+      color: high-contrast-black.$mdn-high-contrast-black-color-text-secondary;
+    }
+
+    .top-level-link {
+      &:link,
+      &:visited {
+        color: high-contrast-black.$mdn-high-contrast-black-color-text-secondary;
+      }
+    }
   }
 }

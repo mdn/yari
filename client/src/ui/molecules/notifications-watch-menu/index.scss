@@ -1,3 +1,5 @@
+@use "../../minimalist/vars/layout";
+
 @use "../../theme/index" as theme;
 @use "../../theme/themes/light-mode" as light-mode;
 
@@ -8,6 +10,11 @@
   gap: theme.$base-spacing;
   padding: theme.$base-spacing * 2;
   width: 100%;
+
+  @media #{layout.$mq-small-desktop-and-up} {
+    border-bottom: 0;
+  }
+
   /* base style for an icon buttons is defined by `.icon-button`
      in client/src/ui/atoms/icon-button/index.scss */
   &::before {

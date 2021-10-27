@@ -1,4 +1,5 @@
-@use "../../vars/sass/variables" as style-disctionary;
+@use "sass:color";
+@use "../../vars/sass/variables" as style-dictionary;
 
 $mdn-dark-color-text-primary: style-dictionary.$token-dark-mode-text-primary;
 $mdn-dark-color-text-secondary: style-dictionary.$token-dark-mode-text-secondary;
