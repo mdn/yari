@@ -13,6 +13,7 @@
   width: 100%;
 
   @media #{layout.$mq-small-desktop-and-up} {
+    border-bottom: 0;
     border-radius: theme.$default-border-radius;
   }
 

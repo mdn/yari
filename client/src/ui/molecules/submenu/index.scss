@@ -2,26 +2,30 @@
 @use "../../minimalist/vars/typography" as type;
 
 @use "../../theme/index" as theme;
-@use "../../theme/themes/light-mode" as light-mode;
+@use "../../theme/themes/light-mode" as light;
+@use "../../theme/themes/dark-mode" as dark;
+@use "../../theme/themes/high-contrast-white";
+@use "../../theme/themes/high-contrast-black";
 
 .submenu {
-  background-color: theme.$white;
+  background-color: light.$mdn-light-color-background-primary;
   display: none;
   list-style: none;
   margin: 0;
   padding: 0;
 
   @media #{layout.$mq-small-desktop-and-up} {
-    border: 1px solid light-mode.$mdn-light-color-border-primary;
+    border: 1px solid light.$mdn-light-color-border-primary;
     border-radius: theme.$default-border-radius * 2;
-    box-shadow: light-mode.$mdn-light-color-shadow01;
+    box-shadow: light.$mdn-light-color-shadow01;
     padding: theme.$base-spacing;
   }
 
   a,
   button {
     align-items: center;
-    border-bottom: 1px solid light-mode.$mdn-light-color-border-secondary;
+    border-bottom: 1px solid light.$mdn-light-color-border-secondary;
+    color: light.$mdn-light-color-text-primary;
     display: flex;
     gap: theme.$base-spacing;
     height: 100%;
@@ -38,14 +42,9 @@
       padding: theme.$base-spacing * 2;
     }
 
-    &:link,
-    &:visited {
-      color: light-mode.$mdn-light-color-text-primary;
-    }
-
     &:hover,
     &:focus {
-      background-color: light-mode.$mdn-light-color-background-secondary;
+      background-color: light.$mdn-light-color-background-secondary;
       text-decoration: none;
     }
   }
@@ -56,6 +55,10 @@
     @media #{layout.$mq-small-desktop-and-up} {
       @include theme.submenu-base-desktop();
     }
+  }
+
+  .active-menu-item {
+    background-color: light.$mdn-light-color-accent-primary;
   }
 
   li {
@@ -114,5 +117,124 @@
 
   .submenu-item-subtext {
     font-size: type.$tiny-text;
+  }
+}
+
+/* DARK MODE */
+.dark {
+  .submenu {
+    background-color: dark.$mdn-dark-color-background-primary;
+
+    @media #{layout.$mq-small-desktop-and-up} {
+      border: 1px solid dark.$mdn-dark-color-border-primary;
+      box-shadow: dark.$mdn-dark-color-shadow01;
+    }
+
+    a,
+    button {
+      border-color: dark.$mdn-dark-color-border-secondary;
+      color: dark.$mdn-dark-color-text-primary;
+
+      &:hover,
+      &:focus {
+        background-color: dark.$mdn-dark-color-background-secondary;
+      }
+    }
+
+    .active-menu-item {
+      background-color: dark.$mdn-dark-color-accent-primary;
+    }
+
+    .submenu-icon {
+      background-color: theme.$mdn-light-grey400;
+
+      &::before {
+        background-color: theme.$mdn-neutral900;
+      }
+    }
+
+    .submenu-item-heading {
+      color: dark.$mdn-dark-color-text-primary;
+    }
+  }
+}
+
+/* HIGH CONTRAST WHITE MODE */
+.high-contrast-white {
+  .submenu {
+    background-color: high-contrast-white.$mdn-high-contrast-white-color-background-primary;
+
+    @media #{layout.$mq-small-desktop-and-up} {
+      border: 1px solid
+        high-contrast-white.$mdn-high-contrast-white-color-border-primary;
+      box-shadow: high-contrast-white.$mdn-high-contrast-white-color-shadow01;
+    }
+
+    a,
+    button {
+      border-color: high-contrast-white.$mdn-high-contrast-white-color-border-secondary;
+      color: high-contrast-white.$mdn-high-contrast-white-color-text-primary;
+
+      &:hover,
+      &:focus {
+        background-color: high-contrast-white.$mdn-high-contrast-white-color-background-secondary;
+      }
+    }
+
+    .active-menu-item {
+      background-color: high-contrast-white.$mdn-high-contrast-white-color-accent-primary;
+    }
+
+    .submenu-icon {
+      background-color: theme.$mdn-light-grey400;
+
+      &::before {
+        background-color: theme.$mdn-neutral900;
+      }
+    }
+
+    .submenu-item-heading {
+      color: high-contrast-white.$mdn-high-contrast-white-color-text-primary;
+    }
+  }
+}
+
+/* HIGH CONTRAST BLACK MODE */
+.high-contrast-black {
+  .submenu {
+    background-color: high-contrast-black.$mdn-high-contrast-black-color-background-primary;
+
+    @media #{layout.$mq-small-desktop-and-up} {
+      border: 1px solid
+        high-contrast-black.$mdn-high-contrast-black-color-border-primary;
+      box-shadow: high-contrast-black.$mdn-high-contrast-black-color-shadow01;
+    }
+
+    a,
+    button {
+      border-color: high-contrast-black.$mdn-high-contrast-black-color-border-secondary;
+      color: high-contrast-black.$mdn-high-contrast-black-color-text-primary;
+
+      &:hover,
+      &:focus {
+        background-color: high-contrast-black.$mdn-high-contrast-black-color-background-secondary;
+      }
+    }
+
+    .active-menu-item {
+      background-color: high-contrast-black.$mdn-high-contrast-black-color-accent-primary;
+    }
+
+    .submenu-icon {
+      background-color: theme.$mdn-light-grey400;
+
+      &::before {
+        background-color: theme.$mdn-neutral900;
+      }
+    }
+
+    .submenu-item-heading {
+      color: high-contrast-black.$mdn-high-contrast-black-color-text-primary;
+    }
   }
 }

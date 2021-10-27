@@ -60,8 +60,8 @@ a.positive {
   }
 }
 
-.light,
-a.light {
+.light-button,
+a.light-button {
   @include button-state(
     $bg-color: $white,
     $bg-hover-color: $mdn-neutral100,

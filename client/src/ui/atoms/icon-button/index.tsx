@@ -3,6 +3,7 @@ import * as React from "react";
 import "./index.scss";
 
 type IconButtonType = {
+  ariaControls?: string;
   ariaHasPopup?: "true" | "false" | "menu" | "dialog" | "listbox";
   ariaExpanded?: "true" | "false";
   buttonType?: "button" | "submit" | "reset";
@@ -19,6 +20,7 @@ type IconButtonType = {
 
 export const IconButton = (props) => {
   const {
+    ariaControls,
     ariaHasPopup,
     ariaExpanded,
     buttonType = "button",
@@ -30,6 +32,7 @@ export const IconButton = (props) => {
 
   return (
     <button
+      aria-controls={ariaControls}
       aria-haspopup={ariaHasPopup}
       aria-expanded={ariaExpanded}
       type={buttonType}
