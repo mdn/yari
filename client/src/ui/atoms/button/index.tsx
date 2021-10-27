@@ -1,6 +1,7 @@
 import * as React from "react";
 
 type ButtonProps = {
+  ariaControls?: string;
   ariaExpanded?: boolean;
   ariaHasPopup?: "true" | "false" | "menu" | "dialog" | "listbox";
   /**
@@ -27,6 +28,7 @@ type ButtonProps = {
 };
 
 export const Button = ({
+  ariaControls,
   ariaExpanded,
   ariaHasPopup,
   buttonType = "button",
@@ -40,6 +42,7 @@ export const Button = ({
 }: ButtonProps) => {
   return (
     <button
+      aria-controls={ariaControls}
       aria-expanded={ariaExpanded}
       aria-haspopup={ariaHasPopup}
       disabled={isDisabled}

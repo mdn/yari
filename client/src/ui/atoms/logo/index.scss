@@ -21,3 +21,11 @@
     top: -2px;
   }
 }
+
+/* DARK AND HIGH CONTRACT BLACK MODE */
+.dark,
+.high-contrast-black {
+  .logo-text {
+    fill: theme.$white;
+  }
+}
