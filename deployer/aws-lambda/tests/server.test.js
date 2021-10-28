@@ -193,6 +193,19 @@ describe("always check for fundamental redirects first", () => {
       expect(r.headers["cache-control"]).toMatch(/max-age=\d\d+/);
     }
   });
+  it("should redirect speculative parsing URL baked into Firefox", async () => {
+    expect.assertions(2 * 2);
+    for (const url of [
+      "/en/Optimizing_Your_Pages_for_Speculative_Parsing/",
+      "/EN/optimizing_your_pages_for_speculative_parsing",
+    ]) {
+      const r = await get(url);
+      expect(r.statusCode).toBe(301);
+      expect(r.headers["location"]).toBe(
+        "/en-US/docs/Glossary/speculative_parsing"
+      );
+    }
+  });
 });
 
 describe("redirect double-slash prefix URIs", () => {
