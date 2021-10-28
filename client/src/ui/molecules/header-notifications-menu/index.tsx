@@ -1,7 +1,6 @@
 import React from "react";
 
 import { Button } from "../../atoms/button";
-import { Submenu } from "../submenu";
 
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
@@ -21,6 +20,16 @@ interface Notification {
   read: boolean;
 }
 
+type NotificationMenuItem = {
+  id?: number;
+  read?: boolean;
+  description?: string;
+  extraClasses?: string;
+  label?: string;
+  created?: string;
+  url?: string;
+};
+
 interface NotificationData {
   items: Array<Notification>;
   csrfmiddlewaretoken: string;
@@ -31,6 +40,9 @@ export const HeaderNotificationsMenu = () => {
   const [visibleSubMenuId, setVisibleSubMenuId] = React.useState<string | null>(
     null
   );
+
+  let notificationCount = 0;
+  const notificationMenuId = "my-notifications";
 
   const locale = useLocale();
 
@@ -50,59 +62,27 @@ export const HeaderNotificationsMenu = () => {
     }
   );
 
-  if (error) {
-    return null;
-  }
+  let notificationsMenuItems: Array<NotificationMenuItem> = [];
 
-  if (!data) {
-    return <div>No data yet (ToDo)</div>;
-  }
+  if (data && !error) {
+    const notifications = data.items.map((item) => {
+      return {
+        id: item.id,
+        url: `/${locale}/plus/notifications/${item.id}/`,
+        read: item.read,
+        label: item.text,
+        description: item.title,
+        created: dayjs(item.created).toString(),
+        extraClasses: !item.read ? "unread-notification" : "",
+      };
+    });
 
-  console.log(data.items);
+    notificationsMenuItems.push(...notifications);
 
-  const notificationsMenuItems = {
-    label: "Notifications",
-    id: "my-notifications",
-    items: [
-      {
-        component: () => {
-          return (
-            <div className="submenu-header submenu-content-container">
-              <div className="submenu-item-heading">Notifications</div>
-              <a
-                href={`/${locale}/plus/notifications/`}
-                className="submenu-header-action"
-              >
-                View all
-              </a>
-            </div>
-          );
-        },
-      },
-      ...data.items.map((item) => {
-        return {
-          id: item.id,
-          url: `/${locale}/plus/notifications/${item.id}/`,
-          read: item.read,
-          label: item.text,
-          description: item.title,
-          subText: dayjs(item.created).toString(),
-          extraClasses: !item.read ? "unread-notification" : "",
-        };
-      }),
-    ],
-  };
-
-  // Remove the header from counts
-  const notificationCount = data.items.reduce(
-    (n, item) => (item.read === false ? ++n : n),
-    0
-  );
-
-  function hideSubMenuIfVisible() {
-    if (visibleSubMenuId) {
-      setVisibleSubMenuId(null);
-    }
+    notificationCount = notifications.reduce(
+      (n, item) => (item.read === false ? ++n : n),
+      0
+    );
   }
 
   /**
@@ -123,9 +103,9 @@ export const HeaderNotificationsMenu = () => {
         ariaHasPopup={"menu"}
         extraClasses="ghost notifications-button"
         aria-label={`You currently have ${notificationCount} notifications`}
-        ariaExpanded={notificationsMenuItems.id === visibleSubMenuId}
+        ariaExpanded={notificationMenuId === visibleSubMenuId}
         onClickHandler={(event) => {
-          toggleSubMenu(event, notificationsMenuItems.id);
+          toggleSubMenu(event, notificationMenuId);
         }}
       >
         <span className="notifications-label">Notifications</span>
@@ -138,27 +118,57 @@ export const HeaderNotificationsMenu = () => {
         </span>
       </Button>
 
-      {data.items.length > 0 ? (
-        <Submenu
-          menuEntry={notificationsMenuItems}
-          visibleSubMenuId={visibleSubMenuId}
-          onBlurHandler={hideSubMenuIfVisible}
-        />
-      ) : (
-        <div
-          className={`submenu ${notificationsMenuItems.id} ${
-            notificationsMenuItems.id === visibleSubMenuId ? "show" : ""
-          }`}
-          role="menu"
-          aria-labelledby={`${notificationsMenuItems.id}-button`}
-        >
+      <ul
+        className={`submenu ${notificationMenuId} ${
+          notificationMenuId === visibleSubMenuId ? "show" : ""
+        }`}
+        role="menu"
+        aria-labelledby={`${notificationMenuId}-button`}
+      >
+        {notificationsMenuItems.length > 0 ? (
+          <>
+            <li className="submenu-header submenu-content-container">
+              <div className="submenu-item-heading">Notifications</div>
+              <a
+                href={`/${locale}/plus/notifications/`}
+                className="submenu-header-action"
+              >
+                View all
+              </a>
+            </li>
+
+            {notificationsMenuItems.map((notification) => {
+              return (
+                <li key={`my-notifications-${notification.id}`}>
+                  <a
+                    href={notification.url}
+                    role="menuitem"
+                    className="submenu-content-container"
+                  >
+                    <div className="submenu-item-heading">
+                      {notification.label}
+                    </div>
+                    {notification.description && (
+                      <p className="submenu-item-description">
+                        {notification.description}
+                      </p>
+                    )}
+                    <span className="submenu-item-subtext">
+                      {notification.created}
+                    </span>
+                  </a>
+                </li>
+              );
+            })}
+          </>
+        ) : (
           <div className="submenu-empty-message">
             <a href={`/${locale}/plus/notifications/`}>
               No notifications yet. Get started.
             </a>
           </div>
-        </div>
-      )}
+        )}
+      </ul>
     </div>
   );
 };
