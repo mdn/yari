@@ -1,0 +1,305 @@
+/* Variables courtesy of Lukas Oppermann's design token export (https://github.com/lukasoppermann/design-tokens) */
+
+/* Full Color Ramp */
+
+$mdn-color-light-grey-05: #fbfbfeff;
+$mdn-color-light-grey-10: #f9f9fbff;
+$mdn-color-light-grey-20: #f0f0f4ff;
+$mdn-color-light-grey-30: #e0e0e6ff;
+$mdn-color-light-grey-40: #cfcfd8ff;
+$mdn-color-light-grey-50: #bfbfc9ff;
+$mdn-color-light-grey-60: #afafbaff;
+$mdn-color-light-grey-70: #9f9fadff;
+$mdn-color-light-grey-80: #8f8f9dff;
+$mdn-color-light-grey-90: #80808eff;
+$mdn-color-dark-grey-05: #5b5b66ff;
+$mdn-color-dark-grey-10: #52525eff;
+$mdn-color-dark-grey-20: #4a4a55ff;
+$mdn-color-dark-grey-30: #42414dff;
+$mdn-color-dark-grey-40: #3a3944ff;
+$mdn-color-dark-grey-50: #32313cff;
+$mdn-color-dark-grey-60: #2b2a33ff;
+$mdn-color-dark-grey-70: #23222bff;
+$mdn-color-dark-grey-80: #1c1b22ff;
+$mdn-color-dark-grey-90: #15141aff;
+$mdn-color-blue-05: #aaf2ffff;
+$mdn-color-blue-10: #80ebffff;
+$mdn-color-blue-20: #00ddffff;
+$mdn-color-blue-30: #00b3f4ff;
+$mdn-color-blue-40: #0090edff;
+$mdn-color-blue-50: #0060dfff;
+$mdn-color-blue-60: #0250bbff;
+$mdn-color-blue-70: #054096ff;
+$mdn-color-blue-80: #073072ff;
+$mdn-color-blue-90: #09204dff;
+$mdn-color-green-05: #e3fff3ff;
+$mdn-color-green-10: #d1ffeeff;
+$mdn-color-green-20: #b3ffe3ff;
+$mdn-color-green-30: #87ffd1ff;
+$mdn-color-green-40: #54ffbdff;
+$mdn-color-green-50: #3fe1b0ff;
+$mdn-color-green-60: #2ac3a2ff;
+$mdn-color-green-70: #008787ff;
+$mdn-color-green-80: #005e5eff;
+$mdn-color-green-90: #08403fff;
+$mdn-color-yellow-05: #ffffccff;
+$mdn-color-yellow-10: #ffff98ff;
+$mdn-color-yellow-20: #ffea80ff;
+$mdn-color-yellow-30: #ffd567ff;
+$mdn-color-yellow-40: #ffbd4fff;
+$mdn-color-yellow-50: #ffa436ff;
+$mdn-color-yellow-60: #e27f2eff;
+$mdn-color-yellow-70: #c45a27ff;
+$mdn-color-yellow-80: #a7341fff;
+$mdn-color-yellow-90: #960e18ff;
+$mdn-color-red-05: #ffdfe7ff;
+$mdn-color-red-10: #ffbdc5ff;
+$mdn-color-red-20: #ff9aa2ff;
+$mdn-color-red-30: #ff848bff;
+$mdn-color-red-40: #ff6a75ff;
+$mdn-color-red-50: #ff4f5eff;
+$mdn-color-red-60: #e22850ff;
+$mdn-color-red-70: #c50042ff;
+$mdn-color-red-80: #810220ff;
+$mdn-color-red-90: #440306ff;
+$mdn-color-violet-05: #e7dfffff;
+$mdn-color-violet-10: #d9bfffff;
+$mdn-color-violet-20: #cb9effff;
+$mdn-color-violet-30: #c688ffff;
+$mdn-color-violet-40: #ab71ffff;
+$mdn-color-violet-50: #9059ffff;
+$mdn-color-violet-60: #7542e4ff;
+$mdn-color-violet-70: #592acbff;
+$mdn-color-violet-80: #45278dff;
+$mdn-color-violet-90: #321c64ff;
+$mdn-color-pink-05: #ffdff0ff;
+$mdn-color-pink-10: #ffb4dbff;
+$mdn-color-pink-20: #ff8ac5ff;
+$mdn-color-pink-30: #ff6bbaff;
+$mdn-color-pink-40: #ff4aa2ff;
+$mdn-color-pink-50: #ff298aff;
+$mdn-color-pink-60: #e21587ff;
+$mdn-color-pink-70: #c60084ff;
+$mdn-color-pink-80: #7f145bff;
+$mdn-color-pink-90: #50134bff;
+$mdn-color-ink-05: #393473ff;
+$mdn-color-ink-10: #342f6dff;
+$mdn-color-ink-20: #312a64ff;
+$mdn-color-ink-30: #2e255dff;
+$mdn-color-ink-40: #2b2156ff;
+$mdn-color-ink-50: #291d4fff;
+$mdn-color-ink-60: #271948ff;
+$mdn-color-ink-70: #20123aff;
+$mdn-color-ink-80: #20133aff;
+$mdn-color-ink-90: #1d1133ff;
+$mdn-color-marketing-grey-05: #f9f9faff;
+$mdn-color-marketing-grey-10: #ededf0ff;
+$mdn-color-marketing-grey-20: #cdcdd4ff;
+$mdn-color-marketing-grey-30: #b1b1bcff;
+$mdn-color-marketing-grey-40: #9595a2ff;
+$mdn-color-marketing-grey-50: #7a7a8bff;
+$mdn-color-marketing-grey-60: #5e5e72ff;
+$mdn-color-marketing-grey-70: #42435aff;
+$mdn-color-marketing-grey-80: #1f2033ff;
+$mdn-color-marketing-grey-90: #141422ff;
+$mdn-color-black: #000000ff;
+$mdn-color-white: #ffffffff;
+
+/* Theme: Light  */
+
+$mdn-theme-light-text-primary: #15141aff;
+$mdn-theme-light-text-secondary: #5b5b66ff;
+$mdn-theme-light-text-inactive: #5b5b66a6;
+$mdn-theme-light-text-link: #008787ff;
+$mdn-theme-light-background-primary: #ffffffff;
+$mdn-theme-light-background-secondary: #f9f9fbff;
+$mdn-theme-light-background-tertiary: #fbfbfeff;
+$mdn-theme-light-border-primary: #e0e0e6ff;
+$mdn-theme-light-border-secondary: #f0f0f4ff;
+$mdn-theme-light-button-primary-default: #005e5eff;
+$mdn-theme-light-button-primary-hover: #08403fff;
+$mdn-theme-light-button-primary-active: #08403fff;
+$mdn-theme-light-button-primary-inactive: #005e5eff;
+$mdn-theme-light-button-secondary-default: #fbfbfeff;
+$mdn-theme-light-button-secondary-hover: #e0e0e6ff;
+$mdn-theme-light-button-secondary-active: #e0e0e6ff;
+$mdn-theme-light-button-secondary-inactive: #fbfbfeff;
+$mdn-theme-light-icon-primary: #5b5b66ff;
+$mdn-theme-light-icon-secondary: #afafbaff;
+$mdn-theme-light-icon-information: #0090edff;
+$mdn-theme-light-icon-warning: #ffa436ff;
+$mdn-theme-light-icon-critical: #e22850ff;
+$mdn-theme-light-icon-success: #2ac3a2ff;
+$mdn-theme-light-accent-primary: #008787ff;
+$mdn-theme-light-accent-secondary: #005e5eff;
+$mdn-theme-light-shadow-01: 0px 1px 2px rgba(43, 42, 51, 0.05);
+
+/* Theme: Dark */
+
+$mdn-theme-dark-text-primary: #fbfbfeff;
+$mdn-theme-dark-text-secondary: #cfcfd8ff;
+$mdn-theme-dark-text-inactive: #cfcfd8a6;
+$mdn-theme-dark-text-link: #3fe1b0ff;
+$mdn-theme-dark-background-primary: #15141aff;
+$mdn-theme-dark-background-secondary: #23222bff;
+$mdn-theme-dark-background-tertiary: #2b2a33ff;
+$mdn-theme-dark-border-primary: #52525eff;
+$mdn-theme-dark-border-secondary: #3a3944ff;
+$mdn-theme-dark-button-primary-default: #008787ff;
+$mdn-theme-dark-button-primary-hover: #2ac3a2ff;
+$mdn-theme-dark-button-primary-active: #2ac3a2ff;
+$mdn-theme-dark-button-primary-inactive: #008787ff;
+$mdn-theme-dark-button-secondary-default: #2b2a33ff;
+$mdn-theme-dark-button-secondary-hover: #52525eff;
+$mdn-theme-dark-button-secondary-active: #5b5b66ff;
+$mdn-theme-dark-button-secondary-inactive: #2b2a33ff;
+$mdn-theme-dark-icon-primary: #fbfbfeff;
+$mdn-theme-dark-icon-secondary: #afafbaff;
+$mdn-theme-dark-icon-information: #80ebffff;
+$mdn-theme-dark-icon-warning: #ffbd4fff;
+$mdn-theme-dark-icon-critical: #ff9aa2ff;
+$mdn-theme-dark-icon-success: #2ac3a2ff;
+$mdn-theme-dark-accent-primary: #2ac3a2ff;
+$mdn-theme-dark-accent-secondary: #3fe1b0ff;
+
+/* Theme: High Contrast White */
+
+$mdn-theme-high-contrast-white-text-primary: #000000ff;
+$mdn-theme-high-contrast-white-text-secondary: #000000ff;
+$mdn-theme-high-contrast-white-text-inactive: #000000a6;
+$mdn-theme-high-contrast-white-text-link: #0060dfff;
+$mdn-theme-high-contrast-white-background-primary: #ffffffff;
+$mdn-theme-high-contrast-white-background-secondary: #ffffffff;
+$mdn-theme-high-contrast-white-background-tertiary: #ffffffff;
+$mdn-theme-high-contrast-white-border-primary: #000000ff;
+$mdn-theme-high-contrast-white-border-secondary: #000000ff;
+$mdn-theme-high-contrast-white-button-primary-default: #0060dfff;
+$mdn-theme-high-contrast-white-button-primary-hover: #0060dfff;
+$mdn-theme-high-contrast-white-button-primary-active: #0060dfff;
+$mdn-theme-high-contrast-white-button-primary-inactive: #0060dfff;
+$mdn-theme-high-contrast-white-button-secondary-default: #ffffffff;
+$mdn-theme-high-contrast-white-button-secondary-hover: #ffffffff;
+$mdn-theme-high-contrast-white-button-secondary-active: #ffffffff;
+$mdn-theme-high-contrast-white-button-secondary-inactive: #ffffffff;
+$mdn-theme-high-contrast-white-icon-primary: #000000ff;
+$mdn-theme-high-contrast-white-icon-secondary: #000000ff;
+$mdn-theme-high-contrast-white-icon-information: #0060dfff;
+$mdn-theme-high-contrast-white-icon-warning: #e27f2eff;
+$mdn-theme-high-contrast-white-icon-critical: #c50042ff;
+$mdn-theme-high-contrast-white-icon-success: #008787ff;
+$mdn-theme-high-contrast-white-accent-primary: #0060dfff;
+$mdn-theme-high-contrast-white-accent-secondary: #0060dfff;
+
+/* Theme: High Contrast Black */
+
+$mdn-theme-high-contrast-black-text-primary: #ffffffff;
+$mdn-theme-high-contrast-black-text-secondary: #ffffffff;
+$mdn-theme-high-contrast-black-text-link: #00ddffff;
+$mdn-theme-high-contrast-black-text-inactive: #ffffffa6;
+$mdn-theme-high-contrast-black-background-primary: #000000ff;
+$mdn-theme-high-contrast-black-background-secondary: #000000ff;
+$mdn-theme-high-contrast-black-background-tertiary: #000000ff;
+$mdn-theme-high-contrast-black-border-primary: #ffffffff;
+$mdn-theme-high-contrast-black-border-secondary: #ffffffff;
+$mdn-theme-high-contrast-black-button-primary-default: #00ddffff;
+$mdn-theme-high-contrast-black-button-primary-hover: #00ddffff;
+$mdn-theme-high-contrast-black-button-primary-active: #00ddffff;
+$mdn-theme-high-contrast-black-button-primary-inactive: #00ddffff;
+$mdn-theme-high-contrast-black-button-secondary-default: #000000ff;
+$mdn-theme-high-contrast-black-button-secondary-hover: #000000ff;
+$mdn-theme-high-contrast-black-button-secondary-active: #000000ff;
+$mdn-theme-high-contrast-black-button-secondary-inactive: #000000ff;
+$mdn-theme-high-contrast-black-icon-primary: #ffffffff;
+$mdn-theme-high-contrast-black-icon-secondary: #ffffffff;
+$mdn-theme-high-contrast-black-icon-information: #80ebffff;
+$mdn-theme-high-contrast-black-icon-warning: #ffea80ff;
+$mdn-theme-high-contrast-black-icon-critical: #ffbdc5ff;
+$mdn-theme-high-contrast-black-icon-success: #87ffd1ff;
+$mdn-theme-high-contrast-black-accent-primary: #00ddffff;
+$mdn-theme-high-contrast-black-accent-secondary: #00ddffff;
+
+/* Layout */
+
+$screen-sm: 425px;
+$screen-md: 768px;
+$screen-lg: 1024px;
+$screen-xl: 1440px;
+
+/* Typography */
+
+/* Typography - MDN Docs */
+
+.mdn-docs-type-heading-1 {
+  font: 600 36px/120% "Montserrat";
+  letter-spacing: -0.5px;
+  padding-bottom: 48px;
+}
+.mdn-docs-type-heading-2 {
+  font: 600 28px/120% "Montserrat";
+  letter-spacing: 0.5px;
+  padding: 32px 0px 16px 0px;
+}
+.mdn-docs-type-heading-3 {
+  font: 600 24px/120% "Montserrat";
+  letter-spacing: 0.5px;
+  padding: 32px 0px 16px 0px;
+}
+.mdn-docs-type-heading-4 {
+  font: 600 18px/120% "Montserrat";
+  letter-spacing: 0.5px;
+  padding: 32px 0px 16px 0px;
+}
+.mdn-docs-type-heading-5 {
+  font: 600 16px/120% "Montserrat";
+  letter-spacing: 1.5px;
+  padding: 32px 0px 16px 0px;
+  text-transform: uppercase;
+}
+.mdn-docs-type-heading-6 {
+  font: 600 12px/120% "Montserrat";
+  letter-spacing: 1.5px;
+  padding: 32px 0px 16px 0px;
+  text-transform: uppercase;
+}
+.mdn-docs-type-paragraph-regular {
+  font: 400 16px/200% "Inter";
+  padding-bottom: 32px;
+}
+.mdn-docs-type-paragraph-bold {
+  font: 600 16px/200% "Inter";
+}
+.mdn-docs-type-paragraph-italic {
+  font: italic 400 16px/200% "Inter";
+}
+.mdn-docs-type-paragraph-bold-italic {
+  font: italic 600 16px/200% "Inter";
+}
+.mdn-docs-type-notecard-bold {
+  font-family: Inter;
+  font-style: normal;
+  font-weight: 600;
+  font-size: 14px;
+  line-height: 175%;
+}
+.mdn-docs-type-notecard-regular {
+  font-family: Inter;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 14px;
+  line-height: 175%;
+}
+.mdn-docs-type-notecard-underlined {
+  font-family: Inter;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 14px;
+  line-height: 175%;
+  text-decoration-line: underline;
+}
+.mdn-docs-type-code-regular {
+  font-family: Consolas;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 14px;
+  line-height: 150%;
+}
