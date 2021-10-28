@@ -250,7 +250,7 @@ const SCL3_REDIRECT_URLS = [].concat(
   url_test(
     "/EN/optimizing_your_pages_for_speculative_parsing",
     "/en-US/docs/Glossary/speculative_parsing"
-  ),
+  )
 );
 
 const GITHUB_IO_URLS = [].concat(
