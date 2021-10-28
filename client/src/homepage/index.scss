@@ -1,15 +1,14 @@
-@import "~@mdn/minimalist/sass/mixins/utils";
-@import "~@mdn/minimalist/sass/vars/layout";
+@import "../ui/base/styles";
+@import "../ui/base/theme";
 
 .home-content-container {
   margin: 0 auto;
-  max-width: $max-width-default;
-  padding: $base-spacing;
+  max-width: 1440px;
+  padding: 1rem;
   position: relative;
 
-  @media #{$mq-small-desktop-and-up} {
-    @include gap($base-spacing);
+  @media screen and (max-width: $screen-md) {
     display: flex;
-    margin: ($base-spacing * 2) auto;
+    margin: 2rem auto;
   }
 }

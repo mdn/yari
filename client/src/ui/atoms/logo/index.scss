@@ -1,5 +1,5 @@
-@use "../../minimalist/vars/_layout.scss" as layout;
-@use "../../theme/index" as theme;
+@import "../../base/styles";
+@import "../../base/theme";
 
 .logo {
   display: flex;
@@ -10,12 +10,12 @@
     width: 100%;
   }
 
-  @media #{layout.$mq-small-desktop-and-up} {
+  @media screen and (max-width: $screen-md) {
     height: 65px;
     width: 200px;
   }
 
-  @media #{layout.$mq-large-desktop-and-up} {
+  @media screen and (max-width: $screen-md) {
     flex-basis: 200px;
     position: relative;
     top: -2px;
@@ -26,6 +26,6 @@
 .dark,
 .high-contrast-black {
   .logo-text {
-    fill: theme.$white;
+    fill: white;
   }
 }

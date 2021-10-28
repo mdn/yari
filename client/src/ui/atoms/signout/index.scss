@@ -1,27 +1,24 @@
-@use "../../minimalist/vars/layout";
-
-@use "../../theme/index" as theme;
-@use "../../theme/themes/light-mode" as light-mode;
-
+@import "../../base/styles";
+@import "../../base/theme";
 .sign-out-form {
-  @media #{layout.$mq-large-desktop-and-up} {
-    border-top: 1px solid light-mode.$mdn-light-color-border-primary;
+  @media screen and (max-width: $screen-md) {
+    border-top: 1px solid $border-primary;
   }
 }
 
 button.signout-button {
-  color: light-mode.$mdn-light-color-text-primary;
-  padding: theme.$base-spacing;
+  color: $text-primary;
+  padding: 0.5rem;
   width: 100%;
 
-  @media #{layout.$mq-large-desktop-and-up} {
-    border-radius: theme.$default-border-radius;
-    margin-top: theme.$base-spacing;
-    padding: theme.$base-spacing;
+  @media screen and (max-width: $screen-md) {
+    border-radius: 0.25rem;
+    margin-top: 0.5rem;
+    padding: 0.5rem;
   }
 
   &:hover,
   &:focus {
-    background-color: light-mode.$mdn-light-color-background-secondary;
+    background-color: $background-secondary;
   }
 }

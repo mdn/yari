@@ -1,4 +1,5 @@
-@use "../../minimalist/vars/_layout.scss" as layout;
+@import "../../base/styles";
+@import "../../base/theme";
 
 .auth-container {
   display: flex;
@@ -9,7 +10,7 @@
   padding: 0;
   text-align: center;
 
-  @media #{layout.$mq-large-desktop-and-up} {
+  @media screen and (max-width: $screen-md) {
     align-items: center;
     flex-flow: row;
     justify-content: flex-end;

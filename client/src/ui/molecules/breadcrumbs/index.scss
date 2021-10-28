@@ -1,14 +1,5 @@
-@use "sass:math";
-
-@use "../../minimalist/vars/layout";
-@use "../../minimalist/vars/typography";
-@use "../../minimalist/mixins/utils" as mx-utils;
-
-@use "../../theme/index" as theme;
-@use "../../theme/themes/light-mode" as light;
-@use "../../theme/themes/dark-mode" as dark;
-@use "../../theme/themes/high-contrast-white";
-@use "../../theme/themes/high-contrast-black";
+@import "../../base/styles";
+@import "../../base/theme";
 
 .breadcrumbs-container {
   a {
@@ -17,13 +8,12 @@
 
     &:link,
     &:visited {
-      color: light.$mdn-light-color-text-secondary;
+      color: $text-secondary;
     }
   }
 
   ol {
-    @include mx-utils.reset-list();
-    line-height: typography.$default-line-height;
+    line-height: 1.2;
   }
 
   li {
@@ -32,7 +22,7 @@
 
     .breadcrumb {
       &::after {
-        background-color: light.$mdn-light-color-icon-secondary;
+        background-color: $icon-secondary;
         background-size: 12px;
         content: "";
         display: block;
@@ -45,61 +35,7 @@
 
     [property="name"] {
       display: inline-block;
-      margin: 0 theme.$base-spacing;
-    }
-  }
-}
-
-/* DARK MODE */
-.dark {
-  .breadcrumbs-container {
-    a {
-      &:link,
-      &:visited {
-        color: dark.$mdn-dark-color-text-secondary;
-      }
-    }
-
-    .breadcrumb {
-      &::after {
-        background-color: dark.$mdn-dark-color-icon-secondary;
-      }
-    }
-  }
-}
-
-/* HIGH CONTRAST WHITE MODE */
-.high-contrast-white {
-  .breadcrumbs-container {
-    a {
-      &:link,
-      &:visited {
-        color: high-contrast-white.$mdn-high-contrast-white-color-text-secondary;
-      }
-    }
-
-    .breadcrumb {
-      &::after {
-        background-color: high-contrast-white.$mdn-high-contrast-white-color-icon-secondary;
-      }
-    }
-  }
-}
-
-/* HIGH CONTRAST BLACK MODE */
-.high-contrast-black {
-  .breadcrumbs-container {
-    a {
-      &:link,
-      &:visited {
-        color: high-contrast-black.$mdn-high-contrast-black-color-text-secondary;
-      }
-    }
-
-    .breadcrumb {
-      &::after {
-        background-color: high-contrast-black.$mdn-high-contrast-black-color-icon-secondary;
-      }
+      margin: 0 0.5rem;
     }
   }
 }

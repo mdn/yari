@@ -1,43 +1,38 @@
-@use "sass:math";
-
-@use "../../minimalist/vars/typography" as type;
-@use "../../minimalist/vars/layout";
-@use "../../theme/index" as theme;
-
-@use "../../theme/themes/light-mode" as light-mode;
+@import "../../base/styles";
+@import "../../base/theme";
 
 .notifications-menu {
   position: relative;
 
   .notifications-button {
-    color: light-mode.$mdn-light-color-text-primary;
+    color: $text-primary;
     margin: 12px 0;
     padding: 0;
 
-    @media #{layout.$mq-small-desktop-and-up} {
+    @media screen and (max-width: $screen-md) {
       display: flex;
       margin: initial;
     }
   }
 
   .notifications-count-container {
-    background-color: light-mode.$mdn-light-color-icon-secondary;
+    background-color: $icon-secondary;
     border-radius: 50%;
-    color: theme.$white;
+    color: white;
     display: inline-block;
     height: 21px;
     line-height: 1;
-    margin-left: math.div(theme.$base-spacing, 2);
+    margin-left: 0.5rem;
     padding: 2px;
     text-align: center;
     width: 21px;
 
-    @media #{layout.$mq-small-desktop-and-up} {
+    @media screen and (max-width: $screen-md) {
       background-color: transparent;
       padding: 0;
 
       &::before {
-        background-color: light-mode.$mdn-light-color-icon-primary;
+        background-color: $icon-primary;
         background-size: 21px 21px;
         content: "";
         display: block;
@@ -48,27 +43,27 @@
     }
 
     &.unread-notifications {
-      background-color: light-mode.$mdn-light-color-icon-secondary;
+      background-color: $icon-secondary;
 
-      @media #{layout.$mq-small-desktop-and-up} {
+      @media screen and (max-width: $screen-md) {
         background-color: transparent;
 
         &::before {
-          background-color: light-mode.$mdn-light-color-accent-primary;
+          background-color: $accent-primary;
           mask-image: url("~@mdn/dinocons/plus/notification.svg");
         }
       }
     }
   }
 
-  @media #{layout.$mq-small-desktop-and-up} {
+  @media screen and (max-width: $screen-md) {
     .notifications-label,
     .notifications-count {
       display: none;
     }
   }
 
-  @media #{layout.$mq-tablet-and-up} {
+  @media screen and (max-width: $screen-sm) {
     .my-notifications {
       left: initial;
       padding: 0;
@@ -87,13 +82,13 @@
       .submenu-header,
       .submenu-item-heading,
       .submenu-item-description {
-        font-size: type.$small-font-size;
+        font-size: 0.8125rem;
       }
 
       .submenu-content-container {
-        border-top: 1px solid light-mode.$mdn-light-color-border-primary;
+        border-top: 1px solid $border-primary;
 
-        padding: theme.$base-spacing theme.$base-spacing * 2;
+        padding: 0.5rem;
       }
 
       .submenu-header .submenu-content-container {
@@ -102,7 +97,7 @@
 
       .submenu-header .submenu-content-container {
         display: flex;
-        gap: theme.$base-spacing;
+        gap: 0.5rem;
         justify-content: space-between;
       }
 

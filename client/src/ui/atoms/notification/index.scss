@@ -1,8 +1,8 @@
-@use "../../theme/index" as theme;
-
+@import "../../base/styles";
+@import "../../base/theme";
 .notification-container {
-  background-color: theme.$mdn-violet700;
-  color: theme.$white;
+  background-color: $mdn-color-violet-90;
+  color: white;
   padding: 12px;
   text-align: center;
 

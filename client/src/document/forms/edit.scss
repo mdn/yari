@@ -1,6 +1,5 @@
-@import "~@mdn/minimalist/sass/vars/mdn-web-docs-palette";
-@import "~@mdn/minimalist/sass/vars/layout";
-@import "~@mdn/minimalist/sass/vars/typography";
+@import "../../ui/base/styles";
+@import "../../ui/base/theme";
 
 .document-edit {
   display: grid;
@@ -8,8 +7,8 @@
 
   .edit-header {
     .close {
-      font-size: $tiny-text;
-      margin-left: $base-spacing;
+      font-size: 0.8125rem;
+      margin-left: 1rem;
     }
   }
 }
@@ -21,7 +20,7 @@
 }
 
 .document-preview {
-  border: 2px solid $mdn-red400;
+  border: 2px solid $mdn-color-red-40;
   grid-column: 2/3;
   grid-row: 2/3;
   max-height: 90vh;

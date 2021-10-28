@@ -1,19 +1,17 @@
-@use "../../minimalist/vars/layout";
-
-@use "../../theme/index" as theme;
-@use "../../theme/themes/light-mode" as light-mode;
+@import "../../base/styles";
+@import "../../base/theme";
 
 .page-header-main {
   display: none;
   left: 0;
-  padding: 0 (theme.$base-spacing * 3) (theme.$base-spacing * 3);
+  padding: 1rem;
   position: absolute;
   top: 64px;
   width: 100%;
-  z-index: layout.$bring-to-front;
+  z-index: 1000;
 
   &.show-grid {
-    background-color: light-mode.$mdn-light-color-background-primary;
+    background-color: $background-primary;
     display: block;
 
     @supports (display: grid) {
@@ -43,10 +41,10 @@
     }
   }
 
-  @media #{layout.$mq-small-desktop-and-up} {
+  @media screen and (max-width: $screen-md) {
     align-items: center;
     display: flex;
-    gap: theme.$base-spacing * 2;
+    gap: 0.5rem;
     left: inherit;
     padding: 0;
     position: initial;
@@ -73,7 +71,7 @@
   display: flex;
   flex-flow: column-reverse;
 
-  @media #{layout.$mq-small-desktop-and-up} {
+  @media screen and (max-width: $screen-md) {
     flex-flow: row;
   }
 }

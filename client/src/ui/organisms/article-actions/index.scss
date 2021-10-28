@@ -1,24 +1,22 @@
-@use "../../minimalist/vars/layout";
-
-@use "../../theme/index" as theme;
-@use "../../theme/themes/light-mode" as light-mode;
+@import "../../base/styles";
+@import "../../base/theme";
 
 .article-actions {
   display: none;
 
   &.show-utilities {
-    background-color: light-mode.$mdn-light-color-background-primary;
-    color: light-mode.$mdn-light-color-text-primary;
+    background-color: $background-primary;
+    color: $text-primary;
     display: block;
     height: 100vh;
     left: 0;
     position: absolute;
     top: 0;
     width: 100vw;
-    z-index: layout.$bring-to-front;
+    z-index: 9999;
   }
 
-  @media #{layout.$mq-small-desktop-and-up} {
+  @media screen and (max-width: $screen-md) {
     display: block;
   }
 
@@ -33,7 +31,7 @@
   margin: 0;
   padding: 0;
 
-  @media #{layout.$mq-small-desktop-and-up} {
+  @media screen and (max-width: $screen-md) {
     display: flex;
   }
 }

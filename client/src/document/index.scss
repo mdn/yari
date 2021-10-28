@@ -1,38 +1,28 @@
-@use "sass:math";
-
-@import "~@mdn/minimalist/sass/vars/layout";
-@import "~@mdn/minimalist/sass/vars/mdn-web-docs-palette";
-@import "~@mdn/minimalist/sass/vars/borders";
-@import "~@mdn/minimalist/sass/vars/typography";
-
-@import "~@mdn/minimalist/sass/mixins/animation";
-@import "~@mdn/minimalist/sass/mixins/utils";
-
-@import "./molecules/notecards";
-@import "./molecules/localized-content-note";
+@import "../ui/base/styles";
+@import "../ui/base/theme";
 
 .main-content {
-  @media #{$mq-small-desktop-and-up} {
-    margin-top: $base-spacing;
+  @media screen and (max-width: $screen-md) {
+    margin-top: 1rem;
   }
 }
 
 .only-in-en-us {
   span {
-    font-size: $small-font-size;
+    font-size: 0.8125rem;
   }
 }
 
 a.page-not-created {
-  color: $mdn-red700;
+  color: $icon-critical;
   cursor: not-allowed;
 }
 
 .main-page-content {
-  padding: math.div($base-spacing, 2) $base-spacing $base-spacing;
+  padding: 0.5rem 1rem 1rem;
 
   figure {
-    margin-bottom: $base-spacing;
+    margin-bottom: 1rem;
   }
 
   ul li {
@@ -41,7 +31,7 @@ a.page-not-created {
 
   .example-good,
   .example-bad {
-    padding: 0 $base-spacing;
+    padding: 0 1rem;
     position: relative;
 
     &::after {
@@ -58,14 +48,14 @@ a.page-not-created {
 
   .example-bad {
     &::after {
-      background-color: $mdn-red700;
+      background-color: $icon-critical;
       mask-image: url("~@mdn/dinocons/emojis/frown.svg");
     }
   }
 
   .example-good {
     &::after {
-      background-color: $mdn-green900;
+      background-color: $icon-success;
       mask-image: url("~@mdn/dinocons/emojis/smiley.svg");
     }
   }
@@ -74,46 +64,46 @@ a.page-not-created {
     position: relative;
 
     .copy-icon {
-      background: $mdn-neutral100 url("../assets/clippy.svg") center center
+      background: $icon-primary url("../assets/clippy.svg") center center
         no-repeat;
       background-position: 61% 45%;
       background-size: 16px;
-      border: 1px solid $mdn-neutral100;
-      border-radius: $default-border-radius;
+      border: 1px solid $border-secondary;
+      border-radius: 0.25rem;
       cursor: pointer;
       height: 36px;
       margin: 0;
-      padding: math.div($base-spacing, 4);
+      padding: 0.25rem;
       position: absolute;
-      right: math.div($base-spacing, 3);
-      top: math.div($base-spacing, 3);
+      right: 0.25rem;
+      top: 0.25rem;
       vertical-align: middle;
       width: 33px;
-      z-index: $bottom-layer;
+      z-index: -1000;
 
-      @media #{$mq-large-desktop-and-up} {
+      @media screen and (max-width: $screen-lg) {
         opacity: 0.4;
 
         &:hover,
         &:focus {
-          background-color: $mdn-neutral200;
+          background-color: $background-secondary;
           opacity: 1;
         }
       }
     }
 
     .copy-icon-message {
-      background: $mdn-neutral900;
-      border-radius: $default-border-radius;
-      color: $white;
+      background: $mdn-color-dark-grey-90;
+      border-radius: 0.25rem;
+      color: white;
       display: none;
-      font-size: $small-font-size;
+      font-size: 0.8125rem;
       opacity: 1;
-      padding: math.div($base-spacing, 4);
+      padding: 0.125rem;
       position: absolute;
-      right: math.div($base-spacing, 3);
+      right: 0.25rem;
       top: 15px;
-      z-index: $bottom-layer;
+      z-index: -1000;
     }
 
     &:focus,
@@ -129,7 +119,7 @@ a.page-not-created {
 
     .example-good,
     .example-bad {
-      padding: $base-spacing;
+      padding: 1rem;
 
       &::after {
         right: 44px;
@@ -138,9 +128,9 @@ a.page-not-created {
     }
   }
 
-  @media #{$mq-small-desktop-and-up} {
-    margin-bottom: $base-spacing * 2;
-    padding: 0 $base-spacing $base-spacing;
+  @media screen and (max-width: $screen-md) {
+    margin-bottom: 0.5rem;
+    padding: 0 1rem 1rem;
   }
 
   h1 {
@@ -154,13 +144,6 @@ a.page-not-created {
     margin-top: 0;
   }
 
-  p,
-  ul,
-  ol,
-  dl {
-    @include readable-line-length();
-  }
-
   a {
     text-decoration: underline;
 
@@ -170,8 +153,8 @@ a.page-not-created {
     }
 
     &:active {
-      background-color: $mdn-blue700;
-      color: $text-color-inverted;
+      background-color: $text-link;
+      color: white;
 
       code {
         background-color: transparent;
@@ -181,7 +164,7 @@ a.page-not-created {
     &[id^="attr-"] {
       &:link,
       &:visited {
-        color: $mdn-neutral900;
+        color: $mdn-color-dark-grey-90;
         text-decoration: none;
       }
 
@@ -191,30 +174,30 @@ a.page-not-created {
       }
 
       &:active {
-        color: $text-color-inverted;
+        color: white;
       }
     }
   }
 
   [aria-current] {
-    color: $mdn-neutral900;
+    color: $mdn-color-dark-grey-90;
     font-weight: bold;
     text-decoration: none;
   }
 
   h2,
   h3 {
-    margin-bottom: ($base-unit * 2);
+    margin-bottom: 2rem;
 
     a:link,
     a:visited {
-      color: $mdn-neutral900;
+      color: $mdn-color-dark-grey-90;
       text-decoration: none;
     }
 
     a:hover,
     a:focus {
-      color: $mdn-neutral900;
+      color: $mdn-color-dark-grey-90;
       text-decoration: underline;
     }
 
@@ -224,14 +207,14 @@ a.page-not-created {
   }
 
   table {
-    margin-bottom: $base-spacing * 2;
+    margin-bottom: 0.5rem;
   }
 
   /* readonly inline badges needs a slightly darker background color in general article content  */
   .inline {
     &.optional,
     &.readonly {
-      background-color: $mdn-neutral100;
+      background-color: $background-secondary;
     }
   }
 
@@ -241,17 +224,17 @@ a.page-not-created {
    */
   .prevnext,
   .prev-next {
-    @media #{$mq-tablet-and-up} {
+    @media screen and (max-width: $screen-sm) {
       display: flex;
       justify-content: space-between;
-      margin-bottom: $base-spacing;
+      margin-bottom: 1rem;
     }
 
     a.button {
-      margin-bottom: math.div($base-spacing, 2);
+      margin-bottom: 0.5rem;
       max-width: inherit;
 
-      @media #{$mq-tablet-and-up} {
+      @media screen and (max-width: $screen-sm) {
         margin-bottom: inherit;
       }
     }
@@ -263,19 +246,19 @@ a.page-not-created {
   */
   .index {
     columns: 300px;
-    margin-bottom: $base-spacing;
+    margin-bottom: 1rem;
 
-    @media #{$mq-small-desktop-and-up} {
-      margin-bottom: $base-spacing * 2;
+    @media screen and (max-width: $screen-md) {
+      margin-bottom: 0.5rem;
     }
 
     .icon-experimental,
     .icon-nonstandard {
-      color: $mdn-blue700;
+      color: $icon-information;
     }
 
     .icon-deprecated {
-      color: $mdn-red700;
+      color: $icon-critical;
     }
   }
 

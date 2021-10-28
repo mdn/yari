@@ -28,7 +28,7 @@ don't use any of that, we can safely ignore it.
 .token.constant,
 .token.symbol,
 .token.deleted {
-  color: palette.$mdn-red700;
+  color: palette.$icon-critical;
 }
 
 .token.selector,
@@ -45,7 +45,7 @@ don't use any of that, we can safely ignore it.
 .token.url,
 .language-css .token.string,
 .style .token.string {
-  color: palette.$mdn-neutral900;
+  color: palette.$mdn-color-dark-grey-90;
 }
 
 .token.atrule,

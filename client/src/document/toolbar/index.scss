@@ -1,13 +1,13 @@
-@import "~@mdn/minimalist/sass/vars/mdn-web-docs-palette";
-@import "~@mdn/minimalist/sass/vars/layout";
+@import "../../ui/base/styles";
+@import "../../ui/base/theme";
 
 .toolbar {
   display: none;
 
-  @media #{$mq-small-desktop-and-up} {
+  @media screen and (max-width: $screen-md) {
     display: block;
     margin: 0 auto;
-    padding: $base-unit $base-spacing;
+    padding: 1rem 1rem;
   }
 
   .toolbar-first-row {
@@ -16,7 +16,7 @@
     justify-content: space-between;
 
     .edit-actions {
-      padding: $base-unit 0;
+      padding: 1rem 0;
       li {
         margin-left: 0;
       }

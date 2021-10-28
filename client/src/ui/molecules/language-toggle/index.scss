@@ -2,15 +2,13 @@
 
 @use "~@mdn/minimalist/sass/vars/layout";
 
-@use "../../theme/index" as theme;
-
 ul.language-toggle {
   display: flex;
-  gap: math.div(layout.$base-spacing, 2);
+  gap: 0.5rem;
   height: 35px;
   list-style: none;
 
-  @media #{layout.$mq-tablet-and-up} {
+  @media screen and (max-width: $screen-sm) {
     text-align: inherit;
   }
 
@@ -23,7 +21,7 @@ ul.language-toggle {
   }
 
   .language-icon {
-    border-radius: math.div(theme.$default-border-radius, 3);
+    border-radius: 0.25rem;
     display: inline-block;
     height: 35px;
     width: 35px;
@@ -45,7 +43,7 @@ ul.language-toggle {
       height: 25px;
       margin: 0 auto;
       mask-image: url("~@mdn/dinocons/general/language.svg");
-      padding: math.div(layout.$base-spacing, 2);
+      padding: 0.5rem;
       position: relative;
       top: 4px;
       width: 25px;
@@ -55,7 +53,7 @@ ul.language-toggle {
   .view-in-english {
     display: none;
 
-    @media #{layout.$mq-tablet-and-up} {
+    @media screen and (max-width: $screen-sm) {
       display: block;
       position: relative;
       top: 3px;
@@ -65,7 +63,7 @@ ul.language-toggle {
   .show-desktop {
     display: none;
 
-    @media #{layout.$mq-small-desktop-and-up} {
+    @media screen and (max-width: $screen-md) {
       display: inline;
     }
   }

@@ -1,6 +1,4 @@
 // We're assuming that code snippets are so common that it's OK to always
 // include them in every page.
-@import "./minimal-prism";
-
-@import "./ui/minimalist/mdn-minimalist";
-@import "./ui/molecules/grids/grids";
+@use "./ui/base/styles";
+@use "./ui/base/theme";

@@ -1,3 +1,6 @@
+@import "../../base/styles";
+@import "../../base/theme";
+
 /* standard page grid */
 @supports (display: grid) {
   .page-wrapper {
@@ -25,13 +28,13 @@
       display: grid;
       grid-row: 3/4;
       grid-template-columns: 100%;
-      padding: $base-spacing;
+      padding: 1rem;
     }
 
-    @media #{$mq-large-desktop-and-up} {
+    @media screen and (max-width: $screen-md) {
       .page-content-container {
         margin: 0 auto;
-        max-width: $max-width-default;
+        max-width: 1440px;
         width: 100%;
       }
     }

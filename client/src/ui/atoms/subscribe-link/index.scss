@@ -1,24 +1,22 @@
-@use "../../minimalist/vars/_layout.scss" as layout;
-
-@use "../../theme/index" as theme;
-@use "../../theme/themes/light-mode" as light-mode;
+@import "../../base/styles";
+@import "../../base/theme";
 
 .mdn-plus-subscribe-link {
-  background-color: light-mode.$mdn-light-color-button-primary-default;
-  border-radius: theme.$default-border-radius;
+  background-color: $button-primary-default;
+  border-radius: 0.25rem;
   display: block;
   font-weight: bold;
   margin: 0 auto;
   max-width: 150px;
-  padding: theme.$base-spacing (theme.$base-spacing * 2);
+  padding: 0.5rem;
   text-align: center;
 
-  @media #{layout.$mq-large-desktop-and-up} {
+  @media screen and (max-width: $screen-md) {
     margin-top: 0;
   }
 
   &:link,
   &:visited {
-    color: theme.$white;
+    color: white;
   }
 }
