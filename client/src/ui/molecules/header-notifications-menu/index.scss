@@ -1,16 +1,20 @@
+@use "sass:color";
 @use "sass:math";
 
 @use "../../minimalist/vars/typography" as type;
 @use "../../minimalist/vars/layout" as layout;
 @use "../../theme/index" as theme;
 
-@use "../../theme/themes/light-mode" as light-mode;
+@use "../../theme/themes/light-mode" as light;
+@use "../../theme/themes/dark-mode" as dark;
+@use "../../theme/themes/high-contrast-white";
+@use "../../theme/themes/high-contrast-black";
 
 .notifications-menu {
   position: relative;
 
   .notifications-button {
-    color: light-mode.$mdn-light-color-text-primary;
+    color: light.$mdn-light-color-text-primary;
     margin: 12px 0;
     padding: 0;
 
@@ -21,7 +25,7 @@
   }
 
   .notifications-count-container {
-    background-color: light-mode.$mdn-light-color-icon-secondary;
+    background-color: light.$mdn-light-color-icon-secondary;
     border-radius: 50%;
     color: theme.$white;
     display: inline-block;
@@ -37,7 +41,7 @@
       padding: 0;
 
       &::before {
-        background-color: light-mode.$mdn-light-color-icon-primary;
+        background-color: light.$mdn-light-color-icon-primary;
         background-size: 21px 21px;
         content: "";
         display: block;
@@ -48,13 +52,13 @@
     }
 
     &.unread-notifications {
-      background-color: light-mode.$mdn-light-color-icon-secondary;
+      background-color: light.$mdn-light-color-icon-secondary;
 
       @media #{layout.$mq-small-desktop-and-up} {
         background-color: transparent;
 
         &::before {
-          background-color: light-mode.$mdn-light-color-accent-primary;
+          background-color: light.$mdn-light-color-accent-primary;
           mask-image: url("~@mdn/dinocons/plus/notification.svg");
         }
       }
@@ -79,13 +83,17 @@
   }
 
   .notifications-submenu-action {
-    border-top: 1px solid light-mode.$mdn-light-color-border-primary;
+    border-top: 1px solid light.$mdn-light-color-border-primary;
     display: block;
     padding: theme.$base-spacing theme.$base-spacing * 2;
 
+    &.unread {
+      background-color: color.adjust(theme.$mdn-blue500, $alpha: -0.92);
+    }
+
     &:hover,
     &:focus {
-      background-color: light-mode.$mdn-light-color-background-secondary;
+      background-color: light.$mdn-light-color-background-secondary;
       text-decoration: none;
     }
   }
@@ -110,7 +118,7 @@
 
   .notifications-submenu-item-heading,
   .notifications-submenu-item-description {
-    color: light-mode.$mdn-light-color-text-primary;
+    color: light.$mdn-light-color-text-primary;
   }
 
   .notifications-submenu-item-heading {
@@ -122,27 +130,120 @@
   }
 
   .notifications-submenu-item-created {
-    color: light-mode.$mdn-light-color-text-inactive;
+    color: light.$mdn-light-color-text-inactive;
     font-size: type.$tiny-text;
     font-weight: 600;
   }
 
   @media #{layout.$mq-small-desktop-and-up} {
     &.show {
-      background-color: light-mode.$mdn-light-color-background-primary;
-      border: 1px solid light-mode.$mdn-light-color-border-primary;
+      background-color: light.$mdn-light-color-background-primary;
+      border: 1px solid light.$mdn-light-color-border-primary;
       border-radius: theme.$default-border-radius * 2;
-      box-shadow: light-mode.$mdn-light-color-shadow01;
+      box-shadow: light.$mdn-light-color-shadow01;
 
       display: block;
       left: initial;
-      min-width: 315px;
+      min-width: 310px;
       padding: 0;
       position: absolute;
       right: 0;
       top: 32px;
       width: max-content;
       z-index: layout.$bring-to-front;
+    }
+  }
+}
+
+/* DARK MODE */
+.dark {
+  .my-notifications {
+    background-color: dark.$mdn-dark-color-background-primary;
+    border-color: dark.$mdn-dark-color-border-primary;
+    box-shadow: dark.$mdn-dark-color-shadow01;
+
+    .notifications-submenu-action {
+      border-top-color: dark.$mdn-dark-color-border-primary;
+
+      &:hover,
+      &:focus {
+        background-color: dark.$mdn-dark-color-background-secondary;
+      }
+    }
+
+    .notifications-submenu-header-action {
+      color: dark.$mdn-dark-color-text-link;
+    }
+
+    .notifications-submenu-item-heading,
+    .notifications-submenu-item-description {
+      color: dark.$mdn-dark-color-text-primary;
+    }
+
+    .notifications-submenu-item-created {
+      color: dark.$mdn-dark-color-text-inactive;
+    }
+  }
+}
+
+/* HIGH CONTRAST WHITE MODE */
+.high-contrast-white {
+  .my-notifications {
+    background-color: high-contrast-white.$mdn-high-contrast-white-color-background-primary;
+    border-color: high-contrast-white.$mdn-high-contrast-white-color-border-primary;
+    box-shadow: high-contrast-white.$mdn-high-contrast-white-color-shadow01;
+
+    .notifications-submenu-action {
+      border-top-color: high-contrast-white.$mdn-high-contrast-white-color-border-primary;
+
+      &:hover,
+      &:focus {
+        background-color: high-contrast-white.$mdn-high-contrast-white-color-background-secondary;
+      }
+    }
+
+    .notifications-submenu-header-action {
+      color: high-contrast-white.$mdn-high-contrast-white-color-text-link;
+    }
+
+    .notifications-submenu-item-heading,
+    .notifications-submenu-item-description {
+      color: high-contrast-white.$mdn-high-contrast-white-color-text-primary;
+    }
+
+    .notifications-submenu-item-created {
+      color: high-contrast-white.$mdn-high-contrast-white-color-text-inactive;
+    }
+  }
+}
+
+/* HIGH CONTRAST BLACK MODE */
+.high-contrast-black {
+  .my-notifications {
+    background-color: high-contrast-black.$mdn-high-contrast-black-color-background-primary;
+    border-color: high-contrast-black.$mdn-high-contrast-black-color-border-primary;
+    box-shadow: high-contrast-black.$mdn-high-contrast-black-color-shadow01;
+
+    .notifications-submenu-action {
+      border-top-color: high-contrast-black.$mdn-high-contrast-black-color-border-primary;
+
+      &:hover,
+      &:focus {
+        background-color: high-contrast-black.$mdn-high-contrast-black-color-background-secondary;
+      }
+    }
+
+    .notifications-submenu-header-action {
+      color: high-contrast-black.$mdn-high-contrast-black-color-text-link;
+    }
+
+    .notifications-submenu-item-heading,
+    .notifications-submenu-item-description {
+      color: high-contrast-black.$mdn-high-contrast-black-color-text-primary;
+    }
+
+    .notifications-submenu-item-created {
+      color: high-contrast-black.$mdn-high-contrast-black-color-text-inactive;
     }
   }
 }

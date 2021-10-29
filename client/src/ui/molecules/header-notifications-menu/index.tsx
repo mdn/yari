@@ -145,7 +145,7 @@ export const HeaderNotificationsMenu = () => {
                     href={notification.url}
                     role="menuitem"
                     className={`notifications-submenu-action ${
-                      !notification.read ? "unread-notification" : ""
+                      !notification.read ? "unread" : ""
                     }`}
                   >
                     <div className="notifications-submenu-item-heading">
