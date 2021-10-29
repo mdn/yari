@@ -135,6 +135,12 @@
     font-weight: 600;
   }
 
+  .notifications-submenu-empty-message {
+    font-weight: 600;
+    padding: theme.$base-spacing theme.$base-spacing * 2;
+    text-align: center;
+  }
+
   @media #{layout.$mq-small-desktop-and-up} {
     &.show {
       background-color: light.$mdn-light-color-background-primary;
