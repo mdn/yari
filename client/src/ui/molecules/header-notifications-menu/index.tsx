@@ -16,18 +16,17 @@ interface Notification {
   id: number;
   title: string;
   text: string;
-  created: string;
+  created: Date;
   read: boolean;
 }
 
 type NotificationMenuItem = {
-  id?: number;
-  read?: boolean;
+  id: number;
+  read: boolean;
   description?: string;
-  extraClasses?: string;
-  label?: string;
-  created?: string;
-  url?: string;
+  label: string;
+  created: Date;
+  url: string;
 };
 
 interface NotificationData {
@@ -72,8 +71,7 @@ export const HeaderNotificationsMenu = () => {
         read: item.read,
         label: item.text,
         description: item.title,
-        created: dayjs(item.created).toString(),
-        extraClasses: !item.read ? "unread-notification" : "",
+        created: item.created,
       };
     });
 
@@ -120,7 +118,7 @@ export const HeaderNotificationsMenu = () => {
       </Button>
 
       <ul
-        className={`submenu ${notificationMenuId} ${
+        className={`notifications-submenu ${notificationMenuId} ${
           notificationMenuId === visibleSubMenuId ? "show" : ""
         }`}
         role="menu"
@@ -128,11 +126,13 @@ export const HeaderNotificationsMenu = () => {
       >
         {notificationsMenuItems.length > 0 ? (
           <>
-            <li className="submenu-header submenu-content-container">
-              <div className="submenu-item-heading">Notifications</div>
+            <li className="notifications-submenu-header">
+              <div className="notifications-submenu-item-heading">
+                Notifications
+              </div>
               <a
                 href={`/${locale}/plus/notifications/`}
-                className="submenu-header-action"
+                className="notifications-submenu-header-action"
               >
                 View all
               </a>
@@ -144,26 +144,32 @@ export const HeaderNotificationsMenu = () => {
                   <a
                     href={notification.url}
                     role="menuitem"
-                    className="submenu-content-container"
+                    className={`notifications-submenu-action ${
+                      !notification.read ? "unread-notification" : ""
+                    }`}
                   >
-                    <div className="submenu-item-heading">
+                    <div className="notifications-submenu-item-heading">
                       {notification.label}
                     </div>
                     {notification.description && (
-                      <p className="submenu-item-description">
+                      <p className="notifications-submenu-item-description">
                         {notification.description}
                       </p>
                     )}
-                    <span className="submenu-item-subtext">
-                      {notification.created}
-                    </span>
+
+                    <time
+                      className="notifications-submenu-item-created"
+                      dateTime={dayjs(notification.created).toISOString()}
+                    >
+                      {dayjs(notification.created).fromNow().toString()}
+                    </time>
                   </a>
                 </li>
               );
             })}
           </>
         ) : (
-          <div className="submenu-empty-message">
+          <div className="notifications-submenu-empty-message">
             <a href={`/${locale}/plus/notifications/`}>
               No notifications yet. Get started.
             </a>

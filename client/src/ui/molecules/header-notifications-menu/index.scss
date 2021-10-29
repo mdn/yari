@@ -1,7 +1,7 @@
 @use "sass:math";
 
 @use "../../minimalist/vars/typography" as type;
-@use "../../minimalist/vars/layout";
+@use "../../minimalist/vars/layout" as layout;
 @use "../../theme/index" as theme;
 
 @use "../../theme/themes/light-mode" as light-mode;
@@ -67,50 +67,82 @@
       display: none;
     }
   }
+}
 
-  @media #{layout.$mq-tablet-and-up} {
-    .my-notifications.show {
+.my-notifications {
+  display: none;
+  margin: 0;
+  padding: 0;
+
+  li {
+    list-style: none;
+  }
+
+  .notifications-submenu-action {
+    border-top: 1px solid light-mode.$mdn-light-color-border-primary;
+    display: block;
+    padding: theme.$base-spacing theme.$base-spacing * 2;
+
+    &:hover,
+    &:focus {
+      background-color: light-mode.$mdn-light-color-background-secondary;
+      text-decoration: none;
+    }
+  }
+
+  li:last-child .notifications-submenu-action {
+    border-radius: 0 0 theme.$default-border-radius * 2
+      theme.$default-border-radius * 2;
+  }
+
+  .notifications-submenu-header,
+  .notifications-submenu-item-heading,
+  .notifications-submenu-item-description {
+    font-size: type.$small-font-size;
+  }
+
+  .notifications-submenu-header {
+    display: flex;
+    gap: theme.$base-spacing;
+    justify-content: space-between;
+    padding: theme.$base-spacing theme.$base-spacing * 2;
+  }
+
+  .notifications-submenu-item-heading,
+  .notifications-submenu-item-description {
+    color: light-mode.$mdn-light-color-text-primary;
+  }
+
+  .notifications-submenu-item-heading {
+    font-weight: bold;
+  }
+
+  .notifications-submenu-item-description {
+    margin-bottom: 0;
+  }
+
+  .notifications-submenu-item-created {
+    color: light-mode.$mdn-light-color-text-inactive;
+    font-size: type.$tiny-text;
+    font-weight: 600;
+  }
+
+  @media #{layout.$mq-small-desktop-and-up} {
+    &.show {
+      background-color: light-mode.$mdn-light-color-background-primary;
+      border: 1px solid light-mode.$mdn-light-color-border-primary;
+      border-radius: theme.$default-border-radius * 2;
+      box-shadow: light-mode.$mdn-light-color-shadow01;
+
+      display: block;
       left: initial;
+      min-width: 315px;
       padding: 0;
+      position: absolute;
       right: 0;
-      top: 28px;
-
-      &.submenu {
-        gap: 0;
-      }
-
-      a {
-        display: block;
-        padding: 0;
-      }
-
-      .submenu-header,
-      .submenu-item-heading,
-      .submenu-item-description {
-        font-size: type.$small-font-size;
-      }
-
-      .submenu-content-container {
-        border-top: 1px solid light-mode.$mdn-light-color-border-primary;
-
-        padding: theme.$base-spacing theme.$base-spacing * 2;
-      }
-
-      .submenu-header {
-        border-top: none;
-        display: flex;
-        gap: theme.$base-spacing;
-        justify-content: space-between;
-      }
-
-      .submenu-header-action {
-        border-radius: unset;
-        padding: unset;
-      }
-
-      .submenu-header-action:hover {
-        background-color: transparent;
-      }
+      top: 32px;
+      width: max-content;
+      z-index: layout.$bring-to-front;
     }
   }
 }
