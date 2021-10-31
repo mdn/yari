@@ -1,4 +1,4 @@
-@import "~@mdn/minimalist/sass/mixins/utils";
+@use "~@mdn/minimalist/sass/mixins/utils" as *;
 
 .offscreen,
 .only-icon span {

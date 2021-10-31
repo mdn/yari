@@ -1,5 +1,5 @@
-@import "../../base/styles";
-@import "../../base/theme";
+@use "../../base/styles" as *;
+@use "../../base/theme" as *;
 
 /* standard page grid */
 @supports (display: grid) {
@@ -31,7 +31,7 @@
       padding: 1rem;
     }
 
-    @media screen and (max-width: $screen-md) {
+    @media screen and (min-width: $screen-md) {
       .page-content-container {
         margin: 0 auto;
         max-width: 1440px;

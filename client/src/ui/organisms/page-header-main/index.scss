@@ -1,5 +1,5 @@
-@import "../../base/styles";
-@import "../../base/theme";
+@use "../../base/styles" as *;
+@use "../../base/theme" as *;
 
 .page-header-main {
   display: none;
@@ -41,7 +41,7 @@
     }
   }
 
-  @media screen and (max-width: $screen-md) {
+  @media screen and (min-width: $screen-md) {
     align-items: center;
     display: flex;
     gap: 0.5rem;
@@ -71,7 +71,7 @@
   display: flex;
   flex-flow: column-reverse;
 
-  @media screen and (max-width: $screen-md) {
+  @media screen and (min-width: $screen-md) {
     flex-flow: row;
   }
 }

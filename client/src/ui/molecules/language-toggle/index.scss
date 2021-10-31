@@ -63,7 +63,7 @@ ul.language-toggle {
   .show-desktop {
     display: none;
 
-    @media screen and (max-width: $screen-md) {
+    @media screen and (min-width: $screen-md) {
       display: inline;
     }
   }

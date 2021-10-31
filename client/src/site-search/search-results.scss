@@ -1,6 +1,6 @@
 @use "sass:math";
-@import "../ui/base/styles";
-@import "../ui/base/theme";
+@use "../ui/base/styles" as *;
+@use "../ui/base/theme" as *;
 
 .search-results {
   .highlight,
@@ -20,7 +20,7 @@
 }
 
 .pagination {
-  @media screen and (max-width: $screen-md) {
+  @media screen and (min-width: $screen-md) {
     display: flex;
     justify-content: space-between;
   }

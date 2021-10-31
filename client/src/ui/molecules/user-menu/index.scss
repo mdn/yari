@@ -1,5 +1,5 @@
-@import "../../base/styles";
-@import "../../base/theme";
+@use "../../base/styles" as *;
+@use "../../base/theme" as *;
 
 .user-menu {
   position: relative;
@@ -15,7 +15,7 @@
     position: relative;
     width: 100%;
 
-    @media screen and (max-width: $screen-md) {
+    @media screen and (min-width: $screen-md) {
       border: 5px solid white;
     }
 
@@ -26,7 +26,7 @@
       }
     }
 
-    @media screen and (max-width: $screen-md) {
+    @media screen and (min-width: $screen-md) {
       &:focus {
         box-shadow: $focus-01;
       }
@@ -35,7 +35,7 @@
 }
 
 .submenu.my-mdn-plus.show {
-  @media screen and (max-width: $screen-md) {
+  @media screen and (min-width: $screen-md) {
     left: initial;
     right: 0;
     top: 50px;
@@ -58,12 +58,12 @@
 .show-desktop-inline-block {
   display: none;
 
-  @media screen and (max-width: $screen-md) {
+  @media screen and (min-width: $screen-md) {
     display: inline-block;
   }
 }
 
-@media screen and (max-width: $screen-md) {
+@media screen and (min-width: $screen-md) {
   .hide-desktop {
     display: none;
   }

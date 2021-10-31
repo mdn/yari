@@ -1,12 +1,12 @@
-@import "../../base/styles";
-@import "../../base/theme";
+@use "../../base/styles" as *;
+@use "../../base/theme" as *;
 
 /* The document grid */
 @supports (display: grid) {
   .page-wrapper.document-page {
     grid-template-columns: 70% 30%;
 
-    @media screen and (max-width: $screen-md) {
+    @media screen and (min-width: $screen-md) {
       grid-template-columns: minmax(25%, 75%) minmax(75%, 25%);
       grid-template-rows: repeat(3, auto) max-content 1fr;
     }
@@ -39,7 +39,7 @@
     .document-toc-container {
       grid-row: 4/5;
 
-      @media screen and (max-width: $screen-md) {
+      @media screen and (min-width: $screen-md) {
         grid-column: 1/2;
       }
     }
@@ -47,7 +47,7 @@
     .main-content {
       grid-row: 5/6;
 
-      @media screen and (max-width: $screen-md) {
+      @media screen and (min-width: $screen-md) {
         grid-column: 2/3;
         grid-row: 4/6;
       }
@@ -56,7 +56,7 @@
     .sidebar {
       grid-row: 6/7;
 
-      @media screen and (max-width: $screen-md) {
+      @media screen and (min-width: $screen-md) {
         grid-column: 1/2;
         grid-row: 5/6;
       }

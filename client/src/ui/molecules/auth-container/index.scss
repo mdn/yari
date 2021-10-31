@@ -1,5 +1,5 @@
-@import "../../base/styles";
-@import "../../base/theme";
+@use "../../base/styles" as *;
+@use "../../base/theme" as *;
 
 .auth-container {
   display: flex;
@@ -10,7 +10,7 @@
   padding: 0;
   text-align: center;
 
-  @media screen and (max-width: $screen-md) {
+  @media screen and (min-width: $screen-md) {
     align-items: center;
     flex-flow: row;
     justify-content: flex-end;

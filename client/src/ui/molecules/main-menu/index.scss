@@ -1,7 +1,7 @@
 @use "sass:color";
 
-@import "../../base/styles";
-@import "../../base/theme";
+@use "../../base/styles" as *;
+@use "../../base/theme" as *;
 
 ul.main-menu {
   box-sizing: border-box;
@@ -10,7 +10,7 @@ ul.main-menu {
   padding: 0;
   width: 100%;
 
-  @media screen and (max-width: $screen-md) {
+  @media screen and (min-width: $screen-md) {
     align-items: center;
     display: flex;
     justify-content: space-around;
@@ -37,7 +37,7 @@ ul.main-menu {
     text-align: left;
     width: 100%;
 
-    @media screen and (max-width: $screen-md) {
+    @media screen and (min-width: $screen-md) {
       border-radius: 0.25rem;
       padding: 0 0.5rem;
 
@@ -52,7 +52,7 @@ ul.main-menu {
   &.show {
     display: block;
 
-    @media screen and (max-width: $screen-md) {
+    @media screen and (min-width: $screen-md) {
       display: flex;
     }
   }
@@ -62,7 +62,7 @@ ul.main-menu {
     font-weight: normal;
     padding: 0.5rem;
 
-    @media screen and (max-width: $screen-md) {
+    @media screen and (min-width: $screen-md) {
       border-radius: 0.25rem;
       padding: 0.5rem;
 
@@ -82,7 +82,7 @@ ul.main-menu {
 }
 
 /* enable hover interaction if javascript is not available */
-@media screen and (max-width: $screen-md) {
+@media screen and (min-width: $screen-md) {
   ul.main-menu.nojs {
     .top-level-entry-container:hover,
     .top-level-entry-container:focus {
@@ -93,7 +93,7 @@ ul.main-menu {
   }
 }
 
-@media screen and (max-width: $screen-md) {
+@media screen and (min-width: $screen-md) {
   .page-overlay {
     display: none;
   }

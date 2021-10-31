@@ -1,5 +1,5 @@
-@import "../../base/styles";
-@import "../../base/theme";
+@use "../../base/styles" as *;
+@use "../../base/theme" as *;
 .icon-button {
   background: none;
   color: text-primary;

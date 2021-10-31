@@ -1,5 +1,5 @@
-@import "../../base/styles";
-@import "../../base/theme";
+@use "../../base/styles" as *;
+@use "../../base/theme" as *;
 
 .submenu {
   background-color: $background-primary;
@@ -8,7 +8,7 @@
   margin: 0;
   padding: 0;
 
-  @media screen and (max-width: $screen-md) {
+  @media screen and (min-width: $screen-md) {
     border: 1px solid $border-primary;
     border-radius: 0.25rem;
     box-shadow: $shadow-01;
@@ -30,7 +30,7 @@
       width: unset;
     }
 
-    @media screen and (max-width: $screen-md) {
+    @media screen and (min-width: $screen-md) {
       border-bottom: 0;
       border-radius: 0.25rem;
       padding: 0.5rem;
@@ -46,7 +46,7 @@
   &.show {
     display: block;
 
-    @media screen and (max-width: $screen-md) {
+    @media screen and (min-width: $screen-md) {
     }
   }
 
@@ -92,7 +92,7 @@
     font-weight: normal;
     margin-bottom: 0.5rem;
 
-    @media screen and (max-width: $screen-md) {
+    @media screen and (min-width: $screen-md) {
       font-weight: bold;
       margin-bottom: 0;
     }
@@ -101,7 +101,7 @@
   .submenu-item-description {
     display: none;
 
-    @media screen and (max-width: $screen-md) {
+    @media screen and (min-width: $screen-md) {
       display: block;
       font-weight: normal;
       margin-bottom: 0;

@@ -1,5 +1,5 @@
-@import "../../base/styles";
-@import "../../base/theme";
+@use "../../base/styles" as *;
+@use "../../base/theme" as *;
 
 .article-actions-container {
   align-items: center;
@@ -10,7 +10,7 @@
   gap: 0.5rem;
   padding-left: 0.5rem;
 
-  @media screen and (max-width: $screen-md) {
+  @media screen and (min-width: $screen-md) {
     margin: 0.5rem;
     padding: 0 0.5rem;
 

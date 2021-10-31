@@ -1,8 +1,8 @@
-@import "../../base/styles";
-@import "../../base/theme";
+@use "../../base/styles" as *;
+@use "../../base/theme" as *;
 
 .contribute {
-  @media screen and (max-width: $screen-md) {
+  @media screen and (min-width: $screen-md) {
     flex-basis: 35%;
   }
 

@@ -1,7 +1,3 @@
-/* Variables courtesy of Lukas Oppermann's design token export (https://github.com/lukasoppermann/design-tokens) */
-
-/* Full Color Ramp */
-
 $mdn-color-light-grey-05: #fbfbfeff;
 $mdn-color-light-grey-10: #f9f9fbff;
 $mdn-color-light-grey-20: #f0f0f4ff;
@@ -105,8 +101,6 @@ $mdn-color-marketing-grey-90: #141422ff;
 $mdn-color-black: #000000ff;
 $mdn-color-white: #ffffffff;
 
-/* Theme: Light  */
-
 $mdn-theme-light-text-primary: #15141aff;
 $mdn-theme-light-text-secondary: #5b5b66ff;
 $mdn-theme-light-text-inactive: #5b5b66a6;
@@ -134,8 +128,6 @@ $mdn-theme-light-accent-primary: #008787ff;
 $mdn-theme-light-accent-secondary: #005e5eff;
 $mdn-theme-light-shadow-01: 0px 1px 2px rgba(43, 42, 51, 0.05);
 
-/* Theme: Dark */
-
 $mdn-theme-dark-text-primary: #fbfbfeff;
 $mdn-theme-dark-text-secondary: #cfcfd8ff;
 $mdn-theme-dark-text-inactive: #cfcfd8a6;
@@ -161,8 +153,6 @@ $mdn-theme-dark-icon-critical: #ff9aa2ff;
 $mdn-theme-dark-icon-success: #2ac3a2ff;
 $mdn-theme-dark-accent-primary: #2ac3a2ff;
 $mdn-theme-dark-accent-secondary: #3fe1b0ff;
-
-/* Theme: High Contrast White */
 
 $mdn-theme-high-contrast-white-text-primary: #000000ff;
 $mdn-theme-high-contrast-white-text-secondary: #000000ff;
@@ -190,8 +180,6 @@ $mdn-theme-high-contrast-white-icon-success: #008787ff;
 $mdn-theme-high-contrast-white-accent-primary: #0060dfff;
 $mdn-theme-high-contrast-white-accent-secondary: #0060dfff;
 
-/* Theme: High Contrast Black */
-
 $mdn-theme-high-contrast-black-text-primary: #ffffffff;
 $mdn-theme-high-contrast-black-text-secondary: #ffffffff;
 $mdn-theme-high-contrast-black-text-link: #00ddffff;
@@ -218,88 +206,7 @@ $mdn-theme-high-contrast-black-icon-success: #87ffd1ff;
 $mdn-theme-high-contrast-black-accent-primary: #00ddffff;
 $mdn-theme-high-contrast-black-accent-secondary: #00ddffff;
 
-/* Layout */
-
 $screen-sm: 425px;
 $screen-md: 768px;
 $screen-lg: 1024px;
 $screen-xl: 1440px;
-
-/* Typography */
-
-/* Typography - MDN Docs */
-
-.mdn-docs-type-heading-1 {
-  font: 600 36px/120% "Montserrat";
-  letter-spacing: -0.5px;
-  padding-bottom: 48px;
-}
-.mdn-docs-type-heading-2 {
-  font: 600 28px/120% "Montserrat";
-  letter-spacing: 0.5px;
-  padding: 32px 0px 16px 0px;
-}
-.mdn-docs-type-heading-3 {
-  font: 600 24px/120% "Montserrat";
-  letter-spacing: 0.5px;
-  padding: 32px 0px 16px 0px;
-}
-.mdn-docs-type-heading-4 {
-  font: 600 18px/120% "Montserrat";
-  letter-spacing: 0.5px;
-  padding: 32px 0px 16px 0px;
-}
-.mdn-docs-type-heading-5 {
-  font: 600 16px/120% "Montserrat";
-  letter-spacing: 1.5px;
-  padding: 32px 0px 16px 0px;
-  text-transform: uppercase;
-}
-.mdn-docs-type-heading-6 {
-  font: 600 12px/120% "Montserrat";
-  letter-spacing: 1.5px;
-  padding: 32px 0px 16px 0px;
-  text-transform: uppercase;
-}
-.mdn-docs-type-paragraph-regular {
-  font: 400 16px/200% "Inter";
-  padding-bottom: 32px;
-}
-.mdn-docs-type-paragraph-bold {
-  font: 600 16px/200% "Inter";
-}
-.mdn-docs-type-paragraph-italic {
-  font: italic 400 16px/200% "Inter";
-}
-.mdn-docs-type-paragraph-bold-italic {
-  font: italic 600 16px/200% "Inter";
-}
-.mdn-docs-type-notecard-bold {
-  font-family: Inter;
-  font-style: normal;
-  font-weight: 600;
-  font-size: 14px;
-  line-height: 175%;
-}
-.mdn-docs-type-notecard-regular {
-  font-family: Inter;
-  font-style: normal;
-  font-weight: normal;
-  font-size: 14px;
-  line-height: 175%;
-}
-.mdn-docs-type-notecard-underlined {
-  font-family: Inter;
-  font-style: normal;
-  font-weight: normal;
-  font-size: 14px;
-  line-height: 175%;
-  text-decoration-line: underline;
-}
-.mdn-docs-type-code-regular {
-  font-family: Consolas;
-  font-style: normal;
-  font-weight: normal;
-  font-size: 14px;
-  line-height: 150%;
-}

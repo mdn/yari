@@ -1,5 +1,5 @@
-@import "../../base/styles";
-@import "../../base/theme";
+@use "../../base/styles" as *;
+@use "../../base/theme" as *;
 
 .main-menu-toggle {
   padding: 10px 20px;
@@ -7,7 +7,7 @@
   right: 0;
   top: 14px;
 
-  @media screen and (max-width: $screen-md) {
+  @media screen and (min-width: $screen-md) {
     display: none;
   }
 }
@@ -20,7 +20,7 @@
   position: relative;
   width: 100%;
 
-  @media screen and (max-width: $screen-md) {
+  @media screen and (min-width: $screen-md) {
     display: flex;
     gap: 0.5rem;
   }

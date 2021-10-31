@@ -1,6 +1,6 @@
-@import "~@mdn/minimalist/sass/mixins/utils";
-@import "../../base/styles";
-@import "../../base/theme";
+@use "~@mdn/minimalist/sass/mixins/utils" as *;
+@use "../../base/styles" as *;
+@use "../../base/theme" as *;
 
 .hero {
   background-color: $mdn-color-blue-20;
@@ -15,7 +15,7 @@
     padding-top: 75px;
   }
 
-  @media screen and (max-width: $screen-md) {
+  @media screen and (min-width: $screen-md) {
     padding-bottom: 1rem;
   }
 }
@@ -34,7 +34,7 @@
     margin-bottom: 1rem;
     text-align: center;
 
-    @media screen and (max-width: $screen-md) {
+    @media screen and (min-width: $screen-md) {
       font-size: 1.25rem;
       margin-bottom: 0.5rem;
       max-width: 750px;
@@ -44,7 +44,7 @@
   ul {
     @include reset-list();
 
-    @media screen and (max-width: $screen-md) {
+    @media screen and (min-width: $screen-md) {
       display: flex;
       justify-content: space-around;
     }
@@ -53,7 +53,7 @@
       flex-basis: 35%;
       position: relative;
 
-      @media screen and (max-width: $screen-md) {
+      @media screen and (min-width: $screen-md) {
         flex-basis: 25%;
       }
     }

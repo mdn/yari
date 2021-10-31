@@ -1,5 +1,5 @@
-@import "../../../ui/base/styles";
-@import "../../../ui/base/theme";
+@use "../../../ui/base/styles" as *;
+@use "../../../ui/base/theme" as *;
 
 .metadata {
   background-color: $background-secondary;

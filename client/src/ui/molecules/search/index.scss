@@ -1,5 +1,5 @@
-@import "../../base/styles";
-@import "../../base/theme";
+@use "../../base/styles" as *;
+@use "../../base/theme" as *;
 
 .header-search {
   .search-widget {
@@ -7,7 +7,7 @@
     position: relative;
     width: 100%;
 
-    @media screen and (max-width: $screen-md) {
+    @media screen and (min-width: $screen-md) {
       align-items: center;
       display: flex;
       gap: 0.5rem;
@@ -129,7 +129,7 @@
 .close-search-button {
   display: none;
 
-  @media screen and (max-width: $screen-md) {
+  @media screen and (min-width: $screen-md) {
     background: none;
     border-radius: 0.25rem;
     display: block;

@@ -1,7 +1,7 @@
 @use "sass:math";
 
-@import "../../../ui/base/styles";
-@import "../../../ui/base/theme";
+@use "../../../ui/base/styles" as *;
+@use "../../../ui/base/theme" as *;
 
 .document-toc {
   font-size: 1rem;
@@ -12,7 +12,7 @@
     padding: 0 1rem;
   }
 
-  @media screen and (max-width: $screen-md) {
+  @media screen and (min-width: $screen-md) {
     margin-top: 1rem;
   }
 

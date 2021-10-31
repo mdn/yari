@@ -1,7 +1,7 @@
 @use "sass:math";
 
-@import "~@mdn/minimalist/sass/vars/color-palette";
-@import "~@mdn/minimalist/sass/vars/color-gradients";
+@use "~@mdn/minimalist/sass/vars/color-palette";
+@use "~@mdn/minimalist/sass/vars/color-gradients";
 
 .mdn-cta-container {
   background-color: #212121;

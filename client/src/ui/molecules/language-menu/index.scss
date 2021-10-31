@@ -1,5 +1,5 @@
-@import "../../base/styles";
-@import "../../base/theme";
+@use "../../base/styles" as *;
+@use "../../base/theme" as *;
 
 .language-menu {
   margin-top: 1rem;
@@ -12,7 +12,7 @@
     font-size: 1rem;
     font-weight: bold;
 
-    @media screen and (max-width: $screen-md) {
+    @media screen and (min-width: $screen-md) {
       font-size: 1rem;
     }
   }
@@ -27,7 +27,7 @@
       vertical-align: text-top;
     }
 
-    @media screen and (max-width: $screen-md) {
+    @media screen and (min-width: $screen-md) {
       width: inherit;
     }
   }

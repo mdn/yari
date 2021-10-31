@@ -1,5 +1,5 @@
-@import "../ui/base/styles";
-@import "../ui/base/theme";
+@use "../ui/base/styles" as *;
+@use "../ui/base/theme" as *;
 
 .home-content-container {
   margin: 0 auto;
@@ -7,7 +7,7 @@
   padding: 1rem;
   position: relative;
 
-  @media screen and (max-width: $screen-md) {
+  @media screen and (min-width: $screen-md) {
     display: flex;
     margin: 2rem auto;
   }

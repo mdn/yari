@@ -1,5 +1,5 @@
-@import "../../base/styles";
-@import "../../base/theme";
+@use "../../base/styles" as *;
+@use "../../base/theme" as *;
 
 .logo {
   display: flex;
@@ -10,12 +10,12 @@
     width: 100%;
   }
 
-  @media screen and (max-width: $screen-md) {
+  @media screen and (min-width: $screen-md) {
     height: 65px;
     width: 200px;
   }
 
-  @media screen and (max-width: $screen-md) {
+  @media screen and (min-width: $screen-md) {
     flex-basis: 200px;
     position: relative;
     top: -2px;

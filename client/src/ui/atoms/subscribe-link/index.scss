@@ -1,5 +1,5 @@
-@import "../../base/styles";
-@import "../../base/theme";
+@use "../../base/styles" as *;
+@use "../../base/theme" as *;
 
 .mdn-plus-subscribe-link {
   background-color: $button-primary-default;
@@ -11,7 +11,7 @@
   padding: 0.5rem;
   text-align: center;
 
-  @media screen and (max-width: $screen-md) {
+  @media screen and (min-width: $screen-md) {
     margin-top: 0;
   }
 

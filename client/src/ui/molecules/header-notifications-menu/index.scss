@@ -1,5 +1,5 @@
-@import "../../base/styles";
-@import "../../base/theme";
+@use "../../base/styles" as *;
+@use "../../base/theme" as *;
 
 .notifications-menu {
   position: relative;
@@ -9,7 +9,7 @@
     margin: 12px 0;
     padding: 0;
 
-    @media screen and (max-width: $screen-md) {
+    @media screen and (min-width: $screen-md) {
       display: flex;
       margin: initial;
     }
@@ -27,7 +27,7 @@
     text-align: center;
     width: 21px;
 
-    @media screen and (max-width: $screen-md) {
+    @media screen and (min-width: $screen-md) {
       background-color: transparent;
       padding: 0;
 
@@ -45,7 +45,7 @@
     &.unread-notifications {
       background-color: $icon-secondary;
 
-      @media screen and (max-width: $screen-md) {
+      @media screen and (min-width: $screen-md) {
         background-color: transparent;
 
         &::before {
@@ -56,7 +56,7 @@
     }
   }
 
-  @media screen and (max-width: $screen-md) {
+  @media screen and (min-width: $screen-md) {
     .notifications-label,
     .notifications-count {
       display: none;

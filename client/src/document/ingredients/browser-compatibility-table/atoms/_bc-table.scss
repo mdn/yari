@@ -34,7 +34,7 @@
   thead {
     display: none;
 
-    @media screen and (max-width: $screen-md) {
+    @media screen and (min-width: $screen-md) {
       display: table-header-group;
     }
 
@@ -44,7 +44,7 @@
       border-top: 0;
       overflow: hidden;
 
-      @media screen and (max-width: $screen-md) {
+      @media screen and (min-width: $screen-md) {
         width: 200px;
       }
     }
@@ -74,7 +74,7 @@
     th {
       padding: 0;
 
-      @media screen and (max-width: $screen-md) {
+      @media screen and (min-width: $screen-md) {
         border-right: 2px solid $mdn-color-dark-grey-90;
         display: table-cell;
         font-weight: normal;
@@ -84,7 +84,7 @@
     }
 
     td {
-      @media screen and (max-width: $screen-md) {
+      @media screen and (min-width: $screen-md) {
         border-right: 1px solid $mdn-color-dark-grey-90;
         display: table-cell;
         overflow: hidden;
@@ -108,7 +108,7 @@
     padding: 0.125rem;
     width: 75%;
 
-    @media screen and (max-width: $screen-md) {
+    @media screen and (min-width: $screen-md) {
       display: none;
     }
   }
@@ -127,7 +127,7 @@
   }
 }
 
-@media screen and (max-width: $screen-md) {
+@media screen and (min-width: $screen-md) {
   .bc-table-web {
     thead {
       /** Border between desktop and mobile sections. */

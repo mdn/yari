@@ -6,7 +6,7 @@ tr.bc-history {
     border-right: 0;
   }
 
-  @media screen and (max-width: $screen-md) {
+  @media screen and (min-width: $screen-md) {
     display: table-row;
   }
 
@@ -56,7 +56,7 @@ dl.bc-history-mobile {
   display: block;
   padding: 0.5rem;
 
-  @media screen and (max-width: $screen-md) {
+  @media screen and (min-width: $screen-md) {
     display: none;
   }
 

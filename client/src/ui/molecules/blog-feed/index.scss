@@ -1,9 +1,9 @@
-@import "../../base/styles";
-@import "../../base/theme";
-@import "~@mdn/minimalist/sass/mixins/utils";
+@use "../../base/styles" as *;
+@use "../../base/theme" as *;
+@use "~@mdn/minimalist/sass/mixins/utils" as *;
 
 .blog-feed {
-  @media screen and (max-width: $screen-md) {
+  @media screen and (min-width: $screen-md) {
     flex-basis: 65%;
   }
 
