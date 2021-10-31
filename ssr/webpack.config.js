@@ -54,17 +54,7 @@ module.exports = {
         test: /\.(png|svg|jpg|gif)$/,
         use: ["file-loader?outputPath=/distimages/"],
       },
-      {
-        test: /\.(css|scss)$/,
-        exclude: /node_modules/,
-        use: [
-          {
-            loader: "file-loader",
-            options: { outputPath: "css/", name: "[name].min.css" },
-          },
-          "sass-loader",
-        ],
-      },
+      { test: /\.(css|scss)$/, loader: "ignore-loader" },
     ],
   },
   externals: nodeExternals(),
