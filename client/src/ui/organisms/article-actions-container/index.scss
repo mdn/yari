@@ -9,6 +9,7 @@
   display: flex;
   gap: 0.5rem;
   padding-left: 0.5rem;
+  justify-content: space-between;
 
   @media screen and (min-width: $screen-md) {
     padding: 0.5rem;

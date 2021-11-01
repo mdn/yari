@@ -1,31 +1,45 @@
 @use "../../base/styles" as *;
 @use "../../base/theme" as *;
 
-/* The document grid */
-@supports (display: grid) {
-  .page-wrapper.document-page {
-    grid-template-columns: 70% 30%;
-
-    @media screen and (min-width: $screen-md) {
-      grid-template-columns: minmax(25%, 75%) minmax(75%, 25%);
-      grid-template-rows: repeat(3, auto) max-content 1fr;
-    }
+.document-page {
+  .page-header,
+  .generic-loading,
+  .article-actions-container,
+  .localized-content-note,
+  .document-toc-container,
+  .main-content,
+  .sidebar,
+  .metadata {
+    display: flex;
   }
 
-  .document-page {
-    .page-header,
-    .generic-loading,
-    .article-actions-container,
-    .localized-content-note,
-    .document-toc-container,
-    .main-content,
-    .sidebar,
-    .metadata {
-      display: flex;
-    }
+  .main-content,
+  .sidebar {
+    flex-direction: column;
+  }
 
-    .main-content {
+  /* Contains the sidebar and article content */
+  .article-wrapper {
+    display: grid;
+    grid-template-columns: 1fr 3fr;
+
+    .content-wrapper {
+      display: flex;
       flex-direction: column;
+      @media screen and (min-width: $screen-xl) {
+        flex-direction: row-reverse;
+      }
+
+      .toc {
+        width: 100%;
+
+        @media screen and (min-width: $screen-xl) {
+          .document-toc-container {
+            position: sticky;
+            top: 1rem;
+          }
+        }
+      }
     }
   }
 }
