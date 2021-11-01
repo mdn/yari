@@ -2,11 +2,11 @@ import { useState } from "react";
 
 import { Logo } from "../../atoms/logo";
 import { IconButton } from "../../atoms/icon-button";
-import { PageHeaderMain } from "../page-header-main";
+import { TopNavigationMain } from "../top-navigation-main";
 
 import "./index.scss";
 
-export function Header() {
+export function TopNavigation() {
   const [showMainMenu, setShowMainMenu] = useState(false);
 
   function toggleMainMenu(event) {
@@ -24,7 +24,7 @@ export function Header() {
   }
 
   return (
-    <header className="page-header">
+    <header className="top-navigation">
       <Logo />
       <IconButton
         ariaHasPopup={"menu"}
@@ -35,7 +35,7 @@ export function Header() {
         <span className="visually-hidden">Show Menu</span>
       </IconButton>
 
-      <PageHeaderMain showMainMenu={showMainMenu} />
+      <TopNavigationMain showMainMenu={showMainMenu} />
     </header>
   );
 }

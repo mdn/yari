@@ -11,7 +11,7 @@ import { useUserData } from "../../../user-context";
 
 import "./index.scss";
 
-export const PageHeaderMain = ({ showMainMenu }) => {
+export const TopNavigationMain = ({ showMainMenu }) => {
   const userData = useUserData();
   const isSubscriber = userData && userData.isSubscriber;
   const [isMobile, setIsMobile] = React.useState(false);
@@ -23,7 +23,7 @@ export const PageHeaderMain = ({ showMainMenu }) => {
 
   React.useEffect(() => {
     if (typeof window !== "undefined" && window.matchMedia) {
-      const mql = window.matchMedia("(max-width: 63.9375em)");
+      const mql = window.matchMedia("(max-width: 768px)");
 
       // add an event listener to report as the viewport changes
       mql.addEventListener("change", updateViewportState);
@@ -35,34 +35,36 @@ export const PageHeaderMain = ({ showMainMenu }) => {
 
   return (
     <div
-      className={`page-header-main ${
+      className={`top-navigation-main ${
         isMobile && showMainMenu ? "show-grid" : ""
       }`}
     >
       <MainMenu />
-      {isMobile || showSearch ? (
-        <Search
-          onCloseSearch={() => {
-            setShowSearch(false);
-          }}
-        />
-      ) : (
-        <IconButton
-          clickHandler={() => {
-            setShowSearch(true);
-          }}
-          extraClasses="toggle-search-button"
-        >
-          <span className="visually-hidden">Show search</span>
-        </IconButton>
-      )}
-      {isSubscriber && (!showSearch || isMobile) && (
-        <>
-          <HeaderNotificationsMenu />
-          <UserMenu />
-        </>
-      )}
-      {!isSubscriber && (!showSearch || isMobile) && <AuthContainer />}
+      <div className="top-navigation-actions">
+        {isMobile || showSearch ? (
+          <Search
+            onCloseSearch={() => {
+              setShowSearch(false);
+            }}
+          />
+        ) : (
+          <IconButton
+            clickHandler={() => {
+              setShowSearch(true);
+            }}
+            extraClasses="toggle-search-button"
+          >
+            <span className="visually-hidden">Show search</span>
+          </IconButton>
+        )}
+        {isSubscriber && (!showSearch || isMobile) && (
+          <>
+            <HeaderNotificationsMenu />
+            <UserMenu />
+          </>
+        )}
+        {!isSubscriber && (!showSearch || isMobile) && <AuthContainer />}
+      </div>
     </div>
   );
 };

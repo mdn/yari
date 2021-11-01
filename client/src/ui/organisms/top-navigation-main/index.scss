@@ -1,44 +1,24 @@
 @use "../../base/styles" as *;
 @use "../../base/theme" as *;
 
-.page-header-main {
+.top-navigation-main {
   display: none;
   left: 0;
   padding: 1rem;
   position: absolute;
-  top: 64px;
+  top: 4rem;
   width: 100%;
   z-index: 1000;
+  justify-content: space-between;
+
+  a {
+    padding: 0.5rem 1rem;
+  }
 
   &.show-grid {
     background-color: $background-primary;
-    display: block;
-
-    @supports (display: grid) {
-      display: grid;
-      grid-template-rows: 1fr;
-
-      .auth-container {
-        grid-row: 1/2;
-      }
-
-      .search-toggle,
-      .header-search {
-        grid-row: 2/3;
-      }
-
-      .main-nav {
-        grid-row: 3/4;
-      }
-
-      .notifications-menu {
-        grid-row: 4/5;
-      }
-
-      .user-menu {
-        grid-row: 5/6;
-      }
-    }
+    display: flex;
+    flex-direction: column-reverse;
   }
 
   @media screen and (min-width: $screen-md) {
@@ -50,17 +30,15 @@
     position: initial;
     top: inherit;
     z-index: inherit;
+  }
 
-    .main-nav {
-      flex: 3 1 40%;
-    }
+  .top-navigation-actions {
+    display: flex;
+    flex-direction: column-reverse;
+    grid-gap: 0.5rem;
 
-    .header-search {
-      flex: 0 1 auto;
-    }
-
-    .auth-container {
-      flex: 0 1 auto;
+    @media screen and (min-width: $screen-md) {
+      flex-direction: initial;
     }
   }
 }

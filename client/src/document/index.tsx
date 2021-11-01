@@ -156,8 +156,6 @@ export function Document(props /* TODO: define a TS interface for this */) {
         searchParams.get("retiredLocale") && <RetiredLocaleNote />
       )}
 
-      {doc.toc && !!doc.toc.length && <TOC toc={doc.toc} />}
-
       <MainContentContainer>
         {!isServer && CRUD_MODE && !props.isPreview && doc.isActive && (
           <React.Suspense fallback={<Loading message={"Loading toolbar"} />}>
@@ -171,6 +169,7 @@ export function Document(props /* TODO: define a TS interface for this */) {
         )}
         <article className="main-page-content" lang={doc.locale}>
           <h1>{doc.title}</h1>
+          {doc.toc && !!doc.toc.length && <TOC toc={doc.toc} />}
           <RenderDocumentBody doc={doc} />
         </article>
         <Metadata doc={doc} locale={locale} />

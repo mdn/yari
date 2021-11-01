@@ -1,10 +1,17 @@
 @use "../ui/base/styles" as *;
 @use "../ui/base/theme" as *;
 @use "../ui/molecules/grids/grids.scss" as *;
+@use "../ui/base/typography" as *;
 
 .main-content {
   @media screen and (min-width: $screen-md) {
     margin-top: 1rem;
+  }
+
+  article {
+    dt {
+      margin: 1rem 0;
+    }
   }
 }
 
@@ -68,11 +75,11 @@ a.page-not-created {
       background: $icon-primary url("../assets/clippy.svg") center center
         no-repeat;
       background-position: 61% 45%;
-      background-size: 16px;
+      background-size: 1rem;
       border: 1px solid $border-secondary;
       border-radius: 0.25rem;
       cursor: pointer;
-      height: 36px;
+      height: 3rem;
       margin: 0;
       padding: 0.25rem;
       position: absolute;
@@ -138,13 +145,6 @@ a.page-not-created {
     word-break: break-word;
   }
 
-  h2,
-  h3,
-  h4,
-  h5 {
-    margin-top: 0;
-  }
-
   a {
     text-decoration: underline;
 
@@ -188,8 +188,6 @@ a.page-not-created {
 
   h2,
   h3 {
-    margin-bottom: 2rem;
-
     a:link,
     a:visited {
       color: $mdn-color-dark-grey-90;
@@ -246,7 +244,7 @@ a.page-not-created {
    * https://developer.mozilla.org/en-US/docs/Web/API#Specifications
   */
   .index {
-    columns: 300px;
+    columns: 300;
     margin-bottom: 1rem;
 
     @media screen and (min-width: $screen-md) {
@@ -271,79 +269,78 @@ a.page-not-created {
   iframe:not(.sample-code-frame) {
     border: 0;
   }
-}
 
-.mdn-docs-type-heading-1 {
-  font: 600 36px/120% "Montserrat";
-  letter-spacing: -0.5px;
-  padding-bottom: 48px;
-}
-.mdn-docs-type-heading-2 {
-  font: 600 28px/120% "Montserrat";
-  letter-spacing: 0.5px;
-  padding: 32px 0px 16px 0px;
-}
-.mdn-docs-type-heading-3 {
-  font: 600 24px/120% "Montserrat";
-  letter-spacing: 0.5px;
-  padding: 32px 0px 16px 0px;
-}
-.mdn-docs-type-heading-4 {
-  font: 600 18px/120% "Montserrat";
-  letter-spacing: 0.5px;
-  padding: 32px 0px 16px 0px;
-}
-.mdn-docs-type-heading-5 {
-  font: 600 16px/120% "Montserrat";
-  letter-spacing: 1.5px;
-  padding: 32px 0px 16px 0px;
-  text-transform: uppercase;
-}
-.mdn-docs-type-heading-6 {
-  font: 600 12px/120% "Montserrat";
-  letter-spacing: 1.5px;
-  padding: 32px 0px 16px 0px;
-  text-transform: uppercase;
-}
-.mdn-docs-type-paragraph-regular {
-  font: 400 16px/200% "Inter";
-  padding-bottom: 32px;
-}
-.mdn-docs-type-paragraph-bold {
-  font: 600 16px/200% "Inter";
-}
-.mdn-docs-type-paragraph-italic {
-  font: italic 400 16px/200% "Inter";
-}
-.mdn-docs-type-paragraph-bold-italic {
-  font: italic 600 16px/200% "Inter";
-}
-.mdn-docs-type-notecard-bold {
-  font-family: Inter;
-  font-style: normal;
-  font-weight: 600;
-  font-size: 14px;
-  line-height: 175%;
-}
-.mdn-docs-type-notecard-regular {
-  font-family: Inter;
-  font-style: normal;
-  font-weight: normal;
-  font-size: 14px;
-  line-height: 175%;
-}
-.mdn-docs-type-notecard-underlined {
-  font-family: Inter;
-  font-style: normal;
-  font-weight: normal;
-  font-size: 14px;
-  line-height: 175%;
-  text-decoration-line: underline;
-}
-.mdn-docs-type-code-regular {
-  font-family: Consolas;
-  font-style: normal;
-  font-weight: normal;
-  font-size: 14px;
-  line-height: 150%;
+  h1 {
+    font: 600 3rem/120% $Montserrat;
+    letter-spacing: -0.5px;
+    padding-bottom: 4rem;
+  }
+
+  h2 {
+    font: 600 28px/120% $Montserrat;
+    letter-spacing: 0.5px;
+    padding: 2rem 0 1rem 0;
+  }
+
+  h3 {
+    font: 600 24px/120% $Montserrat;
+    letter-spacing: 0.5px;
+    padding: 2rem 0 1rem 0;
+  }
+
+  h4 {
+    font: 600 18px/120% $Montserrat;
+    letter-spacing: 0.5px;
+    padding: 2rem 0 1rem 0;
+  }
+
+  h5 {
+    font: 600 1rem/120% $Montserrat;
+    letter-spacing: 1.5px;
+    padding: 2rem 0 1rem 0;
+    text-transform: uppercase;
+  }
+
+  h6 {
+    font: 600 12px/120% $Montserrat;
+    letter-spacing: 1.5px;
+    padding: 2rem 0 1rem 0;
+    text-transform: uppercase;
+  }
+
+  p {
+    font-family: $Inter;
+    line-height: 2;
+    padding-bottom: 2rem;
+  }
+
+  .mdn-docs-type-notecard-bold {
+    font-family: Inter;
+    font-style: normal;
+    font-weight: 600;
+    font-size: 0.875rem;
+    line-height: 1.75;
+  }
+  .mdn-docs-type-notecard-regular {
+    font-family: Inter;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 0.875rem;
+    line-height: 1.75;
+  }
+  .mdn-docs-type-notecard-underlined {
+    font-family: Inter;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 0.875rem;
+    line-height: 1.75;
+    text-decoration-line: underline;
+  }
+  .mdn-docs-type-code-regular {
+    font-family: Consolas;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 0.875rem;
+    line-height: 150%;
+  }
 }

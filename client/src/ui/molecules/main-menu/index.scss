@@ -5,10 +5,10 @@
 
 ul.main-menu {
   box-sizing: border-box;
-  font-weight: bold;
   list-style: none;
   padding: 0;
   width: 100%;
+  grid-gap: 1rem;
 
   @media screen and (min-width: $screen-md) {
     align-items: center;
@@ -39,7 +39,7 @@ ul.main-menu {
 
     @media screen and (min-width: $screen-md) {
       border-radius: 0.25rem;
-      padding: 0 0.5rem;
+      padding: 0.5rem;
 
       &:hover,
       &:focus {

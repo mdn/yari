@@ -1,5 +1,6 @@
 @use "../../base/styles" as *;
 @use "../../base/theme" as *;
+@use "../../base/typography" as *;
 
 .submenu {
   background-color: $background-primary;
@@ -13,17 +14,24 @@
     border-radius: 0.25rem;
     box-shadow: $shadow-01;
     padding: 0.5rem;
+    position: absolute;
+    width: 25rem;
+    z-index: 1000;
+
+    li a {
+      padding: 1rem;
+    }
   }
 
   a,
   button {
     align-items: center;
     border-bottom: 1px solid $border-secondary;
-    color: text-primary;
+    color: $text-primary;
     display: flex;
     gap: 0.5rem;
     height: 100%;
-    padding: 0.5rem;
+    padding: 1rem;
     width: 100%;
 
     @media screen and (max-width: $screen-sm) {
@@ -33,7 +41,6 @@
     @media screen and (min-width: $screen-md) {
       border-bottom: 0;
       border-radius: 0.25rem;
-      padding: 0.5rem;
     }
 
     &:hover,
@@ -66,12 +73,12 @@
     background-color: $icon-primary;
     background-size: 10px;
     border-radius: 4px;
-    height: 16px;
+    height: 2rem;
     margin-bottom: 0.5rem;
     margin-right: 0.5rem;
     padding: 0.5rem;
     position: relative;
-    width: 16px;
+    width: 2rem;
 
     &::before {
       background-color: $background-primary;
@@ -89,8 +96,7 @@
   }
 
   .submenu-item-heading {
-    font-weight: normal;
-    margin-bottom: 0.5rem;
+    font: $mdn-ui-type-emphasis-m;
 
     @media screen and (min-width: $screen-md) {
       font-weight: bold;
@@ -103,8 +109,8 @@
 
     @media screen and (min-width: $screen-md) {
       display: block;
-      font-weight: normal;
       margin-bottom: 0;
+      font: $mdn-ui-type-body-s;
     }
   }
 

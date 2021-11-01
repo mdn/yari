@@ -3,23 +3,8 @@
 
 .logo {
   display: flex;
-  height: 32px;
-  width: 116.35px;
-
-  svg {
-    width: 100%;
-  }
-
-  @media screen and (min-width: $screen-md) {
-    height: 65px;
-    width: 200px;
-  }
-
-  @media screen and (min-width: $screen-md) {
-    flex-basis: 200px;
-    position: relative;
-    top: -2px;
-  }
+  height: 2rem;
+  width: 8rem;
 }
 
 /* DARK AND HIGH CONTRACT BLACK MODE */

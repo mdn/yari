@@ -2,26 +2,25 @@
 @use "../../base/theme" as *;
 
 .main-menu-toggle {
-  padding: 10px 20px;
   position: absolute;
-  right: 0;
-  top: 14px;
+  right: 1rem;
+  top: 1rem;
 
   @media screen and (min-width: $screen-md) {
     display: none;
   }
 }
 
-.page-header {
+.top-navigation {
   background-color: $background-primary;
   margin: 0 auto;
   max-width: 1440px;
-  padding: 0.5rem;
+  padding: 1rem;
   position: relative;
   width: 100%;
 
   @media screen and (min-width: $screen-md) {
     display: flex;
-    gap: 0.5rem;
+    gap: 1rem;
   }
 }

@@ -1,8 +1,10 @@
 @use "../../base/styles" as *;
 @use "../../base/theme" as *;
+@forward "../button/button.scss";
+
 .icon-button {
   background: none;
-  color: text-primary;
+  color: $text-primary;
 
   &::before {
     background-color: $icon-primary;
