@@ -35,7 +35,7 @@ export const Submenu = ({
       aria-labelledby={`${menuEntry.id}-button`}
     >
       {menuEntry.items &&
-        menuEntry.items.map((item) => (
+        menuEntry.items.map((item, index) => (
           <li
             key={item.url}
             role="none"
@@ -59,7 +59,7 @@ export const Submenu = ({
                 </div>
               </a>
             ) : (
-              <>
+              <div key={`${menuEntry.id}-${index}`}>
                 {item.hasIcon && <div className={item.iconClasses}></div>}
                 <div className="submenu-content-container">
                   <div className="submenu-item-heading">{item.label}</div>
@@ -72,7 +72,7 @@ export const Submenu = ({
                     <span className="submenu-item-subtext">{item.subText}</span>
                   )}
                 </div>
-              </>
+              </div>
             )}
           </li>
         ))}

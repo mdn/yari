@@ -1,14 +1,38 @@
 import React from "react";
 
 import { Button } from "../../atoms/button";
-import { Submenu } from "../submenu";
 
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 
+import { useLocale } from "../../../hooks";
+
 import "./index.scss";
+import useSWR from "swr";
 
 dayjs.extend(relativeTime);
+
+interface Notification {
+  id: number;
+  title: string;
+  text: string;
+  created: Date;
+  read: boolean;
+}
+
+type NotificationMenuItem = {
+  id: number;
+  read: boolean;
+  description?: string;
+  label: string;
+  created: Date;
+  url: string;
+};
+
+interface NotificationData {
+  items: Array<Notification>;
+  csrfmiddlewaretoken: string;
+}
 
 export const HeaderNotificationsMenu = () => {
   const previousActiveElement = React.useRef<null | HTMLButtonElement>(null);
@@ -16,52 +40,47 @@ export const HeaderNotificationsMenu = () => {
     null
   );
 
-  const notificationsMenuItems = {
-    label: "Notifications",
-    id: "my-notifications",
-    items: [
-      {
-        component: () => {
-          return (
-            <div className="submenu-content-container">
-              <div className="submenu-item-heading">Notifications</div>
-              <a href="/notifications/" className="submenu-header-action">
-                View all
-              </a>
-            </div>
-          );
-        },
-      },
-      {
-        id: "Notification1",
-        url: "/notifications/1",
-        label: "border-block",
-        description: "Now available in multiple browsers",
-        subText: dayjs(Date.now()).fromNow(),
-      },
-      {
-        id: "Notification2",
-        url: "/notifications/2",
-        label: "AggregateError",
-        description: "Available now for Deno 1.2",
-        subText: dayjs(new Date("10/19/2021")).fromNow(),
-      },
-      {
-        id: "Notification3",
-        url: "/notifications/3",
-        label: "decodeURI()",
-        description: "Deprecated for Node.js 0.09.0",
-        subText: dayjs(new Date("10/18/2021")).fromNow(),
-      },
-    ],
-  };
+  let notificationCount = 0;
+  const notificationMenuId = "my-notifications";
 
-  const notificationCount = notificationsMenuItems.items.length;
+  const locale = useLocale();
 
-  function hideSubMenuIfVisible() {
-    if (visibleSubMenuId) {
-      setVisibleSubMenuId(null);
+  const apiURL = "/api/v1/plus/notifications/?per_page=5";
+  const { data, error } = useSWR<NotificationData>(
+    apiURL,
+    async (url) => {
+      const response = await fetch(url);
+      if (!response.ok) {
+        const text = await response.text();
+        throw new Error(`${response.status} on ${url}: ${text}`);
+      }
+      return await response.json();
+    },
+    {
+      revalidateOnFocus: true,
     }
+  );
+
+  let notificationsMenuItems: Array<NotificationMenuItem> = [];
+
+  if (data && !error) {
+    const notifications = data.items.map((item) => {
+      return {
+        id: item.id,
+        url: `/${locale}/plus/notifications/${item.id}/`,
+        read: item.read,
+        label: item.text,
+        description: item.title,
+        created: item.created,
+      };
+    });
+
+    notificationsMenuItems.push(...notifications);
+
+    notificationCount = notifications.reduce(
+      (n, item) => (item.read === false ? ++n : n),
+      0
+    );
   }
 
   /**
@@ -80,11 +99,12 @@ export const HeaderNotificationsMenu = () => {
     <div className="notifications-menu">
       <Button
         ariaHasPopup={"menu"}
+        ariaControls={notificationMenuId}
         extraClasses="ghost notifications-button"
         aria-label={`You currently have ${notificationCount} notifications`}
-        ariaExpanded={notificationsMenuItems.id === visibleSubMenuId}
+        ariaExpanded={notificationMenuId === visibleSubMenuId}
         onClickHandler={(event) => {
-          toggleSubMenu(event, notificationsMenuItems.id);
+          toggleSubMenu(event, notificationMenuId);
         }}
       >
         <span className="notifications-label">Notifications</span>
@@ -97,23 +117,65 @@ export const HeaderNotificationsMenu = () => {
         </span>
       </Button>
 
-      {notificationsMenuItems.items.length > 0 ? (
-        <Submenu
-          menuEntry={notificationsMenuItems}
-          visibleSubMenuId={visibleSubMenuId}
-          onBlurHandler={hideSubMenuIfVisible}
-        />
-      ) : (
-        <div
-          className={`submenu ${notificationsMenuItems.id} ${
-            notificationsMenuItems.id === visibleSubMenuId ? "show" : ""
-          }`}
-          role="menu"
-          aria-labelledby={`${notificationsMenuItems.id}-button`}
-        >
-          <span>No notifications yet. Get started.</span>
-        </div>
-      )}
+      <ul
+        className={`notifications-submenu ${notificationMenuId} ${
+          notificationMenuId === visibleSubMenuId ? "show" : ""
+        }`}
+        role="menu"
+        aria-labelledby={`${notificationMenuId}-button`}
+      >
+        {notificationsMenuItems.length > 0 ? (
+          <>
+            <li className="notifications-submenu-header">
+              <div className="notifications-submenu-item-heading">
+                Notifications
+              </div>
+              <a
+                href={`/${locale}/plus/notifications/`}
+                className="notifications-submenu-header-action"
+              >
+                View all
+              </a>
+            </li>
+
+            {notificationsMenuItems.map((notification) => {
+              return (
+                <li key={`my-notifications-${notification.id}`}>
+                  <a
+                    href={notification.url}
+                    role="menuitem"
+                    className={`notifications-submenu-action ${
+                      !notification.read ? "unread" : ""
+                    }`}
+                  >
+                    <div className="notifications-submenu-item-heading">
+                      {notification.label}
+                    </div>
+                    {notification.description && (
+                      <p className="notifications-submenu-item-description">
+                        {notification.description}
+                      </p>
+                    )}
+
+                    <time
+                      className="notifications-submenu-item-created"
+                      dateTime={dayjs(notification.created).toISOString()}
+                    >
+                      {dayjs(notification.created).fromNow().toString()}
+                    </time>
+                  </a>
+                </li>
+              );
+            })}
+          </>
+        ) : (
+          <div className="notifications-submenu-empty-message">
+            <a href={`/${locale}/plus/notifications/`}>
+              No notifications yet. Get started.
+            </a>
+          </div>
+        )}
+      </ul>
     </div>
   );
 };

@@ -1,5 +1,7 @@
+@use "sass:color";
 @use "../../base/styles" as *;
 @use "../../base/theme" as *;
+@use "../../base/typography" as *;
 
 .notifications-menu {
   position: relative;
@@ -62,54 +64,91 @@
       display: none;
     }
   }
+}
 
-  @media screen and (max-width: $screen-sm) {
-    .my-notifications {
+.my-notifications {
+  display: none;
+  margin: 0;
+  padding: 0;
+
+  li {
+    list-style: none;
+  }
+
+  .notifications-submenu-action {
+    border-top: 1px solid $border-primary;
+    display: block;
+    padding: 1rem 2rem;
+
+    &.unread {
+      background-color: color.adjust($mdn-color-blue-50, $alpha: -0.92);
+    }
+
+    &:hover,
+    &:focus {
+      background-color: $background-secondary;
+      text-decoration: none;
+    }
+  }
+
+  li:last-child .notifications-submenu-action {
+    border-radius: 0 0 0.25rem 0.25rem;
+  }
+
+  .notifications-submenu-header,
+  .notifications-submenu-item-heading,
+  .notifications-submenu-item-description {
+    font-size: $mdn-ui-type-body-m;
+  }
+
+  .notifications-submenu-header {
+    display: flex;
+    gap: 1rem;
+    justify-content: space-between;
+    padding: 1rem 2rem;
+  }
+
+  .notifications-submenu-item-heading,
+  .notifications-submenu-item-description {
+    color: $text-primary;
+  }
+
+  .notifications-submenu-item-heading {
+    font-weight: bold;
+  }
+
+  .notifications-submenu-item-description {
+    margin-bottom: 0;
+  }
+
+  .notifications-submenu-item-created {
+    color: $text-inactive;
+    font-size: $mdn-ui-type-body-s;
+    font-weight: 600;
+  }
+
+  .notifications-submenu-empty-message {
+    font-weight: 600;
+    padding: 1rem 2rem;
+    text-align: center;
+  }
+
+  @media screen and (min-width: $screen-md) {
+    &.show {
+      background-color: $background-primary;
+      border: 1px solid $border-primary;
+      border-radius: 0.25rem;
+      box-shadow: $shadow-01;
+
+      display: block;
       left: initial;
+      min-width: 310px;
       padding: 0;
+      position: absolute;
       right: 0;
-      top: 28px;
-
-      &.submenu {
-        gap: 0;
-      }
-
-      a {
-        display: block;
-        padding: 0;
-      }
-
-      .submenu-header,
-      .submenu-item-heading,
-      .submenu-item-description {
-        font-size: 0.8125rem;
-      }
-
-      .submenu-content-container {
-        border-top: 1px solid $border-primary;
-
-        padding: 0.5rem;
-      }
-
-      .submenu-header .submenu-content-container {
-        border-top: none;
-      }
-
-      .submenu-header .submenu-content-container {
-        display: flex;
-        gap: 0.5rem;
-        justify-content: space-between;
-      }
-
-      .submenu-header-action {
-        border-radius: unset;
-        padding: unset;
-      }
-
-      // !!!
-      .submenu-header-action:hover {
-        background-color: transparent;
-      }
+      top: 32px;
+      width: max-content;
+      z-index: 1000;
     }
   }
 }
