@@ -1,11 +1,17 @@
-@use "../../minimalist/vars/layout";
+@use "sass:math";
 
+@use "../../minimalist/vars/typography" as type;
+@use "../../minimalist/vars/layout" as layout;
 @use "../../theme/index" as theme;
-@use "../../theme/themes/light-mode" as light-mode;
+
+@use "../../theme/themes/light-mode" as light;
+@use "../../theme/themes/dark-mode" as dark;
+@use "../../theme/themes/high-contrast-white";
+@use "../../theme/themes/high-contrast-black";
 
 .watch-menu {
   align-items: center;
-  border-bottom: 1px solid light-mode.$mdn-light-color-border-secondary;
+  border-bottom: 1px solid light.$mdn-light-color-border-secondary;
   display: flex;
   gap: theme.$base-spacing;
   padding: theme.$base-spacing * 2;
@@ -19,5 +25,70 @@
      in client/src/ui/atoms/icon-button/index.scss */
   &::before {
     mask-image: url("~@mdn/dinocons/plus/watch.svg");
+  }
+}
+
+.watch-menu-button {
+  background-color: transparent;
+  border-top: 1px solid light.$mdn-light-color-border-primary;
+  padding: 0;
+
+  &-wrap {
+    display: flex;
+    flex-direction: column;
+    padding: math.div(layout.$base-spacing, 2);
+    padding-left: layout.$base-spacing * 1.5;
+  }
+
+  &-label,
+  &-text {
+    font-size: type.$small-font-size;
+    line-height: 16px;
+  }
+
+  &-label {
+    font-weight: bold;
+    margin-bottom: theme.$base-spacing;
+  }
+
+  &-text {
+    color: light.$mdn-light-color-text-primary;
+  }
+}
+
+.watch-submenu {
+  display: none;
+  margin: 0;
+  padding: 0;
+
+  &-header {
+    display: none;
+  }
+
+  @media #{layout.$mq-small-desktop-and-up} {
+    &.show {
+      background-color: light.$mdn-light-color-background-primary;
+      border: 1px solid light.$mdn-light-color-border-primary;
+      border-radius: theme.$default-border-radius * 2;
+      box-shadow: light.$mdn-light-color-shadow01;
+
+      display: flex;
+      flex-direction: column;
+      left: initial;
+      padding: 0;
+      position: absolute;
+      right: 0;
+      top: 32px;
+      width: 316px;
+      z-index: layout.$bring-to-front;
+    }
+  }
+
+  .watch-submenu-header {
+    display: block;
+    font-size: type.$small-font-size;
+    font-weight: 600;
+    padding: theme.$base-spacing theme.$base-spacing * 2;
+    text-align: center;
   }
 }

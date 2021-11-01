@@ -35,13 +35,14 @@ interface NotificationData {
 }
 
 export const HeaderNotificationsMenu = () => {
+  const menuId = "my-notifications";
+
   const previousActiveElement = React.useRef<null | HTMLButtonElement>(null);
   const [visibleSubMenuId, setVisibleSubMenuId] = React.useState<string | null>(
     null
   );
 
   let notificationCount = 0;
-  const notificationMenuId = "my-notifications";
 
   const locale = useLocale();
 
@@ -84,12 +85,10 @@ export const HeaderNotificationsMenu = () => {
   }
 
   /**
-   * Show and hide submenus in the main menu, send GA events and updates
-   * the ARIA state.
-   * @param {Object} event - The event that triggered the function.
+   * Show and hide submenus in the main menu
    * @param {String} menuEntryId - The current top-level menu item id
    */
-  function toggleSubMenu(event, menuEntryId) {
+  function toggleSubMenu(menuEntryId) {
     // store the current activeElement
     previousActiveElement.current = document.activeElement as HTMLButtonElement;
     setVisibleSubMenuId(visibleSubMenuId === menuEntryId ? null : menuEntryId);
@@ -99,12 +98,12 @@ export const HeaderNotificationsMenu = () => {
     <div className="notifications-menu">
       <Button
         ariaHasPopup={"menu"}
-        ariaControls={notificationMenuId}
+        ariaControls={menuId}
         extraClasses="ghost notifications-button"
         aria-label={`You currently have ${notificationCount} notifications`}
-        ariaExpanded={notificationMenuId === visibleSubMenuId}
-        onClickHandler={(event) => {
-          toggleSubMenu(event, notificationMenuId);
+        ariaExpanded={menuId === visibleSubMenuId}
+        onClickHandler={() => {
+          toggleSubMenu(menuId);
         }}
       >
         <span className="notifications-label">Notifications</span>
@@ -118,11 +117,11 @@ export const HeaderNotificationsMenu = () => {
       </Button>
 
       <ul
-        className={`notifications-submenu ${notificationMenuId} ${
-          notificationMenuId === visibleSubMenuId ? "show" : ""
+        className={`notifications-submenu ${menuId} ${
+          menuId === visibleSubMenuId ? "show" : ""
         }`}
         role="menu"
-        aria-labelledby={`${notificationMenuId}-button`}
+        aria-labelledby={`${menuId}-button`}
       >
         {notificationsMenuItems.length > 0 ? (
           <>
@@ -140,7 +139,7 @@ export const HeaderNotificationsMenu = () => {
 
             {notificationsMenuItems.map((notification) => {
               return (
-                <li key={`my-notifications-${notification.id}`}>
+                <li key={`${menuId}-${notification.id}`}>
                   <a
                     href={notification.url}
                     role="menuitem"
