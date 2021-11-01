@@ -18,10 +18,25 @@
     flex-direction: column;
   }
 
+  .main-content {
+    padding: 0 1rem;
+  }
+
+  .sidebar {
+    display: none;
+    @media screen and (min-width: $screen-md) {
+      display: flex;
+    }
+  }
+
   /* Contains the sidebar and article content */
   .article-wrapper {
-    display: grid;
-    grid-template-columns: 1fr 3fr;
+    display: flex;
+
+    @media screen and (min-width: $screen-md) {
+      display: grid;
+      grid-template-columns: 1fr 3fr;
+    }
 
     .content-wrapper {
       display: flex;
@@ -39,6 +54,10 @@
             top: 1rem;
           }
         }
+      }
+
+      .main-page-content {
+        max-width: 48rem;
       }
     }
   }
