@@ -19,7 +19,7 @@ PyGithub = "^1.55"
 unidiff = "^0.7.0"
 
 [tool.poetry.dev-dependencies]
-black = "^21.9b0"
+black = "^21.10b0"
 flake8 = "^3.9.2"
 pytest = "^6.2.5"
 
