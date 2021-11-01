@@ -1,5 +1,7 @@
-// We're assuming that code snippets are so common that it's OK to always
-// include them in every page.
-@use "./ui/base/styles" as *;
-@use "./ui/base/theme" as *;
-@use "./ui/molecules/grids/grids.scss" as *;
+:root {
+  body {
+    font-size: 16px;
+    font-family: Inter, sans-serif;
+    line-height: 1.2;
+  }
+}
