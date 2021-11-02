@@ -158,7 +158,7 @@
     "ignore-loader": "^0.1.2",
     "jest-junit-reporter": "^1.1.0",
     "jest-puppeteer": "6.0.0",
-    "jsdom": "^18.0.0",
+    "jsdom": "^18.0.1",
     "node-dev": "7.1.0",
     "pegjs": "^0.10.0",
     "prettier": "^2.4.1",
