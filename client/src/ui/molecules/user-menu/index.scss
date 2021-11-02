@@ -1,9 +1,5 @@
-@use "sass:color";
-
-@use "../../minimalist/vars/layout";
-
-@use "../../theme/index" as theme;
-@use "../../theme/themes/light-mode" as light-mode;
+@use "../../base/styles" as *;
+@use "../../base/theme" as *;
 
 .user-menu {
   position: relative;
@@ -12,15 +8,15 @@
     align-items: center;
     background: none;
     border-radius: 50%;
-    color: light-mode.$mdn-light-color-text-secondary;
+    color: $text-secondary;
     display: flex;
-    margin: theme.$base-spacing 0;
+    margin: 0.25rem;
     padding: 0;
     position: relative;
     width: 100%;
 
-    @media #{layout.$mq-small-desktop-and-up} {
-      border: 5px solid theme.$white;
+    @media screen and (min-width: $screen-md) {
+      border: 5px solid white;
     }
 
     &[aria-haspopup="menu"] {
@@ -30,16 +26,16 @@
       }
     }
 
-    @media #{layout.$mq-small-desktop-and-up} {
+    @media screen and (min-width: $screen-md) {
       &:focus {
-        border: 5px solid color.adjust(theme.$mdn-blue400, $alpha: -0.6);
+        box-shadow: $focus-01;
       }
     }
   }
 }
 
 .submenu.my-mdn-plus.show {
-  @media #{layout.$mq-small-desktop-and-up} {
+  @media screen and (min-width: $screen-md) {
     left: initial;
     right: 0;
     top: 50px;
@@ -47,11 +43,11 @@
 
   a,
   .usermenu-email-desktop {
-    padding: theme.$base-spacing;
+    padding: 0.5rem;
   }
 
   .usermenu-email-desktop {
-    border-bottom: 1px solid light-mode.$mdn-light-color-border-primary;
+    border-bottom: 1px solid $border-primary;
   }
 
   .submenu-item-heading {
@@ -62,12 +58,12 @@
 .show-desktop-inline-block {
   display: none;
 
-  @media #{layout.$mq-small-desktop-and-up} {
+  @media screen and (min-width: $screen-md) {
     display: inline-block;
   }
 }
 
-@media #{layout.$mq-small-desktop-and-up} {
+@media screen and (min-width: $screen-md) {
   .hide-desktop {
     display: none;
   }

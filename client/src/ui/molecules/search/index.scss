@@ -1,24 +1,16 @@
-@use "sass:math";
-
-@use "../../minimalist/vars/layout";
-@use "../../minimalist/vars/typography";
-
-@use "../../theme/index" as theme;
-@use "../../theme/themes/light-mode" as light;
-@use "../../theme/themes/dark-mode" as dark;
-@use "../../theme/themes/high-contrast-white";
-@use "../../theme/themes/high-contrast-black";
+@use "../../base/styles" as *;
+@use "../../base/theme" as *;
 
 .header-search {
   .search-widget {
-    margin: theme.$base-spacing 0;
+    margin: 0.25rem;
     position: relative;
     width: 100%;
 
-    @media #{layout.$mq-large-desktop-and-up} {
+    @media screen and (min-width: $screen-md) {
       align-items: center;
       display: flex;
-      gap: theme.$base-spacing;
+      gap: 0.5rem;
       margin: 0;
     }
   }
@@ -26,42 +18,41 @@
   input.search-input-field {
     // make webkit play nice with search input types
     -webkit-appearance: none; /* stylelint-disable-line property-no-vendor-prefix */
-    border: 1px solid light.$mdn-light-color-border-primary;
-    border-radius: theme.$default-border-radius;
-    color: theme.$mdn-neutral900;
+    border: 1px solid $border-primary;
+    border-radius: 0.25rem;
+    color: $background-primary;
     min-width: 60px;
-    padding: theme.$base-spacing (theme.$base-spacing * 2) theme.$base-spacing
-      46px;
+    padding: 0.5rem 0.5rem 0.5rem 2.5rem;
     width: 100%;
 
     &:focus {
-      outline: light.$mdn-light-color-border-primary;
+      outline: $border-primary;
     }
   }
 
   .server-error {
-    color: theme.$mdn-red700;
+    color: $icon-critical;
     margin: 0;
   }
 
   .search-results {
-    background-color: theme.$white;
-    border: 2px solid theme.$mdn-neutral900;
-    border-radius: 0 0 theme.$base-spacing theme.$base-spacing;
+    background-color: white;
+    border: 2px solid $background-primary;
+    border-radius: 0.25rem;
     border-top: 0;
-    box-shadow: 0 2px theme.$base-spacing 0 theme.$mdn-neutral500;
+    box-shadow: $shadow-01;
     left: 0;
     position: absolute;
     top: 42px;
     width: 100%;
-    z-index: layout.$top-layer;
+    z-index: 1000;
 
     .indexing-warning {
-      color: theme.$mdn-yellow400;
+      color: $icon-warning;
     }
 
     div {
-      padding: theme.$base-spacing;
+      padding: 0.5rem;
     }
 
     .nothing-found {
@@ -69,17 +60,17 @@
     }
 
     .fuzzy-engaged {
-      font-size: typography.$tiny-text;
+      font-size: 0.8125rem;
     }
 
     .result-item {
-      border-bottom: 1px solid theme.$mdn-neutral100;
+      border-bottom: 1px solid $border-primary;
       word-break: break-word;
     }
 
     .result-item:hover,
     .result-item.highlight {
-      background-color: theme.$mdn-neutral100;
+      background-color: $background-tertiary;
     }
 
     .result-item:hover,
@@ -92,7 +83,7 @@
     }
 
     mark {
-      background-color: theme.$mdn-yellow200;
+      background-color: $icon-warning;
     }
 
     small {
@@ -104,7 +95,7 @@
     }
 
     div.searchindex-error {
-      color: theme.$mdn-red700;
+      color: $icon-critical;
     }
   }
 }
@@ -114,23 +105,22 @@
 }
 
 .search-button {
-  height: 44px;
-  left: 1px;
-  padding: 16px;
-  position: absolute;
-  top: 1px;
-  width: 42px;
+  margin-left: 0.25rem;
+  position: relative;
+  top: -2rem;
+
+  @media screen and (min-width: $screen-md) {
+    position: absolute;
+  }
 
   &::before {
-    background-color: light.$mdn-light-color-icon-primary;
+    background-color: $icon-primary;
     background-size: 16px;
     content: "";
     display: block;
     height: 16px;
-    left: -3px;
     mask-image: url("~@mdn/dinocons/general/search.svg");
     position: relative;
-    top: -1px;
     width: 16px;
   }
 }
@@ -138,14 +128,14 @@
 .close-search-button {
   display: none;
 
-  @media #{layout.$mq-large-desktop-and-up} {
+  @media screen and (min-width: $screen-md) {
     background: none;
-    border-radius: theme.$default-border-radius;
+    border-radius: 0.25rem;
     display: block;
-    padding: theme.$base-spacing * 2;
+    padding: 0.5rem;
 
     &::before {
-      background-color: light.$mdn-light-color-icon-primary;
+      background-color: $icon-primary;
       background-size: 12px;
       content: "";
       display: block;
@@ -162,145 +152,7 @@
   &:hover,
   &:focus,
   &:active {
-    background-color: light.$mdn-light-color-button-secondary-hover;
-    outline: theme.$white;
-  }
-}
-
-/* DARK MODE */
-.dark {
-  .header-search {
-    input.search-input-field {
-      border-color: dark.$mdn-dark-color-border-primary;
-      color: theme.$mdn-neutral900;
-
-      &:focus {
-        outline: dark.$mdn-dark-color-border-primary;
-      }
-    }
-  }
-
-  .search-button {
-    &::before {
-      background-color: dark.$mdn-dark-color-icon-secondary;
-    }
-
-    &:hover,
-    &:focus,
-    &:active {
-      background-color: dark.$mdn-dark-color-button-secondary-hover;
-      outline: theme.$white;
-
-      &::before {
-        background-color: dark.$mdn-dark-color-icon-primary;
-      }
-    }
-  }
-
-  .close-search-button {
-    &:hover,
-    &:focus,
-    &:active {
-      background-color: dark.$mdn-dark-color-button-secondary-hover;
-      outline: theme.$white;
-    }
-
-    @media #{layout.$mq-large-desktop-and-up} {
-      &::before {
-        background-color: dark.$mdn-dark-color-icon-primary;
-      }
-    }
-  }
-}
-
-/* HIGH CONTRAST WHITE MODE */
-.high-contrast-white {
-  .header-search {
-    input.search-input-field {
-      border-color: high-contrast-white.$mdn-high-contrast-white-color-border-primary;
-      color: theme.$mdn-neutral900;
-
-      &:focus {
-        outline: high-contrast-white.$mdn-high-contrast-white-color-border-primary;
-      }
-    }
-  }
-
-  .search-button {
-    &::before {
-      background-color: high-contrast-white.$mdn-high-contrast-white-color-icon-secondary;
-    }
-
-    &:hover,
-    &:focus,
-    &:active {
-      background-color: high-contrast-white.$mdn-high-contrast-white-color-button-secondary-hover;
-      outline: theme.$white;
-
-      &::before {
-        background-color: high-contrast-white.$mdn-high-contrast-white-color-icon-primary;
-      }
-    }
-  }
-
-  .close-search-button {
-    &:hover,
-    &:focus,
-    &:active {
-      background-color: high-contrast-white.$mdn-high-contrast-white-color-button-secondary-hover;
-      outline: theme.$white;
-    }
-
-    @media #{layout.$mq-large-desktop-and-up} {
-      &::before {
-        background-color: high-contrast-white.$mdn-high-contrast-white-color-icon-primary;
-      }
-    }
-  }
-}
-
-/* HIGH CONTRAST BLACK MODE */
-.high-contrast-black {
-  .header-search {
-    input.search-input-field {
-      border-color: high-contrast-black.$mdn-high-contrast-black-color-border-primary;
-      color: theme.$mdn-neutral900;
-
-      &:focus {
-        outline: high-contrast-black.$mdn-high-contrast-black-color-border-primary;
-      }
-    }
-  }
-
-  .search-button {
-    &::before {
-      background-color: high-contrast-black.$mdn-high-contrast-black-color-icon-secondary;
-    }
-
-    &:hover,
-    &:focus,
-    &:active {
-      background-color: high-contrast-black.$mdn-high-contrast-black-color-button-secondary-hover;
-      outline: theme.$black;
-
-      &::before {
-        background-color: high-contrast-black.$mdn-high-contrast-black-color-icon-primary;
-      }
-    }
-  }
-
-  .close-search-button {
-    &:hover,
-    &:focus,
-    &:active {
-      background-color: high-contrast-black.$mdn-high-contrast-black-color-button-secondary-hover;
-      outline: theme.$black;
-    }
-
-    @media #{layout.$mq-large-desktop-and-up} {
-      &::before {
-        background-color: high-contrast-black.$mdn-high-contrast-black-color-icon-primary;
-      }
-    }
+    background-color: $button-secondary-hover;
+    outline: white;
   }
 }

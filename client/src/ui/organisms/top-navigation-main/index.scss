@@ -1,0 +1,55 @@
+@use "../../base/styles" as *;
+@use "../../base/theme" as *;
+
+.top-navigation-main {
+  display: none;
+  left: 0;
+  padding: 1rem;
+  position: absolute;
+  top: 4rem;
+  width: 100%;
+  z-index: 1000;
+  justify-content: space-between;
+
+  a {
+    padding: 0.5rem 1rem;
+  }
+
+  &.show-grid {
+    background-color: $background-primary;
+    display: flex;
+    flex-direction: column-reverse;
+  }
+
+  @media screen and (min-width: $screen-md) {
+    align-items: center;
+    display: flex;
+    gap: 0.5rem;
+    left: inherit;
+    padding: 0;
+    position: initial;
+    top: inherit;
+    z-index: inherit;
+  }
+
+  .top-navigation-actions {
+    display: flex;
+    flex-direction: column-reverse;
+    grid-gap: 0.5rem;
+
+    @media screen and (min-width: $screen-md) {
+      flex-direction: initial;
+    }
+  }
+}
+
+/* displays elements in container in `column-reverse` flow on
+   mobile and then switches to `row` on desktop */
+.show-reverse-to-row {
+  display: flex;
+  flex-flow: column-reverse;
+
+  @media screen and (min-width: $screen-md) {
+    flex-flow: row;
+  }
+}

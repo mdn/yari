@@ -33,7 +33,7 @@ export const ArticleActionsContainer = ({ doc }: { doc: Doc }) => {
 
   React.useEffect(() => {
     if (typeof window !== "undefined" && window.matchMedia) {
-      const mql = window.matchMedia("(max-width: 63.9375em)");
+      const mql = window.matchMedia("(max-width: 768px)");
 
       // add an event listener to report as the viewport changes
       mql.addEventListener("change", updateViewportState);

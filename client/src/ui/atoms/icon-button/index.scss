@@ -1,15 +1,13 @@
-@use "../../theme/index" as theme;
-@use "../../theme/themes/light-mode" as light;
-@use "../../theme/themes/dark-mode" as dark;
-@use "../../theme/themes/high-contrast-white";
-@use "../../theme/themes/high-contrast-black";
+@use "../../base/styles" as *;
+@use "../../base/theme" as *;
+@forward "../button/button.scss";
 
 .icon-button {
   background: none;
-  color: light.$mdn-light-color-text-primary;
+  color: $text-primary;
 
   &::before {
-    background-color: light.$mdn-light-color-icon-primary;
+    background-color: $icon-primary;
     background-position: center center;
     background-repeat: no-repeat;
     background-size: 16px;
@@ -38,10 +36,10 @@
 
 .article-actions-close {
   align-items: center;
-  border-bottom: 1px solid light.$mdn-light-color-border-secondary;
+  border-bottom: 1px solid $border-secondary;
   display: flex;
-  gap: theme.$base-spacing;
-  padding: theme.$base-spacing * 2;
+  gap: 0.5rem;
+  padding: 0.5rem;
   width: 100%;
 
   &::before {
@@ -61,39 +59,6 @@
       background-size: 16px;
       height: 16px;
       mask-image: url("~@mdn/dinocons/navigation/menu-close.svg");
-    }
-  }
-}
-
-/* DARK MODE */
-.dark {
-  .icon-button {
-    color: dark.$mdn-dark-color-text-primary;
-
-    &::before {
-      background-color: dark.$mdn-dark-color-icon-primary;
-    }
-  }
-}
-
-/* HIGH CONTRAST WHITE MODE */
-.high-contrast-white {
-  .icon-button {
-    color: high-contrast-white.$mdn-high-contrast-white-color-text-primary;
-
-    &::before {
-      background-color: high-contrast-white.$mdn-high-contrast-white-color-icon-primary;
-    }
-  }
-}
-
-/* HIGH CONTRAST BLACK MODE */
-.high-contrast-black {
-  .icon-button {
-    color: high-contrast-black.$mdn-high-contrast-black-color-text-primary;
-
-    &::before {
-      background-color: high-contrast-black.$mdn-high-contrast-black-color-icon-primary;
     }
   }
 }

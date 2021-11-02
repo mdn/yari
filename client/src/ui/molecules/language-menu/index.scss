@@ -1,35 +1,33 @@
-@use "sass:math";
-
-@import "~@mdn/minimalist/sass/vars/layout";
-@import "~@mdn/minimalist/sass/vars/typography";
+@use "../../base/styles" as *;
+@use "../../base/theme" as *;
 
 .language-menu {
-  margin-top: $base-spacing;
+  margin-top: 1rem;
 
   fieldset {
     padding: 0;
   }
 
   legend {
-    font-size: $medium-font-size;
+    font-size: 1rem;
     font-weight: bold;
 
-    @media #{$mq-small-desktop-and-up} {
-      font-size: $medium-font-size;
+    @media screen and (min-width: $screen-md) {
+      font-size: 1rem;
     }
   }
 
   select {
     display: inline-block;
-    margin-right: math.div($base-spacing, 3);
-    margin-bottom: math.div($base-spacing, 3);
+    margin-right: 1rem;
+    margin-bottom: 1rem;
 
-    @media #{$mq-tablet-and-up} {
+    @media screen and (max-width: $screen-sm) {
       display: inline-block;
       vertical-align: text-top;
     }
 
-    @media #{$mq-small-desktop-and-up} {
+    @media screen and (min-width: $screen-md) {
       width: inherit;
     }
   }

@@ -1,17 +1,14 @@
-@use "sass:math";
-
-@import "~@mdn/minimalist/sass/vars/mdn-web-docs-palette";
-@import "~@mdn/minimalist/sass/vars/layout";
-@import "~@mdn/minimalist/sass/vars/typography";
+@use "../../base/styles" as *;
+@use "../../base/theme" as *;
 
 .page-footer-logo {
-  margin-bottom: $base-spacing;
+  margin-bottom: 1rem;
 }
 
 .page-footer {
-  background-color: $mdn-neutral900;
-  color: $text-color-inverted;
-  padding: ($base-spacing * 2) $base-spacing;
+  background-color: $mdn-color-dark-grey-90;
+  color: white;
+  padding: (1rem * 2) 1rem;
   position: relative;
 
   .content-container {
@@ -20,7 +17,7 @@
   }
 
   a {
-    color: $text-color-inverted;
+    color: white;
   }
 
   ul {
@@ -36,7 +33,7 @@
     display: flex;
 
     h4 {
-      font-size: $small-medium-font-size;
+      font-size: 1rem;
       font-weight: normal;
       margin: inherit;
       margin-right: 10px;
@@ -48,7 +45,7 @@
     }
 
     ul {
-      padding-inline-start: math.div($base-spacing, 4);
+      padding-inline-start: 0.25rem;
     }
   }
 
@@ -80,15 +77,15 @@
   .footer-license {
     margin: 10px 0;
 
-    @media #{$mq-tablet-and-up} {
-      border-top: 1px solid $mdn-neutral100;
+    @media screen and (max-width: $screen-sm) {
+      border-top: 1px solid $border-secondary;
       margin: 50px 0 30px;
       padding: 30px 0 0;
     }
   }
 
   .footer-legal {
-    @media #{$mq-tablet-and-up} {
+    @media screen and (max-width: $screen-sm) {
       padding-bottom: 20px;
     }
 
@@ -122,7 +119,7 @@
     .link-list-mdn {
       grid-row: 2/3;
 
-      @media #{$mq-tablet-and-up} {
+      @media screen and (max-width: $screen-sm) {
         grid-column: 1/2;
       }
     }
@@ -130,7 +127,7 @@
     .link-list-moz {
       grid-row: 3/4;
 
-      @media #{$mq-tablet-and-up} {
+      @media screen and (max-width: $screen-sm) {
         grid-column: 2/3;
         grid-row: 2/3;
       }

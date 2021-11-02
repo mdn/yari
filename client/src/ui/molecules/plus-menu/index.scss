@@ -1,21 +1,21 @@
 @use "sass:color";
-
-@use "../../theme/index" as theme;
+@use "../../base/styles" as *;
+@use "../../base/theme" as *;
 
 .submenu.mdn-plus {
   a:hover,
   a:focus {
-    background-color: color.adjust(theme.$mdn-green700, $alpha: -0.9);
+    background-color: color.adjust($accent-primary, $alpha: -0.9);
   }
 }
 
 .submenu-icon {
   &.bookmarks-icon,
   &.notifications-icon {
-    background-color: theme.$mdn-green700;
+    background-color: $accent-primary;
 
     &::before {
-      background-color: theme.$white;
+      background-color: white;
     }
   }
 }

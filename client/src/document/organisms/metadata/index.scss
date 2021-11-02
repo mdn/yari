@@ -1,16 +1,15 @@
-@import "~@mdn/minimalist/sass/vars/mdn-web-docs-palette";
-@import "~@mdn/minimalist/sass/vars/layout";
-@import "~@mdn/minimalist/sass/vars/typography";
+@use "../../../ui/base/styles" as *;
+@use "../../../ui/base/theme" as *;
 
 .metadata {
-  background-color: $mdn-neutral100;
-  margin: ($base-spacing * 2) 0;
-  padding: $base-spacing;
+  background-color: $background-secondary;
+  margin: (1rem * 2) 0;
+  padding: 1rem;
 }
 
 .metadata-content-container {
   margin: 0 auto;
-  max-width: $max-width-default;
+  max-width: 1440px;
 
   a:link,
   a:visited {
@@ -18,7 +17,7 @@
   }
 
   .on-github {
-    margin-bottom: $base-spacing;
+    margin-bottom: 1rem;
 
     ul li {
       margin-bottom: 8px;
