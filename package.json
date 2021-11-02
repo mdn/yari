@@ -172,7 +172,7 @@
     "react-router-dom": "6.0.0-beta.2",
     "react-scripts": "4.0.3",
     "rehype-minify-whitespace": "^4.0.5",
-    "remark-prettier": "^1.2.0",
+    "remark-prettier": "^1.3.0",
     "rough-notation": "0.5.1",
     "sass": "^1.43.4",
     "source-map-explorer": "^2.5.2",
