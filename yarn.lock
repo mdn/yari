@@ -13112,7 +13112,7 @@ mdast-util-to-markdown@^0.5.0:
     repeat-string "^1.0.0"
     zwitch "^1.0.0"
 
-mdast-util-to-markdown@^0.6.0, mdast-util-to-markdown@^0.6.1, mdast-util-to-markdown@^0.6.5, mdast-util-to-markdown@~0.6.0:
+mdast-util-to-markdown@^0.6.0, mdast-util-to-markdown@^0.6.1, mdast-util-to-markdown@~0.6.0:
   version "0.6.5"
   resolved "https://registry.yarnpkg.com/mdast-util-to-markdown/-/mdast-util-to-markdown-0.6.5.tgz#b33f67ca820d69e6cc527a93d4039249b504bebe"
   integrity sha512-XeV9sDE7ZlOQvs45C9UKMtfTcctcaj/pGwH8YLbMHoMOXNNCn2LsqVQOqrF1+/NU8lKDAqozme9SCXWyo9oAcQ==
@@ -15556,7 +15556,7 @@ prettier-linter-helpers@^1.0.0:
   dependencies:
     fast-diff "^1.1.2"
 
-prettier-plugin-packagejson@^2.2.10, prettier-plugin-packagejson@^2.2.12:
+prettier-plugin-packagejson@^2.2.12:
   version "2.2.12"
   resolved "https://registry.yarnpkg.com/prettier-plugin-packagejson/-/prettier-plugin-packagejson-2.2.12.tgz#9d61b63c8926dc1257774837534547ce91dc5c8d"
   integrity sha512-dmZatncTp1Ehn1pomiBBNgkhTBDsuTnuv9mne6a7bVALf2Z0EwYIfhJ3m1Suj5XJxH+OKWSy7sER7Ag+4Vq7gA==
@@ -16621,14 +16621,14 @@ remark-parse@^9.0.0:
   dependencies:
     mdast-util-from-markdown "^0.8.0"
 
-remark-prettier@^1.2.0:
-  version "1.2.0"
-  resolved "https://registry.yarnpkg.com/remark-prettier/-/remark-prettier-1.2.0.tgz#6083d7282334d27feb8ef9733df22f6a886f13ef"
-  integrity sha512-ijOcZDeDDfSKKPY157l39gzV2lwtRTwrn+w++QGika0X8hZkj+lzHXHnD2vt1QZP6kPm0Bc/y8zYOSPTZ22INg==
+remark-prettier@^1.3.0:
+  version "1.3.0"
+  resolved "https://registry.yarnpkg.com/remark-prettier/-/remark-prettier-1.3.0.tgz#c04308c9b567a7443248a9f9fb907cad26b9b605"
+  integrity sha512-uMyV1Om90Hg1zNBkL4pNAq7j3gGEvAaE0CD+MSQsuaWSr+T2wdm3hOeTApegqqvz4fAaNzbzP1i6x/fG7m+VwQ==
   dependencies:
-    mdast-util-to-markdown "^0.6.5"
+    mdast-util-to-markdown "^0.6.0"
     prettier-linter-helpers "^1.0.0"
-    prettier-plugin-packagejson "^2.2.10"
+    vfile-location "^3.0.0"
 
 remark-rehype@^8.1.0:
   version "8.1.0"
@@ -19265,12 +19265,7 @@ vendors@^1.0.0:
   resolved "https://registry.yarnpkg.com/vendors/-/vendors-1.0.4.tgz#e2b800a53e7a29b93506c3cf41100d16c4c4ad8e"
   integrity sha512-/juG65kTL4Cy2su4P8HjtkTxk6VmJDiOPBufWniqQ6wknac6jNiXS9vU+hO3wgusiyqWlzTbVHi0dyJqRONg3w==
 
-vfile-location@^3.0.0:
-  version "3.0.1"
-  resolved "https://registry.yarnpkg.com/vfile-location/-/vfile-location-3.0.1.tgz#d78677c3546de0f7cd977544c367266764d31bb3"
-  integrity sha512-yYBO06eeN/Ki6Kh1QAkgzYpWT1d3Qln+ZCtSbJqFExPl1S3y2qqotJQXoh6qEvl/jDlgpUJolBn3PItVnnZRqQ==
-
-vfile-location@^3.2.0:
+vfile-location@^3.0.0, vfile-location@^3.2.0:
   version "3.2.0"
   resolved "https://registry.yarnpkg.com/vfile-location/-/vfile-location-3.2.0.tgz#d8e41fbcbd406063669ebf6c33d56ae8721d0f3c"
   integrity sha512-aLEIZKv/oxuCDZ8lkJGhuhztf/BW4M+iHdCwglA/eWc+vtuRFJj8EtgceYFX4LRjOhCAAiNHsKGssC6onJ+jbA==
