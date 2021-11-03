@@ -1,22 +1,8 @@
 @use "../../base/styles" as *;
 @use "../../base/theme" as *;
 
-.page-wrapper {
-  grid-template-columns: 100%;
-}
-
 .standard-page {
   max-width: inherit;
-
-  .page-header,
-  .page-content-container {
-  }
-
-  .page-header {
-  }
-
-  .titlebar-container {
-  }
 
   .page-content-container {
     display: grid;
@@ -27,9 +13,11 @@
 
   @media screen and (min-width: $screen-md) {
     .page-content-container {
-      margin: 0 auto;
-      max-width: 1440px;
-      width: 100%;
+      .wrapper {
+        margin: 0 auto;
+        max-width: 1440px;
+        width: 100%;
+      }
     }
   }
 }
