@@ -13,14 +13,18 @@
 
 .top-navigation {
   background-color: $background-primary;
-  margin: 0 auto;
-  max-width: 1440px;
-  padding: 1rem;
   position: relative;
   width: 100%;
 
-  @media screen and (min-width: $screen-md) {
+  .wrapper {
+    max-width: 1440px;
+    padding: 1rem;
+    margin: 0 auto;
     display: flex;
-    gap: 1rem;
+    align-items: center;
+
+    @media screen and (min-width: $screen-md) {
+      gap: 1rem;
+    }
   }
 }

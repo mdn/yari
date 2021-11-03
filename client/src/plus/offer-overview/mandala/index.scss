@@ -1,0 +1,99 @@
+.mandala {
+  animation: mandala-rotate 500s infinite;
+  position: relative;
+  left: -100px;
+}
+
+$mandala-primary: #42435a;
+$mandala-accent-1: #ff9aa2;
+$mandala-accent-2: #3fe1b0;
+$mandala-accent-3: #ffff98;
+$mandala-accent-4: #b1b1bc;
+$mandala-animation: mandala-color-change 50s infinite;
+
+.mandala-accent-1,
+.mandala-accent-2,
+.mandala-accent-3,
+.mandala-accent-4 {
+  animation: $mandala-animation;
+  animation-timing-function: ease-in-out;
+}
+
+.mandala-primary {
+  fill: $mandala-primary;
+}
+
+.mandala-accent-1 {
+  fill: $mandala-accent-1;
+  animation-delay: -15s;
+}
+
+.mandala-accent-2 {
+  fill: $mandala-accent-2;
+
+  animation-delay: -20s;
+}
+
+.mandala-accent-3 {
+  fill: $mandala-accent-3;
+  animation-delay: -30s;
+}
+
+.mandala-accent-4 {
+  fill: $mandala-accent-4;
+  animation-delay: -40s;
+}
+
+@keyframes mandala-color-change {
+  0% {
+    fill: $mandala-primary;
+  }
+  10% {
+    fill: $mandala-primary;
+  }
+  15% {
+    fill: $mandala-accent-1;
+  }
+  20% {
+    fill: $mandala-primary;
+  }
+  25% {
+    fill: $mandala-primary;
+  }
+  30% {
+    fill: $mandala-accent-2;
+  }
+  35% {
+    fill: $mandala-primary;
+  }
+  40% {
+    fill: $mandala-primary;
+  }
+  50% {
+    fill: $mandala-accent-3;
+  }
+  55% {
+    fill: $mandala-primary;
+  }
+  60% {
+    fill: $mandala-primary;
+  }
+  65% {
+    fill: $mandala-accent-4;
+  }
+  70% {
+    fill: $mandala-primary;
+  }
+  100% {
+    fill: $mandala-primary;
+  }
+}
+
+@keyframes mandala-rotate {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}

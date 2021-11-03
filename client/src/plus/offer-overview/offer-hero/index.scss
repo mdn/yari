@@ -1,0 +1,114 @@
+$text-stroke-width: 2px;
+
+.offer-hero {
+  max-width: 900px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: 64px 16px;
+  color: #141422;
+  margin: 0 auto;
+  height: 350px;
+  overflow: hidden;
+  -moz-transition: all 0.5s ease-in-out;
+  transition: all 0.5s ease-in-out;
+
+  @media screen and (min-width: 426px) {
+    padding: 64px;
+  }
+
+  .offer-hero-wrapper {
+    max-width: 512px;
+    z-index: 1;
+
+    h1 {
+      font-family: Montserrat;
+      font-style: normal;
+      font-weight: 600;
+      font-size: 48px;
+      line-height: 120%;
+      letter-spacing: -0.5px;
+      margin: 0px;
+
+      span {
+        display: inline-flex;
+        background: #b3ffe3;
+        padding: 2px 8px;
+      }
+
+      span:first-child {
+        margin-bottom: 8px;
+      }
+    }
+
+    h2 {
+      font-family: Inter;
+      font-style: normal;
+      font-weight: 600;
+      font-size: 16px;
+      line-height: 175%;
+      margin: 16px 0px;
+      color: white;
+      text-shadow: -#{$text-stroke-width} -#{$text-stroke-width} 0 #141422,
+        0 -#{$text-stroke-width} 0 #141422,
+        $text-stroke-width -#{$text-stroke-width} 0 #141422,
+        $text-stroke-width 0 0 #141422,
+        $text-stroke-width $text-stroke-width 0 #141422,
+        0 $text-stroke-width 0 #141422,
+        -#{$text-stroke-width} $text-stroke-width 0 #141422,
+        -#{$text-stroke-width} 0 0 #141422;
+
+      span {
+        display: inline-flex;
+        width: 100%;
+      }
+    }
+
+    .button-wrapper {
+      display: flex;
+      width: 100%;
+
+      a {
+        padding: 8px;
+        font-family: Inter;
+        font-weight: 600;
+        font-size: 14px;
+        border-radius: 4px;
+        border: none;
+        line-height: 175%;
+        -moz-transition: all 1s ease-in-out;
+        transition: all 1s ease-in-out;
+        width: 140px;
+        @media screen and (max-width: 426px) {
+          width: 100%;
+        }
+      }
+
+      a:first-child {
+        margin-right: 16px;
+      }
+
+      .button-primary {
+        background: white;
+      }
+
+      .button-secondary {
+        background: none;
+        border: 2px solid #ff9aa2;
+        color: white;
+        background: #141422ab;
+      }
+    }
+  }
+  .mandala-wrapper {
+    width: 0%;
+    position: relative;
+    left: -200px;
+    -moz-transition: all 1s ease-in-out;
+    transition: all 1s ease-in-out;
+
+    @media screen and (max-width: 780px) {
+      left: -200px;
+    }
+  }
+}
