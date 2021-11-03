@@ -33,7 +33,7 @@ export function PageContentContainer({
     <MainContentContainer
       className={`page-content-container ${extraClasses ? extraClasses : ""}`}
     >
-      <div className="wrapper">{children}</div>
+      {children}
     </MainContentContainer>
   );
 }

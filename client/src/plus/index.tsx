@@ -46,7 +46,7 @@ export function Plus({ pageTitle }: { pageTitle?: string }) {
   );
 
   return (
-    <PageContentContainer extraClasses="plus">
+    <PageContentContainer extraClasses="fullwidth">
       {isServer ? loading : routes}
     </PageContentContainer>
   );
