@@ -34,13 +34,13 @@
 .bc-icons i,
 .legend-icons {
   &::before {
-    background-size: $base-unit * 3;
+    background-size: 1rem * 3;
     display: inline-block;
-    height: $base-unit * 3;
+    height: 1rem * 3;
     line-height: 1;
-    margin-left: math.div($base-unit, 1.2);
-    margin-right: math.div($base-unit, 1.5);
-    width: $base-unit * 3;
+    margin-left: math.div(1rem, 1.2);
+    margin-right: math.div(1rem, 1.5);
+    width: 1rem * 3;
   }
 }
 
@@ -77,9 +77,9 @@
   margin-right: 5px;
 
   &::before {
-    color: $mdn-neutral900;
+    color: $mdn-color-dark-grey-90;
     content: "-x-";
-    font-size: $small-medium-font-size;
+    font-size: 1rem;
     font-style: normal;
     font-weight: bold;
     text-decoration: none;

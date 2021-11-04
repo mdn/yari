@@ -1,23 +1,15 @@
-@use "sass:math";
-
-@use "../../minimalist/vars/typography" as type;
-@use "../../minimalist/vars/layout" as layout;
-@use "../../theme/index" as theme;
-
-@use "../../theme/themes/light-mode" as light;
-@use "../../theme/themes/dark-mode" as dark;
-@use "../../theme/themes/high-contrast-white";
-@use "../../theme/themes/high-contrast-black";
+@use "../../base/styles" as *;
+@use "../../base/theme" as *;
 
 .watch-menu {
   align-items: center;
-  border-bottom: 1px solid light.$mdn-light-color-border-secondary;
+  border-bottom: 1px solid $border-secondary;
   display: flex;
-  gap: theme.$base-spacing;
-  padding: theme.$base-spacing * 2;
+  gap: 0.5rem;
+  padding: 0.5rem;
   width: 100%;
 
-  @media #{layout.$mq-small-desktop-and-up} {
+  @media screen and (min-width: $screen-md) {
     border-bottom: 0;
   }
 
@@ -30,29 +22,29 @@
 
 .watch-menu-button {
   background-color: transparent;
-  border-top: 1px solid light.$mdn-light-color-border-primary;
+  border-top: 1px solid $border-primary;
   padding: 0;
 
   &-wrap {
     display: flex;
     flex-direction: column;
-    padding: math.div(layout.$base-spacing, 2);
-    padding-left: layout.$base-spacing * 1.5;
+    padding: 0.5rem;
+    padding-left: 1.5rem;
   }
 
   &-label,
   &-text {
-    font-size: type.$small-font-size;
-    line-height: 16px;
+    font-size: 0.8125rem;
+    line-height: 1;
   }
 
   &-label {
     font-weight: bold;
-    margin-bottom: theme.$base-spacing;
+    margin-bottom: 1rem;
   }
 
   &-text {
-    color: light.$mdn-light-color-text-primary;
+    color: $text-primary;
   }
 }
 
@@ -65,12 +57,12 @@
     display: none;
   }
 
-  @media #{layout.$mq-small-desktop-and-up} {
+  @media screen and (min-width: $screen-md) {
     &.show {
-      background-color: light.$mdn-light-color-background-primary;
-      border: 1px solid light.$mdn-light-color-border-primary;
-      border-radius: theme.$default-border-radius * 2;
-      box-shadow: light.$mdn-light-color-shadow01;
+      background-color: $background-primary;
+      border: 1px solid $border-primary;
+      border-radius: 0.25rem;
+      box-shadow: $shadow-01;
 
       display: flex;
       flex-direction: column;
@@ -80,15 +72,15 @@
       right: 0;
       top: 32px;
       width: 316px;
-      z-index: layout.$bring-to-front;
+      z-index: 1000;
     }
   }
 
   .watch-submenu-header {
     display: block;
-    font-size: type.$small-font-size;
+    font-size: 0.8125rem;
     font-weight: 600;
-    padding: theme.$base-spacing theme.$base-spacing * 2;
+    padding: 1rem 2rem;
     text-align: center;
   }
 }

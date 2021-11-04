@@ -1,25 +1,18 @@
-@use "sass:math";
-
-@use "../../minimalist/vars/layout";
-
-@use "../../theme/index" as theme;
-@use "../../theme/themes/light-mode" as light;
-@use "../../theme/themes/dark-mode" as dark;
-@use "../../theme/themes/high-contrast-white";
-@use "../../theme/themes/high-contrast-black";
+@use "../../base/styles" as *;
+@use "../../base/theme" as *;
 
 .article-actions-container {
   align-items: center;
-  background-color: light.$mdn-light-color-background-secondary;
-  border-bottom: 1px solid light.$mdn-light-color-border-primary;
-  border-top: 1px solid light.$mdn-light-color-border-primary;
+  background-color: $background-secondary;
+  border-bottom: 1px solid $border-primary;
+  border-top: 1px solid $border-primary;
   display: flex;
-  gap: theme.$base-spacing;
-  padding-left: theme.$base-spacing * 2;
+  gap: 0.5rem;
+  padding-left: 0.5rem;
+  justify-content: space-between;
 
-  @media #{layout.$mq-small-desktop-and-up} {
-    margin: theme.$base-spacing 0 0;
-    padding: 0 (theme.$base-spacing * 2);
+  @media screen and (min-width: $screen-md) {
+    padding: 0.5rem;
 
     .breadcrumbs-container {
       flex: 1 1 90%;
@@ -43,32 +36,5 @@
       flex-basis: 100%;
       justify-content: flex-end;
     }
-  }
-}
-
-/* DARK MODE */
-.dark {
-  .article-actions-container {
-    background-color: dark.$mdn-dark-color-background-secondary;
-    border-bottom-color: dark.$mdn-dark-color-border-primary;
-    border-top-color: dark.$mdn-dark-color-border-primary;
-  }
-}
-
-/* HIGH CONTRAST WHITE MODE */
-.high-contrast-white {
-  .article-actions-container {
-    background-color: high-contrast-white.$mdn-high-contrast-white-color-background-secondary;
-    border-bottom-color: high-contrast-white.$mdn-high-contrast-white-color-border-primary;
-    border-top-color: high-contrast-white.$mdn-high-contrast-white-color-border-primary;
-  }
-}
-
-/* HIGH CONTRAST BLACK MODE */
-.high-contrast-black {
-  .article-actions-container {
-    background-color: high-contrast-black.$mdn-high-contrast-black-color-background-secondary;
-    border-bottom-color: high-contrast-black.$mdn-high-contrast-black-color-border-primary;
-    border-top-color: high-contrast-black.$mdn-high-contrast-black-color-border-primary;
   }
 }

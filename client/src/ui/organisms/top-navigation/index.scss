@@ -1,0 +1,26 @@
+@use "../../base/styles" as *;
+@use "../../base/theme" as *;
+
+.main-menu-toggle {
+  position: absolute;
+  right: 1rem;
+  top: 1rem;
+
+  @media screen and (min-width: $screen-md) {
+    display: none;
+  }
+}
+
+.top-navigation {
+  background-color: $background-primary;
+  margin: 0 auto;
+  max-width: 1440px;
+  padding: 1rem;
+  position: relative;
+  width: 100%;
+
+  @media screen and (min-width: $screen-md) {
+    display: flex;
+    gap: 1rem;
+  }
+}

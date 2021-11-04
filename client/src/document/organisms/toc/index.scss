@@ -1,40 +1,39 @@
 @use "sass:math";
 
-@import "~@mdn/minimalist/sass/vars/layout";
-@import "~@mdn/minimalist/sass/vars/mdn-web-docs-palette";
-@import "~@mdn/minimalist/sass/vars/typography";
+@use "../../../ui/base/styles" as *;
+@use "../../../ui/base/theme" as *;
 
 .document-toc {
-  font-size: $default-font-size;
-  padding: math.div($base-spacing, 4) $base-spacing;
+  font-size: 1rem;
+  padding: math.div(1rem, 4) 1rem;
   position: relative;
 
-  @media #{$mq-tablet-and-up} {
-    padding: 0 $base-spacing;
+  @media screen and (max-width: $screen-sm) {
+    padding: 0 1rem;
   }
 
-  @media #{$mq-small-desktop-and-up} {
-    margin-top: $base-spacing;
+  @media screen and (min-width: $screen-md) {
+    margin-top: 1rem;
   }
 
   h2 {
     display: none;
 
-    @media #{$mq-large-desktop-and-up} {
+    @media screen and (max-width: $screen-lg) {
       display: block;
-      font-size: $medium-font-size;
+      font-size: 1rem;
     }
   }
 
   .toc-trigger-mobile {
     border: 0;
-    color: $link-color;
+    color: $text-link;
     font-weight: normal;
-    padding: math.div($base-spacing, 2) 0;
+    padding: 0.5rem 0;
     text-align: left;
     width: 100%;
 
-    @media #{$mq-large-desktop-and-up} {
+    @media screen and (max-width: $screen-lg) {
       display: none;
     }
 
@@ -47,14 +46,14 @@
       content: "";
       display: inline-block;
       height: 16px;
-      margin-right: $base-unit;
+      margin-right: 1rem;
       transform: rotate(90deg);
       transform-origin: 50%;
       transition: transform 0.2s ease-in;
       vertical-align: sub;
       width: 16px;
 
-      @media #{$mq-large-desktop-and-up} {
+      @media screen and (max-width: $screen-lg) {
         display: none;
       }
     }
@@ -68,15 +67,15 @@
 
   ul {
     background-color: #fff;
-    border: 2px solid $mdn-blue700;
+    border: 2px solid $mdn-color-blue-70;
     display: none;
     list-style: none;
-    padding: 0 $base-spacing;
+    padding: 0 1rem;
     position: absolute;
     top: 65px;
-    z-index: $top-layer;
+    z-index: 1000;
 
-    @media #{$mq-large-desktop-and-up} {
+    @media screen and (max-width: $screen-lg) {
       background-color: inherit;
       border: 0;
       display: block;
@@ -91,7 +90,7 @@
       line-height: 1.2;
       margin: 20px 0;
 
-      @media #{$mq-large-desktop-and-up} {
+      @media screen and (max-width: $screen-lg) {
         margin: 10px 0;
       }
     }

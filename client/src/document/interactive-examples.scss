@@ -1,10 +1,10 @@
-@import "~@mdn/minimalist/sass/vars/mdn-web-docs-palette";
-@import "~@mdn/minimalist/sass/vars/layout";
+@use "../ui/base/styles" as *;
+@use "../ui/base/theme" as *;
 
 .interactive {
-  background-color: $mdn-neutral100;
-  border: 1px solid $mdn-neutral200;
-  color: $text-color;
+  background-color: $background-secondary;
+  border: 1px solid $border-primary;
+  color: $text-primary;
   padding: 10px;
   width: 100%;
   // Note! The height is set as a regular pixel height number

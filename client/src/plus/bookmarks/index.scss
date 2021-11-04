@@ -1,9 +1,8 @@
-@use "sass:math";
-@use "~@mdn/minimalist/sass/vars/layout" as layout;
-@use "../../ui/theme/index.scss" as theme;
+@use "../../ui/base/styles" as *;
+@use "../../ui/base/theme" as *;
 
 .page-content-container.plus {
-  background-color: theme.$default-page-background-color;
+  background-color: $background-primary;
   max-width: inherit;
 }
 
@@ -12,21 +11,21 @@
   position: relative;
   width: 100%;
 
-  @media #{layout.$mq-tablet-and-up} {
+  @media screen and (max-width: $screen-sm) {
     padding: 48px 24px;
   }
 
   h3 {
-    border-bottom: theme.$standard-light-border;
+    border-bottom: $border-primary;
     padding-bottom: 24px;
   }
 }
 
 .bookmark {
   align-items: center;
-  background-color: theme.$white;
-  border: theme.$standard-primary-border;
-  border-radius: theme.$component-border-radius;
+  background-color: white;
+  border: $border-primary;
+  border-radius: 0.25rem;
   display: flex;
   justify-content: space-between;
   margin-bottom: 8px;
@@ -36,17 +35,17 @@
   a {
     &:link,
     &:visited {
-      color: theme.$mdn-neutral900;
+      color: $background-primary;
     }
   }
 
   .bookmark-icon {
     display: none;
 
-    @media #{layout.$mq-tablet-and-up} {
-      background-color: theme.$mdn-green600;
-      border-radius: math.div(theme.$default-border-radius, 3);
-      color: theme.$white;
+    @media screen and (max-width: $screen-sm) {
+      background-color: $mdn-color-green-60;
+      border-radius: 0.125rem;
+      color: white;
       display: block;
       font-style: italic;
       margin-right: 12px;
@@ -58,7 +57,7 @@
     flex: 1 1 80%;
     overflow: hidden;
 
-    @media #{layout.$mq-tablet-and-up} {
+    @media screen and (max-width: $screen-sm) {
       flex-basis: 95%;
     }
 
@@ -71,7 +70,7 @@
   .bookmark-actions {
     flex: 0 1 20%;
 
-    @media #{layout.$mq-tablet-and-up} {
+    @media screen and (max-width: $screen-sm) {
       flex-basis: 5%;
     }
   }
@@ -85,7 +84,7 @@
       margin: 0;
 
       &::after {
-        background-color: theme.$text-secondary;
+        background-color: $text-secondary;
         content: "";
         display: inline-block;
         height: 8px;
@@ -101,16 +100,16 @@
 
 .remove-bookmark-button {
   background-color: transparent;
-  border-radius: math.div(theme.$default-border-radius, 3);
+  border-radius: 0.25rem;
   padding: 8px;
 
   &:hover,
   &:focus {
-    background-color: theme.$mdn-light-grey200;
+    background-color: $mdn-color-light-grey-20;
   }
 
   &::before {
-    background-color: theme.$icon-primary;
+    background-color: $icon-primary;
     content: "";
     display: inline-block;
     height: 25px;

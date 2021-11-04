@@ -209,7 +209,7 @@ test("content built foo page", () => {
   expect(toFrURL).toBe("https://developer.mozilla.org/fr/docs/Web/Foo");
 
   // The h4 heading in there has its ID transformed to lowercase
-  expect($("h4").attr("id")).toBe($("h4").attr("id").toLowerCase());
+  expect($("main h4").attr("id")).toBe($("main h4").attr("id").toLowerCase());
 });
 
 test("icons mentioned in <head> should resolve", () => {
@@ -1456,7 +1456,7 @@ test("headings with HTML should be rendered as HTML", () => {
   expect($("article h3 a").html()).toBe(
     "You can use escaped HTML tags like &lt;pre&gt; still"
   );
-  expect($("article h3").text()).toBe(
+  expect($("article h3 a").text()).toBe(
     "You can use escaped HTML tags like <pre> still"
   );
 
@@ -1508,8 +1508,8 @@ test("external links always get the right attributes", () => {
   // 4 links on that page and we'll do 2 assertions for each one, plus
   // 1 for the extra sanity check.
   expect.assertions(4 * 2 + 1);
-  expect($("article a").length).toBe(4); // sanity check
-  $("article a").each((i, element) => {
+  expect($("article > div a").length).toBe(4); // sanity check
+  $("article > div a").each((i, element) => {
     const $a = $(element);
     expect($a.hasClass("external")).toBe(true);
     expect(
@@ -1589,6 +1589,7 @@ test("basic markdown rendering", () => {
   const htmlFile = path.join(builtFolder, "index.html");
   const html = fs.readFileSync(htmlFile, "utf-8");
   const $ = cheerio.load(html);
+  $("article > aside:last-child").remove();
   expect($("article h2[id]").length).toBe(2);
   expect($("article h3[id]").length).toBe(3);
   expect($("article p code").length).toBe(2);
@@ -1743,7 +1744,7 @@ test("duplicate IDs are de-duplicated", () => {
   const html = fs.readFileSync(htmlFile, "utf-8");
   const $ = cheerio.load(html);
   const h2IDs = [];
-  $("#content h2").each((i, element) => {
+  $("#content main h2").each((i, element) => {
     h2IDs.push($(element).attr("id"));
   });
   expect(new Set(h2IDs.map((id) => id.toLowerCase())).size).toEqual(

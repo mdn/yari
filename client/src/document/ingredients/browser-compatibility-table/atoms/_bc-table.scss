@@ -1,7 +1,5 @@
-@use "sass:math";
-
 .bc-table {
-  background-color: $mdn-neutral100;
+  background-color: $background-secondary;
   border: 0;
   border-collapse: separate;
   border-spacing: 0;
@@ -17,9 +15,9 @@
   td,
   th {
     border-bottom: 0 solid transparent;
-    border-left: 1px solid $mdn-neutral900;
+    border-left: 1px solid $mdn-color-dark-grey-90;
     border-right: 0;
-    border-top: 1px solid $mdn-neutral900;
+    border-top: 1px solid $mdn-color-dark-grey-90;
     padding: 0;
     position: relative;
     text-align: center;
@@ -28,32 +26,32 @@
   th {
     background-color: transparent;
     border-left: 0;
-    border-right: 1px solid $mdn-neutral900;
+    border-right: 1px solid $mdn-color-dark-grey-90;
     overflow: hidden;
-    padding: $base-unit;
+    padding: 1rem;
   }
 
   thead {
     display: none;
 
-    @media #{$mq-small-desktop-and-up} {
+    @media screen and (min-width: $screen-md) {
       display: table-header-group;
     }
 
     td {
       border-left: 0;
-      border-right: 2px solid $mdn-neutral900;
+      border-right: 2px solid $mdn-color-dark-grey-90;
       border-top: 0;
       overflow: hidden;
 
-      @media #{$mq-small-desktop-and-up} {
+      @media screen and (min-width: $screen-md) {
         width: 200px;
       }
     }
   }
 
   .bc-table-row-header {
-    padding: math.div($base-spacing, 2) math.div($base-spacing, 4);
+    padding: 0.5rem math.div(1rem, 4);
     display: flex;
 
     code {
@@ -76,8 +74,8 @@
     th {
       padding: 0;
 
-      @media #{$mq-small-desktop-and-up} {
-        border-right: 2px solid $mdn-neutral900;
+      @media screen and (min-width: $screen-md) {
+        border-right: 2px solid $mdn-color-dark-grey-90;
         display: table-cell;
         font-weight: normal;
         overflow: hidden;
@@ -86,18 +84,18 @@
     }
 
     td {
-      @media #{$mq-small-desktop-and-up} {
-        border-right: 1px solid $mdn-neutral900;
+      @media screen and (min-width: $screen-md) {
+        border-right: 1px solid $mdn-color-dark-grey-90;
         display: table-cell;
         overflow: hidden;
-        padding: math.div($base-spacing, 2) $base-unit;
+        padding: 0.5rem 1rem;
         text-align: center;
         vertical-align: middle;
       }
     }
 
     tr:nth-child(even) {
-      background-color: $mdn-neutral100;
+      background-color: $background-secondary;
     }
 
     dl {
@@ -107,10 +105,10 @@
 
   .bc-browser-name {
     display: inline-block;
-    padding: math.div($base-spacing, 4);
+    padding: 0.125rem;
     width: 75%;
 
-    @media #{$mq-small-desktop-and-up} {
+    @media screen and (min-width: $screen-md) {
       display: none;
     }
   }
@@ -125,32 +123,32 @@
    * that link to page that doesn't exist.
    */
   .new {
-    color: $mdn-red700;
+    color: $icon-critical;
   }
 }
 
-@media #{$mq-small-desktop-and-up} {
+@media screen and (min-width: $screen-md) {
   .bc-table-web {
     thead {
       /** Border between desktop and mobile sections. */
       th:nth-child(8) {
-        border-left: 1px solid $mdn-neutral900;
+        border-left: 1px solid $mdn-color-dark-grey-90;
       }
 
       /** Border between mobile and server sections. */
       th:nth-child(14) {
-        border-left: 1px solid $mdn-neutral900;
+        border-left: 1px solid $mdn-color-dark-grey-90;
       }
     }
 
     /** Border between desktop and mobile sections. */
     td:nth-child(8) {
-      border-left: 1px solid $mdn-neutral900;
+      border-left: 1px solid $mdn-color-dark-grey-90;
     }
 
     /** Border between mobile and server sections. */
     td:nth-child(14) {
-      border-left: 1px solid $mdn-neutral900;
+      border-left: 1px solid $mdn-color-dark-grey-90;
     }
   }
 }

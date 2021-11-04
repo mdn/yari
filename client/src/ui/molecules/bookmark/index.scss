@@ -1,39 +1,37 @@
-@use "../../minimalist/vars/layout";
-
-@use "../../theme/index" as theme;
-@use "../../theme/themes/light-mode" as light-mode;
+@use "../../base/styles" as *;
+@use "../../base/theme" as *;
 
 .bookmark-button {
   align-items: center;
   background-color: transparent;
-  border-bottom: 1px solid light-mode.$mdn-light-color-border-secondary;
+  border-bottom: 1px solid $border-secondary;
   display: flex;
-  gap: theme.$base-spacing;
-  padding: theme.$base-spacing * 2;
+  gap: 0.5rem;
+  padding: 0.5rem;
   width: 100%;
 
-  @media #{layout.$mq-small-desktop-and-up} {
+  @media screen and (min-width: $screen-md) {
     border-bottom: 0;
-    border-radius: theme.$default-border-radius;
+    border-radius: 0.25rem;
   }
 
   &::before {
-    background-color: light-mode.$mdn-light-color-icon-primary;
+    background-color: $icon-primary;
     height: 16px;
     mask-image: url("~@mdn/dinocons/plus/bookmark.svg");
-    padding: theme.$base-spacing;
+    padding: 0.5rem;
     width: 16px;
   }
 
   &.bookmarked {
     &::before {
-      background-color: light-mode.$mdn-light-color-accent-secondary;
+      background-color: $accent-secondary;
       mask-image: url("~@mdn/dinocons/plus/bookmark-filled.svg");
     }
   }
 
   &:hover,
   &:focus {
-    background-color: light-mode.$mdn-light-color-button-secondary-hover;
+    background-color: $button-secondary-hover;
   }
 }

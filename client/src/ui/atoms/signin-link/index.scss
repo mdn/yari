@@ -1,13 +1,12 @@
-@use "../../theme/index" as theme;
-@use "../../theme/themes/light-mode" as light-mode;
-
+@use "../../base/styles" as *;
+@use "../../base/theme" as *;
 .auth-container {
   .signin-link {
     font-weight: bold;
 
     &:link,
     &:visited {
-      color: light-mode.$mdn-light-color-text-secondary;
+      color: $text-secondary;
     }
   }
 }

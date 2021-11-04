@@ -149,34 +149,38 @@ export function Document(props /* TODO: define a TS interface for this */) {
   return (
     <>
       <ArticleActionsContainer doc={doc} />
-
-      {doc.isTranslated ? (
-        <LocalizedContentNote isActive={doc.isActive} locale={locale} />
-      ) : (
-        searchParams.get("retiredLocale") && <RetiredLocaleNote />
-      )}
-
-      {doc.toc && !!doc.toc.length && <TOC toc={doc.toc} />}
-
-      <MainContentContainer>
-        {!isServer && CRUD_MODE && !props.isPreview && doc.isActive && (
-          <React.Suspense fallback={<Loading message={"Loading toolbar"} />}>
-            <Toolbar
-              doc={doc}
-              reloadPage={() => {
-                mutate(dataURL);
-              }}
-            />
-          </React.Suspense>
+      <div className="article-wrapper">
+        {doc.isTranslated ? (
+          <LocalizedContentNote isActive={doc.isActive} locale={locale} />
+        ) : (
+          searchParams.get("retiredLocale") && <RetiredLocaleNote />
         )}
-        <article className="main-page-content" lang={doc.locale}>
-          <h1>{doc.title}</h1>
-          <RenderDocumentBody doc={doc} />
-        </article>
-        <Metadata doc={doc} locale={locale} />
-      </MainContentContainer>
+        {doc.sidebarHTML && <RenderSideBar doc={doc} />}
 
-      {doc.sidebarHTML && <RenderSideBar doc={doc} />}
+        <MainContentContainer>
+          {!isServer && CRUD_MODE && !props.isPreview && doc.isActive && (
+            <React.Suspense fallback={<Loading message={"Loading toolbar"} />}>
+              <Toolbar
+                doc={doc}
+                reloadPage={() => {
+                  mutate(dataURL);
+                }}
+              />
+            </React.Suspense>
+          )}
+          <div className="content-wrapper">
+            <div className="toc">
+              {doc.toc && !!doc.toc.length && <TOC toc={doc.toc} />}
+            </div>
+            <article className="main-page-content" lang={doc.locale}>
+              <h1>{doc.title}</h1>
+
+              <RenderDocumentBody doc={doc} />
+              <Metadata doc={doc} locale={locale} />
+            </article>
+          </div>
+        </MainContentContainer>
+      </div>
     </>
   );
 }

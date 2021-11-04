@@ -1,11 +1,11 @@
-@use "../../theme/index" as theme;
-@use "../../theme/themes/light-mode" as light-mode;
+@use "../../base/styles" as *;
+@use "../../base/theme" as *;
 
 .auth-disabled {
-  border: 1px solid theme.$standard-light-border;
-  border-radius: theme.$default-border-radius;
-  box-shadow: theme.$menu-box-shadow;
-  color: light-mode.$mdn-light-color-text-secondary;
+  border: 1px solid $border-primary;
+  border-radius: 0.25rem;
+  box-shadow: $shadow-01;
+  color: $text-secondary;
   padding: 16px;
 
   p {
