@@ -87,7 +87,7 @@ export const HeaderNotificationsMenu = () => {
       return null;
     }
 
-    const apiPostURL = `/api/v1/plus/notifications/1/mark-as-read/`;
+    const apiPostURL = `/api/v1/plus/notifications/all/mark-as-read/`;
 
     const response = await fetch(apiPostURL, {
       method: "POST",
