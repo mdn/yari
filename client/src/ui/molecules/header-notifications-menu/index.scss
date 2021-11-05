@@ -20,7 +20,7 @@
   }
 
   .notifications-count-container {
-    background-color: $icon-secondary;
+    background-color: $icon-information;
     border-radius: 50%;
     color: white;
     display: inline-block;
@@ -47,8 +47,6 @@
     }
 
     &.unread-notifications {
-      background-color: $icon-secondary;
-
       @media screen and (min-width: $screen-md) {
         background-color: transparent;
 
