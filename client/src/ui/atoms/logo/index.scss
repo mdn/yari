@@ -2,6 +2,7 @@
 @use "../../base/theme" as *;
 
 .logo {
+  width: fit-content;
   display: flex;
   height: 2rem;
   width: 8rem;

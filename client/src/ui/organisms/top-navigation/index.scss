@@ -21,6 +21,7 @@
 
   @media screen and (min-width: $screen-md) {
     display: flex;
+    align-items: center;
     gap: 1rem;
   }
 }
