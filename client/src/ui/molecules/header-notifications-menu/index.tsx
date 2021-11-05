@@ -33,15 +33,6 @@ interface NotificationData {
   csrfmiddlewaretoken: string;
 }
 
-const fetchUserNotifications = async (url) => {
-  const response = await fetch(url);
-  if (!response.ok) {
-    const text = await response.text();
-    throw new Error(`${response.status} on ${url}: ${text}`);
-  }
-  return await response.json();
-};
-
 export const HeaderNotificationsMenu = () => {
   const menuId = "my-notifications";
 
@@ -56,7 +47,14 @@ export const HeaderNotificationsMenu = () => {
   const apiURL = "/api/v1/plus/notifications/?per_page=5";
   const { data, error } = useSWR<NotificationData>(
     apiURL,
-    fetchUserNotifications,
+    async (url) => {
+      const response = await fetch(url);
+      if (!response.ok) {
+        const text = await response.text();
+        throw new Error(`${response.status} on ${url}: ${text}`);
+      }
+      return await response.json();
+    },
     {
       revalidateOnFocus: true,
     }
@@ -102,7 +100,7 @@ export const HeaderNotificationsMenu = () => {
     if (!response.ok) {
       throw new Error(`${response.status} on ${response.url}`);
     }
-    await mutate(apiURL, fetchUserNotifications);
+    await mutate(apiURL);
     return true;
   }
 
