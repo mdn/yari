@@ -6,12 +6,11 @@ import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 
 import { useLocale } from "../../../hooks";
+import useSWR, { mutate } from "swr";
 
 import "./index.scss";
-import useSWR from "swr";
 
 dayjs.extend(relativeTime);
-
 interface Notification {
   id: number;
   title: string;
@@ -41,7 +40,6 @@ export const HeaderNotificationsMenu = () => {
   const [visibleSubMenuId, setVisibleSubMenuId] = React.useState<string | null>(
     null
   );
-
   let notificationCount = 0;
 
   const locale = useLocale();
@@ -84,6 +82,28 @@ export const HeaderNotificationsMenu = () => {
     );
   }
 
+  async function markNotificationsAsRead() {
+    if (!data) {
+      return null;
+    }
+
+    const apiPostURL = `/api/v1/plus/notifications/1/mark-as-read/`;
+
+    const response = await fetch(apiPostURL, {
+      method: "POST",
+      headers: {
+        "X-CSRFToken": data.csrfmiddlewaretoken,
+        "Content-Type": "application/x-www-form-urlencoded",
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error(`${response.status} on ${response.url}`);
+    }
+    mutate(apiURL);
+    return true;
+  }
+
   /**
    * Show and hide submenus in the main menu
    * @param {String} menuEntryId - The current top-level menu item id
@@ -91,7 +111,13 @@ export const HeaderNotificationsMenu = () => {
   function toggleSubMenu(menuEntryId) {
     // store the current activeElement
     previousActiveElement.current = document.activeElement as HTMLButtonElement;
-    setVisibleSubMenuId(visibleSubMenuId === menuEntryId ? null : menuEntryId);
+    if (visibleSubMenuId === menuEntryId) {
+      setVisibleSubMenuId(null);
+      // User has closed the menu, so mark all notifications as read
+      markNotificationsAsRead();
+    } else {
+      setVisibleSubMenuId(menuEntryId);
+    }
   }
 
   return (

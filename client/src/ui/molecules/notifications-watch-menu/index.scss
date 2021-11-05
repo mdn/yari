@@ -26,21 +26,22 @@
   padding: 0;
 
   &-wrap {
+    align-items: flex-start;
     display: flex;
     flex-direction: column;
+    gap: 0.5rem;
     padding: 0.5rem;
     padding-left: 1.5rem;
+    text-align: left;
   }
 
   &-label,
   &-text {
     font-size: 0.8125rem;
-    line-height: 1;
   }
 
   &-label {
     font-weight: bold;
-    margin-bottom: 1rem;
   }
 
   &-text {
