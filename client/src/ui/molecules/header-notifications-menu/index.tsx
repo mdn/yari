@@ -68,8 +68,8 @@ export const HeaderNotificationsMenu = () => {
         id: item.id,
         url: `/${locale}/plus/notifications/${item.id}/`,
         read: item.read,
-        label: item.text,
-        description: item.title,
+        label: item.title,
+        description: item.text,
         created: item.created,
       };
     });
