@@ -56,7 +56,7 @@ export const ThemeSwitcher = () => {
   });
 
   return (
-    <>
+    <div className="theme-switcher-menu">
       <IconButton
         ariaControls={menuId}
         ariaHasPopup={"menu"}
@@ -129,6 +129,6 @@ export const ThemeSwitcher = () => {
           </Button>
         </li>
       </ul>
-    </>
+    </div>
   );
 };
