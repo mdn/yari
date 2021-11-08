@@ -4,6 +4,8 @@
 @use "../../base/typography" as *;
 
 .notifications-menu {
+  align-items: center;
+  display: flex;
   position: relative;
 
   .notifications-button {
