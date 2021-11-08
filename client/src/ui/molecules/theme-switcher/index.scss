@@ -51,7 +51,7 @@
 
       &:hover,
       &:focus {
-        background-color: color.adjust($accent-primary, $alpha: -0.9);
+        background-color: var(--accent-primary-engage);
         text-decoration: none;
       }
     }

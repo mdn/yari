@@ -1,3 +1,4 @@
+@use "sass:color";
 @use "./styles.scss" as *;
 
 body[class="light"] {
@@ -25,6 +26,10 @@ body[class="light"] {
   --icon-critical: #{$mdn-theme-light-icon-critical};
   --icon-success: #{$mdn-theme-light-icon-success};
   --accent-primary: #{$mdn-theme-light-accent-primary};
+  --accent-primary-engage: #{color.adjust(
+      $mdn-theme-light-accent-primary,
+      $alpha: -0.9
+    )};
   --accent-secondary: #{$mdn-theme-light-accent-secondary};
 }
 
@@ -53,6 +58,10 @@ body[class="dark"] {
   --icon-critical: #{$mdn-theme-dark-icon-critical};
   --icon-success: #{$mdn-theme-dark-icon-success};
   --accent-primary: #{$mdn-theme-dark-accent-primary};
+  --accent-primary-engage: #{color.adjust(
+      $mdn-theme-dark-accent-primary,
+      $alpha: -0.9
+    )};
   --accent-secondary: #{$mdn-theme-dark-accent-secondary};
 }
 
@@ -81,6 +90,10 @@ body[class="high-contrast-white"] {
   --icon-critical: #{$mdn-theme-high-contrast-white-icon-critical};
   --icon-success: #{$mdn-theme-high-contrast-white-icon-success};
   --accent-primary: #{$mdn-theme-high-contrast-white-accent-primary};
+  --accent-primary-engage: #{color.adjust(
+      $mdn-theme-high-contrast-white-accent-primary,
+      $alpha: -0.9
+    )};
   --accent-secondary: #{$mdn-theme-high-contrast-white-accent-secondary};
 }
 
@@ -109,5 +122,9 @@ body[class="high-contrast-black"] {
   --icon-critical: #{$mdn-theme-high-contrast-black-icon-critical};
   --icon-success: #{$mdn-theme-high-contrast-black-icon-success};
   --accent-primary: #{$mdn-theme-high-contrast-black-accent-primary};
+  --accent-primary-engage: #{color.adjust(
+      $mdn-theme-high-contrast-black-accent-primary,
+      $alpha: -0.9
+    )};
   --accent-secondary: #{$mdn-theme-high-contrast-black-accent-secondary};
 }
