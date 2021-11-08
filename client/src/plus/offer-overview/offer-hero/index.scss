@@ -1,3 +1,5 @@
+@use "../../../ui/base/styles" as *;
+
 $text-stroke-width: 2px;
 
 .offer-hero {
@@ -6,12 +8,13 @@ $text-stroke-width: 2px;
   flex-direction: row;
   align-items: center;
   padding: 4rem 1rem;
-  color: #141422;
+  color: $mdn-color-dark-grey-90;
   margin: 0 auto;
   height: 350px;
   overflow-y: clip;
-  -moz-transition: all 0.5s ease-in-out;
-  transition: all 0.5s ease-in-out;
+  overflow-y: -moz-hidden-unscrollable;
+  -moz-transition: all 0.3s ease-in-out;
+  transition: all 0.3s ease-in-out;
 
   @media screen and (min-width: 426px) {
     padding: 4rem;
@@ -32,7 +35,7 @@ $text-stroke-width: 2px;
 
       span {
         display: inline-flex;
-        background: #b3ffe3;
+        background: $mdn-color-green-20;
         padding: 2px 8px;
       }
 
@@ -49,14 +52,15 @@ $text-stroke-width: 2px;
       line-height: 175%;
       margin: 1rem 0;
       color: white;
-      text-shadow: -#{$text-stroke-width} -#{$text-stroke-width} 0 #141422,
-        0 -#{$text-stroke-width} 0 #141422,
-        $text-stroke-width -#{$text-stroke-width} 0 #141422,
-        $text-stroke-width 0 0 #141422,
-        $text-stroke-width $text-stroke-width 0 #141422,
-        0 $text-stroke-width 0 #141422,
-        -#{$text-stroke-width} $text-stroke-width 0 #141422,
-        -#{$text-stroke-width} 0 0 #141422;
+      text-shadow: -#{$text-stroke-width} -#{$text-stroke-width} 0
+          $mdn-color-dark-grey-90,
+        0 -#{$text-stroke-width} 0 $mdn-color-dark-grey-90,
+        $text-stroke-width -#{$text-stroke-width} 0 $mdn-color-dark-grey-90,
+        $text-stroke-width 0 0 $mdn-color-dark-grey-90,
+        $text-stroke-width $text-stroke-width 0 $mdn-color-dark-grey-90,
+        0 $text-stroke-width 0 $mdn-color-dark-grey-90,
+        -#{$text-stroke-width} $text-stroke-width 0 $mdn-color-dark-grey-90,
+        -#{$text-stroke-width} 0 0 $mdn-color-dark-grey-90;
 
       span {
         display: inline-flex;
@@ -73,14 +77,14 @@ $text-stroke-width: 2px;
         padding: 0.5rem;
         font-size: 14px;
         border-radius: 0.25rem;
-        border: none;
         line-height: 175%;
-        -moz-transition: all 1s ease-in-out;
-        transition: all 1s ease-in-out;
         width: 140px;
         text-align: center;
-        color: #141422;
         font-weight: 600;
+        z-index: 1;
+        position: relative;
+        -moz-transition: all 0.2s ease;
+        transition: all 0.2s ease;
         @media screen and (max-width: 426px) {
           width: 100%;
         }
@@ -88,13 +92,17 @@ $text-stroke-width: 2px;
 
       .button-primary {
         background: white;
+        color: $mdn-color-dark-grey-90;
       }
 
       .button-secondary {
-        background: none;
-        border: 2px solid #ff9aa2;
+        border: 2px solid $mdn-color-red-20;
         color: white;
-        background: #141422ab;
+        background: #15141a1a;
+      }
+
+      .button-secondary:hover {
+        border: 2px solid $mdn-color-red-05;
       }
     }
   }

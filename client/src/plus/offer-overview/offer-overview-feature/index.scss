@@ -1,3 +1,5 @@
+@use "../../../ui/base/styles" as *;
+
 .offer-overview-feature {
   background-color: white;
   width: 100%;
@@ -38,15 +40,41 @@
         font-weight: normal;
         font-size: 16px;
         line-height: 175%;
-        color: #141422;
+        color: $mdn-color-dark-grey-90;
         margin: 1rem 0;
       }
 
       a {
-        background: #141422;
+        background: $mdn-color-dark-grey-90;
         padding: 0.25rem 0.5rem;
         color: white;
         width: fit-content;
+        position: relative;
+        z-index: 1;
+        transition: all 0.3s ease;
+
+        &:after {
+          position: absolute;
+          content: "";
+          width: 0;
+          height: 100%;
+          top: 0;
+          right: 0;
+          z-index: -1;
+          background: $mdn-color-green-20;
+          transition: all 0.3s ease;
+        }
+
+        &:hover {
+          color: $mdn-color-dark-grey-90;
+          font-weight: 650;
+          padding: 0.25rem 0.45rem;
+        }
+
+        &:hover:after {
+          left: 0;
+          width: 100%;
+        }
       }
     }
   }
