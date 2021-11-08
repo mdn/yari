@@ -1,5 +1,4 @@
 @use "../../base/styles" as *;
-@use "../../base/theme" as *;
 
 .main-menu-toggle {
   position: absolute;
@@ -12,7 +11,7 @@
 }
 
 .top-navigation {
-  background-color: $background-primary;
+  background-color: var(--background-primary);
   margin: 0 auto;
   max-width: 1440px;
   padding: 1rem;
