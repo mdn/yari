@@ -23,7 +23,6 @@ function OfferHero() {
         </div>
       </div>
       <div className="mandala-wrapper">
-        {" "}
         <Mandala />
       </div>
     </header>

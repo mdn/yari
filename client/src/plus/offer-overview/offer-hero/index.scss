@@ -5,16 +5,16 @@ $text-stroke-width: 2px;
   display: flex;
   flex-direction: row;
   align-items: center;
-  padding: 64px 16px;
+  padding: 4rem 1rem;
   color: #141422;
   margin: 0 auto;
   height: 350px;
-  overflow: hidden;
+  overflow-y: clip;
   -moz-transition: all 0.5s ease-in-out;
   transition: all 0.5s ease-in-out;
 
   @media screen and (min-width: 426px) {
-    padding: 64px;
+    padding: 4rem;
   }
 
   .offer-hero-wrapper {
@@ -24,8 +24,8 @@ $text-stroke-width: 2px;
     h1 {
       font-family: Montserrat;
       font-style: normal;
-      font-weight: 600;
-      font-size: 48px;
+      font-weight: 650;
+      font-size: 3rem;
       line-height: 120%;
       letter-spacing: -0.5px;
       margin: 0px;
@@ -47,7 +47,7 @@ $text-stroke-width: 2px;
       font-weight: 600;
       font-size: 16px;
       line-height: 175%;
-      margin: 16px 0px;
+      margin: 1rem 0;
       color: white;
       text-shadow: -#{$text-stroke-width} -#{$text-stroke-width} 0 #141422,
         0 -#{$text-stroke-width} 0 #141422,
@@ -67,25 +67,23 @@ $text-stroke-width: 2px;
     .button-wrapper {
       display: flex;
       width: 100%;
+      gap: 1rem;
 
       a {
-        padding: 8px;
-        font-family: Inter;
-        font-weight: 600;
+        padding: 0.5rem;
         font-size: 14px;
-        border-radius: 4px;
+        border-radius: 0.25rem;
         border: none;
         line-height: 175%;
         -moz-transition: all 1s ease-in-out;
         transition: all 1s ease-in-out;
         width: 140px;
+        text-align: center;
+        color: #141422;
+        font-weight: 600;
         @media screen and (max-width: 426px) {
           width: 100%;
         }
-      }
-
-      a:first-child {
-        margin-right: 16px;
       }
 
       .button-primary {

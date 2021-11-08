@@ -27,7 +27,7 @@
       h2 {
         font-family: Montserrat;
         font-style: normal;
-        font-weight: 600;
+        font-weight: 650;
         font-size: 24px;
         line-height: 120%;
       }
@@ -39,11 +39,14 @@
         font-size: 16px;
         line-height: 175%;
         color: #141422;
+        margin: 1rem 0;
       }
 
       a {
         background: #141422;
-        padding: 4px 8px;
+        padding: 0.25rem 0.5rem;
+        color: white;
+        width: fit-content;
       }
     }
   }

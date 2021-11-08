@@ -1,14 +1,16 @@
+@use "../../../ui/base/styles" as *;
+
 .mandala {
   animation: mandala-rotate 500s infinite;
   position: relative;
   left: -100px;
 }
 
-$mandala-primary: #42435a;
-$mandala-accent-1: #ff9aa2;
-$mandala-accent-2: #3fe1b0;
-$mandala-accent-3: #ffff98;
-$mandala-accent-4: #b1b1bc;
+$mandala-primary: $mdn-color-marketing-grey-70;
+$mandala-accent-1: $mdn-color-red-20;
+$mandala-accent-2: $mdn-color-green-20;
+$mandala-accent-3: $mdn-color-yellow-20;
+$mandala-accent-4: $mdn-color-marketing-grey-30;
 $mandala-animation: mandala-color-change 50s infinite;
 
 .mandala-accent-1,
