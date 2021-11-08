@@ -14,10 +14,10 @@ function OfferHero() {
           <span>For just $5 a month.</span>
         </h2>
         <div className="button-wrapper">
-          <a href="/#subscribe" className="button-primary">
+          <a href="#subscribe" className="button-primary">
             Get started
           </a>
-          <a href="/#features" className="button-secondary">
+          <a href="#features" className="button-secondary">
             What's included
           </a>
         </div>

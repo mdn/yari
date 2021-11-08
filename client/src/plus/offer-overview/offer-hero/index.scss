@@ -37,11 +37,11 @@ $text-stroke-width: 2px;
       span {
         display: inline-flex;
         background: $mdn-color-green-20;
-        padding: 2px 8px;
+        padding: 2px 0.5rem;
       }
 
       span:first-child {
-        margin-bottom: 8px;
+        margin-bottom: 0.5rem;
       }
     }
 

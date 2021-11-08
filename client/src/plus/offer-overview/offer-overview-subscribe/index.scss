@@ -1,0 +1,77 @@
+@use "../../../ui/base/styles" as *;
+
+.subscribe {
+  min-height: 25rem;
+  background: $mdn-color-dark-grey-90;
+  padding: 2rem 4rem;
+  text-align: center;
+
+  h2 {
+    color: white;
+    font-family: Montserrat;
+    font-style: normal;
+    font-weight: 650;
+    font-size: 24px;
+    line-height: 120%;
+    margin-bottom: 2rem;
+  }
+
+  .sub-price {
+    color: white;
+    font-family: Montserrat;
+    font-style: normal;
+    font-weight: 650;
+    font-size: 36px;
+    line-height: 120%;
+  }
+
+  .sub-length {
+    color: white;
+    font-family: Montserrat;
+    font-style: normal;
+    font-weight: 650;
+    font-size: 24px;
+    line-height: 120%;
+  }
+
+  .wrapper {
+    display: flex;
+    margin: 0 auto;
+    max-width: 25rem;
+    gap: 2rem;
+    justify-content: center;
+
+    .subscribe-detail {
+      padding: 4rem 2rem;
+      color: white;
+      min-width: 20rem;
+      display: flex;
+      gap: 2rem;
+      flex-direction: column;
+      align-items: center;
+      border-radius: 1rem;
+
+      &#annually {
+        background: $mdn-color-violet-40;
+      }
+
+      &#monthly {
+        background: $mdn-color-green-60;
+      }
+
+      p {
+        text-align: left;
+        width: 100%;
+        line-height: 1.75;
+      }
+    }
+  }
+
+  a {
+    background: $mdn-color-dark-grey-90;
+    padding: 0.25rem 0.5rem;
+    color: white;
+    width: fit-content;
+    font-weight: 620;
+  }
+}
