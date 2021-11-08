@@ -111,6 +111,7 @@
 
   @media screen and (min-width: $screen-md) {
     position: absolute;
+    top: 4px; // Assumes 16px icon
   }
 
   &::before {

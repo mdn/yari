@@ -588,7 +588,7 @@ function remove(
   }
 
   const children = findChildren(url, true);
-  if (children.length > 0 && (redirect || !recursive)) {
+  if (children.length > 0 && redirect && !recursive) {
     throw new Error("unable to remove and redirect a document with children");
   }
   const docs = [slug, ...children.map(({ metadata }) => metadata.slug)];
@@ -610,7 +610,10 @@ function remove(
   execGit(["rm", "-r", path.dirname(fileInfo.path)], { cwd: root });
 
   if (redirect) {
-    Redirect.add(locale, [[url, redirect]]);
+    Redirect.add(locale, [
+      [url, redirect],
+      ...children.map(({ url: childUrl }) => [childUrl, redirect]),
+    ]);
   } else {
     Redirect.remove(locale, [url, ...removed]);
   }

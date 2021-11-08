@@ -45,23 +45,23 @@ if (found_tag != undefined && found_tag != null && found_tag.length) {
 var resultAPI = [];
 
  if (s_svg_href) {  %>
-  <section class="Quick_links" id="Quick_Links">
+  <section id="Quick_links">
   <ol>
-   <% if (found_tag) {        
-/*       
+   <% if (found_tag) {
+/*
         for( aPage in resultGuide) { // Tutorials and guides matching
   %>
             <li><a href="<%-resultGuide[aPage].url%>"><%-resultGuide[aPage].title%></a></li>
   <%    }
 */
-        for (aTitle in resultSVG) { // SVG entities matching 
+        for (aTitle in resultSVG) { // SVG entities matching
   %>
             <li><%- await template("SVGElement", [resultSVG[aTitle]]) %></li>
-  <%    } 
-        for (aTitle in resultAPI) { // SVG-DOM interfaces matching 
+  <%    }
+        for (aTitle in resultAPI) { // SVG-DOM interfaces matching
   %>
             <li><%- await template("domxref", [resultAPI[aTitle]]) %></li>
-  <%    } 
+  <%    }
     } %>
    <li><details><summary><%-s_svg_ref_title%></summary><ol>
  <li>A
@@ -206,7 +206,7 @@ var resultAPI = [];
    <ol>
      <li><%-await template("SVGElement", ["view"])%></li>
      <li><%-await template("SVGElement", ["vkern"])%></li>
-   </ol>   
+   </ol>
  </li>
    </ol></li></details>
    </ol>

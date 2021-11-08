@@ -1,5 +1,4 @@
 @use "../../base/styles" as *;
-@use "../../base/theme" as *;
 
 .main-menu-toggle {
   position: absolute;
@@ -12,7 +11,10 @@
 }
 
 .top-navigation {
-  background-color: $background-primary;
+  background-color: var(--background-primary);
+  margin: 0 auto;
+  max-width: 1440px;
+  padding: 1rem;
   position: relative;
   width: 100%;
 
@@ -22,9 +24,7 @@
     margin: 0 auto;
     display: flex;
     align-items: center;
-
-    @media screen and (min-width: $screen-md) {
-      gap: 1rem;
-    }
+    gap: 1rem;
+    height: 64px;
   }
 }

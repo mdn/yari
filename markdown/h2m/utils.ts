@@ -9,6 +9,7 @@ export type Options = Partial<{
   shouldWrap: boolean;
   singleLine: boolean;
   summary: string;
+  locale: string;
 }>;
 
 export const asArray = <T extends undefined | unknown | unknown[]>(

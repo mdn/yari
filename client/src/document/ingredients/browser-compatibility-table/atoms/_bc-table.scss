@@ -53,10 +53,12 @@
   .bc-table-row-header {
     padding: 0.5rem math.div(1rem, 4);
     display: flex;
+    display: -webkit-flex;
 
     code {
       text-decoration: none;
       white-space: normal;
+      word-wrap: anywhere;
     }
   }
 
