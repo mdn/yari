@@ -1,6 +1,6 @@
 import "./index.scss";
-import placeholder_1 from "./placeholder_1.png";
-import placeholder_2 from "./placeholder_2.png";
+import placeholder_1 from "./placeholder_1.svg";
+import placeholder_2 from "./placeholder_2.svg";
 
 function OfferOverviewFeature() {
   return (

@@ -3,21 +3,22 @@
 $text-stroke-width: 2px;
 
 .offer-hero {
-  max-width: 900px;
+  max-width: 60rem;
   display: flex;
   flex-direction: row;
   align-items: center;
   padding: 4rem 1rem;
+
   color: $mdn-color-dark-grey-90;
   margin: 0 auto;
   height: 350px;
-  overflow-y: clip;
-  overflow-y: -moz-hidden-unscrollable;
+  overflow: hidden;
   -moz-transition: all 0.3s ease-in-out;
   transition: all 0.3s ease-in-out;
 
   @media screen and (min-width: 426px) {
     padding: 4rem;
+    padding-right: 0;
   }
 
   .offer-hero-wrapper {

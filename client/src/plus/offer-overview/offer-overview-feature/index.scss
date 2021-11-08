@@ -3,26 +3,41 @@
 .offer-overview-feature {
   background-color: white;
   width: 100%;
-  min-height: 400px;
+  min-height: 25rem;
 
   .wrapper {
     width: 100%;
     display: flex;
-    flex-direction: column-reverse;
+    flex-direction: column;
     align-items: center;
     height: 100%;
-    padding: 64px 16px;
+    padding: 4rem 1rem;
     margin: 0 auto;
-    max-width: 900px;
+    max-width: 60rem;
+    gap: 4rem;
 
-    @media screen and (min-width: 1025px) {
+    @media screen and (min-width: $screen-md) {
+      padding: 4rem;
+    }
+
+    @media screen and (min-width: $screen-lg) {
       flex-direction: row;
     }
 
     .copy-container,
     .img-container {
       width: 100%;
-      margin: 0px 32px;
+      margin: 0 1rem;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .img-container {
+      align-items: center;
+
+      img {
+        max-width: 24rem;
+      }
     }
 
     .copy-container {
@@ -41,7 +56,7 @@
         font-size: 16px;
         line-height: 175%;
         color: $mdn-color-dark-grey-90;
-        margin: 1rem 0;
+        margin: 1rem 0 1.5rem 0;
       }
 
       a {
@@ -52,6 +67,7 @@
         position: relative;
         z-index: 1;
         transition: all 0.3s ease;
+        font-weight: 620;
 
         &:after {
           position: absolute;
@@ -67,8 +83,6 @@
 
         &:hover {
           color: $mdn-color-dark-grey-90;
-          font-weight: 650;
-          padding: 0.25rem 0.45rem;
         }
 
         &:hover:after {
@@ -79,9 +93,9 @@
     }
   }
 
-  .wrapper #bookmarking,
-  .wrapper #offline {
-    flex-direction: column;
+  .wrapper#bookmarking,
+  .wrapper#offline {
+    flex-direction: column-reverse;
     @media screen and (min-width: 1025px) {
       flex-direction: row;
     }
@@ -89,5 +103,5 @@
 }
 
 .offer-overview-feature:nth-child(even) {
-  background: #fbfbfe;
+  background: $mdn-color-light-grey-05;
 }
