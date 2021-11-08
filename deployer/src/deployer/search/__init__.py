@@ -108,7 +108,9 @@ def index(
                 count_worked += 1
             else:
                 count_errors += 1
-                errors_counter[info["index"]["error"]] += 1
+                error_data = info["index"]["error"]
+                error_key = f"{error_data['type']}: {error_data['reason']}"
+                errors_counter[error_key] += 1
             count_done += 1
             bar.update(1)
 

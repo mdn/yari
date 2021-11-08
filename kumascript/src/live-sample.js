@@ -73,7 +73,9 @@ function buildLiveSamplePages(uri, title, $, rawBody) {
   return $("iframe")
     .filter((i, iframe) => {
       const src = $(iframe).attr("src");
-      return src && src.includes(`${uri}/_sample_.`);
+      return (
+        src && src.toLowerCase().includes(`${uri.toLowerCase()}/_sample_.`)
+      );
     })
     .map((i, iframe) => {
       const iframeId = $(iframe).attr("id");
