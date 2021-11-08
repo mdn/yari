@@ -12,6 +12,7 @@ const express = require("express");
 
 const router = express();
 
+// file deepcode ignore NoRateLimitingForExpensiveWebOperation: not publicly exposed
 router.get("*", (req, res) => {
   const folder = path.resolve("./fake-v1-api");
   if (!fs.existsSync(folder)) {
@@ -22,6 +23,7 @@ router.get("*", (req, res) => {
   const filepath = path.join(folder, `${req.url.slice(1)}.json`);
 
   if (fs.existsSync(filepath)) {
+    // file deepcode ignore PT: no exposed publicly
     const payload = fs.readFileSync(filepath);
     res.json(JSON.parse(payload));
   } else {

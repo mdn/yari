@@ -1,38 +1,42 @@
-const fs = require("fs");
-const path = require("path");
+import fs from "fs";
+import path from "path";
 
-const chalk = require("chalk");
-const express = require("express");
-const send = require("send");
-const { createProxyMiddleware } = require("http-proxy-middleware");
-const cookieParser = require("cookie-parser");
-const openEditor = require("open-editor");
+import chalk from "chalk";
+import express from "express";
+import send from "send";
+import { createProxyMiddleware } from "http-proxy-middleware";
+import cookieParser from "cookie-parser";
+import openEditor from "open-editor";
 
-const {
+import {
   buildDocument,
   buildLiveSamplePageFromURL,
   renderContributorsTxt,
-} = require("../build");
-const { findDocumentTranslations } = require("../content/translations");
-const {
+} from "../build/index.mjs";
+import { findDocumentTranslations } from "../content/translations.js";
+import {
   CONTENT_ROOT,
   Document,
   Redirect,
   Image,
   CONTENT_TRANSLATED_ROOT,
-} = require("../content");
+} from "../content/index.js";
+//const { renderHTML } = require("../ssr/dist/main");
+import { createRequire } from "module";
+const require = createRequire(import.meta.url);
 // eslint-disable-next-line node/no-missing-require
-const { renderHTML } = require("../ssr/dist/main");
-const { CSP_VALUE, DEFAULT_LOCALE } = require("../libs/constants");
+const { renderHTML } = require("../ssr/dist/main.js");
 
-const { STATIC_ROOT, PROXY_HOSTNAME, FAKE_V1_API } = require("./constants");
-const documentRouter = require("./document");
-const fakeV1APIRouter = require("./fake-v1-api");
-const { searchIndexRoute } = require("./search-index");
-const flawsRoute = require("./flaws");
-const { router: translationsRouter } = require("./translations");
-const { staticMiddlewares, originRequestMiddleware } = require("./middlewares");
-const { getRoot } = require("../content/utils");
+import { CSP_VALUE, DEFAULT_LOCALE } from "../libs/constants/index.js";
+
+import { STATIC_ROOT, PROXY_HOSTNAME, FAKE_V1_API } from "./constants.js";
+import documentRouter from "./document.mjs";
+import fakeV1APIRouter from "./fake-v1-api.js";
+import { searchIndexRoute } from "./search-index.mjs";
+import flawsRoute from "./flaws.mjs";
+import { router } from "./translations.mjs";
+import { staticMiddlewares, originRequestMiddleware } from "./middlewares.mjs";
+import { getRoot } from "../content/utils.js";
 
 async function buildDocumentFromURL(url) {
   const document = Document.findByURL(url);
@@ -158,7 +162,7 @@ app.use("/:locale/search-index.json", searchIndexRoute);
 
 app.get("/_flaws", flawsRoute);
 
-app.use("/_translations", translationsRouter);
+app.use("/_translations", router);
 
 app.get("/*/contributors.txt", async (req, res) => {
   const url = req.path.replace(/\/contributors\.txt$/, "");
