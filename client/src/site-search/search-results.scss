@@ -59,7 +59,7 @@
 
   // Used to indicate that a search result link is in a different locale
   .locale-indicator {
-    background-color: $background-secondary;
+    background-color: var(--background-secondary);
     cursor: help;
     display: block;
     font-size: 0.8125rem;

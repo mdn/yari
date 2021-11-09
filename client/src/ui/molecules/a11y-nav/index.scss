@@ -22,7 +22,7 @@ Keyboard & screen reader skip link menu
 
     &:hover,
     &:focus {
-      box-shadow: $shadow-01;
+      box-shadow: var(--shadow-01);
       text-decoration: none;
       top: 20em;
     }

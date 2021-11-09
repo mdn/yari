@@ -4,10 +4,10 @@
 
 .icon-button {
   background: none;
-  color: $text-primary;
+  color: var(--text-primary);
 
   &::before {
-    background-color: $icon-primary;
+    background-color: var(--icon-primary);
     background-position: center center;
     background-repeat: no-repeat;
     background-size: 16px;
@@ -36,7 +36,7 @@
 
 .article-actions-close {
   align-items: center;
-  border-bottom: 1px solid $border-secondary;
+  border-bottom: 1px solid var(--border-secondary);
   display: flex;
   gap: 0.5rem;
   padding: 0.5rem;

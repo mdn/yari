@@ -2,12 +2,12 @@
 @use "../../base/theme" as *;
 .sign-out-form {
   @media screen and (min-width: $screen-md) {
-    border-top: 1px solid $border-primary;
+    border-top: 1px solid var(--border-primary);
   }
 }
 
 button.signout-button {
-  color: $text-primary;
+  color: var(--text-primary);
   padding: 0.5rem;
   width: 100%;
 
@@ -19,6 +19,6 @@ button.signout-button {
 
   &:hover,
   &:focus {
-    background-color: $background-secondary;
+    background-color: var(--background-secondary);
   }
 }

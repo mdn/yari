@@ -3,9 +3,9 @@
 
 .article-actions-container {
   align-items: center;
-  background-color: $background-secondary;
-  border-bottom: 1px solid $border-primary;
-  border-top: 1px solid $border-primary;
+  background-color: var(--background-secondary);
+  border-bottom: 1px solid var(--border-primary);
+  border-top: 1px solid var(--border-primary);
   display: flex;
   gap: 0.5rem;
   padding-left: 0.5rem;

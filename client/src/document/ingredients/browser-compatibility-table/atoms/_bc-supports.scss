@@ -80,7 +80,7 @@ $bc-partial-support-cross: rgba(144, 99, 18, 0.2);
 }
 
 .bc-supports-unknown {
-  background-color: $background-secondary;
+  background-color: var(--background-secondary);
 }
 
 .bc-supports-preview {

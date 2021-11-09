@@ -17,7 +17,7 @@
   }
 
   &.show-grid {
-    background-color: $background-primary;
+    background-color: var(--background-primary);
     display: flex;
     flex-direction: column-reverse;
   }

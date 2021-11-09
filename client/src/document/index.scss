@@ -23,7 +23,7 @@
 }
 
 a.page-not-created {
-  color: $icon-critical;
+  color: var(--icon-critical);
   cursor: not-allowed;
 }
 
@@ -57,14 +57,14 @@ a.page-not-created {
 
   .example-bad {
     &::after {
-      background-color: $icon-critical;
+      background-color: var(--icon-critical);
       mask-image: url("~@mdn/dinocons/emojis/frown.svg");
     }
   }
 
   .example-good {
     &::after {
-      background-color: $icon-success;
+      background-color: var(--icon-success);
       mask-image: url("~@mdn/dinocons/emojis/smiley.svg");
     }
   }
@@ -77,7 +77,7 @@ a.page-not-created {
         no-repeat;
       background-position: 61% 45%;
       background-size: 1rem;
-      border: 1px solid $border-secondary;
+      border: 1px solid var(--border-secondary);
       border-radius: 0.25rem;
       cursor: pointer;
       height: 3rem;
@@ -95,7 +95,7 @@ a.page-not-created {
 
         &:hover,
         &:focus {
-          background-color: $background-secondary;
+          background-color: var(--background-secondary);
           opacity: 1;
         }
       }
@@ -155,7 +155,7 @@ a.page-not-created {
     }
 
     &:active {
-      background-color: $text-link;
+      background-color: var(--text-link);
       color: white;
 
       code {
@@ -214,7 +214,7 @@ a.page-not-created {
   .inline {
     &.optional,
     &.readonly {
-      background-color: $background-secondary;
+      background-color: var(--background-secondary);
     }
   }
 
@@ -254,11 +254,11 @@ a.page-not-created {
 
     .icon-experimental,
     .icon-nonstandard {
-      color: $icon-information;
+      color: var(--icon-information);
     }
 
     .icon-deprecated {
-      color: $icon-critical;
+      color: var(--icon-critical);
     }
   }
 

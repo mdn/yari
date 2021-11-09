@@ -12,7 +12,7 @@
 .submenu-icon {
   &.bookmarks-icon,
   &.notifications-icon {
-    background-color: $accent-primary;
+    background-color: var(--accent-primary);
 
     &::before {
       background-color: white;

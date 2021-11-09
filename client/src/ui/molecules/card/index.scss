@@ -4,7 +4,7 @@
 .card {
   background-color: white;
   border-radius: 0.25rem;
-  box-shadow: $shadow-01;
+  box-shadow: var(--shadow-01);
   margin: 0 auto (1rem);
   max-width: 95%;
   padding: 0.5rem;
@@ -44,7 +44,7 @@
   }
 
   .author {
-    border-bottom: $border-primary;
+    border-bottom: var(--border-primary);
     margin: 0.5rem 0;
     padding-bottom: 1rem;
   }

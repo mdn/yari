@@ -18,29 +18,29 @@
   input.search-input-field {
     // make webkit play nice with search input types
     -webkit-appearance: none; /* stylelint-disable-line property-no-vendor-prefix */
-    border: 1px solid $border-primary;
+    border: 1px solid var(--border-primary);
     border-radius: 0.25rem;
-    color: $background-primary;
+    color: var(--background-primary);
     min-width: 60px;
     padding: 0.5rem 0.5rem 0.5rem 2.5rem;
     width: 100%;
 
     &:focus {
-      outline: $border-primary;
+      outline: var(--border-primary);
     }
   }
 
   .server-error {
-    color: $icon-critical;
+    color: var(--icon-critical);
     margin: 0;
   }
 
   .search-results {
     background-color: white;
-    border: 2px solid $background-primary;
+    border: 2px solid var(--background-primary);
     border-radius: 0.25rem;
     border-top: 0;
-    box-shadow: $shadow-01;
+    box-shadow: var(--shadow-01);
     left: 0;
     position: absolute;
     top: 42px;
@@ -48,7 +48,7 @@
     z-index: 1000;
 
     .indexing-warning {
-      color: $icon-warning;
+      color: var(--icon-warning);
     }
 
     div {
@@ -64,13 +64,13 @@
     }
 
     .result-item {
-      border-bottom: 1px solid $border-primary;
+      border-bottom: 1px solid var(--border-primary);
       word-break: break-word;
     }
 
     .result-item:hover,
     .result-item.highlight {
-      background-color: $background-tertiary;
+      background-color: var(--background-tertiary);
     }
 
     .result-item:hover,
@@ -83,7 +83,7 @@
     }
 
     mark {
-      background-color: $icon-warning;
+      background-color: var(--icon-warning);
     }
 
     small {
@@ -95,7 +95,7 @@
     }
 
     div.searchindex-error {
-      color: $icon-critical;
+      color: var(--icon-critical);
     }
   }
 }
@@ -115,7 +115,7 @@
   }
 
   &::before {
-    background-color: $icon-primary;
+    background-color: var(--icon-primary);
     background-size: 16px;
     content: "";
     display: block;
@@ -136,7 +136,7 @@
     padding: 0.5rem;
 
     &::before {
-      background-color: $icon-primary;
+      background-color: var(--icon-primary);
       background-size: 12px;
       content: "";
       display: block;
@@ -153,7 +153,7 @@
   &:hover,
   &:focus,
   &:active {
-    background-color: $button-secondary-hover;
+    background-color: var(--button-secondary-hover);
     outline: white;
   }
 }
