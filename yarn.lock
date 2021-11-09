@@ -2621,10 +2621,10 @@
   resolved "https://registry.yarnpkg.com/@mdn/dinocons/-/dinocons-0.3.5.tgz#3c3e9cb2877c4449c224134cf29b2658f4614576"
   integrity sha512-LIM66Ylm26YE/fYc0IquszpE2rcta2gaBrKLWO5HH0CnlQP7HLwh6D6SrErIgGnXzMCw3kc5t4YX/QgwcPFvEA==
 
-"@mdn/minimalist@^2.0.2":
-  version "2.0.2"
-  resolved "https://registry.yarnpkg.com/@mdn/minimalist/-/minimalist-2.0.2.tgz#baff15e7d56aa1e216bfe8813d3e0a8fdf524f9d"
-  integrity sha512-ZUJpDYl8Lb7HQFljisaCKZ9GZi79U8mG64UsGxrknrHVfQrgDYDj4rIkR+N57Wv+N9KQKjrhP5MJXN4kt6kZ6g==
+"@mdn/minimalist@^2.0.3":
+  version "2.0.3"
+  resolved "https://registry.yarnpkg.com/@mdn/minimalist/-/minimalist-2.0.3.tgz#511eb106ee91b215a13e8709c21f79436b7e1b6a"
+  integrity sha512-ENTIH/na+1aLDH+l8dDccC/5Fuhy/9lz7Q/tAVenZ4efi7jlG303SNJdanAZAPYANvu3vsqSHudNWZRhp4d/Pw==
 
 "@mdx-js/loader@^1.6.22":
   version "1.6.22"
@@ -10769,10 +10769,10 @@ human-signals@^2.1.0:
   resolved "https://registry.yarnpkg.com/human-signals/-/human-signals-2.1.0.tgz#dc91fcba42e4d06e4abaed33b3e7a3c02f514ea0"
   integrity sha512-B4FFZ6q/T2jhhksgkbEW3HBvWIfDW85snkQgawt07S7J5QXTk6BkNV+0yAeZrM5QpMAdYlocGoljn0sJ/WQkFw==
 
-husky@^6.0.0:
-  version "6.0.0"
-  resolved "https://registry.yarnpkg.com/husky/-/husky-6.0.0.tgz#810f11869adf51604c32ea577edbc377d7f9319e"
-  integrity sha512-SQS2gDTB7tBN486QSoKPKQItZw97BMOd+Kdb6ghfpBc0yXyzrddI0oDV5MkDAbuB4X2mO3/nj60TRMcYxwzZeQ==
+husky@^7.0.4:
+  version "7.0.4"
+  resolved "https://registry.yarnpkg.com/husky/-/husky-7.0.4.tgz#242048245dc49c8fb1bf0cc7cfb98dd722531535"
+  integrity sha512-vbaCKN2QLtP/vD4yvs6iz6hBEo6wkSzs8HpRah1Z6aGmF2KW5PdYuAd7uX5a+OyBZHBhd+TFLqgjUgytQr4RvQ==
 
 iconv-lite@0.4.24, iconv-lite@^0.4.24:
   version "0.4.24"
