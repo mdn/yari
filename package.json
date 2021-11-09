@@ -99,7 +99,7 @@
     "read-chunk": "3.2.0",
     "rehype-format": "^3.1.0",
     "rehype-parse": "^7.0.1",
-    "rehype-raw": "^5.1.0",
+    "rehype-raw": "^6.1.0",
     "rehype-remark": "^8.1.1",
     "rehype-stringify": "^8.0.0",
     "remark-gfm": "^1.0.0",
