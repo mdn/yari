@@ -799,6 +799,13 @@ const SCL3_REDIRECT_PATTERNS = [
   redirect(/^es4.*/i, "http://www.ecma-international.org/memento/TC39.htm", {
     permanent: false,
   }),
+  // Redirect for URL baked into Firefox releases.
+  // https://github.com/mdn/content/issues/9734
+  redirect(
+    /^en\/Optimizing_Your_Pages_for_Speculative_Parsing\/?$/i,
+    "/en-US/docs/Glossary/speculative_parsing",
+    { permanent: true }
+  ),
 ];
 
 const zoneRedirects = [
