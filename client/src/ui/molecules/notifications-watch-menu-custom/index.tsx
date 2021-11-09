@@ -101,23 +101,16 @@ export function NotificationsWatchMenuCustom({ setStepHandler }) {
 
         {compatOptions.map((option, index) => (
           <fieldset key={`CompatCat-${index}`}>
-            <details>
-              <summary>
+            <WatchMenuOption fieldName={option.name} checked={option.checked} />
+            <ul>
+              {option.interfaces.map((interfaceOption, index) => (
                 <WatchMenuOption
-                  fieldName={option.name}
-                  checked={option.checked}
+                  key={`CompatInterface-${index}`}
+                  fieldName={interfaceOption.name}
+                  checked={interfaceOption.checked}
                 />
-              </summary>
-              <ul>
-                {option.interfaces.map((interfaceOption, index) => (
-                  <WatchMenuOption
-                    key={`CompatInterface-${index}`}
-                    fieldName={interfaceOption.name}
-                    checked={interfaceOption.checked}
-                  />
-                ))}
-              </ul>
-            </details>
+              ))}
+            </ul>
           </fieldset>
         ))}
       </fieldset>
