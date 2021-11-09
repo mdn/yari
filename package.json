@@ -105,7 +105,7 @@
     "remark-gfm": "^1.0.0",
     "remark-parse": "^9.0.0",
     "remark-rehype": "^8.1.0",
-    "remark-stringify": "^9.0.1",
+    "remark-stringify": "^10.0.1",
     "sanitize-filename": "^1.6.3",
     "send": "0.17.1",
     "source-map-support": "0.5.20",
