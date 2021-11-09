@@ -16,24 +16,6 @@
     margin-bottom: 2rem;
   }
 
-  .sub-price {
-    color: white;
-    font-family: Montserrat;
-    font-style: normal;
-    font-weight: 650;
-    font-size: 36px;
-    line-height: 120%;
-  }
-
-  .sub-length {
-    color: white;
-    font-family: Montserrat;
-    font-style: normal;
-    font-weight: 650;
-    font-size: 24px;
-    line-height: 120%;
-  }
-
   .wrapper {
     display: flex;
     margin: 0 auto;
@@ -42,27 +24,93 @@
     justify-content: center;
 
     .subscribe-detail {
-      padding: 4rem 2rem;
       color: white;
       min-width: 20rem;
       display: flex;
-      gap: 2rem;
+      gap: 1rem;
       flex-direction: column;
       align-items: center;
       border-radius: 1rem;
 
       &#annually {
-        background: $mdn-color-violet-40;
+        background: $mdn-color-violet-50;
+
+        .content {
+          padding: 0 2rem 2rem 2rem;
+        }
       }
 
       &#monthly {
         background: $mdn-color-green-60;
+
+        .content {
+          padding: 3rem 2rem 2rem 2rem;
+        }
       }
 
-      p {
-        text-align: left;
+      .tagline {
+        padding: 0.5rem;
+        background: #0000001f;
+        border-radius: 1rem 1rem 0 0;
         width: 100%;
-        line-height: 1.75;
+        font-size: 14px;
+      }
+
+      .content {
+        flex-direction: column;
+        align-items: center;
+        gap: 2rem;
+        display: flex;
+        width: 100%;
+
+        .sub-info {
+          display: flex;
+          flex-direction: column;
+          gap: 0.5rem;
+
+          .sub-price {
+            color: white;
+            font-family: Montserrat;
+            font-style: normal;
+            font-weight: 650;
+            font-size: 36px;
+            line-height: 120%;
+          }
+
+          .sub-length {
+            color: white;
+            font-family: Montserrat;
+            font-style: normal;
+            font-weight: 650;
+            font-size: 24px;
+            line-height: 120%;
+          }
+
+          i {
+            font-size: 14px;
+          }
+        }
+
+        ul {
+          width: 100%;
+
+          li {
+            text-align: left;
+            width: 100%;
+            line-height: 1.75;
+
+            &:before {
+              content: "✓";
+              margin-right: 0.5rem;
+            }
+          }
+        }
+      }
+
+      .terms {
+        font-size: 14px;
+        text-decoration: underline;
+        font-style: italic;
       }
     }
   }

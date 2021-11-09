@@ -7,6 +7,8 @@ $font-fallback: BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu",
       format("woff2 supports variations"),
     url("../../assets/fonts/Inter.var.woff2") format("woff2-variations");
   font-weight: 1 999;
+  font-stretch: 75% 100%;
+  font-style: oblique 0deg 20deg;
   font-display: swap;
 }
 
