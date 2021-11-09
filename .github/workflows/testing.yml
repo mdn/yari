@@ -14,10 +14,10 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v2.3.4
+      - uses: actions/checkout@v2.4.0
 
       - name: Setup Node.js environment
-        uses: actions/setup-node@v2.4.0
+        uses: actions/setup-node@v2.4.1
         with:
           node-version: "12"
           cache: "yarn"
@@ -68,6 +68,15 @@ jobs:
         run: |
           yarn test:testing
           yarn test:headless
+
+      - name: Basic m2h/h2m tool testing
+        env:
+          ENV_FILE: testing/.env
+        run: |
+          yarn md m2h markdown/tool/m2h --locale en-US
+          diff -s testing/content/files/en-us/markdown/tool/m2h/index.html testing/content/files/en-us/markdown/tool/m2h/expected.html
+          yarn md h2m markdown/tool/h2m --locale en-US
+          diff -s testing/content/files/en-us/markdown/tool/h2m/index.md testing/content/files/en-us/markdown/tool/h2m/expected.md
 
       - name: Debug server's stdout and stderr if tests failed
         if: failure()
