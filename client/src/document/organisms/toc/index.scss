@@ -1,11 +1,10 @@
 @use "sass:math";
 
 @use "../../../ui/base/styles" as *;
-@use "../../../ui/base/theme" as *;
 
 .document-toc {
   font-size: 1rem;
-  padding: math.div(1rem, 4) 1rem;
+  padding: 0.25rem 1rem;
   position: relative;
 
   @media screen and (max-width: $screen-sm) {

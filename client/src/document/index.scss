@@ -1,5 +1,4 @@
 @use "../ui/base/styles" as *;
-@use "../ui/base/theme" as *;
 @use "../ui/molecules/grids/grids.scss" as *;
 @use "../ui/base/typography" as *;
 
@@ -73,7 +72,7 @@ a.page-not-created {
     position: relative;
 
     .copy-icon {
-      background: $icon-primary url("../assets/clippy.svg") center center
+      background: var(--icon-primary) url("../assets/clippy.svg") center center
         no-repeat;
       background-position: 61% 45%;
       background-size: 1rem;

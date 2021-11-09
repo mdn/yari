@@ -1,6 +1,5 @@
 @use "~@mdn/minimalist/sass/mixins/utils" as *;
 @use "../../base/styles" as *;
-@use "../../base/theme" as *;
 
 .hero {
   background-color: $mdn-color-blue-20;
