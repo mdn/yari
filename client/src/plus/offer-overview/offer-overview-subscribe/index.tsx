@@ -25,7 +25,9 @@ function OfferOverviewSubscribe() {
               <li>MDN Offline</li>
               <li>Access to all themes</li>
             </ul>
-            <a href={MDN_PLUS_SUBSCRIBE_MONTHLY_URL}>Get yearly plan</a>
+            <a href="https://accounts.stage.mozaws.net/subscriptions/products/prod_Jtbg9tyGyLRuB0?plan=price_1JpIPwKb9q6OnNsLJLsIqMp7">
+              Get yearly plan
+            </a>
             <span className="terms">See terms and conditions</span>
           </div>
         </div>
