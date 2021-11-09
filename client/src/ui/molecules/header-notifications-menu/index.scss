@@ -83,7 +83,7 @@
     padding: 1rem;
 
     &.unread {
-      background-color: color.adjust($mdn-color-blue-50, $alpha: -0.9);
+      background-color: color.adjust($mdn-color-blue-40, $alpha: -0.9);
     }
 
     &:hover,

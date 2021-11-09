@@ -1,6 +1,8 @@
 import React from "react";
 
 import { IconButton } from "../../atoms/icon-button";
+import { NotificationsWatchMenuCustom } from "../notifications-watch-menu-custom";
+import { NotificationsWatchMenuStart } from "../notifications-watch-menu-start";
 
 import "./index.scss";
 
@@ -10,6 +12,7 @@ export const NotificationsWatchMenu = () => {
   const [visibleSubMenuId, setVisibleSubMenuId] = React.useState<string | null>(
     null
   );
+  const [visibleStep, setVisibleStep] = React.useState<number>(0);
 
   /**
    * Show and hide submenus in the main menu.
@@ -19,6 +22,14 @@ export const NotificationsWatchMenu = () => {
     // store the current activeElement
     previousActiveElement.current = document.activeElement as HTMLButtonElement;
     setVisibleSubMenuId(visibleSubMenuId === menuEntryId ? null : menuEntryId);
+  }
+
+  function showStepStart() {
+    setVisibleStep(0);
+  }
+
+  function showStepCustom() {
+    setVisibleStep(1);
   }
 
   return (
@@ -36,63 +47,17 @@ export const NotificationsWatchMenu = () => {
         <span className="">Watch</span>
       </IconButton>
 
-      <form
+      <div
         className={`${menuId} ${menuId === visibleSubMenuId ? "show" : ""}`}
         role="menu"
         aria-labelledby={`${menuId}-button`}
       >
-        <div className="watch-submenu-header">Notifications</div>
-
-        <button
-          type="submit"
-          role="menuitemradio"
-          aria-checked="false"
-          className="watch-menu-button"
-        >
-          <span className="watch-menu-button-wrap">
-            <span className="watch-menu-button-status">✅</span>
-
-            <span className="watch-menu-button-label">Major updates</span>
-            <span className="watch-menu-button-text">
-              Only receive notifications of major browser compatability releases
-              and revisions to this article.
-            </span>
-          </span>
-        </button>
-
-        <button
-          type="submit"
-          role="menuitemradio"
-          aria-checked="true"
-          aria-haspopup="true"
-          className="watch-menu-button"
-        >
-          <span className="watch-menu-button-wrap">
-            <span className="watch-menu-button-status"></span>
-
-            <span className="watch-menu-button-label">Custom</span>
-            <span className="watch-menu-button-text">
-              Select which events you would like to be notified of.
-            </span>
-          </span>
-        </button>
-
-        <button
-          type="submit"
-          role="menuitemradio"
-          aria-checked="false"
-          className="watch-menu-button"
-        >
-          <span className="watch-menu-button-wrap">
-            <span className="watch-menu-button-status"></span>
-
-            <span className="watch-menu-button-label">Unwatch</span>
-            <span className="watch-menu-button-text">
-              Stop receiveing notifications about this article.
-            </span>
-          </span>
-        </button>
-      </form>
+        {visibleStep === 0 ? (
+          <NotificationsWatchMenuStart setStepHandler={showStepCustom} />
+        ) : (
+          <NotificationsWatchMenuCustom setStepHandler={showStepStart} />
+        )}
+      </div>
     </>
   );
 };
