@@ -110,7 +110,7 @@
     "send": "0.17.1",
     "source-map-support": "0.5.20",
     "tempy": "1.0.1",
-    "unified": "^9.2.1",
+    "unified": "^10.1.0",
     "unist-builder": "^2.0.3",
     "unist-util-visit": "2.0.3"
   },
