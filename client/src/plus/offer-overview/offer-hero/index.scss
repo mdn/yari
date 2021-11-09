@@ -66,6 +66,13 @@ $text-stroke-width: 2px;
       span {
         display: inline-flex;
         width: 100%;
+
+        u {
+          padding: 0 0.25rem;
+          text-decoration-thickness: 0.15rem;
+          text-underline-offset: 0.1em;
+          text-decoration-color: $mdn-color-red-20;
+        }
       }
     }
 
