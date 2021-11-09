@@ -120,7 +120,7 @@
     "tempy": "^2.0.0",
     "unified": "^10.1.0",
     "unist-builder": "^2.0.3",
-    "unist-util-visit": "^2.0.3"
+    "unist-util-visit": "^4.1.0"
   },
   "devDependencies": {
     "@babel/core": "^7.18.2",
