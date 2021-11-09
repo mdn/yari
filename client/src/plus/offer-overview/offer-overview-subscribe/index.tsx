@@ -1,4 +1,3 @@
-import { SubscribeLink } from "../../../ui/atoms/subscribe-link";
 import "./index.scss";
 
 function OfferOverviewSubscribe() {
