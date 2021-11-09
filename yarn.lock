@@ -4975,10 +4975,10 @@ entities@^4.2.0, entities@^4.3.0:
   resolved "https://registry.yarnpkg.com/entities/-/entities-4.3.0.tgz#62915f08d67353bb4eb67e3d62641a4059aec656"
   integrity sha512-/iP1rZrSEJ0DTlPiX+jbzlA3eVkY/e8L8SozroF395fIqE3TYF/Nz7YOMAawta+vLmyJ/hkGNNPcSbMADCCXbg==
 
-env-editor@^0.4.1:
-  version "0.4.2"
-  resolved "https://registry.yarnpkg.com/env-editor/-/env-editor-0.4.2.tgz#4e76568d0bd8f5c2b6d314a9412c8fe9aa3ae861"
-  integrity sha512-ObFo8v4rQJAE59M69QzwloxPZtd33TpYEIjtKD1rrFDcM1Gd7IkDxEBU+HriziN6HSHQnBJi8Dmy+JWkav5HKA==
+env-editor@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/env-editor/-/env-editor-1.0.0.tgz#a7de585a96f0198d9ba20a786c17a691c53afaab"
+  integrity sha512-SRy6e7u1tZgohoxL952q9+kbRkkUrzi63dB7J4zr6wOSMQrCD0KJUNhMZajGTNQfdY68PaStfmIzh7To/FKilQ==
 
 env-variable@0.0.x:
   version "0.0.6"
@@ -8260,12 +8260,12 @@ lilconfig@2.0.5, lilconfig@^2.0.3, lilconfig@^2.0.5:
   resolved "https://registry.yarnpkg.com/lilconfig/-/lilconfig-2.0.5.tgz#19e57fd06ccc3848fd1891655b5a447092225b25"
   integrity sha512-xaYmXZtTHPAw5m+xLN8ab9C+3a8YmV3asNSPOATITbtwrfbwaLJj8h66H1WMIpALCkqsIzK3h7oQ+PdX+LQ9Eg==
 
-line-column-path@^2.0.0:
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/line-column-path/-/line-column-path-2.0.0.tgz#439aff48ef80d74c475801a25b560d021acf1288"
-  integrity sha512-nz3A+vi4bElhwd62E9+Qk/f9BDYLSzD/4Hy1rir0I4GnMxSTezSymzANyph5N1PgRZ3sSbA+yR5hOuXxc71a0Q==
+line-column-path@^3.0.0:
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/line-column-path/-/line-column-path-3.0.0.tgz#c873b42feb57f5f97bc72af30d21581076b3119e"
+  integrity sha512-Atocnm7Wr9nuvAn97yEPQa3pcQI5eLQGBz+m6iTb+CVw+IOzYB9MrYK7jI7BfC9ISnT4Fu0eiwhAScV//rp4Hw==
   dependencies:
-    type-fest "^0.4.1"
+    type-fest "^2.0.0"
 
 lines-and-columns@^1.1.6:
   version "1.2.4"
@@ -9501,17 +9501,17 @@ onetime@^5.1.0, onetime@^5.1.2:
   dependencies:
     mimic-fn "^2.1.0"
 
-open-editor@^3.0.0:
-  version "3.0.0"
-  resolved "https://registry.yarnpkg.com/open-editor/-/open-editor-3.0.0.tgz#2c9bfa013c0518601f0c321d89b68ff2bb6851ab"
-  integrity sha512-00Nqoa7k8F4AK1oSFMIIhYku+essXiCljR2L2kV+bl5j90ANgbQgzEeTdZu23LsikDoz+KfhyRHpGLAwpQhugA==
+open-editor@^4.0.0:
+  version "4.0.0"
+  resolved "https://registry.yarnpkg.com/open-editor/-/open-editor-4.0.0.tgz#881900b3c5540eaeef5b880abd05638ee82ca81f"
+  integrity sha512-5mKZ98iFdkivozt5XTCOspoKbL3wtYu6oOoVxfWQ0qUX9NYsK8pdkHE7VUHXr+CwyC3nf6mV0S5FPsMS65innw==
   dependencies:
-    env-editor "^0.4.1"
-    execa "^5.0.0"
-    line-column-path "^2.0.0"
-    open "^7.3.0"
+    env-editor "^1.0.0"
+    execa "^5.1.1"
+    line-column-path "^3.0.0"
+    open "^8.4.0"
 
-open@^7.3.0, open@^7.3.1:
+open@^7.3.1:
   version "7.4.2"
   resolved "https://registry.yarnpkg.com/open/-/open-7.4.2.tgz#b8147e26dcf3e426316c730089fd71edd29c2321"
   integrity sha512-MVHddDVweXZF3awtlAS+6pgKLlm/JgxZ90+/NBurBoQctVOOB/zDdVjcyPzQ+0laDGbsWgrRkflI65sQeOgT9Q==
@@ -12865,11 +12865,6 @@ type-fest@^0.21.3:
   version "0.21.3"
   resolved "https://registry.yarnpkg.com/type-fest/-/type-fest-0.21.3.tgz#d260a24b0198436e133fa26a524a6d65fa3b2e37"
   integrity sha512-t0rzBq87m3fVcduHDUFhKmyyX+9eo6WQjZvf51Ea/M0Q7+T374Jp1aUiyUl0GKxp8M/OETVHSDvmkyPgvX+X2w==
-
-type-fest@^0.4.1:
-  version "0.4.1"
-  resolved "https://registry.yarnpkg.com/type-fest/-/type-fest-0.4.1.tgz#8bdf77743385d8a4f13ba95f610f5ccd68c728f8"
-  integrity sha512-IwzA/LSfD2vC1/YDYMv/zHP4rDF1usCwllsDpbolT3D4fUepIO7f9K70jjmUewU/LmGUKJcwcVtDCpnKk4BPMw==
 
 type-fest@^0.6.0:
   version "0.6.0"
