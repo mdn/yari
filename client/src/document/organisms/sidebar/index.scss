@@ -1,9 +1,8 @@
 @use "sass:math";
 
-@import "~@mdn/minimalist/sass/vars/mdn-web-docs-palette";
-@import "~@mdn/minimalist/sass/vars/layout";
-@import "~@mdn/minimalist/sass/vars/typography";
-@import "~@mdn/minimalist/sass/mixins/utils";
+@use "~@mdn/minimalist/sass/vars/mdn-web-docs-palette" as *;
+@use "~@mdn/minimalist/sass/vars/layout" as *;
+@use "~@mdn/minimalist/sass/vars/typography" as *;
 
 .sidebar {
   font-size: $small-font-size;
@@ -16,7 +15,9 @@
   }
 
   ol {
-    @include reset-list();
+    list-style: none;
+    margin: 0;
+    padding: 0;
     width: 100%;
 
     ol,
