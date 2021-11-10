@@ -118,6 +118,11 @@
               content: "✓";
               margin-right: 0.5rem;
             }
+
+            a {
+              display: inline-block;
+              color: white;
+            }
           }
         }
       }
@@ -127,14 +132,14 @@
         text-decoration: underline;
         font-style: italic;
       }
-    }
-  }
 
-  a {
-    background: $mdn-color-dark-grey-90;
-    padding: 0.25rem 0.5rem;
-    color: white;
-    width: fit-content;
-    font-weight: 620;
+      .sub-link {
+        background: $mdn-color-dark-grey-90;
+        padding: 0.25rem 0.5rem;
+        color: white;
+        width: fit-content;
+        font-weight: 620;
+      }
+    }
   }
 }
