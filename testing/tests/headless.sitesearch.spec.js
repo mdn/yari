@@ -52,7 +52,7 @@ test.describe("Site search", () => {
   });
 
   test("search and go to page 2", async ({ page }) => {
-    await page.goto(testURL("/en-US/search/"));
+    await page.goto(testURL("/en-US/search"));
     // See server/static.js for how fixtures are hardcoded
     await page.fill(SEARCH_SELECTOR, "SERIAL(20)");
     await page.waitForSelector("#nav-main-search"); // autocomplete search form
@@ -76,6 +76,6 @@ test.describe("Site search", () => {
     expect(await page.isVisible("text=Serial 19")).toBeTruthy();
     expect(await page.isVisible('a:has-text("Previous")')).toBeTruthy();
     expect(await page.isVisible('a:has-text("Next")')).toBeFalsy();
-    expect(page.url()).toBe(testURL("/en-US/search?q=SERIAL%2820%29&page=2"));
+    expect(page.url()).toBe(testURL("/en-US/search/?q=SERIAL%2820%29&page=2"));
   });
 });
