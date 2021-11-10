@@ -1,6 +1,3 @@
-$font-fallback: BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu",
-  "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-sans;
-
 @font-face {
   font-family: "Inter";
   src: url("../../assets/fonts/Inter.var.woff2")
@@ -20,14 +17,3 @@ $font-fallback: BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu",
   font-weight: 1 999;
   font-display: swap;
 }
-
-$Inter: Inter, $font-fallback;
-$Montserrat: Montserrat, $font-fallback;
-
-$mdn-ui-type-heading-l: 600 16px/19px $Montserrat;
-$mdn-ui-type-body-l: 400 16px/19px $Inter;
-$mdn-ui-type-body-m: 400 13px/16px $Inter;
-$mdn-ui-type-body-s: 500 11px/14px $Inter;
-$mdn-ui-type-emphasis-l: 600 16px/19px $Inter;
-$mdn-ui-type-emphasis-m: 600 13px/16px $Inter;
-$mdn-ui-type-label-s: 600 10px/12px $Montserrat;

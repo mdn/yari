@@ -227,7 +227,7 @@ SCL3_REDIRECT_URLS = list(
             url_test("/en/demos", "/en/docs/Web/Demos_of_open_web_technologies"),
             url_test(
                 "/{en,EN}/optimizing_your_pages_for_speculative_{PARSING,parsing,parsing/}",
-                "/en-US/docs/Glossary/speculative_parsing"
+                "/en-US/docs/Glossary/speculative_parsing",
             ),
         )
     )

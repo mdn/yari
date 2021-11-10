@@ -1,4 +1,4 @@
-@use "../../base/styles" as *;
+@use "../../vars" as *;
 @use "../../base/typography" as *;
 
 .submenu {
@@ -95,7 +95,7 @@
   }
 
   .submenu-item-heading {
-    font: $mdn-ui-type-emphasis-m;
+    font: var(--type-emphasis-m);
     text-align: left;
 
     @media screen and (min-width: $screen-md) {
@@ -110,7 +110,7 @@
     @media screen and (min-width: $screen-md) {
       display: block;
       margin-bottom: 0;
-      font: $mdn-ui-type-body-s;
+      font: var(--type-body-s);
     }
   }
 

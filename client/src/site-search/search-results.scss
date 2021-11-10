@@ -1,5 +1,5 @@
 @use "sass:math";
-@use "../ui/base/styles" as *;
+@use "../ui/vars" as *;
 
 .search-results {
   .highlight,

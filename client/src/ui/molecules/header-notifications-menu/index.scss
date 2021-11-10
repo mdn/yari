@@ -1,5 +1,5 @@
 @use "sass:color";
-@use "../../base/styles" as *;
+@use "../../vars" as *;
 @use "../../base/typography" as *;
 
 .notifications-menu {
@@ -46,8 +46,6 @@
     }
 
     &.unread-notifications {
-      background-color: var(--icon-secondary);
-
       @media screen and (min-width: $screen-md) {
         background-color: transparent;
 
@@ -78,11 +76,13 @@
 
   .notifications-submenu-action {
     border-top: 1px solid var(--border-primary);
-    display: block;
-    padding: 1rem 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    padding: 1rem;
 
     &.unread {
-      background-color: color.adjust($mdn-color-blue-50, $alpha: -0.9);
+      background-color: color.adjust($mdn-color-blue-40, $alpha: -0.9);
     }
 
     &:hover,
@@ -99,14 +99,18 @@
   .notifications-submenu-header,
   .notifications-submenu-item-heading,
   .notifications-submenu-item-description {
-    font-size: $mdn-ui-type-body-m;
+    font-size: 0.8125rem;
   }
 
   .notifications-submenu-header {
     display: flex;
-    gap: 1rem;
+    gap: 0.5rem;
     justify-content: space-between;
-    padding: 1rem 2rem;
+    padding: 1rem;
+  }
+
+  .notifications-submenu-header-action {
+    padding: 0;
   }
 
   .notifications-submenu-item-heading,
@@ -124,13 +128,13 @@
 
   .notifications-submenu-item-created {
     color: var(--text-inactive);
-    font-size: $mdn-ui-type-body-s;
+    font-size: 0.6875rem;
     font-weight: 600;
   }
 
   .notifications-submenu-empty-message {
     font-weight: 600;
-    padding: 1rem 2rem;
+    padding: 1rem;
     text-align: center;
   }
 
@@ -147,7 +151,7 @@
       padding: 0;
       position: absolute;
       right: 0;
-      top: 32px;
+      top: 100%;
       width: max-content;
       z-index: 1000;
     }

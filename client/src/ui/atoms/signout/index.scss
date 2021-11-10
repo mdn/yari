@@ -1,4 +1,4 @@
-@use "../../base/styles" as *;
+@use "../../vars" as *;
 .sign-out-form {
   @media screen and (min-width: $screen-md) {
     border-top: 1px solid var(--border-primary);

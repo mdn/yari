@@ -1,4 +1,4 @@
-@use "../../base/styles" as *;
+@use "../../vars" as *;
 
 .watch-menu {
   align-items: center;
@@ -16,5 +16,71 @@
      in client/src/ui/atoms/icon-button/index.scss */
   &::before {
     mask-image: url("~@mdn/dinocons/plus/watch.svg");
+  }
+}
+
+.watch-menu-button {
+  background-color: transparent;
+  border-top: 1px solid var(--border-primary);
+  padding: 0;
+
+  &-wrap {
+    align-items: flex-start;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    padding: 0.5rem;
+    padding-left: 1.5rem;
+    text-align: left;
+  }
+
+  &-label,
+  &-text {
+    font-size: 0.8125rem;
+  }
+
+  &-label {
+    font-weight: bold;
+  }
+
+  &-text {
+    color: var(--text-primary);
+  }
+}
+
+.watch-submenu {
+  display: none;
+  margin: 0;
+  padding: 0;
+
+  &-header {
+    display: none;
+  }
+
+  @media screen and (min-width: $screen-md) {
+    &.show {
+      background-color: var(--background-primary);
+      border: 1px solid var(--border-primary);
+      border-radius: 0.25rem;
+      box-shadow: var(--shadow-01);
+
+      display: flex;
+      flex-direction: column;
+      left: initial;
+      padding: 0;
+      position: absolute;
+      right: 0;
+      top: 100%;
+      width: 316px;
+      z-index: 1000;
+    }
+  }
+
+  .watch-submenu-header {
+    display: block;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    padding: 1rem 2rem;
+    text-align: center;
   }
 }
