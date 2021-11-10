@@ -1,6 +1,5 @@
 import "./index.scss";
 import placeholder_1 from "./placeholder_1.svg";
-import placeholder_2 from "./placeholder_2.svg";
 
 function OfferOverviewFeature() {
   return (
@@ -24,7 +23,7 @@ function OfferOverviewFeature() {
       <div className="offer-overview-feature notifications">
         <div className="wrapper" id="notifications">
           <div className="img-container">
-            <img src={placeholder_2} alt="notifications section hero"></img>
+            <img src={placeholder_1} alt="notifications section hero"></img>
           </div>
           <div className="copy-container">
             <h2>Create multi-channel campaigns with ease</h2>
@@ -56,7 +55,7 @@ function OfferOverviewFeature() {
       <div className="offer-overview-feature themes">
         <div className="wrapper" id="themes">
           <div className="img-container">
-            <img src={placeholder_2} alt="themes section hero"></img>
+            <img src={placeholder_1} alt="themes section hero"></img>
           </div>
           <div className="copy-container">
             <h2>Create multi-channel campaigns with ease</h2>

@@ -23,12 +23,22 @@ function OfferOverviewSubscribe() {
               </span>
             </div>
             <ul>
-              <li>Bookmarking</li>
-              <li>Notifications</li>
-              <li>MDN Offline</li>
-              <li>Access to all themes</li>
+              <li>
+                <a href="#bookmarking">Bookmarking</a>
+              </li>
+              <li>
+                <a href="#notifications">Notifications</a>
+              </li>
+              <li>
+                <a href="#offline">MDN Offline</a>
+              </li>
+              <li>
+                <a href="#themes">Access to all themes</a>
+              </li>
             </ul>
-            <a href={MDN_PLUS_SUBSCRIBE_YEARLY_URL}>Get yearly plan</a>
+            <a href={MDN_PLUS_SUBSCRIBE_YEARLY_URL} className="sub-link">
+              Get yearly plan
+            </a>
             <span className="terms">See terms and conditions</span>
           </div>
         </div>
@@ -45,12 +55,22 @@ function OfferOverviewSubscribe() {
               </span>
             </div>
             <ul>
-              <li>Bookmarking</li>
-              <li>Notifications</li>
-              <li>MDN Offline</li>
-              <li>Access to all themes</li>
+              <li>
+                <a href="#bookmarking">Bookmarking</a>
+              </li>
+              <li>
+                <a href="#notifications">Notifications</a>
+              </li>
+              <li>
+                <a href="#offline">MDN Offline</a>
+              </li>
+              <li>
+                <a href="#themes">Access to all themes</a>
+              </li>
             </ul>
-            <a href={MDN_PLUS_SUBSCRIBE_MONTHLY_URL}>Get monthly plan</a>
+            <a href={MDN_PLUS_SUBSCRIBE_MONTHLY_URL} className="sub-link">
+              Get monthly plan
+            </a>
             <span className="terms">See terms and conditions</span>
           </div>
         </div>
