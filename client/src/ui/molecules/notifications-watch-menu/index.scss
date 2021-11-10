@@ -1,9 +1,8 @@
 @use "../../base/styles" as *;
-@use "../../base/theme" as *;
 
 .watch-menu {
   align-items: center;
-  border-bottom: 1px solid $border-secondary;
+  border-bottom: 1px solid var(--border-secondary);
   display: flex;
   gap: 0.5rem;
   padding: 0.5rem;

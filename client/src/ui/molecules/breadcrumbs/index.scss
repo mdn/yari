@@ -1,5 +1,4 @@
 @use "../../base/styles" as *;
-@use "../../base/theme" as *;
 
 .breadcrumbs-container {
   a {
@@ -8,7 +7,7 @@
 
     &:link,
     &:visited {
-      color: $text-secondary;
+      color: var(--text-secondary);
     }
   }
 
@@ -22,7 +21,7 @@
 
     .breadcrumb {
       &::after {
-        background-color: $icon-secondary;
+        background-color: var(--icon-secondary);
         background-size: 12px;
         content: "";
         display: block;

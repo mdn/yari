@@ -1,5 +1,4 @@
 @use "../../../ui/base/styles" as *;
-@use "../../../ui/base/theme" as *;
 
 .sidebar {
   font-size: 0.8125rem;
@@ -53,10 +52,10 @@
   /* icons in sidebars */
   .icon-experimental,
   .icon-nonstandard {
-    color: $icon-information;
+    color: var(--icon-information);
   }
 
   .icon-deprecated {
-    color: $icon-critical;
+    color: var(--icon-critical);
   }
 }

@@ -1,7 +1,6 @@
 @use "sass:color";
 
 @use "../../base/styles" as *;
-@use "../../base/theme" as *;
 
 ul.main-menu {
   box-sizing: border-box;
@@ -31,7 +30,7 @@ ul.main-menu {
   .top-level-entry {
     background: none;
     border: 0;
-    color: $text-secondary;
+    color: var(--text-secondary);
     cursor: pointer;
     padding: 0.5rem;
     text-align: left;
@@ -44,7 +43,7 @@ ul.main-menu {
       &:hover,
       &:focus {
         background-color: var(--accent-primary-engage);
-        color: $accent-primary;
+        color: var(--accent-primary);
       }
     }
   }
@@ -69,14 +68,14 @@ ul.main-menu {
       &:hover,
       &:focus {
         background-color: var(--accent-primary-engage);
-        color: $accent-primary;
+        color: var(--accent-primary);
         text-decoration: none;
       }
     }
 
     &:link,
     &:visited {
-      color: $text-secondary;
+      color: var(--text-secondary);
     }
   }
 }

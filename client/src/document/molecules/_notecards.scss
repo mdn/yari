@@ -42,9 +42,9 @@
 
   h3,
   h4 {
-    /* 
+    /*
      * Because we also allow h3, we need to undo some of its styling here.
-     * This relates specifically to `background-color`, `color`, 
+     * This relates specifically to `background-color`, `color`,
      * `padding` and `font-weight`
      */
     background-color: inherit;
@@ -54,7 +54,7 @@
     font-size: 1rem;
     font-weight: bold;
     margin: 0;
-    margin-bottom: math.div(1rem, 4);
+    margin-bottom: 0.25rem;
     padding: 0;
 
     @media screen and (max-width: $screen-sm) {
@@ -71,7 +71,7 @@
       content: "";
       display: inline-block;
       height: 21px;
-      margin-right: math.div(1rem, 4);
+      margin-right: 0.25rem;
       position: relative;
       top: 2px;
       width: 20px;
@@ -79,7 +79,7 @@
   }
 
   p {
-    margin-bottom: math.div(1rem, 4);
+    margin-bottom: 0.25rem;
 
     &:last-child {
       margin-bottom: 0;
@@ -88,8 +88,8 @@
 
   &.inline {
     font-weight: normal;
-    margin: math.div(1rem, 4);
-    padding: math.div(1rem, 8) math.div(1rem, 4);
+    margin: 0.25rem;
+    padding: 0.125rem 0.25rem;
 
     &::before {
       top: 5px;

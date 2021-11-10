@@ -1,11 +1,10 @@
 @use "../../base/styles" as *;
-@use "../../base/theme" as *;
 
 .auth-disabled {
-  border: 1px solid $border-primary;
+  border: 1px solid var(--border-primary);
   border-radius: 0.25rem;
-  box-shadow: $shadow-01;
-  color: $text-secondary;
+  box-shadow: var(--shadow-01);
+  color: var(--text-secondary);
   padding: 16px;
 
   p {

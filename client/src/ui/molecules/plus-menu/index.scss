@@ -1,6 +1,5 @@
 @use "sass:color";
 @use "../../base/styles" as *;
-@use "../../base/theme" as *;
 
 .submenu.mdn-plus {
   a:hover,
@@ -12,7 +11,7 @@
 .submenu-icon {
   &.bookmarks-icon,
   &.notifications-icon {
-    background-color: $accent-primary;
+    background-color: var(--accent-primary);
 
     &::before {
       background-color: white;

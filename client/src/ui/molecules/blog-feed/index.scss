@@ -1,5 +1,4 @@
 @use "../../base/styles" as *;
-@use "../../base/theme" as *;
 @use "~@mdn/minimalist/sass/mixins/utils" as *;
 
 .blog-feed {
@@ -16,7 +15,7 @@
     @include reset-list();
 
     li {
-      border-bottom: 1px solid $border-primary;
+      border-bottom: 1px solid var(--border-primary);
       margin-bottom: 0.5rem;
     }
   }

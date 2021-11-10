@@ -1,5 +1,4 @@
 @use "../../base/styles" as *;
-@use "../../base/theme" as *;
 
 .contribute {
   @media screen and (min-width: $screen-md) {
@@ -8,7 +7,7 @@
 
   ul {
     li {
-      border-bottom: 1px solid $border-primary;
+      border-bottom: 1px solid var(--border-primary);
       margin-bottom: 0.5rem;
     }
   }

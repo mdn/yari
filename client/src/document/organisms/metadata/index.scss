@@ -1,8 +1,7 @@
 @use "../../../ui/base/styles" as *;
-@use "../../../ui/base/theme" as *;
 
 .metadata {
-  background-color: $background-secondary;
+  background-color: var(--background-secondary);
   margin: (1rem * 2) 0;
   padding: 1rem;
 }

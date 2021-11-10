@@ -1,6 +1,5 @@
 @use "sass:color";
 @use "../../base/styles" as *;
-@use "../../base/theme" as *;
 @use "../../base/typography" as *;
 
 .notifications-menu {
@@ -9,7 +8,7 @@
   position: relative;
 
   .notifications-button {
-    color: $text-primary;
+    color: var(--text-primary);
     margin: 12px 0;
     padding: 0;
 
@@ -20,7 +19,7 @@
   }
 
   .notifications-count-container {
-    background-color: $icon-secondary;
+    background-color: var(--icon-secondary);
     border-radius: 50%;
     color: white;
     display: inline-block;
@@ -36,7 +35,7 @@
       padding: 0;
 
       &::before {
-        background-color: $icon-primary;
+        background-color: var(--icon-primary);
         background-size: 21px 21px;
         content: "";
         display: block;
@@ -47,13 +46,13 @@
     }
 
     &.unread-notifications {
-      background-color: $icon-secondary;
+      background-color: var(--icon-secondary);
 
       @media screen and (min-width: $screen-md) {
         background-color: transparent;
 
         &::before {
-          background-color: $accent-primary;
+          background-color: var(--accent-primary);
           mask-image: url("~@mdn/dinocons/plus/notification.svg");
         }
       }
@@ -78,7 +77,7 @@
   }
 
   .notifications-submenu-action {
-    border-top: 1px solid $border-primary;
+    border-top: 1px solid var(--border-primary);
     display: block;
     padding: 1rem 2rem;
 
@@ -88,7 +87,7 @@
 
     &:hover,
     &:focus {
-      background-color: $background-secondary;
+      background-color: var(--background-secondary);
       text-decoration: none;
     }
   }
@@ -112,7 +111,7 @@
 
   .notifications-submenu-item-heading,
   .notifications-submenu-item-description {
-    color: $text-primary;
+    color: var(--text-primary);
   }
 
   .notifications-submenu-item-heading {
@@ -124,7 +123,7 @@
   }
 
   .notifications-submenu-item-created {
-    color: $text-inactive;
+    color: var(--text-inactive);
     font-size: $mdn-ui-type-body-s;
     font-weight: 600;
   }
@@ -137,10 +136,10 @@
 
   @media screen and (min-width: $screen-md) {
     &.show {
-      background-color: $background-primary;
-      border: 1px solid $border-primary;
+      background-color: var(--background-primary);
+      border: 1px solid var(--border-primary);
       border-radius: 0.25rem;
-      box-shadow: $shadow-01;
+      box-shadow: var(--shadow-01);
 
       display: block;
       left: initial;

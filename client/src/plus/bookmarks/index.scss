@@ -1,8 +1,7 @@
 @use "../../ui/base/styles" as *;
-@use "../../ui/base/theme" as *;
 
 .page-content-container.plus {
-  background-color: $background-primary;
+  background-color: var(--background-primary);
   max-width: inherit;
 }
 
@@ -16,7 +15,7 @@
   }
 
   h3 {
-    border-bottom: $border-primary;
+    border-bottom: var(--border-primary);
     padding-bottom: 24px;
   }
 }
@@ -24,7 +23,7 @@
 .bookmark {
   align-items: center;
   background-color: white;
-  border: $border-primary;
+  border: var(--border-primary);
   border-radius: 0.25rem;
   display: flex;
   justify-content: space-between;
@@ -35,7 +34,7 @@
   a {
     &:link,
     &:visited {
-      color: $background-primary;
+      color: var(--background-primary);
     }
   }
 
@@ -84,7 +83,7 @@
       margin: 0;
 
       &::after {
-        background-color: $text-secondary;
+        background-color: var(--text-secondary);
         content: "";
         display: inline-block;
         height: 8px;
@@ -109,7 +108,7 @@
   }
 
   &::before {
-    background-color: $icon-primary;
+    background-color: var(--icon-primary);
     content: "";
     display: inline-block;
     height: 25px;

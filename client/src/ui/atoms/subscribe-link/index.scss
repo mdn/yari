@@ -1,8 +1,7 @@
 @use "../../base/styles" as *;
-@use "../../base/theme" as *;
 
 .mdn-plus-subscribe-link {
-  background-color: $button-primary-default;
+  background-color: var(--button-primary-default);
   border-radius: 0.25rem;
   display: block;
   margin: 0 auto;
