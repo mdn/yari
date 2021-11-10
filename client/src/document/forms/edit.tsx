@@ -43,7 +43,7 @@ export default function DocumentEdit() {
         window.location.href =
           location.pathname.split("_edit")[0] + "_edit/" + data.metadata.slug;
       }
-    } catch (err) {
+    } catch (err: any) {
       setSavingError(err);
     }
     setIsSaving(false);

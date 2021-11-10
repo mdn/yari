@@ -44,7 +44,7 @@ function getSessionStorageData() {
       }
       return parsed as UserData;
     }
-  } catch (error) {
+  } catch (error: any) {
     console.warn("sessionStorage.getItem didn't work", error.toString());
     return null;
   }
@@ -56,7 +56,7 @@ export function removeSessionStorageData() {
     // and it's pointless to first do a .hasItem() before the .removeItem()
     // because internally that's what .removeItem() already does.
     sessionStorage.removeItem(SESSION_STORAGE_KEY);
-  } catch (error) {
+  } catch (error: any) {
     console.warn("sessionStorage.removeItem didn't work", error.toString());
   }
 }
@@ -64,7 +64,7 @@ export function removeSessionStorageData() {
 function setSessionStorageData(data: UserData) {
   try {
     sessionStorage.setItem(SESSION_STORAGE_KEY, JSON.stringify(data));
-  } catch (error) {
+  } catch (error: any) {
     console.warn("sessionStorage.setItem didn't work", error.toString());
   }
 }
