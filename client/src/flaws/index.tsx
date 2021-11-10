@@ -173,7 +173,7 @@ export default function AllFlaws() {
     const params = createSearchParams({
       ...restFilters,
       page: String(page),
-      locale,
+      locale: locale || "",
       sort: sort_by,
       reverse: JSON.stringify(sort_reverse),
     });
@@ -230,7 +230,7 @@ export default function AllFlaws() {
       <PageContentContainer>
         {loading}
         {error && <ShowSearchError error={error} />}
-        {lastData && (
+        {lastData && locale && (
           <div className="filter-documents">
             <FilterControls flawLevels={lastData.flawLevels} />
             <DocumentsTable

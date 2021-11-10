@@ -42,7 +42,12 @@ export default function FallbackLink({ url }: { url: string }) {
   );
 
   React.useEffect(() => {
-    if (url && url.includes("/docs/") && locale.toLowerCase() !== "en-us") {
+    if (
+      url &&
+      url.includes("/docs/") &&
+      locale &&
+      locale.toLowerCase() !== "en-us"
+    ) {
       // What if we attempt to see if it would be something there in English?
       // We'll use the `index.json` version of the URL
       let enUSURL = url.replace(`/${locale}/`, "/en-US/");
@@ -77,13 +82,14 @@ export default function FallbackLink({ url }: { url: string }) {
       </div>
     );
   } else if (document) {
+    const currentLocale = locale || "";
     return (
       <div className="fallback-document notecard success">
         <h4>Good news!</h4>
         <p>
           The page you requested doesn't exist in{" "}
-          <b>{LANGUAGES.get(locale.toLowerCase())?.English}</b> but it exists in{" "}
-          <b>English</b>
+          <b>{LANGUAGES.get(currentLocale.toLowerCase())?.English}</b> but it
+          exists in <b>English</b>
         </p>
         <p className="fallback-link">
           <a href={document.mdn_url}>

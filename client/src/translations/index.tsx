@@ -42,14 +42,14 @@ function PickLocale() {
   const { locale } = useParams();
   React.useEffect(() => {
     let title = "All translations";
-    if (locale.toLowerCase() !== "en-us") {
+    if (locale && locale.toLowerCase() !== "en-us") {
       title += ` for ${locale}`;
     }
     document.title = title;
   }, [locale]);
 
   const { data: dataLocales, error: errorLocales } = useSWR<LocalesData, Error>(
-    locale.toLowerCase() === "en-us" ? "/_translations/" : null,
+    locale && locale.toLowerCase() === "en-us" ? "/_translations/" : null,
     async (url) => {
       const response = await fetch(url);
       if (!response.ok) {
@@ -59,7 +59,7 @@ function PickLocale() {
     }
   );
 
-  if (locale.toLowerCase() === "en-us") {
+  if (locale && locale.toLowerCase() === "en-us") {
     return (
       <>
         {!dataLocales && !errorLocales && <Loading />}

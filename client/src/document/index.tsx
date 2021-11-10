@@ -156,13 +156,13 @@ export function Document(props /* TODO: define a TS interface for this */) {
       {(doc.parents || !!translations.length) && (
         <div className="breadcrumb-locale-container">
           {doc.parents && <Breadcrumbs parents={doc.parents} />}
-          {translations && !!translations.length && (
+          {locale && translations && !!translations.length && (
             <LanguageToggle locale={locale} translations={translations} />
           )}
         </div>
       )}
 
-      {doc.isTranslated ? (
+      {doc.isTranslated && locale ? (
         <LocalizedContentNote isActive={doc.isActive} locale={locale} />
       ) : (
         searchParams.get("retiredLocale") && <RetiredLocaleNote />

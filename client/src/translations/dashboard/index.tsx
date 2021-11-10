@@ -97,14 +97,14 @@ export function TranslationDashboard() {
 
   const currentSection = searchParams.get("section") || "";
   React.useEffect(() => {
-    if (locale.toLowerCase() === "en-us") {
+    if (locale && locale.toLowerCase() === "en-us") {
       navigate(`/${locale}/_translations`);
     }
   }, [locale, navigate]);
 
   React.useEffect(() => {
     let title = "Translation dashboard ";
-    if (locale.toLowerCase() !== "en-us") {
+    if (locale && locale.toLowerCase() !== "en-us") {
       title += ` for ${locale}`;
     }
     if (currentSection !== "") {
@@ -114,7 +114,7 @@ export function TranslationDashboard() {
   }, [lastData, locale, currentSection]);
 
   let { data, error, isValidating } = useSWR<Data, Error>(
-    locale.toLowerCase() !== "en-us"
+    locale && locale.toLowerCase() !== "en-us"
       ? `/_translations/dashboard/?locale=${locale}&section=${currentSection}`
       : null,
     async (url) => {
@@ -144,7 +144,8 @@ export function TranslationDashboard() {
     }
   }, [data]);
 
-  const lastStorageData = getStorage(locale);
+  const currentLocale = locale || "";
+  const lastStorageData = getStorage(currentLocale);
   const defaultSort = lastStorageData?.defaultSort || "url";
   const defaultSortReverse = lastStorageData?.defaultSortReverse || "false";
   const sort = searchParams.get("sort") || defaultSort;
@@ -153,16 +154,18 @@ export function TranslationDashboard() {
   );
 
   React.useEffect(() => {
-    saveStorage(
-      locale,
-      Object.assign({}, lastStorageData, {
-        defaultSort: sort,
-        defaultSortReverse: sortReverse,
-      })
-    );
+    if (locale) {
+      saveStorage(
+        locale,
+        Object.assign({}, lastStorageData, {
+          defaultSort: sort,
+          defaultSortReverse: sortReverse,
+        })
+      );
+    }
   }, [locale, sort, sortReverse, lastStorageData]);
 
-  if (locale.toLowerCase() === "en-us") {
+  if (locale && locale.toLowerCase() === "en-us") {
     return null;
   }
 
@@ -207,7 +210,7 @@ export function TranslationDashboard() {
             documents={lastData.detailDocuments}
             sort={sort}
             sortReverse={sortReverse}
-            locale={locale}
+            locale={locale || ""}
           />
         </div>
       )}

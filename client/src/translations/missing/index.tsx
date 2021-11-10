@@ -111,14 +111,14 @@ export function MissingTranslations() {
   const [lastData, setLastData] = React.useState<Data | null>(null);
 
   React.useEffect(() => {
-    if (locale.toLowerCase() === "en-us") {
+    if (locale && locale.toLowerCase() === "en-us") {
       navigate(`/${locale}/_translations`);
     }
   }, [locale, navigate]);
 
   React.useEffect(() => {
     let title = "Missing translations";
-    if (locale.toLowerCase() !== "en-us") {
+    if (locale && locale.toLowerCase() !== "en-us") {
       title += ` for ${locale}`;
     }
     if (lastData) {
@@ -128,7 +128,7 @@ export function MissingTranslations() {
   }, [lastData, locale]);
 
   const { data, error, isValidating } = useSWR<Data, Error>(
-    locale.toLowerCase() !== "en-us"
+    locale && locale.toLowerCase() !== "en-us"
       ? `/_translations/missing/?locale=${locale}`
       : null,
     async (url) => {
@@ -178,7 +178,8 @@ export function MissingTranslations() {
     }
   }, [data]);
 
-  const lastStorageData = getStorage(locale);
+  const currentLocale = locale || "";
+  const lastStorageData = getStorage(currentLocale);
   const defaultSort = lastStorageData?.defaultSort || "popularity";
   const defaultSortReverse = lastStorageData?.defaultSortReverse || "false";
   const sort = searchParams.get("sort") || defaultSort;
@@ -187,16 +188,18 @@ export function MissingTranslations() {
   );
 
   React.useEffect(() => {
-    saveStorage(
-      locale,
-      Object.assign({}, lastStorageData, {
-        defaultSort: sort,
-        defaultSortReverse: sortReverse,
-      })
-    );
+    if (locale) {
+      saveStorage(
+        locale,
+        Object.assign({}, lastStorageData, {
+          defaultSort: sort,
+          defaultSortReverse: sortReverse,
+        })
+      );
+    }
   }, [locale, sort, sortReverse, lastStorageData]);
 
-  if (locale.toLowerCase() === "en-us") {
+  if (locale && locale.toLowerCase() === "en-us") {
     return null;
   }
 
