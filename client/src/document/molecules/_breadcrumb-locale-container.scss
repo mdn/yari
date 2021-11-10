@@ -1,5 +1,8 @@
 @use "sass:math";
 
+@use "~@mdn/minimalist/sass/vars/mdn-web-docs-palette" as *;
+@use "~@mdn/minimalist/sass/vars/layout" as *;
+
 .breadcrumb-locale-container {
   align-items: center;
   background-color: $mdn-neutral100;

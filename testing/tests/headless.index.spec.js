@@ -224,8 +224,8 @@ test.describe("changing language", () => {
     await page.selectOption('select[name="language"]', {
       label: "English (US)",
     });
+    await page.click("#select-language button");
 
-    await page.click('button:has-text("Change language")');
     // Wait for XHR loading of the whole document
     await page.waitForLoadState("networkidle");
     expect(await page.isVisible("text=<foo>: A test tag")).toBeTruthy();
@@ -235,7 +235,7 @@ test.describe("changing language", () => {
     await page.selectOption('select[name="language"]', {
       label: "Français",
     });
-    await page.click('button:has-text("Change language")');
+    await page.click("#select-language button");
     // Wait for XHR loading of the whole document
     await page.waitForLoadState("networkidle");
     expect(await page.isVisible("text=<foo>: Une page de test")).toBeTruthy();
