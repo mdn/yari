@@ -158,6 +158,10 @@ a.page-not-created {
     max-width: 85ch;
   }
 
+  p {
+    margin-bottom: $base-spacing;
+  }
+
   a {
     text-decoration: underline;
 
