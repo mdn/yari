@@ -25,17 +25,19 @@ export function TopNavigation() {
 
   return (
     <header className="top-navigation">
-      <Logo />
-      <IconButton
-        ariaHasPopup={"menu"}
-        clickHandler={toggleMainMenu}
-        extraClasses="main-menu-toggle"
-        iconClassName="menu-open"
-      >
-        <span className="visually-hidden">Show Menu</span>
-      </IconButton>
+      <div className="wrapper">
+        <Logo />
+        <IconButton
+          ariaHasPopup={"menu"}
+          clickHandler={toggleMainMenu}
+          extraClasses="main-menu-toggle"
+          iconClassName="menu-open"
+        >
+          <span className="visually-hidden">Show Menu</span>
+        </IconButton>
 
-      <TopNavigationMain showMainMenu={showMainMenu} />
+        <TopNavigationMain showMainMenu={showMainMenu} />
+      </div>
     </header>
   );
 }

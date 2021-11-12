@@ -1231,9 +1231,6 @@ test("plus page", () => {
   const $ = cheerio.load(html);
   expect($("title").text()).toContain("Plus");
   expect($('meta[name="robots"]').attr("content")).toBe("noindex, nofollow");
-  expect($("main.plus").length).toBe(1);
-  // because, by default, it just loads the blank skeleton page
-  expect($("main.plus h1").length).toBe(0);
 });
 
 test("plus bookmarks page", () => {
@@ -1244,9 +1241,6 @@ test("plus bookmarks page", () => {
   const $ = cheerio.load(html);
   expect($("title").text()).toMatch(/Bookmarks/);
   expect($('meta[name="robots"]').attr("content")).toBe("noindex, nofollow");
-  expect($("main.plus").length).toBe(1);
-  // because, by default, it just loads the blank skeleton page
-  expect($("main.plus h1").length).toBe(0);
 });
 
 test("bcd table extraction followed by h3", () => {

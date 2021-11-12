@@ -1,5 +1,4 @@
-@use "../../base/styles" as *;
-@use "../../base/theme" as *;
+@use "../../vars" as *;
 
 .page-wrapper {
   grid-template-columns: 100%;
@@ -8,21 +7,9 @@
 .standard-page {
   max-width: inherit;
 
-  .page-header,
-  .page-content-container {
-  }
-
-  .page-header {
-  }
-
-  .titlebar-container {
-  }
-
   .page-content-container {
     display: grid;
-
     grid-template-columns: 100%;
-    padding: 1rem;
   }
 
   @media screen and (min-width: $screen-md) {
@@ -30,6 +17,10 @@
       margin: 0 auto;
       max-width: 1440px;
       width: 100%;
+
+      &.fullwidth {
+        max-width: initial;
+      }
     }
   }
 }

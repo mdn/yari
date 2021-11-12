@@ -1,9 +1,8 @@
-@use "../../base/styles" as *;
-@use "../../base/theme" as *;
+@use "../../vars" as *;
 
 .watch-menu {
   align-items: center;
-  border-bottom: 1px solid $border-secondary;
+  border-bottom: 1px solid var(--border-secondary);
   display: flex;
   gap: 0.5rem;
   padding: 0.5rem;
@@ -22,7 +21,7 @@
 
 .watch-menu-button {
   background-color: transparent;
-  border-top: 1px solid $border-primary;
+  border-top: 1px solid var(--border-primary);
   padding: 0;
 
   &-wrap {
@@ -45,7 +44,7 @@
   }
 
   &-text {
-    color: $text-primary;
+    color: var(--text-primary);
   }
 }
 
@@ -60,10 +59,10 @@
 
   @media screen and (min-width: $screen-md) {
     &.show {
-      background-color: $background-primary;
-      border: 1px solid $border-primary;
+      background-color: var(--background-primary);
+      border: 1px solid var(--border-primary);
       border-radius: 0.25rem;
-      box-shadow: $shadow-01;
+      box-shadow: var(--shadow-01);
 
       display: flex;
       flex-direction: column;

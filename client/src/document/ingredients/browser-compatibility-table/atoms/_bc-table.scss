@@ -1,5 +1,5 @@
 .bc-table {
-  background-color: $background-secondary;
+  background-color: var(--background-secondary);
   border: 0;
   border-collapse: separate;
   border-spacing: 0;
@@ -51,7 +51,7 @@
   }
 
   .bc-table-row-header {
-    padding: 0.5rem math.div(1rem, 4);
+    padding: 0.5rem 0.25rem;
     display: flex;
     display: -webkit-flex;
 
@@ -97,7 +97,7 @@
     }
 
     tr:nth-child(even) {
-      background-color: $background-secondary;
+      background-color: var(--background-secondary);
     }
 
     dl {
@@ -125,7 +125,7 @@
    * that link to page that doesn't exist.
    */
   .new {
-    color: $icon-critical;
+    color: var(--icon-critical);
   }
 }
 

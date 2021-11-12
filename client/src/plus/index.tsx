@@ -5,7 +5,7 @@ import { Loading } from "../ui/atoms/loading";
 import { PageContentContainer } from "../ui/atoms/page-content";
 import { PageNotFound } from "../page-not-found";
 import Notifications from "./notifications";
-const App = React.lazy(() => import("./app"));
+const OfferOverview = React.lazy(() => import("./offer-overview"));
 const Bookmarks = React.lazy(() => import("./bookmarks"));
 
 export function Plus({ pageTitle }: { pageTitle?: string }) {
@@ -28,7 +28,7 @@ export function Plus({ pageTitle }: { pageTitle?: string }) {
         path="/"
         element={
           <React.Suspense fallback={loading}>
-            <App />
+            <OfferOverview />
           </React.Suspense>
         }
       />
@@ -57,7 +57,7 @@ export function Plus({ pageTitle }: { pageTitle?: string }) {
   );
 
   return (
-    <PageContentContainer extraClasses="plus">
+    <PageContentContainer extraClasses="fullwidth">
       {isServer ? loading : routes}
     </PageContentContainer>
   );

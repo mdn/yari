@@ -1,5 +1,4 @@
-@use "../../base/styles" as *;
-@use "../../base/theme" as *;
+@use "../../vars" as *;
 
 .document-page {
   .page-header,
@@ -33,6 +32,8 @@
   /* Contains the sidebar and article content */
   .article-wrapper {
     display: flex;
+    max-width: 1440px;
+    margin: 0 auto;
 
     @media screen and (min-width: $screen-md) {
       display: grid;

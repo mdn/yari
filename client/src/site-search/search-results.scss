@@ -1,6 +1,5 @@
 @use "sass:math";
-@use "../ui/base/styles" as *;
-@use "../ui/base/theme" as *;
+@use "../ui/vars" as *;
 
 .search-results {
   .highlight,
@@ -42,7 +41,7 @@
     color: $mdn-color-dark-grey-90;
     display: inline-block;
     margin: 0;
-    margin-bottom: math.div(1rem, 4);
+    margin-bottom: 0.25rem;
     padding: 0;
 
     a {
@@ -54,25 +53,25 @@
   }
 
   .search-result-url {
-    margin-bottom: math.div(1rem, 4);
+    margin-bottom: 0.25rem;
   }
 
   // Used to indicate that a search result link is in a different locale
   .locale-indicator {
-    background-color: $background-secondary;
+    background-color: var(--background-secondary);
     cursor: help;
     display: block;
     font-size: 0.8125rem;
     margin-top: 1rem;
     max-width: max-content;
-    padding: math.div(1rem, 2) 1rem;
+    padding: 0.5rem 1rem;
     position: relative;
     top: -3px;
 
     @media screen and (max-width: $screen-sm) {
       display: inline-block;
       margin: 0;
-      margin-left: math.div(1rem, 4);
+      margin-left: 0.25rem;
       padding: 1rem;
     }
   }
@@ -115,7 +114,7 @@
     li {
       display: inline-block;
       padding: 0;
-      padding-right: math.div(1rem, 4);
+      padding-right: 0.25rem;
 
       &::after {
         content: " | ";
@@ -133,6 +132,6 @@
   margin-bottom: 1rem;
 
   p {
-    margin-bottom: math.div(1rem, 2);
+    margin-bottom: 0.5rem;
   }
 }

@@ -1,0 +1,145 @@
+@use "../../../ui/vars" as *;
+
+.subscribe {
+  background: $mdn-color-dark-grey-90;
+  padding: 2rem 1rem;
+  text-align: center;
+
+  @media screen and (min-width: $screen-md) {
+    padding: 2rem 4rem;
+  }
+
+  h2 {
+    color: white;
+    font-family: Montserrat;
+    font-style: normal;
+    font-weight: 650;
+    font-size: 24px;
+    line-height: 120%;
+    margin-bottom: 2rem;
+  }
+
+  .wrapper {
+    display: flex;
+    margin: 0 auto;
+    max-width: 25rem;
+    gap: 2rem;
+    justify-content: center;
+    flex-direction: column;
+
+    @media screen and (min-width: $screen-md) {
+      flex-direction: row;
+    }
+
+    @media screen and (min-width: $screen-sm) and (max-width: $screen-md) {
+      max-width: 20rem;
+    }
+
+    .subscribe-detail {
+      color: white;
+      display: flex;
+      gap: 1rem;
+      flex-direction: column;
+      align-items: center;
+      border-radius: 1rem;
+
+      @media screen and (min-width: $screen-md) {
+        min-width: 20rem;
+      }
+
+      &#annually {
+        background: $mdn-color-violet-50;
+
+        .content {
+          padding: 0 2rem 2rem 2rem;
+        }
+      }
+
+      &#monthly {
+        background: $mdn-color-green-60;
+
+        .content {
+          padding: 3rem 2rem 2rem 2rem;
+        }
+      }
+
+      .tagline {
+        padding: 0.5rem;
+        background: #0000001f;
+        border-radius: 1rem 1rem 0 0;
+        width: 100%;
+        font-size: 14px;
+      }
+
+      .content {
+        flex-direction: column;
+        align-items: center;
+        gap: 2rem;
+        display: flex;
+        width: 100%;
+
+        .sub-info {
+          display: flex;
+          flex-direction: column;
+          gap: 0.5rem;
+
+          .sub-price {
+            color: white;
+            font-family: Montserrat;
+            font-style: normal;
+            font-weight: 650;
+            font-size: 36px;
+            line-height: 120%;
+          }
+
+          .sub-length {
+            color: white;
+            font-family: Montserrat;
+            font-style: normal;
+            font-weight: 650;
+            font-size: 24px;
+            line-height: 120%;
+          }
+
+          i {
+            font-size: 14px;
+          }
+        }
+
+        ul {
+          width: 100%;
+
+          li {
+            text-align: left;
+            width: 100%;
+            line-height: 1.75;
+
+            &:before {
+              content: "✓";
+              margin-right: 0.5rem;
+            }
+
+            a {
+              display: inline-block;
+              color: white;
+            }
+          }
+        }
+      }
+
+      .terms {
+        font-size: 14px;
+        text-decoration: underline;
+        font-style: italic;
+      }
+
+      .sub-link {
+        background: $mdn-color-dark-grey-90;
+        padding: 0.25rem 0.5rem;
+        color: white;
+        width: fit-content;
+        font-weight: 620;
+      }
+    }
+  }
+}

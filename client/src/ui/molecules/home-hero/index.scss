@@ -1,6 +1,5 @@
 @use "~@mdn/minimalist/sass/mixins/utils" as *;
-@use "../../base/styles" as *;
-@use "../../base/theme" as *;
+@use "../../vars" as *;
 
 .hero {
   background-color: $mdn-color-blue-20;
@@ -60,7 +59,7 @@
   }
 
   a {
-    border-bottom: 2px solid $border-primary;
+    border-bottom: 2px solid var(--border-primary);
     color: black;
     display: inline-block;
     padding: 0.5rem 0;

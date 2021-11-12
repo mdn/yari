@@ -1,7 +1,7 @@
 @use "sass:color";
-@use "./styles.scss" as *;
+@use "../vars.scss" as *;
 
-body[class="light"] {
+:root {
   --text-primary: #{$mdn-theme-light-text-primary};
   --text-secondary: #{$mdn-theme-light-text-secondary};
   --text-inactive: #{$mdn-theme-light-text-inactive};
@@ -31,6 +31,8 @@ body[class="light"] {
       $alpha: -0.9
     )};
   --accent-secondary: #{$mdn-theme-light-accent-secondary};
+  --shadow-01: #{$mdn-theme-light-shadow-01};
+  --focus-01: #{$mdn-theme-light-shadow-01};
 }
 
 body[class="dark"] {

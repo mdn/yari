@@ -1,4 +1,4 @@
-@use "../../base/styles" as *;
+@use "../../vars" as *;
 
 .main-menu-toggle {
   position: absolute;
@@ -12,13 +12,13 @@
 
 .top-navigation {
   background-color: var(--background-primary);
-  margin: 0 auto;
-  max-width: 1440px;
-  padding: 1rem;
   position: relative;
   width: 100%;
 
-  @media screen and (min-width: $screen-md) {
+  .wrapper {
+    max-width: 1440px;
+    padding: 1rem;
+    margin: 0 auto;
     display: flex;
     align-items: center;
     gap: 1rem;

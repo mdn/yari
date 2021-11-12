@@ -1,5 +1,4 @@
-@use "../../base/styles" as *;
-@use "../../base/theme" as *;
+@use "../../vars" as *;
 
 .user-menu {
   position: relative;
@@ -8,7 +7,7 @@
     align-items: center;
     background: none;
     border-radius: 50%;
-    color: $text-secondary;
+    color: var(--text-secondary);
     display: flex;
     margin: 0.25rem;
     padding: 0;
@@ -28,7 +27,7 @@
 
     @media screen and (min-width: $screen-md) {
       &:focus {
-        box-shadow: $focus-01;
+        box-shadow: var(--focus-01);
       }
     }
   }
@@ -47,7 +46,7 @@
   }
 
   .usermenu-email-desktop {
-    border-bottom: 1px solid $border-primary;
+    border-bottom: 1px solid var(--border-primary);
   }
 
   .submenu-item-heading {

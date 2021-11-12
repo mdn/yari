@@ -1,5 +1,5 @@
 tr.bc-history {
-  background-color: $background-secondary;
+  background-color: var(--background-secondary);
   display: none;
 
   td {
@@ -22,7 +22,7 @@ tr.bc-history {
   }
 
   dl.bc-notes-list {
-    background-color: $background-secondary;
+    background-color: var(--background-secondary);
     display: flex;
     flex-flow: column;
     gap: 1rem;
@@ -52,7 +52,7 @@ tr.bc-history {
 }
 
 dl.bc-history-mobile {
-  background-color: $background-secondary;
+  background-color: var(--background-secondary);
   display: block;
   padding: 0.5rem;
 

@@ -1,12 +1,11 @@
-@use "../../base/styles" as *;
-@use "../../base/theme" as *;
+@use "../../vars" as *;
 
 .article-actions {
   display: none;
 
   &.show-utilities {
-    background-color: $background-primary;
-    color: $text-primary;
+    background-color: var(--background-primary);
+    color: var(--text-primary);
     display: block;
     height: 100vh;
     left: 0;

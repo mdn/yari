@@ -1,101 +1,41 @@
+@use "./ui/base/typography";
+@use "./ui/base/reset";
 @use "./ui/base/themes";
 
+/*
+  Global :root variables, for those independent of themes
+*/
 :root {
-  main {
-    min-height: 80vh;
-  }
+  /* Typography */
+  --font-fallback: BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu",
+    "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-sans;
 
-  /* See https://hankchizljaw.com/wrote/a-modern-css-reset/ */
-  /* Box sizing rules */
-  *,
-  *::before,
-  *::after {
-    box-sizing: border-box;
-  }
+  --font-body: Inter, var(--font-fallback);
+  --font-heading: Montserrat, var(--font-fallback);
+  --font-size: 16px;
+  --font-line-height: 1.2;
 
-  /* Remove default margin */
-  body,
-  h1,
-  h2,
-  h3,
-  h4,
-  p,
-  figure,
-  blockquote,
-  dl,
-  dd {
-    margin: 0;
-  }
+  --type-heading-l: 600 1rem/1.1875 var(--font-heading); /* 16px/19px */
+  --type-body-l: 400 1rem/1.1875 var(--font-body); /* 16px/19px */
+  --type-body-m: 400 0.8125rem/1.23 var(--font-body); /* 13px/16px */
+  --type-body-s: 500 0.6875rem/1.273 var(--font-body); /* 11px/14px */
+  --type-emphasis-l: 600 1rem/1.1875 var(--font-body); /* 16px/19px */
+  --type-emphasis-m: 600 0.8125rem/1.23 var(--font-body); /* 13px/16px */
+  --type-label-s: 600 0.625rem/1.2 var(--font-heading); /* 10px/12px */
+}
 
-  ul,
-  ol {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-  }
+main {
+  min-height: 80vh;
+}
 
-  /* Set core root defaults */
-  html:focus-within {
-    scroll-behavior: smooth;
-  }
+.visually-hidden {
+  display: none;
+}
 
-  /* Set core body defaults */
-  body {
-    text-rendering: optimizeSpeed;
-    font-size: 16px;
-    font-family: Inter, sans-serif;
-    line-height: 1.2;
-  }
-
-  /* A elements that don't have a class get default styles */
-  a:not([class]) {
-    text-decoration-skip-ink: auto;
-  }
-
-  a {
-    text-decoration: none;
-  }
-
-  /* Make images easier to work with */
-  img,
-  picture {
-    max-width: 100%;
-    display: block;
-  }
-
-  /* Inherit fonts for inputs and buttons */
-  input,
-  button,
-  textarea,
-  select {
-    font: inherit;
-  }
-
-  /* Remove all animations, transitions and smooth scroll for people that prefer not to see them */
-  @media (prefers-reduced-motion: reduce) {
-    html:focus-within {
-      scroll-behavior: auto;
-    }
-
-    *,
-    *::before,
-    *::after {
-      animation-duration: 0.01ms !important;
-      animation-iteration-count: 1 !important;
-      transition-duration: 0.01ms !important;
-      scroll-behavior: auto !important;
-    }
-  }
-
-  .visually-hidden {
-    display: none;
-  }
-
-  pre {
-    white-space: pre-wrap;
-    white-space: -moz-pre-wrap;
-    white-space: -pre-wrap;
-    white-space: -o-pre-wrap;
-    word-wrap: break-word;
-  }
+pre {
+  white-space: pre-wrap;
+  white-space: -moz-pre-wrap;
+  white-space: -pre-wrap;
+  white-space: -o-pre-wrap;
+  word-wrap: break-word;
 }
