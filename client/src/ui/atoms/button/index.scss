@@ -1,0 +1,70 @@
+.button {
+  --button-bg: var(--button-primary-default);
+  --button-border-color: var(--button-primary-default);
+  --button-color: #fff;
+  --button-padding: 0.5rem;
+  --button-radius: var(--elem-radius, 0.25rem);
+
+  appearance: none;
+  background: none;
+  border: none;
+  border-radius: var(--button-radius);
+  cursor: pointer;
+  display: inline-block;
+  padding: 0;
+  text-decoration: none;
+}
+
+.button > span {
+  align-items: center;
+  background-color: var(--button-bg);
+  border: 1px solid var(--button-border-color);
+  border-radius: var(--button-radius);
+  color: var(--button-color);
+  display: flex;
+  font: var(--type-emphasis-m);
+  height: 2rem;
+  justify-content: center;
+  padding-left: var(--button-padding);
+  padding-right: var(--button-padding);
+}
+
+/* Button States */
+
+.button:hover,
+.button.hover {
+  --button-bg: var(--button-primary-hover);
+}
+
+.button:active,
+.button.active {
+  --button-bg: var(--button-primary-active);
+}
+
+.button:focus,
+.button.focus {
+  --button-bg: var(--button-primary-focus);
+  outline: 3px solid var(--accent-primary-engage);
+}
+
+.button[disabled],
+.button.disabled {
+  --button-bg: var(--button-primary-inactive);
+  --button-border-color: transparent;
+}
+
+/* Button Modifiers */
+
+.button.small {
+  height: 1.75rem;
+}
+
+/* Secondary Version */
+
+.button.secondary {
+  --button-bg: var(--button-secondary-default);
+  --button-border-color: var(--button-secondary-default);
+  --button-color: var(--text-secondary);
+
+  font: var(--type-label-s);
+}
