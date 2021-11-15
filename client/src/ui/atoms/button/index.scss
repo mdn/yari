@@ -2,6 +2,7 @@
   --button-bg: var(--button-primary-default);
   --button-border-color: var(--button-primary-default);
   --button-color: #fff;
+  --button-font: var(--type-emphasis-m);
   --button-padding: 0.5rem;
   --button-radius: var(--elem-radius, 0.25rem);
 
@@ -22,7 +23,7 @@
   border-radius: var(--button-radius);
   color: var(--button-color);
   display: flex;
-  font: var(--type-emphasis-m);
+  font: var(--button-font);
   height: 2rem;
   justify-content: center;
   padding-left: var(--button-padding);
@@ -43,19 +44,19 @@
 
 .button:focus,
 .button.focus {
-  --button-bg: var(--button-primary-focus);
   outline: 3px solid var(--accent-primary-engage);
 }
 
 .button[disabled],
-.button.disabled {
-  --button-bg: var(--button-primary-inactive);
-  --button-border-color: transparent;
+.button.inactive {
+  opacity: 0.65;
 }
 
-/* Button Modifiers */
+/* Standard Button Modifiers */
 
-.button.small {
+.button.small,
+.button.small > span {
+  --button-padding: 0.25rem;
   height: 1.75rem;
 }
 
@@ -63,8 +64,42 @@
 
 .button.secondary {
   --button-bg: var(--button-secondary-default);
-  --button-border-color: var(--button-secondary-default);
+  --button-border-color: var(--border-primary);
   --button-color: var(--text-secondary);
+}
 
-  font: var(--type-label-s);
+.button.secondary:hover {
+  --button-bg: var(--button-secondary-hover);
+}
+
+.button.secondary:active {
+  --button-bg: var(--button-secondary-active);
+}
+
+.button.secondary:focus {
+  --button-bg: var(--button-secondary-default);
+}
+
+/* Action Version */
+
+.button.action {
+  --button-bg: transparent;
+  --button-border-color: var(--button-bg);
+  --button-color: var(--text-secondary);
+  --button-font: var(--type-label-s);
+}
+
+.button.action > span {
+  text-transform: uppercase;
+}
+
+.high-contrast-black {
+  .button {
+    --button-color: var(--button-secondary-default);
+  }
+
+  .button.secondary {
+    --button-bg: transparent;
+    --button-border-color: var(--button-color);
+  }
 }

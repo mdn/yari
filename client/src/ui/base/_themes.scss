@@ -17,10 +17,7 @@
   --button-primary-default: #{$mdn-theme-light-button-primary-default};
   --button-primary-hover: #{$mdn-theme-light-button-primary-hover};
   --button-primary-active: #{$mdn-theme-light-button-primary-active};
-  --button-primary-inactive: #{color.adjust(
-      $mdn-theme-light-button-primary-inactive,
-      $alpha: -0.65
-    )};
+  --button-primary-inactive: #{$mdn-theme-light-button-primary-inactive};
 
   --button-secondary-default: #{$mdn-theme-light-button-secondary-default};
   --button-secondary-hover: #{$mdn-theme-light-button-secondary-hover};
@@ -62,10 +59,7 @@ body[class="dark"] {
   --button-primary-default: #{$mdn-theme-dark-button-primary-default};
   --button-primary-hover: #{$mdn-theme-dark-button-primary-hover};
   --button-primary-active: #{$mdn-theme-dark-button-primary-active};
-  --button-primary-inactive: #{color.adjust(
-      $mdn-theme-dark-button-primary-inactive,
-      $alpha: -0.65
-    )};
+  --button-primary-inactive: #{$mdn-theme-dark-button-primary-inactive};
 
   --button-secondary-default: #{$mdn-theme-dark-button-secondary-default};
   --button-secondary-hover: #{$mdn-theme-dark-button-secondary-hover};
@@ -80,7 +74,10 @@ body[class="dark"] {
   --icon-success: #{$mdn-theme-dark-icon-success};
 
   --accent-primary: #{$mdn-theme-dark-accent-primary};
-  s: #{color.adjust($mdn-theme-dark-accent-primary, $alpha: -0.9)};
+  --accent-primary-engage: #{color.adjust(
+      $mdn-theme-dark-accent-primary,
+      $alpha: -0.9
+    )};
   --accent-secondary: #{$mdn-theme-dark-accent-secondary};
 }
 
@@ -100,10 +97,7 @@ body[class="high-contrast-white"] {
   --button-primary-default: #{$mdn-theme-high-contrast-white-button-primary-default};
   --button-primary-hover: #{$mdn-theme-high-contrast-white-button-primary-hover};
   --button-primary-active: #{$mdn-theme-high-contrast-white-button-primary-active};
-  --button-primary-inactive: #{color.adjust(
-      $mdn-theme-high-contrast-white-button-primary-inactive,
-      $alpha: -0.65
-    )};
+  --button-primary-inactive: #{$mdn-theme-high-contrast-white-button-primary-inactive};
   --button-secondary-default: #{$mdn-theme-high-contrast-white-button-secondary-default};
   --button-secondary-hover: #{$mdn-theme-high-contrast-white-button-secondary-hover};
   --button-secondary-active: #{$mdn-theme-high-contrast-white-button-secondary-active};
@@ -140,10 +134,7 @@ body[class="high-contrast-black"] {
   --button-primary-default: #{$mdn-theme-high-contrast-black-button-primary-default};
   --button-primary-hover: #{$mdn-theme-high-contrast-black-button-primary-hover};
   --button-primary-active: #{$mdn-theme-high-contrast-black-button-primary-active};
-  --button-primary-inactive: #{color.adjust(
-      $mdn-theme-high-contrast-black-button-primary-inactive,
-      $alpha: -0.65
-    )};
+  --button-primary-inactive: #{$mdn-theme-high-contrast-black-button-primary-inactive};
 
   --button-secondary-default: #{$mdn-theme-high-contrast-black-button-secondary-default};
   --button-secondary-hover: #{$mdn-theme-high-contrast-black-button-secondary-hover};

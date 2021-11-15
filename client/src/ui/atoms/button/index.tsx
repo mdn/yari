@@ -8,7 +8,7 @@ type ButtonProps = {
   ariaExpanded?: boolean;
   ariaHasPopup?: "true" | "false" | "menu" | "dialog" | "listbox";
 
-  type?: "primary" | "secondary";
+  type?: "primary" | "secondary" | "action";
 
   /**
    * The `type` of the button. Not used with links.
