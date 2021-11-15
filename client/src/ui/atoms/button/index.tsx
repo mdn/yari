@@ -29,7 +29,7 @@ type ButtonProps = {
   size?: "small" | "medium";
 
   state?: "default" | "hover" | "active" | "focused" | "inactive";
-  children: React.ReactNode;
+  children?: React.ReactNode;
 };
 
 export const Button = ({
@@ -54,6 +54,10 @@ export const Button = ({
       buttonClasses += ` ${attr}`;
     }
   });
+
+  if (extraClasses) {
+    buttonClasses += ` ${extraClasses}`;
+  }
 
   if (href) {
     return (
