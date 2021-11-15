@@ -108,7 +108,7 @@ function* collectLevels($el) {
     }
     level = getLevel($header);
     $prev = $header;
-    yield $header.add($header.nextUntil(nextHigherLevel));
+    yield $header.clone().add($header.nextUntil(nextHigherLevel).clone());
   }
 }
 

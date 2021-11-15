@@ -69,13 +69,6 @@ function buildLiveSamplePages(uri, title, $, rawBody) {
   // document or else collect flaws
   if (typeof $ == "string") {
     $ = cheerio.load($);
-  } else {
-    // Let's create a deep copy, since the CheerioAPI object may
-    // be modified during the course of collecting the live sample
-    // code blocks. I couldn't find a better way to create a deep
-    // copy of the CheerioAPI object.
-    // https://stackoverflow.com/questions/55172833/how-do-you-clone-a-cheerio-object
-    $ = cheerio.load($.html());
   }
   return $("iframe")
     .filter((i, iframe) => {
