@@ -144,7 +144,7 @@
     "foreman": "3.0.1",
     "fzf": "0.4.1",
     "history": "5.1.0",
-    "html-validate": "6.1.1",
+    "html-validate": "6.1.2",
     "husky": "^7.0.4",
     "ignore-loader": "^0.1.2",
     "jest-environment-jsdom-sixteen": "^2.0.0",
