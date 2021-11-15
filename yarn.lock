@@ -2810,10 +2810,10 @@
     estree-walker "^1.0.1"
     picomatch "^2.2.2"
 
-"@sidvind/better-ajv-errors@^1.0.0":
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/@sidvind/better-ajv-errors/-/better-ajv-errors-1.0.0.tgz#d2caceb47b31fee568c8b0902aa6a8ae9f3033c6"
-  integrity sha512-0wPZhyEtsBxecE4Hsy1jD1mewP/xW2U9R0A/slBjVRg2jnyx/50JygGjVZTPvipy/fehqjZTymv96n2ZeaenfQ==
+"@sidvind/better-ajv-errors@^1.0.2":
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/@sidvind/better-ajv-errors/-/better-ajv-errors-1.0.2.tgz#5a7dd4023d20978243da4e6c82339d500c5bacd0"
+  integrity sha512-ueXf+vGKseSE2LXMbmXQUESD4aBbzi6ID0hYflw4UNasf6A7JeYwI5FQUgJxuDoklS48XegBc2cuijI0xun4ww==
   dependencies:
     "@babel/code-frame" "^7.16.0"
     chalk "^4.1.0"
@@ -10441,14 +10441,14 @@ html-tags@^3.1.0:
   resolved "https://registry.yarnpkg.com/html-tags/-/html-tags-3.1.0.tgz#7b5e6f7e665e9fb41f30007ed9e0d41e97fb2140"
   integrity sha512-1qYz89hW3lFDEazhjW0yVAV87lw8lVkrJocr72XmBkMKsoSVJCQx3W8BXsC7hO2qAt8BoVjYjtAcZ9perqGnNg==
 
-html-validate@6.1.1:
-  version "6.1.1"
-  resolved "https://registry.yarnpkg.com/html-validate/-/html-validate-6.1.1.tgz#1d08310e79fc203a622b0ff3fa0b08c2baa4fccb"
-  integrity sha512-AKq2MVpXmm6Cb4AMLDNo5FIjor6yqckQqc0rvd0iCDSi5ictkjVHZoHpbTxrNlUK/uyzAJGKy+gYeTGTI7LZfg==
+html-validate@6.1.2:
+  version "6.1.2"
+  resolved "https://registry.yarnpkg.com/html-validate/-/html-validate-6.1.2.tgz#c808642ff9263e61f02c59e3cfd3a72fcaee8764"
+  integrity sha512-KcPK6XILs3I5DEbCPXq0UkQubE62ZnCWrBjiRVZHXEYI3kvPHdQpQEG2bz66SsbJCMqLAN5kc3txr/t+3yX9Ag==
   dependencies:
     "@babel/code-frame" "^7.10.0"
     "@html-validate/stylish" "^2.0.0"
-    "@sidvind/better-ajv-errors" "^1.0.0"
+    "@sidvind/better-ajv-errors" "^1.0.2"
     acorn-walk "^8.0.0"
     ajv "^8.0.0"
     deepmerge "^4.2.0"
