@@ -16,7 +16,7 @@
   text-decoration: none;
 }
 
-.button > span {
+.button-wrap {
   align-items: center;
   background-color: var(--button-bg);
   border: 1px solid var(--button-border-color);
@@ -24,10 +24,15 @@
   color: var(--button-color);
   display: flex;
   font: var(--button-font);
+  gap: 0.25rem;
   height: 2rem;
   justify-content: center;
   padding-left: var(--button-padding);
   padding-right: var(--button-padding);
+}
+
+.button .icon {
+  background-color: var(--button-color);
 }
 
 /* Button States */

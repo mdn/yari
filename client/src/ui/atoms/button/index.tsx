@@ -1,6 +1,8 @@
 import * as React from "react";
 import { Link } from "react-router-dom";
 
+import { Icon } from "../icon";
+
 import "./index.scss";
 
 type ButtonProps = {
@@ -40,6 +42,7 @@ export const Button = ({
   buttonType = "button",
   extraClasses,
   href,
+  icon,
   id,
   isDisabled = false,
   onClickHandler,
@@ -59,6 +62,19 @@ export const Button = ({
     buttonClasses += ` ${extraClasses}`;
   }
 
+  function renderContent() {
+    if (icon) {
+      return (
+        <>
+          <Icon name={icon} />
+          {children}
+        </>
+      );
+    }
+
+    return children;
+  }
+
   if (href) {
     return (
       <Link
@@ -68,7 +84,7 @@ export const Button = ({
         onClick={onClickHandler}
         onFocus={onFocusHandler}
       >
-        <span>{children}</span>
+        <span className="button-wrap">{renderContent()}</span>
       </Link>
     );
   }
@@ -84,7 +100,7 @@ export const Button = ({
       onClick={onClickHandler}
       onFocus={onFocusHandler}
     >
-      <span>{children}</span>
+      <span className="button-wrap">{renderContent()}</span>
     </button>
   );
 };
