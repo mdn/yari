@@ -1,5 +1,3 @@
-import { Button } from "../../atoms/button";
-
 export function NotificationsWatchMenuStart({ setStepHandler }) {
   return (
     <form action={""} method="POST">
