@@ -58,7 +58,7 @@
     "cli-progress": "^3.9.1",
     "compression": "1.7.4",
     "cookie": "0.4.1",
-    "cookie-parser": "1.4.5",
+    "cookie-parser": "1.4.6",
     "cssesc": "^3.0.0",
     "dayjs": "1.10.7",
     "dotenv": "10.0.0",
