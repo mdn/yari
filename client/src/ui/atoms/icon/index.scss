@@ -23,4 +23,16 @@ $icons: "add-filled", "add", "bell-filled", "bell", "bookmark-filled",
   &.icon-close {
     mask-image: url("~@mdn/dinocons/general/close.svg");
   }
+
+  &.icon-menu-open {
+    mask-image: url("~@mdn/dinocons/navigation/menu-open.svg");
+  }
+
+  &.icon-menu-close {
+    mask-image: url("~@mdn/dinocons/navigation/menu-close.svg");
+  }
+
+  &.icon-kebab-menu {
+    mask-image: url("~@mdn/dinocons/general/kebab-menu.svg");
+  }
 }

@@ -49,9 +49,10 @@ export const ArticleActionsContainer = ({ doc }: { doc: Doc }) => {
       {doc.parents && <Breadcrumbs parents={doc.parents} />}
       {isMobile && (
         <Button
+          type="action"
           ariaHasPopup={"menu"}
+          icon="kebab-menu"
           onClickHandler={toggleArticleActionsMenu}
-          extraClasses="article-actions-open"
         >
           <span className="visually-hidden">Show article actions menu</span>
         </Button>

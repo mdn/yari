@@ -1,7 +1,6 @@
 import * as React from "react";
 
 import { Button } from "../../atoms/button";
-import { IconButton } from "../../atoms/icon-button";
 
 import "./index.scss";
 
@@ -61,13 +60,14 @@ export const ThemeSwitcher = () => {
         ariaControls={menuId}
         ariaHasPopup={"menu"}
         ariaExpanded={menuId === visibleSubMenuId}
+        type="secondary"
         icon="theme"
         extraClasses="theme-switcher-menu mobile-only"
         onClickHandler={() => {
           toggleSubMenu(menuId);
         }}
       >
-        <span className="">Theme</span>
+        Theme
       </Button>
       <ul
         className={`${visibleSubMenuId ? "themes-menu show" : "themes-menu"}`}

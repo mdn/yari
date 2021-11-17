@@ -28,6 +28,7 @@ export function TopNavigation() {
       <div className="wrapper">
         <Logo />
         <Button
+          type="action"
           ariaHasPopup={"menu"}
           icon="menu-open"
           onClickHandler={toggleMainMenu}
