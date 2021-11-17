@@ -57,17 +57,18 @@ export const ThemeSwitcher = () => {
 
   return (
     <div className="theme-switcher-menu">
-      <IconButton
+      <Button
         ariaControls={menuId}
         ariaHasPopup={"menu"}
         ariaExpanded={menuId === visibleSubMenuId}
-        extraClasses="theme-switcher-menu with-icon-flex mobile-only"
-        clickHandler={() => {
+        icon="theme"
+        extraClasses="theme-switcher-menu mobile-only"
+        onClickHandler={() => {
           toggleSubMenu(menuId);
         }}
       >
         <span className="">Theme</span>
-      </IconButton>
+      </Button>
       <ul
         className={`${visibleSubMenuId ? "themes-menu show" : "themes-menu"}`}
         id={menuId}

@@ -19,4 +19,8 @@ $icons: "add-filled", "add", "bell-filled", "bell", "bookmark-filled",
       mask-image: url("../../../assets/icons/" + $name + ".svg");
     }
   }
+
+  &.icon-close {
+    mask-image: url("~@mdn/dinocons/general/close.svg");
+  }
 }

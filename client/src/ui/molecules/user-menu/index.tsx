@@ -69,6 +69,7 @@ export const UserMenu = () => {
   return (
     <div className="user-menu">
       <Button
+        type="action"
         id={`${userMenuItems.id}-button`}
         extraClasses="user-menu-toggle with-icon-flex mobile-only"
         ariaHasPopup="menu"
@@ -80,7 +81,6 @@ export const UserMenu = () => {
         <Avatar userData={userData} />
         <span className="hide-desktop">{userData.email}</span>
       </Button>
-
       <Submenu
         menuEntry={userMenuItems}
         visibleSubMenuId={visibleSubMenuId}

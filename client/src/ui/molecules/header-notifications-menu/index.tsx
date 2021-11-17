@@ -123,9 +123,10 @@ export const HeaderNotificationsMenu = () => {
   return (
     <div className="notifications-menu">
       <Button
+        type="action"
         ariaHasPopup={"menu"}
         ariaControls={menuId}
-        extraClasses="ghost notifications-button"
+        extraClasses="notifications-button"
         aria-label={`You currently have ${notificationCount} notifications`}
         ariaExpanded={menuId === visibleSubMenuId}
         onClickHandler={() => {

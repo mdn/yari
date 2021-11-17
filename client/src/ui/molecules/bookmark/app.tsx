@@ -3,7 +3,7 @@ import useSWR, { mutate } from "swr";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 
-import { IconButton } from "../../atoms/icon-button";
+import { Button } from "../../atoms/button";
 
 import { Doc } from "../../../document/types";
 
@@ -95,10 +95,10 @@ export default function App({ doc }: { doc: Doc }) {
           />
         )
       )}
-      <IconButton
-        iconClassName={`bookmark-button ${localBookmarked ? "bookmarked" : ""}`}
+      <Button
+        extraClasses={`bookmark-button ${localBookmarked ? "bookmarked" : ""}`}
         isDisabled={isSaving}
-        clickHandler={async () => {
+        onClickHandler={async () => {
           // The first thing we do when the user has toggled it is to store it
           // in local state so that the UI feels responsive.
           // Once this is done, we can take care of sending the local state to
@@ -127,7 +127,7 @@ export default function App({ doc }: { doc: Doc }) {
         <span className="bookmark-button-label">
           {localBookmarked ? "Bookmarked" : "Bookmark"}
         </span>
-      </IconButton>
+      </Button>
     </>
   );
 }

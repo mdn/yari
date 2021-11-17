@@ -1,7 +1,7 @@
 import * as React from "react";
 
 import { BookmarkToggle } from "../../molecules/bookmark";
-import { IconButton } from "../../atoms/icon-button";
+import { Button } from "../../atoms/button";
 import { NotificationsWatchMenu } from "../../molecules/notifications-watch-menu";
 import { ThemeSwitcher } from "../../molecules/theme-switcher";
 
@@ -65,14 +65,14 @@ export const ArticleActions = ({
     >
       {/* styling for icon is defined in client/src/ui/atoms/icon-button/index.scss */}
       {isMobile && (
-        <IconButton
-          clickHandler={toggleArticleActionsMenu}
-          iconClassName="article-actions-close"
+        <Button
+          onClickHandler={toggleArticleActionsMenu}
+          icon="article-actions-close"
         >
           <span className="article-actions-dialog-heading">
             Article actions
           </span>
-        </IconButton>
+        </Button>
       )}
       <ul className="article-actions-entries">
         {isSubscriber && (

@@ -1,7 +1,7 @@
 import { useState } from "react";
 
 import { Logo } from "../../atoms/logo";
-import { IconButton } from "../../atoms/icon-button";
+import { Button } from "../../atoms/button";
 import { TopNavigationMain } from "../top-navigation-main";
 
 import "./index.scss";
@@ -27,14 +27,14 @@ export function TopNavigation() {
     <header className="top-navigation">
       <div className="wrapper">
         <Logo />
-        <IconButton
+        <Button
           ariaHasPopup={"menu"}
-          clickHandler={toggleMainMenu}
+          icon="menu-open"
+          onClickHandler={toggleMainMenu}
           extraClasses="main-menu-toggle"
-          iconClassName="menu-open"
         >
           <span className="visually-hidden">Show Menu</span>
-        </IconButton>
+        </Button>
 
         <TopNavigationMain showMainMenu={showMainMenu} />
       </div>
