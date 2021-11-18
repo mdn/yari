@@ -57,10 +57,10 @@ export const ThemeSwitcher = () => {
   return (
     <div className="theme-switcher-menu">
       <Button
+        type="action"
         ariaControls={menuId}
         ariaHasPopup={"menu"}
         ariaExpanded={menuId === visibleSubMenuId}
-        type="secondary"
         icon="theme"
         extraClasses="theme-switcher-menu mobile-only"
         onClickHandler={() => {

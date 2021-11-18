@@ -96,7 +96,7 @@ export default function App({ doc }: { doc: Doc }) {
         )
       )}
       <Button
-        type="secondary"
+        type="action"
         icon={`${localBookmarked ? "bookmark-filled" : "bookmark"}`}
         extraClasses={`bookmark-button ${localBookmarked ? "bookmarked" : ""}`}
         isDisabled={isSaving}

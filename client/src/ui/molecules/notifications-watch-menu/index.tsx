@@ -35,7 +35,7 @@ export const NotificationsWatchMenu = () => {
   return (
     <>
       <Button
-        type="secondary"
+        type="action"
         id="watch-menu-button"
         icon="eye"
         extraClasses="watch-menu"

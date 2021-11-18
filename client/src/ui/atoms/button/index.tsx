@@ -58,9 +58,8 @@ export const Button = ({
     }
   });
 
-  if (extraClasses) {
-    buttonClasses += ` ${extraClasses}`;
-  }
+  buttonClasses += icon ? " has-icon" : "";
+  buttonClasses += extraClasses ? ` ${extraClasses}` : "";
 
   function renderContent() {
     if (icon) {

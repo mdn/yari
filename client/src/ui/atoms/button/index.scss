@@ -98,6 +98,11 @@
   text-transform: uppercase;
 }
 
+.button.action.has-icon > span {
+  --button-font: var(--type-emphasis-m);
+  text-transform: initial;
+}
+
 .high-contrast-black {
   .button {
     --button-color: var(--button-secondary-default);
