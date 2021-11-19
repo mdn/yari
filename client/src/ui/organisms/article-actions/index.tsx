@@ -78,7 +78,7 @@ export const ArticleActions = ({
               <BookmarkToggle doc={doc} />
             </li>
             <li className="article-actions-entry">
-              <NotificationsWatchMenu />
+              <NotificationsWatchMenu doc={doc} />
             </li>
             <li className="article-actions-entry">
               <ThemeSwitcher />

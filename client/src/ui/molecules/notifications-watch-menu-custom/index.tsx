@@ -3,7 +3,7 @@ type WatchMenuOptionProps = {
   checked: boolean;
 };
 
-export function NotificationsWatchMenuCustom({ setStepHandler }) {
+export function NotificationsWatchMenuCustom({ doc, setStepHandler }) {
   let compatOptions = [
     {
       name: "Desktop",

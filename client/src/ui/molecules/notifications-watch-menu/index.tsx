@@ -6,7 +6,7 @@ import { NotificationsWatchMenuStart } from "../notifications-watch-menu-start";
 
 import "./index.scss";
 
-export const NotificationsWatchMenu = () => {
+export const NotificationsWatchMenu = ({ doc }) => {
   const menuId = "watch-submenu";
   const previousActiveElement = React.useRef<null | HTMLButtonElement>(null);
   const [visibleSubMenuId, setVisibleSubMenuId] = React.useState<string | null>(
@@ -55,9 +55,15 @@ export const NotificationsWatchMenu = () => {
         aria-labelledby={`${menuId}-button`}
       >
         {visibleStep === 0 ? (
-          <NotificationsWatchMenuStart setStepHandler={showStepCustom} />
+          <NotificationsWatchMenuStart
+            doc={doc}
+            setStepHandler={showStepCustom}
+          />
         ) : (
-          <NotificationsWatchMenuCustom setStepHandler={showStepStart} />
+          <NotificationsWatchMenuCustom
+            doc={doc}
+            setStepHandler={showStepStart}
+          />
         )}
       </div>
     </>

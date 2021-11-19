@@ -1,21 +1,22 @@
 import React, { useState } from "react";
 import useSWR, { mutate } from "swr";
+import { useCSRFMiddlewareToken } from "../../../hooks";
 interface WatchModeData {
   modeType: string;
   csrfmiddlewaretoken: string;
 }
 
-export function NotificationsWatchMenuStart({ setStepHandler }) {
+export function NotificationsWatchMenuStart({ doc, setStepHandler }) {
   const [watchMode, setWatchMode] = useState<string>("major");
+  const csrfMiddlewareToken = useCSRFMiddlewareToken();
 
-  const setWatchAPIEndpoint = "/api/v1/plus/watch/set-watch/";
-  const apiPostURL = `${setWatchAPIEndpoint}${watchMode}`;
-  const slug = "page-slug"; // Unique ID for the page
+  const slug = doc.mdn_url; // Unique ID for the page
+  const apiURL = `/api/v1/plus/watch${slug}/`;
+  const compat = doc.body.filter((e) => e.type === "browser_compatibility");
+  const path = compat.length > 0 ? compat[0].value?.query : null;
+  const title = doc.title;
 
-  // Get existing Watch Mode
-  // TODO: Is pathname correct here?
   // Returns "major", "custom", or "unwatch"
-  const apiURL = `/api/v1/plus/watch/get-mode/${slug}`;
   const { data, error } = useSWR<WatchModeData>(
     apiURL,
     async (url) => {
@@ -42,27 +43,38 @@ export function NotificationsWatchMenuStart({ setStepHandler }) {
       return null;
     }
 
-    const response = await fetch(apiPostURL, {
+    if (!path || !title) {
+      console.log(
+        "this page is missing a path or a title from browser compat",
+        path,
+        title
+      );
+      console.log(doc);
+      return;
+    }
+
+    const response = await fetch(apiURL, {
       method: "POST",
+      body: JSON.stringify({
+        path: path,
+        title: title,
+      }),
       headers: {
-        "X-CSRFToken": data.csrfmiddlewaretoken,
-        "Content-Type": "application/x-www-form-urlencoded",
+        "X-CSRFToken": csrfMiddlewareToken || "",
+        "Content-Type": "text/plain", // This has to be "text/plain" cause otherwise django won't accept the request
       },
     });
 
     if (!response.ok) {
-      throw new Error(`${response.status} on ${response.url}`);
+      console.log(response);
+      throw new Error(`${response.status} on ${slug}`);
     }
     await mutate(apiURL);
     return true;
   }
 
   return (
-    <form
-      action={setWatchAPIEndpoint}
-      method="POST"
-      onSubmit={handleWatchSelection}
-    >
+    <form action={apiURL} method="POST" onSubmit={handleWatchSelection}>
       <div className="watch-submenu-header">Notifications</div>
 
       <button
@@ -70,6 +82,7 @@ export function NotificationsWatchMenuStart({ setStepHandler }) {
         aria-checked="false"
         className="watch-menu-button"
         value="major"
+        disabled={!path || !title}
         onClick={handleSelection}
       >
         <span className="watch-menu-button-wrap">
@@ -92,6 +105,7 @@ export function NotificationsWatchMenuStart({ setStepHandler }) {
         aria-checked="true"
         aria-haspopup="true"
         className="watch-menu-button"
+        disabled={!path || !title}
         onClick={(event) => {
           event.preventDefault();
           setStepHandler(1);
@@ -113,6 +127,7 @@ export function NotificationsWatchMenuStart({ setStepHandler }) {
         aria-checked="false"
         className="watch-menu-button"
         value="unwatch"
+        disabled={!path || !title}
         onClick={handleSelection}
       >
         <span className="watch-menu-button-wrap">
