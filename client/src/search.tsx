@@ -422,11 +422,21 @@ function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
         })}
       />
 
-      <Button extraClasses="close-search-button" onClickHandler={onCloseSearch}>
+      <Button
+        type="action"
+        icon="close"
+        extraClasses="close-search-button"
+        onClickHandler={onCloseSearch}
+      >
         <span className="visually-hidden">Close search</span>
       </Button>
 
-      <Button buttonType="submit" extraClasses="ghost search-button">
+      <Button
+        type="action"
+        icon="search"
+        buttonType="submit"
+        extraClasses="search-button"
+      >
         <span className="visually-hidden">Search</span>
       </Button>
 

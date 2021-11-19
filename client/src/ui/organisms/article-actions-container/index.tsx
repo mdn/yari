@@ -1,7 +1,7 @@
 import * as React from "react";
 
 import { Breadcrumbs } from "../../molecules/breadcrumbs";
-import { IconButton } from "../../atoms/icon-button";
+import { Button } from "../../atoms/button";
 import { ArticleActions } from "../article-actions";
 
 import { Doc } from "../../../document/types";
@@ -47,15 +47,15 @@ export const ArticleActionsContainer = ({ doc }: { doc: Doc }) => {
     <div className="article-actions-container">
       {/* if we have breadcrumbsfor the current page, continue rendering the section */}
       {doc.parents && <Breadcrumbs parents={doc.parents} />}
-      {/* styling for icon is defined in client/src/ui/atoms/icon-button/index.scss */}
       {isMobile && (
-        <IconButton
+        <Button
+          type="action"
           ariaHasPopup={"menu"}
-          clickHandler={toggleArticleActionsMenu}
-          iconClassName="article-actions-open"
+          icon="kebab-menu"
+          onClickHandler={toggleArticleActionsMenu}
         >
           <span className="visually-hidden">Show article actions menu</span>
-        </IconButton>
+        </Button>
       )}
       <ArticleActions
         doc={doc}
