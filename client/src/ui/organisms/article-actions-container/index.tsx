@@ -51,7 +51,7 @@ export const ArticleActionsContainer = ({ doc }: { doc: Doc }) => {
         <Button
           type="action"
           ariaHasPopup={"menu"}
-          icon="kebab-menu"
+          icon="ellipses"
           onClickHandler={toggleArticleActionsMenu}
         >
           <span className="visually-hidden">Show article actions menu</span>
