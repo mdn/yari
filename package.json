@@ -125,7 +125,7 @@
     "@storybook/react": "^6.3.4",
     "@testing-library/react": "^12.1.2",
     "@types/hast": "^2.3.4",
-    "@types/jest": "^27.0.2",
+    "@types/jest": "^27.0.3",
     "@types/mdast": "^3.0.10",
     "@types/react": "^17.0.35",
     "@types/react-dom": "^17.0.11",
