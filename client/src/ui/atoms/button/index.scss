@@ -7,7 +7,7 @@ button {
 .button {
   --button-bg: var(--button-primary-default);
   --button-border-color: var(--button-primary-default);
-  --button-focus-shadow: 0 0 0 3px var(--accent-primary-engage);
+  --button-focus-effect: var(--focus-effect);
   --button-color: #fff;
   --button-font: var(--type-emphasis-m);
   --button-padding: 0.5rem;
@@ -61,7 +61,7 @@ button {
   outline: none;
 
   .button-wrap {
-    box-shadow: var(--button-focus-shadow);
+    box-shadow: var(--button-focus-effect);
   }
 }
 
@@ -131,7 +131,7 @@ button {
 .high-contrast-white {
   .button:focus {
     --button-border-color: var(--border-primary);
-    --button-focus-shadow: 0 0 0 4px var(--background-primary),
+    --button-focus-effect: 0 0 0 4px var(--background-primary),
       0 0 0 7px var(--border-primary);
   }
 }

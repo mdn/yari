@@ -1,21 +1,16 @@
 @use "../../vars" as *;
-@use "../../base/typography" as *;
 
 .top-navigation-main {
   display: none;
+  justify-content: space-between;
   left: 0;
   padding: 1rem;
   position: absolute;
-  top: 4rem;
+  top: var(--top-nav-height);
   width: 100%;
-  z-index: 1000;
-  justify-content: space-between;
+  z-index: var(--z-index-top);
 
-  a {
-    padding: 0.5rem 1rem;
-  }
-
-  &.show-grid {
+  &.is-open {
     background-color: var(--background-primary);
     display: flex;
     flex-direction: column-reverse;
@@ -41,16 +36,5 @@
     @media screen and (min-width: $screen-md) {
       flex-direction: initial;
     }
-  }
-}
-
-/* displays elements in container in `column-reverse` flow on
-   mobile and then switches to `row` on desktop */
-.show-reverse-to-row {
-  display: flex;
-  flex-flow: column-reverse;
-
-  @media screen and (min-width: $screen-md) {
-    flex-flow: row;
   }
 }

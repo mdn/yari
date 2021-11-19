@@ -1,27 +1,25 @@
 @use "../../vars" as *;
 
-.main-menu-toggle {
-  position: absolute;
-  right: 1rem;
-  top: 1rem;
+.top-navigation {
+  background-color: var(--background-primary);
+  left: 0;
+  position: relative;
+  position: sticky;
+  top: 0;
+  width: 100%;
+  z-index: var(--z-index-top);
 
-  @media screen and (min-width: $screen-md) {
-    display: none;
+  .container {
+    align-items: center;
+    display: flex;
+    gap: var(--gutter);
+    height: var(--top-nav-height);
+    justify-content: space-between;
   }
 }
 
-.top-navigation {
-  background-color: var(--background-primary);
-  position: relative;
-  width: 100%;
-
-  .wrapper {
-    max-width: var(--max-width);
-    padding: 1rem;
-    margin: 0 auto;
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    height: 64px;
+.main-menu-toggle {
+  @media screen and (min-width: $screen-md) {
+    display: none;
   }
 }

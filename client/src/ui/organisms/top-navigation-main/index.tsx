@@ -14,34 +14,13 @@ import "./index.scss";
 export const TopNavigationMain = ({ showMainMenu }) => {
   const userData = useUserData();
   const isSubscriber = userData && userData.isSubscriber;
-  const [isMobile, setIsMobile] = React.useState(false);
   const [showSearch, setShowSearch] = React.useState(false);
 
-  function updateViewportState(state) {
-    setIsMobile(state.matches);
-  }
-
-  React.useEffect(() => {
-    if (typeof window !== "undefined" && window.matchMedia) {
-      const mql = window.matchMedia("(max-width: 768px)");
-
-      // add an event listener to report as the viewport changes
-      mql.addEventListener("change", updateViewportState);
-
-      // immediately report our initial state
-      updateViewportState(mql);
-    }
-  }, []);
-
   return (
-    <div
-      className={`top-navigation-main ${
-        isMobile && showMainMenu ? "show-grid" : ""
-      }`}
-    >
+    <div className={`top-navigation-main${showMainMenu ? " is-open" : ""}`}>
       <MainMenu />
       <div className="top-navigation-actions">
-        {isMobile || showSearch ? (
+        {showSearch ? (
           <Search
             onCloseSearch={() => {
               setShowSearch(false);
@@ -59,13 +38,13 @@ export const TopNavigationMain = ({ showMainMenu }) => {
             <span className="visually-hidden">Show search</span>
           </Button>
         )}
-        {isSubscriber && (!showSearch || isMobile) && (
+        {isSubscriber && !showSearch && (
           <>
             <HeaderNotificationsMenu />
             <UserMenu />
           </>
         )}
-        {!isSubscriber && (!showSearch || isMobile) && <AuthContainer />}
+        {!isSubscriber && !showSearch && <AuthContainer />}
       </div>
     </div>
   );

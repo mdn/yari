@@ -9,14 +9,10 @@ import "./index.scss";
 export function TopNavigation() {
   const [showMainMenu, setShowMainMenu] = useState(false);
 
-  function toggleMainMenu(event) {
+  function toggleMainMenu() {
     const pageOverlay = document.querySelector(".page-overlay");
-    const mainMenuButton = event.target;
 
-    if (mainMenuButton) {
-      mainMenuButton.classList.toggle("menu-close");
-      setShowMainMenu(!showMainMenu);
-    }
+    setShowMainMenu(!showMainMenu);
 
     if (pageOverlay) {
       pageOverlay.classList.toggle("hidden");
@@ -25,16 +21,17 @@ export function TopNavigation() {
 
   return (
     <header className="top-navigation">
-      <div className="wrapper">
+      <div className="container">
         <Logo />
         <Button
           type="action"
           ariaHasPopup={"menu"}
-          icon="menu-open"
+          ariaLabel={showMainMenu ? "Close main menu" : "Open main menu"}
+          icon={showMainMenu ? "cancel" : "menu"}
           onClickHandler={toggleMainMenu}
           extraClasses="main-menu-toggle"
         >
-          <span className="visually-hidden">Show Menu</span>
+          <span className="visually-hidden">Toggle Menu</span>
         </Button>
 
         <TopNavigationMain showMainMenu={showMainMenu} />
