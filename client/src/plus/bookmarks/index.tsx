@@ -15,7 +15,6 @@ import { DISABLE_AUTH } from "../../constants";
 import { AuthDisabled } from "../../ui/atoms/auth-disabled";
 import { Loading } from "../../ui/atoms/loading";
 import { useUserData } from "../../user-context";
-import { useLocale } from "../../hooks";
 
 import "./index.scss";
 import { DataError, NotSignedIn, NotSubscriber } from "../common";

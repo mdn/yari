@@ -17,7 +17,7 @@ export function NotificationsWatchMenuStart({ doc, setStepHandler }) {
   const title = doc.title;
 
   // Returns "major", "custom", or "unwatch"
-  const { data, error } = useSWR<WatchModeData>(
+  const { data } = useSWR<WatchModeData>(
     apiURL,
     async (url) => {
       const response = await fetch(url);
@@ -79,7 +79,7 @@ export function NotificationsWatchMenuStart({ doc, setStepHandler }) {
 
       <button
         role="menuitemradio"
-        aria-checked="false"
+        aria-checked={watchMode === "major"}
         className="watch-menu-button"
         value="major"
         disabled={!path || !title}
@@ -102,7 +102,7 @@ export function NotificationsWatchMenuStart({ doc, setStepHandler }) {
       <button
         type="button"
         role="menuitemradio"
-        aria-checked="true"
+        aria-checked={watchMode === "custom"}
         aria-haspopup="true"
         className="watch-menu-button"
         disabled={!path || !title}
@@ -124,7 +124,7 @@ export function NotificationsWatchMenuStart({ doc, setStepHandler }) {
       <button
         type="submit"
         role="menuitemradio"
-        aria-checked="false"
+        aria-checked={watchMode === "unwatch"}
         className="watch-menu-button"
         value="unwatch"
         disabled={!path || !title}
