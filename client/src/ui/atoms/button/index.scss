@@ -54,7 +54,7 @@
 .button.focus {
   outline: none;
 
-  & > span {
+  .button-wrap {
     box-shadow: var(--button-focus-shadow);
   }
 }
@@ -67,7 +67,7 @@
 /* Standard Button Modifiers */
 
 .button.small,
-.button.small > span {
+.button.small .button-wrap {
   --button-padding: 0.25rem;
   height: 1.75rem;
 }
@@ -100,11 +100,11 @@
   --button-color: var(--text-secondary);
   --button-font: var(--type-label-s);
 
-  & > span {
+  .button-wrap {
     text-transform: uppercase;
   }
 
-  &.has-icon > span {
+  &.has-icon .button-wrap {
     --button-font: var(--type-emphasis-m);
     text-transform: initial;
   }
