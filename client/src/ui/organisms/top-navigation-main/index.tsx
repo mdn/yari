@@ -3,7 +3,7 @@ import * as React from "react";
 import { AuthContainer } from "../../molecules/auth-container";
 import MainMenu from "../../molecules/main-menu";
 import { HeaderNotificationsMenu } from "../../molecules/header-notifications-menu";
-import { IconButton } from "../../atoms/icon-button";
+import { Button } from "../../atoms/button";
 import { UserMenu } from "../../molecules/user-menu";
 import { Search } from "../../molecules/search";
 
@@ -48,14 +48,16 @@ export const TopNavigationMain = ({ showMainMenu }) => {
             }}
           />
         ) : (
-          <IconButton
-            clickHandler={() => {
+          <Button
+            type="action"
+            icon="search"
+            onClickHandler={() => {
               setShowSearch(true);
             }}
             extraClasses="toggle-search-button"
           >
             <span className="visually-hidden">Show search</span>
-          </IconButton>
+          </Button>
         )}
         {isSubscriber && (!showSearch || isMobile) && (
           <>

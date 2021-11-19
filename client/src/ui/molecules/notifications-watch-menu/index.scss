@@ -10,12 +10,7 @@
 
   @media screen and (min-width: $screen-md) {
     border-bottom: 0;
-  }
-
-  /* base style for an icon buttons is defined by `.icon-button`
-     in client/src/ui/atoms/icon-button/index.scss */
-  &::before {
-    mask-image: url("~@mdn/dinocons/plus/watch.svg");
+    padding: 0;
   }
 }
 

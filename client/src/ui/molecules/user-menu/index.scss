@@ -4,30 +4,10 @@
   position: relative;
 
   .user-menu-toggle {
-    align-items: center;
-    background: none;
-    border-radius: 50%;
-    color: var(--text-secondary);
-    display: flex;
-    margin: 0.25rem;
-    padding: 0;
-    position: relative;
-    width: 100%;
-
-    @media screen and (min-width: $screen-md) {
-      border: 5px solid white;
-    }
-
     &[aria-haspopup="menu"] {
       &::after {
         position: absolute;
         right: 0;
-      }
-    }
-
-    @media screen and (min-width: $screen-md) {
-      &:focus {
-        box-shadow: var(--focus-01);
       }
     }
   }
