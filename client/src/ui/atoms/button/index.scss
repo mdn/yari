@@ -1,6 +1,7 @@
 .button {
   --button-bg: var(--button-primary-default);
   --button-border-color: var(--button-primary-default);
+  --button-focus-shadow: 0 0 0 3px var(--accent-primary-engage);
   --button-color: #fff;
   --button-font: var(--type-emphasis-m);
   --button-padding: 0.5rem;
@@ -39,7 +40,9 @@
 
 .button:hover,
 .button.hover {
+  // In most cases, we want the border to be the same color as the background.
   --button-bg: var(--button-primary-hover);
+  --button-border-color: var(--button-bg);
 }
 
 .button:active,
@@ -49,7 +52,11 @@
 
 .button:focus,
 .button.focus {
-  outline: 3px solid var(--accent-primary-engage);
+  outline: none;
+
+  & > span {
+    box-shadow: var(--button-focus-shadow);
+  }
 }
 
 .button[disabled],
@@ -71,18 +78,18 @@
   --button-bg: var(--button-secondary-default);
   --button-border-color: var(--border-primary);
   --button-color: var(--text-secondary);
-}
 
-.button.secondary:hover {
-  --button-bg: var(--button-secondary-hover);
-}
+  &:hover {
+    --button-bg: var(--button-secondary-hover);
+  }
 
-.button.secondary:active {
-  --button-bg: var(--button-secondary-active);
-}
+  &:active {
+    --button-bg: var(--button-secondary-active);
+  }
 
-.button.secondary:focus {
-  --button-bg: var(--button-secondary-default);
+  &:focus {
+    --button-border-color: var(--button-secondary-border-focus);
+  }
 }
 
 /* Action Version */
@@ -92,24 +99,53 @@
   --button-border-color: var(--button-bg);
   --button-color: var(--text-secondary);
   --button-font: var(--type-label-s);
+
+  & > span {
+    text-transform: uppercase;
+  }
+
+  &.has-icon > span {
+    --button-font: var(--type-emphasis-m);
+    text-transform: initial;
+  }
+
+  &:hover {
+    --button-bg: var(--button-secondary-hover);
+  }
+
+  &:active {
+    --button-bg: var(--button-secondary-active);
+  }
+
+  &:focus {
+    --button-border-color: var(--button-secondary-border-focus);
+  }
 }
 
-.button.action > span {
-  text-transform: uppercase;
-}
-
-.button.action.has-icon > span {
-  --button-font: var(--type-emphasis-m);
-  text-transform: initial;
+.high-contrast-white {
+  .button:focus {
+    --button-border-color: var(--border-primary);
+    --button-focus-shadow: 0 0 0 4px var(--background-primary),
+      0 0 0 7px var(--border-primary);
+  }
 }
 
 .high-contrast-black {
+  .button:focus {
+    --button-border-color: var(--border-primary);
+    --button-focus-shadow: 0 0 0 4px var(--background-primary),
+      0 0 0 7px var(--border-primary);
+  }
+
   .button {
     --button-color: var(--button-secondary-default);
   }
 
   .button.secondary {
-    --button-bg: transparent;
     --button-border-color: var(--button-color);
+  }
+
+  .button.action {
+    --button-color: var(--text-secondary);
   }
 }
