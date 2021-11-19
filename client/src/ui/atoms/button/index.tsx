@@ -9,6 +9,8 @@ type ButtonProps = {
   ariaControls?: string;
   ariaExpanded?: boolean;
   ariaHasPopup?: "true" | "false" | "menu" | "dialog" | "listbox";
+  ariaLabel?: string;
+  title?: string;
 
   type?: "primary" | "secondary" | "action";
 
@@ -38,6 +40,8 @@ export const Button = ({
   ariaControls,
   ariaExpanded,
   ariaHasPopup,
+  ariaLabel,
+  title,
   type = "primary",
   buttonType = "button",
   extraClasses,
@@ -82,6 +86,8 @@ export const Button = ({
         id={id}
         onClick={onClickHandler}
         onFocus={onFocusHandler}
+        aria-label={ariaLabel}
+        title={title}
       >
         <span className="button-wrap">{renderContent()}</span>
       </Link>
@@ -92,6 +98,8 @@ export const Button = ({
       aria-controls={ariaControls}
       aria-expanded={ariaExpanded}
       aria-haspopup={ariaHasPopup}
+      aria-label={ariaLabel}
+      title={title}
       disabled={isDisabled}
       id={id}
       type={buttonType}
