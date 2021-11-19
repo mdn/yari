@@ -1,3 +1,9 @@
+button {
+  appearance: none;
+  background: none;
+  border: none;
+}
+
 .button {
   --button-bg: var(--button-primary-default);
   --button-border-color: var(--button-primary-default);
