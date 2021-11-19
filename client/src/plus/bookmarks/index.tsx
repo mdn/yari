@@ -9,6 +9,8 @@ import {
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 
+import { Button } from "../../ui/atoms/button";
+
 import { DISABLE_AUTH } from "../../constants";
 import { AuthDisabled } from "../../ui/atoms/auth-disabled";
 import { Loading } from "../../ui/atoms/loading";
@@ -213,9 +215,9 @@ function DisplayData({
         <div className="unbookmark">
           <p>
             Bookmark removed{" "}
-            <button
-              type="button"
-              onClick={async () => {
+            <Button
+              type="action"
+              onClickHandler={async () => {
                 try {
                   await saveBookmarked(unbookmarked.url);
                   setUnbookmarked(null);
@@ -228,7 +230,7 @@ function DisplayData({
               }}
             >
               Undo
-            </button>
+            </Button>
           </p>
         </div>
       )}
@@ -292,11 +294,11 @@ function Bookmark({
         </h4>
       </div>
       <div className="bookmark-actions">
-        <button
-          type="button"
-          className="remove-bookmark-button"
+        <Button
+          type="action"
+          icon="trash"
           title="Remove bookmark"
-          onClick={async () => {
+          onClickHandler={async () => {
             setDoomed(true);
             try {
               await toggle();
@@ -306,7 +308,7 @@ function Bookmark({
           }}
         >
           <span className="visually-hidden">Remove bookmark</span>
-        </button>
+        </Button>
       </div>
     </div>
   );

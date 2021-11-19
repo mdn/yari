@@ -1,0 +1,34 @@
+$icons: "add-filled", "add", "bell-filled", "bell", "bookmark-filled",
+  "bookmark", "cancel", "chevron", "critical", "edit", "ellipses", "external",
+  "eye-filled", "eye", "firefox", "information", "language", "menu-filled",
+  "menu", "search", "sidebar", "small-arrow", "star-filled", "star", "theme",
+  "trash", "warning";
+
+.icon {
+  --size: 1rem;
+
+  background-color: var(--icon-primary);
+  display: inline-block;
+  height: var(--size);
+  width: var(--size);
+}
+
+.icon {
+  @each $name in $icons {
+    &.icon-#{$name} {
+      mask-image: url("../../../assets/icons/" + $name + ".svg");
+    }
+  }
+
+  &.icon-close {
+    mask-image: url("~@mdn/dinocons/general/close.svg");
+  }
+
+  &.icon-menu-open {
+    mask-image: url("~@mdn/dinocons/navigation/menu-open.svg");
+  }
+
+  &.icon-menu-close {
+    mask-image: url("~@mdn/dinocons/navigation/menu-close.svg");
+  }
+}

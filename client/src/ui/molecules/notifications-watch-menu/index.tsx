@@ -1,6 +1,6 @@
 import React from "react";
 
-import { IconButton } from "../../atoms/icon-button";
+import { Button } from "../../atoms/button";
 import { NotificationsWatchMenuCustom } from "../notifications-watch-menu-custom";
 import { NotificationsWatchMenuStart } from "../notifications-watch-menu-start";
 
@@ -34,18 +34,20 @@ export const NotificationsWatchMenu = () => {
 
   return (
     <>
-      <IconButton
+      <Button
+        type="action"
+        id="watch-menu-button"
+        icon="eye"
         extraClasses="watch-menu"
         ariaHasPopup={"menu"}
-        id="watch-menu-button"
         aria-label="Watch this page for updates"
         ariaExpanded={menuId === visibleSubMenuId}
-        clickHandler={() => {
+        onClickHandler={() => {
           toggleSubMenu(menuId);
         }}
       >
-        <span className="">Watch</span>
-      </IconButton>
+        Watch
+      </Button>
 
       <div
         className={`${menuId} ${menuId === visibleSubMenuId ? "show" : ""}`}

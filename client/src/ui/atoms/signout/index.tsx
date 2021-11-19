@@ -4,6 +4,7 @@ import { removeSessionStorageData } from "../../../user-context";
 import { useCSRFMiddlewareToken, useLocale } from "../../../hooks";
 
 import "./index.scss";
+import { Button } from "../button";
 
 export default function SignOut() {
   const csrfMiddlewareToken = useCSRFMiddlewareToken();
@@ -45,9 +46,13 @@ export default function SignOut() {
       {/* XXX Here it would be great to link to the account settings page */}
       <input type="hidden" name="next" value={next} />
       {csrfMiddlewareToken && (
-        <button type="submit" className="button ghost signout-button">
-          Sign out
-        </button>
+        <Button
+          type="secondary"
+          buttonType="submit"
+          extraClasses="signout-button"
+        >
+          Sign Out
+        </Button>
       )}
     </form>
   );

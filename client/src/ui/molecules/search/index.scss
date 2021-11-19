@@ -112,47 +112,12 @@
     position: absolute;
     top: 4px; // Assumes 16px icon
   }
-
-  &::before {
-    background-color: var(--icon-primary);
-    background-size: 16px;
-    content: "";
-    display: block;
-    height: 16px;
-    mask-image: url("~@mdn/dinocons/general/search.svg");
-    position: relative;
-    width: 16px;
-  }
 }
 
 .close-search-button {
   display: none;
 
   @media screen and (min-width: $screen-md) {
-    background: none;
-    border-radius: 0.25rem;
     display: block;
-    padding: 0.5rem;
-
-    &::before {
-      background-color: var(--icon-primary);
-      background-size: 12px;
-      content: "";
-      display: block;
-      height: 12px;
-      mask-image: url("~@mdn/dinocons/general/close.svg");
-      position: relative;
-      width: 12px;
-    }
-  }
-}
-
-.search-button,
-.close-search-button {
-  &:hover,
-  &:focus,
-  &:active {
-    background-color: var(--button-secondary-hover);
-    outline: white;
   }
 }

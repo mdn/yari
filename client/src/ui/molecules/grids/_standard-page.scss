@@ -12,10 +12,14 @@
     grid-template-columns: 100%;
   }
 
+  &.plus {
+    background-color: var(--background-secondary);
+  }
+
   @media screen and (min-width: $screen-md) {
     .page-content-container {
       margin: 0 auto;
-      max-width: 1440px;
+      max-width: var(--max-width);
       width: 100%;
 
       &.fullwidth {
