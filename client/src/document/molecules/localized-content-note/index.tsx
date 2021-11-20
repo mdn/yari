@@ -42,10 +42,6 @@ export function LocalizedContentNote({
       linkText:
         "Esta página fue traducida del inglés por la comunidad, pero no se mantiene activamente, por lo que puede estar desactualizada. Si desea ayudar a mantenerlo, descubra cómo activar las configuraciones regionales inactivas.",
     },
-    "ja": {
-      linkText:
-        "このページはコミュニティーによって英語から翻訳されましたが、その後更新されておらず、原文から遅れた内容かもしれません。訳を更新するための方法は、こちらから学べます。",
-    },
   };
 
   const linkText = isActive
