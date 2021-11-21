@@ -19,6 +19,12 @@ export function TopNavigation() {
     }
   }
 
+  /*
+    In this situation the assistive text, button text, and title text are
+    similar enough that they could be the same.
+  */
+  const assistiveText = showMainMenu ? "Close main menu" : "Open main menu";
+
   return (
     <header className="top-navigation">
       <div className="container">
@@ -26,12 +32,14 @@ export function TopNavigation() {
         <Button
           type="action"
           ariaHasPopup={"menu"}
-          ariaLabel={showMainMenu ? "Close main menu" : "Open main menu"}
+          ariaLabel={assistiveText}
+          ariaExpanded={showMainMenu}
+          title={assistiveText}
           icon={showMainMenu ? "cancel" : "menu"}
           onClickHandler={toggleMainMenu}
           extraClasses="main-menu-toggle"
         >
-          <span className="visually-hidden">Toggle Menu</span>
+          <span className="visually-hidden">{assistiveText}</span>
         </Button>
 
         <TopNavigationMain showMainMenu={showMainMenu} />

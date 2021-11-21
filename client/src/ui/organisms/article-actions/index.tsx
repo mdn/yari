@@ -65,7 +65,11 @@ export const ArticleActions = ({
     >
       {/* styling for icon is defined in client/src/ui/atoms/icon-button/index.scss */}
       {isMobile && (
-        <Button onClickHandler={toggleArticleActionsMenu} icon="menu-close">
+        <Button
+          type="action"
+          onClickHandler={toggleArticleActionsMenu}
+          icon="menu-close"
+        >
           <span className="article-actions-dialog-heading">
             Article actions
           </span>

@@ -71,10 +71,8 @@
   .submenu-icon {
     background-color: var(--icon-primary);
     background-size: 10px;
-    border-radius: 4px;
+    border-radius: var(--elem-radius);
     height: 2rem;
-    margin-bottom: 0.5rem;
-    margin-right: 0.5rem;
     padding: 0.5rem;
     position: relative;
     width: 2rem;

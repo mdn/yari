@@ -1,4 +1,5 @@
 button {
+  -webkit-appearance: none; /* stylelint-disable-line property-no-vendor-prefix */
   appearance: none;
   background: none;
   border: none;
@@ -8,6 +9,7 @@ button {
   --button-bg: var(--button-primary-default);
   --button-border-color: var(--button-primary-default);
   --button-focus-effect: var(--focus-effect);
+  --button-height: var(--form-elem-height, 2rem);
   --button-color: #fff;
   --button-font: var(--type-emphasis-m);
   --button-padding: 0.5rem;
@@ -32,7 +34,7 @@ button {
   display: flex;
   font: var(--button-font);
   gap: 0.25rem;
-  height: 2rem;
+  height: var(--button-height);
   justify-content: center;
   padding-left: var(--button-padding);
   padding-right: var(--button-padding);
@@ -74,8 +76,8 @@ button {
 
 .button.small,
 .button.small .button-wrap {
+  --button-height: 1.75rem;
   --button-padding: 0.25rem;
-  height: 1.75rem;
 }
 
 /* Secondary Version */

@@ -89,7 +89,7 @@ export const ReferenceMenu = () => {
     <li key={menu.id} className="top-level-entry-container">
       <Button
         id={`${menu.id}-button`}
-        extraClasses="top-level-entry with-icon-flex space-between mobile-only"
+        extraClasses="top-level-entry menu-toggle"
         ariaHasPopup="menu"
         ariaExpanded={menu.id === visibleSubMenuId}
         onClickHandler={(event) => {

@@ -4,7 +4,7 @@
   display: none;
   justify-content: space-between;
   left: 0;
-  padding: 1rem;
+  padding: 1rem var(--gutter);
   position: absolute;
   top: var(--top-nav-height);
   width: 100%;
@@ -14,6 +14,10 @@
     background-color: var(--background-primary);
     display: flex;
     flex-direction: column-reverse;
+  }
+
+  .toggle-search-button {
+    display: none;
   }
 
   @media screen and (min-width: $screen-md) {

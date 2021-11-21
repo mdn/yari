@@ -59,7 +59,7 @@ export const PlusMenu = () => {
     <li key={plusMenu.id} className="top-level-entry-container">
       <Button
         id={`${plusMenu.id}-button`}
-        extraClasses="top-level-entry with-icon-flex space-between mobile-only"
+        extraClasses="top-level-entry"
         ariaHasPopup="menu"
         ariaExpanded={plusMenu.id === visibleSubMenuId}
         onClickHandler={(event) => {

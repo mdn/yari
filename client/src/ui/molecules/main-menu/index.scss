@@ -80,7 +80,7 @@ ul.main-menu {
   }
 }
 
-/* enable hover interaction if javascript is not available */
+/* Enable hover interaction if javascript is not available */
 @media screen and (min-width: $screen-md) {
   ul.main-menu.nojs {
     .top-level-entry-container:hover,
