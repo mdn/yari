@@ -2881,15 +2881,15 @@
   resolved "https://registry.yarnpkg.com/@sideway/pinpoint/-/pinpoint-2.0.0.tgz#cff8ffadc372ad29fd3f78277aeb29e632cc70df"
   integrity sha512-RNiOoTPkptFtSVzQevY/yWtZwf/RxyVnPy/OcA9HBM3MlGDnBEYL5B41H0MTn0Uec8Hi+2qUtTfG2WWZBmMejQ==
 
-"@sidvind/better-ajv-errors@^0.9.0":
-  version "0.9.0"
-  resolved "https://registry.yarnpkg.com/@sidvind/better-ajv-errors/-/better-ajv-errors-0.9.0.tgz#fcc84df0d2a68b100a4d6b9b2cc7066525c42dee"
-  integrity sha512-GeeIsUsq8eUB7kvDq+fS0wpD0hZ56xrqsaVTiJEmSWqEK+BvTd29mah3AWDublvRx2dWQ/qMbvb3Ml98Huedcw==
+"@sidvind/better-ajv-errors@^1.0.2":
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/@sidvind/better-ajv-errors/-/better-ajv-errors-1.0.2.tgz#5a7dd4023d20978243da4e6c82339d500c5bacd0"
+  integrity sha512-ueXf+vGKseSE2LXMbmXQUESD4aBbzi6ID0hYflw4UNasf6A7JeYwI5FQUgJxuDoklS48XegBc2cuijI0xun4ww==
   dependencies:
-    "@babel/code-frame" "^7.0.0"
-    chalk "^4.0.0"
+    "@babel/code-frame" "^7.16.0"
+    chalk "^4.1.0"
     json-to-ast "^2.0.3"
-    jsonpointer "^4.1.0"
+    jsonpointer "^5.0.0"
     leven "^3.1.0"
 
 "@sindresorhus/is@^0.7.0":
@@ -10820,14 +10820,14 @@ html-tags@^3.1.0:
   resolved "https://registry.yarnpkg.com/html-tags/-/html-tags-3.1.0.tgz#7b5e6f7e665e9fb41f30007ed9e0d41e97fb2140"
   integrity sha512-1qYz89hW3lFDEazhjW0yVAV87lw8lVkrJocr72XmBkMKsoSVJCQx3W8BXsC7hO2qAt8BoVjYjtAcZ9perqGnNg==
 
-html-validate@6.1.0:
-  version "6.1.0"
-  resolved "https://registry.yarnpkg.com/html-validate/-/html-validate-6.1.0.tgz#e1f923acf6d5e2a5a82ef2726ecff81694ec0d9c"
-  integrity sha512-TLlN2GkC/m4nlcFP9U/KEQiVtxZdAwF6qrAosMdobmVCs2bVF1og4p9J+JUVZCC99jjbH1r+qR/BZZE0TZc6xw==
+html-validate@6.1.3:
+  version "6.1.3"
+  resolved "https://registry.yarnpkg.com/html-validate/-/html-validate-6.1.3.tgz#7a5a6d60f78c3eac409f0b5ecd49df5321163c6a"
+  integrity sha512-KVA+HH9FyR/5KRrUlBm3wvYyRQsJ+pWetj5MqTBa9qC9l32JZH0tHk9lgN99ei62UiBB/LCpNbpFAhKWhuiEzA==
   dependencies:
     "@babel/code-frame" "^7.10.0"
     "@html-validate/stylish" "^2.0.0"
-    "@sidvind/better-ajv-errors" "^0.9.0"
+    "@sidvind/better-ajv-errors" "^1.0.2"
     acorn-walk "^8.0.0"
     ajv "^8.0.0"
     deepmerge "^4.2.0"
@@ -12842,10 +12842,10 @@ jsonfile@^6.0.1:
   optionalDependencies:
     graceful-fs "^4.1.6"
 
-jsonpointer@^4.1.0:
-  version "4.1.0"
-  resolved "https://registry.yarnpkg.com/jsonpointer/-/jsonpointer-4.1.0.tgz#501fb89986a2389765ba09e6053299ceb4f2c2cc"
-  integrity sha512-CXcRvMyTlnR53xMcKnuMzfCA5i/nfblTnnr74CZb6C4vG39eu6w51t7nKmU5MfLfbTgGItliNyjO/ciNPDqClg==
+jsonpointer@^5.0.0:
+  version "5.0.0"
+  resolved "https://registry.yarnpkg.com/jsonpointer/-/jsonpointer-5.0.0.tgz#f802669a524ec4805fa7389eadbc9921d5dc8072"
+  integrity sha512-PNYZIdMjVIvVgDSYKTT63Y+KZ6IZvGRNNWcxwD+GNnUz1MKPfv30J8ueCjdwcN0nDx2SlshgyB7Oy0epAzVRRg==
 
 "jsx-ast-utils@^2.4.1 || ^3.0.0", jsx-ast-utils@^3.1.0:
   version "3.1.0"
