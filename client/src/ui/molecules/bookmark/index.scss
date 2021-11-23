@@ -12,25 +12,6 @@
   @media screen and (min-width: $screen-md) {
     border-bottom: 0;
     border-radius: 0.25rem;
-  }
-
-  &::before {
-    background-color: var(--icon-primary);
-    height: 16px;
-    mask-image: url("~@mdn/dinocons/plus/bookmark.svg");
-    padding: 0.5rem;
-    width: 16px;
-  }
-
-  &.bookmarked {
-    &::before {
-      background-color: var(--accent-secondary);
-      mask-image: url("~@mdn/dinocons/plus/bookmark-filled.svg");
-    }
-  }
-
-  &:hover,
-  &:focus {
-    background-color: var(--button-secondary-hover);
+    padding: 0;
   }
 }
