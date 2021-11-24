@@ -211,3 +211,12 @@ $screen-sm: 426px;
 $screen-md: 769px;
 $screen-lg: 1025px;
 $screen-xl: 1441px;
+
+/*
+ * z-index scale
+ */
+$send-to-back: -1;
+$bring-to-front: 9999;
+$bottom-layer: 100;
+$middle-layer: 200;
+$top-layer: 300;
