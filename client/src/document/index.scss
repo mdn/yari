@@ -69,32 +69,39 @@ a.page-not-created {
   }
 
   .code-example {
+    background-color: var(--background-tertiary);
+    border: 1px solid var(--border-secondary);
+    border-radius: 4px;
+    color: var(--code-default);
+    font: var(--type-code-regular);
+    padding: 1rem;
     position: relative;
 
+    pre {
+      margin: 0;
+    }
+
     .copy-icon {
-      background: var(--icon-primary) url("../assets/clippy.svg") center center
-        no-repeat;
+      background: var(--icon-secondary) url("../assets/clippy.svg") center
+        center no-repeat;
       background-position: 61% 45%;
       background-size: 1rem;
       border: 1px solid var(--border-secondary);
       border-radius: 0.25rem;
       cursor: pointer;
-      height: 3rem;
+      height: 33px;
       margin: 0;
       padding: 0.25rem;
       position: absolute;
       right: 0.25rem;
       top: 0.25rem;
-      vertical-align: middle;
       width: 33px;
-      z-index: -1000;
 
-      @media screen and (max-width: $screen-lg) {
+      @media screen and (min-width: $screen-md) {
         opacity: 0.4;
 
         &:hover,
         &:focus {
-          background-color: var(--background-secondary);
           opacity: 1;
         }
       }
@@ -112,13 +119,6 @@ a.page-not-created {
       right: 0.25rem;
       top: 15px;
       z-index: -1000;
-    }
-
-    &:focus,
-    &:hover {
-      .copy-icon {
-        opacity: 1;
-      }
     }
 
     .show {
