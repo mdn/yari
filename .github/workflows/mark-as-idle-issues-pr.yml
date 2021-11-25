@@ -5,4 +5,4 @@ on:
 
 jobs:
   idle-issues-prs:
-    uses: mdn/workflows/.github/workflows/idle-issues.yml@v1
+    uses: mdn/workflows/.github/workflows/idle-issues.yml@main
