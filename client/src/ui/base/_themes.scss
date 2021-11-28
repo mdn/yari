@@ -42,6 +42,14 @@
 
   --shadow-01: #{$mdn-theme-light-shadow-01};
   --focus-01: #{$mdn-theme-light-shadow-01};
+
+  --code-tag: #{$mdn-theme-light-code-tag};
+  --code-punctuation: #{$mdn-theme-light-code-punctuation};
+  --code-attribute-name: #{$mdn-theme-light-code-attribute-name};
+  --code-attribute-value: #{$mdn-theme-light-code-attribute-value};
+  --code-comment: #{$mdn-theme-light-code-comment};
+  --code-default: #{$mdn-theme-light-code-default};
+  --code-selector: #{$mdn-theme-light-code-selector};
 }
 
 body[class="dark"] {

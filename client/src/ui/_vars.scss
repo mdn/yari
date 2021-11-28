@@ -128,6 +128,13 @@ $mdn-theme-light-icon-success: #2ac3a2ff;
 $mdn-theme-light-accent-primary: #008787ff;
 $mdn-theme-light-accent-secondary: #005e5eff;
 $mdn-theme-light-shadow-01: 0px 1px 2px rgba(43, 42, 51, 0.05);
+$mdn-theme-light-code-tag: #e22850;
+$mdn-theme-light-code-punctuation: #45278d;
+$mdn-theme-light-code-attribute-name: #e27f2e;
+$mdn-theme-light-code-attribute-value: #008787;
+$mdn-theme-light-code-comment: #5b5b66;
+$mdn-theme-light-code-default: #15141a;
+$mdn-theme-light-code-selector: #054096;
 
 $mdn-theme-dark-text-primary: #fbfbfeff;
 $mdn-theme-dark-text-secondary: #cfcfd8ff;
@@ -211,3 +218,12 @@ $screen-sm: 426px;
 $screen-md: 769px;
 $screen-lg: 1025px;
 $screen-xl: 1441px;
+
+/*
+ * z-index scale
+ */
+$send-to-back: -1;
+$bring-to-front: 9999;
+$bottom-layer: 100;
+$middle-layer: 200;
+$top-layer: 300;
