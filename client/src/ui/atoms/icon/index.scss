@@ -5,11 +5,12 @@ $icons: "add-filled", "add", "bell-filled", "bell", "bookmark-filled",
   "star", "theme", "trash", "warning";
 
 .icon {
-  --size: 1rem;
+  --size: var(--icon-size, 1rem);
 
   background-color: var(--icon-primary);
   display: inline-block;
   height: var(--size);
+  mask-repeat: no-repeat;
   width: var(--size);
 }
 

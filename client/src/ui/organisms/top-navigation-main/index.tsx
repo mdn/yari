@@ -10,12 +10,12 @@ import { useUserData } from "../../../user-context";
 
 import "./index.scss";
 
-export const TopNavigationMain = ({ showMainMenu }) => {
+export const TopNavigationMain = () => {
   const userData = useUserData();
   const isSubscriber = userData && userData.isSubscriber;
 
   return (
-    <div className={`top-navigation-main${showMainMenu ? " is-open" : ""}`}>
+    <div className="top-navigation-main">
       <MainMenu />
       <div className="top-navigation-actions">
         <Search />

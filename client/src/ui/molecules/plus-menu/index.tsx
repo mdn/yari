@@ -3,7 +3,6 @@ import * as React from "react";
 import { useUserData } from "../../../user-context";
 import { useLocale } from "../../../hooks";
 
-import { Button } from "../../atoms/button";
 import { Submenu } from "../submenu";
 
 import "./index.scss";
@@ -57,17 +56,17 @@ export const PlusMenu = () => {
 
   return isSubscriber ? (
     <li key={plusMenu.id} className="top-level-entry-container">
-      <Button
+      <button
         id={`${plusMenu.id}-button`}
-        extraClasses="top-level-entry"
-        ariaHasPopup="menu"
-        ariaExpanded={plusMenu.id === visibleSubMenuId}
-        onClickHandler={(event) => {
+        className="top-level-entry menu-toggle"
+        aria-haspopup="menu"
+        aria-expanded={plusMenu.id === visibleSubMenuId}
+        onClick={(event) => {
           toggleSubMenu(event, plusMenu.id);
         }}
       >
         {plusMenu.label}
-      </Button>
+      </button>
 
       <Submenu
         menuEntry={plusMenu}
@@ -77,7 +76,7 @@ export const PlusMenu = () => {
     </li>
   ) : (
     <li>
-      <a href={`/${locale}/plus`} className="top-level-link">
+      <a href={`/${locale}/plus`} className="top-level-entry">
         MDN Plus
       </a>
     </li>

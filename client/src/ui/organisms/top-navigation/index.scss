@@ -9,6 +9,13 @@
   width: 100%;
   z-index: var(--z-index-top);
 
+  @media screen and (max-width: ($screen-md - 1)) {
+    &.is-open {
+      height: 100vh;
+      position: absolute;
+    }
+  }
+
   .container {
     align-items: center;
     display: flex;

@@ -52,7 +52,7 @@ export default function MainMenu() {
       <ul className="main-menu nojs" ref={mainMenuRef}>
         <ReferenceMenu />
         <li>
-          <a href={`/${locale}/docs/Learn`} className="top-level-link">
+          <a href={`/${locale}/docs/Learn`} className="top-level-entry">
             Guides
           </a>
         </li>

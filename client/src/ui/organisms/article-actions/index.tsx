@@ -29,7 +29,7 @@ export const ArticleActions = ({
     const articleActionsMenuButton = event.target;
 
     if (articleActionsMenuButton) {
-      articleActionsMenuButton.classList.toggle("menu-close");
+      articleActionsMenuButton.classList.toggle("icon-cancel");
       setShowArticleActionsMenu(!showArticleActionsMenu);
     }
 
@@ -68,7 +68,7 @@ export const ArticleActions = ({
         <Button
           type="action"
           onClickHandler={toggleArticleActionsMenu}
-          icon="menu-close"
+          icon="cancel"
         >
           <span className="article-actions-dialog-heading">
             Article actions

@@ -22,15 +22,14 @@
     }
   }
 
-  a,
-  button {
+  a {
     align-items: center;
     border-bottom: 1px solid var(--border-secondary);
     color: var(--text-primary);
     display: flex;
     gap: 0.5rem;
     height: 100%;
-    padding: 1rem;
+    padding: 1rem 0.5rem;
     width: 100%;
 
     @media screen and (max-width: $screen-sm) {
@@ -51,9 +50,6 @@
 
   &.show {
     display: block;
-
-    @media screen and (min-width: $screen-md) {
-    }
   }
 
   .active-menu-item {

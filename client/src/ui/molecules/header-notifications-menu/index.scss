@@ -20,16 +20,18 @@
   }
 
   .notifications-count-container {
+    align-items: center;
     background-color: var(--icon-secondary);
     border-radius: 50%;
     color: white;
-    display: inline-block;
-    height: 21px;
+    display: inline-flex;
+    height: 1.5em;
+    justify-content: center;
     line-height: 1;
     margin-left: 0.5rem;
     padding: 2px;
     text-align: center;
-    width: 21px;
+    width: 1.5em;
 
     @media screen and (min-width: $screen-md) {
       background-color: transparent;

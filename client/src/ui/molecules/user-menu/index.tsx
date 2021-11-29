@@ -71,7 +71,7 @@ export const UserMenu = () => {
       <Button
         type="action"
         id={`${userMenuItems.id}-button`}
-        extraClasses="user-menu-toggle"
+        extraClasses="top-level-entry menu-toggle user-menu-toggle"
         ariaHasPopup="menu"
         ariaExpanded={userMenuItems.id === visibleSubMenuId}
         onClickHandler={(event) => {

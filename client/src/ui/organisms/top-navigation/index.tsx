@@ -26,7 +26,7 @@ export function TopNavigation() {
   const assistiveText = showMainMenu ? "Close main menu" : "Open main menu";
 
   return (
-    <header className="top-navigation">
+    <header className={`top-navigation${showMainMenu ? " is-open" : ""}`}>
       <div className="container">
         <Logo />
         <Button
@@ -42,7 +42,7 @@ export function TopNavigation() {
           <span className="visually-hidden">{assistiveText}</span>
         </Button>
 
-        <TopNavigationMain showMainMenu={showMainMenu} />
+        <TopNavigationMain />
       </div>
     </header>
   );

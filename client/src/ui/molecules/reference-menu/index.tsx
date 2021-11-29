@@ -1,8 +1,7 @@
 import * as React from "react";
+import { Link } from "react-router-dom";
 
 import { useLocale } from "../../../hooks";
-
-import { Button } from "../../atoms/button";
 import { Submenu } from "../submenu";
 
 import "./index.scss";
@@ -87,17 +86,22 @@ export const ReferenceMenu = () => {
 
   return (
     <li key={menu.id} className="top-level-entry-container">
-      <Button
+      <button
+        type="button"
         id={`${menu.id}-button`}
-        extraClasses="top-level-entry menu-toggle"
-        ariaHasPopup="menu"
-        ariaExpanded={menu.id === visibleSubMenuId}
-        onClickHandler={(event) => {
+        className="top-level-entry menu-toggle"
+        aria-haspopup="menu"
+        aria-expanded={menu.id === visibleSubMenuId}
+        onClick={(event) => {
           toggleSubMenu(event, menu.id);
         }}
       >
         {menu.label}
-      </Button>
+      </button>
+
+      <Link to={`/${locale}/docs/Web/`} className="top-level-entry">
+        References
+      </Link>
 
       <Submenu
         menuEntry={menu}

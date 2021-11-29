@@ -10,7 +10,7 @@
   width: 100%;
   z-index: var(--z-index-top);
 
-  &.is-open {
+  .is-open & {
     background-color: var(--background-primary);
     display: flex;
     flex-direction: column-reverse;
@@ -20,15 +20,61 @@
     display: none;
   }
 
-  @media screen and (min-width: $screen-md) {
-    align-items: center;
-    display: flex;
-    gap: 0.5rem;
-    left: inherit;
-    padding: 0;
-    position: initial;
-    top: inherit;
-    z-index: inherit;
+  .top-level-entry-container {
+    position: relative;
+  }
+
+  .top-level-entry {
+    display: block;
+    background: none;
+    border-top: 1px solid var(--border-secondary);
+    color: var(--text-secondary);
+    cursor: pointer;
+    padding: 1rem 0.5rem;
+    text-align: left;
+    width: 100%;
+
+    &:link,
+    &:visited {
+      color: var(--text-secondary);
+    }
+
+    @media screen and (min-width: $screen-md) {
+      border-radius: 0.25rem;
+      padding: 0.5rem;
+
+      &:hover,
+      &:focus {
+        background-color: var(--accent-primary-engage);
+        color: var(--accent-primary);
+        text-decoration: none;
+      }
+    }
+  }
+
+  .menu-toggle {
+    position: relative;
+  }
+
+  .menu-toggle:after {
+    content: "";
+    display: block;
+    position: absolute;
+    right: 0.5rem;
+    top: calc(50% - (var(--icon-size) / 2));
+    width: var(--icon-size);
+    height: var(--icon-size);
+    background-color: var(--icon-primary);
+
+    mask-image: url("../../../assets/icons/chevron.svg");
+  }
+
+  .menu-toggle[aria-expanded="true"]::after {
+    transform: rotate(180deg);
+  }
+
+  .menu-toggle + .top-level-entry {
+    display: none;
   }
 
   .top-navigation-actions {
@@ -36,8 +82,28 @@
     flex-direction: column-reverse;
     grid-gap: 0.5rem;
     font: var(--type-emphasis-m);
+  }
 
-    @media screen and (min-width: $screen-md) {
+  @media screen and (min-width: $screen-md) {
+    align-items: center;
+    display: flex;
+    flex-direction: row;
+    gap: 0.5rem;
+    left: inherit;
+    padding: 0;
+    position: initial;
+    top: inherit;
+    z-index: inherit;
+
+    .menu-toggle {
+      display: none;
+    }
+
+    .menu-toggle + .top-level-entry {
+      display: inline-flex;
+    }
+
+    .top-navigation-actions {
       flex-direction: initial;
     }
   }

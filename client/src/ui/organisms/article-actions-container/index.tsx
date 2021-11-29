@@ -18,7 +18,7 @@ export const ArticleActionsContainer = ({ doc }: { doc: Doc }) => {
     const articleActionsMenuButton = event.target;
 
     if (articleActionsMenuButton) {
-      articleActionsMenuButton.classList.toggle("menu-close");
+      articleActionsMenuButton.classList.toggle("icon-cancel");
       setShowArticleActionsMenu(!showArticleActionsMenu);
     }
 
