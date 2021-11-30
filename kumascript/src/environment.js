@@ -20,8 +20,6 @@
  * separate src/api/*.js file and imported with require(). That would
  * be tidier, and would keep separate the code with poor test coverage
  * from the rest of the file which is well tested.
- *
- * @prettier
  */
 
 import { createRequire } from "module";
@@ -48,7 +46,7 @@ import webPrototype from "./api/web.js";
 import pagePrototype from "./api/page.js";
 import { info } from "./info.js";
 
-class Environment {
+export default class Environment {
   // Initialize an environment object that will be used to render
   // all of the macros in one document or page. We pass in a context
   // object (which may come from HTTP request headers) that gives
@@ -198,5 +196,3 @@ class Environment {
     return context;
   }
 }
-
-export { Environment };
