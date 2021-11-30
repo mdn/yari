@@ -34,15 +34,12 @@
  * the render() function passing:
  *
  *   - the text of the page to be rendered
- *
  *   - the environment object that defines per-page values such as
  *     locale, title and slug.
- *
- * @prettier
  */
 import * as Parser from "./parser.js";
-import { Templates } from "./templates.js";
-import { Environment } from "./environment.js";
+import Templates from "./templates.js";
+import Environment from "./environment.js";
 import {
   MacroInvocationError,
   MacroNotFoundError,
