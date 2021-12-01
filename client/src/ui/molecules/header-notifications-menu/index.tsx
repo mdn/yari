@@ -9,15 +9,9 @@ import { useLocale } from "../../../hooks";
 import useSWR, { mutate } from "swr";
 
 import "./index.scss";
+import { NotificationData } from "../../../types/notifications";
 
 dayjs.extend(relativeTime);
-interface Notification {
-  id: number;
-  title: string;
-  text: string;
-  created: Date;
-  read: boolean;
-}
 
 type NotificationMenuItem = {
   id: number;
@@ -27,11 +21,6 @@ type NotificationMenuItem = {
   created: Date;
   url: string;
 };
-
-interface NotificationData {
-  items: Array<Notification>;
-  csrfmiddlewaretoken: string;
-}
 
 export const HeaderNotificationsMenu = () => {
   const menuId = "my-notifications";
@@ -123,9 +112,10 @@ export const HeaderNotificationsMenu = () => {
   return (
     <div className="notifications-menu">
       <Button
+        type="action"
         ariaHasPopup={"menu"}
         ariaControls={menuId}
-        extraClasses="ghost notifications-button"
+        extraClasses="notifications-button"
         aria-label={`You currently have ${notificationCount} notifications`}
         ariaExpanded={menuId === visibleSubMenuId}
         onClickHandler={() => {

@@ -1,14 +1,11 @@
 @use "../../ui/vars" as *;
 
-.page-content-container.plus {
-  background-color: var(--background-primary);
-  max-width: inherit;
-}
-
 .bookmarks {
   padding: 48px 6px;
   position: relative;
   width: 100%;
+  margin: 0 auto;
+  max-width: var(--max-width);
 
   @media screen and (max-width: $screen-sm) {
     padding: 48px 24px;
@@ -34,7 +31,7 @@
   a {
     &:link,
     &:visited {
-      color: var(--background-primary);
+      color: var(--text-primary);
     }
   }
 
@@ -89,32 +86,11 @@
         height: 8px;
         margin: 0 4px;
         mask-image: url("~@mdn/dinocons/arrows/chevron.svg");
-        transform: rotate(90deg);
+        transform: rotate(-90deg);
         vertical-align: middle;
         width: 8px;
       }
     }
-  }
-}
-
-.remove-bookmark-button {
-  background-color: transparent;
-  border-radius: 0.25rem;
-  padding: 8px;
-
-  &:hover,
-  &:focus {
-    background-color: $mdn-color-light-grey-20;
-  }
-
-  &::before {
-    background-color: var(--icon-primary);
-    content: "";
-    display: inline-block;
-    height: 25px;
-    mask-image: url("~@mdn/dinocons/general/trash.svg");
-    vertical-align: middle;
-    width: 25px;
   }
 }
 

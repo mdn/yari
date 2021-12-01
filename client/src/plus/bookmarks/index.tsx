@@ -9,13 +9,15 @@ import {
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 
+import { Button } from "../../ui/atoms/button";
+
 import { DISABLE_AUTH } from "../../constants";
 import { AuthDisabled } from "../../ui/atoms/auth-disabled";
 import { Loading } from "../../ui/atoms/loading";
 import { useUserData } from "../../user-context";
-import { useLocale } from "../../hooks";
 
 import "./index.scss";
+import { DataError, NotSignedIn, NotSubscriber } from "../common";
 
 dayjs.extend(relativeTime);
 
@@ -212,9 +214,9 @@ function DisplayData({
         <div className="unbookmark">
           <p>
             Bookmark removed{" "}
-            <button
-              type="button"
-              onClick={async () => {
+            <Button
+              type="action"
+              onClickHandler={async () => {
                 try {
                   await saveBookmarked(unbookmarked.url);
                   setUnbookmarked(null);
@@ -227,7 +229,7 @@ function DisplayData({
               }}
             >
               Undo
-            </button>
+            </Button>
           </p>
         </div>
       )}
@@ -291,11 +293,11 @@ function Bookmark({
         </h4>
       </div>
       <div className="bookmark-actions">
-        <button
-          type="button"
-          className="remove-bookmark-button"
+        <Button
+          type="action"
+          icon="trash"
           title="Remove bookmark"
-          onClick={async () => {
+          onClickHandler={async () => {
             setDoomed(true);
             try {
               await toggle();
@@ -305,7 +307,7 @@ function Bookmark({
           }}
         >
           <span className="visually-hidden">Remove bookmark</span>
-        </button>
+        </Button>
       </div>
     </div>
   );
@@ -325,43 +327,5 @@ function Breadcrumbs({ parents }: { parents: Breadcrumb[] }) {
         );
       })}
     </ol>
-  );
-}
-
-function DataError({ error }: { error: Error }) {
-  return (
-    <div className="notecard negative">
-      <h3>Server error</h3>
-      <p>A server error occurred trying to get your bookmarks.</p>
-      <p>
-        <code>{error.toString()}</code>
-      </p>
-      <a href={window.location.pathname}>Reload this page and try again.</a>
-    </div>
-  );
-}
-
-function NotSignedIn() {
-  const locale = useLocale();
-  const sp = new URLSearchParams();
-  sp.set("next", window.location.pathname);
-
-  return (
-    <>
-      <h2>You have not signed in</h2>
-      <Link to={`/${locale}/signin?${sp.toString()}`}>
-        Please sign in to continue
-      </Link>
-    </>
-  );
-}
-
-function NotSubscriber() {
-  const locale = useLocale();
-  return (
-    <>
-      <h2>You are signed in but not an active subscriber</h2>
-      <Link to={`/${locale}/plus`}>Go to the MDN Plus home page</Link>
-    </>
   );
 }

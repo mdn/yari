@@ -1,12 +1,12 @@
 import React from "react";
 
-import { IconButton } from "../../atoms/icon-button";
+import { Button } from "../../atoms/button";
 import { NotificationsWatchMenuCustom } from "../notifications-watch-menu-custom";
 import { NotificationsWatchMenuStart } from "../notifications-watch-menu-start";
 
 import "./index.scss";
 
-export const NotificationsWatchMenu = () => {
+export const NotificationsWatchMenu = ({ doc }) => {
   const menuId = "watch-submenu";
   const previousActiveElement = React.useRef<null | HTMLButtonElement>(null);
   const [visibleSubMenuId, setVisibleSubMenuId] = React.useState<string | null>(
@@ -34,18 +34,20 @@ export const NotificationsWatchMenu = () => {
 
   return (
     <>
-      <IconButton
+      <Button
+        type="action"
+        id="watch-menu-button"
+        icon="eye"
         extraClasses="watch-menu"
         ariaHasPopup={"menu"}
-        id="watch-menu-button"
         aria-label="Watch this page for updates"
         ariaExpanded={menuId === visibleSubMenuId}
-        clickHandler={() => {
+        onClickHandler={() => {
           toggleSubMenu(menuId);
         }}
       >
-        <span className="">Watch</span>
-      </IconButton>
+        Watch
+      </Button>
 
       <div
         className={`${menuId} ${menuId === visibleSubMenuId ? "show" : ""}`}
@@ -53,9 +55,15 @@ export const NotificationsWatchMenu = () => {
         aria-labelledby={`${menuId}-button`}
       >
         {visibleStep === 0 ? (
-          <NotificationsWatchMenuStart setStepHandler={showStepCustom} />
+          <NotificationsWatchMenuStart
+            doc={doc}
+            setStepHandler={showStepCustom}
+          />
         ) : (
-          <NotificationsWatchMenuCustom setStepHandler={showStepStart} />
+          <NotificationsWatchMenuCustom
+            doc={doc}
+            setStepHandler={showStepStart}
+          />
         )}
       </div>
     </>

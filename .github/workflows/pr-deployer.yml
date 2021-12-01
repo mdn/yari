@@ -14,19 +14,19 @@ jobs:
       - uses: actions/checkout@v2.4.0
 
       - name: Install Python
-        uses: actions/setup-python@v2.2.2
+        uses: actions/setup-python@v2.3.1
         with:
           python-version: "3.8"
 
       - name: Load cached venv
         id: cached-poetry-dependencies
-        uses: actions/cache@v2.1.6
+        uses: actions/cache@v2.1.7
         with:
           path: deployer/.venv
           key: venv-${{ runner.os }}-${{ hashFiles('**/poetry.lock') }}-${{ hashFiles('.github/workflows/pr-deployer.yml') }}
 
       - name: Load cached .local
-        uses: actions/cache@v2.1.6
+        uses: actions/cache@v2.1.7
         with:
           path: ~/.local
           key: dotlocal-${{ runner.os }}-${{ hashFiles('.github/workflows/pr-deployer.yml') }}

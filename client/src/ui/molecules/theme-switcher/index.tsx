@@ -1,7 +1,7 @@
 import * as React from "react";
 
 import { Button } from "../../atoms/button";
-import { IconButton } from "../../atoms/icon-button";
+import { IEX_DOMAIN } from "../../../constants";
 
 import "./index.scss";
 
@@ -13,6 +13,21 @@ export const ThemeSwitcher = () => {
     null
   );
 
+  /**
+   * Posts the name of the theme we are changing to to the
+   * interactive examples `iframe`.
+   * @param { string } theme - The theme to switch to
+   */
+  function postToIEx(theme: string) {
+    const iexFrame = document.querySelector(
+      ".interactive"
+    ) as HTMLIFrameElement;
+
+    if (iexFrame) {
+      iexFrame.contentWindow?.postMessage({ theme: theme }, IEX_DOMAIN);
+    }
+  }
+
   function switchTheme(theme: string) {
     const body = document.querySelector("body");
 
@@ -20,6 +35,7 @@ export const ThemeSwitcher = () => {
       body.className = theme;
       window.localStorage.setItem("theme", theme);
       setActiveTheme(theme);
+      postToIEx(theme);
     }
   }
 
@@ -44,10 +60,9 @@ export const ThemeSwitcher = () => {
 
     if (theme) {
       switchTheme(theme);
+      postToIEx(theme);
     }
-  }, []);
 
-  React.useEffect(() => {
     document.addEventListener("keyup", (event) => {
       if (event.key === "Escape") {
         hideSubMenuIfVisible();
@@ -57,17 +72,19 @@ export const ThemeSwitcher = () => {
 
   return (
     <div className="theme-switcher-menu">
-      <IconButton
+      <Button
+        type="action"
         ariaControls={menuId}
         ariaHasPopup={"menu"}
         ariaExpanded={menuId === visibleSubMenuId}
-        extraClasses="theme-switcher-menu with-icon-flex mobile-only"
-        clickHandler={() => {
+        icon="theme"
+        extraClasses="theme-switcher-menu mobile-only"
+        onClickHandler={() => {
           toggleSubMenu(menuId);
         }}
       >
-        <span className="">Theme</span>
-      </IconButton>
+        Theme
+      </Button>
       <ul
         className={`${visibleSubMenuId ? "themes-menu show" : "themes-menu"}`}
         id={menuId}
@@ -96,36 +113,6 @@ export const ThemeSwitcher = () => {
             }}
           >
             Dark
-          </Button>
-        </li>
-        <li>
-          <Button
-            extraClasses={
-              activeTheme === "high-contrast-white"
-                ? "active-menu-item"
-                : undefined
-            }
-            onClickHandler={() => {
-              switchTheme("high-contrast-white");
-              setVisibleSubMenuId(null);
-            }}
-          >
-            High contrast(light)
-          </Button>
-        </li>
-        <li>
-          <Button
-            extraClasses={
-              activeTheme === "high-contrast-black"
-                ? "active-menu-item"
-                : undefined
-            }
-            onClickHandler={() => {
-              switchTheme("high-contrast-black");
-              setVisibleSubMenuId(null);
-            }}
-          >
-            High contrast(dark)
           </Button>
         </li>
       </ul>

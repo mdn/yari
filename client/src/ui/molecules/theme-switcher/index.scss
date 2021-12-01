@@ -13,12 +13,6 @@
     border-bottom: 0;
   }
 
-  /* base style for an icon buttons is defined by `.icon-button`
-     in client/src/ui/atoms/icon-button/index.scss */
-  &::before {
-    mask-image: url("~@mdn/dinocons/plus/theme.svg");
-  }
-
   &::after {
     position: absolute;
     right: 0.5rem;
@@ -67,6 +61,7 @@
         position: absolute;
         right: 0;
         top: 50px;
+        z-index: $bring-to-front;
       }
 
       button {

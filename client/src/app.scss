@@ -1,6 +1,7 @@
 @use "./ui/base/typography";
 @use "./ui/base/reset";
 @use "./ui/base/themes";
+@use "./ui/base/prism";
 
 /*
   Global :root variables, for those independent of themes
@@ -12,6 +13,7 @@
 
   --font-body: Inter, var(--font-fallback);
   --font-heading: Montserrat, var(--font-fallback);
+  --font-code: Consolas, "Courier New", monospace;
   --font-size: 16px;
   --font-line-height: 1.2;
 
@@ -22,10 +24,20 @@
   --type-emphasis-l: 600 1rem/1.1875 var(--font-body); /* 16px/19px */
   --type-emphasis-m: 600 0.8125rem/1.23 var(--font-body); /* 13px/16px */
   --type-label-s: 600 0.625rem/1.2 var(--font-heading); /* 10px/12px */
+  --type-code-regular: 400 0.875rem/1.5 var(--font-code); /* 14px/21px */
+
+  /* Globals */
+  --max-width: 1440px;
+  --elem-radius: 0.25rem;
 }
 
 main {
   min-height: 80vh;
+}
+
+.container {
+  margin: 0 auto;
+  max-width: var(--max-width);
 }
 
 .visually-hidden {
