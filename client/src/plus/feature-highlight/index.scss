@@ -5,56 +5,31 @@
   width: 100%;
   min-height: 25rem;
 
+  p {
+    /* MDN/Plus/Type/Body/M */
+    line-height: 1.75;
+  }
+
   .wrapper {
     width: 100%;
     display: flex;
-    flex-direction: column;
-    align-items: center;
+    flex-direction: row;
     height: 100%;
     padding: 4rem 1rem;
+    max-width: 50rem;
     margin: 0 auto;
-    max-width: 60rem;
-    gap: 4rem;
 
     @media screen and (min-width: $screen-md) {
-      padding: 4rem;
+      padding: 4rem 0;
     }
 
-    @media screen and (min-width: $screen-lg) {
-      flex-direction: row;
-    }
-
-    .copy-container,
-    .img-container {
+    .ft-sidebar {
       width: 100%;
-      margin: 0 1rem;
-      display: flex;
-      flex-direction: column;
-    }
+      max-width: 13rem;
+      display: none;
 
-    .img-container {
-      align-items: center;
-      box-shadow: 0px 3px 22px #2b2a331a;
-      border-radius: 1rem;
-    }
-
-    .copy-container {
-      h2 {
-        font-family: Montserrat;
-        font-style: normal;
-        font-weight: 650;
-        font-size: 24px;
-        line-height: 120%;
-      }
-
-      p {
-        font-family: Inter;
-        font-style: normal;
-        font-weight: normal;
-        font-size: 16px;
-        line-height: 175%;
-        color: $mdn-color-dark-grey-90;
-        margin: 1rem 0 1.5rem 0;
+      @media screen and (min-width: $screen-md) {
+        display: block;
       }
 
       a {
@@ -66,6 +41,7 @@
         z-index: 1;
         transition: all 0.3s ease;
         font-weight: 620;
+        display: flex;
 
         &:after {
           position: absolute;
@@ -73,7 +49,7 @@
           width: 0;
           height: 100%;
           top: 0;
-          right: 0;
+          left: 0;
           z-index: -1;
           background: $mdn-color-green-20;
           transition: all 0.3s ease;
@@ -84,22 +60,59 @@
         }
 
         &:hover:after {
-          left: 0;
+          left: auto;
+          right: 0;
           width: 100%;
         }
       }
     }
-  }
 
-  .wrapper#bookmarking,
-  .wrapper#offline {
-    flex-direction: column-reverse;
-    @media screen and (min-width: 1025px) {
-      flex-direction: row;
+    .ft-content {
+      display: flex;
+      gap: 4rem;
+      flex-direction: column;
+
+      .ft-title {
+        gap: 1rem;
+        display: flex;
+        flex-direction: column;
+
+        .ft-name {
+          /* MDN/Plus/Type/Overline/S */
+          font: 700 12px/120% Inter;
+          letter-spacing: 1.5px;
+          text-transform: uppercase;
+          color: $mdn-color-green-60;
+        }
+
+        .ft-headline {
+          /* MDN/Plus/Type/Title */
+          font: 700 48px/120% Montserrat;
+          letter-spacing: -0.5px;
+        }
+      }
+    }
+
+    .ft-article {
+      h1 {
+        /* MDN/Plus/Type/Heading/1 */
+        font-family: Montserrat;
+        font-style: normal;
+        font-weight: 600;
+        font-size: 36px;
+        line-height: 120%;
+        padding-bottom: 1rem;
+      }
+
+      h2 {
+        /* MDN/Plus/Type/Heading/2 */
+
+        font-family: Montserrat;
+        font-style: normal;
+        font-weight: 600;
+        font-size: 24px;
+        padding: 4rem 0 1rem;
+      }
     }
   }
-}
-
-.offer-overview-feature:nth-child(even) {
-  background: $mdn-color-light-grey-05;
 }
