@@ -1,14 +1,14 @@
 @use "../../vars" as *;
 
 .top-navigation-main {
+  display: flex;
+  background-color: var(--background-primary);
   display: none;
   justify-content: space-between;
   padding: 1rem var(--gutter);
   width: 100%;
 
   .is-open & {
-    background-color: var(--background-primary);
-    display: flex;
     flex-direction: column-reverse;
   }
 
@@ -103,6 +103,10 @@
 
     .top-navigation-actions {
       flex-direction: initial;
+    }
+
+    .is-open & {
+      flex-direction: row;
     }
   }
 }
