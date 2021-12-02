@@ -6,6 +6,8 @@ import { HeaderNotificationsMenu } from "../../molecules/header-notifications-me
 import { UserMenu } from "../../molecules/user-menu";
 import { Search } from "../../molecules/search";
 
+import { Button } from "../../atoms/button";
+
 import { useUserData } from "../../../user-context";
 
 import "./index.scss";
@@ -13,12 +15,30 @@ import "./index.scss";
 export const TopNavigationMain = () => {
   const userData = useUserData();
   const isSubscriber = userData && userData.isSubscriber;
+  const [showSearch, setShowSearch] = React.useState(false);
 
   return (
-    <div className="top-navigation-main">
+    <div className={`top-navigation-main${showSearch ? " search-open" : ""}`}>
       <MainMenu />
       <div className="top-navigation-actions">
-        <Search />
+        {showSearch ? (
+          <Search
+            onCloseSearch={() => {
+              setShowSearch(false);
+            }}
+          />
+        ) : (
+          <Button
+            type="action"
+            icon="search"
+            onClickHandler={() => {
+              setShowSearch(true);
+            }}
+            extraClasses="toggle-search-button"
+          >
+            <span className="visually-hidden">Show search</span>
+          </Button>
+        )}
 
         {isSubscriber && (
           <>

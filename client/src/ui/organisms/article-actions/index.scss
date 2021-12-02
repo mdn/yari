@@ -9,10 +9,10 @@
     display: block;
     height: 100vh;
     left: 0;
-    position: absolute;
+    position: fixed;
     top: 0;
     width: 100vw;
-    z-index: 9999;
+    z-index: var(--z-index-top);
   }
 
   @media screen and (min-width: $screen-md) {

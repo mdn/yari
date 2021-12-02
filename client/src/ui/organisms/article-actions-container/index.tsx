@@ -42,16 +42,16 @@ export const ArticleActionsContainer = ({ doc }: { doc: Doc }) => {
     <div className="article-actions-container">
       {/* if we have breadcrumbsfor the current page, continue rendering the section */}
       {doc.parents && <Breadcrumbs parents={doc.parents} />}
-      {isMobile && (
-        <Button
-          type="action"
-          ariaHasPopup={"menu"}
-          icon="ellipses"
-          onClickHandler={toggleArticleActionsMenu}
-        >
-          <span className="visually-hidden">Show article actions menu</span>
-        </Button>
-      )}
+
+      <Button
+        type="action"
+        ariaHasPopup={"menu"}
+        icon="ellipses"
+        onClickHandler={toggleArticleActionsMenu}
+        extraClasses="article-actions-toggle"
+      >
+        <span className="visually-hidden">Show article actions menu</span>
+      </Button>
       <ArticleActions
         doc={doc}
         showArticleActionsMenu={showArticleActionsMenu}

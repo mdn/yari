@@ -1,7 +1,6 @@
 @use "../../vars" as *;
 
 .top-navigation-main {
-  display: flex;
   background-color: var(--background-primary);
   display: none;
   justify-content: space-between;
@@ -9,6 +8,7 @@
   width: 100%;
 
   .is-open & {
+    display: flex;
     flex-direction: column-reverse;
   }
 
@@ -81,6 +81,11 @@
     font: var(--type-emphasis-m);
   }
 
+  .top-navigation-actions .header-search {
+    max-width: 100%;
+    width: 340px;
+  }
+
   @media screen and (min-width: $screen-md) {
     align-items: center;
     display: flex;
@@ -108,5 +113,15 @@
     .is-open & {
       flex-direction: row;
     }
+
+    .toggle-search-button {
+      display: inline-block;
+    }
+  }
+}
+
+.top-navigation-main.search-open {
+  .auth-container {
+    display: none;
   }
 }

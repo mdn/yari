@@ -20,6 +20,10 @@
     padding: 2px 0.5rem;
     position: static;
 
+    .article-actions-toggle {
+      display: none;
+    }
+
     .breadcrumbs-container {
       flex: 1 1 90%;
     }

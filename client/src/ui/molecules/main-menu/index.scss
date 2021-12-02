@@ -28,6 +28,10 @@ ul.main-menu {
     li:last-child {
       flex-basis: inherit;
     }
+
+    .submenu.show {
+      display: none;
+    }
   }
 }
 
