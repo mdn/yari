@@ -98,10 +98,6 @@
     top: inherit;
     z-index: inherit;
 
-    .menu-toggle {
-      display: none;
-    }
-
     .menu-toggle + .top-level-entry {
       display: inline-flex;
     }
