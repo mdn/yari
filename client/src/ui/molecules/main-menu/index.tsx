@@ -1,7 +1,5 @@
 import { useEffect, useRef, useState } from "react";
 
-import { useLocale } from "../../../hooks";
-
 import { GuidesMenu } from "../guides-menu";
 import { ReferenceMenu } from "../reference-menu";
 import { PlusMenu } from "../plus-menu";
