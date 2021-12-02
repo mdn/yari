@@ -12,9 +12,7 @@ export const GuidesMenu = () => {
   const [visibleSubMenuId, setVisibleSubMenuId] = React.useState<string | null>(
     null
   );
-  /*
-  <ul class="references-guides " role="menu" aria-labelledby="references-guides-button"><li role="none"><a tabindex="-1" href="/en-US/docs/Learn" role="menuitem">Learn web development</a></li><li role="none"><a tabindex="-1" href="/en-US/docs/Web/Tutorials" role="menuitem">Tutorials</a></li><li role="none"><a tabindex="-1" href="/en-US/docs/Web/Reference" role="menuitem">References</a></li><li role="none"><a tabindex="0" href="/en-US/docs/Web/Guide" role="menuitem">Developer Guides</a></li><li role="none"><a tabindex="-1" href="/en-US/docs/Web/Accessibility" role="menuitem">Accessibility</a></li><li role="none"><a tabindex="-1" href="/en-US/docs/Games" role="menuitem">Game development</a></li><li role="none"><a tabindex="-1" href="/en-US/docs/Web" role="menuitem">...more docs</a></li></ul>
-*/
+
   const menu = {
     label: "Guides",
     id: "guides",
@@ -22,6 +20,30 @@ export const GuidesMenu = () => {
       {
         label: "Learn web development",
         url: `/${locale}/docs/Learn`,
+      },
+      {
+        label: "Tutorials",
+        url: `/${locale}/docs/Tutorials`,
+      },
+      {
+        label: "References",
+        url: `/${locale}/docs/Reference`,
+      },
+      {
+        label: "Developer Guides",
+        url: `/${locale}/docs/Guide`,
+      },
+      {
+        label: "Accessibility",
+        url: `/${locale}/docs/Accessibility`,
+      },
+      {
+        label: "Game development",
+        url: `/${locale}/docs/Games`,
+      },
+      {
+        label: "...more docs",
+        url: `/${locale}/docs/Web`,
       },
     ],
   };
