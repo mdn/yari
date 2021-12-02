@@ -3,12 +3,8 @@
 .top-navigation-main {
   display: none;
   justify-content: space-between;
-  left: 0;
   padding: 1rem var(--gutter);
-  position: absolute;
-  top: var(--top-nav-height);
   width: 100%;
-  z-index: var(--z-index-top);
 
   .is-open & {
     background-color: var(--background-primary);
@@ -87,6 +83,7 @@
   @media screen and (min-width: $screen-md) {
     align-items: center;
     display: flex;
+    flex: 1;
     flex-direction: row;
     gap: 0.5rem;
     left: inherit;

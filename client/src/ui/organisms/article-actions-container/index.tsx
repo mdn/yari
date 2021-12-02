@@ -14,16 +14,11 @@ export const ArticleActionsContainer = ({ doc }: { doc: Doc }) => {
     React.useState(false);
 
   function toggleArticleActionsMenu(event) {
-    const pageOverlay = document.querySelector(".page-overlay");
     const articleActionsMenuButton = event.target;
 
     if (articleActionsMenuButton) {
       articleActionsMenuButton.classList.toggle("icon-cancel");
       setShowArticleActionsMenu(!showArticleActionsMenu);
-    }
-
-    if (pageOverlay) {
-      pageOverlay.classList.toggle("hidden");
     }
   }
 

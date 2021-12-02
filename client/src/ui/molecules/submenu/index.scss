@@ -48,6 +48,10 @@
     }
   }
 
+  li:last-child a {
+    border-bottom: none;
+  }
+
   &.show {
     display: block;
   }

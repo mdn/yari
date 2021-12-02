@@ -10,13 +10,7 @@ export function TopNavigation() {
   const [showMainMenu, setShowMainMenu] = useState(false);
 
   function toggleMainMenu() {
-    const pageOverlay = document.querySelector(".page-overlay");
-
     setShowMainMenu(!showMainMenu);
-
-    if (pageOverlay) {
-      pageOverlay.classList.toggle("hidden");
-    }
   }
 
   /*
@@ -28,19 +22,21 @@ export function TopNavigation() {
   return (
     <header className={`top-navigation${showMainMenu ? " is-open" : ""}`}>
       <div className="container">
-        <Logo />
-        <Button
-          type="action"
-          ariaHasPopup={"menu"}
-          ariaLabel={assistiveText}
-          ariaExpanded={showMainMenu}
-          title={assistiveText}
-          icon={showMainMenu ? "cancel" : "menu"}
-          onClickHandler={toggleMainMenu}
-          extraClasses="main-menu-toggle"
-        >
-          <span className="visually-hidden">{assistiveText}</span>
-        </Button>
+        <div className="top-navigation-wrap">
+          <Logo />
+          <Button
+            type="action"
+            ariaHasPopup={"menu"}
+            ariaLabel={assistiveText}
+            ariaExpanded={showMainMenu}
+            title={assistiveText}
+            icon={showMainMenu ? "cancel" : "menu"}
+            onClickHandler={toggleMainMenu}
+            extraClasses="main-menu-toggle"
+          >
+            <span className="visually-hidden">{assistiveText}</span>
+          </Button>
+        </div>
 
         <TopNavigationMain />
       </div>

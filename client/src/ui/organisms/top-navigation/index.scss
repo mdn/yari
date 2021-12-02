@@ -2,31 +2,36 @@
 
 .top-navigation {
   background-color: var(--background-primary);
-  left: 0;
   position: relative;
-  position: sticky;
-  top: 0;
   width: 100%;
-  z-index: var(--z-index-top);
-
-  @media screen and (max-width: ($screen-md - 1)) {
-    &.is-open {
-      height: 100vh;
-      position: absolute;
-    }
-  }
 
   .container {
     align-items: center;
     display: flex;
+    flex-flow: row wrap;
     gap: var(--gutter);
-    height: var(--top-nav-height);
+  }
+
+  /* Wrapper strictly used for containing the logo and menu toggle */
+  .top-navigation-wrap {
+    flex: 1;
+    display: flex;
+    align-items: center;
     justify-content: space-between;
+    height: var(--top-nav-height);
+  }
+
+  &.is-open .container {
+    height: auto;
   }
 }
 
-.main-menu-toggle {
-  @media screen and (min-width: $screen-md) {
+@media screen and (min-width: $screen-md) {
+  .main-menu-toggle {
     display: none;
+  }
+
+  .top-navigation .top-navigation-wrap {
+    flex: 0;
   }
 }

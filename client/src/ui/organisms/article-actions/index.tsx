@@ -25,16 +25,11 @@ export const ArticleActions = ({
   const isSubscriber = userData && userData.isSubscriber;
 
   function toggleArticleActionsMenu(event) {
-    const pageOverlay = document.querySelector(".page-overlay");
     const articleActionsMenuButton = event.target;
 
     if (articleActionsMenuButton) {
       articleActionsMenuButton.classList.toggle("icon-cancel");
       setShowArticleActionsMenu(!showArticleActionsMenu);
-    }
-
-    if (pageOverlay) {
-      pageOverlay.classList.toggle("hidden");
     }
   }
 
