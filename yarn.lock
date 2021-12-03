@@ -2654,10 +2654,10 @@
     "@types/yargs" "^16.0.0"
     chalk "^4.0.0"
 
-"@mdn/browser-compat-data@4.0.12":
-  version "4.0.12"
-  resolved "https://registry.yarnpkg.com/@mdn/browser-compat-data/-/browser-compat-data-4.0.12.tgz#ea5472755d8460b711c61b6ed8f47f92f782c6c0"
-  integrity sha512-vUxvn5V8KLQAm9EmxOv9STqsZrEuJbY5rKoxOwM31cKN34qzBbGpy+yOl4OQh3eqXh7S5uIOyIleZS3rKsuf4g==
+"@mdn/browser-compat-data@4.1.0":
+  version "4.1.0"
+  resolved "https://registry.yarnpkg.com/@mdn/browser-compat-data/-/browser-compat-data-4.1.0.tgz#78867eef0f12845d62957f89e2262f4ea43bee58"
+  integrity sha512-58eB5/ovJ5CfArzZwmZdenF/WlAGGS+1PG8RUb3oJ4st9exETBjClmFC0E1uVrZG1BwPaT205RKS8RhnUh5x3Q==
 
 "@mdn/dinocons@^0.5.5":
   version "0.5.5"
@@ -2754,10 +2754,10 @@
   dependencies:
     mkdirp "^1.0.4"
 
-"@playwright/test@1.17.0":
-  version "1.17.0"
-  resolved "https://registry.yarnpkg.com/@playwright/test/-/test-1.17.0.tgz#efb10d7785947efeb5da8956e0cf9c891492c89e"
-  integrity sha512-zaNbMhZOSocU0SL4Qsi1JGHQhuLS188OOGFAravpcjNUPf+kPMwOp+DbDw5yd/J+W0EjQ11ip9SeDZDZ/SUYlA==
+"@playwright/test@1.17.1":
+  version "1.17.1"
+  resolved "https://registry.yarnpkg.com/@playwright/test/-/test-1.17.1.tgz#9e5aca496d2c90ce95ca19ac2c3a8867a4f606d3"
+  integrity sha512-mMZS5OMTN/vUlqd1JZkFoAk2FsIZ4/E/00tw5it2c/VF4+3z/aWO+PPd8ShEGzYME7B16QGWNPjyFpDQI1t4RQ==
   dependencies:
     "@babel/code-frame" "^7.14.5"
     "@babel/core" "^7.14.8"
@@ -2782,16 +2782,18 @@
     expect "=27.2.5"
     jest-matcher-utils "=27.2.5"
     jpeg-js "^0.4.2"
+    mime "^2.4.6"
     minimatch "^3.0.3"
     ms "^2.1.2"
     open "^8.3.0"
     pirates "^4.0.1"
     pixelmatch "^5.2.1"
-    playwright-core "=1.17.0"
+    playwright-core "=1.17.1"
     pngjs "^5.0.0"
     rimraf "^3.0.2"
     source-map-support "^0.4.18"
     stack-utils "^2.0.3"
+    yazl "^2.5.1"
 
 "@pmmmwh/react-refresh-webpack-plugin@0.4.3", "@pmmmwh/react-refresh-webpack-plugin@^0.4.3":
   version "0.4.3"
@@ -10695,7 +10697,7 @@ highlight.js@~10.3.0:
   resolved "https://registry.yarnpkg.com/highlight.js/-/highlight.js-10.3.2.tgz#135fd3619a00c3cbb8b4cd6dbc78d56bfcbc46f1"
   integrity sha512-3jRT7OUYsVsKvukNKZCtnvRcFyCJqSEIuIMsEybAXRiFSwpt65qjPd/Pr+UOdYt7WJlt+lj3+ypUsHiySBp/Jw==
 
-history@5.1.0:
+history@5.1.0, history@^5.1.0:
   version "5.1.0"
   resolved "https://registry.yarnpkg.com/history/-/history-5.1.0.tgz#2e93c09c064194d38d52ed62afd0afc9d9b01ece"
   integrity sha512-zPuQgPacm2vH2xdORvGGz1wQMuHSIB56yNAy5FnLuwOwgSYyPKptJtcMm6Ev+hRGeS+GzhbmRacHzvlESbFwDg==
@@ -15191,10 +15193,10 @@ platform@^1.3.3:
   resolved "https://registry.yarnpkg.com/platform/-/platform-1.3.6.tgz#48b4ce983164b209c2d45a107adb31f473a6e7a7"
   integrity sha512-fnWVljUchTro6RiCFvCXBbNhJc2NijN7oIQxbwsyL0buWJPG85v81ehlHI9fXrJsMNgTofEoWIQeClKpgxFLrg==
 
-playwright-core@=1.17.0:
-  version "1.17.0"
-  resolved "https://registry.yarnpkg.com/playwright-core/-/playwright-core-1.17.0.tgz#4bb36367ea890e337f6074b866065be6d3e7d66d"
-  integrity sha512-9ZzKZwmK6G7O9+jtvIurL8efIbJQu3oW0kI4uuNreY3O2jQDWH6xNnD27HCaJN1/tHnw/OmdUC2AmMDZv3vNhQ==
+playwright-core@=1.17.1:
+  version "1.17.1"
+  resolved "https://registry.yarnpkg.com/playwright-core/-/playwright-core-1.17.1.tgz#a16e0f89284a0ed8ae6d77e1c905c84b8a2ba022"
+  integrity sha512-C3c8RpPiC3qr15fRDN6dx6WnUkPLFmST37gms2aoHPDRvp7EaGDPMMZPpqIm/QWB5J40xDrQCD4YYHz2nBTojQ==
   dependencies:
     commander "^8.2.0"
     debug "^4.1.1"
@@ -16587,10 +16589,10 @@ react-popper@^2.2.4:
     react-fast-compare "^3.0.1"
     warning "^4.0.2"
 
-react-refresh@0.10:
-  version "0.10.0"
-  resolved "https://registry.yarnpkg.com/react-refresh/-/react-refresh-0.10.0.tgz#2f536c9660c0b9b1d500684d9e52a65e7404f7e3"
-  integrity sha512-PgidR3wST3dDYKr6b4pJoqQFpPGNKDSCDx4cZoshjXipw3LzO7mG1My2pwEzz2JVkF+inx3xRpDeQLFQGH/hsQ==
+react-refresh@0.11:
+  version "0.11.0"
+  resolved "https://registry.yarnpkg.com/react-refresh/-/react-refresh-0.11.0.tgz#77198b944733f0f1f1a90e791de4541f9f074046"
+  integrity sha512-F27qZr8uUqwhWZboondsPx8tnC3Ct3SxZA3V5WyEvujRyyNv0VYPhoBg1gZ8/MV5tubQp76Trw8lTv9hzRBa+A==
 
 react-refresh@^0.8.3:
   version "0.8.3"
@@ -16609,10 +16611,12 @@ react-router@6.0.0-beta.2:
   resolved "https://registry.yarnpkg.com/react-router/-/react-router-6.0.0-beta.2.tgz#7c804e4d1f86ebfd397ed8b1e05a63d24bf3313f"
   integrity sha512-oyVEfpVT9VbClWaZNNShfprq8HA5rSLfo/ZsXFT08/6mldM6onHzqr6Lc1ybBYEB7/c+rr1VOA99as7hEoAoXw==
 
-react-router@6.0.0-beta.7:
-  version "6.0.0-beta.7"
-  resolved "https://registry.yarnpkg.com/react-router/-/react-router-6.0.0-beta.7.tgz#8c22236c46977e53696ed779ebec31080ab2d3ee"
-  integrity sha512-n5eIqqY724yW6v2G2DXwcTNwz+NlowV1bOg/OKLz6EtJWD8/lez/5whyfyp9dPkA3ICqYuDZhZxnhk7A/u0aFQ==
+react-router@6.0.2:
+  version "6.0.2"
+  resolved "https://registry.yarnpkg.com/react-router/-/react-router-6.0.2.tgz#bd2b0fa84fd1d152671e9f654d9c0b1f5a7c86da"
+  integrity sha512-8/Wm3Ed8t7TuedXjAvV39+c8j0vwrI5qVsYqjFr5WkJjsJpEvNSoLRUbtqSEYzqaTUj1IV+sbPJxvO+accvU0Q==
+  dependencies:
+    history "^5.1.0"
 
 react-scripts@4.0.3:
   version "4.0.3"
