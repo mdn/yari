@@ -27,6 +27,10 @@ a.page-not-created {
 .main-page-content {
   padding: math.div($base-spacing, 2) $base-spacing $base-spacing;
 
+  img {
+    display: inline-block;
+  }
+
   figure {
     margin-bottom: $base-spacing;
   }
