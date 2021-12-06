@@ -50,14 +50,14 @@ uvloop = ["uvloop (>=0.15.2)"]
 
 [[package]]
 name = "boto3"
-version = "1.20.14"
+version = "1.20.20"
 description = "The AWS SDK for Python"
 category = "main"
 optional = false
 python-versions = ">= 3.6"
 
 [package.dependencies]
-botocore = ">=1.23.14,<1.24.0"
+botocore = ">=1.23.20,<1.24.0"
 jmespath = ">=0.7.1,<1.0.0"
 s3transfer = ">=0.5.0,<0.6.0"
 
@@ -66,7 +66,7 @@ crt = ["botocore[crt] (>=1.21.0,<2.0a0)"]
 
 [[package]]
 name = "botocore"
-version = "1.23.14"
+version = "1.23.20"
 description = "Low-level, data-driven core of boto 3."
 category = "main"
 optional = false
@@ -564,7 +564,7 @@ testing = ["pytest (>=4.6)", "pytest-checkdocs (>=1.2.3)", "pytest-flake8", "pyt
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.7"
-content-hash = "db0ae0de52ee347a48f149379529da420cac6c63acd81b5c51131090e7ac8ff1"
+content-hash = "3589ed613f649d850666f1d41a619558dfbf077974a5f301d2707b457c500df3"
 
 [metadata.files]
 atomicwrites = [
@@ -580,12 +580,12 @@ black = [
     {file = "black-21.10b0.tar.gz", hash = "sha256:a9952229092e325fe5f3dae56d81f639b23f7131eb840781947e4b2886030f33"},
 ]
 boto3 = [
-    {file = "boto3-1.20.14-py3-none-any.whl", hash = "sha256:97bbb57d9e37ee24e013d022a2b39b21b131a7b1364d4a44a1e2a16c3a66979f"},
-    {file = "boto3-1.20.14.tar.gz", hash = "sha256:df6f0c7f57a4463c9827080690046eb9381c6216d3a2f539ba74ba5c7dc84ef5"},
+    {file = "boto3-1.20.20-py3-none-any.whl", hash = "sha256:6c173ffaf0604e34d6865edf7a9a71e1b3e79bd441b8b465ca4b2d44f840806d"},
+    {file = "boto3-1.20.20.tar.gz", hash = "sha256:2c5377b6ab74eeccccd16f0f21537ede87b05c8322b0ccc852a68f36ea6c16c9"},
 ]
 botocore = [
-    {file = "botocore-1.23.14-py3-none-any.whl", hash = "sha256:28d5b0efa2d6a22232551b0b2df88a2978cbe9b1faa7ed0821dd012550b0aed6"},
-    {file = "botocore-1.23.14.tar.gz", hash = "sha256:e8d52cbf2e73c6268cf2c207f47e3cfb3ede0983f93e8b59674b54628e7ef1f1"},
+    {file = "botocore-1.23.20-py3-none-any.whl", hash = "sha256:98275e47c941cada6507089ecfe91e420972209b1deeceaf55a89ea50d046347"},
+    {file = "botocore-1.23.20.tar.gz", hash = "sha256:22e1c7b4b2b8b11d7001ca5ef2b41bda9a8be46fb3cb994a2948462666ac5ef1"},
 ]
 certifi = [
     {file = "certifi-2020.12.5-py2.py3-none-any.whl", hash = "sha256:719a74fb9e33b9bd44cc7f3a8d94bc35e4049deebe19ba7d8e108280cfd59830"},
