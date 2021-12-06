@@ -8,12 +8,19 @@
   position: relative;
 
   .notifications-button {
-    --button-font: var(--type-body-l);
     --btn-color: var(--text-primary);
     --button-padding: 0;
 
     padding: 0;
     width: 100%;
+
+    .icon {
+      display: none;
+    }
+
+    &.has-icon .button-wrap {
+      --button-font: var(--type-body-l);
+    }
 
     &:hover {
       --button-bg: transparent;
@@ -30,6 +37,10 @@
       display: flex;
       margin: initial;
       padding: 0;
+
+      .icon {
+        display: inline-block;
+      }
     }
   }
 
