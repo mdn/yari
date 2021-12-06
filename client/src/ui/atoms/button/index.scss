@@ -28,8 +28,8 @@ button {
 .button-wrap {
   align-items: center;
   background-color: var(--button-bg);
-  border: 1px solid var(--button-border-color);
   border-radius: var(--button-radius);
+  border: 1px solid var(--button-border-color);
   color: var(--button-color);
   display: flex;
   font: var(--button-font);
@@ -38,6 +38,7 @@ button {
   justify-content: center;
   padding-left: var(--button-padding);
   padding-right: var(--button-padding);
+  position: relative;
 }
 
 .button .icon {

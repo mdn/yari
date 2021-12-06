@@ -125,11 +125,11 @@ export const HeaderNotificationsMenu = () => {
       >
         <span className="notifications-label">Notifications</span>
         <span
-          className={`notifications-count-container ${
-            notificationCount > 0 ? "unread-notifications" : ""
+          className={`notifications-count-container${
+            notificationCount > 0 ? " has-unread" : ""
           }`}
         >
-          <span className="notifications-count">{notificationCount}</span>
+          {notificationCount}
         </span>
       </Button>
 
