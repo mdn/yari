@@ -251,8 +251,8 @@ const SCL3_REDIRECT_URLS = [].concat(
     "/EN/optimizing_your_pages_for_speculative_parsing",
     "/en-US/docs/Glossary/speculative_parsing"
   ),
-  url_test("MDN/Contribute", "/en-US/docs/MDN/Contribute"),
-  url_test("mdn/contribute", "/en-US/docs/MDN/Contribute")
+  url_test("/MDN/Contribute", "/en-US/docs/MDN/Contribute"),
+  url_test("/mdn/contribute", "/en-US/docs/MDN/Contribute")
 );
 
 const GITHUB_IO_URLS = [].concat(
