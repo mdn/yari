@@ -229,6 +229,10 @@ SCL3_REDIRECT_URLS = list(
                 "/{en,EN}/optimizing_your_pages_for_speculative_{PARSING,parsing,parsing/}",
                 "/en-US/docs/Glossary/speculative_parsing"
             ),
+            url_test(
+                "{mdn,MDN}/{Contribute,contribute}",
+                "/en-US/docs/MDN/Contribute"
+            )
         )
     )
 )
