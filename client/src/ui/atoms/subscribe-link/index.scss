@@ -1,20 +1,8 @@
 @use "../../vars" as *;
 
 .mdn-plus-subscribe-link {
-  background-color: var(--button-primary-default);
-  border-radius: 0.25rem;
-  display: block;
+  --button-padding: 1rem;
+
   margin: 0 auto;
   max-width: 150px;
-  padding: 0.5rem;
-  text-align: center;
-
-  @media screen and (min-width: $screen-md) {
-    margin-top: 0;
-  }
-
-  &:link,
-  &:visited {
-    color: white;
-  }
 }

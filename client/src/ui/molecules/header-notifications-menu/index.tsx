@@ -115,20 +115,21 @@ export const HeaderNotificationsMenu = () => {
         type="action"
         ariaHasPopup={"menu"}
         ariaControls={menuId}
-        extraClasses="notifications-button"
+        extraClasses="top-level-entry notifications-button"
         aria-label={`You currently have ${notificationCount} notifications`}
         ariaExpanded={menuId === visibleSubMenuId}
+        icon="bell"
         onClickHandler={() => {
           toggleSubMenu(menuId);
         }}
       >
         <span className="notifications-label">Notifications</span>
         <span
-          className={`notifications-count-container ${
-            notificationCount > 0 ? "unread-notifications" : ""
+          className={`notifications-count-container${
+            notificationCount > 0 ? " has-unread" : ""
           }`}
         >
-          <span className="notifications-count">{notificationCount}</span>
+          {notificationCount}
         </span>
       </Button>
 

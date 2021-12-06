@@ -91,6 +91,7 @@ export const ThemeSwitcher = () => {
       >
         <li>
           <Button
+            type="action"
             extraClasses={
               activeTheme === "light" ? "active-menu-item" : undefined
             }
@@ -104,6 +105,7 @@ export const ThemeSwitcher = () => {
         </li>
         <li>
           <Button
+            type="action"
             extraClasses={
               activeTheme === "dark" ? "active-menu-item" : undefined
             }

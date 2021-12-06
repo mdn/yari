@@ -6,62 +6,44 @@ import { Submenu } from "../submenu";
 
 import "./index.scss";
 
-export const ReferenceMenu = () => {
+export const GuidesMenu = () => {
   const locale = useLocale();
   const previousActiveElement = React.useRef<null | HTMLButtonElement>(null);
   const [visibleSubMenuId, setVisibleSubMenuId] = React.useState<string | null>(
     null
   );
+
   const menu = {
-    label: "References",
-    id: "references",
+    label: "Guides",
+    id: "guides",
     items: [
       {
-        description: "Most basic building block of the Web",
-        extraClasses: "html-link-container",
-        hasIcon: true,
-        iconClasses: "submenu-icon html",
-        label: "HTML",
-        url: `/${locale}/docs/Web/HTML`,
+        label: "Learn web development",
+        url: `/${locale}/docs/Learn`,
       },
       {
-        description: "Code used for describing document styling",
-        extraClasses: "css-link-container",
-        hasIcon: true,
-        iconClasses: "submenu-icon css",
-        label: "CSS",
-        url: `/${locale}/docs/Web/CSS`,
+        label: "Tutorials",
+        url: `/${locale}/docs/Tutorials`,
       },
       {
-        description: "Lightweight, interpreted, object-oriented language",
-        extraClasses: "javascript-link-container",
-        hasIcon: true,
-        iconClasses: "submenu-icon javascript",
-        label: "JavaScript",
-        url: `/${locale}/docs/Web/JavaScript`,
+        label: "References",
+        url: `/${locale}/docs/Reference`,
       },
       {
-        description: "Protocol for transmitting hypermedia documents",
-        extraClasses: "http-link-container",
-        hasIcon: true,
-        iconClasses: "submenu-icon http",
-        label: "HTTP",
-        url: `/${locale}/docs/Web/HTTP`,
+        label: "Developer Guides",
+        url: `/${locale}/docs/Guide`,
       },
       {
-        description: "Software interface that connects software",
-        extraClasses: "apis-link-container",
-        hasIcon: true,
-        iconClasses: "submenu-icon apis",
-        label: "APIs",
-        url: `/${locale}/docs/Web/API`,
+        label: "Accessibility",
+        url: `/${locale}/docs/Accessibility`,
       },
       {
-        description: "Discover more of what the web has to offer",
-        hasIcon: true,
-        iconClasses: "submenu-icon",
-        label: "More…",
-        url: `/${locale}/docs/Mozilla/Add-ons/WebExtensions`,
+        label: "Game development",
+        url: `/${locale}/docs/Games`,
+      },
+      {
+        label: "...more docs",
+        url: `/${locale}/docs/Web`,
       },
     ],
   };
@@ -100,7 +82,7 @@ export const ReferenceMenu = () => {
       </button>
 
       <Link to={`/${locale}/docs/Web/`} className="top-level-entry">
-        {menu.label}
+        Guides
       </Link>
 
       <Submenu

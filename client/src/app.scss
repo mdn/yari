@@ -26,9 +26,19 @@
   --type-label-s: 600 0.625rem/1.2 var(--font-heading); /* 10px/12px */
   --type-code-regular: 400 0.875rem/1.5 var(--font-code); /* 14px/21px */
 
-  /* Globals */
+  /* Grid and Layout */
   --max-width: 1440px;
+  --gutter: 0.5rem; /* Space between content and browser window */
+  --z-index-top: 1000;
+
+  /* Features */
   --elem-radius: 0.25rem;
+  --focus-effect: 0 0 0 3px var(--accent-primary-engage);
+  --form-elem-height: 2rem;
+
+  /* Major Components */
+  --top-nav-height: 4rem;
+  --icon-size: 1rem;
 }
 
 main {
@@ -36,10 +46,14 @@ main {
 }
 
 .container {
-  margin: 0 auto;
+  margin-left: auto;
+  margin-right: auto;
   max-width: var(--max-width);
+  padding-left: var(--gutter);
+  padding-right: var(--gutter);
 }
 
+// !!! This is not an accessible way to hide content
 .visually-hidden {
   display: none;
 }

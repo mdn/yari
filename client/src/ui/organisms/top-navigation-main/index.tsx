@@ -3,70 +3,49 @@ import * as React from "react";
 import { AuthContainer } from "../../molecules/auth-container";
 import MainMenu from "../../molecules/main-menu";
 import { HeaderNotificationsMenu } from "../../molecules/header-notifications-menu";
-import { Button } from "../../atoms/button";
 import { UserMenu } from "../../molecules/user-menu";
 import { Search } from "../../molecules/search";
+
+import { Button } from "../../atoms/button";
 
 import { useUserData } from "../../../user-context";
 
 import "./index.scss";
 
-export const TopNavigationMain = ({ showMainMenu }) => {
+export const TopNavigationMain = () => {
   const userData = useUserData();
   const isSubscriber = userData && userData.isSubscriber;
-  const [isMobile, setIsMobile] = React.useState(false);
   const [showSearch, setShowSearch] = React.useState(false);
-
-  function updateViewportState(state) {
-    setIsMobile(state.matches);
-  }
-
-  React.useEffect(() => {
-    if (typeof window !== "undefined" && window.matchMedia) {
-      const mql = window.matchMedia("(max-width: 768px)");
-
-      // add an event listener to report as the viewport changes
-      mql.addEventListener("change", updateViewportState);
-
-      // immediately report our initial state
-      updateViewportState(mql);
-    }
-  }, []);
 
   return (
     <div
-      className={`top-navigation-main ${
-        isMobile && showMainMenu ? "show-grid" : ""
-      }`}
+      className={`top-navigation-main${showSearch ? " has-search-open" : ""}`}
     >
       <MainMenu />
-      <div className="top-navigation-actions">
-        {isMobile || showSearch ? (
-          <Search
-            onCloseSearch={() => {
-              setShowSearch(false);
-            }}
-          />
-        ) : (
-          <Button
-            type="action"
-            icon="search"
-            onClickHandler={() => {
-              setShowSearch(true);
-            }}
-            extraClasses="toggle-search-button"
-          >
-            <span className="visually-hidden">Show search</span>
-          </Button>
-        )}
-        {isSubscriber && (!showSearch || isMobile) && (
-          <>
-            <HeaderNotificationsMenu />
-            <UserMenu />
-          </>
-        )}
-        {!isSubscriber && (!showSearch || isMobile) && <AuthContainer />}
-      </div>
+
+      <Search
+        onCloseSearch={() => {
+          setShowSearch(false);
+        }}
+      />
+      <Button
+        type="action"
+        icon="search"
+        onClickHandler={() => {
+          setShowSearch(true);
+        }}
+        extraClasses="toggle-search-button"
+      >
+        <span className="visually-hidden">Show search</span>
+      </Button>
+
+      {isSubscriber && (
+        <>
+          <HeaderNotificationsMenu />
+          <UserMenu />
+        </>
+      )}
+      {!isSubscriber && <AuthContainer />}
     </div>
   );
 };

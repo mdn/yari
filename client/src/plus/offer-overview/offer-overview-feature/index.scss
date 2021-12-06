@@ -67,7 +67,7 @@
         transition: all 0.3s ease;
         font-weight: 620;
 
-        &:after {
+        &::after {
           position: absolute;
           content: "";
           width: 0;

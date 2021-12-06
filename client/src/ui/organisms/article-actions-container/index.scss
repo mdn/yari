@@ -7,14 +7,22 @@
   border-top: 1px solid var(--border-primary);
   display: flex;
   gap: 0.5rem;
-  padding-left: 0.5rem;
+  padding: 0 var(--gutter);
   justify-content: space-between;
   margin: 0 auto;
   max-width: var(--max-width);
   min-height: 2rem;
+  position: sticky;
+  top: 0;
+  z-index: var(--z-index-top);
 
   @media screen and (min-width: $screen-md) {
     padding: 2px 0.5rem;
+    position: static;
+
+    .article-actions-toggle {
+      display: none;
+    }
 
     .breadcrumbs-container {
       flex: 1 1 90%;

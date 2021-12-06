@@ -9,35 +9,36 @@ import "./index.scss";
 export function TopNavigation() {
   const [showMainMenu, setShowMainMenu] = useState(false);
 
-  function toggleMainMenu(event) {
-    const pageOverlay = document.querySelector(".page-overlay");
-    const mainMenuButton = event.target;
-
-    if (mainMenuButton) {
-      mainMenuButton.classList.toggle("menu-close");
-      setShowMainMenu(!showMainMenu);
-    }
-
-    if (pageOverlay) {
-      pageOverlay.classList.toggle("hidden");
-    }
+  function toggleMainMenu() {
+    setShowMainMenu(!showMainMenu);
   }
 
-  return (
-    <header className="top-navigation">
-      <div className="wrapper">
-        <Logo />
-        <Button
-          type="action"
-          ariaHasPopup={"menu"}
-          icon="menu-open"
-          onClickHandler={toggleMainMenu}
-          extraClasses="main-menu-toggle"
-        >
-          <span className="visually-hidden">Show Menu</span>
-        </Button>
+  /*
+    In this situation the assistive text, button text, and title text are
+    similar enough that they could be the same.
+  */
+  const assistiveText = showMainMenu ? "Close main menu" : "Open main menu";
 
-        <TopNavigationMain showMainMenu={showMainMenu} />
+  return (
+    <header className={`top-navigation${showMainMenu ? " is-open" : ""}`}>
+      <div className="container">
+        <div className="top-navigation-wrap">
+          <Logo />
+          <Button
+            type="action"
+            ariaHasPopup={"menu"}
+            ariaLabel={assistiveText}
+            ariaExpanded={showMainMenu}
+            title={assistiveText}
+            icon={showMainMenu ? "cancel" : "menu"}
+            onClickHandler={toggleMainMenu}
+            extraClasses="main-menu-toggle"
+          >
+            <span className="visually-hidden">{assistiveText}</span>
+          </Button>
+        </div>
+
+        <TopNavigationMain />
       </div>
     </header>
   );

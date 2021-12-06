@@ -25,16 +25,11 @@ export const ArticleActions = ({
   const isSubscriber = userData && userData.isSubscriber;
 
   function toggleArticleActionsMenu(event) {
-    const pageOverlay = document.querySelector(".page-overlay");
     const articleActionsMenuButton = event.target;
 
     if (articleActionsMenuButton) {
-      articleActionsMenuButton.classList.toggle("menu-close");
+      articleActionsMenuButton.classList.toggle("icon-cancel");
       setShowArticleActionsMenu(!showArticleActionsMenu);
-    }
-
-    if (pageOverlay) {
-      pageOverlay.classList.toggle("hidden");
     }
   }
 
@@ -65,7 +60,12 @@ export const ArticleActions = ({
     >
       {/* styling for icon is defined in client/src/ui/atoms/icon-button/index.scss */}
       {isMobile && (
-        <Button onClickHandler={toggleArticleActionsMenu} icon="menu-close">
+        <Button
+          type="action"
+          extraClasses="article-actions-toggle"
+          onClickHandler={toggleArticleActionsMenu}
+          icon="cancel"
+        >
           <span className="article-actions-dialog-heading">
             Article actions
           </span>

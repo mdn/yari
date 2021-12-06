@@ -22,19 +22,20 @@
     }
   }
 
-  a,
-  button {
+  a {
     align-items: center;
     border-bottom: 1px solid var(--border-secondary);
     color: var(--text-primary);
     display: flex;
     gap: 0.5rem;
     height: 100%;
-    padding: 1rem;
+    padding: 1rem 0.5rem;
     width: 100%;
 
-    @media screen and (max-width: $screen-sm) {
-      width: unset;
+    &:hover,
+    &:focus {
+      background-color: var(--background-secondary);
+      text-decoration: none;
     }
 
     @media screen and (min-width: $screen-md) {
@@ -42,18 +43,17 @@
       border-radius: 0.25rem;
     }
 
-    &:hover,
-    &:focus {
-      background-color: var(--background-secondary);
-      text-decoration: none;
+    @media screen and (max-width: $screen-sm) {
+      width: unset;
     }
+  }
+
+  li:last-child a {
+    border-bottom: none;
   }
 
   &.show {
     display: block;
-
-    @media screen and (min-width: $screen-md) {
-    }
   }
 
   .active-menu-item {
@@ -71,10 +71,8 @@
   .submenu-icon {
     background-color: var(--icon-primary);
     background-size: 10px;
-    border-radius: 4px;
+    border-radius: var(--elem-radius);
     height: 2rem;
-    margin-bottom: 0.5rem;
-    margin-right: 0.5rem;
     padding: 0.5rem;
     position: relative;
     width: 2rem;
@@ -115,6 +113,6 @@
   }
 
   .submenu-item-subtext {
-    font-size: 0.8125rem;
+    font: var(--type-emphasis-m);
   }
 }
