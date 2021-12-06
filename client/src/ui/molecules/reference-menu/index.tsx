@@ -100,7 +100,7 @@ export const ReferenceMenu = () => {
       </button>
 
       <Link to={`/${locale}/docs/Web/`} className="top-level-entry">
-        References
+        {menu.label}
       </Link>
 
       <Submenu

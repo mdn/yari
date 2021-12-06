@@ -24,6 +24,14 @@
     left: initial;
     right: -15px;
   }
+
+  .article-actions-toggle {
+    width: 100%;
+
+    .button-wrap {
+      justify-content: flex-start;
+    }
+  }
 }
 
 .article-actions-entries {

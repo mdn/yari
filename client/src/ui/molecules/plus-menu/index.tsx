@@ -3,6 +3,7 @@ import * as React from "react";
 import { useUserData } from "../../../user-context";
 import { useLocale } from "../../../hooks";
 
+import { Link } from "react-router-dom";
 import { Submenu } from "../submenu";
 
 import "./index.scss";
@@ -28,9 +29,16 @@ export const PlusMenu = () => {
       {
         description: "Stay up to date with MDN content",
         hasIcon: true,
-        iconClasses: "submenu-icon notifications-icon",
+        iconClasses: "submenu-icon",
         label: "My Notifications",
         url: `/${locale}/plus/notifications`,
+      },
+      {
+        description: "Learn more about your MDN Plus Subscription",
+        hasIcon: true,
+        iconClasses: "submenu-icon",
+        label: "About MDN Plus",
+        url: `/${locale}/plus/`,
       },
     ],
   };
@@ -67,6 +75,10 @@ export const PlusMenu = () => {
       >
         {plusMenu.label}
       </button>
+
+      <Link to={`/${locale}/plus/`} className="top-level-entry">
+        {plusMenu.label}
+      </Link>
 
       <Submenu
         menuEntry={plusMenu}

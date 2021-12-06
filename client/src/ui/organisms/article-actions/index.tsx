@@ -62,6 +62,7 @@ export const ArticleActions = ({
       {isMobile && (
         <Button
           type="action"
+          extraClasses="article-actions-toggle"
           onClickHandler={toggleArticleActionsMenu}
           icon="cancel"
         >

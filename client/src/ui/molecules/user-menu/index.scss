@@ -4,6 +4,35 @@
   position: relative;
 
   .user-menu-toggle {
+    --button-font: var(--type-body-l);
+    --btn-color: var(--text-primary);
+    --button-padding: 0;
+
+    .button-wrap {
+      background: none;
+      gap: 0.5rem;
+      justify-content: flex-start;
+      padding: 0;
+      text-transform: initial;
+    }
+
+    .avatar {
+      margin-right: 0;
+    }
+
+    @media screen and (max-width: $screen-md) {
+      &:hover {
+        --button-bg: transparent;
+      }
+    }
+  }
+
+  @media screen and (min-width: $screen-md) {
+    /* !!! */
+    .user-menu-toggle.user-menu-toggle {
+      padding-right: 1.75rem;
+    }
+
     &[aria-haspopup="menu"] {
       &::after {
         position: absolute;

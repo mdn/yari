@@ -32,8 +32,10 @@
     padding: 1rem 0.5rem;
     width: 100%;
 
-    @media screen and (max-width: $screen-sm) {
-      width: unset;
+    &:hover,
+    &:focus {
+      background-color: var(--background-secondary);
+      text-decoration: none;
     }
 
     @media screen and (min-width: $screen-md) {
@@ -41,10 +43,8 @@
       border-radius: 0.25rem;
     }
 
-    &:hover,
-    &:focus {
-      background-color: var(--background-secondary);
-      text-decoration: none;
+    @media screen and (max-width: $screen-sm) {
+      width: unset;
     }
   }
 
@@ -113,6 +113,6 @@
   }
 
   .submenu-item-subtext {
-    font-size: 0.8125rem;
+    font: var(--type-emphasis-m);
   }
 }

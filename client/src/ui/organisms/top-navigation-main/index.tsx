@@ -18,36 +18,34 @@ export const TopNavigationMain = () => {
   const [showSearch, setShowSearch] = React.useState(false);
 
   return (
-    <div className={`top-navigation-main${showSearch ? " search-open" : ""}`}>
+    <div
+      className={`top-navigation-main${showSearch ? " has-search-open" : ""}`}
+    >
       <MainMenu />
-      <div className="top-navigation-actions">
-        {showSearch ? (
-          <Search
-            onCloseSearch={() => {
-              setShowSearch(false);
-            }}
-          />
-        ) : (
-          <Button
-            type="action"
-            icon="search"
-            onClickHandler={() => {
-              setShowSearch(true);
-            }}
-            extraClasses="toggle-search-button"
-          >
-            <span className="visually-hidden">Show search</span>
-          </Button>
-        )}
 
-        {isSubscriber && (
-          <>
-            <HeaderNotificationsMenu />
-            <UserMenu />
-          </>
-        )}
-        {!isSubscriber && <AuthContainer />}
-      </div>
+      <Search
+        onCloseSearch={() => {
+          setShowSearch(false);
+        }}
+      />
+      <Button
+        type="action"
+        icon="search"
+        onClickHandler={() => {
+          setShowSearch(true);
+        }}
+        extraClasses="toggle-search-button"
+      >
+        <span className="visually-hidden">Show search</span>
+      </Button>
+
+      {isSubscriber && (
+        <>
+          <HeaderNotificationsMenu />
+          <UserMenu />
+        </>
+      )}
+      {!isSubscriber && <AuthContainer />}
     </div>
   );
 };

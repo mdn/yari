@@ -2,6 +2,7 @@
 
 .auth-container {
   display: flex;
+  font: var(--type-emphasis-m);
   flex-flow: column-reverse;
   gap: 0.5rem;
   list-style: none;

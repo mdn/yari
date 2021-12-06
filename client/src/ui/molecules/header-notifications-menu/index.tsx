@@ -115,9 +115,10 @@ export const HeaderNotificationsMenu = () => {
         type="action"
         ariaHasPopup={"menu"}
         ariaControls={menuId}
-        extraClasses="notifications-button"
+        extraClasses="top-level-entry notifications-button"
         aria-label={`You currently have ${notificationCount} notifications`}
         ariaExpanded={menuId === visibleSubMenuId}
+        icon="bell"
         onClickHandler={() => {
           toggleSubMenu(menuId);
         }}
