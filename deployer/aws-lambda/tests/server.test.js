@@ -206,6 +206,14 @@ describe("always check for fundamental redirects first", () => {
       );
     }
   });
+  it("should redirect Contribute link distributed by video", async () => {
+    expect.assertions(2 * 2);
+    for (const url of ["/mdn/contribute/", "/MDN/Contribute"]) {
+      const r = await get(url);
+      expect(r.statusCode).toBe(301);
+      expect(r.headers["location"]).toBe("/en-US/docs/MDN/Contribute");
+    }
+  });
 });
 
 describe("redirect double-slash prefix URIs", () => {
