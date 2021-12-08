@@ -807,7 +807,7 @@ const SCL3_REDIRECT_PATTERNS = [
     { permanent: true }
   ),
   // Redirect for URL in Contribute video
-  redirect(/MDN\/Contribute\/?$/i, "/en-US/docs/MDN/Contribute", {
+  redirect(/^MDN\/Contribute\/?$/i, "/en-US/docs/MDN/Contribute", {
     permanent: true,
   }),
 ];
