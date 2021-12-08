@@ -43,7 +43,7 @@ ul.main-menu {
 @media screen and (min-width: $screen-md) {
   ul.main-menu {
     .top-level-entry-container:hover,
-    .top-level-entry-container:focus {
+    .top-level-entry-container:focus-within {
       ul {
         display: block;
       }
