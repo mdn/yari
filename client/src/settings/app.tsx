@@ -6,14 +6,13 @@ import { Loading } from "../ui/atoms/loading";
 import { DISABLE_AUTH } from "../constants";
 import { useUserData } from "../user-context";
 import { useLocale } from "../hooks";
-import { Subscription, SubscriptionConfig } from "./subscription";
+import { AuthDisabled } from "../ui/atoms/auth-disabled";
 
 import "./index.scss";
 
 interface UserSettings {
   csrfmiddlewaretoken: string;
   locale: string;
-  subscription: object;
 }
 
 interface Locale {
@@ -24,7 +23,6 @@ interface Locale {
 
 interface SettingsData {
   possibleLocales: Locale[];
-  subscriptionConfig: null | SubscriptionConfig;
 }
 
 export default function SettingsApp({ ...appProps }) {
@@ -49,7 +47,6 @@ export default function SettingsApp({ ...appProps }) {
       initialData: appProps.possibleLocales
         ? {
             possibleLocales: appProps.possibleLocales,
-            subscriptionConfig: null,
           }
         : undefined,
       revalidateOnFocus: false,
@@ -129,22 +126,6 @@ export default function SettingsApp({ ...appProps }) {
           />
         )}
       <CloseAccount userSettings={data} />
-      {settingsData?.subscriptionConfig && (
-        <Subscription
-          config={settingsData.subscriptionConfig}
-          csrfmiddlewaretoken={data.csrfmiddlewaretoken}
-          current={data.subscription}
-        />
-      )}
-    </div>
-  );
-}
-
-function AuthDisabled() {
-  return (
-    <div className="notecard warning">
-      <h4>Authentication disabled</h4>
-      <p>Authentication and the user settings app is currently disabled.</p>
     </div>
   );
 }
@@ -185,7 +166,10 @@ function Settings({
   settingsData: SettingsData;
   refreshUserSettings: () => void;
 }) {
-  const [locale, setLocale] = React.useState(userSettings.locale);
+  // It only becomes 'en-US' if the userprofile doesn't have a 'locale'
+  // set in its profile from before at all. But it also makes sure that
+  // the value is always a string.
+  const [locale, setLocale] = React.useState(userSettings.locale || "en-US");
 
   const [sent, setSent] = React.useState(false);
   const [sendError, setSendError] = React.useState<Error | null>(null);

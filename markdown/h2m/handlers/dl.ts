@@ -57,7 +57,7 @@ const toDefinitionItem = (node, terms, definitions): ListItem =>
       ...terms,
       h(
         "list",
-        h("listItem", prefixDefinitions(definitions), { spread: false }),
+        h("listItem", prefixDefinitions(definitions), { spread: true }),
         {
           spread: false,
         }

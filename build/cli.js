@@ -13,7 +13,6 @@ const {
   translationsOf,
   CONTENT_ROOT,
   CONTENT_TRANSLATED_ROOT,
-  CONTENT_ARCHIVED_ROOT,
 } = require("../content");
 const { VALID_LOCALES } = require("../libs/constants");
 // eslint-disable-next-line node/no-missing-require
@@ -81,6 +80,7 @@ async function buildDocuments(
   files = null,
   quiet = false,
   interactive = false,
+  noHTML = false,
   locales = new Map()
 ) {
   // If a list of files was set, it came from the CLI.
@@ -139,29 +139,26 @@ async function buildDocuments(
       appendTotalFlaws(builtDocument.flaws);
     }
 
-    fs.writeFileSync(
-      path.join(outPath, "index.html"),
-      renderHTML(document.url, { doc: builtDocument })
-    );
+    if (!noHTML) {
+      fs.writeFileSync(
+        path.join(outPath, "index.html"),
+        renderHTML(document.url, { doc: builtDocument })
+      );
+    }
+
     fs.writeFileSync(
       path.join(outPath, "index.json"),
       // This is exploiting the fact that renderHTML has the side-effect of
       // mutating the built document which makes this not great and refactor-worthy.
       JSON.stringify({ doc: builtDocument })
     );
-    // There are some archived documents that, due to possible corruption or other
-    // unknown reasons, don't have a list of contributors.
-    if (document.metadata.contributors || !document.isArchive) {
-      fs.writeFileSync(
-        path.join(outPath, "contributors.txt"),
-        renderContributorsTxt(
-          document.metadata.contributors,
-          !document.isArchive
-            ? builtDocument.source.github_url.replace("/blob/", "/commits/")
-            : null
-        )
-      );
-    }
+    fs.writeFileSync(
+      path.join(outPath, "contributors.txt"),
+      renderContributorsTxt(
+        document.metadata.contributors,
+        builtDocument.source.github_url.replace("/blob/", "/commits/")
+      )
+    );
     for (const { url, data } of bcdData) {
       fs.writeFileSync(
         path.join(outPath, path.basename(url)),
@@ -192,7 +189,7 @@ async function buildDocuments(
       fs.copyFileSync(filePath, path.join(outPath, path.basename(filePath)));
     }
 
-    // Collect non-archived documents' slugs to be used in sitemap building and
+    // Collect active documents' slugs to be used in sitemap building and
     // search index building.
     if (!builtDocument.noIndexing) {
       const { locale, slug } = document.metadata;
@@ -282,7 +279,14 @@ program
   .option("-i, --interactive", "Ask what to do when encountering flaws", {
     default: false,
   })
+  .option("-n, --nohtml", "Do not build index.html", {
+    default: false,
+  })
   .option("-l, --locale <locale...>", "Filtered specific locales", {
+    default: [],
+    validator: [...VALID_LOCALES.keys()],
+  })
+  .option("--not-locale <locale...>", "Exclude specific locales", {
     default: [],
     validator: [...VALID_LOCALES.keys()],
   })
@@ -293,7 +297,6 @@ program
         const roots = [
           ["CONTENT_ROOT", CONTENT_ROOT],
           ["CONTENT_TRANSLATED_ROOT", CONTENT_TRANSLATED_ROOT],
-          ["CONTENT_ARCHIVED_ROOT", CONTENT_ARCHIVED_ROOT],
         ];
         for (const [key, value] of roots) {
           console.log(
@@ -305,22 +308,43 @@ program
       }
       const { files } = args;
 
-      // 'true' means we include this locale and all others get excluded.
-      // Some day we might make it an option to set `--not-locale` to
-      // filter out specific locales.
-      const locales = new Map(
-        // The `options.locale` is either an empty array (e.g. no --locale used),
-        // a string (e.g. one single --locale) or an array of strings
-        // (e.g. multiple --locale options).
-        (Array.isArray(options.locale) ? options.locale : [options.locale]).map(
-          (locale) => [locale, true]
-        )
-      );
+      let locales = new Map();
+      if (options.notLocale && options.notLocale.length > 0) {
+        if (options.locale && options.locale.length) {
+          throw new Error(
+            "Can't use --not-locale and --locale at the same time"
+          );
+        }
+        const notLocales = Array.isArray(options.notLocale)
+          ? options.notLocale
+          : [options.notLocale];
+
+        locales = new Map(
+          [...VALID_LOCALES.keys()]
+            .filter((locale) => !notLocales.includes(locale))
+            .map((locale) => [locale, true])
+        );
+      } else {
+        // 'true' means we include this locale and all others get excluded.
+        // Some day we might make it an option to set `--not-locale` to
+        // filter out specific locales.
+        locales = new Map(
+          // The `options.locale` is either an empty array (e.g. no --locale used),
+          // a string (e.g. one single --locale) or an array of strings
+          // (e.g. multiple --locale options).
+          (Array.isArray(options.locale)
+            ? options.locale
+            : [options.locale]
+          ).map((locale) => [locale, true])
+        );
+      }
+
       const t0 = new Date();
       const { slugPerLocale, peakHeapBytes, totalFlaws } = await buildDocuments(
         files,
         Boolean(options.quiet),
         Boolean(options.interactive),
+        Boolean(options.nohtml),
         locales
       );
       const t1 = new Date();
@@ -335,10 +359,19 @@ program
           : `${seconds.toFixed(1)} seconds`;
       if (!options.quiet) {
         console.log(
-          `Built ${count.toLocaleString()} pages in ${took}, at a rate of ${(
-            count / seconds
-          ).toFixed(1)} documents per second.`
+          chalk.green(
+            `Built ${count.toLocaleString()} pages in ${took}, at a rate of ${(
+              count / seconds
+            ).toFixed(1)} documents per second.`
+          )
         );
+        if (locales.size) {
+          console.log(
+            chalk.yellow(
+              `(only building locales: ${[...locales.keys()].join(", ")})`
+            )
+          );
+        }
         console.log(`Peak heap memory usage: ${humanFileSize(peakHeapBytes)}`);
         console.log(formatTotalFlaws(totalFlaws));
       }

@@ -30,15 +30,6 @@ all prefixed with `CONTENT_`. E.g. `CONTENT_ROOT`
 
 Where the files are.
 
-### `CONTENT_ARCHIVED_ROOT`
-
-**Default: `null`** (meaning, not set nor included)
-
-If you want to build archive content (no KumaScript rendering) you
-can say where the location to the folder is.
-
-**Example: `/tmp/mdn-archive-content`**
-
 ### `BUILD_FOLDERSEARCH`
 
 **Default: ``** (meaning, none)
@@ -193,14 +184,6 @@ Which RSS feed URL to parse for displaying feed entries on the home page.
 
 How many RSS feed entries to display on the home page.
 
-### `BUILD_SUBSCRIPTION_CONFIG_URL`
-
-**Default: `''`**
-
-URL from which to fetch the subscription config. You need Kuma running and for local
-dev you will likely want to point it to
-`http://localhost.org:8000/api/v1/subscriptions/config/`
-
 ## Server
 
 ### `SERVER_PORT`
@@ -221,31 +204,6 @@ This is the port for the WebSocket server, which is started when you run `yarn s
 **Default `../client/build`**
 
 If you want to serve static files some a completely different directory.
-
-## Testing
-
-### `TESTING_OPEN_BROWSER`
-
-**Default: `false`**
-
-When running the `jest-puppeteer` test suites, if you set this to `true`,
-it will open a browser on every page navigation.
-
-It might just flash by too quickly, so consider putting in
-`await jestPuppeteer.debug()` inside the test function to slow it down.
-
-### `TESTING_START_SERVER`
-
-**Default: `false`**
-
-When `jest-puppeteer` starts the `jest` tests, if this variable is set
-to `true` it will execute `node ../server/index.js` to start the `server`
-on `localhost:5000`.
-
-In most cases, on your laptop it's better to start the server yourself
-in a separate terminal and then run the headless tests in another.
-
-For more information, see the `testing/README.md`.
 
 ## Client
 

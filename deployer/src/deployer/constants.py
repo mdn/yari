@@ -10,7 +10,6 @@ CI = config("CI", default=False, cast=bool)
 
 CONTENT_ROOT = config("CONTENT_ROOT", default=None)
 CONTENT_TRANSLATED_ROOT = config("CONTENT_TRANSLATED_ROOT", default=None)
-CONTENT_ARCHIVED_ROOT = config("CONTENT_ARCHIVED_ROOT", default=None)
 
 DEFAULT_BUCKET_NAME = config("DEPLOYER_BUCKET_NAME", default="mdn-content-dev")
 DEFAULT_BUCKET_PREFIX = config("DEPLOYER_BUCKET_PREFIX", default="main")

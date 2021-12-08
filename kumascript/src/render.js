@@ -199,16 +199,21 @@ async function render(
     };
 
     // If the token signature is already in the map, then we've
-    // already run the macro. We're only going to use the prior run
-    // if there were no errors. If there were errors in the prior run,
-    // let's re-run the macro in order to capture the context in fresh
-    // errors.
+    // already run the macro. We're only going to use the prior run if
+    // there were no errors and if the macro isn't "EmbedLiveSample".
+    // If there were errors in the prior run, let's re-run the macro in
+    // order to capture the context in fresh errors. If the macro is
+    // "EmbedLiveSample", there are cases when the same call signatures
+    // yield different results. For example, when the live-sample ID
+    // provided as the first argument can't be found or is not provided
+    // at all, the result depends on the macro's location in the document.
     const priorResult = signatureToResult.get(token.signature);
 
     if (
       priorResult &&
       !priorResult.errors.fatal &&
-      !priorResult.errors.nonFatal
+      !priorResult.errors.nonFatal &&
+      macroName !== "embedlivesample"
     ) {
       currentResult.output = priorResult.output;
     } else {
@@ -219,7 +224,7 @@ async function render(
       try {
         currentResult.output = await templates.render(
           macroName,
-          environment.getExecutionContext(token.args)
+          environment.getExecutionContext(token.args, token)
         );
       } catch (e) {
         let macroError;

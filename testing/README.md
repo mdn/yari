@@ -1,192 +1,186 @@
-# Functional tests
+# Testing
 
-This is a module dedicated to simulating all of Yari but with a
-fixed set of content files.
+There are many kinds of testing in Yari. Each one serving a different purpose.
+We try to test things as far away from the implementation details as possible.
+In particular, we always try to favor an end-to-end test instead of a unit test.
 
-Unlike testing the real content, this content "never changes". I.e. we
-control it and know exactly what to expect to find.
+In this directory (`/testing/`) we have the `jest` tests,
+[`playwright`](https://playwright.dev/)
+tests, and all the sample "fixture" content we use for testing.
+There are actually
+some tests that test with real content but mostly we try to control all
+the content that we test against.
 
-The general idea is that you run the same build commands as regular
-Yari but you point it to a different "content root" and then we run
-tests (using `jest`) on what got built.
+## Functional tests
 
-This way we can trigger specific `kumascript` macros and other effects
-and know exactly what it should have become.
+This is primarily to test the outcome of the Yari builder. You run `yarn build`
+in a way so it builds based on the content here in `/testing/` and then,
+using `jest`, we analyze the generated `index.json`, `index.html`, and
+file attachments generated from that build.
 
-## Local development
+To run these tests, first run:
 
-When hacking on the functional tests it's important that you can do
-this _without_ continuous integration (CI). That way you don't need to
-wait for CI to run your every commit in a pull request (PR).
-
-Also, you can start the full development environment with:
-
-```bash
+```sh
+export ENV_FILE=testing/.env
+yarn prepare-build
+yarn build
 yarn start:static-server
 ```
 
-That will start the `server` (Express
-serve on <http://localhost:5000>), and the client (`create-react-app` on
-<http://localhost:3000>).
-To test it go to:
-<http://localhost:3000/en-US/docs/Web/Foo>
-for example.
-
-Now you should be able to make edits and notice automatic reloading.
-But remember to unstage edits, otherwise it might break the automated
-test suite.
-
-The first thing to do is to run the _whole_ test suite now:
-
-```bash
-./testing/scripts/functional-test.sh
-```
-
-That includes all the important pre-build, build, and starting the `jest`
-tests. But once you've run that once, you can "break it apart" and just
-run the `jest` test suite and this you can run repeatedly:
-
-```bash
-yarn test:testing
-```
-
-This assumes you've set the appropriate environment variables and built the
-content. Alternatively, you can run `./testing/scripts/functional-test.sh`
-which takes care of all of these things.
-
-## Conditional testing in CI
-
-In GitHub Actions, instead of trying to optimize certain tests, just skip
-them if none of the files that affect the tests have changed.
-
-One such example is the tests for the `kumascript` source code plus macros.
-Use this technique heartily to speed up the continuous integration.
-
-## Caveats
-
-- At the moment it might not work on Windows. It should. At least the "Local
-  development"
-- We should put all known `kumascript` macros in some form. At least the ones
-  intend to support.
-- There is no guidelines for how to add tests but feel free to pile on
-  sample pages. You should not be afraid to add more.
-
-## Writing headless tests
-
-Headless tests are when we use [`puppeteer`](https://pptr.dev/) to view pages
-rendered from the functional tests. If it helps, the non-headless tests
-use `fs.readFileSync()` and `cheerio` etc. to inspect the created files in
-`client/build/**`.
-
-We use [`jest-puppeteer`](https://github.com/smooth-code/jest-puppeteer) and
-its README is very relevant to help you write tests. Here's the link to
-the [document for `expect-puppeteer`](https://github.com/smooth-code/jest-puppeteer/blob/master/packages/expect-puppeteer/README.md#api)
-which is your best friend when writing headless tests.
-
-To get started, open `testing/tests/headless.test.js` and make changes there.
-If you need a new page to open, you need to add that to
-`testing/content/files/...` first. Then it becomes possible to open it
-based on the slug you typed.
-
-Before running the tests, start the function dev server instance:
-
-```sh
-yarn start:functional
-```
-
-Before you proceed, appreciate that you can now open `http://localhost:5000`
-and from there open any page (for example using the search) and what you
-see in your browser is what you can expect to see in `jest-puppeteer` in
-the tests.
-
-In a separate terminal, run all the tests:
-
-```sh
-./testing/scripts/functional-test.sh
-```
-
-As you notice, that shell script actually does a lot. It prebuilds the
-assets, builds the actual documents, and it runs _all_ `jest` tests.
-
-To just run all `jest` tests, just run the last command:
+This will start a server on <http://localhost:5000> which serves the built content.
+Now, in a separate terminal, you can run:
 
 ```sh
 yarn test:testing
 ```
 
-Which is just an alias to start `jest` which means you can apply your own
-parameters. For example, this starts the `jest` watcher:
+The last command is just an alias for `jest` so you can run, for example:
 
 ```sh
-yarn test:testing --watch
+# See jest help
+yarn test:testing --help
+# Interactive re-run every time a file is saved and exit on the first error
+yarn test:testing --watch --bail
+# Alias for searching by test file name. I.e. only run `index.test.js`
+yarn test:testing index
 ```
 
-Once the `jest` watcher has started press "p" and type `headless`
-and now it only (re-runs) tests the headless tests.
+## Headless tests
 
-**Note!** that only in local development do you need to start the functional
-server first. In GitHub Actions (CI), `jest-puppeteer` is instructed to start
-the server as a setup (and teardown) step.
-
-## Debugging headless tests
-
-It's very likely that you'll want to see and test
-what the headless browser sees. To help with that there are a couple of
-useful tricks.
-
-The first trick is to set the `TESTING_OPEN_BROWSER=true` environment
-variable.
+Headless tests are all about using a headless browser to browse the built
+HTML files with `playwright`. It's based on the same steps as above, so first:
 
 ```sh
-TESTING_OPEN_BROWSER=true yarn test:testing --watch
-```
-
-Now, you'll see a browser window open and shut as the tests run.
-It's unlikely that you're fast enough to see what it's in that browser
-but what you can do is to "pause" the tests a little by injecting
-this line (temporarily) into your test code:
-
-```javascript
-await jestPuppeteer.debug();
-```
-
-Note that when you use `await jestPuppeteer.debug()` the real browser window will
-close as soon as the test failed with only a tiny timeout. To resolve that, add
-a third option to the test with the number of seconds you want it to wait. E.g.
-
-```javascript
-it("should show your settings page", async () => {
-  const url = testURL("/en-US/settings");
-  await page.goto(url);
-  await jestPuppeteer.debug();
-  await expect(page).toMatchElement("h1", { text: "Account settings" });
-}, 9999);
-```
-
-Another useful trick is to dump the DOM HTML on the console. You can
-put this in anywhere:
-
-```javascript
-console.log(await page.content());
-```
-
-## Headless tests should only test static server
-
-To run the functional tests you need a server (on `localhost:5000`) and
-it should just be a static file server. You _can_ use `yarn start:functional`
-but that server has many tricks such as building on-the-fly.
-
-A better server to use is:
-
-```sh
+export ENV_FILE=testing/.env
+yarn prepare-build
+yarn build
 yarn start:static-server
 ```
 
-Now you can run just the functional `jest` tests over and over:
+Now, to run the actual headless tests you run:
 
 ```sh
-export TESTING_START_SERVER=false  # should be false by default anyway
-./testing/scripts/functional-test.sh
+yarn test:headless
 ```
 
-If in doubt, look at the file `.github/workflows/testing.yml` and what it does.
+In CI automation it automatically picks up the browser binary according to the
+setting `channel` in the file `/playwright.config.js`. For local development on
+your laptop you might need to run:
+
+```sh
+npx playwright install chrome
+```
+
+(assuming `chrome` is what `channel` is set to in `playwright.config.js`)
+
+### Debugging `playwright` tests
+
+`playwright` has powerful debugging capabilities. Your best guide is
+the [Debugging tools](https://playwright.dev/docs/debug) documentation. But
+here are some quick tips to get you started.
+
+```sh
+# Just run the test by a test description string
+yarn test:headless -g 'show your settings page'
+# Make it NOT headless by making a browser pop up for each test
+yarn test:headless --headed
+# Exclusively run the tests in headless.sitesearch.spec.js only
+playwright test headless.sitesearch
+```
+
+When you use `--headed` the browser will almost flash before your eyes
+and close down before you get a chance to see what the browser is seeing.
+What you can do is inject one line of `await page.pause();` anywhere inside
+the test code. Now, next time you run, with `--headed`, a GUI should appear
+that pauses and allows you to skip and resume tests.
+
+## Headless tests of the development environment
+
+There are two kinds of headless tests that _don't_ use the `/testing/content/`
+and `/testing/translated-content/` fixtures. The first one is testing what
+Yari developers would see. To run these you first need to run, in one terminal:
+
+```sh
+yarn dev
+```
+
+And in another terminal, run:
+
+```sh
+export TESTING_DEVELOPING=true
+yarn test:developing
+```
+
+**Note!** To avoid "cross-contamination" with the other fixture-based headless
+tests, when doing this start a fresh new terminal so that previously set
+environment variables don't interfere.
+
+The other kind of headless tests is those that test how Yari would work from the
+perspective of using the packaged `@mdn/yari` from within the `mdn/content`
+repository. To run these you need to go into your `mdn/content` repo and there
+first run in one terminal:
+
+```sh
+cd /where/is/mdn/content
+yarn start
+```
+
+Now, to run the tests in another terminal:
+
+```sh
+cd /back/to/mdn/yari
+export TESTING_DEVELOPING=true
+export DEVELOPING_SKIP_DEV_URL=true
+yarn test:developing
+```
+
+**Note!** It's admittedly many permutations of testing and it's hard to
+remember which is doing what. But as a tip, open the various files in
+`.github/workflows/*.yml` and look through how they do it.
+
+## Unit tests
+
+There are currently 2 types of unit tests. The tests are located outside the
+`/testing/` directory.
+
+First to unit test some React components. This tests the `client/src/**/*.test.tsx`
+files:
+
+```sh
+yarn test:client
+```
+
+Secondly, to unit test the `kumascript` tests. These tests are located in
+`kumascript/tests/*.test.js`:
+
+```sh
+yarn test:kumascript
+```
+
+In both of these cases, it's `jest` so you can do things like adding
+`--watch --bail` for example to interactively test over and over.
+
+### Unit test deployer Python tests
+
+See the file `deployer/README.md` for instructions.
+
+## Local development for debugging tests
+
+Going back to testing the content in `/testing/content/files/` and
+`/testing/translated-content/files/` you might find it fiddly to see what
+you're testing. The `--headed` flag to `yarn test:headless` is good but it's
+a bit hard to see what you're getting to get around that you can do the
+following:
+
+```sh
+echo 'CONTENT_ROOT=testing/content/files' >> .env
+echo 'CONTENT_TRANSLATED_ROOT=testing/translated-content/files' >> .env
+yarn dev
+```
+
+Now you can browse both <http://localhost:3000> and <http://localhost:5000>
+to see what the content fixtures are.
+For example, you can go to <http://localhost:3000/en-US/docs/Web/Foo>.
+Again, remember to start with a fresh new terminal so that no other testing
+related environment variables. And remember to undo these changes from
+your personal `.env` when you're done.

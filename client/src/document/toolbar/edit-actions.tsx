@@ -50,7 +50,7 @@ export function EditActions({
           setEditorOpeningError(new Error(`${response.status}: ${body}`));
         }
       }
-    } catch (err) {
+    } catch (err: any) {
       setEditorOpeningError(err);
     }
   }

@@ -97,7 +97,7 @@ function checkSidebarResult(html, locale, isUnderWebExtAPI = false) {
   // Lint the HTML
   expect(lintHTML(html)).toBeFalsy();
   const dom = JSDOM.fragment(html);
-  const section = dom.querySelector("section.Quick_links");
+  const section = dom.querySelector("section#Quick_links");
   // Check the basics
   expect(section).toBeTruthy();
   // Check the total number of top-level list items that can be toggled

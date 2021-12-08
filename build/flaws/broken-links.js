@@ -4,7 +4,7 @@ const path = require("path");
 const fromMarkdown = require("mdast-util-from-markdown");
 const visit = require("unist-util-visit");
 
-const { Archive, Document, Redirect, Image } = require("../../content");
+const { Document, Redirect, Image } = require("../../content");
 const { FLAW_LEVELS } = require("../constants");
 const { findMatchesInText } = require("../matches-in-text");
 const { DEFAULT_LOCALE, VALID_LOCALES } = require("../../libs/constants");
@@ -270,10 +270,7 @@ function getBrokenLinksFlaws(doc, $, { rawContent }, level) {
       const found = Document.findByURL(hrefNormalized);
       if (!found) {
         // Before we give up, check if it's an image.
-        if (
-          !Image.findByURL(hrefNormalized) &&
-          !Archive.isArchivedURL(hrefNormalized)
-        ) {
+        if (!Image.findByURL(hrefNormalized)) {
           // Even if it's a redirect, it's still a flaw, but it'll be nice to
           // know what it *should* be.
           const resolved = Redirect.resolve(hrefNormalized);
