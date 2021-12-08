@@ -7,7 +7,12 @@
   display: flex;
   position: relative;
 
+  .top-level-entry {
+    position: relative;
+  }
+
   @media screen and (min-width: $screen-md) {
+    .top-navigation-main & .top-level-entry,
     .notifications-label {
       display: none;
     }
@@ -15,22 +20,9 @@
 }
 
 .notifications-button {
-  --btn-color: var(--text-primary);
-  --button-padding: 0;
-
-  padding: 0;
-  width: 100%;
-
+  &,
   .icon {
     display: none;
-  }
-
-  &.has-icon .button-wrap {
-    --button-font: var(--type-body-l);
-  }
-
-  &:hover {
-    --button-bg: transparent;
   }
 
   @media screen and (max-width: $screen-md) {
@@ -41,10 +33,7 @@
   }
 
   @media screen and (min-width: $screen-md) {
-    display: flex;
-    margin: initial;
-    padding: 0;
-
+    &,
     .icon {
       display: inline-block;
     }
@@ -63,7 +52,9 @@
   line-height: 1;
   margin-left: 0.25rem;
   padding: 2px;
+  position: relative;
   text-align: center;
+  top: -1px;
   width: 1.5em;
 
   @media screen and (min-width: $screen-md) {

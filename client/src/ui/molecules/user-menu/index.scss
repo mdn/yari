@@ -4,18 +4,6 @@
   position: relative;
 
   .user-menu-toggle {
-    --button-font: var(--type-body-l);
-    --btn-color: var(--text-primary);
-    --button-padding: 0;
-
-    .button-wrap {
-      background: none;
-      gap: 0.5rem;
-      justify-content: flex-start;
-      padding: 0;
-      text-transform: initial;
-    }
-
     .avatar {
       margin-right: 0;
     }

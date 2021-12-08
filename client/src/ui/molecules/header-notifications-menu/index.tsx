@@ -10,6 +10,7 @@ import useSWR, { mutate } from "swr";
 
 import "./index.scss";
 import { NotificationData } from "../../../types/notifications";
+import { Link } from "react-router-dom";
 
 dayjs.extend(relativeTime);
 
@@ -109,20 +110,9 @@ export const HeaderNotificationsMenu = () => {
     }
   }
 
-  return (
-    <div className="notifications-menu">
-      <Button
-        type="action"
-        ariaHasPopup={"menu"}
-        ariaControls={menuId}
-        extraClasses="top-level-entry notifications-button"
-        aria-label={`You currently have ${notificationCount} notifications`}
-        ariaExpanded={menuId === visibleSubMenuId}
-        icon="bell"
-        onClickHandler={() => {
-          toggleSubMenu(menuId);
-        }}
-      >
+  function drawNotificationButtonContents() {
+    return (
+      <>
         <span className="notifications-label">Notifications</span>
         <span
           className={`notifications-count-container${
@@ -131,6 +121,29 @@ export const HeaderNotificationsMenu = () => {
         >
           {notificationCount}
         </span>
+      </>
+    );
+  }
+
+  return (
+    <div className="notifications-menu">
+      <Link to={`/${locale}/plus/notifications/`} className="top-level-entry">
+        {drawNotificationButtonContents()}
+      </Link>
+
+      <Button
+        type="action"
+        ariaHasPopup={"menu"}
+        ariaControls={menuId}
+        extraClasses="notifications-button"
+        aria-label={`You currently have ${notificationCount} notifications`}
+        ariaExpanded={menuId === visibleSubMenuId}
+        icon="bell"
+        onClickHandler={() => {
+          toggleSubMenu(menuId);
+        }}
+      >
+        {drawNotificationButtonContents()}
       </Button>
 
       <ul

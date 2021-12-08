@@ -109,11 +109,7 @@ button {
   --button-color: var(--text-secondary);
   --button-font: var(--type-label-s);
 
-  .button-wrap {
-    text-transform: uppercase;
-  }
-
-  &.has-icon .button-wrap {
+  &.has-icon {
     --button-font: var(--type-emphasis-m);
     text-transform: initial;
   }
@@ -128,6 +124,10 @@ button {
 
   &:focus {
     --button-border-color: var(--button-secondary-border-focus);
+  }
+
+  .button-wrap {
+    text-transform: uppercase;
   }
 }
 
