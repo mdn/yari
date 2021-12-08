@@ -2,6 +2,13 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
+/* Adding the following based on https://developer.mozilla.org/en-US/docs/Web/MathML/Fonts */
+@font-face {
+  font-family: "STIXRegular";
+  src: url("./font/STIXTwoMath-Regular.otf") format("opentype");
+  font-weight: normal;
+}
+
 /* See https://github.com/fred-wang/mathml.css */
 
 @namespace "http://www.w3.org/1998/Math/MathML";
@@ -9,6 +16,7 @@
 /* math */
 math {
   display: inline;
+  font-family: "STIXRegular";
   text-indent: 0;
 }
 math[display="block"] {
