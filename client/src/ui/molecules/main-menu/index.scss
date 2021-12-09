@@ -41,10 +41,10 @@ ul.main-menu {
 
 /* Enable hover interaction if javascript is not available */
 @media screen and (min-width: $screen-md) {
-  ul.main-menu {
-    .top-level-entry-container:hover,
-    .top-level-entry-container:focus-within {
-      ul {
+  ul.main-menu .top-level-entry-container {
+    &:hover,
+    &:focus-within {
+      .submenu {
         display: block;
       }
     }

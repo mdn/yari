@@ -67,7 +67,7 @@ export const UserMenu = () => {
   }
 
   return (
-    <div className="user-menu">
+    <div className="top-level-entry-container user-menu">
       <Button
         type="action"
         id={`${userMenuItems.id}-button`}
@@ -79,8 +79,9 @@ export const UserMenu = () => {
         }}
       >
         <Avatar userData={userData} />
-        <span className="hide-desktop">{userData.email}</span>
+        <span className="user-menu-id">{userData.email}</span>
       </Button>
+
       <Submenu
         menuEntry={userMenuItems}
         visibleSubMenuId={visibleSubMenuId}

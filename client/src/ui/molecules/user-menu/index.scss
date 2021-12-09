@@ -3,51 +3,49 @@
 .user-menu {
   position: relative;
 
-  .user-menu-toggle {
-    .avatar {
-      margin-right: 0;
-    }
-
-    @media screen and (max-width: $screen-md) {
-      &:hover {
-        --button-bg: transparent;
-      }
+  @media screen and (max-width: $screen-md) {
+    .user-menu-toggle:hover {
+      --button-bg: transparent;
     }
   }
 
   @media screen and (min-width: $screen-md) {
-    /* !!! */
-    .user-menu-toggle.user-menu-toggle {
-      padding-right: 1.75rem;
-    }
+    /*
+      The user menu button is shaped like an avatar and thus has some
+      very specific focus and hover states.
+    */
+    .button.user-menu-toggle {
+      &:hover,
+      &:focus {
+        &,
+        .button-wrap {
+          --button-border-color: transparent;
+          background: transparent;
+          box-shadow: none;
+        }
 
-    &[aria-haspopup="menu"] {
+        .avatar {
+          box-shadow: var(--focus-effect);
+        }
+      }
+
       &::after {
-        position: absolute;
-        right: 0;
+        display: none;
       }
     }
-  }
-}
 
-.submenu.my-mdn-plus.show {
-  @media screen and (min-width: $screen-md) {
-    left: initial;
-    right: 0;
-    top: 50px;
-  }
+    .user-menu-id {
+      display: none;
+    }
 
-  a,
-  .usermenu-email-desktop {
-    padding: 0.5rem;
-  }
+    .usermenu-email-desktop {
+      border-bottom: 1px solid var(--border-primary);
+    }
 
-  .usermenu-email-desktop {
-    border-bottom: 1px solid var(--border-primary);
-  }
-
-  .submenu-item-heading {
-    font-weight: normal;
+    .submenu {
+      left: initial;
+      right: 0;
+    }
   }
 }
 
@@ -56,11 +54,5 @@
 
   @media screen and (min-width: $screen-md) {
     display: inline-block;
-  }
-}
-
-@media screen and (min-width: $screen-md) {
-  .hide-desktop {
-    display: none;
   }
 }
