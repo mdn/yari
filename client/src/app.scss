@@ -41,6 +41,11 @@
   --icon-size: 1rem;
 }
 
+body {
+  background-color: var(--background-primary);
+  color: var(--text-primary);
+}
+
 main {
   min-height: 80vh;
 }

@@ -147,6 +147,7 @@ a.page-not-created {
 
   a {
     text-decoration: underline;
+    color: var(--text-link);
 
     &:hover,
     &:focus {
@@ -165,7 +166,7 @@ a.page-not-created {
     &[id^="attr-"] {
       &:link,
       &:visited {
-        color: $mdn-color-dark-grey-90;
+        color: var(--text-link);
         text-decoration: none;
       }
 
@@ -181,7 +182,7 @@ a.page-not-created {
   }
 
   [aria-current] {
-    color: $mdn-color-dark-grey-90;
+    color: var(--text-link);
     font-weight: bold;
     text-decoration: none;
   }
@@ -190,13 +191,13 @@ a.page-not-created {
   h3 {
     a:link,
     a:visited {
-      color: $mdn-color-dark-grey-90;
+      color: var(--text-link);
       text-decoration: none;
     }
 
     a:hover,
     a:focus {
-      color: $mdn-color-dark-grey-90;
+      color: var(--text-link);
       text-decoration: underline;
     }
 
