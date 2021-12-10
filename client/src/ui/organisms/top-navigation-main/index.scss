@@ -36,11 +36,11 @@
     display: none;
   }
 
-  .button {
+  .button.action {
     --button-border-color: transparent;
   }
 
-  .button:hover {
+  .button.action:hover {
     --button-bg: var(--accent-primary-engage);
   }
 
