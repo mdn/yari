@@ -9,7 +9,6 @@ import { Doc } from "../../../document/types";
 import "./index.scss";
 
 export const ArticleActionsContainer = ({ doc }: { doc: Doc }) => {
-  const [isMobile, setIsMobile] = React.useState(false);
   const [showArticleActionsMenu, setShowArticleActionsMenu] =
     React.useState(false);
 
@@ -21,22 +20,6 @@ export const ArticleActionsContainer = ({ doc }: { doc: Doc }) => {
       setShowArticleActionsMenu(!showArticleActionsMenu);
     }
   }
-
-  function updateViewportState(state) {
-    setIsMobile(state.matches);
-  }
-
-  React.useEffect(() => {
-    if (typeof window !== "undefined" && window.matchMedia) {
-      const mql = window.matchMedia("(max-width: 768px)");
-
-      // add an event listener to report as the viewport changes
-      mql.addEventListener("change", updateViewportState);
-
-      // immediately report our initial state
-      updateViewportState(mql);
-    }
-  }, []);
 
   return (
     <div className="article-actions-container">

@@ -20,7 +20,6 @@ export const ArticleActions = ({
   showArticleActionsMenu: boolean;
   setShowArticleActionsMenu: (show: boolean) => void;
 }) => {
-  const [isMobile, setIsMobile] = React.useState(false);
   const userData = useUserData();
   const isSubscriber = userData && userData.isSubscriber;
 
@@ -33,59 +32,38 @@ export const ArticleActions = ({
     }
   }
 
-  function updateViewportState(state) {
-    setIsMobile(state.matches);
-  }
-
   // @TODO we will need the following when including the language drop-down
   // const translations = doc.other_translations || [];
 
-  React.useEffect(() => {
-    if (typeof window !== "undefined" && window.matchMedia) {
-      const mql = window.matchMedia("(max-width: 63.9375em)");
-
-      // add an event listener to report as the viewport changes
-      mql.addEventListener("change", updateViewportState);
-
-      // immediately report our initial state
-      updateViewportState(mql);
-    }
-  }, []);
-
   return (
-    <div
-      className={`article-actions ${
-        isMobile && showArticleActionsMenu ? "show-utilities" : ""
-      }`}
-    >
-      {/* styling for icon is defined in client/src/ui/atoms/icon-button/index.scss */}
-      {isMobile && (
-        <Button
-          type="action"
-          extraClasses="article-actions-toggle"
-          onClickHandler={toggleArticleActionsMenu}
-          icon="cancel"
-        >
-          <span className="article-actions-dialog-heading">
-            Article actions
-          </span>
-        </Button>
+    <div className="article-actions">
+      {isSubscriber && (
+        <>
+          <Button
+            type="action"
+            extraClasses="article-actions-toggle"
+            onClickHandler={toggleArticleActionsMenu}
+            icon="cancel"
+          >
+            <span className="article-actions-dialog-heading">
+              Article actions
+            </span>
+          </Button>
+          <ul className="article-actions-entries">
+            <>
+              <li className="article-actions-entry">
+                <BookmarkToggle doc={doc} />
+              </li>
+              <li className="article-actions-entry">
+                <NotificationsWatchMenu doc={doc} />
+              </li>
+              <li className="article-actions-entry">
+                <ThemeSwitcher />
+              </li>
+            </>
+          </ul>
+        </>
       )}
-      <ul className="article-actions-entries">
-        {isSubscriber && (
-          <>
-            <li className="article-actions-entry">
-              <BookmarkToggle doc={doc} />
-            </li>
-            <li className="article-actions-entry">
-              <NotificationsWatchMenu doc={doc} />
-            </li>
-            <li className="article-actions-entry">
-              <ThemeSwitcher />
-            </li>
-          </>
-        )}
-      </ul>
     </div>
   );
 };
