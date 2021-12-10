@@ -24,29 +24,28 @@ export const ArticleActions = ({
   const isSubscriber = userData && userData.isSubscriber;
 
   function toggleArticleActionsMenu(event) {
-    const articleActionsMenuButton = event.target;
-
-    if (articleActionsMenuButton) {
-      articleActionsMenuButton.classList.toggle("icon-cancel");
-      setShowArticleActionsMenu(!showArticleActionsMenu);
-    }
+    setShowArticleActionsMenu(!showArticleActionsMenu);
   }
 
   // @TODO we will need the following when including the language drop-down
   // const translations = doc.other_translations || [];
 
   return (
-    <div className="article-actions">
+    <>
       {isSubscriber && (
-        <>
+        <div
+          className={`article-actions${
+            showArticleActionsMenu ? " show-actions" : ""
+          }`}
+        >
           <Button
             type="action"
             extraClasses="article-actions-toggle"
             onClickHandler={toggleArticleActionsMenu}
-            icon="cancel"
+            icon={showArticleActionsMenu ? "cancel" : "ellipses"}
           >
             <span className="article-actions-dialog-heading">
-              Article actions
+              Article Actions
             </span>
           </Button>
           <ul className="article-actions-entries">
@@ -62,8 +61,8 @@ export const ArticleActions = ({
               </li>
             </>
           </ul>
-        </>
+        </div>
       )}
-    </div>
+    </>
   );
 };

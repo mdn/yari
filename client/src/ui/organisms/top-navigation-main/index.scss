@@ -7,7 +7,7 @@
   padding: 1rem 0;
   width: 100%;
 
-  .is-open & {
+  .show-nav & {
     display: flex;
     flex-direction: column;
   }
@@ -139,7 +139,7 @@
     top: inherit;
     z-index: inherit;
 
-    .is-open & {
+    .show-nav & {
       flex-direction: row;
     }
 

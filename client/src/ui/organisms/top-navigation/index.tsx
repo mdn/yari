@@ -20,7 +20,7 @@ export function TopNavigation() {
   const assistiveText = showMainMenu ? "Close main menu" : "Open main menu";
 
   return (
-    <header className={`top-navigation${showMainMenu ? " is-open" : ""}`}>
+    <header className={`top-navigation${showMainMenu ? " show-nav" : ""}`}>
       <div className="container">
         <div className="top-navigation-wrap">
           <Logo />

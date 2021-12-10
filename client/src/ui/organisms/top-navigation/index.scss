@@ -21,7 +21,7 @@
     height: var(--top-nav-height);
   }
 
-  &.is-open .container {
+  &.show-nav .container {
     height: auto;
   }
 }
