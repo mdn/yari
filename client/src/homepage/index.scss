@@ -1,5 +1,15 @@
 @use "../ui/vars" as *;
 
+.top-navigation {
+  background: transparent !important; // I don't know how to do this better, we need a state for the top nav that doesn't use a background ideally.
+  filter: saturate(0);
+  mix-blend-mode: luminosity;
+
+  .top-navigation-main {
+    background: transparent !important;
+  }
+}
+
 .homepage {
   .homepage-hero {
     width: 100%;
@@ -28,10 +38,19 @@
       /* Terrible things Daryl's done to make the search look okay for now */
       .header-search {
         width: 100%;
-        border: 1px solid var(--border-primary);
-        border-radius: 10rem;
         max-height: 4rem;
         display: flex;
+
+        form {
+          outline: 1px solid var(--border-primary);
+          border-radius: 10rem;
+          background: var(--background-primary);
+        }
+
+        form[aria-expanded="true"] {
+          border-radius: 2rem 2rem 0 0;
+          box-shadow: var(--shadow-02);
+        }
 
         button {
           border: 1px solid transparent;
@@ -73,11 +92,39 @@
             &:hover {
               background: none;
               border: 1px solid transparent;
+
+              .icon {
+                background-color: var(--text-primary);
+              }
             }
 
             .icon {
               background-color: var(--icon-primary);
               border: none;
+            }
+          }
+        }
+        .search-results {
+          top: 4rem;
+          outline: 1px solid var(--border-primary);
+          border-radius: 0 0 2rem 2rem;
+          text-align: left;
+          box-shadow: var(--shadow-02);
+
+          .result-item {
+            padding: 0.5rem 1.5rem;
+
+            mark {
+              background: none;
+            }
+
+            span {
+              font-weight: normal;
+              color: var(--text-secondary);
+            }
+
+            small {
+              color: var(--text-secondary);
             }
           }
         }
@@ -96,11 +143,13 @@
         #9752fa 47.63%,
         #ffe600 82.74%
       );
+
       mix-blend-mode: hard-light;
       opacity: 0.2;
-      transform: skewY(-5deg);
+      transform: skewY(-3deg);
       height: 25rem;
       transform-origin: 0;
+      overflow-y: clip;
     }
   }
 }

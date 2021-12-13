@@ -1,5 +1,6 @@
 import "./index.scss";
 import { Search } from "../ui/molecules/search";
+import Mandala from "./mandala";
 
 export function Homepage() {
   return (
@@ -18,6 +19,9 @@ export function Homepage() {
             </p>
             <Search />
           </header>
+          <div className="homepage-hero-bg">
+            <Mandala />
+          </div>
         </div>
       </div>
     </main>
