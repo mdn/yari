@@ -3,6 +3,10 @@
 .user-menu {
   position: relative;
 
+  .submenu-header {
+    display: none;
+  }
+
   @media screen and (max-width: $screen-md) {
     .user-menu-toggle:hover {
       --button-bg: transparent;
@@ -34,12 +38,17 @@
       }
     }
 
-    .user-menu-id {
-      display: none;
+    .submenu-header {
+      display: block;
+      margin-bottom: 0.5rem;
     }
 
-    .usermenu-email-desktop {
-      border-bottom: 1px solid var(--border-primary);
+    .signout-container {
+      margin-top: 0.5rem;
+    }
+
+    .user-menu-id {
+      display: none;
     }
 
     .submenu {
@@ -47,13 +56,5 @@
       max-width: max-content;
       right: 0;
     }
-  }
-}
-
-.show-desktop-inline-block {
-  display: none;
-
-  @media screen and (min-width: $screen-md) {
-    display: inline-block;
   }
 }

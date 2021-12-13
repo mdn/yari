@@ -61,6 +61,15 @@
   }
 }
 
+.submenu-header {
+  display: block;
+  padding: 1rem;
+
+  @media screen and (min-width: $screen-md) {
+    border-bottom: 1px solid var(--border-primary);
+  }
+}
+
 .submenu-icon {
   background-color: var(--icon-primary);
   background-size: 10px;
