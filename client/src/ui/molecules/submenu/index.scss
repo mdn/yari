@@ -100,8 +100,16 @@
   }
 }
 
+.submenu-item-heading,
 .submenu-item {
   font: var(--type-body-m);
+
+  @media screen and (min-width: $screen-md) {
+    // If there is sub-text associated with this heading, make it bold.
+    &:not(:only-child) {
+      font: var(--type-emphasis-m);
+    }
+  }
 }
 
 .submenu-item-description {

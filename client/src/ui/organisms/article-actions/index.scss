@@ -25,6 +25,10 @@
     }
   }
 
+  .button.action .button-wrap {
+    text-transform: initial;
+  }
+
   @media screen and (min-width: $screen-md) {
     display: block;
     margin-left: auto;
