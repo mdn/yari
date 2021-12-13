@@ -78,44 +78,49 @@ export const ThemeSwitcher = () => {
         ariaHasPopup={"menu"}
         ariaExpanded={menuId === visibleSubMenuId}
         icon="theme"
-        extraClasses="theme-switcher-menu mobile-only"
+        extraClasses="theme-switcher-menu"
         onClickHandler={() => {
           toggleSubMenu(menuId);
         }}
       >
         Theme
       </Button>
+
       <ul
-        className={`${visibleSubMenuId ? "themes-menu show" : "themes-menu"}`}
+        className={`${
+          visibleSubMenuId
+            ? "submenu themes-menu  show"
+            : "sub-menu themes-menu"
+        }`}
         id={menuId}
       >
         <li>
-          <Button
-            type="action"
-            extraClasses={
+          <button
+            type="button"
+            className={`submenu-item ${
               activeTheme === "light" ? "active-menu-item" : undefined
-            }
-            onClickHandler={() => {
+            }`}
+            onClick={() => {
               switchTheme("light");
               setVisibleSubMenuId(null);
             }}
           >
             Light
-          </Button>
+          </button>
         </li>
         <li>
-          <Button
-            type="action"
-            extraClasses={
+          <button
+            type="button"
+            className={`submenu-item ${
               activeTheme === "dark" ? "active-menu-item" : undefined
-            }
-            onClickHandler={() => {
+            }`}
+            onClick={() => {
               switchTheme("dark");
               setVisibleSubMenuId(null);
             }}
           >
             Dark
-          </Button>
+          </button>
         </li>
       </ul>
     </div>

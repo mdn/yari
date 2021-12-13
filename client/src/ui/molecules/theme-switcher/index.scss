@@ -12,11 +12,6 @@
     border-bottom: 0;
   }
 
-  &::after {
-    position: absolute;
-    right: 0.5rem;
-  }
-
   .themes-menu {
     background-color: var(--background-primary);
     display: none;
@@ -24,47 +19,21 @@
     margin: 0;
     padding: 0.5rem;
 
-    button {
-      align-items: center;
-      background: none;
-      border-bottom: 1px solid var(--border-secondary);
-      color: var(--text-primary);
-      display: flex;
-      gap: 0.5rem;
-      height: 100%;
-      padding: 0.5rem;
-      width: 100%;
-
-      @media screen and (min-width: $screen-md) {
-        border-bottom: 0;
-        border-radius: 0.25rem;
-        gap: initial;
-      }
-
-      &:hover,
-      &:focus {
-        background-color: var(--accent-primary-engage);
-        text-decoration: none;
-      }
-    }
-
     @media screen and (min-width: $screen-md) {
       &.show {
         border-radius: 0.5rem;
         border: 1px solid var(--border-primary);
         box-shadow: var(--shadow-01);
-        display: block;
-        gap: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
         left: initial;
+        max-width: max-content;
         padding: 0.5rem;
         position: absolute;
         right: 0;
         top: 50px;
         z-index: $bring-to-front;
-      }
-
-      button {
-        text-align: left;
       }
     }
 
@@ -77,10 +46,6 @@
 
     li {
       width: 100%;
-
-      @media screen and (max-width: $screen-sm) {
-        width: unset;
-      }
     }
   }
 }

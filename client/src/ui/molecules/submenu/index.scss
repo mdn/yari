@@ -16,7 +16,8 @@
     width: 100%;
   }
 
-  a {
+  a,
+  .submenu-item {
     align-items: center;
     border-bottom: 1px solid var(--border-secondary);
     color: var(--text-primary);
@@ -50,12 +51,9 @@
     width: 25rem;
     z-index: 1000;
 
-    a {
+    .submenu-item {
       border-bottom: 0;
       border-radius: 0.25rem;
-    }
-
-    li a {
       padding: 1rem;
     }
   }
@@ -64,6 +62,14 @@
 .submenu-header {
   display: block;
   padding: 1rem;
+
+  .submenu-item {
+    padding: 0;
+  }
+
+  .submenu-item:hover {
+    background: none;
+  }
 
   @media screen and (min-width: $screen-md) {
     border-bottom: 1px solid var(--border-primary);
@@ -94,15 +100,8 @@
   }
 }
 
-.submenu-item-heading {
+.submenu-item {
   font: var(--type-body-m);
-
-  @media screen and (min-width: $screen-md) {
-    // If there is sub-text associated with this heading, make it bold.
-    &:not(:only-child) {
-      font: var(--type-emphasis-m);
-    }
-  }
 }
 
 .submenu-item-description {
