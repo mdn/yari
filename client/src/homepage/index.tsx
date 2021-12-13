@@ -1,6 +1,7 @@
 import "./index.scss";
 import { HomepageHero } from "./homepage-hero";
 import RecentContributions from "./recent-contributions";
+import { ContributorSpotlight } from "./contributor-spotlight";
 
 export function Homepage() {
   return (
@@ -63,6 +64,7 @@ export function Homepage() {
           </div>
         </div>
         <RecentContributions />
+        <ContributorSpotlight />
       </div>
     </main>
   );
