@@ -29,7 +29,7 @@ export default function SignOut() {
 
   return (
     <form
-      className="sign-out-form"
+      className="signout-form"
       method="post"
       action={`${prefix}/users/fxa/login/logout/`}
       onSubmit={() => {

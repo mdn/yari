@@ -28,7 +28,7 @@ export const UserMenu = () => {
     items: [
       {
         label: userData.email || "",
-        extraClasses: "usermenu-email-desktop show-desktop-inline-block",
+        extraClasses: "submenu-header",
       },
       {
         url: FXA_SETTINGS_URL,
@@ -44,6 +44,7 @@ export const UserMenu = () => {
       },
       {
         component: SignOut,
+        extraClasses: "signout-container",
       },
     ],
   };
@@ -67,11 +68,11 @@ export const UserMenu = () => {
   }
 
   return (
-    <div className="user-menu">
+    <div className="top-level-entry-container user-menu">
       <Button
         type="action"
         id={`${userMenuItems.id}-button`}
-        extraClasses="user-menu-toggle with-icon-flex mobile-only"
+        extraClasses="top-level-entry menu-toggle user-menu-toggle "
         ariaHasPopup="menu"
         ariaExpanded={userMenuItems.id === visibleSubMenuId}
         onClickHandler={(event) => {
@@ -79,8 +80,9 @@ export const UserMenu = () => {
         }}
       >
         <Avatar userData={userData} />
-        <span className="hide-desktop">{userData.email}</span>
+        <span className="user-menu-id">{userData.email}</span>
       </Button>
+
       <Submenu
         menuEntry={userMenuItems}
         visibleSubMenuId={visibleSubMenuId}

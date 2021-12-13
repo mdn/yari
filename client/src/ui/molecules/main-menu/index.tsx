@@ -1,14 +1,12 @@
 import { useEffect, useRef, useState } from "react";
 
-import { useLocale } from "../../../hooks";
-
+import { GuidesMenu } from "../guides-menu";
 import { ReferenceMenu } from "../reference-menu";
 import { PlusMenu } from "../plus-menu";
 
 import "./index.scss";
 
 export default function MainMenu() {
-  const locale = useLocale();
   const previousActiveElement = useRef<null | HTMLButtonElement>(null);
   const mainMenuRef = useRef<null | HTMLUListElement>(null);
   const [visibleSubMenuId, setVisibleSubMenuId] = useState<string | null>(null);
@@ -51,11 +49,7 @@ export default function MainMenu() {
     <nav className="main-nav" aria-label="Main menu">
       <ul className="main-menu nojs" ref={mainMenuRef}>
         <ReferenceMenu />
-        <li>
-          <a href={`/${locale}/docs/Learn`} className="top-level-link">
-            Guides
-          </a>
-        </li>
+        <GuidesMenu />
         <PlusMenu />
       </ul>
     </nav>

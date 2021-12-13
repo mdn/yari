@@ -44,7 +44,12 @@ export const Submenu = ({
             {item.component ? (
               <item.component />
             ) : item.url ? (
-              <a href={item.url} onBlur={onBlurHandler} role="menuitem">
+              <a
+                href={item.url}
+                className="submenu-item"
+                onBlur={onBlurHandler}
+                role="menuitem"
+              >
                 {item.hasIcon && <div className={item.iconClasses}></div>}
                 <div className="submenu-content-container">
                   <div className="submenu-item-heading">{item.label}</div>
@@ -59,7 +64,7 @@ export const Submenu = ({
                 </div>
               </a>
             ) : (
-              <div key={`${menuEntry.id}-${index}`}>
+              <div key={`${menuEntry.id}-${index}`} className="submenu-item">
                 {item.hasIcon && <div className={item.iconClasses}></div>}
                 <div className="submenu-content-container">
                   <div className="submenu-item-heading">{item.label}</div>

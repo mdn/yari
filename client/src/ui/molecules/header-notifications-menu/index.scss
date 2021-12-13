@@ -7,62 +7,71 @@
   display: flex;
   position: relative;
 
-  .notifications-button {
-    color: var(--text-primary);
-    margin: 12px 0;
-    padding: 0;
-
-    @media screen and (min-width: $screen-md) {
-      display: flex;
-      margin: initial;
-      padding: 0;
-    }
+  .top-level-entry {
+    position: relative;
   }
 
-  .notifications-count-container {
-    background-color: var(--icon-secondary);
-    border-radius: 50%;
-    color: white;
-    display: inline-block;
-    height: 21px;
-    line-height: 1;
-    margin-left: 0.5rem;
-    padding: 2px;
-    text-align: center;
-    width: 21px;
-
-    @media screen and (min-width: $screen-md) {
-      background-color: transparent;
-      margin-left: initial;
-      padding: 0;
-
-      &::before {
-        background-color: var(--icon-primary);
-        background-size: 21px 21px;
-        content: "";
-        display: block;
-        height: 21px;
-        mask-image: url("~@mdn/dinocons/plus/bell.svg");
-        width: 21px;
-      }
+  @media screen and (min-width: $screen-md) {
+    .top-navigation-main & .top-level-entry,
+    .notifications-label {
+      display: none;
     }
+  }
+}
 
-    &.unread-notifications {
-      @media screen and (min-width: $screen-md) {
-        background-color: transparent;
+.notifications-button {
+  &,
+  .icon {
+    display: none;
+  }
 
-        &::before {
-          background-color: var(--accent-primary);
-          mask-image: url("~@mdn/dinocons/plus/notification.svg");
-        }
-      }
+  @media screen and (max-width: $screen-md) {
+    .button-wrap {
+      justify-content: flex-start;
+      text-transform: initial;
     }
   }
 
   @media screen and (min-width: $screen-md) {
-    .notifications-label,
-    .notifications-count {
-      display: none;
+    &,
+    .icon {
+      display: inline-block;
+    }
+  }
+}
+
+.notifications-count-container {
+  align-items: center;
+  background-color: var(--icon-secondary);
+  border-radius: 50%;
+  color: white;
+  display: inline-flex;
+  font: var(--type-body-s);
+  height: 1.5em;
+  justify-content: center;
+  line-height: 1;
+  margin-left: 0.25rem;
+  padding: 2px;
+  position: relative;
+  text-align: center;
+  top: -1px;
+  width: 1.5em;
+
+  @media screen and (min-width: $screen-md) {
+    display: none;
+
+    // The small dot that appears over the icon
+    &.has-unread {
+      background-color: var(--icon-information);
+      content: "";
+      display: block;
+      height: 8px;
+      position: absolute;
+      right: 0;
+      top: 8px;
+      width: 8px;
+      border: 1px solid #fff;
+      text-indent: -9999rem;
     }
   }
 }

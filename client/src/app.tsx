@@ -43,9 +43,6 @@ function Layout({ pageType, children }) {
         {children}
       </div>
       <Footer />
-
-      {/* Shown on mobile when main navigation is expanded to provide a clear distinction between the foreground menu and the page content */}
-      <div className="page-overlay hidden"></div>
     </>
   );
 }

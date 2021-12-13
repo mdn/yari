@@ -12,6 +12,10 @@
     }
   }
 
+  a {
+    color: var(--text-link);
+  }
+
   p.editor-opening-error {
     font-weight: bold;
   }

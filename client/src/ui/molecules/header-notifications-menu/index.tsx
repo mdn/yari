@@ -10,6 +10,7 @@ import useSWR, { mutate } from "swr";
 
 import "./index.scss";
 import { NotificationData } from "../../../types/notifications";
+import { Link } from "react-router-dom";
 
 dayjs.extend(relativeTime);
 
@@ -109,8 +110,27 @@ export const HeaderNotificationsMenu = () => {
     }
   }
 
+  function drawNotificationButtonContents() {
+    return (
+      <>
+        <span className="notifications-label">Notifications</span>
+        <span
+          className={`notifications-count-container${
+            notificationCount > 0 ? " has-unread" : ""
+          }`}
+        >
+          {notificationCount}
+        </span>
+      </>
+    );
+  }
+
   return (
     <div className="notifications-menu">
+      <Link to={`/${locale}/plus/notifications/`} className="top-level-entry">
+        {drawNotificationButtonContents()}
+      </Link>
+
       <Button
         type="action"
         ariaHasPopup={"menu"}
@@ -118,18 +138,12 @@ export const HeaderNotificationsMenu = () => {
         extraClasses="notifications-button"
         aria-label={`You currently have ${notificationCount} notifications`}
         ariaExpanded={menuId === visibleSubMenuId}
+        icon="bell"
         onClickHandler={() => {
           toggleSubMenu(menuId);
         }}
       >
-        <span className="notifications-label">Notifications</span>
-        <span
-          className={`notifications-count-container ${
-            notificationCount > 0 ? "unread-notifications" : ""
-          }`}
-        >
-          <span className="notifications-count">{notificationCount}</span>
-        </span>
+        {drawNotificationButtonContents()}
       </Button>
 
       <ul

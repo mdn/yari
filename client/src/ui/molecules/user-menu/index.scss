@@ -3,47 +3,58 @@
 .user-menu {
   position: relative;
 
-  .user-menu-toggle {
-    &[aria-haspopup="menu"] {
-      &::after {
-        position: absolute;
-        right: 0;
-      }
+  .submenu-header {
+    display: none;
+  }
+
+  @media screen and (max-width: $screen-md) {
+    .user-menu-toggle:hover {
+      --button-bg: transparent;
     }
   }
-}
-
-.submenu.my-mdn-plus.show {
-  @media screen and (min-width: $screen-md) {
-    left: initial;
-    right: 0;
-    top: 50px;
-  }
-
-  a,
-  .usermenu-email-desktop {
-    padding: 0.5rem;
-  }
-
-  .usermenu-email-desktop {
-    border-bottom: 1px solid var(--border-primary);
-  }
-
-  .submenu-item-heading {
-    font-weight: normal;
-  }
-}
-
-.show-desktop-inline-block {
-  display: none;
 
   @media screen and (min-width: $screen-md) {
-    display: inline-block;
-  }
-}
+    /*
+      The user menu button is shaped like an avatar and thus has some
+      very specific focus and hover states.
+    */
+    .button.user-menu-toggle {
+      &:hover,
+      &:focus {
+        &,
+        .button-wrap {
+          --button-border-color: transparent;
+          background: transparent;
+          box-shadow: none;
+        }
 
-@media screen and (min-width: $screen-md) {
-  .hide-desktop {
-    display: none;
+        .avatar {
+          box-shadow: var(--focus-effect);
+        }
+      }
+
+      &::after {
+        display: none;
+      }
+    }
+
+    .submenu-header {
+      display: block;
+      margin-bottom: 0.5rem;
+    }
+
+    .signout-container {
+      margin-top: 0.5rem;
+    }
+
+    .user-menu-id {
+      display: none;
+    }
+
+    .submenu {
+      left: initial;
+      max-width: max-content;
+      right: 0;
+    }
   }
 }

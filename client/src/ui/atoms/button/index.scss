@@ -1,4 +1,5 @@
 button {
+  -webkit-appearance: none; /* stylelint-disable-line property-no-vendor-prefix */
   appearance: none;
   background: none;
   border: none;
@@ -7,7 +8,8 @@ button {
 .button {
   --button-bg: var(--button-primary-default);
   --button-border-color: var(--button-primary-default);
-  --button-focus-shadow: 0 0 0 3px var(--accent-primary-engage);
+  --button-focus-effect: var(--focus-effect);
+  --button-height: var(--form-elem-height, 2rem);
   --button-color: #fff;
   --button-font: var(--type-emphasis-m);
   --button-padding: 0.5rem;
@@ -26,16 +28,17 @@ button {
 .button-wrap {
   align-items: center;
   background-color: var(--button-bg);
-  border: 1px solid var(--button-border-color);
   border-radius: var(--button-radius);
+  border: 1px solid var(--button-border-color);
   color: var(--button-color);
   display: flex;
   font: var(--button-font);
   gap: 0.25rem;
-  height: 2rem;
+  height: var(--button-height);
   justify-content: center;
   padding-left: var(--button-padding);
   padding-right: var(--button-padding);
+  position: relative;
 }
 
 .button .icon {
@@ -61,7 +64,7 @@ button {
   outline: none;
 
   .button-wrap {
-    box-shadow: var(--button-focus-shadow);
+    box-shadow: var(--button-focus-effect);
   }
 }
 
@@ -74,8 +77,8 @@ button {
 
 .button.small,
 .button.small .button-wrap {
+  --button-height: 1.75rem;
   --button-padding: 0.25rem;
-  height: 1.75rem;
 }
 
 /* Secondary Version */
@@ -106,11 +109,7 @@ button {
   --button-color: var(--text-secondary);
   --button-font: var(--type-label-s);
 
-  .button-wrap {
-    text-transform: uppercase;
-  }
-
-  &.has-icon .button-wrap {
+  &.has-icon {
     --button-font: var(--type-emphasis-m);
     text-transform: initial;
   }
@@ -126,12 +125,16 @@ button {
   &:focus {
     --button-border-color: var(--button-secondary-border-focus);
   }
+
+  .button-wrap {
+    text-transform: uppercase;
+  }
 }
 
 .high-contrast-white {
   .button:focus {
     --button-border-color: var(--border-primary);
-    --button-focus-shadow: 0 0 0 4px var(--background-primary),
+    --button-focus-effect: 0 0 0 4px var(--background-primary),
       0 0 0 7px var(--border-primary);
   }
 }

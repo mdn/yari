@@ -3,7 +3,7 @@ import * as React from "react";
 import { useUserData } from "../../../user-context";
 import { useLocale } from "../../../hooks";
 
-import { Button } from "../../atoms/button";
+import { Link } from "react-router-dom";
 import { Submenu } from "../submenu";
 
 import "./index.scss";
@@ -29,9 +29,16 @@ export const PlusMenu = () => {
       {
         description: "Stay up to date with MDN content",
         hasIcon: true,
-        iconClasses: "submenu-icon notifications-icon",
+        iconClasses: "submenu-icon",
         label: "My Notifications",
         url: `/${locale}/plus/notifications`,
+      },
+      {
+        description: "Learn more about your MDN Plus Subscription",
+        hasIcon: true,
+        iconClasses: "submenu-icon",
+        label: "About MDN Plus",
+        url: `/${locale}/plus/`,
       },
     ],
   };
@@ -57,17 +64,21 @@ export const PlusMenu = () => {
 
   return isSubscriber ? (
     <li key={plusMenu.id} className="top-level-entry-container">
-      <Button
+      <button
         id={`${plusMenu.id}-button`}
-        extraClasses="top-level-entry with-icon-flex space-between mobile-only"
-        ariaHasPopup="menu"
-        ariaExpanded={plusMenu.id === visibleSubMenuId}
-        onClickHandler={(event) => {
+        className="top-level-entry menu-toggle"
+        aria-haspopup="menu"
+        aria-expanded={plusMenu.id === visibleSubMenuId}
+        onClick={(event) => {
           toggleSubMenu(event, plusMenu.id);
         }}
       >
         {plusMenu.label}
-      </Button>
+      </button>
+
+      <Link to={`/${locale}/plus/`} className="top-level-entry">
+        {plusMenu.label}
+      </Link>
 
       <Submenu
         menuEntry={plusMenu}
@@ -77,7 +88,7 @@ export const PlusMenu = () => {
     </li>
   ) : (
     <li>
-      <a href={`/${locale}/plus`} className="top-level-link">
+      <a href={`/${locale}/plus`} className="top-level-entry">
         MDN Plus
       </a>
     </li>

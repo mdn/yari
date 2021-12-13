@@ -8,38 +8,27 @@
   margin: 0;
   padding: 0;
 
-  @media screen and (min-width: $screen-md) {
-    border: 1px solid var(--border-primary);
-    border-radius: 0.25rem;
-    box-shadow: var(--shadow-01);
-    padding: 0.5rem;
-    position: absolute;
-    width: 25rem;
-    z-index: 1000;
+  &.show {
+    display: block;
+  }
 
-    li a {
-      padding: 1rem;
-    }
+  li {
+    width: 100%;
   }
 
   a,
-  button {
+  .submenu-item {
     align-items: center;
     border-bottom: 1px solid var(--border-secondary);
     color: var(--text-primary);
     display: flex;
     gap: 0.5rem;
     height: 100%;
-    padding: 1rem;
+    padding: 1rem 0.5rem;
     width: 100%;
 
-    @media screen and (max-width: $screen-sm) {
-      width: unset;
-    }
-
-    @media screen and (min-width: $screen-md) {
-      border-bottom: 0;
-      border-radius: 0.25rem;
+    li:last-child & {
+      border-bottom: none;
     }
 
     &:hover,
@@ -49,72 +38,90 @@
     }
   }
 
-  &.show {
-    display: block;
-
-    @media screen and (min-width: $screen-md) {
-    }
-  }
-
   .active-menu-item {
     background-color: var(--accent-primary);
   }
 
-  li {
-    width: 100%;
-
-    @media screen and (max-width: $screen-sm) {
-      width: unset;
-    }
-  }
-
-  .submenu-icon {
-    background-color: var(--icon-primary);
-    background-size: 10px;
-    border-radius: 4px;
-    height: 2rem;
-    margin-bottom: 0.5rem;
-    margin-right: 0.5rem;
+  @media screen and (min-width: $screen-md) {
+    border: 1px solid var(--border-primary);
+    border-radius: 0.25rem;
+    box-shadow: var(--shadow-01);
     padding: 0.5rem;
-    position: relative;
-    width: 2rem;
+    position: absolute;
+    width: 25rem;
+    z-index: 1000;
 
-    &::before {
-      background-color: var(--background-primary);
-      content: "";
-      display: block;
-      height: 16px;
-      /* half the width */
-      left: 8px;
-      mask-image: url("~@mdn/dinocons/general/asterisk.svg");
-      position: absolute;
-      /* half the height */
-      top: 8px;
-      width: 16px;
+    .submenu-item {
+      border-bottom: 0;
+      border-radius: 0.25rem;
+      padding: 1rem;
     }
   }
+}
 
-  .submenu-item-heading {
-    font: var(--type-emphasis-m);
-    text-align: left;
+.submenu-header {
+  display: block;
+  padding: 1rem;
 
-    @media screen and (min-width: $screen-md) {
-      font-weight: bold;
-      margin-bottom: 0;
+  .submenu-item {
+    padding: 0;
+  }
+
+  .submenu-item:hover {
+    background: none;
+  }
+
+  @media screen and (min-width: $screen-md) {
+    border-bottom: 1px solid var(--border-primary);
+  }
+}
+
+.submenu-icon {
+  background-color: var(--icon-primary);
+  background-size: 10px;
+  border-radius: var(--elem-radius);
+  height: 2rem;
+  padding: 0.5rem;
+  position: relative;
+  width: 2rem;
+
+  &::before {
+    background-color: var(--background-primary);
+    content: "";
+    display: block;
+    height: 16px;
+    /* half the width */
+    left: 8px;
+    mask-image: url("~@mdn/dinocons/general/asterisk.svg");
+    position: absolute;
+    /* half the height */
+    top: 8px;
+    width: 16px;
+  }
+}
+
+.submenu-item-heading,
+.submenu-item {
+  font: var(--type-body-m);
+
+  @media screen and (min-width: $screen-md) {
+    // If there is sub-text associated with this heading, make it bold.
+    &:not(:only-child) {
+      font: var(--type-emphasis-m);
     }
   }
+}
 
-  .submenu-item-description {
-    display: none;
+.submenu-item-description {
+  display: none;
 
-    @media screen and (min-width: $screen-md) {
-      display: block;
-      margin-bottom: 0;
-      font: var(--type-body-s);
-    }
+  @media screen and (min-width: $screen-md) {
+    display: block;
+    margin-bottom: 0;
+    font: var(--type-body-s);
   }
+}
 
-  .submenu-item-subtext {
-    font-size: 0.8125rem;
-  }
+.submenu-item-subtext {
+  font: var(--type-emphasis-m);
 }

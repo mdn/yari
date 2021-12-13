@@ -145,6 +145,7 @@ type InnerSearchNavigateWidgetProps = SearchProps & {
 function useHasNotChangedFor(value: string, ms: number) {
   const [hasNotChanged, setHasNotChanged] = useState(false);
   const previousValue = useRef(value);
+
   useEffect(() => {
     if (previousValue.current === value) {
       return;
@@ -424,7 +425,7 @@ function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
 
       <Button
         type="action"
-        icon="close"
+        icon="cancel"
         extraClasses="close-search-button"
         onClickHandler={onCloseSearch}
       >

@@ -20,6 +20,7 @@ type ButtonProps = {
   buttonType?: "button" | "submit" | "reset";
   extraClasses?: string;
   href?: string;
+  rel?: string;
   icon?: string;
 
   id?: string;
@@ -46,6 +47,7 @@ export const Button = ({
   buttonType = "button",
   extraClasses,
   href,
+  rel,
   icon,
   id,
   isDisabled = false,
@@ -82,6 +84,7 @@ export const Button = ({
     return (
       <Link
         to={href}
+        rel={rel}
         className={buttonClasses}
         id={id}
         onClick={onClickHandler}
