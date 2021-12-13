@@ -11,145 +11,75 @@
 }
 
 .homepage {
-  .homepage-hero {
-    width: 100%;
+  display: flex;
+  gap: 2rem;
+  flex-direction: column;
+  align-items: center;
 
-    header {
-      height: 20rem;
+  p {
+    // MDN UI / Emphasis / M
+    font-size: 0.875rem;
+    line-height: 1.2;
+  }
+
+  .mdn-ui-emphasis-l {
+    font-weight: 600;
+    font-size: 1rem;
+    line-height: 1.2;
+  }
+
+  .featured-articles {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    align-items: center;
+
+    .tile-container {
       display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-direction: column;
       max-width: 45rem;
-      text-align: center;
-      margin: 0 auto;
-      gap: 2rem;
+      gap: 1rem;
 
-      h1 {
-        /* Title */
-        font-family: Montserrat;
-        font-style: normal;
-        font-weight: 650;
-        font-size: 48px;
-        line-height: 120%;
-        letter-spacing: -0.5px;
-      }
-
-      /* Terrible things Daryl's done to make the search look okay for now */
-      .header-search {
-        width: 100%;
-        max-height: 4rem;
+      .article-tile {
+        border-radius: 0.5rem;
+        border: 1px solid var(--border-primary);
+        padding: 1rem;
         display: flex;
+        flex-direction: column;
+        gap: 1rem;
 
-        form {
-          outline: 1px solid var(--border-primary);
-          border-radius: 10rem;
-          background: var(--background-primary);
-        }
-
-        form[aria-expanded="true"] {
-          border-radius: 2rem 2rem 0 0;
+        &:hover {
           box-shadow: var(--shadow-02);
         }
 
-        button {
-          border: 1px solid transparent;
+        .tile-tag {
+          // MDN UI / Emphasis / M
+          font-size: 0.875rem;
+          font-weight: 650;
+          line-height: 1.2;
+          color: var(--text-primary);
 
           &:hover {
-            background: none;
+            color: var(--icon-information);
           }
         }
 
-        .search-widget {
-          gap: 0;
-        }
-
-        input {
-          padding: 2rem;
-          background: none;
-          border: none;
-        }
-
-        .close-search-button {
-          display: none;
-        }
-
-        .search-button {
-          position: relative;
+        .tile-title {
+          font-size: 1.5rem;
+          font-weight: 650;
+          line-height: 1.2;
+          color: var(--text-primary);
 
           &:hover {
-            background: none;
-            border: 1px solid transparent;
-          }
-
-          .button-wrap {
-            padding: 1.5rem;
-            height: 100%;
-            border-radius: 0 10rem 10rem 0;
-            background: none;
-            border: 1px solid transparent;
-
-            &:hover {
-              background: none;
-              border: 1px solid transparent;
-
-              .icon {
-                background-color: var(--text-primary);
-              }
-            }
-
-            .icon {
-              background-color: var(--icon-primary);
-              border: none;
-            }
+            color: var(--icon-information);
           }
         }
-        .search-results {
-          top: 4rem;
-          outline: 1px solid var(--border-primary);
-          border-radius: 0 0 2rem 2rem;
-          text-align: left;
-          box-shadow: var(--shadow-02);
 
-          .result-item {
-            padding: 0.5rem 1.5rem;
-
-            mark {
-              background: none;
-            }
-
-            span {
-              font-weight: normal;
-              color: var(--text-secondary);
-            }
-
-            small {
-              color: var(--text-secondary);
-            }
-          }
+        p {
+          // MDN UI / Body / S
+          font-size: 12px;
+          line-height: 1.2;
         }
       }
-    }
-
-    .homepage-hero-bg {
-      width: 100%;
-      height: 100%;
-      position: absolute;
-      top: 0;
-      z-index: -1;
-      background: radial-gradient(
-        114.42% 123.24% at 6.69% 13.67%,
-        #33b3fc 22.84%,
-        #9752fa 47.63%,
-        #ffe600 82.74%
-      );
-
-      mix-blend-mode: hard-light;
-      opacity: 0.2;
-      transform: skewY(-3deg);
-      height: 25rem;
-      transform-origin: 0;
-      overflow-y: clip;
     }
   }
 }

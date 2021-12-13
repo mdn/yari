@@ -44,6 +44,11 @@
 body {
   background-color: var(--background-primary);
   color: var(--text-primary);
+
+  ::selection {
+    background-color: var(--text-primary);
+    color: var(--background-primary);
+  }
 }
 
 main {
