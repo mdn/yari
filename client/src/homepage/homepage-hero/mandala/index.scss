@@ -1,25 +1,29 @@
-.mandala {
-  animation: mandala-rotate 500s infinite;
-  @media (prefers-reduced-motion) {
-    animation: none;
-  }
-  position: relative;
-  left: 10%;
-
-  [class*="mandala"] {
-    fill: white;
-  }
-
-  g {
-    transform: skewX(3deg);
-  }
-
-  @keyframes mandala-rotate {
-    from {
-      transform: rotate(0deg);
+.mandala-container {
+  display: flex;
+  justify-content: center;
+  .mandala {
+    animation: mandala-rotate 500s infinite;
+    @media (prefers-reduced-motion) {
+      animation: none;
     }
-    to {
-      transform: rotate(360deg);
+    position: relative;
+    left: -10rem;
+
+    [class*="mandala"] {
+      fill: white;
+    }
+
+    g {
+      transform: skewX(3deg);
+    }
+
+    @keyframes mandala-rotate {
+      from {
+        transform: rotate(0deg);
+      }
+      to {
+        transform: rotate(360deg);
+      }
     }
   }
 }

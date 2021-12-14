@@ -2,7 +2,7 @@ import "./index.scss";
 
 function Mandala() {
   return (
-    <div>
+    <div className="mandala-container">
       <svg
         width="675"
         height="675"
