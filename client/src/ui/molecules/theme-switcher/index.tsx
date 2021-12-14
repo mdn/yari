@@ -1,9 +1,15 @@
 import * as React from "react";
 
 import { Button } from "../../atoms/button";
+import { Submenu } from "../submenu";
 import { IEX_DOMAIN } from "../../../constants";
 
 import "./index.scss";
+
+type ThemeButton = {
+  id: string;
+  label: string;
+};
 
 export const ThemeSwitcher = () => {
   const menuId = "themes-menu";
@@ -12,6 +18,32 @@ export const ThemeSwitcher = () => {
   const [visibleSubMenuId, setVisibleSubMenuId] = React.useState<string | null>(
     null
   );
+
+  function ThemeButton({ id, label }: ThemeButton) {
+    return (
+      <button
+        type="button"
+        className={`submenu-item ${
+          activeTheme === id ? "active-menu-item" : undefined
+        }`}
+        onClick={() => {
+          switchTheme(id);
+          setVisibleSubMenuId(null);
+        }}
+      >
+        {label}
+      </button>
+    );
+  }
+
+  const menu = {
+    label: "Themes",
+    id: menuId,
+    items: [
+      { component: () => <ThemeButton id="light" label="Light" /> },
+      { component: () => <ThemeButton id="dark" label="Dark" /> },
+    ],
+  };
 
   /**
    * Posts the name of the theme we are changing to to the
@@ -86,43 +118,11 @@ export const ThemeSwitcher = () => {
         Theme
       </Button>
 
-      <ul
-        className={`${
-          visibleSubMenuId
-            ? "submenu themes-menu  show"
-            : "sub-menu themes-menu"
-        }`}
-        id={menuId}
-      >
-        <li>
-          <button
-            type="button"
-            className={`submenu-item ${
-              activeTheme === "light" ? "active-menu-item" : undefined
-            }`}
-            onClick={() => {
-              switchTheme("light");
-              setVisibleSubMenuId(null);
-            }}
-          >
-            Light
-          </button>
-        </li>
-        <li>
-          <button
-            type="button"
-            className={`submenu-item ${
-              activeTheme === "dark" ? "active-menu-item" : undefined
-            }`}
-            onClick={() => {
-              switchTheme("dark");
-              setVisibleSubMenuId(null);
-            }}
-          >
-            Dark
-          </button>
-        </li>
-      </ul>
+      <Submenu
+        menuEntry={menu}
+        visibleSubMenuId={visibleSubMenuId}
+        onBlurHandler={hideSubMenuIfVisible}
+      />
     </div>
   );
 };
