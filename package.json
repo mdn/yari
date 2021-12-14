@@ -187,7 +187,7 @@
     "swr": "^0.5.6",
     "ts-loader": "^8.1.0",
     "ts-node": "^10.4.0",
-    "typescript": "^4.5.2",
+    "typescript": "^4.5.4",
     "use-debounce": "^7.0.1",
     "webpack": "^4.44.2",
     "webpack-cli": "^4.9.1",
