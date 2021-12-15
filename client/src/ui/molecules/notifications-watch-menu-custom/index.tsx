@@ -1,8 +1,10 @@
+import { Button } from "../../atoms/button";
 import { Icon } from "../../atoms/icon";
 
 type WatchMenuOptionProps = {
   fieldName: string;
   checked: boolean;
+  hasToggle?: boolean;
 };
 
 export function NotificationsWatchMenuCustom({ doc, setStepHandler }) {
@@ -45,7 +47,7 @@ export function NotificationsWatchMenuCustom({ doc, setStepHandler }) {
       interfaces: [
         {
           name: "Deno",
-          checked: true,
+          checked: false,
         },
         {
           name: "Node.js",
@@ -62,7 +64,11 @@ export function NotificationsWatchMenuCustom({ doc, setStepHandler }) {
 
   function setGlobalDefault() {}
 
-  function WatchMenuOption({ fieldName, checked }: WatchMenuOptionProps) {
+  function WatchMenuOption({
+    fieldName,
+    checked,
+    hasToggle,
+  }: WatchMenuOptionProps) {
     const formattedFieldName = `customize_${fieldName
       .toLowerCase()
       .replace(/ /g, "_")}`;
@@ -79,6 +85,10 @@ export function NotificationsWatchMenuCustom({ doc, setStepHandler }) {
           }}
         />
         <label htmlFor={formattedFieldName}>{fieldName}</label>
+
+        {hasToggle && (
+          <Button type="action" extraClasses="small" icon="chevron"></Button>
+        )}
       </div>
     );
   }
@@ -104,11 +114,22 @@ export function NotificationsWatchMenuCustom({ doc, setStepHandler }) {
           <label htmlFor="customize_browser_compat">
             Browser Compatability Data
           </label>
+
+          <Button
+            type="action"
+            extraClasses="small"
+            ariaLabel="Toggle browser compatability data options"
+            icon="chevron"
+          ></Button>
         </div>
 
         {compatOptions.map((option, index) => (
           <fieldset className="watch-submenu-group" key={`CompatCat-${index}`}>
-            <WatchMenuOption fieldName={option.name} checked={option.checked} />
+            <WatchMenuOption
+              fieldName={option.name}
+              checked={option.checked}
+              hasToggle={true}
+            />
             <ul>
               {option.interfaces.map((interfaceOption, index) => (
                 <li key={`CompatInterface-${index}`}>
