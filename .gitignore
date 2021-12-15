@@ -69,6 +69,7 @@ fake-v1-api/
 mdn-yari-*.tgz
 function.zip
 md-conversion-problems-report*.md
+frontmatter-inventory.json
 
 testing/content/files/en-us/_githistory.json
 testing/translated-content/files/**/_githistory.json

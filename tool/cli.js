@@ -1,6 +1,8 @@
 const fs = require("fs");
 const path = require("path");
 
+const klawSync = require("klaw-sync");
+const frontmatter = require("frontmatter");
 const program = require("@caporal/core").default;
 const chalk = require("chalk");
 const { prompt } = require("inquirer");
@@ -888,6 +890,54 @@ if (Mozilla && !Mozilla.dntEnabled()) {
       console.log(
         `modified: ${countModified} | no-change: ${countNoChange} | skipped: ${countSkipped} | total: ${countTotal}`
       );
+    })
+  )
+
+  .command(
+    "frontmatter-inventory",
+    "Create frontmatter content inventory as JSON"
+  )
+  .action(
+    tryOrExit(async ({ options }) => {
+      if (options.verbose) {
+        console.log(chalk.green("Checking for precense of CONTENT_ROOT"));
+      }
+
+      if (!CONTENT_ROOT) {
+        throw new Error(
+          "CONTENT_ROOT not set. Please see the docs at tool/README.md"
+        );
+      }
+
+      if (options.verbose) {
+        console.log(chalk.green("CONTENT_ROOT set, generating inventory"));
+      }
+
+      const inventory = {};
+      const allPaths = klawSync(CONTENT_ROOT, {
+        nodir: true,
+        filter: (entry) => path.extname(entry.path) === ".md",
+        traverseAll: true,
+      });
+
+      allPaths.forEach((entry) => {
+        const fileContents = fs.readFileSync(entry.path, "utf8");
+        const parsed = frontmatter(fileContents);
+        inventory[entry.path.substring(entry.path.indexOf("/files"))] = {
+          frontmatter: parsed.data,
+        };
+      });
+
+      if (options.verbose) {
+        console.log(chalk.green("Writing ./frontmatter-invetory.json"));
+      }
+      fs.writeFileSync(
+        "./frontmatter-inventory.json",
+        JSON.stringify(inventory)
+      );
+      if (options.verbose) {
+        console.log(chalk.green("frontmatter-invetory.json written to disk."));
+      }
     })
   )
 
