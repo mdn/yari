@@ -105,7 +105,7 @@ export function App(appProps) {
   // But if the App is loaded from the code that builds the SPAs, then `isServer`
   // is true. So you have to have `isServer && CRUD_MODE` at the same time.
   const homePage =
-    !isServer && CRUD_MODE ? (
+    isServer && CRUD_MODE ? (
       <Layout pageType="standard-page">
         <WritersHomepage />
       </Layout>
