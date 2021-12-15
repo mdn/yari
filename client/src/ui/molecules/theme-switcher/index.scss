@@ -3,49 +3,40 @@
 @use "../../vars" as *;
 
 .theme-switcher-menu {
-  align-items: center;
-  display: flex;
-  gap: 0.5rem;
-  width: 100%;
+  .themes-menu .button {
+    --button-bg: transparent;
+    --button-border-color: var(--button-bg);
+    --button-color: var(--text-primary);
+    font: var(--type-body-m);
+    width: 100%;
+
+    &:hover {
+      --button-bg: var(--background-secondary);
+    }
+  }
+
+  .active-menu-item,
+  .active-menu-item:hover,
+  .active-menu-item:focus {
+    .button-wrap {
+      --button-bg: var(--accent-primary);
+      --button-border-color: var(--button-bg);
+      --button-color: #fff;
+    }
+  }
 
   @media screen and (min-width: $screen-md) {
     border-bottom: 0;
-  }
 
-  .themes-menu {
-    background-color: var(--background-primary);
-    display: none;
-    list-style: none;
-    margin: 0;
-    padding: 0.5rem;
-
-    @media screen and (min-width: $screen-md) {
-      &.show {
-        border-radius: 0.5rem;
-        border: 1px solid var(--border-primary);
-        box-shadow: var(--shadow-01);
-        display: flex;
-        flex-direction: column;
-        gap: 0.5rem;
-        left: initial;
-        max-width: max-content;
-        padding: 0.5rem;
-        position: absolute;
-        right: 0;
-        top: 50px;
-        z-index: $bring-to-front;
-      }
+    .themes-menu.show {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      max-width: max-content;
     }
 
-    .active-menu-item,
-    .active-menu-item:hover,
-    .active-menu-item:focus {
-      background-color: var(--accent-primary);
-      color: white;
-    }
-
-    li {
-      width: 100%;
+    .themes-menu .submenu-item {
+      padding: 0.5rem 1rem;
     }
   }
 }

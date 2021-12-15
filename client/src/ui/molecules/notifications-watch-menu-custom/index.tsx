@@ -1,6 +1,10 @@
+import { Button } from "../../atoms/button";
+import { Icon } from "../../atoms/icon";
+
 type WatchMenuOptionProps = {
   fieldName: string;
-  checked: boolean;
+  checked?: boolean;
+  hasToggle?: boolean;
 };
 
 export function NotificationsWatchMenuCustom({ doc, setStepHandler }) {
@@ -43,7 +47,7 @@ export function NotificationsWatchMenuCustom({ doc, setStepHandler }) {
       interfaces: [
         {
           name: "Deno",
-          checked: true,
+          checked: false,
         },
         {
           name: "Node.js",
@@ -58,7 +62,13 @@ export function NotificationsWatchMenuCustom({ doc, setStepHandler }) {
     // Trigger re-draw of custom watch menu
   }
 
-  function WatchMenuOption({ fieldName, checked }: WatchMenuOptionProps) {
+  function setGlobalDefault() {}
+
+  function WatchMenuOption({
+    fieldName,
+    checked,
+    hasToggle,
+  }: WatchMenuOptionProps) {
     const formattedFieldName = `customize_${fieldName
       .toLowerCase()
       .replace(/ /g, "_")}`;
@@ -75,6 +85,10 @@ export function NotificationsWatchMenuCustom({ doc, setStepHandler }) {
           }}
         />
         <label htmlFor={formattedFieldName}>{fieldName}</label>
+
+        {hasToggle && (
+          <Button type="action" extraClasses="small" icon="chevron"></Button>
+        )}
       </div>
     );
   }
@@ -82,12 +96,15 @@ export function NotificationsWatchMenuCustom({ doc, setStepHandler }) {
   return (
     <form>
       <button onClick={setStepHandler} className="watch-submenu-header">
-        Notifications
+        <span className="watch-submenu-header-wrap">
+          <Icon name="chevron" />
+          Customize Notifications
+        </span>
       </button>
 
-      <WatchMenuOption fieldName={"Content Updates"} checked={false} />
+      <WatchMenuOption fieldName={"Content Updates"} />
 
-      <fieldset>
+      <fieldset className="watch-submenu-group">
         <div className="watch-submenu-item">
           <input
             type="checkbox"
@@ -97,25 +114,35 @@ export function NotificationsWatchMenuCustom({ doc, setStepHandler }) {
           <label htmlFor="customize_browser_compat">
             Browser Compatability Data
           </label>
+
+          <Button
+            type="action"
+            extraClasses="small"
+            ariaLabel="Toggle browser compatability data options"
+            icon="chevron"
+          ></Button>
         </div>
 
         {compatOptions.map((option, index) => (
-          <fieldset key={`CompatCat-${index}`}>
-            <WatchMenuOption fieldName={option.name} checked={option.checked} />
+          <fieldset className="watch-submenu-group" key={`CompatCat-${index}`}>
+            <WatchMenuOption fieldName={option.name} hasToggle={true} />
             <ul>
               {option.interfaces.map((interfaceOption, index) => (
-                <WatchMenuOption
-                  key={`CompatInterface-${index}`}
-                  fieldName={interfaceOption.name}
-                  checked={interfaceOption.checked}
-                />
+                <li key={`CompatInterface-${index}`}>
+                  <WatchMenuOption fieldName={interfaceOption.name} />
+                </li>
               ))}
             </ul>
           </fieldset>
         ))}
       </fieldset>
 
-      <button>Set as global default</button>
+      <button
+        className="watch-submenu-item watch-submenu-setGlobal"
+        onClick={setGlobalDefault}
+      >
+        Set as global default
+      </button>
     </form>
   );
 }

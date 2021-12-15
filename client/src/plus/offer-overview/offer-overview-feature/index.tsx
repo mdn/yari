@@ -13,7 +13,7 @@ function OfferOverviewFeature() {
               email, SMS, social, and onsite pop ups - all from a single
               platform.
             </p>
-            <a href="/">Learn more →</a>
+            <a href="plus/feature-highlight">Learn more →</a>
           </div>
           <div className="img-container">
             <img src={placeholder_1} alt="bookmarking section hero"></img>
@@ -32,7 +32,7 @@ function OfferOverviewFeature() {
               email, SMS, social, and onsite pop ups - all from a single
               platform.
             </p>
-            <a href="/">Learn more →</a>
+            <a href="plus/feature-highlight">Learn more →</a>
           </div>
         </div>
       </div>
@@ -45,7 +45,7 @@ function OfferOverviewFeature() {
               email, SMS, social, and onsite pop ups - all from a single
               platform.
             </p>
-            <a href="/">Learn more →</a>
+            <a href="plus/feature-highlight">Learn more →</a>
           </div>
           <div className="img-container">
             <img src={placeholder_1} alt="offline section hero"></img>
@@ -64,7 +64,7 @@ function OfferOverviewFeature() {
               email, SMS, social, and onsite pop ups - all from a single
               platform.
             </p>
-            <a href="/">Learn more →</a>
+            <a href="plus/feature-highlight">Learn more →</a>
           </div>
         </div>
       </div>

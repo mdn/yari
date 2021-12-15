@@ -38,7 +38,7 @@ export const NotificationsWatchMenu = ({ doc }) => {
         type="action"
         id="watch-menu-button"
         icon="eye"
-        extraClasses="watch-menu"
+        extraClasses="small watch-menu"
         ariaHasPopup={"menu"}
         aria-label="Watch this page for updates"
         ariaExpanded={menuId === visibleSubMenuId}

@@ -34,6 +34,7 @@ type ButtonProps = {
   size?: "small" | "medium";
 
   state?: "default" | "hover" | "active" | "focused" | "inactive";
+  value?: string;
   children?: React.ReactNode;
 };
 
@@ -55,6 +56,7 @@ export const Button = ({
   onFocusHandler,
   size,
   state,
+  value,
   children,
 }: ButtonProps) => {
   let buttonClasses = "button";
@@ -109,6 +111,7 @@ export const Button = ({
       className={buttonClasses}
       onClick={onClickHandler}
       onFocus={onFocusHandler}
+      value={value}
     >
       <span className="button-wrap">{renderContent()}</span>
     </button>

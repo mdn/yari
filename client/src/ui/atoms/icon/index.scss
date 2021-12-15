@@ -10,8 +10,8 @@ $icons: "add-filled", "add", "bell-filled", "bell", "bookmark-filled",
   background-color: var(--icon-primary);
   display: inline-block;
   height: var(--size);
-  mask-repeat: no-repeat;
   width: var(--size);
+  vertical-align: middle;
 }
 
 .icon {
