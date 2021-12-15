@@ -14,32 +14,35 @@
   }
 }
 
-.watch-menu-button {
+.watch-submenu-button {
   background-color: transparent;
   border-top: 1px solid var(--border-primary);
   padding: 0;
 
   &-wrap {
-    align-items: flex-start;
-    display: flex;
-    flex-direction: column;
+    display: grid;
+    grid-template-columns: 16px 1fr;
+    grid-template-areas:
+      "status label"
+      "status text";
     gap: 0.5rem;
-    padding: 0.5rem;
+    padding: 0.8125rem 0.5rem;
     padding-left: 1.5rem;
     text-align: left;
   }
 
-  &-label,
-  &-text {
-    font-size: 0.8125rem;
+  &-status {
+    grid-area: status;
   }
 
   &-label {
-    font-weight: bold;
+    font: var(--type-emphasis-m);
+    grid-area: label;
   }
 
   &-text {
-    color: var(--text-primary);
+    font: var(--type-body-m);
+    grid-area: text;
   }
 }
 
