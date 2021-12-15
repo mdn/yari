@@ -1,3 +1,5 @@
+import { Icon } from "../../atoms/icon";
+
 type WatchMenuOptionProps = {
   fieldName: string;
   checked: boolean;
@@ -58,6 +60,8 @@ export function NotificationsWatchMenuCustom({ doc, setStepHandler }) {
     // Trigger re-draw of custom watch menu
   }
 
+  function setGlobalDefault() {}
+
   function WatchMenuOption({ fieldName, checked }: WatchMenuOptionProps) {
     const formattedFieldName = `customize_${fieldName
       .toLowerCase()
@@ -82,12 +86,15 @@ export function NotificationsWatchMenuCustom({ doc, setStepHandler }) {
   return (
     <form>
       <button onClick={setStepHandler} className="watch-submenu-header">
-        Notifications
+        <span className="watch-submenu-header-wrap">
+          <Icon name="chevron" />
+          Customize Notifications
+        </span>
       </button>
 
       <WatchMenuOption fieldName={"Content Updates"} checked={false} />
 
-      <fieldset>
+      <fieldset className="watch-submenu-group">
         <div className="watch-submenu-item">
           <input
             type="checkbox"
@@ -100,22 +107,28 @@ export function NotificationsWatchMenuCustom({ doc, setStepHandler }) {
         </div>
 
         {compatOptions.map((option, index) => (
-          <fieldset key={`CompatCat-${index}`}>
+          <fieldset className="watch-submenu-group" key={`CompatCat-${index}`}>
             <WatchMenuOption fieldName={option.name} checked={option.checked} />
             <ul>
               {option.interfaces.map((interfaceOption, index) => (
-                <WatchMenuOption
-                  key={`CompatInterface-${index}`}
-                  fieldName={interfaceOption.name}
-                  checked={interfaceOption.checked}
-                />
+                <li key={`CompatInterface-${index}`}>
+                  <WatchMenuOption
+                    fieldName={interfaceOption.name}
+                    checked={interfaceOption.checked}
+                  />
+                </li>
               ))}
             </ul>
           </fieldset>
         ))}
       </fieldset>
 
-      <button>Set as global default</button>
+      <button
+        className="watch-submenu-item watch-submenu-setGlobal"
+        onClick={setGlobalDefault}
+      >
+        Set as global default
+      </button>
     </form>
   );
 }

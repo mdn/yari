@@ -17,6 +17,10 @@ export const TopNavigationMain = () => {
   const isSubscriber = userData && userData.isSubscriber;
   const [showSearch, setShowSearch] = React.useState(false);
 
+  function handleShowSearch() {
+    setShowSearch(true);
+  }
+
   return (
     <div
       className={`top-navigation-main${showSearch ? " has-search-open" : ""}`}
@@ -31,9 +35,7 @@ export const TopNavigationMain = () => {
       <Button
         type="action"
         icon="search"
-        onClickHandler={() => {
-          setShowSearch(true);
-        }}
+        onClickHandler={handleShowSearch}
         extraClasses="toggle-search-button"
       >
         <span className="visually-hidden">Show search</span>
