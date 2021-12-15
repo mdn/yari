@@ -93,7 +93,7 @@
     padding: 1rem;
 
     &.unread {
-      background-color: color.adjust($mdn-color-blue-40, $alpha: -0.9);
+      background-color: var(--accent-tertiary);
     }
 
     &:hover,

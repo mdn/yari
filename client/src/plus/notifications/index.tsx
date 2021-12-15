@@ -11,9 +11,9 @@ import "./index.scss";
 
 dayjs.extend(relativeTime);
 
-function Notification(item) {
+function NotificationCard(item) {
   return (
-    <article className="notification-card">
+    <article className={`notification-card ${!item.read ? "unread" : ""}`}>
       <Button type="action" extraClasses="notification-card-star" icon="star" />
 
       <div className="notification-card-description">
@@ -27,6 +27,8 @@ function Notification(item) {
       >
         {dayjs(item.created).fromNow().toString()}
       </time>
+
+      <Button type="action" icon="ellipses"></Button>
     </article>
   );
 }
@@ -60,7 +62,10 @@ export default function Notifications() {
       </header>
 
       <Container>
-        <List component={Notification} apiUrl="/api/v1/plus/notifications/" />
+        <List
+          component={NotificationCard}
+          apiUrl="/api/v1/plus/notifications/"
+        />
       </Container>
     </>
   );

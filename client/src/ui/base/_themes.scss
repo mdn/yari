@@ -39,6 +39,7 @@
     )};
 
   --accent-secondary: #{$mdn-theme-light-accent-secondary};
+  --accent-tertiary: #{color.adjust($mdn-color-blue-40, $alpha: -0.9)};
 
   --shadow-01: #{$mdn-theme-light-shadow-01};
   --shadow-02: #{$mdn-theme-light-shadow-02};
