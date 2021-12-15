@@ -17,6 +17,7 @@ from .constants import (
     DEFAULT_CACHE_CONTROL,
     HASHED_CACHE_CONTROL,
     LOG_EACH_SUCCESSFUL_UPLOAD,
+    MANUAL_PREFIXES,
     MAX_WORKERS_PARALLEL_UPLOADS,
 )
 from .utils import StopWatch, fmt_size, iterdir, log
@@ -664,11 +665,13 @@ def upload_content(build_directory, content_roots, config):
         delete_keys = []
 
         for key in existing_bucket_objects:
-            if key.startswith(f"{bucket_prefix}/_whatsdeployed/"):
-                # These are special and wouldn't have been uploaded
-                continue
+            key_without_bucket_prefix = key.lstrip(f"{bucket_prefix}/")
+            for prefix in MANUAL_PREFIXES:
+                if key_without_bucket_prefix.startswith(prefix):
+                    # These are special and wouldn't have been uploaded
+                    continue
 
-            if key.startswith(f"{bucket_prefix}/static/"):
+            if key_without_bucket_prefix.startswith("static/"):
                 # Careful with these!
                 # Static assets such as `main/static/js/8.0b83949c.chunk.js`
                 # are aggressively cached and they might still be referenced
