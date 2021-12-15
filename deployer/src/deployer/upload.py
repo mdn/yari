@@ -666,10 +666,14 @@ def upload_content(build_directory, content_roots, config):
 
         for key in existing_bucket_objects:
             key_without_bucket_prefix = key.lstrip(f"{bucket_prefix}/")
-            for prefix in MANUAL_PREFIXES:
-                if key_without_bucket_prefix.startswith(prefix):
-                    # These are special and wouldn't have been uploaded
-                    continue
+            if any(
+                map(
+                    lambda prefix: key_without_bucket_prefix.startswith(prefix),
+                    MANUAL_PREFIXES,
+                )
+            ):
+                # These are special and wouldn't have been uploaded
+                continue
 
             if key_without_bucket_prefix.startswith("static/"):
                 # Careful with these!
