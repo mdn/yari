@@ -9,6 +9,8 @@ import Tabs from "../../ui/molecules/tabs";
 
 import "./index.scss";
 
+dayjs.extend(relativeTime);
+
 function Notification(item) {
   return (
     <article className="notification-card">
