@@ -1,15 +1,5 @@
 @use "../ui/vars" as *;
 
-.top-navigation {
-  background: transparent !important; // I don't know how to do this better, we need a state for the top nav that doesn't use a background ideally.
-  filter: saturate(0);
-  mix-blend-mode: luminosity;
-
-  .top-navigation-main {
-    background: transparent !important;
-  }
-}
-
 .homepage {
   display: flex;
   gap: 2rem;
