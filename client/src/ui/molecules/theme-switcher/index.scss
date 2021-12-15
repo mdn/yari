@@ -3,7 +3,7 @@
 @use "../../vars" as *;
 
 .theme-switcher-menu {
-  .button {
+  .themes-menu .button {
     --button-bg: transparent;
     --button-border-color: var(--button-bg);
     --button-color: var(--text-primary);
