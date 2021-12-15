@@ -1,26 +1,44 @@
+@use "../../ui/vars" as *;
+
 .recent-contributions {
   display: flex;
   flex-direction: column;
   max-width: 45rem;
   width: 100%;
   gap: 1rem;
+  padding: 0 1rem;
+
+  @media screen and (min-width: $screen-md) {
+    padding: 0;
+  }
 
   .request-item {
     padding: 0.5rem;
     display: flex;
     justify-content: space-between;
+    flex-direction: column;
+
+    @media screen and (min-width: $screen-md) {
+      flex-direction: revert;
+    }
 
     &:nth-child(odd) {
       background: var(--background-secondary);
     }
 
-    .request-title,
     .request-date {
-      font-size: 14px;
+      font-size: 12px;
       line-height: 175%;
+      display: flex;
+      align-items: center;
+
+      @media screen and (min-width: $screen-md) {
+      }
     }
 
     .request-title {
+      font-size: 14px;
+      line-height: 175%;
       margin: 0px;
       display: flex;
       flex-direction: column;
