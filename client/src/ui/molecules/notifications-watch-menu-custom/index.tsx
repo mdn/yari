@@ -3,7 +3,7 @@ import { Icon } from "../../atoms/icon";
 
 type WatchMenuOptionProps = {
   fieldName: string;
-  checked: boolean;
+  checked?: boolean;
   hasToggle?: boolean;
 };
 
@@ -102,7 +102,7 @@ export function NotificationsWatchMenuCustom({ doc, setStepHandler }) {
         </span>
       </button>
 
-      <WatchMenuOption fieldName={"Content Updates"} checked={false} />
+      <WatchMenuOption fieldName={"Content Updates"} />
 
       <fieldset className="watch-submenu-group">
         <div className="watch-submenu-item">
@@ -125,18 +125,11 @@ export function NotificationsWatchMenuCustom({ doc, setStepHandler }) {
 
         {compatOptions.map((option, index) => (
           <fieldset className="watch-submenu-group" key={`CompatCat-${index}`}>
-            <WatchMenuOption
-              fieldName={option.name}
-              checked={option.checked}
-              hasToggle={true}
-            />
+            <WatchMenuOption fieldName={option.name} hasToggle={true} />
             <ul>
               {option.interfaces.map((interfaceOption, index) => (
                 <li key={`CompatInterface-${index}`}>
-                  <WatchMenuOption
-                    fieldName={interfaceOption.name}
-                    checked={interfaceOption.checked}
-                  />
+                  <WatchMenuOption fieldName={interfaceOption.name} />
                 </li>
               ))}
             </ul>
