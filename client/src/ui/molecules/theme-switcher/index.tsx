@@ -21,18 +21,15 @@ export const ThemeSwitcher = () => {
 
   function ThemeButton({ id, label }: ThemeButton) {
     return (
-      <button
-        type="button"
-        className={`submenu-item ${
-          activeTheme === id ? "active-menu-item" : undefined
-        }`}
-        onClick={() => {
+      <Button
+        extraClasses={activeTheme === id ? "active-menu-item" : undefined}
+        onClickHandler={() => {
           switchTheme(id);
           setVisibleSubMenuId(null);
         }}
       >
         {label}
-      </button>
+      </Button>
     );
   }
 
@@ -110,7 +107,7 @@ export const ThemeSwitcher = () => {
         ariaHasPopup={"menu"}
         ariaExpanded={menuId === visibleSubMenuId}
         icon="theme"
-        extraClasses="theme-switcher-menu"
+        extraClasses="theme-switcher-menu small"
         onClickHandler={() => {
           toggleSubMenu(menuId);
         }}

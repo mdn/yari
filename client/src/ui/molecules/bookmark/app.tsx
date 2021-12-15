@@ -98,7 +98,9 @@ export default function App({ doc }: { doc: Doc }) {
       <Button
         type="action"
         icon={`${localBookmarked ? "bookmark-filled" : "bookmark"}`}
-        extraClasses={`bookmark-button ${localBookmarked ? "bookmarked" : ""}`}
+        extraClasses={`bookmark-button small ${
+          localBookmarked ? "bookmarked" : ""
+        }`}
         isDisabled={isSaving}
         onClickHandler={async () => {
           // The first thing we do when the user has toggled it is to store it
