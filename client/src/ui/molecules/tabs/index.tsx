@@ -22,8 +22,12 @@ export default function Tabs({ tabs }: { tabs: TabItem[] }) {
             const currentCheck = location.pathname === tab.path;
 
             return (
-              <li>
-                <Link to={tab.path} aria-current={currentCheck}>
+              <li className="tab">
+                <Link
+                  to={tab.path}
+                  aria-current={currentCheck}
+                  className="tab-item"
+                >
                   {tab.label}
                 </Link>
               </li>

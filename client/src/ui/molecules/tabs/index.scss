@@ -4,8 +4,19 @@
 
 .tabs ul {
   display: flex;
+  gap: 1rem;
 }
 
-.tabs li[aria-selected="true"] {
-  border-bottom: 2px solid var(--accent-secondary);
+.tabs .tab-item {
+  padding: 0.5rem 0;
+  border-bottom: 2px solid transparent;
+}
+
+.tabs a.tab-item {
+  display: block;
+  font: var(--type-body-m);
+}
+
+.tabs .tab-item[aria-current="true"] {
+  border-bottom-color: var(--accent-secondary);
 }
