@@ -1,0 +1,11 @@
+.tabs {
+  border-bottom: 1px solid var(--border-primary);
+}
+
+.tabs ul {
+  display: flex;
+}
+
+.tabs li[aria-selected="true"] {
+  border-bottom: 2px solid var(--accent-secondary);
+}
