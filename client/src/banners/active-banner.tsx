@@ -3,7 +3,7 @@ import * as React from "react";
 import { ReactComponent as CloseIcon } from "@mdn/dinocons/general/close.svg";
 import { useGA } from "../ga-context";
 // import { COMMON_SURVEY_ID } from "./ids";
-import { PLUS_IDv1 } from "./ids";
+import { PLUS_IDv2 } from "./ids";
 import { useLocale } from "../hooks";
 
 // const CATEGORY_LEARNING_SURVEY = "learning web development";
@@ -116,16 +116,18 @@ function PlusBanner({ onDismissed }: { onDismissed: () => void }) {
 
   return (
     <Banner
-      id={PLUS_IDv1}
-      copy={"✨ Love MDN? Get even more! - "}
-      cta={"Discover MDN Plus »"}
-      url={`/${locale}/plus`}
-      newWindow={false}
+      id={PLUS_IDv2}
+      copy={
+        "✨ We are working on a new logo for MDN and would love your input! - "
+      }
+      cta={"Vote for your favorite(s) »"}
+      url={"/opendesign"}
+      newWindow={true}
       onDismissed={onDismissed}
       onCTAClick={() => {
         ga("send", {
           hitType: "event",
-          eventCategory: PLUS_IDv1,
+          eventCategory: PLUS_IDv2,
           eventAction: "CTA clicked",
           eventLabel: "banner",
         });
@@ -145,7 +147,7 @@ export default function ActiveBanner({
   id: string;
   onDismissed: () => void;
 }) {
-  if (id === PLUS_IDv1) {
+  if (id === PLUS_IDv2) {
     return <PlusBanner onDismissed={onDismissed} />;
   }
   // if (id === COMMON_SURVEY_ID) {
