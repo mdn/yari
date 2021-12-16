@@ -5,14 +5,6 @@ function testURL(pathname = "/") {
 }
 
 test.describe("Basic viewing of functional pages", () => {
-  test("open the temporary home page", async ({ page }) => {
-    await page.goto(testURL("/"));
-    expect(await page.title()).toContain("MDN Web Docs");
-    expect(await page.innerText("h1")).toBe(
-      "Resources for developers, by developers."
-    );
-  });
-
   test("open the /en-US/docs/Web/Foo page", async ({ page }) => {
     await page.goto(testURL("/en-US/docs/Web/Foo"));
     expect(await page.title()).toContain("<foo>: A test tag");
@@ -197,14 +189,6 @@ test.describe("Basic viewing of functional pages", () => {
     expect(await page.getAttribute(".fallback-link a", "href")).toBe(
       "/en-US/docs/Web/Foo"
     );
-  });
-
-  test("give the home page and see Hacks blog posts", async ({ page }) => {
-    await page.goto(testURL("/en-US/"));
-    expect(
-      await page.isVisible("text=Resources for developers, by developers.")
-    ).toBeTruthy();
-    expect(await page.isVisible("text=Hacks Blog")).toBeTruthy();
   });
 });
 

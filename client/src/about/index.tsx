@@ -7,9 +7,9 @@ export function About() {
     <div className="about">
       <div className="about-container">
         <header>
-          <span className="about-logo">//:</span>
+          <span className="about-logo">*</span>
           <h1>
-            MDN’s mission is simple:
+            MDN's mission is simple:
             <b> Provide a blueprint for a better internet</b> and empower a new
             generation of developers and content creators to build it.
           </h1>
