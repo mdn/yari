@@ -1,133 +1,72 @@
-import useSWR from "swr";
-import { useEffect } from "react";
-import { Loading } from "../../ui/atoms/loading";
-import { NotificationData } from "../../types/notifications";
-import { useUserData } from "../../user-context";
-import { DataError, NotSignedIn, NotSubscriber } from "../common";
-import {
-  createSearchParams,
-  Link,
-  useLocation,
-  useSearchParams,
-} from "react-router-dom";
-import { DISABLE_AUTH } from "../../constants";
-import { AuthDisabled } from "../../ui/atoms/auth-disabled";
+import { useLocale } from "../../hooks";
+import dayjs from "dayjs";
+import relativeTime from "dayjs/plugin/relativeTime";
 
-export default function Notifications() {
-  const [searchParams, setSearchParams] = useSearchParams();
-  const { pathname } = useLocation();
-  const userData = useUserData();
+import { Button } from "../../ui/atoms/button";
+import Container from "../../ui/atoms/container";
+import List from "../common/list";
+import Tabs from "../../ui/molecules/tabs";
 
-  const apiUrl = "/api/v1/plus/notifications/";
-  const pageTitle = "My Notifications";
+import "./index.scss";
 
-  const isSubscriber = userData && userData.isSubscriber;
-  const localApiURL = isSubscriber
-    ? `${apiUrl}?${searchParams.toString()}`
-    : null;
+dayjs.extend(relativeTime);
 
-  const { data, error } = useSWR<NotificationData>(
-    localApiURL,
-    async (url) => {
-      const response = await fetch(url);
-      if (!response.ok) {
-        const text = await response.text();
-        throw new Error(`${response.status} on ${url}: ${text}`);
-      }
-      return await response.json();
-    },
-    {
-      revalidateOnFocus: true,
-    }
-  );
-
-  useEffect(() => {
-    if (data && data.metadata.total > 0) {
-      let newTitle = `${pageTitle} (${data.metadata.total})`;
-      if (data.metadata.page > 1) {
-        newTitle += ` Page ${data.metadata.page}`;
-      }
-      document.title = newTitle;
-    }
-  }, [data]);
-
-  useEffect(() => {
-    if (data) {
-      // If you're on ?page=3 and the per_page number is 10 and you have
-      // 31 bookmarks. If you delete the only bookmark there on page 3,
-      // it no longer makes sense to be on that page. So we force a
-      // change to `?page={3 - 1}`.
-      if (data.metadata.page > 1 && data.items.length === 0) {
-        const newSearchParams = createSearchParams(searchParams);
-        if (data.metadata.page === 2) {
-          newSearchParams.delete("page");
-        } else {
-          newSearchParams.set("page", `${data.metadata.page - 1}`);
-        }
-        setSearchParams(newSearchParams);
-      }
-    }
-  }, [data, setSearchParams, searchParams]);
-
-  if (DISABLE_AUTH) {
-    return <AuthDisabled />;
-  }
-
-  if (!userData) {
-    return <Loading message="Waiting for authentication" />;
-  } else if (!userData.isAuthenticated) {
-    return <NotSignedIn />;
-  } else if (!userData.isSubscriber) {
-    return <NotSubscriber />;
-  }
-
-  if (error) {
-    return <DataError error={error} />;
-  } else if (!data) {
-    return <Loading message="Waiting for data" />;
-  }
-
-  const maxPage = Math.ceil(data.metadata.total / data.metadata.per_page);
-  const nextPage =
-    data.metadata.page + 1 <= maxPage ? data.metadata.page + 1 : 0;
-  const previousPage = data.metadata.page - 1 > 0 ? data.metadata.page - 1 : 0;
-
-  function getPaginationURL(page: number) {
-    const sp = createSearchParams(searchParams);
-    if (page === 1) {
-      sp.delete("page");
-    } else {
-      sp.set("page", `${page}`);
-    }
-    if (sp.toString()) {
-      return `${pathname}?${sp.toString()}`;
-    }
-    return pathname;
-  }
-
+function NotificationCard(item) {
   return (
-    <>
-      <h1>My Notifications</h1>
-      {data?.items.map(Notification)}
-      {(nextPage !== 0 || previousPage !== 0) && (
-        <div className="pagination">
-          {previousPage !== 0 && (
-            <Link to={getPaginationURL(previousPage)}>Page {previousPage}</Link>
-          )}{" "}
-          {nextPage !== 0 && (
-            <Link to={getPaginationURL(nextPage)}>Page {nextPage}</Link>
-          )}
-        </div>
-      )}
-    </>
+    <article className={`notification-card ${!item.read ? "unread" : ""}`}>
+      <Button type="action" extraClasses="notification-card-star" icon="star" />
+
+      <div className="notification-card-description">
+        <h2 className="notification-card-title">{item.title}</h2>
+        <p className="notification-card-text">{item.text}</p>
+      </div>
+
+      <time
+        className="notification-card-created"
+        dateTime={dayjs(item.created).toISOString()}
+      >
+        {dayjs(item.created).fromNow().toString()}
+      </time>
+
+      <Button type="action" icon="ellipses"></Button>
+    </article>
   );
 }
 
-function Notification(item) {
+export default function Notifications() {
+  const locale = useLocale();
+
+  const tabs = [
+    {
+      label: "All Notifications",
+      path: `/${locale}/plus/notifications/`,
+    },
+    {
+      label: "Watch List",
+      path: `/${locale}/plus/notifications/watch`,
+    },
+    {
+      label: "Starred",
+      path: `/${locale}/plus/notifications/starred`,
+    },
+  ];
+
   return (
-    <div>
-      <h4>{item.title}</h4>
-      <p>{item.text}</p>
-    </div>
+    <>
+      <header className="plus-header">
+        <Container>
+          <h1>My Notifications</h1>
+        </Container>
+
+        <Tabs tabs={tabs} />
+      </header>
+
+      <Container>
+        <List
+          component={NotificationCard}
+          apiUrl="/api/v1/plus/notifications/"
+        />
+      </Container>
+    </>
   );
 }

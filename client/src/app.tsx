@@ -16,6 +16,7 @@ import { Loading } from "./ui/atoms/loading";
 import { PageContentContainer } from "./ui/atoms/page-content";
 import { PageNotFound } from "./page-not-found";
 import { Plus } from "./plus";
+import { About } from "./about";
 
 const AllFlaws = React.lazy(() => import("./flaws"));
 const Translations = React.lazy(() => import("./translations"));
@@ -246,6 +247,14 @@ export function App(appProps) {
                     <Document {...appProps} />
                   </DocumentLayout>
                 </PageOrPageNotFound>
+              }
+            />
+            <Route
+              path="/about/*"
+              element={
+                <StandardLayout>
+                  <About />
+                </StandardLayout>
               }
             />
             <Route

@@ -1,5 +1,6 @@
 import { useState } from "react";
 
+import Container from "../../atoms/container";
 import { Logo } from "../../atoms/logo";
 import { Button } from "../../atoms/button";
 import { TopNavigationMain } from "../top-navigation-main";
@@ -21,7 +22,7 @@ export function TopNavigation() {
 
   return (
     <header className={`top-navigation${showMainMenu ? " show-nav" : ""}`}>
-      <div className="container">
+      <Container>
         <div className="top-navigation-wrap">
           <Logo />
           <Button
@@ -39,7 +40,7 @@ export function TopNavigation() {
         </div>
 
         <TopNavigationMain />
-      </div>
+      </Container>
     </header>
   );
 }

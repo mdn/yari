@@ -5,8 +5,10 @@ import { Loading } from "../ui/atoms/loading";
 import { PageContentContainer } from "../ui/atoms/page-content";
 import { PageNotFound } from "../page-not-found";
 import Notifications from "./notifications";
+import WatchedPages from "./watched";
 const OfferOverview = React.lazy(() => import("./offer-overview"));
 const Bookmarks = React.lazy(() => import("./bookmarks"));
+const FeatureHighlight = React.lazy(() => import("./feature-highlight"));
 
 export function Plus({ pageTitle }: { pageTitle?: string }) {
   const defaultPageTitle = "MDN Plus";
@@ -48,6 +50,24 @@ export function Plus({ pageTitle }: { pageTitle?: string }) {
           <React.Suspense fallback={loading}>
             <div className="notifications girdle">
               <Notifications />
+            </div>
+          </React.Suspense>
+        }
+      />
+      <Route
+        path="feature-highlight"
+        element={
+          <React.Suspense fallback={loading}>
+            <FeatureHighlight />
+          </React.Suspense>
+        }
+      />
+      <Route
+        path="watched"
+        element={
+          <React.Suspense fallback={loading}>
+            <div className="watched girdle">
+              <WatchedPages />
             </div>
           </React.Suspense>
         }
