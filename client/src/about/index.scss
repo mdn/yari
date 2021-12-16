@@ -1,0 +1,118 @@
+@use "../ui/vars" as *;
+
+.about {
+  width: 100%;
+
+  .about-bg {
+    animation: background-shift 30s infinite;
+    @media (prefers-reduced-motion) {
+      animation: none;
+    }
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    z-index: -1;
+    background-size: 200% 100%;
+    background-image: radial-gradient(
+      111.78% 55.34% at 16.18% 1.51%,
+      #3fe1b0 -14%,
+      #33b3fc 20.93%,
+      #9752fa 59.32%,
+      #ff9e0c 96.2%,
+      #ffe600 100%
+    );
+    mix-blend-mode: hard-light;
+    overflow-y: clip;
+    pointer-events: none;
+
+    @keyframes background-shift {
+      0% {
+        background-position: 100% 0;
+      }
+      50% {
+        background-position: 40% 0;
+      }
+      100% {
+        background-position: 100% 0;
+      }
+    }
+
+    &::after {
+      position: absolute;
+      content: "";
+      left: 0px;
+      top: 0px;
+      height: 100%;
+      width: 100%;
+      background: radial-gradient(
+        150.79% 100.46% at 87.07% -2.98%,
+        rgba(255, 255, 255, 0) 38.88%,
+        #ffffff 64.47%
+      );
+
+      pointer-events: none;
+    }
+  }
+
+  .about-container {
+    display: flex;
+    gap: 2rem;
+    flex-direction: column;
+    align-items: center;
+    max-width: 36rem;
+    margin: 0 auto;
+    padding: 0 1rem 2rem 1rem;
+
+    @media screen and (min-width: $screen-md) {
+      padding: 0;
+      padding-bottom: 2rem;
+    }
+
+    header {
+      display: flex;
+      gap: 1rem;
+      flex-direction: column;
+      align-items: center;
+      padding: 2rem 0;
+
+      .about-logo {
+        font-family: Zilla Slab;
+        font-weight: bold;
+        font-size: 4rem;
+        line-height: 1.2;
+        height: 100%;
+      }
+
+      h1 {
+        font-family: var(--font-heading);
+        font-style: normal;
+        font-weight: normal;
+        font-size: 1.313rem;
+        line-height: 175%;
+        text-align: center;
+      }
+    }
+
+    p {
+      font-weight: 350;
+      font-size: 1rem;
+      line-height: 175%;
+    }
+
+    h2 {
+      font-family: var(--font-heading);
+      font-weight: 600;
+      font-size: 1.3rem;
+      line-height: 120%;
+      text-align: center;
+    }
+
+    .heading-break {
+      display: none;
+      @media screen and (min-width: $screen-md) {
+        display: block;
+      }
+    }
+  }
+}

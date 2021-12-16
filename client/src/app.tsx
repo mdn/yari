@@ -16,6 +16,7 @@ import { Loading } from "./ui/atoms/loading";
 import { PageContentContainer } from "./ui/atoms/page-content";
 import { PageNotFound } from "./page-not-found";
 import { Plus } from "./plus";
+import { About } from "./about";
 
 const AllFlaws = React.lazy(() => import("./flaws"));
 const Translations = React.lazy(() => import("./translations"));
@@ -105,7 +106,7 @@ export function App(appProps) {
   // But if the App is loaded from the code that builds the SPAs, then `isServer`
   // is true. So you have to have `isServer && CRUD_MODE` at the same time.
   const homePage =
-    isServer && CRUD_MODE ? (
+    !isServer && CRUD_MODE ? (
       <Layout pageType="standard-page">
         <WritersHomepage />
       </Layout>
@@ -246,6 +247,14 @@ export function App(appProps) {
                     <Document {...appProps} />
                   </DocumentLayout>
                 </PageOrPageNotFound>
+              }
+            />
+            <Route
+              path="/about/*"
+              element={
+                <StandardLayout>
+                  <About />
+                </StandardLayout>
               }
             />
             <Route

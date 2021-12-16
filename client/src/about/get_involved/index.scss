@@ -1,0 +1,28 @@
+.get-involved {
+  background: purple;
+  span {
+    color: white;
+    padding: 2rem 0;
+    max-width: 36rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin: 0 auto;
+    text-align: center;
+    line-height: 1.75;
+
+    h2 {
+      font-family: var(--font-heading);
+      font-weight: 600;
+      font-size: 1.3rem;
+      line-height: 120%;
+      text-align: center;
+    }
+
+    a {
+      background: black;
+      color: white;
+      border-radius: 10rem;
+    }
+  }
+}
