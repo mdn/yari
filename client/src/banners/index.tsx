@@ -59,7 +59,7 @@ function isEmbargoed(id: string) {
     return false;
   }
 }
-
+/* Not used currently
 function isPathnameIncluded(id: string, pathname: string) {
   if (id === PLUS_IDv2) {
     return !(pathname.includes("/plus") || pathname.includes("/signin"));
@@ -90,6 +90,7 @@ function isRandomlyIncluded(id: string, chancePercentage: number) {
   }
   return false;
 }
+*/
 
 export function Banner() {
   const userData = useUserData();

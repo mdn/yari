@@ -112,7 +112,6 @@ function Banner(props: BannerProps) {
 
 function PlusBanner({ onDismissed }: { onDismissed: () => void }) {
   const ga = useGA();
-  const locale = useLocale();
 
   return (
     <Banner
