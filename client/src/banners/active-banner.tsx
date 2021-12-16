@@ -4,7 +4,6 @@ import { ReactComponent as CloseIcon } from "@mdn/dinocons/general/close.svg";
 import { useGA } from "../ga-context";
 // import { COMMON_SURVEY_ID } from "./ids";
 import { PLUS_IDv2 } from "./ids";
-import { useLocale } from "../hooks";
 
 // const CATEGORY_LEARNING_SURVEY = "learning web development";
 
