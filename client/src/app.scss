@@ -30,7 +30,11 @@
   /* Grid and Layout */
   --max-width: 1440px;
   --gutter: 0.5rem; /* Space between content and browser window */
-  --z-index-top: 1000;
+
+  --z-index-back: -1;
+  --z-index-top: 9999;
+  --z-index-mid: 500;
+  --z-index-low: 100;
 
   /* Features */
   --elem-radius: 0.25rem;
