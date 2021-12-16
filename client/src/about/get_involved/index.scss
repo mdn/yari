@@ -1,8 +1,18 @@
+@use "../../ui/vars" as *;
+
 .get-involved {
-  background: purple;
+  background-image: radial-gradient(
+    111.78% 55.34% at 16.18% 1.51%,
+    #3fe1b0 -14%,
+    #33b3fc 20.93%,
+    #9752fa 59.32%,
+    #ff9e11 161.2%,
+    #ffe600 100%
+  );
+  background-size: 100% 446%;
+
   span {
     color: white;
-    padding: 2rem 0;
     max-width: 36rem;
     display: flex;
     flex-direction: column;
@@ -10,6 +20,12 @@
     margin: 0 auto;
     text-align: center;
     line-height: 1.75;
+
+    padding: 2rem 1rem;
+
+    @media screen and (min-width: $screen-md) {
+      padding: 2rem 0;
+    }
 
     h2 {
       font-family: var(--font-heading);
@@ -19,10 +35,14 @@
       text-align: center;
     }
 
-    a {
-      background: black;
-      color: white;
-      border-radius: 10rem;
+    .get-involved-cta {
+      .button-wrap {
+        background: black;
+        color: white;
+        border-radius: 10rem;
+        width: fit-content;
+        padding: 0.5rem 1rem;
+      }
     }
   }
 }

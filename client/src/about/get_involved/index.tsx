@@ -1,3 +1,4 @@
+import { Button } from "../../ui/atoms/button";
 import "./index.scss";
 
 export function GetInvolved() {
@@ -8,7 +9,7 @@ export function GetInvolved() {
         Our constant quest for innovation starts here, with you. Every part of
         MDN (docs, demos and the site itself) springs from our incredible open
         community of developers. Please join us!
-        <a href="/contribute">Get Involved</a>
+        <Button extraClasses="get-involved-cta">Get Involved</Button>
       </span>
     </div>
   );
