@@ -1,3 +1,5 @@
+import { useState } from "react";
+
 import { useLocale } from "../../hooks";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
@@ -5,6 +7,7 @@ import relativeTime from "dayjs/plugin/relativeTime";
 import { Button } from "../../ui/atoms/button";
 import Container from "../../ui/atoms/container";
 import List from "../common/list";
+import SearchFilter from "../../ui/organisms/search-filter";
 import Tabs from "../../ui/molecules/tabs";
 
 import "./index.scss";
@@ -35,6 +38,7 @@ function NotificationCard(item) {
 
 export default function Notifications() {
   const locale = useLocale();
+  const [listUrl] = useState("/api/v1/plus/notifications/");
 
   const tabs = [
     {
@@ -43,11 +47,33 @@ export default function Notifications() {
     },
     {
       label: "Watch List",
-      path: `/${locale}/plus/notifications/watch`,
+      path: `/${locale}/plus/notifications/watched`,
     },
     {
       label: "Starred",
       path: `/${locale}/plus/notifications/starred`,
+    },
+  ];
+
+  const filters = [
+    {
+      label: "Content Updates",
+      param: "filterType=content",
+    },
+    {
+      label: "Browser Compatibility",
+      param: "filterType=compat",
+    },
+  ];
+
+  const sorts = [
+    {
+      label: "Date",
+      param: "sort=date",
+    },
+    {
+      label: "Time",
+      param: "sort=time",
     },
   ];
 
@@ -62,10 +88,9 @@ export default function Notifications() {
       </header>
 
       <Container>
-        <List
-          component={NotificationCard}
-          apiUrl="/api/v1/plus/notifications/"
-        />
+        <SearchFilter filters={filters} sorts={sorts} />
+
+        <List component={NotificationCard} apiUrl={listUrl} />
       </Container>
     </>
   );

@@ -12,7 +12,17 @@ import {
 import { DISABLE_AUTH } from "../../constants";
 import { AuthDisabled } from "../../ui/atoms/auth-disabled";
 
-export default function List({ apiUrl, component }) {
+export default function List({
+  apiUrl,
+  component,
+  filterList,
+  sortList,
+}: {
+  apiUrl: string;
+  component: any;
+  filterList?: any;
+  sortList?: any;
+}) {
   const [searchParams, setSearchParams] = useSearchParams();
   const { pathname } = useLocation();
   const userData = useUserData();
