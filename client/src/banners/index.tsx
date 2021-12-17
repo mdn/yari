@@ -1,7 +1,7 @@
 import * as React from "react";
 import { CRUD_MODE } from "../constants";
 
-import { useUserData } from "../user-context";
+// import { useUserData } from "../user-context";
 
 // We may or may not load any active banner. But if there's a small chance
 // that we might, it's best practice to not have to lazy-load the CSS
@@ -93,12 +93,15 @@ function isRandomlyIncluded(id: string, chancePercentage: number) {
 */
 
 export function Banner() {
+  /* Since auth is disabled on prod we cannot rely on this.
+
   const userData = useUserData();
 
   // Never return true if the whoami hasn't resolved yet, anonymous or not.
   if (!userData) {
     return null;
   }
+  */
 
   // The order of the if statements is important and it's our source of
   // truth about which banner is "more important" than the other.
