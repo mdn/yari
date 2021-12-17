@@ -18615,10 +18615,10 @@ strtok3@^6.2.4:
     "@tokenizer/token" "^0.3.0"
     peek-readable "^4.0.1"
 
-style-dictionary@^3.0.3:
-  version "3.0.3"
-  resolved "https://registry.yarnpkg.com/style-dictionary/-/style-dictionary-3.0.3.tgz#251ac680303fe757f19af3af9898db1a66f7373e"
-  integrity sha512-4s8wK1o4M/o9AhwsMqOdu0swBJrvxXspcQ7efdKpER5OP7DnnGC5KeCPHlLdciNYDng+z7TWHUXlw1xs7rR50g==
+style-dictionary@^3.1.0:
+  version "3.1.0"
+  resolved "https://registry.yarnpkg.com/style-dictionary/-/style-dictionary-3.1.0.tgz#9dd7934ea81f6fb84cd0fe87a90091e5387946ee"
+  integrity sha512-rQW74b89fV6eTUPwyLgytVXBVSogcOiT3fB3tefWtrv9Frh8vdaDEQj4H6r62TALDTPBONcUUSl0q93cSRDiTQ==
   dependencies:
     chalk "^4.0.0"
     change-case "^4.1.2"

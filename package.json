@@ -176,7 +176,7 @@
     "rough-notation": "0.5.1",
     "sass": "^1.45.0",
     "source-map-explorer": "^2.5.2",
-    "style-dictionary": "^3.0.3",
+    "style-dictionary": "^3.1.0",
     "stylelint": "^13.13.1",
     "stylelint-a11y": "^1.2.3",
     "stylelint-config-prettier": "^9.0.3",
