@@ -4,10 +4,12 @@ import { useLocale } from "../../hooks";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 
+import { SearchFiltersProvider } from "../contexts/search-filters";
+
 import { Button } from "../../ui/atoms/button";
 import Container from "../../ui/atoms/container";
 import List from "../common/list";
-import SearchFilter from "../../ui/organisms/search-filter";
+import SearchFilter from "../search-filter";
 import Tabs from "../../ui/molecules/tabs";
 
 import "./index.scss";
@@ -88,9 +90,10 @@ export default function Notifications() {
       </header>
 
       <Container>
-        <SearchFilter filters={filters} sorts={sorts} />
-
-        <List component={NotificationCard} apiUrl={listUrl} />
+        <SearchFiltersProvider>
+          <SearchFilter filters={filters} sorts={sorts} />
+          <List component={NotificationCard} apiUrl={listUrl} />
+        </SearchFiltersProvider>
       </Container>
     </>
   );

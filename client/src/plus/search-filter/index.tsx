@@ -1,6 +1,9 @@
-import React from "react";
-import { Button } from "../../atoms/button";
-import { Submenu } from "../../molecules/submenu";
+import React, { useContext } from "react";
+
+import { searchFiltersContext } from "../contexts/search-filters";
+
+import { Button } from "../../ui/atoms/button";
+import { Submenu } from "../../ui/molecules/submenu";
 
 import "./index.scss";
 
@@ -10,11 +13,26 @@ export default function SearchFilter({ filters, sorts }) {
     null
   );
 
+  const [selectedFilter, setSelectedFilter] = useContext(searchFiltersContext);
+  const [selectedSort, setSelectedSort] = useContext(searchFiltersContext);
+
   const filterMenu = {
     label: "Filters",
     id: "filters-menu",
     items: filters.map((filter) => ({
-      component: () => <Button type="action">{filter.label}</Button>,
+      component: () => (
+        <Button
+          type="action"
+          extraClasses={
+            selectedFilter === filter.param ? "active-menu-item" : undefined
+          }
+          onClickHandler={() => {
+            setSelectedFilter(filter.path);
+          }}
+        >
+          {filter.label}
+        </Button>
+      ),
     })),
   };
 
@@ -22,7 +40,19 @@ export default function SearchFilter({ filters, sorts }) {
     label: "Sort",
     id: "sort-menu",
     items: sorts.map((sort) => ({
-      component: () => <Button type="action">{sort.label}</Button>,
+      component: () => (
+        <Button
+          type="action"
+          extraClasses={
+            selectedSort === sort.param ? "active-menu-item" : undefined
+          }
+          onClickHandler={() => {
+            setSelectedSort(sort.path);
+          }}
+        >
+          {sort.label}
+        </Button>
+      ),
     })),
   };
 
