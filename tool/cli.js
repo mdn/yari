@@ -2,7 +2,7 @@ const fs = require("fs");
 const path = require("path");
 
 const klawSync = require("klaw-sync");
-const frontmatter = require("frontmatter");
+const frontmatter = require("front-matter");
 const program = require("@caporal/core").default;
 const chalk = require("chalk");
 const { prompt } = require("inquirer");
@@ -897,9 +897,15 @@ if (Mozilla && !Mozilla.dntEnabled()) {
     "frontmatter-inventory",
     "Create frontmatter content inventory as JSON"
   )
+  .argument("<output>", "Output to file or stdout", {
+    default: "stdout",
+  })
   .action(
-    tryOrExit(async ({ options }) => {
-      if (options.verbose) {
+    tryOrExit(async ({ args, options }) => {
+      const { verbose } = options;
+      const { output } = args;
+
+      if (verbose) {
         console.log(chalk.green("Checking for precense of CONTENT_ROOT"));
       }
 
@@ -909,34 +915,35 @@ if (Mozilla && !Mozilla.dntEnabled()) {
         );
       }
 
-      if (options.verbose) {
+      if (verbose) {
         console.log(chalk.green("CONTENT_ROOT set, generating inventory"));
       }
 
-      const inventory = {};
       const allPaths = klawSync(CONTENT_ROOT, {
         nodir: true,
         filter: (entry) => path.extname(entry.path) === ".md",
         traverseAll: true,
       });
 
-      allPaths.forEach((entry) => {
+      const inventory = allPaths.map((entry) => {
         const fileContents = fs.readFileSync(entry.path, "utf8");
         const parsed = frontmatter(fileContents);
-        inventory[entry.path.substring(entry.path.indexOf("/files"))] = {
-          frontmatter: parsed.data,
+
+        return {
+          path: entry.path.substring(entry.path.indexOf("/files")),
+          frontmatter: parsed.attributes,
         };
       });
 
-      if (options.verbose) {
+      if (output === "file") {
         console.log(chalk.green("Writing ./frontmatter-invetory.json"));
-      }
-      fs.writeFileSync(
-        "./frontmatter-inventory.json",
-        JSON.stringify(inventory)
-      );
-      if (options.verbose) {
+        fs.writeFileSync(
+          "./frontmatter-inventory.json",
+          JSON.stringify(inventory)
+        );
         console.log(chalk.green("frontmatter-invetory.json written to disk."));
+      } else if (output === "stdout") {
+        process.stdout.write(JSON.stringify(inventory));
       }
     })
   )
