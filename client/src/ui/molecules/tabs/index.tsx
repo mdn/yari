@@ -18,11 +18,11 @@ export default function Tabs({ tabs }: { tabs: TabItem[] }) {
     <nav className="tabs">
       <Container>
         <ul>
-          {tabs.map((tab: TabItem) => {
+          {tabs.map((tab: TabItem, index) => {
             const currentCheck = location.pathname === tab.path;
 
             return (
-              <li className="tab">
+              <li className="tab" key={`tab-${index}`}>
                 <Link
                   to={tab.path}
                   aria-current={currentCheck}

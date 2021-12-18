@@ -4,9 +4,9 @@ interface SearchFiltersInterface {
   selectedTerms: string;
   selectedFilter: string;
   selectedSort: string;
-  setSelectedTerms: (terms: string) => void;
-  setSelectedFilter: (filter: string) => void;
-  setSelectedSort: (sort: string) => void;
+  setSelectedTerms: Function;
+  setSelectedFilter: Function;
+  setSelectedSort: Function;
 }
 
 const searchFiltersContext = React.createContext<SearchFiltersInterface>({

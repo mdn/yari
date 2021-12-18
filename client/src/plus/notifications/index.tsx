@@ -33,7 +33,7 @@ function NotificationCard(item) {
         {dayjs(item.created).fromNow().toString()}
       </time>
 
-      <Button type="action" icon="ellipses"></Button>
+      <Button type="action" icon="trash"></Button>
     </article>
   );
 }

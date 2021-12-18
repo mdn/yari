@@ -26,7 +26,7 @@ export default function SearchFilter({ filters, sorts }) {
             selectedFilter === filter.param ? "active-menu-item" : undefined
           }
           onClickHandler={() => {
-            setSelectedFilter(filter.path);
+            setSelectedFilter(filter.param);
           }}
         >
           {filter.label}
@@ -46,7 +46,7 @@ export default function SearchFilter({ filters, sorts }) {
             selectedSort === sort.param ? "active-menu-item" : undefined
           }
           onClickHandler={() => {
-            setSelectedSort(sort.path);
+            setSelectedSort(sort.param);
           }}
         >
           {sort.label}

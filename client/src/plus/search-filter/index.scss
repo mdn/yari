@@ -1,3 +1,5 @@
+@use "../../ui/vars" as *;
+
 .search-filter {
   display: flex;
   gap: 0.5rem;
@@ -6,4 +8,15 @@
 
 .search-filter [type="search"] {
   flex: 1;
+}
+
+.search-filter-filters {
+  position: relative;
+}
+
+@media screen and (min-width: $screen-md) {
+  .search-filter .submenu {
+    max-width: max-content;
+    right: 0;
+  }
 }
