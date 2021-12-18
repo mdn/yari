@@ -1,29 +1,35 @@
 import React from "react";
 
-type SearchFiltersData = {
-  selectedTerms?: string;
-  selectedFilters?: string;
-  selectedSort?: string;
-};
+interface SearchFiltersInterface {
+  selectedTerms: string;
+  selectedFilter: string;
+  selectedSort: string;
+  setSelectedTerms: (terms: string) => void;
+  setSelectedFilter: (filter: string) => void;
+  setSelectedSort: (sort: string) => void;
+}
 
-const searchFiltersContext = React.createContext<SearchFiltersData>({
+const searchFiltersContext = React.createContext<SearchFiltersInterface>({
   selectedTerms: "",
-  selectedFilters: "",
+  selectedFilter: "",
   selectedSort: "",
+  setSelectedTerms: () => {},
+  setSelectedFilter: () => {},
+  setSelectedSort: () => {},
 });
 
 const SearchFiltersProvider = (props) => {
   const [selectedTerms, setSelectedTerms] = React.useState<string>("");
-  const [selectedFilters, setSelectedFilters] = React.useState<string>("");
+  const [selectedFilter, setSelectedFilter] = React.useState<string>("");
   const [selectedSort, setSelectedSort] = React.useState<string>("");
 
   const state = {
     selectedTerms,
-    selectedFilters,
+    selectedFilter,
     selectedSort,
 
     setSelectedTerms,
-    setSelectedFilters,
+    setSelectedFilter,
     setSelectedSort,
   };
 

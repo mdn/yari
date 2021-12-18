@@ -1,9 +1,8 @@
 import React, { useContext } from "react";
 
-import { searchFiltersContext } from "../contexts/search-filters";
-
 import { Button } from "../../ui/atoms/button";
 import { Submenu } from "../../ui/molecules/submenu";
+import { searchFiltersContext } from "../contexts/search-filters";
 
 import "./index.scss";
 
@@ -13,8 +12,8 @@ export default function SearchFilter({ filters, sorts }) {
     null
   );
 
-  const [selectedFilter, setSelectedFilter] = useContext(searchFiltersContext);
-  const [selectedSort, setSelectedSort] = useContext(searchFiltersContext);
+  const { selectedFilter, selectedSort, setSelectedFilter, setSelectedSort } =
+    useContext(searchFiltersContext);
 
   const filterMenu = {
     label: "Filters",
