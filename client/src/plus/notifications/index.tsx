@@ -1,10 +1,13 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 
 import { useLocale } from "../../hooks";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 
-import { SearchFiltersProvider } from "../contexts/search-filters";
+import {
+  searchFiltersContext,
+  SearchFiltersProvider,
+} from "../contexts/search-filters";
 
 import { Button } from "../../ui/atoms/button";
 import Container from "../../ui/atoms/container";
@@ -17,9 +20,18 @@ import "./index.scss";
 dayjs.extend(relativeTime);
 
 function NotificationCard(item) {
+  function toggleStar() {
+    item.starred = !item.starred;
+  }
+
   return (
     <article className={`notification-card ${!item.read ? "unread" : ""}`}>
-      <Button type="action" extraClasses="notification-card-star" icon="star" />
+      <Button
+        type="action"
+        extraClasses="notification-card-star"
+        icon={item.starred ? "star-filled" : "star"}
+        onClickHandler={toggleStar}
+      />
 
       <div className="notification-card-description">
         <h2 className="notification-card-title">{item.title}</h2>
@@ -38,9 +50,13 @@ function NotificationCard(item) {
   );
 }
 
-export default function Notifications() {
+function NotificationsLayout() {
   const locale = useLocale();
-  const [listUrl] = useState("/api/v1/plus/notifications/");
+
+  const { selectedTerms, selectedFilter, selectedSort } =
+    useContext(searchFiltersContext);
+
+  const listUrl = `/api/v1/plus/notifications/?${selectedTerms}&${selectedFilter}&${selectedSort}`;
 
   const tabs = [
     {
@@ -85,16 +101,21 @@ export default function Notifications() {
         <Container>
           <h1>My Notifications</h1>
         </Container>
-
         <Tabs tabs={tabs} />
       </header>
 
       <Container>
-        <SearchFiltersProvider>
-          <SearchFilter filters={filters} sorts={sorts} />
-          <List component={NotificationCard} apiUrl={listUrl} />
-        </SearchFiltersProvider>
+        <SearchFilter filters={filters} sorts={sorts} />
+        <List component={NotificationCard} apiUrl={listUrl} />
       </Container>
     </>
+  );
+}
+
+export default function Notifications() {
+  return (
+    <SearchFiltersProvider>
+      <NotificationsLayout />
+    </SearchFiltersProvider>
   );
 }
