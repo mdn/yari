@@ -20,6 +20,7 @@ button,
   display: inline-block;
   padding: 0;
   text-decoration: none;
+  border-radius: var(--button-radius);
 }
 
 .button-wrap {

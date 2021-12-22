@@ -13,8 +13,13 @@ export default function SearchFilter({ filters, sorts }) {
     null
   );
 
-  const { selectedFilter, selectedSort, setSelectedFilter, setSelectedSort } =
-    useContext(searchFiltersContext);
+  const {
+    selectedFilter,
+    selectedSort,
+    setSelectedTerms,
+    setSelectedFilter,
+    setSelectedSort,
+  } = useContext(searchFiltersContext);
 
   const filterMenu = {
     label: "Filters",
@@ -82,7 +87,13 @@ export default function SearchFilter({ filters, sorts }) {
 
   return (
     <form className="search-filter">
-      <Search name="terms" placeholder="Filter by keyword" />
+      <Search
+        name="terms"
+        placeholder="Filter by keyword"
+        onChangeHandler={(e) => {
+          setSelectedTerms(e.target.value);
+        }}
+      />
 
       <div className="search-filter-category search-filter-filters">
         <Button
