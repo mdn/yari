@@ -6,6 +6,7 @@ import { PageContentContainer } from "../ui/atoms/page-content";
 import { PageNotFound } from "../page-not-found";
 import Notifications from "./notifications";
 import WatchedPages from "./watched";
+
 const OfferOverview = React.lazy(() => import("./offer-overview"));
 const Bookmarks = React.lazy(() => import("./bookmarks"));
 const FeatureHighlight = React.lazy(() => import("./feature-highlight"));

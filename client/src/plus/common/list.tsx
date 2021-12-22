@@ -12,7 +12,13 @@ import {
 import { DISABLE_AUTH } from "../../constants";
 import { AuthDisabled } from "../../ui/atoms/auth-disabled";
 
-export default function List({ apiUrl, component }) {
+export default function List({
+  apiUrl,
+  component,
+}: {
+  apiUrl: string;
+  component: any;
+}) {
   const [searchParams, setSearchParams] = useSearchParams();
   const { pathname } = useLocation();
   const userData = useUserData();
@@ -107,11 +113,8 @@ export default function List({ apiUrl, component }) {
       {data?.items.map(component)}
       {(nextPage !== 0 || previousPage !== 0) && (
         <div className="pagination">
-          {previousPage !== 0 && (
-            <Link to={getPaginationURL(previousPage)}>Page {previousPage}</Link>
-          )}{" "}
           {nextPage !== 0 && (
-            <Link to={getPaginationURL(nextPage)}>Page {nextPage}</Link>
+            <Link to={getPaginationURL(nextPage)}>Load More</Link>
           )}
         </div>
       )}
