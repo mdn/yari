@@ -140,7 +140,7 @@ export function Footer() {
             <li className="page-footer-app-item">
               <a
                 className="page-footer-app-dl is-apple"
-                href="#"
+                href="/"
                 target="_blank"
                 rel="noopener noreferrer"
               >
@@ -153,7 +153,7 @@ export function Footer() {
             <li className="page-footer-app-item">
               <a
                 className="page-footer-app-dl is-google"
-                href="#"
+                href="/"
                 target="_blank"
                 rel="noopener noreferrer"
               >
@@ -166,7 +166,7 @@ export function Footer() {
             <li className="page-footer-app-item">
               <a
                 className="page-footer-app-dl is-ms"
-                href="#"
+                href="/"
                 target="_blank"
                 rel="noopener noreferrer"
               >
@@ -177,7 +177,7 @@ export function Footer() {
         </div>
 
         <div className="page-footer-moz">
-          <a href="#" className="footer-moz-logo-link">
+          <a href="/" className="footer-moz-logo-link">
             <MozLogo />
           </a>
           <ul className="footer-moz-list">
@@ -213,7 +213,7 @@ export function Footer() {
             </li>
             <li className="footer-moz-item">
               <a
-                href="#"
+                href="/"
                 className="footer-moz-link"
                 target="_blank"
                 rel="noopener noreferrer"
