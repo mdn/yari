@@ -22,6 +22,10 @@
     background-color: var(--icon-secondary);
   }
 
+  & + & {
+    border-top: none;
+  }
+
   &-description {
     display: flex;
     flex-direction: column;

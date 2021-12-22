@@ -1,6 +1,7 @@
 import React, { useContext } from "react";
 
 import { Button } from "../../ui/atoms/button";
+import { Search } from "../../ui/atoms/search";
 import { Submenu } from "../../ui/molecules/submenu";
 import { searchFiltersContext } from "../contexts/search-filters";
 
@@ -81,11 +82,11 @@ export default function SearchFilter({ filters, sorts }) {
 
   return (
     <form className="search-filter">
-      <input type="search" />
+      <Search name="terms" placeholder="Filter by keyword" />
 
-      <div className="search-filter-filters">
+      <div className="search-filter-category search-filter-filters">
         <Button
-          type="action"
+          type="select"
           ariaControls={filterMenu.id}
           ariaHasPopup={"menu"}
           ariaExpanded={filterMenu.id === visibleSubMenuId}
@@ -102,9 +103,9 @@ export default function SearchFilter({ filters, sorts }) {
         />
       </div>
 
-      <div className="search-filter-sorts">
+      <div className="search-filter-category search-filter-sorts">
         <Button
-          type="action"
+          type="select"
           ariaControls={sortMenu.id}
           ariaHasPopup={"menu"}
           ariaExpanded={sortMenu.id === visibleSubMenuId}

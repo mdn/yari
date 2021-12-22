@@ -1,4 +1,5 @@
-button {
+button,
+.button {
   -webkit-appearance: none; /* stylelint-disable-line property-no-vendor-prefix */
   appearance: none;
   background: none;
@@ -15,10 +16,6 @@ button {
   --button-padding: 0.5rem;
   --button-radius: var(--elem-radius, 0.25rem);
 
-  appearance: none;
-  background: none;
-  border: none;
-  border-radius: var(--button-radius);
   cursor: pointer;
   display: inline-block;
   padding: 0;
@@ -131,6 +128,25 @@ button {
   }
 }
 
+/* Select Version */
+.button.select {
+  --button-bg: var(--background-primary);
+  --button-border-color: var(--border-primary);
+  --button-color: var(--text-secondary);
+  appearance: none;
+  background: none;
+  border: none;
+  padding: 0;
+  text-decoration: none;
+
+  .button-wrap {
+    position: relative;
+    padding-right: 30px;
+    box-shadow: var(--shadow-01);
+  }
+}
+
+/*
 .high-contrast-white {
   .button:focus {
     --button-border-color: var(--border-primary);
@@ -158,3 +174,4 @@ button {
     --button-color: var(--text-secondary);
   }
 }
+*/

@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useContext } from "react";
 
 import { useLocale } from "../../hooks";
 import dayjs from "dayjs";
@@ -62,10 +62,6 @@ function NotificationsLayout() {
     {
       label: "All Notifications",
       path: `/${locale}/plus/notifications/`,
-    },
-    {
-      label: "Watch List",
-      path: `/${locale}/plus/notifications/watched`,
     },
     {
       label: "Starred",
