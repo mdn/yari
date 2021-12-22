@@ -18,7 +18,7 @@ import { PageNotFound } from "./page-not-found";
 
 import { SignIn, SignOut } from "./auth";
 import { Settings } from "./settings";
-import { Banner } from "./banners";
+// import { Banner } from "./banners";
 
 const AllFlaws = React.lazy(() => import("./flaws"));
 const Translations = React.lazy(() => import("./translations"));
@@ -40,7 +40,7 @@ function Layout({ pageType, children }) {
        Note, if you do uncomment banners again (because there's one to possible
        display), remember to go to
        */}
-      {!isServer && <Banner />}
+      {/* !isServer && <Banner /> */}
       <div className={`page-wrapper ${pageType}`}>
         <Header />
         {children}
