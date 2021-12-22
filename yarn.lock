@@ -5865,10 +5865,10 @@ browser-process-hrtime@^1.0.0:
   resolved "https://registry.yarnpkg.com/browser-process-hrtime/-/browser-process-hrtime-1.0.0.tgz#3c9b4b7d782c8121e56f10106d84c0d0ffc94626"
   integrity sha512-9o5UecI3GhkpM6DrXr69PblIuWxPKk9Y0jHBRhdocZ2y7YECBFCsHm79Pr3OyR2AvjhDkabFJaDJMYRazHgsow==
 
-browser-specs@^2.19.2:
-  version "2.19.2"
-  resolved "https://registry.yarnpkg.com/browser-specs/-/browser-specs-2.19.2.tgz#b93f75e825948e1f6281fae775fb74e6163758eb"
-  integrity sha512-/dyBqOqJZPVDKInLGSpbYFIqoDa89yZ2OmEyu9eju4k3ZzWSCkw/pyyFbvTe/+j1BmSS1mnBMNKVOJFuYxEZlA==
+browser-specs@^2.19.3:
+  version "2.19.3"
+  resolved "https://registry.yarnpkg.com/browser-specs/-/browser-specs-2.19.3.tgz#d4bab1bef1e61b4537052f51ee4cbff2a8afa72d"
+  integrity sha512-5+HbEfJcsn91kUWguMts8c3O8aagvPMIzdTXS1pHpQtGVu+jrFUtDlo2w6kABBg8xVTvBX2bQnFH4iMLGAO1Uw==
 
 browserify-aes@^1.0.0, browserify-aes@^1.0.4:
   version "1.2.0"
@@ -13574,10 +13574,10 @@ mdn-data@2.0.14:
   resolved "https://registry.yarnpkg.com/mdn-data/-/mdn-data-2.0.14.tgz#7113fc4281917d63ce29b43446f701e68c25ba50"
   integrity sha512-dn6wd0uw5GsdswPFfsgMp5NSB0/aDe6fK94YJV/AJDYXL6HVLWBsxeq7js7Ad+mU2K9LAlwpk6kN2D5mwCPVow==
 
-mdn-data@2.0.23:
-  version "2.0.23"
-  resolved "https://registry.yarnpkg.com/mdn-data/-/mdn-data-2.0.23.tgz#dfb6c41e50a0edb808cf340973ab29321b70808e"
-  integrity sha512-IonVb7pfla2U4zW8rc7XGrtgq11BvYeCxWN8HS+KFBnLDE7XDK9AAMVhRuG6fj9BBsjc69Fqsp6WEActEdNTDQ==
+mdn-data@2.0.25:
+  version "2.0.25"
+  resolved "https://registry.yarnpkg.com/mdn-data/-/mdn-data-2.0.25.tgz#17556b0bcdfacfbedc08b1be894ffb14b9209a7f"
+  integrity sha512-AQ5BW06x903h845oyqFUzzppJSn4KhCecjsC29RiIeB40Crbw8jTTtce6oAmM1rwIXMyWkElbz1Fo+l7GBY8HQ==
 
 mdn-data@2.0.4:
   version "2.0.4"
@@ -17570,10 +17570,10 @@ sass-loader@^10.0.5:
     schema-utils "^3.0.0"
     semver "^7.3.2"
 
-sass@^1.45.0:
-  version "1.45.0"
-  resolved "https://registry.yarnpkg.com/sass/-/sass-1.45.0.tgz#192ede1908324bb293a3e403d1841dbcaafdd323"
-  integrity sha512-ONy5bjppoohtNkFJRqdz1gscXamMzN3wQy1YH9qO2FiNpgjLhpz/IPRGg0PpCjyz/pWfCOaNEaiEGCcjOFAjqw==
+sass@^1.45.1:
+  version "1.45.1"
+  resolved "https://registry.yarnpkg.com/sass/-/sass-1.45.1.tgz#fa03951f924d1ba5762949567eaf660e608a1ab0"
+  integrity sha512-pwPRiq29UR0o4X3fiQyCtrESldXvUQAAE0QmcJTpsI4kuHHcLzZ54M1oNBVIXybQv8QF2zfkpFcTxp8ta97dUA==
   dependencies:
     chokidar ">=3.0.0 <4.0.0"
     immutable "^4.0.0"
