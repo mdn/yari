@@ -141,8 +141,21 @@ button,
 
   .button-wrap {
     position: relative;
-    padding-right: 30px;
+    padding-right: 26px;
     box-shadow: var(--shadow-01);
+  }
+
+  .button-wrap::after {
+    position: absolute;
+    top: calc(50% - 0.5rem);
+    right: 0.5rem;
+    display: block;
+    width: 16px;
+    height: 16px;
+    background-color: var(--icon-primary);
+    mask-image: url("../../../assets/icons/small-arrow.svg");
+    mask-size: cover;
+    content: "";
   }
 }
 

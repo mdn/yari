@@ -12,6 +12,7 @@ type SearchProps = {
    * Should the button be disabled? This is optional with a default of false
    */
   isDisabled?: boolean;
+  onChangeHandler?: (event: React.ChangeEvent<HTMLInputElement>) => void;
   onClickHandler?: (event: React.MouseEvent<Element>) => void;
   onFocusHandler?: (event: React.FocusEvent<Element>) => void;
   size?: "small" | "medium";
@@ -23,6 +24,7 @@ export const Search = ({
   extraClasses,
   id,
   isDisabled,
+  onChangeHandler,
   onClickHandler,
   onFocusHandler,
   placeholder,
@@ -38,6 +40,9 @@ export const Search = ({
         name={name}
         placeholder={placeholder}
         value={value}
+        onFocus={onFocusHandler}
+        onChange={onChangeHandler}
+        onClick={onClickHandler}
       />
       <button type="submit" className="button action has-icon search-button">
         <span className="button-wrap">

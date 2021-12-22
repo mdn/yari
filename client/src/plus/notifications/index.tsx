@@ -86,8 +86,8 @@ function NotificationsLayout() {
       param: "sort=date",
     },
     {
-      label: "Time",
-      param: "sort=time",
+      label: "Title",
+      param: "sort=title",
     },
   ];
 
