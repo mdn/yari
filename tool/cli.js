@@ -893,30 +893,16 @@ if (Mozilla && !Mozilla.dntEnabled()) {
     })
   )
 
-  .command(
-    "frontmatter-inventory",
-    "Create frontmatter content inventory as JSON"
+  .command("inventory", "Create content inventory as JSON")
+  .help(
+    "In order to run the command, ensure that you have CONTENT_ROOT set in your .env file. For example: CONTENT_ROOT=/Users/steve/mozilla/mdn-content/files"
   )
-  .argument("<output>", "Output to file or stdout", {
-    default: "stdout",
-  })
   .action(
-    tryOrExit(async ({ args, options }) => {
-      const { verbose } = options;
-      const { output } = args;
-
-      if (verbose) {
-        console.log(chalk.green("Checking for precense of CONTENT_ROOT"));
-      }
-
+    tryOrExit(async () => {
       if (!CONTENT_ROOT) {
         throw new Error(
-          "CONTENT_ROOT not set. Please see the docs at tool/README.md"
+          "CONTENT_ROOT not set. Please run yarn tool inventory --help for more information."
         );
-      }
-
-      if (verbose) {
-        console.log(chalk.green("CONTENT_ROOT set, generating inventory"));
       }
 
       const allPaths = klawSync(CONTENT_ROOT, {
@@ -935,16 +921,7 @@ if (Mozilla && !Mozilla.dntEnabled()) {
         };
       });
 
-      if (output === "file") {
-        console.log(chalk.green("Writing ./frontmatter-invetory.json"));
-        fs.writeFileSync(
-          "./frontmatter-inventory.json",
-          JSON.stringify(inventory)
-        );
-        console.log(chalk.green("frontmatter-invetory.json written to disk."));
-      } else if (output === "stdout") {
-        process.stdout.write(JSON.stringify(inventory));
-      }
+      process.stdout.write(JSON.stringify(inventory, undefined, 2));
     })
   )
 

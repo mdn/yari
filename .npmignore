@@ -42,4 +42,3 @@ webpack.config.js
 jest.config.js
 *.test.js
 .storybook/
-frontmatter-inventory.json
