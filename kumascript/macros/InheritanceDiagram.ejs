@@ -11,24 +11,23 @@
     - http://localhost:3000/en-US/docs/Web/API/USB/connect_event
 */
 
-const data = web.getJSONData("InterfaceData");
-const href = '/' + env.locale + '/docs/Web/API/';
+const data = web.getJSONData("InterfaceData")[0];
+const href = `/${env.locale}/docs/Web/API/`;
 const mainInterfaceName = $0 || env.slug.replace('Web/API/','').split('/')[0];
 
-let out = "";
 let height = 40;
 let offset = 0;
 let xpos = 1;
 let ypos = 1;
 
 let inheritanceChain = [mainInterfaceName];
-let inh = data[0][mainInterfaceName] != undefined ? data[0][mainInterfaceName].inh : '';
+let inh = data[mainInterfaceName] != undefined ? data[mainInterfaceName].inh : '';
 
 function getInheritance(inh) {
-  if (inh.length > 0) {
+  if (inh !== '') {
     inheritanceChain.unshift(inh);
-    if (Object.prototype.hasOwnProperty.call(data[0], inh)) {
-        inh = data[0][inh].inh;
+    if (data[inh]) {
+        inh = data[inh].inh;
         getInheritance(inh);
     }
   }
@@ -70,29 +69,34 @@ function lineWithTriangle(x, y, reverse) {
 }
 
 function connectingLineWithTriangle() {
-  out += `<polyline points="${xpos},${ypos+14} ${xpos+10},${ypos+9} ${xpos+10},${ypos+19} ${xpos},${ypos+14}" stroke="#D4DDE4" fill="none"/>`;
+  let str = '';
+
+  str += `<polyline points="${xpos},${ypos+14} ${xpos+10},${ypos+9} ${xpos+10},${ypos+19} ${xpos},${ypos+14}" stroke="#D4DDE4" fill="none"/>`;
   xpos += 10;
-  out += `<line x1="${xpos}" y1="${ypos+14}" x2="${xpos+8}" y2="${ypos+14}" stroke="#D4DDE4"/>`;
+  str += `<line x1="${xpos}" y1="${ypos+14}" x2="${xpos+8}" y2="${ypos+14}" stroke="#D4DDE4"/>`;
   xpos += 8;
-  out += `<line x1="${xpos}" y1="${ypos+14}" x2="${xpos}" y2="${ypos+59}" stroke="#D4DDE4"/>`;
+  str += `<line x1="${xpos}" y1="${ypos+14}" x2="${xpos}" y2="${ypos+59}" stroke="#D4DDE4"/>`;
   ypos = 60;
-  out += `<line x1="${xpos}" y1="${ypos}" x2="${xpos-17}" y2="${ypos}" stroke="#D4DDE4"/>`;
-  xpos -= 18;
-  ypos = 47
+  str += `<line x1="${xpos}" y1="${ypos}" x2="${xpos-17}" y2="${ypos}" stroke="#D4DDE4"/>`;
+
+  return str;
 }
 
 function drawDiagram(inheritanceChain) {
+  let str = '';
   for (let i = 0; i < inheritanceChain.length; i++) {
     const fill = (inheritanceChain[i] == mainInterfaceName) ? '#F4F7F8': '#fff';
     // we are going to the second row with a connecting line
     if (i === 4) {
-      connectingLineWithTriangle()
+      str += connectingLineWithTriangle();
+      xpos -= 18;
+      ypos = 47;
     }
     // first row
     if (i < 4) {
-      out += rectWithText(xpos, ypos, fill, inheritanceChain[i]);
+      str += rectWithText(xpos, ypos, fill, inheritanceChain[i]);
       if (i != inheritanceChain.length - 1 && i != 3) {
-        out += lineWithTriangle(xpos, ypos);
+        str += lineWithTriangle(xpos, ypos);
         xpos += 30;
       }
     // second row
@@ -101,19 +105,20 @@ function drawDiagram(inheritanceChain) {
       if (i > 5) {
         offset = 200; // in case of a really long chain, like SVGTextPositioningElement
       }
-      out += rectWithText(xpos, ypos, fill, inheritanceChain[i], true);
-      if (i != inheritanceChain.length - 1 && i != 3) {
-        out += lineWithTriangle(xpos, ypos, true);
+      str += rectWithText(xpos, ypos, fill, inheritanceChain[i], true);
+      if (i != inheritanceChain.length - 1) {
+        str += lineWithTriangle(xpos, ypos, true);
         xpos -= 30;
       }
     }
   }
+  return str;
 }
 
-drawDiagram(inheritanceChain);
+let diagram = drawDiagram(inheritanceChain);
 
 let output = `<svg viewbox="-${offset} 0 650 ${height}" preserveAspectRatio="xMinYMin meet">`;
-output += out;
+output += diagram;
 output +='</svg>';
 
 %>
