@@ -19,15 +19,15 @@ import "./index.scss";
 dayjs.extend(relativeTime);
 
 function NotificationCard(item) {
-  /*
   function toggleStar() {
-    const localApiURL = `/api/v1/plus/notifications/${item.id}/star`;
+    //const localApiURL = `/api/v1/plus/notifications/${item.id}/star`;
+    return true;
   }
 
   function deleteNotification() {
-    const localApiURL = `/api/v1/plus/notifications/${item.id}/delete`;
+    //const localApiURL = `/api/v1/plus/notifications/${item.id}/delete`;
+    return true;
   }
-  */
 
   return (
     <article className={`notification-card ${!item.read ? "unread" : ""}`}>
