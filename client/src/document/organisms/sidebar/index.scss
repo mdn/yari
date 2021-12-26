@@ -13,6 +13,10 @@
     font-size: $medium-font-size;
     margin-bottom: $base-spacing;
   }
+  
+  li {
+    word-break: break-all;
+  }
 
   ol {
     list-style: none;
