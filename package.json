@@ -154,7 +154,7 @@
     "react-is": "^17.0.2",
     "react-refresh": "0.11",
     "react-router": "6.0.2",
-    "react-router-dom": "6.0.0-beta.2",
+    "react-router-dom": "6.2.1",
     "react-scripts": "4.0.3",
     "rehype-minify-whitespace": "^4.0.5",
     "remark-prettier": "^1.3.0",
