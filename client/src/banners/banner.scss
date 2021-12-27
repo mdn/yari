@@ -1,5 +1,8 @@
 @use "sass:math";
 
+@use "~@mdn/minimalist/sass/vars/color-palette";
+@use "~@mdn/minimalist/sass/vars/color-gradients";
+
 @import "~@mdn/minimalist/sass/vars/layout";
 @import "~@mdn/minimalist/sass/vars/typography";
 
@@ -12,7 +15,7 @@
   font-family: $heading-font-family;
   min-height: 40px;
   height: 100%;
-  padding: 0 $base-spacing;
+  padding: 0 1rem;
 
   .mdn-cta-copy {
     margin: 0;

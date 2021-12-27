@@ -17,7 +17,7 @@ export default function WritersHomepage() {
       <div id="writers-homepage">
         <h2>Writer's home page</h2>
 
-        <Search preload={true} />
+        <Search />
 
         {!isServer && (
           <React.Suspense fallback={null}>

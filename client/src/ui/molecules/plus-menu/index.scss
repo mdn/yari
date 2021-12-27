@@ -1,0 +1,20 @@
+@use "sass:color";
+@use "../../vars" as *;
+
+.submenu.mdn-plus {
+  a:hover,
+  a:focus {
+    background-color: var(--accent-primary-engage);
+  }
+}
+
+.submenu-icon {
+  &.bookmarks-icon,
+  &.notifications-icon {
+    background-color: var(--accent-primary);
+
+    &::before {
+      background-color: white;
+    }
+  }
+}

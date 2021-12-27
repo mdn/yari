@@ -5,14 +5,6 @@ function testURL(pathname = "/") {
 }
 
 test.describe("Basic viewing of functional pages", () => {
-  test("open the temporary home page", async ({ page }) => {
-    await page.goto(testURL("/"));
-    expect(await page.title()).toContain("MDN Web Docs");
-    expect(await page.innerText("h1")).toBe(
-      "Resources for developers, by developers."
-    );
-  });
-
   test("open the /en-US/docs/Web/Foo page", async ({ page }) => {
     await page.goto(testURL("/en-US/docs/Web/Foo"));
     expect(await page.title()).toContain("<foo>: A test tag");
@@ -20,16 +12,17 @@ test.describe("Basic viewing of functional pages", () => {
     expect(await page.isVisible(".metadata time")).toBeTruthy();
   });
 
-  test("open the French /fr/docs/Web/Foo page and navigate to English", async ({
-    page,
-  }) => {
-    await page.goto(testURL("/fr/docs/Web/Foo"));
-    expect(await page.innerText("h1")).toBe("<foo>: Une page de test");
-    await page.click("text=View in English");
-    expect(await page.innerText("h1")).toBe("<foo>: A test tag");
-    // Should have been redirected too...
-    expect(page.url()).toBe(testURL("/en-US/docs/Web/Foo/"));
-  });
+  // @TODO Temporarily disabled until we reintroduce the language selector
+  // test("open the French /fr/docs/Web/Foo page and navigate to English", async ({
+  //   page,
+  // }) => {
+  //   await page.goto(testURL("/fr/docs/Web/Foo"));
+  //   expect(await page.innerText("h1")).toBe("<foo>: Une page de test");
+  //   await page.click("text=View in English");
+  //   expect(await page.innerText("h1")).toBe("<foo>: A test tag");
+  //   // Should have been redirected too...
+  //   expect(page.url()).toBe(testURL("/en-US/docs/Web/Foo/"));
+  // });
 
   test("open the /en-US/docs/Web/InteractiveExample page", async ({ page }) => {
     await page.goto(testURL("/en-US/docs/Web/InteractiveExample"));
@@ -168,14 +161,6 @@ test.describe("Basic viewing of functional pages", () => {
     // stuff but do note that the page you're on is always a valid link
     expect(
       await page.innerText(
-        "nav a.breadcrumb-penultimate[property=item][typeof=WebPage]"
-      )
-    ).toBe(
-      // You gotta know your fixture documents
-      "Web technology for developers"
-    );
-    expect(
-      await page.innerText(
         "nav a.breadcrumb-current-page[property=item][typeof=WebPage]"
       )
     ).toBe(
@@ -204,14 +189,6 @@ test.describe("Basic viewing of functional pages", () => {
     expect(await page.getAttribute(".fallback-link a", "href")).toBe(
       "/en-US/docs/Web/Foo"
     );
-  });
-
-  test("give the home page and see Hacks blog posts", async ({ page }) => {
-    await page.goto(testURL("/en-US/"));
-    expect(
-      await page.isVisible("text=Resources for developers, by developers.")
-    ).toBeTruthy();
-    expect(await page.isVisible("text=Hacks Blog")).toBeTruthy();
   });
 });
 

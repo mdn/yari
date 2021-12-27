@@ -1,0 +1,17 @@
+@use "../../vars" as *;
+
+.bookmark-button {
+  align-items: center;
+  background-color: transparent;
+  border-bottom: 1px solid var(--border-secondary);
+  display: flex;
+  gap: 0.5rem;
+  padding: 0.5rem;
+  width: 100%;
+
+  @media screen and (min-width: $screen-md) {
+    border-bottom: 0;
+    border-radius: 0.25rem;
+    padding: 0;
+  }
+}

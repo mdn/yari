@@ -7,8 +7,10 @@ import useSWR from "swr";
 import { Doc, FuzzySearch } from "./fuzzy-search";
 import { preload, preloadSupported } from "./document/preloading";
 
+import { Button } from "./ui/atoms/button";
+
 import { useLocale } from "./hooks";
-import { getPlaceholder, SearchProps, useFocusOnSlash } from "./search-utils";
+import { SearchProps, useFocusOnSlash } from "./search-utils";
 
 const PRELOAD_WAIT_MS = 500;
 const SHOW_INDEXING_AFTER_MS = 500;
@@ -135,6 +137,7 @@ function BreadcrumbURI({
 }
 
 type InnerSearchNavigateWidgetProps = SearchProps & {
+  onCloseSearch?: () => void;
   onResultPicked?: () => void;
   defaultSelection: [number, number];
 };
@@ -142,6 +145,7 @@ type InnerSearchNavigateWidgetProps = SearchProps & {
 function useHasNotChangedFor(value: string, ms: number) {
   const [hasNotChanged, setHasNotChanged] = useState(false);
   const previousValue = useRef(value);
+
   useEffect(() => {
     if (previousValue.current === value) {
       return;
@@ -168,6 +172,7 @@ function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
     onChangeInputValue,
     isFocused,
     onChangeIsFocused,
+    onCloseSearch,
     onResultPicked,
     defaultSelection,
   } = props;
@@ -389,7 +394,7 @@ function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
             : "search-input-field",
           id: "main-q",
           name: "q",
-          placeholder: getPlaceholder(isFocused),
+          placeholder: "Search MDN",
           onMouseOver: initializeSearchIndex,
           onFocus: () => {
             onChangeIsFocused(true);
@@ -418,12 +423,23 @@ function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
         })}
       />
 
-      <input
-        type="submit"
-        className="ghost search-button"
-        value=""
-        aria-label="Search"
-      />
+      <Button
+        type="action"
+        icon="cancel"
+        extraClasses="close-search-button"
+        onClickHandler={onCloseSearch}
+      >
+        <span className="visually-hidden">Close search</span>
+      </Button>
+
+      <Button
+        type="action"
+        icon="search"
+        buttonType="submit"
+        extraClasses="search-button"
+      >
+        <span className="visually-hidden">Search</span>
+      </Button>
 
       <div {...getMenuProps()}>
         {searchResults && <div className="search-results">{searchResults}</div>}

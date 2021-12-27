@@ -1,9 +1,9 @@
 @import "~@mdn/minimalist/sass/vars/layout";
 
 .bc-github-link {
-  margin: $base-unit 0;
+  margin: 1rem 0;
 
-  @media #{$mq-small-desktop-and-up} {
+  @media screen and (min-width: $screen-md) {
     float: right;
     white-space: pre-line;
   }

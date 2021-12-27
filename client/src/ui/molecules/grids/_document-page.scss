@@ -1,66 +1,66 @@
-/* The document grid */
-@supports (display: grid) {
-  .page-wrapper.document-page {
-    grid-template-columns: 70% 30%;
+@use "../../vars" as *;
 
-    @media #{$mq-small-desktop-and-up} {
-      grid-template-columns: minmax(25%, 75%) minmax(75%, 25%);
-      grid-template-rows: repeat(3, auto) max-content 1fr;
+.document-page {
+  .page-header,
+  .generic-loading,
+  .article-actions-container,
+  .localized-content-note,
+  .document-toc-container,
+  .main-content,
+  .sidebar,
+  .metadata {
+    display: flex;
+  }
+
+  .main-content,
+  .sidebar {
+    flex-direction: column;
+  }
+
+  .main-content {
+    padding: 1rem;
+    grid-column: 2;
+  }
+
+  .sidebar {
+    display: none;
+    @media screen and (min-width: $screen-md) {
+      display: flex;
     }
   }
 
-  .document-page {
-    .page-header,
-    .generic-loading,
-    .breadcrumb-locale-container,
-    .localized-content-note,
-    .document-toc-container,
-    .main-content,
-    .sidebar,
-    .metadata {
-      grid-column: 1/3;
+  /* Contains the sidebar and article content */
+  .article-wrapper {
+    display: flex;
+    max-width: 1440px;
+    margin: 0 auto;
+
+    @media screen and (min-width: $screen-md) {
+      display: grid;
+      grid-template-columns: 1fr 3fr;
     }
 
-    .page-header {
-      grid-row: 1/2;
-    }
-
-    .breadcrumb-locale-container {
-      grid-row: 2/3;
-    }
-
-    .localized-content-note {
-      grid-row: 3/4;
-    }
-
-    .document-toc-container {
-      grid-row: 4/5;
-
-      @media #{$mq-small-desktop-and-up} {
-        grid-column: 1/2;
+    .content-wrapper {
+      display: flex;
+      flex-direction: column;
+      @media screen and (min-width: $screen-xl) {
+        flex-direction: row-reverse;
       }
-    }
 
-    .main-content {
-      grid-row: 5/6;
+      .toc {
+        width: 100%;
 
-      @media #{$mq-small-desktop-and-up} {
-        grid-column: 2/3;
-        grid-row: 4/6;
+        @media screen and (min-width: $screen-xl) {
+          .document-toc-container {
+            position: sticky;
+            top: 1rem;
+          }
+        }
       }
-    }
 
-    .sidebar {
-      grid-row: 6/7;
-
-      @media #{$mq-small-desktop-and-up} {
-        grid-column: 1/2;
-        grid-row: 5/6;
+      .main-page-content {
+        max-width: 48rem;
       }
-    }
-
-    .metadata {
-      grid-row: 7/8;
     }
   }
 }

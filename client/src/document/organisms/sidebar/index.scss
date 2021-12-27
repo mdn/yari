@@ -1,36 +1,32 @@
-@use "sass:math";
-
-@use "~@mdn/minimalist/sass/vars/mdn-web-docs-palette" as *;
-@use "~@mdn/minimalist/sass/vars/layout" as *;
-@use "~@mdn/minimalist/sass/vars/typography" as *;
+@use "../../../ui/vars" as *;
 
 .sidebar {
-  font-size: $small-font-size;
-  padding: $base-spacing;
+  font-size: 0.8125rem;
+  padding: 1rem;
+
+  a {
+    color: var(--text-link);
+  }
 
   h4 {
-    font-family: $heading-font-family;
-    font-size: $medium-font-size;
-    margin-bottom: $base-spacing;
+    font-size: 1rem;
+    margin-bottom: 1rem;
   }
 
   ol {
-    list-style: none;
-    margin: 0;
-    padding: 0;
     width: 100%;
 
     ol,
     ul {
-      @media #{$mq-tablet-and-up} {
-        padding-left: math.div($base-spacing, 2);
+      @media screen and (max-width: $screen-sm) {
+        padding-left: 0.5rem;
       }
     }
   }
 
   summary,
   li {
-    margin-bottom: math.div($base-spacing, 2);
+    margin-bottom: 0.5rem;
   }
 
   a {
@@ -48,7 +44,7 @@
   }
 
   details {
-    margin: $base-spacing 0;
+    margin: 1rem 0;
   }
 
   .icon {
@@ -60,10 +56,10 @@
   /* icons in sidebars */
   .icon-experimental,
   .icon-nonstandard {
-    color: $mdn-blue700;
+    color: var(--icon-information);
   }
 
   .icon-deprecated {
-    color: $mdn-red700;
+    color: var(--icon-critical);
   }
 }

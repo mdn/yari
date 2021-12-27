@@ -1,4 +1,4 @@
-@import "~@mdn/minimalist/sass/mixins/utils";
+@use "~@mdn/minimalist/sass/mixins/utils" as *;
 
 @import "./atoms/bc-github";
 @import "./atoms/bc-table";

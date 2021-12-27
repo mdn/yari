@@ -1,16 +1,21 @@
-import * as React from "react";
+import { useLocation } from "react-router-dom";
 
 import { useLocale } from "../../../hooks";
-import { ReactComponent as LogoSVG } from "../../../assets/logo.svg";
+
+import { ReactComponent as MDNDocsLogo } from "../../../assets/mdn-docs-logo.svg";
+import { ReactComponent as MDNPlusLogo } from "../../../assets/mdn-plus-logo.svg";
 
 import "./index.scss";
 
-export function Logo({ mode }: { mode?: string }) {
+export function Logo() {
   const locale = useLocale();
+  const location = useLocation();
+
+  const isPlus = location.pathname.indexOf("/plus") > -1 ? true : false;
 
   return (
-    <a href={`/${locale}/`} className="logo" aria-label="MDN Web Docs">
-      <LogoSVG fill={mode === "dark" ? "#fff" : undefined} />
+    <a href={`/${locale}/`} className="logo">
+      {isPlus ? <MDNPlusLogo /> : <MDNDocsLogo />}
     </a>
   );
 }

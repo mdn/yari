@@ -1,20 +1,20 @@
 @use "sass:math";
 
 .bc-legend {
-  margin: ($base-spacing * 2) 0;
+  margin: (1rem * 2) 0;
 
   dl.bc-legend-items-container {
     align-items: center;
     display: flex;
     flex-wrap: wrap;
-    gap: $base-spacing * 2;
+    gap: 0.5rem;
     line-height: 1.2;
     max-width: inherit;
 
     .bc-legend-item {
       flex-basis: 100%;
 
-      @media #{$mq-tablet-and-up} {
+      @media screen and (max-width: $screen-sm) {
         flex-basis: 45%;
       }
     }
@@ -29,7 +29,7 @@
     }
 
     dt {
-      margin-right: math.div($base-spacing, 2);
+      margin-right: 0.5rem;
       vertical-align: bottom;
     }
   }
