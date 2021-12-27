@@ -4,76 +4,107 @@ import {
   MDN_PLUS_SUBSCRIBE_YEARLY_URL,
 } from "../../../constants";
 
+export enum Period {
+  Month,
+  Year,
+}
+
+export type OfferDetailsProps = {
+  id: string;
+  tagline?: string;
+  name: string;
+  monthlyPrice: number;
+  price: number;
+  currency: string;
+  period: Period;
+  features: string[][];
+  cta: string;
+  ctaLink: string;
+};
+
+const YEARLY = {
+  id: "annually",
+  tagline: "Save 20%",
+  name: "Yearly",
+  monthlyPrice: 5000 / 12,
+  price: 5000,
+  currency: "USD",
+  period: Period.Year,
+  features: [
+    ["bookmarking", "Bookmarking"],
+    ["notifications", "Notifications"],
+    ["offline", "MDN Offline"],
+    ["themes", "Access to all themes"],
+  ],
+  cta: "Get yearly Plan",
+  ctaLink: MDN_PLUS_SUBSCRIBE_YEARLY_URL,
+};
+
+const MONTHLY = {
+  id: "monthly",
+  name: "Monthly",
+  monthlyPrice: 500,
+  price: 5000 * 12,
+  currency: "USD",
+  period: Period.Month,
+  features: [
+    ["bookmarking", "Bookmarking"],
+    ["notifications", "Notifications"],
+    ["offline", "MDN Offline"],
+    ["themes", "Access to all themes"],
+  ],
+  cta: "Get monthly Plan",
+  ctaLink: MDN_PLUS_SUBSCRIBE_MONTHLY_URL,
+};
+
+function OfferDetails(props: OfferDetailsProps) {
+  const displayMonthlyPrice = new Intl.NumberFormat(undefined, {
+    style: "currency",
+    currency: props.currency,
+  }).format(props.monthlyPrice / 100);
+  const displayPrice = new Intl.NumberFormat(undefined, {
+    style: "currency",
+    currency: props.currency,
+  }).format(props.price / 100);
+  return (
+    <section className="subscribe-detail" id={props.id}>
+      {props.tagline && <p className="tagline">{props.tagline}</p>}
+      <p className="sub-info">
+        <h3>Yearly</h3>
+        <p>
+          <span className="sub-price">{displayMonthlyPrice}</span>
+          <span className="sub-length">/month</span>
+        </p>
+        <p>
+          <i>
+            {props.period === Period.Month
+              ? "Billed monthly"
+              : `${displayPrice} billed annually`}
+          </i>
+        </p>
+        <ul>
+          {props.features.map(([href, text]) => (
+            <li>
+              <a href={`#${href}`}>{text}</a>
+            </li>
+          ))}
+        </ul>
+        <a href={props.ctaLink} className="sub-link">
+          {props.cta}
+        </a>
+        <span className="terms">See terms and conditions</span>
+      </p>
+    </section>
+  );
+}
+
 function OfferOverviewSubscribe() {
   return (
     <div className="subscribe" id="subscribe">
       <h2>Choose a plan</h2>
       <div className="wrapper">
-        <div className="subscribe-detail" id="annually">
-          <div className="tagline">Save 20%</div>
-          <div className="content">
-            <div className="sub-info">
-              Yearly
-              <span>
-                <span className="sub-price">$4.80</span>
-                <span className="sub-length">/month</span>
-              </span>
-              <span>
-                <i>$57.60 billed annually</i>
-              </span>
-            </div>
-            <ul>
-              <li>
-                <a href="#bookmarking">Bookmarking</a>
-              </li>
-              <li>
-                <a href="#notifications">Notifications</a>
-              </li>
-              <li>
-                <a href="#offline">MDN Offline</a>
-              </li>
-              <li>
-                <a href="#themes">Access to all themes</a>
-              </li>
-            </ul>
-            <a href={MDN_PLUS_SUBSCRIBE_YEARLY_URL} className="sub-link">
-              Get yearly plan
-            </a>
-            <span className="terms">See terms and conditions</span>
-          </div>
-        </div>
-        <div className="subscribe-detail" id="monthly">
-          <div className="content">
-            <div className="sub-info">
-              Monthly
-              <span>
-                <span className="sub-price">$6</span>
-                <span className="sub-length">/month</span>
-              </span>
-              <span>
-                <i>Billed monthly</i>
-              </span>
-            </div>
-            <ul>
-              <li>
-                <a href="#bookmarking">Bookmarking</a>
-              </li>
-              <li>
-                <a href="#notifications">Notifications</a>
-              </li>
-              <li>
-                <a href="#offline">MDN Offline</a>
-              </li>
-              <li>
-                <a href="#themes">Access to all themes</a>
-              </li>
-            </ul>
-            <a href={MDN_PLUS_SUBSCRIBE_MONTHLY_URL} className="sub-link">
-              Get monthly plan
-            </a>
-            <span className="terms">See terms and conditions</span>
-          </div>
-        </div>
+        <OfferDetails {...YEARLY}></OfferDetails>
+        <OfferDetails {...MONTHLY}></OfferDetails>
       </div>
     </div>
   );

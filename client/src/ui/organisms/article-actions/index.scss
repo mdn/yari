@@ -1,9 +1,11 @@
 @use "../../vars" as *;
 
 .article-actions {
-  display: none;
+  .article-actions-dialog-heading {
+    display: none;
+  }
 
-  &.show-utilities {
+  &.show-actions {
     background-color: var(--background-primary);
     color: var(--text-primary);
     display: block;
@@ -13,34 +15,35 @@
     top: 0;
     width: 100vw;
     z-index: var(--z-index-top);
+
+    .article-actions-dialog-heading {
+      display: block;
+    }
+
+    .article-actions-entries {
+      display: block;
+    }
+  }
+
+  .button.action .button-wrap {
+    text-transform: initial;
   }
 
   @media screen and (min-width: $screen-md) {
     display: block;
     margin-left: auto;
   }
-
-  .submenu.show {
-    left: initial;
-    right: -15px;
-  }
-
-  .article-actions-toggle {
-    width: 100%;
-
-    .button-wrap {
-      justify-content: flex-start;
-    }
-  }
 }
 
 .article-actions-entries {
+  display: none;
   list-style: none;
   margin: 0;
   padding: 0;
 
   @media screen and (min-width: $screen-md) {
     display: flex;
+    gap: 0.5rem;
   }
 }
 
@@ -48,13 +51,4 @@
   align-items: center;
   display: flex;
   position: relative;
-}
-
-.article-actions-close {
-  align-items: center;
-  border-bottom: 1px solid var(--border-secondary);
-  display: flex;
-  gap: 0.5rem;
-  padding: 0.5rem;
-  width: 100%;
 }

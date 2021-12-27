@@ -24,21 +24,13 @@ export const NotificationsWatchMenu = ({ doc }) => {
     setVisibleSubMenuId(visibleSubMenuId === menuEntryId ? null : menuEntryId);
   }
 
-  function showStepStart() {
-    setVisibleStep(0);
-  }
-
-  function showStepCustom() {
-    setVisibleStep(1);
-  }
-
   return (
     <>
       <Button
         type="action"
         id="watch-menu-button"
         icon="eye"
-        extraClasses="watch-menu"
+        extraClasses="small watch-menu"
         ariaHasPopup={"menu"}
         aria-label="Watch this page for updates"
         ariaExpanded={menuId === visibleSubMenuId}
@@ -57,12 +49,12 @@ export const NotificationsWatchMenu = ({ doc }) => {
         {visibleStep === 0 ? (
           <NotificationsWatchMenuStart
             doc={doc}
-            setStepHandler={showStepCustom}
+            setStepHandler={setVisibleStep}
           />
         ) : (
           <NotificationsWatchMenuCustom
             doc={doc}
-            setStepHandler={showStepStart}
+            setStepHandler={setVisibleStep}
           />
         )}
       </div>

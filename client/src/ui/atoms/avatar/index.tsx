@@ -12,7 +12,7 @@ export const Avatar = ({ userData }: { userData: UserData }) => {
     <>
       <img
         alt={userData.username || ""}
-        className="avatar"
+        className={userData.isSubscriber ? "subscriber avatar" : "avatar"}
         src={userData.avatarUrl || avatarImage}
       />
       <span className="avatar-username visually-hidden">

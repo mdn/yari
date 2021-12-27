@@ -39,8 +39,10 @@
     )};
 
   --accent-secondary: #{$mdn-theme-light-accent-secondary};
+  --accent-tertiary: #{color.adjust($mdn-color-blue-40, $alpha: -0.9)};
 
   --shadow-01: #{$mdn-theme-light-shadow-01};
+  --shadow-02: #{$mdn-theme-light-shadow-02};
   --focus-01: #{$mdn-theme-light-shadow-01};
 
   --code-tag: #{$mdn-theme-light-code-tag};
@@ -88,6 +90,9 @@ body[class="dark"] {
       $alpha: -0.9
     )};
   --accent-secondary: #{$mdn-theme-dark-accent-secondary};
+
+  --shadow-01: #{$mdn-theme-dark-shadow-01};
+  --shadow-02: #{$mdn-theme-dark-shadow-02};
 }
 
 body[class="high-contrast-white"] {

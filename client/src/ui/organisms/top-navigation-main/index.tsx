@@ -14,8 +14,12 @@ import "./index.scss";
 
 export const TopNavigationMain = () => {
   const userData = useUserData();
-  const isSubscriber = userData && userData.isSubscriber;
+  const isAuthenticated = userData && userData.isAuthenticated;
   const [showSearch, setShowSearch] = React.useState(false);
+
+  function handleShowSearch() {
+    setShowSearch(true);
+  }
 
   return (
     <div
@@ -31,21 +35,19 @@ export const TopNavigationMain = () => {
       <Button
         type="action"
         icon="search"
-        onClickHandler={() => {
-          setShowSearch(true);
-        }}
+        onClickHandler={handleShowSearch}
         extraClasses="toggle-search-button"
       >
         <span className="visually-hidden">Show search</span>
       </Button>
 
-      {isSubscriber && (
+      {isAuthenticated && (
         <>
           <HeaderNotificationsMenu />
           <UserMenu />
         </>
       )}
-      {!isSubscriber && <AuthContainer />}
+      {!isAuthenticated && <AuthContainer />}
     </div>
   );
 };

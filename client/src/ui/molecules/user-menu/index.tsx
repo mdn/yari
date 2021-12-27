@@ -28,7 +28,7 @@ export const UserMenu = () => {
     items: [
       {
         label: userData.email || "",
-        extraClasses: "usermenu-email-desktop show-desktop-inline-block",
+        extraClasses: "submenu-header",
       },
       {
         url: FXA_SETTINGS_URL,
@@ -44,6 +44,7 @@ export const UserMenu = () => {
       },
       {
         component: SignOut,
+        extraClasses: "signout-container",
       },
     ],
   };

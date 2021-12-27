@@ -18,6 +18,8 @@
   --font-line-height: 1.2;
 
   --type-heading-l: 600 1rem/1.1875 var(--font-heading); /* 16px/19px */
+  --type-title-l: 600 1.5rem/1.2 var(--font-heading);
+  --type-title-s: 600 0.8125rem/1.2 var(--font-body);
   --type-body-l: 400 1rem/1.1875 var(--font-body); /* 16px/19px */
   --type-body-m: 400 0.8125rem/1.23 var(--font-body); /* 13px/16px */
   --type-body-s: 500 0.6875rem/1.273 var(--font-body); /* 11px/14px */
@@ -29,7 +31,11 @@
   /* Grid and Layout */
   --max-width: 1440px;
   --gutter: 0.5rem; /* Space between content and browser window */
-  --z-index-top: 1000;
+
+  --z-index-back: -1;
+  --z-index-top: 9999;
+  --z-index-mid: 500;
+  --z-index-low: 100;
 
   /* Features */
   --elem-radius: 0.25rem;
@@ -44,18 +50,15 @@
 body {
   background-color: var(--background-primary);
   color: var(--text-primary);
+
+  ::selection {
+    background-color: var(--text-primary);
+    color: var(--background-primary);
+  }
 }
 
 main {
   min-height: 80vh;
-}
-
-.container {
-  margin-left: auto;
-  margin-right: auto;
-  max-width: var(--max-width);
-  padding-left: var(--gutter);
-  padding-right: var(--gutter);
 }
 
 // !!! This is not an accessible way to hide content
@@ -69,4 +72,8 @@ pre {
   white-space: -pre-wrap;
   white-space: -o-pre-wrap;
   word-wrap: break-word;
+}
+
+a {
+  color: var(--text-link);
 }

@@ -63,6 +63,11 @@
         }
       }
 
+      h3 {
+        font-weight: normal;
+        font-size: 1em;
+      }
+
       .tagline {
         padding: 0.5rem;
         background: #0000001f;
@@ -71,43 +76,43 @@
         font-size: 14px;
       }
 
-      .content {
-        flex-direction: column;
-        align-items: center;
-        gap: 2rem;
+      .tagline + .sub-info {
+        margin-top: 0;
+      }
+
+      .sub-info {
+        margin-top: 3rem;
         display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
         width: 100%;
 
-        .sub-info {
-          display: flex;
-          flex-direction: column;
-          gap: 0.5rem;
+        .sub-price {
+          color: white;
+          font-family: Montserrat;
+          font-style: normal;
+          font-weight: 650;
+          font-size: 36px;
+          line-height: 120%;
+        }
 
-          .sub-price {
-            color: white;
-            font-family: Montserrat;
-            font-style: normal;
-            font-weight: 650;
-            font-size: 36px;
-            line-height: 120%;
-          }
+        .sub-length {
+          color: white;
+          font-family: Montserrat;
+          font-style: normal;
+          font-weight: 650;
+          font-size: 24px;
+          line-height: 120%;
+        }
 
-          .sub-length {
-            color: white;
-            font-family: Montserrat;
-            font-style: normal;
-            font-weight: 650;
-            font-size: 24px;
-            line-height: 120%;
-          }
-
-          i {
-            font-size: 14px;
-          }
+        i {
+          font-size: 14px;
         }
 
         ul {
           width: 100%;
+          padding: 1.5rem 2rem;
+          align-self: flex-start;
 
           li {
             text-align: left;
@@ -125,20 +130,22 @@
             }
           }
         }
-      }
 
-      .terms {
-        font-size: 14px;
-        text-decoration: underline;
-        font-style: italic;
-      }
+        .terms {
+          font-size: 14px;
+          text-decoration: underline;
+          font-style: italic;
+          padding: 1.75rem;
+        }
 
-      .sub-link {
-        background: $mdn-color-dark-grey-90;
-        padding: 0.25rem 0.5rem;
-        color: white;
-        width: fit-content;
-        font-weight: 620;
+        .sub-link {
+          background: $mdn-color-dark-grey-90;
+          padding: 0.25rem 0.5rem;
+          color: white;
+          width: fit-content;
+          font-weight: 620;
+          align-self: center;
+        }
       }
     }
   }

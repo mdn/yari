@@ -67,8 +67,8 @@
       display: block;
       height: 8px;
       position: absolute;
-      right: 0;
-      top: 8px;
+      right: 7px;
+      top: 7px;
       width: 8px;
       border: 1px solid #fff;
       text-indent: -9999rem;
@@ -93,7 +93,7 @@
     padding: 1rem;
 
     &.unread {
-      background-color: color.adjust($mdn-color-blue-40, $alpha: -0.9);
+      background-color: var(--accent-tertiary);
     }
 
     &:hover,

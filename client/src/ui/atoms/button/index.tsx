@@ -1,6 +1,5 @@
 import * as React from "react";
 import { Link } from "react-router-dom";
-
 import { Icon } from "../icon";
 
 import "./index.scss";
@@ -12,7 +11,7 @@ type ButtonProps = {
   ariaLabel?: string;
   title?: string;
 
-  type?: "primary" | "secondary" | "action";
+  type?: "primary" | "secondary" | "action" | "select";
 
   /**
    * The `type` of the button. Not used with links.
@@ -34,6 +33,7 @@ type ButtonProps = {
   size?: "small" | "medium";
 
   state?: "default" | "hover" | "active" | "focused" | "inactive";
+  value?: string;
   children?: React.ReactNode;
 };
 
@@ -55,6 +55,7 @@ export const Button = ({
   onFocusHandler,
   size,
   state,
+  value,
   children,
 }: ButtonProps) => {
   let buttonClasses = "button";
@@ -109,6 +110,7 @@ export const Button = ({
       className={buttonClasses}
       onClick={onClickHandler}
       onFocus={onFocusHandler}
+      value={value}
     >
       <span className="button-wrap">{renderContent()}</span>
     </button>

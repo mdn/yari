@@ -1,0 +1,22 @@
+@use "../../ui/vars" as *;
+
+.search-filter {
+  display: flex;
+  gap: 0.5rem;
+  padding: 1rem 0;
+}
+
+.search-filter [type="search"] {
+  flex: 1;
+}
+
+.search-filter-category {
+  position: relative;
+}
+
+@media screen and (min-width: $screen-md) {
+  .search-filter .submenu {
+    max-width: max-content;
+    right: 0;
+  }
+}

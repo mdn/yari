@@ -1,6 +1,17 @@
 import React, { useState } from "react";
 import useSWR, { mutate } from "swr";
 import { useCSRFMiddlewareToken } from "../../../hooks";
+
+import { Icon } from "../../atoms/icon";
+
+type WatchMenuButton = {
+  value: string;
+  status: boolean;
+  label: string;
+  text?: string;
+  onClickHandler?: (event: React.MouseEvent<Element>) => void;
+};
+
 interface WatchModeData {
   modeType: string;
   csrfmiddlewaretoken: string;
@@ -36,7 +47,7 @@ export function NotificationsWatchMenuStart({ doc, setStepHandler }) {
     setWatchMode(event.currentTarget.value);
   };
 
-  async function handleWatchSelection(event) {
+  async function handleWatchSubmit(event) {
     event.preventDefault();
 
     if (!data) {
@@ -73,72 +84,71 @@ export function NotificationsWatchMenuStart({ doc, setStepHandler }) {
     return true;
   }
 
-  return (
-    <form action={apiURL} method="POST" onSubmit={handleWatchSelection}>
-      <div className="watch-submenu-header">Notifications</div>
-
+  function WatchMenuButton({
+    value,
+    onClickHandler,
+    status,
+    label,
+    text,
+  }: WatchMenuButton) {
+    return (
       <button
         role="menuitemradio"
-        aria-checked={watchMode === "major"}
-        className="watch-menu-button"
-        value="major"
+        aria-checked={watchMode === value}
+        className="watch-submenu-button"
+        value={value}
         disabled={!path || !title}
-        onClick={handleSelection}
+        onClick={onClickHandler}
       >
-        <span className="watch-menu-button-wrap">
-          <span className="watch-menu-button-status">✅</span>
+        <span className="watch-submenu-button-wrap">
+          {status && (
+            <span className="watch-submenu-button-status">
+              <Icon name="checkmark" />
+            </span>
+          )}
 
-          <span className="watch-menu-button-label">Major updates</span>
-          <span className="watch-menu-button-text">
-            Only receive notifications of major browser compatability releases
-            and revisions to this article.
-          </span>
+          <span className="watch-submenu-button-label">{label}</span>
+          {text && <span className="watch-submenu-button-text">{text}</span>}
         </span>
       </button>
+    );
+  }
 
-      {/*
-        !!!
-      */}
-      <button
-        type="button"
-        role="menuitemradio"
-        aria-checked={watchMode === "custom"}
-        aria-haspopup="true"
-        className="watch-menu-button"
-        disabled={!path || !title}
-        onClick={(event) => {
+  return (
+    <form
+      className="watch-menu-form"
+      action={apiURL}
+      method="POST"
+      onSubmit={handleWatchSubmit}
+    >
+      <div className="watch-submenu-header">Notifications</div>
+
+      <WatchMenuButton
+        value="major"
+        label="Major updates"
+        text="Only receive notifications of major browser compatability releases and revisions to this article."
+        status={watchMode === "major"}
+        onClickHandler={handleSelection}
+      />
+
+      <WatchMenuButton
+        value="custom"
+        label="Custom"
+        text="Select which events you would like to be notified of."
+        status={watchMode === "custom"}
+        onClickHandler={(event) => {
           event.preventDefault();
           setStepHandler(1);
         }}
-      >
-        <span className="watch-menu-button-wrap">
-          <span className="watch-menu-button-status"></span>
+      />
 
-          <span className="watch-menu-button-label">Custom</span>
-          <span className="watch-menu-button-text">
-            Select which events you would like to be notified of.
-          </span>
-        </span>
-      </button>
-
-      <button
-        type="submit"
-        role="menuitemradio"
-        aria-checked={watchMode === "unwatch"}
-        className="watch-menu-button"
+      <WatchMenuButton
         value="unwatch"
-        disabled={!path || !title}
-        onClick={handleSelection}
-      >
-        <span className="watch-menu-button-wrap">
-          <span className="watch-menu-button-status"></span>
-
-          <span className="watch-menu-button-label">Unwatch</span>
-          <span className="watch-menu-button-text">
-            Stop receiveing notifications about this article.
-          </span>
-        </span>
-      </button>
+        label="Unwatch"
+        text="Stop receiveing notifications about this article."
+        status={watchMode === "unwatch"}
+        onClickHandler={handleSelection}
+      />
     </form>
   );
 }
