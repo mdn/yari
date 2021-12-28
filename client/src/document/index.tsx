@@ -169,6 +169,13 @@ export function Document(props /* TODO: define a TS interface for this */) {
               />
             </React.Suspense>
           )}
+
+          {!isServer && doc.hasMathML && (
+            <React.Suspense fallback={null}>
+              <MathMLPolyfillMaybe />
+            </React.Suspense>
+          )}
+
           <div className="content-wrapper">
             <div className="toc">
               {doc.toc && !!doc.toc.length && <TOC toc={doc.toc} />}
