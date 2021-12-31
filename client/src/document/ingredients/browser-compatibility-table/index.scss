@@ -1,14 +1,4 @@
-@import "~@mdn/minimalist/sass/mixins/utils";
-
-@import "./atoms/bc-github";
-@import "./atoms/bc-table";
-@import "./atoms/bc-platforms";
-@import "./atoms/bc-icons";
-@import "./atoms/bc-supports";
-@import "./atoms/bc-browsers";
-@import "./atoms/bc-history";
-@import "./atoms/bc-history-link";
-@import "./atoms/bc-legend";
+@use "~@mdn/minimalist/sass/mixins/utils" as *;
 
 .offscreen,
 .only-icon span {
@@ -17,6 +7,7 @@
 
 .bc-table-row-header {
   code {
+    display: flex;
     overflow: hidden;
   }
 

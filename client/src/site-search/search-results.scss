@@ -1,13 +1,10 @@
 @use "sass:math";
-
-@import "~@mdn/minimalist/sass/vars/mdn-web-docs-palette";
-@import "~@mdn/minimalist/sass/vars/layout";
-@import "~@mdn/minimalist/sass/vars/typography";
+@use "../ui/vars" as *;
 
 .search-results {
   .highlight,
   .summary {
-    color: $mdn-neutral800;
+    color: $mdn-color-dark-grey-90;
     display: block;
   }
 
@@ -16,13 +13,13 @@
   }
 
   .nerd-data {
-    font-size: $small-font-size;
-    margin-left: $base-spacing;
+    font-size: 0.8125rem;
+    margin-left: 1rem;
   }
 }
 
 .pagination {
-  @media #{$mq-small-desktop-and-up} {
+  @media screen and (min-width: $screen-md) {
     display: flex;
     justify-content: space-between;
   }
@@ -37,72 +34,71 @@
 }
 
 .search-results-list {
-  margin-bottom: $base-spacing;
+  margin-bottom: 1rem;
 
   .title {
     background-color: inherit;
-    color: $mdn-neutral900;
+    color: $mdn-color-dark-grey-90;
     display: inline-block;
     margin: 0;
-    margin-bottom: math.div($base-spacing, 4);
+    margin-bottom: 0.25rem;
     padding: 0;
 
     a {
       &:link,
       &:visited {
-        color: $mdn-neutral900;
+        color: $mdn-color-dark-grey-90;
       }
     }
   }
 
   .search-result-url {
-    margin-bottom: math.div($base-spacing, 4);
+    margin-bottom: 0.25rem;
   }
 
   // Used to indicate that a search result link is in a different locale
   .locale-indicator {
-    background-color: $mdn-neutral100;
+    background-color: var(--background-secondary);
     cursor: help;
     display: block;
-    font-size: $small-font-size;
-    margin-top: $base-unit;
+    font-size: 0.8125rem;
+    margin-top: 1rem;
     max-width: max-content;
-    padding: math.div($base-unit, 2) $base-unit;
+    padding: 0.5rem 1rem;
     position: relative;
     top: -3px;
 
-    @media #{$mq-tablet-and-up} {
+    @media screen and (max-width: $screen-sm) {
       display: inline-block;
       margin: 0;
-      margin-left: math.div($base-spacing, 4);
-      padding: $base-unit;
+      margin-left: 0.25rem;
+      padding: 1rem;
     }
   }
 
   mark {
-    background-color: $mdn-yellow100;
+    background-color: $mdn-color-yellow-10;
     font-style: italic;
   }
 }
 
 .search-result-entry {
-  margin-bottom: $base-spacing * 2;
+  margin-bottom: 0.5rem;
   word-wrap: break-word;
 
-  @media #{$mq-tablet-and-up} {
-    margin-bottom: $base-spacing * 2.5;
+  @media screen and (max-width: $screen-sm) {
+    margin-bottom: 1rem * 2.5;
   }
 }
 
 .language-options,
 .sort-options {
-  margin-top: math.div($base-spacing, 2);
+  margin-top: 0.5rem;
 
   h2 {
-    font-family: $site-font-family;
-    font-size: $default-font-size;
+    font-size: 1rem;
 
-    @media #{$mq-tablet-and-up} {
+    @media screen and (max-width: $screen-sm) {
       display: inline;
     }
   }
@@ -111,14 +107,14 @@
   .sort-option-list {
     display: inline-block;
 
-    @media #{$mq-tablet-and-up} {
-      margin-left: $base-unit;
+    @media screen and (max-width: $screen-sm) {
+      margin-left: 1rem;
     }
 
     li {
       display: inline-block;
       padding: 0;
-      padding-right: math.div($base-spacing, 4);
+      padding-right: 0.25rem;
 
       &::after {
         content: " | ";
@@ -133,9 +129,9 @@
 }
 
 .search-suggestions {
-  margin-bottom: $base-spacing;
+  margin-bottom: 1rem;
 
   p {
-    margin-bottom: math.div($base-unit, 2);
+    margin-bottom: 0.5rem;
   }
 }

@@ -1,0 +1,54 @@
+@use "../../vars" as *;
+
+.article-actions {
+  .article-actions-dialog-heading {
+    display: none;
+  }
+
+  &.show-actions {
+    background-color: var(--background-primary);
+    color: var(--text-primary);
+    display: block;
+    height: 100vh;
+    left: 0;
+    position: fixed;
+    top: 0;
+    width: 100vw;
+    z-index: var(--z-index-top);
+
+    .article-actions-dialog-heading {
+      display: block;
+    }
+
+    .article-actions-entries {
+      display: block;
+    }
+  }
+
+  .button.action .button-wrap {
+    text-transform: initial;
+  }
+
+  @media screen and (min-width: $screen-md) {
+    display: block;
+    margin-left: auto;
+  }
+}
+
+.article-actions-entries {
+  display: none;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+
+  @media screen and (min-width: $screen-md) {
+    display: flex;
+    gap: 0.5rem;
+  }
+}
+
+.article-actions-entry {
+  align-items: center;
+  display: flex;
+  position: relative;
+}

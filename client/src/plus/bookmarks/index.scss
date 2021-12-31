@@ -1,0 +1,115 @@
+@use "../../ui/vars" as *;
+
+.bookmarks {
+  padding: 48px 6px;
+  position: relative;
+  width: 100%;
+  margin: 0 auto;
+  max-width: var(--max-width);
+
+  @media screen and (max-width: $screen-sm) {
+    padding: 48px 24px;
+  }
+
+  h3 {
+    border-bottom: var(--border-primary);
+    padding-bottom: 24px;
+  }
+}
+
+.bookmark {
+  align-items: center;
+  background-color: white;
+  border: var(--border-primary);
+  border-radius: 0.25rem;
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 8px;
+  margin-top: 16px;
+  padding: 16px;
+
+  a {
+    &:link,
+    &:visited {
+      color: var(--text-primary);
+    }
+  }
+
+  .bookmark-icon {
+    display: none;
+
+    @media screen and (max-width: $screen-sm) {
+      background-color: $mdn-color-green-60;
+      border-radius: 0.125rem;
+      color: white;
+      display: block;
+      font-style: italic;
+      margin-right: 12px;
+      padding: 8px;
+    }
+  }
+
+  .bookmark-content {
+    flex: 1 1 80%;
+    overflow: hidden;
+
+    @media screen and (max-width: $screen-sm) {
+      flex-basis: 95%;
+    }
+
+    h4 {
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+  }
+
+  .bookmark-actions {
+    flex: 0 1 20%;
+
+    @media screen and (max-width: $screen-sm) {
+      flex-basis: 5%;
+    }
+  }
+
+  .breadcrumbs {
+    list-style: none;
+    margin-bottom: 0;
+
+    li {
+      display: inline-block;
+      margin: 0;
+
+      &::after {
+        background-color: var(--text-secondary);
+        content: "";
+        display: inline-block;
+        height: 8px;
+        margin: 0 4px;
+        mask-image: url("~@mdn/dinocons/arrows/chevron.svg");
+        transform: rotate(-90deg);
+        vertical-align: middle;
+        width: 8px;
+      }
+    }
+  }
+}
+
+.doomed {
+  /* stylelint-disable-line a11y/media-prefers-reduced-motion */
+  animation: fadeOutNearly 0.5s ease-out; /* we already disable all animation and transitions globally via a reset */
+}
+
+.unbookmark {
+  position: absolute;
+  right: 24px;
+  top: 0;
+}
+
+@keyframes fadeOutNearly {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0.1;
+  }
+}

@@ -1,62 +1,56 @@
-@use "sass:math";
-
-@use "~@mdn/minimalist/sass/vars/layout";
-@use "~@mdn/minimalist/sass/vars/typography";
-
-@use "../../theme/index" as theme;
+@use "../../vars" as *;
 
 .card {
-  background-color: theme.$white;
-  border-radius: theme.$default-border-radius;
-  box-shadow: theme.$card-box-shadow;
-  margin: 0 auto (layout.$base-spacing * 2);
+  background-color: white;
+  border-radius: 0.25rem;
+  box-shadow: var(--shadow-01);
+  margin: 0 auto (1rem);
   max-width: 95%;
-  padding: layout.$base-spacing;
+  padding: 0.5rem;
 
-  @media #{layout.$mq-tablet-and-up} {
+  @media screen and (max-width: $screen-sm) {
     max-width: 340px;
   }
 
   &.featured {
-    border-top: 18px solid theme.$mdn-pink600;
+    border-top: 18px solid $mdn-color-pink-60;
   }
 
   .card-type-heading {
-    color: theme.$mdn-pink600;
-    font-family: theme.$metropolis-font-family;
-    margin-bottom: math.div(layout.$base-spacing, 2);
+    color: $mdn-color-pink-60;
+    margin-bottom: 1rem;
   }
 
   h2 {
-    font-size: typography.$medium-font-size;
-    line-height: typography.$heading-line-height;
-    margin: math.div(layout.$base-spacing, 2) 0;
+    font-size: 1rem;
+    line-height: 1.2;
+    margin: 0.5rem 0;
 
-    @media #{layout.$mq-small-desktop-and-up} {
-      font-size: typography.$large-font-size;
+    @media screen and (min-width: $screen-md) {
+      font-size: 1rem;
       margin-top: 0;
     }
   }
 
   h3 {
-    font-size: typography.$default-font-size;
+    font-size: 1rem;
     font-weight: bold;
-    margin-bottom: math.div(layout.$base-spacing, 2);
+    margin-bottom: 1rem;
 
-    @media #{layout.$mq-small-desktop-and-up} {
-      font-size: typography.$small-medium-font-size;
+    @media screen and (min-width: $screen-md) {
+      font-size: 1rem;
     }
   }
 
   .author {
-    border-bottom: theme.$standard-light-border;
-    margin: math.div(layout.$base-spacing, 2) 0;
-    padding-bottom: math.div(layout.$base-spacing, 2);
+    border-bottom: var(--border-primary);
+    margin: 0.5rem 0;
+    padding-bottom: 1rem;
   }
 
   ul,
   li {
-    font-size: typography.$small-font-size;
+    font-size: 0.8125rem;
     list-style: none;
     margin: 0;
     padding: 0;

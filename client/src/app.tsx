@@ -10,15 +10,13 @@ import { Homepage } from "./homepage";
 import { Document } from "./document";
 import { A11yNav } from "./ui/molecules/a11y-nav";
 import { Footer } from "./ui/organisms/footer";
-import { Header } from "./ui/organisms/header";
+import { TopNavigation } from "./ui/organisms/top-navigation";
 import { SiteSearch } from "./site-search";
 import { Loading } from "./ui/atoms/loading";
 import { PageContentContainer } from "./ui/atoms/page-content";
 import { PageNotFound } from "./page-not-found";
-
-import { SignIn, SignOut } from "./auth";
-import { Settings } from "./settings";
-// import { Banner } from "./banners";
+import { Plus } from "./plus";
+import { About } from "./about";
 
 const AllFlaws = React.lazy(() => import("./flaws"));
 const Translations = React.lazy(() => import("./translations"));
@@ -42,19 +40,22 @@ function Layout({ pageType, children }) {
        */}
       {/* !isServer && <Banner /> */}
       <div className={`page-wrapper ${pageType}`}>
-        <Header />
+        <TopNavigation />
         {children}
       </div>
       <Footer />
-
-      {/* Shown on mobile when main navigation is expanded to provide a clear distinction between the foreground menu and the page content */}
-      <div className="page-overlay hidden"></div>
     </>
   );
 }
 
-function StandardLayout({ children }) {
-  return <Layout pageType="standard-page">{children}</Layout>;
+function StandardLayout({
+  extraClasses,
+  children,
+}: {
+  extraClasses?: string;
+  children: React.ReactNode;
+}) {
+  return <Layout pageType={`standard-page ${extraClasses}`}>{children}</Layout>;
 }
 function DocumentLayout({ children }) {
   return <Layout pageType="document-page">{children}</Layout>;
@@ -229,26 +230,10 @@ export function App(appProps) {
               }
             />
             <Route
-              path="/signin"
+              path="/plus/*"
               element={
-                <StandardLayout>
-                  <SignIn />
-                </StandardLayout>
-              }
-            />
-            <Route
-              path="/signout"
-              element={
-                <StandardLayout>
-                  <SignOut />
-                </StandardLayout>
-              }
-            />
-            <Route
-              path="/settings"
-              element={
-                <StandardLayout>
-                  <Settings {...appProps} />
+                <StandardLayout extraClasses="plus">
+                  <Plus {...appProps} />
                 </StandardLayout>
               }
             />
@@ -260,6 +245,14 @@ export function App(appProps) {
                     <Document {...appProps} />
                   </DocumentLayout>
                 </PageOrPageNotFound>
+              }
+            />
+            <Route
+              path="/about/*"
+              element={
+                <StandardLayout>
+                  <About />
+                </StandardLayout>
               }
             />
             <Route

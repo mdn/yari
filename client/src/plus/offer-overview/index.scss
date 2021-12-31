@@ -1,0 +1,39 @@
+@use "../../ui/vars" as *;
+
+.offer-overview {
+  background-color: $mdn-color-dark-grey-90;
+
+  a {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+}
+
+/* This should be replaced at some point when the top navigation has theming implemented */
+
+.top-navigation {
+  background-color: $mdn-theme-dark-background-primary;
+  button,
+  a {
+    color: $mdn-theme-dark-text-secondary !important;
+    &:hover {
+      color: $mdn-theme-dark-text-primary !important;
+    }
+  }
+  .main-menu {
+    button:hover,
+    a:hover {
+      background: $mdn-theme-dark-background-tertiary !important;
+    }
+  }
+
+  path.logo-text {
+    fill: white;
+  }
+
+  .mdn-plus-subscribe-link {
+    color: white !important;
+    background: $mdn-color-dark-grey-50;
+  }
+}

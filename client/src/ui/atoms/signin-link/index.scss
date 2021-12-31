@@ -1,0 +1,15 @@
+@use "../../vars" as *;
+
+.auth-container {
+  .signin-link {
+    align-items: center;
+    display: inline-flex;
+    font-weight: bold;
+    height: 2rem;
+
+    &:link,
+    &:visited {
+      color: var(--text-secondary);
+    }
+  }
+}

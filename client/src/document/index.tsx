@@ -13,8 +13,7 @@ import { SpecificationSection } from "./ingredients/spec-section";
 
 // Misc
 // Sub-components
-import { Breadcrumbs } from "../ui/molecules/breadcrumbs";
-import { LanguageToggle } from "../ui/molecules/language-toggle";
+import { ArticleActionsContainer } from "../ui/organisms/article-actions-container";
 import { LocalizedContentNote } from "./molecules/localized-content-note";
 import { TOC } from "./organisms/toc";
 import { RenderSideBar } from "./organisms/sidebar";
@@ -146,55 +145,50 @@ export function Document(props /* TODO: define a TS interface for this */) {
     return null;
   }
 
-  const translations = doc.other_translations || [];
-
   const isServer = typeof window === "undefined";
 
   return (
     <>
-      {/* if we have either breadcrumbs or translations for the current page,
-      continue rendering the section */}
-      {(doc.parents || !!translations.length) && (
-        <div className="breadcrumb-locale-container">
-          {doc.parents && <Breadcrumbs parents={doc.parents} />}
-          {translations && !!translations.length && (
-            <LanguageToggle locale={locale} translations={translations} />
+      <ArticleActionsContainer doc={doc} />
+      <div className="article-wrapper">
+        {doc.isTranslated ? (
+          <LocalizedContentNote isActive={doc.isActive} locale={locale} />
+        ) : (
+          searchParams.get("retiredLocale") && <RetiredLocaleNote />
+        )}
+        {doc.sidebarHTML && <RenderSideBar doc={doc} />}
+
+        <MainContentContainer>
+          {!isServer && CRUD_MODE && !props.isPreview && doc.isActive && (
+            <React.Suspense fallback={<Loading message={"Loading toolbar"} />}>
+              <Toolbar
+                doc={doc}
+                reloadPage={() => {
+                  mutate(dataURL);
+                }}
+              />
+            </React.Suspense>
           )}
-        </div>
-      )}
 
-      {doc.isTranslated ? (
-        <LocalizedContentNote isActive={doc.isActive} locale={locale} />
-      ) : (
-        searchParams.get("retiredLocale") && <RetiredLocaleNote />
-      )}
+          {!isServer && doc.hasMathML && (
+            <React.Suspense fallback={null}>
+              <MathMLPolyfillMaybe />
+            </React.Suspense>
+          )}
 
-      {doc.toc && !!doc.toc.length && <TOC toc={doc.toc} />}
+          <div className="content-wrapper">
+            <div className="toc">
+              {doc.toc && !!doc.toc.length && <TOC toc={doc.toc} />}
+            </div>
+            <article className="main-page-content" lang={doc.locale}>
+              <h1>{doc.title}</h1>
 
-      <MainContentContainer>
-        {!isServer && CRUD_MODE && !props.isPreview && doc.isActive && (
-          <React.Suspense fallback={<Loading message={"Loading toolbar"} />}>
-            <Toolbar
-              doc={doc}
-              reloadPage={() => {
-                mutate(dataURL);
-              }}
-            />
-          </React.Suspense>
-        )}
-        {!isServer && doc.hasMathML && (
-          <React.Suspense fallback={null}>
-            <MathMLPolyfillMaybe />
-          </React.Suspense>
-        )}
-        <article className="main-page-content" lang={doc.locale}>
-          <h1>{doc.title}</h1>
-          <RenderDocumentBody doc={doc} />
-        </article>
-        <Metadata doc={doc} locale={locale} />
-      </MainContentContainer>
-
-      {doc.sidebarHTML && <RenderSideBar doc={doc} />}
+              <RenderDocumentBody doc={doc} />
+              <Metadata doc={doc} locale={locale} />
+            </article>
+          </div>
+        </MainContentContainer>
+      </div>
     </>
   );
 }
