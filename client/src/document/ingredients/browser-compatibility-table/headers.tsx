@@ -33,6 +33,7 @@ function PlatformHeaders({ platforms, browsers }) {
             key={platform}
             className={`bc-platform-${platformId}`}
             colSpan={browserCount}
+            title={platform}
           >
             <span>{platform}</span>
           </th>
