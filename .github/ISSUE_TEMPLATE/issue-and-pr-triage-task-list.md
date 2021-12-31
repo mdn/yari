@@ -1,11 +1,11 @@
 ---
 name: Issue and PR Triage Task List
-about: A weekly revolving task list to traige and review new and old issues and pull
+about:
+  A weekly revolving task list to traige and review new and old issues and pull
   requests
-title: 'Task List: Sprint 1: Issue and PR Triage'
+title: "Task List: Sprint 1: Issue and PR Triage"
 labels: maintenance
 assignees: schalkneethling
-
 ---
 
 ## Milestone
