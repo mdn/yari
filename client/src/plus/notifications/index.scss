@@ -18,6 +18,14 @@
   grid-template-columns: auto 1fr 10ch auto;
   padding: 0.5rem;
 
+  .icon {
+    background-color: var(--icon-secondary);
+  }
+
+  & + & {
+    border-top: none;
+  }
+
   &-description {
     display: flex;
     flex-direction: column;
@@ -35,6 +43,7 @@
   &-created {
     color: var(--text-secondary);
     font: var(--type-body-s);
+    text-align: right;
   }
 
   &:first-child {

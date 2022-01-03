@@ -24,14 +24,6 @@ export const NotificationsWatchMenu = ({ doc }) => {
     setVisibleSubMenuId(visibleSubMenuId === menuEntryId ? null : menuEntryId);
   }
 
-  function showStepStart() {
-    setVisibleStep(0);
-  }
-
-  function showStepCustom() {
-    setVisibleStep(1);
-  }
-
   return (
     <>
       <Button
@@ -57,12 +49,12 @@ export const NotificationsWatchMenu = ({ doc }) => {
         {visibleStep === 0 ? (
           <NotificationsWatchMenuStart
             doc={doc}
-            setStepHandler={showStepCustom}
+            setStepHandler={setVisibleStep}
           />
         ) : (
           <NotificationsWatchMenuCustom
             doc={doc}
-            setStepHandler={showStepStart}
+            setStepHandler={setVisibleStep}
           />
         )}
       </div>

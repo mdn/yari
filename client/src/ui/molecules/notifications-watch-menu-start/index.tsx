@@ -47,7 +47,7 @@ export function NotificationsWatchMenuStart({ doc, setStepHandler }) {
     setWatchMode(event.currentTarget.value);
   };
 
-  async function handleWatchSelection(event) {
+  async function handleWatchSubmit(event) {
     event.preventDefault();
 
     if (!data) {
@@ -119,7 +119,7 @@ export function NotificationsWatchMenuStart({ doc, setStepHandler }) {
       className="watch-menu-form"
       action={apiURL}
       method="POST"
-      onSubmit={handleWatchSelection}
+      onSubmit={handleWatchSubmit}
     >
       <div className="watch-submenu-header">Notifications</div>
 

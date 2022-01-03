@@ -1,6 +1,5 @@
 import * as React from "react";
 import { Link } from "react-router-dom";
-
 import { Icon } from "../icon";
 
 import "./index.scss";
@@ -12,7 +11,7 @@ type ButtonProps = {
   ariaLabel?: string;
   title?: string;
 
-  type?: "primary" | "secondary" | "action";
+  type?: "primary" | "secondary" | "action" | "select";
 
   /**
    * The `type` of the button. Not used with links.
