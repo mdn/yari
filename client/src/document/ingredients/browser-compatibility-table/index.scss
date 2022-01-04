@@ -1,4 +1,116 @@
 @use "~@mdn/minimalist/sass/mixins/utils" as *;
+@use "../../../ui/vars" as *;
+
+.bc {
+  &-table {
+    border: 1px solid var(--border-primary);
+    border-collapse: collapse;
+    width: 100%;
+
+    td,
+    th {
+      border: 1px solid var(--border-primary);
+      font: var(--type-body-m);
+      padding: 0.5rem;
+    }
+
+    th {
+      vertical-align: bottom;
+      text-align: center;
+    }
+
+    tbody th {
+      min-width: 20%;
+    }
+  }
+
+  &-head-txt-label {
+    -ms-writing-mode: tb-rl;
+    -webkit-writing-mode: vertical-rl;
+    writing-mode: vertical-rl;
+    transform: rotate(180deg);
+    white-space: nowrap;
+  }
+
+  &-icon-cell {
+    text-align: center;
+    vertical-align: middle;
+
+    .bc-version-label,
+    .bc-support-level {
+      display: none;
+    }
+  }
+
+  &-history-link {
+    @include visually-hidden;
+    position: absolute; // messing up layout otherwise
+  }
+
+  &-level-no {
+    background-color: var(--icon-critical);
+  }
+
+  &-level-preview {
+    background-color: var(--icon-information);
+  }
+}
+
+.bc-platforms {
+  th {
+    text-align: center;
+  }
+}
+
+.bc-notes-list {
+  margin-left: 20%;
+  position: relative;
+
+  &:before {
+    position: absolute;
+    z-index: -1;
+    height: 100%;
+    left: 7px;
+    width: 2px;
+    background: var(--border-primary);
+    content: "";
+  }
+
+  .bc-level-yes.icon.icon-yes {
+    // override icon
+    background-color: var(--icon-success);
+    mask-image: url("../../../assets/icons/yes-circle.svg");
+  }
+
+  .icon.icon-footnote {
+    mask-image: none;
+    border-radius: 50%;
+    border: 3px solid var(--background-primary);
+    background: var(--border-primary);
+  }
+
+  .icon.icon-disabled {
+    background-color: var(--icon-information);
+  }
+
+  .bc-support-level {
+    display: none;
+  }
+
+  .icon-wrap {
+    background: var(--background-primary);
+  }
+
+  abbr {
+    margin-right: 4px;
+  }
+
+  dd {
+    margin-bottom: 1rem;
+    padding-left: 1.5rem;
+    text-indent: -1.5rem;
+  }
+}
 
 .offscreen,
 .only-icon span {
@@ -17,7 +129,7 @@
     overflow: hidden;
   }
 
-  /* Can only flex-shrink and not flex-grow 
+  /* Can only flex-shrink and not flex-grow
   ie the "slider" in a sliding glass door */
   .left-side {
     flex: 0 1 auto;
@@ -27,5 +139,27 @@
   its the stationary portion */
   .right-side {
     flex: 1 0 auto;
+  }
+}
+
+@media screen and (min-width: $screen-md) {
+  .bc-icon-cell {
+    &[aria-expanded="true"] {
+      position: relative;
+
+      &:after {
+        position: absolute;
+        left: 0;
+        bottom: -1px;
+        height: 2px;
+        width: 100%;
+        background: #fff;
+        content: "";
+      }
+
+      .bc-history-mobile {
+        display: none;
+      }
+    }
   }
 }
