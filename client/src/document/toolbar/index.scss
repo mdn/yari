@@ -1,13 +1,9 @@
 @use "../../ui/vars" as *;
 
 .toolbar {
-  display: none;
-
-  @media screen and (min-width: $screen-md) {
-    display: block;
-    margin: 0 auto;
-    padding: 1rem 1rem;
-  }
+  display: block;
+  margin: 0 auto;
+  padding: $base-unit $base-spacing;
 
   .toolbar-first-row {
     display: flex;
