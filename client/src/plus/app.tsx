@@ -16,7 +16,7 @@ export default function App() {
       )}
 
       <p>
-        <SubscribeLink toFXA={true} />
+        <SubscribeLink />
       </p>
     </div>
   );
