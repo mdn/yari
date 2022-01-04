@@ -95,7 +95,13 @@ export function NotificationsWatchMenuCustom({ doc, setStepHandler }) {
 
   return (
     <form>
-      <button onClick={setStepHandler} className="watch-submenu-header">
+      <button
+        onClick={(e) => {
+          e.preventDefault();
+          setStepHandler(0);
+        }}
+        className="watch-submenu-header"
+      >
         <span className="watch-submenu-header-wrap">
           <Icon name="chevron" />
           Customize Notifications
