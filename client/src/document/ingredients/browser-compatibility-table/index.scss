@@ -3,13 +3,27 @@
 
 .bc {
   &-table {
-    border: 1px solid var(--border-primary);
+    border-bottom: 1px solid var(--border-primary);
     border-collapse: collapse;
     width: 100%;
+    margin: 1rem 0;
+
+    thead {
+      display: none;
+    }
+
+    &-row-header,
+    tbody td,
+    tbody th {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
 
     td,
     th {
       border: 1px solid var(--border-primary);
+      border-bottom: 0 none;
       font: var(--type-body-m);
       padding: 0.5rem;
     }
@@ -17,10 +31,19 @@
     th {
       vertical-align: bottom;
       text-align: center;
+      background: var(--border-primary);
     }
 
     tbody th {
       min-width: 20%;
+    }
+
+    .icon-wrap {
+      background: var(--background-primary);
+
+      .bc-support-level {
+        @include visually-hidden;
+      }
     }
   }
 
@@ -35,11 +58,6 @@
   &-icon-cell {
     text-align: center;
     vertical-align: middle;
-
-    .bc-version-label,
-    .bc-support-level {
-      display: none;
-    }
   }
 
   &-history-link {
@@ -56,6 +74,14 @@
   }
 }
 
+.bc-supports.bc-supports {
+  margin-top: 0;
+}
+
+.bc-version-label {
+  display: none;
+}
+
 .bc-platforms {
   th {
     text-align: center;
@@ -63,8 +89,9 @@
 }
 
 .bc-notes-list {
-  margin-left: 20%;
   position: relative;
+  margin: 1rem 0.5rem;
+  text-align: left;
 
   &:before {
     position: absolute;
@@ -74,6 +101,22 @@
     width: 2px;
     background: var(--border-primary);
     content: "";
+  }
+
+  // complicated selector to cover the last bit of the grey line above.
+  .bc-notes-wrapper:last-child dd:last-child {
+    position: relative;
+
+    &:before {
+      position: absolute;
+      z-index: -1;
+      height: calc(100% - 6px);
+      left: 7px;
+      width: 2px;
+      bottom: 0;
+      background: var(--background-primary);
+      content: "";
+    }
   }
 
   .bc-level-yes.icon.icon-yes {
@@ -93,12 +136,8 @@
     background-color: var(--icon-information);
   }
 
-  .bc-support-level {
-    display: none;
-  }
-
-  .icon-wrap {
-    background: var(--background-primary);
+  .bc-version-label {
+    display: inline;
   }
 
   abbr {
@@ -109,6 +148,18 @@
     margin-bottom: 1rem;
     padding-left: 1.5rem;
     text-indent: -1.5rem;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+}
+
+.bc-notes-wrapper {
+  margin-bottom: 1rem;
+
+  &:last-child {
+    margin-bottom: 0;
   }
 }
 
@@ -143,7 +194,41 @@
 }
 
 @media screen and (min-width: $screen-md) {
+  .bc-table {
+    border: 1px solid var(--border-primary);
+
+    thead {
+      display: table-header-group;
+    }
+
+    &-row-header,
+    tbody td,
+    tbody th {
+      display: table-cell;
+    }
+
+    td,
+    th {
+      border-bottom: 1px solid var(--border-primary);
+      background: inherit;
+    }
+  }
+
+  .bc-support-level,
+  .bc-browser-name {
+    display: none;
+  }
+
+  .bc-notes-list {
+    margin-left: 20%;
+  }
+
   .bc-icon-cell {
+    .bc-version-label,
+    .bc-support-level {
+      display: none;
+    }
+
     &[aria-expanded="true"] {
       position: relative;
 

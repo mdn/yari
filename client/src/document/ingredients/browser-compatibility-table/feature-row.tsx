@@ -216,10 +216,9 @@ const CellText = React.memo(
           >
             <span className="bc-support-level">{title}</span>
           </abbr>
-          <span className="bc-version-label">
-            {" "}
-            {browser} {label}
-          </span>
+        </span>
+        <span className="bc-version-label">
+          <BrowserName id={browser} /> {label}
         </span>
       </>
     );
@@ -446,10 +445,10 @@ function CompatCell({
           browserReleaseDate ? `Released ${browserReleaseDate}` : undefined
         }
       >
-        <span className="bc-browser-name visually-hidden">
+        <CellText {...{ support }} browser={browser} />
+        <span className="bc-browser-name">
           <BrowserName id={browser} />
         </span>
-        <CellText {...{ support }} browser={browser} />
         <CellIcons support={support} />
         {hasNotes && (
           <button
