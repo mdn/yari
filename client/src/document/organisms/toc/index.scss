@@ -16,12 +16,8 @@
   }
 
   h2 {
-    display: none;
-
-    @media screen and (max-width: $screen-lg) {
-      display: block;
-      font-size: 1rem;
-    }
+    display: block;
+    font-size: 1rem;
   }
 
   a {
@@ -71,7 +67,6 @@
   ul {
     background-color: var(--background-primary);
     border: 2px solid var(--border-primary);
-    display: none;
     list-style: none;
     padding: 0 1rem;
     position: absolute;

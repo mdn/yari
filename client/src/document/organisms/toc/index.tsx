@@ -1,40 +1,99 @@
 import React from "react";
 
+import "./index.scss";
 import { Toc } from "../../types";
 
-import "./index.scss";
+// This component needed to be a class, because IntersectionObservers have trouble
+// finding react hooks' state variables. IntersectionObservers were referencing only the
+// first state, even though the values changed with time.
+// Having a class instance on memory made it persistent.
+export class TOC extends React.Component<
+  { toc: Toc[] },
+  { currentViewedTocItems: string[] }
+> {
+  constructor(props) {
+    super(props);
+    this.state = {
+      currentViewedTocItems: [],
+    };
+  }
 
-export function TOC({ toc }: { toc: Toc[] }) {
-  const [showTOC, setShowTOC] = React.useState(false);
+  handleViewed = (itemId, entry) => {
+    const { currentViewedTocItems } = this.state;
+
+    if (entry.isIntersecting && !currentViewedTocItems.includes(itemId)) {
+      this.setState({
+        currentViewedTocItems: [...currentViewedTocItems, itemId],
+      });
+    } else if (!entry.isIntersecting) {
+      this.setState({
+        currentViewedTocItems: currentViewedTocItems.filter(
+          (id) => id !== itemId
+        ),
+      });
+    }
+  };
+
+  render() {
+    const { currentViewedTocItems } = this.state;
+    const { toc } = this.props;
+
+    return (
+      <aside className="document-toc-container">
+        <section className="document-toc">
+          <header>
+            <h2>Table of contents</h2>
+          </header>
+          <ul id="toc-entries">
+            {toc.map((item) => {
+              return (
+                <TOCItem
+                  key={item.id}
+                  id={item.id}
+                  text={item.text}
+                  handleViewed={this.handleViewed}
+                  currentViewedTocItems={currentViewedTocItems}
+                />
+              );
+            })}
+          </ul>
+        </section>
+      </aside>
+    );
+  }
+}
+
+function TOCItem({
+  id,
+  text,
+  currentViewedTocItems,
+  handleViewed,
+}: Toc & {
+  currentViewedTocItems: string[];
+  handleViewed: (string, IntersectionObserverEntry) => void;
+}) {
+  React.useEffect(() => {
+    const relatedSectionElement = document.getElementById(
+      id.toLowerCase()
+    )?.nextElementSibling;
+
+    const currentObserver = new IntersectionObserver(
+      (entry) => {
+        handleViewed(id, entry[0]);
+      },
+      { threshold: [0, 0.25, 0.5, 0.75, 1] }
+    );
+    if (relatedSectionElement) {
+      currentObserver.observe(relatedSectionElement);
+    }
+  }, [handleViewed, id]);
 
   return (
-    <aside className="document-toc-container">
-      <section className="document-toc">
-        <header>
-          <h2>Table of contents</h2>
-          <button
-            type="button"
-            className="ghost toc-trigger-mobile"
-            onClick={() => {
-              setShowTOC(!showTOC);
-            }}
-            aria-controls="toc-entries"
-            aria-expanded={showTOC}
-          >
-            Table of contents
-          </button>
-        </header>
-        <ul id="toc-entries" className={showTOC ? "show-toc" : undefined}>
-          {toc.map((item) => (
-            <li key={item.id}>
-              <a
-                href={`#${item.id.toLowerCase()}`}
-                dangerouslySetInnerHTML={{ __html: item.text }}
-              ></a>
-            </li>
-          ))}
-        </ul>
-      </section>
-    </aside>
+    <li key={id} aria-current={currentViewedTocItems[0] === id || undefined}>
+      <a
+        href={`#${id.toLowerCase()}`}
+        dangerouslySetInnerHTML={{ __html: text }}
+      />
+    </li>
   );
 }
