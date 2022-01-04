@@ -5,6 +5,7 @@ import { NotificationsWatchMenuCustom } from "../notifications-watch-menu-custom
 import { NotificationsWatchMenuStart } from "../notifications-watch-menu-start";
 
 import "./index.scss";
+import { useOnClickOutside } from "../../../hooks";
 
 export const NotificationsWatchMenu = ({ doc }) => {
   const menuId = "watch-submenu";
@@ -13,6 +14,9 @@ export const NotificationsWatchMenu = ({ doc }) => {
     null
   );
   const [visibleStep, setVisibleStep] = React.useState<number>(0);
+
+  const submenuRef = React.useRef(null);
+  useOnClickOutside(submenuRef, toggleSubMenu);
 
   /**
    * Show and hide submenus in the main menu.
@@ -42,6 +46,7 @@ export const NotificationsWatchMenu = ({ doc }) => {
       </Button>
 
       <div
+        ref={submenuRef}
         className={`${menuId} ${menuId === visibleSubMenuId ? "show" : ""}`}
         role="menu"
         aria-labelledby={`${menuId}-button`}
