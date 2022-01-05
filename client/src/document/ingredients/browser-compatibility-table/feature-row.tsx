@@ -88,7 +88,7 @@ function StatusIcons({ status }: { status: bcd.StatusBlock }) {
     },
   ].filter(isTruthy);
   return icons.length === 0 ? null : (
-    <div className="bc-icons">
+    <div className="bc-icons" data-test={icons.length}>
       {icons.map((icon) => (
         <abbr key={icon.iconClassName} className="only-icon" title={icon.title}>
           <span>{icon.text}</span>
@@ -206,15 +206,20 @@ const CellText = React.memo(
 
     return (
       <>
-        <abbr
-          className={`bc-level-${getSupportClassName(
-            currentSupport
-          )} only-icon`}
-          title={title}
-        >
-          <span>{title}</span>
-        </abbr>
-        <span>{label}</span>
+        <span className="icon-wrap">
+          <abbr
+            className={`
+            bc-level-${getSupportClassName(currentSupport)}
+            icon
+            icon-${getSupportClassName(currentSupport)}`}
+            title={title}
+          >
+            <span className="bc-support-level">{title}</span>
+          </abbr>
+        </span>
+        <span className="bc-version-label">
+          <BrowserName id={browser} /> {label}
+        </span>
       </>
     );
   }
@@ -224,7 +229,7 @@ function Icon({ name }: { name: string }) {
   return (
     <abbr className="only-icon" title={name}>
       <span>{name}</span>
-      <i className={`ic-${name}`} />
+      <i className={`icon icon-${name}`} />
     </abbr>
   );
 }
@@ -239,7 +244,6 @@ function CellIcons({ support }: { support: bcd.SupportStatement | undefined }) {
       {supportItem.prefix && <Icon name="prefix" />}
       {supportItem.alternative_name && <Icon name="altname" />}
       {supportItem.flags && <Icon name="disabled" />}
-      {supportItem.notes && <Icon name="footnote" />}
     </div>
   );
 }
@@ -305,7 +309,7 @@ function getNotes(
       const supportNotes = [
         item.version_removed
           ? {
-              iconName: "footnote",
+              iconName: "disabled",
               label: (
                 <>
                   Removed in {labelFromString(item.version_removed, browser)}{" "}
@@ -334,7 +338,7 @@ function getNotes(
           : null,
         item.flags
           ? {
-              iconName: "footnote",
+              iconName: "disabled",
               label: <FlagsNote browser={browser} supportItem={item} />,
             }
           : null,
@@ -374,7 +378,7 @@ function getNotes(
                 )} bc-supports`}
               >
                 <CellText support={item} browser={browser} />
-                <CellIcons support={item} />
+                {/**<CellIcons support={item} /> */}
               </dt>
               {supportNotes.map(({ iconName, label }, i) => {
                 return (
@@ -425,7 +429,7 @@ function CompatCell({
   return (
     <>
       <td
-        className={`bc-browser-${browser} bc-supports-${supportClassName} ${
+        className={`bc-icon-cell bc-browser-${browser} bc-supports-${supportClassName} ${
           hasNotes ? "bc-has-history" : ""
         }`}
         aria-expanded={showNotes ? "true" : "false"}
@@ -441,16 +445,16 @@ function CompatCell({
           browserReleaseDate ? `Released ${browserReleaseDate}` : undefined
         }
       >
+        <CellText {...{ support }} browser={browser} />
         <span className="bc-browser-name">
           <BrowserName id={browser} />
         </span>
-        <CellText {...{ support }} browser={browser} />
         <CellIcons support={support} />
         {hasNotes && (
           <button
             type="button"
             title="Open implementation notes"
-            className={`bc-history-link only-icon ${
+            className={`bc-history-link ${
               showNotes ? "bc-history-link-inverse" : ""
             }`}
           >
