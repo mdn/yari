@@ -1,8 +1,1 @@
-<svg width="17" height="12" viewBox="0 0 17 12" fill="none" xmlns="http://www.w3.org/2000/svg">
-<rect x="0.27002" width="16" height="3" rx="1" fill="currentColor"/>
-<circle cx="14.27" cy="1.5" r="0.75" fill="white"/>
-<rect x="0.27002" y="4.5" width="16" height="3" rx="1" fill="currentColor"/>
-<circle cx="14.27" cy="6" r="0.75" fill="white"/>
-<rect x="0.27002" y="9" width="16" height="3" rx="1" fill="currentColor"/>
-<circle cx="14.27" cy="10.5" r="0.75" fill="white"/>
-</svg>
+<svg xmlns="http://www.w3.org/2000/svg" width="16" height="12" viewBox="0 0 16 12"><g id="Layer_2" data-name="Layer 2"><g id="Layer_1-2" data-name="Layer 1"><path d="M15,0H1A1,1,0,0,0,0,1V2A1,1,0,0,0,1,3H15a1,1,0,0,0,1-1V1A1,1,0,0,0,15,0ZM14,2.25a.75.75,0,1,1,.75-.75A.75.75,0,0,1,14,2.25Z"/><path d="M15,4.5H1a1,1,0,0,0-1,1v1a1,1,0,0,0,1,1H15a1,1,0,0,0,1-1v-1A1,1,0,0,0,15,4.5ZM14,6.75A.75.75,0,1,1,14.75,6,.75.75,0,0,1,14,6.75Z"/><path d="M15,9H1a1,1,0,0,0-1,1v1a1,1,0,0,0,1,1H15a1,1,0,0,0,1-1V10A1,1,0,0,0,15,9Zm-1,2.25a.75.75,0,1,1,.75-.75A.75.75,0,0,1,14,11.25Z"/></g></g></svg>

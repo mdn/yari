@@ -218,7 +218,7 @@ const CellText = React.memo(
           </abbr>
         </span>
         <span className="bc-version-label">
-          <BrowserName id={browser} /> {label}
+          <BrowserName id={browser} /> {label !== "No" ? label : null}
         </span>
       </>
     );
@@ -332,7 +332,7 @@ function getNotes(
           : null,
         item.alternative_name
           ? {
-              iconName: "footnote",
+              iconName: "altname",
               label: `Alternate name: ${item.alternative_name}`,
             }
           : null,
@@ -354,13 +354,23 @@ function getNotes(
             }
           : null,
         // If we encounter nothing else than the required `version_added` and
-        // `release_date` properties, assume full support
+        // `release_date` properties, assume full support.
+        // EDIT 1-5-21: if item.version_added doesn't exist, assume no support.
         Object.keys(item).filter(
           (x) => !["version_added", "release_date"].includes(x)
-        ).length === 0 && item.version_added !== "preview"
+        ).length === 0 &&
+        item.version_added &&
+        item.version_added !== "preview"
           ? {
               iconName: "footnote",
               label: "Full support",
+            }
+          : Object.keys(item).filter(
+              (x) => !["version_added", "release_date"].includes(x)
+            ).length === 0 && !item.version_added
+          ? {
+              iconName: "footnote",
+              label: "No support",
             }
           : null,
       ]
@@ -416,16 +426,19 @@ function CompatCell({
 }) {
   const supportClassName = getSupportClassName(support);
   const browserReleaseDate = getSupportBrowserReleaseDate(support);
+  // NOTE: 1-5-21, I've forced hasNotes to return true, in order to
+  // make the details view open all the time.
+  const hasNotes = true;
   // Whenever the support statement is complex (array with more than one entry)
   // or if a single entry is complex (prefix, notes, etc.),
   // we need to render support details in `bc-history`
-  const hasNotes =
-    support &&
-    (asList(support).length > 1 ||
-      asList(support).some(
-        (item) =>
-          item.prefix || item.notes || item.alternative_name || item.flags
-      ));
+  // const hasNotes =
+  //   support &&
+  //   (asList(support).length > 1 ||
+  //     asList(support).some(
+  //       (item) =>
+  //         item.prefix || item.notes || item.alternative_name || item.flags
+  //     ));
   return (
     <>
       <td
