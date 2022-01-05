@@ -3,7 +3,6 @@
 
 .bc {
   &-table {
-    border-bottom: 1px solid var(--border-primary);
     border-collapse: collapse;
     width: 100%;
     margin: 1rem 0;
@@ -20,6 +19,19 @@
       gap: 0.5rem;
     }
 
+    &-row-header {
+      text-align: left;
+    }
+
+    tbody th:first-child {
+      border-radius: var(--elem-radius) var(--elem-radius) 0 0;
+    }
+
+    tbody > tr > td:last-child {
+      border-bottom: 1px solid var(--border-primary);
+      border-radius: 0 0 var(--elem-radius) var(--elem-radius);
+    }
+
     td,
     th {
       border: 1px solid var(--border-primary);
@@ -31,7 +43,7 @@
     th {
       vertical-align: bottom;
       text-align: center;
-      background: var(--border-primary);
+      background: var(--background-tertiary);
     }
 
     tbody th {
@@ -92,6 +104,7 @@
   position: relative;
   margin: 1rem 0.5rem;
   text-align: left;
+  width: 100%;
 
   &:before {
     position: absolute;
@@ -196,6 +209,7 @@
 @media screen and (min-width: $screen-md) {
   .bc-table {
     border: 1px solid var(--border-primary);
+    border-radius: 0;
 
     thead {
       display: table-header-group;
@@ -221,6 +235,7 @@
 
   .bc-notes-list {
     margin-left: 20%;
+    width: auto;
   }
 
   .bc-icon-cell {
