@@ -5,6 +5,7 @@ import { NotificationsWatchMenuCustom } from "./custom";
 import { NotificationsWatchMenuStart } from "./start";
 
 import "./index.scss";
+import { useOnClickOutside } from "../../../hooks";
 import useSWR from "swr";
 import { useCSRFMiddlewareToken } from "../../../hooks";
 
@@ -38,6 +39,9 @@ export const NotificationsWatchMenu = ({ doc }) => {
     }
   );
   const watching = data?.status && data.status !== "unwatched";
+
+  const submenuRef = React.useRef(null);
+  useOnClickOutside(submenuRef, () => setShow(false));
 
   async function handleWatchSubmit({
     custom,
@@ -87,7 +91,7 @@ export const NotificationsWatchMenu = ({ doc }) => {
   }
 
   return (
-    <>
+    <div className="watch-menu" ref={submenuRef}>
       <React.Suspense fallback={null}>
         <Button
           type="action"
@@ -130,6 +134,6 @@ export const NotificationsWatchMenu = ({ doc }) => {
           )}
         </div>
       )}
-    </>
+    </div>
   );
 };
