@@ -91,7 +91,7 @@ export const NotificationsWatchMenu = ({ doc }) => {
   }
 
   return (
-    <>
+    <div className="watch-menu" ref={submenuRef}>
       <React.Suspense fallback={null}>
         <Button
           type="action"
@@ -111,7 +111,6 @@ export const NotificationsWatchMenu = ({ doc }) => {
 
       {data && (
         <div
-          ref={submenuRef}
           className={`${menuId} ${show ? "show" : ""}`}
           role="menu"
           aria-labelledby={`${menuId}-button`}
@@ -135,6 +134,6 @@ export const NotificationsWatchMenu = ({ doc }) => {
           )}
         </div>
       )}
-    </>
+    </div>
   );
 };

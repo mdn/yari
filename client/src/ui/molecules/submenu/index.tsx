@@ -1,5 +1,4 @@
 import "./index.scss";
-import { useOnClickOutside } from "../../../hooks";
 import React from "react";
 
 type SubmenuItem = {
@@ -28,12 +27,8 @@ export const Submenu = ({
   onBlurHandler?: () => void;
   visibleSubMenuId: string | null;
 }) => {
-  const submenuRef = React.useRef(null);
-  useOnClickOutside(submenuRef, onBlurHandler);
-
   return (
     <ul
-      ref={submenuRef}
       className={`submenu ${menuEntry.id} ${
         menuEntry.id === visibleSubMenuId ? "show" : ""
       }`}

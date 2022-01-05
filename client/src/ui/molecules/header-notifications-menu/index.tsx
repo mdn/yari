@@ -129,7 +129,7 @@ export const HeaderNotificationsMenu = () => {
   }
 
   return (
-    <div className="notifications-menu">
+    <div className="notifications-menu" ref={submenuRef}>
       <Link to={`/${locale}/plus/notifications/`} className="top-level-entry">
         {drawNotificationButtonContents()}
       </Link>
@@ -150,7 +150,6 @@ export const HeaderNotificationsMenu = () => {
       </Button>
 
       <ul
-        ref={submenuRef}
         className={`notifications-submenu ${menuId} ${
           menuId === visibleSubMenuId ? "show" : ""
         }`}
