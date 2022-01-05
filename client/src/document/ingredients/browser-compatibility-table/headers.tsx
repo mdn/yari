@@ -13,7 +13,7 @@ export const PLATFORM_BROWSERS: { [key: string]: bcd.BrowserNames[] } = {
   ],
   server: ["deno", "nodejs"],
   "webextensions-desktop": ["chrome", "edge", "firefox", "opera", "safari"],
-  "webextensions-mobile": ["firefox_android"],
+  "webextensions-mobile": ["firefox_android", "safari_ios"],
 };
 
 function PlatformHeaders({ platforms, browsers }) {
@@ -33,6 +33,7 @@ function PlatformHeaders({ platforms, browsers }) {
             key={platform}
             className={`bc-platform-${platformId}`}
             colSpan={browserCount}
+            title={platform}
           >
             <span>{platform}</span>
           </th>

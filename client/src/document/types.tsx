@@ -137,5 +137,6 @@ export interface Doc {
   contributors: string[];
   isTranslated: boolean;
   isActive: boolean;
+  hasMathML?: boolean;
   isMarkdown: boolean;
 }

@@ -1,5 +1,7 @@
 @use "sass:math";
 
+@import "~@mdn/minimalist/sass/vars/typography";
+
 .bc-notes-wrapper {
   .bc-supports {
     display: flex;

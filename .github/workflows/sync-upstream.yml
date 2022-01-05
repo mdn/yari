@@ -1,0 +1,31 @@
+name: Sync from Upstream
+
+on:
+  workflow_dispatch:
+    inputs:
+      notes:
+        description: "Notes"
+        required: false
+        default: ""
+  schedule:
+    # * is a special character in YAML so you have to quote this string
+    - cron: "0 */24 * * *"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Commit changes
+        run: |
+          cd $GITHUB_WORKSPACE
+          git remote add upstream "https://github.com/mdn/yari.git"
+          git remote add private "https://${GITHUB_ACTOR}:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+          git config --local user.email "actions@users.noreply.github.com"
+          git config --local user.name "MDN"
+          git fetch upstream
+          git fetch private
+          git merge upstream/main -m "Auto-merge yari/main"
+          git push private main

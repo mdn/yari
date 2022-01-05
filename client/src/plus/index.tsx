@@ -46,7 +46,7 @@ export function Plus({ pageTitle }: { pageTitle?: string }) {
         }
       />
       <Route
-        path="notifications"
+        path="notifications/*"
         element={
           <React.Suspense fallback={loading}>
             <div className="notifications girdle">

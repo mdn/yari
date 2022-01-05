@@ -70,7 +70,7 @@ function NotificationsLayout() {
   const tabs = [
     {
       label: "All Notifications",
-      path: `/${locale}/plus/notifications/`,
+      path: `/${locale}/plus/notifications`,
     },
     {
       label: "Starred",
