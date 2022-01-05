@@ -42,7 +42,13 @@ function Checkbox({
   );
 }
 
-export function NotificationsWatchMenuCustom({ doc, setStepHandler }) {
+export function NotificationsWatchMenuCustom({
+  data,
+  setStepHandler,
+  handleSelection,
+}) {
+  const compat = data.compatibility || {};
+  const [content, setContent] = React.useState(!!data.content);
   const [compatOpen, setCompatOpen] = React.useState<string[]>([]);
   const [compatOptions, setCompatOptions] = React.useState([
     {
@@ -50,15 +56,15 @@ export function NotificationsWatchMenuCustom({ doc, setStepHandler }) {
       interfaces: [
         {
           name: "Chrome",
-          checked: true,
+          checked: !!compat.chrome,
         },
         {
           name: "Edge",
-          checked: false,
+          checked: !!compat.edge,
         },
         {
           name: "Firefox",
-          checked: true,
+          checked: !!compat.firefox,
         },
       ],
     },
@@ -67,11 +73,11 @@ export function NotificationsWatchMenuCustom({ doc, setStepHandler }) {
       interfaces: [
         {
           name: "WebView Android",
-          checked: true,
+          checked: !!compat.webview_android,
         },
         {
           name: "Chrome Android",
-          checked: false,
+          checked: !!compat.chrome_android,
         },
       ],
     },
@@ -80,19 +86,25 @@ export function NotificationsWatchMenuCustom({ doc, setStepHandler }) {
       interfaces: [
         {
           name: "Deno",
-          checked: true,
+          checked: !!compat.deno,
         },
         {
           name: "Node.js",
-          checked: true,
+          checked: !!compat["node.js"],
         },
       ],
     },
   ]);
 
-  function handleOptionChange(fieldName) {
-    // Update backend that field changed
-    // Trigger re-draw of custom watch menu
+  function handleOptionChange() {
+    handleSelection({
+      content,
+      compatibility: compatOptions.flatMap((opt) =>
+        opt.interfaces
+          .filter((o) => o.checked)
+          .map((o) => o.name.toLowerCase().replace(/ /g, "_"))
+      ),
+    });
   }
 
   function setGlobalDefault() {}
@@ -115,7 +127,6 @@ export function NotificationsWatchMenuCustom({ doc, setStepHandler }) {
           checked={checked}
           indeterminate={indeterminate}
           onChange={(e) => {
-            handleOptionChange(formattedFieldName);
             callback && callback(e);
           }}
         >
@@ -165,6 +176,7 @@ export function NotificationsWatchMenuCustom({ doc, setStepHandler }) {
           indeterminate={indeterminate}
           callback={() => {
             option.interfaces.map((o) => (o.checked = !checked));
+            handleOptionChange();
             setCompatOptions([...compatOptions]);
           }}
         />
@@ -206,7 +218,14 @@ export function NotificationsWatchMenuCustom({ doc, setStepHandler }) {
         </span>
       </button>
 
-      <WatchMenuOption fieldName={"Content Updates"} checked={true} />
+      <WatchMenuOption
+        fieldName={"Content Updates"}
+        checked={content}
+        callback={() => {
+          setContent(!content);
+          handleOptionChange();
+        }}
+      />
 
       <fieldset className="watch-submenu-group">
         <div className="watch-submenu-item">

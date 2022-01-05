@@ -806,6 +806,10 @@ const SCL3_REDIRECT_PATTERNS = [
     "/en-US/docs/Glossary/speculative_parsing",
     { permanent: true }
   ),
+  // Redirect for URL in Contribute video
+  redirect(/^MDN\/Contribute\/?$/i, "/en-US/docs/MDN/Contribute", {
+    permanent: true,
+  }),
 ];
 
 const zoneRedirects = [

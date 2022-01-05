@@ -3,6 +3,9 @@
 @use "~@mdn/minimalist/sass/vars/color-palette";
 @use "~@mdn/minimalist/sass/vars/color-gradients";
 
+@import "~@mdn/minimalist/sass/vars/layout";
+@import "~@mdn/minimalist/sass/vars/typography";
+
 .mdn-cta-container {
   background-color: #212121;
   color: white;

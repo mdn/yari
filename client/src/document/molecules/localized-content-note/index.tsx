@@ -28,7 +28,7 @@ export function LocalizedContentNote({
   const inactiveLocaleNoteContent = {
     de: {
       linkText:
-        "Der Inhalt dieser Seite wurde von der Community übersetzt, jedoch wird er nicht mehr aktiv gepflegt und kann daher veraltet sein. Wenn du mithelfen möchtest, kannst du hier herausfinden wie deaktivierte Übersetzung reaktiviert werden.",
+        "Der Inhalt dieser Seite wurde von der Community übersetzt, jedoch wird er nicht mehr aktiv gepflegt und kann daher veraltet sein. Wenn du mithelfen möchtest, kannst du hier herausfinden wie deaktivierte Übersetzungen reaktiviert werden können.",
     },
     "en-US": {
       linkText:

@@ -61,9 +61,12 @@ main {
   min-height: 80vh;
 }
 
-// !!! This is not an accessible way to hide content
 .visually-hidden {
-  display: none;
+  font: 0/0 a;
+  padding: 0 !important;
+  margin: 0 !important;
+  height: 0;
+  color: transparent;
 }
 
 pre {

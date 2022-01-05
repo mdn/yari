@@ -139,7 +139,7 @@ module.exports = {
         } else {
           flaw = this.env.recordNonFatalError(
             "broken-link",
-            `${hrefpath} does not exist but fallbacked on ${enUSPage.url}`
+            `${hrefpath} does not exist but fell back to ${enUSPage.url}`
           );
           flawAttribute = ` data-flaw-src="${util.htmlEscape(
             flaw.macroSource

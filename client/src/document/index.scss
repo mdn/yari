@@ -29,6 +29,10 @@ a.page-not-created {
 .main-page-content {
   padding: 0.5rem 1rem 1rem;
 
+  img {
+    display: inline-block;
+  }
+
   figure {
     margin-bottom: 1rem;
   }
