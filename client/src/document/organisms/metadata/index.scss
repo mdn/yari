@@ -1,9 +1,13 @@
 @use "../../../ui/vars" as *;
 
-.metadata {
+.main-page-content .metadata {
   background-color: var(--background-secondary);
   margin: (1rem * 2) 0;
   padding: 1rem;
+
+  h3 {
+    padding-top: 0;
+  }
 }
 
 .metadata-content-container {
@@ -14,14 +18,6 @@
   a:link,
   a:visited {
     text-decoration: underline;
-  }
-
-  .on-github {
-    margin-bottom: 1rem;
-
-    ul li {
-      margin-bottom: 8px;
-    }
   }
 
   .last-modified-date {
