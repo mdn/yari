@@ -1,5 +1,3 @@
-import React, { useState } from "react";
-
 import { Icon } from "../../atoms/icon";
 
 type WatchMenuButton = {
