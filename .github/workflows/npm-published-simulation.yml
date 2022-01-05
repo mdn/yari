@@ -73,13 +73,13 @@ jobs:
         run: |
           yarn start > /tmp/stdout.log 2> /tmp/stderr.log &
 
-      - name: View some URLs on localhost:5000
+      - name: View some URLs on localhost:5042
         run: |
-          curl --retry-connrefused --retry 5 -I http://localhost:5000
+          curl --retry-connrefused --retry 5 -I http://localhost:5042
 
           # Basically, test if it 200 OKs. If not, this'll exit non-zero.
-          curl http://localhost:5000/en-US/ > /dev/null
-          curl http://localhost:5000/en-US/docs/MDN/Kitchensink > /dev/null
+          curl http://localhost:5042/en-US/ > /dev/null
+          curl http://localhost:5042/en-US/docs/MDN/Kitchensink > /dev/null
 
       - name: Test viewing the dev server
         env:
@@ -87,7 +87,7 @@ jobs:
           # if the development server is up and ready to be tested.
           TESTING_DEVELOPING: true
           # When running Yari from within mdn/content it only starts 1 server;
-          # the one on localhost:5000. No React dev server; the one
+          # the one on localhost:5042. No React dev server; the one
           # on localhost:3000.
           # Testing that dev server is not relevant or important in this context.
           DEVELOPING_SKIP_DEV_URL: true

@@ -104,7 +104,7 @@ with the front-end code, ready to be served as static files.
 ## Development
 
 The `yarn start` command encapsulates the front-end dev server
-(on <http://localhost:3000>) and the `server` (on <http://localhost:5000>).
+(on <http://localhost:3000>) and the `server` (on <http://localhost:5042>).
 
 All the sub-commands of `yarn start` can be broken down and run individually
 if you want to work more rapidly.
@@ -169,7 +169,7 @@ be fairly feature-complete.
 1. [Create in account on Ngrok.com](https://dashboard.ngrok.com/signup)
 2. [Download the executable](https://ngrok.com/download)
 3. Start your Yari server with `yarn start` in one terminal
-4. Start the `ngrok` executable with: `/path/to/your/ngrok http 5000`
+4. Start the `ngrok` executable with: `/path/to/your/ngrok http 5042`
 
 This will display something like this:
 
@@ -178,8 +178,8 @@ This will display something like this:
     Version                       2.3.35
     Region                        United States (us)
     Web Interface                 http://127.0.0.1:4040
-    Forwarding                    http://920ba2108da8.ngrok.io -> http://localhost:5000
-    Forwarding                    https://920ba2108da8.ngrok.io -> http://localhost:5000
+    Forwarding                    http://920ba2108da8.ngrok.io -> http://localhost:5042
+    Forwarding                    https://920ba2108da8.ngrok.io -> http://localhost:5042
 
     Connections                   ttl     opn     rt1     rt5     p50     p90
                                   0       0       0.00    0.00    0.00    0.00
@@ -263,9 +263,9 @@ sub-dependencies. A sure way to solve it is to run:
     rm -fr node_modules
     yarn install
 
-### `Error: listen EADDRINUSE: address already in use :::5000`
+### `Error: listen EADDRINUSE: address already in use :::5042`
 
-The default server port `:5000` might be in use by another process. To resolve this,
+The default server port `:5042` might be in use by another process. To resolve this,
 you can pick any unused port (e.g., 6000) and run the following:
 
     echo SERVER_PORT=6000 >> .env

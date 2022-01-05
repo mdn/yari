@@ -2,7 +2,7 @@ const got = require("got");
 const braces = require("braces");
 
 function serverURL(pathname = "/") {
-  return `http://localhost:5000${pathname}`;
+  return `http://localhost:5042${pathname}`;
 }
 
 function url_test(from, to, { statusCode = 301 } = {}) {

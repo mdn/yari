@@ -9,7 +9,7 @@ function devURL(pathname = "/") {
 }
 
 const SERVER_BASE_URL =
-  process.env.DEVELOPING_SERVER_BASE_URL || "http://localhost:5000";
+  process.env.DEVELOPING_SERVER_BASE_URL || "http://localhost:5042";
 
 function serverURL(pathname = "/") {
   return `${SERVER_BASE_URL}${pathname}`;
