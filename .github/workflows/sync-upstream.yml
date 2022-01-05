@@ -21,7 +21,7 @@ jobs:
       - name: Commit changes
         run: |
           cd $GITHUB_WORKSPACE
-          git remote add upstream "https://github.com/yari.git"
+          git remote add upstream "https://github.com/mdn/yari.git"
           git remote add private "https://${GITHUB_ACTOR}:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
           git config --local user.email "actions@users.noreply.github.com"
           git config --local user.name "MDN"
