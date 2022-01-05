@@ -1,8 +1,8 @@
 import React from "react";
 
 import { Button } from "../../atoms/button";
-import { NotificationsWatchMenuCustom } from "../notifications-watch-menu-custom";
-import { NotificationsWatchMenuStart } from "../notifications-watch-menu-start";
+import { NotificationsWatchMenuCustom } from "./custom";
+import { NotificationsWatchMenuStart } from "./start";
 
 import "./index.scss";
 
