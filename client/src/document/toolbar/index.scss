@@ -3,7 +3,7 @@
 .toolbar {
   display: block;
   margin: 0 auto;
-  padding: $base-unit $base-spacing;
+  padding: 1rem;
 
   .toolbar-first-row {
     display: flex;
@@ -12,6 +12,7 @@
 
     .edit-actions {
       padding: 1rem 0;
+
       li {
         margin-left: 0;
       }
