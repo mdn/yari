@@ -53,3 +53,6 @@ ELASTICSEARCH_URL = config("DEPLOYER_ELASTICSEARCH_URL", default=None)
 DEFAULT_REPO = config("GITHUB_REPOSITORY", default=None)
 
 DEFAULT_GITHUB_TOKEN = config("GITHUB_TOKEN", default=None)
+
+# Object prefixes that are managed manually and must not be pruned.
+MANUAL_PREFIXES = ["opendesign", "_whatsdeployed"]

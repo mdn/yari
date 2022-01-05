@@ -17,7 +17,7 @@ jobs:
       - uses: actions/checkout@v2.4.0
 
       - name: Setup Node.js environment
-        uses: actions/setup-node@v2.5.0
+        uses: actions/setup-node@v2.5.1
         with:
           node-version: "12"
           cache: "yarn"
@@ -45,6 +45,7 @@ jobs:
         run: yarn test:client
 
       - name: Build and start server
+        id: server
         env:
           ENV_FILE: testing/.env
         run: |
@@ -79,7 +80,7 @@ jobs:
           diff -s testing/content/files/en-us/markdown/tool/h2m/index.md testing/content/files/en-us/markdown/tool/h2m/expected.md
 
       - name: Debug server's stdout and stderr if tests failed
-        if: failure()
+        if: failure() && steps.server.outcome != 'skipped'
         run: |
           echo "STDOUT..................................................."
           cat /tmp/stdout.log
