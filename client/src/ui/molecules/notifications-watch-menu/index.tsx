@@ -8,21 +8,8 @@ import "./index.scss";
 
 export const NotificationsWatchMenu = ({ doc }) => {
   const menuId = "watch-submenu";
-  const previousActiveElement = React.useRef<null | HTMLButtonElement>(null);
-  const [visibleSubMenuId, setVisibleSubMenuId] = React.useState<string | null>(
-    null
-  );
+  const [show, setShow] = React.useState(false);
   const [visibleStep, setVisibleStep] = React.useState<number>(0);
-
-  /**
-   * Show and hide submenus in the main menu.
-   * @param {String} menuEntryId - The current top-level menu item id
-   */
-  function toggleSubMenu(menuEntryId) {
-    // store the current activeElement
-    previousActiveElement.current = document.activeElement as HTMLButtonElement;
-    setVisibleSubMenuId(visibleSubMenuId === menuEntryId ? null : menuEntryId);
-  }
 
   return (
     <>
@@ -33,16 +20,16 @@ export const NotificationsWatchMenu = ({ doc }) => {
         extraClasses="small watch-menu"
         ariaHasPopup={"menu"}
         aria-label="Watch this page for updates"
-        ariaExpanded={menuId === visibleSubMenuId}
+        ariaExpanded={show}
         onClickHandler={() => {
-          toggleSubMenu(menuId);
+          setShow(!show);
         }}
       >
         Watch
       </Button>
 
       <div
-        className={`${menuId} ${menuId === visibleSubMenuId ? "show" : ""}`}
+        className={`${menuId} ${show ? "show" : ""}`}
         role="menu"
         aria-labelledby={`${menuId}-button`}
       >
