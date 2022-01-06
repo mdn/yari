@@ -93,27 +93,27 @@ export function Legend({
         {getActiveLegendItems(compat, name).map(([key, label]) =>
           ["yes", "partial", "no", "unknown"].includes(key) ? (
             <div className="bc-legend-item" key={key}>
-              <dt key={key}>
+              <dt className="bc-legend-item-dt" key={key}>
                 <span className={`bc-supports-${key} bc-supports`}>
                   <abbr
-                    className={`bc-level bc-level-${key} only-icon`}
+                    className={`bc-level bc-level-${key} icon icon-${key}`}
                     title={label}
                   >
-                    <span>{label}</span>
+                    <span className="visually-hidden">{label}</span>
                   </abbr>
                 </span>
               </dt>
-              <dd>{label}</dd>
+              <dd className="bc-legend-item-dd">{label}</dd>
             </div>
           ) : (
             <div className="bc-legend-item" key={key}>
-              <dt>
+              <dt className="bc-legend-item-dt">
                 <abbr
-                  className={`only-icon legend-icons ic-${key}`}
+                  className={`legend-icons icon icon-${key}`}
                   title={label}
                 ></abbr>
               </dt>
-              <dd>{label}</dd>
+              <dd className="bc-legend-item-dd">{label}</dd>
             </div>
           )
         )}

@@ -392,7 +392,7 @@ function getNotes(
               </dt>
               {supportNotes.map(({ iconName, label }, i) => {
                 return (
-                  <dd key={i}>
+                  <dd className="bc-supports-dd" key={i}>
                     <Icon name={iconName} />{" "}
                     {typeof label === "string" ? (
                       <span dangerouslySetInnerHTML={{ __html: label }} />

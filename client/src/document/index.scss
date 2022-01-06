@@ -6,13 +6,6 @@
   @media screen and (min-width: $screen-md) {
     margin-top: 1rem;
   }
-
-  article {
-    dt {
-      margin: 1rem 0;
-      font-weight: bold;
-    }
-  }
 }
 
 .only-in-en-us {
@@ -38,7 +31,25 @@ a.page-not-created {
   }
 
   ul li {
-    margin-bottom: 8px;
+    margin-bottom: 0.5rem;
+  }
+
+  dt:not(.bc-legend-item-dt) {
+    margin-bottom: 1rem;
+
+    &:not(.bc-supports) {
+      padding-bottom: 1rem;
+      color: var(--text-link);
+      border-bottom: 1px solid var(--border-primary);
+    }
+
+    p {
+      padding: 0;
+    }
+  }
+
+  dd:not(.bc-legend-item-dd) {
+    margin-bottom: 1rem;
   }
 
   .example-good,
@@ -211,6 +222,18 @@ a.page-not-created {
     a:active {
       background-color: transparent;
     }
+
+    a[href^="#"]:hover {
+      &:after {
+        display: inline-flex;
+        margin-left: 4px;
+        line-height: 1;
+        font-size: 0.7em;
+        text-decoration: none;
+        color: var(--text-inactive);
+        content: "#";
+      }
+    }
   }
 
   table:not(.bc-table) {
@@ -218,6 +241,7 @@ a.page-not-created {
     border: 1px solid var(--border-primary);
     border-collapse: collapse;
     margin: 1rem 0;
+    width: 100%;
 
     th {
       text-align: left;
@@ -294,6 +318,8 @@ a.page-not-created {
 
   iframe {
     max-width: 100%;
+    width: 100%;
+    border: 1px solid var(--border-primary);
   }
 
   iframe:not(.sample-code-frame) {
