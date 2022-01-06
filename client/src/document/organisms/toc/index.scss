@@ -15,82 +15,28 @@
     margin-top: 1rem;
   }
 
-  h2 {
+  &-heading {
+    font: var(--type-heading-h6);
+    letter-spacing: 1.5px;
+    padding: 2rem 0 1rem 0;
+    text-transform: uppercase;
+  }
+
+  &-link {
     display: block;
-    font-size: 1rem;
-  }
+    padding: 0.5rem 1rem;
+    font: var(--type-body-m);
+    border-left: 2px solid var(--border-primary);
+    color: var(--text-primary);
 
-  a {
-    color: var(--text-link);
-  }
-
-  .toc-trigger-mobile {
-    border: 0;
-    color: var(--text-link);
-    font-weight: normal;
-    padding: 0.5rem 0;
-    text-align: left;
-    width: 100%;
-
-    @media screen and (max-width: $screen-lg) {
-      display: none;
+    &:hover {
+      color: var(--text-link);
     }
 
-    /* we already disable all animation and transitions globally via a reset so */
-    &::before {
-      /* stylelint-disable-line a11y/media-prefers-reduced-motion */
-      background: transparent url("~@mdn/dinocons/arrows/triangle.svg") 0 0
-        no-repeat;
-      background-size: 16px;
-      content: "";
-      display: inline-block;
-      height: 16px;
-      margin-right: 1rem;
-      transform: rotate(90deg);
-      transform-origin: 50%;
-      transition: transform 0.2s ease-in;
-      vertical-align: sub;
-      width: 16px;
-
-      @media screen and (max-width: $screen-lg) {
-        display: none;
-      }
-    }
-
-    &[aria-expanded="true"] {
-      &::before {
-        transform: rotate(180deg);
-      }
-    }
-  }
-
-  ul {
-    background-color: var(--background-primary);
-    border: 2px solid var(--border-primary);
-    list-style: none;
-    padding: 0 1rem;
-    position: absolute;
-    top: 65px;
-    z-index: 1000;
-
-    @media screen and (max-width: $screen-lg) {
-      background-color: inherit;
-      border: 0;
-      display: block;
-      padding-left: 0;
-      position: inherit;
-      top: inherit;
-      width: auto;
-      z-index: inherit;
-    }
-
-    li {
-      line-height: 1.2;
-      margin: 20px 0;
-
-      @media screen and (max-width: $screen-lg) {
-        margin: 10px 0;
-      }
+    &[aria-current] {
+      color: var(--text-link);
+      font-weight: 600;
+      border-left: 2px solid var(--text-link);
     }
   }
 

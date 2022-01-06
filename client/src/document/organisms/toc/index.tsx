@@ -42,9 +42,9 @@ export class TOC extends React.Component<
       <aside className="document-toc-container">
         <section className="document-toc">
           <header>
-            <h2>Table of contents</h2>
+            <h2 className="document-toc-heading">In this article</h2>
           </header>
-          <ul id="toc-entries">
+          <ul className="document-toc-list" id="toc-entries">
             {toc.map((item) => {
               return (
                 <TOCItem
@@ -89,8 +89,11 @@ function TOCItem({
   }, [handleViewed, id]);
 
   return (
-    <li key={id} aria-current={currentViewedTocItems[0] === id || undefined}>
+    <li className="document-toc-item">
       <a
+        className="document-toc-link"
+        key={id}
+        aria-current={currentViewedTocItems[0] === id || undefined}
         href={`#${id.toLowerCase()}`}
         dangerouslySetInnerHTML={{ __html: text }}
       />
