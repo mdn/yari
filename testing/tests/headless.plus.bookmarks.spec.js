@@ -36,10 +36,10 @@ test.describe("Bookmarking pages", () => {
     await page.waitForLoadState("networkidle");
 
     expect(
-      await page.isVisible('.bookmark-button-label:text-is("Bookmark")')
+      await page.isVisible('.bookmark-button-label:text-is("Save")')
     ).toBeFalsy();
     expect(
-      await page.isVisible('.bookmark-button-label:text-is("Bookmarked")')
+      await page.isVisible('.bookmark-button-label:text-is("Saved")')
     ).toBeTruthy();
 
     // Reload the page to prove that it sticks
@@ -47,7 +47,7 @@ test.describe("Bookmarking pages", () => {
     await page.waitForSelector(SELECTOR);
 
     expect(
-      await page.isVisible('.bookmark-button-label:text-is("Bookmarked")')
+      await page.isVisible('.bookmark-button-label:text-is("Saved")')
     ).toBeTruthy();
   });
 
@@ -61,7 +61,7 @@ test.describe("Bookmarking pages", () => {
     await page.waitForLoadState("networkidle");
 
     await page.goto(testURL("/en-US/plus/bookmarks"));
-    await page.waitForSelector("text=Nothing bookmarked yet.");
+    await page.waitForSelector("text=Nothing saved yet.");
 
     // Open a bunch of pages
     const urls = [

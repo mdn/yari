@@ -1,4 +1,5 @@
 import "./index.scss";
+import React from "react";
 
 type SubmenuItem = {
   component?: () => JSX.Element;

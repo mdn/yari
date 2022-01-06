@@ -1,4 +1,198 @@
 @use "~@mdn/minimalist/sass/mixins/utils" as *;
+@use "../../../ui/vars" as *;
+
+.bc {
+  &-table {
+    border-collapse: collapse;
+    width: 100%;
+    margin: 1rem 0;
+
+    thead {
+      display: none;
+    }
+
+    &-row-header,
+    tbody td,
+    tbody th {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    &-row-header {
+      text-align: left;
+    }
+
+    tbody > tr:first-child > th:first-child {
+      border-radius: var(--elem-radius) var(--elem-radius) 0 0;
+    }
+
+    tbody > tr:last-child > td:last-child {
+      border-bottom: 1px solid var(--border-primary);
+      border-radius: 0 0 var(--elem-radius) var(--elem-radius);
+    }
+
+    td,
+    th {
+      border: 1px solid var(--border-primary);
+      border-bottom: 0 none;
+      font: var(--type-body-m);
+      padding: 0.5rem;
+    }
+
+    th {
+      vertical-align: bottom;
+      text-align: center;
+      background: var(--background-tertiary);
+    }
+
+    tbody th {
+      min-width: 20%;
+    }
+
+    .icon-wrap {
+      background: var(--background-primary);
+
+      .bc-support-level {
+        @include visually-hidden;
+      }
+    }
+  }
+
+  &-head-txt-label {
+    -ms-writing-mode: tb-rl;
+    -webkit-writing-mode: vertical-rl;
+    writing-mode: vertical-rl;
+    transform: rotate(180deg);
+    white-space: nowrap;
+  }
+
+  &-icon-cell {
+    text-align: center;
+    vertical-align: middle;
+  }
+
+  &-history-link {
+    @include visually-hidden;
+    position: absolute; // messing up layout otherwise
+  }
+
+  &-level-no {
+    background-color: var(--icon-critical);
+  }
+
+  &-level-preview {
+    background-color: var(--icon-information);
+  }
+}
+
+.bc-legend {
+  &-items-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+  }
+
+  &-item {
+    display: flex;
+    gap: 0.5rem;
+
+    &-dt {
+      display: flex;
+    }
+  }
+}
+
+.bc-supports.bc-supports {
+  margin-top: 0;
+}
+
+.bc-version-label {
+  display: none;
+}
+
+.bc-platforms {
+  th {
+    text-align: center;
+  }
+}
+
+.bc-notes-list {
+  position: relative;
+  margin: 1rem 0.5rem;
+  text-align: left;
+  width: 100%;
+
+  &:before {
+    position: absolute;
+    z-index: -1;
+    height: 100%;
+    left: 7px;
+    width: 2px;
+    background: var(--border-primary);
+    content: "";
+  }
+
+  // complicated selector to cover the last bit of the grey line above.
+  .bc-notes-wrapper:last-child dd:last-child {
+    position: relative;
+
+    &:before {
+      position: absolute;
+      z-index: -1;
+      height: calc(100% - 6px);
+      left: 7px;
+      width: 2px;
+      bottom: 0;
+      background: var(--background-primary);
+      content: "";
+    }
+  }
+
+  .bc-level-yes.icon.icon-yes {
+    // override icon
+    background-color: var(--icon-success);
+    mask-image: url("../../../assets/icons/yes-circle.svg");
+  }
+
+  .icon.icon-footnote {
+    mask-image: none;
+    border-radius: 50%;
+    border: 3px solid var(--background-primary);
+    background: var(--border-primary);
+  }
+
+  .icon.icon-disabled {
+    background-color: var(--icon-information);
+  }
+
+  .bc-version-label {
+    display: inline;
+  }
+
+  abbr {
+    margin-right: 4px;
+  }
+
+  dd {
+    margin-bottom: 1rem;
+    padding-left: 1.5rem;
+    text-indent: -1.5rem;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+}
+
+.bc-notes-wrapper {
+  margin-bottom: 1rem;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
 
 .offscreen,
 .only-icon span {
@@ -17,7 +211,7 @@
     overflow: hidden;
   }
 
-  /* Can only flex-shrink and not flex-grow 
+  /* Can only flex-shrink and not flex-grow
   ie the "slider" in a sliding glass door */
   .left-side {
     flex: 0 1 auto;
@@ -27,5 +221,63 @@
   its the stationary portion */
   .right-side {
     flex: 1 0 auto;
+  }
+}
+
+@media screen and (min-width: $screen-md) {
+  .bc-table {
+    border: 1px solid var(--border-primary);
+    border-radius: 0;
+
+    thead {
+      display: table-header-group;
+    }
+
+    &-row-header,
+    tbody td,
+    tbody th {
+      display: table-cell;
+    }
+
+    td,
+    th {
+      border-bottom: 1px solid var(--border-primary);
+      background: inherit;
+    }
+  }
+
+  .bc-support-level,
+  .bc-browser-name {
+    display: none;
+  }
+
+  .bc-notes-list {
+    margin-left: 20%;
+    width: auto;
+  }
+
+  .bc-icon-cell {
+    .bc-version-label,
+    .bc-support-level {
+      display: none;
+    }
+
+    &[aria-expanded="true"] {
+      position: relative;
+
+      &:after {
+        position: absolute;
+        left: 0;
+        bottom: -1px;
+        height: 2px;
+        width: 100%;
+        background: #fff;
+        content: "";
+      }
+
+      .bc-history-mobile {
+        display: none;
+      }
+    }
   }
 }

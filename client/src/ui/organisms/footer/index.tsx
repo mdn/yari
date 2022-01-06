@@ -146,6 +146,7 @@ export function Footer() {
               >
                 <img
                   src={appDlApple}
+                  width="135"
                   alt="Download the App from the Apple Store"
                 />
               </a>
@@ -159,6 +160,7 @@ export function Footer() {
               >
                 <img
                   src={appDlGoogle}
+                  width="135"
                   alt="Download the App from the Google Play Store"
                 />
               </a>
@@ -170,7 +172,11 @@ export function Footer() {
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                <img src={appDlMs} alt="Download the App from Microsoft" />
+                <img
+                  src={appDlMs}
+                  width="135"
+                  alt="Download the App from Microsoft"
+                />
               </a>
             </li>
           </ul>

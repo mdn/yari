@@ -9,6 +9,7 @@ import { useUserData } from "../../../user-context";
 import { FXA_SETTINGS_URL } from "../../../constants";
 
 import "./index.scss";
+import { useOnClickOutside } from "../../../hooks";
 
 export const UserMenu = () => {
   const userData = useUserData();
@@ -16,6 +17,9 @@ export const UserMenu = () => {
   const [visibleSubMenuId, setVisibleSubMenuId] = React.useState<string | null>(
     null
   );
+
+  const submenuRef = React.useRef(null);
+  useOnClickOutside(submenuRef, hideSubMenuIfVisible);
 
   // if we don't have the user data yet, don't render anything
   if (!userData || typeof window === "undefined") {
@@ -68,7 +72,7 @@ export const UserMenu = () => {
   }
 
   return (
-    <div className="top-level-entry-container user-menu">
+    <div className="top-level-entry-container user-menu" ref={submenuRef}>
       <Button
         type="action"
         id={`${userMenuItems.id}-button`}

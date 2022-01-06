@@ -5,7 +5,7 @@ import { Routes, Route, useLocation } from "react-router-dom";
 // and applied before any component specific style
 import "./app.scss";
 
-import { CRUD_MODE, ENABLE_PLUS } from "./constants";
+import { CRUD_MODE } from "./constants";
 import { Homepage } from "./homepage";
 import { Document } from "./document";
 import { A11yNav } from "./ui/molecules/a11y-nav";
@@ -38,7 +38,7 @@ function Layout({ pageType, children }) {
        Note, if you do uncomment banners again (because there's one to possible
        display), remember to go to
        */}
-      {/* {!isServer && <Banner />} */}
+      {/* !isServer && <Banner /> */}
       <div className={`page-wrapper ${pageType}`}>
         <TopNavigation />
         {children}
@@ -229,16 +229,14 @@ export function App(appProps) {
                 </StandardLayout>
               }
             />
-            {ENABLE_PLUS && (
-              <Route
-                path="/plus/*"
-                element={
-                  <StandardLayout extraClasses="plus">
-                    <Plus {...appProps} />
-                  </StandardLayout>
-                }
-              />
-            )}
+            <Route
+              path="/plus/*"
+              element={
+                <StandardLayout extraClasses="plus">
+                  <Plus {...appProps} />
+                </StandardLayout>
+              }
+            />
             <Route
               path="/docs/*"
               element={

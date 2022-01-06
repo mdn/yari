@@ -108,7 +108,7 @@ function* collectLevels($el) {
     }
     level = getLevel($header);
     $prev = $header;
-    yield $header.add($header.nextUntil(nextHigherLevel));
+    yield $header.clone().add($header.nextUntil(nextHigherLevel).clone());
   }
 }
 
@@ -251,8 +251,8 @@ class HTMLTool {
     return this.$.html(result);
   }
 
-  extractLiveSampleObject(sampleID) {
-    const sectionID = sampleID.substr("frame_".length);
+  extractLiveSampleObject(iframeID) {
+    const sectionID = iframeID.substr("frame_".length);
     if (hasHeading(this.$, sectionID)) {
       const result = Object.create(null);
       const sample = this.getSection(sectionID);
@@ -280,7 +280,10 @@ class HTMLTool {
       }
       return result;
     } else {
-      const result = collectClosestCode(findSectionStart(this.$, sectionID));
+      // We're here because we can't find the sectionID, so instead we're going
+      // to find the live-sample iframe by its id (iframeID, NOT sectionID), and
+      // then collect the closest blocks of code for the live sample.
+      const result = collectClosestCode(findSectionStart(this.$, iframeID));
       if (!result) {
         throw new KumascriptError(
           `unable to find any live code samples for "${sectionID}" within ${this.pathDescription}`

@@ -3,6 +3,9 @@
 @use "./ui/base/themes";
 @use "./ui/base/prism";
 
+// These classes are used across several components.
+@use "./ui/molecules/notecards";
+
 /*
   Global :root variables, for those independent of themes
 */
@@ -17,16 +20,24 @@
   --font-size: 16px;
   --font-line-height: 1.2;
 
-  --type-heading-l: 600 1rem/1.1875 var(--font-heading); /* 16px/19px */
+  --type-heading-l: 600 1rem/1.1875 var(--font-heading); /* 16px/19px, h5 */
   --type-title-l: 600 1.5rem/1.2 var(--font-heading);
   --type-title-s: 600 0.8125rem/1.2 var(--font-body);
-  --type-body-l: 400 1rem/1.1875 var(--font-body); /* 16px/19px */
+  --type-body-l: 400 1rem/2 var(--font-body); /* 16px/19px */
   --type-body-m: 400 0.8125rem/1.23 var(--font-body); /* 13px/16px */
   --type-body-s: 500 0.6875rem/1.273 var(--font-body); /* 11px/14px */
   --type-emphasis-l: 600 1rem/1.1875 var(--font-body); /* 16px/19px */
   --type-emphasis-m: 600 0.8125rem/1.23 var(--font-body); /* 13px/16px */
   --type-label-s: 600 0.625rem/1.2 var(--font-heading); /* 10px/12px */
   --type-code-regular: 400 0.875rem/1.5 var(--font-code); /* 14px/21px */
+
+  // From Figma, here: https://www.figma.com/file/7lbOm57iOjSVIGORzXqrlW/MDN-Articles?node-id=1%3A27
+  --type-heading-h1: 600 2.25rem/1.138 var(--font-heading); /* 36px/41px */
+  --type-heading-h2: 600 1.75rem/1.2857 var(--font-heading); /* 28px/36px */
+  --type-heading-h3: 600 1.5rem/1.2916 var(--font-heading); /* 24px/31px */
+  --type-heading-h4: 600 1.125rem/1.222 var(--font-heading); /* 18px/22px */
+  --type-heading-h5: var(--type-heading-l);
+  --type-heading-h6: 600 0.75rem/1.0833 var(--font-heading); /* 12px/13px */
 
   /* Grid and Layout */
   --max-width: 1440px;
@@ -61,8 +72,17 @@ main {
   min-height: 80vh;
 }
 
-// !!! This is not an accessible way to hide content
 .visually-hidden {
+  /* absolute positioning fixes spacing with grid-gap */
+  position: absolute !important;
+  font: 0/0 a;
+  padding: 0 !important;
+  margin: 0 !important;
+  height: 0;
+  color: transparent;
+}
+
+.hidden {
   display: none;
 }
 
