@@ -34,30 +34,39 @@ export function NotificationsWatchMenuCustom({
   setStepHandler,
   handleSelection,
 }) {
-  const [content, setContent] = React.useState(false);
+  let custom = data?.default;
+  if (data?.custom && data.custom !== true) {
+    custom = data.custom;
+  }
+
+  const [content, setContent] = React.useState(!!custom?.content);
   React.useEffect(() => {
-    setContent(!!data.content);
-  }, [data]);
+    setContent(!!custom?.content);
+  }, [custom]);
 
   const [compatOptions, setCompatOptions] = React.useState<OptionsFormat>(
     OPTIONS.map((g) => ({
       name: g.name,
-      options: g.options.map((o) => ({ name: o, checked: false })),
+      options: g.options.map((o) => ({
+        name: o,
+        checked: custom?.compatibility
+          ? custom.compatibility.includes(slugify(o))
+          : false,
+      })),
     }))
   );
   React.useEffect(() => {
-    console.log(data);
-    if (!data?.compatibility) return;
+    if (!custom.compatibility) return;
     setCompatOptions((c) =>
       c.map((g) => ({
         ...g,
         options: g.options.map((o) => {
-          const checked = !!data.compatibility.includes(slugify(o.name));
+          const checked = custom.compatibility.includes(slugify(o.name));
           return { ...o, checked };
         }),
       }))
     );
-  }, [data]);
+  }, [custom.compatibility]);
 
   const saveData = React.useRef<{
     content: boolean;
@@ -70,16 +79,47 @@ export function NotificationsWatchMenuCustom({
         g.options.filter((o) => o.checked).map((o) => slugify(o.name))
       ),
     };
-    if (
-      saveData.current &&
-      JSON.stringify(saveData.current) !== JSON.stringify(newSaveData)
-    ) {
-      handleSelection(newSaveData);
+    if (saveData.current) {
+      const oldCompatibility = saveData.current.compatibility;
+      const newCompatibility = newSaveData.compatibility;
+      oldCompatibility.sort();
+      newCompatibility.sort();
+      if (
+        saveData.current.content !== newSaveData.content ||
+        JSON.stringify(oldCompatibility) !== JSON.stringify(newCompatibility)
+      ) {
+        // console.debug(
+        //   "saving",
+        //   JSON.stringify(saveData.current),
+        //   JSON.stringify(newSaveData)
+        // );
+        handleSelection(newSaveData);
+      }
+    } else {
+      if (data.status !== "custom" && data.default) {
+        handleSelection({ ...data.default, custom_default: true });
+      }
     }
     saveData.current = newSaveData;
-  }, [content, compatOptions, handleSelection]);
+  }, [content, compatOptions, handleSelection, data.status, data.default]);
 
-  function setGlobalDefault() {}
+  function setGlobalDefault(update?: boolean) {
+    if (update || !data?.default) {
+      saveData.current = {
+        content,
+        compatibility: compatOptions.flatMap((g) =>
+          g.options.filter((o) => o.checked).map((o) => slugify(o.name))
+        ),
+      };
+    } else {
+      saveData.current = data.default;
+    }
+    const opts = update ? { update_custom_default: true } : {};
+    handleSelection({ ...saveData.current, custom_default: true, ...opts });
+  }
+
+  const anythingSelected =
+    content || compatOptions.some((g) => g.options.some((o) => o.checked));
 
   return (
     <form>
@@ -174,12 +214,31 @@ export function NotificationsWatchMenuCustom({
         ))}
       </fieldset>
 
-      <button
-        className="watch-submenu-item watch-submenu-setGlobal"
-        onClick={setGlobalDefault}
-      >
-        Set as global default
-      </button>
+      {anythingSelected && data?.custom !== true ? (
+        <button
+          className="button watch-submenu-item watch-submenu-setGlobal"
+          onClick={(e) => {
+            e.preventDefault();
+            setGlobalDefault(true);
+          }}
+        >
+          Set as your default custom settings
+        </button>
+      ) : null}
+      {data?.default ? (
+        <button
+          className="button watch-submenu-item watch-submenu-setGlobal"
+          onClick={(e) => {
+            e.preventDefault();
+            setGlobalDefault();
+          }}
+          disabled={data?.custom === true}
+        >
+          {data?.custom === true
+            ? "Using your global defaults"
+            : "Use your global defaults"}
+        </button>
+      ) : null}
     </form>
   );
 }

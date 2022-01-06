@@ -14,19 +14,23 @@ interface WatchModeData {
 }
 
 export const NotificationsWatchMenu = ({ doc }) => {
+  const compat = doc.body.filter((e) => e.type === "browser_compatibility");
+  const path = compat.length > 0 ? compat[0].value?.query : null;
+  const title = doc.title;
+
+  const invalidPage = !path || !title;
+
   const menuId = "watch-submenu";
   const [show, setShow] = React.useState(false);
   const [visibleStep, setVisibleStep] = React.useState<number>(0);
   const slug = doc.mdn_url; // Unique ID for the page
-  const compat = doc.body.filter((e) => e.type === "browser_compatibility");
-  const path = compat.length > 0 ? compat[0].value?.query : null;
-  const title = doc.title;
   const apiURL = `/api/v1/plus/watch${slug}/`;
   const csrfMiddlewareToken = useCSRFMiddlewareToken();
 
   const { data, mutate } = useSWR<WatchModeData>(
     apiURL,
     async (url) => {
+      if (invalidPage) return null;
       const response = await fetch(url);
       if (!response.ok) {
         const text = await response.text();
@@ -43,11 +47,17 @@ export const NotificationsWatchMenu = ({ doc }) => {
   const submenuRef = React.useRef(null);
   useOnClickOutside(submenuRef, () => setShow(false));
 
+  if (invalidPage) return null;
+
   async function handleWatchSubmit({
     custom,
+    custom_default,
+    update_custom_default,
     unwatch,
   }: {
-    custom?: {};
+    custom?: { content: boolean; compatibility: string[] };
+    custom_default?: boolean;
+    update_custom_default?: boolean;
     unwatch?: boolean;
   }) {
     if (!data) {
@@ -64,10 +74,19 @@ export const NotificationsWatchMenu = ({ doc }) => {
       return;
     }
 
-    let postData = {
+    let postData: {
+      path: string;
+      title: string;
+      unwatch?: boolean;
+      custom_default?: boolean;
+      update_custom_default?: boolean;
+      custom?: { content: boolean; compatibility: string[] };
+    } = {
       path,
       title,
       unwatch,
+      custom_default,
+      update_custom_default,
     };
     if (custom) {
       postData = { ...postData, ...custom };
@@ -127,12 +146,20 @@ export const NotificationsWatchMenu = ({ doc }) => {
             <NotificationsWatchMenuCustom
               data={data}
               setStepHandler={setVisibleStep}
-              handleSelection={(custom: {
-                content: boolean;
-                compatibility: string[];
-              }) => {
+              handleSelection={(
+                custom: {
+                  content: boolean;
+                  compatibility: string[];
+                },
+                custom_default,
+                update_custom_default
+              ) => {
                 if (custom.content || custom.compatibility.length) {
-                  handleWatchSubmit({ custom });
+                  handleWatchSubmit({
+                    custom,
+                    custom_default,
+                    update_custom_default,
+                  });
                 } else {
                   handleWatchSubmit({ unwatch: true });
                 }
