@@ -8,8 +8,8 @@ const LEGEND_LABELS = {
   no: "No support",
   unknown: "Compatibility unknown",
   experimental: "Experimental. Expect behavior to change in the future.",
-  "non-standard": "Non-standard. Check cross-browser support before using.",
-  deprecated: "Deprecated. Not for use in new websites.",
+  "note-warning": "Non-standard. Check cross-browser support before using.",
+  "thumbs-down": "Deprecated. Not for use in new websites.",
   footnote: "See implementation notes.",
   disabled: "User must explicitly enable this feature.",
   altname: "Uses a non-standard name.",
@@ -28,10 +28,10 @@ function getActiveLegendItems(compat: bcd.Identifier, name: string) {
         legendItems.add("experimental");
       }
       if (status.deprecated) {
-        legendItems.add("deprecated");
+        legendItems.add("thumbs-down");
       }
       if (!status.standard_track) {
-        legendItems.add("non-standard");
+        legendItems.add("note-warning");
       }
     }
 

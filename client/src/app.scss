@@ -3,6 +3,9 @@
 @use "./ui/base/themes";
 @use "./ui/base/prism";
 
+// These classes are used across several components.
+@use "./ui/molecules/notecards";
+
 /*
   Global :root variables, for those independent of themes
 */

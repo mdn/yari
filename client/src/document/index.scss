@@ -91,6 +91,7 @@ a.page-not-created {
     font: var(--type-code-regular);
     margin-bottom: 2rem;
     padding: 1rem;
+    margin: 0 0 2rem 0;
     position: relative;
 
     pre {
@@ -161,7 +162,7 @@ a.page-not-created {
     word-break: break-word;
   }
 
-  a {
+  a:not(.button) {
     text-decoration: underline;
     color: var(--text-link);
 
