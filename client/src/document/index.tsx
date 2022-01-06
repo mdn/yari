@@ -158,6 +158,10 @@ export function Document(props /* TODO: define a TS interface for this */) {
         )}
         {doc.sidebarHTML && <RenderSideBar doc={doc} />}
 
+        <div className="toc">
+          {doc.toc && !!doc.toc.length && <TOC toc={doc.toc} />}
+        </div>
+
         <MainContentContainer>
           {!isServer && CRUD_MODE && !props.isPreview && doc.isActive && (
             <React.Suspense fallback={<Loading message={"Loading toolbar"} />}>
@@ -175,18 +179,14 @@ export function Document(props /* TODO: define a TS interface for this */) {
               <MathMLPolyfillMaybe />
             </React.Suspense>
           )}
-
-          <div className="content-wrapper">
-            <div className="toc">
+          <article className="main-page-content" lang={doc.locale}>
+            <h1>{doc.title}</h1>
+            <div className="in-page-toc">
               {doc.toc && !!doc.toc.length && <TOC toc={doc.toc} />}
             </div>
-            <article className="main-page-content" lang={doc.locale}>
-              <h1>{doc.title}</h1>
-
-              <RenderDocumentBody doc={doc} />
-              <Metadata doc={doc} locale={locale} />
-            </article>
-          </div>
+            <RenderDocumentBody doc={doc} />
+            <Metadata doc={doc} locale={locale} />
+          </article>
         </MainContentContainer>
       </div>
     </>

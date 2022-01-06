@@ -17,50 +17,66 @@
     flex-direction: column;
   }
 
-  .main-content {
-    padding: 1rem;
-    grid-column: 2;
-  }
-
   .sidebar {
     display: none;
     @media screen and (min-width: $screen-md) {
       display: flex;
     }
   }
+}
 
-  /* Contains the sidebar and article content */
-  .article-wrapper {
-    display: flex;
-    max-width: 1440px;
-    margin: 0 auto;
+.article-wrapper {
+  display: flex;
+  max-width: 1440px;
+  margin: 0 auto;
 
-    @media screen and (min-width: $screen-md) {
-      display: grid;
-      grid-template-columns: 1fr 3fr;
+  .toc {
+    display: none;
+  }
+
+  @media screen and (min-width: $screen-md) {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: 3rem;
+    padding-left: 1.5rem;
+    padding-right: 3rem;
+    grid-template-areas: "sidebar main";
+
+    .sidebar,
+    .toc,
+    .main-content {
+      padding-top: 3rem;
     }
 
-    .content-wrapper {
-      display: flex;
-      flex-direction: column;
-      @media screen and (min-width: $screen-xl) {
-        flex-direction: row-reverse;
-      }
+    .sidebar {
+      grid-area: sidebar;
+    }
 
-      .toc {
-        width: 100%;
+    .main-content {
+      grid-area: main;
+    }
+  }
 
-        @media screen and (min-width: $screen-xl) {
-          .document-toc-container {
-            position: sticky;
-            top: 1rem;
-          }
-        }
-      }
+  @media screen and (min-width: $screen-lg) {
+    display: grid;
+    grid-template-columns: 1fr 2fr 1fr;
+    gap: 3rem;
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+    grid-template-areas: "sidebar main toc";
 
-      .main-page-content {
-        max-width: 48rem;
+    .toc {
+      display: block;
+      grid-area: toc;
+
+      .document-toc-container {
+        position: sticky;
+        top: 1rem;
       }
+    }
+
+    .in-page-toc {
+      display: none;
     }
   }
 }
