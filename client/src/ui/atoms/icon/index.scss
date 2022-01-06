@@ -17,6 +17,13 @@ $icons: "add-filled", "add", "altname", "bell-filled", "bell", "bookmark-filled"
   mask-repeat: no-repeat;
 }
 
+// The icon class is applied directly to SVGs sometimes. This
+// override un-breaks those.
+svg.icon {
+  background: transparent;
+  color: var(--icon-primary);
+}
+
 .icon {
   @each $name in $icons {
     &.icon-#{$name} {

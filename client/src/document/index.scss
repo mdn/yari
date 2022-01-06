@@ -6,13 +6,6 @@
   @media screen and (min-width: $screen-md) {
     margin-top: 1rem;
   }
-
-  article {
-    dt {
-      margin: 1rem 0;
-      font-weight: bold;
-    }
-  }
 }
 
 .only-in-en-us {
@@ -38,7 +31,25 @@ a.page-not-created {
   }
 
   ul li {
-    margin-bottom: 8px;
+    margin-bottom: 0.5rem;
+  }
+
+  dt:not(.bc-legend-item-dt) {
+    margin-bottom: 1rem;
+
+    &:not(.bc-supports) {
+      padding-bottom: 1rem;
+      color: var(--text-link);
+      border-bottom: 1px solid var(--border-primary);
+    }
+
+    p {
+      padding: 0;
+    }
+  }
+
+  dd:not(.bc-legend-item-dd) {
+    margin-bottom: 1rem;
   }
 
   .example-good,
@@ -191,27 +202,66 @@ a.page-not-created {
     text-decoration: none;
   }
 
+  h1,
   h2,
-  h3 {
+  h3,
+  h4,
+  h5,
+  h6 {
     a:link,
     a:visited {
-      color: var(--text-link);
+      color: var(--text-primary);
       text-decoration: none;
     }
 
     a:hover,
     a:focus {
-      color: var(--text-link);
       text-decoration: underline;
     }
 
     a:active {
       background-color: transparent;
     }
+
+    a[href^="#"]:hover {
+      &:after {
+        display: inline-flex;
+        margin-left: 4px;
+        line-height: 1;
+        font-size: 0.7em;
+        text-decoration: none;
+        color: var(--text-inactive);
+        content: "#";
+      }
+    }
   }
 
-  table {
-    margin-bottom: 0.5rem;
+  table:not(.bc-table) {
+    font: var(--type-body-l);
+    border: 1px solid var(--border-primary);
+    border-collapse: collapse;
+    margin: 1rem 0;
+    width: 100%;
+
+    th {
+      text-align: left;
+      background: var(--background-tertiary);
+      font-weight: bold;
+    }
+
+    td,
+    th {
+      padding: 0.5rem;
+      border: 1px solid var(--border-primary);
+      vertical-align: middle;
+    }
+  }
+
+  blockquote {
+    border-left: 4px solid var(--border-secondary);
+    padding: 1rem 2rem;
+    margin: 1rem 0;
+    font: var(--type-body-l);
   }
 
   /* readonly inline badges needs a slightly darker background color in general article content  */
@@ -249,7 +299,7 @@ a.page-not-created {
    * https://developer.mozilla.org/en-US/docs/Web/API#Specifications
   */
   .index {
-    columns: 300;
+    columns: 3;
     margin-bottom: 1rem;
 
     @media screen and (min-width: $screen-md) {
@@ -268,6 +318,8 @@ a.page-not-created {
 
   iframe {
     max-width: 100%;
+    width: 100%;
+    border: 1px solid var(--border-primary);
   }
 
   iframe:not(.sample-code-frame) {
@@ -275,47 +327,74 @@ a.page-not-created {
   }
 
   h1 {
-    font: 600 3rem/120% var(--font-heading);
+    font: var(--type-heading-h1);
     letter-spacing: -0.5px;
-    padding-bottom: 4rem;
+    padding-bottom: 3rem;
   }
 
   h2 {
+    font: var(--type-heading-h2);
     font: 600 28px/120% var(--font-heading);
     letter-spacing: 0.5px;
     padding: 2rem 0 1rem 0;
   }
 
   h3 {
-    font: 600 24px/120% var(--font-heading);
+    font: var(--type-heading-h3);
     letter-spacing: 0.5px;
     padding: 2rem 0 1rem 0;
   }
 
   h4 {
-    font: 600 18px/120% var(--font-heading);
+    font: var(--type-heading-h4);
     letter-spacing: 0.5px;
     padding: 2rem 0 1rem 0;
   }
 
   h5 {
-    font: 600 1rem/120% var(--font-heading);
+    font: var(--type-heading-h5);
     letter-spacing: 1.5px;
     padding: 2rem 0 1rem 0;
     text-transform: uppercase;
   }
 
   h6 {
-    font: 600 12px/120% var(--font-heading);
+    font: var(--type-heading-h6);
     letter-spacing: 1.5px;
     padding: 2rem 0 1rem 0;
     text-transform: uppercase;
   }
 
   p {
-    font-family: var(--font-body);
-    line-height: 2;
+    font: var(--type-body-l);
     padding-bottom: 2rem;
+  }
+
+  li {
+    font: var(--type-body-l);
+  }
+
+  ul,
+  ol {
+    margin: 0;
+    padding: 0 0 2rem 2rem;
+  }
+
+  ul {
+    list-style: disc;
+
+    ul {
+      padding-bottom: 0;
+    }
+  }
+
+  ol {
+    list-style: decimal;
+
+    ol {
+      list-style: lower-roman;
+      padding-bottom: 0;
+    }
   }
 
   .mdn-docs-type-notecard-bold {
