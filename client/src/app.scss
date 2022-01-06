@@ -70,6 +70,8 @@ main {
 }
 
 .visually-hidden {
+  /* absolute positioning fixes spacing with grid-gap */
+  position: absolute !important;
   font: 0/0 a;
   padding: 0 !important;
   margin: 0 !important;

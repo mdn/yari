@@ -99,7 +99,7 @@ export default function App({ doc }: { doc: Doc }) {
         type="action"
         icon={`${localBookmarked ? "bookmark-filled" : "bookmark"}`}
         extraClasses={`bookmark-button small ${
-          localBookmarked ? "bookmarked" : ""
+          localBookmarked ? "highlight" : ""
         }`}
         isDisabled={isSaving}
         onClickHandler={async () => {
@@ -129,7 +129,7 @@ export default function App({ doc }: { doc: Doc }) {
         }}
       >
         <span className="bookmark-button-label">
-          {localBookmarked ? "Bookmarked" : "Bookmark"}
+          {localBookmarked ? "Saved" : "Save"}
         </span>
       </Button>
     </>

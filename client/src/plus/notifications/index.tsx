@@ -37,7 +37,7 @@ function NotificationCard(item) {
         icon={item.starred ? "star-filled" : "star"}
         onClickHandler={toggleStar}
       >
-        <span className="sr-only">Toggle Starring</span>
+        <span className="visually-hidden">Toggle Starring</span>
       </Button>
 
       <div className="notification-card-description">
@@ -53,7 +53,7 @@ function NotificationCard(item) {
       </time>
 
       <Button type="action" icon="trash" onClickHandler={deleteNotification}>
-        <span className="sr-only">Delete</span>
+        <span className="visually-hidden">Delete</span>
       </Button>
     </article>
   );
