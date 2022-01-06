@@ -51,10 +51,10 @@ export const ArticleActions = ({
           <ul className="article-actions-entries">
             <>
               <li className="article-actions-entry">
-                <BookmarkToggle doc={doc} />
+                <NotificationsWatchMenu doc={doc} />
               </li>
               <li className="article-actions-entry">
-                <NotificationsWatchMenu doc={doc} />
+                <BookmarkToggle doc={doc} />
               </li>
               <li className="article-actions-entry">
                 <ThemeSwitcher />

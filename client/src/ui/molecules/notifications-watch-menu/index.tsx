@@ -1,8 +1,8 @@
 import React from "react";
 
 import { Button } from "../../atoms/button";
-import { NotificationsWatchMenuCustom } from "./custom";
-import { NotificationsWatchMenuStart } from "./start";
+import { NotificationsWatchMenuCustom } from "./menu-custom";
+import { NotificationsWatchMenuStart } from "./menu-start";
 
 import "./index.scss";
 import { useOnClickOutside } from "../../../hooks";
@@ -97,7 +97,7 @@ export const NotificationsWatchMenu = ({ doc }) => {
           type="action"
           id="watch-menu-button"
           icon={watching ? "eye-filled" : "eye"}
-          extraClasses="small watch-menu"
+          extraClasses={`small watch-menu ${watching ? "highlight" : ""}`}
           ariaHasPopup={"menu"}
           aria-label="Watch this page for updates"
           ariaExpanded={show}
@@ -127,8 +127,15 @@ export const NotificationsWatchMenu = ({ doc }) => {
             <NotificationsWatchMenuCustom
               data={data}
               setStepHandler={setVisibleStep}
-              handleSelection={(custom) => {
-                handleWatchSubmit({ custom });
+              handleSelection={(custom: {
+                content: boolean;
+                compatibility: string[];
+              }) => {
+                if (custom.content || custom.compatibility.length) {
+                  handleWatchSubmit({ custom });
+                } else {
+                  handleWatchSubmit({ unwatch: true });
+                }
               }}
             />
           )}
