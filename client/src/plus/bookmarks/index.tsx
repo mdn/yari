@@ -195,7 +195,7 @@ function DisplayData({
 
       {data.metadata.total === 0 && (
         <p className="nothing-bookmarked">
-          Nothing bookmarked yet. Go out there and explore!
+          Nothing saved yet. Go out there and explore!
         </p>
       )}
 
