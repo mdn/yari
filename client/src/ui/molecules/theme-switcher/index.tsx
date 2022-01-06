@@ -5,6 +5,7 @@ import { Submenu } from "../submenu";
 import { IEX_DOMAIN } from "../../../constants";
 
 import "./index.scss";
+import { useOnClickOutside } from "../../../hooks";
 
 type ThemeButton = {
   id: string;
@@ -18,6 +19,9 @@ export const ThemeSwitcher = () => {
   const [visibleSubMenuId, setVisibleSubMenuId] = React.useState<string | null>(
     null
   );
+
+  const submenuRef = React.useRef(null);
+  useOnClickOutside(submenuRef, toggleSubMenu);
 
   function ThemeButton({ id, label }: ThemeButton) {
     return (
@@ -100,7 +104,7 @@ export const ThemeSwitcher = () => {
   });
 
   return (
-    <div className="theme-switcher-menu">
+    <div className="theme-switcher-menu" ref={submenuRef}>
       <Button
         type="action"
         ariaControls={menuId}

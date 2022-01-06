@@ -5,7 +5,7 @@ import { Button } from "../../atoms/button";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 
-import { useLocale } from "../../../hooks";
+import { useLocale, useOnClickOutside } from "../../../hooks";
 import useSWR, { mutate } from "swr";
 
 import "./index.scss";
@@ -25,6 +25,9 @@ type NotificationMenuItem = {
 
 export const HeaderNotificationsMenu = () => {
   const menuId = "my-notifications";
+
+  const submenuRef = React.useRef(null);
+  useOnClickOutside(submenuRef, toggleSubMenu);
 
   const previousActiveElement = React.useRef<null | HTMLButtonElement>(null);
   const [visibleSubMenuId, setVisibleSubMenuId] = React.useState<string | null>(
@@ -126,7 +129,7 @@ export const HeaderNotificationsMenu = () => {
   }
 
   return (
-    <div className="notifications-menu">
+    <div className="notifications-menu" ref={submenuRef}>
       <Link to={`/${locale}/plus/notifications/`} className="top-level-entry">
         {drawNotificationButtonContents()}
       </Link>

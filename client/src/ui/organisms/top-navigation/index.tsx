@@ -6,8 +6,12 @@ import { Button } from "../../atoms/button";
 import { TopNavigationMain } from "../top-navigation-main";
 
 import "./index.scss";
+import { useLocation } from "react-router-dom";
+
+const DARK_NAV_ROUTES = [/\/plus\/$/i];
 
 export function TopNavigation() {
+  const location = useLocation();
   const [showMainMenu, setShowMainMenu] = useState(false);
 
   function toggleMainMenu() {
@@ -19,9 +23,15 @@ export function TopNavigation() {
     similar enough that they could be the same.
   */
   const assistiveText = showMainMenu ? "Close main menu" : "Open main menu";
+  const route = location.pathname.substring(location.pathname.indexOf("/", 1));
+  const dark = DARK_NAV_ROUTES.some((r) => route.match(r));
 
   return (
-    <header className={`top-navigation${showMainMenu ? " show-nav" : ""}`}>
+    <header
+      className={`top-navigation${showMainMenu ? " show-nav" : ""}${
+        dark ? " dark" : ""
+      }`}
+    >
       <Container>
         <div className="top-navigation-wrap">
           <Logo />

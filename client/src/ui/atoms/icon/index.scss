@@ -1,17 +1,20 @@
-$icons: "add-filled", "add", "bell-filled", "bell", "bookmark-filled",
-  "bookmark", "cancel", "checkmark", "chevron", "critical", "edit", "ellipses",
-  "external", "eye-filled", "eye", "firefox", "github-mark-small", "information",
-  "language", "menu-filled", "menu", "search", "sidebar", "small-arrow",
-  "star-filled", "star", "theme", "trash", "twitter", "warning";
+$icons: "add-filled", "add", "altname", "bell-filled", "bell", "bookmark-filled",
+  "bookmark", "cancel", "checkmark", "chevron", "critical", "desktop",
+  "disabled", "edit", "ellipses", "external", "eye-filled", "eye", "firefox",
+  "footnote", "github-mark-small", "information", "language", "menu-filled",
+  "menu", "mobile", "no", "preview", "search", "server", "sidebar",
+  "small-arrow", "star-filled", "star", "theme", "trash", "twitter", "warning",
+  "yes", "yes-circle";
 
 .icon {
   --size: var(--icon-size, 1rem);
-
   background-color: var(--icon-primary);
   display: inline-block;
   height: var(--size);
   width: var(--size);
   vertical-align: middle;
+  mask-position: center;
+  mask-repeat: no-repeat;
 }
 
 .icon {

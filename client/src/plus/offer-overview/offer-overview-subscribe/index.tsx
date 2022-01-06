@@ -149,7 +149,7 @@ function OfferDetails(props: OfferDetailsProps) {
 
 // TODO: This depends on SubPlat providing us with the actual data.
 function isCurrent(user: UserData | null, plan: String) {
-  if (user === null) {
+  if (user === null || !user.isAuthenticated) {
     return false;
   }
   if (!user.isSubscriber && plan === "core") {

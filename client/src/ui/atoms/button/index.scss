@@ -127,6 +127,10 @@ button,
   .button-wrap {
     text-transform: uppercase;
   }
+
+  &.highlight {
+    --button-color: var(--button-primary-default);
+  }
 }
 
 /* Select Version */

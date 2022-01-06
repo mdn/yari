@@ -1,7 +1,8 @@
 @use "sass:color";
 @use "../vars.scss" as *;
 
-:root {
+:root,
+.light {
   --text-primary: #{$mdn-theme-light-text-primary};
   --text-secondary: #{$mdn-theme-light-text-secondary};
   --text-inactive: #{$mdn-theme-light-text-inactive};
@@ -54,7 +55,7 @@
   --code-selector: #{$mdn-theme-light-code-selector};
 }
 
-body[class="dark"] {
+.dark {
   --text-primary: #{$mdn-theme-dark-text-primary};
   --text-secondary: #{$mdn-theme-dark-text-secondary};
   --text-inactive: #{$mdn-theme-dark-text-inactive};
