@@ -43,6 +43,11 @@
   }
 
   &-moz {
+    display: flex;
+    flex-flow: row wrap;
+    align-items: center;
+    gap: 2rem;
+
     padding-top: 1.5rem;
     border-top: 1px solid var(--border-primary);
   }
@@ -70,7 +75,6 @@
 
   &-logo-link {
     display: flex;
-    margin-bottom: 1rem;
   }
 
   &-link {
@@ -183,14 +187,11 @@
 @media screen and (min-width: $screen-lg) {
   .page-footer {
     &-grid {
-      grid-template-columns: minmax(260px, 1fr) 1fr 1fr 1fr 1fr minmax(
-          140px,
-          1fr
-        );
+      grid-template-columns: minmax(260px, 2fr) repeat(4, 1fr) max-content;
       grid-template-areas:
         "logo  nav1  nav2  nav3  nav4  app"
         "moz   moz   moz   moz   moz   moz"
-        "legal legal legal .     .     .";
+        "legal legal legal legal  .    .";
     }
 
     &-app-list {

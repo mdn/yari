@@ -40,7 +40,12 @@
 
     .submenu-header {
       display: block;
+      padding: 0 0 0.5rem;
       margin-bottom: 0.5rem;
+    }
+
+    .submenu-item {
+      padding: 0.5rem;
     }
 
     .signout-container {

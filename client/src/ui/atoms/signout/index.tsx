@@ -5,6 +5,7 @@ import { useCSRFMiddlewareToken, useLocale } from "../../../hooks";
 
 import "./index.scss";
 import { Button } from "../button";
+import { MDN_APP_ANDROID, MDN_APP_DESKTOP } from "../../../constants";
 
 export default function SignOut() {
   const csrfMiddlewareToken = useCSRFMiddlewareToken();
@@ -27,33 +28,57 @@ export default function SignOut() {
     prefix = `http://${process.env.REACT_APP_KUMA_HOST}`;
   }
 
-  return (
-    <form
-      className="signout-form"
-      method="post"
-      action={`${prefix}/users/fxa/login/logout/`}
-      onSubmit={() => {
-        removeSessionStorageData();
-      }}
-    >
-      {csrfMiddlewareToken && (
-        <input
-          type="hidden"
-          name="csrfmiddlewaretoken"
-          value={csrfMiddlewareToken}
-        />
-      )}
-      {/* XXX Here it would be great to link to the account settings page */}
-      <input type="hidden" name="next" value={next} />
-      {csrfMiddlewareToken && (
+  if (MDN_APP_DESKTOP || MDN_APP_ANDROID) {
+    let signOut = async () => {};
+    if (MDN_APP_DESKTOP) {
+      signOut = async () => {
+        await window.Desktop.signOut();
+      };
+    } else if (MDN_APP_ANDROID) {
+      signOut = async () => {
+        await window.Android.signOut();
+      };
+    }
+    return (
+      <form className="sign-out-form">
         <Button
+          onClickHandler={signOut}
           type="secondary"
-          buttonType="submit"
           extraClasses="signout-button"
         >
-          Sign Out
+          Sign out
         </Button>
-      )}
-    </form>
-  );
+      </form>
+    );
+  } else {
+    return (
+      <form
+        className="signout-form"
+        method="post"
+        action={`${prefix}/users/fxa/login/logout/`}
+        onSubmit={() => {
+          removeSessionStorageData();
+        }}
+      >
+        {csrfMiddlewareToken && (
+          <input
+            type="hidden"
+            name="csrfmiddlewaretoken"
+            value={csrfMiddlewareToken}
+          />
+        )}
+        {/* XXX Here it would be great to link to the account settings page */}
+        <input type="hidden" name="next" value={next} />
+        {csrfMiddlewareToken && (
+          <Button
+            type="secondary"
+            buttonType="submit"
+            extraClasses="signout-button"
+          >
+            Sign Out
+          </Button>
+        )}
+      </form>
+    );
+  }
 }
