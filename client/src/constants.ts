@@ -56,3 +56,14 @@ export const DEFAULT_GEO_COUNTRY =
   process.env.REACT_APP_DEFAULT_GEO_COUNTRY || "United States";
 
 export const IEX_DOMAIN = "https://interactive-examples.mdn.mozilla.net";
+export const MDN_APP = Boolean(process.env.REACT_APP_MDN_APP) || false;
+export const MDN_APP_ANDROID =
+  (process.env.REACT_APP_MDN_APP || "").toLowerCase() === "android";
+
+export const MDN_APP_DESKTOP =
+  (process.env.REACT_APP_MDN_APP || "").toLowerCase() === "desktop";
+
+export const MDN_APP_IOS =
+  (process.env.REACT_APP_MDN_APP || "").toLowerCase() === "ios";
+
+export const MDN_APP_MOBILE = MDN_APP && !MDN_APP_DESKTOP;

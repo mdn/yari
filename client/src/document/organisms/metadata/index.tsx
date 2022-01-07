@@ -1,3 +1,4 @@
+import { MDN_APP } from "../../../constants";
 import { LanguageMenu } from "../../../ui/molecules/language-menu";
 import { OnGitHubLink } from "../../on-github";
 
@@ -36,7 +37,7 @@ export function Metadata({ doc, locale }) {
           <LastModified value={doc.modified} locale={locale} />,{" "}
           <a href={`${doc.mdn_url}/contributors.txt`}>by MDN contributors</a>
         </p>
-        {translations && !!translations.length && (
+        {!MDN_APP && translations && !!translations.length && (
           <LanguageMenu
             translations={translations}
             native={native}

@@ -106,7 +106,7 @@ export function LanguageMenu({
             );
           })}
         </select>{" "}
-        <Button>Change language</Button>
+        <Button buttonType="submit">Change language</Button>
       </fieldset>
     </form>
   );
