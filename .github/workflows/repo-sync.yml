@@ -17,5 +17,5 @@ jobs:
         with:
           source_repo: "https://github.com/mdn/yari.git"
           source_branch: "main"
-          destination_branch: "public-main-sync"
+          destination_branch: "main"
           github_token: ${{ secrets.PAT }}
