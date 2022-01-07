@@ -5,21 +5,17 @@
 .document-toc {
   font-size: 1rem;
   margin-bottom: 2rem;
-  padding: 0.25rem 1rem;
+  padding: 0;
   position: relative;
 
   @media screen and (max-width: $screen-sm) {
     padding: 0 1rem;
   }
 
-  @media screen and (min-width: $screen-md) {
-    margin-top: 1rem;
-  }
-
   &-heading {
     font: var(--type-heading-h6);
     letter-spacing: 1.5px;
-    padding: 2rem 0 1rem 0;
+    padding: 0 0 1rem 0;
     text-transform: uppercase;
   }
 
