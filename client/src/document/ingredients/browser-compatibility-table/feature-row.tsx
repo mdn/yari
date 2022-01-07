@@ -79,12 +79,12 @@ function StatusIcons({ status }: { status: bcd.StatusBlock }) {
     status.deprecated && {
       title: "Deprecated. Not for use in new websites.",
       text: "Deprecated",
-      iconClassName: "ic-deprecated",
+      iconClassName: "icon-thumbs-down",
     },
     !status.standard_track && {
       title: "Non-standard. Expect poor cross-browser support.",
       text: "Non-standard",
-      iconClassName: "ic-non-standard",
+      iconClassName: "icon-note-warning",
     },
   ].filter(isTruthy);
   return icons.length === 0 ? null : (
@@ -216,9 +216,10 @@ const CellText = React.memo(
           >
             <span className="bc-support-level">{title}</span>
           </abbr>
-        </span>
+        </span>{" "}
         <span className="bc-version-label">
-          <BrowserName id={browser} /> {label !== "No" ? label : null}
+          <BrowserName id={browser} />{" "}
+          {label !== "No" && label !== "?" ? label : null}
         </span>
       </>
     );
@@ -392,7 +393,7 @@ function getNotes(
               </dt>
               {supportNotes.map(({ iconName, label }, i) => {
                 return (
-                  <dd key={i}>
+                  <dd className="bc-supports-dd" key={i}>
                     <Icon name={iconName} />{" "}
                     {typeof label === "string" ? (
                       <span dangerouslySetInnerHTML={{ __html: label }} />

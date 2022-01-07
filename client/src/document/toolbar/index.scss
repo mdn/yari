@@ -1,21 +1,29 @@
 @use "../../ui/vars" as *;
 
 .toolbar {
-  display: block;
-  margin: 0 auto;
-  padding: 1rem;
+  background: var(--background-secondary);
+  border: 1px solid var(--border-secondary);
+  border-radius: var(--elem-radius);
+  padding: 0.5rem 1rem;
+  margin: 0 0 1rem 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.5rem;
+  font: var(--type-body-m);
 
-  .toolbar-first-row {
+  &-first-row,
+  .edit-actions {
     display: flex;
-    flex-direction: row;
-    justify-content: space-between;
+    gap: 1rem;
+  }
 
-    .edit-actions {
-      padding: 1rem 0;
+  .button {
+    color: var(--text-color);
+    text-decoration: underline;
 
-      li {
-        margin-left: 0;
-      }
+    &:hover {
+      text-decoration: none;
     }
   }
 }

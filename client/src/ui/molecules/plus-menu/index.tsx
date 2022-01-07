@@ -23,7 +23,7 @@ export const PlusMenu = () => {
         description: "Collect articles from across MDN",
         hasIcon: true,
         iconClasses: "submenu-icon bookmarks-icon",
-        label: "My Bookmarks",
+        label: "My Collection",
         url: `/${locale}/plus/bookmarks`,
       },
       {

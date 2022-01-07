@@ -1,7 +1,8 @@
 const { test, expect } = require("@playwright/test");
 
 function testURL(pathname = "/") {
-  return `http://localhost:5000${pathname}`;
+  const PORT = parseInt(process.env.SERVER_PORT || "5000");
+  return `http://localhost:${PORT}${pathname}`;
 }
 
 test.describe("Basic viewing of functional pages", () => {

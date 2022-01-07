@@ -10,7 +10,7 @@ export function Switch({
   name: string;
   checked?: boolean;
   toggle?: (Event) => void;
-  children: string | ReactChildren;
+  children?: string | ReactChildren;
 }) {
   return (
     <label className="switch">

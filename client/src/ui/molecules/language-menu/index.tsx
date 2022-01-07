@@ -1,4 +1,5 @@
 import React from "react";
+import { Button } from "../../atoms/button";
 import { useLocation, useNavigate } from "react-router-dom";
 
 import { useGA } from "../../../ga-context";
@@ -105,9 +106,7 @@ export function LanguageMenu({
             );
           })}
         </select>{" "}
-        <button type="submit" className="button minimal">
-          Change language
-        </button>
+        <Button buttonType="submit">Change language</Button>
       </fieldset>
     </form>
   );
