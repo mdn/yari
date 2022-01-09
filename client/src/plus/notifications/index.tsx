@@ -1,4 +1,5 @@
 import { useContext } from "react";
+import { useLocation } from "react-router-dom";
 import { useLocale } from "../../hooks";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
@@ -61,11 +62,17 @@ function NotificationCard(item) {
 
 function NotificationsLayout() {
   const locale = useLocale();
+  const location = useLocation();
 
   const { selectedTerms, selectedFilter, selectedSort } =
     useContext(searchFiltersContext);
 
-  const listUrl = `/api/v1/plus/notifications/?${selectedTerms}&${selectedFilter}&${selectedSort}`;
+  const starredUrl = `/${locale}/plus/notifications/starred`;
+
+  let listUrl = `/api/v1/plus/notifications/?${selectedTerms}&${selectedFilter}&${selectedSort}`;
+  if (location.pathname === starredUrl) {
+    listUrl += "&filterStarred=true";
+  }
 
   const tabs = [
     {
@@ -74,7 +81,7 @@ function NotificationsLayout() {
     },
     {
       label: "Starred",
-      path: `/${locale}/plus/notifications/starred`,
+      path: starredUrl,
     },
   ];
 

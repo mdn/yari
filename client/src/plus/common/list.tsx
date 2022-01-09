@@ -25,9 +25,16 @@ export default function List({
   const pageTitle = "My Watched Pages";
 
   const isSubscriber = userData && userData.isSubscriber;
-  const localApiURL = isSubscriber
-    ? `${apiUrl}?${searchParams.toString()}`
-    : null;
+  let localApiURL: string | null = null;
+  if (isSubscriber) {
+    const params = searchParams.toString();
+    if (params) {
+      const joiner = apiUrl.includes("?") ? "&" : "?";
+      localApiURL = `${apiUrl}${joiner}${searchParams.toString()}`;
+    } else {
+      localApiURL = apiUrl;
+    }
+  }
 
   const { data, error } = useSWR(
     localApiURL,
