@@ -56,7 +56,7 @@ export function NotificationsWatchMenuCustom({
     }))
   );
   React.useEffect(() => {
-    if (!custom.compatibility) return;
+    if (!custom?.compatibility) return;
     setCompatOptions((c) =>
       c.map((g) => ({
         ...g,
@@ -66,7 +66,7 @@ export function NotificationsWatchMenuCustom({
         }),
       }))
     );
-  }, [custom.compatibility]);
+  }, [custom?.compatibility]);
 
   const saveData = React.useRef<{
     content: boolean;
