@@ -11,6 +11,7 @@ import {
 } from "react-router-dom";
 import { DISABLE_AUTH } from "../../constants";
 import { AuthDisabled } from "../../ui/atoms/auth-disabled";
+import { useCSRFMiddlewareToken } from "../../hooks";
 
 export default function List({
   apiUrl,
@@ -22,6 +23,7 @@ export default function List({
   const [searchParams, setSearchParams] = useSearchParams();
   const { pathname } = useLocation();
   const userData = useUserData();
+  const csrfToken = useCSRFMiddlewareToken();
   const pageTitle = "My Watched Pages";
 
   const isSubscriber = userData && userData.isSubscriber;
@@ -36,7 +38,7 @@ export default function List({
     }
   }
 
-  const { data, error } = useSWR(
+  const { data, error, mutate } = useSWR(
     localApiURL,
     async (url) => {
       const response = await fetch(url);
@@ -117,7 +119,9 @@ export default function List({
 
   return (
     <>
-      {data?.items.map(component)}
+      {data?.items.map((item) =>
+        component(item, { changedCallback: mutate, csrfToken: csrfToken || "" })
+      )}
       {(nextPage !== 0 || previousPage !== 0) && (
         <div className="pagination">
           {nextPage !== 0 && (
