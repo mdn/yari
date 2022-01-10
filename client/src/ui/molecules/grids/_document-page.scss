@@ -36,7 +36,7 @@
 
   @media screen and (min-width: $screen-md) {
     display: grid;
-    grid-template-columns: 1fr 2fr;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
     gap: 3rem;
     padding-left: 1.5rem;
     padding-right: 3rem;
@@ -59,7 +59,7 @@
 
   @media screen and (min-width: $screen-lg) {
     display: grid;
-    grid-template-columns: 1fr 2fr 1fr;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 2fr) minmax(0, 1fr);
     gap: 3rem;
     padding-left: 1.5rem;
     padding-right: 1.5rem;
@@ -71,7 +71,7 @@
 
       .document-toc-container {
         position: sticky;
-        top: 1rem;
+        top: 3rem;
       }
     }
 

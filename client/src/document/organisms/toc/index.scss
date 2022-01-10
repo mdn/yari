@@ -12,19 +12,31 @@
     padding: 0 1rem;
   }
 
-  &-heading {
+  // double classes to override specificity from root styles
+  &-heading.document-toc-heading {
     font: var(--type-heading-h6);
     letter-spacing: 1.5px;
     padding: 0 0 1rem 0;
     text-transform: uppercase;
   }
+  // double classes to override specificity from root styles
+  &-list.document-toc-list {
+    list-style: none;
+    padding-left: 0;
 
-  &-link {
+    li {
+      margin-bottom: 0;
+    }
+  }
+
+  // double classes to override specificity from root styles
+  &-link.document-toc-link:not(.button) {
     display: block;
     padding: 0.5rem 1rem;
     font: var(--type-body-m);
     border-left: 2px solid var(--border-primary);
     color: var(--text-secondary);
+    text-decoration: none;
 
     &:hover {
       color: var(--text-link);
