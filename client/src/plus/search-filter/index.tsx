@@ -91,7 +91,7 @@ export default function SearchFilter({ filters, sorts }) {
         name="terms"
         placeholder="Filter by keyword"
         onChangeHandler={(e) => {
-          setSelectedTerms(e.target.value);
+          setSelectedTerms(`q=${encodeURIComponent(e.target.value)}`);
         }}
       />
 

@@ -1,32 +1,45 @@
-import { useContext } from "react";
-import { useLocale } from "../../hooks";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
-
+import { useContext } from "react";
+import { useLocation } from "react-router-dom";
+import { useLocale } from "../../hooks";
+import { Button } from "../../ui/atoms/button";
+import Container from "../../ui/atoms/container";
+import Tabs from "../../ui/molecules/tabs";
+import List from "../common/list";
 import {
   searchFiltersContext,
   SearchFiltersProvider,
 } from "../contexts/search-filters";
-
-import { Button } from "../../ui/atoms/button";
-import Container from "../../ui/atoms/container";
-import List from "../common/list";
 import SearchFilter from "../search-filter";
-import Tabs from "../../ui/molecules/tabs";
-
 import "./index.scss";
 
 dayjs.extend(relativeTime);
 
-function NotificationCard(item) {
-  function toggleStar() {
-    //const localApiURL = `/api/v1/plus/notifications/${item.id}/star`;
-    return true;
+async function post(url: string, csrfToken: string) {
+  const response = await fetch(url, {
+    method: "POST",
+    headers: {
+      "X-CSRFToken": csrfToken,
+      "Content-Type": "application/x-www-form-urlencoded",
+    },
+  });
+
+  if (!response.ok) {
+    throw new Error(`${response.status} on ${response.url}`);
+  }
+  return true;
+}
+
+function NotificationCard(item, { changedCallback, csrfToken }) {
+  async function toggleStar() {
+    const url = `/api/v1/plus/notifications/${item.id}/toggle-starred/`;
+    await post(url, csrfToken);
   }
 
-  function deleteNotification() {
-    //const localApiURL = `/api/v1/plus/notifications/${item.id}/delete`;
-    return true;
+  async function deleteNotification() {
+    const url = `/api/v1/plus/notifications/${item.id}/delete/`;
+    await post(url, csrfToken);
   }
 
   return (
@@ -35,7 +48,10 @@ function NotificationCard(item) {
         type="action"
         extraClasses="notification-card-star"
         icon={item.starred ? "star-filled" : "star"}
-        onClickHandler={toggleStar}
+        onClickHandler={async () => {
+          await toggleStar();
+          changedCallback && changedCallback();
+        }}
       >
         <span className="visually-hidden">Toggle Starring</span>
       </Button>
@@ -52,7 +68,14 @@ function NotificationCard(item) {
         {dayjs(item.created).fromNow().toString()}
       </time>
 
-      <Button type="action" icon="trash" onClickHandler={deleteNotification}>
+      <Button
+        type="action"
+        icon="trash"
+        onClickHandler={async () => {
+          await deleteNotification();
+          changedCallback && changedCallback();
+        }}
+      >
         <span className="visually-hidden">Delete</span>
       </Button>
     </article>
@@ -61,11 +84,17 @@ function NotificationCard(item) {
 
 function NotificationsLayout() {
   const locale = useLocale();
+  const location = useLocation();
 
   const { selectedTerms, selectedFilter, selectedSort } =
     useContext(searchFiltersContext);
 
-  const listUrl = `/api/v1/plus/notifications/?${selectedTerms}&${selectedFilter}&${selectedSort}`;
+  const starredUrl = `/${locale}/plus/notifications/starred`;
+
+  let listUrl = `/api/v1/plus/notifications/?${selectedTerms}&${selectedFilter}&${selectedSort}`;
+  if (location.pathname === starredUrl) {
+    listUrl += "&filterStarred=true";
+  }
 
   const tabs = [
     {
@@ -74,7 +103,7 @@ function NotificationsLayout() {
     },
     {
       label: "Starred",
-      path: `/${locale}/plus/notifications/starred`,
+      path: starredUrl,
     },
   ];
 
