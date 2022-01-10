@@ -4,12 +4,14 @@ import { BookmarkToggle } from "../../molecules/bookmark";
 import { Button } from "../../atoms/button";
 import { NotificationsWatchMenu } from "../../molecules/notifications-watch-menu";
 import { ThemeSwitcher } from "../../molecules/theme-switcher";
+import { LanguageMenu } from "../../molecules/language-menu";
 
 import { useUserData } from "../../../user-context";
 
 import { Doc } from "../../../document/types";
 
 import "./index.scss";
+import { MDN_APP } from "../../../constants";
 
 export const ArticleActions = ({
   doc,
@@ -22,6 +24,8 @@ export const ArticleActions = ({
 }) => {
   const userData = useUserData();
   const isSubscriber = userData && userData.isSubscriber;
+  const translations = doc.other_translations || [];
+  const { native } = doc;
 
   function toggleArticleActionsMenu(event) {
     setShowArticleActionsMenu(!showArticleActionsMenu);
@@ -59,6 +63,11 @@ export const ArticleActions = ({
               <li className="article-actions-entry">
                 <ThemeSwitcher />
               </li>
+              {!MDN_APP && translations && !!translations.length && (
+                <li className="article-actions-entry">
+                  <LanguageMenu translations={translations} native={native} />
+                </li>
+              )}
             </>
           </ul>
         </div>
