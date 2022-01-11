@@ -3,7 +3,7 @@ export async function post(url: string, csrfToken: string, data?: object) {
     method: "POST",
     headers: {
       "X-CSRFToken": csrfToken,
-      "Content-Type": "application/json",
+      "Content-Type": "text/plain",
     },
   };
   if (data) fetchData.body = JSON.stringify(data);
