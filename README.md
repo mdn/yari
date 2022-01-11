@@ -68,6 +68,21 @@ so use with caution.
 See also our [reviewing guide](docs/REVIEWING.md) for information on how to
 review Yari changes.
 
+### Pull request requirements
+
+Firstly, thank you for your interest in contributing to Yari!
+We do have a few requirements when it comes to pull requests:
+
+1. Please make use of a [feature branch workflow](https://www.atlassian.com/git/tutorials/comparing-workflows/feature-branch-workflow).
+2. We prefer if you use the [conventional commits format](https://www.conventionalcommits.org/)
+   when making pull requests.
+3. Lastly, we require that all commits are signed.
+   Please see the documentation [about signed commits](https://docs.github.com/en/authentication/managing-commit-signature-verification/about-commit-signature-verification)
+   and [how to sign yours](https://docs.github.com/en/authentication/managing-commit-signature-verification/signing-commits)
+   on GitHub.
+
+Thank you for your understanding! We look forward to your contributions.
+
 ### How to stay up-to-date
 
 Periodically, the code and the content changes. Make sure you stay
