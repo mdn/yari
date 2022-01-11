@@ -4,8 +4,12 @@ export function NotificationsWatchMenuStart({
   data,
   setStepHandler,
   handleSelection,
+  showCustom,
 }) {
   const selected: { [x: string]: boolean } = { [data.status]: true };
+  const majorText = showCustom
+    ? "Only receive notifications of major browser compatability releases and revisions to this article."
+    : "Receive notifications of revisions to this article.";
 
   return (
     <>
@@ -13,28 +17,36 @@ export function NotificationsWatchMenuStart({
 
       <WatchMenuItem
         value="major"
-        label="Major updates"
-        text="Only receive notifications of major browser compatability releases and revisions to this article."
+        label={
+          showCustom
+            ? "Major updates"
+            : selected.major
+            ? "Watching page"
+            : "Watch page"
+        }
+        text={majorText}
         checked={selected.major}
         onClickHandler={() => {
           handleSelection();
         }}
       />
 
-      <WatchMenuItem
-        value="custom"
-        label="Custom"
-        text={
-          selected.custom
-            ? "Receiving customized notifications."
-            : "Select which events you would like to be notified of."
-        }
-        checked={selected.custom}
-        onClickHandler={(event) => {
-          event.preventDefault();
-          setStepHandler(1);
-        }}
-      />
+      {showCustom ? (
+        <WatchMenuItem
+          value="custom"
+          label="Custom"
+          text={
+            selected.custom
+              ? "Receiving customized notifications."
+              : "Select which events you would like to be notified of."
+          }
+          checked={selected.custom}
+          onClickHandler={(event) => {
+            event.preventDefault();
+            setStepHandler(1);
+          }}
+        />
+      ) : null}
 
       <WatchMenuItem
         value="unwatch"

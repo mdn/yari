@@ -16,8 +16,14 @@
   }
 
   li {
-    display: inline-flex;
+    display: none;
     hyphens: auto;
+
+    // only show first and last on mobile
+    &:first-child,
+    &:last-child {
+      display: inline-flex;
+    }
 
     .breadcrumb {
       &::after {
@@ -35,6 +41,12 @@
     [property="name"] {
       display: inline-block;
       margin: 0 0.5rem;
+    }
+  }
+
+  @media screen and (min-width: $screen-md) {
+    li {
+      display: inline-flex;
     }
   }
 }
