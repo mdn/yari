@@ -16,6 +16,7 @@ import WatchCard from "./watch-card";
 function NotificationsLayout() {
   const locale = useLocale();
   const location = useLocation();
+  const pageTitle = "My Watched Pages";
 
   const { selectedTerms, selectedFilter, selectedSort } =
     useContext(searchFiltersContext);
@@ -85,6 +86,7 @@ function NotificationsLayout() {
               component={WatchCard}
               apiUrl={watchingApiUrl}
               makeKey={(item) => item.url}
+              pageTitle={pageTitle}
             />
           </>
         ) : (
@@ -94,6 +96,7 @@ function NotificationsLayout() {
               component={NotificationCard}
               apiUrl={apiUrl}
               makeKey={(item) => item.id}
+              pageTitle={pageTitle}
             />
           </>
         )}

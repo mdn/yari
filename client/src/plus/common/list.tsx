@@ -17,16 +17,17 @@ export default function List({
   apiUrl,
   component,
   makeKey,
+  pageTitle,
 }: {
   apiUrl: string;
   component: any;
   makeKey: CallableFunction;
+  pageTitle: string;
 }) {
   const [searchParams, setSearchParams] = useSearchParams();
   const { pathname } = useLocation();
   const userData = useUserData();
   const csrfToken = useCSRFMiddlewareToken();
-  const pageTitle = "My Watched Pages";
 
   const isSubscriber = userData && userData.isSubscriber;
   let localApiURL: string | null = null;
