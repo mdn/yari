@@ -16,9 +16,11 @@ import { useCSRFMiddlewareToken } from "../../hooks";
 export default function List({
   apiUrl,
   component,
+  makeKey,
 }: {
   apiUrl: string;
   component: any;
+  makeKey: CallableFunction;
 }) {
   const [searchParams, setSearchParams] = useSearchParams();
   const { pathname } = useLocation();
@@ -117,11 +119,17 @@ export default function List({
     return pathname;
   }
 
+  const ItemComponent = component;
   return (
     <>
-      {data?.items.map((item) =>
-        component(item, { changedCallback: mutate, csrfToken: csrfToken || "" })
-      )}
+      {data?.items.map((item) => (
+        <ItemComponent
+          key={makeKey(item)}
+          item={item}
+          changedCallback={mutate}
+          csrfToken={csrfToken || ""}
+        ></ItemComponent>
+      ))}
       {(nextPage !== 0 || previousPage !== 0) && (
         <div className="pagination">
           {nextPage !== 0 && (

@@ -5,7 +5,7 @@ import relativeTime from "dayjs/plugin/relativeTime";
 
 dayjs.extend(relativeTime);
 
-export default function NotificationCard(item, { changedCallback, csrfToken }) {
+export default function NotificationCard({ item, changedCallback, csrfToken }) {
   const toggleStarUrl = `/api/v1/plus/notifications/${item.id}/toggle-starred/`;
   const deleteUrl = `/api/v1/plus/notifications/${item.id}/delete/`;
 
