@@ -48,8 +48,9 @@
     box-shadow: var(--shadow-01);
     padding: 0.5rem;
     position: absolute;
-    width: 25rem;
-    z-index: 1000;
+    width: max-content;
+    max-width: 25rem;
+    z-index: var(--z-index-mid);
 
     .submenu-item {
       border-bottom: 0;

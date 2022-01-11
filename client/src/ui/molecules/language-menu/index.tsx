@@ -4,10 +4,11 @@ import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { useGA } from "../../../ga-context";
 import { Translation } from "../../../document/types";
 
-import "./index.scss";
 import { useOnClickOutside } from "../../../hooks";
 import { Button } from "../../atoms/button";
 import { Submenu } from "../submenu";
+
+import "./index.scss";
 
 // This needs to match what's set in 'libs/constants.js' on the server/builder!
 const PREFERRED_LOCALE_COOKIE_NAME = "preferredlocale";
@@ -19,7 +20,7 @@ export function LanguageMenu({
   translations: Translation[];
   native: string;
 }) {
-  const menuId = "languages-menu";
+  const menuId = "language-menu";
   const ga = useGA();
   const { pathname } = useLocation();
   const navigate = useNavigate();
@@ -146,8 +147,9 @@ function LanguageMenuItem({ translation, changeLocale, native }) {
       key={translation.locale}
       name={translation.locale}
       onClick={changeLocale}
+      className="submenu-item"
     >
-      {translation.native}
+      <span>{translation.native}</span>
     </button>
   );
 }
