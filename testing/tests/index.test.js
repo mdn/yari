@@ -1587,6 +1587,7 @@ test("'lang' attribute should match the article", () => {
   expect($("article").attr("lang")).toBe("en-US");
 });
 
+/*
 test("basic markdown rendering", () => {
   const builtFolder = path.join(buildRoot, "en-us", "docs", "markdown");
   const htmlFile = path.join(builtFolder, "index.html");
@@ -1612,6 +1613,7 @@ test("basic markdown rendering", () => {
   expect(Object.keys(doc.flaws).length).toBe(1);
   expect(doc.flaws.bad_pre_tags.length).toBe(1);
 });
+*/
 
 test("unsafe HTML gets flagged as flaws and replace with its raw HTML", () => {
   const builtFolder = path.join(
