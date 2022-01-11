@@ -166,7 +166,7 @@ test.describe("Basic viewing of functional pages", () => {
       )
     ).toBe(
       // Always includes a link to "self"
-      "<foo>: A test tag"
+      "<foo>"
     );
   });
 
