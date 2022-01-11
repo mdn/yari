@@ -5,16 +5,18 @@
   background-color: var(--background-secondary);
   border-bottom: 1px solid var(--border-primary);
   border-top: 1px solid var(--border-primary);
-  display: flex;
-  gap: 0.5rem;
   padding: 0 var(--gutter);
-  justify-content: space-between;
-  margin: 0 auto;
-  max-width: var(--max-width);
+  margin: 0;
   min-height: 2rem;
   position: sticky;
   top: 0;
   z-index: var(--z-index-top);
+
+  .container {
+    display: flex;
+    justify-content: space-between;
+    gap: 0.5rem;
+  }
 
   @media screen and (min-width: $screen-md) {
     padding: 2px 0.5rem;
@@ -24,21 +26,12 @@
       display: none;
     }
 
-    .breadcrumbs-container {
-      flex: 1 1 90%;
-    }
-
     .bookmark-button-container {
       flex: 0 0 40px;
     }
 
     .language-toggle {
       flex: 1 1 fit-content;
-    }
-
-    // when the breadcrumbs is the only item in the container
-    .breadcrumbs-container:last-child {
-      flex-basis: 100%;
     }
 
     // when the language toggle is the only item in the container

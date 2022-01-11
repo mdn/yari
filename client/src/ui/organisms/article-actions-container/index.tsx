@@ -14,13 +14,15 @@ export const ArticleActionsContainer = ({ doc }: { doc: Doc }) => {
   return (
     <div className="article-actions-container">
       {/* if we have breadcrumbs for the current page, continue rendering the section */}
-      {doc.parents && <Breadcrumbs parents={doc.parents} />}
+      <div className="container">
+        {doc.parents && <Breadcrumbs parents={doc.parents} />}
 
-      <ArticleActions
-        doc={doc}
-        showArticleActionsMenu={showArticleActionsMenu}
-        setShowArticleActionsMenu={setShowArticleActionsMenu}
-      />
+        <ArticleActions
+          doc={doc}
+          showArticleActionsMenu={showArticleActionsMenu}
+          setShowArticleActionsMenu={setShowArticleActionsMenu}
+        />
+      </div>
     </div>
   );
 };
