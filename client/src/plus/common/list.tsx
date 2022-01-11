@@ -24,6 +24,10 @@ export default function List({
   const userData = useUserData();
   const csrfToken = useCSRFMiddlewareToken();
 
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [apiUrl]);
+
   if (DISABLE_AUTH) {
     return <AuthDisabled />;
   }
