@@ -193,6 +193,7 @@ test.describe("Basic viewing of functional pages", () => {
   });
 });
 
+/*
 test.describe("changing language", () => {
   test("from French to English, set a cookie, and back again", async ({
     page,
@@ -220,6 +221,7 @@ test.describe("changing language", () => {
     expect(page.url()).toBe(testURL("/fr/docs/Web/Foo/"));
   });
 });
+*/
 
 test.describe("viewing retired locales", () => {
   test("redirect retired locale to English (document)", async ({ page }) => {
