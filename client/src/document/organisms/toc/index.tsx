@@ -39,9 +39,12 @@ export function TOC({ toc }: { toc: Toc[] }) {
   );
 
   useEffect(() => {
-    window.onscroll = debouncedGetCurrentHighlightedSectionId;
+    window.addEventListener("scroll", debouncedGetCurrentHighlightedSectionId);
     return () => {
-      window.onscroll = null;
+      window.removeEventListener(
+        "scroll",
+        debouncedGetCurrentHighlightedSectionId
+      );
     };
   }, []);
 
