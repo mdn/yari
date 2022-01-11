@@ -39,10 +39,12 @@
     .toc,
     .main-content {
       padding-top: 3rem;
+      padding-bottom: 3rem;
     }
 
     .sidebar {
       grid-area: sidebar;
+      align-self: start;
     }
 
     .main-content {
