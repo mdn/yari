@@ -16,13 +16,6 @@
   .sidebar {
     flex-direction: column;
   }
-
-  .sidebar {
-    display: none;
-    @media screen and (min-width: $screen-md) {
-      display: flex;
-    }
-  }
 }
 
 .article-wrapper {

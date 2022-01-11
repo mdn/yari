@@ -1,13 +1,84 @@
 @use "../../../ui/vars" as *;
 
 .sidebar {
-  overflow: auto;
-  position: sticky;
-  top: 0;
-  bottom: 0;
-  // height minus header. On scroll, this variable is changed with JS.
-  max-height: calc(100vh - var(--visible-height-of-header, 6rem));
   color: var(--text-secondary);
+
+  .backdrop {
+    display: none;
+  }
+
+  // apply drawer styles only to the sizes that need them.
+  @media screen and (max-width: #{$screen-md - 1}) {
+    position: fixed;
+    top: 0;
+    right: 0;
+    left: 0;
+    height: 100vh;
+    max-height: 100vh;
+    z-index: var(--z-index-top);
+    transform: translateX(-100%);
+
+    .sidebar-inner {
+      transform: translateX(-100%);
+      overflow: hidden; //animations look janky if scrollbars are present
+      will-change: transform;
+      transition: 0.2s linear transform;
+      position: relative;
+      padding: 1rem;
+      width: 80vw;
+      max-width: 20rem;
+      height: 100vh;
+      max-height: 100vh;
+      overflow: auto;
+      background: var(--background-primary);
+      border-right: 1px solid var(--border-primary);
+      z-index: var(--z-index-top);
+    }
+
+    .backdrop {
+      opacity: 0;
+      will-change: opacity;
+      transition: opacity 0.2s linear;
+
+      display: flex;
+      position: fixed;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      width: 100%;
+      background: rgba(0, 0, 0, 0.3);
+      z-index: var(--z-index-mid);
+      border-radius: 0;
+      cursor: default;
+    }
+
+    &.is-animating {
+      transform: translateX(0);
+    }
+
+    &.is-expanded {
+      transform: translateX(0); // no transition on this one, just show it.
+
+      .sidebar-inner {
+        transform: translateX(0);
+      }
+
+      .backdrop {
+        opacity: 1;
+      }
+    }
+  }
+
+  @media screen and (min-width: $screen-md) {
+    display: flex;
+    overflow: auto;
+    position: sticky;
+    top: 0;
+    bottom: 0;
+    // height minus header. On scroll, this variable is changed with JS.
+    max-height: calc(100vh - var(--visible-height-of-header, 6rem));
+  }
 
   &-heading {
     font: var(--type-heading-h6);

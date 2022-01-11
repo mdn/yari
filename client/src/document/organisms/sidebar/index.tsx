@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import React, { useEffect } from "react";
 import _ from "lodash";
+import { Button } from "../../../ui/atoms/button";
 
 import "./index.scss";
 
@@ -39,7 +40,8 @@ function SidebarContainer({ children }) {
   return (
     <>
       <nav id="sidebar-quicklinks" className="sidebar">
-        {children}
+        <Button extraClasses="backdrop" type="action" />
+        <div className="sidebar-inner">{children}</div>
       </nav>
       <CalculateSidebarOnScroll />
     </>
