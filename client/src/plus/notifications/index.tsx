@@ -81,12 +81,20 @@ function NotificationsLayout() {
         {watching ? (
           <>
             <SearchFilter />
-            <List component={WatchCard} apiUrl={watchingApiUrl} />
+            <List
+              component={WatchCard}
+              apiUrl={watchingApiUrl}
+              makeKey={(item) => item.url}
+            />
           </>
         ) : (
           <>
             <SearchFilter filters={filters} sorts={sorts} />
-            <List component={NotificationCard} apiUrl={apiUrl} />
+            <List
+              component={NotificationCard}
+              apiUrl={apiUrl}
+              makeKey={(item) => item.id}
+            />
           </>
         )}
       </Container>

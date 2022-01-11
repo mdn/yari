@@ -2,8 +2,8 @@ import { mutate } from "swr";
 import { Button } from "../../ui/atoms/button";
 import { post } from "./utils";
 
-export default function WatchCard(item, { changedCallback, csrfToken }) {
-  const deleteUrl = `/api/v1/plus/notifications/watch/${item.url}`;
+export default function WatchCard({ item, changedCallback, csrfToken }) {
+  const deleteUrl = `/api/v1/plus/watch${item.url}`;
 
   return (
     <article className="notification-card no-star">
@@ -18,6 +18,7 @@ export default function WatchCard(item, { changedCallback, csrfToken }) {
         type="action"
         icon="trash"
         onClickHandler={async () => {
+          console.log(deleteUrl);
           await post(deleteUrl, csrfToken, { unwatch: true });
           mutate(deleteUrl);
           changedCallback && changedCallback();

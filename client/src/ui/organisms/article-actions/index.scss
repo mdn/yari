@@ -1,6 +1,8 @@
 @use "../../vars" as *;
 
 .article-actions {
+  margin-left: auto;
+
   .article-actions-dialog-heading {
     display: none;
   }
@@ -31,7 +33,6 @@
 
   @media screen and (min-width: $screen-md) {
     display: block;
-    margin-left: auto;
   }
 }
 
