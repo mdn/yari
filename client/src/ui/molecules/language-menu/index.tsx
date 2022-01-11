@@ -147,7 +147,7 @@ function LanguageMenuItem({ translation, changeLocale, native }) {
       key={translation.locale}
       name={translation.locale}
       onClick={changeLocale}
-      className="submenu-item"
+      className="button submenu-item"
     >
       <span>{translation.native}</span>
     </button>

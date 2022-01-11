@@ -1,5 +1,11 @@
+@use "../../../ui/vars" as *;
+
 .language-menu {
   .submenu-item {
     padding: 0.5rem;
+  }
+
+  @media (min-width: $screen-md) {
+    right: 0;
   }
 }
