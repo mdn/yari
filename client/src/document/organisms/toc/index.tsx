@@ -21,7 +21,7 @@ export function TOC({ toc }: { toc: Toc[] }) {
     );
     let currentSectionId;
 
-    headings.map((section) => {
+    headings.forEach((section) => {
       const posY = section?.offsetTop;
       if (posY && posY < offsetY + window.innerHeight * 0.5) {
         currentSectionId = section.id;
@@ -46,7 +46,7 @@ export function TOC({ toc }: { toc: Toc[] }) {
         debouncedGetCurrentHighlightedSectionId
       );
     };
-  }, []);
+  }, [debouncedGetCurrentHighlightedSectionId]);
 
   return (
     <aside className="document-toc-container">
