@@ -327,7 +327,7 @@ function getNotes(
           : null,
         item.prefix
           ? {
-              iconName: "footnote",
+              iconName: "prefix",
               label: `Implemented with the vendor prefix: ${item.prefix}`,
             }
           : null,

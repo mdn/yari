@@ -94,6 +94,14 @@
 
   --shadow-01: #{$mdn-theme-dark-shadow-01};
   --shadow-02: #{$mdn-theme-dark-shadow-02};
+
+  --code-tag: #{$mdn-theme-dark-code-tag};
+  --code-punctuation: #{$mdn-theme-dark-code-punctuation};
+  --code-attribute-name: #{$mdn-theme-dark-code-attribute-name};
+  --code-attribute-value: #{$mdn-theme-dark-code-attribute-value};
+  --code-comment: #{$mdn-theme-dark-code-comment};
+  --code-default: #{$mdn-theme-dark-code-default};
+  --code-selector: #{$mdn-theme-dark-code-selector};
 }
 
 body[class="high-contrast-white"] {
