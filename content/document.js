@@ -448,8 +448,11 @@ function findAll({
           return false;
         }
 
+        const locale = filePath.replace(root, "").split(path.sep)[1];
+        if (!VALID_LOCALES.has(locale)) {
+          return false;
+        }
         if (locales.size) {
-          const locale = filePath.replace(root, "").split(path.sep)[1];
           if (!locales.get(locale)) {
             return false;
           }
