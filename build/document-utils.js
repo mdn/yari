@@ -1,11 +1,45 @@
 const { Document } = require("../content");
 
-/** The breadcrumb is an array of parents include the document itself.
- * It only gets added to the document there are actual parents.
+/**
+ * Temporary fix for long titles in breadcrumbs
+ * @see https://github.com/mdn/yari-private/issues/612
+ * @param {String} title : the title of the document
+ * @returns transformed title or original title as a string
+ */
+function transformTitle(title) {
+  const transformStrings = {
+    "Web technology for developers": "References",
+    "Learn web development": "Guides",
+    "HTML: HyperText Markup Language": "HTML",
+    "CSS: Cascading Style Sheets": "CSS",
+    "Graphics on the Web": "Graphics",
+    "HTML elements reference": "Elements",
+    "JavaScript reference": "JavaScript",
+    "Structuring the web with HTML": "HTML",
+    "Learn to style HTML using CSS": "CSS",
+    "Web forms — Working with user data": "Forms",
+  };
+
+  // if the title contains a string like `<input>: The Input (Form Input) element`,
+  // return only the `<input>` portion of the title
+  if (/<\w+>/g.test(title)) {
+    return /<\w+>/g.exec(title)[0];
+  }
+
+  // if the above did not match, see if it is one of the strings in the
+  // transformStrings object and return the relevant replacement or
+  // the unmodified title string
+  return transformStrings[title] || title;
+}
+
+/**
+ * The breadcrumb is an array of parents including the document itself.
+ * It is only added to the document if there are actual parents.
  */
 function addBreadcrumbData(url, document) {
   const parents = [];
   const split = url.split("/");
+
   let parentURL;
   // If the URL was something like `/en-US/docs/Foo/Bar` when you split
   // that, the array becomes `['', 'en-US', 'docs', 'Foo', 'Bar']`
@@ -23,11 +57,16 @@ function addBreadcrumbData(url, document) {
     if (parentDoc) {
       parents.unshift({
         uri: parentURL,
-        title: parentDoc.metadata.title,
+        title: transformTitle(parentDoc.metadata.title),
       });
     }
   }
+
   if (parents.length) {
+    if (!document.short_title) {
+      document.short_title = transformTitle(document.title);
+    }
+
     parents.push({
       uri: url,
       title: document.short_title || document.title,
