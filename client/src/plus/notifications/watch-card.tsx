@@ -3,7 +3,7 @@ import { Button } from "../../ui/atoms/button";
 import { post } from "./utils";
 
 export default function WatchCard(item, { changedCallback, csrfToken }) {
-  const deleteUrl = `/api/v1/plus/notifications/watch/${item.url}`;
+  const deleteUrl = `/api/v1/plus/watch${item.url}`;
 
   return (
     <article className="notification-card no-star">
