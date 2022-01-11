@@ -1,15 +1,8 @@
 @use "../../vars" as *;
 
 .breadcrumbs-container {
-  a {
-    align-items: center;
-    display: flex;
-
-    &:link,
-    &:visited {
-      color: var(--text-secondary);
-    }
-  }
+  display: flex;
+  align-items: center;
 
   ol {
     line-height: 1.2;
@@ -35,6 +28,16 @@
         mask-image: url("~@mdn/dinocons/arrows/chevron.svg");
         transform: rotate(-90deg);
         width: 12px;
+      }
+    }
+
+    a {
+      align-items: center;
+      display: flex;
+
+      &:link,
+      &:visited {
+        color: var(--text-secondary);
       }
     }
 
