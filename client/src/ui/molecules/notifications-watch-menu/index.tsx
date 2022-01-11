@@ -14,11 +14,11 @@ interface WatchModeData {
 }
 
 export const NotificationsWatchMenu = ({ doc }) => {
-  const compat = doc.body.filter((e) => e.type === "browser_compatibility");
-  const path = compat.length > 0 ? compat[0].value?.query : null;
+  const compat = doc.body.find((e) => e.type === "browser_compatibility");
+  const path = compat ? compat.value?.query : doc.mdn_url;
   const title = doc.title;
 
-  const invalidPage = !path || !title;
+  const compatPage = path && compat;
 
   const menuId = "watch-submenu";
   const [show, setShow] = React.useState(false);
@@ -30,7 +30,6 @@ export const NotificationsWatchMenu = ({ doc }) => {
   const { data, mutate } = useSWR<WatchModeData>(
     apiURL,
     async (url) => {
-      if (invalidPage) return null;
       const response = await fetch(url);
       if (!response.ok) {
         const text = await response.text();
@@ -46,8 +45,6 @@ export const NotificationsWatchMenu = ({ doc }) => {
 
   const submenuRef = React.useRef(null);
   useOnClickOutside(submenuRef, () => setShow(false));
-
-  if (invalidPage) return null;
 
   async function handleWatchSubmit({
     custom,
@@ -141,6 +138,7 @@ export const NotificationsWatchMenu = ({ doc }) => {
               handleSelection={(unwatch: boolean) => {
                 handleWatchSubmit({ unwatch });
               }}
+              showCustom={compatPage}
             />
           ) : (
             <NotificationsWatchMenuCustom

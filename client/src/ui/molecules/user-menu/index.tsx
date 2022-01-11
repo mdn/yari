@@ -6,7 +6,12 @@ import { Submenu } from "../submenu";
 import SignOut from "../../atoms/signout";
 
 import { useUserData } from "../../../user-context";
-import { FXA_SETTINGS_URL } from "../../../constants";
+import {
+  FXA_SETTINGS_URL,
+  MDN_APP_ANDROID,
+  MDN_APP_DESKTOP,
+  MDN_APP_IOS,
+} from "../../../constants";
 
 import "./index.scss";
 import { useOnClickOutside } from "../../../hooks";
@@ -52,6 +57,25 @@ export const UserMenu = () => {
       },
     ],
   };
+
+  const itemsCount = userMenuItems.items.length;
+  if (MDN_APP_DESKTOP || MDN_APP_IOS) {
+    userMenuItems.items.splice(itemsCount - 1, 0, {
+      url: "/en-US/app-settings",
+      label: "App settings",
+    });
+  }
+
+  if (MDN_APP_ANDROID) {
+    userMenuItems.items.splice(itemsCount - 1, 0, {
+      component: () => (
+        <Button onClickHandler={async () => window.Android.settings()}>
+          App settings
+        </Button>
+      ),
+      extraClasses: "",
+    });
+  }
 
   function hideSubMenuIfVisible() {
     if (visibleSubMenuId) {

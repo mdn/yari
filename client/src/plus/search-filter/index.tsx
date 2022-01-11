@@ -7,7 +7,13 @@ import { searchFiltersContext } from "../contexts/search-filters";
 
 import "./index.scss";
 
-export default function SearchFilter({ filters, sorts }) {
+export default function SearchFilter({
+  filters = [],
+  sorts = [],
+}: {
+  filters?: { label: string; param: string }[];
+  sorts?: { label: string; param: string }[];
+}) {
   const previousActiveElement = React.useRef<null | HTMLButtonElement>(null);
   const [visibleSubMenuId, setVisibleSubMenuId] = React.useState<string | null>(
     null
@@ -91,47 +97,51 @@ export default function SearchFilter({ filters, sorts }) {
         name="terms"
         placeholder="Filter by keyword"
         onChangeHandler={(e) => {
-          setSelectedTerms(e.target.value);
+          setSelectedTerms(`q=${encodeURIComponent(e.target.value)}`);
         }}
       />
 
-      <div className="search-filter-category search-filter-filters">
-        <Button
-          type="select"
-          ariaControls={filterMenu.id}
-          ariaHasPopup={"menu"}
-          ariaExpanded={filterMenu.id === visibleSubMenuId}
-          onClickHandler={() => {
-            toggleSubMenu(filterMenu.id);
-          }}
-        >
-          {filterMenu.label}
-        </Button>
-        <Submenu
-          menuEntry={filterMenu}
-          visibleSubMenuId={visibleSubMenuId}
-          onBlurHandler={hideSubMenuIfVisible}
-        />
-      </div>
+      {filters.length ? (
+        <div className="search-filter-category search-filter-filters">
+          <Button
+            type="select"
+            ariaControls={filterMenu.id}
+            ariaHasPopup={"menu"}
+            ariaExpanded={filterMenu.id === visibleSubMenuId}
+            onClickHandler={() => {
+              toggleSubMenu(filterMenu.id);
+            }}
+          >
+            {filterMenu.label}
+          </Button>
+          <Submenu
+            menuEntry={filterMenu}
+            visibleSubMenuId={visibleSubMenuId}
+            onBlurHandler={hideSubMenuIfVisible}
+          />
+        </div>
+      ) : null}
 
-      <div className="search-filter-category search-filter-sorts">
-        <Button
-          type="select"
-          ariaControls={sortMenu.id}
-          ariaHasPopup={"menu"}
-          ariaExpanded={sortMenu.id === visibleSubMenuId}
-          onClickHandler={() => {
-            toggleSubMenu(sortMenu.id);
-          }}
-        >
-          {sortMenu.label}
-        </Button>
-        <Submenu
-          menuEntry={sortMenu}
-          visibleSubMenuId={visibleSubMenuId}
-          onBlurHandler={hideSubMenuIfVisible}
-        />
-      </div>
+      {sorts.length ? (
+        <div className="search-filter-category search-filter-sorts">
+          <Button
+            type="select"
+            ariaControls={sortMenu.id}
+            ariaHasPopup={"menu"}
+            ariaExpanded={sortMenu.id === visibleSubMenuId}
+            onClickHandler={() => {
+              toggleSubMenu(sortMenu.id);
+            }}
+          >
+            {sortMenu.label}
+          </Button>
+          <Submenu
+            menuEntry={sortMenu}
+            visibleSubMenuId={visibleSubMenuId}
+            onBlurHandler={hideSubMenuIfVisible}
+          />
+        </div>
+      ) : null}
     </form>
   );
 }

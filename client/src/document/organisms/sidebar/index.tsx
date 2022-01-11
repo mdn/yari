@@ -1,12 +1,48 @@
 import { Link } from "react-router-dom";
+import React, { useEffect } from "react";
+import _ from "lodash";
 
 import "./index.scss";
 
+function CalculateSidebarOnScroll() {
+  useEffect(function mount() {
+    function calcOnScroll() {
+      let sidebar = document.getElementById("sidebar-quicklinks");
+      if (sidebar) {
+        let sidebarTop = sidebar.getBoundingClientRect().top;
+        let sidebarTopString = sidebarTop.toString();
+        let sidebarTopPx = sidebarTopString + "px";
+        document.documentElement.style.setProperty(
+          "--visible-height-of-header",
+          sidebarTopPx
+        );
+      }
+    }
+
+    window.addEventListener(
+      "scroll",
+      _.throttle(calcOnScroll, 30, {
+        leading: true,
+        trailing: true,
+      })
+    );
+
+    return function unMount() {
+      window.removeEventListener("scroll", calcOnScroll);
+    };
+  });
+
+  return null;
+}
+
 function SidebarContainer({ children }) {
   return (
-    <nav id="sidebar-quicklinks" className="sidebar">
-      {children}
-    </nav>
+    <>
+      <nav id="sidebar-quicklinks" className="sidebar">
+        {children}
+      </nav>
+      <CalculateSidebarOnScroll />
+    </>
   );
 }
 
@@ -15,7 +51,7 @@ export function RenderSideBar({ doc }) {
     if (doc.sidebarHTML) {
       return (
         <SidebarContainer>
-          <h4>Related Topics</h4>
+          <h4 className="sidebar-heading">Related Topics</h4>
           <div
             dangerouslySetInnerHTML={{
               __html: `${doc.sidebarHTML}`,
@@ -34,7 +70,7 @@ export function RenderSideBar({ doc }) {
 function SidebarLeaf({ parent }) {
   return (
     <SidebarContainer>
-      <h4>{parent.title}</h4>
+      <h4 className="sidebar-heading">{parent.title}</h4>
       <ul>
         {parent.content.map((node) => {
           if (node.content) {

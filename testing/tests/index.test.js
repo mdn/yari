@@ -1385,14 +1385,14 @@ test("img tags should always have their 'width' and 'height' set", () => {
       expect($img.attr("width")).toBe("250");
       expect($img.attr("height")).toBe("250");
     } else if ($img.attr("src").endsWith("app-dl-apple.svg")) {
-      expect($img.attr("width")).toBe("120");
-      expect($img.attr("height")).toBe("40");
+      expect($img.attr("width")).toBe("130");
+      expect($img.attr("height")).toBe("43");
     } else if ($img.attr("src").endsWith("app-dl-google.svg")) {
-      expect($img.attr("width")).toBe("135");
-      expect($img.attr("height")).toBe("40");
+      expect($img.attr("width")).toBe("130");
+      expect($img.attr("height")).toBe("39");
     } else if ($img.attr("src").endsWith("app-dl-ms.png")) {
-      expect($img.attr("width")).toBe("135");
-      expect($img.attr("height")).toBe("49");
+      expect($img.attr("width")).toBe("110");
+      expect($img.attr("height")).toBe("40");
     } else {
       throw new Error("unexpected image");
     }

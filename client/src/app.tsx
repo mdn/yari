@@ -5,7 +5,7 @@ import { Routes, Route, useLocation } from "react-router-dom";
 // and applied before any component specific style
 import "./app.scss";
 
-import { CRUD_MODE } from "./constants";
+import { MDN_APP, CRUD_MODE, MDN_APP_DESKTOP } from "./constants";
 import { Homepage } from "./homepage";
 import { Document } from "./document";
 import { A11yNav } from "./ui/molecules/a11y-nav";
@@ -17,6 +17,7 @@ import { PageContentContainer } from "./ui/atoms/page-content";
 import { PageNotFound } from "./page-not-found";
 import { Plus } from "./plus";
 import { About } from "./about";
+import { AppSettings } from "./app-settings";
 
 const AllFlaws = React.lazy(() => import("./flaws"));
 const Translations = React.lazy(() => import("./translations"));
@@ -43,7 +44,7 @@ function Layout({ pageType, children }) {
         <TopNavigation />
         {children}
       </div>
-      <Footer />
+      {!MDN_APP && <Footer />}
     </>
   );
 }
@@ -237,6 +238,16 @@ export function App(appProps) {
                 </StandardLayout>
               }
             />
+            {MDN_APP_DESKTOP && (
+              <Route
+                path="/app-settings"
+                element={
+                  <StandardLayout>
+                    <AppSettings {...appProps} />
+                  </StandardLayout>
+                }
+              />
+            )}
             <Route
               path="/docs/*"
               element={

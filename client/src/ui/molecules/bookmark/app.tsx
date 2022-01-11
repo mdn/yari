@@ -18,6 +18,7 @@ interface Bookmarked {
 
 interface BookmarkedData {
   bookmarked: Bookmarked | null;
+  offline?: Boolean;
   csrfmiddlewaretoken: string;
 }
 
@@ -41,7 +42,7 @@ export default function App({ doc }: { doc: Doc }) {
   );
 
   async function saveBookmarked() {
-    if (!data) {
+    if (!data || data.offline) {
       return;
     }
     const response = await fetch(apiURL, {
@@ -69,12 +70,14 @@ export default function App({ doc }: { doc: Doc }) {
     React.useState<Bookmarked | null>(null);
 
   React.useEffect(() => {
-    if (data && !error) {
+    if (data && !data.offline && !error) {
       setLocalBookmarked(data.bookmarked as Bookmarked);
     }
   }, [data, error]);
 
   const [isSaving, setSaving] = React.useState(false);
+
+  const offline = data?.offline || false;
 
   return (
     <>
@@ -101,7 +104,7 @@ export default function App({ doc }: { doc: Doc }) {
         extraClasses={`bookmark-button small ${
           localBookmarked ? "highlight" : ""
         }`}
-        isDisabled={isSaving}
+        isDisabled={Boolean(isSaving || offline)}
         onClickHandler={async () => {
           // The first thing we do when the user has toggled it is to store it
           // in local state so that the UI feels responsive.

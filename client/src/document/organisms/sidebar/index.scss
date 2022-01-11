@@ -1,20 +1,43 @@
 @use "../../../ui/vars" as *;
 
 .sidebar {
-  font-size: 0.8125rem;
-  padding: 1rem;
+  overflow: auto;
+  position: sticky;
+  top: 0;
+  bottom: 0;
+  // height minus header. On scroll, this variable is changed with JS.
+  max-height: calc(100vh - var(--visible-height-of-header, 6rem));
+  color: var(--text-secondary);
 
-  a {
-    color: var(--text-link);
+  &-heading {
+    font: var(--type-heading-h6);
+    color: var(--text-primary);
+    letter-spacing: 1.5px;
+    padding: 0 0 1rem 0;
+    text-transform: uppercase;
   }
 
-  h4 {
-    font-size: 1rem;
-    margin-bottom: 1rem;
+  a {
+    display: flex;
+    width: 100%;
+    padding: 0.25rem;
+    color: var(--text-secondary);
+    hyphens: auto;
+
+    &[aria-current="page"] {
+      background: var(--border-secondary);
+      border-radius: var(--elem-radius);
+    }
+  }
+
+  // TODO: Find these and add a class, if possible. These are section headings
+  strong {
+    margin-top: 2rem;
+    display: flex;
   }
 
   ol {
-    width: 100%;
+    font: var(--type-body-m);
 
     ol,
     ul {
@@ -22,15 +45,28 @@
         padding-left: 0.5rem;
       }
     }
+
+    ol {
+      li {
+        display: flex;
+        align-items: flex-start;
+        gap: 0.25rem;
+
+        &:before {
+          border-radius: 50%;
+          width: 2px;
+          height: 2px;
+          margin-top: 0.75rem;
+          background: var(--text-secondary);
+          content: "";
+        }
+      }
+    }
   }
 
   summary,
   li {
     margin-bottom: 0.5rem;
-  }
-
-  a {
-    hyphens: auto;
   }
 
   code {
@@ -41,16 +77,48 @@
 
   summary {
     cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+
+    &::marker {
+      content: none;
+    }
+
+    &:before {
+      top: calc(50% - 0.5rem);
+      right: 0.5rem;
+      display: block;
+      width: 8px;
+      height: 8px;
+      background-color: var(--text-secondary);
+      mask-image: url("../../../assets/icons/caret.svg");
+      mask-size: contain;
+      mask-position: center;
+      mask-repeat: no-repeat;
+      content: "";
+    }
+  }
+
+  details[open] > summary:before {
+    transform-origin: center;
+    transform: rotate(90deg);
   }
 
   details {
     margin: 1rem 0;
+
+    ol {
+      padding-left: 0.75rem;
+    }
   }
 
   .icon {
-    background-size: 18px;
-    height: 18px;
-    width: 18px;
+    background-size: 14px;
+    height: 14px;
+    width: 14px;
+    margin-right: -0.25rem;
+    align-self: center;
   }
 
   /* icons in sidebars */

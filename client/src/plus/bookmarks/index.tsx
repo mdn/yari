@@ -191,7 +191,7 @@ function DisplayData({
 
   return (
     <>
-      <h3>My Bookmarks</h3>
+      <h3>My Collection</h3>
 
       {data.metadata.total === 0 && (
         <p className="nothing-bookmarked">

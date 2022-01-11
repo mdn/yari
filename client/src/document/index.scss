@@ -2,12 +2,6 @@
 @use "../ui/molecules/grids/grids.scss" as *;
 @use "../ui/base/typography" as *;
 
-.main-content {
-  @media screen and (min-width: $screen-md) {
-    margin-top: 1rem;
-  }
-}
-
 .only-in-en-us {
   span {
     font-size: 0.8125rem;
@@ -336,7 +330,6 @@ a.page-not-created {
 
   h2 {
     font: var(--type-heading-h2);
-    font: 600 28px/120% var(--font-heading);
     letter-spacing: 0.5px;
     padding: 2rem 0 1rem 0;
   }

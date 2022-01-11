@@ -41,13 +41,12 @@ export const TopNavigationMain = () => {
         <span className="visually-hidden">Show search</span>
       </Button>
 
-      {isAuthenticated && (
+      {(isAuthenticated && (
         <>
           <HeaderNotificationsMenu />
           <UserMenu />
         </>
-      )}
-      {!isAuthenticated && <AuthContainer />}
+      )) || <AuthContainer />}
     </div>
   );
 };
