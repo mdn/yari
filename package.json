@@ -77,7 +77,7 @@
     "file-type": "^17.1.1",
     "front-matter": "^4.0.2",
     "fs-extra": "^10.1.0",
-    "got": "^12.0.0",
+    "got": "^12.0.1",
     "hast-util-is-element": "^2.1.2",
     "hast-util-to-html": "^8.0.3",
     "hast-util-to-text": "^3.1.1",
