@@ -61,6 +61,7 @@
 body {
   background-color: var(--background-primary);
   color: var(--text-primary);
+  accent-color: var(--accent-primary); // for checkboxes, radios, etc.
 
   ::selection {
     background-color: var(--text-primary);
