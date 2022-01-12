@@ -116,10 +116,14 @@ function drawDiagram(inheritanceChain) {
   return str;
 }
 
-let diagram = drawDiagram(inheritanceChain);
+let output = '';
 
-let output = `<svg viewbox="-${offset} 0 650 ${height}" preserveAspectRatio="xMinYMin meet">`;
-output += diagram;
-output +='</svg>';
+if (inheritanceChain.length > 1) {
+  let diagram = drawDiagram(inheritanceChain); // needs to run first to calculate offset and height
+  output = `<svg viewbox="-${offset} 0 650 ${height}" preserveAspectRatio="xMinYMin meet">`;
+  output += diagram;
+  output +='</svg>';
+}
+
 %>
 <%-output%>
