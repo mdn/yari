@@ -174,22 +174,6 @@
     .search-form {
       display: none;
     }
-
-    .submenu {
-      top: calc(100% + 4px);
-    }
-
-    /* Creates a space between the top-level menu and the submenu that
-        keeps the menu open when the cursor moves to the menu */
-    .submenu:before {
-      content: "";
-      display: block;
-      height: 8px;
-      left: 0;
-      position: absolute;
-      top: -8px;
-      width: 100%;
-    }
   }
 }
 

@@ -3,13 +3,13 @@ import { HomepageHero } from "./homepage-hero";
 import RecentContributions from "./recent-contributions";
 import { ContributorSpotlight } from "./contributor-spotlight";
 
-export function Homepage() {
+export function Homepage(props) {
   return (
     <main id="content" role="main">
       <div className="homepage mdn-ui-body-m">
         <HomepageHero />
         <div className="featured-articles">
-          <span className="mdn-ui-emphasis-l">Featured Articles</span>
+          <h2 className="mdn-ui-emphasis-l">Featured Articles</h2>
           <div className="tile-container">
             <div className="article-tile">
               <a href="/en-US/docs/Web/CSS/" className="tile-tag">
@@ -63,7 +63,7 @@ export function Homepage() {
             </div>
           </div>
         </div>
-        <RecentContributions />
+        <RecentContributions {...props} />
         <ContributorSpotlight />
       </div>
     </main>

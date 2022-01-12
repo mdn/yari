@@ -15,9 +15,11 @@ a.page-not-created {
 
 .main-page-content {
   padding: 0.5rem 1rem 1rem;
+  overflow-wrap: break-word;
 
   img {
     display: inline-block;
+    height: auto;
   }
 
   figure {
@@ -77,6 +79,7 @@ a.page-not-created {
     }
   }
 
+  pre,
   .code-example {
     background-color: var(--background-tertiary);
     border: 1px solid var(--border-secondary);
@@ -90,6 +93,10 @@ a.page-not-created {
 
     pre {
       margin: 0;
+      padding: 0;
+      border: 0 none;
+      border-radius: 0;
+      background: transparent;
     }
 
     .copy-icon {

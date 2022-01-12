@@ -123,6 +123,7 @@ export type Toc = {
 export interface Doc {
   title: string;
   locale: string;
+  native: string;
   pageTitle: string;
   mdn_url: string;
   sidebarHTML: string;

@@ -6,7 +6,7 @@ export function ContributorSpotlight() {
     <div className="contributor-spotlight">
       <div className="wrapper">
         <span>
-          <h4>Contributor Spotlight</h4>
+          <h2 className="mdn-ui-emphasis-l">Contributor Spotlight</h2>
           <span className="contributor-name">@username</span>
           <p>
             Lectus vitae senectus proin vel leo. Venenatis volutpat consequat

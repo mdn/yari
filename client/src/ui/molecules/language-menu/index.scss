@@ -1,43 +1,11 @@
-@use "../../vars" as *;
+@use "../../../ui/vars" as *;
 
 .language-menu {
-  fieldset {
-    padding: 0.5rem 0;
-    border: 0 none;
+  .submenu-item {
+    padding: 0.5rem;
   }
 
-  .button {
-    background: var(--button-bg);
-    padding: 0.5rem 1rem;
-    color: var(--button-color);
-    font: var(--type-body-m);
-  }
-
-  legend {
-    font-size: 1rem;
-    font-weight: bold;
-
-    @media screen and (min-width: $screen-md) {
-      font-size: 1rem;
-    }
-  }
-
-  select {
-    display: inline-block;
-    margin-right: 1rem;
-    margin-bottom: 1rem;
-
-    @media screen and (max-width: $screen-sm) {
-      display: inline-block;
-      vertical-align: text-top;
-    }
-
-    @media screen and (min-width: $screen-md) {
-      width: inherit;
-    }
-  }
-
-  .button {
-    max-width: inherit;
+  @media (min-width: $screen-md) {
+    right: 0;
   }
 }

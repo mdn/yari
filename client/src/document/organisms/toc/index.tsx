@@ -1,99 +1,87 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 
 import "./index.scss";
 import { Toc } from "../../types";
+import { useDebouncedCallback } from "use-debounce";
 
-// This component needed to be a class, because IntersectionObservers have trouble
-// finding react hooks' state variables. IntersectionObservers were referencing only the
-// first state, even though the values changed with time.
-// Having a class instance on memory made it persistent.
-export class TOC extends React.Component<
-  { toc: Toc[] },
-  { currentViewedTocItems: string[] }
-> {
-  constructor(props) {
-    super(props);
-    this.state = {
-      currentViewedTocItems: [],
-    };
-  }
+export function TOC({ toc }: { toc: Toc[] }) {
+  const [currentViewedTocItem, setCurrentViewedTocItem] = useState(
+    toc[0].id.toLowerCase()
+  );
 
-  handleViewed = (itemId, entry) => {
-    const { currentViewedTocItems } = this.state;
+  const getCurrentHighlightedSectionId = () => {
+    const offsetY = window.scrollY;
+    if (offsetY < window.innerHeight * 0.5) {
+      setCurrentViewedTocItem(toc[0].id.toLowerCase());
+      return;
+    }
 
-    if (entry.isIntersecting && !currentViewedTocItems.includes(itemId)) {
-      this.setState({
-        currentViewedTocItems: [...currentViewedTocItems, itemId],
-      });
-    } else if (!entry.isIntersecting) {
-      this.setState({
-        currentViewedTocItems: currentViewedTocItems.filter(
-          (id) => id !== itemId
-        ),
-      });
+    const headings = toc.map((item) =>
+      document.getElementById(item.id.toLowerCase())
+    );
+    let currentSectionId;
+
+    headings.forEach((section) => {
+      const posY = section?.offsetTop;
+      if (posY && posY < offsetY + window.innerHeight * 0.5) {
+        currentSectionId = section.id;
+      }
+    });
+
+    if (currentSectionId && currentSectionId !== currentViewedTocItem) {
+      setCurrentViewedTocItem(currentSectionId);
     }
   };
 
-  render() {
-    const { currentViewedTocItems } = this.state;
-    const { toc } = this.props;
+  const debouncedGetCurrentHighlightedSectionId = useDebouncedCallback(
+    getCurrentHighlightedSectionId,
+    25
+  );
 
-    return (
-      <aside className="document-toc-container">
-        <section className="document-toc">
-          <header>
-            <h2 className="document-toc-heading">In this article</h2>
-          </header>
-          <ul className="document-toc-list" id="toc-entries">
-            {toc.map((item) => {
-              return (
-                <TOCItem
-                  key={item.id}
-                  id={item.id}
-                  text={item.text}
-                  handleViewed={this.handleViewed}
-                  currentViewedTocItems={currentViewedTocItems}
-                />
-              );
-            })}
-          </ul>
-        </section>
-      </aside>
-    );
-  }
+  useEffect(() => {
+    window.addEventListener("scroll", debouncedGetCurrentHighlightedSectionId);
+    return () => {
+      window.removeEventListener(
+        "scroll",
+        debouncedGetCurrentHighlightedSectionId
+      );
+    };
+  }, [debouncedGetCurrentHighlightedSectionId]);
+
+  return (
+    <aside className="document-toc-container">
+      <section className="document-toc">
+        <header>
+          <h2 className="document-toc-heading">In this article</h2>
+        </header>
+        <ul className="document-toc-list" id="toc-entries">
+          {toc.map((item) => {
+            return (
+              <TOCItem
+                key={item.id}
+                id={item.id}
+                text={item.text}
+                currentViewedTocItem={currentViewedTocItem}
+              />
+            );
+          })}
+        </ul>
+      </section>
+    </aside>
+  );
 }
 
 function TOCItem({
   id,
   text,
-  currentViewedTocItems,
-  handleViewed,
-}: Toc & {
-  currentViewedTocItems: string[];
-  handleViewed: (string, IntersectionObserverEntry) => void;
-}) {
-  React.useEffect(() => {
-    const relatedSectionElement = document.getElementById(
-      id.toLowerCase()
-    )?.nextElementSibling;
-
-    const currentObserver = new IntersectionObserver(
-      (entry) => {
-        handleViewed(id, entry[0]);
-      },
-      { threshold: [0, 0.25, 0.5, 0.75, 1] }
-    );
-    if (relatedSectionElement) {
-      currentObserver.observe(relatedSectionElement);
-    }
-  }, [handleViewed, id]);
-
+  currentViewedTocItem,
+}: Toc & { currentViewedTocItem: string }) {
   return (
     <li className="document-toc-item">
       <a
         className="document-toc-link"
         key={id}
-        aria-current={currentViewedTocItems[0] === id || undefined}
+        aria-current={currentViewedTocItem === id.toLowerCase() || undefined}
         href={`#${id.toLowerCase()}`}
         dangerouslySetInnerHTML={{ __html: text }}
       />
