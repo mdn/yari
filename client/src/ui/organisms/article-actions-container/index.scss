@@ -10,12 +10,32 @@
   min-height: 2rem;
   position: sticky;
   top: 0;
-  z-index: var(--z-index-top);
+  z-index: var(--z-index-low);
 
   .container {
     display: flex;
     justify-content: space-between;
+    align-items: center;
     gap: 0.5rem;
+  }
+
+  // sidebar button for tablet sizes only
+  .sidebar-button {
+    display: none;
+  }
+
+  @media screen and (min-width: $screen-sm) and (max-width: $screen-md) {
+    .sidebar-button {
+      display: flex;
+      align-self: stretch;
+      align-items: center;
+      margin: 0 0 0 -1rem;
+
+      .button-wrap {
+        border-right: 1px solid var(--border-primary);
+        border-radius: 0;
+      }
+    }
   }
 
   @media screen and (min-width: $screen-md) {

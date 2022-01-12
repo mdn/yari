@@ -2,6 +2,7 @@ import * as React from "react";
 
 import { Breadcrumbs } from "../../molecules/breadcrumbs";
 import { ArticleActions } from "../article-actions";
+import { Button } from "../../atoms/button";
 
 import { Doc } from "../../../document/types";
 
@@ -13,8 +14,10 @@ export const ArticleActionsContainer = ({ doc }: { doc: Doc }) => {
 
   return (
     <div className="article-actions-container">
-      {/* if we have breadcrumbs for the current page, continue rendering the section */}
       <div className="container">
+        <Button extraClasses="sidebar-button" icon="sidebar" type="action" />
+
+        {/* if we have breadcrumbs for the current page, continue rendering the section */}
         {doc.parents && <Breadcrumbs parents={doc.parents} />}
 
         <ArticleActions
