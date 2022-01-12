@@ -20,7 +20,7 @@
 
 .article-wrapper {
   display: flex;
-  max-width: 1440px;
+  max-width: var(--max-width);
   margin: 0 auto;
 
   .toc {
@@ -56,9 +56,9 @@
     display: grid;
     grid-template-columns: minmax(0, 1fr) minmax(0, 2fr) minmax(0, 1fr);
     gap: 3rem;
-    padding-left: 1.5rem;
-    padding-right: 1.5rem;
     grid-template-areas: "sidebar main toc";
+    padding-left: 1rem;
+    padding-right: 1rem;
 
     .toc {
       display: block;

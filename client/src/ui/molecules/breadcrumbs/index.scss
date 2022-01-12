@@ -19,6 +19,10 @@
       display: inline-flex;
     }
 
+    &:first-child [property="name"] {
+      margin-left: 0;
+    }
+
     .breadcrumb {
       &::after {
         background-color: var(--icon-secondary);

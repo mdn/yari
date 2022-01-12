@@ -60,4 +60,11 @@
       justify-content: flex-end;
     }
   }
+
+  @media screen and (min-width: $screen-xl) {
+    .container {
+      padding-right: 1rem;
+      padding-left: 1rem;
+    }
+  }
 }
