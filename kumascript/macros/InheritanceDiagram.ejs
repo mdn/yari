@@ -102,13 +102,14 @@ function drawDiagram(inheritanceChain) {
     // second row
     } else {
       height = 80; // need more space
-      if (i > 5) {
-        offset = 200; // in case of a really long chain, like SVGTextPositioningElement
-      }
       str += rectWithText(xpos, ypos, fill, inheritanceChain[i], true);
       if (i != inheritanceChain.length - 1) {
         str += lineWithTriangle(xpos, ypos, true);
         xpos -= 30;
+      }
+      if (xpos < 0) {
+        // prevent cut off in case of a really long chain (see e.g. SVGTextPositioningElement)
+        offset = 1 + Math.abs(xpos);
       }
     }
   }
@@ -120,6 +121,5 @@ let diagram = drawDiagram(inheritanceChain);
 let output = `<svg viewbox="-${offset} 0 650 ${height}" preserveAspectRatio="xMinYMin meet">`;
 output += diagram;
 output +='</svg>';
-
 %>
 <%-output%>
