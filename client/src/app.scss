@@ -62,6 +62,7 @@ body {
   background-color: var(--background-primary);
   color: var(--text-primary);
   accent-color: var(--accent-primary); // for checkboxes, radios, etc.
+  scrollbar-color: var(--scrollbar-color) var(--scrollbar-bg);
 
   ::selection {
     background-color: var(--text-primary);
@@ -97,4 +98,21 @@ pre {
 
 a {
   color: var(--text-link);
+}
+
+/* Scrollbar customizations */
+::-webkit-scrollbar-track {
+  -webkit-border-radius: 10px;
+  border-radius: 10px;
+}
+
+*::-webkit-scrollbar {
+  width: 12px;
+  background-color: var(--scrollbar-bg, auto);
+}
+
+*::-webkit-scrollbar-thumb {
+  border-radius: 10px;
+  border: 2px solid var(--scrollbar-bg, auto);
+  background: var(--scrollbar-color);
 }

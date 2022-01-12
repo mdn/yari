@@ -54,6 +54,9 @@
   --code-comment: #{$mdn-theme-light-code-comment};
   --code-default: #{$mdn-theme-light-code-default};
   --code-selector: #{$mdn-theme-light-code-selector};
+
+  --scrollbar-bg: transparent;
+  --scrollbar-color: rgba(0, 0, 0, 0.25);
 }
 
 .dark {
@@ -103,6 +106,8 @@
   --code-comment: #{$mdn-theme-dark-code-comment};
   --code-default: #{$mdn-theme-dark-code-default};
   --code-selector: #{$mdn-theme-dark-code-selector};
+
+  --scrollbar-color: rgba(255, 255, 255, 0.25);
 }
 
 body[class="high-contrast-white"] {
