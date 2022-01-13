@@ -66,9 +66,15 @@ button,
   }
 }
 
-.button[disabled],
-.button.inactive {
+.button.button[disabled],
+.button.button.inactive {
   opacity: 0.65;
+  cursor: default;
+
+  &:hover {
+    --button-bg: inherit;
+    --button-border-color: transparent;
+  }
 }
 
 /* Standard Button Modifiers */
