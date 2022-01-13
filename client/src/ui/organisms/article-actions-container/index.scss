@@ -5,17 +5,37 @@
   background-color: var(--background-secondary);
   border-bottom: 1px solid var(--border-primary);
   border-top: 1px solid var(--border-primary);
-  padding: 0 var(--gutter);
+  padding: 0 0 0 var(--gutter);
   margin: 0;
   min-height: 2rem;
   position: sticky;
   top: 0;
-  z-index: var(--z-index-top);
+  z-index: var(--z-index-low);
 
   .container {
     display: flex;
     justify-content: space-between;
+    align-items: center;
     gap: 0.5rem;
+  }
+
+  // sidebar button for tablet sizes only
+  .sidebar-button {
+    display: none;
+  }
+
+  @media screen and (min-width: $screen-sm) and (max-width: $screen-md) {
+    .sidebar-button {
+      display: flex;
+      align-self: stretch;
+      align-items: center;
+      margin: 0 0 0 -1rem;
+
+      .button-wrap {
+        border-right: 1px solid var(--border-primary);
+        border-radius: 0;
+      }
+    }
   }
 
   @media screen and (min-width: $screen-md) {
@@ -38,6 +58,13 @@
     .language-toggle:only-child {
       flex-basis: 100%;
       justify-content: flex-end;
+    }
+  }
+
+  @media screen and (min-width: $screen-xl) {
+    .container {
+      padding-right: 1rem;
+      padding-left: 1rem;
     }
   }
 }

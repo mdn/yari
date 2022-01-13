@@ -14,7 +14,7 @@ a.page-not-created {
 }
 
 .main-page-content {
-  padding: 0.5rem 1rem 1rem;
+  padding: 3rem 1rem 1rem;
   overflow-wrap: break-word;
 
   img {
@@ -152,11 +152,6 @@ a.page-not-created {
         top: 13px;
       }
     }
-  }
-
-  @media screen and (min-width: $screen-md) {
-    margin-bottom: 0.5rem;
-    padding: 0 1rem 1rem;
   }
 
   h1 {
@@ -427,5 +422,14 @@ a.page-not-created {
     font-weight: normal;
     font-size: 0.875rem;
     line-height: 150%;
+  }
+
+  @media screen and (min-width: $screen-sm) {
+    padding: 3rem;
+  }
+
+  @media screen and (min-width: $screen-md) {
+    margin-bottom: 0.5rem;
+    padding: 0;
   }
 }

@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { Loading } from "../../ui/atoms/loading";
 import { useUserData } from "../../user-context";
 import { DataError, NotSignedIn, NotSubscriber } from ".";
+import { Button } from "../../ui/atoms/button";
 import { createSearchParams, useSearchParams } from "react-router-dom";
 import { DISABLE_AUTH } from "../../constants";
 import { AuthDisabled } from "../../ui/atoms/auth-disabled";
@@ -128,7 +129,9 @@ function Page({
         />
       ))}
       {nextPage && isLastLoadedPage ? (
-        <button onClick={getNextPageHandler}>Load more</button>
+        <Button type="primary" onClickHandler={getNextPageHandler}>
+          Show more
+        </Button>
       ) : null}
     </>
   );

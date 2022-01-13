@@ -7,8 +7,6 @@ import { Button } from "../../atoms/button";
 
 import { Doc } from "../../../document/types";
 
-import "./index.scss";
-
 dayjs.extend(relativeTime);
 
 interface Bookmarked {

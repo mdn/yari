@@ -7,6 +7,14 @@
   border-radius: var(--elem-radius);
   border-left: 4px solid var(--note-theme);
 
+  a {
+    color: var(--text-primary);
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+
   &:before {
     position: absolute;
     top: 50%;

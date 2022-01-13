@@ -9,7 +9,7 @@
     height: 0;
 
     &:checked + .slider {
-      background-color: var(--button-primary-default);
+      background-color: var(--accent-primary);
       &:before {
         left: 56.25%;
         right: 6.25%;
@@ -17,7 +17,7 @@
     }
 
     &:focus + .slider {
-      box-shadow: 0 0 3px var(--button-primary-hover);
+      box-shadow: 0 0 3px var(--accent-primary-engage);
     }
   }
 

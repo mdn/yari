@@ -3,6 +3,7 @@
 .breadcrumbs-container {
   display: flex;
   align-items: center;
+  margin-right: auto;
 
   ol {
     line-height: 1.2;
@@ -16,6 +17,10 @@
     &:first-child,
     &:last-child {
       display: inline-flex;
+    }
+
+    &:first-child [property="name"] {
+      margin-left: 0;
     }
 
     .breadcrumb {

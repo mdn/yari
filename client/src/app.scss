@@ -5,6 +5,7 @@
 
 // These classes are used across several components.
 @use "./ui/molecules/notecards";
+@use "./ui/molecules/pagination";
 
 /*
   Global :root variables, for those independent of themes
@@ -20,6 +21,7 @@
   --font-size: 16px;
   --font-line-height: 1.2;
 
+  // defined in Figma here: https://www.figma.com/file/cAd46zJb6H7mW7W14iLsDe/MDN-Basic-Components?node-id=299%3A311
   --type-heading-l: 600 1rem/1.1875 var(--font-heading); /* 16px/19px, h5 */
   --type-title-l: 600 1.5rem/1.2 var(--font-heading);
   --type-title-s: 600 0.8125rem/1.2 var(--font-body);
@@ -61,6 +63,8 @@
 body {
   background-color: var(--background-primary);
   color: var(--text-primary);
+  accent-color: var(--accent-primary); // for checkboxes, radios, etc.
+  scrollbar-color: var(--scrollbar-color) var(--scrollbar-bg);
 
   ::selection {
     background-color: var(--text-primary);
@@ -96,4 +100,32 @@ pre {
 
 a {
   color: var(--text-link);
+
+  &.external:after {
+    display: inline-flex;
+    width: 10px;
+    height: 10px;
+    margin-left: 4px;
+    background-color: var(--icon-primary);
+    mask-image: url("./assets/icons/external.svg");
+    mask-size: cover;
+    content: "";
+  }
+}
+
+/* Scrollbar customizations */
+::-webkit-scrollbar-track {
+  -webkit-border-radius: 10px;
+  border-radius: 10px;
+}
+
+*::-webkit-scrollbar {
+  width: 12px;
+  background-color: var(--scrollbar-bg, auto);
+}
+
+*::-webkit-scrollbar-thumb {
+  border-radius: 10px;
+  border: 2px solid var(--scrollbar-bg, auto);
+  background: var(--scrollbar-color);
 }
