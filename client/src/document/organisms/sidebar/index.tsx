@@ -3,7 +3,7 @@ import React, { useEffect, useContext } from "react";
 import _ from "lodash";
 import { Button } from "../../../ui/atoms/button";
 
-import UIContext from "../../../ui-context";
+import { useUIStatus } from "../../../ui-context";
 
 import "./index.scss";
 
@@ -39,13 +39,17 @@ function CalculateSidebarOnScroll() {
 }
 
 function SidebarContainer({ children }) {
-  const { isSidebarOpen } = useContext(UIContext);
+  const { isSidebarOpen, setIsSidebarOpen } = useUIStatus();
   const classes = `sidebar ${isSidebarOpen ? "is-expanded" : ""}`;
 
   return (
     <>
       <nav id="sidebar-quicklinks" className={classes}>
-        <Button extraClasses="backdrop" type="action" />
+        <Button
+          extraClasses="backdrop"
+          type="action"
+          onClickHandler={() => setIsSidebarOpen(!isSidebarOpen)}
+        />
         <div className="sidebar-inner">{children}</div>
       </nav>
       <CalculateSidebarOnScroll />
