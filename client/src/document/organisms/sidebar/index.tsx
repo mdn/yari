@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import React, { useEffect, useContext } from "react";
+import React, { useEffect } from "react";
 import _ from "lodash";
 import { Button } from "../../../ui/atoms/button";
 
