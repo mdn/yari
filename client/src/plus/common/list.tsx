@@ -129,9 +129,11 @@ function Page({
         />
       ))}
       {nextPage && isLastLoadedPage ? (
-        <Button type="primary" onClickHandler={getNextPageHandler}>
-          Show more
-        </Button>
+        <div className="pagination">
+          <Button type="primary" onClickHandler={getNextPageHandler}>
+            Show more
+          </Button>
+        </div>
       ) : null}
     </>
   );
