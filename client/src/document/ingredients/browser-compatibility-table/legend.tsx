@@ -8,8 +8,8 @@ const LEGEND_LABELS = {
   no: "No support",
   unknown: "Compatibility unknown",
   experimental: "Experimental. Expect behavior to change in the future.",
-  "non-standard": "Non-standard. Check cross-browser support before using.",
-  deprecated: "Deprecated. Not for use in new websites.",
+  "note-warning": "Non-standard. Check cross-browser support before using.",
+  "thumbs-down": "Deprecated. Not for use in new websites.",
   footnote: "See implementation notes.",
   disabled: "User must explicitly enable this feature.",
   altname: "Uses a non-standard name.",
@@ -28,10 +28,10 @@ function getActiveLegendItems(compat: bcd.Identifier, name: string) {
         legendItems.add("experimental");
       }
       if (status.deprecated) {
-        legendItems.add("deprecated");
+        legendItems.add("thumbs-down");
       }
       if (!status.standard_track) {
-        legendItems.add("non-standard");
+        legendItems.add("note-warning");
       }
     }
 
@@ -93,27 +93,27 @@ export function Legend({
         {getActiveLegendItems(compat, name).map(([key, label]) =>
           ["yes", "partial", "no", "unknown"].includes(key) ? (
             <div className="bc-legend-item" key={key}>
-              <dt key={key}>
+              <dt className="bc-legend-item-dt" key={key}>
                 <span className={`bc-supports-${key} bc-supports`}>
                   <abbr
-                    className={`bc-level bc-level-${key} only-icon`}
+                    className={`bc-level bc-level-${key} icon icon-${key}`}
                     title={label}
                   >
-                    <span>{label}</span>
+                    <span className="visually-hidden">{label}</span>
                   </abbr>
                 </span>
               </dt>
-              <dd>{label}</dd>
+              <dd className="bc-legend-item-dd">{label}</dd>
             </div>
           ) : (
             <div className="bc-legend-item" key={key}>
-              <dt>
+              <dt className="bc-legend-item-dt">
                 <abbr
-                  className={`only-icon legend-icons ic-${key}`}
+                  className={`legend-icons icon icon-${key}`}
                   title={label}
                 ></abbr>
               </dt>
-              <dd>{label}</dd>
+              <dd className="bc-legend-item-dd">{label}</dd>
             </div>
           )
         )}

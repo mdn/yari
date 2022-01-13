@@ -1,40 +1,143 @@
-@use "sass:math";
-
-@use "~@mdn/minimalist/sass/vars/mdn-web-docs-palette" as *;
-@use "~@mdn/minimalist/sass/vars/layout" as *;
-@use "~@mdn/minimalist/sass/vars/typography" as *;
+@use "../../../ui/vars" as *;
 
 .sidebar {
-  font-size: $small-font-size;
-  padding: $base-spacing;
+  color: var(--text-secondary);
 
-  h4 {
-    font-family: $heading-font-family;
-    font-size: $medium-font-size;
-    margin-bottom: $base-spacing;
+  .backdrop {
+    display: none;
+  }
+
+  // apply drawer styles only to the sizes that need them.
+  @media screen and (max-width: #{$screen-md - 1}) {
+    position: fixed;
+    top: 0;
+    right: 0;
+    left: 0;
+    height: 100vh;
+    max-height: 100vh;
+    z-index: var(--z-index-top);
+    transform: translateX(-100%);
+
+    .sidebar-inner {
+      transform: translateX(-100%);
+      overflow: hidden; //animations look janky if scrollbars are present
+      will-change: transform;
+      transition: 0.2s linear transform;
+      position: relative;
+      padding: 1rem;
+      width: 80vw;
+      max-width: 20rem;
+      height: 100vh;
+      max-height: 100vh;
+      overflow: auto;
+      background: var(--background-primary);
+      border-right: 1px solid var(--border-primary);
+      z-index: var(--z-index-top);
+    }
+
+    .backdrop {
+      opacity: 0;
+      will-change: opacity;
+      transition: opacity 0.2s linear;
+
+      display: flex;
+      position: fixed;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      width: 100%;
+      background: rgba(0, 0, 0, 0.3);
+      z-index: var(--z-index-mid);
+      border-radius: 0;
+      cursor: default;
+    }
+
+    &.is-animating {
+      transform: translateX(0);
+    }
+
+    &.is-expanded {
+      transform: translateX(0); // no transition on this one, just show it.
+
+      .sidebar-inner {
+        transform: translateX(0);
+      }
+
+      .backdrop {
+        opacity: 1;
+      }
+    }
+  }
+
+  @media screen and (min-width: $screen-md) {
+    display: flex;
+    overflow: auto;
+    position: sticky;
+    top: 0;
+    bottom: 0;
+    // height minus header. On scroll, this variable is changed with JS.
+    max-height: calc(100vh - var(--visible-height-of-header, 6rem));
+  }
+
+  &-heading {
+    font: var(--type-heading-h6);
+    color: var(--text-primary);
+    letter-spacing: 1.5px;
+    padding: 0 0 1rem 0;
+    text-transform: uppercase;
+  }
+
+  a {
+    display: flex;
+    width: 100%;
+    padding: 0.25rem;
+    color: var(--text-secondary);
+    hyphens: auto;
+
+    &[aria-current="page"] {
+      background: var(--border-secondary);
+      border-radius: var(--elem-radius);
+    }
+  }
+
+  // TODO: Find these and add a class, if possible. These are section headings
+  strong {
+    margin-top: 2rem;
+    display: flex;
   }
 
   ol {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    width: 100%;
+    font: var(--type-body-m);
 
     ol,
     ul {
-      @media #{$mq-tablet-and-up} {
-        padding-left: math.div($base-spacing, 2);
+      @media screen and (max-width: $screen-sm) {
+        padding-left: 0.5rem;
+      }
+    }
+
+    ol {
+      li {
+        display: flex;
+        align-items: flex-start;
+        gap: 0.25rem;
+
+        &:before {
+          border-radius: 50%;
+          width: 2px;
+          height: 2px;
+          margin-top: 0.75rem;
+          background: var(--text-secondary);
+          content: "";
+        }
       }
     }
   }
 
   summary,
   li {
-    margin-bottom: math.div($base-spacing, 2);
-  }
-
-  a {
-    hyphens: auto;
+    margin-bottom: 0.5rem;
   }
 
   code {
@@ -45,25 +148,57 @@
 
   summary {
     cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+
+    &::marker {
+      content: none;
+    }
+
+    &:before {
+      top: calc(50% - 0.5rem);
+      right: 0.5rem;
+      display: block;
+      width: 8px;
+      height: 8px;
+      background-color: var(--text-secondary);
+      mask-image: url("../../../assets/icons/caret.svg");
+      mask-size: contain;
+      mask-position: center;
+      mask-repeat: no-repeat;
+      content: "";
+    }
+  }
+
+  details[open] > summary:before {
+    transform-origin: center;
+    transform: rotate(90deg);
   }
 
   details {
-    margin: $base-spacing 0;
+    margin: 1rem 0;
+
+    ol {
+      padding-left: 0.75rem;
+    }
   }
 
   .icon {
-    background-size: 18px;
-    height: 18px;
-    width: 18px;
+    background-size: 14px;
+    height: 14px;
+    width: 14px;
+    margin-right: -0.25rem;
+    align-self: center;
   }
 
   /* icons in sidebars */
   .icon-experimental,
   .icon-nonstandard {
-    color: $mdn-blue700;
+    color: var(--icon-information);
   }
 
   .icon-deprecated {
-    color: $mdn-red700;
+    color: var(--icon-critical);
   }
 }

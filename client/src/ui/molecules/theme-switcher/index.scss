@@ -1,0 +1,42 @@
+@use "sass:color";
+
+@use "../../vars" as *;
+
+.theme-switcher-menu {
+  .themes-menu .button {
+    --button-bg: transparent;
+    --button-border-color: var(--button-bg);
+    --button-color: var(--text-primary);
+    font: var(--type-body-m);
+    width: 100%;
+
+    &:hover {
+      --button-bg: var(--background-secondary);
+    }
+  }
+
+  .active-menu-item,
+  .active-menu-item:hover,
+  .active-menu-item:focus {
+    .button-wrap {
+      --button-bg: var(--accent-primary);
+      --button-border-color: var(--button-bg);
+      --button-color: #fff;
+    }
+  }
+
+  @media screen and (min-width: $screen-md) {
+    border-bottom: 0;
+
+    .themes-menu.show {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      max-width: max-content;
+    }
+
+    .themes-menu .submenu-item {
+      padding: 0.5rem 1rem;
+    }
+  }
+}

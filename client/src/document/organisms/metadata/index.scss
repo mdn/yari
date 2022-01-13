@@ -1,28 +1,23 @@
-@import "~@mdn/minimalist/sass/vars/mdn-web-docs-palette";
-@import "~@mdn/minimalist/sass/vars/layout";
-@import "~@mdn/minimalist/sass/vars/typography";
+@use "../../../ui/vars" as *;
 
-.metadata {
-  background-color: $mdn-neutral100;
-  margin: ($base-spacing * 2) 0;
-  padding: $base-spacing;
+.main-page-content .metadata {
+  background-color: var(--background-secondary);
+  margin: (1rem * 2) 0;
+  padding: 1rem;
+
+  h3 {
+    padding-top: 0;
+  }
 }
 
 .metadata-content-container {
   margin: 0 auto;
-  max-width: $max-width-default;
+  max-width: 1440px;
+  width: 100%;
 
   a:link,
   a:visited {
     text-decoration: underline;
-  }
-
-  .on-github {
-    margin-bottom: $base-spacing;
-
-    ul li {
-      margin-bottom: 8px;
-    }
   }
 
   .last-modified-date {

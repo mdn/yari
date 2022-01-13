@@ -1,0 +1,173 @@
+@use "../../ui/vars" as *;
+
+.homepage-hero {
+  width: 100%;
+
+  header {
+    height: 20rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    max-width: 45rem;
+    text-align: center;
+    margin: 0 auto;
+    gap: 2rem;
+    padding: 0 1rem;
+
+    @media screen and (min-width: $screen-md) {
+      padding: 0;
+    }
+
+    h1 {
+      /* Title */
+      font-family: Montserrat;
+      font-style: normal;
+      font-weight: 650;
+      font-size: 2rem;
+      line-height: 120%;
+      letter-spacing: -0.5px;
+      padding-bottom: 1rem;
+
+      @media screen and (min-width: $screen-sm) {
+        font-size: 2.5rem;
+      }
+
+      @media screen and (min-width: $screen-md) {
+        font-size: 3rem;
+      }
+
+      span {
+        background: linear-gradient(to right, #4584fd, #7a70f2);
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+    }
+
+    p {
+      max-width: 30rem;
+    }
+
+    /* Terrible things Daryl's done to make the search look okay for now */
+    .header-search {
+      width: 100%;
+      max-height: 4rem;
+      display: flex;
+
+      form {
+        outline: 1px solid var(--border-primary);
+        border-radius: 10rem;
+        background: var(--background-primary);
+
+        input,
+        input::placeholder {
+          font-size: 0.875rem;
+        }
+      }
+
+      form[aria-expanded="true"] {
+        border-radius: 2rem 2rem 0 0;
+        box-shadow: var(--shadow-02);
+      }
+
+      button {
+        border: 1px solid transparent;
+
+        &:hover {
+          background: none;
+        }
+      }
+
+      .search-widget {
+        gap: 0;
+        display: flex;
+      }
+
+      input {
+        padding: 2rem;
+        background: none;
+        border: none;
+      }
+
+      .close-search-button {
+        display: none;
+      }
+
+      .search-button {
+        position: relative;
+
+        &:hover {
+          background: none;
+          border: 1px solid transparent;
+        }
+
+        .button-wrap {
+          padding: 1.5rem;
+          height: 100%;
+          border-radius: 0 10rem 10rem 0;
+          background: none;
+          border: 1px solid transparent;
+
+          &:hover {
+            background: none;
+            border: 1px solid transparent;
+
+            .icon {
+              background-color: var(--text-primary);
+            }
+          }
+
+          .icon {
+            background-color: var(--icon-primary);
+            border: none;
+          }
+        }
+      }
+      .search-results {
+        top: 4rem;
+        outline: 1px solid var(--border-primary);
+        border-radius: 0 0 2rem 2rem;
+        text-align: left;
+        box-shadow: var(--shadow-02);
+        font-size: 0.875rem;
+
+        .result-item {
+          padding: 0.5rem 1.5rem;
+
+          mark {
+            background: none;
+          }
+
+          span {
+            font-weight: normal;
+            color: var(--text-secondary);
+          }
+
+          small {
+            color: var(--text-secondary);
+          }
+        }
+      }
+    }
+  }
+
+  .homepage-hero-bg {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    z-index: -1;
+    background: radial-gradient(
+      114.42% 123.24% at 6.69% 13.67%,
+      #33b3fc 22.84%,
+      #9752fa 80.63%,
+      #ffe600 282.74%
+    );
+    opacity: 0.2;
+    transform: skewY(-3deg);
+    height: 24rem;
+    transform-origin: 0;
+    overflow-y: clip;
+  }
+}

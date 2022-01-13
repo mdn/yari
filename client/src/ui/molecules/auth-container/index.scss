@@ -1,0 +1,20 @@
+@use "../../vars" as *;
+
+.auth-container {
+  display: flex;
+  font: var(--type-emphasis-m);
+  flex-flow: column-reverse;
+  gap: 0.5rem;
+  list-style: none;
+  padding: 0;
+  text-align: center;
+
+  @media screen and (min-width: $screen-md) {
+    align-items: center;
+    flex-flow: row;
+    gap: 1rem;
+    justify-content: flex-end;
+    margin: 0;
+    text-align: initial;
+  }
+}

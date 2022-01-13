@@ -1,0 +1,143 @@
+@use "../../vars" as *;
+@use "../../base/typography" as *;
+
+.submenu {
+  background-color: var(--background-primary);
+  display: none;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+
+  &.show {
+    display: block;
+  }
+
+  li {
+    width: 100%;
+  }
+
+  a,
+  .submenu-item {
+    align-items: center;
+    border-bottom: 1px solid var(--border-secondary);
+    color: var(--text-primary);
+    display: flex;
+    gap: 0.5rem;
+    height: 100%;
+    padding: 1rem 0.5rem;
+    width: 100%;
+
+    li:last-child & {
+      border-bottom: none;
+    }
+
+    &:hover,
+    &:focus {
+      background-color: var(--background-secondary);
+      text-decoration: none;
+    }
+  }
+
+  .active-menu-item {
+    background-color: var(--accent-primary);
+  }
+
+  @media screen and (min-width: $screen-md) {
+    border-radius: 0.25rem;
+    border: 1px solid var(--border-primary);
+    box-shadow: var(--shadow-01);
+    max-width: 25rem;
+    padding: 0.5rem;
+    position: absolute;
+    top: calc(100% + 4px);
+    width: max-content;
+    z-index: var(--z-index-mid);
+
+    .submenu-item {
+      border-bottom: 0;
+      border-radius: 0.25rem;
+      padding: 1rem;
+    }
+
+    /*
+      Creates a space between the top-level menu and the submenu that
+      keeps the menu open when the cursor moves to the menu
+    */
+    &:before {
+      content: "";
+      display: block;
+      height: 8px;
+      left: 0;
+      position: absolute;
+      top: -8px;
+      width: 100%;
+    }
+  }
+}
+
+.submenu-header {
+  display: block;
+  padding: 1rem;
+
+  .submenu-item {
+    padding: 0;
+  }
+
+  .submenu-item:hover {
+    background: none;
+  }
+
+  @media screen and (min-width: $screen-md) {
+    border-bottom: 1px solid var(--border-primary);
+  }
+}
+
+.submenu-icon {
+  background-color: var(--icon-primary);
+  background-size: 10px;
+  border-radius: var(--elem-radius);
+  height: 2rem;
+  padding: 0.5rem;
+  position: relative;
+  width: 2rem;
+
+  &::before {
+    background-color: var(--background-primary);
+    content: "";
+    display: block;
+    height: 16px;
+    /* half the width */
+    left: 8px;
+    mask-image: url("~@mdn/dinocons/general/asterisk.svg");
+    position: absolute;
+    /* half the height */
+    top: 8px;
+    width: 16px;
+  }
+}
+
+.submenu-item-heading,
+.submenu-item {
+  font: var(--type-body-m);
+
+  @media screen and (min-width: $screen-md) {
+    // If there is sub-text associated with this heading, make it bold.
+    &:not(:only-child) {
+      font: var(--type-emphasis-m);
+    }
+  }
+}
+
+.submenu-item-description {
+  display: none;
+
+  @media screen and (min-width: $screen-md) {
+    display: block;
+    margin-bottom: 0;
+    font: var(--type-body-s);
+  }
+}
+
+.submenu-item-subtext {
+  font: var(--type-emphasis-m);
+}

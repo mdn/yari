@@ -1,0 +1,70 @@
+@use "../../ui/vars" as *;
+
+.recent-contributions {
+  display: flex;
+  flex-direction: column;
+  max-width: 45rem;
+  width: 100%;
+  gap: 1rem;
+  padding: 0 1rem;
+
+  @media screen and (min-width: $screen-md) {
+    padding: 0;
+  }
+
+  h5 {
+    margin: 0;
+  }
+
+  .request-item {
+    padding: 0.5rem;
+    display: flex;
+    justify-content: space-between;
+    flex-direction: column;
+
+    @media screen and (min-width: $screen-md) {
+      flex-direction: revert;
+    }
+
+    &:nth-child(odd) {
+      background: var(--background-secondary);
+    }
+
+    .request-date {
+      font-size: 12px;
+      line-height: 175%;
+      display: flex;
+      align-items: center;
+
+      @media screen and (min-width: $screen-md) {
+      }
+    }
+
+    .request-title {
+      font-size: 14px;
+      line-height: 175%;
+      margin: 0px;
+      display: flex;
+      flex-direction: column;
+      gap: 0.125rem;
+
+      /* MDN UI / Body / M */
+      font-weight: 450;
+      font-size: 0.875rem;
+      line-height: 1.2;
+      a {
+        color: var(--text-primary);
+
+        &:hover {
+          text-decoration: underline;
+          color: var(--text-primary);
+        }
+      }
+
+      .request-repo {
+        font-size: 12px;
+        color: var(--text-secondary);
+      }
+    }
+  }
+}

@@ -1,0 +1,72 @@
+@use "../../ui/vars" as *;
+
+.plus-header {
+  padding-top: 2rem;
+}
+
+.plus-header h1 {
+  margin-bottom: 1rem;
+  font: var(--type-title-l);
+}
+
+.notification-card {
+  align-items: center;
+  border: 1px solid var(--border-secondary);
+  background-color: var(--background-primary);
+  display: grid;
+  gap: 0.5rem;
+  grid-template-columns: auto 1fr 10ch auto;
+  padding: 0.5rem;
+
+  &.no-star {
+    grid-template-columns: 1fr 10ch auto;
+  }
+
+  .icon {
+    background-color: var(--icon-secondary);
+  }
+
+  & + & {
+    border-top: none;
+  }
+
+  &-description {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  &-title {
+    font: var(--type-emphasis-m);
+  }
+
+  &-text {
+    font: var(--type-body-m);
+  }
+
+  &-created {
+    color: var(--text-secondary);
+    font: var(--type-body-s);
+    text-align: right;
+  }
+
+  &:first-child {
+    border-top-left-radius: var(--elem-radius);
+    border-top-right-radius: var(--elem-radius);
+  }
+
+  &:last-child {
+    border-bottom-left-radius: var(--elem-radius);
+    border-bottom-right-radius: var(--elem-radius);
+  }
+
+  &.unread {
+    background-color: var(--accent-tertiary);
+  }
+
+  @media screen and (min-width: $screen-md) {
+    &-description {
+      flex-direction: row;
+    }
+  }
+}

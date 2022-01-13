@@ -1,0 +1,34 @@
+$icons: "add-filled", "add", "altname", "bell-filled", "bell", "bookmark-filled",
+  "bookmark", "cancel", "checkmark", "chevron", "critical", "desktop",
+  "disabled", "edit", "ellipses", "external", "eye-filled", "eye", "firefox",
+  "footnote", "github-mark-small", "information", "language", "menu-filled",
+  "menu", "mobile", "no", "note-info", "note-warning", "note-deprecated",
+  "partial", "prefix", "preview", "search", "server", "sidebar", "small-arrow",
+  "star-filled", "star", "theme", "thumbs-down", "thumbs-up", "trash", "twitter",
+  "unknown", "warning", "yes", "yes-circle";
+
+.icon {
+  --size: var(--icon-size, 1rem);
+  background-color: var(--icon-primary);
+  display: inline-block;
+  height: var(--size);
+  width: var(--size);
+  vertical-align: middle;
+  mask-position: center;
+  mask-repeat: no-repeat;
+}
+
+// The icon class is applied directly to SVGs sometimes. This
+// override un-breaks those.
+svg.icon {
+  background: transparent;
+  color: var(--icon-primary);
+}
+
+.icon {
+  @each $name in $icons {
+    &.icon-#{$name} {
+      mask-image: url("../../../assets/icons/" + $name + ".svg");
+    }
+  }
+}
