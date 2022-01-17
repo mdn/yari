@@ -63,7 +63,7 @@ a.page-not-created {
       width: 16px;
       position: absolute;
       right: 20px;
-      top: 20px;
+      top: 18px;
     }
   }
 
@@ -74,7 +74,7 @@ a.page-not-created {
   .example-bad {
     &::after {
       background-color: var(--icon-critical);
-      mask-image: url("../assets/icons/critical.svg");
+      mask-image: url("../assets/icons/no.svg");
     }
   }
 
@@ -87,7 +87,7 @@ a.page-not-created {
 
   pre {
     margin-bottom: 2rem;
-    padding: 1rem;
+    padding: 1rem 2.5rem 1rem 1rem;
     margin: 0 0 2rem 0;
     background-color: var(--background-tertiary);
     border: 1px solid var(--border-secondary);
@@ -100,19 +100,18 @@ a.page-not-created {
     position: relative;
 
     .copy-icon {
-      background: var(--icon-secondary) url("../assets/clippy.svg") center
-        center no-repeat;
+      background-image: url("../assets/clippy.svg");
+      background-repeat: no-repeat;
       background-position: 61% 45%;
       background-size: 1rem;
-      border: 1px solid var(--border-secondary);
       border-radius: 0.25rem;
       cursor: pointer;
       height: 33px;
       margin: 0;
       padding: 0.25rem;
       position: absolute;
-      right: 0.25rem;
-      top: 0.25rem;
+      right: 0.5rem;
+      top: 0.75rem;
       width: 33px;
 
       @media screen and (min-width: $screen-md) {
