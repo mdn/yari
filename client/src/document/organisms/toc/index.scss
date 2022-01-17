@@ -1,7 +1,7 @@
 @use "sass:math";
 
 @import "~@mdn/minimalist/sass/vars/layout";
-@import "~@mdn/minimalist/sass/vars/color-palette";
+@import "~@mdn/minimalist/sass/vars/mdn-web-docs-palette";
 @import "~@mdn/minimalist/sass/vars/typography";
 
 .document-toc {
@@ -68,7 +68,7 @@
 
   ul {
     background-color: #fff;
-    border: 2px solid $primary-100;
+    border: 2px solid $mdn-blue700;
     display: none;
     list-style: none;
     padding: 0 $base-spacing;

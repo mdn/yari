@@ -14,9 +14,9 @@ var htmlEscape = kuma.htmlEscape;
 // slug is not available in preview mode.
 if (slug && group) {
 
-var webAPIGroups = JSON.parse(await template("GroupData"));
+var webAPIGroups = web.getJSONData("GroupData");
 
-var commonl10n = JSON.parse(await template('L10n:Common'));
+var commonl10n = web.getJSONData("L10n-Common");
 
 var text = {
     'Methods': mdn.getLocalString(commonl10n, 'Methods'),
@@ -102,7 +102,7 @@ function convertEvent(eventName) {
 }
 
 // output
-output = '<section class="Quick_links" id="Quick_Links"><ol>';
+output = '<section id="Quick_links"><ol>';
 
 if (webAPIGroups[0][group].overview) {
   output += '<li><strong><a href="' +  APIHref + '/' + webAPIGroups[0][group].overview[0].replace(/ /g, '_') + '">' + webAPIGroups[0][group].overview[0] + '</a></strong></li>';

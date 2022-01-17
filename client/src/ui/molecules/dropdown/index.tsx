@@ -29,6 +29,8 @@ type DropdownProps = {
   right?: boolean;
   // If true, we won't show the arrow next to the menu
   hideArrow?: boolean;
+  // Optional function to trigger a closing.
+  forceClose?: boolean;
   children: React.ReactNode;
 };
 
@@ -42,11 +44,21 @@ export default function Dropdown(props: DropdownProps) {
   }
 
   React.useEffect(() => {
+    if (props.forceClose) {
+      setShowDropdownMenu(false);
+    }
+  }, [props.forceClose]);
+
+  React.useEffect(() => {
+    let mounted = true;
     document.addEventListener("keyup", (event: KeyboardEvent) => {
-      if (event.key === "Escape") {
+      if (event.key === "Escape" && mounted) {
         hideDropdownMenuIfVisible();
       }
     });
+    return () => {
+      mounted = false;
+    };
   });
 
   return (

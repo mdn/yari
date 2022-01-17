@@ -1,7 +1,7 @@
 @use "sass:math";
 
 @import "~@mdn/minimalist/sass/mixins/utils";
-@import "~@mdn/minimalist/sass/vars/color-palette";
+@import "~@mdn/minimalist/sass/vars/mdn-web-docs-palette";
 @import "~@mdn/minimalist/sass/vars/layout";
 @import "~@mdn/minimalist/sass/vars/typography";
 
@@ -19,7 +19,7 @@
     @include reset-list();
 
     li {
-      border-bottom: 1px solid $neutral-550;
+      border-bottom: 1px solid $mdn-neutral100;
       margin-bottom: math.div($base-spacing, 2);
     }
   }

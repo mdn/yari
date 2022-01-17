@@ -4,7 +4,7 @@ import useSWR, { mutate } from "swr";
 
 import { CRUD_MODE } from "../constants";
 import { useGA } from "../ga-context";
-import { useDocumentURL } from "./hooks";
+import { useDocumentURL, useCopyExamplesToClipboard } from "./hooks";
 import { Doc } from "./types";
 // Ingredients
 import { Prose, ProseWithHeading } from "./ingredients/prose";
@@ -35,6 +35,7 @@ import "./interactive-examples.scss";
 
 // Lazy sub-components
 const Toolbar = React.lazy(() => import("./toolbar"));
+const MathMLPolyfillMaybe = React.lazy(() => import("./mathml-polyfill"));
 
 export function Document(props /* TODO: define a TS interface for this */) {
   const ga = useGA();
@@ -70,8 +71,11 @@ export function Document(props /* TODO: define a TS interface for this */) {
           ? props.doc
           : null,
       revalidateOnFocus: CRUD_MODE,
+      refreshInterval: CRUD_MODE ? 500 : 0,
     }
   );
+
+  useCopyExamplesToClipboard(doc);
 
   React.useEffect(() => {
     if (!doc && !error) {
@@ -148,8 +152,6 @@ export function Document(props /* TODO: define a TS interface for this */) {
 
   return (
     <>
-      {doc.isArchive && !doc.isTranslated && <Archived />}
-
       {/* if we have either breadcrumbs or translations for the current page,
       continue rendering the section */}
       {(doc.parents || !!translations.length) && (
@@ -180,6 +182,11 @@ export function Document(props /* TODO: define a TS interface for this */) {
             />
           </React.Suspense>
         )}
+        {!isServer && doc.hasMathML && (
+          <React.Suspense fallback={null}>
+            <MathMLPolyfillMaybe />
+          </React.Suspense>
+        )}
         <article className="main-page-content" lang={doc.locale}>
           <h1>{doc.title}</h1>
           <RenderDocumentBody doc={doc} />
@@ -189,16 +196,6 @@ export function Document(props /* TODO: define a TS interface for this */) {
 
       {doc.sidebarHTML && <RenderSideBar doc={doc} />}
     </>
-  );
-}
-
-function Archived() {
-  return (
-    <div className="archived">
-      <p>
-        <b>This is an archived page.</b> It's not actively maintained.
-      </p>
-    </div>
   );
 }
 

@@ -11,12 +11,13 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v2.3.4
+      - uses: actions/checkout@v2.4.0
 
       - name: Setup Node.js environment
-        uses: actions/setup-node@v2.1.5
+        uses: actions/setup-node@v2.5.1
         with:
           node-version: "12"
+          cache: "yarn"
 
       - name: Lint markdown files
         run: |

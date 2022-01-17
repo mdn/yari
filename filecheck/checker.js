@@ -104,21 +104,27 @@ async function checkFile(filePath, options) {
   }
 
   // The image has to be mentioned in the adjacent index.html document
-  const htmlFilePath = path.join(path.dirname(filePath), "index.html");
-  if (!fs.existsSync(htmlFilePath)) {
+  const parentPath = path.dirname(filePath);
+  const htmlFilePath = path.join(parentPath, "index.html");
+  const mdFilePath = path.join(parentPath, "index.md");
+  const rawContent = fs.existsSync(htmlFilePath)
+    ? fs.readFileSync(htmlFilePath, "utf-8")
+    : fs.existsSync(mdFilePath)
+    ? fs.readFileSync(mdFilePath, "utf-8")
+    : null;
+  if (!rawContent) {
     throw new Error(
-      `${filePath} is not located in a folder with an 'index.html' file.`
+      `${filePath} is not located in a folder with a document file.`
     );
   }
 
-  // The image must be mentioned (as a string) in the 'index.html' file.
+  // The image must be mentioned (as a string) in the content
   // Note that it might not be in a <img src> attribute but it could be
   // used in a code example. Either way, it needs to be mentioned by
   // name at least once.
   // Yes, this is pretty easy to fake if you really wanted to, but why
   // bother?
-  const html = fs.readFileSync(htmlFilePath, "utf-8");
-  if (!html.includes(path.basename(filePath))) {
+  if (!rawContent.includes(path.basename(filePath))) {
     throw new Error(`${filePath} is not mentioned in ${htmlFilePath}`);
   }
 

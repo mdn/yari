@@ -11,10 +11,11 @@ const info = require("./src/info.js");
 const { render: renderMacros } = require("./src/render.js");
 const {
   getLiveSampleIDs,
-  buildLiveSamplePage,
+  buildLiveSamplePages,
   LiveSampleError,
 } = require("./src/live-sample.js");
 const { HTMLTool } = require("./src/api/util.js");
+const { DEFAULT_LOCALE } = require("../libs/constants");
 
 const DEPENDENCY_LOOP_INTRO =
   'The following documents form a circular dependency when rendering (via the "page" and/or "IncludeSubnav" macros):';
@@ -51,8 +52,26 @@ const renderFromURL = async (
         `Tried to find a folder called ${Document.urlToFolderPath(url)}`
     );
   }
-  const { rawBody, metadata, fileInfo, isMarkdown } = document;
-  const rawHTML = isMarkdown ? await m2h(rawBody) : rawBody;
+  let { metadata } = document;
+  // If we're rendering a translation, merge in the parent document's
+  // metadata into this metadata.
+  if (metadata.locale !== DEFAULT_LOCALE) {
+    const parentURL = url
+      .toLowerCase()
+      .replace(`/${metadata.locale.toLowerCase()}/`, `/${DEFAULT_LOCALE}/`);
+
+    const parentDocument = invalidateCache
+      ? Document.findByURL(parentURL, Document.MEMOIZE_INVALIDATE)
+      : Document.findByURL(parentURL);
+    if (parentDocument) {
+      metadata = { ...parentDocument.metadata, ...metadata };
+    }
+  }
+
+  const { rawBody, fileInfo, isMarkdown } = document;
+  const rawHTML = isMarkdown
+    ? await m2h(rawBody, { locale: metadata.locale })
+    : rawBody;
   const [renderedHtml, errors] = await renderMacros(
     rawHTML,
     {
@@ -97,7 +116,7 @@ const renderFromURL = async (
 };
 
 module.exports = {
-  buildLiveSamplePage,
+  buildLiveSamplePages,
   getLiveSampleIDs,
   LiveSampleError,
   render: renderFromURL,

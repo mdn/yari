@@ -1,6 +1,6 @@
 /*
  * PEG.js parser for macros in wiki documents.
- * see also: http://pegjs.majda.cz/documentation
+ * see also: https://pegjs.org/documentation
  */
 start = Document
 
@@ -25,7 +25,7 @@ EscapedBraces = c:("\\{" / "\\}") { return [c[1]]; }
 SingleBackslash = "\\" { return ["\\"]; }
 BoringChars = [^{}\\]+
 
-Macro = "{{" __ name:MacroName __ args:(Arguments / ArgumentsJSON)? __ "}}" { 
+Macro = "{{" __ name:MacroName __ args:(Arguments / ArgumentsJSON)? __ "}}" {
     return {
         type: 'MACRO',
         name: name.join(''),
@@ -120,14 +120,14 @@ DoubleQuotedArgumentChars
 SingleQuotedArgumentChars
   = "'" c:SingleQuotedArgumentChar* "'" { return c.join(''); }
 
-DoubleQuotedArgumentChar 
+DoubleQuotedArgumentChar
   = [^"\\] /
-    "\\'" { return "'"; } / 
+    "\\'" { return "'"; } /
     '\\"' { return '"'; }
 
-SingleQuotedArgumentChar 
+SingleQuotedArgumentChar
   = [^'\\] /
-    "\\'" { return "'"; } / 
+    "\\'" { return "'"; } /
     '\\"' { return '"'; }
 
 __ = whitespace*

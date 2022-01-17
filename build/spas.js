@@ -50,9 +50,25 @@ async function buildSPAs(options) {
       const SPAs = [
         { prefix: "search", pageTitle: "Search" },
         { prefix: "signin", pageTitle: "Sign in", noIndexing: true },
-        { prefix: "signup", pageTitle: "Sign up", noIndexing: true },
+        { prefix: "signout", pageTitle: "Sign out", noIndexing: true },
         { prefix: "settings", pageTitle: "Account settings", noIndexing: true },
         { prefix: "plus", pageTitle: "Plus", noIndexing: true },
+        { prefix: "plus/bookmarks", pageTitle: "Bookmarks", noIndexing: true },
+        {
+          prefix: "plus/deep-dives",
+          pageTitle: "Modern CSS in the Real World",
+          noIndexing: true,
+        },
+        {
+          prefix: "plus/deep-dives/planning-for-browser-support",
+          pageTitle: "Planning for browser support ~ Plus",
+          noIndexing: true,
+        },
+        {
+          prefix: "plus/deep-dives/your-browser-support-toolkit",
+          pageTitle: "Your browser support toolkit ~ Plus",
+          noIndexing: true,
+        },
       ];
       for (const { prefix, pageTitle, noIndexing } of SPAs) {
         const url = `/${locale}/${prefix}`;
@@ -103,6 +119,10 @@ async function buildSPAs(options) {
       continue;
     }
     for (const locale of fs.readdirSync(root)) {
+      if (locale === "jsondata") {
+        // This is actually not a locale but it's located next to the locales.
+        continue;
+      }
       if (!fs.statSync(path.join(root, locale)).isDirectory()) {
         continue;
       }
@@ -137,6 +157,7 @@ async function buildSPAs(options) {
       }
     }
   }
+
   if (!options.quiet) {
     console.log(`Built ${buildCount} SPA related files`);
   }

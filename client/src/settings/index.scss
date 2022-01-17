@@ -1,6 +1,6 @@
 @use "sass:math";
 
-@import "~@mdn/minimalist/sass/vars/color-palette";
+@import "~@mdn/minimalist/sass/vars/mdn-web-docs-palette";
 @import "~@mdn/minimalist/sass/vars/layout";
 @import "~@mdn/minimalist/sass/vars/typography";
 
@@ -76,8 +76,8 @@
 
 .settings-form,
 .close-account {
-  border: 1px solid $neutral-500;
-  border-top: 5px solid $primary-100;
+  border: 1px solid $mdn-neutral500;
+  border-top: 5px solid $mdn-blue700;
   flex-basis: 45%;
   padding: $base-spacing;
 }

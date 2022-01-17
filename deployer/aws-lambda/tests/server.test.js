@@ -71,9 +71,9 @@ describe("root URL redirects", () => {
 });
 
 describe("URLs that need a locale injected", () => {
-  const spaPrefixes = ["search", "signin", "signup", "settings"];
+  const spaPrefixes = ["search", "signin", "settings", "plus"];
   it("should inject the locale depending on first prefix", async () => {
-    expect.assertions(4 * 2);
+    expect.assertions(spaPrefixes.length * 2);
     for (const prefix of spaPrefixes) {
       const r = await get(`/${prefix}`);
       expect(r.statusCode).toBe(302);
@@ -81,7 +81,7 @@ describe("URLs that need a locale injected", () => {
     }
   });
   it("should inject the locale depending on first prefix by header", async () => {
-    expect.assertions(4 * 2);
+    expect.assertions(spaPrefixes.length * 2);
     for (const prefix of spaPrefixes) {
       const r = await get(`/${prefix}`, {
         "Accept-language": "zh-Cn",
@@ -91,7 +91,7 @@ describe("URLs that need a locale injected", () => {
     }
   });
   it("should inject the locale depending on first prefix by cookie", async () => {
-    expect.assertions(4 * 2);
+    expect.assertions(spaPrefixes.length * 2);
     for (const prefix of spaPrefixes) {
       const r = await get(`/${prefix}`, {
         Cookie: "preferredlocale=fr",
@@ -101,7 +101,7 @@ describe("URLs that need a locale injected", () => {
     }
   });
   it("should inject the locale depending on first prefix by cookie over header", async () => {
-    expect.assertions(4 * 2);
+    expect.assertions(spaPrefixes.length * 2);
     for (const prefix of spaPrefixes) {
       const r = await get(`/${prefix}`, {
         "Accept-language": "zh-Cn",
@@ -117,7 +117,7 @@ describe("URLs that need a locale injected", () => {
     expect(r.headers["location"]).toBe(`/en-US/search?q=foo`);
   });
   it("should inject the locale depending on first prefix and drop any trailing slash", async () => {
-    expect.assertions(4 * 2);
+    expect.assertions(spaPrefixes.length * 2);
     for (const prefix of spaPrefixes) {
       const r = await get(`/${prefix}/`);
       expect(r.statusCode).toBe(302);
@@ -193,6 +193,27 @@ describe("always check for fundamental redirects first", () => {
       expect(r.headers["cache-control"]).toMatch(/max-age=\d\d+/);
     }
   });
+  it("should redirect speculative parsing URL baked into Firefox", async () => {
+    expect.assertions(2 * 2);
+    for (const url of [
+      "/en/Optimizing_Your_Pages_for_Speculative_Parsing/",
+      "/EN/optimizing_your_pages_for_speculative_parsing",
+    ]) {
+      const r = await get(url);
+      expect(r.statusCode).toBe(301);
+      expect(r.headers["location"]).toBe(
+        "/en-US/docs/Glossary/speculative_parsing"
+      );
+    }
+  });
+  it("should redirect Contribute link distributed by video", async () => {
+    expect.assertions(2 * 2);
+    for (const url of ["/mdn/contribute/", "/MDN/Contribute"]) {
+      const r = await get(url);
+      expect(r.statusCode).toBe(301);
+      expect(r.headers["location"]).toBe("/en-US/docs/MDN/Contribute");
+    }
+  });
 });
 
 describe("redirect double-slash prefix URIs", () => {
@@ -244,14 +265,14 @@ describe("response headers", () => {
     const r = await get("/en-US/docs/Web/HTTP/_samples_/Foo/index.html");
     expect(r.statusCode).toBe(200);
     expect(r.headers["x-frame-options"]).toBeFalsy();
-    expect(r.headers["content-security-policy-report-only"]).toBeFalsy();
+    expect(r.headers["content-security-policy"]).toBeFalsy();
   });
 
   it("should not set CSP or X-Frame-Options for /_sample.*", async () => {
     const r = await get("/en-US/docs/Web/HTTP/_sample_.Foo.html");
     expect(r.statusCode).toBe(200);
     expect(r.headers["x-frame-options"]).toBeFalsy();
-    expect(r.headers["content-security-policy-report-only"]).toBeFalsy();
+    expect(r.headers["content-security-policy"]).toBeFalsy();
   });
 
   it("should set CSP and other security headers for non-samples (stage)", async () => {
@@ -263,12 +284,9 @@ describe("response headers", () => {
     expect(r.headers["x-frame-options"]).toBeTruthy();
     expect(r.headers["strict-transport-security"]).toBeTruthy();
     expect(r.headers["x-xss-protection"]).toBeTruthy();
-    expect(r.headers["content-security-policy-report-only"]).toEqual(
-      expect.stringContaining(
-        "report-uri https://sentry.prod.mozaws.net/api/72/security/"
-      )
-    );
+    expect(r.headers["content-security-policy"]).toBeTruthy();
   });
+
   it("should set CSP and other security headers for non-samples (prod)", async () => {
     const r = await get("/en-US/docs/Web/HTTP", {
       origin_domain_name: "mdn-content-prod.s3-website-us-west-2.amazonaws.com",
@@ -277,18 +295,31 @@ describe("response headers", () => {
     expect(r.headers["x-frame-options"]).toBeTruthy();
     expect(r.headers["strict-transport-security"]).toBeTruthy();
     expect(r.headers["x-xss-protection"]).toBeTruthy();
-    expect(r.headers["content-security-policy-report-only"]).toEqual(
-      expect.stringContaining(
-        "report-uri https://sentry.prod.mozaws.net/api/73/security/"
-      )
-    );
+    expect(r.headers["content-security-policy"]).toBeTruthy();
   });
+
   it("should not set CSP but other security headers non-HTML", async () => {
     const r = await get("/en-US/docs/Web/HTTP/screenshot.png");
     expect(r.statusCode).toBe(200);
     expect(r.headers["x-frame-options"]).toBeTruthy();
     expect(r.headers["strict-transport-security"]).toBeTruthy();
     expect(r.headers["x-xss-protection"]).toBeTruthy();
-    expect(r.headers["content-security-policy-report-only"]).toBeFalsy();
+    expect(r.headers["content-security-policy"]).toBeFalsy();
+  });
+
+  it("temporaily redirect localized plus URLs", async () => {
+    for (const locale of ["en-US", "fr"]) {
+      for (const slug of [
+        "plus",
+        "plus/",
+        "plus/bookmarks",
+        "plus/deep-dives",
+        "plus/deep-dives/your-browser-support-toolkit",
+      ]) {
+        const r = await get(`/${locale}/${slug}`);
+        expect(r.statusCode).toBe(302);
+        expect(r.headers["location"]).toBe(`/${locale}/`);
+      }
+    }
   });
 });

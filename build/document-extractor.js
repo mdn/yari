@@ -2,33 +2,26 @@ const cheerio = require("cheerio");
 const { packageBCD } = require("./resolve-bcd");
 const specs = require("browser-specs");
 
-/** Extract and mutate the $ if it as a "Quick_Links" section.
+/** Extract and mutate the $ if it as a "Quick_links" section.
  * But only if it exists.
  *
  * If you had this:
  *
  *   const $ = cheerio.load(`
- *      <div id="Quick_Links">Stuff</div>
+ *      <div id="Quick_links">Stuff</div>
  *      <h2>Headline<h2>
  *      <p>Text</p>
  *    `)
  *   const sidebar = extractSidebar($);
  *   console.log(sidebar);
- *   // '<div id="Quick_Links">Stuff</div>'
+ *   // '<div id="Quick_links">Stuff</div>'
  *   console.log($.html());
  *   // '<h2>Headline<h2>\n<p>Text</p>'
  *
  * ...give or take some whitespace.
  */
 function extractSidebar($) {
-  // Have to use both spellings because unfortunately, some sidebars don't come
-  // from macros but have it hardcoded into the content. Perhaps it was the
-  // result of someone once rendering out some sidebar macros.
-  // We could consolidate it to just exactly one spelling (`quick_links`) but
-  // that would require having to fix 29 macros, fix thousands of archived-content
-  // pages and hundres of translated content.
-  // By selecting for either spelling we're being defensive and safe.
-  const search = $("#Quick_Links, #Quick_links");
+  const search = $("#Quick_links");
   if (!search.length) {
     return "";
   }
@@ -71,6 +64,68 @@ function extractSections($) {
     sections.push(...subSections);
     flaws.push(...subFlaws);
   }
+
+  // Check for and mutate possible duplicated IDs.
+  // If a HTML document has...:
+  //
+  //   <h2 id="Examples">Check these examples</h2>
+  //   ...
+  //   <h2 id="examples">Examples</h2>
+  //
+  // then this can cause various problems. For example, the anchor links
+  // won't work. The Table of Contents won't be able to do a loop with unique
+  // `key={section.id}` values.
+  // The reason we need to loop through to get a list of all existing IDs
+  // first is because we might have this:
+  //
+  //  <h2 id="foo">Foo X</h2>
+  //  <h2 id="foo">Foo Y</h2>
+  //  <h2 id="foo_2">Foo Z</h2>
+  //
+  // So when you encounter `<h2 id="foo">Foo Y</h2>` you'll know that you
+  // can't suggest it to be `<h2 id="foo_2">Foo Y</h2>` because that ID
+  // is taken by another one, later.
+  const allIDs = new Set(
+    sections
+      .map((section) => section.value.id)
+      .filter(Boolean)
+      .map((id) => id.toLowerCase())
+  );
+
+  const seenIDs = new Set();
+  for (const section of sections) {
+    const originalID = section.value.id;
+    if (!originalID) {
+      // Not all sections have an ID. For example, prose sections that don't
+      // start with a <h2>.
+      // Since we're primarily concerned about *uniqueness* here, let's just
+      // skip worrying about these.
+      continue;
+    }
+    // We normalize all IDs to lowercase so that `id="Foo"` === `id="foo"`.
+    const id = originalID.toLowerCase();
+    if (seenIDs.has(id)) {
+      // That's bad! We have to come up with a new ID but it can't be one
+      // that's used by another other section.
+      let increment = 2;
+      let newID = `${originalID}_${increment}`;
+      while (
+        seenIDs.has(newID.toLowerCase()) ||
+        allIDs.has(newID.toLowerCase())
+      ) {
+        increment++;
+        newID = `${originalID}_${increment}`;
+      }
+      section.value.id = newID;
+      seenIDs.add(newID.toLowerCase());
+      flaws.push(
+        `'${originalID}' is not a unique ID in this HTML (temporarily changed to ${section.value.id})`
+      );
+    } else {
+      seenIDs.add(id);
+    }
+  }
+
   return [sections, flaws];
 }
 
@@ -519,12 +574,14 @@ function _addSectionProse($) {
     value.titleAsText = titleAsText;
   }
 
-  const sections = [
-    {
+  const sections = [];
+  if (value.content || value.title) {
+    sections.push({
       type: "prose",
       value,
-    },
-  ];
+    });
+  }
+
   return [sections, flaws];
 }
 

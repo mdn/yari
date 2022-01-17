@@ -219,7 +219,7 @@ const info = {
         let $ = null;
         let summary = "";
         try {
-          $ = cheerio.load(isMarkdown ? m2hSync(rawBody) : rawBody);
+          $ = cheerio.load(isMarkdown ? m2hSync(rawBody, { locale }) : rawBody);
           $("span.seoSummary, .summary").each((i, element) => {
             if (!summary) {
               const html = $(element)

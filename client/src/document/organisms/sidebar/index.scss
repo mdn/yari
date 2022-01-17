@@ -1,9 +1,8 @@
 @use "sass:math";
 
-@import "~@mdn/minimalist/sass/vars/color-palette";
-@import "~@mdn/minimalist/sass/vars/layout";
-@import "~@mdn/minimalist/sass/vars/typography";
-@import "~@mdn/minimalist/sass/mixins/utils";
+@use "~@mdn/minimalist/sass/vars/mdn-web-docs-palette" as *;
+@use "~@mdn/minimalist/sass/vars/layout" as *;
+@use "~@mdn/minimalist/sass/vars/typography" as *;
 
 .sidebar {
   font-size: $small-font-size;
@@ -16,7 +15,9 @@
   }
 
   ol {
-    @include reset-list();
+    list-style: none;
+    margin: 0;
+    padding: 0;
     width: 100%;
 
     ol,
@@ -38,6 +39,8 @@
 
   code {
     background-color: transparent;
+    white-space: normal;
+    word-wrap: normal;
   }
 
   summary {
@@ -57,10 +60,10 @@
   /* icons in sidebars */
   .icon-experimental,
   .icon-nonstandard {
-    color: $primary-50;
+    color: $mdn-blue700;
   }
 
   .icon-deprecated {
-    color: $red-100;
+    color: $mdn-red700;
   }
 }
