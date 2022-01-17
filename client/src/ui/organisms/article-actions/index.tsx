@@ -12,6 +12,7 @@ import { Doc } from "../../../document/types";
 
 import "./index.scss";
 import { MDN_APP } from "../../../constants";
+import { useUIStatus } from "../../../ui-context";
 
 export const ArticleActions = ({
   doc,
@@ -25,6 +26,7 @@ export const ArticleActions = ({
   const userData = useUserData();
   const isSubscriber = userData && userData.isSubscriber;
   const isAuthenticated = userData && userData.isAuthenticated;
+  const { setIsSidebarOpen } = useUIStatus();
   const translations = doc.other_translations || [];
   const { native } = doc;
 
@@ -54,6 +56,21 @@ export const ArticleActions = ({
         </Button>
         <ul className="article-actions-entries">
           <>
+            {doc.related_content || doc.sidebarHTML ? (
+              <li>
+                <Button
+                  type="action"
+                  icon="sidebar"
+                  extraClasses="sidebar-toggle"
+                  onClickHandler={() => {
+                    setShowArticleActionsMenu(false);
+                    setIsSidebarOpen(true);
+                  }}
+                >
+                  Sidebar
+                </Button>
+              </li>
+            ) : null}
             {isSubscriber && (
               <>
                 <li className="article-actions-entry">
