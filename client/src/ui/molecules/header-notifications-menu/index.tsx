@@ -11,6 +11,7 @@ import useSWR, { mutate } from "swr";
 import "./index.scss";
 import { NotificationData } from "../../../types/notifications";
 import { Link } from "react-router-dom";
+import { HEADER_NOTIFICATIONS_MENU_API_URL } from "../../../constants";
 
 dayjs.extend(relativeTime);
 
@@ -37,9 +38,8 @@ export const HeaderNotificationsMenu = () => {
 
   const locale = useLocale();
 
-  const apiURL = "/api/v1/plus/notifications/?per_page=5";
   const { data, error } = useSWR<NotificationData>(
-    apiURL,
+    HEADER_NOTIFICATIONS_MENU_API_URL,
     async (url) => {
       const response = await fetch(url);
       if (!response.ok) {
@@ -93,7 +93,7 @@ export const HeaderNotificationsMenu = () => {
     if (!response.ok) {
       throw new Error(`${response.status} on ${response.url}`);
     }
-    await mutate(apiURL);
+    await mutate(HEADER_NOTIFICATIONS_MENU_API_URL);
     return true;
   }
 

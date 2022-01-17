@@ -12,6 +12,8 @@ import SearchFilter from "../search-filter";
 import "./index.scss";
 import NotificationCard from "./notification-card";
 import WatchCard from "./watch-card";
+import { mutate } from "swr";
+import { HEADER_NOTIFICATIONS_MENU_API_URL } from "../../constants";
 
 function getCookie(name) {
   const value = `; ${document.cookie}`;
@@ -20,6 +22,19 @@ function getCookie(name) {
 }
 
 function NotificationsLayout() {
+  const locale = useLocale();
+  const location = useLocation();
+
+  const starredUrl = `/${locale}/plus/notifications/starred`;
+  const watchingUrl = `/${locale}/plus/notifications/watching`;
+
+  const { selectedTerms, selectedFilter, selectedSort } =
+    useContext(searchFiltersContext);
+
+  let apiUrl = `/api/v1/plus/notifications/?${selectedTerms}&${selectedFilter}&${selectedSort}`;
+  if (location.pathname === starredUrl) {
+    apiUrl += "&filterStarred=true";
+  }
   useEffect(() => {
     const clearNotificationsUrl =
       "/api/v1/plus/notifications/all/mark-as-read/";
@@ -41,23 +56,13 @@ function NotificationsLayout() {
       fetch(clearNotificationsUrl, {
         body: formData,
         method: "POST",
-      }).then();
+      }).then(async () => {
+        await mutate(apiUrl);
+        await mutate(HEADER_NOTIFICATIONS_MENU_API_URL);
+      });
     };
   }, []);
 
-  const locale = useLocale();
-  const location = useLocation();
-
-  const { selectedTerms, selectedFilter, selectedSort } =
-    useContext(searchFiltersContext);
-
-  const starredUrl = `/${locale}/plus/notifications/starred`;
-  const watchingUrl = `/${locale}/plus/notifications/watching`;
-
-  let apiUrl = `/api/v1/plus/notifications/?${selectedTerms}&${selectedFilter}&${selectedSort}`;
-  if (location.pathname === starredUrl) {
-    apiUrl += "&filterStarred=true";
-  }
   let watchingApiUrl = `/api/v1/plus/watched/?${selectedTerms}`;
 
   const watching = location.pathname === watchingUrl;
