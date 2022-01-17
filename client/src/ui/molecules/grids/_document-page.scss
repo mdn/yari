@@ -54,7 +54,7 @@
 
   @media screen and (min-width: $screen-lg) {
     display: grid;
-    grid-template-columns: minmax(0, 1fr) minmax(0, 2fr) minmax(0, 1fr);
+    grid-template-columns: minmax(0, 1fr) minmax(0, 2.5fr) minmax(0, 15rem);
     gap: 3rem;
     grid-template-areas: "sidebar main toc";
     padding-left: 1rem;
