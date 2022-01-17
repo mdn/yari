@@ -54,6 +54,15 @@ export const ArticleActions = ({
         </Button>
         <ul className="article-actions-entries">
           <>
+            <li>
+              <Button
+                type="action"
+                icon="sidebar"
+                extraClasses="sidebar-toggle"
+              >
+                Sidebar
+              </Button>
+            </li>
             {isSubscriber && (
               <>
                 <li className="article-actions-entry">
