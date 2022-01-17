@@ -34,7 +34,7 @@ it's sending to Google Analytics.
 But note, when you use the `webpack` server (from `create-react-app`) that runs
 on <http://localhost:3000> this will not be present. It's only present on pages that
 are fully server-side rendered. So to test out what Google Analytics does,
-make sure you use <http://localhost:5000>.
+make sure you use <http://localhost:5042>.
 
 ## Sending events
 

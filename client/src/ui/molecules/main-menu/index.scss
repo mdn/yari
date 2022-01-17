@@ -1,11 +1,11 @@
-@import "~@mdn/minimalist/sass/vars/color-palette";
+@import "~@mdn/minimalist/sass/vars/mdn-web-docs-palette";
 @import "~@mdn/minimalist/sass/vars/layout";
 @import "~@mdn/minimalist/sass/vars/typography";
 
-$menu-box-shadow: 0 2px 8px 0 $neutral-500;
-$menu-border: solid 1px $neutral-400;
+$menu-box-shadow: 0 2px 8px 0 $mdn-neutral500;
+$menu-border: solid 1px $mdn-neutral400;
 $menu-border-radius: $base-unit;
-$dropdown-item-background-color: $primary-200;
+$dropdown-item-background-color: $mdn-blue600;
 
 @mixin submenu-base-desktop() {
   min-width: 220px;
@@ -42,7 +42,7 @@ ul.main-menu {
   }
 
   li ul {
-    background-color: $neutral-600;
+    background-color: $white;
     display: none;
     margin: 0;
     padding: $base-unit 0;

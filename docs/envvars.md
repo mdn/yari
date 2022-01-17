@@ -30,15 +30,6 @@ all prefixed with `CONTENT_`. E.g. `CONTENT_ROOT`
 
 Where the files are.
 
-### `CONTENT_ARCHIVED_ROOT`
-
-**Default: `null`** (meaning, not set nor included)
-
-If you want to build archive content (no KumaScript rendering) you
-can say where the location to the folder is.
-
-**Example: `/tmp/mdn-archive-content`**
-
 ### `BUILD_FOLDERSEARCH`
 
 **Default: ``** (meaning, none)
@@ -120,7 +111,7 @@ because the security of the `iframe`'s content has not been audited as
 carefully as the rest of the site.
 
 When doing local development, it's recommended to set this to
-`http://localhost:5000` in your personal `.env`.
+`http://localhost:5042` in your personal `.env`.
 
 ### `BUILD_INTERACTIVE_EXAMPLES_BASE_URL`
 
@@ -165,14 +156,16 @@ You can get it here on [this settings page](https://speedcurve.com/mozilla-add-o
 which will give you the ID in the snippet shown there. Also, try to match
 this with the domains in those settings to match where we deploy it.
 
-### `BUILD_ALWAYS_NO_ROBOTS`
+### `BUILD_ALWAYS_ALLOW_ROBOTS`
 
 **Default: `false`**
 
 This exists so we can forcibly always include
 `<meta name="robots" content="noindex, nofollow">` into the HTML no matter what.
-For example, on our stage or dev builds, none of the documents should be indexed,
-so we'll set `BUILD_ALWAYS_NO_ROBOTS` to `true`.
+For example, on our stage or dev builds, we never want robots.
+
+The only place where we want robots is in prod. That's explicitly always
+set in `prod-build.yml`.
 
 We use this to make absolutely sure that no dev or stage build ever gets into
 the Google index. Thankfully we _always_ used a canonical URL
@@ -195,7 +188,7 @@ How many RSS feed entries to display on the home page.
 
 ### `SERVER_PORT`
 
-**Default: `5000`**
+**Default: `5042`**
 
 Usually the `server` module is started with `foreman` (the `nf` command)
 and this is the default port.
@@ -212,36 +205,11 @@ This is the port for the WebSocket server, which is started when you run `yarn s
 
 If you want to serve static files some a completely different directory.
 
-## Testing
-
-### `TESTING_OPEN_BROWSER`
-
-**Default: `false`**
-
-When running the `jest-puppeteer` test suites, if you set this to `true`,
-it will open a browser on every page navigation.
-
-It might just flash by too quickly, so consider putting in
-`await jestPuppeteer.debug()` inside the test function to slow it down.
-
-### `TESTING_START_SERVER`
-
-**Default: `false`**
-
-When `jest-puppeteer` starts the `jest` tests, if this variable is set
-to `true` it will execute `node ../server/index.js` to start the `server`
-on `localhost:5000`.
-
-In most cases, on your laptop it's better to start the server yourself
-in a separate terminal and then run the headless tests in another.
-
-For more information, see the `testing/README.md`.
-
 ## Client
 
 NOTE! Due to a quirk of how we build the client, anything `REACT_APP_*` environment
 variable that you want to be available in the production-grade built JS code
-that gets used when use `localhost:5000` can not only be set in the root `/.env`
+that gets used when use `localhost:5042` can not only be set in the root `/.env`
 file. Either use `export REACT_APP_*=...` or write it once in `/.env` and
 once in `/client/.env`.
 

@@ -135,7 +135,8 @@ export interface Doc {
   parents?: DocParent[];
   source: Source;
   contributors: string[];
-  isArchive: boolean;
   isTranslated: boolean;
   isActive: boolean;
+  hasMathML?: boolean;
+  isMarkdown: boolean;
 }

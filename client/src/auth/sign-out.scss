@@ -1,0 +1,7 @@
+@import "~@mdn/minimalist/sass/vars/layout";
+
+.sign-out {
+  button[type="submit"] {
+    min-width: 250px;
+  }
+}

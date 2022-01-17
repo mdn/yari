@@ -78,7 +78,7 @@ export function DocumentForm({
       debounceCallback(
         {
           rawBody,
-          metadata: { slug, title, locale },
+          metadata: { slug, title, locale: locale || "" },
         },
         didSlugChange
       );
@@ -101,7 +101,7 @@ export function DocumentForm({
         onSave(
           {
             rawBody,
-            metadata: { slug, title, locale },
+            metadata: { slug, title, locale: locale || "" },
           },
           didSlugChange
         );

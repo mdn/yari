@@ -49,23 +49,7 @@ cat ./fake-v1-api/whoami.json
   "avatar_url": "https://api.adorable.io/avatars/45/peter",
   "email": "peter@example.com",
   "subscriber_number": 2,
-  "is_subscriber": true,
-  "waffle": {
-    "flags": {
-      "kumaediting": true,
-      "section_edit": true,
-      "spam_checks_enabled": true,
-      "subscription": true,
-      "subscription_banner": true,
-      "subscription_form": true
-    },
-    "switches": {
-      "welcome_email": true,
-      "application_ACAO": true,
-      "store_revision_ips": true
-    },
-    "samples": {}
-  }
+  "is_subscriber": true
 }
 ```
 
@@ -87,11 +71,11 @@ await fetch("/api/v1/whoami");
 ```
 
 ...what that does is that the request, by the Webpack dev server, is forwarded
-to our Yari server (`localhost:5000`) which in turn picks this up and proxies,
+to our Yari server (`localhost:5042`) which in turn picks this up and proxies,
 it leaving the request untouched, but essentially only changes the host name.
 
 So a request for `http://localhost:3000/api/v1/whoami` goes from your browser
-to `http://localhost:5000/api/v1/whoami` (via Node) proxies it on to
+to `http://localhost:5042/api/v1/whoami` (via Node) proxies it on to
 `http://localhost.org:8000/api/v1/whoami`. All along, any cookie tied
 to `localhost.org` is automatically appended to the request.
 

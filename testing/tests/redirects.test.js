@@ -2,7 +2,7 @@ const got = require("got");
 const braces = require("braces");
 
 function serverURL(pathname = "/") {
-  return `http://localhost:5000${pathname}`;
+  return `http://localhost:5042${pathname}`;
 }
 
 function url_test(from, to, { statusCode = 301 } = {}) {
@@ -242,7 +242,18 @@ const SCL3_REDIRECT_URLS = [].concat(
     "https://kripken.github.io/BananaBread/cube2/index.html"
   ),
   url_test("/en-US/demos", "/en-US/docs/Web/Demos_of_open_web_technologies"),
-  url_test("/en/demos", "/en/docs/Web/Demos_of_open_web_technologies")
+  url_test("/en/demos", "/en/docs/Web/Demos_of_open_web_technologies"),
+  url_test(
+    "/en/Optimizing_Your_Pages_for_Speculative_Parsing/",
+    "/en-US/docs/Glossary/speculative_parsing"
+  ),
+  url_test(
+    "/EN/optimizing_your_pages_for_speculative_parsing",
+    "/en-US/docs/Glossary/speculative_parsing"
+  ),
+  url_test("/MDN/Contribute", "/en-US/docs/MDN/Contribute"),
+  url_test("/mdn/contribute", "/en-US/docs/MDN/Contribute"),
+  url_test("/en-US/docs/MDN/Contribute", null, { statusCode: 404 })
 );
 
 const GITHUB_IO_URLS = [].concat(
@@ -1190,6 +1201,28 @@ const RETIRED_LOCALE_URLS = [].concat(
 );
 
 const MISC_REDIRECT_URLS = [].concat(
+  url_test("/events", "https://community.mozilla.org/events/", {
+    statusCode: 302,
+  }),
+  url_test("/events/", "https://community.mozilla.org/events/", {
+    statusCode: 302,
+  }),
+  url_test("/fr/events", "https://community.mozilla.org/events/", {
+    statusCode: 302,
+  }),
+  url_test("/en-US/events", "https://community.mozilla.org/events/", {
+    statusCode: 302,
+  }),
+  url_test("/en-US/events/", "https://community.mozilla.org/events/", {
+    statusCode: 302,
+  }),
+  url_test(
+    "/communities/mozilla-tech-speakers",
+    "https://community.mozilla.org/en/groups/tech-speakers/",
+    {
+      statusCode: 302,
+    }
+  ),
   url_test("/fr/account", "/fr/settings", { statusCode: 302 }),
   url_test("/en-US/account", "/en-US/settings", { statusCode: 302 }),
   url_test("/en-US/account/", "/en-US/settings", { statusCode: 302 }),
@@ -1198,12 +1231,6 @@ const MISC_REDIRECT_URLS = [].concat(
   url_test("/en-US/profile/", "/en-US/settings", { statusCode: 302 }),
   url_test("/en-US/profile/edit", "/en-US/settings", { statusCode: 302 }),
   url_test("/en-US/profile/edit/", "/en-US/settings", { statusCode: 302 }),
-  url_test("/en-US/profile/stripe_subscription", "/en-US/settings", {
-    statusCode: 302,
-  }),
-  url_test("/en-US/profile/stripe_subscription/", "/en-US/settings", {
-    statusCode: 302,
-  }),
   url_test("/zh-CN/profiles/sheppy", "/zh-CN/settings", { statusCode: 302 }),
   url_test("/en-US/profiles/sheppy", "/en-US/settings", { statusCode: 302 }),
   url_test("/en-US/profiles/sheppy/", "/en-US/settings", { statusCode: 302 }),

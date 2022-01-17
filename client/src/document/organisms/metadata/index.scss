@@ -1,9 +1,9 @@
-@import "~@mdn/minimalist/sass/vars/color-palette";
+@import "~@mdn/minimalist/sass/vars/mdn-web-docs-palette";
 @import "~@mdn/minimalist/sass/vars/layout";
 @import "~@mdn/minimalist/sass/vars/typography";
 
 .metadata {
-  background-color: $neutral-550;
+  background-color: $mdn-neutral100;
   margin: ($base-spacing * 2) 0;
   padding: $base-spacing;
 }
@@ -19,6 +19,10 @@
 
   .on-github {
     margin-bottom: $base-spacing;
+
+    ul li {
+      margin-bottom: 8px;
+    }
   }
 
   .last-modified-date {

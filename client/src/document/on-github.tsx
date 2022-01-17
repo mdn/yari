@@ -3,8 +3,11 @@ import { Doc } from "./types";
 export function OnGitHubLink({ doc }: { doc: Doc }) {
   return (
     <div id="on-github" className="on-github">
-      <h4>Found a problem with this page?</h4>
+      <h3>Found a problem with this page?</h3>
       <ul>
+        <li>
+          <EditOnGitHubLink doc={doc} />
+        </li>
         <li>
           <SourceOnGitHubLink doc={doc} />
         </li>
@@ -26,6 +29,7 @@ export function OnGitHubLink({ doc }: { doc: Doc }) {
     </div>
   );
 }
+
 function SourceOnGitHubLink({ doc }: { doc: Doc }) {
   const { github_url, folder } = doc.source;
   return (
@@ -36,6 +40,20 @@ function SourceOnGitHubLink({ doc }: { doc: Doc }) {
       rel="noopener noreferrer"
     >
       Source on <b>GitHub</b>
+    </a>
+  );
+}
+
+function EditOnGitHubLink({ doc }: { doc: Doc }) {
+  const { github_url } = doc.source;
+  return (
+    <a
+      href={github_url.replace("/blob/", "/edit/")}
+      title={`You're going to need to sign in to GitHub first (Opens in a new tab)`}
+      target="_blank"
+      rel="noopener noreferrer"
+    >
+      Edit on <b>GitHub</b>
     </a>
   );
 }
@@ -74,19 +92,31 @@ MDN URL: https://developer.mozilla.org$PATHNAME
 // The labels do not not needs to exist in advance on the GitHub repo.
 // If not matched to any of these labels, it will default to "Other" as the label.
 const CONTENT_LABELS_PREFIXES = [
-  ["web/javascript", "JavaScript"],
+  ["web/javascript", "JS"],
   ["web/css", "CSS"],
   ["web/html", "HTML"],
   ["web/api", "WebAPI"],
   ["web/http", "HTTP"],
+  ["web/svg", "SVG"],
+  ["web/media", "Media"],
+  ["web/mathml", "MathML"],
+  ["webassembly", "wasm"],
   ["mozilla/add-ons/webextensions", "WebExt"],
-  ["web/accessibility", "A11y"],
+  ["web/accessibility", "Accessibility"],
   ["learn", "Learn"],
   ["tools", "DevTools"],
 ];
 
+// For all locales that as spelled differently as a issue label, map the locale
+// to the proper label name. For locales not mentioned here, we keep the locale
+// as is.
+const LOCALE_LABEL_ALIASES = new Map([
+  ["zh-cn", "zh"],
+  ["zh-tw", "zh"],
+]);
+
 function NewIssueOnGitHubLink({ doc }: { doc: Doc }) {
-  const baseURL = "https://github.com/mdn/content/issues/new";
+  let baseURL = "https://github.com/mdn/content/issues/new";
   const sp = new URLSearchParams();
 
   const { folder, github_url, last_commit_url } = doc.source;
@@ -108,6 +138,9 @@ function NewIssueOnGitHubLink({ doc }: { doc: Doc }) {
   sp.set("title", `Issue with "${titleShort}": (short summary here please)`);
 
   const slug = doc.mdn_url.split("/docs/")[1].toLowerCase();
+  const { locale } = doc;
+
+  const labels = ["needs-triage"];
   let contentLabel = "";
   for (const [prefix, label] of CONTENT_LABELS_PREFIXES) {
     if (slug.startsWith(prefix)) {
@@ -118,7 +151,17 @@ function NewIssueOnGitHubLink({ doc }: { doc: Doc }) {
   if (!contentLabel) {
     contentLabel = "Other";
   }
-  sp.set("labels", `Content:${contentLabel},needs-triage`);
+  if (locale === "en-US") {
+    labels.push(`Content:${contentLabel}`);
+  } else {
+    baseURL = "https://github.com/mdn/translated-content/issues/new";
+    const localeLabel =
+      LOCALE_LABEL_ALIASES.get(locale.toLowerCase()) || locale.toLowerCase();
+    labels.push(`l10n-${localeLabel}`);
+    // Maybe a l10n-unsupported label would be useful to add?
+  }
+
+  sp.set("labels", labels.join(","));
 
   const href = `${baseURL}?${sp.toString()}`;
 

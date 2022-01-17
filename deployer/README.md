@@ -1,6 +1,6 @@
 # Deployer
 
-The Yari deployer does two things. First, it's used to upload document
+The Yari Deployer does two things. First, it's used to upload document
 redirects, pre-built document pages, static files (e.g. JS, CSS, and
 image files), and sitemap files into an existing AWS S3 bucket. Since
 we serve MDN document pages from an S3 bucket via a CloudFront CDN,
@@ -13,7 +13,7 @@ their corresponding S3 keys.
 
 ## Getting started
 
-You can install it globally or in a virtualenv environment. Whichever you
+You can install it globally or in a `virtualenv` environment. Whichever you
 prefer.
 
 ```sh
@@ -28,7 +28,7 @@ with regards to configuring AWS access credentials.
 ## Uploads
 
 The `poetry run deployer upload DIRECTORY` command uploads files as well as redirects
-into an existing S3 bucket. Currently, we have three main S3 buckets that we
+into an existing S3 bucket. Currently, we have three S3 buckets that we
 upload into: `mdn-content-dev` (for variations or experimental versions of
 the site), `mdn-content-stage`, and `mdn-content-prod`.
 
@@ -46,7 +46,7 @@ most likely what you'll want for uploads to the `mdn-content-stage` and
 bucket, the prefix is often used to specify a different folder for each
 variation of the site that is being reviewed/considered.
 
-When uploading files (not redirects), the deployer is intelligent about
+When uploading files (not redirects), the Deployer is intelligent about
 what it uploads. If only uploads files whose content has changed, skipping
 the rest. However, since the `cache-control` attribute of a file is not
 considered part of its content, if you'd like to change the `cache-control`
@@ -307,10 +307,10 @@ poetry install
 That should have installed the CLI:
 
 ```sh
-poetry run deployer
+poetry run deployer --help
 ```
 
-If you wanna make a PR, make sure it's formatted with `black` and
+If you want to make a PR, make sure it's formatted with `black` and
 passes `flake8`.
 
 You can check that all files are `flake8` fine by running:

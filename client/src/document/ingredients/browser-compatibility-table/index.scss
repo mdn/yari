@@ -1,7 +1,3 @@
-@import "~@mdn/minimalist/sass/vars/typography";
-@import "~@mdn/minimalist/sass/vars/layout";
-@import "~@mdn/minimalist/sass/vars/color-palette";
-
 @import "~@mdn/minimalist/sass/mixins/utils";
 
 @import "./atoms/bc-github";
@@ -17,4 +13,28 @@
 .offscreen,
 .only-icon span {
   @include visually-hidden();
+}
+
+.bc-table-row-header {
+  code {
+    overflow: hidden;
+  }
+
+  .left-side,
+  .right-side {
+    white-space: pre;
+    overflow: hidden;
+  }
+
+  /* Can only flex-shrink and not flex-grow 
+  ie the "slider" in a sliding glass door */
+  .left-side {
+    flex: 0 1 auto;
+    text-overflow: ellipsis;
+  }
+  /* Can flex-grow and not flex-shrink as
+  its the stationary portion */
+  .right-side {
+    flex: 1 0 auto;
+  }
 }

@@ -24,7 +24,7 @@ key, it renders this instead.
 
 To debug the 404 page, in local development you have two choices:
 
-- <http://localhost:5000/en-US/docs/Does/not/exist>
+- <http://localhost:5042/en-US/docs/Does/not/exist>
 
 - <http://localhost:3000/en-US/_404/Does/not/exist>
 

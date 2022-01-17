@@ -3,7 +3,7 @@
 @import "~@mdn/minimalist/sass/mixins/utils";
 @import "~@mdn/minimalist/sass/mixins/links";
 
-@import "~@mdn/minimalist/sass/vars/color-palette";
+@import "~@mdn/minimalist/sass/vars/mdn-web-docs-palette";
 @import "~@mdn/minimalist/sass/vars/layout";
 @import "~@mdn/minimalist/sass/vars/typography";
 
@@ -91,7 +91,7 @@
     &:last-child {
       a:link,
       a:visited {
-        color: $text-color;
+        color: $mdn-neutral900;
       }
     }
   }

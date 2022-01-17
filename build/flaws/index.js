@@ -26,8 +26,6 @@ const { getUnsafeHTMLFlaws } = require("./unsafe-html");
 const { injectTranslationDifferences } = require("./translation-differences");
 
 function injectFlaws(doc, $, options, document) {
-  if (doc.isArchive) return;
-
   const flawChecks = [
     ["unsafe_html", getUnsafeHTMLFlaws, false],
     ["broken_links", getBrokenLinksFlaws, true],
@@ -80,7 +78,7 @@ function injectFlaws(doc, $, options, document) {
 }
 
 async function fixFixableFlaws(doc, options, document) {
-  if (!options.fixFlaws || document.isArchive) return;
+  if (!options.fixFlaws) return;
 
   const { rawBody, isMarkdown } = document;
   if (isMarkdown) {

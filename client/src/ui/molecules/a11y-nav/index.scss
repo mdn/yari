@@ -5,7 +5,7 @@ Keyboard & screen reader skip link menu
 ********************************************************************** */
 
 @import "~@mdn/minimalist/sass/vars/layout";
-@import "~@mdn/minimalist/sass/vars/color-palette";
+@import "~@mdn/minimalist/sass/vars/mdn-web-docs-palette";
 
 .a11y-nav {
   position: absolute;
@@ -24,7 +24,7 @@ Keyboard & screen reader skip link menu
 
     &:hover,
     &:focus {
-      box-shadow: 3px 3px 5px $neutral-550;
+      box-shadow: 3px 3px 5px $mdn-neutral100;
       text-decoration: none;
       top: 20em;
     }

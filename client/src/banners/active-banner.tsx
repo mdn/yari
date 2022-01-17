@@ -3,8 +3,7 @@ import * as React from "react";
 import { ReactComponent as CloseIcon } from "@mdn/dinocons/general/close.svg";
 import { useGA } from "../ga-context";
 // import { COMMON_SURVEY_ID } from "./ids";
-import { PLUS_IDv1 } from "./ids";
-import { useLocale } from "../hooks";
+import { PLUS_IDv2 } from "./ids";
 
 // const CATEGORY_LEARNING_SURVEY = "learning web development";
 
@@ -15,8 +14,7 @@ import { useLocale } from "../hooks";
 // the banner configurable through props like these. For now, however,
 // that is hardcoded into the stylesheet.
 export type BannerProps = {
-  // A unique string associated with this banner. It must match the
-  // name of the waffle flag that controls the banner, and is also
+  // A unique string associated with this banner. Is also
   // used as part of a localStorage key.
   id: string;
   // class name used on main banner container. Exclusively used
@@ -113,20 +111,21 @@ function Banner(props: BannerProps) {
 
 function PlusBanner({ onDismissed }: { onDismissed: () => void }) {
   const ga = useGA();
-  const locale = useLocale();
 
   return (
     <Banner
-      id={PLUS_IDv1}
-      copy={"✨ Love MDN? Get even more! - "}
-      cta={"Discover MDN Plus »"}
-      url={`/${locale}/plus`}
-      newWindow={false}
+      id={PLUS_IDv2}
+      copy={
+        "✨ We are working on a new logo for MDN and would love your input! - "
+      }
+      cta={"Vote for your favorite(s) »"}
+      url={"/opendesign"}
+      newWindow={true}
       onDismissed={onDismissed}
       onCTAClick={() => {
         ga("send", {
           hitType: "event",
-          eventCategory: PLUS_IDv1,
+          eventCategory: PLUS_IDv2,
           eventAction: "CTA clicked",
           eventLabel: "banner",
         });
@@ -146,7 +145,7 @@ export default function ActiveBanner({
   id: string;
   onDismissed: () => void;
 }) {
-  if (id === PLUS_IDv1) {
+  if (id === PLUS_IDv2) {
     return <PlusBanner onDismissed={onDismissed} />;
   }
   // if (id === COMMON_SURVEY_ID) {

@@ -1,9 +1,9 @@
-@import "~@mdn/minimalist/sass/vars/color-palette";
+@import "~@mdn/minimalist/sass/vars/mdn-web-docs-palette";
 @import "~@mdn/minimalist/sass/vars/layout";
 
 .interactive {
-  background-color: $neutral-550;
-  border: 1px solid #eaf2f4;
+  background-color: $mdn-neutral100;
+  border: 1px solid $mdn-neutral200;
   color: $text-color;
   padding: 10px;
   width: 100%;
