@@ -3,9 +3,9 @@ import { useEffect } from "react";
 import { Loading } from "../../ui/atoms/loading";
 import { useUserData } from "../../user-context";
 import { DataError, NotSignedIn, NotSubscriber } from ".";
+import { Button } from "../../ui/atoms/button";
 import {
   createSearchParams,
-  Link,
   useLocation,
   useSearchParams,
 } from "react-router-dom";
@@ -132,9 +132,27 @@ export default function List({
       ))}
       {(nextPage !== 0 || previousPage !== 0) && (
         <div className="pagination">
-          {nextPage !== 0 && (
-            <Link to={getPaginationURL(nextPage)}>Load More</Link>
-          )}
+          <Button
+            href={
+              previousPage !== 0 ? getPaginationURL(previousPage) : undefined
+            }
+            type="action"
+            icon="previous"
+            isDisabled={previousPage === 0 ? true : false}
+          />
+
+          {
+            <span className="pagination-label">
+              Page {data.metadata.page} of {maxPage}
+            </span>
+          }
+
+          <Button
+            href={nextPage !== 0 ? getPaginationURL(nextPage) : undefined}
+            type="action"
+            icon="next"
+            isDisabled={nextPage === 0 ? true : false}
+          />
         </div>
       )}
     </>

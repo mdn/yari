@@ -35,6 +35,7 @@
     svg,
     img {
       width: 100%;
+      height: 38px;
     }
 
     &.is-ms {
@@ -53,7 +54,7 @@
   }
 
   &-legal-text {
-    font: var(--type-body-m);
+    font: var(--type-body-s);
 
     a {
       text-decoration: underline;
@@ -70,7 +71,7 @@
     display: flex;
     flex-wrap: wrap;
     gap: 1rem;
-    font: var(--type-body-m);
+    font: var(--type-body-s);
   }
 
   &-logo-link {
@@ -131,7 +132,7 @@
   }
 }
 
-@media screen and (min-width: $screen-md) {
+@media screen and (min-width: $screen-sm) {
   .page-footer {
     &-grid {
       display: grid;
@@ -184,18 +185,34 @@
   }
 }
 
-@media screen and (min-width: $screen-lg) {
+@media screen and (min-width: $screen-md) {
   .page-footer {
     &-grid {
-      grid-template-columns: minmax(260px, 2fr) repeat(4, 1fr) max-content;
+      grid-template-columns: minmax(260px, 2fr) repeat(5, minmax(0, 1fr));
       grid-template-areas:
         "logo  nav1  nav2  nav3  nav4  app"
         "moz   moz   moz   moz   moz   moz"
         "legal legal legal legal  .    .";
+      gap: 1rem;
     }
 
     &-app-list {
       flex-direction: column;
+    }
+
+    &-app-dl {
+      img,
+      svg {
+        height: auto;
+      }
+    }
+  }
+}
+
+@media screen and (min-width: $screen-xl) {
+  .page-footer {
+    &-grid {
+      gap: 2.5rem;
     }
   }
 }

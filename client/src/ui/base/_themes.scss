@@ -44,7 +44,8 @@
 
   --shadow-01: #{$mdn-theme-light-shadow-01};
   --shadow-02: #{$mdn-theme-light-shadow-02};
-  --focus-01: #{$mdn-theme-light-shadow-01};
+  --focus-01: #{$mdn-theme-light-focus-01};
+  --field-focus-border: #{$mdn-theme-field-focus-border};
 
   --code-tag: #{$mdn-theme-light-code-tag};
   --code-punctuation: #{$mdn-theme-light-code-punctuation};
@@ -53,6 +54,9 @@
   --code-comment: #{$mdn-theme-light-code-comment};
   --code-default: #{$mdn-theme-light-code-default};
   --code-selector: #{$mdn-theme-light-code-selector};
+
+  --scrollbar-bg: transparent;
+  --scrollbar-color: rgba(0, 0, 0, 0.25);
 }
 
 .dark {
@@ -102,6 +106,8 @@
   --code-comment: #{$mdn-theme-dark-code-comment};
   --code-default: #{$mdn-theme-dark-code-default};
   --code-selector: #{$mdn-theme-dark-code-selector};
+
+  --scrollbar-color: rgba(255, 255, 255, 0.25);
 }
 
 body[class="high-contrast-white"] {

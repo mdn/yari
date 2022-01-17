@@ -1,6 +1,9 @@
 import { Link } from "react-router-dom";
 import React, { useEffect } from "react";
 import _ from "lodash";
+import { Button } from "../../../ui/atoms/button";
+
+import { useUIStatus } from "../../../ui-context";
 
 import "./index.scss";
 
@@ -36,10 +39,18 @@ function CalculateSidebarOnScroll() {
 }
 
 function SidebarContainer({ children }) {
+  const { isSidebarOpen, setIsSidebarOpen } = useUIStatus();
+  const classes = `sidebar ${isSidebarOpen ? "is-expanded" : ""}`;
+
   return (
     <>
-      <nav id="sidebar-quicklinks" className="sidebar">
-        {children}
+      <nav id="sidebar-quicklinks" className={classes}>
+        <Button
+          extraClasses="backdrop"
+          type="action"
+          onClickHandler={() => setIsSidebarOpen(!isSidebarOpen)}
+        />
+        <div className="sidebar-inner">{children}</div>
       </nav>
       <CalculateSidebarOnScroll />
     </>

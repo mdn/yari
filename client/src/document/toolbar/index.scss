@@ -5,11 +5,12 @@
   border: 1px solid var(--border-secondary);
   border-radius: var(--elem-radius);
   padding: 0.5rem 1rem;
-  margin: 0 0 1rem 0;
+  margin: 0.5rem;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: 0.5rem;
+  flex-wrap: wrap;
+  gap: 1rem;
   font: var(--type-body-m);
 
   &-first-row,
@@ -21,9 +22,18 @@
   .button {
     color: var(--text-color);
     text-decoration: underline;
+    white-space: nowrap;
 
     &:hover {
       text-decoration: none;
     }
+  }
+
+  .toggle-show-flaws {
+    white-space: nowrap;
+  }
+
+  @media screen and (min-width: $screen-md) {
+    margin: 0 0 1rem 0;
   }
 }
