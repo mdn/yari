@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import _ from "lodash";
 import { Button } from "../../../ui/atoms/button";
 
@@ -40,7 +40,18 @@ function CalculateSidebarOnScroll() {
 
 function SidebarContainer({ children }) {
   const { isSidebarOpen, setIsSidebarOpen } = useUIStatus();
-  const classes = `sidebar ${isSidebarOpen ? "is-expanded" : ""}`;
+  const [classes, setClasses] = useState<string>("sidebar");
+
+  useEffect(() => {
+    if (isSidebarOpen) {
+      setClasses("sidebar is-expanded");
+    } else {
+      setClasses("sidebar is-animating");
+      setTimeout(() => {
+        setClasses("sidebar");
+      }, 300);
+    }
+  }, [isSidebarOpen]);
 
   return (
     <>
