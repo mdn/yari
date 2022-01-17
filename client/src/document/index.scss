@@ -62,12 +62,13 @@ a.page-not-created {
       height: 16px;
       width: 16px;
       position: absolute;
-      right: 20px;
+      right: 16px;
       top: 18px;
     }
   }
 
-  .example-bad + .copy-icon {
+  .example-bad + .copy-icon,
+  .example-good + .copy-icon {
     display: none;
   }
 
@@ -234,6 +235,7 @@ a.page-not-created {
     border-collapse: collapse;
     margin: 1rem 0;
     width: 100%;
+    line-height: 1.2;
 
     th {
       text-align: left;
@@ -243,7 +245,7 @@ a.page-not-created {
 
     td,
     th {
-      padding: 0.5rem;
+      padding: 0.5rem 0.75rem;
       border: 1px solid var(--border-primary);
       vertical-align: middle;
     }
