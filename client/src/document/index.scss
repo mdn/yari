@@ -57,25 +57,29 @@ a.page-not-created {
       background-size: 24px;
       content: "";
       display: block;
-      height: 24px;
+      height: 16px;
+      width: 16px;
       position: absolute;
-      right: 13px;
-      top: 3px;
-      width: 24px;
+      right: 20px;
+      top: 20px;
     }
+  }
+
+  .example-bad + .copy-icon {
+    display: none;
   }
 
   .example-bad {
     &::after {
       background-color: var(--icon-critical);
-      mask-image: url("~@mdn/dinocons/emojis/frown.svg");
+      mask-image: url("../assets/icons/critical.svg");
     }
   }
 
   .example-good {
     &::after {
       background-color: var(--icon-success);
-      mask-image: url("~@mdn/dinocons/emojis/smiley.svg");
+      mask-image: url("../assets/icons/checkmark.svg");
     }
   }
 
@@ -146,11 +150,6 @@ a.page-not-created {
     .example-good,
     .example-bad {
       padding: 1rem;
-
-      &::after {
-        right: 44px;
-        top: 13px;
-      }
     }
   }
 
