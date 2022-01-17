@@ -83,25 +83,19 @@ a.page-not-created {
     }
   }
 
-  pre,
-  .code-example {
-    background-color: var(--background-tertiary);
-    border: 1px solid var(--border-secondary);
-    border-radius: 4px;
-    color: var(--code-default);
-    font: var(--type-code-regular);
+  pre {
     margin-bottom: 2rem;
     padding: 1rem;
     margin: 0 0 2rem 0;
-    position: relative;
+    background-color: var(--background-tertiary);
+    border: 1px solid var(--border-secondary);
+    border-radius: 4px;
+  }
 
-    pre {
-      margin: 0;
-      padding: 0;
-      border: 0 none;
-      border-radius: 0;
-      background: transparent;
-    }
+  .code-example {
+    color: var(--code-default);
+    font: var(--type-code-regular);
+    position: relative;
 
     .copy-icon {
       background: var(--icon-secondary) url("../assets/clippy.svg") center
