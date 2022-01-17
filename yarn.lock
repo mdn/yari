@@ -8202,10 +8202,10 @@ html-tags@^3.1.0:
   resolved "https://registry.yarnpkg.com/html-tags/-/html-tags-3.1.0.tgz#7b5e6f7e665e9fb41f30007ed9e0d41e97fb2140"
   integrity sha512-1qYz89hW3lFDEazhjW0yVAV87lw8lVkrJocr72XmBkMKsoSVJCQx3W8BXsC7hO2qAt8BoVjYjtAcZ9perqGnNg==
 
-html-validate@6.1.6:
-  version "6.1.6"
-  resolved "https://registry.yarnpkg.com/html-validate/-/html-validate-6.1.6.tgz#9f86da46eb0df57b41711bdc6e326cfe8ae8b9b3"
-  integrity sha512-UAfa1Wk4xDy8dsA96yTscvdYts4Cl1aYAG6wl4SwFkjnrVj1MTs3iWj/svHmi0PmXa2q4mt/g5ZAKJ2Sgk8o7w==
+html-validate@6.2.0:
+  version "6.2.0"
+  resolved "https://registry.yarnpkg.com/html-validate/-/html-validate-6.2.0.tgz#cbdc4fea37c536c25e4db306d7655d057de8d628"
+  integrity sha512-W0oScIrMVVK1uraO9CpttUuSvBvaFxFEqeimKQbENfH0qVKyO+nZHJJpHo48XSAa0Hq54BXyefr+sgykzlkp5Q==
   dependencies:
     "@babel/code-frame" "^7.10.0"
     "@html-validate/stylish" "^2.0.0"
@@ -13137,15 +13137,7 @@ prompts@2.4.0:
     kleur "^3.0.3"
     sisteransi "^1.0.5"
 
-prompts@^2.0.0, prompts@^2.0.1:
-  version "2.4.1"
-  resolved "https://registry.yarnpkg.com/prompts/-/prompts-2.4.1.tgz#befd3b1195ba052f9fd2fde8a486c4e82ee77f61"
-  integrity sha512-EQyfIuO2hPDsX1L/blblV+H7I0knhgAd82cVneCwcdND9B8AuCDuRcBH6yIcG4dFzlOUqbazQqwGjx5xmsNLuQ==
-  dependencies:
-    kleur "^3.0.3"
-    sisteransi "^1.0.5"
-
-prompts@^2.4.2:
+prompts@^2.0.0, prompts@^2.0.1, prompts@^2.4.2:
   version "2.4.2"
   resolved "https://registry.yarnpkg.com/prompts/-/prompts-2.4.2.tgz#7b57e73b3a48029ad10ebd44f74b01722a4cb069"
   integrity sha512-NxNv/kLguCA7p3jE8oL2aEBsrJWgAakBpgmgK6lpPWV+WuOmY6r2/zbAVnP+T8bQlA0nzHXSJSJW0Hq7ylaD2Q==
