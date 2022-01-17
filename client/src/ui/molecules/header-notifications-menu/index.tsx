@@ -27,7 +27,7 @@ export const HeaderNotificationsMenu = () => {
   const menuId = "my-notifications";
 
   const submenuRef = React.useRef(null);
-  useOnClickOutside(submenuRef, toggleSubMenu);
+  useOnClickOutside(submenuRef, closeSubMenu);
 
   const previousActiveElement = React.useRef<null | HTMLButtonElement>(null);
   const [visibleSubMenuId, setVisibleSubMenuId] = React.useState<string | null>(
@@ -105,11 +105,17 @@ export const HeaderNotificationsMenu = () => {
     // store the current activeElement
     previousActiveElement.current = document.activeElement as HTMLButtonElement;
     if (visibleSubMenuId === menuEntryId) {
+      closeSubMenu();
+    } else {
+      setVisibleSubMenuId(menuEntryId);
+    }
+  }
+
+  function closeSubMenu() {
+    if (visibleSubMenuId) {
       setVisibleSubMenuId(null);
       // User has closed the menu, so mark all notifications as read
       markNotificationsAsRead();
-    } else {
-      setVisibleSubMenuId(menuEntryId);
     }
   }
 
