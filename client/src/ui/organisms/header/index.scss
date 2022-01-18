@@ -13,11 +13,11 @@
   &::before {
     background: transparent url("~@mdn/dinocons/navigation/menu-open.svg") 0 0
       no-repeat;
-    background-size: 21px;
+    background-size: 27px;
     content: "";
     display: block;
-    height: 21px;
-    width: 21px;
+    height: 27px;
+    width: 27px;
   }
 
   &.expanded::before {
