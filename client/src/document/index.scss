@@ -1,4 +1,5 @@
 @use "../ui/vars" as *;
+@use "../ui/base/themes" as *;
 @use "../ui/molecules/grids/grids.scss" as *;
 @use "../ui/base/typography" as *;
 
@@ -47,6 +48,7 @@ a.page-not-created {
 
     code {
       font-size: 1.15rem;
+      font-weight: 650;
     }
   }
 
@@ -90,13 +92,27 @@ a.page-not-created {
     }
   }
 
+  pre,
+  code {
+    border-radius: 0.25rem;
+    font: var(--type-code-regular);
+  }
+
+  code {
+    background: var(--code-background-inline);
+    padding: 0.125rem 0.25rem;
+  }
+
   pre {
     margin-bottom: 2rem;
     padding: 1rem 2.5rem 1rem 1rem;
     margin: 0 0 2rem 0;
-    background-color: var(--background-tertiary);
-    border: 1px solid var(--border-secondary);
-    border-radius: 4px;
+    background-color: var(--code-background-block);
+    border: 1px solid transparent;
+
+    code {
+      background: none;
+    }
   }
 
   .code-example {
