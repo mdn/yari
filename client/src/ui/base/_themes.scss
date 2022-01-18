@@ -54,8 +54,8 @@
   --code-token-comment: #{$mdn-theme-light-code-token-comment};
   --code-token-default: #{$mdn-theme-light-code-token-default};
   --code-token-selector: #{$mdn-theme-light-code-token-selector};
-  --code-background-inline: #{$mdn-theme-light-background-inline};
-  --code-background-block: #{$mdn-theme-light-background-block};
+  --code-background-inline: #{$mdn-theme-light-code-background-inline};
+  --code-background-block: #{$mdn-theme-light-code-background-block};
 
   --scrollbar-bg: transparent;
   --scrollbar-color: rgba(0, 0, 0, 0.25);
@@ -108,8 +108,8 @@
   --code-token-comment: #{$mdn-theme-dark-code-token-comment};
   --code-token-default: #{$mdn-theme-dark-code-token-default};
   --code-token-selector: #{$mdn-theme-dark-code-token-selector};
-  --code-background-inline: #{$mdn-theme-dark-background-inline};
-  --code-background-block: #{$mdn-theme-dark-background-block};
+  --code-background-inline: #{$mdn-theme-dark-code-background-inline};
+  --code-background-block: #{$mdn-theme-dark-code-background-block};
 
   --scrollbar-color: rgba(255, 255, 255, 0.25);
 }
