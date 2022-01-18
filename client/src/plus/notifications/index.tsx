@@ -61,7 +61,7 @@ function NotificationsLayout() {
         await mutate(HEADER_NOTIFICATIONS_MENU_API_URL);
       });
     };
-  }, []);
+  }, [apiUrl]);
 
   let watchingApiUrl = `/api/v1/plus/watched/?${selectedTerms}`;
 
