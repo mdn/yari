@@ -20,6 +20,8 @@ a.page-not-created {
   img {
     display: inline-block;
     height: auto;
+    margin: 0 auto;
+    display: flex;
   }
 
   figure {
@@ -31,16 +33,20 @@ a.page-not-created {
   }
 
   dt:not(.bc-legend-item-dt) {
-    margin-bottom: 1rem;
-
     &:not(.bc-supports) {
-      padding-bottom: 1rem;
+      padding-bottom: 0.5rem;
       color: var(--text-link);
       border-bottom: 1px solid var(--border-primary);
     }
 
     p {
       padding: 0;
+    }
+
+    font-weight: 650;
+
+    code {
+      font-size: 1.15rem;
     }
   }
 
@@ -57,62 +63,60 @@ a.page-not-created {
       background-size: 24px;
       content: "";
       display: block;
-      height: 24px;
+      height: 16px;
+      width: 16px;
       position: absolute;
-      right: 13px;
-      top: 3px;
-      width: 24px;
+      right: 16px;
+      top: 18px;
     }
+  }
+
+  .example-bad + .copy-icon,
+  .example-good + .copy-icon {
+    display: none;
   }
 
   .example-bad {
     &::after {
       background-color: var(--icon-critical);
-      mask-image: url("~@mdn/dinocons/emojis/frown.svg");
+      mask-image: url("../assets/icons/no.svg");
     }
   }
 
   .example-good {
     &::after {
       background-color: var(--icon-success);
-      mask-image: url("~@mdn/dinocons/emojis/smiley.svg");
+      mask-image: url("../assets/icons/checkmark.svg");
     }
   }
 
-  pre,
-  .code-example {
+  pre {
+    margin-bottom: 2rem;
+    padding: 1rem 2.5rem 1rem 1rem;
+    margin: 0 0 2rem 0;
     background-color: var(--background-tertiary);
     border: 1px solid var(--border-secondary);
     border-radius: 4px;
+  }
+
+  .code-example {
     color: var(--code-default);
     font: var(--type-code-regular);
-    margin-bottom: 2rem;
-    padding: 1rem;
-    margin: 0 0 2rem 0;
     position: relative;
 
-    pre {
-      margin: 0;
-      padding: 0;
-      border: 0 none;
-      border-radius: 0;
-      background: transparent;
-    }
-
     .copy-icon {
-      background: var(--icon-secondary) url("../assets/clippy.svg") center
-        center no-repeat;
+      background-image: url("../assets/clippy.svg");
+      background-repeat: no-repeat;
       background-position: 61% 45%;
       background-size: 1rem;
-      border: 1px solid var(--border-secondary);
       border-radius: 0.25rem;
       cursor: pointer;
       height: 33px;
       margin: 0;
       padding: 0.25rem;
       position: absolute;
-      right: 0.25rem;
-      top: 0.25rem;
+      right: 0.5rem;
+      top: 0.75rem;
       width: 33px;
 
       @media screen and (min-width: $screen-md) {
@@ -146,11 +150,6 @@ a.page-not-created {
     .example-good,
     .example-bad {
       padding: 1rem;
-
-      &::after {
-        right: 44px;
-        top: 13px;
-      }
     }
   }
 
@@ -159,12 +158,11 @@ a.page-not-created {
   }
 
   a:not(.button) {
-    text-decoration: underline;
     color: var(--text-link);
 
     &:hover,
     &:focus {
-      text-decoration: none;
+      text-decoration: underline;
     }
 
     &:active {
@@ -240,6 +238,7 @@ a.page-not-created {
     border-collapse: collapse;
     margin: 1rem 0;
     width: 100%;
+    line-height: 1.2;
 
     th {
       text-align: left;
@@ -249,7 +248,7 @@ a.page-not-created {
 
     td,
     th {
-      padding: 0.5rem;
+      padding: 0.5rem 0.75rem;
       border: 1px solid var(--border-primary);
       vertical-align: middle;
     }

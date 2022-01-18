@@ -9,3 +9,12 @@
     font: var(--type-body-m);
   }
 }
+
+.main-page-content .prev-next,
+.prev-next {
+  list-style: none;
+  margin: 1rem 0;
+  padding: 0;
+  display: flex;
+  justify-content: space-between;
+}

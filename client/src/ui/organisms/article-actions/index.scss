@@ -29,6 +29,10 @@
   @media screen and (min-width: $screen-md) {
     display: flex;
     gap: 0.5rem;
+
+    .sidebar-toggle {
+      display: none;
+    }
   }
 }
 
