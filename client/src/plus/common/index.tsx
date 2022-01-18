@@ -1,5 +1,3 @@
-import { useLocale } from "../../hooks";
-import { Link } from "react-router-dom";
 import SignInLink from "../../ui/atoms/signin-link";
 
 export function NotSignedIn() {
