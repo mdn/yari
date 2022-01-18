@@ -2,11 +2,11 @@
 .token.prolog,
 .token.doctype,
 .token.cdata {
-  color: var(--code-comment);
+  color: var(--code-token-comment);
 }
 
 .token.punctuation {
-  color: var(--code-punctuation);
+  color: var(--code-token-punctuation);
 }
 
 .token.attr-name,
@@ -17,16 +17,16 @@
 .token.string,
 .token.property,
 .token.function {
-  color: var(--code-attribute-name);
+  color: var(--code-token-attribute-name);
 }
 
 .token.atrule,
 .token.attr-value {
-  color: var(--code-attribute-value);
+  color: var(--code-token-attribute-value);
 }
 
 .token.keyword {
-  color: var(--code-tag);
+  color: var(--code-token-tag);
 }
 
 .token.tag,
@@ -35,7 +35,7 @@
 .token.constant,
 .token.symbol,
 .token.deleted {
-  color: var(--code-tag);
+  color: var(--code-token-tag);
 }
 
 .token.selector,
@@ -43,7 +43,7 @@
 .token.char,
 .token.builtin,
 .token.inserted {
-  color: var(--code-selector);
+  color: var(--code-token-selector);
 }
 
 .token.important,

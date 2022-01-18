@@ -16,6 +16,7 @@ $icons: "add-filled", "add", "altname", "bell-filled", "bell", "bookmark-filled"
   vertical-align: middle;
   mask-position: center;
   mask-repeat: no-repeat;
+  flex-shrink: 0;
 }
 
 // The icon class is applied directly to SVGs sometimes. This
