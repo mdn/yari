@@ -1,14 +1,10 @@
 import useSWR from "swr";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Loading } from "../../ui/atoms/loading";
 import { useUserData } from "../../user-context";
 import { DataError, NotSignedIn, NotSubscriber } from ".";
 import { Button } from "../../ui/atoms/button";
-import {
-  createSearchParams,
-  useLocation,
-  useSearchParams,
-} from "react-router-dom";
+import { createSearchParams, useSearchParams } from "react-router-dom";
 import { DISABLE_AUTH } from "../../constants";
 import { AuthDisabled } from "../../ui/atoms/auth-disabled";
 import { useCSRFMiddlewareToken } from "../../hooks";
@@ -17,31 +13,78 @@ export default function List({
   apiUrl,
   component,
   makeKey,
+  pageTitle,
 }: {
   apiUrl: string;
   component: any;
   makeKey: CallableFunction;
+  pageTitle: string;
 }) {
-  const [searchParams, setSearchParams] = useSearchParams();
-  const { pathname } = useLocation();
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [searchParams] = useSearchParams();
   const userData = useUserData();
   const csrfToken = useCSRFMiddlewareToken();
-  const pageTitle = "My Watched Pages";
 
-  const isSubscriber = userData && userData.isSubscriber;
-  let localApiURL: string | null = null;
-  if (isSubscriber) {
-    const params = searchParams.toString();
-    if (params) {
-      const joiner = apiUrl.includes("?") ? "&" : "?";
-      localApiURL = `${apiUrl}${joiner}${searchParams.toString()}`;
-    } else {
-      localApiURL = apiUrl;
-    }
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [apiUrl]);
+
+  if (DISABLE_AUTH) {
+    return <AuthDisabled />;
   }
 
+  if (!userData) {
+    return <Loading message="Waiting for authentication" />;
+  } else if (!userData.isAuthenticated) {
+    return <NotSignedIn />;
+  } else if (!userData.isSubscriber) {
+    return <NotSubscriber />;
+  }
+
+  function getPageUrl(page: number) {
+    let sp: URLSearchParams | string = createSearchParams(searchParams);
+    const joiner = apiUrl.includes("?") ? "&" : "?";
+    if (page === 1) {
+      sp.delete("page");
+    } else {
+      sp.set("page", `${page}`);
+    }
+    if (sp.toString()) {
+      sp = `${sp.toString()}`;
+    }
+    return `${apiUrl}${joiner}${sp}`;
+  }
+
+  const pages: JSX.Element[] = [];
+  for (let i = 0; i < currentPage; i++) {
+    pages.push(
+      <Page
+        fetchUrl={getPageUrl(i + 1)}
+        key={i}
+        makeKey={makeKey}
+        csrfToken={csrfToken}
+        ItemComponent={component}
+        getNextPageHandler={() => setCurrentPage((page) => page + 1)}
+        isLastLoadedPage={currentPage === i + 1}
+        pageTitle={pageTitle}
+      />
+    );
+  }
+
+  return <>{pages}</>;
+}
+
+function Page({
+  fetchUrl,
+  makeKey,
+  csrfToken,
+  ItemComponent,
+  getNextPageHandler,
+  isLastLoadedPage,
+  pageTitle,
+}) {
   const { data, error, mutate } = useSWR(
-    localApiURL,
+    fetchUrl,
     async (url) => {
       const response = await fetch(url);
       if (!response.ok) {
@@ -56,105 +99,47 @@ export default function List({
   );
 
   useEffect(() => {
-    if (data && data.metadata.total > 0) {
-      let newTitle = `${pageTitle} (${data.metadata.total})`;
+    if (data) {
+      let newTitle = `${pageTitle}`;
+
+      if (data.metadata.total > 0) {
+        newTitle += ` (${data.metadata.total})`;
+      }
+
       if (data.metadata.page > 1) {
         newTitle += ` Page ${data.metadata.page}`;
       }
       document.title = newTitle;
     }
-  }, [data]);
-
-  useEffect(() => {
-    if (data) {
-      // If you're on ?page=3 and the per_page number is 10 and you have
-      // 31 bookmarks. If you delete the only bookmark there on page 3,
-      // it no longer makes sense to be on that page. So we force a
-      // change to `?page={3 - 1}`.
-      if (data.metadata.page > 1 && data.items.length === 0) {
-        const newSearchParams = createSearchParams(searchParams);
-        if (data.metadata.page === 2) {
-          newSearchParams.delete("page");
-        } else {
-          newSearchParams.set("page", `${data.metadata.page - 1}`);
-        }
-        setSearchParams(newSearchParams);
-      }
-    }
-  }, [data, setSearchParams, searchParams]);
-
-  if (DISABLE_AUTH) {
-    return <AuthDisabled />;
-  }
-
-  if (!userData) {
-    return <Loading message="Waiting for authentication" />;
-  } else if (!userData.isAuthenticated) {
-    return <NotSignedIn />;
-  } else if (!userData.isSubscriber) {
-    return <NotSubscriber />;
-  }
+  }, [data, pageTitle]);
 
   if (error) {
     return <DataError error={error} />;
-  } else if (!data) {
+  } else if (!data || !data.items) {
     return <Loading message="Waiting for data" />;
   }
 
   const maxPage = Math.ceil(data.metadata.total / data.metadata.per_page);
   const nextPage =
     data.metadata.page + 1 <= maxPage ? data.metadata.page + 1 : 0;
-  const previousPage = data.metadata.page - 1 > 0 ? data.metadata.page - 1 : 0;
 
-  function getPaginationURL(page: number) {
-    const sp = createSearchParams(searchParams);
-    if (page === 1) {
-      sp.delete("page");
-    } else {
-      sp.set("page", `${page}`);
-    }
-    if (sp.toString()) {
-      return `${pathname}?${sp.toString()}`;
-    }
-    return pathname;
-  }
-
-  const ItemComponent = component;
   return (
     <>
-      {data?.items.map((item) => (
+      {data.items.map((item) => (
         <ItemComponent
           key={makeKey(item)}
           item={item}
           changedCallback={mutate}
           csrfToken={csrfToken || ""}
-        ></ItemComponent>
+        />
       ))}
-      {(nextPage !== 0 || previousPage !== 0) && (
+      {nextPage && isLastLoadedPage ? (
         <div className="pagination">
-          <Button
-            href={
-              previousPage !== 0 ? getPaginationURL(previousPage) : undefined
-            }
-            type="action"
-            icon="previous"
-            isDisabled={previousPage === 0 ? true : false}
-          />
-
-          {
-            <span className="pagination-label">
-              Page {data.metadata.page} of {maxPage}
-            </span>
-          }
-
-          <Button
-            href={nextPage !== 0 ? getPaginationURL(nextPage) : undefined}
-            type="action"
-            icon="next"
-            isDisabled={nextPage === 0 ? true : false}
-          />
+          <Button type="primary" onClickHandler={getNextPageHandler}>
+            Show more
+          </Button>
         </div>
-      )}
+      ) : null}
     </>
   );
 }

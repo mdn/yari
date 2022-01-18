@@ -31,9 +31,11 @@ function NotificationsLayout() {
   const { selectedTerms, selectedFilter, selectedSort } =
     useContext(searchFiltersContext);
 
+  let pageTitle = "My Notifications";
   let apiUrl = `/api/v1/plus/notifications/?${selectedTerms}&${selectedFilter}&${selectedSort}`;
   if (location.pathname === starredUrl) {
     apiUrl += "&filterStarred=true";
+    pageTitle = "My Starred Pages";
   }
   useEffect(() => {
     const clearNotificationsUrl =
@@ -121,6 +123,7 @@ function NotificationsLayout() {
               component={WatchCard}
               apiUrl={watchingApiUrl}
               makeKey={(item) => item.url}
+              pageTitle="My Watched Pages"
             />
           </>
         ) : (
@@ -130,6 +133,7 @@ function NotificationsLayout() {
               component={NotificationCard}
               apiUrl={apiUrl}
               makeKey={(item) => item.id}
+              pageTitle={pageTitle}
             />
           </>
         )}
