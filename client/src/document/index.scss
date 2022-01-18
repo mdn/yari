@@ -339,6 +339,21 @@ a.page-not-created {
     border: 0;
   }
 
+  /* "Live Samples" discussion here:
+  https://github.com/mdn/yari-private/issues/370,
+  These src attributes taken from unsafe-html.js */
+  iframe[src*="https://mdn.github.io"],
+  iframe[src*="https://www.youtube-nocookie.com"],
+  iframe[src*="https://jsfiddle.net"],
+  iframe[src*="https://test262.report"]
+  {
+    background: #fff;
+    border: 1px solid var(--border-primary);
+    border-radius: var(--elem-radius);
+    padding: 1rem;
+    width: 100%;
+  }
+
   h1 {
     font: var(--type-heading-h1);
     letter-spacing: -0.5px;
