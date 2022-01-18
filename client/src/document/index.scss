@@ -33,16 +33,20 @@ a.page-not-created {
   }
 
   dt:not(.bc-legend-item-dt) {
-    margin-bottom: 1rem;
-
     &:not(.bc-supports) {
-      padding-bottom: 1rem;
+      padding-bottom: 0.5rem;
       color: var(--text-link);
       border-bottom: 1px solid var(--border-primary);
     }
 
     p {
       padding: 0;
+    }
+
+    font-weight: 650;
+
+    code {
+      font-size: 1.15rem;
     }
   }
 
@@ -154,12 +158,11 @@ a.page-not-created {
   }
 
   a:not(.button) {
-    text-decoration: underline;
     color: var(--text-link);
 
     &:hover,
     &:focus {
-      text-decoration: none;
+      text-decoration: underline;
     }
 
     &:active {
