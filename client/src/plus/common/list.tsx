@@ -99,8 +99,13 @@ function Page({
   );
 
   useEffect(() => {
-    if (data && data.metadata.total > 0) {
-      let newTitle = `${pageTitle} (${data.metadata.total})`;
+    if (data) {
+      let newTitle = `${pageTitle}`;
+
+      if (data.metadata.total > 0) {
+        newTitle += ` (${data.metadata.total})`;
+      }
+
       if (data.metadata.page > 1) {
         newTitle += ` Page ${data.metadata.page}`;
       }

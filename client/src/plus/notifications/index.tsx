@@ -16,7 +16,6 @@ import WatchCard from "./watch-card";
 function NotificationsLayout() {
   const locale = useLocale();
   const location = useLocation();
-  const pageTitle = "My Watched Pages";
 
   const { selectedTerms, selectedFilter, selectedSort } =
     useContext(searchFiltersContext);
@@ -24,9 +23,11 @@ function NotificationsLayout() {
   const starredUrl = `/${locale}/plus/notifications/starred`;
   const watchingUrl = `/${locale}/plus/notifications/watching`;
 
+  let pageTitle = "My Notifications";
   let apiUrl = `/api/v1/plus/notifications/?${selectedTerms}&${selectedFilter}&${selectedSort}`;
   if (location.pathname === starredUrl) {
     apiUrl += "&filterStarred=true";
+    pageTitle = "My Starred Pages";
   }
   let watchingApiUrl = `/api/v1/plus/watched/?${selectedTerms}`;
 
@@ -86,7 +87,7 @@ function NotificationsLayout() {
               component={WatchCard}
               apiUrl={watchingApiUrl}
               makeKey={(item) => item.url}
-              pageTitle={pageTitle}
+              pageTitle="My Watched Pages"
             />
           </>
         ) : (
