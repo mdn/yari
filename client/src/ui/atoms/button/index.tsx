@@ -17,6 +17,7 @@ type ButtonProps = {
    * The `type` of the button. Not used with links.
    */
   buttonType?: "button" | "submit" | "reset";
+  name?: string;
   extraClasses?: string;
   href?: string;
   rel?: string;
@@ -43,6 +44,7 @@ export const Button = ({
   ariaHasPopup,
   ariaLabel,
   title,
+  name,
   type = "primary",
   buttonType = "button",
   extraClasses,
@@ -111,6 +113,7 @@ export const Button = ({
       onClick={onClickHandler}
       onFocus={onFocusHandler}
       value={value}
+      name={name}
     >
       <span className="button-wrap">{renderContent()}</span>
     </button>

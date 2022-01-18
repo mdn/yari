@@ -101,7 +101,7 @@ export default function Bookmarks() {
     }
   }, [data, setSearchParams, searchParams]);
 
-  async function saveBookmarked(url: string) {
+  async function deleteBookmarked(url: string, undelete?: boolean) {
     const sp = new URLSearchParams({
       url,
     });
@@ -111,6 +111,7 @@ export default function Bookmarks() {
     }
     const response = await fetch(apiPostURL, {
       method: "POST",
+      body: new URLSearchParams(undelete ? undefined : { delete: "true" }),
       headers: {
         "X-CSRFToken": data.csrfmiddlewaretoken,
         "Content-Type": "application/x-www-form-urlencoded",
@@ -140,15 +141,15 @@ export default function Bookmarks() {
   } else if (!data) {
     return <Loading message="Waiting for data" />;
   }
-  return <DisplayData data={data} saveBookmarked={saveBookmarked} />;
+  return <DisplayData data={data} deleteBookmarked={deleteBookmarked} />;
 }
 
 function DisplayData({
   data,
-  saveBookmarked,
+  deleteBookmarked,
 }: {
   data: BookmarksData;
-  saveBookmarked: (url: string) => Promise<boolean>;
+  deleteBookmarked: (url: string, undelete?: boolean) => Promise<boolean>;
 }) {
   const [searchParams] = useSearchParams();
   const { pathname } = useLocation();
@@ -218,7 +219,7 @@ function DisplayData({
               type="action"
               onClickHandler={async () => {
                 try {
-                  await saveBookmarked(unbookmarked.url);
+                  await deleteBookmarked(unbookmarked.url, true);
                   setUnbookmarked(null);
                   if (toggleError) {
                     setToggleError(null);
@@ -241,7 +242,7 @@ function DisplayData({
             bookmark={bookmark}
             toggle={async () => {
               try {
-                await saveBookmarked(bookmark.url);
+                await deleteBookmarked(bookmark.url);
                 setUnbookmarked(bookmark);
                 if (toggleError) {
                   setToggleError(null);

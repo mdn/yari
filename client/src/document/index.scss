@@ -1,4 +1,5 @@
 @use "../ui/vars" as *;
+@use "../ui/base/themes" as *;
 @use "../ui/molecules/grids/grids.scss" as *;
 @use "../ui/base/typography" as *;
 
@@ -33,16 +34,21 @@ a.page-not-created {
   }
 
   dt:not(.bc-legend-item-dt) {
-    margin-bottom: 1rem;
-
     &:not(.bc-supports) {
-      padding-bottom: 1rem;
+      padding-bottom: 0.5rem;
       color: var(--text-link);
       border-bottom: 1px solid var(--border-primary);
     }
 
     p {
       padding: 0;
+    }
+
+    font-weight: 650;
+
+    code {
+      font-size: 1.15rem;
+      font-weight: 650;
     }
   }
 
@@ -86,13 +92,27 @@ a.page-not-created {
     }
   }
 
+  pre,
+  code {
+    border-radius: 0.25rem;
+    font: var(--type-code-regular);
+  }
+
+  code {
+    background: var(--code-background-inline);
+    padding: 0.125rem 0.25rem;
+  }
+
   pre {
     margin-bottom: 2rem;
     padding: 1rem 2.5rem 1rem 1rem;
     margin: 0 0 2rem 0;
-    background-color: var(--background-tertiary);
-    border: 1px solid var(--border-secondary);
-    border-radius: 4px;
+    background-color: var(--code-background-block);
+    border: 1px solid transparent;
+
+    code {
+      background: none;
+    }
   }
 
   .code-example {
@@ -154,12 +174,11 @@ a.page-not-created {
   }
 
   a:not(.button) {
-    text-decoration: underline;
     color: var(--text-link);
 
     &:hover,
     &:focus {
-      text-decoration: none;
+      text-decoration: underline;
     }
 
     &:active {
@@ -318,6 +337,21 @@ a.page-not-created {
 
   iframe:not(.sample-code-frame) {
     border: 0;
+  }
+
+  /* "Live Samples" discussion here:
+  https://github.com/mdn/yari-private/issues/370,
+  These src attributes taken from unsafe-html.js */
+  iframe[src*="https://mdn.github.io"],
+  iframe[src*="https://www.youtube-nocookie.com"],
+  iframe[src*="https://jsfiddle.net"],
+  iframe[src*="https://test262.report"]
+  {
+    background: #fff;
+    border: 1px solid var(--border-primary);
+    border-radius: var(--elem-radius);
+    padding: 1rem;
+    width: 100%;
   }
 
   h1 {
