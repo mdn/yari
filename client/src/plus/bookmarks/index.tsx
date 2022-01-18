@@ -18,6 +18,7 @@ import { useUserData } from "../../user-context";
 
 import "./index.scss";
 import { DataError, NotSignedIn, NotSubscriber } from "../common";
+import NoteCard from "../../ui/molecules/notecards";
 
 dayjs.extend(relativeTime);
 
@@ -201,14 +202,14 @@ function DisplayData({
       )}
 
       {toggleError && (
-        <div className="notecard negative">
+        <NoteCard type="negative">
           <h3>Server error</h3>
           <p>Unable to save your bookmark to the server.</p>
           <p>
             <code>{toggleError.toString()}</code>
           </p>
           <a href={window.location.pathname}>Reload this page and try again.</a>
-        </div>
+        </NoteCard>
       )}
 
       {unbookmarked && (
