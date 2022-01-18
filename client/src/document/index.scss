@@ -210,7 +210,7 @@ a.page-not-created {
 
   [aria-current] {
     color: var(--text-link);
-    font-weight: bold;
+    font-weight: var(--font-body-strong-weight);
     text-decoration: none;
   }
 
@@ -259,7 +259,7 @@ a.page-not-created {
     th {
       text-align: left;
       background: var(--background-tertiary);
-      font-weight: bold;
+      font-weight: var(--font-body-strong-weight);
     }
 
     td,
