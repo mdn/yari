@@ -1,6 +1,5 @@
-import { useLocale } from "../../hooks";
-import { Link } from "react-router-dom";
 import SignInLink from "../../ui/atoms/signin-link";
+import NoteCard from "../../ui/molecules/notecards";
 
 export function NotSignedIn() {
   return (
@@ -22,13 +21,13 @@ export function NotSubscriber() {
 
 export function DataError({ error }: { error: Error }) {
   return (
-    <div className="notecard negative">
+    <NoteCard type="negative">
       <h3>Server error</h3>
       <p>A server error occurred trying to get your bookmarks.</p>
       <p>
         <code>{error.toString()}</code>
       </p>
       <a href={window.location.pathname}>Reload this page and try again.</a>
-    </div>
+    </NoteCard>
   );
 }
