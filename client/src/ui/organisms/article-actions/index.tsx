@@ -1,6 +1,5 @@
 import * as React from "react";
 
-import { BookmarkToggle } from "../../molecules/bookmark";
 import { Button } from "../../atoms/button";
 import { NotificationsWatchMenu } from "../../molecules/notifications-watch-menu";
 import { ThemeSwitcher } from "../../molecules/theme-switcher";
@@ -13,6 +12,7 @@ import { Doc } from "../../../document/types";
 import "./index.scss";
 import { MDN_APP } from "../../../constants";
 import { useUIStatus } from "../../../ui-context";
+import { BookmarkMenu } from "../../molecules/bookmark/menu";
 
 export const ArticleActions = ({
   doc,
@@ -77,7 +77,7 @@ export const ArticleActions = ({
                   <NotificationsWatchMenu doc={doc} />
                 </li>
                 <li className="article-actions-entry">
-                  <BookmarkToggle doc={doc} />
+                  <BookmarkMenu doc={doc} />
                 </li>
               </>
             )}
