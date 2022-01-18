@@ -17,9 +17,8 @@
 
   &:before {
     position: absolute;
-    top: 50%;
+    top: 1.5rem;
     left: 1rem;
-    transform: translateY(-50%);
     display: block;
     width: 16px;
     height: 16px;
@@ -57,7 +56,19 @@
     }
   }
 
-  p:last-child {
-    padding-bottom: 0;
+  // extra classes added to fix specificity.
+
+  &.notecard ul,
+  &.notecard ol {
+    padding-left: 2rem;
+  }
+
+  &.notecard ul,
+  &.notecard p {
+    padding-bottom: 0.5rem;
+
+    &:last-child {
+      padding-bottom: 0;
+    }
   }
 }
