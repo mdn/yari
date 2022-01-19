@@ -458,4 +458,25 @@ a.page-not-created {
     margin-bottom: 0.5rem;
     padding: 0;
   }
+
+  .callout {
+    background: var(--background-secondary);
+    padding: 1rem;
+    border-radius: 0.25rem;
+    border: 1px solid var(--border-primary);
+    box-shadow: var(--shadow-01);
+    display: flex;
+    text-align: center;
+    gap: 1rem;
+    flex-direction: column;
+
+    h4 {
+      padding: 0;
+    }
+
+    p {
+      margin: 0;
+      font: var(--type-body-m);
+    }
+  }
 }
