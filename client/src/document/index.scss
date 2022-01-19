@@ -33,6 +33,10 @@ a.page-not-created {
     margin-bottom: 0.5rem;
   }
 
+  li {
+    margin: 0.5rem 0;
+  }
+
   dt:not(.bc-legend-item-dt) {
     &:not(.bc-supports) {
       padding-bottom: 0.5rem;
@@ -273,8 +277,13 @@ a.page-not-created {
   blockquote {
     border-left: 4px solid var(--border-secondary);
     padding: 1rem 2rem;
-    margin: 1rem 0;
+    margin-bottom: 2rem;
     font: var(--type-body-l);
+    color: var(--text-secondary);
+
+    p {
+      padding-bottom: 0;
+    }
   }
 
   /* readonly inline badges needs a slightly darker background color in general article content  */
