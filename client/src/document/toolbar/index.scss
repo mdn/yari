@@ -2,7 +2,7 @@
 
 .toolbar {
   background: var(--background-secondary);
-  border: 1px solid var(--border-secondary);
+  border: 1px solid var(--border-primary);
   border-radius: var(--elem-radius);
   padding: 0.5rem 1rem;
   margin: 0.5rem;
@@ -12,6 +12,7 @@
   flex-wrap: wrap;
   gap: 1rem;
   font: var(--type-body-m);
+  box-shadow: var(--shadow-01);
 
   &-first-row,
   .edit-actions {
@@ -21,11 +22,10 @@
 
   .button {
     color: var(--text-color);
-    text-decoration: underline;
     white-space: nowrap;
 
     &:hover {
-      text-decoration: none;
+      text-decoration: underline;
     }
   }
 
@@ -34,6 +34,6 @@
   }
 
   @media screen and (min-width: $screen-md) {
-    margin: 0 0 1rem 0;
+    margin: 0 0 2rem 0;
   }
 }

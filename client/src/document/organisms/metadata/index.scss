@@ -2,11 +2,14 @@
 
 .main-page-content .metadata {
   background-color: var(--background-secondary);
-  margin: (1rem * 2) 0;
+  margin: 2rem 0;
   padding: 1rem;
+  border: 1px solid var(--border-primary);
+  box-shadow: var(--shadow-01);
+  border-radius: var(--elem-radius);
 
-  h3 {
-    padding-top: 0;
+  h4 {
+    padding: 0;
   }
 }
 
@@ -14,11 +17,6 @@
   margin: 0 auto;
   max-width: 1440px;
   width: 100%;
-
-  a:link,
-  a:visited {
-    text-decoration: underline;
-  }
 
   .last-modified-date {
     margin-bottom: 0;

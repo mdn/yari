@@ -18,6 +18,11 @@ a.page-not-created {
   padding: 3rem 1rem 1rem;
   overflow-wrap: break-word;
 
+  b,
+  strong {
+    font-weight: 650;
+  }
+
   img {
     display: inline-block;
     height: auto;
@@ -33,27 +38,33 @@ a.page-not-created {
     margin-bottom: 0.5rem;
   }
 
+  li {
+    margin: 0.5rem 0;
+  }
+
   dt:not(.bc-legend-item-dt) {
     &:not(.bc-supports) {
+      margin-top: 2rem;
       padding-bottom: 0.5rem;
-      color: var(--text-link);
-      border-bottom: 1px solid var(--border-primary);
+      font-weight: 650;
     }
 
     p {
-      padding: 0;
+      margin: 0 0 1rem 0;
     }
 
-    font-weight: 650;
-
     code {
-      font-size: 1.15rem;
       font-weight: 650;
     }
   }
 
   dd:not(.bc-legend-item-dd) {
-    margin-bottom: 1rem;
+    margin-bottom: 2rem;
+    padding-left: 1rem;
+
+    p {
+      margin: 0 0 1rem 0;
+    }
   }
 
   .example-good,
@@ -94,7 +105,7 @@ a.page-not-created {
 
   pre,
   code {
-    border-radius: 0.25rem;
+    border-radius: var(--elem-radius);
     font: var(--type-code-regular);
   }
 
@@ -104,14 +115,14 @@ a.page-not-created {
   }
 
   pre {
-    margin-bottom: 2rem;
     padding: 1rem 2.5rem 1rem 1rem;
-    margin: 0 0 2rem 0;
+    margin: 1rem 0 2rem 0;
     background-color: var(--code-background-block);
     border: 1px solid transparent;
 
     code {
       background: none;
+      padding: 0;
     }
   }
 
@@ -125,7 +136,7 @@ a.page-not-created {
       background-repeat: no-repeat;
       background-position: 61% 45%;
       background-size: 1rem;
-      border-radius: 0.25rem;
+      border-radius: var(--elem-radius);
       cursor: pointer;
       height: 33px;
       margin: 0;
@@ -147,7 +158,7 @@ a.page-not-created {
 
     .copy-icon-message {
       background: $mdn-color-dark-grey-90;
-      border-radius: 0.25rem;
+      border-radius: var(--elem-radius);
       color: white;
       display: none;
       font-size: 0.8125rem;
@@ -254,7 +265,6 @@ a.page-not-created {
     border-collapse: collapse;
     margin: 1rem 0;
     width: 100%;
-    line-height: 1.2;
 
     th {
       text-align: left;
@@ -268,13 +278,28 @@ a.page-not-created {
       border: 1px solid var(--border-primary);
       vertical-align: middle;
     }
+
+    td {
+      .code-example pre {
+        margin: 0;
+      }
+
+      ul {
+        margin: 0;
+      }
+    }
   }
 
   blockquote {
     border-left: 4px solid var(--border-secondary);
     padding: 1rem 2rem;
-    margin: 1rem 0;
+    margin-bottom: 2rem;
     font: var(--type-body-l);
+    color: var(--text-secondary);
+
+    p {
+      margin: 0;
+    }
   }
 
   /* readonly inline badges needs a slightly darker background color in general article content  */
@@ -357,44 +382,44 @@ a.page-not-created {
   h1 {
     font: var(--type-heading-h1);
     letter-spacing: -0.5px;
-    padding-bottom: 3rem;
+    margin-bottom: 3rem;
   }
 
   h2 {
     font: var(--type-heading-h2);
     letter-spacing: 0.5px;
-    padding: 2rem 0 1rem 0;
+    padding: 2rem 0 1rem;
   }
 
   h3 {
     font: var(--type-heading-h3);
     letter-spacing: 0.5px;
-    padding: 2rem 0 1rem 0;
+    padding: 2rem 0 1rem;
   }
 
   h4 {
     font: var(--type-heading-h4);
     letter-spacing: 0.5px;
-    padding: 2rem 0 1rem 0;
+    padding: 2rem 0 1rem;
   }
 
   h5 {
     font: var(--type-heading-h5);
     letter-spacing: 1.5px;
-    padding: 2rem 0 1rem 0;
+    padding: 2rem 0 1rem;
     text-transform: uppercase;
   }
 
   h6 {
     font: var(--type-heading-h6);
     letter-spacing: 1.5px;
-    padding: 2rem 0 1rem 0;
+    padding: 2rem 0 1rem;
     text-transform: uppercase;
   }
 
   p {
     font: var(--type-body-l);
-    padding-bottom: 2rem;
+    margin: 1rem 0;
   }
 
   li {
@@ -403,8 +428,8 @@ a.page-not-created {
 
   ul,
   ol {
-    margin: 0;
-    padding: 0 0 2rem 2rem;
+    margin: 1rem 0 2rem;
+    padding-left: 2rem;
   }
 
   ul {
@@ -420,38 +445,8 @@ a.page-not-created {
 
     ol {
       list-style: lower-roman;
-      padding-bottom: 0;
+      margin: 0;
     }
-  }
-
-  .mdn-docs-type-notecard-bold {
-    font-family: Inter;
-    font-style: normal;
-    font-weight: 600;
-    font-size: 0.875rem;
-    line-height: 1.75;
-  }
-  .mdn-docs-type-notecard-regular {
-    font-family: Inter;
-    font-style: normal;
-    font-weight: normal;
-    font-size: 0.875rem;
-    line-height: 1.75;
-  }
-  .mdn-docs-type-notecard-underlined {
-    font-family: Inter;
-    font-style: normal;
-    font-weight: normal;
-    font-size: 0.875rem;
-    line-height: 1.75;
-    text-decoration-line: underline;
-  }
-  .mdn-docs-type-code-regular {
-    font-family: Consolas;
-    font-style: normal;
-    font-weight: normal;
-    font-size: 0.875rem;
-    line-height: 150%;
   }
 
   @media screen and (min-width: $screen-sm) {
@@ -461,5 +456,27 @@ a.page-not-created {
   @media screen and (min-width: $screen-md) {
     margin-bottom: 0.5rem;
     padding: 0;
+  }
+
+  .callout {
+    background: var(--background-secondary);
+    padding: 1rem;
+    border-radius: var(--elem-radius);
+    border: 1px solid var(--border-primary);
+    box-shadow: var(--shadow-01);
+    display: flex;
+    text-align: center;
+    gap: 1rem;
+    flex-direction: column;
+    margin: 2rem 0;
+
+    h4 {
+      padding: 0;
+    }
+
+    p {
+      margin: 0;
+      font: var(--type-body-m);
+    }
   }
 }

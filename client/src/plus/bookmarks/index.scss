@@ -21,7 +21,7 @@
   align-items: center;
   background-color: white;
   border: var(--border-primary);
-  border-radius: 0.25rem;
+  border-radius: var(--elem-radius);
   display: flex;
   justify-content: space-between;
   margin-bottom: 8px;
