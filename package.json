@@ -15,6 +15,7 @@
     "fiori:build": "cd client && build-storybook",
     "fiori:start": "cd client && start-storybook -p 6006",
     "md": "ts-node markdown/cli.ts",
+    "prepare": "husky install",
     "prepare-build": "yarn build:client && yarn build:ssr && yarn tool optimize-client-build && yarn tool google-analytics-code && yarn tool spas && yarn tool gather-git-history && yarn tool build-robots-txt && yarn tool popularities",
     "prettier-check": "prettier --check .",
     "prettier-format": "prettier --write .",
@@ -26,13 +27,12 @@
     "test": "yarn prettier-check && yarn test:client && yarn test:kumascript && yarn test:content && yarn test:testing",
     "test:client": "cd client && tsc --noEmit && react-scripts test --env=jest-environment-jsdom-sixteen",
     "test:content": "jest content",
-    "test:headless": "playwright test headless",
     "test:developing": "playwright test developing",
+    "test:headless": "playwright test headless",
     "test:kumascript": "jest kumascript --env=node",
     "test:testing": "jest --rootDir testing",
     "tool": "node tool/cli.js",
-    "watch:ssr": "cd ssr && webpack --mode=production --watch",
-    "prepare": "husky install"
+    "watch:ssr": "cd ssr && webpack --mode=production --watch"
   },
   "jest": {
     "testPathIgnorePatterns": [

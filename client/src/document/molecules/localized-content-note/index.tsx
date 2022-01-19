@@ -4,8 +4,8 @@ export function LocalizedContentNote({
   isActive,
   locale,
 }: {
-  isActive: boolean,
-  locale: string,
+  isActive: boolean;
+  locale: string;
 }) {
   const activeLocaleNoteContent = {
     "en-US": {
