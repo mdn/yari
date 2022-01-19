@@ -1,4 +1,5 @@
 import * as React from "react";
+import { useState } from "react";
 import { Link } from "react-router-dom";
 
 import { useLocale } from "../../../hooks";
@@ -8,10 +9,8 @@ import "./index.scss";
 
 export const ReferenceMenu = () => {
   const locale = useLocale();
-  const previousActiveElement = React.useRef<null | HTMLButtonElement>(null);
-  const [visibleSubMenuId, setVisibleSubMenuId] = React.useState<string | null>(
-    null
-  );
+  const [isOpen, setIsOpen] = useState<boolean>(false);
+
   const menu = {
     label: "References",
     id: "references",
@@ -66,24 +65,6 @@ export const ReferenceMenu = () => {
     ],
   };
 
-  function hideSubMenuIfVisible() {
-    if (visibleSubMenuId) {
-      setVisibleSubMenuId(null);
-    }
-  }
-
-  /**
-   * Show and hide submenus in the main menu, send GA events and updates
-   * the ARIA state.
-   * @param {Object} event - The event that triggered the function.
-   * @param {String} menuEntryId - The current top-level menu item id
-   */
-  function toggleSubMenu(event, menuEntryId) {
-    // store the current activeElement
-    previousActiveElement.current = document.activeElement as HTMLButtonElement;
-    setVisibleSubMenuId(visibleSubMenuId === menuEntryId ? null : menuEntryId);
-  }
-
   return (
     <li key={menu.id} className="top-level-entry-container">
       <button
@@ -91,9 +72,9 @@ export const ReferenceMenu = () => {
         id={`${menu.id}-button`}
         className="top-level-entry menu-toggle"
         aria-haspopup="menu"
-        aria-expanded={menu.id === visibleSubMenuId}
+        aria-expanded={isOpen || undefined}
         onClick={(event) => {
-          toggleSubMenu(event, menu.id);
+          setIsOpen(!isOpen);
         }}
       >
         {menu.label}
@@ -103,11 +84,7 @@ export const ReferenceMenu = () => {
         {menu.label}
       </Link>
 
-      <Submenu
-        menuEntry={menu}
-        visibleSubMenuId={visibleSubMenuId}
-        onBlurHandler={hideSubMenuIfVisible}
-      />
+      <Submenu menuEntry={menu} defaultHidden />
     </li>
   );
 };
