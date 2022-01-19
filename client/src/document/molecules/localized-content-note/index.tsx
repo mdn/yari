@@ -4,8 +4,8 @@ export function LocalizedContentNote({
   isActive,
   locale,
 }: {
-  isActive: boolean;
-  locale: string;
+  isActive: boolean,
+  locale: string,
 }) {
   const activeLocaleNoteContent = {
     "en-US": {
@@ -16,7 +16,7 @@ export function LocalizedContentNote({
       linkText:
         "Cette page a été traduite à partir de l'anglais par la communauté. Vous pouvez également contribuer en rejoignant la communauté francophone sur MDN Web Docs.",
     },
-    "ja": {
+    ja: {
       linkText:
         "このページはコミュニティーの尽力で英語から翻訳されました。MDN Web Docs コミュニティーについてもっと知り、仲間になるにはこちらから。",
     },
