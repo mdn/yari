@@ -1,17 +1,18 @@
-import React from "react";
+import React, { useState } from "react";
 
 import { Button } from "../../atoms/button";
 
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 
-import { useLocale, useOnClickOutside } from "../../../hooks";
+import { useLocale } from "../../../hooks";
 import useSWR, { mutate } from "swr";
 
 import "./index.scss";
 import { NotificationData } from "../../../types/notifications";
 import { Link } from "react-router-dom";
 import { HEADER_NOTIFICATIONS_MENU_API_URL } from "../../../constants";
+import { DropdownMenu, DropdownMenuWrapper } from "../dropdown";
 
 dayjs.extend(relativeTime);
 
@@ -27,13 +28,7 @@ type NotificationMenuItem = {
 export const HeaderNotificationsMenu = () => {
   const menuId = "my-notifications";
 
-  const submenuRef = React.useRef(null);
-  useOnClickOutside(submenuRef, closeSubMenu);
-
-  const previousActiveElement = React.useRef<null | HTMLButtonElement>(null);
-  const [visibleSubMenuId, setVisibleSubMenuId] = React.useState<string | null>(
-    null
-  );
+  const [isOpen, setIsOpen] = useState<boolean>(false);
   let notificationCount = 0;
 
   const locale = useLocale();
@@ -97,28 +92,6 @@ export const HeaderNotificationsMenu = () => {
     return true;
   }
 
-  /**
-   * Show and hide submenus in the main menu
-   * @param {String} menuEntryId - The current top-level menu item id
-   */
-  function toggleSubMenu(menuEntryId) {
-    // store the current activeElement
-    previousActiveElement.current = document.activeElement as HTMLButtonElement;
-    if (visibleSubMenuId === menuEntryId) {
-      closeSubMenu();
-    } else {
-      setVisibleSubMenuId(menuEntryId);
-    }
-  }
-
-  function closeSubMenu() {
-    if (visibleSubMenuId) {
-      setVisibleSubMenuId(null);
-      // User has closed the menu, so mark all notifications as read
-      markNotificationsAsRead();
-    }
-  }
-
   function drawNotificationButtonContents() {
     return (
       <>
@@ -135,7 +108,11 @@ export const HeaderNotificationsMenu = () => {
   }
 
   return (
-    <div className="notifications-menu" ref={submenuRef}>
+    <DropdownMenuWrapper
+      className="notifications-menu"
+      isOpen={isOpen}
+      setIsOpen={setIsOpen}
+    >
       <Link to={`/${locale}/plus/notifications/`} className="top-level-entry">
         {drawNotificationButtonContents()}
       </Link>
@@ -146,74 +123,74 @@ export const HeaderNotificationsMenu = () => {
         ariaControls={menuId}
         extraClasses="notifications-button"
         aria-label={`You currently have ${notificationCount} notifications`}
-        ariaExpanded={menuId === visibleSubMenuId}
+        ariaExpanded={isOpen || undefined}
         icon="bell"
         onClickHandler={() => {
-          toggleSubMenu(menuId);
+          setIsOpen(!isOpen);
         }}
       >
         {drawNotificationButtonContents()}
       </Button>
 
-      <ul
-        className={`notifications-submenu ${menuId} ${
-          menuId === visibleSubMenuId ? "show" : ""
-        }`}
-        role="menu"
-        aria-labelledby={`${menuId}-button`}
-      >
-        {notificationsMenuItems.length > 0 ? (
-          <>
-            <li className="notifications-submenu-header">
-              <div className="notifications-submenu-item-heading">
-                Notifications
-              </div>
-              <a
-                href={`/${locale}/plus/notifications/`}
-                className="notifications-submenu-header-action"
-              >
-                View all
-              </a>
-            </li>
+      <DropdownMenu onClose={markNotificationsAsRead}>
+        <ul
+          className={`notifications-submenu ${menuId} show`}
+          role="menu"
+          aria-labelledby={`${menuId}-button`}
+        >
+          {notificationsMenuItems.length > 0 ? (
+            <>
+              <li className="notifications-submenu-header">
+                <div className="notifications-submenu-item-heading">
+                  Notifications
+                </div>
+                <a
+                  href={`/${locale}/plus/notifications/`}
+                  className="notifications-submenu-header-action"
+                >
+                  View all
+                </a>
+              </li>
 
-            {notificationsMenuItems.map((notification) => {
-              return (
-                <li key={`${menuId}-${notification.id}`}>
-                  <a
-                    href={`/${locale}/plus/notifications/`}
-                    role="menuitem"
-                    className={`notifications-submenu-action ${
-                      !notification.read ? "unread" : ""
-                    }`}
-                  >
-                    <div className="notifications-submenu-item-heading">
-                      {notification.label}
-                    </div>
-                    {notification.description && (
-                      <p className="notifications-submenu-item-description">
-                        {notification.description}
-                      </p>
-                    )}
-
-                    <time
-                      className="notifications-submenu-item-created"
-                      dateTime={dayjs(notification.created).toISOString()}
+              {notificationsMenuItems.map((notification) => {
+                return (
+                  <li key={`${menuId}-${notification.id}`}>
+                    <a
+                      href={`/${locale}/plus/notifications/`}
+                      role="menuitem"
+                      className={`notifications-submenu-action ${
+                        !notification.read ? "unread" : ""
+                      }`}
                     >
-                      {dayjs(notification.created).fromNow().toString()}
-                    </time>
-                  </a>
-                </li>
-              );
-            })}
-          </>
-        ) : (
-          <div className="notifications-submenu-empty-message">
-            <a href={`/${locale}/plus/notifications/`}>
-              No notifications yet. Get started.
-            </a>
-          </div>
-        )}
-      </ul>
-    </div>
+                      <div className="notifications-submenu-item-heading">
+                        {notification.label}
+                      </div>
+                      {notification.description && (
+                        <p className="notifications-submenu-item-description">
+                          {notification.description}
+                        </p>
+                      )}
+
+                      <time
+                        className="notifications-submenu-item-created"
+                        dateTime={dayjs(notification.created).toISOString()}
+                      >
+                        {dayjs(notification.created).fromNow().toString()}
+                      </time>
+                    </a>
+                  </li>
+                );
+              })}
+            </>
+          ) : (
+            <div className="notifications-submenu-empty-message">
+              <a href={`/${locale}/plus/notifications/`}>
+                No notifications yet. Get started.
+              </a>
+            </div>
+          )}
+        </ul>
+      </DropdownMenu>
+    </DropdownMenuWrapper>
   );
 };

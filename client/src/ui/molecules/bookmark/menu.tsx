@@ -3,10 +3,10 @@ import React, { useEffect } from "react";
 import { Button } from "../../atoms/button";
 
 import "../notifications-watch-menu/index.scss";
-import { useOnClickOutside } from "../../../hooks";
 import useSWR from "swr";
 import { Icon } from "../../atoms/icon";
 import { Doc } from "../../../document/types";
+import { DropdownMenu, DropdownMenuWrapper } from "../dropdown";
 
 const menuId = "watch-submenu";
 
@@ -92,11 +92,12 @@ export function BookmarkMenu({ doc }: { doc: Doc }) {
 
   const bookmarked = data?.bookmarked;
 
-  const submenuRef = React.useRef(null);
-  useOnClickOutside(submenuRef, () => setShow(false));
-
   return (
-    <div className="watch-menu" ref={submenuRef}>
+    <DropdownMenuWrapper
+      className="watch-menu"
+      isOpen={show}
+      setIsOpen={setShow}
+    >
       <Button
         type="action"
         icon={`${bookmarked ? "bookmark-filled" : "bookmark"}`}
@@ -113,64 +114,66 @@ export function BookmarkMenu({ doc }: { doc: Doc }) {
 
       {data && (
         <form method="post" action={apiURL} onSubmit={saveHandler}>
-          <div
-            className={`${menuId} ${show ? "show" : ""}`}
-            role="menu"
-            aria-labelledby={`${menuId}-button`}
-          >
-            <button onClick={cancelHandler} className="watch-submenu-header">
-              <span className="watch-submenu-header-wrap">
-                <Icon name="chevron" />
-                {bookmarked ? "Edit" : "Save to Collection"}
-              </span>
-            </button>
+          <DropdownMenu>
+            <div
+              className={`${menuId} show`}
+              role="menu"
+              aria-labelledby={`${menuId}-button`}
+            >
+              <button onClick={cancelHandler} className="watch-submenu-header">
+                <span className="watch-submenu-header-wrap">
+                  <Icon name="chevron" />
+                  {bookmarked ? "Edit" : "Save to Collection"}
+                </span>
+              </button>
 
-            <div className="watch-submenu-item">
-              <label htmlFor="bookmark-name">Name:</label>
-              <input
-                id="bookmark-name"
-                name="name"
-                value={name}
-                autoComplete="off"
-                onChange={(e) => setName(e.target.value)}
-                onKeyDown={enterHandler}
-              />
-            </div>
-            <div className="watch-submenu-item">
-              <label htmlFor="bookmark-note">Note:</label>
-              <input
-                id="bookmark-note"
-                name="notes"
-                autoComplete="off"
-                value={notes}
-                onChange={(e) => setNotes(e.target.value)}
-                onKeyDown={enterHandler}
-              />
-            </div>
-            <div className="watch-submenu-item">
-              <Button buttonType="submit" isDisabled={isValidating}>
-                Save
-              </Button>
-              {!data?.bookmarked ? (
-                <Button onClickHandler={cancelHandler} type="secondary">
-                  Cancel
+              <div className="watch-submenu-item">
+                <label htmlFor="bookmark-name">Name:</label>
+                <input
+                  id="bookmark-name"
+                  name="name"
+                  value={name}
+                  autoComplete="off"
+                  onChange={(e) => setName(e.target.value)}
+                  onKeyDown={enterHandler}
+                />
+              </div>
+              <div className="watch-submenu-item">
+                <label htmlFor="bookmark-note">Note:</label>
+                <input
+                  id="bookmark-note"
+                  name="notes"
+                  autoComplete="off"
+                  value={notes}
+                  onChange={(e) => setNotes(e.target.value)}
+                  onKeyDown={enterHandler}
+                />
+              </div>
+              <div className="watch-submenu-item">
+                <Button buttonType="submit" isDisabled={isValidating}>
+                  Save
                 </Button>
-              ) : (
-                <Button
-                  type="action"
-                  buttonType="submit"
-                  name="delete"
-                  value="true"
-                  icon="trash"
-                  isDisabled={isValidating}
-                >
-                  Remove
-                </Button>
-              )}
+                {!data?.bookmarked ? (
+                  <Button onClickHandler={cancelHandler} type="secondary">
+                    Cancel
+                  </Button>
+                ) : (
+                  <Button
+                    type="action"
+                    buttonType="submit"
+                    name="delete"
+                    value="true"
+                    icon="trash"
+                    isDisabled={isValidating}
+                  >
+                    Remove
+                  </Button>
+                )}
+              </div>
             </div>
-          </div>
+          </DropdownMenu>
         </form>
       )}
-    </div>
+    </DropdownMenuWrapper>
   );
 }
