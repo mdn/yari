@@ -27,7 +27,7 @@ yarn build
 yarn start:static-server
 ```
 
-This will start a server on <http://localhost:5000> which serves the built content.
+This will start a server on <http://localhost:5042> which serves the built content.
 Now, in a separate terminal, you can run:
 
 ```sh
@@ -178,7 +178,7 @@ echo 'CONTENT_TRANSLATED_ROOT=testing/translated-content/files' >> .env
 yarn dev
 ```
 
-Now you can browse both <http://localhost:3000> and <http://localhost:5000>
+Now you can browse both <http://localhost:3000> and <http://localhost:5042>
 to see what the content fixtures are.
 For example, you can go to <http://localhost:3000/en-US/docs/Web/Foo>.
 Again, remember to start with a fresh new terminal so that no other testing

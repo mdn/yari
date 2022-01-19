@@ -58,6 +58,7 @@ const LOCALE_ALIASES = new Map([
 const PREFERRED_LOCALE_COOKIE_NAME = "preferredlocale";
 const ACTIVE_LOCALES = new Set([
   "en-us",
+  "es",
   "fr",
   "ja",
   "ko",
@@ -115,6 +116,7 @@ const CSP_DIRECTIVES = {
     // Avatars
     "*.githubusercontent.com",
     "*.googleusercontent.com",
+    "mozillausercontent.com",
     "profile.stage.mozaws.net",
     "profile.accounts.firefox.com",
 

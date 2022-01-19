@@ -18,9 +18,10 @@ import { PageNotFound } from "./page-not-found";
 
 import { SignIn, SignOut } from "./auth";
 import { Settings } from "./settings";
+// import { Banner } from "./banners";
 
 const AllFlaws = React.lazy(() => import("./flaws"));
-const AllTranslations = React.lazy(() => import("./translations"));
+const Translations = React.lazy(() => import("./translations"));
 const DocumentEdit = React.lazy(() => import("./document/forms/edit"));
 const DocumentCreate = React.lazy(() => import("./document/forms/create"));
 const DocumentManage = React.lazy(() => import("./document/forms/manage"));
@@ -39,7 +40,7 @@ function Layout({ pageType, children }) {
        Note, if you do uncomment banners again (because there's one to possible
        display), remember to go to
        */}
-      {/* {!isServer && <Banner />} */}
+      {/* !isServer && <Banner /> */}
       <div className={`page-wrapper ${pageType}`}>
         <Header />
         {children}
@@ -140,10 +141,10 @@ export function App(appProps) {
                   }
                 />
                 <Route
-                  path="/_translations"
+                  path="/_translations/*"
                   element={
                     <StandardLayout>
-                      <AllTranslations />
+                      <Translations />
                     </StandardLayout>
                   }
                 />

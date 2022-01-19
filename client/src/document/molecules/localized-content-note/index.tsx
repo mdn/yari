@@ -26,13 +26,13 @@ export function LocalizedContentNote({
     },
     ru: {
       linkText:
-        "Эта страница с английского языка была переведена силами сообщества. Вы также можете помочь, присоединившись к русскоязычному сообществу MDN Web Docs.",
+        "Эта страница была переведена с английского языка силами сообщества. Вы тоже можете внести свой вклад, присоединившись к русскоязычному сообществу MDN Web Docs.",
     },
   };
   const inactiveLocaleNoteContent = {
     de: {
       linkText:
-        "Der Inhalt dieser Seite wurde von der Community übersetzt, jedoch wird er nicht mehr aktiv gepflegt und kann daher veraltet sein. Wenn du mithelfen möchtest, kannst du hier herausfinden wie deaktivierte Übersetzung reaktiviert werden.",
+        "Der Inhalt dieser Seite wurde von der Community übersetzt, jedoch wird er nicht mehr aktiv gepflegt und kann daher veraltet sein. Wenn du mithelfen möchtest, kannst du hier herausfinden wie deaktivierte Übersetzungen reaktiviert werden können.",
     },
     "en-US": {
       linkText:

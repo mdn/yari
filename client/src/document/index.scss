@@ -1,12 +1,7 @@
 @use "sass:math";
 
-@import "~@mdn/minimalist/sass/vars/layout";
-@import "~@mdn/minimalist/sass/vars/mdn-web-docs-palette";
-@import "~@mdn/minimalist/sass/vars/borders";
-@import "~@mdn/minimalist/sass/vars/typography";
-
-@import "~@mdn/minimalist/sass/mixins/animation";
-@import "~@mdn/minimalist/sass/mixins/utils";
+@use "~@mdn/minimalist/sass/vars/mdn-web-docs-palette" as *;
+@use "~@mdn/minimalist/sass/vars/layout" as *;
 
 @import "./molecules/breadcrumb-locale-container";
 @import "./molecules/notecards";
@@ -31,6 +26,10 @@ a.page-not-created {
 
 .main-page-content {
   padding: math.div($base-spacing, 2) $base-spacing $base-spacing;
+
+  img {
+    display: inline-block;
+  }
 
   figure {
     margin-bottom: $base-spacing;
@@ -80,7 +79,7 @@ a.page-not-created {
       background-position: 61% 45%;
       background-size: 16px;
       border: 1px solid $mdn-neutral100;
-      border-radius: $default-border-radius;
+      border-radius: 6px;
       cursor: pointer;
       height: 36px;
       margin: 0;
@@ -105,7 +104,7 @@ a.page-not-created {
 
     .copy-icon-message {
       background: $mdn-neutral900;
-      border-radius: $default-border-radius;
+      border-radius: 6px;
       color: $white;
       display: none;
       font-size: $small-font-size;
@@ -159,7 +158,12 @@ a.page-not-created {
   ul,
   ol,
   dl {
-    @include readable-line-length();
+    max-width: $max-line-length-fallback;
+    max-width: 85ch;
+  }
+
+  p {
+    margin-bottom: $base-spacing;
   }
 
   a {
@@ -282,7 +286,6 @@ a.page-not-created {
 
   iframe {
     max-width: 100%;
-    width: 100%;
   }
 
   iframe:not(.sample-code-frame) {

@@ -14,16 +14,16 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v2.3.4
+      - uses: actions/checkout@v2.4.0
 
       - name: Setup Node.js environment
-        uses: actions/setup-node@v2.4.0
+        uses: actions/setup-node@v2.5.1
         with:
           node-version: "12"
           cache: "yarn"
 
       - name: Cache node_modules
-        uses: actions/cache@v2.1.6
+        uses: actions/cache@v2.1.7
         id: cached-node_modules
         with:
           path: |
@@ -45,6 +45,7 @@ jobs:
         run: yarn test:client
 
       - name: Build and start server
+        id: server
         env:
           ENV_FILE: testing/.env
         run: |
@@ -62,7 +63,7 @@ jobs:
 
           yarn start:static-server > /tmp/stdout.log 2> /tmp/stderr.log &
           sleep 1
-          curl --fail --retry-connrefused --retry 5 http://localhost:5000 > /dev/null
+          curl --fail --retry-connrefused --retry 5 http://localhost:5042 > /dev/null
 
       - name: Functional testing
         run: |
@@ -79,7 +80,7 @@ jobs:
           diff -s testing/content/files/en-us/markdown/tool/h2m/index.md testing/content/files/en-us/markdown/tool/h2m/expected.md
 
       - name: Debug server's stdout and stderr if tests failed
-        if: failure()
+        if: failure() && steps.server.outcome != 'skipped'
         run: |
           echo "STDOUT..................................................."
           cat /tmp/stdout.log

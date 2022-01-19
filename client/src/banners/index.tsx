@@ -1,7 +1,7 @@
 import * as React from "react";
-import { useLocation } from "react-router";
+import { CRUD_MODE } from "../constants";
 
-import { useUserData } from "../user-context";
+// import { useUserData } from "../user-context";
 
 // We may or may not load any active banner. But if there's a small chance
 // that we might, it's best practice to not have to lazy-load the CSS
@@ -11,7 +11,7 @@ import { useUserData } from "../user-context";
 import "./banner.scss";
 
 // import { COMMON_SURVEY_ID } from "./ids";
-import { PLUS_IDv1 } from "./ids";
+import { PLUS_IDv2 } from "./ids";
 
 const ActiveBanner = React.lazy(() => import("./active-banner"));
 
@@ -59,16 +59,16 @@ function isEmbargoed(id: string) {
     return false;
   }
 }
-
+/* Not used currently
 function isPathnameIncluded(id: string, pathname: string) {
-  if (id === PLUS_IDv1) {
+  if (id === PLUS_IDv2) {
     return !(pathname.includes("/plus") || pathname.includes("/signin"));
   }
   return false;
 }
 
 function isGeoLocationIncluded(id: string, country: string) {
-  if (id === PLUS_IDv1) {
+  if (id === PLUS_IDv2) {
     return country === "United States";
   }
   return false;
@@ -90,15 +90,18 @@ function isRandomlyIncluded(id: string, chancePercentage: number) {
   }
   return false;
 }
+*/
 
 export function Banner() {
+  /* Since auth is disabled on prod we cannot rely on this.
+
   const userData = useUserData();
-  const location = useLocation();
 
   // Never return true if the whoami hasn't resolved yet, anonymous or not.
   if (!userData) {
     return null;
   }
+  */
 
   // The order of the if statements is important and it's our source of
   // truth about which banner is "more important" than the other.
@@ -111,18 +114,13 @@ export function Banner() {
   // 4. Have you not dismissed it previously
   // 5. Have you seen a different PLUS_IDvN banner before
   // 6. Is your locale en-US?
-  if (
-    isPathnameIncluded(PLUS_IDv1, location.pathname) &&
-    isGeoLocationIncluded(PLUS_IDv1, userData.geo.country) &&
-    isRandomlyIncluded(PLUS_IDv1, 10) &&
-    !isEmbargoed(PLUS_IDv1)
-  ) {
+  if (CRUD_MODE || !isEmbargoed(PLUS_IDv2)) {
     return (
       <React.Suspense fallback={null}>
         <ActiveBanner
-          id={PLUS_IDv1}
+          id={PLUS_IDv2}
           onDismissed={() => {
-            setEmbargoed(PLUS_IDv1, 7);
+            setEmbargoed(PLUS_IDv2, 7);
           }}
         />
       </React.Suspense>
