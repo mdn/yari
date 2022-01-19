@@ -44,24 +44,27 @@ a.page-not-created {
 
   dt:not(.bc-legend-item-dt) {
     &:not(.bc-supports) {
+      margin-top: 2rem;
       padding-bottom: 0.5rem;
-      border-bottom: 1px solid var(--border-primary);
+      font-weight: 650;
     }
 
     p {
-      padding: 0;
+      margin: 0 0 1rem 0;
     }
 
-    font-weight: 650;
-
     code {
-      font-size: 1.15rem;
       font-weight: 650;
     }
   }
 
   dd:not(.bc-legend-item-dd) {
-    margin-bottom: 1rem;
+    margin-bottom: 2rem;
+    padding-left: 1rem;
+
+    p {
+      margin: 0 0 1rem 0;
+    }
   }
 
   .example-good,
@@ -119,6 +122,7 @@ a.page-not-created {
 
     code {
       background: none;
+      padding: 0;
     }
   }
 
@@ -379,7 +383,7 @@ a.page-not-created {
   h1 {
     font: var(--type-heading-h1);
     letter-spacing: -0.5px;
-    padding-bottom: 3rem;
+    margin-bottom: 3rem;
   }
 
   h2 {
