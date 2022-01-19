@@ -6,6 +6,12 @@
   border: 1px solid var(--border-primary);
   border-radius: var(--elem-radius);
   border-left: 4px solid var(--note-theme);
+  box-shadow: var(--shadow-01);
+
+  p {
+    font-size: 0.875rem !important;
+    color: var(--text-secondary);
+  }
 
   a {
     color: var(--text-primary);
