@@ -61,7 +61,7 @@ export function DropdownMenu({ children, onClose = () => {} }) {
     return () => {
       document.removeEventListener("keyup", closeOnEsc);
     };
-  }, [isOpen, close]);
+  }, [isOpen, close, onClose]);
 
   useOnClickOutside(wrapperRef, () => {
     if (isOpen) {
