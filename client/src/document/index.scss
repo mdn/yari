@@ -105,7 +105,7 @@ a.page-not-created {
 
   pre,
   code {
-    border-radius: 0.25rem;
+    border-radius: var(--elem-radius);
     font: var(--type-code-regular);
   }
 
@@ -136,7 +136,7 @@ a.page-not-created {
       background-repeat: no-repeat;
       background-position: 61% 45%;
       background-size: 1rem;
-      border-radius: 0.25rem;
+      border-radius: var(--elem-radius);
       cursor: pointer;
       height: 33px;
       margin: 0;
@@ -158,7 +158,7 @@ a.page-not-created {
 
     .copy-icon-message {
       background: $mdn-color-dark-grey-90;
-      border-radius: 0.25rem;
+      border-radius: var(--elem-radius);
       color: white;
       display: none;
       font-size: 0.8125rem;
@@ -265,7 +265,6 @@ a.page-not-created {
     border-collapse: collapse;
     margin: 1rem 0;
     width: 100%;
-    line-height: 1.2;
 
     th {
       text-align: left;
@@ -462,13 +461,14 @@ a.page-not-created {
   .callout {
     background: var(--background-secondary);
     padding: 1rem;
-    border-radius: 0.25rem;
+    border-radius: var(--elem-radius);
     border: 1px solid var(--border-primary);
     box-shadow: var(--shadow-01);
     display: flex;
     text-align: center;
     gap: 1rem;
     flex-direction: column;
+    margin: 2rem 0;
 
     h4 {
       padding: 0;

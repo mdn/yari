@@ -2,7 +2,7 @@
 
 .card {
   background-color: white;
-  border-radius: 0.25rem;
+  border-radius: var(--elem-radius);
   box-shadow: var(--shadow-01);
   margin: 0 auto (1rem);
   max-width: 95%;
