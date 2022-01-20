@@ -1,32 +1,27 @@
 @use "../../ui/vars" as *;
+@use "../../ui/vars" as *;
+
+.page-heading {
+  font: var(--type-heading-h3);
+  margin-bottom: 1rem;
+}
 
 .bookmarks {
-  padding: 48px 6px;
+  padding: 48px 0;
   position: relative;
-  width: 100%;
-  margin: 0 auto;
-  max-width: var(--max-width);
+}
 
-  @media screen and (max-width: $screen-sm) {
-    padding: 48px 24px;
-  }
-
-  h3 {
-    border-bottom: var(--border-primary);
-    padding-bottom: 24px;
-  }
+.bookmark-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
 }
 
 .bookmark {
-  align-items: center;
-  background-color: white;
-  border: var(--border-primary);
+  border: 1px solid var(--border-secondary);
   border-radius: var(--elem-radius);
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 8px;
-  margin-top: 16px;
-  padding: 16px;
+  background-color: var(--background-primary);
+  padding: 1rem;
 
   a {
     &:link,
@@ -35,18 +30,53 @@
     }
   }
 
-  .bookmark-icon {
-    display: none;
+  &-icon {
+    width: 3rem;
+    height: 3rem;
+    background-color: var(--http-accent-color);
+    border-radius: 0.125rem;
+    color: var(--background-primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.75rem;
+    font-style: italic;
+    padding: 0.5rem;
 
-    @media screen and (max-width: $screen-sm) {
-      background-color: $mdn-color-green-60;
-      border-radius: 0.125rem;
-      color: white;
-      display: block;
-      font-style: italic;
-      margin-right: 12px;
-      padding: 8px;
+    &.html {
+      background-color: var(--html-accent-color);
     }
+
+    &.css {
+      background-color: var(--css-accent-color);
+    }
+
+    &.javascript {
+      background-color: var(--js-accent-color);
+    }
+
+    &.http {
+      background-color: var(--http-accent-color);
+    }
+
+    &.apis {
+      background-color: var(--apis-accent-color);
+    }
+  }
+
+  &-title-wrap {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1rem;
+  }
+
+  &-title {
+    font: var(--type-emphasis-l);
+  }
+
+  &-description {
+    font: var(--type-body-m);
+    color: var(--text-secondary);
   }
 
   .bookmark-content {
@@ -64,16 +94,16 @@
   }
 
   .bookmark-actions {
-    flex: 0 1 20%;
-
-    @media screen and (max-width: $screen-sm) {
-      flex-basis: 5%;
-    }
+    margin-left: auto;
+    align-self: center;
   }
 
   .breadcrumbs {
     list-style: none;
     margin-bottom: 0;
+    font: var(--type-body-m);
+    color: var(--text-secondary);
+    margin-bottom: 0.5rem;
 
     li {
       display: inline-block;
