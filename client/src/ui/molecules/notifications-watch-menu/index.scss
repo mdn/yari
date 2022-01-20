@@ -1,5 +1,9 @@
 @use "../../vars" as *;
 
+.watch-menu {
+  position: relative;
+}
+
 .watch-submenu {
   --gutter-padding: 1rem;
 

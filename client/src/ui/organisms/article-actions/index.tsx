@@ -12,7 +12,7 @@ import { Doc } from "../../../document/types";
 import "./index.scss";
 import { MDN_APP } from "../../../constants";
 import { useUIStatus } from "../../../ui-context";
-import { BookmarkMenu } from "../../molecules/bookmark/menu";
+import { BookmarkContainer } from "../../molecules/bookmark";
 
 export const ArticleActions = ({
   doc,
@@ -77,7 +77,7 @@ export const ArticleActions = ({
                   <NotificationsWatchMenu doc={doc} />
                 </li>
                 <li className="article-actions-entry">
-                  <BookmarkMenu doc={doc} />
+                  <BookmarkContainer doc={doc} />
                 </li>
               </>
             )}
