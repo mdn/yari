@@ -84,7 +84,7 @@
     font: var(--type-heading-h6);
     color: var(--text-primary);
     letter-spacing: 1.5px;
-    padding: 0 0 1rem 0;
+    margin: 0 0 1rem 0;
     text-transform: uppercase;
   }
 
@@ -137,7 +137,7 @@
 
   summary,
   li {
-    margin-bottom: 0.5rem;
+    margin-bottom: 0.75rem;
   }
 
   code {
@@ -155,7 +155,7 @@
     cursor: pointer;
     display: flex;
     align-items: center;
-    gap: 0.25rem;
+    gap: 0.5rem;
 
     &::marker {
       content: none;
