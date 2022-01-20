@@ -2,7 +2,7 @@
 
 .card {
   background-color: white;
-  border-radius: 0.25rem;
+  border-radius: var(--elem-radius);
   box-shadow: var(--shadow-01);
   margin: 0 auto (1rem);
   max-width: 95%;
@@ -34,7 +34,7 @@
 
   h3 {
     font-size: 1rem;
-    font-weight: bold;
+    font-weight: var(--font-body-strong-weight);
     margin-bottom: 1rem;
 
     @media screen and (min-width: $screen-md) {

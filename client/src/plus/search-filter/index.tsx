@@ -4,6 +4,7 @@ import { Button } from "../../ui/atoms/button";
 import { Search } from "../../ui/atoms/search";
 import { Submenu } from "../../ui/molecules/submenu";
 import { searchFiltersContext } from "../contexts/search-filters";
+import { useDebouncedCallback } from "use-debounce";
 
 import "./index.scss";
 
@@ -96,9 +97,9 @@ export default function SearchFilter({
       <Search
         name="terms"
         placeholder="Filter by keyword"
-        onChangeHandler={(e) => {
-          setSelectedTerms(`q=${encodeURIComponent(e.target.value)}`);
-        }}
+        onChangeHandler={useDebouncedCallback((e) => {
+          setSelectedTerms(e.target.value);
+        }, 400)}
       />
 
       {filters.length ? (

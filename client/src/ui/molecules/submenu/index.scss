@@ -43,7 +43,7 @@
   }
 
   @media screen and (min-width: $screen-md) {
-    border-radius: 0.25rem;
+    border-radius: var(--elem-radius);
     border: 1px solid var(--border-primary);
     box-shadow: var(--shadow-01);
     max-width: 25rem;
@@ -55,7 +55,7 @@
 
     .submenu-item {
       border-bottom: 0;
-      border-radius: 0.25rem;
+      border-radius: var(--elem-radius);
       padding: 1rem;
     }
 

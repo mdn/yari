@@ -52,7 +52,7 @@
     display: inline-block;
     font-family: $site-font-family;
     font-size: 1rem;
-    font-weight: bold;
+    font-weight: var(--font-body-strong-weight);
     margin: 0;
     margin-bottom: 0.25rem;
     padding: 0;

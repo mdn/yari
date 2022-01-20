@@ -21,7 +21,7 @@ ul.language-toggle {
   }
 
   .language-icon {
-    border-radius: 0.25rem;
+    border-radius: var(--elem-radius);
     display: inline-block;
     height: 35px;
     width: 35px;

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import useSWR, { mutate } from "swr";
 import {
   createSearchParams,
@@ -18,6 +18,17 @@ import { useUserData } from "../../user-context";
 
 import "./index.scss";
 import { DataError, NotSignedIn, NotSubscriber } from "../common";
+import NoteCard from "../../ui/molecules/notecards";
+import {
+  BookmarkMenu,
+  getBookmarkApiUrl,
+} from "../../ui/molecules/bookmark/menu";
+import {
+  searchFiltersContext,
+  SearchFiltersProvider,
+} from "../contexts/search-filters";
+import SearchFilter from "../search-filter";
+import Container from "../../ui/atoms/container";
 
 dayjs.extend(relativeTime);
 
@@ -25,11 +36,32 @@ interface Breadcrumb {
   uri: string;
   title: string;
 }
+const filters = [
+  // {
+  //   label: "Content Updates",
+  //   param: "filterType=content",
+  // },
+  // {
+  //   label: "Browser Compatibility",
+  //   param: "filterType=compat",
+  // },
+];
 
-interface BookmarkData {
+const sorts = [
+  {
+    label: "Date",
+    param: "",
+  },
+  {
+    label: "Title",
+    param: "sort=title",
+  },
+];
+export interface BookmarkData {
   id: number;
   url: string;
   title: string;
+  notes: string;
   parents: Breadcrumb[];
   created: string;
 }
@@ -46,11 +78,18 @@ interface BookmarksData {
   csrfmiddlewaretoken: string;
 }
 
-const API_URL = "/api/v1/plus/bookmarks/";
-
 export default function Bookmarks() {
+  return (
+    <SearchFiltersProvider>
+      <BookmarksLayout />
+    </SearchFiltersProvider>
+  );
+}
+
+export function BookmarksLayout() {
   const userData = useUserData();
   const [searchParams, setSearchParams] = useSearchParams();
+  const { getSearchFiltersParams } = useContext(searchFiltersContext);
 
   const pageTitle = "My Bookmarks";
   React.useEffect(() => {
@@ -59,19 +98,25 @@ export default function Bookmarks() {
 
   const isSubscriber = userData && userData.isSubscriber;
 
-  const apiURL = isSubscriber ? `${API_URL}?${searchParams.toString()}` : null;
+  const apiParams = getSearchFiltersParams();
+  const page = searchParams.get("page");
+  if (page) {
+    apiParams.append("page", page);
+  }
+  const apiURL = isSubscriber ? getBookmarkApiUrl(apiParams) : null;
 
-  const { data, error } = useSWR<BookmarksData | null, Error | null>(
-    apiURL,
-    async (url) => {
-      const response = await fetch(url);
-      if (!response.ok) {
-        throw new Error(`${response.status} on ${response.url}`);
-      }
-      const data = (await response.json()) as BookmarksData;
-      return data;
+  const {
+    data,
+    error,
+    isValidating,
+    mutate: listMutate,
+  } = useSWR<BookmarksData, Error>(apiURL, async (url) => {
+    const response = await fetch(url);
+    if (!response.ok) {
+      throw new Error(`${response.status} on ${response.url}`);
     }
-  );
+    return (await response.json()) as BookmarksData;
+  });
 
   React.useEffect(() => {
     if (data && data.metadata.total > 0) {
@@ -102,25 +147,21 @@ export default function Bookmarks() {
   }, [data, setSearchParams, searchParams]);
 
   async function deleteBookmarked(url: string, undelete?: boolean) {
-    const sp = new URLSearchParams({
-      url,
-    });
-    const apiPostURL = `${API_URL}?${sp.toString()}`;
-    if (!data) {
-      return false;
-    }
+    if (!data) return false;
+    const apiPostURL = getBookmarkApiUrl(new URLSearchParams([["url", url]]));
     const response = await fetch(apiPostURL, {
       method: "POST",
       body: new URLSearchParams(undelete ? undefined : { delete: "true" }),
       headers: {
-        "X-CSRFToken": data.csrfmiddlewaretoken,
+        // "X-CSRFToken": data.csrfmiddlewaretoken,
         "Content-Type": "application/x-www-form-urlencoded",
       },
     });
     if (!response.ok) {
       throw new Error(`${response.status} on ${response.url}`);
     }
-    mutate(apiURL);
+    listMutate();
+    mutate(apiPostURL);
     return true;
   }
 
@@ -138,17 +179,41 @@ export default function Bookmarks() {
 
   if (error) {
     return <DataError error={error} />;
-  } else if (!data) {
-    return <Loading message="Waiting for data" />;
   }
-  return <DisplayData data={data} deleteBookmarked={deleteBookmarked} />;
+  return (
+    <>
+      <header className="plus-header">
+        <Container>
+          <h3>My Collection</h3>
+        </Container>
+      </header>
+
+      <Container>
+        <SearchFilter filters={filters} sorts={sorts} />
+        {data ? (
+          <DisplayData
+            data={data}
+            isValidating={isValidating}
+            listMutate={listMutate}
+            deleteBookmarked={deleteBookmarked}
+          />
+        ) : (
+          <Loading message="Waiting for data" />
+        )}
+      </Container>
+    </>
+  );
 }
 
 function DisplayData({
   data,
+  isValidating,
+  listMutate,
   deleteBookmarked,
 }: {
   data: BookmarksData;
+  isValidating: boolean;
+  listMutate: CallableFunction;
   deleteBookmarked: (url: string, undelete?: boolean) => Promise<boolean>;
 }) {
   const [searchParams] = useSearchParams();
@@ -192,8 +257,6 @@ function DisplayData({
 
   return (
     <>
-      <h3>My Collection</h3>
-
       {data.metadata.total === 0 && (
         <p className="nothing-bookmarked">
           Nothing saved yet. Go out there and explore!
@@ -201,14 +264,14 @@ function DisplayData({
       )}
 
       {toggleError && (
-        <div className="notecard negative">
+        <NoteCard type="negative">
           <h3>Server error</h3>
           <p>Unable to save your bookmark to the server.</p>
           <p>
             <code>{toggleError.toString()}</code>
           </p>
           <a href={window.location.pathname}>Reload this page and try again.</a>
-        </div>
+        </NoteCard>
       )}
 
       {unbookmarked && (
@@ -239,6 +302,9 @@ function DisplayData({
         return (
           <Bookmark
             key={bookmark.id}
+            isValidating={isValidating}
+            listMutate={listMutate}
+            data={data}
             bookmark={bookmark}
             toggle={async () => {
               try {
@@ -270,9 +336,15 @@ function DisplayData({
 
 function Bookmark({
   bookmark,
+  data,
+  isValidating,
+  listMutate,
   toggle,
 }: {
   bookmark: BookmarkData;
+  data: BookmarksData;
+  isValidating: boolean;
+  listMutate: CallableFunction;
   toggle: () => Promise<void>;
 }) {
   const [doomed, setDoomed] = React.useState(false);
@@ -292,6 +364,7 @@ function Bookmark({
         <h4>
           <a href={bookmark.url}>{bookmark.title}</a>
         </h4>
+        {bookmark.notes && <p>{bookmark.notes}</p>}
       </div>
       <div className="bookmark-actions">
         <Button
@@ -309,6 +382,15 @@ function Bookmark({
         >
           <span className="visually-hidden">Remove bookmark</span>
         </Button>
+        <BookmarkMenu
+          doc={null}
+          isValidating={isValidating}
+          data={{
+            bookmarked: bookmark,
+            csrfmiddlewaretoken: data.csrfmiddlewaretoken,
+          }}
+          mutate={listMutate}
+        ></BookmarkMenu>
       </div>
     </div>
   );
