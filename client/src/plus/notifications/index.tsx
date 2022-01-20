@@ -23,9 +23,11 @@ function NotificationsLayout() {
   const starredUrl = `/${locale}/plus/notifications/starred`;
   const watchingUrl = `/${locale}/plus/notifications/watching`;
 
+  let pageTitle = "My Notifications";
   let apiUrl = `/api/v1/plus/notifications/?${getSearchFiltersParams().toString()}`;
   if (location.pathname === starredUrl) {
     apiUrl += "&filterStarred=true";
+    pageTitle = "My Starred Pages";
   }
   let watchingApiUrl = `/api/v1/plus/watched/?q=${encodeURIComponent(
     selectedTerms
@@ -87,6 +89,7 @@ function NotificationsLayout() {
               component={WatchCard}
               apiUrl={watchingApiUrl}
               makeKey={(item) => item.url}
+              pageTitle="My Watched Pages"
             />
           </>
         ) : (
@@ -96,6 +99,7 @@ function NotificationsLayout() {
               component={NotificationCard}
               apiUrl={apiUrl}
               makeKey={(item) => item.id}
+              pageTitle={pageTitle}
             />
           </>
         )}
