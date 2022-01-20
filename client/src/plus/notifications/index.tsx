@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import { useLocale } from "../../hooks";
 import Container from "../../ui/atoms/container";
@@ -12,6 +12,14 @@ import SearchFilter from "../search-filter";
 import "./index.scss";
 import NotificationCard from "./notification-card";
 import WatchCard from "./watch-card";
+import { mutate } from "swr";
+import { HEADER_NOTIFICATIONS_MENU_API_URL } from "../../constants";
+
+function getCookie(name) {
+  const value = `; ${document.cookie}`;
+  const parts = value.split(`; ${name}=`);
+  if (parts.length === 2) return parts.pop()?.split(";").shift();
+}
 
 function NotificationsLayout() {
   const locale = useLocale();
@@ -29,6 +37,34 @@ function NotificationsLayout() {
     apiUrl += "&filterStarred=true";
     pageTitle = "My Starred Pages";
   }
+  useEffect(() => {
+    const clearNotificationsUrl =
+      "/api/v1/plus/notifications/all/mark-as-read/";
+    const formData = new FormData();
+    formData.append("csrfmiddlewaretoken", getCookie("csrftoken") || "");
+
+    // if the user clicks a hard link, we set notifications as read using a sendBeacon request
+    const markNotificationsAsRead = () => {
+      if (document.visibilityState === "hidden") {
+        navigator.sendBeacon(clearNotificationsUrl, formData);
+      }
+    };
+    document.addEventListener("visibilitychange", markNotificationsAsRead);
+
+    return () => {
+      // if the user clicks a react-router Link, we remove the sendBeacon handler
+      // and send a fetch request to mark notifications as read
+      document.removeEventListener("visibilitychange", markNotificationsAsRead);
+      fetch(clearNotificationsUrl, {
+        body: formData,
+        method: "POST",
+      }).then(async () => {
+        await mutate(apiUrl);
+        await mutate(HEADER_NOTIFICATIONS_MENU_API_URL);
+      });
+    };
+  }, [apiUrl]);
+
   let watchingApiUrl = `/api/v1/plus/watched/?q=${encodeURIComponent(
     selectedTerms
   )}`;
