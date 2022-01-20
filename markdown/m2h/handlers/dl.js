@@ -1,4 +1,9 @@
 const { all, wrap } = require("./mdast-util-to-hast-utils");
+// FIXME: This slugify() import from kumascript is for taking the text
+// content of definition-list terms (<dt> in HTML output) and normalizing
+// that text to use as generated ID values for the output <dt> elements.
+// There’s probably something else that we should use here instead...
+const { slugify } = require("../../../kumascript/src/api/util");
 
 const DEFINITION_PREFIX = ": ";
 
@@ -37,11 +42,14 @@ function asDefinitionList(h, node) {
     paragraph.children[0].value = paragraph.children[0].value.slice(
       DEFINITION_PREFIX.length
     );
+    // FIXME: I’m guessing there’s probably some function other than
+    // kumascript’s slugify() that we should use here instead.
+    const id = slugify(terms[0].children[0].value).toLowerCase();
     return [
       h(
         node,
         "dt",
-        {},
+        { id: id },
         all(h, {
           ...node,
           children:
