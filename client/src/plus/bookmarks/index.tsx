@@ -153,7 +153,7 @@ export function BookmarksLayout() {
       method: "POST",
       body: new URLSearchParams(undelete ? undefined : { delete: "true" }),
       headers: {
-        // "X-CSRFToken": data.csrfmiddlewaretoken,
+        "X-CSRFToken": data.csrfmiddlewaretoken,
         "Content-Type": "application/x-www-form-urlencoded",
       },
     });
