@@ -12,7 +12,7 @@ Keyboard & screen reader skip link menu
 
   a {
     background-color: rgba(255, 255, 255, 0.9);
-    font-weight: bold;
+    font-weight: var(--font-body-strong-weight);
     left: 0;
     padding: 0.5rem;
     position: absolute;

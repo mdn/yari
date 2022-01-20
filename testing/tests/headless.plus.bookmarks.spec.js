@@ -1,3 +1,4 @@
+/*
 const { test, expect } = require("@playwright/test");
 
 function testURL(pathname = "/") {
@@ -93,3 +94,4 @@ test.describe("Bookmarking pages", () => {
     await expect(locator).not.toBeVisible();
   });
 });
+*/

@@ -76,7 +76,7 @@ $bc-partial-support-cross: rgba(144, 99, 18, 0.2);
   background-position: 50% 50%, 50% 50%;
   background-repeat: no-repeat;
   background-size: 100px 100px, 100px 100px;
-  font-weight: bold;
+  font-weight: var(--font-body-strong-weight);
 }
 
 .bc-supports-unknown {

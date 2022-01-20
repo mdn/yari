@@ -6,6 +6,13 @@
   border: 1px solid var(--border-primary);
   border-radius: var(--elem-radius);
   border-left: 4px solid var(--note-theme);
+  box-shadow: var(--shadow-01);
+
+  p {
+    font-size: 0.875rem !important;
+    color: var(--text-secondary);
+    margin: 0 !important;
+  }
 
   a {
     color: var(--text-primary);
@@ -17,9 +24,8 @@
 
   &:before {
     position: absolute;
-    top: 50%;
+    top: 1.5rem;
     left: 1rem;
-    transform: translateY(-50%);
     display: block;
     width: 16px;
     height: 16px;
@@ -57,7 +63,27 @@
     }
   }
 
-  p:last-child {
-    padding-bottom: 0;
+  // extra classes added to fix specificity.
+
+  &.notecard ul,
+  &.notecard ol {
+    padding-left: 2rem;
+  }
+
+  &.notecard ul,
+  &.notecard p {
+    padding-bottom: 0.5rem;
+
+    &:last-child {
+      padding-bottom: 0;
+    }
+  }
+
+  &.notecard:last-of-type {
+    margin-bottom: 2rem;
+  }
+
+  &.notecard:first-of-type {
+    margin-top: 2rem;
   }
 }

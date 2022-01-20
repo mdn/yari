@@ -1,5 +1,9 @@
 @use "../../vars" as *;
 
+.watch-menu {
+  position: relative;
+}
+
 .watch-submenu {
   --gutter-padding: 1rem;
 
@@ -11,7 +15,7 @@
     &.show {
       background-color: var(--background-primary);
       border: 1px solid var(--border-primary);
-      border-radius: 0.25rem;
+      border-radius: var(--elem-radius);
       box-shadow: var(--shadow-01);
 
       display: flex;

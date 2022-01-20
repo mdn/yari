@@ -6,6 +6,7 @@
 // These classes are used across several components.
 @use "./ui/molecules/notecards";
 @use "./ui/molecules/pagination";
+@use "./ui/atoms/button";
 
 /*
   Global :root variables, for those independent of themes
@@ -17,19 +18,22 @@
 
   --font-body: Inter, var(--font-fallback);
   --font-heading: Montserrat, var(--font-fallback);
-  --font-code: Consolas, "Courier New", monospace;
+  --font-code: Menlo, Consolas, Monaco, Liberation Mono, Lucida Console,
+    monospace;
   --font-size: 16px;
   --font-line-height: 1.2;
+  --font-body-strong-weight: 650;
 
   // defined in Figma here: https://www.figma.com/file/cAd46zJb6H7mW7W14iLsDe/MDN-Basic-Components?node-id=299%3A311
   --type-heading-l: 600 1rem/1.1875 var(--font-heading); /* 16px/19px, h5 */
   --type-title-l: 600 1.5rem/1.2 var(--font-heading);
-  --type-title-s: 600 0.8125rem/1.2 var(--font-body);
+  --type-title-s: var(--font-body-strong-weight) 0.8125rem/1.2 var(--font-body);
   --type-body-l: 400 1rem/2 var(--font-body); /* 16px/19px */
   --type-body-m: 400 0.8125rem/1.23 var(--font-body); /* 13px/16px */
   --type-body-s: 500 0.6875rem/1.273 var(--font-body); /* 11px/14px */
-  --type-emphasis-l: 600 1rem/1.1875 var(--font-body); /* 16px/19px */
-  --type-emphasis-m: 600 0.8125rem/1.23 var(--font-body); /* 13px/16px */
+  --type-emphasis-l: var(--font-body-strong-weight) 1rem/1.1875 var(--font-body); /* 16px/19px */
+  --type-emphasis-m: var(--font-body-strong-weight) 0.8125rem/1.23
+    var(--font-body); /* 13px/16px */
   --type-label-s: 600 0.625rem/1.2 var(--font-heading); /* 10px/12px */
   --type-code-regular: 400 0.875rem/1.5 var(--font-code); /* 14px/21px */
 

@@ -1,4 +1,5 @@
 @use "../ui/vars" as *;
+@use "../ui/base/themes" as *;
 @use "../ui/molecules/grids/grids.scss" as *;
 @use "../ui/base/typography" as *;
 
@@ -17,9 +18,16 @@ a.page-not-created {
   padding: 3rem 1rem 1rem;
   overflow-wrap: break-word;
 
+  b,
+  strong {
+    font-weight: 650;
+  }
+
   img {
     display: inline-block;
     height: auto;
+    margin: 0 auto;
+    display: flex;
   }
 
   figure {
@@ -30,22 +38,33 @@ a.page-not-created {
     margin-bottom: 0.5rem;
   }
 
-  dt:not(.bc-legend-item-dt) {
-    margin-bottom: 1rem;
+  li {
+    margin: 0.5rem 0;
+  }
 
+  dt:not(.bc-legend-item-dt) {
     &:not(.bc-supports) {
-      padding-bottom: 1rem;
-      color: var(--text-link);
-      border-bottom: 1px solid var(--border-primary);
+      margin-top: 2rem;
+      padding-bottom: 0.5rem;
+      font-weight: 650;
     }
 
     p {
-      padding: 0;
+      margin: 0 0 1rem 0;
+    }
+
+    code {
+      font-weight: 650;
     }
   }
 
   dd:not(.bc-legend-item-dd) {
-    margin-bottom: 1rem;
+    margin-bottom: 2rem;
+    padding-left: 1rem;
+
+    p {
+      margin: 0 0 1rem 0;
+    }
   }
 
   .example-good,
@@ -57,62 +76,74 @@ a.page-not-created {
       background-size: 24px;
       content: "";
       display: block;
-      height: 24px;
+      height: 16px;
+      width: 16px;
       position: absolute;
-      right: 13px;
-      top: 3px;
-      width: 24px;
+      right: 16px;
+      top: 18px;
     }
+  }
+
+  .example-bad + .copy-icon,
+  .example-good + .copy-icon {
+    display: none;
   }
 
   .example-bad {
     &::after {
       background-color: var(--icon-critical);
-      mask-image: url("~@mdn/dinocons/emojis/frown.svg");
+      mask-image: url("../assets/icons/no.svg");
     }
   }
 
   .example-good {
     &::after {
       background-color: var(--icon-success);
-      mask-image: url("~@mdn/dinocons/emojis/smiley.svg");
+      mask-image: url("../assets/icons/checkmark.svg");
     }
   }
 
   pre,
+  code {
+    border-radius: var(--elem-radius);
+    font: var(--type-code-regular);
+  }
+
+  code {
+    background: var(--code-background-inline);
+    padding: 0.125rem 0.25rem;
+  }
+
+  pre {
+    padding: 1rem 2.5rem 1rem 1rem;
+    margin: 1rem 0 2rem 0;
+    background-color: var(--code-background-block);
+    border: 1px solid transparent;
+
+    code {
+      background: none;
+      padding: 0;
+    }
+  }
+
   .code-example {
-    background-color: var(--background-tertiary);
-    border: 1px solid var(--border-secondary);
-    border-radius: 4px;
     color: var(--code-default);
     font: var(--type-code-regular);
-    margin-bottom: 2rem;
-    padding: 1rem;
-    margin: 0 0 2rem 0;
     position: relative;
 
-    pre {
-      margin: 0;
-      padding: 0;
-      border: 0 none;
-      border-radius: 0;
-      background: transparent;
-    }
-
     .copy-icon {
-      background: var(--icon-secondary) url("../assets/clippy.svg") center
-        center no-repeat;
+      background-image: url("../assets/clippy.svg");
+      background-repeat: no-repeat;
       background-position: 61% 45%;
       background-size: 1rem;
-      border: 1px solid var(--border-secondary);
-      border-radius: 0.25rem;
+      border-radius: var(--elem-radius);
       cursor: pointer;
       height: 33px;
       margin: 0;
       padding: 0.25rem;
       position: absolute;
-      right: 0.25rem;
-      top: 0.25rem;
+      right: 0.5rem;
+      top: 0.75rem;
       width: 33px;
 
       @media screen and (min-width: $screen-md) {
@@ -127,7 +158,7 @@ a.page-not-created {
 
     .copy-icon-message {
       background: $mdn-color-dark-grey-90;
-      border-radius: 0.25rem;
+      border-radius: var(--elem-radius);
       color: white;
       display: none;
       font-size: 0.8125rem;
@@ -146,11 +177,6 @@ a.page-not-created {
     .example-good,
     .example-bad {
       padding: 1rem;
-
-      &::after {
-        right: 44px;
-        top: 13px;
-      }
     }
   }
 
@@ -159,12 +185,11 @@ a.page-not-created {
   }
 
   a:not(.button) {
-    text-decoration: underline;
     color: var(--text-link);
 
     &:hover,
     &:focus {
-      text-decoration: none;
+      text-decoration: underline;
     }
 
     &:active {
@@ -196,7 +221,7 @@ a.page-not-created {
 
   [aria-current] {
     color: var(--text-link);
-    font-weight: bold;
+    font-weight: var(--font-body-strong-weight);
     text-decoration: none;
   }
 
@@ -244,22 +269,37 @@ a.page-not-created {
     th {
       text-align: left;
       background: var(--background-tertiary);
-      font-weight: bold;
+      font-weight: var(--font-body-strong-weight);
     }
 
     td,
     th {
-      padding: 0.5rem;
+      padding: 0.5rem 0.75rem;
       border: 1px solid var(--border-primary);
       vertical-align: middle;
+    }
+
+    td {
+      .code-example pre {
+        margin: 0;
+      }
+
+      ul {
+        margin: 0;
+      }
     }
   }
 
   blockquote {
     border-left: 4px solid var(--border-secondary);
     padding: 1rem 2rem;
-    margin: 1rem 0;
+    margin-bottom: 2rem;
     font: var(--type-body-l);
+    color: var(--text-secondary);
+
+    p {
+      margin: 0;
+    }
   }
 
   /* readonly inline badges needs a slightly darker background color in general article content  */
@@ -324,47 +364,62 @@ a.page-not-created {
     border: 0;
   }
 
+  /* "Live Samples" discussion here:
+  https://github.com/mdn/yari-private/issues/370,
+  These src attributes taken from unsafe-html.js */
+  iframe[src*="https://mdn.github.io"],
+  iframe[src*="https://www.youtube-nocookie.com"],
+  iframe[src*="https://jsfiddle.net"],
+  iframe[src*="https://test262.report"]
+  {
+    background: #fff;
+    border: 1px solid var(--border-primary);
+    border-radius: var(--elem-radius);
+    padding: 1rem;
+    width: 100%;
+  }
+
   h1 {
     font: var(--type-heading-h1);
     letter-spacing: -0.5px;
-    padding-bottom: 3rem;
+    margin-bottom: 3rem;
   }
 
   h2 {
     font: var(--type-heading-h2);
     letter-spacing: 0.5px;
-    padding: 2rem 0 1rem 0;
+    padding: 2rem 0 1rem;
   }
 
   h3 {
     font: var(--type-heading-h3);
     letter-spacing: 0.5px;
-    padding: 2rem 0 1rem 0;
+    padding: 2rem 0 1rem;
   }
 
   h4 {
     font: var(--type-heading-h4);
     letter-spacing: 0.5px;
-    padding: 2rem 0 1rem 0;
+    padding: 2rem 0 1rem;
   }
 
   h5 {
     font: var(--type-heading-h5);
     letter-spacing: 1.5px;
-    padding: 2rem 0 1rem 0;
+    padding: 2rem 0 1rem;
     text-transform: uppercase;
   }
 
   h6 {
     font: var(--type-heading-h6);
     letter-spacing: 1.5px;
-    padding: 2rem 0 1rem 0;
+    padding: 2rem 0 1rem;
     text-transform: uppercase;
   }
 
   p {
     font: var(--type-body-l);
-    padding-bottom: 2rem;
+    margin: 1rem 0;
   }
 
   li {
@@ -373,8 +428,8 @@ a.page-not-created {
 
   ul,
   ol {
-    margin: 0;
-    padding: 0 0 2rem 2rem;
+    margin: 1rem 0 2rem;
+    padding-left: 2rem;
   }
 
   ul {
@@ -390,38 +445,8 @@ a.page-not-created {
 
     ol {
       list-style: lower-roman;
-      padding-bottom: 0;
+      margin: 0;
     }
-  }
-
-  .mdn-docs-type-notecard-bold {
-    font-family: Inter;
-    font-style: normal;
-    font-weight: 600;
-    font-size: 0.875rem;
-    line-height: 1.75;
-  }
-  .mdn-docs-type-notecard-regular {
-    font-family: Inter;
-    font-style: normal;
-    font-weight: normal;
-    font-size: 0.875rem;
-    line-height: 1.75;
-  }
-  .mdn-docs-type-notecard-underlined {
-    font-family: Inter;
-    font-style: normal;
-    font-weight: normal;
-    font-size: 0.875rem;
-    line-height: 1.75;
-    text-decoration-line: underline;
-  }
-  .mdn-docs-type-code-regular {
-    font-family: Consolas;
-    font-style: normal;
-    font-weight: normal;
-    font-size: 0.875rem;
-    line-height: 150%;
   }
 
   @media screen and (min-width: $screen-sm) {
@@ -431,5 +456,27 @@ a.page-not-created {
   @media screen and (min-width: $screen-md) {
     margin-bottom: 0.5rem;
     padding: 0;
+  }
+
+  .callout {
+    background: var(--background-secondary);
+    padding: 1rem;
+    border-radius: var(--elem-radius);
+    border: 1px solid var(--border-primary);
+    box-shadow: var(--shadow-01);
+    display: flex;
+    text-align: center;
+    gap: 1rem;
+    flex-direction: column;
+    margin: 2rem 0;
+
+    h4 {
+      padding: 0;
+    }
+
+    p {
+      margin: 0;
+      font: var(--type-body-m);
+    }
   }
 }

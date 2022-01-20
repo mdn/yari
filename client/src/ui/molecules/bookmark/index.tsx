@@ -1,18 +1,29 @@
-import React from "react";
-import { useUserData } from "../../../user-context";
+import useSWR from "swr";
 import { Doc } from "../../../document/types";
+import { BookmarkData } from "../../../plus/bookmarks";
+import { BookmarkMenu } from "./menu";
 
-const App = React.lazy(() => import("./app"));
+export interface BookmarkedData {
+  bookmarked?: BookmarkData;
+  csrfmiddlewaretoken: string;
+}
 
-export const BookmarkToggle = ({ doc }: { doc: Doc }) => {
-  const userData = useUserData();
-  const isServer = typeof window === "undefined";
-  if (isServer || !userData || (userData && !userData.isSubscriber)) {
-    return null;
-  }
-  return (
-    <React.Suspense fallback={null}>
-      <App doc={doc} />
-    </React.Suspense>
+export function BookmarkContainer({ doc }: { doc: Doc }) {
+  const apiURL = `/api/v1/plus/bookmarks/?${new URLSearchParams({
+    url: doc.mdn_url,
+  }).toString()}`;
+  const { data, isValidating, mutate } = useSWR<BookmarkedData>(
+    apiURL,
+    async (url) => {
+      const response = await fetch(url);
+      if (!response.ok) {
+        const text = await response.text();
+        throw new Error(`${response.status} on ${url}: ${text}`);
+      }
+      const data = await response.json();
+      return data;
+    }
   );
-};
+
+  return BookmarkMenu({ doc, data, isValidating, mutate });
+}

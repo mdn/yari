@@ -126,6 +126,7 @@ export interface Doc {
   native: string;
   pageTitle: string;
   mdn_url: string;
+  related_content: any[];
   sidebarHTML: string;
   toc: Toc[];
   body: string;

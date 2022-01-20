@@ -67,3 +67,6 @@ export const MDN_APP_IOS =
   (process.env.REACT_APP_MDN_APP || "").toLowerCase() === "ios";
 
 export const MDN_APP_MOBILE = MDN_APP && !MDN_APP_DESKTOP;
+
+export const HEADER_NOTIFICATIONS_MENU_API_URL =
+  "/api/v1/plus/notifications/?per_page=5";
