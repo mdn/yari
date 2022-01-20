@@ -4,7 +4,7 @@
   .signin-link {
     align-items: center;
     display: inline-flex;
-    font-weight: bold;
+    font-weight: var(--font-body-strong-weight);
     height: 2rem;
 
     &:link,
