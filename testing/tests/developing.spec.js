@@ -38,7 +38,7 @@ test.describe("Testing the kitchensink page", () => {
     ).toBeTruthy();
     expect(
       await page.isVisible("text=No known flaws at the moment")
-    ).toBeTruthy();
+    ).not.toBeTruthy();
   });
 
   test("open a file attachement directly in the dev URL", async ({ page }) => {
@@ -68,9 +68,9 @@ test.describe("Testing the kitchensink page", () => {
     const { doc } = await got(
       serverURL("/en-US/docs/MDN/Kitchensink/index.json")
     ).json();
+
     expect(doc.title).toBe("The MDN Content Kitchensink");
-    // There should be no flaws
-    expect(Object.keys(doc.flaws).length).toBe(0);
+    expect(Object.keys(doc.flaws).length).toBe(1);
   });
 
   // XXX Do more advanced tasks that test the server and document "CRUD operations"
