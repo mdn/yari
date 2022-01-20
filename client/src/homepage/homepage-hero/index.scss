@@ -25,7 +25,7 @@
       font-style: normal;
       font-weight: 650;
       font-size: 2rem;
-      line-height: 120%;
+      line-height: 100%;
       letter-spacing: -0.5px;
       padding-bottom: 1rem;
 
@@ -47,6 +47,7 @@
 
     p {
       max-width: 30rem;
+      margin: 0 auto;
     }
 
     /* Terrible things Daryl's done to make the search look okay for now */
@@ -96,6 +97,7 @@
 
       .search-button {
         position: relative;
+        left: -1.5rem;
 
         &:hover {
           background: none;
@@ -124,6 +126,7 @@
           }
         }
       }
+
       .search-results {
         top: 4rem;
         outline: 1px solid var(--border-primary);

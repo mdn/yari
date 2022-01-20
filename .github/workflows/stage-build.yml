@@ -133,6 +133,9 @@ jobs:
           # is not insecure.
           BUILD_LIVE_SAMPLES_BASE_URL: https://yari-demos.stage.mdn.mozit.cloud
 
+          # Use the stage version of interactive examples.
+          BUILD_INTERACTIVE_EXAMPLES_BASE_URL: https://interactive-examples.stage.mdn.mozilla.net
+
           # Now is not the time to worry about flaws.
           BUILD_FLAW_LEVELS: "*:ignore"
 

@@ -17,6 +17,8 @@ export enum Period {
   Year,
 }
 
+const BILLING_PERIOD = "subscription_billing_period";
+
 export type OfferDetailsProps = {
   id: string;
   name: string;
@@ -162,7 +164,9 @@ function isCurrent(user: UserData | null, plan: String) {
 }
 
 function OfferOverviewSubscribe() {
-  let [period, setPeriod] = useState(Period.Month);
+  const initialPeriod =
+    JSON.parse(localStorage.getItem(BILLING_PERIOD) || "null") || Period.Month;
+  let [period, setPeriod] = useState(initialPeriod);
   return (
     <div className="subscribe" id="subscribe">
       <h2>Choose a plan</h2>
@@ -170,7 +174,9 @@ function OfferOverviewSubscribe() {
         name="period"
         checked={period === Period.Year || false}
         toggle={(e) => {
-          setPeriod(e.target.checked ? Period.Year : Period.Month);
+          const period = e.target.checked ? Period.Year : Period.Month;
+          localStorage.setItem(BILLING_PERIOD, JSON.stringify(period));
+          setPeriod(period);
         }}
       >
         Save 20%

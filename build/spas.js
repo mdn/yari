@@ -64,7 +64,7 @@ async function buildSPAs(options) {
   // Build all the home pages in all locales.
   // Fetch merged content PRs for the latest contribution section.
   const pullRequestsData = await got(
-    "https://api.github.com/repos/mdn/content/pulls?state=merged&per_page=10"
+    "https://api.github.com/search/issues?q=repo:mdn/content+is:pr+is:merged+sort:updated&per_page=10"
   ).json();
   for (const root of [CONTENT_ROOT, CONTENT_TRANSLATED_ROOT]) {
     if (!root) {
@@ -80,7 +80,10 @@ async function buildSPAs(options) {
       }
       const url = `/${locale}/`;
       const context = {
-        pullRequestsData,
+        pullRequestsData: {
+          items: pullRequestsData.items,
+          repo: { name: "mdn/content", url: "https://github.com/mdn/content" },
+        },
       };
       const html = renderHTML(url, context);
       const outPath = path.join(BUILD_OUT_ROOT, locale);

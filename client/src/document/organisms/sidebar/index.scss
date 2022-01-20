@@ -84,7 +84,7 @@
     font: var(--type-heading-h6);
     color: var(--text-primary);
     letter-spacing: 1.5px;
-    padding: 0 0 1rem 0;
+    margin: 0 0 1rem 0;
     text-transform: uppercase;
   }
 
@@ -137,20 +137,25 @@
 
   summary,
   li {
-    margin-bottom: 0.5rem;
+    margin-bottom: 0.75rem;
   }
 
   code {
-    background-color: transparent;
     white-space: normal;
     word-wrap: normal;
+    border-radius: var(--elem-radius);
+    font-family: var(--font-code);
+    background: var(--code-background-inline);
+    padding: 0.125rem 0.125rem;
+    font-size: 0.75rem;
+    line-height: 1.2;
   }
 
   summary {
     cursor: pointer;
     display: flex;
     align-items: center;
-    gap: 0.25rem;
+    gap: 0.5rem;
 
     &::marker {
       content: none;

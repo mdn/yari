@@ -28,17 +28,18 @@ function RecentContributions(props) {
       <h2 className="mdn-ui-emphasis-l">Recent contributions</h2>
       <ul className="contribution-list">
         {data &&
-          data.pullRequestsData.map((pullRequest) => (
+          data.pullRequestsData.items.map((pullRequest) => (
             <li className="request-item">
               <p className="request-title">
-                <a href={pullRequest.html_url}>{pullRequest.title} </a>
+                <a href={pullRequest.pull_request.html_url}>
+                  {pullRequest.title}{" "}
+                </a>
                 <span>
                   <a
                     className="request-repo"
-                    href={pullRequest.base.repo.html_url}
+                    href={data.pullRequestsData.repo.url}
                   >
-                    mdn/
-                    {pullRequest.base.repo.name}
+                    {data.pullRequestsData.repo.name}
                   </a>
                 </span>
               </p>
