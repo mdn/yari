@@ -178,11 +178,7 @@ export function BookmarkMenu({
               <Button buttonType="submit" isDisabled={isValidating}>
                 Save
               </Button>
-              {data?.bookmarked ? (
-                <Button onClickHandler={cancelHandler} type="secondary">
-                  Cancel
-                </Button>
-              ) : doc ? (
+              {doc && data?.bookmarked ? (
                 <Button
                   type="action"
                   buttonType="submit"
@@ -193,7 +189,11 @@ export function BookmarkMenu({
                 >
                   Remove
                 </Button>
-              ) : null}
+              ) : (
+                <Button onClickHandler={cancelHandler} type="secondary">
+                  Cancel
+                </Button>
+              )}
             </div>
           </div>
         </form>
