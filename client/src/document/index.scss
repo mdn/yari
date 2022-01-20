@@ -26,7 +26,7 @@ a.page-not-created {
   img {
     display: inline-block;
     height: auto;
-    margin: 0 auto;
+    margin: 2rem auto;
     display: flex;
   }
 
@@ -394,26 +394,26 @@ a.page-not-created {
   h3 {
     font: var(--type-heading-h3);
     letter-spacing: 0.5px;
-    padding: 2rem 0 1rem;
+    margin: 2rem 0 1rem;
   }
 
   h4 {
     font: var(--type-heading-h4);
     letter-spacing: 0.5px;
-    padding: 2rem 0 1rem;
+    margin: 2rem 0 1rem;
   }
 
   h5 {
     font: var(--type-heading-h5);
     letter-spacing: 1.5px;
-    padding: 2rem 0 1rem;
+    margin: 2rem 0 1rem;
     text-transform: uppercase;
   }
 
   h6 {
     font: var(--type-heading-h6);
     letter-spacing: 1.5px;
-    padding: 2rem 0 1rem;
+    margin: 2rem 0 1rem;
     text-transform: uppercase;
   }
 
@@ -471,7 +471,7 @@ a.page-not-created {
     margin: 2rem 0;
 
     h4 {
-      padding: 0;
+      margin: 0;
     }
 
     p {
