@@ -10,43 +10,43 @@ export default function NotificationCard({ item, changedCallback, csrfToken }) {
   const deleteUrl = `/api/v1/plus/notifications/${item.id}/delete/`;
 
   return (
-    <a href={item.url}>
-      <article className={`notification-card ${!item.read ? "unread" : ""}`}>
-        <Button
-          type="action"
-          extraClasses="notification-card-star"
-          icon={item.starred ? "star-filled" : "star"}
-          onClickHandler={async () => {
-            await post(toggleStarUrl, csrfToken);
-            changedCallback && changedCallback();
-          }}
-        >
-          <span className="visually-hidden">Toggle Starring</span>
-        </Button>
+    <article className={`notification-card ${!item.read ? "unread" : ""}`}>
+      <Button
+        type="action"
+        extraClasses="notification-card-star"
+        icon={item.starred ? "star-filled" : "star"}
+        onClickHandler={async () => {
+          await post(toggleStarUrl, csrfToken);
+          changedCallback && changedCallback();
+        }}
+      >
+        <span className="visually-hidden">Toggle Starring</span>
+      </Button>
 
+      <a href={item.url}>
         <div className="notification-card-description">
           <h2 className="notification-card-title">{item.title}</h2>
           <p className="notification-card-text">{item.text}</p>
         </div>
+      </a>
 
-        <time
-          className="notification-card-created"
-          dateTime={dayjs(item.created).toISOString()}
-        >
-          {dayjs(item.created).fromNow().toString()}
-        </time>
+      <time
+        className="notification-card-created"
+        dateTime={dayjs(item.created).toISOString()}
+      >
+        {dayjs(item.created).fromNow().toString()}
+      </time>
 
-        <Button
-          type="action"
-          icon="trash"
-          onClickHandler={async () => {
-            await post(deleteUrl, csrfToken);
-            changedCallback && changedCallback();
-          }}
-        >
-          <span className="visually-hidden">Delete</span>
-        </Button>
-      </article>
-    </a>
+      <Button
+        type="action"
+        icon="trash"
+        onClickHandler={async () => {
+          await post(deleteUrl, csrfToken);
+          changedCallback && changedCallback();
+        }}
+      >
+        <span className="visually-hidden">Delete</span>
+      </Button>
+    </article>
   );
 }
