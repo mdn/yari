@@ -147,13 +147,18 @@ a.page-not-created {
       right: 0.5rem;
       top: 0.75rem;
       width: 33px;
+      opacity: 0;
+    }
 
-      @media screen and (min-width: $screen-md) {
-        opacity: 0.4;
+    &:hover {
+      .copy-icon {
+        @media screen and (min-width: $screen-md) {
+          opacity: 0.4;
 
-        &:hover,
-        &:focus {
-          opacity: 1;
+          &:hover,
+          &:focus {
+            opacity: 1;
+          }
         }
       }
     }
