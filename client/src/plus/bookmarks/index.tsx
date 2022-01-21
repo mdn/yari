@@ -153,7 +153,7 @@ export function BookmarksLayout() {
       method: "POST",
       body: new URLSearchParams(undelete ? undefined : { delete: "true" }),
       headers: {
-        // "X-CSRFToken": data.csrfmiddlewaretoken,
+        "X-CSRFToken": data.csrfmiddlewaretoken,
         "Content-Type": "application/x-www-form-urlencoded",
       },
     });
@@ -298,28 +298,30 @@ function DisplayData({
         </div>
       )}
 
-      {data.items.map((bookmark) => {
-        return (
-          <Bookmark
-            key={bookmark.id}
-            isValidating={isValidating}
-            listMutate={listMutate}
-            data={data}
-            bookmark={bookmark}
-            toggle={async () => {
-              try {
-                await deleteBookmarked(bookmark.url);
-                setUnbookmarked(bookmark);
-                if (toggleError) {
-                  setToggleError(null);
+      <section className="bookmark-list">
+        {data.items.map((bookmark) => {
+          return (
+            <Bookmark
+              key={bookmark.id}
+              isValidating={isValidating}
+              listMutate={listMutate}
+              data={data}
+              bookmark={bookmark}
+              toggle={async () => {
+                try {
+                  await deleteBookmarked(bookmark.url);
+                  setUnbookmarked(bookmark);
+                  if (toggleError) {
+                    setToggleError(null);
+                  }
+                } catch (err: any) {
+                  setToggleError(err);
                 }
-              } catch (err: any) {
-                setToggleError(err);
-              }
-            }}
-          />
-        );
-      })}
+              }}
+            />
+          );
+        })}
+      </section>
       {(nextPage !== 0 || previousPage !== 0) && (
         <div className="pagination">
           {previousPage !== 0 && (
@@ -356,42 +358,51 @@ function Bookmark({
 
   return (
     <div key={bookmark.id} className={className}>
-      <div className="bookmark-icon">docs</div>
-      <div className="bookmark-content">
-        {bookmark.parents.length > 0 && (
-          <Breadcrumbs parents={bookmark.parents} />
-        )}
-        <h4>
-          <a href={bookmark.url}>{bookmark.title}</a>
-        </h4>
-        {bookmark.notes && <p>{bookmark.notes}</p>}
+      <div className="bookmark-title-wrap">
+        <div className="bookmark-icon">
+          docs
+          {/* accepts the following classes to change colors:
+            .html, css, javascript, http, apis, to match
+            the colors in the navigation. */}
+        </div>
+        <div className="bookmark-content">
+          {bookmark.parents.length > 0 && (
+            <Breadcrumbs parents={bookmark.parents} />
+          )}
+          <h2 className="bookmark-title">
+            <a href={bookmark.url}>{bookmark.title}</a>
+          </h2>
+        </div>
+        <div className="bookmark-actions">
+          <Button
+            type="action"
+            icon="trash"
+            title="Remove bookmark"
+            onClickHandler={async () => {
+              setDoomed(true);
+              try {
+                await toggle();
+              } catch (error) {
+                setDoomed(false);
+              }
+            }}
+          >
+            <span className="visually-hidden">Remove bookmark</span>
+          </Button>
+          <BookmarkMenu
+            doc={null}
+            isValidating={isValidating}
+            data={{
+              bookmarked: bookmark,
+              csrfmiddlewaretoken: data.csrfmiddlewaretoken,
+            }}
+            mutate={listMutate}
+          ></BookmarkMenu>
+        </div>
       </div>
-      <div className="bookmark-actions">
-        <Button
-          type="action"
-          icon="trash"
-          title="Remove bookmark"
-          onClickHandler={async () => {
-            setDoomed(true);
-            try {
-              await toggle();
-            } catch (error) {
-              setDoomed(false);
-            }
-          }}
-        >
-          <span className="visually-hidden">Remove bookmark</span>
-        </Button>
-        <BookmarkMenu
-          doc={null}
-          isValidating={isValidating}
-          data={{
-            bookmarked: bookmark,
-            csrfmiddlewaretoken: data.csrfmiddlewaretoken,
-          }}
-          mutate={listMutate}
-        ></BookmarkMenu>
-      </div>
+      {bookmark.notes && (
+        <p className="bookmark-description">{bookmark.notes}</p>
+      )}
     </div>
   );
 }
