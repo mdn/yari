@@ -61,8 +61,7 @@ a.page-not-created {
   }
 
   dd:not(.bc-legend-item-dd) {
-    margin-bottom: 2rem;
-    padding-left: 1rem;
+    margin-bottom: 1rem;
 
     p {
       margin: 0 0 1rem 0;
@@ -114,6 +113,7 @@ a.page-not-created {
   code {
     background: var(--code-background-inline);
     padding: 0.125rem 0.25rem;
+    width: fit-content;
   }
 
   pre {
@@ -193,6 +193,7 @@ a.page-not-created {
 
   a:not(.button) {
     color: var(--text-link);
+    width: fit-content;
 
     &:hover,
     &:focus {
@@ -309,14 +310,6 @@ a.page-not-created {
 
     p {
       margin: 0;
-    }
-  }
-
-  /* readonly inline badges needs a slightly darker background color in general article content  */
-  .inline {
-    &.optional,
-    &.readonly {
-      background-color: var(--background-secondary);
     }
   }
 
@@ -493,5 +486,13 @@ a.page-not-created {
       margin: 0;
       font: var(--type-body-m);
     }
+  }
+
+  .badge {
+    border: 1px solid var(--border-primary);
+    font: var(--type-body-s);
+    padding: 0.125rem 0.375rem;
+    border-radius: 4rem;
+    color: var(--text-secondary);
   }
 }
