@@ -8,10 +8,15 @@
   border-left: 4px solid var(--note-theme);
   box-shadow: var(--shadow-01);
 
-  p {
-    font-size: 0.875rem !important;
+  &,
+  p,
+  li {
+    font: var(--type-body-m);
     color: var(--text-secondary);
-    margin: 0 !important;
+  }
+
+  p {
+    margin: 0;
   }
 
   a {
@@ -24,7 +29,7 @@
 
   &:before {
     position: absolute;
-    top: 1.5rem;
+    top: 1rem;
     left: 1rem;
     display: block;
     width: 16px;
@@ -65,13 +70,13 @@
 
   // extra classes added to fix specificity.
 
-  &.notecard ul,
-  &.notecard ol {
+  ul,
+  ol {
     padding-left: 2rem;
   }
 
-  &.notecard ul,
-  &.notecard p {
+  ul,
+  p {
     padding-bottom: 0.5rem;
 
     &:last-child {
@@ -79,11 +84,26 @@
     }
   }
 
-  &.notecard:last-of-type {
+  &:last-of-type {
     margin-bottom: 2rem;
   }
 
-  &.notecard:first-of-type {
+  &:first-of-type {
     margin-top: 2rem;
+  }
+
+  & > *:first-child {
+    margin-top: 0;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font: var(--type-emphasis-l);
+    color: var(--text-primary);
+    margin-bottom: 0.5rem;
   }
 }
