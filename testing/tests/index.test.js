@@ -1384,7 +1384,7 @@ test("img tags should always have their 'width' and 'height' set", () => {
     } else if ($img.attr("src").endsWith("screenshot.png")) {
       expect($img.attr("width")).toBe("250");
       expect($img.attr("height")).toBe("250");
-    } else if ($img.attr("src").endsWith("app-dl-apple.svg")) {
+    } else if ($img.attr("src").endsWith("app-dl-gdapple.svg")) {
       expect($img.attr("width")).toBe("130");
       expect($img.attr("height")).toBe("43");
     } else if ($img.attr("src").endsWith("app-dl-google.svg")) {
@@ -1532,7 +1532,7 @@ test("home page should have a /index.json file with pullRequestsData", () => {
 
   const jsonFile = path.join(builtFolder, "index.json");
   const { pullRequestsData } = JSON.parse(fs.readFileSync(jsonFile));
-  expect(pullRequestsData?.items?.length).toBeGreaterThan(0);
+  expect(pullRequestsData.items.length).toBeGreaterThan(0);
 });
 
 test("headings with links in them are flaws", () => {
