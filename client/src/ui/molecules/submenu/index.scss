@@ -94,26 +94,9 @@
 
 .submenu-icon {
   background-color: var(--icon-primary);
-  background-size: 10px;
-  border-radius: var(--elem-radius);
   height: 2rem;
-  padding: 0.5rem;
   position: relative;
-  width: 2rem;
-
-  &::before {
-    background-color: var(--background-primary);
-    content: "";
-    display: block;
-    height: 16px;
-    /* half the width */
-    left: 8px;
-    mask-image: url("~@mdn/dinocons/general/asterisk.svg");
-    position: absolute;
-    /* half the height */
-    top: 8px;
-    width: 16px;
-  }
+  width: 0.2rem;
 }
 
 .submenu-item-heading,

@@ -62,9 +62,13 @@
       min-width: 20%;
     }
 
-    .icon-wrap {
-      background: var(--background-primary);
+    .bc-supports {
+      .icon-wrap {
+        background: var(--background-primary);
+      }
+    }
 
+    .icon-wrap {
       .bc-support-level {
         @include visually-hidden;
       }
@@ -205,7 +209,7 @@
     text-indent: -1.5rem;
 
     &:last-child {
-      margin-bottom: 0;
+      margin-bottom: 2rem;
     }
   }
 }
@@ -294,6 +298,7 @@
   .bc-notes-list {
     margin-left: 20%;
     width: auto;
+    margin-bottom: -1.5rem;
   }
 
   .bc-icon-cell {
@@ -318,6 +323,14 @@
       .bc-history-mobile {
         display: none;
       }
+    }
+  }
+
+  .bc-has-history {
+    cursor: pointer;
+
+    &:hover {
+      background: var(--background-secondary);
     }
   }
 }
