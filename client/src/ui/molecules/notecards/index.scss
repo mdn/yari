@@ -17,6 +17,7 @@
 
   p {
     margin: 0;
+    line-height: 2;
   }
 
   a {
@@ -29,11 +30,11 @@
 
   &:before {
     position: absolute;
-    top: 1rem;
+    top: 1.3rem;
     left: 1rem;
     display: block;
-    width: 16px;
-    height: 16px;
+    width: 1rem;
+    height: 1rem;
     background-color: var(--note-theme);
     mask-image: url("../../../assets/icons/note-info.svg");
     mask-size: contain;
