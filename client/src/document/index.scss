@@ -92,13 +92,22 @@
     border-radius: var(--elem-radius);
   }
 
+  .prev-next {
+    ul {
+      padding: 0 !important;
+    }
+  }
+
   // specific styles to override base styles. The Markdown compiler
   // adds extra divs, so this is a way for these styles to not
   // stomp out component styles.
   > div:not([class]) > {
     p {
       font: var(--type-article-p);
-      margin-bottom: 2rem;
+
+      &:last-child {
+        margin-bottom: 2rem;
+      }
     }
 
     figure {
@@ -113,7 +122,6 @@
       li {
         margin: 0.5rem 0;
         font: var(--type-body-l);
-        padding-left: 0.5rem;
       }
     }
 
@@ -122,6 +130,8 @@
 
       ul {
         margin: 0;
+        list-style-type: circle;
+        padding-left: 1rem;
       }
     }
 
@@ -179,6 +189,7 @@ table {
   border-collapse: collapse;
   margin: 1rem 0;
   width: 100%;
+  font-size: 0.875rem;
 
   th {
     text-align: left;
@@ -491,6 +502,7 @@ a.page-not-created {
   padding: 0.125rem 0.375rem;
   border-radius: 4rem;
   color: var(--text-secondary);
+  white-space: nowrap;
 }
 
 kbd {
