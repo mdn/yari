@@ -219,8 +219,13 @@
   span {
     display: flex;
     flex-direction: row;
-    align-items: center;
+    align-items: baseline;
+    grid-gap: 0.25rem;
     gap: 0.25rem;
+    flex-wrap: wrap;
+    width: fit-content;
+    justify-content: flex-start;
+    text-align: left;
   }
 
   code {
