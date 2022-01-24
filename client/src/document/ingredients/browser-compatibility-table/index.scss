@@ -59,7 +59,9 @@
     }
 
     tbody th {
-      width: 20%;
+      @media screen and (min-width: $screen-md) {
+        width: 20%;
+      }
     }
 
     .bc-supports {
