@@ -1532,7 +1532,7 @@ test("home page should have a /index.json file with pullRequestsData", () => {
 
   const jsonFile = path.join(builtFolder, "index.json");
   const { pullRequestsData } = JSON.parse(fs.readFileSync(jsonFile));
-  expect(pullRequestsData.length).toBeGreaterThan(0);
+  expect(pullRequestsData?.items?.length).toBeGreaterThan(0);
 });
 
 test("headings with links in them are flaws", () => {
