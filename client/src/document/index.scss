@@ -350,6 +350,10 @@ pre {
  */
 .prevnext,
 .prev-next {
+  li {
+    list-style: none;
+  }
+
   @media screen and (max-width: $screen-sm) {
     display: flex;
     justify-content: space-between;
@@ -485,5 +489,15 @@ a.page-not-created {
   font: var(--type-body-s);
   padding: 0.125rem 0.375rem;
   border-radius: 4rem;
+  color: var(--text-secondary);
+}
+
+kbd {
+  border: 2px solid var(--border-secondary);
+  padding: 0.25rem;
+  border-radius: var(--elem-radius);
+  box-shadow: var(--border-secondary);
+  font-size: 0.825rem;
+  box-shadow: inset 0px -1px 0px 0px var(--border-secondary);
   color: var(--text-secondary);
 }
