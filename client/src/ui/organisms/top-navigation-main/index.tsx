@@ -11,6 +11,7 @@ import { Button } from "../../atoms/button";
 import { useUserData } from "../../../user-context";
 
 import "./index.scss";
+import { ENABLE_PLUS } from "../../../constants";
 
 export const TopNavigationMain = () => {
   const userData = useUserData();
@@ -41,12 +42,13 @@ export const TopNavigationMain = () => {
         <span className="visually-hidden">Show search</span>
       </Button>
 
-      {(isAuthenticated && (
-        <>
-          <HeaderNotificationsMenu />
-          <UserMenu />
-        </>
-      )) || <AuthContainer />}
+      {ENABLE_PLUS &&
+        ((isAuthenticated && (
+          <>
+            <HeaderNotificationsMenu />
+            <UserMenu />
+          </>
+        )) || <AuthContainer />)}
     </div>
   );
 };
