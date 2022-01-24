@@ -16,7 +16,7 @@
   &-heading.document-toc-heading {
     font: var(--type-heading-h6);
     letter-spacing: 1.5px;
-    padding: 0 0 1rem 0;
+    margin: 0 0 1rem 0;
     text-transform: uppercase;
   }
   // double classes to override specificity from root styles
