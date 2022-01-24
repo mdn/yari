@@ -10,8 +10,13 @@
     font: var(--type-body-m);
     width: 100%;
 
+    .button-wrap {
+      font-weight: 400;
+      justify-content: flex-start;
+    }
+
     &:hover {
-      --button-bg: var(--background-secondary);
+      --button-bg: var(--border-secondary);
     }
   }
 
@@ -19,9 +24,9 @@
   .active-menu-item:hover,
   .active-menu-item:focus {
     .button-wrap {
-      --button-bg: var(--accent-primary);
-      --button-border-color: var(--button-bg);
-      --button-color: #fff;
+      --button-bg: var(--background-primary);
+      --button-border-color: var(--border-secondary);
+      // --button-color: #fff;
     }
   }
 
@@ -33,6 +38,7 @@
       flex-direction: column;
       gap: 0.5rem;
       max-width: max-content;
+      min-width: 130px;
     }
 
     .themes-menu .submenu-item {
