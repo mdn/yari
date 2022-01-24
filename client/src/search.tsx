@@ -249,6 +249,11 @@ function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
     [searchPath]
   );
 
+  const onlineSearch = useMemo(
+    () => ({ url: searchPath, title: "", positions: new Set() }),
+    [searchPath]
+  );
+
   const {
     getInputProps,
     getItemProps,
@@ -261,9 +266,14 @@ function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
     reset,
     toggleMenu,
   } = useCombobox({
-    items: resultItems.length === 0 ? [nothingFoundItem] : resultItems,
+    items:
+      resultItems.length === 0
+        ? [nothingFoundItem]
+        : [...resultItems, onlineSearch],
     inputValue,
+    isOpen: inputValue !== "",
     defaultIsOpen: isFocused,
+    defaultHighlightedIndex: 0,
     onSelectedItemChange: ({ selectedItem }) => {
       if (selectedItem) {
         navigate(selectedItem.url);
@@ -341,21 +351,39 @@ function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
             </Link>
           </div>
         ) : (
-          resultItems.map((item, i) => (
+          [
+            ...resultItems.map((item, i) => (
+              <div
+                {...getItemProps({
+                  key: item.url,
+                  className:
+                    "result-item " +
+                    (i === highlightedIndex ? "highlight" : ""),
+                  item,
+                  index: i,
+                })}
+              >
+                <HighlightMatch title={item.title} q={inputValue} />
+                <br />
+                <BreadcrumbURI uri={item.url} positions={item.positions} />
+              </div>
+            )),
             <div
               {...getItemProps({
-                key: item.url,
                 className:
-                  "result-item " + (i === highlightedIndex ? "highlight" : ""),
-                item,
-                index: i,
+                  "nothing-found result-item " +
+                  (highlightedIndex === resultItems.length ? "highlight" : ""),
+                item: onlineSearch,
+                index: resultItems.length,
               })}
             >
-              <HighlightMatch title={item.title} q={inputValue} />
+              Not seeing what you're searching for?
               <br />
-              <BreadcrumbURI uri={item.url} positions={item.positions} />
-            </div>
-          ))
+              <Link to={searchPath}>
+                Site search for <code>{inputValue}</code>
+              </Link>
+            </div>,
+          ]
         )}
         {isFuzzySearchString(inputValue) && (
           <div className="fuzzy-engaged">Fuzzy searching by URI</div>
