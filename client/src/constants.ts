@@ -37,7 +37,7 @@ export const VALID_LOCALES = new Set([
 ]);
 
 export const ENABLE_PLUS = Boolean(
-  JSON.parse(process.env.REACT_APP_ENABLE_PLUS || "")
+  JSON.parse(process.env.REACT_APP_ENABLE_PLUS || "false")
 );
 export const MDN_PLUS_SUBSCRIBE_5M_URL = `${process.env.REACT_APP_MDN_PLUS_SUBSCRIBE_URL}?plan=${process.env.REACT_APP_MDN_PLUS_5M_PLAN}`;
 export const MDN_PLUS_SUBSCRIBE_5Y_URL = `${process.env.REACT_APP_MDN_PLUS_SUBSCRIBE_URL}?plan=${process.env.REACT_APP_MDN_PLUS_5Y_PLAN}`;
