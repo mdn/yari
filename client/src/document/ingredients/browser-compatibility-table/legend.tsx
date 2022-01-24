@@ -7,7 +7,7 @@ const LEGEND_LABELS = {
   partial: "Partial support",
   no: "No support",
   unknown: "Compatibility unknown",
-  experimental: "Experimental. Expect behavior to change in the future.",
+  preview: "Experimental. Expect behavior to change in the future.",
   "note-warning": "Non-standard. Check cross-browser support before using.",
   "thumbs-down": "Deprecated. Not for use in new websites.",
   footnote: "See implementation notes.",
@@ -25,7 +25,7 @@ function getActiveLegendItems(compat: bcd.Identifier, name: string) {
 
     if (status) {
       if (status.experimental) {
-        legendItems.add("experimental");
+        legendItems.add("preview");
       }
       if (status.deprecated) {
         legendItems.add("thumbs-down");

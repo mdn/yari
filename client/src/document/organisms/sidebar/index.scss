@@ -101,6 +101,12 @@
     }
   }
 
+  .no-link {
+    display: flex;
+    width: 100%;
+    padding: 0.25rem;
+  }
+
   // TODO: Find these and add a class, if possible. These are section headings
   strong {
     margin-top: 2rem 0 1rem;
@@ -130,6 +136,15 @@
           margin-top: 0.75rem;
           background: var(--text-secondary);
           content: "";
+        }
+
+        &.no-bullet {
+          display: block;
+          font-weight: var(--font-body-strong-weight);
+
+          &:before {
+            content: none;
+          }
         }
       }
     }
