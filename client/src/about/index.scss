@@ -16,12 +16,12 @@
     height: 100%;
     width: 100%;
     -webkit-mask-image: radial-gradient(
-      150.79% 100.46% at 87.07% -2.98%,
+      151.79% 80.46% at 81.07% -7.98%,
       var(--background-primary) 38.88%,
       transparent 64.47%
     );
     mask-image: radial-gradient(
-      150.79% 100.46% at 87.07% -2.98%,
+      151.79% 80.46% at 81.07% -7.98%,
       var(--background-primary) 38.88%,
       transparent 64.47%
     );
@@ -51,21 +51,7 @@
       }
     }
 
-    &::after {
-      position: absolute;
-      content: "";
-      left: 0px;
-      top: 0px;
-      height: 100%;
-      width: 100%;
-      background: radial-gradient(
-        150.79% 100.46% at 87.07% -2.98%,
-        rgba(255, 255, 255, 0) 38.88%,
-        #ffffff 64.47%
-      );
-
-      pointer-events: none;
-    }
+    pointer-events: none;
   }
 
   .about-container {
