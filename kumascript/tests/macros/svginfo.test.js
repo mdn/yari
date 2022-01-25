@@ -4,7 +4,7 @@
 const path = require("path");
 const cheerio = require("cheerio");
 
-const { assert, itMacro, describeMacro, beforeEachMacro } = require("./utils");
+const { itMacro, describeMacro, beforeEachMacro } = require("./utils");
 
 const CONTENT_ROOT = process.env.CONTENT_ROOT;
 if (!CONTENT_ROOT) {
