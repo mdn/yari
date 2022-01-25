@@ -1,18 +1,23 @@
 import * as React from "react";
 import { useLocale } from "../../../hooks";
 import "./index.scss";
+import { useLocation } from "react-router-dom";
 
 import { ReactComponent as MDNLogo } from "../../../assets/mdn-footer-logo.svg";
 import { ReactComponent as MozLogo } from "../../../assets/moz-logo.svg";
 const appDlApple = `${process.env.PUBLIC_URL || ""}/assets/app-dl-apple.svg`;
 const appDlGoogle = `${process.env.PUBLIC_URL || ""}/assets/app-dl-google.svg`;
 const appDlMs = `${process.env.PUBLIC_URL || ""}/assets/app-dl-ms.png`;
+const DARK_NAV_ROUTES = [/\/plus\/?$/i, "_homepage"];
 
 export function Footer() {
   const locale = useLocale();
+  const location = useLocation();
+  const route = location.pathname.substring(location.pathname.indexOf("/", 1));
+  const dark = DARK_NAV_ROUTES.some((r) => route.match(r));
 
   return (
-    <footer id="nav-footer" className="page-footer">
+    <footer id="nav-footer" className={`page-footer${dark ? " dark" : ""}`}>
       <div className="page-footer-grid">
         <div className="page-footer-logo-col">
           <a href="/" className="mdn-footer-logo">
