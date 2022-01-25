@@ -298,8 +298,10 @@ function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
   useEffect(() => {
     if (isFocused) {
       initializeSearchIndex();
+      onChangeIsFocused(true);
+      inputRef.current?.focus();
     }
-  }, [initializeSearchIndex, isFocused]);
+  }, [initializeSearchIndex, isFocused, onChangeIsFocused]);
 
   useEffect(() => {
     const item = resultItems[highlightedIndex];

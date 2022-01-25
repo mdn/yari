@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
 
 import SearchNavigateWidget from "../../../search";
@@ -20,11 +20,15 @@ function useQueryParamState() {
 }
 
 export function Search({
+  hasOpened,
   onCloseSearch,
   onResultPicked,
+  onChangeIsFocused = () => {},
 }: {
+  hasOpened?: boolean;
   onCloseSearch?: () => void;
   onResultPicked?: () => void;
+  onChangeIsFocused?: (isFocused?: boolean) => void;
 }) {
   const [value, setValue] = useQueryParamState();
   const [isFocused, setIsFocused] = useState(false);
@@ -37,12 +41,20 @@ export function Search({
       isFocused,
       onChangeIsFocused: (isFocused) => {
         setIsFocused(isFocused);
+        onChangeIsFocused(isFocused);
       },
       defaultSelection,
       onChangeSelection: (selection) => setDefaultSelection(selection),
     }),
-    [value, isFocused, defaultSelection, setValue]
+    [value, isFocused, defaultSelection, setValue, onChangeIsFocused]
   );
+
+  useEffect(() => {
+    if(hasOpened){
+      setIsFocused(true);
+    }
+  }, [hasOpened]);
+
 
   return (
     <div className="header-search">
