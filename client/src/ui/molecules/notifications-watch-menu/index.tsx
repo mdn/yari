@@ -100,6 +100,10 @@ export const NotificationsWatchMenu = ({ doc }) => {
 
     if (!response.ok) {
       console.log(response);
+      // if (response.error === "max_subscriptions"){
+      //   ToDo: Handle Error here
+      // }
+
       throw new Error(`${response.status} on ${slug}`);
     }
     await mutate();
