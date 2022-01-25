@@ -49,7 +49,7 @@ export const HeaderNotificationsMenu = () => {
       return await response.json();
     },
     {
-      revalidateOnFocus: true,
+      revalidateOnFocus: false,
     }
   );
 
