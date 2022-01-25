@@ -20,28 +20,24 @@ export const GuidesMenu = () => {
         url: `/${locale}/docs/Learn`,
       },
       {
-        label: "Tutorials",
-        url: `/${locale}/docs/Tutorials`,
+        label: "HTML",
+        url: `/${locale}/docs/Learn/HTML`,
       },
       {
-        label: "References",
-        url: `/${locale}/docs/Reference`,
+        label: "CSS",
+        url: `/${locale}/docs/Learn/CSS`,
       },
       {
-        label: "Developer Guides",
-        url: `/${locale}/docs/Guide`,
+        label: "JavaScript",
+        url: `/${locale}/docs/Learn/JavaScript`,
       },
       {
-        label: "Accessibility",
-        url: `/${locale}/docs/Accessibility`,
+        label: "Web Forms",
+        url: `/${locale}/docs/Learn/Forms`,
       },
       {
-        label: "Game development",
-        url: `/${locale}/docs/Games`,
-      },
-      {
-        label: "...more docs",
-        url: `/${locale}/docs/Web`,
+        label: "Accessability",
+        url: `/${locale}/docs/Web/Accessibility`,
       },
     ],
   };

@@ -13,6 +13,7 @@
 
   iframe {
     height: 50vw;
+    padding: 0;
 
     @media screen and (min-width: $screen-md) {
       width: 48%;
@@ -41,7 +42,6 @@
     p {
       font-size: 18px;
       line-height: 120%;
-      padding: 1rem 0 1.25rem 0;
     }
 
     .author-name,

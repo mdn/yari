@@ -9,6 +9,12 @@
   font: var(--type-title-l);
 }
 
+.notification-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
 .notification-card {
   align-items: center;
   border: 1px solid var(--border-secondary);

@@ -25,14 +25,15 @@ function NotificationsLayout() {
   const locale = useLocale();
   const location = useLocation();
 
+  const { selectedTerms, getSearchFiltersParams } =
+    useContext(searchFiltersContext);
+
   const starredUrl = `/${locale}/plus/notifications/starred`;
   const watchingUrl = `/${locale}/plus/notifications/watching`;
 
-  const { selectedTerms, selectedFilter, selectedSort } =
-    useContext(searchFiltersContext);
-
   let pageTitle = "My Notifications";
-  let apiUrl = `/api/v1/plus/notifications/?${selectedTerms}&${selectedFilter}&${selectedSort}`;
+  let apiUrl = `/api/v1/plus/notifications/?${getSearchFiltersParams().toString()}`;
+
   if (location.pathname === starredUrl) {
     apiUrl += "&filterStarred=true";
     pageTitle = "My Starred Pages";
@@ -65,7 +66,9 @@ function NotificationsLayout() {
     };
   }, [apiUrl]);
 
-  let watchingApiUrl = `/api/v1/plus/watched/?${selectedTerms}`;
+  let watchingApiUrl = `/api/v1/plus/watched/?q=${encodeURIComponent(
+    selectedTerms
+  )}`;
 
   const watching = location.pathname === watchingUrl;
 

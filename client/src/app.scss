@@ -28,7 +28,7 @@
   --type-heading-l: 600 1rem/1.1875 var(--font-heading); /* 16px/19px, h5 */
   --type-title-l: 600 1.5rem/1.2 var(--font-heading);
   --type-title-s: var(--font-body-strong-weight) 0.8125rem/1.2 var(--font-body);
-  --type-body-l: 400 1rem/2 var(--font-body); /* 16px/19px */
+  --type-body-l: 400 1rem/1.75 var(--font-body); /* 16px/28px */
   --type-body-m: 400 0.8125rem/1.23 var(--font-body); /* 13px/16px */
   --type-body-s: 500 0.6875rem/1.273 var(--font-body); /* 11px/14px */
   --type-emphasis-l: var(--font-body-strong-weight) 1rem/1.1875 var(--font-body); /* 16px/19px */
@@ -44,10 +44,11 @@
   --type-heading-h4: 600 1.125rem/1.222 var(--font-heading); /* 18px/22px */
   --type-heading-h5: var(--type-heading-l);
   --type-heading-h6: 600 0.75rem/1.0833 var(--font-heading); /* 12px/13px */
+  --type-article-p: 400 1rem/2 var(--font-body); /* 16px/200% */
 
   /* Grid and Layout */
   --max-width: 1440px;
-  --gutter: 0.5rem; /* Space between content and browser window */
+  --gutter: 1rem; /* Space between content and browser window */
 
   --z-index-back: -1;
   --z-index-top: 9999;

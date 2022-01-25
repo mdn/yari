@@ -1,40 +1,51 @@
 import React, { useEffect } from "react";
 
-import { Button } from "../../atoms/button";
-
 import "../notifications-watch-menu/index.scss";
-import useSWR from "swr";
 import { Icon } from "../../atoms/icon";
+import { Button } from "../../atoms/button";
 import { Doc } from "../../../document/types";
+import { BookmarkedData } from ".";
 import { DropdownMenu, DropdownMenuWrapper } from "../dropdown";
 
 const menuId = "watch-submenu";
 
-interface BookmarkedData {
-  bookmarked?: { title: string; notes: string };
-  csrfmiddlewaretoken: string;
+export function getBookmarkApiUrl(params?: URLSearchParams) {
+  let url = "/api/v1/plus/bookmarks/";
+  if (params) {
+    const querystring = params.toString();
+    if (querystring) {
+      url += `?${querystring}`;
+    }
+  }
+  return url;
 }
 
-export function BookmarkMenu({ doc }: { doc: Doc }) {
-  const apiURL = `/api/v1/plus/bookmarks/?${new URLSearchParams({
-    url: doc.mdn_url,
-  }).toString()}`;
-  const [show, setShow] = React.useState(false);
-  const [name, setName] = React.useState(doc.title);
-  const [notes, setNotes] = React.useState("");
-
-  const { data, isValidating, mutate } = useSWR<BookmarkedData>(
-    apiURL,
-    async (url) => {
-      const response = await fetch(url);
-      if (!response.ok) {
-        const text = await response.text();
-        throw new Error(`${response.status} on ${url}: ${text}`);
-      }
-      const data = await response.json();
-      return data;
+export function BookmarkMenu({
+  doc,
+  data,
+  isValidating,
+  mutate,
+}:
+  | {
+      doc: Doc;
+      data?: BookmarkedData;
+      isValidating: boolean;
+      mutate: CallableFunction;
     }
+  | {
+      doc: null;
+      data: BookmarkedData;
+      isValidating: boolean;
+      mutate: CallableFunction;
+    }) {
+  const apiURL = getBookmarkApiUrl(
+    new URLSearchParams([["url", doc?.mdn_url || data?.bookmarked?.url || ""]])
   );
+  const [show, setShow] = React.useState(false);
+  const [name, setName] = React.useState<string>(
+    data?.bookmarked?.title || doc?.title || ""
+  );
+  const [notes, setNotes] = React.useState("");
 
   useEffect(() => {
     if (data?.bookmarked) {
@@ -49,7 +60,7 @@ export function BookmarkMenu({ doc }: { doc: Doc }) {
       setName(data.bookmarked.title);
       setNotes(data.bookmarked.notes);
     } else {
-      setName(doc.title);
+      setName(doc?.title || "");
       setNotes("");
     }
     setShow(false);
@@ -98,19 +109,34 @@ export function BookmarkMenu({ doc }: { doc: Doc }) {
       isOpen={show}
       setIsOpen={setShow}
     >
-      <Button
-        type="action"
-        icon={`${bookmarked ? "bookmark-filled" : "bookmark"}`}
-        extraClasses={`bookmark-button small ${bookmarked ? "highlight" : ""}`}
-        isDisabled={!data}
-        onClickHandler={() => {
-          setShow((v) => !v);
-        }}
-      >
-        <span className="bookmark-button-label">
-          {bookmarked ? "Saved" : "Save"}
-        </span>
-      </Button>
+      {doc ? (
+        <Button
+          type="action"
+          icon={`${bookmarked ? "bookmark-filled" : "bookmark"}`}
+          extraClasses={`bookmark-button small ${
+            bookmarked ? "highlight" : ""
+          }`}
+          isDisabled={!data}
+          onClickHandler={() => {
+            setShow((v) => !v);
+          }}
+        >
+          <span className="bookmark-button-label">
+            {bookmarked ? "Saved" : "Save"}
+          </span>
+        </Button>
+      ) : (
+        <Button
+          icon="edit"
+          type="action"
+          title="Edit"
+          onClickHandler={() => {
+            setShow((v) => !v);
+          }}
+        >
+          <span className="visually-hidden">Edit bookmark</span>
+        </Button>
+      )}
 
       {data && (
         <form method="post" action={apiURL} onSubmit={saveHandler}>
@@ -123,7 +149,7 @@ export function BookmarkMenu({ doc }: { doc: Doc }) {
               <button onClick={cancelHandler} className="watch-submenu-header">
                 <span className="watch-submenu-header-wrap">
                   <Icon name="chevron" />
-                  {bookmarked ? "Edit" : "Save to Collection"}
+                  {bookmarked ? "Edit Bookmark" : "Save to Collection"}
                 </span>
               </button>
 
@@ -153,11 +179,7 @@ export function BookmarkMenu({ doc }: { doc: Doc }) {
                 <Button buttonType="submit" isDisabled={isValidating}>
                   Save
                 </Button>
-                {!data?.bookmarked ? (
-                  <Button onClickHandler={cancelHandler} type="secondary">
-                    Cancel
-                  </Button>
-                ) : (
+                {doc && data?.bookmarked ? (
                   <Button
                     type="action"
                     buttonType="submit"
@@ -167,6 +189,10 @@ export function BookmarkMenu({ doc }: { doc: Doc }) {
                     isDisabled={isValidating}
                   >
                     Remove
+                  </Button>
+                ) : (
+                  <Button onClickHandler={cancelHandler} type="secondary">
+                    Cancel
                   </Button>
                 )}
               </div>

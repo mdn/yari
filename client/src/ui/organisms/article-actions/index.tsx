@@ -12,7 +12,7 @@ import { Doc } from "../../../document/types";
 import "./index.scss";
 import { MDN_APP } from "../../../constants";
 import { useUIStatus } from "../../../ui-context";
-import { BookmarkMenu } from "../../molecules/bookmark/menu";
+import { BookmarkContainer } from "../../molecules/bookmark";
 
 export const ArticleActions = ({
   doc,
@@ -71,15 +71,15 @@ export const ArticleActions = ({
                 </Button>
               </li>
             ) : null}
+            {isAuthenticated && (
+              <li className="article-actions-entry">
+                <NotificationsWatchMenu doc={doc} />
+              </li>
+            )}
             {isSubscriber && (
-              <>
-                <li className="article-actions-entry">
-                  <NotificationsWatchMenu doc={doc} />
-                </li>
-                <li className="article-actions-entry">
-                  <BookmarkMenu doc={doc} />
-                </li>
-              </>
+              <li className="article-actions-entry">
+                <BookmarkContainer doc={doc} />
+              </li>
             )}
             {isAuthenticated && (
               <li className="article-actions-entry">

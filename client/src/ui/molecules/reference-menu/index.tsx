@@ -55,13 +55,6 @@ export const ReferenceMenu = () => {
         label: "APIs",
         url: `/${locale}/docs/Web/API`,
       },
-      {
-        description: "Discover more of what the web has to offer",
-        hasIcon: true,
-        iconClasses: "submenu-icon",
-        label: "More…",
-        url: `/${locale}/docs/Mozilla/Add-ons/WebExtensions`,
-      },
     ],
   };
 

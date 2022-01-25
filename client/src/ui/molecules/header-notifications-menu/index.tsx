@@ -142,7 +142,7 @@ export const HeaderNotificationsMenu = () => {
             <>
               <li className="notifications-submenu-header">
                 <div className="notifications-submenu-item-heading">
-                  Notifications
+                  Notifications ({notificationCount})
                 </div>
                 <a
                   href={`/${locale}/plus/notifications/`}
