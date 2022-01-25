@@ -3,15 +3,21 @@
   position: relative;
   padding: 1rem 1rem 1rem 3rem;
   margin: 1rem 0;
-  border: 1px solid var(--border-primary);
+  border: 1px solid var(--border-secondary);
   border-radius: var(--elem-radius);
   border-left: 4px solid var(--note-theme);
   box-shadow: var(--shadow-01);
 
-  p {
-    font-size: 0.875rem !important;
+  &,
+  p,
+  li {
+    font: var(--type-body-m);
     color: var(--text-secondary);
-    margin: 0 !important;
+  }
+
+  p {
+    margin: 0;
+    line-height: 2;
   }
 
   a {
@@ -24,11 +30,11 @@
 
   &:before {
     position: absolute;
-    top: 1.5rem;
+    top: 1.3rem;
     left: 1rem;
     display: block;
-    width: 16px;
-    height: 16px;
+    width: 1rem;
+    height: 1rem;
     background-color: var(--note-theme);
     mask-image: url("../../../assets/icons/note-info.svg");
     mask-size: contain;
@@ -65,13 +71,13 @@
 
   // extra classes added to fix specificity.
 
-  &.notecard ul,
-  &.notecard ol {
+  ul,
+  ol {
     padding-left: 2rem;
   }
 
-  &.notecard ul,
-  &.notecard p {
+  ul,
+  p {
     padding-bottom: 0.5rem;
 
     &:last-child {
@@ -79,11 +85,26 @@
     }
   }
 
-  &.notecard:last-of-type {
+  &:last-of-type {
     margin-bottom: 2rem;
   }
 
-  &.notecard:first-of-type {
+  &:first-of-type {
     margin-top: 2rem;
+  }
+
+  & > *:first-child {
+    margin-top: 0;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font: var(--type-emphasis-l);
+    color: var(--text-primary);
+    margin-bottom: 0.5rem;
   }
 }

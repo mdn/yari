@@ -14,6 +14,7 @@
     margin: 0 auto;
     gap: 2rem;
     padding: 0 1rem;
+    color: white;
 
     @media screen and (min-width: $screen-md) {
       padding: 0;
@@ -21,13 +22,13 @@
 
     h1 {
       /* Title */
-      font-family: Montserrat;
-      font-style: normal;
+      font-family: var(--font-heading);
       font-weight: 650;
       font-size: 2rem;
       line-height: 100%;
       letter-spacing: -0.5px;
       padding-bottom: 1rem;
+      margin: 0;
 
       @media screen and (min-width: $screen-sm) {
         font-size: 2.5rem;
@@ -161,15 +162,8 @@
     position: absolute;
     top: 0;
     z-index: -1;
-    background: radial-gradient(
-      114.42% 123.24% at 6.69% 13.67%,
-      #33b3fc 22.84%,
-      #9752fa 80.63%,
-      #ffe600 282.74%
-    );
-    opacity: 0.2;
-    transform: skewY(-3deg);
-    height: 24rem;
+    background: var(--text-primary);
+    height: 23rem;
     transform-origin: 0;
     overflow-y: clip;
   }

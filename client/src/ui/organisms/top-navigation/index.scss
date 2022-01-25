@@ -1,9 +1,9 @@
 @use "../../vars" as *;
 
 .top-navigation {
-  background-color: var(--background-primary);
   position: relative;
   width: 100%;
+  background: var(--background-primary);
 
   .container {
     align-items: center;

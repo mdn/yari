@@ -6,14 +6,13 @@
 
 .watch-submenu {
   --gutter-padding: 1rem;
-
   display: none;
   margin: 0;
   padding: 0;
 
   @media screen and (min-width: $screen-md) {
     &.show {
-      background-color: var(--background-primary);
+      background-color: var(--background-secondary);
       border: 1px solid var(--border-primary);
       border-radius: var(--elem-radius);
       box-shadow: var(--shadow-01);
@@ -30,15 +29,19 @@
     }
   }
 
-  // !!!
   input {
-    margin: 0 0.5rem 0 0;
+    background: var(--background-primary);
+    border: 1px solid var(--border-primary);
+    color: var(--text-primary);
+    font: var(--type-body-m);
+    padding: 0.5rem;
   }
 
   &-header,
   &-setGlobal {
     display: block;
     font: var(--type-emphasis-m);
+    color: var(--text-primary);
     padding: 1rem var(--gutter-padding);
     text-align: center;
     width: 100%;
@@ -66,8 +69,13 @@
 .watch-submenu-item {
   display: flex;
   align-items: center;
+  gap: 0.5rem;
   font: var(--type-emphasis-m);
-  padding: 0.5rem var(--gutter-padding);
+  padding: 0 var(--gutter-padding) 0.5rem;
+
+  &:last-child {
+    padding-bottom: 1rem;
+  }
 
   label {
     flex: 1;
@@ -111,7 +119,7 @@
   }
 
   &:hover {
-    background-color: var(--accent-primary-engage);
+    background-color: var(--border-secondary);
   }
 }
 

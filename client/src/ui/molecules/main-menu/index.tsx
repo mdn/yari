@@ -5,6 +5,7 @@ import { ReferenceMenu } from "../reference-menu";
 import { PlusMenu } from "../plus-menu";
 
 import "./index.scss";
+import { ENABLE_PLUS } from "../../../constants";
 
 export default function MainMenu() {
   const previousActiveElement = useRef<null | HTMLButtonElement>(null);
@@ -50,7 +51,7 @@ export default function MainMenu() {
       <ul className="main-menu nojs" ref={mainMenuRef}>
         <ReferenceMenu />
         <GuidesMenu />
-        <PlusMenu />
+        {ENABLE_PLUS && <PlusMenu />}
       </ul>
     </nav>
   );

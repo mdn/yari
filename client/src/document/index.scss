@@ -3,229 +3,9 @@
 @use "../ui/molecules/grids/grids.scss" as *;
 @use "../ui/base/typography" as *;
 
-.only-in-en-us {
-  span {
-    font-size: 0.8125rem;
-  }
-}
-
-a.page-not-created {
-  color: var(--icon-critical);
-  cursor: not-allowed;
-}
-
 .main-page-content {
   padding: 3rem 1rem 1rem;
   overflow-wrap: break-word;
-
-  b,
-  strong {
-    font-weight: 650;
-  }
-
-  img {
-    display: inline-block;
-    height: auto;
-    margin: 2rem auto;
-    display: flex;
-    border: 1px solid var(--border-primary) !important;
-    border-radius: var(--elem-radius);
-  }
-
-  figure {
-    margin-bottom: 1rem;
-  }
-
-  ul li {
-    margin-bottom: 0.5rem;
-  }
-
-  li {
-    margin: 0.5rem 0;
-  }
-
-  dt:not(.bc-legend-item-dt) {
-    &:not(.bc-supports) {
-      margin-top: 2rem;
-      padding-bottom: 0.5rem;
-      font-weight: 650;
-    }
-
-    p {
-      margin: 0 0 1rem 0;
-    }
-
-    code {
-      font-weight: 650;
-    }
-  }
-
-  dd:not(.bc-legend-item-dd) {
-    margin-bottom: 2rem;
-    padding-left: 1rem;
-
-    p {
-      margin: 0 0 1rem 0;
-    }
-  }
-
-  .example-good,
-  .example-bad {
-    padding: 0 1rem;
-    position: relative;
-
-    &::after {
-      background-size: 24px;
-      content: "";
-      display: block;
-      height: 16px;
-      width: 16px;
-      position: absolute;
-      right: 16px;
-      top: 18px;
-    }
-  }
-
-  .example-bad + .copy-icon,
-  .example-good + .copy-icon {
-    display: none;
-  }
-
-  .example-bad {
-    &::after {
-      background-color: var(--icon-critical);
-      mask-image: url("../assets/icons/no.svg");
-    }
-  }
-
-  .example-good {
-    &::after {
-      background-color: var(--icon-success);
-      mask-image: url("../assets/icons/checkmark.svg");
-    }
-  }
-
-  pre,
-  code {
-    border-radius: var(--elem-radius);
-    font: var(--type-code-regular);
-  }
-
-  code {
-    background: var(--code-background-inline);
-    padding: 0.125rem 0.25rem;
-  }
-
-  pre {
-    padding: 1rem 2.5rem 1rem 1rem;
-    margin: 1rem 0 2rem 0;
-    background-color: var(--code-background-block);
-    border: 1px solid transparent;
-
-    code {
-      background: none;
-      padding: 0;
-    }
-  }
-
-  .code-example {
-    color: var(--code-default);
-    font: var(--type-code-regular);
-    position: relative;
-
-    .copy-icon {
-      background-image: url("../assets/clippy.svg");
-      background-repeat: no-repeat;
-      background-position: 61% 45%;
-      background-size: 1rem;
-      border-radius: var(--elem-radius);
-      cursor: pointer;
-      height: 33px;
-      margin: 0;
-      padding: 0.25rem;
-      position: absolute;
-      right: 0.5rem;
-      top: 0.75rem;
-      width: 33px;
-
-      @media screen and (min-width: $screen-md) {
-        opacity: 0.4;
-
-        &:hover,
-        &:focus {
-          opacity: 1;
-        }
-      }
-    }
-
-    .copy-icon-message {
-      background: $mdn-color-dark-grey-90;
-      border-radius: var(--elem-radius);
-      color: white;
-      display: none;
-      font-size: 0.8125rem;
-      opacity: 1;
-      padding: 0.125rem;
-      position: absolute;
-      right: 0.25rem;
-      top: 15px;
-      z-index: -1000;
-    }
-
-    .show {
-      display: block;
-    }
-
-    .example-good,
-    .example-bad {
-      padding: 1rem;
-    }
-  }
-
-  h1 {
-    word-break: break-word;
-  }
-
-  a:not(.button) {
-    color: var(--text-link);
-
-    &:hover,
-    &:focus {
-      text-decoration: underline;
-    }
-
-    &:active {
-      background-color: var(--text-link);
-      color: white;
-
-      code {
-        background-color: transparent;
-      }
-    }
-
-    &[id^="attr-"] {
-      &:link,
-      &:visited {
-        color: var(--text-link);
-        text-decoration: none;
-      }
-
-      &:hover,
-      &:focus {
-        text-decoration: underline;
-      }
-
-      &:active {
-        color: white;
-      }
-    }
-  }
-
-  [aria-current] {
-    color: var(--text-link);
-    font-weight: var(--font-body-strong-weight);
-    text-decoration: none;
-  }
 
   h1,
   h2,
@@ -261,201 +41,124 @@ a.page-not-created {
     }
   }
 
-  table:not(.bc-table) {
-    font: var(--type-body-l);
-    border: 1px solid var(--border-primary);
-    border-collapse: collapse;
-    margin: 1rem 0;
-    width: 100%;
+  a:not(.button) {
+    color: var(--text-link);
+    width: fit-content;
 
-    th {
-      text-align: left;
-      background: var(--background-tertiary);
+    &:hover,
+    &:focus {
+      text-decoration: underline;
+    }
+
+    &:active {
+      background-color: var(--text-link);
+      color: white;
+
+      code {
+        background-color: transparent;
+      }
+    }
+
+    &[id^="attr-"] {
+      &:link,
+      &:visited {
+        color: var(--text-link);
+        text-decoration: none;
+      }
+
+      &:hover,
+      &:focus {
+        text-decoration: underline;
+      }
+
+      &:active {
+        color: white;
+      }
+    }
+
+    &[aria-current] {
+      color: var(--text-link);
       font-weight: var(--font-body-strong-weight);
-    }
-
-    td,
-    th {
-      padding: 0.5rem 0.75rem;
-      border: 1px solid var(--border-primary);
-      vertical-align: middle;
-    }
-
-    td {
-      .code-example pre {
-        margin: 0;
-      }
-
-      ul {
-        margin: 0;
-      }
-    }
-
-    &.properties {
+      text-decoration: none;
     }
   }
 
-  blockquote {
-    border-left: 4px solid var(--border-secondary);
-    padding: 1rem 2rem;
-    margin-bottom: 2rem;
-    font: var(--type-body-l);
-    color: var(--text-secondary);
-
-    p {
-      margin: 0;
-    }
+  img {
+    display: inline-block;
+    height: auto;
+    margin: 2rem auto;
+    display: flex;
+    border: 1px solid var(--border-primary) !important;
+    border-radius: var(--elem-radius);
   }
 
-  /* readonly inline badges needs a slightly darker background color in general article content  */
-  .inline {
-    &.optional,
-    &.readonly {
-      background-color: var(--background-secondary);
-    }
-  }
-
-  /*
-   * top navigational elements on tutorial pages
-   * prevnext is added for backwards compatibility
-   */
-  .prevnext,
   .prev-next {
-    @media screen and (max-width: $screen-sm) {
-      display: flex;
-      justify-content: space-between;
+    ul {
+      padding: 0 !important;
+    }
+  }
+
+  // specific styles to override base styles. The Markdown compiler
+  // adds extra divs, so this is a way for these styles to not
+  // stomp out component styles.
+  > div:not([class]) > {
+    p {
+      font: var(--type-article-p);
+
+      &:last-child {
+        margin-bottom: 2rem;
+      }
+    }
+
+    figure {
       margin-bottom: 1rem;
     }
 
-    a.button {
-      margin-bottom: 0.5rem;
-      max-width: inherit;
+    ul,
+    ol {
+      margin: 1rem 0 2rem;
+      padding-left: 2rem;
 
-      @media screen and (max-width: $screen-sm) {
-        margin-bottom: inherit;
+      li {
+        margin: 0.5rem 0;
+        font: var(--type-body-l);
       }
     }
-  }
-
-  /*
-   * multi-column layout on pages with an index such as
-   * https://developer.mozilla.org/en-US/docs/Web/API#Specifications
-  */
-  .index {
-    columns: 3;
-    margin-bottom: 1rem;
-
-    @media screen and (min-width: $screen-md) {
-      margin-bottom: 0.5rem;
-    }
-
-    .icon-experimental,
-    .icon-nonstandard {
-      color: var(--icon-information);
-    }
-
-    .icon-deprecated {
-      color: var(--icon-critical);
-    }
-  }
-
-  iframe {
-    max-width: 100%;
-    width: 100%;
-    border: 1px solid var(--border-primary);
-  }
-
-  iframe:not(.sample-code-frame) {
-    border: 0;
-  }
-
-  /* "Live Samples" discussion here:
-  https://github.com/mdn/yari-private/issues/370,
-  These src attributes taken from unsafe-html.js */
-  iframe[src*="https://mdn.github.io"],
-  iframe[src*="https://www.youtube-nocookie.com"],
-  iframe[src*="https://jsfiddle.net"],
-  iframe[src*="https://test262.report"]
-  {
-    background: #fff;
-    border: 1px solid var(--border-primary);
-    border-radius: var(--elem-radius);
-    padding: 1rem;
-    width: 100%;
-  }
-
-  h1 {
-    font: var(--type-heading-h1);
-    letter-spacing: -0.5px;
-    margin-bottom: 3rem;
-  }
-
-  h2 {
-    font: var(--type-heading-h2);
-    letter-spacing: 0.5px;
-    margin: 4rem 0 1rem;
-  }
-
-  h3 {
-    font: var(--type-heading-h3);
-    letter-spacing: 0.5px;
-    margin: 2rem 0 1rem;
-  }
-
-  h4 {
-    font: var(--type-heading-h4);
-    letter-spacing: 0.5px;
-    margin: 2rem 0 1rem;
-  }
-
-  h5 {
-    font: var(--type-heading-h5);
-    letter-spacing: 1.5px;
-    margin: 2rem 0 1rem;
-    text-transform: uppercase;
-  }
-
-  h6 {
-    font: var(--type-heading-h6);
-    letter-spacing: 1.5px;
-    margin: 2rem 0 1rem;
-    text-transform: uppercase;
-  }
-
-  p {
-    font: var(--type-body-l);
-    margin: 1rem 0;
-  }
-
-  li {
-    font: var(--type-body-l);
-    padding-left: 0.5rem;
 
     ul {
-      margin: 0;
+      list-style: disc;
+
+      ul {
+        margin: 0;
+        list-style-type: circle;
+        padding-left: 1rem;
+      }
     }
-  }
-
-  ul,
-  ol {
-    margin: 1rem 0 2rem;
-    padding-left: 2rem;
-  }
-
-  ul {
-    list-style: disc;
-
-    ul {
-      padding-bottom: 0;
-    }
-  }
-
-  ol {
-    list-style: decimal;
 
     ol {
-      list-style: lower-roman;
-      margin: 0;
+      list-style: decimal;
+
+      ol {
+        list-style: lower-roman;
+        margin: 0;
+      }
+    }
+
+    dl {
+      dt {
+        margin-top: 2rem;
+        margin-bottom: 0.5rem;
+        font-weight: 650;
+      }
+
+      dd {
+        margin-bottom: 1rem;
+      }
+
+      p {
+        margin: 0 0 1rem 0;
+        padding-left: 1rem;
+      }
     }
   }
 
@@ -467,26 +170,347 @@ a.page-not-created {
     margin-bottom: 0.5rem;
     padding: 0;
   }
+}
 
-  .callout {
-    background: var(--background-secondary);
-    padding: 1rem;
-    border-radius: var(--elem-radius);
+// Base typography styles. Trying to remove as much as possible from
+// the .main-page-content override.
+b,
+strong {
+  font-weight: 650;
+}
+
+code {
+  font-weight: 650;
+}
+
+table {
+  font: var(--type-body-l);
+  border: 1px solid var(--border-primary);
+  border-collapse: collapse;
+  margin: 1rem 0;
+  width: 100%;
+  font-size: 0.875rem;
+
+  th {
+    text-align: left;
+    background: var(--background-tertiary);
+    font-weight: var(--font-body-strong-weight);
+  }
+
+  td,
+  th {
+    padding: 0.5rem 0.75rem;
     border: 1px solid var(--border-primary);
-    box-shadow: var(--shadow-01);
-    display: flex;
-    text-align: center;
-    gap: 1rem;
-    flex-direction: column;
-    margin: 2rem 0;
+    vertical-align: middle;
+  }
 
-    h4 {
+  td {
+    .code-example pre {
       margin: 0;
     }
 
-    p {
+    ul {
       margin: 0;
-      font: var(--type-body-m);
     }
   }
+}
+
+iframe {
+  max-width: 100%;
+  width: 100%;
+  border: 1px solid var(--border-primary);
+
+  &:not(.sample-code-frame) {
+    border: 0;
+  }
+
+  /* "Live Samples" discussion here:
+  https://github.com/mdn/yari-private/issues/370,
+  These src attributes taken from unsafe-html.js */
+  &[src*="https://mdn.github.io"],
+  &[src*="https://www.youtube-nocookie.com"],
+  &[src*="https://jsfiddle.net"],
+  &[src*="https://test262.report"]
+  {
+    background: #fff;
+    border: 1px solid var(--border-primary);
+    border-radius: var(--elem-radius);
+    padding: 1rem;
+    width: 100%;
+  }
+}
+
+h1 {
+  font: var(--type-heading-h1);
+  letter-spacing: -0.5px;
+  margin-bottom: 3rem;
+  word-break: break-word;
+}
+
+h2 {
+  font: var(--type-heading-h2);
+  letter-spacing: 0.5px;
+  margin: 4rem 0 1rem;
+}
+
+h3 {
+  font: var(--type-heading-h3);
+  letter-spacing: 0.5px;
+  margin: 2rem 0 1rem;
+}
+
+h4 {
+  font: var(--type-heading-h4);
+  letter-spacing: 0.5px;
+  margin: 2rem 0 1rem;
+}
+
+h5 {
+  font: var(--type-heading-h5);
+  letter-spacing: 1.5px;
+  margin: 2rem 0 1rem;
+  text-transform: uppercase;
+}
+
+h6 {
+  font: var(--type-heading-h6);
+  letter-spacing: 1.5px;
+  margin: 2rem 0 1rem;
+  text-transform: uppercase;
+}
+
+p {
+  font: var(--type-body-l);
+  margin: 1rem 0;
+}
+
+blockquote {
+  border-left: 4px solid var(--border-secondary);
+  padding: 1rem 2rem;
+  margin-bottom: 2rem;
+  font: var(--type-body-l);
+  color: var(--text-secondary);
+
+  p {
+    margin: 0;
+  }
+}
+
+pre,
+code {
+  border-radius: var(--elem-radius);
+  font: var(--type-code-regular);
+}
+
+code {
+  background: var(--code-background-inline);
+  padding: 0.125rem 0.25rem;
+  width: fit-content;
+}
+
+pre {
+  padding: 1rem 2.5rem 1rem 1rem;
+  margin: 1rem 0 2rem 0;
+  background-color: var(--code-background-block);
+  border: 1px solid transparent;
+
+  code {
+    background: none;
+    padding: 0;
+  }
+}
+
+.example-good,
+.example-bad {
+  padding: 0 1rem;
+  position: relative;
+
+  &::after {
+    background-size: 24px;
+    content: "";
+    display: block;
+    height: 16px;
+    width: 16px;
+    position: absolute;
+    right: 16px;
+    top: 18px;
+  }
+}
+
+.example-bad + .copy-icon,
+.example-good + .copy-icon {
+  display: none;
+}
+
+.example-bad {
+  &::after {
+    background-color: var(--icon-critical);
+    mask-image: url("../assets/icons/no.svg");
+  }
+}
+
+.example-good {
+  &::after {
+    background-color: var(--icon-success);
+    mask-image: url("../assets/icons/checkmark.svg");
+  }
+}
+
+/*
+ * top navigational elements on tutorial pages
+ * prevnext is added for backwards compatibility
+ */
+.prevnext,
+.prev-next {
+  li {
+    list-style: none;
+  }
+
+  @media screen and (max-width: $screen-sm) {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+  }
+
+  a.button {
+    margin-bottom: 0.5rem;
+    max-width: inherit;
+
+    @media screen and (max-width: $screen-sm) {
+      margin-bottom: inherit;
+    }
+  }
+}
+
+/*
+ * multi-column layout on pages with an index such as
+ * https://developer.mozilla.org/en-US/docs/Web/API#Specifications
+*/
+.index {
+  columns: 3;
+  margin-bottom: 1rem;
+
+  @media screen and (min-width: $screen-md) {
+    margin-bottom: 0.5rem;
+  }
+
+  .icon-experimental,
+  .icon-nonstandard {
+    color: var(--icon-information);
+  }
+
+  .icon-deprecated {
+    color: var(--icon-critical);
+  }
+}
+
+.callout {
+  background: var(--background-secondary);
+  padding: 1rem;
+  border-radius: var(--elem-radius);
+  border: 1px solid var(--border-primary);
+  box-shadow: var(--shadow-01);
+  display: flex;
+  text-align: center;
+  gap: 1rem;
+  flex-direction: column;
+  margin: 2rem 0;
+
+  h4 {
+    margin: 0;
+  }
+
+  p {
+    margin: 0;
+    font: var(--type-body-m);
+  }
+}
+
+.code-example {
+  color: var(--code-default);
+  font: var(--type-code-regular);
+  position: relative;
+
+  .copy-icon {
+    background-image: url("../assets/clippy.svg");
+    background-repeat: no-repeat;
+    background-position: 61% 45%;
+    background-size: 1rem;
+    border-radius: var(--elem-radius);
+    cursor: pointer;
+    height: 33px;
+    margin: 0;
+    padding: 0.25rem;
+    position: absolute;
+    right: 0.5rem;
+    top: 0.75rem;
+    width: 33px;
+    opacity: 0;
+  }
+
+  &:hover {
+    .copy-icon {
+      @media screen and (min-width: $screen-md) {
+        opacity: 0.4;
+
+        &:hover,
+        &:focus {
+          opacity: 1;
+        }
+      }
+    }
+  }
+
+  .copy-icon-message {
+    background: $mdn-color-dark-grey-90;
+    border-radius: var(--elem-radius);
+    color: white;
+    display: none;
+    font-size: 0.8125rem;
+    opacity: 1;
+    padding: 0.125rem;
+    position: absolute;
+    right: 0.25rem;
+    top: 15px;
+    z-index: -1000;
+  }
+
+  .show {
+    display: block;
+  }
+
+  .example-good,
+  .example-bad {
+    padding: 1rem;
+  }
+}
+
+.only-in-en-us {
+  span {
+    font-size: 0.8125rem;
+  }
+}
+
+a.page-not-created {
+  color: var(--icon-critical);
+  cursor: not-allowed;
+}
+
+.badge {
+  border: 1px solid var(--border-primary);
+  font: var(--type-body-s);
+  padding: 0.125rem 0.375rem;
+  border-radius: 4rem;
+  color: var(--text-secondary);
+  white-space: nowrap;
+}
+
+kbd {
+  border: 2px solid var(--border-secondary);
+  padding: 0.25rem;
+  border-radius: var(--elem-radius);
+  box-shadow: var(--border-secondary);
+  font-size: 0.825rem;
+  box-shadow: inset 0px -1px 0px 0px var(--border-secondary);
+  color: var(--text-secondary);
 }
