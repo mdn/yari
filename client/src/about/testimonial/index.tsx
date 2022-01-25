@@ -1,5 +1,5 @@
 import "./index.scss";
-import quote from "./quote.svg";
+import { ReactComponent as Quote } from "./quote.svg";
 
 export function Testimonial() {
   return (
@@ -13,7 +13,7 @@ export function Testimonial() {
         allowFullScreen
       ></iframe>
       <div className="testimonial-copy">
-        <img src={quote} alt="quotation mark" />
+        <Quote />
         <p>
           Condimentum donec quam odio viverra erat mi mae-cenas odio. Tempus
           arcu tincidunt tortor placerat tempor pharetra.
