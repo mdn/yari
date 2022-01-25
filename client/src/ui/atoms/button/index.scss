@@ -11,7 +11,7 @@ button,
   --button-border-color: var(--button-primary-default);
   --button-focus-effect: var(--focus-effect);
   --button-height: var(--form-elem-height, 2rem);
-  --button-color: #fff;
+  --button-color: var(--background-primary);
   --button-font: var(--type-emphasis-m);
   --button-padding: 0.5rem;
   --button-radius: var(--elem-radius, 0.25rem);
