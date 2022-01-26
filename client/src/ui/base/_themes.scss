@@ -65,6 +65,12 @@
   --http-accent-color: #{$mdn-color-green-60};
   --apis-accent-color: #{$mdn-color-violet-60};
 
+  --html-accent-engage: #{color.adjust($mdn-color-red-50, $alpha: -0.3)};
+  --css-accent-engage: #{color.adjust($mdn-color-blue-40, $alpha: -0.3)};
+  --js-accent-engage: #{color.adjust($mdn-color-yellow-40, $alpha: -0.3)};
+  --http-accent-engage: #{color.adjust($mdn-color-green-60, $alpha: -0.3)};
+  --apis-accent-engage: #{color.adjust($mdn-color-violet-60, $alpha: -0.3)};
+
   --homepage-hero-bg: radial-gradient(
     114.42% 123.24% at 6.69% 13.67%,
     rgba(51, 178, 252, 0.2) 22.84%,

@@ -3,7 +3,6 @@
 .mandala-container {
   display: flex;
   justify-content: center;
-  // transform: skew(-7deg, 10deg);
 
   .mandala {
     animation: mandala-rotate 500s infinite;
@@ -11,17 +10,19 @@
       animation: none;
     }
     position: relative;
-    left: -10rem;
+    left: -8rem;
+    top: 7rem;
     width: 100%;
     height: 100%;
 
     @media screen and (min-width: $screen-md) {
-      width: 40rem;
-      height: 40rem;
+      height: 30rem;
+      width: 30rem;
     }
 
     [class*="mandala"] {
-      fill: rgba(255, 255, 255, 0.178);
+      fill: var(--background-primary);
+      opacity: 0.5;
     }
 
     @keyframes mandala-rotate {

@@ -8,8 +8,8 @@ export function HomepageHero() {
       <header>
         <div>
           <h1>
-            Your <span>blueprint</span>
-            <br /> for a better web.
+            Resources by developers,
+            <br /> for developers.
           </h1>
           <p>
             Evolving learning platform for Web technologies and the software
