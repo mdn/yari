@@ -16,5 +16,11 @@
     justify-content: flex-end;
     margin: 0;
     text-align: initial;
+    width: min-content;
+  }
+
+  // override to fix layout in English.
+  @media screen and (min-width: 820px) {
+    width: unset;
   }
 }

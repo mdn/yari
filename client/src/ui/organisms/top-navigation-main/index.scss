@@ -188,7 +188,15 @@
 
 .top-navigation-main.has-search-open {
   .header-search {
-    width: 340px;
+    width: 240px;
+  }
+
+  // This one-off MQ is also used in auth-container/index
+  // to tweak the layout in English. This fix is related.
+  @media screen and (min-width: 820px) {
+    .header-search {
+      width: 340px;
+    }
   }
 
   .header-search ~ * {
