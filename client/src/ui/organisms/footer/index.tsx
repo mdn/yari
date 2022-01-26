@@ -20,7 +20,7 @@ export function Footer() {
     <footer id="nav-footer" className={`page-footer${dark ? " dark" : ""}`}>
       <div className="page-footer-grid">
         <div className="page-footer-logo-col">
-          <a href="/" className="mdn-footer-logo">
+          <a href="/" className="mdn-footer-logo" aria-label="MDN homepage">
             <MDNLogo />
           </a>
           <p>
