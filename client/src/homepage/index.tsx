@@ -17,7 +17,7 @@ export function Homepage(props) {
               </a>
               <a
                 href="/en-US/docs/Web/CSS/gradient/conic-gradient()"
-                className="tile-title"
+                className="tile-title expand-this-link"
               >
                 conic-gradient()
               </a>
@@ -34,7 +34,7 @@ export function Homepage(props) {
               </a>
               <a
                 href="/en-US/docs/Web/CSS/gradient/conic-gradient()"
-                className="tile-title"
+                className="tile-title expand-this-link"
               >
                 Web Audio API
               </a>
@@ -53,7 +53,7 @@ export function Homepage(props) {
               </a>
               <a
                 href="/en-US/docs/Web/CSS/gradient/conic-gradient()"
-                className="tile-title"
+                className="tile-title expand-this-link"
               >
                 &#60;track&#62;
               </a>

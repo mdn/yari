@@ -8,7 +8,7 @@ export function ContributorSpotlight() {
   return (
     <div className="contributor-spotlight">
       <div className="wrapper">
-        <span>
+        <div className="text-col">
           <h2 className="mdn-ui-emphasis-l">Contributor Spotlight</h2>
           <span className="contributor-name">@username</span>
           <p>
@@ -18,7 +18,7 @@ export function ContributorSpotlight() {
           <Button href="/contribute" extraClasses="spotlight-cta">
             Get involved
           </Button>
-        </span>
+        </div>
         <figure className="contributor-graphic">
           <img src={contributorGraphic} alt="Tiled Mozilla Logo" />
         </figure>

@@ -35,7 +35,6 @@
     svg,
     img {
       width: 100%;
-      height: 38px;
     }
 
     &.is-ms {
@@ -181,6 +180,13 @@
 
     &-app-list {
       flex-direction: row;
+    }
+
+    &-app-dl {
+      img,
+      svg {
+        height: 38px;
+      }
     }
   }
 }

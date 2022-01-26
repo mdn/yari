@@ -9,8 +9,32 @@
   align-items: center;
   padding: 2rem 1rem;
 
-  @media screen and (min-width: $screen-md) {
-    padding: 2rem 0;
+  p {
+    margin: 0;
+  }
+
+  h4 {
+    font: var(--type-body-m);
+  }
+
+  .text-col {
+    display: flex;
+    flex-direction: column;
+    max-width: 45rem;
+    width: 100%;
+    gap: 1rem;
+    align-items: center;
+    text-align: center;
+  }
+
+  .spotlight-cta {
+    width: fit-content;
+    --button-bg: #{$mdn-color-dark-grey-90};
+    --button-border-color: #{$mdn-color-dark-grey-90};
+    --button-color: #{$mdn-color-white};
+    --button-radius: 10rem;
+    --button-padding: 1rem;
+    --button-primary-hover: #{$mdn-color-dark-grey-40};
   }
 
   .wrapper {
@@ -21,57 +45,35 @@
     gap: 2rem;
     padding: 2rem 0;
     align-items: center;
+  }
 
-    @media screen and (min-width: $screen-md) {
+  .contributor-graphic {
+    width: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    word-break: break-word;
+    opacity: 0.5;
+  }
+
+  .contributor-name {
+    // note: this deviates from var(--type-title-l),
+    // as it uses the body font family.
+    font-size: 1.5rem;
+    font-weight: 650;
+  }
+
+  @media screen and (min-width: $screen-md) {
+    padding: 2rem 0;
+
+    .wrapper {
       flex-direction: row;
       align-items: initial;
     }
 
-    span {
-      display: flex;
-      flex-direction: column;
-      max-width: 45rem;
-      width: 100%;
-      gap: 1rem;
-      align-items: center;
-      text-align: center;
-
-      @media screen and (min-width: $screen-md) {
-        align-items: initial;
-        text-align: left;
-      }
-    }
-
-    .contributor-graphic {
-      width: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      word-break: break-word;
-      opacity: 0.5;
-    }
-
-    h4 {
-      // MDN UI / Body / M
-      font-weight: 400;
-    }
-
-    .contributor-name {
-      font-size: 1.5rem;
-      font-weight: 650;
-    }
-
-    .spotlight-cta {
-      width: fit-content;
-      padding-top: 1rem;
-
-      span {
-        background: #15141a;
-        border: 1px solid #15141a;
-        color: white;
-        border-radius: 10rem;
-        padding: 0.5rem 1rem;
-      }
+    .text-col {
+      align-items: initial;
+      text-align: left;
     }
   }
 }
