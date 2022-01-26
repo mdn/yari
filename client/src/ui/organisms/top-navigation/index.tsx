@@ -51,7 +51,7 @@ export function TopNavigation() {
           </Button>
         </div>
 
-        <TopNavigationMain />
+        <TopNavigationMain isOpenOnMobile={showMainMenu} />
       </Container>
     </header>
   );

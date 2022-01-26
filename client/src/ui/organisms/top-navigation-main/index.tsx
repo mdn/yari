@@ -13,7 +13,7 @@ import { useUserData } from "../../../user-context";
 import "./index.scss";
 import { ENABLE_PLUS } from "../../../constants";
 
-export const TopNavigationMain = () => {
+export const TopNavigationMain = ({ isOpenOnMobile }) => {
   const userData = useUserData();
   const isAuthenticated = userData && userData.isAuthenticated;
   const [showSearch, setShowSearch] = React.useState(false);
@@ -28,7 +28,7 @@ export const TopNavigationMain = () => {
     <div
       className={`top-navigation-main${showSearch ? " has-search-open" : ""}`}
     >
-      <MainMenu />
+      <MainMenu isOpenOnMobile={isOpenOnMobile} />
 
       <Search
         hasOpened={hasOpened}

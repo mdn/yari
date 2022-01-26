@@ -7,7 +7,7 @@ import { PlusMenu } from "../plus-menu";
 import "./index.scss";
 import { ENABLE_PLUS } from "../../../constants";
 
-export default function MainMenu() {
+export default function MainMenu({ isOpenOnMobile }) {
   const previousActiveElement = useRef<null | HTMLButtonElement>(null);
   const mainMenuRef = useRef<null | HTMLUListElement>(null);
   const [visibleSubMenuId, setVisibleSubMenuId] = useState<string | null>(null);
@@ -46,6 +46,12 @@ export default function MainMenu() {
     });
   });
 
+  useEffect(() => {
+    if (!isOpenOnMobile && visibleSubMenuId) {
+      setVisibleSubMenuId(null);
+    }
+  }, [isOpenOnMobile, visibleSubMenuId]);
+
   function toggleMenu(id) {
     if (visibleSubMenuId === id) {
       setVisibleSubMenuId(null);
@@ -53,6 +59,7 @@ export default function MainMenu() {
       setVisibleSubMenuId(id);
     }
   }
+
   return (
     <nav className="main-nav" aria-label="Main menu">
       <ul className="main-menu nojs" ref={mainMenuRef}>
