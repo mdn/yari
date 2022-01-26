@@ -17,13 +17,13 @@
     width: 100%;
     -webkit-mask-image: radial-gradient(
       151.79% 80.46% at 81.07% -7.98%,
-      var(--background-primary) 38.88%,
-      transparent 64.47%
+      var(--background-primary) 23.88%,
+      transparent 44.47%
     );
     mask-image: radial-gradient(
       151.79% 80.46% at 81.07% -7.98%,
-      var(--background-primary) 38.88%,
-      transparent 64.47%
+      var(--background-primary) 23.88%,
+      transparent 44.47%
     );
     z-index: -1;
     background-size: 200% 100%;
@@ -50,8 +50,6 @@
         background-position: 100% 0;
       }
     }
-
-    pointer-events: none;
   }
 
   .about-container {
