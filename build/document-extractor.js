@@ -426,7 +426,11 @@ function _addSingleSpecialSection($) {
             info = [info];
           }
           for (const infoEntry of info) {
-            const added = infoEntry.version_added;
+            const added =
+              typeof infoEntry.version_added === "string" &&
+              infoEntry.version_added.startsWith("≤")
+                ? infoEntry.version_added.slice(1)
+                : infoEntry.version_added;
             if (browserReleaseData.has(browser)) {
               if (browserReleaseData.get(browser).has(added)) {
                 infoEntry.release_date = browserReleaseData
