@@ -1,5 +1,4 @@
 import * as React from "react";
-import { useState } from "react";
 import { Link } from "react-router-dom";
 
 import { useLocale } from "../../../hooks";
@@ -7,9 +6,8 @@ import { Submenu } from "../submenu";
 
 import "./index.scss";
 
-export const ReferenceMenu = () => {
+export const ReferenceMenu = ({ visibleSubMenuId, toggleMenu }) => {
   const locale = useLocale();
-  const [isOpen, setIsOpen] = useState<boolean>(false);
 
   const menu = {
     label: "References",
@@ -65,6 +63,7 @@ export const ReferenceMenu = () => {
       },
     ],
   };
+  const isOpen = visibleSubMenuId === menu.id;
 
   return (
     <li key={menu.id} className="top-level-entry-container">
@@ -74,8 +73,8 @@ export const ReferenceMenu = () => {
         className="top-level-entry menu-toggle"
         aria-haspopup="menu"
         aria-expanded={isOpen || undefined}
-        onClick={(event) => {
-          setIsOpen(!isOpen);
+        onClick={() => {
+          toggleMenu(menu.id);
         }}
       >
         {menu.label}

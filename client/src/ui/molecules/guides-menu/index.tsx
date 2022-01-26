@@ -5,11 +5,9 @@ import { useLocale } from "../../../hooks";
 import { Submenu } from "../submenu";
 
 import "./index.scss";
-import { useState } from "react";
 
-export const GuidesMenu = () => {
+export const GuidesMenu = ({ visibleSubMenuId, toggleMenu }) => {
   const locale = useLocale();
-  const [isOpen, setIsOpen] = useState<boolean>(false);
 
   const menu = {
     label: "Guides",
@@ -64,6 +62,7 @@ export const GuidesMenu = () => {
       },
     ],
   };
+  const isOpen = visibleSubMenuId === menu.id;
 
   return (
     <li key={menu.id} className="top-level-entry-container">
@@ -74,7 +73,7 @@ export const GuidesMenu = () => {
         aria-haspopup="menu"
         aria-expanded={isOpen || undefined}
         onClick={() => {
-          setIsOpen(!isOpen);
+          toggleMenu(menu.id);
         }}
       >
         {menu.label}

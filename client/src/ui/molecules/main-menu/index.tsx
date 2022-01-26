@@ -46,11 +46,24 @@ export default function MainMenu() {
     });
   });
 
+  function toggleMenu(id) {
+    if (visibleSubMenuId === id) {
+      setVisibleSubMenuId(null);
+    } else {
+      setVisibleSubMenuId(id);
+    }
+  }
   return (
     <nav className="main-nav" aria-label="Main menu">
       <ul className="main-menu nojs" ref={mainMenuRef}>
-        <ReferenceMenu />
-        <GuidesMenu />
+        <ReferenceMenu
+          visibleSubMenuId={visibleSubMenuId}
+          toggleMenu={toggleMenu}
+        />
+        <GuidesMenu
+          visibleSubMenuId={visibleSubMenuId}
+          toggleMenu={toggleMenu}
+        />
         {ENABLE_PLUS && <PlusMenu />}
       </ul>
     </nav>
