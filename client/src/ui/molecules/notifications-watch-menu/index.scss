@@ -23,7 +23,7 @@
       padding: 0;
       position: absolute;
       right: 0;
-      top: 100%;
+      top: calc(100% + 6px);
       width: 316px;
       z-index: 1000;
     }
