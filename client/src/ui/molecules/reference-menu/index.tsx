@@ -55,6 +55,14 @@ export const ReferenceMenu = () => {
         label: "APIs",
         url: `/${locale}/docs/Web/API`,
       },
+      {
+        description: "Web technology reference for developers",
+        extraClasses: "apis-link-container",
+        hasIcon: true,
+        iconClasses: "submenu-icon",
+        label: "Web Technology",
+        url: `/${locale}/docs/Web/`,
+      },
     ],
   };
 
