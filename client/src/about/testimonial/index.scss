@@ -52,4 +52,13 @@
       display: block;
     }
   }
+
+  .quotation-mark {
+    width: 10px;
+    height: 10px;
+    margin-left: 4px;
+    background-color: var(--icon-primary);
+    mask-image: url("./quote.svg");
+    mask-size: cover;
+  }
 }

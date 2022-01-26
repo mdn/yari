@@ -11,7 +11,20 @@
     width: 100%;
     height: 100%;
     position: absolute;
-    top: 0;
+    left: 0px;
+    top: 0px;
+    height: 100%;
+    width: 100%;
+    -webkit-mask-image: radial-gradient(
+      150.79% 100.46% at 87.07% -2.98%,
+      var(--background-primary) 38.88%,
+      transparent 64.47%
+    );
+    mask-image: radial-gradient(
+      150.79% 100.46% at 87.07% -2.98%,
+      var(--background-primary) 38.88%,
+      transparent 64.47%
+    );
     z-index: -1;
     background-size: 200% 100%;
     background-image: radial-gradient(
@@ -90,6 +103,7 @@
         font-size: 1.313rem;
         line-height: 175%;
         text-align: center;
+        margin: 0;
       }
     }
 
