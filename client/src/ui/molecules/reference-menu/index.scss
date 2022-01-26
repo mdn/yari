@@ -1,60 +1,88 @@
 @use "sass:color";
 @use "../../vars" as *;
 
+.references {
+  background: var(--background-primary);
+
+  .submenu-item:hover {
+    background: var(--background-tertiary);
+  }
+}
+
 .html-link-container {
   a:hover,
   a:focus {
-    background-color: color.adjust($mdn-color-red-50, $alpha: -0.9);
+    .submenu-icon {
+      &.html {
+        background: var(--html-accent-color) !important;
+      }
+    }
   }
 }
 
 .css-link-container {
   a:hover,
   a:focus {
-    background-color: color.adjust($mdn-color-yellow-50, $alpha: -0.9);
+    .submenu-icon {
+      &.css {
+        background-color: var(--css-accent-color) !important;
+      }
+    }
   }
 }
 
 .javascript-link-container {
   a:hover,
   a:focus {
-    background-color: color.adjust($mdn-color-green-50, $alpha: -0.9);
+    .submenu-icon {
+      &.js {
+        background-color: var(--js-accent-color) !important;
+      }
+    }
   }
 }
 
 .http-link-container {
   a:hover,
   a:focus {
-    background-color: color.adjust($mdn-color-blue-50, $alpha: -0.9);
+    .submenu-icon {
+      &.http {
+        background-color: var(--http-accent-color) !important;
+      }
+    }
   }
 }
 
 .apis-link-container {
   a:hover,
   a:focus {
-    background-color: color.adjust($mdn-color-violet-50, $alpha: -0.9);
+    .submenu-icon {
+      &.apis {
+        background-color: var(--apis-accent-color) !important;
+      }
+    }
   }
 }
 
 .submenu-icon {
   &.html {
-    background-color: var(--html-accent-color);
+    background-color: var(--html-accent-engage);
   }
 
   &.css {
-    background-color: var(--css-accent-color);
+    background-color: var(--css-accent-engage);
   }
 
   &.javascript {
-    background-color: var(--js-accent-color);
+    background-color: var(--js-accent-engage);
   }
 
   &.http {
-    background-color: var(--http-accent-color);
+    background-color: var(--http-accent-engage);
   }
 
   &.apis {
-    background-color: var(--apis-accent-color);
+    background-color: var(--apis-accent-engage);
   }
 
   &.apis,

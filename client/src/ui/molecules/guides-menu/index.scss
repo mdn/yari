@@ -2,6 +2,11 @@
 @use "../../vars" as *;
 
 .guides {
+  background: var(--background-primary);
+
+  .submenu-item:hover {
+    background: var(--background-tertiary);
+  }
   .submenu .submenu-item-heading {
     font-weight: initial;
     font: var(--type-body-m);

@@ -16,7 +16,7 @@ export const ReferenceMenu = () => {
     id: "references",
     items: [
       {
-        description: "Most basic building block of the Web",
+        description: "Structure of content on the Web",
         extraClasses: "html-link-container",
         hasIcon: true,
         iconClasses: "submenu-icon html",
@@ -24,7 +24,7 @@ export const ReferenceMenu = () => {
         url: `/${locale}/docs/Web/HTML`,
       },
       {
-        description: "Code used for describing document styling",
+        description: "Code used to describe document style",
         extraClasses: "css-link-container",
         hasIcon: true,
         iconClasses: "submenu-icon css",
@@ -32,7 +32,7 @@ export const ReferenceMenu = () => {
         url: `/${locale}/docs/Web/CSS`,
       },
       {
-        description: "Lightweight, interpreted, object-oriented language",
+        description: "General-purpose scripting language",
         extraClasses: "javascript-link-container",
         hasIcon: true,
         iconClasses: "submenu-icon javascript",
@@ -40,7 +40,7 @@ export const ReferenceMenu = () => {
         url: `/${locale}/docs/Web/JavaScript`,
       },
       {
-        description: "Protocol for transmitting hypermedia documents",
+        description: "Protocol for transmitting Web resources",
         extraClasses: "http-link-container",
         hasIcon: true,
         iconClasses: "submenu-icon http",
@@ -48,11 +48,11 @@ export const ReferenceMenu = () => {
         url: `/${locale}/docs/Web/HTTP`,
       },
       {
-        description: "Software interface that connects software",
+        description: "Interfaces for building Web applications",
         extraClasses: "apis-link-container",
         hasIcon: true,
         iconClasses: "submenu-icon apis",
-        label: "APIs",
+        label: "Web APIs",
         url: `/${locale}/docs/Web/API`,
       },
       {

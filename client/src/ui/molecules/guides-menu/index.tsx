@@ -24,7 +24,7 @@ export const GuidesMenu = () => {
         url: `/${locale}/docs/Learn`,
       },
       {
-        description: "Structuring the web with HTML",
+        description: "Learn to structure Web content with HTML",
         extraClasses: "html-link-container",
         hasIcon: true,
         iconClasses: "submenu-icon html",
@@ -32,7 +32,7 @@ export const GuidesMenu = () => {
         url: `/${locale}/docs/Learn/HTML`,
       },
       {
-        description: "Learn to style HTML using CSS",
+        description: "Learn to style content using CSS",
         extraClasses: "css-link-container",
         hasIcon: true,
         iconClasses: "submenu-icon css",
@@ -40,7 +40,7 @@ export const GuidesMenu = () => {
         url: `/${locale}/docs/Learn/CSS`,
       },
       {
-        description: "Dynamic client-side scripting",
+        description: "Learn to run scripts in the browser",
         extraClasses: "javascript-link-container",
         hasIcon: true,
         iconClasses: "submenu-icon javascript",
@@ -49,14 +49,14 @@ export const GuidesMenu = () => {
       },
 
       {
-        description: "Working with user data",
+        description: "Learn to work with user data",
         hasIcon: true,
         iconClasses: "submenu-icon",
         label: "Web Forms",
         url: `/${locale}/docs/Learn/Forms`,
       },
       {
-        description: "Learn to make the web accessible to all readers",
+        description: "Learn to make the Web accessible to all",
         hasIcon: true,
         iconClasses: "submenu-icon",
         label: "Accessibility",
