@@ -100,16 +100,12 @@
   </head>
   <body>
     <script>
-      const colors = {
-        light: "#ffffff",
-        dark: "#15141a",
-      };
+      const c = { light: "#ffffff", dark: "#15141a" };
       if (window && document.body) {
-        const theme = window.localStorage.getItem("theme");
-        if (theme) {
-          document.body.className = theme;
-          document.body.style.backgroundColor = colors[theme];
-        }
+        const o = window.localStorage.getItem("theme");
+        o &&
+          ((document.body.className = o),
+          (document.body.style.backgroundColor = c[o]));
       }
     </script>
     <div id="root"></div>
