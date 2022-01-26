@@ -1,5 +1,8 @@
 import { Button } from "../../ui/atoms/button";
 import "./index.scss";
+const contributorGraphic = `${
+  process.env.PUBLIC_URL || ""
+}/assets/tiled-dinos.svg`;
 
 export function ContributorSpotlight() {
   return (
@@ -16,9 +19,9 @@ export function ContributorSpotlight() {
             Get involved
           </Button>
         </span>
-        <span className="contributor-graphic">
-          |\|\|\|\|\|\|\|\|\|\|\|\|\|\|\|\|\|\|\|\|\|\|\|\|\|\|\|\|\|\|\|\|\|\|\|\|\|\|\|\|\|\|\|\|\|\|\|\|\|\|\|\|\|\|\|\|\|\|\|\|\|\|\|\|\|\|\|\|\|\|\|\|\|\|\|\|\|\|\|\|\|\|\|\|\|\|\|\|\|\|\|\|\|\|\|\|\|\|\|\|\|\|\|\|\|\|\|\|\|\|\|\|\|\|\|\|\|\|\|\|\|\|\|\|\|\|\|\|\|\|\|\|\|\|\|\|\|\|\|\|\|\|\
-        </span>
+        <figure className="contributor-graphic">
+          <img src={contributorGraphic} alt="Tiled Mozilla Logo" />
+        </figure>
       </div>
     </div>
   );
