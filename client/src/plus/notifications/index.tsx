@@ -33,6 +33,7 @@ function NotificationsLayout() {
 
   let pageTitle = "My Notifications";
   let apiUrl = `/api/v1/plus/notifications/?${getSearchFiltersParams().toString()}`;
+
   if (location.pathname === starredUrl) {
     apiUrl += "&filterStarred=true";
     pageTitle = "My Starred Pages";

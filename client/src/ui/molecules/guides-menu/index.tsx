@@ -5,13 +5,11 @@ import { useLocale } from "../../../hooks";
 import { Submenu } from "../submenu";
 
 import "./index.scss";
+import { useState } from "react";
 
 export const GuidesMenu = () => {
   const locale = useLocale();
-  const previousActiveElement = React.useRef<null | HTMLButtonElement>(null);
-  const [visibleSubMenuId, setVisibleSubMenuId] = React.useState<string | null>(
-    null
-  );
+  const [isOpen, setIsOpen] = useState<boolean>(false);
 
   const menu = {
     label: "Guides",
@@ -44,24 +42,6 @@ export const GuidesMenu = () => {
     ],
   };
 
-  function hideSubMenuIfVisible() {
-    if (visibleSubMenuId) {
-      setVisibleSubMenuId(null);
-    }
-  }
-
-  /**
-   * Show and hide submenus in the main menu, send GA events and updates
-   * the ARIA state.
-   * @param {Object} event - The event that triggered the function.
-   * @param {String} menuEntryId - The current top-level menu item id
-   */
-  function toggleSubMenu(event, menuEntryId) {
-    // store the current activeElement
-    previousActiveElement.current = document.activeElement as HTMLButtonElement;
-    setVisibleSubMenuId(visibleSubMenuId === menuEntryId ? null : menuEntryId);
-  }
-
   return (
     <li key={menu.id} className="top-level-entry-container">
       <button
@@ -69,9 +49,9 @@ export const GuidesMenu = () => {
         id={`${menu.id}-button`}
         className="top-level-entry menu-toggle"
         aria-haspopup="menu"
-        aria-expanded={menu.id === visibleSubMenuId}
-        onClick={(event) => {
-          toggleSubMenu(event, menu.id);
+        aria-expanded={isOpen || undefined}
+        onClick={() => {
+          setIsOpen(!isOpen);
         }}
       >
         {menu.label}
@@ -81,11 +61,7 @@ export const GuidesMenu = () => {
         Guides
       </Link>
 
-      <Submenu
-        menuEntry={menu}
-        visibleSubMenuId={visibleSubMenuId}
-        onBlurHandler={hideSubMenuIfVisible}
-      />
+      <Submenu menuEntry={menu} defaultHidden />
     </li>
   );
 };
