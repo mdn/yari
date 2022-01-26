@@ -1,10 +1,153 @@
-@import "./theme-dark";
-@import "./theme-light";
+@use "sass:color";
+@use "../vars.scss" as *;
+
+@mixin light-theme {
+  --text-primary: #{$mdn-theme-light-text-primary};
+  --text-secondary: #{$mdn-theme-light-text-secondary};
+  --text-inactive: #{$mdn-theme-light-text-inactive};
+  --text-link: #{$mdn-theme-light-text-link};
+
+  --background-primary: #{$mdn-theme-light-background-primary};
+  --background-secondary: #{$mdn-theme-light-background-secondary};
+  --background-tertiary: #{$mdn-theme-light-background-tertiary};
+
+  --border-primary: #{$mdn-theme-light-border-primary};
+  --border-secondary: #{$mdn-theme-light-border-secondary};
+
+  --button-primary-default: #{$mdn-theme-light-button-primary-default};
+  --button-primary-hover: #{$mdn-theme-light-button-primary-hover};
+  --button-primary-active: #{$mdn-theme-light-button-primary-active};
+  --button-primary-inactive: #{$mdn-theme-light-button-primary-inactive};
+
+  --button-secondary-default: #{$mdn-theme-light-button-secondary-default};
+  --button-secondary-hover: #{$mdn-theme-light-button-secondary-hover};
+  --button-secondary-active: #{$mdn-theme-light-button-secondary-active};
+  --button-secondary-inactive: #{$mdn-theme-light-button-secondary-inactive};
+  --button-secondary-border-focus: #{$mdn-theme-light-button-secondary-border-focus};
+
+  --icon-primary: #{$mdn-theme-light-icon-primary};
+  --icon-secondary: #{$mdn-theme-light-icon-secondary};
+  --icon-information: #{$mdn-theme-light-icon-information};
+  --icon-warning: #{$mdn-theme-light-icon-warning};
+  --icon-critical: #{$mdn-theme-light-icon-critical};
+  --icon-success: #{$mdn-theme-light-icon-success};
+
+  --accent-primary: #{$mdn-theme-light-accent-primary};
+  --accent-primary-engage: #{color.adjust(
+      $mdn-theme-light-accent-primary,
+      $alpha: -0.9
+    )};
+
+  --accent-secondary: #{$mdn-theme-light-accent-secondary};
+  --accent-tertiary: #{color.adjust($mdn-color-blue-40, $alpha: -0.9)};
+
+  --shadow-01: #{$mdn-theme-light-shadow-01};
+  --shadow-02: #{$mdn-theme-light-shadow-02};
+  --focus-01: #{$mdn-theme-light-focus-01};
+  --field-focus-border: #{$mdn-theme-light-field-focus-border};
+
+  --code-token-tag: #{$mdn-theme-light-code-token-tag};
+  --code-token-punctuation: #{$mdn-theme-light-code-token-punctuation};
+  --code-token-attribute-name: #{$mdn-theme-light-code-token-attribute-name};
+  --code-token-attribute-value: #{$mdn-theme-light-code-token-attribute-value};
+  --code-token-comment: #{$mdn-theme-light-code-token-comment};
+  --code-token-default: #{$mdn-theme-light-code-token-default};
+  --code-token-selector: #{$mdn-theme-light-code-token-selector};
+  --code-background-inline: #{$mdn-theme-light-code-background-inline};
+  --code-background-block: #{$mdn-theme-light-code-background-block};
+
+  --scrollbar-bg: transparent;
+  --scrollbar-color: rgba(0, 0, 0, 0.25);
+
+  --html-accent-color: #{$mdn-color-red-50};
+  --css-accent-color: #{$mdn-color-yellow-50};
+  --js-accent-color: #{$mdn-color-green-50};
+  --http-accent-color: #{$mdn-color-blue-50};
+  --apis-accent-color: #{$mdn-color-violet-50};
+
+  --homepage-hero-bg: radial-gradient(
+    114.42% 123.24% at 6.69% 13.67%,
+    rgba(51, 178, 252, 0.2) 22.84%,
+    rgba(152, 82, 250, 0.2) 47.63%,
+    rgba(255, 230, 0, 0.2) 82.74%
+  );
+  --homepage-secondary-bg: linear-gradient(
+    90deg,
+    #8524ff -43.99%,
+    #4d7fff 159.52%
+  );
+}
+
+@mixin dark-theme {
+  --text-primary: #{$mdn-theme-dark-text-primary};
+  --text-secondary: #{$mdn-theme-dark-text-secondary};
+  --text-inactive: #{$mdn-theme-dark-text-inactive};
+  --text-link: #{$mdn-theme-dark-text-link};
+
+  --background-primary: #{$mdn-theme-dark-background-primary};
+  --background-secondary: #{$mdn-theme-dark-background-secondary};
+  --background-tertiary: #{$mdn-theme-dark-background-tertiary};
+
+  --border-primary: #{$mdn-theme-dark-border-primary};
+  --border-secondary: #{$mdn-theme-dark-border-secondary};
+
+  --button-primary-default: #{$mdn-theme-dark-button-primary-default};
+  --button-primary-hover: #{$mdn-theme-dark-button-primary-hover};
+  --button-primary-active: #{$mdn-theme-dark-button-primary-active};
+  --button-primary-inactive: #{$mdn-theme-dark-button-primary-inactive};
+
+  --button-secondary-default: #{$mdn-theme-dark-button-secondary-default};
+  --button-secondary-hover: #{$mdn-theme-dark-button-secondary-hover};
+  --button-secondary-active: #{$mdn-theme-dark-button-secondary-active};
+  --button-secondary-inactive: #{$mdn-theme-dark-button-secondary-inactive};
+
+  --icon-primary: #{$mdn-theme-dark-icon-primary};
+  --icon-secondary: #{$mdn-theme-dark-icon-secondary};
+  --icon-information: #{$mdn-theme-dark-icon-information};
+  --icon-warning: #{$mdn-theme-dark-icon-warning};
+  --icon-critical: #{$mdn-theme-dark-icon-critical};
+  --icon-success: #{$mdn-theme-dark-icon-success};
+
+  --accent-primary: #{$mdn-theme-dark-accent-primary};
+  --accent-primary-engage: #{color.adjust(
+      $mdn-theme-dark-accent-primary,
+      $alpha: -0.9
+    )};
+  --accent-secondary: #{$mdn-theme-dark-accent-secondary};
+
+  --shadow-01: #{$mdn-theme-dark-shadow-01};
+  --shadow-02: #{$mdn-theme-dark-shadow-02};
+
+  --code-token-tag: #{$mdn-theme-dark-code-token-tag};
+  --code-token-punctuation: #{$mdn-theme-dark-code-token-punctuation};
+  --code-token-attribute-name: #{$mdn-theme-dark-code-token-attribute-name};
+  --code-token-attribute-value: #{$mdn-theme-dark-code-token-attribute-value};
+  --code-token-comment: #{$mdn-theme-dark-code-token-comment};
+  --code-token-default: #{$mdn-theme-dark-code-token-default};
+  --code-token-selector: #{$mdn-theme-dark-code-token-selector};
+  --code-background-inline: #{$mdn-theme-dark-code-background-inline};
+  --code-background-block: #{$mdn-theme-dark-code-background-block};
+
+  --scrollbar-color: rgba(255, 255, 255, 0.25);
+}
+
+:root,
+.light {
+  @include light-theme;
+}
+
+.dark {
+  @include dark-theme;
+}
 
 @media (prefers-color-scheme: light) {
-  @import "./theme-light";
+  :root {
+    @include light-theme;
+  }
 }
 
 @media (prefers-color-scheme: dark) {
-  @import "./theme-dark";
+  :root {
+    @include dark-theme;
+  }
 }

@@ -1,11 +1,12 @@
 import * as React from "react";
+import { useState } from "react";
 
 import { Button } from "../../atoms/button";
 import { Submenu } from "../submenu";
 import { IEX_DOMAIN } from "../../../constants";
+import { DropdownMenu, DropdownMenuWrapper } from "../dropdown";
 
 import "./index.scss";
-import { useOnClickOutside } from "../../../hooks";
 
 type ThemeButton = {
   id: string;
@@ -14,14 +15,8 @@ type ThemeButton = {
 
 export const ThemeSwitcher = () => {
   const menuId = "themes-menu";
+  const [isOpen, setIsOpen] = useState<boolean>(false);
   const [activeTheme, setActiveTheme] = React.useState("light");
-  const previousActiveElement = React.useRef<null | HTMLButtonElement>(null);
-  const [visibleSubMenuId, setVisibleSubMenuId] = React.useState<string | null>(
-    null
-  );
-
-  const submenuRef = React.useRef(null);
-  useOnClickOutside(submenuRef, toggleSubMenu);
 
   function ThemeButton({ id, label }: ThemeButton) {
     return (
@@ -29,7 +24,7 @@ export const ThemeSwitcher = () => {
         extraClasses={activeTheme === id ? "active-menu-item" : undefined}
         onClickHandler={() => {
           switchTheme(id);
-          setVisibleSubMenuId(null);
+          setIsOpen(false);
         }}
       >
         {label}
@@ -72,22 +67,6 @@ export const ThemeSwitcher = () => {
     }
   }
 
-  /**
-   * Show and hide submenu
-   * @param {String} menuEntryId - The current top-level menu item id
-   */
-  function toggleSubMenu(menuEntryId) {
-    // store the current activeElement
-    previousActiveElement.current = document.activeElement as HTMLButtonElement;
-    setVisibleSubMenuId(visibleSubMenuId === menuEntryId ? null : menuEntryId);
-  }
-
-  function hideSubMenuIfVisible() {
-    if (visibleSubMenuId) {
-      setVisibleSubMenuId(null);
-    }
-  }
-
   React.useEffect(() => {
     const theme = localStorage.getItem("theme");
 
@@ -95,35 +74,31 @@ export const ThemeSwitcher = () => {
       switchTheme(theme);
       postToIEx(theme);
     }
-
-    document.addEventListener("keyup", (event) => {
-      if (event.key === "Escape") {
-        hideSubMenuIfVisible();
-      }
-    });
   });
 
   return (
-    <div className="theme-switcher-menu" ref={submenuRef}>
+    <DropdownMenuWrapper
+      className="theme-switcher-menu"
+      isOpen={isOpen}
+      setIsOpen={setIsOpen}
+    >
       <Button
         type="action"
         ariaControls={menuId}
         ariaHasPopup={"menu"}
-        ariaExpanded={menuId === visibleSubMenuId}
+        ariaExpanded={isOpen || undefined}
         icon="theme"
         extraClasses="theme-switcher-menu small"
         onClickHandler={() => {
-          toggleSubMenu(menuId);
+          setIsOpen(!isOpen);
         }}
       >
         Theme
       </Button>
 
-      <Submenu
-        menuEntry={menu}
-        visibleSubMenuId={visibleSubMenuId}
-        onBlurHandler={hideSubMenuIfVisible}
-      />
-    </div>
+      <DropdownMenu>
+        <Submenu menuEntry={menu} />
+      </DropdownMenu>
+    </DropdownMenuWrapper>
   );
 };

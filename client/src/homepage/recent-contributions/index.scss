@@ -27,6 +27,7 @@
     }
 
     &:nth-child(odd) {
+      border-radius: var(--elem-radius);
       background: var(--background-secondary);
     }
 
@@ -39,32 +40,29 @@
       @media screen and (min-width: $screen-md) {
       }
     }
+  }
 
-    .request-title {
-      font-size: 14px;
-      line-height: 175%;
-      margin: 0px;
-      display: flex;
-      flex-direction: column;
-      gap: 0.125rem;
+  .request-title {
+    font-size: 14px;
+    line-height: 175%;
+    margin: 0px;
+    display: flex;
+    flex-direction: column;
+    gap: 0.125rem;
+    font: var(--type-body-m);
 
-      /* MDN UI / Body / M */
-      font-weight: 450;
-      font-size: 0.875rem;
-      line-height: 1.2;
-      a {
+    a {
+      color: var(--text-primary);
+
+      &:hover {
+        text-decoration: underline;
         color: var(--text-primary);
-
-        &:hover {
-          text-decoration: underline;
-          color: var(--text-primary);
-        }
       }
+    }
 
-      .request-repo {
-        font-size: 12px;
-        color: var(--text-secondary);
-      }
+    .request-repo {
+      font: var(--type-body-s);
+      color: var(--text-secondary);
     }
   }
 }

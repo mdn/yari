@@ -1,7 +1,7 @@
 @use "../../ui/vars" as *;
 
 .contributor-spotlight {
-  background: linear-gradient(90deg, #8524ff -43.99%, #4d7fff 159.52%);
+  background: var(--homepage-secondary-bg);
   color: white;
   width: 100%;
   display: flex;
