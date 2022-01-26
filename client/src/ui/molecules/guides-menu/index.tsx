@@ -57,7 +57,7 @@ export const GuidesMenu = () => {
         {menu.label}
       </button>
 
-      <Link to={`/${locale}/docs/Web/`} className="top-level-entry">
+      <Link to={`/${locale}/docs/Learn/`} className="top-level-entry">
         Guides
       </Link>
 
