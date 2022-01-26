@@ -79,7 +79,12 @@ export const GuidesMenu = ({ visibleSubMenuId, toggleMenu }) => {
         {menu.label}
       </button>
 
-      <Link to={`/${locale}/docs/Learn/`} className="top-level-entry">
+      <Link
+        to={`/${locale}/docs/Learn/`}
+        className="top-level-entry"
+        // @ts-ignore
+        onClick={() => document?.activeElement?.blur()}
+      >
         Guides
       </Link>
 

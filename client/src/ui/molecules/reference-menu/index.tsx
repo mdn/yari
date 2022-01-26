@@ -80,7 +80,12 @@ export const ReferenceMenu = ({ visibleSubMenuId, toggleMenu }) => {
         {menu.label}
       </button>
 
-      <Link to={`/${locale}/docs/Web/`} className="top-level-entry">
+      <Link
+        to={`/${locale}/docs/Web/`}
+        className="top-level-entry"
+        // @ts-ignore
+        onClick={() => document?.activeElement?.blur()}
+      >
         {menu.label}
       </Link>
 
