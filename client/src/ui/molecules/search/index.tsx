@@ -50,11 +50,10 @@ export function Search({
   );
 
   useEffect(() => {
-    if(hasOpened){
+    if (hasOpened) {
       setIsFocused(true);
     }
   }, [hasOpened]);
-
 
   return (
     <div className="header-search">
