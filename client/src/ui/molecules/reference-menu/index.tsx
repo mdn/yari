@@ -85,7 +85,7 @@ export const ReferenceMenu = () => {
         {menu.label}
       </Link>
 
-      <Submenu menuEntry={menu} defaultHidden />
+      <Submenu menuEntry={menu} defaultHidden={!isOpen} />
     </li>
   );
 };

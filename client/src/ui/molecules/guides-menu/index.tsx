@@ -84,7 +84,7 @@ export const GuidesMenu = () => {
         Guides
       </Link>
 
-      <Submenu menuEntry={menu} defaultHidden />
+      <Submenu menuEntry={menu} defaultHidden={!isOpen} />
     </li>
   );
 };
