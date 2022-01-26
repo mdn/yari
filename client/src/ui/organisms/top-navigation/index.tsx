@@ -8,7 +8,8 @@ import { TopNavigationMain } from "../top-navigation-main";
 import "./index.scss";
 import { useLocation } from "react-router-dom";
 
-const DARK_NAV_ROUTES = [/\/plus\/?$/i, "_homepage"];
+const DARK_NAV_ROUTES = [/\/plus\/?$/i];
+const TRANSPARENT_NAV_ROUTES = ["_homepage"];
 
 export function TopNavigation() {
   const location = useLocation();
@@ -25,12 +26,13 @@ export function TopNavigation() {
   const assistiveText = showMainMenu ? "Close main menu" : "Open main menu";
   const route = location.pathname.substring(location.pathname.indexOf("/", 1));
   const dark = DARK_NAV_ROUTES.some((r) => route.match(r));
+  const transparent = TRANSPARENT_NAV_ROUTES.some((r) => route.match(r));
 
   return (
     <header
-      className={`top-navigation${showMainMenu ? " show-nav" : ""}${
-        dark ? " dark" : ""
-      }`}
+      className={`top-navigation${showMainMenu ? " show-nav" : ""}
+      ${dark ? " dark" : ""}
+      ${transparent ? " is-transparent" : ""}`}
     >
       <Container>
         <div className="top-navigation-wrap">

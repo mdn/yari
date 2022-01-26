@@ -41,6 +41,14 @@
 
   .button.action:hover {
     --button-bg: var(--border-secondary);
+
+    @at-root .is-transparent & {
+      --button-bg: var(--accent-primary-engage);
+    }
+  }
+
+  .button.action.search-button:hover {
+    --button-bg: transparent;
   }
 
   .top-level-entry {

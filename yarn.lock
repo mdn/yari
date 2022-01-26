@@ -1776,10 +1776,10 @@
     "@types/yargs" "^16.0.0"
     chalk "^4.0.0"
 
-"@mdn/browser-compat-data@4.1.3":
-  version "4.1.3"
-  resolved "https://registry.npmjs.org/@mdn/browser-compat-data/-/browser-compat-data-4.1.3.tgz"
-  integrity sha512-489a7ook3U/LZtFAw4c713LgQa/hTVMUdWPmrUHox+gF/xbR01EQkJfSjiVeKPGS8SQtnkcHyuiBkIwRZZaYlQ==
+"@mdn/browser-compat-data@4.1.4":
+  version "4.1.4"
+  resolved "https://registry.yarnpkg.com/@mdn/browser-compat-data/-/browser-compat-data-4.1.4.tgz#a3764100624151323f7421ff5d90731b9ff9bc48"
+  integrity sha512-GT+WV0p/3Y90zfyv3alYZykqkySbFxq6lJcK1RMnaoPoA6RGrbXwOnOhD9RPw+Jy6IKdzfUjvtXvrep+qkwwrQ==
 
 "@mdn/dinocons@^0.5.5":
   version "0.5.5"
@@ -3720,10 +3720,10 @@ browser-process-hrtime@^1.0.0:
   resolved "https://registry.npmjs.org/browser-process-hrtime/-/browser-process-hrtime-1.0.0.tgz"
   integrity sha512-9o5UecI3GhkpM6DrXr69PblIuWxPKk9Y0jHBRhdocZ2y7YECBFCsHm79Pr3OyR2AvjhDkabFJaDJMYRazHgsow==
 
-browser-specs@^2.21.0:
-  version "2.21.0"
-  resolved "https://registry.npmjs.org/browser-specs/-/browser-specs-2.21.0.tgz"
-  integrity sha512-HnV+fV9xvN4a5zvi47Le2ShBxYJ2pU+crtGL+sJGRcBh5mkUkS9BswQEuwKM2VZ4z1FHmBTGKtnn4NeVglHXag==
+browser-specs@^2.22.0:
+  version "2.22.0"
+  resolved "https://registry.yarnpkg.com/browser-specs/-/browser-specs-2.22.0.tgz#0c8829073dd967f9f9e6ea3ebb50e9fcf5d590e7"
+  integrity sha512-B9AhSfIL+OJO5pa8m9+s7i81VCkYfq/W0WWkicvPTrJ2M7Yk8F//3q1cHJzERSLsupedmFFGap/Vzzz8p3qeBw==
 
 browserify-aes@^1.0.0, browserify-aes@^1.0.4:
   version "1.2.0"

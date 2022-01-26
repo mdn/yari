@@ -1384,7 +1384,7 @@ test("img tags should always have their 'width' and 'height' set", () => {
     } else if ($img.attr("src").endsWith("screenshot.png")) {
       expect($img.attr("width")).toBe("250");
       expect($img.attr("height")).toBe("250");
-    } else if ($img.attr("src").endsWith("app-dl-gdapple.svg")) {
+    } else if ($img.attr("src").endsWith("app-dl-apple.svg")) {
       expect($img.attr("width")).toBe("130");
       expect($img.attr("height")).toBe("43");
     } else if ($img.attr("src").endsWith("app-dl-google.svg")) {
@@ -1394,7 +1394,7 @@ test("img tags should always have their 'width' and 'height' set", () => {
       expect($img.attr("width")).toBe("110");
       expect($img.attr("height")).toBe("40");
     } else {
-      throw new Error("unexpected image");
+      throw new Error("unexpected image: " + $img.attr("src"));
     }
   });
 });

@@ -81,6 +81,8 @@ const scriptSrcValues = [
 
   "assets.codepen.io",
   "production-assets.codepen.io",
+
+  "'sha256-CUy3BwqnmCSHS96nUyHoUsOB3r+s10eRpf5GbZdZqgk='", // inline no flicker
 ];
 const CSP_DIRECTIVES = {
   "default-src": ["'self'"],

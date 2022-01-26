@@ -99,6 +99,15 @@
     </style>
   </head>
   <body>
+    <script>
+      const c = { light: "#ffffff", dark: "#15141a" };
+      if (window && document.body) {
+        const o = window.localStorage.getItem("theme");
+        o &&
+          ((document.body.className = o),
+          (document.body.style.backgroundColor = c[o]));
+      }
+    </script>
     <div id="root"></div>
   </body>
 </html>

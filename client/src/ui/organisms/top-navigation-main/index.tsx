@@ -17,9 +17,11 @@ export const TopNavigationMain = () => {
   const userData = useUserData();
   const isAuthenticated = userData && userData.isAuthenticated;
   const [showSearch, setShowSearch] = React.useState(false);
+  const [hasOpened, setHasOpened] = React.useState<boolean | undefined>(false);
 
   function handleShowSearch() {
     setShowSearch(true);
+    setHasOpened(true);
   }
 
   return (
@@ -29,6 +31,8 @@ export const TopNavigationMain = () => {
       <MainMenu />
 
       <Search
+        hasOpened={hasOpened}
+        onChangeIsFocused={(isFocused) => setHasOpened(isFocused)}
         onCloseSearch={() => {
           setShowSearch(false);
         }}

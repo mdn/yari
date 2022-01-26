@@ -1,14 +1,13 @@
-import React from "react";
+import React, { useState } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 
 import { useGA } from "../../../ga-context";
 import { Translation } from "../../../document/types";
-
-import { useOnClickOutside } from "../../../hooks";
 import { Button } from "../../atoms/button";
 import { Submenu } from "../submenu";
 
 import "./index.scss";
+import { DropdownMenu, DropdownMenuWrapper } from "../dropdown";
 
 // This needs to match what's set in 'libs/constants.js' on the server/builder!
 const PREFERRED_LOCALE_COOKIE_NAME = "preferredlocale";
@@ -25,14 +24,7 @@ export function LanguageMenu({
   const { pathname } = useLocation();
   const navigate = useNavigate();
   const { locale } = useParams();
-
-  const previousActiveElement = React.useRef<null | HTMLButtonElement>(null);
-  const [visibleSubMenuId, setVisibleSubMenuId] = React.useState<string | null>(
-    null
-  );
-
-  const submenuRef = React.useRef(null);
-  useOnClickOutside(submenuRef, toggleSubMenu);
+  const [isOpen, setIsOpen] = useState<boolean>(false);
 
   function translateURL(destinationLocale: string) {
     return pathname.replace(`/${locale}/`, `/${destinationLocale}/`);
@@ -81,23 +73,7 @@ export function LanguageMenu({
 
       navigate(localeURL);
       window.scrollTo(0, 0);
-      hideSubMenuIfVisible();
-    }
-  }
-
-  /**
-   * Show and hide submenu
-   * @param {String} menuEntryId - The current top-level menu item id
-   */
-  function toggleSubMenu(menuEntryId) {
-    // store the current activeElement
-    previousActiveElement.current = document.activeElement as HTMLButtonElement;
-    setVisibleSubMenuId(visibleSubMenuId === menuEntryId ? null : menuEntryId);
-  }
-
-  function hideSubMenuIfVisible() {
-    if (visibleSubMenuId) {
-      setVisibleSubMenuId(null);
+      setIsOpen(false);
     }
   }
 
@@ -116,27 +92,27 @@ export function LanguageMenu({
   };
 
   return (
-    <div className="languages-switcher-menu" ref={submenuRef}>
+    <DropdownMenuWrapper
+      className="languages-switcher-menu"
+      isOpen={isOpen}
+      setIsOpen={setIsOpen}
+    >
       <Button
         type="action"
         ariaControls={menuId}
         ariaHasPopup={"menu"}
-        ariaExpanded={menuId === visibleSubMenuId}
+        ariaExpanded={isOpen || undefined}
         icon="language"
         extraClasses="languages-switcher-menu"
-        onClickHandler={() => {
-          toggleSubMenu(menuId);
-        }}
+        onClickHandler={() => setIsOpen(!isOpen)}
       >
         {native}
       </Button>
 
-      <Submenu
-        menuEntry={menuEntry}
-        visibleSubMenuId={visibleSubMenuId}
-        onBlurHandler={hideSubMenuIfVisible}
-      />
-    </div>
+      <DropdownMenu>
+        <Submenu menuEntry={menuEntry} />
+      </DropdownMenu>
+    </DropdownMenuWrapper>
   );
 }
 

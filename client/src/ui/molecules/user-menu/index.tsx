@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 
 import { Avatar } from "../../atoms/avatar";
 import { Button } from "../../atoms/button";
@@ -14,17 +14,11 @@ import {
 } from "../../../constants";
 
 import "./index.scss";
-import { useOnClickOutside } from "../../../hooks";
+import { DropdownMenu, DropdownMenuWrapper } from "../dropdown";
 
 export const UserMenu = () => {
   const userData = useUserData();
-  const previousActiveElement = React.useRef<null | HTMLButtonElement>(null);
-  const [visibleSubMenuId, setVisibleSubMenuId] = React.useState<string | null>(
-    null
-  );
-
-  const submenuRef = React.useRef(null);
-  useOnClickOutside(submenuRef, hideSubMenuIfVisible);
+  const [isOpen, setIsOpen] = useState<boolean>(false);
 
   // if we don't have the user data yet, don't render anything
   if (!userData || typeof window === "undefined") {
@@ -77,45 +71,29 @@ export const UserMenu = () => {
     });
   }
 
-  function hideSubMenuIfVisible() {
-    if (visibleSubMenuId) {
-      setVisibleSubMenuId(null);
-    }
-  }
-
-  /**
-   * Show and hide submenus in the main menu, send GA events and updates
-   * the ARIA state.
-   * @param {Object} event - The event that triggered the function.
-   * @param {String} menuEntryId - The current top-level menu item id
-   */
-  function toggleSubMenu(event, menuEntryId) {
-    // store the current activeElement
-    previousActiveElement.current = document.activeElement as HTMLButtonElement;
-    setVisibleSubMenuId(visibleSubMenuId === menuEntryId ? null : menuEntryId);
-  }
-
   return (
-    <div className="top-level-entry-container user-menu" ref={submenuRef}>
+    <DropdownMenuWrapper
+      className="top-level-entry-container user-menu"
+      isOpen={isOpen}
+      setIsOpen={setIsOpen}
+    >
       <Button
         type="action"
         id={`${userMenuItems.id}-button`}
         extraClasses="top-level-entry menu-toggle user-menu-toggle "
         ariaHasPopup="menu"
-        ariaExpanded={userMenuItems.id === visibleSubMenuId}
+        ariaExpanded={isOpen || undefined}
         onClickHandler={(event) => {
-          toggleSubMenu(event, userMenuItems.id);
+          setIsOpen(!isOpen);
         }}
       >
         <Avatar userData={userData} />
         <span className="user-menu-id">{userData.email}</span>
       </Button>
 
-      <Submenu
-        menuEntry={userMenuItems}
-        visibleSubMenuId={visibleSubMenuId}
-        onBlurHandler={hideSubMenuIfVisible}
-      />
-    </div>
+      <DropdownMenu>
+        <Submenu menuEntry={userMenuItems} />
+      </DropdownMenu>
+    </DropdownMenuWrapper>
   );
 };

@@ -5,9 +5,9 @@ import { NotificationsWatchMenuCustom } from "./menu-custom";
 import { NotificationsWatchMenuStart } from "./menu-start";
 
 import "./index.scss";
-import { useOnClickOutside } from "../../../hooks";
 import useSWR from "swr";
 import { useCSRFMiddlewareToken } from "../../../hooks";
+import { DropdownMenu, DropdownMenuWrapper } from "../dropdown";
 
 interface WatchModeData {
   status: string;
@@ -42,9 +42,6 @@ export const NotificationsWatchMenu = ({ doc }) => {
     }
   );
   const watching = data?.status && data.status !== "unwatched";
-
-  const submenuRef = React.useRef(null);
-  useOnClickOutside(submenuRef, () => setShow(false));
 
   async function handleWatchSubmit({
     custom,
@@ -111,7 +108,11 @@ export const NotificationsWatchMenu = ({ doc }) => {
   }
 
   return (
-    <div className="watch-menu" ref={submenuRef}>
+    <DropdownMenuWrapper
+      className="watch-menu"
+      isOpen={show}
+      setIsOpen={setShow}
+    >
       <React.Suspense fallback={null}>
         <Button
           type="action"
@@ -130,46 +131,48 @@ export const NotificationsWatchMenu = ({ doc }) => {
       </React.Suspense>
 
       {data && (
-        <div
-          className={`${menuId} ${show ? "show" : ""}`}
-          role="menu"
-          aria-labelledby={`${menuId}-button`}
-        >
-          {visibleStep === 0 ? (
-            <NotificationsWatchMenuStart
-              data={data}
-              setStepHandler={setVisibleStep}
-              handleSelection={(unwatch: boolean) => {
-                handleWatchSubmit({ unwatch });
-              }}
-              showCustom={compatPage}
-            />
-          ) : (
-            <NotificationsWatchMenuCustom
-              data={data}
-              setStepHandler={setVisibleStep}
-              handleSelection={(
-                custom: {
-                  content: boolean;
-                  compatibility: string[];
-                },
-                custom_default,
-                update_custom_default
-              ) => {
-                if (custom.content || custom.compatibility.length) {
-                  handleWatchSubmit({
-                    custom,
-                    custom_default,
-                    update_custom_default,
-                  });
-                } else {
-                  handleWatchSubmit({ unwatch: true });
-                }
-              }}
-            />
-          )}
-        </div>
+        <DropdownMenu>
+          <div
+            className={`${menuId} show`}
+            role="menu"
+            aria-labelledby={`${menuId}-button`}
+          >
+            {visibleStep === 0 ? (
+              <NotificationsWatchMenuStart
+                data={data}
+                setStepHandler={setVisibleStep}
+                handleSelection={(unwatch: boolean) => {
+                  handleWatchSubmit({ unwatch });
+                }}
+                showCustom={compatPage}
+              />
+            ) : (
+              <NotificationsWatchMenuCustom
+                data={data}
+                setStepHandler={setVisibleStep}
+                handleSelection={(
+                  custom: {
+                    content: boolean;
+                    compatibility: string[];
+                  },
+                  custom_default,
+                  update_custom_default
+                ) => {
+                  if (custom.content || custom.compatibility.length) {
+                    handleWatchSubmit({
+                      custom,
+                      custom_default,
+                      update_custom_default,
+                    });
+                  } else {
+                    handleWatchSubmit({ unwatch: true });
+                  }
+                }}
+              />
+            )}
+          </div>
+        </DropdownMenu>
       )}
-    </div>
+    </DropdownMenuWrapper>
   );
 };

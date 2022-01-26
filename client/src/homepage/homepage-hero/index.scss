@@ -1,7 +1,7 @@
 @use "../../ui/vars" as *;
 
 .homepage-hero {
-  width: 100%;
+  width: 100vw;
 
   header {
     height: 20rem;
@@ -14,7 +14,6 @@
     margin: 0 auto;
     gap: 2rem;
     padding: 0 1rem;
-    color: white;
 
     @media screen and (min-width: $screen-md) {
       padding: 0;
@@ -50,110 +49,6 @@
       max-width: 30rem;
       margin: 0 auto;
     }
-
-    /* Terrible things Daryl's done to make the search look okay for now */
-    .header-search {
-      width: 100%;
-      max-height: 4rem;
-      display: flex;
-
-      form {
-        outline: 1px solid var(--border-primary);
-        border-radius: 10rem;
-        background: var(--background-primary);
-
-        input,
-        input::placeholder {
-          font-size: 0.875rem;
-        }
-      }
-
-      form[aria-expanded="true"] {
-        border-radius: 2rem 2rem 0 0;
-        box-shadow: var(--shadow-02);
-      }
-
-      button {
-        border: 1px solid transparent;
-
-        &:hover {
-          background: none;
-        }
-      }
-
-      .search-widget {
-        gap: 0;
-        display: flex;
-      }
-
-      input {
-        padding: 2rem;
-        background: none;
-        border: none;
-      }
-
-      .close-search-button {
-        display: none;
-      }
-
-      .search-button {
-        position: relative;
-        left: -1.5rem;
-
-        &:hover {
-          background: none;
-          border: 1px solid transparent;
-        }
-
-        .button-wrap {
-          padding: 1.5rem;
-          height: 100%;
-          border-radius: 0 10rem 10rem 0;
-          background: none;
-          border: 1px solid transparent;
-
-          &:hover {
-            background: none;
-            border: 1px solid transparent;
-
-            .icon {
-              background-color: var(--text-primary);
-            }
-          }
-
-          .icon {
-            background-color: var(--icon-primary);
-            border: none;
-          }
-        }
-      }
-
-      .search-results {
-        top: 4rem;
-        outline: 1px solid var(--border-primary);
-        border-radius: 0 0 2rem 2rem;
-        text-align: left;
-        box-shadow: var(--shadow-02);
-        font-size: 0.875rem;
-
-        .result-item {
-          padding: 0.5rem 1.5rem;
-
-          mark {
-            background: none;
-          }
-
-          span {
-            font-weight: normal;
-            color: var(--text-secondary);
-          }
-
-          small {
-            color: var(--text-secondary);
-          }
-        }
-      }
-    }
   }
 
   .homepage-hero-bg {
@@ -162,9 +57,98 @@
     position: absolute;
     top: 0;
     z-index: -1;
-    background: var(--text-primary);
+    background-image: var(--homepage-hero-bg);
+    background-size: 180% 120%;
     height: 23rem;
-    transform-origin: 0;
+    transform-origin: center;
     overflow-y: clip;
+    transform: rotate(-9deg) scale(150%) translateY(-37%);
+  }
+
+  .header-search {
+    width: 100%;
+    max-height: 4rem;
+    display: flex;
+
+    .search-widget {
+      gap: 0;
+      display: flex;
+    }
+
+    .close-search-button {
+      display: none;
+    }
+
+    .search-results {
+      top: 4.2rem;
+      margin: 0 1.5rem;
+      text-align: left;
+      box-shadow: var(--shadow-02);
+      width: calc(100% - 3rem);
+
+      .result-item {
+        padding: 0.5rem 1.5rem;
+
+        mark {
+          background: none;
+          color: var(--text-primary);
+        }
+
+        span {
+          font-weight: normal;
+          color: var(--text-secondary);
+        }
+
+        small {
+          color: var(--text-secondary);
+        }
+      }
+    }
+  }
+
+  .search-input-field {
+    font: var(--type-body-l);
+    border-radius: 10rem;
+    background: var(--background-primary);
+    padding: 2rem;
+  }
+
+  .search-button.button {
+    position: absolute;
+    right: 2rem;
+    left: auto;
+    top: 0;
+
+    &:hover {
+      background: none;
+      border-color: transparent;
+    }
+
+    .button-wrap {
+      padding: 1.5rem;
+      height: 100%;
+      border-radius: 0 10rem 10rem 0;
+      background: none;
+      border: 1px solid transparent;
+
+      &:hover {
+        background: none;
+        border: 1px solid transparent;
+
+        .icon {
+          background-color: var(--text-primary);
+        }
+      }
+
+      .icon {
+        background-color: var(--icon-primary);
+        border: none;
+      }
+    }
+  }
+
+  .search-form {
+    &[aria-expanded="true"] {
+    }
   }
 }
