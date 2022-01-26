@@ -2,6 +2,7 @@
 @use "../../base/typography" as *;
 
 .submenu {
+  background-color: var(--background-primary);
   list-style: none;
   margin: 0;
   padding: 0;
