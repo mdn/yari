@@ -35,7 +35,7 @@
   a:hover,
   a:focus {
     .submenu-icon {
-      &.js {
+      &.javascript {
         background-color: var(--js-accent-color) !important;
       }
     }
@@ -83,13 +83,5 @@
 
   &.apis {
     background-color: var(--apis-accent-engage);
-  }
-
-  &.apis,
-  &.http,
-  &.html {
-    &::before {
-      background-color: white;
-    }
   }
 }
