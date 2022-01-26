@@ -71,15 +71,15 @@ export const ArticleActions = ({
                 </Button>
               </li>
             ) : null}
+            {isAuthenticated && (
+              <li className="article-actions-entry">
+                <NotificationsWatchMenu doc={doc} />
+              </li>
+            )}
             {isSubscriber && (
-              <>
-                <li className="article-actions-entry">
-                  <NotificationsWatchMenu doc={doc} />
-                </li>
-                <li className="article-actions-entry">
-                  <BookmarkContainer doc={doc} />
-                </li>
-              </>
+              <li className="article-actions-entry">
+                <BookmarkContainer doc={doc} />
+              </li>
             )}
             {isAuthenticated && (
               <li className="article-actions-entry">

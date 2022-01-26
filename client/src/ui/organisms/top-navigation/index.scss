@@ -4,12 +4,17 @@
   position: relative;
   width: 100%;
   background: var(--background-primary);
+  z-index: $bottom-layer;
 
   .container {
     align-items: center;
     display: flex;
     flex-flow: row wrap;
     gap: var(--gutter);
+  }
+
+  &.is-transparent {
+    background-color: transparent;
   }
 
   /* Wrapper strictly used for containing the logo and menu toggle */

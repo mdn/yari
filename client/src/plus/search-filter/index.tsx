@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 
 import { Button } from "../../ui/atoms/button";
 import { Search } from "../../ui/atoms/search";
@@ -7,6 +7,7 @@ import { searchFiltersContext } from "../contexts/search-filters";
 import { useDebouncedCallback } from "use-debounce";
 
 import "./index.scss";
+import { DropdownMenu, DropdownMenuWrapper } from "../../ui/molecules/dropdown";
 
 export default function SearchFilter({
   filters = [],
@@ -15,10 +16,8 @@ export default function SearchFilter({
   filters?: { label: string; param: string }[];
   sorts?: { label: string; param: string }[];
 }) {
-  const previousActiveElement = React.useRef<null | HTMLButtonElement>(null);
-  const [visibleSubMenuId, setVisibleSubMenuId] = React.useState<string | null>(
-    null
-  );
+  const [isFiltersOpen, setIsFiltersOpen] = useState<boolean>(false);
+  const [isSortingOpen, setIsSortingOpen] = useState<boolean>(false);
 
   const {
     selectedFilter,
@@ -68,30 +67,6 @@ export default function SearchFilter({
     })),
   };
 
-  /**
-   * Show and hide submenu
-   * @param {String} menuEntryId - The current top-level menu item id
-   */
-  function toggleSubMenu(menuEntryId) {
-    // store the current activeElement
-    previousActiveElement.current = document.activeElement as HTMLButtonElement;
-    setVisibleSubMenuId(visibleSubMenuId === menuEntryId ? null : menuEntryId);
-  }
-
-  function hideSubMenuIfVisible() {
-    if (visibleSubMenuId) {
-      setVisibleSubMenuId(null);
-    }
-  }
-
-  React.useEffect(() => {
-    document.addEventListener("keyup", (event) => {
-      if (event.key === "Escape") {
-        hideSubMenuIfVisible();
-      }
-    });
-  });
-
   return (
     <form className="search-filter">
       <Search
@@ -103,45 +78,49 @@ export default function SearchFilter({
       />
 
       {filters.length ? (
-        <div className="search-filter-category search-filter-filters">
+        <DropdownMenuWrapper
+          className="search-filter-category search-filter-filters"
+          isOpen={isFiltersOpen}
+          setIsOpen={setIsFiltersOpen}
+        >
           <Button
             type="select"
             ariaControls={filterMenu.id}
             ariaHasPopup={"menu"}
-            ariaExpanded={filterMenu.id === visibleSubMenuId}
+            ariaExpanded={isFiltersOpen || undefined}
             onClickHandler={() => {
-              toggleSubMenu(filterMenu.id);
+              setIsFiltersOpen(!isFiltersOpen);
             }}
           >
             {filterMenu.label}
           </Button>
-          <Submenu
-            menuEntry={filterMenu}
-            visibleSubMenuId={visibleSubMenuId}
-            onBlurHandler={hideSubMenuIfVisible}
-          />
-        </div>
+          <DropdownMenu>
+            <Submenu menuEntry={filterMenu} />
+          </DropdownMenu>
+        </DropdownMenuWrapper>
       ) : null}
 
       {sorts.length ? (
-        <div className="search-filter-category search-filter-sorts">
+        <DropdownMenuWrapper
+          className="search-filter-category search-filter-sorts"
+          isOpen={isSortingOpen}
+          setIsOpen={setIsSortingOpen}
+        >
           <Button
             type="select"
             ariaControls={sortMenu.id}
             ariaHasPopup={"menu"}
-            ariaExpanded={sortMenu.id === visibleSubMenuId}
+            ariaExpanded={isSortingOpen || undefined}
             onClickHandler={() => {
-              toggleSubMenu(sortMenu.id);
+              setIsSortingOpen(!isSortingOpen);
             }}
           >
             {sortMenu.label}
           </Button>
-          <Submenu
-            menuEntry={sortMenu}
-            visibleSubMenuId={visibleSubMenuId}
-            onBlurHandler={hideSubMenuIfVisible}
-          />
-        </div>
+          <DropdownMenu>
+            <Submenu menuEntry={sortMenu} />
+          </DropdownMenu>
+        </DropdownMenuWrapper>
       ) : null}
     </form>
   );
