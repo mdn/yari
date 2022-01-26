@@ -20,18 +20,14 @@ type MenuEntry = {
 
 export const Submenu = ({
   menuEntry,
-  onBlurHandler,
-  visibleSubMenuId,
+  defaultHidden = false,
 }: {
   menuEntry: MenuEntry;
-  onBlurHandler?: () => void;
-  visibleSubMenuId: string | null;
+  defaultHidden?: boolean;
 }) => {
   return (
     <ul
-      className={`submenu ${menuEntry.id} ${
-        menuEntry.id === visibleSubMenuId ? "show" : ""
-      }`}
+      className={`submenu ${menuEntry.id} ${defaultHidden ? "hidden" : ""}`}
       role="menu"
       aria-labelledby={`${menuEntry.id}-button`}
     >
@@ -47,13 +43,8 @@ export const Submenu = ({
               {item.component ? (
                 <item.component key={key} />
               ) : item.url ? (
-                <a
-                  href={item.url}
-                  className="submenu-item"
-                  onBlur={onBlurHandler}
-                  role="menuitem"
-                >
-                  {item.hasIcon && <div className={item.iconClasses}></div>}
+                <a href={item.url} className="submenu-item" role="menuitem">
+                  {item.hasIcon && <div className={item.iconClasses} />}
                   <div className="submenu-content-container">
                     <div className="submenu-item-heading">{item.label}</div>
                     {item.description && (
@@ -70,7 +61,7 @@ export const Submenu = ({
                 </a>
               ) : (
                 <div key={key} className="submenu-item">
-                  {item.hasIcon && <div className={item.iconClasses}></div>}
+                  {item.hasIcon && <div className={item.iconClasses} />}
                   <div className="submenu-content-container">
                     <div className="submenu-item-heading">{item.label}</div>
                     {item.description && (
