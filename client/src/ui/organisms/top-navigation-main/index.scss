@@ -36,19 +36,21 @@
   }
 
   .button.action {
-    --button-border-color: transparent;
-  }
+    &:hover {
+      --button-bg: var(--border-secondary);
+    }
 
-  .button.action:hover {
-    --button-bg: var(--border-secondary);
+    @at-root .is-transparent &:not(:focus):hover {
+      --button-border-color: transparent;
+    }
 
-    @at-root .is-transparent & {
+    @at-root .is-transparent &:hover {
       --button-bg: var(--accent-primary-engage);
     }
-  }
 
-  .button.action.search-button:hover {
-    --button-bg: transparent;
+    &.search-button:hover {
+      --button-bg: transparent;
+    }
   }
 
   .top-level-entry {
