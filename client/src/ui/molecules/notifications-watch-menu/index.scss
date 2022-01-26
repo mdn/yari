@@ -10,23 +10,11 @@
   margin: 0;
   padding: 0;
 
-  @media screen and (min-width: $screen-md) {
-    &.show {
-      background-color: var(--background-secondary);
-      border: 1px solid var(--border-primary);
-      border-radius: var(--elem-radius);
-      box-shadow: var(--shadow-01);
-
-      display: flex;
-      flex-direction: column;
-      left: initial;
-      padding: 0;
-      position: absolute;
-      right: 0;
-      top: calc(100% + 6px);
-      width: 316px;
-      z-index: 1000;
-    }
+  &.show {
+    display: flex;
+    flex-direction: column;
+    margin-top: 0.5rem;
+    padding-bottom: 1rem;
   }
 
   input {
@@ -35,6 +23,8 @@
     color: var(--text-primary);
     font: var(--type-body-m);
     padding: 0.5rem;
+    flex: 1 1 100%;
+    min-width: 0;
   }
 
   &-header,
@@ -42,8 +32,8 @@
     display: block;
     font: var(--type-emphasis-m);
     color: var(--text-primary);
-    padding: 1rem var(--gutter-padding);
-    text-align: center;
+    padding: 1rem 0;
+    text-align: left;
     width: 100%;
   }
 
@@ -64,6 +54,35 @@
     padding-bottom: 0.5rem;
     border-top: 1px solid var(--border-primary);
   }
+
+  @media screen and (min-width: $screen-md) {
+    &.show {
+      margin-top: 0;
+      padding: 0;
+      left: initial;
+      position: absolute;
+      right: 0;
+      top: calc(100% + 6px);
+      width: 316px;
+      z-index: 1000;
+      padding: 1rem;
+      margin-top: 0.5rem;
+      background-color: var(--background-secondary);
+      border: 1px solid var(--border-primary);
+      border-radius: var(--elem-radius);
+      box-shadow: var(--shadow-01);
+    }
+
+    &-header {
+      display: block;
+      padding: 1rem var(--gutter-padding);
+    }
+
+    &-header,
+    &-setGlobal {
+      text-align: center;
+    }
+  }
 }
 
 .watch-submenu-item {
@@ -71,18 +90,27 @@
   align-items: center;
   gap: 0.5rem;
   font: var(--type-emphasis-m);
-  padding: 0 var(--gutter-padding) 0.5rem;
+  padding: 0 0 0.5rem;
 
   &:last-child {
-    padding-bottom: 1rem;
+    padding-bottom: 0;
   }
 
   label {
-    flex: 1;
+    flex: 1 1 auto;
+    width: 80px;
   }
 
-  .button {
-    margin-left: auto;
+  @media screen and (min-width: $screen-md) {
+    padding: 0 var(--gutter-padding) 0.5rem;
+
+    &:last-child {
+      padding-bottom: 1rem;
+    }
+
+    .button {
+      margin-left: auto;
+    }
   }
 }
 

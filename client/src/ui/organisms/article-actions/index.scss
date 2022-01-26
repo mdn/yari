@@ -60,12 +60,20 @@
       // Reset all buttons
       .button {
         --button-radius: 0;
-
         width: 100%;
 
         .button-wrap {
           justify-content: flex-start;
           padding: 1.5rem 1rem;
+        }
+      }
+
+      .watch-submenu.show .button {
+        --button-radius: var(--elem-radius);
+
+        .button-wrap {
+          padding: 0 var(--button-padding);
+          justify-content: center;
         }
       }
 
@@ -90,7 +98,7 @@
       .submenu {
         flex-direction: column;
         gap: 0.5rem;
-        padding-bottom: 0.5rem;
+        padding: 0.5rem 0 0.5rem 1rem;
       }
 
       .submenu-item {
