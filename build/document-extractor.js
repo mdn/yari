@@ -387,7 +387,7 @@ function _addSingleSpecialSection($) {
     //
     //   'chrome_android': {
     //      '28': {
-    //        release_data: '2012-06-01',
+    //        release_date: '2012-06-01',
     //        release_notes: '...',
     //        ...
     //
