@@ -446,6 +446,10 @@ pre {
     top: 0.75rem;
     width: 33px;
     opacity: 0;
+
+    &:focus {
+      opacity: 1;
+    }
   }
 
   &:hover {
