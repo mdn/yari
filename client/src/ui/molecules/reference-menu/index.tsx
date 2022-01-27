@@ -1,5 +1,4 @@
 import * as React from "react";
-import { useState } from "react";
 import { Link } from "react-router-dom";
 
 import { useLocale } from "../../../hooks";
@@ -7,16 +6,15 @@ import { Submenu } from "../submenu";
 
 import "./index.scss";
 
-export const ReferenceMenu = () => {
+export const ReferenceMenu = ({ visibleSubMenuId, toggleMenu }) => {
   const locale = useLocale();
-  const [isOpen, setIsOpen] = useState<boolean>(false);
 
   const menu = {
     label: "References",
     id: "references",
     items: [
       {
-        description: "Most basic building block of the Web",
+        description: "Structure of content on the Web",
         extraClasses: "html-link-container",
         hasIcon: true,
         iconClasses: "submenu-icon html",
@@ -24,7 +22,7 @@ export const ReferenceMenu = () => {
         url: `/${locale}/docs/Web/HTML`,
       },
       {
-        description: "Code used for describing document styling",
+        description: "Code used to describe document style",
         extraClasses: "css-link-container",
         hasIcon: true,
         iconClasses: "submenu-icon css",
@@ -32,7 +30,7 @@ export const ReferenceMenu = () => {
         url: `/${locale}/docs/Web/CSS`,
       },
       {
-        description: "Lightweight, interpreted, object-oriented language",
+        description: "General-purpose scripting language",
         extraClasses: "javascript-link-container",
         hasIcon: true,
         iconClasses: "submenu-icon javascript",
@@ -40,7 +38,7 @@ export const ReferenceMenu = () => {
         url: `/${locale}/docs/Web/JavaScript`,
       },
       {
-        description: "Protocol for transmitting hypermedia documents",
+        description: "Protocol for transmitting Web resources",
         extraClasses: "http-link-container",
         hasIcon: true,
         iconClasses: "submenu-icon http",
@@ -48,15 +46,24 @@ export const ReferenceMenu = () => {
         url: `/${locale}/docs/Web/HTTP`,
       },
       {
-        description: "Software interface that connects software",
+        description: "Interfaces for building Web applications",
         extraClasses: "apis-link-container",
         hasIcon: true,
         iconClasses: "submenu-icon apis",
-        label: "APIs",
+        label: "Web APIs",
         url: `/${locale}/docs/Web/API`,
+      },
+      {
+        description: "Web technology reference for developers",
+        extraClasses: "apis-link-container",
+        hasIcon: true,
+        iconClasses: "submenu-icon",
+        label: "Web Technology",
+        url: `/${locale}/docs/Web/`,
       },
     ],
   };
+  const isOpen = visibleSubMenuId === menu.id;
 
   return (
     <li key={menu.id} className="top-level-entry-container">
@@ -66,18 +73,23 @@ export const ReferenceMenu = () => {
         className="top-level-entry menu-toggle"
         aria-haspopup="menu"
         aria-expanded={isOpen || undefined}
-        onClick={(event) => {
-          setIsOpen(!isOpen);
+        onClick={() => {
+          toggleMenu(menu.id);
         }}
       >
         {menu.label}
       </button>
 
-      <Link to={`/${locale}/docs/Web/`} className="top-level-entry">
+      <Link
+        to={`/${locale}/docs/Web/`}
+        className="top-level-entry"
+        // @ts-ignore
+        onClick={() => document?.activeElement?.blur()}
+      >
         {menu.label}
       </Link>
 
-      <Submenu menuEntry={menu} defaultHidden />
+      <Submenu menuEntry={menu} defaultHidden={!isOpen} />
     </li>
   );
 };

@@ -3,7 +3,7 @@
 .top-navigation-main {
   display: none;
   justify-content: space-between;
-  padding: 1rem 0;
+  padding: 0 0 1rem;
   width: 100%;
 
   .show-nav & {
@@ -36,19 +36,21 @@
   }
 
   .button.action {
-    --button-border-color: transparent;
-  }
+    &:hover {
+      --button-bg: var(--border-secondary);
+    }
 
-  .button.action:hover {
-    --button-bg: var(--border-secondary);
+    @at-root .is-transparent &:not(:focus):hover {
+      --button-border-color: transparent;
+    }
 
-    @at-root .is-transparent & {
+    @at-root .is-transparent &:hover {
       --button-bg: var(--accent-primary-engage);
     }
-  }
 
-  .button.action.search-button:hover {
-    --button-bg: transparent;
+    &.search-button:hover {
+      --button-bg: transparent;
+    }
   }
 
   .top-level-entry {
@@ -186,7 +188,15 @@
 
 .top-navigation-main.has-search-open {
   .header-search {
-    width: 340px;
+    width: 240px;
+  }
+
+  // This one-off MQ is also used in auth-container/index
+  // to tweak the layout in English. This fix is related.
+  @media screen and (min-width: 820px) {
+    .header-search {
+      width: 340px;
+    }
   }
 
   .header-search ~ * {

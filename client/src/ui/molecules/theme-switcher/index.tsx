@@ -61,6 +61,7 @@ export const ThemeSwitcher = () => {
 
     if (window && body) {
       body.className = theme;
+      body.style.backgroundColor = "";
       window.localStorage.setItem("theme", theme);
       setActiveTheme(theme);
       postToIEx(theme);

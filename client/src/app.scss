@@ -82,13 +82,17 @@ main {
 }
 
 .visually-hidden {
-  /* absolute positioning fixes spacing with grid-gap */
-  position: absolute !important;
-  font: 0/0 a;
+  -webkit-clip-path: inset(50%) !important;
+  clip-path: inset(50%) !important;
+  border: 0 !important;
+  clip: rect(1px, 1px, 1px, 1px) !important;
+  height: 1px !important;
+  margin: -1px !important;
+  overflow: hidden !important;
   padding: 0 !important;
-  margin: 0 !important;
-  height: 0;
-  color: transparent;
+  position: absolute !important;
+  white-space: nowrap !important;
+  width: 1px !important;
 }
 
 .hidden {
@@ -115,6 +119,36 @@ a {
     mask-image: url("./assets/icons/external.svg");
     mask-size: cover;
     content: "";
+  }
+}
+
+.expand-this-link:after {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  content: "";
+}
+
+[type="search"] {
+  /* clears the ‘X’ from Internet Explorer */
+  &::-ms-clear {
+    display: none;
+    width: 0;
+    height: 0;
+  }
+  &::-ms-reveal {
+    display: none;
+    width: 0;
+    height: 0;
+  }
+  /* clears the ‘X’ from Chrome */
+  &::-webkit-search-decoration,
+  &::-webkit-search-cancel-button,
+  &::-webkit-search-results-button,
+  &::-webkit-search-results-decoration {
+    display: none;
   }
 }
 

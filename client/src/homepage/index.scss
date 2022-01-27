@@ -36,6 +36,7 @@
   }
 
   .article-tile {
+    position: relative;
     border-radius: 0.5rem;
     border: 1px solid var(--border-primary);
     padding: 1rem;
@@ -48,10 +49,7 @@
     }
 
     .tile-tag {
-      // MDN UI / Emphasis / M
-      font-size: 0.875rem;
-      font-weight: 650;
-      line-height: 1.2;
+      font: var(--type-emphasis-m);
       color: var(--text-primary);
 
       &:hover {
@@ -60,9 +58,7 @@
     }
 
     .tile-title {
-      font-size: 1.5rem;
-      font-weight: 650;
-      line-height: 1.2;
+      font: var(--type-title-l);
       color: var(--text-primary);
 
       &:hover {
@@ -71,9 +67,7 @@
     }
 
     p {
-      // MDN UI / Body / S
-      font-size: 12px;
-      line-height: 1.2;
+      font: var(--type-body-m);
       margin: 0;
     }
   }

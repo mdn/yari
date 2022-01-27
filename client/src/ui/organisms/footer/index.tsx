@@ -20,7 +20,7 @@ export function Footer() {
     <footer id="nav-footer" className={`page-footer${dark ? " dark" : ""}`}>
       <div className="page-footer-grid">
         <div className="page-footer-logo-col">
-          <a href="/" className="mdn-footer-logo">
+          <a href="/" className="mdn-footer-logo" aria-label="MDN homepage">
             <MDNLogo />
           </a>
           <p>
@@ -56,7 +56,7 @@ export function Footer() {
           <h2 className="footer-nav-heading">MDN</h2>
           <ul className="footer-nav-list">
             <li className="footer-nav-item">
-              <a href={`/${locale}/docs/MDN/About`}>About</a>
+              <a href={`/${locale}/About`}>About</a>
             </li>
             <li className="footer-nav-item">
               <a href={`/${locale}/#TODO`}>Careers</a>
