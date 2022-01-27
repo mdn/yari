@@ -234,10 +234,6 @@ iframe {
   width: 100%;
   border: 1px solid var(--border-primary);
 
-  &:not(.sample-code-frame) {
-    border: 0;
-  }
-
   /* "Live Samples" discussion here:
   https://github.com/mdn/yari-private/issues/370,
   These src attributes taken from unsafe-html.js */
