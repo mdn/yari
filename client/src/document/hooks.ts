@@ -34,15 +34,20 @@ export function useCopyExamplesToClipboard(doc: Doc | undefined) {
 
         const button = document.createElement("button");
         const span = document.createElement("span");
+        const liveregion = document.createElement("span");
+
         span.textContent = "Copy to Clipboard";
 
-        button.setAttribute("aria-hidden", "false");
         button.setAttribute("type", "button");
         button.setAttribute("class", "copy-icon");
         span.setAttribute("class", "visually-hidden");
+        liveregion.classList.add("copy-icon-message", "visually-hidden");
+        liveregion.setAttribute("role", "alert");
+        liveregion.style.top = "52px";
 
         button.appendChild(span);
         wrapper.appendChild(button);
+        wrapper.appendChild(liveregion);
 
         button.onclick = async () => {
           let copiedSuccessfully = true;
@@ -80,15 +85,14 @@ export function useCopyExamplesToClipboard(doc: Doc | undefined) {
 function showCopiedMessage(wrapper: HTMLElement, msg: string) {
   const element = getCopiedMessageElement(wrapper);
   element.textContent = msg;
-  element.classList.add("show");
-  element.setAttribute("aria-hidden", "false");
+  element.classList.remove("visually-hidden");
 }
 
 function hideCopiedMessage(wrapper: HTMLElement) {
   const element = getCopiedMessageElement(wrapper);
+  element.textContent = ""; // ensure contents change, so that they are picked up by the live region
   if (element) {
-    element.classList.remove("show");
-    element.setAttribute("aria-hidden", "true");
+    element.classList.add("visually-hidden");
   }
 }
 
@@ -100,7 +104,8 @@ function getCopiedMessageElement(wrapper: HTMLElement) {
   if (!element) {
     element = document.createElement("span");
     element.classList.add(className);
-    element.setAttribute("aria-hidden", "true");
+    element.classList.add("visually-hidden");
+    element.setAttribute("role", "alert");
     element.style.top = "52px";
     wrapper.appendChild(element);
   }
