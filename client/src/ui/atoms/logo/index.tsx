@@ -14,7 +14,7 @@ export function Logo() {
   const isPlus = location.pathname.indexOf("/plus") > -1 ? true : false;
 
   return (
-    <a href={`/${locale}/`} className="logo">
+    <a href={`/${locale}/`} className="logo" aria-label="MDN homepage">
       {isPlus ? <MDNPlusLogo /> : <MDNDocsLogo />}
     </a>
   );
