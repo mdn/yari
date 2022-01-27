@@ -23,11 +23,12 @@
       &::after {
         margin-right: 0.5rem;
         background-color: var(--icon-secondary);
-        background-size: 12px;
+        mask-size: 12px;
         content: "";
         display: block;
         height: 12px;
         mask-image: url("../../../assets/icons/chevron.svg");
+        mask-size: 12px;
         transform: rotate(-90deg);
         width: 12px;
       }

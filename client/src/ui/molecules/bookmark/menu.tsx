@@ -146,12 +146,39 @@ export function BookmarkMenu({
               role="menu"
               aria-labelledby={`${menuId}-button`}
             >
-              <button onClick={cancelHandler} className="watch-submenu-header">
+              <button
+                onClick={cancelHandler}
+                className="watch-submenu-header mobile-only"
+              >
                 <span className="watch-submenu-header-wrap">
                   <Icon name="chevron" />
-                  {bookmarked ? "Edit Bookmark" : "Save to Collection"}
+                  {bookmarked ? "Edit Bookmark" : "Add Bookmark"}
                 </span>
               </button>
+
+              <h2 className="watch-submenu-header desktop-only">
+                {bookmarked ? "Edit Bookmark" : "Add Bookmark"}
+              </h2>
+
+              <div className="watch-submenu-mobile-buttons">
+                {doc && data?.bookmarked ? (
+                  <Button
+                    type="action"
+                    buttonType="submit"
+                    name="delete"
+                    value="true"
+                    icon="trash"
+                    isDisabled={isValidating}
+                  />
+                ) : null}
+                <Button
+                  buttonType="submit"
+                  type="action"
+                  icon="checkmark"
+                  isDisabled={isValidating}
+                  name="save"
+                />
+              </div>
 
               <div className="watch-submenu-item">
                 <label htmlFor="bookmark-name">Name:</label>
@@ -175,20 +202,19 @@ export function BookmarkMenu({
                   onKeyDown={enterHandler}
                 />
               </div>
-              <div className="watch-submenu-item">
+              <div className="watch-submenu-item is-button-row">
                 <Button buttonType="submit" isDisabled={isValidating}>
                   Save
                 </Button>
                 {doc && data?.bookmarked ? (
                   <Button
-                    type="action"
+                    type="secondary"
                     buttonType="submit"
                     name="delete"
                     value="true"
-                    icon="trash"
                     isDisabled={isValidating}
                   >
-                    Remove
+                    Remove Bookmark
                   </Button>
                 ) : (
                   <Button onClickHandler={cancelHandler} type="secondary">

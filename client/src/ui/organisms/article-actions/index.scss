@@ -23,8 +23,8 @@
   padding: 0;
 
   .button {
-    width: 100%;
     white-space: nowrap;
+    width: 100%;
   }
 
   @media screen and (min-width: $screen-md) {
@@ -61,11 +61,16 @@
       .button {
         --button-radius: 0;
         width: 100%;
+        border-bottom: 1px solid var(--border-secondary);
 
         .button-wrap {
           justify-content: flex-start;
           padding: 1.5rem 1rem;
         }
+      }
+
+      .watch-submenu-mobile-buttons .button {
+        border-bottom-width: 0;
       }
 
       .watch-submenu.show .button {

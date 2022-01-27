@@ -3,16 +3,18 @@
 @use "../../vars" as *;
 
 .theme-switcher-menu {
-  .themes-menu .button {
+  .themes-menu .button.button {
     --button-bg: transparent;
     --button-border-color: var(--button-bg);
     --button-color: var(--text-primary);
+    border-bottom-width: 0;
     font: var(--type-body-m);
     width: 100%;
 
     .button-wrap {
       font-weight: 400;
       justify-content: flex-start;
+      padding: 1rem;
 
       &:before {
         display: inline-flex;
@@ -70,6 +72,36 @@
 
     .themes-menu .submenu-item {
       padding: 0.5rem 1rem;
+    }
+  }
+}
+
+.theme-switcher-menu,
+.languages-switcher-menu {
+  > .button {
+    .button-wrap:after {
+      background-color: var(--icon-secondary);
+      content: "";
+      display: block;
+      height: 16px;
+      mask-image: url("../../../assets/icons/chevron.svg");
+      mask-size: 16px;
+      width: 16px;
+      margin-left: auto;
+    }
+
+    &[aria-expanded="true"] {
+      .button-wrap:after {
+        transform: rotate(180deg);
+      }
+    }
+  }
+
+  @media screen and (min-width: $screen-md) {
+    > .button {
+      .button-wrap:after {
+        content: unset;
+      }
     }
   }
 }
