@@ -1,4 +1,5 @@
-<svg width="107" height="24" viewBox="0 0 107 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+<svg width="107" height="24" viewBox="0 0 107 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-labelledby="mdn-plus-logo-svg">
+<title id="mdn-plus-logo-svg">MDN plus logo</title>
 <path d="M0 24H3.60948L9.3913 0H5.87884L0 24Z" fill="var(--text-link)"/>
 <path d="M12.8914 24H16.5005L22.2827 0H18.7696L12.8914 24Z" fill="var(--text-link)"/>
 <path d="M9.39136 24H12.8914V0H9.46809L9.39136 24Z" fill="var(--text-link)"/>
