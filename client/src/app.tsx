@@ -67,8 +67,10 @@ function StandardLayout({
   return <Layout pageType={`standard-page ${extraClasses}`}>{children}</Layout>;
 }
 function DocumentLayout({ children }) {
-  const [category, setCategory] = React.useState<string | null>(null);
   const { pathname } = useLocation();
+  const [category, setCategory] = React.useState<string | null>(
+    docCategory({ pathname })
+  );
 
   React.useEffect(() => {
     setCategory(docCategory({ pathname }));
