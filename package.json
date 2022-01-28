@@ -126,7 +126,7 @@
     "@babel/core": "^7.16.7",
     "@mdn/dinocons": "^0.5.5",
     "@mdn/minimalist": "^2.0.4",
-    "@playwright/test": "1.17.2",
+    "@playwright/test": "1.18.1",
     "@testing-library/react": "^12.1.2",
     "@types/hast": "^2.3.4",
     "@types/jest": "^27.4.0",
