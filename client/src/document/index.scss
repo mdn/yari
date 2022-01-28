@@ -92,12 +92,6 @@
     border-radius: var(--elem-radius);
   }
 
-  .prev-next {
-    ul {
-      padding: 0 !important;
-    }
-  }
-
   // specific styles to override base styles. The Markdown compiler
   // adds extra divs, so this is a way for these styles to not
   // stomp out component styles.
@@ -160,6 +154,26 @@
         padding-left: 1rem;
       }
     }
+
+    .prev-next {
+      list-style: none;
+      margin: 1rem 0;
+      padding: 0;
+      display: flex;
+      justify-content: space-between;
+      gap: 0.5rem;
+      text-align: center;
+
+      li {
+        display: flex;
+        margin: 0;
+      }
+
+      .button {
+        margin: 0;
+        max-width: inherit;
+      }
+    }
   }
 
   @media screen and (min-width: $screen-sm) {
@@ -219,10 +233,6 @@ iframe {
   max-width: 100%;
   width: 100%;
   border: 1px solid var(--border-primary);
-
-  &:not(.sample-code-frame) {
-    border: 0;
-  }
 
   /* "Live Samples" discussion here:
   https://github.com/mdn/yari-private/issues/370,
@@ -357,32 +367,6 @@ pre {
 }
 
 /*
- * top navigational elements on tutorial pages
- * prevnext is added for backwards compatibility
- */
-.prevnext,
-.prev-next {
-  li {
-    list-style: none;
-  }
-
-  @media screen and (max-width: $screen-sm) {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 1rem;
-  }
-
-  a.button {
-    margin-bottom: 0.5rem;
-    max-width: inherit;
-
-    @media screen and (max-width: $screen-sm) {
-      margin-bottom: inherit;
-    }
-  }
-}
-
-/*
  * multi-column layout on pages with an index such as
  * https://developer.mozilla.org/en-US/docs/Web/API#Specifications
 */
@@ -513,44 +497,4 @@ kbd {
   font-size: 0.825rem;
   box-shadow: inset 0px -1px 0px 0px var(--border-secondary);
   color: var(--text-secondary);
-}
-
-.category-html {
-  .toc,
-  .sidebar,
-  .main-content {
-    --text-link: var(--html-accent-color);
-  }
-}
-
-.category-css {
-  .toc,
-  .sidebar,
-  .main-content {
-    --text-link: var(--css-accent-color);
-  }
-}
-
-.category-javascript {
-  .toc,
-  .sidebar,
-  .main-content {
-    --text-link: var(--js-accent-color);
-  }
-}
-
-.category-http {
-  .toc,
-  .sidebar,
-  .main-content {
-    --text-link: var(--http-accent-color);
-  }
-}
-
-.category-api {
-  .toc,
-  .sidebar,
-  .main-content {
-    --text-link: var(--apis-accent-color);
-  }
 }

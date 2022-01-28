@@ -168,3 +168,48 @@ a {
   border: 2px solid var(--scrollbar-bg, auto);
   background: var(--scrollbar-color);
 }
+
+.category-html {
+  .logo,
+  .toc,
+  .sidebar,
+  .main-content {
+    --text-link: var(--html-accent-color);
+  }
+}
+
+.category-css {
+  .logo,
+  .toc,
+  .sidebar,
+  .main-content {
+    --text-link: var(--css-accent-color);
+  }
+}
+
+.category-javascript {
+  .logo,
+  .toc,
+  .sidebar,
+  .main-content {
+    --text-link: var(--js-accent-color);
+  }
+}
+
+.category-http {
+  .logo,
+  .toc,
+  .sidebar,
+  .main-content {
+    --text-link: var(--http-accent-color);
+  }
+}
+
+.category-api {
+  .logo,
+  .toc,
+  .sidebar,
+  .main-content {
+    --text-link: var(--apis-accent-color);
+  }
+}

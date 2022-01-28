@@ -21,7 +21,10 @@ export const ThemeSwitcher = () => {
   function ThemeButton({ id, label }: ThemeButton) {
     return (
       <Button
-        extraClasses={activeTheme === id ? "active-menu-item" : undefined}
+        extraClasses={`
+          ${activeTheme === id ? "active-menu-item" : undefined}
+          ${`is-` + id}
+        `}
         onClickHandler={() => {
           switchTheme(id);
           setIsOpen(false);
@@ -36,6 +39,7 @@ export const ThemeSwitcher = () => {
     label: "Themes",
     id: menuId,
     items: [
+      { component: () => <ThemeButton id="os-default" label="OS Default" /> },
       { component: () => <ThemeButton id="light" label="Light" /> },
       { component: () => <ThemeButton id="dark" label="Dark" /> },
     ],

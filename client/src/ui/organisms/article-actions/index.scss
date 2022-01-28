@@ -23,8 +23,8 @@
   padding: 0;
 
   .button {
-    width: 100%;
     white-space: nowrap;
+    width: 100%;
   }
 
   @media screen and (min-width: $screen-md) {
@@ -60,12 +60,25 @@
       // Reset all buttons
       .button {
         --button-radius: 0;
-
         width: 100%;
+        border-bottom: 1px solid var(--border-secondary);
 
         .button-wrap {
           justify-content: flex-start;
           padding: 1.5rem 1rem;
+        }
+      }
+
+      .watch-submenu-mobile-buttons .button {
+        border-bottom-width: 0;
+      }
+
+      .watch-submenu.show .button {
+        --button-radius: var(--elem-radius);
+
+        .button-wrap {
+          padding: 0 var(--button-padding);
+          justify-content: center;
         }
       }
 
@@ -90,7 +103,7 @@
       .submenu {
         flex-direction: column;
         gap: 0.5rem;
-        padding-bottom: 0.5rem;
+        padding: 0.5rem 0 0.5rem 1rem;
       }
 
       .submenu-item {

@@ -36,14 +36,6 @@ import "./interactive-examples.scss";
 const Toolbar = React.lazy(() => import("./toolbar"));
 const MathMLPolyfillMaybe = React.lazy(() => import("./mathml-polyfill"));
 
-function docCategory({ mdn_url = "" } = {}) {
-  const [, , , webOrLearn, category] = mdn_url.split("/");
-  if ((webOrLearn === "Learn" || webOrLearn === "Web") && category) {
-    return `category-${category.toLowerCase()}`;
-  }
-  return null;
-}
-
 export function Document(props /* TODO: define a TS interface for this */) {
   const ga = useGA();
   const mountCounter = React.useRef(0);
@@ -160,7 +152,6 @@ export function Document(props /* TODO: define a TS interface for this */) {
   }
 
   const isServer = typeof window === "undefined";
-  const category = docCategory(doc);
 
   return (
     <>
@@ -176,7 +167,7 @@ export function Document(props /* TODO: define a TS interface for this */) {
           </div>
         )
       )}
-      <div className={`article-wrapper${category ? ` ${category}` : ""}`}>
+      <div className="article-wrapper">
         {doc.sidebarHTML && <RenderSideBar doc={doc} />}
 
         <div className="toc">

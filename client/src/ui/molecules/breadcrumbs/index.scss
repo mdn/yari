@@ -19,18 +19,16 @@
       display: inline-flex;
     }
 
-    &:first-child [property="name"] {
-      margin-left: 0;
-    }
-
     .breadcrumb {
       &::after {
+        margin-right: 0.5rem;
         background-color: var(--icon-secondary);
-        background-size: 12px;
+        mask-size: 12px;
         content: "";
         display: block;
         height: 12px;
-        mask-image: url("~@mdn/dinocons/arrows/chevron.svg");
+        mask-image: url("../../../assets/icons/chevron.svg");
+        mask-size: 12px;
         transform: rotate(-90deg);
         width: 12px;
       }
@@ -48,7 +46,7 @@
 
     [property="name"] {
       display: inline-block;
-      margin: 0 0.5rem;
+      margin-right: 0.5rem;
     }
   }
 

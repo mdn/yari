@@ -103,6 +103,7 @@ export function LanguageMenu({
         ariaHasPopup={"menu"}
         ariaExpanded={isOpen || undefined}
         icon="language"
+        size="small"
         extraClasses="languages-switcher-menu"
         onClickHandler={() => setIsOpen(!isOpen)}
       >

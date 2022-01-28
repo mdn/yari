@@ -1,10 +1,12 @@
 import { WatchMenuItem } from "./atoms/menu-item";
+import { Icon } from "../../atoms/icon";
 
 export function NotificationsWatchMenuStart({
   data,
   setStepHandler,
   handleSelection,
   showCustom,
+  closeDropdown,
 }) {
   const selected: { [x: string]: boolean } = { [data.status]: true };
   const majorText = showCustom
@@ -13,7 +15,18 @@ export function NotificationsWatchMenuStart({
 
   return (
     <>
-      <div className="watch-submenu-header">Notifications</div>
+      <div>
+        <button
+          onClick={closeDropdown}
+          className="watch-submenu-header mobile-only"
+        >
+          <span className="watch-submenu-header-wrap">
+            <Icon name="chevron" />
+            Notifications
+          </span>
+        </button>
+        <h2 className="watch-submenu-header desktop-only">Notifications</h2>
+      </div>
 
       <WatchMenuItem
         value="major"

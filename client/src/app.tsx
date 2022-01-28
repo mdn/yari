@@ -29,6 +29,14 @@ const Sitemap = React.lazy(() => import("./sitemap"));
 
 const isServer = typeof window === "undefined";
 
+function docCategory({ pathname = "" } = {}) {
+  const [, , , webOrLearn, category] = pathname.split("/");
+  if ((webOrLearn === "Learn" || webOrLearn === "Web") && category) {
+    return `category-${category.toLowerCase()}`;
+  }
+  return null;
+}
+
 function Layout({ pageType, children }) {
   return (
     <>
@@ -59,7 +67,15 @@ function StandardLayout({
   return <Layout pageType={`standard-page ${extraClasses}`}>{children}</Layout>;
 }
 function DocumentLayout({ children }) {
-  return <Layout pageType="document-page">{children}</Layout>;
+  const [category, setCategory] = React.useState<string | null>(null);
+  const { pathname } = useLocation();
+
+  React.useEffect(() => {
+    setCategory(docCategory({ pathname }));
+  }, [pathname]);
+  return (
+    <Layout pageType={`document-page ${category || ""}`}>{children}</Layout>
+  );
 }
 
 /** This component exists so you can dynamically change which sub-component to

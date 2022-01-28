@@ -22,6 +22,8 @@ export const NotificationsWatchMenu = ({ doc }) => {
 
   const menuId = "watch-submenu";
   const [show, setShow] = React.useState(false);
+  const closeDropdown = () => setShow(false);
+
   const [visibleStep, setVisibleStep] = React.useState<number>(0);
   const slug = doc.mdn_url; // Unique ID for the page
   const apiURL = `/api/v1/plus/watch${slug}/`;
@@ -139,6 +141,7 @@ export const NotificationsWatchMenu = ({ doc }) => {
           >
             {visibleStep === 0 ? (
               <NotificationsWatchMenuStart
+                closeDropdown={closeDropdown}
                 data={data}
                 setStepHandler={setVisibleStep}
                 handleSelection={(unwatch: boolean) => {
