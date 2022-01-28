@@ -9,7 +9,7 @@ const cheerio = require("cheerio");
 
 const H1_TO_H6_TAGS = new Set(["h1", "h2", "h3", "h4", "h5", "h6"]);
 const HEADING_TAGS = new Set([...H1_TO_H6_TAGS, "hgroup"]);
-const INJECT_SECTION_ID_TAGS = new Set([...HEADING_TAGS, "section"]);
+const INJECT_SECTION_ID_TAGS = new Set([...HEADING_TAGS, "section", "dt"]);
 const LIVE_SAMPLE_PARTS = ["html", "css", "js"];
 const SECTION_ID_DISALLOWED = /["#$%&+,/:;=?@[\]^`{|}~')(\\]/g;
 
@@ -170,6 +170,7 @@ class HTMLTool {
     // If all else, generate a unique one.
     $([...INJECT_SECTION_ID_TAGS].join(",")).each((i, element) => {
       const $element = $(element);
+      const isDt = $element[0].name === "dt";
       // Default is the existing one. Let's see if we need to change it.
       let id = $element.attr("id");
       if ($element.attr("name")) {
@@ -177,10 +178,18 @@ class HTMLTool {
         id = slugify($element.attr("name"));
       } else if (id) {
         // If it already has an ID, respect it and leave it be.
-      } else if (H1_TO_H6_TAGS.has($element[0].name)) {
-        // For heading tags, we'll give them an "id" that's a
+      } else if (H1_TO_H6_TAGS.has($element[0].name) || isDt) {
+        // For heading and dt tags, we'll give them an "id" that's a
         // slugified version of their text content.
-        const text = $element.text();
+        let text = $element.text();
+        if (isDt) {
+          // dt elements can, along with the actual term, contain stuff
+          // like <span class="badge inline optional">Optional</span>. If
+          // we don’t trim that, we end up with generated IDs like
+          // id="rtcSessionDescriptionInit_Optional". So, if the dt content
+          // contains a space, we take just whatever precedes the space.
+          text = text.split(" ")[0];
+        }
         id = slugify(text);
         if (id) {
           // Ensure that the slugified "id" has not already been
@@ -194,6 +203,16 @@ class HTMLTool {
       }
       if (!id) {
         id = generateUniqueID();
+      }
+      if (isDt) {
+        // There’s existing code that causes heading IDs to get lowercased,
+        // but it doesn’t handle dt elements. So we lowercase the dt IDs
+        // here. And to ensure the ID uniqueness-check works as expected,
+        // we need to do the lowercasing after the knownIDs.has(id) check
+        // above, and not before. Also, to ensure the resulting ID will
+        // always be lowercased in all cases, we need to do the lowercasing
+        // after generateUniqueID() runs, and not before.
+        id = id.toLowerCase();
       }
       knownIDs.add(id);
       $element.attr("id", id);
