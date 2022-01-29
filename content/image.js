@@ -5,7 +5,7 @@ const readChunk = require("read-chunk");
 const imageType = require("image-type");
 const isSvg = require("is-svg");
 
-const { ROOTS } = require("./constants");
+const { ROOTS, DEFAULT_LOCALE } = require("./constants");
 const { memoize, slugToFolder } = require("./utils");
 
 function isImage(filePath) {
@@ -45,6 +45,24 @@ function findByURL(url) {
   return find(urlToFilePath(url));
 }
 
+function findByURLWithFallback(url) {
+  let filePath = findByURL(url);
+  const locale = url.split("/")[1].toLowerCase();
+  if (
+    !filePath &&
+    locale !== DEFAULT_LOCALE &&
+    !url.startsWith(`/${DEFAULT_LOCALE.toLowerCase()}/`)
+  ) {
+    let defaultLocaleURL = url.replace(
+      new RegExp(`^/${locale}/`, "i"),
+      `/${DEFAULT_LOCALE}/`
+    );
+    filePath = findByURL(defaultLocaleURL);
+  }
+  return filePath;
+}
+
 module.exports = {
   findByURL,
+  findByURLWithFallback,
 };
