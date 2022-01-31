@@ -52,7 +52,9 @@ export const FXA_SETTINGS_URL = process.env.REACT_APP_FXA_SETTINGS_URL || "";
 export const DEFAULT_GEO_COUNTRY =
   process.env.REACT_APP_DEFAULT_GEO_COUNTRY || "United States";
 
-export const IEX_DOMAIN = "https://interactive-examples.mdn.mozilla.net";
+export const IEX_DOMAIN =
+  process.env.BUILD_INTERACTIVE_EXAMPLES_BASE_URL ||
+  "https://interactive-examples.mdn.mozilla.net";
 export const MDN_APP = Boolean(process.env.REACT_APP_MDN_APP) || false;
 export const MDN_APP_ANDROID =
   (process.env.REACT_APP_MDN_APP || "").toLowerCase() === "android";
