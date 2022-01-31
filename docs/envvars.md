@@ -111,7 +111,7 @@ because the security of the `iframe`'s content has not been audited as
 carefully as the rest of the site.
 
 When doing local development, it's recommended to set this to
-`http://localhost:5000` in your personal `.env`.
+`http://localhost:5042` in your personal `.env`.
 
 ### `BUILD_INTERACTIVE_EXAMPLES_BASE_URL`
 
@@ -188,7 +188,7 @@ How many RSS feed entries to display on the home page.
 
 ### `SERVER_PORT`
 
-**Default: `5000`**
+**Default: `5042`**
 
 Usually the `server` module is started with `foreman` (the `nf` command)
 and this is the default port.
@@ -209,7 +209,7 @@ If you want to serve static files some a completely different directory.
 
 NOTE! Due to a quirk of how we build the client, anything `REACT_APP_*` environment
 variable that you want to be available in the production-grade built JS code
-that gets used when use `localhost:5000` can not only be set in the root `/.env`
+that gets used when use `localhost:5042` can not only be set in the root `/.env`
 file. Either use `export REACT_APP_*=...` or write it once in `/.env` and
 once in `/client/.env`.
 
