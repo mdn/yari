@@ -210,6 +210,7 @@ table {
     text-align: left;
     background: var(--background-tertiary);
     font-weight: var(--font-body-strong-weight);
+    line-height: 1.5;
   }
 
   td,
@@ -288,6 +289,17 @@ h6 {
   letter-spacing: 1.5px;
   margin: 2rem 0 1rem;
   text-transform: uppercase;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  code {
+    font-size: inherit;
+  }
 }
 
 p {
