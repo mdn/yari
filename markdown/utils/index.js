@@ -1,7 +1,7 @@
-const unified = require("unified");
-const parse = require("rehype-parse");
-const format = require("rehype-format");
-const stringify = require("rehype-stringify");
+import unified from "unified";
+import parse from "rehype-parse";
+import format from "rehype-format";
+import stringify from "rehype-stringify";
 
 const KS_RE = /{{([^}]*)}}/g;
 
@@ -53,4 +53,4 @@ const prettyAST = (node, depth = 0) => {
     .join("\n");
 };
 
-module.export = { encodeKS, decodeKS, formatH, prettyAST };
+export { encodeKS, decodeKS, formatH, prettyAST };
