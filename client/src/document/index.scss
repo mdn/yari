@@ -185,6 +185,15 @@
     margin-bottom: 0.5rem;
     padding: 0;
   }
+
+  .index {
+    ul {
+      margin: 0.5rem 0 2rem;
+      li {
+        margin: 0.5rem 0;
+      }
+    }
+  }
 }
 
 // Base typography styles. Trying to remove as much as possible from
