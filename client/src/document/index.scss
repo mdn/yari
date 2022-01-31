@@ -238,6 +238,32 @@ table {
       margin: 0;
     }
   }
+
+  &.properties {
+    border: none;
+
+    th,
+    td {
+      border: none;
+    }
+
+    th {
+      background: none;
+      padding: 0;
+    }
+
+    tr {
+      border-bottom: 1px solid var(--border-secondary);
+
+      &:first-child {
+        border-top: 1px solid var(--border-primary);
+      }
+
+      &:last-child {
+        border-bottom: 1px solid var(--border-primary);
+      }
+    }
+  }
 }
 
 iframe {
