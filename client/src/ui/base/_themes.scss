@@ -63,13 +63,52 @@
   --css-accent-color: #{$mdn-color-blue-50};
   --js-accent-color: #{$mdn-color-yellow-70};
   --http-accent-color: #{$mdn-color-green-80};
-  --apis-accent-color: #{$mdn-color-violet-60};
+  --apis-accent-color: #{$mdn-color-violet-70};
 
   --html-accent-engage: #{color.adjust($mdn-color-red-60, $alpha: -0.3)};
   --css-accent-engage: #{color.adjust($mdn-color-blue-50, $alpha: -0.3)};
   --js-accent-engage: #{color.adjust($mdn-color-yellow-70, $alpha: -0.3)};
   --http-accent-engage: #{color.adjust($mdn-color-green-80, $alpha: -0.3)};
-  --apis-accent-engage: #{color.adjust($mdn-color-violet-60, $alpha: -0.3)};
+  --apis-accent-engage: #{color.adjust($mdn-color-violet-70, $alpha: -0.3)};
+
+  --html-code-inline: #{color.adjust(
+      $mdn-color-red-60,
+      $alpha: -0.92,
+      $saturation: -20%
+    )};
+  --html-code-block: #{color.adjust(
+      $mdn-color-red-60,
+      $alpha: -0.95,
+      $saturation: -10%
+    )};
+
+  --css-code-inline: #{color.adjust($mdn-color-blue-50, $alpha: -0.92)};
+  --css-code-block: #{color.adjust($mdn-color-blue-50, $alpha: -0.97)};
+
+  --js-code-inline: #{color.adjust(
+      $mdn-color-yellow-60,
+      $alpha: -0.9,
+      $saturation: 20%
+    )};
+  --js-code-block: #{color.adjust(
+      $mdn-color-yellow-60,
+      $alpha: -0.95,
+      $saturation: 20%
+    )};
+
+  --http-code-inline: #{color.adjust($mdn-color-green-70, $alpha: -0.92)};
+  --http-code-block: #{color.adjust($mdn-color-green-70, $alpha: -0.95)};
+
+  --apis-code-inline: #{color.adjust(
+      $mdn-color-violet-60,
+      $alpha: -0.92,
+      $saturation: -10%
+    )};
+  --apis-code-block: #{color.adjust(
+      $mdn-color-violet-60,
+      $alpha: -0.96,
+      $saturation: -20%
+    )};
 
   --homepage-hero-bg: radial-gradient(
     114.42% 123.24% at 6.69% 13.67%,
@@ -147,6 +186,61 @@
   --js-accent-engage: #{color.adjust($mdn-color-yellow-30, $alpha: -0.3)};
   --http-accent-engage: #{color.adjust($mdn-color-green-40, $alpha: -0.3)};
   --apis-accent-engage: #{color.adjust($mdn-color-violet-30, $alpha: -0.3)};
+
+  --html-code-inline: #{color.adjust(
+      $mdn-color-red-40,
+      $alpha: -0.8,
+      $saturation: 20%
+    )};
+  --html-code-block: #{color.adjust(
+      $mdn-color-red-40,
+      $alpha: -0.9,
+      $saturation: 10%
+    )};
+
+  --css-code-inline: #{color.adjust(
+      $mdn-color-blue-20,
+      $alpha: -0.85,
+      $saturation: 20%
+    )};
+  --css-code-block: #{color.adjust(
+      $mdn-color-blue-20,
+      $alpha: -0.9,
+      $saturation: 20%
+    )};
+
+  --js-code-inline: #{color.adjust(
+      $mdn-color-yellow-10,
+      $alpha: -0.85,
+      $saturation: 20%
+    )};
+  --js-code-block: #{color.adjust(
+      $mdn-color-yellow-10,
+      $alpha: -0.9,
+      $saturation: 20%
+    )};
+
+  --http-code-inline: #{color.adjust(
+      $mdn-color-green-30,
+      $alpha: -0.85,
+      $saturation: 20%
+    )};
+  --http-code-block: #{color.adjust(
+      $mdn-color-green-30,
+      $alpha: -0.9,
+      $saturation: 20%
+    )};
+
+  --apis-code-inline: #{color.adjust(
+      $mdn-color-violet-30,
+      $alpha: -0.85,
+      $saturation: 20%
+    )};
+  --apis-code-block: #{color.adjust(
+      $mdn-color-violet-30,
+      $alpha: -0.92,
+      $saturation: 20%
+    )};
 }
 
 :root,

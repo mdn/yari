@@ -175,6 +175,8 @@ a {
   .sidebar,
   .main-content {
     --text-link: var(--html-accent-color);
+    --code-background-inline: var(--html-code-inline);
+    --code-background-block: var(--html-code-block);
   }
 }
 
@@ -184,6 +186,8 @@ a {
   .sidebar,
   .main-content {
     --text-link: var(--css-accent-color);
+    --code-background-inline: var(--css-code-inline);
+    --code-background-block: var(--css-code-block);
   }
 }
 
@@ -193,6 +197,8 @@ a {
   .sidebar,
   .main-content {
     --text-link: var(--js-accent-color);
+    --code-background-inline: var(--js-code-inline);
+    --code-background-block: var(--js-code-block);
   }
 }
 
@@ -202,6 +208,8 @@ a {
   .sidebar,
   .main-content {
     --text-link: var(--http-accent-color);
+    --code-background-inline: var(--http-code-inline);
+    --code-background-block: var(--http-code-block);
   }
 }
 
@@ -211,5 +219,7 @@ a {
   .sidebar,
   .main-content {
     --text-link: var(--apis-accent-color);
+    --code-background-inline: var(--apis-code-inline);
+    --code-background-block: var(--apis-code-block);
   }
 }
