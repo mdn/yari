@@ -513,7 +513,7 @@ python-versions = "*"
 
 [[package]]
 name = "unidiff"
-version = "0.7.0"
+version = "0.7.2"
 description = "Unified diff parsing/metadata extraction library."
 category = "main"
 optional = false
@@ -555,7 +555,7 @@ testing = ["pytest (>=4.6)", "pytest-checkdocs (>=1.2.3)", "pytest-flake8", "pyt
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.7"
-content-hash = "11180a382429c173f4ccc7a065b4857986733e709250af716c747f96db629e1d"
+content-hash = "02014ccf8a37e9d3875f438ad99c79799190bb0426561e2beb8684b793adc856"
 
 [metadata.files]
 atomicwrites = [
@@ -914,8 +914,8 @@ typing-extensions = [
     {file = "typing_extensions-3.10.0.2.tar.gz", hash = "sha256:49f75d16ff11f1cd258e1b988ccff82a3ca5570217d7ad8c5f48205dd99a677e"},
 ]
 unidiff = [
-    {file = "unidiff-0.7.0-py2.py3-none-any.whl", hash = "sha256:ae4a9dacb2fba7297dbd85c4d629728ca4b3a6c2606a53a419b53b0388857c89"},
-    {file = "unidiff-0.7.0.tar.gz", hash = "sha256:91bb13b4969514a400679d9ae5e29a6ffad85346087677f8b5e2e036af817447"},
+    {file = "unidiff-0.7.2-py2.py3-none-any.whl", hash = "sha256:1ecddf0fa1e1b121a2a410a25b9ec26863f917f27373160cc71c7423877f19bd"},
+    {file = "unidiff-0.7.2.tar.gz", hash = "sha256:15297652e97870f55136bd3c07c697eaed813b24ca8cec7ae08398b026ff03cc"},
 ]
 urllib3 = [
     {file = "urllib3-1.26.5-py2.py3-none-any.whl", hash = "sha256:753a0374df26658f99d826cfe40394a686d05985786d946fbe4165b5148f5a7c"},
