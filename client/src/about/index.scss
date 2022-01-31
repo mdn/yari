@@ -27,14 +27,7 @@
     );
     z-index: -1;
     background-size: 200% 100%;
-    background-image: radial-gradient(
-      111.78% 55.34% at 16.18% 1.51%,
-      #3fe1b0 -14%,
-      #33b3fc 20.93%,
-      #9752fa 59.32%,
-      #ff9e0c 96.2%,
-      #ffe600 100%
-    );
+    background-image: none;
     mix-blend-mode: hard-light;
     overflow-y: clip;
     pointer-events: none;

@@ -59,16 +59,16 @@
   --scrollbar-bg: transparent;
   --scrollbar-color: rgba(0, 0, 0, 0.25);
 
-  --html-accent-color: #{$mdn-color-red-50};
-  --css-accent-color: #{$mdn-color-blue-40};
-  --js-accent-color: #{$mdn-color-yellow-40};
-  --http-accent-color: #{$mdn-color-green-60};
+  --html-accent-color: #{$mdn-color-red-60};
+  --css-accent-color: #{$mdn-color-blue-50};
+  --js-accent-color: #{$mdn-color-yellow-70};
+  --http-accent-color: #{$mdn-color-green-80};
   --apis-accent-color: #{$mdn-color-violet-60};
 
-  --html-accent-engage: #{color.adjust($mdn-color-red-50, $alpha: -0.3)};
-  --css-accent-engage: #{color.adjust($mdn-color-blue-40, $alpha: -0.3)};
-  --js-accent-engage: #{color.adjust($mdn-color-yellow-40, $alpha: -0.3)};
-  --http-accent-engage: #{color.adjust($mdn-color-green-60, $alpha: -0.3)};
+  --html-accent-engage: #{color.adjust($mdn-color-red-60, $alpha: -0.3)};
+  --css-accent-engage: #{color.adjust($mdn-color-blue-50, $alpha: -0.3)};
+  --js-accent-engage: #{color.adjust($mdn-color-yellow-70, $alpha: -0.3)};
+  --http-accent-engage: #{color.adjust($mdn-color-green-80, $alpha: -0.3)};
   --apis-accent-engage: #{color.adjust($mdn-color-violet-60, $alpha: -0.3)};
 
   --homepage-hero-bg: radial-gradient(
@@ -135,6 +135,18 @@
   --code-background-block: #{$mdn-theme-dark-code-background-block};
 
   --scrollbar-color: rgba(255, 255, 255, 0.25);
+
+  --html-accent-color: #{$mdn-color-red-50};
+  --css-accent-color: #{$mdn-color-blue-20};
+  --js-accent-color: #{$mdn-color-yellow-30};
+  --http-accent-color: #{$mdn-color-green-40};
+  --apis-accent-color: #{$mdn-color-violet-30};
+
+  --html-accent-engage: #{color.adjust($mdn-color-red-50, $alpha: -0.3)};
+  --css-accent-engage: #{color.adjust($mdn-color-blue-20, $alpha: -0.3)};
+  --js-accent-engage: #{color.adjust($mdn-color-yellow-30, $alpha: -0.3)};
+  --http-accent-engage: #{color.adjust($mdn-color-green-40, $alpha: -0.3)};
+  --apis-accent-engage: #{color.adjust($mdn-color-violet-30, $alpha: -0.3)};
 }
 
 :root,
