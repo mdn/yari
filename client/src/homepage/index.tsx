@@ -1,49 +1,72 @@
-import useSWR from "swr";
-
-import { CRUD_MODE } from "../constants";
-import { BlogFeed } from "../ui/molecules/blog-feed";
-import { Contribute } from "../ui/molecules/home-contribute";
-import { HomeHero } from "../ui/molecules/home-hero";
-
 import "./index.scss";
+import { HomepageHero } from "./homepage-hero";
+import RecentContributions from "./recent-contributions";
+import { ContributorSpotlight } from "./contributor-spotlight";
 
-import { FeedEntry } from "./types";
-
-interface HomepageData {
-  feedEntries: FeedEntry[];
-}
-
-export function Homepage(props /* TODO: define a TS interface for this */) {
-  const { data, error } = useSWR<HomepageData>(
-    "./index.json",
-    async (url) => {
-      const response = await fetch(url);
-      if (!response.ok) {
-        const text = await response.text();
-        throw new Error(`${response.status} on ${url}: ${text}`);
-      }
-      return await response.json();
-    },
-    {
-      initialData: props.feedEntries
-        ? { feedEntries: props.feedEntries }
-        : undefined,
-      revalidateOnFocus: CRUD_MODE,
-    }
-  );
-
+export function Homepage(props) {
   return (
     <main id="content" role="main">
-      <HomeHero />
-      <div className="home-content-container">
-        {error ? (
-          <p>
-            Error downloading feed entries (<code>{error.toString()}</code>)
-          </p>
-        ) : (
-          <BlogFeed feedEntries={data && data.feedEntries} />
-        )}
-        <Contribute />
+      <div className="homepage mdn-ui-body-m">
+        <HomepageHero />
+        <div className="featured-articles">
+          <h2 className="mdn-ui-emphasis-l">Featured Articles</h2>
+          <div className="tile-container">
+            <div className="article-tile">
+              <a href="/en-US/docs/Web/CSS/" className="tile-tag">
+                CSS
+              </a>
+              <a
+                href="/en-US/docs/Web/CSS/gradient/conic-gradient()"
+                className="tile-title expand-this-link"
+              >
+                conic-gradient()
+              </a>
+              <p>
+                The conic-gradient() CSS function creates an image consisting of
+                a gradient with color transitions rotated around a center point
+                (rather than radiating from the center).
+              </p>
+            </div>
+
+            <div className="article-tile">
+              <a href="/en-US/docs/Web/API/Web_Audio_API" className="tile-tag">
+                APIs
+              </a>
+              <a
+                href="/en-US/docs/Web/CSS/gradient/conic-gradient()"
+                className="tile-title expand-this-link"
+              >
+                Web Audio API
+              </a>
+              <p>
+                The Web Audio API provides a powerful and versatile system for
+                controlling audio on the Web, allowing developers to choose
+                audio sources, add effects to audio, create audio
+                visualizations, apply spatial effects (such as panning) and much
+                more.
+              </p>
+            </div>
+
+            <div className="article-tile">
+              <a href="/en-US/docs/Web/CSS/" className="tile-tag">
+                CSS
+              </a>
+              <a
+                href="/en-US/docs/Web/CSS/gradient/conic-gradient()"
+                className="tile-title expand-this-link"
+              >
+                &#60;track&#62;
+              </a>
+              <p>
+                The conic-gradient() CSS function creates an image consisting of
+                a gradient with color transitions rotated around a center point
+                (rather than radiating from the center).
+              </p>
+            </div>
+          </div>
+        </div>
+        <RecentContributions {...props} />
+        <ContributorSpotlight />
       </div>
     </main>
   );

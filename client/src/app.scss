@@ -1,6 +1,225 @@
-// We're assuming that code snippets are so common that it's OK to always
-// include them in every page.
-@use "./minimal-prism";
+@use "./ui/base/typography";
+@use "./ui/base/reset";
+@use "./ui/base/themes";
+@use "./ui/base/prism";
 
-@use "~@mdn/minimalist/sass/mdn-minimalist";
-@use "./ui/molecules/grids/grids";
+// These classes are used across several components.
+@use "./ui/molecules/notecards";
+@use "./ui/molecules/pagination";
+@use "./ui/atoms/button";
+
+/*
+  Global :root variables, for those independent of themes
+*/
+:root {
+  /* Typography */
+  --font-fallback: BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu",
+    "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-sans;
+
+  --font-body: Inter, var(--font-fallback);
+  --font-heading: Montserrat, var(--font-fallback);
+  --font-code: Menlo, Consolas, Monaco, Liberation Mono, Lucida Console,
+    monospace;
+  --font-size: 16px;
+  --font-line-height: 1.2;
+  --font-body-strong-weight: 650;
+
+  // defined in Figma here: https://www.figma.com/file/cAd46zJb6H7mW7W14iLsDe/MDN-Basic-Components?node-id=299%3A311
+  --type-heading-l: 600 1rem/1.1875 var(--font-heading); /* 16px/19px, h5 */
+  --type-title-l: 600 1.5rem/1.2 var(--font-heading);
+  --type-title-s: var(--font-body-strong-weight) 0.8125rem/1.2 var(--font-body);
+  --type-body-l: 400 1rem/1.75 var(--font-body); /* 16px/28px */
+  --type-body-m: 400 0.8125rem/1.23 var(--font-body); /* 13px/16px */
+  --type-body-s: 500 0.6875rem/1.273 var(--font-body); /* 11px/14px */
+  --type-emphasis-l: var(--font-body-strong-weight) 1rem/1.1875 var(--font-body); /* 16px/19px */
+  --type-emphasis-m: var(--font-body-strong-weight) 0.8125rem/1.23
+    var(--font-body); /* 13px/16px */
+  --type-label-s: 600 0.625rem/1.2 var(--font-heading); /* 10px/12px */
+  --type-code-regular: 400 0.875rem/1.5 var(--font-code); /* 14px/21px */
+
+  // From Figma, here: https://www.figma.com/file/7lbOm57iOjSVIGORzXqrlW/MDN-Articles?node-id=1%3A27
+  --type-heading-h1: 600 2.25rem/1.138 var(--font-heading); /* 36px/41px */
+  --type-heading-h2: 600 1.75rem/1.2857 var(--font-heading); /* 28px/36px */
+  --type-heading-h3: 600 1.5rem/1.2916 var(--font-heading); /* 24px/31px */
+  --type-heading-h4: 600 1.125rem/1.222 var(--font-heading); /* 18px/22px */
+  --type-heading-h5: var(--type-heading-l);
+  --type-heading-h6: 600 0.75rem/1.0833 var(--font-heading); /* 12px/13px */
+  --type-article-p: 400 1rem/2 var(--font-body); /* 16px/200% */
+
+  /* Grid and Layout */
+  --max-width: 1440px;
+  --gutter: 1rem; /* Space between content and browser window */
+
+  --z-index-back: -1;
+  --z-index-top: 9999;
+  --z-index-mid: 500;
+  --z-index-low: 100;
+
+  /* Features */
+  --elem-radius: 0.25rem;
+  --focus-effect: 0 0 0 3px var(--accent-primary-engage);
+  --form-elem-height: 2rem;
+
+  /* Major Components */
+  --top-nav-height: 4rem;
+  --icon-size: 1rem;
+}
+
+body {
+  background-color: var(--background-primary);
+  color: var(--text-primary);
+  accent-color: var(--accent-primary); // for checkboxes, radios, etc.
+  scrollbar-color: var(--scrollbar-color) var(--scrollbar-bg);
+
+  ::selection {
+    background-color: var(--text-primary);
+    color: var(--background-primary);
+  }
+}
+
+main {
+  min-height: 80vh;
+}
+
+.visually-hidden {
+  -webkit-clip-path: inset(50%) !important;
+  clip-path: inset(50%) !important;
+  border: 0 !important;
+  clip: rect(1px, 1px, 1px, 1px) !important;
+  height: 1px !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  padding: 0 !important;
+  position: absolute !important;
+  white-space: nowrap !important;
+  width: 1px !important;
+}
+
+.hidden {
+  display: none;
+}
+
+pre {
+  white-space: pre-wrap;
+  white-space: -moz-pre-wrap;
+  white-space: -pre-wrap;
+  white-space: -o-pre-wrap;
+  word-wrap: break-word;
+}
+
+a {
+  color: var(--text-link);
+
+  &.external:after {
+    display: inline-flex;
+    width: 10px;
+    height: 10px;
+    margin-left: 4px;
+    background-color: var(--icon-primary);
+    mask-image: url("./assets/icons/external.svg");
+    mask-size: cover;
+    content: "";
+  }
+}
+
+.expand-this-link:after {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  content: "";
+}
+
+[type="search"] {
+  /* clears the ‘X’ from Internet Explorer */
+  &::-ms-clear {
+    display: none;
+    width: 0;
+    height: 0;
+  }
+  &::-ms-reveal {
+    display: none;
+    width: 0;
+    height: 0;
+  }
+  /* clears the ‘X’ from Chrome */
+  &::-webkit-search-decoration,
+  &::-webkit-search-cancel-button,
+  &::-webkit-search-results-button,
+  &::-webkit-search-results-decoration {
+    display: none;
+  }
+}
+
+/* Scrollbar customizations */
+::-webkit-scrollbar-track {
+  -webkit-border-radius: 10px;
+  border-radius: 10px;
+}
+
+*::-webkit-scrollbar {
+  width: 12px;
+  background-color: var(--scrollbar-bg, auto);
+}
+
+*::-webkit-scrollbar-thumb {
+  border-radius: 10px;
+  border: 2px solid var(--scrollbar-bg, auto);
+  background: var(--scrollbar-color);
+}
+
+.category-html {
+  .logo,
+  .toc,
+  .sidebar,
+  .main-content {
+    --text-link: var(--html-accent-color);
+    --code-background-inline: var(--html-code-inline);
+    --code-background-block: var(--html-code-block);
+  }
+}
+
+.category-css {
+  .logo,
+  .toc,
+  .sidebar,
+  .main-content {
+    --text-link: var(--css-accent-color);
+    --code-background-inline: var(--css-code-inline);
+    --code-background-block: var(--css-code-block);
+  }
+}
+
+.category-javascript {
+  .logo,
+  .toc,
+  .sidebar,
+  .main-content {
+    --text-link: var(--js-accent-color);
+    --code-background-inline: var(--js-code-inline);
+    --code-background-block: var(--js-code-block);
+  }
+}
+
+.category-http {
+  .logo,
+  .toc,
+  .sidebar,
+  .main-content {
+    --text-link: var(--http-accent-color);
+    --code-background-inline: var(--http-code-inline);
+    --code-background-block: var(--http-code-block);
+  }
+}
+
+.category-api {
+  .logo,
+  .toc,
+  .sidebar,
+  .main-content {
+    --text-link: var(--apis-accent-color);
+    --code-background-inline: var(--apis-code-inline);
+    --code-background-block: var(--apis-code-block);
+  }
+}

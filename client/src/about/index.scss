@@ -1,0 +1,108 @@
+@use "../ui/vars" as *;
+
+.about {
+  width: 100%;
+
+  .about-bg {
+    animation: background-shift 30s infinite;
+    @media (prefers-reduced-motion) {
+      animation: none;
+    }
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    height: 100%;
+    width: 100%;
+    -webkit-mask-image: radial-gradient(
+      151.79% 80.46% at 81.07% -7.98%,
+      var(--background-primary) 23.88%,
+      transparent 44.47%
+    );
+    mask-image: radial-gradient(
+      151.79% 80.46% at 81.07% -7.98%,
+      var(--background-primary) 23.88%,
+      transparent 44.47%
+    );
+    z-index: -1;
+    background-size: 200% 100%;
+    background-image: none;
+    mix-blend-mode: hard-light;
+    overflow-y: clip;
+    pointer-events: none;
+
+    @keyframes background-shift {
+      0% {
+        background-position: 100% 0;
+      }
+      50% {
+        background-position: 40% 0;
+      }
+      100% {
+        background-position: 100% 0;
+      }
+    }
+  }
+
+  .about-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    max-width: 36rem;
+    margin: 0 auto;
+    padding: 0 1rem 2rem 1rem;
+
+    @media screen and (min-width: $screen-md) {
+      padding: 0;
+      padding-bottom: 2rem;
+    }
+
+    header {
+      display: flex;
+      gap: 1rem;
+      flex-direction: column;
+      align-items: center;
+      padding: 2rem 0;
+
+      .about-logo {
+        font-family: Zilla Slab;
+        font-weight: var(--font-body-strong-weight);
+        font-size: 4rem;
+        line-height: 1.2;
+        height: 100%;
+      }
+
+      h1 {
+        font-family: var(--font-heading);
+        font-style: normal;
+        font-weight: normal;
+        font-size: 1.313rem;
+        line-height: 175%;
+        text-align: center;
+        margin: 0;
+      }
+    }
+
+    p {
+      font-weight: 350;
+      font-size: 1rem;
+      line-height: 175%;
+    }
+
+    h2 {
+      font-family: var(--font-heading);
+      font-weight: 600;
+      font-size: 1.3rem;
+      line-height: 120%;
+      text-align: center;
+    }
+
+    .heading-break {
+      display: none;
+      @media screen and (min-width: $screen-md) {
+        display: block;
+      }
+    }
+  }
+}

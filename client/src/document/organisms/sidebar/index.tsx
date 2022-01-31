@@ -1,12 +1,88 @@
 import { Link } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import _ from "lodash";
+import { Button } from "../../../ui/atoms/button";
+
+import { useUIStatus } from "../../../ui-context";
 
 import "./index.scss";
 
+function CalculateSidebarOnScroll() {
+  useEffect(function mount() {
+    function calcOnScroll() {
+      let sidebar = document.getElementById("sidebar-quicklinks");
+      if (sidebar) {
+        let sidebarTop = sidebar.getBoundingClientRect().top;
+        let sidebarTopString = sidebarTop.toString();
+        let sidebarTopPx = sidebarTopString + "px";
+        document.documentElement.style.setProperty(
+          "--visible-height-of-header",
+          sidebarTopPx
+        );
+      }
+    }
+
+    window.addEventListener(
+      "scroll",
+      _.throttle(calcOnScroll, 30, {
+        leading: true,
+        trailing: true,
+      })
+    );
+
+    return function unMount() {
+      window.removeEventListener("scroll", calcOnScroll);
+    };
+  });
+
+  return null;
+}
+
+function _setScrollLock(isSidebarOpen) {
+  const mainContentElement = document.querySelector("main");
+
+  if (isSidebarOpen) {
+    document.body.style.overflow = "hidden";
+    if (mainContentElement) {
+      mainContentElement.style.overflow = "hidden";
+    }
+  } else {
+    document.body.style.overflow = "";
+    if (mainContentElement) {
+      mainContentElement.style.overflow = "";
+    }
+  }
+}
+
 function SidebarContainer({ children }) {
+  const { isSidebarOpen, setIsSidebarOpen } = useUIStatus();
+  const [classes, setClasses] = useState<string>("sidebar");
+
+  useEffect(() => {
+    if (isSidebarOpen) {
+      setClasses("sidebar is-expanded");
+    } else {
+      setClasses("sidebar is-animating");
+      setTimeout(() => {
+        setClasses("sidebar");
+      }, 300);
+    }
+
+    _setScrollLock(isSidebarOpen);
+  }, [isSidebarOpen]);
+
   return (
-    <nav id="sidebar-quicklinks" className="sidebar">
-      {children}
-    </nav>
+    <>
+      <nav id="sidebar-quicklinks" className={classes}>
+        <Button
+          extraClasses="backdrop"
+          type="action"
+          onClickHandler={() => setIsSidebarOpen(!isSidebarOpen)}
+        />
+        <div className="sidebar-inner">{children}</div>
+      </nav>
+      <CalculateSidebarOnScroll />
+    </>
   );
 }
 
@@ -15,7 +91,7 @@ export function RenderSideBar({ doc }) {
     if (doc.sidebarHTML) {
       return (
         <SidebarContainer>
-          <h4>Related Topics</h4>
+          <h4 className="sidebar-heading">Related Topics</h4>
           <div
             dangerouslySetInnerHTML={{
               __html: `${doc.sidebarHTML}`,
@@ -34,7 +110,7 @@ export function RenderSideBar({ doc }) {
 function SidebarLeaf({ parent }) {
   return (
     <SidebarContainer>
-      <h4>{parent.title}</h4>
+      <h4 className="sidebar-heading">{parent.title}</h4>
       <ul>
         {parent.content.map((node) => {
           if (node.content) {

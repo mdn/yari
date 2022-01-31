@@ -1,0 +1,202 @@
+button,
+.button {
+  -webkit-appearance: none; /* stylelint-disable-line property-no-vendor-prefix */
+  appearance: none;
+  background: none;
+  border: none;
+}
+
+.button {
+  --button-bg: var(--button-primary-default);
+  --button-border-color: var(--button-primary-default);
+  --button-focus-effect: var(--focus-effect);
+  --button-height: var(--form-elem-height, 2rem);
+  --button-color: var(--background-primary);
+  --button-font: var(--type-emphasis-m);
+  --button-padding: 0.5rem;
+  --button-radius: var(--elem-radius, 0.25rem);
+
+  cursor: pointer;
+  display: inline-block;
+  padding: 0;
+  text-decoration: none;
+  border-radius: var(--button-radius);
+}
+
+.button-wrap {
+  align-items: center;
+  background-color: var(--button-bg);
+  border-radius: var(--button-radius);
+  border: 1px solid var(--button-border-color);
+  color: var(--button-color);
+  display: flex;
+  font: var(--button-font);
+  gap: 0.25rem;
+  height: var(--button-height);
+  justify-content: center;
+  padding-left: var(--button-padding);
+  padding-right: var(--button-padding);
+  position: relative;
+}
+
+.button .icon {
+  background-color: var(--button-color);
+  margin: 0 -1px; // shrinks icon-only buttons to square.
+}
+
+/* Button States */
+
+.button:hover,
+.button.hover {
+  // In most cases, we want the border to be the same color as the background.
+  --button-bg: var(--button-primary-hover);
+  --button-border-color: var(--button-bg);
+}
+
+.button:active,
+.button.active {
+  --button-bg: var(--button-primary-active);
+}
+
+.button:focus,
+.button.focus {
+  outline: none;
+
+  .button-wrap {
+    box-shadow: var(--button-focus-effect);
+  }
+}
+
+.button.button[disabled],
+.button.button.inactive {
+  opacity: 0.65;
+  cursor: default;
+
+  &:hover {
+    --button-bg: inherit;
+    --button-border-color: transparent;
+  }
+}
+
+/* Standard Button Modifiers */
+
+.button.small,
+.button.small .button-wrap {
+  --button-height: 1.75rem;
+  --button-padding: 0.25rem;
+}
+
+/* Secondary Version */
+
+.button.secondary {
+  --button-bg: var(--button-secondary-default);
+  --button-border-color: var(--border-primary);
+  --button-color: var(--text-secondary);
+
+  &:hover {
+    --button-bg: var(--button-secondary-hover);
+  }
+
+  &:active {
+    --button-bg: var(--button-secondary-active);
+  }
+
+  &:focus {
+    --button-border-color: var(--button-secondary-border-focus);
+  }
+}
+
+/* Action Version */
+
+.button.action {
+  --button-bg: transparent;
+  --button-border-color: var(--button-bg);
+  --button-color: var(--text-secondary);
+  --button-font: var(--type-label-s);
+
+  &.has-icon {
+    --button-font: var(--type-emphasis-m);
+    text-transform: initial;
+  }
+
+  &:hover {
+    --button-bg: var(--button-secondary-hover);
+  }
+
+  &:active {
+    --button-bg: var(--button-secondary-active);
+  }
+
+  &:focus {
+    --button-border-color: var(--button-secondary-border-focus);
+  }
+
+  .button-wrap {
+    text-transform: uppercase;
+  }
+
+  &.highlight {
+    --button-color: var(--button-primary-default);
+  }
+}
+
+/* Select Version */
+.button.select {
+  --button-bg: var(--background-primary);
+  --button-border-color: var(--border-primary);
+  --button-color: var(--text-secondary);
+  appearance: none;
+  background: none;
+  border: none;
+  padding: 0;
+  text-decoration: none;
+
+  .button-wrap {
+    position: relative;
+    padding-right: 26px;
+    box-shadow: var(--shadow-01);
+  }
+
+  .button-wrap::after {
+    position: absolute;
+    top: calc(50% - 0.5rem);
+    right: 0.5rem;
+    display: block;
+    width: 16px;
+    height: 16px;
+    background-color: var(--icon-primary);
+    mask-image: url("../../../assets/icons/small-arrow.svg");
+    mask-size: cover;
+    content: "";
+  }
+}
+
+/*
+.high-contrast-white {
+  .button:focus {
+    --button-border-color: var(--border-primary);
+    --button-focus-effect: 0 0 0 4px var(--background-primary),
+      0 0 0 7px var(--border-primary);
+  }
+}
+
+.high-contrast-black {
+  .button:focus {
+    --button-border-color: var(--border-primary);
+    --button-focus-shadow: 0 0 0 4px var(--background-primary),
+      0 0 0 7px var(--border-primary);
+  }
+
+  .button {
+    --button-color: var(--button-secondary-default);
+  }
+
+  .button.secondary {
+    --button-border-color: var(--button-color);
+  }
+
+  .button.action {
+    --button-color: var(--text-secondary);
+  }
+}
+*/

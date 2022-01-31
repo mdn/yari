@@ -1,0 +1,68 @@
+@use "../../ui/vars" as *;
+
+.recent-contributions {
+  display: flex;
+  flex-direction: column;
+  max-width: 45rem;
+  width: 100%;
+  gap: 1rem;
+  padding: 0 1rem;
+
+  @media screen and (min-width: $screen-md) {
+    padding: 0;
+  }
+
+  h5 {
+    margin: 0;
+  }
+
+  .request-item {
+    padding: 0.5rem;
+    display: flex;
+    justify-content: space-between;
+    flex-direction: column;
+
+    @media screen and (min-width: $screen-md) {
+      flex-direction: revert;
+    }
+
+    &:nth-child(odd) {
+      border-radius: var(--elem-radius);
+      background: var(--background-secondary);
+    }
+
+    .request-date {
+      font-size: 12px;
+      line-height: 175%;
+      display: flex;
+      align-items: center;
+
+      @media screen and (min-width: $screen-md) {
+      }
+    }
+  }
+
+  .request-title {
+    font-size: 14px;
+    line-height: 175%;
+    margin: 0px;
+    display: flex;
+    flex-direction: column;
+    gap: 0.125rem;
+    font: var(--type-body-m);
+
+    a {
+      color: var(--text-primary);
+
+      &:hover {
+        text-decoration: underline;
+        color: var(--text-primary);
+      }
+    }
+
+    .request-repo {
+      font: var(--type-body-s);
+      color: var(--text-secondary);
+    }
+  }
+}

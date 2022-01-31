@@ -133,6 +133,9 @@ jobs:
           # is not insecure.
           BUILD_LIVE_SAMPLES_BASE_URL: https://yari-demos.stage.mdn.mozit.cloud
 
+          # Use the stage version of interactive examples.
+          BUILD_INTERACTIVE_EXAMPLES_BASE_URL: https://interactive-examples.stage.mdn.mozilla.net
+
           # Now is not the time to worry about flaws.
           BUILD_FLAW_LEVELS: "*:ignore"
 
@@ -157,8 +160,12 @@ jobs:
           REACT_APP_FXA_SIGNIN_URL: /users/fxa/login/authenticate/
           REACT_APP_FXA_SETTINGS_URL: https://accounts.stage.mozaws.net/settings/
           REACT_APP_MDN_PLUS_SUBSCRIBE_URL: https://accounts.stage.mozaws.net/subscriptions/products/prod_Jtbg9tyGyLRuB0
-          REACT_APP_MDN_PLUS_YEARLY_PLAN: price_1JpIPwKb9q6OnNsLJLsIqMp7
-          REACT_APP_MDN_PLUS_MONTHLY_PLAN: price_1JFoTYKb9q6OnNsLalexa03p
+          REACT_APP_MDN_PLUS_5M_PLAN: price_1JFoTYKb9q6OnNsLalexa03p
+          REACT_APP_MDN_PLUS_5Y_PLAN: price_1JpIPwKb9q6OnNsLJLsIqMp7
+          REACT_APP_MDN_PLUS_10M_PLAN: price_1K6X7gKb9q6OnNsLi44HdLcC
+          REACT_APP_MDN_PLUS_10Y_PLAN: price_1K6X8VKb9q6OnNsLFlUcEiu4
+          REACT_APP_MDN_PLUS_50M_PLAN: price_1K6X8eKb9q6OnNsL0uN3qaBC
+          REACT_APP_MDN_PLUS_50Y_PLAN: price_1K6X8pKb9q6OnNsLikbtdtUT
 
         run: |
 

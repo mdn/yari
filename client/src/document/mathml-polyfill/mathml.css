@@ -186,7 +186,7 @@ ms[rquote]:after {
 [mathvariant="bold-italic"],
 [mathvariant="bold-sans-serif"],
 [mathvariant="sans-serif-bold-italic"] {
-  font-weight: bold;
+  font-weight: var(--font-body-strong-weight);
   font-style: normal;
 }
 [mathvariant="monospace"] {

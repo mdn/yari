@@ -6,22 +6,10 @@ const {
   CONTENT_TRANSLATED_ROOT,
   VALID_LOCALES,
 } = require("../content");
-const {
-  BUILD_OUT_ROOT,
-  HOMEPAGE_FEED_URL,
-  HOMEPAGE_FEED_DISPLAY_MAX,
-} = require("./constants");
-const { getFeedEntries } = require("./feedparser");
+const { BUILD_OUT_ROOT } = require("./constants");
 // eslint-disable-next-line node/no-missing-require
 const { renderHTML } = require("../ssr/dist/main");
-
-function getLanguages() {
-  return new Map(
-    Object.entries(
-      JSON.parse(fs.readFileSync(path.join(__dirname, "languages.json")))
-    )
-  );
-}
+const { default: got } = require("got");
 
 async function buildSPAs(options) {
   let buildCount = 0;
@@ -49,26 +37,8 @@ async function buildSPAs(options) {
       }
       const SPAs = [
         { prefix: "search", pageTitle: "Search" },
-        { prefix: "signin", pageTitle: "Sign in", noIndexing: true },
-        { prefix: "signout", pageTitle: "Sign out", noIndexing: true },
-        { prefix: "settings", pageTitle: "Account settings", noIndexing: true },
         { prefix: "plus", pageTitle: "Plus", noIndexing: true },
         { prefix: "plus/bookmarks", pageTitle: "Bookmarks", noIndexing: true },
-        {
-          prefix: "plus/deep-dives",
-          pageTitle: "Modern CSS in the Real World",
-          noIndexing: true,
-        },
-        {
-          prefix: "plus/deep-dives/planning-for-browser-support",
-          pageTitle: "Planning for browser support ~ Plus",
-          noIndexing: true,
-        },
-        {
-          prefix: "plus/deep-dives/your-browser-support-toolkit",
-          pageTitle: "Your browser support toolkit ~ Plus",
-          noIndexing: true,
-        },
       ];
       for (const { prefix, pageTitle, noIndexing } of SPAs) {
         const url = `/${locale}/${prefix}`;
@@ -77,15 +47,7 @@ async function buildSPAs(options) {
           locale: VALID_LOCALES.get(locale) || locale,
           noIndexing,
         };
-        if (prefix === "settings") {
-          // This SPA needs a list of all valid locales
-          const languages = getLanguages();
-          context.possibleLocales = [...VALID_LOCALES.values()].map(
-            (locale) => {
-              return Object.assign({ locale }, languages.get(locale));
-            }
-          );
-        }
+
         const html = renderHTML(url, context);
         const outPath = path.join(BUILD_OUT_ROOT, locale, prefix);
         fs.mkdirSync(outPath, { recursive: true });
@@ -95,25 +57,15 @@ async function buildSPAs(options) {
         if (options.verbose) {
           console.log("Wrote", filePath);
         }
-        if (prefix === "settings") {
-          const filePathContext = path.join(outPath, "index.json");
-          fs.writeFileSync(filePathContext, JSON.stringify(context));
-          buildCount++;
-          if (options.verbose) {
-            console.log("Wrote", filePathContext);
-          }
-        }
       }
     }
   }
 
   // Build all the home pages in all locales.
-  // Have the feed entries ready before building the home pages.
-  // XXX disk caching?
-  const feedEntries = (await getFeedEntries(HOMEPAGE_FEED_URL)).slice(
-    0,
-    HOMEPAGE_FEED_DISPLAY_MAX
-  );
+  // Fetch merged content PRs for the latest contribution section.
+  const pullRequestsData = await got(
+    "https://api.github.com/search/issues?q=repo:mdn/content+is:pr+is:merged+sort:updated&per_page=10"
+  ).json();
   for (const root of [CONTENT_ROOT, CONTENT_TRANSLATED_ROOT]) {
     if (!root) {
       continue;
@@ -127,16 +79,11 @@ async function buildSPAs(options) {
         continue;
       }
       const url = `/${locale}/`;
-      // Each .pubDate in feedEntries is a Date object. That has to be converted
-      // to a string. That way the SSR rendering is
-      const dateFormatter = new Intl.DateTimeFormat(locale, {
-        dateStyle: "full",
-      });
       const context = {
-        feedEntries: feedEntries.map((entry) => {
-          const pubDateString = dateFormatter.format(entry.pubDate);
-          return Object.assign({}, entry, { pubDate: pubDateString });
-        }),
+        pullRequestsData: {
+          items: pullRequestsData.items,
+          repo: { name: "mdn/content", url: "https://github.com/mdn/content" },
+        },
       };
       const html = renderHTML(url, context);
       const outPath = path.join(BUILD_OUT_ROOT, locale);
@@ -147,7 +94,7 @@ async function buildSPAs(options) {
       if (options.verbose) {
         console.log("Wrote", filePath);
       }
-      // Also, dump the feed entries as a JSON file so the data can be gotten
+      // Also, dump the recent pull requests in a file so the data can be gotten
       // in client-side rendering.
       const filePathContext = path.join(outPath, "index.json");
       fs.writeFileSync(filePathContext, JSON.stringify(context));

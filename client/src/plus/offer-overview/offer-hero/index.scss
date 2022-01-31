@@ -1,0 +1,128 @@
+@use "../../../ui/vars" as *;
+
+$text-stroke-width: 2px;
+
+.offer-hero {
+  max-width: 60rem;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: 4rem 1rem;
+
+  color: $mdn-color-dark-grey-90;
+  margin: 0 auto;
+  height: 350px;
+  overflow: hidden;
+  -moz-transition: all 0.3s ease-in-out;
+  transition: all 0.3s ease-in-out;
+
+  @media screen and (min-width: 426px) {
+    padding: 4rem;
+    padding-right: 0;
+  }
+
+  .offer-hero-wrapper {
+    max-width: 512px;
+    z-index: 1;
+
+    h1 {
+      font-family: Montserrat;
+      font-style: normal;
+      font-weight: 650;
+      font-size: 3rem;
+      line-height: 120%;
+      letter-spacing: -0.5px;
+      margin: 0px;
+
+      span {
+        display: inline-flex;
+        background: $mdn-color-green-20;
+        padding: 2px 0.5rem;
+      }
+
+      span:first-child {
+        margin-bottom: 0.5rem;
+      }
+    }
+
+    h2 {
+      font-family: Inter;
+      font-style: normal;
+      font-weight: 600;
+      font-size: 16px;
+      line-height: 175%;
+      margin: 1rem 0;
+      color: white;
+      text-shadow: -#{$text-stroke-width} -#{$text-stroke-width} 0
+          $mdn-color-dark-grey-90,
+        0 -#{$text-stroke-width} 0 $mdn-color-dark-grey-90,
+        $text-stroke-width -#{$text-stroke-width} 0 $mdn-color-dark-grey-90,
+        $text-stroke-width 0 0 $mdn-color-dark-grey-90,
+        $text-stroke-width $text-stroke-width 0 $mdn-color-dark-grey-90,
+        0 $text-stroke-width 0 $mdn-color-dark-grey-90,
+        -#{$text-stroke-width} $text-stroke-width 0 $mdn-color-dark-grey-90,
+        -#{$text-stroke-width} 0 0 $mdn-color-dark-grey-90;
+
+      span {
+        display: inline-flex;
+        width: 100%;
+
+        u {
+          padding: 0 0.25rem;
+          text-decoration-thickness: 0.15rem;
+          text-underline-offset: 0.1em;
+          text-decoration-color: $mdn-color-red-20;
+        }
+      }
+    }
+
+    .button-wrapper {
+      display: flex;
+      width: 100%;
+      gap: 1rem;
+
+      a {
+        padding: 0.5rem;
+        font-size: 14px;
+        border-radius: var(--elem-radius);
+        line-height: 175%;
+        width: 140px;
+        text-align: center;
+        font-weight: 600;
+        z-index: 1;
+        position: relative;
+        -moz-transition: all 0.2s ease;
+        transition: all 0.2s ease;
+        @media screen and (max-width: 426px) {
+          width: 100%;
+        }
+      }
+
+      .button-primary {
+        background: white;
+        color: $mdn-color-dark-grey-90;
+      }
+
+      .button-secondary {
+        border: 2px solid $mdn-color-red-20;
+        color: white;
+        background: #15141a1a;
+      }
+
+      .button-secondary:hover {
+        border: 2px solid $mdn-color-red-05;
+      }
+    }
+  }
+  .mandala-wrapper {
+    width: 0%;
+    position: relative;
+    left: -200px;
+    -moz-transition: all 1s ease-in-out;
+    transition: all 1s ease-in-out;
+
+    @media screen and (max-width: 780px) {
+      left: -200px;
+    }
+  }
+}

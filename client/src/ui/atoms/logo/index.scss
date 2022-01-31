@@ -1,17 +1,20 @@
-@import "~@mdn/minimalist/sass/vars/layout";
+@use "../../vars" as *;
 
 .logo {
-  display: block;
-  height: 35px;
-  width: 170px;
+  display: flex;
+  height: 2rem;
+  width: 8rem;
+  align-items: center;
 
-  @media #{$mq-tablet-and-up} {
-    height: 55px;
-    width: 200px;
+  svg {
+    width: fit-content;
   }
+}
 
-  @media #{$mq-large-desktop-and-up} {
-    flex-basis: 250px;
-    height: inherit;
+/* DARK AND HIGH CONTRACT BLACK MODE */
+.dark,
+.high-contrast-black {
+  .logo-text {
+    fill: white;
   }
 }

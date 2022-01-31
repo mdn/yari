@@ -1,0 +1,41 @@
+@use "../../vars" as *;
+
+.top-navigation {
+  position: relative;
+  width: 100%;
+  z-index: $bottom-layer;
+
+  .container {
+    align-items: center;
+    display: flex;
+    flex-flow: row wrap;
+    gap: var(--gutter);
+  }
+
+  &.is-transparent {
+    background-color: transparent;
+  }
+
+  /* Wrapper strictly used for containing the logo and menu toggle */
+  .top-navigation-wrap {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: var(--top-nav-height);
+  }
+
+  &.show-nav .container {
+    height: auto;
+  }
+}
+
+@media screen and (min-width: $screen-md) {
+  .main-menu-toggle {
+    display: none;
+  }
+
+  .top-navigation .top-navigation-wrap {
+    flex: 0;
+  }
+}
