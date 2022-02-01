@@ -82,7 +82,7 @@ function NotificationsLayout() {
       path: starredUrl,
     },
     {
-      label: "Watching",
+      label: "Watch List",
       path: watchingUrl,
     },
   ];

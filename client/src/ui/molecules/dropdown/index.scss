@@ -22,6 +22,7 @@
     --button-bg: transparent;
     border-width: 0;
     justify-content: flex-start;
+    text-align: left;
 
     &:hover {
       --button-bg: var(--button-secondary-hover);
