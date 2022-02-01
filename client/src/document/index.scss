@@ -478,6 +478,10 @@ pre {
     top: 0.75rem;
     width: 33px;
     opacity: 0;
+
+    &:focus {
+      opacity: 1;
+    }
   }
 
   &:hover {
@@ -497,7 +501,6 @@ pre {
     background: $mdn-color-dark-grey-90;
     border-radius: var(--elem-radius);
     color: white;
-    display: none;
     font-size: 0.8125rem;
     opacity: 1;
     padding: 0.125rem;
@@ -505,10 +508,6 @@ pre {
     right: 0.25rem;
     top: 15px;
     z-index: -1000;
-  }
-
-  .show {
-    display: block;
   }
 
   .example-good,
