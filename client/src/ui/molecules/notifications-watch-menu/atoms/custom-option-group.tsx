@@ -22,7 +22,7 @@ export function CompatGroup({ group, groupCallback, optionCallback }) {
         fieldName={group.name}
         toggle={(e) => {
           e.preventDefault();
-          setOpen(true);
+          setOpen((v) => !v);
         }}
         checked={!!checked}
         indeterminate={indeterminate}

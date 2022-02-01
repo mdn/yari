@@ -83,10 +83,8 @@ export const NotificationsWatchMenu = ({ doc }) => {
       unwatch,
       custom_default,
       update_custom_default,
+      custom,
     };
-    if (custom) {
-      postData = { ...postData, ...custom };
-    }
 
     const response = await fetch(apiURL, {
       method: "POST",
@@ -153,14 +151,11 @@ export const NotificationsWatchMenu = ({ doc }) => {
               <NotificationsWatchMenuCustom
                 data={data}
                 setStepHandler={setVisibleStep}
-                handleSelection={(
-                  custom: {
-                    content: boolean;
-                    compatibility: string[];
-                  },
+                handleSelection={({
+                  custom,
                   custom_default,
-                  update_custom_default
-                ) => {
+                  update_custom_default,
+                }) => {
                   if (custom.content || custom.compatibility.length) {
                     handleWatchSubmit({
                       custom,
