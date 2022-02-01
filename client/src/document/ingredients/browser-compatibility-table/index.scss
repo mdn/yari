@@ -14,7 +14,6 @@
       display: none;
     }
 
-    &-row-header,
     tbody td,
     tbody th {
       display: flex;
@@ -53,13 +52,13 @@
 
         th {
           border-left-width: 0;
+          vertical-align: middle;
         }
       }
     }
 
     th {
       vertical-align: bottom;
-      text-align: center;
       background: var(--background-tertiary);
     }
 
@@ -81,6 +80,10 @@
       .bc-support-level {
         @include visually-hidden;
       }
+    }
+
+    tr [class^="bc-browser"] {
+      text-align: center;
     }
   }
 
@@ -126,6 +129,10 @@
 
     &-dt {
       display: flex;
+
+      .icon {
+        background-color: var(--icon-secondary);
+      }
     }
   }
 }
@@ -235,20 +242,7 @@
 .bc-table-row-header {
   width: 100%;
 
-  span {
-    display: flex;
-    flex-direction: row;
-    align-items: baseline;
-    grid-gap: 0.25rem;
-    gap: 0.25rem;
-    flex-wrap: wrap;
-    width: fit-content;
-    justify-content: flex-start;
-    text-align: left;
-  }
-
   code {
-    display: flex;
     overflow: hidden;
     font-size: 0.75rem;
   }
@@ -269,6 +263,18 @@
   its the stationary portion */
   .right-side {
     flex: 1 0 auto;
+  }
+
+  .bc-icons {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: 0.25rem;
+    .icon {
+      background-color: var(--icon-secondary);
+      &:hover {
+        background-color: var(--icon-primary);
+      }
+    }
   }
 }
 
@@ -377,4 +383,8 @@
   .table-scroll-inner {
     padding: 0;
   }
+}
+
+.bc-github-link {
+  font: var(--type-body-m);
 }

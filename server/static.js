@@ -252,5 +252,5 @@ app.get("/*", async (req, res) => {
     .sendFile(path.join(STATIC_ROOT, "en-us", "_spas", "404.html"));
 });
 
-const PORT = parseInt(process.env.SERVER_PORT || "5000");
+const PORT = parseInt(process.env.SERVER_PORT || "5042");
 app.listen(PORT, () => console.log(`Listening on port ${PORT}`));

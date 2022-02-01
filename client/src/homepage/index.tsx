@@ -30,7 +30,7 @@ export function Homepage(props) {
 
             <div className="article-tile">
               <a href="/en-US/docs/Web/API/Web_Audio_API" className="tile-tag">
-                APIs
+                Web APIs
               </a>
               <a
                 href="/en-US/docs/Web/CSS/gradient/conic-gradient()"

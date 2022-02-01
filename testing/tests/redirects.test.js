@@ -2,7 +2,7 @@ const got = require("got");
 const braces = require("braces");
 
 function serverURL(pathname = "/") {
-  const PORT = parseInt(process.env.SERVER_PORT || "5000");
+  const PORT = parseInt(process.env.SERVER_PORT || "5042");
   return `http://localhost:${PORT}${pathname}`;
 }
 

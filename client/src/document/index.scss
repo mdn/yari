@@ -90,6 +90,7 @@
     display: flex;
     border: 1px solid var(--border-primary) !important;
     border-radius: var(--elem-radius);
+    background: white;
   }
 
   // specific styles to override base styles. The Markdown compiler
@@ -184,6 +185,15 @@
     margin-bottom: 0.5rem;
     padding: 0;
   }
+
+  .index {
+    ul {
+      margin: 0.5rem 0 2rem;
+      li {
+        margin: 0.5rem 0;
+      }
+    }
+  }
 }
 
 // Base typography styles. Trying to remove as much as possible from
@@ -209,6 +219,7 @@ table {
     text-align: left;
     background: var(--background-tertiary);
     font-weight: var(--font-body-strong-weight);
+    line-height: 1.5;
   }
 
   td,
@@ -225,6 +236,32 @@ table {
 
     ul {
       margin: 0;
+    }
+  }
+
+  &.properties {
+    border: none;
+
+    th,
+    td {
+      border: none;
+    }
+
+    th {
+      background: none;
+      padding: 0;
+    }
+
+    tr {
+      border-bottom: 1px solid var(--border-secondary);
+
+      &:first-child {
+        border-top: 1px solid var(--border-primary);
+      }
+
+      &:last-child {
+        border-bottom: 1px solid var(--border-primary);
+      }
     }
   }
 }
@@ -287,6 +324,17 @@ h6 {
   letter-spacing: 1.5px;
   margin: 2rem 0 1rem;
   text-transform: uppercase;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  code {
+    font-size: inherit;
+  }
 }
 
 p {

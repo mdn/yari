@@ -90,9 +90,12 @@ function StatusIcons({ status }: { status: bcd.StatusBlock }) {
   return icons.length === 0 ? null : (
     <div className="bc-icons" data-test={icons.length}>
       {icons.map((icon) => (
-        <abbr key={icon.iconClassName} className="only-icon" title={icon.title}>
+        <abbr
+          key={icon.iconClassName}
+          className={`only-icon icon ${icon.iconClassName}`}
+          title={icon.title}
+        >
           <span>{icon.text}</span>
-          <i className={icon.iconClassName} />
         </abbr>
       ))}
     </div>

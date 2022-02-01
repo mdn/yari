@@ -157,7 +157,7 @@
 
   code {
     white-space: normal;
-    word-wrap: normal;
+    word-wrap: break-word;
     border-radius: var(--elem-radius);
     font-family: var(--font-code);
     background: var(--code-background-inline);

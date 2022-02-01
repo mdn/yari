@@ -35,7 +35,7 @@ const { runOptimizeClientBuild } = require("./optimize-client-build");
 const { runBuildRobotsTxt } = require("./build-robots-txt");
 const kumascript = require("../kumascript");
 
-const PORT = parseInt(process.env.SERVER_PORT || "5000");
+const PORT = parseInt(process.env.SERVER_PORT || "5042");
 
 // The Google Analytics pageviews CSV file parsed, sorted (most pageviews
 // first), and sliced to this number of URIs that goes into the JSON file.

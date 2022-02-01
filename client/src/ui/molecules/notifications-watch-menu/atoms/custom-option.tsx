@@ -21,7 +21,7 @@ export function WatchMenuOption({
     .toLowerCase()
     .replace(/ /g, "_")}`;
   return (
-    <div className="watch-submenu-item">
+    <div className="watch-submenu-item border-top-0">
       <Checkbox
         id={formattedFieldName}
         name={formattedFieldName}

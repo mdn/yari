@@ -7,7 +7,8 @@ const LEGEND_LABELS = {
   partial: "Partial support",
   no: "No support",
   unknown: "Compatibility unknown",
-  preview: "Experimental. Expect behavior to change in the future.",
+  preview: "Supported in pre-release/beta channel",
+  experimental: "Experimental. Expect behavior to change in the future.",
   "note-warning": "Non-standard. Check cross-browser support before using.",
   "thumbs-down": "Deprecated. Not for use in new websites.",
   footnote: "See implementation notes.",
@@ -25,7 +26,7 @@ function getActiveLegendItems(compat: bcd.Identifier, name: string) {
 
     if (status) {
       if (status.experimental) {
-        legendItems.add("preview");
+        legendItems.add("experimental");
       }
       if (status.deprecated) {
         legendItems.add("thumbs-down");
@@ -45,6 +46,8 @@ function getActiveLegendItems(compat: bcd.Identifier, name: string) {
         if (versionSupport.version_added) {
           if (versionSupport.flags && versionSupport.flags.length) {
             legendItems.add("no");
+          } else if (versionSupport.version_added === "preview") {
+            legendItems.add("preview");
           } else {
             legendItems.add("yes");
           }
@@ -91,7 +94,7 @@ export function Legend({
       </h3>
       <dl className="bc-legend-items-container">
         {getActiveLegendItems(compat, name).map(([key, label]) =>
-          ["yes", "partial", "no", "unknown"].includes(key) ? (
+          ["yes", "partial", "no", "unknown", "preview"].includes(key) ? (
             <div className="bc-legend-item" key={key}>
               <dt className="bc-legend-item-dt" key={key}>
                 <span className={`bc-supports-${key} bc-supports`}>

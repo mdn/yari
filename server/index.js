@@ -305,7 +305,7 @@ console.log(
     : ""
 );
 
-const PORT = parseInt(process.env.SERVER_PORT || "5000");
+const PORT = parseInt(process.env.SERVER_PORT || "5042");
 app.listen(PORT, () => {
   console.log(`Listening on port ${PORT}`);
   if (process.env.EDITOR) {

@@ -140,7 +140,7 @@ export function Document(props /* TODO: define a TS interface for this */) {
   }, []);
 
   if (!doc && !error) {
-    return <Loading minHeight={600} message="Loading document..." />;
+    return <Loading minHeight={800} message="Loading document..." />;
   }
 
   if (error) {
