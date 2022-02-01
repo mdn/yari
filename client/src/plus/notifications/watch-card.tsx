@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 
 import { mutate } from "swr";
 import { Button } from "../../ui/atoms/button";
