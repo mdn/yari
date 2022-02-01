@@ -84,9 +84,6 @@ export const NotificationsWatchMenu = ({ doc }) => {
       custom_default,
       update_custom_default,
     };
-    if (custom) {
-      postData = { ...postData, ...custom };
-    }
 
     const response = await fetch(apiURL, {
       method: "POST",
