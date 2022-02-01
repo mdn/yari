@@ -129,6 +129,10 @@
 
     &-dt {
       display: flex;
+
+      .icon {
+        background-color: var(--icon-secondary);
+      }
     }
   }
 }
@@ -260,6 +264,18 @@
   .right-side {
     flex: 1 0 auto;
   }
+
+  .bc-icons {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: 0.25rem;
+    .icon {
+      background-color: var(--icon-secondary);
+      &:hover {
+        background-color: var(--icon-primary);
+      }
+    }
+  }
 }
 
 @media screen and (min-width: $screen-sm) {
@@ -367,4 +383,8 @@
   .table-scroll-inner {
     padding: 0;
   }
+}
+
+.bc-github-link {
+  font: var(--type-body-m);
 }

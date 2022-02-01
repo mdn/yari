@@ -25,7 +25,7 @@
   padding: 0.5rem;
 
   &.no-star {
-    grid-template-columns: 1fr 10ch auto;
+    grid-template-columns: 1fr auto;
   }
 
   .icon {
@@ -44,10 +44,12 @@
 
   &-title {
     font: var(--type-emphasis-m);
+    margin: 0;
   }
 
   &-text {
     font: var(--type-body-m);
+    margin: 0;
   }
 
   &-created {

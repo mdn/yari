@@ -156,7 +156,7 @@ export const HeaderNotificationsMenu = () => {
                 return (
                   <li key={`${menuId}-${notification.id}`}>
                     <a
-                      href={`/${locale}/plus/notifications/`}
+                      href={notification.url}
                       role="menuitem"
                       className={`notifications-submenu-action ${
                         !notification.read ? "unread" : ""
