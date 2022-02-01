@@ -181,16 +181,16 @@ class HTMLTool {
         // If it already has an ID, lowercase it and use it.
         id = $element.attr("id").toLowerCase();
       } else if (H1_TO_H6_TAGS.has($element[0].name) || isDt) {
-        // For heading and dt tags, we'll give them an "id" that's a
-        // slugified version of their text content.
+        // For heading elements, we start by getting the text content of
+        // the entire heading element (including any children it may have).
         let text = $element.text();
         if (isDt) {
           // dt elements can, along with the actual term, contain stuff
           // like <span class="badge inline optional">Optional</span>. If
-          // we don’t trim that, we end up with generated IDs like
-          // id="rtcSessionDescriptionInit_Optional". So, if the dt content
-          // contains a space, we take just whatever precedes the space.
-          text = text.split(" ")[0];
+          // we include the text from that, we end up with generated IDs
+          // like id="rtcSessionDescriptionInit_Optional". So, for dt, we
+          // take just the text from the first element child of the dt.
+          text = $element.contents().first().text();
         }
         id = slugify(text).toLowerCase();
         if (id) {
