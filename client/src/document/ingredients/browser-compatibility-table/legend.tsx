@@ -5,9 +5,9 @@ import { asList, listFeatures } from "./utils";
 const LEGEND_LABELS = {
   yes: "Full support",
   partial: "Partial support",
+  preview: "In development. Supported in a pre-release version.",
   no: "No support",
   unknown: "Compatibility unknown",
-  preview: "Supported in pre-release/beta channel",
   experimental: "Experimental. Expect behavior to change in the future.",
   "non-standard": "Non-standard. Check cross-browser support before using.",
   deprecated: "Deprecated. Not for use in new websites.",
