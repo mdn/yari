@@ -14,7 +14,12 @@
   @media screen and (min-width: $screen-md) {
     .top-navigation-main & .top-level-entry,
     .notifications-label {
-      display: none;
+      position: absolute !important;
+      font: 0/0 a;
+      padding: 0 !important;
+      margin: 0 !important;
+      height: 0;
+      color: transparent;
     }
   }
 }
