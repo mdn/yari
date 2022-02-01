@@ -168,6 +168,7 @@ class HTMLTool {
     // If it already has an ID, leave it and use that.
     // If it's a H1-6 tag, generate (slugify) an ID from its text.
     // If all else, generate a unique one.
+    // And we ensure all IDs that get added are completely lowercase.
     $([...INJECT_SECTION_ID_TAGS].join(",")).each((i, element) => {
       const $element = $(element);
       const isDt = $element[0].name === "dt";
@@ -175,9 +176,10 @@ class HTMLTool {
       let id = $element.attr("id");
       if ($element.attr("name")) {
         // The "name" attribute overrides any current "id".
-        id = slugify($element.attr("name"));
+        id = slugify($element.attr("name").toLowerCase());
       } else if (id) {
-        // If it already has an ID, respect it and leave it be.
+        // If it already has an ID, lowercase it and use it.
+        id = $element.attr("id").toLowerCase();
       } else if (H1_TO_H6_TAGS.has($element[0].name) || isDt) {
         // For heading and dt tags, we'll give them an "id" that's a
         // slugified version of their text content.
@@ -190,29 +192,21 @@ class HTMLTool {
           // contains a space, we take just whatever precedes the space.
           text = text.split(" ")[0];
         }
-        id = slugify(text);
+        id = slugify(text).toLowerCase();
         if (id) {
           // Ensure that the slugified "id" has not already been
           // taken. If it has, create a unique version of it.
           let version = 2;
           const originalID = id;
           while (knownIDs.has(id)) {
-            id = `${originalID}_${version++}`;
+            id = `${originalID}_${version++}`.toLowerCase();
           }
         }
       }
       if (!id) {
+        // No need to call toLowerCase() here, because generateUniqueID()
+        // makes all-lowercase IDs in the form sectN, where N is a number.
         id = generateUniqueID();
-      }
-      if (isDt) {
-        // There’s existing code that causes heading IDs to get lowercased,
-        // but it doesn’t handle dt elements. So we lowercase the dt IDs
-        // here. And to ensure the ID uniqueness-check works as expected,
-        // we need to do the lowercasing after the knownIDs.has(id) check
-        // above, and not before. Also, to ensure the resulting ID will
-        // always be lowercased in all cases, we need to do the lowercasing
-        // after generateUniqueID() runs, and not before.
-        id = id.toLowerCase();
       }
       knownIDs.add(id);
       $element.attr("id", id);
