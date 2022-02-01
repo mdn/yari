@@ -29,6 +29,7 @@ import {
 } from "../contexts/search-filters";
 import SearchFilter from "../search-filter";
 import Container from "../../ui/atoms/container";
+import { docCategory } from "../../utils";
 
 dayjs.extend(relativeTime);
 
@@ -36,6 +37,7 @@ interface Breadcrumb {
   uri: string;
   title: string;
 }
+
 const filters = [
   // {
   //   label: "Content Updates",
@@ -57,6 +59,7 @@ const sorts = [
     param: "sort=title",
   },
 ];
+
 export interface BookmarkData {
   id: number;
   url: string;
@@ -336,6 +339,21 @@ function DisplayData({
   );
 }
 
+function _getIconLabel(url) {
+  let category = docCategory({ pathname: url });
+
+  if (category) {
+    category = category?.split("-")[1];
+
+    if (category === "javascript") {
+      return "js";
+    }
+    return category;
+  }
+
+  return "docs";
+}
+
 function Bookmark({
   bookmark,
   data,
@@ -355,16 +373,13 @@ function Bookmark({
   if (doomed) {
     className += " doomed";
   }
+  const iconClass = docCategory({ pathname: bookmark.url })?.split("-")[1];
+  const iconLabel = _getIconLabel(bookmark.url);
 
   return (
     <div key={bookmark.id} className={className}>
       <div className="bookmark-title-wrap">
-        <div className="bookmark-icon">
-          docs
-          {/* accepts the following classes to change colors:
-            .html, css, javascript, http, apis, to match
-            the colors in the navigation. */}
-        </div>
+        <div className={`bookmark-icon ${iconClass || ""}`}>{iconLabel}</div>
         <div className="bookmark-content">
           {bookmark.parents.length > 0 && (
             <Breadcrumbs parents={bookmark.parents} />
