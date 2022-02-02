@@ -125,6 +125,10 @@
         vertical-align: middle;
         width: 8px;
       }
+
+      &:last-child:after {
+        content: unset;
+      }
     }
   }
 }

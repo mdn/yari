@@ -95,7 +95,7 @@ export default function SearchFilter({
             {filterMenu.label}
           </Button>
           <DropdownMenu>
-            <Submenu menuEntry={filterMenu} />
+            <Submenu menuEntry={filterMenu} isDropdown />
           </DropdownMenu>
         </DropdownMenuWrapper>
       ) : null}
@@ -118,7 +118,7 @@ export default function SearchFilter({
             {sortMenu.label}
           </Button>
           <DropdownMenu>
-            <Submenu menuEntry={sortMenu} />
+            <Submenu menuEntry={sortMenu} isDropdown />
           </DropdownMenu>
         </DropdownMenuWrapper>
       ) : null}

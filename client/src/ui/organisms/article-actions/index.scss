@@ -56,17 +56,23 @@
       top: 0;
       width: 100vw;
       z-index: var(--z-index-low);
+      overflow: auto;
+      -webkit-overflow-scrolling: touch;
 
       // Reset all buttons
       .button {
         --button-radius: 0;
         width: 100%;
-        border-bottom: 1px solid var(--border-secondary);
 
         .button-wrap {
           justify-content: flex-start;
           padding: 1.5rem 1rem;
         }
+      }
+
+      .article-actions-entries > li > .button,
+      .article-actions-entries > li > div > .button {
+        border-bottom: 1px solid var(--border-secondary);
       }
 
       .watch-submenu-mobile-buttons .button {

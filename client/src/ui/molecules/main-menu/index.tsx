@@ -71,7 +71,12 @@ export default function MainMenu({ isOpenOnMobile }) {
           visibleSubMenuId={visibleSubMenuId}
           toggleMenu={toggleMenu}
         />
-        {ENABLE_PLUS && <PlusMenu />}
+        {ENABLE_PLUS && (
+          <PlusMenu
+            visibleSubMenuId={visibleSubMenuId}
+            toggleMenu={toggleMenu}
+          />
+        )}
       </ul>
     </nav>
   );
