@@ -5,6 +5,7 @@
   width: 100%;
   background-color: var(--background-primary);
   z-index: $bottom-layer;
+  border-bottom: 1px solid var(--border-primary);
 
   .container {
     align-items: center;

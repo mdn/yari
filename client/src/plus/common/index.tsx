@@ -3,10 +3,10 @@ import NoteCard from "../../ui/molecules/notecards";
 
 export function NotSignedIn() {
   return (
-    <>
-      <h2>You have not signed in</h2>
+    <div className="container">
+      <h3>You have not signed in</h3>
       <SignInLink />
-    </>
+    </div>
   );
 }
 

@@ -71,6 +71,11 @@
     .dropdown {
       align-self: center;
     }
+
+    .breadcrumbs a:link,
+    .breadcrumbs a:visited {
+      color: var(--text-secondary);
+    }
   }
 
   &-title {
