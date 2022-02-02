@@ -18,14 +18,20 @@
     right: 0;
   }
 
-  &-item .button-wrap {
-    --button-bg: transparent;
-    border-width: 0;
-    justify-content: flex-start;
-    text-align: left;
+  &-item {
+    .button {
+      width: 100%;
+    }
 
-    &:hover {
-      --button-bg: var(--button-secondary-hover);
+    .button-wrap {
+      --button-bg: transparent;
+      border-width: 0;
+      justify-content: flex-start;
+      text-align: left;
+
+      &:hover {
+        --button-bg: var(--button-secondary-hover);
+      }
     }
   }
 }

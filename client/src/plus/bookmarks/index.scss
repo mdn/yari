@@ -67,6 +67,10 @@
   &-title-wrap {
     display: flex;
     gap: 1rem;
+
+    .dropdown {
+      align-self: center;
+    }
   }
 
   &-title {

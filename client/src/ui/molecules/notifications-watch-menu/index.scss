@@ -22,6 +22,20 @@
     z-index: var(--z-index-mid);
   }
 
+  &.is-in-modal {
+    display: block;
+    position: static;
+    inset: auto;
+
+    .watch-submenu-item {
+      padding: 1rem 0 0;
+
+      &.padding-top-0 {
+        padding-top: 0;
+      }
+    }
+  }
+
   [type="text"] {
     background: var(--background-primary);
     border: 1px solid var(--border-primary);

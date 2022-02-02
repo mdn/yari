@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useSearchParams, useParams, useNavigate } from "react-router-dom";
 import useSWR, { mutate } from "swr";
 
@@ -10,6 +10,7 @@ import { Doc } from "./types";
 import { Prose, ProseWithHeading } from "./ingredients/prose";
 import { LazyBrowserCompatibilityTable } from "./lazy-bcd-table";
 import { SpecificationSection } from "./ingredients/spec-section";
+import { Button } from "../ui/atoms/button";
 
 // Misc
 // Sub-components
