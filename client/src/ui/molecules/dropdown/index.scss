@@ -19,18 +19,20 @@
   }
 
   &-item {
-    .button {
+    .button.action {
       width: 100%;
-    }
 
-    .button-wrap {
-      --button-bg: transparent;
-      border-width: 0;
-      justify-content: flex-start;
-      text-align: left;
+      .button-wrap {
+        --button-font: var(--type-body-m);
+        --button-bg: transparent;
+        border-width: 0;
+        justify-content: flex-start;
+        text-align: left;
+        text-transform: none;
 
-      &:hover {
-        --button-bg: var(--button-secondary-hover);
+        &:hover {
+          --button-bg: var(--button-secondary-hover);
+        }
       }
     }
   }

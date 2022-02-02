@@ -92,7 +92,7 @@ export function BookmarksLayout() {
   const [searchParams, setSearchParams] = useSearchParams();
   const { getSearchFiltersParams } = useContext(searchFiltersContext);
 
-  const pageTitle = "My Bookmarks";
+  const pageTitle = "My Collection";
   React.useEffect(() => {
     document.title = pageTitle;
   }, []);
@@ -185,7 +185,7 @@ export function BookmarksLayout() {
     <>
       <header className="plus-header">
         <Container>
-          <h3>My Collection</h3>
+          <h1>My Collection</h1>
         </Container>
       </header>
 
