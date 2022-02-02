@@ -15,6 +15,7 @@
 .tabs a.tab-item {
   display: block;
   font: var(--type-body-m);
+  color: var(--text-primary);
 }
 
 .tabs .tab-item[aria-current="true"] {

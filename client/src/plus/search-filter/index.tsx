@@ -68,7 +68,11 @@ export default function SearchFilter({
   };
 
   return (
-    <form className="search-filter">
+    <form
+      className={`search-filter ${
+        !filters.length ? "inline-on-mobile" : undefined
+      }`}
+    >
       <Search
         name="terms"
         placeholder="Filter by keyword"
