@@ -131,26 +131,6 @@ export function EditBookmark({
               action={apiURL}
               onSubmit={saveHandler}
             >
-              <div className="watch-submenu-mobile-buttons">
-                {doc && data?.bookmarked ? (
-                  <Button
-                    type="action"
-                    buttonType="submit"
-                    name="delete"
-                    value="true"
-                    icon="trash"
-                    isDisabled={isValidating}
-                  />
-                ) : null}
-                <Button
-                  buttonType="submit"
-                  type="action"
-                  icon="checkmark"
-                  isDisabled={isValidating}
-                  name="save"
-                />
-              </div>
-
               <div className="watch-submenu-item border-top-0 padding-top-0">
                 <label htmlFor="bookmark-name">Name:</label>
                 <input
@@ -175,7 +155,7 @@ export function EditBookmark({
                   onKeyDown={enterHandler}
                 />
               </div>
-              <div className="watch-submenu-item border-top-0 is-button-row">
+              <div className="watch-submenu-item border-top-0 is-button-row is-always-visible">
                 <Button buttonType="submit" isDisabled={isValidating}>
                   Save
                 </Button>

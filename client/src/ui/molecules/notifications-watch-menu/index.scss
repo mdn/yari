@@ -140,6 +140,11 @@
 
   &.is-button-row {
     display: none;
+
+    &.is-always-visible {
+      display: flex;
+      justify-content: flex-end;
+    }
   }
 
   &:last-child {
