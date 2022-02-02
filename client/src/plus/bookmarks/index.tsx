@@ -19,16 +19,15 @@ import { useUserData } from "../../user-context";
 import "./index.scss";
 import { DataError, NotSignedIn, NotSubscriber } from "../common";
 import NoteCard from "../../ui/molecules/notecards";
-import {
-  BookmarkMenu,
-  getBookmarkApiUrl,
-} from "../../ui/molecules/bookmark/menu";
+import { getBookmarkApiUrl } from "../../ui/molecules/bookmark/menu";
 import {
   searchFiltersContext,
   SearchFiltersProvider,
 } from "../contexts/search-filters";
 import SearchFilter from "../search-filter";
 import Container from "../../ui/atoms/container";
+import { DropdownMenu, DropdownMenuWrapper } from "../../ui/molecules/dropdown";
+import { EditBookmark } from "../../ui/molecules/bookmark/edit-bookmark";
 
 dayjs.extend(relativeTime);
 
@@ -36,6 +35,7 @@ interface Breadcrumb {
   uri: string;
   title: string;
 }
+
 const filters = [
   // {
   //   label: "Content Updates",
@@ -57,6 +57,7 @@ const sorts = [
     param: "sort=title",
   },
 ];
+
 export interface BookmarkData {
   id: number;
   url: string;
@@ -349,6 +350,7 @@ function Bookmark({
   listMutate: CallableFunction;
   toggle: () => Promise<void>;
 }) {
+  const [show, setShow] = React.useState(false);
   const [doomed, setDoomed] = React.useState(false);
 
   let className = "bookmark";
@@ -373,32 +375,59 @@ function Bookmark({
             <a href={bookmark.url}>{bookmark.title}</a>
           </h2>
         </div>
-        <div className="bookmark-actions">
+        <DropdownMenuWrapper
+          className="dropdown is-flush-right"
+          isOpen={show}
+          setIsOpen={(value, event) => {
+            if (
+              !document.querySelector(".modal-content")?.contains(event.target)
+            ) {
+              setShow(value);
+            }
+          }}
+        >
           <Button
             type="action"
-            icon="trash"
-            title="Remove bookmark"
-            onClickHandler={async () => {
-              setDoomed(true);
-              try {
-                await toggle();
-              } catch (error) {
-                setDoomed(false);
-              }
+            icon="ellipses"
+            ariaControls="bookmark-dropdown"
+            ariaHasPopup={"menu"}
+            ariaExpanded={show || undefined}
+            onClickHandler={() => {
+              setShow(!show);
             }}
-          >
-            <span className="visually-hidden">Remove bookmark</span>
-          </Button>
-          <BookmarkMenu
-            doc={null}
-            isValidating={isValidating}
-            data={{
-              bookmarked: bookmark,
-              csrfmiddlewaretoken: data.csrfmiddlewaretoken,
-            }}
-            mutate={listMutate}
-          ></BookmarkMenu>
-        </div>
+          />
+          <DropdownMenu>
+            <ul className="dropdown-list" id="bookmark-dropdown">
+              <li className="dropdown-item">
+                <Button
+                  type="action"
+                  title="Delete"
+                  onClickHandler={async () => {
+                    setDoomed(true);
+                    try {
+                      await toggle();
+                    } catch (error) {
+                      setDoomed(false);
+                    }
+                  }}
+                >
+                  Delete
+                </Button>
+              </li>
+              <li className="dropdown-item">
+                <EditBookmark
+                  doc={null}
+                  isValidating={isValidating}
+                  data={{
+                    bookmarked: bookmark,
+                    csrfmiddlewaretoken: data.csrfmiddlewaretoken,
+                  }}
+                  mutate={listMutate}
+                />
+              </li>
+            </ul>
+          </DropdownMenu>
+        </DropdownMenuWrapper>
       </div>
       {bookmark.notes && (
         <p className="bookmark-description">{bookmark.notes}</p>

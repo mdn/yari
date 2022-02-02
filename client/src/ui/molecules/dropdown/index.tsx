@@ -1,12 +1,12 @@
 import * as React from "react";
-import { useContext, useRef } from "react";
+import { ReactChild, ReactChildren, useContext, useRef } from "react";
 import { useOnClickOutside } from "../../../hooks";
 
 import "./index.scss";
 
 const DropdownMenuContext = React.createContext<{
   isOpen: boolean;
-  close: () => void;
+  close: (event?: Event) => void;
   wrapperRef?: React.Ref<HTMLDivElement>;
 }>({
   isOpen: false,
@@ -21,7 +21,7 @@ export function DropdownMenuWrapper({
   useLIs = false,
 }) {
   const wrapperRef = useRef(null);
-  const close = () => setIsOpen(false);
+  const close = (event) => setIsOpen(false, event);
 
   const contextValue = {
     close,
@@ -48,14 +48,20 @@ export function DropdownMenuWrapper({
   );
 }
 
-export function DropdownMenu({ children, onClose = () => {} }) {
+export function DropdownMenu({
+  children,
+  onClose = () => {},
+}: {
+  children: ReactChildren | ReactChild;
+  onClose?: (event?: Event) => void;
+}) {
   const { isOpen, wrapperRef, close } = useContext(DropdownMenuContext);
 
   React.useEffect(() => {
     const closeOnEsc = (event) => {
       if (event.key === "Escape" && isOpen) {
-        close();
-        onClose();
+        close(event);
+        onClose(event);
       }
     };
     document.addEventListener("keyup", closeOnEsc);
@@ -65,10 +71,10 @@ export function DropdownMenu({ children, onClose = () => {} }) {
     };
   }, [isOpen, close, onClose]);
 
-  useOnClickOutside(wrapperRef, () => {
+  useOnClickOutside(wrapperRef, (event) => {
     if (isOpen) {
-      close();
-      onClose();
+      close(event);
+      onClose(event);
     }
   });
   if (!isOpen) return null;

@@ -3,7 +3,9 @@ interface Notification {
   title: string;
   text: string;
   created: Date;
+  url: string;
   read: boolean;
+  deleted: boolean;
 }
 
 interface Metadata {

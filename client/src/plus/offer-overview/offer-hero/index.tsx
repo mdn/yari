@@ -1,5 +1,5 @@
+import Mandala from "../../../ui/molecules/mandala";
 import "./index.scss";
-import Mandala from "../mandala";
 
 function OfferHero() {
   return (
@@ -25,7 +25,7 @@ function OfferHero() {
         </div>
       </div>
       <div className="mandala-wrapper">
-        <Mandala />
+        <Mandala animate={true} />
       </div>
     </header>
   );
