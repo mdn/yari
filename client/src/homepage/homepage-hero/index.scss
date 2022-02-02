@@ -63,6 +63,10 @@
     transform-origin: center;
     overflow-y: clip;
     transform: rotate(-9deg) scale(150%) translateY(-37%);
+
+    .mandala-container {
+      --mandala-primary: var(--background-primary);
+    }
   }
 
   .header-search {

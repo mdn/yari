@@ -114,7 +114,6 @@ $text-stroke-width: 2px;
     }
   }
   .mandala-wrapper {
-    width: 0%;
     position: relative;
     left: -200px;
     -moz-transition: all 1s ease-in-out;
@@ -122,6 +121,11 @@ $text-stroke-width: 2px;
 
     @media screen and (max-width: 780px) {
       left: -200px;
+    }
+
+    .mandala {
+      width: 800px;
+      height: 800px;
     }
   }
 }
