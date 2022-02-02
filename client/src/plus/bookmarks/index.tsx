@@ -28,6 +28,7 @@ import SearchFilter from "../search-filter";
 import Container from "../../ui/atoms/container";
 import { DropdownMenu, DropdownMenuWrapper } from "../../ui/molecules/dropdown";
 import { EditBookmark } from "../../ui/molecules/bookmark/edit-bookmark";
+import { docCategory } from "../../utils";
 
 dayjs.extend(relativeTime);
 
@@ -337,6 +338,21 @@ function DisplayData({
   );
 }
 
+function _getIconLabel(url) {
+  let category = docCategory({ pathname: url });
+
+  if (category) {
+    category = category?.split("-")[1];
+
+    if (category === "javascript") {
+      return "js";
+    }
+    return category;
+  }
+
+  return "docs";
+}
+
 function Bookmark({
   bookmark,
   data,
@@ -357,16 +373,13 @@ function Bookmark({
   if (doomed) {
     className += " doomed";
   }
+  const iconClass = docCategory({ pathname: bookmark.url })?.split("-")[1];
+  const iconLabel = _getIconLabel(bookmark.url);
 
   return (
     <div key={bookmark.id} className={className}>
       <div className="bookmark-title-wrap">
-        <div className="bookmark-icon">
-          docs
-          {/* accepts the following classes to change colors:
-            .html, css, javascript, http, apis, to match
-            the colors in the navigation. */}
-        </div>
+        <div className={`bookmark-icon ${iconClass || ""}`}>{iconLabel}</div>
         <div className="bookmark-content">
           {bookmark.parents.length > 0 && (
             <Breadcrumbs parents={bookmark.parents} />
