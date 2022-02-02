@@ -67,16 +67,21 @@
   &-title-wrap {
     display: flex;
     gap: 1rem;
-    margin-bottom: 1rem;
   }
 
   &-title {
     font: var(--type-emphasis-l);
+    margin: 0;
   }
 
   &-description {
     font: var(--type-body-m);
     color: var(--text-secondary);
+  }
+
+  &-actions {
+    display: flex;
+    gap: 0.5rem;
   }
 
   .bookmark-content {
@@ -119,6 +124,10 @@
         transform: rotate(-90deg);
         vertical-align: middle;
         width: 8px;
+      }
+
+      &:last-child:after {
+        content: unset;
       }
     }
   }

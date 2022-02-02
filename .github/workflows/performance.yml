@@ -63,7 +63,7 @@ jobs:
           yarn start:static-server &
           sleep 1
           curl --retry-connrefused --retry 5 \
-            http://localhost:5000/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/forEach/ > /dev/null
+            http://localhost:5042/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/forEach/ > /dev/null
 
           npm install -g @lhci/cli@next
 
@@ -75,7 +75,7 @@ jobs:
 
           lhci autorun \
             --upload.target=temporary-public-storage \
-            --collect.url="http://localhost:5000/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/forEach/"
+            --collect.url="http://localhost:5042/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/forEach/"
 
           # TODO (as of Oct 2020)
           # Once our Lighthouse score starts to not be so terrible, we can start

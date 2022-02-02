@@ -187,6 +187,7 @@ export function BookmarkMenu({
                   name="name"
                   value={name}
                   autoComplete="off"
+                  type="text"
                   onChange={(e) => setName(e.target.value)}
                   onKeyDown={enterHandler}
                 />
@@ -196,6 +197,7 @@ export function BookmarkMenu({
                 <input
                   id="bookmark-note"
                   name="notes"
+                  type="text"
                   autoComplete="off"
                   value={notes}
                   onChange={(e) => setNotes(e.target.value)}

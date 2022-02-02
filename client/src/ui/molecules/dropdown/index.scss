@@ -1,0 +1,31 @@
+.dropdown {
+  position: relative;
+
+  &-list {
+    position: absolute;
+    top: calc(100% + 2px);
+    left: 0;
+    background: var(--background-secondary);
+    border: 1px solid var(--border-primary);
+    box-shadow: var(--shadow-01);
+    padding: 0.5rem;
+    border-radius: var(--elem-radius);
+    z-index: var(--z-index-low);
+  }
+
+  &.is-flush-right .dropdown-list {
+    left: auto;
+    right: 0;
+  }
+
+  &-item .button-wrap {
+    --button-bg: transparent;
+    border-width: 0;
+    justify-content: flex-start;
+    text-align: left;
+
+    &:hover {
+      --button-bg: var(--button-secondary-hover);
+    }
+  }
+}

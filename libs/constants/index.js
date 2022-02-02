@@ -58,6 +58,7 @@ const LOCALE_ALIASES = new Map([
 const PREFERRED_LOCALE_COOKIE_NAME = "preferredlocale";
 const ACTIVE_LOCALES = new Set([
   "en-us",
+  "es",
   "fr",
   "ja",
   "ko",

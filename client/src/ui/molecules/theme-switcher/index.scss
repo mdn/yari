@@ -16,6 +16,8 @@
       justify-content: flex-start;
       padding: 1rem;
 
+      border-width: 1px;
+
       &:before {
         display: inline-flex;
         width: 1rem;
@@ -34,6 +36,10 @@
       background-color: $mdn-color-white;
     }
 
+    &:focus {
+      --button-border-color: var(--button-secondary-border-focus);
+    }
+
     &.is-os-default .button-wrap:before {
       @media (prefers-color-scheme: light) {
         background-color: $mdn-color-white;
@@ -50,13 +56,15 @@
   }
 
   .active-menu-item,
-  .active-menu-item:hover,
-  .active-menu-item:focus {
+  .active-menu-item:hover {
     .button-wrap {
       --button-bg: var(--background-primary);
       --button-border-color: var(--border-secondary);
-      // --button-color: #fff;
     }
+  }
+
+  .active-menu-item:focus .button-wrap {
+    --button-border-color: var(--button-secondary-border-focus);
   }
 
   @media screen and (min-width: $screen-md) {

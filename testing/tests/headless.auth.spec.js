@@ -1,7 +1,7 @@
 const { test, expect } = require("@playwright/test");
 
 function testURL(pathname = "/") {
-  const PORT = parseInt(process.env.SERVER_PORT || "5000");
+  const PORT = parseInt(process.env.SERVER_PORT || "5042");
   return `http://localhost:${PORT}${pathname}`;
 }
 

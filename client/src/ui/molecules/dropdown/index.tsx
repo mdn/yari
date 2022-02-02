@@ -2,6 +2,8 @@ import * as React from "react";
 import { useContext, useRef } from "react";
 import { useOnClickOutside } from "../../../hooks";
 
+import "./index.scss";
+
 const DropdownMenuContext = React.createContext<{
   isOpen: boolean;
   close: () => void;

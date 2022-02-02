@@ -22,20 +22,29 @@
     padding: 1rem 0.5rem;
     width: 100%;
 
-    li:last-child & {
-      border-bottom: none;
+    li:last-child &:not(:focus) {
+      border-bottom-color: transparent;
     }
 
-    &:hover,
-    &:focus {
+    &:hover {
       background-color: var(--border-secondary);
       text-decoration: none;
+    }
+
+    &:focus {
+      border: 1px solid var(--button-secondary-border-focus);
+      box-shadow: var(--button-focus-effect);
     }
   }
 
   .active-menu-item {
     background-color: var(--background-primary);
     border-color: var(--border-secondary);
+  }
+
+  // Tjhese
+  &.sort-menu,
+  &.is-dropdown {
   }
 
   @media screen and (min-width: $screen-md) {

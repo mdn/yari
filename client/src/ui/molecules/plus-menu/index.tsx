@@ -1,5 +1,4 @@
 import * as React from "react";
-import { useState } from "react";
 
 import { useUserData } from "../../../user-context";
 import { useLocale } from "../../../hooks";
@@ -9,10 +8,9 @@ import { Submenu } from "../submenu";
 
 import "./index.scss";
 
-export const PlusMenu = () => {
+export const PlusMenu = ({ visibleSubMenuId, toggleMenu }) => {
   const locale = useLocale();
   const userData = useUserData();
-  const [isOpen, setIsOpen] = useState<boolean>(false);
 
   const plusMenu = {
     label: "MDN Plus",
@@ -41,6 +39,7 @@ export const PlusMenu = () => {
       },
     ],
   };
+  const isOpen = visibleSubMenuId === plusMenu.id;
   const isSubscriber = userData && userData.isSubscriber;
 
   return isSubscriber ? (
@@ -51,7 +50,7 @@ export const PlusMenu = () => {
         aria-haspopup="menu"
         aria-expanded={isOpen || undefined}
         onClick={() => {
-          setIsOpen(!isOpen);
+          toggleMenu(plusMenu.id);
         }}
       >
         {plusMenu.label}
@@ -61,7 +60,7 @@ export const PlusMenu = () => {
         {plusMenu.label}
       </Link>
 
-      <Submenu menuEntry={plusMenu} defaultHidden />
+      <Submenu menuEntry={plusMenu} defaultHidden={!isOpen} />
     </li>
   ) : (
     <li>

@@ -22,7 +22,7 @@
     z-index: var(--z-index-mid);
   }
 
-  input {
+  [type="text"] {
     background: var(--background-primary);
     border: 1px solid var(--border-primary);
     color: var(--text-primary);
@@ -65,6 +65,11 @@
     padding-top: 0.5rem;
     padding-bottom: 0.5rem;
     border-top: 1px solid var(--border-primary);
+    border-radius: 0;
+
+    &.border-top-0 {
+      border-top-width: 0;
+    }
   }
 
   @media screen and (min-width: $screen-md) {
@@ -129,6 +134,15 @@
 
   label {
     width: 100%;
+  }
+
+  [type="checkbox"] + label {
+    width: auto;
+  }
+
+  [type="checkbox"] + label + .button {
+    width: 28px;
+    margin-left: auto;
   }
 
   @media screen and (min-width: $screen-md) {

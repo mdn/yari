@@ -21,13 +21,17 @@ type MenuEntry = {
 export const Submenu = ({
   menuEntry,
   defaultHidden = false,
+  isDropdown = false,
 }: {
   menuEntry: MenuEntry;
   defaultHidden?: boolean;
+  isDropdown?: boolean;
 }) => {
   return (
     <ul
-      className={`submenu ${menuEntry.id} ${defaultHidden ? "hidden" : ""}`}
+      className={`${isDropdown ? "dropdown-list" : "submenu"} ${menuEntry.id} ${
+        defaultHidden ? "hidden" : ""
+      }`}
       role="menu"
       aria-labelledby={`${menuEntry.id}-button`}
     >
@@ -38,7 +42,9 @@ export const Submenu = ({
             <li
               key={key}
               role="none"
-              className={item.extraClasses || undefined}
+              className={`${item.extraClasses || undefined} ${
+                isDropdown ? "dropdown-item" : ""
+              }`}
             >
               {item.component ? (
                 <item.component key={key} />

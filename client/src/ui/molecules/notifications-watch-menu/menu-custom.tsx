@@ -88,16 +88,11 @@ export function NotificationsWatchMenuCustom({
         saveData.current.content !== newSaveData.content ||
         JSON.stringify(oldCompatibility) !== JSON.stringify(newCompatibility)
       ) {
-        // console.debug(
-        //   "saving",
-        //   JSON.stringify(saveData.current),
-        //   JSON.stringify(newSaveData)
-        // );
-        handleSelection(newSaveData);
+        handleSelection({ custom: newSaveData });
       }
     } else {
       if (data.status !== "custom" && data.default) {
-        handleSelection({ ...data.default, custom_default: true });
+        handleSelection({ custom: data.default, custom_default: true });
       }
     }
     saveData.current = newSaveData;
@@ -115,7 +110,11 @@ export function NotificationsWatchMenuCustom({
       saveData.current = data.default;
     }
     const opts = update ? { update_custom_default: true } : {};
-    handleSelection({ ...saveData.current, custom_default: true, ...opts });
+    handleSelection({
+      custom: saveData.current,
+      custom_default: true,
+      ...opts,
+    });
   }
 
   const anythingSelected =
