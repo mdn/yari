@@ -347,6 +347,10 @@ function _getIconLabel(url) {
     if (category === "javascript") {
       return "js";
     }
+
+    if (category === "accessibility") {
+      return "acc";
+    }
     return category;
   }
 
