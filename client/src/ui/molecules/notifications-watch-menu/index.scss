@@ -244,7 +244,8 @@
 
   & & .watch-submenu-item {
     font: var(--type-body-m);
-    padding: 0.25rem var(--gutter-padding);
+    padding: 0.25rem var(--gutter-padding) 0.25rem
+      calc(var(--gutter-padding) * 2);
   }
 }
 
