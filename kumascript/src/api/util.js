@@ -178,8 +178,11 @@ class HTMLTool {
         // The "name" attribute overrides any current "id".
         id = slugify($element.attr("name").toLowerCase());
       } else if (id) {
-        // If it already has an ID, lowercase it and use it.
-        id = $element.attr("id").toLowerCase();
+        // If there’s already has an ID, use it — and lowercase it as long
+        // as the value isn’t "Quick_links" (which we need to keep as-is).
+        if (id !== "Quick_links") {
+          id.toLowerCase();
+        }
       } else if (H1_TO_H6_TAGS.has($element[0].name) || isDt) {
         // For heading elements, we start by getting the text content of
         // the entire heading element (including any children it may have).
