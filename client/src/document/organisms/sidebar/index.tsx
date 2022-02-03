@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import React, { useEffect, useState } from "react";
-import _ from "lodash";
+import throttle from "lodash.throttle";
 import { Button } from "../../../ui/atoms/button";
 
 import { useUIStatus } from "../../../ui-context";
@@ -24,7 +24,7 @@ function CalculateSidebarOnScroll() {
 
     window.addEventListener(
       "scroll",
-      _.throttle(calcOnScroll, 30, {
+      throttle(calcOnScroll, 30, {
         leading: true,
         trailing: true,
       })
