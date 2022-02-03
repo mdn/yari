@@ -4,18 +4,21 @@ import { useLocale } from "../../../hooks";
 
 import { ReactComponent as MDNDocsLogo } from "../../../assets/mdn-docs-logo.svg";
 import { ReactComponent as MDNPlusLogo } from "../../../assets/mdn-plus-logo.svg";
+import { ReactComponent as MDNLogo } from "../../../assets/mdn-logo.svg";
 
 import "./index.scss";
+import { isDocs, isPlus } from "../../../utils";
 
 export function Logo() {
   const locale = useLocale();
   const location = useLocation();
 
-  const isPlus = location.pathname.indexOf("/plus") > -1 ? true : false;
+  const plus = isPlus(location.pathname);
+  const docs = isDocs(location.pathname);
 
   return (
     <a href={`/${locale}/`} className="logo" aria-label="MDN homepage">
-      {isPlus ? <MDNPlusLogo /> : <MDNDocsLogo />}
+      {(plus && <MDNPlusLogo />) || (docs && <MDNDocsLogo />) || <MDNLogo />}
     </a>
   );
 }
