@@ -88,56 +88,67 @@ function Mandala({ animate = false }: { animate: boolean }) {
         </defs>
         <text className="mandala-accent-1" dy="70" textLength="2010">
           <textPath textLength="2010" href="#circle1">
-            &nbsp;/<tspan>/</tspan>/<tspan>/</tspan>/<tspan>/</tspan>/
-            <tspan>/</tspan>/<tspan>/</tspan>/<tspan>/</tspan>
-            &nbsp;/<tspan>/</tspan>/<tspan>/</tspan>/<tspan>/</tspan>/
-            <tspan>/</tspan>/<tspan>/</tspan>/<tspan>/</tspan>
-            &nbsp;/<tspan>/</tspan>/<tspan>/</tspan>/<tspan>/</tspan>/
-            <tspan>/</tspan>/<tspan>/</tspan>/<tspan>/</tspan>
-            &nbsp;/<tspan>/</tspan>/<tspan>/</tspan>/<tspan>/</tspan>/
-            <tspan>/</tspan>/<tspan>/</tspan>/<tspan>/</tspan>
-            &nbsp;/<tspan>/</tspan>/<tspan>/</tspan>/<tspan>/</tspan>/
-            <tspan>/</tspan>/<tspan>/</tspan>/<tspan>/</tspan>
-            &nbsp;/<tspan>/</tspan>/<tspan>/</tspan>/<tspan>/</tspan>/
-            <tspan>/</tspan>/<tspan>/</tspan>/<tspan>/</tspan>
-            &nbsp;/<tspan>/</tspan>/<tspan>/</tspan>/<tspan>/</tspan>/
-            <tspan>/</tspan>/<tspan>/</tspan>/<tspan>/</tspan>
+            &nbsp;&nbsp;&nbsp;/<tspan>/</tspan>/<tspan>/</tspan>/
+            <tspan>/</tspan>/<tspan>/</tspan>/<tspan>/</tspan>/<tspan>/</tspan>
+            &nbsp;&nbsp;&nbsp;/<tspan>/</tspan>/<tspan>/</tspan>/
+            <tspan>/</tspan>/<tspan>/</tspan>/<tspan>/</tspan>/<tspan>/</tspan>
+            &nbsp;&nbsp;&nbsp;/<tspan>/</tspan>/<tspan>/</tspan>/
+            <tspan>/</tspan>/<tspan>/</tspan>/<tspan>/</tspan>/<tspan>/</tspan>
+            &nbsp;&nbsp;&nbsp;/<tspan>/</tspan>/<tspan>/</tspan>/
+            <tspan>/</tspan>/<tspan>/</tspan>/<tspan>/</tspan>/<tspan>/</tspan>
+            &nbsp;&nbsp;&nbsp;/<tspan>/</tspan>/<tspan>/</tspan>/
+            <tspan>/</tspan>/<tspan>/</tspan>/<tspan>/</tspan>/<tspan>/</tspan>
+            &nbsp;&nbsp;&nbsp;/<tspan>/</tspan>/<tspan>/</tspan>/
+            <tspan>/</tspan>/<tspan>/</tspan>/<tspan>/</tspan>/<tspan>/</tspan>
+            &nbsp;&nbsp;&nbsp;/<tspan>/</tspan>/<tspan>/</tspan>/
+            <tspan>/</tspan>/<tspan>/</tspan>/<tspan>/</tspan>/<tspan>/</tspan>
           </textPath>
         </text>
         <text className="mandala-accent-2" dy="70" textLength="1760">
           <textPath textLength="1760" href="#circle2">
-            &nbsp;+<tspan>+</tspan>+<tspan>+</tspan>+<tspan>+</tspan>
-            &nbsp;+<tspan>+</tspan>+<tspan>+</tspan>+<tspan>+</tspan>
-            &nbsp;+<tspan>+</tspan>+<tspan>+</tspan>+<tspan>+</tspan>
-            &nbsp;+<tspan>+</tspan>+<tspan>+</tspan>+<tspan>+</tspan>
-            &nbsp;+<tspan>+</tspan>+<tspan>+</tspan>+<tspan>+</tspan>
-            &nbsp;+<tspan>+</tspan>+<tspan>+</tspan>+<tspan>+</tspan>
-            &nbsp;+<tspan>+</tspan>+<tspan>+</tspan>+<tspan>+</tspan>
+            &nbsp;&nbsp;+<tspan>+</tspan>+<tspan>+</tspan>+<tspan>+</tspan>
+            &nbsp;&nbsp;+<tspan>+</tspan>+<tspan>+</tspan>+<tspan>+</tspan>
+            &nbsp;&nbsp;+<tspan>+</tspan>+<tspan>+</tspan>+<tspan>+</tspan>
+            &nbsp;&nbsp;+<tspan>+</tspan>+<tspan>+</tspan>+<tspan>+</tspan>
+            &nbsp;&nbsp;+<tspan>+</tspan>+<tspan>+</tspan>+<tspan>+</tspan>
+            &nbsp;&nbsp;+<tspan>+</tspan>+<tspan>+</tspan>+<tspan>+</tspan>
+            &nbsp;&nbsp;+<tspan>+</tspan>+<tspan>+</tspan>+<tspan>+</tspan>
           </textPath>
         </text>
         <text className="mandala-accent-3" dy="70" textLength="1507">
           <textPath textLength="1507" href="#circle3">
-            &nbsp;<tspan>&#123;</tspan>&#123;<tspan>&#123;</tspan>&#123;
-            <tspan>&#125;</tspan>&#125;<tspan>&#125;</tspan>&#125; &nbsp;
-            <tspan>&#123;</tspan>&#123;<tspan>&#123;</tspan>&#123;
-            <tspan>&#125;</tspan>&#125;<tspan>&#125;</tspan>&#125; &nbsp;
-            <tspan>&#123;</tspan>&#123;<tspan>&#123;</tspan>&#123;
-            <tspan>&#125;</tspan>&#125;<tspan>&#125;</tspan>&#125; &nbsp;
-            <tspan>&#123;</tspan>&#123;<tspan>&#123;</tspan>&#123;
-            <tspan>&#125;</tspan>&#125;<tspan>&#125;</tspan>&#125; &nbsp;
-            <tspan>&#123;</tspan>&#123;<tspan>&#123;</tspan>&#123;
-            <tspan>&#125;</tspan>&#125;<tspan>&#125;</tspan>&#125; &nbsp;
-            <tspan>&#123;</tspan>&#123;<tspan>&#123;</tspan>&#123;
-            <tspan>&#125;</tspan>&#125;<tspan>&#125;</tspan>&#125;
+            <tspan>&#123;</tspan>&#123;<tspan>&#123;</tspan>&#123;&nbsp;
+            <tspan>&#125;</tspan>&#125;<tspan>&#125;</tspan>&#125;&nbsp;&nbsp;
+            <tspan>&#123;</tspan>&#123;<tspan>&#123;</tspan>&#123;&nbsp;
+            <tspan>&#125;</tspan>&#125;<tspan>&#125;</tspan>&#125;&nbsp;&nbsp;
+            <tspan>&#123;</tspan>&#123;<tspan>&#123;</tspan>&#123;&nbsp;
+            <tspan>&#125;</tspan>&#125;<tspan>&#125;</tspan>&#125;&nbsp;&nbsp;
+            <tspan>&#123;</tspan>&#123;<tspan>&#123;</tspan>&#123;&nbsp;
+            <tspan>&#125;</tspan>&#125;<tspan>&#125;</tspan>&#125;&nbsp;&nbsp;
+            <tspan>&#123;</tspan>&#123;<tspan>&#123;</tspan>&#123;&nbsp;
+            <tspan>&#125;</tspan>&#125;<tspan>&#125;</tspan>&#125;&nbsp;&nbsp;
+            <tspan>&#123;</tspan>&#123;<tspan>&#123;</tspan>&#123;&nbsp;
+            <tspan>&#125;</tspan>&#125;<tspan>&#125;</tspan>&#125;&nbsp;&nbsp;
           </textPath>
         </text>
         <text className="mandala-accent-4" dy="70" textLength="1257">
           <textPath textLength="1257" href="#circle4">
-            &nbsp;../../&nbsp;../../&nbsp;../../&nbsp;../../&nbsp;../../&nbsp;../../&nbsp;../../
+            &nbsp;&nbsp;&nbsp;../../ &nbsp;&nbsp;&nbsp;../../
+            &nbsp;&nbsp;&nbsp;../../ &nbsp;&nbsp;&nbsp;../../
+            &nbsp;&nbsp;&nbsp;../../ &nbsp;&nbsp;&nbsp;../../
+            &nbsp;&nbsp;&nbsp;../../
           </textPath>
         </text>
         <text className="mandala-accent-5" dy="70" textLength="1005">
           <textPath textLength="1005" href="#circle5">
+            <tspan>&lt;&gt;</tspan>&lt;/&gt;
+            <tspan>&lt;&gt;</tspan>&lt;/&gt;
+            <tspan>&lt;&gt;</tspan>&lt;/&gt;
+            <tspan>&lt;&gt;</tspan>&lt;/&gt;
+            <tspan>&lt;&gt;</tspan>&lt;/&gt;
+            <tspan>&lt;&gt;</tspan>&lt;/&gt;
+            <tspan>&lt;&gt;</tspan>&lt;/&gt;
+            <tspan>&lt;&gt;</tspan>&lt;/&gt;
             <tspan>&lt;&gt;</tspan>&lt;/&gt;
             <tspan>&lt;&gt;</tspan>&lt;/&gt;
             <tspan>&lt;&gt;</tspan>&lt;/&gt;
