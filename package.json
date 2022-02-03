@@ -55,7 +55,7 @@
     "cheerio": "1.0.0-rc.10",
     "cli-progress": "^3.10.0",
     "compression": "1.7.4",
-    "cookie": "0.4.1",
+    "cookie": "0.4.2",
     "cookie-parser": "1.4.6",
     "cssesc": "^3.0.0",
     "dayjs": "1.10.7",
