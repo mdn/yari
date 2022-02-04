@@ -114,21 +114,6 @@ function LoadingFallback({ message }: { message?: string }) {
 }
 
 export function App(appProps) {
-  React.useEffect(() => {
-    if (!isServer) {
-      window.addEventListener("message", (event) => {
-        if (event.data.height !== undefined) {
-          let iframe = document.querySelector(
-            `iframe[src="${event.data.url}"]`
-          );
-          if (iframe !== null) {
-            iframe.setAttribute("height", event.data.height);
-          }
-        }
-      });
-    }
-  });
-
   // When preparing a build for use in the NPM package, CRUD_MODE is always true.
   // But if the App is loaded from the code that builds the SPAs, then `isServer`
   // is true. So you have to have `isServer && CRUD_MODE` at the same time.
