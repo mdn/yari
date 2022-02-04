@@ -115,7 +115,7 @@ function LoadingFallback({ message }: { message?: string }) {
 
 export function App(appProps) {
   React.useEffect(() => {
-    if (window) {
+    if (!isServer) {
       window.addEventListener("message", (event) => {
         if (event.data.height !== undefined) {
           let iframe = document.querySelector(
