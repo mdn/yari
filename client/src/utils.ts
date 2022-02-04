@@ -1,6 +1,6 @@
-const HOMEPAGE_RE = /^\/[A-Za-z\-]*\/?(?:_homepage)?$/i;
-const DOCS_RE = /^\/[A-Za-z\-]+\/docs\/.*$/i;
-const PLUS_RE = /^\/[A-Za-z\-]*\/?plus(?:\/?.*)$/i;
+const HOMEPAGE_RE = /^\/[A-Za-z-]*\/?(?:_homepage)?$/i;
+const DOCS_RE = /^\/[A-Za-z-]+\/docs\/.*$/i;
+const PLUS_RE = /^\/[A-Za-z-]*\/?plus(?:\/?.*)$/i;
 
 export function docCategory({ pathname = "" } = {}): string | null {
   const [, , , webOrLearn, category] = pathname.split("/");
