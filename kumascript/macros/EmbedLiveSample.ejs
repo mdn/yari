@@ -15,6 +15,7 @@
 // See also : LiveSampleLink
 
 var sampleId = $0 || $token.location.start.offset;
+sampleId = sampleId.toLowerCase();
 var width = $1;
 var height = $2;
 var screenshotUrl = $3;
