@@ -1,8 +1,18 @@
 import "./index.scss";
 
-function Mandala({ animate = false }: { animate: boolean }) {
+function Mandala({
+  animate = false,
+  extraClasses = null,
+}: {
+  animate?: boolean;
+  extraClasses?: string | null;
+}) {
   return (
-    <div className={`mandala-container ${animate ? "animate" : ""}`}>
+    <div
+      className={`mandala-container ${animate ? "animate" : ""} ${
+        extraClasses ? extraClasses : ""
+      }`}
+    >
       <svg
         width="675"
         height="675"
