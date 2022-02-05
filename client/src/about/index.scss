@@ -58,6 +58,14 @@
       padding-bottom: 2rem;
     }
 
+    h1 {
+      margin-top: 2rem;
+      font-weight: var(--font-body-strong-weight);
+      font-size: 4rem;
+      line-height: 1.2;
+      height: 100%;
+    }
+
     header {
       display: flex;
       gap: 1rem;
@@ -65,15 +73,7 @@
       align-items: center;
       padding: 2rem 0;
 
-      .about-logo {
-        font-family: Zilla Slab;
-        font-weight: var(--font-body-strong-weight);
-        font-size: 4rem;
-        line-height: 1.2;
-        height: 100%;
-      }
-
-      h1 {
+      .headline {
         font-family: var(--font-heading);
         font-style: normal;
         font-weight: normal;

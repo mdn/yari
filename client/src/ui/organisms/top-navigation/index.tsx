@@ -8,8 +8,8 @@ import { TopNavigationMain } from "../top-navigation-main";
 import "./index.scss";
 import { useLocation } from "react-router-dom";
 
-const DARK_NAV_ROUTES = [/\/plus\/?$/i];
-const TRANSPARENT_NAV_ROUTES = ["_homepage"];
+const DARK_NAV_ROUTES = [/\/plus\/?$/i, "_homepage", /^\/?$/];
+const TRANSPARENT_NAV_ROUTES = []; //["_homepage", /\/?$/];
 
 export function TopNavigation() {
   const location = useLocation();

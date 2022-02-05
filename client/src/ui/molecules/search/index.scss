@@ -32,8 +32,12 @@
     }
 
     &::placeholder {
-      color: var(--text-inactive);
       font: var(--type-body-l);
+      text-decoration: underline;
+      text-decoration-thickness: 0.15rem;
+      text-underline-offset: 0.1em;
+      text-decoration-color: var(--text-link);
+      opacity: 1;
     }
   }
 
@@ -43,6 +47,7 @@
   }
 
   .search-results {
+    color: var(--text-primary);
     border: 1px solid var(--border-secondary);
     border-radius: var(--elem-radius);
     box-shadow: var(--shadow-01);
