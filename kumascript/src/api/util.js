@@ -9,7 +9,12 @@ const cheerio = require("cheerio");
 
 const H1_TO_H6_TAGS = new Set(["h1", "h2", "h3", "h4", "h5", "h6"]);
 const HEADING_TAGS = new Set([...H1_TO_H6_TAGS, "hgroup"]);
-const INJECT_SECTION_ID_TAGS = new Set([...HEADING_TAGS, "section", "dt"]);
+const INJECT_SECTION_ID_TAGS = new Set([
+  ...HEADING_TAGS,
+  "section",
+  "div",
+  "dt",
+]);
 const LIVE_SAMPLE_PARTS = ["html", "css", "js"];
 const SECTION_ID_DISALLOWED = /["#$%&+,/:;=?@[\]^`{|}~')(\\]/g;
 
@@ -179,8 +184,13 @@ class HTMLTool {
         id = slugify($element.attr("name").toLowerCase());
       } else if (id) {
         // If there’s already has an ID, use it — and lowercase it as long
-        // as the value isn’t "Quick_links" (which we need to keep as-is).
-        if (id !== "Quick_links") {
+        // as the value isn’t "Quick_links" (which we need to keep as-is),
+        // and as long as it’s not a class=bc-data div (the ID for which we
+        // need to keep as-is).
+        if (
+          id !== "Quick_links" &&
+          $element[0].attribs["class"] !== "bc-data"
+        ) {
           id = id.toLowerCase();
         }
       } else if (H1_TO_H6_TAGS.has($element[0].name) || isDt) {
