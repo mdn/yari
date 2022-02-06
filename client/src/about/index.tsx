@@ -6,15 +6,21 @@ export function About() {
   return (
     <div className="about">
       <div className="about-container">
+        <h1 className="mify">Build it better</h1>
+        <p>
+          MDN Web Docs is an open-source, collaborative project documenting Web
+          platform technologies, including CSS, HTML, JavaScript and Web APIs.
+          We also provide an extensive set of learning resources for beginning
+          developers and students.
+        </p>
+
         <header>
-          <span className="about-logo">*</span>
-          <h1>
+          <span className="headline">
             MDN's mission is simple:
             <b> Provide a blueprint for a better internet</b> and empower a new
             generation of developers and content creators to build it.
-          </h1>
+          </span>
         </header>
-
         <p>
           MDN Docs is a dynamic, ever-evolving learning platform, an
           open-source, collaborative project documenting the software and

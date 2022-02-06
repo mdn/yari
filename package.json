@@ -54,6 +54,7 @@
     "set-value": ">=2.0.1"
   },
   "dependencies": {
+    "@babel/helper-builder-react-jsx": "^7.16.7",
     "@caporal/core": "2.0.2",
     "@fast-csv/parse": "4.3.6",
     "@mdn/browser-compat-data": "4.1.5",
@@ -93,6 +94,7 @@
     "is-svg": "4.2.2",
     "js-yaml": "4.1.0",
     "klaw-sync": "^6.0.0",
+    "lodash.throttle": "^4.1.1",
     "loglevel": "^1.8.0",
     "lru-cache": "^6.0.0",
     "md5-file": "5.0.0",

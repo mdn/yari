@@ -22,6 +22,20 @@
     z-index: var(--z-index-mid);
   }
 
+  &.is-in-modal {
+    display: block;
+    position: static;
+    inset: auto;
+
+    .watch-submenu-item {
+      padding: 1rem 0 0;
+
+      &.padding-top-0 {
+        padding-top: 0;
+      }
+    }
+  }
+
   [type="text"] {
     background: var(--background-primary);
     border: 1px solid var(--border-primary);
@@ -126,6 +140,11 @@
 
   &.is-button-row {
     display: none;
+
+    &.is-always-visible {
+      display: flex;
+      justify-content: flex-end;
+    }
   }
 
   &:last-child {
@@ -225,7 +244,8 @@
 
   & & .watch-submenu-item {
     font: var(--type-body-m);
-    padding: 0.25rem var(--gutter-padding);
+    padding: 0.25rem var(--gutter-padding) 0.25rem
+      calc(var(--gutter-padding) * 2);
   }
 }
 

@@ -191,7 +191,7 @@ export function Document(props /* TODO: define a TS interface for this */) {
               <MathMLPolyfillMaybe />
             </React.Suspense>
           )}
-          <article className="main-page-content" lang={doc.locale}>
+          <article className="main-page-content is-600-plus" lang={doc.locale}>
             <h1>{doc.title}</h1>
             <div className="in-page-toc">
               {doc.toc && !!doc.toc.length && <TOC toc={doc.toc} />}

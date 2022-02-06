@@ -8,12 +8,3 @@
   font-style: oblique 0deg 20deg;
   font-display: swap;
 }
-
-@font-face {
-  font-family: "Montserrat";
-  src: url("../../assets/fonts/Montserrat-VF.woff2")
-      format("woff2 supports variations"),
-    url("../../assets/fonts/Montserrat-VF.woff2") format("woff2-variations");
-  font-weight: 1 999;
-  font-display: swap;
-}

@@ -18,6 +18,7 @@ import { PageNotFound } from "./page-not-found";
 import { Plus } from "./plus";
 import { About } from "./about";
 import { AppSettings } from "./app-settings";
+import { docCategory } from "./utils";
 
 const AllFlaws = React.lazy(() => import("./flaws"));
 const Translations = React.lazy(() => import("./translations"));
@@ -28,14 +29,6 @@ const WritersHomepage = React.lazy(() => import("./writers-homepage"));
 const Sitemap = React.lazy(() => import("./sitemap"));
 
 const isServer = typeof window === "undefined";
-
-function docCategory({ pathname = "" } = {}) {
-  const [, , , webOrLearn, category] = pathname.split("/");
-  if ((webOrLearn === "Learn" || webOrLearn === "Web") && category) {
-    return `category-${category.toLowerCase()}`;
-  }
-  return null;
-}
 
 function Layout({ pageType, children }) {
   return (

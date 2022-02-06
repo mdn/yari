@@ -1,16 +1,15 @@
 @use "../../ui/vars" as *;
 
 .homepage-hero {
+  color: var(--text-primary);
   width: 100vw;
 
-  header {
-    height: 20rem;
+  section {
+    height: 22rem;
     display: flex;
-    align-items: center;
     justify-content: center;
     flex-direction: column;
     max-width: 45rem;
-    text-align: center;
     margin: 0 auto;
     gap: 2rem;
     padding: 0 1rem;
@@ -21,13 +20,11 @@
 
     h1 {
       /* Title */
-      font-family: var(--font-heading);
-      font-weight: 650;
-      font-size: 2rem;
-      line-height: 100%;
+      font-size: 2.2rem;
+      line-height: 120%;
       letter-spacing: -0.5px;
-      padding-bottom: 1rem;
       margin: 0;
+      font-weight: 200;
 
       @media screen and (min-width: $screen-sm) {
         font-size: 2.5rem;
@@ -36,18 +33,18 @@
       @media screen and (min-width: $screen-md) {
         font-size: 3rem;
       }
+    }
 
-      span {
-        background: linear-gradient(to right, #4584fd, #7a70f2);
-        -webkit-background-clip: text;
-        background-clip: text;
-        -webkit-text-fill-color: transparent;
-      }
+    h1::after {
+      content: " ";
+      text-decoration: underline;
+      text-decoration-thickness: 0.15rem;
+      text-underline-offset: 0.1rem;
+      text-decoration-color: var(--text-link);
     }
 
     p {
-      max-width: 30rem;
-      margin: 0 auto;
+      font-weight: 300;
     }
   }
 
@@ -57,12 +54,14 @@
     position: absolute;
     top: 0;
     z-index: -1;
-    background-image: var(--homepage-hero-bg);
-    background-size: 180% 120%;
     height: 23rem;
-    transform-origin: center;
     overflow-y: clip;
-    transform: rotate(-9deg) scale(150%) translateY(-37%);
+    --mandala-primary: var(--border-primary);
+    background-color: rgba(1, 1, 1, 0.9);
+
+    .mandala {
+      transform: translate(8rem, -8rem);
+    }
   }
 
   .header-search {
@@ -106,11 +105,13 @@
     }
   }
 
-  .search-input-field {
-    font: var(--type-body-l);
-    border-radius: 10rem;
-    background: var(--background-primary);
-    padding: 2rem;
+  .header-search {
+    .search-input-field {
+      font: var(--type-body-l);
+      border-radius: 10rem;
+      background-color: rgba(1, 1, 1, 0.5);
+      padding: 2rem;
+    }
   }
 
   .search-button.button {

@@ -121,6 +121,8 @@
     #8524ff -43.99%,
     #4d7fff 159.52%
   );
+
+  --modal-backdrop-color: #{rgba($mdn-theme-dark-background-primary, 0.1)};
 }
 
 @mixin dark-theme {
@@ -241,6 +243,7 @@
       $alpha: -0.92,
       $saturation: 20%
     )};
+  --modal-backdrop-color: #{rgba($mdn-theme-dark-background-primary, 0.7)};
 }
 
 :root,

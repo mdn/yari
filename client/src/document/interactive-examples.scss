@@ -6,7 +6,69 @@
   color: var(--text-primary);
   padding: 0;
   width: 100%;
-  // Note! The height is set as a regular pixel height number
-  // on the <iframe> itself and that's done in the EmbedInteractiveExample.ejs
-  // macro.
+
+  // Since heights are now responsive, these classes are added
+  // in the EmbedInteractiveExample.ejs macro.
+  height: 675px;
+
+  &.is-js-height,
+  &.is-taller-height,
+  &.is-shorter-height {
+    border: 0 none;
+  }
+
+  &.is-js-height {
+    height: 513px;
+  }
+  &.is-shorter-height {
+    height: 433px;
+  }
+  &.is-taller-height {
+    height: 725px;
+  }
+  &.is-tabbed-shorter-height {
+    height: 487px;
+  }
+  &.is-tabbed-standard-height {
+    height: 548px;
+  }
+  &.is-tabbed-taller-height {
+    height: 774px;
+  }
 }
+
+// The layout switches at 600 in the `mdn/bob` app.
+// But that's the iframe width, so media queries
+// are useless here.
+.is-600-plus {
+  .interactive {
+    height: 375px;
+
+    &.is-js-height {
+      height: 444px;
+    }
+    &.is-shorter-height {
+      height: 364px;
+    }
+    &.is-taller-height {
+      height: 654px;
+    }
+    &.is-tabbed-shorter-height {
+      height: 351px;
+    }
+    &.is-tabbed-standard-height {
+      height: 421px;
+    }
+    &.is-tabbed-taller-height {
+      height: 631px;
+    }
+  }
+}
+
+// default: 390
+// js: 490
+// shorter: 410
+// taller: 692
+// tabbed-shorter: 375
+// tabbed-standard: 445
+// tabbed-taller: 655

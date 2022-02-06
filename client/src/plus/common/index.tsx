@@ -3,10 +3,10 @@ import NoteCard from "../../ui/molecules/notecards";
 
 export function NotSignedIn() {
   return (
-    <>
-      <h2>You have not signed in</h2>
+    <div className="container">
+      <h3>You have not signed in</h3>
       <SignInLink />
-    </>
+    </div>
   );
 }
 
@@ -23,7 +23,7 @@ export function DataError({ error }: { error: Error }) {
   return (
     <NoteCard type="negative">
       <h3>Server error</h3>
-      <p>A server error occurred trying to get your bookmarks.</p>
+      <p>A server error occurred trying to get your collections.</p>
       <p>
         <code>{error.toString()}</code>
       </p>

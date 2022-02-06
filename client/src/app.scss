@@ -17,7 +17,7 @@
     "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-sans;
 
   --font-body: Inter, var(--font-fallback);
-  --font-heading: Montserrat, var(--font-fallback);
+  --font-heading: Inter, var(--font-fallback);
   --font-code: Menlo, Consolas, Monaco, Liberation Mono, Lucida Console,
     monospace;
   --font-size: 16px;
@@ -152,6 +152,12 @@ a {
   }
 }
 
+u {
+  text-decoration-thickness: 0.15rem;
+  text-underline-offset: 0.1em;
+  text-decoration-color: var(--text-link);
+}
+
 /* Scrollbar customizations */
 ::-webkit-scrollbar-track {
   -webkit-border-radius: 10px;
@@ -222,4 +228,23 @@ a {
     --code-background-inline: var(--apis-code-inline);
     --code-background-block: var(--apis-code-block);
   }
+}
+
+.mify::before {
+  content: "";
+  mask: url("./assets/m-logo.svg") no-repeat 50% 50%;
+  mask-size: cover;
+  height: 1.2em;
+  width: 1.2em;
+  display: inline-block;
+  background-color: var(--text-link);
+  transform: translate(-0.2em, 0.2em);
+}
+
+.mify::after {
+  content: " ";
+  text-decoration: underline;
+  text-decoration-thickness: 0.1em;
+  text-underline-offset: 0.1em;
+  text-decoration-color: var(--text-link);
 }
