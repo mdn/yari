@@ -58,18 +58,11 @@ function lineWithTriangle(x, y, reverse) {
   ${triangle(x, y, reverse)}`;
 }
 
-function connectingLineWithTriangle() {
-  let str = '';
-
-  str += triangle(xpos, ypos + 14);
-  xpos += 10;
-  str += `<line x1="${xpos}" y1="${ypos+14}" x2="${xpos+8}" y2="${ypos+14}" stroke="#D4DDE4"/>`;
-  xpos += 8;
-  str += `<line x1="${xpos}" y1="${ypos+14}" x2="${xpos}" y2="${ypos+59}" stroke="#D4DDE4"/>`;
-  ypos = 60;
-  str += `<line x1="${xpos}" y1="${ypos}" x2="${xpos-17}" y2="${ypos}" stroke="#D4DDE4"/>`;
-
-  return str;
+function connectingLineWithTriangle(x, y, reverse) {
+  const width = reverse ? -17 : 17;
+  return `
+  <polyline points="${x},${y} ${x+width},${y} ${x+width},${y+45} ${x},${y+45}" stroke="#D4DDE4" fill="none"/>
+  ${triangle(x, y, reverse)}`;
 }
 
 function triangle(x, y, reverse) {
@@ -83,8 +76,7 @@ function drawDiagram(inheritanceChain) {
     const fill = (inheritanceChain[i] == mainInterfaceName) ? '#F4F7F8': '#fff';
     // we are going to the second row with a connecting line
     if (i === 4) {
-      str += connectingLineWithTriangle();
-      xpos -= 18;
+      str += connectingLineWithTriangle(xpos, ypos + 14);
       ypos = 47;
     }
     // first row
