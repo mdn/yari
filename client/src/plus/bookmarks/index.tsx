@@ -37,6 +37,22 @@ interface Breadcrumb {
   title: string;
 }
 
+function transformTitle(title) {
+  const transformStrings = {
+    "Web technology for developers": "References",
+    "Learn web development": "Guides",
+    "HTML: HyperText Markup Language": "HTML",
+    "CSS: Cascading Style Sheets": "CSS",
+    "Graphics on the Web": "Graphi;cs",
+    "HTML elements reference": "Elements",
+    "JavaScript reference": "JavaScript",
+    "Structuring the web with HTML": "HTML",
+    "Learn to style HTML using CSS": "CSS",
+    "Web forms — Working with user data": "Forms",
+  };
+  return transformStrings[title] || title;
+}
+
 const filters = [
   // {
   //   label: "Content Updates",
@@ -462,7 +478,7 @@ function Breadcrumbs({ parents }: { parents: Breadcrumb[] }) {
             key={parent.uri}
             className={i + 1 === parents.length ? "last" : undefined}
           >
-            <a href={parent.uri}>{parent.title}</a>
+            <a href={parent.uri}>{transformTitle(parent.title)}</a>
           </li>
         );
       })}
