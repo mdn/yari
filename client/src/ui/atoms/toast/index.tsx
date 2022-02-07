@@ -7,7 +7,7 @@ export interface ToastData {
   mainText: string;
   isImportant?: boolean;
   closeHandler?: React.MouseEventHandler;
-  secondaryText?: string;
+  shortText?: string;
   buttonText?: string;
   buttonHandler?: React.MouseEventHandler;
 }
@@ -15,7 +15,7 @@ export interface ToastData {
 export default function Toast({
   isImportant,
   mainText,
-  secondaryText,
+  shortText,
   buttonText,
   buttonHandler,
   closeHandler = () => {},
@@ -23,10 +23,14 @@ export default function Toast({
   return (
     <div className={`toast ${isImportant ? `is-important` : null}`}>
       <div className="toast-content">
-        <span className="toast-primary-text">{mainText}</span>
-        {secondaryText ? (
-          <span className="toast-secondary-text"> {secondaryText}</span>
-        ) : null}
+        {shortText ? (
+          <>
+            <span className="toast-verbose-text">{mainText}</span>
+            <span className="toast-short-text"> {shortText}</span>
+          </>
+        ) : (
+          <span>{mainText}</span>
+        )}
       </div>
       {buttonText && buttonHandler ? (
         <Button type="action" onClickHandler={buttonHandler}>

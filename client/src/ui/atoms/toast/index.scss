@@ -1,3 +1,5 @@
+@use "../../vars.scss" as *;
+
 .toast {
   --toast-bg: var(--text-primary);
   --toast-color: var(--background-primary);
@@ -34,5 +36,19 @@
   &.is-important {
     --toast-bg: var(--accent-secondary);
     --toast-color: #fff;
+  }
+
+  &-verbose-text {
+    display: none;
+  }
+
+  @media screen and (min-width: $screen-md) {
+    &-verbose-text {
+      display: inline;
+    }
+
+    &-short-text {
+      display: none;
+    }
   }
 }

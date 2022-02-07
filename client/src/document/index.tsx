@@ -199,8 +199,9 @@ export function Document(props /* TODO: define a TS interface for this */) {
               onClick={() =>
                 setToastData({
                   isImportant: true,
-                  mainText: "CSS: Cascading Stylesheets",
-                  secondaryText: "removed from collection",
+                  mainText:
+                    "CSS: Cascading Stylesheets removed from collection",
+
                   buttonText: "Undo",
                   buttonHandler: () => alert("button clicked"),
                   closeHandler: () => alert("toast is closing"),
