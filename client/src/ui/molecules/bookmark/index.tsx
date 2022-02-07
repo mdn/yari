@@ -9,7 +9,7 @@ export interface BookmarkedData {
 }
 
 export function BookmarkContainer({ doc }: { doc: Doc }) {
-  const apiURL = `/api/v1/plus/bookmarks/?${new URLSearchParams({
+  const apiURL = `/api/v1/plus/collection/?${new URLSearchParams({
     url: doc.mdn_url,
   }).toString()}`;
   const { data, isValidating, mutate } = useSWR<BookmarkedData>(

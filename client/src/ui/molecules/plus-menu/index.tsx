@@ -21,7 +21,7 @@ export const PlusMenu = ({ visibleSubMenuId, toggleMenu }) => {
         hasIcon: true,
         iconClasses: "submenu-icon bookmarks-icon",
         label: "My Collection",
-        url: `/${locale}/plus/bookmarks`,
+        url: `/${locale}/plus/collection`,
       },
       {
         description: "Stay up to date with MDN content",

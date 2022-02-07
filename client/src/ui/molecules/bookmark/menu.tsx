@@ -10,7 +10,7 @@ import { DropdownMenu, DropdownMenuWrapper } from "../dropdown";
 const menuId = "watch-submenu";
 
 export function getBookmarkApiUrl(params?: URLSearchParams) {
-  let url = "/api/v1/plus/bookmarks/";
+  let url = "/api/v1/plus/collection/";
   if (params) {
     const querystring = params.toString();
     if (querystring) {

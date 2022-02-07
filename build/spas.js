@@ -38,7 +38,11 @@ async function buildSPAs(options) {
       const SPAs = [
         { prefix: "search", pageTitle: "Search" },
         { prefix: "plus", pageTitle: "Plus", noIndexing: true },
-        { prefix: "plus/bookmarks", pageTitle: "Bookmarks", noIndexing: true },
+        {
+          prefix: "plus/collection",
+          pageTitle: "Collection",
+          noIndexing: true,
+        },
       ];
       for (const { prefix, pageTitle, noIndexing } of SPAs) {
         const url = `/${locale}/${prefix}`;
