@@ -16,7 +16,7 @@ requests = {extras = ["security"], version = "^2.27.1"}
 elasticsearch-dsl = "^7.4.0"
 selectolax = "^0.3.6"
 PyGithub = "^1.55"
-unidiff = "^0.7.2"
+unidiff = "^0.7.3"
 
 [tool.poetry.dev-dependencies]
 black = "^21.12b0"
