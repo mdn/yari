@@ -35,7 +35,7 @@ function getInheritance(inh) {
 getInheritance(inh);
 
 function rectWithText(x, y, fill, interfaceName, reverse) {
-  const rectWidth = interfaceName.length * 8 < 75 ? 75 : interfaceName.length * 8;
+  const rectWidth = calculateRectWidth(interfaceName);
   if (reverse) {
     xpos -= rectWidth;
     x = xpos;
@@ -68,6 +68,10 @@ function connectingLineWithTriangle(x, y, reverse) {
 function triangle(x, y, reverse) {
   const width = reverse ? -10 : 10;
   return `<polyline points="${x},${y} ${x+width},${y-5} ${x+width},${y+5} ${x},${y}" stroke="#D4DDE4" fill="#fff"/>`;
+}
+
+function calculateRectWidth(text) {
+  return text.length * 8 < 75 ? 75 : text.length * 8;
 }
 
 function drawDiagram(inheritanceChain) {
