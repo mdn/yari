@@ -83,13 +83,19 @@ export function BookmarkMenu({
         formData.append(submitter.name, submitter.value);
       }
     }
-    await fetch(form.action, {
+    const response = await fetch(form.action, {
       method: form.method,
       body: new URLSearchParams([...(formData as any)]),
       headers: {
         "X-CSRFToken": data.csrfmiddlewaretoken,
       },
     });
+    if (!response.ok) {
+      console.log(response);
+      // if (response.error === "max_subscriptions"){
+      //   ToDo: Handle Error here
+      // }
+    }
     mutate();
     setShow(false);
   };
