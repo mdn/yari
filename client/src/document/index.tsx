@@ -198,9 +198,10 @@ export function Document(props /* TODO: define a TS interface for this */) {
             <button
               onClick={() =>
                 setToastData({
-                  mainText: "TEST TOAST",
-                  secondaryText: "SECONDARY TEXT",
-                  buttonText: "BUTTON TEXT",
+                  isImportant: true,
+                  mainText: "CSS: Cascading Stylesheets",
+                  secondaryText: "removed from collection",
+                  buttonText: "Undo",
                   buttonHandler: () => alert("button clicked"),
                   closeHandler: () => alert("toast is closing"),
                 })

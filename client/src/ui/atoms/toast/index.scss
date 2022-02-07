@@ -1,11 +1,38 @@
 .toast {
+  --toast-bg: var(--text-primary);
+  --toast-color: var(--background-primary);
+
   position: fixed;
   bottom: 1rem;
-  background: red;
+  padding: 1rem 1rem 1rem 2rem;
+  border-radius: var(--elem-radius);
   left: 50%;
   transform: translate(-50%, 0);
+  width: 90vw;
+  max-width: 680px;
+  background: var(--toast-bg);
+  box-shadow: var(--shadow-02);
+  display: flex;
+  gap: 0.5rem;
 
-  * {
-    padding: 0.5rem;
+  &-content {
+    margin-right: auto;
+    font: var(--type-body-l);
+    color: var(--toast-color);
+  }
+
+  .button.action {
+    white-space: nowrap;
+    --button-color: var(--toast-color);
+
+    &:hover {
+      --button-bg: rgba(58, 57, 68, 0.3);
+      --button-border-color: transparent;
+    }
+  }
+
+  &.is-important {
+    --toast-bg: var(--accent-secondary);
+    --toast-color: #fff;
   }
 }

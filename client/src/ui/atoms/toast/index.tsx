@@ -1,16 +1,19 @@
 import React, { MouseEventHandler } from "react";
+import { Button } from "../../atoms/button";
 
 import "./index.scss";
 
 export interface ToastData {
   mainText: string;
-  closeHandler?: MouseEventHandler<HTMLButtonElement>;
+  isImportant?: boolean;
+  closeHandler?: React.MouseEventHandler;
   secondaryText?: string;
   buttonText?: string;
-  buttonHandler?: MouseEventHandler<HTMLButtonElement>;
+  buttonHandler?: React.MouseEventHandler;
 }
 
 export default function Toast({
+  isImportant,
   mainText,
   secondaryText,
   buttonText,
@@ -18,17 +21,19 @@ export default function Toast({
   closeHandler = () => {},
 }: ToastData) {
   return (
-    <div className="toast">
-      {mainText}
-      {secondaryText}
+    <div className={`toast ${isImportant ? `is-important` : null}`}>
+      <div className="toast-content">
+        <span className="toast-primary-text">{mainText}</span>
+        {secondaryText ? (
+          <span className="toast-secondary-text"> {secondaryText}</span>
+        ) : null}
+      </div>
       {buttonText && buttonHandler ? (
-        <button type="button" onClick={buttonHandler}>
+        <Button type="action" onClickHandler={buttonHandler}>
           {buttonText}
-        </button>
+        </Button>
       ) : null}
-      <button type="button" onClick={closeHandler}>
-        X
-      </button>
+      <Button type="action" icon="cancel" onClickHandler={closeHandler} />
     </div>
   );
 }
