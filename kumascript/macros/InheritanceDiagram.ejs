@@ -52,17 +52,10 @@ function rectWithText(x, y, fill, interfaceName, reverse) {
 }
 
 function lineWithTriangle(x, y, reverse) {
-  let str = '';
-  let linePoints = `x1="${x+10}" y1="${y+14}" x2="${x+30}" y2="${y+14}"`;
-
-  if (reverse) {
-    linePoints = `x1="${x-10}" y1="${y+14}" x2="${x-30}" y2="${y+14}"`;
-  }
-
-  str += triangle(x, y + 14, reverse);
-  str += `<line ${linePoints} stroke="#D4DDE4"/>`;
-
-  return str;
+  const length = reverse ? -30 : 30;
+  return `
+  <line x1="${x}" y1="${y}" x2="${x+length}" y2="${y}" stroke="#D4DDE4""/>
+  ${triangle(x, y, reverse)}`;
 }
 
 function connectingLineWithTriangle() {
@@ -98,7 +91,7 @@ function drawDiagram(inheritanceChain) {
     if (i < 4) {
       str += rectWithText(xpos, ypos, fill, inheritanceChain[i]);
       if (i != inheritanceChain.length - 1 && i != 3) {
-        str += lineWithTriangle(xpos, ypos);
+        str += lineWithTriangle(xpos, ypos + 14);
         xpos += 30;
       }
     // second row
@@ -106,7 +99,7 @@ function drawDiagram(inheritanceChain) {
       height = 80; // need more space
       str += rectWithText(xpos, ypos, fill, inheritanceChain[i], true);
       if (i != inheritanceChain.length - 1) {
-        str += lineWithTriangle(xpos, ypos, true);
+        str += lineWithTriangle(xpos, ypos + 14, true);
         xpos -= 30;
       }
       if (xpos < 0) {
