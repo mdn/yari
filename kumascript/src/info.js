@@ -2,7 +2,7 @@ import cheerio from "cheerio";
 
 import * as Parser from "./parser.js";
 import { VALID_LOCALES, Document, Redirect } from "../../content/index.js";
-import { m2hSync } from "../../markdown/index.js";
+import { m2hSync } from "@mdn/markdown-converter/src/index.js";
 
 const DUMMY_BASE_URL = "https://example.com";
 

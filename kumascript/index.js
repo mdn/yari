@@ -1,7 +1,7 @@
 import LRU from "lru-cache";
 
 import { Document } from "../content/index.js";
-import * as m2h from "../markdown/index.js";
+import { m2h } from "@mdn/markdown-converter/src/index.js";
 
 import {
   INTERACTIVE_EXAMPLES_BASE_URL,
@@ -66,7 +66,7 @@ const renderFromURL = async (
 
   const { rawBody, fileInfo, isMarkdown } = document;
   const rawHTML = isMarkdown
-    ? await m2h.m2h(rawBody, { locale: metadata.locale })
+    ? await m2h(rawBody, { locale: metadata.locale })
     : rawBody;
   const [renderedHtml, errors] = await renderMacros(
     rawHTML,
