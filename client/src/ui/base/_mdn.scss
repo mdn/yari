@@ -1,0 +1,18 @@
+@mixin mify {
+  content: "";
+  mask: url("../../assets/m-logo.svg") no-repeat 50% 50%;
+  mask-size: cover;
+  height: 1.2em;
+  width: 1.2em;
+  display: inline-block;
+  background-color: var(--text-link);
+  transform: translate(-0.2em, 0.2em);
+}
+
+@mixin uify {
+  content: " ";
+  text-decoration: underline;
+  text-decoration-thickness: 0.1em;
+  text-underline-offset: 0.1em;
+  text-decoration-color: var(--text-link);
+}

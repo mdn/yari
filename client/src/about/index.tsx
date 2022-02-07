@@ -9,63 +9,62 @@ export function About() {
         <h1 className="mify">Build it better</h1>
         <p>
           MDN Web Docs is an open-source, collaborative project documenting Web
-          platform technologies, including CSS, HTML, JavaScript and Web APIs.
-          We also provide an extensive set of learning resources for beginning
-          developers and students.
+          platform technologies, including <a href="/docs/Web/CSS">CSS</a>,{" "}
+          <a href="/docs/Web/HTML">HTML</a>,{" "}
+          <a href="/docs/Web/JavaScript">JavaScript</a>, and{" "}
+          <a href="/docs/Web/API/">Web APIs</a>. We also provide an extensive
+          set of learning resources for beginning developers and students.
         </p>
 
         <header>
           <span className="headline">
-            MDN's mission is simple:
-            <b> Provide a blueprint for a better internet</b> and empower a new
-            generation of developers and content creators to build it.
+            <b>
+              MDN's mission is to provide a blueprint for a better internet and
+              empower a new generation of developers and content creators to
+              build it.
+            </b>
           </span>
         </header>
         <p>
-          MDN Docs is a dynamic, ever-evolving learning platform, an
-          open-source, collaborative project documenting the software and
-          languages that power the Web and essential applications, including
-          CSS, HTML, JavaScript and Web APIs. We also provide an extensive set
-          of learning resources for beginning developers and students.
-        </p>
-        <p>
           We're always striving to connect developers more seamlessly with the
-          tools and information they need to easily build projects on the open
-          Web. If it's an open technology exposed to the Web, we want to
-          document it. Since our beginnings in 2005, we've amassed around 45,000
-          pages of free, open-source content.
+          tools and information they need to easily build projects on the{" "}
+          <a href="/">open Web</a>. Since our beginnings in 2005, Mozilla and
+          the community have amassed around 45,000 pages of free, open-source
+          content.
         </p>
         <Testimonial />
-        <h2>
-          Independent and unbiased - <br />
-          across browsers and technologies
+        <h2 className="_ify">
+          Independent and unbiased - across browsers and technologies
         </h2>
         <p>
           This guiding principle has made MDN Docs the go-to repository of
-          independent, unbiased information for developers, regardless of brand,
-          browser or platform. We are an open community of devs building
-          resources for a better Web, with over 17 million monthly MDN users
-          from all over the world.
+          independent information for developers, regardless of brand, browser
+          or platform. We are an open community of devs, writers, and other
+          technologists building resources for a better Web, with over 17
+          million monthly MDN users from all over the world. Anyone can
+          contribute, and each of the 56,000 individuals who have done so over
+          the past decades has strengthened and improved the resource. We also
+          receive content contributions from our partners, including Microsoft,
+          Google, Samsung, Igalia, W3C and others. Together we continue to drive
+          innovation on the Web and serve the common good.
         </p>
-        <p>
-          Anyone can contribute, and each of the 56,000 individuals who have
-          done so over the past 16 years has strengthened and improved the
-          resource. We also receive content contributions from our partners,
-          including Microsoft, Google, Samsung, Igalia, W3C and others. Together
-          we continue to drive innovation on the Web and serve the common good.
-        </p>
-        <Testimonial />
-        <h2>Accurate and vetted for quality</h2>
+        <h2 className="_ify">Accurate and vetted for quality</h2>
         <p>
           Through our GitHub documentation repository, contributors can make
           changes, submit pull requests, have their contributions reviewed and
-          then merged with existing content. Through this workflow, we welcome
-          the vast knowledge and experience of our developer community while
-          maintaining a high level of quality, accurate content.
+          then merged with existing content. Through{" "}
+          <a
+            href="https://mdn-contributor-docs.mozilla.org/"
+            target="_blank"
+            rel="nofollow"
+          >
+            this workflow
+          </a>
+          , we welcome the vast knowledge and experience of our developer
+          community while maintaining a high level of quality, accurate content.
         </p>
       </div>
       <GetInvolved />
-      <div className="about-bg" />
     </div>
   );
 }

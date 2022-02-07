@@ -1,5 +1,6 @@
 @use "../ui/vars" as *;
 @use "../ui/base/themes" as *;
+@use "../ui/base/mdn";
 @use "../ui/molecules/grids/grids.scss" as *;
 @use "../ui/base/typography" as *;
 
@@ -292,12 +293,20 @@ h1 {
   letter-spacing: -0.5px;
   margin-bottom: 3rem;
   word-break: break-word;
+
+  &::after {
+    @include mdn.uify;
+  }
 }
 
 h2 {
   font: var(--type-heading-h2);
   letter-spacing: 0.5px;
   margin: 4rem 0 1rem;
+
+  &::after {
+    @include mdn.uify;
+  }
 }
 
 h3 {
