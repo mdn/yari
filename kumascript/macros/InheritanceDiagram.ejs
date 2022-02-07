@@ -53,16 +53,13 @@ function rectWithText(x, y, fill, interfaceName, reverse) {
 
 function lineWithTriangle(x, y, reverse) {
   let str = '';
-  let polylinePoints = `${x},${y+14} ${x+10},${y+9} ${x+10},${y+19} ${x},${y+14}`;
   let linePoints = `x1="${x+10}" y1="${y+14}" x2="${x+30}" y2="${y+14}"`;
 
   if (reverse) {
-    polylinePoints = `${x},${y+14} ${x-10},${y+9} ${x-10},${y+19} ${x},${y+14}`;
     linePoints = `x1="${x-10}" y1="${y+14}" x2="${x-30}" y2="${y+14}"`;
   }
 
-  str += `<polyline points="${polylinePoints}" stroke="#D4DDE4" fill="none"/>`;
-  x -= 10;
+  str += triangle(x, y + 14, reverse);
   str += `<line ${linePoints} stroke="#D4DDE4"/>`;
 
   return str;
@@ -71,7 +68,7 @@ function lineWithTriangle(x, y, reverse) {
 function connectingLineWithTriangle() {
   let str = '';
 
-  str += `<polyline points="${xpos},${ypos+14} ${xpos+10},${ypos+9} ${xpos+10},${ypos+19} ${xpos},${ypos+14}" stroke="#D4DDE4" fill="none"/>`;
+  str += triangle(xpos, ypos + 14);
   xpos += 10;
   str += `<line x1="${xpos}" y1="${ypos+14}" x2="${xpos+8}" y2="${ypos+14}" stroke="#D4DDE4"/>`;
   xpos += 8;
@@ -80,6 +77,11 @@ function connectingLineWithTriangle() {
   str += `<line x1="${xpos}" y1="${ypos}" x2="${xpos-17}" y2="${ypos}" stroke="#D4DDE4"/>`;
 
   return str;
+}
+
+function triangle(x, y, reverse) {
+  const width = reverse ? -10 : 10;
+  return `<polyline points="${x},${y} ${x+width},${y-5} ${x+width},${y+5} ${x},${y}" stroke="#D4DDE4" fill="#fff"/>`;
 }
 
 function drawDiagram(inheritanceChain) {
