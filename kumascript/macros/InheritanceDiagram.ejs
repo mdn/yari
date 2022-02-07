@@ -36,12 +36,7 @@ getInheritance(inh);
 
 function rectWithText(x, y, fill, interfaceName, reverse) {
   const rectWidth = calculateRectWidth(interfaceName);
-  if (reverse) {
-    xpos -= rectWidth;
-    x = xpos;
-  } else {
-    xpos += rectWidth;
-  }
+  if (reverse) x -= rectWidth;
   return `
   <a style="text-decoration: none;" xlink:href="${href+interfaceName}">
     <rect x="${x}" y="${y}" width="${rectWidth}" height="25" fill="${fill}" stroke="#D4DDE4" stroke-width="2px" />
@@ -78,6 +73,7 @@ function drawDiagram(inheritanceChain) {
   let str = '';
   for (let i = 0; i < inheritanceChain.length; i++) {
     const fill = (inheritanceChain[i] == mainInterfaceName) ? '#F4F7F8': '#fff';
+    const rectWidth = calculateRectWidth(inheritanceChain[i]);
     // we are going to the second row with a connecting line
     if (i === 4) {
       str += connectingLineWithTriangle(xpos, ypos + 14);
@@ -86,6 +82,7 @@ function drawDiagram(inheritanceChain) {
     // first row
     if (i < 4) {
       str += rectWithText(xpos, ypos, fill, inheritanceChain[i]);
+      xpos += rectWidth;
       if (i != inheritanceChain.length - 1 && i != 3) {
         str += lineWithTriangle(xpos, ypos + 14);
         xpos += 30;
@@ -94,6 +91,7 @@ function drawDiagram(inheritanceChain) {
     } else {
       height = 80; // need more space
       str += rectWithText(xpos, ypos, fill, inheritanceChain[i], true);
+      xpos -= rectWidth;
       if (i != inheritanceChain.length - 1) {
         str += lineWithTriangle(xpos, ypos + 14, true);
         xpos -= 30;
