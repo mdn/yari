@@ -56,7 +56,7 @@ export function About() {
           <a
             href="https://mdn-contributor-docs.mozilla.org/"
             target="_blank"
-            rel="nofollow"
+            rel="nofollow noreferrer"
           >
             this workflow
           </a>
