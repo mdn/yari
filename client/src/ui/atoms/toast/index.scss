@@ -1,0 +1,11 @@
+.toast {
+  position: fixed;
+  bottom: 1rem;
+  background: red;
+  left: 50%;
+  transform: translate(-50%, 0);
+
+  * {
+    padding: 0.5rem;
+  }
+}
