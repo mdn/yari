@@ -1,5 +1,4 @@
 @use "../../ui/vars" as *;
-@use "../../ui/vars" as *;
 
 .page-heading {
   font: var(--type-heading-h3);
@@ -9,12 +8,6 @@
 .bookmarks {
   padding: 0 0 3rem 0;
   position: relative;
-}
-
-.icon-card-list {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
 }
 
 .doomed {
