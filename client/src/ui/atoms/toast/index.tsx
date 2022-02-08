@@ -1,4 +1,4 @@
-import React, { MouseEventHandler } from "react";
+import React from "react";
 import { Button } from "../../atoms/button";
 
 import "./index.scss";
