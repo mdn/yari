@@ -20,7 +20,7 @@ export function WatchMenuItem({
     <button
       role="menuitemradio"
       aria-checked={checked}
-      className="watch-submenu-button"
+      className={`watch-submenu-button is-${value}`}
       value={value}
       onClick={onClickHandler}
     >

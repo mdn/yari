@@ -144,7 +144,7 @@ export function NotificationsWatchMenuCustom({
       />
 
       <fieldset className="watch-submenu-group">
-        <div className="watch-submenu-item">
+        <div className="watch-submenu-item has-dropdown">
           <Checkbox
             id="customize_browser_compat"
             name="CustomizeBrowserCompat"
