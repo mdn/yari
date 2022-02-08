@@ -181,10 +181,16 @@
     &.is-button-row {
       display: flex;
       justify-content: flex-end;
+      padding-top: 1rem;
 
       .button {
         width: auto;
       }
+    }
+
+    &.pad-y {
+      padding-top: 1rem;
+      padding-bottom: 1rem;
     }
 
     &:last-child {

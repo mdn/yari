@@ -31,6 +31,10 @@
       text-decoration: none;
     }
 
+    @at-root .main-menu &:hover {
+      background-color: var(--background-secondary);
+    }
+
     &:focus {
       border: 1px solid var(--button-secondary-border-focus);
       box-shadow: var(--button-focus-effect);
@@ -40,11 +44,6 @@
   .active-menu-item {
     background-color: var(--background-primary);
     border-color: var(--border-secondary);
-  }
-
-  // Tjhese
-  &.sort-menu,
-  &.is-dropdown {
   }
 
   @media screen and (min-width: $screen-md) {
@@ -58,6 +57,10 @@
     top: calc(100% + 4px);
     width: max-content;
     z-index: var(--z-index-mid);
+
+    @at-root .main-menu & {
+      background-color: var(--background-primary);
+    }
 
     .submenu-item {
       border-bottom: 0;

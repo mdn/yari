@@ -186,7 +186,7 @@ export function BookmarkMenu({
                 />
               </div>
 
-              <div className="watch-submenu-item">
+              <div className="watch-submenu-item pad-y">
                 <label htmlFor="bookmark-name">Name:</label>
                 <input
                   id="bookmark-name"
