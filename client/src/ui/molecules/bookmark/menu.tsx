@@ -158,12 +158,12 @@ export function BookmarkMenu({
               >
                 <span className="watch-submenu-header-wrap">
                   <Icon name="chevron" />
-                  {bookmarked ? "Edit Bookmark" : "Add Bookmark"}
+                  {bookmarked ? "Edit Collection" : "Add Collection"}
                 </span>
               </button>
 
               <h2 className="watch-submenu-header desktop-only">
-                {bookmarked ? "Edit Bookmark" : "Add Bookmark"}
+                {bookmarked ? "Edit Collection" : "Add Collection"}
               </h2>
 
               <div className="watch-submenu-mobile-buttons">
@@ -222,7 +222,7 @@ export function BookmarkMenu({
                     value="true"
                     isDisabled={isValidating}
                   >
-                    Remove Bookmark
+                    Remove Collection
                   </Button>
                 ) : (
                   <Button onClickHandler={cancelHandler} type="secondary">
