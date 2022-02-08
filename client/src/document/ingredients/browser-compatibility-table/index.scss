@@ -241,6 +241,8 @@
 
 .bc-table-row-header {
   width: 100%;
+  display: inline-flex;
+  align-items: baseline;
 
   code {
     overflow: hidden;

@@ -259,6 +259,11 @@ table {
     }
   }
 
+  caption {
+    font: var(--type-emphasis-l);
+    margin: 1rem 0 0.5rem;
+  }
+
   &.properties {
     border: none;
 
