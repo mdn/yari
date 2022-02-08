@@ -42,13 +42,6 @@
     }
   }
 
-  h1,
-  h2 {
-    &::after {
-      @include mdn.uify;
-    }
-  }
-
   a:not(.button) {
     color: var(--text-link);
     width: fit-content;
@@ -266,6 +259,11 @@ table {
     }
   }
 
+  caption {
+    font: var(--type-emphasis-l);
+    margin: 1rem 0 0.5rem;
+  }
+
   &.properties {
     border: none;
 
@@ -319,12 +317,20 @@ h1 {
   letter-spacing: -0.5px;
   margin-bottom: 3rem;
   word-break: break-word;
+
+  &::after {
+    @include mdn.uify;
+  }
 }
 
 h2 {
   font: var(--type-heading-h2);
   letter-spacing: 0.5px;
   margin: 4rem 0 1rem;
+
+  &::after {
+    @include mdn.uify;
+  }
 }
 
 h3 {
