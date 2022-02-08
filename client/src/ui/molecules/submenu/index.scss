@@ -41,11 +41,6 @@
     }
   }
 
-  .active-menu-item {
-    background-color: var(--background-primary);
-    border-color: var(--border-secondary);
-  }
-
   @media screen and (min-width: $screen-md) {
     background-color: var(--background-secondary);
     border-radius: var(--elem-radius);
@@ -132,4 +127,9 @@
 
 .submenu-item-subtext {
   font: var(--type-emphasis-m);
+}
+
+.active-menu-item {
+  background-color: var(--background-primary);
+  border-color: var(--border-secondary);
 }
