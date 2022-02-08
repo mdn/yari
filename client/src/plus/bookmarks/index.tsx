@@ -34,6 +34,8 @@ import Container from "../../ui/atoms/container";
 import { DropdownMenu, DropdownMenuWrapper } from "../../ui/molecules/dropdown";
 import { EditBookmark } from "../../ui/molecules/bookmark/edit-bookmark";
 import { docCategory } from "../../utils";
+import { useUIStatus } from "../../ui-context";
+import { post } from "../notifications/utils";
 
 dayjs.extend(relativeTime);
 
@@ -113,6 +115,7 @@ export function BookmarksLayout() {
   const userData = useUserData();
   const [searchParams, setSearchParams] = useSearchParams();
   const { getSearchFiltersParams } = useContext(searchFiltersContext);
+  const { setToastData } = useUIStatus();
 
   const pageTitle = "My Collection";
   React.useEffect(() => {
@@ -169,9 +172,11 @@ export function BookmarksLayout() {
     }
   }, [data, setSearchParams, searchParams]);
 
-  async function deleteBookmarked(url: string, undelete?: boolean) {
+  async function deleteBookmarked(bookmark: BookmarkData, undelete?: boolean) {
     if (!data) return false;
-    const apiPostURL = getBookmarkApiUrl(new URLSearchParams([["url", url]]));
+    const apiPostURL = getBookmarkApiUrl(
+      new URLSearchParams([["url", bookmark.url]])
+    );
     const response = await fetch(apiPostURL, {
       method: "POST",
       body: new URLSearchParams(undelete ? undefined : { delete: "true" }),
@@ -185,6 +190,16 @@ export function BookmarksLayout() {
     }
     listMutate();
     mutate(apiPostURL);
+    setToastData({
+      mainText: `${bookmark.title} removed from your collection`,
+      shortText: "Article removed",
+      buttonText: "UNDO",
+      buttonHandler: async () => {
+        await post(apiPostURL, data.csrfmiddlewaretoken);
+        await listMutate();
+        setToastData(null);
+      },
+    });
     return true;
   }
 
@@ -237,28 +252,14 @@ function DisplayData({
   data: BookmarksData;
   isValidating: boolean;
   listMutate: CallableFunction;
-  deleteBookmarked: (url: string, undelete?: boolean) => Promise<boolean>;
+  deleteBookmarked: (
+    bookmark: BookmarkData,
+    undelete?: boolean
+  ) => Promise<boolean>;
 }) {
   const [searchParams] = useSearchParams();
   const { pathname } = useLocation();
   const [toggleError, setToggleError] = React.useState<Error | null>(null);
-  const [unbookmarked, setUnbookmarked] = React.useState<BookmarkData | null>(
-    null
-  );
-
-  React.useEffect(() => {
-    let mounted = true;
-    if (unbookmarked) {
-      setTimeout(() => {
-        if (mounted) {
-          setUnbookmarked(null);
-        }
-      }, 5000);
-    }
-    return () => {
-      mounted = false;
-    };
-  }, [unbookmarked]);
 
   const maxPage = Math.ceil(data.metadata.total / data.metadata.per_page);
   const nextPage =
@@ -297,30 +298,6 @@ function DisplayData({
         </NoteCard>
       )}
 
-      {unbookmarked && (
-        <div className="unbookmark">
-          <p>
-            Bookmark removed{" "}
-            <Button
-              type="action"
-              onClickHandler={async () => {
-                try {
-                  await deleteBookmarked(unbookmarked.url, true);
-                  setUnbookmarked(null);
-                  if (toggleError) {
-                    setToggleError(null);
-                  }
-                } catch (err: any) {
-                  setToggleError(err);
-                }
-              }}
-            >
-              Undo
-            </Button>
-          </p>
-        </div>
-      )}
-
       <section className="icon-card-list">
         {data.items.map((bookmark) => {
           return (
@@ -332,8 +309,7 @@ function DisplayData({
               bookmark={bookmark}
               toggle={async () => {
                 try {
-                  await deleteBookmarked(bookmark.url);
-                  setUnbookmarked(bookmark);
+                  await deleteBookmarked(bookmark);
                   if (toggleError) {
                     setToggleError(null);
                   }
