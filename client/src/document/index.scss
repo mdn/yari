@@ -311,7 +311,8 @@ iframe {
   &[src*="https://www.youtube-nocookie.com"],
   &[src*="https://jsfiddle.net"],
   &[src*="https://test262.report"],
-  &.nobutton {
+  &.nobutton,
+  &.sample-code-frame {
     background: #fff;
     border: 1px solid var(--border-primary);
     border-radius: var(--elem-radius);
