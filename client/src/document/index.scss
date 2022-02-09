@@ -42,13 +42,6 @@
     }
   }
 
-  h1,
-  h2 {
-    &::after {
-      @include mdn.uify;
-    }
-  }
-
   a:not(.button) {
     color: var(--text-link);
     width: fit-content;
@@ -175,6 +168,14 @@
 
       dd {
         margin-bottom: 1rem;
+
+        .notecard {
+          margin-left: 1rem;
+
+          p {
+            padding-left: 0;
+          }
+        }
       }
 
       p {

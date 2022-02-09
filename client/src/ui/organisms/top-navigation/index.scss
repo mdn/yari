@@ -27,8 +27,13 @@
     height: var(--top-nav-height);
   }
 
-  &.show-nav .container {
-    height: auto;
+  &.show-nav {
+    box-shadow: 0 0 10px 0px rgba(0, 0, 0, 0.2);
+    z-index: var(--z-index-top);
+
+    .container {
+      height: auto;
+    }
   }
 }
 

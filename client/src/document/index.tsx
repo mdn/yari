@@ -4,7 +4,11 @@ import useSWR, { mutate } from "swr";
 
 import { CRUD_MODE, MDN_APP_ANDROID, MDN_APP_DESKTOP } from "../constants";
 import { useGA } from "../ga-context";
-import { useDocumentURL, useCopyExamplesToClipboard } from "./hooks";
+import {
+  useDocumentURL,
+  useCopyExamplesToClipboard,
+  usePersistFrequentlyViewed,
+} from "./hooks";
 import { Doc } from "./types";
 // Ingredients
 import { Prose, ProseWithHeading } from "./ingredients/prose";
@@ -31,6 +35,7 @@ import "./index.scss";
 // code could come with its own styling rather than it having to be part of the
 // main bundle all the time.
 import "./interactive-examples.scss";
+import { useUIStatus } from "../ui-context";
 
 // Lazy sub-components
 const Toolbar = React.lazy(() => import("./toolbar"));
@@ -73,7 +78,7 @@ export function Document(props /* TODO: define a TS interface for this */) {
       refreshInterval: CRUD_MODE ? 500 : 0,
     }
   );
-
+  usePersistFrequentlyViewed(doc);
   useCopyExamplesToClipboard(doc);
 
   React.useEffect(() => {
@@ -138,6 +143,7 @@ export function Document(props /* TODO: define a TS interface for this */) {
       }
     }
   }, []);
+  const { setToastData } = useUIStatus();
 
   if (!doc && !error) {
     return <Loading minHeight={800} message="Loading document..." />;
