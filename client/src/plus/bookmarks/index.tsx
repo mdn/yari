@@ -413,6 +413,17 @@ function Bookmark({
           <DropdownMenu>
             <ul className="dropdown-list" id="bookmark-dropdown">
               <li className="dropdown-item">
+                <EditBookmark
+                  doc={null}
+                  isValidating={isValidating}
+                  data={{
+                    bookmarked: bookmark,
+                    csrfmiddlewaretoken: data.csrfmiddlewaretoken,
+                  }}
+                  mutate={listMutate}
+                />
+              </li>
+              <li className="dropdown-item">
                 <Button
                   type="action"
                   title="Delete"
@@ -427,17 +438,6 @@ function Bookmark({
                 >
                   Delete
                 </Button>
-              </li>
-              <li className="dropdown-item">
-                <EditBookmark
-                  doc={null}
-                  isValidating={isValidating}
-                  data={{
-                    bookmarked: bookmark,
-                    csrfmiddlewaretoken: data.csrfmiddlewaretoken,
-                  }}
-                  mutate={listMutate}
-                />
               </li>
             </ul>
           </DropdownMenu>
