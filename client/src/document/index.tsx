@@ -199,21 +199,6 @@ export function Document(props /* TODO: define a TS interface for this */) {
           )}
           <article className="main-page-content is-600-plus" lang={doc.locale}>
             <h1>{doc.title}</h1>
-            <button
-              onClick={() =>
-                setToastData({
-                  isImportant: true,
-                  mainText:
-                    "CSS: Cascading Stylesheets removed from collection",
-
-                  buttonText: "Undo",
-                  buttonHandler: () => alert("button clicked"),
-                  closeHandler: () => alert("toast is closing"),
-                })
-              }
-            >
-              OPEN TOAST
-            </button>
             <div className="in-page-toc">
               {doc.toc && !!doc.toc.length && <TOC toc={doc.toc} />}
             </div>
