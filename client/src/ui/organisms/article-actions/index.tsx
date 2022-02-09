@@ -24,7 +24,6 @@ export const ArticleActions = ({
   setShowArticleActionsMenu: (show: boolean) => void;
 }) => {
   const userData = useUserData();
-  const isSubscriber = userData && userData.isSubscriber;
   const isAuthenticated = userData && userData.isAuthenticated;
   const { setIsSidebarOpen } = useUIStatus();
   const translations = doc.other_translations || [];
@@ -76,7 +75,7 @@ export const ArticleActions = ({
                 <NotificationsWatchMenu doc={doc} />
               </li>
             )}
-            {isSubscriber && (
+            {isAuthenticated && (
               <li className="article-actions-entry">
                 <BookmarkContainer doc={doc} />
               </li>

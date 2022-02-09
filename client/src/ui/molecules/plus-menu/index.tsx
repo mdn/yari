@@ -40,9 +40,9 @@ export const PlusMenu = ({ visibleSubMenuId, toggleMenu }) => {
     ],
   };
   const isOpen = visibleSubMenuId === plusMenu.id;
-  const isSubscriber = userData && userData.isSubscriber;
+  const isAuthenticated = userData && userData.isAuthenticated;
 
-  return isSubscriber ? (
+  return isAuthenticated ? (
     <li key={plusMenu.id} className="top-level-entry-container">
       <button
         id={`${plusMenu.id}-button`}

@@ -37,8 +37,6 @@ export default function List({
     return <Loading message="Waiting for authentication" />;
   } else if (!userData.isAuthenticated) {
     return <NotSignedIn />;
-  } else if (!userData.isSubscriber) {
-    return <NotSubscriber />;
   }
 
   function getPageUrl(page: number) {

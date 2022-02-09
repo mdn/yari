@@ -118,14 +118,14 @@ function BookmarksLayout() {
     document.title = pageTitle;
   }, []);
 
-  const isSubscriber = userData && userData.isSubscriber;
+  const isAuthenticated = userData && userData.isAuthenticated;
 
   const apiParams = getSearchFiltersParams();
   const page = searchParams.get("page");
   if (page) {
     apiParams.append("page", page);
   }
-  const apiURL = isSubscriber ? getBookmarkApiUrl(apiParams) : null;
+  const apiURL = isAuthenticated ? getBookmarkApiUrl(apiParams) : null;
 
   let [entries, setEntries] = useFrequentlyViewed();
 
@@ -217,8 +217,6 @@ function BookmarksLayout() {
     return <Loading message="Waiting for authentication" />;
   } else if (!userData.isAuthenticated) {
     return <NotSignedIn />;
-  } else if (!userData.isSubscriber) {
-    return <NotSubscriber />;
   }
 
   if (error) {
