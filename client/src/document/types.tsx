@@ -142,3 +142,11 @@ export interface Doc {
   hasMathML?: boolean;
   isMarkdown: boolean;
 }
+
+export type FrequentlyViewedEntry = {
+  url: string;
+  title: string;
+  timestamp: number;
+  visitCount: number;
+  parents?: DocParent[];
+};
