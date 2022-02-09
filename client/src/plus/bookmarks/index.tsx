@@ -36,7 +36,7 @@ import { useLocale } from "../../hooks";
 import { useFrequentlyViewed } from "../../document/hooks";
 import { BookmarkData, BookmarksData, Breadcrumb, TABS } from "./types";
 import { EditBookmark } from "../../ui/molecules/bookmark/edit-bookmark";
-import { DropdownMenuWrapper, DropdownMenu } from "../../ui/molecules/dropdown";
+import { DropdownMenu, DropdownMenuWrapper } from "../../ui/molecules/dropdown";
 import { docCategory } from "../../utils";
 import { useUIStatus } from "../../ui-context";
 import { post } from "../notifications/utils";
@@ -137,12 +137,15 @@ function BookmarksLayout() {
     selectedTerms
   );
 
-  const deleteFrequentlyViewed = async (
-    bookmarkData: BookmarkData,
-    undelete: boolean | undefined
-  ) => {
+  const deleteFrequentlyViewed = async (bookmarkData: BookmarkData) => {
+    const filteredEntries = entries.filter(
+      (entry) => entry.url !== bookmarkData.url
+    );
+    setEntries(filteredEntries);
+
     setToastData({
-      mainText: `Bookmark removed`,
+      mainText: `${bookmarkData.title} removed`,
+      shortText: "Article removed",
       buttonText: "UNDO",
       buttonHandler: async () => {
         const restored: FrequentlyViewedEntry = {
@@ -152,11 +155,11 @@ function BookmarksLayout() {
           parents: bookmarkData.parents,
           visitCount: bookmarkData.visitCount || 1,
         };
-        setEntries([restored, ...entries]);
+        setEntries([restored, ...filteredEntries]);
+        setToastData(null);
       },
     });
 
-    setEntries(entries.filter((entry) => entry.url !== bookmarkData.url));
     return true;
   };
 
@@ -343,9 +346,6 @@ function DisplayData({
   const [searchParams] = useSearchParams();
   const { pathname } = useLocation();
   const [toggleError, setToggleError] = React.useState<Error | null>(null);
-  const [unbookmarked, setUnbookmarked] = React.useState<BookmarkData | null>(
-    null
-  );
 
   const maxPage = Math.ceil(data.metadata.total / data.metadata.per_page);
   const nextPage =
@@ -397,7 +397,6 @@ function DisplayData({
               toggle={async () => {
                 try {
                   await deleteBookmarked(bookmark);
-                  setUnbookmarked(bookmark);
                   if (toggleError) {
                     setToggleError(null);
                   }
