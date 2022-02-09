@@ -22,7 +22,7 @@ import "./index.scss";
 // this data in addition to the watch list data.
 import "../icon-card/index.scss";
 
-import { DataError, NotSignedIn, NotSubscriber } from "../common";
+import { DataError, NotSignedIn } from "../common";
 import NoteCard from "../../ui/molecules/notecards";
 import { getBookmarkApiUrl } from "../../ui/molecules/bookmark/menu";
 import {

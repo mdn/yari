@@ -2,7 +2,7 @@ import useSWR from "swr";
 import { useEffect, useState } from "react";
 import { Loading } from "../../ui/atoms/loading";
 import { useUserData } from "../../user-context";
-import { DataError, NotSignedIn, NotSubscriber } from ".";
+import { DataError, NotSignedIn } from ".";
 import { Button } from "../../ui/atoms/button";
 import { createSearchParams, useSearchParams } from "react-router-dom";
 import { DISABLE_AUTH } from "../../constants";
