@@ -44,6 +44,12 @@
     padding: 0.5rem;
     flex: 1 1 100%;
     min-width: 0;
+
+    &:focus {
+      outline: 0 none;
+      border: 1px solid var(--button-secondary-border-focus);
+      box-shadow: var(--focus-effect);
+    }
   }
 
   &-header,
@@ -239,6 +245,11 @@
 
   &:first-of-type {
     border-top-width: 0;
+  }
+
+  &:focus {
+    outline: 1px solid var(--button-secondary-border-focus);
+    box-shadow: var(--focus-effect);
   }
 
   &-wrap {
