@@ -18,8 +18,8 @@ import { useUserData } from "../../user-context";
 
 import "./index.scss";
 
-// TODO: Consider refactoring the plus/icon-card component to accept
-// this data in addition to the watch list data.
+// Data from this component deviates too much from the watch list,
+// so all we're importing here is the CSS.
 import "../icon-card/index.scss";
 
 import { DataError, NotSignedIn, NotSubscriber } from "../common";
@@ -141,18 +141,22 @@ function BookmarksLayout() {
     bookmarkData: BookmarkData,
     undelete: boolean | undefined
   ) => {
-    if (undelete) {
-      const restored: FrequentlyViewedEntry = {
-        url: bookmarkData.url,
-        title: bookmarkData.title,
-        timestamp: new Date(bookmarkData.created).getTime(),
-        parents: bookmarkData.parents,
-        visitCount: bookmarkData.visitCount || 1,
-      };
-      setEntries([restored, ...entries]);
-    } else {
-      setEntries(entries.filter((entry) => entry.url !== bookmarkData.url));
-    }
+    setToastData({
+      mainText: `Bookmark removed`,
+      buttonText: "UNDO",
+      buttonHandler: async () => {
+        const restored: FrequentlyViewedEntry = {
+          url: bookmarkData.url,
+          title: bookmarkData.title,
+          timestamp: new Date(bookmarkData.created).getTime(),
+          parents: bookmarkData.parents,
+          visitCount: bookmarkData.visitCount || 1,
+        };
+        setEntries([restored, ...entries]);
+      },
+    });
+
+    setEntries(entries.filter((entry) => entry.url !== bookmarkData.url));
     return true;
   };
 
@@ -339,6 +343,9 @@ function DisplayData({
   const [searchParams] = useSearchParams();
   const { pathname } = useLocation();
   const [toggleError, setToggleError] = React.useState<Error | null>(null);
+  const [unbookmarked, setUnbookmarked] = React.useState<BookmarkData | null>(
+    null
+  );
 
   const maxPage = Math.ceil(data.metadata.total / data.metadata.per_page);
   const nextPage =
@@ -375,30 +382,6 @@ function DisplayData({
           </p>
           <a href={window.location.pathname}>Reload this page and try again.</a>
         </NoteCard>
-      )}
-
-      {unbookmarked && (
-        <div className="unbookmark">
-          <p>
-            Bookmark removed{" "}
-            <Button
-              type="action"
-              onClickHandler={async () => {
-                try {
-                  await deleteBookmarked(unbookmarked, true);
-                  setUnbookmarked(null);
-                  if (toggleError) {
-                    setToggleError(null);
-                  }
-                } catch (err: any) {
-                  setToggleError(err);
-                }
-              }}
-            >
-              Undo
-            </Button>
-          </p>
-        </div>
       )}
 
       <section className="icon-card-list">
@@ -519,17 +502,19 @@ function Bookmark({
           />
           <DropdownMenu>
             <ul className="dropdown-list" id="bookmark-dropdown">
-              <li className="dropdown-item">
-                <EditBookmark
-                  doc={null}
-                  isValidating={isValidating}
-                  data={{
-                    bookmarked: bookmark,
-                    csrfmiddlewaretoken: data.csrfmiddlewaretoken,
-                  }}
-                  mutate={listMutate}
-                />
-              </li>
+              {showEditButton && (
+                <li className="dropdown-item">
+                  <EditBookmark
+                    doc={null}
+                    isValidating={isValidating}
+                    data={{
+                      bookmarked: bookmark,
+                      csrfmiddlewaretoken: data.csrfmiddlewaretoken,
+                    }}
+                    mutate={listMutate}
+                  />
+                </li>
+              )}
               <li className="dropdown-item">
                 <Button
                   type="action"
@@ -546,19 +531,6 @@ function Bookmark({
                   Delete
                 </Button>
               </li>
-              {showEditButton && (
-                <li className="dropdown-item">
-                  <EditBookmark
-                    doc={null}
-                    isValidating={isValidating}
-                    data={{
-                      bookmarked: bookmark,
-                      csrfmiddlewaretoken: data.csrfmiddlewaretoken,
-                    }}
-                    mutate={listMutate}
-                  />
-                </li>
-              )}
             </ul>
           </DropdownMenu>
         </DropdownMenuWrapper>
