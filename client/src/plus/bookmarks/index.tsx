@@ -18,8 +18,8 @@ import { useUserData } from "../../user-context";
 
 import "./index.scss";
 
-// TODO: Consider refactoring the plus/icon-card component to accept
-// this data in addition to the watch list data.
+// Data from this component deviates too much from the watch list,
+// so all we're importing here is the CSS.
 import "../icon-card/index.scss";
 
 import { DataError, NotSignedIn } from "../common";
@@ -36,8 +36,10 @@ import { useLocale } from "../../hooks";
 import { useFrequentlyViewed } from "../../document/hooks";
 import { BookmarkData, BookmarksData, Breadcrumb, TABS } from "./types";
 import { EditBookmark } from "../../ui/molecules/bookmark/edit-bookmark";
-import { DropdownMenuWrapper, DropdownMenu } from "../../ui/molecules/dropdown";
+import { DropdownMenu, DropdownMenuWrapper } from "../../ui/molecules/dropdown";
 import { docCategory } from "../../utils";
+import { useUIStatus } from "../../ui-context";
+import { post } from "../notifications/utils";
 import { FrequentlyViewedEntry } from "../../document/types";
 
 dayjs.extend(relativeTime);
@@ -112,6 +114,7 @@ function BookmarksLayout() {
   const [searchParams, setSearchParams] = useSearchParams();
   const { selectedTerms, getSearchFiltersParams } =
     useContext(searchFiltersContext);
+  const { setToastData } = useUIStatus();
 
   const pageTitle = "My Collection";
   React.useEffect(() => {
@@ -134,22 +137,29 @@ function BookmarksLayout() {
     selectedTerms
   );
 
-  const deleteFrequentlyViewed = async (
-    bookmarkData: BookmarkData,
-    undelete: boolean | undefined
-  ) => {
-    if (undelete) {
-      const restored: FrequentlyViewedEntry = {
-        url: bookmarkData.url,
-        title: bookmarkData.title,
-        timestamp: new Date(bookmarkData.created).getTime(),
-        parents: bookmarkData.parents,
-        visitCount: bookmarkData.visitCount || 1,
-      };
-      setEntries([restored, ...entries]);
-    } else {
-      setEntries(entries.filter((entry) => entry.url !== bookmarkData.url));
-    }
+  const deleteFrequentlyViewed = async (bookmarkData: BookmarkData) => {
+    const filteredEntries = entries.filter(
+      (entry) => entry.url !== bookmarkData.url
+    );
+    setEntries(filteredEntries);
+
+    setToastData({
+      mainText: `${bookmarkData.title} removed`,
+      shortText: "Article removed",
+      buttonText: "UNDO",
+      buttonHandler: async () => {
+        const restored: FrequentlyViewedEntry = {
+          url: bookmarkData.url,
+          title: bookmarkData.title,
+          timestamp: new Date(bookmarkData.created).getTime(),
+          parents: bookmarkData.parents,
+          visitCount: bookmarkData.visitCount || 1,
+        };
+        setEntries([restored, ...filteredEntries]);
+        setToastData(null);
+      },
+    });
+
     return true;
   };
 
@@ -206,6 +216,16 @@ function BookmarksLayout() {
     }
     listMutate();
     mutate(apiPostURL);
+    setToastData({
+      mainText: `${bookmark.title} removed from your collection`,
+      shortText: "Article removed",
+      buttonText: "UNDO",
+      buttonHandler: async () => {
+        await post(apiPostURL, data.csrfmiddlewaretoken);
+        await listMutate();
+        setToastData(null);
+      },
+    });
     return true;
   }
 
@@ -324,23 +344,6 @@ function DisplayData({
   const [searchParams] = useSearchParams();
   const { pathname } = useLocation();
   const [toggleError, setToggleError] = React.useState<Error | null>(null);
-  const [unbookmarked, setUnbookmarked] = React.useState<BookmarkData | null>(
-    null
-  );
-
-  React.useEffect(() => {
-    let mounted = true;
-    if (unbookmarked) {
-      setTimeout(() => {
-        if (mounted) {
-          setUnbookmarked(null);
-        }
-      }, 5000);
-    }
-    return () => {
-      mounted = false;
-    };
-  }, [unbookmarked]);
 
   const maxPage = Math.ceil(data.metadata.total / data.metadata.per_page);
   const nextPage =
@@ -379,30 +382,6 @@ function DisplayData({
         </NoteCard>
       )}
 
-      {unbookmarked && (
-        <div className="unbookmark">
-          <p>
-            Bookmark removed{" "}
-            <Button
-              type="action"
-              onClickHandler={async () => {
-                try {
-                  await deleteBookmarked(unbookmarked, true);
-                  setUnbookmarked(null);
-                  if (toggleError) {
-                    setToggleError(null);
-                  }
-                } catch (err: any) {
-                  setToggleError(err);
-                }
-              }}
-            >
-              Undo
-            </Button>
-          </p>
-        </div>
-      )}
-
       <section className="icon-card-list">
         {data.items.map((bookmark) => {
           return (
@@ -416,7 +395,6 @@ function DisplayData({
               toggle={async () => {
                 try {
                   await deleteBookmarked(bookmark);
-                  setUnbookmarked(bookmark);
                   if (toggleError) {
                     setToggleError(null);
                   }
@@ -521,6 +499,19 @@ function Bookmark({
           />
           <DropdownMenu>
             <ul className="dropdown-list" id="bookmark-dropdown">
+              {showEditButton && (
+                <li className="dropdown-item">
+                  <EditBookmark
+                    doc={null}
+                    isValidating={isValidating}
+                    data={{
+                      bookmarked: bookmark,
+                      csrfmiddlewaretoken: data.csrfmiddlewaretoken,
+                    }}
+                    mutate={listMutate}
+                  />
+                </li>
+              )}
               <li className="dropdown-item">
                 <Button
                   type="action"
@@ -537,19 +528,6 @@ function Bookmark({
                   Delete
                 </Button>
               </li>
-              {showEditButton && (
-                <li className="dropdown-item">
-                  <EditBookmark
-                    doc={null}
-                    isValidating={isValidating}
-                    data={{
-                      bookmarked: bookmark,
-                      csrfmiddlewaretoken: data.csrfmiddlewaretoken,
-                    }}
-                    mutate={listMutate}
-                  />
-                </li>
-              )}
             </ul>
           </DropdownMenu>
         </DropdownMenuWrapper>

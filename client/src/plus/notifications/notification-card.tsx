@@ -4,13 +4,16 @@ import { post } from "./utils";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import { DropdownMenu, DropdownMenuWrapper } from "../../ui/molecules/dropdown";
+import { useUIStatus } from "../../ui-context";
 
 dayjs.extend(relativeTime);
 
 export default function NotificationCard({ item, changedCallback, csrfToken }) {
   const toggleStarUrl = `/api/v1/plus/notifications/${item.id}/toggle-starred/`;
   const deleteUrl = `/api/v1/plus/notifications/${item.id}/delete/`;
+  const undoUrl = `/api/v1/plus/notifications/${item.id}/undo-deletion/`;
   const [show, setShow] = React.useState(false);
+  const { setToastData } = useUIStatus();
 
   return (
     <article className={`notification-card ${!item.read ? "unread" : ""}`}>
@@ -62,6 +65,16 @@ export default function NotificationCard({ item, changedCallback, csrfToken }) {
                 type="action"
                 onClickHandler={async () => {
                   await post(deleteUrl, csrfToken);
+                  setToastData({
+                    mainText: `${item.title} removed from your collection`,
+                    shortText: "Article removed",
+                    buttonText: "UNDO",
+                    buttonHandler: async () => {
+                      await post(undoUrl, csrfToken);
+                      changedCallback && changedCallback();
+                      setToastData(null);
+                    },
+                  });
                   changedCallback && changedCallback();
                 }}
               >
