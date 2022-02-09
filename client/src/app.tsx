@@ -19,6 +19,7 @@ import { Plus } from "./plus";
 import { About } from "./about";
 import { AppSettings } from "./app-settings";
 import { docCategory } from "./utils";
+import { Contribute } from "./contribute";
 
 const AllFlaws = React.lazy(() => import("./flaws"));
 const Translations = React.lazy(() => import("./translations"));
@@ -276,6 +277,14 @@ export function App(appProps) {
               element={
                 <StandardLayout>
                   <About />
+                </StandardLayout>
+              }
+            />
+            <Route
+              path="/contribute/*"
+              element={
+                <StandardLayout>
+                  <Contribute />
                 </StandardLayout>
               }
             />

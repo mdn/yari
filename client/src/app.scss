@@ -231,12 +231,10 @@ u {
   }
 }
 
-.mify::before {
-  content: "";
+.mify {
   @include mdn.mify;
 }
 
-._ify::after,
-.mify::after {
+._ify {
   @include mdn.uify;
 }
