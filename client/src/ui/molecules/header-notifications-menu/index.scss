@@ -149,9 +149,14 @@
   }
 
   .notifications-submenu-empty-message {
-    font-weight: 600;
-    padding: 1rem;
+    padding: 0.5rem 1rem;
     text-align: center;
+
+    p {
+      font: var(--type-body-m);
+      color: var(--text-secondary);
+      margin: 0.5rem 0;
+    }
   }
 
   @media screen and (min-width: $screen-md) {

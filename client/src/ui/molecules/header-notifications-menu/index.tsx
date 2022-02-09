@@ -185,9 +185,14 @@ export const HeaderNotificationsMenu = () => {
             </>
           ) : (
             <div className="notifications-submenu-empty-message">
-              <a href={`/${locale}/plus/notifications/`}>
-                No notifications yet. Get started.
-              </a>
+              <p>
+                <em>There are no unread notifications.</em>
+              </p>
+              <p>
+                <strong>
+                  <a href={`/${locale}/plus/notifications/`}>See all</a>
+                </strong>
+              </p>
             </div>
           )}
         </ul>
