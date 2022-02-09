@@ -3,7 +3,7 @@
 .top-navigation-main {
   display: none;
   justify-content: space-between;
-  padding: 0 0 1rem;
+  padding: 0;
   width: 100%;
 
   .show-nav & {
@@ -68,11 +68,17 @@
       color: var(--text-secondary);
     }
 
+    &.menu-toggle {
+      padding: 0.5rem;
+      min-height: 53px;
+    }
+
     @media screen and (max-width: $screen-md) {
       &.button {
         --button-font: var(--type-body-l);
         --button-color: var(--text-secondary);
         --button-padding: 0;
+        --button-radius: 0;
 
         .button-wrap {
           background: none;
