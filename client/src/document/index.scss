@@ -175,6 +175,14 @@
 
       dd {
         margin-bottom: 1rem;
+
+        .notecard {
+          margin-left: 1rem;
+
+          p {
+            padding-left: 0;
+          }
+        }
       }
 
       p {
