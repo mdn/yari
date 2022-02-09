@@ -42,13 +42,6 @@
     }
   }
 
-  h1,
-  h2 {
-    &::after {
-      @include mdn.uify;
-    }
-  }
-
   a:not(.button) {
     color: var(--text-link);
     width: fit-content;
