@@ -17,6 +17,11 @@ import { Loading } from "../../ui/atoms/loading";
 import { useUserData } from "../../user-context";
 
 import "./index.scss";
+
+// TODO: Consider refactoring the plus/icon-card component to accept
+// this data in addition to the watch list data.
+import "../icon-card/index.scss";
+
 import { DataError, NotSignedIn, NotSubscriber } from "../common";
 import NoteCard from "../../ui/molecules/notecards";
 import { getBookmarkApiUrl } from "../../ui/molecules/bookmark/menu";
@@ -35,6 +40,22 @@ dayjs.extend(relativeTime);
 interface Breadcrumb {
   uri: string;
   title: string;
+}
+
+function transformTitle(title) {
+  const transformStrings = {
+    "Web technology for developers": "References",
+    "Learn web development": "Guides",
+    "HTML: HyperText Markup Language": "HTML",
+    "CSS: Cascading Style Sheets": "CSS",
+    "Graphics on the Web": "Graphi;cs",
+    "HTML elements reference": "Elements",
+    "JavaScript reference": "JavaScript",
+    "Structuring the web with HTML": "HTML",
+    "Learn to style HTML using CSS": "CSS",
+    "Web forms — Working with user data": "Forms",
+  };
+  return transformStrings[title] || title;
 }
 
 const filters = [
@@ -300,7 +321,7 @@ function DisplayData({
         </div>
       )}
 
-      <section className="bookmark-list">
+      <section className="icon-card-list">
         {data.items.map((bookmark) => {
           return (
             <Bookmark
@@ -373,7 +394,7 @@ function Bookmark({
   const [show, setShow] = React.useState(false);
   const [doomed, setDoomed] = React.useState(false);
 
-  let className = "bookmark";
+  let className = "icon-card";
   if (doomed) {
     className += " doomed";
   }
@@ -382,13 +403,13 @@ function Bookmark({
 
   return (
     <div key={bookmark.id} className={className}>
-      <div className="bookmark-title-wrap">
-        <div className={`bookmark-icon ${iconClass || ""}`}>{iconLabel}</div>
-        <div className="bookmark-content">
+      <div className="icon-card-title-wrap">
+        <div className={`icon-card-icon ${iconClass || ""}`}>{iconLabel}</div>
+        <div className="icon-card-content">
           {bookmark.parents.length > 0 && (
             <Breadcrumbs parents={bookmark.parents} />
           )}
-          <h2 className="bookmark-title">
+          <h2 className="icon-card-title">
             <a href={bookmark.url}>{bookmark.title}</a>
           </h2>
         </div>
@@ -447,7 +468,7 @@ function Bookmark({
         </DropdownMenuWrapper>
       </div>
       {bookmark.notes && (
-        <p className="bookmark-description">{bookmark.notes}</p>
+        <p className="icon-card-description">{bookmark.notes}</p>
       )}
     </div>
   );
@@ -462,7 +483,7 @@ function Breadcrumbs({ parents }: { parents: Breadcrumb[] }) {
             key={parent.uri}
             className={i + 1 === parents.length ? "last" : undefined}
           >
-            <a href={parent.uri}>{parent.title}</a>
+            <a href={parent.uri}>{transformTitle(parent.title)}</a>
           </li>
         );
       })}

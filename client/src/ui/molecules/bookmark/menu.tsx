@@ -10,7 +10,7 @@ import { DropdownMenu, DropdownMenuWrapper } from "../dropdown";
 const menuId = "watch-submenu";
 
 export function getBookmarkApiUrl(params?: URLSearchParams) {
-  let url = "/api/v1/plus/bookmarks/";
+  let url = "/api/v1/plus/collection/";
   if (params) {
     const querystring = params.toString();
     if (querystring) {
@@ -83,13 +83,19 @@ export function BookmarkMenu({
         formData.append(submitter.name, submitter.value);
       }
     }
-    await fetch(form.action, {
+    const response = await fetch(form.action, {
       method: form.method,
       body: new URLSearchParams([...(formData as any)]),
       headers: {
         "X-CSRFToken": data.csrfmiddlewaretoken,
       },
     });
+    if (!response.ok) {
+      console.log(response);
+      // if (response.error === "max_subscriptions"){
+      //   ToDo: Handle Error here
+      // }
+    }
     mutate();
     setShow(false);
   };
@@ -152,12 +158,12 @@ export function BookmarkMenu({
               >
                 <span className="watch-submenu-header-wrap">
                   <Icon name="chevron" />
-                  {bookmarked ? "Edit Bookmark" : "Add Bookmark"}
+                  {bookmarked ? "Edit Collection" : "Add Collection"}
                 </span>
               </button>
 
               <h2 className="watch-submenu-header desktop-only">
-                {bookmarked ? "Edit Bookmark" : "Add Bookmark"}
+                {bookmarked ? "Edit Collection" : "Add Collection"}
               </h2>
 
               <div className="watch-submenu-mobile-buttons">
@@ -180,7 +186,7 @@ export function BookmarkMenu({
                 />
               </div>
 
-              <div className="watch-submenu-item">
+              <div className="watch-submenu-item pad-y">
                 <label htmlFor="bookmark-name">Name:</label>
                 <input
                   id="bookmark-name"
@@ -216,7 +222,7 @@ export function BookmarkMenu({
                     value="true"
                     isDisabled={isValidating}
                   >
-                    Remove Bookmark
+                    Remove Collection
                   </Button>
                 ) : (
                   <Button onClickHandler={cancelHandler} type="secondary">

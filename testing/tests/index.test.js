@@ -1234,12 +1234,12 @@ test("plus page", () => {
 });
 
 test("plus bookmarks page", () => {
-  const builtFolder = path.join(buildRoot, "en-us", "plus", "bookmarks");
+  const builtFolder = path.join(buildRoot, "en-us", "plus", "collection");
   expect(fs.existsSync(builtFolder)).toBeTruthy();
   const htmlFile = path.join(builtFolder, "index.html");
   const html = fs.readFileSync(htmlFile, "utf-8");
   const $ = cheerio.load(html);
-  expect($("title").text()).toMatch(/Bookmarks/);
+  expect($("title").text()).toMatch(/Collection/);
   expect($('meta[name="robots"]').attr("content")).toBe("noindex, nofollow");
 });
 

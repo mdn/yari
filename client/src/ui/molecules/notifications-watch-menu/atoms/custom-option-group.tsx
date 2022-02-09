@@ -17,7 +17,7 @@ export function CompatGroup({ group, groupCallback, optionCallback }) {
   const [open, setOpen] = React.useState(false);
 
   return (
-    <fieldset className="watch-submenu-group">
+    <fieldset className={`watch-submenu-group ${open ? `is-open` : null}`}>
       <WatchMenuOption
         fieldName={group.name}
         toggle={(e) => {

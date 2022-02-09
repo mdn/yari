@@ -11,7 +11,7 @@ import {
 import SearchFilter from "../search-filter";
 import "./index.scss";
 import NotificationCard from "./notification-card";
-import WatchCard from "./watch-card";
+import IconCard from "../icon-card";
 import { mutate } from "swr";
 import { HEADER_NOTIFICATIONS_MENU_API_URL } from "../../constants";
 
@@ -35,7 +35,7 @@ function NotificationsLayout() {
   let apiUrl = `/api/v1/plus/notifications/?${getSearchFiltersParams().toString()}`;
 
   if (location.pathname === starredUrl) {
-    apiUrl += "&filterStarred=true";
+    apiUrl += "&starred=true";
     pageTitle = "My Starred Pages";
   }
   useEffect(() => {
@@ -122,12 +122,14 @@ function NotificationsLayout() {
         {watching ? (
           <>
             <SearchFilter />
-            <List
-              component={WatchCard}
-              apiUrl={watchingApiUrl}
-              makeKey={(item) => item.url}
-              pageTitle="My Watched Pages"
-            />
+            <div className="icon-card-list">
+              <List
+                component={IconCard}
+                apiUrl={watchingApiUrl}
+                makeKey={(item) => item.url}
+                pageTitle="My Watched Pages"
+              />
+            </div>
           </>
         ) : (
           <>

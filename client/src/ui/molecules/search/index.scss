@@ -1,3 +1,4 @@
+@use "sass:color";
 @use "../../vars" as *;
 
 .header-search {
@@ -103,7 +104,7 @@
     }
 
     mark {
-      background-color: var(--icon-warning);
+      background: #{color.adjust($mdn-color-yellow-30, $alpha: -0.6)};
     }
 
     small {

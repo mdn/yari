@@ -1,10 +1,11 @@
+@use "sass:color";
 @use "sass:math";
 @use "../ui/vars" as *;
 
 .search-results {
   .highlight,
   .summary {
-    color: $mdn-color-dark-grey-90;
+    color: var(--text-primary);
     display: block;
   }
 
@@ -38,7 +39,7 @@
 
   .title {
     background-color: inherit;
-    color: $mdn-color-dark-grey-90;
+    color: var(--text-primary);
     display: inline-block;
     margin: 0;
     margin-bottom: 0.25rem;
@@ -47,7 +48,7 @@
     a {
       &:link,
       &:visited {
-        color: $mdn-color-dark-grey-90;
+        color: var(--text-primary);
       }
     }
   }
@@ -77,17 +78,19 @@
   }
 
   mark {
-    background-color: $mdn-color-yellow-10;
+    background: #{color.adjust($mdn-color-yellow-30, $alpha: -0.6)};
+    color: var(--text-primary);
+    border-radius: var(--elem-radius);
     font-style: italic;
   }
 }
 
 .search-result-entry {
-  margin-bottom: 0.5rem;
+  margin: 4rem 0;
   word-wrap: break-word;
 
   @media screen and (max-width: $screen-sm) {
-    margin-bottom: 1rem * 2.5;
+    margin-bottom: 2.5rem;
   }
 }
 
@@ -97,6 +100,7 @@
 
   h2 {
     font-size: 1rem;
+    margin: 0;
 
     @media screen and (max-width: $screen-sm) {
       display: inline;

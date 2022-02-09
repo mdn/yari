@@ -19,7 +19,7 @@
     display: flex;
     gap: 0.75rem;
     height: 100%;
-    padding: 1rem 0.5rem;
+    padding: 0.5rem;
     width: 100%;
 
     li:last-child &:not(:focus) {
@@ -29,6 +29,10 @@
     &:hover {
       background-color: var(--border-secondary);
       text-decoration: none;
+    }
+
+    @at-root .main-menu &:hover {
+      background-color: var(--background-secondary);
     }
 
     &:focus {
@@ -42,11 +46,6 @@
     border-color: var(--border-secondary);
   }
 
-  // Tjhese
-  &.sort-menu,
-  &.is-dropdown {
-  }
-
   @media screen and (min-width: $screen-md) {
     background-color: var(--background-secondary);
     border-radius: var(--elem-radius);
@@ -58,6 +57,10 @@
     top: calc(100% + 4px);
     width: max-content;
     z-index: var(--z-index-mid);
+
+    @at-root .main-menu & {
+      background-color: var(--background-primary);
+    }
 
     .submenu-item {
       border-bottom: 0;

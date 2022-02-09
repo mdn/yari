@@ -1,5 +1,6 @@
 @use "../ui/vars" as *;
 @use "../ui/base/themes" as *;
+@use "../ui/base/mdn";
 @use "../ui/molecules/grids/grids.scss" as *;
 @use "../ui/base/typography" as *;
 
@@ -38,6 +39,13 @@
         color: var(--text-inactive);
         content: "#";
       }
+    }
+  }
+
+  h1,
+  h2 {
+    &::after {
+      @include mdn.uify;
     }
   }
 
@@ -93,6 +101,55 @@
     background: white;
   }
 
+  ul,
+  ol {
+    margin: 1rem 0 2rem;
+    padding-left: 2rem;
+
+    li {
+      margin: 0.5rem 0;
+      font: var(--type-body-l);
+    }
+  }
+
+  ul {
+    list-style: disc;
+
+    ul {
+      margin: 0;
+      list-style-type: circle;
+      padding-left: 1rem;
+    }
+  }
+
+  ol {
+    list-style: decimal;
+
+    ol {
+      list-style: lower-roman;
+      margin: 0;
+    }
+  }
+
+  dd ol,
+  dd ul {
+    padding-left: 3rem;
+    margin-bottom: 1rem;
+  }
+
+  td ul,
+  td ol {
+    padding-left: 1rem;
+  }
+
+  dd li {
+    margin-bottom: 1rem;
+  }
+
+  td li {
+    margin-bottom: 0.5rem;
+  }
+
   // specific styles to override base styles. The Markdown compiler
   // adds extra divs, so this is a way for these styles to not
   // stomp out component styles.
@@ -107,36 +164,6 @@
 
     figure {
       margin-bottom: 1rem;
-    }
-
-    ul,
-    ol {
-      margin: 1rem 0 2rem;
-      padding-left: 2rem;
-
-      li {
-        margin: 0.5rem 0;
-        font: var(--type-body-l);
-      }
-    }
-
-    ul {
-      list-style: disc;
-
-      ul {
-        margin: 0;
-        list-style-type: circle;
-        padding-left: 1rem;
-      }
-    }
-
-    ol {
-      list-style: decimal;
-
-      ol {
-        list-style: lower-roman;
-        margin: 0;
-      }
     }
 
     dl {
@@ -237,6 +264,11 @@ table {
     ul {
       margin: 0;
     }
+  }
+
+  caption {
+    font: var(--type-emphasis-l);
+    margin: 1rem 0 0.5rem;
   }
 
   &.properties {

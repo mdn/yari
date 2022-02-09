@@ -6,6 +6,7 @@ import { Loading } from "../ui/atoms/loading";
 import { CRUD_MODE } from "../constants";
 import { useLocale } from "../hooks";
 import { appendURL } from "./utils";
+import { Button } from "../ui/atoms/button";
 
 import LANGUAGES_RAW from "../languages.json";
 import "./search-results.scss";
@@ -276,13 +277,14 @@ function ExplainServerOperationalError({ statusCode }: { statusCode: number }) {
         If you're curious, it was a <b>{statusCode}</b> error.
       </p>
       <p>
-        <button
-          onClick={() => {
+        <Button
+          onClickHandler={() => {
             window.location.reload();
           }}
+          type="secondary"
         >
           Try reloading
-        </button>
+        </Button>
       </p>
     </NoteCard>
   );
