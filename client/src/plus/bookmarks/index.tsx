@@ -466,7 +466,7 @@ function Bookmark({
   const iconLabel = _getIconLabel(bookmark.url);
 
   return (
-    <div key={bookmark.id} className={className}>
+    <article key={bookmark.id} className={className}>
       <div className="icon-card-title-wrap">
         <div className={`icon-card-icon ${iconClass || ""}`}>{iconLabel}</div>
         <div className="icon-card-content">
@@ -536,7 +536,7 @@ function Bookmark({
       {bookmark.notes && (
         <p className="icon-card-description">{bookmark.notes}</p>
       )}
-    </div>
+    </article>
   );
 }
 
