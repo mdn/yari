@@ -21,6 +21,7 @@ export interface BookmarksMetadata {
   page: number;
   total: number;
   per_page: number;
+  max_non_subscribed: number;
 }
 
 export interface BookmarksData {
