@@ -41,12 +41,34 @@ ul.main-menu {
 
 /* Enable hover interaction if javascript is not available */
 @media screen and (min-width: $screen-md) {
+  .submenu {
+    display: none;
+  }
+
   ul.main-menu .top-level-entry-container {
     &:hover,
     &:focus-within {
       .submenu {
         display: block;
       }
+    }
+  }
+
+  // This allows keyboard nav to work more predictably on desktop dropdowns.
+  .open-on-focus-within {
+    &:focus-within {
+      .watch-submenu {
+        display: flex;
+      }
+
+      .submenu {
+        display: block;
+      }
+    }
+
+    .submenu,
+    .watch-submenu {
+      display: none;
     }
   }
 }

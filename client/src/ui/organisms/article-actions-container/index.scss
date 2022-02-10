@@ -66,23 +66,3 @@
     }
   }
 }
-
-// This allows keyboard nav to work more predictably on desktop dropdowns.
-@media screen and (min-width: $screen-md) {
-  .open-on-focus-within {
-    &:focus-within {
-      .watch-submenu {
-        display: flex;
-      }
-
-      .submenu {
-        display: block;
-      }
-    }
-
-    .submenu,
-    .watch-submenu {
-      display: none;
-    }
-  }
-}

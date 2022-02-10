@@ -11,9 +11,11 @@ export function NoteBanner({
 }) {
   return (
     <NoteCard extraClasses={`localized-content-note inline ${type}`}>
-      <a href={url} className={!url.startsWith("/") ? "external" : undefined}>
-        {linkText}
-      </a>
+      <p>
+        <a href={url} className={!url.startsWith("/") ? "external" : undefined}>
+          {linkText}
+        </a>
+      </p>
     </NoteCard>
   );
 }
