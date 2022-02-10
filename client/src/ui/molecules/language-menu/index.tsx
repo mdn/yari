@@ -93,7 +93,7 @@ export function LanguageMenu({
 
   return (
     <DropdownMenuWrapper
-      className="languages-switcher-menu"
+      className="languages-switcher-menu open-on-focus-within"
       isOpen={isOpen}
       setIsOpen={setIsOpen}
     >
