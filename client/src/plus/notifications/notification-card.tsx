@@ -27,7 +27,7 @@ export default function NotificationCard({ item, changedCallback, csrfToken }) {
       );
       setDynamicContent(content);
     }
-  });
+  }, [item.text]);
 
   return (
     <article className={`notification-card ${!item.read ? "unread" : ""}`}>
