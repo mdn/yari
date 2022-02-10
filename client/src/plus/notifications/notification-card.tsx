@@ -14,20 +14,21 @@ export default function NotificationCard({ item, changedCallback, csrfToken }) {
   const deleteUrl = `/api/v1/plus/notifications/${item.id}/delete/`;
   const undoUrl = `/api/v1/plus/notifications/${item.id}/undo-deletion/`;
   const [show, setShow] = React.useState(false);
-  const [dynamicContent, setDynamicContent] = React.useState(false);
+  const [dynamicContent, setDynamicContent] = React.useState(null);
   const { setToastData } = useUIStatus();
 
   React.useEffect(() => {
     const regex = /PR!(?<repo>.+\/.+)!(?<pr>\d+)!!/;
     const groups = item.text.match(regex)?.groups;
     if (groups !== undefined) {
-      item.text = item.text.replace(
+      const content = item.text.replace(
         regex,
         `<a href="https://github.com/${groups.repo}/pull/${groups.pr}">#${groups.pr}</a>`
       );
-      setDynamicContent(true);
+      setDynamicContent(content);
     }
   });
+
   return (
     <article className={`notification-card ${!item.read ? "unread" : ""}`}>
       <Button
@@ -46,7 +47,7 @@ export default function NotificationCard({ item, changedCallback, csrfToken }) {
         <div className="notification-card-description">
           <h2 className="notification-card-title">{item.title}</h2>
           {dynamicContent ? (
-            <p className="notification-card-text">{parse(item.text)}</p>
+            <p className="notification-card-text">{parse(dynamicContent)}</p>
           ) : (
             <p className="notification-card-text">{item.text}</p>
           )}
