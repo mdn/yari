@@ -309,6 +309,7 @@ function mapToBookmarksData(
       page: 1,
       per_page: 20,
       total: items.length,
+      max_non_subscribed: -1,
     },
     csrfmiddlewaretoken: "",
   };
