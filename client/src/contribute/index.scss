@@ -44,7 +44,12 @@ main.contribute {
       padding: 2rem;
       display: flex;
       flex-direction: row;
+      gap: 2rem;
       border: none;
+
+      @media screen and (max-width: 40rem) {
+        flex-wrap: wrap-reverse;
+      }
 
       &.owd {
         background-color: var(--text-primary);
@@ -67,7 +72,7 @@ main.contribute {
 
       .partner {
         width: 100%;
-        min-width: 20rem;
+        width: max-content;
         flex-direction: column;
 
         h4 {
