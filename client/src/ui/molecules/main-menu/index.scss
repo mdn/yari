@@ -41,7 +41,7 @@ ul.main-menu {
 
 /* Enable hover interaction if javascript is not available */
 @media screen and (min-width: $screen-md) {
-  .submenu {
+  ul.main-menu .submenu {
     display: none;
   }
 
