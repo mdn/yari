@@ -43,6 +43,8 @@ async function buildSPAs(options) {
           pageTitle: "Collection",
           noIndexing: true,
         },
+        { prefix: "about", pageTitle: "About MDN" },
+        { prefix: "contribute", pageTitle: "Contribute to MDN" },
       ];
       for (const { prefix, pageTitle, noIndexing } of SPAs) {
         const url = `/${locale}/${prefix}`;
