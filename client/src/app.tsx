@@ -1,5 +1,5 @@
-import React from "react";
-import { Routes, Route, useLocation } from "react-router-dom";
+import React, { useEffect } from "react";
+import { Routes, Route, useLocation, useMatch } from "react-router-dom";
 
 // we include our base SASS here to ensure it is loaded
 // and applied before any component specific style
@@ -101,6 +101,14 @@ function LoadingFallback({ message }: { message?: string }) {
 }
 
 export function App(appProps) {
+  const localeMatch = useMatch("/:locale/*");
+
+  useEffect(() => {
+    const locale = localeMatch?.params.locale || appProps.locale;
+
+    document.documentElement.setAttribute("lang", locale);
+  }, [appProps.locale, localeMatch]);
+
   // When preparing a build for use in the NPM package, CRUD_MODE is always true.
   // But if the App is loaded from the code that builds the SPAs, then `isServer`
   // is true. So you have to have `isServer && CRUD_MODE` at the same time.
