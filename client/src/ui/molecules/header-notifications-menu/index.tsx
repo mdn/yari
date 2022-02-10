@@ -13,6 +13,7 @@ import { NotificationData } from "../../../types/notifications";
 import { Link } from "react-router-dom";
 import { HEADER_NOTIFICATIONS_MENU_API_URL } from "../../../constants";
 import { DropdownMenu, DropdownMenuWrapper } from "../dropdown";
+import parse from "html-react-parser";
 
 dayjs.extend(relativeTime);
 
@@ -154,6 +155,17 @@ export const HeaderNotificationsMenu = () => {
               </li>
 
               {notificationsMenuItems.map((notification) => {
+                const regex = /PR!(?<repo>.+\/.+)!(?<pr>\d+)!!/;
+                const groups = notification.description?.match(regex)?.groups;
+                let content: any = null;
+                if (groups !== undefined) {
+                  notification.description = notification.description?.replace(
+                    regex,
+                    `<a href="https://github.com/${groups.repo}/pull/${groups.pr}">#${groups.pr}</a>`
+                  );
+                  content = parse(notification.description as string);
+                }
+
                 return (
                   <li key={`${menuId}-${notification.id}`}>
                     <a
@@ -166,12 +178,15 @@ export const HeaderNotificationsMenu = () => {
                       <div className="notifications-submenu-item-heading">
                         {notification.label}
                       </div>
-                      {notification.description && (
+                      {content != null ? (
+                        <p className="notifications-submenu-item-description">
+                          {content}
+                        </p>
+                      ) : (
                         <p className="notifications-submenu-item-description">
                           {notification.description}
                         </p>
                       )}
-
                       <time
                         className="notifications-submenu-item-created"
                         dateTime={dayjs(notification.created).toISOString()}
