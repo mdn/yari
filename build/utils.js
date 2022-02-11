@@ -67,7 +67,7 @@ async function downloadAndResizeImage(src, out, basePath) {
   }
   if (!fileType) {
     throw new Error(
-      `No file type could be extracted from ${flaw.src} at all. Probably not going to be a valid image file.`
+      `No file type could be extracted from ${src} at all. Probably not going to be a valid image file.`
     );
   }
   const isSVG =
