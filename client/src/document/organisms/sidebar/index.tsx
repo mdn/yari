@@ -6,6 +6,7 @@ import { Button } from "../../../ui/atoms/button";
 import { useUIStatus } from "../../../ui-context";
 
 import "./index.scss";
+import { TOC } from "../toc";
 
 function CalculateSidebarOnScroll() {
   useEffect(function mount() {
@@ -54,7 +55,7 @@ function _setScrollLock(isSidebarOpen) {
   }
 }
 
-function SidebarContainer({ children }) {
+function SidebarContainer({ doc, children }) {
   const { isSidebarOpen, setIsSidebarOpen } = useUIStatus();
   const [classes, setClasses] = useState<string>("sidebar");
 
@@ -79,7 +80,12 @@ function SidebarContainer({ children }) {
           type="action"
           onClickHandler={() => setIsSidebarOpen(!isSidebarOpen)}
         />
-        <div className="sidebar-inner">{children}</div>
+        <div className="sidebar-inner">
+          <div className="in-nav-toc">
+            {doc.toc && !!doc.toc.length && <TOC toc={doc.toc} />}
+          </div>
+          {children}
+        </div>
       </nav>
       <CalculateSidebarOnScroll />
     </>
@@ -90,7 +96,7 @@ export function RenderSideBar({ doc }) {
   if (!doc.related_content) {
     if (doc.sidebarHTML) {
       return (
-        <SidebarContainer>
+        <SidebarContainer doc={doc}>
           <h4 className="sidebar-heading">Related Topics</h4>
           <div
             dangerouslySetInnerHTML={{
@@ -103,13 +109,13 @@ export function RenderSideBar({ doc }) {
     return null;
   }
   return doc.related_content.map((node) => (
-    <SidebarLeaf key={node.title} parent={node} />
+    <SidebarLeaf key={node.title} parent={node} doc={doc} />
   ));
 }
 
-function SidebarLeaf({ parent }) {
+function SidebarLeaf({ doc, parent }) {
   return (
-    <SidebarContainer>
+    <SidebarContainer doc={doc}>
       <h4 className="sidebar-heading">{parent.title}</h4>
       <ul>
         {parent.content.map((node) => {

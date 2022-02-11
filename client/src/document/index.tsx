@@ -199,9 +199,6 @@ export function Document(props /* TODO: define a TS interface for this */) {
           )}
           <article className="main-page-content" lang={doc.locale}>
             <h1>{doc.title}</h1>
-            <div className="in-page-toc">
-              {doc.toc && !!doc.toc.length && <TOC toc={doc.toc} />}
-            </div>
             <RenderDocumentBody doc={doc} />
             <Metadata doc={doc} locale={locale} />
           </article>
