@@ -1,0 +1,68 @@
+@use "../../vars" as *;
+
+.article-actions-container {
+  align-items: center;
+  background-color: var(--background-secondary);
+  border-bottom: 1px solid var(--border-primary);
+  padding: 0;
+  margin: 0;
+  min-height: 2rem;
+  position: sticky;
+  top: 0;
+  z-index: var(--z-index-low);
+
+  .container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  // sidebar button for tablet sizes only
+  .sidebar-button {
+    display: none;
+  }
+
+  @media screen and (min-width: $screen-sm) and (max-width: $screen-md) {
+    .sidebar-button {
+      display: flex;
+      align-self: stretch;
+      align-items: center;
+      margin: 0 0 0 -1rem;
+
+      .button-wrap {
+        border-right: 1px solid var(--border-primary);
+        border-radius: 0;
+      }
+    }
+  }
+
+  @media screen and (min-width: $screen-md) {
+    position: static;
+
+    .article-actions-toggle {
+      display: none;
+    }
+
+    .bookmark-button-container {
+      flex: 0 0 40px;
+    }
+
+    .language-toggle {
+      flex: 1 1 fit-content;
+    }
+
+    // when the language toggle is the only item in the container
+    .language-toggle:only-child {
+      flex-basis: 100%;
+      justify-content: flex-end;
+    }
+  }
+
+  @media screen and (min-width: $screen-xl) {
+    .container {
+      padding-right: 1rem;
+      padding-left: 1rem;
+    }
+  }
+}

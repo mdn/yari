@@ -1,0 +1,268 @@
+@use "sass:color";
+@use "../vars.scss" as *;
+
+@mixin light-theme {
+  --text-primary: #{$mdn-theme-light-text-primary};
+  --text-secondary: #{$mdn-theme-light-text-secondary};
+  --text-inactive: #{$mdn-theme-light-text-inactive};
+  --text-link: #{$mdn-theme-light-text-link};
+
+  --background-primary: #{$mdn-theme-light-background-primary};
+  --background-secondary: #{$mdn-theme-light-background-secondary};
+  --background-tertiary: #{$mdn-theme-light-background-tertiary};
+
+  --border-primary: #{$mdn-theme-light-border-primary};
+  --border-secondary: #{$mdn-theme-light-border-secondary};
+
+  --button-primary-default: #{$mdn-theme-light-button-primary-default};
+  --button-primary-hover: #{$mdn-theme-light-button-primary-hover};
+  --button-primary-active: #{$mdn-theme-light-button-primary-active};
+  --button-primary-inactive: #{$mdn-theme-light-button-primary-inactive};
+
+  --button-secondary-default: #{$mdn-theme-light-button-secondary-default};
+  --button-secondary-hover: #{$mdn-theme-light-button-secondary-hover};
+  --button-secondary-active: #{$mdn-theme-light-button-secondary-active};
+  --button-secondary-inactive: #{$mdn-theme-light-button-secondary-inactive};
+  --button-secondary-border-focus: #{$mdn-theme-light-button-secondary-border-focus};
+
+  --icon-primary: #{$mdn-theme-light-icon-primary};
+  --icon-secondary: #{$mdn-theme-light-icon-secondary};
+  --icon-information: #{$mdn-theme-light-icon-information};
+  --icon-warning: #{$mdn-theme-light-icon-warning};
+  --icon-critical: #{$mdn-theme-light-icon-critical};
+  --icon-success: #{$mdn-theme-light-icon-success};
+
+  --accent-primary: #{$mdn-theme-light-accent-primary};
+  --accent-primary-engage: #{color.adjust(
+      $mdn-theme-light-accent-primary,
+      $alpha: -0.9
+    )};
+
+  --accent-secondary: #{$mdn-theme-light-accent-secondary};
+  --accent-tertiary: #{color.adjust($mdn-color-blue-40, $alpha: -0.9)};
+
+  --shadow-01: #{$mdn-theme-light-shadow-01};
+  --shadow-02: #{$mdn-theme-light-shadow-02};
+  --focus-01: #{$mdn-theme-light-focus-01};
+  --field-focus-border: #{$mdn-theme-light-field-focus-border};
+
+  --code-token-tag: #{$mdn-theme-light-code-token-tag};
+  --code-token-punctuation: #{$mdn-theme-light-code-token-punctuation};
+  --code-token-attribute-name: #{$mdn-theme-light-code-token-attribute-name};
+  --code-token-attribute-value: #{$mdn-theme-light-code-token-attribute-value};
+  --code-token-comment: #{$mdn-theme-light-code-token-comment};
+  --code-token-default: #{$mdn-theme-light-code-token-default};
+  --code-token-selector: #{$mdn-theme-light-code-token-selector};
+  --code-background-inline: #{$mdn-theme-light-code-background-inline};
+  --code-background-block: #{$mdn-theme-light-code-background-block};
+
+  --scrollbar-bg: transparent;
+  --scrollbar-color: rgba(0, 0, 0, 0.25);
+
+  --html-accent-color: #{$mdn-color-red-60};
+  --css-accent-color: #{$mdn-color-blue-50};
+  --js-accent-color: #{$mdn-color-yellow-70};
+  --http-accent-color: #{$mdn-color-green-80};
+  --apis-accent-color: #{$mdn-color-violet-70};
+
+  --html-accent-engage: #{color.adjust($mdn-color-red-60, $alpha: -0.3)};
+  --css-accent-engage: #{color.adjust($mdn-color-blue-50, $alpha: -0.3)};
+  --js-accent-engage: #{color.adjust($mdn-color-yellow-70, $alpha: -0.3)};
+  --http-accent-engage: #{color.adjust($mdn-color-green-80, $alpha: -0.3)};
+  --apis-accent-engage: #{color.adjust($mdn-color-violet-70, $alpha: -0.3)};
+
+  --html-code-inline: #{color.adjust(
+      $mdn-color-red-60,
+      $alpha: -0.92,
+      $saturation: -20%
+    )};
+  --html-code-block: #{color.adjust(
+      $mdn-color-red-60,
+      $alpha: -0.95,
+      $saturation: -10%
+    )};
+
+  --css-code-inline: #{color.adjust($mdn-color-blue-50, $alpha: -0.92)};
+  --css-code-block: #{color.adjust($mdn-color-blue-50, $alpha: -0.97)};
+
+  --js-code-inline: #{color.adjust(
+      $mdn-color-yellow-60,
+      $alpha: -0.9,
+      $saturation: 20%
+    )};
+  --js-code-block: #{color.adjust(
+      $mdn-color-yellow-60,
+      $alpha: -0.95,
+      $saturation: 20%
+    )};
+
+  --http-code-inline: #{color.adjust($mdn-color-green-70, $alpha: -0.92)};
+  --http-code-block: #{color.adjust($mdn-color-green-70, $alpha: -0.95)};
+
+  --apis-code-inline: #{color.adjust(
+      $mdn-color-violet-60,
+      $alpha: -0.92,
+      $saturation: -10%
+    )};
+  --apis-code-block: #{color.adjust(
+      $mdn-color-violet-60,
+      $alpha: -0.96,
+      $saturation: -20%
+    )};
+
+  --homepage-hero-bg: radial-gradient(
+    114.42% 123.24% at 6.69% 13.67%,
+    rgba(51, 178, 252, 0.2) 22.84%,
+    rgba(152, 82, 250, 0.2) 47.63%,
+    rgba(255, 230, 0, 0.2) 82.74%
+  );
+  --homepage-secondary-bg: linear-gradient(
+    90deg,
+    #8524ff -43.99%,
+    #4d7fff 159.52%
+  );
+
+  --modal-backdrop-color: #{rgba($mdn-theme-dark-background-primary, 0.1)};
+}
+
+@mixin dark-theme {
+  --text-primary: #{$mdn-theme-dark-text-primary};
+  --text-secondary: #{$mdn-theme-dark-text-secondary};
+  --text-inactive: #{$mdn-theme-dark-text-inactive};
+  --text-link: #{$mdn-theme-dark-text-link};
+
+  --background-primary: #{$mdn-theme-dark-background-primary};
+  --background-secondary: #{$mdn-theme-dark-background-secondary};
+  --background-tertiary: #{$mdn-theme-dark-background-tertiary};
+
+  --border-primary: #{$mdn-theme-dark-border-primary};
+  --border-secondary: #{$mdn-theme-dark-border-secondary};
+
+  --button-primary-default: #{$mdn-theme-dark-button-primary-default};
+  --button-primary-hover: #{$mdn-theme-dark-button-primary-hover};
+  --button-primary-active: #{$mdn-theme-dark-button-primary-active};
+  --button-primary-inactive: #{$mdn-theme-dark-button-primary-inactive};
+
+  --button-secondary-default: #{$mdn-theme-dark-button-secondary-default};
+  --button-secondary-hover: #{$mdn-theme-dark-button-secondary-hover};
+  --button-secondary-active: #{$mdn-theme-dark-button-secondary-active};
+  --button-secondary-inactive: #{$mdn-theme-dark-button-secondary-inactive};
+
+  --icon-primary: #{$mdn-theme-dark-icon-primary};
+  --icon-secondary: #{$mdn-theme-dark-icon-secondary};
+  --icon-information: #{$mdn-theme-dark-icon-information};
+  --icon-warning: #{$mdn-theme-dark-icon-warning};
+  --icon-critical: #{$mdn-theme-dark-icon-critical};
+  --icon-success: #{$mdn-theme-dark-icon-success};
+
+  --accent-primary: #{$mdn-theme-dark-accent-primary};
+  --accent-primary-engage: #{color.adjust(
+      $mdn-theme-dark-accent-primary,
+      $alpha: -0.9
+    )};
+  --accent-secondary: #{$mdn-theme-dark-accent-secondary};
+
+  --shadow-01: #{$mdn-theme-dark-shadow-01};
+  --shadow-02: #{$mdn-theme-dark-shadow-02};
+
+  --code-token-tag: #{$mdn-theme-dark-code-token-tag};
+  --code-token-punctuation: #{$mdn-theme-dark-code-token-punctuation};
+  --code-token-attribute-name: #{$mdn-theme-dark-code-token-attribute-name};
+  --code-token-attribute-value: #{$mdn-theme-dark-code-token-attribute-value};
+  --code-token-comment: #{$mdn-theme-dark-code-token-comment};
+  --code-token-default: #{$mdn-theme-dark-code-token-default};
+  --code-token-selector: #{$mdn-theme-dark-code-token-selector};
+  --code-background-inline: #{$mdn-theme-dark-code-background-inline};
+  --code-background-block: #{$mdn-theme-dark-code-background-block};
+
+  --scrollbar-color: rgba(255, 255, 255, 0.25);
+
+  --html-accent-color: #{$mdn-color-red-50};
+  --css-accent-color: #{$mdn-color-blue-20};
+  --js-accent-color: #{$mdn-color-yellow-30};
+  --http-accent-color: #{$mdn-color-green-40};
+  --apis-accent-color: #{$mdn-color-violet-30};
+
+  --html-accent-engage: #{color.adjust($mdn-color-red-50, $alpha: -0.3)};
+  --css-accent-engage: #{color.adjust($mdn-color-blue-20, $alpha: -0.3)};
+  --js-accent-engage: #{color.adjust($mdn-color-yellow-30, $alpha: -0.3)};
+  --http-accent-engage: #{color.adjust($mdn-color-green-40, $alpha: -0.3)};
+  --apis-accent-engage: #{color.adjust($mdn-color-violet-30, $alpha: -0.3)};
+
+  --html-code-inline: #{color.adjust(
+      $mdn-color-red-40,
+      $alpha: -0.8,
+      $saturation: 20%
+    )};
+  --html-code-block: #{color.adjust(
+      $mdn-color-red-40,
+      $alpha: -0.9,
+      $saturation: 10%
+    )};
+
+  --css-code-inline: #{color.adjust(
+      $mdn-color-blue-20,
+      $alpha: -0.85,
+      $saturation: 20%
+    )};
+  --css-code-block: #{color.adjust(
+      $mdn-color-blue-20,
+      $alpha: -0.9,
+      $saturation: 20%
+    )};
+
+  --js-code-inline: #{color.adjust(
+      $mdn-color-yellow-10,
+      $alpha: -0.85,
+      $saturation: 20%
+    )};
+  --js-code-block: #{color.adjust(
+      $mdn-color-yellow-10,
+      $alpha: -0.9,
+      $saturation: 20%
+    )};
+
+  --http-code-inline: #{color.adjust(
+      $mdn-color-green-30,
+      $alpha: -0.85,
+      $saturation: 20%
+    )};
+  --http-code-block: #{color.adjust(
+      $mdn-color-green-30,
+      $alpha: -0.9,
+      $saturation: 20%
+    )};
+
+  --apis-code-inline: #{color.adjust(
+      $mdn-color-violet-30,
+      $alpha: -0.85,
+      $saturation: 20%
+    )};
+  --apis-code-block: #{color.adjust(
+      $mdn-color-violet-30,
+      $alpha: -0.92,
+      $saturation: 20%
+    )};
+  --modal-backdrop-color: #{rgba($mdn-theme-dark-background-primary, 0.7)};
+}
+
+:root,
+.light {
+  @include light-theme;
+}
+
+.dark {
+  @include dark-theme;
+}
+
+@media (prefers-color-scheme: light) {
+  :root {
+    @include light-theme;
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    @include dark-theme;
+  }
+}

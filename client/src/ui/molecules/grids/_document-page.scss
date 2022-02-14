@@ -1,66 +1,78 @@
-/* The document grid */
-@supports (display: grid) {
-  .page-wrapper.document-page {
-    grid-template-columns: 70% 30%;
+@use "../../vars" as *;
 
-    @media #{$mq-small-desktop-and-up} {
-      grid-template-columns: minmax(25%, 75%) minmax(75%, 25%);
-      grid-template-rows: repeat(3, auto) max-content 1fr;
-    }
+.document-page {
+  .page-header,
+  .generic-loading,
+  .article-actions-container,
+  .localized-content-note,
+  .document-toc-container,
+  .main-content,
+  .sidebar,
+  .metadata {
+    display: flex;
   }
 
-  .document-page {
-    .page-header,
-    .generic-loading,
-    .breadcrumb-locale-container,
-    .localized-content-note,
-    .document-toc-container,
-    .main-content,
+  .main-content,
+  .sidebar {
+    flex-direction: column;
+    width: 100%;
+  }
+}
+
+.article-wrapper {
+  display: flex;
+  max-width: var(--max-width);
+  margin: 0 auto;
+
+  .toc {
+    display: none;
+  }
+
+  @media screen and (min-width: $screen-md) {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
+    gap: 3rem;
+    padding-left: 1.5rem;
+    padding-right: 3rem;
+    grid-template-areas: "sidebar main";
+
     .sidebar,
-    .metadata {
-      grid-column: 1/3;
-    }
-
-    .page-header {
-      grid-row: 1/2;
-    }
-
-    .breadcrumb-locale-container {
-      grid-row: 2/3;
-    }
-
-    .localized-content-note {
-      grid-row: 3/4;
-    }
-
-    .document-toc-container {
-      grid-row: 4/5;
-
-      @media #{$mq-small-desktop-and-up} {
-        grid-column: 1/2;
-      }
-    }
-
+    .toc,
     .main-content {
-      grid-row: 5/6;
-
-      @media #{$mq-small-desktop-and-up} {
-        grid-column: 2/3;
-        grid-row: 4/6;
-      }
+      padding-top: 3rem;
+      padding-bottom: 3rem;
     }
 
     .sidebar {
-      grid-row: 6/7;
+      grid-area: sidebar;
+      align-self: start;
+    }
 
-      @media #{$mq-small-desktop-and-up} {
-        grid-column: 1/2;
-        grid-row: 5/6;
+    .main-content {
+      grid-area: main;
+    }
+  }
+
+  @media screen and (min-width: $screen-lg) {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 2.5fr) minmax(0, 15rem);
+    gap: 3rem;
+    grid-template-areas: "sidebar main toc";
+    padding-left: 1rem;
+    padding-right: 1rem;
+
+    .toc {
+      display: block;
+      grid-area: toc;
+
+      .document-toc-container {
+        position: sticky;
+        top: 3rem;
       }
     }
 
-    .metadata {
-      grid-row: 7/8;
+    .in-page-toc {
+      display: none;
     }
   }
 }

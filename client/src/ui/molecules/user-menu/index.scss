@@ -1,0 +1,66 @@
+@use "../../vars" as *;
+
+.user-menu {
+  position: relative;
+
+  .submenu-header {
+    display: none;
+  }
+
+  @media screen and (max-width: $screen-md) {
+    .user-menu-toggle:hover {
+      --button-bg: transparent;
+    }
+  }
+
+  @media screen and (min-width: $screen-md) {
+    /*
+      The user menu button is shaped like an avatar and thus has some
+      very specific focus and hover states.
+    */
+    .button.user-menu-toggle {
+      &:hover,
+      &:focus {
+        &,
+        .button-wrap {
+          border-color: transparent;
+          background: transparent;
+          box-shadow: none;
+        }
+
+        .avatar {
+          border: 1px solid var(--button-secondary-border-focus);
+          box-shadow: var(--focus-effect);
+        }
+      }
+
+      &::after {
+        display: none;
+      }
+    }
+
+    .submenu-header {
+      display: block;
+      padding: 0 0 0.5rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .submenu-item {
+      padding: 0.5rem;
+    }
+
+    .signout-container {
+      margin-top: 0.5rem;
+    }
+
+    .user-menu-id {
+      display: none;
+    }
+
+    .submenu {
+      left: initial;
+      max-width: max-content;
+      right: 0;
+    }
+  }
+}

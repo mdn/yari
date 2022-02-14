@@ -1,0 +1,52 @@
+@use "../../ui/vars" as *;
+
+.search-filter {
+  display: flex;
+  gap: 0.5rem;
+  padding: 1rem 0;
+  flex-wrap: wrap;
+
+  &.inline-on-mobile {
+    flex-wrap: nowrap;
+
+    .search-filter-category {
+      width: auto;
+    }
+  }
+}
+
+.search-filter [type="search"] {
+  flex: 1;
+}
+
+.search-filter-category {
+  position: relative;
+  width: calc(50% - 0.25rem);
+
+  > .button,
+  .dropdown-list {
+    width: 100%;
+  }
+}
+
+@media screen and (min-width: $screen-md) {
+  .search-filter {
+    flex-wrap: nowrap;
+  }
+
+  .search-filter .submenu {
+    max-width: max-content;
+    right: 0;
+  }
+
+  .search-filter-category,
+  .search-filter-category .dropdown-list {
+    width: auto;
+  }
+
+  .search-filter-category .dropdown-list.filters-menu {
+    width: 180px;
+    right: 0;
+    left: auto;
+  }
+}

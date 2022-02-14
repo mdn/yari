@@ -1,0 +1,119 @@
+@use "../../../ui/vars" as *;
+
+.offer-overview-feature {
+  background-color: white;
+  width: 100%;
+  min-height: 25rem;
+
+  .wrapper {
+    width: 100%;
+    display: flex;
+    flex-direction: column-reverse;
+    align-items: center;
+    height: 100%;
+    padding: 4rem 1rem;
+    margin: 0 auto;
+    max-width: 60rem;
+    gap: 4rem;
+
+    @media screen and (min-width: $screen-md) {
+      padding: 4rem;
+    }
+
+    @media screen and (min-width: $screen-lg) {
+      flex-direction: row;
+    }
+
+    .copy-container,
+    .img-container {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .img-container {
+      align-items: center;
+      box-shadow: 0px 3px 22px #2b2a331a;
+      border-radius: 1rem;
+      max-width: 25rem;
+    }
+
+    .copy-container {
+      text-align: center;
+      align-items: center;
+      padding: 0 1rem;
+
+      @media screen and (min-width: $screen-sm) and (max-width: $screen-md) {
+        padding: 0 2rem;
+        h2 {
+          max-width: 25rem;
+        }
+      }
+
+      @media screen and (min-width: $screen-lg) {
+        text-align: initial;
+        align-items: initial;
+      }
+
+      h2 {
+        font-style: normal;
+        font-weight: 650;
+        font-size: 24px;
+        line-height: 120%;
+        margin: 0;
+      }
+
+      p {
+        font-family: Inter;
+        font-style: normal;
+        font-weight: normal;
+        font-size: 16px;
+        line-height: 175%;
+        color: $mdn-color-dark-grey-90;
+        margin: 1rem 0 1.5rem 0;
+      }
+
+      a {
+        background: $mdn-color-dark-grey-90;
+        padding: 0.25rem 0.5rem;
+        color: white;
+        width: fit-content;
+        position: relative;
+        z-index: 1;
+        transition: all 0.3s ease;
+        font-weight: 620;
+
+        &::after {
+          position: absolute;
+          content: "";
+          width: 0;
+          height: 100%;
+          top: 0;
+          right: 0;
+          z-index: -1;
+          background: $mdn-color-green-20;
+          transition: all 0.3s ease;
+        }
+
+        &:hover {
+          color: $mdn-color-dark-grey-90;
+        }
+
+        &:hover:after {
+          left: 0;
+          width: 100%;
+        }
+      }
+    }
+  }
+}
+
+.offer-overview-feature:nth-child(even) {
+  background: $mdn-color-light-grey-05;
+  .wrapper {
+    flex-direction: column;
+    @media screen and (min-width: $screen-lg) {
+      flex-direction: row;
+    }
+  }
+}
