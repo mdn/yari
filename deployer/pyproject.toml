@@ -19,9 +19,9 @@ PyGithub = "^1.55"
 unidiff = "^0.7.3"
 
 [tool.poetry.dev-dependencies]
-black = "^21.12b0"
+black = "^22.1"
 flake8 = "^4.0.1"
-pytest = "^6.2.5"
+pytest = "^7.0.0"
 
 [tool.poetry.scripts]
 deployer = "deployer.main:cli"

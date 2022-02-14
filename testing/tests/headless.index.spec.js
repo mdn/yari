@@ -36,10 +36,10 @@ test.describe("Basic viewing of functional pages", () => {
     page,
   }) => {
     const uri = "/en-US/docs/Learn/CSS/CSS_layout/Introduction";
-    const flexSample1Uri = `${uri}/Flex/_sample_.Flex_1.html`;
-    const flexSample2Uri = `${uri}/Flex/_sample_.Flex_2.html`;
-    const gridSample1Uri = `${uri}/Grid/_sample_.Grid_1.html`;
-    const gridSample2Uri = `${uri}/_sample_.Grid_2.html`;
+    const flexSample1Uri = `${uri}/Flex/_sample_.flex_1.html`;
+    const flexSample2Uri = `${uri}/Flex/_sample_.flex_2.html`;
+    const gridSample1Uri = `${uri}/Grid/_sample_.grid_1.html`;
+    const gridSample2Uri = `${uri}/_sample_.grid_2.html`;
     await page.goto(testURL(uri));
     expect(await page.title()).toContain("A Test Introduction to CSS layout");
     expect(await page.innerText("h1")).toBe(
@@ -56,7 +56,7 @@ test.describe("Basic viewing of functional pages", () => {
     expect(
       await page.isVisible(`iframe.sample-code-frame[src$="${gridSample1Uri}"]`)
     ).toBeTruthy();
-    expect(await page.innerText("#Grid_2 pre.css.notranslate")).toMatch(
+    expect(await page.innerText("#grid_2 pre.css.notranslate")).toMatch(
       /\.wrapper\s*\{\s*display:\s*grid;/
     );
     expect(
@@ -83,8 +83,8 @@ test.describe("Basic viewing of functional pages", () => {
     page,
   }) => {
     const uri = "/en-US/docs/Learn/CSS/CSS_layout/Introduction/Flex";
-    const flexSample1Uri = `${uri}/_sample_.Flex_1.html`;
-    const flexSample2Uri = `${uri}/_sample_.Flex_2.html`;
+    const flexSample1Uri = `${uri}/_sample_.flex_1.html`;
+    const flexSample2Uri = `${uri}/_sample_.flex_2.html`;
     await page.goto(testURL(uri));
     expect(await page.title()).toContain(
       "A Test Introduction to CSS Flexbox Layout"
@@ -94,14 +94,14 @@ test.describe("Basic viewing of functional pages", () => {
     );
     expect(await page.innerText("#flexbox")).toBe("Flexbox");
 
-    expect(await page.innerText("#Flex_1 pre.css.notranslate")).toMatch(
+    expect(await page.innerText("#flex_1 pre.css.notranslate")).toMatch(
       /\.wrapper\s*\{\s*display:\s*flex;\s*\}/
     );
     expect(
       await page.isVisible(`iframe.sample-code-frame[src$="${flexSample1Uri}"]`)
     ).toBeTruthy();
 
-    expect(await page.innerText("#Flex_2 pre.css.notranslate")).toMatch(
+    expect(await page.innerText("#flex_2 pre.css.notranslate")).toMatch(
       /\.wrapper {\s*display: flex;\s*\}\s*\.wrapper > div \{\s*flex: 1;\s*\}/
     );
     expect(
@@ -113,8 +113,8 @@ test.describe("Basic viewing of functional pages", () => {
     page,
   }) => {
     const uri = "/en-US/docs/Learn/CSS/CSS_layout/Introduction/Grid";
-    const gridSample1Uri = `${uri}/_sample_.Grid_1.html`;
-    const gridSample2Uri = `${uri}/_sample_.Grid_2.html`;
+    const gridSample1Uri = `${uri}/_sample_.grid_1.html`;
+    const gridSample2Uri = `${uri}/_sample_.grid_2.html`;
     await page.goto(testURL(uri));
     expect(await page.title()).toContain(
       "A Test Introduction to CSS Grid Layout"
@@ -123,14 +123,14 @@ test.describe("Basic viewing of functional pages", () => {
       "A Test Introduction to CSS Grid Layout"
     );
     expect(await page.innerText("#grid_layout")).toBe("Grid Layout");
-    expect(await page.innerText("#Grid_1 pre.css.notranslate")).toMatch(
+    expect(await page.innerText("#grid_1 pre.css.notranslate")).toMatch(
       /\.wrapper\s*\{\s*display:\s*grid;/
     );
     expect(
       await page.isVisible(`iframe.sample-code-frame[src$="${gridSample1Uri}"]`)
     ).toBeTruthy();
 
-    expect(await page.innerText("#Grid_2 pre.css.notranslate")).toMatch(
+    expect(await page.innerText("#grid_2 pre.css.notranslate")).toMatch(
       /grid-template-columns: 1fr 1fr 1fr;/
     );
     expect(
