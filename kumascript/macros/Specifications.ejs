@@ -14,6 +14,7 @@ Example calls
 */
 
 var query = $0 || env['browser-compat'];
+query = !query && env['title'].startsWith('aria-') ? env['title'] : query;
 if (!query) {
   throw new Error("No first query argument or 'browser-compat' front-matter value passed");
 }

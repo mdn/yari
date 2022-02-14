@@ -323,12 +323,14 @@ function _addSingleSpecialSection($) {
 
   let dataQuery = null;
   let specialSectionType = null;
+  let isSpecSectionForAria;
   if ($.find("div.bc-data").length) {
     specialSectionType = "browser_compatibility";
     dataQuery = $.find("div.bc-data").attr("id");
   } else if ($.find("div.bc-specs").length) {
     specialSectionType = "specifications";
     dataQuery = $.find("div.bc-specs").attr("data-bcd-query");
+    isSpecSectionForAria = dataQuery.startsWith("aria-") ? true : false;
   }
 
   // Some old legacy documents haven't been re-rendered yet, since it
@@ -361,7 +363,7 @@ function _addSingleSpecialSection($) {
     }
     return _buildSpecialBCDSection();
   } else if (specialSectionType === "specifications") {
-    if (data === undefined) {
+    if (data === undefined && !isSpecSectionForAria) {
       return [
         {
           type: specialSectionType,
@@ -458,13 +460,16 @@ function _addSingleSpecialSection($) {
     // Collect spec_urls from a BCD feature.
     // Can either be a string or an array of strings.
     let specURLs = [];
-
-    for (const [key, compat] of Object.entries(data)) {
-      if (key === "__compat" && compat.spec_url) {
-        if (Array.isArray(compat.spec_url)) {
-          specURLs = compat.spec_url;
-        } else {
-          specURLs.push(compat.spec_url);
+    if (isSpecSectionForAria) {
+      specURLs.push(`https://w3c.github.io/aria/#${dataQuery}`);
+    } else {
+      for (const [key, compat] of Object.entries(data)) {
+        if (key === "__compat" && compat.spec_url) {
+          if (Array.isArray(compat.spec_url)) {
+            specURLs = compat.spec_url;
+          } else {
+            specURLs.push(compat.spec_url);
+          }
         }
       }
     }
