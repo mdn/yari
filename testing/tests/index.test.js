@@ -1453,9 +1453,6 @@ test("headings with HTML should be rendered as HTML", () => {
   const html = fs.readFileSync(htmlFile, "utf-8");
   const $ = cheerio.load(html);
 
-  // TOC should not be tested
-  $("article > .in-page-toc").remove();
-
   // The page only has 1 h2, and its content should be HTML.
   expect($("article h2 a").html()).toBe("Here's some <code>code</code>");
   expect($("article h2").text()).toBe("Here's some code");
@@ -1597,7 +1594,6 @@ test("basic markdown rendering", () => {
   const $ = cheerio.load(html);
   // Following elements do not test TOC rendering
   $("article > .metadata").remove();
-  $("article > .in-page-toc").remove();
 
   expect($("article h2[id]").length).toBe(2);
   expect($("article h3[id]").length).toBe(3);
