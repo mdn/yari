@@ -64,6 +64,7 @@ button,
 
   .button-wrap {
     box-shadow: var(--button-focus-effect);
+    border: 1px solid var(--button-secondary-border-focus);
   }
 }
 

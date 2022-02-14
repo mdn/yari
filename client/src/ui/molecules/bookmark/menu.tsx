@@ -111,7 +111,7 @@ export function BookmarkMenu({
 
   return (
     <DropdownMenuWrapper
-      className="watch-menu"
+      className="watch-menu open-on-focus-within"
       isOpen={show}
       setIsOpen={setShow}
     >

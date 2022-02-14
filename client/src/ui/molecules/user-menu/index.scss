@@ -23,12 +23,13 @@
       &:focus {
         &,
         .button-wrap {
-          --button-border-color: transparent;
+          border-color: transparent;
           background: transparent;
           box-shadow: none;
         }
 
         .avatar {
+          border: 1px solid var(--button-secondary-border-focus);
           box-shadow: var(--focus-effect);
         }
       }

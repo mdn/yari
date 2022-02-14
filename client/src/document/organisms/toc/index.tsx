@@ -11,7 +11,7 @@ export function TOC({ toc }: { toc: Toc[] }) {
 
   const getCurrentHighlightedSectionId = () => {
     const offsetY = window.scrollY;
-    if (offsetY < window.innerHeight * 0.5) {
+    if (offsetY < window.innerHeight * 0.1) {
       setCurrentViewedTocItem(toc[0].id.toLowerCase());
       return;
     }
@@ -23,7 +23,7 @@ export function TOC({ toc }: { toc: Toc[] }) {
 
     headings.forEach((section) => {
       const posY = section?.offsetTop;
-      if (posY && posY < offsetY + window.innerHeight * 0.5) {
+      if (posY && posY < offsetY + window.innerHeight * 0.1) {
         currentSectionId = section.id;
       }
     });

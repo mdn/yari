@@ -488,8 +488,9 @@ function DocumentsTable({
                 .split("commit/")[1]
                 .substring(0, 7);
               let status = "Untranslated";
-              let dateDiff = Number.POSITIVE_INFINITY;
               if (documentDetail.info.localeInfo) {
+                let dateDiff =
+                  documentDetail.info.dateDiff ?? Number.POSITIVE_INFINITY;
                 status = "Out of date";
 
                 if (dateDiff > 0) {

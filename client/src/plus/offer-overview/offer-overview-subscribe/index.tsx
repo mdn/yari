@@ -3,8 +3,6 @@ import {
   FXA_SIGNIN_URL,
   MDN_PLUS_SUBSCRIBE_10M_URL,
   MDN_PLUS_SUBSCRIBE_10Y_URL,
-  MDN_PLUS_SUBSCRIBE_50M_URL,
-  MDN_PLUS_SUBSCRIBE_50Y_URL,
   MDN_PLUS_SUBSCRIBE_5M_URL,
   MDN_PLUS_SUBSCRIBE_5Y_URL,
 } from "../../../constants";
@@ -81,19 +79,6 @@ const PLUS_10 = {
   discountedCtaLink: MDN_PLUS_SUBSCRIBE_10Y_URL,
 };
 
-const PLUS_50 = {
-  id: "plus50",
-  name: "MDN Plus 50",
-  monthlyPrice: 5000,
-  discountedMonthlyPrice: 4000,
-  currency: "USD",
-  features: [...PLUS_FEATURES, [null, "A good feeling"]],
-  includes: "Includes unlimited access to:",
-  cta: "Start with Supporter 50",
-  ctaLink: MDN_PLUS_SUBSCRIBE_50M_URL,
-  discountedCtaLink: MDN_PLUS_SUBSCRIBE_50Y_URL,
-};
-
 function OfferDetails(props: OfferDetailsProps) {
   const discounted = props.period === Period.Year;
   const userData = useUserData();
@@ -164,9 +149,13 @@ function isCurrent(user: UserData | null, plan: String) {
 }
 
 function OfferOverviewSubscribe() {
+  const isServer = typeof window === "undefined";
+
   const initialPeriod =
-    JSON.parse(localStorage.getItem(BILLING_PERIOD) || "null") || Period.Month;
+    JSON.parse((!isServer && localStorage.getItem(BILLING_PERIOD)) || "null") ||
+    Period.Month;
   let [period, setPeriod] = useState(initialPeriod);
+
   return (
     <div className="subscribe" id="subscribe">
       <h2>Choose a plan</h2>
@@ -175,7 +164,8 @@ function OfferOverviewSubscribe() {
         checked={period === Period.Year || false}
         toggle={(e) => {
           const period = e.target.checked ? Period.Year : Period.Month;
-          localStorage.setItem(BILLING_PERIOD, JSON.stringify(period));
+          !isServer &&
+            localStorage.setItem(BILLING_PERIOD, JSON.stringify(period));
           setPeriod(period);
         }}
       >
@@ -185,7 +175,6 @@ function OfferOverviewSubscribe() {
         <OfferDetails {...CORE} period={period}></OfferDetails>
         <OfferDetails {...PLUS_5} period={period}></OfferDetails>
         <OfferDetails {...PLUS_10} period={period}></OfferDetails>
-        <OfferDetails {...PLUS_50} period={period}></OfferDetails>
       </div>
     </div>
   );

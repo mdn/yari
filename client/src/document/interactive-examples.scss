@@ -37,10 +37,18 @@
   }
 }
 
-// The layout switches at 600 in the `mdn/bob` app.
-// But that's the iframe width, so media queries
-// are useless here.
-.is-600-plus {
+// The layout switches at 590px in the `mdn/bob` app.
+// In order to respect the height shifts without using
+// JS, a complicated media query is needed. This is
+// fragile, as if the margins or anything changes
+// on the main layout, this will need to be adjusted.
+
+// This spans from the time the iframe is 590px
+// wide in the mobile layout to the time it switches
+// to two columns. Then, from the time the iframe
+// is 590px wide in the two-column layout on up.
+@media screen and (min-width: 688px) and (max-width: $screen-md - 1),
+  screen and (min-width: 1008px) {
   .interactive {
     height: 375px;
 
@@ -64,11 +72,3 @@
     }
   }
 }
-
-// default: 390
-// js: 490
-// shorter: 410
-// taller: 692
-// tabbed-shorter: 375
-// tabbed-standard: 445
-// tabbed-taller: 655

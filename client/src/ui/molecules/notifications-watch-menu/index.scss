@@ -44,6 +44,12 @@
     padding: 0.5rem;
     flex: 1 1 100%;
     min-width: 0;
+
+    &:focus {
+      outline: 0 none;
+      border: 1px solid var(--button-secondary-border-focus);
+      box-shadow: var(--focus-effect);
+    }
   }
 
   &-header,
@@ -150,6 +156,7 @@
     &.is-always-visible {
       display: flex;
       justify-content: flex-end;
+      padding-bottom: 0.25rem;
     }
   }
 
@@ -240,6 +247,11 @@
     border-top-width: 0;
   }
 
+  &:focus {
+    outline: 1px solid var(--button-secondary-border-focus);
+    box-shadow: var(--focus-effect);
+  }
+
   &-wrap {
     display: grid;
     grid-template-columns: 16px 1fr;
@@ -276,7 +288,7 @@
   padding: 0;
 
   ul {
-    padding-left: var(--gutter-padding);
+    padding-left: 1.5rem;
   }
 
   & & .watch-submenu-item {

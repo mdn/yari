@@ -35,6 +35,7 @@ import "./index.scss";
 // code could come with its own styling rather than it having to be part of the
 // main bundle all the time.
 import "./interactive-examples.scss";
+// import { useUIStatus } from "../ui-context";
 
 // Lazy sub-components
 const Toolbar = React.lazy(() => import("./toolbar"));
@@ -142,6 +143,7 @@ export function Document(props /* TODO: define a TS interface for this */) {
       }
     }
   }, []);
+  // const { setToastData } = useUIStatus();
 
   if (!doc && !error) {
     return <Loading minHeight={800} message="Loading document..." />;
@@ -195,11 +197,8 @@ export function Document(props /* TODO: define a TS interface for this */) {
               <MathMLPolyfillMaybe />
             </React.Suspense>
           )}
-          <article className="main-page-content is-600-plus" lang={doc.locale}>
+          <article className="main-page-content" lang={doc.locale}>
             <h1>{doc.title}</h1>
-            <div className="in-page-toc">
-              {doc.toc && !!doc.toc.length && <TOC toc={doc.toc} />}
-            </div>
             <RenderDocumentBody doc={doc} />
             <Metadata doc={doc} locale={locale} />
           </article>

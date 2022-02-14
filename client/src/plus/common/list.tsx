@@ -2,7 +2,7 @@ import useSWR from "swr";
 import { useEffect, useState } from "react";
 import { Loading } from "../../ui/atoms/loading";
 import { useUserData } from "../../user-context";
-import { DataError, NotSignedIn, NotSubscriber } from ".";
+import { DataError, NotSignedIn } from ".";
 import { Button } from "../../ui/atoms/button";
 import { createSearchParams, useSearchParams } from "react-router-dom";
 import { DISABLE_AUTH } from "../../constants";
@@ -37,8 +37,6 @@ export default function List({
     return <Loading message="Waiting for authentication" />;
   } else if (!userData.isAuthenticated) {
     return <NotSignedIn />;
-  } else if (!userData.isSubscriber) {
-    return <NotSubscriber />;
   }
 
   function getPageUrl(page: number) {

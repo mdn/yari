@@ -12,6 +12,7 @@ interface Metadata {
   page: number;
   total: number;
   per_page: number;
+  max_non_subscribed: number;
 }
 
 interface NotificationData {

@@ -25,7 +25,6 @@
       .button-wrap {
         --button-font: var(--type-body-m);
         --button-bg: transparent;
-        border-width: 0;
         justify-content: flex-start;
         text-align: left;
         text-transform: none;
@@ -33,6 +32,11 @@
         &:hover {
           --button-bg: var(--button-secondary-hover);
         }
+      }
+
+      &.active-menu-item {
+        --button-bg: var(--background-primary);
+        --button-border-color: var(--border-secondary);
       }
     }
   }
