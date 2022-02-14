@@ -40,8 +40,14 @@ function forceExternalURL(url) {
   return url;
 }
 
-async function downloadAndResizeImage(src, out, basePath) {
-  const imageResponse = await got(forceExternalURL(src), {
+async function downloadAndResizeImage(
+  src,
+  out,
+  basePath,
+  forceExternal = true
+) {
+  const url = forceExternal ? forceExternalURL(src) : src;
+  const imageResponse = await got(url, {
     responseType: "buffer",
     timeout: 10000,
     retry: 3,

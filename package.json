@@ -158,6 +158,7 @@
     "jest-junit-reporter": "^1.1.0",
     "jest-puppeteer": "6.0.3",
     "jsdom": "^19.0.0",
+    "marked": "^4.0.12",
     "node-dev": "7.1.0",
     "pegjs": "^0.10.0",
     "prettier": "^2.5.1",
