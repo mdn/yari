@@ -13,7 +13,6 @@ export function SpecificationSection({
   specifications: Array<{
     title: string;
     bcdSpecificationURL: string;
-    shortTitle: string;
   }>;
   query: string;
 }) {
@@ -34,9 +33,7 @@ export function SpecificationSection({
               <tr key={spec.bcdSpecificationURL}>
                 <td>
                   <a href={spec.bcdSpecificationURL}>
-                    {spec.title}{" "}
-                    {spec.title !== spec.shortTitle && `(${spec.shortTitle})`}
-                    <br />
+                    {spec.title} <br />
                     {spec.bcdSpecificationURL.includes("#") && (
                       <small>
                         # {`${spec.bcdSpecificationURL.split("#")[1]}`}
