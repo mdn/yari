@@ -74,7 +74,7 @@ function NotificationsLayout() {
 
   const tabs = [
     {
-      label: "All Notifications",
+      label: "All notifications",
       path: `/${locale}/plus/notifications`,
     },
     {
@@ -82,18 +82,18 @@ function NotificationsLayout() {
       path: starredUrl,
     },
     {
-      label: "Watch List",
+      label: "Watch list",
       path: watchingUrl,
     },
   ];
 
   const filters = [
     {
-      label: "Content Updates",
+      label: "Content updates",
       param: "filterType=content",
     },
     {
-      label: "Browser Compatibility",
+      label: "Browser compatibility",
       param: "filterType=compat",
     },
   ];

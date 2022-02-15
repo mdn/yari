@@ -14,7 +14,7 @@ export const ReferenceMenu = ({ visibleSubMenuId, toggleMenu }) => {
     id: "references",
     items: [
       {
-        description: "Structure of content on the Web",
+        description: "Structure of content on the web",
         extraClasses: "html-link-container",
         hasIcon: true,
         iconClasses: "submenu-icon html",
@@ -38,7 +38,7 @@ export const ReferenceMenu = ({ visibleSubMenuId, toggleMenu }) => {
         url: `/${locale}/docs/Web/JavaScript`,
       },
       {
-        description: "Protocol for transmitting Web resources",
+        description: "Protocol for transmitting web resources",
         extraClasses: "http-link-container",
         hasIcon: true,
         iconClasses: "submenu-icon http",
@@ -46,7 +46,7 @@ export const ReferenceMenu = ({ visibleSubMenuId, toggleMenu }) => {
         url: `/${locale}/docs/Web/HTTP`,
       },
       {
-        description: "Interfaces for building Web applications",
+        description: "Interfaces for building web applications",
         extraClasses: "apis-link-container",
         hasIcon: true,
         iconClasses: "submenu-icon apis",
