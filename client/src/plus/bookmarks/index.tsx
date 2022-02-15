@@ -468,7 +468,9 @@ function Bookmark({
   return (
     <article key={bookmark.id} className={className}>
       <div className="icon-card-title-wrap">
-        <div className={`icon-card-icon ${iconClass || ""}`}>{iconLabel}</div>
+        <div className={`icon-card-icon ${iconClass || ""}`}>
+          <span>{iconLabel}</span>
+        </div>
         <div className="icon-card-content">
           {bookmark.parents.length > 0 && (
             <Breadcrumbs parents={bookmark.parents} />

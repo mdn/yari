@@ -36,6 +36,11 @@
     font-style: italic;
     padding: 0.5rem;
 
+    span {
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
     &.html {
       background-color: var(--html-accent-color);
     }
