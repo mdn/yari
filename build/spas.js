@@ -1,8 +1,8 @@
 const fs = require("fs");
 const path = require("path");
 const frontmatter = require("front-matter");
-// eslint-disable-next-line node/no-unpublished-require
-const { marked } = require("marked");
+
+const { m2h } = require("../markdown");
 
 const {
   CONTENT_ROOT,
@@ -69,7 +69,7 @@ async function buildSPAs(options) {
         "base64"
       );
       const frontMatter = frontmatter(markdown);
-      const contributorHTML = marked(frontMatter.body);
+      const contributorHTML = await m2h(frontMatter.body, locale);
 
       const context = {
         body: contributorHTML,
