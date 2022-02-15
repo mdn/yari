@@ -11,6 +11,7 @@
   border-radius: var(--elem-radius);
   background-color: var(--background-primary);
   padding: 1rem;
+  transition: 0.3s ease-out; // this removes a flash from .doomed animations
 
   a {
     &:link,
