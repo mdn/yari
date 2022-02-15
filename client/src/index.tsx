@@ -22,8 +22,6 @@ const appData = hydrationElement
   ? JSON.parse(hydrationElement.textContent!)
   : {};
 
-console.log(appData);
-
 let app = (
   <GAProvider>
     <UserDataProvider>
