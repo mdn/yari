@@ -18,6 +18,10 @@ const { default: got } = require("got");
 function getFeaturedContributor() {
   const prefix = "/en-us/contribute/spotlight";
   for (const root of [CONTRIBUTOR_SPOTLIGHT_ROOT]) {
+    if (!root) {
+      continue;
+    }
+
     for (const contributor of fs.readdirSync(root)) {
       const markdown = fs.readFileSync(
         `${root}/${contributor}/index.md`,
