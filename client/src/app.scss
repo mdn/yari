@@ -78,6 +78,11 @@ body {
   }
 }
 
+:focus-visible {
+  outline-style: auto;
+  outline-color: var(--accent-primary);
+}
+
 main {
   min-height: 80vh;
 }
