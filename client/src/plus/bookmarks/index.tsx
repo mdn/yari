@@ -116,7 +116,7 @@ function BookmarksLayout() {
     useContext(searchFiltersContext);
   const { setToastData } = useUIStatus();
 
-  const pageTitle = "My Collection";
+  const pageTitle = "Collections";
   React.useEffect(() => {
     document.title = pageTitle;
   }, []);
@@ -246,7 +246,7 @@ function BookmarksLayout() {
     <>
       <header className="plus-header">
         <Container>
-          <h1>My Collection</h1>
+          <h1>Collections</h1>
         </Container>
       </header>
       <Tabs tabs={localeToTab(locale)} />

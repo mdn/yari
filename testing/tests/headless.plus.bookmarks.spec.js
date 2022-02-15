@@ -83,7 +83,7 @@ test.describe("Bookmarking pages", () => {
     const locator = page.locator(".pagination");
 
     await page.goto(testURL("/en-US/plus/collection"));
-    await page.waitForSelector("h3:has-text('My Collection')");
+    await page.waitForSelector("h3:has-text('Collections')");
 
     await expect(locator).toBeVisible();
 
