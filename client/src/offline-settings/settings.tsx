@@ -39,7 +39,7 @@ function Settings() {
     const init = async () => {
       setSettings(await window.MDNWorker.offlineSettings());
       setStatus(await window.MDNWorker.updateAvailable());
-      setEstimate(await navigator?.storage.estimate());
+      setEstimate(await navigator?.storage?.estimate?.());
     };
     init();
   }, []);
