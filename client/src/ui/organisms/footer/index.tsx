@@ -120,7 +120,7 @@ export function Footer() {
 
         <div className="page-footer-nav-col-4">
           <h2 className="footer-nav-heading">Developers</h2>
-          <ul className="footer-nav-liÎst">
+          <ul className="footer-nav-list">
             <li className="footer-nav-item">
               <a className="footer-nav-link" href={`/${locale}/docs/Web`}>
                 Web technologies
