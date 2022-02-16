@@ -1,66 +1,67 @@
 import { Switch } from "../ui/atoms/switch";
-import { SettingsData, STATE, UpdateStatus } from "../app-interface";
+import { SettingsData, STATE, UpdateStatus } from "./mdn-worker";
 import useInterval from "@use-it/interval";
 
 import "./index.scss";
 import { useEffect, useState } from "react";
 import UpdateButton from "./update";
 import ClearButton from "./clear";
-import { MDN_APP_DESKTOP } from "../constants";
+
+function displayEstimate({ usage = 0, quota = Infinity }: StorageEstimate) {
+  const usageInMib = Math.round(usage / (1024 * 1024));
+
+  return `${usageInMib} MiB`;
+}
 
 export default function SettingsApp({ ...appProps }) {
   return (
-    <form>
-      <div className="field-group">
-        <section>
-          <h3>Offline settings</h3>
+    <div className="field-group">
+      <section>
+        <h3>Offline settings</h3>
 
-          <Settings />
-        </section>
-      </div>
-    </form>
+        <Settings />
+      </section>
+    </div>
   );
 }
 
 function Settings() {
-  MDN_APP_DESKTOP && window.Desktop.setTitle("Settings");
+  document.title = "MDN - Settings";
   const [status, setStatus] = useState<UpdateStatus>();
   const [delay, setDelay] = useState<number | null>(
     !status || status?.state === STATE.init ? 500 : null
   );
 
+  const [estimate, setEstimate] = useState<StorageEstimate | null>(null);
   const [settings, setSettings] = useState<SettingsData>();
 
   useEffect(() => {
     const init = async () => {
-      setSettings(await window.Desktop.offlineSettings());
-      setStatus(await window.Desktop.updateAvailable());
-      await window.Desktop.updateUser();
+      setSettings(await window.MDNWorker.offlineSettings());
+      setStatus(await window.MDNWorker.updateAvailable());
+      setEstimate(await navigator?.storage.estimate());
     };
     init();
   }, []);
 
   const updateSettings = async (change: SettingsData) => {
-    let newSettings = await window.Desktop.setOfflineSettings(change);
+    let newSettings = await window.MDNWorker.setOfflineSettings(change);
     setSettings(newSettings);
   };
 
   useInterval(async () => {
-    const next = await window.Desktop.updateStatus();
+    const next = await window.MDNWorker.status();
+    console.log(`next: ${next.state} - ${next.progress}`);
     if (next.state === STATE.nothing || next.state === STATE.updateAvailable) {
       setDelay(null);
     }
-    if (
-      next.progress !== status?.progress ||
-      next.state !== STATE.nothing ||
-      status?.state === STATE.init
-    ) {
-      setStatus(next);
+    if (next.progress !== status?.progress || status?.state === next.state) {
+      setStatus({ ...next });
     }
   }, delay);
 
   const update = () => {
-    window.Desktop.update();
+    window.MDNWorker.update();
     setDelay(500);
     setStatus(status);
   };
@@ -69,7 +70,7 @@ function Settings() {
     if (
       window.confirm("All downloaded content will be removed from your device")
     ) {
-      window.Desktop.clear();
+      window.MDNWorker.clear();
       setDelay(500);
       setStatus(status);
     }
@@ -78,6 +79,8 @@ function Settings() {
   if (settings?.autoUpdates && status?.state === STATE.updateAvailable) {
     update();
   }
+
+  const usage = estimate && displayEstimate(estimate);
 
   return (
     <ul>
@@ -90,14 +93,44 @@ function Settings() {
           toggle={(e) =>
             updateSettings({
               offline: e.target.checked,
-              autoUpdates: null,
             })
           }
         ></Switch>
       </li>
       {settings?.offline && (
         <li>
+          <h4>Prefer online content</h4>
+          <span>
+            Do not use offline content while connected to the internet
+          </span>
+          <Switch
+            name="prefer-online"
+            checked={settings?.preferOnline || false}
+            toggle={(e) =>
+              updateSettings({
+                preferOnline: e.target.checked,
+              })
+            }
+          ></Switch>
+        </li>
+      )}
+      {settings?.offline && (
+        <li>
           <UpdateButton updateStatus={status || null} update={update} />
+        </li>
+      )}
+      {settings?.offline && window?.location.hash === "#debug" && (
+        <li>
+          <h4>Debug</h4>
+          <span>{JSON.stringify(status, null, 2)}</span>
+        </li>
+      )}
+      {settings?.offline && (
+        <li>
+          <h4>Storage used</h4>
+          <span>
+            MDN offline currently uses <b>{usage || "?"}</b>
+          </span>
         </li>
       )}
       {settings?.offline && (
@@ -111,7 +144,6 @@ function Settings() {
             checked={settings?.autoUpdates || false}
             toggle={(e) =>
               updateSettings({
-                offline: null,
                 autoUpdates: e.target.checked,
               })
             }
