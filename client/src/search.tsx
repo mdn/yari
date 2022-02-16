@@ -61,7 +61,7 @@ function useSearchIndex(): readonly [
       return;
     }
 
-    const flex = FlexSearch.create({ tokenize: "forward" });
+    const flex = FlexSearch.create({ tokenize: "full" });
     data!.forEach(({ title }, i) => {
       flex.add(i, title);
     });
