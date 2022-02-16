@@ -6,7 +6,7 @@ import {
   MDN_PLUS_SUBSCRIBE_5M_URL,
   MDN_PLUS_SUBSCRIBE_5Y_URL,
 } from "../../../constants";
-import { UserData, useUserData } from "../../../user-context";
+import { SubscriptionType, UserData, useUserData } from "../../../user-context";
 import { Switch } from "../../../ui/atoms/switch";
 import { useState } from "react";
 
@@ -17,19 +17,22 @@ export enum Period {
 
 const BILLING_PERIOD = "subscription_billing_period";
 
+export type OfferDetailsPlanProps = {
+  subscriptionType: SubscriptionType;
+  monthlyPrice?: number;
+  ctaLink: string;
+};
+
 export type OfferDetailsProps = {
   id: string;
   name: string;
-  monthlyPrice?: number;
-  discountedMonthlyPrice?: number;
   price?: number;
   currency?: string;
-  period?: Period;
   features: (string | null)[][];
   includes: string;
   cta: string;
-  ctaLink: string;
-  discountedCtaLink?: string;
+  discounted: OfferDetailsPlanProps;
+  regular: OfferDetailsPlanProps;
 };
 
 const PLUS_FEATURES = [
@@ -39,7 +42,7 @@ const PLUS_FEATURES = [
   ["themes", "Access to all themes"],
 ];
 
-const CORE = {
+const CORE: OfferDetailsProps = {
   id: "core",
   name: "Core",
   features: [
@@ -50,52 +53,78 @@ const CORE = {
   ],
   includes: "Includes:",
   cta: "Start with Core",
-  ctaLink: FXA_SIGNIN_URL,
+  regular: {
+    subscriptionType: SubscriptionType.MDN_CORE,
+    ctaLink: FXA_SIGNIN_URL,
+  },
+  discounted: {
+    subscriptionType: SubscriptionType.MDN_CORE,
+    ctaLink: FXA_SIGNIN_URL,
+  },
 };
 
-const PLUS_5 = {
+const PLUS_5: OfferDetailsProps = {
   id: "plus5",
   name: "MDN Plus 5",
-  monthlyPrice: 500,
-  discountedMonthlyPrice: 400,
   currency: "USD",
   features: PLUS_FEATURES,
   includes: "Includes unlimited access to:",
   cta: "Start with Supporter 5",
-  ctaLink: MDN_PLUS_SUBSCRIBE_5M_URL,
-  discountedCtaLink: MDN_PLUS_SUBSCRIBE_5Y_URL,
+  regular: {
+    subscriptionType: SubscriptionType.MDN_PLUS_5M,
+    ctaLink: MDN_PLUS_SUBSCRIBE_5M_URL,
+    monthlyPrice: 500,
+  },
+  discounted: {
+    subscriptionType: SubscriptionType.MDN_PLUS_5Y,
+    ctaLink: MDN_PLUS_SUBSCRIBE_5Y_URL,
+    monthlyPrice: 417,
+  },
 };
 
-const PLUS_10 = {
+const PLUS_10: OfferDetailsProps = {
   id: "plus10",
   name: "MDN Plus 10",
-  monthlyPrice: 1000,
-  discountedMonthlyPrice: 800,
   currency: "USD",
   features: [...PLUS_FEATURES, [null, "A good feeling"]],
   includes: "Includes unlimited access to:",
   cta: "Start with Supporter 10",
-  ctaLink: MDN_PLUS_SUBSCRIBE_10M_URL,
-  discountedCtaLink: MDN_PLUS_SUBSCRIBE_10Y_URL,
+  regular: {
+    subscriptionType: SubscriptionType.MDN_PLUS_10M,
+    ctaLink: MDN_PLUS_SUBSCRIBE_10M_URL,
+    monthlyPrice: 1000,
+  },
+  discounted: {
+    subscriptionType: SubscriptionType.MDN_PLUS_10Y,
+    ctaLink: MDN_PLUS_SUBSCRIBE_10Y_URL,
+    monthlyPrice: 833,
+  },
 };
 
-function OfferDetails(props: OfferDetailsProps) {
-  const discounted = props.period === Period.Year;
+function OfferDetails({
+  offerDetails,
+  period,
+}: {
+  offerDetails: OfferDetailsProps;
+  period: Period;
+}) {
+  const discounted = period === Period.Year;
+  const { subscriptionType, ctaLink, monthlyPrice } =
+    period === Period.Year && offerDetails.id !== "core"
+      ? offerDetails.discounted
+      : offerDetails.regular;
   const userData = useUserData();
-  const current = isCurrent(userData, props.id);
+  const current = isCurrent(userData, subscriptionType);
   const displayMonthlyPrice =
-    props.monthlyPrice &&
-    props.discountedMonthlyPrice &&
+    monthlyPrice &&
     new Intl.NumberFormat(undefined, {
       style: "currency",
-      currency: props.currency,
-    }).format(
-      (discounted ? props.discountedMonthlyPrice : props.monthlyPrice) / 100
-    );
+      currency: offerDetails.currency,
+    }).format(monthlyPrice / 100);
   return (
-    <section className="subscribe-detail" id={props.id}>
+    <section className="subscribe-detail" id={offerDetails.id}>
       <p className="sub-info">
-        <h3>{props.name}</h3>
+        <h3>{offerDetails.name}</h3>
         {(displayMonthlyPrice && (
           <p className="price">
             <span className="sub-price">{displayMonthlyPrice}</span>
@@ -115,16 +144,13 @@ function OfferDetails(props: OfferDetailsProps) {
         {(current && (
           <span className="sub-link current">Current plan</span>
         )) || (
-          <a
-            href={discounted ? props.discountedCtaLink : props.ctaLink}
-            className="sub-link"
-          >
-            {props.cta}
+          <a href={ctaLink} className="sub-link">
+            {offerDetails.cta}
           </a>
         )}
-        <p className="includes">{props.includes}</p>
+        <p className="includes">{offerDetails.includes}</p>
         <ul>
-          {props.features.map(([href, text]) => (
+          {offerDetails.features.map(([href, text]) => (
             <li>{(href && <a href={`#${href}`}>{text}</a>) || text}</li>
           ))}
         </ul>
@@ -135,17 +161,11 @@ function OfferDetails(props: OfferDetailsProps) {
 }
 
 // TODO: This depends on SubPlat providing us with the actual data.
-function isCurrent(user: UserData | null, plan: String) {
+function isCurrent(user: UserData | null, subscriptionType: SubscriptionType) {
   if (user === null || !user.isAuthenticated) {
     return false;
   }
-  if (!user.isSubscriber && plan === "core") {
-    return true;
-  }
-  if (user.isSubscriber && plan !== "core") {
-    return true;
-  }
-  return false;
+  return user.subscriptionType === subscriptionType;
 }
 
 function OfferOverviewSubscribe() {
@@ -172,9 +192,9 @@ function OfferOverviewSubscribe() {
         Save 20%
       </Switch>
       <div className="wrapper">
-        <OfferDetails {...CORE} period={period}></OfferDetails>
-        <OfferDetails {...PLUS_5} period={period}></OfferDetails>
-        <OfferDetails {...PLUS_10} period={period}></OfferDetails>
+        <OfferDetails offerDetails={CORE} period={period}></OfferDetails>
+        <OfferDetails offerDetails={PLUS_5} period={period}></OfferDetails>
+        <OfferDetails offerDetails={PLUS_10} period={period}></OfferDetails>
       </div>
     </div>
   );

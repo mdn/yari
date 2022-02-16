@@ -41,6 +41,16 @@
       &:visited {
         color: var(--text-secondary);
       }
+
+      &:focus-visible {
+        outline: 0;
+
+        [property="name"] {
+          outline-style: auto;
+          outline-color: var(--accent-primary);
+          outline-offset: 1px;
+        }
+      }
     }
 
     [property="name"] {

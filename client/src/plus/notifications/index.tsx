@@ -31,7 +31,7 @@ function NotificationsLayout() {
   const starredUrl = `/${locale}/plus/notifications/starred`;
   const watchingUrl = `/${locale}/plus/notifications/watching`;
 
-  let pageTitle = "My Notifications";
+  let pageTitle = "Notifications";
   let apiUrl = `/api/v1/plus/notifications/?${getSearchFiltersParams().toString()}`;
 
   if (location.pathname === starredUrl) {
@@ -74,7 +74,7 @@ function NotificationsLayout() {
 
   const tabs = [
     {
-      label: "All Notifications",
+      label: "All notifications",
       path: `/${locale}/plus/notifications`,
     },
     {
@@ -82,18 +82,18 @@ function NotificationsLayout() {
       path: starredUrl,
     },
     {
-      label: "Watch List",
+      label: "Watch list",
       path: watchingUrl,
     },
   ];
 
   const filters = [
     {
-      label: "Content Updates",
+      label: "Content updates",
       param: "filterType=content",
     },
     {
-      label: "Browser Compatibility",
+      label: "Browser compatibility",
       param: "filterType=compat",
     },
   ];
@@ -113,7 +113,7 @@ function NotificationsLayout() {
     <>
       <header className="plus-header">
         <Container>
-          <h1>My Notifications</h1>
+          <h1>Notifications</h1>
         </Container>
         <Tabs tabs={tabs} />
       </header>

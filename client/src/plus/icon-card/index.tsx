@@ -37,7 +37,9 @@ export default function IconCard({ item, changedCallback, csrfToken }) {
   return (
     <article className="icon-card">
       <div className="icon-card-title-wrap">
-        <div className={`icon-card-icon ${iconClass || ""}`}>{iconLabel}</div>
+        <div className={`icon-card-icon ${iconClass || ""}`}>
+          <span>{iconLabel}</span>
+        </div>
         <div className="icon-card-content">
           <ol className="breadcrumbs">
             <li className="last">

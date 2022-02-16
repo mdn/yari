@@ -67,7 +67,7 @@ export function Footer() {
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                MDN Store
+                MDN store
               </a>
             </li>
           </ul>
@@ -78,12 +78,12 @@ export function Footer() {
           <ul className="footer-nav-list">
             <li className="footer-nav-item">
               <a className="footer-nav-link" href={`/${locale}/#TODO`}>
-                Product Help
+                Product help
               </a>
             </li>
             <li className="footer-nav-item">
               <a className="footer-nav-link" href={`/${locale}/#TODO`}>
-                Report a Documentation Issue
+                Report a documentation issue
               </a>
             </li>
             <li className="footer-nav-item">
@@ -91,14 +91,14 @@ export function Footer() {
                 className="footer-nav-link"
                 href={`/${locale}/docs/MDN/Feedback`}
               >
-                Report a Site Issue
+                Report a site issue
               </a>
             </li>
           </ul>
         </div>
 
         <div className="page-footer-nav-col-3">
-          <h2 className="footer-nav-heading">Our Communities</h2>
+          <h2 className="footer-nav-heading">Our communities</h2>
           <ul className="footer-nav-list">
             <li className="footer-nav-item">
               <a className="footer-nav-link" href={`/${locale}/#TODO`}>
@@ -107,12 +107,12 @@ export function Footer() {
             </li>
             <li className="footer-nav-item">
               <a className="footer-nav-link" href={`/${locale}/#TODO`}>
-                MDN Forums
+                MDN forums
               </a>
             </li>
             <li className="footer-nav-item">
               <a className="footer-nav-link" href={`/${locale}/#TODO`}>
-                MDN Chat
+                MDN chat
               </a>
             </li>
           </ul>
@@ -120,15 +120,15 @@ export function Footer() {
 
         <div className="page-footer-nav-col-4">
           <h2 className="footer-nav-heading">Developers</h2>
-          <ul className="footer-nav-list">
+          <ul className="footer-nav-liÎst">
             <li className="footer-nav-item">
               <a className="footer-nav-link" href={`/${locale}/docs/Web`}>
-                Web Technologies
+                Web technologies
               </a>
             </li>
             <li className="footer-nav-item">
               <a className="footer-nav-link" href={`/${locale}/#TODO`}>
-                Learn Web Development
+                Learn web development
               </a>
             </li>
             <li className="footer-nav-item">

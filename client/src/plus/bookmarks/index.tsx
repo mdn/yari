@@ -116,7 +116,7 @@ function BookmarksLayout() {
     useContext(searchFiltersContext);
   const { setToastData } = useUIStatus();
 
-  const pageTitle = "My Collection";
+  const pageTitle = "Collections";
   React.useEffect(() => {
     document.title = pageTitle;
   }, []);
@@ -246,7 +246,7 @@ function BookmarksLayout() {
     <>
       <header className="plus-header">
         <Container>
-          <h1>My Collection</h1>
+          <h1>Collections</h1>
         </Container>
       </header>
       <Tabs tabs={localeToTab(locale)} />
@@ -468,7 +468,9 @@ function Bookmark({
   return (
     <article key={bookmark.id} className={className}>
       <div className="icon-card-title-wrap">
-        <div className={`icon-card-icon ${iconClass || ""}`}>{iconLabel}</div>
+        <div className={`icon-card-icon ${iconClass || ""}`}>
+          <span>{iconLabel}</span>
+        </div>
         <div className="icon-card-content">
           {bookmark.parents.length > 0 && (
             <Breadcrumbs parents={bookmark.parents} />
