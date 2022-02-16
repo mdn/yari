@@ -5,7 +5,7 @@ import { useCSRFMiddlewareToken, useLocale } from "../../../hooks";
 
 import "./index.scss";
 import { Button } from "../button";
-import { MDN_APP_ANDROID, MDN_APP_DESKTOP } from "../../../constants";
+import { MDN_APP_ANDROID } from "../../../constants";
 
 export default function SignOut() {
   const csrfMiddlewareToken = useCSRFMiddlewareToken();
@@ -28,17 +28,10 @@ export default function SignOut() {
     prefix = `http://${process.env.REACT_APP_KUMA_HOST}`;
   }
 
-  if (MDN_APP_DESKTOP || MDN_APP_ANDROID) {
-    let signOut = async () => {};
-    if (MDN_APP_DESKTOP) {
-      signOut = async () => {
-        await window.Desktop.signOut();
-      };
-    } else if (MDN_APP_ANDROID) {
-      signOut = async () => {
-        await window.Android.signOut();
-      };
-    }
+  if (MDN_APP_ANDROID) {
+    const signOut = async () => {
+      await window.Android.signOut();
+    };
     return (
       <form className="sign-out-form">
         <Button
