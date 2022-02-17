@@ -8,7 +8,7 @@ export function HomepageHero() {
       <section>
         <h1>
           Resources for <u>Developers</u>,
-          <br /> by Developers.
+          <br /> by Developers
         </h1>
         <p>
           Evolving learning platform for Web technologies and the software that

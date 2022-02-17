@@ -424,7 +424,7 @@ function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
             : "search-input-field",
           id: "main-q",
           name: "q",
-          placeholder: "   ",
+          placeholder: "   ",
           onMouseOver: initializeSearchIndex,
           onFocus: () => {
             onChangeIsFocused(true);
