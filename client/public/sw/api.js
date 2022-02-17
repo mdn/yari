@@ -1,7 +1,5 @@
-importScripts("https://cdn.jsdelivr.net/npm/jsstore@4.2.6/dist/jsstore.min.js");
-importScripts(
-  "https://cdn.jsdelivr.net/npm/jsstore@4.2.6/dist/jsstore.worker.min.js"
-);
+importScripts("./sw/jsstore.min.js");
+importScripts("./sw/jsstore.worker.min.js");
 
 const SCHEMA = {
   name: "MDN",
