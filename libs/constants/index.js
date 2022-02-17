@@ -95,6 +95,9 @@ const CSP_DIRECTIVES = {
   "connect-src": [
     "'self'",
 
+    "updates.developer.allizom.org",
+    "updates.developer.mozilla.org",
+
     "www.google-analytics.com",
     "stats.g.doubleclick.net",
   ],

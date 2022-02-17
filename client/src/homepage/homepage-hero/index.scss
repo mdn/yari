@@ -2,7 +2,7 @@
 
 .homepage-hero {
   color: var(--text-primary);
-  width: 100vw;
+  width: 100%;
 
   section {
     height: 22rem;
@@ -55,7 +55,7 @@
     top: 0;
     z-index: -1;
     height: 23rem;
-    overflow-y: clip;
+    overflow: hidden;
     --mandala-primary: var(--border-primary);
     background-color: rgba(1, 1, 1, 0.9);
 
