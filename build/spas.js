@@ -15,27 +15,27 @@ const { BUILD_OUT_ROOT } = require("./constants");
 const { renderHTML } = require("../ssr/dist/main");
 const { default: got } = require("got");
 
+const contributorSpotlightRoot = CONTRIBUTOR_SPOTLIGHT_ROOT;
+
 function getFeaturedContributor() {
   const prefix = "/en-us/contribute/spotlight";
-  for (const root of [CONTRIBUTOR_SPOTLIGHT_ROOT]) {
-    if (!root) {
-      continue;
-    }
+  if (!contributorSpotlightRoot) {
+    return;
+  }
 
-    for (const contributor of fs.readdirSync(root)) {
-      const markdown = fs.readFileSync(
-        `${root}/${contributor}/index.md`,
-        "utf8"
-      );
-      const frontMatter = frontmatter(markdown);
+  for (const contributor of fs.readdirSync(contributorSpotlightRoot)) {
+    const markdown = fs.readFileSync(
+      `${contributorSpotlightRoot}/${contributor}/index.md`,
+      "utf8"
+    );
+    const frontMatter = frontmatter(markdown);
 
-      if (frontMatter.attributes.is_featured) {
-        return {
-          contributorName: frontMatter.attributes.contributor_name,
-          url: `${prefix}/${frontMatter.attributes.folder_name}`,
-          quote: frontMatter.attributes.quote,
-        };
-      }
+    if (frontMatter.attributes.is_featured) {
+      return {
+        contributorName: frontMatter.attributes.contributor_name,
+        url: `${prefix}/${frontMatter.attributes.folder_name}`,
+        quote: frontMatter.attributes.quote,
+      };
     }
   }
 }
@@ -54,58 +54,55 @@ async function buildSPAs(options) {
     console.log("Wrote", path.join(outPath, path.basename(url)));
   }
 
-  for (const root of [CONTRIBUTOR_SPOTLIGHT_ROOT]) {
-    if (!root) {
-      continue;
-    }
+  if (!contributorSpotlightRoot) {
+    return;
+  }
 
-    // for now, these will only be available in English
-    const locale = "en-US";
-    const prefix = "contribute/spotlight";
+  // for now, these will only be available in English
+  const locale = "en-US";
+  const prefix = "contribute/spotlight";
+  const profileImg = "profile-image.jpg";
 
-    for (const contributor of fs.readdirSync(root)) {
-      const markdown = fs.readFileSync(
-        `${root}/${contributor}/index.md`,
-        "utf8"
-      );
-      const imgFile = fs.readFileSync(
-        `${root}/${contributor}/profile-image.jpg`,
-        "base64"
-      );
-      const frontMatter = frontmatter(markdown);
-      const contributorHTML = await m2h(frontMatter.body, locale);
+  for (const contributor of fs.readdirSync(contributorSpotlightRoot)) {
+    const markdown = fs.readFileSync(
+      `${contributorSpotlightRoot}/${contributor}/index.md`,
+      "utf8"
+    );
 
-      const context = {
-        body: contributorHTML,
-        contributorName: frontMatter.attributes.contributor_name,
-        folderName: frontMatter.attributes.folder_name,
-        isFeatured: frontMatter.attributes.is_featured,
-        pageTitle: `Contributor Spotlight - ${frontMatter.attributes.contributor_name} - MDN Web Docs`,
-        profileImg: frontMatter.attributes.profile_img[0],
-        webLinks: frontMatter.attributes.web_links,
-        quote: frontMatter.attributes.quote,
-      };
+    const frontMatter = frontmatter(markdown);
+    const contributorHTML = await m2h(frontMatter.body, locale);
 
-      const html = renderHTML(url, context);
-      const outPath = path.join(
-        BUILD_OUT_ROOT,
-        locale,
-        `${prefix}/${context.folderName}`
-      );
-      const filePath = path.join(outPath, "index.html");
-      const imgFilePath = path.join(outPath, "profile-image.jpg");
-      const jsonFilePath = path.join(outPath, "index.json");
+    const context = {
+      body: contributorHTML,
+      contributorName: frontMatter.attributes.contributor_name,
+      folderName: frontMatter.attributes.folder_name,
+      isFeatured: frontMatter.attributes.is_featured,
+      profileImg,
+      profileImgAlt: frontMatter.attributes.img_alt,
+      webLinks: frontMatter.attributes.web_links,
+      quote: frontMatter.attributes.quote,
+    };
 
-      fs.mkdirSync(outPath, { recursive: true });
-      fs.writeFileSync(filePath, html);
-      fs.writeFileSync(imgFilePath, imgFile, "base64");
-      fs.writeFileSync(jsonFilePath, JSON.stringify(context));
+    const html = renderHTML(url, context);
+    const outPath = path.join(
+      BUILD_OUT_ROOT,
+      locale,
+      `${prefix}/${context.folderName}`
+    );
+    const filePath = path.join(outPath, "index.html");
+    const imgFilePath = `${contributorSpotlightRoot}/${contributor}/profile-image.jpg`;
+    const imgFileDestPath = path.join(outPath, profileImg);
+    const jsonFilePath = path.join(outPath, "index.json");
 
-      buildCount++;
+    fs.mkdirSync(outPath, { recursive: true });
+    fs.writeFileSync(filePath, html);
+    fs.copyFileSync(imgFilePath, imgFileDestPath);
+    fs.writeFileSync(jsonFilePath, JSON.stringify(context));
 
-      if (options.verbose) {
-        console.log("Wrote", filePath);
-      }
+    buildCount++;
+
+    if (options.verbose) {
+      console.log("Wrote", filePath);
     }
   }
 

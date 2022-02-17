@@ -12,8 +12,8 @@ type ContributorDetails = {
   contributorName: string;
   folderName: string;
   isFeatured: boolean;
-  pageTitle: string;
-  profileImg: object;
+  profileImg: string;
+  profileImgAlt: string;
   webLinks: Array<{ name: string; url: string }>;
   quote: string;
 };
@@ -40,7 +40,9 @@ export function ContributorSpotlight(props: ContributorDetails) {
   );
 
   React.useEffect(() => {
-    document.title = data && data.pageTitle;
+    const pageTitle =
+      data && `Contributor Spotlight - ${data.contributorName} - MDN Web Docs`;
+    document.title = pageTitle;
   }, [data]);
 
   return (
@@ -49,8 +51,8 @@ export function ContributorSpotlight(props: ContributorDetails) {
         <>
           <img
             className="profile-image"
-            src={`${baseURL}/${data.profileImg.src}`}
-            alt={data.profileImg.alt}
+            src={`${baseURL}/${data.profileImg}`}
+            alt={data.profileImgAlt}
           />
           <h1>Contributor Spotlight - {data.contributorName}</h1>
           <WebLinks webLinks={data.webLinks} />
