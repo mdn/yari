@@ -61,7 +61,7 @@
     cursor: pointer;
     padding: 1rem 0.5rem;
     text-align: left;
-    width: 100%;
+    width: max-content;
 
     &:link,
     &:visited {
@@ -176,6 +176,7 @@
 
     .main-nav {
       margin-right: auto;
+      width: max-content;
     }
 
     .menu-toggle + .top-level-entry {
