@@ -450,17 +450,9 @@ function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
           ref: (input) => {
             inputRef.current = input;
           },
+          required: true,
         })}
       />
-
-      <Button
-        type="action"
-        icon="cancel"
-        extraClasses="close-search-button"
-        onClickHandler={onCloseSearch}
-      >
-        <span className="visually-hidden">Close search</span>
-      </Button>
 
       <Button
         type="action"
@@ -469,6 +461,15 @@ function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
         extraClasses="search-button"
       >
         <span className="visually-hidden">Search</span>
+      </Button>
+
+      <Button
+        type="action"
+        icon="cancel"
+        extraClasses="close-search-button"
+        onClickHandler={onCloseSearch}
+      >
+        <span className="visually-hidden">Close search</span>
       </Button>
 
       <div {...getMenuProps()}>
