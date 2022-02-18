@@ -83,7 +83,6 @@ async function buildSPAs(options) {
     if (options.verbose) {
       console.log("Wrote", filePath);
     }
-    
     if (frontMatter.attributes.is_featured) {
       featuredContributor = {
         contributorName: frontMatter.attributes.contributor_name,
