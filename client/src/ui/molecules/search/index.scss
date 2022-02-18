@@ -40,13 +40,16 @@
     }
 
     &:invalid {
-      animation: blink 1.5s step-end infinite;
+      animation: blink 2s step-end infinite;
+      caret-color: transparent;
+    }
+    &:valid {
+      animation: none;
     }
     &:focus {
       outline: 0 none;
       box-shadow: var(--focus-01);
       border-color: var(--field-focus-border);
-      animation: none;
     }
 
     &::placeholder {
