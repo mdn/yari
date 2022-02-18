@@ -10,6 +10,14 @@
   --background-primary: #{$mdn-theme-light-background-primary};
   --background-secondary: #{$mdn-theme-light-background-secondary};
   --background-tertiary: #{$mdn-theme-light-background-tertiary};
+  --background-mark-yellow: #{color.adjust(
+      $mdn-color-light-theme-yellow-30,
+      $alpha: -0.6
+    )};
+  --background-mark-green: #{color.adjust(
+      $mdn-color-light-theme-green-30,
+      $alpha: -0.6
+    )};
 
   --border-primary: #{$mdn-theme-light-border-primary};
   --border-secondary: #{$mdn-theme-light-border-secondary};
@@ -24,6 +32,8 @@
   --button-secondary-active: #{$mdn-theme-light-button-secondary-active};
   --button-secondary-inactive: #{$mdn-theme-light-button-secondary-inactive};
   --button-secondary-border-focus: #{$mdn-theme-light-button-secondary-border-focus};
+  --button-secondary-border-red: #{$mdn-theme-light-button-secondary-border-red};
+  --button-secondary-border-red-focus: #{$mdn-theme-light-button-secondary-border-red-focus};
 
   --icon-primary: #{$mdn-theme-light-icon-primary};
   --icon-secondary: #{$mdn-theme-light-icon-secondary};
@@ -39,7 +49,10 @@
     )};
 
   --accent-secondary: #{$mdn-theme-light-accent-secondary};
-  --accent-tertiary: #{color.adjust($mdn-color-blue-40, $alpha: -0.9)};
+  --accent-tertiary: #{color.adjust(
+      $mdn-color-light-theme-blue-50,
+      $alpha: -0.9
+    )};
 
   --shadow-01: #{$mdn-theme-light-shadow-01};
   --shadow-02: #{$mdn-theme-light-shadow-02};
@@ -59,53 +72,85 @@
   --scrollbar-bg: transparent;
   --scrollbar-color: rgba(0, 0, 0, 0.25);
 
-  --html-accent-color: #{$mdn-color-red-60};
-  --css-accent-color: #{$mdn-color-blue-50};
-  --js-accent-color: #{$mdn-color-yellow-70};
-  --http-accent-color: #{$mdn-color-green-80};
-  --apis-accent-color: #{$mdn-color-violet-70};
+  --plus-accent-color: #{$mdn-color-light-theme-blue-50};
+  --html-accent-color: #{$mdn-color-light-theme-red-50};
+  --css-accent-color: #{$mdn-color-light-theme-blue-50};
+  --js-accent-color: #{$mdn-color-light-theme-green-50};
+  --http-accent-color: #{$mdn-color-light-theme-yellow-50};
+  --apis-accent-color: #{$mdn-color-light-theme-violet-50};
 
-  --html-accent-engage: #{color.adjust($mdn-color-red-60, $alpha: -0.3)};
-  --css-accent-engage: #{color.adjust($mdn-color-blue-50, $alpha: -0.3)};
-  --js-accent-engage: #{color.adjust($mdn-color-yellow-70, $alpha: -0.3)};
-  --http-accent-engage: #{color.adjust($mdn-color-green-80, $alpha: -0.3)};
-  --apis-accent-engage: #{color.adjust($mdn-color-violet-70, $alpha: -0.3)};
+  --plus-accent-engage: #{color.adjust(
+      $mdn-color-light-theme-blue-50,
+      $alpha: -0.3
+    )};
+  --html-accent-engage: #{color.adjust(
+      $mdn-color-light-theme-red-50,
+      $alpha: -0.3
+    )};
+  --css-accent-engage: #{color.adjust(
+      $mdn-color-light-theme-blue-50,
+      $alpha: -0.3
+    )};
+  --js-accent-engage: #{color.adjust(
+      $mdn-color-light-theme-green-50,
+      $alpha: -0.3
+    )};
+  --http-accent-engage: #{color.adjust(
+      $mdn-color-light-theme-yellow-50,
+      $alpha: -0.3
+    )};
+  --apis-accent-engage: #{color.adjust(
+      $mdn-color-light-theme-violet-50,
+      $alpha: -0.3
+    )};
 
   --html-code-inline: #{color.adjust(
-      $mdn-color-red-60,
+      $mdn-color-light-theme-red-50,
       $alpha: -0.92,
       $saturation: -20%
     )};
   --html-code-block: #{color.adjust(
-      $mdn-color-red-60,
+      $mdn-color-light-theme-red-50,
       $alpha: -0.95,
       $saturation: -10%
     )};
 
-  --css-code-inline: #{color.adjust($mdn-color-blue-50, $alpha: -0.92)};
-  --css-code-block: #{color.adjust($mdn-color-blue-50, $alpha: -0.97)};
+  --css-code-inline: #{color.adjust(
+      $mdn-color-light-theme-blue-50,
+      $alpha: -0.92
+    )};
+  --css-code-block: #{color.adjust(
+      $mdn-color-light-theme-blue-50,
+      $alpha: -0.97
+    )};
 
   --js-code-inline: #{color.adjust(
-      $mdn-color-yellow-60,
+      $mdn-color-light-theme-green-50,
       $alpha: -0.9,
       $saturation: 20%
     )};
   --js-code-block: #{color.adjust(
-      $mdn-color-yellow-60,
+      $mdn-color-light-theme-green-50,
       $alpha: -0.95,
       $saturation: 20%
     )};
 
-  --http-code-inline: #{color.adjust($mdn-color-green-70, $alpha: -0.92)};
-  --http-code-block: #{color.adjust($mdn-color-green-70, $alpha: -0.95)};
+  --http-code-inline: #{color.adjust(
+      $mdn-color-light-theme-yellow-50,
+      $alpha: -0.92
+    )};
+  --http-code-block: #{color.adjust(
+      $mdn-color-light-theme-yellow-50,
+      $alpha: -0.95
+    )};
 
   --apis-code-inline: #{color.adjust(
-      $mdn-color-violet-60,
+      $mdn-color-light-theme-violet-50,
       $alpha: -0.92,
       $saturation: -10%
     )};
   --apis-code-block: #{color.adjust(
-      $mdn-color-violet-60,
+      $mdn-color-light-theme-violet-50,
       $alpha: -0.96,
       $saturation: -20%
     )};
@@ -134,6 +179,10 @@
   --background-primary: #{$mdn-theme-dark-background-primary};
   --background-secondary: #{$mdn-theme-dark-background-secondary};
   --background-tertiary: #{$mdn-theme-dark-background-tertiary};
+  --background-mark-yellow: #{color.adjust(
+      $mdn-color-dark-theme-yellow-30,
+      $alpha: -0.6
+    )};
 
   --border-primary: #{$mdn-theme-dark-border-primary};
   --border-secondary: #{$mdn-theme-dark-border-secondary};
@@ -179,69 +228,84 @@
 
   --scrollbar-color: rgba(255, 255, 255, 0.25);
 
-  --html-accent-color: #{$mdn-color-red-50};
-  --css-accent-color: #{$mdn-color-blue-20};
-  --js-accent-color: #{$mdn-color-yellow-30};
-  --http-accent-color: #{$mdn-color-green-40};
-  --apis-accent-color: #{$mdn-color-violet-30};
+  --html-accent-color: #{$mdn-color-dark-theme-red-50};
+  --css-accent-color: #{$mdn-color-dark-theme-blue-50};
+  --js-accent-color: #{$mdn-color-dark-theme-yellow-50};
+  --http-accent-color: #{$mdn-color-dark-theme-green-50};
+  --apis-accent-color: #{$mdn-color-dark-theme-violet-50};
 
-  --html-accent-engage: #{color.adjust($mdn-color-red-50, $alpha: -0.3)};
-  --css-accent-engage: #{color.adjust($mdn-color-blue-20, $alpha: -0.3)};
-  --js-accent-engage: #{color.adjust($mdn-color-yellow-30, $alpha: -0.3)};
-  --http-accent-engage: #{color.adjust($mdn-color-green-40, $alpha: -0.3)};
-  --apis-accent-engage: #{color.adjust($mdn-color-violet-30, $alpha: -0.3)};
+  --html-accent-engage: #{color.adjust(
+      $mdn-color-dark-theme-red-50,
+      $alpha: -0.3
+    )};
+  --css-accent-engage: #{color.adjust(
+      $mdn-color-dark-theme-blue-50,
+      $alpha: -0.3
+    )};
+  --js-accent-engage: #{color.adjust(
+      $mdn-color-dark-theme-yellow-50,
+      $alpha: -0.3
+    )};
+  --http-accent-engage: #{color.adjust(
+      $mdn-color-dark-theme-green-50,
+      $alpha: -0.3
+    )};
+  --apis-accent-engage: #{color.adjust(
+      $mdn-color-dark-theme-violet-50,
+      $alpha: -0.3
+    )};
 
   --html-code-inline: #{color.adjust(
-      $mdn-color-red-40,
+      $mdn-color-dark-theme-red-50,
       $alpha: -0.8,
       $saturation: 20%
     )};
   --html-code-block: #{color.adjust(
-      $mdn-color-red-40,
+      $mdn-color-dark-theme-red-40,
       $alpha: -0.9,
       $saturation: 10%
     )};
 
   --css-code-inline: #{color.adjust(
-      $mdn-color-blue-20,
+      $mdn-color-dark-theme-blue-20,
       $alpha: -0.85,
       $saturation: 20%
     )};
   --css-code-block: #{color.adjust(
-      $mdn-color-blue-20,
+      $mdn-color-dark-theme-blue-20,
       $alpha: -0.9,
       $saturation: 20%
     )};
 
   --js-code-inline: #{color.adjust(
-      $mdn-color-yellow-10,
+      $mdn-color-dark-theme-yellow-10,
       $alpha: -0.85,
       $saturation: 20%
     )};
   --js-code-block: #{color.adjust(
-      $mdn-color-yellow-10,
+      $mdn-color-dark-theme-yellow-10,
       $alpha: -0.9,
       $saturation: 20%
     )};
 
   --http-code-inline: #{color.adjust(
-      $mdn-color-green-30,
+      $mdn-color-dark-theme-green-30,
       $alpha: -0.85,
       $saturation: 20%
     )};
   --http-code-block: #{color.adjust(
-      $mdn-color-green-30,
+      $mdn-color-dark-theme-green-30,
       $alpha: -0.9,
       $saturation: 20%
     )};
 
   --apis-code-inline: #{color.adjust(
-      $mdn-color-violet-30,
+      $mdn-color-dark-theme-violet-30,
       $alpha: -0.85,
       $saturation: 20%
     )};
   --apis-code-block: #{color.adjust(
-      $mdn-color-violet-30,
+      $mdn-color-dark-theme-violet-30,
       $alpha: -0.92,
       $saturation: 20%
     )};

@@ -51,7 +51,7 @@
           top: 0;
           left: 0;
           z-index: -1;
-          background: $mdn-color-green-20;
+          background: var(--plus-accent-engage);
           transition: all 0.3s ease;
         }
 
@@ -82,7 +82,7 @@
           font: 700 12px/120% Inter;
           letter-spacing: 1.5px;
           text-transform: uppercase;
-          color: $mdn-color-green-60;
+          color: var(--plus-accent-color);
         }
 
         .ft-headline {

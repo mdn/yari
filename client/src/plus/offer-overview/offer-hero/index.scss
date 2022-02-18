@@ -35,7 +35,7 @@ $text-stroke-width: 2px;
 
       span {
         display: inline-flex;
-        background: $mdn-color-green-20;
+        background: var(--background-mark-green);
         padding: 2px 0.5rem;
       }
 
@@ -70,7 +70,7 @@ $text-stroke-width: 2px;
           padding: 0 0.25rem;
           text-decoration-thickness: 0.15rem;
           text-underline-offset: 0.1em;
-          text-decoration-color: $mdn-color-red-20;
+          text-decoration-color: var(--icon-critical);
         }
       }
     }
@@ -103,13 +103,13 @@ $text-stroke-width: 2px;
       }
 
       .button-secondary {
-        border: 2px solid $mdn-color-red-20;
+        border: 2px solid var(--button-secondary-border-red);
         color: white;
         background: #15141a1a;
       }
 
       .button-secondary:hover {
-        border: 2px solid $mdn-color-red-05;
+        border: 2px solid var(--button-secondary-border-red-focus);
       }
     }
   }

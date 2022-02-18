@@ -18,7 +18,7 @@
       background: radial-gradient(
         circle,
         white 55%,
-        #{$mdn-color-yellow-40} 55%
+        var(--background-mark-yellow) 55%
       );
     }
   }

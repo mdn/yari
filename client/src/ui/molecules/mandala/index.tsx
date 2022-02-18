@@ -1,8 +1,8 @@
 import "./index.scss";
 
 function Mandala({
-  animate = false,
-  animateColors = false,
+  animate = true,
+  animateColors = true,
   extraClasses = null,
 }: {
   animate?: boolean;

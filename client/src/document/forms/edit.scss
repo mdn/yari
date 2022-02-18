@@ -19,7 +19,7 @@
 }
 
 .document-preview {
-  border: 2px solid $mdn-color-red-40;
+  border: 2px solid var(--icon-warning);
   grid-column: 2/3;
   grid-row: 2/3;
   max-height: 90vh;
