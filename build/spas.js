@@ -17,28 +17,7 @@ const { default: got } = require("got");
 
 const contributorSpotlightRoot = CONTRIBUTOR_SPOTLIGHT_ROOT;
 
-function getFeaturedContributor() {
-  const prefix = "/en-us/contribute/spotlight";
-  if (!contributorSpotlightRoot) {
-    return;
-  }
-
-  for (const contributor of fs.readdirSync(contributorSpotlightRoot)) {
-    const markdown = fs.readFileSync(
-      `${contributorSpotlightRoot}/${contributor}/index.md`,
-      "utf8"
-    );
-    const frontMatter = frontmatter(markdown);
-
-    if (frontMatter.attributes.is_featured) {
-      return {
-        contributorName: frontMatter.attributes.contributor_name,
-        url: `${prefix}/${frontMatter.attributes.folder_name}`,
-        quote: frontMatter.attributes.quote,
-      };
-    }
-  }
-}
+let featuredContributor;
 
 async function buildSPAs(options) {
   let buildCount = 0;
@@ -83,7 +62,7 @@ async function buildSPAs(options) {
       quote: frontMatter.attributes.quote,
     };
 
-    const html = renderHTML(url, context);
+    const html = renderHTML(`/${locale}/${prefix}/${contributor}`, context);
     const outPath = path.join(
       BUILD_OUT_ROOT,
       locale,
@@ -103,6 +82,14 @@ async function buildSPAs(options) {
 
     if (options.verbose) {
       console.log("Wrote", filePath);
+    }
+    
+    if (frontMatter.attributes.is_featured) {
+      featuredContributor = {
+        contributorName: frontMatter.attributes.contributor_name,
+        url: `${prefix}/${frontMatter.attributes.folder_name}`,
+        quote: frontMatter.attributes.quote,
+      };
     }
   }
 
@@ -153,7 +140,6 @@ async function buildSPAs(options) {
   const pullRequestsData = await got(
     "https://api.github.com/search/issues?q=repo:mdn/content+is:pr+is:merged+sort:updated&per_page=10"
   ).json();
-  const featuredContributor = getFeaturedContributor();
 
   for (const root of [CONTENT_ROOT, CONTENT_TRANSLATED_ROOT]) {
     if (!root) {
