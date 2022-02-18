@@ -19,24 +19,7 @@ const contributorSpotlightRoot = CONTRIBUTOR_SPOTLIGHT_ROOT;
 
 let featuredContributor;
 
-async function buildSPAs(options) {
-  let buildCount = 0;
-
-  // The URL isn't very important as long as it triggers the right route in the <App/>
-  const url = "/en-US/404.html";
-  const html = renderHTML(url, { pageNotFound: true });
-  const outPath = path.join(BUILD_OUT_ROOT, "en-us", "_spas");
-  fs.mkdirSync(outPath, { recursive: true });
-  fs.writeFileSync(path.join(outPath, path.basename(url)), html);
-  buildCount++;
-  if (options.verbose) {
-    console.log("Wrote", path.join(outPath, path.basename(url)));
-  }
-
-  if (!contributorSpotlightRoot) {
-    return;
-  }
-
+async function buildContributorSpotlight(options) {
   // for now, these will only be available in English
   const locale = "en-US";
   const prefix = "contribute/spotlight";
@@ -78,8 +61,6 @@ async function buildSPAs(options) {
     fs.copyFileSync(imgFilePath, imgFileDestPath);
     fs.writeFileSync(jsonFilePath, JSON.stringify(context));
 
-    buildCount++;
-
     if (options.verbose) {
       console.log("Wrote", filePath);
     }
@@ -90,6 +71,26 @@ async function buildSPAs(options) {
         quote: frontMatter.attributes.quote,
       };
     }
+  }
+}
+
+async function buildSPAs(options) {
+  let buildCount = 0;
+
+  // The URL isn't very important as long as it triggers the right route in the <App/>
+  const url = "/en-US/404.html";
+  const html = renderHTML(url, { pageNotFound: true });
+  const outPath = path.join(BUILD_OUT_ROOT, "en-us", "_spas");
+  fs.mkdirSync(outPath, { recursive: true });
+  fs.writeFileSync(path.join(outPath, path.basename(url)), html);
+  buildCount++;
+  if (options.verbose) {
+    console.log("Wrote", path.join(outPath, path.basename(url)));
+  }
+
+  if (contributorSpotlightRoot) {
+    buildContributorSpotlight(options);
+    buildCount++;
   }
 
   // Basically, this builds one (for example) `search/index.html` for every
