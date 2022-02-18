@@ -61,7 +61,7 @@
     cursor: pointer;
     padding: 1rem 0.5rem;
     text-align: left;
-    width: 100%;
+    width: max-content;
 
     &:link,
     &:visited {
@@ -176,6 +176,7 @@
 
     .main-nav {
       margin-right: auto;
+      width: max-content;
     }
 
     .menu-toggle + .top-level-entry {
@@ -195,14 +196,6 @@
 .top-navigation-main.has-search-open {
   .header-search {
     width: 240px;
-  }
-
-  // This one-off MQ is also used in auth-container/index
-  // to tweak the layout in English. This fix is related.
-  @media screen and (min-width: 820px) {
-    .header-search {
-      width: 340px;
-    }
   }
 
   .header-search ~ * {

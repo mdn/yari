@@ -142,7 +142,6 @@
         "logo  . "
         "nav1  nav2"
         "nav3  nav4"
-        "app   app"
         "moz   moz"
         "legal legal";
     }
@@ -195,11 +194,11 @@
 @media screen and (min-width: $screen-md) {
   .page-footer {
     &-grid {
-      grid-template-columns: minmax(260px, 2fr) repeat(5, minmax(0, 1fr));
+      grid-template-columns: minmax(260px, 2fr) repeat(4, minmax(0, 1fr));
       grid-template-areas:
-        "logo  nav1  nav2  nav3  nav4  app"
-        "moz   moz   moz   moz   moz   moz"
-        "legal legal legal legal  .    .";
+        "logo  nav1  nav2  nav3  nav4"
+        "moz   moz   moz   moz   moz"
+        "legal legal legal legal  . ";
       gap: 1rem;
     }
 

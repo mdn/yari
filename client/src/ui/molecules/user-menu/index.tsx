@@ -6,6 +6,8 @@ import { Submenu } from "../submenu";
 import SignOut from "../../atoms/signout";
 
 import { useUserData } from "../../../user-context";
+import { useLocale } from "../../../hooks";
+
 import {
   FXA_SETTINGS_URL,
   MDN_APP_ANDROID,
@@ -18,6 +20,7 @@ import { DropdownMenu, DropdownMenuWrapper } from "../dropdown";
 
 export const UserMenu = () => {
   const userData = useUserData();
+  const locale = useLocale();
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
   // if we don't have the user data yet, don't render anything
@@ -32,6 +35,14 @@ export const UserMenu = () => {
       {
         label: userData.email || "",
         extraClasses: "submenu-header",
+      },
+      {
+        label: "Notifications",
+        url: `/${locale}/plus/notifications`,
+      },
+      {
+        label: "Collections",
+        url: `/${locale}/plus/collection`,
       },
       {
         url: FXA_SETTINGS_URL,

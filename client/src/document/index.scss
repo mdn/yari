@@ -163,7 +163,7 @@
       dt {
         margin-top: 2rem;
         margin-bottom: 0.5rem;
-        font-weight: 650;
+        font-weight: var(--font-body-strong-weight);
       }
 
       dd {
@@ -228,11 +228,11 @@
 // the .main-page-content override.
 b,
 strong {
-  font-weight: 650;
+  font-weight: var(--font-body-strong-weight);
 }
 
 code {
-  font-weight: 650;
+  font-weight: var(--font-body-strong-weight);
 }
 
 table {

@@ -20,21 +20,37 @@
     background-color: var(--background-primary);
     border: 1px solid var(--border-primary);
     border-radius: 100px;
+    padding-right: 2rem;
     color: var(--text-primary);
     height: var(--form-elem-height);
-    min-width: 60px;
-    padding-left: 2rem;
+    min-width: 5rem;
+    padding-left: 1rem;
     width: 100%;
+    text-decoration-color: transparent;
+    caret-color: var(--text-link);
 
+    @keyframes blink {
+      from,
+      to {
+        text-decoration: none;
+      }
+      50% {
+        text-decoration: underline;
+      }
+    }
+
+    &:invalid {
+      animation: blink 1.5s step-end infinite;
+    }
     &:focus {
       outline: 0 none;
       box-shadow: var(--focus-01);
       border-color: var(--field-focus-border);
+      animation: none;
     }
 
     &::placeholder {
       font: var(--type-body-l);
-      text-decoration: underline;
       text-decoration-thickness: 0.15rem;
       text-underline-offset: 0.1em;
       text-decoration-color: var(--text-link);
@@ -127,12 +143,11 @@
 
 .button.search-button {
   --button-color: var(--icon-secondary);
-  --button-height: 28px;
+  --button-height: 1.5rem;
   --button-padding: 0;
   position: absolute;
-  top: 2px;
-  left: 2px;
-  width: 28px;
+  right: 3.5rem;
+  width: 1.5rem;
 
   &:hover {
     background: transparent;

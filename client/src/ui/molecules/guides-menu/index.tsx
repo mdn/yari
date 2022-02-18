@@ -22,7 +22,7 @@ export const GuidesMenu = ({ visibleSubMenuId, toggleMenu }) => {
         url: `/${locale}/docs/Learn`,
       },
       {
-        description: "Learn to structure Web content with HTML",
+        description: "Learn to structure web content with HTML",
         extraClasses: "html-link-container",
         hasIcon: true,
         iconClasses: "submenu-icon html",
@@ -50,11 +50,11 @@ export const GuidesMenu = ({ visibleSubMenuId, toggleMenu }) => {
         description: "Learn to work with user data",
         hasIcon: true,
         iconClasses: "submenu-icon",
-        label: "Web Forms",
+        label: "Web forms",
         url: `/${locale}/docs/Learn/Forms`,
       },
       {
-        description: "Learn to make the Web accessible to all",
+        description: "Learn to make the web accessible to all",
         hasIcon: true,
         iconClasses: "submenu-icon",
         label: "Accessibility",

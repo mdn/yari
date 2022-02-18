@@ -2,14 +2,16 @@ import "./index.scss";
 
 function Mandala({
   animate = false,
+  animateColors = false,
   extraClasses = null,
 }: {
   animate?: boolean;
+  animateColors?: boolean;
   extraClasses?: string | null;
 }) {
   return (
     <div
-      className={`mandala-container ${animate ? "animate" : ""} ${
+      className={`mandala-container ${animateColors ? "animate-colors" : ""} ${
         extraClasses ? extraClasses : ""
       }`}
     >

@@ -174,7 +174,7 @@ export function Document(props /* TODO: define a TS interface for this */) {
         )
       )}
       <div className="article-wrapper">
-        {doc.sidebarHTML && <RenderSideBar doc={doc} />}
+        <RenderSideBar doc={doc} />
 
         <div className="toc">
           {doc.toc && !!doc.toc.length && <TOC toc={doc.toc} />}

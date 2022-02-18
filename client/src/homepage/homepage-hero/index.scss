@@ -60,7 +60,10 @@
     background-color: rgba(1, 1, 1, 0.9);
 
     .mandala {
-      transform: translate(8rem, -8rem);
+      transform: translate(10rem, -8rem) scale(1.2);
+      @media screen and (min-width: $screen-sm) {
+        transform: translate(12rem, -8rem);
+      }
     }
   }
 

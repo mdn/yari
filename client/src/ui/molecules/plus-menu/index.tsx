@@ -17,25 +17,18 @@ export const PlusMenu = ({ visibleSubMenuId, toggleMenu }) => {
     id: "mdn-plus",
     items: [
       {
-        description: "Collect articles from across MDN",
+        description: "Your saved articles from across MDN",
         hasIcon: true,
         iconClasses: "submenu-icon bookmarks-icon",
-        label: "My Collection",
+        label: "Collections",
         url: `/${locale}/plus/collection`,
       },
       {
-        description: "Stay up to date with MDN content",
+        description: "Updates from the pages you’re watching",
         hasIcon: true,
         iconClasses: "submenu-icon",
-        label: "My Notifications",
+        label: "Notifications",
         url: `/${locale}/plus/notifications`,
-      },
-      {
-        description: "Learn more about your MDN Plus Subscription",
-        hasIcon: true,
-        iconClasses: "submenu-icon",
-        label: "About MDN Plus",
-        url: `/${locale}/plus/`,
       },
     ],
   };

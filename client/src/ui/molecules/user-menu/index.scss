@@ -27,7 +27,9 @@
           background: transparent;
           box-shadow: none;
         }
+      }
 
+      &:focus {
         .avatar {
           border: 1px solid var(--button-secondary-border-focus);
           box-shadow: var(--focus-effect);

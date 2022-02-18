@@ -12,20 +12,14 @@
 
 .doomed {
   /* stylelint-disable-line a11y/media-prefers-reduced-motion */
-  animation: fadeOutNearly 0.5s ease-out; /* we already disable all animation and transitions globally via a reset */
+  /* we already disable all animation and transitions globally
+  via a reset based on user prefs */
+  opacity: 0;
+  transition: 0.3s ease-out;
 }
 
 .unbookmark {
   position: absolute;
   right: 24px;
   top: 0;
-}
-
-@keyframes fadeOutNearly {
-  0% {
-    opacity: 1;
-  }
-  100% {
-    opacity: 0.1;
-  }
 }
