@@ -1,15 +1,78 @@
 const fs = require("fs");
 const path = require("path");
+const frontmatter = require("front-matter");
+
+const { m2h } = require("../markdown");
 
 const {
   CONTENT_ROOT,
   CONTENT_TRANSLATED_ROOT,
+  CONTRIBUTOR_SPOTLIGHT_ROOT,
   VALID_LOCALES,
 } = require("../content");
 const { BUILD_OUT_ROOT } = require("./constants");
 // eslint-disable-next-line node/no-missing-require
 const { renderHTML } = require("../ssr/dist/main");
 const { default: got } = require("got");
+
+const contributorSpotlightRoot = CONTRIBUTOR_SPOTLIGHT_ROOT;
+
+let featuredContributor;
+
+async function buildContributorSpotlight(options) {
+  // for now, these will only be available in English
+  const locale = "en-US";
+  const prefix = "contribute/spotlight";
+  const profileImg = "profile-image.jpg";
+
+  for (const contributor of fs.readdirSync(contributorSpotlightRoot)) {
+    const markdown = fs.readFileSync(
+      `${contributorSpotlightRoot}/${contributor}/index.md`,
+      "utf8"
+    );
+
+    const frontMatter = frontmatter(markdown);
+    const contributorHTML = await m2h(frontMatter.body, locale);
+
+    const context = {
+      body: contributorHTML,
+      contributorName: frontMatter.attributes.contributor_name,
+      folderName: frontMatter.attributes.folder_name,
+      isFeatured: frontMatter.attributes.is_featured,
+      profileImg,
+      profileImgAlt: frontMatter.attributes.img_alt,
+      webLinks: frontMatter.attributes.web_links,
+      quote: frontMatter.attributes.quote,
+    };
+
+    const html = renderHTML(`/${locale}/${prefix}/${contributor}`, context);
+    const outPath = path.join(
+      BUILD_OUT_ROOT,
+      locale,
+      `${prefix}/${context.folderName}`
+    );
+    const filePath = path.join(outPath, "index.html");
+    const imgFilePath = `${contributorSpotlightRoot}/${contributor}/profile-image.jpg`;
+    const imgFileDestPath = path.join(outPath, profileImg);
+    const jsonFilePath = path.join(outPath, "index.json");
+
+    fs.mkdirSync(outPath, { recursive: true });
+    fs.writeFileSync(filePath, html);
+    fs.copyFileSync(imgFilePath, imgFileDestPath);
+    fs.writeFileSync(jsonFilePath, JSON.stringify(context));
+
+    if (options.verbose) {
+      console.log("Wrote", filePath);
+    }
+    if (frontMatter.attributes.is_featured) {
+      featuredContributor = {
+        contributorName: frontMatter.attributes.contributor_name,
+        url: `${prefix}/${frontMatter.attributes.folder_name}`,
+        quote: frontMatter.attributes.quote,
+      };
+    }
+  }
+}
 
 async function buildSPAs(options) {
   let buildCount = 0;
@@ -23,6 +86,11 @@ async function buildSPAs(options) {
   buildCount++;
   if (options.verbose) {
     console.log("Wrote", path.join(outPath, path.basename(url)));
+  }
+
+  if (contributorSpotlightRoot) {
+    buildContributorSpotlight(options);
+    buildCount++;
   }
 
   // Basically, this builds one (for example) `search/index.html` for every
@@ -72,6 +140,7 @@ async function buildSPAs(options) {
   const pullRequestsData = await got(
     "https://api.github.com/search/issues?q=repo:mdn/content+is:pr+is:merged+sort:updated&per_page=10"
   ).json();
+
   for (const root of [CONTENT_ROOT, CONTENT_TRANSLATED_ROOT]) {
     if (!root) {
       continue;
@@ -90,6 +159,7 @@ async function buildSPAs(options) {
           items: pullRequestsData.items,
           repo: { name: "mdn/content", url: "https://github.com/mdn/content" },
         },
+        featuredContributor,
       };
       const html = renderHTML(url, context);
       const outPath = path.join(BUILD_OUT_ROOT, locale);
@@ -100,6 +170,7 @@ async function buildSPAs(options) {
       if (options.verbose) {
         console.log("Wrote", filePath);
       }
+
       // Also, dump the recent pull requests in a file so the data can be gotten
       // in client-side rendering.
       const filePathContext = path.join(outPath, "index.json");

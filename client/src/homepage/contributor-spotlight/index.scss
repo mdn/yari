@@ -61,6 +61,17 @@
     // as it uses the body font family.
     font-size: 1.5rem;
     font-weight: 650;
+
+    &:link,
+    &:visited {
+      color: var(--mdn-color-white);
+      text-decoration: underline;
+    }
+
+    &:hover,
+    &:focus {
+      text-decoration: none;
+    }
   }
 
   @media screen and (min-width: $screen-md) {

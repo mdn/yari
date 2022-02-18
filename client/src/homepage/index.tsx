@@ -66,7 +66,7 @@ export function Homepage(props) {
           </div>
         </div>
         <RecentContributions {...props} />
-        <ContributorSpotlight />
+        <ContributorSpotlight {...props} />
       </div>
     </main>
   );

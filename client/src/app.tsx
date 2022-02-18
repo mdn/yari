@@ -20,6 +20,7 @@ import { About } from "./about";
 import { AppSettings } from "./app-settings";
 import { docCategory } from "./utils";
 import { Contribute } from "./contribute";
+import { ContributorSpotlight } from "./contributor-spotlight";
 
 const AllFlaws = React.lazy(() => import("./flaws"));
 const Translations = React.lazy(() => import("./translations"));
@@ -58,7 +59,11 @@ function StandardLayout({
   extraClasses?: string;
   children: React.ReactNode;
 }) {
-  return <Layout pageType={`standard-page ${extraClasses}`}>{children}</Layout>;
+  return (
+    <Layout pageType={`standard-page ${extraClasses ? extraClasses : ""}`}>
+      {children}
+    </Layout>
+  );
 }
 function DocumentLayout({ children }) {
   const { pathname } = useLocation();
@@ -285,6 +290,14 @@ export function App(appProps) {
               element={
                 <StandardLayout>
                   <Contribute />
+                </StandardLayout>
+              }
+            />
+            <Route
+              path="/contribute/spotlight/*"
+              element={
+                <StandardLayout>
+                  <ContributorSpotlight {...appProps} />
                 </StandardLayout>
               }
             />

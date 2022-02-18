@@ -1,0 +1,21 @@
+.contributor-spotlight-content-container {
+  max-width: 50rem;
+  margin: 3rem auto;
+
+  ul {
+    padding-left: 1rem;
+  }
+
+  li {
+    line-height: 1.5;
+    list-style-type: disc;
+    margin-bottom: 1rem;
+  }
+
+  .profile-image {
+    border-radius: 50%;
+    height: 300px;
+    margin: 1rem auto;
+    width: 300px;
+  }
+}
