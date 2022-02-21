@@ -31,15 +31,15 @@ export function ContributorSpotlight(props) {
       <div className="wrapper">
         <div className="text-col">
           <h2 className="mdn-ui-emphasis-l">Contributor Spotlight</h2>
-          {data && (
+          {data && data?.featuredContributor && (
             <>
               <a
                 className="contributor-name"
-                href={data.featuredContributor.url}
+                href={data?.featuredContributor?.url}
               >
-                {data.featuredContributor.contributorName}
+                {data?.featuredContributor?.contributorName}
               </a>
-              <blockquote>{data.featuredContributor.quote}</blockquote>
+              <blockquote>{data?.featuredContributor?.quote}</blockquote>
             </>
           )}
           <a href="/contribute" className="spotlight-cta">
