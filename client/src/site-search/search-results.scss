@@ -78,7 +78,7 @@
   }
 
   mark {
-    background: #{color.adjust($mdn-color-yellow-30, $alpha: -0.6)};
+    background: var(--background-mark-yellow);
     color: var(--text-primary);
     border-radius: var(--elem-radius);
     font-style: italic;

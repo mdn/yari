@@ -94,19 +94,20 @@ function SidebarContainer({ doc, children }) {
 
 export function RenderSideBar({ doc }) {
   if (!doc.related_content) {
-    if (doc.sidebarHTML) {
-      return (
-        <SidebarContainer doc={doc}>
-          <h4 className="sidebar-heading">Related Topics</h4>
-          <div
-            dangerouslySetInnerHTML={{
-              __html: `${doc.sidebarHTML}`,
-            }}
-          />
-        </SidebarContainer>
-      );
-    }
-    return null;
+    return (
+      <SidebarContainer doc={doc}>
+        {doc.sidebarHTML && (
+          <>
+            <h4 className="sidebar-heading">Related Topics</h4>
+            <div
+              dangerouslySetInnerHTML={{
+                __html: `${doc.sidebarHTML}`,
+              }}
+            />
+          </>
+        )}
+      </SidebarContainer>
+    );
   }
   return doc.related_content.map((node) => (
     <SidebarLeaf key={node.title} parent={node} doc={doc} />

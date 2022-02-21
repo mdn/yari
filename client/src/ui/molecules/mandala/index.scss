@@ -6,11 +6,23 @@
   // transform: skew(-7deg, 10deg);
 
   --mandala-primary: #{$mdn-color-marketing-grey-70};
-  --mandala-accent-1: #{$mdn-color-red-20};
-  --mandala-accent-2: #{$mdn-color-green-20};
-  --mandala-accent-3: #{$mdn-color-yellow-20};
+  --mandala-accent-1: var(--html-accent-color);
+  --mandala-accent-2: var(--http-accent-color);
+  --mandala-accent-3: var(--js-accent-color);
   --mandala-accent-4: #{$mdn-color-marketing-grey-30};
 
+  @keyframes rotation {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  .mandala-rotate > svg {
+    animation: rotation 500s linear infinite;
+  }
   svg {
     font-size: 1.5rem;
     font-weight: 100;
@@ -40,7 +52,7 @@
     font-size: 1rem;
   }
 
-  &.animate {
+  &.animate-colors {
     svg > text > textPath > tspan {
       animation: mandala-color-change 50s infinite;
       animation-timing-function: ease-in-out;

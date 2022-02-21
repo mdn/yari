@@ -1,3 +1,4 @@
+import { Icon } from "../ui/atoms/icon";
 import "./index.scss";
 
 const STATS = [
@@ -61,6 +62,7 @@ export function Contribute() {
             </h4>
           </div>
           <p>
+            <Icon name="quote"></Icon>
             Our constant quest for innovation starts here, with you. Every part
             of MDN (docs, demos and the site itself) springs from our incredible
             open community of developers. Please join us!
@@ -98,16 +100,9 @@ export function Contribute() {
               <br />
               &nbsp;Web&nbsp;Docs&nbsp;
             </h4>
-            <a
-              href="https://openwebdocs.org/"
-              target="_blank"
-              rel="noreferrer noopener"
-              className="external"
-            >
-              openwebdocs.org
-            </a>
           </div>
           <p>
+            <Icon name="quote"></Icon>
             Our constant quest for innovation starts here, with you. Every part
             of MDN (docs, demos and the site itself) springs from our incredible
             open community of developers. Please join us!

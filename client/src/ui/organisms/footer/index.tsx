@@ -5,10 +5,8 @@ import { useLocation } from "react-router-dom";
 
 import { ReactComponent as MDNLogo } from "../../../assets/mdn-footer-logo.svg";
 import { ReactComponent as MozLogo } from "../../../assets/moz-logo.svg";
-const appDlApple = `${process.env.PUBLIC_URL || ""}/assets/app-dl-apple.svg`;
-const appDlGoogle = `${process.env.PUBLIC_URL || ""}/assets/app-dl-google.svg`;
-const appDlMs = `${process.env.PUBLIC_URL || ""}/assets/app-dl-ms.png`;
-const DARK_NAV_ROUTES = [/\/plus\/?$/i, "_homepage"];
+import { ENABLE_PLUS } from "../../../constants";
+const DARK_NAV_ROUTES = [/\/plus\/?$/i];
 
 export function Footer() {
   const locale = useLocale();
@@ -23,11 +21,7 @@ export function Footer() {
           <a href="/" className="mdn-footer-logo" aria-label="MDN homepage">
             <MDNLogo />
           </a>
-          <p>
-            The Mozilla Developer Network's mission is simple: provide
-            developers with the information they need to easily build projects
-            on the open Web.
-          </p>
+          <p>Your blueprint for a better internet.</p>
           <ul className="social-icons">
             <li>
               <a
@@ -56,18 +50,24 @@ export function Footer() {
           <h2 className="footer-nav-heading">MDN</h2>
           <ul className="footer-nav-list">
             <li className="footer-nav-item">
-              <a href={`/${locale}/About`}>About</a>
-            </li>
-            <li className="footer-nav-item">
-              <a href={`/${locale}/#TODO`}>Careers</a>
+              <a href={`/${locale}/about`}>About</a>
             </li>
             <li className="footer-nav-item">
               <a
-                href="https://shop.spreadshirt.com/mdn-store/"
+                href="https://hacks.mozilla.org/"
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                MDN store
+                Hacks Blog
+              </a>
+            </li>
+            <li className="footer-nav-item">
+              <a
+                href="https://www.mozilla.org/en-US/careers/listings/?team=Marketing"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Careers
               </a>
             </li>
           </ul>
@@ -76,20 +76,25 @@ export function Footer() {
         <div className="page-footer-nav-col-2">
           <h2 className="footer-nav-heading">Support</h2>
           <ul className="footer-nav-list">
+            {ENABLE_PLUS && (
+              <li className="footer-nav-item">
+                <a className="footer-nav-link" href={`/${locale}/#TODO`}>
+                  Product help
+                </a>
+              </li>
+            )}
             <li className="footer-nav-item">
-              <a className="footer-nav-link" href={`/${locale}/#TODO`}>
-                Product help
-              </a>
-            </li>
-            <li className="footer-nav-item">
-              <a className="footer-nav-link" href={`/${locale}/#TODO`}>
-                Report a documentation issue
+              <a
+                className="footer-nav-link"
+                href={`/${locale}/docs/MDN/Contribute/Feedback/`}
+              >
+                Report a page issue
               </a>
             </li>
             <li className="footer-nav-item">
               <a
                 className="footer-nav-link"
-                href={`/${locale}/docs/MDN/Feedback`}
+                href={`/${locale}/docs/MDN/Contribute/Feedback/`}
               >
                 Report a site issue
               </a>
@@ -101,17 +106,27 @@ export function Footer() {
           <h2 className="footer-nav-heading">Our communities</h2>
           <ul className="footer-nav-list">
             <li className="footer-nav-item">
-              <a className="footer-nav-link" href={`/${locale}/#TODO`}>
+              <a className="footer-nav-link" href={`/${locale}/contribute/`}>
                 Contribute to MDN
               </a>
             </li>
             <li className="footer-nav-item">
-              <a className="footer-nav-link" href={`/${locale}/#TODO`}>
+              <a
+                className="footer-nav-link"
+                href="https://discourse.mozilla.org/c/mdn/236"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
                 MDN forums
               </a>
             </li>
             <li className="footer-nav-item">
-              <a className="footer-nav-link" href={`/${locale}/#TODO`}>
+              <a
+                className="footer-nav-link"
+                href="https://wiki.mozilla.org/Matrix"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
                 MDN chat
               </a>
             </li>
@@ -122,71 +137,22 @@ export function Footer() {
           <h2 className="footer-nav-heading">Developers</h2>
           <ul className="footer-nav-list">
             <li className="footer-nav-item">
-              <a className="footer-nav-link" href={`/${locale}/docs/Web`}>
+              <a className="footer-nav-link" href={`/${locale}/docs/Web/`}>
                 Web technologies
               </a>
             </li>
             <li className="footer-nav-item">
-              <a className="footer-nav-link" href={`/${locale}/#TODO`}>
+              <a className="footer-nav-link" href={`/${locale}/docs/Learn/`}>
                 Learn web development
               </a>
             </li>
-            <li className="footer-nav-item">
-              <a className="footer-nav-link" href={`/${locale}/#TODO`}>
-                MDN Plus
-              </a>
-            </li>
-          </ul>
-        </div>
-
-        <div className="page-footer-app-col">
-          <h2 className="footer-nav-heading">Get the app</h2>
-          <ul className="page-footer-app-list">
-            <li className="page-footer-app-item">
-              <a
-                className="page-footer-app-dl is-apple"
-                href="/"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <img
-                  src={appDlApple}
-                  width="130"
-                  height="43"
-                  alt="Download the App from the Apple Store"
-                />
-              </a>
-            </li>
-            <li className="page-footer-app-item">
-              <a
-                className="page-footer-app-dl is-google"
-                href="/"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <img
-                  src={appDlGoogle}
-                  width="130"
-                  height="39"
-                  alt="Download the App from the Google Play Store"
-                />
-              </a>
-            </li>
-            <li className="page-footer-app-item">
-              <a
-                className="page-footer-app-dl is-ms"
-                href="/"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <img
-                  src={appDlMs}
-                  width="110"
-                  height="40"
-                  alt="Download the App from Microsoft"
-                />
-              </a>
-            </li>
+            {ENABLE_PLUS && (
+              <li className="footer-nav-item">
+                <a className="footer-nav-link" href={`/${locale}/#TODO`}>
+                  MDN Plus
+                </a>
+              </li>
+            )}
           </ul>
         </div>
 

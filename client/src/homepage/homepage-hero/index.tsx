@@ -8,15 +8,15 @@ export function HomepageHero() {
       <section>
         <h1>
           Resources for <u>Developers</u>,
-          <br /> by Developers.
+          <br /> by Developers
         </h1>
         <p>
           Evolving learning platform for Web technologies and the software that
           powers the Web, including CSS, HTML, and JavaScript. Since 2005.
         </p>
-        <Search />
+        <Search hasOpened={true} />
       </section>
-      <Mandala extraClasses="homepage-hero-bg" />
+      <Mandala rotate={true} extraClasses="homepage-hero-bg" />
     </div>
   );
 }

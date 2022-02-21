@@ -51,10 +51,23 @@ main.contribute {
         flex-wrap: wrap-reverse;
       }
 
+      p {
+        font-style: italic;
+        display: flex;
+
+        .icon {
+          margin-right: 1rem;
+          margin-top: 0.2rem;
+        }
+      }
+
       &.owd {
         background-color: var(--text-primary);
         color: var(--background-primary);
 
+        .icon {
+          background-color: var(--background-primary);
+        }
         h4 {
           color: var(--text-primary);
           background-color: var(--background-primary);
@@ -64,7 +77,11 @@ main.contribute {
       &.pab {
         background-color: var(--text-link);
         color: var(--background-primary);
+        flex-direction: row-reverse;
 
+        .icon {
+          background-color: var(--background-primary);
+        }
         h4 {
           background-color: var(--text-primary);
         }

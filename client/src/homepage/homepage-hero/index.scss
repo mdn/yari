@@ -59,8 +59,11 @@
     --mandala-primary: var(--border-primary);
     background-color: rgba(1, 1, 1, 0.9);
 
-    .mandala {
-      transform: translate(8rem, -8rem);
+    .mandala-translate {
+      transform: translate(10rem, -8rem) scale(1.2);
+      @media screen and (min-width: $screen-sm) {
+        transform: translate(12rem, -8rem);
+      }
     }
   }
 
@@ -68,6 +71,13 @@
     width: 100%;
     max-height: 4rem;
     display: flex;
+
+    .search-input-field {
+      &:focus {
+        box-shadow: var(--focus-01);
+        border-color: var(--field-focus-border);
+      }
+    }
 
     .search-widget {
       gap: 0;

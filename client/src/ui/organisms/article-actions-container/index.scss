@@ -23,7 +23,7 @@
     display: none;
   }
 
-  @media screen and (min-width: $screen-sm) and (max-width: $screen-md) {
+  @media screen and (max-width: $screen-md) {
     .sidebar-button {
       display: flex;
       align-self: stretch;
