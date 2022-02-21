@@ -46,6 +46,10 @@
     &:valid {
       animation: none;
     }
+    &:not(:focus) {
+      animation: none;
+      text-decoration: underline;
+    }
     &:focus {
       outline: 0 none;
       box-shadow: var(--focus-01);

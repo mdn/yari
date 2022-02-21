@@ -334,6 +334,14 @@
   --modal-backdrop-color: #{rgba($mdn-theme-dark-background-primary, 0.7)};
 }
 
+body,
+:root {
+  --mdn-color-white: #{$mdn-color-white};
+  --mdn-color-black: #{$mdn-color-black};
+  --mdn-background-dark: #{$mdn-theme-dark-background-primary};
+  --mdn-background-light: #{$mdn-theme-light-background-primary};
+}
+
 :root,
 .light {
   @include light-theme;

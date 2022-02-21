@@ -11,6 +11,18 @@
   --mandala-accent-3: var(--js-accent-color);
   --mandala-accent-4: #{$mdn-color-marketing-grey-30};
 
+  @keyframes rotation {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  .mandala-rotate > svg {
+    animation: rotation 500s linear infinite;
+  }
   svg {
     font-size: 1.5rem;
     font-weight: 100;
