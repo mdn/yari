@@ -1,11 +1,10 @@
 import useSWR from "swr";
 import { CRUD_MODE } from "../../constants";
 
-import { Button } from "../../ui/atoms/button";
 import "./index.scss";
 const contributorGraphic = `${
   process.env.PUBLIC_URL || ""
-}/assets/tiled-dinos.svg`;
+}/assets/mdn_contributor.png`;
 
 export function ContributorSpotlight(props) {
   const { data } = useSWR<any>(
@@ -27,7 +26,7 @@ export function ContributorSpotlight(props) {
   );
 
   return (
-    <div className="contributor-spotlight">
+    <div className="contributor-spotlight dark">
       <div className="wrapper">
         <div className="text-col">
           <h2 className="mdn-ui-emphasis-l">Contributor Spotlight</h2>
@@ -39,12 +38,12 @@ export function ContributorSpotlight(props) {
               >
                 {data.featuredContributor.contributorName}
               </a>
-              <p>{data.featuredContributor.quote}</p>
+              <blockquote>{data.featuredContributor.quote}</blockquote>
             </>
           )}
-          <Button href="/contribute" extraClasses="spotlight-cta">
-            Get involved
-          </Button>
+          <a href="/contribute" className="spotlight-cta">
+            Get involved →
+          </a>
         </div>
         <figure className="contributor-graphic">
           <img src={contributorGraphic} alt="Tiled Mozilla Logo" />
