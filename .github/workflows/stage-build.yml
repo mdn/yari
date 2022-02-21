@@ -79,6 +79,11 @@ jobs:
           repository: mdn/translated-content
           path: mdn/translated-content
 
+      - uses: actions/checkout@v2.4.0
+        with:
+          repository: mdn/mdn-contributor-spotlight
+          path: mdn/mdn-contributor-spotlight
+
       - name: Setup Node.js environment
         uses: actions/setup-node@v2.5.1
         with:
@@ -126,6 +131,7 @@ jobs:
           # sub-folder called "mdn/content"
           CONTENT_ROOT: ${{ github.workspace }}/mdn/content/files
           CONTENT_TRANSLATED_ROOT: ${{ github.workspace }}/mdn/translated-content/files
+          CONTRIBUTOR_SPOTLIGHT_ROOT: ${{ github.workspace }}/mdn/mdn-contributor-spotlight/contributors
 
           # The default for this environment variable is geared for writers
           # (aka. local development). Usually defaults are supposed to be for
