@@ -188,6 +188,8 @@ u {
   .sidebar,
   .main-content {
     --text-link: var(--html-accent-color);
+    --category-color: var(--html-accent-color);
+    --category-color-background: var(--html-accent-background-color);
     --code-background-inline: var(--html-code-inline);
     --code-background-block: var(--html-code-block);
   }
@@ -199,6 +201,8 @@ u {
   .sidebar,
   .main-content {
     --text-link: var(--css-accent-color);
+    --category-color: var(--css-accent-color);
+    --category-color-background: var(--css-accent-background-color);
     --code-background-inline: var(--css-code-inline);
     --code-background-block: var(--css-code-block);
   }
@@ -210,6 +214,8 @@ u {
   .sidebar,
   .main-content {
     --text-link: var(--js-accent-color);
+    --category-color: var(--js-accent-color);
+    --category-color-background: var(--js-accent-background-color);
     --code-background-inline: var(--js-code-inline);
     --code-background-block: var(--js-code-block);
   }
@@ -221,6 +227,8 @@ u {
   .sidebar,
   .main-content {
     --text-link: var(--http-accent-color);
+    --category-color: var(--http-accent-color);
+    --category-color-background: var(--http-accent-background-color);
     --code-background-inline: var(--http-code-inline);
     --code-background-block: var(--http-code-block);
   }
@@ -232,6 +240,8 @@ u {
   .sidebar,
   .main-content {
     --text-link: var(--apis-accent-color);
+    --category-color: var(--apis-accent-color);
+    --category-color-background: var(--apis-accent-background-color);
     --code-background-inline: var(--apis-code-inline);
     --code-background-block: var(--apis-code-block);
   }

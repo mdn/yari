@@ -1,5 +1,6 @@
 @use "sass:color";
 @use "../vars.scss" as *;
+@use "../color-palette" as *;
 
 @mixin light-theme {
   --text-primary: #{$mdn-theme-light-text-primary};
@@ -72,12 +73,22 @@
   --scrollbar-bg: transparent;
   --scrollbar-color: rgba(0, 0, 0, 0.25);
 
+  --category-color: #{$mdn-color-light-theme-green-50};
+  --category-color-background: #{$mdn-color-light-theme-green-50}10;
+
   --plus-accent-color: #{$mdn-color-light-theme-blue-50};
   --html-accent-color: #{$mdn-color-light-theme-red-50};
   --css-accent-color: #{$mdn-color-light-theme-blue-50};
-  --js-accent-color: #{$mdn-color-light-theme-green-50};
-  --http-accent-color: #{$mdn-color-light-theme-yellow-50};
+  --js-accent-color: #{$mdn-color-light-theme-yellow-50};
+  --http-accent-color: #{$mdn-color-light-theme-green-50};
   --apis-accent-color: #{$mdn-color-light-theme-violet-50};
+
+  --plus-accent-background-color: #{$mdn-color-light-theme-blue-50}10;
+  --html-accent-background-color: #{$mdn-color-light-theme-red-50}10;
+  --css-accent-background-color: #{$mdn-color-light-theme-blue-50}10;
+  --js-accent-background-color: #{$mdn-color-light-theme-yellow-50}10;
+  --http-accent-background-color: #{$mdn-color-light-theme-green-50}10;
+  --apis-accent-background-color: #{$mdn-color-light-theme-violet-50}10;
 
   --plus-accent-engage: #{color.adjust(
       $mdn-color-light-theme-blue-50,
@@ -92,18 +103,18 @@
       $alpha: -0.3
     )};
   --js-accent-engage: #{color.adjust(
-      $mdn-color-light-theme-green-50,
+      $mdn-color-light-theme-yellow-50,
       $alpha: -0.3
     )};
   --http-accent-engage: #{color.adjust(
-      $mdn-color-light-theme-yellow-50,
+      $mdn-color-light-theme-green-50,
       $alpha: -0.3
     )};
   --apis-accent-engage: #{color.adjust(
       $mdn-color-light-theme-violet-50,
       $alpha: -0.3
     )};
-
+  /*
   --html-code-inline: #{color.adjust(
       $mdn-color-light-theme-red-50,
       $alpha: -0.92,
@@ -125,22 +136,22 @@
     )};
 
   --js-code-inline: #{color.adjust(
-      $mdn-color-light-theme-green-50,
+      $mdn-color-light-theme-yellow-50,
       $alpha: -0.9,
       $saturation: 20%
     )};
   --js-code-block: #{color.adjust(
-      $mdn-color-light-theme-green-50,
+      $mdn-color-light-theme-yellow-50,
       $alpha: -0.95,
       $saturation: 20%
     )};
 
   --http-code-inline: #{color.adjust(
-      $mdn-color-light-theme-yellow-50,
+      $mdn-color-light-theme-green-50,
       $alpha: -0.92
     )};
   --http-code-block: #{color.adjust(
-      $mdn-color-light-theme-yellow-50,
+      $mdn-color-light-theme-green-50,
       $alpha: -0.95
     )};
 
@@ -154,6 +165,17 @@
       $alpha: -0.96,
       $saturation: -20%
     )};
+*/
+  --html-code-inline: #{$mdn-color-light-grey-10};
+  --html-code-block: #{$mdn-color-light-grey-10};
+  --css-code-inline: #{$mdn-color-light-grey-10};
+  --css-code-block: #{$mdn-color-light-grey-10};
+  --js-code-inline: #{$mdn-color-light-grey-10};
+  --js-code-block: #{$mdn-color-light-grey-10};
+  --http-code-inline: #{$mdn-color-light-grey-10};
+  --http-code-block: #{$mdn-color-light-grey-10};
+  --apis-code-inline: #{$mdn-color-light-grey-10};
+  --apis-code-block: #{$mdn-color-light-grey-10};
 
   --homepage-hero-bg: radial-gradient(
     114.42% 123.24% at 6.69% 13.67%,
