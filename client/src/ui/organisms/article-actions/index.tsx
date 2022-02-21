@@ -1,5 +1,3 @@
-import * as React from "react";
-
 import { Button } from "../../atoms/button";
 import { NotificationsWatchMenu } from "../../molecules/notifications-watch-menu";
 import { ThemeSwitcher } from "../../molecules/theme-switcher";
@@ -11,7 +9,6 @@ import { Doc } from "../../../document/types";
 
 import "./index.scss";
 import { MDN_APP } from "../../../constants";
-import { useUIStatus } from "../../../ui-context";
 import { BookmarkContainer } from "../../molecules/bookmark";
 
 export const ArticleActions = ({
@@ -25,7 +22,6 @@ export const ArticleActions = ({
 }) => {
   const userData = useUserData();
   const isAuthenticated = userData && userData.isAuthenticated;
-  const { setIsSidebarOpen } = useUIStatus();
   const translations = doc.other_translations || [];
   const { native } = doc;
 
