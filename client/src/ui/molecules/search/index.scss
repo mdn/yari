@@ -153,11 +153,17 @@
   --button-height: 1.5rem;
   --button-padding: 0;
   position: absolute;
-  right: 3.5rem;
+  right: 0.75rem;
+  top: 0.25rem;
   width: 1.5rem;
 
   &:hover {
     background: transparent;
+  }
+
+  @media screen and (min-width: $screen-md) {
+    right: 3.5rem;
+    width: 1.5rem;
   }
 }
 

@@ -115,17 +115,17 @@
 
   .menu-toggle {
     position: relative;
+    display: flex;
+    align-items: center;
   }
 
   .menu-toggle:after {
     content: "";
-    display: block;
-    position: absolute;
-    right: 0.5rem;
-    top: calc(50% - (var(--icon-size) / 2));
     width: var(--icon-size);
     height: var(--icon-size);
     background-color: var(--icon-primary);
+    margin-top: 0.2em;
+    margin-left: 0.2em;
 
     mask-image: url("../../../assets/icons/chevron.svg");
   }
