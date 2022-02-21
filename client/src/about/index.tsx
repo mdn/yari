@@ -1,6 +1,5 @@
-import { GetInvolved } from "./get_involved";
+import { GetInvolved } from "../ui/molecules/get_involved";
 import "./index.scss";
-import { Testimonial } from "./testimonial";
 
 export function About() {
   return (
@@ -13,15 +12,16 @@ export function About() {
           <a href="/docs/Web/HTML">HTML</a>,{" "}
           <a href="/docs/Web/JavaScript">JavaScript</a>, and{" "}
           <a href="/docs/Web/API/">Web APIs</a>. We also provide an extensive
-          set of learning resources for beginning developers and students.
+          set of <a href="/docs/Learn">learning resources</a> for beginning
+          developers and students.
         </p>
 
         <header>
           <span className="headline">
             <b>
-              MDN's mission is to provide a blueprint for a better internet and
-              empower a new generation of developers and content creators to
-              build it.
+              MDN's mission is to{" "}
+              <u>provide a blueprint for a better internet</u> and empower a new
+              generation of developers and content creators to build it.
             </b>
           </span>
         </header>
@@ -32,7 +32,7 @@ export function About() {
           the community have amassed around 45,000 pages of free, open-source
           content.
         </p>
-        <Testimonial />
+        {/*<Testimonial />*/}
         <h2 className="_ify">
           Independent and unbiased - across browsers and technologies
         </h2>

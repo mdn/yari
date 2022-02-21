@@ -250,6 +250,9 @@
 
   --scrollbar-color: rgba(255, 255, 255, 0.25);
 
+  --category-color: #{$mdn-color-dark-theme-green-50};
+  --category-color-background: #{$mdn-color-dark-theme-green-50}10;
+
   --html-accent-color: #{$mdn-color-dark-theme-red-50};
   --css-accent-color: #{$mdn-color-dark-theme-blue-50};
   --js-accent-color: #{$mdn-color-dark-theme-yellow-50};

@@ -21,11 +21,7 @@ export function Footer() {
           <a href="/" className="mdn-footer-logo" aria-label="MDN homepage">
             <MDNLogo />
           </a>
-          <p>
-            The Mozilla Developer Network's mission is simple: provide
-            developers with the information they need to easily build projects
-            on the open Web.
-          </p>
+          <p>Your blueprint for a better internet.</p>
           <ul className="social-icons">
             <li>
               <a
@@ -54,7 +50,7 @@ export function Footer() {
           <h2 className="footer-nav-heading">MDN</h2>
           <ul className="footer-nav-list">
             <li className="footer-nav-item">
-              <a href={`/${locale}/About`}>About</a>
+              <a href={`/${locale}/about`}>About</a>
             </li>
             <li className="footer-nav-item">
               <a
@@ -110,10 +106,7 @@ export function Footer() {
           <h2 className="footer-nav-heading">Our communities</h2>
           <ul className="footer-nav-list">
             <li className="footer-nav-item">
-              <a
-                className="footer-nav-link"
-                href={`/${locale}/docs/MDN/About/`}
-              >
+              <a className="footer-nav-link" href={`/${locale}/contribute/`}>
                 Contribute to MDN
               </a>
             </li>
