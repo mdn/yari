@@ -37,62 +37,51 @@ export const ArticleActions = ({
   // const translations = doc.other_translations || [];
 
   return (
-    <>
-      <div
-        className={`article-actions${
-          showArticleActionsMenu ? " show-actions" : ""
-        }`}
-      >
-        <Button
-          type="action"
-          extraClasses="article-actions-toggle"
-          onClickHandler={toggleArticleActionsMenu}
-          icon={showArticleActionsMenu ? "cancel" : "ellipses"}
+    (((!MDN_APP && translations && !!translations.length) ||
+      isAuthenticated) && (
+      <>
+        <div
+          className={`article-actions${
+            showArticleActionsMenu ? " show-actions" : ""
+          }`}
         >
-          <span className="article-actions-dialog-heading">
-            Article Actions
-          </span>
-        </Button>
-        <ul className="article-actions-entries">
-          <>
-            {doc.related_content || doc.sidebarHTML ? (
-              <li>
-                <Button
-                  type="action"
-                  icon="sidebar"
-                  extraClasses="sidebar-toggle"
-                  onClickHandler={() => {
-                    setShowArticleActionsMenu(false);
-                    setIsSidebarOpen(true);
-                  }}
-                >
-                  Sidebar
-                </Button>
-              </li>
-            ) : null}
-            {isAuthenticated && (
-              <li className="article-actions-entry">
-                <NotificationsWatchMenu doc={doc} />
-              </li>
-            )}
-            {isAuthenticated && (
-              <li className="article-actions-entry">
-                <BookmarkContainer doc={doc} />
-              </li>
-            )}
-            {isAuthenticated && (
-              <li className="article-actions-entry">
-                <ThemeSwitcher />
-              </li>
-            )}
-            {!MDN_APP && translations && !!translations.length && (
-              <li className="article-actions-entry">
-                <LanguageMenu translations={translations} native={native} />
-              </li>
-            )}
-          </>
-        </ul>
-      </div>
-    </>
+          <Button
+            type="action"
+            extraClasses="article-actions-toggle"
+            onClickHandler={toggleArticleActionsMenu}
+            icon={showArticleActionsMenu ? "cancel" : "ellipses"}
+          >
+            <span className="article-actions-dialog-heading">
+              Article Actions
+            </span>
+          </Button>
+          <ul className="article-actions-entries">
+            <>
+              {isAuthenticated && (
+                <li className="article-actions-entry">
+                  <NotificationsWatchMenu doc={doc} />
+                </li>
+              )}
+              {isAuthenticated && (
+                <li className="article-actions-entry">
+                  <BookmarkContainer doc={doc} />
+                </li>
+              )}
+              {isAuthenticated && (
+                <li className="article-actions-entry">
+                  <ThemeSwitcher />
+                </li>
+              )}
+              {!MDN_APP && translations && !!translations.length && (
+                <li className="article-actions-entry">
+                  <LanguageMenu translations={translations} native={native} />
+                </li>
+              )}
+            </>
+          </ul>
+        </div>
+      </>
+    )) ||
+    null
   );
 };
