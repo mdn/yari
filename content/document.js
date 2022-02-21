@@ -546,7 +546,7 @@ function move(oldSlug, newSlug, locale, { dry = false } = {}) {
 }
 
 function fileForSlug(slug, locale) {
-  return getHTMLPath(getFolderPath({ slug, locale }));
+  return getMarkdownPath(getFolderPath({ slug, locale }));
 }
 
 function exists(slug, locale) {
