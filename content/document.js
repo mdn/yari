@@ -96,6 +96,7 @@ function saveFile(filePath, rawBody, metadata, frontMatterKeys = null) {
     "translation_of_original",
     "original_slug",
     "browser-compat",
+    "spec-urls",
   ];
 
   const saveMetadata = {};
