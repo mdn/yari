@@ -70,15 +70,6 @@ jobs:
           yarn test:testing
           yarn test:headless
 
-      - name: Basic m2h/h2m tool testing
-        env:
-          ENV_FILE: testing/.env
-        run: |
-          yarn md m2h markdown/tool/m2h --locale en-US
-          diff -s testing/content/files/en-us/markdown/tool/m2h/index.html testing/content/files/en-us/markdown/tool/m2h/expected.html
-          yarn md h2m markdown/tool/h2m --locale en-US
-          diff -s testing/content/files/en-us/markdown/tool/h2m/index.md testing/content/files/en-us/markdown/tool/h2m/expected.md
-
       - name: Debug server's stdout and stderr if tests failed
         if: failure() && steps.server.outcome != 'skipped'
         run: |
