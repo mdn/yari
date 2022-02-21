@@ -115,6 +115,7 @@
   },
   "devDependencies": {
     "@babel/core": "^7.16.12",
+    "@babel/helper-builder-react-jsx": "^7.16.7",
     "@mdn/dinocons": "^0.3.5",
     "@mdn/minimalist": "^2.0.4",
     "@playwright/test": "1.18.1",
