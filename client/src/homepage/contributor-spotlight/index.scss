@@ -1,13 +1,13 @@
 @use "../../ui/vars" as *;
 
 .contributor-spotlight {
-  background: var(--background-secondary);
   color: var(--text-primary);
   width: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
   padding: 2rem 1rem;
+  position: relative;
 
   blockquote {
     margin: 0;
@@ -27,7 +27,6 @@
     width: 100%;
     gap: 1rem;
     align-items: center;
-    text-align: center;
   }
 
   .spotlight-cta {
@@ -67,6 +66,7 @@
     background-color: var(--mdn-color-white);
     width: fit-content;
     line-height: 1.4;
+    text-transform: uppercase;
 
     &::after,
     &::before {
@@ -96,6 +96,21 @@
     .text-col {
       align-items: initial;
       text-align: left;
+    }
+  }
+
+  .mandala-container {
+    background: var(--background-secondary);
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    z-index: -1;
+    overflow: hidden;
+    --mandala-primary: var(--border-primary);
+
+    .mandala-translate {
+      transform: translate(8rem, -3rem);
     }
   }
 }

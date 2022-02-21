@@ -2,20 +2,49 @@
   max-width: 50rem;
   margin: 3rem auto;
 
-  ul {
-    padding-left: 1rem;
-  }
-
   li {
     line-height: 1.5;
     list-style-type: disc;
     margin-bottom: 1rem;
   }
 
-  .profile-image {
-    border-radius: 50%;
-    height: 300px;
-    margin: 1rem auto;
-    width: 300px;
+  h2 ~ * {
+    padding-left: 2rem;
+  }
+
+  h2 ~ ul {
+    padding-left: 3rem;
+  }
+
+  h2 {
+    padding-left: 0;
+    color: var(--category-color);
+  }
+
+  .profile-header {
+    background-color: var(--background-secondary);
+    border: 1px solid var(--border-primary);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-width: max-content;
+    max-width: 30rem;
+    padding: 1rem;
+
+    h2 {
+      color: var(--text-primary);
+      margin-top: 0;
+      margin-bottom: 0;
+    }
+
+    a {
+      font-size: 1.3rem;
+    }
+
+    .profile-image {
+      border-radius: 50%;
+      height: 200px;
+      width: 200px;
+    }
   }
 }

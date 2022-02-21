@@ -1,5 +1,6 @@
 import useSWR from "swr";
 import { CRUD_MODE } from "../../constants";
+import Mandala from "../../ui/molecules/mandala";
 
 import "./index.scss";
 const contributorGraphic = `${
@@ -49,6 +50,7 @@ export function ContributorSpotlight(props) {
           <img src={contributorGraphic} alt="Tiled Mozilla Logo" />
         </figure>
       </div>
+      <Mandala />
     </div>
   );
 }

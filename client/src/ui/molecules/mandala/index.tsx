@@ -3,10 +3,12 @@ import "./index.scss";
 function Mandala({
   animate = false,
   animateColors = false,
+  rotate = false,
   extraClasses = null,
 }: {
   animate?: boolean;
   animateColors?: boolean;
+  rotate?: boolean;
   extraClasses?: string | null;
 }) {
   return (
@@ -15,7 +17,11 @@ function Mandala({
         extraClasses ? extraClasses : ""
       }`}
     >
-      <div className={`mandala-translate ${animate ? "" : "mandala-rotate"}`}>
+      <div
+        className={`mandala-translate ${
+          rotate && !animate ? "mandala-rotate" : ""
+        }`}
+      >
         <svg
           width="675"
           height="675"

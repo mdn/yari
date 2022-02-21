@@ -41,7 +41,7 @@ async function buildContributorSpotlight(options) {
       isFeatured: frontMatter.attributes.is_featured,
       profileImg,
       profileImgAlt: frontMatter.attributes.img_alt,
-      webLinks: frontMatter.attributes.web_links,
+      usernames: frontMatter.attributes.usernames,
       quote: frontMatter.attributes.quote,
     };
 

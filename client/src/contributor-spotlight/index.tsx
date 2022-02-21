@@ -2,8 +2,8 @@ import * as React from "react";
 import { useParams } from "react-router-dom";
 import useSWR from "swr";
 
-import WebLinks from "./web-links";
 import { CRUD_MODE } from "../constants";
+import { GetInvolved } from "../ui/molecules/get_involved";
 
 import "./index.scss";
 
@@ -14,7 +14,9 @@ type ContributorDetails = {
   isFeatured: boolean;
   profileImg: string;
   profileImgAlt: string;
-  webLinks: Array<{ name: string; url: string }>;
+  webLinks: {
+    github: string;
+  };
   quote: string;
 };
 
@@ -46,19 +48,28 @@ export function ContributorSpotlight(props: ContributorDetails) {
   }, [data]);
 
   return (
-    <main className="contributor-spotlight-content-container">
-      {data && (
-        <>
-          <img
-            className="profile-image"
-            src={`${baseURL}/${data.profileImg}`}
-            alt={data.profileImgAlt}
-          />
-          <h1>Contributor Spotlight - {data.contributorName}</h1>
-          <WebLinks webLinks={data.webLinks} />
-          <div dangerouslySetInnerHTML={{ __html: data.body }} />
-        </>
-      )}
-    </main>
+    <>
+      <main className="contributor-spotlight-content-container">
+        {data && (
+          <>
+            <h1 className="mify">Contributor profile</h1>
+            <p className="profile-header">
+              <img
+                className="profile-image"
+                src={`${baseURL}/${data.profileImg}`}
+                alt={data.profileImgAlt}
+              />
+
+              <h2>{data.contributorName}</h2>
+              <a href={`https://github.com/${data.usernames.github}`}>
+                @{data.usernames.github}
+              </a>
+            </p>
+            <div dangerouslySetInnerHTML={{ __html: data.body }} />
+          </>
+        )}
+      </main>
+      <GetInvolved />
+    </>
   );
 }

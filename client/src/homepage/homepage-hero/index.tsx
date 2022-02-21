@@ -16,7 +16,7 @@ export function HomepageHero() {
         </p>
         <Search hasOpened={true} />
       </section>
-      <Mandala extraClasses="homepage-hero-bg" />
+      <Mandala rotate={true} extraClasses="homepage-hero-bg" />
     </div>
   );
 }
