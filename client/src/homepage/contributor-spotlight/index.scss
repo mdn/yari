@@ -55,6 +55,10 @@
     align-items: center;
     justify-content: center;
     word-break: break-word;
+
+    img {
+      max-width: 90%;
+    }
   }
 
   .contributor-name {
@@ -110,7 +114,7 @@
     --mandala-primary: var(--border-primary);
 
     .mandala-translate {
-      transform: translate(8rem, -3rem);
+      transform: translate(15rem, -0rem);
     }
   }
 }
