@@ -395,6 +395,7 @@ code {
 }
 
 code {
+  color: var(--code-color);
   background: var(--code-background-inline);
   padding: 0.125rem 0.25rem;
   width: fit-content;
