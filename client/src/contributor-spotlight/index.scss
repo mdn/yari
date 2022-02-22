@@ -30,6 +30,7 @@
     min-width: max-content;
     max-width: 30rem;
     padding: 1rem;
+    border-radius: var(--elem-radius);
 
     h2 {
       color: var(--text-primary);
@@ -39,6 +40,7 @@
 
     a {
       font-size: 1.3rem;
+      padding-left: 0;
     }
 
     .profile-image {

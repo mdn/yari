@@ -17,6 +17,12 @@
       margin-top: 3rem;
     }
 
+    @media screen and (min-width: $screen-md) {
+      h1 {
+        font-size: 3.5rem;
+      }
+    }
+
     header {
       display: flex;
       gap: 1rem;

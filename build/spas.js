@@ -22,7 +22,7 @@ let featuredContributor;
 async function buildContributorSpotlight(options) {
   // for now, these will only be available in English
   const locale = "en-US";
-  const prefix = "contribute/spotlight";
+  const prefix = "community/spotlight";
   const profileImg = "profile-image.jpg";
 
   for (const contributor of fs.readdirSync(contributorSpotlightRoot)) {

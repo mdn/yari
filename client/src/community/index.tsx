@@ -94,7 +94,26 @@ export function Contribute() {
           to support “web platform documentation for the benefit of web
           developers &amp; designers worldwide.” The team at OWD has led or
           contributed to many projects to improve documentation on MDN. They're
-          an invaluable partner in the day-to-day work of making MDN.
+          an invaluable partner in the day-to-day work of making MDN. Read more
+          about OWD’s activities in their{" "}
+          <a
+            href="https://github.com/openwebdocs/project/tree/main/impact-report-2021"
+            target="_blank"
+            rel="noreferrer noopener"
+            className="external"
+          >
+            2021 Impact and Transparency Report
+          </a>{" "}
+          and get continuous updates on their{" "}
+          <a
+            href="https://twitter.com/openwebdocs"
+            target="_blank"
+            rel="noreferrer noopener"
+            className="external"
+          >
+            Twitter
+          </a>{" "}
+          account.
         </p>
         <blockquote className="owd dark">
           <div className="partner">

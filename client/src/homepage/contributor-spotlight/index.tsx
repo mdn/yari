@@ -1,5 +1,6 @@
 import useSWR from "swr";
 import { CRUD_MODE } from "../../constants";
+import { Icon } from "../../ui/atoms/icon";
 import Mandala from "../../ui/molecules/mandala";
 
 import "./index.scss";
@@ -39,10 +40,13 @@ export function ContributorSpotlight(props) {
               >
                 {data?.featuredContributor?.contributorName}
               </a>
-              <blockquote>{data?.featuredContributor?.quote}</blockquote>
+              <blockquote>
+                <Icon name="quote"></Icon>
+                {data?.featuredContributor?.quote}
+              </blockquote>
             </>
           )}
-          <a href="/contribute" className="spotlight-cta">
+          <a href="/en-US/community" className="spotlight-cta">
             Get involved →
           </a>
         </div>

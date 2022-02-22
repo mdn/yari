@@ -11,7 +11,7 @@ export function GetInvolved() {
           Our constant quest for innovation starts here, with you. Every part of
           MDN (docs, demos and the site itself) springs from our incredible open
           community of developers. Please join us!
-          <a className="get-involved-cta" href={`/${locale}/contribute/`}>
+          <a className="get-involved-cta" href={`/${locale}/community/`}>
             Get Involved →
           </a>
         </p>

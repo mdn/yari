@@ -268,21 +268,21 @@
 
   --scrollbar-color: rgba(255, 255, 255, 0.25);
 
-  --category-color: #{$mdn-color-dark-theme-blue-40};
-  --category-color-background: #{$mdn-color-dark-theme-blue-40}10;
-  --color-code: #{$mdn-color-dark-theme-blue-30};
+  --category-color: #{$mdn-color-dark-theme-blue-30};
+  --category-color-background: #{$mdn-color-dark-theme-blue-30}10;
+  --color-code: #{$mdn-color-dark-theme-blue-20};
 
-  --plus-accent-color: #{$mdn-color-dark-theme-blue-40};
+  --plus-accent-color: #{$mdn-color-dark-theme-blue-30};
   --html-accent-color: #{$mdn-color-dark-theme-red-40};
-  --css-accent-color: #{$mdn-color-dark-theme-blue-40};
+  --css-accent-color: #{$mdn-color-dark-theme-blue-30};
   --js-accent-color: #{$mdn-color-dark-theme-yellow-40};
   --http-accent-color: #{$mdn-color-dark-theme-green-40};
   --apis-accent-color: #{$mdn-color-dark-theme-violet-40};
   --learn-accent-color: #{$mdn-color-dark-theme-pink-40};
 
-  --plus-code-color: #{$mdn-color-dark-theme-blue-30};
+  --plus-code-color: #{$mdn-color-dark-theme-blue-20};
   --html-code-color: #{$mdn-color-dark-theme-red-30};
-  --css-code-color: #{$mdn-color-dark-theme-blue-30};
+  --css-code-color: #{$mdn-color-dark-theme-blue-20};
   --js-code-color: #{$mdn-color-dark-theme-yellow-30};
   --http-code-color: #{$mdn-color-dark-theme-green-30};
   --apis-code-color: #{$mdn-color-dark-theme-violet-30};
@@ -293,7 +293,7 @@
       $alpha: -0.3
     )};
   --css-accent-engage: #{color.adjust(
-      $mdn-color-dark-theme-blue-40,
+      $mdn-color-dark-theme-blue-30,
       $alpha: -0.3
     )};
   --js-accent-engage: #{color.adjust(
