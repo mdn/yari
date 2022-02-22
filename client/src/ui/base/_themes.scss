@@ -279,7 +279,7 @@
       $mdn-color-dark-theme-violet-50,
       $alpha: -0.3
     )};
-
+  /*
   --html-code-inline: #{color.adjust(
       $mdn-color-dark-theme-red-50,
       $alpha: -0.8,
@@ -334,6 +334,19 @@
       $alpha: -0.92,
       $saturation: 20%
     )};
+*/
+
+  --html-code-inline: #{$mdn-color-dark-grey-70};
+  --html-code-block: #{$mdn-color-dark-grey-70};
+  --css-code-inline: #{$mdn-color-dark-grey-70};
+  --css-code-block: #{$mdn-color-dark-grey-70};
+  --js-code-inline: #{$mdn-color-dark-grey-70};
+  --js-code-block: #{$mdn-color-dark-grey-70};
+  --http-code-inline: #{$mdn-color-dark-grey-70};
+  --http-code-block: #{$mdn-color-dark-grey-70};
+  --apis-code-inline: #{$mdn-color-dark-grey-70};
+  --apis-code-block: #{$mdn-color-dark-grey-70};
+
   --modal-backdrop-color: #{rgba($mdn-theme-dark-background-primary, 0.7)};
 }
 
