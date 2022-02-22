@@ -86,7 +86,7 @@ export function Footer() {
             <li className="footer-nav-item">
               <a
                 className="footer-nav-link"
-                href={`/${locale}/docs/MDN/Contribute/Feedback/`}
+                href={`/${locale}/docs/MDN/Contribute/Feedback`}
               >
                 Report a page issue
               </a>
@@ -94,7 +94,7 @@ export function Footer() {
             <li className="footer-nav-item">
               <a
                 className="footer-nav-link"
-                href={`/${locale}/docs/MDN/Contribute/Feedback/`}
+                href={`/${locale}/docs/MDN/Contribute/Feedback`}
               >
                 Report a site issue
               </a>
@@ -106,8 +106,8 @@ export function Footer() {
           <h2 className="footer-nav-heading">Our communities</h2>
           <ul className="footer-nav-list">
             <li className="footer-nav-item">
-              <a className="footer-nav-link" href={`/${locale}/contribute/`}>
-                Contribute to MDN
+              <a className="footer-nav-link" href={`/${locale}/contribute`}>
+                MDN Community
               </a>
             </li>
             <li className="footer-nav-item">
@@ -117,7 +117,7 @@ export function Footer() {
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                MDN forums
+                MDN Forum
               </a>
             </li>
             <li className="footer-nav-item">
@@ -127,7 +127,7 @@ export function Footer() {
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                MDN chat
+                MDN Chat
               </a>
             </li>
           </ul>
@@ -137,13 +137,13 @@ export function Footer() {
           <h2 className="footer-nav-heading">Developers</h2>
           <ul className="footer-nav-list">
             <li className="footer-nav-item">
-              <a className="footer-nav-link" href={`/${locale}/docs/Web/`}>
-                Web technologies
+              <a className="footer-nav-link" href={`/${locale}/docs/Web`}>
+                Web Technologies
               </a>
             </li>
             <li className="footer-nav-item">
-              <a className="footer-nav-link" href={`/${locale}/docs/Learn/`}>
-                Learn web development
+              <a className="footer-nav-link" href={`/${locale}/docs/Learn`}>
+                Learn Web Development
               </a>
             </li>
             {ENABLE_PLUS && (
