@@ -26,36 +26,53 @@
     min-width: 5rem;
     padding-left: 1rem;
     width: 100%;
-    text-decoration-color: transparent;
     caret-color: var(--text-link);
 
     @keyframes blink {
       from,
       to {
-        text-decoration: none;
+        text-decoration-line: none;
       }
       50% {
-        text-decoration: underline;
+        text-decoration-line: underline;
       }
     }
 
-    &:invalid {
+    &:invalid,
+    &:invalid::placeholder {
       animation: blink 2s step-end infinite;
       caret-color: transparent;
     }
-    &:valid {
+
+    &:valid,
+    &:valid::placeholder {
       animation: none;
-    }
-    &:not(:focus) {
-      animation: none;
-      text-decoration: underline;
-    }
-    &:focus {
-      outline: 0 none;
-      box-shadow: var(--focus-01);
-      border-color: var(--field-focus-border);
     }
 
+    &:not(:focus):valid,
+    &:not(:focus):valid::placeholder {
+      text-decoration-line: none;
+    }
+
+    &:not(:focus),
+    &:not(:focus)::placeholder {
+      animation: none;
+      text-decoration-line: underline;
+    }
+
+    &:not(:focus)::placeholder {
+      animation: none;
+      text-decoration-line: underline;
+    }
+
+    &:focus {
+      outline: 0 none;
+      box-shadow: 0px 0px 0px 3px var(--blend-color),
+        0px 0px 0px 3px var(--category-color);
+      border-color: var(--category-color);
+    }
+
+    &,
     &::placeholder {
       font: var(--type-body-l);
       text-decoration-thickness: 0.15rem;

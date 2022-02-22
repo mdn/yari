@@ -53,19 +53,22 @@ export function Contribute() {
           industry. Each quarter, the PAB meets to discuss problems, prioritize
           content creation, and make connections for future collaborations.
         </p>
-        <blockquote className="pab">
+        <blockquote className="pab dark">
           <div className="partner">
             <h4>
-              &nbsp;Product&nbsp;
-              <br />
-              &nbsp;Advisory&nbsp;Board&nbsp;
+              Dan Appelquist, Samsung Internet (charter member of the Product
+              Advisory Board)
             </h4>
           </div>
           <p>
             <Icon name="quote"></Icon>
-            Our constant quest for innovation starts here, with you. Every part
-            of MDN (docs, demos and the site itself) springs from our incredible
-            open community of developers. Please join us!
+            MDN has a unique place right now as a vendor-neutral and
+            authoritative documentation and information resource for web
+            developers. The MDN PAB has helped to bring feedback from the wider
+            web community (including standards engineers, web browser makers and
+            open source developers) into MDN to help keep it strong. As a member
+            of the web community and a fan of MDN it’s been great to be a part
+            of.
           </p>
         </blockquote>
         <h3>Open Web Docs</h3>
@@ -93,19 +96,17 @@ export function Contribute() {
           contributed to many projects to improve documentation on MDN. They're
           an invaluable partner in the day-to-day work of making MDN.
         </p>
-        <blockquote className="owd">
+        <blockquote className="owd dark">
           <div className="partner">
-            <h4>
-              &nbsp;Open&nbsp;
-              <br />
-              &nbsp;Web&nbsp;Docs&nbsp;
-            </h4>
+            <h4>Florian Scholz, Content Lead, Open Web Docs</h4>
           </div>
           <p>
             <Icon name="quote"></Icon>
-            Our constant quest for innovation starts here, with you. Every part
-            of MDN (docs, demos and the site itself) springs from our incredible
-            open community of developers. Please join us!
+            Open Web Docs strongly believes in MDN as critical infrastructure
+            for the web platform. As a vendor-neutral organization, we are
+            supporting MDN with an independent editorial voice and with the
+            needs of the global community of web developers and designers in
+            mind.
           </p>
         </blockquote>
         <h2>Licensing</h2>

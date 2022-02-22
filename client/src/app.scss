@@ -183,68 +183,57 @@ u {
 }
 
 .category-html {
-  .logo,
-  .toc,
-  .sidebar,
-  .main-content {
-    --text-link: var(--html-accent-color);
-    --category-color: var(--html-accent-color);
-    --category-color-background: var(--html-accent-background-color);
-    --code-background-inline: var(--html-code-inline);
-    --code-background-block: var(--html-code-block);
-  }
+  --text-link: var(--html-accent-color);
+  --category-color: var(--html-accent-color);
+  --category-color-background: var(--html-accent-background-color);
+  --code-color: var(--html-code-color);
+  --code-background-inline: var(--html-code-inline);
+  --code-background-block: var(--html-code-block);
 }
 
 .category-css {
-  .logo,
-  .toc,
-  .sidebar,
-  .main-content {
-    --text-link: var(--css-accent-color);
-    --category-color: var(--css-accent-color);
-    --category-color-background: var(--css-accent-background-color);
-    --code-background-inline: var(--css-code-inline);
-    --code-background-block: var(--css-code-block);
-  }
+  --text-link: var(--css-accent-color);
+  --category-color: var(--css-accent-color);
+  --category-color-background: var(--css-accent-background-color);
+  --code-color: var(--css-code-color);
+  --code-background-inline: var(--css-code-inline);
+  --code-background-block: var(--css-code-block);
 }
 
 .category-javascript {
-  .logo,
-  .toc,
-  .sidebar,
-  .main-content {
-    --text-link: var(--js-accent-color);
-    --category-color: var(--js-accent-color);
-    --category-color-background: var(--js-accent-background-color);
-    --code-background-inline: var(--js-code-inline);
-    --code-background-block: var(--js-code-block);
-  }
+  --text-link: var(--js-accent-color);
+  --category-color: var(--js-accent-color);
+  --category-color-background: var(--js-accent-background-color);
+  --code-color: var(--js-code-color);
+  --code-background-inline: var(--js-code-inline);
+  --code-background-block: var(--js-code-block);
 }
 
 .category-http {
-  .logo,
-  .toc,
-  .sidebar,
-  .main-content {
-    --text-link: var(--http-accent-color);
-    --category-color: var(--http-accent-color);
-    --category-color-background: var(--http-accent-background-color);
-    --code-background-inline: var(--http-code-inline);
-    --code-background-block: var(--http-code-block);
-  }
+  --text-link: var(--http-accent-color);
+  --category-color: var(--http-accent-color);
+  --category-color-background: var(--http-accent-background-color);
+  --code-color: var(--http-code-color);
+  --code-background-inline: var(--http-code-inline);
+  --code-background-block: var(--http-code-block);
 }
 
 .category-api {
-  .logo,
-  .toc,
-  .sidebar,
-  .main-content {
-    --text-link: var(--apis-accent-color);
-    --category-color: var(--apis-accent-color);
-    --category-color-background: var(--apis-accent-background-color);
-    --code-background-inline: var(--apis-code-inline);
-    --code-background-block: var(--apis-code-block);
-  }
+  --text-link: var(--apis-accent-color);
+  --category-color: var(--apis-accent-color);
+  --category-color-background: var(--apis-accent-background-color);
+  --code-color: var(--api-code-color);
+  --code-background-inline: var(--apis-code-inline);
+  --code-background-block: var(--apis-code-block);
+}
+
+.category-learn {
+  --text-link: var(--learn-accent-color);
+  --category-color: var(--learn-accent-color);
+  --category-color-background: var(--learn-accent-background-color);
+  --code-color: var(--api-code-color);
+  --code-background-inline: var(--learn-code-inline);
+  --code-background-block: var(--learn-code-block);
 }
 
 .mify {
