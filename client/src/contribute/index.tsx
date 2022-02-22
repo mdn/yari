@@ -53,7 +53,7 @@ export function Contribute() {
           industry. Each quarter, the PAB meets to discuss problems, prioritize
           content creation, and make connections for future collaborations.
         </p>
-        <blockquote className="pab">
+        <blockquote className="pab dark">
           <div className="partner">
             <h4>
               &nbsp;Product&nbsp;
