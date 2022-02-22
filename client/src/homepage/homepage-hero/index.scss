@@ -77,6 +77,9 @@
         box-shadow: var(--focus-01);
         border-color: var(--field-focus-border);
       }
+      &::placeholder {
+        font-size: 1.5rem;
+      }
     }
 
     .search-widget {

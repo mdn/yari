@@ -46,6 +46,7 @@ main.contribute {
       gap: 2rem;
       border: none;
       flex-direction: column-reverse;
+      border-radius: 0.5rem;
 
       @media screen and (max-width: 40rem) {
         flex-wrap: wrap-reverse;

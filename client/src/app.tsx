@@ -19,7 +19,7 @@ import { Plus } from "./plus";
 import { About } from "./about";
 import { AppSettings } from "./app-settings";
 import { docCategory } from "./utils";
-import { Contribute } from "./contribute";
+import { Contribute } from "./community";
 import { ContributorSpotlight } from "./contributor-spotlight";
 
 const AllFlaws = React.lazy(() => import("./flaws"));
@@ -286,7 +286,7 @@ export function App(appProps) {
               }
             />
             <Route
-              path="/contribute/*"
+              path="/community/*"
               element={
                 <StandardLayout>
                   <Contribute />
@@ -294,7 +294,7 @@ export function App(appProps) {
               }
             />
             <Route
-              path="/contribute/spotlight/*"
+              path="/community/spotlight/*"
               element={
                 <StandardLayout>
                   <ContributorSpotlight {...appProps} />

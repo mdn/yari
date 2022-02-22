@@ -22,7 +22,7 @@ type ContributorDetails = {
 
 export function ContributorSpotlight(props: ContributorDetails) {
   const { "*": slug, locale } = useParams();
-  const baseURL = `/${locale.toLowerCase()}/contribute/spotlight/${slug}`;
+  const baseURL = `/${locale.toLowerCase()}/community/spotlight/${slug}`;
   const contributorJSONUrl = `${baseURL}/index.json`;
 
   const { data } = useSWR<any>(

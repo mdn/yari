@@ -50,7 +50,7 @@ export function Footer() {
           <h2 className="footer-nav-heading">MDN</h2>
           <ul className="footer-nav-list">
             <li className="footer-nav-item">
-              <a href={`/${locale}/about`}>About</a>
+              <a href={`/en-US/about`}>About</a>
             </li>
             <li className="footer-nav-item">
               <a
@@ -86,7 +86,7 @@ export function Footer() {
             <li className="footer-nav-item">
               <a
                 className="footer-nav-link"
-                href={`/${locale}/docs/MDN/Contribute/Feedback`}
+                href={`/${locale}/docs/MDN/Contribute/Feedback#documentation_issues`}
               >
                 Report a page issue
               </a>
@@ -94,7 +94,7 @@ export function Footer() {
             <li className="footer-nav-item">
               <a
                 className="footer-nav-link"
-                href={`/${locale}/docs/MDN/Contribute/Feedback`}
+                href={`/${locale}/docs/MDN/Contribute/Feedback#site_issues`}
               >
                 Report a site issue
               </a>
@@ -106,7 +106,7 @@ export function Footer() {
           <h2 className="footer-nav-heading">Our communities</h2>
           <ul className="footer-nav-list">
             <li className="footer-nav-item">
-              <a className="footer-nav-link" href={`/${locale}/contribute`}>
+              <a className="footer-nav-link" href={`/en-US/community`}>
                 MDN Community
               </a>
             </li>

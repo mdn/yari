@@ -24,45 +24,50 @@ export function Homepage(props) {
                 &lt;dialog&gt;: The Dialog element
               </a>
               <p>
-                The conic-gradient() CSS function creates an image consisting of
-                a gradient with color transitions rotated around a center point
-                (rather than radiating from the center).
+                The &lt;dialog&gt; HTML element represents a dialog box or other
+                interactive component, such as a dismissible alert, inspector,
+                or subwindow.
               </p>
             </div>
 
             <div className="article-tile">
-              <a href="/en-US/docs/Web/API/Web_Audio_API" className="tile-tag">
-                Web APIs
-              </a>
-              <a
-                href="/en-US/docs/Web/CSS/gradient/conic-gradient()"
-                className="tile-title expand-this-link"
-              >
-                Web Audio API
-              </a>
-              <p>
-                The Web Audio API provides a powerful and versatile system for
-                controlling audio on the Web, allowing developers to choose
-                audio sources, add effects to audio, create audio
-                visualizations, apply spatial effects (such as panning) and much
-                more.
-              </p>
-            </div>
-
-            <div className="article-tile">
-              <a href="/en-US/docs/Web/CSS/" className="tile-tag">
+              <a href={`/${locale}/docs/Web/CSS`} className="tile-tag">
                 CSS
               </a>
               <a
-                href="/en-US/docs/Web/CSS/gradient/conic-gradient()"
+                href={`/${locale}/docs/Web/CSS/color-scheme`}
                 className="tile-title expand-this-link"
               >
-                &#60;track&#62;
+                color-scheme
               </a>
               <p>
-                The conic-gradient() CSS function creates an image consisting of
-                a gradient with color transitions rotated around a center point
-                (rather than radiating from the center).
+                The color-scheme CSS property allows an element to indicate
+                which color schemes it can comfortably be rendered in.
+                <br />
+                Common choices for operating system color schemes are "light"
+                and "dark", or "day mode" and "night mode". When a user selects
+                one of these color schemes, the operating system makes
+                adjustments to the user interface. This includes form controls,
+                scrollbars, and the used values of CSS system colors.
+              </p>
+            </div>
+
+            <div className="article-tile">
+              <a href={`/${locale}/docs/Web/API`} className="tile-tag">
+                Web APIs
+              </a>
+              <a
+                href={`/${locale}/docs/Web/API/Canvas_API/Tutorial`}
+                className="tile-title expand-this-link"
+              >
+                Canvas tutorial
+              </a>
+              <p>
+                This tutorial describes how to use the &lt;canvas&gt; element to
+                draw 2D graphics, starting with the basics. The examples
+                provided should give you some clear ideas about what you can do
+                with canvas, and will provide code snippets that may get you
+                started in building your own content.
               </p>
             </div>
           </div>

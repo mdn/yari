@@ -14,6 +14,12 @@
     border: 0;
     font-style: italic;
     padding: 0;
+    display: flex;
+
+    .icon {
+      margin-right: 0.5rem;
+      margin-top: 0.25rem;
+    }
   }
 
   h4 {
@@ -114,7 +120,7 @@
     --mandala-primary: var(--border-primary);
 
     .mandala-translate {
-      transform: translate(15rem, -0rem);
+      transform: translate(-5rem, -0rem);
     }
   }
 }
