@@ -12,6 +12,7 @@
 import fs from "fs";
 
 import csv from "@fast-csv/parse";
+// eslint-disable-next-line node/no-missing-import
 import got from "got";
 
 const CURRENT_URL =
