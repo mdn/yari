@@ -1,3 +1,4 @@
+// eslint-disable-next-line node/no-missing-import
 import got from "got";
 import * as util from "./util.js";
 
@@ -134,8 +135,12 @@ export default {
         webExtExamples = await got(
           "https://raw.githubusercontent.com/mdn/webextensions-examples/master/examples.json",
           {
-            timeout: 1000,
-            retry: 5,
+            timeout: {
+              response: 1000,
+            },
+            retry: {
+              limit: 5,
+            },
           }
         ).json();
       } catch (error) {
