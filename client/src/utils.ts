@@ -4,8 +4,11 @@ const PLUS_RE = /^\/[A-Za-z-]*\/?plus(?:\/?.*)$/i;
 
 export function docCategory({ pathname = "" } = {}): string | null {
   const [, , , webOrLearn, category] = pathname.split("/");
-  if ((webOrLearn === "Learn" || webOrLearn === "Web") && category) {
-    return `category-${category.toLowerCase()}`;
+  if (webOrLearn === "Learn" || webOrLearn === "Web") {
+    if (category) {
+      return `category-${category.toLowerCase()}`;
+    }
+    return `category-${webOrLearn.toLowerCase()}`;
   }
   return null;
 }

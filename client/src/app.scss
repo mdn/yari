@@ -227,6 +227,15 @@ u {
   --code-background-block: var(--apis-code-block);
 }
 
+.category-learn {
+  --text-link: var(--learn-accent-color);
+  --category-color: var(--learn-accent-color);
+  --category-color-background: var(--learn-accent-background-color);
+  --code-color: var(--api-code-color);
+  --code-background-inline: var(--learn-code-inline);
+  --code-background-block: var(--learn-code-block);
+}
+
 .mify {
   @include mdn.mify;
 }

@@ -26,12 +26,14 @@ $mdn-color-dark-theme-green: #088806;
 $mdn-color-dark-theme-yellow: #d84000;
 $mdn-color-dark-theme-red: #e80840;
 $mdn-color-dark-theme-violet: #a040f8;
+$mdn-color-dark-theme-pink: #c84080;
 
 $mdn-color-light-theme-blue: #1870f0;
 $mdn-color-light-theme-green: #088806;
 $mdn-color-light-theme-yellow: #d84000;
 $mdn-color-light-theme-red: #e80840;
 $mdn-color-light-theme-violet: #a040f8;
+$mdn-color-light-theme-pink: #c84080;
 
 $mdn-color-light-theme-blue-10: mdn-color($mdn-color-light-theme-blue, 10);
 $mdn-color-light-theme-blue-20: mdn-color($mdn-color-light-theme-blue, 20);
@@ -83,6 +85,16 @@ $mdn-color-light-theme-violet-70: mdn-color($mdn-color-light-theme-violet, 70);
 $mdn-color-light-theme-violet-80: mdn-color($mdn-color-light-theme-violet, 80);
 $mdn-color-light-theme-violet-90: mdn-color($mdn-color-light-theme-violet, 90);
 
+$mdn-color-light-theme-pink-10: mdn-color($mdn-color-light-theme-pink, 10);
+$mdn-color-light-theme-pink-20: mdn-color($mdn-color-light-theme-pink, 20);
+$mdn-color-light-theme-pink-30: mdn-color($mdn-color-light-theme-pink, 30);
+$mdn-color-light-theme-pink-40: mdn-color($mdn-color-light-theme-pink, 40);
+$mdn-color-light-theme-pink-50: mdn-color($mdn-color-light-theme-pink, 50);
+$mdn-color-light-theme-pink-60: mdn-color($mdn-color-light-theme-pink, 60);
+$mdn-color-light-theme-pink-70: mdn-color($mdn-color-light-theme-pink, 70);
+$mdn-color-light-theme-pink-80: mdn-color($mdn-color-light-theme-pink, 80);
+$mdn-color-light-theme-pink-90: mdn-color($mdn-color-light-theme-pink, 90);
+
 $mdn-color-dark-theme-blue-10: mdn-color($mdn-color-dark-theme-blue, 10);
 $mdn-color-dark-theme-blue-20: mdn-color($mdn-color-dark-theme-blue, 20);
 $mdn-color-dark-theme-blue-30: mdn-color($mdn-color-dark-theme-blue, 30);
@@ -133,16 +145,16 @@ $mdn-color-dark-theme-violet-70: mdn-color($mdn-color-dark-theme-violet, 70);
 $mdn-color-dark-theme-violet-80: mdn-color($mdn-color-dark-theme-violet, 80);
 $mdn-color-dark-theme-violet-90: mdn-color($mdn-color-dark-theme-violet, 90);
 
-$mdn-color-pink-05: #ffdff0;
-$mdn-color-pink-10: #ffb4db;
-$mdn-color-pink-20: #ff8ac5;
-$mdn-color-pink-30: #ff6bba;
-$mdn-color-pink-40: #ff4aa2;
-$mdn-color-pink-50: #ff298a;
-$mdn-color-pink-60: #e21587;
-$mdn-color-pink-70: #c60084;
-$mdn-color-pink-80: #7f145b;
-$mdn-color-pink-90: #50134b;
+$mdn-color-dark-theme-pink-10: mdn-color($mdn-color-dark-theme-pink, 10);
+$mdn-color-dark-theme-pink-20: mdn-color($mdn-color-dark-theme-pink, 20);
+$mdn-color-dark-theme-pink-30: mdn-color($mdn-color-dark-theme-pink, 30);
+$mdn-color-dark-theme-pink-40: mdn-color($mdn-color-dark-theme-pink, 40);
+$mdn-color-dark-theme-pink-50: mdn-color($mdn-color-dark-theme-pink, 50);
+$mdn-color-dark-theme-pink-60: mdn-color($mdn-color-dark-theme-pink, 60);
+$mdn-color-dark-theme-pink-70: mdn-color($mdn-color-dark-theme-pink, 70);
+$mdn-color-dark-theme-pink-80: mdn-color($mdn-color-dark-theme-pink, 80);
+$mdn-color-dark-theme-pink-90: mdn-color($mdn-color-dark-theme-pink, 90);
+
 $mdn-color-ink-05: #393473;
 $mdn-color-ink-10: #342f6d;
 $mdn-color-ink-20: #312a64;

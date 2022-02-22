@@ -83,6 +83,7 @@
   --js-accent-color: #{$mdn-color-light-theme-yellow-50};
   --http-accent-color: #{$mdn-color-light-theme-green-50};
   --apis-accent-color: #{$mdn-color-light-theme-violet-50};
+  --learn-accent-color: #{$mdn-color-light-theme-pink-50};
 
   --plus-code-color: #{$mdn-color-light-theme-blue-60};
   --html-code-color: #{$mdn-color-light-theme-red-60};
@@ -90,6 +91,7 @@
   --js-code-color: #{$mdn-color-light-theme-yellow-60};
   --http-code-color: #{$mdn-color-light-theme-green-60};
   --apis-code-color: #{$mdn-color-light-theme-violet-60};
+  --learn-code-color: #{$mdn-color-light-theme-pink-60};
 
   --plus-accent-background-color: #{$mdn-color-light-theme-blue-50}10;
   --html-accent-background-color: #{$mdn-color-light-theme-red-50}10;
@@ -97,6 +99,7 @@
   --js-accent-background-color: #{$mdn-color-light-theme-yellow-50}10;
   --http-accent-background-color: #{$mdn-color-light-theme-green-50}10;
   --apis-accent-background-color: #{$mdn-color-light-theme-violet-50}10;
+  --learn-accent-background-color: #{$mdn-color-light-theme-pink-50}10;
 
   --plus-accent-engage: #{color.adjust(
       $mdn-color-light-theme-blue-50,
@@ -120,6 +123,10 @@
     )};
   --apis-accent-engage: #{color.adjust(
       $mdn-color-light-theme-violet-50,
+      $alpha: -0.3
+    )};
+  --learn-accent-engage: #{color.adjust(
+      $mdn-color-light-theme-pink-50,
       $alpha: -0.3
     )};
   /*
@@ -184,6 +191,8 @@
   --http-code-block: #{$mdn-color-light-grey-10};
   --apis-code-inline: #{$mdn-color-light-grey-10};
   --apis-code-block: #{$mdn-color-light-grey-10};
+  --learn-code-inline: #{$mdn-color-light-grey-10};
+  --learn-code-block: #{$mdn-color-light-grey-10};
 
   --homepage-hero-bg: radial-gradient(
     114.42% 123.24% at 6.69% 13.67%,
@@ -269,6 +278,7 @@
   --js-accent-color: #{$mdn-color-dark-theme-yellow-40};
   --http-accent-color: #{$mdn-color-dark-theme-green-40};
   --apis-accent-color: #{$mdn-color-dark-theme-violet-40};
+  --learn-accent-color: #{$mdn-color-dark-theme-pink-40};
 
   --plus-code-color: #{$mdn-color-dark-theme-blue-30};
   --html-code-color: #{$mdn-color-dark-theme-red-30};
@@ -276,6 +286,7 @@
   --js-code-color: #{$mdn-color-dark-theme-yellow-30};
   --http-code-color: #{$mdn-color-dark-theme-green-30};
   --apis-code-color: #{$mdn-color-dark-theme-violet-30};
+  --learn-code-color: #{$mdn-color-dark-theme-pink-30};
 
   --html-accent-engage: #{color.adjust(
       $mdn-color-dark-theme-red-40,
@@ -295,6 +306,10 @@
     )};
   --apis-accent-engage: #{color.adjust(
       $mdn-color-dark-theme-violet-40,
+      $alpha: -0.3
+    )};
+  --learn-accent-engage: #{color.adjust(
+      $mdn-color-dark-theme-pink-40,
       $alpha: -0.3
     )};
   /*
@@ -364,6 +379,8 @@
   --http-code-block: #{$mdn-color-dark-grey-70};
   --apis-code-inline: #{$mdn-color-dark-grey-70};
   --apis-code-block: #{$mdn-color-dark-grey-70};
+  --learn-code-inline: #{$mdn-color-dark-grey-70};
+  --learn-code-block: #{$mdn-color-dark-grey-70};
 
   --modal-backdrop-color: #{rgba($mdn-theme-dark-background-primary, 0.7)};
   --blend-color: #{$mdn-color-black}80;

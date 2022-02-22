@@ -56,6 +56,17 @@
   }
 }
 
+.learn-link-container {
+  a:hover,
+  a:focus {
+    .submenu-icon {
+      &.learn {
+        background-color: var(--apis-accent-color) !important;
+      }
+    }
+  }
+}
+
 .submenu-icon {
   &.html {
     background-color: var(--html-accent-engage);
@@ -74,6 +85,9 @@
   }
 
   &.apis {
+    background-color: var(--apis-accent-engage);
+  }
+  &.learn {
     background-color: var(--apis-accent-engage);
   }
 }
