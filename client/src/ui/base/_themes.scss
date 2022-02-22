@@ -190,6 +190,7 @@
   );
 
   --modal-backdrop-color: #{rgba($mdn-theme-dark-background-primary, 0.1)};
+  --blend-color: #{$mdn-color-white}80;
 }
 
 @mixin dark-theme {
@@ -348,6 +349,7 @@
   --apis-code-block: #{$mdn-color-dark-grey-70};
 
   --modal-backdrop-color: #{rgba($mdn-theme-dark-background-primary, 0.7)};
+  --blend-color: #{$mdn-color-black}80;
 }
 
 body,
