@@ -43,9 +43,9 @@ main.contribute {
       margin: 2rem 0;
       padding: 2rem;
       display: flex;
-      flex-direction: row;
       gap: 2rem;
       border: none;
+      flex-direction: column-reverse;
 
       @media screen and (max-width: 40rem) {
         flex-wrap: wrap-reverse;
@@ -62,40 +62,27 @@ main.contribute {
       }
 
       &.owd {
-        background-color: var(--text-primary);
+        background-color: var(--text-link);
         color: var(--background-primary);
 
         .icon {
-          background-color: var(--background-primary);
-        }
-        h4 {
-          color: var(--text-primary);
           background-color: var(--background-primary);
         }
       }
 
       &.pab {
-        background-color: var(--text-link);
-        color: var(--background-primary);
-        flex-direction: row-reverse;
+        background-color: var(--background-primary);
+        color: var(--text-primary);
 
         .icon {
-          background-color: var(--background-primary);
-        }
-        h4 {
           background-color: var(--text-primary);
         }
       }
 
       .partner {
-        width: 100%;
-        width: max-content;
-        flex-direction: column;
-
         h4 {
-          font-size: 2rem;
+          font-size: 0.8rem;
           display: inline;
-          line-height: 1.4;
         }
 
         a {
