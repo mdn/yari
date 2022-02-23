@@ -29,6 +29,9 @@
 
   .top-level-entry-container {
     position: relative;
+    .submenu {
+      z-index: var(--z-index-nav-menu);
+    }
   }
 
   .toggle-search-button {

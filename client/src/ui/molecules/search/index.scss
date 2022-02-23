@@ -96,7 +96,7 @@
     position: absolute;
     top: 42px;
     width: 100%;
-    z-index: 1000;
+    z-index: var(--z-index-search-results);
 
     .indexing-warning {
       color: var(--icon-warning);
