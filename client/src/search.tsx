@@ -273,8 +273,8 @@ function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
     isOpen: inputValue !== "",
     defaultIsOpen: isFocused,
     defaultHighlightedIndex: 0,
-    onSelectedItemChange: ({ selectedItem }) => {
-      if (selectedItem) {
+    onSelectedItemChange: ({ type, selectedItem }) => {
+      if (type !== useCombobox.stateChangeTypes.InputBlur && selectedItem) {
         navigate(selectedItem.url);
         onChangeInputValue("");
         reset();
@@ -446,7 +446,10 @@ function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
           onBlur: () => onChangeIsFocused(false),
           onKeyDown(event) {
             if (event.key === "Escape" && inputRef.current) {
+              onChangeInputValue("");
+              reset();
               toggleMenu();
+              inputRef.current?.blur();
             } else if (
               event.key === "Enter" &&
               inputValue.trim() &&
