@@ -1,11 +1,12 @@
 import dayjs from "dayjs";
 import useSWR from "swr";
 import { CRUD_MODE } from "../../constants";
+import { HydrationData } from "../../types/hydration";
 
 import "./index.scss";
 
-function RecentContributions(props) {
-  const { data } = useSWR<any>(
+function RecentContributions(props: HydrationData<any>) {
+  const { data: { data } = {} } = useSWR<any>(
     "./index.json",
     async (url) => {
       const response = await fetch(url);
@@ -16,9 +17,7 @@ function RecentContributions(props) {
       return await response.json();
     },
     {
-      initialData: props.pullRequestsData
-        ? { pullRequestsData: props.pullRequestsData }
-        : undefined,
+      initialData: props.data ? { data: props.data } : undefined,
       revalidateOnFocus: CRUD_MODE,
     }
   );

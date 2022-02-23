@@ -34,7 +34,7 @@ async function buildContributorSpotlight(options) {
     const frontMatter = frontmatter(markdown);
     const contributorHTML = await m2h(frontMatter.body, locale);
 
-    const context = {
+    const data = {
       body: contributorHTML,
       contributorName: frontMatter.attributes.contributor_name,
       folderName: frontMatter.attributes.folder_name,
@@ -44,12 +44,13 @@ async function buildContributorSpotlight(options) {
       usernames: frontMatter.attributes.usernames,
       quote: frontMatter.attributes.quote,
     };
+    const context = { data };
 
     const html = renderHTML(`/${locale}/${prefix}/${contributor}`, context);
     const outPath = path.join(
       BUILD_OUT_ROOT,
       locale,
-      `${prefix}/${context.folderName}`
+      `${prefix}/${data.folderName}`
     );
     const filePath = path.join(outPath, "index.html");
     const imgFilePath = `${contributorSpotlightRoot}/${contributor}/profile-image.jpg`;
@@ -112,7 +113,7 @@ async function buildSPAs(options) {
           noIndexing: true,
         },
         { prefix: "about", pageTitle: "About MDN" },
-        { prefix: "contribute", pageTitle: "Contribute to MDN" },
+        { prefix: "community", pageTitle: "Contribute to MDN" },
       ];
       for (const { prefix, pageTitle, noIndexing } of SPAs) {
         const url = `/${locale}/${prefix}`;
@@ -154,13 +155,14 @@ async function buildSPAs(options) {
         continue;
       }
       const url = `/${locale}/`;
-      const context = {
+      const data = {
         pullRequestsData: {
           items: pullRequestsData.items,
           repo: { name: "mdn/content", url: "https://github.com/mdn/content" },
         },
         featuredContributor,
       };
+      const context = { data };
       const html = renderHTML(url, context);
       const outPath = path.join(BUILD_OUT_ROOT, locale);
       fs.mkdirSync(outPath, { recursive: true });

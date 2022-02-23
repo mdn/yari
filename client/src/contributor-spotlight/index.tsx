@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 import useSWR from "swr";
 
 import { CRUD_MODE } from "../constants";
+import { HydrationData } from "../types/hydration";
 import { GetInvolved } from "../ui/molecules/get_involved";
 
 import "./index.scss";
@@ -20,12 +21,12 @@ type ContributorDetails = {
   quote: string;
 };
 
-export function ContributorSpotlight(props: ContributorDetails) {
+export function ContributorSpotlight(props: HydrationData<ContributorDetails>) {
   const { "*": slug, locale } = useParams();
   const baseURL = `/${locale.toLowerCase()}/community/spotlight/${slug}`;
   const contributorJSONUrl = `${baseURL}/index.json`;
 
-  const { data } = useSWR<any>(
+  const { data: { data } = {} } = useSWR<any>(
     contributorJSONUrl,
     async (url) => {
       const response = await fetch(url);
@@ -36,7 +37,7 @@ export function ContributorSpotlight(props: ContributorDetails) {
       return await response.json();
     },
     {
-      initialData: props.body ? props : undefined,
+      initialData: props.data ? props : undefined,
       revalidateOnFocus: CRUD_MODE,
     }
   );
