@@ -119,9 +119,7 @@ function RedesignAnnouncementBanner({
   return (
     <Banner
       id={REDESIGN_ANNOUNCEMENT}
-      copy={
-        "✨ Read about the work that went into the new MDN Web Docs redesign"
-      }
+      copy={"✨ Learn more about MDN Web Docs' new design"}
       cta={"Read more »"}
       url={"https://hacks.mozilla.org/"}
       newWindow={true}
