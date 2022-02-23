@@ -11,6 +11,9 @@ export function docCategory({ pathname = "" } = {}): string | null {
     }
     return `category-${webOrLearn.toLowerCase()}`;
   }
+  if (isHomePage(pathname)) {
+    return `category-home`;
+  }
   return null;
 }
 

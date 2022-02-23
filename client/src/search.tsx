@@ -89,14 +89,13 @@ function HighlightMatch({ title, q }: { title: string; q: string }) {
 
   // Split on higlight term and include term into parts, ignore case.
   const words = q.trim().toLowerCase().split(/[ ,]+/);
-
   // $& means the whole matched string
   const regexWords = words.map((s) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"));
-  const regex = `\\b(${regexWords.join("|")})`;
+  const regex = regexWords.map((word) => `(${word})`).join("|");
   const parts = title.split(new RegExp(regex, "gi"));
   return (
     <b>
-      {parts.map((part, i) => {
+      {parts.filter(Boolean).map((part, i) => {
         const key = `${part}:${i}`;
         if (words.includes(part.toLowerCase())) {
           return <mark key={key}>{part}</mark>;
@@ -274,8 +273,8 @@ function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
     isOpen: inputValue !== "",
     defaultIsOpen: isFocused,
     defaultHighlightedIndex: 0,
-    onSelectedItemChange: ({ selectedItem }) => {
-      if (selectedItem) {
+    onSelectedItemChange: ({ type, selectedItem }) => {
+      if (type !== useCombobox.stateChangeTypes.InputBlur && selectedItem) {
         navigate(selectedItem.url);
         onChangeInputValue("");
         reset();
@@ -303,6 +302,10 @@ function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
     }
   }, [initializeSearchIndex, isFocused, onChangeIsFocused]);
 
+  const [resultsWithHighlighting, setResultsWithHighlighting] = useState<any>(
+    []
+  );
+
   useEffect(() => {
     const item = resultItems[highlightedIndex];
     if (item && preloadSupported()) {
@@ -314,6 +317,20 @@ function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
       };
     }
   }, [highlightedIndex, resultItems]);
+
+  useEffect(() => {
+    setResultsWithHighlighting(
+      resultItems.map((item) => {
+        return (
+          <>
+            <HighlightMatch title={item.title} q={inputValue} />
+            <br />
+            <BreadcrumbURI uri={item.url} positions={item.positions} />
+          </>
+        );
+      })
+    );
+  }, [resultItems, inputValue]);
 
   const searchResults = (() => {
     if (!isOpen || !inputValue.trim()) {
@@ -333,7 +350,6 @@ function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
         </div>
       ) : null;
     }
-
     return (
       <>
         {resultItems.length === 0 && inputValue !== "/" ? (
@@ -365,9 +381,7 @@ function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
                   index: i,
                 })}
               >
-                <HighlightMatch title={item.title} q={inputValue} />
-                <br />
-                <BreadcrumbURI uri={item.url} positions={item.positions} />
+                ({resultsWithHighlighting[i]})
               </div>
             )),
             <div
@@ -432,7 +446,10 @@ function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
           onBlur: () => onChangeIsFocused(false),
           onKeyDown(event) {
             if (event.key === "Escape" && inputRef.current) {
+              onChangeInputValue("");
+              reset();
               toggleMenu();
+              inputRef.current?.blur();
             } else if (
               event.key === "Enter" &&
               inputValue.trim() &&

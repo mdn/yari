@@ -395,10 +395,14 @@ code {
 }
 
 code {
-  color: var(--code-color);
+  color: var(--text-secondary);
   background: var(--code-background-inline);
   padding: 0.125rem 0.25rem;
   width: fit-content;
+}
+
+a > code {
+  color: var(--code-color);
 }
 
 pre {

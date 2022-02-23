@@ -33,6 +33,14 @@ const Sitemap = React.lazy(() => import("./sitemap"));
 const isServer = typeof window === "undefined";
 
 function Layout({ pageType, children }) {
+  const { pathname } = useLocation();
+  const [category, setCategory] = React.useState<string | null>(
+    docCategory({ pathname })
+  );
+
+  React.useEffect(() => {
+    setCategory(docCategory({ pathname }));
+  }, [pathname]);
   return (
     <>
       <A11yNav />
@@ -43,7 +51,7 @@ function Layout({ pageType, children }) {
        display), remember to go to
        */}
       {/* !isServer && <Banner /> */}
-      <div className={`page-wrapper ${pageType}`}>
+      <div className={`page-wrapper  ${category || ""} ${pageType}`}>
         <TopNavigation />
         {children}
       </div>
@@ -66,17 +74,7 @@ function StandardLayout({
   );
 }
 function DocumentLayout({ children }) {
-  const { pathname } = useLocation();
-  const [category, setCategory] = React.useState<string | null>(
-    docCategory({ pathname })
-  );
-
-  React.useEffect(() => {
-    setCategory(docCategory({ pathname }));
-  }, [pathname]);
-  return (
-    <Layout pageType={`document-page ${category || ""}`}>{children}</Layout>
-  );
+  return <Layout pageType="document-page">{children}</Layout>;
 }
 
 /** This component exists so you can dynamically change which sub-component to

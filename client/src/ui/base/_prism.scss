@@ -11,11 +11,10 @@
 
 .token.attr-name,
 .token.builtin,
-.token.char,
 .token.inserted,
 .token.selector,
-.token.string,
 .token.property,
+.token.class-name,
 .token.function {
   color: var(--code-token-attribute-name);
 }
@@ -30,18 +29,19 @@
 }
 
 .token.tag,
+.token.char,
+.token.string,
 .token.boolean,
 .token.number,
 .token.constant,
 .token.symbol,
 .token.deleted {
-  color: var(--code-token-tag);
+  color: var(--code-token-attribute-value);
 }
 
 .token.selector,
-.token.string,
-.token.char,
 .token.builtin,
+.token.template-string > .token.string,
 .token.inserted {
   color: var(--code-token-selector);
 }
