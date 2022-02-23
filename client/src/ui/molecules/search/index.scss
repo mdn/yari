@@ -145,7 +145,8 @@
     }
 
     mark {
-      background: var(--background-mark-yellow);
+      background-color: var(--mark-color);
+      color: var(--text-primary);
     }
 
     small {
