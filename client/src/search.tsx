@@ -381,7 +381,7 @@ function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
                   index: i,
                 })}
               >
-                ({resultsWithHighlighting[i]})
+                {resultsWithHighlighting[i]}
               </div>
             )),
             <div
