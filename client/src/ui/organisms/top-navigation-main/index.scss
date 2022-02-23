@@ -206,3 +206,14 @@
     display: flex;
   }
 }
+
+.category-home {
+  .header-search {
+    .search-input-field {
+      &:focus {
+        box-shadow: var(--focus-01);
+        border-color: var(--field-focus-border);
+      }
+    }
+  }
+}
