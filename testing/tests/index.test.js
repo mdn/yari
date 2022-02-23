@@ -164,8 +164,8 @@ test("content built foo page", () => {
     "This becomes the summary."
   );
 
-  // Before testing the `<img>` tags, assert that there's only 4 image in total.
-  expect($("img").length).toBe(4);
+  // Before testing the `<img>` tags, assert that there's only 1 image in total.
+  expect($("img").length).toBe(1);
 
   // The 'Foo' page has 1 image. It should have been given the `loading="lazy"`
   // attribute.
@@ -1372,10 +1372,10 @@ test("img tags should always have their 'width' and 'height' set", () => {
   const htmlFile = path.join(builtFolder, "index.html");
   const html = fs.readFileSync(htmlFile, "utf-8");
   const $ = cheerio.load(html);
-  // There are 8 images, so can expect there 2 be 8x2 checks in the loop...
+  // There are 5 images, so can expect there 2 be 5x2 checks in the loop...
   // But we have to account for ALL expect() calls too.
-  expect.assertions(8 * 2 + 1);
-  expect($("img").length).toBe(8);
+  expect.assertions(5 * 2 + 1);
+  expect($("img").length).toBe(5);
   $("img").each((i, img) => {
     const $img = $(img);
     if ($img.attr("src").endsWith("florian.png")) {
@@ -1384,15 +1384,6 @@ test("img tags should always have their 'width' and 'height' set", () => {
     } else if ($img.attr("src").endsWith("screenshot.png")) {
       expect($img.attr("width")).toBe("250");
       expect($img.attr("height")).toBe("250");
-    } else if ($img.attr("src").endsWith("app-dl-apple.svg")) {
-      expect($img.attr("width")).toBe("130");
-      expect($img.attr("height")).toBe("43");
-    } else if ($img.attr("src").endsWith("app-dl-google.svg")) {
-      expect($img.attr("width")).toBe("130");
-      expect($img.attr("height")).toBe("39");
-    } else if ($img.attr("src").endsWith("app-dl-ms.png")) {
-      expect($img.attr("width")).toBe("110");
-      expect($img.attr("height")).toBe("40");
     } else {
       throw new Error("unexpected image: " + $img.attr("src"));
     }
@@ -1528,7 +1519,9 @@ test("home page should have a /index.json file with pullRequestsData", () => {
   const builtFolder = path.join(buildRoot, "en-us");
 
   const jsonFile = path.join(builtFolder, "index.json");
-  const { pullRequestsData } = JSON.parse(fs.readFileSync(jsonFile));
+  const { hyData: { pullRequestsData } = {} } = JSON.parse(
+    fs.readFileSync(jsonFile)
+  );
   expect(pullRequestsData.items.length).toBeGreaterThan(0);
 });
 

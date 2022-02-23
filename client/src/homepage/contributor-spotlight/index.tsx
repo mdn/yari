@@ -1,5 +1,6 @@
 import useSWR from "swr";
 import { CRUD_MODE } from "../../constants";
+import { HydrationData } from "../../types/hydration";
 import { Icon } from "../../ui/atoms/icon";
 import Mandala from "../../ui/molecules/mandala";
 
@@ -8,8 +9,8 @@ const contributorGraphic = `${
   process.env.PUBLIC_URL || ""
 }/assets/mdn_contributor.png`;
 
-export function ContributorSpotlight(props) {
-  const { data } = useSWR<any>(
+export function ContributorSpotlight(props: HydrationData<any>) {
+  const { data: { hyData } = {} } = useSWR<any>(
     "./index.json",
     async (url) => {
       const response = await fetch(url);
@@ -20,9 +21,7 @@ export function ContributorSpotlight(props) {
       return await response.json();
     },
     {
-      initialData: props.featuredContributor
-        ? { featuredContributor: props.featuredContributor }
-        : undefined,
+      initialData: props.hyData ? props : undefined,
       revalidateOnFocus: CRUD_MODE,
     }
   );
@@ -32,17 +31,17 @@ export function ContributorSpotlight(props) {
       <div className="wrapper">
         <div className="text-col">
           <h2 className="mdn-ui-emphasis-l">Contributor Spotlight</h2>
-          {data && data?.featuredContributor && (
+          {hyData && hyData?.featuredContributor && (
             <>
               <a
                 className="contributor-name"
-                href={data?.featuredContributor?.url}
+                href={hyData?.featuredContributor?.url}
               >
-                {data?.featuredContributor?.contributorName}
+                {hyData?.featuredContributor?.contributorName}
               </a>
               <blockquote>
                 <Icon name="quote"></Icon>
-                {data?.featuredContributor?.quote}
+                {hyData?.featuredContributor?.quote}
               </blockquote>
             </>
           )}
