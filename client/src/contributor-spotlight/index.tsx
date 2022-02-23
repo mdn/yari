@@ -9,7 +9,7 @@ import { GetInvolved } from "../ui/molecules/get_involved";
 import "./index.scss";
 
 type ContributorDetails = {
-  body: string;
+  sections: [string];
   contributorName: string;
   folderName: string;
   isFeatured: boolean;
@@ -54,20 +54,29 @@ export function ContributorSpotlight(props: HydrationData<ContributorDetails>) {
       <main className="contributor-spotlight-content-container">
         {hyData && (
           <>
-            <h1 className="mify">Contributor profile</h1>
-            <p className="profile-header">
+            <h1 className="_ify">Contributor profile</h1>
+            <a
+              className="username"
+              href={`https://github.com/${hyData.usernames.github}`}
+            >
+              @{hyData.usernames.github}
+            </a>
+            <section
+              dangerouslySetInnerHTML={{ __html: hyData.sections[0] }}
+            ></section>
+            <blockquote>
               <img
                 className="profile-image"
                 src={`${baseURL}/${hyData.profileImg}`}
                 alt={hyData.profileImgAlt}
               />
+              <span>{hyData.quote}</span>
+              <span>{hyData.contributorName}</span>
+            </blockquote>
 
-              <h2>{hyData.contributorName}</h2>
-              <a href={`https://github.com/${hyData.usernames.github}`}>
-                @{hyData.usernames.github}
-              </a>
-            </p>
-            <div dangerouslySetInnerHTML={{ __html: hyData.body }} />
+            {hyData.sections.slice(1).map((section) => {
+              return <section dangerouslySetInnerHTML={{ __html: section }} />;
+            })}
           </>
         )}
       </main>

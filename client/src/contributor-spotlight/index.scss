@@ -8,17 +8,14 @@
     margin-bottom: 1rem;
   }
 
-  h2 ~ * {
-    padding-left: 2rem;
+  ul {
+    padding-left: 1rem;
   }
-
-  h2 ~ ul {
-    padding-left: 3rem;
-  }
-
   h2 {
-    padding-left: 0;
-    color: var(--category-color);
+  }
+
+  .username {
+    font-size: 1.5rem;
   }
 
   .profile-header {
