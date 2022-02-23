@@ -1,5 +1,5 @@
 interface HydrationData<Type = any> {
-  data: Type;
+  hyData: Type;
 }
 
 export type { HydrationData };

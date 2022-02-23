@@ -134,7 +134,7 @@ export default function render(
   {
     doc = null,
     pageNotFound = false,
-    data = null,
+    hyData = null,
     pageTitle = null,
     possibleLocales = null,
     locale = null,
@@ -162,8 +162,8 @@ export default function render(
   if (pageNotFound) {
     pageTitle = `🤷🏽‍♀️ Page not found | ${pageTitle}`;
     hydrationData.pageNotFound = true;
-  } else if (data) {
-    hydrationData.data = data;
+  } else if (hyData) {
+    hydrationData.hyData = hyData;
   } else if (doc) {
     // Use the doc's title instead
     pageTitle = doc.pageTitle;

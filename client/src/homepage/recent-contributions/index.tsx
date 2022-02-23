@@ -6,7 +6,7 @@ import { HydrationData } from "../../types/hydration";
 import "./index.scss";
 
 function RecentContributions(props: HydrationData<any>) {
-  const { data: { data } = {} } = useSWR<any>(
+  const { data: { hyData } = {} } = useSWR<any>(
     "./index.json",
     async (url) => {
       const response = await fetch(url);
@@ -17,7 +17,7 @@ function RecentContributions(props: HydrationData<any>) {
       return await response.json();
     },
     {
-      initialData: props.data ? { data: props.data } : undefined,
+      initialData: props.hyData ? props : undefined,
       revalidateOnFocus: CRUD_MODE,
     }
   );
@@ -26,8 +26,8 @@ function RecentContributions(props: HydrationData<any>) {
     <section className="recent-contributions">
       <h2 className="mdn-ui-emphasis-l">Recent contributions</h2>
       <ul className="contribution-list">
-        {data &&
-          data.pullRequestsData.items.map((pullRequest) => (
+        {hyData &&
+          hyData.pullRequestsData.items.map((pullRequest) => (
             <li className="request-item">
               <p className="request-title">
                 <a href={pullRequest.pull_request.html_url}>
@@ -36,9 +36,9 @@ function RecentContributions(props: HydrationData<any>) {
                 <span>
                   <a
                     className="request-repo"
-                    href={data.pullRequestsData.repo.url}
+                    href={hyData.pullRequestsData.repo.url}
                   >
-                    {data.pullRequestsData.repo.name}
+                    {hyData.pullRequestsData.repo.name}
                   </a>
                 </span>
               </p>
