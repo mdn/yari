@@ -76,7 +76,8 @@
 
   --category-color: #{$mdn-color-light-theme-blue-50};
   --category-color-background: #{$mdn-color-light-theme-blue-50}10;
-  --category-color-code: #{$mdn-color-light-theme-blue-40};
+  --code-color: #{$mdn-color-light-theme-blue-40};
+  --mark-color: #{$mdn-color-light-theme-blue-10};
 
   --plus-accent-color: #{$mdn-color-light-theme-blue-50};
   --html-accent-color: #{$mdn-color-light-theme-red-50};
@@ -280,7 +281,8 @@
 
   --category-color: #{$mdn-color-dark-theme-blue-30};
   --category-color-background: #{$mdn-color-dark-theme-blue-30}70;
-  --color-code: #{$mdn-color-dark-theme-blue-20};
+  --code-color: #{$mdn-color-dark-theme-blue-20};
+  --mark-color: #{$mdn-color-dark-theme-blue-70};
 
   --plus-accent-color: #{$mdn-color-dark-theme-blue-30};
   --html-accent-color: #{$mdn-color-dark-theme-red-40};

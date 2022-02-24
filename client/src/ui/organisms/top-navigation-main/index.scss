@@ -38,8 +38,17 @@
     display: none;
   }
 
-  .switch {
-    margin-right: 1rem;
+  .theme-toggle {
+    align-self: end;
+    margin-right: 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+
+  @media screen and (min-width: $screen-md) {
+    .theme-toggle {
+      align-self: initial;
+      margin-bottom: initial;
+    }
   }
 
   .button.action {
