@@ -11,16 +11,13 @@
     display: flex;
     justify-content: center;
     flex-direction: column;
-    max-width: 50rem;
+    max-width: 52rem;
+    padding: 0 1rem;
     margin: 0 auto;
     gap: 2rem;
     padding: 0 1rem;
     grid-column: 1;
     grid-row: 1;
-
-    @media screen and (min-width: $screen-md) {
-      padding: 0;
-    }
 
     h1 {
       /* Title */

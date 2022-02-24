@@ -4,14 +4,9 @@
   width: 100%;
 
   .about-container {
-    max-width: 50rem;
+    max-width: 52rem;
     margin: 0 auto;
     padding: 0 1rem 2rem 1rem;
-
-    @media screen and (min-width: $screen-md) {
-      padding: 0;
-      padding-bottom: 2rem;
-    }
 
     h1 {
       margin-top: 3rem;

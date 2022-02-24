@@ -16,12 +16,8 @@
     flex-direction: row;
     height: 100%;
     padding: 4rem 1rem;
-    max-width: 50rem;
+    max-width: 52rem;
     margin: 0 auto;
-
-    @media screen and (min-width: $screen-md) {
-      padding: 4rem 0;
-    }
 
     .ft-sidebar {
       width: 100%;
