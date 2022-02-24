@@ -1,4 +1,3 @@
-import { Icon } from "../ui/atoms/icon";
 import { Quote } from "../ui/molecules/quote";
 import "./index.scss";
 
