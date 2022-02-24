@@ -1,6 +1,7 @@
 const fs = require("fs");
 const path = require("path");
 const frontmatter = require("front-matter");
+const cheerio = require("cheerio");
 
 const { m2h } = require("../markdown");
 
@@ -33,9 +34,35 @@ async function buildContributorSpotlight(options) {
 
     const frontMatter = frontmatter(markdown);
     const contributorHTML = await m2h(frontMatter.body, locale);
+    const $ = cheerio.load(`<div id="_body">${contributorHTML}</div>`);
+
+    const blocks = [];
+
+    const section = cheerio
+      .load("<div></div>", { decodeEntities: false })("div")
+      .eq(0);
+
+    const iterable = [...$("#_body")[0].childNodes];
+    let c = 0;
+    iterable.forEach((child) => {
+      if (child.tagName === "h2") {
+        if (c) {
+          blocks.push(section.clone());
+          section.empty();
+          c = 0;
+        }
+      }
+      c++;
+      section.append(child);
+    });
+    if (c) {
+      blocks.push(section.clone());
+    }
+
+    const sections = blocks.map((block) => block.html().trim());
 
     const hyData = {
-      body: contributorHTML,
+      sections: sections,
       contributorName: frontMatter.attributes.contributor_name,
       folderName: frontMatter.attributes.folder_name,
       isFeatured: frontMatter.attributes.is_featured,

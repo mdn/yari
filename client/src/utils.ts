@@ -1,3 +1,4 @@
+import { IEX_DOMAIN } from "./constants";
 const HOMEPAGE_RE = /^\/[A-Za-z-]*\/?(?:_homepage)?$/i;
 const DOCS_RE = /^\/[A-Za-z-]+\/docs\/.*$/i;
 const PLUS_RE = /^\/[A-Za-z-]*\/?plus(?:\/?.*)$/i;
@@ -27,4 +28,29 @@ export function isPlus(pathname: string): boolean {
 
 export function isHomePage(pathname: string): boolean {
   return Boolean(pathname.match(HOMEPAGE_RE));
+}
+
+/**
+ * Posts the name of the theme we are changing to to the
+ * interactive examples `iframe`.
+ * @param { string } theme - The theme to switch to
+ */
+export function postToIEx(theme: string) {
+  const iexFrame = document.querySelector(".interactive") as HTMLIFrameElement;
+
+  if (iexFrame) {
+    iexFrame.contentWindow?.postMessage({ theme: theme }, IEX_DOMAIN);
+  }
+}
+
+export function switchTheme(theme: string, set: (theme: string) => void) {
+  const body = document.querySelector("body");
+
+  if (window && body) {
+    body.className = theme;
+    body.style.backgroundColor = "";
+    window.localStorage.setItem("theme", theme);
+    set(theme);
+    postToIEx(theme);
+  }
 }

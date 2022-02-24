@@ -3,10 +3,10 @@ import { useState } from "react";
 
 import { Button } from "../../atoms/button";
 import { Submenu } from "../submenu";
-import { IEX_DOMAIN } from "../../../constants";
 import { DropdownMenu, DropdownMenuWrapper } from "../dropdown";
 
 import "./index.scss";
+import { postToIEx, switchTheme } from "../../../utils";
 
 type ThemeButton = {
   id: string;
@@ -26,7 +26,7 @@ export const ThemeSwitcher = () => {
           ${`is-` + id}
         `}
         onClickHandler={() => {
-          switchTheme(id);
+          switchTheme(id, setActiveTheme);
           setIsOpen(false);
         }}
       >
@@ -45,38 +45,11 @@ export const ThemeSwitcher = () => {
     ],
   };
 
-  /**
-   * Posts the name of the theme we are changing to to the
-   * interactive examples `iframe`.
-   * @param { string } theme - The theme to switch to
-   */
-  function postToIEx(theme: string) {
-    const iexFrame = document.querySelector(
-      ".interactive"
-    ) as HTMLIFrameElement;
-
-    if (iexFrame) {
-      iexFrame.contentWindow?.postMessage({ theme: theme }, IEX_DOMAIN);
-    }
-  }
-
-  function switchTheme(theme: string) {
-    const body = document.querySelector("body");
-
-    if (window && body) {
-      body.className = theme;
-      body.style.backgroundColor = "";
-      window.localStorage.setItem("theme", theme);
-      setActiveTheme(theme);
-      postToIEx(theme);
-    }
-  }
-
   React.useEffect(() => {
     const theme = localStorage.getItem("theme");
 
     if (theme) {
-      switchTheme(theme);
+      switchTheme(theme, setActiveTheme);
       postToIEx(theme);
     }
   });
