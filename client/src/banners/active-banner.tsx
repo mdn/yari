@@ -24,18 +24,9 @@ export type BannerProps = {
   title?: string;
   // The banner description. e.g. "Help us understand the top 10 needs..."
   // Could also be a React Element such as that returned by `<Interpolated />`
-  copy: Object | string;
-  // The call to action button text. e.g. "Take the survey"
-  cta: string;
-  // The URL of the page to open when the button is clicked
-  url: string;
-  // An optional property. If present, it should be set to true to indicate
-  // that the main cta link should open in a new window
-  newWindow?: boolean;
-  // an optional property. If present, it will be called when the CTA
-  // link is clicked
   onCTAClick?: (event: React.SyntheticEvent<HTMLAnchorElement>) => any;
   onDismissed: () => void;
+  children: React.ReactNode;
 };
 
 function Banner(props: BannerProps) {
@@ -52,17 +43,7 @@ function Banner(props: BannerProps) {
     <div className={containerClassNames}>
       <div id="mdn-cta-content" className="mdn-cta-content">
         <div id={props.id} className="mdn-cta-content-container">
-          <p className="mdn-cta-copy">
-            {props.copy}{" "}
-            <a
-              href={props.url}
-              target={props.newWindow ? "_blank" : undefined}
-              rel={props.newWindow ? "noopener noreferrer" : undefined}
-              onClick={props.onCTAClick}
-            >
-              {props.cta}
-            </a>
-          </p>
+          {props.children}
         </div>
       </div>
       <div className="mdn-cta-controls">
@@ -115,24 +96,30 @@ function RedesignAnnouncementBanner({
   onDismissed: () => void;
 }) {
   const ga = useGA();
+  const onCTAClick = () => {
+    ga("send", {
+      hitType: "event",
+      eventCategory: REDESIGN_ANNOUNCEMENT,
+      eventAction: "CTA clicked",
+      eventLabel: "banner",
+    });
+  };
 
   return (
-    <Banner
-      id={REDESIGN_ANNOUNCEMENT}
-      copy={"✨ Learn more about MDN Web Docs' new design"}
-      cta={"Read more »"}
-      url={"https://hacks.mozilla.org/2022/02/a-new-year-a-new-mdn/"}
-      newWindow={true}
-      onDismissed={onDismissed}
-      onCTAClick={() => {
-        ga("send", {
-          hitType: "event",
-          eventCategory: REDESIGN_ANNOUNCEMENT,
-          eventAction: "CTA clicked",
-          eventLabel: "banner",
-        });
-      }}
-    />
+    <Banner id={REDESIGN_ANNOUNCEMENT} onDismissed={onDismissed}>
+      <p className="mdn-cta-copy">
+        ✨{" "}
+        <a
+          href="https://hacks.mozilla.org/2022/02/a-new-year-a-new-mdn/"
+          target="_blank"
+          rel="noopener noreferrer"
+          onClick={onCTAClick}
+        >
+          Learn more
+        </a>{" "}
+        about MDN Web Docs' new design.
+      </p>
+    </Banner>
   );
 }
 
