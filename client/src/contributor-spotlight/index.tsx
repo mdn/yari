@@ -61,6 +61,8 @@ export function ContributorSpotlight(props: HydrationData<ContributorDetails>) {
                 className="profile-image"
                 src={`${baseURL}/${hyData.profileImg}`}
                 alt={hyData.profileImgAlt}
+                width="200"
+                height="200"
               />
               <a
                 className="username"
