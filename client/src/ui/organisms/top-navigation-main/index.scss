@@ -29,6 +29,9 @@
 
   .top-level-entry-container {
     position: relative;
+    .submenu {
+      z-index: var(--z-index-nav-menu);
+    }
   }
 
   .toggle-search-button {
@@ -204,5 +207,16 @@
 
   .search-form {
     display: flex;
+  }
+}
+
+.category-home {
+  .header-search {
+    .search-input-field {
+      &:focus {
+        box-shadow: var(--focus-01);
+        border-color: var(--field-focus-border);
+      }
+    }
   }
 }

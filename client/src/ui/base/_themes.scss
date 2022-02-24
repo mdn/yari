@@ -93,6 +93,14 @@
   --apis-code-color: #{$mdn-color-light-theme-violet-60};
   --learn-code-color: #{$mdn-color-light-theme-pink-60};
 
+  --plus-mark-color: #{$mdn-color-light-theme-blue-10};
+  --html-mark-color: #{$mdn-color-light-theme-red-10};
+  --css-mark-color: #{$mdn-color-light-theme-blue-10};
+  --js-mark-color: #{$mdn-color-light-theme-yellow-10};
+  --http-mark-color: #{$mdn-color-light-theme-green-10};
+  --apis-mark-color: #{$mdn-color-light-theme-violet-10};
+  --learn-mark-color: #{$mdn-color-light-theme-pink-10};
+
   --plus-accent-background-color: #{$mdn-color-light-theme-blue-50}10;
   --html-accent-background-color: #{$mdn-color-light-theme-red-50}10;
   --css-accent-background-color: #{$mdn-color-light-theme-blue-50}10;
@@ -287,6 +295,14 @@
   --http-code-color: #{$mdn-color-dark-theme-green-30};
   --apis-code-color: #{$mdn-color-dark-theme-violet-30};
   --learn-code-color: #{$mdn-color-dark-theme-pink-30};
+
+  --plus-mark-color: #{$mdn-color-dark-theme-blue-70};
+  --html-mark-color: #{$mdn-color-dark-theme-red-70};
+  --css-mark-color: #{$mdn-color-dark-theme-blue-70};
+  --js-mark-color: #{$mdn-color-dark-theme-yellow-70};
+  --http-mark-color: #{$mdn-color-dark-theme-green-70};
+  --apis-mark-color: #{$mdn-color-dark-theme-violet-70};
+  --learn-mark-color: #{$mdn-color-dark-theme-pink-70};
 
   --html-accent-engage: #{color.adjust(
       $mdn-color-dark-theme-red-40,

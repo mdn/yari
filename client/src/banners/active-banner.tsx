@@ -121,7 +121,7 @@ function RedesignAnnouncementBanner({
       id={REDESIGN_ANNOUNCEMENT}
       copy={"✨ Learn more about MDN Web Docs' new design"}
       cta={"Read more »"}
-      url={"https://hacks.mozilla.org/"}
+      url={"https://hacks.mozilla.org/2022/02/a-new-year-a-new-mdn/"}
       newWindow={true}
       onDismissed={onDismissed}
       onCTAClick={() => {

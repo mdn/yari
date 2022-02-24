@@ -96,7 +96,7 @@
     position: absolute;
     top: 42px;
     width: 100%;
-    z-index: 1000;
+    z-index: var(--z-index-search-results);
 
     .indexing-warning {
       color: var(--icon-warning);
@@ -111,6 +111,7 @@
     }
 
     .fuzzy-engaged {
+      background-color: var(--background-secondary);
       font-size: 0.8125rem;
     }
 
@@ -144,7 +145,8 @@
     }
 
     mark {
-      background: var(--background-mark-yellow);
+      background-color: var(--mark-color);
+      color: var(--text-primary);
     }
 
     small {
