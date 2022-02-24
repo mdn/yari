@@ -45,14 +45,6 @@ export const GuidesMenu = ({ visibleSubMenuId, toggleMenu }) => {
         label: "JavaScript",
         url: `/${locale}/docs/Learn/JavaScript`,
       },
-
-      {
-        description: "Learn to work with user data",
-        hasIcon: true,
-        iconClasses: "submenu-icon",
-        label: "Web forms",
-        url: `/${locale}/docs/Learn/Forms`,
-      },
       {
         description: "Learn to make the web accessible to all",
         hasIcon: true,
