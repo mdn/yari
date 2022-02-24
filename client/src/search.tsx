@@ -1,7 +1,6 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { useCombobox } from "downshift";
-import FlexSearch from "flexsearch";
 import useSWR from "swr";
 
 import { Doc, FuzzySearch } from "./fuzzy-search";
@@ -61,10 +60,7 @@ function useSearchIndex(): readonly [
       return;
     }
 
-    const flex = FlexSearch.create({ tokenize: "full" });
-    data!.forEach(({ title }, i) => {
-      flex.add(i, title);
-    });
+    const flex = data.map(({ title }, i) => [i, title.toLowerCase()]);
     const fuzzy = new FuzzySearch(data as Doc[]);
 
     setSearchIndex({ flex, fuzzy, items: data! });
@@ -83,11 +79,7 @@ function isFuzzySearchString(str: string) {
 }
 
 function HighlightMatch({ title, q }: { title: string; q: string }) {
-  // FlexSearch doesn't support finding out which "typo corrections"
-  // were done unfortunately.
-  // See https://github.com/nextapps-de/flexsearch/issues/99
-
-  // Split on higlight term and include term into parts, ignore case.
+  // Split on highlight term and include term into parts, ignore case.
   const words = q.trim().toLowerCase().split(/[ ,]+/);
   // $& means the whole matched string
   const regexWords = words.map((s) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"));
@@ -225,11 +217,14 @@ function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
         }));
       }
     } else {
-      // Full-Text search
-      const indexResults: number[] = searchIndex.flex.search(inputValue, {
-        limit,
-        suggest: true, // This can give terrible result suggestions
-      });
+      const q: string[] = inputValue
+        .toLowerCase()
+        .split(" ")
+        .map((s) => s.trim());
+      const indexResults: number[] = searchIndex.flex
+        .filter(([_, title]) => q.every((q) => title.includes(q)))
+        .map(([i]) => i)
+        .slice(0, limit);
       return indexResults.map(
         (index: number) => (searchIndex.items || [])[index] as ResultItem
       );
