@@ -28,7 +28,7 @@ function RecentContributions(props: HydrationData<any>) {
       <ul className="contribution-list">
         {hyData &&
           hyData.pullRequestsData.items.map((pullRequest) => (
-            <li className="request-item">
+            <li className="request-item" key={pullRequest.number}>
               <p className="request-title">
                 <a href={pullRequest.pull_request.html_url}>
                   {pullRequest.title}{" "}
