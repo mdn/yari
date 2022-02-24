@@ -156,6 +156,7 @@ jobs:
           # https://speedcurve.com/mozilla-add-ons/mdn/settings/updated/#lux
           BUILD_SPEEDCURVE_LUX_ID: 108906238
 
+          # This enables the Plus call-to-action banner and the Plus landing page
           REACT_APP_ENABLE_PLUS: false
 
           # This adds the ability to sign in (stage only for now)

@@ -12,8 +12,9 @@ main.contribute {
     margin-bottom: 3rem;
   }
   section {
-    max-width: 50rem;
+    max-width: 52rem;
     margin: 0 auto;
+    padding: 0 1rem;
 
     &.stats-header {
       display: flex;
@@ -28,15 +29,6 @@ main.contribute {
       text-align: center;
 
       @include mify;
-    }
-
-    h2,
-    h3 {
-      padding: 0 1rem;
-    }
-
-    p {
-      padding: 0 1rem;
     }
 
     .quote {

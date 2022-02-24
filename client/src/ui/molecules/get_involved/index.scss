@@ -1,10 +1,8 @@
-@use "../../../ui/vars" as *;
-
 .get-involved {
   background-color: var(--mdn-background-dark);
   section {
     color: var(--text-primary);
-    max-width: 50rem;
+    max-width: 52rem;
     display: flex;
     flex-direction: column;
     gap: 1rem;
@@ -12,10 +10,6 @@
     line-height: 1.75;
 
     padding: 2rem 1rem;
-
-    @media screen and (min-width: $screen-md) {
-      padding: 2rem 0;
-    }
 
     h2 {
       font-family: var(--font-heading);

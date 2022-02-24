@@ -29,7 +29,8 @@
   .text-col {
     display: flex;
     flex-direction: column;
-    max-width: 50rem;
+    max-width: 52rem;
+    padding: 0 1rem;
     width: 100%;
     gap: 1rem;
     align-items: center;
@@ -48,10 +49,10 @@
   .wrapper {
     display: flex;
     flex-direction: column;
-    max-width: 50rem;
+    max-width: 52rem;
     width: 100%;
     gap: 2rem;
-    padding: 2rem 0;
+    padding: 2rem 1rem;
     align-items: center;
   }
 
@@ -97,8 +98,6 @@
   }
 
   @media screen and (min-width: $screen-md) {
-    padding: 2rem 0;
-
     .wrapper {
       flex-direction: row;
       align-items: initial;

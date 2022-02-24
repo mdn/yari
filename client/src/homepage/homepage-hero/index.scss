@@ -3,20 +3,21 @@
 .homepage-hero {
   color: var(--text-primary);
   width: 100%;
+  display: grid;
+  grid-template-rows: fit-content(24rem);
 
   section {
-    height: 22rem;
+    height: 100%;
     display: flex;
     justify-content: center;
     flex-direction: column;
-    max-width: 50rem;
+    max-width: 52rem;
+    padding: 0 1rem;
     margin: 0 auto;
     gap: 2rem;
     padding: 0 1rem;
-
-    @media screen and (min-width: $screen-md) {
-      padding: 0;
-    }
+    grid-column: 1;
+    grid-row: 1;
 
     h1 {
       /* Title */
@@ -50,14 +51,13 @@
 
   .homepage-hero-bg {
     width: 100%;
-    height: 100%;
-    position: absolute;
     top: 0;
     z-index: -1;
-    height: 23rem;
     overflow: hidden;
     --mandala-primary: var(--border-primary);
     background-color: rgba(1, 1, 1, 0.9);
+    grid-column: 1;
+    grid-row: 1;
 
     .mandala-translate {
       transform: translate(10rem, -8rem) scale(1.2);
@@ -71,6 +71,7 @@
     width: 100%;
     max-height: 4rem;
     display: flex;
+    margin-bottom: 1rem;
 
     .search-input-field {
       &:focus {
