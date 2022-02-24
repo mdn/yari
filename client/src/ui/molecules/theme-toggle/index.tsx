@@ -6,8 +6,9 @@ import { Switch } from "../../atoms/switch";
 import "./index.scss";
 
 export function ThemeToggle() {
+  const isServer = typeof window === "undefined";
   const [activeTheme, setActiveTheme] = React.useState(
-    document?.body?.className || "light"
+    (!isServer && document?.body?.className) || "light"
   );
   const [dark, setDark] = React.useState(activeTheme === "dark");
 
