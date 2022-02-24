@@ -52,7 +52,7 @@ export const ThemeSwitcher = () => {
       switchTheme(theme, setActiveTheme);
       postToIEx(theme);
     }
-  });
+  }, [activeTheme]);
 
   return (
     <DropdownMenuWrapper
