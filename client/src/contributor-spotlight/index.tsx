@@ -5,6 +5,7 @@ import useSWR from "swr";
 import { CRUD_MODE } from "../constants";
 import { HydrationData } from "../types/hydration";
 import { GetInvolved } from "../ui/molecules/get_involved";
+import { Quote } from "../ui/molecules/quote";
 
 import "./index.scss";
 
@@ -55,24 +56,23 @@ export function ContributorSpotlight(props: HydrationData<ContributorDetails>) {
         {hyData && (
           <>
             <h1 className="_ify">Contributor profile</h1>
-            <a
-              className="username"
-              href={`https://github.com/${hyData.usernames.github}`}
-            >
-              @{hyData.usernames.github}
-            </a>
-            <section
-              dangerouslySetInnerHTML={{ __html: hyData.sections[0] }}
-            ></section>
-            <blockquote>
+            <section className="profile-header">
               <img
                 className="profile-image"
                 src={`${baseURL}/${hyData.profileImg}`}
                 alt={hyData.profileImgAlt}
               />
-              <span>{hyData.quote}</span>
-              <span>{hyData.contributorName}</span>
-            </blockquote>
+              <a
+                className="username"
+                href={`https://github.com/${hyData.usernames.github}`}
+              >
+                @{hyData.usernames.github}
+              </a>
+            </section>
+            <section
+              dangerouslySetInnerHTML={{ __html: hyData.sections[0] }}
+            ></section>
+            <Quote name={hyData.contributorName}>{hyData.quote}</Quote>
 
             {hyData.sections.slice(1).map((section) => {
               return <section dangerouslySetInnerHTML={{ __html: section }} />;

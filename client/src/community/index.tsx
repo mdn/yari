@@ -1,4 +1,5 @@
 import { Icon } from "../ui/atoms/icon";
+import { Quote } from "../ui/molecules/quote";
 import "./index.scss";
 
 const STATS = [
@@ -53,24 +54,19 @@ export function Contribute() {
           industry. Each quarter, the PAB meets to discuss problems, prioritize
           content creation, and make connections for future collaborations.
         </p>
-        <blockquote className="pab dark">
-          <div className="partner">
-            <h4>
-              Dan Appelquist, Samsung Internet (charter member of the Product
-              Advisory Board)
-            </h4>
-          </div>
-          <p>
-            <Icon name="quote"></Icon>
-            MDN has a unique place right now as a vendor-neutral and
-            authoritative documentation and information resource for web
-            developers. The MDN PAB has helped to bring feedback from the wider
-            web community (including standards engineers, web browser makers and
-            open source developers) into MDN to help keep it strong. As a member
-            of the web community and a fan of MDN it’s been great to be a part
-            of.
-          </p>
-        </blockquote>
+        <Quote
+          name="Dan Appelquist"
+          title="Samsung Internet (charter member of the Product
+              Advisory Board)"
+          extraClasses="pab dark"
+        >
+          MDN has a unique place right now as a vendor-neutral and authoritative
+          documentation and information resource for web developers. The MDN PAB
+          has helped to bring feedback from the wider web community (including
+          standards engineers, web browser makers and open source developers)
+          into MDN to help keep it strong. As a member of the web community and
+          a fan of MDN it’s been great to be a part of.
+        </Quote>
         <h3>Open Web Docs</h3>
         <p>
           <a
@@ -115,19 +111,17 @@ export function Contribute() {
           </a>{" "}
           account.
         </p>
-        <blockquote className="owd dark">
-          <div className="partner">
-            <h4>Florian Scholz, Content Lead, Open Web Docs</h4>
-          </div>
-          <p>
-            <Icon name="quote"></Icon>
-            Open Web Docs strongly believes in MDN as critical infrastructure
-            for the web platform. As a vendor-neutral organization, we are
-            supporting MDN with an independent editorial voice and with the
-            needs of the global community of web developers and designers in
-            mind.
-          </p>
-        </blockquote>
+        <Quote
+          name="Florian Scholz"
+          title="Content Lead"
+          org="Open Web Docs"
+          extraClasses="owd dark"
+        >
+          Open Web Docs strongly believes in MDN as critical infrastructure for
+          the web platform. As a vendor-neutral organization, we are supporting
+          MDN with an independent editorial voice and with the needs of the
+          global community of web developers and designers in mind.
+        </Quote>
         <h2>Licensing</h2>
         <p>
           MDN's resources are entirely available under various open source

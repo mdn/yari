@@ -39,29 +39,7 @@ main.contribute {
       padding: 0 1rem;
     }
 
-    blockquote {
-      margin: 2rem 0;
-      padding: 2rem;
-      display: flex;
-      gap: 2rem;
-      border: none;
-      flex-direction: column-reverse;
-      border-radius: 0.5rem;
-
-      @media screen and (max-width: 40rem) {
-        flex-wrap: wrap-reverse;
-      }
-
-      p {
-        font-style: italic;
-        display: flex;
-
-        .icon {
-          margin-right: 1rem;
-          margin-top: 0.2rem;
-        }
-      }
-
+    .quote {
       &.owd {
         background-color: var(--text-link);
         color: var(--background-primary);
@@ -77,17 +55,6 @@ main.contribute {
 
         .icon {
           background-color: var(--text-primary);
-        }
-      }
-
-      .partner {
-        h4 {
-          font-size: 0.8rem;
-          display: inline;
-        }
-
-        a {
-          display: block;
         }
       }
     }

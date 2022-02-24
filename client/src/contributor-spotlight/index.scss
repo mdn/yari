@@ -11,21 +11,27 @@
   ul {
     padding-left: 1rem;
   }
-  h2 {
+
+  .quote {
+    background-color: var(--category-color-background);
+    color: var(--text-primary);
+
+    .icon {
+      background-color: var(--text-primary);
+    }
   }
 
-  .username {
-    font-size: 1.5rem;
+  .profile-image {
+    border-radius: 50%;
+    height: 200px;
+    width: 200px;
   }
-
   .profile-header {
-    background-color: var(--background-secondary);
-    border: 1px solid var(--border-primary);
     display: flex;
     flex-direction: column;
     align-items: center;
-    min-width: max-content;
-    max-width: 30rem;
+    gap: 1rem;
+    width: 100%;
     padding: 1rem;
     border-radius: var(--elem-radius);
 
@@ -35,15 +41,11 @@
       margin-bottom: 0;
     }
 
-    a {
-      font-size: 1.3rem;
-      padding-left: 0;
-    }
-
-    .profile-image {
-      border-radius: 50%;
-      height: 200px;
-      width: 200px;
+    .username {
+      background-color: var(--category-color);
+      color: var(--text-invert);
+      font-size: 1.75rem;
+      padding: 0.2rem 0.4rem;
     }
   }
 }
