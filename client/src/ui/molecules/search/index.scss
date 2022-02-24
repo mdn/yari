@@ -128,6 +128,11 @@
       &:last-child {
         border-radius: 0 0 var(--elem-radius) var(--elem-radius);
       }
+      &.nothing-found {
+        code {
+          font-size: 0.8125rem;
+        }
+      }
     }
 
     .result-item:hover,
