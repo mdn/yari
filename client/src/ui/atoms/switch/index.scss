@@ -9,7 +9,6 @@
     height: 0;
 
     &:checked + .slider {
-      background-color: var(--accent-primary);
       &:before {
         left: 56.25%;
         right: 6.25%;
@@ -24,7 +23,7 @@
   .slider {
     position: absolute;
     cursor: pointer;
-    background-color: var(--icon-secondary);
+    background-color: var(--text-link);
     transition: 0.4s;
     border-radius: 1em;
     width: 2rem;
@@ -37,7 +36,7 @@
       right: 56.25%;
       top: 12.5%;
       bottom: 12.5%;
-      background-color: var(--button-secondary-default);
+      background-color: var(--background-primary);
       transition: 0.4s;
       border-radius: 50%;
     }

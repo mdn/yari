@@ -38,6 +38,10 @@
     display: none;
   }
 
+  .switch {
+    margin-right: 1rem;
+  }
+
   .button.action {
     &:hover {
       --button-bg: var(--border-secondary);
