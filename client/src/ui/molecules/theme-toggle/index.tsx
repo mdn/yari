@@ -7,8 +7,15 @@ import "./index.scss";
 
 export function ThemeToggle() {
   const isServer = typeof window === "undefined";
+  let prefers = "light";
+  if (!isServer) {
+    const mql = window.matchMedia("(prefers-color-scheme: dark)");
+    if (mql.matches) {
+      prefers = "dark";
+    }
+  }
   const [activeTheme, setActiveTheme] = React.useState(
-    (!isServer && document?.body?.className) || "light"
+    (!isServer && document?.body?.className) || prefers
   );
   const [dark, setDark] = React.useState(activeTheme === "dark");
 
