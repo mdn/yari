@@ -153,7 +153,7 @@
     "file-loader": "^6.2.0",
     "foreman": "^3.0.1",
     "fzf": "^0.5.1",
-    "history": "^5.2.0",
+    "history": "^5.3.0",
     "html-validate": "^7.1.1",
     "html-webpack-plugin": "^5.5.0",
     "husky": "^8.0.1",
