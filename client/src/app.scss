@@ -74,11 +74,6 @@ body {
   color: var(--text-primary);
   accent-color: var(--accent-primary); // for checkboxes, radios, etc.
   scrollbar-color: var(--scrollbar-color) var(--scrollbar-bg);
-
-  ::selection {
-    background-color: var(--text-primary);
-    color: var(--background-primary);
-  }
 }
 
 :focus-visible {
