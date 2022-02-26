@@ -4,12 +4,14 @@ Placeholder to render a specification section with spec_urls from BCD
 
 Parameters
 
-$0 – A query string indicating for which feature to retrieve specification URLs for.
+$0 – Either (a) a query string indicating which feature to retrieve spec
+     URLs for, or else (2) one or more spec URLs, separated by commas.
 
 Example calls
 
 {{Specifications}}
-{{Specifications("html.element.abbr")}}
+{{Specifications("api.isSecureContext")}}
+{{Specifications("https://w3c.github.io/webappsec-secure-contexts/")}}
 
 */
 

@@ -342,8 +342,17 @@ function _addSingleSpecialSection($) {
     const [proseSections] = _addSectionProse($);
     return proseSections;
   }
-  const query = dataQuery.replace(/^bcd:/, "");
-  const { browsers, data } = packageBCD(query);
+  let query = dataQuery.replace(/^bcd:/, "");
+  let browsers;
+  let data;
+
+  if (dataQuery && dataQuery.trim().match("^http[s]?://")) {
+    specURLsString = [specURLsString, dataQuery.trim()]
+      .filter((urls) => urls)
+      .join(", ");
+  } else {
+    ({ browsers, data } = packageBCD(query));
+  }
 
   if (specialSectionType === "browser_compatibility") {
     if (data === undefined) {
