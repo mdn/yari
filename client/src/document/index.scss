@@ -143,6 +143,29 @@
     margin-bottom: 0.5rem;
   }
 
+  dl {
+    dt {
+      margin-top: 2rem;
+      margin-bottom: 0.5rem;
+      font-weight: var(--font-body-strong-weight);
+    }
+
+    dd {
+      margin-bottom: 1rem;
+      margin-left: 1rem;
+
+      .notecard {
+        p {
+          padding-left: 0;
+        }
+      }
+    }
+
+    p {
+      margin: 0 0 1rem 0;
+    }
+  }
+
   // specific styles to override base styles. The Markdown compiler
   // adds extra divs, so this is a way for these styles to not
   // stomp out component styles.
@@ -157,31 +180,6 @@
 
     figure {
       margin-bottom: 1rem;
-    }
-
-    dl {
-      dt {
-        margin-top: 2rem;
-        margin-bottom: 0.5rem;
-        font-weight: var(--font-body-strong-weight);
-      }
-
-      dd {
-        margin-bottom: 1rem;
-
-        .notecard {
-          margin-left: 1rem;
-
-          p {
-            padding-left: 0;
-          }
-        }
-      }
-
-      p {
-        margin: 0 0 1rem 0;
-        padding-left: 1rem;
-      }
     }
 
     .prev-next {
