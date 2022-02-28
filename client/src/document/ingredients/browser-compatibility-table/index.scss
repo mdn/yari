@@ -390,3 +390,17 @@
 .bc-github-link {
   font: var(--type-body-m);
 }
+
+.main-page-content {
+  .bc-legend {
+    dd,
+    dt {
+      margin-top: 0;
+      margin-bottom: 0;
+      margin-left: 0;
+    }
+  }
+  .bc-supports-dd {
+    margin: 0;
+  }
+}

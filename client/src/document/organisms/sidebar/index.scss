@@ -88,9 +88,14 @@
     text-transform: uppercase;
   }
 
+  em {
+    display: inline-flex;
+    padding: 0.25rem;
+    hyphens: auto;
+  }
+
   a {
-    display: flex;
-    width: 100%;
+    display: inline-flex;
     padding: 0.25rem;
     color: var(--text-secondary);
     hyphens: auto;
@@ -102,8 +107,7 @@
   }
 
   .no-link {
-    display: flex;
-    width: 100%;
+    display: inline-flex;
     padding: 0.25rem;
   }
 
@@ -125,9 +129,14 @@
 
     ol {
       li {
-        list-style-type: "·";
+        list-style-type: "· ";
+        list-style-position: inside;
 
+        .icon {
+          margin-right: 0.01em;
+        }
         &.no-bullet {
+          display: block;
           font-weight: var(--font-body-strong-weight);
           list-style-type: none;
         }
