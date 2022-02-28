@@ -125,26 +125,11 @@
 
     ol {
       li {
-        display: flex;
-        align-items: flex-start;
-        gap: 0.25rem;
-
-        &:before {
-          border-radius: 50%;
-          width: 2px;
-          height: 2px;
-          margin-top: 0.75rem;
-          background: var(--text-secondary);
-          content: "";
-        }
+        list-style-type: "·";
 
         &.no-bullet {
-          display: block;
           font-weight: var(--font-body-strong-weight);
-
-          &:before {
-            content: none;
-          }
+          list-style-type: none;
         }
       }
     }
