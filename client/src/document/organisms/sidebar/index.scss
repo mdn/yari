@@ -162,32 +162,6 @@
 
   summary {
     cursor: pointer;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-
-    &::marker {
-      content: none;
-    }
-
-    &:before {
-      top: calc(50% - 0.5rem);
-      right: 0.5rem;
-      display: block;
-      width: 8px;
-      height: 8px;
-      background-color: var(--text-secondary);
-      mask-image: url("../../../assets/icons/caret.svg");
-      mask-size: contain;
-      mask-position: center;
-      mask-repeat: no-repeat;
-      content: "";
-    }
-  }
-
-  details[open] > summary:before {
-    transform-origin: center;
-    transform: rotate(90deg);
   }
 
   details {
