@@ -157,7 +157,12 @@ export function Footer() {
         </div>
 
         <div className="page-footer-moz">
-          <a href="/" className="footer-moz-logo-link">
+          <a
+            href="https://www.mozilla.org/"
+            className="footer-moz-logo-link"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
             <MozLogo />
           </a>
           <ul className="footer-moz-list">
