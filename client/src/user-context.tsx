@@ -3,6 +3,14 @@ import useSWR from "swr";
 
 import { DISABLE_AUTH, DEFAULT_GEO_COUNTRY } from "./constants";
 
+export enum SubscriptionType {
+  MDN_CORE = "",
+  MDN_PLUS_5M = "mdn_plus_5m",
+  MDN_PLUS_5Y = "mdn_plus_5y",
+  MDN_PLUS_10M = "mdn_plus_10m",
+  MDN_PLUS_10Y = "mdn_plus_10y",
+}
+
 export type UserData = {
   username: string | null | undefined;
   isAuthenticated: boolean;
@@ -13,6 +21,7 @@ export type UserData = {
   avatarUrl: string | null | undefined;
   isSubscriber: boolean;
   subscriberNumber: number | null | undefined;
+  subscriptionType: SubscriptionType | null;
   email: string | null | undefined;
   geo: {
     country: string;
@@ -87,6 +96,7 @@ export function UserDataProvider(props: { children: React.ReactNode }) {
         isSuperuser: data.is_super_user || false,
         avatarUrl: data.avatar_url || null,
         isSubscriber: data.is_subscriber || false,
+        subscriptionType: data.subscription_type ?? null,
         subscriberNumber: data.subscriber_number || null,
         email: data.email || null,
         geo: {

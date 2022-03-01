@@ -1,0 +1,120 @@
+@use "../../vars" as *;
+
+.article-actions {
+  margin-left: auto;
+
+  .article-actions-dialog-heading {
+    display: none;
+  }
+
+  .button.action .button-wrap {
+    text-transform: initial;
+  }
+
+  @media screen and (min-width: $screen-md) {
+    display: block;
+  }
+}
+
+.article-actions-entries {
+  display: none;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+
+  .button {
+    white-space: nowrap;
+    width: 100%;
+  }
+
+  @media screen and (min-width: $screen-md) {
+    display: flex;
+    gap: 0.5rem;
+
+    .sidebar-toggle {
+      display: none;
+    }
+  }
+}
+
+.article-actions-entry {
+  align-items: center;
+  display: flex;
+  position: relative;
+}
+
+/* Open state, mobile-only */
+.article-actions {
+  @media screen and (max-width: $screen-md) {
+    &.show-actions {
+      background-color: var(--background-primary);
+      color: var(--text-primary);
+      display: block;
+      height: 100vh;
+      left: 0;
+      position: fixed;
+      top: 0;
+      width: 100vw;
+      z-index: var(--z-index-low);
+      overflow: auto;
+      -webkit-overflow-scrolling: touch;
+
+      // Reset all buttons
+      .button {
+        --button-radius: 0;
+        width: 100%;
+
+        .button-wrap {
+          justify-content: flex-start;
+          padding: 1.5rem 1rem;
+        }
+      }
+
+      .article-actions-entries > li > .button,
+      .article-actions-entries > li > div > .button {
+        border-bottom: 1px solid var(--border-secondary);
+      }
+
+      .watch-submenu-mobile-buttons .button {
+        border-bottom-width: 0;
+      }
+
+      .watch-submenu.show .button {
+        --button-radius: var(--elem-radius);
+
+        .button-wrap {
+          padding: 0 var(--button-padding);
+          justify-content: center;
+        }
+      }
+
+      .article-actions-dialog-heading {
+        display: block;
+      }
+
+      .article-actions-entries {
+        display: block;
+        padding: 1rem;
+      }
+
+      .article-actions-toggle,
+      .article-action-entry {
+        border-bottom: 1px solid var(--border-secondary);
+      }
+
+      .article-actions-entry {
+        display: block;
+      }
+
+      .submenu {
+        flex-direction: column;
+        gap: 0.5rem;
+        padding: 0.5rem 0 0.5rem 1rem;
+      }
+
+      .submenu-item {
+        padding-left: 1.5rem;
+      }
+    }
+  }
+}
