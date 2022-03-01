@@ -14,11 +14,10 @@ function CalculateSidebarOnScroll() {
       let sidebar = document.getElementById("sidebar-quicklinks");
       if (sidebar) {
         let sidebarTop = sidebar.getBoundingClientRect().top;
-        let sidebarTopString = sidebarTop.toString();
-        let sidebarTopPx = sidebarTopString + "px";
+        let visibleHeaderHeight = sidebarTop > 0 ? sidebarTop : 0;
         document.documentElement.style.setProperty(
           "--visible-height-of-header",
-          sidebarTopPx
+          `${visibleHeaderHeight}px`
         );
       }
     }
