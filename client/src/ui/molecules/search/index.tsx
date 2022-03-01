@@ -20,11 +20,13 @@ function useQueryParamState() {
 }
 
 export function Search({
+  id,
   hasOpened,
   onCloseSearch,
   onResultPicked,
   onChangeIsFocused = () => {},
 }: {
+  id: string;
   hasOpened?: boolean;
   onCloseSearch?: () => void;
   onResultPicked?: () => void;
@@ -36,6 +38,7 @@ export function Search({
 
   const searchProps = useMemo(
     () => ({
+      id,
       inputValue: value,
       onChangeInputValue: (value) => setValue(value),
       isFocused,
@@ -46,7 +49,7 @@ export function Search({
       defaultSelection,
       onChangeSelection: (selection) => setDefaultSelection(selection),
     }),
-    [value, isFocused, defaultSelection, setValue, onChangeIsFocused]
+    [id, value, isFocused, defaultSelection, setValue, onChangeIsFocused]
   );
 
   useEffect(() => {

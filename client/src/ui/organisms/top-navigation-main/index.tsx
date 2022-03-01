@@ -32,6 +32,7 @@ export const TopNavigationMain = ({ isOpenOnMobile }) => {
       <MainMenu isOpenOnMobile={isOpenOnMobile} />
 
       <Search
+        id="top-nav-search"
         hasOpened={hasOpened}
         onChangeIsFocused={(isFocused) => setHasOpened(isFocused)}
         onCloseSearch={() => {

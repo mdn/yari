@@ -17,7 +17,7 @@ export default function WritersHomepage() {
       <div className="container" id="writers-homepage">
         <h2>Writer's home page</h2>
 
-        <Search />
+        <Search id="writers-hp" />
 
         {!isServer && (
           <React.Suspense fallback={null}>
