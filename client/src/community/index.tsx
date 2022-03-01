@@ -25,18 +25,20 @@ export function Contribute() {
         </section>
       </div>
       <section>
+        <h2>Our volunteer community</h2>
         <p>
           The power of MDN lies in its vast, vital community of active users and
-          contributors. Since the origins of MDN in 2005, approximately 60,000
-          contributions have created the documentation repository we know and
-          love, with over 45,000 documents and counting: An up-to-date,
-          comprehensive and free resource with a wealth of documents both in
-          English and{" "}
+          contributors. Since 2005, approximately 45,000 contributors have
+          created the documentation we know and love. Together, contributors
+          have created over 45,000 documents that make up an up-to-date,
+          comprehensive, and free resource for web developers around the world.
+          In addition to English-language articles,{" "}
           <a href="/en-US/docs/MDN/Contribute/Localize">
-            localized for different languages
-          </a>
-          . With over 200 commits per week, the culture of active contribution
-          is going strong. And you can be a part of it.
+            over 35 volunteers lead translation and localization efforts
+          </a>{" "}
+          for Chinese, French, Japanese, Korean, Portuguese, Russian, and
+          Spanish. With over 200 commits per week, the culture of active
+          contribution is going strong. And you can be a part of it.
         </p>
         <h2>Our partners</h2>
         <h3>The Product Advisory Board</h3>

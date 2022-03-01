@@ -193,7 +193,7 @@ export function Footer() {
             </li>
             <li className="footer-moz-item">
               <a
-                href="/"
+                href="https://www.mozilla.org/about/governance/policies/participation/"
                 className="footer-moz-link"
                 target="_blank"
                 rel="noopener noreferrer"

@@ -11,8 +11,8 @@ export function HomepageHero() {
           <br /> by Developers
         </h1>
         <p>
-          Evolving learning platform for Web technologies and the software that
-          powers the Web, including CSS, HTML, and JavaScript. Since 2005.
+          Documenting web technologies, including CSS, HTML, and JavaScript,
+          since 2005.
         </p>
         <Search />
       </section>
