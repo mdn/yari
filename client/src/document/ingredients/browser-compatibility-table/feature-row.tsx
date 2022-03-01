@@ -303,116 +303,114 @@ function FlagsNote({
   );
 }
 
-function getNotes(
-  browser: bcd.BrowserNames,
-  support: bcd.SupportStatement,
-  locale: string
-) {
-  return asList(support)
-    .flatMap((item, i) => {
-      const supportNotes = [
-        item.version_removed
-          ? {
-              iconName: "disabled",
-              label: (
-                <>
-                  Removed in {labelFromString(item.version_removed, browser)}{" "}
-                  and later
-                </>
-              ),
-            }
-          : null,
-        item.partial_implementation
-          ? {
-              iconName: "footnote",
-              label: "Partial support",
-            }
-          : null,
-        item.prefix
-          ? {
-              iconName: "prefix",
-              label: `Implemented with the vendor prefix: ${item.prefix}`,
-            }
-          : null,
-        item.alternative_name
-          ? {
-              iconName: "altname",
-              label: `Alternate name: ${item.alternative_name}`,
-            }
-          : null,
-        item.flags
-          ? {
-              iconName: "disabled",
-              label: <FlagsNote browser={browser} supportItem={item} />,
-            }
-          : null,
-        item.notes
-          ? (Array.isArray(item.notes) ? item.notes : [item.notes]).map(
-              (note) => ({ iconName: "footnote", label: note })
-            )
-          : null,
-        item.version_added === "preview"
-          ? {
-              iconName: "footnote",
-              label: "Preview browser support",
-            }
-          : null,
-        // If we encounter nothing else than the required `version_added` and
-        // `release_date` properties, assume full support.
-        // EDIT 1-5-21: if item.version_added doesn't exist, assume no support.
-        Object.keys(item).filter(
-          (x) => !["version_added", "release_date"].includes(x)
-        ).length === 0 &&
-        item.version_added &&
-        item.version_added !== "preview"
-          ? {
-              iconName: "footnote",
-              label: "Full support",
-            }
-          : Object.keys(item).filter(
-              (x) => !["version_added", "release_date"].includes(x)
-            ).length === 0 && !item.version_added
-          ? {
-              iconName: "footnote",
-              label: "No support",
-            }
-          : null,
-      ]
-        .flat()
-        .filter(isTruthy);
+function getNotes(browser: bcd.BrowserNames, support: bcd.SupportStatement) {
+  if (support) {
+    return asList(support)
+      .flatMap((item, i) => {
+        const supportNotes = [
+          item.version_removed
+            ? {
+                iconName: "disabled",
+                label: (
+                  <>
+                    Removed in {labelFromString(item.version_removed, browser)}{" "}
+                    and later
+                  </>
+                ),
+              }
+            : null,
+          item.partial_implementation
+            ? {
+                iconName: "footnote",
+                label: "Partial support",
+              }
+            : null,
+          item.prefix
+            ? {
+                iconName: "prefix",
+                label: `Implemented with the vendor prefix: ${item.prefix}`,
+              }
+            : null,
+          item.alternative_name
+            ? {
+                iconName: "altname",
+                label: `Alternate name: ${item.alternative_name}`,
+              }
+            : null,
+          item.flags
+            ? {
+                iconName: "disabled",
+                label: <FlagsNote browser={browser} supportItem={item} />,
+              }
+            : null,
+          item.notes
+            ? (Array.isArray(item.notes) ? item.notes : [item.notes]).map(
+                (note) => ({ iconName: "footnote", label: note })
+              )
+            : null,
+          item.version_added === "preview"
+            ? {
+                iconName: "footnote",
+                label: "Preview browser support",
+              }
+            : null,
+          // If we encounter nothing else than the required `version_added` and
+          // `release_date` properties, assume full support.
+          // EDIT 1-5-21: if item.version_added doesn't exist, assume no support.
+          Object.keys(item).filter(
+            (x) => !["version_added", "release_date"].includes(x)
+          ).length === 0 &&
+          item.version_added &&
+          item.version_added !== "preview"
+            ? {
+                iconName: "footnote",
+                label: "Full support",
+              }
+            : Object.keys(item).filter(
+                (x) => !["version_added", "release_date"].includes(x)
+              ).length === 0 && !item.version_added
+            ? {
+                iconName: "footnote",
+                label: "No support",
+              }
+            : null,
+        ]
+          .flat()
+          .filter(isTruthy);
 
-      const hasNotes = supportNotes.length > 0;
-      return (
-        (i === 0 || hasNotes) && (
-          <React.Fragment key={i}>
-            <div className="bc-notes-wrapper">
-              <dt
-                className={`bc-supports-${getSupportClassName(
-                  item
-                )} bc-supports`}
-              >
-                <CellText support={item} browser={browser} />
-                {/**<CellIcons support={item} /> */}
-              </dt>
-              {supportNotes.map(({ iconName, label }, i) => {
-                return (
-                  <dd className="bc-supports-dd" key={i}>
-                    <Icon name={iconName} />{" "}
-                    {typeof label === "string" ? (
-                      <span dangerouslySetInnerHTML={{ __html: label }} />
-                    ) : (
-                      label
-                    )}
-                  </dd>
-                );
-              })}
-              {!hasNotes && <dd />}
-            </div>
-          </React.Fragment>
-        )
-      );
-    })
-    .filter(isTruthy);
+        const hasNotes = supportNotes.length > 0;
+        return (
+          (i === 0 || hasNotes) && (
+            <React.Fragment key={i}>
+              <div className="bc-notes-wrapper">
+                <dt
+                  className={`bc-supports-${getSupportClassName(
+                    item
+                  )} bc-supports`}
+                >
+                  <CellText support={item} browser={browser} />
+                  {/**<CellIcons support={item} /> */}
+                </dt>
+                {supportNotes.map(({ iconName, label }, i) => {
+                  return (
+                    <dd className="bc-supports-dd" key={i}>
+                      <Icon name={iconName} />{" "}
+                      {typeof label === "string" ? (
+                        <span dangerouslySetInnerHTML={{ __html: label }} />
+                      ) : (
+                        label
+                      )}
+                    </dd>
+                  );
+                })}
+                {!hasNotes && <dd />}
+              </div>
+            </React.Fragment>
+          )
+        );
+      })
+      .filter(isTruthy);
+  }
 }
 
 function CompatCell({
@@ -432,7 +430,6 @@ function CompatCell({
   const browserReleaseDate = getSupportBrowserReleaseDate(support);
   // NOTE: 1-5-21, I've forced hasNotes to return true, in order to
   // make the details view open all the time.
-  const hasNotes = true;
   // Whenever the support statement is complex (array with more than one entry)
   // or if a single entry is complex (prefix, notes, etc.),
   // we need to render support details in `bc-history`
@@ -443,16 +440,17 @@ function CompatCell({
   //       (item) =>
   //         item.prefix || item.notes || item.alternative_name || item.flags
   //     ));
+  const notes = getNotes(browser, support!);
   return (
     <>
       <td
         className={`bc-icon-cell bc-browser-${browser} bc-supports-${supportClassName} ${
-          hasNotes ? "bc-has-history" : ""
+          notes ? "bc-has-history" : ""
         }`}
         aria-expanded={showNotes ? "true" : "false"}
-        tabIndex={hasNotes ? 0 : undefined}
+        tabIndex={notes ? 0 : undefined}
         onClick={
-          hasNotes
+          notes
             ? () => {
                 onToggle();
               }
@@ -467,7 +465,7 @@ function CompatCell({
           <BrowserName id={browser} />
         </span>
         <CellIcons support={support} />
-        {hasNotes && (
+        {notes && (
           <button
             type="button"
             title="Open implementation notes"
@@ -481,7 +479,7 @@ function CompatCell({
         )}
         {showNotes && (
           <dl className="bc-notes-list bc-history bc-history-mobile">
-            {getNotes(browser, support!, locale)}
+            {notes}
           </dl>
         )}
       </td>
@@ -563,11 +561,7 @@ export const FeatureRow = React.memo(
           <tr className="bc-history">
             <td colSpan={browsers.length + 1}>
               <dl className="bc-notes-list">
-                {getNotes(
-                  activeBrowser,
-                  compat.support[activeBrowser]!,
-                  locale
-                )}
+                {getNotes(activeBrowser, compat.support[activeBrowser]!)}
               </dl>
             </td>
           </tr>
