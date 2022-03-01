@@ -9,7 +9,7 @@ export function ThemeToggle() {
   const isServer = typeof window === "undefined";
   let prefers = "light";
   if (!isServer) {
-    const mql = window.matchMedia("(prefers-color-scheme: dark)");
+    const mql = window?.matchMedia?.("(prefers-color-scheme: dark)");
     if (mql.matches) {
       prefers = "dark";
     }
