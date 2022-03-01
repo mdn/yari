@@ -12,7 +12,7 @@ A short description of the overall issue.
 
 <!-- Include one or more URLs where you found the problem. -->
 
-## What happened?
+## What is the problem?
 
 ## What did you expect to happen?
 
