@@ -37,12 +37,12 @@ export function About() {
           Independent and unbiased - across browsers and technologies
         </h2>
         <p>
-          This guiding principle has made MDN Docs the go-to repository of
+          This guiding principle has made MDN Web Docs the go-to repository of
           independent information for developers, regardless of brand, browser
           or platform. We are an open community of devs, writers, and other
           technologists building resources for a better Web, with over 17
           million monthly MDN users from all over the world. Anyone can
-          contribute, and each of the 56,000 individuals who have done so over
+          contribute, and each of the 45,000 individuals who have done so over
           the past decades has strengthened and improved the resource. We also
           receive content contributions from our partners, including Microsoft,
           Google, Samsung, Igalia, W3C and others. Together we continue to drive
