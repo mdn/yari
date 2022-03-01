@@ -19,6 +19,7 @@ A short description of the overall issue.
 ## Steps to reproduce the issue
 
 <!-- Example: -->
+
 1. Open https://developer.mozilla.org/... in Chrome/Firefox/Safari
 2. Click on "..."
 3. Type in "..."
@@ -27,7 +28,7 @@ A short description of the overall issue.
 
 ## Environment
 
-<!-- Please [x] tick what environment you experienced the bug with. --> 
+<!-- Please [x] tick what environment you experienced the bug with. -->
 
 ### Device
 
