@@ -1,7 +1,7 @@
 ---
 name: Frontend bug
 about: Use this template to notify us of a frontend bug on MDN Web Docs that needs fixing
-title: "New issue title"
+title: "Bug: <TITLE OF PROBLEM>"
 ---
 
 # Issue overview
