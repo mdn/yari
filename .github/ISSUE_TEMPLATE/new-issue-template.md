@@ -2,7 +2,6 @@
 name: New issue
 about: Let us know about potential bugs on MDN Web Docs
 title: "New issue title"
-labels: bug
 ---
 
 # Issue overview
