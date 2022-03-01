@@ -122,15 +122,12 @@
 
     ol,
     ul {
-      @media screen and (max-width: $screen-sm) {
-        padding-left: 0.5rem;
-      }
+      padding-left: 0.5rem;
     }
 
     ol {
       li {
         list-style-type: "· ";
-        list-style-position: inside;
 
         .icon {
           margin-right: 0.01em;
