@@ -131,9 +131,10 @@
 
   .search-button.button {
     position: absolute;
-    right: 2rem;
+    right: 1.5rem;
     left: auto;
     top: 0;
+    height: 100%;
 
     &:hover {
       background: none;
@@ -141,18 +142,13 @@
     }
 
     .button-wrap {
-      padding: 1.5rem;
-      height: 100%;
-      border-radius: 0 10rem 10rem 0;
       background: none;
-      border: 1px solid transparent;
-
       &:hover {
         background: none;
         border: 1px solid transparent;
 
         .icon {
-          background-color: var(--text-primary);
+          background-color: var(--text-link);
         }
       }
 
