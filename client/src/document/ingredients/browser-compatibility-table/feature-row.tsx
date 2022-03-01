@@ -430,29 +430,17 @@ function CompatCell({
 }) {
   const supportClassName = getSupportClassName(support);
   const browserReleaseDate = getSupportBrowserReleaseDate(support);
-  // NOTE: 1-5-21, I've forced hasNotes to return true, in order to
-  // make the details view open all the time.
-  const hasNotes = true;
-  // Whenever the support statement is complex (array with more than one entry)
-  // or if a single entry is complex (prefix, notes, etc.),
-  // we need to render support details in `bc-history`
-  // const hasNotes =
-  //   support &&
-  //   (asList(support).length > 1 ||
-  //     asList(support).some(
-  //       (item) =>
-  //         item.prefix || item.notes || item.alternative_name || item.flags
-  //     ));
+  const showDetails = Boolean(support);
   return (
     <>
       <td
         className={`bc-icon-cell bc-browser-${browser} bc-supports-${supportClassName} ${
-          hasNotes ? "bc-has-history" : ""
+          showDetails ? "bc-has-history" : ""
         }`}
         aria-expanded={showNotes ? "true" : "false"}
-        tabIndex={hasNotes ? 0 : undefined}
+        tabIndex={showDetails ? 0 : undefined}
         onClick={
-          hasNotes
+          showDetails
             ? () => {
                 onToggle();
               }
@@ -467,7 +455,7 @@ function CompatCell({
           <BrowserName id={browser} />
         </span>
         <CellIcons support={support} />
-        {hasNotes && (
+        {showDetails && (
           <button
             type="button"
             title="Open implementation notes"
