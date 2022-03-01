@@ -18,4 +18,30 @@ A short description of the overall issue.
 
 ### Steps to reproduce the issue
 
-### Browser and operating system
+## Environment
+
+<!-- Please [x] tick what environment you experienced the bug with. --> 
+
+### Device
+
+- [ ] Desktop
+- [ ] Mobile: ...
+- [ ] Tablet: ...
+- [ ] Other: ...
+
+### Browser
+
+- [ ] Chrome: (what version?)
+- [ ] Firefox: (what version?)
+- [ ] Safari: (what version?)
+- [ ] Other: (what browser / version?)
+
+### Operating system
+
+- [ ] Windows: (what version?)
+- [ ] Mac OS: (what version?)
+- [ ] Linux: (what distribution / version?)
+
+## Screenshots
+
+<!-- Optional, but very helpful, if provided. -->
