@@ -16,7 +16,14 @@ A short description of the overall issue.
 
 ## What did you expect to happen?
 
-### Steps to reproduce the issue
+## Steps to reproduce the issue
+
+<!-- Example: -->
+1. Open https://developer.mozilla.org/... in Chrome/Firefox/Safari
+2. Click on "..."
+3. Type in "..."
+4. Press "..."
+5. ...
 
 ## Environment
 
