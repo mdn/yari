@@ -1,5 +1,5 @@
 ---
-name: New issue
+name: Frontend bug
 about: Let us know about potential bugs on MDN Web Docs
 title: "New issue title"
 ---
