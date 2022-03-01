@@ -99,6 +99,7 @@
     padding: 0.25rem;
     color: var(--text-secondary);
     hyphens: auto;
+    max-width: calc(100% - 1rem);
 
     &[aria-current="page"] {
       background: var(--border-secondary);
