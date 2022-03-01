@@ -4,9 +4,13 @@ about: Use this template to notify us of a frontend bug on MDN Web Docs that nee
 title: "Bug: <TITLE OF PROBLEM>"
 ---
 
-# Issue overview
+# Summary
 
-A short descriptions of the overall issue.
+A short description of the overall issue.
+
+## Where did you spot the bug?
+
+<!-- Include one or more URLs where you found the problem. -->
 
 ## What happened?
 
