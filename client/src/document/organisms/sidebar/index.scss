@@ -75,9 +75,7 @@
     overflow: auto;
     position: sticky;
     top: 0;
-    bottom: 0;
-    // height minus header. On scroll, this variable is changed with JS.
-    max-height: calc(100vh - var(--visible-height-of-header, 6rem));
+    max-height: 100vh;
   }
 
   &-heading {
