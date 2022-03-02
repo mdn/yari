@@ -25,7 +25,7 @@ test.describe("Autocomplete search", () => {
     // This will activate the fancy autocomplete search and it should start
     // a download of the `/en-US/search-index.json` too.
     await page.focus(SEARCH_SELECTOR);
-    await page.waitForSelector("#nav-main-search"); // autocomplete search form
+    await page.waitForSelector("# top-nav-search-form"); // autocomplete search form
     await page.waitForLoadState("networkidle");
 
     await page.fill(SEARCH_SELECTOR, "foo");
@@ -47,7 +47,7 @@ test.describe("Autocomplete search", () => {
     // This will activate the fancy autocomplete search and it should start
     // a download of the `/en-US/search-index.json` too.
     await page.focus(SEARCH_SELECTOR);
-    await page.waitForSelector("#nav-main-search"); // autocomplete search form
+    await page.waitForSelector("# top-nav-search-form"); // autocomplete search form
     await page.waitForLoadState("networkidle");
 
     await page.fill(SEARCH_SELECTOR, "gooblyg00k");
@@ -65,11 +65,11 @@ test.describe("Autocomplete search", () => {
     // This will activate the fancy autocomplete search and it should start
     // a download of the `/en-US/search-index.json` too.
     await page.focus(SEARCH_SELECTOR);
-    await page.waitForSelector("#nav-main-search"); // autocomplete search form
+    await page.waitForSelector("# top-nav-search-form"); // autocomplete search form
     await page.waitForLoadState("networkidle");
 
     await page.fill(SEARCH_SELECTOR, "/");
-    await page.waitForSelector("#nav-main-search"); // autocomplete search form
+    await page.waitForSelector("# top-nav-search-form"); // autocomplete search form
     expect(await page.isVisible("text=Fuzzy searching by URI")).toBeTruthy();
     expect(await page.isVisible("text=No document titles found")).toBeFalsy();
     await page.fill(SEARCH_SELECTOR, "/wboo");
@@ -91,11 +91,11 @@ test.describe("Autocomplete search", () => {
     // This will activate the fancy autocomplete search and it should start
     // a download of the `/en-US/search-index.json` too.
     await page.focus(SEARCH_SELECTOR);
-    await page.waitForSelector("#nav-main-search"); // autocomplete search form
+    await page.waitForSelector("# top-nav-search-form"); // autocomplete search form
     await page.waitForLoadState("networkidle");
 
     await page.fill(SEARCH_SELECTOR, "/gooblygook");
-    await page.waitForSelector("#nav-main-search"); // autocomplete search form
+    await page.waitForSelector("# top-nav-search-form"); // autocomplete search form
     expect(await page.isVisible("text=No document titles found")).toBeTruthy();
   });
 });
