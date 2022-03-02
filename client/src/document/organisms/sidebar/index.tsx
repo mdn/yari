@@ -1,42 +1,11 @@
 import { Link } from "react-router-dom";
 import React, { useEffect, useState } from "react";
-import throttle from "lodash.throttle";
 import { Button } from "../../../ui/atoms/button";
 
 import { useUIStatus } from "../../../ui-context";
 
 import "./index.scss";
 import { TOC } from "../toc";
-
-function CalculateSidebarOnScroll() {
-  useEffect(function mount() {
-    function calcOnScroll() {
-      let sidebar = document.getElementById("sidebar-quicklinks");
-      if (sidebar) {
-        let sidebarTop = sidebar.getBoundingClientRect().top;
-        let visibleHeaderHeight = sidebarTop > 0 ? sidebarTop : 0;
-        document.documentElement.style.setProperty(
-          "--visible-height-of-header",
-          `${visibleHeaderHeight}px`
-        );
-      }
-    }
-
-    window.addEventListener(
-      "scroll",
-      throttle(calcOnScroll, 30, {
-        leading: true,
-        trailing: true,
-      })
-    );
-
-    return function unMount() {
-      window.removeEventListener("scroll", calcOnScroll);
-    };
-  });
-
-  return null;
-}
 
 function _setScrollLock(isSidebarOpen) {
   const mainContentElement = document.querySelector("main");
@@ -86,7 +55,6 @@ function SidebarContainer({ doc, children }) {
           {children}
         </div>
       </nav>
-      <CalculateSidebarOnScroll />
     </>
   );
 }
