@@ -417,7 +417,9 @@ function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
           // When something *is* entered, the onKeyDown event is triggered
           // on the <input> and within that handler you can
           // access `event.key === 'Enter'` as a signal to submit the form.
-          e.preventDefault();
+          if (!inputValue.trim()) {
+            e.preventDefault();
+          }
         },
       })}
     >
