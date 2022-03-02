@@ -228,8 +228,7 @@ const CellText = React.memo(
           </abbr>
         </span>{" "}
         <span className="bc-version-label">
-          <BrowserName id={browser} />{" "}
-          {label !== "No" && label !== "?" ? label : null}
+          {browser.name} {label !== "No" && label !== "?" ? label : null}
         </span>
       </>
     );
@@ -352,7 +351,7 @@ function getNotes(
                 (note) => ({ iconName: "footnote", label: note })
               )
             : null,
-          item.version_added === "preview"
+          versionIsPreview(item.version_added, browser)
             ? {
                 iconName: "footnote",
                 label: "Preview browser support",
@@ -365,7 +364,7 @@ function getNotes(
             (x) => !["version_added", "release_date"].includes(x)
           ).length === 0 &&
           item.version_added &&
-          item.version_added !== "preview"
+          !versionIsPreview(item.version_added, browser)
             ? {
                 iconName: "footnote",
                 label: "Full support",
@@ -467,7 +466,7 @@ function CompatCell({
           browserReleaseDate ? `Released ${browserReleaseDate}` : undefined
         }
       >
-        <CellText {...{ support }} browser={browser} />
+        <CellText {...{ support }} browser={browserInfo} />
         <span className="bc-browser-name">
           <BrowserName id={browserId} />
         </span>
