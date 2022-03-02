@@ -147,7 +147,7 @@ export default function render(
 
   // Some day, we'll have the chrome localized and then this can no longer be
   // hardcoded to 'en'. But for now, the chrome is always in "English (US)".
-  $("html").attr("lang", DEFAULT_LOCALE);
+  $("html").attr("lang", locale || DEFAULT_LOCALE);
 
   const rendered = renderToString(renderApp);
 
