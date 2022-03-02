@@ -51,6 +51,8 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2.4.0
+        with:
+          ref: stage
 
       - uses: actions/checkout@v2.4.0
         with:
@@ -157,7 +159,7 @@ jobs:
           BUILD_SPEEDCURVE_LUX_ID: 108906238
 
           # This enables the Plus call-to-action banner and the Plus landing page
-          REACT_APP_ENABLE_PLUS: false
+          REACT_APP_ENABLE_PLUS: true
 
           # This adds the ability to sign in (stage only for now)
           REACT_APP_DISABLE_AUTH: false
