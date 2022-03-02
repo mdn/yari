@@ -82,6 +82,8 @@ const scriptSrcValues = [
 
   "assets.codepen.io",
   "production-assets.codepen.io",
+
+  "'sha256-CUy3BwqnmCSHS96nUyHoUsOB3r+s10eRpf5GbZdZqgk='", // inline no flicker
 ];
 const CSP_DIRECTIVES = {
   "default-src": ["'self'"],
@@ -101,6 +103,8 @@ const CSP_DIRECTIVES = {
     "'self'",
 
     "interactive-examples.mdn.mozilla.net",
+    "interactive-examples.prod.mdn.mozilla.net",
+    "interactive-examples.stage.mdn.mozilla.net",
     "mdn.github.io",
     "yari-demos.prod.mdn.mozit.cloud",
     "mdn.mozillademos.org",
@@ -126,6 +130,8 @@ const CSP_DIRECTIVES = {
     "media.prod.mdn.mozit.cloud",
     "media.stage.mdn.mozit.cloud",
     "interactive-examples.mdn.mozilla.net",
+    "interactive-examples.prod.mdn.mozilla.net",
+    "interactive-examples.stage.mdn.mozilla.net",
 
     "wikipedia.org",
 

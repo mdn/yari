@@ -1,98 +1,67 @@
-@use "sass:math";
-
-@import "~@mdn/minimalist/sass/mixins/utils";
-@import "~@mdn/minimalist/sass/mixins/links";
-
-@import "~@mdn/minimalist/sass/vars/mdn-web-docs-palette";
-@import "~@mdn/minimalist/sass/vars/layout";
-@import "~@mdn/minimalist/sass/vars/typography";
+@use "../../vars" as *;
 
 .breadcrumbs-container {
-  @media #{$mq-small-desktop-and-up} {
-    padding: math.div($base-spacing, 2) $base-spacing;
-  }
-
-  @media #{$mq-small-desktop-and-up} {
-    padding: 0;
-  }
-
-  a {
-    align-items: center;
-    display: flex;
-  }
+  display: flex;
+  align-items: center;
+  margin-right: auto;
 
   ol {
-    @include reset-list();
+    line-height: 1.2;
   }
 
   li {
-    display: inline-flex;
+    display: none;
     hyphens: auto;
 
-    .breadcrumb,
-    .breadcrumb-current-page {
-      @include visually-hidden();
-
-      @media #{$mq-small-desktop-and-up} {
-        @include reset-visually-hidden();
-      }
-    }
-
-    .breadcrumb,
-    .breadcrumb-penultimate {
-      &::after {
-        background: transparent url("~@mdn/dinocons/arrows/chevron.svg") 0 0
-          no-repeat;
-        background-size: 12px;
-        content: "";
-        height: 12px;
-        transform: rotate(90deg);
-        width: 12px;
-      }
+    // only show first and last on mobile
+    &:first-child,
+    &:last-child {
+      display: inline-flex;
     }
 
     .breadcrumb {
       &::after {
-        display: inline-block;
+        margin-right: 0.5rem;
+        background-color: var(--icon-secondary);
+        content: "";
+        display: block;
+        height: 12px;
+        mask-image: url("../../../assets/icons/chevron.svg");
+        mask-size: 12px;
+        transform: rotate(-90deg);
+        width: 12px;
+      }
+    }
+
+    a {
+      align-items: center;
+      display: flex;
+
+      &:link,
+      &:visited {
+        color: var(--text-secondary);
+      }
+
+      &:focus-visible {
+        outline: 0;
+
+        [property="name"] {
+          outline-style: auto;
+          outline-color: var(--accent-primary);
+          outline-offset: 1px;
+        }
       }
     }
 
     [property="name"] {
       display: inline-block;
-      margin: 0 math.div($base-unit, 2);
+      margin-right: 0.5rem;
     }
+  }
 
-    .breadcrumb-penultimate {
-      &::before {
-        background: transparent url("~@mdn/dinocons/arrows/chevron.svg") 0 0
-          no-repeat;
-        background-size: auto;
-        content: "";
-        display: inline-block;
-        height: 16px;
-        margin-right: math.div($base-spacing, 4);
-        transform: rotate(-90deg);
-        width: 16px;
-
-        @media #{$mq-small-desktop-and-up} {
-          display: none;
-        }
-      }
-
-      &::after {
-        display: none;
-
-        @media #{$mq-small-desktop-and-up} {
-          display: inline-block;
-        }
-      }
-    }
-
-    &:last-child {
-      a:link,
-      a:visited {
-        color: $mdn-neutral900;
-      }
+  @media screen and (min-width: $screen-lg) {
+    li {
+      display: inline-flex;
     }
   }
 }

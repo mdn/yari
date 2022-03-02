@@ -1,39 +1,37 @@
-@use "sass:math";
-
 .bc-history-link {
   display: none;
 
-  @media #{$mq-tablet-and-up} {
+  @media screen and (max-width: $screen-sm) {
     background: transparent url("~@mdn/dinocons/arrows/triangle.svg") center
       center no-repeat;
     background-size: 16px;
     border: 0;
-    border-bottom: 1px solid $mdn-neutral900;
+    border-bottom: 1px solid $mdn-color-dark-grey-90;
     border-radius: 0;
     box-shadow: none;
-    color: $mdn-neutral900;
+    color: $mdn-color-dark-grey-90;
     cursor: pointer;
     display: block;
-    font-size: $tiny-text;
+    font-size: 0.8125rem;
     height: 16px;
-    padding: math.div($base-spacing, 2);
+    padding: 0.5rem;
     position: relative;
     transform: rotate(180deg);
     width: 100%;
   }
 
-  @media #{$mq-small-desktop-and-up} {
+  @media screen and (min-width: $screen-md) {
     bottom: 0;
     left: 0;
-    margin: math.div($base-spacing, 2) 0 0;
+    margin: 0.5rem 0 0;
     padding: 0;
     position: absolute;
-    z-index: $top-layer;
+    z-index: 1000;
   }
 }
 
 .bc-history-link-inverse {
   border: 0;
-  border-top: 1px solid $mdn-neutral900;
+  border-top: 1px solid $mdn-color-dark-grey-90;
   transform: rotate(0deg);
 }

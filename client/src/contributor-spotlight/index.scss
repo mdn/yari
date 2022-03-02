@@ -1,0 +1,52 @@
+.contributor-spotlight-content-container {
+  max-width: 52rem;
+  margin: 3rem auto;
+  padding: 0 1rem;
+
+  li {
+    line-height: 1.5;
+    list-style-type: disc;
+    margin-bottom: 1rem;
+  }
+
+  ul {
+    padding-left: 1rem;
+  }
+
+  .quote {
+    background-color: var(--category-color-background);
+    color: var(--text-primary);
+
+    .icon {
+      background-color: var(--text-primary);
+    }
+  }
+
+  .profile-image {
+    border-radius: 50%;
+    height: 200px;
+    width: 200px;
+  }
+  .profile-header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    width: 100%;
+    padding: 1rem;
+    border-radius: var(--elem-radius);
+
+    h2 {
+      color: var(--text-primary);
+      margin-top: 0;
+      margin-bottom: 0;
+    }
+
+    .username {
+      background-color: var(--category-color);
+      color: var(--text-invert);
+      font-size: 1.75rem;
+      padding: 0.2rem 0.4rem;
+    }
+  }
+}

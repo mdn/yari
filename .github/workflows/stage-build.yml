@@ -79,8 +79,13 @@ jobs:
           repository: mdn/translated-content
           path: mdn/translated-content
 
+      - uses: actions/checkout@v2.4.0
+        with:
+          repository: mdn/mdn-contributor-spotlight
+          path: mdn/mdn-contributor-spotlight
+
       - name: Setup Node.js environment
-        uses: actions/setup-node@v2.5.1
+        uses: actions/setup-node@v3
         with:
           node-version: "12"
 
@@ -97,7 +102,7 @@ jobs:
         run: yarn --frozen-lockfile
 
       - name: Install Python
-        uses: actions/setup-python@v2.3.2
+        uses: actions/setup-python@v3.0.0
         with:
           python-version: "3.8"
 
@@ -126,12 +131,16 @@ jobs:
           # sub-folder called "mdn/content"
           CONTENT_ROOT: ${{ github.workspace }}/mdn/content/files
           CONTENT_TRANSLATED_ROOT: ${{ github.workspace }}/mdn/translated-content/files
+          CONTRIBUTOR_SPOTLIGHT_ROOT: ${{ github.workspace }}/mdn/mdn-contributor-spotlight/contributors
 
           # The default for this environment variable is geared for writers
           # (aka. local development). Usually defaults are supposed to be for
           # secure production but this is an exception and default
           # is not insecure.
           BUILD_LIVE_SAMPLES_BASE_URL: https://yari-demos.stage.mdn.mozit.cloud
+
+          # Use the stage version of interactive examples.
+          BUILD_INTERACTIVE_EXAMPLES_BASE_URL: https://interactive-examples.stage.mdn.mozilla.net
 
           # Now is not the time to worry about flaws.
           BUILD_FLAW_LEVELS: "*:ignore"
@@ -148,17 +157,22 @@ jobs:
           BUILD_SPEEDCURVE_LUX_ID: 108906238
 
           # This enables the Plus call-to-action banner and the Plus landing page
-          REACT_APP_ENABLE_PLUS: true
+          REACT_APP_ENABLE_PLUS: false
 
           # This adds the ability to sign in (stage only for now)
           REACT_APP_DISABLE_AUTH: false
+
+          # Use the stage version of interactive examples in react app
+          REACT_APP_INTERACTIVE_EXAMPLES_BASE_URL: https://interactive-examples.stage.mdn.mozilla.net
 
           # Firefox Accounts and SubPlat settings
           REACT_APP_FXA_SIGNIN_URL: /users/fxa/login/authenticate/
           REACT_APP_FXA_SETTINGS_URL: https://accounts.stage.mozaws.net/settings/
           REACT_APP_MDN_PLUS_SUBSCRIBE_URL: https://accounts.stage.mozaws.net/subscriptions/products/prod_Jtbg9tyGyLRuB0
-          REACT_APP_MDN_PLUS_YEARLY_PLAN: price_1JpIPwKb9q6OnNsLJLsIqMp7
-          REACT_APP_MDN_PLUS_MONTHLY_PLAN: price_1JFoTYKb9q6OnNsLalexa03p
+          REACT_APP_MDN_PLUS_5M_PLAN: price_1JFoTYKb9q6OnNsLalexa03p
+          REACT_APP_MDN_PLUS_5Y_PLAN: price_1JpIPwKb9q6OnNsLJLsIqMp7
+          REACT_APP_MDN_PLUS_10M_PLAN: price_1K6X7gKb9q6OnNsLi44HdLcC
+          REACT_APP_MDN_PLUS_10Y_PLAN: price_1K6X8VKb9q6OnNsLFlUcEiu4
 
         run: |
 

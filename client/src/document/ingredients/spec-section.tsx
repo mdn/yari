@@ -1,4 +1,5 @@
 import { DisplayH2, DisplayH3 } from "./utils";
+import NoteCard from "../../ui/molecules/notecards";
 
 export function SpecificationSection({
   id,
@@ -46,7 +47,7 @@ export function SpecificationSection({
           </tbody>
         </table>
       ) : (
-        <div className="notecard warning">
+        <NoteCard type="warning">
           <h4>No specification found</h4>
           <p>
             No specification data found for <code>{query}</code>.<br />
@@ -59,7 +60,7 @@ export function SpecificationSection({
             <a href="https://github.com/w3c/browser-specs">w3c/browser-specs</a>
             .
           </p>
-        </div>
+        </NoteCard>
       )}
     </>
   );

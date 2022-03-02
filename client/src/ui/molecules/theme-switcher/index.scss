@@ -1,0 +1,115 @@
+@use "sass:color";
+
+@use "../../vars" as *;
+
+.theme-switcher-menu {
+  .themes-menu .button.button {
+    --button-bg: transparent;
+    --button-border-color: var(--button-bg);
+    --button-color: var(--text-primary);
+    border-bottom-width: 0;
+    font: var(--type-body-m);
+    width: 100%;
+
+    .button-wrap {
+      font-weight: 400;
+      justify-content: flex-start;
+      padding: 1rem;
+
+      border-width: 1px;
+
+      &:before {
+        display: inline-flex;
+        width: 1rem;
+        height: 1rem;
+        border-radius: 1rem;
+        border: 1px solid var(--border-secondary);
+        background: var(--background-primary);
+        content: "";
+      }
+    }
+
+    &.is-dark .button-wrap:before {
+      background: $mdn-theme-dark-background-primary;
+    }
+    &.is-light .button-wrap:before {
+      background-color: $mdn-color-white;
+    }
+
+    &:focus {
+      --button-border-color: var(--button-secondary-border-focus);
+    }
+
+    &.is-os-default .button-wrap:before {
+      @media (prefers-color-scheme: light) {
+        background-color: $mdn-color-white;
+      }
+
+      @media (prefers-color-scheme: dark) {
+        background: $mdn-theme-dark-background-primary;
+      }
+    }
+
+    &:hover {
+      --button-bg: var(--border-secondary);
+    }
+  }
+
+  .active-menu-item,
+  .active-menu-item:hover {
+    .button-wrap {
+      --button-bg: var(--background-primary);
+      --button-border-color: var(--border-secondary);
+    }
+  }
+
+  .active-menu-item:focus .button-wrap {
+    --button-border-color: var(--button-secondary-border-focus);
+  }
+
+  @media screen and (min-width: $screen-md) {
+    border-bottom: 0;
+
+    .themes-menu.show {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      max-width: max-content;
+      min-width: 130px;
+    }
+
+    .themes-menu .submenu-item {
+      padding: 0.5rem 1rem;
+    }
+  }
+}
+
+.theme-switcher-menu,
+.languages-switcher-menu {
+  > .button {
+    .button-wrap:after {
+      background-color: var(--icon-secondary);
+      content: "";
+      display: block;
+      height: 16px;
+      mask-image: url("../../../assets/icons/chevron.svg");
+      mask-size: 16px;
+      width: 16px;
+      margin-left: auto;
+    }
+
+    &[aria-expanded="true"] {
+      .button-wrap:after {
+        transform: rotate(180deg);
+      }
+    }
+  }
+
+  @media screen and (min-width: $screen-md) {
+    > .button {
+      .button-wrap:after {
+        content: unset;
+      }
+    }
+  }
+}

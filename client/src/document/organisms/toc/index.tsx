@@ -1,40 +1,90 @@
-import React from "react";
-
-import { Toc } from "../../types";
+import React, { useEffect, useState } from "react";
 
 import "./index.scss";
+import { Toc } from "../../types";
+import { useDebouncedCallback } from "use-debounce";
 
 export function TOC({ toc }: { toc: Toc[] }) {
-  const [showTOC, setShowTOC] = React.useState(false);
+  const [currentViewedTocItem, setCurrentViewedTocItem] = useState(
+    toc[0].id.toLowerCase()
+  );
+
+  const getCurrentHighlightedSectionId = () => {
+    const offsetY = window.scrollY;
+    if (offsetY < window.innerHeight * 0.1) {
+      setCurrentViewedTocItem(toc[0].id.toLowerCase());
+      return;
+    }
+
+    const headings = toc.map((item) =>
+      document.getElementById(item.id.toLowerCase())
+    );
+    let currentSectionId;
+
+    headings.forEach((section) => {
+      const posY = section?.offsetTop;
+      if (posY && posY < offsetY + window.innerHeight * 0.1) {
+        currentSectionId = section.id;
+      }
+    });
+
+    if (currentSectionId && currentSectionId !== currentViewedTocItem) {
+      setCurrentViewedTocItem(currentSectionId);
+    }
+  };
+
+  const debouncedGetCurrentHighlightedSectionId = useDebouncedCallback(
+    getCurrentHighlightedSectionId,
+    25
+  );
+
+  useEffect(() => {
+    window.addEventListener("scroll", debouncedGetCurrentHighlightedSectionId);
+    return () => {
+      window.removeEventListener(
+        "scroll",
+        debouncedGetCurrentHighlightedSectionId
+      );
+    };
+  }, [debouncedGetCurrentHighlightedSectionId]);
 
   return (
     <aside className="document-toc-container">
       <section className="document-toc">
         <header>
-          <h2>Table of contents</h2>
-          <button
-            type="button"
-            className="ghost toc-trigger-mobile"
-            onClick={() => {
-              setShowTOC(!showTOC);
-            }}
-            aria-controls="toc-entries"
-            aria-expanded={showTOC}
-          >
-            Table of contents
-          </button>
+          <h2 className="document-toc-heading">In this article</h2>
         </header>
-        <ul id="toc-entries" className={showTOC ? "show-toc" : undefined}>
-          {toc.map((item) => (
-            <li key={item.id}>
-              <a
-                href={`#${item.id.toLowerCase()}`}
-                dangerouslySetInnerHTML={{ __html: item.text }}
-              ></a>
-            </li>
-          ))}
+        <ul className="document-toc-list" id="toc-entries">
+          {toc.map((item) => {
+            return (
+              <TOCItem
+                key={item.id}
+                id={item.id}
+                text={item.text}
+                currentViewedTocItem={currentViewedTocItem}
+              />
+            );
+          })}
         </ul>
       </section>
     </aside>
+  );
+}
+
+function TOCItem({
+  id,
+  text,
+  currentViewedTocItem,
+}: Toc & { currentViewedTocItem: string }) {
+  return (
+    <li className="document-toc-item">
+      <a
+        className="document-toc-link"
+        key={id}
+        aria-current={currentViewedTocItem === id.toLowerCase() || undefined}
+        href={`#${id.toLowerCase()}`}
+        dangerouslySetInnerHTML={{ __html: text }}
+      />
+    </li>
   );
 }

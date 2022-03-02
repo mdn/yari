@@ -1,182 +1,59 @@
-@use "sass:math";
-
-@use "~@mdn/minimalist/sass/vars/mdn-web-docs-palette" as *;
-@use "~@mdn/minimalist/sass/vars/layout" as *;
-
-@import "./molecules/breadcrumb-locale-container";
-@import "./molecules/notecards";
-@import "./molecules/localized-content-note";
-
-.main-content {
-  @media #{$mq-small-desktop-and-up} {
-    margin-top: $base-spacing;
-  }
-}
-
-.only-in-en-us {
-  span {
-    font-size: $small-font-size;
-  }
-}
-
-a.page-not-created {
-  color: $mdn-red700;
-  cursor: not-allowed;
-}
+@use "../ui/vars" as *;
+@use "../ui/base/themes" as *;
+@use "../ui/base/mdn";
+@use "../ui/molecules/grids/grids.scss" as *;
+@use "../ui/base/typography" as *;
 
 .main-page-content {
-  padding: math.div($base-spacing, 2) $base-spacing $base-spacing;
+  padding: 3rem 1rem 1rem;
+  overflow-wrap: break-word;
 
-  img {
-    display: inline-block;
-  }
-
-  figure {
-    margin-bottom: $base-spacing;
-  }
-
-  ul li {
-    margin-bottom: 8px;
-  }
-
-  .example-good,
-  .example-bad {
-    padding: 0 $base-spacing;
-    position: relative;
-
-    &::after {
-      background-size: 24px;
-      content: "";
-      display: block;
-      height: 24px;
-      position: absolute;
-      right: 13px;
-      top: 3px;
-      width: 24px;
-    }
-  }
-
-  .example-bad {
-    &::after {
-      background-color: $mdn-red700;
-      mask-image: url("~@mdn/dinocons/emojis/frown.svg");
-    }
-  }
-
-  .example-good {
-    &::after {
-      background-color: $mdn-green900;
-      mask-image: url("~@mdn/dinocons/emojis/smiley.svg");
-    }
-  }
-
-  .code-example {
-    position: relative;
-
-    .copy-icon {
-      background: $mdn-neutral100 url("../assets/clippy.svg") center center
-        no-repeat;
-      background-position: 61% 45%;
-      background-size: 16px;
-      border: 1px solid $mdn-neutral100;
-      border-radius: 6px;
-      cursor: pointer;
-      height: 36px;
-      margin: 0;
-      padding: math.div($base-spacing, 4);
-      position: absolute;
-      right: math.div($base-spacing, 3);
-      top: math.div($base-spacing, 3);
-      vertical-align: middle;
-      width: 33px;
-      z-index: $bottom-layer;
-
-      @media #{$mq-large-desktop-and-up} {
-        opacity: 0.4;
-
-        &:hover,
-        &:focus {
-          background-color: $mdn-neutral200;
-          opacity: 1;
-        }
-      }
-    }
-
-    .copy-icon-message {
-      background: $mdn-neutral900;
-      border-radius: 6px;
-      color: $white;
-      display: none;
-      font-size: $small-font-size;
-      opacity: 1;
-      padding: math.div($base-spacing, 4);
-      position: absolute;
-      right: math.div($base-spacing, 3);
-      top: 15px;
-      z-index: $bottom-layer;
-    }
-
-    &:focus,
-    &:hover {
-      .copy-icon {
-        opacity: 1;
-      }
-    }
-
-    .show {
-      display: block;
-    }
-
-    .example-good,
-    .example-bad {
-      padding: $base-spacing;
-
-      &::after {
-        right: 44px;
-        top: 13px;
-      }
-    }
-  }
-
-  @media #{$mq-small-desktop-and-up} {
-    margin-bottom: $base-spacing * 2;
-    padding: 0 $base-spacing $base-spacing;
-  }
-
-  h1 {
-    word-break: break-word;
-  }
-
+  h1,
   h2,
   h3,
   h4,
-  h5 {
-    margin-top: 0;
-  }
-
-  p,
-  ul,
-  ol,
-  dl {
-    max-width: $max-line-length-fallback;
-    max-width: 85ch;
-  }
-
-  p {
-    margin-bottom: $base-spacing;
-  }
-
-  a {
-    text-decoration: underline;
-
-    &:hover,
-    &:focus {
+  h5,
+  h6 {
+    a:link,
+    a:visited {
+      color: var(--text-primary);
       text-decoration: none;
     }
 
+    a:hover,
+    a:focus {
+      text-decoration: underline;
+    }
+
+    a:active {
+      background-color: transparent;
+    }
+
+    a[href^="#"]:hover {
+      &:after {
+        display: inline-flex;
+        margin-left: 4px;
+        line-height: 1;
+        font-size: 0.7em;
+        text-decoration: none;
+        color: var(--text-inactive);
+        content: "#";
+      }
+    }
+  }
+
+  a:not(.button) {
+    color: var(--text-link);
+    width: fit-content;
+
+    &:hover,
+    &:focus {
+      text-decoration: underline;
+    }
+
     &:active {
-      background-color: $mdn-blue700;
-      color: $text-color-inverted;
+      background-color: var(--text-link);
+      color: white;
 
       code {
         background-color: transparent;
@@ -186,7 +63,7 @@ a.page-not-created {
     &[id^="attr-"] {
       &:link,
       &:visited {
-        color: $mdn-neutral900;
+        color: var(--text-link);
         text-decoration: none;
       }
 
@@ -196,99 +73,517 @@ a.page-not-created {
       }
 
       &:active {
-        color: $text-color-inverted;
+        color: white;
       }
     }
-  }
 
-  [aria-current] {
-    color: $mdn-neutral900;
-    font-weight: bold;
-    text-decoration: none;
-  }
-
-  h2,
-  h3 {
-    margin-bottom: ($base-unit * 2);
-
-    a:link,
-    a:visited {
-      color: $mdn-neutral900;
+    &[aria-current] {
+      color: var(--text-link);
+      font-weight: var(--font-body-strong-weight);
       text-decoration: none;
     }
+  }
 
-    a:hover,
-    a:focus {
-      color: $mdn-neutral900;
-      text-decoration: underline;
-    }
+  img {
+    display: inline-block;
+    height: auto;
+    margin: 2rem auto;
+    display: flex;
+    border: 1px solid var(--border-primary) !important;
+    border-radius: var(--elem-radius);
+    background: white;
+  }
 
-    a:active {
-      background-color: transparent;
+  ul,
+  ol {
+    margin: 1rem 0 2rem;
+    padding-left: 2rem;
+
+    li {
+      margin: 0.5rem 0;
+      font: var(--type-body-l);
     }
   }
 
-  table {
-    margin-bottom: $base-spacing * 2;
-  }
+  ul {
+    list-style: disc;
 
-  /* readonly inline badges needs a slightly darker background color in general article content  */
-  .inline {
-    &.optional,
-    &.readonly {
-      background-color: $mdn-neutral100;
+    ul {
+      margin: 0;
+      list-style-type: circle;
+      padding-left: 1rem;
     }
   }
 
-  /*
-   * top navigational elements on tutorial pages
-   * prevnext is added for backwards compatibility
-   */
-  .prevnext,
-  .prev-next {
-    @media #{$mq-tablet-and-up} {
+  ol {
+    list-style: decimal;
+
+    ol {
+      list-style: lower-roman;
+      margin: 0;
+    }
+  }
+
+  dd ol,
+  dd ul {
+    padding-left: 3rem;
+    margin-bottom: 1rem;
+  }
+
+  td ul,
+  td ol {
+    padding-left: 1rem;
+  }
+
+  dd li {
+    margin-bottom: 1rem;
+  }
+
+  td li {
+    margin-bottom: 0.5rem;
+  }
+
+  dl {
+    dt {
+      margin-top: 2rem;
+      margin-bottom: 0.5rem;
+      font-weight: var(--font-body-strong-weight);
+    }
+
+    dd {
+      margin-bottom: 1rem;
+      margin-left: 1rem;
+
+      .notecard {
+        p {
+          padding-left: 0;
+        }
+      }
+    }
+
+    p {
+      margin: 0 0 1rem 0;
+    }
+  }
+
+  // specific styles to override base styles. The Markdown compiler
+  // adds extra divs, so this is a way for these styles to not
+  // stomp out component styles.
+  > div:not([class]) > {
+    p {
+      font: var(--type-article-p);
+
+      &:last-child {
+        margin-bottom: 2rem;
+      }
+    }
+
+    figure {
+      margin-bottom: 1rem;
+    }
+
+    .prev-next {
+      list-style: none;
+      margin: 1rem 0;
+      padding: 0;
       display: flex;
       justify-content: space-between;
-      margin-bottom: $base-spacing;
-    }
+      gap: 0.5rem;
+      text-align: center;
 
-    a.button {
-      margin-bottom: math.div($base-spacing, 2);
-      max-width: inherit;
+      li {
+        display: flex;
+        margin: 0;
+      }
 
-      @media #{$mq-tablet-and-up} {
-        margin-bottom: inherit;
+      .button {
+        margin: 0;
+        max-width: inherit;
       }
     }
   }
 
-  /*
-   * multi-column layout on pages with an index such as
-   * https://developer.mozilla.org/en-US/docs/Web/API#Specifications
-  */
+  @media screen and (min-width: $screen-sm) {
+    padding: 3rem;
+  }
+
+  @media screen and (min-width: $screen-md) {
+    margin-bottom: 0.5rem;
+    padding: 0;
+  }
+
   .index {
-    columns: 300px;
-    margin-bottom: $base-spacing;
+    ul {
+      margin: 0.5rem 0 2rem;
+      li {
+        margin: 0.5rem 0;
+      }
+    }
+  }
+}
 
-    @media #{$mq-small-desktop-and-up} {
-      margin-bottom: $base-spacing * 2;
+// Base typography styles. Trying to remove as much as possible from
+// the .main-page-content override.
+b,
+strong {
+  font-weight: var(--font-body-strong-weight);
+}
+
+code {
+  font-weight: var(--font-body-strong-weight);
+}
+
+table {
+  font: var(--type-body-l);
+  border: 1px solid var(--border-primary);
+  border-collapse: collapse;
+  margin: 1rem 0;
+  width: 100%;
+  font-size: 0.875rem;
+
+  th {
+    text-align: left;
+    background: var(--background-tertiary);
+    font-weight: var(--font-body-strong-weight);
+    line-height: 1.5;
+  }
+
+  td,
+  th {
+    padding: 0.5rem 0.75rem;
+    border: 1px solid var(--border-primary);
+    vertical-align: middle;
+  }
+
+  td {
+    .code-example pre {
+      margin: 0;
     }
 
-    .icon-experimental,
-    .icon-nonstandard {
-      color: $mdn-blue700;
-    }
-
-    .icon-deprecated {
-      color: $mdn-red700;
+    ul {
+      margin: 0;
     }
   }
 
-  iframe {
-    max-width: 100%;
+  caption {
+    font: var(--type-emphasis-l);
+    margin: 1rem 0 0.5rem;
   }
 
-  iframe:not(.sample-code-frame) {
-    border: 0;
+  &.properties {
+    border: none;
+
+    th,
+    td {
+      border: none;
+    }
+
+    th {
+      background: none;
+      padding: 0;
+    }
+
+    tr {
+      border-bottom: 1px solid var(--border-secondary);
+
+      &:first-child {
+        border-top: 1px solid var(--border-primary);
+      }
+
+      &:last-child {
+        border-bottom: 1px solid var(--border-primary);
+      }
+    }
   }
+}
+
+iframe {
+  max-width: 100%;
+  width: 100%;
+  border: 1px solid var(--border-primary);
+
+  /* "Live Samples" discussion here:
+  https://github.com/mdn/yari-private/issues/370,
+  These src attributes taken from unsafe-html.js */
+  &[src*="https://mdn.github.io"],
+  &[src*="https://www.youtube-nocookie.com"],
+  &[src*="https://jsfiddle.net"],
+  &[src*="https://test262.report"],
+  &.nobutton,
+  &.sample-code-frame {
+    background: #fff;
+    border: 1px solid var(--border-primary);
+    border-radius: var(--elem-radius);
+    padding: 1rem;
+    width: 100%;
+  }
+}
+
+h1 {
+  font: var(--type-heading-h1);
+  letter-spacing: -0.5px;
+  margin-bottom: 3rem;
+  word-break: break-word;
+}
+
+h2 {
+  font: var(--type-heading-h2);
+  letter-spacing: 0.5px;
+  margin: 4rem 0 1rem;
+}
+
+h3 {
+  font: var(--type-heading-h3);
+  letter-spacing: 0.5px;
+  margin: 2rem 0 1rem;
+}
+
+h4 {
+  font: var(--type-heading-h4);
+  letter-spacing: 0.5px;
+  margin: 2rem 0 1rem;
+}
+
+h5 {
+  font: var(--type-heading-h5);
+  letter-spacing: 1.5px;
+  margin: 2rem 0 1rem;
+  text-transform: uppercase;
+}
+
+h6 {
+  font: var(--type-heading-h6);
+  letter-spacing: 1.5px;
+  margin: 2rem 0 1rem;
+  text-transform: uppercase;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  code {
+    font-size: inherit;
+  }
+}
+
+p {
+  font: var(--type-body-l);
+  margin: 1rem 0;
+}
+
+blockquote {
+  border-left: 4px solid var(--border-secondary);
+  padding: 1rem 2rem;
+  margin-bottom: 2rem;
+  font: var(--type-body-l);
+  color: var(--text-secondary);
+
+  p {
+    margin: 0;
+  }
+}
+
+pre,
+code {
+  border-radius: var(--elem-radius);
+  font: var(--type-code-regular);
+}
+
+code {
+  color: var(--text-secondary);
+  background: var(--code-background-inline);
+  padding: 0.125rem 0.25rem;
+  width: fit-content;
+}
+
+a > code {
+  color: var(--code-color);
+}
+
+a code {
+  font: var(--type-code-inline);
+}
+
+pre {
+  padding: 1rem 2.5rem 1rem 1rem;
+  margin: 1rem 0 2rem 0;
+  background-color: var(--code-background-block);
+  border: 1px solid transparent;
+
+  code {
+    color: var(--text-primary);
+    background: none;
+    padding: 0;
+  }
+}
+
+.example-good,
+.example-bad {
+  padding: 0 1rem;
+  position: relative;
+
+  &::after {
+    background-size: 24px;
+    content: "";
+    display: block;
+    height: 16px;
+    width: 16px;
+    position: absolute;
+    right: 16px;
+    top: 18px;
+  }
+}
+
+.example-bad + .copy-icon,
+.example-good + .copy-icon {
+  display: none;
+}
+
+.example-bad {
+  &::after {
+    background-color: var(--icon-critical);
+    mask-image: url("../assets/icons/no.svg");
+  }
+}
+
+.example-good {
+  &::after {
+    background-color: var(--icon-success);
+    mask-image: url("../assets/icons/checkmark.svg");
+  }
+}
+
+/*
+ * multi-column layout on pages with an index such as
+ * https://developer.mozilla.org/en-US/docs/Web/API#Specifications
+*/
+.index {
+  columns: 3;
+  margin-bottom: 1rem;
+
+  @media screen and (min-width: $screen-md) {
+    margin-bottom: 0.5rem;
+  }
+
+  .icon-experimental,
+  .icon-nonstandard {
+    color: var(--icon-information);
+  }
+
+  .icon-deprecated {
+    color: var(--icon-critical);
+  }
+}
+
+.callout {
+  background: var(--background-secondary);
+  padding: 1rem;
+  border-radius: var(--elem-radius);
+  border: 1px solid var(--border-primary);
+  box-shadow: var(--shadow-01);
+  display: flex;
+  text-align: center;
+  gap: 1rem;
+  flex-direction: column;
+  margin: 2rem 0;
+
+  h4 {
+    margin: 0;
+  }
+
+  p {
+    margin: 0;
+    font: var(--type-body-m);
+  }
+}
+
+.code-example {
+  color: var(--code-default);
+  font: var(--type-code-regular);
+  position: relative;
+
+  .copy-icon {
+    background-image: url("../assets/clippy.svg");
+    background-repeat: no-repeat;
+    background-position: 61% 45%;
+    background-size: 1rem;
+    border-radius: var(--elem-radius);
+    cursor: pointer;
+    height: 33px;
+    margin: 0;
+    padding: 0.25rem;
+    position: absolute;
+    right: 0.5rem;
+    top: 0.75rem;
+    width: 33px;
+    opacity: 0;
+
+    &:focus {
+      opacity: 1;
+    }
+  }
+
+  &:hover {
+    .copy-icon {
+      @media screen and (min-width: $screen-md) {
+        opacity: 0.4;
+
+        &:hover,
+        &:focus {
+          opacity: 1;
+        }
+      }
+    }
+  }
+
+  .copy-icon-message {
+    background: $mdn-color-dark-grey-90;
+    border-radius: var(--elem-radius);
+    color: white;
+    font-size: 0.8125rem;
+    opacity: 1;
+    padding: 0.125rem;
+    position: absolute;
+    right: 0.25rem;
+    top: 15px;
+    z-index: -1000;
+  }
+
+  .example-good,
+  .example-bad {
+    padding: 1rem;
+  }
+}
+
+.only-in-en-us {
+  span {
+    font-size: 0.8125rem;
+  }
+}
+
+a.page-not-created {
+  color: var(--icon-critical);
+  cursor: not-allowed;
+}
+
+.badge {
+  border: 1px solid var(--border-primary);
+  font: var(--type-body-s);
+  padding: 0.125rem 0.375rem;
+  border-radius: 4rem;
+  color: var(--text-secondary);
+  white-space: nowrap;
+}
+
+kbd {
+  border: 2px solid var(--border-secondary);
+  padding: 0.25rem;
+  border-radius: var(--elem-radius);
+  box-shadow: var(--border-secondary);
+  font-size: 0.825rem;
+  box-shadow: inset 0px -1px 0px 0px var(--border-secondary);
+  color: var(--text-secondary);
 }

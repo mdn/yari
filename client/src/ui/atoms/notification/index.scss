@@ -1,0 +1,12 @@
+@use "../../vars" as *;
+
+.notification-container {
+  background-color: $mdn-color-violet-90;
+  color: white;
+  padding: 12px;
+  text-align: center;
+
+  p {
+    margin-bottom: 0;
+  }
+}
