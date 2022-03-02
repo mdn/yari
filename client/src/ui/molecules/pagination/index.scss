@@ -1,0 +1,13 @@
+@use "../../../ui/vars" as *;
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem 0;
+
+  &-label {
+    font: var(--type-body-m);
+  }
+}

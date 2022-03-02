@@ -55,6 +55,17 @@ const SUMMARIES = {
     "Extension Workshop",
     "渠道",
   ],
+  es: [
+    "Comenzar",
+    "Conceptos",
+    "Interfaz de usuario",
+    "Cómo hacer",
+    "Diferenciadores de Firefox",
+    "API de JavaScript",
+    "Claves de manifiesto",
+    "Taller de Extensión",
+    "Canales de discusión",
+  ],
 };
 
 const MANIFEST_SLUG = "Mozilla/Add-ons/WebExtensions/manifest.json";

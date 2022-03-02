@@ -1,0 +1,13 @@
+@use "../../vars" as *;
+
+.auth-disabled {
+  border: 1px solid var(--border-primary);
+  border-radius: var(--elem-radius);
+  box-shadow: var(--shadow-01);
+  color: var(--text-secondary);
+  padding: 16px;
+
+  p {
+    margin-bottom: 0;
+  }
+}
