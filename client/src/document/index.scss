@@ -41,6 +41,14 @@
       }
     }
   }
+  
+  h2 {
+    background: linear-gradient(
+      rgba(255,255,255,0.9), 
+      rgba(255,255,255,0.9)
+    ), var(--text-link);
+    padding-left: 0.2rem;
+  }
 
   a:not(.button) {
     color: var(--text-link);
