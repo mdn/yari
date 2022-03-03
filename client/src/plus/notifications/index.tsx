@@ -1,4 +1,4 @@
-import { useContext, useEffect } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { useLocale } from "../../hooks";
 import Container from "../../ui/atoms/container";
@@ -47,15 +47,31 @@ interface Tab {
   path: string;
 }
 
-function NotificationsLayout() {
-  const locale = useLocale();
-  const location = useLocation();
+const ALL_URL = "/plus/notifications";
+const STARRED_URL = "/plus/notifications/starred";
+const WATCHING_URL = "/plus/notifications/watching";
 
-  const { selectedTerms, getSearchFiltersParams } =
-    useContext(searchFiltersContext);
+const FILTERS = [
+  {
+    label: "Content updates",
+    param: "filterType=content",
+  },
+  {
+    label: "Browser compatibility",
+    param: "filterType=compat",
+  },
+];
 
-  const starredUrl = `/${locale}/plus/notifications/starred`;
-  const watchingUrl = `/${locale}/plus/notifications/watching`;
+const SORTS = [
+  {
+    label: "Date",
+    param: "sort=date",
+  },
+  {
+    label: "Title",
+    param: "sort=title",
+  },
+];
 
 function useCurrentTab(locale): TabVariant {
   const location = useLocation();
@@ -64,23 +80,18 @@ function useCurrentTab(locale): TabVariant {
 
   const [currentTab, setTab] = useState<TabVariant>(initialTab);
 
-  if (location.pathname === starredUrl) {
-    apiUrl += "&starred=true";
-    pageTitle = "My Starred Pages";
-  }
   useEffect(() => {
-    const clearNotificationsUrl =
-      "/api/v1/plus/notifications/all/mark-as-read/";
-    const formData = new FormData();
-    formData.append("csrfmiddlewaretoken", getCookie("csrftoken") || "");
+    if (location.pathname === `/${locale}${STARRED_URL}`) {
+      setTab(TabVariant.STARRED);
+    } else if (location.pathname === `/${locale}${WATCHING_URL}`) {
+      setTab(TabVariant.WATCHING);
+    } else {
+      setTab(TabVariant.ALL);
+    }
+  }, [location]);
 
-    // if the user clicks a hard link, we set notifications as read using a sendBeacon request
-    const markNotificationsAsRead = () => {
-      if (document.visibilityState === "hidden") {
-        navigator.sendBeacon(clearNotificationsUrl, formData);
-      }
-    };
-    document.addEventListener("visibilitychange", markNotificationsAsRead);
+  return currentTab;
+}
 
 function getInitialTab() {
   if (window.location.pathname.endsWith(STARRED_URL)) {
@@ -96,24 +107,24 @@ function NotificationsLayout() {
   const locale = useLocale();
   const userData = useUserData();
 
-  let watchingApiUrl = `/api/v1/plus/watched/?q=${encodeURIComponent(
-    selectedTerms
-  )}`;
-
-  const watching = location.pathname === watchingUrl;
-
-  const tabs = [
+  const tabs: Tab[] = [
     {
+      pageTitle: "Notifications",
       label: "All notifications",
-      path: `/${locale}/plus/notifications`,
+      path: `/${locale}${ALL_URL}`,
+      variant: TabVariant.ALL,
     },
     {
       label: "Starred",
-      path: starredUrl,
+      pageTitle: "My Starred Pages",
+      path: `/${locale}${STARRED_URL}`,
+      variant: TabVariant.STARRED,
     },
     {
       label: "Watch list",
-      path: watchingUrl,
+      pageTitle: "My Watched Pages",
+      path: `/${locale}${WATCHING_URL}`,
+      variant: TabVariant.WATCHING,
     },
   ];
 
