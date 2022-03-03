@@ -1,4 +1,4 @@
-import React, { useReducer } from "react";
+import React, { useReducer, useState } from "react";
 import { useLocation } from "react-router-dom";
 import type bcd from "@mdn/browser-compat-data/types";
 import { BrowserInfoContext } from "./browser-info";
@@ -7,6 +7,7 @@ import { FeatureRow } from "./feature-row";
 import { Headers, PLATFORM_BROWSERS } from "./headers";
 import { Legend } from "./legend";
 import { listFeatures } from "./utils";
+import { Switch } from "../../../ui/atoms/switch";
 
 // Note! Don't import any SCSS here inside *this* component.
 // It's done in the component that lazy-loads this component.
@@ -121,7 +122,14 @@ export default function BrowserCompatibilityTable({
   browsers: bcd.Browsers;
   locale: string;
 }) {
+  const isServer = typeof window === "undefined";
   const location = useLocation();
+  const [expert, setExpert] = useState(
+    Boolean(
+      !isServer &&
+        JSON.parse(window.localStorage.getItem("bcd-expert-view") || "false")
+    )
+  );
 
   if (!data || !Object.keys(data).length) {
     throw new Error(
@@ -147,6 +155,12 @@ export default function BrowserCompatibilityTable({
     return `${url}?${sp.toString()}`;
   }
 
+  function toggleExpert(e) {
+    let checked = e?.target?.checked || false;
+    window.localStorage.setItem("bcd-expert-view", "true");
+    setExpert(checked);
+  }
+
   return (
     <BrowserCompatibilityErrorBoundary>
       <BrowserInfoContext.Provider value={browserInfo}>
@@ -161,7 +175,15 @@ export default function BrowserCompatibilityTable({
         </a>
         <div className="table-scroll">
           <div className="table-scroll-inner">
-            <table key="bc-table" className="bc-table bc-table-web">
+            <Switch
+              name="bcd-expert"
+              checked={expert}
+              toggle={toggleExpert}
+            ></Switch>
+            <table
+              key="bc-table"
+              className={`bc-table bc-table-web ${expert ? "expert" : ""}`}
+            >
               <Headers {...{ platforms, browsers }} />
               <tbody>
                 <FeatureListAccordion

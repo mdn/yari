@@ -140,6 +140,15 @@
 .bc-version-label {
   display: none;
 }
+.expert .bc-version-label {
+  display: initial;
+}
+
+.expert .bc-icon-cell {
+  .icon-wrap {
+    display: none;
+  }
+}
 
 .bc-platforms {
   height: 2rem;
@@ -338,7 +347,6 @@
   }
 
   .bc-icon-cell {
-    .bc-version-label,
     .bc-support-level {
       display: none;
     }
