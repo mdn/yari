@@ -17,7 +17,6 @@ interface Metadata {
 
 interface NotificationData {
   items: Array<Notification>;
-  metadata: Metadata;
   csrfmiddlewaretoken: string;
 }
 
