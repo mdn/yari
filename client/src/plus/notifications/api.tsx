@@ -55,6 +55,9 @@ export async function undoDeleteItemById(csrfToken: string, id: number) {
 export function useApiEndpoint(
   offset: number,
   searchTerms: string,
+  selectedFilter: string,
+  getSearchFiltersParams: CallableFunction,
+  selectedSort: string,
   tab: TabVariant
 ) {
   const [data, setData] = useState<any>({});
@@ -75,11 +78,16 @@ export function useApiEndpoint(
       sp.append("limit", NOTIFICATIONS_DEFAULT_LIMIT.toString());
       offset!! && sp.append("offset", offset.toString());
 
+      let combined = new URLSearchParams({
+        ...Object.fromEntries(sp),
+        ...Object.fromEntries(getSearchFiltersParams()),
+      });
+
       const base =
         tab === TabVariant.WATCHING
           ? WATCHED_BASE_PATH
           : NOTIFICATIONS_BASE_PATH;
-      const response = await fetch(`${base}/?${sp.toString()}`);
+      const response = await fetch(`${base}/?${combined.toString()}`);
 
       if (!response.ok) {
         setError(
@@ -99,13 +107,15 @@ export function useApiEndpoint(
         }
         if (data.items.length < NOTIFICATIONS_DEFAULT_LIMIT) {
           setHasMore(false);
+        } else {
+          setHasMore(true);
         }
         setData(data);
         setIsLoading(false);
         setError(null);
       }
     })();
-  }, [offset, searchTerms, tab]);
+  }, [offset, searchTerms, tab, selectedFilter, selectedSort]);
   return { data, error, isLoading, hasMore };
 }
 

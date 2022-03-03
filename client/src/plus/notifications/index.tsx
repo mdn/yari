@@ -25,7 +25,7 @@ import {
   useApiEndpoint,
   unwatchItemsByUrls,
 } from "./api";
-import { getCookie, post } from "./utils";
+import { getCookie } from "./utils";
 import { Button } from "../../ui/atoms/button";
 import { useUIStatus } from "../../ui-context";
 import NotificationCardListItem from "./notification-card-list-item";
@@ -39,12 +39,6 @@ export enum TabVariant {
   ALL,
   STARRED,
   WATCHING,
-}
-interface Tab {
-  variant: TabVariant;
-  pageTitle: string;
-  label: string;
-  path: string;
 }
 
 const ALL_URL = "/plus/notifications";
@@ -73,9 +67,35 @@ const SORTS = [
   },
 ];
 
+const TAB_INFO = new Map([
+  [
+    TabVariant.ALL,
+    {
+      pageTitle: "Notifications",
+      label: "All notifications",
+      path: ALL_URL,
+    },
+  ],
+  [
+    TabVariant.STARRED,
+    {
+      label: "Starred",
+      pageTitle: "My Starred Pages",
+      path: STARRED_URL,
+    },
+  ],
+  [
+    TabVariant.WATCHING,
+    {
+      label: "Watch list",
+      pageTitle: "My Watched Pages",
+      path: WATCHING_URL,
+    },
+  ],
+]);
+
 function useCurrentTab(locale): TabVariant {
   const location = useLocation();
-
   const initialTab = getInitialTab();
 
   const [currentTab, setTab] = useState<TabVariant>(initialTab);
@@ -88,6 +108,7 @@ function useCurrentTab(locale): TabVariant {
     } else {
       setTab(TabVariant.ALL);
     }
+    document.title = `${TAB_INFO.get(currentTab)?.pageTitle}` || "MDN Plus";
   }, [location]);
 
   return currentTab;
@@ -107,29 +128,15 @@ function NotificationsLayout() {
   const locale = useLocale();
   const userData = useUserData();
 
-  const tabs: Tab[] = [
-    {
-      pageTitle: "Notifications",
-      label: "All notifications",
-      path: `/${locale}${ALL_URL}`,
-      variant: TabVariant.ALL,
-    },
-    {
-      label: "Starred",
-      pageTitle: "My Starred Pages",
-      path: `/${locale}${STARRED_URL}`,
-      variant: TabVariant.STARRED,
-    },
-    {
-      label: "Watch list",
-      pageTitle: "My Watched Pages",
-      path: `/${locale}${WATCHING_URL}`,
-      variant: TabVariant.WATCHING,
-    },
-  ];
-
-  const { selectedTerms, getSearchFiltersParams } =
-    useContext(searchFiltersContext);
+  const {
+    selectedTerms,
+    selectedFilter,
+    selectedSort,
+    setSelectedTerms,
+    setSelectedFilter,
+    setSelectedSort,
+    getSearchFiltersParams,
+  } = useContext(searchFiltersContext);
 
   const currentTab = useCurrentTab(locale);
 
@@ -141,8 +148,22 @@ function NotificationsLayout() {
   const { data, error, isLoading, hasMore } = useApiEndpoint(
     offset,
     selectedTerms,
+    selectedFilter,
+    getSearchFiltersParams,
+    selectedSort,
     currentTab
   );
+
+  useEffect(() => {
+    setSelectedSort("");
+    setSelectedTerms("");
+    setSelectedFilter("");
+    setOffset(0);
+  }, [currentTab]);
+
+  useEffect(() => {
+    setOffset(0);
+  }, [selectedTerms, selectedFilter, selectedSort]);
 
   return (
     <>
@@ -150,7 +171,11 @@ function NotificationsLayout() {
         <Container>
           <h1>Notifications</h1>
         </Container>
-        <Tabs tabs={tabs} />
+        <Tabs
+          tabs={[...TAB_INFO.values()].map((val) => {
+            return { ...val, path: `/${locale}${val.path}` };
+          })}
+        />
       </header>
       {isLoading && <Loading message="Waiting for data" />}
       {showTabs && (
@@ -159,6 +184,8 @@ function NotificationsLayout() {
             <NotificationsTab
               currentTab={currentTab}
               selectedTerms={selectedTerms}
+              selectedFilter={selectedFilter}
+              selectedSort={selectedSort}
               setOffset={setOffset}
               offset={offset}
               data={data}
@@ -177,6 +204,8 @@ function NotificationsLayout() {
 function NotificationsTab({
   currentTab,
   selectedTerms,
+  selectedFilter,
+  selectedSort,
   data,
   offset,
   setOffset,
@@ -193,12 +222,12 @@ function NotificationsTab({
     unwatchEnabled: false,
   });
 
-  //Set state for search terms change
+  // Uncheck and clear list on tab or filter change
   useEffect(() => {
     setSelectAllChecked(false);
-    setOffset(0);
     setList([]);
-  }, [selectedTerms, currentTab]);
+    document.title = `${TAB_INFO.get(currentTab)?.pageTitle}` || "MDN Plus";
+  }, [currentTab, selectedFilter, selectedSort, , selectedTerms]);
 
   useVisibilityChangeListener();
 
@@ -210,6 +239,10 @@ function NotificationsTab({
           return { ...item, checked: false };
         }),
       ]);
+      let unread = data.items.filter((v) => v.read === false).length;
+      if (!!unread) {
+        document.title = document.title + ` (${unread})`;
+      }
     }
   }, [data]);
 
@@ -413,22 +446,6 @@ function registerSendBeaconHandler(formData: FormData) {
   document.addEventListener("visibilitychange", handler);
   return handler;
 }
-
-//   useEffect(() => {
-//     if (data) {
-//       let newTitle = `${pageTitle}`;
-
-//       if (data.metadata.total > 0) {
-//         newTitle += ` (${data.metadata.total})`;
-//       }
-
-//       if (data.metadata.page > 1) {
-//         newTitle += ` Page ${data.metadata.page}`;
-//       }
-//       document.title = newTitle;
-//     }
-//   }, [data, pageTitle]);
-// }
 
 export default function Notifications() {
   return (
