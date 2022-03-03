@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { TabVariant } from ".";
+import { TabVariant } from "./tabs";
 
 export const NOTIFICATIONS_BASE_PATH = "/api/v1/plus/notifications";
 export const WATCHED_BASE_PATH = "/api/v1/plus/watched/";
