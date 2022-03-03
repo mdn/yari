@@ -20,8 +20,7 @@
   border: 1px solid var(--border-secondary);
   background-color: var(--background-primary);
   display: grid;
-  gap: 0.5rem;
-  grid-template-columns: auto 1fr 10ch auto;
+  grid-template-columns: auto auto 1fr 10ch auto;
   padding: 0.5rem;
   animation: fade-in 0.2s;
   &.no-star {

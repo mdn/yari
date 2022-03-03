@@ -15,3 +15,9 @@ export async function post(url: string, csrfToken: string, data?: object) {
   }
   return true;
 }
+
+export function getCookie(name) {
+  const value = `; ${document.cookie}`;
+  const parts = value.split(`; ${name}=`);
+  if (parts.length === 2) return parts.pop()?.split(";").shift();
+}
