@@ -100,6 +100,7 @@
     "md5-file": "5.0.0",
     "mdast-util-from-markdown": "^0.8.5",
     "mdast-util-phrasing": "^2.0.0",
+    "mdast-util-to-hast": "^12.1.1",
     "mdn-data": "2.0.27",
     "node-gettext": "^3.0.0",
     "open": "^8.4.0",
