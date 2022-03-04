@@ -185,6 +185,12 @@
   }
 
   .bc-icon-cell {
+    color: #212121;
+
+    @media screen and (min-width: $screen-sm) {
+      color: inherit;
+    }
+
     &[aria-expanded="true"] {
       &:after {
         display: none;
