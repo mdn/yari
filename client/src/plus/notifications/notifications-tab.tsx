@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useUIStatus } from "../../ui-context";
 import { Button } from "../../ui/atoms/button";
 import WatchedCardListItem from "../icon-card";
@@ -29,6 +29,7 @@ export function NotificationsTab({
 }) {
   const { setToastData } = useUIStatus();
 
+  const listRef = useRef<Array<any>>([]);
   const [list, setList] = useState<Array<any>>([]);
   const [selectAllChecked, setSelectAllChecked] = useState(false);
   const [editOptions, setEditOptions] = useState({
@@ -37,7 +38,7 @@ export function NotificationsTab({
     deleteEnabled: false,
     unwatchEnabled: false,
   });
-
+  listRef.current = list;
   // Uncheck and clear list on tab or filter change
   useEffect(() => {
     setSelectAllChecked(false);
@@ -48,8 +49,8 @@ export function NotificationsTab({
 
   useEffect(() => {
     if (data && !!data.items) {
-      setList((l) => [
-        ...list,
+      setList([
+        ...listRef.current,
         ...data.items.map((item) => {
           return { ...item, checked: false };
         }),
