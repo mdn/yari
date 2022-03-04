@@ -1,4 +1,4 @@
-import { STATE, UpdateStatus } from "../app-interface";
+import { STATE, UpdateStatus } from "./mdn-worker";
 
 export default function ClearButton({
   updateStatus,

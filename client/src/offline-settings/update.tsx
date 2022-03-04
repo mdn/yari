@@ -1,4 +1,4 @@
-import { STATE, UpdateStatus } from "../app-interface";
+import { STATE, UpdateStatus } from "./mdn-worker";
 
 export default function UpdateButton({
   updateStatus,
@@ -7,6 +7,7 @@ export default function UpdateButton({
   updateStatus: UpdateStatus | null;
   update: () => void;
 }) {
+  console.log(`updateStatus: ${updateStatus?.state}`);
   const current = `Last updated: ${
     updateStatus?.currentDate
       ? Intl.DateTimeFormat([], { dateStyle: "medium" }).format(
@@ -14,7 +15,9 @@ export default function UpdateButton({
         )
       : "never"
   }`;
-  let button, info;
+  let button: JSX.Element | null = null;
+  let info: string | undefined;
+  let progress = (updateStatus?.progress || 0) * 100;
   if (!updateStatus || updateStatus?.state === STATE.init) {
     info = "Checking for updates";
   }
@@ -28,11 +31,23 @@ export default function UpdateButton({
   }
   if (updateStatus?.state === STATE.downloading) {
     info = "Update in progress…";
-    button = <button>Downloading {updateStatus?.progress}%</button>;
+    button = <button>Downloading…</button>;
   }
   if (updateStatus?.state === STATE.unpacking) {
     info = "Update in progress…";
-    button = <button>Extracting {updateStatus?.progress}%</button>;
+    button = (
+      <button>
+        Unpacking…{" "}
+        {progress?.toLocaleString(undefined, {
+          maximumFractionDigits: 0,
+        })}
+        %
+      </button>
+    );
+  }
+  if (updateStatus?.state === STATE.cleaning) {
+    info = "Update in progress…";
+    button = <button>Cleaning…</button>;
   }
   if (updateStatus?.state === STATE.clearing) {
     info = "Clearing…";

@@ -5,7 +5,7 @@ import { Routes, Route, useLocation, useMatch } from "react-router-dom";
 // and applied before any component specific style
 import "./app.scss";
 
-import { MDN_APP, CRUD_MODE, MDN_APP_DESKTOP, ENABLE_PLUS } from "./constants";
+import { MDN_APP, CRUD_MODE, ENABLE_PLUS } from "./constants";
 import { Homepage } from "./homepage";
 import { Document } from "./document";
 import { A11yNav } from "./ui/molecules/a11y-nav";
@@ -17,7 +17,7 @@ import { PageContentContainer } from "./ui/atoms/page-content";
 import { PageNotFound } from "./page-not-found";
 import { Plus } from "./plus";
 import { About } from "./about";
-import { AppSettings } from "./app-settings";
+import { OfflineSettings } from "./offline-settings";
 import { docCategory } from "./utils";
 import { Contribute } from "./community";
 import { ContributorSpotlight } from "./contributor-spotlight";
@@ -264,12 +264,12 @@ export function App(appProps) {
                 }
               />
             )}
-            {MDN_APP_DESKTOP && (
+            {ENABLE_PLUS && (
               <Route
-                path="/app-settings"
+                path="/offline-settings"
                 element={
                   <StandardLayout>
-                    <AppSettings {...appProps} />
+                    <OfflineSettings {...appProps} />
                   </StandardLayout>
                 }
               />
