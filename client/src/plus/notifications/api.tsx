@@ -56,7 +56,6 @@ export function useApiEndpoint(
   offset: number,
   searchTerms: string,
   selectedFilter: string,
-  getSearchFiltersParams: CallableFunction,
   selectedSort: string,
   tab: TabVariant
 ) {
@@ -70,6 +69,8 @@ export function useApiEndpoint(
       const sp = new URLSearchParams();
 
       searchTerms!! && sp.append("q", searchTerms);
+      selectedFilter!! && sp.append("filterType", selectedFilter);
+      selectedSort!! && sp.append("sort", selectedSort);
 
       if (tab === TabVariant.STARRED) {
         sp.append("starred", "true");
@@ -78,16 +79,11 @@ export function useApiEndpoint(
       sp.append("limit", NOTIFICATIONS_DEFAULT_LIMIT.toString());
       offset!! && sp.append("offset", offset.toString());
 
-      let combined = new URLSearchParams({
-        ...Object.fromEntries(sp),
-        ...Object.fromEntries(getSearchFiltersParams()),
-      });
-
       const base =
         tab === TabVariant.WATCHING
           ? WATCHED_BASE_PATH
           : NOTIFICATIONS_BASE_PATH;
-      const response = await fetch(`${base}/?${combined.toString()}`);
+      const response = await fetch(`${base}/?${sp.toString()}`);
 
       if (!response.ok) {
         setError(

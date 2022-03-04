@@ -43,7 +43,7 @@ export function NotificationsTab({
     setSelectAllChecked(false);
     setList([]);
     document.title = `${TAB_INFO.get(currentTab)?.pageTitle}` || "MDN Plus";
-  }, [currentTab, selectedFilter, selectedSort, , selectedTerms]);
+  }, [currentTab, selectedFilter, selectedSort, selectedTerms]);
 
   useVisibilityChangeListener();
 
@@ -64,7 +64,7 @@ export function NotificationsTab({
 
   const deleteItem = async (item) => {
     await deleteItemById(data.csrfmiddlewaretoken, item.id);
-    const listWithDelete = list.filter((v) => v.id != item.id);
+    const listWithDelete = list.filter((v) => v.id !== item.id);
     setList(listWithDelete);
     setToastData({
       mainText: `${item.title} removed from your collection`,

@@ -42,7 +42,6 @@ function NotificationsLayout() {
     offset,
     selectedTerms,
     selectedFilter,
-    getSearchFiltersParams,
     selectedSort,
     currentTab
   );

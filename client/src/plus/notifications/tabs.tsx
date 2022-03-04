@@ -14,22 +14,22 @@ const WATCHING_URL = "/plus/notifications/watching";
 export const FILTERS = [
   {
     label: "Content updates",
-    param: "filterType=content",
+    param: "content",
   },
   {
     label: "Browser compatibility",
-    param: "filterType=compat",
+    param: "compat",
   },
 ];
 
 export const SORTS = [
   {
     label: "Date",
-    param: "sort=date",
+    param: "date",
   },
   {
     label: "Title",
-    param: "sort=title",
+    param: "title",
   },
 ];
 
@@ -75,7 +75,7 @@ export function useCurrentTab(locale): TabVariant {
       setTab(TabVariant.ALL);
     }
     document.title = `${TAB_INFO.get(currentTab)?.pageTitle}` || "MDN Plus";
-  }, [location]);
+  }, [location, currentTab]);
 
   return currentTab;
 }
