@@ -17,7 +17,7 @@ test.describe("Site search", () => {
     await page.click(SEARCH_TOGGLE_SELECTOR);
 
     await page.fill(SEARCH_SELECTOR, "foo");
-    await page.waitForSelector("#nav-main-search"); // autocomplete search form
+    await page.waitForSelector("#top-nav-search-form"); // autocomplete search form
     await page.$eval('form[role="search"]', (form) => form.submit());
     // Force a wait for the lazy-loading
     await page.waitForLoadState("networkidle");
@@ -36,7 +36,7 @@ test.describe("Site search", () => {
 
     // See server/static.js for how fixtures are hardcoded
     await page.fill(SEARCH_SELECTOR, "FOO");
-    await page.waitForSelector("#nav-main-search"); // autocomplete search form
+    await page.waitForSelector("#top-nav-search-form"); // autocomplete search form
     await page.$eval('form[role="search"]', (form) => form.submit());
     // Force a wait for the lazy-loading
     await page.waitForLoadState("networkidle");
@@ -54,7 +54,7 @@ test.describe("Site search", () => {
 
     // See server/static.js for how fixtures are hardcoded
     await page.fill(SEARCH_SELECTOR, "NOTHING");
-    await page.waitForSelector("#nav-main-search"); // autocomplete search form
+    await page.waitForSelector("#top-nav-search-form"); // autocomplete search form
     await page.$eval('form[role="search"]', (form) => form.submit());
     await page.waitForLoadState("networkidle");
     expect(page.url()).toBe(testURL("/en-US/search/?q=NOTHING"));
@@ -72,7 +72,7 @@ test.describe("Site search", () => {
 
     // See server/static.js for how fixtures are hardcoded
     await page.fill(SEARCH_SELECTOR, "SERIAL(20)");
-    await page.waitForSelector("#nav-main-search"); // autocomplete search form
+    await page.waitForSelector("#top-nav-search-form"); // autocomplete search form
     await page.$eval('form[role="search"]', (form) => form.submit());
     await page.waitForLoadState("networkidle");
     expect(

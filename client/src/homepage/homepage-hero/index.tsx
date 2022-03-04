@@ -14,7 +14,7 @@ export function HomepageHero() {
           Documenting web technologies, including CSS, HTML, and JavaScript,
           since 2005.
         </p>
-        <Search />
+        <Search id="hp-search" />
       </section>
       <Mandala rotate={true} extraClasses="homepage-hero-bg" />
     </div>

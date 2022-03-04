@@ -61,7 +61,7 @@ export const MDN_APP_IOS =
   (process.env.REACT_APP_MDN_APP || "").toLowerCase() === "ios";
 
 export const HEADER_NOTIFICATIONS_MENU_API_URL =
-  "/api/v1/plus/notifications/?per_page=5";
+  "/api/v1/plus/notifications?limit=5";
 
 export const UPDATES_BASE_URL =
   process.env.REACT_APP_UPDATES_BASE_URL ||

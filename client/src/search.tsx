@@ -159,6 +159,7 @@ function useHasNotChangedFor(value: string, ms: number) {
 
 function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
   const {
+    id,
     inputValue,
     onChangeInputValue,
     isFocused,
@@ -168,6 +169,8 @@ function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
     defaultSelection,
   } = props;
 
+  const inputId = `${id}-q`;
+  const formId = `${id}-form`;
   const navigate = useNavigate();
   const locale = useLocale();
 
@@ -409,7 +412,7 @@ function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
       {...getComboboxProps({
         ref: formRef as any, // downshift's types hardcode it as a div
         className: "search-form search-widget",
-        id: "nav-main-search",
+        id: formId,
         role: "search",
         onSubmit: (e) => {
           // This comes into effect if the input is completely empty and the
@@ -423,7 +426,7 @@ function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
         },
       })}
     >
-      <label htmlFor="main-q" className="visually-hidden">
+      <label htmlFor={inputId} className="visually-hidden">
         Search MDN
       </label>
 
@@ -433,7 +436,7 @@ function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
           className: isOpen
             ? "has-search-results search-input-field"
             : "search-input-field",
-          id: "main-q",
+          id: inputId,
           name: "q",
           placeholder: "   ",
           onMouseOver: initializeSearchIndex,
