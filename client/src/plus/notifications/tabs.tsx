@@ -74,7 +74,7 @@ export function useCurrentTab(locale): TabVariant {
     } else {
       setTab(TabVariant.ALL);
     }
-  }, [location, currentTab]);
+  }, [location, currentTab, locale]);
 
   return currentTab;
 }

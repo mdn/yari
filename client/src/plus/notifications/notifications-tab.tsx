@@ -14,7 +14,7 @@ import {
 } from "./api";
 import NotificationCardListItem from "./notification-card-list-item";
 import SelectedNotificationsBar from "./notification-select";
-import { FILTERS, SORTS, TabVariant, TAB_INFO } from "./tabs";
+import { FILTERS, SORTS, TabVariant } from "./tabs";
 import { useVisibilityChangeListener } from "./utils";
 
 export function NotificationsTab({
@@ -48,7 +48,7 @@ export function NotificationsTab({
 
   useEffect(() => {
     if (data && !!data.items) {
-      setList([
+      setList((l) => [
         ...list,
         ...data.items.map((item) => {
           return { ...item, checked: false };

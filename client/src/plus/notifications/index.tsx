@@ -61,7 +61,7 @@ function NotificationsLayout() {
     setSelectedTerms("");
     setSelectedFilter("");
     setOffset(0);
-  }, [currentTab]);
+  }, [currentTab, setSelectedSort, setSelectedTerms, setSelectedFilter]);
 
   useEffect(() => {
     setOffset(0);
