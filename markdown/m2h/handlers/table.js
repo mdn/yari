@@ -1,4 +1,4 @@
-const defaultHandlers = require("mdast-util-to-hast/lib/handlers");
+const { table: defaultHandler } = require("mdast-util-to-hast/lib/handlers");
 
 /**
  * Wrap tables in scrollable div,
@@ -6,7 +6,7 @@ const defaultHandlers = require("mdast-util-to-hast/lib/handlers");
  */
 function table(h, node) {
   const attrs = { className: ["table-scroll"] };
-  const children = [defaultHandlers.table(h, node)];
+  const children = [defaultHandler(h, node)];
 
   return h(node, "div", attrs, children);
 }
