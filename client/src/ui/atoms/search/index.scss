@@ -4,6 +4,10 @@
   position: relative;
   width: 100%;
 
+  .search-filter-button {
+    right: 0.5rem;
+  }
+
   @media screen and (min-width: $screen-md) {
     align-items: center;
     display: flex;
