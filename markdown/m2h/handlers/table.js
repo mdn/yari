@@ -1,4 +1,4 @@
-const { table: defaultHandler } = require("./mdast-util-to-hast-utils");
+const { table: defaultHandler } = require("mdast-util-to-hast/lib/handlers");
 
 /**
  * Wrap tables in scrollable div,
