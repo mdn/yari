@@ -1,0 +1,32 @@
+@use "../../../../ui/vars" as *;
+
+.expert {
+  td {
+    border-color: var(--border-primary);
+    padding: 0;
+
+    @media screen and (min-width: $screen-md) {
+      padding: 0.4rem;
+    }
+
+    &[aria-expanded="true"] {
+      padding-top: 0.5rem;
+
+      @media screen and (min-width: $screen-md) {
+        padding-top: 0.4rem;
+      }
+    }
+
+    &.bc-supports-yes {
+      background-color: var(--bc-supports-yes);
+    }
+
+    &.bc-supports-no {
+      background-color: var(--bc-supports-no);
+    }
+
+    &.bc-supports-preview {
+      background-color: var(--bc-supports-preview);
+    }
+  }
+}

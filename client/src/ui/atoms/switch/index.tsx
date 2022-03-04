@@ -3,19 +3,21 @@ import "./index.scss";
 
 export function Switch({
   name,
+  extraClasses,
   hiddenLabel,
   checked = false,
   toggle = () => {},
   children,
 }: {
   name: string;
+  extraClasses?: string;
   hiddenLabel?: string;
   checked?: boolean;
   toggle?: (Event) => void;
   children?: string | ReactChildren;
 }) {
   return (
-    <label className="switch">
+    <label className={extraClasses ? `switch ${extraClasses}` : "switch"}>
       {hiddenLabel && <span className="visually-hidden">{hiddenLabel}</span>}
       <input
         type="checkbox"

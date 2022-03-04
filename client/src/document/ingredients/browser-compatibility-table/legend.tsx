@@ -82,13 +82,15 @@ function getActiveLegendItems(compat: bcd.Identifier, name: string) {
 
 export function Legend({
   compat,
+  expertMode,
   name,
 }: {
   compat: bcd.Identifier;
+  expertMode: boolean;
   name: string;
 }) {
   return (
-    <section className="bc-legend">
+    <section className={expertMode ? "bc-legend expert" : "bc-legend"}>
       <h3 className="visually-hidden" id="Legend">
         Legend
       </h3>

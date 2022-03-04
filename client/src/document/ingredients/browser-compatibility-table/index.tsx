@@ -75,10 +75,12 @@ function gatherPlatformsAndBrowsers(
 type CellIndex = [number, number];
 
 function FeatureListAccordion({
+  expertMode,
   features,
   browsers,
   locale,
 }: {
+  expertMode: boolean;
   features: ReturnType<typeof listFeatures>;
   browsers: bcd.BrowserNames[];
   locale: string;
@@ -97,6 +99,7 @@ function FeatureListAccordion({
     <>
       {features.map((feature, i) => (
         <FeatureRow
+          expertMode={expertMode}
           key={i}
           {...{ feature, browsers }}
           index={i}
@@ -178,8 +181,11 @@ export default function BrowserCompatibilityTable({
             <Switch
               name="bcd-expert"
               checked={expert}
+              extraClasses="toggle-expert-mode"
               toggle={toggleExpert}
-            ></Switch>
+            >
+              {expert ? "Hide version numbers" : "Show version numbers"}
+            </Switch>
             <table
               key="bc-table"
               className={`bc-table bc-table-web ${expert ? "expert" : ""}`}
@@ -187,6 +193,7 @@ export default function BrowserCompatibilityTable({
               <Headers {...{ platforms, browsers }} />
               <tbody>
                 <FeatureListAccordion
+                  expertMode={expert}
                   browsers={browsers}
                   features={listFeatures(data, "", name)}
                   locale={locale}
@@ -195,7 +202,7 @@ export default function BrowserCompatibilityTable({
             </table>
           </div>
         </div>
-        <Legend compat={data} name={name} />
+        <Legend compat={data} expertMode={expert} name={name} />
 
         {/* https://github.com/mdn/yari/issues/1191 */}
         <div className="hidden">

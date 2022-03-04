@@ -7,6 +7,8 @@ import {
 } from "./browser-info";
 import { asList, getFirst, isTruthy } from "./utils";
 
+import "./molecules/feature-row.scss";
+
 // Yari builder will attach extra keys from the compat data
 // it gets from @mdn/browser-compat-data. These are "Yari'esque"
 // extras that helps us avoiding to have a separate data structure.
@@ -122,9 +124,11 @@ function labelFromString(
 
 const CellText = React.memo(
   ({
+    expertMode,
     support,
     browser,
   }: {
+    expertMode: boolean;
     support: bcd.SupportStatement | undefined;
     browser: bcd.BrowserNames;
   }) => {
@@ -225,7 +229,7 @@ const CellText = React.memo(
             {" "}
             <BrowserName id={browser} />{" "}
           </span>
-          {label !== "No" && label !== "?" ? label : null}
+          {expertMode ? label : label !== "No" && label !== "?" ? label : null}
         </span>
       </>
     );
@@ -306,7 +310,11 @@ function FlagsNote({
   );
 }
 
-function getNotes(browser: bcd.BrowserNames, support: bcd.SupportStatement) {
+function getNotes(
+  expertMode: boolean,
+  browser: bcd.BrowserNames,
+  support: bcd.SupportStatement
+) {
   if (support) {
     return asList(support)
       .flatMap((item, i) => {
@@ -391,7 +399,11 @@ function getNotes(browser: bcd.BrowserNames, support: bcd.SupportStatement) {
                     item
                   )} bc-supports`}
                 >
-                  <CellText support={item} browser={browser} />
+                  <CellText
+                    expertMode={expertMode}
+                    support={item}
+                    browser={browser}
+                  />
                   {/**<CellIcons support={item} /> */}
                 </dt>
                 {supportNotes.map(({ iconName, label }, i) => {
@@ -418,12 +430,14 @@ function getNotes(browser: bcd.BrowserNames, support: bcd.SupportStatement) {
 
 function CompatCell({
   browser,
+  expertMode,
   support,
   showNotes,
   onToggle,
   locale,
 }: {
   browser: bcd.BrowserNames;
+  expertMode: boolean;
   support: bcd.SupportStatement | undefined;
   showNotes: boolean;
   onToggle: () => void;
@@ -443,7 +457,7 @@ function CompatCell({
   //       (item) =>
   //         item.prefix || item.notes || item.alternative_name || item.flags
   //     ));
-  const notes = getNotes(browser, support!);
+  const notes = getNotes(expertMode, browser, support!);
   return (
     <>
       <td
@@ -463,7 +477,7 @@ function CompatCell({
           browserReleaseDate ? `Released ${browserReleaseDate}` : undefined
         }
       >
-        <CellText {...{ support }} browser={browser} />
+        <CellText expertMode={expertMode} {...{ support }} browser={browser} />
         <span className="bc-browser-name">
           <BrowserName id={browser} />
         </span>
@@ -492,6 +506,7 @@ function CompatCell({
 
 export const FeatureRow = React.memo(
   ({
+    expertMode,
     index,
     feature,
     browsers,
@@ -499,6 +514,7 @@ export const FeatureRow = React.memo(
     onToggleCell,
     locale,
   }: {
+    expertMode: boolean;
     index: number;
     feature: {
       name: string;
@@ -553,6 +569,7 @@ export const FeatureRow = React.memo(
             <CompatCell
               key={browser}
               browser={browser}
+              expertMode={expertMode}
               support={compat.support[browser]}
               showNotes={activeCell === i}
               onToggle={() => onToggleCell([index, i])}
@@ -564,7 +581,11 @@ export const FeatureRow = React.memo(
           <tr className="bc-history">
             <td colSpan={browsers.length + 1}>
               <dl className="bc-notes-list">
-                {getNotes(activeBrowser, compat.support[activeBrowser]!)}
+                {getNotes(
+                  expertMode,
+                  activeBrowser,
+                  compat.support[activeBrowser]!
+                )}
               </dl>
             </td>
           </tr>

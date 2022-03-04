@@ -218,6 +218,14 @@
 
   --modal-backdrop-color: #{rgba($mdn-theme-dark-background-primary, 0.1)};
   --blend-color: #{$mdn-color-white}80;
+
+  --bc-supports-yes: #{$mdn-color-light-theme-green-10};
+  --bc-supports-yes-icon-color: #{$mdn-color-light-theme-green-50};
+  --bc-supports-no: #{$mdn-color-light-theme-red-10};
+  --bc-supports-no-icon-color: #{$mdn-color-light-theme-red-50};
+  --bc-supports-preview: #{$mdn-color-light-theme-blue-10};
+  --bc-supports-preview-icon-color: #{$mdn-color-light-theme-blue-50};
+  --bc-supports-unknown-icon-color: var(--icon-primary);
 }
 
 @mixin dark-theme {

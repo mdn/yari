@@ -124,6 +124,7 @@
   }
 
   &-item {
+    align-items: center;
     display: flex;
     gap: 0.5rem;
 
@@ -135,6 +136,36 @@
       }
     }
   }
+
+  /* Expert mode legend styling */
+  &.expert {
+    .bc-legend-item-dt .icon.bc-level-yes {
+      background-color: var(--bc-supports-yes-icon-color);
+    }
+
+    .bc-legend-item-dt .icon.bc-level-no {
+      background-color: var(--bc-supports-no-icon-color);
+    }
+
+    .bc-legend-item-dt .icon.bc-level-preview {
+      background-color: var(--bc-supports-preview-icon-color);
+    }
+
+    .bc-legend-item-dt .icon.bc-level-unknown,
+    .bc-legend-item-dt .icon.icon-altname {
+      background-color: var(--bc-supports-unknown-icon-color);
+    }
+  }
+}
+
+/* Switch component */
+.toggle-expert-mode {
+  font-size: 0.9rem;
+  margin-top: 1rem;
+
+  [type="checkbox"]:focus + .slider {
+    box-shadow: 1px 1px 5px var(--field-focus-border);
+  }
 }
 
 .bc-version-label {
@@ -145,8 +176,24 @@
 }
 
 .expert .bc-icon-cell {
+  &[aria-expanded="true"] {
+    &:after {
+      display: none;
+    }
+  }
+
+  & > .icon-wrap {
+    padding-left: 0.4rem;
+
+    @media screen and (min-width: $screen-sm) {
+      padding-left: inherit;
+    }
+  }
+
   .icon-wrap {
-    display: none;
+    @media screen and (min-width: $screen-sm) {
+      display: none;
+    }
   }
 }
 
@@ -167,19 +214,31 @@
 }
 
 .bc-notes-list {
+  background-color: var(--background-primary);
   position: relative;
-  margin: 0.5rem 0;
+  // margin: 0.5rem 0;
+  padding: 0 0.7rem;
   text-align: left;
   width: 100%;
 
+  @media screen and (min-width: $screen-md) {
+    padding: 0;
+  }
+
   &:before {
     position: absolute;
-    z-index: -1;
-    height: 100%;
-    left: 7px;
+    // z-index: -1;
+    height: 90%;
+    left: 18px;
+    margin: 0.4rem 0;
     width: 2px;
     background: var(--border-primary);
     content: "";
+
+    @media screen and (min-width: $screen-md) {
+      height: 100%;
+      left: 7px;
+    }
   }
 
   // complicated selector to cover the last bit of the grey line above.
@@ -379,6 +438,10 @@
   }
 }
 @media screen and (min-width: $screen-md) {
+  .bc-table .bc-supports {
+    margin-top: 0.5rem;
+  }
+
   .table-scroll {
     width: calc(100% + 6rem);
   }
