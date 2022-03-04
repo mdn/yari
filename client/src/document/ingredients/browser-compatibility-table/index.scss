@@ -171,29 +171,45 @@
 .bc-version-label {
   display: none;
 }
-.expert .bc-version-label {
-  display: initial;
-}
 
-.expert .bc-icon-cell {
-  &[aria-expanded="true"] {
-    &:after {
-      display: none;
+.expert {
+  .bc-version-label {
+    /* As the background color does not change when switching between
+     light and dark mode, we need to set these to a fixed color. */
+    color: #141422;
+    display: initial;
+  }
+
+  .bc-notes-list .bc-version-label {
+    color: var(--text-primary);
+  }
+
+  .bc-icon-cell {
+    &[aria-expanded="true"] {
+      &:after {
+        display: none;
+      }
+    }
+
+    & > .icon-wrap {
+      padding-left: 0.4rem;
+
+      @media screen and (min-width: $screen-sm) {
+        padding-left: inherit;
+      }
+    }
+
+    .icon-wrap {
+      @media screen and (min-width: $screen-sm) {
+        display: none;
+      }
     }
   }
 
-  & > .icon-wrap {
-    padding-left: 0.4rem;
-
-    @media screen and (min-width: $screen-sm) {
-      padding-left: inherit;
-    }
-  }
-
-  .icon-wrap {
-    @media screen and (min-width: $screen-sm) {
-      display: none;
-    }
+  /* As the background color does not change when switching between
+     light and dark mode, we need to set these to a fixed color. */
+  tbody .icon {
+    background-color: #141422;
   }
 }
 

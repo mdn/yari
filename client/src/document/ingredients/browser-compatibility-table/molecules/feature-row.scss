@@ -28,5 +28,11 @@
     &.bc-supports-preview {
       background-color: var(--bc-supports-preview);
     }
+
+    &.bc-supports-unknown {
+      .bc-version-label {
+        color: var(--text-primary);
+      }
+    }
   }
 }
