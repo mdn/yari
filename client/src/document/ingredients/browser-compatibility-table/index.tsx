@@ -157,7 +157,7 @@ export default function BrowserCompatibilityTable({
 
   function toggleExpert(e) {
     let checked = e?.target?.checked || false;
-    window.localStorage.setItem("bcd-expert-view", "true");
+    window.localStorage.setItem("bcd-expert-view", checked);
     setExpert(checked);
   }
 
@@ -175,11 +175,13 @@ export default function BrowserCompatibilityTable({
         </a>
         <div className="table-scroll">
           <div className="table-scroll-inner">
-            <Switch
-              name="bcd-expert"
-              checked={expert}
-              toggle={toggleExpert}
-            ></Switch>
+            <div className="expert-toggle">
+              <Switch
+                name="bcd-expert"
+                checked={expert}
+                toggle={toggleExpert}
+              >{`${expert ? "hide" : "show"} browser versions`}</Switch>
+            </div>
             <table
               key="bc-table"
               className={`bc-table bc-table-web ${expert ? "expert" : ""}`}

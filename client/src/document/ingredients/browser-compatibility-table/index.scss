@@ -1,6 +1,13 @@
 @use "~@mdn/minimalist/sass/mixins/utils" as *;
 @use "../../../ui/vars" as *;
 
+.expert-toggle {
+  display: flex;
+  justify-content: end;
+  margin-top: 0.5rem;
+  font: var(--type-body-m);
+}
+
 .bc {
   &-table {
     width: 100%;
@@ -85,6 +92,10 @@
     tr [class^="bc-browser"] {
       text-align: center;
     }
+
+    .bc-history-desktop {
+      display: none;
+    }
   }
 
   &-head-txt-label {
@@ -145,8 +156,25 @@
 }
 
 .expert .bc-icon-cell {
-  .icon-wrap {
-    display: none;
+  > .icon-wrap {
+    display: block;
+  }
+}
+
+.expert {
+  td {
+    &.bc-supports-no > span {
+      color: var(--text-primary-red);
+    }
+    &.bc-supports-partial > span {
+      color: var(--text-primary-yellow);
+    }
+    &.bc-supports-preview > span {
+      color: var(--text-primary-blue);
+    }
+    &.bc-supports-yes > span {
+      color: var(--text-primary-green);
+    }
   }
 }
 
@@ -312,6 +340,9 @@
       padding: 0.25rem;
       width: 2rem;
     }
+    tr.bc-history-desktop {
+      display: table-row;
+    }
   }
 
   .table-scroll {
@@ -360,7 +391,7 @@
         bottom: -1px;
         height: 2px;
         width: 100%;
-        background: #fff;
+        background: var(--text-primary);
         content: "";
       }
 

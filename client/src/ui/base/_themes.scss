@@ -234,6 +234,11 @@
 
   --modal-backdrop-color: #{rgba($mdn-theme-dark-background-primary, 0.1)};
   --blend-color: #{$mdn-color-white}80;
+
+  --text-primary-red: #{$mdn-color-light-theme-red-60};
+  --text-primary-green: #{$mdn-color-light-theme-green-60};
+  --text-primary-blue: #{$mdn-color-light-theme-blue-60};
+  --text-primary-yellow: #{$mdn-color-light-theme-yellow-60};
 }
 
 @mixin dark-theme {
@@ -420,6 +425,11 @@
 
   --modal-backdrop-color: #{rgba($mdn-theme-dark-background-primary, 0.7)};
   --blend-color: #{$mdn-color-black}80;
+
+  --text-primary-red: #{$mdn-color-dark-theme-red-30};
+  --text-primary-green: #{$mdn-color-dark-theme-green-30};
+  --text-primary-blue: #{$mdn-color-dark-theme-blue-30};
+  --text-primary-yellow: #{$mdn-color-dark-theme-yellow-30};
 }
 
 body,

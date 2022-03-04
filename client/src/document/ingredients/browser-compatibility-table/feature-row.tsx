@@ -230,6 +230,7 @@ const CellText = React.memo(
         <span className="bc-version-label">
           {browser.name} {label !== "No" && label !== "?" ? label : null}
         </span>
+        <span className="bc-version-label">{label}</span>
       </>
     );
   }
@@ -467,9 +468,6 @@ function CompatCell({
         }
       >
         <CellText {...{ support }} browser={browserInfo} />
-        <span className="bc-browser-name">
-          <BrowserName id={browserId} />
-        </span>
         <CellIcons support={support} />
         {notes && (
           <button
@@ -571,7 +569,7 @@ export const FeatureRow = React.memo(
           ))}
         </tr>
         {activeBrowser && (
-          <tr className="bc-history">
+          <tr className="bc-history bc-history-desktop">
             <td colSpan={browsers.length + 1}>
               <dl className="bc-notes-list">
                 {getNotes(
