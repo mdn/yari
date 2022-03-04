@@ -9,7 +9,8 @@ export type SearchProps = {
 };
 
 export function useFocusOnSlash(
-  inputRef: React.RefObject<null | HTMLInputElement>
+  inputRef: React.RefObject<null | HTMLInputElement>,
+  { onFocus }: { onFocus?: () => void } = {}
 ) {
   useEffect(() => {
     function focusOnSearchMaybe(event) {
@@ -23,6 +24,7 @@ export function useFocusOnSlash(
         if (input && document.activeElement !== input) {
           event.preventDefault();
           input.focus();
+          onFocus?.();
         }
       }
     }
@@ -30,5 +32,5 @@ export function useFocusOnSlash(
     return () => {
       document.removeEventListener("keydown", focusOnSearchMaybe);
     };
-  }, [inputRef]);
+  }, [inputRef, onFocus]);
 }

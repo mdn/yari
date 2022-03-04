@@ -30,7 +30,7 @@ export function Search({
   hasOpened?: boolean;
   onCloseSearch?: () => void;
   onResultPicked?: () => void;
-  onChangeIsFocused?: (isFocused?: boolean) => void;
+  onChangeIsFocused?: (isFocused: boolean) => void;
 }) {
   const [value, setValue] = useQueryParamState();
   const [isFocused, setIsFocused] = useState(false);
