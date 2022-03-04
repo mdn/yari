@@ -1,5 +1,5 @@
 @use "../../ui/vars" as *;
-@use "~@mdn/minimalist/sass/mixins/animation" as *;
+@use "../../ui/mixins" as *;
 
 .plus-header {
   padding-top: 2rem;

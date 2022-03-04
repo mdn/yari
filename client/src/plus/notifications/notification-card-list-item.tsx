@@ -31,11 +31,9 @@ export default function NotificationCardListItem({
         <span className="visually-hidden">Toggle Starring</span>
       </Button>
 
-      <a href={item.url}>
-        <div className="notification-card-description">
-          <h2 className="notification-card-title">{item.title}</h2>
-          <p className="notification-card-text">{item.text}</p>
-        </div>
+      <a href={item.url} className="notification-card-description">
+        <h2 className="notification-card-title">{item.title}</h2>
+        <p className="notification-card-text">{item.text}</p>
       </a>
 
       <time

@@ -41,7 +41,6 @@ export async function deleteItemById(csrfToken: string, id: number) {
 
 export async function unwatchItemsByUrls(csrfToken: string, data: any[]) {
   const payload = { unwatch: data.map((val) => val.url) };
-  console.log(payload);
   return await post(`/api/v1/plus/unwatch-many/`, csrfToken, payload);
 }
 
