@@ -28,7 +28,6 @@ function NotificationsLayout() {
     setSelectedTerms,
     setSelectedFilter,
     setSelectedSort,
-    getSearchFiltersParams,
   } = useContext(searchFiltersContext);
 
   const currentTab = useCurrentTab(locale);
@@ -45,6 +44,17 @@ function NotificationsLayout() {
     selectedSort,
     currentTab
   );
+
+  useEffect(() => {
+    let unread;
+    document.title = TAB_INFO.get(currentTab)?.pageTitle || "MDN Plus";
+    if (data && data.items) {
+      unread = data.items.filter((v) => v.read === false).length;
+    }
+    if (!!unread) {
+      document.title = document.title + ` (${unread})`;
+    }
+  }, [data, currentTab]);
 
   useEffect(() => {
     setSelectedSort("");

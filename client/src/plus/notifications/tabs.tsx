@@ -74,7 +74,6 @@ export function useCurrentTab(locale): TabVariant {
     } else {
       setTab(TabVariant.ALL);
     }
-    document.title = `${TAB_INFO.get(currentTab)?.pageTitle}` || "MDN Plus";
   }, [location, currentTab]);
 
   return currentTab;

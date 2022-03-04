@@ -42,7 +42,6 @@ export function NotificationsTab({
   useEffect(() => {
     setSelectAllChecked(false);
     setList([]);
-    document.title = `${TAB_INFO.get(currentTab)?.pageTitle}` || "MDN Plus";
   }, [currentTab, selectedFilter, selectedSort, selectedTerms]);
 
   useVisibilityChangeListener();
@@ -55,10 +54,6 @@ export function NotificationsTab({
           return { ...item, checked: false };
         }),
       ]);
-      let unread = data.items.filter((v) => v.read === false).length;
-      if (!!unread) {
-        document.title = document.title + ` (${unread})`;
-      }
     }
   }, [data]);
 
