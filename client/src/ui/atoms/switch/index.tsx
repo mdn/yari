@@ -24,7 +24,7 @@ export function Switch({
         onChange={toggle}
       ></input>
       <span className="slider"></span>
-      <span className="label">{children}</span>
+      {children && <span className="label">{children}</span>}
     </label>
   );
 }
