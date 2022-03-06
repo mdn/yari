@@ -13,7 +13,12 @@ module.exports = {
     es2020: true,
     "jest/globals": true,
   },
-  extends: ["eslint:recommended", "plugin:node/recommended"],
+  extends: [
+    "eslint:recommended",
+    "plugin:node/recommended",
+    "plugin:react/recommended",
+    "plugin:react/jsx-runtime",
+  ],
   plugins: ["jest"],
   globals: {
     Atomics: "readonly",
@@ -30,6 +35,9 @@ module.exports = {
       allowModules: ["expect-puppeteer"],
       resolvePaths: [__dirname],
       tryExtensions: [".js", ".json", ".node", ".tsx", ".ts"],
+    },
+    react: {
+      version: "detect",
     },
   },
   overrides: [
