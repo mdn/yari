@@ -1,10 +1,4 @@
-import React, {
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { useCombobox } from "downshift";
 import useSWR from "swr";
@@ -173,6 +167,7 @@ function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
     onCloseSearch,
     onResultPicked,
     defaultSelection,
+    onSlashFocus,
   } = props;
 
   const inputId = `${id}-q`;
@@ -296,12 +291,8 @@ function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
     },
   });
 
-  const handleSlashFocus = useCallback(() => {
-    onChangeIsFocused(true);
-  }, [onChangeIsFocused]);
-
   useFocusOnSlash(inputRef, {
-    onFocus: handleSlashFocus,
+    onFocus: onSlashFocus,
   });
 
   useEffect(() => {

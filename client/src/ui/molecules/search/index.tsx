@@ -25,12 +25,14 @@ export function Search({
   onCloseSearch,
   onResultPicked,
   onChangeIsFocused = () => {},
+  onSlashFocus,
 }: {
   id: string;
   hasOpened?: boolean;
   onCloseSearch?: () => void;
   onResultPicked?: () => void;
   onChangeIsFocused?: (isFocused: boolean) => void;
+  onSlashFocus?: () => void;
 }) {
   const [value, setValue] = useQueryParamState();
   const [isFocused, setIsFocused] = useState(false);
@@ -64,6 +66,7 @@ export function Search({
         {...searchProps}
         onResultPicked={onResultPicked}
         onCloseSearch={onCloseSearch}
+        onSlashFocus={onSlashFocus}
       />
     </div>
   );

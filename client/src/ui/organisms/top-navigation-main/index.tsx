@@ -20,13 +20,14 @@ export const TopNavigationMain = ({ isOpenOnMobile }) => {
   const [showSearch, setShowSearch] = React.useState(false);
   const [hasOpened, setHasOpened] = React.useState<boolean | undefined>(false);
 
-  const handleShowSearch = React.useCallback(function handleShowSearch(
-    value: boolean
-  ) {
-    setShowSearch(value);
-    setHasOpened(value);
-  },
-  []);
+  function handleShowSearch() {
+    setShowSearch(true);
+    setHasOpened(true);
+  }
+
+  function handleSlashFocus() {
+    setShowSearch(true);
+  }
 
   return (
     <div
@@ -37,7 +38,8 @@ export const TopNavigationMain = ({ isOpenOnMobile }) => {
       <Search
         id="top-nav-search"
         hasOpened={hasOpened}
-        onChangeIsFocused={handleShowSearch}
+        onChangeIsFocused={setHasOpened}
+        onSlashFocus={handleSlashFocus}
         onCloseSearch={() => {
           setShowSearch(false);
         }}
@@ -46,7 +48,7 @@ export const TopNavigationMain = ({ isOpenOnMobile }) => {
       <Button
         type="action"
         icon="search"
-        onClickHandler={() => handleShowSearch(true)}
+        onClickHandler={handleShowSearch}
         extraClasses="toggle-search-button"
       >
         <span className="visually-hidden">Show search</span>
