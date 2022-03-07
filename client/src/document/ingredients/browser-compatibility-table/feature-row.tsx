@@ -227,9 +227,7 @@ const CellText = React.memo(
             <span className="bc-support-level">{title}</span>
           </abbr>
         </span>
-        <span className="bc-version-label">
-          {browser.name} {label !== "No" && label !== "?" ? label : null}
-        </span>
+        <span className="bc-browser-name">{browser.name}</span>
         <span className="bc-version-label">{label}</span>
       </>
     );

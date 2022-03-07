@@ -1,7 +1,7 @@
 @use "~@mdn/minimalist/sass/mixins/utils" as *;
 @use "../../../ui/vars" as *;
 
-.expert-toggle {
+.show-browser-version-toggle {
   display: flex;
   justify-content: end;
   margin-top: 0.5rem;
@@ -152,17 +152,17 @@
 .bc-version-label {
   display: none;
 }
-.expert .bc-version-label {
+.show-browser-version .bc-version-label {
   display: initial;
 }
 
-.expert .bc-icon-cell {
+.show-browser-version .bc-icon-cell {
   > .icon-wrap {
     display: block;
   }
 }
 
-.expert {
+.show-browser-version {
   td {
     &.bc-supports-no > span {
       color: var(--text-primary-red);

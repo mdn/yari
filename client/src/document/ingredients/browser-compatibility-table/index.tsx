@@ -124,10 +124,10 @@ export default function BrowserCompatibilityTable({
 }) {
   const isServer = typeof window === "undefined";
   const location = useLocation();
-  const [expert, setExpert] = useState(
+  const [showBrowserVersion, setShowBrowserVersion] = useState(
     Boolean(
       !isServer &&
-        JSON.parse(window.localStorage.getItem("bcd-expert-view") || "false")
+        JSON.parse(window.localStorage.getItem("bcd-view-mode") || "false")
     )
   );
 
@@ -155,10 +155,10 @@ export default function BrowserCompatibilityTable({
     return `${url}?${sp.toString()}`;
   }
 
-  function toggleExpert(e) {
+  function toggleShowBrowserVersion(e) {
     let checked = e?.target?.checked || false;
-    window.localStorage.setItem("bcd-expert-view", checked);
-    setExpert(checked);
+    window.localStorage.setItem("bcd-view-mode", checked);
+    setShowBrowserVersion(checked);
   }
 
   return (
@@ -175,16 +175,20 @@ export default function BrowserCompatibilityTable({
         </a>
         <div className="table-scroll">
           <div className="table-scroll-inner">
-            <div className="expert-toggle">
+            <div className="show-browser-version-toggle">
               <Switch
-                name="bcd-expert"
-                checked={expert}
-                toggle={toggleExpert}
-              >{`${expert ? "hide" : "show"} browser versions`}</Switch>
+                name="bcd-show-browser-version"
+                checked={showBrowserVersion}
+                toggle={toggleShowBrowserVersion}
+              >{`${
+                showBrowserVersion ? "hide" : "show"
+              } browser versions`}</Switch>
             </div>
             <table
               key="bc-table"
-              className={`bc-table bc-table-web ${expert ? "expert" : ""}`}
+              className={`bc-table bc-table-web ${
+                showBrowserVersion ? "show-browser-version" : ""
+              }`}
             >
               <Headers {...{ platforms, browsers }} />
               <tbody>
