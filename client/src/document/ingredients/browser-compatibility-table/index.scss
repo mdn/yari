@@ -50,7 +50,6 @@
     // being easy.
     tbody {
       tr {
-        height: 4rem;
         &:last-child {
           th,
           td {
@@ -163,6 +162,9 @@
 }
 
 .show-browser-version {
+  tbody tr {
+    height: 4rem;
+  }
   td {
     &.bc-supports-no > span {
       color: var(--text-primary-red);

@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 import type bcd from "@mdn/browser-compat-data/types";
-import { BrowserInfoContext, BrowserName } from "./browser-info";
+import { BrowserInfoContext } from "./browser-info";
 import { asList, getFirst, isTruthy, versionIsPreview } from "./utils";
 
 // Yari builder will attach extra keys from the compat data
