@@ -86,7 +86,10 @@
     color: var(--icon-critical);
     margin: 0;
   }
+}
 
+.header-search,
+.homepage-hero-search {
   .search-results {
     color: var(--text-primary);
     border: 1px solid var(--border-secondary);
@@ -169,6 +172,7 @@
 }
 
 .search-form {
+  display: flex;
   position: relative;
 }
 
@@ -186,15 +190,7 @@
   }
 
   @media screen and (min-width: $screen-md) {
-    right: 3.5rem;
+    right: 1.2rem;
     width: 1.5rem;
-  }
-}
-
-.close-search-button {
-  display: none;
-
-  @media screen and (min-width: $screen-md) {
-    display: block;
   }
 }

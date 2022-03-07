@@ -128,7 +128,6 @@ function BreadcrumbURI({
 }
 
 type InnerSearchNavigateWidgetProps = SearchProps & {
-  onCloseSearch?: () => void;
   onResultPicked?: () => void;
   defaultSelection: [number, number];
 };
@@ -164,7 +163,6 @@ function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
     onChangeInputValue,
     isFocused,
     onChangeIsFocused,
-    onCloseSearch,
     onResultPicked,
     defaultSelection,
   } = props;
@@ -196,7 +194,7 @@ function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
 
   const resultItems: ResultItem[] = useMemo(() => {
     if (!searchIndex || !inputValue || searchIndexError) {
-      // This can happen if the initialized hasn't completed yet or
+      // This can happen if the initialization hasn't completed yet or
       // completed un-successfully.
       return [];
     }
@@ -478,15 +476,6 @@ function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
         extraClasses="search-button"
       >
         <span className="visually-hidden">Search</span>
-      </Button>
-
-      <Button
-        type="action"
-        icon="cancel"
-        extraClasses="close-search-button"
-        onClickHandler={onCloseSearch}
-      >
-        <span className="visually-hidden">Close search</span>
       </Button>
 
       <div {...getMenuProps()}>

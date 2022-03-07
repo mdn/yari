@@ -34,10 +34,6 @@
     }
   }
 
-  .toggle-search-button {
-    display: none;
-  }
-
   .theme-toggle {
     align-self: end;
     margin-right: 1.5rem;
@@ -198,28 +194,6 @@
     .menu-toggle + .top-level-entry {
       display: inline-flex;
     }
-
-    .toggle-search-button {
-      display: inline-block;
-    }
-
-    .search-form {
-      display: none;
-    }
-  }
-}
-
-.top-navigation-main.has-search-open {
-  .header-search {
-    width: 240px;
-  }
-
-  .header-search ~ * {
-    display: none;
-  }
-
-  .search-form {
-    display: flex;
   }
 }
 

@@ -67,13 +67,18 @@
     }
   }
 
-  .header-search {
+  .homepage-hero-search {
     width: 100%;
     max-height: 4rem;
     display: flex;
     margin-bottom: 1rem;
 
     .search-input-field {
+      border-radius: 10rem;
+      background-color: rgba(1, 1, 1, 0.5);
+      font: var(--type-body-l);
+      padding: 2rem;
+
       &:focus {
         box-shadow: var(--focus-01);
         border-color: var(--field-focus-border);
@@ -86,10 +91,6 @@
     .search-widget {
       gap: 0;
       display: flex;
-    }
-
-    .close-search-button {
-      display: none;
     }
 
     .search-results {
