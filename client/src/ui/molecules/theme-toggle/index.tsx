@@ -28,7 +28,7 @@ export function ThemeToggle() {
 
   return (
     <div className="theme-toggle">
-      <Icon name="theme"></Icon>
+      {dark ? <Icon name="moon-fill"></Icon> : <Icon name="sun-fill"></Icon>}
       <Switch
         name="themeToggle"
         hiddenLabel={`toggle theme to ${dark ? "light" : "dark"} mode`}
