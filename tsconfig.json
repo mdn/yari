@@ -2,7 +2,7 @@
   "compilerOptions": {
     "jsx": "react-jsx",
     "strictBindCallApply": true,
-    "target": "ES2018",
+    "target": "ES2019",
     "preserveWatchOutput": true
   },
   "files": []

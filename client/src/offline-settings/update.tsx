@@ -7,7 +7,6 @@ export default function UpdateButton({
   updateStatus: UpdateStatus | null;
   update: () => void;
 }) {
-  console.log(`updateStatus: ${updateStatus?.state}`);
   const current = `Last updated: ${
     updateStatus?.currentDate
       ? Intl.DateTimeFormat([], { dateStyle: "medium" }).format(

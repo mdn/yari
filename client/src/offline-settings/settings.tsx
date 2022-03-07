@@ -28,41 +28,37 @@ export default function SettingsApp({ ...appProps }) {
 function Settings() {
   document.title = "MDN - Settings";
   const [status, setStatus] = useState<UpdateStatus>();
-  const [delay, setDelay] = useState<number | null>(
-    !status || status?.state === STATE.init ? 500 : null
-  );
 
   const [estimate, setEstimate] = useState<StorageEstimate | null>(null);
   const [settings, setSettings] = useState<SettingsData>();
 
   useEffect(() => {
     const init = async () => {
-      setSettings(await window.MDNWorker.offlineSettings());
-      setStatus(await window.MDNWorker.updateAvailable());
+      setSettings(await window.mdnWorker.offlineSettings());
+      setStatus(await window.mdnWorker.updateAvailable());
       setEstimate(await navigator?.storage?.estimate?.());
     };
-    init();
+    init().then(() => {});
   }, []);
 
   const updateSettings = async (change: SettingsData) => {
-    let newSettings = await window.MDNWorker.setOfflineSettings(change);
+    let newSettings = await window.mdnWorker.setOfflineSettings(change);
     setSettings(newSettings);
   };
 
-  useInterval(async () => {
-    const next = await window.MDNWorker.status();
-    console.log(`next: ${next.state} - ${next.progress}`);
-    if (next.state === STATE.nothing || next.state === STATE.updateAvailable) {
-      setDelay(null);
-    }
-    if (next.progress !== status?.progress || status?.state === next.state) {
+  useInterval(() => {
+    const next = window.mdnWorker.status();
+    if (next.state === STATE.nothing) {
+      if (next.state !== status?.state) {
+        setStatus({ ...next });
+      }
+    } else {
       setStatus({ ...next });
     }
-  }, delay);
+  }, 500);
 
   const update = () => {
-    window.MDNWorker.update();
-    setDelay(500);
+    window.mdnWorker.update();
     setStatus(status);
   };
 
@@ -70,8 +66,7 @@ function Settings() {
     if (
       window.confirm("All downloaded content will be removed from your device")
     ) {
-      window.MDNWorker.clear();
-      setDelay(500);
+      window.mdnWorker.clear();
       setStatus(status);
     }
   };

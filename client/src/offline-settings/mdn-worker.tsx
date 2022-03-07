@@ -57,14 +57,13 @@ export class UpdateStatus {
 }
 
 export class MDNWorker {
-  controller: ServiceWorker | null;
   updateStatus: UpdateStatus;
   settings: SettingsData;
   latestUpdate: UpdateData | null;
   updating: boolean;
+  registered: boolean;
 
   constructor() {
-    this.controller = navigator.serviceWorker.controller;
     this.settings = this.offlineSettings();
     this.updateStatus = new UpdateStatus();
     //this.settings.currentVersion = "87fe3ab8a3";
@@ -72,19 +71,26 @@ export class MDNWorker {
     this.updateStatus.currentVersion = this.settings.currentVersion || null;
     this.updating = false;
     this.latestUpdate = null;
-
-    navigator.serviceWorker.addEventListener("message", async (event) => {
-      console.log(event);
-      switch (event.data.type) {
-        case "updateStatus":
-          console.log(event.data);
-          await this.setStatus(event.data);
-          break;
-        default:
-          console.log("unknown message");
-      }
-    });
+    this.registered = false;
   }
+
+  async messageHandler(event) {
+    switch (event.data.type) {
+      case "updateStatus":
+        await window.mdnWorker.setStatus(event.data);
+        break;
+      case "pong":
+        console.log("pong");
+        break;
+      default:
+        console.log("unknown message");
+    }
+  }
+
+  controller(): ServiceWorker | null {
+    return navigator.serviceWorker.controller;
+  }
+
   update() {
     const payload = {};
     if (
@@ -99,8 +105,7 @@ export class MDNWorker {
       payload["date"] = this.latestUpdate.date;
     }
     this.updateStatus.state = STATE.downloading;
-    console.log(JSON.stringify(payload, null, 2));
-    this.controller?.postMessage({ type: "update", ...payload });
+    this.controller()?.postMessage({ type: "update", ...payload });
   }
 
   async getUpdate(): Promise<UpdateData | null> {
@@ -123,7 +128,6 @@ export class MDNWorker {
       let res = await fetch(`${UPDATES_BASE_URL}/update.json`);
       update = await res.json();
     }
-    console.log(update);
     this.updateStatus.updateVersion = update?.latest;
     this.updateStatus.updateDate = update?.date;
     if (this.settings.currentVersion !== update?.latest) {
@@ -149,13 +153,16 @@ export class MDNWorker {
       await navigator.serviceWorker.register(this.swName(onlineFirst), {
         scope: "/",
       });
+      this.registered = true;
     }
+    registerMessageHandler();
   }
 
   async disableServiceWorker() {
     if ("serviceWorker" in navigator) {
       const registration = await navigator.serviceWorker.getRegistration();
       await registration?.unregister();
+      this.registered = false;
     }
   }
 
@@ -164,7 +171,6 @@ export class MDNWorker {
     return this.status();
   }
   status() {
-    console.log(this.updateStatus);
     return this.updateStatus;
   }
 
@@ -178,9 +184,12 @@ export class MDNWorker {
   async setOfflineSettings(settingsData: SettingsData): Promise<SettingsData> {
     const current = this.offlineSettings();
 
-    if (!current.offline && settingsData.offline) {
+    if (!current.offline && settingsData.offline && !this.registered) {
       await this.enableServiceWorker(settingsData.preferOnline);
-    } else if (current.preferOnline !== settingsData.preferOnline) {
+    } else if (
+      "preferOnline" in settingsData &&
+      current.preferOnline !== settingsData.preferOnline
+    ) {
       await this.disableServiceWorker();
       await this.enableServiceWorker(settingsData.preferOnline);
     }
@@ -195,11 +204,10 @@ export class MDNWorker {
   }
   clear() {
     this.updateStatus.state = STATE.clearing;
-    this.controller?.postMessage({ type: "clear" });
+    this.controller()?.postMessage({ type: "clear" });
   }
 
   async setStatus(updateStatus: UpdateStatus) {
-    console.log(updateStatus);
     if (typeof updateStatus.progress !== "undefined") {
       this.updateStatus.progress = updateStatus.progress;
     }
@@ -218,11 +226,22 @@ export class MDNWorker {
         updateStatus.state === STATE.init &&
         this.updateStatus.state !== STATE.init
       ) {
+        this.updating = false;
         this.updateStatus.updateVersion = null;
         this.updateStatus.updateDate = null;
         this.updateStatus.state = updateStatus.state;
         await this.getUpdate();
       } else {
+        if (
+          [STATE.clearing, STATE.downloading, STATE.unpacking].includes(
+            updateStatus.state
+          )
+        ) {
+          this.updating = true;
+        } else {
+          this.updating = false;
+        }
+
         this.updateStatus.state = updateStatus.state;
       }
     }
@@ -231,14 +250,21 @@ export class MDNWorker {
 
 declare global {
   interface Window {
-    MDNWorker: MDNWorker;
+    mdnWorker: MDNWorker;
   }
 }
 
-window.MDNWorker = new MDNWorker();
+window.mdnWorker = new MDNWorker();
 
-if (window.MDNWorker.settings.offline) {
-  window.MDNWorker.enableServiceWorker(window.MDNWorker.settings.preferOnline);
+function registerMessageHandler() {
+  navigator.serviceWorker.addEventListener(
+    "message",
+    window.mdnWorker.messageHandler
+  );
+}
+
+if (window.mdnWorker.settings.offline) {
+  window.mdnWorker.enableServiceWorker(window.mdnWorker.settings.preferOnline);
 }
 
 /*

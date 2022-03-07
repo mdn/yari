@@ -13,9 +13,15 @@ function jsonBlob(json) {
 }
 
 async function messageAllClients(payload) {
-  const allClients = await self.clients.matchAll();
-  for (const client of allClients) {
-    client.postMessage(payload);
+  try {
+    const allClients = await self.clients.matchAll({
+      includeUncontrolled: true,
+    });
+    for (const client of allClients) {
+      client.postMessage(payload);
+    }
+  } catch (e) {
+    console.log(e);
   }
 }
 
@@ -35,8 +41,9 @@ async function updateContent({ current, latest, date } = {}, e) {
       : `/packages/${latest}-content.zip`,
     UPDATES_BASE_URL
   );
-  console.log(`downloading: ${url}`);
+  console.log(`[update] downloading: ${url}`);
   const res = await fetch(url);
+  console.log(`[update] unpacking: ${url}`);
   await messageAllClients({
     type: "updateStatus",
     progress: 0,
@@ -57,10 +64,10 @@ async function updateContent({ current, latest, date } = {}, e) {
     currentVersion: latest,
     currentDate: date,
   });
+  console.log(`[update] done`);
 }
 
 async function clearContent() {
-  console.log("clearing");
   await messageAllClients({
     type: "updateStatus",
     progress: 0,
@@ -97,6 +104,8 @@ self.addEventListener("message", (e) => {
           return updateContent(e?.data, e);
         case "clear":
           return clearContent();
+        case "ping":
+          return await messageAllClients({ type: "pong" });
         default:
           console.log(`unknown msg type: ${e?.data?.type}`);
           return Promise.resolve();
@@ -106,17 +115,19 @@ self.addEventListener("message", (e) => {
 });
 
 self.addEventListener("activate", (e) => {
-  e.waitUntil(async () => {
-    await self.clients.claim();
-    return caches.keys().then((keyList) => {
-      return Promise.all(
-        keyList.map((key) => {
-          if (key === cacheName) {
-            return;
-          }
-          return caches.delete(key);
-        })
-      );
-    });
-  });
+  e.waitUntil(
+    (async () => {
+      await clients.claim();
+      return caches.keys().then((keyList) => {
+        return Promise.all(
+          keyList.map((key) => {
+            if (key === cacheName) {
+              return;
+            }
+            return caches.delete(key);
+          })
+        );
+      });
+    })()
+  );
 });
