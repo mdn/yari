@@ -517,23 +517,11 @@ pre {
     right: 0.5rem;
     top: 0.75rem;
     width: 1.25rem;
-    opacity: 0.5;
+    opacity: 0.4;
 
+    &:hover,
     &:focus {
       opacity: 1;
-    }
-  }
-
-  &:hover {
-    .copy-icon {
-      @media screen and (min-width: $screen-md) {
-        opacity: 0.4;
-
-        &:hover,
-        &:focus {
-          opacity: 1;
-        }
-      }
     }
   }
 
