@@ -28,13 +28,14 @@ export function ThemeToggle() {
 
   return (
     <div className="theme-toggle">
-      <Icon name="theme"></Icon>
+      <Icon name="sun-fill" />
       <Switch
         name="themeToggle"
         hiddenLabel={`toggle theme to ${dark ? "light" : "dark"} mode`}
         checked={dark}
         toggle={toggle}
       ></Switch>
+      <Icon name="moon-fill" />
     </div>
   );
 }
