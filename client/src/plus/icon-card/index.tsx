@@ -1,11 +1,8 @@
 import React from "react";
-
-import { mutate } from "swr";
 import { Button } from "../../ui/atoms/button";
-import { post } from "../notifications/utils";
 import { DropdownMenu, DropdownMenuWrapper } from "../../ui/molecules/dropdown";
+import { Checkbox } from "../../ui/molecules/notifications-watch-menu/atoms/checkbox";
 import { docCategory } from "../../utils";
-
 import "./index.scss";
 
 function _getIconLabel(url) {
@@ -27,16 +24,24 @@ function _getIconLabel(url) {
   return "docs";
 }
 
-export default function IconCard({ item, changedCallback, csrfToken }) {
-  const deleteUrl = `/api/v1/plus/watch${item.url}`;
+export default function WatchedCardListItem({
+  item,
+  onUnwatched,
+  toggleSelected,
+}) {
   const [show, setShow] = React.useState(false);
 
   const iconClass = docCategory({ pathname: item.url })?.split("-")[1];
   const iconLabel = _getIconLabel(item.url);
 
   return (
-    <article className="icon-card">
+    <li className="icon-card">
       <div className="icon-card-title-wrap">
+        <Checkbox
+          name="selected"
+          checked={item.checked}
+          onChange={(e) => toggleSelected(item, e.target.value)}
+        />
         <div className={`icon-card-icon ${iconClass || ""}`}>
           <span>{iconLabel}</span>
         </div>
@@ -68,15 +73,7 @@ export default function IconCard({ item, changedCallback, csrfToken }) {
           <DropdownMenu>
             <ul className="dropdown-list" id="watch-card-dropdown">
               <li className="dropdown-item">
-                <Button
-                  type="action"
-                  onClickHandler={async () => {
-                    console.log(deleteUrl);
-                    await post(deleteUrl, csrfToken, { unwatch: true });
-                    mutate(deleteUrl);
-                    changedCallback && changedCallback();
-                  }}
-                >
+                <Button type="action" onClickHandler={() => onUnwatched(item)}>
                   Unwatch
                 </Button>
               </li>
@@ -85,6 +82,6 @@ export default function IconCard({ item, changedCallback, csrfToken }) {
         </DropdownMenuWrapper>
       </div>
       {/* <p className="icon-card-description">This is a note, lets keep it. </p> */}
-    </article>
+    </li>
   );
 }

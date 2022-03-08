@@ -20,6 +20,22 @@
       $mdn-color-light-theme-green-30,
       $alpha: -0.6
     )};
+  --background-information: #{color.adjust(
+      $mdn-theme-light-icon-information,
+      $alpha: -0.9
+    )};
+  --background-warning: #{color.adjust(
+      $mdn-theme-light-icon-warning,
+      $alpha: -0.9
+    )};
+  --background-critical: #{color.adjust(
+      $mdn-theme-light-icon-critical,
+      $alpha: -0.9
+    )};
+  --background-success: #{color.adjust(
+      $mdn-theme-light-icon-success,
+      $alpha: -0.9
+    )};
 
   --border-primary: #{$mdn-theme-light-border-primary};
   --border-secondary: #{$mdn-theme-light-border-secondary};

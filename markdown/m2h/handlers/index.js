@@ -2,6 +2,7 @@ const fs = require("fs");
 const path = require("path");
 const { DEFAULT_LOCALE } = require("../../../libs/constants");
 const code = require("./code");
+const table = require("./table");
 const { asDefinitionList, isDefinitionList } = require("./dl");
 const { one, all, wrap } = require("./mdast-util-to-hast-utils");
 
@@ -62,6 +63,7 @@ function buildLocalizedHandlers(locale) {
   /* This is only used for the Notecard parsing where the "magit" word depends on the locale */
   return {
     code,
+    table,
 
     paragraph(h, node) {
       const [child] = node.children;
