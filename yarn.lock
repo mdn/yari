@@ -6797,10 +6797,10 @@ fast-safe-stringify@^2.0.4:
   resolved "https://registry.npmjs.org/fast-safe-stringify/-/fast-safe-stringify-2.0.7.tgz"
   integrity sha512-Utm6CdzT+6xsDk2m8S6uL8VHxNwI6Jub+e9NYTcAms28T84pTa25GJQV9j0CY0N1rM8hK4x6grpF2BQf+2qwVA==
 
-fast-xml-parser@4.0.4:
-  version "4.0.4"
-  resolved "https://registry.yarnpkg.com/fast-xml-parser/-/fast-xml-parser-4.0.4.tgz#a7a74546d4d1213d0a8e31a8b3aa54570affab6d"
-  integrity sha512-3drDiRcLD22vJ95YH9yhPQaHA8JAWwfJDZhXIFxKYp32EuhACgnOdS5cQIGVtaCH2VvygmYFDk79QEaeskGlaA==
+fast-xml-parser@4.0.5:
+  version "4.0.5"
+  resolved "https://registry.yarnpkg.com/fast-xml-parser/-/fast-xml-parser-4.0.5.tgz#583bdca78e99d29b46a4f88fb560d8fa240964c3"
+  integrity sha512-B3eG9unGn4SqG6Fdwhc4eaIFBSN/0CdqUKG1nzjLuojhMyq4qMxNShzng0QjOW3swE3MhERMf70u7C/XnzmshA==
   dependencies:
     strnum "^1.0.5"
 
@@ -10345,6 +10345,11 @@ lru-cache@^6.0.0:
   integrity sha512-Jo6dJ04CmSjuznwJSS3pUeWmd/H0ffTlkXXgwZi+eq1UCmqQwCh+eLsYOYCwY991i2Fah4h1BEMCx4qThGbsiA==
   dependencies:
     yallist "^4.0.0"
+
+lru-cache@^7.4.1:
+  version "7.4.1"
+  resolved "https://registry.yarnpkg.com/lru-cache/-/lru-cache-7.4.1.tgz#afe07e885ef0cd5bf99f62f4fa7545d48746d779"
+  integrity sha512-NCD7/WRlFmADccuHjsRUYqdluYBr//n/O0fesCb/n52FoGcgKh8o4Dpm7YIbZwVcDs8rPBQbCZLmWWsp6m+xGQ==
 
 lz-string@^1.4.4:
   version "1.4.4"
@@ -15680,10 +15685,10 @@ ts-loader@^8.1.0:
     micromatch "^4.0.0"
     semver "^7.3.4"
 
-ts-node@^10.6.0:
-  version "10.6.0"
-  resolved "https://registry.yarnpkg.com/ts-node/-/ts-node-10.6.0.tgz#c3f4195d5173ce3affdc8f2fd2e9a7ac8de5376a"
-  integrity sha512-CJen6+dfOXolxudBQXnVjRVvYTmTWbyz7cn+xq2XTsvnaXbHqr4gXSCNbS2Jj8yTZMuGwUoBESLaOkLascVVvg==
+ts-node@^10.7.0:
+  version "10.7.0"
+  resolved "https://registry.yarnpkg.com/ts-node/-/ts-node-10.7.0.tgz#35d503d0fab3e2baa672a0e94f4b40653c2463f5"
+  integrity sha512-TbIGS4xgJoX2i3do417KSaep1uRAW/Lu+WAL2doDHC0D6ummjirVOXU5/7aiZotbQ5p1Zp9tP7U6cYhA0O7M8A==
   dependencies:
     "@cspotcode/source-map-support" "0.7.0"
     "@tsconfig/node10" "^1.0.7"
