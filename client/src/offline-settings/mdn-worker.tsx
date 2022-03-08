@@ -266,18 +266,3 @@ function registerMessageHandler() {
 if (window.mdnWorker.settings.offline) {
   window.mdnWorker.enableServiceWorker(window.mdnWorker.settings.preferOnline);
 }
-
-/*
- * Legacy Android support
- */
-interface External {
-  setTitle: (title: string) => void;
-  signIn: () => Promise<void>;
-  signOut: () => Promise<void>;
-  settings: () => Promise<void>;
-}
-declare global {
-  interface Window {
-    Android: External;
-  }
-}
