@@ -71,7 +71,7 @@ export const ArticleActions = ({
               {!MDN_APP && translations && !!translations.length && (
                 <li className="article-actions-entry">
                   <LanguageMenu
-                    toggleArticleActionsMenu={toggleArticleActionsMenu}
+                    onClose={toggleArticleActionsMenu}
                     translations={translations}
                     native={native}
                   />

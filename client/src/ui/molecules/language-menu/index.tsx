@@ -13,11 +13,11 @@ import { DropdownMenu, DropdownMenuWrapper } from "../dropdown";
 const PREFERRED_LOCALE_COOKIE_NAME = "preferredlocale";
 
 export function LanguageMenu({
-  toggleArticleActionsMenu,
+  onClose,
   translations,
   native,
 }: {
-  toggleArticleActionsMenu: () => void;
+  onClose: () => void;
   translations: Translation[];
   native: string;
 }) {
@@ -76,8 +76,8 @@ export function LanguageMenu({
       navigate(localeURL);
       window.scrollTo(0, 0);
 
-      toggleArticleActionsMenu();
       setIsOpen(false);
+      onClose();
     }
   }
 
