@@ -171,7 +171,7 @@ async function buildDocuments(
           // Therefore, we strip out all "retired" releases.
           if (key === "releases") {
             return Object.fromEntries(
-              Object.entries(value).filter(([_, v]) => v.status !== "retired")
+              Object.entries(value).filter(([, v]) => v.status !== "retired")
             );
           }
           return value;
