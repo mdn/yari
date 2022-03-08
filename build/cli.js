@@ -168,11 +168,12 @@ async function buildDocuments(
           // The `.releases` block contains information about browsers (e.g
           // release dates) and that part has already been extracted and put
           // next to each version number where appropriate.
+          // Therefore, we strip out all "retired" releases.
           if (key === "releases") {
-            return undefined;
+            return Object.fromEntries(
+              Object.entries(value).filter(([_, v]) => v.status !== "retired")
+            );
           }
-          // TODO: Instead of serializing with a exclusion, instead explicitly
-          // serialize exactly only the data that is needed.
           return value;
         })
       );
