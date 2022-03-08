@@ -1,7 +1,11 @@
 import React, { useContext } from "react";
 import type bcd from "@mdn/browser-compat-data/types";
-import { BrowserInfoContext, BrowserName } from "./browser-info";
-import { asList, getFirst, isTruthy, versionIsPreview } from "./utils";
+import {
+  BrowserInfoContext,
+  BrowserName,
+  BrowserPreviewName,
+} from "./browser-info";
+import { asList, getFirst, isTruthy } from "./utils";
 
 // Yari builder will attach extra keys from the compat data
 // it gets from @mdn/browser-compat-data. These are "Yari'esque"
@@ -27,8 +31,7 @@ type SupportStatementExtended =
   | SimpleSupportStatementExtended[];
 
 function getSupportClassName(
-  support: SupportStatementExtended | undefined,
-  browser: bcd.BrowserStatement
+  support: SupportStatementExtended | undefined
 ): string {
   if (!support) {
     return "unknown";
@@ -40,7 +43,7 @@ function getSupportClassName(
   let className;
   if (version_added === null) {
     className = "unknown";
-  } else if (versionIsPreview(version_added, browser)) {
+  } else if (version_added === "preview") {
     className = "preview";
   } else if (version_added) {
     className = "yes";
@@ -101,7 +104,7 @@ function StatusIcons({ status }: { status: bcd.StatusBlock }) {
 
 function labelFromString(
   version: string | boolean | null | undefined,
-  browser: bcd.BrowserStatement
+  browser: bcd.BrowserNames
 ) {
   if (typeof version !== "string") {
     return <>{"?"}</>;
@@ -112,7 +115,7 @@ function labelFromString(
     return <>{version.slice(1)}</>;
   }
   if (version === "preview") {
-    return browser.preview_name;
+    return <BrowserPreviewName id={browser} />;
   }
   return <>{version}</>;
 }
@@ -123,7 +126,7 @@ const CellText = React.memo(
     browser,
   }: {
     support: bcd.SupportStatement | undefined;
-    browser: bcd.BrowserStatement;
+    browser: bcd.BrowserNames;
   }) => {
     const currentSupport = getFirst(support);
 
@@ -151,17 +154,7 @@ const CellText = React.memo(
         status = { isSupported: "preview" };
         break;
       default:
-        if (versionIsPreview(added, browser)) {
-          status = {
-            isSupported: "preview",
-            label: labelFromString(added, browser),
-          };
-        } else {
-          status = {
-            isSupported: "yes",
-            label: labelFromString(added, browser),
-          };
-        }
+        status = { isSupported: "yes", label: labelFromString(added, browser) };
         break;
     }
 
@@ -205,7 +198,7 @@ const CellText = React.memo(
 
       case "preview":
         title = "Preview browser support";
-        label = status.label || browser.preview_name;
+        label = <BrowserPreviewName id={browser} />;
         break;
 
       case "unknown":
@@ -219,16 +212,17 @@ const CellText = React.memo(
         <span className="icon-wrap">
           <abbr
             className={`
-            bc-level-${getSupportClassName(currentSupport, browser)}
+            bc-level-${getSupportClassName(currentSupport)}
             icon
-            icon-${getSupportClassName(currentSupport, browser)}`}
+            icon-${getSupportClassName(currentSupport)}`}
             title={title}
           >
             <span className="bc-support-level">{title}</span>
           </abbr>
         </span>{" "}
         <span className="bc-version-label">
-          {browser.name} {label !== "No" && label !== "?" ? label : null}
+          <BrowserName id={browser} />{" "}
+          {label !== "No" && label !== "?" ? label : null}
         </span>
       </>
     );
@@ -263,8 +257,14 @@ function FlagsNote({
   browser,
 }: {
   supportItem: bcd.SimpleSupportStatement;
-  browser: bcd.BrowserStatement;
+  browser: bcd.BrowserNames;
 }) {
+  const browserInfo = useContext(BrowserInfoContext);
+  if (!browserInfo) {
+    throw new Error("Missing browser info");
+  }
+  const info = browserInfo[browser];
+
   const hasAddedVersion = typeof supportItem.version_added === "string";
   const hasRemovedVersion = typeof supportItem.version_removed === "string";
   const flags = supportItem.flags || [];
@@ -296,17 +296,14 @@ function FlagsNote({
         );
       })}
       .
-      {browser.pref_url &&
+      {info.pref_url &&
         flags.some((flag) => flag.type === "preference") &&
-        ` To change preferences in ${browser.name}, visit ${browser.pref_url}.`}
+        ` To change preferences in ${info.name}, visit ${info.pref_url}.`}
     </>
   );
 }
 
-function getNotes(
-  browser: bcd.BrowserStatement,
-  support: bcd.SupportStatement
-) {
+function getNotes(browser: bcd.BrowserNames, support: bcd.SupportStatement) {
   if (support) {
     return asList(support)
       .flatMap((item, i) => {
@@ -351,7 +348,7 @@ function getNotes(
                 (note) => ({ iconName: "footnote", label: note })
               )
             : null,
-          versionIsPreview(item.version_added, browser)
+          item.version_added === "preview"
             ? {
                 iconName: "footnote",
                 label: "Preview browser support",
@@ -364,7 +361,7 @@ function getNotes(
             (x) => !["version_added", "release_date"].includes(x)
           ).length === 0 &&
           item.version_added &&
-          !versionIsPreview(item.version_added, browser)
+          item.version_added !== "preview"
             ? {
                 iconName: "footnote",
                 label: "Full support",
@@ -388,8 +385,7 @@ function getNotes(
               <div className="bc-notes-wrapper">
                 <dt
                   className={`bc-supports-${getSupportClassName(
-                    item,
-                    browser
+                    item
                   )} bc-supports`}
                 >
                   <CellText support={item} browser={browser} />
@@ -418,21 +414,19 @@ function getNotes(
 }
 
 function CompatCell({
-  browserId,
-  browserInfo,
+  browser,
   support,
   showNotes,
   onToggle,
   locale,
 }: {
-  browserId: bcd.BrowserNames;
-  browserInfo: bcd.BrowserStatement;
+  browser: bcd.BrowserNames;
   support: bcd.SupportStatement | undefined;
   showNotes: boolean;
   onToggle: () => void;
   locale: string;
 }) {
-  const supportClassName = getSupportClassName(support, browserInfo);
+  const supportClassName = getSupportClassName(support);
   const browserReleaseDate = getSupportBrowserReleaseDate(support);
   // NOTE: 1-5-21, I've forced hasNotes to return true, in order to
   // make the details view open all the time.
@@ -446,11 +440,11 @@ function CompatCell({
   //       (item) =>
   //         item.prefix || item.notes || item.alternative_name || item.flags
   //     ));
-  const notes = getNotes(browserInfo, support!);
+  const notes = getNotes(browser, support!);
   return (
     <>
       <td
-        className={`bc-icon-cell bc-browser-${browserId} bc-supports-${supportClassName} ${
+        className={`bc-icon-cell bc-browser-${browser} bc-supports-${supportClassName} ${
           notes ? "bc-has-history" : ""
         }`}
         aria-expanded={showNotes ? "true" : "false"}
@@ -466,9 +460,9 @@ function CompatCell({
           browserReleaseDate ? `Released ${browserReleaseDate}` : undefined
         }
       >
-        <CellText {...{ support }} browser={browserInfo} />
+        <CellText {...{ support }} browser={browser} />
         <span className="bc-browser-name">
-          <BrowserName id={browserId} />
+          <BrowserName id={browser} />
         </span>
         <CellIcons support={support} />
         {notes && (
@@ -513,12 +507,6 @@ export const FeatureRow = React.memo(
     onToggleCell: ([row, column]: [number, number]) => void;
     locale: string;
   }) => {
-    const browserInfo = useContext(BrowserInfoContext);
-
-    if (!browserInfo) {
-      throw new Error("Missing browser info");
-    }
-
     const { name, compat, isRoot } = feature;
     const title = compat.description ? (
       <span dangerouslySetInnerHTML={{ __html: compat.description }} />
@@ -561,8 +549,7 @@ export const FeatureRow = React.memo(
           {browsers.map((browser, i) => (
             <CompatCell
               key={browser}
-              browserId={browser}
-              browserInfo={browserInfo[browser]}
+              browser={browser}
               support={compat.support[browser]}
               showNotes={activeCell === i}
               onToggle={() => onToggleCell([index, i])}
@@ -574,10 +561,7 @@ export const FeatureRow = React.memo(
           <tr className="bc-history">
             <td colSpan={browsers.length + 1}>
               <dl className="bc-notes-list">
-                {getNotes(
-                  browserInfo[activeBrowser],
-                  compat.support[activeBrowser]!
-                )}
+                {getNotes(activeBrowser, compat.support[activeBrowser]!)}
               </dl>
             </td>
           </tr>
