@@ -50,6 +50,8 @@
     // being easy.
     tbody {
       tr {
+        height: 3rem;
+
         &:last-child {
           th,
           td {
@@ -60,6 +62,21 @@
         th {
           border-left-width: 0;
           vertical-align: middle;
+        }
+      }
+
+      td {
+        &.bc-supports-no > span {
+          color: var(--text-primary-red);
+        }
+        &.bc-supports-partial > span {
+          color: var(--text-primary-yellow);
+        }
+        &.bc-supports-preview > span {
+          color: var(--text-primary-blue);
+        }
+        &.bc-supports-yes > span {
+          color: var(--text-primary-green);
         }
       }
     }
@@ -86,6 +103,11 @@
     .icon-wrap {
       .bc-support-level {
         @include visually-hidden;
+      }
+    }
+    .bc-icon-cell {
+      > .icon-wrap {
+        display: block;
       }
     }
 
@@ -144,39 +166,6 @@
       .icon {
         background-color: var(--icon-secondary);
       }
-    }
-  }
-}
-
-.bc-version-label {
-  display: none;
-}
-.show-browser-version .bc-version-label {
-  display: initial;
-}
-
-.show-browser-version .bc-icon-cell {
-  > .icon-wrap {
-    display: block;
-  }
-}
-
-.show-browser-version {
-  tbody tr {
-    height: 4rem;
-  }
-  td {
-    &.bc-supports-no > span {
-      color: var(--text-primary-red);
-    }
-    &.bc-supports-partial > span {
-      color: var(--text-primary-yellow);
-    }
-    &.bc-supports-preview > span {
-      color: var(--text-primary-blue);
-    }
-    &.bc-supports-yes > span {
-      color: var(--text-primary-green);
     }
   }
 }
@@ -271,6 +260,15 @@
 
   &:last-child {
     margin-bottom: 0;
+  }
+}
+
+dl.bc-notes-list {
+  dt.bc-supports {
+    margin-top: 1rem;
+  }
+  dd.bc-supports-dd {
+    margin-bottom: 1rem;
   }
 }
 
@@ -377,7 +375,6 @@
   .bc-notes-list {
     margin-left: 20%;
     width: auto;
-    margin-bottom: -1.5rem;
   }
 
   .bc-icon-cell {

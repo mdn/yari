@@ -122,14 +122,7 @@ export default function BrowserCompatibilityTable({
   browsers: bcd.Browsers;
   locale: string;
 }) {
-  const isServer = typeof window === "undefined";
   const location = useLocation();
-  const [showBrowserVersion, setShowBrowserVersion] = useState(
-    Boolean(
-      !isServer &&
-        JSON.parse(window.localStorage.getItem("bcd-view-mode") || "false")
-    )
-  );
 
   if (!data || !Object.keys(data).length) {
     throw new Error(
@@ -155,12 +148,6 @@ export default function BrowserCompatibilityTable({
     return `${url}?${sp.toString()}`;
   }
 
-  function toggleShowBrowserVersion(e) {
-    let checked = e?.target?.checked || false;
-    window.localStorage.setItem("bcd-view-mode", checked);
-    setShowBrowserVersion(checked);
-  }
-
   return (
     <BrowserCompatibilityErrorBoundary>
       <BrowserInfoContext.Provider value={browserInfo}>
@@ -175,21 +162,7 @@ export default function BrowserCompatibilityTable({
         </a>
         <div className="table-scroll">
           <div className="table-scroll-inner">
-            <div className="show-browser-version-toggle">
-              <Switch
-                name="bcd-show-browser-version"
-                checked={showBrowserVersion}
-                toggle={toggleShowBrowserVersion}
-              >{`${
-                showBrowserVersion ? "hide" : "show"
-              } browser versions`}</Switch>
-            </div>
-            <table
-              key="bc-table"
-              className={`bc-table bc-table-web ${
-                showBrowserVersion ? "show-browser-version" : ""
-              }`}
-            >
+            <table key="bc-table" className="bc-table bc-table-web">
               <Headers {...{ platforms, browsers }} />
               <tbody>
                 <FeatureListAccordion
