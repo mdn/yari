@@ -1,4 +1,4 @@
-import React, { useReducer, useState } from "react";
+import React, { useReducer } from "react";
 import { useLocation } from "react-router-dom";
 import type bcd from "@mdn/browser-compat-data/types";
 import { BrowserInfoContext } from "./browser-info";
@@ -7,7 +7,6 @@ import { FeatureRow } from "./feature-row";
 import { Headers, PLATFORM_BROWSERS } from "./headers";
 import { Legend } from "./legend";
 import { listFeatures } from "./utils";
-import { Switch } from "../../../ui/atoms/switch";
 
 // Note! Don't import any SCSS here inside *this* component.
 // It's done in the component that lazy-loads this component.
