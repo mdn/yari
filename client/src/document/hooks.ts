@@ -38,7 +38,7 @@ export function useCopyExamplesToClipboard(doc: Doc | undefined) {
         span.textContent = "Copy to Clipboard";
 
         button.setAttribute("type", "button");
-        button.setAttribute("class", "copy-icon");
+        button.setAttribute("class", "icon copy-icon");
         span.setAttribute("class", "visually-hidden");
         liveregion.classList.add("copy-icon-message", "visually-hidden");
         liveregion.setAttribute("role", "alert");
