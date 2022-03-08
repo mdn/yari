@@ -120,11 +120,11 @@ function Settings() {
           <span>{JSON.stringify(status, null, 2)}</span>
         </li>
       )}
-      {settings?.offline && (
+      {settings?.offline && usage && (
         <li>
           <h4>Storage used</h4>
           <span>
-            MDN offline currently uses <b>{usage || "?"}</b>
+            MDN offline currently uses <b>{usage}</b>
           </span>
         </li>
       )}
