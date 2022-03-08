@@ -1,6 +1,13 @@
 @use "~@mdn/minimalist/sass/mixins/utils" as *;
 @use "../../../ui/vars" as *;
 
+.show-browser-version-toggle {
+  display: flex;
+  justify-content: end;
+  margin-top: 0.5rem;
+  font: var(--type-body-m);
+}
+
 .bc {
   &-table {
     width: 100%;
@@ -43,6 +50,8 @@
     // being easy.
     tbody {
       tr {
+        height: 3rem;
+
         &:last-child {
           th,
           td {
@@ -53,6 +62,21 @@
         th {
           border-left-width: 0;
           vertical-align: middle;
+        }
+      }
+
+      td {
+        &.bc-supports-no > span {
+          color: var(--text-primary-red);
+        }
+        &.bc-supports-partial > span {
+          color: var(--text-primary-yellow);
+        }
+        &.bc-supports-preview > span {
+          color: var(--text-primary-blue);
+        }
+        &.bc-supports-yes > span {
+          color: var(--text-primary-green);
         }
       }
     }
@@ -81,9 +105,18 @@
         @include visually-hidden;
       }
     }
+    .bc-icon-cell {
+      > .icon-wrap {
+        display: block;
+      }
+    }
 
     tr [class^="bc-browser"] {
       text-align: center;
+    }
+
+    .bc-history-desktop {
+      display: none;
     }
   }
 
@@ -135,10 +168,6 @@
       }
     }
   }
-}
-
-.bc-version-label {
-  display: none;
 }
 
 .bc-platforms {
@@ -234,6 +263,15 @@
   }
 }
 
+dl.bc-notes-list {
+  dt.bc-supports {
+    margin-top: 1rem;
+  }
+  dd.bc-supports-dd {
+    margin-bottom: 1rem;
+  }
+}
+
 .offscreen,
 .only-icon span {
   @include visually-hidden();
@@ -303,6 +341,9 @@
       padding: 0.25rem;
       width: 2rem;
     }
+    tr.bc-history-desktop {
+      display: table-row;
+    }
   }
 
   .table-scroll {
@@ -334,11 +375,9 @@
   .bc-notes-list {
     margin-left: 20%;
     width: auto;
-    margin-bottom: -1.5rem;
   }
 
   .bc-icon-cell {
-    .bc-version-label,
     .bc-support-level {
       display: none;
     }
@@ -352,7 +391,7 @@
         bottom: -1px;
         height: 2px;
         width: 100%;
-        background: #fff;
+        background: var(--text-primary);
         content: "";
       }
 
