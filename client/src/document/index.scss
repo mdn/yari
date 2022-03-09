@@ -518,6 +518,7 @@ pre {
     top: 0.75rem;
     width: 1.25rem;
     opacity: 0.4;
+    filter: invert(var(--invert-value));
 
     &:hover,
     &:focus {
