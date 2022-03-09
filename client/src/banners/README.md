@@ -49,7 +49,7 @@ function RedesignAnnouncementBanner({
           href="https://hacks.mozilla.org/2022/02/a-new-year-a-new-mdn/"
           target="_blank"
           rel="noopener noreferrer"
-          onClick={() => SendToGA(REDESIGN_ANNOUNCEMENT)}
+          onClick={() => SendCTAEventToGA(REDESIGN_ANNOUNCEMENT)}
         >
           Learn more
         </a>{" "}

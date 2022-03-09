@@ -61,7 +61,7 @@ function Banner(props: BannerProps) {
   );
 }
 
-function sendCTAEventToGA(eventCategory: string) {
+function SendCTAEventToGA(eventCategory: string) {
   const ga = useGA();
   ga("send", {
     hitType: "event",
@@ -84,7 +84,7 @@ function RedesignAnnouncementBanner({
           href="https://hacks.mozilla.org/2022/02/a-new-year-a-new-mdn/"
           target="_blank"
           rel="noopener noreferrer"
-          onClick={() => sendCTAEventToGA(REDESIGN_ANNOUNCEMENT)}
+          onClick={() => SendCTAEventToGA(REDESIGN_ANNOUNCEMENT)}
         >
           Learn more
         </a>{" "}
