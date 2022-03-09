@@ -6,6 +6,20 @@
   .submenu-header {
     display: none;
   }
+  .button.user-menu-toggle {
+    .notification-dot ~ .avatar-wrap::after {
+      content: "";
+      color: var(--text-link);
+      position: absolute;
+      bottom: 0;
+      right: 0;
+      border: 1px solid var(--background-primary);
+      border-radius: 2rem;
+      background: var(--text-link);
+      width: 0.5rem;
+      height: 0.5rem;
+    }
+  }
 
   @media screen and (max-width: $screen-md) {
     .user-menu-toggle:hover {
