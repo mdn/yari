@@ -3,7 +3,6 @@ import { Icon } from "../../atoms/icon";
 
 export function NotificationsWatchMenuStart({
   data,
-  setStepHandler,
   handleSelection,
   showCustom,
   closeDropdown,
@@ -43,24 +42,6 @@ export function NotificationsWatchMenuStart({
           handleSelection();
         }}
       />
-
-      {showCustom ? (
-        <WatchMenuItem
-          value="custom"
-          label="Custom"
-          text={
-            selected.custom
-              ? "Receiving customized notifications."
-              : "Select which events you would like to be notified of."
-          }
-          checked={selected.custom}
-          onClickHandler={(event) => {
-            event.preventDefault();
-            setStepHandler(1);
-          }}
-        />
-      ) : null}
-
       <WatchMenuItem
         value="unwatch"
         label={selected.unwatched ? "Not watching" : "Unwatch"}

@@ -1,7 +1,6 @@
 import React from "react";
 
 import { Button } from "../../atoms/button";
-import { NotificationsWatchMenuCustom } from "./menu-custom";
 import { NotificationsWatchMenuStart } from "./menu-start";
 
 import "./index.scss";
@@ -18,13 +17,10 @@ export const NotificationsWatchMenu = ({ doc }) => {
   const path = compat ? compat.value?.query : doc.mdn_url;
   const title = doc.title;
 
-  const compatPage = path && compat;
-
   const menuId = "watch-submenu";
   const [show, setShow] = React.useState(false);
   const closeDropdown = () => setShow(false);
 
-  const [visibleStep, setVisibleStep] = React.useState<number>(0);
   const slug = doc.mdn_url; // Unique ID for the page
   const apiURL = `/api/v1/plus/watching/?url=${slug}`;
   const csrfMiddlewareToken = useCSRFMiddlewareToken();
@@ -137,37 +133,14 @@ export const NotificationsWatchMenu = ({ doc }) => {
             role="menu"
             aria-labelledby={`${menuId}-button`}
           >
-            {visibleStep === 0 ? (
-              <NotificationsWatchMenuStart
-                closeDropdown={closeDropdown}
-                data={data}
-                setStepHandler={setVisibleStep}
-                handleSelection={(unwatch: boolean) => {
-                  handleWatchSubmit({ unwatch });
-                }}
-                showCustom={compatPage}
-              />
-            ) : (
-              <NotificationsWatchMenuCustom
-                data={data}
-                setStepHandler={setVisibleStep}
-                handleSelection={({
-                  custom,
-                  custom_default,
-                  update_custom_default,
-                }) => {
-                  if (custom.content || custom.compatibility.length) {
-                    handleWatchSubmit({
-                      custom,
-                      custom_default,
-                      update_custom_default,
-                    });
-                  } else {
-                    handleWatchSubmit({ unwatch: true });
-                  }
-                }}
-              />
-            )}
+            <NotificationsWatchMenuStart
+              closeDropdown={closeDropdown}
+              data={data}
+              handleSelection={(unwatch: boolean) => {
+                handleWatchSubmit({ unwatch });
+              }}
+              showCustom={false}
+            />
           </div>
         </DropdownMenu>
       )}
