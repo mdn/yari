@@ -18,8 +18,8 @@ export function setEmbargoed(id: string, days: number) {
 // so a user does not see a banner they recently dismissed.
 export function isEmbargoed(id: string) {
   try {
-    let key = `banner.${id}.embargoed_until`;
-    let value = localStorage.getItem(key);
+    const key = `banner.${id}.embargoed_until`;
+    const value = localStorage.getItem(key);
     // If it is not set, then the banner has never been dismissed
     if (!value) {
       return false;
