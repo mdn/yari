@@ -35,7 +35,7 @@ export function NotificationsWatchMenuCustom({
   handleSelection,
 }) {
   let custom = data?.default;
-  if (data?.custom && data.custom !== true) {
+  if (data?.custom && data.custom !== "default") {
     custom = data.custom;
   }
 
@@ -233,7 +233,7 @@ export function NotificationsWatchMenuCustom({
           }}
           disabled={data?.custom === true}
         >
-          {data?.custom === true
+          {data?.custom === "default"
             ? "Using your global defaults"
             : "Use your global defaults"}
         </button>

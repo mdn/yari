@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { TabVariant } from "./tabs";
 
 export const NOTIFICATIONS_BASE_PATH = "/api/v1/plus/notifications";
-export const WATCHED_BASE_PATH = "/api/v1/plus/watched";
+export const WATCHED_BASE_PATH = "/api/v1/plus/watching";
 
 export const NOTIFICATIONS_MARK_ALL_AS_READ_PATH = `${NOTIFICATIONS_BASE_PATH}/all/mark-as-read/`;
 const NOTIFICATIONS_DEFAULT_LIMIT = 20;

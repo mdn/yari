@@ -26,7 +26,7 @@ export const NotificationsWatchMenu = ({ doc }) => {
 
   const [visibleStep, setVisibleStep] = React.useState<number>(0);
   const slug = doc.mdn_url; // Unique ID for the page
-  const apiURL = `/api/v1/plus/watch${slug}/`;
+  const apiURL = `/api/v1/plus/watching/?url=${slug}`;
   const csrfMiddlewareToken = useCSRFMiddlewareToken();
 
   const { data, mutate } = useSWR<WatchModeData>(
