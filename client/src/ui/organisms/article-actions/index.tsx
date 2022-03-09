@@ -25,7 +25,7 @@ export const ArticleActions = ({
   const translations = doc.other_translations || [];
   const { native } = doc;
 
-  function toggleArticleActionsMenu(event) {
+  function toggleArticleActionsMenu() {
     setShowArticleActionsMenu(!showArticleActionsMenu);
   }
 
@@ -70,7 +70,11 @@ export const ArticleActions = ({
               )}
               {!MDN_APP && translations && !!translations.length && (
                 <li className="article-actions-entry">
-                  <LanguageMenu translations={translations} native={native} />
+                  <LanguageMenu
+                    onClose={toggleArticleActionsMenu}
+                    translations={translations}
+                    native={native}
+                  />
                 </li>
               )}
             </>

@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 import type bcd from "@mdn/browser-compat-data/types";
-import { BrowserInfoContext, BrowserName } from "./browser-info";
+import { BrowserInfoContext } from "./browser-info";
 import { asList, getFirst, isTruthy, versionIsPreview } from "./utils";
 
 // Yari builder will attach extra keys from the compat data
@@ -226,10 +226,9 @@ const CellText = React.memo(
           >
             <span className="bc-support-level">{title}</span>
           </abbr>
-        </span>{" "}
-        <span className="bc-version-label">
-          {browser.name} {label !== "No" && label !== "?" ? label : null}
         </span>
+        <span className="bc-browser-name">{browser.name}</span>
+        <span className="bc-version-label">{label}</span>
       </>
     );
   }
@@ -467,9 +466,6 @@ function CompatCell({
         }
       >
         <CellText {...{ support }} browser={browserInfo} />
-        <span className="bc-browser-name">
-          <BrowserName id={browserId} />
-        </span>
         <CellIcons support={support} />
         {notes && (
           <button
@@ -571,7 +567,7 @@ export const FeatureRow = React.memo(
           ))}
         </tr>
         {activeBrowser && (
-          <tr className="bc-history">
+          <tr className="bc-history bc-history-desktop">
             <td colSpan={browsers.length + 1}>
               <dl className="bc-notes-list">
                 {getNotes(
