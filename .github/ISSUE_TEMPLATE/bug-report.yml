@@ -1,0 +1,128 @@
+name: "\U0001F41E Bug report"
+description: Report a frontend bug on MDN Web Docs.
+labels:
+  - bug
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to fill out this bug report!
+  - type: textarea
+    id: summary
+    attributes:
+      label: Summary
+      description: >-
+        A clear and concise description of what the problem is.
+        If you intend to submit a PR, please share your proposed solution.
+      placeholder: A short description of the overall issue.
+    validations:
+      required: true
+  - type: textarea
+    id: url
+    attributes:
+      label: URL
+      description: List one or more URLs where the issue appeared.
+      placeholder: https://developer.mozilla.org/en-US/docs/...
+    validations:
+      required: true
+  - type: textarea
+    id: repro
+    attributes:
+      label: Reproduction steps
+      description: "How do you trigger this bug? Please walk us through it step by step."
+      value: |
+        1.
+        2.
+        3.
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+      placeholder: What do you expect to happen or see?
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behavior
+      placeholder: What happens instead? What do you see instead?
+    validations:
+      required: true
+  - type: dropdown
+    id: devices
+    attributes:
+      label: Device
+      description: What device were you using when the issue appeared?
+      options:
+        - Desktop
+        - Laptop
+        - Smartphone
+        - Tablet (e.g. iPad)
+        - Other (specify below)
+    validations:
+      required: true
+  - type: dropdown
+    id: browsers
+    attributes:
+      label: Browser
+      description: What browser were you using?
+      options:
+        - Chrome
+        - Edge
+        - Firefox
+        - Safari
+        - Other (specify below)
+    validations:
+      required: true
+  - type: dropdown
+    id: browser-version
+    attributes:
+      label: Browser version
+      description: What browser release channel were you using?
+      options:
+        - Stable
+        - Pre-release (e.g. Beta, Nightly or Canary)
+        - Extended Support Release
+        - Other version (specify below)
+    validations:
+      required: true
+  - type: dropdown
+    id: operating-systems
+    attributes:
+      label: Operating system
+      description: What operating system were you using?
+      options:
+        - Android
+        - iOS
+        - Linux
+        - Mac OS
+        - Windows
+        - Other (specify below)
+    validations:
+      required: true
+  - type: textarea
+    id: screenshot
+    attributes:
+      label: Screenshot
+      description: Please always add a screenshot or (even better) a screen recording to help us understand the problem.
+      placeholder: Paste screenshot or screen recording here.
+  - type: textarea
+    attributes:
+      label: Anything else?
+      description: Links? References? Anything that will give us more context about the issue you are encountering!
+    validations:
+      required: false
+  - type: checkboxes
+    id: checkboxes
+    attributes:
+      label: Validations
+      description: Before submitting the issue, please make sure you do the following.
+      options:
+        - label: I have read the [Community Participation Guidelines](https://www.mozilla.org/en-US/about/governance/policies/participation/).
+          required: true
+        - label: I have verified that there isn't [already an issue](https://github.com/mdn/yari/issues) that reports the same bug to avoid creating a duplicate.
+          required: true
+        - label: I have checked that this is a concrete bug. For Q&A open a [GitHub Discussion](https://github.com/mdn/yari/discussions).
+          required: true
