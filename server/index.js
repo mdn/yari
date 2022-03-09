@@ -211,7 +211,7 @@ app.get("/*", async (req, res) => {
     // Remember, Image.findByURLWithFallback() will return the absolute file path
     // iff it exists on disk.
     // Using a "fallback" strategy here so that images embedded in live samples
-    // may be resolved when existing in en-US but not in <locale>
+    // are resolved if they exist in en-US but not in <locale>
     const filePath = Image.findByURLWithFallback(req.path);
     if (filePath) {
       // The second parameter to `send()` has to be either a full absolute

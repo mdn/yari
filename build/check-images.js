@@ -137,7 +137,7 @@ function checkImageReferences(doc, $, options, { url, rawContent }) {
       // insensitively.
 
       // What follows uses the same algorithm as Image.findByURLWithFallback
-      // but only adds filePath if existing for DEFAULT_LOCALE
+      // but only adds a filePath if it exists for the DEFAULT_LOCALE
       let filePath = Image.findByURL(finalSrc);
       let enUSFallback = false;
       if (
