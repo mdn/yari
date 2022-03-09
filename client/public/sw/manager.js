@@ -6,6 +6,8 @@ importScripts("./sw/caches.js");
 importScripts("./sw/api.js");
 importScripts("./sw/unpack-cache.js");
 
+var updating = false;
+
 function jsonBlob(json) {
   return new Blob([JSON.stringify(json, null, 2)], {
     type: "application/json",
@@ -26,6 +28,11 @@ async function messageAllClients(payload) {
 }
 
 async function updateContent({ current, latest, date } = {}, e) {
+  if (updating) {
+    return;
+  } else {
+    updating = true;
+  }
   if (!current) {
     await caches.delete(contentCache);
   }
@@ -65,6 +72,7 @@ async function updateContent({ current, latest, date } = {}, e) {
     currentDate: date,
   });
   console.log(`[update] done`);
+  updating = false;
 }
 
 async function clearContent() {

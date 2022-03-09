@@ -62,6 +62,7 @@ export class MDNWorker {
   latestUpdate: UpdateData | null;
   updating: boolean;
   registered: boolean;
+  timeout?: ReturnType<typeof setTimeout> | null;
 
   constructor() {
     this.settings = this.offlineSettings();
@@ -72,6 +73,22 @@ export class MDNWorker {
     this.updating = false;
     this.latestUpdate = null;
     this.registered = false;
+    this.timeout = null;
+
+    if (this.settings.autoUpdates) {
+      this.autoUpdate();
+    }
+  }
+
+  async autoUpdate() {
+    console.log("running auto update");
+    if (this.timeout) {
+      clearTimeout(this.timeout);
+      this.timeout = null;
+    }
+    await this.getUpdate();
+    this.update();
+    this.timeout = setTimeout(() => this.autoUpdate(), 60 * 60 * 1000);
   }
 
   async messageHandler(event) {
@@ -92,6 +109,13 @@ export class MDNWorker {
   }
 
   update() {
+    if (
+      this.updating ||
+      this.updateStatus.currentVersion === this.latestUpdate?.latest
+    ) {
+      return;
+    }
+    this.updating = true;
     const payload = {};
     if (
       this.latestUpdate &&
@@ -195,6 +219,16 @@ export class MDNWorker {
     }
     if (current.offline && settingsData.offline === false) {
       await this.disableServiceWorker();
+    }
+
+    if (settingsData.autoUpdates === false && this.timeout) {
+      clearTimeout(this.timeout);
+      this.timeout = null;
+    } else if (
+      settingsData.autoUpdates === true &&
+      current.autoUpdates === false
+    ) {
+      await this.autoUpdate();
     }
 
     const settings = { ...current, ...settingsData };
