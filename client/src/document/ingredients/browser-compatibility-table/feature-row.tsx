@@ -46,6 +46,8 @@ function getSupportClassName(
     className = "yes";
     if (version_removed || (flags && flags.length)) {
       className = "no";
+    } else if (getFirst(support) && getFirst(support).hasOwnProperty("notes")) {
+      className = "footnote";
     }
   } else {
     className = "no";
