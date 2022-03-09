@@ -41,17 +41,7 @@ export const NotificationsWatchMenu = ({ doc }) => {
   );
   const watching = data?.status && data.status !== "unwatched";
 
-  async function handleWatchSubmit({
-    custom,
-    custom_default,
-    update_custom_default,
-    unwatch,
-  }: {
-    custom?: { content: boolean; compatibility: string[] };
-    custom_default?: boolean;
-    update_custom_default?: boolean;
-    unwatch?: boolean;
-  }) {
+  async function handleWatchSubmit({ unwatch }: { unwatch?: boolean }) {
     if (!data) {
       return null;
     }
@@ -70,16 +60,10 @@ export const NotificationsWatchMenu = ({ doc }) => {
       path: string;
       title: string;
       unwatch?: boolean;
-      custom_default?: boolean;
-      update_custom_default?: boolean;
-      custom?: { content: boolean; compatibility: string[] };
     } = {
       path,
       title,
       unwatch,
-      custom_default,
-      update_custom_default,
-      custom,
     };
 
     const response = await fetch(apiURL, {
@@ -139,7 +123,6 @@ export const NotificationsWatchMenu = ({ doc }) => {
               handleSelection={(unwatch: boolean) => {
                 handleWatchSubmit({ unwatch });
               }}
-              showCustom={false}
             />
           </div>
         </DropdownMenu>

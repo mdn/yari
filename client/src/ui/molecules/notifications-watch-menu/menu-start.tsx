@@ -4,13 +4,10 @@ import { Icon } from "../../atoms/icon";
 export function NotificationsWatchMenuStart({
   data,
   handleSelection,
-  showCustom,
   closeDropdown,
 }) {
   const selected: { [x: string]: boolean } = { [data.status]: true };
-  const majorText = showCustom
-    ? "Only receive notifications of major browser compatability releases and revisions to this article."
-    : "Receive notifications of revisions to this article.";
+  const majorText = "Receive notifications of revisions to this article.";
 
   return (
     <>
@@ -29,13 +26,7 @@ export function NotificationsWatchMenuStart({
 
       <WatchMenuItem
         value="major"
-        label={
-          showCustom
-            ? "Major updates"
-            : selected.major
-            ? "Watching page"
-            : "Watch page"
-        }
+        label={selected.major ? "Watching page" : "Watch page"}
         text={majorText}
         checked={selected.major}
         onClickHandler={() => {
