@@ -130,6 +130,8 @@ const CellText = React.memo(
     const added = currentSupport && currentSupport.version_added;
     const removed = currentSupport && currentSupport.version_removed;
 
+    const browserReleaseDate = getSupportBrowserReleaseDate(support);
+
     let status:
       | { isSupported: "unknown" }
       | {
@@ -228,7 +230,14 @@ const CellText = React.memo(
           </abbr>
         </span>
         <span className="bc-browser-name">{browser.name}</span>
-        <span className="bc-version-label">{label}</span>
+        <span
+          className="bc-version-label"
+          title={
+            browserReleaseDate ? `Released ${browserReleaseDate}` : undefined
+          }
+        >
+          {label}
+        </span>
       </>
     );
   }
@@ -432,7 +441,6 @@ function CompatCell({
   locale: string;
 }) {
   const supportClassName = getSupportClassName(support, browserInfo);
-  const browserReleaseDate = getSupportBrowserReleaseDate(support);
   // NOTE: 1-5-21, I've forced hasNotes to return true, in order to
   // make the details view open all the time.
   // Whenever the support statement is complex (array with more than one entry)
@@ -460,9 +468,6 @@ function CompatCell({
                 onToggle();
               }
             : undefined
-        }
-        title={
-          browserReleaseDate ? `Released ${browserReleaseDate}` : undefined
         }
       >
         <CellText {...{ support }} browser={browserInfo} />

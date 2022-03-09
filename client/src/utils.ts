@@ -6,7 +6,10 @@ const CATEGORIES = ["html", "javascript", "css", "api", "http"];
 
 export function docCategory({ pathname = "" } = {}): string | null {
   const [, , , webOrLearn, category] = pathname.split("/");
-  if (webOrLearn === "Learn" || webOrLearn === "Web") {
+  if (
+    webOrLearn?.toLowerCase() === "learn" ||
+    webOrLearn?.toLowerCase() === "web"
+  ) {
     if (CATEGORIES.includes(category?.toLocaleLowerCase?.())) {
       return `category-${category.toLowerCase()}`;
     }
