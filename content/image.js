@@ -47,16 +47,15 @@ function findByURL(url) {
 
 function findByURLWithFallback(url) {
   let filePath = findByURL(url);
-  const locale = url.split("/")[1].toLowerCase();
+  const urlParts = url.split("/")
+  const locale = urlParts[1].toLowerCase();
   if (
     !filePath &&
     locale !== DEFAULT_LOCALE &&
     !url.startsWith(`/${DEFAULT_LOCALE.toLowerCase()}/`)
   ) {
-    let defaultLocaleURL = url.replace(
-      new RegExp(`^/${locale}/`, "i"),
-      `/${DEFAULT_LOCALE}/`
-    );
+    urlParts[1] = DEFAULT_LOCALE;
+    const defaultLocaleURL = urlParts.join("/');
     filePath = findByURL(defaultLocaleURL);
   }
   return filePath;
