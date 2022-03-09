@@ -61,7 +61,7 @@ function Banner(props: BannerProps) {
   );
 }
 
-function SendToGA(eventCategory: string) {
+function sendCTAEventToGA(eventCategory: string) {
   const ga = useGA();
   ga("send", {
     hitType: "event",
