@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "module": "ES2022",
-    "target": "esnext",
+    "target": "ES2021",
     "lib": ["es2021", "webworker"],
     "jsx": "react",
     "noImplicitAny": false,

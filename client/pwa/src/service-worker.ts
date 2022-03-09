@@ -55,7 +55,20 @@ self.addEventListener("activate", (e) => {
 });
 
 self.addEventListener("fetch", (e) => {
-  e.respondWith(respond(e));
+  const preferOnline = new URLSearchParams(location.search).get("preferOnline");
+  if (preferOnline) {
+    e.respondWith(
+      (async () => {
+        try {
+          return await fetch(e.request);
+        } catch {
+          return respond(e);
+        }
+      })()
+    );
+  } else {
+    e.respondWith(respond(e));
+  }
 });
 
 export async function messageAllClients(
@@ -74,11 +87,18 @@ export async function messageAllClients(
   }
 }
 
+var updating = false;
+
 export async function updateContent(
   self,
   { current = null, latest = null, date = null } = {},
   e
 ) {
+  if (updating) {
+    return;
+  } else {
+    updating = true;
+  }
   if (!current) {
     await caches.delete(contentCache);
   }
@@ -94,8 +114,9 @@ export async function updateContent(
       : `/packages/${latest}-content.zip`,
     UPDATES_BASE_URL
   );
-  console.log(`downloading: ${url}`);
+  console.log(`[update] downloading: ${url}`);
   const res = await fetch(url.toString());
+  console.log(`[update] unpacking: ${url}`);
   await messageAllClients(self, {
     type: "updateStatus",
     progress: 0,
@@ -116,10 +137,11 @@ export async function updateContent(
     currentVersion: latest,
     currentDate: date,
   });
+  console.log(`[update] done`);
+  updating = false;
 }
 
 async function clearContent(self: ServiceWorkerGlobalScope) {
-  console.log("clearing");
   await messageAllClients(self, {
     type: "updateStatus",
     progress: 0,
@@ -156,6 +178,8 @@ self.addEventListener("message", (e: ExtendableMessageEvent) => {
           return updateContent(self, e?.data, e);
         case "clear":
           return clearContent(self);
+        case "ping":
+          return await messageAllClients(self, { type: "pong" });
         default:
           console.log(`unknown msg type: ${e?.data?.type}`);
           return Promise.resolve();
@@ -165,17 +189,19 @@ self.addEventListener("message", (e: ExtendableMessageEvent) => {
 });
 
 self.addEventListener("activate", (e: ExtendableEvent) => {
-  e.waitUntil(async () => {
-    await self.clients.claim();
-    return caches.keys().then((keyList) => {
-      return Promise.all(
-        keyList.map((key) => {
-          if (key === cacheName) {
-            return;
-          }
-          return caches.delete(key);
-        })
-      );
-    });
-  });
+  e.waitUntil(
+    (async () => {
+      await self.clients.claim();
+      return caches.keys().then((keyList) => {
+        return Promise.all(
+          keyList.map((key) => {
+            if (key === cacheName) {
+              return;
+            }
+            return caches.delete(key);
+          })
+        );
+      });
+    })()
+  );
 });

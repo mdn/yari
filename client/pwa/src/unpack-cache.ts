@@ -1,9 +1,18 @@
 import * as zip from "@zip.js/zip.js";
 import { openContentCache } from "./caches";
 import { INTERACTIVE_EXAMPLES_URL } from "./service-worker";
+import * as fflate from "fflate";
+
+const { Deflate, Inflate } = zip.initShimAsyncCodec(
+  fflate,
+  undefined,
+  (codec, onData) => (codec.ondata = onData)
+);
 
 zip.configure({
   useWebWorkers: false,
+  Deflate,
+  Inflate,
 });
 
 export async function unpackAndCache(data, progress = async (number) => {}) {
@@ -14,12 +23,14 @@ export async function unpackAndCache(data, progress = async (number) => {}) {
   const entries = await reader.getEntries();
   const cache = await openContentCache();
   const total = entries.length;
+  const percent = Math.floor(total / 100);
+
   let index = 0;
   let removed;
   for (const entry of entries) {
     index += 1;
-    if (index % 100 === 0) {
-      console.log(`${index}/${total}`);
+    if (index % percent === 0) {
+      console.log(`[update] ${index}/${total}`);
       await progress(index / total);
     }
     if (entry.filename === "removed") {
@@ -35,19 +46,9 @@ export async function unpackAndCache(data, progress = async (number) => {}) {
     const location = getLocation(entry.filename);
     const response = new Response(data, {
       headers: {
-        // As the zip says nothing about the nature of the file, we extract
-        // this information from the file name.
         "Content-Type": getContentType(entry.filename),
       },
     });
-
-    console.log(
-      "-> Caching",
-      location,
-      "(size:",
-      entry.uncompressedSize,
-      "bytes)"
-    );
 
     await cache.put(location, response);
   }
@@ -63,7 +64,7 @@ export async function unpackAndCache(data, progress = async (number) => {}) {
       )
     );
   }
-  console.log(removed);
+  console.log(`[update] removed ${removed?.length ?? 0}`);
 }
 
 function getLocation(filename) {

@@ -165,11 +165,7 @@ export class MDNWorker {
 
   swName(onlineFirst: boolean | null | undefined = null) {
     const onlineFirstSW = onlineFirst ?? this.settings.preferOnline ?? false;
-    if (onlineFirstSW) {
-      return "/sw-prefer-online.js";
-    } else {
-      return "/sw-prefer-offline.js";
-    }
+    return `/service-worker.js?preferOnline=${onlineFirstSW}`;
   }
 
   async enableServiceWorker(onlineFirst: boolean | null | undefined = null) {
