@@ -5,7 +5,7 @@ import { Routes, Route, useLocation, useMatch } from "react-router-dom";
 // and applied before any component specific style
 import "./app.scss";
 
-import { MDN_APP, CRUD_MODE, ENABLE_PLUS } from "./constants";
+import { CRUD_MODE, ENABLE_PLUS } from "./constants";
 import { Homepage } from "./homepage";
 import { Document } from "./document";
 import { A11yNav } from "./ui/molecules/a11y-nav";
@@ -56,7 +56,7 @@ function Layout({ pageType, children }) {
         <TopNavigation />
         {children}
       </div>
-      {!MDN_APP && <Footer />}
+      <Footer />
     </>
   );
 }
