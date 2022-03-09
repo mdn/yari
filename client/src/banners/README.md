@@ -1,6 +1,6 @@
 # Using banners
 
-Your first step is to define and `id` for the banner or reuse one of the previous banner `ids` in `client/src/banners/ids.ts`. For example:
+Your first step is to define and `id` for the banner or reuse one of the previous banners(if appropriate) `ids` in `client/src/banners/ids.ts`. For example:
 
 ```js
 export const REDESIGN_ANNOUNCEMENT = "redesign_announcement";
