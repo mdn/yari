@@ -6,6 +6,7 @@ import * as fflate from "fflate";
 const { Deflate, Inflate } = zip.initShimAsyncCodec(
   fflate,
   undefined,
+  // @ts-ignore
   (codec, onData) => (codec.ondata = onData)
 );
 
