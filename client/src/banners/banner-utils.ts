@@ -3,7 +3,7 @@
 // to prevent the redisplay of the banner for a while.
 export function setEmbargoed(id: string, days: number) {
   try {
-    let key = `banner.${id}.embargoed_until`;
+    const key = `banner.${id}.embargoed_until`;
     localStorage.setItem(
       key,
       String(Date.now() + Math.round(days * 24 * 60 * 60 * 1000))
