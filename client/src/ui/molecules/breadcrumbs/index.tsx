@@ -1,12 +1,15 @@
-import { DocParent } from "../../../document/types";
+import { Doc } from "../../../document/types";
 import { PreloadingDocumentLink } from "../../../document/preloading";
 
 import "./index.scss";
 
-export const Breadcrumbs = ({ parents }: { parents: DocParent[] }) => {
-  if (!parents.length) {
-    throw new Error("Empty parents array");
-  }
+export const Breadcrumbs = ({ doc }: { doc: Doc }) => {
+  const items = doc.parents || [
+    {
+      uri: doc.mdn_url,
+      title: doc.title,
+    },
+  ];
 
   return (
     <nav className="breadcrumbs-container" aria-label="Breadcrumb navigation">
@@ -15,19 +18,19 @@ export const Breadcrumbs = ({ parents }: { parents: DocParent[] }) => {
         vocab="https://schema.org/"
         aria-label="breadcrumbs"
       >
-        {parents.map((parent, i) => {
+        {items.map((item, i) => {
           const currentCrumb = i + 1;
-          const isLast = currentCrumb === parents.length;
+          const isLast = currentCrumb === items.length;
 
           return (
-            <li key={parent.uri} property="itemListElement" typeof="ListItem">
+            <li key={item.uri} property="itemListElement" typeof="ListItem">
               <PreloadingDocumentLink
-                to={parent.uri}
+                to={item.uri}
                 className={isLast ? "breadcrumb-current-page" : "breadcrumb"}
                 property="item"
                 typeof="WebPage"
               >
-                <span property="name">{parent.title}</span>
+                <span property="name">{item.title}</span>
               </PreloadingDocumentLink>
               <meta property="position" content={`${currentCrumb}`} />
             </li>
