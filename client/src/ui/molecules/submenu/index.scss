@@ -131,10 +131,9 @@
 .submenu-item-dot ~ .submenu-content-container > .submenu-item-heading::after {
   content: "";
   display: inline-block;
-  color: var(--text-link);
   border: 1px solid var(--background-primary);
   border-radius: 2rem;
-  background: var(--text-link);
+  background: var(--text-primary-blue);
   width: 0.5rem;
   height: 0.5rem;
   margin-left: 0.5rem;
