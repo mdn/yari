@@ -53,6 +53,11 @@ function getSupportClassName(
       getFirst(support).hasOwnProperty("notes")
     ) {
       className = "footnote";
+    } else if (
+      use_note_symbol &&
+      asList(support).some((s) => s.hasOwnProperty("notes"))
+    ) {
+      className = "chevron";
     }
   } else {
     className = "no";
@@ -225,7 +230,7 @@ const CellText = React.memo(
         break;
     }
     const supportClassName = getSupportClassName(
-      currentSupport,
+      support,
       browser,
       use_note_symbol
     );
