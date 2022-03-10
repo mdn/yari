@@ -14,6 +14,7 @@ const LEGEND_LABELS = {
   "note-warning": "Non-standard. Check cross-browser support before using.",
   "thumbs-down": "Deprecated. Not for use in new websites.",
   footnote: "See implementation notes.",
+  chevron: "See support notes related to outdated browsers.",
   disabled: "User must explicitly enable this feature.",
   altname: "Uses a non-standard name.",
   prefix: "Requires a vendor prefix or different name for use.",
@@ -73,7 +74,14 @@ function getActiveLegendItems(
         if (versionSupport.prefix) {
           legendItems.add("prefix");
         }
-        if (versionSupport.notes) {
+        if (versionSupport.notes && Array.isArray(browserSupport)) {
+          legendItems.add("chevron");
+        }
+        if (
+          versionSupport.notes &&
+          !versionSupport.version_removed &&
+          !versionSupport.partial_implementation
+        ) {
           legendItems.add("footnote");
         }
         if (versionSupport.alternative_name) {
