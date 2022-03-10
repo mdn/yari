@@ -10,6 +10,7 @@ type SubmenuItem = {
   label?: string;
   subText?: string;
   url?: string;
+  dot?: string;
 };
 
 type MenuEntry = {
@@ -51,6 +52,11 @@ export const Submenu = ({
               ) : item.url ? (
                 <a href={item.url} className="submenu-item" role="menuitem">
                   {item.hasIcon && <div className={item.iconClasses} />}
+                  {item.dot && (
+                    <span className="visually-hidden submenu-item-dot">
+                      {item.dot}
+                    </span>
+                  )}
                   <div className="submenu-content-container">
                     <div className="submenu-item-heading">{item.label}</div>
                     {item.description && (

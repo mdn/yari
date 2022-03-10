@@ -2,7 +2,6 @@ import * as React from "react";
 
 import { AuthContainer } from "../../molecules/auth-container";
 import MainMenu from "../../molecules/main-menu";
-import { HeaderNotificationsMenu } from "../../molecules/header-notifications-menu";
 import { UserMenu } from "../../molecules/user-menu";
 import { Search } from "../../molecules/search";
 
@@ -52,7 +51,6 @@ export const TopNavigationMain = ({ isOpenOnMobile }) => {
       {ENABLE_PLUS &&
         ((isAuthenticated && (
           <>
-            <HeaderNotificationsMenu />
             <UserMenu />
           </>
         )) || <AuthContainer />)}
