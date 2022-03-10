@@ -251,10 +251,10 @@ function BookmarksLayout() {
       </header>
       <Tabs tabs={localeToTab(locale)} />
       <Container>
-        {SELECTED_TAB === TABS.TAB_BOOKMARKS &&
-          (data ? (
-            <>
-              <SearchFilter filters={filters} sorts={sorts} />
+        {SELECTED_TAB === TABS.TAB_BOOKMARKS && (
+          <>
+            <SearchFilter filters={filters} sorts={sorts} />
+            {(data && (
               <DisplayData
                 data={data}
                 isValidating={isValidating}
@@ -262,10 +262,9 @@ function BookmarksLayout() {
                 deleteBookmarked={deleteBookmarked}
                 showEditButton={true}
               />
-            </>
-          ) : (
-            <Loading message="Waiting for data" />
-          ))}
+            )) || <Loading message="Waiting for data" />}
+          </>
+        )}
         {SELECTED_TAB === TABS.TAB_FREQ_VISITED && (
           <>
             <SearchFilter filters={filters} />
