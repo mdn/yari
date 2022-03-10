@@ -1,9 +1,9 @@
+import { isValidElement } from "react";
 import { MDNOfflineDB } from "./db";
 
 const PATH_COLLECTIONS = "/api/v1/plus/collection";
 const PATH_WHOAMI = "/api/v1/whoami";
-const PATH_WATCHING = "/api/v1/plus/watched";
-const PATH_WATCH = "/api/v1/plus/watch"; //Change to watching
+const PATH_WATCHING = "/api/v1/plus/watching";
 const PATH_NOTIFICATIONS = "/api/v1/plus/notifications";
 
 interface FetchInterceptor {
@@ -35,12 +35,12 @@ class WhoamiInterceptor implements FetchInterceptor {
       const res = await fetch(req);
       const json = await res.clone().json();
       if (json?.username) {
-        await this.db.whoami.put(json, 0);
+        await this.db.whoami.put(json, 1);
       }
       return res;
     } catch (err: any) {
       const whoami = await this.db.whoami.get(1);
-      return new Response(jsonBlob(whoami));
+      return new Response(jsonBlob({ ...whoami, offline: true }));
     }
   }
   async onPost(req: Request): Promise<Response> {
@@ -74,7 +74,7 @@ class CollectionsInterceptor implements FetchInterceptor {
       if (url) {
         //Single request case.
         const item = await this.db.collections.get({ url: url });
-        return new Response(jsonBlob({ bookmarked: item }));
+        return new Response(jsonBlob({ bookmarked: item, offline: true }));
       } else {
         const collection = await this.db.collections.toCollection().toArray();
         return new Response(
@@ -87,7 +87,12 @@ class CollectionsInterceptor implements FetchInterceptor {
     }
   }
   async onPost(req: Request): Promise<Response> {
-    return await fetch(req);
+    try {
+      const res = await fetch(req);
+      return res;
+    } catch (err) {
+      return new Response(jsonBlob({ error: "offline" }));
+    }
   }
 }
 
@@ -112,15 +117,25 @@ class NotificationsInterceptor implements FetchInterceptor {
       return res;
     } catch (err: any) {
       let notifications = await this.db.notifications.toCollection().toArray();
-      const limit = new URLSearchParams(req.url).get("limit");
-      if (limit) {
-        notifications = notifications.slice(0, parseInt(limit));
+      const params = new URL(req.url).searchParams;
+
+      if (Boolean(params.get("starred"))) {
+        notifications = notifications.filter((v) => v.starred);
       }
-      return new Response(jsonBlob({ items: notifications }));
+      const limit = params.get("limit");
+      const offset = params.get("offset");
+      if (limit && offset) {
+        notifications = notifications.slice(parseInt(offset), parseInt(limit));
+      }
+      return new Response(jsonBlob({ items: notifications, offline: true }));
     }
   }
   async onPost(req: Request): Promise<Response> {
-    return await fetch(req);
+    try {
+      return await fetch(req);
+    } catch (err) {
+      return new Response(jsonBlob({ error: "offline" }));
+    }
   }
 }
 
@@ -141,21 +156,47 @@ class WatchedInterceptor implements FetchInterceptor {
       const json = await res.clone().json();
       if (json?.items) {
         await this.db.watched.bulkPut(json.items);
+      } else if (json?.status !== "unwatched") {
+        await this.db.watched.put(json);
       }
       return res;
     } catch (err: any) {
       let watching;
       try {
-        watching = await this.db.watched.toCollection().toArray();
+        const params = new URL(req.url).searchParams;
+        const url = params.get("url");
+        if (url) {
+          const watched = await this.db.watched.get({ url: url.toLowerCase() });
+
+          return new Response(
+            jsonBlob({ ...watched, status: "major", offline: true })
+          );
+        } else {
+          watching = await this.db.watched.toCollection().toArray();
+          const limit = params.get("limit");
+          const offset = params.get("offset");
+          if (limit && offset) {
+            watching = watching.slice(parseInt(offset), parseInt(limit));
+          }
+          // We don't store the status.
+          watching = watching.map((val) => {
+            return { ...val, status: "major" };
+          });
+        }
       } catch (err) {
         console.log(err);
         watching = [];
       }
-      return new Response(jsonBlob({ items: watching }));
+      return new Response(jsonBlob({ items: watching, offline: true }));
     }
   }
   async onPost(req: Request): Promise<Response> {
-    return await fetch(req);
+    try {
+      const res = await fetch(req);
+      return res;
+    } catch (err) {
+      return new Response(jsonBlob({ error: "offline" }));
+    }
   }
 }
 

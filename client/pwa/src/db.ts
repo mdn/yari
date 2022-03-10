@@ -4,6 +4,7 @@ interface Watched {
   url: string;
   title: string;
   path: string;
+  status: string;
 }
 
 interface Notifications {
@@ -50,7 +51,7 @@ export class MDNOfflineDB extends Dexie {
     super("MDNOfflineDB");
     this.version(1).stores({
       whoami:
-        "++id, username, is_authenticated, email, avatar_url, is_subscriber",
+        "++, username, is_authenticated, email, avatar_url, is_subscriber",
       collections: "url, title, parents, notes",
       watched: "url, title, path",
       notifications: "id, title, text, url, created, read, starred",
