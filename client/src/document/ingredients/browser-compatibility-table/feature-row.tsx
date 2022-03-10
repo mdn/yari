@@ -28,7 +28,8 @@ type SupportStatementExtended =
 
 function getSupportClassName(
   support: SupportStatementExtended | undefined,
-  browser: bcd.BrowserStatement
+  browser: bcd.BrowserStatement,
+  use_note_symbol: boolean
 ): string {
   if (!support) {
     return "unknown";
@@ -46,7 +47,11 @@ function getSupportClassName(
     className = "yes";
     if (version_removed || (flags && flags.length)) {
       className = "no";
-    } else if (getFirst(support) && getFirst(support).hasOwnProperty("notes")) {
+    } else if (
+      use_note_symbol &&
+      getFirst(support) &&
+      getFirst(support).hasOwnProperty("notes")
+    ) {
       className = "footnote";
     }
   } else {
@@ -123,9 +128,11 @@ const CellText = React.memo(
   ({
     support,
     browser,
+    use_note_symbol,
   }: {
     support: bcd.SupportStatement | undefined;
     browser: bcd.BrowserStatement;
+    use_note_symbol: boolean;
   }) => {
     const currentSupport = getFirst(support);
 
@@ -217,15 +224,20 @@ const CellText = React.memo(
         label = "?";
         break;
     }
+    const supportClassName = getSupportClassName(
+      currentSupport,
+      browser,
+      use_note_symbol
+    );
 
     return (
       <>
         <span className="icon-wrap">
           <abbr
             className={`
-            bc-level-${getSupportClassName(currentSupport, browser)}
+            bc-level-${supportClassName}
             icon
-            icon-${getSupportClassName(currentSupport, browser)}`}
+            icon-${supportClassName}`}
             title={title}
           >
             <span className="bc-support-level">{title}</span>
@@ -399,10 +411,15 @@ function getNotes(
                 <dt
                   className={`bc-supports-${getSupportClassName(
                     item,
-                    browser
+                    browser,
+                    false
                   )} bc-supports`}
                 >
-                  <CellText support={item} browser={browser} />
+                  <CellText
+                    support={item}
+                    browser={browser}
+                    use_note_symbol={false}
+                  />
                   {/**<CellIcons support={item} /> */}
                 </dt>
                 {supportNotes.map(({ iconName, label }, i) => {
@@ -442,7 +459,7 @@ function CompatCell({
   onToggle: () => void;
   locale: string;
 }) {
-  const supportClassName = getSupportClassName(support, browserInfo);
+  const supportClassName = getSupportClassName(support, browserInfo, false);
   // NOTE: 1-5-21, I've forced hasNotes to return true, in order to
   // make the details view open all the time.
   // Whenever the support statement is complex (array with more than one entry)
@@ -472,7 +489,11 @@ function CompatCell({
             : undefined
         }
       >
-        <CellText {...{ support }} browser={browserInfo} />
+        <CellText
+          {...{ support }}
+          browser={browserInfo}
+          use_note_symbol={true}
+        />
         <CellIcons support={support} />
         {notes && (
           <button
