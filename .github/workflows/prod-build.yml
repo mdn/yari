@@ -50,9 +50,9 @@ jobs:
     if: github.repository == 'mdn/yari'
 
     steps:
-      - uses: actions/checkout@v2.4.0
+      - uses: actions/checkout@v3
 
-      - uses: actions/checkout@v2.4.0
+      - uses: actions/checkout@v3
         with:
           repository: mdn/content
           path: mdn/content
@@ -74,13 +74,18 @@ jobs:
           echo "DEPLOYER_BUCKET_PREFIX=${{ github.event.inputs.deployment_prefix || env.DEFAULT_DEPLOYMENT_PREFIX }}" >> $GITHUB_ENV
           echo "DEPLOYER_LOG_EACH_SUCCESSFUL_UPLOAD=${{ github.event.inputs.log_each_successful_upload || env.DEFAULT_LOG_EACH_SUCCESSFUL_UPLOAD }}" >> $GITHUB_ENV
 
-      - uses: actions/checkout@v2.4.0
+      - uses: actions/checkout@v3
         with:
           repository: mdn/translated-content
           path: mdn/translated-content
 
+      - uses: actions/checkout@v3
+        with:
+          repository: mdn/mdn-contributor-spotlight
+          path: mdn/mdn-contributor-spotlight
+
       - name: Setup Node.js environment
-        uses: actions/setup-node@v2.5.1
+        uses: actions/setup-node@v3
         with:
           node-version: "12"
 
@@ -97,7 +102,7 @@ jobs:
         run: yarn --frozen-lockfile
 
       - name: Install Python
-        uses: actions/setup-python@v2.3.1
+        uses: actions/setup-python@v3.0.0
         with:
           python-version: "3.8"
 
@@ -126,6 +131,7 @@ jobs:
           # sub-folder called "mdn/content"
           CONTENT_ROOT: ${{ github.workspace }}/mdn/content/files
           CONTENT_TRANSLATED_ROOT: ${{ github.workspace }}/mdn/translated-content/files
+          CONTRIBUTOR_SPOTLIGHT_ROOT: ${{ github.workspace }}/mdn/mdn-contributor-spotlight/contributors
 
           # The default for this environment variable is geared for writers
           # (aka. local development). Usually defaults are supposed to be for
@@ -147,8 +153,8 @@ jobs:
           # https://speedcurve.com/mozilla-add-ons/mdn/settings/updated/#lux
           BUILD_SPEEDCURVE_LUX_ID: 108906238
 
-          # This enables the Plus call-to-action banner and the Plus landing page
-          REACT_APP_ENABLE_PLUS: true
+          # This enables the MDN Plus
+          REACT_APP_ENABLE_PLUS: false
 
           # This removes the ability to sign in
           REACT_APP_DISABLE_AUTH: true

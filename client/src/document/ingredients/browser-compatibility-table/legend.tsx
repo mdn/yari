@@ -1,16 +1,18 @@
+import { useContext } from "react";
 import type bcd from "@mdn/browser-compat-data/types";
-import { asList, listFeatures } from "./utils";
+import { BrowserInfoContext } from "./browser-info";
+import { asList, listFeatures, versionIsPreview } from "./utils";
 
 // Also specifies the order in which the legend appears
 const LEGEND_LABELS = {
   yes: "Full support",
   partial: "Partial support",
+  preview: "In development. Supported in a pre-release version.",
   no: "No support",
   unknown: "Compatibility unknown",
-  preview: "Supported in pre-release/beta channel",
   experimental: "Experimental. Expect behavior to change in the future.",
-  "non-standard": "Non-standard. Check cross-browser support before using.",
-  deprecated: "Deprecated. Not for use in new websites.",
+  "note-warning": "Non-standard. Check cross-browser support before using.",
+  "thumbs-down": "Deprecated. Not for use in new websites.",
   footnote: "See implementation notes.",
   disabled: "User must explicitly enable this feature.",
   altname: "Uses a non-standard name.",
@@ -18,7 +20,11 @@ const LEGEND_LABELS = {
 };
 type LEGEND_KEY = keyof typeof LEGEND_LABELS;
 
-function getActiveLegendItems(compat: bcd.Identifier, name: string) {
+function getActiveLegendItems(
+  compat: bcd.Identifier,
+  name: string,
+  browserInfo: bcd.Browsers
+) {
   const legendItems = new Set<LEGEND_KEY>();
 
   for (const feature of listFeatures(compat, "", name)) {
@@ -29,14 +35,16 @@ function getActiveLegendItems(compat: bcd.Identifier, name: string) {
         legendItems.add("experimental");
       }
       if (status.deprecated) {
-        legendItems.add("deprecated");
+        legendItems.add("thumbs-down");
       }
       if (!status.standard_track) {
-        legendItems.add("non-standard");
+        legendItems.add("note-warning");
       }
     }
 
-    for (const browserSupport of Object.values(feature.compat.support)) {
+    for (const [browser, browserSupport] of Object.entries(
+      feature.compat.support
+    )) {
       if (!browserSupport) {
         legendItems.add("no");
         continue;
@@ -46,7 +54,9 @@ function getActiveLegendItems(compat: bcd.Identifier, name: string) {
         if (versionSupport.version_added) {
           if (versionSupport.flags && versionSupport.flags.length) {
             legendItems.add("no");
-          } else if (versionSupport.version_added === "preview") {
+          } else if (
+            versionIsPreview(versionSupport.version_added, browserInfo[browser])
+          ) {
             legendItems.add("preview");
           } else {
             legendItems.add("yes");
@@ -87,36 +97,42 @@ export function Legend({
   compat: bcd.Identifier;
   name: string;
 }) {
+  const browserInfo = useContext(BrowserInfoContext);
+
+  if (!browserInfo) {
+    throw new Error("Missing browser info");
+  }
+
   return (
     <section className="bc-legend">
       <h3 className="visually-hidden" id="Legend">
         Legend
       </h3>
       <dl className="bc-legend-items-container">
-        {getActiveLegendItems(compat, name).map(([key, label]) =>
+        {getActiveLegendItems(compat, name, browserInfo).map(([key, label]) =>
           ["yes", "partial", "no", "unknown", "preview"].includes(key) ? (
             <div className="bc-legend-item" key={key}>
-              <dt key={key}>
+              <dt className="bc-legend-item-dt" key={key}>
                 <span className={`bc-supports-${key} bc-supports`}>
                   <abbr
-                    className={`bc-level bc-level-${key} only-icon`}
+                    className={`bc-level bc-level-${key} icon icon-${key}`}
                     title={label}
                   >
-                    <span>{label}</span>
+                    <span className="visually-hidden">{label}</span>
                   </abbr>
                 </span>
               </dt>
-              <dd>{label}</dd>
+              <dd className="bc-legend-item-dd">{label}</dd>
             </div>
           ) : (
             <div className="bc-legend-item" key={key}>
-              <dt>
+              <dt className="bc-legend-item-dt">
                 <abbr
-                  className={`only-icon legend-icons ic-${key}`}
+                  className={`legend-icons icon icon-${key}`}
                   title={label}
                 ></abbr>
               </dt>
-              <dd>{label}</dd>
+              <dd className="bc-legend-item-dd">{label}</dd>
             </div>
           )
         )}

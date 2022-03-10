@@ -33,6 +33,7 @@ const { buildSPAs } = require("./spas");
 const { renderCache: renderKumascriptCache } = require("../kumascript");
 const LANGUAGES_RAW = require("../content/languages.json");
 const { safeDecodeURIComponent } = require("../kumascript/src/api/util");
+const { wrapTables } = require("./wrap-tables");
 
 const LANGUAGES = new Map(
   Object.entries(LANGUAGES_RAW).map(([locale, data]) => {
@@ -534,6 +535,8 @@ async function buildDocument(document, documentOptions = {}) {
   injectNotecardOnWarnings($);
 
   formatNotecards($);
+
+  wrapTables($);
 
   // Turn the $ instance into an array of section blocks. Most of the
   // section blocks are of type "prose" and their value is a string blob

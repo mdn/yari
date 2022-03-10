@@ -14,10 +14,11 @@ Example calls
 */
 
 var query = $0 || env['browser-compat'];
-if (!query) {
-  throw new Error("No first query argument or 'browser-compat' front-matter value passed");
+var specURLs = env['spec-urls'] || "";
+if (!query && !specURLs) {
+  throw new Error("No first query argument or 'browser-compat' or 'spec-urls' front-matter value passed");
 }
-var output = `<div class="bc-specs" data-bcd-query="${query}">
+var output = `<div class="bc-specs" data-bcd-query="${query}" data-spec-urls="${specURLs}">
   If you're able to see this, something went wrong on this page.
 </div>`;
 %>

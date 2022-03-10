@@ -1,14 +1,15 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { useCombobox } from "downshift";
-import FlexSearch from "flexsearch";
 import useSWR from "swr";
 
 import { Doc, FuzzySearch } from "./fuzzy-search";
 import { preload, preloadSupported } from "./document/preloading";
 
+import { Button } from "./ui/atoms/button";
+
 import { useLocale } from "./hooks";
-import { getPlaceholder, SearchProps, useFocusOnSlash } from "./search-utils";
+import { SearchProps, useFocusOnSlash } from "./search-utils";
 
 const PRELOAD_WAIT_MS = 500;
 const SHOW_INDEXING_AFTER_MS = 500;
@@ -59,10 +60,7 @@ function useSearchIndex(): readonly [
       return;
     }
 
-    const flex = FlexSearch.create({ tokenize: "forward" });
-    data!.forEach(({ title }, i) => {
-      flex.add(i, title);
-    });
+    const flex = data.map(({ title }, i) => [i, title.toLowerCase()]);
     const fuzzy = new FuzzySearch(data as Doc[]);
 
     setSearchIndex({ flex, fuzzy, items: data! });
@@ -81,20 +79,15 @@ function isFuzzySearchString(str: string) {
 }
 
 function HighlightMatch({ title, q }: { title: string; q: string }) {
-  // FlexSearch doesn't support finding out which "typo corrections"
-  // were done unfortunately.
-  // See https://github.com/nextapps-de/flexsearch/issues/99
-
-  // Split on higlight term and include term into parts, ignore case.
+  // Split on highlight term and include term into parts, ignore case.
   const words = q.trim().toLowerCase().split(/[ ,]+/);
-
   // $& means the whole matched string
   const regexWords = words.map((s) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"));
-  const regex = `\\b(${regexWords.join("|")})`;
+  const regex = regexWords.map((word) => `(${word})`).join("|");
   const parts = title.split(new RegExp(regex, "gi"));
   return (
     <b>
-      {parts.map((part, i) => {
+      {parts.filter(Boolean).map((part, i) => {
         const key = `${part}:${i}`;
         if (words.includes(part.toLowerCase())) {
           return <mark key={key}>{part}</mark>;
@@ -135,6 +128,7 @@ function BreadcrumbURI({
 }
 
 type InnerSearchNavigateWidgetProps = SearchProps & {
+  onCloseSearch?: () => void;
   onResultPicked?: () => void;
   defaultSelection: [number, number];
 };
@@ -142,6 +136,7 @@ type InnerSearchNavigateWidgetProps = SearchProps & {
 function useHasNotChangedFor(value: string, ms: number) {
   const [hasNotChanged, setHasNotChanged] = useState(false);
   const previousValue = useRef(value);
+
   useEffect(() => {
     if (previousValue.current === value) {
       return;
@@ -164,14 +159,18 @@ function useHasNotChangedFor(value: string, ms: number) {
 
 function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
   const {
+    id,
     inputValue,
     onChangeInputValue,
     isFocused,
     onChangeIsFocused,
+    onCloseSearch,
     onResultPicked,
     defaultSelection,
   } = props;
 
+  const inputId = `${id}-q`;
+  const formId = `${id}-form`;
   const navigate = useNavigate();
   const locale = useLocale();
 
@@ -221,11 +220,14 @@ function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
         }));
       }
     } else {
-      // Full-Text search
-      const indexResults: number[] = searchIndex.flex.search(inputValue, {
-        limit,
-        suggest: true, // This can give terrible result suggestions
-      });
+      const q: string[] = inputValue
+        .toLowerCase()
+        .split(" ")
+        .map((s) => s.trim());
+      const indexResults: number[] = searchIndex.flex
+        .filter(([_, title]) => q.every((q) => title.includes(q)))
+        .map(([i]) => i)
+        .slice(0, limit);
       return indexResults.map(
         (index: number) => (searchIndex.items || [])[index] as ResultItem
       );
@@ -244,6 +246,11 @@ function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
     [searchPath]
   );
 
+  const onlineSearch = useMemo(
+    () => ({ url: searchPath, title: "", positions: new Set() }),
+    [searchPath]
+  );
+
   const {
     getInputProps,
     getItemProps,
@@ -256,11 +263,16 @@ function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
     reset,
     toggleMenu,
   } = useCombobox({
-    items: resultItems.length === 0 ? [nothingFoundItem] : resultItems,
+    items:
+      resultItems.length === 0
+        ? [nothingFoundItem]
+        : [...resultItems, onlineSearch],
     inputValue,
+    isOpen: inputValue !== "",
     defaultIsOpen: isFocused,
-    onSelectedItemChange: ({ selectedItem }) => {
-      if (selectedItem) {
+    defaultHighlightedIndex: 0,
+    onSelectedItemChange: ({ type, selectedItem }) => {
+      if (type !== useCombobox.stateChangeTypes.InputBlur && selectedItem) {
         navigate(selectedItem.url);
         onChangeInputValue("");
         reset();
@@ -283,8 +295,14 @@ function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
   useEffect(() => {
     if (isFocused) {
       initializeSearchIndex();
+      onChangeIsFocused(true);
+      inputRef.current?.focus();
     }
-  }, [initializeSearchIndex, isFocused]);
+  }, [initializeSearchIndex, isFocused, onChangeIsFocused]);
+
+  const [resultsWithHighlighting, setResultsWithHighlighting] = useState<any>(
+    []
+  );
 
   useEffect(() => {
     const item = resultItems[highlightedIndex];
@@ -297,6 +315,20 @@ function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
       };
     }
   }, [highlightedIndex, resultItems]);
+
+  useEffect(() => {
+    setResultsWithHighlighting(
+      resultItems.map((item) => {
+        return (
+          <>
+            <HighlightMatch title={item.title} q={inputValue} />
+            <br />
+            <BreadcrumbURI uri={item.url} positions={item.positions} />
+          </>
+        );
+      })
+    );
+  }, [resultItems, inputValue]);
 
   const searchResults = (() => {
     if (!isOpen || !inputValue.trim()) {
@@ -316,7 +348,6 @@ function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
         </div>
       ) : null;
     }
-
     return (
       <>
         {resultItems.length === 0 && inputValue !== "/" ? (
@@ -336,21 +367,37 @@ function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
             </Link>
           </div>
         ) : (
-          resultItems.map((item, i) => (
+          [
+            ...resultItems.map((item, i) => (
+              <div
+                {...getItemProps({
+                  key: item.url,
+                  className:
+                    "result-item " +
+                    (i === highlightedIndex ? "highlight" : ""),
+                  item,
+                  index: i,
+                })}
+              >
+                {resultsWithHighlighting[i]}
+              </div>
+            )),
             <div
               {...getItemProps({
-                key: item.url,
                 className:
-                  "result-item " + (i === highlightedIndex ? "highlight" : ""),
-                item,
-                index: i,
+                  "nothing-found result-item " +
+                  (highlightedIndex === resultItems.length ? "highlight" : ""),
+                item: onlineSearch,
+                index: resultItems.length,
               })}
             >
-              <HighlightMatch title={item.title} q={inputValue} />
+              Not seeing what you're searching for?
               <br />
-              <BreadcrumbURI uri={item.url} positions={item.positions} />
-            </div>
-          ))
+              <Link to={searchPath}>
+                Site search for <code>{inputValue}</code>
+              </Link>
+            </div>,
+          ]
         )}
         {isFuzzySearchString(inputValue) && (
           <div className="fuzzy-engaged">Fuzzy searching by URI</div>
@@ -365,7 +412,7 @@ function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
       {...getComboboxProps({
         ref: formRef as any, // downshift's types hardcode it as a div
         className: "search-form search-widget",
-        id: "nav-main-search",
+        id: formId,
         role: "search",
         onSubmit: (e) => {
           // This comes into effect if the input is completely empty and the
@@ -373,11 +420,13 @@ function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
           // When something *is* entered, the onKeyDown event is triggered
           // on the <input> and within that handler you can
           // access `event.key === 'Enter'` as a signal to submit the form.
-          e.preventDefault();
+          if (!inputValue.trim()) {
+            e.preventDefault();
+          }
         },
       })}
     >
-      <label htmlFor="main-q" className="visually-hidden">
+      <label htmlFor={inputId} className="visually-hidden">
         Search MDN
       </label>
 
@@ -387,9 +436,9 @@ function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
           className: isOpen
             ? "has-search-results search-input-field"
             : "search-input-field",
-          id: "main-q",
+          id: inputId,
           name: "q",
-          placeholder: getPlaceholder(isFocused),
+          placeholder: "   ",
           onMouseOver: initializeSearchIndex,
           onFocus: () => {
             onChangeIsFocused(true);
@@ -397,7 +446,10 @@ function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
           onBlur: () => onChangeIsFocused(false),
           onKeyDown(event) {
             if (event.key === "Escape" && inputRef.current) {
+              onChangeInputValue("");
+              reset();
               toggleMenu();
+              inputRef.current?.blur();
             } else if (
               event.key === "Enter" &&
               inputValue.trim() &&
@@ -415,15 +467,27 @@ function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
           ref: (input) => {
             inputRef.current = input;
           },
+          required: true,
         })}
       />
 
-      <input
-        type="submit"
-        className="ghost search-button"
-        value=""
-        aria-label="Search"
-      />
+      <Button
+        type="action"
+        icon="search"
+        buttonType="submit"
+        extraClasses="search-button"
+      >
+        <span className="visually-hidden">Search</span>
+      </Button>
+
+      <Button
+        type="action"
+        icon="cancel"
+        extraClasses="close-search-button"
+        onClickHandler={onCloseSearch}
+      >
+        <span className="visually-hidden">Close search</span>
+      </Button>
 
       <div {...getMenuProps()}>
         {searchResults && <div className="search-results">{searchResults}</div>}

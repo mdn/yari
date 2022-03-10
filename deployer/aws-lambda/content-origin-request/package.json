@@ -14,7 +14,7 @@
     "@yari-internal/get-locale": "file:../../../libs/get-locale",
     "@yari-internal/slug-utils": "file:../../../libs/slug-utils",
     "accept-language-parser": "^1.5.0",
-    "cookie": "0.4.1",
+    "cookie": "0.4.2",
     "sanitize-filename": "^1.6.3"
   },
   "devDependencies": {},

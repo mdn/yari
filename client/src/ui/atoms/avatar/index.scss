@@ -1,0 +1,29 @@
+@use "../../vars" as *;
+
+.avatar {
+  border-radius: 50%;
+
+  &-wrap {
+    /* pull the avatar into the space on the left
+       introduced by the border */
+    margin-left: -7px;
+    margin-right: 0.1rem;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    position: relative;
+
+    &.is-subscriber {
+      padding: 2px;
+      background: radial-gradient(
+        circle,
+        white 55%,
+        var(--background-mark-yellow) 55%
+      );
+    }
+  }
+
+  @media screen and (min-width: $screen-md) {
+    margin: initial;
+  }
+}

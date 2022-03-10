@@ -1,0 +1,9 @@
+@use "sass:color";
+@use "../../vars" as *;
+
+.guides {
+  .submenu .submenu-item-heading {
+    font-weight: initial;
+    font: var(--type-body-m);
+  }
+}

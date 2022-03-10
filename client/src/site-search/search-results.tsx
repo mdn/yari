@@ -1,15 +1,17 @@
 import React from "react";
-import { Link, createSearchParams, useSearchParams } from "react-router-dom";
+import { createSearchParams, Link, useSearchParams } from "react-router-dom";
 import useSWR from "swr";
 
 import { Loading } from "../ui/atoms/loading";
 import { CRUD_MODE } from "../constants";
 import { useLocale } from "../hooks";
 import { appendURL } from "./utils";
+import { Button } from "../ui/atoms/button";
 
 import LANGUAGES_RAW from "../languages.json";
 import "./search-results.scss";
 import { useGA } from "../ga-context";
+import NoteCard from "../ui/molecules/notecards";
 
 const LANGUAGES = new Map(
   Object.entries(LANGUAGES_RAW).map(([locale, data]) => {
@@ -27,6 +29,7 @@ type Highlight = {
   body?: string[];
   title?: string[];
 };
+
 interface Document {
   mdn_url: string;
   locale: string;
@@ -59,6 +62,7 @@ interface FormErrorMessage {
   message: string;
   code: string;
 }
+
 type FormErrors = [{ key: string }, FormErrorMessage[]];
 
 class BadRequestError extends Error {
@@ -72,6 +76,7 @@ class BadRequestError extends Error {
 
 class ServerOperationalError extends Error {
   public statusCode: number;
+
   constructor(statusCode: number) {
     super(`ServerOperationalError ${statusCode}`);
     this.statusCode = statusCode;
@@ -197,13 +202,13 @@ function RemoteSearchWarning() {
     // so it's hardcoded here in the client.
     const kumaHost = process.env.REACT_APP_KUMA_HOST || "developer.mozilla.org";
     return (
-      <div className="notecard warning">
+      <NoteCard type="warning">
         <h4>Note!</h4>
         <p>
           Site-search is proxied to <code>{kumaHost}</code> which means that
           some content found doesn't reflect what's in your current branch.
         </p>
-      </div>
+      </NoteCard>
     );
   }
   return null;
@@ -245,7 +250,7 @@ function SearchErrorContainer({ children }: { children: React.ReactNode }) {
 
 function ExplainBadRequestError({ errors }: { errors: FormErrors }) {
   return (
-    <div className="notecard warning">
+    <NoteCard type="warning">
       <p>The search didn't work because there were problems with the input.</p>
       <ul>
         {Object.keys(errors).map((key) => {
@@ -260,27 +265,28 @@ function ExplainBadRequestError({ errors }: { errors: FormErrors }) {
           );
         })}
       </ul>
-    </div>
+    </NoteCard>
   );
 }
 
 function ExplainServerOperationalError({ statusCode }: { statusCode: number }) {
   return (
-    <div className="notecard warning">
+    <NoteCard type="warning">
       <p>The search failed because the server failed to respond.</p>
       <p>
         If you're curious, it was a <b>{statusCode}</b> error.
       </p>
       <p>
-        <button
-          onClick={() => {
+        <Button
+          onClickHandler={() => {
             window.location.reload();
           }}
+          type="secondary"
         >
           Try reloading
-        </button>
+        </Button>
       </p>
-    </div>
+    </NoteCard>
   );
 }
 

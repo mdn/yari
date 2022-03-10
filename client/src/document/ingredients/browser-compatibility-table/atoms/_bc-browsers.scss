@@ -4,7 +4,7 @@
   th {
     border-top: 0;
     height: 200px;
-    padding: $base-unit 0;
+    padding: 1rem 0;
     vertical-align: bottom;
 
     &:nth-child(2) {
@@ -17,7 +17,7 @@
     display: inline-block;
     font-weight: normal;
     height: 20px;
-    margin: 0 0 $base-spacing math.div($base-spacing, 2);
+    margin: 0 0 1rem 0.5rem;
     padding: 0;
     text-align: left;
     transform: rotate(-90deg);

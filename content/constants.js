@@ -19,6 +19,10 @@ const CONTENT_TRANSLATED_ROOT = correctContentPathFromEnv(
   "CONTENT_TRANSLATED_ROOT"
 );
 
+const CONTRIBUTOR_SPOTLIGHT_ROOT = correctContentPathFromEnv(
+  "CONTRIBUTOR_SPOTLIGHT_ROOT"
+);
+
 // This makes it possible to know, give a root folder, what is the name of
 // the repository on GitHub.
 // E.g. `'https://github.com/' + REPOSITORY_URLS[document.fileInfo.root]`
@@ -59,6 +63,7 @@ function correctContentPathFromEnv(envVarName) {
 module.exports = {
   CONTENT_ROOT,
   CONTENT_TRANSLATED_ROOT,
+  CONTRIBUTOR_SPOTLIGHT_ROOT,
   REPOSITORY_URLS,
   ROOTS,
   VALID_LOCALES,

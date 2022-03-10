@@ -1,0 +1,114 @@
+.notecard {
+  --note-background: var(--background-information);
+  --note-theme: var(--icon-information);
+  position: relative;
+  padding: 1rem 1rem 1rem 3rem;
+  margin: 1rem 0;
+  background-color: var(--note-background);
+  border: 1px solid var(--border-secondary);
+  border-radius: var(--elem-radius);
+  border-left: 4px solid var(--note-theme);
+  box-shadow: var(--shadow-01);
+
+  &,
+  p,
+  li {
+    color: var(--text-secondary);
+  }
+
+  p {
+    margin: 0 !important;
+    line-height: 2;
+  }
+
+  a {
+    color: var(--text-primary);
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+
+  &:before {
+    position: absolute;
+    top: 1.5rem;
+    left: 1rem;
+    display: block;
+    width: 1rem;
+    height: 1rem;
+    background-color: var(--note-theme);
+    mask-image: url("../../../assets/icons/note-info.svg");
+    mask-size: contain;
+    mask-position: center;
+    mask-repeat: no-repeat;
+    content: "";
+  }
+
+  &.warning {
+    --note-background: var(--background-warning);
+    --note-theme: var(--icon-warning);
+
+    &:before {
+      mask-image: url("../../../assets/icons/note-warning.svg");
+    }
+  }
+
+  &.deprecated,
+  &.error,
+  &.negative {
+    --note-background: var(--background-critical);
+    --note-theme: var(--icon-critical);
+
+    &:before {
+      mask-image: url("../../../assets/icons/note-deprecated.svg");
+    }
+  }
+
+  &.success {
+    --note-background: var(--background-success);
+    --note-theme: var(--icon-success);
+
+    &:before {
+      mask-image: url("../../../assets/icons/note-info.svg");
+    }
+  }
+
+  // extra classes added to fix specificity.
+
+  ul,
+  ol {
+    padding-left: 2rem;
+  }
+
+  ul,
+  p {
+    padding-bottom: 0.5rem;
+
+    &:last-child {
+      padding-bottom: 0;
+    }
+  }
+
+  &:last-of-type {
+    margin-bottom: 2rem;
+  }
+
+  &:first-of-type {
+    margin-top: 2rem;
+  }
+
+  & > *:first-child {
+    margin-top: 0;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font: var(--type-emphasis-l);
+    color: var(--text-primary);
+    margin-bottom: 0.5rem;
+  }
+}

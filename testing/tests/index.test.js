@@ -209,7 +209,7 @@ test("content built foo page", () => {
   expect(toFrURL).toBe("https://developer.mozilla.org/fr/docs/Web/Foo");
 
   // The h4 heading in there has its ID transformed to lowercase
-  expect($("h4").attr("id")).toBe($("h4").attr("id").toLowerCase());
+  expect($("main h4").attr("id")).toBe($("main h4").attr("id").toLowerCase());
 });
 
 test("icons mentioned in <head> should resolve", () => {
@@ -1223,48 +1223,24 @@ test("404 page", () => {
   expect($('meta[property="og:locale"]').attr("content")).toBe("en-US");
 });
 
-test("sign in page", () => {
-  const builtFolder = path.join(buildRoot, "en-us", "signin");
+test("plus page", () => {
+  const builtFolder = path.join(buildRoot, "en-us", "plus");
   expect(fs.existsSync(builtFolder)).toBeTruthy();
   const htmlFile = path.join(builtFolder, "index.html");
   const html = fs.readFileSync(htmlFile, "utf-8");
   const $ = cheerio.load(html);
-  expect($("h1").text()).toContain("Sign in to MDN Web Docs");
-  expect($("title").text()).toContain("Sign in");
-  expect($('meta[property="og:locale"]').attr("content")).toBe("en-US");
-  expect($('meta[property="og:title"]').attr("content")).toBe("Sign in");
+  expect($("title").text()).toContain("Plus");
   expect($('meta[name="robots"]').attr("content")).toBe("noindex, nofollow");
 });
 
-test("French sign in page", () => {
-  const builtFolder = path.join(buildRoot, "fr", "signin");
+test("plus bookmarks page", () => {
+  const builtFolder = path.join(buildRoot, "en-us", "plus", "collection");
   expect(fs.existsSync(builtFolder)).toBeTruthy();
   const htmlFile = path.join(builtFolder, "index.html");
   const html = fs.readFileSync(htmlFile, "utf-8");
   const $ = cheerio.load(html);
-  // This will be translated the day we support localized chrome.
-  expect($("h1").text()).toContain("Sign in to MDN Web Docs");
-  expect($("title").text()).toContain("Sign in");
-  expect($('meta[property="og:locale"]').attr("content")).toBe("fr");
-});
-
-test("settings page", () => {
-  const builtFolder = path.join(buildRoot, "en-us", "settings");
-  expect(fs.existsSync(builtFolder)).toBeTruthy();
-  const htmlFile = path.join(builtFolder, "index.html");
-  const html = fs.readFileSync(htmlFile, "utf-8");
-  const $ = cheerio.load(html);
-  expect($("h1").text()).toBe("Account settings");
-  expect($("title").text()).toContain("Account settings");
+  expect($("title").text()).toMatch(/Collection/);
   expect($('meta[name="robots"]').attr("content")).toBe("noindex, nofollow");
-
-  const jsonFile = path.join(builtFolder, "index.json");
-  const data = JSON.parse(fs.readFileSync(jsonFile));
-  expect(data.pageTitle).toBe("Account settings");
-  expect(data.possibleLocales).toBeTruthy();
-  const possibleLocale = data.possibleLocales.find((p) => p.locale === "en-US");
-  expect(possibleLocale.English).toBe("English (US)");
-  expect(possibleLocale.native).toBe("English (US)");
 });
 
 test("bcd table extraction followed by h3", () => {
@@ -1409,7 +1385,7 @@ test("img tags should always have their 'width' and 'height' set", () => {
       expect($img.attr("width")).toBe("250");
       expect($img.attr("height")).toBe("250");
     } else {
-      throw new Error("unexpected image");
+      throw new Error("unexpected image: " + $img.attr("src"));
     }
   });
 });
@@ -1474,7 +1450,7 @@ test("headings with HTML should be rendered as HTML", () => {
   expect($("article h3 a").html()).toBe(
     "You can use escaped HTML tags like &lt;pre&gt; still"
   );
-  expect($("article h3").text()).toBe(
+  expect($("article h3 a").text()).toBe(
     "You can use escaped HTML tags like <pre> still"
   );
 
@@ -1526,8 +1502,8 @@ test("external links always get the right attributes", () => {
   // 4 links on that page and we'll do 2 assertions for each one, plus
   // 1 for the extra sanity check.
   expect.assertions(4 * 2 + 1);
-  expect($("article a").length).toBe(4); // sanity check
-  $("article a").each((i, element) => {
+  expect($("article > div a").length).toBe(4); // sanity check
+  $("article > div a").each((i, element) => {
     const $a = $(element);
     expect($a.hasClass("external")).toBe(true);
     expect(
@@ -1539,12 +1515,14 @@ test("external links always get the right attributes", () => {
   });
 });
 
-test("home page should have a /index.json file with feedEntries", () => {
+test("home page should have a /index.json file with pullRequestsData", () => {
   const builtFolder = path.join(buildRoot, "en-us");
 
   const jsonFile = path.join(builtFolder, "index.json");
-  const { feedEntries } = JSON.parse(fs.readFileSync(jsonFile));
-  expect(feedEntries.length).toBeGreaterThan(0);
+  const { hyData: { pullRequestsData } = {} } = JSON.parse(
+    fs.readFileSync(jsonFile)
+  );
+  expect(pullRequestsData.items.length).toBeGreaterThan(0);
 });
 
 test("headings with links in them are flaws", () => {
@@ -1607,6 +1585,9 @@ test("basic markdown rendering", () => {
   const htmlFile = path.join(builtFolder, "index.html");
   const html = fs.readFileSync(htmlFile, "utf-8");
   const $ = cheerio.load(html);
+  // Following elements do not test TOC rendering
+  $("article > .metadata").remove();
+
   expect($("article h2[id]").length).toBe(2);
   expect($("article h3[id]").length).toBe(3);
   expect($("article p code").length).toBe(2);
@@ -1761,7 +1742,7 @@ test("duplicate IDs are de-duplicated", () => {
   const html = fs.readFileSync(htmlFile, "utf-8");
   const $ = cheerio.load(html);
   const h2IDs = [];
-  $("#content h2").each((i, element) => {
+  $("#content main h2").each((i, element) => {
     h2IDs.push($(element).attr("id"));
   });
   expect(new Set(h2IDs.map((id) => id.toLowerCase())).size).toEqual(

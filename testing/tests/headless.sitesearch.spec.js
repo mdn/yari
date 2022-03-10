@@ -5,14 +5,19 @@ function testURL(pathname = "/") {
 }
 
 test.describe("Site search", () => {
+  const SEARCH_TOGGLE_SELECTOR = ".toggle-search-button";
   const SEARCH_SELECTOR = 'form input[type="search"]';
 
   test("submit the autocomplete search form will redirect to site search", async ({
     page,
   }) => {
     await page.goto(testURL("/en-US/search/"));
+
+    // this will show the search input
+    await page.click(SEARCH_TOGGLE_SELECTOR);
+
     await page.fill(SEARCH_SELECTOR, "foo");
-    await page.waitForSelector("#nav-main-search"); // autocomplete search form
+    await page.waitForSelector("#top-nav-search-form"); // autocomplete search form
     await page.$eval('form[role="search"]', (form) => form.submit());
     // Force a wait for the lazy-loading
     await page.waitForLoadState("networkidle");
@@ -25,9 +30,13 @@ test.describe("Site search", () => {
   test("go to site-search page without query", async ({ page }) => {
     await page.goto(testURL("/en-US/search/"));
     expect(await page.isVisible("text=No query, no results")).toBeTruthy();
+
+    // this will show the search input
+    await page.click(SEARCH_TOGGLE_SELECTOR);
+
     // See server/static.js for how fixtures are hardcoded
     await page.fill(SEARCH_SELECTOR, "FOO");
-    await page.waitForSelector("#nav-main-search"); // autocomplete search form
+    await page.waitForSelector("#top-nav-search-form"); // autocomplete search form
     await page.$eval('form[role="search"]', (form) => form.submit());
     // Force a wait for the lazy-loading
     await page.waitForLoadState("networkidle");
@@ -39,9 +48,13 @@ test.describe("Site search", () => {
   test("search and find nothing", async ({ page }) => {
     await page.goto(testURL("/en-US/search/"));
     expect(await page.isVisible("text=No query, no results")).toBeTruthy();
+
+    // this will show the search input
+    await page.click(SEARCH_TOGGLE_SELECTOR);
+
     // See server/static.js for how fixtures are hardcoded
     await page.fill(SEARCH_SELECTOR, "NOTHING");
-    await page.waitForSelector("#nav-main-search"); // autocomplete search form
+    await page.waitForSelector("#top-nav-search-form"); // autocomplete search form
     await page.$eval('form[role="search"]', (form) => form.submit());
     await page.waitForLoadState("networkidle");
     expect(page.url()).toBe(testURL("/en-US/search/?q=NOTHING"));
@@ -53,9 +66,13 @@ test.describe("Site search", () => {
 
   test("search and go to page 2", async ({ page }) => {
     await page.goto(testURL("/en-US/search/"));
+
+    // this will show the search input
+    await page.click(SEARCH_TOGGLE_SELECTOR);
+
     // See server/static.js for how fixtures are hardcoded
     await page.fill(SEARCH_SELECTOR, "SERIAL(20)");
-    await page.waitForSelector("#nav-main-search"); // autocomplete search form
+    await page.waitForSelector("#top-nav-search-form"); // autocomplete search form
     await page.$eval('form[role="search"]', (form) => form.submit());
     await page.waitForLoadState("networkidle");
     expect(

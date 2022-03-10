@@ -306,20 +306,4 @@ describe("response headers", () => {
     expect(r.headers["x-xss-protection"]).toBeTruthy();
     expect(r.headers["content-security-policy"]).toBeFalsy();
   });
-
-  it("temporaily redirect localized plus URLs", async () => {
-    for (const locale of ["en-US", "fr"]) {
-      for (const slug of [
-        "plus",
-        "plus/",
-        "plus/bookmarks",
-        "plus/deep-dives",
-        "plus/deep-dives/your-browser-support-toolkit",
-      ]) {
-        const r = await get(`/${locale}/${slug}`);
-        expect(r.statusCode).toBe(302);
-        expect(r.headers["location"]).toBe(`/${locale}/`);
-      }
-    }
-  });
 });
