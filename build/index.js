@@ -155,9 +155,9 @@ function postLocalFileLinks($, doc) {
     const href = element.attribs.href;
 
     // This test is merely here to quickly bail if there's no hope to find the
-    // image as a local file link. `Image.findByURLWithFallback()` is fast but there are
-    // a LOT of hyperlinks throughout the content and this simple if statement
-    // means we can skip 99% of the links, so it's presumed to be worth it.
+    // image as a local file link. There are a LOT of hyperlinks throughout
+    // the content and this simple if statement means we can skip 99% of the
+    // links, so it's presumed to be worth it.
     if (
       !href ||
       /^(\/|\.\.|http|#|mailto:|about:|ftp:|news:|irc:|ftp:)/i.test(href)
