@@ -1,4 +1,3 @@
-import { isValidElement } from "react";
 import { MDNOfflineDB } from "./db";
 
 const PATH_COLLECTIONS = "/api/v1/plus/collection";

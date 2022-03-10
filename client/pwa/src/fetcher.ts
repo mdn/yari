@@ -1,3 +1,4 @@
+/* eslint no-restricted-globals: ["off", "self"] */
 import {
   NotificationsInterceptor,
   CollectionsInterceptor,
@@ -33,6 +34,9 @@ export async function respond(e): Promise<Response> {
     const r = await caches.match(e.request);
     if (r) {
       return r;
+    }
+    if (!url.pathname.split("/").pop().includes(".")) {
+      return await caches.match("/index.html");
     }
     console.log(`hit test: ${url.href}`);
     if (url.pathname.startsWith("/en-US/docs/")) {

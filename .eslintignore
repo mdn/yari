@@ -2,5 +2,5 @@
 client/build/
 dist/
 libs/
-client/public/sw-*.js
-client/public/sw/
+client/public/service-worker.js
+client/public/

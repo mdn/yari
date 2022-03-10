@@ -1,3 +1,4 @@
+/* eslint no-restricted-globals: ["off", "self"] */
 import * as zip from "@zip.js/zip.js";
 import { openContentCache } from "./caches";
 import { INTERACTIVE_EXAMPLES_URL } from "./service-worker";

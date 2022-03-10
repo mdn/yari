@@ -1,6 +1,6 @@
+/* eslint no-restricted-globals: ["off", "location"] */
 /// <reference lib="WebWorker" />
 
-import { DBCoreRangeType } from "dexie";
 import { cacheName, contentCache, openCache } from "./caches";
 import { respond } from "./fetcher";
 import { unpackAndCache } from "./unpack-cache";
@@ -28,8 +28,9 @@ self.addEventListener("install", (e) => {
 });
 
 self.addEventListener("fetch", (e) => {
-  const preferOnline = new URLSearchParams(location.search).get("preferOnline");
-  if (Boolean(preferOnline) && !e.request.url.includes("/api/v1/")) {
+  const preferOnline =
+    new URLSearchParams(location.search).get("preferOnline") === "true";
+  if (preferOnline && !e.request.url.includes("/api/v1/")) {
     e.respondWith(
       (async () => {
         const res = await fetch(e.request);
@@ -74,7 +75,7 @@ self.addEventListener("activate", (e: ExtendableEvent) => {
         return Promise.all(
           keyList.map((key) => {
             if (key === cacheName) {
-              return;
+              return Promise.resolve(true);
             }
             return caches.delete(key);
           })
@@ -206,7 +207,7 @@ async function fetchAllLimitOffset(path: string) {
   let limit = 50;
   let items = 50;
   let update = [];
-  while (items == limit) {
+  while (items === limit) {
     const res = await fetch(`${path}/?limit=${limit}&offset=${offset}`);
     const body = await res.json();
     items = body.items?.length;
@@ -223,7 +224,7 @@ async function fetchAllPaged(path: string) {
   let page = 1;
   let items = 50;
   let update = [];
-  while (items == limit) {
+  while (items === limit) {
     const res = await fetch(`${path}/?limit=${limit}&page=${page}`);
     const body = await res.json();
     items = body.items?.length;
