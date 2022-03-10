@@ -47,7 +47,7 @@ function findByURL(url) {
 
 function findByURLWithFallback(url) {
   let filePath = findByURL(url);
-  const urlParts = url.split("/")
+  const urlParts = url.split("/");
   const locale = urlParts[1].toLowerCase();
   if (
     !filePath &&
@@ -55,7 +55,7 @@ function findByURLWithFallback(url) {
     !url.startsWith(`/${DEFAULT_LOCALE.toLowerCase()}/`)
   ) {
     urlParts[1] = DEFAULT_LOCALE;
-    const defaultLocaleURL = urlParts.join("/');
+    const defaultLocaleURL = urlParts.join("/");
     filePath = findByURL(defaultLocaleURL);
   }
   return filePath;
