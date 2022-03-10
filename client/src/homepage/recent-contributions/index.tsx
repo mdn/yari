@@ -1,9 +1,12 @@
 import dayjs from "dayjs";
+import relativeTime from "dayjs/plugin/relativeTime";
 import useSWR from "swr";
 import { CRUD_MODE } from "../../constants";
 import { HydrationData } from "../../types/hydration";
 
 import "./index.scss";
+
+dayjs.extend(relativeTime);
 
 function RecentContributions(props: HydrationData<any>) {
   const { data: { hyData } = {} } = useSWR<any>(
