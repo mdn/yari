@@ -12,7 +12,7 @@ const LEGEND_LABELS = {
   unknown: "Compatibility unknown",
   experimental: "Experimental. Expect behavior to change in the future.",
   "note-warning": "Non-standard. Check cross-browser support before using.",
-  "thumbs-down": "Deprecated. Not for use in new websites.",
+  trash: "Deprecated. Not for use in new websites.",
   footnote: "See implementation notes.",
   disabled: "User must explicitly enable this feature.",
   altname: "Uses a non-standard name.",
@@ -35,7 +35,7 @@ function getActiveLegendItems(
         legendItems.add("experimental");
       }
       if (status.deprecated) {
-        legendItems.add("thumbs-down");
+        legendItems.add("trash");
       }
       if (!status.standard_track) {
         legendItems.add("note-warning");

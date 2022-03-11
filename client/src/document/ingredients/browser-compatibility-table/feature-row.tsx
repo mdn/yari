@@ -76,7 +76,7 @@ function StatusIcons({ status }: { status: bcd.StatusBlock }) {
     status.deprecated && {
       title: "Deprecated. Not for use in new websites.",
       text: "Deprecated",
-      iconClassName: "icon-thumbs-down",
+      iconClassName: "icon-trash",
     },
     !status.standard_track && {
       title: "Non-standard. Expect poor cross-browser support.",
