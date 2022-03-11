@@ -52,8 +52,9 @@
         }
       }
       
-      &:hover {
-        background-color: var(--button-secondary-hover);
+      &:hover,
+      &:focus {
+        text-decoration: underline;
       }
     }
 
