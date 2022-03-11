@@ -220,7 +220,7 @@ $mdn-theme-light-code-token-comment: $mdn-color-dark-grey-05;
 $mdn-theme-light-code-token-default: $mdn-color-dark-grey-90;
 $mdn-theme-light-code-token-selector: $mdn-color-light-theme-violet-60;
 $mdn-theme-light-code-background-inline: $mdn-color-light-grey-20;
-$mdn-theme-light-code-background-block: rgba(240, 240, 244, 0.5);
+$mdn-theme-light-code-background-block: $mdn-color-light-grey-20;
 
 $mdn-theme-dark-text-primary: $mdn-color-light-grey-05;
 $mdn-theme-dark-text-secondary: $mdn-color-light-grey-40;
@@ -253,15 +253,15 @@ $mdn-theme-dark-accent-secondary: $mdn-color-dark-theme-blue-40;
 $mdn-theme-dark-field-focus-border: $mdn-color-light-grey-05;
 $mdn-theme-dark-focus-01: 0px 0px 0px 3px rgba(251, 251, 254, 0.5);
 
-$mdn-theme-dark-code-token-tag: $mdn-color-dark-theme-blue-30;
-$mdn-theme-dark-code-token-punctuation: $mdn-color-light-grey-80;
-$mdn-theme-dark-code-token-attribute-name: $mdn-color-dark-theme-red-40;
-$mdn-theme-dark-code-token-attribute-value: $mdn-color-dark-theme-green-40;
-$mdn-theme-dark-code-token-comment: $mdn-color-light-grey-80;
+$mdn-theme-dark-code-token-tag: $mdn-color-dark-theme-blue-20;
+$mdn-theme-dark-code-token-punctuation: $mdn-color-light-grey-70;
+$mdn-theme-dark-code-token-attribute-name: $mdn-color-dark-theme-red-30;
+$mdn-theme-dark-code-token-attribute-value: $mdn-color-dark-theme-green-30;
+$mdn-theme-dark-code-token-comment: $mdn-color-light-grey-70;
 $mdn-theme-dark-code-token-default: $mdn-color-light-grey-05;
-$mdn-theme-dark-code-token-selector: $mdn-color-dark-theme-violet-40;
-$mdn-theme-dark-code-background-inline: $mdn-color-dark-grey-40;
-$mdn-theme-dark-code-background-block: rgba(58, 57, 68, 0.5);
+$mdn-theme-dark-code-token-selector: $mdn-color-dark-theme-violet-30;
+$mdn-theme-dark-code-background-inline: $mdn-color-dark-grey-60;
+$mdn-theme-dark-code-background-block: $mdn-color-dark-grey-60;
 
 $screen-sm: 426px;
 $screen-md: 769px;

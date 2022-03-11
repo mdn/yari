@@ -1,6 +1,10 @@
 const fs = require("fs");
 const path = require("path");
-const { ACTIVE_LOCALES, VALID_LOCALES } = require("../libs/constants");
+const {
+  ACTIVE_LOCALES,
+  VALID_LOCALES,
+  DEFAULT_LOCALE,
+} = require("../libs/constants");
 
 require("dotenv").config({
   path: path.join(__dirname, "..", process.env.ENV_FILE || ".env"),
@@ -64,4 +68,5 @@ module.exports = {
   ROOTS,
   VALID_LOCALES,
   ACTIVE_LOCALES,
+  DEFAULT_LOCALE,
 };
