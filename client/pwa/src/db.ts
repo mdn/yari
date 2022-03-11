@@ -12,7 +12,7 @@ interface Notifications {
   title: string;
   text: string;
   url: string;
-  created: string;
+  created: Date;
   read: boolean;
   starred: boolean;
 }
@@ -28,6 +28,7 @@ interface Collections {
   title: string;
   parents?: Array<Parent>[];
   notes?: string;
+  created: Date;
 }
 
 interface Whoami {
@@ -52,7 +53,7 @@ export class MDNOfflineDB extends Dexie {
     this.version(1).stores({
       whoami:
         "++, username, is_authenticated, email, avatar_url, is_subscriber",
-      collections: "url, title, parents, notes",
+      collections: "url, title, created",
       watched: "url, title, path",
       notifications: "id, title, text, url, created, read, starred",
     });

@@ -69,17 +69,29 @@ class CollectionsInterceptor implements FetchInterceptor {
       }
       return res;
     } catch (err) {
-      const url = new URL(req.url).searchParams.get("url");
+      const params = new URL(req.url).searchParams;
+      const url = params.get("url");
       if (url) {
         //Single request case.
         const item = await this.db.collections.get({ url: url });
         return new Response(jsonBlob({ bookmarked: item, offline: true }));
       } else {
-        const collection = await this.db.collections.toCollection().toArray();
+        let collection = [];
+        if (params.get("sort") === "title") {
+          collection = await this.db.collections
+            .orderBy("created")
+            .reverse()
+            .toArray();
+        } else {
+          collection = await this.db.collections.orderBy("title").toArray();
+        }
+        const total = collection.length;
+        collection = filter(params, collection);
+
         return new Response(
           jsonBlob({
             items: collection,
-            metadata: { total: collection.length, per_page: collection.length },
+            metadata: { total: total, per_page: total },
           })
         );
       }
@@ -115,14 +127,25 @@ class NotificationsInterceptor implements FetchInterceptor {
       }
       return res;
     } catch (err: any) {
-      let notifications = await this.db.notifications.toCollection().toArray();
       const params = new URL(req.url).searchParams;
+
+      let notifications;
+      if (params.get("sort") === "title") {
+        notifications = await this.db.notifications.orderBy("title").toArray();
+      } else {
+        notifications = await this.db.notifications
+          .orderBy("created")
+          .reverse()
+          .toArray();
+      }
 
       if (Boolean(params.get("starred"))) {
         notifications = notifications.filter((v) => v.starred);
       }
+      notifications = filter(params, notifications);
       const limit = params.get("limit");
       const offset = params.get("offset");
+
       if (limit && offset) {
         notifications = notifications.slice(parseInt(offset), parseInt(limit));
       }
@@ -137,7 +160,6 @@ class NotificationsInterceptor implements FetchInterceptor {
     }
   }
 }
-
 class WatchedInterceptor implements FetchInterceptor {
   db: MDNOfflineDB;
 
@@ -175,6 +197,7 @@ class WatchedInterceptor implements FetchInterceptor {
           }
         } else {
           watching = await this.db.watched.toCollection().toArray();
+          watching = filter(params, watching);
           const limit = params.get("limit");
           const offset = params.get("offset");
           if (limit && offset) {
@@ -227,6 +250,15 @@ class DefaultApiInterceptor implements FetchInterceptor {
       return new Response(jsonBlob({ error: "offline" }));
     }
   }
+}
+
+function filter(params: URLSearchParams, input: Array<any>) {
+  if (params.get("q")) {
+    input = input.filter((val) =>
+      val.title.toLowerCase().includes(params.get("q").toLowerCase())
+    );
+  }
+  return input;
 }
 
 export {
