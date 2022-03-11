@@ -2,7 +2,6 @@ import { Switch } from "../ui/atoms/switch";
 import { SettingsData, STATE, UpdateStatus } from "./mdn-worker";
 import useInterval from "@use-it/interval";
 
-import "./index.scss";
 import { useEffect, useState } from "react";
 import UpdateButton from "./update";
 import ClearButton from "./clear";
@@ -15,13 +14,10 @@ function displayEstimate({ usage = 0, quota = Infinity }: StorageEstimate) {
 
 export default function SettingsApp({ ...appProps }) {
   return (
-    <div className="field-group">
-      <section>
-        <h3>Offline settings</h3>
-
-        <Settings />
-      </section>
-    </div>
+    <section className="field-group">
+      {/* <h3>Offline settings</h3> */}
+      <Settings />
+    </section>
   );
 }
 
