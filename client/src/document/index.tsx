@@ -208,15 +208,12 @@ export function Document(props /* TODO: define a TS interface for this */) {
   );
 }
 
-/** These prose sections should be rendered WITHOUT a heading. */
-const PROSE_NO_HEADING = ["short_description", "overview"];
-
 function RenderDocumentBody({ doc }) {
   return doc.body.map((section, i) => {
     if (section.type === "prose") {
       // Only exceptional few should use the <Prose/> component,
       // as opposed to <ProseWithHeading/>.
-      if (!section.value.id || PROSE_NO_HEADING.includes(section.value.id)) {
+      if (!section.value.id) {
         return (
           <Prose
             key={section.value.id || `prose${i}`}

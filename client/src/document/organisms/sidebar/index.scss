@@ -75,9 +75,7 @@
     overflow: auto;
     position: sticky;
     top: 0;
-    bottom: 0;
-    // height minus header. On scroll, this variable is changed with JS.
-    max-height: calc(100vh - var(--visible-height-of-header, 6rem));
+    max-height: 100vh;
   }
 
   &-heading {
@@ -122,15 +120,12 @@
 
     ol,
     ul {
-      @media screen and (max-width: $screen-sm) {
-        padding-left: 0.5rem;
-      }
+      padding-left: 0.5rem;
     }
 
     ol {
       li {
         list-style-type: "· ";
-        list-style-position: inside;
 
         .icon {
           margin-right: 0.01em;

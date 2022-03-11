@@ -66,4 +66,4 @@ export const MDN_APP_IOS =
 export const MDN_APP_MOBILE = MDN_APP && !MDN_APP_DESKTOP;
 
 export const HEADER_NOTIFICATIONS_MENU_API_URL =
-  "/api/v1/plus/notifications/?per_page=5";
+  "/api/v1/plus/notifications?limit=1&unread=true";

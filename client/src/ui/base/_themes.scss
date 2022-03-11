@@ -20,6 +20,22 @@
       $mdn-color-light-theme-green-30,
       $alpha: -0.6
     )};
+  --background-information: #{color.adjust(
+      $mdn-theme-light-icon-information,
+      $alpha: -0.9
+    )};
+  --background-warning: #{color.adjust(
+      $mdn-theme-light-icon-warning,
+      $alpha: -0.9
+    )};
+  --background-critical: #{color.adjust(
+      $mdn-theme-light-icon-critical,
+      $alpha: -0.9
+    )};
+  --background-success: #{color.adjust(
+      $mdn-theme-light-icon-success,
+      $alpha: -0.9
+    )};
 
   --border-primary: #{$mdn-theme-light-border-primary};
   --border-secondary: #{$mdn-theme-light-border-secondary};
@@ -139,70 +155,6 @@
       $mdn-color-light-theme-pink-50,
       $alpha: -0.3
     )};
-  /*
-  --html-code-inline: #{color.adjust(
-      $mdn-color-light-theme-red-50,
-      $alpha: -0.92,
-      $saturation: -20%
-    )};
-  --html-code-block: #{color.adjust(
-      $mdn-color-light-theme-red-50,
-      $alpha: -0.95,
-      $saturation: -10%
-    )};
-
-  --css-code-inline: #{color.adjust(
-      $mdn-color-light-theme-blue-50,
-      $alpha: -0.92
-    )};
-  --css-code-block: #{color.adjust(
-      $mdn-color-light-theme-blue-50,
-      $alpha: -0.97
-    )};
-
-  --js-code-inline: #{color.adjust(
-      $mdn-color-light-theme-yellow-50,
-      $alpha: -0.9,
-      $saturation: 20%
-    )};
-  --js-code-block: #{color.adjust(
-      $mdn-color-light-theme-yellow-50,
-      $alpha: -0.95,
-      $saturation: 20%
-    )};
-
-  --http-code-inline: #{color.adjust(
-      $mdn-color-light-theme-green-50,
-      $alpha: -0.92
-    )};
-  --http-code-block: #{color.adjust(
-      $mdn-color-light-theme-green-50,
-      $alpha: -0.95
-    )};
-
-  --apis-code-inline: #{color.adjust(
-      $mdn-color-light-theme-violet-50,
-      $alpha: -0.92,
-      $saturation: -10%
-    )};
-  --apis-code-block: #{color.adjust(
-      $mdn-color-light-theme-violet-50,
-      $alpha: -0.96,
-      $saturation: -20%
-    )};
-*/
-  --html-code-inline: #{$mdn-color-light-grey-10};
-  --html-code-block: #{$mdn-color-light-grey-10};
-  --css-code-inline: #{$mdn-color-light-grey-10};
-  --css-code-block: #{$mdn-color-light-grey-10};
-  --js-code-inline: #{$mdn-color-light-grey-10};
-  --js-code-block: #{$mdn-color-light-grey-10};
-  --http-code-inline: #{$mdn-color-light-grey-10};
-  --http-code-block: #{$mdn-color-light-grey-10};
-  --apis-code-inline: #{$mdn-color-light-grey-10};
-  --apis-code-block: #{$mdn-color-light-grey-10};
-  --learn-code-inline: #{$mdn-color-light-grey-10};
-  --learn-code-block: #{$mdn-color-light-grey-10};
 
   --homepage-hero-bg: radial-gradient(
     114.42% 123.24% at 6.69% 13.67%,
@@ -218,6 +170,11 @@
 
   --modal-backdrop-color: #{rgba($mdn-theme-dark-background-primary, 0.1)};
   --blend-color: #{$mdn-color-white}80;
+
+  --text-primary-red: #{$mdn-color-light-theme-red-60};
+  --text-primary-green: #{$mdn-color-light-theme-green-60};
+  --text-primary-blue: #{$mdn-color-light-theme-blue-60};
+  --text-primary-yellow: #{$mdn-color-light-theme-yellow-60};
 }
 
 @mixin dark-theme {
@@ -332,78 +289,14 @@
       $mdn-color-dark-theme-pink-40,
       $alpha: -0.3
     )};
-  /*
-  --html-code-inline: #{color.adjust(
-      $mdn-color-dark-theme-red-50,
-      $alpha: -0.8,
-      $saturation: 20%
-    )};
-  --html-code-block: #{color.adjust(
-      $mdn-color-dark-theme-red-40,
-      $alpha: -0.9,
-      $saturation: 10%
-    )};
-
-  --css-code-inline: #{color.adjust(
-      $mdn-color-dark-theme-blue-20,
-      $alpha: -0.85,
-      $saturation: 20%
-    )};
-  --css-code-block: #{color.adjust(
-      $mdn-color-dark-theme-blue-20,
-      $alpha: -0.9,
-      $saturation: 20%
-    )};
-
-  --js-code-inline: #{color.adjust(
-      $mdn-color-dark-theme-yellow-10,
-      $alpha: -0.85,
-      $saturation: 20%
-    )};
-  --js-code-block: #{color.adjust(
-      $mdn-color-dark-theme-yellow-10,
-      $alpha: -0.9,
-      $saturation: 20%
-    )};
-
-  --http-code-inline: #{color.adjust(
-      $mdn-color-dark-theme-green-30,
-      $alpha: -0.85,
-      $saturation: 20%
-    )};
-  --http-code-block: #{color.adjust(
-      $mdn-color-dark-theme-green-30,
-      $alpha: -0.9,
-      $saturation: 20%
-    )};
-
-  --apis-code-inline: #{color.adjust(
-      $mdn-color-dark-theme-violet-30,
-      $alpha: -0.85,
-      $saturation: 20%
-    )};
-  --apis-code-block: #{color.adjust(
-      $mdn-color-dark-theme-violet-30,
-      $alpha: -0.92,
-      $saturation: 20%
-    )};
-*/
-
-  --html-code-inline: #{$mdn-color-dark-grey-70};
-  --html-code-block: #{$mdn-color-dark-grey-70};
-  --css-code-inline: #{$mdn-color-dark-grey-70};
-  --css-code-block: #{$mdn-color-dark-grey-70};
-  --js-code-inline: #{$mdn-color-dark-grey-70};
-  --js-code-block: #{$mdn-color-dark-grey-70};
-  --http-code-inline: #{$mdn-color-dark-grey-70};
-  --http-code-block: #{$mdn-color-dark-grey-70};
-  --apis-code-inline: #{$mdn-color-dark-grey-70};
-  --apis-code-block: #{$mdn-color-dark-grey-70};
-  --learn-code-inline: #{$mdn-color-dark-grey-70};
-  --learn-code-block: #{$mdn-color-dark-grey-70};
 
   --modal-backdrop-color: #{rgba($mdn-theme-dark-background-primary, 0.7)};
   --blend-color: #{$mdn-color-black}80;
+
+  --text-primary-red: #{$mdn-color-dark-theme-red-30};
+  --text-primary-green: #{$mdn-color-dark-theme-green-30};
+  --text-primary-blue: #{$mdn-color-dark-theme-blue-30};
+  --text-primary-yellow: #{$mdn-color-dark-theme-yellow-30};
 }
 
 body,

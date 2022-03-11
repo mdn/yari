@@ -1,113 +1,71 @@
-import { useContext, useEffect } from "react";
-import { useLocation } from "react-router-dom";
+import { useContext, useEffect, useState } from "react";
 import { useLocale } from "../../hooks";
 import Container from "../../ui/atoms/container";
 import Tabs from "../../ui/molecules/tabs";
-import List from "../common/list";
+
 import {
   searchFiltersContext,
   SearchFiltersProvider,
 } from "../contexts/search-filters";
-import SearchFilter from "../search-filter";
 import "./index.scss";
-import NotificationCard from "./notification-card";
-import IconCard from "../icon-card";
-import { mutate } from "swr";
-import { HEADER_NOTIFICATIONS_MENU_API_URL } from "../../constants";
 
-function getCookie(name) {
-  const value = `; ${document.cookie}`;
-  const parts = value.split(`; ${name}=`);
-  if (parts.length === 2) return parts.pop()?.split(";").shift();
-}
+import { useApiEndpoint } from "./api";
+
+import { Loading } from "../../ui/atoms/loading";
+import { DataError, NotSignedIn } from "../common";
+import { useUserData } from "../../user-context";
+import { TAB_INFO, useCurrentTab } from "./tabs";
+import { NotificationsTab } from "./notifications-tab";
 
 function NotificationsLayout() {
   const locale = useLocale();
-  const location = useLocation();
+  const userData = useUserData();
 
-  const { selectedTerms, getSearchFiltersParams } =
-    useContext(searchFiltersContext);
+  const {
+    selectedTerms,
+    selectedFilter,
+    selectedSort,
+    setSelectedTerms,
+    setSelectedFilter,
+    setSelectedSort,
+  } = useContext(searchFiltersContext);
 
-  const starredUrl = `/${locale}/plus/notifications/starred`;
-  const watchingUrl = `/${locale}/plus/notifications/watching`;
+  const currentTab = useCurrentTab(locale);
 
-  let pageTitle = "Notifications";
-  let apiUrl = `/api/v1/plus/notifications/?${getSearchFiltersParams().toString()}`;
+  const showTabs = userData && userData.isAuthenticated;
+  const isAuthed = userData?.isAuthenticated;
 
-  if (location.pathname === starredUrl) {
-    apiUrl += "&starred=true";
-    pageTitle = "My Starred Pages";
-  }
+  const [offset, setOffset] = useState(0);
+
+  const { data, error, isLoading, hasMore } = useApiEndpoint(
+    offset,
+    selectedTerms,
+    selectedFilter,
+    selectedSort,
+    currentTab
+  );
+
   useEffect(() => {
-    const clearNotificationsUrl =
-      "/api/v1/plus/notifications/all/mark-as-read/";
-    const formData = new FormData();
-    formData.append("csrfmiddlewaretoken", getCookie("csrftoken") || "");
+    let unread;
+    document.title = TAB_INFO.get(currentTab)?.pageTitle || "MDN Plus";
+    if (data && data.items) {
+      unread = data.items.filter((v) => v.read === false).length;
+    }
+    if (!!unread) {
+      document.title = document.title + ` (${unread})`;
+    }
+  }, [data, currentTab]);
 
-    // if the user clicks a hard link, we set notifications as read using a sendBeacon request
-    const markNotificationsAsRead = () => {
-      if (document.visibilityState === "hidden") {
-        navigator.sendBeacon(clearNotificationsUrl, formData);
-      }
-    };
-    document.addEventListener("visibilitychange", markNotificationsAsRead);
+  useEffect(() => {
+    setSelectedSort("");
+    setSelectedTerms("");
+    setSelectedFilter("");
+    setOffset(0);
+  }, [currentTab, setSelectedSort, setSelectedTerms, setSelectedFilter]);
 
-    return () => {
-      // if the user clicks a react-router Link, we remove the sendBeacon handler
-      // and send a fetch request to mark notifications as read
-      document.removeEventListener("visibilitychange", markNotificationsAsRead);
-      fetch(clearNotificationsUrl, {
-        body: formData,
-        method: "POST",
-      }).then(async () => {
-        await mutate(apiUrl);
-        await mutate(HEADER_NOTIFICATIONS_MENU_API_URL);
-      });
-    };
-  }, [apiUrl]);
-
-  let watchingApiUrl = `/api/v1/plus/watched/?q=${encodeURIComponent(
-    selectedTerms
-  )}`;
-
-  const watching = location.pathname === watchingUrl;
-
-  const tabs = [
-    {
-      label: "All notifications",
-      path: `/${locale}/plus/notifications`,
-    },
-    {
-      label: "Starred",
-      path: starredUrl,
-    },
-    {
-      label: "Watch list",
-      path: watchingUrl,
-    },
-  ];
-
-  const filters = [
-    {
-      label: "Content updates",
-      param: "filterType=content",
-    },
-    {
-      label: "Browser compatibility",
-      param: "filterType=compat",
-    },
-  ];
-
-  const sorts = [
-    {
-      label: "Date",
-      param: "sort=date",
-    },
-    {
-      label: "Title",
-      param: "sort=title",
-    },
-  ];
+  useEffect(() => {
+    setOffset(0);
+  }, [selectedTerms, selectedFilter, selectedSort]);
 
   return (
     <>
@@ -115,34 +73,32 @@ function NotificationsLayout() {
         <Container>
           <h1>Notifications</h1>
         </Container>
-        <Tabs tabs={tabs} />
+        <Tabs
+          tabs={[...TAB_INFO.values()].map((val) => {
+            return { ...val, path: `/${locale}${val.path}` };
+          })}
+        />
       </header>
-
-      <Container>
-        {watching ? (
+      {showTabs && (
+        <Container>
           <>
-            <SearchFilter />
-            <div className="icon-card-list">
-              <List
-                component={IconCard}
-                apiUrl={watchingApiUrl}
-                makeKey={(item) => item.url}
-                pageTitle="My Watched Pages"
-              />
-            </div>
-          </>
-        ) : (
-          <>
-            <SearchFilter filters={filters} sorts={sorts} />
-            <List
-              component={NotificationCard}
-              apiUrl={apiUrl}
-              makeKey={(item) => item.id}
-              pageTitle={pageTitle}
+            <NotificationsTab
+              currentTab={currentTab}
+              selectedTerms={selectedTerms}
+              selectedFilter={selectedFilter}
+              selectedSort={selectedSort}
+              setOffset={setOffset}
+              offset={offset}
+              data={data}
+              hasMore={hasMore}
             />
           </>
-        )}
-      </Container>
+          {isLoading && <Loading message="Waiting for data" />}
+          {!userData && <Loading message="Waiting for authentication" />}
+          {!userData && !isAuthed && <NotSignedIn />}
+          {error && <DataError error={error} />}
+        </Container>
+      )}
     </>
   );
 }

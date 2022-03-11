@@ -1,5 +1,5 @@
-import React from "react";
-import { Routes, Route, useLocation } from "react-router-dom";
+import React, { useEffect } from "react";
+import { Routes, Route, useLocation, useMatch } from "react-router-dom";
 
 // we include our base SASS here to ensure it is loaded
 // and applied before any component specific style
@@ -21,7 +21,8 @@ import { AppSettings } from "./app-settings";
 import { docCategory } from "./utils";
 import { Contribute } from "./community";
 import { ContributorSpotlight } from "./contributor-spotlight";
-import { Banner } from "./banners";
+
+import { Banner, hasActiveBanners } from "./banners";
 
 const AllFlaws = React.lazy(() => import("./flaws"));
 const Translations = React.lazy(() => import("./translations"));
@@ -45,13 +46,7 @@ function Layout({ pageType, children }) {
   return (
     <>
       <A11yNav />
-      {/* Commented out for now. Kept as a record/reminder of how we implement
-       banners. As of May 27, 2021 we don't have any banners to show. At all.
-
-       Note, if you do uncomment banners again (because there's one to possible
-       display), remember to go to
-       */}
-      {!isServer && <Banner />}
+      {!isServer && hasActiveBanners && <Banner />}
       <div className={`page-wrapper  ${category || ""} ${pageType}`}>
         <TopNavigation />
         {children}
@@ -119,6 +114,14 @@ function LoadingFallback({ message }: { message?: string }) {
 }
 
 export function App(appProps) {
+  const localeMatch = useMatch("/:locale/*");
+
+  useEffect(() => {
+    const locale = localeMatch?.params.locale || appProps.locale;
+
+    document.documentElement.setAttribute("lang", locale);
+  }, [appProps.locale, localeMatch]);
+
   // When preparing a build for use in the NPM package, CRUD_MODE is always true.
   // But if the App is loaded from the code that builds the SPAs, then `isServer`
   // is true. So you have to have `isServer && CRUD_MODE` at the same time.

@@ -1,8 +1,10 @@
 .notecard {
+  --note-background: var(--background-information);
   --note-theme: var(--icon-information);
   position: relative;
   padding: 1rem 1rem 1rem 3rem;
   margin: 1rem 0;
+  background-color: var(--note-background);
   border: 1px solid var(--border-secondary);
   border-radius: var(--elem-radius);
   border-left: 4px solid var(--note-theme);
@@ -11,7 +13,6 @@
   &,
   p,
   li {
-    font: var(--type-body-m);
     color: var(--text-secondary);
   }
 
@@ -30,7 +31,7 @@
 
   &:before {
     position: absolute;
-    top: 1.3rem;
+    top: 1.5rem;
     left: 1rem;
     display: block;
     width: 1rem;
@@ -44,6 +45,7 @@
   }
 
   &.warning {
+    --note-background: var(--background-warning);
     --note-theme: var(--icon-warning);
 
     &:before {
@@ -54,6 +56,7 @@
   &.deprecated,
   &.error,
   &.negative {
+    --note-background: var(--background-critical);
     --note-theme: var(--icon-critical);
 
     &:before {
@@ -62,6 +65,7 @@
   }
 
   &.success {
+    --note-background: var(--background-success);
     --note-theme: var(--icon-success);
 
     &:before {

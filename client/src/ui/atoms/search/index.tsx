@@ -44,7 +44,10 @@ export const Search = ({
         onChange={onChangeHandler}
         onClick={onClickHandler}
       />
-      <button type="submit" className="button action has-icon search-button">
+      <button
+        type="submit"
+        className="button action has-icon search-button search-filter-button"
+      >
         <span className="button-wrap">
           <span className="icon icon-search undefined"></span>
           <span className="visually-hidden">Search</span>

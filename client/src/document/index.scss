@@ -8,6 +8,18 @@
   padding: 3rem 1rem 1rem;
   overflow-wrap: break-word;
 
+  a {
+    &:link,
+    &:visited {
+      text-decoration: underline;
+    }
+
+    &:hover,
+    &:focus {
+      text-decoration: none;
+    }
+  }
+
   h1,
   h2,
   h3,
@@ -45,11 +57,6 @@
   a:not(.button) {
     color: var(--text-link);
     width: fit-content;
-
-    &:hover,
-    &:focus {
-      text-decoration: underline;
-    }
 
     &:active {
       background-color: var(--text-link);
@@ -506,36 +513,22 @@ pre {
   position: relative;
 
   .copy-icon {
-    background-image: url("../assets/clippy.svg");
-    background-repeat: no-repeat;
-    background-position: 61% 45%;
-    background-size: 1rem;
     border-radius: var(--elem-radius);
     cursor: pointer;
-    height: 33px;
+    height: 1.25rem;
+    mask-image: url("../assets/clippy.svg");
+    mask-size: cover;
     margin: 0;
     padding: 0.25rem;
     position: absolute;
     right: 0.5rem;
     top: 0.75rem;
-    width: 33px;
-    opacity: 0;
+    width: 1.25rem;
+    opacity: 0.4;
 
+    &:hover,
     &:focus {
       opacity: 1;
-    }
-  }
-
-  &:hover {
-    .copy-icon {
-      @media screen and (min-width: $screen-md) {
-        opacity: 0.4;
-
-        &:hover,
-        &:focus {
-          opacity: 1;
-        }
-      }
     }
   }
 

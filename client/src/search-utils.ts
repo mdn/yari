@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
 
 export type SearchProps = {
+  id: string;
   inputValue: string;
   onChangeInputValue: (value: string) => void;
   isFocused: boolean;
