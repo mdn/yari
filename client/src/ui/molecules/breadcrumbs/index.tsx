@@ -1,10 +1,10 @@
-import { Doc } from "../../../document/types";
+import { Doc, DocParent } from "../../../document/types";
 import { PreloadingDocumentLink } from "../../../document/preloading";
 
 import "./index.scss";
 
 export const Breadcrumbs = ({ doc }: { doc: Doc }) => {
-  const items = doc.parents || [
+  const items: DocParent[] = doc.parents || [
     {
       uri: doc.mdn_url,
       title: doc.title,
