@@ -74,22 +74,24 @@
     display: flex;
     overflow: auto;
     position: sticky;
-    top: 0;
+    top: var(--top-navigation-height);
     max-height: 100vh;
   }
 
   &-heading {
-    font: var(--type-heading-h6);
+    font: var(--type-heading-h5);
     color: var(--text-primary);
     letter-spacing: 1.5px;
-    margin: 0 0 1rem 0;
-    text-transform: uppercase;
+    margin: 0;
   }
 
   em {
-    display: inline-flex;
-    padding: 0.25rem;
+    background-color: var(--background-toc-active);
+    border-left: 2px solid var(--category-color);
+    display: inline-block;
     hyphens: auto;
+    padding: 0.25rem;
+    width: 100%;
   }
 
   a {
@@ -97,6 +99,11 @@
     padding: 0.25rem;
     color: var(--text-secondary);
     hyphens: auto;
+
+    &:hover,
+    &:focus {
+      text-decoration: underline;
+    }
 
     &[aria-current="page"] {
       background: var(--border-secondary);
@@ -111,12 +118,13 @@
 
   // TODO: Find these and add a class, if possible. These are section headings
   strong {
-    margin-top: 1rem;
     display: flex;
+    font-size: var(--type-base-font-size-rem);
+    margin-top: 1rem;
   }
 
   ol {
-    font: var(--type-body-m);
+    font-size: var(--type-smaller-font-size);
 
     ol,
     ul {
@@ -125,11 +133,10 @@
 
     ol {
       li {
-        list-style-type: "· ";
-
         .icon {
           margin-right: 0.01em;
         }
+
         &.no-bullet {
           display: block;
           font-weight: var(--font-body-strong-weight);
@@ -139,19 +146,31 @@
     }
   }
 
+  /* This is for sidebars where there is no sub-heading
+   * for example: https://developer-mozilla.org/en-US/docs/Web/HTML/Element/progress 
+   */
+  .sidebar-heading ~ ol,
+  .sidebar-heading ~ div > ol {
+    margin-top: 1rem;
+  }
+
   summary,
   li {
     margin-bottom: 0.5rem;
   }
 
+  summary {
+    font-size: var(--type-smaller-font-size);
+  }
+
   code {
     white-space: normal;
     word-wrap: break-word;
+    background-color: initial;
     border-radius: var(--elem-radius);
     font-family: var(--font-code);
-    background: var(--code-background-inline);
+    font-size: var(--type-smaller-font-size);
     padding: 0.125rem 0.125rem;
-    font-size: 0.75rem;
     line-height: 1.2;
   }
 

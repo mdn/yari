@@ -21,14 +21,6 @@
     line-height: 2;
   }
 
-  a {
-    color: var(--text-primary);
-
-    &:hover {
-      text-decoration: underline;
-    }
-  }
-
   &:before {
     position: absolute;
     top: 1.5rem;
@@ -144,8 +136,21 @@
   h4,
   h5,
   h6 {
-    font: var(--type-emphasis-l);
+    font: var(--type-base-font-size-rem);
     color: var(--text-primary);
     margin-bottom: 0.5rem;
+  }
+}
+
+.main-content {
+  .notecard {
+    a:not(.button),
+    code {
+      color: var(--notecard-link-color);
+
+      &:hover {
+        text-decoration: none;
+      }
+    }
   }
 }

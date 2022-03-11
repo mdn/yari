@@ -108,12 +108,12 @@
 
 .submenu-item-heading,
 .submenu-item {
-  font: var(--type-body-m);
+  font-size: var(--type-smaller-font-size);
 
   @media screen and (min-width: $screen-md) {
     // If there is sub-text associated with this heading, make it bold.
     &:not(:only-child) {
-      font: var(--type-emphasis-m);
+      font-weight: var(--font-body-strong-weight);
     }
   }
 }
@@ -124,12 +124,12 @@
   @media screen and (min-width: $screen-md) {
     display: block;
     margin: 0.25rem 0 0 0;
-    font: var(--type-body-s);
+    font-size: var(--type-tiny-font-size);
   }
 }
 
 .submenu-item-subtext {
-  font: var(--type-emphasis-m);
+  font-weight: var(--font-body-strong-weight);
 }
 
 .submenu-item-dot ~ .submenu-content-container > .submenu-item-heading::after {

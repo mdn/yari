@@ -22,7 +22,7 @@ blockquote.quote {
   }
 
   .name {
-    font-size: 0.8rem;
+    font-size: var(--type-base-font-size-rem);
     display: inline;
     margin: 0;
   }

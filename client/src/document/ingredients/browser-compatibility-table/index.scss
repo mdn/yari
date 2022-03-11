@@ -15,16 +15,21 @@
   th {
     border: 1px solid var(--border-secondary);
     border-width: 0 0 1px 1px;
-    font: var(--type-body-m);
+    font-weight: 500;
+    padding: 0;
+
+    @media screen and (min-width: $screen-md) {
+      font-size: var(--type-smaller-font-size);
+      padding: 0.4rem;
+
+      code {
+        font-size: var(--type-smaller-font-size);
+      }
+    }
+  }
+
+  th {
     padding: 0.4rem;
-
-    &[aria-expanded="false"] {
-      height: 2rem;
-    }
-
-    code {
-      font-size: 0.75rem !important;
-    }
   }
 
   // these props allow us to add border-radius to the table.
@@ -103,6 +108,7 @@
   transform: rotate(180deg);
   white-space: nowrap;
   left: calc(50% - 0.5rem);
+  line-height: 1;
   position: relative;
   padding-top: 0.5rem;
 }
@@ -129,18 +135,20 @@
   flex-wrap: wrap;
   gap: 1.5rem;
   margin-bottom: 2rem;
-  font: var(--type-body-m);
+  font-size: var(--type-smaller-font-size);
 }
 
 .bc-legend-item {
+  align-items: center;
   display: flex;
   gap: 0.5rem;
 }
+
 .bc-legend-item-dt {
   display: flex;
 
   .icon {
-    background-color: var(--icon-secondary);
+    background-color: var(--icon-primary);
   }
 }
 
@@ -267,7 +275,6 @@ dl.bc-notes-list {
 
   code {
     overflow: hidden;
-    font-size: 0.75rem;
   }
 
   .left-side,
@@ -302,7 +309,7 @@ dl.bc-notes-list {
 }
 
 .bc-github-link {
-  font: var(--type-body-m);
+  font: var(--type-smaller-font-size);
 }
 
 .main-page-content {
@@ -314,6 +321,7 @@ dl.bc-notes-list {
       margin-left: 0;
     }
   }
+
   .bc-supports-dd {
     margin: 0;
   }
@@ -323,3 +331,67 @@ dl.bc-notes-list {
 @import "./index-desktop";
 @import "./index-desktop-md";
 @import "./index-desktop-lg";
+
+.bcd-cell-text-wrapper {
+  display: flex;
+  flex-direction: row-reverse;
+  gap: 0.5rem;
+
+  @media screen and (min-width: $screen-md) {
+    align-items: center;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+}
+
+.bcd-cell-text-copy {
+  color: var(--text-primary);
+  display: flex;
+  gap: 0.5rem;
+}
+
+.bc-supports-yes {
+  .bcd-cell-text-copy {
+    color: var(--text-primary-green);
+  }
+}
+
+.bc-supports-no {
+  .bcd-cell-text-copy {
+    color: var(--text-primary-red);
+  }
+}
+
+.bc-supports-partial {
+  .bcd-cell-text-copy {
+    color: var(--text-primary-yellow);
+  }
+}
+
+.bcd-cell-icons {
+  display: flex;
+  gap: 0.5rem;
+
+  @media screen and (min-width: $screen-md) {
+    display: block;
+  }
+}
+
+.bc-notes-wrapper {
+  .bcd-cell-text-wrapper {
+    flex-direction: row;
+    justify-content: initial;
+  }
+}
+
+@media screen and (min-width: $screen-md) {
+  .bc-table {
+    td {
+      height: 2rem;
+    }
+
+    td.bc-support > button {
+      padding: 0.5rem 0.25rem;
+    }
+  }
+}

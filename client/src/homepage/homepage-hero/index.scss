@@ -79,13 +79,13 @@
     .search-input-field {
       border-radius: 10rem;
       background-color: rgba(1, 1, 1, 0.5);
-      font: var(--type-body-l);
       padding: 2rem;
 
       &:focus {
         box-shadow: var(--focus-01);
         border-color: var(--field-focus-border);
       }
+
       &::placeholder {
         font-size: 1.5rem;
       }

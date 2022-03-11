@@ -100,9 +100,10 @@ export const UserMenu = () => {
         type="action"
         id={`${userMenuItems.id}-button`}
         extraClasses="top-level-entry menu-toggle user-menu-toggle"
+        ariaControls={userMenuItems.id}
         ariaHasPopup="menu"
         ariaExpanded={isOpen || undefined}
-        onClickHandler={(event) => {
+        onClickHandler={() => {
           setIsOpen(!isOpen);
         }}
       >
@@ -116,7 +117,7 @@ export const UserMenu = () => {
       </Button>
 
       <DropdownMenu>
-        <Submenu menuEntry={userMenuItems} />
+        <Submenu submenuId={userMenuItems.id} menuEntry={userMenuItems} />
       </DropdownMenu>
     </DropdownMenuWrapper>
   );

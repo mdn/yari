@@ -64,11 +64,9 @@
     .toc {
       display: block;
       grid-area: toc;
-
-      .document-toc-container {
-        position: sticky;
-        top: 3rem;
-      }
+      max-height: 100vh;
+      position: sticky;
+      top: var(--top-navigation-height);
     }
 
     .in-nav-toc {

@@ -72,7 +72,7 @@
     cursor: pointer;
     padding: 1rem 0.5rem;
     text-align: left;
-    width: max-content;
+    width: 100%;
 
     &:link,
     &:visited {
@@ -86,7 +86,6 @@
 
     @media screen and (max-width: $screen-md) {
       &.button {
-        --button-font: var(--type-body-l);
         --button-color: var(--text-secondary);
         --button-padding: 0;
         --button-radius: 0;
@@ -125,9 +124,10 @@
   }
 
   .menu-toggle {
-    position: relative;
-    display: flex;
     align-items: center;
+    display: flex;
+    justify-content: space-between;
+    position: relative;
   }
 
   .menu-toggle:after {
