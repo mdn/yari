@@ -181,6 +181,15 @@ u {
   background: var(--scrollbar-color);
 }
 
+.plus .dark,
+.plus {
+  --text-link: var(--plus-accent-color);
+  --category-color: var(--plus-accent-color);
+  --category-color-background: var(--plus-accent-background-color);
+  --code-color: var(--plus-code-color);
+  --mark-color: var(--plus-mark-color);
+}
+
 .category-html {
   --text-link: var(--html-accent-color);
   --category-color: var(--html-accent-color);
