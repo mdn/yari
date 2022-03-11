@@ -26,7 +26,7 @@ export const ArticleActionsContainer = ({ doc }: { doc: Doc }) => {
         />
 
         {/* if we have breadcrumbs for the current page, continue rendering the section */}
-        {<Breadcrumbs doc={doc} />}
+        {doc.parents && <Breadcrumbs parents={doc.parents} />}
 
         <ArticleActions
           doc={doc}
