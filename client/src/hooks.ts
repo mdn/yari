@@ -26,7 +26,7 @@ export function useLocale() {
   return locale && VALID_LOCALES.has(locale) ? locale : "en-US";
 }
 
-export function useCSRFMiddlewareToken() {
+export function useCSRFMiddlewareToken(): string {
   const userData = useUserData();
   const userSettingsAPIURL = React.useMemo(() => {
     return userData && userData.isAuthenticated ? "/api/v1/settings" : null;
@@ -43,7 +43,9 @@ export function useCSRFMiddlewareToken() {
   );
 
   if (!error) {
-    return data?.csrfmiddlewaretoken;
+    return data?.csrfmiddlewaretoken ?? "";
+  } else {
+    return "";
   }
 }
 

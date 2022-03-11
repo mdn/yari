@@ -166,10 +166,13 @@ class WatchedInterceptor implements FetchInterceptor {
         const url = params.get("url");
         if (url) {
           const watched = await this.db.watched.get({ url: url.toLowerCase() });
-
-          return new Response(
-            jsonBlob({ ...watched, status: "major", offline: true })
-          );
+          if (watched) {
+            return new Response(
+              jsonBlob({ ...watched, status: "major", offline: true })
+            );
+          } else {
+            return new Response(jsonBlob({ error: "offline" }));
+          }
         } else {
           watching = await this.db.watched.toCollection().toArray();
           const limit = params.get("limit");

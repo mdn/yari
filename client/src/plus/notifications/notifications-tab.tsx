@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { useCSRFMiddlewareToken } from "../../hooks";
 import { useUIStatus } from "../../ui-context";
 import { Button } from "../../ui/atoms/button";
 import WatchedCardListItem from "../icon-card";
@@ -28,7 +29,7 @@ export function NotificationsTab({
   hasMore,
 }) {
   const { setToastData } = useUIStatus();
-
+  const csrfMiddlewareToken = useCSRFMiddlewareToken();
   const listRef = useRef<Array<any>>([]);
   const [list, setList] = useState<Array<any>>([]);
   const [selectAllChecked, setSelectAllChecked] = useState(false);
@@ -59,7 +60,7 @@ export function NotificationsTab({
   }, [data]);
 
   const deleteItem = async (item) => {
-    await deleteItemById(data.csrfmiddlewaretoken, item.id);
+    await deleteItemById(csrfMiddlewareToken, item.id);
     const listWithDelete = list.filter((v) => v.id !== item.id);
     setList(listWithDelete);
     setToastData({
@@ -67,7 +68,7 @@ export function NotificationsTab({
       shortText: "Article removed",
       buttonText: "Undo",
       buttonHandler: async () => {
-        await undoDeleteItemById((data as any).csrfmiddlewaretoken, item.id);
+        await undoDeleteItemById(csrfMiddlewareToken, item.id);
         setToastData(null);
       },
     });
@@ -75,13 +76,13 @@ export function NotificationsTab({
 
   const deleteMany = async () => {
     const toDelete = list.filter((v) => v.checked).map((i) => i.id);
-    await deleteItemsById(data.csrfmiddlewaretoken, toDelete);
+    await deleteItemsById(csrfMiddlewareToken, toDelete);
     const updated = list.filter((v) => !v.checked);
     setList(updated);
   };
 
   const toggleStarItem = async (item) => {
-    await starItem(data.csrfmiddlewaretoken, item.id);
+    await starItem(csrfMiddlewareToken, item.id);
     //Local updates
     if (currentTab === TabVariant.STARRED) {
       setList([...list.filter((v) => v.id !== item.id)]);
@@ -98,7 +99,7 @@ export function NotificationsTab({
 
   const starMany = async () => {
     const toStar = list.filter((v) => v.checked).map((i) => i.id);
-    await starItemsById((data as any).csrfmiddlewaretoken, toStar);
+    await starItemsById(csrfMiddlewareToken, toStar);
     const updated = list.map((v) => {
       if (v.checked) {
         v.starred = true;
@@ -110,7 +111,7 @@ export function NotificationsTab({
 
   const unstarMany = async () => {
     const toUnstar = list.filter((v) => v.checked).map((i) => i.id);
-    await unstarItemsById((data as any).csrfmiddlewaretoken, toUnstar);
+    await unstarItemsById(csrfMiddlewareToken, toUnstar);
     const updated = list.map((v) => {
       if (v.checked) {
         v.starred = false;
@@ -149,13 +150,13 @@ export function NotificationsTab({
   };
 
   const unwatchItem = async (toUnWatch) => {
-    await unwatchItemsByUrls(data.csrfmiddlewaretoken, [toUnWatch]);
+    await unwatchItemsByUrls(csrfMiddlewareToken, [toUnWatch]);
     const updated = list.filter((v) => v.id !== toUnWatch.id);
     setList(updated);
   };
   const unwatchMany = async () => {
     const toUnWatch = list.filter((v) => v.checked);
-    await unwatchItemsByUrls(data.csrfmiddlewaretoken, toUnWatch);
+    await unwatchItemsByUrls(csrfMiddlewareToken, toUnWatch);
     const updated = list.filter((v) => !v.checked);
     setList(updated);
   };
