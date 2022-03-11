@@ -42,6 +42,10 @@
         color: var(--text-secondary);
       }
 
+      &:hover {
+        text-decoration: underline;
+      }
+
       &:focus-visible {
         outline: 0;
 
@@ -50,11 +54,6 @@
           outline-color: var(--accent-primary);
           outline-offset: 1px;
         }
-      }
-      
-      &:hover,
-      &:focus {
-        text-decoration: underline;
       }
     }
 
