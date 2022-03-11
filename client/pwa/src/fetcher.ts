@@ -16,7 +16,6 @@ let interceptors = [
 
 export async function respond(e): Promise<Response> {
   const url = new URL(e.request.url);
-  console.log(`going for: ${url.href}`);
   if ([self.location.host].includes(url.host)) {
     const handler = interceptors
       .filter((val) => val.handles(url.pathname))
@@ -38,18 +37,15 @@ export async function respond(e): Promise<Response> {
     if (!url.pathname.split("/").pop().includes(".")) {
       return await caches.match("/index.html");
     }
-    console.log(`hit test: ${url.href}`);
     if (url.pathname.startsWith("/en-US/docs/")) {
       url.pathname = url.pathname.toLowerCase();
       try {
         const response = await caches.match(url.href);
         if (response) {
-          console.log(`from cache: ${url.href}`);
           return response;
         }
       } catch (e) {
-        console.log(url.href);
-        console.log(e);
+        console.error(e);
       }
     }
   }

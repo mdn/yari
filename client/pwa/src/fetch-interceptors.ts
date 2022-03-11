@@ -183,7 +183,7 @@ class WatchedInterceptor implements FetchInterceptor {
           });
         }
       } catch (err) {
-        console.log(err);
+        console.error(err);
         watching = [];
       }
       return new Response(jsonBlob({ items: watching, offline: true }));

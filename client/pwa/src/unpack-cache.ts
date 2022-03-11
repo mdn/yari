@@ -32,7 +32,6 @@ export async function unpackAndCache(data, progress = async (number) => {}) {
   for (const entry of entries) {
     index += 1;
     if (index % percent === 0) {
-      console.log(`[update] ${index}/${total}`);
       await progress(index / total);
     }
     if (entry.filename === "removed") {

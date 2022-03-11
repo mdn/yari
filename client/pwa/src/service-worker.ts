@@ -97,7 +97,7 @@ export async function messageAllClients(
       client.postMessage(payload);
     }
   } catch (e) {
-    console.log(e);
+    console.error(e);
   }
 }
 
@@ -175,7 +175,6 @@ async function clearContent(self: ServiceWorkerGlobalScope) {
 }
 
 async function synchronizeDb() {
-  console.log("Sync db");
   const NOTIFICATIONS_BASE_PATH = "/api/v1/plus/notifications";
   const WATCHED_BASE_PATH = "/api/v1/plus/watching";
   const PATH_COLLECTIONS = "/api/v1/plus/collection";
