@@ -22,7 +22,7 @@ export default function SettingsApp({ ...appProps }) {
 }
 
 function Settings() {
-  document.title = "MDN - Settings";
+  document.title = "Settings | MDN";
   const [status, setStatus] = useState<UpdateStatus>();
 
   const [estimate, setEstimate] = useState<StorageEstimate | null>(null);
