@@ -68,7 +68,7 @@ function addBreadcrumbData(url, document) {
 
   parents.push({
     uri: url,
-    title: document.short_title || document.title,
+    title: document.short_title,
   });
   document.parents = parents;
 }
