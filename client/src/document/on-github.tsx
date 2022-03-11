@@ -34,7 +34,7 @@ function SourceOnGitHubLink({ doc }: { doc: Doc }) {
   const { github_url, folder } = doc.source;
   return (
     <a
-      href={github_url}
+      href={`${github_url}?plain=1`}
       title={`Folder: ${folder} (Opens in a new tab)`}
       target="_blank"
       rel="noopener noreferrer"
