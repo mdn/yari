@@ -4,6 +4,7 @@ import {
   CollectionsInterceptor,
   WatchedInterceptor,
   WhoamiInterceptor,
+  DefaultApiInterceptor,
 } from "./fetch-interceptors";
 import { offlineDb } from "./db";
 
@@ -14,12 +15,17 @@ let interceptors = [
   new WatchedInterceptor(offlineDb),
 ];
 
+let defaultInterceptor = new DefaultApiInterceptor(offlineDb);
+
 export async function respond(e): Promise<Response> {
   const url = new URL(e.request.url);
   if ([self.location.host].includes(url.host)) {
-    const handler = interceptors
+    let handler = interceptors
       .filter((val) => val.handles(url.pathname))
       .shift();
+    if (!handler && defaultInterceptor.handles(url.pathname)) {
+      handler = defaultInterceptor;
+    }
     if (handler) {
       if (e.request.method === "GET") {
         return handler.onGet(e.request);

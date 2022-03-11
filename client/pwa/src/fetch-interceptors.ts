@@ -202,9 +202,37 @@ class WatchedInterceptor implements FetchInterceptor {
   }
 }
 
+class DefaultApiInterceptor implements FetchInterceptor {
+  db: MDNOfflineDB;
+
+  constructor(db: MDNOfflineDB) {
+    this.db = db;
+  }
+
+  handles(path: string): boolean {
+    return path.startsWith("/api/v1/");
+  }
+
+  async onGet(req: Request): Promise<Response> {
+    try {
+      return await fetch(req);
+    } catch (err: any) {
+      return new Response(jsonBlob({ error: "offline" }));
+    }
+  }
+  async onPost(req: Request): Promise<Response> {
+    try {
+      return await fetch(req);
+    } catch (err) {
+      return new Response(jsonBlob({ error: "offline" }));
+    }
+  }
+}
+
 export {
   WhoamiInterceptor,
   CollectionsInterceptor,
   WatchedInterceptor,
   NotificationsInterceptor,
+  DefaultApiInterceptor,
 };
