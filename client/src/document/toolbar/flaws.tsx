@@ -120,9 +120,10 @@ export function ToggleDocumentFlaws({
 }) {
   const location = useLocation();
   const navigate = useNavigate();
-  const [show, toggle] = useReducer((v) => !v, location.hash === FLAWS_HASH);
   const rootElement = useRef<HTMLDivElement>(null);
   const isInitialRender = useRef(true);
+
+  const show = location.hash === FLAWS_HASH;
 
   useEffect(() => {
     if (isInitialRender.current && show && rootElement.current) {
@@ -131,14 +132,13 @@ export function ToggleDocumentFlaws({
     isInitialRender.current = false;
   }, [show]);
 
-  useEffect(() => {
-    const hasShowHash = window.location.hash === FLAWS_HASH;
-    if (show && !hasShowHash) {
-      navigate(location.pathname + location.search + FLAWS_HASH);
-    } else if (!show && hasShowHash) {
+  function toggle() {
+    if (show) {
       navigate(location.pathname + location.search);
+    } else {
+      navigate(location.pathname + location.search + FLAWS_HASH);
     }
-  }, [location, navigate, show]);
+  }
 
   const flawsCounts = Object.entries(doc.flaws)
     .map(([name, actualFlaws]) => ({
