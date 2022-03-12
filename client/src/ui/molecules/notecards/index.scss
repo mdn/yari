@@ -72,6 +72,12 @@
     }
   }
 
+  &.experimental {
+    &:before {
+      mask-image: url("../../../assets/icons/experimental.svg");
+    }
+  }
+
   &.success {
     --note-background: var(--background-success);
     --note-theme: var(--icon-success);
