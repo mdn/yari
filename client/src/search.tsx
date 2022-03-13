@@ -379,7 +379,13 @@ function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
                   index: i,
                 })}
               >
-                {resultsWithHighlighting[i]}
+                <a
+                  href={item.url}
+                  onClick={(event: React.MouseEvent) => event.preventDefault()}
+                  tabIndex={-1}
+                >
+                  {resultsWithHighlighting[i]}
+                </a>
               </div>
             )),
             <div

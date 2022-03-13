@@ -88,7 +88,6 @@
   }
 
   .search-results {
-    color: var(--text-primary);
     border: 1px solid var(--border-secondary);
     border-radius: var(--elem-radius);
     box-shadow: var(--shadow-01);
@@ -97,6 +96,12 @@
     top: 42px;
     width: 100%;
     z-index: var(--z-index-search-results);
+
+    &,
+    a[href],
+    mark {
+      color: var(--text-primary);
+    }
 
     .indexing-warning {
       color: var(--icon-warning);
@@ -148,7 +153,6 @@
 
     mark {
       background-color: var(--mark-color);
-      color: var(--text-primary);
     }
 
     small {
