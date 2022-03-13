@@ -102,10 +102,6 @@
       color: var(--icon-warning);
     }
 
-    div {
-      padding: 0.5rem;
-    }
-
     .nothing-found {
       font-style: italic;
     }
@@ -117,6 +113,7 @@
 
     .result-item {
       border-bottom: 1px solid var(--border-secondary);
+      padding: 0.5rem;
       word-break: break-word;
       background: var(--background-secondary);
       font: var(--type-body-m);
