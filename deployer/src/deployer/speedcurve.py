@@ -7,9 +7,11 @@ from .utils import log
 POST_URL = "https://api.speedcurve.com/v1/deploys"
 
 
-def deploy_ping(
-    api_key: str, site_id: str, note: str, detail: str, dry_run: bool = False
-):
+def deploy_ping(api_key: str,
+                site_id: str,
+                note: str,
+                detail: str,
+                dry_run: bool = False):
     """Based on https://api.speedcurve.com/#add-a-deploy"""
     data = {
         "site_id": site_id,
@@ -20,16 +22,16 @@ def deploy_ping(
         data["detail"] = detail
 
     if dry_run:
-        log.info(f"Posting {data} to {POST_URL} with API key {api_key[:3] + '...'!r}")
+        log.info(
+            f"Posting {data} to {POST_URL} with API key {api_key[:3] + '...'!r}"
+        )
         return
 
-    adapter = HTTPAdapter(
-        max_retries=Retry(
-            backoff_factor=0.3,
-            status_forcelist=[429, 500, 502, 503, 504],
-            method_whitelist=["POST"],
-        )
-    )
+    adapter = HTTPAdapter(max_retries=Retry(
+        backoff_factor=0.3,
+        status_forcelist=[429, 500, 502, 503, 504],
+        method_whitelist=["POST"],
+    ))
     session = requests.Session()
     session.mount("https://", adapter)
     auth = (api_key, "x")

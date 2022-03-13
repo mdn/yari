@@ -123,13 +123,11 @@ def assert_valid_url(
     # so that the value will appear in locals in test output
     resp_location = resp.headers.get("location")
     if follow_redirects:
-        assert (
-            resp.status_code == final_status_code
-        ), f"got {resp.status_code}, expected {final_status_code}"
+        assert (resp.status_code == final_status_code
+                ), f"got {resp.status_code}, expected {final_status_code}"
     else:
-        assert (
-            resp.status_code == status_code
-        ), f"got {resp.status_code}, expected {status_code}"
+        assert (resp.status_code == status_code
+                ), f"got {resp.status_code}, expected {status_code}"
     if location and not follow_redirects:
         if query:
             # all query values must be lists

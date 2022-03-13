@@ -17,27 +17,30 @@ DEFAULT_BUCKET_PREFIX = config("DEPLOYER_BUCKET_PREFIX", default="main")
 # When uploading a bunch of files, the work is done in a thread pool.
 # If you use too many "workers" it might saturate your network, meaning it's
 # ultimately slower.
-MAX_WORKERS_PARALLEL_UPLOADS = config(
-    "DEPLOYER_MAX_WORKERS_PARALLEL_UPLOADS", default=50, cast=int
-)
+MAX_WORKERS_PARALLEL_UPLOADS = config("DEPLOYER_MAX_WORKERS_PARALLEL_UPLOADS",
+                                      default=50,
+                                      cast=int)
 
 # E.g. /en-US/docs/Foo/Bar
-DEFAULT_CACHE_CONTROL = config("DEPLOYER_CACHE_CONTROL", default=60 * 60 * 24, cast=int)
+DEFAULT_CACHE_CONTROL = config("DEPLOYER_CACHE_CONTROL",
+                               default=60 * 60 * 24,
+                               cast=int)
 # E.g. '2.02b14290.chunk.css'
-HASHED_CACHE_CONTROL = config(
-    "DEPLOYER_HASHED_CACHE_CONTROL", default=60 * 60 * 24 * 365, cast=int
-)
+HASHED_CACHE_CONTROL = config("DEPLOYER_HASHED_CACHE_CONTROL",
+                              default=60 * 60 * 24 * 365,
+                              cast=int)
 
 DEFAULT_NO_PROGRESSBAR = config(
     "DEPLOYER_NO_PROGRESSBAR",
-    default=not sys.stdout.isatty() or bool(json.loads(os.environ.get("CI", "false"))),
+    default=not sys.stdout.isatty()
+    or bool(json.loads(os.environ.get("CI", "false"))),
     cast=bool,
 )
 
 # If true, it will log every successful upload task as it happens.
-LOG_EACH_SUCCESSFUL_UPLOAD = config(
-    "DEPLOYER_LOG_EACH_SUCCESSFUL_UPLOAD", default=False, cast=bool
-)
+LOG_EACH_SUCCESSFUL_UPLOAD = config("DEPLOYER_LOG_EACH_SUCCESSFUL_UPLOAD",
+                                    default=False,
+                                    cast=bool)
 
 # You get this from https://speedcurve.com/mozilla-add-ons/mdn/admin/teams/
 SPEEDCURVE_DEPLOY_API_KEY = config("SPEEDCURVE_DEPLOY_API_KEY", default=None)
@@ -48,7 +51,6 @@ SPEEDCURVE_DEPLOY_SITE_ID = config("SPEEDCURVE_DEPLOY_SITE_ID", default=None)
 # instance of Elasticsearch 7 and start it. Then set this environment variable
 # value to `http://localhost:9200`
 ELASTICSEARCH_URL = config("DEPLOYER_ELASTICSEARCH_URL", default=None)
-
 
 DEFAULT_REPO = config("GITHUB_REPOSITORY", default=None)
 

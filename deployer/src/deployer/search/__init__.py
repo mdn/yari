@@ -45,17 +45,14 @@ def index(
                 break
         else:
             raise IndexAliasError(
-                f"Unable to find an index called {INDEX_ALIAS_NAME}_*"
-            )
+                f"Unable to find an index called {INDEX_ALIAS_NAME}_*")
 
     else:
         # Confusingly, `._index` is actually not a private API.
         # It's the documented way you're supposed to reach it.
         document_index = Document._index
-        click.echo(
-            "Deleting any possible existing index "
-            f"and creating a new one called {document_index._name!r}"
-        )
+        click.echo("Deleting any possible existing index "
+                   f"and creating a new one called {document_index._name!r}")
         document_index.delete(ignore=404)
         document_index.create()
 
@@ -91,16 +88,16 @@ def index(
     t0 = time.time()
     with get_progressbar() as bar:
         for success, info in parallel_bulk(
-            connection,
-            generator(),
-            # If the bulk indexing failed, it will by default raise a BulkIndexError.
-            # Setting this to 'False' will suppress that.
-            raise_on_exception=False,
-            # If the bulk operation failed for some other reason like a ReadTimeoutError
-            # it will raise whatever the error but default.
-            # We prefer to swallow all errors under the assumption that the holes
-            # will hopefully be fixed in the next attempt.
-            raise_on_error=False,
+                connection,
+                generator(),
+                # If the bulk indexing failed, it will by default raise a BulkIndexError.
+                # Setting this to 'False' will suppress that.
+                raise_on_exception=False,
+                # If the bulk operation failed for some other reason like a ReadTimeoutError
+                # it will raise whatever the error but default.
+                # We prefer to swallow all errors under the assumption that the holes
+                # will hopefully be fixed in the next attempt.
+                raise_on_error=False,
         ):
             if success:
                 count_shards_worked += info["index"]["_shards"]["successful"]
@@ -130,32 +127,32 @@ def index(
         # Now we're going to bundle the change to set the alias to point
         # to the new index and delete all old indexes.
         # The reason for doing this together in one update is to make it atomic.
-        alias_updates = [
-            {"add": {"index": document_index._name, "alias": INDEX_ALIAS_NAME}}
-        ]
+        alias_updates = [{
+            "add": {
+                "index": document_index._name,
+                "alias": INDEX_ALIAS_NAME
+            }
+        }]
         for index_name in connection.indices.get_alias():
             if index_name.startswith(f"{INDEX_ALIAS_NAME}_"):
                 if index_name != document_index._name:
-                    alias_updates.append({"remove_index": {"index": index_name}})
+                    alias_updates.append(
+                        {"remove_index": {
+                            "index": index_name
+                        }})
                     click.echo(f"Delete old index {index_name!r}")
 
         connection.indices.update_aliases({"actions": alias_updates})
-        click.echo(
-            f"Reassign the {INDEX_ALIAS_NAME!r} alias from old index "
-            f"to {document_index._name}"
-        )
+        click.echo(f"Reassign the {INDEX_ALIAS_NAME!r} alias from old index "
+                   f"to {document_index._name}")
 
     t1 = time.time()
     took = t1 - t0
     rate = count_done / took
-    click.echo(
-        f"Took {format_time(took)} to index {count_done:,} documents. "
-        f"Approximately {rate:.1f} docs/second"
-    )
-    click.echo(
-        f"Count shards - successful: {count_shards_worked:,} "
-        f"failed: {count_shards_failed:,}"
-    )
+    click.echo(f"Took {format_time(took)} to index {count_done:,} documents. "
+               f"Approximately {rate:.1f} docs/second")
+    click.echo(f"Count shards - successful: {count_shards_worked:,} "
+               f"failed: {count_shards_failed:,}")
     click.echo(f"Counts - worked: {count_worked:,} errors: {count_errors:,}")
     if errors_counter:
         click.echo("Most common errors....")
@@ -164,6 +161,7 @@ def index(
 
 
 class VoidProgressBar:
+
     def __enter__(self):
         return self
 
@@ -225,13 +223,9 @@ def to_search(file, _index=None):
         _index=_index,
         _id=doc["mdn_url"],
         title=doc["title"],
-        body=html_strip(
-            "\n".join(
-                x["value"]["content"]
-                for x in doc["body"]
-                if x["type"] == "prose" and x["value"]["content"]
-            )
-        ),
+        body=html_strip("\n".join(
+            x["value"]["content"] for x in doc["body"]
+            if x["type"] == "prose" and x["value"]["content"])),
         popularity=doc["popularity"],
         summary=doc["summary"],
         # Note! We're always lowercasing the 'slug'. This way we can search on it,

@@ -15,7 +15,6 @@ from elasticsearch_dsl import (
 # We always build an index that is called something based on this name but with
 # the _YYYYMMDDHHMMSS date suffix.
 INDEX_ALIAS_NAME = "mdn_docs"
-
 """
 A great way to debug analyzers is with the `Document._index.analyze()` API which
 is a convenient abstraction for the Elasticsearch Analyze API
@@ -56,7 +55,6 @@ yari_word_delimiter = token_filter(
     # Otherwise things like '3D' would be a search for '3' || 'D'.
     split_on_numerics=False,
 )
-
 
 custom_stopwords = token_filter(
     "custom_stopwords",
@@ -116,7 +114,6 @@ custom_stopwords = token_filter(
         "will",
     ],
 )
-
 
 keep_html_char_filter = char_filter(
     "keep_html_char_filter",

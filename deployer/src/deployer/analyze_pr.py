@@ -13,8 +13,7 @@ from unidiff import PatchSet
 from .utils import log
 
 hidden_comment_regex = re.compile(
-    r"<!-- build_hash: ([a-f0-9]+) date: ([\d:\.\- ]+) -->"
-)
+    r"<!-- build_hash: ([a-f0-9]+) date: ([\d:\.\- ]+) -->")
 
 
 def analyze_pr(build_directory: Path, config):
@@ -24,7 +23,8 @@ def analyze_pr(build_directory: Path, config):
     combined_comments = []
 
     if config["prefix"]:
-        combined_comments.append(post_about_deployment(build_directory, **config))
+        combined_comments.append(
+            post_about_deployment(build_directory, **config))
 
     if config["analyze_flaws"]:
         combined_comments.append(post_about_flaws(build_directory, **config))
@@ -36,8 +36,7 @@ def analyze_pr(build_directory: Path, config):
             with open(diff_file) as f:
                 patch = PatchSet(f.read())
         combined_comments.append(
-            post_about_dangerous_content(build_directory, patch, **config)
-        )
+            post_about_dangerous_content(build_directory, patch, **config))
 
     combined_comment = "\n\n".join(x for x in combined_comments if x)
 
@@ -61,7 +60,8 @@ def analyze_pr(build_directory: Path, config):
     elif config["repo"] and config["pr_number"]:
         pr_url = f"https://github.com/{config['repo']}/pull/{config['pr_number']}"
         if config["dry_run"]:
-            log.warning(f"Dry-run! Not actually posting any comment to {pr_url}")
+            log.warning(
+                f"Dry-run! Not actually posting any comment to {pr_url}")
         else:
             if not config["github_token"]:
                 raise Exception("No 'github_token' so no posting of comments")
@@ -69,7 +69,8 @@ def analyze_pr(build_directory: Path, config):
             print(f"Posting to {pr_url}")
             github = Github(config["github_token"])
             github_repo = github.get_repo(config["repo"])
-            github_issue = github_repo.get_issue(number=int(config["pr_number"]))
+            github_issue = github_repo.get_issue(
+                number=int(config["pr_number"]))
             for comment in github_issue.get_comments():
                 if comment.user.login == "github-actions[bot]":
                     if hidden_comment_regex.search(comment.body):
@@ -103,9 +104,8 @@ def mdn_url_to_dev_url(prefix, mdn_url):
     return template.format(prefix=prefix, mdn_url=mdn_url)
 
 
-def post_about_dangerous_content(
-    build_directory: Path, patch: Optional[PatchSet], **config
-):
+def post_about_dangerous_content(build_directory: Path,
+                                 patch: Optional[PatchSet], **config):
 
     OK_URL_PREFIXES = [
         "https://github.com/mdn/",
@@ -117,16 +117,13 @@ def post_about_dangerous_content(
 
     for doc in get_built_docs(build_directory):
         rendered_html = "\n".join(
-            x["value"]["content"]
-            for x in doc["body"]
-            if x["type"] == "prose" and x["value"]["content"]
-        )
+            x["value"]["content"] for x in doc["body"]
+            if x["type"] == "prose" and x["value"]["content"])
 
         diff_lines = None
         for file_path in patch_lines:
-            if file_path.endswith(
-                "/".join([doc["source"]["folder"], doc["source"]["filename"]])
-            ):
+            if file_path.endswith("/".join(
+                [doc["source"]["folder"], doc["source"]["filename"]])):
                 diff_lines = patch_lines[file_path]
                 break
 
@@ -144,7 +141,8 @@ def post_about_dangerous_content(
 
             # We're only interested in external URLs at the moment
             if href.startswith("//") or "://" in href:
-                if any(href.lower().startswith(x.lower()) for x in OK_URL_PREFIXES):
+                if any(href.lower().startswith(x.lower())
+                       for x in OK_URL_PREFIXES):
                     # exceptions are skipped
                     continue
                 if diff_lines:
@@ -156,10 +154,8 @@ def post_about_dangerous_content(
             external_urls_list = []
             for url in sorted(external_urls):
                 count = external_urls[url]
-                line = (
-                    f"  - {'🚨 ' if url.startswith('http://') else ''}"
-                    f"<{url}> ({count} time{'' if count==1 else 's'})"
-                )
+                line = (f"  - {'🚨 ' if url.startswith('http://') else ''}"
+                        f"<{url}> ({count} time{'' if count==1 else 's'})")
                 if diff_lines:
                     # If this was available and it _did_ fine a URL, then
                     # really make sure it's noticed.
@@ -213,8 +209,7 @@ def post_about_flaws(build_directory: Path, **config):
                 if i + 1 > MAX_FLAW_EXPLANATION:
                     flaws_list.append(
                         f"  - *and {len(flaw_values) - MAX_FLAW_EXPLANATION}"
-                        " more flaws omitted*"
-                    )
+                        " more flaws omitted*")
                     break
                 if isinstance(flaw_value, dict):
                     explanation = flaw_value.get("explanation")
@@ -240,8 +235,7 @@ def post_about_flaws(build_directory: Path, **config):
             heading += (
                 f"Note! *{docs_with_zero_flaws} "
                 f"document{'' if docs_with_zero_flaws == 1 else 's'} with no flaws "
-                "that don't need to be listed. 🎉*\n\n"
-            )
+                "that don't need to be listed. 🎉*\n\n")
 
         # Now turn all of these individual comments into one big one
         per_doc_comments = []

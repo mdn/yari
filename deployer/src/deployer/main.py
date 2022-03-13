@@ -93,10 +93,8 @@ def update_lambda_functions(ctx, directory):
     update_all(directory, dry_run=ctx.obj["dry_run"])
 
 
-@cli.command(
-    help="Create a whatsdeployed.json file "
-    "by asking git for the date and commit hash of HEAD."
-)
+@cli.command(help="Create a whatsdeployed.json file "
+             "by asking git for the date and commit hash of HEAD.")
 @click.option(
     "--output",
     type=click.Path(),
@@ -132,18 +130,21 @@ def whatsdeployed(ctx, directory: Path, output: str):
     is_flag=True,
     default=False,
     show_default=True,
-    help="Forces all files to be uploaded even if they already match what is in S3",
+    help=
+    "Forces all files to be uploaded even if they already match what is in S3",
 )
 @click.option(
     "--content-root",
-    help="The path to the root folder of the main content (defaults to CONTENT_ROOT)",
+    help=
+    "The path to the root folder of the main content (defaults to CONTENT_ROOT)",
     default=CONTENT_ROOT,
     show_default=True,
     callback=validate_optional_directory,
 )
 @click.option(
     "--content-translated-root",
-    help="The path to the root folder of the translated content (defaults to CONTENT_TRANSLATED_ROOT)",
+    help=
+    "The path to the root folder of the translated content (defaults to CONTENT_TRANSLATED_ROOT)",
     default=CONTENT_TRANSLATED_ROOT,
     show_default=True,
     callback=validate_optional_directory,
@@ -164,7 +165,8 @@ def whatsdeployed(ctx, directory: Path, output: str):
 )
 @click.option(
     "--prune",
-    help="Delete keys that were not uploaded this time (including those that didn't "
+    help=
+    "Delete keys that were not uploaded this time (including those that didn't "
     "need to be uploaded)",
     default=False,
     show_default=True,
@@ -172,7 +174,8 @@ def whatsdeployed(ctx, directory: Path, output: str):
 )
 @click.option(
     "--default-cache-control",
-    help="The default Cache-Control value used when uploading files (0 to disable)",
+    help=
+    "The default Cache-Control value used when uploading files (0 to disable)",
     default=DEFAULT_CACHE_CONTROL,
     show_default=True,
 )
@@ -234,10 +237,8 @@ def upload(ctx, directory: Path, **kwargs):
 )
 @click.option(
     "--diff-file",
-    help=(
-        "The path to the file that is a diff output. "
-        "(Only relevant in conjunction with --analyze-dangerous-content)"
-    ),
+    help=("The path to the file that is a diff output. "
+          "(Only relevant in conjunction with --analyze-dangerous-content)"),
     default=None,
     callback=validate_optional_file,
 )
@@ -247,7 +248,8 @@ def analyze_pr_build(ctx, directory: Path, **kwargs):
     log.info(f"Deployer ({__version__})", bold=True)
     ctx.obj.update(kwargs)
 
-    actionable_options = ("prefix", "analyze_flaws", "analyze_dangerous_content")
+    actionable_options = ("prefix", "analyze_flaws",
+                          "analyze_dangerous_content")
     if not any(ctx.obj[x] for x in actionable_options):
         raise Exception("No actionable option used. ")
 
@@ -303,9 +305,11 @@ def speedcurve_deploy(ctx, **kwargs):
     note = kwargs["note"]
     detail = kwargs["detail"]
     log.info(f"Speedcurve Deploy note={note!r}, detail={detail!r}")
-    speedcurve_deploy_ping(
-        api_key, site_id, note, detail, dry_run=ctx.obj.get("dry_run")
-    )
+    speedcurve_deploy_ping(api_key,
+                           site_id,
+                           note,
+                           detail,
+                           dry_run=ctx.obj.get("dry_run"))
 
 
 @cli.command()
@@ -325,7 +329,8 @@ def speedcurve_deploy(ctx, **kwargs):
 @click.option(
     "--no-progressbar",
     is_flag=True,
-    help="Disables the progressbar (this is true by default it env var CI==true)",
+    help=
+    "Disables the progressbar (this is true by default it env var CI==true)",
     default=CI,
     show_default=True,
 )

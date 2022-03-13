@@ -69,6 +69,7 @@ class Totals:
 
 
 class DisplayProgress:
+
     def __init__(self, total_count, show_progress_bar=True):
         if show_progress_bar:
             self.progress_bar = click.progressbar(
@@ -181,12 +182,11 @@ class UploadFileTask(UploadTask):
         if self.file_path.name == "opensearch.xml":
             return "application/opensearchdescription+xml"
 
-        mime_type = (
-            mimetypes.guess_type(str(self.file_path))[0] or "binary/octet-stream"
-        )
-        if mime_type.startswith("text/") or (
-            mime_type in ("application/json", "application/javascript")
-        ):
+        mime_type = (mimetypes.guess_type(str(self.file_path))[0]
+                     or "binary/octet-stream")
+        if mime_type.startswith("text/") or (mime_type
+                                             in ("application/json",
+                                                 "application/javascript")):
             mime_type += "; charset=utf-8"
 
         if mime_type == "binary/octet-stream" and self.file_path.suffix == ".woff2":
@@ -295,6 +295,7 @@ class DeleteTask(UploadTask):
 
 
 class BucketManager:
+
     def __init__(self, bucket_name, bucket_prefix):
         self.bucket_name = bucket_name
         self.bucket_prefix = bucket_prefix
@@ -432,19 +433,21 @@ class BucketManager:
                     default_cache_control=default_cache_control,
                 )
 
-    def iter_redirect_tasks(
-        self, content_roots, for_counting_only=False, dry_run=False
-    ):
+    def iter_redirect_tasks(self,
+                            content_roots,
+                            for_counting_only=False,
+                            dry_run=False):
         # Walk the content roots and yield redirect upload tasks.
         for content_root in content_roots:
             # Look for "_redirects.txt" files up to two levels deep to
             # accommodate the content root specified as the root of the
             # repo or the "files" sub-directory of the root of the repo.
             for fp in chain(
-                content_root.glob("*/_redirects.txt"),
-                content_root.glob("*/*/_redirects.txt"),
+                    content_root.glob("*/_redirects.txt"),
+                    content_root.glob("*/*/_redirects.txt"),
             ):
-                for line_num, line in enumerate(fp.read_text().split("\n"), start=1):
+                for line_num, line in enumerate(fp.read_text().split("\n"),
+                                                start=1):
                     line = line.strip()
                     if line and not line.startswith("#"):
                         parts = line.split("\t")
@@ -466,10 +469,12 @@ class BucketManager:
             yield DeleteTask(key, dry_run=dry_run)
 
     def count_file_tasks(self, build_directory):
-        return sum(self.iter_file_tasks(build_directory, for_counting_only=True))
+        return sum(
+            self.iter_file_tasks(build_directory, for_counting_only=True))
 
     def count_redirect_tasks(self, content_roots):
-        return sum(self.iter_redirect_tasks(content_roots, for_counting_only=True))
+        return sum(
+            self.iter_redirect_tasks(content_roots, for_counting_only=True))
 
     def upload(
         self,
@@ -482,22 +487,20 @@ class BucketManager:
         default_cache_control=DEFAULT_CACHE_CONTROL,
     ):
         with concurrent.futures.ThreadPoolExecutor(
-            max_workers=MAX_WORKERS_PARALLEL_UPLOADS
+                max_workers=MAX_WORKERS_PARALLEL_UPLOADS
         ) as executor, StopWatch() as timer:
             # Upload the redirects first, then the built files. This
             # ensures that a built file overrides its stale redirect.
             task_iters = []
             if not skip_redirects:
                 task_iters.append(
-                    self.iter_redirect_tasks(content_roots, dry_run=dry_run)
-                )
+                    self.iter_redirect_tasks(content_roots, dry_run=dry_run))
             task_iters.append(
                 self.iter_file_tasks(
                     build_directory,
                     dry_run=dry_run,
                     default_cache_control=default_cache_control,
-                )
-            )
+                ))
             for task_iter in task_iters:
                 futures = {}
                 for task in task_iter:
@@ -539,7 +542,7 @@ class BucketManager:
     def delete(self, keys, on_task_complete=None, dry_run=False):
         """Delete doesn't care if it's a redirect or a regular file."""
         with concurrent.futures.ThreadPoolExecutor(
-            max_workers=MAX_WORKERS_PARALLEL_UPLOADS
+                max_workers=MAX_WORKERS_PARALLEL_UPLOADS
         ) as executor, StopWatch() as timer:
             # Upload the redirects first, then the built files. This
             # ensures that a built file overrides its stale redirect.
@@ -576,7 +579,9 @@ def upload_content(build_directory, content_roots, config):
 
     log.info(f"Upload files from: {build_directory}")
     if upload_redirects:
-        log.info(f"Upload redirects from: {', '.join(str(fp) for fp in content_roots)}")
+        log.info(
+            f"Upload redirects from: {', '.join(str(fp) for fp in content_roots)}"
+        )
     log.info("Upload into: ", nl=False)
     if bucket_prefix:
         log.info(f"{bucket_prefix}/ of ", nl=False)
@@ -590,9 +595,9 @@ def upload_content(build_directory, content_roots, config):
             if not total_redirects:
                 raise click.ClickException(
                     "unable to find any redirects to upload "
-                    "(did you specify the right content-root?)"
-                )
-        log.info(f"Total pending redirect uploads: {total_redirects:,} ({timer})")
+                    "(did you specify the right content-root?)")
+        log.info(
+            f"Total pending redirect uploads: {total_redirects:,} ({timer})")
     else:
         total_redirects = 0
         log.info("Not going to upload any redirects")
@@ -611,9 +616,8 @@ def upload_content(build_directory, content_roots, config):
 
     totals = Totals()
 
-    with DisplayProgress(
-        total_redirects + total_possible_files, show_progress_bar
-    ) as progress:
+    with DisplayProgress(total_redirects + total_possible_files,
+                         show_progress_bar) as progress:
 
         def on_task_complete(task):
             progress.update(task)
@@ -632,13 +636,14 @@ def upload_content(build_directory, content_roots, config):
     if dry_run:
         log.info("No uploads. Dry run!")
     else:
-        log.info(
-            f"Total uploaded files: {totals.uploaded_files:,} "
-            f"({fmt_size(totals.uploaded_files_size)})"
-        )
+        log.info(f"Total uploaded files: {totals.uploaded_files:,} "
+                 f"({fmt_size(totals.uploaded_files_size)})")
         if upload_redirects:
-            log.info(f"Total uploaded redirects: {totals.uploaded_redirects:,} ")
-        log.info(f"Total skipped files: {totals.skipped:,} matched existing S3 objects")
+            log.info(
+                f"Total uploaded redirects: {totals.uploaded_redirects:,} ")
+        log.info(
+            f"Total skipped files: {totals.skipped:,} matched existing S3 objects"
+        )
         log.info(f"Total upload/skip time: {upload_timer}")
 
     if prune:
@@ -653,11 +658,11 @@ def upload_content(build_directory, content_roots, config):
         for key in existing_bucket_objects:
             key_without_bucket_prefix = key.lstrip(f"{bucket_prefix}/")
             if any(
-                map(
-                    lambda prefix: key_without_bucket_prefix.startswith(prefix),
-                    MANUAL_PREFIXES,
-                )
-            ):
+                    map(
+                        lambda prefix: key_without_bucket_prefix.startswith(
+                            prefix),
+                        MANUAL_PREFIXES,
+                    )):
                 # These are special and wouldn't have been uploaded
                 continue
 
@@ -695,7 +700,9 @@ def upload_content(build_directory, content_roots, config):
                 progress.update(task)
                 totals.count(task)
 
-            mgr.delete(delete_keys, on_task_complete=on_task_complete, dry_run=dry_run)
+            mgr.delete(delete_keys,
+                       on_task_complete=on_task_complete,
+                       dry_run=dry_run)
 
         if dry_run:
             log.info("No deletions. Dry run!")

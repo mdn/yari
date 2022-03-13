@@ -1,6 +1,5 @@
 import requests
 
-
 DEFAULT_TIMEOUT = 120  # seconds
 # Kuma web domains that are indexed
 INDEXED_WEB_DOMAINS = {"developer.mozilla.org"}

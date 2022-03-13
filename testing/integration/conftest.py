@@ -4,7 +4,6 @@ import pytest
 
 import requests
 
-
 _KUMA_STATUS = None
 
 
@@ -21,9 +20,9 @@ def pytest_configure(config):
     # Process the server status from _kuma_status.json
     base_parts = urlsplit(base_url)
     kuma_status_url = urlunsplit(
-        (base_parts.scheme, base_parts.netloc, "_kuma_status.json", "", "")
-    )
-    response = requests.get(kuma_status_url, headers={"Accept": "application/json"})
+        (base_parts.scheme, base_parts.netloc, "_kuma_status.json", "", ""))
+    response = requests.get(kuma_status_url,
+                            headers={"Accept": "application/json"})
     response.raise_for_status()
     _KUMA_STATUS = response.json()
     _KUMA_STATUS["response"] = {"headers": response.headers}

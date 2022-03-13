@@ -21,11 +21,9 @@ def get_sha256_hash(zip_file_bytes):
 
 def get_lambda_function_dirs(directory):
     for lambda_function_dir in directory.iterdir():
-        if (
-            lambda_function_dir.is_dir()
-            and lambda_function_dir.joinpath("package.json").is_file()
-            and lambda_function_dir.joinpath("index.js").is_file()
-        ):
+        if (lambda_function_dir.is_dir()
+                and lambda_function_dir.joinpath("package.json").is_file()
+                and lambda_function_dir.joinpath("index.js").is_file()):
             yield lambda_function_dir
 
 
@@ -58,8 +56,7 @@ def make_package(lambda_function_dir):
         # Otherwise, something went wrong.
         raise PackageError(
             "failed to create an AWS Lambda deployment package (Zip file)\n\n"
-            f"{subprocess_result.stdout}"
-        )
+            f"{subprocess_result.stdout}")
 
 
 def update(lambda_function_dir, dry_run=False):
@@ -76,9 +73,9 @@ def update(lambda_function_dir, dry_run=False):
             # If this is a dry run, just return the existing function info.
             return function_info["Configuration"]
         # Return the function info of the freshly-published version.
-        return client.update_function_code(
-            FunctionName=function_name, ZipFile=zip_file_bytes, Publish=True
-        )
+        return client.update_function_code(FunctionName=function_name,
+                                           ZipFile=zip_file_bytes,
+                                           Publish=True)
     return None
 
 
@@ -97,7 +94,6 @@ def update_all(directory: Path, dry_run=False):
             else:
                 log.success(
                     f"published version {info['Version']} of {info['FunctionName']} "
-                    f"as {info['FunctionArn']}",
-                )
+                    f"as {info['FunctionArn']}", )
         else:
             log.info(" no change (matches the latest version in AWS)")

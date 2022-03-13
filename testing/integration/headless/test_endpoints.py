@@ -7,15 +7,12 @@ import pytest
 
 from . import INDEXED_WEB_DOMAINS, request
 
-
-META_ROBOTS_RE = re.compile(
-    r"""(?x)    # Verbose regex mode
+META_ROBOTS_RE = re.compile(r"""(?x)    # Verbose regex mode
     <meta\s+                        # meta tag followed by whitespace
     name="robots"\s*                # name=robots
     content="(?P<content>[^"]+)"    # capture the content
     \s*>                            # end meta tag
-"""
-)
+""")
 
 
 @pytest.fixture()
@@ -44,9 +41,8 @@ def test_document_based_redirection(base_url):
     resp = request("get", url)
     assert resp.status_code == 301
     assert (
-        resp.headers["Location"]
-        == "/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/concat"
-    )
+        resp.headers["Location"] ==
+        "/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/concat")
 
 
 def test_home(base_url, is_indexed):

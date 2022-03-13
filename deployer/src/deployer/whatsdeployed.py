@@ -37,4 +37,5 @@ def dump(directory: Path, output: Path, dry_run=False):
                 json.dump(data, f, indent=2)
             log.info(f"Wrote {json.dumps(data)!r} to {output}")
     else:
-        raise click.ClickException("'commit' and 'date' not found in git log output")
+        raise click.ClickException(
+            "'commit' and 'date' not found in git log output")

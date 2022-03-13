@@ -6,7 +6,6 @@ from pathlib import Path
 
 import click
 
-
 ClickLogger = namedtuple("ClickLogger", "info success warning error")
 
 
@@ -28,9 +27,9 @@ def iterdir(directory, max_depth=None, current_depth=0):
         for entry in it:
             if entry.is_dir():
                 if (max_depth is None) or (current_depth < max_depth):
-                    yield from iterdir(
-                        entry, max_depth=max_depth, current_depth=current_depth + 1
-                    )
+                    yield from iterdir(entry,
+                                       max_depth=max_depth,
+                                       current_depth=current_depth + 1)
             else:
                 yield Path(entry)
 
@@ -55,6 +54,7 @@ def fmt_seconds(seconds):
 
 
 class StopWatch:
+
     def __init__(self):
         self.t_start = 0.0
         self.t_stop = 0.0

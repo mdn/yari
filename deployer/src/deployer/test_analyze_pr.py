@@ -8,7 +8,6 @@ from unidiff import PatchSet
 
 from deployer.analyze_pr import analyze_pr, get_patch_lines
 
-
 DEFAULT_CONFIG = {
     "prefix": None,
     "analyze_flaws": False,
@@ -36,7 +35,8 @@ def mock_build_directory(*docs):
 def test_analyze_pr_prefix():
     doc = {"doc": {"mdn_url": "/en-US/docs/Foo"}}
     with mock_build_directory(doc) as build_directory:
-        comment = analyze_pr(build_directory, dict(DEFAULT_CONFIG, prefix="pr007"))
+        comment = analyze_pr(build_directory,
+                             dict(DEFAULT_CONFIG, prefix="pr007"))
         assert "## Preview URLs" in comment
         assert "- <https://pr007.content.dev.mdn.mozit.cloud/en-US/docs/Foo>" in comment
 
@@ -48,11 +48,17 @@ def test_analyze_pr_flaws():
             "title": "Foo",
             "flaws": {
                 "faux_pas": [
-                    {"explanation": "Socks in sandals"},
-                    {"explanation": "Congrats on losing your cat"},
+                    {
+                        "explanation": "Socks in sandals"
+                    },
+                    {
+                        "explanation": "Congrats on losing your cat"
+                    },
                 ],
             },
-            "source": {"github_url": "https://github.com/foo"},
+            "source": {
+                "github_url": "https://github.com/foo"
+            },
         }
     }
     no_flaws_doc = {
@@ -60,11 +66,14 @@ def test_analyze_pr_flaws():
             "mdn_url": "/en-US/docs/Bar",
             "title": "Bar",
             "flaws": {},
-            "source": {"github_url": "https://github.com/bar"},
+            "source": {
+                "github_url": "https://github.com/bar"
+            },
         }
     }
     with mock_build_directory(no_flaws_doc, doc) as build_directory:
-        comment = analyze_pr(build_directory, dict(DEFAULT_CONFIG, analyze_flaws=True))
+        comment = analyze_pr(build_directory,
+                             dict(DEFAULT_CONFIG, analyze_flaws=True))
         assert "## Flaws" in comment
         assert "1 document with no flaws that don't need to be listed" in comment
         assert "Flaw count: 2" in comment
@@ -77,28 +86,31 @@ def test_analyze_pr_flaws():
 def test_analyze_pr_dangerous_content():
     doc = {
         "doc": {
-            "mdn_url": "/en-US/docs/Foo",
-            "title": "Foo",
-            "body": [
-                {
-                    "type": "prose",
-                    "value": {
-                        "content": """
+            "mdn_url":
+            "/en-US/docs/Foo",
+            "title":
+            "Foo",
+            "body": [{
+                "type": "prose",
+                "value": {
+                    "content":
+                    """
             <p>
             <a href="https://www.peterbe.com">Peterbe.com</a>
             <a href="">Empty href</a>
             </p>
             """
-                    },
-                }
-            ],
-            "source": {"github_url": "https://github.com/foo"},
+                },
+            }],
+            "source": {
+                "github_url": "https://github.com/foo"
+            },
         }
     }
     with mock_build_directory(doc) as build_directory:
         comment = analyze_pr(
-            build_directory, dict(DEFAULT_CONFIG, analyze_dangerous_content=True)
-        )
+            build_directory,
+            dict(DEFAULT_CONFIG, analyze_dangerous_content=True))
         assert "## External URLs" in comment
         assert "  - <https://www.peterbe.com> (1 time)" in comment
 
@@ -106,20 +118,21 @@ def test_analyze_pr_dangerous_content():
 def test_analyze_pr_dangerous_content_with_diff_file_matched():
     doc = {
         "doc": {
-            "mdn_url": "/en-US/docs/Foo",
-            "title": "Foo",
-            "body": [
-                {
-                    "type": "prose",
-                    "value": {
-                        "content": """
+            "mdn_url":
+            "/en-US/docs/Foo",
+            "title":
+            "Foo",
+            "body": [{
+                "type": "prose",
+                "value": {
+                    "content":
+                    """
             <p>
             <a href="https://www.peterbe.com">Peterbe.com</a>
             </p>
             """
-                    },
-                }
-            ],
+                },
+            }],
             "source": {
                 "github_url": "https://github.com/foo",
                 "folder": "en-us/mozilla/firefox/releases/4",
@@ -144,20 +157,21 @@ def test_analyze_pr_dangerous_content_with_diff_file_matched():
 def test_analyze_pr_dangerous_content_with_diff_file_not_matched():
     doc = {
         "doc": {
-            "mdn_url": "/en-US/docs/Foo",
-            "title": "Foo",
-            "body": [
-                {
-                    "type": "prose",
-                    "value": {
-                        "content": """
+            "mdn_url":
+            "/en-US/docs/Foo",
+            "title":
+            "Foo",
+            "body": [{
+                "type": "prose",
+                "value": {
+                    "content":
+                    """
             <p>
             <a href="https://www.mozilla.org">Mozilla.org</a>
             </p>
             """
-                    },
-                }
-            ],
+                },
+            }],
             "source": {
                 "github_url": "https://github.com/foo",
                 "folder": "en-us/mozilla/firefox/releases/4",
@@ -186,7 +200,10 @@ def test_analyze_pr_prefix_and_postcomment(mocked_github):
     with mock_build_directory(doc) as build_directory:
         comment = analyze_pr(
             build_directory,
-            dict(DEFAULT_CONFIG, prefix="pr007", pr_number=123, github_token="abc123"),
+            dict(DEFAULT_CONFIG,
+                 prefix="pr007",
+                 pr_number=123,
+                 github_token="abc123"),
         )
         assert "## Preview URLs" in comment
         assert "- <https://pr007.content.dev.mdn.mozit.cloud/en-US/docs/Foo>" in comment
@@ -200,12 +217,11 @@ def test_get_patch_lines_basic():
     lines = get_patch_lines(patch)
 
     assert len(lines) == 4
-    assert (
-        "http://www.peterbe.com/about"
-        in lines["files/en-us/mozilla/firefox/releases/4/index.html"]
-    )
+    assert ("http://www.peterbe.com/about"
+            in lines["files/en-us/mozilla/firefox/releases/4/index.html"])
     assert "Hi Ryan" in lines["files/en-us/mdn/kitchensink/index.html"]
-    assert "on Wikipedia (in Swedish)" in lines["files/en-us/glossary/png/index.html"]
+    assert "on Wikipedia (in Swedish)" in lines[
+        "files/en-us/glossary/png/index.html"]
     assert "Sample change!" in lines["files/en-us/web/api/event/index.html"]
 
 

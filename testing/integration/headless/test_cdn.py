@@ -69,15 +69,16 @@ def assert_not_cached(
     **request_kwargs,
 ):
     if is_behind_cdn:
-        response1 = assert_not_cached_by_cdn(
-            url, expected_status_code, expected_location, method, **request_kwargs
-        )
-        response2 = assert_not_cached_by_cdn(
-            url, expected_status_code, expected_location, method, **request_kwargs
-        )
+        response1 = assert_not_cached_by_cdn(url, expected_status_code,
+                                             expected_location, method,
+                                             **request_kwargs)
+        response2 = assert_not_cached_by_cdn(url, expected_status_code,
+                                             expected_location, method,
+                                             **request_kwargs)
         if expected_status_code in (301, 302) and not expected_location:
             if "/users/github/login/" not in url:
-                assert response2.headers["location"] == response1.headers["location"]
+                assert response2.headers["location"] == response1.headers[
+                    "location"]
         return response2
 
     response = request(method, url, **request_kwargs)
@@ -116,16 +117,17 @@ def assert_cached(
                     if callable(expected_location):
                         assert expected_location(response2.headers["location"])
                     else:
-                        assert response2.headers["location"] == expected_location
+                        assert response2.headers[
+                            "location"] == expected_location
                 else:
-                    assert response2.headers["location"] == response.headers["location"]
+                    assert response2.headers["location"] == response.headers[
+                        "location"]
         else:
             assert is_cdn_cache_hit(response)
     else:
         assert "public" in response.headers["Cache-Control"]
         assert ("max-age" in response.headers["Cache-Control"]) or (
-            "s-maxage" in response.headers["Cache-Control"]
-        )
+            "s-maxage" in response.headers["Cache-Control"])
     return response
 
 
@@ -143,12 +145,14 @@ def assert_cached(
         ("/users/github/login/?next=/en-US/", 404, None),
         ("/users/google/login/?next=/en-US/", 404, None),
         ("/admin/login/", 200, None),
-        ("/admin/users/user/1/", 302, "/admin/login/?next=/admin/users/user/1/"),
+        ("/admin/users/user/1/", 302,
+         "/admin/login/?next=/admin/users/user/1/"),
     ],
 )
 def test_not_cached(base_url, is_behind_cdn, slug, status, expected_location):
     """Ensure that these endpoints respond as expected and are not cached."""
-    assert_not_cached(base_url + slug, status, expected_location, is_behind_cdn)
+    assert_not_cached(base_url + slug, status, expected_location,
+                      is_behind_cdn)
 
 
 @pytest.mark.parametrize(
@@ -182,7 +186,8 @@ def test_cached(base_url, is_behind_cdn, slug, status, expected_location):
     "slug,status",
     [("/files/2767/hut.jpg", 301), ("/@api/deki/files/3613/=hut.jpg", 301)],
 )
-def test_cached_attachments(base_url, attachment_url, is_behind_cdn, slug, status):
+def test_cached_attachments(base_url, attachment_url, is_behind_cdn, slug,
+                            status):
     """Ensure that these file-attachment requests are cached."""
     expected_location = attachment_url + slug
     assert_cached(base_url + slug, status, expected_location, is_behind_cdn)
@@ -198,9 +203,11 @@ def test_cached_attachments(base_url, attachment_url, is_behind_cdn, slug, statu
         ("Marketplace", 302, "/docs/Mozilla/Marketplace"),
     ],
 )
-def test_zones_without_locale(base_url, is_behind_cdn, zone, status, expected_location):
+def test_zones_without_locale(base_url, is_behind_cdn, zone, status,
+                              expected_location):
     """
     Ensure that these zone requests without a locale should redirect and that they
     are cached.
     """
-    assert_cached(base_url + f"/{zone}", status, expected_location, is_behind_cdn)
+    assert_cached(base_url + f"/{zone}", status, expected_location,
+                  is_behind_cdn)
