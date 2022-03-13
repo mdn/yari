@@ -34,8 +34,8 @@ Before you can start working with Yari, you need to:
     git clone https://github.com/[your_account]/yari.git
     ```
 
- Take a note of the file path to the location where you've cloned that
-repo before moving on.
+    Take a note of the file path to the location where you've cloned that
+    repo before moving on.
 
 <!-- markdownlint-enable list-marker-space -->
 
