@@ -81,7 +81,7 @@ function StatusIcons({ status }: { status: bcd.StatusBlock }) {
     !status.standard_track && {
       title: "Non-standard. Expect poor cross-browser support.",
       text: "Non-standard",
-      iconClassName: "icon-note-warning",
+      iconClassName: "icon-non-standard",
     },
   ].filter(isTruthy);
   return icons.length === 0 ? null : (

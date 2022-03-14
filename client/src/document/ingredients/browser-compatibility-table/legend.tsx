@@ -11,7 +11,7 @@ const LEGEND_LABELS = {
   no: "No support",
   unknown: "Compatibility unknown",
   experimental: "Experimental. Expect behavior to change in the future.",
-  "note-warning": "Non-standard. Check cross-browser support before using.",
+  "non-standard": "Non-standard. Check cross-browser support before using.",
   trash: "Deprecated. Not for use in new websites.",
   footnote: "See implementation notes.",
   disabled: "User must explicitly enable this feature.",
@@ -38,7 +38,7 @@ function getActiveLegendItems(
         legendItems.add("trash");
       }
       if (!status.standard_track) {
-        legendItems.add("note-warning");
+        legendItems.add("non-standard");
       }
     }
 
