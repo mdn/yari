@@ -16,7 +16,7 @@ declare const self: ServiceWorkerGlobalScope;
 
 self.addEventListener("install", (e) => {
   self.skipWaiting();
-  synchronizeDb();
+  // synchronizeDb();
   e.waitUntil(
     (async () => {
       const cache = await openCache();
@@ -75,7 +75,7 @@ self.addEventListener("activate", (e: ExtendableEvent) => {
       return caches.keys().then((keyList) => {
         return Promise.all(
           keyList.map((key) => {
-            if (key === cacheName) {
+            if (key === cacheName || key == contentCache) {
               return Promise.resolve(true);
             }
             return caches.delete(key);
