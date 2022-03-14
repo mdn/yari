@@ -533,16 +533,15 @@ pre {
   }
 
   .copy-icon-message {
-    background: $mdn-color-dark-grey-90;
+    background: var(--text-primary);
     border-radius: var(--elem-radius);
-    color: white;
+    color: var(--text-invert);
     font-size: 0.8125rem;
     opacity: 1;
     padding: 0.125rem;
     position: absolute;
     right: 0.25rem;
     top: 15px;
-    z-index: -1000;
   }
 
   .example-good,
