@@ -7,6 +7,7 @@ import {
   DefaultApiInterceptor,
 } from "./fetch-interceptors";
 import { offlineDb } from "./db";
+import { INTERACTIVE_EXAMPLES_URL } from "./service-worker";
 
 let interceptors = [
   new WhoamiInterceptor(offlineDb),
@@ -19,7 +20,7 @@ let defaultInterceptor = new DefaultApiInterceptor(offlineDb);
 
 export async function respond(e): Promise<Response> {
   const url = new URL(e.request.url);
-  if ([self.location.host].includes(url.host)) {
+  if ([self.location.host, INTERACTIVE_EXAMPLES_URL.host].includes(url.host)) {
     let handler = interceptors
       .filter((val) => val.handles(url.pathname))
       .shift();
@@ -42,6 +43,9 @@ export async function respond(e): Promise<Response> {
     }
     if (!url.pathname.split("/").pop().includes(".")) {
       return await caches.match("/index.html");
+    }
+    if (url.pathname === "/index.json") {
+      return await caches.match("/en-us/index.json");
     }
     if (url.pathname.startsWith("/en-US/docs/")) {
       url.pathname = url.pathname.toLowerCase();

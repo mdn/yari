@@ -5,8 +5,9 @@ import { cacheName, contentCache, openCache } from "./caches";
 import { respond } from "./fetcher";
 import { unpackAndCache } from "./unpack-cache";
 import { offlineDb } from "./db";
-export const INTERACTIVE_EXAMPLES_URL =
-  "https://interactive-examples.stage.mdn.mozilla.net";
+export const INTERACTIVE_EXAMPLES_URL = new URL(
+  "https://interactive-examples.stage.mdn.mozilla.net"
+);
 const UPDATES_BASE_URL = "https://updates.developer.allizom.org";
 
 // export empty type because of tsc --isolatedModules flag
