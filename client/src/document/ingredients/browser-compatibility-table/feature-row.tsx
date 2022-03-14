@@ -71,7 +71,7 @@ function StatusIcons({ status }: { status: bcd.StatusBlock }) {
     status.experimental && {
       title: "Experimental. Expect behavior to change in the future.",
       text: "Experimental",
-      iconClassName: "icon-preview",
+      iconClassName: "icon-experimental",
     },
     status.deprecated && {
       title: "Deprecated. Not for use in new websites.",
