@@ -6,9 +6,13 @@ function OfferOverviewFeature({ id, img, imgAlt, children }) {
     <div className={`offer-overview-feature ${id}`}>
       <div className="container">
         <div className="wrapper" id={id}>
-          <div className="img-container">
-            <img src={img} alt={imgAlt}></img>
-          </div>
+          <img
+            className="img-container"
+            src={img}
+            alt={imgAlt}
+            width="1600"
+            height="900"
+          ></img>
           <div className="copy-container">{children}</div>
         </div>
       </div>
@@ -20,7 +24,7 @@ export default function OfferOverviewFeatures() {
   return (
     <section id="features">
       <OfferOverviewFeature
-        id="bookmarking"
+        id="notifications"
         img="/assets/notifications_light.png"
         imgAlt=""
       >
@@ -30,7 +34,7 @@ export default function OfferOverviewFeatures() {
           get customizable notifications when documentation changes, CSS
           features launch, and APIs ship.
         </p>
-        <Button href="plus/feature-highlight">Learn more →</Button>
+        <Button href="./feature/notifications">Learn more →</Button>
       </OfferOverviewFeature>
       <OfferOverviewFeature
         id="offline"
@@ -43,10 +47,10 @@ export default function OfferOverviewFeatures() {
           inaccessible pages or cluttered tabs. With MDN Plus, have the fully
           navigable resources of MDN at your disposal even when offline.
         </p>
-        <Button href="plus/feature-highlight">Learn more →</Button>
+        <Button href="./feature/offline">Learn more →</Button>
       </OfferOverviewFeature>
       <OfferOverviewFeature
-        id="bookmarking"
+        id="collections"
         img="/assets/notifications_light.png"
         imgAlt=""
       >
@@ -59,7 +63,7 @@ export default function OfferOverviewFeatures() {
           your inner curator and collect your favorite articles in one place for
           convenient consultation.
         </p>
-        <Button href="plus/feature-highlight">Learn more →</Button>
+        <Button href="./feature/collections">Learn more →</Button>
       </OfferOverviewFeature>
     </section>
   );

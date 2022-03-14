@@ -37,7 +37,7 @@ export type OfferDetailsProps = {
 
 const PLUS_FEATURES = [
   ["notifications", "Page notifications"],
-  ["collections", "Manual and automatic saved articles"],
+  ["collections", "Collections of articles"],
   ["offline", "MDN offline"],
 ];
 

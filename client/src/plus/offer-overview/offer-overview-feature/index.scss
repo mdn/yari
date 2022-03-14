@@ -14,6 +14,7 @@
     height: 100%;
     padding: 4rem 1rem;
     gap: 4rem;
+    justify-content: space-between;
 
     @media screen and (min-width: $screen-lg) {
       flex-direction: row;
@@ -31,8 +32,9 @@
       box-shadow: 0px 3px 22px #2b2a331a;
       border-radius: 1rem;
       max-width: 25rem;
+      height: 100%;
       @media screen and (min-width: $screen-lg) {
-        max-width: 50%;
+        max-width: min(50%, 30rem);
       }
     }
 
@@ -48,7 +50,7 @@
         text-align: initial;
         align-items: initial;
         height: 100%;
-        max-width: 100%;
+        max-width: 50%;
       }
     }
   }

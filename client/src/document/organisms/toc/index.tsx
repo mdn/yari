@@ -61,6 +61,7 @@ export function TOC({ toc }: { toc: Toc[] }) {
                 key={item.id}
                 id={item.id}
                 text={item.text}
+                sub={item.sub}
                 currentViewedTocItem={currentViewedTocItem}
               />
             );
@@ -74,10 +75,11 @@ export function TOC({ toc }: { toc: Toc[] }) {
 function TOCItem({
   id,
   text,
+  sub,
   currentViewedTocItem,
 }: Toc & { currentViewedTocItem: string }) {
   return (
-    <li className="document-toc-item">
+    <li className={`document-toc-item ${sub ? "document-toc-item-sub" : ""}`}>
       <a
         className="document-toc-link"
         key={id}
