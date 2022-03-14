@@ -10,6 +10,13 @@
 //  {{anch("Some section's title")}}
 //  {{anch("Another section name", "the information elsewhere in this article.")}}
 
+
+// This macro is no more used. Use a regular Markdown link instead.
+// Remove this file when there are no more {{anch}} calls in translated-content
+// See also https://github.com/mdn/content/pull/13802
+// Throw a MacroDeprecatedError flaw
+mdn.deprecated()
+
 var text = $1 || $0;
 var anchor = `#${$0.replace(/ /g, '_').toLowerCase()}`;
 
