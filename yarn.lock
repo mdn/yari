@@ -10347,10 +10347,10 @@ lru-cache@^6.0.0:
   dependencies:
     yallist "^4.0.0"
 
-lru-cache@^7.4.4:
-  version "7.4.4"
-  resolved "https://registry.yarnpkg.com/lru-cache/-/lru-cache-7.4.4.tgz#a3dabc394ec07e2285af52fd24d0d74b3ac71c29"
-  integrity sha512-2XbUJmlpIbmc9JvNNmtLzHlF31srxoDxuiQiwBHic7RZyHyltbTdzoO6maRqpdEhOOG5GD80EXvzAU0wR15ccg==
+lru-cache@^7.5.0:
+  version "7.5.0"
+  resolved "https://registry.yarnpkg.com/lru-cache/-/lru-cache-7.5.0.tgz#5e14318d64e6f180a5cf3b9b955b2e89376c0efe"
+  integrity sha512-8neUvdgNtubJ+VNNqrqOLjUoIlN+NRPFtv1Vne2rQ4uPCxhp0W4TlqntzTLnVVezGXcSSdXTrKCTYooEQA7X6g==
 
 lz-string@^1.4.4:
   version "1.4.4"
