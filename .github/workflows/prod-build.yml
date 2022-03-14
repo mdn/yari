@@ -78,6 +78,8 @@ jobs:
         with:
           repository: mdn/translated-content
           path: mdn/translated-content
+          # See matching warning for mdn/content checkout step
+          fetch-depth: 0
 
       - uses: actions/checkout@v3
         with:
