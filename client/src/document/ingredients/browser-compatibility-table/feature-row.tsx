@@ -2,6 +2,7 @@ import React, { useContext } from "react";
 import type bcd from "@mdn/browser-compat-data/types";
 import { BrowserInfoContext } from "./browser-info";
 import { asList, getFirst, isTruthy, versionIsPreview } from "./utils";
+import { LEGEND_LABELS } from "./legend";
 
 // Yari builder will attach extra keys from the compat data
 // it gets from @mdn/browser-compat-data. These are "Yari'esque"
@@ -244,8 +245,10 @@ const CellText = React.memo(
 );
 
 function Icon({ name }: { name: string }) {
+  const title = LEGEND_LABELS[name] ?? name;
+
   return (
-    <abbr className="only-icon" title={name}>
+    <abbr className="only-icon" title={title}>
       <span>{name}</span>
       <i className={`icon icon-${name}`} />
     </abbr>
