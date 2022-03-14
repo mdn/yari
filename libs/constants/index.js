@@ -89,7 +89,13 @@ const CSP_DIRECTIVES = {
   "default-src": ["'self'"],
   "script-src": scriptSrcValues,
   "script-src-elem": scriptSrcValues,
-  "style-src": ["'report-sample'", "'self'", "'unsafe-inline'"],
+  "style-src": [
+    "'report-sample'",
+    "'self'",
+    "'unsafe-inline'",
+
+    "translate.googleapis.com",
+  ],
   "object-src": ["'none'"],
   "base-uri": ["'self'"],
   "connect-src": [
@@ -135,6 +141,7 @@ const CSP_DIRECTIVES = {
 
     "wikipedia.org",
 
+    "translate.google.com",
     "www.google-analytics.com",
     "www.gstatic.com",
   ],
