@@ -118,6 +118,7 @@ export type DocParent = {
 export type Toc = {
   id: string;
   text: string;
+  sub?: boolean;
 };
 
 export interface Doc {

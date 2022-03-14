@@ -10,7 +10,7 @@ const OfferOverview = React.lazy(() => import("./offer-overview"));
 const Bookmarks = React.lazy(() => import("./bookmarks"));
 const FeatureHighlight = React.lazy(() => import("./feature-highlight"));
 
-export function Plus({ pageTitle }: { pageTitle?: string }) {
+export function Plus({ pageTitle, ...props }: { pageTitle?: string }) {
   const defaultPageTitle = "MDN Plus";
   React.useEffect(() => {
     document.title = pageTitle || defaultPageTitle;
@@ -55,10 +55,10 @@ export function Plus({ pageTitle }: { pageTitle?: string }) {
         }
       />
       <Route
-        path="feature-highlight"
+        path="feature/:feature"
         element={
           <React.Suspense fallback={loading}>
-            <FeatureHighlight />
+            <FeatureHighlight {...props} />
           </React.Suspense>
         }
       />
