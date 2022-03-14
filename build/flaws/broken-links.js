@@ -270,7 +270,7 @@ function getBrokenLinksFlaws(doc, $, { rawContent }, level) {
       const found = Document.findByURL(hrefNormalized);
       if (!found) {
         // Before we give up, check if it's an image.
-        if (!Image.findByURL(hrefNormalized)) {
+        if (!Image.findByURLWithFallback(hrefNormalized)) {
           // Even if it's a redirect, it's still a flaw, but it'll be nice to
           // know what it *should* be.
           const resolved = Redirect.resolve(hrefNormalized);

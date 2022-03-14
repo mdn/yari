@@ -230,9 +230,11 @@ app.get("/*", async (req, res, ...args) => {
   // TODO: Would be nice to have a list of all supported file extensions
   // in a constants file.
   if (/\.(png|webp|gif|jpe?g|svg)$/.test(req.path)) {
-    // Remember, Image.findByURL() will return the absolute file path
+    // Remember, Image.findByURLWithFallback() will return the absolute file path
     // iff it exists on disk.
-    const filePath = Image.findByURL(req.path);
+    // Using a "fallback" strategy here so that images embedded in live samples
+    // are resolved if they exist in en-US but not in <locale>
+    const filePath = Image.findByURLWithFallback(req.path);
     if (filePath) {
       // The second parameter to `send()` has to be either a full absolute
       // path or a path that doesn't start with `../` otherwise you'd
