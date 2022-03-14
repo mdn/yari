@@ -159,6 +159,11 @@ const CellText = React.memo(
             isSupported: "preview",
             label: labelFromString(added, browser),
           };
+        } else if (currentSupport?.flags?.length) {
+          status = {
+            isSupported: "no",
+            label: labelFromString(added, browser),
+          };
         } else {
           status = {
             isSupported: "yes",
