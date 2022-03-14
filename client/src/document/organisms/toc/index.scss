@@ -50,6 +50,10 @@
     }
   }
 
+  &-item-sub > .document-toc-link:not(.button) {
+    padding-left: 2rem;
+  }
+
   .show-toc {
     display: block;
   }

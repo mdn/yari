@@ -1,48 +1,51 @@
+import React from "react";
+import { useParams } from "react-router-dom";
+import useSWR from "swr";
+import { CRUD_MODE } from "../../constants";
+import { TOC } from "../../document/organisms/toc";
+import { Button } from "../../ui/atoms/button";
 import "./index.scss";
 
-function FeatureHighlight() {
+function FeatureHighlight(props) {
+  const { feature, locale } = useParams();
+
+  const baseURL = `/${locale.toLowerCase()}/plus/feature/${feature}`;
+  const featureJSONUrl = `${baseURL}/index.json`;
+  const { data: { hyData } = {} } = useSWR<any>(
+    featureJSONUrl,
+    async (url) => {
+      const response = await fetch(url);
+      if (!response.ok) {
+        const text = await response.text();
+        throw new Error(`${response.status} on ${url}: ${text}`);
+      }
+      return await response.json();
+    },
+    {
+      initialData: props.hyData ? props : undefined,
+      revalidateOnFocus: CRUD_MODE,
+    }
+  );
+  React.useEffect(() => {
+    const pageTitle = hyData && `${hyData.title} | MDN Plus`;
+    document.title = pageTitle;
+  }, [hyData]);
+
+  console.log(props);
+  if (!hyData) {
+    return <>NaN</>;
+  }
   return (
-    <div className="feature-highlight">
-      <div className="wrapper">
-        <div className="ft-sidebar">
-          <a href="/">← Back to Overview</a>
-        </div>
-        <div className="ft-content">
-          <div className="ft-title">
-            <h4 className="ft-name">Bookmarking</h4>
-            <span className="ft-headline">
-              Get more from your note-ta&shy;king app
-            </span>
-            <p>
-              Remember everything and tackle any project with your notes, tasks,
-              and schedule all in one place.
-            </p>
-          </div>
-          <div className="ft-article">
-            <h1>Getting started</h1>
-            <p>
-              Collections are essentially just folders. Whether you’re planning
-              a presentation, preparing for an event or creating a website,
-              create a collection so all the important items are saved in one
-              central place.
-            </p>
-            <h2>Bookmarking a page</h2>
-            <p>
-              Collections are essentially just folders. Whether you’re planning
-              a presentation, preparing for an event or creating a website,
-              create a collection so all the important items are saved in one
-              central place.
-            </p>
-            <h2>Bookmarking a page</h2>
-            <p>
-              Collections are essentially just folders. Whether you’re planning
-              a presentation, preparing for an event or creating a website,
-              create a collection so all the important items are saved in one
-              central place.
-            </p>
-          </div>
-        </div>
+    <div className="feature-highlight container">
+      <div className="ft-sidebar">
+        <Button href={`/${locale}/plus`}>← Back to Overview</Button>
+        {(hyData.toc?.length && <TOC toc={hyData.toc}></TOC>) || null}
       </div>
+      <article className="ft-content">
+        {hyData.sections.map((section) => (
+          <section dangerouslySetInnerHTML={{ __html: section }}></section>
+        ))}
+      </article>
     </div>
   );
 }

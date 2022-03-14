@@ -1,6 +1,7 @@
 const fs = require("fs");
 const path = require("path");
 
+const cheerio = require("cheerio");
 const got = require("got");
 const FileType = require("file-type");
 const imagemin = require("imagemin");
@@ -131,4 +132,43 @@ function getImageminPlugin(fileName) {
   throw new Error(`No imagemin plugin for ${extension}`);
 }
 
-module.exports = { downloadAndResizeImage, forceExternalURL, humanFileSize };
+function splitSections(rawHTML) {
+  const $ = cheerio.load(`<div id="_body">${rawHTML}</div>`);
+  const blocks = [];
+  const toc = [];
+
+  const section = cheerio
+    .load("<div></div>", { decodeEntities: false })("div")
+    .eq(0);
+
+  const iterable = [...$("#_body")[0].childNodes];
+  let c = 0;
+  iterable.forEach((child) => {
+    if (child.tagName === "h2") {
+      if (c) {
+        blocks.push(section.clone());
+        section.empty();
+        c = 0;
+      }
+      const text = $(child).text();
+      const id = text.replace(/[ .,!?]+/g, "-").toLowerCase();
+      toc.push({ id, text });
+      child.attribs = { ...(child.attribs || {}), id };
+    }
+    c++;
+    section.append(child);
+  });
+  if (c) {
+    blocks.push(section.clone());
+  }
+
+  const sections = blocks.map((block) => block.html().trim());
+  return { sections, toc };
+}
+
+module.exports = {
+  downloadAndResizeImage,
+  forceExternalURL,
+  humanFileSize,
+  splitSections,
+};
