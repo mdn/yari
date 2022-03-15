@@ -71,7 +71,7 @@ function StatusIcons({ status }: { status: bcd.StatusBlock }) {
     status.experimental && {
       title: "Experimental. Expect behavior to change in the future.",
       text: "Experimental",
-      iconClassName: "icon-preview",
+      iconClassName: "icon-experimental",
     },
     status.deprecated && {
       title: "Deprecated. Not for use in new websites.",
@@ -127,8 +127,8 @@ const CellText = React.memo(
   }) => {
     const currentSupport = getFirst(support);
 
-    const added = currentSupport && currentSupport.version_added;
-    const removed = currentSupport && currentSupport.version_removed;
+    const added = currentSupport?.version_added ?? null;
+    const removed = currentSupport?.version_removed ?? null;
 
     const browserReleaseDate = getSupportBrowserReleaseDate(support);
 
