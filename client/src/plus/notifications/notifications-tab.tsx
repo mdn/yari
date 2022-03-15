@@ -14,6 +14,7 @@ import SearchFilter from "../search-filter";
 import NotificationCardListItem from "./notification-card-list-item";
 import SelectedNotificationsBar from "./notification-select";
 import { TAB_INFO, TabVariant, FILTERS, SORTS } from "../common/tabs";
+import { useVisibilityChangeListener } from "./utils";
 
 export function NotificationsTab({
   selectedTerms,
@@ -33,8 +34,6 @@ export function NotificationsTab({
     unwatchEnabled: false,
   });
 
-  document.title = TAB_INFO[TabVariant.NOTIFICATIONS].pageTitle || "MDN Plus";
-
   const { data, error, isLoading, hasMore } = useNotificationsApiEndpoint(
     offset,
     selectedTerms,
@@ -42,6 +41,20 @@ export function NotificationsTab({
     selectedSort,
     starred
   );
+
+  useVisibilityChangeListener();
+
+  useEffect(() => {
+    let unread;
+    document.title = TAB_INFO[TabVariant.NOTIFICATIONS].pageTitle;
+    if (data && data.items) {
+      unread = data.items.filter((v) => v.read === false).length;
+    }
+    if (!!unread) {
+      document.title = document.title + ` (${unread})`;
+    }
+  }, [data]);
+
   const listRef = useRef<Array<any>>([]);
 
   listRef.current = list;
