@@ -65,7 +65,7 @@ export const ThemeSwitcher = () => {
         ariaControls={menuId}
         ariaHasPopup={"menu"}
         ariaExpanded={isOpen || undefined}
-        icon={activeTheme}
+        icon={`theme-${activeTheme}`}
         extraClasses="theme-switcher-menu small"
         onClickHandler={() => {
           setIsOpen(!isOpen);
