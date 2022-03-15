@@ -64,7 +64,7 @@ Remove a saved page from **Collections**
 
 ## Collections
 
-When an article is saved, it appears in **Collections**. 
+When an article is saved, it appears in **Collections**.
 
 ### Reaching the Collections page
 
@@ -85,21 +85,17 @@ Saved pages can be filtered by searching by Title keywords through the page sear
 
 ## Sorting saved pages
 
-Saved pages can be sorted by Date added and Title  located to the right of the Collections search.
+Saved pages can be sorted by Date added and Title located to the right of the Collections search.
 
 ## Frequently Visited Articles
 
-These are collections we automatically create for you, based on your activity while being logged into MDN Plus. As an MDN Plus user, you are automatically opted into this feature. 
+These are collections we automatically create for you, based on your activity while being logged into MDN Plus. As an MDN Plus user, you are automatically opted into this feature.
 
 ## How are these articles generated?
 
-Frequently visited pages are articles you visit most frequently while logged into MDN Plus. We will always show you your most recent top visited 20 pages. 
+Frequently visited pages are articles you visit most frequently while logged into MDN Plus. We will always show you your most recent top visited 20 pages.
 
 ## Remove a saved page from Frequently visited articles
 
 Click the **3-Dots menu** to the right of the saved page and select **Delete**.
 Your saved page has now been removed. Select **Undo** in the notification at the bottom of the screen to revert this action.
-
-
-
-
