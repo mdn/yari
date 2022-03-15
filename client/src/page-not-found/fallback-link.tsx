@@ -32,8 +32,25 @@ export default function FallbackLink({ url }: { url: string }) {
     async (url) => {
       const response = await fetch(url);
       if (response.ok) {
-        const { doc } = await response.json();
-        return doc;
+        // If the URL is already for the JSON file, use  the response
+        if (response.url.endsWith("/index.json")) {
+          const { doc } = await response.json();
+          return doc;
+        }
+        // Otherwise, use the URL that gave the successful page (potentially
+        // including any redirects) and append index.json to get the data needed
+        var jsonURL = response.url;
+        if (!jsonURL.endsWith("/")) {
+          jsonURL += "/";
+        }
+        jsonURL += "index.json";
+        var jsonResponse = await fetch(jsonURL);
+        if (jsonResponse.ok) {
+          const { doc } = await jsonResponse.json();
+          return doc;
+        } else if (response.status === 404) {
+          return null;
+        }
       } else if (response.status === 404) {
         return null;
       }
@@ -52,13 +69,8 @@ export default function FallbackLink({ url }: { url: string }) {
       // So remove that when constructing the English index.json URL.
       enUSURL = enUSURL.replace("/_404/", "/docs/");
 
-      // Lastly, because we're going to append `index.json` always make sure
-      // the URL, up to this point, has a trailing /. The "defensiveness" here
-      // is probably only necessary so it works in production and in local development.
-      if (!enUSURL.endsWith("/")) {
-        enUSURL += "/";
-      }
-      enUSURL += "index.json";
+      // The fallback check URL should not force append index.json so it can
+      // follow any redirects
       setFallbackCheckURL(enUSURL);
     }
   }, [url, locale, location]);
