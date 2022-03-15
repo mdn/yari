@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { useFrequentlyViewed } from "../../document/hooks";
 import { BookmarkData } from "../collections";
-import { TabVariant } from "../notifications/tabs";
 
 export const NOTIFICATIONS_BASE_PATH = "/api/v1/plus/notifications";
 export const WATCHED_BASE_PATH = "/api/v1/plus/watching";

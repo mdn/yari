@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from "react";
-import { TAB_INFO, BookmarkData } from ".";
+import { BookmarkData } from ".";
 import { useUIStatus } from "../../ui-context";
 import { Loading } from "../../ui/atoms/loading";
 import {
@@ -8,7 +8,7 @@ import {
   updateDeleteCollectionItem,
 } from "../common/api";
 import { showMoreButton } from "../common/plus-tabs";
-import { TabVariant, SORTS } from "../notifications/tabs";
+import { TabVariant, SORTS, TAB_INFO } from "../common/tabs";
 import SearchFilter from "../search-filter";
 import { CollectionListItem } from "./collection-list-item";
 
@@ -21,8 +21,7 @@ export function CollectionsTab({
   const { setToastData } = useUIStatus();
   const [list, setList] = useState<Array<any>>([]);
 
-  document.title =
-    TAB_INFO.get(TabVariant.COLLECTIONS)?.pageTitle || "MDN Plus";
+  document.title = TAB_INFO[TabVariant.COLLECTIONS].pageTitle || "MDN Plus";
 
   const { data, error, isLoading, hasMore } = useCollectionsApiEndpoint(
     offset,

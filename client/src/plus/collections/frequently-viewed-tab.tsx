@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
-import { TAB_INFO, BookmarkData } from ".";
+import { BookmarkData } from ".";
 import { useUIStatus } from "../../ui-context";
 import { useFrequentlyViewedData } from "../common/api";
-import { TabVariant, SORTS } from "../notifications/tabs";
+import { TabVariant, SORTS, TAB_INFO } from "../common/tabs";
 import SearchFilter from "../search-filter";
 import { CollectionListItem } from "./collection-list-item";
 
@@ -13,7 +13,7 @@ export function FrequentlyViewedTab({ selectedTerms }) {
   const { data, setFrequentlyViewed } = useFrequentlyViewedData(selectedTerms);
 
   document.title =
-    TAB_INFO.get(TabVariant.FREQUENTLY_VIEWED)?.pageTitle || "MDN Plus";
+    TAB_INFO[TabVariant.FREQUENTLY_VIEWED].pageTitle || "MDN Plus";
 
   useEffect(() => {
     if (data) {

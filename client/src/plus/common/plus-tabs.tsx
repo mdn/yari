@@ -1,5 +1,5 @@
 import { Button } from "../../ui/atoms/button";
-import { TabVariant } from "../notifications/tabs";
+import { TabVariant } from "./tabs";
 import { CollectionsTab } from "../collections/collections-tab";
 import { FrequentlyViewedTab } from "../collections/frequently-viewed-tab";
 import {

@@ -13,7 +13,7 @@ import { showMoreButton } from "../common/plus-tabs";
 import SearchFilter from "../search-filter";
 import NotificationCardListItem from "./notification-card-list-item";
 import SelectedNotificationsBar from "./notification-select";
-import { TAB_INFO, TabVariant, FILTERS, SORTS } from "./tabs";
+import { TAB_INFO, TabVariant, FILTERS, SORTS } from "../common/tabs";
 
 export function NotificationsTab({
   selectedTerms,
@@ -33,8 +33,7 @@ export function NotificationsTab({
     unwatchEnabled: false,
   });
 
-  document.title =
-    TAB_INFO.get(TabVariant.NOTIFICATIONS)?.pageTitle || "MDN Plus";
+  document.title = TAB_INFO[TabVariant.NOTIFICATIONS].pageTitle || "MDN Plus";
 
   const { data, error, isLoading, hasMore } = useNotificationsApiEndpoint(
     offset,
@@ -194,7 +193,7 @@ export function StarredNotificationsTab({
   selectedFilter,
   selectedSort,
 }) {
-  document.title = TAB_INFO.get(TabVariant.STARRED)?.pageTitle || "MDN Plus";
+  document.title = TAB_INFO[TabVariant.STARRED].pageTitle || "MDN Plus";
 
   return (
     <NotificationsTab

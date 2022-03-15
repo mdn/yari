@@ -10,7 +10,7 @@ import {
 import "./index.scss";
 
 import { useUserData } from "../../user-context";
-import { TAB_INFO, useCurrentTab } from "./tabs";
+import { TabVariant, TAB_INFO, useCurrentTab } from "../common/tabs";
 import { PlusTabs } from "../common/plus-tabs";
 
 function NotificationsLayout() {
@@ -37,17 +37,21 @@ function NotificationsLayout() {
   const showTabs = userData && userData.isAuthenticated;
   const isAuthed = userData?.isAuthenticated;
 
+  const tabsForRoute = [
+    TAB_INFO[TabVariant.NOTIFICATIONS],
+    TAB_INFO[TabVariant.STARRED],
+    TAB_INFO[TabVariant.WATCHING],
+  ].map((val) => {
+    return { ...val, path: `/${locale}${val?.path}` };
+  });
+
   return (
     <>
       <header className="plus-header">
         <Container>
           <h1>Notifications</h1>
         </Container>
-        <Tabs
-          tabs={[...TAB_INFO.values()].map((val) => {
-            return { ...val, path: `/${locale}${val.path}` };
-          })}
-        />
+        <Tabs tabs={tabsForRoute} />
       </header>
       {showTabs && (
         <Container>
