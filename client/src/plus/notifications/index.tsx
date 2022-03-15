@@ -94,7 +94,7 @@ function NotificationsLayout() {
               setFrequentlyUsed={null}
             />
           </>
-          {isLoading && <Loading message="Waiting for data" />}
+          {isLoading && <Loading message="Fetching notifications..." />}
           {!userData && <Loading message="Waiting for authentication" />}
           {!userData && !isAuthed && <NotSignedIn />}
           {error && <DataError error={error} />}

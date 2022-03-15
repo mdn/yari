@@ -131,7 +131,7 @@ function CollectionsLayout() {
               setFrequentlyUsed={setEntries}
             />
           </>
-          {isLoading && <Loading message="Waiting for data" />}
+          {isLoading && <Loading message="Fetching your collections..." />}
           {!userData && <Loading message="Waiting for authentication" />}
           {!userData && !isAuthed && <NotSignedIn />}
           {error && <DataError error={error} />}
