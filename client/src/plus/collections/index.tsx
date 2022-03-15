@@ -1,23 +1,58 @@
 import { useContext, useEffect, useState } from "react";
-import { useLocale } from "../../hooks";
-import Container from "../../ui/atoms/container";
-import Tabs from "../../ui/molecules/tabs";
+import dayjs from "dayjs";
+import relativeTime from "dayjs/plugin/relativeTime";
+import "./index.scss";
 
+import "../icon-card/index.scss";
+
+import { DataError, NotSignedIn } from "../common";
 import {
   searchFiltersContext,
   SearchFiltersProvider,
 } from "../contexts/search-filters";
-import "./index.scss";
-
-import { useNotificationsApiEndpoint } from "./api";
-
-import { Loading } from "../../ui/atoms/loading";
-import { DataError, NotSignedIn } from "../common";
+import Container from "../../ui/atoms/container";
+import Tabs from "../../ui/molecules/tabs";
+import { useLocale } from "../../hooks";
+import { BookmarkData } from "./types";
 import { useUserData } from "../../user-context";
-import { TAB_INFO, useCurrentTab } from "./tabs";
+import { TabVariant, useCurrentTab } from "../notifications/tabs";
 import { PlusTab } from "../common/plus-tab";
+import { useCollectionsApiEndpoint } from "../notifications/api";
+import { Loading } from "../../ui/atoms/loading";
 
-function NotificationsLayout() {
+dayjs.extend(relativeTime);
+
+const COLLECTIONS_URL = "/plus/collection";
+const FREQUENTLY_VIEWED_URL = "/plus/collection/frequently_viewed";
+
+export const TAB_INFO = new Map([
+  [
+    TabVariant.COLLECTIONS,
+    {
+      label: "Collections",
+      pageTitle: "Collections",
+      path: COLLECTIONS_URL,
+    },
+  ],
+  [
+    TabVariant.FREQUENTLY_VIEWED,
+    {
+      label: "Frequently viewed articles",
+      pageTitle: "Frequently viewed articles",
+      path: FREQUENTLY_VIEWED_URL,
+    },
+  ],
+]);
+
+export default function Collections() {
+  return (
+    <SearchFiltersProvider>
+      <CollectionsLayout />
+    </SearchFiltersProvider>
+  );
+}
+
+function CollectionsLayout() {
   const locale = useLocale();
   const userData = useUserData();
 
@@ -37,13 +72,14 @@ function NotificationsLayout() {
 
   const [offset, setOffset] = useState(0);
 
-  const { data, error, isLoading, hasMore } = useNotificationsApiEndpoint(
-    offset,
-    selectedTerms,
-    selectedFilter,
-    selectedSort,
-    currentTab
-  );
+  const { data, error, isLoading, hasMore, setEntries } =
+    useCollectionsApiEndpoint(
+      offset,
+      selectedTerms,
+      selectedFilter,
+      selectedSort,
+      currentTab
+    );
 
   useEffect(() => {
     let unread;
@@ -71,7 +107,7 @@ function NotificationsLayout() {
     <>
       <header className="plus-header">
         <Container>
-          <h1>Notifications</h1>
+          <h1>Collections</h1>
         </Container>
         <Tabs
           tabs={[...TAB_INFO.values()].map((val) => {
@@ -90,8 +126,9 @@ function NotificationsLayout() {
               setOffset={setOffset}
               offset={offset}
               data={data}
+              showSelectToolbar={false}
               hasMore={hasMore}
-              setFrequentlyUsed={null}
+              setFrequentlyUsed={setEntries}
             />
           </>
           {isLoading && <Loading message="Waiting for data" />}
@@ -104,10 +141,4 @@ function NotificationsLayout() {
   );
 }
 
-export default function Notifications() {
-  return (
-    <SearchFiltersProvider>
-      <NotificationsLayout />
-    </SearchFiltersProvider>
-  );
-}
+export type { BookmarkData };

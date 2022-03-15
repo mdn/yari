@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useUIStatus } from "../../ui-context";
 import { Button } from "../../ui/atoms/button";
+import { CollectionListItem } from "../collections/collection-list-item";
 import WatchedCardListItem from "../icon-card";
 import SearchFilter from "../search-filter";
 import {
@@ -11,24 +12,28 @@ import {
   undoDeleteItemById,
   unstarItemsById,
   unwatchItemsByUrls,
-} from "./api";
-import NotificationCardListItem from "./notification-card-list-item";
-import SelectedNotificationsBar from "./notification-select";
-import { FILTERS, SORTS, TabVariant } from "./tabs";
-import { useVisibilityChangeListener } from "./utils";
+  updateCollectionItem,
+  updateDeleteCollectionItem,
+} from "../notifications/api";
+import NotificationCardListItem from "../notifications/notification-card-list-item";
+import SelectedNotificationsBar from "../notifications/notification-select";
+import { FILTERS, SORTS, TabVariant, TAB_INFO } from "../notifications/tabs";
+import { useVisibilityChangeListener } from "../notifications/utils";
+import { BookmarkData } from "../collections";
 
-export function NotificationsTab({
+export function PlusTab({
   currentTab,
   selectedTerms,
   selectedFilter,
   selectedSort,
+  showSelectToolbar = true,
   data,
   offset,
   setOffset,
   hasMore,
+  setFrequentlyUsed,
 }) {
   const { setToastData } = useUIStatus();
-
   const listRef = useRef<Array<any>>([]);
   const [list, setList] = useState<Array<any>>([]);
   const [selectAllChecked, setSelectAllChecked] = useState(false);
@@ -160,8 +165,71 @@ export function NotificationsTab({
     setList(updated);
   };
 
+  const deleteCollectionItem = async (item) => {
+    await updateDeleteCollectionItem(item, data.csrfmiddlewaretoken, true);
+    const previous = [...list];
+    const listWithDelete = list.filter((v) => v.id !== item.id);
+    setList(listWithDelete);
+    setToastData({
+      mainText: `${item.title} removed from your collection`,
+      shortText: "Article removed",
+      buttonText: "Undo",
+      buttonHandler: async () => {
+        await updateDeleteCollectionItem(item, data.csrfmiddlewaretoken, false);
+        setToastData(null);
+        setList(previous);
+      },
+    });
+  };
+
+  const deleteFrequentlyViewed = async (bookmarkData: BookmarkData) => {
+    const original = list;
+    console.log(list.map((v, idx) => `${idx} ${v.url}`));
+    const filteredEntries = list.filter(
+      (entry) => entry.url !== bookmarkData.url
+    );
+    console.log(filteredEntries.map((v, idx) => `${idx} ${v.url}`));
+    setFrequentlyUsed(filteredEntries);
+    setList(filteredEntries);
+    setToastData({
+      mainText: `${bookmarkData.title} removed`,
+      shortText: "Article removed",
+      buttonText: "UNDO",
+      buttonHandler: async () => {
+        const restored: any = {
+          url: bookmarkData.url,
+          title: bookmarkData.title,
+          timestamp: new Date(bookmarkData.created).getTime(),
+          parents: bookmarkData.parents,
+          visitCount: bookmarkData.visitCount || 1,
+        };
+        setFrequentlyUsed(original);
+        setList(original);
+        setToastData(null);
+      },
+    });
+  };
+
+  const collectionsSaveHandler = async (
+    e: React.FormEvent<HTMLFormElement> | React.BaseSyntheticEvent,
+    item: BookmarkData
+  ) => {
+    let formData;
+    const form = e.target as HTMLFormElement;
+    formData = new FormData(form);
+    console.log(item);
+    await updateCollectionItem(
+      item,
+      new URLSearchParams([...(formData as any)]),
+      data.csrfmiddlewaretoken
+    );
+  };
+
   let cardList = list.map((item) => {
-    if (currentTab !== TabVariant.WATCHING) {
+    if (
+      currentTab === TabVariant.NOTIFICATIONS ||
+      currentTab === TabVariant.STARRED
+    ) {
       return (
         <NotificationCardListItem
           handleDelete={deleteItem}
@@ -171,7 +239,7 @@ export function NotificationsTab({
           key={item.id}
         />
       );
-    } else {
+    } else if (currentTab == TabVariant.WATCHING) {
       return (
         <WatchedCardListItem
           onUnwatched={unwatchItem}
@@ -180,32 +248,59 @@ export function NotificationsTab({
           key={item.id}
         />
       );
+    } else if (currentTab == TabVariant.COLLECTIONS) {
+      return (
+        <CollectionListItem
+          item={item}
+          onEditSubmit={collectionsSaveHandler}
+          key={item.id}
+          showEditButton={true}
+          handleDelete={deleteCollectionItem}
+        />
+      );
+    } else if (currentTab == TabVariant.FREQUENTLY_VIEWED) {
+      return (
+        <CollectionListItem
+          item={item}
+          onEditSubmit={collectionsSaveHandler}
+          key={item.id}
+          showEditButton={false}
+          handleDelete={deleteFrequentlyViewed}
+        />
+      );
     }
   });
 
   return (
     <>
       <SearchFilter
-        filters={currentTab === TabVariant.WATCHING ? [] : FILTERS}
+        filters={
+          currentTab === TabVariant.STARRED ||
+          currentTab === TabVariant.NOTIFICATIONS
+            ? FILTERS
+            : []
+        }
         sorts={currentTab === TabVariant.WATCHING ? [] : SORTS}
       />
-      <SelectedNotificationsBar
-        isChecked={selectAllChecked}
-        onStarSelected={starMany}
-        onSelectAll={(e) => {
-          const newList = list.map((item) => {
-            return { ...item, checked: e.target.checked };
-          });
-          setList(newList);
-          setSelectAllChecked(!selectAllChecked);
-          calculateBulkEditOptions(newList);
-        }}
-        onUnstarSelected={unstarMany}
-        onDeleteSelected={deleteMany}
-        buttonStates={editOptions}
-        onUnwatchSelected={unwatchMany}
-        watchedTab={currentTab === TabVariant.WATCHING}
-      />
+      {showSelectToolbar && (
+        <SelectedNotificationsBar
+          isChecked={selectAllChecked}
+          onStarSelected={starMany}
+          onSelectAll={(e) => {
+            const newList = list.map((item) => {
+              return { ...item, checked: e.target.checked };
+            });
+            setList(newList);
+            setSelectAllChecked(!selectAllChecked);
+            calculateBulkEditOptions(newList);
+          }}
+          onUnstarSelected={unstarMany}
+          onDeleteSelected={deleteMany}
+          buttonStates={editOptions}
+          onUnwatchSelected={unwatchMany}
+          watchedTab={currentTab === TabVariant.WATCHING}
+        />
+      )}
       <ul className="notification-list">
         {currentTab === TabVariant.WATCHING && (
           <div className="icon-card-list">{cardList}</div>

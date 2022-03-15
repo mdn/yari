@@ -1,11 +1,14 @@
 import { useEffect, useState } from "react";
+import { useFrequentlyViewed } from "../../document/hooks";
+import { BookmarkData } from "../collections";
 import { TabVariant } from "./tabs";
 
 export const NOTIFICATIONS_BASE_PATH = "/api/v1/plus/notifications";
 export const WATCHED_BASE_PATH = "/api/v1/plus/watching";
+export const COLLECTION_BASE_PATH = "/api/v1/plus/collection";
 
 export const NOTIFICATIONS_MARK_ALL_AS_READ_PATH = `${NOTIFICATIONS_BASE_PATH}/all/mark-as-read/`;
-const NOTIFICATIONS_DEFAULT_LIMIT = 20;
+const DEFAULT_LIMIT = 20;
 
 export async function markNotificationsAsRead(body: FormData) {
   return fetch(NOTIFICATIONS_MARK_ALL_AS_READ_PATH, {
@@ -51,7 +54,7 @@ export async function undoDeleteItemById(csrfToken: string, id: number) {
   );
 }
 
-export function useApiEndpoint(
+export function useNotificationsApiEndpoint(
   offset: number,
   searchTerms: string,
   selectedFilter: string,
@@ -75,7 +78,7 @@ export function useApiEndpoint(
         sp.append("starred", "true");
       }
 
-      sp.append("limit", NOTIFICATIONS_DEFAULT_LIMIT.toString());
+      sp.append("limit", DEFAULT_LIMIT.toString());
       offset!! && sp.append("offset", offset.toString());
 
       const base =
@@ -100,7 +103,7 @@ export function useApiEndpoint(
             return { ...item, id: item.url };
           });
         }
-        if (data.items.length < NOTIFICATIONS_DEFAULT_LIMIT) {
+        if (data.items.length < DEFAULT_LIMIT) {
           setHasMore(false);
         } else {
           setHasMore(true);
@@ -112,6 +115,95 @@ export function useApiEndpoint(
     })();
   }, [offset, searchTerms, tab, selectedFilter, selectedSort]);
   return { data, error, isLoading, hasMore };
+}
+
+export async function updateCollectionItem(
+  item: BookmarkData,
+  formData: URLSearchParams,
+  csrftoken: string
+) {
+  await fetch(`${COLLECTION_BASE_PATH}/?url=${item.url}`, {
+    method: "POST",
+    body: new URLSearchParams([...(formData as any)]),
+    headers: {
+      "X-CSRFToken": csrftoken,
+    },
+  });
+}
+
+export async function updateDeleteCollectionItem(
+  item: BookmarkData,
+  csrftoken: string,
+  shouldDelete: Boolean
+) {
+  const formData = new FormData();
+  formData.append("delete", shouldDelete.toString());
+  await fetch(`${COLLECTION_BASE_PATH}/?url=${item.url}`, {
+    method: "POST",
+    body: formData,
+    headers: {
+      "X-CSRFToken": csrftoken,
+    },
+  });
+}
+
+export function useCollectionsApiEndpoint(
+  offset: number,
+  searchTerms: string,
+  selectedFilter: string,
+  selectedSort: string,
+  tab: TabVariant
+) {
+  const [data, setData] = useState<any>({});
+  const [error, setError] = useState<Error | null>();
+  const [isLoading, setIsLoading] = useState(true);
+  const [hasMore, setHasMore] = useState(false);
+  const [frequentlyUsed, setEntries] = useFrequentlyViewed();
+
+  useEffect(() => {
+    (async () => {
+      if (tab === TabVariant.FREQUENTLY_VIEWED) {
+        setData(frequentlyUsed);
+        setIsLoading(false);
+        setHasMore(false);
+        setError(null);
+        return;
+      } else if (tab === TabVariant.COLLECTIONS) {
+        const sp = new URLSearchParams();
+
+        searchTerms!! && sp.append("q", searchTerms);
+        selectedFilter!! && sp.append("filterType", selectedFilter);
+        selectedSort!! && sp.append("sort", selectedSort);
+        sp.append("limit", DEFAULT_LIMIT.toString());
+        offset!! && sp.append("offset", offset.toString());
+        const response = await fetch(
+          `${COLLECTION_BASE_PATH}/?${sp.toString()}`
+        );
+
+        if (!response.ok) {
+          setError(
+            new Error(
+              `${response.status} - There was a problem fetching your data. Please try again later`
+            )
+          );
+          setIsLoading(false);
+          return;
+        } else {
+          let data = await response.json();
+          if (data.items.length < DEFAULT_LIMIT) {
+            setHasMore(false);
+          } else {
+            setHasMore(true);
+          }
+          setData(data);
+          setIsLoading(false);
+          setError(null);
+        }
+      }
+    })();
+  }, [offset, searchTerms, tab, selectedFilter, selectedSort]);
+
+  return { data, error, isLoading, hasMore, setEntries };
 }
 
 async function post(url: string, csrfToken: string, data?: object) {

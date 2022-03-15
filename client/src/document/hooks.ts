@@ -126,7 +126,7 @@ const sortByVisitsThenTimestampDesc = (
 };
 
 export function useFrequentlyViewed(): [
-  FrequentlyViewedEntry[],
+  any,
   (arg: FrequentlyViewedEntry[]) => void
 ] {
   const [entries, setEntries] = useState<FrequentlyViewedEntry[]>([]);
@@ -165,7 +165,7 @@ export function useFrequentlyViewed(): [
     }
   };
 
-  return [entries, setStoredEntries];
+  return [{ items: entries }, setStoredEntries];
 }
 
 /**

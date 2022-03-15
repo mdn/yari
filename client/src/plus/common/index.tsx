@@ -1,5 +1,6 @@
 import SignInLink from "../../ui/atoms/signin-link";
 import NoteCard from "../../ui/molecules/notecards";
+import { docCategory } from "../../utils";
 
 export function NotSignedIn() {
   return (
@@ -30,4 +31,23 @@ export function DataError({ error }: { error: Error }) {
       <a href={window.location.pathname}>Reload this page and try again.</a>
     </NoteCard>
   );
+}
+
+export function _getIconLabel(url) {
+  let category = docCategory({ pathname: url });
+
+  if (category) {
+    category = category?.split("-")[1];
+
+    if (category === "javascript") {
+      return "js";
+    }
+
+    if (category === "accessibility") {
+      return "acc";
+    }
+    return category;
+  }
+
+  return "docs";
 }

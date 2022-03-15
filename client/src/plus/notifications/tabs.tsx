@@ -1,15 +1,20 @@
 import { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
+import { COLLECTION_BASE_PATH } from "./api";
 
 export enum TabVariant {
-  ALL,
+  NOTIFICATIONS,
   STARRED,
   WATCHING,
+  COLLECTIONS,
+  FREQUENTLY_VIEWED,
 }
 
 const ALL_URL = "/plus/notifications";
 const STARRED_URL = "/plus/notifications/starred";
 const WATCHING_URL = "/plus/notifications/watching";
+const COLLECTIONS_URL = "/plus/collection";
+const FREQUENTLY_VIEWEED_URL = "/plus/collection/frequently_viewed";
 
 export const FILTERS = [
   {
@@ -35,7 +40,7 @@ export const SORTS = [
 
 export const TAB_INFO = new Map([
   [
-    TabVariant.ALL,
+    TabVariant.NOTIFICATIONS,
     {
       pageTitle: "Notifications",
       label: "All notifications",
@@ -71,8 +76,12 @@ export function useCurrentTab(locale): TabVariant {
       setTab(TabVariant.STARRED);
     } else if (location.pathname === `/${locale}${WATCHING_URL}`) {
       setTab(TabVariant.WATCHING);
+    } else if (location.pathname === `/${locale}${COLLECTIONS_URL}`) {
+      setTab(TabVariant.COLLECTIONS);
+    } else if (location.pathname === `/${locale}${FREQUENTLY_VIEWEED_URL}`) {
+      setTab(TabVariant.FREQUENTLY_VIEWED);
     } else {
-      setTab(TabVariant.ALL);
+      setTab(TabVariant.NOTIFICATIONS);
     }
   }, [location, currentTab, locale]);
 
@@ -83,8 +92,11 @@ function getInitialTab() {
   if (window.location.pathname.endsWith(STARRED_URL)) {
     return TabVariant.STARRED;
   }
+  if (window.location.pathname.endsWith(COLLECTIONS_URL)) {
+    return TabVariant.COLLECTIONS;
+  }
   if (window.location.pathname.endsWith(WATCHING_URL)) {
     return TabVariant.WATCHING;
   }
-  return TabVariant.ALL;
+  return TabVariant.NOTIFICATIONS;
 }
