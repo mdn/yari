@@ -264,10 +264,6 @@ function CellIcons({ support }: { support: bcd.SupportStatement | undefined }) {
       {supportItem.notes?.length &&
         !supportItem.version_removed &&
         !supportItem.partial_implementation && <Icon name="footnote" />}
-      {!supportItem.hasOwnProperty("notes") &&
-        asList(support).some((s) => s!.hasOwnProperty("notes")) && (
-          <Icon name="chevron" />
-        )}
       {supportItem.alternative_name && <Icon name="altname" />}
       {supportItem.flags && <Icon name="disabled" />}
     </div>

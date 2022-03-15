@@ -14,7 +14,6 @@ const LEGEND_LABELS = {
   "note-warning": "Non-standard. Check cross-browser support before using.",
   "thumbs-down": "Deprecated. Not for use in new websites.",
   footnote: "See implementation notes.",
-  chevron: "See support notes related to outdated browsers.",
   disabled: "User must explicitly enable this feature.",
   altname: "Uses a non-standard name.",
   prefix: "Requires a vendor prefix or different name for use.",
@@ -57,12 +56,6 @@ function getActiveLegendItems(
         !firstSupportItem.version_removed
       ) {
         legendItems.add("footnote");
-      }
-      if (
-        !firstSupportItem.notes &&
-        asList(browserSupport).some((s) => s!.hasOwnProperty("notes"))
-      ) {
-        legendItems.add("chevron");
       }
 
       for (const versionSupport of asList(browserSupport)) {
