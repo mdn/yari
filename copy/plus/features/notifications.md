@@ -19,15 +19,15 @@ If a page has a browser compatibility table, then you can subscribe to notificat
 
 ## Getting started
 
-To start getting notifications, **watch** your first page. To do this, visit a page, then click **Watch → Watch page**. 
+To start getting notifications, **watch** your first page. To do this, visit a page, then click **Watch → Watch page**.
 When there are notifications, an indicator appears in the user menu on any MDN page or in the notifications list.
 
 ## See what pages you’re watching
 
-You can see what pages you’re watching in two ways: 
+You can see what pages you’re watching in two ways:
 
 1. Click on **MDN Plus -> Notifications -> Watch list**
-2. Click on your profile photo in the right corner of your screen and select **Collections** from the drop-down list. 
+2. Click on your profile photo in the right corner of your screen and select **Collections** from the drop-down list.
 
 ## Star a notification and review it
 
@@ -40,7 +40,7 @@ You can **stop watching a page** in two ways:
 
 1. Visit the page you want to stop watching, then click **Watching → Unwatch**.
 2. Go to **Notifications -> Whatch list**, and click the **3-Dots menu** to the right of the watched page and select **Unwatch**.
-Your watched page has now been removed. Select Undo in the notification at the bottom of the screen to revert this action.
+   Your watched page has now been removed. Select Undo in the notification at the bottom of the screen to revert this action.
 
 > You can also **Bulk unwatch** by checking the box on top of your **Watched list** and then clicking **Unwatch**
 
