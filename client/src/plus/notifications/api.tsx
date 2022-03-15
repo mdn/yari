@@ -187,6 +187,7 @@ export function useCollectionsApiEndpoint(
             )
           );
           setIsLoading(false);
+          setHasMore(false);
           return;
         } else {
           let data = await response.json();
