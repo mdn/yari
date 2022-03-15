@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
-import { COLLECTION_BASE_PATH } from "./api";
 
 export enum TabVariant {
   NOTIFICATIONS,

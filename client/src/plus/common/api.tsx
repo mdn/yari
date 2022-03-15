@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useFrequentlyViewed } from "../../document/hooks";
 import { BookmarkData } from "../collections";
-import { TabVariant } from "./tabs";
+import { TabVariant } from "../notifications/tabs";
 
 export const NOTIFICATIONS_BASE_PATH = "/api/v1/plus/notifications";
 export const WATCHED_BASE_PATH = "/api/v1/plus/watching";
@@ -59,7 +59,58 @@ export function useNotificationsApiEndpoint(
   searchTerms: string,
   selectedFilter: string,
   selectedSort: string,
-  tab: TabVariant
+  starred: boolean
+) {
+  const [data, setData] = useState<any>({});
+  const [error, setError] = useState<Error | null>();
+  const [isLoading, setIsLoading] = useState(true);
+  const [hasMore, setHasMore] = useState(true);
+
+  useEffect(() => {
+    (async () => {
+      const sp = new URLSearchParams();
+
+      searchTerms!! && sp.append("q", searchTerms);
+      selectedFilter!! && sp.append("filterType", selectedFilter);
+      selectedSort!! && sp.append("sort", selectedSort);
+      starred!! && sp.append("starred", "true");
+
+      sp.append("limit", DEFAULT_LIMIT.toString());
+      offset!! && sp.append("offset", offset.toString());
+
+      const response = await fetch(
+        `${NOTIFICATIONS_BASE_PATH}/?${sp.toString()}`
+      );
+
+      if (!response.ok) {
+        setError(
+          new Error(
+            `${response.status} - There was a problem fetching your data. Please try again later`
+          )
+        );
+        setIsLoading(false);
+        return;
+      } else {
+        let data = await response.json();
+        if (data.items.length < DEFAULT_LIMIT) {
+          setHasMore(false);
+        } else {
+          setHasMore(true);
+        }
+        setData(data);
+        setIsLoading(false);
+        setError(null);
+      }
+    })();
+  }, [offset, searchTerms, selectedFilter, selectedSort]);
+  return { data, error, isLoading, hasMore };
+}
+
+export function useWatchedItemsApiEndpoint(
+  offset: number,
+  searchTerms: string,
+  selectedFilter: string,
+  selectedSort: string
 ) {
   const [data, setData] = useState<any>({});
   const [error, setError] = useState<Error | null>();
@@ -74,18 +125,9 @@ export function useNotificationsApiEndpoint(
       selectedFilter!! && sp.append("filterType", selectedFilter);
       selectedSort!! && sp.append("sort", selectedSort);
 
-      if (tab === TabVariant.STARRED) {
-        sp.append("starred", "true");
-      }
-
       sp.append("limit", DEFAULT_LIMIT.toString());
       offset!! && sp.append("offset", offset.toString());
-
-      const base =
-        tab === TabVariant.WATCHING
-          ? WATCHED_BASE_PATH
-          : NOTIFICATIONS_BASE_PATH;
-      const response = await fetch(`${base}/?${sp.toString()}`);
+      const response = await fetch(`${WATCHED_BASE_PATH}/?${sp.toString()}`);
 
       if (!response.ok) {
         setError(
@@ -97,12 +139,10 @@ export function useNotificationsApiEndpoint(
         return;
       } else {
         let data = await response.json();
-        if (tab === TabVariant.WATCHING) {
-          //We'll set an artificial id field here to make it share interface with notifications
-          data.items = data.items.map((item) => {
-            return { ...item, id: item.url };
-          });
-        }
+        //We'll set an artificial id field here to make it share interface with notifications
+        data.items = data.items.map((item) => {
+          return { ...item, id: item.url };
+        });
         if (data.items.length < DEFAULT_LIMIT) {
           setHasMore(false);
         } else {
@@ -113,7 +153,7 @@ export function useNotificationsApiEndpoint(
         setError(null);
       }
     })();
-  }, [offset, searchTerms, tab, selectedFilter, selectedSort]);
+  }, [offset, searchTerms, selectedFilter, selectedSort]);
   return { data, error, isLoading, hasMore };
 }
 
@@ -151,60 +191,61 @@ export function useCollectionsApiEndpoint(
   offset: number,
   searchTerms: string,
   selectedFilter: string,
-  selectedSort: string,
-  tab: TabVariant
+  selectedSort: string
 ) {
   const [data, setData] = useState<any>({});
   const [error, setError] = useState<Error | null>();
   const [isLoading, setIsLoading] = useState(true);
   const [hasMore, setHasMore] = useState(false);
-  const [frequentlyUsed, setEntries] = useFrequentlyViewed();
-
   useEffect(() => {
     (async () => {
-      if (tab === TabVariant.FREQUENTLY_VIEWED) {
-        setData(frequentlyUsed);
+      const sp = new URLSearchParams();
+
+      searchTerms!! && sp.append("q", searchTerms);
+      selectedFilter!! && sp.append("filterType", selectedFilter);
+      selectedSort!! && sp.append("sort", selectedSort);
+      sp.append("limit", DEFAULT_LIMIT.toString());
+      offset!! && sp.append("offset", offset.toString());
+      const response = await fetch(`${COLLECTION_BASE_PATH}/?${sp.toString()}`);
+
+      if (!response.ok) {
+        setError(
+          new Error(
+            `${response.status} - There was a problem fetching your data. Please try again later`
+          )
+        );
         setIsLoading(false);
         setHasMore(false);
-        setError(null);
         return;
-      } else if (tab === TabVariant.COLLECTIONS) {
-        const sp = new URLSearchParams();
-
-        searchTerms!! && sp.append("q", searchTerms);
-        selectedFilter!! && sp.append("filterType", selectedFilter);
-        selectedSort!! && sp.append("sort", selectedSort);
-        sp.append("limit", DEFAULT_LIMIT.toString());
-        offset!! && sp.append("offset", offset.toString());
-        const response = await fetch(
-          `${COLLECTION_BASE_PATH}/?${sp.toString()}`
-        );
-
-        if (!response.ok) {
-          setError(
-            new Error(
-              `${response.status} - There was a problem fetching your data. Please try again later`
-            )
-          );
-          setIsLoading(false);
+      } else {
+        let data = await response.json();
+        if (data.items.length < DEFAULT_LIMIT) {
           setHasMore(false);
-          return;
         } else {
-          let data = await response.json();
-          if (data.items.length < DEFAULT_LIMIT) {
-            setHasMore(false);
-          } else {
-            setHasMore(true);
-          }
-          setData(data);
-          setIsLoading(false);
-          setError(null);
+          setHasMore(true);
         }
+        setData(data);
+        setIsLoading(false);
+        setError(null);
       }
     })();
-  }, [offset, searchTerms, tab, selectedFilter, selectedSort]);
+  }, [offset, searchTerms, selectedFilter, selectedSort]);
 
-  return { data, error, isLoading, hasMore, setEntries };
+  return { data, error, isLoading, hasMore };
+}
+
+export function useFrequentlyViewedData(searchTerms: string) {
+  let [entries, setFrequentlyViewed] = useFrequentlyViewed();
+  const [data, setData] = useState(entries);
+  console.log(entries);
+  useEffect(() => {
+    if (searchTerms) {
+      setData(entries.filter((val) => val.title.includes(searchTerms)));
+    } else {
+      setData(entries);
+    }
+  }, [searchTerms, entries]);
+  return { data, setFrequentlyViewed };
 }
 
 async function post(url: string, csrfToken: string, data?: object) {

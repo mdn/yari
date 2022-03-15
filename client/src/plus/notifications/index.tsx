@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect } from "react";
 import { useLocale } from "../../hooks";
 import Container from "../../ui/atoms/container";
 import Tabs from "../../ui/molecules/tabs";
@@ -9,13 +9,9 @@ import {
 } from "../contexts/search-filters";
 import "./index.scss";
 
-import { useNotificationsApiEndpoint } from "./api";
-
-import { Loading } from "../../ui/atoms/loading";
-import { DataError, NotSignedIn } from "../common";
 import { useUserData } from "../../user-context";
 import { TAB_INFO, useCurrentTab } from "./tabs";
-import { PlusTab } from "../common/plus-tab";
+import { PlusTabs } from "../common/plus-tabs";
 
 function NotificationsLayout() {
   const locale = useLocale();
@@ -26,46 +22,20 @@ function NotificationsLayout() {
     selectedFilter,
     selectedSort,
     setSelectedTerms,
-    setSelectedFilter,
     setSelectedSort,
+    setSelectedFilter,
   } = useContext(searchFiltersContext);
 
   const currentTab = useCurrentTab(locale);
 
+  useEffect(() => {
+    setSelectedTerms("");
+    setSelectedSort("");
+    setSelectedFilter("");
+  }, [currentTab, setSelectedTerms, setSelectedSort, setSelectedFilter]);
+
   const showTabs = userData && userData.isAuthenticated;
   const isAuthed = userData?.isAuthenticated;
-
-  const [offset, setOffset] = useState(0);
-
-  const { data, error, isLoading, hasMore } = useNotificationsApiEndpoint(
-    offset,
-    selectedTerms,
-    selectedFilter,
-    selectedSort,
-    currentTab
-  );
-
-  useEffect(() => {
-    let unread;
-    document.title = TAB_INFO.get(currentTab)?.pageTitle || "MDN Plus";
-    if (data && data.items) {
-      unread = data.items.filter((v) => v.read === false).length;
-    }
-    if (!!unread) {
-      document.title = document.title + ` (${unread})`;
-    }
-  }, [data, currentTab]);
-
-  useEffect(() => {
-    setSelectedSort("");
-    setSelectedTerms("");
-    setSelectedFilter("");
-    setOffset(0);
-  }, [currentTab, setSelectedSort, setSelectedTerms, setSelectedFilter]);
-
-  useEffect(() => {
-    setOffset(0);
-  }, [selectedTerms, selectedFilter, selectedSort]);
 
   return (
     <>
@@ -82,22 +52,13 @@ function NotificationsLayout() {
       {showTabs && (
         <Container>
           <>
-            <PlusTab
+            <PlusTabs
               currentTab={currentTab}
               selectedTerms={selectedTerms}
               selectedFilter={selectedFilter}
               selectedSort={selectedSort}
-              setOffset={setOffset}
-              offset={offset}
-              data={data}
-              hasMore={hasMore}
-              setFrequentlyUsed={null}
             />
           </>
-          {isLoading && <Loading message="Fetching notifications..." />}
-          {!userData && <Loading message="Waiting for authentication" />}
-          {!userData && !isAuthed && <NotSignedIn />}
-          {error && <DataError error={error} />}
         </Container>
       )}
     </>

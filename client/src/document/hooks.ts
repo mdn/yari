@@ -137,7 +137,6 @@ export function useFrequentlyViewed(): [
       localStorage.getItem(FREQUENTLY_VIEWED_STORAGE_KEY) || "[]"
     );
     const newEntries: FrequentlyViewedEntry[] = [];
-
     for (const entry of entries) {
       newEntries.push({
         url: entry.url,
@@ -165,7 +164,7 @@ export function useFrequentlyViewed(): [
     }
   };
 
-  return [{ items: entries }, setStoredEntries];
+  return [entries, setStoredEntries];
 }
 
 /**

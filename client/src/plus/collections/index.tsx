@@ -1,11 +1,11 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect } from "react";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import "./index.scss";
 
 import "../icon-card/index.scss";
 
-import { DataError, NotSignedIn } from "../common";
+import { NotSignedIn } from "../common";
 import {
   searchFiltersContext,
   SearchFiltersProvider,
@@ -16,8 +16,7 @@ import { useLocale } from "../../hooks";
 import { BookmarkData } from "./types";
 import { useUserData } from "../../user-context";
 import { TabVariant, useCurrentTab } from "../notifications/tabs";
-import { PlusTab } from "../common/plus-tab";
-import { useCollectionsApiEndpoint } from "../notifications/api";
+import { PlusTabs } from "../common/plus-tabs";
 import { Loading } from "../../ui/atoms/loading";
 
 dayjs.extend(relativeTime);
@@ -55,54 +54,23 @@ export default function Collections() {
 function CollectionsLayout() {
   const locale = useLocale();
   const userData = useUserData();
+  const isAuthed = userData?.isAuthenticated;
 
   const {
     selectedTerms,
     selectedFilter,
     selectedSort,
-    setSelectedTerms,
-    setSelectedFilter,
     setSelectedSort,
+    setSelectedFilter,
+    setSelectedTerms,
   } = useContext(searchFiltersContext);
 
   const currentTab = useCurrentTab(locale);
-
-  const showTabs = userData && userData.isAuthenticated;
-  const isAuthed = userData?.isAuthenticated;
-
-  const [offset, setOffset] = useState(0);
-
-  const { data, error, isLoading, hasMore, setEntries } =
-    useCollectionsApiEndpoint(
-      offset,
-      selectedTerms,
-      selectedFilter,
-      selectedSort,
-      currentTab
-    );
-
   useEffect(() => {
-    let unread;
-    document.title = TAB_INFO.get(currentTab)?.pageTitle || "MDN Plus";
-    if (data && data.items) {
-      unread = data.items.filter((v) => v.read === false).length;
-    }
-    if (!!unread) {
-      document.title = document.title + ` (${unread})`;
-    }
-  }, [data, currentTab]);
-
-  useEffect(() => {
-    setSelectedSort("");
     setSelectedTerms("");
+    setSelectedSort("");
     setSelectedFilter("");
-    setOffset(0);
-  }, [currentTab, setSelectedSort, setSelectedTerms, setSelectedFilter]);
-
-  useEffect(() => {
-    setOffset(0);
-  }, [selectedTerms, selectedFilter, selectedSort]);
-
+  }, [currentTab, setSelectedTerms, setSelectedSort, setSelectedFilter]);
   return (
     <>
       <header className="plus-header">
@@ -115,28 +83,18 @@ function CollectionsLayout() {
           })}
         />
       </header>
-      {showTabs && (
-        <Container>
-          <>
-            <PlusTab
-              currentTab={currentTab}
-              selectedTerms={selectedTerms}
-              selectedFilter={selectedFilter}
-              selectedSort={selectedSort}
-              setOffset={setOffset}
-              offset={offset}
-              data={data}
-              showSelectToolbar={false}
-              hasMore={hasMore}
-              setFrequentlyUsed={setEntries}
-            />
-          </>
-          {isLoading && <Loading message="Fetching your collections..." />}
-          {!userData && <Loading message="Waiting for authentication" />}
-          {!userData && !isAuthed && <NotSignedIn />}
-          {error && <DataError error={error} />}
-        </Container>
-      )}
+      <Container>
+        <>
+          <PlusTabs
+            selectedTerms={selectedTerms}
+            selectedFilter={selectedFilter}
+            selectedSort={selectedSort}
+            currentTab={currentTab}
+          />
+        </>
+        {!userData && <Loading message="Waiting for authentication" />}
+        {!userData && !isAuthed && <NotSignedIn />}
+      </Container>
     </>
   );
 }
