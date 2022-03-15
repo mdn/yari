@@ -11,7 +11,6 @@ import { useUserData } from "../../../user-context";
 
 import "./index.scss";
 import { ENABLE_PLUS } from "../../../constants";
-import { ThemeToggle } from "../../molecules/theme-toggle";
 
 export const TopNavigationMain = ({ isOpenOnMobile }) => {
   const userData = useUserData();
@@ -38,7 +37,7 @@ export const TopNavigationMain = ({ isOpenOnMobile }) => {
           setShowSearch(false);
         }}
       />
-      <ThemeToggle></ThemeToggle>
+
       <Button
         type="action"
         icon="search"
