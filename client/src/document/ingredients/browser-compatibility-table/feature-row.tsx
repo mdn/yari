@@ -261,9 +261,11 @@ function CellIcons({ support }: { support: bcd.SupportStatement | undefined }) {
   return (
     <div className="bc-icons">
       {supportItem.prefix && <Icon name="prefix" />}
-      {supportItem.hasOwnProperty("notes") && <Icon name="footnote" />}
+      {supportItem.notes?.length &&
+        !supportItem.version_removed &&
+        !supportItem.partial_implementation && <Icon name="footnote" />}
       {!supportItem.hasOwnProperty("notes") &&
-        asList(support).some((s) => s && s.hasOwnProperty("notes")) && (
+        asList(support).some((s) => s!.hasOwnProperty("notes")) && (
           <Icon name="chevron" />
         )}
       {supportItem.alternative_name && <Icon name="altname" />}

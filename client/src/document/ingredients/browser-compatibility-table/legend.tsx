@@ -1,7 +1,7 @@
 import { useContext } from "react";
 import type bcd from "@mdn/browser-compat-data/types";
 import { BrowserInfoContext } from "./browser-info";
-import { asList, listFeatures, versionIsPreview } from "./utils";
+import { asList, getFirst, listFeatures, versionIsPreview } from "./utils";
 
 // Also specifies the order in which the legend appears
 const LEGEND_LABELS = {
@@ -50,6 +50,20 @@ function getActiveLegendItems(
         legendItems.add("no");
         continue;
       }
+      const firstSupportItem = getFirst(browserSupport);
+      if (
+        firstSupportItem.notes &&
+        !firstSupportItem.partial_implementation &&
+        !firstSupportItem.version_removed
+      ) {
+        legendItems.add("footnote");
+      }
+      if (
+        !firstSupportItem.notes &&
+        asList(browserSupport).some((s) => s!.hasOwnProperty("notes"))
+      ) {
+        legendItems.add("chevron");
+      }
 
       for (const versionSupport of asList(browserSupport)) {
         if (versionSupport.version_added) {
@@ -73,16 +87,6 @@ function getActiveLegendItems(
         }
         if (versionSupport.prefix) {
           legendItems.add("prefix");
-        }
-        if (versionSupport.notes && Array.isArray(browserSupport)) {
-          legendItems.add("chevron");
-        }
-        if (
-          versionSupport.notes &&
-          !versionSupport.version_removed &&
-          !versionSupport.partial_implementation
-        ) {
-          legendItems.add("footnote");
         }
         if (versionSupport.alternative_name) {
           legendItems.add("altname");
