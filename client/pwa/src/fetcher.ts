@@ -7,7 +7,7 @@ import {
   DefaultApiInterceptor,
 } from "./fetch-interceptors";
 import { offlineDb } from "./db";
-import { INTERACTIVE_EXAMPLES_URL } from "./service-worker";
+import { INTERACTIVE_EXAMPLES_URL, LIVE_SAMPLES_URL } from "./service-worker";
 
 let interceptors = [
   new WhoamiInterceptor(offlineDb),
@@ -20,7 +20,13 @@ let defaultInterceptor = new DefaultApiInterceptor(offlineDb);
 
 export async function respond(e): Promise<Response> {
   const url = new URL(e.request.url);
-  if ([self.location.host, INTERACTIVE_EXAMPLES_URL.host].includes(url.host)) {
+  if (
+    [
+      self.location.host,
+      INTERACTIVE_EXAMPLES_URL.host,
+      LIVE_SAMPLES_URL.host,
+    ].includes(url.host)
+  ) {
     let handler = interceptors
       .filter((val) => val.handles(url.pathname))
       .shift();
@@ -42,21 +48,19 @@ export async function respond(e): Promise<Response> {
       return r;
     }
     if (!url.pathname.split("/").pop().includes(".")) {
-      return await caches.match("/index.html");
-    }
-    if (url.pathname === "/index.json") {
-      return await caches.match("/en-us/index.json");
-    }
-    if (url.pathname.startsWith("/en-US/docs/")) {
+      url.pathname = "/index.html";
+    } else if (url.pathname === "/index.json") {
+      url.pathname = "/en-us/index.json";
+    } else if (url.pathname.startsWith("/en-US/docs/")) {
       url.pathname = url.pathname.toLowerCase();
-      try {
-        const response = await caches.match(url.href);
-        if (response) {
-          return response;
-        }
-      } catch (e) {
-        console.error(e);
+    }
+    try {
+      const response = await caches.match(url.href);
+      if (response) {
+        return response;
       }
+    } catch (e) {
+      console.error(e);
     }
   }
   const response = await fetch(e.request);

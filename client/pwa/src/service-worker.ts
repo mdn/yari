@@ -6,7 +6,10 @@ import { respond } from "./fetcher";
 import { unpackAndCache } from "./unpack-cache";
 import { offlineDb } from "./db";
 export const INTERACTIVE_EXAMPLES_URL = new URL(
-  "https://interactive-examples.stage.mdn.mozilla.net"
+  "https://interactive-examples.mdn.mozilla.net"
+);
+export const LIVE_SAMPLES_URL = new URL(
+  "https://yari-demos.prod.mdn.mozit.cloud"
 );
 const UPDATES_BASE_URL = "https://updates.developer.allizom.org";
 
@@ -114,49 +117,57 @@ export async function updateContent(
   } else {
     updating = true;
   }
-  if (!current) {
-    await caches.delete(contentCache);
-  }
-  await messageAllClients(self, {
-    type: "updateStatus",
-    progress: 0,
-    state: "downloading",
-  });
-
-  const url = new URL(
-    current
-      ? `/packages/${latest}-${current}-update.zip`
-      : `/packages/${latest}-content.zip`,
-    UPDATES_BASE_URL
-  );
-  console.log(`[update] downloading: ${url}`);
-  const res = await fetch(url.toString());
-  console.log(`[update] unpacking: ${url}`);
-  await messageAllClients(self, {
-    type: "updateStatus",
-    progress: 0,
-    state: "unpacking",
-  });
-
-  await unpackAndCache(await res.arrayBuffer(), async (progress) => {
+  try {
+    if (!current) {
+      await caches.delete(contentCache);
+    }
     await messageAllClients(self, {
       type: "updateStatus",
-      progress,
+      progress: 0,
+      state: "downloading",
+    });
+
+    const url = new URL(
+      current
+        ? `/packages/${latest}-${current}-update.zip`
+        : `/packages/${latest}-content.zip`,
+      UPDATES_BASE_URL
+    );
+    console.log(`[update] downloading: ${url}`);
+    const res = await fetch(url.href);
+    const buf = await res.arrayBuffer();
+
+    console.log(`[update] unpacking: ${url}`);
+    await messageAllClients(self, {
+      type: "updateStatus",
+      progress: 0,
       state: "unpacking",
     });
-  });
-  await messageAllClients(self, {
-    type: "updateStatus",
-    progress: 0,
-    state: "init",
-    currentVersion: latest,
-    currentDate: date,
-  });
 
-  await synchronizeDb();
+    await unpackAndCache(buf, async (progress) => {
+      await messageAllClients(self, {
+        type: "updateStatus",
+        progress,
+        state: "unpacking",
+      });
+    });
 
-  console.log(`[update] done`);
-  updating = false;
+    await messageAllClients(self, {
+      type: "updateStatus",
+      progress: 0,
+      state: "init",
+      currentVersion: latest,
+      currentDate: date,
+    });
+
+    await synchronizeDb();
+
+    console.log(`[update] done`);
+    updating = false;
+  } catch (e) {
+    console.error(e);
+    updating = false;
+  }
 }
 
 async function clearContent(self: ServiceWorkerGlobalScope) {

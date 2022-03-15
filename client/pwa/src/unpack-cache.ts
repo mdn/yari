@@ -2,19 +2,9 @@
 import * as zip from "@zip.js/zip.js";
 import { openContentCache } from "./caches";
 import { INTERACTIVE_EXAMPLES_URL } from "./service-worker";
-import * as fflate from "fflate";
-
-const { Deflate, Inflate } = zip.initShimAsyncCodec(
-  fflate,
-  undefined,
-  // @ts-ignore
-  (codec, onData) => (codec.ondata = onData)
-);
 
 zip.configure({
   useWebWorkers: false,
-  Deflate,
-  Inflate,
 });
 
 export async function unpackAndCache(data, progress = async (number) => {}) {
