@@ -1,12 +1,12 @@
 $icons: "add-filled", "add", "altname", "bell-filled", "bell", "bookmark-filled",
-  "bookmark", "cancel", "checkmark", "chevron", "critical", "desktop",
-  "disabled", "edit", "ellipses", "experimental", "external", "eye-filled",
-  "eye", "firefox", "footnote", "github-mark-small", "information", "language",
-  "menu-filled", "menu", "mobile", "moon-fill", "next", "no", "note-info",
-  "note-warning", "note-deprecated", "partial", "prefix", "preview", "previous",
-  "quote", "search", "server", "sidebar", "small-arrow", "sun-fill",
-  "star-filled", "star", "theme", "thumbs-down", "thumbs-up", "trash", "twitter",
-  "unknown", "warning", "yes", "yes-circle";
+  "bookmark", "cancel", "checkmark", "chevron", "critical", "deprecated",
+  "desktop", "disabled", "edit", "ellipses", "experimental", "external",
+  "eye-filled", "eye", "firefox", "footnote", "github-mark-small", "information",
+  "language", "menu-filled", "menu", "mobile", "moon-fill", "next", "no",
+  "nonstandard", "note-info", "note-warning", "note-deprecated", "partial",
+  "prefix", "preview", "previous", "quote", "search", "server", "sidebar",
+  "small-arrow", "sun-fill", "star-filled", "star", "theme", "thumbs-down",
+  "thumbs-up", "trash", "twitter", "unknown", "warning", "yes", "yes-circle";
 
 .icon {
   --size: var(--icon-size, 1rem);

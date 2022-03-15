@@ -29,13 +29,13 @@ Before you can start working with Yari, you need to:
 1.  Clone the forked repositories to your computer using the following commands
     (replace `[your account]` with the account you forked the repositories to):
 
-            git clone https://github.com/[your_account]/content.git
-            git clone https://github.com/[your_account]/yari.git
+        git clone https://github.com/[your_account]/content.git
+        git clone https://github.com/[your_account]/yari.git
 
-        Take a note of the file path to the location where you've cloned that
-        repo before moving on.
+    Take a note of the file path to the location where you've cloned that
+    repo before moving on.
 
-    <!-- markdownlint-enable list-marker-space -->
+<!-- markdownlint-enable list-marker-space -->
 
 To run Yari locally, you'll first need to install its dependencies and build the
 app locally. Do this like so:
