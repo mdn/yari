@@ -1,40 +1,90 @@
 import { Link } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { Button } from "../../../ui/atoms/button";
+
+import { useUIStatus } from "../../../ui-context";
 
 import "./index.scss";
+import { TOC } from "../toc";
 
-function SidebarContainer({ children }) {
+function _setScrollLock(isSidebarOpen) {
+  const mainContentElement = document.querySelector("main");
+
+  if (isSidebarOpen) {
+    document.body.style.overflow = "hidden";
+    if (mainContentElement) {
+      mainContentElement.style.overflow = "hidden";
+    }
+  } else {
+    document.body.style.overflow = "";
+    if (mainContentElement) {
+      mainContentElement.style.overflow = "";
+    }
+  }
+}
+
+function SidebarContainer({ doc, children }) {
+  const { isSidebarOpen, setIsSidebarOpen } = useUIStatus();
+  const [classes, setClasses] = useState<string>("sidebar");
+
+  useEffect(() => {
+    if (isSidebarOpen) {
+      setClasses("sidebar is-expanded");
+    } else {
+      setClasses("sidebar is-animating");
+      setTimeout(() => {
+        setClasses("sidebar");
+      }, 300);
+    }
+
+    _setScrollLock(isSidebarOpen);
+  }, [isSidebarOpen]);
+
   return (
-    <nav id="sidebar-quicklinks" className="sidebar">
-      {children}
-    </nav>
+    <>
+      <nav id="sidebar-quicklinks" className={classes}>
+        <Button
+          extraClasses="backdrop"
+          type="action"
+          onClickHandler={() => setIsSidebarOpen(!isSidebarOpen)}
+        />
+        <div className="sidebar-inner">
+          <div className="in-nav-toc">
+            {doc.toc && !!doc.toc.length && <TOC toc={doc.toc} />}
+          </div>
+          {children}
+        </div>
+      </nav>
+    </>
   );
 }
 
 export function RenderSideBar({ doc }) {
   if (!doc.related_content) {
-    if (doc.sidebarHTML) {
-      return (
-        <SidebarContainer>
-          <h4>Related Topics</h4>
-          <div
-            dangerouslySetInnerHTML={{
-              __html: `${doc.sidebarHTML}`,
-            }}
-          />
-        </SidebarContainer>
-      );
-    }
-    return null;
+    return (
+      <SidebarContainer doc={doc}>
+        {doc.sidebarHTML && (
+          <>
+            <h4 className="sidebar-heading">Related Topics</h4>
+            <div
+              dangerouslySetInnerHTML={{
+                __html: `${doc.sidebarHTML}`,
+              }}
+            />
+          </>
+        )}
+      </SidebarContainer>
+    );
   }
   return doc.related_content.map((node) => (
-    <SidebarLeaf key={node.title} parent={node} />
+    <SidebarLeaf key={node.title} parent={node} doc={doc} />
   ));
 }
 
-function SidebarLeaf({ parent }) {
+function SidebarLeaf({ doc, parent }) {
   return (
-    <SidebarContainer>
-      <h4>{parent.title}</h4>
+    <SidebarContainer doc={doc}>
+      <h4 className="sidebar-heading">{parent.title}</h4>
       <ul>
         {parent.content.map((node) => {
           if (node.content) {

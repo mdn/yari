@@ -17,6 +17,7 @@ from .constants import (
     DEFAULT_CACHE_CONTROL,
     HASHED_CACHE_CONTROL,
     LOG_EACH_SUCCESSFUL_UPLOAD,
+    MANUAL_PREFIXES,
     MAX_WORKERS_PARALLEL_UPLOADS,
 )
 from .utils import StopWatch, fmt_size, iterdir, log
@@ -321,7 +322,10 @@ class BucketManager:
             # its URL. Also, note that the content type is not determined by the
             # suffix of the S3 key, but is explicitly set from the full filepath
             # when uploading the file.
-            file_path = file_path.parent
+            # The only exception to this is the root level "index.html". We need that
+            # to cache it in our service worker.
+            if file_path.parent != build_directory:  # not the root level "index.html"
+                file_path = file_path.parent
         return f"{self.key_prefix}{str(file_path.relative_to(build_directory)).lower()}"
 
     def get_redirect_keys(self, from_url, to_url):
@@ -405,13 +409,6 @@ class BucketManager:
                 )
             done.add(key)
 
-        # Prepare a computation of what the root /index.html file would be
-        # called as a S3 key. Do this once so it becomes a quicker operation
-        # later when we compare *each* generated key to see if it matches this.
-        root_index_html_as_key = self.get_key(
-            build_directory, build_directory / "index.html"
-        )
-
         # Walk the build_directory and yield file upload tasks.
         for fp in iterdir(build_directory):
             # Exclude any files that aren't artifacts of the build.
@@ -423,16 +420,6 @@ class BucketManager:
             if key in done:
                 # This can happen since we might have explicitly processed this
                 # in the for-loop above. See comment at the beginning of this method.
-                continue
-
-            # The root index.html file is never useful. It's not the "home page"
-            # because the home page is actually `/$locale/` since `/` is handled
-            # specifically by the CDN.
-            # The client/build/index.html is actually just a template from
-            # create-react-app, used to server-side render all the other pages.
-            # But we don't want to upload it S3. So, delete it before doing the
-            # deployment step.
-            if root_index_html_as_key == key:
                 continue
 
             if for_counting_only:
@@ -664,11 +651,17 @@ def upload_content(build_directory, content_roots, config):
         delete_keys = []
 
         for key in existing_bucket_objects:
-            if key.startswith(f"{bucket_prefix}/_whatsdeployed/"):
+            key_without_bucket_prefix = key.lstrip(f"{bucket_prefix}/")
+            if any(
+                map(
+                    lambda prefix: key_without_bucket_prefix.startswith(prefix),
+                    MANUAL_PREFIXES,
+                )
+            ):
                 # These are special and wouldn't have been uploaded
                 continue
 
-            if key.startswith(f"{bucket_prefix}/static/"):
+            if key_without_bucket_prefix.startswith("static/"):
                 # Careful with these!
                 # Static assets such as `main/static/js/8.0b83949c.chunk.js`
                 # are aggressively cached and they might still be referenced

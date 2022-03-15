@@ -50,9 +50,9 @@ jobs:
     if: github.repository == 'mdn/yari'
 
     steps:
-      - uses: actions/checkout@v2.3.4
+      - uses: actions/checkout@v3
 
-      - uses: actions/checkout@v2.3.4
+      - uses: actions/checkout@v3
         with:
           repository: mdn/content
           path: mdn/content
@@ -74,18 +74,25 @@ jobs:
           echo "DEPLOYER_BUCKET_PREFIX=${{ github.event.inputs.deployment_prefix || env.DEFAULT_DEPLOYMENT_PREFIX }}" >> $GITHUB_ENV
           echo "DEPLOYER_LOG_EACH_SUCCESSFUL_UPLOAD=${{ github.event.inputs.log_each_successful_upload || env.DEFAULT_LOG_EACH_SUCCESSFUL_UPLOAD }}" >> $GITHUB_ENV
 
-      - uses: actions/checkout@v2.3.4
+      - uses: actions/checkout@v3
         with:
           repository: mdn/translated-content
           path: mdn/translated-content
+          # See matching warning for mdn/content checkout step
+          fetch-depth: 0
+
+      - uses: actions/checkout@v3
+        with:
+          repository: mdn/mdn-contributor-spotlight
+          path: mdn/mdn-contributor-spotlight
 
       - name: Setup Node.js environment
-        uses: actions/setup-node@v2.4.0
+        uses: actions/setup-node@v3
         with:
           node-version: "12"
 
       - name: Cache node_modules
-        uses: actions/cache@v2.1.6
+        uses: actions/cache@v2.1.7
         id: cached-node_modules
         with:
           path: |
@@ -97,12 +104,12 @@ jobs:
         run: yarn --frozen-lockfile
 
       - name: Install Python
-        uses: actions/setup-python@v2.2.2
+        uses: actions/setup-python@v3.0.0
         with:
           python-version: "3.8"
 
       - name: Install Python poetry
-        uses: snok/install-poetry@v1.2
+        uses: snok/install-poetry@v1.3
 
       - name: Install deployer
         run: |
@@ -126,12 +133,16 @@ jobs:
           # sub-folder called "mdn/content"
           CONTENT_ROOT: ${{ github.workspace }}/mdn/content/files
           CONTENT_TRANSLATED_ROOT: ${{ github.workspace }}/mdn/translated-content/files
+          CONTRIBUTOR_SPOTLIGHT_ROOT: ${{ github.workspace }}/mdn/mdn-contributor-spotlight/contributors
 
           # The default for this environment variable is geared for writers
           # (aka. local development). Usually defaults are supposed to be for
           # secure production but this is an exception and default
           # is not insecure.
           BUILD_LIVE_SAMPLES_BASE_URL: https://yari-demos.stage.mdn.mozit.cloud
+
+          # Use the stage version of interactive examples.
+          BUILD_INTERACTIVE_EXAMPLES_BASE_URL: https://interactive-examples.stage.mdn.mozilla.net
 
           # Now is not the time to worry about flaws.
           BUILD_FLAW_LEVELS: "*:ignore"
@@ -153,11 +164,17 @@ jobs:
           # This adds the ability to sign in (stage only for now)
           REACT_APP_DISABLE_AUTH: false
 
+          # Use the stage version of interactive examples in react app
+          REACT_APP_INTERACTIVE_EXAMPLES_BASE_URL: https://interactive-examples.stage.mdn.mozilla.net
+
           # Firefox Accounts and SubPlat settings
           REACT_APP_FXA_SIGNIN_URL: /users/fxa/login/authenticate/
           REACT_APP_FXA_SETTINGS_URL: https://accounts.stage.mozaws.net/settings/
           REACT_APP_MDN_PLUS_SUBSCRIBE_URL: https://accounts.stage.mozaws.net/subscriptions/products/prod_Jtbg9tyGyLRuB0
-          REACT_APP_MDN_PLUS_MONTHLY_PLAN: price_1JFoTYKb9q6OnNsLalexa03p
+          REACT_APP_MDN_PLUS_5M_PLAN: price_1JFoTYKb9q6OnNsLalexa03p
+          REACT_APP_MDN_PLUS_5Y_PLAN: price_1JpIPwKb9q6OnNsLJLsIqMp7
+          REACT_APP_MDN_PLUS_10M_PLAN: price_1K6X7gKb9q6OnNsLi44HdLcC
+          REACT_APP_MDN_PLUS_10Y_PLAN: price_1K6X8VKb9q6OnNsLFlUcEiu4
 
         run: |
 

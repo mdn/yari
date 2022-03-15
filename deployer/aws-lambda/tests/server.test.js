@@ -193,6 +193,27 @@ describe("always check for fundamental redirects first", () => {
       expect(r.headers["cache-control"]).toMatch(/max-age=\d\d+/);
     }
   });
+  it("should redirect speculative parsing URL baked into Firefox", async () => {
+    expect.assertions(2 * 2);
+    for (const url of [
+      "/en/Optimizing_Your_Pages_for_Speculative_Parsing/",
+      "/EN/optimizing_your_pages_for_speculative_parsing",
+    ]) {
+      const r = await get(url);
+      expect(r.statusCode).toBe(301);
+      expect(r.headers["location"]).toBe(
+        "/en-US/docs/Glossary/speculative_parsing"
+      );
+    }
+  });
+  it("should redirect Contribute link distributed by video", async () => {
+    expect.assertions(2 * 2);
+    for (const url of ["/mdn/contribute/", "/MDN/Contribute"]) {
+      const r = await get(url);
+      expect(r.statusCode).toBe(301);
+      expect(r.headers["location"]).toBe("/en-US/docs/MDN/Contribute");
+    }
+  });
 });
 
 describe("redirect double-slash prefix URIs", () => {
@@ -284,21 +305,5 @@ describe("response headers", () => {
     expect(r.headers["strict-transport-security"]).toBeTruthy();
     expect(r.headers["x-xss-protection"]).toBeTruthy();
     expect(r.headers["content-security-policy"]).toBeFalsy();
-  });
-
-  it("temporaily redirect localized plus URLs", async () => {
-    for (const locale of ["en-US", "fr"]) {
-      for (const slug of [
-        "plus",
-        "plus/",
-        "plus/bookmarks",
-        "plus/deep-dives",
-        "plus/deep-dives/your-browser-support-toolkit",
-      ]) {
-        const r = await get(`/${locale}/${slug}`);
-        expect(r.statusCode).toBe(302);
-        expect(r.headers["location"]).toBe(`/${locale}/`);
-      }
-    }
   });
 });

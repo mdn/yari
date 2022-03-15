@@ -1,0 +1,313 @@
+@use "../../vars" as *;
+
+.watch-menu {
+  position: relative;
+}
+
+.watch-submenu {
+  --gutter-padding: 1rem;
+  display: none;
+  margin: 0;
+  padding: 0;
+
+  &.show {
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: var(--background-primary);
+    z-index: var(--z-index-mid);
+  }
+
+  &.is-in-modal {
+    display: block;
+    position: static;
+    inset: auto;
+
+    .watch-submenu-item {
+      padding: 1rem 0 0;
+
+      &.padding-top-0 {
+        padding-top: 0;
+      }
+    }
+  }
+
+  [type="text"] {
+    background: var(--background-primary);
+    border: 1px solid var(--border-primary);
+    color: var(--text-primary);
+    font: var(--type-body-m);
+    padding: 0.5rem;
+    flex: 1 1 100%;
+    min-width: 0;
+
+    &:focus {
+      outline: 0 none;
+      border: 1px solid var(--button-secondary-border-focus);
+      box-shadow: var(--focus-effect);
+    }
+  }
+
+  &-header,
+  &-setGlobal {
+    display: block;
+    font: var(--type-emphasis-m);
+    color: var(--text-primary);
+    padding: 1rem;
+    text-align: left;
+    width: 100%;
+  }
+
+  &-header {
+    margin: 0;
+    border-bottom: 1px solid var(--border-primary);
+
+    &-wrap {
+      position: relative;
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .icon {
+      transform: rotate(90deg);
+    }
+
+    &.desktop-only {
+      display: none;
+    }
+  }
+
+  form > &-item,
+  form > &-group {
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+    border-top: 1px solid var(--border-primary);
+    border-radius: 0;
+
+    &.border-top-0 {
+      border-top-width: 0;
+    }
+
+    &.watch-submenu-setGlobal {
+      padding-top: 1rem;
+    }
+  }
+
+  @media screen and (min-width: $screen-md) {
+    &.show {
+      padding: 0;
+      left: initial;
+      position: absolute;
+      right: 0;
+      top: calc(100% + 6px);
+      bottom: auto;
+      width: 316px;
+      z-index: 1000;
+      background-color: var(--background-secondary);
+      border: 1px solid var(--border-primary);
+      border-radius: var(--elem-radius);
+      box-shadow: var(--shadow-02);
+    }
+
+    &-header {
+      display: block;
+      padding: 1rem var(--gutter-padding);
+
+      &-wrap {
+        justify-content: center;
+      }
+
+      &.desktop-only {
+        display: block;
+      }
+
+      &.mobile-only {
+        display: none;
+      }
+
+      .icon {
+        left: 0;
+        position: absolute;
+      }
+    }
+
+    &-header,
+    &-setGlobal {
+      text-align: center;
+    }
+  }
+}
+
+.watch-submenu-item {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  font: var(--type-emphasis-m);
+  padding: 1rem;
+
+  &.is-button-row {
+    display: none;
+
+    &.is-always-visible {
+      display: flex;
+      justify-content: flex-end;
+      padding-bottom: 0.25rem;
+    }
+  }
+
+  &.has-dropdown {
+    padding: 0 1rem 0.25rem;
+  }
+
+  &:last-child {
+    padding-bottom: 0;
+  }
+
+  label {
+    width: 100%;
+  }
+
+  [type="checkbox"] + label {
+    flex: 1;
+    width: auto;
+  }
+
+  [type="checkbox"] + label + .button {
+    width: 28px;
+    margin-left: auto;
+  }
+
+  @media screen and (min-width: $screen-md) {
+    padding: 0 0.5rem 0 1rem;
+
+    &.is-button-row {
+      display: flex;
+      justify-content: flex-end;
+      padding-top: 1rem;
+
+      .button {
+        width: auto;
+      }
+    }
+
+    &.pad-y {
+      padding-top: 1rem;
+      padding-bottom: 1rem;
+    }
+
+    &:last-child {
+      padding-bottom: 1rem;
+    }
+  }
+}
+
+.watch-submenu-mobile-buttons {
+  position: absolute;
+  top: 0.5rem;
+  right: 1rem;
+  display: flex;
+  gap: 0.5rem;
+
+  @media screen and (min-width: $screen-md) {
+    display: none;
+  }
+}
+
+.watch-submenu-button {
+  background-color: transparent;
+  border-top: 1px solid var(--border-primary);
+  padding: 0;
+  color: var(--text-primary);
+  cursor: pointer;
+
+  &.is-custom {
+    position: relative;
+    padding-right: 2.5rem;
+
+    &:after {
+      position: absolute;
+      width: 16px;
+      height: 16px;
+      top: 50%;
+      right: 1rem;
+      mask-image: url("../../../assets/icons/chevron.svg");
+      mask-size: 16px;
+      transform: rotate(-90deg) translateX(50%);
+      background-color: var(--text-primary);
+      content: "";
+    }
+  }
+
+  &:first-of-type {
+    border-top-width: 0;
+  }
+
+  &:focus {
+    outline: 1px solid var(--button-secondary-border-focus);
+    box-shadow: var(--focus-effect);
+  }
+
+  &-wrap {
+    display: grid;
+    grid-template-columns: 16px 1fr;
+    grid-template-areas:
+      "status label"
+      "status text";
+    gap: 0.5rem;
+    padding: 0.8125rem var(--gutter-padding);
+    text-align: left;
+  }
+
+  &-status {
+    grid-area: status;
+  }
+
+  &-label {
+    font: var(--type-emphasis-m);
+    grid-area: label;
+  }
+
+  &-text {
+    font: var(--type-body-m);
+    grid-area: text;
+  }
+
+  &:hover {
+    background-color: var(--border-secondary);
+  }
+}
+
+.watch-submenu-group {
+  border: none;
+  margin: 0;
+  padding: 0;
+
+  ul {
+    padding-left: 1.5rem;
+  }
+
+  & & .watch-submenu-item {
+    font: var(--type-body-m);
+    padding-top: 0;
+    padding-bottom: 0;
+    min-height: 28px;
+  }
+
+  &.is-open {
+    .button .icon {
+      transform: rotate(180deg);
+    }
+  }
+}
+
+.watch-submenu-setGlobal {
+  display: block;
+  color: var(--text-link);
+  font: var(--type-body-m);
+  text-align: right;
+}

@@ -2,8 +2,9 @@
  * @prettier
  */
 const path = require("path");
+const cheerio = require("cheerio");
 
-const { assert, itMacro, describeMacro, beforeEachMacro } = require("./utils");
+const { itMacro, describeMacro, beforeEachMacro } = require("./utils");
 
 const CONTENT_ROOT = process.env.CONTENT_ROOT;
 if (!CONTENT_ROOT) {
@@ -94,7 +95,6 @@ function makeExpect(data, locale = "en-US") {
           const label = _(value, locale);
           const url =
             joinPathsForUrl(locale, SVG_BASE_SLUG, "Element") + anchor;
-
           acc.groups.push(`<a href="${url}">${label}</a>`);
         }
 
@@ -437,13 +437,36 @@ describeMacro("svginfo", () => {
 
   TEST_CASE.forEach((test) => {
     itMacro(test.title, (macro) => {
+      macro.ctx.env.recordNonFatalError = () => {
+        return {
+          macroSource: "foo",
+        };
+      };
       if (test.env) {
         Object.keys(test.env).forEach((key) => {
           macro.ctx.env[key] = test.env[key];
         });
       }
 
-      return assert.eventually.equal(macro.call(...test.input), test.output);
+      macro
+        .call(...test.input)
+        .then((response) => {
+          const $ = cheerio.load(response);
+          $("a").each((i, anchorElement) => {
+            if (anchorElement.attribs.href) {
+              return true;
+            } else if (!anchorElement.attribs.href) {
+              // if an anchor element does not have a href attribute,
+              // then smarLink should have added the class "page-not-created"
+              return expect(anchorElement.attribs.class).toBe(
+                "page-not-created"
+              );
+            }
+          });
+        })
+        .catch((error) => {
+          console.error(error);
+        });
     });
   });
 });

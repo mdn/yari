@@ -1,0 +1,182 @@
+@use "../../../ui/vars" as *;
+
+.subscribe-wrapper {
+  background: var(--background-primary);
+
+  .subscribe {
+    padding: 2rem 1rem;
+    text-align: center;
+    margin: 0 auto;
+
+    @media screen and (min-width: $screen-md) {
+      padding: 2rem 4rem;
+    }
+
+    h2 {
+      color: var(--text-primary);
+      font-style: normal;
+      font-weight: 650;
+      font-size: 24px;
+      line-height: 120%;
+      margin-bottom: 2rem;
+    }
+
+    .switch {
+      margin-bottom: 2rem;
+      color: var(--text-primary);
+    }
+
+    .wrapper {
+      display: flex;
+      margin: 0 auto;
+      gap: 2rem;
+      justify-content: center;
+      flex-direction: column;
+      align-items: center;
+
+      @media screen and (min-width: 66rem) {
+        flex-direction: row;
+        align-items: stretch;
+      }
+
+      .subscribe-detail {
+        color: var(--text-primary);
+        display: flex;
+        gap: 1rem;
+        flex-direction: column;
+        align-items: center;
+        border-radius: 1rem;
+        color: var(--text-invert);
+        background-color: var(--text-secondary);
+
+        min-width: 16rem;
+        width: 100%;
+        max-width: 20rem;
+
+        &#plus5 {
+          background-color: var(--text-primary-blue);
+        }
+
+        &#plus10 {
+          background-color: var(--text-primary-red);
+        }
+
+        &#core {
+          background-color: var(--text-primary-green);
+        }
+
+        h3 {
+          font-size: 1em;
+          margin: 0;
+          width: 100%;
+          background: rgba(0, 0, 0, 0.5);
+          color: var(--text-primary);
+          padding: 0.5rem;
+        }
+
+        .sub-info {
+          margin-top: 1rem;
+          display: flex;
+          flex-direction: column;
+          gap: 1.5rem;
+          width: 100%;
+          height: 100%;
+          padding: 0 2rem 2rem;
+
+          h3,
+          p {
+            margin: 0;
+          }
+
+          .price {
+            height: 3rem;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            align-content: center;
+            column-gap: 0.5rem;
+
+            .sub-price {
+              font-style: normal;
+              font-weight: 650;
+              font-size: 36px;
+              line-height: 120%;
+              grid-column: 1/2;
+              justify-self: right;
+            }
+
+            .free {
+              grid-column: 1/3;
+              justify-self: center;
+            }
+
+            .sub-length {
+              grid-column: 2/3;
+              font-style: normal;
+              font-size: 0.8rem;
+              line-height: 120%;
+              justify-self: left;
+              text-align: left;
+              margin: auto 0;
+            }
+          }
+
+          .includes {
+            align-self: flex-start;
+          }
+
+          ul {
+            width: 100%;
+            align-self: flex-start;
+            list-style-type: "✔ ";
+            margin-left: 1rem;
+
+            li {
+              text-align: left;
+              width: 100%;
+              line-height: 1.75;
+              padding-left: 0.5rem;
+
+              a {
+                display: block;
+                color: var(--text-invert);
+                text-decoration: underline;
+
+                &:hover {
+                  text-decoration: none;
+                }
+              }
+            }
+          }
+
+          .terms {
+            margin-top: auto;
+            font-size: 14px;
+            text-decoration: underline;
+            font-style: italic;
+          }
+
+          .sub-link {
+            background: $mdn-color-dark-grey-90;
+            width: calc(100% - 1rem);
+            height: 2rem;
+            border-radius: 1rem;
+            padding: 0.25rem 0.5rem;
+            color: var(--text-primary);
+            min-width: fit-content;
+            font-weight: 620;
+            align-self: center;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+          }
+
+          .current {
+            background-color: initial;
+            color: black;
+            border: 1px solid black;
+          }
+        }
+      }
+    }
+  }
+}

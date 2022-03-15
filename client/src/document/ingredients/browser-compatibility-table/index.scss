@@ -1,18 +1,276 @@
-@import "~@mdn/minimalist/sass/vars/typography";
-@import "~@mdn/minimalist/sass/vars/layout";
-@import "~@mdn/minimalist/sass/vars/mdn-web-docs-palette";
+@use "~@mdn/minimalist/sass/mixins/utils" as *;
+@use "../../../ui/vars" as *;
 
-@import "~@mdn/minimalist/sass/mixins/utils";
+.show-browser-version-toggle {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 0.5rem;
+  font: var(--type-body-m);
+}
 
-@import "./atoms/bc-github";
-@import "./atoms/bc-table";
-@import "./atoms/bc-platforms";
-@import "./atoms/bc-icons";
-@import "./atoms/bc-supports";
-@import "./atoms/bc-browsers";
-@import "./atoms/bc-history";
-@import "./atoms/bc-history-link";
-@import "./atoms/bc-legend";
+.bc {
+  &-table {
+    width: 100%;
+    margin: 1rem 0;
+    border: 1px solid var(--border-primary);
+    border-radius: var(--elem-radius);
+    border-collapse: separate;
+    border-spacing: 0;
+
+    thead {
+      display: none;
+    }
+
+    tbody td,
+    tbody th {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      align-content: center;
+    }
+
+    td,
+    th {
+      border: 1px solid var(--border-secondary);
+      border-width: 0 0 1px 1px;
+      font: var(--type-body-m);
+      padding: 0.4rem;
+
+      &[aria-expanded="false"] {
+        height: 2rem;
+      }
+
+      code {
+        font-size: 0.75rem !important;
+      }
+    }
+
+    // these props allow us to add border-radius to the table.
+    // border-collapse: separate gets in the way of this
+    // being easy.
+    tbody {
+      tr {
+        height: 3rem;
+
+        &:last-child {
+          th,
+          td {
+            border-bottom-width: 0;
+          }
+        }
+
+        th {
+          border-left-width: 0;
+          vertical-align: middle;
+        }
+      }
+
+      td {
+        &.bc-supports-no > span {
+          color: var(--text-primary-red);
+        }
+        &.bc-supports-partial > span {
+          color: var(--text-primary-yellow);
+        }
+        &.bc-supports-preview > span {
+          color: var(--text-primary-blue);
+        }
+        &.bc-supports-yes > span {
+          color: var(--text-primary-green);
+        }
+      }
+    }
+
+    th {
+      vertical-align: bottom;
+      background: var(--background-tertiary);
+    }
+
+    tbody th {
+      @media screen and (min-width: $screen-md) {
+        width: 20%;
+      }
+    }
+
+    .bc-supports {
+      margin-bottom: 1rem;
+
+      .icon-wrap {
+        background: var(--background-primary);
+      }
+    }
+
+    .icon-wrap {
+      .bc-support-level {
+        @include visually-hidden;
+      }
+    }
+    .bc-icon-cell {
+      > .icon-wrap {
+        display: block;
+      }
+    }
+
+    tr [class^="bc-browser"] {
+      text-align: center;
+    }
+
+    .bc-history-desktop {
+      display: none;
+    }
+  }
+
+  &-head-txt-label {
+    -ms-writing-mode: tb-rl;
+    -webkit-writing-mode: vertical-rl;
+    writing-mode: vertical-rl;
+    transform: rotate(180deg);
+    white-space: nowrap;
+  }
+
+  &-icon-cell {
+    text-align: center;
+    vertical-align: middle;
+  }
+
+  &-history-link {
+    @include visually-hidden;
+    position: absolute; // messing up layout otherwise
+  }
+
+  &-level-no {
+    background-color: var(--icon-critical);
+  }
+
+  &-level-preview {
+    background-color: var(--icon-information);
+  }
+}
+
+.bc-legend {
+  &-items-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+    font: var(--type-body-m);
+  }
+
+  &-item {
+    display: flex;
+    gap: 0.5rem;
+
+    &-dt {
+      display: flex;
+
+      .icon {
+        background-color: var(--icon-secondary);
+      }
+    }
+  }
+}
+
+.bc-platforms {
+  height: 2rem;
+
+  th {
+    text-align: center;
+  }
+}
+
+.bc-platforms td {
+  border: none;
+}
+
+.bc-browsers td {
+  border-width: 0 0 1px 0;
+}
+
+.bc-notes-list {
+  position: relative;
+  margin: 0.5rem 0;
+  text-align: left;
+  width: 100%;
+
+  &:before {
+    position: absolute;
+    z-index: -1;
+    height: 100%;
+    left: 7px;
+    width: 2px;
+    background: var(--border-primary);
+    content: "";
+  }
+
+  // complicated selector to cover the last bit of the grey line above.
+  .bc-notes-wrapper:last-child dd:last-child {
+    position: relative;
+
+    &:before {
+      position: absolute;
+      z-index: -1;
+      height: calc(100% - 6px);
+      left: 7px;
+      width: 2px;
+      bottom: 0;
+      background: var(--background-primary);
+      content: "";
+    }
+  }
+
+  .bc-level-yes.icon.icon-yes {
+    // override icon
+    background-color: var(--icon-success);
+    mask-image: url("../../../assets/icons/yes-circle.svg");
+  }
+
+  .icon.icon-footnote {
+    mask-image: none;
+    border-radius: 50%;
+    border: 3px solid var(--background-primary);
+    background: var(--border-primary);
+  }
+
+  .icon.icon-disabled {
+    background-color: var(--icon-information);
+  }
+
+  .bc-version-label {
+    display: inline;
+    font-weight: 650;
+  }
+
+  abbr {
+    margin-right: 4px;
+  }
+
+  dd {
+    margin-bottom: 1rem;
+    padding-left: 1.5rem;
+    text-indent: -1.5rem;
+
+    &:last-child {
+      margin-bottom: 2rem;
+    }
+  }
+}
+
+.bc-notes-wrapper {
+  margin-bottom: 1rem;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+dl.bc-notes-list {
+  dt.bc-supports {
+    margin-top: 1rem;
+  }
+  dd.bc-supports-dd {
+    margin-bottom: 1rem;
+  }
+}
 
 .offscreen,
 .only-icon span {
@@ -20,9 +278,13 @@
 }
 
 .bc-table-row-header {
+  width: 100%;
+  display: inline-flex;
+  align-items: baseline;
+
   code {
-    display: flex;
     overflow: hidden;
+    font-size: 0.75rem;
   }
 
   .left-side,
@@ -31,7 +293,7 @@
     overflow: hidden;
   }
 
-  /* Can only flex-shrink and not flex-grow 
+  /* Can only flex-shrink and not flex-grow
   ie the "slider" in a sliding glass door */
   .left-side {
     flex: 0 1 auto;
@@ -41,5 +303,143 @@
   its the stationary portion */
   .right-side {
     flex: 1 0 auto;
+  }
+
+  .bc-icons {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: 0.25rem;
+    .icon {
+      background-color: var(--icon-secondary);
+      &:hover {
+        background-color: var(--icon-primary);
+      }
+    }
+  }
+}
+
+@media screen and (min-width: $screen-sm) {
+  .bc-table {
+    thead {
+      display: table-header-group;
+
+      .bc-platforms {
+        th {
+          vertical-align: revert;
+        }
+      }
+    }
+
+    tbody td,
+    tbody th {
+      display: table-cell;
+    }
+
+    td,
+    th {
+      background: inherit;
+      padding: 0.25rem;
+      width: 2rem;
+    }
+    tr.bc-history-desktop {
+      display: table-row;
+    }
+  }
+
+  .table-scroll {
+    overflow: auto;
+    width: 100vw;
+    margin: 0 -3rem;
+  }
+
+  .table-scroll-inner {
+    padding: 0 3rem;
+    position: relative;
+    min-width: max-content;
+
+    &:after {
+      position: absolute;
+      width: 10px;
+      height: 10px;
+      bottom: 0;
+      right: 0;
+      content: "";
+    }
+  }
+
+  .bc-support-level,
+  .bc-browser-name {
+    display: none;
+  }
+
+  .bc-notes-list {
+    margin-left: 20%;
+    width: auto;
+  }
+
+  .bc-icon-cell {
+    .bc-support-level {
+      display: none;
+    }
+
+    &[aria-expanded="true"] {
+      position: relative;
+
+      &:after {
+        position: absolute;
+        left: 0;
+        bottom: -1px;
+        height: 2px;
+        width: 100%;
+        background: var(--text-primary);
+        content: "";
+      }
+
+      .bc-history-mobile {
+        display: none;
+      }
+    }
+  }
+
+  .bc-has-history {
+    cursor: pointer;
+
+    &:hover {
+      background: var(--background-secondary);
+    }
+  }
+}
+@media screen and (min-width: $screen-md) {
+  .table-scroll {
+    width: calc(100% + 6rem);
+  }
+}
+
+@media screen and (min-width: $screen-lg) {
+  .table-scroll {
+    width: 100%;
+    margin: 0;
+  }
+
+  .table-scroll-inner {
+    padding: 0;
+  }
+}
+
+.bc-github-link {
+  font: var(--type-body-m);
+}
+
+.main-page-content {
+  .bc-legend {
+    dd,
+    dt {
+      margin-top: 0;
+      margin-bottom: 0;
+      margin-left: 0;
+    }
+  }
+  .bc-supports-dd {
+    margin: 0;
   }
 }

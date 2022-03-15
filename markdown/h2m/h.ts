@@ -68,14 +68,12 @@ const CONTENT: Content["type"][] = [
 
 type MDNodesWithChildren = Extract<MDNodeUnion, { children: unknown[] }>;
 
-const CHILDREN_TYPES: Partial<
-  {
-    [Type in MDNodesWithChildren["type"]]: Extract<
-      MDNodesWithChildren,
-      { type: Type }
-    >["children"][0]["type"][];
-  }
-> = {
+const CHILDREN_TYPES: Partial<{
+  [Type in MDNodesWithChildren["type"]]: Extract<
+    MDNodesWithChildren,
+    { type: Type }
+  >["children"][0]["type"][];
+}> = {
   paragraph: PHRASING_CONTENT,
   heading: PHRASING_CONTENT,
   blockquote: BLOCK_CONTENT,

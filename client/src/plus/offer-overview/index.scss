@@ -1,0 +1,11 @@
+@use "../../ui/vars" as *;
+
+.offer-overview {
+  a {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+}
+
+/* This should be replaced at some point when the top navigation has theming implemented */

@@ -134,7 +134,7 @@ export default function render(
   {
     doc = null,
     pageNotFound = false,
-    feedEntries = null,
+    hyData = null,
     pageTitle = null,
     possibleLocales = null,
     locale = null,
@@ -147,7 +147,7 @@ export default function render(
 
   // Some day, we'll have the chrome localized and then this can no longer be
   // hardcoded to 'en'. But for now, the chrome is always in "English (US)".
-  $("html").attr("lang", DEFAULT_LOCALE);
+  $("html").attr("lang", locale || DEFAULT_LOCALE);
 
   const rendered = renderToString(renderApp);
 
@@ -162,8 +162,8 @@ export default function render(
   if (pageNotFound) {
     pageTitle = `🤷🏽‍♀️ Page not found | ${pageTitle}`;
     hydrationData.pageNotFound = true;
-  } else if (feedEntries) {
-    hydrationData.feedEntries = feedEntries;
+  } else if (hyData) {
+    hydrationData.hyData = hyData;
   } else if (doc) {
     // Use the doc's title instead
     pageTitle = doc.pageTitle;

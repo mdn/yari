@@ -30,7 +30,7 @@ const documentRouter = require("./document");
 const fakeV1APIRouter = require("./fake-v1-api");
 const { searchIndexRoute } = require("./search-index");
 const flawsRoute = require("./flaws");
-const { translationsRoute } = require("./translations");
+const { router: translationsRouter } = require("./translations");
 const { staticMiddlewares, originRequestMiddleware } = require("./middlewares");
 const { getRoot } = require("../content/utils");
 
@@ -158,7 +158,7 @@ app.use("/:locale/search-index.json", searchIndexRoute);
 
 app.get("/_flaws", flawsRoute);
 
-app.get("/_translations", translationsRoute);
+app.use("/_translations", translationsRouter);
 
 app.get("/*/contributors.txt", async (req, res) => {
   const url = req.path.replace(/\/contributors\.txt$/, "");
@@ -208,9 +208,11 @@ app.get("/*", async (req, res) => {
   // TODO: Would be nice to have a list of all supported file extensions
   // in a constants file.
   if (/\.(png|webp|gif|jpe?g|svg)$/.test(req.path)) {
-    // Remember, Image.findByURL() will return the absolute file path
+    // Remember, Image.findByURLWithFallback() will return the absolute file path
     // iff it exists on disk.
-    const filePath = Image.findByURL(req.path);
+    // Using a "fallback" strategy here so that images embedded in live samples
+    // are resolved if they exist in en-US but not in <locale>
+    const filePath = Image.findByURLWithFallback(req.path);
     if (filePath) {
       // The second parameter to `send()` has to be either a full absolute
       // path or a path that doesn't start with `../` otherwise you'd
@@ -305,7 +307,7 @@ console.log(
     : ""
 );
 
-const PORT = parseInt(process.env.SERVER_PORT || "5000");
+const PORT = parseInt(process.env.SERVER_PORT || "5042");
 app.listen(PORT, () => {
   console.log(`Listening on port ${PORT}`);
   if (process.env.EDITOR) {

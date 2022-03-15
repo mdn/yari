@@ -1,26 +1,81 @@
 const fs = require("fs");
 const path = require("path");
+const frontmatter = require("front-matter");
+
+const { m2h } = require("../markdown");
 
 const {
   CONTENT_ROOT,
   CONTENT_TRANSLATED_ROOT,
+  CONTRIBUTOR_SPOTLIGHT_ROOT,
   VALID_LOCALES,
 } = require("../content");
-const {
-  BUILD_OUT_ROOT,
-  HOMEPAGE_FEED_URL,
-  HOMEPAGE_FEED_DISPLAY_MAX,
-} = require("./constants");
-const { getFeedEntries } = require("./feedparser");
+const { BUILD_OUT_ROOT } = require("./constants");
 // eslint-disable-next-line node/no-missing-require
 const { renderHTML } = require("../ssr/dist/main");
+const { default: got } = require("got");
+const { splitSections } = require("./utils");
 
-function getLanguages() {
-  return new Map(
-    Object.entries(
-      JSON.parse(fs.readFileSync(path.join(__dirname, "languages.json")))
-    )
-  );
+const contributorSpotlightRoot = CONTRIBUTOR_SPOTLIGHT_ROOT;
+
+let featuredContributor;
+
+async function buildContributorSpotlight(options) {
+  // for now, these will only be available in English
+  const locale = "en-US";
+  const prefix = "community/spotlight";
+  const profileImg = "profile-image.jpg";
+
+  for (const contributor of fs.readdirSync(contributorSpotlightRoot)) {
+    const markdown = fs.readFileSync(
+      `${contributorSpotlightRoot}/${contributor}/index.md`,
+      "utf8"
+    );
+
+    const frontMatter = frontmatter(markdown);
+    const contributorHTML = await m2h(frontMatter.body, locale);
+
+    const { sections } = splitSections(contributorHTML);
+
+    const hyData = {
+      sections: sections,
+      contributorName: frontMatter.attributes.contributor_name,
+      folderName: frontMatter.attributes.folder_name,
+      isFeatured: frontMatter.attributes.is_featured,
+      profileImg,
+      profileImgAlt: frontMatter.attributes.img_alt,
+      usernames: frontMatter.attributes.usernames,
+      quote: frontMatter.attributes.quote,
+    };
+    const context = { hyData };
+
+    const html = renderHTML(`/${locale}/${prefix}/${contributor}`, context);
+    const outPath = path.join(
+      BUILD_OUT_ROOT,
+      locale,
+      `${prefix}/${hyData.folderName}`
+    );
+    const filePath = path.join(outPath, "index.html");
+    const imgFilePath = `${contributorSpotlightRoot}/${contributor}/profile-image.jpg`;
+    const imgFileDestPath = path.join(outPath, profileImg);
+    const jsonFilePath = path.join(outPath, "index.json");
+
+    fs.mkdirSync(outPath, { recursive: true });
+    fs.writeFileSync(filePath, html);
+    fs.copyFileSync(imgFilePath, imgFileDestPath);
+    fs.writeFileSync(jsonFilePath, JSON.stringify(context));
+
+    if (options.verbose) {
+      console.log("Wrote", filePath);
+    }
+    if (frontMatter.attributes.is_featured) {
+      featuredContributor = {
+        contributorName: frontMatter.attributes.contributor_name,
+        url: `${prefix}/${frontMatter.attributes.folder_name}`,
+        quote: frontMatter.attributes.quote,
+      };
+    }
+  }
 }
 
 async function buildSPAs(options) {
@@ -37,6 +92,11 @@ async function buildSPAs(options) {
     console.log("Wrote", path.join(outPath, path.basename(url)));
   }
 
+  if (contributorSpotlightRoot) {
+    buildContributorSpotlight(options);
+    buildCount++;
+  }
+
   // Basically, this builds one (for example) `search/index.html` for every
   // locale we intend to build.
   for (const root of [CONTENT_ROOT, CONTENT_TRANSLATED_ROOT]) {
@@ -49,26 +109,14 @@ async function buildSPAs(options) {
       }
       const SPAs = [
         { prefix: "search", pageTitle: "Search" },
-        { prefix: "signin", pageTitle: "Sign in", noIndexing: true },
-        { prefix: "signout", pageTitle: "Sign out", noIndexing: true },
-        { prefix: "settings", pageTitle: "Account settings", noIndexing: true },
         { prefix: "plus", pageTitle: "Plus", noIndexing: true },
-        { prefix: "plus/bookmarks", pageTitle: "Bookmarks", noIndexing: true },
         {
-          prefix: "plus/deep-dives",
-          pageTitle: "Modern CSS in the Real World",
+          prefix: "plus/collection",
+          pageTitle: "Collection",
           noIndexing: true,
         },
-        {
-          prefix: "plus/deep-dives/planning-for-browser-support",
-          pageTitle: "Planning for browser support ~ Plus",
-          noIndexing: true,
-        },
-        {
-          prefix: "plus/deep-dives/your-browser-support-toolkit",
-          pageTitle: "Your browser support toolkit ~ Plus",
-          noIndexing: true,
-        },
+        { prefix: "about", pageTitle: "About MDN" },
+        { prefix: "community", pageTitle: "Contribute to MDN" },
       ];
       for (const { prefix, pageTitle, noIndexing } of SPAs) {
         const url = `/${locale}/${prefix}`;
@@ -77,15 +125,7 @@ async function buildSPAs(options) {
           locale: VALID_LOCALES.get(locale) || locale,
           noIndexing,
         };
-        if (prefix === "settings") {
-          // This SPA needs a list of all valid locales
-          const languages = getLanguages();
-          context.possibleLocales = [...VALID_LOCALES.values()].map(
-            (locale) => {
-              return Object.assign({ locale }, languages.get(locale));
-            }
-          );
-        }
+
         const html = renderHTML(url, context);
         const outPath = path.join(BUILD_OUT_ROOT, locale, prefix);
         fs.mkdirSync(outPath, { recursive: true });
@@ -95,25 +135,60 @@ async function buildSPAs(options) {
         if (options.verbose) {
           console.log("Wrote", filePath);
         }
-        if (prefix === "settings") {
-          const filePathContext = path.join(outPath, "index.json");
-          fs.writeFileSync(filePathContext, JSON.stringify(context));
-          buildCount++;
-          if (options.verbose) {
-            console.log("Wrote", filePathContext);
-          }
-        }
       }
     }
   }
 
+  // Building the MDN Plus feature pages.
+  const featuresDir = path.join(__dirname, "../copy/plus/features");
+  for (const page of fs.readdirSync(featuresDir)) {
+    const locale = "en-US";
+    const feature = page.split(".")[0];
+    console.log(page);
+    const markdown = fs.readFileSync(path.join(featuresDir, page), "utf8");
+
+    const frontMatter = frontmatter(markdown);
+    const rawHTML = await m2h(frontMatter.body, locale);
+
+    const { sections, toc } = splitSections(rawHTML);
+
+    const url = `/${locale}/plus/feature/${feature}`;
+    const hyData = {
+      id: feature,
+      ...frontMatter.attributes,
+      sections,
+      toc,
+    };
+    const context = {
+      hyData,
+      pageTitle: `${frontMatter.attributes.title || ""} | MDN Plus`,
+    };
+    console.log(url);
+    const html = renderHTML(url, context);
+    const outPath = path.join(
+      BUILD_OUT_ROOT,
+      locale,
+      "plus",
+      "feature",
+      feature
+    );
+    fs.mkdirSync(outPath, { recursive: true });
+    const filePath = path.join(outPath, "index.html");
+    fs.writeFileSync(filePath, html);
+    buildCount++;
+    if (options.verbose) {
+      console.log("Wrote", filePath);
+    }
+    const filePathContext = path.join(outPath, "index.json");
+    fs.writeFileSync(filePathContext, JSON.stringify(context));
+  }
+
   // Build all the home pages in all locales.
-  // Have the feed entries ready before building the home pages.
-  // XXX disk caching?
-  const feedEntries = (await getFeedEntries(HOMEPAGE_FEED_URL)).slice(
-    0,
-    HOMEPAGE_FEED_DISPLAY_MAX
-  );
+  // Fetch merged content PRs for the latest contribution section.
+  const pullRequestsData = await got(
+    "https://api.github.com/search/issues?q=repo:mdn/content+is:pr+is:merged+sort:updated&per_page=10"
+  ).json();
+
   for (const root of [CONTENT_ROOT, CONTENT_TRANSLATED_ROOT]) {
     if (!root) {
       continue;
@@ -127,17 +202,14 @@ async function buildSPAs(options) {
         continue;
       }
       const url = `/${locale}/`;
-      // Each .pubDate in feedEntries is a Date object. That has to be converted
-      // to a string. That way the SSR rendering is
-      const dateFormatter = new Intl.DateTimeFormat(locale, {
-        dateStyle: "full",
-      });
-      const context = {
-        feedEntries: feedEntries.map((entry) => {
-          const pubDateString = dateFormatter.format(entry.pubDate);
-          return Object.assign({}, entry, { pubDate: pubDateString });
-        }),
+      const hyData = {
+        pullRequestsData: {
+          items: pullRequestsData.items,
+          repo: { name: "mdn/content", url: "https://github.com/mdn/content" },
+        },
+        featuredContributor,
       };
+      const context = { hyData };
       const html = renderHTML(url, context);
       const outPath = path.join(BUILD_OUT_ROOT, locale);
       fs.mkdirSync(outPath, { recursive: true });
@@ -147,7 +219,8 @@ async function buildSPAs(options) {
       if (options.verbose) {
         console.log("Wrote", filePath);
       }
-      // Also, dump the feed entries as a JSON file so the data can be gotten
+
+      // Also, dump the recent pull requests in a file so the data can be gotten
       // in client-side rendering.
       const filePathContext = path.join(outPath, "index.json");
       fs.writeFileSync(filePathContext, JSON.stringify(context));

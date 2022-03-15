@@ -448,8 +448,11 @@ function findAll({
           return false;
         }
 
+        const locale = filePath.replace(root, "").split(path.sep)[1];
+        if (!VALID_LOCALES.has(locale)) {
+          return false;
+        }
         if (locales.size) {
-          const locale = filePath.replace(root, "").split(path.sep)[1];
           if (!locales.get(locale)) {
             return false;
           }
@@ -543,7 +546,7 @@ function move(oldSlug, newSlug, locale, { dry = false } = {}) {
 }
 
 function fileForSlug(slug, locale) {
-  return getHTMLPath(getFolderPath({ slug, locale }));
+  return getMarkdownPath(getFolderPath({ slug, locale }));
 }
 
 function exists(slug, locale) {
@@ -588,7 +591,7 @@ function remove(
   }
 
   const children = findChildren(url, true);
-  if (children.length > 0 && (redirect || !recursive)) {
+  if (children.length > 0 && redirect && !recursive) {
     throw new Error("unable to remove and redirect a document with children");
   }
   const docs = [slug, ...children.map(({ metadata }) => metadata.slug)];
@@ -610,7 +613,10 @@ function remove(
   execGit(["rm", "-r", path.dirname(fileInfo.path)], { cwd: root });
 
   if (redirect) {
-    Redirect.add(locale, [[url, redirect]]);
+    Redirect.add(locale, [
+      [url, redirect],
+      ...children.map(({ url: childUrl }) => [childUrl, redirect]),
+    ]);
   } else {
     Redirect.remove(locale, [url, ...removed]);
   }

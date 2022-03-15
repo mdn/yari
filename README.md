@@ -20,7 +20,7 @@ Before you can start working with Yari, you need to:
 <!-- markdownlint-disable list-marker-space -->
 
 1.  Install [git](https://git-scm.com/),
-    [Node.js](https://nodejs.org) (>= 12.0.0), and [Yarn 1](https://classic.yarnpkg.com/en/docs/install).
+    [Node.js](https://nodejs.org) (>= 12.11.0 and < 17.0.0), and [Yarn 1](https://classic.yarnpkg.com/en/docs/install).
 
 1.  [Fork](https://docs.github.com/en/github/getting-started-with-github/fork-a-repo)
     the MDN [content](https://github.com/mdn/content) and [yari](https://github.com/mdn/yari)
@@ -68,6 +68,21 @@ so use with caution.
 See also our [reviewing guide](docs/REVIEWING.md) for information on how to
 review Yari changes.
 
+### Pull request requirements
+
+Firstly, thank you for your interest in contributing to Yari!
+We do have a few requirements when it comes to pull requests:
+
+1. Please make use of a [feature branch workflow](https://www.atlassian.com/git/tutorials/comparing-workflows/feature-branch-workflow).
+2. We prefer if you use the [conventional commits format](https://www.conventionalcommits.org/)
+   when making pull requests.
+3. Lastly, we require that all commits are signed.
+   Please see the documentation [about signed commits](https://docs.github.com/en/authentication/managing-commit-signature-verification/about-commit-signature-verification)
+   and [how to sign yours](https://docs.github.com/en/authentication/managing-commit-signature-verification/signing-commits)
+   on GitHub.
+
+Thank you for your understanding! We look forward to your contributions.
+
 ### How to stay up-to-date
 
 Periodically, the code and the content changes. Make sure you stay
@@ -104,7 +119,7 @@ with the front-end code, ready to be served as static files.
 ## Development
 
 The `yarn start` command encapsulates the front-end dev server
-(on <http://localhost:3000>) and the `server` (on <http://localhost:5000>).
+(on <http://localhost:3000>) and the `server` (on <http://localhost:5042>).
 
 All the sub-commands of `yarn start` can be broken down and run individually
 if you want to work more rapidly.
@@ -169,7 +184,7 @@ be fairly feature-complete.
 1. [Create in account on Ngrok.com](https://dashboard.ngrok.com/signup)
 2. [Download the executable](https://ngrok.com/download)
 3. Start your Yari server with `yarn start` in one terminal
-4. Start the `ngrok` executable with: `/path/to/your/ngrok http 5000`
+4. Start the `ngrok` executable with: `/path/to/your/ngrok http 5042`
 
 This will display something like this:
 
@@ -178,8 +193,8 @@ This will display something like this:
     Version                       2.3.35
     Region                        United States (us)
     Web Interface                 http://127.0.0.1:4040
-    Forwarding                    http://920ba2108da8.ngrok.io -> http://localhost:5000
-    Forwarding                    https://920ba2108da8.ngrok.io -> http://localhost:5000
+    Forwarding                    http://920ba2108da8.ngrok.io -> http://localhost:5042
+    Forwarding                    https://920ba2108da8.ngrok.io -> http://localhost:5042
 
     Connections                   ttl     opn     rt1     rt5     p50     p90
                                   0       0       0.00    0.00    0.00    0.00
@@ -232,6 +247,13 @@ converted to favicons using [realfavicongenerator.net](https://realfavicongenera
 To generate new favicons, edit or replace the `mdn-web-docs.svg` file
 and then re-upload that to realfavicongenerator.net.
 
+## Contact
+
+If you want to talk to us, ask questions, and find out more, join the
+discussion on the
+[MDN Web Docs chat room](https://chat.mozilla.org/#/room/#mdn:mozilla.org)
+on [Matrix](https://wiki.mozilla.org/Matrix).
+
 ## Troubleshooting
 
 Some common issues and how to resolve them.
@@ -256,9 +278,9 @@ sub-dependencies. A sure way to solve it is to run:
     rm -fr node_modules
     yarn install
 
-### `Error: listen EADDRINUSE: address already in use :::5000`
+### `Error: listen EADDRINUSE: address already in use :::5042`
 
-The default server port `:5000` might be in use by another process. To resolve this,
+The default server port `:5042` might be in use by another process. To resolve this,
 you can pick any unused port (e.g., 6000) and run the following:
 
     echo SERVER_PORT=6000 >> .env

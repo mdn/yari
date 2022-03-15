@@ -322,6 +322,7 @@ function _addSingleSpecialSection($) {
   }
 
   let dataQuery = null;
+  let specURLsString = "";
   let specialSectionType = null;
   if ($.find("div.bc-data").length) {
     specialSectionType = "browser_compatibility";
@@ -329,13 +330,14 @@ function _addSingleSpecialSection($) {
   } else if ($.find("div.bc-specs").length) {
     specialSectionType = "specifications";
     dataQuery = $.find("div.bc-specs").attr("data-bcd-query");
+    specURLsString = $.find("div.bc-specs").attr("data-spec-urls");
   }
 
   // Some old legacy documents haven't been re-rendered yet, since it
   // was added, so the `div.bc-data` tag doesn't have a `id="bcd:..."`
   // attribute. If that's the case, bail and fail back on a regular
   // prose section :(
-  if (!dataQuery) {
+  if (!dataQuery && specURLsString === "") {
     // I wish there was a good place to log this!
     const [proseSections] = _addSectionProse($);
     return proseSections;
@@ -361,7 +363,7 @@ function _addSingleSpecialSection($) {
     }
     return _buildSpecialBCDSection();
   } else if (specialSectionType === "specifications") {
-    if (data === undefined) {
+    if (data === undefined && specURLsString === "") {
       return [
         {
           type: specialSectionType,
@@ -387,7 +389,7 @@ function _addSingleSpecialSection($) {
     //
     //   'chrome_android': {
     //      '28': {
-    //        release_data: '2012-06-01',
+    //        release_date: '2012-06-01',
     //        release_notes: '...',
     //        ...
     //
@@ -426,7 +428,11 @@ function _addSingleSpecialSection($) {
             info = [info];
           }
           for (const infoEntry of info) {
-            const added = infoEntry.version_added;
+            const added =
+              typeof infoEntry.version_added === "string" &&
+              infoEntry.version_added.startsWith("≤")
+                ? infoEntry.version_added.slice(1)
+                : infoEntry.version_added;
             if (browserReleaseData.has(browser)) {
               if (browserReleaseData.get(browser).has(added)) {
                 infoEntry.release_date = browserReleaseData
@@ -455,18 +461,28 @@ function _addSingleSpecialSection($) {
   }
 
   function _buildSpecialSpecSection() {
-    // Collect spec_urls from a BCD feature.
-    // Can either be a string or an array of strings.
+    // Collect spec URLs from a BCD feature, a 'spec-urls' value, or both;
+    // For a BCD feature, it can either be a string or an array of strings.
     let specURLs = [];
 
-    for (const [key, compat] of Object.entries(data)) {
-      if (key === "__compat" && compat.spec_url) {
-        if (Array.isArray(compat.spec_url)) {
-          specURLs = compat.spec_url;
-        } else {
-          specURLs.push(compat.spec_url);
+    if (data) {
+      // If 'data' is non-null, that means we have data for a BCD feature
+      // that we can extract spec URLs from.
+      for (const [key, compat] of Object.entries(data)) {
+        if (key === "__compat" && compat.spec_url) {
+          if (Array.isArray(compat.spec_url)) {
+            specURLs = compat.spec_url;
+          } else {
+            specURLs.push(compat.spec_url);
+          }
         }
       }
+    }
+
+    if (specURLsString !== "") {
+      // If specURLsString is non-empty, then it has the string contents of
+      // the document’s 'spec-urls' frontmatter key: one or more URLs.
+      specURLs.push(...specURLsString.split(",").map((url) => url.trim()));
     }
 
     // Use BCD specURLs to look up more specification data
@@ -482,11 +498,9 @@ function _addSingleSpecialSection($) {
         const specificationsData = {
           bcdSpecificationURL: specURL,
           title: "Unknown specification",
-          shortTitle: "Unknown specification",
         };
         if (spec) {
           specificationsData.title = spec.title;
-          specificationsData.shortTitle = spec.shortTitle;
         }
 
         return specificationsData;

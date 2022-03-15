@@ -52,7 +52,7 @@ if (numTerms) {
             var summary = aPage.summary.replace(/<img[^>]*>/g," ");
             var url = aPage.url;
 
-            html += "<dt class='landingPageList'><a href='" + url + "'>" + title + "</a></dt><dd class='landingPageList'>" + summary + "</dd>";
+            html += "<dt class='landingPageList'><a href='" + url + "'>" + title + "</a></dt><dd class='landingPageList'><p>" + summary + "</p></dd>";
         }
     }
 

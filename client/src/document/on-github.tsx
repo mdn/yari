@@ -3,7 +3,7 @@ import { Doc } from "./types";
 export function OnGitHubLink({ doc }: { doc: Doc }) {
   return (
     <div id="on-github" className="on-github">
-      <h3>Found a problem with this page?</h3>
+      <h4>Found a problem with this page?</h4>
       <ul>
         <li>
           <EditOnGitHubLink doc={doc} />
@@ -34,7 +34,7 @@ function SourceOnGitHubLink({ doc }: { doc: Doc }) {
   const { github_url, folder } = doc.source;
   return (
     <a
-      href={github_url}
+      href={`${github_url}?plain=1`}
       title={`Folder: ${folder} (Opens in a new tab)`}
       target="_blank"
       rel="noopener noreferrer"

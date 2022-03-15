@@ -1,99 +1,83 @@
 import * as React from "react";
+import { ReactChild, ReactChildren, useContext, useRef } from "react";
+import { useOnClickOutside } from "../../../hooks";
 
 import "./index.scss";
 
-type DropdownProps = {
-  // A string set as the id attribute to uniquely identify this
-  // Dropdown component
-  id?: string;
-  // An optional string that, when specified, is added to the
-  // the existing classes for the dropdown-menu-items element.
-  // Useful when custom styling for a specific dropdown
-  // component is needed.
-  componentClassName?: string;
-  // The string or component to display. Clicking this will
-  // display the menu
-  label: string | React.ReactNode;
-  // An optional string that, when specified, is set as the `id` attribute
-  // of the `ul` menu element. This is then also used as the value of the
-  // `aria-owns` property on the menu trigger button
-  ariaOwns?: string;
-  // An optional string that, when specified, is used to set a custom
-  // label for the menu trigger button using `aria-label`
-  ariaLabel?: string;
-  // If set to true, the menu will be anchored to the right edge of
-  // the label and may extend beyond the left edge. If this is
-  // false or unset, the default behavior is to attach the menu to
-  // the left side of the label and allow it to extend beyond the
-  // right edge of the label.
-  right?: boolean;
-  // If true, we won't show the arrow next to the menu
-  hideArrow?: boolean;
-  // Optional function to trigger a closing.
-  forceClose?: boolean;
-  children: React.ReactNode;
-};
+const DropdownMenuContext = React.createContext<{
+  isOpen: boolean;
+  close: (event?: Event) => void;
+  wrapperRef?: React.Ref<HTMLDivElement>;
+}>({
+  isOpen: false,
+  close: () => {},
+});
 
-export default function Dropdown(props: DropdownProps) {
-  const [showDropdownMenu, setShowDropdownMenu] = React.useState(false);
+export function DropdownMenuWrapper({
+  className = "",
+  children,
+  isOpen,
+  setIsOpen,
+  useLIs = false,
+}) {
+  const wrapperRef = useRef(null);
+  const close = (event) => setIsOpen(false, event);
 
-  function hideDropdownMenuIfVisible() {
-    if (showDropdownMenu) {
-      setShowDropdownMenu(false);
-    }
+  const contextValue = {
+    close,
+    wrapperRef,
+    isOpen,
+  };
+
+  if (useLIs) {
+    return (
+      <li ref={wrapperRef} className={className}>
+        <DropdownMenuContext.Provider value={contextValue}>
+          {children}
+        </DropdownMenuContext.Provider>
+      </li>
+    );
   }
 
-  React.useEffect(() => {
-    if (props.forceClose) {
-      setShowDropdownMenu(false);
-    }
-  }, [props.forceClose]);
-
-  React.useEffect(() => {
-    let mounted = true;
-    document.addEventListener("keyup", (event: KeyboardEvent) => {
-      if (event.key === "Escape" && mounted) {
-        hideDropdownMenuIfVisible();
-      }
-    });
-    return () => {
-      mounted = false;
-    };
-  });
-
   return (
-    <div
-      className={`dropdown-container ${
-        props.componentClassName ? props.componentClassName : ""
-      }`}
-    >
-      <button
-        id={props.id}
-        type="button"
-        className="ghost dropdown-menu-label"
-        aria-haspopup="true"
-        aria-owns={props.ariaOwns}
-        aria-label={props.ariaLabel}
-        onClick={() => {
-          setShowDropdownMenu(!showDropdownMenu);
-        }}
-      >
-        {props.label}
-        {!props.hideArrow && (
-          <span className="dropdown-arrow-down" aria-hidden="true">
-            ▼
-          </span>
-        )}
-      </button>
-      <ul
-        id={props.ariaOwns}
-        className={`dropdown-menu-items ${props.right ? "right" : ""} ${
-          showDropdownMenu ? "show" : ""
-        }`}
-        role="menu"
-      >
-        {props.children}
-      </ul>
+    <div ref={wrapperRef} className={className}>
+      <DropdownMenuContext.Provider value={contextValue}>
+        {children}
+      </DropdownMenuContext.Provider>
     </div>
   );
+}
+
+export function DropdownMenu({
+  children,
+  onClose = () => {},
+}: {
+  children: ReactChildren | ReactChild;
+  onClose?: (event?: Event) => void;
+}) {
+  const { isOpen, wrapperRef, close } = useContext(DropdownMenuContext);
+
+  React.useEffect(() => {
+    const closeOnEsc = (event) => {
+      if (event.key === "Escape" && isOpen) {
+        close(event);
+        onClose(event);
+      }
+    };
+    document.addEventListener("keyup", closeOnEsc);
+
+    return () => {
+      document.removeEventListener("keyup", closeOnEsc);
+    };
+  }, [isOpen, close, onClose]);
+
+  useOnClickOutside(wrapperRef, (event) => {
+    if (isOpen) {
+      close(event);
+      onClose(event);
+    }
+  });
+  if (!isOpen) return null;
+
+  return <>{children}</>;
 }

@@ -141,7 +141,7 @@ app.post("/api/v1/settings", async (req, res) => {
 
 const mockBookmarksDatabase = new Map();
 
-app.post("/api/v1/plus/bookmarks/", async (req, res) => {
+app.post("/api/v1/plus/collection/", async (req, res) => {
   // Toggle
   const url = req.query.url;
   if (!url) {
@@ -176,7 +176,7 @@ app.post("/api/v1/plus/bookmarks/", async (req, res) => {
   res.status(201).json({ OK: true });
 });
 
-app.get("/api/v1/plus/bookmarks/", async (req, res) => {
+app.get("/api/v1/plus/collection/", async (req, res) => {
   if (!req.cookies.sessionid) {
     res.status(403).send("oh no you don't");
   } else {
@@ -252,5 +252,5 @@ app.get("/*", async (req, res) => {
     .sendFile(path.join(STATIC_ROOT, "en-us", "_spas", "404.html"));
 });
 
-const PORT = parseInt(process.env.SERVER_PORT || "5000");
+const PORT = parseInt(process.env.SERVER_PORT || "5042");
 app.listen(PORT, () => console.log(`Listening on port ${PORT}`));
