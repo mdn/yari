@@ -27,7 +27,7 @@
     height: fit-content;
 
     .document-toc-container {
-      width: max-content;
+      max-width: fit-content;
       margin-top: 2rem;
     }
     @media screen and (min-width: $screen-md) {
