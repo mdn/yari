@@ -37,13 +37,6 @@ export function FrequentlyViewedTab({ selectedTerms }) {
       shortText: "Article removed",
       buttonText: "UNDO",
       buttonHandler: async () => {
-        const restored: any = {
-          url: bookmarkData.url,
-          title: bookmarkData.title,
-          timestamp: new Date(bookmarkData.created).getTime(),
-          parents: bookmarkData.parents,
-          visitCount: bookmarkData.visitCount || 1,
-        };
         setFrequentlyViewed(original);
         setList(original);
         setToastData(null);

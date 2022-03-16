@@ -36,18 +36,17 @@ export function DataError({ error }: { error: Error }) {
 export function _getIconLabel(url) {
   let category = docCategory({ pathname: url });
 
-  if (category) {
-    category = category?.split("-")[1];
+  if (!category) {
+    return "docs";
+  }
+  category = category?.split("-")[1];
 
-    if (category === "javascript") {
-      return "js";
-    }
-
-    if (category === "accessibility") {
-      return "acc";
-    }
-    return category;
+  if (category === "javascript") {
+    return "js";
   }
 
-  return "docs";
+  if (category === "accessibility") {
+    return "acc";
+  }
+  return category;
 }

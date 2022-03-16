@@ -20,17 +20,12 @@ export function CollectionListItem({
   handleDelete: (item: BookmarkData) => Promise<void>;
 }) {
   const [show, setShow] = React.useState(false);
-  const [doomed, setDoomed] = React.useState(false);
 
-  let className = "icon-card";
-  if (doomed) {
-    className += " doomed";
-  }
   const iconClass = docCategory({ pathname: item.url })?.split("-")[1];
   const iconLabel = _getIconLabel(item.url);
 
   return (
-    <article key={item.id} className={className}>
+    <article key={item.id} className="icon-card">
       <div className="icon-card-title-wrap">
         <div className={`icon-card-icon ${iconClass || ""}`}>
           <span>{iconLabel}</span>
@@ -61,7 +56,7 @@ export function CollectionListItem({
           <Button
             type="action"
             icon="ellipses"
-            ariaControls="bookmark-dropdown"
+            ariaControls="collection-list-item-dropdown"
             ariaHasPopup={"menu"}
             ariaExpanded={show || undefined}
             onClickHandler={() => {
@@ -69,7 +64,7 @@ export function CollectionListItem({
             }}
           />
           <DropdownMenu>
-            <ul className="dropdown-list" id="bookmark-dropdown">
+            <ul className="dropdown-list" id="collection-item-dropdown">
               {showEditButton && (
                 <li className="dropdown-item">
                   <EditCollection item={item} onEditSubmit={onEditSubmit} />

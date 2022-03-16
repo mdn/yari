@@ -17,7 +17,6 @@ import { BookmarkData } from "./types";
 import { useUserData } from "../../user-context";
 import { TabVariant, TAB_INFO, useCurrentTab } from "../common/tabs";
 import { PlusTabs } from "../common/plus-tabs";
-import { Loading } from "../../ui/atoms/loading";
 
 dayjs.extend(relativeTime);
 
@@ -32,7 +31,9 @@ export default function Collections() {
 function CollectionsLayout() {
   const locale = useLocale();
   const userData = useUserData();
+
   const isAuthed = userData?.isAuthenticated;
+  const showTabs = userData && userData.isAuthenticated;
 
   const {
     selectedTerms,
@@ -65,18 +66,19 @@ function CollectionsLayout() {
         </Container>
         <Tabs tabs={tabsForRoute} />
       </header>
-      <Container>
-        <>
-          <PlusTabs
-            selectedTerms={selectedTerms}
-            selectedFilter={selectedFilter}
-            selectedSort={selectedSort}
-            currentTab={currentTab}
-          />
-        </>
-        {!userData && <Loading message="Waiting for authentication" />}
-        {!userData && !isAuthed && <NotSignedIn />}
-      </Container>
+      {showTabs && (
+        <Container>
+          <>
+            <PlusTabs
+              selectedTerms={selectedTerms}
+              selectedFilter={selectedFilter}
+              selectedSort={selectedSort}
+              currentTab={currentTab}
+            />
+          </>
+        </Container>
+      )}
+      {!userData && !isAuthed && <NotSignedIn />}
     </>
   );
 }

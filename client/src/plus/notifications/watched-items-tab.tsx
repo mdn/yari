@@ -1,4 +1,6 @@
 import { useState, useRef, useEffect } from "react";
+import { Loading } from "../../ui/atoms/loading";
+import { DataError } from "../common";
 import { useWatchedItemsApiEndpoint, unwatchItemsByUrls } from "../common/api";
 import { showMoreButton } from "../common/plus-tabs";
 import WatchedCardListItem from "../icon-card";
@@ -104,6 +106,9 @@ export function WatchedTab({ selectedTerms, selectedFilter, selectedSort }) {
         onUnwatchSelected={unwatchMany}
         watchedTab={true}
       />
+
+      {isLoading && <Loading message="Fetching your collection..." />}
+      {error && <DataError error={error} />}
       <ul className="notification-list">
         <div className="icon-card-list">
           {list.map((item) => (

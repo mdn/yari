@@ -144,7 +144,6 @@ async function buildSPAs(options) {
   for (const page of fs.readdirSync(featuresDir)) {
     const locale = "en-US";
     const feature = page.split(".")[0];
-    console.log(page);
     const markdown = fs.readFileSync(path.join(featuresDir, page), "utf8");
 
     const frontMatter = frontmatter(markdown);
@@ -163,7 +162,6 @@ async function buildSPAs(options) {
       hyData,
       pageTitle: `${frontMatter.attributes.title || ""} | MDN Plus`,
     };
-    console.log(url);
     const html = renderHTML(url, context);
     const outPath = path.join(
       BUILD_OUT_ROOT,

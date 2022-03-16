@@ -2,6 +2,7 @@ import { useState, useRef, useEffect } from "react";
 import { BookmarkData } from ".";
 import { useUIStatus } from "../../ui-context";
 import { Loading } from "../../ui/atoms/loading";
+import { DataError } from "../common";
 import {
   useCollectionsApiEndpoint,
   updateCollectionItem,
@@ -58,13 +59,22 @@ export function CollectionsTab({
     let formData;
     const form = e.target as HTMLFormElement;
     formData = new FormData(form);
-    console.log(item);
     await updateCollectionItem(
       item,
       new URLSearchParams([...(formData as any)]),
       data.csrfmiddlewaretoken
     );
+
+    const newList = list.map((v) => {
+      if (v.id === item.id) {
+        v.title = formData.get("name") ?? v.title;
+        v.notes = formData.get("notes") ?? v.notes;
+      }
+      return v;
+    });
+    setList(newList);
   };
+
   const deleteCollectionItem = async (item) => {
     await updateDeleteCollectionItem(item, data.csrfmiddlewaretoken, true);
     const previous = [...list];
@@ -86,6 +96,7 @@ export function CollectionsTab({
     <>
       <SearchFilter filters={[]} sorts={SORTS} />
       {isLoading && <Loading message="Fetching your collection..." />}
+      {error && <DataError error={error} />}
       <ul className="notification-list">
         <div className="icon-card-list">
           {list.map((item) => (
@@ -93,7 +104,7 @@ export function CollectionsTab({
               item={item}
               onEditSubmit={collectionsSaveHandler}
               key={item.id}
-              showEditButton={false}
+              showEditButton={true}
               handleDelete={deleteCollectionItem}
             />
           ))}

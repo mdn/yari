@@ -63,7 +63,7 @@ export function useNotificationsApiEndpoint(
   const [data, setData] = useState<any>({});
   const [error, setError] = useState<Error | null>();
   const [isLoading, setIsLoading] = useState(true);
-  const [hasMore, setHasMore] = useState(true);
+  const [hasMore, setHasMore] = useState(false);
 
   useEffect(() => {
     (async () => {
@@ -84,7 +84,7 @@ export function useNotificationsApiEndpoint(
       if (!response.ok) {
         setError(
           new Error(
-            `${response.status} - There was a problem fetching your data. Please try again later`
+            `${response.status} - There was a problem fetching your Notifications. Please try again later`
           )
         );
         setIsLoading(false);
@@ -101,7 +101,7 @@ export function useNotificationsApiEndpoint(
         setError(null);
       }
     })();
-  }, [offset, searchTerms, selectedFilter, selectedSort]);
+  }, [offset, searchTerms, selectedFilter, selectedSort, starred]);
   return { data, error, isLoading, hasMore };
 }
 
@@ -114,7 +114,7 @@ export function useWatchedItemsApiEndpoint(
   const [data, setData] = useState<any>({});
   const [error, setError] = useState<Error | null>();
   const [isLoading, setIsLoading] = useState(true);
-  const [hasMore, setHasMore] = useState(true);
+  const [hasMore, setHasMore] = useState(false);
 
   useEffect(() => {
     (async () => {
@@ -131,7 +131,7 @@ export function useWatchedItemsApiEndpoint(
       if (!response.ok) {
         setError(
           new Error(
-            `${response.status} - There was a problem fetching your data. Please try again later`
+            `${response.status} - There was a problem fetching your watched items. Please try again later`
           )
         );
         setIsLoading(false);
@@ -210,7 +210,7 @@ export function useCollectionsApiEndpoint(
       if (!response.ok) {
         setError(
           new Error(
-            `${response.status} - There was a problem fetching your data. Please try again later`
+            `${response.status} - There was a problem fetching your Collection. Please try again later`
           )
         );
         setIsLoading(false);
@@ -236,7 +236,6 @@ export function useCollectionsApiEndpoint(
 export function useFrequentlyViewedData(searchTerms: string) {
   let [entries, setFrequentlyViewed] = useFrequentlyViewed();
   const [data, setData] = useState(entries);
-  console.log(entries);
   useEffect(() => {
     if (searchTerms) {
       setData(entries.filter((val) => val.title.includes(searchTerms)));

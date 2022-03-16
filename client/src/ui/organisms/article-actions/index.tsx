@@ -63,11 +63,9 @@ export const ArticleActions = ({
                   <BookmarkContainer doc={doc} />
                 </li>
               )}
-              {isAuthenticated && (
-                <li className="article-actions-entry">
-                  <ThemeSwitcher />
-                </li>
-              )}
+              <li className="article-actions-entry">
+                <ThemeSwitcher />
+              </li>
               {!MDN_APP && translations && !!translations.length && (
                 <li className="article-actions-entry">
                   <LanguageMenu
