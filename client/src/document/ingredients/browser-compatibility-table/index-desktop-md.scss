@@ -1,0 +1,11 @@
+@media screen and (min-width: $screen-md) {
+  .table-scroll {
+    width: calc(100% + 6rem);
+  }
+
+  .bc-table {
+    tbody th {
+      width: 20%;
+    }
+  }
+}

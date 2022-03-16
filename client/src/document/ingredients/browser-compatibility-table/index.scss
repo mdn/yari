@@ -1,6 +1,8 @@
 @use "~@mdn/minimalist/sass/mixins/utils" as *;
 @use "../../../ui/vars" as *;
 
+// Style for mobile *and* desktop.
+
 .bc-table {
   width: 100%;
   margin: 1rem 0;
@@ -82,12 +84,6 @@
   th {
     vertical-align: bottom;
     background: var(--background-tertiary);
-  }
-
-  tbody th {
-    @media screen and (min-width: $screen-md) {
-      width: 20%;
-    }
   }
 
   .bc-supports {
@@ -311,123 +307,6 @@ dl.bc-notes-list {
   }
 }
 
-@media screen and (min-width: $screen-sm) {
-  .bc-table {
-    thead {
-      display: table-header-group;
-
-      .bc-platforms {
-        th {
-          vertical-align: revert;
-        }
-      }
-    }
-
-    tbody td,
-    tbody th {
-      display: table-cell;
-    }
-
-    td,
-    th {
-      background: inherit;
-      padding: 0.25rem;
-      width: 2rem;
-    }
-
-    td.bc-support {
-      padding: 0;
-
-      > button {
-        padding: 0.25rem;
-      }
-    }
-
-    tr.bc-history-desktop {
-      display: table-row;
-    }
-  }
-
-  .table-scroll {
-    overflow: auto;
-    width: 100vw;
-    margin: 0 -3rem;
-  }
-
-  .table-scroll-inner {
-    padding: 0 3rem;
-    position: relative;
-    min-width: max-content;
-
-    &:after {
-      position: absolute;
-      width: 10px;
-      height: 10px;
-      bottom: 0;
-      right: 0;
-      content: "";
-    }
-  }
-
-  .bc-support-level,
-  .bc-browser-name {
-    display: none;
-  }
-
-  .bc-notes-list {
-    margin-left: 20%;
-    width: auto;
-  }
-
-  .bc-support {
-    .bc-support-level {
-      display: none;
-    }
-
-    &[aria-expanded="true"] {
-      position: relative;
-
-      &:after {
-        position: absolute;
-        left: 0;
-        bottom: -1px;
-        height: 2px;
-        width: 100%;
-        background: var(--text-primary);
-        content: "";
-      }
-
-      .bc-history-mobile {
-        display: none;
-      }
-    }
-  }
-
-  .bc-has-history {
-    cursor: pointer;
-
-    &:hover {
-      background: var(--background-secondary);
-    }
-  }
-}
-@media screen and (min-width: $screen-md) {
-  .table-scroll {
-    width: calc(100% + 6rem);
-  }
-}
-
-@media screen and (min-width: $screen-lg) {
-  .table-scroll {
-    width: 100%;
-    margin: 0;
-  }
-
-  .table-scroll-inner {
-    padding: 0;
-  }
-}
-
 .bc-github-link {
   font: var(--type-body-m);
 }
@@ -445,3 +324,8 @@ dl.bc-notes-list {
     margin: 0;
   }
 }
+
+@import "./index-mobile";
+@import "./index-desktop";
+@import "./index-desktop-md";
+@import "./index-desktop-lg";
