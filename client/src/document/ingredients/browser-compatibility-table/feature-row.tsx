@@ -1,7 +1,13 @@
 import React, { useContext } from "react";
 import type bcd from "@mdn/browser-compat-data/types";
 import { BrowserInfoContext } from "./browser-info";
-import { asList, getFirst, isTruthy, versionIsPreview } from "./utils";
+import {
+  asList,
+  getFirst,
+  hasNoteworthyNotes,
+  isTruthy,
+  versionIsPreview,
+} from "./utils";
 
 // Yari builder will attach extra keys from the compat data
 // it gets from @mdn/browser-compat-data. These are "Yari'esque"
@@ -261,9 +267,7 @@ function CellIcons({ support }: { support: bcd.SupportStatement | undefined }) {
   return (
     <div className="bc-icons">
       {supportItem.prefix && <Icon name="prefix" />}
-      {supportItem.notes?.length &&
-        !supportItem.version_removed &&
-        !supportItem.partial_implementation && <Icon name="footnote" />}
+      {hasNoteworthyNotes(supportItem) && <Icon name="footnote" />}
       {supportItem.alternative_name && <Icon name="altname" />}
       {supportItem.flags && <Icon name="disabled" />}
     </div>

@@ -1,7 +1,13 @@
 import { useContext } from "react";
 import type bcd from "@mdn/browser-compat-data/types";
 import { BrowserInfoContext } from "./browser-info";
-import { asList, getFirst, listFeatures, versionIsPreview } from "./utils";
+import {
+  asList,
+  getFirst,
+  hasNoteworthyNotes,
+  listFeatures,
+  versionIsPreview,
+} from "./utils";
 
 // Also specifies the order in which the legend appears
 const LEGEND_LABELS = {
@@ -50,11 +56,7 @@ function getActiveLegendItems(
         continue;
       }
       const firstSupportItem = getFirst(browserSupport);
-      if (
-        firstSupportItem.notes &&
-        !firstSupportItem.partial_implementation &&
-        !firstSupportItem.version_removed
-      ) {
+      if (hasNoteworthyNotes(firstSupportItem)) {
         legendItems.add("footnote");
       }
 
