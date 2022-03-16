@@ -48,3 +48,7 @@ if (container.firstElementChild) {
 // unregister() to register() below. Note this comes with some pitfalls.
 // Learn more about service workers: https://bit.ly/CRA-PWA
 // serviceWorker.unregister();
+
+if (navigator.serviceWorker.controller && !window.mdnWorker) {
+  import("./offline-settings/mdn-worker");
+}

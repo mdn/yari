@@ -5,12 +5,16 @@ import { cacheName, contentCache, openCache } from "./caches";
 import { respond } from "./fetcher";
 import { unpackAndCache } from "./unpack-cache";
 import { offlineDb } from "./db";
+import { fetchWithExampleOverride } from "./fetcher";
+
 export const INTERACTIVE_EXAMPLES_URL = new URL(
   "https://interactive-examples.mdn.mozilla.net"
 );
 export const LIVE_SAMPLES_URL = new URL(
   "https://yari-demos.prod.mdn.mozit.cloud"
 );
+export const USER_CONTENT_URL = new URL("https://mozillausercontent.com");
+
 const UPDATES_BASE_URL = "https://updates.developer.allizom.org";
 
 // export empty type because of tsc --isolatedModules flag
@@ -26,7 +30,7 @@ self.addEventListener("install", (e) => {
       const { files = {} } =
         (await (await fetch("/asset-manifest.json")).json()) || {};
       const assets = [...Object.values(files)];
-      await cache.addAll(assets);
+      await cache.addAll(assets as string[]);
     })()
   );
 });
@@ -37,12 +41,11 @@ self.addEventListener("fetch", (e) => {
   if (preferOnline && !e.request.url.includes("/api/v1/")) {
     e.respondWith(
       (async () => {
-        const res = await fetch(e.request);
+        const res = await fetchWithExampleOverride(e.request);
         if (res.ok) {
           return res;
-        } else {
-          return respond(e);
         }
+        return respond(e);
       })()
     );
   } else {
@@ -78,7 +81,7 @@ self.addEventListener("activate", (e: ExtendableEvent) => {
       return caches.keys().then((keyList) => {
         return Promise.all(
           keyList.map((key) => {
-            if (key === cacheName || key == contentCache) {
+            if (key === cacheName || key === contentCache) {
               return Promise.resolve(true);
             }
             return caches.delete(key);

@@ -284,7 +284,9 @@ declare global {
   }
 }
 
-window.mdnWorker = new MDNWorker();
+if (!window.mdnWorker) {
+  window.mdnWorker = new MDNWorker();
+}
 
 function registerMessageHandler() {
   navigator.serviceWorker.addEventListener(

@@ -59,9 +59,6 @@ export async function unpackAndCache(data, progress = async (number) => {}) {
 }
 
 function getLocation(filename) {
-  if (filename.startsWith("examples/")) {
-    return filename.replace("examples/", INTERACTIVE_EXAMPLES_URL.href);
-  }
   return `${self.location.origin}/${filename}`;
 }
 
