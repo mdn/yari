@@ -4,7 +4,7 @@ import { BrowserInfoContext } from "./browser-info";
 import { asList, listFeatures, versionIsPreview } from "./utils";
 
 // Also specifies the order in which the legend appears
-const LEGEND_LABELS = {
+export const LEGEND_LABELS = {
   yes: "Full support",
   partial: "Partial support",
   preview: "In development. Supported in a pre-release version.",
