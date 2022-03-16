@@ -166,26 +166,6 @@ export function BookmarkMenu({
                 {bookmarked ? "Edit Collection" : "Add Collection"}
               </h2>
 
-              <div className="watch-submenu-mobile-buttons">
-                {doc && data?.bookmarked ? (
-                  <Button
-                    type="action"
-                    buttonType="submit"
-                    name="delete"
-                    value="true"
-                    icon="trash"
-                    isDisabled={isValidating}
-                  />
-                ) : null}
-                <Button
-                  buttonType="submit"
-                  type="action"
-                  icon="checkmark"
-                  isDisabled={isValidating}
-                  name="save"
-                />
-              </div>
-
               <div className="watch-submenu-item pad-y">
                 <label htmlFor="bookmark-name">Name:</label>
                 <input
