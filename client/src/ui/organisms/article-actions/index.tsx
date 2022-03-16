@@ -52,30 +52,28 @@ export const ArticleActions = ({
             </span>
           </Button>
           <ul className="article-actions-entries">
-            <>
-              {isAuthenticated && (
+            {isAuthenticated && (
+              <>
                 <li className="article-actions-entry">
                   <NotificationsWatchMenu doc={doc} />
                 </li>
-              )}
-              {isAuthenticated && (
                 <li className="article-actions-entry">
                   <BookmarkContainer doc={doc} />
                 </li>
-              )}
-              <li className="article-actions-entry">
-                <ThemeSwitcher />
-              </li>
-              {!MDN_APP && translations && !!translations.length && (
                 <li className="article-actions-entry">
-                  <LanguageMenu
-                    onClose={toggleArticleActionsMenu}
-                    translations={translations}
-                    native={native}
-                  />
+                  <ThemeSwitcher />
                 </li>
-              )}
-            </>
+              </>
+            )}
+            {!MDN_APP && translations && !!translations.length && (
+              <li className="article-actions-entry">
+                <LanguageMenu
+                  onClose={toggleArticleActionsMenu}
+                  translations={translations}
+                  native={native}
+                />
+              </li>
+            )}
           </ul>
         </div>
       </>
