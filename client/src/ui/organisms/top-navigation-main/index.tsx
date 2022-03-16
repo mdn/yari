@@ -11,10 +11,11 @@ import { useUserData } from "../../../user-context";
 
 import "./index.scss";
 import { ENABLE_PLUS } from "../../../constants";
+import { isPlusAvailable } from "../../../utils";
 
 export const TopNavigationMain = ({ isOpenOnMobile }) => {
   const userData = useUserData();
-  const isAuthenticated = userData && userData.isAuthenticated;
+  const plusAvailable = isPlusAvailable(userData);
   const [showSearch, setShowSearch] = React.useState(false);
   const [hasOpened, setHasOpened] = React.useState<boolean | undefined>(false);
 
@@ -47,12 +48,12 @@ export const TopNavigationMain = ({ isOpenOnMobile }) => {
         <span className="visually-hidden">Show search</span>
       </Button>
 
-      {ENABLE_PLUS &&
-        ((isAuthenticated && (
-          <>
-            <UserMenu />
-          </>
-        )) || <AuthContainer />)}
+      {(ENABLE_PLUS && userData && userData.isAuthenticated && (
+        <>
+          <UserMenu />
+        </>
+      )) ||
+        (plusAvailable && <AuthContainer />) || <></>}
     </div>
   );
 };
