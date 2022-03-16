@@ -6,9 +6,13 @@ const { definitionSyntax } = require('css-tree');
 
 const slug = env.slug;
 const locale = env.locale;
-const name = $0 || slug.split('/').pop().toLowerCase();
+const bcdQuery = env['browser-compat'];
 
 const valueDefinitionUrl = `/${locale}/docs/Web/CSS/Value_definition_syntax`;
+
+// get the contents of webref
+const parsedFiles = await webRefData.listAll();
+const allData = Object.values(parsedFiles);
 
 // returns an array of one or more spec URLs, based on the browser-compat front matter key
 function getSpecURLs() {
@@ -23,7 +27,6 @@ function getSpecURLs() {
   }
 
   // look for the browser-compat front matter key
-  const bcdQuery = $0 || env['browser-compat'];
   if (!bcdQuery) {
     throw new Error("No 'browser-compat' front-matter value found");
   }
@@ -44,28 +47,27 @@ function getSpecURLs() {
   return specURLs;
 }
 
-async function getSpecData(specURLs) {
-  const parsedFiles = await webRefData.listAll();
-  const allData = Object.values(parsedFiles);
-
-  const specs = [];
-  for (const data of allData) {
-    if (specURLs.includes(data.spec.url) && data.properties[name]) {
-      specs.push({
-        properties: data.properties,
-        values: data.valuespaces
-      });
+function getPropertySyntax(specs, property, webrefData) {
+  // return the first property syntax we find in the given specs
+  for (const data of webrefData) {
+    if (specs.includes(data.spec.url) && data.properties[property]) {
+      return data.properties[property].value;
     }
   }
-
-  return specs;
 }
 
+// get the spec URLs from BCD, to help us find the spec in webref
 const specURLs = getSpecURLs();
-const specs = await getSpecData(specURLs);
 
-const properties = specs[0].properties;
-const valuespaces = specs[0].values;
+// get the property name from URL
+const propertyName = $0 || slug.split('/').pop().toLowerCase();
+
+// get the property syntax and valuespaces deom webref
+const propertySyntax = getPropertySyntax(specURLs, propertyName, allData);
+let valuespaces = {};
+for (const spec of allData) {
+  valuespaces = {...valuespaces, ...spec.valuespaces};
+}
 
 /**
  * Used for building links and tooltips for parts of the value definition syntax
@@ -256,11 +258,11 @@ function getTypesForSyntaxes(syntaxes, constituents) {
  * Given an item (such as a CSS property), fetch all the types that participate
  * in its formal syntax definition, either directly or transitively.
  */
-function getConstituentTypes(item) {
+function getConstituentTypes() {
   const allConstituents = [];
   let oldConstituentsLength = allConstituents.length;
   // get all the types in the top-level syntax
-  let constituentSyntaxes = [properties[item].value];
+  let constituentSyntaxes = [propertySyntax];
   getTypesForSyntaxes(constituentSyntaxes, allConstituents);
 
   // while an iteration added more types...
@@ -283,14 +285,15 @@ function getConstituentTypes(item) {
   return allConstituents;
 }
 
-function writeFormalSyntax(item) {
+function writeFormalSyntax() {
   let output = '';
   output += '<pre>';
   // write the syntax for the property
-  output += renderSyntax(item, properties[item].value);
+  output += renderSyntax(propertyName, propertySyntax);
   output += '<br/>';
   // collect all the constituent types for the property
-  const types = getConstituentTypes(item);
+  const types = getConstituentTypes();
+
   // and write each one out
   for (const type of types) {
     if (valuespaces[`<${type}>`] && valuespaces[`<${type}>`].value) {
@@ -303,6 +306,6 @@ function writeFormalSyntax(item) {
   return output;
 }
 
-let output = writeFormalSyntax(name);
+const output = writeFormalSyntax();
 %>
 <%-output%>
