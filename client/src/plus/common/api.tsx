@@ -236,7 +236,6 @@ export function useCollectionsApiEndpoint(
 export function useFrequentlyViewedData(searchTerms: string) {
   let [entries, setFrequentlyViewed] = useFrequentlyViewed();
   const [data, setData] = useState(entries);
-  console.log(entries);
   useEffect(() => {
     if (searchTerms) {
       setData(entries.filter((val) => val.title.includes(searchTerms)));

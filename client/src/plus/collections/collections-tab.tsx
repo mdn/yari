@@ -59,7 +59,6 @@ export function CollectionsTab({
     let formData;
     const form = e.target as HTMLFormElement;
     formData = new FormData(form);
-    console.log(item);
     await updateCollectionItem(
       item,
       new URLSearchParams([...(formData as any)]),
