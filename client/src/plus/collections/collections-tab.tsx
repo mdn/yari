@@ -64,7 +64,17 @@ export function CollectionsTab({
       new URLSearchParams([...(formData as any)]),
       data.csrfmiddlewaretoken
     );
+
+    const newList = list.map((v) => {
+      if (v.id === item.id) {
+        v.title = formData.get("name") ?? v.title;
+        v.notes = formData.get("notes") ?? v.notes;
+      }
+      return v;
+    });
+    setList(newList);
   };
+
   const deleteCollectionItem = async (item) => {
     await updateDeleteCollectionItem(item, data.csrfmiddlewaretoken, true);
     const previous = [...list];
