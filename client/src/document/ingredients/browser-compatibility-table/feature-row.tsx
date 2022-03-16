@@ -457,7 +457,7 @@ function CompatCell({
   return (
     <>
       <td
-        className={`bc-cell bc-browser-${browserId} bc-supports-${supportClassName} ${
+        className={`bc-support bc-browser-${browserId} bc-supports-${supportClassName} ${
           notes ? "bc-has-history" : ""
         }`}
         aria-expanded={showNotes ? "true" : "false"}

@@ -104,7 +104,7 @@
       @include visually-hidden;
     }
   }
-  .bc-cell {
+  .bc-support {
     > .icon-wrap {
       display: block;
     }
@@ -123,7 +123,7 @@
   white-space: nowrap;
 }
 
-.bc-cell {
+.bc-support {
   text-align: center;
   vertical-align: middle;
 }
@@ -376,7 +376,7 @@ dl.bc-notes-list {
     width: auto;
   }
 
-  .bc-cell {
+  .bc-support {
     .bc-support-level {
       display: none;
     }
