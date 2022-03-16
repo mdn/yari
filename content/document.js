@@ -580,6 +580,7 @@ function remove(
 ) {
   const root = getRoot(locale);
   const url = buildURL(locale, slug);
+  const redirectUrl = redirect && buildURL(locale, redirect);
 
   const roots = [CONTENT_ROOT];
   if (CONTENT_TRANSLATED_ROOT) {
@@ -597,8 +598,8 @@ function remove(
   const docs = [slug, ...children.map(({ metadata }) => metadata.slug)];
 
   if (dry) {
-    if (redirect) {
-      Redirect.add(locale, [[url, redirect]], { dry });
+    if (redirectUrl) {
+      Redirect.add(locale, [[url, buildURL(locale, redirectUrl)]], { dry });
     }
     return docs;
   }
@@ -612,10 +613,10 @@ function remove(
 
   execGit(["rm", "-r", path.dirname(fileInfo.path)], { cwd: root });
 
-  if (redirect) {
+  if (redirectUrl) {
     Redirect.add(locale, [
-      [url, redirect],
-      ...children.map(({ url: childUrl }) => [childUrl, redirect]),
+      [url, redirectUrl],
+      ...children.map(({ url: childUrl }) => [childUrl, redirectUrl]),
     ]);
   } else {
     Redirect.remove(locale, [url, ...removed]);
