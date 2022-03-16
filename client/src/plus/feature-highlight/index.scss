@@ -1,112 +1,68 @@
 @use "../../ui/vars" as *;
 
 .feature-highlight {
-  background-color: white;
   width: 100%;
-  min-height: 25rem;
+  padding: 2rem 1rem;
 
   p {
     /* MDN/Plus/Type/Body/M */
     line-height: 1.75;
   }
 
-  .wrapper {
+  display: grid;
+  grid-template-columns: 1fr;
+  @media screen and (min-width: $screen-md) {
+    grid-template-columns: 15rem 1fr;
+  }
+  @media screen and (min-width: $screen-lg) {
+    grid-template-columns: 15rem 1fr 15rem;
+  }
+  gap: 2rem;
+
+  .ft-sidebar {
+    position: sticky;
+    top: 2rem;
     width: 100%;
-    display: flex;
-    flex-direction: row;
-    height: 100%;
-    padding: 4rem 1rem;
-    max-width: 52rem;
-    margin: 0 auto;
+    max-width: 15rem;
+    height: fit-content;
 
-    .ft-sidebar {
-      width: 100%;
-      max-width: 13rem;
-      display: none;
+    .document-toc-container {
+      max-width: fit-content;
+      margin-top: 2rem;
+    }
+    @media screen and (min-width: $screen-md) {
+    }
+  }
 
-      @media screen and (min-width: $screen-md) {
-        display: block;
-      }
+  .ft-content {
+    h1 {
+      /* MDN/Plus/Type/Overline/S */
+      font: 700 12px/120% Inter;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--plus-accent-color);
+    }
 
-      a {
-        background: $mdn-color-dark-grey-90;
-        padding: 0.25rem 0.5rem;
-        color: white;
-        width: fit-content;
-        position: relative;
-        z-index: 1;
-        transition: all 0.3s ease;
-        font-weight: 620;
-        display: flex;
-
-        &:after {
-          position: absolute;
-          content: "";
-          width: 0;
-          height: 100%;
-          top: 0;
-          left: 0;
-          z-index: -1;
-          background: var(--plus-accent-engage);
-          transition: all 0.3s ease;
-        }
-
-        &:hover {
-          color: $mdn-color-dark-grey-90;
-        }
-
-        &:hover:after {
-          left: auto;
-          right: 0;
-          width: 100%;
-        }
+    h1 + blockquote {
+      border: revert;
+      padding: revert;
+      margin: 1rem 0 2rem;
+      border: 1px solid var(--background-tertiary);
+      background-color: var(--text-primary);
+      border-radius: var(--elem-radius);
+      color: var(--background-primary);
+      padding: 1rem;
+      p:first-child {
+        font: var(--type-heading-h1);
+        margin-bottom: 2rem;
       }
     }
 
-    .ft-content {
-      display: flex;
-      gap: 4rem;
-      flex-direction: column;
-
-      .ft-title {
-        gap: 1rem;
-        display: flex;
-        flex-direction: column;
-
-        .ft-name {
-          /* MDN/Plus/Type/Overline/S */
-          font: 700 12px/120% Inter;
-          letter-spacing: 1.5px;
-          text-transform: uppercase;
-          color: var(--plus-accent-color);
-        }
-
-        .ft-headline {
-          /* MDN/Plus/Type/Title */
-          font: 700 48px/120% Inter;
-          letter-spacing: -0.5px;
-        }
-      }
-    }
-
-    .ft-article {
-      h1 {
-        /* MDN/Plus/Type/Heading/1 */
-        font-style: normal;
-        font-weight: 600;
-        font-size: 36px;
-        line-height: 120%;
-        padding-bottom: 1rem;
-      }
-
-      h2 {
-        /* MDN/Plus/Type/Heading/2 */
-
-        font-style: normal;
-        font-weight: 600;
-        font-size: 24px;
-        padding: 4rem 0 1rem;
-      }
+    ol,
+    ul {
+      list-style: revert;
+      padding: revert;
+      margin: revert;
     }
   }
 }

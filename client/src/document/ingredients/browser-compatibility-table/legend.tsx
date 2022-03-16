@@ -10,15 +10,15 @@ import {
 } from "./utils";
 
 // Also specifies the order in which the legend appears
-const LEGEND_LABELS = {
+export const LEGEND_LABELS = {
   yes: "Full support",
   partial: "Partial support",
   preview: "In development. Supported in a pre-release version.",
   no: "No support",
   unknown: "Compatibility unknown",
   experimental: "Experimental. Expect behavior to change in the future.",
-  "note-warning": "Non-standard. Check cross-browser support before using.",
-  "thumbs-down": "Deprecated. Not for use in new websites.",
+  nonstandard: "Non-standard. Check cross-browser support before using.",
+  deprecated: "Deprecated. Not for use in new websites.",
   footnote: "See implementation notes.",
   disabled: "User must explicitly enable this feature.",
   altname: "Uses a non-standard name.",
@@ -41,10 +41,10 @@ function getActiveLegendItems(
         legendItems.add("experimental");
       }
       if (status.deprecated) {
-        legendItems.add("thumbs-down");
+        legendItems.add("deprecated");
       }
       if (!status.standard_track) {
-        legendItems.add("note-warning");
+        legendItems.add("nonstandard");
       }
     }
 

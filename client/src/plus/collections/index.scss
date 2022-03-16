@@ -5,9 +5,20 @@
   margin-bottom: 1rem;
 }
 
-.bookmarks {
+.collection {
   padding: 0 0 3rem 0;
   position: relative;
+  &-created {
+    color: var(--text-secondary);
+    font: var(--type-body-s);
+    text-align: center;
+    align-self: center;
+    min-width: max-content;
+    display: none;
+    @media screen and (min-width: $screen-md) {
+      display: inherit;
+    }
+  }
 }
 
 .doomed {

@@ -36,20 +36,17 @@ export type OfferDetailsProps = {
 };
 
 const PLUS_FEATURES = [
-  ["bookmarking", "Bookmarking"],
-  ["notifications", "Notifications"],
-  ["offline", "MDN Offline"],
-  ["themes", "Access to all themes"],
+  ["notifications", "Page notifications"],
+  ["collections", "Collections of articles"],
+  ["offline", "MDN offline"],
 ];
 
 const CORE: OfferDetailsProps = {
   id: "core",
   name: "Core",
   features: [
-    ["bookmarking", "5 Collections"],
-    ["notifications", "3 Notifications"],
-    ["offline", "Access to MDN Apps"],
-    ["themes", "Dark mode"],
+    ["notifications", "Notifications for up to 3 pages"],
+    ["collections", "Up to 5 saved articles"],
   ],
   includes: "Includes:",
   cta: "Start with Core",
@@ -86,7 +83,11 @@ const PLUS_10: OfferDetailsProps = {
   id: "plus10",
   name: "MDN Plus 10",
   currency: "USD",
-  features: [...PLUS_FEATURES, [null, "A good feeling"]],
+  features: [
+    ...PLUS_FEATURES,
+    [null, "Early access to new features"],
+    [null, "Pride and joy"],
+  ],
   includes: "Includes unlimited access to:",
   cta: "Start with Supporter 10",
   regular: {
@@ -123,8 +124,8 @@ function OfferDetails({
     }).format(monthlyPrice / 100);
   return (
     <section className="subscribe-detail" id={offerDetails.id}>
+      <h3>{offerDetails.name}</h3>
       <p className="sub-info">
-        <h3>{offerDetails.name}</h3>
         {(displayMonthlyPrice && (
           <p className="price">
             <span className="sub-price">{displayMonthlyPrice}</span>
@@ -177,25 +178,27 @@ function OfferOverviewSubscribe() {
   let [period, setPeriod] = useState(initialPeriod);
 
   return (
-    <div className="subscribe" id="subscribe">
-      <h2>Choose a plan</h2>
-      <Switch
-        name="period"
-        checked={period === Period.Year || false}
-        toggle={(e) => {
-          const period = e.target.checked ? Period.Year : Period.Month;
-          !isServer &&
-            localStorage.setItem(BILLING_PERIOD, JSON.stringify(period));
-          setPeriod(period);
-        }}
-      >
-        Save 20%
-      </Switch>
-      <div className="wrapper">
-        <OfferDetails offerDetails={CORE} period={period}></OfferDetails>
-        <OfferDetails offerDetails={PLUS_5} period={period}></OfferDetails>
-        <OfferDetails offerDetails={PLUS_10} period={period}></OfferDetails>
-      </div>
+    <div className="dark subscribe-wrapper">
+      <section className="container subscribe" id="subscribe">
+        <h2>Choose a plan</h2>
+        <Switch
+          name="period"
+          checked={period === Period.Year || false}
+          toggle={(e) => {
+            const period = e.target.checked ? Period.Year : Period.Month;
+            !isServer &&
+              localStorage.setItem(BILLING_PERIOD, JSON.stringify(period));
+            setPeriod(period);
+          }}
+        >
+          Pay yearly and get 2 month for free
+        </Switch>
+        <div className="wrapper">
+          <OfferDetails offerDetails={CORE} period={period}></OfferDetails>
+          <OfferDetails offerDetails={PLUS_5} period={period}></OfferDetails>
+          <OfferDetails offerDetails={PLUS_10} period={period}></OfferDetails>
+        </div>
+      </section>
     </div>
   );
 }

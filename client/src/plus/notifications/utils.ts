@@ -4,7 +4,7 @@ import { HEADER_NOTIFICATIONS_MENU_API_URL } from "../../constants";
 import {
   markNotificationsAsRead,
   NOTIFICATIONS_MARK_ALL_AS_READ_PATH,
-} from "./api";
+} from "../common/api";
 
 export async function post(url: string, csrfToken: string, data?: object) {
   const fetchData: { method: string; headers: HeadersInit; body?: string } = {

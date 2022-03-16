@@ -8,6 +8,7 @@ import {
   isTruthy,
   versionIsPreview,
 } from "./utils";
+import { LEGEND_LABELS } from "./legend";
 
 // Yari builder will attach extra keys from the compat data
 // it gets from @mdn/browser-compat-data. These are "Yari'esque"
@@ -77,17 +78,17 @@ function StatusIcons({ status }: { status: bcd.StatusBlock }) {
     status.experimental && {
       title: "Experimental. Expect behavior to change in the future.",
       text: "Experimental",
-      iconClassName: "icon-preview",
+      iconClassName: "icon-experimental",
     },
     status.deprecated && {
       title: "Deprecated. Not for use in new websites.",
       text: "Deprecated",
-      iconClassName: "icon-thumbs-down",
+      iconClassName: "icon-deprecated",
     },
     !status.standard_track && {
       title: "Non-standard. Expect poor cross-browser support.",
       text: "Non-standard",
-      iconClassName: "icon-note-warning",
+      iconClassName: "icon-nonstandard",
     },
   ].filter(isTruthy);
   return icons.length === 0 ? null : (
@@ -133,8 +134,8 @@ const CellText = React.memo(
   }) => {
     const currentSupport = getFirst(support);
 
-    const added = currentSupport && currentSupport.version_added;
-    const removed = currentSupport && currentSupport.version_removed;
+    const added = currentSupport?.version_added ?? null;
+    const removed = currentSupport?.version_removed ?? null;
 
     const browserReleaseDate = getSupportBrowserReleaseDate(support);
 
@@ -162,6 +163,11 @@ const CellText = React.memo(
         if (versionIsPreview(added, browser)) {
           status = {
             isSupported: "preview",
+            label: labelFromString(added, browser),
+          };
+        } else if (currentSupport?.flags?.length) {
+          status = {
+            isSupported: "no",
             label: labelFromString(added, browser),
           };
         } else {
@@ -251,8 +257,10 @@ const CellText = React.memo(
 );
 
 function Icon({ name }: { name: string }) {
+  const title = LEGEND_LABELS[name] ?? name;
+
   return (
-    <abbr className="only-icon" title={name}>
+    <abbr className="only-icon" title={title}>
       <span>{name}</span>
       <i className={`icon icon-${name}`} />
     </abbr>

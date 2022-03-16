@@ -135,9 +135,8 @@ export function useFrequentlyViewed(): [
   useEffect(() => {
     const entries = JSON.parse(
       localStorage.getItem(FREQUENTLY_VIEWED_STORAGE_KEY) || "[]"
-    );
+    ) as FrequentlyViewedEntry[];
     const newEntries: FrequentlyViewedEntry[] = [];
-
     for (const entry of entries) {
       newEntries.push({
         url: entry.url,

@@ -156,8 +156,4 @@
     border-color: $mdn-red300;
     color: $mdn-color-dark-grey-90;
   }
-
-  &.deprecated {
-    @include set-notecard-icon-only("~@mdn/dinocons/emojis/thumbs-down.svg");
-  }
 }

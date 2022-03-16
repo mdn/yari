@@ -8,6 +8,18 @@
   padding: 3rem 1rem 1rem;
   overflow-wrap: break-word;
 
+  a {
+    &:link,
+    &:visited {
+      text-decoration: underline;
+    }
+
+    &:hover,
+    &:focus {
+      text-decoration: none;
+    }
+  }
+
   h1,
   h2,
   h3,
@@ -45,11 +57,6 @@
   a:not(.button) {
     color: var(--text-link);
     width: fit-content;
-
-    &:hover,
-    &:focus {
-      text-decoration: underline;
-    }
 
     &:active {
       background-color: var(--text-link);
@@ -485,7 +492,7 @@ pre {
   border: 1px solid var(--border-primary);
   box-shadow: var(--shadow-01);
   display: flex;
-  text-align: center;
+  text-align: left;
   gap: 1rem;
   flex-direction: column;
   margin: 2rem 0;
@@ -526,16 +533,15 @@ pre {
   }
 
   .copy-icon-message {
-    background: $mdn-color-dark-grey-90;
+    background: var(--text-primary);
     border-radius: var(--elem-radius);
-    color: white;
+    color: var(--text-invert);
     font-size: 0.8125rem;
     opacity: 1;
     padding: 0.125rem;
     position: absolute;
     right: 0.25rem;
     top: 15px;
-    z-index: -1000;
   }
 
   .example-good,
