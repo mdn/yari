@@ -202,6 +202,7 @@ export class MDNWorker {
   }
 
   async setOfflineSettings(settingsData: SettingsData): Promise<SettingsData> {
+    await new Promise((r) => setTimeout(() => r(null), 2000));
     const current = this.offlineSettings();
 
     if (!current.offline && settingsData.offline && !this.registered) {

@@ -25,7 +25,7 @@ export default function SettingsApp({ ...appProps }) {
 function Settings() {
   document.title = "Settings | MDN";
   const [status, setStatus] = useState<UpdateStatus>();
-  const [saving, setSaving] = useState<boolean | null>(true);
+  const [saving, setSaving] = useState<boolean>(true);
 
   const [estimate, setEstimate] = useState<StorageEstimate | null>(null);
   const [settings, setSettings] = useState<SettingsData>();
@@ -106,18 +106,24 @@ function Settings() {
             <span>
               Do not use offline content while connected to the internet
             </span>
-            <Switch
-              name="prefer-online"
-              checked={settings?.preferOnline || false}
-              toggle={(e) =>
-                updateSettings({
-                  preferOnline: e.target.checked,
-                })
-              }
-            ></Switch>
+            {(saving === true && <Spinner extraClasses="loading" />) || (
+              <Switch
+                name="prefer-online"
+                checked={settings?.preferOnline || false}
+                toggle={(e) =>
+                  updateSettings({
+                    preferOnline: e.target.checked,
+                  })
+                }
+              ></Switch>
+            )}
           </li>
           <li>
-            <UpdateButton updateStatus={status || null} update={update} />
+            <UpdateButton
+              disabled={saving}
+              updateStatus={status || null}
+              update={update}
+            />
           </li>
           {window?.location.hash === "#debug" && (
             <li>
@@ -138,18 +144,24 @@ function Settings() {
             <span>
               Automatically download updates to content enabled for download
             </span>
-            <Switch
-              name="auto-update"
-              checked={settings?.autoUpdates || false}
-              toggle={(e) =>
-                updateSettings({
-                  autoUpdates: e.target.checked,
-                })
-              }
-            ></Switch>
+            {(saving === true && <Spinner extraClasses="loading" />) || (
+              <Switch
+                name="auto-update"
+                checked={settings?.autoUpdates || false}
+                toggle={(e) =>
+                  updateSettings({
+                    autoUpdates: e.target.checked,
+                  })
+                }
+              ></Switch>
+            )}
           </li>
           <li>
-            <ClearButton updateStatus={status || null} clear={clear} />
+            <ClearButton
+              disabled={saving}
+              updateStatus={status || null}
+              clear={clear}
+            />
           </li>
         </>
       )}

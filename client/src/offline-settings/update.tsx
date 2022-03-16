@@ -3,9 +3,11 @@ import { STATE, UpdateStatus } from "./mdn-worker";
 export default function UpdateButton({
   updateStatus,
   update,
+  disabled = false,
 }: {
   updateStatus: UpdateStatus | null;
   update: () => void;
+  disabled?: boolean;
 }) {
   const current = `Last updated: ${
     updateStatus?.currentDate
@@ -26,16 +28,21 @@ export default function UpdateButton({
   }
   if (updateStatus?.state === STATE.updateAvailable) {
     info = "Update available";
-    button = <button onClick={update}> Update now</button>;
+    button = (
+      <button onClick={update} disabled={disabled}>
+        {" "}
+        Update now
+      </button>
+    );
   }
   if (updateStatus?.state === STATE.downloading) {
     info = "Update in progress…";
-    button = <button>Downloading…</button>;
+    button = <button disabled={disabled}>Downloading…</button>;
   }
   if (updateStatus?.state === STATE.unpacking) {
     info = "Update in progress…";
     button = (
-      <button>
+      <button disabled={disabled}>
         Unpacking…{" "}
         {progress?.toLocaleString(undefined, {
           maximumFractionDigits: 0,
@@ -46,7 +53,7 @@ export default function UpdateButton({
   }
   if (updateStatus?.state === STATE.cleaning) {
     info = "Update in progress…";
-    button = <button>Cleaning…</button>;
+    button = <button disabled>Cleaning…</button>;
   }
   if (updateStatus?.state === STATE.clearing) {
     info = "Clearing…";
