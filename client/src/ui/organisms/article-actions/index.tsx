@@ -9,7 +9,7 @@ import { Doc } from "../../../document/types";
 
 import "./index.scss";
 import { MDN_APP } from "../../../constants";
-import { BookmarkContainer } from "../../molecules/bookmark";
+import { BookmarkContainer } from "../../molecules/collection";
 
 export const ArticleActions = ({
   doc,

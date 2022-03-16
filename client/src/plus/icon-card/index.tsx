@@ -3,26 +3,8 @@ import { Button } from "../../ui/atoms/button";
 import { DropdownMenu, DropdownMenuWrapper } from "../../ui/molecules/dropdown";
 import { Checkbox } from "../../ui/molecules/notifications-watch-menu/atoms/checkbox";
 import { docCategory } from "../../utils";
+import { _getIconLabel } from "../common";
 import "./index.scss";
-
-function _getIconLabel(url) {
-  let category = docCategory({ pathname: url });
-
-  if (category) {
-    category = category?.split("-")[1];
-
-    if (category === "javascript") {
-      return "js";
-    }
-
-    if (category === "accessibility") {
-      return "acc";
-    }
-    return category;
-  }
-
-  return "docs";
-}
 
 export default function WatchedCardListItem({
   item,
