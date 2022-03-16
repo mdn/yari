@@ -7,9 +7,11 @@ import "./index.scss";
 import useSWR from "swr";
 import { useCSRFMiddlewareToken } from "../../../hooks";
 import { DropdownMenu, DropdownMenuWrapper } from "../dropdown";
+import { ManageOrUpgradeDialog } from "./manage-or-upgrade";
 
 interface WatchModeData {
   status: string;
+  watch_limit_reached: boolean;
 }
 
 export const NotificationsWatchMenu = ({ doc }) => {
@@ -40,6 +42,7 @@ export const NotificationsWatchMenu = ({ doc }) => {
     }
   );
   const watching = data?.status && data.status !== "unwatched";
+  const canWatchMore = !Boolean(data?.watch_limit_reached);
 
   async function handleWatchSubmit({ unwatch }: { unwatch?: boolean }) {
     if (!data) {
@@ -87,6 +90,7 @@ export const NotificationsWatchMenu = ({ doc }) => {
     return true;
   }
 
+  const watchIcon = watching ? "eye-filled" : canWatchMore ? "eye" : "padlock";
   return (
     <DropdownMenuWrapper
       className="watch-menu open-on-focus-within"
@@ -97,7 +101,7 @@ export const NotificationsWatchMenu = ({ doc }) => {
         <Button
           type="action"
           id="watch-menu-button"
-          icon={watching ? "eye-filled" : "eye"}
+          icon={watchIcon}
           extraClasses={`small watch-menu ${watching ? "highlight" : ""}`}
           ariaHasPopup={"menu"}
           aria-label="Watch this page for updates"
@@ -109,8 +113,10 @@ export const NotificationsWatchMenu = ({ doc }) => {
           {watching ? "Watching" : "Watch"}
         </Button>
       </React.Suspense>
-
-      {data && (
+      {!canWatchMore && !watching && (
+        <ManageOrUpgradeDialog show={show} setShow={setShow} />
+      )}
+      {data && canWatchMore && (
         <DropdownMenu>
           <div
             className={`${menuId} show`}
