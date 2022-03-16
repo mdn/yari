@@ -52,11 +52,11 @@ const CORE: OfferDetailsProps = {
   cta: "Start with Core",
   regular: {
     subscriptionType: SubscriptionType.MDN_CORE,
-    ctaLink: FXA_SIGNIN_URL,
+    ctaLink: `${FXA_SIGNIN_URL}?next=/en-US/plus`,
   },
   discounted: {
     subscriptionType: SubscriptionType.MDN_CORE,
-    ctaLink: FXA_SIGNIN_URL,
+    ctaLink: `${FXA_SIGNIN_URL}?next=/en-US/plus`,
   },
 };
 

@@ -49,6 +49,6 @@ if (container.firstElementChild) {
 // Learn more about service workers: https://bit.ly/CRA-PWA
 // serviceWorker.unregister();
 
-if (navigator.serviceWorker.controller && !window.mdnWorker) {
+if (navigator?.serviceWorker?.controller && !window.mdnWorker) {
   import("./offline-settings/mdn-worker");
 }
