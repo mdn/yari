@@ -7,6 +7,9 @@ import { DropdownMenu, DropdownMenuWrapper } from "../../ui/molecules/dropdown";
 import { docCategory } from "../../utils";
 import { _getIconLabel } from "../common";
 import dayjs from "dayjs";
+import relativeTime from "dayjs/plugin/relativeTime";
+
+dayjs.extend(relativeTime);
 
 export function CollectionListItem({
   item,
