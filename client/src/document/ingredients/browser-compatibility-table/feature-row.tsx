@@ -454,6 +454,28 @@ function CompatCell({
   //         item.prefix || item.notes || item.alternative_name || item.flags
   //     ));
   const notes = getNotes(browserInfo, support!);
+  const content = (
+    <>
+      <CellText {...{ support }} browser={browserInfo} />
+      <CellIcons support={support} />
+      {notes && (
+        <button
+          type="button"
+          title="Open implementation notes"
+          className={`bc-history-link ${
+            showNotes ? "bc-history-link-inverse" : ""
+          }`}
+        >
+          <span>Open</span>
+          <i className="ic-history" aria-hidden="true" />
+        </button>
+      )}
+      {showNotes && (
+        <dl className="bc-notes-list bc-history bc-history-mobile">{notes}</dl>
+      )}
+    </>
+  );
+
   return (
     <>
       <td
@@ -470,25 +492,7 @@ function CompatCell({
             : undefined
         }
       >
-        <CellText {...{ support }} browser={browserInfo} />
-        <CellIcons support={support} />
-        {notes && (
-          <button
-            type="button"
-            title="Open implementation notes"
-            className={`bc-history-link ${
-              showNotes ? "bc-history-link-inverse" : ""
-            }`}
-          >
-            <span>Open</span>
-            <i className="ic-history" aria-hidden="true" />
-          </button>
-        )}
-        {showNotes && (
-          <dl className="bc-notes-list bc-history bc-history-mobile">
-            {notes}
-          </dl>
-        )}
+        {content}
       </td>
     </>
   );
