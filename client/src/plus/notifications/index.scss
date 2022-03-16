@@ -20,7 +20,11 @@
   border: 1px solid var(--border-secondary);
   background-color: var(--background-primary);
   display: grid;
-  grid-template-columns: auto auto 1fr 10ch auto;
+  grid-template-columns: auto auto 1fr 2rem;
+  @media screen and (min-width: $screen-md) {
+    grid-template-columns: auto auto 1fr 10ch auto;
+  }
+
   padding: 0.5rem;
   animation: fade-in 0.2s;
   &.no-star {
@@ -45,6 +49,7 @@
     font: var(--type-emphasis-m);
     margin: 0;
     color: var(--text-primary);
+    word-wrap: anywhere;
   }
 
   &-text {
@@ -57,6 +62,11 @@
     color: var(--text-secondary);
     font: var(--type-body-s);
     text-align: right;
+
+    display: none;
+    @media screen and (min-width: $screen-md) {
+      display: inherit;
+    }
   }
 
   &:first-child {

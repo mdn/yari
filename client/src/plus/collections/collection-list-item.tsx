@@ -6,6 +6,7 @@ import { Breadcrumbs } from "../../ui/molecules/breadcrumbs";
 import { DropdownMenu, DropdownMenuWrapper } from "../../ui/molecules/dropdown";
 import { docCategory } from "../../utils";
 import { _getIconLabel } from "../common";
+import dayjs from "dayjs";
 
 export function CollectionListItem({
   item,
@@ -40,6 +41,12 @@ export function CollectionListItem({
             <a href={item.url}>{item.title}</a>
           </h2>
         </div>
+        <time
+          className="collection-created"
+          dateTime={dayjs(item.created).toISOString()}
+        >
+          {`Added ${dayjs(item.created).fromNow().toString()}`}
+        </time>
         <DropdownMenuWrapper
           className="dropdown is-flush-right"
           isOpen={show}
