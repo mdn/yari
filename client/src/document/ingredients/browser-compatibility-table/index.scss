@@ -105,7 +105,7 @@
         @include visually-hidden;
       }
     }
-    .bc-icon-cell {
+    .bc-cell {
       > .icon-wrap {
         display: block;
       }
@@ -128,7 +128,7 @@
     white-space: nowrap;
   }
 
-  &-icon-cell {
+  &-cell {
     text-align: center;
     vertical-align: middle;
   }
@@ -377,7 +377,7 @@ dl.bc-notes-list {
     width: auto;
   }
 
-  .bc-icon-cell {
+  .bc-cell {
     .bc-support-level {
       display: none;
     }
