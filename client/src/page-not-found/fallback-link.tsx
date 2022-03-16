@@ -39,16 +39,16 @@ export default function FallbackLink({ url }: { url: string }) {
         }
         // Otherwise, use the URL that gave the successful page (potentially
         // including any redirects) and append index.json to get the data needed
-        var jsonURL = response.url;
+        let jsonURL = response.url;
         if (!jsonURL.endsWith("/")) {
           jsonURL += "/";
         }
         jsonURL += "index.json";
-        var jsonResponse = await fetch(jsonURL);
+        const jsonResponse = await fetch(jsonURL);
         if (jsonResponse.ok) {
           const { doc } = await jsonResponse.json();
           return doc;
-        } else if (response.status === 404) {
+        } else if (jsonResponse.status === 404) {
           return null;
         }
       } else if (response.status === 404) {
