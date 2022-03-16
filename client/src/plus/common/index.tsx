@@ -1,6 +1,6 @@
 import SignInLink from "../../ui/atoms/signin-link";
 import NoteCard from "../../ui/molecules/notecards";
-import { docCategory, isDocs } from "../../utils";
+import { docCategory } from "../../utils";
 
 export function NotSignedIn() {
   return (

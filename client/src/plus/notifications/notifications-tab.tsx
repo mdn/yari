@@ -15,6 +15,8 @@ import NotificationCardListItem from "./notification-card-list-item";
 import SelectedNotificationsBar from "./notification-select";
 import { TAB_INFO, TabVariant, FILTERS, SORTS } from "../common/tabs";
 import { useVisibilityChangeListener } from "./utils";
+import { DataError } from "../common";
+import { Loading } from "../../ui/atoms/loading";
 
 export function NotificationsTab({
   selectedTerms,
@@ -183,6 +185,8 @@ export function NotificationsTab({
         onUnwatchSelected={null}
         watchedTab={false}
       />
+      {isLoading && <Loading message="Waiting for data" />}
+      {error && <DataError error={error} />}
       <ul className="notification-list">
         <div className="icon-card-list">
           {list.map((item) => (

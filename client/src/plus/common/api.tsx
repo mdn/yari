@@ -101,7 +101,7 @@ export function useNotificationsApiEndpoint(
         setError(null);
       }
     })();
-  }, [offset, searchTerms, selectedFilter, selectedSort]);
+  }, [offset, searchTerms, selectedFilter, selectedSort, starred]);
   return { data, error, isLoading, hasMore };
 }
 

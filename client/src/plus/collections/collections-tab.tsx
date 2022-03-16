@@ -2,6 +2,7 @@ import { useState, useRef, useEffect } from "react";
 import { BookmarkData } from ".";
 import { useUIStatus } from "../../ui-context";
 import { Loading } from "../../ui/atoms/loading";
+import { DataError } from "../common";
 import {
   useCollectionsApiEndpoint,
   updateCollectionItem,
@@ -86,6 +87,7 @@ export function CollectionsTab({
     <>
       <SearchFilter filters={[]} sorts={SORTS} />
       {isLoading && <Loading message="Fetching your collection..." />}
+      {error && <DataError error={error} />}
       <ul className="notification-list">
         <div className="icon-card-list">
           {list.map((item) => (

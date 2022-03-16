@@ -12,6 +12,7 @@ import "./index.scss";
 import { useUserData } from "../../user-context";
 import { TabVariant, TAB_INFO, useCurrentTab } from "../common/tabs";
 import { PlusTabs } from "../common/plus-tabs";
+import { NotSignedIn } from "../common";
 
 function NotificationsLayout() {
   const locale = useLocale();
@@ -65,6 +66,7 @@ function NotificationsLayout() {
           </>
         </Container>
       )}
+      {!userData && !isAuthed && <NotSignedIn />}
     </>
   );
 }
