@@ -93,7 +93,7 @@ export function CollectionsTab({
               item={item}
               onEditSubmit={collectionsSaveHandler}
               key={item.id}
-              showEditButton={false}
+              showEditButton={true}
               handleDelete={deleteCollectionItem}
             />
           ))}
