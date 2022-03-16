@@ -441,6 +441,9 @@ function _addSingleSpecialSection($) {
               }
             }
           }
+          info.sort((a, b) =>
+            _compareVersions(_getFirstVersion(b), _getFirstVersion(a))
+          );
         }
       }
     }
@@ -458,6 +461,60 @@ function _addSingleSpecialSection($) {
         },
       },
     ];
+  }
+
+  /**
+   * @param {object} support
+   * @returns {string}
+   */
+  function _getFirstVersion(support) {
+    if (typeof support.version_added === "string") {
+      return support.version_added;
+    } else if (typeof support.version_removed === "string") {
+      return support.version_removed;
+    } else {
+      return "0";
+    }
+  }
+
+  /**
+   * @param {string} a
+   * @param {string} b
+   */
+  function _compareVersions(a, b) {
+    const x = _splitVersion(a);
+    const y = _splitVersion(b);
+
+    return _compareNumberArray(x, y);
+  }
+
+  /**
+   * @param {number[]} a
+   * @param {number[]} b
+   * @return {number}
+   */
+  function _compareNumberArray(a, b) {
+    while (a.length || b.length) {
+      const x = a.shift() || 0;
+      const y = b.shift() || 0;
+      if (x !== y) {
+        return x - y;
+      }
+    }
+
+    return 0;
+  }
+
+  /**
+   * @param {string} version
+   * @return {number[]}
+   */
+  function _splitVersion(version) {
+    if (version.startsWith("≤")) {
+      version = version.slice(1);
+    }
+
+    return version.split(".").map(Number);
   }
 
   function _buildSpecialSpecSection() {
