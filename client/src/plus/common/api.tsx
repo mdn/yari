@@ -63,7 +63,7 @@ export function useNotificationsApiEndpoint(
   const [data, setData] = useState<any>({});
   const [error, setError] = useState<Error | null>();
   const [isLoading, setIsLoading] = useState(true);
-  const [hasMore, setHasMore] = useState(true);
+  const [hasMore, setHasMore] = useState(false);
 
   useEffect(() => {
     (async () => {
@@ -114,7 +114,7 @@ export function useWatchedItemsApiEndpoint(
   const [data, setData] = useState<any>({});
   const [error, setError] = useState<Error | null>();
   const [isLoading, setIsLoading] = useState(true);
-  const [hasMore, setHasMore] = useState(true);
+  const [hasMore, setHasMore] = useState(false);
 
   useEffect(() => {
     (async () => {
