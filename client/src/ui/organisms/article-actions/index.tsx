@@ -62,9 +62,11 @@ export const ArticleActions = ({
                   <BookmarkContainer doc={doc} />
                 </li>
               )}
-              <li className="article-actions-entry">
-                <ThemeSwitcher />
-              </li>
+              {isAuthenticated && (
+                <li className="article-actions-entry">
+                  <ThemeSwitcher />
+                </li>
+              )}
               {translations && !!translations.length && (
                 <li className="article-actions-entry">
                   <LanguageMenu
