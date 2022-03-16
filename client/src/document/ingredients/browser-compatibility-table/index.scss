@@ -110,10 +110,6 @@
     }
   }
 
-  tr [class^="bc-browser"] {
-    text-align: center;
-  }
-
   .bc-history-desktop {
     display: none;
   }
@@ -165,20 +161,28 @@
   }
 }
 
+// Row with desktop / mobile icons.
 .bc-platforms {
   height: 2rem;
 
   th {
     text-align: center;
   }
+
+  td {
+    border: none;
+  }
 }
 
-.bc-platforms td {
-  border: none;
-}
+// Row with browser names.
+.bc-browsers {
+  th {
+    text-align: center;
+  }
 
-.bc-browsers td {
-  border-width: 0 0 1px 0;
+  td {
+    border-width: 0 0 1px 0;
+  }
 }
 
 .bc-notes-list {

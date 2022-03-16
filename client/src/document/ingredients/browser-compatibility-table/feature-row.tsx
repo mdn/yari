@@ -558,7 +558,9 @@ export const FeatureRow = React.memo(
     return (
       <>
         <tr>
-          <th scope="row">{titleNode}</th>
+          <th className="bc-feature" scope="row">
+            {titleNode}
+          </th>
           {browsers.map((browser, i) => (
             <CompatCell
               key={browser}
