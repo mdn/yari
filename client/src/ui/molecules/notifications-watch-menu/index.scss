@@ -151,15 +151,14 @@
   padding: 1rem;
 
   &.is-button-row {
-    display: none;
+    display: flex;
+    justify-content: flex-end;
+    padding-top: 1rem;
 
-    &.is-always-visible {
-      display: flex;
-      justify-content: flex-end;
-      padding-bottom: 0.25rem;
+    .button {
+      width: auto;
     }
   }
-
   &.has-dropdown {
     padding: 0 1rem 0.25rem;
   }
@@ -184,16 +183,6 @@
 
   @media screen and (min-width: $screen-md) {
     padding: 0 0.5rem 0 1rem;
-
-    &.is-button-row {
-      display: flex;
-      justify-content: flex-end;
-      padding-top: 1rem;
-
-      .button {
-        width: auto;
-      }
-    }
 
     &.pad-y {
       padding-top: 1rem;
