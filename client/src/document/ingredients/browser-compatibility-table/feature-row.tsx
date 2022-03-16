@@ -458,18 +458,6 @@ function CompatCell({
     <>
       <CellText {...{ support }} browser={browserInfo} />
       <CellIcons support={support} />
-      {notes && (
-        <button
-          type="button"
-          title="Open implementation notes"
-          className={`bc-history-link ${
-            showNotes ? "bc-history-link-inverse" : ""
-          }`}
-        >
-          <span>Open</span>
-          <i className="ic-history" aria-hidden="true" />
-        </button>
-      )}
       {showNotes && (
         <dl className="bc-notes-list bc-history bc-history-mobile">{notes}</dl>
       )}
@@ -483,16 +471,12 @@ function CompatCell({
           notes ? "bc-has-history" : ""
         }`}
         aria-expanded={showNotes ? "true" : "false"}
-        tabIndex={notes ? 0 : undefined}
-        onClick={
-          notes
-            ? () => {
-                onToggle();
-              }
-            : undefined
-        }
+        onClick={notes ? () => onToggle() : undefined}
       >
-        {content}
+        <button type="button" disabled={!notes} title="Toggle history">
+          {content}
+          <span className="offscreen">Toggle history</span>
+        </button>
       </td>
     </>
   );

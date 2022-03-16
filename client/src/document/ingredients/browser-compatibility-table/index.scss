@@ -21,7 +21,8 @@
   }
 
   tbody td,
-  tbody th {
+  tbody th,
+  .bc-support > button {
     display: flex;
     flex-wrap: wrap;
     gap: 0.5rem;
@@ -64,17 +65,22 @@
       }
     }
 
-    td {
-      &.bc-supports-no > span {
+    .bc-support {
+      button {
+        cursor: pointer;
+        width: 100%;
+      }
+
+      &.bc-supports-no > button > span {
         color: var(--text-primary-red);
       }
-      &.bc-supports-partial > span {
+      &.bc-supports-partial > button > span {
         color: var(--text-primary-yellow);
       }
-      &.bc-supports-preview > span {
+      &.bc-supports-preview > button > span {
         color: var(--text-primary-blue);
       }
-      &.bc-supports-yes > span {
+      &.bc-supports-yes > button > span {
         color: var(--text-primary-green);
       }
     }
@@ -105,7 +111,7 @@
     }
   }
   .bc-support {
-    > .icon-wrap {
+    > button > .icon-wrap {
       display: block;
     }
   }
@@ -126,11 +132,6 @@
 .bc-support {
   text-align: center;
   vertical-align: middle;
-}
-
-.bc-history-link {
-  @include visually-hidden;
-  position: absolute; // messing up layout otherwise
 }
 
 .bc-level-no {
@@ -340,6 +341,15 @@ dl.bc-notes-list {
       padding: 0.25rem;
       width: 2rem;
     }
+
+    td.bc-support {
+      padding: 0;
+
+      > button {
+        padding: 0.25rem;
+      }
+    }
+
     tr.bc-history-desktop {
       display: table-row;
     }
