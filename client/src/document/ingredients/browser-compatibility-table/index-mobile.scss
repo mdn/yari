@@ -1,5 +1,20 @@
 // Style for mobile.
 
 @media screen and (max-width: $screen-sm) {
-  // Empty for now.
+  thead {
+    display: none;
+  }
+
+  tbody td,
+  tbody th,
+  .bc-support > button {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    align-content: center;
+  }
+
+  .bc-history-desktop {
+    display: none;
+  }
 }

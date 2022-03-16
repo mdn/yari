@@ -11,19 +11,6 @@
   border-collapse: separate;
   border-spacing: 0;
 
-  thead {
-    display: none;
-  }
-
-  tbody td,
-  tbody th,
-  .bc-support > button {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.5rem;
-    align-content: center;
-  }
-
   td,
   th {
     border: 1px solid var(--border-secondary);
@@ -103,10 +90,6 @@
     > button > .icon-wrap {
       display: block;
     }
-  }
-
-  .bc-history-desktop {
-    display: none;
   }
 }
 
