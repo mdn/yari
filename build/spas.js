@@ -142,7 +142,7 @@ async function buildSPAs(options) {
   // Building the MDN Plus feature pages.
   const featuresDir = path.join(__dirname, "../copy/plus/features");
   for (const page of fs.readdirSync(featuresDir)) {
-    const locale = "en-US";
+    const locale = "en-us";
     const feature = page.split(".")[0];
     const markdown = fs.readFileSync(path.join(featuresDir, page), "utf8");
 
