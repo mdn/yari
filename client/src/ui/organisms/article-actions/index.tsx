@@ -8,7 +8,8 @@ import { useUserData } from "../../../user-context";
 import { Doc } from "../../../document/types";
 
 import "./index.scss";
-import { BookmarkContainer } from "../../molecules/bookmark";
+
+import { BookmarkContainer } from "../../molecules/collection";
 
 export const ArticleActions = ({
   doc,
@@ -61,11 +62,9 @@ export const ArticleActions = ({
                   <BookmarkContainer doc={doc} />
                 </li>
               )}
-              {isAuthenticated && (
-                <li className="article-actions-entry">
-                  <ThemeSwitcher />
-                </li>
-              )}
+              <li className="article-actions-entry">
+                <ThemeSwitcher />
+              </li>
               {translations && !!translations.length && (
                 <li className="article-actions-entry">
                   <LanguageMenu

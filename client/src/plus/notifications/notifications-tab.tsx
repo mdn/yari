@@ -1,125 +1,72 @@
-import { useEffect, useRef, useState } from "react";
-import { useCSRFMiddlewareToken } from "../../hooks";
+import { useState, useRef, useEffect } from "react";
 import { useUIStatus } from "../../ui-context";
-import { Button } from "../../ui/atoms/button";
-import WatchedCardListItem from "../icon-card";
-import SearchFilter from "../search-filter";
 import {
-  deleteItemById,
-  deleteItemsById,
-  starItem,
+  useNotificationsApiEndpoint,
   starItemsById,
-  undoDeleteItemById,
   unstarItemsById,
-  unwatchItemsByUrls,
-} from "./api";
+  deleteItemById,
+  undoDeleteItemById,
+  starItem,
+  deleteItemsById,
+} from "../common/api";
+import { showMoreButton } from "../common/plus-tabs";
+import SearchFilter from "../search-filter";
 import NotificationCardListItem from "./notification-card-list-item";
 import SelectedNotificationsBar from "./notification-select";
-import { FILTERS, SORTS, TabVariant } from "./tabs";
+import { TAB_INFO, TabVariant, FILTERS, SORTS } from "../common/tabs";
 import { useVisibilityChangeListener } from "./utils";
+import { DataError } from "../common";
+import { Loading } from "../../ui/atoms/loading";
 
 export function NotificationsTab({
-  currentTab,
   selectedTerms,
   selectedFilter,
   selectedSort,
-  data,
-  offset,
-  setOffset,
-  hasMore,
+  starred = false,
 }) {
+  const [offset, setOffset] = useState(0);
   const { setToastData } = useUIStatus();
-  const csrfMiddlewareToken = useCSRFMiddlewareToken();
-  const listRef = useRef<Array<any>>([]);
-  const [list, setList] = useState<Array<any>>([]);
   const [selectAllChecked, setSelectAllChecked] = useState(false);
+  const [list, setList] = useState<Array<any>>([]);
+
   const [editOptions, setEditOptions] = useState({
     starEnabled: false,
     unstarEnabled: false,
     deleteEnabled: false,
     unwatchEnabled: false,
   });
-  listRef.current = list;
-  // Uncheck and clear list on tab or filter change
-  useEffect(() => {
-    setSelectAllChecked(false);
-    setList([]);
-  }, [currentTab, selectedFilter, selectedSort, selectedTerms]);
+
+  const { data, error, isLoading, hasMore } = useNotificationsApiEndpoint(
+    offset,
+    selectedTerms,
+    selectedFilter,
+    selectedSort,
+    starred
+  );
 
   useVisibilityChangeListener();
 
   useEffect(() => {
-    if (data && !!data.items) {
-      setList([
-        ...listRef.current,
-        ...data.items.map((item) => {
-          return { ...item, checked: false };
-        }),
-      ]);
+    let unread;
+    document.title = TAB_INFO[TabVariant.NOTIFICATIONS].pageTitle;
+    if (data && data.items) {
+      unread = data.items.filter((v) => v.read === false).length;
+    }
+    if (!!unread) {
+      document.title = document.title + ` (${unread})`;
     }
   }, [data]);
 
-  const deleteItem = async (item) => {
-    await deleteItemById(csrfMiddlewareToken, item.id);
-    const listWithDelete = list.filter((v) => v.id !== item.id);
-    setList(listWithDelete);
-    setToastData({
-      mainText: `${item.title} removed from your collection`,
-      shortText: "Article removed",
-      buttonText: "Undo",
-      buttonHandler: async () => {
-        await undoDeleteItemById(csrfMiddlewareToken, item.id);
-        setToastData(null);
-      },
-    });
-  };
+  const listRef = useRef<Array<any>>([]);
 
-  const deleteMany = async () => {
-    const toDelete = list.filter((v) => v.checked).map((i) => i.id);
-    await deleteItemsById(csrfMiddlewareToken, toDelete);
-    const updated = list.filter((v) => !v.checked);
-    setList(updated);
-  };
+  listRef.current = list;
 
-  const toggleStarItem = async (item) => {
-    await starItem(csrfMiddlewareToken, item.id);
-    //Local updates
-    if (currentTab === TabVariant.STARRED) {
-      setList([...list.filter((v) => v.id !== item.id)]);
-    } else {
-      const updated = list.map((v) => {
-        if (v.id === item.id) {
-          v.starred = !v.starred;
-        }
-        return v;
-      });
-      setList(updated);
-    }
-  };
-
-  const starMany = async () => {
-    const toStar = list.filter((v) => v.checked).map((i) => i.id);
-    await starItemsById(csrfMiddlewareToken, toStar);
-    const updated = list.map((v) => {
-      if (v.checked) {
-        v.starred = true;
-      }
-      return v;
-    });
-    setList(updated);
-  };
-
-  const unstarMany = async () => {
-    const toUnstar = list.filter((v) => v.checked).map((i) => i.id);
-    await unstarItemsById(csrfMiddlewareToken, toUnstar);
-    const updated = list.map((v) => {
-      if (v.checked) {
-        v.starred = false;
-      }
-      return v;
-    });
-    setList(updated);
-  };
+  // Uncheck and clear list on filter change
+  useEffect(() => {
+    setSelectAllChecked(false);
+    setList([]);
+    setOffset(0);
+  }, [selectedFilter, selectedSort, selectedTerms]);
 
   const calculateBulkEditOptions = (items: any[]) => {
     editOptions.starEnabled = false;
@@ -138,6 +85,56 @@ export function NotificationsTab({
     setEditOptions({ ...editOptions });
   };
 
+  useEffect(() => {
+    if (data && !!data.items) {
+      setList([
+        ...listRef.current,
+        ...data.items.map((item) => {
+          return { ...item, checked: false };
+        }),
+      ]);
+    }
+  }, [data]);
+
+  const starMany = async () => {
+    const toStar = list.filter((v) => v.checked).map((i) => i.id);
+    await starItemsById(data.csrfMiddlewareToken, toStar);
+    const updated = list.map((v) => {
+      if (v.checked) {
+        v.starred = true;
+      }
+      return v;
+    });
+    setList(updated);
+  };
+
+  const unstarMany = async () => {
+    const toUnstar = list.filter((v) => v.checked).map((i) => i.id);
+    await unstarItemsById(data.csrfMiddlewareToken, toUnstar);
+    const updated = list.map((v) => {
+      if (v.checked) {
+        v.starred = false;
+      }
+      return v;
+    });
+    setList(updated);
+  };
+
+  const deleteItem = async (item) => {
+    await deleteItemById(data.csrfmiddlewaretoken, item.id);
+    const listWithDelete = list.filter((v) => v.id !== item.id);
+    setList(listWithDelete);
+    setToastData({
+      mainText: `${item.title} removed from your collection`,
+      shortText: "Article removed",
+      buttonText: "Undo",
+      buttonHandler: async () => {
+        await undoDeleteItemById((data as any).csrfmiddlewaretoken, item.id);
+        setToastData(null);
+      },
+    });
+  };
+
   const toggleItemChecked = (item) => {
     const newList = list.map((v) => {
       if (v.id === item.id) {
@@ -149,47 +146,28 @@ export function NotificationsTab({
     setList(newList);
   };
 
-  const unwatchItem = async (toUnWatch) => {
-    await unwatchItemsByUrls(csrfMiddlewareToken, [toUnWatch]);
-    const updated = list.filter((v) => v.id !== toUnWatch.id);
+  const toggleStarItem = async (item) => {
+    await starItem(data.csrfmiddlewaretoken, item.id);
+    //Local updates
+    const updated = list.map((v) => {
+      if (v.id === item.id) {
+        v.starred = !v.starred;
+      }
+      return v;
+    });
     setList(updated);
   };
-  const unwatchMany = async () => {
-    const toUnWatch = list.filter((v) => v.checked);
-    await unwatchItemsByUrls(csrfMiddlewareToken, toUnWatch);
+
+  const deleteMany = async () => {
+    const toDelete = list.filter((v) => v.checked).map((i) => i.id);
+    await deleteItemsById(data.csrfmiddlewaretoken, toDelete);
     const updated = list.filter((v) => !v.checked);
     setList(updated);
   };
 
-  let cardList = list.map((item) => {
-    if (currentTab !== TabVariant.WATCHING) {
-      return (
-        <NotificationCardListItem
-          handleDelete={deleteItem}
-          item={item}
-          toggleSelected={toggleItemChecked}
-          toggleStarred={toggleStarItem}
-          key={item.id}
-        />
-      );
-    } else {
-      return (
-        <WatchedCardListItem
-          onUnwatched={unwatchItem}
-          item={item}
-          toggleSelected={toggleItemChecked}
-          key={item.id}
-        />
-      );
-    }
-  });
-
   return (
     <>
-      <SearchFilter
-        filters={currentTab === TabVariant.WATCHING ? [] : FILTERS}
-        sorts={currentTab === TabVariant.WATCHING ? [] : SORTS}
-      />
+      <SearchFilter filters={FILTERS} sorts={SORTS} />
       <SelectedNotificationsBar
         isChecked={selectAllChecked}
         onStarSelected={starMany}
@@ -204,28 +182,42 @@ export function NotificationsTab({
         onUnstarSelected={unstarMany}
         onDeleteSelected={deleteMany}
         buttonStates={editOptions}
-        onUnwatchSelected={unwatchMany}
-        watchedTab={currentTab === TabVariant.WATCHING}
+        onUnwatchSelected={null}
+        watchedTab={false}
       />
+      {isLoading && <Loading message="Waiting for data" />}
+      {error && <DataError error={error} />}
       <ul className="notification-list">
-        {currentTab === TabVariant.WATCHING && (
-          <div className="icon-card-list">{cardList}</div>
-        )}
-        {currentTab !== TabVariant.WATCHING && cardList}
-      </ul>
-      {hasMore && (
-        <div className="pagination">
-          <Button
-            type="primary"
-            onClickHandler={() => {
-              setSelectAllChecked(false);
-              setOffset(offset + list.length);
-            }}
-          >
-            Show more
-          </Button>
+        <div className="icon-card-list">
+          {list.map((item) => (
+            <NotificationCardListItem
+              handleDelete={deleteItem}
+              item={item}
+              toggleSelected={toggleItemChecked}
+              toggleStarred={toggleStarItem}
+              key={item.id}
+            />
+          ))}
         </div>
-      )}
+      </ul>
+      {hasMore && showMoreButton(setSelectAllChecked, setOffset, list)}
     </>
+  );
+}
+
+export function StarredNotificationsTab({
+  selectedTerms,
+  selectedFilter,
+  selectedSort,
+}) {
+  document.title = TAB_INFO[TabVariant.STARRED].pageTitle || "MDN Plus";
+
+  return (
+    <NotificationsTab
+      starred={true}
+      selectedTerms={selectedTerms}
+      selectedSort={selectedSort}
+      selectedFilter={selectedFilter}
+    />
   );
 }
