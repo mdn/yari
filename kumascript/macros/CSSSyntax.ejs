@@ -1,28 +1,71 @@
 <%
 
+const bcd = require('@mdn/browser-compat-data');
+const webRefData = require('@webref/css');
+const { definitionSyntax } = require('css-tree');
+
 const slug = env.slug;
 const locale = env.locale;
 const name = $0 || slug.split('/').pop().toLowerCase();
 
 const valueDefinitionUrl = `/${locale}/docs/Web/CSS/Value_definition_syntax`;
-/**
- * Populate `properties` and `valuespaces` from webref
- */
-const webRefData = require('@webref/css');
-const { definitionSyntax } = require('css-tree');
 
-const parsedFiles = await webRefData.listAll();
-const allData = Object.values(parsedFiles);
+// returns an array of one or more spec URLs, based on the browser-compat front matter key
+function getSpecURLs() {
 
-let properties = {};
-for (const spec of allData) {
-  properties = {...properties, ...spec.properties};
+  function packageBCD(query) {
+    const data = query.split(".").reduce((prev, curr) => {
+      return prev && Object.prototype.hasOwnProperty.call(prev, curr)
+        ? prev[curr]
+        : undefined;
+    }, bcd);
+    return data;
+  }
+
+  // look for the browser-compat front matter key
+  const bcdQuery = $0 || env['browser-compat'];
+  if (!bcdQuery) {
+    throw new Error("No 'browser-compat' front-matter value found");
+  }
+
+  // get the BCD JSON from the key
+  const bcdJSON = packageBCD(bcdQuery);
+  // can be a single URL or an array, normalize it as an array
+  const specURLsWithFragment = Array.isArray(bcdJSON.__compat.spec_url)
+      ? bcdJSON.__compat.spec_url
+      : [bcdJSON.__compat.spec_url];
+
+  // remove the fragment
+  const specURLs = specURLsWithFragment.map(specURLWithFragment => {
+    const url = new URL(specURLWithFragment);
+    return `${url.origin}${url.pathname}`;
+  });
+
+  return specURLs;
 }
 
-let valuespaces = {};
-for (const spec of allData) {
-  valuespaces = {...valuespaces, ...spec.valuespaces};
+async function getSpecData(specURLs) {
+  const parsedFiles = await webRefData.listAll();
+  const allData = Object.values(parsedFiles);
+
+  const specs = [];
+  for (const data of allData) {
+    if (specURLs.includes(data.spec.url) && data.properties[name]) {
+      specs.push({
+        properties: data.properties,
+        values: data.valuespaces
+      });
+    }
+  }
+
+  return specs;
 }
+
+const specURLs = getSpecURLs();
+const specs = await getSpecData(specURLs);
+
+const properties = specs[0].properties;
+const valuespaces = specs[0].values;
 
 /**
  * Used for building links and tooltips for parts of the value definition syntax
@@ -144,7 +187,6 @@ function renderTerms(terms, combinator) {
     // this is just so we can align the terms properly
     const termTextLength = definitionSyntax.generate(term).length;
     termTextLengths.push(termTextLength);
-
     // get the translated terms, with markup
     const termText = definitionSyntax.generate(term, { decorate: renderNode});
     termArray.push(termText);
@@ -244,11 +286,9 @@ function getConstituentTypes(item) {
 function writeFormalSyntax(item) {
   let output = '';
   output += '<pre>';
-
   // write the syntax for the property
   output += renderSyntax(item, properties[item].value);
   output += '<br/>';
-
   // collect all the constituent types for the property
   const types = getConstituentTypes(item);
   // and write each one out
