@@ -5,25 +5,29 @@
 
   input {
     opacity: 0;
-    width: 0;
+    width: 2rem;
     height: 0;
+    margin: 0;
 
     &:checked + .slider {
       &:before {
         left: 56.25%;
         right: 6.25%;
       }
+      background-color: var(--text-link);
     }
 
-    &:focus + .slider {
-      box-shadow: 0 0 3px var(--accent-primary-engage);
+    &:focus-visible + .slider {
+      outline-style: auto;
+      outline-color: var(--accent-primary);
+      outline-offset: 1px;
     }
   }
 
   .slider {
     position: absolute;
     cursor: pointer;
-    background-color: var(--text-link);
+    background-color: var(--text-secondary);
     transition: 0.4s;
     border-radius: 1em;
     width: 2rem;
@@ -43,6 +47,6 @@
   }
 
   .label {
-    margin-left: 2rem;
+    margin-left: 0.5rem;
   }
 }

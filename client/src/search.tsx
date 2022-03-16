@@ -377,7 +377,21 @@ function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
                   index: i,
                 })}
               >
-                {resultsWithHighlighting[i]}
+                <a
+                  href={item.url}
+                  onClick={(event: React.MouseEvent) => {
+                    if (event.ctrlKey || event.metaKey) {
+                      // Open in new tab, don't navigate current tab.
+                      event.stopPropagation();
+                    } else {
+                      // Open in same tab, navigate via combobox.
+                      event.preventDefault();
+                    }
+                  }}
+                  tabIndex={-1}
+                >
+                  {resultsWithHighlighting[i]}
+                </a>
               </div>
             )),
             <div

@@ -91,7 +91,6 @@
 .header-search,
 .homepage-hero-search {
   .search-results {
-    color: var(--text-primary);
     border: 1px solid var(--border-secondary);
     border-radius: var(--elem-radius);
     box-shadow: var(--shadow-01);
@@ -101,12 +100,14 @@
     width: 100%;
     z-index: var(--z-index-search-results);
 
-    .indexing-warning {
-      color: var(--icon-warning);
+    &,
+    a[href],
+    mark {
+      color: var(--text-primary);
     }
 
-    div {
-      padding: 0.5rem;
+    .indexing-warning {
+      color: var(--icon-warning);
     }
 
     .nothing-found {
@@ -120,6 +121,7 @@
 
     .result-item {
       border-bottom: 1px solid var(--border-secondary);
+      padding: 0.5rem;
       word-break: break-word;
       background: var(--background-secondary);
       font: var(--type-body-m);
@@ -154,7 +156,6 @@
 
     mark {
       background-color: var(--mark-color);
-      color: var(--text-primary);
     }
 
     small {

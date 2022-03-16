@@ -79,7 +79,6 @@ function NotificationsLayout() {
           })}
         />
       </header>
-      {isLoading && <Loading message="Waiting for data" />}
       {showTabs && (
         <Container>
           <>
@@ -94,6 +93,7 @@ function NotificationsLayout() {
               hasMore={hasMore}
             />
           </>
+          {isLoading && <Loading message="Waiting for data" />}
           {!userData && <Loading message="Waiting for authentication" />}
           {!userData && !isAuthed && <NotSignedIn />}
           {error && <DataError error={error} />}

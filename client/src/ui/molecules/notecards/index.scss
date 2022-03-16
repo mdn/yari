@@ -13,7 +13,6 @@
   &,
   p,
   li {
-    font: var(--type-body-m);
     color: var(--text-secondary);
   }
 
@@ -32,7 +31,7 @@
 
   &:before {
     position: absolute;
-    top: 1.3rem;
+    top: 1.5rem;
     left: 1rem;
     display: block;
     width: 1rem;
@@ -54,7 +53,15 @@
     }
   }
 
-  &.deprecated,
+  &.nonstandard {
+    --note-background: var(--background-warning);
+    --note-theme: var(--icon-warning);
+
+    &:before {
+      mask-image: url("../../../assets/icons/nonstandard.svg");
+    }
+  }
+
   &.error,
   &.negative {
     --note-background: var(--background-critical);
@@ -62,6 +69,21 @@
 
     &:before {
       mask-image: url("../../../assets/icons/note-deprecated.svg");
+    }
+  }
+
+  &.deprecated {
+    --note-background: var(--background-critical);
+    --note-theme: var(--icon-critical);
+
+    &:before {
+      mask-image: url("../../../assets/icons/deprecated.svg");
+    }
+  }
+
+  &.experimental {
+    &:before {
+      mask-image: url("../../../assets/icons/experimental.svg");
     }
   }
 

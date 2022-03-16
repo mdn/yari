@@ -62,17 +62,15 @@ function addBreadcrumbData(url, document) {
     }
   }
 
-  if (parents.length) {
-    if (!document.short_title) {
-      document.short_title = transformTitle(document.title);
-    }
-
-    parents.push({
-      uri: url,
-      title: document.short_title || document.title,
-    });
-    document.parents = parents;
+  if (!document.short_title) {
+    document.short_title = transformTitle(document.title);
   }
+
+  parents.push({
+    uri: url,
+    title: document.short_title,
+  });
+  document.parents = parents;
 }
 
 module.exports = { addBreadcrumbData };

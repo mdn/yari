@@ -95,7 +95,7 @@
   --code-color: #{$mdn-color-light-theme-blue-40};
   --mark-color: #{$mdn-color-light-theme-blue-10};
 
-  --plus-accent-color: #{$mdn-color-light-theme-blue-50};
+  --plus-accent-color: #{$mdn-color-light-theme-red-50};
   --html-accent-color: #{$mdn-color-light-theme-red-50};
   --css-accent-color: #{$mdn-color-light-theme-blue-50};
   --js-accent-color: #{$mdn-color-light-theme-yellow-50};
@@ -103,7 +103,7 @@
   --apis-accent-color: #{$mdn-color-light-theme-violet-50};
   --learn-accent-color: #{$mdn-color-light-theme-pink-50};
 
-  --plus-code-color: #{$mdn-color-light-theme-blue-60};
+  --plus-code-color: #{$mdn-color-light-theme-red-60};
   --html-code-color: #{$mdn-color-light-theme-red-60};
   --css-code-color: #{$mdn-color-light-theme-blue-60};
   --js-code-color: #{$mdn-color-light-theme-yellow-60};
@@ -111,7 +111,7 @@
   --apis-code-color: #{$mdn-color-light-theme-violet-60};
   --learn-code-color: #{$mdn-color-light-theme-pink-60};
 
-  --plus-mark-color: #{$mdn-color-light-theme-blue-10};
+  --plus-mark-color: #{$mdn-color-light-theme-red-10};
   --html-mark-color: #{$mdn-color-light-theme-red-10};
   --css-mark-color: #{$mdn-color-light-theme-blue-10};
   --js-mark-color: #{$mdn-color-light-theme-yellow-10};
@@ -119,7 +119,7 @@
   --apis-mark-color: #{$mdn-color-light-theme-violet-10};
   --learn-mark-color: #{$mdn-color-light-theme-pink-10};
 
-  --plus-accent-background-color: #{$mdn-color-light-theme-blue-50}10;
+  --plus-accent-background-color: #{$mdn-color-light-theme-red-50}10;
   --html-accent-background-color: #{$mdn-color-light-theme-red-50}10;
   --css-accent-background-color: #{$mdn-color-light-theme-blue-50}10;
   --js-accent-background-color: #{$mdn-color-light-theme-yellow-50}10;
@@ -128,7 +128,7 @@
   --learn-accent-background-color: #{$mdn-color-light-theme-pink-50}10;
 
   --plus-accent-engage: #{color.adjust(
-      $mdn-color-light-theme-blue-50,
+      $mdn-color-light-theme-red-50,
       $alpha: -0.3
     )};
   --html-accent-engage: #{color.adjust(
@@ -155,70 +155,6 @@
       $mdn-color-light-theme-pink-50,
       $alpha: -0.3
     )};
-  /*
-  --html-code-inline: #{color.adjust(
-      $mdn-color-light-theme-red-50,
-      $alpha: -0.92,
-      $saturation: -20%
-    )};
-  --html-code-block: #{color.adjust(
-      $mdn-color-light-theme-red-50,
-      $alpha: -0.95,
-      $saturation: -10%
-    )};
-
-  --css-code-inline: #{color.adjust(
-      $mdn-color-light-theme-blue-50,
-      $alpha: -0.92
-    )};
-  --css-code-block: #{color.adjust(
-      $mdn-color-light-theme-blue-50,
-      $alpha: -0.97
-    )};
-
-  --js-code-inline: #{color.adjust(
-      $mdn-color-light-theme-yellow-50,
-      $alpha: -0.9,
-      $saturation: 20%
-    )};
-  --js-code-block: #{color.adjust(
-      $mdn-color-light-theme-yellow-50,
-      $alpha: -0.95,
-      $saturation: 20%
-    )};
-
-  --http-code-inline: #{color.adjust(
-      $mdn-color-light-theme-green-50,
-      $alpha: -0.92
-    )};
-  --http-code-block: #{color.adjust(
-      $mdn-color-light-theme-green-50,
-      $alpha: -0.95
-    )};
-
-  --apis-code-inline: #{color.adjust(
-      $mdn-color-light-theme-violet-50,
-      $alpha: -0.92,
-      $saturation: -10%
-    )};
-  --apis-code-block: #{color.adjust(
-      $mdn-color-light-theme-violet-50,
-      $alpha: -0.96,
-      $saturation: -20%
-    )};
-*/
-  --html-code-inline: #{$mdn-color-light-grey-10};
-  --html-code-block: #{$mdn-color-light-grey-10};
-  --css-code-inline: #{$mdn-color-light-grey-10};
-  --css-code-block: #{$mdn-color-light-grey-10};
-  --js-code-inline: #{$mdn-color-light-grey-10};
-  --js-code-block: #{$mdn-color-light-grey-10};
-  --http-code-inline: #{$mdn-color-light-grey-10};
-  --http-code-block: #{$mdn-color-light-grey-10};
-  --apis-code-inline: #{$mdn-color-light-grey-10};
-  --apis-code-block: #{$mdn-color-light-grey-10};
-  --learn-code-inline: #{$mdn-color-light-grey-10};
-  --learn-code-block: #{$mdn-color-light-grey-10};
 
   --homepage-hero-bg: radial-gradient(
     114.42% 123.24% at 6.69% 13.67%,
@@ -234,6 +170,11 @@
 
   --modal-backdrop-color: #{rgba($mdn-theme-dark-background-primary, 0.1)};
   --blend-color: #{$mdn-color-white}80;
+
+  --text-primary-red: #{$mdn-color-light-theme-red-60};
+  --text-primary-green: #{$mdn-color-light-theme-green-60};
+  --text-primary-blue: #{$mdn-color-light-theme-blue-60};
+  --text-primary-yellow: #{$mdn-color-light-theme-yellow-60};
 }
 
 @mixin dark-theme {
@@ -300,7 +241,7 @@
   --code-color: #{$mdn-color-dark-theme-blue-20};
   --mark-color: #{$mdn-color-dark-theme-blue-70};
 
-  --plus-accent-color: #{$mdn-color-dark-theme-blue-30};
+  --plus-accent-color: #{$mdn-color-dark-theme-red-30};
   --html-accent-color: #{$mdn-color-dark-theme-red-40};
   --css-accent-color: #{$mdn-color-dark-theme-blue-30};
   --js-accent-color: #{$mdn-color-dark-theme-yellow-40};
@@ -308,7 +249,7 @@
   --apis-accent-color: #{$mdn-color-dark-theme-violet-40};
   --learn-accent-color: #{$mdn-color-dark-theme-pink-40};
 
-  --plus-code-color: #{$mdn-color-dark-theme-blue-20};
+  --plus-code-color: #{$mdn-color-dark-theme-red-20};
   --html-code-color: #{$mdn-color-dark-theme-red-30};
   --css-code-color: #{$mdn-color-dark-theme-blue-20};
   --js-code-color: #{$mdn-color-dark-theme-yellow-30};
@@ -316,7 +257,7 @@
   --apis-code-color: #{$mdn-color-dark-theme-violet-30};
   --learn-code-color: #{$mdn-color-dark-theme-pink-30};
 
-  --plus-mark-color: #{$mdn-color-dark-theme-blue-70};
+  --plus-mark-color: #{$mdn-color-dark-theme-red-70};
   --html-mark-color: #{$mdn-color-dark-theme-red-70};
   --css-mark-color: #{$mdn-color-dark-theme-blue-70};
   --js-mark-color: #{$mdn-color-dark-theme-yellow-70};
@@ -324,6 +265,10 @@
   --apis-mark-color: #{$mdn-color-dark-theme-violet-70};
   --learn-mark-color: #{$mdn-color-dark-theme-pink-70};
 
+  --plus-accent-engage: #{color.adjust(
+      $mdn-color-dark-theme-red-40,
+      $alpha: -0.3
+    )};
   --html-accent-engage: #{color.adjust(
       $mdn-color-dark-theme-red-40,
       $alpha: -0.3
@@ -348,78 +293,14 @@
       $mdn-color-dark-theme-pink-40,
       $alpha: -0.3
     )};
-  /*
-  --html-code-inline: #{color.adjust(
-      $mdn-color-dark-theme-red-50,
-      $alpha: -0.8,
-      $saturation: 20%
-    )};
-  --html-code-block: #{color.adjust(
-      $mdn-color-dark-theme-red-40,
-      $alpha: -0.9,
-      $saturation: 10%
-    )};
-
-  --css-code-inline: #{color.adjust(
-      $mdn-color-dark-theme-blue-20,
-      $alpha: -0.85,
-      $saturation: 20%
-    )};
-  --css-code-block: #{color.adjust(
-      $mdn-color-dark-theme-blue-20,
-      $alpha: -0.9,
-      $saturation: 20%
-    )};
-
-  --js-code-inline: #{color.adjust(
-      $mdn-color-dark-theme-yellow-10,
-      $alpha: -0.85,
-      $saturation: 20%
-    )};
-  --js-code-block: #{color.adjust(
-      $mdn-color-dark-theme-yellow-10,
-      $alpha: -0.9,
-      $saturation: 20%
-    )};
-
-  --http-code-inline: #{color.adjust(
-      $mdn-color-dark-theme-green-30,
-      $alpha: -0.85,
-      $saturation: 20%
-    )};
-  --http-code-block: #{color.adjust(
-      $mdn-color-dark-theme-green-30,
-      $alpha: -0.9,
-      $saturation: 20%
-    )};
-
-  --apis-code-inline: #{color.adjust(
-      $mdn-color-dark-theme-violet-30,
-      $alpha: -0.85,
-      $saturation: 20%
-    )};
-  --apis-code-block: #{color.adjust(
-      $mdn-color-dark-theme-violet-30,
-      $alpha: -0.92,
-      $saturation: 20%
-    )};
-*/
-
-  --html-code-inline: #{$mdn-color-dark-grey-70};
-  --html-code-block: #{$mdn-color-dark-grey-70};
-  --css-code-inline: #{$mdn-color-dark-grey-70};
-  --css-code-block: #{$mdn-color-dark-grey-70};
-  --js-code-inline: #{$mdn-color-dark-grey-70};
-  --js-code-block: #{$mdn-color-dark-grey-70};
-  --http-code-inline: #{$mdn-color-dark-grey-70};
-  --http-code-block: #{$mdn-color-dark-grey-70};
-  --apis-code-inline: #{$mdn-color-dark-grey-70};
-  --apis-code-block: #{$mdn-color-dark-grey-70};
-  --learn-code-inline: #{$mdn-color-dark-grey-70};
-  --learn-code-block: #{$mdn-color-dark-grey-70};
 
   --modal-backdrop-color: #{rgba($mdn-theme-dark-background-primary, 0.7)};
   --blend-color: #{$mdn-color-black}80;
+
+  --text-primary-red: #{$mdn-color-dark-theme-red-30};
+  --text-primary-green: #{$mdn-color-dark-theme-green-30};
+  --text-primary-blue: #{$mdn-color-dark-theme-blue-30};
+  --text-primary-yellow: #{$mdn-color-dark-theme-yellow-30};
 }
 
 body,

@@ -1,7 +1,6 @@
 const fs = require("fs");
 const path = require("path");
 const frontmatter = require("front-matter");
-const cheerio = require("cheerio");
 
 const { m2h } = require("../markdown");
 
@@ -15,6 +14,7 @@ const { BUILD_OUT_ROOT } = require("./constants");
 // eslint-disable-next-line node/no-missing-require
 const { renderHTML } = require("../ssr/dist/main");
 const { default: got } = require("got");
+const { splitSections } = require("./utils");
 
 const contributorSpotlightRoot = CONTRIBUTOR_SPOTLIGHT_ROOT;
 
@@ -34,32 +34,8 @@ async function buildContributorSpotlight(options) {
 
     const frontMatter = frontmatter(markdown);
     const contributorHTML = await m2h(frontMatter.body, locale);
-    const $ = cheerio.load(`<div id="_body">${contributorHTML}</div>`);
 
-    const blocks = [];
-
-    const section = cheerio
-      .load("<div></div>", { decodeEntities: false })("div")
-      .eq(0);
-
-    const iterable = [...$("#_body")[0].childNodes];
-    let c = 0;
-    iterable.forEach((child) => {
-      if (child.tagName === "h2") {
-        if (c) {
-          blocks.push(section.clone());
-          section.empty();
-          c = 0;
-        }
-      }
-      c++;
-      section.append(child);
-    });
-    if (c) {
-      blocks.push(section.clone());
-    }
-
-    const sections = blocks.map((block) => block.html().trim());
+    const { sections } = splitSections(contributorHTML);
 
     const hyData = {
       sections: sections,
@@ -161,6 +137,48 @@ async function buildSPAs(options) {
         }
       }
     }
+  }
+
+  // Building the MDN Plus feature pages.
+  const featuresDir = path.join(__dirname, "../copy/plus/features");
+  for (const page of fs.readdirSync(featuresDir)) {
+    const locale = "en-US";
+    const feature = page.split(".")[0];
+    const markdown = fs.readFileSync(path.join(featuresDir, page), "utf8");
+
+    const frontMatter = frontmatter(markdown);
+    const rawHTML = await m2h(frontMatter.body, locale);
+
+    const { sections, toc } = splitSections(rawHTML);
+
+    const url = `/${locale}/plus/feature/${feature}`;
+    const hyData = {
+      id: feature,
+      ...frontMatter.attributes,
+      sections,
+      toc,
+    };
+    const context = {
+      hyData,
+      pageTitle: `${frontMatter.attributes.title || ""} | MDN Plus`,
+    };
+    const html = renderHTML(url, context);
+    const outPath = path.join(
+      BUILD_OUT_ROOT,
+      locale,
+      "plus",
+      "feature",
+      feature
+    );
+    fs.mkdirSync(outPath, { recursive: true });
+    const filePath = path.join(outPath, "index.html");
+    fs.writeFileSync(filePath, html);
+    buildCount++;
+    if (options.verbose) {
+      console.log("Wrote", filePath);
+    }
+    const filePathContext = path.join(outPath, "index.json");
+    fs.writeFileSync(filePathContext, JSON.stringify(context));
   }
 
   // Build all the home pages in all locales.
