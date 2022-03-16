@@ -7,7 +7,7 @@ import { PageNotFound } from "../page-not-found";
 import Notifications from "./notifications";
 
 const OfferOverview = React.lazy(() => import("./offer-overview"));
-const Bookmarks = React.lazy(() => import("./bookmarks"));
+const Collections = React.lazy(() => import("./collections"));
 const FeatureHighlight = React.lazy(() => import("./feature-highlight"));
 
 export function Plus({ pageTitle, ...props }: { pageTitle?: string }) {
@@ -39,7 +39,7 @@ export function Plus({ pageTitle, ...props }: { pageTitle?: string }) {
         element={
           <React.Suspense fallback={loading}>
             <div className="bookmarks girdle">
-              <Bookmarks />
+              <Collections />
             </div>
           </React.Suspense>
         }

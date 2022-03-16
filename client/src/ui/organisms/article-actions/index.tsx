@@ -9,7 +9,7 @@ import { Doc } from "../../../document/types";
 
 import "./index.scss";
 import { MDN_APP } from "../../../constants";
-import { BookmarkContainer } from "../../molecules/bookmark";
+import { BookmarkContainer } from "../../molecules/collection";
 
 export const ArticleActions = ({
   doc,
@@ -63,9 +63,11 @@ export const ArticleActions = ({
                   <BookmarkContainer doc={doc} />
                 </li>
               )}
-              <li className="article-actions-entry">
-                <ThemeSwitcher />
-              </li>
+              {isAuthenticated && (
+                <li className="article-actions-entry">
+                  <ThemeSwitcher />
+                </li>
+              )}
               {!MDN_APP && translations && !!translations.length && (
                 <li className="article-actions-entry">
                   <LanguageMenu

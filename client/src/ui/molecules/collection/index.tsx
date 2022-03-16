@@ -1,10 +1,10 @@
 import useSWR from "swr";
 import { Doc } from "../../../document/types";
-import { BookmarkData } from "../../../plus/bookmarks";
+import { BookmarkData } from "../../../plus/collections";
 import { BookmarkMenu } from "./menu";
 
 export interface BookmarkedData {
-  bookmarked?: BookmarkData;
+  bookmarked: BookmarkData;
   csrfmiddlewaretoken: string;
 }
 
