@@ -263,7 +263,7 @@ function LoadingError({ error }) {
         </p>
       )}
       <p>
-        <a href=".">Try reloading the page</a>
+        <a href="?">Try reloading the page</a>
       </p>
     </div>
   );
