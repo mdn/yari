@@ -5,9 +5,13 @@
     display: none;
   }
 
-  tbody td,
-  tbody th,
-  .bc-support > button {
+  .bc-support {
+    display: block;
+  }
+
+  .bc-feature,
+  .bc-support > button,
+  .bc-history > td {
     display: flex;
     flex-wrap: wrap;
     gap: 0.5rem;
