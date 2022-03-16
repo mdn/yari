@@ -333,6 +333,8 @@ function getNotes(
 ) {
   if (support) {
     return asList(support)
+      .slice()
+      .reverse()
       .flatMap((item, i) => {
         const supportNotes = [
           item.version_removed
