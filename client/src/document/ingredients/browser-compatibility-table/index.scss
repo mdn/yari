@@ -8,165 +8,160 @@
   font: var(--type-body-m);
 }
 
-.bc {
-  &-table {
-    width: 100%;
-    margin: 1rem 0;
-    border: 1px solid var(--border-primary);
-    border-radius: var(--elem-radius);
-    border-collapse: separate;
-    border-spacing: 0;
+.bc-table {
+  width: 100%;
+  margin: 1rem 0;
+  border: 1px solid var(--border-primary);
+  border-radius: var(--elem-radius);
+  border-collapse: separate;
+  border-spacing: 0;
 
-    thead {
-      display: none;
+  thead {
+    display: none;
+  }
+
+  tbody td,
+  tbody th {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    align-content: center;
+  }
+
+  td,
+  th {
+    border: 1px solid var(--border-secondary);
+    border-width: 0 0 1px 1px;
+    font: var(--type-body-m);
+    padding: 0.4rem;
+
+    &[aria-expanded="false"] {
+      height: 2rem;
     }
 
-    tbody td,
-    tbody th {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.5rem;
-      align-content: center;
+    code {
+      font-size: 0.75rem !important;
     }
+  }
 
-    td,
-    th {
-      border: 1px solid var(--border-secondary);
-      border-width: 0 0 1px 1px;
-      font: var(--type-body-m);
-      padding: 0.4rem;
+  // these props allow us to add border-radius to the table.
+  // border-collapse: separate gets in the way of this
+  // being easy.
+  tbody {
+    tr {
+      height: 3rem;
 
-      &[aria-expanded="false"] {
-        height: 2rem;
-      }
-
-      code {
-        font-size: 0.75rem !important;
-      }
-    }
-
-    // these props allow us to add border-radius to the table.
-    // border-collapse: separate gets in the way of this
-    // being easy.
-    tbody {
-      tr {
-        height: 3rem;
-
-        &:last-child {
-          th,
-          td {
-            border-bottom-width: 0;
-          }
-        }
-
-        th {
-          border-left-width: 0;
-          vertical-align: middle;
+      &:last-child {
+        th,
+        td {
+          border-bottom-width: 0;
         }
       }
 
-      td {
-        &.bc-supports-no > span {
-          color: var(--text-primary-red);
-        }
-        &.bc-supports-partial > span {
-          color: var(--text-primary-yellow);
-        }
-        &.bc-supports-preview > span {
-          color: var(--text-primary-blue);
-        }
-        &.bc-supports-yes > span {
-          color: var(--text-primary-green);
-        }
+      th {
+        border-left-width: 0;
+        vertical-align: middle;
       }
     }
 
-    th {
-      vertical-align: bottom;
-      background: var(--background-tertiary);
-    }
-
-    tbody th {
-      @media screen and (min-width: $screen-md) {
-        width: 20%;
+    td {
+      &.bc-supports-no > span {
+        color: var(--text-primary-red);
+      }
+      &.bc-supports-partial > span {
+        color: var(--text-primary-yellow);
+      }
+      &.bc-supports-preview > span {
+        color: var(--text-primary-blue);
+      }
+      &.bc-supports-yes > span {
+        color: var(--text-primary-green);
       }
     }
+  }
 
-    .bc-supports {
-      margin-bottom: 1rem;
+  th {
+    vertical-align: bottom;
+    background: var(--background-tertiary);
+  }
 
-      .icon-wrap {
-        background: var(--background-primary);
-      }
+  tbody th {
+    @media screen and (min-width: $screen-md) {
+      width: 20%;
     }
+  }
+
+  .bc-supports {
+    margin-bottom: 1rem;
 
     .icon-wrap {
-      .bc-support-level {
-        @include visually-hidden;
-      }
-    }
-    .bc-cell {
-      > .icon-wrap {
-        display: block;
-      }
-    }
-
-    tr [class^="bc-browser"] {
-      text-align: center;
-    }
-
-    .bc-history-desktop {
-      display: none;
+      background: var(--background-primary);
     }
   }
 
-  &-head-txt-label {
-    -ms-writing-mode: tb-rl;
-    -webkit-writing-mode: vertical-rl;
-    writing-mode: vertical-rl;
-    transform: rotate(180deg);
-    white-space: nowrap;
+  .icon-wrap {
+    .bc-support-level {
+      @include visually-hidden;
+    }
+  }
+  .bc-cell {
+    > .icon-wrap {
+      display: block;
+    }
   }
 
-  &-cell {
+  tr [class^="bc-browser"] {
     text-align: center;
-    vertical-align: middle;
   }
 
-  &-history-link {
-    @include visually-hidden;
-    position: absolute; // messing up layout otherwise
-  }
-
-  &-level-no {
-    background-color: var(--icon-critical);
-  }
-
-  &-level-preview {
-    background-color: var(--icon-information);
+  .bc-history-desktop {
+    display: none;
   }
 }
 
-.bc-legend {
-  &-items-container {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 1.5rem;
-    margin-bottom: 2rem;
-    font: var(--type-body-m);
-  }
+.bc-head-txt-label {
+  -ms-writing-mode: tb-rl;
+  -webkit-writing-mode: vertical-rl;
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+  white-space: nowrap;
+}
 
-  &-item {
-    display: flex;
-    gap: 0.5rem;
+.bc-cell {
+  text-align: center;
+  vertical-align: middle;
+}
 
-    &-dt {
-      display: flex;
+.bc-history-link {
+  @include visually-hidden;
+  position: absolute; // messing up layout otherwise
+}
 
-      .icon {
-        background-color: var(--icon-secondary);
-      }
-    }
+.bc-level-no {
+  background-color: var(--icon-critical);
+}
+
+.bc-level-preview {
+  background-color: var(--icon-information);
+}
+
+.bc-legend-items-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+  font: var(--type-body-m);
+}
+
+.bc-legend-item {
+  display: flex;
+  gap: 0.5rem;
+}
+.bc-legend-item-dt {
+  display: flex;
+
+  .icon {
+    background-color: var(--icon-secondary);
   }
 }
 
