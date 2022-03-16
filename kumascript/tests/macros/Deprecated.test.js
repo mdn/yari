@@ -8,8 +8,8 @@ describeMacro("Deprecated_Inline", function () {
   itMacro("No arguments (en-US)", function (macro) {
     return assert.eventually.equal(
       macro.call(),
-      `<abbr class="only-icon icon icon-deprecated" title="Deprecated">
-    <span>Deprecated</span>
+      `<abbr class="icon icon-deprecated" title="Deprecated">
+    <span class="visually-hidden">Deprecated</span>
 </abbr>`
     );
   });
