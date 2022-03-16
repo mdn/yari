@@ -84,7 +84,7 @@ export function useNotificationsApiEndpoint(
       if (!response.ok) {
         setError(
           new Error(
-            `${response.status} - There was a problem fetching your data. Please try again later`
+            `${response.status} - There was a problem fetching your Notifications. Please try again later`
           )
         );
         setIsLoading(false);
@@ -131,7 +131,7 @@ export function useWatchedItemsApiEndpoint(
       if (!response.ok) {
         setError(
           new Error(
-            `${response.status} - There was a problem fetching your data. Please try again later`
+            `${response.status} - There was a problem fetching your watched items. Please try again later`
           )
         );
         setIsLoading(false);
@@ -210,7 +210,7 @@ export function useCollectionsApiEndpoint(
       if (!response.ok) {
         setError(
           new Error(
-            `${response.status} - There was a problem fetching your data. Please try again later`
+            `${response.status} - There was a problem fetching your Collection. Please try again later`
           )
         );
         setIsLoading(false);
