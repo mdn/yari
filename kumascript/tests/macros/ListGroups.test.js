@@ -43,9 +43,9 @@ const expectedHTML = `<div class="index">
         <li>
             <a href='/en-US/docs/Web/API/A2TestInterface_overview'>A2TestInterface</a>
             <span class='indexListBadges'>
-              <svg class="icon icon-experimental" tabindex="0">
-                <use xlink:href="/assets/badges.svg#icon-experimental"></use>
-              </svg>
+              <abbr class="only-icon icon icon-experimental" title="Experimental">
+                <span>Experimental</span>
+              </abbr>
             </span>
         </li>
         <li>

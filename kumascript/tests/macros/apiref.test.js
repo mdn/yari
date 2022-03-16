@@ -349,16 +349,16 @@ function checkInterfaceItem(actual, expected, config) {
     // and the text contents omits the CTA
     const methodLink = actual.querySelector("a");
     expect(methodLink).toBeNull();
-    const methodName = actual.querySelector("svg");
+    const methodName = actual.querySelector("abbr, svg");
     expect(actual.textContent).toContain(methodName.textContent);
   }
 
   // Test that the badges are what we expect
-  const badgeClasses = actual.querySelectorAll("svg");
+  const badgeClasses = actual.querySelectorAll("abbr, svg");
   expect(badgeClasses.length).toEqual(expected.badges.length);
   for (const badgeClass of badgeClasses) {
     badgeClass.classList.forEach((value) => {
-      if (value !== "icon") {
+      if (value !== "icon" && value !== "only-icon") {
         expect(expected.badges).toContain(value);
       }
     });
