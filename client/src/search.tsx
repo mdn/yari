@@ -418,6 +418,13 @@ function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
     );
   })();
 
+  function collapseSearchInput() {
+    onChangeInputValue("");
+    reset();
+    toggleMenu();
+    inputRef.current?.blur();
+  }
+
   return (
     <form
       action={formAction}
@@ -455,13 +462,13 @@ function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
           onFocus: () => {
             onChangeIsFocused(true);
           },
-          onBlur: () => onChangeIsFocused(false),
+          onBlur: () => {
+            onChangeIsFocused(false);
+            collapseSearchInput();
+          },
           onKeyDown(event) {
             if (event.key === "Escape" && inputRef.current) {
-              onChangeInputValue("");
-              reset();
-              toggleMenu();
-              inputRef.current?.blur();
+              collapseSearchInput();
             } else if (
               event.key === "Enter" &&
               inputValue.trim() &&

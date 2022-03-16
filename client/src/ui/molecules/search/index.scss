@@ -2,6 +2,8 @@
 @use "../../vars" as *;
 
 .header-search {
+  max-width: 100%;
+
   .search-widget {
     position: relative;
     width: 100%;
@@ -36,6 +38,15 @@
       50% {
         text-decoration-line: underline;
       }
+    }
+
+    &:invalid {
+      width: 1rem;
+    }
+
+    &:focus,
+    &:valid {
+      width: inherit;
     }
 
     &:invalid,

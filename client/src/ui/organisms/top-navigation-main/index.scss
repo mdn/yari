@@ -149,10 +149,6 @@
     display: none;
   }
 
-  .header-search {
-    max-width: 100%;
-  }
-
   @media screen and (min-width: $screen-md) {
     align-items: center;
     display: flex;
@@ -192,17 +188,6 @@
 
     .menu-toggle + .top-level-entry {
       display: inline-flex;
-    }
-  }
-}
-
-.category-home {
-  .header-search {
-    .search-input-field {
-      &:focus {
-        box-shadow: var(--focus-01);
-        border-color: var(--field-focus-border);
-      }
     }
   }
 }
