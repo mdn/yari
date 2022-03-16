@@ -41,6 +41,7 @@ button,
 
 .button .icon {
   background-color: var(--button-color);
+  margin: 0 -1px; // shrinks icon-only buttons to square.
 }
 
 /* Button States */
