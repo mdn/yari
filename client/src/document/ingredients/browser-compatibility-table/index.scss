@@ -1,13 +1,6 @@
 @use "~@mdn/minimalist/sass/mixins/utils" as *;
 @use "../../../ui/vars" as *;
 
-.show-browser-version-toggle {
-  display: flex;
-  justify-content: flex-end;
-  margin-top: 0.5rem;
-  font: var(--type-body-m);
-}
-
 .bc-table {
   width: 100%;
   margin: 1rem 0;
