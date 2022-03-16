@@ -66,8 +66,13 @@
   --form-elem-height: 2rem;
 
   /* Major Components */
+  --sticky-header-height: 0;
   --top-nav-height: 4rem;
   --icon-size: 1rem;
+}
+
+:target {
+  scroll-margin-top: var(--sticky-header-height);
 }
 
 body {

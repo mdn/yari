@@ -66,3 +66,9 @@
     }
   }
 }
+
+@media screen and (max-width: $screen-md) {
+  :root {
+    --sticky-header-height: 2rem;
+  }
+}
