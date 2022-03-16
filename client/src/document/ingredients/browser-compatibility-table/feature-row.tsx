@@ -1,7 +1,13 @@
 import React, { useContext } from "react";
 import type bcd from "@mdn/browser-compat-data/types";
 import { BrowserInfoContext } from "./browser-info";
-import { asList, getFirst, isTruthy, versionIsPreview } from "./utils";
+import {
+  asList,
+  getFirst,
+  hasNoteworthyNotes,
+  isTruthy,
+  versionIsPreview,
+} from "./utils";
 import { LEGEND_LABELS } from "./legend";
 
 // Yari builder will attach extra keys from the compat data
@@ -221,15 +227,16 @@ const CellText = React.memo(
         label = "?";
         break;
     }
+    const supportClassName = getSupportClassName(support, browser);
 
     return (
       <>
         <span className="icon-wrap">
           <abbr
             className={`
-            bc-level-${getSupportClassName(currentSupport, browser)}
+            bc-level-${supportClassName}
             icon
-            icon-${getSupportClassName(currentSupport, browser)}`}
+            icon-${supportClassName}`}
             title={title}
           >
             <span className="bc-support-level">{title}</span>
@@ -268,6 +275,7 @@ function CellIcons({ support }: { support: bcd.SupportStatement | undefined }) {
   return (
     <div className="bc-icons">
       {supportItem.prefix && <Icon name="prefix" />}
+      {hasNoteworthyNotes(supportItem) && <Icon name="footnote" />}
       {supportItem.alternative_name && <Icon name="altname" />}
       {supportItem.flags && <Icon name="disabled" />}
     </div>
