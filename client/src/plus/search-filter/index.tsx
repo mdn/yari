@@ -18,6 +18,7 @@ export default function SearchFilter({
 }) {
   const [isFiltersOpen, setIsFiltersOpen] = useState<boolean>(false);
   const [isSortingOpen, setIsSortingOpen] = useState<boolean>(false);
+  const [terms, setTerms] = useState<string>("");
 
   const {
     selectedFilter,
@@ -72,13 +73,16 @@ export default function SearchFilter({
       className={`search-filter ${
         !filters.length ? "inline-on-mobile" : undefined
       }`}
+      onSubmit={(event: React.FormEvent) => {
+        event.preventDefault();
+        setSelectedTerms(terms);
+      }}
     >
       <Search
         name="terms"
         placeholder="Filter by keyword"
-        onChangeHandler={useDebouncedCallback((e) => {
-          setSelectedTerms(e.target.value);
-        }, 400)}
+        onBlurHandler={() => setSelectedTerms(terms)}
+        onChangeHandler={(e) => setTerms(e.target.value)}
       />
 
       {filters.length ? (
