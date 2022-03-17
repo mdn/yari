@@ -62,3 +62,11 @@ export function versionIsPreview(
 
   return false;
 }
+
+export function hasNoteworthyNotes(support: bcd.SimpleSupportStatement) {
+  return (
+    support.notes?.length &&
+    !support.version_removed &&
+    !support.partial_implementation
+  );
+}
