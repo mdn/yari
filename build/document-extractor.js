@@ -464,7 +464,7 @@ function _addSingleSpecialSection($) {
   }
 
   /**
-   * @param {object} support
+   * @param {object} support - {bcd.SimpleSupportStatement}
    * @returns {string}
    */
   function _getFirstVersion(support) {
