@@ -179,10 +179,10 @@
   /* icons in sidebars */
   .icon-experimental,
   .icon-nonstandard {
-    color: var(--icon-information);
+    background-color: var(--icon-information);
   }
 
   .icon-deprecated {
-    color: var(--icon-critical);
+    background-color: var(--icon-critical);
   }
 }
