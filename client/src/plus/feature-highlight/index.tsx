@@ -27,6 +27,9 @@ function FeatureHighlight(props) {
     }
   );
   React.useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+  React.useEffect(() => {
     const pageTitle = hyData && `${hyData.title} | MDN Plus`;
     document.title = pageTitle;
   }, [hyData]);
