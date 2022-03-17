@@ -3,6 +3,11 @@
 @use "../../vars" as *;
 
 .theme-switcher-menu {
+  margin-bottom: 0.5rem;
+  .button.action > .button-wrap {
+    text-transform: none;
+  }
+
   .themes-menu .button.button {
     --button-bg: transparent;
     --button-border-color: var(--button-bg);
@@ -69,7 +74,11 @@
 
   @media screen and (min-width: $screen-md) {
     border-bottom: 0;
+    margin-bottom: 0;
 
+    .themes-menu {
+      top: calc(100% - 1rem);
+    }
     .themes-menu.show {
       display: flex;
       flex-direction: column;
