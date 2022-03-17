@@ -188,6 +188,8 @@
     "use-debounce": "^7.0.1",
     "webpack": "4.44.2",
     "webpack-cli": "^4.9.2",
+    "webpack-dev-middleware": "^5.3.1",
+    "webpack-hot-middleware": "^2.25.1",
     "webpack-node-externals": "^3.0.0"
   },
   "engines": {
