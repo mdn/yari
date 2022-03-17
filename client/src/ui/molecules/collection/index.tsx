@@ -6,6 +6,7 @@ import { BookmarkMenu } from "./menu";
 export interface BookmarkedData {
   bookmarked: BookmarkData;
   csrfmiddlewaretoken: string;
+  subscription_limit_reached: boolean;
 }
 
 export function BookmarkContainer({ doc }: { doc: Doc }) {

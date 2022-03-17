@@ -7,11 +7,12 @@ import "./index.scss";
 import useSWR from "swr";
 import { useCSRFMiddlewareToken } from "../../../hooks";
 import { DropdownMenu, DropdownMenuWrapper } from "../dropdown";
-import { ManageOrUpgradeDialog } from "./manage-or-upgrade";
+import { ManageOrUpgradeDialogNotifications } from "../manage-upgrade-dialog";
+import { useUIStatus } from "../../../ui-context";
 
 interface WatchModeData {
   status: string;
-  watch_limit_reached: boolean;
+  subscription_limit_reached: boolean;
 }
 
 export const NotificationsWatchMenu = ({ doc }) => {
@@ -26,6 +27,7 @@ export const NotificationsWatchMenu = ({ doc }) => {
   const slug = doc.mdn_url; // Unique ID for the page
   const apiURL = `/api/v1/plus/watching/?url=${slug}`;
   const csrfMiddlewareToken = useCSRFMiddlewareToken();
+  const ui = useUIStatus();
 
   const { data, mutate } = useSWR<WatchModeData>(
     apiURL,
@@ -42,7 +44,7 @@ export const NotificationsWatchMenu = ({ doc }) => {
     }
   );
   const watching = data?.status && data.status !== "unwatched";
-  const canWatchMore = !Boolean(data?.watch_limit_reached);
+  const canWatchMore = !Boolean(data?.subscription_limit_reached);
 
   async function handleWatchSubmit({ unwatch }: { unwatch?: boolean }) {
     if (!data) {
@@ -79,10 +81,14 @@ export const NotificationsWatchMenu = ({ doc }) => {
     });
 
     if (!response.ok) {
-      console.log(response);
-      // if (response.error === "max_subscriptions"){
-      //   ToDo: Handle Error here
-      // }
+      const json = await response.json();
+      if (json?.error === "max_subscriptions") {
+        ui.setToastData({
+          mainText: "Couldn't watch article - Max subscriptions reached!",
+          isImportant: false,
+        });
+        return;
+      }
 
       throw new Error(`${response.status} on ${slug}`);
     }
@@ -113,10 +119,11 @@ export const NotificationsWatchMenu = ({ doc }) => {
           {watching ? "Watching" : "Watch"}
         </Button>
       </React.Suspense>
-      {!canWatchMore && !watching && (
-        <ManageOrUpgradeDialog show={show} setShow={setShow} />
-      )}
-      {data && canWatchMore && (
+      {!canWatchMore && !watching ? (
+        <DropdownMenu>
+          <ManageOrUpgradeDialogNotifications setShow={setShow} />
+        </DropdownMenu>
+      ) : (
         <DropdownMenu>
           <div
             className={`${menuId} show`}
@@ -127,7 +134,9 @@ export const NotificationsWatchMenu = ({ doc }) => {
               closeDropdown={closeDropdown}
               data={data}
               handleSelection={(unwatch: boolean) => {
-                handleWatchSubmit({ unwatch });
+                if (!watching || unwatch) {
+                  handleWatchSubmit({ unwatch });
+                }
               }}
             />
           </div>

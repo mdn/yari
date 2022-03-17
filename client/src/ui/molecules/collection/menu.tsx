@@ -6,6 +6,8 @@ import { Button } from "../../atoms/button";
 import { Doc } from "../../../document/types";
 import { BookmarkedData } from ".";
 import { DropdownMenu, DropdownMenuWrapper } from "../dropdown";
+import { ManageOrUpgradeDialogCollections } from "../manage-upgrade-dialog";
+import { useUIStatus } from "../../../ui-context";
 
 const menuId = "watch-submenu";
 
@@ -41,6 +43,7 @@ export function BookmarkMenu({
   const apiURL = getBookmarkApiUrl(
     new URLSearchParams([["url", doc?.mdn_url || data?.bookmarked?.url || ""]])
   );
+  const ui = useUIStatus();
   const [show, setShow] = React.useState(false);
   const [name, setName] = React.useState<string>(
     data?.bookmarked?.title || doc?.title || ""
@@ -91,10 +94,16 @@ export function BookmarkMenu({
       },
     });
     if (!response.ok) {
-      console.log(response);
-      // if (response.error === "max_subscriptions"){
-      //   ToDo: Handle Error here
-      // }
+      const json = await response.json();
+      if (json?.error === "max_subscriptions") {
+        ui.setToastData({
+          mainText:
+            "Couldn't save article to collection - Max subscriptions reached!",
+          isImportant: false,
+        });
+        return;
+      }
+      throw new Error(`${response.status}`);
     }
     mutate();
     setShow(false);
@@ -107,7 +116,13 @@ export function BookmarkMenu({
     }
   };
 
-  const bookmarked = data?.bookmarked;
+  const saved = data?.bookmarked;
+  const canSaveMore = !Boolean(data?.subscription_limit_reached);
+  const saveIcon = saved
+    ? "bookmark-filled"
+    : canSaveMore
+    ? "bookmark"
+    : "padlock";
 
   return (
     <DropdownMenuWrapper
@@ -118,17 +133,15 @@ export function BookmarkMenu({
       {doc ? (
         <Button
           type="action"
-          icon={`${bookmarked ? "bookmark-filled" : "bookmark"}`}
-          extraClasses={`bookmark-button small ${
-            bookmarked ? "highlight" : ""
-          }`}
+          icon={saveIcon}
+          extraClasses={`bookmark-button small ${saved ? "highlight" : ""}`}
           isDisabled={!data}
           onClickHandler={() => {
             setShow((v) => !v);
           }}
         >
           <span className="bookmark-button-label">
-            {bookmarked ? "Saved" : "Save"}
+            {saved ? "Saved" : "Save"}
           </span>
         </Button>
       ) : (
@@ -143,8 +156,11 @@ export function BookmarkMenu({
           <span className="visually-hidden">Edit bookmark</span>
         </Button>
       )}
-
-      {data && (
+      {!canSaveMore && !saved ? (
+        <DropdownMenu>
+          <ManageOrUpgradeDialogCollections setShow={setShow} />
+        </DropdownMenu>
+      ) : (
         <form method="post" action={apiURL} onSubmit={saveHandler}>
           <DropdownMenu>
             <div
@@ -158,12 +174,12 @@ export function BookmarkMenu({
               >
                 <span className="watch-submenu-header-wrap">
                   <Icon name="chevron" />
-                  {bookmarked ? "Edit Collection" : "Add Collection"}
+                  {saved ? "Edit Collection" : "Add Collection"}
                 </span>
               </button>
 
               <h2 className="watch-submenu-header desktop-only">
-                {bookmarked ? "Edit Collection" : "Add Collection"}
+                {saved ? "Edit Collection" : "Add Collection"}
               </h2>
 
               <div className="watch-submenu-item pad-y">
