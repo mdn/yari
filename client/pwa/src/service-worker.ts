@@ -22,16 +22,17 @@ export type {};
 declare const self: ServiceWorkerGlobalScope;
 
 self.addEventListener("install", (e) => {
-  self.skipWaiting();
   // synchronizeDb();
   e.waitUntil(
     (async () => {
       const cache = await openCache();
       const { files = {} } =
         (await (await fetch("/asset-manifest.json")).json()) || {};
-      const assets = [...Object.values(files)];
+      const assets = [...Object.values(files)].filter(
+        (asset) => !(asset as string).endsWith(".map")
+      );
       await cache.addAll(assets as string[]);
-    })()
+    })().then(() => self.skipWaiting())
   );
 });
 

@@ -1,5 +1,7 @@
-export const cacheName = "mdn-app-1";
-export const contentCache = "mdn-content-1";
+/* globals __COMMIT_HASH__ */
+declare var __COMMIT_HASH__: string;
+export const cacheName = `mdn-app-${__COMMIT_HASH__}`;
+export const contentCache = "mdn-content-v1";
 
 var contentCachePromise;
 var cachePromise;
