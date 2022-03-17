@@ -18,6 +18,14 @@ function jsonBlob(json) {
   });
 }
 
+function boolOrNull(s): boolean | null {
+  let bon = s ?? null;
+  if (bon !== null) {
+    return s === "true";
+  }
+  return null;
+}
+
 class WhoamiInterceptor implements FetchInterceptor {
   db: MDNOfflineDB;
 
@@ -85,15 +93,15 @@ class CollectionsInterceptor implements FetchInterceptor {
         } else {
           collection = await this.db.collections.orderBy("title").toArray();
         }
-        const total = collection.length;
         collection = filter(params, collection);
 
-        return new Response(
-          jsonBlob({
-            items: collection,
-            metadata: { total: total, per_page: total },
-          })
-        );
+        const limit = params.get("limit");
+        const offset = params.get("offset");
+
+        if (limit && offset) {
+          collection = collection.slice(parseInt(offset), parseInt(limit));
+        }
+        return new Response(jsonBlob({ items: collection, offline: true }));
       }
     }
   }
@@ -139,8 +147,13 @@ class NotificationsInterceptor implements FetchInterceptor {
           .toArray();
       }
 
-      if (Boolean(params.get("starred"))) {
-        notifications = notifications.filter((v) => v.starred);
+      const starred = boolOrNull(params.get("starred"));
+      if (starred) {
+        notifications = notifications.filter((v) => v.starred === starred);
+      }
+      const unread = boolOrNull(params.get("unread"));
+      if (unread !== null) {
+        notifications = notifications.filter((v) => v.read === !unread);
       }
       notifications = filter(params, notifications);
       const limit = params.get("limit");
