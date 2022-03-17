@@ -65,7 +65,7 @@ export async function respond(e): Promise<Response> {
         const cache = await openCache();
         try {
           response = await fetch(e.request);
-          cache.put(url.href, response);
+          cache.put(url.href, response.clone());
           return response.clone();
         } catch (e) {
           console.error(e);
