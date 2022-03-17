@@ -4,7 +4,6 @@ import { Button } from "../../ui/atoms/button";
 import { Search } from "../../ui/atoms/search";
 import { Submenu } from "../../ui/molecules/submenu";
 import { searchFiltersContext } from "../contexts/search-filters";
-import { useDebouncedCallback } from "use-debounce";
 
 import "./index.scss";
 import { DropdownMenu, DropdownMenuWrapper } from "../../ui/molecules/dropdown";
