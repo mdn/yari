@@ -22,7 +22,7 @@ export function ManageOrUpgradeDialogNotifications({ setShow }) {
           Back
         </span>
       </button>
-      <p>You've used all your remaining notification subscriptions.</p>
+      <p>You've reached the limit of articles you can watch!</p>
       <p>
         Manage your notifications settings or upgrade to MDN Plus to unlock
         unlimited subscriptions
@@ -55,7 +55,7 @@ export function ManageOrUpgradeDialogCollections({ setShow }) {
           Back
         </span>
       </button>
-      <p>You've reached your subscription limit of articles you can save!</p>
+      <p>You've reached the limit of articles you can save!</p>
       <p>
         Manage your collection or upgrade to MDN Plus to unlock unlimited saves
       </p>

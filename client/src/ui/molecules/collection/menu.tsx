@@ -174,12 +174,12 @@ export function BookmarkMenu({
               >
                 <span className="watch-submenu-header-wrap">
                   <Icon name="chevron" />
-                  {saved ? "Edit Collection" : "Add Collection"}
+                  {saved ? "Edit Collection" : "Add to Collection"}
                 </span>
               </button>
 
               <h2 className="watch-submenu-header desktop-only">
-                {saved ? "Edit Collection" : "Add Collection"}
+                {saved ? "Edit Collection" : "Add to Collection"}
               </h2>
 
               <div className="watch-submenu-item pad-y">
