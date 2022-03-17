@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useEffect } from "react";
+import React, { useState, useMemo } from "react";
 import { useSearchParams } from "react-router-dom";
 
 import SearchNavigateWidget from "../../../search";
@@ -21,16 +21,12 @@ function useQueryParamState() {
 
 export function Search({
   id,
-  hasOpened,
-  onCloseSearch,
+  isHomepageSearch,
   onResultPicked,
-  onChangeIsFocused = () => {},
 }: {
   id: string;
-  hasOpened?: boolean;
-  onCloseSearch?: () => void;
+  isHomepageSearch?: boolean;
   onResultPicked?: () => void;
-  onChangeIsFocused?: (isFocused?: boolean) => void;
 }) {
   const [value, setValue] = useQueryParamState();
   const [isFocused, setIsFocused] = useState(false);
@@ -44,27 +40,18 @@ export function Search({
       isFocused,
       onChangeIsFocused: (isFocused) => {
         setIsFocused(isFocused);
-        onChangeIsFocused(isFocused);
       },
       defaultSelection,
       onChangeSelection: (selection) => setDefaultSelection(selection),
     }),
-    [id, value, isFocused, defaultSelection, setValue, onChangeIsFocused]
+    [id, value, isFocused, defaultSelection, setValue]
   );
 
-  useEffect(() => {
-    if (hasOpened) {
-      setIsFocused(true);
-    }
-  }, [hasOpened]);
-
   return (
-    <div className="header-search">
-      <SearchNavigateWidget
-        {...searchProps}
-        onResultPicked={onResultPicked}
-        onCloseSearch={onCloseSearch}
-      />
+    <div
+      className={isHomepageSearch ? "homepage-hero-search" : "header-search"}
+    >
+      <SearchNavigateWidget {...searchProps} onResultPicked={onResultPicked} />
     </div>
   );
 }
