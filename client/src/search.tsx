@@ -487,6 +487,15 @@ function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
 
       <Button
         type="action"
+        icon="cancel"
+        extraClasses="clear-search-button"
+        onClickHandler={() => onChangeInputValue("")}
+      >
+        <span className="visually-hidden">Clear search input</span>
+      </Button>
+
+      <Button
+        type="action"
         icon="search"
         buttonType="submit"
         extraClasses="search-button"
