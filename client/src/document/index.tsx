@@ -263,7 +263,15 @@ function LoadingError({ error }) {
         </p>
       )}
       <p>
-        <a href="?">Try reloading the page</a>
+        <button
+          className="button"
+          type="button"
+          onClick={() => {
+            window.location.reload();
+          }}
+        >
+          Try reloading the page
+        </button>
       </p>
     </div>
   );
