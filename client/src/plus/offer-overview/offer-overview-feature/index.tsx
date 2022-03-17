@@ -37,19 +37,6 @@ export default function OfferOverviewFeatures() {
         <Button href="./feature/notifications">Learn more →</Button>
       </OfferOverviewFeature>
       <OfferOverviewFeature
-        id="offline"
-        img="/assets/notifications_light.png"
-        imgAlt=""
-      >
-        <h2>MDN's entire library at your fingertips: offline</h2>
-        <p>
-          Taking your projects beyond the nearest wifi signal? Say goodbye to
-          inaccessible pages or cluttered tabs. With MDN Plus, have the fully
-          navigable resources of MDN at your disposal even when offline.
-        </p>
-        <Button href="./feature/offline">Learn more →</Button>
-      </OfferOverviewFeature>
-      <OfferOverviewFeature
         id="collections"
         img="/assets/notifications_light.png"
         imgAlt=""
@@ -64,6 +51,19 @@ export default function OfferOverviewFeatures() {
           convenient consultation.
         </p>
         <Button href="./feature/collections">Learn more →</Button>
+      </OfferOverviewFeature>
+      <OfferOverviewFeature
+        id="offline"
+        img="/assets/notifications_light.png"
+        imgAlt=""
+      >
+        <h2>MDN's entire library at your fingertips: offline</h2>
+        <p>
+          Taking your projects beyond the nearest wifi signal? Say goodbye to
+          inaccessible pages or cluttered tabs. With MDN Plus, have the fully
+          navigable resources of MDN at your disposal even when offline.
+        </p>
+        <Button href="./feature/offline">Learn more →</Button>
       </OfferOverviewFeature>
     </section>
   );
