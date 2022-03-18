@@ -29,7 +29,8 @@ interface CompatStatementExtended extends bcd.CompatStatement {
 
 function getSupportClassName(
   support: SupportStatementExtended | undefined,
-  browser: bcd.BrowserStatement
+  browser: bcd.BrowserStatement,
+  timeline: boolean
 ): string {
   if (!support) {
     return "unknown";
@@ -51,7 +52,7 @@ function getSupportClassName(
   } else {
     className = "no";
   }
-  if (partial_implementation && !version_removed) {
+  if (partial_implementation && (!version_removed || timeline)) {
     className = "partial";
   }
 
@@ -122,9 +123,11 @@ const CellText = React.memo(
   ({
     support,
     browser,
+    timeline,
   }: {
     support: bcd.SupportStatement | undefined;
     browser: bcd.BrowserStatement;
+    timeline: boolean;
   }) => {
     const currentSupport = getCurrentSupport(support);
 
@@ -183,7 +186,12 @@ const CellText = React.memo(
           </>
         ),
       };
-    } else if (currentSupport && currentSupport.partial_implementation) {
+    }
+    if (
+      currentSupport &&
+      currentSupport.partial_implementation &&
+      (!removed || timeline)
+    ) {
       status = {
         isSupported: "partial",
         label:
@@ -221,7 +229,7 @@ const CellText = React.memo(
         label = "?";
         break;
     }
-    const supportClassName = getSupportClassName(support, browser);
+    const supportClassName = getSupportClassName(support, browser, timeline);
 
     return (
       <div className="bcd-cell-text-wrapper">
@@ -417,10 +425,11 @@ function getNotes(
                 <dt
                   className={`bc-supports-${getSupportClassName(
                     item,
-                    browser
+                    browser,
+                    true
                   )} bc-supports`}
                 >
-                  <CellText support={item} browser={browser} />
+                  <CellText support={item} browser={browser} timeline={true} />
                 </dt>
                 {supportNotes.map(({ iconName, label }, i) => {
                   return (
@@ -459,7 +468,7 @@ function CompatCell({
   onToggle: () => void;
   locale: string;
 }) {
-  const supportClassName = getSupportClassName(support, browserInfo);
+  const supportClassName = getSupportClassName(support, browserInfo, false);
   // NOTE: 1-5-21, I've forced hasNotes to return true, in order to
   // make the details view open all the time.
   // Whenever the support statement is complex (array with more than one entry)
@@ -475,7 +484,7 @@ function CompatCell({
   const notes = getNotes(browserInfo, support!);
   const content = (
     <>
-      <CellText {...{ support }} browser={browserInfo} />
+      <CellText {...{ support }} browser={browserInfo} timeline={false} />
       {showNotes && (
         <dl className="bc-notes-list bc-history bc-history-mobile">{notes}</dl>
       )}
