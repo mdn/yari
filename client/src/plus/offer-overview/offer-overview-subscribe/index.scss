@@ -140,6 +140,7 @@
                 display: block;
                 color: var(--text-invert);
                 text-decoration: underline;
+                width: fit-content;
 
                 &:hover {
                   text-decoration: none;
