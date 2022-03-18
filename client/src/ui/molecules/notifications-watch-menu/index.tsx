@@ -99,7 +99,7 @@ export const NotificationsWatchMenu = ({ doc }) => {
   const watchIcon = watching ? "eye-filled" : canWatchMore ? "eye" : "padlock";
   return (
     <DropdownMenuWrapper
-      className="watch-menu open-on-focus-within"
+      className="watch-menu"
       isOpen={show}
       setIsOpen={setShow}
     >
