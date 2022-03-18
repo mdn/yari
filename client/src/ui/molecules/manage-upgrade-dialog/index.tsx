@@ -9,7 +9,7 @@ export function ManageOrUpgradeDialogNotifications({ setShow }) {
 
   return (
     <div
-      className={`manage-upgrade-dialog show`}
+      className={`watch-submenu manage-upgrade-dialog show`}
       role="menu"
       aria-labelledby={`manage-upgrade-dialog-button`}
     >
