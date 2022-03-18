@@ -4,7 +4,6 @@ import { Button } from "../../ui/atoms/button";
 import { Search } from "../../ui/atoms/search";
 import { Submenu } from "../../ui/molecules/submenu";
 import { searchFiltersContext } from "../contexts/search-filters";
-import { useDebouncedCallback } from "use-debounce";
 
 import "./index.scss";
 import { DropdownMenu, DropdownMenuWrapper } from "../../ui/molecules/dropdown";
@@ -18,6 +17,7 @@ export default function SearchFilter({
 }) {
   const [isFiltersOpen, setIsFiltersOpen] = useState<boolean>(false);
   const [isSortingOpen, setIsSortingOpen] = useState<boolean>(false);
+  const [terms, setTerms] = useState<string>("");
 
   const {
     selectedFilter,
@@ -72,13 +72,16 @@ export default function SearchFilter({
       className={`search-filter ${
         !filters.length ? "inline-on-mobile" : undefined
       }`}
+      onSubmit={(event: React.FormEvent) => {
+        event.preventDefault();
+        setSelectedTerms(terms);
+      }}
     >
       <Search
         name="terms"
         placeholder="Filter by keyword"
-        onChangeHandler={useDebouncedCallback((e) => {
-          setSelectedTerms(e.target.value);
-        }, 400)}
+        onBlurHandler={() => setSelectedTerms(terms)}
+        onChangeHandler={(e) => setTerms(e.target.value)}
       />
 
       {filters.length ? (

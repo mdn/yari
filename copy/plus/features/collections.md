@@ -4,7 +4,7 @@ title: Collections
 
 # Collections
 
-> MDN. Hand selected by you.
+> MDN. Hand _selected_ by you.
 >
 > Collections allow you to save MDN articles and share your library across devices. We also automatically save for you the pages you visit most frequently. They wil help you find what you need quicker by showing first in your search results when looking for a relevant topic and you’ll be able to curate the lists to your liking.
 
@@ -12,7 +12,7 @@ title: Collections
 
 To start creating your Collections, **Save a page** first.
 
-1.  Select **Save [icon]** <span class="icon icon-bookmark "></span>at the top of the page.
+1.  Select **Save** at the top of the page.
 
 ### Desktop
 
@@ -20,8 +20,8 @@ The saved article will appear under **MDN Plus → Collections**.
 
 ### Mobile
 
-1.  **Open 3-Dots menu** and select **Save [option]**.
-2.  Click **Save [icon]** to Save.
+1.  **Open the ⋮ menu** and select **Save**.
+2.  Click **Save** to save.
 3.  The saved article will appear under **MDN Plus → Collections**.
 
 ## Adding notes
@@ -30,36 +30,36 @@ The saved article will appear under **MDN Plus → Collections**.
 
 Add notes from **an article page**
 
-1. Select **Saved [icon]** at the top of the page.
+1. Select **Saved** at the top of the page.
 2. Type the note you’d like to add in the **Note** field and select **Save**.
 
 Add notes from **Collections**
 
-1. Click the **3-Dots menu** to the right of the bookmark and select **Edit**.
+1. Click the **⋮ menu** to the right of the bookmark and select **Edit**.
 2. Type the note you’d like to add in the **Note** field and select **Save**.
 
 ### Mobile
 
 Add notes from **an article page**
 
-1. Click the **3-Dots menu** to the right of the saved article and select **Edit**.
+1. Click the **⋮ menu** to the right of the saved article and select **Edit**.
 2. Type the note you’d like to add in the **Note** field and select **Save**.
 
 Add notes from **Collections**
 
-1. Click the **3-Dots menu** to the right of the saved article and select **Edit**.
+1. Click the **⋮ menu** to the right of the saved article and select **Edit**.
 2. Type the note you’d like to add in the **Note** field and select **Save**.
 
 ## Removing a saved page
 
 Remove a saved page from **an article page**
 
-1. Select **Saved [icon]** at the top of the page.
+1. Select **Saved** at the top of the page.
 2. Select **Remove collection**.
 
 Remove a saved page from **Collections**
 
-1. Click the **3-Dots menu** to the right of the saved page and select **Delete**.
+1. Click the **⋮ menu** to the right of the saved page and select **Delete**.
 2. Your saved page has now been removed. Select **Undo** in the notification at the bottom of the screen to revert this action.
 
 ## Collections
@@ -72,12 +72,12 @@ When an article is saved, it appears in **Collections**.
 
 You can reach Collections in two ways:
 
-1. In the top navigation bar, select **MDN Plus > Collections**.
+1. In the top navigation bar, select **MDN Plus → Collections**.
 2. Click on your profile photo and select **Collections**.
 
 ### Mobile
 
-In the main menu, select **MDN Plus > Collections**.
+In the main menu, select **MDN Plus → Collections**.
 
 ## Filtering saved pages
 
@@ -97,5 +97,5 @@ Frequently visited pages are articles you visit most frequently while logged int
 
 ## Remove a saved page from Frequently visited articles
 
-Click the **3-Dots menu** to the right of the saved page and select **Delete**.
+Click the **⋮ menu** to the right of the saved page and select **Delete**.
 Your saved page has now been removed. Select **Undo** in the notification at the bottom of the screen to revert this action.

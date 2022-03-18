@@ -31,7 +31,7 @@ function PlatformHeaders({ platforms, browsers }) {
         return (
           <th
             key={platform}
-            className={`bc-platform-${platformId}`}
+            className={`bc-platform bc-platform-${platformId}`}
             colSpan={browserCount}
             title={platform}
           >
@@ -49,7 +49,7 @@ function BrowserHeaders({ browsers }: { browsers }) {
     <tr className="bc-browsers">
       <td />
       {browsers.map((browser) => (
-        <th key={browser} className={`bc-browser-${browser}`}>
+        <th key={browser} className={`bc-browser bc-browser-${browser}`}>
           <span className={`bc-head-txt-label bc-head-icon-${browser}`}>
             <BrowserName id={browser} />
           </span>

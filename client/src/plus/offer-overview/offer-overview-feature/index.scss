@@ -8,6 +8,7 @@
 
   .wrapper {
     width: 100%;
+    max-width: 64rem;
     display: flex;
     flex-direction: column-reverse;
     align-items: center;
@@ -15,6 +16,7 @@
     padding: 4rem 1rem;
     gap: 4rem;
     justify-content: space-between;
+    margin: 0 auto;
 
     @media screen and (min-width: $screen-lg) {
       flex-direction: row;
@@ -34,11 +36,14 @@
       max-width: 25rem;
       height: 100%;
       @media screen and (min-width: $screen-lg) {
-        max-width: min(50%, 30rem);
+        max-width: min(50%, 20rem);
       }
     }
 
     .copy-container {
+      a {
+        justify-content: start;
+      }
       h2 {
         margin-top: 1rem;
       }
@@ -59,8 +64,6 @@
 .offer-overview-feature:nth-child(even) {
   .wrapper {
     flex-direction: column;
-    margin-left: auto;
-    margin-right: 0;
     @media screen and (min-width: $screen-lg) {
       flex-direction: row;
     }
@@ -69,8 +72,6 @@
 .offer-overview-feature:nth-child(odd) {
   background: var(--background-secondary);
   .wrapper {
-    margin-right: auto;
-    margin-left: 0;
     flex-direction: column;
     @media screen and (min-width: $screen-lg) {
       flex-direction: row-reverse;
