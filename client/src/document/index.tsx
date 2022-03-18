@@ -50,22 +50,36 @@ export function Document(props /* TODO: define a TS interface for this */) {
 
   const navigate = useNavigate();
 
+  const previousDoc = React.useRef(null);
+
   const dataURL = `${documentURL}/index.json`;
   const { data: doc, error } = useSWR<Doc>(
     dataURL,
     async (url) => {
       const response = await fetch(url);
+
       if (!response.ok) {
-        if (response.status === 404) {
-          throw new Error(`${response.status} on ${url}: Page not found`);
+        switch (response.status) {
+          case 404:
+            throw new Error(`${response.status} on ${url}: Page not found`);
+
+          case 504:
+            if (previousDoc.current) {
+              return previousDoc.current;
+            }
         }
+
         const text = await response.text();
         throw new Error(`${response.status} on ${url}: ${text}`);
       }
+
       const { doc } = await response.json();
+      previousDoc.current = doc;
+
       if (response.redirected) {
         navigate(doc.mdn_url);
       }
+
       return doc;
     },
     {
