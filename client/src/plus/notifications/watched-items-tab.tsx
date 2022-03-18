@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from "react";
+import LimitBanner from "../../ui/atoms/limit-banner";
 import { Loading } from "../../ui/atoms/loading";
 import { DataError } from "../common";
 import { useWatchedItemsApiEndpoint, unwatchItemsByUrls } from "../common/api";
@@ -10,6 +11,8 @@ import SelectedNotificationsBar from "./notification-select";
 export function WatchedTab({ selectedTerms, selectedFilter, selectedSort }) {
   const [offset, setOffset] = useState(0);
   const [selectAllChecked, setSelectAllChecked] = useState(false);
+  const [subscriptionLimitReached, setSubscriptionLimitReached] =
+    useState(false);
   const [list, setList] = useState<Array<any>>([]);
   const listRef = useRef<Array<any>>([]);
 
@@ -24,6 +27,7 @@ export function WatchedTab({ selectedTerms, selectedFilter, selectedSort }) {
 
   useEffect(() => {
     if (data && !!data.items) {
+      setSubscriptionLimitReached(data.subscription_limit_reached);
       setList([
         ...listRef.current,
         ...data.items.map((item) => {
@@ -75,14 +79,20 @@ export function WatchedTab({ selectedTerms, selectedFilter, selectedSort }) {
   };
   const unwatchMany = async () => {
     const toUnWatch = list.filter((v) => v.checked);
-    await unwatchItemsByUrls(data.csrfmiddlewaretoken, toUnWatch);
+    const res = await unwatchItemsByUrls(data.csrfmiddlewaretoken, toUnWatch);
+    const limitReached =
+      (await res.json())?.subscription_limit_reached || false;
     const updated = list.filter((v) => !v.checked);
+    setSubscriptionLimitReached(limitReached);
     setList(updated);
   };
 
   const unwatchItem = async (toUnWatch) => {
-    await unwatchItemsByUrls(data.csrfmiddlewaretoken, [toUnWatch]);
+    const res = await unwatchItemsByUrls(data.csrfmiddlewaretoken, [toUnWatch]);
+    const limitReached =
+      (await res.json())?.subscription_limit_reached || false;
     const updated = list.filter((v) => v.id !== toUnWatch.id);
+    setSubscriptionLimitReached(limitReached);
     setList(updated);
   };
 
@@ -121,6 +131,7 @@ export function WatchedTab({ selectedTerms, selectedFilter, selectedSort }) {
           ))}
         </div>
       </ul>
+      {subscriptionLimitReached && <LimitBanner type="watched" />}
       {hasMore && showMoreButton(setSelectAllChecked, setOffset, list)}
     </>
   );
