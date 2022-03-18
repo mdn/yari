@@ -307,8 +307,10 @@ body,
 :root {
   --mdn-color-white: #{$mdn-color-white};
   --mdn-color-black: #{$mdn-color-black};
+  --mdn-color-dark-grey: #{$mdn-color-dark-grey-30};
   --mdn-background-dark: #{$mdn-theme-dark-background-primary};
   --mdn-background-light: #{$mdn-theme-light-background-primary};
+  --mdn-background-light-grey: #{$mdn-color-light-grey-30};
 }
 
 :root,
