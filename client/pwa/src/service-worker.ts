@@ -15,7 +15,9 @@ export const LIVE_SAMPLES_URL = new URL(
 );
 export const USER_CONTENT_URL = new URL("https://mozillausercontent.com");
 
-const UPDATES_BASE_URL = "https://updates.developer.allizom.org";
+const UPDATES_BASE_URL = `https://updates.${
+  location.hostname === "localhost" ? "developer.allizom.org" : location.host
+}`;
 
 // export empty type because of tsc --isolatedModules flag
 export type {};
