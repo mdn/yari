@@ -1,6 +1,5 @@
 import { Button } from "../../atoms/button";
 import { NotificationsWatchMenu } from "../../molecules/notifications-watch-menu";
-import { ThemeSwitcher } from "../../molecules/theme-switcher";
 import { LanguageMenu } from "../../molecules/language-menu";
 
 import { useUserData } from "../../../user-context";
@@ -61,11 +60,6 @@ export const ArticleActions = ({
               {isAuthenticated && (
                 <li className="article-actions-entry">
                   <BookmarkContainer doc={doc} />
-                </li>
-              )}
-              {isAuthenticated && (
-                <li className="article-actions-entry">
-                  <ThemeSwitcher />
                 </li>
               )}
               {!MDN_APP && translations && !!translations.length && (
