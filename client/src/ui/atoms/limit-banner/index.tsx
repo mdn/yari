@@ -19,7 +19,7 @@ export default function LimitBanner({ type = "collections" }) {
       <p>
         {text[0]}
         <br />
-        <a href={`/${locale}/plus/`}>
+        <a href={`/${locale}/plus`}>
           <strong>Become an MDN Supporter </strong>
         </a>
         {text[1]}
