@@ -161,13 +161,15 @@ export async function updateCollectionItem(
   formData: URLSearchParams,
   csrftoken: string
 ) {
-  await fetch(`${COLLECTION_BASE_PATH}/?url=${item.url}`, {
+  const res = await fetch(`${COLLECTION_BASE_PATH}/?url=${item.url}`, {
     method: "POST",
     body: new URLSearchParams([...(formData as any)]),
     headers: {
       "X-CSRFToken": csrftoken,
     },
   });
+
+  return res;
 }
 
 export async function updateDeleteCollectionItem(
@@ -177,13 +179,14 @@ export async function updateDeleteCollectionItem(
 ) {
   const formData = new FormData();
   formData.append("delete", shouldDelete.toString());
-  await fetch(`${COLLECTION_BASE_PATH}/?url=${item.url}`, {
+  const res = await fetch(`${COLLECTION_BASE_PATH}/?url=${item.url}`, {
     method: "POST",
     body: formData,
     headers: {
       "X-CSRFToken": csrftoken,
     },
   });
+  return res;
 }
 
 export function useCollectionsApiEndpoint(
@@ -196,6 +199,7 @@ export function useCollectionsApiEndpoint(
   const [error, setError] = useState<Error | null>();
   const [isLoading, setIsLoading] = useState(true);
   const [hasMore, setHasMore] = useState(false);
+
   useEffect(() => {
     (async () => {
       const sp = new URLSearchParams();
@@ -261,5 +265,5 @@ async function post(url: string, csrfToken: string, data?: object) {
   if (!response.ok) {
     throw new Error(`${response.status} on ${response.url}`);
   }
-  return true;
+  return response;
 }
