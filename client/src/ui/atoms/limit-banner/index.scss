@@ -1,8 +1,6 @@
 @use "../../vars.scss" as *;
 
 .limit-banner {
-  --limit-banner-bg: var(--text-primary);
-  --limit-banner-color: var(--background-primary);
 
   background: var(--background-tertiary);
   border-radius: var(--elem-radius);
