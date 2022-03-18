@@ -472,41 +472,29 @@ function CompatCell({
   //         item.prefix || item.notes || item.alternative_name || item.flags
   //     ));
   const notes = getNotes(browserInfo, support!);
+  const content = (
+    <>
+      <CellText {...{ support }} browser={browserInfo} />
+      <CellIcons support={support} />
+      {showNotes && (
+        <dl className="bc-notes-list bc-history bc-history-mobile">{notes}</dl>
+      )}
+    </>
+  );
+
   return (
     <>
       <td
-        className={`bc-icon-cell bc-browser-${browserId} bc-supports-${supportClassName} ${
+        className={`bc-support bc-browser-${browserId} bc-supports-${supportClassName} ${
           notes ? "bc-has-history" : ""
         }`}
         aria-expanded={showNotes ? "true" : "false"}
-        tabIndex={notes ? 0 : undefined}
-        onClick={
-          notes
-            ? () => {
-                onToggle();
-              }
-            : undefined
-        }
+        onClick={notes ? () => onToggle() : undefined}
       >
-        <CellText {...{ support }} browser={browserInfo} />
-        <CellIcons support={support} />
-        {notes && (
-          <button
-            type="button"
-            title="Open implementation notes"
-            className={`bc-history-link ${
-              showNotes ? "bc-history-link-inverse" : ""
-            }`}
-          >
-            <span>Open</span>
-            <i className="ic-history" aria-hidden="true" />
-          </button>
-        )}
-        {showNotes && (
-          <dl className="bc-notes-list bc-history bc-history-mobile">
-            {notes}
-          </dl>
-        )}
+        <button type="button" disabled={!notes} title="Toggle history">
+          {content}
+          <span className="offscreen">Toggle history</span>
+        </button>
       </td>
     </>
   );
@@ -576,7 +564,9 @@ export const FeatureRow = React.memo(
     return (
       <>
         <tr>
-          <th scope="row">{titleNode}</th>
+          <th className="bc-feature" scope="row">
+            {titleNode}
+          </th>
           {browsers.map((browser, i) => (
             <CompatCell
               key={browser}
