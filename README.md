@@ -158,7 +158,7 @@ And conveniently, if you're not even interested in what the flaws were, run:
 
 When you ran `yarn` for the first time (`yarn` is an alias for
 `yarn install`) it automatically sets up a `git` pre-commit hook that uses
-`pretty-quick` — a wrapper for `prettier` that checks only the files in the git
+`lint-staged` — a wrapper for `prettier` that checks only the files in the git
 commit.
 
 If you have doubts about formatting, submit your pull request anyway. If you
