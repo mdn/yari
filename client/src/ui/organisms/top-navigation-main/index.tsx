@@ -9,7 +9,7 @@ import { useUserData } from "../../../user-context";
 
 import "./index.scss";
 import { ENABLE_PLUS } from "../../../constants";
-import { ThemeToggle } from "../../molecules/theme-toggle";
+import { ThemeSwitcher } from "../../molecules/theme-switcher";
 
 export const TopNavigationMain = ({ isOpenOnMobile }) => {
   const userData = useUserData();
@@ -20,7 +20,7 @@ export const TopNavigationMain = ({ isOpenOnMobile }) => {
       <MainMenu isOpenOnMobile={isOpenOnMobile} />
 
       <Search id="top-nav-search" />
-      <ThemeToggle />
+      <ThemeSwitcher />
 
       {ENABLE_PLUS &&
         ((isAuthenticated && (

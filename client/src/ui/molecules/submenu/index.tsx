@@ -50,7 +50,13 @@ export const Submenu = ({
               {item.component ? (
                 <item.component key={key} />
               ) : item.url ? (
-                <a href={item.url} className="submenu-item" role="menuitem">
+                <a
+                  href={item.url}
+                  className={`submenu-item ${
+                    item.url.startsWith("https://") ? "external" : ""
+                  }`}
+                  role="menuitem"
+                >
                   {item.hasIcon && <div className={item.iconClasses} />}
                   {item.dot && (
                     <span className="visually-hidden submenu-item-dot">
