@@ -22,37 +22,10 @@
       padding: 1rem;
 
       border-width: 1px;
-
-      &:before {
-        display: inline-flex;
-        width: 1rem;
-        height: 1rem;
-        border-radius: 1rem;
-        border: 1px solid var(--border-secondary);
-        background: var(--background-primary);
-        content: "";
-      }
-    }
-
-    &.is-dark .button-wrap:before {
-      background: $mdn-theme-dark-background-primary;
-    }
-    &.is-light .button-wrap:before {
-      background-color: $mdn-color-white;
     }
 
     &:focus {
       --button-border-color: var(--button-secondary-border-focus);
-    }
-
-    &.is-os-default .button-wrap:before {
-      @media (prefers-color-scheme: light) {
-        background-color: $mdn-color-white;
-      }
-
-      @media (prefers-color-scheme: dark) {
-        background: $mdn-theme-dark-background-primary;
-      }
     }
 
     &:hover {
