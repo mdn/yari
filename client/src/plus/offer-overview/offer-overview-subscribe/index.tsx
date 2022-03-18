@@ -15,7 +15,25 @@ export enum Period {
   Year,
 }
 
-const BILLING_PERIOD = "subscription_billing_period";
+const SUBSCRIPTIONS = {
+  [SubscriptionType.MDN_CORE]: { order: 0 },
+  [SubscriptionType.MDN_PLUS_5M]: {
+    order: 1,
+    period: Period.Month,
+  },
+  [SubscriptionType.MDN_PLUS_5Y]: {
+    order: 2,
+    period: Period.Year,
+  },
+  [SubscriptionType.MDN_PLUS_10M]: {
+    order: 3,
+    period: Period.Month,
+  },
+  [SubscriptionType.MDN_PLUS_10Y]: {
+    order: 4,
+    period: Period.Year,
+  },
+};
 
 export type OfferDetailsPlanProps = {
   subscriptionType: SubscriptionType;
@@ -31,6 +49,7 @@ export type OfferDetailsProps = {
   features: (string | null)[][];
   includes: string;
   cta: string;
+  upgradeCta?: string;
   discounted: OfferDetailsPlanProps;
   regular: OfferDetailsPlanProps;
 };
@@ -67,6 +86,7 @@ const PLUS_5: OfferDetailsProps = {
   features: PLUS_FEATURES,
   includes: "Includes unlimited access to:",
   cta: "Start with Plus 5",
+  upgradeCta: "Upgrade to Plus 5",
   regular: {
     subscriptionType: SubscriptionType.MDN_PLUS_5M,
     ctaLink: MDN_PLUS_SUBSCRIBE_5M_URL,
@@ -90,6 +110,7 @@ const PLUS_10: OfferDetailsProps = {
   ],
   includes: "Includes unlimited access to:",
   cta: "Start with Supporter 10",
+  upgradeCta: "Upgrade to Supporter 10",
   regular: {
     subscriptionType: SubscriptionType.MDN_PLUS_10M,
     ctaLink: MDN_PLUS_SUBSCRIBE_10M_URL,
@@ -116,6 +137,7 @@ function OfferDetails({
       : offerDetails.regular;
   const userData = useUserData();
   const current = isCurrent(userData, subscriptionType);
+  const upgrade = canUpgrade(userData, subscriptionType);
   const displayMonthlyPrice =
     monthlyPrice &&
     new Intl.NumberFormat(undefined, {
@@ -142,13 +164,17 @@ function OfferDetails({
             <span className="sub-price free">Free</span>
           </p>
         )}
-        {(current && (
-          <span className="sub-link current">Current plan</span>
-        )) || (
-          <a href={ctaLink} className="sub-link">
-            {offerDetails.cta}
-          </a>
-        )}
+        {(current && <span className="sub-link current">Current plan</span>) ||
+          (upgrade === null && (
+            <a href={ctaLink} className="sub-link">
+              {offerDetails.cta}
+            </a>
+          )) ||
+          (upgrade && (
+            <a href={ctaLink} className="sub-link">
+              {offerDetails.upgradeCta}
+            </a>
+          )) || <span className="sub-link na">Not available</span>}
         <p className="includes">{offerDetails.includes}</p>
         <ul>
           {offerDetails.features.map(([href, text]) => (
@@ -168,7 +194,6 @@ function OfferDetails({
   );
 }
 
-// TODO: This depends on SubPlat providing us with the actual data.
 function isCurrent(user: UserData | null, subscriptionType: SubscriptionType) {
   if (user === null || !user.isAuthenticated) {
     return false;
@@ -176,13 +201,27 @@ function isCurrent(user: UserData | null, subscriptionType: SubscriptionType) {
   return user.subscriptionType === subscriptionType;
 }
 
-function OfferOverviewSubscribe() {
-  const isServer = typeof window === "undefined";
+function canUpgrade(user: UserData | null, subscriptionType: SubscriptionType) {
+  if (user === null || !user.isAuthenticated) {
+    return null;
+  }
+  if (!user.isSubscriber || !user.subscriptionType) {
+    return true;
+  }
+  return (
+    SUBSCRIPTIONS[user.subscriptionType]?.order <
+    SUBSCRIPTIONS[subscriptionType]?.order
+  );
+}
 
-  const initialPeriod =
-    JSON.parse((!isServer && localStorage.getItem(BILLING_PERIOD)) || "null") ||
+function OfferOverviewSubscribe() {
+  const userData = useUserData();
+  const activeSubscription = userData?.subscriptionType;
+  const activeSubscriptionPeriod =
+    (activeSubscription && SUBSCRIPTIONS[activeSubscription]?.period) ||
     Period.Month;
-  let [period, setPeriod] = useState(initialPeriod);
+
+  let [period, setPeriod] = useState(activeSubscriptionPeriod);
 
   return (
     <div className="dark subscribe-wrapper">
@@ -193,8 +232,6 @@ function OfferOverviewSubscribe() {
           checked={period === Period.Year || false}
           toggle={(e) => {
             const period = e.target.checked ? Period.Year : Period.Month;
-            !isServer &&
-              localStorage.setItem(BILLING_PERIOD, JSON.stringify(period));
             setPeriod(period);
           }}
         >

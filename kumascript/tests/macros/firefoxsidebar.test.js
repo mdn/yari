@@ -6,19 +6,16 @@ const jsdom = require("jsdom");
 
 const locales = {
   "en-US": {
-    Firefox_developer_release_notes: "Firefox developer release notes",
+    Firefox_releases: "Firefox releases",
   },
   fr: {
-    Firefox_developer_release_notes: "Notes de versions pour développeurs",
+    Firefox_releases: "Versions de Firefox",
   },
 };
 
 function checkSidebarDom(dom, locale) {
   const summaries = dom.querySelectorAll("summary");
-  assert.equal(
-    summaries[0].textContent,
-    locales[locale].Firefox_developer_release_notes
-  );
+  assert.equal(summaries[0].textContent, locales[locale].Firefox_releases);
 }
 
 describeMacro("FirefoxSidebar", function () {
