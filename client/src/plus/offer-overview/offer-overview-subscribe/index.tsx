@@ -202,8 +202,11 @@ function isCurrent(user: UserData | null, subscriptionType: SubscriptionType) {
 }
 
 function canUpgrade(user: UserData | null, subscriptionType: SubscriptionType) {
-  if (user === null || !user.isAuthenticated || !user.subscriptionType) {
+  if (user === null || !user.isAuthenticated) {
     return null;
+  }
+  if (!user.isSubscriber || !user.subscriptionType) {
+    return true;
   }
   return (
     SUBSCRIPTIONS[user.subscriptionType]?.order <
