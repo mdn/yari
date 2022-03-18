@@ -236,11 +236,6 @@
     border-top-width: 0;
   }
 
-  &:focus {
-    outline: 1px solid var(--button-secondary-border-focus);
-    box-shadow: var(--focus-effect);
-  }
-
   &-wrap {
     display: grid;
     grid-template-columns: 16px 1fr;
@@ -250,6 +245,15 @@
     gap: 0.5rem;
     padding: 0.8125rem var(--gutter-padding);
     text-align: left;
+  }
+
+  &:focus &-wrap {
+    outline: 1px solid var(--button-secondary-border-focus);
+    box-shadow: var(--focus-effect);
+  }
+
+  &:hover &-wrap {
+    background-color: var(--border-secondary);
   }
 
   &-status {
@@ -264,10 +268,6 @@
   &-text {
     font: var(--type-body-m);
     grid-area: text;
-  }
-
-  &:hover {
-    background-color: var(--border-secondary);
   }
 }
 
