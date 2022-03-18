@@ -195,9 +195,18 @@ const CellText = React.memo(
       status = {
         isSupported: "partial",
         label:
-          typeof added === "string"
-            ? labelFromString(added, browser)
-            : "Partial",
+          typeof added === "string" ? (
+            typeof removed === "string" ? (
+              <>
+                {labelFromString(added, browser)}&#8202;&ndash;&#8202;
+                {labelFromString(removed, browser)}
+              </>
+            ) : (
+              labelFromString(added, browser)
+            )
+          ) : (
+            "Partial"
+          ),
       };
     }
 
