@@ -4,7 +4,7 @@ title: Notifications
 
 # Notifications
 
-> No more surprises: watch specific pages for changes that impact your projects.
+> No more surprises: _watch specific pages_ for changes that impact your projects
 >
 > From tutorial pages to API references, get notifications for the latest developments on MDN.
 
@@ -39,10 +39,10 @@ To see a list of starred notifications, go to the **Notifications** page and cli
 You can **stop watching a page** in two ways:
 
 1. Visit the page you want to stop watching, then click **Watching → Unwatch**.
-2. Go to **Notifications -> Whatch list**, and click the **3-Dots menu** to the right of the watched page and select **Unwatch**.
+2. Go to **Notifications -> Watch list**, and use the **⋮ menu** to the right of the watched page and select **Unwatch**.
    Your watched page has now been removed. Select Undo in the notification at the bottom of the screen to revert this action.
 
-> You can also **Bulk unwatch** by checking the box on top of your **Watched list** and then clicking **Unwatch**
+You can also **Bulk unwatch** by checking the box on top of your **Watched list** and then clicking **Unwatch**
 
 ## About your notifications inbox
 

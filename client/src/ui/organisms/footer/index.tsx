@@ -148,7 +148,7 @@ export function Footer() {
             </li>
             {ENABLE_PLUS && (
               <li className="footer-nav-item">
-                <a className="footer-nav-link" href={`/${locale}/#TODO`}>
+                <a className="footer-nav-link" href={`/${locale}/plus`}>
                   MDN Plus
                 </a>
               </li>
