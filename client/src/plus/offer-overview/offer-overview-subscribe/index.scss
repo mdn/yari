@@ -29,7 +29,7 @@
     .wrapper {
       display: flex;
       margin: 0 auto;
-      gap: 2rem;
+      gap: 1rem;
       justify-content: center;
       flex-direction: column;
       align-items: center;
@@ -153,6 +153,10 @@
             font-size: 14px;
             text-decoration: underline;
             font-style: italic;
+            color: var(--text-invert);
+            &.external::after {
+              background-color: var(--text-invert);
+            }
           }
 
           .sub-link {

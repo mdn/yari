@@ -66,7 +66,7 @@ const PLUS_5: OfferDetailsProps = {
   currency: "USD",
   features: PLUS_FEATURES,
   includes: "Includes unlimited access to:",
-  cta: "Start with Supporter 5",
+  cta: "Start with Plus 5",
   regular: {
     subscriptionType: SubscriptionType.MDN_PLUS_5M,
     ctaLink: MDN_PLUS_SUBSCRIBE_5M_URL,
@@ -81,7 +81,7 @@ const PLUS_5: OfferDetailsProps = {
 
 const PLUS_10: OfferDetailsProps = {
   id: "plus10",
-  name: "MDN Plus 10",
+  name: "MDN Supporter 10",
   currency: "USD",
   features: [
     ...PLUS_FEATURES,
@@ -155,7 +155,14 @@ function OfferDetails({
             <li>{(href && <a href={`#${href}`}>{text}</a>) || text}</li>
           ))}
         </ul>
-        <span className="terms">See terms and conditions</span>
+        <a
+          href="https://www.mozilla.org/en-US/about/legal/terms/mdn-plus/"
+          target="_blank"
+          rel="noreferrer noopener"
+          className="terms external"
+        >
+          See terms and conditions
+        </a>
       </p>
     </section>
   );
@@ -191,7 +198,7 @@ function OfferOverviewSubscribe() {
             setPeriod(period);
           }}
         >
-          Pay yearly and get 2 month for free
+          Pay yearly and get 2 months for free
         </Switch>
         <div className="wrapper">
           <OfferDetails offerDetails={CORE} period={period}></OfferDetails>

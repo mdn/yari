@@ -28,7 +28,11 @@ export default function OfferOverviewFeatures() {
         img="/assets/notifications_light.png"
         imgAlt=""
       >
-        <h2>Development in real time: Get custom alerts</h2>
+        <h2>
+          Development in real time:
+          <br />
+          Get custom alerts
+        </h2>
         <p>
           The Web doesn't have a changelog, but MDN can help. Follow pages and
           get customizable notifications when documentation changes, CSS
