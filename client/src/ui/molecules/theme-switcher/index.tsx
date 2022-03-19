@@ -56,7 +56,7 @@ export const ThemeSwitcher = () => {
 
   return (
     <DropdownMenuWrapper
-      className="theme-switcher-menu open-on-focus-within"
+      className="theme-switcher-menu"
       isOpen={isOpen}
       setIsOpen={setIsOpen}
     >
