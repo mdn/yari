@@ -16,15 +16,15 @@ type ThemeButton = {
 export const ThemeSwitcher = () => {
   const menuId = "themes-menu";
   const [isOpen, setIsOpen] = useState<boolean>(false);
-  const [activeTheme, setActiveTheme] = React.useState("light");
+  const [activeTheme, setActiveTheme] = React.useState("os-default");
 
   function ThemeButton({ id, label }: ThemeButton) {
     return (
       <Button
         extraClasses={`
           ${activeTheme === id ? "active-menu-item" : undefined}
-          ${`is-` + id}
         `}
+        icon={`theme-${id}`}
         onClickHandler={() => {
           switchTheme(id, setActiveTheme);
           setIsOpen(false);
@@ -56,7 +56,7 @@ export const ThemeSwitcher = () => {
 
   return (
     <DropdownMenuWrapper
-      className="theme-switcher-menu open-on-focus-within"
+      className="theme-switcher-menu"
       isOpen={isOpen}
       setIsOpen={setIsOpen}
     >
@@ -65,7 +65,7 @@ export const ThemeSwitcher = () => {
         ariaControls={menuId}
         ariaHasPopup={"menu"}
         ariaExpanded={isOpen || undefined}
-        icon="theme"
+        icon={`theme-${activeTheme}`}
         extraClasses="theme-switcher-menu small"
         onClickHandler={() => {
           setIsOpen(!isOpen);

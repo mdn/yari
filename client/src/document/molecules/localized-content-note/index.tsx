@@ -28,6 +28,10 @@ export function LocalizedContentNote({
       linkText:
         "Эта страница была переведена с английского языка силами сообщества. Вы тоже можете внести свой вклад, присоединившись к русскоязычному сообществу MDN Web Docs.",
     },
+    "zh-CN": {
+      linkText:
+        "此页面由社区从英文翻译而来。了解更多并加入 MDN Web Docs 社区。",
+    },
   };
   const inactiveLocaleNoteContent = {
     de: {

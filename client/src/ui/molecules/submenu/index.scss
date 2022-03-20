@@ -17,7 +17,6 @@
     border: 1px solid transparent;
     color: var(--text-primary);
     display: flex;
-    gap: 0.75rem;
     height: 100%;
     padding: 0.5rem;
     width: 100%;
@@ -38,6 +37,10 @@
     &:focus {
       border: 1px solid var(--button-secondary-border-focus);
       box-shadow: var(--button-focus-effect);
+    }
+
+    .icon {
+      margin-right: 0.5rem;
     }
   }
 
@@ -100,6 +103,7 @@
   height: 2rem;
   position: relative;
   width: 0.2rem;
+  margin-right: 0.75rem;
 }
 
 .submenu-item-heading,
