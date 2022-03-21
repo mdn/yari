@@ -59,7 +59,7 @@ export const ReferenceMenu = ({ visibleSubMenuId, toggleMenu }) => {
         hasIcon: true,
         iconClasses: "submenu-icon",
         label: "Web Technology",
-        url: `/${locale}/docs/Web/`,
+        url: `/${locale}/docs/Web`,
       },
     ],
   };
@@ -81,7 +81,7 @@ export const ReferenceMenu = ({ visibleSubMenuId, toggleMenu }) => {
       </button>
 
       <Link
-        to={`/${locale}/docs/Web/`}
+        to={`/${locale}/docs/Web`}
         className="top-level-entry"
         // @ts-ignore
         onClick={() => document?.activeElement?.blur()}
