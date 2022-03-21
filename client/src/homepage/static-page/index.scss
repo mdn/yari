@@ -1,6 +1,6 @@
 @use "../../ui/vars" as *;
 
-.feature-highlight {
+.static-page {
   width: 100%;
   padding: 2rem 1rem;
 
@@ -19,7 +19,7 @@
   }
   gap: 2rem;
 
-  .ft-sidebar {
+  .static-sidebar {
     @media screen and (min-width: $screen-md) {
       position: sticky;
     }
@@ -34,7 +34,7 @@
     }
   }
 
-  .ft-content {
+  .static-content {
     em {
       text-decoration: underline;
       font-style: normal;
