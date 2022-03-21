@@ -8,6 +8,7 @@ import { BookmarkedData } from ".";
 import { DropdownMenu, DropdownMenuWrapper } from "../dropdown";
 import { ManageOrUpgradeDialogCollections } from "../manage-upgrade-dialog";
 import { useUIStatus } from "../../../ui-context";
+import { useOnlineStatus } from "../../../hooks";
 
 const menuId = "watch-submenu";
 
@@ -44,6 +45,7 @@ export function BookmarkMenu({
     new URLSearchParams([["url", doc?.mdn_url || data?.bookmarked?.url || ""]])
   );
   const ui = useUIStatus();
+  const { isOffline } = useOnlineStatus();
   const [show, setShow] = React.useState(false);
   const [name, setName] = React.useState<string>(
     data?.bookmarked?.title || doc?.title || ""
@@ -133,9 +135,9 @@ export function BookmarkMenu({
       {doc ? (
         <Button
           type="action"
+          isDisabled={isOffline || !data}
           icon={saveIcon}
           extraClasses={`bookmark-button small ${saved ? "highlight" : ""}`}
-          isDisabled={!data}
           onClickHandler={() => {
             setShow((v) => !v);
           }}
@@ -148,6 +150,7 @@ export function BookmarkMenu({
         <Button
           icon="edit"
           type="action"
+          isDisabled={isOffline}
           title="Edit"
           onClickHandler={() => {
             setShow((v) => !v);
