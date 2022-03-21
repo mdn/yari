@@ -144,7 +144,7 @@
     "downshift": "^6.1.7",
     "eslint": "^7.18.0",
     "eslint-gitignore": "^0.1.0",
-    "eslint-plugin-jest": "26.0.0",
+    "eslint-plugin-jest": "26.1.2",
     "eslint-plugin-node": "11.1.0",
     "extend": "^3.0.2",
     "foreman": "3.0.1",
