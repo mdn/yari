@@ -12,6 +12,7 @@
     justify-content: center;
     flex-direction: column;
     max-width: 52rem;
+    width: 100%;
     padding: 0 1rem;
     margin: 0 auto;
     gap: 2rem;
@@ -72,6 +73,8 @@
     max-height: 4rem;
     display: flex;
     margin-bottom: 1rem;
+    max-width: 40rem;
+    align-self: center;
 
     .search-input-field {
       border-radius: 10rem;

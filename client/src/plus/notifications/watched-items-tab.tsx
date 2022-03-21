@@ -121,6 +121,26 @@ export function WatchedTab({ selectedTerms, selectedFilter, selectedSort }) {
       {error && <DataError error={error} />}
       <ul className="notification-list">
         <div className="icon-card-list">
+          {!isLoading && !list.length && (
+            <div className="empty-card">
+              <p>You're not watching any pages.</p>{" "}
+              <p>
+                {" "}
+                Try watching one of these pages:{" "}
+                <a href="/en-US/docs/Web/CSS/overscroll-behavior">
+                  <code>overscroll-behavior</code>
+                </a>
+                ,{" "}
+                <a href="/en-US/docs/Web/API/MIDIPort">
+                  <code>MIDIPort</code>
+                </a>
+                , or{" "}
+                <a href="/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/groupBy">
+                  <code>Array.prototype.groupBy()</code>
+                </a>
+              </p>
+            </div>
+          )}
           {list.map((item) => (
             <WatchedCardListItem
               onUnwatched={unwatchItem}
