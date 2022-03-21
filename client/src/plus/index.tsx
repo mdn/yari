@@ -56,7 +56,7 @@ export function Plus({ pageTitle, ...props }: { pageTitle?: string }) {
         }
       />
       <Route
-        path="feature/:feature"
+        path="features/:feature"
         element={
           <React.Suspense fallback={loading}>
             <FeatureHighlight {...props} />

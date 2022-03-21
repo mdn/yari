@@ -9,7 +9,7 @@ function FeatureHighlight(props) {
     <StaticPage
       {...{
         locale,
-        slug: `plus/feature/${feature}`,
+        slug: `plus/features/${feature}`,
         title: "MDN Plus",
         sidebarHeader: (
           <Button href={`/${locale}/plus`}>← Back to Overview</Button>
