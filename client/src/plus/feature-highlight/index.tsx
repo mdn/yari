@@ -1,20 +1,14 @@
 import { useParams } from "react-router-dom";
-import StaticPage from "../../homepage/static-page";
-import { Button } from "../../ui/atoms/button";
+import StaticPlusPage from "../static-plus-page";
 
 function FeatureHighlight(props) {
-  const { feature, locale } = useParams();
+  const { feature } = useParams();
 
   return (
-    <StaticPage
+    <StaticPlusPage
       {...{
-        locale,
-        slug: `plus/features/${feature}`,
-        title: "MDN Plus",
-        sidebarHeader: (
-          <Button href={`/${locale}/plus`}>← Back to Overview</Button>
-        ),
-        initialData: props.hyData ? props : undefined,
+        slug: `features/${feature}`,
+        ...props,
       }}
     />
   );
