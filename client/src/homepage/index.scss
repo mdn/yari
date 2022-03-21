@@ -25,14 +25,13 @@
     flex-direction: column;
     gap: 1rem;
     padding: 0 1rem;
+    max-width: 52rem;
     align-items: flex-start;
   }
 
   .tile-container {
     display: flex;
     flex-direction: column;
-    max-width: 52rem;
-    padding: 0 1rem;
     gap: 1rem;
   }
 
@@ -81,12 +80,10 @@
 
     .featured-articles {
       align-items: revert;
-      padding: 0;
     }
 
     .tile-container {
       flex-direction: row;
-      padding: 0;
     }
 
     .article-tile {
