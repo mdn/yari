@@ -37,7 +37,7 @@ jobs:
       # is because these 3 directories don't share a common root.
 
       - name: Cache node_modules content-origin-request
-        uses: actions/cache@v2.1.7
+        uses: actions/cache@v3
         id: cached-node_modules-content-origin-request
         with:
           path: |
@@ -49,7 +49,7 @@ jobs:
         run: yarn --frozen-lockfile
 
       - name: Cache node_modules content-origin-response
-        uses: actions/cache@v2.1.7
+        uses: actions/cache@v3
         id: cached-node_modules-content-origin-response
         with:
           path: |
@@ -61,7 +61,7 @@ jobs:
         run: yarn --frozen-lockfile
 
       - name: Cache node_modules
-        uses: actions/cache@v2.1.7
+        uses: actions/cache@v3
         id: cached-node_modules
         with:
           path: |
