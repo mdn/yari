@@ -100,3 +100,16 @@
   border-radius: var(--elem-radius);
   gap: 1rem;
 }
+
+.empty-card {
+  align-items: center;
+  background-color: var(--background-primary);
+  border: 1px solid var(--border-secondary);
+  margin-top: 0.5rem;
+  padding: 0.5rem;
+  p {
+    font: var(--type-article-p);
+    letter-spacing: 0.5px;
+    line-height: 1.5;
+  }
+}
