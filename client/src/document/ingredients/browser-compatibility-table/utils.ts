@@ -76,7 +76,8 @@ function hasLimitation(support: bcd.SimpleSupportStatement) {
     support.partial_implementation ||
     support.alternative_name ||
     support.flags ||
-    support.prefix
+    support.prefix ||
+    support.version_removed
   );
 }
 
@@ -89,9 +90,7 @@ export function requiresPrefix(support: bcd.SupportStatement | undefined) {
 }
 
 export function hasFullSupport(support: bcd.SimpleSupportStatement) {
-  return (
-    support.version_added && !support.version_removed && !hasLimitation(support)
-  );
+  return support.version_added && !hasLimitation(support);
 }
 
 export function showMessageIndicatingNoSupport(
