@@ -164,7 +164,7 @@ export function NotificationsTab({
     const updated = list.filter((v) => !v.checked);
     setList(updated);
   };
-  let empty_text = !starred ? (
+  const empty_text = !starred ? (
     <>
       <p>You have no more notifications to review! ✨</p>{" "}
       <p>
