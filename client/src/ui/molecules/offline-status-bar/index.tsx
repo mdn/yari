@@ -8,7 +8,8 @@ import "./index.scss";
 export function OfflineStatusBar() {
   const user = useUserData();
   const statusBarRef = React.useRef<HTMLDivElement>(null);
-  const initialOnlineStatus = "onLine" in navigator ? navigator.onLine : true;
+  const initialOnlineStatus =
+    navigator && "onLine" in navigator ? navigator.onLine : true;
   const [isOnline, setIsOnline] = React.useState(initialOnlineStatus);
 
   React.useEffect(() => {
