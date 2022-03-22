@@ -4,11 +4,12 @@ import { BrowserInfoContext } from "./browser-info";
 import {
   asList,
   getFirst,
-  hasFullSupport,
   hasNoteworthyNotes,
   isTruthy,
+  requiresAltName,
   requiresPrefix,
-  showMessageIndicatingNoSupport,
+  showsMessageIndicatingFullSupport,
+  showsMessageIndicatingNoSupport,
   versionIsPreview,
 } from "./utils";
 import { LEGEND_LABELS } from "./legend";
@@ -279,7 +280,7 @@ function CellIcons({ support }: { support: bcd.SupportStatement | undefined }) {
     <div className="bc-icons">
       {requiresPrefix(support) && <Icon name="prefix" />}
       {hasNoteworthyNotes(supportItem) && <Icon name="footnote" />}
-      {supportItem.alternative_name && <Icon name="altname" />}
+      {requiresAltName(support) && <Icon name="altname" />}
       {supportItem.flags && <Icon name="disabled" />}
     </div>
   );
@@ -389,12 +390,13 @@ function getNotes(
           // If we encounter nothing else than the required `version_added` and
           // `release_date` properties, assume full support.
           // EDIT 1-5-21: if item.version_added doesn't exist, assume no support.
-          hasFullSupport(item) && !versionIsPreview(item.version_added, browser)
+          showsMessageIndicatingFullSupport(item) &&
+          !versionIsPreview(item.version_added, browser)
             ? {
                 iconName: "footnote",
                 label: "Full support",
               }
-            : showMessageIndicatingNoSupport(item)
+            : showsMessageIndicatingNoSupport(item)
             ? {
                 iconName: "footnote",
                 label: "No support",

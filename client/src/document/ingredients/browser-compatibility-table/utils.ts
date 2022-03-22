@@ -81,19 +81,29 @@ function hasLimitation(support: bcd.SimpleSupportStatement) {
   );
 }
 
+export function requiresAltName(support: bcd.SupportStatement | undefined) {
+  return (
+    support &&
+    getFirst(support).alternative_name &&
+    !asList(support).some((item) => showsMessageIndicatingFullSupport(item))
+  );
+}
+
 export function requiresPrefix(support: bcd.SupportStatement | undefined) {
   return (
     support &&
     getFirst(support).prefix &&
-    !asList(support).some((item) => hasFullSupport(item))
+    !asList(support).some((item) => showsMessageIndicatingFullSupport(item))
   );
 }
 
-export function hasFullSupport(support: bcd.SimpleSupportStatement) {
+export function showsMessageIndicatingFullSupport(
+  support: bcd.SimpleSupportStatement
+) {
   return support.version_added && !hasLimitation(support);
 }
 
-export function showMessageIndicatingNoSupport(
+export function showsMessageIndicatingNoSupport(
   support: bcd.SimpleSupportStatement
 ) {
   return !support.version_added && !hasLimitation(support);
