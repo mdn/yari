@@ -249,30 +249,32 @@ function RenderDocumentBody({ doc }) {
 
 function LoadingError({ error }) {
   return (
-    <div className="page-content-container loading-error">
-      <h3>Loading Error</h3>
-      {error instanceof window.Response ? (
+    <div className="standard-page">
+      <div className="page-content-container loading-error">
+        <h3>Loading Error</h3>
+        {error instanceof window.Response ? (
+          <p>
+            <b>{error.status}</b> on <b>{error.url}</b>
+            <br />
+            <small>{error.statusText}</small>
+          </p>
+        ) : (
+          <p>
+            <code>{error.toString()}</code>
+          </p>
+        )}
         <p>
-          <b>{error.status}</b> on <b>{error.url}</b>
-          <br />
-          <small>{error.statusText}</small>
+          <button
+            className="button"
+            type="button"
+            onClick={() => {
+              window.location.reload();
+            }}
+          >
+            Try reloading the page
+          </button>
         </p>
-      ) : (
-        <p>
-          <code>{error.toString()}</code>
-        </p>
-      )}
-      <p>
-        <button
-          className="button"
-          type="button"
-          onClick={() => {
-            window.location.reload();
-          }}
-        >
-          Try reloading the page
-        </button>
-      </p>
+      </div>
     </div>
   );
 }
