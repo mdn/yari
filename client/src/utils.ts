@@ -1,4 +1,11 @@
 import { IEX_DOMAIN } from "./constants";
+import {
+  MDN_PLUS_5M_PLAN_NAME,
+  MDN_PLUS_5Y_PLAN_NAME,
+  MDN_PLUS_10M_PLAN_NAME,
+  MDN_PLUS_10Y_PLAN_NAME,
+} from "./constants";
+
 const HOMEPAGE_RE = /^\/[A-Za-z-]*\/?(?:_homepage)?$/i;
 const DOCS_RE = /^\/[A-Za-z-]+\/docs\/.*$/i;
 const PLUS_RE = /^\/[A-Za-z-]*\/?plus(?:\/?.*)$/i;
@@ -61,4 +68,22 @@ export function switchTheme(theme: string, set: (theme: string) => void) {
     set(theme);
     postToIEx(theme);
   }
+}
+
+export function isPayingSubscriber(user) {
+  const validSubscriptionTypes = [
+    MDN_PLUS_5M_PLAN_NAME,
+    MDN_PLUS_5Y_PLAN_NAME,
+    MDN_PLUS_10M_PLAN_NAME,
+    MDN_PLUS_10Y_PLAN_NAME,
+  ];
+  if (
+    user?.isSubscriber &&
+    user?.subscriptionType &&
+    validSubscriptionTypes.includes(user.subscriptionType)
+  ) {
+    return true;
+  }
+
+  return false;
 }

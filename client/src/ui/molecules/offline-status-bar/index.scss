@@ -1,0 +1,11 @@
+.offline-status-bar {
+  background-color: var(--accent-primary-engage); // rgba(24, 112, 240, 0.1)
+  color: var(--text-primary);
+  display: none;
+
+  &.is-offline {
+    display: block;
+    padding: 1rem;
+    text-align: center;
+  }
+}
