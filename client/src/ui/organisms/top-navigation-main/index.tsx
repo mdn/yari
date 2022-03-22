@@ -15,13 +15,6 @@ import { ThemeSwitcher } from "../../molecules/theme-switcher";
 export const TopNavigationMain = ({ isOpenOnMobile }) => {
   const userData = useUserData();
   const plusAvailable = isPlusAvailable(userData);
-  const [showSearch, setShowSearch] = React.useState(false);
-  const [hasOpened, setHasOpened] = React.useState<boolean | undefined>(false);
-
-  function handleShowSearch() {
-    setShowSearch(true);
-    setHasOpened(true);
-  }
 
   return (
     <div className="top-navigation-main">
