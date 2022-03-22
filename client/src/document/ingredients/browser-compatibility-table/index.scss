@@ -1,189 +1,161 @@
 @use "~@mdn/minimalist/sass/mixins/utils" as *;
 @use "../../../ui/vars" as *;
 
-.show-browser-version-toggle {
+// Style for mobile *and* desktop.
+
+.bc-table {
+  width: 100%;
+  margin: 1rem 0;
+  border: 1px solid var(--border-primary);
+  border-radius: var(--elem-radius);
+  border-collapse: separate;
+  border-spacing: 0;
+
+  td,
+  th {
+    border: 1px solid var(--border-secondary);
+    border-width: 0 0 1px 1px;
+    font: var(--type-body-m);
+    padding: 0.4rem;
+
+    &[aria-expanded="false"] {
+      height: 2rem;
+    }
+
+    code {
+      font-size: 0.75rem !important;
+    }
+  }
+
+  // these props allow us to add border-radius to the table.
+  // border-collapse: separate gets in the way of this
+  // being easy.
+  tbody {
+    tr {
+      height: 3rem;
+
+      &:last-child {
+        th,
+        td {
+          border-bottom-width: 0;
+        }
+      }
+
+      th {
+        border-left-width: 0;
+        vertical-align: middle;
+      }
+    }
+
+    .bc-support {
+      button {
+        cursor: pointer;
+        width: 100%;
+      }
+
+      &.bc-supports-no > button > span {
+        color: var(--text-primary-red);
+      }
+      &.bc-supports-partial > button > span {
+        color: var(--text-primary-yellow);
+      }
+      &.bc-supports-preview > button > span {
+        color: var(--text-primary-blue);
+      }
+      &.bc-supports-yes > button > span {
+        color: var(--text-primary-green);
+      }
+    }
+  }
+
+  th {
+    vertical-align: bottom;
+    background: var(--background-tertiary);
+  }
+
+  .bc-supports {
+    margin-bottom: 1rem;
+
+    .icon-wrap {
+      background: var(--background-primary);
+    }
+  }
+
+  .icon-wrap {
+    .bc-support-level {
+      @include visually-hidden;
+    }
+  }
+  .bc-support {
+    > button > .icon-wrap {
+      display: block;
+    }
+  }
+}
+
+.bc-head-txt-label {
+  -ms-writing-mode: tb-rl;
+  -webkit-writing-mode: vertical-rl;
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+  white-space: nowrap;
+}
+
+.bc-support {
+  text-align: center;
+  vertical-align: middle;
+}
+
+.bc-level-no {
+  background-color: var(--icon-critical);
+}
+
+.bc-level-preview {
+  background-color: var(--icon-information);
+}
+
+.bc-legend-items-container {
   display: flex;
-  justify-content: flex-end;
-  margin-top: 0.5rem;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  margin-bottom: 2rem;
   font: var(--type-body-m);
 }
 
-.bc {
-  &-table {
-    width: 100%;
-    margin: 1rem 0;
-    border: 1px solid var(--border-primary);
-    border-radius: var(--elem-radius);
-    border-collapse: separate;
-    border-spacing: 0;
+.bc-legend-item {
+  display: flex;
+  gap: 0.5rem;
+}
+.bc-legend-item-dt {
+  display: flex;
 
-    thead {
-      display: none;
-    }
-
-    tbody td,
-    tbody th {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.5rem;
-      align-content: center;
-    }
-
-    td,
-    th {
-      border: 1px solid var(--border-secondary);
-      border-width: 0 0 1px 1px;
-      font: var(--type-body-m);
-      padding: 0.4rem;
-
-      &[aria-expanded="false"] {
-        height: 2rem;
-      }
-
-      code {
-        font-size: 0.75rem !important;
-      }
-    }
-
-    // these props allow us to add border-radius to the table.
-    // border-collapse: separate gets in the way of this
-    // being easy.
-    tbody {
-      tr {
-        height: 3rem;
-
-        &:last-child {
-          th,
-          td {
-            border-bottom-width: 0;
-          }
-        }
-
-        th {
-          border-left-width: 0;
-          vertical-align: middle;
-        }
-      }
-
-      td {
-        &.bc-supports-no > span {
-          color: var(--text-primary-red);
-        }
-        &.bc-supports-partial > span {
-          color: var(--text-primary-yellow);
-        }
-        &.bc-supports-preview > span {
-          color: var(--text-primary-blue);
-        }
-        &.bc-supports-yes > span {
-          color: var(--text-primary-green);
-        }
-      }
-    }
-
-    th {
-      vertical-align: bottom;
-      background: var(--background-tertiary);
-    }
-
-    tbody th {
-      @media screen and (min-width: $screen-md) {
-        width: 20%;
-      }
-    }
-
-    .bc-supports {
-      margin-bottom: 1rem;
-
-      .icon-wrap {
-        background: var(--background-primary);
-      }
-    }
-
-    .icon-wrap {
-      .bc-support-level {
-        @include visually-hidden;
-      }
-    }
-    .bc-icon-cell {
-      > .icon-wrap {
-        display: block;
-      }
-    }
-
-    tr [class^="bc-browser"] {
-      text-align: center;
-    }
-
-    .bc-history-desktop {
-      display: none;
-    }
-  }
-
-  &-head-txt-label {
-    -ms-writing-mode: tb-rl;
-    -webkit-writing-mode: vertical-rl;
-    writing-mode: vertical-rl;
-    transform: rotate(180deg);
-    white-space: nowrap;
-  }
-
-  &-icon-cell {
-    text-align: center;
-    vertical-align: middle;
-  }
-
-  &-history-link {
-    @include visually-hidden;
-    position: absolute; // messing up layout otherwise
-  }
-
-  &-level-no {
-    background-color: var(--icon-critical);
-  }
-
-  &-level-preview {
-    background-color: var(--icon-information);
+  .icon {
+    background-color: var(--icon-secondary);
   }
 }
 
-.bc-legend {
-  &-items-container {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 1.5rem;
-    margin-bottom: 2rem;
-    font: var(--type-body-m);
-  }
-
-  &-item {
-    display: flex;
-    gap: 0.5rem;
-
-    &-dt {
-      display: flex;
-
-      .icon {
-        background-color: var(--icon-secondary);
-      }
-    }
-  }
-}
-
+// Row with desktop / mobile icons.
 .bc-platforms {
   height: 2rem;
 
   th {
     text-align: center;
   }
+
+  td {
+    border: none;
+  }
 }
 
-.bc-platforms td {
-  border: none;
-}
+// Row with browser names.
+.bc-browsers {
+  th {
+    text-align: center;
+  }
 
-.bc-browsers td {
-  border-width: 0 0 1px 0;
+  td {
+    border-width: 0 0 1px 0;
+  }
 }
 
 .bc-notes-list {
@@ -318,114 +290,6 @@ dl.bc-notes-list {
   }
 }
 
-@media screen and (min-width: $screen-sm) {
-  .bc-table {
-    thead {
-      display: table-header-group;
-
-      .bc-platforms {
-        th {
-          vertical-align: revert;
-        }
-      }
-    }
-
-    tbody td,
-    tbody th {
-      display: table-cell;
-    }
-
-    td,
-    th {
-      background: inherit;
-      padding: 0.25rem;
-      width: 2rem;
-    }
-    tr.bc-history-desktop {
-      display: table-row;
-    }
-  }
-
-  .table-scroll {
-    overflow: auto;
-    width: 100vw;
-    margin: 0 -3rem;
-  }
-
-  .table-scroll-inner {
-    padding: 0 3rem;
-    position: relative;
-    min-width: max-content;
-
-    &:after {
-      position: absolute;
-      width: 10px;
-      height: 10px;
-      bottom: 0;
-      right: 0;
-      content: "";
-    }
-  }
-
-  .bc-support-level,
-  .bc-browser-name {
-    display: none;
-  }
-
-  .bc-notes-list {
-    margin-left: 20%;
-    width: auto;
-  }
-
-  .bc-icon-cell {
-    .bc-support-level {
-      display: none;
-    }
-
-    &[aria-expanded="true"] {
-      position: relative;
-
-      &:after {
-        position: absolute;
-        left: 0;
-        bottom: -1px;
-        height: 2px;
-        width: 100%;
-        background: var(--text-primary);
-        content: "";
-      }
-
-      .bc-history-mobile {
-        display: none;
-      }
-    }
-  }
-
-  .bc-has-history {
-    cursor: pointer;
-
-    &:hover {
-      background: var(--background-secondary);
-    }
-  }
-}
-@media screen and (min-width: $screen-md) {
-  .table-scroll {
-    width: calc(100% + 6rem);
-  }
-}
-
-@media screen and (min-width: $screen-lg) {
-  .table-scroll {
-    width: 100%;
-    margin: 0;
-  }
-
-  .table-scroll-inner {
-    padding: 0;
-  }
-}
-
 .bc-github-link {
   font: var(--type-body-m);
 }
@@ -443,3 +307,8 @@ dl.bc-notes-list {
     margin: 0;
   }
 }
+
+@import "./index-mobile";
+@import "./index-desktop";
+@import "./index-desktop-md";
+@import "./index-desktop-lg";

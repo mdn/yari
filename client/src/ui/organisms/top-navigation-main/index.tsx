@@ -5,13 +5,12 @@ import MainMenu from "../../molecules/main-menu";
 import { UserMenu } from "../../molecules/user-menu";
 import { Search } from "../../molecules/search";
 
-import { Button } from "../../atoms/button";
-
 import { useUserData } from "../../../user-context";
 
 import "./index.scss";
 import { ENABLE_PLUS } from "../../../constants";
 import { isPlusAvailable } from "../../../utils";
+import { ThemeSwitcher } from "../../molecules/theme-switcher";
 
 export const TopNavigationMain = ({ isOpenOnMobile }) => {
   const userData = useUserData();
@@ -25,28 +24,11 @@ export const TopNavigationMain = ({ isOpenOnMobile }) => {
   }
 
   return (
-    <div
-      className={`top-navigation-main${showSearch ? " has-search-open" : ""}`}
-    >
+    <div className="top-navigation-main">
       <MainMenu isOpenOnMobile={isOpenOnMobile} />
 
-      <Search
-        id="top-nav-search"
-        hasOpened={hasOpened}
-        onChangeIsFocused={(isFocused) => setHasOpened(isFocused)}
-        onCloseSearch={() => {
-          setShowSearch(false);
-        }}
-      />
-
-      <Button
-        type="action"
-        icon="search"
-        onClickHandler={handleShowSearch}
-        extraClasses="toggle-search-button"
-      >
-        <span className="visually-hidden">Show search</span>
-      </Button>
+      <Search id="top-nav-search" />
+      <ThemeSwitcher />
 
       {(ENABLE_PLUS && userData && userData.isAuthenticated && (
         <>

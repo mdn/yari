@@ -1,0 +1,24 @@
+// Style for mobile.
+
+@media screen and (max-width: $screen-sm) {
+  thead {
+    display: none;
+  }
+
+  .bc-support {
+    display: block;
+  }
+
+  .bc-feature,
+  .bc-support > button,
+  .bc-history > td {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    align-content: center;
+  }
+
+  .bc-history-desktop {
+    display: none;
+  }
+}

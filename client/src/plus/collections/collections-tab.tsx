@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import { BookmarkData } from ".";
 import { useUIStatus } from "../../ui-context";
+import LimitBanner from "../../ui/atoms/limit-banner";
 import { Loading } from "../../ui/atoms/loading";
 import { DataError } from "../common";
 import {
@@ -21,6 +22,8 @@ export function CollectionsTab({
   const [offset, setOffset] = useState(0);
   const { setToastData } = useUIStatus();
   const [list, setList] = useState<Array<any>>([]);
+  const [subscriptionLimitReached, setSubscriptionLimitReached] =
+    useState(false);
 
   document.title = TAB_INFO[TabVariant.COLLECTIONS].pageTitle || "MDN Plus";
 
@@ -43,6 +46,7 @@ export function CollectionsTab({
 
   useEffect(() => {
     if (data && !!data.items) {
+      setSubscriptionLimitReached(data.subscription_limit_reached);
       setList([
         ...listRef.current,
         ...data.items.map((item) => {
@@ -59,12 +63,15 @@ export function CollectionsTab({
     let formData;
     const form = e.target as HTMLFormElement;
     formData = new FormData(form);
-    await updateCollectionItem(
+    const res = await updateCollectionItem(
       item,
       new URLSearchParams([...(formData as any)]),
       data.csrfmiddlewaretoken
     );
 
+    const limitReached =
+      (await res.json())?.subscription_limit_reached || false;
+    setSubscriptionLimitReached(limitReached);
     const newList = list.map((v) => {
       if (v.id === item.id) {
         v.title = formData.get("name") ?? v.title;
@@ -76,16 +83,31 @@ export function CollectionsTab({
   };
 
   const deleteCollectionItem = async (item) => {
-    await updateDeleteCollectionItem(item, data.csrfmiddlewaretoken, true);
+    const res = await updateDeleteCollectionItem(
+      item,
+      data.csrfmiddlewaretoken,
+      true
+    );
+    const limitReached =
+      (await res.json())?.subscription_limit_reached || false;
     const previous = [...list];
     const listWithDelete = list.filter((v) => v.id !== item.id);
     setList(listWithDelete);
+    setSubscriptionLimitReached(limitReached);
+
     setToastData({
       mainText: `${item.title} removed from your collection`,
       shortText: "Article removed",
       buttonText: "Undo",
       buttonHandler: async () => {
-        await updateDeleteCollectionItem(item, data.csrfmiddlewaretoken, false);
+        const res = await updateDeleteCollectionItem(
+          item,
+          data.csrfmiddlewaretoken,
+          false
+        );
+        const limitReached =
+          (await res.json())?.subscription_limit_reached || false;
+        setSubscriptionLimitReached(limitReached);
         setToastData(null);
         setList(previous);
       },
@@ -110,6 +132,7 @@ export function CollectionsTab({
           ))}
         </div>
       </ul>
+      {subscriptionLimitReached && <LimitBanner type="collections" />}
       {hasMore && showMoreButton(() => null, setOffset, list)}
     </>
   );
