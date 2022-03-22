@@ -3,9 +3,23 @@
   color: var(--text-primary);
   display: none;
 
-  &.is-offline {
+  &.is-offline,
+  &.is-online {
     display: block;
     padding: 1rem;
     text-align: center;
+  }
+
+  &.is-online {
+    animation: fade-out 3s ease-out 0.5s;
+  }
+}
+
+@keyframes fade-out {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
   }
 }
