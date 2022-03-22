@@ -94,6 +94,8 @@ export function hasFullSupport(support: bcd.SimpleSupportStatement) {
   );
 }
 
-export function hasNoSupport(support: bcd.SimpleSupportStatement) {
+export function showMessageIndicatingNoSupport(
+  support: bcd.SimpleSupportStatement
+) {
   return !support.version_added && !hasLimitation(support);
 }

@@ -5,10 +5,10 @@ import {
   asList,
   getFirst,
   hasFullSupport,
-  hasNoSupport,
   hasNoteworthyNotes,
   isTruthy,
   requiresPrefix,
+  showMessageIndicatingNoSupport,
   versionIsPreview,
 } from "./utils";
 import { LEGEND_LABELS } from "./legend";
@@ -394,7 +394,7 @@ function getNotes(
                 iconName: "footnote",
                 label: "Full support",
               }
-            : hasNoSupport(item)
+            : showMessageIndicatingNoSupport(item)
             ? {
                 iconName: "footnote",
                 label: "No support",
