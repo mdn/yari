@@ -61,8 +61,19 @@ export function CollectionsTab({
     item: BookmarkData
   ) => {
     let formData;
+
     const form = e.target as HTMLFormElement;
     formData = new FormData(form);
+
+    // Determine if delete was clicked.
+    const submitter = (e.nativeEvent as SubmitEvent)
+      .submitter as HTMLButtonElement;
+
+    let isDeleted = submitter.name === "delete" && submitter.value === "true";
+    if (submitter) {
+      formData.append(submitter.name, submitter.value);
+    }
+
     const res = await updateCollectionItem(
       item,
       new URLSearchParams([...(formData as any)]),
@@ -72,13 +83,21 @@ export function CollectionsTab({
     const limitReached =
       (await res.json())?.subscription_limit_reached || false;
     setSubscriptionLimitReached(limitReached);
-    const newList = list.map((v) => {
-      if (v.id === item.id) {
-        v.title = formData.get("name") ?? v.title;
-        v.notes = formData.get("notes") ?? v.notes;
-      }
-      return v;
-    });
+
+    let newList;
+    if (isDeleted) {
+      // Remove locally.
+      newList = list.filter((v) => v.id !== item.id);
+    } else {
+      // Update locally.
+      newList = list.map((v) => {
+        if (v.id === item.id) {
+          v.title = formData.get("name") ?? v.title;
+          v.notes = formData.get("notes") ?? v.notes;
+        }
+        return v;
+      });
+    }
     setList(newList);
   };
 
