@@ -50,12 +50,6 @@ export const FXA_SETTINGS_URL = process.env.REACT_APP_FXA_SETTINGS_URL || "";
 export const DEFAULT_GEO_COUNTRY =
   process.env.REACT_APP_DEFAULT_GEO_COUNTRY || "United States";
 
-export const PLUS_ENABLED_COUNTRIES =
-  process.env.REACT_APP_PLUS_ENABLED_COUNTRIES?.split(",") || [
-    "United States",
-    "Canada",
-  ];
-
 export const IEX_DOMAIN =
   process.env.REACT_APP_INTERACTIVE_EXAMPLES_BASE_URL ||
   "https://interactive-examples.mdn.mozilla.net";
