@@ -75,7 +75,7 @@ export const UserMenu = () => {
         label: "Manage subscription",
       },
       {
-        url: "https://support.mozilla.org/",
+        url: "https://support.mozilla.org/products/mdn-plus",
         label: "Help",
       },
       {
