@@ -71,15 +71,18 @@ export function hasNoteworthyNotes(support: bcd.SimpleSupportStatement) {
   );
 }
 
-export function needsPrefix(support: bcd.SupportStatement | undefined) {
+export function requiresPrefix(support: bcd.SupportStatement | undefined) {
   return (
     support &&
     getFirst(support).prefix &&
     !asList(support).some(
       (item) =>
-        Object.keys(item).filter(
-          (x) => !["version_added", "release_date"].includes(x)
-        ).length === 0
+        item.version_added &&
+        !item.version_removed &&
+        !item.partial_implementation &&
+        !item.alternative_name &&
+        !item.flags &&
+        !item.prefix
     )
   );
 }
