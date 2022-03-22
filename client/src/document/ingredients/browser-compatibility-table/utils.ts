@@ -70,3 +70,16 @@ export function hasNoteworthyNotes(support: bcd.SimpleSupportStatement) {
     !support.partial_implementation
   );
 }
+
+export function needsPrefix(support: bcd.SupportStatement | undefined) {
+  return (
+    support &&
+    getFirst(support).prefix &&
+    !asList(support).some(
+      (item) =>
+        Object.keys(item).filter(
+          (x) => !["version_added", "release_date"].includes(x)
+        ).length === 0
+    )
+  );
+}

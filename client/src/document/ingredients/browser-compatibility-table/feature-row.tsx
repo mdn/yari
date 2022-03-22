@@ -6,6 +6,7 @@ import {
   getFirst,
   hasNoteworthyNotes,
   isTruthy,
+  needsPrefix,
   versionIsPreview,
 } from "./utils";
 import { LEGEND_LABELS } from "./legend";
@@ -274,7 +275,7 @@ function CellIcons({ support }: { support: bcd.SupportStatement | undefined }) {
   }
   return (
     <div className="bc-icons">
-      {supportItem.prefix && <Icon name="prefix" />}
+      {needsPrefix(support) && <Icon name="prefix" />}
       {hasNoteworthyNotes(supportItem) && <Icon name="footnote" />}
       {supportItem.alternative_name && <Icon name="altname" />}
       {supportItem.flags && <Icon name="disabled" />}
