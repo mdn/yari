@@ -4,6 +4,8 @@ import { BrowserInfoContext } from "./browser-info";
 import {
   asList,
   getFirst,
+  hasFullSupport,
+  hasNoSupport,
   hasNoteworthyNotes,
   isTruthy,
   requiresPrefix,
@@ -387,18 +389,12 @@ function getNotes(
           // If we encounter nothing else than the required `version_added` and
           // `release_date` properties, assume full support.
           // EDIT 1-5-21: if item.version_added doesn't exist, assume no support.
-          Object.keys(item).filter(
-            (x) => !["version_added", "release_date"].includes(x)
-          ).length === 0 &&
-          item.version_added &&
-          !versionIsPreview(item.version_added, browser)
+          hasFullSupport(item) && !versionIsPreview(item.version_added, browser)
             ? {
                 iconName: "footnote",
                 label: "Full support",
               }
-            : Object.keys(item).filter(
-                (x) => !["version_added", "release_date"].includes(x)
-              ).length === 0 && !item.version_added
+            : hasNoSupport(item)
             ? {
                 iconName: "footnote",
                 label: "No support",

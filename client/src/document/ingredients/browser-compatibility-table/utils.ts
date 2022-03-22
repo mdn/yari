@@ -71,18 +71,28 @@ export function hasNoteworthyNotes(support: bcd.SimpleSupportStatement) {
   );
 }
 
+function hasSpecialProperty(support: bcd.SimpleSupportStatement) {
+  return (
+    support.version_removed ||
+    support.partial_implementation ||
+    support.alternative_name ||
+    support.flags ||
+    support.prefix
+  );
+}
+
 export function requiresPrefix(support: bcd.SupportStatement | undefined) {
   return (
     support &&
     getFirst(support).prefix &&
-    !asList(support).some(
-      (item) =>
-        item.version_added &&
-        !item.version_removed &&
-        !item.partial_implementation &&
-        !item.alternative_name &&
-        !item.flags &&
-        !item.prefix
-    )
+    !asList(support).some((item) => hasFullSupport(item))
   );
+}
+
+export function hasFullSupport(support: bcd.SimpleSupportStatement) {
+  return support.version_added && !hasSpecialProperty(support);
+}
+
+export function hasNoSupport(support: bcd.SimpleSupportStatement) {
+  return !support.version_added && !hasSpecialProperty(support);
 }
