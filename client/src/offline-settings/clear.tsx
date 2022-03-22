@@ -1,11 +1,13 @@
-import { STATE, UpdateStatus } from "../app-interface";
+import { STATE, UpdateStatus } from "./mdn-worker";
 
 export default function ClearButton({
   updateStatus,
   clear,
+  disabled = false,
 }: {
   updateStatus: UpdateStatus | null;
   clear: () => void;
+  disabled?: boolean;
 }) {
   let button;
   if (
@@ -13,7 +15,11 @@ export default function ClearButton({
       updateStatus?.state === STATE.updateAvailable) &&
     updateStatus?.currentVersion !== null
   ) {
-    button = <button onClick={clear}>Clear data</button>;
+    button = (
+      <button onClick={clear} disabled={disabled}>
+        Clear data
+      </button>
+    );
   } else if (updateStatus?.state === STATE.clearing) {
     button = <button disabled>Clearing…</button>;
   } else {
