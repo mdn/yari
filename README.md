@@ -108,7 +108,7 @@ in the [mdn/content repository](https://github.com/mdn/content).
 
 Yari does a number of things, the most important of which is to render and serve
 the MDN content found in the [content repo](https://github.com/mdn/content).
-Each document is stored as a `index.md` or `index.html` file that contains metadata 
+Each document is stored as an `index.md` (recommended) or `index.html` file that contains metadata 
 presented as YAML [front-matter](https://github.com/mdn/content#fundamental-concepts)
 followed by the document source.
 
