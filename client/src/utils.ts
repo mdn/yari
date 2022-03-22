@@ -1,4 +1,5 @@
-import { IEX_DOMAIN } from "./constants";
+import { IEX_DOMAIN, PLUS_ENABLED_COUNTRIES } from "./constants";
+import { UserData } from "./user-context";
 const HOMEPAGE_RE = /^\/[A-Za-z-]*\/?(?:_homepage)?$/i;
 const DOCS_RE = /^\/[A-Za-z-]+\/docs\/.*$/i;
 const PLUS_RE = /^\/[A-Za-z-]*\/?plus(?:\/?.*)$/i;
@@ -56,4 +57,11 @@ export function switchTheme(theme: string, set: (theme: string) => void) {
     set(theme);
     postToIEx(theme);
   }
+}
+
+export function isPlusAvailable(userData: UserData | null) {
+  if (!userData) {
+    return false;
+  }
+  return PLUS_ENABLED_COUNTRIES.includes(userData?.geo?.country);
 }
