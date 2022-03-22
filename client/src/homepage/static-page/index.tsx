@@ -2,6 +2,7 @@ import React, { ReactElement } from "react";
 import useSWR from "swr";
 import { CRUD_MODE } from "../../constants";
 import { TOC } from "../../document/organisms/toc";
+import { PageNotFound } from "../../page-not-found";
 import "./index.scss";
 
 interface StaticPageProps {
@@ -45,7 +46,7 @@ function StaticPage({
   }, [hyData, title]);
 
   if (!hyData) {
-    return <>NaN</>;
+    return <PageNotFound></PageNotFound>;
   }
 
   return (
