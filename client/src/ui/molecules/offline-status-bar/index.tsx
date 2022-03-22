@@ -26,6 +26,7 @@ export function OfflineStatusBar() {
 
   return (
     <div
+      aria-live="assertive"
       className={
         isOnline ? "offline-status-bar" : "offline-status-bar is-offline"
       }
