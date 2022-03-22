@@ -26,9 +26,19 @@ function OfferHero({ plusAvailable }: { plusAvailable: boolean }) {
               </div>
             </>
           )) || (
-            <h2>
-              Coming to <u>your</u> region soon.
-            </h2>
+            <>
+              <h2>
+                Coming to <u>your</u> region soon.
+              </h2>
+              <div className="button-wrapper">
+                <a href="#features" className="button-primary">
+                  What's included
+                </a>
+                <a href="/en-US/plus/faq" className="button-secondary">
+                  Frequently asked questions
+                </a>
+              </div>
+            </>
           )}
         </div>
       </header>
