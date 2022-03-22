@@ -79,6 +79,10 @@ export const UserMenu = () => {
         label: "Help",
       },
       {
+        url: "https://github.com/mdn/MDN-feedback",
+        label: "Feedback",
+      },
+      {
         component: SignOut,
         extraClasses: "signout-container",
       },
