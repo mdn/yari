@@ -80,7 +80,7 @@ export function useOnClickOutside(ref, handler) {
 }
 
 export function useOnlineStatus(): { isOnline: boolean; isOffline: boolean } {
-  const [isOnline, setIsOnline] = useState<boolean>(navigator.onLine);
+  const [isOnline, setIsOnline] = useState<boolean>(window?.navigator.onLine);
   const isOffline = useMemo(() => !isOnline, [isOnline]);
 
   useEffect(() => {

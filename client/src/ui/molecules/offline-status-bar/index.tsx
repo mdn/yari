@@ -1,28 +1,23 @@
 import * as React from "react";
 
 import { isPayingSubscriber } from "../../../utils";
+import { useOnlineStatus } from "../../../hooks";
 import { useUserData } from "../../../user-context";
 
 import "./index.scss";
 
 export function OfflineStatusBar() {
   const user = useUserData();
+  const onlineStatus = useOnlineStatus();
   const statusBarRef = React.useRef<HTMLDivElement>(null);
-  const initialOnlineStatus =
-    navigator && "onLine" in navigator ? navigator.onLine : true;
-  const [isOnline, setIsOnline] = React.useState(initialOnlineStatus);
 
   React.useEffect(() => {
     const statusBar = statusBarRef.current;
-
-    window.addEventListener("online", () => {
-      setIsOnline(true);
+    const handleOnline = () => {
       statusBar?.classList.add("is-online");
-    });
+    };
 
-    window.addEventListener("offline", () => {
-      setIsOnline(false);
-    });
+    window.addEventListener("online", handleOnline);
 
     if (statusBar) {
       // when the fade-out animation ends, remove the class so
@@ -31,7 +26,11 @@ export function OfflineStatusBar() {
         statusBar.classList.remove("is-online");
       });
     }
-  }, [isOnline]);
+
+    return () => {
+      window.removeEventListener("online", handleOnline);
+    };
+  }, [onlineStatus]);
 
   if (!isPayingSubscriber(user)) {
     return null;
@@ -41,11 +40,15 @@ export function OfflineStatusBar() {
     <div
       aria-live="assertive"
       className={
-        isOnline ? "offline-status-bar" : "offline-status-bar is-offline"
+        onlineStatus.isOnline
+          ? "offline-status-bar"
+          : "offline-status-bar is-offline"
       }
       ref={statusBarRef}
     >
-      {isOnline ? "You are back online." : "You are reading offline."}
+      {onlineStatus.isOnline
+        ? "You are back online."
+        : "You are reading offline."}
     </div>
   );
 }

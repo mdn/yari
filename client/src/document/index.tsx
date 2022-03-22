@@ -160,7 +160,8 @@ export function Document(props /* TODO: define a TS interface for this */) {
     <>
       <ArticleActionsContainer doc={doc} />
 
-      <OfflineStatusBar />
+      {/* only include this if we are not server-side rendering */}
+      {!isServer && <OfflineStatusBar />}
 
       {doc.isTranslated ? (
         <div className="container">

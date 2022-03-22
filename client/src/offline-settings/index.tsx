@@ -13,6 +13,7 @@ export function OfflineSettings() {
   const locale = useLocale();
   const user = useUserData();
   const pageTitle = "Offline Settings";
+
   return (
     <>
       <OfflineStatusBar />
