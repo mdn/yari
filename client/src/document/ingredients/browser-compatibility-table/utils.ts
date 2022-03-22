@@ -77,7 +77,8 @@ function hasLimitation(support: bcd.SimpleSupportStatement) {
     support.alternative_name ||
     support.flags ||
     support.prefix ||
-    support.version_removed
+    support.version_removed ||
+    support.notes
   );
 }
 
