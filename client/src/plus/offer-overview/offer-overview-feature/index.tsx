@@ -42,7 +42,7 @@ export default function OfferOverviewFeatures() {
       </OfferOverviewFeature>
       <OfferOverviewFeature
         id="collections"
-        img="/assets/notifications_light.png"
+        img="/assets/collections_light.png"
         imgAlt=""
       >
         <h2>
@@ -58,7 +58,7 @@ export default function OfferOverviewFeatures() {
       </OfferOverviewFeature>
       <OfferOverviewFeature
         id="offline"
-        img="/assets/notifications_light.png"
+        img="/assets/offline_settings_light.png"
         imgAlt=""
       >
         <h2>MDN's entire library at your fingertips: offline</h2>
