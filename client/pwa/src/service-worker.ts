@@ -41,7 +41,11 @@ self.addEventListener("install", (e) => {
 self.addEventListener("fetch", (e) => {
   const preferOnline =
     new URLSearchParams(location.search).get("preferOnline") === "true";
-  if (preferOnline && !e.request.url.includes("/api/v1/")) {
+  if (
+    preferOnline &&
+    !e.request.url.includes("/api/v1/") &&
+    !e.request.url.includes("/users/fxa/")
+  ) {
     e.respondWith(
       (async () => {
         const res = await fetchWithExampleOverride(e.request);
