@@ -71,9 +71,8 @@ export function hasNoteworthyNotes(support: bcd.SimpleSupportStatement) {
   );
 }
 
-function hasSpecialProperty(support: bcd.SimpleSupportStatement) {
+function hasLimitation(support: bcd.SimpleSupportStatement) {
   return (
-    support.version_removed ||
     support.partial_implementation ||
     support.alternative_name ||
     support.flags ||
@@ -90,9 +89,11 @@ export function requiresPrefix(support: bcd.SupportStatement | undefined) {
 }
 
 export function hasFullSupport(support: bcd.SimpleSupportStatement) {
-  return support.version_added && !hasSpecialProperty(support);
+  return (
+    support.version_added && !support.version_removed && !hasLimitation(support)
+  );
 }
 
 export function hasNoSupport(support: bcd.SimpleSupportStatement) {
-  return !support.version_added && !hasSpecialProperty(support);
+  return !support.version_added && !hasLimitation(support);
 }
