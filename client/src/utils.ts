@@ -1,5 +1,4 @@
 import { UserData } from "./user-context";
-import { SubscriptionType } from "./user-context";
 import {
   IEX_DOMAIN,
   PLUS_ENABLED_COUNTRIES,
@@ -70,15 +69,11 @@ export function switchTheme(theme: string, set: (theme: string) => void) {
   }
 }
 
-export function isPayingSubscriber(user) {
-  const validSubscriptionTypes = Object.values(SubscriptionType).filter(
-    (type) => type !== ""
-  );
-
+export function isPlusSubscriber(user) {
   if (
     user?.isSubscriber &&
     user?.subscriptionType &&
-    validSubscriptionTypes.includes(user.subscriptionType)
+    user?.subscriptionType.includes("plus")
   ) {
     return true;
   }

@@ -1,6 +1,6 @@
 import * as React from "react";
 
-import { isPayingSubscriber } from "../../../utils";
+import { isPlusSubscriber } from "../../../utils";
 import { useOnlineStatus } from "../../../hooks";
 import { useUserData } from "../../../user-context";
 
@@ -10,7 +10,7 @@ export function OfflineStatusBar() {
   const user = useUserData();
   const { isOnline } = useOnlineStatus();
   const statusBarRef = React.useRef<HTMLDivElement>(null);
-  const skipRender = React.useMemo(() => !isPayingSubscriber(user), [user]);
+  const skipRender = React.useMemo(() => !isPlusSubscriber(user), [user]);
 
   React.useEffect(() => {
     const statusBar = statusBarRef.current;
