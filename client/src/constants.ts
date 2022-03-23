@@ -36,8 +36,14 @@ export const VALID_LOCALES = new Set([
   "zh-TW",
 ]);
 
-export const ENABLE_PLUS = Boolean(
-  JSON.parse(process.env.REACT_APP_ENABLE_PLUS || "false")
+export const PLUS_IS_ENABLED = Boolean(
+  JSON.parse(
+    (typeof window !== "undefined"
+      ? window.localStorage?.getItem("REACT_APP_ENABLE_PLUS")
+      : undefined) ||
+      process.env.REACT_APP_ENABLE_PLUS ||
+      "false"
+  )
 );
 export const PLUS_IS_AVAILABLE_OVERRIDE = JSON.parse(
   process.env.REACT_APP_PLUS_IS_AVAILABLE_OVERRIDE || "null"
