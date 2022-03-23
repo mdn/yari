@@ -2,6 +2,7 @@ import { Link, useParams, useLocation } from "react-router-dom";
 import { MDN_PLUS_TITLE } from "../../constants";
 import StaticPage from "../../homepage/static-page";
 import { Button } from "../../ui/atoms/button";
+import "./index.scss";
 
 function PlusDocsNav() {
   return (
@@ -76,13 +77,14 @@ function PlusDocs({ ...props }) {
   return (
     <StaticPage
       {...{
+        extraClasses: "plus-docs",
         locale,
         slug: `plus/docs/${slug}`,
         title: MDN_PLUS_TITLE,
         sidebarHeader: (
           <>
-            <Button href={`/${locale}/plus`}>← Back to Overview</Button>
             <PlusDocsNav />
+            <Button href={`/${locale}/plus`}>← Back to Overview</Button>
           </>
         ),
         initialData: props.hyData ? props : undefined,

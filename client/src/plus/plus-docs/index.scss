@@ -1,40 +1,9 @@
 @use "../../ui/vars" as *;
 
-.static-page {
-  width: 100%;
-  padding: 2rem 1rem;
+.plus-docs {
+  padding: 2rem 0rem;
 
-  p {
-    /* MDN/Plus/Type/Body/M */
-    line-height: 1.75;
-  }
-
-  display: grid;
-  grid-template-columns: 1fr;
-  @media screen and (min-width: $screen-md) {
-    grid-template-columns: 15rem 1fr;
-  }
-  @media screen and (min-width: $screen-lg) {
-    grid-template-columns: 15rem 1fr 15rem;
-  }
-  gap: 2rem;
-
-  .static-sidebar {
-    @media screen and (min-width: $screen-md) {
-      position: sticky;
-    }
-    top: 2rem;
-    width: 100%;
-    max-width: 15rem;
-    height: fit-content;
-
-    .document-toc-container {
-      max-width: fit-content;
-      margin-top: 2rem;
-    }
-  }
-
-  .static-content {
+  .main-page-content {
     em {
       text-decoration: underline;
       font-style: normal;
@@ -42,6 +11,7 @@
       text-underline-offset: 0.1em;
       text-decoration-color: var(--text-link);
     }
+
     h1 {
       /* MDN/Plus/Type/Overline/S */
       font: 700 12px/120% Inter;
@@ -65,13 +35,6 @@
       p {
         font-style: italic;
       }
-    }
-
-    ol,
-    ul {
-      list-style: revert;
-      padding: revert;
-      margin: revert;
     }
   }
 }

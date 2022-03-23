@@ -4,9 +4,9 @@ import { CRUD_MODE } from "../../constants";
 import { TOC } from "../../document/organisms/toc";
 import { PageNotFound } from "../../page-not-found";
 import { Loading } from "../../ui/atoms/loading";
-import "./index.scss";
 
 interface StaticPageProps {
+  extraClasses?: string;
   locale: string;
   slug: string;
   initialData?: any;
@@ -15,6 +15,7 @@ interface StaticPageProps {
 }
 
 function StaticPage({
+  extraClasses = "",
   locale,
   slug,
   initialData = undefined,
@@ -53,16 +54,22 @@ function StaticPage({
   }
 
   return (
-    <div className="static-page container">
-      <div className="static-sidebar">
-        {sidebarHeader || null}
-        {(hyData.toc?.length && <TOC toc={hyData.toc} />) || null}
+    <div className={`document-page container ${extraClasses}`}>
+      <div className="article-wrapper">
+        <nav id="sidebar-quicklinks" className="sidebar">
+          {sidebarHeader || null}
+        </nav>
+        <div className="toc">
+          {(hyData.toc?.length && <TOC toc={hyData.toc} />) || null}
+        </div>
+        <main id="content">
+          <article className="main-page-content">
+            {hyData.sections.map((section) => (
+              <section dangerouslySetInnerHTML={{ __html: section }}></section>
+            ))}
+          </article>
+        </main>
       </div>
-      <article className="static-content">
-        {hyData.sections.map((section) => (
-          <section dangerouslySetInnerHTML={{ __html: section }}></section>
-        ))}
-      </article>
     </div>
   );
 }
