@@ -14,10 +14,22 @@ function displayEstimate({ usage = 0, quota = Infinity }: StorageEstimate) {
 }
 
 export default function SettingsApp({ ...appProps }) {
+  const serviceWorkerAvailable = window?.navigator?.serviceWorker;
+
   return (
     <section className="field-group">
       {/* <h3>Offline settings</h3> */}
-      <Settings />
+      {serviceWorkerAvailable ? (
+        <Settings />
+      ) : (
+        <>
+          <h4>Offline mode is unavailable 😭 </h4>{" "}
+          <p>
+            Please make sure that you are not using a private or incognito
+            window.
+          </p>
+        </>
+      )}
     </section>
   );
 }
