@@ -165,6 +165,9 @@ jobs:
           # exception in the world where we actually want to welcome robots.
           BUILD_ALWAYS_ALLOW_ROBOTS: true
 
+          # Offline updates
+          REACT_APP_UPDATES_BASE_URL: https://updates.developer.mozilla.org
+
           # Firefox Accounts and SubPlat settings
           REACT_APP_FXA_SIGNIN_URL: /users/fxa/login/authenticate/
           REACT_APP_FXA_SETTINGS_URL: https://accounts.firefox.com/settings/
