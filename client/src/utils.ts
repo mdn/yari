@@ -1,10 +1,5 @@
 import { IEX_DOMAIN } from "./constants";
-import {
-  MDN_PLUS_5M_PLAN_NAME,
-  MDN_PLUS_5Y_PLAN_NAME,
-  MDN_PLUS_10M_PLAN_NAME,
-  MDN_PLUS_10Y_PLAN_NAME,
-} from "./constants";
+import { SubscriptionType } from "./user-context";
 
 const HOMEPAGE_RE = /^\/[A-Za-z-]*\/?(?:_homepage)?$/i;
 const DOCS_RE = /^\/[A-Za-z-]+\/docs\/.*$/i;
@@ -71,12 +66,10 @@ export function switchTheme(theme: string, set: (theme: string) => void) {
 }
 
 export function isPayingSubscriber(user) {
-  const validSubscriptionTypes = [
-    MDN_PLUS_5M_PLAN_NAME,
-    MDN_PLUS_5Y_PLAN_NAME,
-    MDN_PLUS_10M_PLAN_NAME,
-    MDN_PLUS_10Y_PLAN_NAME,
-  ];
+  const validSubscriptionTypes = Object.entries(SubscriptionType)
+    .filter((type) => type[1] !== SubscriptionType.MDN_CORE)
+    .map((type) => type[1]);
+  console.log(validSubscriptionTypes);
   if (
     user?.isSubscriber &&
     user?.subscriptionType &&

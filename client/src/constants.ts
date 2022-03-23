@@ -44,15 +44,6 @@ export const MDN_PLUS_SUBSCRIBE_5Y_URL = `${process.env.REACT_APP_MDN_PLUS_SUBSC
 export const MDN_PLUS_SUBSCRIBE_10M_URL = `${process.env.REACT_APP_MDN_PLUS_SUBSCRIBE_URL}?plan=${process.env.REACT_APP_MDN_PLUS_10M_PLAN}`;
 export const MDN_PLUS_SUBSCRIBE_10Y_URL = `${process.env.REACT_APP_MDN_PLUS_SUBSCRIBE_URL}?plan=${process.env.REACT_APP_MDN_PLUS_10Y_PLAN}`;
 
-export const MDN_PLUS_5M_PLAN_NAME =
-  process.env.REACT_APP_MDN_PLUS_5M_PLAN_NAME || "";
-export const MDN_PLUS_5Y_PLAN_NAME =
-  process.env.REACT_APP_MDN_PLUS_5Y_PLAN_NAME || "";
-export const MDN_PLUS_10M_PLAN_NAME =
-  process.env.REACT_APP_MDN_PLUS_10M_PLAN_NAME || "";
-export const MDN_PLUS_10Y_PLAN_NAME =
-  process.env.REACT_APP_MDN_PLUS_10Y_PLAN_NAME || "";
-
 export const FXA_SIGNIN_URL = process.env.REACT_APP_FXA_SIGNIN_URL || "";
 export const FXA_SETTINGS_URL = process.env.REACT_APP_FXA_SETTINGS_URL || "";
 
