@@ -29,6 +29,7 @@ function Settings() {
 
   const [estimate, setEstimate] = useState<StorageEstimate | null>(null);
   const [settings, setSettings] = useState<SettingsData>();
+  // Workaround to avoid "Error: Too many re-renders." (https://github.com/mdn/yari/pull/5744).
   const updateTriggered = useRef(false);
 
   useEffect(() => {
