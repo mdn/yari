@@ -23,7 +23,7 @@ export default function SettingsApp({ ...appProps }) {
         <Settings />
       ) : (
         <>
-          <h4>Offline mode is unavailable 😭 </h4>{" "}
+          <h4>Offline mode is unavailable </h4>{" "}
           <p>
             Please make sure that you are not using a private or incognito
             window.
