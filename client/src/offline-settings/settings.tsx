@@ -19,7 +19,7 @@ export default function SettingsApp({ ...appProps }) {
 
   return (
     <section className="field-group">
-      {/* <h3>Offline settings</h3> */}
+      {/* <h3>MDN Offline</h3> */}
       {serviceWorkerAvailable ? (
         <Settings />
       ) : (
@@ -36,7 +36,7 @@ export default function SettingsApp({ ...appProps }) {
 }
 
 function Settings() {
-  document.title = `Offline settings | ${MDN_PLUS_TITLE}`;
+  document.title = `MDN Offline | ${MDN_PLUS_TITLE}`;
   const [status, setStatus] = useState<UpdateStatus>();
   const [saving, setSaving] = useState<boolean>(true);
 

@@ -12,7 +12,7 @@ const SettingsApp = React.lazy(() => import("./settings"));
 export function OfflineSettings() {
   const locale = useLocale();
   const user = useUserData();
-  const pageTitle = "Offline settings";
+  const pageTitle = "MDN Offline";
 
   return (
     <>

@@ -139,7 +139,7 @@ async function buildSPAs(options) {
         },
         {
           prefix: "plus/offline",
-          pageTitle: `Offline settings | ${MDN_PLUS_TITLE}`,
+          pageTitle: `MDN Offline | ${MDN_PLUS_TITLE}`,
           noIndexing: true,
         },
         { prefix: "about", pageTitle: "About MDN" },
