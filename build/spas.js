@@ -198,7 +198,7 @@ async function buildSPAs(options) {
   }
   await buildStaticPages(
     path.join(__dirname, "../copy/plus"),
-    "plus",
+    "plus/docs",
     "MDN Plus"
   );
 
