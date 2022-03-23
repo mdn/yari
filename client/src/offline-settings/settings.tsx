@@ -6,6 +6,7 @@ import { useEffect, useRef, useState } from "react";
 import UpdateButton from "./update";
 import ClearButton from "./clear";
 import { Spinner } from "../ui/atoms/spinner";
+import { MDN_PLUS_TITLE } from "../constants";
 
 function displayEstimate({ usage = 0, quota = Infinity }: StorageEstimate) {
   const usageInMib = Math.round(usage / (1024 * 1024));
@@ -35,7 +36,7 @@ export default function SettingsApp({ ...appProps }) {
 }
 
 function Settings() {
-  document.title = "Settings | MDN";
+  document.title = `Offline settings | ${MDN_PLUS_TITLE}`;
   const [status, setStatus] = useState<UpdateStatus>();
   const [saving, setSaving] = useState<boolean>(true);
 
