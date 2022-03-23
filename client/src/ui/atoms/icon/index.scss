@@ -1,13 +1,14 @@
 $icons: "add-filled", "add", "altname", "bell-filled", "bell", "bookmark-filled",
-  "bookmark", "cancel", "checkmark", "chevron", "critical", "deprecated",
-  "desktop", "disabled", "edit", "ellipses", "experimental", "external",
-  "eye-filled", "eye", "firefox", "footnote", "github-mark-small", "information",
-  "language", "menu-filled", "menu", "mobile", "theme-dark", "next", "no",
-  "nonstandard", "note-info", "note-warning", "note-deprecated", "padlock",
-  "partial", "prefix", "preview", "previous", "quote", "search", "server",
-  "sidebar", "small-arrow", "theme-light", "star-filled", "star",
+  "bookmark", "cancel", "checkmark", "chevron", "chrome", "critical", "deno",
+  "deprecated", "desktop", "disabled", "edge", "edit", "ellipses",
+  "experimental", "external", "eye-filled", "eye", "firefox", "footnote",
+  "github-mark-small", "ie", "information", "language", "menu-filled", "menu",
+  "mobile", "theme-dark", "next", "no", "nodejs", "nonstandard", "note-info",
+  "note-warning", "note-deprecated", "opera", "padlock", "partial", "prefix",
+  "preview", "previous", "quote", "safari", "samsunginternet", "search",
+  "server", "sidebar", "small-arrow", "theme-light", "star-filled", "star",
   "theme-os-default", "thumbs-down", "thumbs-up", "trash", "twitter", "unknown",
-  "warning", "yes", "yes-circle";
+  "warning", "webview", "yes", "yes-circle";
 
 .icon {
   --size: var(--icon-size, 1rem);

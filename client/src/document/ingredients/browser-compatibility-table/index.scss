@@ -99,6 +99,9 @@
   writing-mode: vertical-rl;
   transform: rotate(180deg);
   white-space: nowrap;
+  left: calc(50% - 0.5rem);
+  position: relative;
+  padding-top: 6px;
 }
 
 .bc-support {

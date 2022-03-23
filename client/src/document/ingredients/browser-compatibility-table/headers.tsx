@@ -50,9 +50,10 @@ function BrowserHeaders({ browsers }: { browsers }) {
       <td />
       {browsers.map((browser) => (
         <th key={browser} className={`bc-browser bc-browser-${browser}`}>
-          <span className={`bc-head-txt-label bc-head-icon-${browser}`}>
+          <div className={`bc-head-txt-label bc-head-icon-${browser}`}>
             <BrowserName id={browser} />
-          </span>
+          </div>
+          <div className={`icon icon-${browser.split("_")[0]}`}></div>
         </th>
       ))}
     </tr>
