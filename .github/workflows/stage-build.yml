@@ -161,6 +161,9 @@ jobs:
           # This enables the Plus call-to-action banner and the Plus landing page
           REACT_APP_ENABLE_PLUS: true
 
+          # This disables the Plus geo-fencing.
+          REACT_APP_PLUS_IS_AVAILABLE_OVERRIDE: true
+
           # This adds the ability to sign in (stage only for now)
           REACT_APP_DISABLE_AUTH: false
 

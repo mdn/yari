@@ -139,47 +139,68 @@ async function buildSPAs(options) {
     }
   }
 
-  // Building the MDN Plus feature pages.
-  const featuresDir = path.join(__dirname, "../copy/plus/features");
-  for (const page of fs.readdirSync(featuresDir)) {
-    const locale = "en-us";
-    const feature = page.split(".")[0];
-    const markdown = fs.readFileSync(path.join(featuresDir, page), "utf8");
+  // Building the MDN Plus pages.
 
-    const frontMatter = frontmatter(markdown);
-    const rawHTML = await m2h(frontMatter.body, locale);
+  /**
+   *
+   * @param {string} dirpath
+   * @param {string} slug
+   * @param {string} title
+   */
+  async function buildStaticPages(dirpath, slug, title = "MDN") {
+    for (const file of fs.readdirSync(dirpath)) {
+      const filepath = path.join(dirpath, file);
+      const stat = fs.lstatSync(filepath);
+      const page = file.split(".")[0];
 
-    const { sections, toc } = splitSections(rawHTML);
+      if (stat.isDirectory()) {
+        await buildStaticPages(filepath, `${slug}/${page}`, title);
+        return;
+      }
 
-    const url = `/${locale}/plus/feature/${feature}`;
-    const hyData = {
-      id: feature,
-      ...frontMatter.attributes,
-      sections,
-      toc,
-    };
-    const context = {
-      hyData,
-      pageTitle: `${frontMatter.attributes.title || ""} | MDN Plus`,
-    };
-    const html = renderHTML(url, context);
-    const outPath = path.join(
-      BUILD_OUT_ROOT,
-      locale,
-      "plus",
-      "feature",
-      feature
-    );
-    fs.mkdirSync(outPath, { recursive: true });
-    const filePath = path.join(outPath, "index.html");
-    fs.writeFileSync(filePath, html);
-    buildCount++;
-    if (options.verbose) {
-      console.log("Wrote", filePath);
+      const locale = "en-us";
+      const markdown = fs.readFileSync(filepath, "utf8");
+
+      const frontMatter = frontmatter(markdown);
+      const rawHTML = await m2h(frontMatter.body, locale);
+
+      const { sections, toc } = splitSections(rawHTML);
+
+      const url = `/${locale}/${slug}/${page}`;
+      const hyData = {
+        id: page,
+        ...frontMatter.attributes,
+        sections,
+        toc,
+      };
+      const context = {
+        hyData,
+        pageTitle: `${frontMatter.attributes.title || ""} | ${title}`,
+      };
+
+      const html = renderHTML(url, context);
+      const outPath = path.join(
+        BUILD_OUT_ROOT,
+        locale,
+        ...slug.split("/"),
+        page
+      );
+      fs.mkdirSync(outPath, { recursive: true });
+      const filePath = path.join(outPath, "index.html");
+      fs.writeFileSync(filePath, html);
+      buildCount++;
+      if (options.verbose) {
+        console.log("Wrote", filePath);
+      }
+      const filePathContext = path.join(outPath, "index.json");
+      fs.writeFileSync(filePathContext, JSON.stringify(context));
     }
-    const filePathContext = path.join(outPath, "index.json");
-    fs.writeFileSync(filePathContext, JSON.stringify(context));
   }
+  await buildStaticPages(
+    path.join(__dirname, "../copy/plus"),
+    "plus",
+    "MDN Plus"
+  );
 
   // Build all the home pages in all locales.
   // Fetch merged content PRs for the latest contribution section.

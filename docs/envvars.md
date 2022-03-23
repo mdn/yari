@@ -288,3 +288,10 @@ Determines if the MDN++ SPA should be reachable or not.
 If the `/api/v1/whoami` does not include a `geo.country` value, fall back on this.
 Setting this allows you to pretend the XHR request to `/api/v1/whoami` included
 this value for `geo.country`.
+
+### `REACT_APP_PLUS_IS_AVAILABLE_OVERRIDE`
+
+**Default: `null`**
+
+- Setting this to `true` allows everybody to access plus (disables geofencing).
+- Setting this to `false` shows everybody the "Coming to your region soon".

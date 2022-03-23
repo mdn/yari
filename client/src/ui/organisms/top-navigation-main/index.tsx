@@ -9,11 +9,12 @@ import { useUserData } from "../../../user-context";
 
 import "./index.scss";
 import { ENABLE_PLUS } from "../../../constants";
+import { isPlusAvailable } from "../../../utils";
 import { ThemeSwitcher } from "../../molecules/theme-switcher";
 
 export const TopNavigationMain = ({ isOpenOnMobile }) => {
   const userData = useUserData();
-  const isAuthenticated = userData && userData.isAuthenticated;
+  const plusAvailable = isPlusAvailable(userData);
 
   return (
     <div className="top-navigation-main">
@@ -22,12 +23,12 @@ export const TopNavigationMain = ({ isOpenOnMobile }) => {
       <Search id="top-nav-search" />
       <ThemeSwitcher />
 
-      {ENABLE_PLUS &&
-        ((isAuthenticated && (
-          <>
-            <UserMenu />
-          </>
-        )) || <AuthContainer />)}
+      {(ENABLE_PLUS && userData && userData.isAuthenticated && (
+        <>
+          <UserMenu />
+        </>
+      )) ||
+        (plusAvailable && <AuthContainer />) || <></>}
     </div>
   );
 };

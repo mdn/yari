@@ -1,9 +1,14 @@
-import { IEX_DOMAIN } from "./constants";
+import { UserData } from "./user-context";
 import {
   MDN_PLUS_5M_PLAN_NAME,
   MDN_PLUS_5Y_PLAN_NAME,
   MDN_PLUS_10M_PLAN_NAME,
   MDN_PLUS_10Y_PLAN_NAME,
+} from "./constants";
+import {
+  IEX_DOMAIN,
+  PLUS_ENABLED_COUNTRIES,
+  PLUS_IS_AVAILABLE_OVERRIDE,
 } from "./constants";
 
 const HOMEPAGE_RE = /^\/[A-Za-z-]*\/?(?:_homepage)?$/i;
@@ -77,6 +82,7 @@ export function isPayingSubscriber(user) {
     MDN_PLUS_10M_PLAN_NAME,
     MDN_PLUS_10Y_PLAN_NAME,
   ];
+
   if (
     user?.isSubscriber &&
     user?.subscriptionType &&
@@ -86,4 +92,15 @@ export function isPayingSubscriber(user) {
   }
 
   return false;
+}
+
+export function isPlusAvailable(userData: UserData | null) {
+  if (typeof PLUS_IS_AVAILABLE_OVERRIDE === "boolean") {
+    return PLUS_IS_AVAILABLE_OVERRIDE;
+  }
+
+  if (!userData) {
+    return false;
+  }
+  return PLUS_ENABLED_COUNTRIES.includes(userData?.geo?.country);
 }

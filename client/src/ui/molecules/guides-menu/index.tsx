@@ -15,7 +15,15 @@ export const GuidesMenu = ({ visibleSubMenuId, toggleMenu }) => {
     items: [
       {
         description: "Learn web development",
-        extraClasses: "apis-link-container",
+        hasIcon: true,
+        extraClasses: "apis-link-container mobile-only",
+        iconClasses: "submenu-icon learn",
+        label: "Overview / MDN Learning Area",
+        url: `/${locale}/docs/Learn`,
+      },
+      {
+        description: "Learn web development",
+        extraClasses: "apis-link-container desktop-only",
         hasIcon: true,
         iconClasses: "submenu-icon learn",
         label: "MDN Learning Area",
