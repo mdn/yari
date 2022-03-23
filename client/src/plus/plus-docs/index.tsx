@@ -2,14 +2,14 @@ import { useParams } from "react-router-dom";
 import StaticPage from "../../homepage/static-page";
 import { Button } from "../../ui/atoms/button";
 
-function StaticPlusPage({ slug, ...props }) {
-  const { locale } = useParams();
+function PlusDocs({ ...props }) {
+  const { locale, "*": slug } = useParams();
 
   return (
     <StaticPage
       {...{
         locale,
-        slug: `plus/${slug}`,
+        slug: `plus/docs/${slug}`,
         title: "MDN Plus",
         sidebarHeader: (
           <Button href={`/${locale}/plus`}>← Back to Overview</Button>
@@ -20,4 +20,4 @@ function StaticPlusPage({ slug, ...props }) {
   );
 }
 
-export default StaticPlusPage;
+export default PlusDocs;
