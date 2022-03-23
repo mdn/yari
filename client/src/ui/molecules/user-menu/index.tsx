@@ -63,7 +63,7 @@ export const UserMenu = () => {
         url: `/${locale}/plus/collections`,
       },
       {
-        label: "Offline settings",
+        label: "MDN Offline",
         url: "/en-US/plus/offline",
       },
       {
