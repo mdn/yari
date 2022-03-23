@@ -11197,14 +11197,15 @@ no-case@^3.0.4:
     lower-case "^2.0.2"
     tslib "^2.0.3"
 
-node-dev@7.2.0:
-  version "7.2.0"
-  resolved "https://registry.yarnpkg.com/node-dev/-/node-dev-7.2.0.tgz#16aaab70ef8fab9133861cc4be8537fc55a2b2ae"
-  integrity sha512-l54yptkfQ1cHgkniLJN63QgNmIX4DAn8Hamngki2/NiipmVtkfSZiHv2ojzE5JeuyRRNMD4NceNQ63kWW84wIw==
+node-dev@7.3.0:
+  version "7.3.0"
+  resolved "https://registry.yarnpkg.com/node-dev/-/node-dev-7.3.0.tgz#58c7a2accba6015023b96ef1c404344230f487d9"
+  integrity sha512-9N8nBjIzM/bk4tAOd2/KUvLxVonA09PjfuyZFhipI7tID3TuW83LVvr+GGU86o7WHa9fBn08IwQOMSj+HPrdng==
   dependencies:
     dateformat "^3.0.3"
     dynamic-dedupe "^0.3.0"
     filewatcher "~3.0.0"
+    get-package-type "^0.1.0"
     minimist "^1.2.5"
     node-notifier "^8.0.1"
     resolve "^1.0.0"
