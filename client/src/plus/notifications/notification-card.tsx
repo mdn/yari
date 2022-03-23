@@ -84,7 +84,7 @@ export default function NotificationCard({ item, changedCallback, csrfToken }) {
                 onClickHandler={async () => {
                   await post(deleteUrl, csrfToken);
                   setToastData({
-                    mainText: `${item.title} removed from your collection`,
+                    mainText: `${item.title} removed from your notifications`,
                     shortText: "Article removed",
                     buttonText: "UNDO",
                     buttonHandler: async () => {

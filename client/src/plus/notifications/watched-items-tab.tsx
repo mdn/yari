@@ -117,7 +117,7 @@ export function WatchedTab({ selectedTerms, selectedFilter, selectedSort }) {
         watchedTab={true}
       />
 
-      {isLoading && <Loading message="Fetching your collection..." />}
+      {isLoading && <Loading message="Fetching your notifications..." />}
       {error && <DataError error={error} />}
       <ul className="notification-list">
         <div className="icon-card-list">
