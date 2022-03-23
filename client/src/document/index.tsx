@@ -4,6 +4,7 @@ import useSWR, { mutate } from "swr";
 
 import { CRUD_MODE } from "../constants";
 import { useGA } from "../ga-context";
+
 import {
   useDocumentURL,
   useCopyExamplesToClipboard,
@@ -19,6 +20,7 @@ import { SpecificationSection } from "./ingredients/spec-section";
 // Sub-components
 import { ArticleActionsContainer } from "../ui/organisms/article-actions-container";
 import { LocalizedContentNote } from "./molecules/localized-content-note";
+import { OfflineStatusBar } from "../ui/molecules/offline-status-bar";
 import { TOC } from "./organisms/toc";
 import { RenderSideBar } from "./organisms/sidebar";
 import { RetiredLocaleNote } from "./molecules/retired-locale-note";
@@ -43,6 +45,7 @@ const MathMLPolyfillMaybe = React.lazy(() => import("./mathml-polyfill"));
 
 export function Document(props /* TODO: define a TS interface for this */) {
   const ga = useGA();
+
   const mountCounter = React.useRef(0);
   const documentURL = useDocumentURL();
   const { locale } = useParams();
@@ -170,6 +173,10 @@ export function Document(props /* TODO: define a TS interface for this */) {
   return (
     <>
       <ArticleActionsContainer doc={doc} />
+
+      {/* only include this if we are not server-side rendering */}
+      {!isServer && <OfflineStatusBar />}
+
       {doc.isTranslated ? (
         <div className="container">
           <LocalizedContentNote isActive={doc.isActive} locale={locale} />
