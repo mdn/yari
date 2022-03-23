@@ -33,7 +33,7 @@ export function FrequentlyViewedTab({ selectedTerms }) {
     setFrequentlyViewed(filteredEntries);
     setList(filteredEntries);
     setToastData({
-      mainText: `${bookmarkData.title} removed`,
+      mainText: "The page has been removed.",
       shortText: "Article removed",
       buttonText: "UNDO",
       buttonHandler: async () => {

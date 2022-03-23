@@ -115,7 +115,7 @@ export function CollectionsTab({
     setSubscriptionLimitReached(limitReached);
 
     setToastData({
-      mainText: `${item.title} removed from your collection`,
+      mainText: "The page has been removed from your collection.",
       shortText: "Article removed",
       buttonText: "Undo",
       buttonHandler: async () => {
