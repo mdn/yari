@@ -71,9 +71,10 @@ export function switchTheme(theme: string, set: (theme: string) => void) {
 }
 
 export function isPayingSubscriber(user) {
-  const validSubscriptionTypes = Object.entries(SubscriptionType)
-    .filter((type) => type[1] !== SubscriptionType.MDN_CORE)
-    .map((type) => type[1]);
+  const validSubscriptionTypes = Object.values(SubscriptionType).filter(
+    (type) => type !== ""
+  );
+
   if (
     user?.isSubscriber &&
     user?.subscriptionType &&
