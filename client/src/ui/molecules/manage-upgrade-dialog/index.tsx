@@ -60,7 +60,7 @@ export function ManageOrUpgradeDialogCollections({ setShow }) {
         Manage your collection or upgrade to MDN Plus to unlock unlimited saves
       </p>
       <div className="watch-submenu-item is-button-row">
-        <Button type="secondary" href={`/${locale}/plus/collection`}>
+        <Button type="secondary" href={`/${locale}/plus/collections`}>
           Manage
         </Button>
         <Button href={`/${locale}/plus`}>Upgrade</Button>

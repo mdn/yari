@@ -54,7 +54,7 @@ test.describe("Bookmarking pages", () => {
   });
 
   test("view your listing of all bookmarks", async ({ page }) => {
-    await page.goto(testURL("/en-US/plus/collection"));
+    await page.goto(testURL("/en-US/plus/collections"));
     await page.waitForLoadState("networkidle");
     await page.waitForSelector("text=You have not signed in");
 
@@ -62,7 +62,7 @@ test.describe("Bookmarking pages", () => {
     await page.click("text='Already a subscriber?'");
     await page.waitForLoadState("networkidle");
 
-    await page.goto(testURL("/en-US/plus/collection"));
+    await page.goto(testURL("/en-US/plus/collections"));
     await page.waitForSelector("text=Nothing saved yet.");
 
     // Open a bunch of pages
@@ -82,7 +82,7 @@ test.describe("Bookmarking pages", () => {
 
     const locator = page.locator(".pagination");
 
-    await page.goto(testURL("/en-US/plus/collection"));
+    await page.goto(testURL("/en-US/plus/collections"));
     await page.waitForSelector("h3:has-text('Collections')");
 
     await expect(locator).toBeVisible();

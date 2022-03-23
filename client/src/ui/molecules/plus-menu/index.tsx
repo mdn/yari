@@ -33,7 +33,7 @@ export const PlusMenu = ({ visibleSubMenuId, toggleMenu }) => {
               hasIcon: true,
               iconClasses: "submenu-icon bookmarks-icon",
               label: "Collections",
-              url: `/${locale}/plus/collection`,
+              url: `/${locale}/plus/collections`,
             },
             {
               description: "Updates from the pages you’re watching",

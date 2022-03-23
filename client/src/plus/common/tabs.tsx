@@ -12,8 +12,8 @@ export enum TabVariant {
 const NOTIFICATIONS_URL = "/plus/notifications";
 const STARRED_URL = "/plus/notifications/starred";
 const WATCHING_URL = "/plus/notifications/watching";
-const COLLECTIONS_URL = "/plus/collection";
-const FREQUENTLY_VIEWED_URL = "/plus/collection/frequently_viewed";
+const COLLECTIONS_URL = "/plus/collections";
+const FREQUENTLY_VIEWED_URL = "/plus/collections/frequently_viewed";
 
 export const FILTERS = [
   {
