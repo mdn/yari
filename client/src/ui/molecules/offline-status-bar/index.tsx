@@ -10,10 +10,7 @@ export function OfflineStatusBar() {
   const user = useUserData();
   const { isOnline } = useOnlineStatus();
   const statusBarRef = React.useRef<HTMLDivElement>(null);
-  const isPremiumSubscriber = React.useMemo(
-    () => !isPayingSubscriber(user),
-    [user]
-  );
+  const skipRender = React.useMemo(() => !isPayingSubscriber(user), [user]);
 
   React.useEffect(() => {
     const statusBar = statusBarRef.current;
@@ -32,7 +29,7 @@ export function OfflineStatusBar() {
     };
   }, []);
 
-  if (!isPremiumSubscriber) {
+  if (skipRender) {
     return null;
   }
 
