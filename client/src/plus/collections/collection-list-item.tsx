@@ -75,7 +75,13 @@ export function CollectionListItem({
               <ul className="dropdown-list" id="collection-item-dropdown">
                 {showEditButton && (
                   <li className="dropdown-item">
-                    <EditCollection item={item} onEditSubmit={onEditSubmit} />
+                    <EditCollection
+                      item={item}
+                      onEditSubmit={(e, item) => {
+                        setShow(false);
+                        onEditSubmit(e, item);
+                      }}
+                    />
                   </li>
                 )}
                 <li className="dropdown-item">
