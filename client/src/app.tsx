@@ -5,7 +5,12 @@ import { Routes, Route, useLocation, useMatch } from "react-router-dom";
 // and applied before any component specific style
 import "./app.scss";
 
-import { MDN_APP, CRUD_MODE, MDN_APP_DESKTOP, ENABLE_PLUS } from "./constants";
+import {
+  MDN_APP,
+  CRUD_MODE,
+  MDN_APP_DESKTOP,
+  PLUS_IS_ENABLED,
+} from "./constants";
 import { Homepage } from "./homepage";
 import { Document } from "./document";
 import { A11yNav } from "./ui/molecules/a11y-nav";
@@ -249,7 +254,7 @@ export function App(appProps) {
                 </StandardLayout>
               }
             />
-            {ENABLE_PLUS && (
+            {PLUS_IS_ENABLED && (
               <Route
                 path="/plus/*"
                 element={
