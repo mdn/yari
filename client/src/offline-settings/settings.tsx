@@ -2,7 +2,7 @@ import { Switch } from "../ui/atoms/switch";
 import { SettingsData, STATE, UpdateStatus } from "./mdn-worker";
 import useInterval from "@use-it/interval";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import UpdateButton from "./update";
 import ClearButton from "./clear";
 import { Spinner } from "../ui/atoms/spinner";
@@ -29,6 +29,8 @@ function Settings() {
 
   const [estimate, setEstimate] = useState<StorageEstimate | null>(null);
   const [settings, setSettings] = useState<SettingsData>();
+  // Workaround to avoid "Error: Too many re-renders." (https://github.com/mdn/yari/pull/5744).
+  const updateTriggered = useRef(false);
 
   useEffect(() => {
     const init = async () => {
@@ -76,8 +78,13 @@ function Settings() {
     }
   };
 
-  if (settings?.autoUpdates && status?.state === STATE.updateAvailable) {
+  if (
+    settings?.autoUpdates &&
+    status?.state === STATE.updateAvailable &&
+    !updateTriggered.current
+  ) {
     update();
+    updateTriggered.current = true;
   }
 
   const usage = estimate && displayEstimate(estimate);
