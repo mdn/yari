@@ -174,7 +174,14 @@ function OfferDetails({
             <a href={ctaLink} className="sub-link">
               {offerDetails.upgradeCta}
             </a>
-          )) || <span className="sub-link na">Not available</span>}
+          )) || (
+            <a
+              href="/en-US/plus/faq#can-i-upgrade/downgrade-my-plan-"
+              className="sub-link na"
+            >
+              Not available
+            </a>
+          )}
         <p className="includes">{offerDetails.includes}</p>
         <ul>
           {offerDetails.features.map(([href, text]) => (
