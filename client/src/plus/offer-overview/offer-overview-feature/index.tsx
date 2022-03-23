@@ -40,7 +40,7 @@ export default function OfferOverviewFeatures() {
             get customizable notifications when documentation changes, CSS
             features launch, and APIs ship.
           </p>
-          <Button href="/en-US/docs/features/notifications">
+          <Button href="/en-US/plus/docs/features/notifications">
             Learn more →
           </Button>
         </section>
@@ -61,7 +61,9 @@ export default function OfferOverviewFeatures() {
             your inner curator and collect your favorite articles in one place
             for convenient consultation.
           </p>
-          <Button href="/en-US/docs/features/collections">Learn more →</Button>
+          <Button href="/en-US/plus/docs/features/collections">
+            Learn more →
+          </Button>
         </section>
       </OfferOverviewFeature>
       <OfferOverviewFeature
@@ -77,7 +79,7 @@ export default function OfferOverviewFeatures() {
             inaccessible pages or cluttered tabs. With MDN Plus, have the fully
             navigable resources of MDN at your disposal even when offline.
           </p>
-          <Button href="/en-US/docs/features/offline">Learn more →</Button>
+          <Button href="/en-US/plus/docs/features/offline">Learn more →</Button>
         </section>
       </OfferOverviewFeature>
     </section>
