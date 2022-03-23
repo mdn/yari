@@ -632,6 +632,12 @@ function _addSectionProse($) {
       }
     }
   }
+
+  if (id) {
+    // Remove trailing underscores (https://github.com/mdn/yari/issues/5492).
+    id = id.replace(/_+$/g, "");
+  }
+
   const value = {
     id,
     title,
