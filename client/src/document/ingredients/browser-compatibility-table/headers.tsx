@@ -53,7 +53,9 @@ function BrowserHeaders({ browsers }: { browsers }) {
           <div className={`bc-head-txt-label bc-head-icon-${browser}`}>
             <BrowserName id={browser} />
           </div>
-          <div className={`icon icon-${browser.split("_")[0]}`}></div>
+          <div
+            className={`bc-head-icon-symbol icon icon-${browser.split("_")[0]}`}
+          ></div>
         </th>
       ))}
     </tr>
