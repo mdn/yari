@@ -43,8 +43,7 @@ function StaticPage({
     window.scrollTo(0, 0);
   }, []);
   React.useEffect(() => {
-    const pageTitle = hyData && `${hyData.title} | ${title}`;
-    document.title = pageTitle;
+    document.title = hyData ? `${hyData.title} | ${title}` : title;
   }, [hyData, title]);
 
   if (error) {
