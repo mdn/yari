@@ -28,6 +28,7 @@ export default function OfferOverviewFeatures() {
         img="/assets/notifications_light.png"
         imgAlt=""
       >
+        <h1>Notifications</h1>
         <h2>
           Development in real time:
           <br />
@@ -45,6 +46,7 @@ export default function OfferOverviewFeatures() {
         img="/assets/notifications_light.png"
         imgAlt=""
       >
+        <h1>Collections</h1>
         <h2>
           Build your perfect library. <br />
           Or let us build it for you.
@@ -61,6 +63,7 @@ export default function OfferOverviewFeatures() {
         img="/assets/notifications_light.png"
         imgAlt=""
       >
+        <h1>MDN Offline</h1>
         <h2>MDN's entire library at your fingertips: offline</h2>
         <p>
           Taking your projects beyond the nearest wifi signal? Say goodbye to
