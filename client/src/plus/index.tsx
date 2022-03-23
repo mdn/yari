@@ -8,8 +8,7 @@ import Notifications from "./notifications";
 
 const OfferOverview = React.lazy(() => import("./offer-overview"));
 const Collections = React.lazy(() => import("./collections"));
-const FeatureHighlight = React.lazy(() => import("./feature-highlight"));
-const StaticPlusPage = React.lazy(() => import("./static-plus-page"));
+const PlusDocs = React.lazy(() => import("./plus-docs"));
 
 export function Plus({ pageTitle, ...props }: { pageTitle?: string }) {
   const defaultPageTitle = "MDN Plus";
@@ -36,7 +35,7 @@ export function Plus({ pageTitle, ...props }: { pageTitle?: string }) {
         }
       />
       <Route
-        path="collection/*"
+        path="collections/*"
         element={
           <React.Suspense fallback={loading}>
             <div className="bookmarks girdle">
@@ -56,18 +55,10 @@ export function Plus({ pageTitle, ...props }: { pageTitle?: string }) {
         }
       />
       <Route
-        path="features/:feature"
+        path="docs/*"
         element={
           <React.Suspense fallback={loading}>
-            <FeatureHighlight {...props} />
-          </React.Suspense>
-        }
-      />
-      <Route
-        path="faq"
-        element={
-          <React.Suspense fallback={loading}>
-            <StaticPlusPage {...{ ...props, slug: "faq" }} />
+            <PlusDocs {...props} />
           </React.Suspense>
         }
       />

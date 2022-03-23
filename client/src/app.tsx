@@ -5,7 +5,7 @@ import { Routes, Route, useLocation, useMatch } from "react-router-dom";
 // and applied before any component specific style
 import "./app.scss";
 
-import { CRUD_MODE, ENABLE_PLUS } from "./constants";
+import { CRUD_MODE, PLUS_IS_ENABLED } from "./constants";
 import { Homepage } from "./homepage";
 import { Document } from "./document";
 import { A11yNav } from "./ui/molecules/a11y-nav";
@@ -249,7 +249,7 @@ export function App(appProps) {
                 </StandardLayout>
               }
             />
-            {ENABLE_PLUS && (
+            {PLUS_IS_ENABLED && (
               <Route
                 path="/plus/*"
                 element={
@@ -259,7 +259,7 @@ export function App(appProps) {
                 }
               />
             )}
-            {ENABLE_PLUS && (
+            {PLUS_IS_ENABLED && (
               <Route
                 path="/offline-settings"
                 element={

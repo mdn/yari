@@ -5,7 +5,7 @@ import { useLocation } from "react-router-dom";
 
 import { ReactComponent as MDNLogo } from "../../../assets/mdn-footer-logo.svg";
 import { ReactComponent as MozLogo } from "../../../assets/moz-logo.svg";
-import { ENABLE_PLUS } from "../../../constants";
+import { PLUS_IS_ENABLED } from "../../../constants";
 const DARK_NAV_ROUTES = [/\/plus\/?$/i];
 
 export function Footer() {
@@ -76,7 +76,7 @@ export function Footer() {
         <div className="page-footer-nav-col-2">
           <h2 className="footer-nav-heading">Support</h2>
           <ul className="footer-nav-list">
-            {ENABLE_PLUS && (
+            {PLUS_IS_ENABLED && (
               <li className="footer-nav-item">
                 <a
                   className="footer-nav-link"
@@ -149,7 +149,7 @@ export function Footer() {
                 Learn Web Development
               </a>
             </li>
-            {ENABLE_PLUS && (
+            {PLUS_IS_ENABLED && (
               <li className="footer-nav-item">
                 <a className="footer-nav-link" href={`/${locale}/plus`}>
                   MDN Plus

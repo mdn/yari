@@ -1233,8 +1233,8 @@ test("plus page", () => {
   expect($('meta[name="robots"]').attr("content")).toBe("noindex, nofollow");
 });
 
-test("plus bookmarks page", () => {
-  const builtFolder = path.join(buildRoot, "en-us", "plus", "collection");
+test("plus collections page", () => {
+  const builtFolder = path.join(buildRoot, "en-us", "plus", "collections");
   expect(fs.existsSync(builtFolder)).toBeTruthy();
   const htmlFile = path.join(builtFolder, "index.html");
   const html = fs.readFileSync(htmlFile, "utf-8");

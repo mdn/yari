@@ -34,7 +34,7 @@ function OfferHero({ plusAvailable }: { plusAvailable: boolean }) {
                 <a href="#features" className="button-primary">
                   What's included
                 </a>
-                <a href="/en-US/plus/faq" className="button-secondary">
+                <a href="/en-US/plus/docs/faq" className="button-secondary">
                   Frequently asked questions
                 </a>
               </div>

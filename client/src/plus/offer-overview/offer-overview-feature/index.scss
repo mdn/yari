@@ -45,8 +45,20 @@
         justify-content: start;
       }
       h2 {
-        margin-top: 1rem;
+        color: var(--plus-accent-color);
+        font: 700 12px/120% Inter;
+        letter-spacing: 1.5px;
+        text-transform: uppercase;
+        margin-bottom: 1rem;
+        margin-top: 0;
       }
+
+      h3 {
+        font-size: 1.75rem;
+        font-weight: 400;
+        margin-top: 0;
+      }
+
       text-align: center;
       align-items: center;
       max-width: 40rem;

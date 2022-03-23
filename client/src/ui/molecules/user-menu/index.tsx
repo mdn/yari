@@ -60,7 +60,7 @@ export const UserMenu = () => {
       },
       {
         label: "Collections",
-        url: `/${locale}/plus/collection`,
+        url: `/${locale}/plus/collections`,
       },
       {
         label: "Offline settings",

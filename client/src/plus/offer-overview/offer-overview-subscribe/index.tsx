@@ -176,7 +176,7 @@ function OfferDetails({
             </a>
           )) || (
             <a
-              href="/en-US/plus/faq#can-i-upgrade/downgrade-my-plan-"
+              href="/en-US/plus/docs/faq#can-i-upgrade/downgrade-my-plan-"
               className="sub-link na"
             >
               Not available

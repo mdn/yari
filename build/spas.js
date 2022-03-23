@@ -111,7 +111,7 @@ async function buildSPAs(options) {
         { prefix: "search", pageTitle: "Search" },
         { prefix: "plus", pageTitle: "Plus", noIndexing: true },
         {
-          prefix: "plus/collection",
+          prefix: "plus/collections",
           pageTitle: "Collection",
           noIndexing: true,
         },
@@ -198,7 +198,7 @@ async function buildSPAs(options) {
   }
   await buildStaticPages(
     path.join(__dirname, "../copy/plus"),
-    "plus",
+    "plus/docs",
     "MDN Plus"
   );
 
