@@ -39,6 +39,9 @@ export const VALID_LOCALES = new Set([
 export const ENABLE_PLUS = Boolean(
   JSON.parse(process.env.REACT_APP_ENABLE_PLUS || "false")
 );
+export const PLUS_IS_AVAILABLE_OVERRIDE = JSON.parse(
+  process.env.REACT_APP_PLUS_IS_AVAILABLE_OVERRIDE || "null"
+);
 export const MDN_PLUS_SUBSCRIBE_5M_URL = `${process.env.REACT_APP_MDN_PLUS_SUBSCRIBE_URL}?plan=${process.env.REACT_APP_MDN_PLUS_5M_PLAN}`;
 export const MDN_PLUS_SUBSCRIBE_5Y_URL = `${process.env.REACT_APP_MDN_PLUS_SUBSCRIBE_URL}?plan=${process.env.REACT_APP_MDN_PLUS_5Y_PLAN}`;
 export const MDN_PLUS_SUBSCRIBE_10M_URL = `${process.env.REACT_APP_MDN_PLUS_SUBSCRIBE_URL}?plan=${process.env.REACT_APP_MDN_PLUS_10M_PLAN}`;
@@ -49,6 +52,12 @@ export const FXA_SETTINGS_URL = process.env.REACT_APP_FXA_SETTINGS_URL || "";
 
 export const DEFAULT_GEO_COUNTRY =
   process.env.REACT_APP_DEFAULT_GEO_COUNTRY || "United States";
+
+export const PLUS_ENABLED_COUNTRIES =
+  process.env.REACT_APP_PLUS_ENABLED_COUNTRIES?.split(",") || [
+    "United States",
+    "Canada",
+  ];
 
 export const IEX_DOMAIN =
   process.env.REACT_APP_INTERACTIVE_EXAMPLES_BASE_URL ||
