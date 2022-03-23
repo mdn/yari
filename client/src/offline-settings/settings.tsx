@@ -145,20 +145,6 @@ function Settings() {
               update={update}
             />
           </li>
-          {window?.location.hash === "#debug" && (
-            <li>
-              <h4>Debug</h4>
-              <span>{JSON.stringify(status, null, 2)}</span>
-            </li>
-          )}
-          {usage && (
-            <li>
-              <h4>Storage used</h4>
-              <span>
-                MDN offline currently uses <b>{usage}</b>
-              </span>
-            </li>
-          )}
           <li>
             <h4>Enable auto-update</h4>
             <span>
@@ -176,6 +162,20 @@ function Settings() {
               ></Switch>
             )}
           </li>
+          {window?.location.hash === "#debug" && (
+            <li>
+              <h4>Debug</h4>
+              <span>{JSON.stringify(status, null, 2)}</span>
+            </li>
+          )}
+          {usage && (
+            <li>
+              <h4>Storage used</h4>
+              <span>
+                MDN offline currently uses <b>{usage}</b>
+              </span>
+            </li>
+          )}
           <li>
             <ClearButton
               disabled={saving}
