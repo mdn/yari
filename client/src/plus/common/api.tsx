@@ -242,7 +242,11 @@ export function useFrequentlyViewedData(searchTerms: string) {
   const [data, setData] = useState(entries);
   useEffect(() => {
     if (searchTerms) {
-      setData(entries.filter((val) => val.title.includes(searchTerms)));
+      const lowerSearchTerms = searchTerms.toLowerCase();
+      const filteredEntries = entries.filter((val) =>
+        val.title.toLowerCase().includes(lowerSearchTerms)
+      );
+      setData(filteredEntries);
     } else {
       setData(entries);
     }
