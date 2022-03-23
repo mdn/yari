@@ -17,6 +17,7 @@ import { BookmarkData } from "./types";
 import { useUserData } from "../../user-context";
 import { TabVariant, TAB_INFO, useCurrentTab } from "../common/tabs";
 import { PlusTabs } from "../common/plus-tabs";
+import { MDN_PLUS_TITLE } from "../../constants";
 
 dayjs.extend(relativeTime);
 
@@ -50,6 +51,14 @@ function CollectionsLayout() {
     setSelectedSort("");
     setSelectedFilter("");
   }, [currentTab, setSelectedTerms, setSelectedSort, setSelectedFilter]);
+
+  useEffect(() => {
+    document.title = TAB_INFO[currentTab].pageTitle || MDN_PLUS_TITLE;
+
+    return () => {
+      document.title = MDN_PLUS_TITLE;
+    };
+  }, [currentTab]);
 
   const tabsForRoute = [
     TAB_INFO[TabVariant.COLLECTIONS],
