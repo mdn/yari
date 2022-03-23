@@ -64,7 +64,7 @@ export const UserMenu = () => {
       },
       {
         label: "Offline settings",
-        url: "/en-US/offline-settings",
+        url: "/en-US/plus/offline-settings",
       },
       {
         url: FXA_SETTINGS_URL,
