@@ -36,7 +36,7 @@ export function Plus({ pageTitle, ...props }: { pageTitle?: string }) {
         }
       />
       <Route
-        path="collection/*"
+        path="collections/*"
         element={
           <React.Suspense fallback={loading}>
             <div className="bookmarks girdle">

@@ -65,7 +65,7 @@ export const UserMenu = () => {
       },
       {
         label: "Collections",
-        url: `/${locale}/plus/collection`,
+        url: `/${locale}/plus/collections`,
       },
       {
         url: FXA_SETTINGS_URL,

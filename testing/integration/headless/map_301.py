@@ -991,12 +991,12 @@ MISC_REDIRECT_URLS = list(
     flatten(
         (
             url_test(
-                "/fr/{plus,plus/,plus/collection,plus/collection/,plus/deep-dives,plus/deep-dives/}",
+                "/fr/{plus,plus/,plus/collections,plus/collections/,plus/deep-dives,plus/deep-dives/}",
                 "/fr/",
                 status_code=302,
             ),
             url_test(
-                "/en-US/{plus,plus/,plus/collection,plus/collection/,plus/deep-dives,plus/deep-dives/}",
+                "/en-US/{plus,plus/,plus/collections,plus/collections/,plus/deep-dives,plus/deep-dives/}",
                 "/en-US/",
                 status_code=302,
             ),
