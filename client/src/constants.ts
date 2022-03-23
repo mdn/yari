@@ -36,6 +36,8 @@ export const VALID_LOCALES = new Set([
   "zh-TW",
 ]);
 
+export const MDN_PLUS_TITLE = "MDN Plus";
+
 export const PLUS_IS_ENABLED = Boolean(
   JSON.parse(
     (typeof window !== "undefined"
