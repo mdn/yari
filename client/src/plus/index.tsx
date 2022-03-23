@@ -56,7 +56,7 @@ export function Plus({ pageTitle, ...props }: { pageTitle?: string }) {
         }
       />
       <Route
-        path="/offline-settings"
+        path="/offline"
         element={
           <React.Suspense fallback={loading}>
             <OfflineSettings {...props} />
