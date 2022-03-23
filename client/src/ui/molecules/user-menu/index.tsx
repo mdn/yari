@@ -65,6 +65,7 @@ export const UserMenu = () => {
       {
         label: "MDN Offline",
         url: "/en-US/plus/offline",
+        extraClasses: "submenu-header",
       },
       {
         url: FXA_SETTINGS_URL,
