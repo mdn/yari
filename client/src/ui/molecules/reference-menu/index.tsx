@@ -14,6 +14,14 @@ export const ReferenceMenu = ({ visibleSubMenuId, toggleMenu }) => {
     id: "references",
     items: [
       {
+        description: "Web technology reference for developers",
+        hasIcon: true,
+        extraClasses: "apis-link-container mobile-only",
+        iconClasses: "submenu-icon",
+        label: "Overview / Web Technology",
+        url: `/${locale}/docs/Web`,
+      },
+      {
         description: "Structure of content on the web",
         extraClasses: "html-link-container",
         hasIcon: true,
@@ -55,7 +63,7 @@ export const ReferenceMenu = ({ visibleSubMenuId, toggleMenu }) => {
       },
       {
         description: "Web technology reference for developers",
-        extraClasses: "apis-link-container",
+        extraClasses: "apis-link-container desktop-only",
         hasIcon: true,
         iconClasses: "submenu-icon",
         label: "Web Technology",

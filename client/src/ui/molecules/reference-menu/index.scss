@@ -1,6 +1,22 @@
 @use "sass:color";
 @use "../../vars" as *;
 
+.references {
+  .desktop-only {
+    display: none;
+  }
+
+  @media screen and (min-width: $screen-md) {
+    .desktop-only {
+      display: inherit;
+    }
+
+    .mobile-only {
+      display: none;
+    }
+  }
+}
+
 .html-link-container {
   a:hover,
   a:focus {

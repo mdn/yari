@@ -6,4 +6,18 @@
     font-weight: initial;
     font: var(--type-body-m);
   }
+
+  .desktop-only {
+    display: none;
+  }
+
+  @media screen and (min-width: $screen-md) {
+    .desktop-only {
+      display: inherit;
+    }
+
+    .mobile-only {
+      display: none;
+    }
+  }
 }
