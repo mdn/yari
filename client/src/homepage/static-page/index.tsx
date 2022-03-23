@@ -46,14 +46,14 @@ function StaticPage({
   }, [hyData, title]);
 
   if (!hyData) {
-    return <PageNotFound></PageNotFound>;
+    return <PageNotFound />;
   }
 
   return (
     <div className="static-page container">
       <div className="static-sidebar">
         {sidebarHeader || null}
-        {(hyData.toc?.length && <TOC toc={hyData.toc}></TOC>) || null}
+        {(hyData.toc?.length && <TOC toc={hyData.toc} />) || null}
       </div>
       <article className="static-content">
         {hyData.sections.map((section) => (
