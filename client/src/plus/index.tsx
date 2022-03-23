@@ -6,6 +6,7 @@ import { PageContentContainer } from "../ui/atoms/page-content";
 import { PageNotFound } from "../page-not-found";
 import Notifications from "./notifications";
 import { MDN_PLUS_TITLE } from "../constants";
+import { OfflineSettings } from "../offline-settings";
 
 const OfferOverview = React.lazy(() => import("./offer-overview"));
 const Collections = React.lazy(() => import("./collections"));
@@ -51,6 +52,14 @@ export function Plus({ pageTitle, ...props }: { pageTitle?: string }) {
             <div className="notifications girdle">
               <Notifications />
             </div>
+          </React.Suspense>
+        }
+      />
+      <Route
+        path="/offline-settings"
+        element={
+          <React.Suspense fallback={loading}>
+            <OfflineSettings {...props} />
           </React.Suspense>
         }
       />
