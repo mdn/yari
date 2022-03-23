@@ -250,7 +250,7 @@ function RenderDocumentBody({ doc }) {
 function LoadingError({ error }) {
   return (
     <div className="standard-page">
-      <div className="page-content-container loading-error">
+      <div id="content" className="page-content-container loading-error">
         <h3>Loading Error</h3>
         {error instanceof window.Response ? (
           <p>
