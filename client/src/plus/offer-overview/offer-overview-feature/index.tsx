@@ -40,7 +40,9 @@ export default function OfferOverviewFeatures() {
             get customizable notifications when documentation changes, CSS
             features launch, and APIs ship.
           </p>
-          <Button href="/en-US/docs/features/notifications">Learn more →</Button>
+          <Button href="/en-US/docs/features/notifications">
+            Learn more →
+          </Button>
         </section>
       </OfferOverviewFeature>
       <OfferOverviewFeature
