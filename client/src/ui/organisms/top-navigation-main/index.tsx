@@ -8,7 +8,7 @@ import { Search } from "../../molecules/search";
 import { useUserData } from "../../../user-context";
 
 import "./index.scss";
-import { ENABLE_PLUS } from "../../../constants";
+import { PLUS_IS_ENABLED } from "../../../constants";
 import { isPlusAvailable } from "../../../utils";
 import { ThemeSwitcher } from "../../molecules/theme-switcher";
 
@@ -23,7 +23,7 @@ export const TopNavigationMain = ({ isOpenOnMobile }) => {
       <Search id="top-nav-search" />
       <ThemeSwitcher />
 
-      {(ENABLE_PLUS && userData && userData.isAuthenticated && (
+      {(PLUS_IS_ENABLED && userData && userData.isAuthenticated && (
         <>
           <UserMenu />
         </>

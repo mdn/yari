@@ -36,8 +36,14 @@ export const VALID_LOCALES = new Set([
   "zh-TW",
 ]);
 
-export const ENABLE_PLUS = Boolean(
-  JSON.parse(process.env.REACT_APP_ENABLE_PLUS || "false")
+export const PLUS_IS_ENABLED = Boolean(
+  JSON.parse(
+    (typeof window !== "undefined"
+      ? window.localStorage?.getItem("REACT_APP_ENABLE_PLUS")
+      : undefined) ||
+      process.env.REACT_APP_ENABLE_PLUS ||
+      "false"
+  )
 );
 export const PLUS_IS_AVAILABLE_OVERRIDE = JSON.parse(
   process.env.REACT_APP_PLUS_IS_AVAILABLE_OVERRIDE || "null"
@@ -62,17 +68,10 @@ export const PLUS_ENABLED_COUNTRIES =
 export const IEX_DOMAIN =
   process.env.REACT_APP_INTERACTIVE_EXAMPLES_BASE_URL ||
   "https://interactive-examples.mdn.mozilla.net";
-export const MDN_APP = Boolean(process.env.REACT_APP_MDN_APP) || false;
-export const MDN_APP_ANDROID =
-  (process.env.REACT_APP_MDN_APP || "").toLowerCase() === "android";
-
-export const MDN_APP_DESKTOP =
-  (process.env.REACT_APP_MDN_APP || "").toLowerCase() === "desktop";
-
-export const MDN_APP_IOS =
-  (process.env.REACT_APP_MDN_APP || "").toLowerCase() === "ios";
-
-export const MDN_APP_MOBILE = MDN_APP && !MDN_APP_DESKTOP;
 
 export const HEADER_NOTIFICATIONS_MENU_API_URL =
   "/api/v1/plus/notifications?limit=1&unread=true";
+
+export const UPDATES_BASE_URL =
+  process.env.REACT_APP_UPDATES_BASE_URL ||
+  "https://updates.developer.allizom.org";

@@ -5,7 +5,7 @@ import { ReferenceMenu } from "../reference-menu";
 import { PlusMenu } from "../plus-menu";
 
 import "./index.scss";
-import { ENABLE_PLUS } from "../../../constants";
+import { PLUS_IS_ENABLED } from "../../../constants";
 
 export default function MainMenu({ isOpenOnMobile }) {
   const previousActiveElement = useRef<null | HTMLButtonElement>(null);
@@ -71,7 +71,7 @@ export default function MainMenu({ isOpenOnMobile }) {
           visibleSubMenuId={visibleSubMenuId}
           toggleMenu={toggleMenu}
         />
-        {ENABLE_PLUS && (
+        {PLUS_IS_ENABLED && (
           <PlusMenu
             visibleSubMenuId={visibleSubMenuId}
             toggleMenu={toggleMenu}

@@ -1,5 +1,4 @@
-import React, { useEffect, useState } from "react";
-
+import { useEffect, useState } from "react";
 import { Avatar } from "../../atoms/avatar";
 import { Button } from "../../atoms/button";
 import { Submenu } from "../submenu";
@@ -7,13 +6,9 @@ import SignOut from "../../atoms/signout";
 
 import { useUserData } from "../../../user-context";
 import { useLocale } from "../../../hooks";
-
 import {
   FXA_SETTINGS_URL,
   HEADER_NOTIFICATIONS_MENU_API_URL,
-  MDN_APP_ANDROID,
-  MDN_APP_DESKTOP,
-  MDN_APP_IOS,
 } from "../../../constants";
 
 import "./index.scss";
@@ -68,6 +63,10 @@ export const UserMenu = () => {
         url: `/${locale}/plus/collections`,
       },
       {
+        label: "Offline settings",
+        url: "/en-US/offline-settings",
+      },
+      {
         url: FXA_SETTINGS_URL,
         label: "Manage account",
       },
@@ -76,8 +75,12 @@ export const UserMenu = () => {
         label: "Manage subscription",
       },
       {
-        url: "https://support.mozilla.org/",
+        url: "https://support.mozilla.org/products/mdn-plus",
         label: "Help",
+      },
+      {
+        url: "https://github.com/mdn/MDN-feedback",
+        label: "Feedback",
       },
       {
         component: SignOut,
@@ -85,25 +88,6 @@ export const UserMenu = () => {
       },
     ],
   };
-
-  const itemsCount = userMenuItems.items.length;
-  if (MDN_APP_DESKTOP || MDN_APP_IOS) {
-    userMenuItems.items.splice(itemsCount - 1, 0, {
-      url: "/en-US/app-settings",
-      label: "App settings",
-    });
-  }
-
-  if (MDN_APP_ANDROID) {
-    userMenuItems.items.splice(itemsCount - 1, 0, {
-      component: () => (
-        <Button onClickHandler={async () => window.Android.settings()}>
-          App settings
-        </Button>
-      ),
-      extraClasses: "",
-    });
-  }
 
   return (
     <DropdownMenuWrapper

@@ -8,6 +8,7 @@ import { docCategory } from "../../utils";
 import { _getIconLabel } from "../common";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
+import { useOnlineStatus } from "../../hooks";
 
 dayjs.extend(relativeTime);
 
@@ -23,6 +24,7 @@ export function CollectionListItem({
   handleDelete: (item: BookmarkData) => Promise<void>;
 }) {
   const [show, setShow] = React.useState(false);
+  const { isOnline } = useOnlineStatus();
 
   const iconClass = docCategory({ pathname: item.url })?.split("-")[1];
   const iconLabel = _getIconLabel(item.url);
@@ -45,46 +47,56 @@ export function CollectionListItem({
         >
           {`Added ${dayjs(item.created).fromNow().toString()}`}
         </time>
-        <DropdownMenuWrapper
-          className="dropdown is-flush-right"
-          isOpen={show}
-          setIsOpen={(value, event) => {
-            if (
-              !document.querySelector(".modal-content")?.contains(event.target)
-            ) {
-              setShow(value);
-            }
-          }}
-        >
-          <Button
-            type="action"
-            icon="ellipses"
-            ariaControls="collection-list-item-dropdown"
-            ariaHasPopup={"menu"}
-            ariaExpanded={show || undefined}
-            onClickHandler={() => {
-              setShow(!show);
+        {isOnline && (
+          <DropdownMenuWrapper
+            className="dropdown is-flush-right"
+            isOpen={show}
+            setIsOpen={(value, event) => {
+              if (
+                !document
+                  .querySelector(".modal-content")
+                  ?.contains(event.target)
+              ) {
+                setShow(value);
+              }
             }}
-          />
-          <DropdownMenu>
-            <ul className="dropdown-list" id="collection-item-dropdown">
-              {showEditButton && (
+          >
+            <Button
+              type="action"
+              icon="ellipses"
+              ariaControls="collection-list-item-dropdown"
+              ariaHasPopup={"menu"}
+              ariaExpanded={show || undefined}
+              onClickHandler={() => {
+                setShow(!show);
+              }}
+            />
+            <DropdownMenu>
+              <ul className="dropdown-list" id="collection-item-dropdown">
+                {showEditButton && (
+                  <li className="dropdown-item">
+                    <EditCollection
+                      item={item}
+                      onEditSubmit={(e, item) => {
+                        setShow(false);
+                        onEditSubmit(e, item);
+                      }}
+                    />
+                  </li>
+                )}
                 <li className="dropdown-item">
-                  <EditCollection item={item} onEditSubmit={onEditSubmit} />
+                  <Button
+                    type="action"
+                    title="Delete"
+                    onClickHandler={() => handleDelete(item)}
+                  >
+                    Delete
+                  </Button>
                 </li>
-              )}
-              <li className="dropdown-item">
-                <Button
-                  type="action"
-                  title="Delete"
-                  onClickHandler={() => handleDelete(item)}
-                >
-                  Delete
-                </Button>
-              </li>
-            </ul>
-          </DropdownMenu>
-        </DropdownMenuWrapper>
+              </ul>
+            </DropdownMenu>
+          </DropdownMenuWrapper>
+        )}
       </div>
       {item.notes && <p className="icon-card-description">{item.notes}</p>}
     </article>

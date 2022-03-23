@@ -47,7 +47,12 @@ export function postToIEx(theme: string) {
   const iexFrame = document.querySelector(".interactive") as HTMLIFrameElement;
 
   if (iexFrame) {
-    iexFrame.contentWindow?.postMessage({ theme: theme }, IEX_DOMAIN);
+    iexFrame.contentWindow?.postMessage(
+      { theme: theme },
+      window?.mdnWorker?.settings?.preferOnline === false
+        ? window.location.origin
+        : IEX_DOMAIN
+    );
   }
 }
 
