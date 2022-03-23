@@ -42,7 +42,7 @@
       color: var(--text-link);
     }
 
-    &[aria-current] {
+    &[aria-current]:not([aria-current=""]):not([aria-current="false"]) {
       color: var(--text-primary);
       font-weight: 600;
       border-left: 2px solid var(--text-link);

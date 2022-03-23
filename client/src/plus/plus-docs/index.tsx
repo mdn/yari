@@ -40,35 +40,33 @@ function RelatedTopics({
   const { pathname: locationPathname } = useLocation();
 
   return (
-    <>
-      <aside className="document-toc-container">
-        <section className="document-toc">
-          <header>
-            <h2 className="document-toc-heading">{heading}</h2>
-          </header>
-          <ul className="document-toc-list">
-            {items.map(({ slug, title }) => {
-              const itemPathname = `/${locale}/${slug}`;
+    <aside className="document-toc-container">
+      <section className="document-toc">
+        <header>
+          <h2 className="document-toc-heading">{heading}</h2>
+        </header>
+        <ul className="document-toc-list">
+          {items.map(({ slug, title }) => {
+            const itemPathname = `/${locale}/${slug}`;
 
-              return (
-                <li className="document-toc-item">
-                  <Link
-                    className="document-toc-link"
-                    aria-current={
-                      itemPathname.toLowerCase() ===
-                      locationPathname.toLowerCase()
-                    }
-                    to={itemPathname}
-                  >
-                    {title}
-                  </Link>
-                </li>
-              );
-            })}
-          </ul>
-        </section>
-      </aside>
-    </>
+            return (
+              <li className="document-toc-item">
+                <Link
+                  className="document-toc-link"
+                  aria-current={
+                    itemPathname.toLowerCase() ===
+                    locationPathname.toLowerCase()
+                  }
+                  to={itemPathname}
+                >
+                  {title}
+                </Link>
+              </li>
+            );
+          })}
+        </ul>
+      </section>
+    </aside>
   );
 }
 
