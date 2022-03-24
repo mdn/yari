@@ -9,6 +9,7 @@ import { useLocale } from "../../../hooks";
 import {
   FXA_SETTINGS_URL,
   HEADER_NOTIFICATIONS_MENU_API_URL,
+  FXA_MANAGE_SUBSCRIPTIONS_URL,
 } from "../../../constants";
 
 import "./index.scss";
@@ -71,7 +72,7 @@ export const UserMenu = () => {
         label: "Manage account",
       },
       {
-        url: "https://accounts.stage.mozaws.net/subscriptions/",
+        url: FXA_MANAGE_SUBSCRIPTIONS_URL,
         label: "Manage subscription",
       },
       {
