@@ -27,6 +27,8 @@ interface StaticPageProps {
   sidebarHeader?: ReactElement;
 }
 
+const isServer = typeof window === "undefined";
+
 function StaticPage({
   extraClasses = "",
   locale,
@@ -50,7 +52,7 @@ function StaticPage({
       return await response.json();
     },
     {
-      initialData,
+      initialData: isServer ? initialData : undefined,
       revalidateOnFocus: CRUD_MODE,
     }
   );
