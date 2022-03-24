@@ -21,8 +21,9 @@ export function OfflineSettings() {
         <h1 className="slab-highlight">{pageTitle} </h1>
         {(user?.isSubscriber && <SettingsApp />) || (
           <section>
-            MDN offline is only available to Supporters{" "}
-            <a href={`/${locale}/plus`}>learn more</a>.
+            MDN Offline is only available to MDN Plus subscribers.{" "}
+            <a href={`/${locale}/plus#subscribe`}>Learn more</a> about our
+            plans.
           </section>
         )}
       </PageContentContainer>
