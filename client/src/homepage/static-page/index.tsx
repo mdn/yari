@@ -60,9 +60,7 @@ function StaticPage({
       revalidateOnFocus: CRUD_MODE,
     }
   );
-  React.useEffect(() => {
-    window.scrollTo(0, 0);
-  }, []);
+
   React.useEffect(() => {
     document.title = hyData ? `${hyData.title} | ${title}` : title;
   }, [hyData, title]);
