@@ -87,7 +87,7 @@ Saved pages can be filtered by searching by Title keywords through the page sear
 
 Saved pages can be sorted by Date added and Title located to the right of the Collections search.
 
-## Frequently Viewed Articles
+## Frequently viewed articles
 
 These are collections we automatically create for you, based on your activity while being logged into MDN Plus. As an MDN Plus user, you are automatically opted into this feature.
 
