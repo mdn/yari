@@ -124,6 +124,7 @@ const CSP_DIRECTIVES = {
     "*.githubusercontent.com",
     "*.googleusercontent.com",
     "mozillausercontent.com",
+    "firefoxusercontent.com",
     "profile.stage.mozaws.net",
     "profile.accounts.firefox.com",
 
