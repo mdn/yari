@@ -87,15 +87,15 @@ Saved pages can be filtered by searching by Title keywords through the page sear
 
 Saved pages can be sorted by Date added and Title located to the right of the Collections search.
 
-## Frequently Visited Articles
+## Frequently viewed articles
 
 These are collections we automatically create for you, based on your activity while being logged into MDN Plus. As an MDN Plus user, you are automatically opted into this feature.
 
 ## How are these articles generated?
 
-Frequently visited pages are articles you visit most frequently while logged into MDN Plus. We will always show you your most recent top visited 20 pages.
+Frequently viewed pages are articles you visit most frequently while logged into MDN Plus. We will always show you your most recent top viewed 20 pages.
 
-## Remove a saved page from Frequently visited articles
+## Remove a saved page from Frequently viewed articles
 
 Click the **⋮ menu** to the right of the saved page and select **Delete**.
 Your saved page has now been removed. Select **Undo** in the notification at the bottom of the screen to revert this action.

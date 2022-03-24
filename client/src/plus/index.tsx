@@ -70,9 +70,9 @@ export function Plus({ pageTitle, ...props }: { pageTitle?: string }) {
       <Route
         path="/offline"
         element={
-          <React.Suspense fallback={loading}>
+          <Layout>
             <OfflineSettings {...props} />
-          </React.Suspense>
+          </Layout>
         }
       />
       <Route
