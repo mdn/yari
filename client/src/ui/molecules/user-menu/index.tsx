@@ -9,7 +9,7 @@ import { useLocale } from "../../../hooks";
 import {
   FXA_SETTINGS_URL,
   HEADER_NOTIFICATIONS_MENU_API_URL,
-  FXA_MANAGE_SUBSCRIPTIONS,
+  FXA_MANAGE_SUBSCRIPTIONS_URL,
 } from "../../../constants";
 
 import "./index.scss";
@@ -72,7 +72,7 @@ export const UserMenu = () => {
         label: "Manage account",
       },
       {
-        url: FXA_MANAGE_SUBSCRIPTIONS,
+        url: FXA_MANAGE_SUBSCRIPTIONS_URL,
         label: "Manage subscription",
       },
       {
