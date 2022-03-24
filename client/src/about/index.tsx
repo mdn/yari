@@ -1,18 +1,22 @@
+import { useLocale } from "../hooks";
 import { GetInvolved } from "../ui/molecules/get_involved";
 import "./index.scss";
 
 export function About() {
+  const locale = useLocale();
   return (
     <div className="about">
       <div className="about-container">
         <h1 className="mify">Build it better</h1>
         <p>
           MDN Web Docs is an open-source, collaborative project documenting Web
-          platform technologies, including <a href="/docs/Web/CSS">CSS</a>,{" "}
-          <a href="/docs/Web/HTML">HTML</a>,{" "}
-          <a href="/docs/Web/JavaScript">JavaScript</a>, and{" "}
-          <a href="/docs/Web/API/">Web APIs</a>. We also provide an extensive
-          set of <a href="/docs/Learn">learning resources</a> for beginning
+          platform technologies, including{" "}
+          <a href={`/${locale}/docs/Web/CSS`}>CSS</a>,{" "}
+          <a href={`/${locale}/docs/Web/HTML`}>HTML</a>,{" "}
+          <a href={`/${locale}/docs/Web/JavaScript`}>JavaScript</a>, and{" "}
+          <a href={`/${locale}/docs/Web/API/`}>Web APIs</a>. We also provide an
+          extensive set of{" "}
+          <a href={`/${locale}/docs/Learn`}>learning resources</a> for beginning
           developers and students.
         </p>
 
