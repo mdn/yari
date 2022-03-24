@@ -1,6 +1,5 @@
 import { useUserData } from "../../user-context";
 import { isPlusAvailable } from "../../utils";
-import "./index.scss";
 import OfferHero from "./offer-hero";
 import OfferOverviewFeatures from "./offer-overview-feature";
 import OfferOverviewSubscribe from "./offer-overview-subscribe";
