@@ -56,16 +56,21 @@ function StaticPage({
   );
 
   React.useEffect(() => {
-    document.title = hyData ? `${hyData.title} | ${title}` : title;
+    document.title = hyData?.title ? `${hyData.title} | ${title}` : title;
   }, [hyData, title]);
+
+  const isLoaded = hyData && hyData.title && hyData.toc && hyData.sections;
 
   if (error) {
     return <PageNotFound />;
-  } else if (!hyData) {
+  } else if (!isLoaded) {
     return <Loading />;
   }
 
   const toc = hyData.toc?.length && <TOC toc={hyData.toc} />;
+  const sections = hyData.sections.map((section) => (
+    <section dangerouslySetInnerHTML={{ __html: section }}></section>
+  ));
 
   return (
     <>
@@ -92,11 +97,7 @@ function StaticPage({
         </SidebarContainer>
         <div className="toc">{toc || null}</div>
         <main id="content" className="main-content" role="main">
-          <article className="main-page-content">
-            {hyData.sections.map((section) => (
-              <section dangerouslySetInnerHTML={{ __html: section }}></section>
-            ))}
-          </article>
+          <article className="main-page-content">{sections}</article>
         </main>
       </div>
     </>
