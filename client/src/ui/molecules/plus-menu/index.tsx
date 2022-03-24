@@ -49,7 +49,7 @@ export const PlusMenu = ({ visibleSubMenuId, toggleMenu }) => {
         hasIcon: true,
         iconClasses: "submenu-icon",
         label: "FAQ",
-        url: `/${locale}/plus/docs/faq`,
+        url: `/en-US/plus/docs/faq`,
       },
     ],
   };
