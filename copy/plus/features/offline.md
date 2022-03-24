@@ -33,7 +33,7 @@ Open the user menu -> offline settings -> clear data
 
 ## Supported Features
 
-Some insight into what can be expected from using MDN offline
+Some insight into what can be expected from using MDN Offline
 
 ### Browsing Content
 

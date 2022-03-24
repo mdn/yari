@@ -172,7 +172,7 @@ function Settings() {
             <li>
               <h4>Storage used</h4>
               <span>
-                MDN offline currently uses <b>{usage}</b>
+                MDN Offline currently uses <b>{usage}</b>
               </span>
             </li>
           )}
