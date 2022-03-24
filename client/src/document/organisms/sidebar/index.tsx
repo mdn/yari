@@ -28,16 +28,22 @@ export function SidebarContainer({ doc, children }) {
   const [classes, setClasses] = useState<string>("sidebar");
 
   useEffect(() => {
+    let timeoutID;
+
     if (isSidebarOpen) {
       setClasses("sidebar is-expanded");
     } else {
       setClasses("sidebar is-animating");
-      setTimeout(() => {
+      timeoutID = setTimeout(() => {
         setClasses("sidebar");
       }, 300);
     }
 
     _setScrollLock(isSidebarOpen);
+
+    if (timeoutID) {
+      return () => clearTimeout(timeoutID);
+    }
   }, [isSidebarOpen]);
 
   return (
