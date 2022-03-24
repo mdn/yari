@@ -14,7 +14,7 @@ When you need access to MDN even without an internet connection, **MDN Offline**
 
 To start using MDN Offline, you must first **Enable offline storage**.
 
-1. Click on your profile photo and open the **user menu -> offline settings**
+1. Click on your profile photo and open the **user menu → offline settings**
 2. **Enable offline storage**
 
 You can also add it to your homescreen for an experience similar to using a native app.
@@ -29,7 +29,7 @@ You can also add it to your homescreen for an experience similar to using a nati
 
 ## Clear stored data
 
-Open the user menu -> offline settings -> clear data
+Open the user menu → offline settings → clear data
 
 ## Supported Features
 
