@@ -3,13 +3,25 @@ import useSWR from "swr";
 import { CRUD_MODE } from "../../constants";
 import { SidebarContainer } from "../../document/organisms/sidebar";
 import { TOC } from "../../document/organisms/toc";
+import { DocParent, Toc } from "../../document/types";
 import { PageNotFound } from "../../page-not-found";
 import { Loading } from "../../ui/atoms/loading";
+import { useUIStatus } from "../../ui-context";
+import { Button } from "../../ui/atoms/button";
+import { Breadcrumbs } from "../../ui/molecules/breadcrumbs";
+
+interface StaticPageDoc {
+  id: string;
+  title: string;
+  sections: string[];
+  toc: Toc[];
+}
 
 interface StaticPageProps {
   extraClasses?: string;
   locale: string;
   slug: string;
+  parents: DocParent[];
   initialData?: any;
   title?: string;
   sidebarHeader?: ReactElement;
@@ -19,13 +31,15 @@ function StaticPage({
   extraClasses = "",
   locale,
   slug,
+  parents = [],
   initialData = undefined,
   title = "MDN",
   sidebarHeader = <></>,
 }: StaticPageProps) {
-  const baseURL = `/${locale.toLowerCase()}/${slug}`;
-  const featureJSONUrl = `${baseURL}/index.json`;
-  const { data: { hyData } = {}, error } = useSWR<any>(
+  const { isSidebarOpen, setIsSidebarOpen } = useUIStatus();
+  const baseURL = `/${locale}/${slug}`;
+  const featureJSONUrl = `${baseURL.toLowerCase()}/index.json`;
+  const { data: { hyData } = {}, error } = useSWR<{ hyData: StaticPageDoc }>(
     featureJSONUrl,
     async (url) => {
       const response = await fetch(url);
@@ -53,16 +67,33 @@ function StaticPage({
     return <Loading />;
   }
 
+  const toc = hyData.toc?.length && <TOC toc={hyData.toc} />;
+
   return (
     <div className={`document-page container ${extraClasses}`}>
+      <div className="article-actions-container">
+        <div className="container">
+          <Button
+            extraClasses="sidebar-button"
+            icon="sidebar"
+            type="action"
+            onClickHandler={() => setIsSidebarOpen(!isSidebarOpen)}
+          />
+
+          {
+            <Breadcrumbs
+              parents={[...parents, { uri: baseURL, title: hyData.title }]}
+            />
+          }
+        </div>
+      </div>
+
       <div className="article-wrapper">
         <SidebarContainer doc={hyData}>
           {sidebarHeader || null}
         </SidebarContainer>
-        <div className="toc">
-          {(hyData.toc?.length && <TOC toc={hyData.toc} />) || null}
-        </div>
-        <main id="content">
+        <div className="toc">{toc || null}</div>
+        <main id="content" className="main-content" role="main">
           <article className="main-page-content">
             {hyData.sections.map((section) => (
               <section dangerouslySetInnerHTML={{ __html: section }}></section>

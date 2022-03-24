@@ -1,7 +1,8 @@
 @use "../../ui/vars" as *;
 
 .plus-docs {
-  padding: 2rem 0rem;
+  // Workaround: Remove when PlusDocs are no longer wrapped in [Plus]Layout.
+  padding: 0rem;
 
   .main-page-content {
     em {
