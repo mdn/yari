@@ -38,10 +38,11 @@ export const VALID_LOCALES = new Set([
 
 export const MDN_PLUS_TITLE = "MDN Plus";
 
-export const PLUS_IS_ENABLED = process.env.REACT_APP_ENABLE_PLUS || false;
-
-export const PLUS_IS_AVAILABLE_OVERRIDE = Boolean(
-  JSON.parse(process.env.REACT_APP_ENABLE_PLUS || "false")
+export const PLUS_IS_ENABLED = Boolean(
+  process.env.REACT_APP_ENABLE_PLUS || "false"
+);
+export const PLUS_IS_AVAILABLE_OVERRIDE = JSON.parse(
+  process.env.REACT_APP_PLUS_IS_AVAILABLE_OVERRIDE || "null"
 );
 
 export const MDN_PLUS_SUBSCRIBE_5M_URL = `${process.env.REACT_APP_MDN_PLUS_SUBSCRIBE_URL}?plan=${process.env.REACT_APP_MDN_PLUS_5M_PLAN}`;
