@@ -1,8 +1,9 @@
 @use "../../ui/vars" as *;
 
-.plus-docs {
-  // Workaround: Remove when PlusDocs are no longer wrapped in [Plus]Layout.
-  padding: 0rem;
+.plus {
+  .article-actions-container {
+    display: flex;
+  }
 
   .main-page-content {
     em {

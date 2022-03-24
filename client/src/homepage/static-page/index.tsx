@@ -74,7 +74,7 @@ function StaticPage({
   const toc = hyData.toc?.length && <TOC toc={hyData.toc} />;
 
   return (
-    <div className={`document-page container ${extraClasses}`}>
+    <>
       <div className="article-actions-container">
         <div className="container">
           <Button
@@ -105,7 +105,7 @@ function StaticPage({
           </article>
         </main>
       </div>
-    </div>
+    </>
   );
 }
 
