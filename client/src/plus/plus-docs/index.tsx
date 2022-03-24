@@ -50,7 +50,7 @@ function RelatedTopics({
             const itemPathname = `/${locale}/${slug}`;
 
             return (
-              <li className="document-toc-item">
+              <li key={itemPathname} className="document-toc-item">
                 <Link
                   className="document-toc-link"
                   aria-current={
