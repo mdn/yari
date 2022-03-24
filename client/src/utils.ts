@@ -1,9 +1,10 @@
+import { UserData } from "./user-context";
 import {
   IEX_DOMAIN,
   PLUS_ENABLED_COUNTRIES,
   PLUS_IS_AVAILABLE_OVERRIDE,
 } from "./constants";
-import { UserData } from "./user-context";
+
 const HOMEPAGE_RE = /^\/[A-Za-z-]*\/?(?:_homepage)?$/i;
 const DOCS_RE = /^\/[A-Za-z-]+\/docs\/.*$/i;
 const PLUS_RE = /^\/[A-Za-z-]*\/?plus(?:\/?.*)$/i;
@@ -47,7 +48,12 @@ export function postToIEx(theme: string) {
   const iexFrame = document.querySelector(".interactive") as HTMLIFrameElement;
 
   if (iexFrame) {
-    iexFrame.contentWindow?.postMessage({ theme: theme }, IEX_DOMAIN);
+    iexFrame.contentWindow?.postMessage(
+      { theme: theme },
+      window?.mdnWorker?.settings?.preferOnline === false
+        ? window.location.origin
+        : IEX_DOMAIN
+    );
   }
 }
 
@@ -63,10 +69,23 @@ export function switchTheme(theme: string, set: (theme: string) => void) {
   }
 }
 
+export function isPlusSubscriber(user) {
+  if (
+    user?.isSubscriber &&
+    user?.subscriptionType &&
+    user?.subscriptionType.includes("plus")
+  ) {
+    return true;
+  }
+
+  return false;
+}
+
 export function isPlusAvailable(userData: UserData | null) {
   if (typeof PLUS_IS_AVAILABLE_OVERRIDE === "boolean") {
     return PLUS_IS_AVAILABLE_OVERRIDE;
   }
+
   if (!userData) {
     return false;
   }

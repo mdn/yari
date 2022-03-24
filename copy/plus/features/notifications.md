@@ -27,7 +27,7 @@ When there are notifications, an indicator appears in the user menu on any MDN p
 You can see what pages you’re watching in two ways:
 
 1. Click on **MDN Plus -> Notifications -> Watch list**
-2. Click on your profile photo in the right corner of your screen and select **Collections** from the drop-down list.
+2. Click on your profile photo in the right corner of your screen and select **Notifications** from the drop-down list.
 
 ## Star a notification and review it
 

@@ -7,7 +7,7 @@ import { useUserData } from "../../../user-context";
 import { Doc } from "../../../document/types";
 
 import "./index.scss";
-import { MDN_APP } from "../../../constants";
+
 import { BookmarkContainer } from "../../molecules/collection";
 
 export const ArticleActions = ({
@@ -32,8 +32,7 @@ export const ArticleActions = ({
   // const translations = doc.other_translations || [];
 
   return (
-    (((!MDN_APP && translations && !!translations.length) ||
-      isAuthenticated) && (
+    (((translations && !!translations.length) || isAuthenticated) && (
       <>
         <div
           className={`article-actions${
@@ -62,7 +61,7 @@ export const ArticleActions = ({
                   <BookmarkContainer doc={doc} />
                 </li>
               )}
-              {!MDN_APP && translations && !!translations.length && (
+              {translations && !!translations.length && (
                 <li className="article-actions-entry">
                   <LanguageMenu
                     onClose={toggleArticleActionsMenu}

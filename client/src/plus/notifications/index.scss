@@ -19,10 +19,22 @@
   align-items: center;
   border: 1px solid var(--border-secondary);
   background-color: var(--background-primary);
-  display: grid;
-  grid-template-columns: auto auto 1fr 2rem;
+  display: flex;
+  justify-content: space-between;
+
+  & > div {
+    display: flex;
+    align-items: center;
+  }
+
+  .desktop-only {
+    display: hidden;
+  }
+
   @media screen and (min-width: $screen-md) {
-    grid-template-columns: auto auto 1fr 10ch auto;
+    .desktop-only {
+      display: inherit;
+    }
   }
 
   padding: 0.5rem;

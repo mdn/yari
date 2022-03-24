@@ -71,11 +71,11 @@ const CORE: OfferDetailsProps = {
   cta: "Start with Core",
   regular: {
     subscriptionType: SubscriptionType.MDN_CORE,
-    ctaLink: FXA_SIGNIN_URL,
+    ctaLink: `${FXA_SIGNIN_URL}?next=/en-US/plus`,
   },
   discounted: {
     subscriptionType: SubscriptionType.MDN_CORE,
-    ctaLink: FXA_SIGNIN_URL,
+    ctaLink: `${FXA_SIGNIN_URL}?next=/en-US/plus`,
   },
 };
 
@@ -147,7 +147,7 @@ function OfferDetails({
   return (
     <section className="subscribe-detail" id={offerDetails.id}>
       <h3>{offerDetails.name}</h3>
-      <p className="sub-info">
+      <div className="sub-info">
         {(displayMonthlyPrice && (
           <p className="price">
             <span className="sub-price">{displayMonthlyPrice}</span>
@@ -184,8 +184,10 @@ function OfferDetails({
           )}
         <p className="includes">{offerDetails.includes}</p>
         <ul>
-          {offerDetails.features.map(([href, text]) => (
-            <li>{(href && <a href={`#${href}`}>{text}</a>) || text}</li>
+          {offerDetails.features.map(([href, text], index) => (
+            <li key={index}>
+              {(href && <a href={`#${href}`}>{text}</a>) || text}
+            </li>
           ))}
         </ul>
         <a
@@ -196,7 +198,7 @@ function OfferDetails({
         >
           See terms and conditions
         </a>
-      </p>
+      </div>
     </section>
   );
 }

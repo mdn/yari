@@ -1,16 +1,11 @@
 @use "../ui/vars" as *;
 
 .page-content-container.settings {
-  display: flex;
-  flex-flow: column;
-  justify-content: flex-start;
+  display: block;
   max-width: 60em;
   width: min(90vw, 40em);
   margin: auto;
-
-  @media screen and (min-width: $screen-md) {
-    margin: 1rem auto;
-  }
+  padding: 1rem;
 
   .field-group {
     margin: 2rem 0;
@@ -33,6 +28,7 @@
           padding-top: 0.3em;
         }
 
+        .loading,
         .switch {
           justify-self: end;
           grid-column: 2/3;
@@ -49,6 +45,15 @@
           align-self: end;
           grid-column: 2/3;
           grid-row: 1/3;
+          border: 1px solid var(--text-primary);
+          border-radius: var(--elem-radius);
+          color: var(--text-link);
+        }
+
+        button[disabled] {
+          border: 1px solid var(--text-secondary);
+          background-color: var(--background-secondary);
+          color: var(--text-secondary);
         }
       }
     }

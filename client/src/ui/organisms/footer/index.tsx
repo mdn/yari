@@ -78,7 +78,10 @@ export function Footer() {
           <ul className="footer-nav-list">
             {PLUS_IS_ENABLED && (
               <li className="footer-nav-item">
-                <a className="footer-nav-link" href={`/${locale}/#TODO`}>
+                <a
+                  className="footer-nav-link"
+                  href="https://support.mozilla.org/products/mdn-plus"
+                >
                   Product help
                 </a>
               </li>

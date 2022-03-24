@@ -180,10 +180,21 @@
             color: var(--mdn-color-black);
             border: 1px solid var(--mdn-color-black);
           }
+
           .na {
             background-color: var(--mdn-background-light-grey);
             color: var(--mdn-color-dark-grey);
             border: 1px solid var(--mdn-background-light-grey);
+
+            &::after {
+              background-color: var(--mdn-color-dark-grey);
+              content: "";
+              display: inline-block;
+              height: 16px;
+              margin-left: 0.3rem;
+              mask-image: url("../../../assets/icons/question-mark.svg");
+              width: 16px;
+            }
           }
         }
       }
