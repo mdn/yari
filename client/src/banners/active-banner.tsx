@@ -110,8 +110,12 @@ export default function ActiveBanner({
 }) {
   const userData = useUserData();
 
-  if (id === PLUS_LAUNCH_ANNOUNCEMENT && isPlusAvailable(userData)) {
-    return <PlusLaunchAnnouncementBanner onDismissed={onDismissed} />;
+  if (id === PLUS_LAUNCH_ANNOUNCEMENT) {
+    return (
+      isPlusAvailable(userData) && (
+        <PlusLaunchAnnouncementBanner onDismissed={onDismissed} />
+      )
+    );
   }
   throw new Error(`Unrecognized banner to display (${id})`);
 }
