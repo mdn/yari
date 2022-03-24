@@ -2,7 +2,9 @@ import * as React from "react";
 
 import { ReactComponent as CloseIcon } from "@mdn/dinocons/general/close.svg";
 import { useGA } from "../ga-context";
-import { REDESIGN_ANNOUNCEMENT } from "./ids";
+import { useUserData } from "../user-context";
+import { PLUS_LAUNCH_ANNOUNCEMENT } from "./ids";
+import { isPlusAvailable } from "../utils";
 
 // The <Banner> component displays a simple call-to-action banner at
 // the bottom of the window. The following props allow it to be customized.
@@ -71,24 +73,25 @@ function SendCTAEventToGA(eventCategory: string) {
   });
 }
 
-function RedesignAnnouncementBanner({
+function PlusLaunchAnnouncementBanner({
   onDismissed,
 }: {
   onDismissed: () => void;
 }) {
   return (
-    <Banner id={REDESIGN_ANNOUNCEMENT} onDismissed={onDismissed}>
+    <Banner id={PLUS_LAUNCH_ANNOUNCEMENT} onDismissed={onDismissed}>
       <p className="mdn-cta-copy">
-        ✨{" "}
+        <span className="mdn-plus">MDN Plus</span> is here! Support MDN{" "}
+        <em>and</em> make it your own.{" "}
         <a
-          href="https://hacks.mozilla.org/2022/02/a-new-year-a-new-mdn/"
+          href="https://hacks.mozilla.org/2022/03/introducing-mdn-plus-make-mdn-your-own"
           target="_blank"
           rel="noopener noreferrer"
-          onClick={() => SendCTAEventToGA(REDESIGN_ANNOUNCEMENT)}
+          onClick={() => SendCTAEventToGA(PLUS_LAUNCH_ANNOUNCEMENT)}
         >
           Learn more
         </a>{" "}
-        about MDN Web Docs' new design.
+        ✨
       </p>
     </Banner>
   );
@@ -105,8 +108,16 @@ export default function ActiveBanner({
   id: string;
   onDismissed: () => void;
 }) {
-  if (id === REDESIGN_ANNOUNCEMENT) {
-    return <RedesignAnnouncementBanner onDismissed={onDismissed} />;
+  const userData = useUserData();
+
+  if (id === PLUS_LAUNCH_ANNOUNCEMENT) {
+    return (
+      <>
+        {isPlusAvailable(userData) && (
+          <PlusLaunchAnnouncementBanner onDismissed={onDismissed} />
+        )}
+      </>
+    );
   }
   throw new Error(`Unrecognized banner to display (${id})`);
 }

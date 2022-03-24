@@ -10,20 +10,20 @@ import { CRUD_MODE } from "../constants";
 // <ActiveBanner>, at least the CSS will be ready.
 import "./banner.scss";
 
-import { REDESIGN_ANNOUNCEMENT } from "./ids";
+import { PLUS_LAUNCH_ANNOUNCEMENT } from "./ids";
 
 const ActiveBanner = React.lazy(() => import("./active-banner"));
 
-export const hasActiveBanners = false;
+export const hasActiveBanners = true;
 
 export function Banner() {
-  if (CRUD_MODE || !isEmbargoed(REDESIGN_ANNOUNCEMENT)) {
+  if (CRUD_MODE || !isEmbargoed(PLUS_LAUNCH_ANNOUNCEMENT)) {
     return (
       <React.Suspense fallback={null}>
         <ActiveBanner
-          id={REDESIGN_ANNOUNCEMENT}
+          id={PLUS_LAUNCH_ANNOUNCEMENT}
           onDismissed={() => {
-            setEmbargoed(REDESIGN_ANNOUNCEMENT, 7);
+            setEmbargoed(PLUS_LAUNCH_ANNOUNCEMENT, 7);
           }}
         />
       </React.Suspense>
