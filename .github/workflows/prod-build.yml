@@ -156,14 +156,28 @@ jobs:
           BUILD_SPEEDCURVE_LUX_ID: 108906238
 
           # This enables the MDN Plus
-          REACT_APP_ENABLE_PLUS: false
+          REACT_APP_ENABLE_PLUS: true
 
           # This removes the ability to sign in
-          REACT_APP_DISABLE_AUTH: true
+          REACT_APP_DISABLE_AUTH: false
 
           # The default is to always set no to robots. This deployment is the only
           # exception in the world where we actually want to welcome robots.
           BUILD_ALWAYS_ALLOW_ROBOTS: true
+
+          # Offline updates
+          REACT_APP_UPDATES_BASE_URL: https://updates.developer.mozilla.org
+
+          # Firefox Accounts and SubPlat settings
+          REACT_APP_FXA_SIGNIN_URL: /users/fxa/login/authenticate/
+          REACT_APP_FXA_SETTINGS_URL: https://accounts.firefox.com/settings/
+          REACT_APP_MDN_PLUS_SUBSCRIBE_URL: https://subscriptions.firefox.com/checkout/prod_LKvr8fYGbBxcaZ
+          REACT_APP_FXA_MANAGE_SUBSCRIPTIONS_URL: https://subscriptions.firefox.com/subscriptions/
+
+          REACT_APP_MDN_PLUS_5M_PLAN: price_1KeG02JNcmPzuWtR1oBrw8o6
+          REACT_APP_MDN_PLUS_5Y_PLAN: price_1KeG02JNcmPzuWtRslZijhQu
+          REACT_APP_MDN_PLUS_10M_PLAN: price_1KeG02JNcmPzuWtRuAnIgNHh
+          REACT_APP_MDN_PLUS_10Y_PLAN: price_1KeG02JNcmPzuWtRlrSiLTI6
 
         run: |
 

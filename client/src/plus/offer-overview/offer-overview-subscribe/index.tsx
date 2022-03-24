@@ -57,7 +57,7 @@ export type OfferDetailsProps = {
 const PLUS_FEATURES = [
   ["notifications", "Page notifications"],
   ["collections", "Collections of articles"],
-  ["offline", "MDN offline"],
+  ["offline", "MDN Offline"],
 ];
 
 const CORE: OfferDetailsProps = {

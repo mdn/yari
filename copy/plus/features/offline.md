@@ -33,12 +33,14 @@ Open the user menu -> offline settings -> clear data
 
 ## Supported Features
 
-Some insight into what can be expected from using MDN offline
+Some insight into what can be expected from using MDN Offline
 
 ### Browsing Content
 
 If offline mode is enabled, offline content is preferred. All content works without an internet connection, with the exception of a few github-based examples and large video files.
 You can also indicate you prefer offline content even when online.
+
+> NOTE: MDN Offline cannot be used while in a private or incognito window.
 
 ### Collections
 

@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
+import { MDN_PLUS_TITLE } from "../../constants";
 
 export enum TabVariant {
   NOTIFICATIONS,
@@ -37,33 +38,39 @@ export const SORTS = [
   },
 ];
 
-export const TAB_INFO = {
+interface TabDefinition {
+  pageTitle: string;
+  label: string;
+  path: string;
+}
+
+export const TAB_INFO: Record<TabVariant, TabDefinition> = {
   [TabVariant.NOTIFICATIONS]: {
-    pageTitle: "Notifications",
+    pageTitle: `Notifications | ${MDN_PLUS_TITLE}`,
     label: "All notifications",
     path: NOTIFICATIONS_URL,
   },
 
   [TabVariant.STARRED]: {
     label: "Starred",
-    pageTitle: "My Starred Pages",
+    pageTitle: `Starred | ${MDN_PLUS_TITLE}`,
     path: STARRED_URL,
   },
   [TabVariant.WATCHING]: {
     label: "Watch list",
-    pageTitle: "My Watched Pages",
+    pageTitle: `Watch list | ${MDN_PLUS_TITLE}`,
     path: WATCHING_URL,
   },
 
   [TabVariant.COLLECTIONS]: {
     label: "Collections",
-    pageTitle: "Collections",
+    pageTitle: `Collections | ${MDN_PLUS_TITLE}`,
     path: COLLECTIONS_URL,
   },
 
   [TabVariant.FREQUENTLY_VIEWED]: {
     label: "Frequently viewed articles",
-    pageTitle: "Frequently viewed articles",
+    pageTitle: `Frequently viewed articles | ${MDN_PLUS_TITLE}`,
     path: FREQUENTLY_VIEWED_URL,
   },
 };

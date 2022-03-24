@@ -10,7 +10,7 @@ import {
   updateDeleteCollectionItem,
 } from "../common/api";
 import { showMoreButton } from "../common/plus-tabs";
-import { TabVariant, SORTS, TAB_INFO } from "../common/tabs";
+import { SORTS } from "../common/tabs";
 import SearchFilter from "../search-filter";
 import { CollectionListItem } from "./collection-list-item";
 
@@ -24,8 +24,6 @@ export function CollectionsTab({
   const [list, setList] = useState<Array<any>>([]);
   const [subscriptionLimitReached, setSubscriptionLimitReached] =
     useState(false);
-
-  document.title = TAB_INFO[TabVariant.COLLECTIONS].pageTitle || "MDN Plus";
 
   const { data, error, isLoading, hasMore } = useCollectionsApiEndpoint(
     offset,
@@ -115,7 +113,7 @@ export function CollectionsTab({
     setSubscriptionLimitReached(limitReached);
 
     setToastData({
-      mainText: `${item.title} removed from your collection`,
+      mainText: "The page has been removed from your collection.",
       shortText: "Article removed",
       buttonText: "Undo",
       buttonHandler: async () => {

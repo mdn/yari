@@ -107,12 +107,39 @@ async function buildSPAs(options) {
       if (!fs.statSync(path.join(root, locale)).isDirectory()) {
         continue;
       }
+
+      const MDN_PLUS_TITLE = "MDN Plus";
       const SPAs = [
         { prefix: "search", pageTitle: "Search" },
-        { prefix: "plus", pageTitle: "Plus", noIndexing: true },
+        { prefix: "plus", pageTitle: MDN_PLUS_TITLE, noIndexing: true },
         {
           prefix: "plus/collections",
-          pageTitle: "Collection",
+          pageTitle: `Collections | ${MDN_PLUS_TITLE}`,
+          noIndexing: true,
+        },
+        {
+          prefix: "plus/collections/frequently_viewed",
+          pageTitle: `Frequently viewed articles | ${MDN_PLUS_TITLE}`,
+          noIndexing: true,
+        },
+        {
+          prefix: "plus/notifications",
+          pageTitle: `Notifications | ${MDN_PLUS_TITLE}`,
+          noIndexing: true,
+        },
+        {
+          prefix: "plus/notifications/starred",
+          pageTitle: `Starred | ${MDN_PLUS_TITLE}`,
+          noIndexing: true,
+        },
+        {
+          prefix: "plus/notifications/watched",
+          pageTitle: `Watch list | ${MDN_PLUS_TITLE}`,
+          noIndexing: true,
+        },
+        {
+          prefix: "plus/offline",
+          pageTitle: `MDN Offline | ${MDN_PLUS_TITLE}`,
           noIndexing: true,
         },
         { prefix: "about", pageTitle: "About MDN" },

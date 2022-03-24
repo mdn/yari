@@ -23,7 +23,7 @@ function _setScrollLock(isSidebarOpen) {
   }
 }
 
-function SidebarContainer({ doc, children }) {
+export function SidebarContainer({ doc, children }) {
   const { isSidebarOpen, setIsSidebarOpen } = useUIStatus();
   const [classes, setClasses] = useState<string>("sidebar");
 

@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useMemo } from "react";
 import { useUIStatus } from "../../ui-context";
 import {
   useNotificationsApiEndpoint,
@@ -13,10 +13,11 @@ import { showMoreButton } from "../common/plus-tabs";
 import SearchFilter from "../search-filter";
 import NotificationCardListItem from "./notification-card-list-item";
 import SelectedNotificationsBar from "./notification-select";
-import { TAB_INFO, TabVariant, FILTERS, SORTS } from "../common/tabs";
+import { TAB_INFO, FILTERS, SORTS, useCurrentTab } from "../common/tabs";
 import { useVisibilityChangeListener } from "./utils";
 import { DataError } from "../common";
 import { Loading } from "../../ui/atoms/loading";
+import { useLocale } from "../../hooks";
 
 export function NotificationsTab({
   selectedTerms,
@@ -28,6 +29,8 @@ export function NotificationsTab({
   const { setToastData } = useUIStatus();
   const [selectAllChecked, setSelectAllChecked] = useState(false);
   const [list, setList] = useState<Array<any>>([]);
+  const locale = useLocale();
+  const currentTab = useCurrentTab(locale);
 
   const [editOptions, setEditOptions] = useState({
     starEnabled: false,
@@ -46,16 +49,16 @@ export function NotificationsTab({
 
   useVisibilityChangeListener();
 
+  const unreadCount = useMemo(
+    () => data?.items?.filter((v) => v.read === false).length ?? 0,
+    [data]
+  );
+
+  document.title = TAB_INFO[currentTab].pageTitle;
   useEffect(() => {
-    let unread;
-    document.title = TAB_INFO[TabVariant.NOTIFICATIONS].pageTitle;
-    if (data && data.items) {
-      unread = data.items.filter((v) => v.read === false).length;
-    }
-    if (!!unread) {
-      document.title = document.title + ` (${unread})`;
-    }
-  }, [data]);
+    document.title =
+      TAB_INFO[currentTab].pageTitle + (unreadCount ? ` (${unreadCount})` : "");
+  }, [currentTab, unreadCount]);
 
   const listRef = useRef<Array<any>>([]);
 
@@ -125,7 +128,7 @@ export function NotificationsTab({
     const listWithDelete = list.filter((v) => v.id !== item.id);
     setList(listWithDelete);
     setToastData({
-      mainText: `${item.title} removed from your notifications`,
+      mainText: "The notification has been removed from your list.",
       shortText: "Article removed",
       buttonText: "Undo",
       buttonHandler: async () => {
@@ -236,8 +239,6 @@ export function StarredNotificationsTab({
   selectedFilter,
   selectedSort,
 }) {
-  document.title = TAB_INFO[TabVariant.STARRED].pageTitle || "MDN Plus";
-
   return (
     <NotificationsTab
       starred={true}

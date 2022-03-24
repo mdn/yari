@@ -83,7 +83,7 @@ export function EditCollection({
                   name="delete"
                   value="true"
                 >
-                  Remove Bookmark
+                  Delete
                 </Button>
               </div>
             </form>

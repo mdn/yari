@@ -221,7 +221,7 @@ export function BookmarkMenu({
                     value="true"
                     isDisabled={isValidating}
                   >
-                    Remove Collection
+                    Delete
                   </Button>
                 ) : (
                   <Button onClickHandler={cancelHandler} type="secondary">

@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { BookmarkData } from ".";
 import { useUIStatus } from "../../ui-context";
 import { useFrequentlyViewedData } from "../common/api";
-import { TabVariant, SORTS, TAB_INFO } from "../common/tabs";
+import { SORTS } from "../common/tabs";
 import SearchFilter from "../search-filter";
 import { CollectionListItem } from "./collection-list-item";
 
@@ -11,9 +11,6 @@ export function FrequentlyViewedTab({ selectedTerms }) {
   const [list, setList] = useState<Array<any>>([]);
 
   const { data, setFrequentlyViewed } = useFrequentlyViewedData(selectedTerms);
-
-  document.title =
-    TAB_INFO[TabVariant.FREQUENTLY_VIEWED].pageTitle || "MDN Plus";
 
   useEffect(() => {
     if (data) {
@@ -33,7 +30,7 @@ export function FrequentlyViewedTab({ selectedTerms }) {
     setFrequentlyViewed(filteredEntries);
     setList(filteredEntries);
     setToastData({
-      mainText: `${bookmarkData.title} removed`,
+      mainText: "The page has been removed.",
       shortText: "Article removed",
       buttonText: "UNDO",
       buttonHandler: async () => {

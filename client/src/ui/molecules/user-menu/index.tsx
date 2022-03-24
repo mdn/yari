@@ -9,6 +9,7 @@ import { useLocale } from "../../../hooks";
 import {
   FXA_SETTINGS_URL,
   HEADER_NOTIFICATIONS_MENU_API_URL,
+  FXA_MANAGE_SUBSCRIPTIONS_URL,
 } from "../../../constants";
 
 import "./index.scss";
@@ -63,15 +64,15 @@ export const UserMenu = () => {
         url: `/${locale}/plus/collections`,
       },
       {
-        label: "Offline settings",
-        url: "/en-US/offline-settings",
+        label: "MDN Offline",
+        url: "/en-US/plus/offline",
       },
       {
         url: FXA_SETTINGS_URL,
         label: "Manage account",
       },
       {
-        url: "https://accounts.stage.mozaws.net/subscriptions/",
+        url: FXA_MANAGE_SUBSCRIPTIONS_URL,
         label: "Manage subscription",
       },
       {
