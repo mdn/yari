@@ -137,6 +137,11 @@ async function buildSPAs(options) {
           pageTitle: `Watch list | ${MDN_PLUS_TITLE}`,
           noIndexing: true,
         },
+        {
+          prefix: "plus/offline",
+          pageTitle: `MDN Offline | ${MDN_PLUS_TITLE}`,
+          noIndexing: true,
+        },
         { prefix: "about", pageTitle: "About MDN" },
         { prefix: "community", pageTitle: "Contribute to MDN" },
       ];

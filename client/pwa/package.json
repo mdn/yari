@@ -1,7 +1,7 @@
 {
   "name": "mdn-worker",
   "version": "1.0.0",
-  "description": "MDN offline service worker",
+  "description": "MDN Offline service worker",
   "license": "MPL-2.0",
   "author": "MDN Web Docs",
   "main": "service-worker.ts",

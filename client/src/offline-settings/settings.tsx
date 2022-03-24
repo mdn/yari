@@ -6,6 +6,7 @@ import { useEffect, useRef, useState } from "react";
 import UpdateButton from "./update";
 import ClearButton from "./clear";
 import { Spinner } from "../ui/atoms/spinner";
+import { MDN_PLUS_TITLE } from "../constants";
 
 function displayEstimate({ usage = 0, quota = Infinity }: StorageEstimate) {
   const usageInMib = Math.round(usage / (1024 * 1024));
@@ -18,7 +19,7 @@ export default function SettingsApp({ ...appProps }) {
 
   return (
     <section className="field-group">
-      {/* <h3>Offline settings</h3> */}
+      {/* <h3>MDN Offline</h3> */}
       {serviceWorkerAvailable ? (
         <Settings />
       ) : (
@@ -35,7 +36,7 @@ export default function SettingsApp({ ...appProps }) {
 }
 
 function Settings() {
-  document.title = "Settings | MDN";
+  document.title = `MDN Offline | ${MDN_PLUS_TITLE}`;
   const [status, setStatus] = useState<UpdateStatus>();
   const [saving, setSaving] = useState<boolean>(true);
 
@@ -144,20 +145,6 @@ function Settings() {
               update={update}
             />
           </li>
-          {window?.location.hash === "#debug" && (
-            <li>
-              <h4>Debug</h4>
-              <span>{JSON.stringify(status, null, 2)}</span>
-            </li>
-          )}
-          {usage && (
-            <li>
-              <h4>Storage used</h4>
-              <span>
-                MDN offline currently uses <b>{usage}</b>
-              </span>
-            </li>
-          )}
           <li>
             <h4>Enable auto-update</h4>
             <span>
@@ -175,6 +162,20 @@ function Settings() {
               ></Switch>
             )}
           </li>
+          {window?.location.hash === "#debug" && (
+            <li>
+              <h4>Debug</h4>
+              <span>{JSON.stringify(status, null, 2)}</span>
+            </li>
+          )}
+          {usage && (
+            <li>
+              <h4>Storage used</h4>
+              <span>
+                MDN Offline currently uses <b>{usage}</b>
+              </span>
+            </li>
+          )}
           <li>
             <ClearButton
               disabled={saving}

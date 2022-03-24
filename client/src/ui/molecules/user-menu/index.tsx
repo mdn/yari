@@ -63,8 +63,8 @@ export const UserMenu = () => {
         url: `/${locale}/plus/collections`,
       },
       {
-        label: "Offline settings",
-        url: "/en-US/offline-settings",
+        label: "MDN Offline",
+        url: "/en-US/plus/offline",
       },
       {
         url: FXA_SETTINGS_URL,
