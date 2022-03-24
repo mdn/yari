@@ -156,7 +156,7 @@ jobs:
           BUILD_SPEEDCURVE_LUX_ID: 108906238
 
           # This enables the MDN Plus
-          REACT_APP_ENABLE_PLUS: false
+          REACT_APP_ENABLE_PLUS: true
 
           # This removes the ability to sign in
           REACT_APP_DISABLE_AUTH: false
