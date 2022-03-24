@@ -5,21 +5,21 @@ import { Loading } from "../ui/atoms/loading";
 import { PageContentContainer } from "../ui/atoms/page-content";
 import { PageNotFound } from "../page-not-found";
 import Notifications from "./notifications";
+import { MDN_PLUS_TITLE } from "../constants";
 
 const OfferOverview = React.lazy(() => import("./offer-overview"));
 const Collections = React.lazy(() => import("./collections"));
 const PlusDocs = React.lazy(() => import("./plus-docs"));
 
 export function Plus({ pageTitle, ...props }: { pageTitle?: string }) {
-  const defaultPageTitle = "MDN Plus";
   React.useEffect(() => {
-    document.title = pageTitle || defaultPageTitle;
+    document.title = pageTitle || MDN_PLUS_TITLE;
   }, [pageTitle]);
 
   const isServer = typeof window === "undefined";
   const loading = (
     <Loading
-      message={`Loading ${pageTitle || defaultPageTitle}…`}
+      message={`Loading ${pageTitle || MDN_PLUS_TITLE}…`}
       minHeight={800}
     />
   );

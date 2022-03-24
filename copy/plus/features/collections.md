@@ -55,7 +55,7 @@ Add notes from **Collections**
 Remove a saved page from **an article page**
 
 1. Select **Saved** at the top of the page.
-2. Select **Remove collection**.
+2. Select **Delete**.
 
 Remove a saved page from **Collections**
 

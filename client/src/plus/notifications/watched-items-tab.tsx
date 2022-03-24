@@ -4,6 +4,7 @@ import { Loading } from "../../ui/atoms/loading";
 import { DataError } from "../common";
 import { useWatchedItemsApiEndpoint, unwatchItemsByUrls } from "../common/api";
 import { showMoreButton } from "../common/plus-tabs";
+import { TabVariant, TAB_INFO } from "../common/tabs";
 import WatchedCardListItem from "../icon-card";
 import SearchFilter from "../search-filter";
 import SelectedNotificationsBar from "./notification-select";
@@ -15,6 +16,8 @@ export function WatchedTab({ selectedTerms, selectedFilter, selectedSort }) {
     useState(false);
   const [list, setList] = useState<Array<any>>([]);
   const listRef = useRef<Array<any>>([]);
+
+  document.title = TAB_INFO[TabVariant.WATCHING].pageTitle;
 
   const { data, error, isLoading, hasMore } = useWatchedItemsApiEndpoint(
     offset,
