@@ -29,7 +29,7 @@ export default function UpdateButton({
   if (updateStatus?.state === STATE.updateAvailable) {
     info = "Update available";
     button = (
-      <button onClick={update} disabled={disabled}>
+      <button className="button" onClick={update} disabled={disabled}>
         {" "}
         Update now
       </button>

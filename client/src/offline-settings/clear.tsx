@@ -16,14 +16,18 @@ export default function ClearButton({
     updateStatus?.currentVersion !== null
   ) {
     button = (
-      <button onClick={clear} disabled={disabled}>
+      <button className="button" onClick={clear} disabled={disabled}>
         Clear data
       </button>
     );
   } else if (updateStatus?.state === STATE.clearing) {
     button = <button disabled>Clearing…</button>;
   } else {
-    button = <button disabled>Clear data</button>;
+    button = (
+      <button className="button" disabled>
+        Clear data
+      </button>
+    );
   }
 
   return <>{button}</>;
