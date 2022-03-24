@@ -79,7 +79,7 @@ function PlusLaunchAnnouncementBanner({
   return (
     <Banner id={PLUS_LAUNCH_ANNOUNCEMENT} onDismissed={onDismissed}>
       <p className="mdn-cta-copy">
-        ✨{" "}
+        MDN Plus is here! Support MDN <u>and</u> make it your own.{" "}
         <a
           href="https://hacks.mozilla.org/2022/03/introducing-mdn-plus-make-mdn-your-own"
           target="_blank"
@@ -88,7 +88,7 @@ function PlusLaunchAnnouncementBanner({
         >
           Learn more
         </a>{" "}
-        about MDN Plus.
+        ✨
       </p>
     </Banner>
   );
