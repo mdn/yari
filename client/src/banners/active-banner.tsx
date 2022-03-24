@@ -2,7 +2,9 @@ import * as React from "react";
 
 import { ReactComponent as CloseIcon } from "@mdn/dinocons/general/close.svg";
 import { useGA } from "../ga-context";
+import { useUserData } from "../user-context";
 import { PLUS_LAUNCH_ANNOUNCEMENT } from "./ids";
+import { isPlusAvailable } from "../utils";
 
 // The <Banner> component displays a simple call-to-action banner at
 // the bottom of the window. The following props allow it to be customized.
@@ -106,7 +108,9 @@ export default function ActiveBanner({
   id: string;
   onDismissed: () => void;
 }) {
-  if (id === PLUS_LAUNCH_ANNOUNCEMENT) {
+  const userData = useUserData();
+
+  if (id === PLUS_LAUNCH_ANNOUNCEMENT && isPlusAvailable(userData)) {
     return <PlusLaunchAnnouncementBanner onDismissed={onDismissed} />;
   }
   throw new Error(`Unrecognized banner to display (${id})`);
