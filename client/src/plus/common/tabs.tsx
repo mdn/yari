@@ -63,7 +63,7 @@ export const TAB_INFO: Record<TabVariant, TabDefinition> = {
   },
 
   [TabVariant.COLLECTIONS]: {
-    label: "Collections",
+    label: "Collection",
     pageTitle: `Collections | ${MDN_PLUS_TITLE}`,
     path: COLLECTIONS_URL,
   },
