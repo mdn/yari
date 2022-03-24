@@ -84,7 +84,7 @@ export default function NotificationCard({ item, changedCallback, csrfToken }) {
                 onClickHandler={async () => {
                   await post(deleteUrl, csrfToken);
                   setToastData({
-                    mainText: `${item.title} removed from your notifications`,
+                    mainText: "The page has been removed from your Watch list.",
                     shortText: "Article removed",
                     buttonText: "UNDO",
                     buttonHandler: async () => {

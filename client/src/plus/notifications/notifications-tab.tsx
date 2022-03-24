@@ -128,7 +128,7 @@ export function NotificationsTab({
     const listWithDelete = list.filter((v) => v.id !== item.id);
     setList(listWithDelete);
     setToastData({
-      mainText: `${item.title} removed from your notifications`,
+      mainText: "The notification has been removed from your list.",
       shortText: "Article removed",
       buttonText: "Undo",
       buttonHandler: async () => {
