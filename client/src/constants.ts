@@ -57,6 +57,9 @@ export const MDN_PLUS_SUBSCRIBE_10Y_URL = `${process.env.REACT_APP_MDN_PLUS_SUBS
 
 export const FXA_SIGNIN_URL = process.env.REACT_APP_FXA_SIGNIN_URL || "";
 export const FXA_SETTINGS_URL = process.env.REACT_APP_FXA_SETTINGS_URL || "";
+export const FXA_MANAGE_SUBSCRIPTIONS =
+  process.env.REACT_APP_FXA_MANAGE_SUBSCRIPTIONS_URL ||
+  "https://accounts.stage.mozaws.net/subscriptions/";
 
 export const DEFAULT_GEO_COUNTRY =
   process.env.REACT_APP_DEFAULT_GEO_COUNTRY || "United States";
