@@ -40,6 +40,8 @@ Some insight into what can be expected from using MDN offline
 If offline mode is enabled, offline content is preferred. All content works without an internet connection, with the exception of a few github-based examples and large video files.
 You can also indicate you prefer offline content even when online.
 
+> NOTE: MDN Offline cannot be used while in a private or incognito window.
+
 ### Collections
 
 Previously saved pages will appear as such, and you will be able to browse your **Collections**.
