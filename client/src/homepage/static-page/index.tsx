@@ -1,6 +1,7 @@
 import React, { ReactElement } from "react";
 import useSWR from "swr";
 import { CRUD_MODE } from "../../constants";
+import { SidebarContainer } from "../../document/organisms/sidebar";
 import { TOC } from "../../document/organisms/toc";
 import { PageNotFound } from "../../page-not-found";
 import { Loading } from "../../ui/atoms/loading";
@@ -55,9 +56,9 @@ function StaticPage({
   return (
     <div className={`document-page container ${extraClasses}`}>
       <div className="article-wrapper">
-        <nav id="sidebar-quicklinks" className="sidebar">
+        <SidebarContainer doc={hyData}>
           {sidebarHeader || null}
-        </nav>
+        </SidebarContainer>
         <div className="toc">
           {(hyData.toc?.length && <TOC toc={hyData.toc} />) || null}
         </div>
