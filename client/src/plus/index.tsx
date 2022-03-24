@@ -24,51 +24,64 @@ export function Plus({ pageTitle, ...props }: { pageTitle?: string }) {
     />
   );
 
-  const routes = (
+  function Layout({ children }) {
+    return (
+      <PageContentContainer extraClasses="fullwidth">
+        {isServer ? (
+          loading
+        ) : (
+          <React.Suspense fallback={loading}>{children}</React.Suspense>
+        )}
+      </PageContentContainer>
+    );
+  }
+
+  return (
     <Routes>
       <Route
         path="/"
         element={
-          <React.Suspense fallback={loading}>
+          <Layout>
             <OfferOverview />
-          </React.Suspense>
+          </Layout>
         }
       />
       <Route
         path="collections/*"
         element={
-          <React.Suspense fallback={loading}>
+          <Layout>
             <div className="bookmarks girdle">
               <Collections />
             </div>
-          </React.Suspense>
+          </Layout>
         }
       />
       <Route
         path="notifications/*"
         element={
-          <React.Suspense fallback={loading}>
+          <Layout>
             <div className="notifications girdle">
               <Notifications />
             </div>
-          </React.Suspense>
+          </Layout>
         }
       />
       <Route
         path="docs/*"
         element={
-          <React.Suspense fallback={loading}>
+          <Layout>
             <PlusDocs {...props} />
-          </React.Suspense>
+          </Layout>
         }
       />
-      <Route path="*" element={<PageNotFound />} />
+      <Route
+        path="*"
+        element={
+          <Layout>
+            <PageNotFound />
+          </Layout>
+        }
+      />
     </Routes>
-  );
-
-  return (
-    <PageContentContainer extraClasses="fullwidth">
-      {isServer ? loading : routes}
-    </PageContentContainer>
   );
 }

@@ -3,6 +3,7 @@ import useSWR from "swr";
 import { CRUD_MODE } from "../../constants";
 import { TOC } from "../../document/organisms/toc";
 import { PageNotFound } from "../../page-not-found";
+import { Loading } from "../../ui/atoms/loading";
 import "./index.scss";
 
 interface StaticPageProps {
@@ -22,7 +23,7 @@ function StaticPage({
 }: StaticPageProps) {
   const baseURL = `/${locale.toLowerCase()}/${slug}`;
   const featureJSONUrl = `${baseURL}/index.json`;
-  const { data: { hyData } = {} } = useSWR<any>(
+  const { data: { hyData } = {}, error } = useSWR<any>(
     featureJSONUrl,
     async (url) => {
       const response = await fetch(url);
@@ -45,8 +46,10 @@ function StaticPage({
     document.title = pageTitle;
   }, [hyData, title]);
 
-  if (!hyData) {
+  if (error) {
     return <PageNotFound />;
+  } else if (!hyData) {
+    return <Loading />;
   }
 
   return (
