@@ -9,6 +9,7 @@ import { Loading } from "../../ui/atoms/loading";
 import { useUIStatus } from "../../ui-context";
 import { Button } from "../../ui/atoms/button";
 import { Breadcrumbs } from "../../ui/molecules/breadcrumbs";
+import { useScrollEffect } from "../../hooks";
 
 interface StaticPageDoc {
   id: string;
@@ -56,6 +57,8 @@ function StaticPage({
       revalidateOnFocus: CRUD_MODE,
     }
   );
+
+  useScrollEffect([locale, slug]);
 
   React.useEffect(() => {
     document.title = hyData ? `${hyData.title} | ${title}` : title;
