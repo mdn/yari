@@ -25,14 +25,22 @@ export function Plus({ pageTitle, ...props }: { pageTitle?: string }) {
     />
   );
 
-  function Layout({ children }) {
-    return (
-      <PageContentContainer extraClasses="fullwidth">
+  function Layout({ withoutContainer = false, children }) {
+    const inner = (
+      <>
         {isServer ? (
           loading
         ) : (
           <React.Suspense fallback={loading}>{children}</React.Suspense>
         )}
+      </>
+    );
+
+    return withoutContainer ? (
+      inner
+    ) : (
+      <PageContentContainer extraClasses="fullwidth">
+        {inner}
       </PageContentContainer>
     );
   }
@@ -78,7 +86,7 @@ export function Plus({ pageTitle, ...props }: { pageTitle?: string }) {
       <Route
         path="docs/*"
         element={
-          <Layout>
+          <Layout withoutContainer>
             <PlusDocs {...props} />
           </Layout>
         }
