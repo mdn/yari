@@ -11188,10 +11188,10 @@ no-case@^3.0.4:
     lower-case "^2.0.2"
     tslib "^2.0.3"
 
-node-dev@7.3.0:
-  version "7.3.0"
-  resolved "https://registry.yarnpkg.com/node-dev/-/node-dev-7.3.0.tgz#58c7a2accba6015023b96ef1c404344230f487d9"
-  integrity sha512-9N8nBjIzM/bk4tAOd2/KUvLxVonA09PjfuyZFhipI7tID3TuW83LVvr+GGU86o7WHa9fBn08IwQOMSj+HPrdng==
+node-dev@7.3.1:
+  version "7.3.1"
+  resolved "https://registry.yarnpkg.com/node-dev/-/node-dev-7.3.1.tgz#c6ecccccc8ed15c508c11577333c86365e8b9690"
+  integrity sha512-LlUCScMRekDzvzH+0xzfG6jo641J0P6lBcLSLdmuwVxZ5AWjT8QsdmUJol9OB/FA10TIDuMMgoOK0Tlx1McP0A==
   dependencies:
     dateformat "^3.0.3"
     dynamic-dedupe "^0.3.0"
