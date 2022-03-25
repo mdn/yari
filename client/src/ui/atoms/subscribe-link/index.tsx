@@ -1,6 +1,7 @@
+import { useLocale } from "../../../hooks";
+
 import "./index.scss";
 import { Button } from "../button";
-import { usePlusUrl } from "../../../plus/utils";
 
 /**
  *
@@ -8,10 +9,11 @@ import { usePlusUrl } from "../../../plus/utils";
  * @returns {JSX.Element} - The anchor link with the appropriate URL
  */
 export const SubscribeLink = () => {
-  const href = usePlusUrl();
+  const locale = useLocale();
+  const endPoint = `/${locale}/plus`;
 
   return (
-    <Button href={href} extraClasses="mdn-plus-subscribe-link">
+    <Button href={endPoint} extraClasses="mdn-plus-subscribe-link">
       Get MDN Plus
     </Button>
   );
