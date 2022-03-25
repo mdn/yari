@@ -1230,7 +1230,7 @@ test("plus page", () => {
   const html = fs.readFileSync(htmlFile, "utf-8");
   const $ = cheerio.load(html);
   expect($("title").text()).toContain("Plus");
-  expect($('meta[name="robots"]').attr("content")).toBe("noindex, nofollow");
+  expect($('meta[name="robots"]').attr("content")).toBe("index, follow");
 });
 
 test("plus collections page", () => {

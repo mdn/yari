@@ -111,7 +111,7 @@ async function buildSPAs(options) {
       const MDN_PLUS_TITLE = "MDN Plus";
       const SPAs = [
         { prefix: "search", pageTitle: "Search" },
-        { prefix: "plus", pageTitle: MDN_PLUS_TITLE, noIndexing: true },
+        { prefix: "plus", pageTitle: MDN_PLUS_TITLE },
         {
           prefix: "plus/collections",
           pageTitle: `Collections | ${MDN_PLUS_TITLE}`,
