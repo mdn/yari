@@ -9,12 +9,12 @@ function PlusDocsNav() {
       heading="MDN Plus"
       items={[
         {
-          slug: "plus/docs/features/collections",
-          title: "Collections",
-        },
-        {
           slug: "plus/docs/features/notifications",
           title: "Notifications",
+        },
+        {
+          slug: "plus/docs/features/collections",
+          title: "Collections",
         },
         {
           slug: "plus/docs/features/offline",
