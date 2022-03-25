@@ -18,16 +18,16 @@ export const PlusMenu = ({ visibleSubMenuId, toggleMenu }) => {
     label: "MDN Plus",
     id: "mdn-plus",
     items: [
+      {
+        description: "More MDN. Your MDN.",
+        hasIcon: true,
+        extraClasses: "mobile-only",
+        iconClasses: "submenu-icon",
+        label: "Overview",
+        url: `/${locale}/plus`,
+      },
       ...(isAuthenticated
         ? [
-            {
-              description: "More MDN. Your MDN.",
-              hasIcon: true,
-              extraClasses: "mobile-only",
-              iconClasses: "submenu-icon",
-              label: "Overview",
-              url: `/${locale}/plus`,
-            },
             {
               description: "Your saved articles from across MDN",
               hasIcon: true,
