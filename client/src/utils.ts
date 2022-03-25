@@ -89,5 +89,9 @@ export function isPlusAvailable(userData: UserData | null) {
   if (!userData) {
     return false;
   }
-  return PLUS_ENABLED_COUNTRIES.includes(userData?.geo?.country);
+
+  return (
+    userData.isSubscriber ||
+    PLUS_ENABLED_COUNTRIES.includes(userData.geo?.country)
+  );
 }
