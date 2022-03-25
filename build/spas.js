@@ -123,6 +123,22 @@ async function buildSPAs(options) {
           noIndexing: true,
         },
         {
+          prefix: "plus/docs/collections",
+          pageTitle: `Collections | ${MDN_PLUS_TITLE}`,
+        },
+        {
+          prefix: "plus/docs/notifications",
+          pageTitle: `Notifications | ${MDN_PLUS_TITLE}`,
+        },
+        {
+          prefix: "plus/docs/offline",
+          pageTitle: `MDN Offline | ${MDN_PLUS_TITLE}`,
+        },
+        {
+          prefix: "plus/docs/faq",
+          pageTitle: `FAQ | ${MDN_PLUS_TITLE}`,
+        },
+        {
           prefix: "plus/notifications",
           pageTitle: `Notifications | ${MDN_PLUS_TITLE}`,
           noIndexing: true,
