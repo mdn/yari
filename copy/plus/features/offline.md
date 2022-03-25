@@ -34,7 +34,7 @@ You can also add it to your homescreen for an experience similar to using a nati
 
 ## Clear stored data
 
-Open the user menu -> offline settings -> clear data
+Open the user menu → offline settings → clear data
 
 ![Screenshot showing offline settings page with the clear data button highlighted.](/assets/plus-docs/offline/desktop-offline-clear-data.png)
 

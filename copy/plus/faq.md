@@ -28,9 +28,9 @@ accommodate our users’ needs as much as possible:
 
 - _MDN Core_ - A free plan, for those ones who want to try out a limited
   version of the premium features.
-- _MDN Plus 5_ - A 5$/month/50$/year plan that offers unlimited access to the
+- _MDN Plus 5_ - A $5/month or $50/year plan that offers unlimited access to the
   premium features included in MDN Plus.
-- _MDN Supporter 10_ - A 10$/month/100$/year plan for users who want to
+- _MDN Supporter 10_ - A $10/month or $100/year plan for users who want to
   support MDN with a higher amount. On top of the MDN Plus premium features,
   MDN supporters will be able to contribute and shape the product moving
   forward, by having early access to premium features and a direct feedback

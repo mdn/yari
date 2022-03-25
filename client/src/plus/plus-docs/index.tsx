@@ -1,4 +1,4 @@
-import { useParams, useLocation } from "react-router-dom";
+import { Link, useParams, useLocation } from "react-router-dom";
 import { MDN_PLUS_TITLE } from "../../constants";
 import StaticPage from "../../homepage/static-page";
 import "./index.scss";
@@ -50,17 +50,17 @@ function RelatedTopics({
             const itemPathname = `/${locale}/${slug}`;
 
             return (
-              <li className="document-toc-item">
-                <a
-                  href={itemPathname}
+              <li key={itemPathname} className="document-toc-item">
+                <Link
                   className="document-toc-link"
                   aria-current={
                     itemPathname.toLowerCase() ===
                     locationPathname.toLowerCase()
                   }
+                  to={itemPathname}
                 >
                   {title}
-                </a>
+                </Link>
               </li>
             );
           })}

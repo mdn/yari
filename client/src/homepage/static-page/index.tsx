@@ -1,4 +1,4 @@
-import React, { ReactElement, useCallback } from "react";
+import React, { ReactElement } from "react";
 import useSWR from "swr";
 import { CRUD_MODE } from "../../constants";
 import { SidebarContainer } from "../../document/organisms/sidebar";
@@ -27,6 +27,8 @@ interface StaticPageProps {
   sidebarHeader?: ReactElement;
 }
 
+const isServer = typeof window === "undefined";
+
 function StaticPage({
   extraClasses = "",
   locale,
@@ -38,15 +40,9 @@ function StaticPage({
 }: StaticPageProps) {
   const { isSidebarOpen, setIsSidebarOpen } = useUIStatus();
   const baseURL = `/${locale}/${slug}`;
-
-  const getJsonUrl = useCallback(() => {
-    const baseURL = `/${locale}/${slug}`;
-    const featureJSONUrl = `${baseURL.toLowerCase()}/index.json`;
-    return featureJSONUrl;
-  }, [locale, slug]);
-
+  const featureJSONUrl = `${baseURL.toLowerCase()}/index.json`;
   const { data: { hyData } = {}, error } = useSWR<{ hyData: StaticPageDoc }>(
-    getJsonUrl(),
+    featureJSONUrl,
     async (url) => {
       const response = await fetch(url);
       if (!response.ok) {
@@ -56,7 +52,7 @@ function StaticPage({
       return await response.json();
     },
     {
-      initialData,
+      initialData: isServer ? initialData : undefined,
       revalidateOnFocus: CRUD_MODE,
     }
   );
