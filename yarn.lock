@@ -8071,10 +8071,10 @@ html-tags@^3.1.0:
   resolved "https://registry.npmjs.org/html-tags/-/html-tags-3.1.0.tgz"
   integrity sha512-1qYz89hW3lFDEazhjW0yVAV87lw8lVkrJocr72XmBkMKsoSVJCQx3W8BXsC7hO2qAt8BoVjYjtAcZ9perqGnNg==
 
-html-validate@6.6.0:
-  version "6.6.0"
-  resolved "https://registry.yarnpkg.com/html-validate/-/html-validate-6.6.0.tgz#cb51b9ec1e44556bb68da78034a22232b5588f7f"
-  integrity sha512-PdrKDhj1hUroqWr1+Cx4Zj328ucr8DBtQ4Sf+RF4G/79axIe73iGdygDCgDihwY83a3YupNUTiuGquK1xBKNkA==
+html-validate@6.6.1:
+  version "6.6.1"
+  resolved "https://registry.yarnpkg.com/html-validate/-/html-validate-6.6.1.tgz#b14c236105b10ab6e8d8d19b7eb59a172b768dc1"
+  integrity sha512-8XG1GeLJoWARdq7wASWb3ZGnWHjo1EnLEdthDvr8aPsQQPICkNfaMqyBVflTm0hvp0y6GLpPegarOQLxEQWg9g==
   dependencies:
     "@babel/code-frame" "^7.10.0"
     "@html-validate/stylish" "^2.0.0"
