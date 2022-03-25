@@ -48,14 +48,6 @@ export function TOC({ toc }: { toc: Toc[] }) {
     };
   }, [debouncedGetCurrentHighlightedSectionId]);
 
-  useEffect(() => {
-    const listener = () => getCurrentHighlightedSectionId();
-
-    window.addEventListener("hashchange", listener);
-
-    return () => window.removeEventListener("hashchange", listener);
-  });
-
   return (
     <aside className="document-toc-container">
       <section className="document-toc">

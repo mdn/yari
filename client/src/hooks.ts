@@ -100,24 +100,3 @@ export function useOnlineStatus(): { isOnline: boolean; isOffline: boolean } {
 
   return { isOnline, isOffline };
 }
-
-/**
- * Scrolls after a client-side navigation.
- *
- * Limitation: Overrides the scroll position on backward/forward navigation.
- *
- * @param deps Values that trigger a client-side navigation when changed.
- */
-export function useScrollEffect(deps: React.DependencyList) {
-  useEffect(() => {
-    if (window) {
-      const id = window.location.hash.replace("#", "");
-      if (id && document.getElementById(id)) {
-        window.location.href = window.location.hash;
-      } else {
-        window.scrollTo(0, 0);
-      }
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, deps);
-}
