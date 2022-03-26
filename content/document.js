@@ -580,7 +580,10 @@ function remove(
 ) {
   const root = getRoot(locale);
   const url = buildURL(locale, slug);
-  const redirectUrl = redirect && buildURL(locale, redirect);
+  let redirectUrl = redirect;
+  if (redirect && !redirect.match("^http(s)?://")) {
+    redirectUrl = buildURL(locale, redirect);
+  }
 
   const roots = [CONTENT_ROOT];
   if (CONTENT_TRANSLATED_ROOT) {
@@ -599,7 +602,7 @@ function remove(
 
   if (dry) {
     if (redirectUrl) {
-      Redirect.add(locale, [[url, buildURL(locale, redirectUrl)]], { dry });
+      Redirect.add(locale, [[url, redirectUrl]], { dry });
     }
     return docs;
   }
