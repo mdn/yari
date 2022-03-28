@@ -14,9 +14,7 @@ export default function Container({
       {optional === true ? (
         <>{children}</>
       ) : (
-        <div className={`container ${extraClasses ? extraClasses : ""}`}>
-          {children}
-        </div>
+        <div className={`container ${extraClasses || ""}`}>{children}</div>
       )}
     </>
   );

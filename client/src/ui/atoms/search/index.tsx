@@ -22,16 +22,11 @@ type SearchProps = {
 
 export const Search = ({
   name,
-  extraClasses,
-  id,
-  isDisabled,
   onBlurHandler,
   onChangeHandler,
   onClickHandler,
   onFocusHandler,
   placeholder,
-  size,
-  state,
   value,
 }: SearchProps) => {
   return (

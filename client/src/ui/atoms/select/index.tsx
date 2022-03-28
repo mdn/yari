@@ -4,7 +4,7 @@ import "./index.scss";
 
 type SelectProps = {
   name: string;
-  extraClasses?: string;
+  extraClasses?: string | null;
   id?: string;
   /**
    * Should the button be disabled? This is optional with a default of false
@@ -17,19 +17,9 @@ type SelectProps = {
   children?: React.ReactNode;
 };
 
-export const Select = ({
-  name,
-  extraClasses,
-  id,
-  isDisabled,
-  onClickHandler,
-  onFocusHandler,
-  size,
-  state,
-  children,
-}: SelectProps) => {
+export const Select = ({ extraClasses, id, children }: SelectProps) => {
   return (
-    <select className={extraClasses} id={id}>
+    <select className={extraClasses || ""} id={id}>
       {children}
     </select>
   );
