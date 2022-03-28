@@ -61,7 +61,7 @@
     "@mdn/browser-compat-data": "4.1.13",
     "@use-it/interval": "^1.0.0",
     "accept-language-parser": "1.5.0",
-    "browser-specs": "^3.4.0",
+    "browser-specs": "^3.5.0",
     "chalk": "4.1.2",
     "cheerio": "1.0.0-rc.10",
     "cli-progress": "^3.10.0",
