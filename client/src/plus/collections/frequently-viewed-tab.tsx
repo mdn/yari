@@ -46,15 +46,17 @@ export function FrequentlyViewedTab({ selectedTerms }) {
       <SearchFilter filters={[]} sorts={SORTS} />
       <ul className="notification-list">
         <div className="icon-card-list">
-          {list.map((item) => (
-            <CollectionListItem
-              item={item}
-              onEditSubmit={() => null}
-              key={item.id}
-              showEditButton={false}
-              handleDelete={deleteFrequentlyViewed}
-            />
-          ))}
+          {list.length
+            ? list.map((item) => (
+                <CollectionListItem
+                  item={item}
+                  onEditSubmit={() => null}
+                  key={item.id}
+                  showEditButton={false}
+                  handleDelete={deleteFrequentlyViewed}
+                />
+              ))
+            : "There are no items in your frequently viewed articles collection."}
         </div>
       </ul>
     </>
