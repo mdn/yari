@@ -161,7 +161,7 @@ function postLocalFileLinks($, doc) {
     // links, so it's presumed to be worth it.
     if (
       !href ||
-      /^(\/|\.\.|http|#|mailto:|about:|ftp:|news:|irc:|ftp:)/i.test(href)
+      /^(\/|\.\.|http|#|mailto:|about:|ftp:|news:|irc:)/i.test(href)
     ) {
       return;
     }
