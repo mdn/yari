@@ -187,6 +187,10 @@ u {
   background: var(--scrollbar-color);
 }
 
+*::-webkit-scrollbar-corner {
+  background-color: var(--scrollbar-bg, auto);
+}
+
 .plus .dark,
 .plus {
   --text-link: var(--plus-accent-color);
