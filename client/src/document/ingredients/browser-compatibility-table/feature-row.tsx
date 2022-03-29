@@ -531,6 +531,7 @@ export const FeatureRow = React.memo(
     ) : (
       <code>{name}</code>
     );
+    const borderleftwidth = `calc(8 * ${(name.match(/\./g) || []).length}px)`;
     const activeBrowser = activeCell !== null ? browsers[activeCell] : null;
 
     let titleNode: string | React.ReactNode;
@@ -563,7 +564,11 @@ export const FeatureRow = React.memo(
     return (
       <>
         <tr>
-          <th className="bc-feature" scope="row">
+          <th
+            className="bc-feature"
+            style={{ borderLeftWidth: borderleftwidth }}
+            scope="row"
+          >
             {titleNode}
           </th>
           {browsers.map((browser, i) => (
