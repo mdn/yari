@@ -22,7 +22,7 @@ export const ThemeSwitcher = () => {
     return (
       <Button
         extraClasses={`
-          ${activeTheme === id ? "active-menu-item" : null}
+          ${activeTheme === id ? "active-menu-item" : ""}
         `}
         icon={`theme-${id}`}
         onClickHandler={() => {
