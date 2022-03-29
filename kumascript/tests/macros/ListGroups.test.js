@@ -43,7 +43,7 @@ const expectedHTML = `<div class="index">
         <li>
             <a href='/en-US/docs/Web/API/A2TestInterface_overview'>A2TestInterface</a>
             <span class='indexListBadges'>
-              <abbr class="icon icon-experimental" title="Experimental">
+              <abbr class="icon icon-experimental" title="Experimental. Expect behavior to change in the future.">
                 <span class="visually-hidden">Experimental</span>
               </abbr>
             </span>
