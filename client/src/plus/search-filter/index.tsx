@@ -35,7 +35,7 @@ export default function SearchFilter({
         <Button
           type="action"
           extraClasses={
-            selectedFilter === filter.param ? "active-menu-item" : null
+            selectedFilter === filter.param ? "active-menu-item" : ""
           }
           onClickHandler={() => {
             setSelectedFilter(filter.param);
