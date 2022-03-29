@@ -138,15 +138,17 @@ export function CollectionsTab({
       {error && <DataError error={error} />}
       <ul className="notification-list">
         <div className="icon-card-list">
-          {list.map((item) => (
-            <CollectionListItem
-              item={item}
-              onEditSubmit={collectionsSaveHandler}
-              key={item.id}
-              showEditButton={true}
-              handleDelete={deleteCollectionItem}
-            />
-          ))}
+          {list.length
+            ? list.map((item) => (
+                <CollectionListItem
+                  item={item}
+                  onEditSubmit={collectionsSaveHandler}
+                  key={item.id}
+                  showEditButton={true}
+                  handleDelete={deleteCollectionItem}
+                />
+              ))
+            : "You don't have any saved pages in your collection."}
         </div>
       </ul>
       {subscriptionLimitReached && <LimitBanner type="collections" />}
