@@ -254,7 +254,7 @@ function OfferOverviewSubscribe() {
       </section>
       <p className="plus-for-companies">
         * Do you need MDN Plus for your company?{" "}
-        <a href="https://docs.google.com/forms/d/15YimonAiA9ca-JrGfxgRstYEuQsVUuyzGH1_0RbpSPU/edit">
+        <a href="https://docs.google.com/forms/d/15YimonAiA9ca-JrGfxgRstYEuQsVUuyzGH1_0RbpSPU/viewform">
           Let us know
         </a>{" "}
         and we’ll get back to you when it becomes available.
