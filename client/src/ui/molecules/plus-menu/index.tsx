@@ -3,11 +3,11 @@ import * as React from "react";
 import { useUserData } from "../../../user-context";
 import { useLocale } from "../../../hooks";
 
-import { Link } from "react-router-dom";
 import { Submenu } from "../submenu";
 
 import "./index.scss";
 import { usePlusUrl } from "../../../plus/utils";
+import InternalLink from "../../atoms/internal-link";
 
 export const PlusMenu = ({ visibleSubMenuId, toggleMenu }) => {
   const locale = useLocale();
@@ -72,9 +72,9 @@ export const PlusMenu = ({ visibleSubMenuId, toggleMenu }) => {
         {plusMenu.label}
       </button>
 
-      <Link to={plusUrl} className="top-level-entry">
+      <InternalLink to={plusUrl} className="top-level-entry">
         {plusMenu.label}
-      </Link>
+      </InternalLink>
 
       <Submenu menuEntry={plusMenu} defaultHidden={!isOpen} />
     </li>
