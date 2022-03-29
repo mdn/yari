@@ -111,7 +111,7 @@ async function buildSPAs(options) {
       const MDN_PLUS_TITLE = "MDN Plus";
       const SPAs = [
         { prefix: "search", pageTitle: "Search" },
-        { prefix: "plus", pageTitle: MDN_PLUS_TITLE, noIndexing: true },
+        { prefix: "plus", pageTitle: MDN_PLUS_TITLE },
         {
           prefix: "plus/collections",
           pageTitle: `Collections | ${MDN_PLUS_TITLE}`,
@@ -121,6 +121,22 @@ async function buildSPAs(options) {
           prefix: "plus/collections/frequently_viewed",
           pageTitle: `Frequently viewed articles | ${MDN_PLUS_TITLE}`,
           noIndexing: true,
+        },
+        {
+          prefix: "plus/docs/collections",
+          pageTitle: `Collections | ${MDN_PLUS_TITLE}`,
+        },
+        {
+          prefix: "plus/docs/notifications",
+          pageTitle: `Notifications | ${MDN_PLUS_TITLE}`,
+        },
+        {
+          prefix: "plus/docs/offline",
+          pageTitle: `MDN Offline | ${MDN_PLUS_TITLE}`,
+        },
+        {
+          prefix: "plus/docs/faq",
+          pageTitle: `FAQ | ${MDN_PLUS_TITLE}`,
         },
         {
           prefix: "plus/notifications",
