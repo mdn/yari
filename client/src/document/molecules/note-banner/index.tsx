@@ -11,7 +11,7 @@ export function NoteBanner({
 }) {
   return (
     <NoteCard
-      extraClasses={`localized-content-note inline ${type ? type : ""}`}
+      extraClasses={`localized-content-note inline ${type || ""}`}
     >
       <p>
         <a href={url} className={!url.startsWith("/") ? "external" : undefined}>
