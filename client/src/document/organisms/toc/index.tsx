@@ -1,52 +1,75 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 
 import "./index.scss";
 import { Toc } from "../../types";
-import { useDebouncedCallback } from "use-debounce";
 
 export function TOC({ toc }: { toc: Toc[] }) {
-  const [currentViewedTocItem, setCurrentViewedTocItem] = useState(
-    toc[0].id.toLowerCase()
-  );
+  const [currentViewedTocItem, setCurrentViewedTocItem] = useState("");
 
-  const getCurrentHighlightedSectionId = () => {
-    const offsetY = window.scrollY;
-    if (offsetY < window.innerHeight * 0.1) {
-      setCurrentViewedTocItem(toc[0].id.toLowerCase());
-      return;
-    }
+  React.useEffect(() => {
+    // Observe headings and siblings.
+    const main = document.querySelector("main") ?? document;
+    const targets = main.querySelectorAll("h1, h1 ~ *, h2, h2 ~ *, h3, h3 ~ *");
 
-    const headings = toc.map((item) =>
-      document.getElementById(item.id.toLowerCase())
-    );
-    let currentSectionId;
+    // Tracks if observed elements are visible (intersection with viewport).
+    const intersectionMap = new Map<Element, boolean>();
 
-    headings.forEach((section) => {
-      const posY = section?.offsetTop;
-      if (posY && posY < offsetY + window.innerHeight * 0.1) {
-        currentSectionId = section.id;
+    // All ids referenced by the TOC.
+    const tocIds = toc.map(({ id }) => id);
+
+    // Maps every observed element to an id referenced by the TOC.
+    const idMap = new Map<Element, string>();
+
+    /**
+     * Updates the visibility of observed elements.
+     */
+    function manageIntersectionMap(entries: IntersectionObserverEntry[]) {
+      for (const entry of entries) {
+        intersectionMap.set(entry.target, entry.isIntersecting);
       }
-    });
-
-    if (currentSectionId && currentSectionId !== currentViewedTocItem) {
-      setCurrentViewedTocItem(currentSectionId);
     }
-  };
 
-  const debouncedGetCurrentHighlightedSectionId = useDebouncedCallback(
-    getCurrentHighlightedSectionId,
-    25
-  );
+    /**
+     * Sets the first visible item as the currently viewed TOC item.
+     */
+    function updateViewedTocItem() {
+      const visibleIds = Array.from(intersectionMap.entries())
+        .filter(([, value]) => value)
+        .map(([key]) => key)
+        .map((target) => idMap.get(target) ?? "");
 
-  useEffect(() => {
-    window.addEventListener("scroll", debouncedGetCurrentHighlightedSectionId);
-    return () => {
-      window.removeEventListener(
-        "scroll",
-        debouncedGetCurrentHighlightedSectionId
-      );
-    };
-  }, [debouncedGetCurrentHighlightedSectionId]);
+      if (visibleIds.length === 0) {
+        return;
+      }
+
+      setCurrentViewedTocItem(visibleIds[0]);
+    }
+
+    const intersectionObserver = new IntersectionObserver(
+      (entries: IntersectionObserverEntry[]) => {
+        manageIntersectionMap(entries);
+        updateViewedTocItem();
+      },
+      {
+        threshold: [0.0, 1.0],
+      }
+    );
+
+    Array.from(targets).reduce((currentId, target) => {
+      const targetId = target.id.toLowerCase();
+      if (targetId && tocIds.includes(targetId)) {
+        currentId = targetId;
+      }
+      idMap.set(target, currentId);
+
+      intersectionMap.set(target, false);
+      intersectionObserver.observe(target);
+
+      return currentId;
+    }, "");
+
+    return () => intersectionObserver.disconnect();
+  }, [toc]);
 
   return (
     <aside className="document-toc-container">
