@@ -4,20 +4,12 @@ import "./index.scss";
 
 type SearchProps = {
   name: string;
-  extraClasses?: string;
-  id?: string;
   placeholder?: string;
   value?: string;
-  /**
-   * Should the button be disabled? This is optional with a default of false
-   */
-  isDisabled?: boolean;
   onBlurHandler?: (event: React.FocusEvent<HTMLInputElement>) => void;
   onChangeHandler?: (event: React.ChangeEvent<HTMLInputElement>) => void;
   onClickHandler?: (event: React.MouseEvent<Element>) => void;
   onFocusHandler?: (event: React.FocusEvent<Element>) => void;
-  size?: "small" | "medium";
-  state?: "default" | "hover" | "active" | "focused" | "inactive";
 };
 
 export const Search = ({
