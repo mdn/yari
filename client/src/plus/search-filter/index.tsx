@@ -54,7 +54,7 @@ export default function SearchFilter({
       component: () => (
         <Button
           type="action"
-          extraClasses={selectedSort === sort.param ? "active-menu-item" : null}
+          extraClasses={selectedSort === sort.param ? "active-menu-item" : ""}
           onClickHandler={() => {
             setSelectedSort(sort.param);
           }}
