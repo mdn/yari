@@ -31,7 +31,7 @@ export function PageContentContainer({
 }) {
   return (
     <MainContentContainer
-      className={`page-content-container ${extraClasses ? extraClasses : ""}`}
+      className={`page-content-container ${extraClasses || ""}`}
     >
       {children}
     </MainContentContainer>

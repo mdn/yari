@@ -4,7 +4,7 @@ import React from "react";
 type SubmenuItem = {
   component?: () => JSX.Element;
   description?: string;
-  extraClasses?: string;
+  extraClasses?: string | null;
   hasIcon?: boolean;
   iconClasses?: string;
   label?: string;
@@ -43,7 +43,7 @@ export const Submenu = ({
             <li
               key={key}
               role="none"
-              className={`${item.extraClasses || undefined} ${
+              className={`${item.extraClasses || ""} ${
                 isDropdown ? "dropdown-item" : ""
               }`}
             >

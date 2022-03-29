@@ -14,7 +14,7 @@ function Mandala({
   return (
     <div
       className={`mandala-container ${animateColors ? "animate-colors" : ""} ${
-        extraClasses ? extraClasses : ""
+        extraClasses || ""
       }`}
     >
       <div

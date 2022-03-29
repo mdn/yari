@@ -64,9 +64,7 @@ function StandardLayout({
   children: React.ReactNode;
 }) {
   return (
-    <Layout pageType={`standard-page ${extraClasses ? extraClasses : ""}`}>
-      {children}
-    </Layout>
+    <Layout pageType={`standard-page ${extraClasses || ""}`}>{children}</Layout>
   );
 }
 function DocumentLayout({ children }) {

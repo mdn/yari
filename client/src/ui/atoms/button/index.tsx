@@ -18,7 +18,7 @@ type ButtonProps = {
    */
   buttonType?: "button" | "submit" | "reset";
   name?: string;
-  extraClasses?: string;
+  extraClasses?: string | null;
   href?: string;
   rel?: string;
   icon?: string;
