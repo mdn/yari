@@ -13,7 +13,7 @@ export function usePlusUrl(): string {
     return url.replace(/\/$/, "").toLowerCase();
   }
 
-  let target = `/${locale}/plus/`;
+  let target = `/${locale}/plus`;
 
   if (normalizedUrl(target) === normalizedUrl(pathname)) {
     target = "#subscribe";
