@@ -15,13 +15,23 @@ function main() {
   processPR(id);
 }
 
+interface PullRequest {
+  files: ChangedFile[];
+}
+
+interface ChangedFile {
+  path: string;
+  additions: number;
+  deletions: number;
+}
+
 function processPR(id: number) {
   const ghJSON = JSON.parse(
     child_process.execSync(`gh pr view ${id} --json files`, {
       cwd: CONTENT_ROOT,
       encoding: "utf-8",
     })
-  );
+  ) as PullRequest;
 
   for (const file of ghJSON.files) {
     let notify = false;
@@ -40,11 +50,11 @@ function processPR(id: number) {
   }
 }
 
-function netDiffSize(file) {
+function netDiffSize(file: ChangedFile) {
   return file.additions - file.deletions;
 }
 
-function getSlug(path) {
+function getSlug(path: string) {
   const cmd = `yq --front-matter=extract '.slug' ${path}`;
   return child_process.execSync(cmd, {
     cwd: CONTENT_ROOT,
