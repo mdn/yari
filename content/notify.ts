@@ -6,10 +6,15 @@
 
 const child_process = require("child_process");
 
+require("dotenv").config();
+
+const { CONTENT_ROOT } = process.env;
+
 function main() {
   const arg = process.argv[2];
   const ghJSON = JSON.parse(
     child_process.execSync(`gh pr view ${arg} --json files`, {
+      cwd: CONTENT_ROOT,
       encoding: "utf-8",
     })
   );
@@ -38,6 +43,7 @@ function netDiffSize(file) {
 function getSlug(path) {
   const cmd = `yq --front-matter=extract '.slug' ${path}`;
   return child_process.execSync(cmd, {
+    cwd: CONTENT_ROOT,
     encoding: "utf-8",
   });
 }

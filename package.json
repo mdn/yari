@@ -12,6 +12,7 @@
     "build:ssr": "cd ssr && webpack --mode=production",
     "build:sw": "cd client/pwa && yarn && yarn build:prod",
     "build:sw-dev": "cd client/pwa && yarn && yarn build",
+    "content-notify": "ts-node content/notify.ts",
     "dev": "yarn prepare-build && nf -j Procfile.dev start",
     "eslint": "eslint .",
     "filecheck": "cd filecheck && node cli.js",
