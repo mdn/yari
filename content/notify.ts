@@ -11,9 +11,13 @@ require("dotenv").config();
 const { CONTENT_ROOT } = process.env;
 
 function main() {
-  const arg = process.argv[2];
+  const id = Number(process.argv[2]);
+  processPR(id);
+}
+
+function processPR(id: number) {
   const ghJSON = JSON.parse(
-    child_process.execSync(`gh pr view ${arg} --json files`, {
+    child_process.execSync(`gh pr view ${id} --json files`, {
       cwd: CONTENT_ROOT,
       encoding: "utf-8",
     })
@@ -29,7 +33,7 @@ function main() {
 
       if (notify === true) {
         const slug = getSlug(file.path);
-        console.log(`${arg}\t${slug}`);
+        console.log(`${id}\t${slug}`);
         // TODO: post to notifications API endpoint
       }
     }
