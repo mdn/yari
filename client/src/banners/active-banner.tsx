@@ -81,7 +81,7 @@ function PlusLaunchAnnouncementBanner({
 }: {
   onDismissed: () => void;
 }) {
-  const sendCTAEventToGA = useSendCTAEventToGA()
+  const sendCTAEventToGA = useSendCTAEventToGA();
   return (
     <Banner id={PLUS_LAUNCH_ANNOUNCEMENT} onDismissed={onDismissed}>
       <p className="mdn-cta-copy">
