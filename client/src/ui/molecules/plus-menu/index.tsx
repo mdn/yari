@@ -3,14 +3,17 @@ import * as React from "react";
 import { useUserData } from "../../../user-context";
 import { useLocale } from "../../../hooks";
 
-import { Link } from "react-router-dom";
 import { Submenu } from "../submenu";
 
 import "./index.scss";
+import { usePlusUrl } from "../../../plus/utils";
+import InternalLink from "../../atoms/internal-link";
 
 export const PlusMenu = ({ visibleSubMenuId, toggleMenu }) => {
   const locale = useLocale();
   const userData = useUserData();
+
+  const plusUrl = usePlusUrl();
 
   const isAuthenticated = userData && userData.isAuthenticated;
 
@@ -24,7 +27,7 @@ export const PlusMenu = ({ visibleSubMenuId, toggleMenu }) => {
         extraClasses: "mobile-only",
         iconClasses: "submenu-icon",
         label: "Overview",
-        url: `/${locale}/plus`,
+        url: plusUrl,
       },
       ...(isAuthenticated
         ? [
@@ -69,9 +72,9 @@ export const PlusMenu = ({ visibleSubMenuId, toggleMenu }) => {
         {plusMenu.label}
       </button>
 
-      <Link to={`/${locale}/plus/`} className="top-level-entry">
+      <InternalLink to={plusUrl} className="top-level-entry">
         {plusMenu.label}
-      </Link>
+      </InternalLink>
 
       <Submenu menuEntry={plusMenu} defaultHidden={!isOpen} />
     </li>
