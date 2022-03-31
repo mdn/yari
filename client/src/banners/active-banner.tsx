@@ -64,14 +64,17 @@ function Banner(props: BannerProps) {
   );
 }
 
-function SendCTAEventToGA(eventCategory: string) {
+function useSendCTAEventToGA() {
   const ga = useGA();
-  ga("send", {
-    hitType: "event",
-    eventCategory: eventCategory,
-    eventAction: "CTA clicked",
-    eventLabel: "banner",
-  });
+
+  return (eventCategory: string) => {
+    ga("send", {
+      hitType: "event",
+      eventCategory: eventCategory,
+      eventAction: "CTA clicked",
+      eventLabel: "banner",
+    });
+  };
 }
 
 function PlusLaunchAnnouncementBanner({
@@ -79,6 +82,7 @@ function PlusLaunchAnnouncementBanner({
 }: {
   onDismissed: () => void;
 }) {
+  const sendCTAEventToGA = useSendCTAEventToGA();
   const plusUrl = usePlusUrl();
 
   return (
@@ -92,7 +96,7 @@ function PlusLaunchAnnouncementBanner({
           href="https://hacks.mozilla.org/2022/03/introducing-mdn-plus-make-mdn-your-own"
           target="_blank"
           rel="noopener noreferrer"
-          onClick={() => SendCTAEventToGA(PLUS_LAUNCH_ANNOUNCEMENT)}
+          onClick={() => sendCTAEventToGA(PLUS_LAUNCH_ANNOUNCEMENT)}
         >
           Learn more
         </a>{" "}
