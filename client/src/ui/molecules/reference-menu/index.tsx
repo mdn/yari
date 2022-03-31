@@ -1,7 +1,7 @@
 import * as React from "react";
-import { Link } from "react-router-dom";
 
 import { useLocale } from "../../../hooks";
+import InternalLink from "../../atoms/internal-link";
 import { Submenu } from "../submenu";
 
 import "./index.scss";
@@ -88,14 +88,14 @@ export const ReferenceMenu = ({ visibleSubMenuId, toggleMenu }) => {
         {menu.label}
       </button>
 
-      <Link
+      <InternalLink
         to={`/${locale}/docs/Web`}
         className="top-level-entry"
         // @ts-ignore
         onClick={() => document?.activeElement?.blur()}
       >
         {menu.label}
-      </Link>
+      </InternalLink>
 
       <Submenu menuEntry={menu} defaultHidden={!isOpen} />
     </li>
