@@ -99,6 +99,13 @@
   writing-mode: vertical-rl;
   transform: rotate(180deg);
   white-space: nowrap;
+  left: calc(50% - 0.5rem);
+  position: relative;
+  padding-top: 0.5rem;
+}
+
+.bc-head-icon-symbol {
+  margin-bottom: 0.3rem;
 }
 
 .bc-support {
