@@ -163,7 +163,7 @@
     "prettier-plugin-packagejson": "^2.2.17",
     "react": "17.0.2",
     "react-dom": "17.0.2",
-    "react-is": "^17.0.2",
+    "react-is": "^18.0.0",
     "react-refresh": "0.12",
     "react-router": "6.2.2",
     "react-router-dom": "6.0.0-beta.2",
