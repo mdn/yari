@@ -77,7 +77,7 @@ function processPR(pr: PullRequest) {
     file.path.endsWith("index.md")
   );
 
-  if (!force && markdownFiles.length > 5) {
+  if (!force && markdownFiles.length >= 6) {
     // If a merged PR modifies six or more Markdown files,
     // then no notifications should be issued for that PR
     // (to avoid issuing notifications for bulk edits).
