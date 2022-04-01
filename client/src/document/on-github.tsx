@@ -132,7 +132,7 @@ function NewIssueOnGitHubLink({ doc }: { doc: Doc }) {
   return (
     <a
       href={url.href}
-      title="This will take you to https://github.com/mdn/content to file a new issue"
+      title="This will take you to GitHub to file a new issue"
       target="_blank"
       rel="noopener noreferrer"
     >
