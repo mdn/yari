@@ -87,7 +87,14 @@ MDN URL: https://developer.mozilla.org$PATHNAME
   `.trim();
 
 function NewIssueOnGitHubLink({ doc }: { doc: Doc }) {
-  let baseURL = "https://github.com/mdn/content/issues/new";
+  const { locale } = doc;
+  const url = new URL("");
+
+  if (locale !== "en-US") {
+    url.href = "https://github.com/mdn/translated-content/issues/new";
+  } else {
+    url.href = "https://github.com/mdn/content/issues/new";
+  }
   const sp = new URLSearchParams();
 
   const { folder, github_url, last_commit_url } = doc.source;
@@ -108,17 +115,11 @@ function NewIssueOnGitHubLink({ doc }: { doc: Doc }) {
       : doc.title;
   sp.set("title", `Issue with "${titleShort}": (short summary here please)`);
 
-  const { locale } = doc;
-
-  if (locale !== "en-US") {
-    baseURL = "https://github.com/mdn/translated-content/issues/new";
-  }
-
-  const href = `${baseURL}?${sp.toString()}`;
+  url.search = sp.toString();
 
   return (
     <a
-      href={href}
+      href={url.href}
       title="This will take you to https://github.com/mdn/content to file a new issue"
       target="_blank"
       rel="noopener noreferrer"
