@@ -86,35 +86,6 @@ MDN URL: https://developer.mozilla.org$PATHNAME
 </details>
   `.trim();
 
-// These are the hardcoded prefixes that get their own new-issue label in
-// in GitHub. The prefix is matched all in lower-case but the label itself
-// can have case.
-// The labels do not not needs to exist in advance on the GitHub repo.
-// If not matched to any of these labels, it will default to "Other" as the label.
-const CONTENT_LABELS_PREFIXES = [
-  ["web/javascript", "JS"],
-  ["web/css", "CSS"],
-  ["web/html", "HTML"],
-  ["web/api", "WebAPI"],
-  ["web/http", "HTTP"],
-  ["web/svg", "SVG"],
-  ["web/media", "Media"],
-  ["web/mathml", "MathML"],
-  ["webassembly", "wasm"],
-  ["mozilla/add-ons/webextensions", "WebExt"],
-  ["web/accessibility", "Accessibility"],
-  ["learn", "Learn"],
-  ["tools", "DevTools"],
-];
-
-// For all locales that as spelled differently as a issue label, map the locale
-// to the proper label name. For locales not mentioned here, we keep the locale
-// as is.
-const LOCALE_LABEL_ALIASES = new Map([
-  ["zh-cn", "zh"],
-  ["zh-tw", "zh"],
-]);
-
 function NewIssueOnGitHubLink({ doc }: { doc: Doc }) {
   let baseURL = "https://github.com/mdn/content/issues/new";
   const sp = new URLSearchParams();
@@ -137,31 +108,11 @@ function NewIssueOnGitHubLink({ doc }: { doc: Doc }) {
       : doc.title;
   sp.set("title", `Issue with "${titleShort}": (short summary here please)`);
 
-  const slug = doc.mdn_url.split("/docs/")[1].toLowerCase();
   const { locale } = doc;
 
-  const labels = ["needs-triage"];
-  let contentLabel = "";
-  for (const [prefix, label] of CONTENT_LABELS_PREFIXES) {
-    if (slug.startsWith(prefix)) {
-      contentLabel = label;
-      break;
-    }
-  }
-  if (!contentLabel) {
-    contentLabel = "Other";
-  }
-  if (locale === "en-US") {
-    labels.push(`Content:${contentLabel}`);
-  } else {
+  if (locale !== "en-US") {
     baseURL = "https://github.com/mdn/translated-content/issues/new";
-    const localeLabel =
-      LOCALE_LABEL_ALIASES.get(locale.toLowerCase()) || locale.toLowerCase();
-    labels.push(`l10n-${localeLabel}`);
-    // Maybe a l10n-unsupported label would be useful to add?
   }
-
-  sp.set("labels", labels.join(","));
 
   const href = `${baseURL}?${sp.toString()}`;
 
