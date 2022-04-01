@@ -1,0 +1,14 @@
+{
+  "compilerOptions": {
+    "module": "ES2022",
+    "target": "ES2021",
+    "lib": ["es2021", "webworker"],
+    "jsx": "react",
+    "noImplicitAny": false,
+    "sourceMap": true,
+    "preserveConstEnums": true,
+    "outDir": "../public",
+    "moduleResolution": "node"
+  },
+  "include": ["src/*.ts", "src/**/*.ts", "src/*.tsx", "src/**/*.tsx"]
+}

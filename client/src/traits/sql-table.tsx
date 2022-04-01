@@ -121,7 +121,7 @@ export function SQLTable({ documents }: { documents: Document[] }) {
           ].slice(0, 50)
         );
         setQueryError(null);
-      } catch (error) {
+      } catch (error: any) {
         setQueryError(error);
       }
     } else {
@@ -138,7 +138,7 @@ export function SQLTable({ documents }: { documents: Document[] }) {
         const parsed = alasql.parse(queryDraftDebounced);
         setParsedStatement(parsed.statements[0]);
         setSQLParserError(null);
-      } catch (err) {
+      } catch (err: any) {
         setSQLParserError(err);
       }
     }

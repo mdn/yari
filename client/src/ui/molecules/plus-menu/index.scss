@@ -1,0 +1,14 @@
+@use "sass:color";
+@use "../../vars" as *;
+
+.mdn-plus {
+  .submenu-icon {
+    background-color: var(--plus-accent-color);
+  }
+
+  @media screen and (min-width: $screen-md) {
+    .mobile-only {
+      display: none;
+    }
+  }
+}

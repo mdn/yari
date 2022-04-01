@@ -17,6 +17,13 @@
 
     <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
 
+    <link
+      rel="search"
+      type="application/opensearchdescription+xml"
+      href="/opensearch.xml"
+      title="MDN Web Docs"
+    />
+
     <script>
       // Only include the polyfill for browsers that seem to not have
       // certain JS features. E.g. Firefox 58.
@@ -69,7 +76,7 @@
       .document-toc-container,
       .on-github,
       nav.sidebar,
-      .page-header-main,
+      .top-navigation-main,
       .page-footer,
       ul.prev-next,
       .language-menu {
@@ -85,6 +92,15 @@
     </style>
   </head>
   <body>
+    <script>
+      const c = { light: "#ffffff", dark: "#15141a" };
+      if (window && document.body) {
+        const o = window.localStorage.getItem("theme");
+        o &&
+          ((document.body.className = o),
+          (document.body.style.backgroundColor = c[o]));
+      }
+    </script>
     <div id="root"></div>
   </body>
 </html>

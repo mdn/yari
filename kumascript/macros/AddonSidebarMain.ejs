@@ -47,15 +47,24 @@ var text = mdn.localStringMap({
     'Forums': 'Add-ons论坛',
     'Chat': 'Add-ons chat',
     'Contact_us': '联系我们'
+  },
+  'es': {
+    'WebExtensions': 'Extensiones de navegador',
+    'Themes': 'Temas',
+    'Community_and_Support': 'Comunidad y soporte',
+    'Channels': 'Canales de discusión',
+    'Blog': 'Blog de complementos',
+    'Forums': 'Foro de complementos',
+    '#Contact_us': 'Contáctenos'
   }
 });
 
 %>
 
-<section class="Quick_links" id="Quick_Links">
+<section id="Quick_links">
   <ol>
     <li><a href="<%=baseURL%>WebExtensions"><strong><%=text['WebExtensions']%></strong></a></li>
-    <li><a href="<%=baseURL%>Themes"><strong><%=text['Themes']%></strong></a></li>
+    <li><a href="https://extensionworkshop.com/documentation/themes/"><strong><%=text['Themes']%></strong></a></li>
     <li><a href="https://discourse.mozilla.org/c/add-ons"><strong><%=text['Community_and_Support']%></strong></a></li>
     <li class="toggle">
       <details>

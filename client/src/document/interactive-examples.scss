@@ -1,13 +1,75 @@
-@import "~@mdn/minimalist/sass/vars/color-palette";
-@import "~@mdn/minimalist/sass/vars/layout";
+@use "../ui/vars" as *;
 
 .interactive {
-  background-color: $neutral-550;
-  border: 1px solid #eaf2f4;
-  color: $text-color;
-  padding: 10px;
+  background-color: var(--background-secondary);
+  border: 1px solid var(--border-primary);
+  border-radius: var(--elem-radius);
+  color: var(--text-primary);
+  padding: 0;
   width: 100%;
-  // Note! The height is set as a regular pixel height number
-  // on the <iframe> itself and that's done in the EmbedInteractiveExample.ejs
-  // macro.
+
+  // Since heights are now responsive, these classes are added
+  // in the EmbedInteractiveExample.ejs macro.
+  height: 675px;
+
+  &.is-js-height,
+  &.is-taller-height,
+  &.is-shorter-height {
+    border: 0 none;
+  }
+
+  &.is-js-height {
+    height: 513px;
+  }
+  &.is-shorter-height {
+    height: 433px;
+  }
+  &.is-taller-height {
+    height: 725px;
+  }
+  &.is-tabbed-shorter-height {
+    height: 487px;
+  }
+  &.is-tabbed-standard-height {
+    height: 548px;
+  }
+  &.is-tabbed-taller-height {
+    height: 774px;
+  }
+}
+
+// The layout switches at 590px in the `mdn/bob` app.
+// In order to respect the height shifts without using
+// JS, a complicated media query is needed. This is
+// fragile, as if the margins or anything changes
+// on the main layout, this will need to be adjusted.
+
+// This spans from the time the iframe is 590px
+// wide in the mobile layout to the time it switches
+// to two columns. Then, from the time the iframe
+// is 590px wide in the two-column layout on up.
+@media screen and (min-width: 688px) and (max-width: $screen-md - 1),
+  screen and (min-width: 1008px) {
+  .interactive {
+    height: 375px;
+
+    &.is-js-height {
+      height: 444px;
+    }
+    &.is-shorter-height {
+      height: 364px;
+    }
+    &.is-taller-height {
+      height: 654px;
+    }
+    &.is-tabbed-shorter-height {
+      height: 351px;
+    }
+    &.is-tabbed-standard-height {
+      height: 421px;
+    }
+    &.is-tabbed-taller-height {
+      height: 631px;
+    }
+  }
 }

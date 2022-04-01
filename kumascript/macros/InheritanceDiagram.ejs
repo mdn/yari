@@ -1,132 +1,135 @@
-<% 
+<%
 /*
-  Draws an responsive SVG diagram for the inheritance chain (inverted in rtl)
+  Draws an SVG diagram to display an interface's inheritance chain
 
-  $0 - width - defaults to 600
-  $1 - height  - defaults to 70
-  $2 - offset - defaults to 50
-  $3 - Interface name
+  $0 - Interface name (defaults to the interface page the macro is called on)
+
+  Test pages
+
+    - http://localhost:3000/en-US/docs/Web/API/SVGTextPositioningElement
+    - http://localhost:3000/en-US/docs/Web/API/WheelEvent
+    - http://localhost:3000/en-US/docs/Web/API/USB/connect_event
+    - http://localhost:3000/en-US/docs/Web/API/SVGTSpanElement
 */
 
-var data = JSON.parse(await template("InterfaceData"));
-var slug = env.slug;
-var result = "";
-// slug is not available in preview mode.
-if (slug) {
-var locale = env.locale;
-var href = 'https://developer.mozilla.org/' + locale + '/docs/Web/API/';
-var mainIF = $3 || slug.replace('Web/API/','').split('/')[0];
-var rtlLocales = ['ar', 'he', 'fa'];
-var inheritanceChain = [mainIF];
-var inh = data[0][mainIF] != undefined ? data[0][mainIF].inh : '';
-var width = $0 || 600;
-var height = $1 || 70;
-var offset = $2 || 50;
-var rtl = false;
-if (rtlLocales.indexOf(locale) != -1) {
-    rtl = true;
-}
+const data = web.getJSONData("InterfaceData")[0];
+const href = `/${env.locale}/docs/Web/API/`;
+const mainInterfaceName = $0 || env.slug.replace('Web/API/','').split('/')[0];
+
+let height = 40;
+let xpos = 0;
+let ypos = 0;
+let left = 0;
+let right = 0;
+
+let inheritanceChain = [mainInterfaceName];
+let inh = data[mainInterfaceName] != undefined ? data[mainInterfaceName].inh : '';
 
 function getInheritance(inh) {
-  if (inh.length > 0) {
+  if (inh !== '') {
     inheritanceChain.unshift(inh);
-    if (Object.prototype.hasOwnProperty.call(data[0], inh)) {
-        var inh = data[0][inh].inh;
+    if (data[inh]) {
+        inh = data[inh].inh;
         getInheritance(inh);
     }
   }
 }
 getInheritance(inh);
 
-var l = 0;
-
-function rectWithText(x, y, fill, interface, reverse) {
-  var flip = rtl ? 'transform="scale(-1 1)"' : '';
-  var inv = rtl ? '-' : '';
-  l = interface.length * 10 < 75 ? 75 : interface.length * 10;
-  if (reverse) {
-    xpos -= l;
-    x = xpos;
-  }
-  if (!reverse) {
-    xpos += l;
-  }
-  return '<a xlink:href="' + href + interface + '" target="_top">' +
-           '<rect x="'+x+'" y="'+y+'" width="'+l+'" height="50" fill="'+fill+'" stroke="#D4DDE4" stroke-width="2px" />' +
-           '<text '+flip+' x="'+inv+(x+l/2)+'" y="'+(y+29)+'" font-size="12px" font-family="Consolas,Monaco,Andale Mono,monospace"' +
-           ' fill="#4D4E53" text-anchor="middle" alignment-baseline="middle">'+interface+'</text>' +
-         '</a>';
+function rectWithText(x, y, fill, interfaceName, reverse) {
+  const rectWidth = calculateRectWidth(interfaceName);
+  if (reverse) x -= rectWidth;
+  return `
+  <a style="text-decoration: none;" xlink:href="${href+interfaceName}">
+    <rect x="${x}" y="${y}" width="${rectWidth}" height="25" fill="${fill}" stroke="#D4DDE4" stroke-width="2px" />
+    <text x="${x+rectWidth/2}" y="${y+16}" font-size="10px" fill="#4D4E53" text-anchor="middle">
+      ${interfaceName}
+    </text>
+  </a>`;
 }
 
 function lineWithTriangle(x, y, reverse) {
-  var str = '';
-  if (reverse) {
-    str += '<polyline points="'+x+','+(y+24)+'  '+(x-10)+','+(y+19)+'  '+(x-10)+','+(y+29)+'  '+x+','+(y+24)+'" stroke="#D4DDE4" fill="none"/>';
-    x -= 10; 
-    str += '<line x1="'+x+'" y1="'+(y+24)+'" x2="'+(x-30)+'" y2="'+(y+24)+'" stroke="#D4DDE4"/>';
-  } else {
-    str += '<polyline points="'+x+','+(y+24)+'  '+(x+10)+','+(y+19)+'  '+(x+10)+','+(y+29)+'  '+x+','+(y+24)+'" stroke="#D4DDE4" fill="none"/>';
-    x += 10;
-    str += '<line x1="'+x+'" y1="'+(y+24)+'" x2="'+(x+30)+'" y2="'+(y+24)+'" stroke="#D4DDE4"/>';
+  const length = reverse ? -30 : 30;
+  return `
+  <line x1="${x}" y1="${y}" x2="${x+length}" y2="${y}" stroke="#D4DDE4""/>
+  ${triangle(x, y, reverse)}`;
+}
+
+function connectingLineWithTriangle(x, y, reverse) {
+  const width = reverse ? -17 : 17;
+  return `
+  <polyline points="${x},${y} ${x+width},${y} ${x+width},${y+45} ${x},${y+45}" stroke="#D4DDE4" fill="none"/>
+  ${triangle(x, y, reverse)}`;
+}
+
+function triangle(x, y, reverse) {
+  const width = reverse ? -10 : 10;
+  return `<polyline points="${x},${y} ${x+width},${y-5} ${x+width},${y+5} ${x},${y}" stroke="#D4DDE4" fill="#fff"/>`;
+}
+
+function calculateRectWidth(text) {
+  return text.length * 8 < 75 ? 75 : text.length * 8;
+}
+
+function moveBy(number, delta, reverse) {
+  return number + (reverse ? -delta : delta);
+}
+
+function includeInRange(number, start, end) {
+  return [
+    Math.min(start, number),
+    Math.max(end, number)
+  ];
+}
+
+function drawDiagram(inheritanceChain) {
+  let str = '';
+  let reverse = false;
+
+  for (let i = 0; i < inheritanceChain.length; i++) {
+    const fill = (inheritanceChain[i] == mainInterfaceName) ? '#F4F7F8': '#fff';
+    const rectWidth = calculateRectWidth(inheritanceChain[i]);
+    // Minumum space required to continue the current row
+    let reqSpace = rectWidth;
+    if (i > 0) reqSpace += 30;
+    // If the rect from the next iteration won't fit in the row, we need to be
+    // sure that at least the connectingLineWithTriangle will fit
+    if (i < inheritanceChain.length - 1) reqSpace += 17;
+    const reqBounds = includeInRange(
+      moveBy(xpos, reqSpace, reverse), left, right
+    );
+    // Will the current drawing items fit inside the viewbox? Subtract the
+    // stroke width from the viewbox width to prevent stroke cut off.
+    const canContinueRow = reqBounds[1] - reqBounds[0] <= 650 - 2;
+
+    if (i > 0) {
+      if (canContinueRow) {
+        str += lineWithTriangle(xpos, ypos + 14, reverse);
+        xpos = moveBy(xpos, 30, reverse);
+      } else {
+        str += connectingLineWithTriangle(xpos, ypos + 14, reverse);
+        [left, right] = includeInRange(moveBy(xpos, 17, reverse), left, right);
+        ypos += 46;
+        height += 46;
+        reverse = !reverse;
+      }
+    }
+
+    str += rectWithText(xpos, ypos, fill, inheritanceChain[i], reverse);
+    xpos = moveBy(xpos, rectWidth, reverse);
+    [left, right] = includeInRange(xpos, left, right);
   }
   return str;
 }
 
-var padding = (height / width) * 100;
-var xpos = 1;
-var ypos = 1;
-var viewbox = 'viewbox="-'+ offset + ' 0 '+ width + ' ' + height +'"';
+let output = '';
 
-if (rtl) {
-  viewbox = 'viewbox="510 0 '+ width + ' ' + height +'" transform="scale(-1 1)"';
-}
-result = '<div id="interfaceDiagram" style="display: inline-block; position: relative; width: 100%; padding-bottom: '+ padding +'%; vertical-align: middle; overflow: hidden;">' +
-             '<svg style="display: inline-block; position: absolute; top: 0; left: 0;" '+ viewbox +' preserveAspectRatio="xMinYMin meet">';
-
-for (var i = 0; i < inheritanceChain.length; i++) {
-  var fill = (inheritanceChain[i] == mainIF) ? '#F4F7F8': '#fff';
-  // we are going to the second row with a special line
-  if (i == 4) {
-    result += '<polyline points="'+xpos+','+(ypos+24)+'  '+(xpos+10)+','+(ypos+19)+'  '+(xpos+10)+','+(ypos+29)+'  '+xpos+','+(ypos+24)+'" stroke="#D4DDE4" fill="none"/>'
-    xpos += 10;
-    result += '<line x1="'+xpos+'" y1="'+(ypos+24)+'" x2="'+(xpos+8)+'" y2="'+(ypos+24)+'" stroke="#D4DDE4"/>';
-    xpos += 8;
-    result += '<line x1="'+xpos+'" y1="'+(ypos+24)+'" x2="'+xpos+'" y2="'+(ypos+89)+'" stroke="#D4DDE4"/>';
-    ypos = 90;
-    result += '<line x1="'+xpos+'" y1="'+ypos+'" x2="'+(xpos-17)+'" y2="'+ypos+'" stroke="#D4DDE4"/>';
-    xpos -= 18;
-    ypos = 65;
-  }
-  // first row
-  if (i < 4) {
-    result += rectWithText(xpos, ypos, fill, inheritanceChain[i]);
-    if (i != inheritanceChain.length - 1 && i != 3) {
-      result += lineWithTriangle(xpos, ypos);
-      xpos += 40;
-    }
-  } else {
-    // second row
-    result += rectWithText(xpos, ypos, fill, inheritanceChain[i], true);
-    if (i != inheritanceChain.length - 1 && i != 3) {
-      result += lineWithTriangle(xpos, ypos, true);
-      xpos -= 40;
-    }
-  }
+if (inheritanceChain.length > 1) {
+  let diagram = drawDiagram(inheritanceChain); // needs to run first to calculate left and height
+  output = `<svg viewbox="${left-1} -1 650 ${height+2}" preserveAspectRatio="xMinYMin meet">`;
+  output += diagram;
+  output +='</svg>';
 }
 
-result +='</svg></div>';
-}
 %>
-<div class="hidden" id="inheritance_diagram">
-
-<pre class="brush: html">
-  <%=result%>
-</pre>
-
-<pre class="brush: css">
-  a:hover text { fill: #0095DD; pointer-events: all;}
-</pre>
-
-</div>
-
-<%-await template("EmbedLiveSample", ["inheritance_diagram", width, height, '', '', 'inheritance-diagram-frame'])%>
+<%-output%>

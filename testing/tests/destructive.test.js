@@ -15,8 +15,8 @@ const { execSync } = require("child_process");
 
 const tempy = require("tempy");
 
-const CONTENT_DIR = path.resolve(path.join("content"));
-const BUILD_DIR = path.resolve(path.join("..", "client", "build"));
+const CONTENT_DIR = path.resolve(path.join("testing", "content"));
+const BUILD_DIR = path.resolve(path.join("client", "build"));
 
 function* walker(root) {
   const files = fs.readdirSync(root);
@@ -34,7 +34,7 @@ function* walker(root) {
 
 describe("fixing flaws", () => {
   const pattern = path.join("web", "fixable_flaws");
-  const baseDir = path.resolve("..");
+  const baseDir = path.resolve(".");
 
   let tempdir;
   let tempBuildDir;

@@ -45,3 +45,28 @@ export function listFeatures(
   }
   return features;
 }
+
+export function versionIsPreview(
+  version: bcd.VersionValue | string | undefined,
+  browser: bcd.BrowserStatement
+): boolean {
+  if (version === "preview") {
+    return true;
+  }
+
+  if (browser && typeof version === "string" && browser.releases[version]) {
+    return ["beta", "nightly", "planned"].includes(
+      browser.releases[version].status
+    );
+  }
+
+  return false;
+}
+
+export function hasNoteworthyNotes(support: bcd.SimpleSupportStatement) {
+  return (
+    support.notes?.length &&
+    !support.version_removed &&
+    !support.partial_implementation
+  );
+}

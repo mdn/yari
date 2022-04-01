@@ -799,6 +799,17 @@ const SCL3_REDIRECT_PATTERNS = [
   redirect(/^es4.*/i, "http://www.ecma-international.org/memento/TC39.htm", {
     permanent: false,
   }),
+  // Redirect for URL baked into Firefox releases.
+  // https://github.com/mdn/content/issues/9734
+  redirect(
+    /^en\/Optimizing_Your_Pages_for_Speculative_Parsing\/?$/i,
+    "/en-US/docs/Glossary/speculative_parsing",
+    { permanent: true }
+  ),
+  // Redirect for URL in Contribute video
+  redirect(/^MDN\/Contribute\/?$/i, "/en-US/docs/MDN/Contribute", {
+    permanent: true,
+  }),
 ];
 
 const zoneRedirects = [
@@ -1173,16 +1184,26 @@ for (const [pattern, path] of [
 }
 
 const MISC_REDIRECT_PATTERNS = [
-  localeRedirect(/^account\/?$/i, "/settings", {
+  redirect(/^events\/?$/i, "https://community.mozilla.org/events/", {
     permanent: false,
   }),
-  localeRedirect(
-    /^profile(?:|\/stripe_subscription|\/edit)\/?$/i,
-    "/settings",
+  localeRedirect(/^events\/?$/i, "https://community.mozilla.org/events/", {
+    prependLocale: false,
+    permanent: false,
+  }),
+  redirect(
+    /^communities\/mozilla-tech-speakers\/?$/i,
+    "https://community.mozilla.org/en/groups/tech-speakers/",
     {
       permanent: false,
     }
   ),
+  localeRedirect(/^account\/?$/i, "/settings", {
+    permanent: false,
+  }),
+  localeRedirect(/^profile(?:|\/edit)\/?$/i, "/settings", {
+    permanent: false,
+  }),
   localeRedirect(
     /^profiles\/(?:[^\/]+)(?:|\/edit|\/delete)\/?$/i,
     "/settings",

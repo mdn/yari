@@ -76,10 +76,10 @@ Now, go to `~/content` and run:
     rm -fr node_modules
     yarn add ~/yari/mdn-yari-x.y.z.tgz
     yarn start
-    open http://localhost:5000
+    open http://localhost:5042
 
 Make sure you actually test it out fully. For example, just because
 `yarn start` starts the server OK, doesn't mean it can do all things
 it needs to do. The best place to start is to navigate into
-<http://localhost:5000> to an actual page which
+<http://localhost:5042> to an actual page which
 will need to built-on-the-fly.

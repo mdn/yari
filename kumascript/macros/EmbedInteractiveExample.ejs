@@ -9,27 +9,32 @@
 //
 
 const url = kuma.url.resolve(env.interactive_examples.base_url, $0);
-let height = 390;
+let heightClass = 'is-default-height';
 
 if ($0.includes('/js/')) {
-    height = 490;
+  heightClass = 'is-js-height';
 }
 
 if ($1) {
-    if ($1 === 'shorter') {
-        height = 410;
-    } else if ($1 === 'taller') {
-        height = 692;
-    } else if ($1 === 'tabbed-shorter') {
-        height = 375;
-    } else  if ($1 === 'tabbed-standard') {
-        height = 445;
-    } else if ($1 === 'tabbed-taller') {
-        height = 655;
-    } else {
-        throw new Error(`An unrecognized second size parameter to EmbedInteractiveExample ('${$1}')`);
-    }
+  let supportedHeights = ['shorter', 'taller', 'tabbed-shorter', 'tabbed-standard', 'tabbed-taller'];
+  let heightIsSupported = (supportedHeights.indexOf($1) > -1);
+
+  if (heightIsSupported) {
+    heightClass = 'is-' + $1 + '-height';
+  } else {
+    throw new Error(`An unrecognized second size parameter to EmbedInteractiveExample ('${$1}')`);
+  }
 }
 
+const text = mdn.localStringMap({
+  "en-US": {
+    "title": "Try it",
+  },
+  "fr": {
+    "title": "Exemple interactif",
+  }
+});
+
 %>
-<iframe class="interactive" width="100%" height="<%= height %>" src="<%= url %>" title="MDN Web Docs Interactive Example"></iframe>
+<h2><%=text["title"]%></h2>
+<iframe class="interactive <%= heightClass %>" height="200" src="<%= url %>" title="MDN Web Docs Interactive Example"></iframe>

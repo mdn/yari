@@ -1,0 +1,127 @@
+@use "../../ui/vars" as *;
+@use "../../ui/mixins" as *;
+
+.plus-header {
+  padding-top: 2rem;
+}
+
+.plus-header h1 {
+  margin-bottom: 1rem;
+  font: var(--type-title-l);
+}
+
+.notification-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.notification-card {
+  align-items: center;
+  border: 1px solid var(--border-secondary);
+  background-color: var(--background-primary);
+  display: flex;
+  justify-content: space-between;
+
+  & > div {
+    display: flex;
+    align-items: center;
+  }
+
+  .desktop-only {
+    display: hidden;
+  }
+
+  @media screen and (min-width: $screen-md) {
+    .desktop-only {
+      display: inherit;
+    }
+  }
+
+  padding: 0.5rem;
+  animation: fade-in 0.2s;
+  &.no-star {
+    grid-template-columns: 1fr auto;
+  }
+
+  .icon {
+    background-color: var(--icon-secondary);
+  }
+
+  & + & {
+    border-top: none;
+  }
+
+  &-description {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  &-title {
+    font: var(--type-emphasis-m);
+    margin: 0;
+    color: var(--text-primary);
+    word-wrap: anywhere;
+  }
+
+  &-text {
+    font: var(--type-body-m);
+    margin: 0;
+    color: var(--text-primary);
+  }
+
+  &-created {
+    color: var(--text-secondary);
+    font: var(--type-body-s);
+    text-align: right;
+
+    display: none;
+    @media screen and (min-width: $screen-md) {
+      display: inherit;
+    }
+  }
+
+  &:first-child {
+    margin-top: 1rem;
+    border-top-left-radius: var(--elem-radius);
+    border-top-right-radius: var(--elem-radius);
+  }
+
+  &:last-child {
+    border-bottom-left-radius: var(--elem-radius);
+    border-bottom-right-radius: var(--elem-radius);
+  }
+
+  &.unread {
+    background-color: var(--accent-tertiary);
+  }
+
+  @media screen and (min-width: $screen-md) {
+    &-description {
+      flex-direction: row;
+    }
+  }
+}
+
+.select-all-toolbar {
+  padding: 0.5rem;
+  display: flex;
+  background-color: var(--background-primary);
+  align-items: center;
+  border: 1px solid var(--border-primary);
+  border-radius: var(--elem-radius);
+  gap: 1rem;
+}
+
+.empty-card {
+  align-items: center;
+  background-color: var(--background-primary);
+  border: 1px solid var(--border-secondary);
+  margin-top: 0.5rem;
+  padding: 0.5rem;
+  p {
+    font: var(--type-article-p);
+    letter-spacing: 0.5px;
+    line-height: 1.5;
+  }
+}

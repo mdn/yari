@@ -17,6 +17,7 @@ from .constants import (
     DEFAULT_CACHE_CONTROL,
     HASHED_CACHE_CONTROL,
     LOG_EACH_SUCCESSFUL_UPLOAD,
+    MANUAL_PREFIXES,
     MAX_WORKERS_PARALLEL_UPLOADS,
 )
 from .utils import StopWatch, fmt_size, iterdir, log
@@ -177,6 +178,9 @@ class UploadFileTask(UploadTask):
 
     @property
     def content_type(self):
+        if self.file_path.name == "opensearch.xml":
+            return "application/opensearchdescription+xml"
+
         mime_type = (
             mimetypes.guess_type(str(self.file_path))[0] or "binary/octet-stream"
         )
@@ -318,7 +322,10 @@ class BucketManager:
             # its URL. Also, note that the content type is not determined by the
             # suffix of the S3 key, but is explicitly set from the full filepath
             # when uploading the file.
-            file_path = file_path.parent
+            # The only exception to this is the root level "index.html". We need that
+            # to cache it in our service worker.
+            if file_path.parent != build_directory:  # not the root level "index.html"
+                file_path = file_path.parent
         return f"{self.key_prefix}{str(file_path.relative_to(build_directory)).lower()}"
 
     def get_redirect_keys(self, from_url, to_url):
@@ -402,13 +409,6 @@ class BucketManager:
                 )
             done.add(key)
 
-        # Prepare a computation of what the root /index.html file would be
-        # called as a S3 key. Do this once so it becomes a quicker operation
-        # later when we compare *each* generated key to see if it matches this.
-        root_index_html_as_key = self.get_key(
-            build_directory, build_directory / "index.html"
-        )
-
         # Walk the build_directory and yield file upload tasks.
         for fp in iterdir(build_directory):
             # Exclude any files that aren't artifacts of the build.
@@ -420,16 +420,6 @@ class BucketManager:
             if key in done:
                 # This can happen since we might have explicitly processed this
                 # in the for-loop above. See comment at the beginning of this method.
-                continue
-
-            # The root index.html file is never useful. It's not the "home page"
-            # because the home page is actually `/$locale/` since `/` is handled
-            # specifically by the CDN.
-            # The client/build/index.html is actually just a template from
-            # create-react-app, used to server-side render all the other pages.
-            # But we don't want to upload it S3. So, delete it before doing the
-            # deployment step.
-            if root_index_html_as_key == key:
                 continue
 
             if for_counting_only:
@@ -572,14 +562,6 @@ class BucketManager:
         return timer
 
 
-def parse_archived_txt_file(file: Path):
-    with open(file) as f:
-        for line in f:
-            line = line.strip()
-            if line and not line.startswith("#"):
-                yield line
-
-
 def upload_content(build_directory, content_roots, config):
     full_timer = StopWatch().start()
 
@@ -590,7 +572,6 @@ def upload_content(build_directory, content_roots, config):
     show_progress_bar = not config["no_progressbar"]
     upload_redirects = not config["no_redirects"]
     prune = config["prune"]
-    archived_txt_file = config["archived_files"]
     default_cache_control = config["default_cache_control"]
 
     log.info(f"Upload files from: {build_directory}")
@@ -669,20 +650,18 @@ def upload_content(build_directory, content_roots, config):
         now = datetime.datetime.utcnow().replace(tzinfo=UTC)
         delete_keys = []
 
-        archived_files_as_keys = set()
-        if archived_txt_file:
-            for file in parse_archived_txt_file(archived_txt_file):
-                locale, slug = file.replace("/index.html", "").split("/", 1)
-                archived_files_as_keys.add(f"{bucket_prefix}/{locale}/docs/{slug}")
-            if not archived_files_as_keys:
-                raise Exception(f"found no entries inside {archived_txt_file}")
-
         for key in existing_bucket_objects:
-            if key.startswith(f"{bucket_prefix}/_whatsdeployed/"):
+            key_without_bucket_prefix = key.lstrip(f"{bucket_prefix}/")
+            if any(
+                map(
+                    lambda prefix: key_without_bucket_prefix.startswith(prefix),
+                    MANUAL_PREFIXES,
+                )
+            ):
                 # These are special and wouldn't have been uploaded
                 continue
 
-            if key.startswith(f"{bucket_prefix}/static/"):
+            if key_without_bucket_prefix.startswith("static/"):
                 # Careful with these!
                 # Static assets such as `main/static/js/8.0b83949c.chunk.js`
                 # are aggressively cached and they might still be referenced
@@ -703,35 +682,6 @@ def upload_content(build_directory, content_roots, config):
             # But every page usually has a `index.json` file, which might look
             # something like this: `main/en-us/docs/web/api/index.json` or
             # `main/en-us/docs/web/api/screenshot.png`
-
-            # This if statement protects against possible deleting anything that
-            # isn't a document.
-            if "/docs/" in key:
-                is_archived = False
-                # Trying to avoid having to do another for-loop with key.startswith()
-                # so first look for the low-hanging fruit.
-                if key in archived_files_as_keys:
-                    # This is the easiest and fastest lookup
-                    is_archived = True
-                elif (
-                    re.sub(r"/(index\.json|contributors\.txt|bcd\.json)$", "", key)
-                    in archived_files_as_keys
-                ):
-                    # This is easy and fast too and covers 99% of the other
-                    # possible keys.
-                    is_archived = True
-                else:
-                    # This is for things like:
-                    # `main/en-us/docs/web/api/screenshot.png` where you can't
-                    # confidently use `path.dirname()` because the key could
-                    # be something like `main/fr/docs/web/api/manifest.json` which
-                    # is actually a "folder".
-                    for archive_file_as_key in archived_files_as_keys:
-                        if key.startswith(archive_file_as_key):
-                            is_archived = True
-                            break
-                if is_archived:
-                    continue
 
             assert key.startswith(bucket_prefix)
 

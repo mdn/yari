@@ -1,6 +1,257 @@
-// We're assuming that code snippets are so common that it's OK to always
-// include them in every page.
-@import "./minimal-prism";
+@use "./ui/base/mdn";
+@use "./ui/base/typography";
+@use "./ui/base/reset";
+@use "./ui/base/themes";
+@use "./ui/base/prism";
 
-@import "~@mdn/minimalist/sass/mdn-minimalist";
-@import "./ui/molecules/grids/grids";
+// These classes are used across several components.
+@use "./ui/molecules/notecards";
+@use "./ui/molecules/pagination";
+@use "./ui/atoms/button";
+
+/*
+  Global :root variables, for those independent of themes
+*/
+:root {
+  /* Typography */
+  --font-fallback: BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu",
+    "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-sans;
+
+  --font-body: Inter, var(--font-fallback);
+  --font-heading: Inter, var(--font-fallback);
+  --font-code: Menlo, Consolas, Monaco, Liberation Mono, Lucida Console,
+    monospace;
+  --font-size: 16px;
+  --font-line-height: 1.2;
+  --font-body-strong-weight: 600;
+
+  // defined in Figma here: https://www.figma.com/file/cAd46zJb6H7mW7W14iLsDe/MDN-Basic-Components?node-id=299%3A311
+  --type-heading-l: 500 1rem/1.1875 var(--font-heading); /* 16px/19px, h5 */
+  --type-title-l: 400 1.5rem/1.2 var(--font-heading);
+  --type-title-s: var(--font-body-strong-weight) 0.8125rem/1.2 var(--font-body);
+  --type-body-l: 400 1rem/1.75 var(--font-body); /* 16px/28px */
+  --type-body-m: 400 0.8125rem/1.23 var(--font-body); /* 13px/16px */
+  --type-body-s: 500 0.6875rem/1.273 var(--font-body); /* 11px/14px */
+  --type-emphasis-l: var(--font-body-strong-weight) 1rem/1.1875 var(--font-body); /* 16px/19px */
+  --type-emphasis-m: var(--font-body-strong-weight) 0.8125rem/1.23
+    var(--font-body); /* 13px/16px */
+  --type-label-s: 600 0.625rem/1.2 var(--font-heading); /* 10px/12px */
+  --type-code-regular: 400 0.875rem/1.5 var(--font-code); /* 14px/21px */
+  --type-code-inline: 400 0.875em/1.5 var(--font-code); /* 14px/21px */
+
+  // From Figma, here: https://www.figma.com/file/7lbOm57iOjSVIGORzXqrlW/MDN-Articles?node-id=1%3A27
+  --type-heading-h1: 300 2.25rem/1.138 var(--font-heading); /* 36px/41px */
+  --type-heading-h2: 400 1.75rem/1.2857 var(--font-heading); /* 28px/36px */
+  --type-heading-h3: 500 1.5rem/1.2916 var(--font-heading); /* 24px/31px */
+  --type-heading-h4: 500 1.125rem/1.222 var(--font-heading); /* 18px/22px */
+  --type-heading-h5: var(--type-heading-l);
+  --type-heading-h6: 500 0.75rem/1.0833 var(--font-heading); /* 12px/13px */
+  --type-article-p: 400 1rem/2 var(--font-body); /* 16px/200% */
+
+  /* Grid and Layout */
+  --max-width: 1440px;
+  --gutter: 1rem; /* Space between content and browser window */
+
+  --z-index-back: -1;
+  --z-index-top: 9999;
+  --z-index-mid: 500;
+  --z-index-nav-menu: 200;
+  --z-index-search-results: 101;
+  --z-index-low: 100;
+  --z-index-search-results-home: 99;
+
+  /* Features */
+  --elem-radius: 0.25rem;
+  --focus-effect: 0 0 0 3px var(--accent-primary-engage);
+  --form-elem-height: 2rem;
+
+  /* Major Components */
+  --sticky-header-height: 0;
+  --top-nav-height: 4rem;
+  --icon-size: 1rem;
+}
+
+:target {
+  scroll-margin-top: var(--sticky-header-height);
+}
+
+body {
+  background-color: var(--background-primary);
+  color: var(--text-primary);
+  accent-color: var(--accent-primary); // for checkboxes, radios, etc.
+  scrollbar-color: var(--scrollbar-color) var(--scrollbar-bg);
+}
+
+:focus-visible {
+  outline-style: auto;
+  outline-color: var(--accent-primary);
+  outline-offset: 1px;
+}
+
+main {
+  min-height: 80vh;
+}
+
+.visually-hidden {
+  -webkit-clip-path: inset(50%) !important;
+  clip-path: inset(50%) !important;
+  border: 0 !important;
+  clip: rect(1px, 1px, 1px, 1px) !important;
+  height: 1px !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  padding: 0 !important;
+  position: absolute !important;
+  white-space: nowrap !important;
+  width: 1px !important;
+}
+
+.hidden {
+  display: none;
+}
+
+pre {
+  white-space: pre-wrap;
+  white-space: -moz-pre-wrap;
+  white-space: -pre-wrap;
+  white-space: -o-pre-wrap;
+  word-wrap: break-word;
+}
+
+a {
+  color: var(--text-link);
+
+  &.external:after {
+    display: inline-flex;
+    width: 10px;
+    height: 10px;
+    margin-left: 4px;
+    background-color: var(--icon-primary);
+    mask-image: url("./assets/icons/external.svg");
+    mask-size: cover;
+    content: "";
+  }
+}
+
+.expand-this-link:after {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  content: "";
+}
+
+[type="search"] {
+  /* clears the ‘X’ from Internet Explorer */
+  &::-ms-clear {
+    display: none;
+    width: 0;
+    height: 0;
+  }
+  &::-ms-reveal {
+    display: none;
+    width: 0;
+    height: 0;
+  }
+  /* clears the ‘X’ from Chrome */
+  &::-webkit-search-decoration,
+  &::-webkit-search-cancel-button,
+  &::-webkit-search-results-button,
+  &::-webkit-search-results-decoration {
+    display: none;
+  }
+}
+
+u {
+  text-decoration-thickness: 0.15rem;
+  text-underline-offset: 0.1em;
+  text-decoration-color: var(--text-link);
+}
+
+/* Scrollbar customizations */
+::-webkit-scrollbar-track {
+  -webkit-border-radius: 10px;
+  border-radius: 10px;
+}
+
+*::-webkit-scrollbar {
+  width: 12px;
+  height: 12px;
+  background-color: var(--scrollbar-bg, auto);
+}
+
+*::-webkit-scrollbar-thumb {
+  border-radius: 10px;
+  border: 2px solid var(--scrollbar-bg, auto);
+  background: var(--scrollbar-color);
+}
+
+*::-webkit-scrollbar-corner {
+  background-color: var(--scrollbar-bg, auto);
+}
+
+.plus .dark,
+.plus {
+  --text-link: var(--plus-accent-color);
+  --category-color: var(--plus-accent-color);
+  --category-color-background: var(--plus-accent-background-color);
+  --code-color: var(--plus-code-color);
+  --mark-color: var(--plus-mark-color);
+}
+
+.category-html {
+  --text-link: var(--html-accent-color);
+  --category-color: var(--html-accent-color);
+  --category-color-background: var(--html-accent-background-color);
+  --code-color: var(--html-code-color);
+  --mark-color: var(--html-mark-color);
+}
+
+.category-css {
+  --text-link: var(--css-accent-color);
+  --category-color: var(--css-accent-color);
+  --category-color-background: var(--css-accent-background-color);
+  --code-color: var(--css-code-color);
+  --mark-color: var(--css-mark-color);
+}
+
+.category-javascript {
+  --text-link: var(--js-accent-color);
+  --category-color: var(--js-accent-color);
+  --category-color-background: var(--js-accent-background-color);
+  --code-color: var(--js-code-color);
+  --mark-color: var(--js-mark-color);
+}
+
+.category-http {
+  --text-link: var(--http-accent-color);
+  --category-color: var(--http-accent-color);
+  --category-color-background: var(--http-accent-background-color);
+  --code-color: var(--http-code-color);
+  --mark-color: var(--http-mark-color);
+}
+
+.category-api {
+  --text-link: var(--apis-accent-color);
+  --category-color: var(--apis-accent-color);
+  --category-color-background: var(--apis-accent-background-color);
+  --code-color: var(--apis-code-color);
+  --mark-color: var(--apis-mark-color);
+}
+
+.category-learn {
+  --text-link: var(--learn-accent-color);
+  --category-color: var(--learn-accent-color);
+  --category-color-background: var(--learn-accent-background-color);
+  --code-color: var(--api-code-color);
+  --mark-color: var(--api-mark-color);
+}
+
+.mify {
+  @include mdn.mify;
+}
+
+._ify {
+  @include mdn.uify;
+}

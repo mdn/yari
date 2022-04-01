@@ -118,13 +118,16 @@ export type DocParent = {
 export type Toc = {
   id: string;
   text: string;
+  sub?: boolean;
 };
 
 export interface Doc {
   title: string;
   locale: string;
+  native: string;
   pageTitle: string;
   mdn_url: string;
+  related_content: any[];
   sidebarHTML: string;
   toc: Toc[];
   body: string;
@@ -135,7 +138,16 @@ export interface Doc {
   parents?: DocParent[];
   source: Source;
   contributors: string[];
-  isArchive: boolean;
   isTranslated: boolean;
   isActive: boolean;
+  hasMathML?: boolean;
+  isMarkdown: boolean;
 }
+
+export type FrequentlyViewedEntry = {
+  url: string;
+  title: string;
+  timestamp: number;
+  visitCount: number;
+  parents?: DocParent[];
+};

@@ -1,4 +1,4 @@
-import React, { useEffect, useReducer, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { annotate, annotationGroup } from "rough-notation";
 import { RoughAnnotation } from "rough-notation/lib/model";
@@ -120,9 +120,10 @@ export function ToggleDocumentFlaws({
 }) {
   const location = useLocation();
   const navigate = useNavigate();
-  const [show, toggle] = useReducer((v) => !v, location.hash === FLAWS_HASH);
   const rootElement = useRef<HTMLDivElement>(null);
   const isInitialRender = useRef(true);
+
+  const show = location.hash === FLAWS_HASH;
 
   useEffect(() => {
     if (isInitialRender.current && show && rootElement.current) {
@@ -131,14 +132,13 @@ export function ToggleDocumentFlaws({
     isInitialRender.current = false;
   }, [show]);
 
-  useEffect(() => {
-    const hasShowHash = window.location.hash === FLAWS_HASH;
-    if (show && !hasShowHash) {
-      navigate(location.pathname + location.search + FLAWS_HASH);
-    } else if (!show && hasShowHash) {
+  function toggle() {
+    if (show) {
       navigate(location.pathname + location.search);
+    } else {
+      navigate(location.pathname + location.search + FLAWS_HASH);
     }
-  }, [location, navigate, show]);
+  }
 
   const flawsCounts = Object.entries(doc.flaws)
     .map(([name, actualFlaws]) => ({
@@ -224,15 +224,27 @@ function Flaws({
   // the server in POSIX style and the `open-editor` program will make
   // this work for Windows automatically.
   const filePath = doc.source.folder + "/" + doc.source.filename;
+
   return (
     <div id="document-flaws">
-      {!!fixableFlaws.length && !isReadOnly && (
-        <FixableFlawsAction
-          count={fixableFlaws.length}
-          reloadPage={reloadPage}
-        />
-      )}
-
+      {!!fixableFlaws.length && !isReadOnly && fixableFlaws.length > 0 && (
+        <>
+          {doc.isMarkdown ? (
+            <small>
+              Automatic fixing fixable flaws not yet enabled for Markdown
+              documents. See{" "}
+              <a href="https://github.com/mdn/yari/issues/4333">
+                mdn/yari#4333
+              </a>
+            </small>
+          ) : (
+            <FixableFlawsAction
+              count={fixableFlaws.length}
+              reloadPage={reloadPage}
+            />
+          )}
+        </>
+      )}{" "}
       {flaws.map((flaw) => {
         switch (flaw.name) {
           case "broken_links":
@@ -351,7 +363,7 @@ function FixableFlawsAction({
         throw new Error(`${response.status} on ${response.url}`);
       }
       setFixed(true);
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error trying to fix fixable flaws");
 
       setFixingError(error);
@@ -360,9 +372,6 @@ function FixableFlawsAction({
     }
   }
 
-  if (!count) {
-    return null;
-  }
   return (
     <div>
       {fixingError && (

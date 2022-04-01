@@ -1,0 +1,107 @@
+@use "../../../ui/vars" as *;
+
+$text-stroke-width: 2px;
+
+.offer-hero {
+  background-color: var(--background-primary);
+  color: var(--text-primary);
+  width: 100%;
+  display: grid;
+  grid-template-rows: fit-content(24rem);
+
+  .offer-hero-header {
+    grid-column: 1;
+    grid-row: 1;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding: 1rem 1rem;
+    max-width: 52rem;
+    width: initial;
+
+    color: var(--text-secondary);
+    margin: 0 auto;
+    -moz-transition: all 0.3s ease-in-out;
+    transition: all 0.3s ease-in-out;
+
+    .offer-hero-wrapper {
+      z-index: 1;
+      align-self: start;
+
+      h1 {
+        font-size: 3rem;
+        margin-top: 1rem;
+
+        span {
+          display: block;
+        }
+
+        span:first-child {
+          margin-bottom: 0.5rem;
+        }
+      }
+
+      h2 {
+        width: 100%;
+        font: var(--type-heading-h4);
+      }
+
+      .button-wrapper {
+        display: flex;
+        width: 100%;
+        gap: 1rem;
+
+        a {
+          padding: 0.5rem;
+          font-size: 14px;
+          border-radius: var(--elem-radius);
+          line-height: 175%;
+          width: 140px;
+          text-align: center;
+          font-weight: 600;
+          z-index: 1;
+          position: relative;
+          -moz-transition: all 0.2s ease;
+          transition: all 0.2s ease;
+          width: 100%;
+        }
+
+        .button-primary {
+          background-color: var(--text-primary);
+          color: var(--text-invert);
+
+          &:hover {
+            background-color: var(--text-secondary);
+          }
+        }
+
+        .button-secondary {
+          border: 2px solid var(--button-secondary-border-red);
+          color: white;
+          background: #15141a1a;
+        }
+
+        .button-secondary:hover {
+          border: 2px solid var(--button-secondary-border-red-focus);
+        }
+      }
+    }
+  }
+  .mandala-wrapper {
+    grid-column: 1;
+    grid-row: 1;
+    width: 100%;
+    top: 0;
+    overflow: hidden;
+    --mandala-primary: var(--border-primary);
+    -moz-transition: all 1s ease-in-out;
+    transition: all 1s ease-in-out;
+
+    .mandala-translate {
+      transform: translate(10rem, -8rem) scale(1.2);
+      @media screen and (min-width: $screen-sm) {
+        transform: translate(12rem, -8rem);
+      }
+    }
+  }
+}

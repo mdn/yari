@@ -19,7 +19,9 @@ const groupDataFixturePath = path.resolve(
   __dirname,
   "fixtures/listgroups/groupdata.json"
 );
-const groupDataFixture = fs.readFileSync(groupDataFixturePath, "utf8");
+const groupDataFixture = JSON.parse(
+  fs.readFileSync(groupDataFixturePath, "utf8")
+);
 
 /**
  * Used to mock wiki.getPage()
@@ -109,12 +111,13 @@ describeMacro("ListGroups", () => {
       return overviewPages[name];
     });
     // Mock calls to GroupData
-    const originalTemplate = macro.ctx.template;
-    macro.ctx.template = jest.fn(async (name, ...args) => {
+    const originalgetJSONData = macro.ctx.web.getJSONData;
+    macro.ctx.web.getJSONData = jest.fn((name) => {
       if (name === "GroupData") {
         return groupDataFixture;
+      } else {
+        return originalgetJSONData(name);
       }
-      return await originalTemplate(name, ...args);
     });
   });
 

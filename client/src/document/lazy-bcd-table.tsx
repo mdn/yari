@@ -12,9 +12,13 @@ import { Loading } from "../ui/atoms/loading";
 // the JS (and the JSON XHR fetch of course)
 import "./ingredients/browser-compatibility-table/index.scss";
 import { useLocale } from "../hooks";
+import NoteCard from "../ui/molecules/notecards";
 
 const BrowserCompatibilityTable = lazy(
-  () => import("./ingredients/browser-compatibility-table")
+  () =>
+    import(
+      /* webpackChunkName: "browser-compatibility-table" */ "./ingredients/browser-compatibility-table"
+    )
 );
 
 const isServer = typeof window === "undefined";
@@ -39,7 +43,7 @@ export function LazyBrowserCompatibilityTable({
       {dataURL ? (
         <LazyBrowserCompatibilityTableInner dataURL={dataURL} />
       ) : (
-        <div className="notecard warning">
+        <NoteCard type="warning">
           <p>
             No compatibility data found for <code>{query}</code>.<br />
             <a href="#on-github">Check for problems with this page</a> or
@@ -49,7 +53,7 @@ export function LazyBrowserCompatibilityTable({
             </a>
             .
           </p>
-        </div>
+        </NoteCard>
       )}
     </>
   );
@@ -86,8 +90,72 @@ function LazyBrowserCompatibilityTableInner({ dataURL }: { dataURL: string }) {
   }
 
   return (
-    <Suspense fallback={<Loading message="Loading BCD table" />}>
-      <BrowserCompatibilityTable locale={locale} {...data} />
-    </Suspense>
+    <ErrorBoundary>
+      <Suspense fallback={<Loading message="Loading BCD table" />}>
+        <BrowserCompatibilityTable locale={locale} {...data} />
+      </Suspense>
+    </ErrorBoundary>
   );
+}
+
+type ErrorBoundaryProps = {};
+type ErrorBoundaryState = {
+  error: Error | null;
+};
+
+class ErrorBoundary extends React.Component<
+  ErrorBoundaryProps,
+  ErrorBoundaryState
+> {
+  constructor(props: ErrorBoundaryProps) {
+    super(props);
+    this.state = { error: null };
+  }
+
+  static getDerivedStateFromError(error: Error) {
+    return { error };
+  }
+
+  // componentDidCatch(error: Error, errorInfo) {
+  //   console.log({ error, errorInfo });
+  // }
+
+  render() {
+    if (this.state.error) {
+      return (
+        <NoteCard type="negative">
+          <p>
+            <strong>Error loading browser compatibility table</strong>
+          </p>
+          <p>
+            This can happen if the JavaScript, which is loaded later, didn't
+            successfully load.
+          </p>
+          <p>
+            <a
+              href="."
+              className="button"
+              style={{ color: "white", textDecoration: "none" }}
+              onClick={(event) => {
+                event.preventDefault();
+                window.location.reload();
+              }}
+            >
+              Try reloading the page
+            </a>
+          </p>
+          <hr style={{ margin: 20 }} />
+          <p>
+            <small>If you're curious, this was the error:</small>
+            <br />
+            <small style={{ fontFamily: "monospace" }}>
+              {this.state.error.toString()}
+            </small>
+          </p>
+        </NoteCard>
+      );
+    }
+
+    return this.props.children;
+  }
 }

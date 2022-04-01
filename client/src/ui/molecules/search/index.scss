@@ -1,66 +1,126 @@
-@use "sass:math";
-
-@import "~@mdn/minimalist/sass/vars/color-palette";
-@import "~@mdn/minimalist/sass/vars/layout";
-@import "~@mdn/minimalist/sass/vars/typography";
-@import "~@mdn/minimalist/sass/mixins/utils";
+@use "sass:color";
+@use "../../vars" as *;
 
 .header-search {
-  background-color: $neutral-600;
-
-  @media #{$mq-tablet-and-up} {
-    height: 40px;
-    min-width: 80px;
-    width: inherit;
-  }
+  max-width: 100%;
 
   .search-widget {
-    margin: $base-spacing 0;
     position: relative;
     width: 100%;
 
-    @media #{$mq-tablet-and-up} {
-      margin: math.div($base-spacing, 2) 0;
-      min-width: 80px;
-    }
-
-    @media #{$mq-large-desktop-and-up} {
+    @media screen and (min-width: $screen-md) {
+      align-items: center;
+      display: flex;
+      gap: 0.5rem;
       margin: 0;
     }
   }
 
-  input.search-input-field {
-    border: 2px solid $text-color;
-    color: $text-color;
-    min-width: 60px;
-    padding: $base-unit ($base-unit * 2);
+  .search-input-field {
+    // make webkit play nice with search input types
+    -webkit-appearance: none; /* stylelint-disable-line property-no-vendor-prefix */
+    background-color: var(--background-primary);
+    border: 1px solid var(--border-primary);
+    border-radius: 100px;
+    padding-right: 2rem;
+    color: var(--text-primary);
+    height: var(--form-elem-height);
+    min-width: 5rem;
+    padding-left: 1rem;
     width: 100%;
+    caret-color: var(--text-link);
+
+    @keyframes blink {
+      from,
+      to {
+        text-decoration-line: none;
+      }
+      50% {
+        text-decoration-line: underline;
+      }
+    }
+
+    @media screen and (min-width: $screen-md) {
+      &:invalid {
+        width: 1rem;
+      }
+    }
+
+    &:focus,
+    &:valid {
+      width: inherit;
+    }
+
+    &:invalid,
+    &:invalid::placeholder {
+      animation: blink 2s step-end infinite;
+      caret-color: transparent;
+    }
+
+    &:valid,
+    &:valid::placeholder {
+      animation: none;
+    }
+
+    &:not(:focus):valid,
+    &:not(:focus):valid::placeholder {
+      text-decoration-line: none;
+    }
+
+    &:not(:focus),
+    &:not(:focus)::placeholder {
+      animation: none;
+      text-decoration-line: underline;
+    }
+
+    &:not(:focus)::placeholder {
+      animation: none;
+      text-decoration-line: underline;
+    }
+
+    &:focus {
+      outline: 0 none;
+      box-shadow: 0px 0px 0px 3px var(--blend-color),
+        0px 0px 0px 3px var(--category-color);
+      border-color: var(--category-color);
+    }
+
+    &,
+    &::placeholder {
+      font: var(--type-body-l);
+      text-decoration-thickness: 0.15rem;
+      text-underline-offset: 0.1em;
+      text-decoration-color: var(--text-link);
+      opacity: 1;
+    }
   }
 
   .server-error {
-    color: $red-100;
-    font-size: $small-font-size;
+    color: var(--icon-critical);
     margin: 0;
   }
+}
 
+.header-search,
+.homepage-hero-search {
   .search-results {
-    background-color: $neutral-600;
-    border: 2px solid $neutral-100;
-    border-radius: 0 0 $base-unit $base-unit;
-    border-top: 0;
-    box-shadow: 0 2px 8px 0 $neutral-500;
+    border: 1px solid var(--border-secondary);
+    border-radius: var(--elem-radius);
+    box-shadow: var(--shadow-01);
     left: 0;
     position: absolute;
     top: 42px;
     width: 100%;
-    z-index: $top-layer;
+    z-index: var(--z-index-search-results);
 
-    .indexing-warning {
-      color: $yellow-100;
+    &,
+    a[href],
+    mark {
+      color: var(--text-primary);
     }
 
-    div {
-      padding: $base-unit;
+    .indexing-warning {
+      color: var(--icon-warning);
     }
 
     .nothing-found {
@@ -68,17 +128,34 @@
     }
 
     .fuzzy-engaged {
-      font-size: $tiny-text;
+      background-color: var(--background-secondary);
+      font-size: 0.8125rem;
     }
 
     .result-item {
-      border-bottom: 1px solid $neutral-550;
+      border-bottom: 1px solid var(--border-secondary);
+      padding: 0.5rem;
       word-break: break-word;
+      background: var(--background-secondary);
+      font: var(--type-body-m);
+
+      &:first-child {
+        border-radius: var(--elem-radius) var(--elem-radius) 0 0;
+      }
+
+      &:last-child {
+        border-radius: 0 0 var(--elem-radius) var(--elem-radius);
+      }
+      &.nothing-found {
+        code {
+          font-size: 0.8125rem;
+        }
+      }
     }
 
     .result-item:hover,
     .result-item.highlight {
-      background-color: $neutral-550;
+      background-color: var(--border-secondary);
     }
 
     .result-item:hover,
@@ -91,7 +168,7 @@
     }
 
     mark {
-      background-color: $yellow-300;
+      background-color: var(--mark-color);
     }
 
     small {
@@ -103,7 +180,48 @@
     }
 
     div.searchindex-error {
-      color: $red-100;
+      color: var(--icon-critical);
+    }
+  }
+}
+
+.search-form {
+  display: flex;
+  position: relative;
+}
+
+.button.search-button,
+.button.clear-search-button {
+  --button-color: var(--icon-secondary);
+  --button-height: 1.5rem;
+  --button-padding: 0;
+  position: absolute;
+  right: 0.75rem;
+  top: 0.25rem;
+  width: 1.5rem;
+
+  &:hover {
+    background: transparent;
+  }
+
+  @media screen and (min-width: $screen-md) {
+    right: 1.2rem;
+    width: 1.5rem;
+  }
+}
+
+.button.clear-search-button {
+  display: none;
+}
+
+/* When the search input has focus or has content,
+   show the clear search button */
+.header-search .search-input-field {
+  &:valid,
+  &:focus {
+    & ~ .button.clear-search-button {
+      display: block;
+      right: 2.8rem;
     }
   }
 }

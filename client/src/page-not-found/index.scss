@@ -1,8 +1,5 @@
 @use "sass:math";
 
-@import "~@mdn/minimalist/sass/vars/layout";
-@import "~@mdn/minimalist/sass/vars/typography";
-
 .page-not-found {
   p {
     margin-top: 50px;
@@ -10,11 +7,11 @@
 
   .fallback-document {
     p {
-      margin-top: math.div($base-spacing, 2);
+      margin-top: 0.5rem;
     }
 
     .fallback-link {
-      font-size: $small-medium-font-size;
+      font-size: 1rem;
     }
   }
 }

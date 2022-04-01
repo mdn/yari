@@ -2,33 +2,26 @@ const cheerio = require("cheerio");
 const { packageBCD } = require("./resolve-bcd");
 const specs = require("browser-specs");
 
-/** Extract and mutate the $ if it as a "Quick_Links" section.
+/** Extract and mutate the $ if it as a "Quick_links" section.
  * But only if it exists.
  *
  * If you had this:
  *
  *   const $ = cheerio.load(`
- *      <div id="Quick_Links">Stuff</div>
+ *      <div id="Quick_links">Stuff</div>
  *      <h2>Headline<h2>
  *      <p>Text</p>
  *    `)
  *   const sidebar = extractSidebar($);
  *   console.log(sidebar);
- *   // '<div id="Quick_Links">Stuff</div>'
+ *   // '<div id="Quick_links">Stuff</div>'
  *   console.log($.html());
  *   // '<h2>Headline<h2>\n<p>Text</p>'
  *
  * ...give or take some whitespace.
  */
 function extractSidebar($) {
-  // Have to use both spellings because unfortunately, some sidebars don't come
-  // from macros but have it hardcoded into the content. Perhaps it was the
-  // result of someone once rendering out some sidebar macros.
-  // We could consolidate it to just exactly one spelling (`quick_links`) but
-  // that would require having to fix 29 macros, fix thousands of archived-content
-  // pages and hundres of translated content.
-  // By selecting for either spelling we're being defensive and safe.
-  const search = $("#Quick_Links, #Quick_links");
+  const search = $("#Quick_links");
   if (!search.length) {
     return "";
   }
@@ -71,6 +64,68 @@ function extractSections($) {
     sections.push(...subSections);
     flaws.push(...subFlaws);
   }
+
+  // Check for and mutate possible duplicated IDs.
+  // If a HTML document has...:
+  //
+  //   <h2 id="Examples">Check these examples</h2>
+  //   ...
+  //   <h2 id="examples">Examples</h2>
+  //
+  // then this can cause various problems. For example, the anchor links
+  // won't work. The Table of Contents won't be able to do a loop with unique
+  // `key={section.id}` values.
+  // The reason we need to loop through to get a list of all existing IDs
+  // first is because we might have this:
+  //
+  //  <h2 id="foo">Foo X</h2>
+  //  <h2 id="foo">Foo Y</h2>
+  //  <h2 id="foo_2">Foo Z</h2>
+  //
+  // So when you encounter `<h2 id="foo">Foo Y</h2>` you'll know that you
+  // can't suggest it to be `<h2 id="foo_2">Foo Y</h2>` because that ID
+  // is taken by another one, later.
+  const allIDs = new Set(
+    sections
+      .map((section) => section.value.id)
+      .filter(Boolean)
+      .map((id) => id.toLowerCase())
+  );
+
+  const seenIDs = new Set();
+  for (const section of sections) {
+    const originalID = section.value.id;
+    if (!originalID) {
+      // Not all sections have an ID. For example, prose sections that don't
+      // start with a <h2>.
+      // Since we're primarily concerned about *uniqueness* here, let's just
+      // skip worrying about these.
+      continue;
+    }
+    // We normalize all IDs to lowercase so that `id="Foo"` === `id="foo"`.
+    const id = originalID.toLowerCase();
+    if (seenIDs.has(id)) {
+      // That's bad! We have to come up with a new ID but it can't be one
+      // that's used by another other section.
+      let increment = 2;
+      let newID = `${originalID}_${increment}`;
+      while (
+        seenIDs.has(newID.toLowerCase()) ||
+        allIDs.has(newID.toLowerCase())
+      ) {
+        increment++;
+        newID = `${originalID}_${increment}`;
+      }
+      section.value.id = newID;
+      seenIDs.add(newID.toLowerCase());
+      flaws.push(
+        `'${originalID}' is not a unique ID in this HTML (temporarily changed to ${section.value.id})`
+      );
+    } else {
+      seenIDs.add(id);
+    }
+  }
+
   return [sections, flaws];
 }
 
@@ -267,6 +322,7 @@ function _addSingleSpecialSection($) {
   }
 
   let dataQuery = null;
+  let specURLsString = "";
   let specialSectionType = null;
   if ($.find("div.bc-data").length) {
     specialSectionType = "browser_compatibility";
@@ -274,13 +330,14 @@ function _addSingleSpecialSection($) {
   } else if ($.find("div.bc-specs").length) {
     specialSectionType = "specifications";
     dataQuery = $.find("div.bc-specs").attr("data-bcd-query");
+    specURLsString = $.find("div.bc-specs").attr("data-spec-urls");
   }
 
   // Some old legacy documents haven't been re-rendered yet, since it
   // was added, so the `div.bc-data` tag doesn't have a `id="bcd:..."`
   // attribute. If that's the case, bail and fail back on a regular
   // prose section :(
-  if (!dataQuery) {
+  if (!dataQuery && specURLsString === "") {
     // I wish there was a good place to log this!
     const [proseSections] = _addSectionProse($);
     return proseSections;
@@ -306,7 +363,7 @@ function _addSingleSpecialSection($) {
     }
     return _buildSpecialBCDSection();
   } else if (specialSectionType === "specifications") {
-    if (data === undefined) {
+    if (data === undefined && specURLsString === "") {
       return [
         {
           type: specialSectionType,
@@ -332,7 +389,7 @@ function _addSingleSpecialSection($) {
     //
     //   'chrome_android': {
     //      '28': {
-    //        release_data: '2012-06-01',
+    //        release_date: '2012-06-01',
     //        release_notes: '...',
     //        ...
     //
@@ -371,7 +428,11 @@ function _addSingleSpecialSection($) {
             info = [info];
           }
           for (const infoEntry of info) {
-            const added = infoEntry.version_added;
+            const added =
+              typeof infoEntry.version_added === "string" &&
+              infoEntry.version_added.startsWith("≤")
+                ? infoEntry.version_added.slice(1)
+                : infoEntry.version_added;
             if (browserReleaseData.has(browser)) {
               if (browserReleaseData.get(browser).has(added)) {
                 infoEntry.release_date = browserReleaseData
@@ -380,6 +441,9 @@ function _addSingleSpecialSection($) {
               }
             }
           }
+          info.sort((a, b) =>
+            _compareVersions(_getFirstVersion(b), _getFirstVersion(a))
+          );
         }
       }
     }
@@ -399,19 +463,83 @@ function _addSingleSpecialSection($) {
     ];
   }
 
+  /**
+   * @param {object} support - {bcd.SimpleSupportStatement}
+   * @returns {string}
+   */
+  function _getFirstVersion(support) {
+    if (typeof support.version_added === "string") {
+      return support.version_added;
+    } else if (typeof support.version_removed === "string") {
+      return support.version_removed;
+    } else {
+      return "0";
+    }
+  }
+
+  /**
+   * @param {string} a
+   * @param {string} b
+   */
+  function _compareVersions(a, b) {
+    const x = _splitVersion(a);
+    const y = _splitVersion(b);
+
+    return _compareNumberArray(x, y);
+  }
+
+  /**
+   * @param {number[]} a
+   * @param {number[]} b
+   * @return {number}
+   */
+  function _compareNumberArray(a, b) {
+    while (a.length || b.length) {
+      const x = a.shift() || 0;
+      const y = b.shift() || 0;
+      if (x !== y) {
+        return x - y;
+      }
+    }
+
+    return 0;
+  }
+
+  /**
+   * @param {string} version
+   * @return {number[]}
+   */
+  function _splitVersion(version) {
+    if (version.startsWith("≤")) {
+      version = version.slice(1);
+    }
+
+    return version.split(".").map(Number);
+  }
+
   function _buildSpecialSpecSection() {
-    // Collect spec_urls from a BCD feature.
-    // Can either be a string or an array of strings.
+    // Collect spec URLs from a BCD feature, a 'spec-urls' value, or both;
+    // For a BCD feature, it can either be a string or an array of strings.
     let specURLs = [];
 
-    for (const [key, compat] of Object.entries(data)) {
-      if (key === "__compat" && compat.spec_url) {
-        if (Array.isArray(compat.spec_url)) {
-          specURLs = compat.spec_url;
-        } else {
-          specURLs.push(compat.spec_url);
+    if (data) {
+      // If 'data' is non-null, that means we have data for a BCD feature
+      // that we can extract spec URLs from.
+      for (const [key, compat] of Object.entries(data)) {
+        if (key === "__compat" && compat.spec_url) {
+          if (Array.isArray(compat.spec_url)) {
+            specURLs = compat.spec_url;
+          } else {
+            specURLs.push(compat.spec_url);
+          }
         }
       }
+    }
+
+    if (specURLsString !== "") {
+      // If specURLsString is non-empty, then it has the string contents of
+      // the document’s 'spec-urls' frontmatter key: one or more URLs.
+      specURLs.push(...specURLsString.split(",").map((url) => url.trim()));
     }
 
     // Use BCD specURLs to look up more specification data
@@ -427,11 +555,9 @@ function _addSingleSpecialSection($) {
         const specificationsData = {
           bcdSpecificationURL: specURL,
           title: "Unknown specification",
-          shortTitle: "Unknown specification",
         };
         if (spec) {
           specificationsData.title = spec.title;
-          specificationsData.shortTitle = spec.shortTitle;
         }
 
         return specificationsData;
@@ -506,6 +632,12 @@ function _addSectionProse($) {
       }
     }
   }
+
+  if (id) {
+    // Remove trailing underscores (https://github.com/mdn/yari/issues/5492).
+    id = id.replace(/_+$/g, "");
+  }
+
   const value = {
     id,
     title,
@@ -519,12 +651,14 @@ function _addSectionProse($) {
     value.titleAsText = titleAsText;
   }
 
-  const sections = [
-    {
+  const sections = [];
+  if (value.content || value.title) {
+    sections.push({
       type: "prose",
       value,
-    },
-  ];
+    });
+  }
+
   return [sections, flaws];
 }
 

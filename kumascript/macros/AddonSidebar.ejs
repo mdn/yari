@@ -53,6 +53,7 @@ var text = mdn.localStringMap({
     'WebExtensions/Work_with_the_Bookmarks_API': 'Work with the Bookmarks API',
     'WebExtensions/Work_with_the_Cookies_API': 'Work with the Cookies API',
     'WebExtensions/Work_with_contextual_identities': 'Work with contextual identities',
+    'WebExtensions/Interact_with_the_clipboard': 'Interact with the clipboard',
     'WebExtensions/Build_a_cross_browser_extension': 'Build a cross-browser extension',
     'WebExtensions/Firefox_differentiators': 'Firefox differentiators',
     'WebExtensions#Firefox_workflow': 'Firefox workflow',
@@ -72,6 +73,7 @@ var text = mdn.localStringMap({
     'WebExtensions/Best_practices_for_updating_your_extension': 'Best practices for updating your extension',
     'WebExtensions/API': 'JavaScript APIs',
     'WebExtensions/manifest.json': 'Manifest keys',
+    'WebExtensions/manifest.json_intro': 'Introduction',
     'extension_workshop': 'Extension Workshop',
     'extension_workshop_develop': 'Develop',
     'extension_workshop_publish': 'Publish',
@@ -124,6 +126,7 @@ var text = mdn.localStringMap({
     'WebExtensions/Work_with_the_Bookmarks_API': 'Travailler avec l\'API Bookmarks',
     'WebExtensions/Work_with_the_Cookies_API': 'Travailler avec l\'API Cookies',
     'WebExtensions/Work_with_contextual_identities': 'Travailler avec des identités contextuelles',
+    'WebExtensions/Interact_with_the_clipboard': 'Interagir avec le presse-papier',
     'WebExtensions/Build_a_cross_browser_extension': 'Build a cross-browser extension',
     'WebExtensions/Firefox_differentiators': 'Firefox differentiators',
     'WebExtensions#Firefox_workflow': 'Déroulement avec Firefox',
@@ -142,6 +145,7 @@ var text = mdn.localStringMap({
     'WebExtensions/Best_practices_for_updating_your_extension': 'Bonnes pratiques pour la mise à jour de votre extension',
     'WebExtensions/API': 'Les API JavaScript',
     'WebExtensions/manifest.json': 'Clés de manifeste',
+    'WebExtensions/manifest.json_intro': 'Introduction',
     'extension_workshop': 'Extension Workshop',
     'extension_workshop_develop': 'Develop',
     'extension_workshop_publish': 'Publish',
@@ -194,6 +198,7 @@ var text = mdn.localStringMap({
     'WebExtensions/Work_with_the_Bookmarks_API': 'Bookmark API 群の使い方',
     'WebExtensions/Work_with_the_Cookies_API': 'Cookie API 群の使い方',
     'WebExtensions/Work_with_contextual_identities': 'contextual identities の使い方',
+    'WebExtensions/Interact_with_the_clipboard': 'クリップボードとのやりとり',
     'WebExtensions/Build_a_cross_browser_extension': 'Build a cross-browser extension',
     'WebExtensions/Firefox_differentiators': 'Firefox differentiators',
     'WebExtensions#Firefox_workflow': 'Firefox でのワークフロー',
@@ -212,6 +217,7 @@ var text = mdn.localStringMap({
     'WebExtensions/Best_practices_for_updating_your_extension': 'Best practices for updating your extension',
     'WebExtensions/API': 'JavaScript API 群',
     'WebExtensions/manifest.json': 'Manifest keys',
+    'WebExtensions/manifest.json_intro': '序章',
     'extension_workshop': 'Extension Workshop',
     'extension_workshop_develop': 'Develop',
     'extension_workshop_publish': 'Publish',
@@ -264,10 +270,12 @@ var text = mdn.localStringMap({
     'WebExtensions/Work_with_the_Bookmarks_API': 'Bookmarks API 사용하기',
     'WebExtensions/Work_with_the_Cookies_API': 'Cookies API 사용하기',
     'WebExtensions/Work_with_contextual_identities': 'contextual identities 사용하기',
+    'WebExtensions/Interact_with_the_clipboard': 'Interact with the clipboard',
     'WebExtensions/Build_a_cross_browser_extension': 'Build a cross-browser extension',
     'WebExtensions/Firefox_differentiators': 'Firefox의 차별화',
     'WebExtensions/API': 'JavaScript APIs',
     'WebExtensions/manifest.json': 'Manifest 키',
+    'WebExtensions/manifest.json_intro': '소개',
     'extension_workshop': 'Extension Workshop',
     'extension_workshop_develop': 'Develop',
     'extension_workshop_publish': 'Publish',
@@ -320,11 +328,13 @@ var text = mdn.localStringMap({
     'WebExtensions/Work_with_the_Bookmarks_API': '使用Bookmarks API',
     'WebExtensions/Work_with_the_Cookies_API': '使用Cookies API',
     'WebExtensions/Work_with_contextual_identities': '使用上下文身份',
+    'WebExtensions/Interact_with_the_clipboard': 'Interact with the clipboard',
     'WebExtensions/Build_a_cross_browser_extension': '构建跨浏览器扩展',
     'WebExtensions#Porting': '移植',
     'WebExtensions/Firefox_differentiators': 'Firefox的优势',
     'WebExtensions/API': 'JavaScript APIs',
     'WebExtensions/manifest.json': 'Manifest keys',
+    'WebExtensions/manifest.json_intro': '介绍',
     'extension_workshop': 'Extension Workshop',
     'extension_workshop_develop': 'Develop',
     'extension_workshop_publish': 'Publish',
@@ -377,6 +387,7 @@ var text = mdn.localStringMap({
     'WebExtensions/Work_with_the_Bookmarks_API': 'Trabalhar com a API Bookmarks',
     'WebExtensions/Work_with_the_Cookies_API': 'Trabalhe com a API de Cookies',
     'WebExtensions/Work_with_contextual_identities': 'Trabalhe com identidades contextuais',
+    'WebExtensions/Interact_with_the_clipboard': 'Interact with the clipboard',
     'WebExtensions/Build_a_cross_browser_extension': 'Crie uma extensão para vários navegadores',
     'WebExtensions/Firefox_differentiators': 'Diferenciadores do Firefox',
     'WebExtensions#Firefox_workflow': 'Fluxo de trabalho do Firefox',
@@ -396,6 +407,7 @@ var text = mdn.localStringMap({
     'WebExtensions/Best_practices_for_updating_your_extension': 'Práticas recomendadas para atualizar sua extensão',
     'WebExtensions/API': 'APIs JavaScript',
     'WebExtensions/manifest.json': 'Chaves Manifest',
+    'WebExtensions/manifest.json_intro': 'Introdução',
     'extension_workshop': 'Workshop de extensões',
     'extension_workshop_develop': 'Desenvolver',
     'extension_workshop_publish': 'Publicar',
@@ -406,12 +418,85 @@ var text = mdn.localStringMap({
     'Forums': 'Fóruns complementares',
     'Chat': 'Add-ons chat',
     'Contact_us': 'Contate-Nos'
-  }
+  },
+  'es': {
+    'WebExtensions': 'Extensiónes del navegador',
+    'WebExtensions#Getting_started': 'Comenzar',
+    'WebExtensions/What_are_WebExtensions': '¿Qué son las extensiones?',
+    'WebExtensions/Your_first_WebExtension': 'Tu primera extensión',
+    'WebExtensions/Your_second_WebExtension': 'Tu segunda extensión',
+    'WebExtensions/Anatomy_of_a_WebExtension': 'Anatomía de una extensión',
+    'WebExtensions/Examples': 'Extensiones de ejemplo',
+    'WebExtensions/What_next_': '¿Qué sigue?',
+    'WebExtensions#Concepts': 'Conceptos',
+    'WebExtensions/Using_the_JavaScript_APIs': 'Uso de las API de JavaScript',
+    'WebExtensions/Content_scripts': 'Guiones de contenido',
+    'WebExtensions/Match_patterns': 'Patrones de coincidencia',
+    'WebExtensions/Working_with_files': 'Trabajar con archivos',
+    'WebExtensions/Internationalization': 'Internacionalización',
+    'WebExtensions/Content_Security_Policy': 'Política de seguridad de contenido',
+    'WebExtensions/Differences_between_API_implementations': 'Diferencias entre implementaciones de API',
+    'WebExtensions/Chrome_incompatibilities': 'Incompatibilidades de Chrome',
+    'WebExtensions/Native_messaging': 'Mensajería nativa',
+    'WebExtensions#User_Interface': 'Interfaz de usuario',
+    'WebExtensions/user_interface': 'Interfaz de usuario',
+    'WebExtensions/user_interface/Browser_action': 'Botón de la barra de herramientas',
+    'WebExtensions/user_interface/Page_actions': 'Botón de la barra de direcciones',
+    'WebExtensions/user_interface/Sidebars': 'Barras laterales',
+    'WebExtensions/user_interface/Context_menu_items': 'Elementos del menú contextual',
+    'WebExtensions/user_interface/Options_pages': 'Página de opciones',
+    'WebExtensions/user_interface/Extension_pages': 'Páginas de extensión',
+    'WebExtensions/user_interface/Notifications': 'Notificaciones',
+    'WebExtensions/user_interface/Omnibox': 'Sugerencias de la barra de direcciones',
+    'WebExtensions/user_interface/devtools_panels': 'Paneles de herramientas para desarrolladores',
+    'WebExtensions#How_to': 'Cómo hacer',
+    'WebExtensions/Intercept_HTTP_requests': 'Interceptar solicitudes HTTP',
+    'WebExtensions/Modify_a_web_page': 'Modificar una página web',
+    'WebExtensions/Safely_inserting_external_content_into_a_page': 'Insertar contenido externo',
+    'WebExtensions/Sharing_objects_with_page_scripts': 'Comparta objetos con scripts de página',
+    'WebExtensions/Add_a_button_to_the_toolbar': 'Agregar un botón a la barra de herramientas',
+    'WebExtensions/Implement_a_settings_page': 'Implementar una página de configuración',
+    'WebExtensions/Working_with_the_Tabs_API': 'Trabajar con la API de pestañas',
+    'WebExtensions/Work_with_the_Bookmarks_API': 'Trabajar con la API de marcadores',
+    'WebExtensions/Work_with_the_Cookies_API': 'Trabajar con la API de Cookies',
+    'WebExtensions/Work_with_contextual_identities': 'Trabajar con identidades contextuales',
+    'WebExtensions/Interact_with_the_clipboard': 'Interactuar con el portapapeles',
+    'WebExtensions/Build_a_cross_browser_extension': 'Cree una extensión multinavegador',
+    'WebExtensions/Firefox_differentiators': 'Diferenciadores de Firefox',
+    'WebExtensions#Firefox_workflow': 'Flujo de trabajo de Firefox',
+    'WebExtensions/Development_Tools': 'Herramientas de desarrollo',
+    'WebExtensions/Choose_a_Firefox_version_for_web_extension_develop': 'Elige una versión de Firefox',
+    'WebExtensions/User_experience_best_practices': 'Experiencia de usuario',
+    'WebExtensions/Prompt_users_for_data_and_privacy_consents': 'Solicitar a los usuarios los consentimientos de datos y privacidad',
+    'WebExtensions/Temporary_Installation_in_Firefox': 'Instalación Temporal en Firefox',
+    'WebExtensions/Debugging': 'Depuración',
+    'WebExtensions/Testing_persistent_and_restart_features': 'Prueba de funciones persistentes y de reinicio',
+    'WebExtensions/Test_permission_requests': 'Probar solicitudes de permiso',
+    'WebExtensions/Developing_WebExtensions_for_Firefox_for_Android': 'Desarrollo para Firefox para Android',
+    'WebExtensions/Getting_started_with_web-ext': 'Introducción a la extensión web',
+    'WebExtensions/web-ext_command_reference': 'Referencia de comando para la extensión web',
+    'WebExtensions/WebExtensions_and_the_Add-on_ID': 'Extensiones y el complemento del ID',
+    'WebExtensions/Request_the_right_permissions': 'Solicitar los permisos adecuados',
+    'WebExtensions/Best_practices_for_updating_your_extension': 'Mejores prácticas para actualizar su extensión',
+    'WebExtensions/API': 'API de JavaScript',
+    'WebExtensions/manifest.json': 'Claves de manifiesto',
+    'WebExtensions/manifest.json_intro': 'Introducción',
+    'extension_workshop': 'Taller de Extensión',
+    'extension_workshop_develop': 'Desarrollar',
+    'extension_workshop_publish': 'Publish',
+    'extension_workshop_manage': 'Gestionar',
+    'extension_workshop_enterprise': 'Empresa',
+    'Channels': 'Canales de discusión',
+    'Blog': 'Blog de complementos',
+    'Forums': 'Foro de complementos',
+    'Chat': 'Chat de complementos',
+    'Contact_us': 'Contáctenos',
+  },
 });
 
 %>
 
-<section class="Quick_links" id="Quick_Links">
+<section id="Quick_links">
   <ol>
     <li><a href="<%=baseURL%>WebExtensions"><strong><%=text['WebExtensions']%></strong></a></li>
     <li class="toggle">
@@ -474,6 +559,7 @@ var text = mdn.localStringMap({
           <li><a href="<%=baseURL%>WebExtensions/Work_with_the_Bookmarks_API"><%=text['WebExtensions/Work_with_the_Bookmarks_API']%></a></li>
           <li><a href="<%=baseURL%>WebExtensions/Work_with_the_Cookies_API"><%=text['WebExtensions/Work_with_the_Cookies_API']%></a></li>
           <li><a href="<%=baseURL%>WebExtensions/Work_with_contextual_identities"><%=text['WebExtensions/Work_with_contextual_identities']%></a></li>
+          <li><a href="<%=baseURL%>WebExtensions/Interact_with_the_clipboard"><%=text['WebExtensions/Interact_with_the_clipboard']%></a></li>
           <li><a href="<%=baseURL%>WebExtensions/Build_a_cross_browser_extension"><%=text['WebExtensions/Build_a_cross_browser_extension']%></a></li>
         </ol>
       </details>
@@ -492,6 +578,9 @@ var text = mdn.localStringMap({
     <li class="toggle">
       <details>
       <summary><%=text['WebExtensions/manifest.json']%></summary>
+        <ol>
+          <li><a href="<%=baseURL%>WebExtensions/manifest.json"><%=text['WebExtensions/manifest.json_intro']%></a></li>
+        </ol>
       <%-
         await wiki.tree(baseURL + "WebExtensions/manifest.json", 1, 0, 0, 1)
       %>

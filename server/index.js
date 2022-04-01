@@ -22,16 +22,22 @@ const {
   CONTENT_TRANSLATED_ROOT,
 } = require("../content");
 // eslint-disable-next-line node/no-missing-require
-const { prepareDoc, renderDocHTML } = require("../ssr/dist/main");
-const { CSP_VALUE_DEV, DEFAULT_LOCALE } = require("../libs/constants");
+const { renderHTML } = require("../ssr/dist/main");
+const { CSP_VALUE, DEFAULT_LOCALE } = require("../libs/constants");
 
-const { STATIC_ROOT, PROXY_HOSTNAME, FAKE_V1_API } = require("./constants");
+const {
+  STATIC_ROOT,
+  PROXY_HOSTNAME,
+  FAKE_V1_API,
+  CONTENT_HOSTNAME,
+  OFFLINE_CONTENT,
+} = require("./constants");
 const documentRouter = require("./document");
 const documentTraitsRouter = require("./traits");
 const fakeV1APIRouter = require("./fake-v1-api");
 const { searchIndexRoute } = require("./search-index");
 const flawsRoute = require("./flaws");
-const { translationsRoute } = require("./translations");
+const { router: translationsRouter } = require("./translations");
 const { staticMiddlewares, originRequestMiddleware } = require("./middlewares");
 const { getRoot } = require("../content/utils");
 
@@ -84,9 +90,18 @@ const proxy = FAKE_V1_API
       // timeout: 20000,
     });
 
+const contentProxy =
+  CONTENT_HOSTNAME &&
+  createProxyMiddleware({
+    target: `https://${CONTENT_HOSTNAME}`,
+    changeOrigin: true,
+    // proxyTimeout: 20000,
+    // timeout: 20000,
+  });
+
 app.use("/api/v1", proxy);
 // This is an exception and it's only ever relevant in development.
-app.post("/:locale/users/account/signup", proxy);
+app.use("/users/*", proxy);
 
 // It's important that this line comes *after* the setting up for the proxy
 // middleware for `/api/v1` above.
@@ -161,7 +176,7 @@ app.use("/:locale/search-index.json", searchIndexRoute);
 
 app.get("/_flaws", flawsRoute);
 
-app.get("/_translations", translationsRoute);
+app.use("/_translations", translationsRouter);
 
 app.get("/*/contributors.txt", async (req, res) => {
   const url = req.path.replace(/\/contributors\.txt$/, "");
@@ -171,21 +186,15 @@ app.get("/*/contributors.txt", async (req, res) => {
     return res.status(404).send(`Document not found by URL (${url})`);
   }
   const { doc: builtDocument } = await buildDocument(document);
-  if (document.metadata.contributors || !document.isArchive) {
-    res.send(
-      renderContributorsTxt(
-        document.metadata.contributors,
-        !document.isArchive
-          ? builtDocument.source.github_url.replace("/blob/", "/commits/")
-          : null
-      )
-    );
-  } else {
-    res.status(410).send("Contributors not known for this document.\n");
-  }
+  res.send(
+    renderContributorsTxt(
+      document.metadata.contributors,
+      builtDocument.source.github_url.replace("/blob/", "/commits/")
+    )
+  );
 });
 
-app.get("/*", async (req, res) => {
+app.get("/*", async (req, res, ...args) => {
   if (req.url.startsWith("/_")) {
     // URLs starting with _ is exclusively for the meta-work and if there
     // isn't already a handler, it's something wrong.
@@ -195,6 +204,13 @@ app.get("/*", async (req, res) => {
   // If the catch-all gets one of these something's gone wrong
   if (req.url.startsWith("/static")) {
     return res.status(404).send("Page not found");
+  }
+  if (OFFLINE_CONTENT) {
+    return res.status(404).send("Offline");
+  }
+  if (contentProxy) {
+    console.log(`proxying: ${req.url}`);
+    return contentProxy(req, res, ...args);
   }
 
   if (req.url.includes("/_sample_.")) {
@@ -217,9 +233,11 @@ app.get("/*", async (req, res) => {
   // TODO: Would be nice to have a list of all supported file extensions
   // in a constants file.
   if (/\.(png|webp|gif|jpe?g|svg)$/.test(req.path)) {
-    // Remember, Image.findByURL() will return the absolute file path
+    // Remember, Image.findByURLWithFallback() will return the absolute file path
     // iff it exists on disk.
-    const filePath = Image.findByURL(req.path);
+    // Using a "fallback" strategy here so that images embedded in live samples
+    // are resolved if they exist in en-US but not in <locale>
+    const filePath = Image.findByURLWithFallback(req.path);
     if (filePath) {
       // The second parameter to `send()` has to be either a full absolute
       // path or a path that doesn't start with `../` otherwise you'd
@@ -295,12 +313,11 @@ app.get("/*", async (req, res) => {
     );
   }
 
-  prepareDoc(document);
   if (isJSONRequest) {
     res.json({ doc: document });
   } else {
-    res.header("Content-Security-Policy", CSP_VALUE_DEV);
-    res.send(renderDocHTML(document, lookupURL));
+    res.header("Content-Security-Policy", CSP_VALUE);
+    res.send(renderHTML(lookupURL, { doc: document }));
   }
 });
 
@@ -315,7 +332,7 @@ console.log(
     : ""
 );
 
-const PORT = parseInt(process.env.SERVER_PORT || "5000");
+const PORT = parseInt(process.env.SERVER_PORT || "5042");
 app.listen(PORT, () => {
   console.log(`Listening on port ${PORT}`);
   if (process.env.EDITOR) {

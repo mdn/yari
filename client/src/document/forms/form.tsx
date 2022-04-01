@@ -12,7 +12,7 @@ type DocumentFormData = {
 
 // Same as DocumentFormData but metadata also includes the locale
 export type DocumentOutData = DocumentFormData & {
-  metadata: DocumentFormData["metadata"] & { locale: string };
+  metadata: DocumentFormData["metadata"] & { locale: string | undefined };
 };
 
 export function DocumentForm({
@@ -78,7 +78,7 @@ export function DocumentForm({
       debounceCallback(
         {
           rawBody,
-          metadata: { slug, title, locale },
+          metadata: { slug, title, locale: locale || "" },
         },
         didSlugChange
       );
@@ -101,7 +101,7 @@ export function DocumentForm({
         onSave(
           {
             rawBody,
-            metadata: { slug, title, locale },
+            metadata: { slug, title, locale: locale || "" },
           },
           didSlugChange
         );

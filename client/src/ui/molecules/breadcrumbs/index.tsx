@@ -3,7 +3,7 @@ import { PreloadingDocumentLink } from "../../../document/preloading";
 
 import "./index.scss";
 
-export function Breadcrumbs({ parents }: { parents: DocParent[] }) {
+export const Breadcrumbs = ({ parents }: { parents: DocParent[] }) => {
   if (!parents.length) {
     throw new Error("Empty parents array");
   }
@@ -18,19 +18,12 @@ export function Breadcrumbs({ parents }: { parents: DocParent[] }) {
         {parents.map((parent, i) => {
           const currentCrumb = i + 1;
           const isLast = currentCrumb === parents.length;
-          const isPenultimate = currentCrumb === parents.length - 1;
 
           return (
             <li key={parent.uri} property="itemListElement" typeof="ListItem">
               <PreloadingDocumentLink
                 to={parent.uri}
-                className={
-                  isLast
-                    ? "breadcrumb-current-page"
-                    : isPenultimate
-                    ? "breadcrumb-penultimate"
-                    : "breadcrumb"
-                }
+                className={isLast ? "breadcrumb-current-page" : "breadcrumb"}
                 property="item"
                 typeof="WebPage"
               >
@@ -43,4 +36,4 @@ export function Breadcrumbs({ parents }: { parents: DocParent[] }) {
       </ol>
     </nav>
   );
-}
+};

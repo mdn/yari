@@ -42,6 +42,13 @@ function containsTag(tagList, tag) {
 }
 
 var pages = await page.subpagesExpand(APIHref); // get subpages, including tags
+
+// The result of `subpagesExpand()` does not guarantee the order to be
+// alphabetical. Most of the time it is because of how the OS is iterating over
+// files on disk. So sort it first, because the rendering loop (see far below)
+// depends on it.
+pages.sort((a, b) => a.title.toLowerCase().localeCompare(b.title.toLowerCase()));
+
 var locale = env.locale;
 var letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 var html = "";
