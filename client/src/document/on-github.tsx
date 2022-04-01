@@ -58,6 +58,20 @@ function EditOnGitHubLink({ doc }: { doc: Doc }) {
   );
 }
 
+const METADATA_TEMPLATE = `
+<!-- Do not make changes below this line -->
+<details>
+<summary>Page report details</summary>
+
+* Folder: \`$FOLDER\`
+* MDN URL: https://developer.mozilla.org$PATHNAME
+* GitHub URL: $GITHUB_URL
+* Last commit: $LAST_COMMIT_URL
+* Document last modified: $DATE
+
+</details>
+`;
+
 const NEW_ISSUE_TEMPLATE = `
 MDN URL: https://developer.mozilla.org$PATHNAME
 
@@ -73,32 +87,13 @@ MDN URL: https://developer.mozilla.org$PATHNAME
 #### Did you test this? If so, how?
 
 
-<!-- Do not make changes below this line -->
-<details>
-<summary>MDN Content page report details</summary>
-
-* Folder: \`$FOLDER\`
-* MDN URL: https://developer.mozilla.org$PATHNAME
-* GitHub URL: $GITHUB_URL
-* Last commit: $LAST_COMMIT_URL
-* Document last modified: $DATE
-
-</details>
+${METADATA_TEMPLATE}
   `.trim();
 
-function NewIssueOnGitHubLink({ doc }: { doc: Doc }) {
-  const { locale } = doc;
-  const url = new URL("");
-
-  if (locale !== "en-US") {
-    url.href = "https://github.com/mdn/translated-content/issues/new";
-  } else {
-    url.href = "https://github.com/mdn/content/issues/new";
-  }
-  const sp = new URLSearchParams();
-
+function fillMetadata(string, doc) {
   const { folder, github_url, last_commit_url } = doc.source;
-  const body = NEW_ISSUE_TEMPLATE.replace(/\$PATHNAME/g, doc.mdn_url)
+  return string
+    .replace(/\$PATHNAME/g, doc.mdn_url)
     .replace(/\$FOLDER/g, folder)
     .replace(/\$GITHUB_URL/g, github_url)
     .replace(/\$LAST_COMMIT_URL/g, last_commit_url)
@@ -107,13 +102,30 @@ function NewIssueOnGitHubLink({ doc }: { doc: Doc }) {
       doc.modified ? new Date(doc.modified).toISOString() : "*date not known*"
     )
     .trim();
-  sp.set("body", body);
-  const maxLength = 50;
-  const titleShort =
-    doc.title.length > maxLength
-      ? `${doc.title.slice(0, maxLength)}…`
-      : doc.title;
-  sp.set("title", `Issue with "${titleShort}": (short summary here please)`);
+}
+
+function NewIssueOnGitHubLink({ doc }: { doc: Doc }) {
+  const { locale } = doc;
+  const url = new URL("");
+  const sp = new URLSearchParams();
+
+  if (locale !== "en-US") {
+    url.href = "https://github.com/mdn/translated-content/issues/new";
+
+    const body = fillMetadata(NEW_ISSUE_TEMPLATE, doc);
+    sp.set("body", body);
+
+    const maxLength = 50;
+    const titleShort =
+      doc.title.length > maxLength
+        ? `${doc.title.slice(0, maxLength)}…`
+        : doc.title;
+    sp.set("title", `Issue with "${titleShort}": (short summary here please)`);
+  } else {
+    url.href = "https://github.com/mdn/content/issues/new";
+    sp.set("template", "page-report.yml");
+    sp.set("metadata", fillMetadata(METADATA_TEMPLATE, doc));
+  }
 
   url.search = sp.toString();
 
