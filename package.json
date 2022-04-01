@@ -35,7 +35,7 @@
     "test:prepare": "yarn prepare-build && yarn build && yarn start:static-server",
     "test:testing": "jest --rootDir testing",
     "tool": "node tool/cli.js",
-    "watch:ssr": "cd ssr && webpack --mode=production --watch"
+    "traits:build": "cd traits && node cli.js"
   },
   "jest": {
     "globals": {
@@ -137,6 +137,7 @@
     "@types/react": "^17.0.43",
     "@types/react-dom": "^17.0.14",
     "@types/react-modal": "^3.13.1",
+    "alasql": "1.7.3",
     "benchmark": "2.1.4",
     "braces": "^3.0.2",
     "cross-env": "^7.0.3",
@@ -168,6 +169,7 @@
     "react-router": "6.2.2",
     "react-router-dom": "6.0.0-beta.2",
     "react-scripts": "4.0.3",
+    "react-simple-code-editor": "0.11.0",
     "rehype-minify-whitespace": "^4.0.5",
     "remark-prettier": "^1.3.0",
     "rough-notation": "0.5.1",
