@@ -527,22 +527,23 @@ export const FeatureRow = React.memo(
     }
 
     const { name, compat, depth } = feature;
+    let titleMargin: string = depth * 0.75 + "em";
+
     const title = compat.description ? (
-      <span dangerouslySetInnerHTML={{ __html: compat.description }} />
+      <span
+        dangerouslySetInnerHTML={{ __html: compat.description }}
+        style={{ marginLeft: titleMargin }}
+      />
     ) : (
-      <code>{name}</code>
+      <code style={{ marginLeft: titleMargin }}>{name}</code>
     );
     const activeBrowser = activeCell !== null ? browsers[activeCell] : null;
 
-    let titleNode: string | React.ReactNode;
-    let titleMargin: string = depth * 0.75 + "em";
+    let titleNode: React.ReactNode;
 
     if (compat.bad_url && compat.mdn_url) {
       titleNode = (
-        <div
-          className="bc-table-row-header"
-          style={{ marginLeft: titleMargin }}
-        >
+        <div className="bc-table-row-header">
           <abbr className="new" title={`${compat.mdn_url} does not exist`}>
             {title}
           </abbr>
@@ -551,21 +552,14 @@ export const FeatureRow = React.memo(
       );
     } else if (compat.mdn_url && depth > 0) {
       titleNode = (
-        <a
-          href={compat.mdn_url}
-          className="bc-table-row-header"
-          style={{ marginLeft: titleMargin }}
-        >
+        <a href={compat.mdn_url} className="bc-table-row-header">
           {title}
           {compat.status && <StatusIcons status={compat.status} />}
         </a>
       );
     } else {
       titleNode = (
-        <div
-          className="bc-table-row-header"
-          style={{ marginLeft: titleMargin }}
-        >
+        <div className="bc-table-row-header">
           {title}
           {compat.status && <StatusIcons status={compat.status} />}
         </div>
