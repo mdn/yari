@@ -535,12 +535,13 @@ export const FeatureRow = React.memo(
     const activeBrowser = activeCell !== null ? browsers[activeCell] : null;
 
     let titleNode: string | React.ReactNode;
+    let titleMargin: string = depth * 0.75 + "em";
 
     if (compat.bad_url && compat.mdn_url) {
       titleNode = (
         <div
           className="bc-table-row-header"
-          style={{ marginLeft: depth + "em" }}
+          style={{ marginLeft: titleMargin }}
         >
           <abbr className="new" title={`${compat.mdn_url} does not exist`}>
             {title}
@@ -553,7 +554,7 @@ export const FeatureRow = React.memo(
         <a
           href={compat.mdn_url}
           className="bc-table-row-header"
-          style={{ marginLeft: depth + "em" }}
+          style={{ marginLeft: titleMargin }}
         >
           {title}
           {compat.status && <StatusIcons status={compat.status} />}
@@ -563,7 +564,7 @@ export const FeatureRow = React.memo(
       titleNode = (
         <div
           className="bc-table-row-header"
-          style={{ marginLeft: depth + "em" }}
+          style={{ marginLeft: titleMargin }}
         >
           {title}
           {compat.status && <StatusIcons status={compat.status} />}
