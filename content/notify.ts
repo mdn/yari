@@ -12,7 +12,7 @@ require("dotenv").config();
 
 const { CONTENT_ROOT } = process.env;
 
-const DATE_RANGE_REGEXP = /^(\d{4}-\d{2}-\d{2})+\.\.(\d{4}-\d{2}-\d{2}|\*)$/;
+const DATE_RANGE_REGEXP = /^(\d{4}-\d{2}-\d{2})(\.\.(\d{4}-\d{2}-\d{2}|\*))?$/;
 const FORCE_NOTIFICATION_LABEL = "force-notifications";
 
 function main() {
@@ -20,7 +20,7 @@ function main() {
 
   if (!DATE_RANGE_REGEXP.test(merged)) {
     console.error(
-      "Please specify merged date as a range: YYYY-MM-DD..YYYY-MM-DD | YYYY-MM-DD..*"
+      "Please specify merged date in this format: YYYY-MM-DD | YYYY-MM-DD..YYYY-MM-DD | YYYY-MM-DD..*"
     );
     process.exit(1);
   }
