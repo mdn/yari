@@ -10,6 +10,12 @@ import click
 ClickLogger = namedtuple("ClickLogger", "info success warning error")
 
 
+def slug_to_folder(slug):
+    slug.replace("*", "_star_").replace("::", "_doublecolon_").replace(
+        ":", "_colon_"
+    ).replace("?", "_question_").lower()
+
+
 def info(*msg, **kwargs):
     msg = " ".join(str(x) for x in msg)
     click.secho(msg, **kwargs)
