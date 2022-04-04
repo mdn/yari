@@ -63,6 +63,7 @@ export class MDNWorker {
   updating: boolean;
   registered: boolean;
   timeout?: ReturnType<typeof setTimeout> | null;
+  keepAlive: ReturnType<typeof setInterval> | null;
 
   constructor() {
     this.settings = this.offlineSettings();
@@ -74,6 +75,7 @@ export class MDNWorker {
     this.latestUpdate = null;
     this.registered = false;
     this.timeout = null;
+    this.keepAlive = null;
 
     if (this.settings.autoUpdates) {
       this.autoUpdate();
@@ -273,6 +275,20 @@ export class MDNWorker {
           this.updating = false;
         }
 
+        if (this.updating && !this.keepAlive) {
+          this.keepAlive = setInterval(() => {
+            this.controller()?.postMessage({ type: "keepalive" });
+            if (!this.updating && this.keepAlive) {
+              clearInterval(this.keepAlive);
+              this.keepAlive = null;
+            }
+            console.log("keepalive");
+          }, 10000);
+        }
+        if (!this.updating && this.keepAlive) {
+          clearInterval(this.keepAlive);
+          this.keepAlive = null;
+        }
         this.updateStatus.state = updateStatus.state;
       }
     }
