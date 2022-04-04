@@ -1,8 +1,15 @@
-// Runs from the root of the mdn/content checkout
-// Requires `gh` CLI
-// Requires `jq` CLI
-// Requires `yq` CLI
-// Known issues: it doesn't ignore completely new slugs
+// Generates content update changes from merged PRs in mdn/content.
+//
+// Usage: `yarn ts-node notify.ts MERGED_DATE_OR_RANGE [OUTPUT_FILE]`
+//
+// Example:
+// - Run: `yarn ts-node notify.ts '2022-04-01' changes.json`
+// - This generates changes for all PRs merged on 2022-04-01 into changes.json.
+//
+// Requirements:
+// - Have `gh` CLI installed and configured.
+// - Have mdn/content checked out and up-to-date.
+// - Have CONTENT_ROOT set in .env (pointing to files/ in the checkout).
 
 import * as child_process from "child_process";
 import frontmatter from "front-matter";
@@ -16,8 +23,11 @@ const { CONTENT_ROOT } = process.env;
 const DATE_RANGE_REGEXP = /^(\d{4}-\d{2}-\d{2})(\.\.(\d{4}-\d{2}-\d{2}|\*))?$/;
 const FORCE_NOTIFICATION_LABEL = "force-notifications";
 
+const EVENT_CONTENT_UPDATED = "content_updated";
+
 function main() {
   const merged = process.argv[2];
+  const output = process.argv[3];
 
   if (!DATE_RANGE_REGEXP.test(merged)) {
     console.error(
@@ -26,7 +36,23 @@ function main() {
     process.exit(1);
   }
 
-  processMergedPRs(merged);
+  const search = `is:merged merged:${merged}`;
+
+  console.log(`Searching for PRs... (${search})`);
+  const prs = [...searchContentPRs(search)];
+  console.log(`-> Found ${prs.length} PR(s).`);
+
+  console.log(`Generating changes...`);
+  const changes = [...generateChangesFromPRs(prs)];
+  console.log(`-> Generated ${changes.length} change(s).`);
+
+  const json = JSON.stringify(changes);
+
+  if (output) {
+    fs.writeFileSync(output, json);
+  } else {
+    console.log(json);
+  }
 }
 
 interface PullRequest {
@@ -54,25 +80,43 @@ interface PageFrontmatter {
   slug: string;
 }
 
-function processMergedPRs(merged: string) {
-  const search = ["is:merged", `merged:${merged}`];
+interface ContentUpdateChange {
+  event: "content_updated";
+  slug: string | null;
+  pr: {
+    number: number;
+    title: string;
+    url: string;
+  };
+}
 
-  const fields = ["id", "number", "url", "labels", "title", "files"];
+function* searchContentPRs(search: string): Generator<PullRequest> {
+  const fields = ["id", "number", "url", "labels", "title", "files"].join(",");
 
   const prs = JSON.parse(
     child_process.execSync(
-      `gh pr list --search '${search.join(" ")}' --json ${fields.join(",")}`,
+      `gh pr list --head main --limit 1000 --search '${search}' --json ${fields}`,
       {
         cwd: CONTENT_ROOT,
         encoding: "utf-8",
       }
     )
-  ) as PullRequest[];
+  );
 
-  prs.forEach((pr) => processPR(pr));
+  yield* prs;
 }
 
-function processPR(pr: PullRequest) {
+function* generateChangesFromPRs(
+  prs: PullRequest[]
+): Generator<ContentUpdateChange> {
+  for (const pr of prs) {
+    yield* generateChangesFromPR(pr);
+  }
+}
+
+function* generateChangesFromPR(
+  pr: PullRequest
+): Generator<ContentUpdateChange> {
   // A PR labeled force-notifications must trigger a notification
   // issued for every slug modified by the PR.
   const force = pr.labels.some(({ name }) => name === FORCE_NOTIFICATION_LABEL);
@@ -96,9 +140,22 @@ function processPR(pr: PullRequest) {
       continue;
     }
 
-    const slug = getSlug(file.path);
-    console.log(`${pr.number}\t${slug}`);
-    // TODO: post to notifications API endpoint
+    const event = EVENT_CONTENT_UPDATED;
+    try {
+      const slug = getSlug(file.path);
+      const change = {
+        event,
+        slug,
+        pr: {
+          number: pr.number,
+          title: pr.title,
+          url: pr.url,
+        },
+      };
+      yield change as ContentUpdateChange;
+    } catch (e) {
+      console.error(e);
+    }
   }
 }
 
@@ -106,14 +163,33 @@ function netDiffSize(file: ChangedFile) {
   return file.additions - file.deletions;
 }
 
-function getSlug(path: string) {
-  path = path.substring("files/".length);
+function getSlug(path: string): string | null {
+  path = resolveContentPath(path);
 
-  const markdown = fs.readFileSync(`${CONTENT_ROOT}/${path}`, "utf8");
+  if (!path) {
+    console.warn(`File not found: ${path}`);
+    return null;
+  }
+
+  const markdown = fs.readFileSync(path, "utf8");
 
   const frontMatter = frontmatter<PageFrontmatter>(markdown);
 
   return frontMatter.attributes.slug;
+}
+
+function resolveContentPath(file: string): string | null {
+  if (file.startsWith("files/")) {
+    file = file.substring("files/".length);
+  }
+
+  file = `${CONTENT_ROOT}/${file}`;
+
+  if (fs.existsSync(file)) {
+    return file;
+  }
+
+  return null;
 }
 
 main();
