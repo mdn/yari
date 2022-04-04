@@ -1,10 +1,21 @@
 import { DisplayH2, DisplayH3 } from "./utils";
 
-export function Prose({ section }) {
-  return <div dangerouslySetInnerHTML={{ __html: section.content }} />;
+export function Prose({ id, section }: { id?: string; section: any }) {
+  return (
+    <section
+      aria-describedby={id}
+      dangerouslySetInnerHTML={{ __html: section.content }}
+    />
+  );
 }
 
-export function ProseWithHeading({ id, section }) {
+export function ProseWithHeading({
+  id,
+  section,
+}: {
+  id: string;
+  section: any;
+}) {
   return (
     <>
       {section.isH3 ? (
@@ -20,7 +31,7 @@ export function ProseWithHeading({ id, section }) {
           titleAsText={section.titleAsText}
         />
       )}
-      <Prose section={section} />
+      <Prose id={id} section={section} />
     </>
   );
 }
