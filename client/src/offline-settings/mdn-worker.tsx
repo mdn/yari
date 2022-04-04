@@ -1,12 +1,12 @@
 import { UPDATES_BASE_URL } from "../constants";
+import { MDNOfflineDB, UpdateMetadata } from "./db";
 
 export enum STATE {
   init = "init",
   nothing = "nothing",
   clearing = "clearing",
   updateAvailable = "updateAvailable",
-  downloading = "downloading",
-  unpacking = "unpacking",
+  updating = "updating",
   cleaning = "cleaning",
 }
 
@@ -22,19 +22,25 @@ export class UpdateData {
   }
 }
 
+interface UpdatePackageManifest {
+  root: string;
+  files: Array<string>;
+}
+
+interface VersionInfo {
+  currentVersion?: string | null;
+  updatedAt?: Date | null;
+}
+
 export class SettingsData {
   offline?: boolean;
   preferOnline?: boolean;
   autoUpdates?: boolean;
-  currentVersion?: string | null;
-  currentDate?: string | null;
 
   constructor() {
     this.offline = false;
     this.preferOnline = false;
     this.autoUpdates = false;
-    this.currentVersion = null;
-    this.currentDate = null;
   }
 }
 
@@ -58,61 +64,53 @@ export class UpdateStatus {
 
 export class MDNWorker {
   updateStatus: UpdateStatus;
+  versionInfo?: VersionInfo | null;
   settings: SettingsData;
   latestUpdate: UpdateData | null;
   updating: boolean;
   registered: boolean;
   timeout?: ReturnType<typeof setTimeout> | null;
+  db: MDNOfflineDB;
 
   constructor() {
     this.settings = this.offlineSettings();
     this.updateStatus = new UpdateStatus();
-    //this.settings.currentVersion = "87fe3ab8a3";
-    this.updateStatus.currentDate = this.settings.currentDate || null;
-    this.updateStatus.currentVersion = this.settings.currentVersion || null;
     this.updating = false;
     this.latestUpdate = null;
     this.registered = false;
     this.timeout = null;
+    this.db = new MDNOfflineDB();
 
     if (this.settings.autoUpdates) {
       this.autoUpdate();
     }
   }
 
+  async getVersionInfo(): Promise<VersionInfo | null> {
+    return (await this.db.version_info.toCollection().first()) ?? null;
+  }
+
   async autoUpdate() {
-    console.log("running auto update");
     if (this.timeout) {
       clearTimeout(this.timeout);
       this.timeout = null;
     }
     await this.getUpdate();
     this.update();
-    this.timeout = setTimeout(() => this.autoUpdate(), 60 * 60 * 1000);
-  }
-
-  async messageHandler(event) {
-    switch (event.data.type) {
-      case "updateStatus":
-        await window.mdnWorker.setStatus(event.data);
-        break;
-      case "pong":
-        console.log("pong");
-        break;
-      default:
-        console.log("unknown message");
-    }
+    this.timeout = setTimeout(() => this.autoUpdate(), 5 * 1000);
   }
 
   controller(): ServiceWorker | null {
     return navigator.serviceWorker.controller;
   }
 
-  update() {
+  async update() {
     if (
       this.updating ||
-      this.updateStatus.currentVersion === this.latestUpdate?.latest
+      this.versionInfo?.currentVersion === this.latestUpdate?.latest
     ) {
+      console.log(this.updateStatus);
+      this.updateStatus.progress = await this.getProgress();
       return;
     }
     this.updating = true;
@@ -128,8 +126,31 @@ export class MDNWorker {
       payload["latest"] = this.latestUpdate.latest;
       payload["date"] = this.latestUpdate.date;
     }
-    this.updateStatus.state = STATE.downloading;
-    this.controller()?.postMessage({ type: "update", ...payload });
+    const updateManifestResponse = await fetch(
+      `${UPDATES_BASE_URL}/packages/${this.latestUpdate?.latest}-content/index.json`
+    );
+    const manifest: UpdatePackageManifest = await updateManifestResponse.json();
+    this.updateStatus.state = STATE.updating;
+    await this.registerUpdate(manifest);
+    await manifest.files.map(async (file) => {
+      payload["filename"] = file;
+      await this.controller()?.postMessage({
+        type: "update",
+        ...payload,
+      });
+    });
+  }
+
+  async registerUpdate(manifest: UpdatePackageManifest) {
+    const update: Array<UpdateMetadata> = manifest.files.map((file) => {
+      return {
+        root: manifest.root,
+        filename: file,
+        completed: null,
+        error: false,
+      };
+    });
+    this.db.update_progress.bulkPut(update);
   }
 
   async getUpdate(): Promise<UpdateData | null> {
@@ -143,6 +164,7 @@ export class MDNWorker {
       return this.latestUpdate;
     }
     let update;
+    this.versionInfo = await this.getVersionInfo();
     if (
       this.latestUpdate &&
       new Date(this.latestUpdate.date) > new Date(Date.now() - 86400000)
@@ -154,7 +176,18 @@ export class MDNWorker {
     }
     this.updateStatus.updateVersion = update?.latest;
     this.updateStatus.updateDate = update?.date;
-    if (this.settings.currentVersion !== update?.latest) {
+    console.log(update.latest);
+    const chunksInProgress = await this.db.update_progress
+      .where({ root: update.latest })
+      .filter((v) => v.completed === null)
+      .count();
+    console.log(`chunks ${chunksInProgress}`);
+    if (chunksInProgress) {
+      this.updateStatus.state = STATE.updating;
+      return update;
+    }
+
+    if (!this.versionInfo || this.versionInfo !== update?.latest) {
       this.updateStatus.state = STATE.updateAvailable;
     } else {
       this.updateStatus.state = STATE.nothing;
@@ -175,7 +208,7 @@ export class MDNWorker {
       });
       this.registered = true;
     }
-    registerMessageHandler();
+    // registerMessageHandler();
   }
 
   async disableServiceWorker() {
@@ -190,7 +223,27 @@ export class MDNWorker {
     await this.getUpdate();
     return this.status();
   }
-  status() {
+
+  async status() {
+    const installedVersion = await this.getVersionInfo();
+    console.log(installedVersion);
+    if (installedVersion?.currentVersion === this.updateStatus.updateVersion) {
+      this.updateStatus.state = STATE.nothing;
+      return this.updateStatus;
+    }
+
+    const progress = await this.getProgress();
+    this.updateStatus.progress = progress;
+
+    if (progress === 1) {
+      this.db.version_info.put({
+        current: this.updateStatus.updateVersion,
+        updatedAt: new Date(),
+      });
+      this.updateStatus.currentVersion = this.updateStatus.updateVersion;
+      this.updateStatus.currentDate = this.updateStatus.updateDate;
+      this.updateStatus.state = STATE.nothing;
+    }
     return this.updateStatus;
   }
 
@@ -238,20 +291,29 @@ export class MDNWorker {
     this.controller()?.postMessage({ type: "clear" });
   }
 
-  async setStatus(updateStatus: UpdateStatus) {
-    if (typeof updateStatus.progress !== "undefined") {
-      this.updateStatus.progress = updateStatus.progress;
+  async getProgress(): Promise<number> {
+    if (!this.updateStatus || !this.updateStatus.updateVersion) {
+      return -1;
     }
+
+    const inprogress = await this.db.update_progress
+      .where({ root: this.updateStatus.updateVersion })
+      .filter((val) => !!val.completed)
+      .count();
+    const total = await this.db.update_progress
+      .where({ root: this.updateStatus.updateVersion })
+      .count();
+    return inprogress / total;
+  }
+  async setStatus(updateStatus: UpdateStatus) {
+    console.log(`setStatus current status: `, updateStatus);
     if (typeof updateStatus.currentDate !== "undefined") {
       this.updateStatus.currentDate = updateStatus.currentDate;
     }
     if (typeof updateStatus.currentVersion !== "undefined") {
       this.updateStatus.currentVersion = updateStatus.currentVersion;
     }
-    await this.setOfflineSettings({
-      currentDate: this.updateStatus.currentDate,
-      currentVersion: this.updateStatus.currentVersion || null,
-    });
+
     if (updateStatus.state) {
       if (
         updateStatus.state === STATE.init &&
@@ -263,16 +325,11 @@ export class MDNWorker {
         this.updateStatus.state = updateStatus.state;
         await this.getUpdate();
       } else {
-        if (
-          [STATE.clearing, STATE.downloading, STATE.unpacking].includes(
-            updateStatus.state
-          )
-        ) {
+        if ([STATE.clearing, STATE.updating].includes(updateStatus.state)) {
           this.updating = true;
         } else {
           this.updating = false;
         }
-
         this.updateStatus.state = updateStatus.state;
       }
     }
@@ -289,12 +346,12 @@ if (!window.mdnWorker) {
   window.mdnWorker = new MDNWorker();
 }
 
-function registerMessageHandler() {
-  navigator.serviceWorker.addEventListener(
-    "message",
-    window.mdnWorker.messageHandler
-  );
-}
+// function registerMessageHandler() {
+//   navigator.serviceWorker.addEventListener(
+//     "message",
+//     window.mdnWorker.messageHandler
+//   );
+// }
 
 if (window.mdnWorker.settings.offline) {
   window.mdnWorker.enableServiceWorker(window.mdnWorker.settings.preferOnline);

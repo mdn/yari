@@ -77,7 +77,3 @@ export class MDNOfflineDB extends Dexie {
     });
   }
 }
-
-const offlineDb = new MDNOfflineDB();
-
-export { offlineDb };

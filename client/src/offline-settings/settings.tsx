@@ -66,8 +66,9 @@ function Settings() {
     setSettings(newSettings);
   };
 
-  useInterval(() => {
-    const next = window.mdnWorker.status();
+  useInterval(async () => {
+    const next = await window.mdnWorker.status();
+    console.log("use interval", next);
     if (next.state === STATE.nothing) {
       if (next.state !== status?.state) {
         setStatus({ ...next });

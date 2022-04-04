@@ -44,23 +44,16 @@ export default function UpdateButton({
       );
     }
   }
-  if (updateStatus?.state === STATE.downloading) {
+  if (updateStatus?.state === STATE.updating) {
     if (updateStatus?.currentDate) {
       info = "Update in progress…";
     } else {
       info = "Download in progress…";
     }
-    button = <button disabled={disabled}>Downloading…</button>;
-  }
-  if (updateStatus?.state === STATE.unpacking) {
-    if (updateStatus?.currentDate) {
-      info = "Update in progress…";
-    } else {
-      info = "Download in progress…";
-    }
+
     button = (
       <button disabled={disabled}>
-        Unpacking…{" "}
+        Updating…{" "}
         {progress?.toLocaleString(undefined, {
           maximumFractionDigits: 0,
         })}

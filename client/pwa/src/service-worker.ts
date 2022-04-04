@@ -64,6 +64,7 @@ self.addEventListener("fetch", (e) => {
 });
 
 self.addEventListener("message", (e: ExtendableMessageEvent) => {
+  console.log("received", e.data);
   e.waitUntil(
     (async () => {
       switch (e?.data?.type) {
@@ -115,85 +116,49 @@ export async function messageAllClients(
   }
 }
 
-var updating = false;
-
 export async function updateContent(
   self,
-  { current = null, latest = null, date = null } = {},
+  { current = null, latest = null, date = null, filename = "" } = {},
   e
 ) {
-  if (updating) {
-    return;
-  } else {
-    updating = true;
-  }
-  try {
-    if (!current) {
-      await caches.delete(contentCache);
-    }
-    await messageAllClients(self, {
-      type: "updateStatus",
-      progress: 0,
-      state: "downloading",
-    });
+  const root = current ? `${latest}-${current}` : latest;
+  const url = new URL(
+    current
+      ? `/packages/${latest}-${current}-update/${filename}`
+      : `/packages/${latest}-content/${filename}`,
+    UPDATES_BASE_URL
+  );
 
-    const url = new URL(
-      current
-        ? `/packages/${latest}-${current}-update.zip`
-        : `/packages/${latest}-content.zip`,
-      UPDATES_BASE_URL
-    );
+  try {
     console.log(`[update] downloading: ${url}`);
     const res = await fetch(url.href);
     const buf = await res.arrayBuffer();
 
     console.log(`[update] unpacking: ${url}`);
-    await messageAllClients(self, {
-      type: "updateStatus",
-      progress: 0,
-      state: "unpacking",
-    });
+    const success = await unpackAndCache(buf);
 
-    await unpackAndCache(buf, async (progress) => {
-      await messageAllClients(self, {
-        type: "updateStatus",
-        progress,
-        state: "unpacking",
-      });
-    });
-
-    await messageAllClients(self, {
-      type: "updateStatus",
-      progress: 0,
-      state: "init",
-      currentVersion: latest,
-      currentDate: date,
-    });
-
-    await synchronizeDb();
-
-    console.log(`[update] done`);
-    updating = false;
+    let update = {
+      filename: filename,
+      root,
+      completed: new Date(),
+      error: false,
+    };
+    if (success) {
+      await offlineDb.update_progress.put(update);
+    } else {
+      update = { ...update, completed: null, error: true };
+      await offlineDb.update_progress.put(update);
+    }
   } catch (e) {
-    console.error(e);
-    updating = false;
+    let update = { filename: filename, root, completed: null, error: true };
+    await offlineDb.update_progress.put(update);
   }
 }
 
 async function clearContent(self: ServiceWorkerGlobalScope) {
-  await messageAllClients(self, {
-    type: "updateStatus",
-    progress: 0,
-    state: "clearing",
-  });
   await caches.delete(contentCache);
-  await messageAllClients(self, {
-    type: "updateStatus",
-    progress: -1,
-    state: "init",
-    currentVersion: null,
-    currentDate: null,
-  });
+  await offlineDb.update_progress.clear();
+  await offlineDb.version_info.clear();
 }
 
 async function synchronizeDb() {
