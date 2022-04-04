@@ -4,11 +4,12 @@
 // Requires `yq` CLI
 // Known issues: it doesn't ignore completely new slugs
 
-const child_process = require("child_process");
-const frontmatter = require("front-matter");
-const fs = require("fs");
+import * as child_process from "child_process";
+import frontmatter from "front-matter";
+import * as fs from "fs";
+import { config as dotenvConfig } from "dotenv";
 
-require("dotenv").config();
+dotenvConfig();
 
 const { CONTENT_ROOT } = process.env;
 
@@ -48,6 +49,9 @@ interface ChangedFile {
   path: string;
   additions: number;
   deletions: number;
+}
+interface PageFrontmatter {
+  slug: string;
 }
 
 function processMergedPRs(merged: string) {
@@ -107,7 +111,7 @@ function getSlug(path: string) {
 
   const markdown = fs.readFileSync(`${CONTENT_ROOT}/${path}`, "utf8");
 
-  const frontMatter = frontmatter(markdown);
+  const frontMatter = frontmatter<PageFrontmatter>(markdown);
 
   return frontMatter.attributes.slug;
 }
