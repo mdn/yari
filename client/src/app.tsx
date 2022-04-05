@@ -25,6 +25,7 @@ import { ContributorSpotlight } from "./contributor-spotlight";
 import { Banner, hasActiveBanners } from "./banners";
 
 const AllFlaws = React.lazy(() => import("./flaws"));
+const AllTraits = React.lazy(() => import("./traits"));
 const Translations = React.lazy(() => import("./translations"));
 const DocumentEdit = React.lazy(() => import("./document/forms/edit"));
 const DocumentCreate = React.lazy(() => import("./document/forms/create"));
@@ -164,6 +165,14 @@ export function App(appProps) {
                   element={
                     <StandardLayout>
                       <Translations />
+                    </StandardLayout>
+                  }
+                />
+                <Route
+                  path="/_traits/*"
+                  element={
+                    <StandardLayout>
+                      <AllTraits />
                     </StandardLayout>
                   }
                 />

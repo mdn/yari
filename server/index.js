@@ -33,6 +33,7 @@ const {
   OFFLINE_CONTENT,
 } = require("./constants");
 const documentRouter = require("./document");
+const documentTraitsRouter = require("./traits");
 const fakeV1APIRouter = require("./fake-v1-api");
 const { searchIndexRoute } = require("./search-index");
 const flawsRoute = require("./flaws");
@@ -125,6 +126,8 @@ app.post(
 );
 
 app.use("/_document", documentRouter);
+
+app.use("/_traits", documentTraitsRouter);
 
 app.get("/_open", (req, res) => {
   const { line, column, filepath, url } = req.query;
