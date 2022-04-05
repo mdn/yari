@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { Doc, FrequentlyViewedEntry } from "./types";
 
@@ -12,7 +12,7 @@ export function useDocumentURL() {
 }
 
 export function useCopyExamplesToClipboard(doc: Doc | undefined) {
-  React.useEffect(() => {
+  useEffect(() => {
     if (!doc) {
       return;
     }
@@ -219,4 +219,55 @@ export function usePersistFrequentlyViewed(doc: Doc | undefined) {
       console.error(`Failed to write to localStorage: ${err}`);
     }
   });
+}
+
+/**
+ * Observes elements and fires the callback when the first visible element changes.
+ */
+export function useFirstVisibleElement(
+  observedElementsProvider: () => Element[],
+  visibleElementCallback: (firstVisibleElement: Element | null) => void
+) {
+  const [firstVisibleElement, setFirstVisibleElement] =
+    useState<Element | null>(null);
+
+  useEffect(() => {
+    visibleElementCallback(firstVisibleElement);
+  }, [visibleElementCallback, firstVisibleElement]);
+
+  useEffect(() => {
+    const observedElements = observedElementsProvider();
+    const visibilityByElement = new Map<Element, boolean>();
+
+    function manageVisibility(entries: IntersectionObserverEntry[]) {
+      for (const entry of entries) {
+        visibilityByElement.set(entry.target, entry.isIntersecting);
+      }
+    }
+
+    function manageFirstVisibleElement() {
+      const visibleElements = Array.from(visibilityByElement.entries())
+        .filter(([, value]) => value)
+        .map(([key]) => key);
+
+      setFirstVisibleElement(visibleElements[0] ?? null);
+    }
+
+    const observer = new IntersectionObserver(
+      (entries: IntersectionObserverEntry[]) => {
+        manageVisibility(entries);
+        manageFirstVisibleElement();
+      },
+      {
+        threshold: [0.0, 1.0],
+      }
+    );
+
+    observedElements.forEach((element) => {
+      visibilityByElement.set(element, false);
+      observer.observe(element);
+    });
+
+    return () => observer.disconnect();
+  }, [observedElementsProvider, visibleElementCallback]);
 }
