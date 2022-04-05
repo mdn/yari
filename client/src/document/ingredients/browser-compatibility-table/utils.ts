@@ -70,3 +70,44 @@ export function hasNoteworthyNotes(support: bcd.SimpleSupportStatement) {
     !support.partial_implementation
   );
 }
+
+function hasLimitation(support: bcd.SimpleSupportStatement) {
+  return (
+    support.partial_implementation ||
+    support.alternative_name ||
+    support.flags ||
+    support.prefix ||
+    support.version_removed ||
+    support.notes
+  );
+}
+
+export function isOnlySupportedWithAltName(
+  support: bcd.SupportStatement | undefined
+) {
+  return (
+    support &&
+    getFirst(support).alternative_name &&
+    !asList(support).some((item) => isFullySupportedWithoutLimitation(item))
+  );
+}
+
+export function isOnlySupportedWithPrefix(
+  support: bcd.SupportStatement | undefined
+) {
+  return (
+    support &&
+    getFirst(support).prefix &&
+    !asList(support).some((item) => isFullySupportedWithoutLimitation(item))
+  );
+}
+
+export function isFullySupportedWithoutLimitation(
+  support: bcd.SimpleSupportStatement
+) {
+  return support.version_added && !hasLimitation(support);
+}
+
+export function isNotSupportedAtAll(support: bcd.SimpleSupportStatement) {
+  return !support.version_added && !hasLimitation(support);
+}
