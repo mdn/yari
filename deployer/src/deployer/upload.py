@@ -20,7 +20,7 @@ from .constants import (
     MANUAL_PREFIXES,
     MAX_WORKERS_PARALLEL_UPLOADS,
 )
-from .utils import StopWatch, fmt_size, iterdir, log
+from .utils import StopWatch, fmt_size, iterdir, log, slug_to_folder
 
 S3_MULTIPART_THRESHOLD = S3TransferConfig().multipart_threshold
 S3_MULTIPART_CHUNKSIZE = S3TransferConfig().multipart_chunksize
@@ -329,10 +329,11 @@ class BucketManager:
         return f"{self.key_prefix}{str(file_path.relative_to(build_directory)).lower()}"
 
     def get_redirect_keys(self, from_url, to_url):
-        return (
-            f"{self.key_prefix}{from_url.strip('/').lower()}",
-            f"/{to_url.strip('/')}" if to_url.startswith("/") else to_url,
+        cleaned_from_path = slug_to_folder(from_url.strip("/"))
+        cleaned_to_url_or_path = (
+            slug_to_folder(to_url.rstrip("/")) if to_url.startswith("/") else to_url
         )
+        return (f"{self.key_prefix}{cleaned_from_path}", cleaned_to_url_or_path)
 
     def get_bucket_objects(self):
         result = {}
