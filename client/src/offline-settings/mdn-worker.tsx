@@ -282,7 +282,6 @@ export class MDNWorker {
               clearInterval(this.keepAlive);
               this.keepAlive = null;
             }
-            console.log("keepalive");
           }, 10000);
         }
         if (!this.updating && this.keepAlive) {
