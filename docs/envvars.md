@@ -246,6 +246,12 @@ host name instead. That means you can log in _from_ Yari with a single click.
 This removes sign-in and `whoami` XHR fetching.
 Useful when using Yari purely for content editing as authentication is then not required.
 
+### `REACT_APP_DISABLE_WRITERS_HOMEPAGE`
+
+**Default: `!CRUD_MODE`**
+
+Disables the "Writer's homepage", which shows instead of the regular MDN homepage.
+
 ### `REACT_APP_CRUD_MODE`
 
 **Default: `NODE_ENV==='development'`**

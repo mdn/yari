@@ -107,6 +107,11 @@ export default function WritersHomepage() {
             <Link to={`/${locale}/_traits`}>All Documents Traits</Link>
           </li>
         </ul>
+        <div className="notecard note">
+          Looking for the standard MDN homepage? Add{" "}
+          <code>REACT_APP_DISABLE_WRITERS_HOMEPAGE=true</code> to your{" "}
+          <code>.env</code> file.
+        </div>
       </div>
     </PageContentContainer>
   );

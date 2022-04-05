@@ -5,7 +5,11 @@ import { Routes, Route, useLocation, useMatch } from "react-router-dom";
 // and applied before any component specific style
 import "./app.scss";
 
-import { CRUD_MODE, PLUS_IS_ENABLED } from "./constants";
+import {
+  CRUD_MODE,
+  PLUS_IS_ENABLED,
+  WRITERS_HOMEPAGE_IS_DISABLED,
+} from "./constants";
 import { Homepage } from "./homepage";
 import { Document } from "./document";
 import { A11yNav } from "./ui/molecules/a11y-nav";
@@ -125,7 +129,7 @@ export function App(appProps) {
   // But if the App is loaded from the code that builds the SPAs, then `isServer`
   // is true. So you have to have `isServer && CRUD_MODE` at the same time.
   const homePage =
-    !isServer && CRUD_MODE ? (
+    !isServer && !WRITERS_HOMEPAGE_IS_DISABLED ? (
       <Layout pageType="standard-page">
         <WritersHomepage />
       </Layout>

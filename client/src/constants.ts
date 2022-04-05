@@ -36,6 +36,12 @@ export const VALID_LOCALES = new Set([
   "zh-TW",
 ]);
 
+export const WRITERS_HOMEPAGE_IS_DISABLED = Boolean(
+  JSON.parse(
+    process.env.REACT_APP_DISABLE_WRITERS_HOMEPAGE ?? String(!CRUD_MODE)
+  )
+);
+
 export const MDN_PLUS_TITLE = "MDN Plus";
 
 export const PLUS_IS_ENABLED = Boolean(
