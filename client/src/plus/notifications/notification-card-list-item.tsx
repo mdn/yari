@@ -22,7 +22,11 @@ export default function NotificationCardListItem({
   if (groups !== undefined) {
     const content = item.text.replace(
       regex,
-      `<a href="https://github.com/${groups.repo}/pull/${groups.pr}">#${groups.pr}</a>`
+      `<a href="https://github.com/${groups.repo}/pull/${groups.pr}"  
+          target="_blank"
+          rel="noreferrer noopener"
+          className="external"
+          >#${groups.pr}</a>`
     );
     textWithPr = content;
   }
