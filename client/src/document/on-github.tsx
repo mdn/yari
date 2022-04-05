@@ -106,11 +106,11 @@ function fillMetadata(string, doc) {
 
 function NewIssueOnGitHubLink({ doc }: { doc: Doc }) {
   const { locale } = doc;
-  const url = new URL("");
+  const url = new URL("https://github.com/");
   const sp = new URLSearchParams();
 
   if (locale !== "en-US") {
-    url.href = "https://github.com/mdn/translated-content/issues/new";
+    url.pathname = "/mdn/translated-content/issues/new";
 
     const body = fillMetadata(NEW_ISSUE_TEMPLATE, doc);
     sp.set("body", body);
@@ -122,7 +122,7 @@ function NewIssueOnGitHubLink({ doc }: { doc: Doc }) {
         : doc.title;
     sp.set("title", `Issue with "${titleShort}": (short summary here please)`);
   } else {
-    url.href = "https://github.com/mdn/content/issues/new";
+    url.pathname = "/mdn/content/issues/new";
     sp.set("template", "page-report.yml");
     sp.set("mdn-url", doc.mdn_url);
     sp.set("metadata", fillMetadata(METADATA_TEMPLATE, doc));
