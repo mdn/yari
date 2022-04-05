@@ -82,30 +82,32 @@ function hasLimitation(support: bcd.SimpleSupportStatement) {
   );
 }
 
-export function requiresAltName(support: bcd.SupportStatement | undefined) {
+export function isOnlySupportedWithAltName(
+  support: bcd.SupportStatement | undefined
+) {
   return (
     support &&
     getFirst(support).alternative_name &&
-    !asList(support).some((item) => showsMessageIndicatingFullSupport(item))
+    !asList(support).some((item) => isFullySupportedWithoutLimitation(item))
   );
 }
 
-export function requiresPrefix(support: bcd.SupportStatement | undefined) {
+export function isOnlySupportedWithPrefix(
+  support: bcd.SupportStatement | undefined
+) {
   return (
     support &&
     getFirst(support).prefix &&
-    !asList(support).some((item) => showsMessageIndicatingFullSupport(item))
+    !asList(support).some((item) => isFullySupportedWithoutLimitation(item))
   );
 }
 
-export function showsMessageIndicatingFullSupport(
+export function isFullySupportedWithoutLimitation(
   support: bcd.SimpleSupportStatement
 ) {
   return support.version_added && !hasLimitation(support);
 }
 
-export function showsMessageIndicatingNoSupport(
-  support: bcd.SimpleSupportStatement
-) {
+export function isNotSupportedAtAll(support: bcd.SimpleSupportStatement) {
   return !support.version_added && !hasLimitation(support);
 }
