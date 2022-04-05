@@ -16,21 +16,20 @@ export function isTruthy<T>(t: T | false | undefined | null): t is T {
 interface Feature {
   name: string;
   compat: bcd.CompatStatement;
-  depth: number;
+  isRoot: boolean;
 }
 
 export function listFeatures(
   identifier: bcd.Identifier,
   parentName: string = "",
-  rootName: string = "",
-  depth: number = 0
+  rootName: string = ""
 ): Feature[] {
   const features: Feature[] = [];
   if (rootName && identifier.__compat) {
     features.push({
       name: rootName,
       compat: identifier.__compat,
-      depth,
+      isRoot: true,
     });
   }
 
@@ -39,9 +38,9 @@ export function listFeatures(
       features.push({
         name: parentName ? `${parentName}.${subName}` : subName,
         compat: subIdentifier.__compat,
-        depth: depth + 1,
+        isRoot: parentName !== "",
       });
-      features.push(...listFeatures(subIdentifier, subName, "", depth + 1));
+      features.push(...listFeatures(subIdentifier, subName));
     }
   }
   return features;

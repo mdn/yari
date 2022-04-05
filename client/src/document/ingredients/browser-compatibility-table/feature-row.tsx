@@ -513,7 +513,7 @@ export const FeatureRow = React.memo(
     feature: {
       name: string;
       compat: CompatStatementExtended;
-      depth: number;
+      isRoot: boolean;
     };
     browsers: bcd.BrowserNames[];
     activeCell: number | null;
@@ -526,20 +526,15 @@ export const FeatureRow = React.memo(
       throw new Error("Missing browser info");
     }
 
-    const { name, compat, depth } = feature;
-    let titleMargin: string = depth * 0.75 + "em";
-
+    const { name, compat, isRoot } = feature;
     const title = compat.description ? (
-      <span
-        dangerouslySetInnerHTML={{ __html: compat.description }}
-        style={{ marginLeft: titleMargin }}
-      />
+      <span dangerouslySetInnerHTML={{ __html: compat.description }} />
     ) : (
-      <code style={{ marginLeft: titleMargin }}>{name}</code>
+      <code>{name}</code>
     );
     const activeBrowser = activeCell !== null ? browsers[activeCell] : null;
 
-    let titleNode: React.ReactNode;
+    let titleNode: string | React.ReactNode;
 
     if (compat.bad_url && compat.mdn_url) {
       titleNode = (
@@ -550,7 +545,7 @@ export const FeatureRow = React.memo(
           {compat.status && <StatusIcons status={compat.status} />}
         </div>
       );
-    } else if (compat.mdn_url && depth > 0) {
+    } else if (compat.mdn_url && !isRoot) {
       titleNode = (
         <a href={compat.mdn_url} className="bc-table-row-header">
           {title}
