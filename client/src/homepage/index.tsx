@@ -35,20 +35,15 @@ export function Homepage(props) {
                 CSS
               </a>
               <a
-                href={`/${locale}/docs/Web/CSS/color-scheme`}
+                href={`/${locale}/docs/Web/CSS/revert-layer`}
                 className="tile-title expand-this-link"
               >
-                color-scheme
+                revert-layer
               </a>
               <p>
-                The color-scheme CSS property allows an element to indicate
-                which color schemes it can comfortably be rendered in.
-                <br />
-                Common choices for operating system color schemes are "light"
-                and "dark", or "day mode" and "night mode". When a user selects
-                one of these color schemes, the operating system makes
-                adjustments to the user interface. This includes form controls,
-                scrollbars, and the used values of CSS system colors.
+                The revert-layer CSS keyword rolls back the value of a property
+                in a cascade layer to the value of the property in a CSS rule
+                matching the element in a previous cascade layer.
               </p>
             </div>
 
