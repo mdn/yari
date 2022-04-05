@@ -563,7 +563,7 @@ export const FeatureRow = React.memo(
     return (
       <>
         <tr>
-          <th className="bc-feature" scope="row">
+          <th className={`bc-feature bc-feature-depth-${depth}`} scope="row">
             {titleNode}
           </th>
           {browsers.map((browser, i) => (
