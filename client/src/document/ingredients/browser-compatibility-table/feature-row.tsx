@@ -531,8 +531,6 @@ export const FeatureRow = React.memo(
     ) : (
       <code>{name}</code>
     );
-    const path = name.split(".");
-    const depth = path.length;
     const activeBrowser = activeCell !== null ? browsers[activeCell] : null;
 
     let titleNode: string | React.ReactNode;
