@@ -23,6 +23,8 @@ const UPDATES_BASE_URL = `https://updates.${
 export type {};
 declare const self: ServiceWorkerGlobalScope;
 
+var unpacking = Promise.resolve();
+
 self.addEventListener("install", (e) => {
   // synchronizeDb();
   e.waitUntil(
@@ -68,11 +70,14 @@ self.addEventListener("message", (e: ExtendableMessageEvent) => {
     (async () => {
       switch (e?.data?.type) {
         case "update":
-          return updateContent(self, e?.data, e);
+          unpacking = updateContent(self, e?.data, e);
+          return unpacking;
         case "clear":
           return clearContent(self);
         case "ping":
           return await messageAllClients(self, { type: "pong" });
+        case "keepalive":
+          return unpacking;
         default:
           console.log(`unknown msg type: ${e?.data?.type}`);
           return Promise.resolve();
