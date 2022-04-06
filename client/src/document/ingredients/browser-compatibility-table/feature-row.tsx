@@ -336,14 +336,15 @@ function getNotes(
   support: bcd.SupportStatement
 ) {
   if (support) {
-    const firstItem = getFirst(support);
     return asList(support)
       .slice()
       .reverse()
       .flatMap((item, i) => {
         const supportNotes = [
           item.version_removed &&
-          item.version_added === firstItem!.version_added
+          !asList(support).some(
+            (otherItem) => otherItem.version_added === item.version_removed
+          )
             ? {
                 iconName: "disabled",
                 label: (
