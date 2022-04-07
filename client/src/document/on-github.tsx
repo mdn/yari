@@ -58,6 +58,20 @@ function EditOnGitHubLink({ doc }: { doc: Doc }) {
   );
 }
 
+const METADATA_TEMPLATE = `
+<!-- Do not make changes below this line -->
+<details>
+<summary>Page report details</summary>
+
+* Folder: \`$FOLDER\`
+* MDN URL: https://developer.mozilla.org$PATHNAME
+* GitHub URL: $GITHUB_URL
+* Last commit: $LAST_COMMIT_URL
+* Document last modified: $DATE
+
+</details>
+`;
+
 const NEW_ISSUE_TEMPLATE = `
 MDN URL: https://developer.mozilla.org$PATHNAME
 
@@ -73,54 +87,13 @@ MDN URL: https://developer.mozilla.org$PATHNAME
 #### Did you test this? If so, how?
 
 
-<!-- Do not make changes below this line -->
-<details>
-<summary>MDN Content page report details</summary>
-
-* Folder: \`$FOLDER\`
-* MDN URL: https://developer.mozilla.org$PATHNAME
-* GitHub URL: $GITHUB_URL
-* Last commit: $LAST_COMMIT_URL
-* Document last modified: $DATE
-
-</details>
+${METADATA_TEMPLATE}
   `.trim();
 
-// These are the hardcoded prefixes that get their own new-issue label in
-// in GitHub. The prefix is matched all in lower-case but the label itself
-// can have case.
-// The labels do not not needs to exist in advance on the GitHub repo.
-// If not matched to any of these labels, it will default to "Other" as the label.
-const CONTENT_LABELS_PREFIXES = [
-  ["web/javascript", "JS"],
-  ["web/css", "CSS"],
-  ["web/html", "HTML"],
-  ["web/api", "WebAPI"],
-  ["web/http", "HTTP"],
-  ["web/svg", "SVG"],
-  ["web/media", "Media"],
-  ["web/mathml", "MathML"],
-  ["webassembly", "wasm"],
-  ["mozilla/add-ons/webextensions", "WebExt"],
-  ["web/accessibility", "Accessibility"],
-  ["learn", "Learn"],
-  ["tools", "DevTools"],
-];
-
-// For all locales that as spelled differently as a issue label, map the locale
-// to the proper label name. For locales not mentioned here, we keep the locale
-// as is.
-const LOCALE_LABEL_ALIASES = new Map([
-  ["zh-cn", "zh"],
-  ["zh-tw", "zh"],
-]);
-
-function NewIssueOnGitHubLink({ doc }: { doc: Doc }) {
-  let baseURL = "https://github.com/mdn/content/issues/new";
-  const sp = new URLSearchParams();
-
+function fillMetadata(string, doc) {
   const { folder, github_url, last_commit_url } = doc.source;
-  const body = NEW_ISSUE_TEMPLATE.replace(/\$PATHNAME/g, doc.mdn_url)
+  return string
+    .replace(/\$PATHNAME/g, doc.mdn_url)
     .replace(/\$FOLDER/g, folder)
     .replace(/\$GITHUB_URL/g, github_url)
     .replace(/\$LAST_COMMIT_URL/g, last_commit_url)
@@ -129,46 +102,38 @@ function NewIssueOnGitHubLink({ doc }: { doc: Doc }) {
       doc.modified ? new Date(doc.modified).toISOString() : "*date not known*"
     )
     .trim();
-  sp.set("body", body);
-  const maxLength = 50;
-  const titleShort =
-    doc.title.length > maxLength
-      ? `${doc.title.slice(0, maxLength)}…`
-      : doc.title;
-  sp.set("title", `Issue with "${titleShort}": (short summary here please)`);
+}
 
-  const slug = doc.mdn_url.split("/docs/")[1].toLowerCase();
+function NewIssueOnGitHubLink({ doc }: { doc: Doc }) {
   const { locale } = doc;
+  const url = new URL("https://github.com/");
+  const sp = new URLSearchParams();
 
-  const labels = ["needs-triage"];
-  let contentLabel = "";
-  for (const [prefix, label] of CONTENT_LABELS_PREFIXES) {
-    if (slug.startsWith(prefix)) {
-      contentLabel = label;
-      break;
-    }
-  }
-  if (!contentLabel) {
-    contentLabel = "Other";
-  }
-  if (locale === "en-US") {
-    labels.push(`Content:${contentLabel}`);
+  if (locale !== "en-US") {
+    url.pathname = "/mdn/translated-content/issues/new";
+
+    const body = fillMetadata(NEW_ISSUE_TEMPLATE, doc);
+    sp.set("body", body);
+
+    const maxLength = 50;
+    const titleShort =
+      doc.title.length > maxLength
+        ? `${doc.title.slice(0, maxLength)}…`
+        : doc.title;
+    sp.set("title", `Issue with "${titleShort}": (short summary here please)`);
   } else {
-    baseURL = "https://github.com/mdn/translated-content/issues/new";
-    const localeLabel =
-      LOCALE_LABEL_ALIASES.get(locale.toLowerCase()) || locale.toLowerCase();
-    labels.push(`l10n-${localeLabel}`);
-    // Maybe a l10n-unsupported label would be useful to add?
+    url.pathname = "/mdn/content/issues/new";
+    sp.set("template", "page-report.yml");
+    sp.set("mdn-url", doc.mdn_url);
+    sp.set("metadata", fillMetadata(METADATA_TEMPLATE, doc));
   }
 
-  sp.set("labels", labels.join(","));
-
-  const href = `${baseURL}?${sp.toString()}`;
+  url.search = sp.toString();
 
   return (
     <a
-      href={href}
-      title="This will take you to https://github.com/mdn/content to file a new issue"
+      href={url.href}
+      title="This will take you to GitHub to file a new issue"
       target="_blank"
       rel="noopener noreferrer"
     >
