@@ -57,7 +57,7 @@ export function LocalizedContentNote({
       inactiveLocaleNoteContent["en-US"].linkText;
   const url = isActive
     ? "/en-US/docs/MDN/Contribute/Localize#active_locales"
-    : "https://github.com/mdn/translated-content#promoting-an-inactive-locale-to-tier-1";
+    : "https://github.com/mdn/translated-content/blob/main/PEERS_GUIDELINES.md#activating-a-locale";
 
   const type = isActive ? "neutral" : "warning";
   return <NoteBanner linkText={linkText} url={url} type={type} />;
