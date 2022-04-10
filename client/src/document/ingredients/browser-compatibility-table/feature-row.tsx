@@ -55,7 +55,13 @@ function getSupportClassName(
     className = "preview";
   } else if (version_added) {
     className = "yes";
-    if (version_removed || (flags && flags.length)) {
+    if (
+      (version_removed &&
+        !asList(support!).some((item) =>
+          isFullySupportedWithoutLimitation(item)
+        )) ||
+      (flags && flags.length)
+    ) {
       className = "no";
     }
   } else {
@@ -136,12 +142,17 @@ const CellText = React.memo(
     support: bcd.SupportStatement | undefined;
     browser: bcd.BrowserStatement;
   }) => {
-    const currentSupport = getFirst(support);
+    const currentSupport =
+      (support &&
+        asList(support).find((item) =>
+          isFullySupportedWithoutLimitation(item)
+        )) ??
+      getFirst(support);
 
     const added = currentSupport?.version_added ?? null;
     const removed = currentSupport?.version_removed ?? null;
 
-    const browserReleaseDate = getSupportBrowserReleaseDate(support);
+    const browserReleaseDate = getSupportBrowserReleaseDate(currentSupport);
 
     let status:
       | { isSupported: "unknown" }
@@ -183,7 +194,11 @@ const CellText = React.memo(
         break;
     }
 
-    if (removed) {
+    if (
+      removed &&
+      support &&
+      !asList(support).some((item) => isFullySupportedWithoutLimitation(item))
+    ) {
       status = {
         isSupported: "no",
         label: (
