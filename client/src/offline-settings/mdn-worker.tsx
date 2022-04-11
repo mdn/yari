@@ -7,7 +7,6 @@ export enum STATE {
   updateAvailable = "updateAvailable",
   downloading = "downloading",
   unpacking = "unpacking",
-  cleaning = "cleaning",
 }
 
 export class UpdateData {

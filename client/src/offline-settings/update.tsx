@@ -68,14 +68,6 @@ export default function UpdateButton({
       </button>
     );
   }
-  if (updateStatus?.state === STATE.cleaning) {
-    if (updateStatus?.currentDate) {
-      info = "Update in progress…";
-    } else {
-      info = "Download in progress…";
-    }
-    button = <button disabled>Cleaning…</button>;
-  }
   if (updateStatus?.state === STATE.clearing) {
     info = "Clearing…";
   }
