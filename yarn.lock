@@ -8252,10 +8252,10 @@ html-tags@^3.1.0:
   resolved "https://registry.npmjs.org/html-tags/-/html-tags-3.1.0.tgz"
   integrity sha512-1qYz89hW3lFDEazhjW0yVAV87lw8lVkrJocr72XmBkMKsoSVJCQx3W8BXsC7hO2qAt8BoVjYjtAcZ9perqGnNg==
 
-html-validate@6.7.0:
-  version "6.7.0"
-  resolved "https://registry.yarnpkg.com/html-validate/-/html-validate-6.7.0.tgz#72c9803f16d5d82800a348b4d4303045a267000b"
-  integrity sha512-zh7ErcoM7nHzB2SUFnXiZEEN7vdiuIX+hbpncg9c08+CEDk1WnMT153El8EN6ruLA8h0SIi0rSosFgd7WsMZxA==
+html-validate@6.7.1:
+  version "6.7.1"
+  resolved "https://registry.yarnpkg.com/html-validate/-/html-validate-6.7.1.tgz#54ab9559d6b2cc286f7044fc5e3963becd5d767c"
+  integrity sha512-tUQKMWixZXYmJ4C79Tz9PXmNlDGZEGUL1J4abGRO8GvgMx4UAaZr6WfhdQnUyv7wp1fiJIcQYOYIHYCq0Eq1Vw==
   dependencies:
     "@babel/code-frame" "^7.10.0"
     "@html-validate/stylish" "^2.0.0"
