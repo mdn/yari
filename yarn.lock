@@ -3780,10 +3780,10 @@ browser-process-hrtime@^1.0.0:
   resolved "https://registry.npmjs.org/browser-process-hrtime/-/browser-process-hrtime-1.0.0.tgz"
   integrity sha512-9o5UecI3GhkpM6DrXr69PblIuWxPKk9Y0jHBRhdocZ2y7YECBFCsHm79Pr3OyR2AvjhDkabFJaDJMYRazHgsow==
 
-browser-specs@^3.6.0:
-  version "3.6.0"
-  resolved "https://registry.yarnpkg.com/browser-specs/-/browser-specs-3.6.0.tgz#a72279f5497d93e5bffe2e2e8889d12ea2014618"
-  integrity sha512-ix97gDB6qt7U/QNTJZh0nuqsPSVeHr0VYn5I+dqk/VAr3b3aAg0ski5m68mIcJAYc5/xZI32TPKsdq7wDk+Hfw==
+browser-specs@^3.6.1:
+  version "3.6.1"
+  resolved "https://registry.yarnpkg.com/browser-specs/-/browser-specs-3.6.1.tgz#37c1762e6ef067b516c51da8e7472a3694518bef"
+  integrity sha512-RKvTUsnuM1P3uznI+LGsivh3sy6t+g2TVtMBEHe4Wz2bLRXk3dPH0KUuIIOg30yfh65D9yEQAV8Orl0OTJKCaQ==
 
 browserify-aes@^1.0.0, browserify-aes@^1.0.4:
   version "1.2.0"
