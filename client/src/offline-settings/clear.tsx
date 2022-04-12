@@ -10,13 +10,13 @@ export default function ClearButton({
   disabled?: boolean;
 }) {
   let button;
-  if (updateStatus?.phase === ContentStatusPhase.idle && updateStatus?.local) {
+  if (updateStatus?.phase === ContentStatusPhase.IDLE && updateStatus?.local) {
     button = (
       <button className="button" onClick={clear} disabled={disabled}>
         Clear data
       </button>
     );
-  } else if (updateStatus?.phase === ContentStatusPhase.clear) {
+  } else if (updateStatus?.phase === ContentStatusPhase.CLEAR) {
     button = <button disabled>Clearing…</button>;
   } else {
     button = (

@@ -175,7 +175,7 @@ export async function updateContent(self: ServiceWorkerGlobalScope) {
     }
 
     await patchContentStatus({
-      phase: ContentStatusPhase.download,
+      phase: ContentStatusPhase.DOWNLOAD,
     });
 
     const url = new URL(
@@ -191,19 +191,19 @@ export async function updateContent(self: ServiceWorkerGlobalScope) {
 
     console.log(`[update] unpacking: ${url}`);
     await patchContentStatus({
-      phase: ContentStatusPhase.unpack,
+      phase: ContentStatusPhase.UNPACK,
       progress: 0,
     });
 
     await unpackAndCache(buf, async (progress) => {
       await patchContentStatus({
-        phase: ContentStatusPhase.unpack,
+        phase: ContentStatusPhase.UNPACK,
         progress: progress,
       });
     });
 
     await patchContentStatus({
-      phase: ContentStatusPhase.idle,
+      phase: ContentStatusPhase.IDLE,
       local: remote,
       progress: null,
     });
@@ -230,7 +230,7 @@ async function clearContent(self: ServiceWorkerGlobalScope) {
 
   try {
     await patchContentStatus({
-      phase: ContentStatusPhase.clear,
+      phase: ContentStatusPhase.CLEAR,
     });
 
     console.log(`[clear] deleting`);
@@ -238,7 +238,7 @@ async function clearContent(self: ServiceWorkerGlobalScope) {
     console.log(`[clear] done: ${success}`);
 
     await patchContentStatus({
-      phase: ContentStatusPhase.idle,
+      phase: ContentStatusPhase.UNPACK,
       local: null,
     });
   } finally {

@@ -41,11 +41,11 @@ interface Whoami {
 }
 
 export enum ContentStatusPhase {
-  initial = "initial",
-  idle = "idle",
-  download = "download",
-  unpack = "unpack",
-  clear = "clear",
+  INITIAL = "initial",
+  IDLE = "idle",
+  DOWNLOAD = "download",
+  UNPACK = "unpack",
+  CLEAR = "clear",
 }
 
 export interface ContentVersion {
@@ -93,7 +93,7 @@ async function getContentStatus(): Promise<ContentStatus> {
 
   return (
     current || {
-      phase: ContentStatusPhase.initial,
+      phase: ContentStatusPhase.INITIAL,
       local: null,
       remote: null,
       progress: null,
@@ -113,8 +113,8 @@ async function patchContentStatus(
     timestamp: new Date(),
   };
 
-  if (newStatus.phase === ContentStatusPhase.initial) {
-    newStatus.phase = ContentStatusPhase.idle;
+  if (newStatus.phase === ContentStatusPhase.INITIAL) {
+    newStatus.phase = ContentStatusPhase.IDLE;
   }
 
   const table = offlineDb.contentStatusHistory;

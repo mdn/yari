@@ -18,11 +18,11 @@ export default function UpdateButton({
   let info: string | undefined;
 
   switch (updateStatus?.phase) {
-    case ContentStatusPhase.initial:
+    case ContentStatusPhase.INITIAL:
       info = "Checking for updates";
       break;
 
-    case ContentStatusPhase.idle:
+    case ContentStatusPhase.IDLE:
       if (updateStatus?.local?.version === updateStatus?.remote?.version) {
         info = "Your content is up to date";
         button = <button disabled>Up to date</button>;
@@ -48,7 +48,7 @@ export default function UpdateButton({
       }
       break;
 
-    case ContentStatusPhase.download:
+    case ContentStatusPhase.DOWNLOAD:
       if (updateStatus?.local) {
         info = "Update in progress…";
       } else {
@@ -57,7 +57,7 @@ export default function UpdateButton({
       button = <button disabled={disabled}>Downloading…</button>;
       break;
 
-    case ContentStatusPhase.unpack:
+    case ContentStatusPhase.UNPACK:
       if (updateStatus?.local) {
         info = "Update in progress…";
       } else {
@@ -75,7 +75,7 @@ export default function UpdateButton({
       );
       break;
 
-    case ContentStatusPhase.clear:
+    case ContentStatusPhase.CLEAR:
       info = "Clearing…";
       break;
   }
