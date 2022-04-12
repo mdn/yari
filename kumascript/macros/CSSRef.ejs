@@ -330,7 +330,7 @@ const pageList = await page.subpagesExpand('/en-US/docs/Web/CSS');
 const standardPages = pageList.filter(page => !hasTag(page, "Non-standard"));
 
 const groups = standardPages.filter(page => hasTag(page, "Overview"));
-const properties = standardPages.filter(page => hasTag(page, "CSS Property"));
+const properties = standardPages.filter(page => hasTag(page, "CSS Property")).sort((a, b) => a.title.localeCompare(b.title));
 const selectors = standardPages.filter(page => (hasTag(page, "Selector") && !hasTag(page, "Pseudo-element") && !hasTag(page, "Pseudo-class")));
 const pseudoClasses = standardPages.filter(page => hasTag(page, "Pseudo-class"));
 const pseudoElements = standardPages.filter(page => hasTag(page, "Pseudo-element"));
