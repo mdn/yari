@@ -4,7 +4,12 @@
 import { cacheName, contentCache, openCache } from "./caches";
 import { respond } from "./fetcher";
 import { unpackAndCache } from "./unpack-cache";
-import { offlineDb } from "./db";
+import {
+  ContentStatusPhase,
+  getContentStatus,
+  offlineDb,
+  patchContentStatus,
+} from "./db";
 import { fetchWithExampleOverride } from "./fetcher";
 
 export const INTERACTIVE_EXAMPLES_URL = new URL(
@@ -38,6 +43,7 @@ self.addEventListener("install", (e) => {
       await cache.addAll(assets as string[]);
     })().then(() => self.skipWaiting())
   );
+  refreshContent(self);
 });
 
 self.addEventListener("fetch", (e) => {
@@ -69,15 +75,22 @@ self.addEventListener("message", (e: ExtendableMessageEvent) => {
   e.waitUntil(
     (async () => {
       switch (e?.data?.type) {
+        case "refresh":
+          return refreshContent(self);
+
         case "update":
-          unpacking = updateContent(self, e?.data, e);
+          unpacking = updateContent(self);
           return unpacking;
+
         case "clear":
           return clearContent(self);
+
         case "ping":
           return await messageAllClients(self, { type: "pong" });
+
         case "keepalive":
           return unpacking;
+
         default:
           console.log(`unknown msg type: ${e?.data?.type}`);
           return Promise.resolve();
@@ -122,83 +135,115 @@ export async function messageAllClients(
 
 var updating = false;
 
-export async function updateContent(
-  self,
-  { current = null, latest = null, date = null } = {},
-  e
-) {
+export async function refreshContent(self: ServiceWorkerGlobalScope) {
+  if (updating) {
+    return;
+  }
+
+  const res = await fetch(`${UPDATES_BASE_URL}/update.json`);
+  const update = await res.json();
+
+  if (!update) {
+    console.error(`[refresh] Failed to determine remote version!`, res);
+  }
+
+  await patchContentStatus({
+    remote: {
+      version: update.latest,
+      date: update.date,
+    },
+  });
+}
+
+export async function updateContent(self: ServiceWorkerGlobalScope) {
+  const { local, remote } = await getContentStatus();
+
+  if (!remote || (local && local.version === remote.version)) {
+    return;
+  }
+
   if (updating) {
     return;
   } else {
     updating = true;
   }
+
   try {
-    if (!current) {
+    if (!local) {
+      console.log(`[update] cleaning`);
       await caches.delete(contentCache);
     }
-    await messageAllClients(self, {
-      type: "updateStatus",
-      progress: 0,
-      state: "downloading",
+
+    await patchContentStatus({
+      phase: ContentStatusPhase.download,
     });
 
     const url = new URL(
-      current
-        ? `/packages/${latest}-${current}-update.zip`
-        : `/packages/${latest}-content.zip`,
+      local
+        ? `/packages/${remote.version}-${local.version}-update.zip`
+        : `/packages/${remote.version}-content.zip`,
       UPDATES_BASE_URL
     );
+
     console.log(`[update] downloading: ${url}`);
     const res = await fetch(url.href);
     const buf = await res.arrayBuffer();
 
     console.log(`[update] unpacking: ${url}`);
-    await messageAllClients(self, {
-      type: "updateStatus",
+    await patchContentStatus({
+      phase: ContentStatusPhase.unpack,
       progress: 0,
-      state: "unpacking",
     });
 
     await unpackAndCache(buf, async (progress) => {
-      await messageAllClients(self, {
-        type: "updateStatus",
-        progress,
-        state: "unpacking",
+      await patchContentStatus({
+        phase: ContentStatusPhase.unpack,
+        progress: progress,
       });
     });
 
-    await messageAllClients(self, {
-      type: "updateStatus",
-      progress: 0,
-      state: "init",
-      currentVersion: latest,
-      currentDate: date,
+    await patchContentStatus({
+      phase: ContentStatusPhase.idle,
+      local: remote,
+      progress: null,
     });
 
+    console.log(`[update] synchronizing`);
     await synchronizeDb();
 
     console.log(`[update] done`);
-    updating = false;
   } catch (e) {
-    console.error(e);
+    console.error(`[update] failed`, e);
+  } finally {
     updating = false;
   }
 }
 
+var clearing = false;
+
 async function clearContent(self: ServiceWorkerGlobalScope) {
-  await messageAllClients(self, {
-    type: "updateStatus",
-    progress: 0,
-    state: "clearing",
-  });
-  await caches.delete(contentCache);
-  await messageAllClients(self, {
-    type: "updateStatus",
-    progress: -1,
-    state: "init",
-    currentVersion: null,
-    currentDate: null,
-  });
+  if (clearing) {
+    return;
+  }
+
+  clearing = true;
+
+  try {
+    await patchContentStatus({
+      phase: ContentStatusPhase.clear,
+    });
+
+    console.log(`[clear] deleting`);
+    const success = await caches.delete(contentCache);
+    console.log(`[clear] done: ${success}`);
+
+    await patchContentStatus({
+      phase: ContentStatusPhase.idle,
+      local: null,
+    });
+  } finally {
+    clearing = false;
+  }
 }
 
 async function synchronizeDb() {
