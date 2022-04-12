@@ -238,7 +238,7 @@ async function clearContent(self: ServiceWorkerGlobalScope) {
     console.log(`[clear] done: ${success}`);
 
     await patchContentStatus({
-      phase: ContentStatusPhase.UNPACK,
+      phase: ContentStatusPhase.IDLE,
       local: null,
     });
   } finally {
