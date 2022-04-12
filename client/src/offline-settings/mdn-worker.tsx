@@ -18,14 +18,12 @@ export class SettingsData {
 
 export class MDNWorker {
   settings: SettingsData;
-  updating: boolean;
   registered: boolean;
   timeout?: ReturnType<typeof setTimeout> | null;
   keepAlive: ReturnType<typeof setInterval> | null;
 
   constructor() {
     this.settings = this.offlineSettings();
-    this.updating = false;
     this.registered = false;
     this.timeout = null;
     this.keepAlive = null;
