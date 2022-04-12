@@ -215,6 +215,11 @@ export async function updateContent(self: ServiceWorkerGlobalScope) {
     console.log(`[update] done`);
   } catch (e) {
     console.error(`[update] failed`, e);
+
+    await patchContentStatus({
+      phase: ContentStatusPhase.IDLE,
+      progress: null,
+    });
   } finally {
     updating = false;
   }
