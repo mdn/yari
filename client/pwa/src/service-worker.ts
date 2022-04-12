@@ -180,17 +180,14 @@ export async function updateContent(self: ServiceWorkerGlobalScope) {
   }
 
   try {
-    if (!local) {
-      console.log(`[update] cleaning`);
-      await caches.delete(contentCache);
-    }
-
     await patchContentStatus({
       phase: ContentStatusPhase.DOWNLOAD,
     });
 
+    const useDiff = local && remote.updates.includes(local.version);
+
     const url = new URL(
-      local && remote.updates.includes(local.version)
+      useDiff
         ? `/packages/${remote.latest}-${local.version}-update.zip`
         : `/packages/${remote.latest}-content.zip`,
       UPDATES_BASE_URL
@@ -200,7 +197,12 @@ export async function updateContent(self: ServiceWorkerGlobalScope) {
     const res = await fetch(url.href);
     const buf = await res.arrayBuffer();
 
-    console.log(`[update] unpacking: ${url}`);
+    if (!useDiff) {
+      console.log(`[update] clearing old content`);
+      await deleteContentCache();
+    }
+
+    console.log(`[update] unpacking`);
     await patchContentStatus({
       phase: ContentStatusPhase.UNPACK,
       progress: 0,
@@ -251,16 +253,22 @@ async function clearContent(self: ServiceWorkerGlobalScope) {
     });
 
     console.log(`[clear] deleting`);
-    const success = await caches.delete(contentCache);
+    const success = await deleteContentCache();
     console.log(`[clear] done: ${success}`);
   } catch (e) {
     console.error(`[clear] failed`, e);
   } finally {
     await patchContentStatus({
       phase: ContentStatusPhase.IDLE,
-      local: null,
     });
   }
+}
+
+async function deleteContentCache() {
+  await patchContentStatus({
+    local: null,
+  });
+  return await caches.delete(contentCache);
 }
 
 async function synchronizeDb() {
