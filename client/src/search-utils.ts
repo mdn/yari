@@ -8,17 +8,17 @@ export type SearchProps = {
   onChangeIsFocused: (isFocused: boolean) => void;
 };
 
-export function useFocusOnSlash(
+export function useFocusOnSlashOrCtrlOrCmdK(
   inputRef: React.RefObject<null | HTMLInputElement>
 ) {
   useEffect(() => {
     function focusOnSearchMaybe(event) {
       const input = inputRef.current;
       if (
-        event.key === "/" &&
-        !event.ctrlKey &&
-        !event.metaKey &&
-        !["TEXTAREA", "INPUT"].includes(event.target.tagName)
+        (event.key === "/" && !event.ctrlKey && !event.metaKey) ||
+        (event.key.toLowerCase() === "k" &&
+          (event.metaKey || event.ctrlKey) &&
+          !["TEXTAREA", "INPUT"].includes(event.target.tagName))
       ) {
         if (input && document.activeElement !== input) {
           event.preventDefault();
