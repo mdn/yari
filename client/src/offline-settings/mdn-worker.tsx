@@ -1,18 +1,14 @@
-import { getContentStatus } from "./db";
+import { getContentStatus, patchContentStatus } from "./db";
 
 export class SettingsData {
   offline?: boolean;
   preferOnline?: boolean;
   autoUpdates?: boolean;
-  currentVersion?: string | null;
-  currentDate?: string | null;
 
   constructor() {
     this.offline = false;
     this.preferOnline = false;
     this.autoUpdates = false;
-    this.currentVersion = null;
-    this.currentDate = null;
   }
 }
 
@@ -94,10 +90,25 @@ export class MDNWorker {
   }
 
   offlineSettings(): SettingsData {
-    return (
+    const settings =
       JSON.parse(window.localStorage.getItem("MDNSettings") || "null") ??
-      new SettingsData()
-    );
+      new SettingsData();
+
+    if (settings.currentDate && settings.currentVersion) {
+      console.log(
+        `[worker] Migrate LocalContentStatus from LocalStorage to IndexedDB`
+      );
+      patchContentStatus({
+        local: {
+          version: settings.currentVersion,
+          date: settings.currentDate,
+        },
+      });
+      delete settings.currentDate;
+      delete settings.currentVersion;
+    }
+
+    return settings;
   }
 
   async setOfflineSettings(settingsData: SettingsData): Promise<SettingsData> {
