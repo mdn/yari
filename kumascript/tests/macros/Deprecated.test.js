@@ -8,9 +8,9 @@ describeMacro("Deprecated_Inline", function () {
   itMacro("No arguments (en-US)", function (macro) {
     return assert.eventually.equal(
       macro.call(),
-      `<svg class="icon icon-deprecated" tabindex="0">
-    <use xlink:href="/assets/badges.svg#icon-deprecated"></use>
-</svg>`
+      `<abbr class="icon icon-deprecated" title="Deprecated. Not for use in new websites.">
+    <span class="visually-hidden">Deprecated</span>
+</abbr>`
     );
   });
   itMacro('"semver" string only (en-US)', function (macro) {
