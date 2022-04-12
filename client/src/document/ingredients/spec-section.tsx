@@ -22,30 +22,28 @@ export function SpecificationSection({
       {title && !isH3 && <DisplayH2 id={id} title={title} />}
       {title && isH3 && <DisplayH3 id={id} title={title} />}
 
+      {/*
+        If we were to output HTML table markup here, then in the case where
+        we have multiple BCD features from a browser-compat frontmatter
+        key, we’d end up with multiple tables in the output. So we instead
+        output a simpler HTML structure for each specification, and use CSS
+        to push each piece together to make the collective end result look
+        like a table; client/src/document/index.scss has the CSS styles.
+      */}
+      <div className="spec-header">Specification</div>
       {specifications.length > 0 ? (
-        <table className="standard-table">
-          <thead>
-            <tr>
-              <th scope="col">Specification</th>
-            </tr>
-          </thead>
-          <tbody>
-            {specifications.map((spec) => (
-              <tr key={spec.bcdSpecificationURL}>
-                <td>
-                  <a href={spec.bcdSpecificationURL}>
-                    {spec.title} <br />
-                    {spec.bcdSpecificationURL.includes("#") && (
-                      <small>
-                        # {`${spec.bcdSpecificationURL.split("#")[1]}`}
-                      </small>
-                    )}
-                  </a>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+        <div className="specs">
+          {specifications.map((spec) => (
+            <p key={spec.bcdSpecificationURL}>
+              <a href={spec.bcdSpecificationURL}>
+                {spec.title} <br />
+                {spec.bcdSpecificationURL.includes("#") && (
+                  <small># {`${spec.bcdSpecificationURL.split("#")[1]}`}</small>
+                )}
+              </a>
+            </p>
+          ))}
+        </div>
       ) : (
         <NoteCard type="warning">
           <h4>No specification found</h4>

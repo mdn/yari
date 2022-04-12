@@ -115,11 +115,13 @@ export default function BrowserCompatibilityTable({
   data,
   browsers: browserInfo,
   locale,
+  showTableHeadings,
 }: {
   query: string;
   data: bcd.Identifier;
   browsers: bcd.Browsers;
   locale: string;
+  showTableHeadings: boolean;
 }) {
   const location = useLocation();
 
@@ -147,8 +149,28 @@ export default function BrowserCompatibilityTable({
     return `${url}?${sp.toString()}`;
   }
 
+  // “tableHeading” holds a BCD feature name. If there’s a “description”
+  // key in BCD for the feature, we use that description — after stripping
+  // out any HTML tags from it. Otherwise, if there’s no “description” key,
+  // we just use the BCD feature name. (These can be different; for
+  // example, the BCD feature name may be “for_of”, while its description
+  // is the string “<code>for...of</code>”.
+  let tableHeading;
+  if (data && data.__compat) {
+    tableHeading = data.__compat.description ? (
+      <h3
+        dangerouslySetInnerHTML={{
+          __html: data.__compat.description.replace(/<[^>]+>/g, ""),
+        }}
+      />
+    ) : (
+      <h3>{name}</h3>
+    );
+  }
+
   return (
     <BrowserCompatibilityErrorBoundary>
+      {showTableHeadings ? tableHeading : null}
       <BrowserInfoContext.Provider value={browserInfo}>
         <a
           className="bc-github-link external external-icon"

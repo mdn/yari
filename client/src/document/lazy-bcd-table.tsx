@@ -25,12 +25,14 @@ const isServer = typeof window === "undefined";
 
 export function LazyBrowserCompatibilityTable({
   id,
+  showTableHeadings,
   title,
   isH3,
   query,
   dataURL,
 }: {
   id: string;
+  showTableHeadings: boolean;
   title: string;
   isH3: boolean;
   query: string;
@@ -41,7 +43,10 @@ export function LazyBrowserCompatibilityTable({
       {title && !isH3 && <DisplayH2 id={id} title={title} />}
       {title && isH3 && <DisplayH3 id={id} title={title} />}
       {dataURL ? (
-        <LazyBrowserCompatibilityTableInner dataURL={dataURL} />
+        <LazyBrowserCompatibilityTableInner
+          dataURL={dataURL}
+          showTableHeadings={showTableHeadings}
+        />
       ) : (
         <NoteCard type="warning">
           <p>
@@ -59,7 +64,13 @@ export function LazyBrowserCompatibilityTable({
   );
 }
 
-function LazyBrowserCompatibilityTableInner({ dataURL }: { dataURL: string }) {
+function LazyBrowserCompatibilityTableInner({
+  dataURL,
+  showTableHeadings,
+}: {
+  dataURL: string;
+  showTableHeadings: boolean;
+}) {
   const locale = useLocale();
   const [bcdDataURL, setBCDDataURL] = useState("");
 
@@ -92,7 +103,11 @@ function LazyBrowserCompatibilityTableInner({ dataURL }: { dataURL: string }) {
   return (
     <ErrorBoundary>
       <Suspense fallback={<Loading message="Loading BCD table" />}>
-        <BrowserCompatibilityTable locale={locale} {...data} />
+        <BrowserCompatibilityTable
+          locale={locale}
+          showTableHeadings={showTableHeadings}
+          {...data}
+        />
       </Suspense>
     </ErrorBoundary>
   );

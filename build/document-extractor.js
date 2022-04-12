@@ -259,7 +259,9 @@ function addSections($) {
           // XXX That `_addSingleSpecialSection(section.clone())` might return a
           // and empty array and that means it failed and we should
           // bail.
-          subSections.push(..._addSingleSpecialSection(section.clone()));
+          for (const item of _addSingleSpecialSection(section.clone())) {
+            subSections.push(...item);
+          }
           section.empty();
         } else {
           section.append(child);
@@ -280,7 +282,10 @@ function addSections($) {
       }
       return [subSections, flaws];
     }
-    const specialSections = _addSingleSpecialSection($);
+    const specialSections = [];
+    for (const item of _addSingleSpecialSection($)) {
+      specialSections.push(...item);
+    }
 
     // The _addSingleSpecialSection() function will have sucked up the <h2> or <h3>
     // and the `div.bc-data` or `div.bc-specs` to turn it into a special section.
@@ -341,49 +346,99 @@ function _addSingleSpecialSection($) {
   if (!dataQuery && specURLsString === "") {
     // I wish there was a good place to log this!
     const [proseSections] = _addSectionProse($);
-    return proseSections;
+    return [proseSections];
   }
-  const query = dataQuery.replace(/^bcd:/, "");
-  const { browsers, data } = packageBCD(query);
 
+  const query = dataQuery.replace(/^bcd:/, "");
+  const queries = [];
+  // If the value of a browser-compat frontmatter key is a YAML array of
+  // multiple BCD feature identifiers, the “query” string here will end up
+  // containing a comma-separated list of the BCD identifiers — so we split
+  // the “query” value out into a JavaScript array.
+  queries.push(...query.split(",").map((item) => item.trim()));
+  // We create and populate the “features” value with an array of objects,
+  // where each object holds the results of doing a BCD query for one of
+  // the BCD identifiers in the “query” value.
+  const features = [];
+  for (let i = 0; i < queries.length; i++) {
+    features[i] = {};
+    const { browsers, data } = packageBCD(queries[i]);
+    features[i].browsers = browsers;
+    features[i].data = data;
+  }
+
+  const sectionItems = [];
   if (specialSectionType === "browser_compatibility") {
-    if (data === undefined) {
-      return [
-        {
-          type: specialSectionType,
-          value: {
-            title,
-            id,
-            isH3,
-            data: null,
-            query,
-            browsers: null,
+    for (let i = 0; i < queries.length; i++) {
+      const query = queries[i];
+      if (features[i].data === undefined) {
+        sectionItems.push([
+          {
+            type: specialSectionType,
+            value: {
+              title,
+              id,
+              isH3,
+              data: null,
+              query,
+              browsers: null,
+            },
           },
-        },
-      ];
+        ]);
+      }
+      // If we’re iterating through a list of multiple BCD features, we’ll
+      // end up with multiple “Browser compatibility” headings (titles) in
+      // the rendered page — unless we suppress rendering of all but the
+      // first “Browser compatibility” heading (title); “showTitle” is the
+      // flag we pass down through called code to cause that suppression.
+      const showTitle = i === 0 ? true : false;
+      const showTableHeadings = features.length > 1 ? true : false;
+      // For a “Browser compatibility” section, if we’re iterating through
+      // a list of multiple BCD features, we end up with multiple tables
+      // in the rendered page.
+      //
+      // In that case, to make it more clear which feature each table is
+      // for, we output the feature name as a heading before each table.
+      //
+      // But if there’s only one feature — only one table — we don’t output
+      // that feature-name heading. So “showTableHeadings” is the flag we
+      // pass down through called code to control whether those
+      // feature-name headings are output before the tables.
+      sectionItems.push(
+        _buildSpecialBCDSection(
+          showTitle,
+          showTableHeadings,
+          features[i].browsers,
+          features[i].data,
+          query
+        )
+      );
     }
-    return _buildSpecialBCDSection();
+    return sectionItems;
   } else if (specialSectionType === "specifications") {
-    if (data === undefined && specURLsString === "") {
-      return [
-        {
-          type: specialSectionType,
-          value: {
-            title,
-            id,
-            isH3,
-            query,
-            specifications: [],
-          },
-        },
-      ];
+    // If we’re iterating through a list of multiple BCD features, we’ll
+    // end up with multiple “Specifications” headings (titles) in the
+    // rendered page — unless we suppress rendering of all but the first
+    // “Specifications” heading (title); “showTitle” is the flag we pass
+    // down through called code to cause that suppression.
+    for (let i = 0; i < queries.length; i++) {
+      const showTitle = i === 0 ? true : false;
+      sectionItems.push(
+        _buildSpecialSpecSection(showTitle, features[i].data, query)
+      );
     }
-    return _buildSpecialSpecSection();
+    return sectionItems;
   }
 
   throw new Error(`Unrecognized special section type '${specialSectionType}'`);
 
-  function _buildSpecialBCDSection() {
+  function _buildSpecialBCDSection(
+    showTitle,
+    showTableHeadings,
+    browsers,
+    data,
+    query
+  ) {
     // First extract a map of all release data, keyed by (normalized) browser
     // name and the versions.
     // You'll have a map that looks like this:
@@ -406,6 +461,10 @@ function _addSingleSpecialSection($) {
         }
       }
       browserReleaseData.set(name, releaseData);
+    }
+
+    if (!data) {
+      return [];
     }
 
     for (const [key, compat] of Object.entries(data)) {
@@ -449,10 +508,12 @@ function _addSingleSpecialSection($) {
       }
     }
 
+    title = showTitle ? title : null;
     return [
       {
         type: "browser_compatibility",
         value: {
+          showTableHeadings,
           title,
           id,
           isH3,
@@ -518,14 +579,15 @@ function _addSingleSpecialSection($) {
     return version.split(".").map(Number);
   }
 
-  function _buildSpecialSpecSection() {
+  function _buildSpecialSpecSection(showTitle, data, query) {
     // Collect spec URLs from a BCD feature, a 'spec-urls' value, or both;
     // For a BCD feature, it can either be a string or an array of strings.
     let specURLs = [];
 
     if (data) {
-      // If 'data' is non-null, that means we have data for a BCD feature
-      // that we can extract spec URLs from.
+      // If 'data' is non-null, that means we have data, from the value of
+      // a browser-compat frontmatter key, for a BCD feature that we can
+      // extract spec URLs from.
       for (const [key, compat] of Object.entries(data)) {
         if (key === "__compat" && compat.spec_url) {
           if (Array.isArray(compat.spec_url)) {
@@ -535,12 +597,16 @@ function _addSingleSpecialSection($) {
           }
         }
       }
-    }
-
-    if (specURLsString !== "") {
-      // If specURLsString is non-empty, then it has the string contents of
-      // the document’s 'spec-urls' frontmatter key: one or more URLs.
-      specURLs.push(...specURLsString.split(",").map((url) => url.trim()));
+      // If there’s no browser-compat frontmatter key, then we check the
+      // value of the spec-urls frontmatter key. (Otherwise, we just use
+      // the BCD identifier(s) from the browser-compat key, and ignore any
+      // spec-urls key.)
+    } else {
+      if (specURLsString !== "") {
+        // If specURLsString is non-empty, then it has the string contents
+        // of the document’s 'spec-urls' frontmatter key: one or more URLs.
+        specURLs.push(...specURLsString.split(",").map((url) => url.trim()));
+      }
     }
 
     // Use BCD specURLs to look up more specification data
@@ -573,6 +639,7 @@ function _addSingleSpecialSection($) {
       })
       .filter(Boolean);
 
+    title = showTitle ? title : null;
     return [
       {
         type: "specifications",

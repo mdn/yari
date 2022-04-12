@@ -240,6 +240,37 @@ code {
   font-weight: var(--font-body-strong-weight);
 }
 
+div.specs p {
+  border: 1px solid var(--border-primary);
+  font: var(--type-body-l);
+  font-size: 0.875rem;
+  line-height: 1.75;
+  margin: 0;
+  padding: 0.5rem 0.75rem;
+}
+
+div.specs ~ div.specs p,
+div.specs p ~ p {
+  border-top-style: none;
+}
+
+.spec-header {
+  background: var(--background-tertiary);
+  border: 1px solid var(--border-primary);
+  border-bottom-style: none;
+  font: var(--type-body-l);
+  font-size: 0.875rem;
+  font-weight: var(--font-body-strong-weight);
+  line-height: 1.5;
+  padding: 0.5rem 0.75rem;
+  text-align: left;
+  vertical-align: middle;
+}
+
+.spec-header ~ .spec-header {
+  display: none;
+}
+
 table {
   font: var(--type-body-l);
   border: 1px solid var(--border-primary);
