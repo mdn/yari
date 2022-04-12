@@ -219,14 +219,12 @@ export async function updateContent(self: ServiceWorkerGlobalScope) {
   }
 }
 
-var clearing = false;
-
 async function clearContent(self: ServiceWorkerGlobalScope) {
-  if (clearing) {
+  const contentStatus = await getContentStatus();
+
+  if (contentStatus.phase === ContentStatusPhase.CLEAR) {
     return;
   }
-
-  clearing = true;
 
   try {
     await patchContentStatus({
@@ -236,13 +234,13 @@ async function clearContent(self: ServiceWorkerGlobalScope) {
     console.log(`[clear] deleting`);
     const success = await caches.delete(contentCache);
     console.log(`[clear] done: ${success}`);
-
+  } catch (e) {
+    console.error(`[clear] failed`, e);
+  } finally {
     await patchContentStatus({
       phase: ContentStatusPhase.IDLE,
       local: null,
     });
-  } finally {
-    clearing = false;
   }
 }
 
