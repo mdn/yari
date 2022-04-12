@@ -1,3 +1,8 @@
+// WARNING - This file is duplicated at two locations:
+// - client/pwa/src/db.ts
+// - client/src/offline-settings/db.ts
+// Until we find a solution, keep both files in sync.
+
 import Dexie from "dexie";
 
 interface Watched {
