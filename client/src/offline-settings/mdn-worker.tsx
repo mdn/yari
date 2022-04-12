@@ -41,7 +41,7 @@ export class MDNWorker {
       clearTimeout(this.timeout);
       this.timeout = null;
     }
-    this.getUpdate();
+    this.checkForUpdate();
     this.update();
     this.timeout = setTimeout(() => this.autoUpdate(), 60 * 60 * 1000);
   }
@@ -60,12 +60,12 @@ export class MDNWorker {
     return navigator.serviceWorker.controller;
   }
 
-  update() {
-    this.controller()?.postMessage({ type: "update" });
+  checkForUpdate(): void {
+    this.controller()?.postMessage({ type: "checkForUpdate" });
   }
 
-  getUpdate(): void {
-    this.controller()?.postMessage({ type: "refresh" });
+  update() {
+    this.controller()?.postMessage({ type: "update" });
   }
 
   swName(onlineFirst: boolean | null | undefined = null) {
@@ -89,10 +89,6 @@ export class MDNWorker {
       await registration?.unregister();
       this.registered = false;
     }
-  }
-
-  async updateAvailable() {
-    await this.getUpdate();
   }
 
   async status() {

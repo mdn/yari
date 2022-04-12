@@ -44,7 +44,7 @@ self.addEventListener("install", (e) => {
       await cache.addAll(assets as string[]);
     })().then(() => self.skipWaiting())
   );
-  refreshContent(self);
+  checkForUpdate(self);
 });
 
 self.addEventListener("fetch", (e) => {
@@ -76,8 +76,8 @@ self.addEventListener("message", (e: ExtendableMessageEvent) => {
   e.waitUntil(
     (async () => {
       switch (e?.data?.type) {
-        case "refresh":
-          return refreshContent(self);
+        case "checkForUpdate":
+          return checkForUpdate(self);
 
         case "update":
           unpacking = updateContent(self);
@@ -145,7 +145,7 @@ function isRemoteStatus(remote: unknown): remote is RemoteStatus {
 
 var updating = false;
 
-export async function refreshContent(self: ServiceWorkerGlobalScope) {
+export async function checkForUpdate(self: ServiceWorkerGlobalScope) {
   if (updating) {
     return;
   }
@@ -154,10 +154,10 @@ export async function refreshContent(self: ServiceWorkerGlobalScope) {
   const remote = await res.json();
 
   if (!remote) {
-    console.error(`[refresh] Failed to fetch remote status!`, res);
+    console.error(`[checkForUpdate] Failed to fetch remote status!`, res);
     return;
   } else if (!isRemoteStatus(remote)) {
-    console.warn(`[refresh] Got unsupported remote status:`, remote);
+    console.warn(`[checkForUpdate] Got unsupported remote status:`, remote);
     return;
   }
 

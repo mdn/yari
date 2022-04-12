@@ -51,7 +51,7 @@ function Settings() {
       const mdnWorker = getMDNWorker();
       setSettings(await mdnWorker.offlineSettings());
       setEstimate(await navigator?.storage?.estimate?.());
-      await mdnWorker.updateAvailable();
+      mdnWorker.checkForUpdate();
     };
     init().then(() => {});
   }, []);
