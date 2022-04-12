@@ -341,7 +341,10 @@ function getNotes(
       .reverse()
       .flatMap((item, i) => {
         const supportNotes = [
-          item.version_removed
+          item.version_removed &&
+          !asList(support).some(
+            (otherItem) => otherItem.version_added === item.version_removed
+          )
             ? {
                 iconName: "disabled",
                 label: (
