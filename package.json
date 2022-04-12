@@ -134,7 +134,7 @@
     "@types/hast": "^2.3.4",
     "@types/jest": "^27.4.0",
     "@types/mdast": "^3.0.10",
-    "@types/react": "^17.0.43",
+    "@types/react": "^18.0.2",
     "@types/react-dom": "^17.0.14",
     "@types/react-modal": "^3.13.1",
     "alasql": "1.7.3",
