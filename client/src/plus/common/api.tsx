@@ -67,6 +67,7 @@ export function useNotificationsApiEndpoint(
 
   useEffect(() => {
     (async () => {
+      setIsLoading(true);
       const sp = new URLSearchParams();
 
       searchTerms!! && sp.append("q", searchTerms);
