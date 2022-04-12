@@ -134,6 +134,15 @@ export async function messageAllClients(
   }
 }
 
+function isRemoteStatus(remote: unknown): remote is RemoteStatus {
+  return (
+    typeof remote === "object" &&
+    typeof remote["latest"] === "string" &&
+    typeof remote["date"] === "string" &&
+    Array.isArray(remote["updates"])
+  );
+}
+
 var updating = false;
 
 export async function refreshContent(self: ServiceWorkerGlobalScope) {
@@ -145,11 +154,15 @@ export async function refreshContent(self: ServiceWorkerGlobalScope) {
   const remote = await res.json();
 
   if (!remote) {
-    console.error(`[refresh] Failed to determine remote version!`, res);
+    console.error(`[refresh] Failed to fetch remote status!`, res);
+    return;
+  } else if (!isRemoteStatus(remote)) {
+    console.warn(`[refresh] Got unsupported remote status:`, remote);
+    return;
   }
 
   await patchContentStatus({
-    remote: remote as RemoteStatus,
+    remote,
   });
 }
 
