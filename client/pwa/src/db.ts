@@ -48,12 +48,12 @@ export enum ContentStatusPhase {
   CLEAR = "clear",
 }
 
-export interface LocalStatus {
+export interface LocalContentStatus {
   version: string;
   date: string;
 }
 
-export interface RemoteStatus {
+export interface RemoteContentStatus {
   date: string;
   latest: string;
   updates: [string];
@@ -62,8 +62,8 @@ export interface RemoteStatus {
 export interface ContentStatus {
   id?: number;
   phase: ContentStatusPhase;
-  local: LocalStatus | null;
-  remote: RemoteStatus | null;
+  local: LocalContentStatus | null;
+  remote: RemoteContentStatus | null;
   progress: number | null;
   timestamp: Date;
 }

@@ -9,7 +9,7 @@ import {
   getContentStatus,
   offlineDb,
   patchContentStatus,
-  RemoteStatus,
+  RemoteContentStatus,
 } from "./db";
 import { fetchWithExampleOverride } from "./fetcher";
 
@@ -134,7 +134,7 @@ export async function messageAllClients(
   }
 }
 
-function isRemoteStatus(remote: unknown): remote is RemoteStatus {
+function isRemoteContentStatus(remote: unknown): remote is RemoteContentStatus {
   return (
     typeof remote === "object" &&
     typeof remote["latest"] === "string" &&
@@ -156,7 +156,7 @@ export async function checkForUpdate(self: ServiceWorkerGlobalScope) {
   if (!remote) {
     console.error(`[checkForUpdate] Failed to fetch remote status!`, res);
     return;
-  } else if (!isRemoteStatus(remote)) {
+  } else if (!isRemoteContentStatus(remote)) {
     console.warn(`[checkForUpdate] Got unsupported remote status:`, remote);
     return;
   }
