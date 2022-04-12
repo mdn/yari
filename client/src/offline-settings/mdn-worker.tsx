@@ -1,17 +1,5 @@
 import { getContentStatus } from "./db";
 
-export class UpdateData {
-  date: Date;
-  latest: string;
-  updates: [string];
-
-  constructor({ date, latest, updates }) {
-    this.date = new Date(date);
-    this.latest = latest;
-    this.updates = updates;
-  }
-}
-
 export class SettingsData {
   offline?: boolean;
   preferOnline?: boolean;

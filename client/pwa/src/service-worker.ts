@@ -9,6 +9,7 @@ import {
   getContentStatus,
   offlineDb,
   patchContentStatus,
+  RemoteStatus,
 } from "./db";
 import { fetchWithExampleOverride } from "./fetcher";
 
@@ -141,24 +142,21 @@ export async function refreshContent(self: ServiceWorkerGlobalScope) {
   }
 
   const res = await fetch(`${UPDATES_BASE_URL}/update.json`);
-  const update = await res.json();
+  const remote = await res.json();
 
-  if (!update) {
+  if (!remote) {
     console.error(`[refresh] Failed to determine remote version!`, res);
   }
 
   await patchContentStatus({
-    remote: {
-      version: update.latest,
-      date: update.date,
-    },
+    remote: remote as RemoteStatus,
   });
 }
 
 export async function updateContent(self: ServiceWorkerGlobalScope) {
   const { local, remote } = await getContentStatus();
 
-  if (!remote || (local && local.version === remote.version)) {
+  if (!remote || (local && local.version === remote.latest)) {
     return;
   }
 
@@ -179,9 +177,9 @@ export async function updateContent(self: ServiceWorkerGlobalScope) {
     });
 
     const url = new URL(
-      local
-        ? `/packages/${remote.version}-${local.version}-update.zip`
-        : `/packages/${remote.version}-content.zip`,
+      local && remote.updates.includes(local.version)
+        ? `/packages/${remote.latest}-${local.version}-update.zip`
+        : `/packages/${remote.latest}-content.zip`,
       UPDATES_BASE_URL
     );
 
@@ -204,7 +202,10 @@ export async function updateContent(self: ServiceWorkerGlobalScope) {
 
     await patchContentStatus({
       phase: ContentStatusPhase.IDLE,
-      local: remote,
+      local: {
+        version: remote.latest,
+        date: remote.date,
+      },
       progress: null,
     });
 

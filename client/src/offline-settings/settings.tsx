@@ -93,7 +93,7 @@ function Settings() {
 
   if (
     settings?.autoUpdates &&
-    status?.remote?.version !== status?.local?.version &&
+    status?.remote?.latest !== status?.local?.version &&
     !updateTriggered.current
   ) {
     update();
