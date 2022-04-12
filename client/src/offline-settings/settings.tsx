@@ -165,7 +165,9 @@ function Settings() {
           {window?.location.hash === "#debug" && (
             <li>
               <h4>Debug</h4>
-              <span>{JSON.stringify(status, null, 2)}</span>
+              <span style={{ fontFamily: "monospace", whiteSpace: "pre" }}>
+                {JSON.stringify(status, null, 2)}
+              </span>
             </li>
           )}
           {usage && (
