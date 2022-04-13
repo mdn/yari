@@ -90,6 +90,7 @@ self.addEventListener("message", (e: ExtendableMessageEvent) => {
           return await messageAllClients(self, { type: "pong" });
 
         case "keepalive":
+          console.log("[keepalive]");
           return unpacking;
 
         default:

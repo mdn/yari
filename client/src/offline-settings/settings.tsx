@@ -7,7 +7,7 @@ import UpdateButton from "./update";
 import ClearButton from "./clear";
 import { Spinner } from "../ui/atoms/spinner";
 import { MDN_PLUS_TITLE } from "../constants";
-import { ContentStatus } from "./db";
+import { ContentStatus, ContentStatusPhase } from "./db";
 
 function displayEstimate({ usage = 0, quota = Infinity }: StorageEstimate) {
   const usageInMib = Math.round(usage / (1024 * 1024));
@@ -61,6 +61,14 @@ function Settings() {
     };
     init();
   }, [settings]);
+
+  useEffect(() => {
+    const mdnWorker = getMDNWorker();
+    const keepAlive = status?.phase
+      ? status?.phase !== ContentStatusPhase.IDLE
+      : false;
+    mdnWorker.toggleKeepAlive(keepAlive);
+  }, [status?.phase]);
 
   const updateSettings = async (change: SettingsData) => {
     setSaving(true);

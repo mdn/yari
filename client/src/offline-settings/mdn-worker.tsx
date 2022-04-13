@@ -85,6 +85,20 @@ export class MDNWorker {
     }
   }
 
+  toggleKeepAlive(keepAlive: boolean) {
+    if (this.keepAlive && !keepAlive) {
+      console.log("[worker] keepalive -> enabling");
+      clearInterval(this.keepAlive);
+      this.keepAlive = null;
+    } else if (keepAlive && !this.keepAlive) {
+      console.log("[worker] keepalive -> disabling");
+      this.keepAlive = setInterval(
+        () => this.controller()?.postMessage({ type: "keepalive" }),
+        10000
+      );
+    }
+  }
+
   async status() {
     return await getContentStatus();
   }
