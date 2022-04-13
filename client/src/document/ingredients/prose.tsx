@@ -3,7 +3,7 @@ import { DisplayH2, DisplayH3 } from "./utils";
 export function Prose({ id, section }: { id?: string; section: any }) {
   return (
     <section
-      aria-describedby={id}
+      aria-labelledby={id}
       dangerouslySetInnerHTML={{ __html: section.content }}
     />
   );
