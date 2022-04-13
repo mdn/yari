@@ -5,6 +5,11 @@ export class SettingsData {
   preferOnline?: boolean;
   autoUpdates?: boolean;
 
+  /** @deprecated Migrated to IndexedDB. */
+  currentVersion?: string;
+  /** @deprecated Migrated to IndexedDB. */
+  currentDate?: string;
+
   constructor() {
     this.offline = false;
     this.preferOnline = false;
@@ -104,9 +109,7 @@ export class MDNWorker {
   }
 
   offlineSettings(): SettingsData {
-    const settings =
-      JSON.parse(window.localStorage.getItem("MDNSettings") || "null") ??
-      new SettingsData();
+    const settings = this.readOfflineSettings();
 
     if (settings.currentDate && settings.currentVersion) {
       console.log(
@@ -120,6 +123,7 @@ export class MDNWorker {
       });
       delete settings.currentDate;
       delete settings.currentVersion;
+      this.writeOfflineSettings(settings);
     }
 
     return settings;
@@ -152,10 +156,22 @@ export class MDNWorker {
     }
 
     const settings = { ...current, ...settingsData };
-    window.localStorage.setItem("MDNSettings", JSON.stringify(settings));
+    this.writeOfflineSettings(settings);
     this.settings = settings;
     return settings;
   }
+
+  readOfflineSettings(): SettingsData {
+    return (
+      JSON.parse(window.localStorage.getItem("MDNSettings") || "null") ??
+      new SettingsData()
+    );
+  }
+
+  writeOfflineSettings(settings: SettingsData) {
+    window.localStorage.setItem("MDNSettings", JSON.stringify(settings));
+  }
+
   async clear() {
     this.controller()?.postMessage({ type: "clear" });
   }
