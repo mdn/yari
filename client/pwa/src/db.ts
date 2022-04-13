@@ -128,7 +128,7 @@ async function patchContentStatus(
       timestamp: new Date(),
     };
 
-    if (newStatus.phase === ContentStatusPhase.INITIAL) {
+    if (oldStatus.phase === ContentStatusPhase.INITIAL && !changes.phase) {
       newStatus.phase = ContentStatusPhase.IDLE;
     }
 
