@@ -111,10 +111,9 @@ async function initOncePerRun(self: ServiceWorkerGlobalScope) {
   }
 
   await patchContentStatus({
-    phase: ContentStatusPhase.INITIAL,
+    phase: ContentStatusPhase.IDLE,
     progress: null,
   });
-  checkForUpdate(self);
 }
 
 self.addEventListener("activate", (e: ExtendableEvent) => {
@@ -167,6 +166,7 @@ export async function checkForUpdate(self: ServiceWorkerGlobalScope) {
     return;
   }
 
+  console.log("[checkForUpdate]");
   const res = await fetch(`${UPDATES_BASE_URL}/update.json`);
   const remote = await res.json();
 
