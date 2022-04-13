@@ -31,7 +31,7 @@ function extractSidebar($) {
   return sidebarHtml;
 }
 
-function extractSections($) {
+function extractSections($, metadata) {
   const flaws = [];
   const sections = [];
   const section = cheerio
@@ -46,7 +46,7 @@ function extractSections($) {
   iterable.forEach((child) => {
     if (child.tagName === "h2" || child.tagName === "h3") {
       if (c) {
-        const [subSections, subFlaws] = addSections(section.clone());
+        const [subSections, subFlaws] = addSections(section.clone(), metadata);
         sections.push(...subSections);
         flaws.push(...subFlaws);
         section.empty();
@@ -61,7 +61,7 @@ function extractSections($) {
   });
   if (c) {
     // last straggler
-    const [subSections, subFlaws] = addSections(section);
+    const [subSections, subFlaws] = addSections(section, metadata);
     sections.push(...subSections);
     flaws.push(...subFlaws);
   }
@@ -183,11 +183,14 @@ function extractSections($) {
  *        specifications: {....}
  *   }]
  */
-function addSections($) {
+function addSections($, metadata) {
   const flaws = [];
 
   const countPotentialSpecialDivs = $.find("div.bc-data, div.bc-specs").length;
-  if (countPotentialSpecialDivs) {
+  const countSpecialSections = $.find(
+    "#specifications, #browser_compatibility"
+  ).length;
+  if (countPotentialSpecialDivs || countSpecialSections) {
     /** If there's exactly 1 special table the only section to add is something
      * like this:
      *    {
@@ -259,7 +262,9 @@ function addSections($) {
           // XXX That `_addSingleSpecialSection(section.clone())` might return a
           // and empty array and that means it failed and we should
           // bail.
-          subSections.push(..._addSingleSpecialSection(section.clone()));
+          subSections.push(
+            ..._addSingleSpecialSection(section.clone(), metadata)
+          );
           section.empty();
         } else {
           section.append(child);
@@ -280,7 +285,7 @@ function addSections($) {
       }
       return [subSections, flaws];
     }
-    const specialSections = _addSingleSpecialSection($);
+    const specialSections = _addSingleSpecialSection($, metadata);
 
     // The _addSingleSpecialSection() function will have sucked up the <h2> or <h3>
     // and the `div.bc-data` or `div.bc-specs` to turn it into a special section.
@@ -304,7 +309,7 @@ function addSections($) {
   return [proseSections, flaws];
 }
 
-function _addSingleSpecialSection($) {
+function _addSingleSpecialSection($, metadata) {
   let id = null;
   let title = null;
   let isH3 = false;
@@ -322,16 +327,63 @@ function _addSingleSpecialSection($) {
     }
   }
 
-  let dataQuery = null;
+  let dataQuery = "";
+  let specURLs = "";
   let specURLsString = "";
   let specialSectionType = null;
-  if ($.find("div.bc-data").length) {
+  const bcdElementFromCompatMacro = $.find("div.bc-data");
+  const bcdElementFromSpecificationsMacro = $.find("div.bc-specs");
+  if (
+    $.find("#browser_compatibility").length ||
+    bcdElementFromCompatMacro.length
+  ) {
+    if (metadata["browser-compat"]) {
+      // Note: If the browser-compat value is a YAML array, then dataQuery
+      // will end up being a JavaScript array here.
+      dataQuery = metadata["browser-compat"];
+      // If we have any BCD identifiers from a browser-compat frontmatter
+      // key, then ignore any BCD identifiers from any Compat macros.
+    } else {
+      if (bcdElementFromCompatMacro.length) {
+        dataQuery = bcdElementFromCompatMacro.attr("id");
+      }
+    }
     specialSectionType = "browser_compatibility";
-    dataQuery = $.find("div.bc-data").attr("id");
-  } else if ($.find("div.bc-specs").length) {
+  } else if (
+    $.find("#specifications").length ||
+    bcdElementFromSpecificationsMacro.length
+  ) {
+    if (bcdElementFromSpecificationsMacro.length) {
+      dataQuery = bcdElementFromSpecificationsMacro.attr("data-bcd-query");
+    }
+    if (metadata["spec-urls"]) {
+      // Note: If the spec-urls value is a YAML array, then specURLs will
+      // end up being a JavaScript array here.
+      specURLs = metadata["spec-urls"];
+      console.log("spec URLs: " + specURLs);
+      // If we have any spec URLs from a spec-urls frontmatter key, then
+      // ignore any spec URLs identifiers from any Specifications macros.
+    } else {
+      specURLsString = bcdElementFromSpecificationsMacro.attr("data-spec-urls");
+    }
     specialSectionType = "specifications";
-    dataQuery = $.find("div.bc-specs").attr("data-bcd-query");
-    specURLsString = $.find("div.bc-specs").attr("data-spec-urls");
+  }
+  // The browser-compat and spec-urls frontmatter values can be either
+  // strings or YAML arrays. So we can end up with dataQuery and specURLs
+  // values that are either strings or arrays. But in the case that we
+  // got the values from the Specifications and Compat macros, the values
+  // will never be arrays but instead always strings — though the strings
+  // may contain multiple comma-separated spec URLs or BCD identifiers. So
+  // for backward-compatiblity with the macros case, we “normalize” the
+  // values into strings here (and then in our code that consumes the
+  // values, we handle splitting them back out into arrays if needed).
+  if (dataQuery instanceof Array) {
+    dataQuery = dataQuery.join(",");
+  }
+  if (specURLs instanceof Array) {
+    specURLsString = specURLs.join(",");
+  } else {
+    specURLsString = specURLs;
   }
 
   // Some old legacy documents haven't been re-rendered yet, since it
