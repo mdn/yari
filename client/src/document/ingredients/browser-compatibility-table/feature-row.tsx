@@ -3,7 +3,7 @@ import type bcd from "@mdn/browser-compat-data/types";
 import { BrowserInfoContext } from "./browser-info";
 import {
   asList,
-  getFirst,
+  getCurrent,
   hasNoteworthyNotes,
   isFullySupportedWithoutLimitation,
   isNotSupportedAtAll,
@@ -46,7 +46,7 @@ function getSupportClassName(
   }
 
   let { flags, version_added, version_removed, partial_implementation } =
-    getFirst(support);
+    getCurrent(support);
 
   let className;
   if (version_added === null) {
@@ -55,13 +55,7 @@ function getSupportClassName(
     className = "preview";
   } else if (version_added) {
     className = "yes";
-    if (
-      (version_removed &&
-        !asList(support!).some((item) =>
-          isFullySupportedWithoutLimitation(item)
-        )) ||
-      (flags && flags.length)
-    ) {
+    if (version_removed || (flags && flags.length)) {
       className = "no";
     }
   } else {
@@ -80,7 +74,7 @@ function getSupportBrowserReleaseDate(
   if (!support) {
     return undefined;
   }
-  return getFirst(support).release_date;
+  return getCurrent(support).release_date;
 }
 
 function StatusIcons({ status }: { status: bcd.StatusBlock }) {
@@ -142,17 +136,12 @@ const CellText = React.memo(
     support: bcd.SupportStatement | undefined;
     browser: bcd.BrowserStatement;
   }) => {
-    const currentSupport =
-      (support &&
-        asList(support).find((item) =>
-          isFullySupportedWithoutLimitation(item)
-        )) ??
-      getFirst(support);
+    const currentSupport = getCurrent(support);
 
     const added = currentSupport?.version_added ?? null;
     const removed = currentSupport?.version_removed ?? null;
 
-    const browserReleaseDate = getSupportBrowserReleaseDate(currentSupport);
+    const browserReleaseDate = getSupportBrowserReleaseDate(support);
 
     let status:
       | { isSupported: "unknown" }
@@ -194,11 +183,7 @@ const CellText = React.memo(
         break;
     }
 
-    if (
-      removed &&
-      support &&
-      !asList(support).some((item) => isFullySupportedWithoutLimitation(item))
-    ) {
+    if (removed) {
       status = {
         isSupported: "no",
         label: (
@@ -287,7 +272,7 @@ function Icon({ name }: { name: string }) {
 }
 
 function CellIcons({ support }: { support: bcd.SupportStatement | undefined }) {
-  const supportItem = getFirst(support);
+  const supportItem = getCurrent(support);
   if (!supportItem) {
     return null;
   }
