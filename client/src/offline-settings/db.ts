@@ -116,26 +116,30 @@ async function getContentStatus(): Promise<ContentStatus> {
 async function patchContentStatus(
   changes: Omit<Partial<ContentStatus>, "id" | "timestamp">
 ) {
-  const oldStatus = await getContentStatus();
-  const newStatus = {
-    ...oldStatus,
-    ...changes,
-    id: undefined,
-    timestamp: new Date(),
-  };
+  const db = offlineDb;
+  const table = db.contentStatusHistory;
 
-  if (newStatus.phase === ContentStatusPhase.INITIAL) {
-    newStatus.phase = ContentStatusPhase.IDLE;
-  }
+  await db.transaction("rw", table, async () => {
+    const oldStatus = await getContentStatus();
+    const newStatus = {
+      ...oldStatus,
+      ...changes,
+      id: undefined,
+      timestamp: new Date(),
+    };
 
-  const table = offlineDb.contentStatusHistory;
-  if (oldStatus.id && oldStatus.phase === newStatus.phase) {
-    await table.update(oldStatus.id, newStatus);
-  } else {
-    await table.add(newStatus);
-    // Keep latest entries for debugging.
-    await table.reverse().offset(100).delete();
-  }
+    if (oldStatus.phase === ContentStatusPhase.INITIAL && !changes.phase) {
+      newStatus.phase = ContentStatusPhase.IDLE;
+    }
+
+    if (oldStatus.id && oldStatus.phase === newStatus.phase) {
+      await table.update(oldStatus.id, newStatus);
+    } else {
+      await table.add(newStatus);
+      // Keep latest entries for debugging.
+      await table.reverse().offset(100).delete();
+    }
+  });
 }
 
 export { offlineDb, getContentStatus, patchContentStatus };
