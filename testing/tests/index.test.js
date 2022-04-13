@@ -1502,8 +1502,8 @@ test("external links always get the right attributes", () => {
   // 4 links on that page and we'll do 2 assertions for each one, plus
   // 1 for the extra sanity check.
   expect.assertions(4 * 2 + 1);
-  expect($("article > section a").length).toBe(4); // sanity check
-  $("article > section a").each((i, element) => {
+  expect($("article > section div a").length).toBe(4); // sanity check
+  $("article > section div a").each((i, element) => {
     const $a = $(element);
     expect($a.hasClass("external")).toBe(true);
     expect(
