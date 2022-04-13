@@ -64,10 +64,21 @@ function Settings() {
 
   useEffect(() => {
     const mdnWorker = getMDNWorker();
-    const keepAlive = status?.phase
+    const isWorkerBusy = status?.phase
       ? status?.phase !== ContentStatusPhase.IDLE
       : false;
-    mdnWorker.toggleKeepAlive(keepAlive);
+    mdnWorker.toggleKeepAlive(isWorkerBusy);
+
+    if (isWorkerBusy) {
+      // Warn when leaving page.
+      const listener = (e) => {
+        e.preventDefault();
+        e.returnValue = "";
+      };
+      window.addEventListener("beforeunload", listener);
+
+      return () => window.removeEventListener("beforeunload", listener);
+    }
   }, [status?.phase]);
 
   const updateSettings = async (change: SettingsData) => {
