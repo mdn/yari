@@ -124,7 +124,7 @@ function NewIssueOnGitHubLink({ doc }: { doc: Doc }) {
   } else {
     url.pathname = "/mdn/content/issues/new";
     sp.set("template", "page-report.yml");
-    sp.set("mdn-url", doc.mdn_url);
+    sp.set("mdn-url", `https://developer.mozilla.org${doc.mdn_url}`);
     sp.set("metadata", fillMetadata(METADATA_TEMPLATE, doc));
   }
 
