@@ -44,7 +44,7 @@ self.addEventListener("install", (e) => {
       await cache.addAll(assets as string[]);
     })().then(() => self.skipWaiting())
   );
-  checkForUpdate(self);
+  initOncePerRun(self);
 });
 
 self.addEventListener("fetch", (e) => {
@@ -75,6 +75,7 @@ self.addEventListener("fetch", (e) => {
 self.addEventListener("message", (e: ExtendableMessageEvent) => {
   e.waitUntil(
     (async () => {
+      initOncePerRun(self);
       switch (e?.data?.type) {
         case "checkForUpdate":
           return checkForUpdate(self);
@@ -100,6 +101,21 @@ self.addEventListener("message", (e: ExtendableMessageEvent) => {
     })()
   );
 });
+
+var isRunning = false;
+async function initOncePerRun(self: ServiceWorkerGlobalScope) {
+  if (isRunning) {
+    return;
+  } else {
+    isRunning = true;
+  }
+
+  await patchContentStatus({
+    phase: ContentStatusPhase.INITIAL,
+    progress: null,
+  });
+  checkForUpdate(self);
+}
 
 self.addEventListener("activate", (e: ExtendableEvent) => {
   e.waitUntil(
