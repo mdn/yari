@@ -26,7 +26,7 @@ export function PageNotFound() {
   }, [location]);
 
   return (
-    <div className="page-not-found">
+    <div className="main-wrapper page-not-found">
       <PageContentContainer>
         {/* This string should match the `pageTitle` set in ssr/render.js */}
         <h1>Page not found</h1>

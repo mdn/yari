@@ -49,7 +49,7 @@ export function SiteSearch() {
   }, [query, page, ga]);
 
   return (
-    <div className="site-search main-page-content">
+    <div className="main-wrapper site-search main-page-content">
       <PageContentContainer>
         {query ? (
           <h1>
