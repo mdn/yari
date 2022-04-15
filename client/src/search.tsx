@@ -443,6 +443,8 @@ function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
     );
   })();
 
+  const blurTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
+
   return (
     <form
       action={formAction}
@@ -477,10 +479,19 @@ function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
           name: "q",
           onMouseOver: initializeSearchIndex,
           onFocus: () => {
+            if (blurTimeout.current) {
+              // For example: click on search item.
+              clearTimeout(blurTimeout.current);
+            }
             onChangeIsFocused(true);
           },
           onBlur: () => {
-            onChangeIsFocused(false);
+            if (blurTimeout.current) {
+              clearTimeout(blurTimeout.current);
+            }
+            blurTimeout.current = setTimeout(() => {
+              onChangeIsFocused(false);
+            }, 0);
           },
           onKeyDown(event) {
             if (event.key === "Escape" && inputRef.current) {
