@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { useCombobox } from "downshift";
 import useSWR from "swr";
 
@@ -163,13 +163,11 @@ function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
     onChangeInputValue,
     isFocused,
     onChangeIsFocused,
-    onResultPicked,
     defaultSelection,
   } = props;
 
   const inputId = `${id}-q`;
   const formId = `${id}-form`;
-  const navigate = useNavigate();
   const locale = useLocale();
 
   const [searchIndex, searchIndexError, initializeSearchIndex] =
@@ -270,20 +268,12 @@ function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
     defaultIsOpen: isFocused,
     defaultHighlightedIndex: 0,
     onSelectedItemChange: ({ type, selectedItem }) => {
-      if (type !== useCombobox.stateChangeTypes.InputBlur && selectedItem) {
-        navigate(selectedItem.url);
-        onChangeInputValue("");
-        reset();
-        toggleMenu();
-        inputRef.current?.blur();
-        if (onResultPicked) {
-          onResultPicked();
-        }
-        window.scroll({
-          top: 0,
-          left: 0,
-          behavior: "smooth",
-        });
+      if (type === useCombobox.stateChangeTypes.InputBlur) {
+        // Ignore: Happens when focusing the hp search.
+        return;
+      }
+      if (selectedItem) {
+        window.location.href = selectedItem.url;
       }
     },
   });
