@@ -266,7 +266,7 @@ function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
         ? [nothingFoundItem]
         : [...resultItems, onlineSearch],
     inputValue,
-    isOpen: inputValue !== "",
+    isOpen: isFocused,
     defaultIsOpen: isFocused,
     defaultHighlightedIndex: 0,
     onSelectedItemChange: ({ type, selectedItem }) => {
