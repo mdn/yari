@@ -88,7 +88,7 @@ function StaticPage({
         </div>
       </div>
 
-      <div className="article-wrapper">
+      <div className="main-wrapper">
         <SidebarContainer doc={hyData}>
           {sidebarHeader || null}
         </SidebarContainer>
