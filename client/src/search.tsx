@@ -319,7 +319,7 @@ function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
   }, [resultItems, inputValue]);
 
   const searchResults = (() => {
-    if (!isOpen || !inputValue.trim()) {
+    if (!inputValue.trim()) {
       return null;
     }
 
