@@ -31,7 +31,7 @@ test.describe("Autocomplete search", () => {
     await page.waitForLoadState("networkidle");
     expect(await page.innerText("h1")).toBe("<foo>: A test tag");
     // Should have been redirected too...
-    expect(page.url()).toBe(testURL("/en-US/docs/Web/Foo"));
+    expect(page.url()).toBe(testURL("/en-US/docs/Web/Foo/"));
   });
 
   test("find nothing by title search", async ({ page }) => {
@@ -69,7 +69,7 @@ test.describe("Autocomplete search", () => {
     await page.waitForLoadState("networkidle");
     expect(await page.innerText("h1")).toBe("<foo>: A test tag");
     // Should have been redirected too...
-    expect(page.url()).toBe(testURL("/en-US/docs/Web/Foo"));
+    expect(page.url()).toBe(testURL("/en-US/docs/Web/Foo/"));
   });
 
   test("find nothing by fuzzy-search", async ({ page }) => {
