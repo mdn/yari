@@ -3,7 +3,7 @@ import type bcd from "@mdn/browser-compat-data/types";
 import { BrowserInfoContext } from "./browser-info";
 import {
   asList,
-  getCurrent,
+  getCurrentSupport,
   hasNoteworthyNotes,
   isFullySupportedWithoutLimitation,
   isNotSupportedAtAll,
@@ -11,6 +11,8 @@ import {
   isOnlySupportedWithPrefix,
   isTruthy,
   versionIsPreview,
+  SimpleSupportStatementExtended,
+  SupportStatementExtended,
 } from "./utils";
 import { LEGEND_LABELS } from "./legend";
 
@@ -25,18 +27,6 @@ interface CompatStatementExtended extends bcd.CompatStatement {
   bad_url?: true;
 }
 
-// Extended for the fields, beyond the bcd types, that are extra-added
-// exclusively in Yari.
-interface SimpleSupportStatementExtended extends bcd.SimpleSupportStatement {
-  // Known for some support statements where the browser *version* is known,
-  // as opposed to just "true" and if the version release date is known.
-  release_date?: string;
-}
-
-type SupportStatementExtended =
-  | SimpleSupportStatementExtended
-  | SimpleSupportStatementExtended[];
-
 function getSupportClassName(
   support: SupportStatementExtended | undefined,
   browser: bcd.BrowserStatement
@@ -46,7 +36,7 @@ function getSupportClassName(
   }
 
   let { flags, version_added, version_removed, partial_implementation } =
-    getCurrent(support);
+    getCurrentSupport(support)!;
 
   let className;
   if (version_added === null) {
@@ -74,7 +64,7 @@ function getSupportBrowserReleaseDate(
   if (!support) {
     return undefined;
   }
-  return getCurrent(support).release_date;
+  return getCurrentSupport(support)!.release_date;
 }
 
 function StatusIcons({ status }: { status: bcd.StatusBlock }) {
@@ -136,7 +126,7 @@ const CellText = React.memo(
     support: bcd.SupportStatement | undefined;
     browser: bcd.BrowserStatement;
   }) => {
-    const currentSupport = getCurrent(support);
+    const currentSupport = getCurrentSupport(support);
 
     const added = currentSupport?.version_added ?? null;
     const removed = currentSupport?.version_removed ?? null;
@@ -272,7 +262,7 @@ function Icon({ name }: { name: string }) {
 }
 
 function CellIcons({ support }: { support: bcd.SupportStatement | undefined }) {
-  const supportItem = getCurrent(support);
+  const supportItem = getCurrentSupport(support);
   if (!supportItem) {
     return null;
   }
