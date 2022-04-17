@@ -11,7 +11,6 @@ import {
   isOnlySupportedWithPrefix,
   isTruthy,
   versionIsPreview,
-  SimpleSupportStatementExtended,
   SupportStatementExtended,
 } from "./utils";
 import { LEGEND_LABELS } from "./legend";
