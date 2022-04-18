@@ -77,7 +77,7 @@
     "fdir": "5.2.0",
     "file-type": "16.5.3",
     "front-matter": "^4.0.2",
-    "fs-extra": "10.0.0",
+    "fs-extra": "10.1.0",
     "glob": "^7.2.0",
     "got": "11.8.3",
     "hast-util-is-element": "^1.1.0",
