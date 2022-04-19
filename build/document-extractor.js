@@ -362,23 +362,23 @@ function _addSingleSpecialSection($) {
         },
       ];
     }
+
     return _buildSpecialBCDSection();
   } else if (specialSectionType === "specifications") {
-    if (data === undefined && specURLsString === "") {
-      return [
-        {
-          type: specialSectionType,
-          value: {
-            title,
-            id,
-            isH3,
-            query,
-            specifications: [],
-          },
+    const specifications = _getSpecifications(specURLsString, data);
+
+    return [
+      {
+        type: "specifications",
+        value: {
+          title,
+          id,
+          isH3,
+          specifications,
+          query,
         },
-      ];
-    }
-    return _buildSpecialSpecSection();
+      },
+    ];
   }
 
   throw new Error(`Unrecognized special section type '${specialSectionType}'`);
@@ -517,75 +517,73 @@ function _addSingleSpecialSection($) {
 
     return version.split(".").map(Number);
   }
+}
 
-  function _buildSpecialSpecSection() {
-    // Collect spec URLs from a BCD feature, a 'spec-urls' value, or both;
-    // For a BCD feature, it can either be a string or an array of strings.
-    let specURLs = [];
+/**
+ * @param {string} specURLsString
+ * @param {object} data
+ * @returns
+ */
+function _getSpecifications(specURLsString, data) {
+  if (data === undefined && specURLsString === "") {
+    return [];
+  }
 
-    if (data) {
-      // If 'data' is non-null, that means we have data for a BCD feature
-      // that we can extract spec URLs from.
-      for (const [key, compat] of Object.entries(data)) {
-        if (key === "__compat" && compat.spec_url) {
-          if (Array.isArray(compat.spec_url)) {
-            specURLs = compat.spec_url;
-          } else {
-            specURLs.push(compat.spec_url);
-          }
+  // Collect spec URLs from a BCD feature, a 'spec-urls' value, or both;
+  // For a BCD feature, it can either be a string or an array of strings.
+  let specURLs = [];
+
+  if (data) {
+    // If 'data' is non-null, that means we have data for a BCD feature
+    // that we can extract spec URLs from.
+    for (const [key, compat] of Object.entries(data)) {
+      if (key === "__compat" && compat.spec_url) {
+        if (Array.isArray(compat.spec_url)) {
+          specURLs = compat.spec_url;
+        } else {
+          specURLs.push(compat.spec_url);
         }
       }
     }
-
-    if (specURLsString !== "") {
-      // If specURLsString is non-empty, then it has the string contents of
-      // the document’s 'spec-urls' frontmatter key: one or more URLs.
-      specURLs.push(...specURLsString.split(",").map((url) => url.trim()));
-    }
-
-    // Use BCD specURLs to look up more specification data
-    // from the browser-specs package
-    const specifications = specURLs
-      .map((specURL) => {
-        const spec = specs.find(
-          (spec) =>
-            specURL.startsWith(spec.url) ||
-            specURL.startsWith(spec.nightly.url) ||
-            specURL.startsWith(spec.series.nightlyUrl)
-        );
-        const specificationsData = {
-          bcdSpecificationURL: specURL,
-          title: "Unknown specification",
-        };
-        if (spec) {
-          specificationsData.title = spec.title;
-        } else {
-          const specList = web.getJSONData("SpecData");
-          const titleFromSpecData = Object.keys(specList).find(
-            (key) => specList[key]["url"] === specURL.split("#")[0]
-          );
-          if (titleFromSpecData) {
-            specificationsData.title = titleFromSpecData;
-          }
-        }
-
-        return specificationsData;
-      })
-      .filter(Boolean);
-
-    return [
-      {
-        type: "specifications",
-        value: {
-          title,
-          id,
-          isH3,
-          specifications,
-          query,
-        },
-      },
-    ];
   }
+
+  if (specURLsString !== "") {
+    // If specURLsString is non-empty, then it has the string contents of
+    // the document’s 'spec-urls' frontmatter key: one or more URLs.
+    specURLs.push(...specURLsString.split(",").map((url) => url.trim()));
+  }
+
+  // Use BCD specURLs to look up more specification data
+  // from the browser-specs package
+  const specifications = specURLs
+    .map((specURL) => {
+      const spec = specs.find(
+        (spec) =>
+          specURL.startsWith(spec.url) ||
+          specURL.startsWith(spec.nightly.url) ||
+          specURL.startsWith(spec.series.nightlyUrl)
+      );
+      const specificationsData = {
+        bcdSpecificationURL: specURL,
+        title: "Unknown specification",
+      };
+      if (spec) {
+        specificationsData.title = spec.title;
+      } else {
+        const specList = web.getJSONData("SpecData");
+        const titleFromSpecData = Object.keys(specList).find(
+          (key) => specList[key]["url"] === specURL.split("#")[0]
+        );
+        if (titleFromSpecData) {
+          specificationsData.title = titleFromSpecData;
+        }
+      }
+
+      return specificationsData;
+    })
+    .filter(Boolean);
+
+  return specifications;
 }
 
 function _addSectionProse($) {
