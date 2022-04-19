@@ -62,6 +62,10 @@ export const FXA_MANAGE_SUBSCRIPTIONS_URL =
 export const DEFAULT_GEO_COUNTRY =
   process.env.REACT_APP_DEFAULT_GEO_COUNTRY || "United States";
 
+export const ENABLE_PLUS_EU = Boolean(
+  JSON.parse(process.env.REACT_APP_ENABLE_PLUS_EU || "false")
+);
+
 export const PLUS_ENABLED_COUNTRIES =
   process.env.REACT_APP_PLUS_ENABLED_COUNTRIES?.split(",") || [
     "United States",

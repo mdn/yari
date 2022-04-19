@@ -260,9 +260,7 @@ export async function getStripePlans() {
   let res;
   //This comes from edge lambda so must be from live.
   if (window.location.hostname.includes("localhost")) {
-    res = await fetch("https://developer.allizom.org/api/v1/stripe/plans", {
-      mode: "cors",
-    });
+    res = await fetch("https://developer.allizom.org/api/v1/stripe/plans");
   } else {
     res = await fetch(STRIPE_PLANS_PATH);
   }

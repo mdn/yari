@@ -1,5 +1,6 @@
 import "./index.scss";
 import {
+  ENABLE_PLUS_EU,
   FXA_SIGNIN_URL,
   MDN_PLUS_SUBSCRIBE_10M_URL,
   MDN_PLUS_SUBSCRIBE_10Y_URL,
@@ -269,8 +270,10 @@ function OfferOverviewSubscribe() {
   });
   useEffect(() => {
     (async () => {
-      const plans: StripePlans = await getStripePlans();
-      setOfferDetails(getLocalizedPlans(plans));
+      if (ENABLE_PLUS_EU) {
+        const plans: StripePlans = await getStripePlans();
+        setOfferDetails(getLocalizedPlans(plans));
+      }
     })();
   }, []);
 
