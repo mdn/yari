@@ -35,7 +35,8 @@
     "test:prepare": "yarn prepare-build && yarn build && yarn start:static-server",
     "test:testing": "jest --rootDir testing",
     "tool": "node tool/cli.js",
-    "traits:build": "cd traits && node cli.js"
+    "traits:build": "cd traits && node cli.js",
+    "watch:ssr": "cd ssr && webpack --mode=production --watch"
   },
   "jest": {
     "globals": {
