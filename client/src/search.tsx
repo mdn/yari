@@ -399,6 +399,7 @@ function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
                 className:
                   "nothing-found result-item " +
                   (highlightedIndex === resultItems.length ? "highlight" : ""),
+                key: "nothing-found",
                 item: onlineSearch,
                 index: resultItems.length,
               })}
