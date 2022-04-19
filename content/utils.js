@@ -49,7 +49,7 @@ function memoize(fn) {
 
     if (cache.has(key)) {
       if (invalidate) {
-        cache.del(key);
+        cache.delete(key);
       } else {
         return cache.get(key);
       }
