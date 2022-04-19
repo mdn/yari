@@ -5,10 +5,12 @@ import {
   MDN_PLUS_SUBSCRIBE_10Y_URL,
   MDN_PLUS_SUBSCRIBE_5M_URL,
   MDN_PLUS_SUBSCRIBE_5Y_URL,
+  MDN_PLUS_SUBSCRIBE_BASE,
 } from "../../../constants";
 import { SubscriptionType, UserData, useUserData } from "../../../user-context";
 import { Switch } from "../../../ui/atoms/switch";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { getStripePlans } from "../../common/api";
 
 export enum Period {
   Month,
@@ -39,6 +41,11 @@ export type OfferDetailsPlanProps = {
   subscriptionType: SubscriptionType;
   monthlyPrice?: number;
   ctaLink: string;
+};
+
+export type StripePlans = {
+  currency: string;
+  plans: Array<{ [key: string]: string }>;
 };
 
 export type OfferDetailsProps = {
@@ -223,8 +230,50 @@ function canUpgrade(user: UserData | null, subscriptionType: SubscriptionType) {
   );
 }
 
+function getLocalizedPlans(countrySpecific: StripePlans) {
+  return {
+    CORE: CORE,
+    PLUS_5: {
+      ...PLUS_5,
+      currency: countrySpecific.currency,
+      regular: {
+        ...PLUS_5.regular,
+        ctaLink: `${MDN_PLUS_SUBSCRIBE_BASE}?plan=${countrySpecific.plans["mdn_plus_5m"]}`,
+      },
+      discount: {
+        ...PLUS_5.discounted,
+        ctaLink: `${MDN_PLUS_SUBSCRIBE_BASE}?plan=${countrySpecific.plans["mdn_plus_5y"]}`,
+      },
+    },
+    PLUS_10: {
+      ...PLUS_10,
+      currency: countrySpecific.currency,
+      regular: {
+        ...PLUS_10.regular,
+        ctaLink: `${MDN_PLUS_SUBSCRIBE_BASE}?plan=${countrySpecific.plans["mdn_plus_10m"]}`,
+      },
+      discount: {
+        ...PLUS_10.discounted,
+        ctaLink: `${MDN_PLUS_SUBSCRIBE_BASE}?plan=${countrySpecific.plans["mdn_plus_10y"]}`,
+      },
+    },
+  };
+}
+
 function OfferOverviewSubscribe() {
   const userData = useUserData();
+  const [offerDetails, setOfferDetails] = useState({
+    CORE: CORE,
+    PLUS_5: PLUS_5,
+    PLUS_10: PLUS_10,
+  });
+  useEffect(() => {
+    (async () => {
+      const plans: StripePlans = await getStripePlans();
+      setOfferDetails(getLocalizedPlans(plans));
+    })();
+  }, []);
+
   const activeSubscription = userData?.subscriptionType;
   const activeSubscriptionPeriod =
     (activeSubscription && SUBSCRIPTIONS[activeSubscription]?.period) ||
@@ -247,9 +296,18 @@ function OfferOverviewSubscribe() {
           Pay yearly and get 2 months for free
         </Switch>
         <div className="wrapper">
-          <OfferDetails offerDetails={CORE} period={period}></OfferDetails>
-          <OfferDetails offerDetails={PLUS_5} period={period}></OfferDetails>
-          <OfferDetails offerDetails={PLUS_10} period={period}></OfferDetails>
+          <OfferDetails
+            offerDetails={offerDetails.CORE}
+            period={period}
+          ></OfferDetails>
+          <OfferDetails
+            offerDetails={offerDetails.PLUS_5}
+            period={period}
+          ></OfferDetails>
+          <OfferDetails
+            offerDetails={offerDetails.PLUS_10}
+            period={period}
+          ></OfferDetails>
         </div>
       </section>
       <p className="plus-for-companies">

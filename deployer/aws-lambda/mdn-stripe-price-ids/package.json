@@ -1,0 +1,18 @@
+{
+  "name": "@yari-internal/mdn-stripe-price-ids",
+  "version": "0.0.1",
+  "private": true,
+  "description": "Provides Stripe price code + Currency for region",
+  "license": "MPL-2.0",
+  "main": "index.js",
+  "scripts": {
+    "make-package": "yarn install && zip -r -X function.zip . -i index.js 'node_modules/*'"
+  },
+  "engines": {
+    "node": ">=12.x"
+  },
+  "aws": {
+    "name": "mdn-stripe-price-ids",
+    "region": "us-east-1"
+  }
+}

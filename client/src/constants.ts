@@ -49,6 +49,9 @@ export const MDN_PLUS_SUBSCRIBE_5M_URL = `${process.env.REACT_APP_MDN_PLUS_SUBSC
 export const MDN_PLUS_SUBSCRIBE_5Y_URL = `${process.env.REACT_APP_MDN_PLUS_SUBSCRIBE_URL}?plan=${process.env.REACT_APP_MDN_PLUS_5Y_PLAN}`;
 export const MDN_PLUS_SUBSCRIBE_10M_URL = `${process.env.REACT_APP_MDN_PLUS_SUBSCRIBE_URL}?plan=${process.env.REACT_APP_MDN_PLUS_10M_PLAN}`;
 export const MDN_PLUS_SUBSCRIBE_10Y_URL = `${process.env.REACT_APP_MDN_PLUS_SUBSCRIBE_URL}?plan=${process.env.REACT_APP_MDN_PLUS_10Y_PLAN}`;
+export const MDN_PLUS_SUBSCRIBE_BASE =
+  process.env.REACT_APP_MDN_PLUS_SUBSCRIBE_URL ||
+  "https://accounts.stage.mozaws.net/subscriptions/products/prod_Jtbg9tyGyLRuB0";
 
 export const FXA_SIGNIN_URL = process.env.REACT_APP_FXA_SIGNIN_URL || "";
 export const FXA_SETTINGS_URL = process.env.REACT_APP_FXA_SETTINGS_URL || "";
