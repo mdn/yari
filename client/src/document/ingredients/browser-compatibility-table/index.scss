@@ -185,7 +185,8 @@
   &:before {
     position: absolute;
     z-index: -1;
-    height: 100%;
+    height: calc(100% - 0.25rem);
+    margin-top: 0.25rem;
     left: 7px;
     width: 2px;
     background: var(--border-primary);
