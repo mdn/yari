@@ -346,26 +346,22 @@ function _addSingleSpecialSection($) {
     return proseSections;
   }
   const query = dataQuery.replace(/^bcd:/, "");
-  const { browsers, data } = packageBCD(query);
+  const { browsers, data } = _getBCD(query);
 
   if (specialSectionType === "browser_compatibility") {
-    if (data === undefined) {
-      return [
-        {
-          type: specialSectionType,
-          value: {
-            title,
-            id,
-            isH3,
-            data: null,
-            query,
-            browsers: null,
-          },
+    return [
+      {
+        type: "browser_compatibility",
+        value: {
+          title,
+          id,
+          isH3,
+          data,
+          query,
+          browsers,
         },
-      ];
-    }
-
-    return _buildSpecialBCDSection();
+      },
+    ];
   } else if (specialSectionType === "specifications") {
     const specifications = _getSpecifications(specURLsString, data);
 
@@ -385,7 +381,17 @@ function _addSingleSpecialSection($) {
 
   throw new Error(`Unrecognized special section type '${specialSectionType}'`);
 
-  function _buildSpecialBCDSection() {
+  /**
+   * @param {string} queryString
+   * @returns {object}
+   */
+  function _getBCD(queryString) {
+    const { browsers, data } = packageBCD(queryString);
+
+    if (data === undefined) {
+      return { browsers: null, data: null };
+    }
+
     // First extract a map of all release data, keyed by (normalized) browser
     // name and the versions.
     // You'll have a map that looks like this:
@@ -443,19 +449,7 @@ function _addSingleSpecialSection($) {
       }
     }
 
-    return [
-      {
-        type: "browser_compatibility",
-        value: {
-          title,
-          id,
-          isH3,
-          data,
-          query,
-          browsers,
-        },
-      },
-    ];
+    return { browsers, data };
   }
 
   /**
