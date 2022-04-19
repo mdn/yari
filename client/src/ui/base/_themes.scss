@@ -12,6 +12,7 @@
   --background-primary: #{$mdn-theme-light-background-primary};
   --background-secondary: #{$mdn-theme-light-background-secondary};
   --background-tertiary: #{$mdn-theme-light-background-tertiary};
+  --background-toc-active: #{$mdn-theme-light-background-toc-active};
   --background-mark-yellow: #{color.adjust(
       $mdn-color-light-theme-yellow-30,
       $alpha: -0.6
@@ -87,6 +88,8 @@
   --code-background-inline: #{$mdn-theme-light-code-background-inline};
   --code-background-block: #{$mdn-theme-light-code-background-block};
 
+  --notecard-link-color: #{$mdn-color-neutral-80};
+
   --scrollbar-bg: transparent;
   --scrollbar-color: rgba(0, 0, 0, 0.25);
 
@@ -95,16 +98,16 @@
   --code-color: #{$mdn-color-light-theme-blue-40};
   --mark-color: #{$mdn-color-light-theme-blue-10};
 
-  --plus-accent-color: #{$mdn-color-light-theme-red-50};
-  --html-accent-color: #{$mdn-color-light-theme-red-50};
-  --css-accent-color: #{$mdn-color-light-theme-blue-50};
-  --js-accent-color: #{$mdn-color-light-theme-yellow-50};
-  --http-accent-color: #{$mdn-color-light-theme-green-50};
-  --apis-accent-color: #{$mdn-color-light-theme-violet-50};
-  --learn-accent-color: #{$mdn-color-light-theme-pink-50};
+  --plus-accent-color: #{$mdn-color-dark-theme-red-60};
+  --html-accent-color: #{$mdn-color-light-theme-red-60};
+  --css-accent-color: #{$mdn-color-light-theme-blue-60};
+  --js-accent-color: #{$mdn-color-light-theme-yellow-40};
+  --http-accent-color: #{$mdn-color-light-theme-green-60};
+  --apis-accent-color: #{$mdn-color-light-theme-violet-60};
+  --learn-accent-color: #{$mdn-color-light-theme-pink-60};
 
-  --plus-code-color: #{$mdn-color-light-theme-red-60};
-  --html-code-color: #{$mdn-color-light-theme-red-60};
+  --plus-code-color: #{$mdn-color-light-theme-blue-60};
+  --html-code-color: #{$mdn-color-light-theme-red-70};
   --css-code-color: #{$mdn-color-light-theme-blue-60};
   --js-code-color: #{$mdn-color-light-theme-yellow-60};
   --http-code-color: #{$mdn-color-light-theme-green-60};
@@ -119,13 +122,13 @@
   --apis-mark-color: #{$mdn-color-light-theme-violet-10};
   --learn-mark-color: #{$mdn-color-light-theme-pink-10};
 
-  --plus-accent-background-color: #{$mdn-color-light-theme-red-50}10;
-  --html-accent-background-color: #{$mdn-color-light-theme-red-50}10;
-  --css-accent-background-color: #{$mdn-color-light-theme-blue-50}10;
-  --js-accent-background-color: #{$mdn-color-light-theme-yellow-50}10;
-  --http-accent-background-color: #{$mdn-color-light-theme-green-50}10;
-  --apis-accent-background-color: #{$mdn-color-light-theme-violet-50}10;
-  --learn-accent-background-color: #{$mdn-color-light-theme-pink-50}10;
+  --plus-accent-background-color: #{$mdn-color-light-theme-red-50}30;
+  --html-accent-background-color: #{$mdn-color-light-theme-red-50}30;
+  --css-accent-background-color: #{$mdn-color-light-theme-blue-50}30;
+  --js-accent-background-color: #{$mdn-color-light-theme-yellow-50}30;
+  --http-accent-background-color: #{$mdn-color-light-theme-green-50}30;
+  --apis-accent-background-color: #{$mdn-color-light-theme-violet-50}30;
+  --learn-accent-background-color: #{$mdn-color-light-theme-pink-50}30;
 
   --plus-accent-engage: #{color.adjust(
       $mdn-color-light-theme-red-50,
@@ -187,6 +190,7 @@
   --background-primary: #{$mdn-theme-dark-background-primary};
   --background-secondary: #{$mdn-theme-dark-background-secondary};
   --background-tertiary: #{$mdn-theme-dark-background-tertiary};
+  --background-toc-active: #{$mdn-theme-dark-background-toc-active};
   --background-mark-yellow: #{color.adjust(
       $mdn-color-dark-theme-yellow-30,
       $alpha: -0.6
@@ -234,6 +238,8 @@
   --code-background-inline: #{$mdn-theme-dark-code-background-inline};
   --code-background-block: #{$mdn-theme-dark-code-background-block};
 
+  --notecard-link-color: #{$mdn-color-neutral-10};
+
   --scrollbar-color: rgba(255, 255, 255, 0.25);
 
   --category-color: #{$mdn-color-dark-theme-blue-30};
@@ -249,8 +255,8 @@
   --apis-accent-color: #{$mdn-color-dark-theme-violet-40};
   --learn-accent-color: #{$mdn-color-dark-theme-pink-40};
 
-  --plus-code-color: #{$mdn-color-dark-theme-red-20};
-  --html-code-color: #{$mdn-color-dark-theme-red-30};
+  --plus-code-color: #{$mdn-color-dark-theme-blue-20};
+  --html-code-color: #{$mdn-color-neutral-light-70};
   --css-code-color: #{$mdn-color-dark-theme-blue-20};
   --js-code-color: #{$mdn-color-dark-theme-yellow-30};
   --http-code-color: #{$mdn-color-dark-theme-green-30};
@@ -307,10 +313,10 @@ body,
 :root {
   --mdn-color-white: #{$mdn-color-white};
   --mdn-color-black: #{$mdn-color-black};
-  --mdn-color-dark-grey: #{$mdn-color-dark-grey-30};
+  --mdn-color-dark-grey: #{$mdn-color-neutral-70};
   --mdn-background-dark: #{$mdn-theme-dark-background-primary};
   --mdn-background-light: #{$mdn-theme-light-background-primary};
-  --mdn-background-light-grey: #{$mdn-color-light-grey-30};
+  --mdn-background-light-grey: #{$mdn-color-neutral-10};
   --color-announcement-banner-accent: #{$mdn-color-light-theme-pink-40};
 }
 

@@ -38,7 +38,7 @@ const overviewPages = {
  * Used to test against the actual HTML we get back.
  */
 const expectedHTML = `<div class="index">
-    <span>A</span>
+    <H3>A</H3>
     <ul>
         <li>
             <a href='/en-US/docs/Web/API/A2TestInterface_overview'>A2TestInterface</a>
@@ -52,7 +52,7 @@ const expectedHTML = `<div class="index">
             <a href='/en-US/docs/Web/API/An_overview_page_for_ATestInterface_API'>ATestInterface</a>
         </li>
     </ul>
-    <span>B</span>
+    <H3>B</H3>
     <ul>
         <li>
             <a href='/en-US/docs/Web/API/An_overview_page_for_BTestInterface_API'>BTestInterface</a>
@@ -74,7 +74,7 @@ function compareNode(actual, expected) {
   expect(actual.classList.value).toEqual(expected.classList.value);
   if (
     actual.nodeName === "A" ||
-    (actual.nodeName === "SPAN" && expected.textContent.trim())
+    (actual.nodeName === "H3" && expected.textContent.trim())
   ) {
     expect(actual.textContent.trim()).toEqual(expected.textContent.trim());
   }

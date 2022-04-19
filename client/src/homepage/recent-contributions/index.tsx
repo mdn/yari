@@ -27,7 +27,7 @@ function RecentContributions(props: HydrationData<any>) {
 
   return (
     <section className="recent-contributions">
-      <h2 className="mdn-ui-emphasis-l">Recent contributions</h2>
+      <h2>Recent contributions</h2>
       <ul className="contribution-list">
         {hyData &&
           hyData.pullRequestsData.items.map((pullRequest) => (

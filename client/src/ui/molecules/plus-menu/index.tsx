@@ -1,13 +1,9 @@
-import * as React from "react";
-
 import { useUserData } from "../../../user-context";
 import { useLocale } from "../../../hooks";
 
-import { Submenu } from "../submenu";
-
 import "./index.scss";
 import { usePlusUrl } from "../../../plus/utils";
-import InternalLink from "../../atoms/internal-link";
+import { Menu } from "../menu";
 
 export const PlusMenu = ({ visibleSubMenuId, toggleMenu }) => {
   const locale = useLocale();
@@ -20,6 +16,7 @@ export const PlusMenu = ({ visibleSubMenuId, toggleMenu }) => {
   const plusMenu = {
     label: "MDN Plus",
     id: "mdn-plus",
+    to: plusUrl,
     items: [
       {
         description: "More MDN. Your MDN.",
@@ -58,25 +55,5 @@ export const PlusMenu = ({ visibleSubMenuId, toggleMenu }) => {
   };
   const isOpen = visibleSubMenuId === plusMenu.id;
 
-  return (
-    <li key={plusMenu.id} className="top-level-entry-container">
-      <button
-        id={`${plusMenu.id}-button`}
-        className="top-level-entry menu-toggle"
-        aria-haspopup="menu"
-        aria-expanded={isOpen || undefined}
-        onClick={() => {
-          toggleMenu(plusMenu.id);
-        }}
-      >
-        {plusMenu.label}
-      </button>
-
-      <InternalLink to={plusUrl} className="top-level-entry">
-        {plusMenu.label}
-      </InternalLink>
-
-      <Submenu menuEntry={plusMenu} defaultHidden={!isOpen} />
-    </li>
-  );
+  return <Menu menu={plusMenu} isOpen={isOpen} toggle={toggleMenu} />;
 };

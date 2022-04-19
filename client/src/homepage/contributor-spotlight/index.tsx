@@ -30,7 +30,7 @@ export function ContributorSpotlight(props: HydrationData<any>) {
     <div className="contributor-spotlight dark">
       <div className="wrapper">
         <div className="text-col">
-          <h2 className="mdn-ui-emphasis-l">Contributor Spotlight</h2>
+          <h3>Contributor Spotlight</h3>
           {hyData && hyData?.featuredContributor && (
             <>
               <a

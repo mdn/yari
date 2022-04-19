@@ -34,16 +34,16 @@ ol {
 }
 
 /* Set core root defaults */
-html:focus-within {
+html {
   scroll-behavior: smooth;
 }
 
 /* Set core body defaults */
 body {
   text-rendering: optimizeSpeed;
-  font-size: var(--font-size);
+  font-size: var(--base-font-size);
   font-family: var(--font-body);
-  line-height: var(--font-line-height);
+  line-height: var(--font-content-line-height);
 }
 
 /* A elements that don't have a class get default styles */
@@ -72,7 +72,7 @@ select {
 
 /* Remove all animations, transitions and smooth scroll for people that prefer not to see them */
 @media (prefers-reduced-motion: reduce) {
-  html:focus-within {
+  html {
     scroll-behavior: auto;
   }
 

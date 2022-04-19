@@ -147,11 +147,11 @@ var badges = {
 }
 
 function buildSublist(pages, title, opened) {
-  var result = '<li>';
-  if (opened) {
-    result = '<li data-default-state="open">';
+  var result = '<li><details>';
+  if (opened !== '') {
+    result = '<li><details open>';
   }
-  result += '<a href="#"><strong>' + title + '</strong></a><ol>';
+  result += '<summary>' + title + '</summary></a><ol>';
 
   for (var i in pages) {
     var aPage = pages[i];
@@ -207,7 +207,7 @@ function buildSublist(pages, title, opened) {
     result += '</li>';
   }
 
-  result += '</ol></li>';
+  result += '</ol></details></li>';
 
   return result;
 }

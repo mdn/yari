@@ -29,7 +29,7 @@ export function useLocale() {
 export function useCSRFMiddlewareToken(): string {
   const userData = useUserData();
   const userSettingsAPIURL = React.useMemo(() => {
-    return userData && userData.isAuthenticated ? "/api/v1/settings" : null;
+    return userData && userData.isAuthenticated ? "/api/v1/settings/" : null;
   }, [userData]);
   const { data, error } = useSWR<UserSettings>(
     userSettingsAPIURL,

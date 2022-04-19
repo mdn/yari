@@ -5,11 +5,11 @@
   justify-content: center;
   // transform: skew(-7deg, 10deg);
 
-  --mandala-primary: #{$mdn-color-marketing-grey-70};
+  --mandala-primary: #{$mdn-color-neutral-70};
   --mandala-accent-1: var(--html-accent-color);
   --mandala-accent-2: var(--http-accent-color);
   --mandala-accent-3: var(--js-accent-color);
-  --mandala-accent-4: #{$mdn-color-marketing-grey-30};
+  --mandala-accent-4: #{$mdn-color-neutral-30};
 
   @keyframes rotation {
     from {

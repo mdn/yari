@@ -8,12 +8,21 @@
   gap: 1rem;
   padding: 0 1rem;
 
+  @media screen and (min-width: $screen-lg) {
+    padding: 0;
+  }
+
+  h2 {
+    font: var(--type-heading-h4);
+    margin-top: 1rem;
+  }
+
   h5 {
     margin: 0;
   }
 
   .request-item {
-    padding: 0.5rem;
+    padding: 0.7rem;
     display: flex;
     justify-content: space-between;
     flex-direction: column;
@@ -36,13 +45,11 @@
   }
 
   .request-title {
-    font-size: 14px;
-    line-height: 175%;
-    margin: 0px;
     display: flex;
     flex-direction: column;
     gap: 0.125rem;
-    font: var(--type-body-m);
+    line-height: var(--base-line-height);
+    margin: 0;
 
     a {
       color: var(--text-primary);
@@ -54,7 +61,7 @@
     }
 
     .request-repo {
-      font: var(--type-body-s);
+      font-size: var(--type-tiny-font-size);
       color: var(--text-secondary);
     }
   }

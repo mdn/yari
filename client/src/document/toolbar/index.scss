@@ -11,7 +11,7 @@
   align-items: center;
   flex-wrap: wrap;
   gap: 0.5rem;
-  font: var(--type-body-m);
+  font-size: var(--type-smaller-font-size);
   box-shadow: var(--shadow-01);
 
   &-first-row,

@@ -1,3 +1,4 @@
+@use "./ui/vars" as *;
 @use "./ui/base/mdn";
 @use "./ui/base/typography";
 @use "./ui/base/reset";
@@ -21,36 +22,55 @@
   --font-heading: Inter, var(--font-fallback);
   --font-code: Menlo, Consolas, Monaco, Liberation Mono, Lucida Console,
     monospace;
-  --font-size: 16px;
-  --font-line-height: 1.2;
+
+  --base-font-size: 100%;
+  --base-line-height: 1.2;
+  --intermediate-line-height: 1.5;
+  --heading-line-height: var(--base-line-height);
+  --heading-letter-spacing: -0.031rem;
+  --font-content-line-height: 1.75;
   --font-body-strong-weight: 600;
 
-  // defined in Figma here: https://www.figma.com/file/cAd46zJb6H7mW7W14iLsDe/MDN-Basic-Components?node-id=299%3A311
-  --type-heading-l: 500 1rem/1.1875 var(--font-heading); /* 16px/19px, h5 */
-  --type-title-l: 400 1.5rem/1.2 var(--font-heading);
-  --type-title-s: var(--font-body-strong-weight) 0.8125rem/1.2 var(--font-body);
-  --type-body-l: 400 1rem/1.75 var(--font-body); /* 16px/28px */
-  --type-body-m: 400 0.8125rem/1.23 var(--font-body); /* 13px/16px */
-  --type-body-s: 500 0.6875rem/1.273 var(--font-body); /* 11px/14px */
-  --type-emphasis-l: var(--font-body-strong-weight) 1rem/1.1875 var(--font-body); /* 16px/19px */
-  --type-emphasis-m: var(--font-body-strong-weight) 0.8125rem/1.23
-    var(--font-body); /* 13px/16px */
-  --type-label-s: 600 0.625rem/1.2 var(--font-heading); /* 10px/12px */
-  --type-code-regular: 400 0.875rem/1.5 var(--font-code); /* 14px/21px */
-  --type-code-inline: 400 0.875em/1.5 var(--font-code); /* 14px/21px */
+  /* based on the following type-scale https://type-scale.com/?size=16&scale=1.200&text=MDN%20Web%20Docs&font=Inter&fontweight=400&bodyfont=body_font_default&bodyfontweight=400&lineheight=1.75&backgroundcolor=%23ffffff&fontcolor=%23000000&preview=false */
+  --type-heading-h1-font-size: 2.488rem;
+  --type-heading-h2-font-size: 2.074rem;
+  --type-heading-h3-font-size: 1.728rem;
+  --type-heading-h4-font-size: 1.44rem;
+  --type-heading-h5-font-size: 1.2rem;
+  --type-base-font-size-rem: 1rem;
+  --type-smaller-font-size: 0.833rem;
+  --type-tiny-font-size: 0.694rem;
 
-  // From Figma, here: https://www.figma.com/file/7lbOm57iOjSVIGORzXqrlW/MDN-Articles?node-id=1%3A27
-  --type-heading-h1: 300 2.25rem/1.138 var(--font-heading); /* 36px/41px */
-  --type-heading-h2: 400 1.75rem/1.2857 var(--font-heading); /* 28px/36px */
-  --type-heading-h3: 500 1.5rem/1.2916 var(--font-heading); /* 24px/31px */
-  --type-heading-h4: 500 1.125rem/1.222 var(--font-heading); /* 18px/22px */
-  --type-heading-h5: var(--type-heading-l);
-  --type-heading-h6: 500 0.75rem/1.0833 var(--font-heading); /* 12px/13px */
-  --type-article-p: 400 1rem/2 var(--font-body); /* 16px/200% */
+  /* based on the following type-scale https://type-scale.com/?size=16&scale=1.125&text=MDN%20Web%20Docs&font=Inter&fontweight=400&bodyfont=body_font_default&bodyfontweight=400&lineheight=1.75&backgroundcolor=%23ffffff&fontcolor=%23000000&preview=false */
+  --type-heading-h1-font-size-mobile: 1.802rem;
+  --type-heading-h2-font-size-mobile: 1.602rem;
+  --type-heading-h3-font-size-mobile: 1.424rem;
+  --type-heading-h4-font-size-mobile: 1.266rem;
+
+  --type-emphasis-m: var(--font-body-strong-weight)
+    var(--type-smaller-font-size) / 1.23 var(--font-body);
+  --type-label-s: 600 var(--type-tiny-font-size) / 1.2 var(--font-heading);
+
+  --type-heading-h1: 600 var(--type-heading-h1-font-size-mobile) /
+    var(--heading-line-height) var(--font-heading);
+  --type-heading-h2: 500 var(--type-heading-h2-font-size-mobile) /
+    var(--heading-line-height) var(--font-heading);
+  --type-heading-h3: 300 var(--type-heading-h3-font-size-mobile) /
+    var(--heading-line-height) var(--font-heading);
+  --type-heading-h4: 400 var(--type-heading-h4-font-size-mobile) /
+    var(--heading-line-height) var(--font-heading);
+  --type-heading-h5: 400 var(--type-heading-h5-font-size) /
+    var(--heading-line-height) var(--font-heading);
+  --type-heading-h6: 400 var(--type-base-font-size-rem) /
+    var(--heading-line-height) var(--font-heading);
+  --type-article-p: 400 var(--type-base-font-size-rem) /
+    var(--font-content-line-height) var(--font-body);
 
   /* Grid and Layout */
   --max-width: 1440px;
   --gutter: 1rem; /* Space between content and browser window */
+  --top-navigation-height: 4rem;
+  --top-navigation-offset: -4rem;
 
   --z-index-back: -1;
   --z-index-top: 9999;
@@ -68,7 +88,21 @@
   /* Major Components */
   --sticky-header-height: 0;
   --top-nav-height: 4rem;
+  --main-document-header-height: 6rem;
   --icon-size: 1rem;
+}
+
+@media screen and (min-width: $screen-md) {
+  :root {
+    --type-heading-h1: 600 var(--type-heading-h1-font-size) /
+      var(--heading-line-height) var(--font-heading);
+    --type-heading-h2: 500 var(--type-heading-h2-font-size) /
+      var(--heading-line-height) var(--font-heading);
+    --type-heading-h3: 300 var(--type-heading-h3-font-size) /
+      var(--heading-line-height) var(--font-heading);
+    --type-heading-h4: 400 var(--type-heading-h4-font-size) /
+      var(--heading-line-height) var(--font-heading);
+  }
 }
 
 :target {
@@ -90,6 +124,21 @@ body {
 
 main {
   min-height: 80vh;
+}
+
+.about-container,
+.main-page-content {
+  a {
+    &:link,
+    &:visited {
+      text-decoration: underline;
+    }
+
+    &:hover,
+    &:focus {
+      text-decoration: none;
+    }
+  }
 }
 
 .visually-hidden {
@@ -169,30 +218,9 @@ u {
   text-decoration-color: var(--text-link);
 }
 
-/* Scrollbar customizations */
-::-webkit-scrollbar-track {
-  -webkit-border-radius: 10px;
-  border-radius: 10px;
-}
-
-*::-webkit-scrollbar {
-  width: 12px;
-  height: 12px;
-  background-color: var(--scrollbar-bg, auto);
-}
-
-*::-webkit-scrollbar-thumb {
-  border-radius: 10px;
-  border: 2px solid var(--scrollbar-bg, auto);
-  background: var(--scrollbar-color);
-}
-
-*::-webkit-scrollbar-corner {
-  background-color: var(--scrollbar-bg, auto);
-}
-
 .plus .dark,
 .plus {
+  --background-toc-active: var(--plus-accent-background-color);
   --text-link: var(--plus-accent-color);
   --category-color: var(--plus-accent-color);
   --category-color-background: var(--plus-accent-background-color);
@@ -201,50 +229,44 @@ u {
 }
 
 .category-html {
-  --text-link: var(--html-accent-color);
+  --background-toc-active: var(--html-accent-background-color);
   --category-color: var(--html-accent-color);
   --category-color-background: var(--html-accent-background-color);
-  --code-color: var(--html-code-color);
   --mark-color: var(--html-mark-color);
 }
 
 .category-css {
-  --text-link: var(--css-accent-color);
+  --background-toc-active: var(--css-accent-background-color);
   --category-color: var(--css-accent-color);
   --category-color-background: var(--css-accent-background-color);
-  --code-color: var(--css-code-color);
   --mark-color: var(--css-mark-color);
 }
 
 .category-javascript {
-  --text-link: var(--js-accent-color);
+  --background-toc-active: var(--js-accent-background-color);
   --category-color: var(--js-accent-color);
   --category-color-background: var(--js-accent-background-color);
-  --code-color: var(--js-code-color);
   --mark-color: var(--js-mark-color);
 }
 
 .category-http {
-  --text-link: var(--http-accent-color);
+  --background-toc-active: var(--http-accent-background-color);
   --category-color: var(--http-accent-color);
   --category-color-background: var(--http-accent-background-color);
-  --code-color: var(--http-code-color);
   --mark-color: var(--http-mark-color);
 }
 
 .category-api {
-  --text-link: var(--apis-accent-color);
+  --background-toc-active: var(--apis-accent-background-color);
   --category-color: var(--apis-accent-color);
   --category-color-background: var(--apis-accent-background-color);
-  --code-color: var(--apis-code-color);
   --mark-color: var(--apis-mark-color);
 }
 
 .category-learn {
-  --text-link: var(--learn-accent-color);
+  --background-toc-active: var(--learn-accent-background-color);
   --category-color: var(--learn-accent-color);
   --category-color-background: var(--learn-accent-background-color);
-  --code-color: var(--api-code-color);
   --mark-color: var(--api-mark-color);
 }
 
