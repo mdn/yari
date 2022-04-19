@@ -1,5 +1,5 @@
 const cheerio = require("cheerio");
-const { packageBCD } = require("./resolve-bcd");
+const { packageBCD, BCD_BROWSER_RELEASES } = require("./resolve-bcd");
 const specs = require("browser-specs");
 const web = require("../kumascript/src/api/web.js");
 
@@ -392,118 +392,44 @@ function _addSingleSpecialSection($) {
       return { browsers: null, data: null };
     }
 
-    // First extract a map of all release data, keyed by (normalized) browser
-    // name and the versions.
-    // You'll have a map that looks like this:
-    //
-    //   'chrome_android': {
-    //      '28': {
-    //        release_date: '2012-06-01',
-    //        release_notes: '...',
-    //        ...
-    //
-    // The reason we extract this to a locally scoped map, is so we can
-    // use it to augment the `__compat` blocks for the latest version
-    // when (if known) it was added.
-    const browserReleaseData = new Map();
-    for (const [name, browser] of Object.entries(browsers)) {
-      const releaseData = new Map();
-      for (const [version, data] of Object.entries(browser.releases || [])) {
-        if (data) {
-          releaseData.set(version, data);
-        }
+    for (const [key, compat] of Object.entries(data)) {
+      let block;
+      if (key === "__compat") {
+        block = compat;
+      } else if (compat.__compat) {
+        block = compat.__compat;
       }
-      browserReleaseData.set(name, releaseData);
-    }
-
-    for (const block of _extractCompatBlocks(data)) {
-      for (let [browser, info] of Object.entries(block.support)) {
-        // `info` here will be one of the following:
-        //  - a single simple_support_statement:
-        //    { version_added: 42 }
-        //  - an array of simple_support_statements:
-        //    [ { version_added: 42 }, { prefix: '-moz', version_added: 35 } ]
-        //
-        // Standardize the first version to an array of one, so we don't have
-        // to deal with two different forms below
-        if (!Array.isArray(info)) {
-          info = [info];
-        }
-        for (const infoEntry of info) {
-          const added =
-            typeof infoEntry.version_added === "string" &&
-            infoEntry.version_added.startsWith("≤")
-              ? infoEntry.version_added.slice(1)
-              : infoEntry.version_added;
-          if (browserReleaseData.has(browser)) {
-            if (browserReleaseData.get(browser).has(added)) {
-              infoEntry.release_date = browserReleaseData
-                .get(browser)
-                .get(added).release_date;
+      if (block) {
+        for (let [browser, info] of Object.entries(block.support)) {
+          // `info` here will be one of the following:
+          //  - a single simple_support_statement:
+          //    { version_added: 42 }
+          //  - an array of simple_support_statements:
+          //    [ { version_added: 42 }, { prefix: '-moz', version_added: 35 } ]
+          //
+          // Standardize the first version to an array of one, so we don't have
+          // to deal with two different forms below
+          if (!Array.isArray(info)) {
+            info = [info];
+          }
+          for (const infoEntry of info) {
+            const added =
+              typeof infoEntry.version_added === "string" &&
+              infoEntry.version_added.startsWith("≤")
+                ? infoEntry.version_added.slice(1)
+                : infoEntry.version_added;
+            if (BCD_BROWSER_RELEASES.has(browser)) {
+              if (BCD_BROWSER_RELEASES.get(browser).has(added)) {
+                infoEntry.release_date =
+                  BCD_BROWSER_RELEASES.get(browser).get(added).release_date;
+              }
             }
           }
         }
-        info.sort((a, b) =>
-          _compareVersions(_getFirstVersion(b), _getFirstVersion(a))
-        );
       }
     }
 
     return { browsers, data };
-  }
-
-  /**
-   * @param {object} support - {bcd.SimpleSupportStatement}
-   * @returns {string}
-   */
-  function _getFirstVersion(support) {
-    if (typeof support.version_added === "string") {
-      return support.version_added;
-    } else if (typeof support.version_removed === "string") {
-      return support.version_removed;
-    } else {
-      return "0";
-    }
-  }
-
-  /**
-   * @param {string} a
-   * @param {string} b
-   */
-  function _compareVersions(a, b) {
-    const x = _splitVersion(a);
-    const y = _splitVersion(b);
-
-    return _compareNumberArray(x, y);
-  }
-
-  /**
-   * @param {number[]} a
-   * @param {number[]} b
-   * @return {number}
-   */
-  function _compareNumberArray(a, b) {
-    while (a.length || b.length) {
-      const x = a.shift() || 0;
-      const y = b.shift() || 0;
-      if (x !== y) {
-        return x - y;
-      }
-    }
-
-    return 0;
-  }
-
-  /**
-   * @param {string} version
-   * @return {number[]}
-   */
-  function _splitVersion(version) {
-    if (version.startsWith("≤")) {
-      version = version.slice(1);
-    }
-
-    return version.split(".").map(Number);
   }
 }
 
