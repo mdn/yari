@@ -214,15 +214,13 @@
     mask-image: url("../../../assets/icons/yes-circle.svg");
   }
 
-  .icon.icon-footnote {
-    mask-image: none;
-    border-radius: 50%;
-    border: 3px solid var(--background-primary);
-    background: var(--border-primary);
-  }
-
-  .icon.icon-disabled {
-    background-color: var(--icon-information);
+  .bc-supports-dd {
+    .icon {
+      mask-image: none;
+      border-radius: 50%;
+      border: 3px solid var(--background-primary);
+      background: var(--border-primary);
+    }
   }
 
   .bc-version-label {
