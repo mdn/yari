@@ -392,8 +392,19 @@ function _addSingleSpecialSection($) {
   function _getBCD(queryString) {
     const data = queryBCD(queryString);
 
-    if (data === undefined) {
-      return null;
+    _processBCDData(data);
+
+    return data;
+  }
+
+  /**
+   *
+   * @param {object|undefined} data
+   * @returns {object|undefined}
+   */
+  function _processBCDData(data) {
+    if (!data) {
+      return data;
     }
 
     for (const [key, compat] of Object.entries(data)) {
@@ -435,8 +446,6 @@ function _addSingleSpecialSection($) {
         }
       }
     }
-
-    return data;
   }
 
   /**
