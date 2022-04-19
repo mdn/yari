@@ -390,11 +390,44 @@ function _addSingleSpecialSection($) {
    * @returns {object}
    */
   function _getBCD(queryString) {
-    const data = queryBCD(queryString);
+    const data = _getBCDData(queryString);
 
     _processBCDData(data);
 
     return data;
+  }
+
+  /**
+   * @param {string} queryString
+   * @returns {object}
+   */
+  function _getBCDData(queryString) {
+    const queries = queryString.split(",");
+
+    const data = queries.reduce((data, query) => {
+      const dataForQuery = queryBCD(query);
+
+      const breadcrumbs = query.split(".");
+      const name = breadcrumbs[breadcrumbs.length - 1];
+
+      return {
+        ...data,
+        [name]: dataForQuery,
+      };
+    }, {});
+
+    const keys = Object.keys(data);
+
+    switch (keys.length) {
+      case 0:
+        return null;
+
+      case 1:
+        return data[keys[0]];
+
+      default:
+        return data;
+    }
   }
 
   /**
