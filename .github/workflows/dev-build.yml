@@ -58,6 +58,11 @@ jobs:
           # See matching warning for mdn/content checkout step
           fetch-depth: 0
 
+      - uses: actions/checkout@v3
+        with:
+          repository: mdn/mdn-contributor-spotlight
+          path: mdn/mdn-contributor-spotlight
+
       - name: Setup Node.js environment
         uses: actions/setup-node@v3
         with:
@@ -105,6 +110,7 @@ jobs:
           # sub-folder called "mdn/content"
           CONTENT_ROOT: ${{ github.workspace }}/mdn/content/files
           CONTENT_TRANSLATED_ROOT: ${{ github.workspace }}/mdn/translated-content/files
+          CONTRIBUTOR_SPOTLIGHT_ROOT: ${{ github.workspace }}/mdn/mdn-contributor-spotlight/contributors
 
           # This basically means that all live-sample iframes run on the same
           # host as the page that includes the iframe. Not great security but the

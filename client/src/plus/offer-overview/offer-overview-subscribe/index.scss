@@ -148,7 +148,20 @@
               }
             }
           }
-
+          .sub-link {
+            background: $mdn-color-neutral-90;
+            width: calc(100% - 1rem);
+            height: 2rem;
+            border-radius: 1rem;
+            padding: 0.25rem 0.5rem;
+            color: white;
+            min-width: fit-content;
+            font-weight: 620;
+            align-self: center;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+          }
           .terms {
             margin-top: auto;
             font-size: 14px;
@@ -161,7 +174,7 @@
           }
 
           .sub-link {
-            background: $mdn-color-dark-grey-90;
+            background: $mdn-color-neutral-90;
             width: calc(100% - 1rem);
             height: 2rem;
             border-radius: 1rem;

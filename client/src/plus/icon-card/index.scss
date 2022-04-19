@@ -84,7 +84,8 @@
   }
 
   &-title {
-    font: var(--type-emphasis-l);
+    font-size: var(--type-base-font-size-rem);
+    font-weight: var(--font-body-strong-weight);
     overflow: hidden;
     text-overflow: ellipsis;
     word-wrap: break-word;
@@ -92,7 +93,7 @@
   }
 
   &-description {
-    font: var(--type-body-m);
+    font-size: var(--type-smaller-font-size);
     color: var(--text-secondary);
   }
 
@@ -123,7 +124,7 @@
   .breadcrumbs {
     list-style: none;
     margin-bottom: 0;
-    font: var(--type-body-m);
+    font-size: var(--type-smaller-font-size);
     color: var(--text-secondary);
     margin-bottom: 0.5rem;
 

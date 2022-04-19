@@ -30,7 +30,9 @@ export function TopNavigation() {
 
   return (
     <header
-      className={`top-navigation${showMainMenu ? " show-nav" : ""}
+      className={`main-document-header-container top-navigation ${
+        showMainMenu ? "show-nav" : ""
+      }
       ${dark ? " dark" : ""}
       ${transparent ? " is-transparent" : ""}`}
     >

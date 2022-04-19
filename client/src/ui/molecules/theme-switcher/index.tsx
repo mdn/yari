@@ -62,7 +62,6 @@ export const ThemeSwitcher = () => {
     >
       <Button
         type="action"
-        ariaControls={menuId}
         ariaHasPopup={"menu"}
         ariaExpanded={isOpen || undefined}
         icon={`theme-${activeTheme}`}

@@ -234,28 +234,33 @@ const CellText = React.memo(
     const supportClassName = getSupportClassName(support, browser);
 
     return (
-      <>
-        <span className="icon-wrap">
-          <abbr
-            className={`
-            bc-level-${supportClassName}
-            icon
-            icon-${supportClassName}`}
-            title={title}
+      <div className="bcd-cell-text-wrapper">
+        <div className="bcd-cell-icons">
+          <span className="icon-wrap">
+            <abbr
+              className={`
+              bc-level-${supportClassName}
+              icon
+              icon-${supportClassName}`}
+              title={title}
+            >
+              <span className="bc-support-level">{title}</span>
+            </abbr>
+          </span>
+        </div>
+        <div className="bcd-cell-text-copy">
+          <span className="bc-browser-name">{browser.name}</span>
+          <span
+            className="bc-version-label"
+            title={
+              browserReleaseDate ? `Released ${browserReleaseDate}` : undefined
+            }
           >
-            <span className="bc-support-level">{title}</span>
-          </abbr>
-        </span>
-        <span className="bc-browser-name">{browser.name}</span>
-        <span
-          className="bc-version-label"
-          title={
-            browserReleaseDate ? `Released ${browserReleaseDate}` : undefined
-          }
-        >
-          {label}
-        </span>
-      </>
+            {label}
+          </span>
+        </div>
+        <CellIcons support={support} />
+      </div>
     );
   }
 );
@@ -273,17 +278,14 @@ function Icon({ name }: { name: string }) {
 
 function CellIcons({ support }: { support: bcd.SupportStatement | undefined }) {
   const supportItem = getFirst(support);
-  if (!supportItem) {
-    return null;
-  }
-  return (
-    <div className="bc-icons">
-      {isOnlySupportedWithPrefix(support) && <Icon name="prefix" />}
-      {hasNoteworthyNotes(supportItem) && <Icon name="footnote" />}
-      {isOnlySupportedWithAltName(support) && <Icon name="altname" />}
-      {supportItem.flags && <Icon name="disabled" />}
-    </div>
-  );
+  const icons = [
+    isOnlySupportedWithPrefix(support) && <Icon name="prefix" />,
+    supportItem && hasNoteworthyNotes(supportItem) && <Icon name="footnote" />,
+    isOnlySupportedWithAltName(support) && <Icon name="altname" />,
+    supportItem && supportItem.flags && <Icon name="disabled" />,
+  ].filter(Boolean);
+
+  return icons.length ? <div className="bc-icons">{icons}</div> : null;
 }
 
 function FlagsNote({
@@ -421,7 +423,6 @@ function getNotes(
                   )} bc-supports`}
                 >
                   <CellText support={item} browser={browser} />
-                  {/**<CellIcons support={item} /> */}
                 </dt>
                 {supportNotes.map(({ iconName, label }, i) => {
                   return (
@@ -477,7 +478,6 @@ function CompatCell({
   const content = (
     <>
       <CellText {...{ support }} browser={browserInfo} />
-      <CellIcons support={support} />
       {showNotes && (
         <dl className="bc-notes-list bc-history bc-history-mobile">{notes}</dl>
       )}

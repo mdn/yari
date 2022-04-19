@@ -1,6 +1,7 @@
 @use "../../vars" as *;
 
 .top-navigation {
+  height: var(--top-navigation-height);
   position: relative;
   width: 100%;
   background-color: var(--background-primary);
@@ -8,10 +9,15 @@
   border-bottom: 1px solid var(--border-primary);
 
   .container {
+    background-color: var(--background-primary);
     align-items: center;
     display: flex;
     flex-flow: row wrap;
     gap: var(--gutter);
+
+    @media screen and (min-width: $screen-md) {
+      background-color: transparent;
+    }
   }
 
   &.is-transparent {
