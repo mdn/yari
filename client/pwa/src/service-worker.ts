@@ -4,7 +4,13 @@
 import { cacheName, contentCache, openCache } from "./caches";
 import { respond } from "./fetcher";
 import { unpackAndCache } from "./unpack-cache";
-import { offlineDb } from "./db";
+import {
+  ContentStatusPhase,
+  getContentStatus,
+  offlineDb,
+  patchContentStatus,
+  RemoteContentStatus,
+} from "./db";
 import { fetchWithExampleOverride } from "./fetcher";
 
 export const INTERACTIVE_EXAMPLES_URL = new URL(
@@ -38,6 +44,8 @@ self.addEventListener("install", (e) => {
       await cache.addAll(assets as string[]);
     })().then(() => self.skipWaiting())
   );
+
+  initOncePerRun(self);
 });
 
 self.addEventListener("fetch", (e) => {
@@ -68,16 +76,26 @@ self.addEventListener("fetch", (e) => {
 self.addEventListener("message", (e: ExtendableMessageEvent) => {
   e.waitUntil(
     (async () => {
+      initOncePerRun(self);
+
       switch (e?.data?.type) {
+        case "checkForUpdate":
+          return checkForUpdate(self);
+
         case "update":
-          unpacking = updateContent(self, e?.data, e);
+          unpacking = updateContent(self, e?.data);
           return unpacking;
+
         case "clear":
           return clearContent(self);
+
         case "ping":
           return await messageAllClients(self, { type: "pong" });
+
         case "keepalive":
+          console.log("[keepalive]");
           return unpacking;
+
         default:
           console.log(`unknown msg type: ${e?.data?.type}`);
           return Promise.resolve();
@@ -85,6 +103,30 @@ self.addEventListener("message", (e: ExtendableMessageEvent) => {
     })()
   );
 });
+
+var isRunning = false;
+async function initOncePerRun(self: ServiceWorkerGlobalScope) {
+  if (isRunning) {
+    return;
+  } else {
+    isRunning = true;
+  }
+
+  await patchContentStatus({
+    phase: ContentStatusPhase.IDLE,
+    progress: null,
+  });
+
+  // Deprecated.
+  const contentStatus = await getContentStatus();
+  await messageAllClients(self, {
+    type: "updateStatus",
+    progress: 0,
+    state: "init",
+    currentVersion: contentStatus.local?.version,
+    currentDate: contentStatus.local?.date,
+  });
+}
 
 self.addEventListener("activate", (e: ExtendableEvent) => {
   e.waitUntil(
@@ -120,39 +162,108 @@ export async function messageAllClients(
   }
 }
 
+function isRemoteContentStatus(remote: unknown): remote is RemoteContentStatus {
+  return (
+    typeof remote === "object" &&
+    typeof remote["latest"] === "string" &&
+    typeof remote["date"] === "string" &&
+    Array.isArray(remote["updates"])
+  );
+}
+
 var updating = false;
 
+export async function checkForUpdate(self: ServiceWorkerGlobalScope) {
+  if (updating) {
+    return;
+  }
+
+  console.log("[checkForUpdate]");
+  const res = await fetch(`${UPDATES_BASE_URL}/update.json`);
+  const remote = await res.json();
+
+  if (!remote) {
+    console.error(`[checkForUpdate] Failed to fetch remote status!`, res);
+    return;
+  } else if (!isRemoteContentStatus(remote)) {
+    console.warn(`[checkForUpdate] Got unsupported remote status:`, remote);
+    return;
+  }
+
+  await patchContentStatus({
+    remote,
+  });
+}
+
 export async function updateContent(
-  self,
-  { current = null, latest = null, date = null } = {},
-  e
+  self: ServiceWorkerGlobalScope,
+  { current = null }: { current?: string }
 ) {
+  await checkForUpdate(self);
+
+  const contentStatus = await getContentStatus();
+
+  if (!contentStatus.local && current) {
+    // Fallback to local version from client (LocalStorage).
+    const local = {
+      version: current,
+      date: "1970-01-01",
+    };
+    await patchContentStatus({
+      local,
+    });
+    contentStatus.local = local;
+  }
+
+  const { local, remote } = contentStatus;
+
+  if (!remote || (local && local.version === remote.latest)) {
+    return;
+  }
+
   if (updating) {
     return;
   } else {
     updating = true;
   }
+
   try {
-    if (!current) {
-      await caches.delete(contentCache);
-    }
+    await patchContentStatus({
+      phase: ContentStatusPhase.DOWNLOAD,
+    });
+
+    // Deprecated.
     await messageAllClients(self, {
       type: "updateStatus",
       progress: 0,
       state: "downloading",
     });
 
+    const useDiff = local && remote.updates.includes(local.version);
+
     const url = new URL(
-      current
-        ? `/packages/${latest}-${current}-update.zip`
-        : `/packages/${latest}-content.zip`,
+      useDiff
+        ? `/packages/${remote.latest}-${local.version}-update.zip`
+        : `/packages/${remote.latest}-content.zip`,
       UPDATES_BASE_URL
     );
+
     console.log(`[update] downloading: ${url}`);
     const res = await fetch(url.href);
     const buf = await res.arrayBuffer();
 
-    console.log(`[update] unpacking: ${url}`);
+    if (!useDiff) {
+      console.log(`[update] clearing old content`);
+      await deleteContentCache();
+    }
+
+    console.log(`[update] unpacking`);
+    await patchContentStatus({
+      phase: ContentStatusPhase.UNPACK,
+      progress: 0,
+    });
+
+    // Deprecated.
     await messageAllClients(self, {
       type: "updateStatus",
       progress: 0,
@@ -160,6 +271,12 @@ export async function updateContent(
     });
 
     await unpackAndCache(buf, async (progress) => {
+      await patchContentStatus({
+        phase: ContentStatusPhase.UNPACK,
+        progress: progress,
+      });
+
+      // Deprecated.
       await messageAllClients(self, {
         type: "updateStatus",
         progress,
@@ -167,38 +284,94 @@ export async function updateContent(
       });
     });
 
+    await patchContentStatus({
+      phase: ContentStatusPhase.IDLE,
+      local: {
+        version: remote.latest,
+        date: remote.date,
+      },
+      progress: null,
+    });
+
+    // Deprecated.
     await messageAllClients(self, {
       type: "updateStatus",
       progress: 0,
       state: "init",
-      currentVersion: latest,
-      currentDate: date,
+      currentVersion: remote.latest,
+      currentDate: remote.date,
     });
 
+    console.log(`[update] synchronizing`);
     await synchronizeDb();
 
     console.log(`[update] done`);
-    updating = false;
   } catch (e) {
-    console.error(e);
+    console.error(`[update] failed`, e);
+
+    await patchContentStatus({
+      phase: ContentStatusPhase.IDLE,
+      progress: null,
+    });
+
+    // Deprecated.
+    await messageAllClients(self, {
+      type: "updateStatus",
+      progress: 0,
+      state: "init",
+      currentVersion: remote.latest,
+      currentDate: remote.date,
+    });
+  } finally {
     updating = false;
   }
 }
 
 async function clearContent(self: ServiceWorkerGlobalScope) {
-  await messageAllClients(self, {
-    type: "updateStatus",
-    progress: 0,
-    state: "clearing",
+  const contentStatus = await getContentStatus();
+
+  if (contentStatus.phase === ContentStatusPhase.CLEAR) {
+    return;
+  }
+
+  try {
+    await patchContentStatus({
+      phase: ContentStatusPhase.CLEAR,
+    });
+
+    // Deprecated.
+    await messageAllClients(self, {
+      type: "updateStatus",
+      progress: 0,
+      state: "clearing",
+    });
+
+    console.log(`[clear] deleting`);
+    const success = await deleteContentCache();
+    console.log(`[clear] done: ${success}`);
+  } catch (e) {
+    console.error(`[clear] failed`, e);
+  } finally {
+    await patchContentStatus({
+      phase: ContentStatusPhase.IDLE,
+    });
+
+    // Deprecated.
+    await messageAllClients(self, {
+      type: "updateStatus",
+      progress: -1,
+      state: "init",
+      currentVersion: null,
+      currentDate: null,
+    });
+  }
+}
+
+async function deleteContentCache() {
+  await patchContentStatus({
+    local: null,
   });
-  await caches.delete(contentCache);
-  await messageAllClients(self, {
-    type: "updateStatus",
-    progress: -1,
-    state: "init",
-    currentVersion: null,
-    currentDate: null,
-  });
+  return await caches.delete(contentCache);
 }
 
 async function synchronizeDb() {

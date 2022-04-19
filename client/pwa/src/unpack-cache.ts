@@ -42,6 +42,7 @@ export async function unpackAndCache(data, progress = async (number) => {}) {
 
     await cache.put(location, response);
   }
+  await progress(1);
   await reader.close();
   if (removed) {
     await Promise.all(
