@@ -1,5 +1,9 @@
 const cheerio = require("cheerio");
-const { packageBCD, BCD_BROWSER_RELEASES } = require("./resolve-bcd");
+const {
+  queryBCD,
+  BCD_BROWSER_RELEASES,
+  BCD_BROWSERS,
+} = require("./resolve-bcd");
 const specs = require("browser-specs");
 const web = require("../kumascript/src/api/web.js");
 
@@ -346,9 +350,11 @@ function _addSingleSpecialSection($) {
     return proseSections;
   }
   const query = dataQuery.replace(/^bcd:/, "");
-  const { browsers, data } = _getBCD(query);
+  const data = _getBCD(query);
 
   if (specialSectionType === "browser_compatibility") {
+    const browsers = BCD_BROWSERS;
+
     return [
       {
         type: "browser_compatibility",
@@ -386,10 +392,10 @@ function _addSingleSpecialSection($) {
    * @returns {object}
    */
   function _getBCD(queryString) {
-    const { browsers, data } = packageBCD(queryString);
+    const data = queryBCD(queryString);
 
     if (data === undefined) {
-      return { browsers: null, data: null };
+      return null;
     }
 
     for (const [key, compat] of Object.entries(data)) {
@@ -429,7 +435,7 @@ function _addSingleSpecialSection($) {
       }
     }
 
-    return { browsers, data };
+    return data;
   }
 }
 
