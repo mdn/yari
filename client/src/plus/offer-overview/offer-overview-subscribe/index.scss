@@ -34,6 +34,12 @@
       flex-direction: column;
       align-items: center;
 
+      &-offline {
+        @extend .wrapper;
+        filter: blur(0.5rem);
+        pointer-events: none;
+      }
+
       @media screen and (min-width: 66rem) {
         flex-direction: row;
         align-items: stretch;

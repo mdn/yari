@@ -12,6 +12,7 @@ import { SubscriptionType, UserData, useUserData } from "../../../user-context";
 import { Switch } from "../../../ui/atoms/switch";
 import { useEffect, useState } from "react";
 import { getStripePlans } from "../../common/api";
+import { useOnlineStatus } from "../../../hooks";
 
 export enum Period {
   Month,
@@ -44,9 +45,14 @@ export type OfferDetailsPlanProps = {
   ctaLink: string;
 };
 
+export type PlanInfo = {
+  id: string;
+  monthlyPriceInCents: number;
+};
+
 export type StripePlans = {
   currency: string;
-  plans: Array<{ [key: string]: string }>;
+  plans: { [key: string]: PlanInfo };
 };
 
 export type OfferDetailsProps = {
@@ -239,11 +245,13 @@ function getLocalizedPlans(countrySpecific: StripePlans) {
       currency: countrySpecific.currency,
       regular: {
         ...PLUS_5.regular,
-        ctaLink: `${MDN_PLUS_SUBSCRIBE_BASE}?plan=${countrySpecific.plans["mdn_plus_5m"]}`,
+        ctaLink: `${MDN_PLUS_SUBSCRIBE_BASE}?plan=${countrySpecific.plans["mdn_plus_5m"].id}`,
+        monthlyPrice: countrySpecific.plans["mdn_plus_5m"].monthlyPriceInCents,
       },
       discount: {
         ...PLUS_5.discounted,
-        ctaLink: `${MDN_PLUS_SUBSCRIBE_BASE}?plan=${countrySpecific.plans["mdn_plus_5y"]}`,
+        ctaLink: `${MDN_PLUS_SUBSCRIBE_BASE}?plan=${countrySpecific.plans["mdn_plus_5y"].id}`,
+        monthlyPrice: countrySpecific.plans["mdn_plus_5y"].monthlyPriceInCents,
       },
     },
     PLUS_10: {
@@ -251,11 +259,13 @@ function getLocalizedPlans(countrySpecific: StripePlans) {
       currency: countrySpecific.currency,
       regular: {
         ...PLUS_10.regular,
-        ctaLink: `${MDN_PLUS_SUBSCRIBE_BASE}?plan=${countrySpecific.plans["mdn_plus_10m"]}`,
+        ctaLink: `${MDN_PLUS_SUBSCRIBE_BASE}?plan=${countrySpecific.plans["mdn_plus_10m"].id}`,
+        monthlyPrice: countrySpecific.plans["mdn_plus_10m"].monthlyPriceInCents,
       },
       discount: {
         ...PLUS_10.discounted,
-        ctaLink: `${MDN_PLUS_SUBSCRIBE_BASE}?plan=${countrySpecific.plans["mdn_plus_10y"]}`,
+        ctaLink: `${MDN_PLUS_SUBSCRIBE_BASE}?plan=${countrySpecific.plans["mdn_plus_10y"].id}`,
+        monthlyPrice: countrySpecific.plans["mdn_plus_10y"].monthlyPriceInCents,
       },
     },
   };
@@ -268,14 +278,16 @@ function OfferOverviewSubscribe() {
     PLUS_5: PLUS_5,
     PLUS_10: PLUS_10,
   });
+  const { isOnline } = useOnlineStatus();
+
   useEffect(() => {
     (async () => {
-      if (ENABLE_PLUS_EU) {
+      if (ENABLE_PLUS_EU && isOnline) {
         const plans: StripePlans = await getStripePlans();
         setOfferDetails(getLocalizedPlans(plans));
       }
     })();
-  }, []);
+  }, [isOnline]);
 
   const activeSubscription = userData?.subscriptionType;
   const activeSubscriptionPeriod =
@@ -283,22 +295,33 @@ function OfferOverviewSubscribe() {
     Period.Month;
 
   let [period, setPeriod] = useState(activeSubscriptionPeriod);
+  const wrapperClass = !isOnline ? "wrapper-offline" : "wrapper";
 
   return (
     <div className="dark subscribe-wrapper">
       <section className="container subscribe" id="subscribe">
-        <h2>Choose a plan</h2>
-        <Switch
-          name="period"
-          checked={period === Period.Year || false}
-          toggle={(e) => {
-            const period = e.target.checked ? Period.Year : Period.Month;
-            setPeriod(period);
-          }}
-        >
-          Pay yearly and get 2 months for free
-        </Switch>
-        <div className="wrapper">
+        {!isOnline && (
+          <h2>
+            You are currently offline. Please go online to view the plans for
+            MDN Plus
+          </h2>
+        )}
+        {isOnline && (
+          <>
+            <h2>Choose a plan</h2>
+            <Switch
+              name="period"
+              checked={period === Period.Year || false}
+              toggle={(e) => {
+                const period = e.target.checked ? Period.Year : Period.Month;
+                setPeriod(period);
+              }}
+            >
+              Pay yearly and get 2 months for free
+            </Switch>
+          </>
+        )}
+        <div className={wrapperClass}>
           <OfferDetails
             offerDetails={offerDetails.CORE}
             period={period}
