@@ -259,9 +259,17 @@
 dl.bc-notes-list {
   dt.bc-supports {
     margin-top: 1rem;
+
+    &:first-child {
+      margin-top: 0rem;
+    }
   }
   dd.bc-supports-dd {
     margin-bottom: 1rem;
+
+    &:last-child {
+      margin-bottom: 0rem;
+    }
   }
 }
 
