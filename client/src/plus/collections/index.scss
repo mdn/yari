@@ -8,9 +8,10 @@
 .collection {
   padding: 0 0 3rem 0;
   position: relative;
+
   &-created {
     color: var(--text-secondary);
-    font: var(--type-body-s);
+    font-size: var(--type-tiny-font-size);
     text-align: center;
     align-self: center;
     min-width: max-content;

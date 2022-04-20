@@ -18,6 +18,7 @@ import { SpecificationSection } from "./ingredients/spec-section";
 
 // Misc
 // Sub-components
+import { TopNavigation } from "../ui/organisms/top-navigation";
 import { ArticleActionsContainer } from "../ui/organisms/article-actions-container";
 import { LocalizedContentNote } from "./molecules/localized-content-note";
 import { OfflineStatusBar } from "../ui/molecules/offline-status-bar";
@@ -172,11 +173,12 @@ export function Document(props /* TODO: define a TS interface for this */) {
 
   return (
     <>
-      <ArticleActionsContainer doc={doc} />
-
+      <div className="main-document-header-container">
+        <TopNavigation />
+        <ArticleActionsContainer doc={doc} />
+      </div>
       {/* only include this if we are not server-side rendering */}
       {!isServer && <OfflineStatusBar />}
-
       {doc.isTranslated ? (
         <div className="container">
           <LocalizedContentNote isActive={doc.isActive} locale={locale} />

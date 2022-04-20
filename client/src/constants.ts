@@ -77,7 +77,7 @@ export const IEX_DOMAIN =
   "https://interactive-examples.mdn.mozilla.net";
 
 export const HEADER_NOTIFICATIONS_MENU_API_URL =
-  "/api/v1/plus/notifications?limit=1&unread=true";
+  "/api/v1/plus/notifications/?limit=1&unread=true";
 
 export const UPDATES_BASE_URL =
   process.env.REACT_APP_UPDATES_BASE_URL ||

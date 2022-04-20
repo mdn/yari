@@ -2,7 +2,9 @@
 
 .auth-container {
   display: flex;
-  font: var(--type-emphasis-m);
+  font-family: var(--font-body);
+  font-size: var(--type-smaller-font-size);
+  font-weight: var(--font-body-strong-weight);
   flex-flow: column-reverse;
   gap: 0.5rem;
   list-style: none;
