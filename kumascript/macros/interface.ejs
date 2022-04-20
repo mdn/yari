@@ -6,6 +6,11 @@
 //
 //  $0 - Interface name
 
+// Throw a MacroDeprecatedError flaw
+// No more use in en-US
+// Still 288 uses in translated-content (then we can delete it)
+mdn.deprecated();
+
 let lang = env.locale;
 let basePath = "/" + lang + "/docs/Mozilla/Tech/XPCOM/Reference/Interface/";
 
