@@ -190,7 +190,7 @@ export function Document(props /* TODO: define a TS interface for this */) {
           </div>
         )
       )}
-      <div className="article-wrapper">
+      <div className="main-wrapper">
         <RenderSideBar doc={doc} />
 
         <div className="toc">

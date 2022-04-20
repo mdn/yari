@@ -26,26 +26,28 @@ export function PageNotFound() {
   }, [location]);
 
   return (
-    <div className="page-not-found">
+    <div className="main-wrapper page-not-found">
       <PageContentContainer>
-        {/* This string should match the `pageTitle` set in ssr/render.js */}
-        <h1>Page not found</h1>
+        <article className="main-page-content">
+          {/* This string should match the `pageTitle` set in ssr/render.js */}
+          <h1>Page not found</h1>
 
-        {url && (
-          <p className="sorry-message">
-            Sorry, the page <code>{url}</code> could not be found.
+          {url && (
+            <p className="sorry-message">
+              Sorry, the page <code>{url}</code> could not be found.
+            </p>
+          )}
+
+          {url && (
+            <React.Suspense fallback={null}>
+              <FallbackLink url={url} />
+            </React.Suspense>
+          )}
+
+          <p>
+            <a href="/">Go back to the home page</a>
           </p>
-        )}
-
-        {url && (
-          <React.Suspense fallback={null}>
-            <FallbackLink url={url} />
-          </React.Suspense>
-        )}
-
-        <p>
-          <a href="/">Go back to the home page</a>
-        </p>
+        </article>
       </PageContentContainer>
     </div>
   );
