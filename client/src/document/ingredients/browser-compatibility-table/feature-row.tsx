@@ -8,6 +8,7 @@ import {
   isFullySupportedWithoutLimitation,
   isNotSupportedAtAll,
   isOnlySupportedWithAltName,
+  isOnlySupportedWithFlags,
   isOnlySupportedWithPrefix,
   isTruthy,
   versionIsPreview,
@@ -272,10 +273,14 @@ function CellIcons({ support }: { support: bcd.SupportStatement | undefined }) {
   }
 
   const icons = [
-    isOnlySupportedWithPrefix(support) && <Icon name="prefix" />,
-    supportItem && hasNoteworthyNotes(supportItem) && <Icon name="footnote" />,
-    isOnlySupportedWithAltName(support) && <Icon name="altname" />,
-    supportItem && supportItem.flags && <Icon name="disabled" />,
+    isOnlySupportedWithPrefix(support) && <Icon key="prefix" name="prefix" />,
+    hasNoteworthyNotes(supportItem) && <Icon key="footnote" name="footnote" />,
+    isOnlySupportedWithAltName(support) && (
+      <Icon key="altname" name="altname" />
+    ),
+    isOnlySupportedWithFlags(support) && (
+      <Icon key="disabled" name="disabled" />
+    ),
   ].filter(Boolean);
 
   return icons.length ? <div className="bc-icons">{icons}</div> : null;

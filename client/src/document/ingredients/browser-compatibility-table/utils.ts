@@ -118,6 +118,16 @@ export function isOnlySupportedWithPrefix(
   );
 }
 
+export function isOnlySupportedWithFlags(
+  support: bcd.SupportStatement | undefined
+) {
+  return (
+    support &&
+    getFirst(support).flags &&
+    !asList(support).some((item) => isFullySupportedWithoutLimitation(item))
+  );
+}
+
 export function isFullySupportedWithoutLimitation(
   support: bcd.SimpleSupportStatement
 ) {
