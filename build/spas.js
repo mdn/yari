@@ -16,6 +16,13 @@ const { renderHTML } = require("../ssr/dist/main");
 const { default: got } = require("got");
 const { splitSections } = require("./utils");
 const cheerio = require("cheerio");
+const { findByURL } = require("../content/document");
+
+const FEATURED_ARTICLES = [
+  "Web/HTML/Element/dialog",
+  "Web/CSS/color-scheme",
+  "Web/API/Canvas_API/Tutorial",
+];
 
 const contributorSpotlightRoot = CONTRIBUTOR_SPOTLIGHT_ROOT;
 
@@ -267,6 +274,30 @@ async function buildSPAs(options) {
       if (!fs.statSync(path.join(root, locale)).isDirectory()) {
         continue;
       }
+
+      // circular dependency, so needs to be imported down here:
+      const { buildDocument } = require("./");
+      const featuredArticles = (
+        await Promise.all(
+          FEATURED_ARTICLES.map(async (url) => {
+            const document =
+              findByURL(`/${locale}/docs/${url}`) ||
+              findByURL(`/en-US/docs/${url}`);
+            if (document) {
+              const {
+                doc: { mdn_url, summary, title, parents },
+              } = await buildDocument(document);
+              return {
+                mdn_url,
+                summary,
+                title,
+                tag: parents.length > 2 ? parents[1] : null,
+              };
+            }
+          })
+        )
+      ).filter(Boolean);
+
       const url = `/${locale}/`;
       const hyData = {
         pullRequestsData: {
@@ -275,6 +306,7 @@ async function buildSPAs(options) {
         },
         featuredContributor,
         latestNews,
+        featuredArticles,
       };
       const context = { hyData };
       const html = renderHTML(url, context);

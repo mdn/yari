@@ -68,6 +68,10 @@
       font: var(--type-smaller-font-size);
       line-height: var(--base-line-height);
       margin: 0;
+      display: -webkit-box;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: 3;
+      overflow: hidden;
     }
   }
 }
