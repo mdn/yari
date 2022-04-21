@@ -594,9 +594,10 @@ a.page-not-created {
 
   &:link,
   &:hover,
+  &:not([href]),
   &:focus {
     color: var(--icon-critical);
-    text-decoration-style: wavy;
+    text-decoration: underline wavy;
   }
 }
 
