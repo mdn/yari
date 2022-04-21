@@ -15,6 +15,7 @@ const { BUILD_OUT_ROOT } = require("./constants");
 const { renderHTML } = require("../ssr/dist/main");
 const { default: got } = require("got");
 const { splitSections } = require("./utils");
+const cheerio = require("cheerio");
 
 const contributorSpotlightRoot = CONTRIBUTOR_SPOTLIGHT_ROOT;
 
@@ -251,6 +252,9 @@ async function buildSPAs(options) {
     "https://api.github.com/search/issues?q=repo:mdn/content+is:pr+is:merged+sort:updated&per_page=10"
   ).json();
 
+  // Fetch latest Hacks articles.
+  const latestNews = await fetchLatestNews();
+
   for (const root of [CONTENT_ROOT, CONTENT_TRANSLATED_ROOT]) {
     if (!root) {
       continue;
@@ -270,6 +274,7 @@ async function buildSPAs(options) {
           repo: { name: "mdn/content", url: "https://github.com/mdn/content" },
         },
         featuredContributor,
+        latestNews,
       };
       const context = { hyData };
       const html = renderHTML(url, context);
@@ -296,6 +301,33 @@ async function buildSPAs(options) {
   if (!options.quiet) {
     console.log(`Built ${buildCount} SPA related files`);
   }
+}
+
+async function fetchLatestNews() {
+  const xml = await got("https://hacks.mozilla.org/category/mdn/feed/").text();
+
+  const $ = cheerio.load(xml, { xmlMode: true });
+
+  const items = [];
+
+  $("item").each((i, item) => {
+    const $item = $(item);
+
+    items.push({
+      title: $item.find("title").text(),
+      url: $item.find("guid").text(),
+      author: $item.find("dc\\:creator").text(),
+      published_at: $item.find("pubDate").text(),
+      source: {
+        name: "hacks.mozilla.org",
+        url: "https://hacks.mozilla.org/category/mdn/",
+      },
+    });
+  });
+
+  return {
+    items,
+  };
 }
 
 module.exports = { buildSPAs };
