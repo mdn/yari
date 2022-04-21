@@ -296,7 +296,7 @@ export function useFirstVisibleElement(
     visibleElementCallback(firstVisibleElement);
   }, [visibleElementCallback, firstVisibleElement]);
 
-  const [rootMargin, setRootMargin] = useState<string>("");
+  const [rootMargin, setRootMargin] = useState<string>("0px");
   const stickyHeaderHeight = useStickyHeaderHeight();
 
   useEffect(() => {
