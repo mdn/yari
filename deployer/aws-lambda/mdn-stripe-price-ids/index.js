@@ -39,9 +39,7 @@ exports.handler = async (event) => {
     supportedLanguageOrDefault = supportedCurrency.defaultLanguage;
   }
 
-  const key = [supportedCurrency.currency, supportedLanguageOrDefault].join(
-    "-"
-  );
+  const key = `${supportedCurrency.currency}-${supportedLanguageOrDefault}`;
 
   const plans = lookupData.langCurrencyToPlans[key];
   const planData = {};
