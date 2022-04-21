@@ -36,8 +36,7 @@
 
       &-offline {
         @extend .wrapper;
-        filter: blur(0.5rem);
-        pointer-events: none;
+        display: none;
       }
 
       @media screen and (min-width: 66rem) {
