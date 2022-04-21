@@ -6,7 +6,14 @@
   "license": "MPL-2.0",
   "main": "index.js",
   "scripts": {
-    "make-package": "yarn install && zip -r -X function.zip . -i index.js 'node_modules/*'"
+    "make-package": "yarn install && zip -r -X function.zip . -i index.js 'node_modules/*'",
+    "test": "jest ./tests"
+  },
+  "dependencies": {
+    "accept-language-parser": "1.5.0"
+  },
+  "devDependencies": {
+    "jest": "27.5.1"
   },
   "engines": {
     "node": ">=12.x"

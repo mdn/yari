@@ -1,195 +1,63 @@
+const acceptLanguageParser = require("accept-language-parser");
+
+const stageLookup = require("./plans-stage-lookup.json");
+const prodLookup = require("./plans-prod-lookup.json");
+
 const PROD_ENV = "prod";
-
-const regionCodesToCurrency = {
-  AS: "USD",
-  CA: "USD",
-  GB: "USD",
-  GU: "USD",
-  MP: "USD",
-  MY: "USD",
-  NZ: "USD",
-  PR: "USD",
-  SG: "USD",
-  US: "USD",
-  VI: "USD",
-  AT: "EUR",
-  BE: "EUR",
-  DE: "EUR",
-  ES: "EUR",
-  FR: "EUR",
-  IE: "EUR",
-  IT: "EUR",
-  NL: "EUR",
-  SE: "EUR",
-  FI: "EUR",
-  CH: "CHF",
-};
-
-//##TODO Update to actual prod values.
-const PLANS_PROD = {
-  USD: {
-    mdn_plus_5m: {
-      id: "price_1JFoTYKb9q6OnNsLalexa03p",
-      monthlyPriceInCents: 500,
-    },
-    mdn_plus_5y: {
-      id: "price_1JpIPwKb9q6OnNsLJLsIqMp7",
-      monthlyPriceInCents: 417,
-    },
-    mdn_plus_10m: {
-      id: "price_1K6X7gKb9q6OnNsLi44HdLcC",
-      monthlyPriceInCents: 1000,
-    },
-    mdn_plus_10y: {
-      id: "price_1K6X8VKb9q6OnNsLFlUcEiu4",
-      monthlyPriceInCents: 833,
-    },
-  },
-  EUR: {
-    mdn_plus_5m: {
-      id: "price_1Ko6oDKb9q6OnNsL3UV65T60",
-      monthlyPriceInCents: 500,
-    },
-    mdn_plus_5y: {
-      id: "price_1Ko6qAKb9q6OnNsLdsHFRRYW",
-      monthlyPriceInCents: 417,
-    },
-    mdn_plus_10m: {
-      id: "price_1Ko6rsKb9q6OnNsL9jMzlpUn",
-      monthlyPriceInCents: 1000,
-    },
-    mdn_plus_10y: {
-      id: "price_1Ko6stKb9q6OnNsL4rnrw4Wn",
-      monthlyPriceInCents: 833,
-    },
-  },
-  GBP: {
-    mdn_plus_5m: {
-      id: "price_1Ko71LKb9q6OnNsLfA5Rxab7",
-      monthlyPriceInCents: 500,
-    },
-    mdn_plus_5y: {
-      id: "price_1Ko72WKb9q6OnNsLHziO3ZDq",
-      monthlyPriceInCents: 417,
-    },
-    mdn_plus_10m: {
-      id: "price_1Ko73gKb9q6OnNsLGfHRdyzV",
-      monthlyPriceInCents: 1000,
-    },
-    mdn_plus_10y: {
-      id: "price_1Ko74nKb9q6OnNsLBZ0w2KZo",
-      monthlyPriceInCents: 833,
-    },
-  },
-  CHF: {
-    mdn_plus_5m: {
-      id: "price_1Ko6vdKb9q6OnNsLHogCAAEC",
-      monthlyPriceInCents: 500,
-    },
-    mdn_plus_5y: {
-      id: "price_1Ko6xTKb9q6OnNsLyKSDZFpO",
-      monthlyPriceInCents: 417,
-    },
-    mdn_plus_10m: {
-      id: "price_1Ko6ycKb9q6OnNsLODtL4BlT",
-      monthlyPriceInCents: 1000,
-    },
-    mdn_plus_10y: {
-      id: "price_1Ko6zgKb9q6OnNsLuc5eVkuX",
-      monthlyPriceInCents: 833,
-    },
-  },
-};
-
-const PLANS_STAGE = {
-  USD: {
-    mdn_plus_5m: {
-      id: "price_1JFoTYKb9q6OnNsLalexa03p",
-      monthlyPriceInCents: 500,
-    },
-    mdn_plus_5y: {
-      id: "price_1JpIPwKb9q6OnNsLJLsIqMp7",
-      monthlyPriceInCents: 417,
-    },
-    mdn_plus_10m: {
-      id: "price_1K6X7gKb9q6OnNsLi44HdLcC",
-      monthlyPriceInCents: 1000,
-    },
-    mdn_plus_10y: {
-      id: "price_1K6X8VKb9q6OnNsLFlUcEiu4",
-      monthlyPriceInCents: 833,
-    },
-  },
-  EUR: {
-    mdn_plus_5m: {
-      id: "price_1Ko6oDKb9q6OnNsL3UV65T60",
-      monthlyPriceInCents: 500,
-    },
-    mdn_plus_5y: {
-      id: "price_1Ko6qAKb9q6OnNsLdsHFRRYW",
-      monthlyPriceInCents: 417,
-    },
-    mdn_plus_10m: {
-      id: "price_1Ko6rsKb9q6OnNsL9jMzlpUn",
-      monthlyPriceInCents: 1000,
-    },
-    mdn_plus_10y: {
-      id: "price_1Ko6stKb9q6OnNsL4rnrw4Wn",
-      monthlyPriceInCents: 833,
-    },
-  },
-  GBP: {
-    mdn_plus_5m: {
-      id: "price_1Ko71LKb9q6OnNsLfA5Rxab7",
-      monthlyPriceInCents: 500,
-    },
-    mdn_plus_5y: {
-      id: "price_1Ko72WKb9q6OnNsLHziO3ZDq",
-      monthlyPriceInCents: 417,
-    },
-    mdn_plus_10m: {
-      id: "price_1Ko73gKb9q6OnNsLGfHRdyzV",
-      monthlyPriceInCents: 1000,
-    },
-    mdn_plus_10y: {
-      id: "price_1Ko74nKb9q6OnNsLBZ0w2KZo",
-      monthlyPriceInCents: 833,
-    },
-  },
-  CHF: {
-    mdn_plus_5m: {
-      id: "price_1Ko6vdKb9q6OnNsLHogCAAEC",
-      monthlyPriceInCents: 500,
-    },
-    mdn_plus_5y: {
-      id: "price_1Ko6xTKb9q6OnNsLyKSDZFpO",
-      monthlyPriceInCents: 417,
-    },
-    mdn_plus_10m: {
-      id: "price_1Ko6ycKb9q6OnNsLODtL4BlT",
-      monthlyPriceInCents: 1000,
-    },
-    mdn_plus_10y: {
-      id: "price_1Ko6zgKb9q6OnNsLuc5eVkuX",
-      monthlyPriceInCents: 833,
-    },
-  },
-};
 
 exports.handler = async (event) => {
   const request = event.Records[0].cf.request;
   const ENV = request.origin.custom.customHeaders["x-mdn-env"] || "prod";
-  const PLANS = ENV === PROD_ENV ? PLANS_PROD : PLANS_STAGE;
+  const lookupData = ENV === PROD_ENV ? prodLookup : stageLookup;
 
   //https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/using-cloudfront-headers.html
   const countryHeader = request.headers["cloudfront-viewer-country"];
 
+  const localeHeader = request.headers["accept-language"];
+
   const countryCode = countryHeader ? countryHeader[0].value : "US";
-  const currency = regionCodesToCurrency[`${countryCode}`] || "USD";
+  const supportedCurrency = lookupData.countryToCurrency[countryCode];
+
+  if (!supportedCurrency) {
+    return {
+      status: 404,
+      statusDescription: "NOT_OK",
+    };
+  }
+
+  let acceptLanguage = localeHeader ? localeHeader[0].value : null;
+  let supportedLanguageOrDefault;
+  if (acceptLanguage) {
+    //E.g "en-GB,en;q=0.7,it;q=0.3" - Takes 'en'
+    supportedLanguageOrDefault =
+      acceptLanguageParser.pick(
+        Object.keys(supportedCurrency.supportedLanguages),
+        acceptLanguage,
+        { loose: true }
+      ) || supportedCurrency.defaultLanguage;
+  } else {
+    supportedLanguageOrDefault = supportedCurrency.defaultLanguage;
+  }
+
+  const key = [supportedCurrency.currency, supportedLanguageOrDefault].join(
+    "-"
+  );
+
+  const plans = lookupData.langCurrencyToPlans[key];
+  const planData = {};
+  Object.entries(plans).forEach(([key, value]) => {
+    let monthlyPriceInCents;
+    if (value.recurring.interval === "year") {
+      monthlyPriceInCents = Math.floor(value.unit_amount / 12);
+    } else {
+      monthlyPriceInCents = value.unit_amount;
+    }
+    planData[key] = { monthlyPriceInCents, id: value.price_id };
+  });
 
   const content = {
-    currency: currency,
-    plans: PLANS[currency] || PLANS["USD"],
+    currency: supportedCurrency.currency,
+    plans: planData,
   };
 
   const response = {
