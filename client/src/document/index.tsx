@@ -12,7 +12,7 @@ import {
 } from "./hooks";
 import { Doc } from "./types";
 // Ingredients
-import { Prose, ProseWithHeading } from "./ingredients/prose";
+import { Prose } from "./ingredients/prose";
 import { LazyBrowserCompatibilityTable } from "./lazy-bcd-table";
 import { SpecificationSection } from "./ingredients/spec-section";
 
@@ -228,24 +228,7 @@ export function Document(props /* TODO: define a TS interface for this */) {
 function RenderDocumentBody({ doc }) {
   return doc.body.map((section, i) => {
     if (section.type === "prose") {
-      // Only exceptional few should use the <Prose/> component,
-      // as opposed to <ProseWithHeading/>.
-      if (!section.value.id) {
-        return (
-          <Prose
-            key={section.value.id || `prose${i}`}
-            section={section.value}
-          />
-        );
-      } else {
-        return (
-          <ProseWithHeading
-            key={section.value.id}
-            id={section.value.id}
-            section={section.value}
-          />
-        );
-      }
+      return <Prose key={section.value.id} section={section.value} />;
     } else if (section.type === "browser_compatibility") {
       return (
         <LazyBrowserCompatibilityTable
