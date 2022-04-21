@@ -1,14 +1,20 @@
 const handler = require("../index");
+jest.mock("../plans-stage-lookup.json", () => {
+  return require("./__mocks__/plans-stage-lookup-test.json");
+});
+jest.mock("../plans-prod-lookup.json", () => {
+  return require("./__mocks__/plans-prod-lookup-test.json");
+});
 
 test("Returns Italian language with Euro price_id for Italian in Germany", async () => {
   const event = getEventForAcceptHeaderAndCountry("it;q=0.7,en;q=0.3", "DE");
   const res = await handler.handler(event);
   const bodyJson = JSON.parse(res.body);
   const expectedPriceArray = [
-    "price_1KqeXFJNcmPzuWtRUBiVlTVX",
-    "price_1KqeXFJNcmPzuWtRjdDWnMU6",
-    "price_1KqeXFJNcmPzuWtR2UJ1TVSG",
-    "price_1KqeXGJNcmPzuWtR7cw3rh90",
+    "ITALIAN_1",
+    "ITALIAN_2",
+    "ITALIAN_3",
+    "ITALIAN_4",
   ];
 
   expect(Object.values(bodyJson.plans).map((val) => val.id)).toEqual(
@@ -25,10 +31,10 @@ test("(PROD) Returns Italian language with Euro price_id for Italian in Germany"
   const res = await handler.handler(event);
   const bodyJson = JSON.parse(res.body);
   const expectedPriceArray = [
-    "price_1KqeXFJNcmPzuWtRUBiVlTVX",
-    "price_1KqeXFJNcmPzuWtRjdDWnMU6",
-    "price_1KqeXFJNcmPzuWtR2UJ1TVSG",
-    "price_1KqeXGJNcmPzuWtR7cw3rh90",
+    "ITALIAN_1",
+    "ITALIAN_2",
+    "ITALIAN_3",
+    "ITALIAN_4",
   ];
 
   expect(Object.values(bodyJson.plans).map((val) => val.id)).toEqual(
@@ -42,10 +48,10 @@ test("Returns French language with CHF price_id for Swiss person in Switzerland"
   const res = await handler.handler(event);
   const bodyJson = JSON.parse(res.body);
   const expectedPriceArray = [
-    "price_1KqeXLJNcmPzuWtRyS2uTKyE",
-    "price_1KqeXLJNcmPzuWtRbH6wD6sm",
-    "price_1KqeXMJNcmPzuWtR46VuMNtb",
-    "price_1KqeXMJNcmPzuWtR3bNmxM4C",
+    "SWISS_FRENCH_1",
+    "SWISS_FRENCH_2",
+    "SWISS_FRENCH_3",
+    "SWISS_FRENCH_4",
   ];
 
   expect(Object.values(bodyJson.plans).map((val) => val.id)).toEqual(
@@ -59,10 +65,10 @@ test("Returns English (default) language with USD price_id for German person in 
   const res = await handler.handler(event);
   const bodyJson = JSON.parse(res.body);
   const expectedPriceArray = [
-    "price_1KeG02JNcmPzuWtR1oBrw8o6",
-    "price_1KeG02JNcmPzuWtRslZijhQu",
-    "price_1KeG02JNcmPzuWtRuAnIgNHh",
-    "price_1KeG02JNcmPzuWtRlrSiLTI6",
+    "USD_ENGLISH_1",
+    "USD_ENGLISH_2",
+    "USD_ENGLISH_3",
+    "USD_ENGLISH_4",
   ];
 
   expect(Object.values(bodyJson.plans).map((val) => val.id)).toEqual(

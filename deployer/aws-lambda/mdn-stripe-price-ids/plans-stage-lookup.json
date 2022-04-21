@@ -273,7 +273,7 @@
       "mdn_plus_5m": {
         "unit_amount": 500,
         "currency": "usd",
-        "product": "prod_LKvr8fYGbBxcaZ",
+        "product": "prod_Jtbg9tyGyLRuB0",
         "recurring": {
           "interval": "month"
         },
@@ -281,7 +281,7 @@
         "lookup_key": "usd-en-5m",
         "metadata": {
           "productSet": "mdnPlus",
-          "productOrder": 1,
+          "productOrder": "1",
           "capabilities:b6f5727337fefe8e": "mdn_plus_5m",
           "capabilities:e7bc284c2d3b4a90": "mdn_plus_5m",
           "capabilities:ed18cbc69ec23491": "mdn_plus_5m",
@@ -291,12 +291,12 @@
           "product:details:2": "Collections of articles",
           "product:details:3": "MDN offline"
         },
-        "price_id": "price_1KeG02JNcmPzuWtR1oBrw8o6"
+        "price_id": "price_1JFoTYKb9q6OnNsLalexa03p"
       },
       "mdn_plus_5y": {
         "unit_amount": 5000,
         "currency": "usd",
-        "product": "prod_LKvr8fYGbBxcaZ",
+        "product": "prod_Jtbg9tyGyLRuB0",
         "recurring": {
           "interval": "year"
         },
@@ -304,7 +304,7 @@
         "lookup_key": "usd-en-5y",
         "metadata": {
           "productSet": "mdnPlus",
-          "productOrder": 2,
+          "productOrder": "2",
           "capabilities:b6f5727337fefe8e": "mdn_plus_5y",
           "capabilities:e7bc284c2d3b4a90": "mdn_plus_5y",
           "capabilities:ed18cbc69ec23491": "mdn_plus_5y",
@@ -314,12 +314,12 @@
           "product:details:2": "Collections of articles",
           "product:details:3": "MDN offline"
         },
-        "price_id": "price_1KeG02JNcmPzuWtRslZijhQu"
+        "price_id": "price_1JpIPwKb9q6OnNsLJLsIqMp7"
       },
       "mdn_plus_10m": {
         "unit_amount": 1000,
         "currency": "usd",
-        "product": "prod_LKvr8fYGbBxcaZ",
+        "product": "prod_Jtbg9tyGyLRuB0",
         "recurring": {
           "interval": "month"
         },
@@ -327,7 +327,7 @@
         "lookup_key": "usd-en-10m",
         "metadata": {
           "productSet": "mdnPlus",
-          "productOrder": 3,
+          "productOrder": "3",
           "capabilities:b6f5727337fefe8e": "mdn_plus_10m",
           "capabilities:e7bc284c2d3b4a90": "mdn_plus_10m",
           "capabilities:ed18cbc69ec23491": "mdn_plus_10m",
@@ -337,12 +337,12 @@
           "product:details:2": "Collections of articles",
           "product:details:3": "MDN offline"
         },
-        "price_id": "price_1KeG02JNcmPzuWtRuAnIgNHh"
+        "price_id": "price_1K6X7gKb9q6OnNsLi44HdLcC"
       },
       "mdn_plus_10y": {
         "unit_amount": 10000,
         "currency": "usd",
-        "product": "prod_LKvr8fYGbBxcaZ",
+        "product": "prod_Jtbg9tyGyLRuB0",
         "recurring": {
           "interval": "year"
         },
@@ -350,7 +350,7 @@
         "lookup_key": "usd-en-10y",
         "metadata": {
           "productSet": "mdnPlus",
-          "productOrder": 4,
+          "productOrder": "4",
           "capabilities:b6f5727337fefe8e": "mdn_plus_10y",
           "capabilities:e7bc284c2d3b4a90": "mdn_plus_10y",
           "capabilities:ed18cbc69ec23491": "mdn_plus_10y",
@@ -360,14 +360,14 @@
           "product:details:2": "Collections of articles",
           "product:details:3": "MDN offline"
         },
-        "price_id": "price_1KeG02JNcmPzuWtRlrSiLTI6"
+        "price_id": "price_1K6X8VKb9q6OnNsLFlUcEiu4"
       }
     },
     "eur-en": {
       "mdn_plus_5m": {
         "unit_amount": 500,
         "currency": "eur",
-        "product": "prod_LKvr8fYGbBxcaZ",
+        "product": "prod_Jtbg9tyGyLRuB0",
         "recurring": {
           "interval": "month"
         },
@@ -375,7 +375,7 @@
         "lookup_key": "eur-en-5m",
         "metadata": {
           "productSet": "mdnPlus",
-          "productOrder": 1,
+          "productOrder": "1",
           "capabilities:b6f5727337fefe8e": "mdn_plus_5m",
           "capabilities:e7bc284c2d3b4a90": "mdn_plus_5m",
           "capabilities:ed18cbc69ec23491": "mdn_plus_5m",
@@ -385,12 +385,12 @@
           "product:details:2": "Collections of articles",
           "product:details:3": "MDN offline"
         },
-        "price_id": "price_1KqeX9JNcmPzuWtRJNelT86c"
+        "price_id": "price_1KqdudKb9q6OnNsLvZkMKGkx"
       },
       "mdn_plus_5y": {
         "unit_amount": 5000,
         "currency": "eur",
-        "product": "prod_LKvr8fYGbBxcaZ",
+        "product": "prod_Jtbg9tyGyLRuB0",
         "recurring": {
           "interval": "year"
         },
@@ -398,7 +398,7 @@
         "lookup_key": "eur-en-5y",
         "metadata": {
           "productSet": "mdnPlus",
-          "productOrder": 2,
+          "productOrder": "2",
           "capabilities:b6f5727337fefe8e": "mdn_plus_5y",
           "capabilities:e7bc284c2d3b4a90": "mdn_plus_5y",
           "capabilities:ed18cbc69ec23491": "mdn_plus_5y",
@@ -408,12 +408,12 @@
           "product:details:2": "Collections of articles",
           "product:details:3": "MDN offline"
         },
-        "price_id": "price_1KqeX9JNcmPzuWtR4dOStCqA"
+        "price_id": "price_1KqdudKb9q6OnNsLJAJVh0rh"
       },
       "mdn_plus_10m": {
         "unit_amount": 1000,
         "currency": "eur",
-        "product": "prod_LKvr8fYGbBxcaZ",
+        "product": "prod_Jtbg9tyGyLRuB0",
         "recurring": {
           "interval": "month"
         },
@@ -421,7 +421,7 @@
         "lookup_key": "eur-en-10m",
         "metadata": {
           "productSet": "mdnPlus",
-          "productOrder": 3,
+          "productOrder": "3",
           "capabilities:b6f5727337fefe8e": "mdn_plus_10m",
           "capabilities:e7bc284c2d3b4a90": "mdn_plus_10m",
           "capabilities:ed18cbc69ec23491": "mdn_plus_10m",
@@ -431,12 +431,12 @@
           "product:details:2": "Collections of articles",
           "product:details:3": "MDN offline"
         },
-        "price_id": "price_1KqeXAJNcmPzuWtRjvfOVIUP"
+        "price_id": "price_1KqdudKb9q6OnNsLDYhWPIjT"
       },
       "mdn_plus_10y": {
         "unit_amount": 10000,
         "currency": "eur",
-        "product": "prod_LKvr8fYGbBxcaZ",
+        "product": "prod_Jtbg9tyGyLRuB0",
         "recurring": {
           "interval": "year"
         },
@@ -444,7 +444,7 @@
         "lookup_key": "eur-en-10y",
         "metadata": {
           "productSet": "mdnPlus",
-          "productOrder": 4,
+          "productOrder": "4",
           "capabilities:b6f5727337fefe8e": "mdn_plus_10y",
           "capabilities:e7bc284c2d3b4a90": "mdn_plus_10y",
           "capabilities:ed18cbc69ec23491": "mdn_plus_10y",
@@ -454,14 +454,14 @@
           "product:details:2": "Collections of articles",
           "product:details:3": "MDN offline"
         },
-        "price_id": "price_1KqeXAJNcmPzuWtR5hwpwsUr"
+        "price_id": "price_1KqdueKb9q6OnNsLDg4Toybn"
       }
     },
     "eur-de": {
       "mdn_plus_5m": {
         "unit_amount": 500,
         "currency": "eur",
-        "product": "prod_LKvr8fYGbBxcaZ",
+        "product": "prod_Jtbg9tyGyLRuB0",
         "recurring": {
           "interval": "month"
         },
@@ -469,7 +469,7 @@
         "lookup_key": "eur-de-5m",
         "metadata": {
           "productSet": "mdnPlus",
-          "productOrder": 1,
+          "productOrder": "1",
           "capabilities:b6f5727337fefe8e": "mdn_plus_5m",
           "capabilities:e7bc284c2d3b4a90": "mdn_plus_5m",
           "capabilities:ed18cbc69ec23491": "mdn_plus_5m",
@@ -479,12 +479,12 @@
           "product:details:2": "Artikelsammlungen",
           "product:details:3": "MDN offline"
         },
-        "price_id": "price_1KqeXBJNcmPzuWtR7opydXog"
+        "price_id": "price_1Ko6oDKb9q6OnNsL3UV65T60"
       },
       "mdn_plus_5y": {
         "unit_amount": 5000,
         "currency": "eur",
-        "product": "prod_LKvr8fYGbBxcaZ",
+        "product": "prod_Jtbg9tyGyLRuB0",
         "recurring": {
           "interval": "year"
         },
@@ -492,7 +492,7 @@
         "lookup_key": "eur-de-5y",
         "metadata": {
           "productSet": "mdnPlus",
-          "productOrder": 2,
+          "productOrder": "2",
           "capabilities:b6f5727337fefe8e": "mdn_plus_5y",
           "capabilities:e7bc284c2d3b4a90": "mdn_plus_5y",
           "capabilities:ed18cbc69ec23491": "mdn_plus_5y",
@@ -502,12 +502,12 @@
           "product:details:2": "Artikelsammlungen",
           "product:details:3": "MDN offline"
         },
-        "price_id": "price_1KqeXBJNcmPzuWtRBSY6DGlv"
+        "price_id": "price_1Ko6qAKb9q6OnNsLdsHFRRYW"
       },
       "mdn_plus_10m": {
         "unit_amount": 1000,
         "currency": "eur",
-        "product": "prod_LKvr8fYGbBxcaZ",
+        "product": "prod_Jtbg9tyGyLRuB0",
         "recurring": {
           "interval": "month"
         },
@@ -515,7 +515,7 @@
         "lookup_key": "eur-de-10m",
         "metadata": {
           "productSet": "mdnPlus",
-          "productOrder": 3,
+          "productOrder": "3",
           "capabilities:b6f5727337fefe8e": "mdn_plus_10m",
           "capabilities:e7bc284c2d3b4a90": "mdn_plus_10m",
           "capabilities:ed18cbc69ec23491": "mdn_plus_10m",
@@ -525,12 +525,12 @@
           "product:details:2": "Artikelsammlungen",
           "product:details:3": "MDN offline"
         },
-        "price_id": "price_1KqeXBJNcmPzuWtRNWzQ6IX4"
+        "price_id": "price_1Ko6rsKb9q6OnNsL9jMzlpUn"
       },
       "mdn_plus_10y": {
         "unit_amount": 10000,
         "currency": "eur",
-        "product": "prod_LKvr8fYGbBxcaZ",
+        "product": "prod_Jtbg9tyGyLRuB0",
         "recurring": {
           "interval": "year"
         },
@@ -538,7 +538,7 @@
         "lookup_key": "eur-de-10y",
         "metadata": {
           "productSet": "mdnPlus",
-          "productOrder": 4,
+          "productOrder": "4",
           "capabilities:b6f5727337fefe8e": "mdn_plus_10y",
           "capabilities:e7bc284c2d3b4a90": "mdn_plus_10y",
           "capabilities:ed18cbc69ec23491": "mdn_plus_10y",
@@ -548,14 +548,14 @@
           "product:details:2": "Artikelsammlungen",
           "product:details:3": "MDN offline"
         },
-        "price_id": "price_1KqeXCJNcmPzuWtR5fl7C1tx"
+        "price_id": "price_1Ko6stKb9q6OnNsL4rnrw4Wn"
       }
     },
     "eur-es": {
       "mdn_plus_5m": {
         "unit_amount": 500,
         "currency": "eur",
-        "product": "prod_LKvr8fYGbBxcaZ",
+        "product": "prod_Jtbg9tyGyLRuB0",
         "recurring": {
           "interval": "month"
         },
@@ -563,7 +563,7 @@
         "lookup_key": "eur-es-5m",
         "metadata": {
           "productSet": "mdnPlus",
-          "productOrder": 1,
+          "productOrder": "1",
           "capabilities:b6f5727337fefe8e": "mdn_plus_5m",
           "capabilities:e7bc284c2d3b4a90": "mdn_plus_5m",
           "capabilities:ed18cbc69ec23491": "mdn_plus_5m",
@@ -573,12 +573,12 @@
           "product:details:2": "Collections of articles",
           "product:details:3": "MDN offline"
         },
-        "price_id": "price_1KqeXCJNcmPzuWtR05tPDWqA"
+        "price_id": "price_1KqdugKb9q6OnNsL41ATLMv6"
       },
       "mdn_plus_5y": {
         "unit_amount": 5000,
         "currency": "eur",
-        "product": "prod_LKvr8fYGbBxcaZ",
+        "product": "prod_Jtbg9tyGyLRuB0",
         "recurring": {
           "interval": "year"
         },
@@ -586,7 +586,7 @@
         "lookup_key": "eur-es-5y",
         "metadata": {
           "productSet": "mdnPlus",
-          "productOrder": 2,
+          "productOrder": "2",
           "capabilities:b6f5727337fefe8e": "mdn_plus_5y",
           "capabilities:e7bc284c2d3b4a90": "mdn_plus_5y",
           "capabilities:ed18cbc69ec23491": "mdn_plus_5y",
@@ -596,12 +596,12 @@
           "product:details:2": "Collections of articles",
           "product:details:3": "MDN offline"
         },
-        "price_id": "price_1KqeXCJNcmPzuWtR5yy0wlfO"
+        "price_id": "price_1KqdugKb9q6OnNsLXv0GwhaT"
       },
       "mdn_plus_10m": {
         "unit_amount": 1000,
         "currency": "eur",
-        "product": "prod_LKvr8fYGbBxcaZ",
+        "product": "prod_Jtbg9tyGyLRuB0",
         "recurring": {
           "interval": "month"
         },
@@ -609,7 +609,7 @@
         "lookup_key": "eur-es-10m",
         "metadata": {
           "productSet": "mdnPlus",
-          "productOrder": 3,
+          "productOrder": "3",
           "capabilities:b6f5727337fefe8e": "mdn_plus_10m",
           "capabilities:e7bc284c2d3b4a90": "mdn_plus_10m",
           "capabilities:ed18cbc69ec23491": "mdn_plus_10m",
@@ -619,12 +619,12 @@
           "product:details:2": "Collections of articles",
           "product:details:3": "MDN offline"
         },
-        "price_id": "price_1KqeXDJNcmPzuWtRJAstOkqA"
+        "price_id": "price_1KqdugKb9q6OnNsLF5ZHUiBP"
       },
       "mdn_plus_10y": {
         "unit_amount": 10000,
         "currency": "eur",
-        "product": "prod_LKvr8fYGbBxcaZ",
+        "product": "prod_Jtbg9tyGyLRuB0",
         "recurring": {
           "interval": "year"
         },
@@ -632,7 +632,7 @@
         "lookup_key": "eur-es-10y",
         "metadata": {
           "productSet": "mdnPlus",
-          "productOrder": 4,
+          "productOrder": "4",
           "capabilities:b6f5727337fefe8e": "mdn_plus_10y",
           "capabilities:e7bc284c2d3b4a90": "mdn_plus_10y",
           "capabilities:ed18cbc69ec23491": "mdn_plus_10y",
@@ -642,14 +642,14 @@
           "product:details:2": "Collections of articles",
           "product:details:3": "MDN offline"
         },
-        "price_id": "price_1KqeXDJNcmPzuWtR8hPdxJiS"
+        "price_id": "price_1KqduhKb9q6OnNsLfrNPlNDh"
       }
     },
     "eur-fr": {
       "mdn_plus_5m": {
         "unit_amount": 500,
         "currency": "eur",
-        "product": "prod_LKvr8fYGbBxcaZ",
+        "product": "prod_Jtbg9tyGyLRuB0",
         "recurring": {
           "interval": "month"
         },
@@ -657,7 +657,7 @@
         "lookup_key": "eur-fr-5m",
         "metadata": {
           "productSet": "mdnPlus",
-          "productOrder": 1,
+          "productOrder": "1",
           "capabilities:b6f5727337fefe8e": "mdn_plus_5m",
           "capabilities:e7bc284c2d3b4a90": "mdn_plus_5m",
           "capabilities:ed18cbc69ec23491": "mdn_plus_5m",
@@ -667,12 +667,12 @@
           "product:details:2": "Collections of articles",
           "product:details:3": "MDN offline"
         },
-        "price_id": "price_1KqeXDJNcmPzuWtRoL9NNeK4"
+        "price_id": "price_1KqduhKb9q6OnNsLOPbGN60q"
       },
       "mdn_plus_5y": {
         "unit_amount": 5000,
         "currency": "eur",
-        "product": "prod_LKvr8fYGbBxcaZ",
+        "product": "prod_Jtbg9tyGyLRuB0",
         "recurring": {
           "interval": "year"
         },
@@ -680,7 +680,7 @@
         "lookup_key": "eur-fr-5y",
         "metadata": {
           "productSet": "mdnPlus",
-          "productOrder": 2,
+          "productOrder": "2",
           "capabilities:b6f5727337fefe8e": "mdn_plus_5y",
           "capabilities:e7bc284c2d3b4a90": "mdn_plus_5y",
           "capabilities:ed18cbc69ec23491": "mdn_plus_5y",
@@ -690,12 +690,12 @@
           "product:details:2": "Collections of articles",
           "product:details:3": "MDN offline"
         },
-        "price_id": "price_1KqeXEJNcmPzuWtRTw1w8bX5"
+        "price_id": "price_1KqduhKb9q6OnNsL2Iio3oSP"
       },
       "mdn_plus_10m": {
         "unit_amount": 1000,
         "currency": "eur",
-        "product": "prod_LKvr8fYGbBxcaZ",
+        "product": "prod_Jtbg9tyGyLRuB0",
         "recurring": {
           "interval": "month"
         },
@@ -703,7 +703,7 @@
         "lookup_key": "eur-fr-10m",
         "metadata": {
           "productSet": "mdnPlus",
-          "productOrder": 3,
+          "productOrder": "3",
           "capabilities:b6f5727337fefe8e": "mdn_plus_10m",
           "capabilities:e7bc284c2d3b4a90": "mdn_plus_10m",
           "capabilities:ed18cbc69ec23491": "mdn_plus_10m",
@@ -713,12 +713,12 @@
           "product:details:2": "Collections of articles",
           "product:details:3": "MDN offline"
         },
-        "price_id": "price_1KqeXEJNcmPzuWtR3WZLuJ6K"
+        "price_id": "price_1KqduiKb9q6OnNsLzF5Ca5LV"
       },
       "mdn_plus_10y": {
         "unit_amount": 10000,
         "currency": "eur",
-        "product": "prod_LKvr8fYGbBxcaZ",
+        "product": "prod_Jtbg9tyGyLRuB0",
         "recurring": {
           "interval": "year"
         },
@@ -726,7 +726,7 @@
         "lookup_key": "eur-fr-10y",
         "metadata": {
           "productSet": "mdnPlus",
-          "productOrder": 4,
+          "productOrder": "4",
           "capabilities:b6f5727337fefe8e": "mdn_plus_10y",
           "capabilities:e7bc284c2d3b4a90": "mdn_plus_10y",
           "capabilities:ed18cbc69ec23491": "mdn_plus_10y",
@@ -736,14 +736,14 @@
           "product:details:2": "Collections of articles",
           "product:details:3": "MDN offline"
         },
-        "price_id": "price_1KqeXEJNcmPzuWtR1kOfChz0"
+        "price_id": "price_1KqduiKb9q6OnNsLH0G5Lmvk"
       }
     },
     "eur-it": {
       "mdn_plus_5m": {
         "unit_amount": 500,
         "currency": "eur",
-        "product": "prod_LKvr8fYGbBxcaZ",
+        "product": "prod_Jtbg9tyGyLRuB0",
         "recurring": {
           "interval": "month"
         },
@@ -751,7 +751,7 @@
         "lookup_key": "eur-it-5m",
         "metadata": {
           "productSet": "mdnPlus",
-          "productOrder": 1,
+          "productOrder": "1",
           "capabilities:b6f5727337fefe8e": "mdn_plus_5m",
           "capabilities:e7bc284c2d3b4a90": "mdn_plus_5m",
           "capabilities:ed18cbc69ec23491": "mdn_plus_5m",
@@ -761,12 +761,12 @@
           "product:details:2": "Collections of articles",
           "product:details:3": "MDN offline"
         },
-        "price_id": "price_1KqeXFJNcmPzuWtRUBiVlTVX"
+        "price_id": "price_1KqduiKb9q6OnNsL6Amq5kOo"
       },
       "mdn_plus_5y": {
         "unit_amount": 5000,
         "currency": "eur",
-        "product": "prod_LKvr8fYGbBxcaZ",
+        "product": "prod_Jtbg9tyGyLRuB0",
         "recurring": {
           "interval": "year"
         },
@@ -774,7 +774,7 @@
         "lookup_key": "eur-it-5y",
         "metadata": {
           "productSet": "mdnPlus",
-          "productOrder": 2,
+          "productOrder": "2",
           "capabilities:b6f5727337fefe8e": "mdn_plus_5y",
           "capabilities:e7bc284c2d3b4a90": "mdn_plus_5y",
           "capabilities:ed18cbc69ec23491": "mdn_plus_5y",
@@ -784,12 +784,12 @@
           "product:details:2": "Collections of articles",
           "product:details:3": "MDN offline"
         },
-        "price_id": "price_1KqeXFJNcmPzuWtRjdDWnMU6"
+        "price_id": "price_1KqdujKb9q6OnNsLhdfctEHd"
       },
       "mdn_plus_10m": {
         "unit_amount": 1000,
         "currency": "eur",
-        "product": "prod_LKvr8fYGbBxcaZ",
+        "product": "prod_Jtbg9tyGyLRuB0",
         "recurring": {
           "interval": "month"
         },
@@ -797,7 +797,7 @@
         "lookup_key": "eur-it-10m",
         "metadata": {
           "productSet": "mdnPlus",
-          "productOrder": 3,
+          "productOrder": "3",
           "capabilities:b6f5727337fefe8e": "mdn_plus_10m",
           "capabilities:e7bc284c2d3b4a90": "mdn_plus_10m",
           "capabilities:ed18cbc69ec23491": "mdn_plus_10m",
@@ -807,12 +807,12 @@
           "product:details:2": "Collections of articles",
           "product:details:3": "MDN offline"
         },
-        "price_id": "price_1KqeXFJNcmPzuWtR2UJ1TVSG"
+        "price_id": "price_1KqdujKb9q6OnNsLPFNYmZdu"
       },
       "mdn_plus_10y": {
         "unit_amount": 10000,
         "currency": "eur",
-        "product": "prod_LKvr8fYGbBxcaZ",
+        "product": "prod_Jtbg9tyGyLRuB0",
         "recurring": {
           "interval": "year"
         },
@@ -820,7 +820,7 @@
         "lookup_key": "eur-it-10y",
         "metadata": {
           "productSet": "mdnPlus",
-          "productOrder": 4,
+          "productOrder": "4",
           "capabilities:b6f5727337fefe8e": "mdn_plus_10y",
           "capabilities:e7bc284c2d3b4a90": "mdn_plus_10y",
           "capabilities:ed18cbc69ec23491": "mdn_plus_10y",
@@ -830,14 +830,14 @@
           "product:details:2": "Collections of articles",
           "product:details:3": "MDN offline"
         },
-        "price_id": "price_1KqeXGJNcmPzuWtR7cw3rh90"
+        "price_id": "price_1KqdukKb9q6OnNsLje4nw89h"
       }
     },
     "eur-nl": {
       "mdn_plus_5m": {
         "unit_amount": 500,
         "currency": "eur",
-        "product": "prod_LKvr8fYGbBxcaZ",
+        "product": "prod_Jtbg9tyGyLRuB0",
         "recurring": {
           "interval": "month"
         },
@@ -845,7 +845,7 @@
         "lookup_key": "eur-nl-5m",
         "metadata": {
           "productSet": "mdnPlus",
-          "productOrder": 1,
+          "productOrder": "1",
           "capabilities:b6f5727337fefe8e": "mdn_plus_5m",
           "capabilities:e7bc284c2d3b4a90": "mdn_plus_5m",
           "capabilities:ed18cbc69ec23491": "mdn_plus_5m",
@@ -855,12 +855,12 @@
           "product:details:2": "Collections of articles",
           "product:details:3": "MDN offline"
         },
-        "price_id": "price_1KqeXGJNcmPzuWtRcjH3vbwC"
+        "price_id": "price_1KqdukKb9q6OnNsLjjA8mTpM"
       },
       "mdn_plus_5y": {
         "unit_amount": 5000,
         "currency": "eur",
-        "product": "prod_LKvr8fYGbBxcaZ",
+        "product": "prod_Jtbg9tyGyLRuB0",
         "recurring": {
           "interval": "year"
         },
@@ -868,7 +868,7 @@
         "lookup_key": "eur-nl-5y",
         "metadata": {
           "productSet": "mdnPlus",
-          "productOrder": 2,
+          "productOrder": "2",
           "capabilities:b6f5727337fefe8e": "mdn_plus_5y",
           "capabilities:e7bc284c2d3b4a90": "mdn_plus_5y",
           "capabilities:ed18cbc69ec23491": "mdn_plus_5y",
@@ -878,12 +878,12 @@
           "product:details:2": "Collections of articles",
           "product:details:3": "MDN offline"
         },
-        "price_id": "price_1KqeXGJNcmPzuWtRbycawcNr"
+        "price_id": "price_1KqdukKb9q6OnNsLPCtBqPcw"
       },
       "mdn_plus_10m": {
         "unit_amount": 1000,
         "currency": "eur",
-        "product": "prod_LKvr8fYGbBxcaZ",
+        "product": "prod_Jtbg9tyGyLRuB0",
         "recurring": {
           "interval": "month"
         },
@@ -891,7 +891,7 @@
         "lookup_key": "eur-nl-10m",
         "metadata": {
           "productSet": "mdnPlus",
-          "productOrder": 3,
+          "productOrder": "3",
           "capabilities:b6f5727337fefe8e": "mdn_plus_10m",
           "capabilities:e7bc284c2d3b4a90": "mdn_plus_10m",
           "capabilities:ed18cbc69ec23491": "mdn_plus_10m",
@@ -901,12 +901,12 @@
           "product:details:2": "Collections of articles",
           "product:details:3": "MDN offline"
         },
-        "price_id": "price_1KqeXHJNcmPzuWtRxV9W8tIQ"
+        "price_id": "price_1KqdulKb9q6OnNsLWgRvCo2X"
       },
       "mdn_plus_10y": {
         "unit_amount": 10000,
         "currency": "eur",
-        "product": "prod_LKvr8fYGbBxcaZ",
+        "product": "prod_Jtbg9tyGyLRuB0",
         "recurring": {
           "interval": "year"
         },
@@ -914,7 +914,7 @@
         "lookup_key": "eur-nl-10y",
         "metadata": {
           "productSet": "mdnPlus",
-          "productOrder": 4,
+          "productOrder": "4",
           "capabilities:b6f5727337fefe8e": "mdn_plus_10y",
           "capabilities:e7bc284c2d3b4a90": "mdn_plus_10y",
           "capabilities:ed18cbc69ec23491": "mdn_plus_10y",
@@ -924,14 +924,14 @@
           "product:details:2": "Collections of articles",
           "product:details:3": "MDN offline"
         },
-        "price_id": "price_1KqeXHJNcmPzuWtR9IvbHgFI"
+        "price_id": "price_1KqdulKb9q6OnNsLnNtjAc1b"
       }
     },
     "chf-en": {
       "mdn_plus_5m": {
         "unit_amount": 500,
         "currency": "chf",
-        "product": "prod_LKvr8fYGbBxcaZ",
+        "product": "prod_Jtbg9tyGyLRuB0",
         "recurring": {
           "interval": "month"
         },
@@ -939,7 +939,7 @@
         "lookup_key": "chf-en-5m",
         "metadata": {
           "productSet": "mdnPlus",
-          "productOrder": 1,
+          "productOrder": "1",
           "capabilities:b6f5727337fefe8e": "mdn_plus_5m",
           "capabilities:e7bc284c2d3b4a90": "mdn_plus_5m",
           "capabilities:ed18cbc69ec23491": "mdn_plus_5m",
@@ -949,12 +949,12 @@
           "product:details:2": "Collections of articles",
           "product:details:3": "MDN offline"
         },
-        "price_id": "price_1KqeXHJNcmPzuWtR4itTRF7Y"
+        "price_id": "price_1KqdulKb9q6OnNsLbkK1T4dR"
       },
       "mdn_plus_5y": {
         "unit_amount": 5000,
         "currency": "chf",
-        "product": "prod_LKvr8fYGbBxcaZ",
+        "product": "prod_Jtbg9tyGyLRuB0",
         "recurring": {
           "interval": "year"
         },
@@ -962,7 +962,7 @@
         "lookup_key": "chf-en-5y",
         "metadata": {
           "productSet": "mdnPlus",
-          "productOrder": 2,
+          "productOrder": "2",
           "capabilities:b6f5727337fefe8e": "mdn_plus_5y",
           "capabilities:e7bc284c2d3b4a90": "mdn_plus_5y",
           "capabilities:ed18cbc69ec23491": "mdn_plus_5y",
@@ -972,12 +972,12 @@
           "product:details:2": "Collections of articles",
           "product:details:3": "MDN offline"
         },
-        "price_id": "price_1KqeXIJNcmPzuWtRZJlZhXpW"
+        "price_id": "price_1KqdumKb9q6OnNsLfjFLaTzi"
       },
       "mdn_plus_10m": {
         "unit_amount": 1000,
         "currency": "chf",
-        "product": "prod_LKvr8fYGbBxcaZ",
+        "product": "prod_Jtbg9tyGyLRuB0",
         "recurring": {
           "interval": "month"
         },
@@ -985,7 +985,7 @@
         "lookup_key": "chf-en-10m",
         "metadata": {
           "productSet": "mdnPlus",
-          "productOrder": 3,
+          "productOrder": "3",
           "capabilities:b6f5727337fefe8e": "mdn_plus_10m",
           "capabilities:e7bc284c2d3b4a90": "mdn_plus_10m",
           "capabilities:ed18cbc69ec23491": "mdn_plus_10m",
@@ -995,12 +995,12 @@
           "product:details:2": "Collections of articles",
           "product:details:3": "MDN offline"
         },
-        "price_id": "price_1KqeXIJNcmPzuWtRKwoSofy2"
+        "price_id": "price_1KqdumKb9q6OnNsLc248nWtE"
       },
       "mdn_plus_10y": {
         "unit_amount": 10000,
         "currency": "chf",
-        "product": "prod_LKvr8fYGbBxcaZ",
+        "product": "prod_Jtbg9tyGyLRuB0",
         "recurring": {
           "interval": "year"
         },
@@ -1008,7 +1008,7 @@
         "lookup_key": "chf-en-10y",
         "metadata": {
           "productSet": "mdnPlus",
-          "productOrder": 4,
+          "productOrder": "4",
           "capabilities:b6f5727337fefe8e": "mdn_plus_10y",
           "capabilities:e7bc284c2d3b4a90": "mdn_plus_10y",
           "capabilities:ed18cbc69ec23491": "mdn_plus_10y",
@@ -1018,14 +1018,14 @@
           "product:details:2": "Collections of articles",
           "product:details:3": "MDN offline"
         },
-        "price_id": "price_1KqeXJJNcmPzuWtRDSDHSlAl"
+        "price_id": "price_1KqdumKb9q6OnNsLEbRL4nAo"
       }
     },
     "chf-de": {
       "mdn_plus_5m": {
         "unit_amount": 500,
         "currency": "chf",
-        "product": "prod_LKvr8fYGbBxcaZ",
+        "product": "prod_Jtbg9tyGyLRuB0",
         "recurring": {
           "interval": "month"
         },
@@ -1033,7 +1033,7 @@
         "lookup_key": "chf-de-5m",
         "metadata": {
           "productSet": "mdnPlus",
-          "productOrder": 1,
+          "productOrder": "1",
           "capabilities:b6f5727337fefe8e": "mdn_plus_5m",
           "capabilities:e7bc284c2d3b4a90": "mdn_plus_5m",
           "capabilities:ed18cbc69ec23491": "mdn_plus_5m",
@@ -1043,12 +1043,12 @@
           "product:details:2": "Collections of articles",
           "product:details:3": "MDN offline"
         },
-        "price_id": "price_1KqeXJJNcmPzuWtRDFlszhVO"
+        "price_id": "price_1KqdunKb9q6OnNsLMgnnIma0"
       },
       "mdn_plus_5y": {
         "unit_amount": 5000,
         "currency": "chf",
-        "product": "prod_LKvr8fYGbBxcaZ",
+        "product": "prod_Jtbg9tyGyLRuB0",
         "recurring": {
           "interval": "year"
         },
@@ -1056,7 +1056,7 @@
         "lookup_key": "chf-de-5y",
         "metadata": {
           "productSet": "mdnPlus",
-          "productOrder": 2,
+          "productOrder": "2",
           "capabilities:b6f5727337fefe8e": "mdn_plus_5y",
           "capabilities:e7bc284c2d3b4a90": "mdn_plus_5y",
           "capabilities:ed18cbc69ec23491": "mdn_plus_5y",
@@ -1066,12 +1066,12 @@
           "product:details:2": "Collections of articles",
           "product:details:3": "MDN offline"
         },
-        "price_id": "price_1KqeXKJNcmPzuWtREcYZdrje"
+        "price_id": "price_1KqdunKb9q6OnNsLiF9qvEVf"
       },
       "mdn_plus_10m": {
         "unit_amount": 1000,
         "currency": "chf",
-        "product": "prod_LKvr8fYGbBxcaZ",
+        "product": "prod_Jtbg9tyGyLRuB0",
         "recurring": {
           "interval": "month"
         },
@@ -1079,7 +1079,7 @@
         "lookup_key": "chf-de-10m",
         "metadata": {
           "productSet": "mdnPlus",
-          "productOrder": 3,
+          "productOrder": "3",
           "capabilities:b6f5727337fefe8e": "mdn_plus_10m",
           "capabilities:e7bc284c2d3b4a90": "mdn_plus_10m",
           "capabilities:ed18cbc69ec23491": "mdn_plus_10m",
@@ -1089,12 +1089,12 @@
           "product:details:2": "Collections of articles",
           "product:details:3": "MDN offline"
         },
-        "price_id": "price_1KqeXKJNcmPzuWtRExRB58k0"
+        "price_id": "price_1KqdunKb9q6OnNsLnaEHicOP"
       },
       "mdn_plus_10y": {
         "unit_amount": 10000,
         "currency": "chf",
-        "product": "prod_LKvr8fYGbBxcaZ",
+        "product": "prod_Jtbg9tyGyLRuB0",
         "recurring": {
           "interval": "year"
         },
@@ -1102,7 +1102,7 @@
         "lookup_key": "chf-de-10y",
         "metadata": {
           "productSet": "mdnPlus",
-          "productOrder": 4,
+          "productOrder": "4",
           "capabilities:b6f5727337fefe8e": "mdn_plus_10y",
           "capabilities:e7bc284c2d3b4a90": "mdn_plus_10y",
           "capabilities:ed18cbc69ec23491": "mdn_plus_10y",
@@ -1112,14 +1112,14 @@
           "product:details:2": "Collections of articles",
           "product:details:3": "MDN offline"
         },
-        "price_id": "price_1KqeXLJNcmPzuWtRtypFouG4"
+        "price_id": "price_1KqduoKb9q6OnNsLQrxviGu0"
       }
     },
     "chf-fr": {
       "mdn_plus_5m": {
         "unit_amount": 500,
         "currency": "chf",
-        "product": "prod_LKvr8fYGbBxcaZ",
+        "product": "prod_Jtbg9tyGyLRuB0",
         "recurring": {
           "interval": "month"
         },
@@ -1127,7 +1127,7 @@
         "lookup_key": "chf-fr-5m",
         "metadata": {
           "productSet": "mdnPlus",
-          "productOrder": 1,
+          "productOrder": "1",
           "capabilities:b6f5727337fefe8e": "mdn_plus_5m",
           "capabilities:e7bc284c2d3b4a90": "mdn_plus_5m",
           "capabilities:ed18cbc69ec23491": "mdn_plus_5m",
@@ -1137,12 +1137,12 @@
           "product:details:2": "Collections of articles",
           "product:details:3": "MDN offline"
         },
-        "price_id": "price_1KqeXLJNcmPzuWtRyS2uTKyE"
+        "price_id": "price_1KqduoKb9q6OnNsLv4AoSQJg"
       },
       "mdn_plus_5y": {
         "unit_amount": 5000,
         "currency": "chf",
-        "product": "prod_LKvr8fYGbBxcaZ",
+        "product": "prod_Jtbg9tyGyLRuB0",
         "recurring": {
           "interval": "year"
         },
@@ -1150,7 +1150,7 @@
         "lookup_key": "chf-fr-5y",
         "metadata": {
           "productSet": "mdnPlus",
-          "productOrder": 2,
+          "productOrder": "2",
           "capabilities:b6f5727337fefe8e": "mdn_plus_5y",
           "capabilities:e7bc284c2d3b4a90": "mdn_plus_5y",
           "capabilities:ed18cbc69ec23491": "mdn_plus_5y",
@@ -1160,12 +1160,12 @@
           "product:details:2": "Collections of articles",
           "product:details:3": "MDN offline"
         },
-        "price_id": "price_1KqeXLJNcmPzuWtRbH6wD6sm"
+        "price_id": "price_1KqduoKb9q6OnNsLf9iSMYIf"
       },
       "mdn_plus_10m": {
         "unit_amount": 1000,
         "currency": "chf",
-        "product": "prod_LKvr8fYGbBxcaZ",
+        "product": "prod_Jtbg9tyGyLRuB0",
         "recurring": {
           "interval": "month"
         },
@@ -1173,7 +1173,7 @@
         "lookup_key": "chf-fr-10m",
         "metadata": {
           "productSet": "mdnPlus",
-          "productOrder": 3,
+          "productOrder": "3",
           "capabilities:b6f5727337fefe8e": "mdn_plus_10m",
           "capabilities:e7bc284c2d3b4a90": "mdn_plus_10m",
           "capabilities:ed18cbc69ec23491": "mdn_plus_10m",
@@ -1183,12 +1183,12 @@
           "product:details:2": "Collections of articles",
           "product:details:3": "MDN offline"
         },
-        "price_id": "price_1KqeXMJNcmPzuWtR46VuMNtb"
+        "price_id": "price_1KqdupKb9q6OnNsLWiJvcYUp"
       },
       "mdn_plus_10y": {
         "unit_amount": 10000,
         "currency": "chf",
-        "product": "prod_LKvr8fYGbBxcaZ",
+        "product": "prod_Jtbg9tyGyLRuB0",
         "recurring": {
           "interval": "year"
         },
@@ -1196,7 +1196,7 @@
         "lookup_key": "chf-fr-10y",
         "metadata": {
           "productSet": "mdnPlus",
-          "productOrder": 4,
+          "productOrder": "4",
           "capabilities:b6f5727337fefe8e": "mdn_plus_10y",
           "capabilities:e7bc284c2d3b4a90": "mdn_plus_10y",
           "capabilities:ed18cbc69ec23491": "mdn_plus_10y",
@@ -1206,14 +1206,14 @@
           "product:details:2": "Collections of articles",
           "product:details:3": "MDN offline"
         },
-        "price_id": "price_1KqeXMJNcmPzuWtR3bNmxM4C"
+        "price_id": "price_1KqdupKb9q6OnNsLcVJfbhL9"
       }
     },
     "chf-it": {
       "mdn_plus_5m": {
         "unit_amount": 500,
         "currency": "chf",
-        "product": "prod_LKvr8fYGbBxcaZ",
+        "product": "prod_Jtbg9tyGyLRuB0",
         "recurring": {
           "interval": "month"
         },
@@ -1221,7 +1221,7 @@
         "lookup_key": "chf-it-5m",
         "metadata": {
           "productSet": "mdnPlus",
-          "productOrder": 1,
+          "productOrder": "1",
           "capabilities:b6f5727337fefe8e": "mdn_plus_5m",
           "capabilities:e7bc284c2d3b4a90": "mdn_plus_5m",
           "capabilities:ed18cbc69ec23491": "mdn_plus_5m",
@@ -1231,12 +1231,12 @@
           "product:details:2": "Collections of articles",
           "product:details:3": "MDN offline"
         },
-        "price_id": "price_1KqeXMJNcmPzuWtRC7IJcwUD"
+        "price_id": "price_1KqdupKb9q6OnNsL1TqMroUf"
       },
       "mdn_plus_5y": {
         "unit_amount": 5000,
         "currency": "chf",
-        "product": "prod_LKvr8fYGbBxcaZ",
+        "product": "prod_Jtbg9tyGyLRuB0",
         "recurring": {
           "interval": "year"
         },
@@ -1244,7 +1244,7 @@
         "lookup_key": "chf-it-5y",
         "metadata": {
           "productSet": "mdnPlus",
-          "productOrder": 2,
+          "productOrder": "2",
           "capabilities:b6f5727337fefe8e": "mdn_plus_5y",
           "capabilities:e7bc284c2d3b4a90": "mdn_plus_5y",
           "capabilities:ed18cbc69ec23491": "mdn_plus_5y",
@@ -1254,12 +1254,12 @@
           "product:details:2": "Collections of articles",
           "product:details:3": "MDN offline"
         },
-        "price_id": "price_1KqeXNJNcmPzuWtRSCJ2GbVn"
+        "price_id": "price_1KqduqKb9q6OnNsLhNwOl77S"
       },
       "mdn_plus_10m": {
         "unit_amount": 1000,
         "currency": "chf",
-        "product": "prod_LKvr8fYGbBxcaZ",
+        "product": "prod_Jtbg9tyGyLRuB0",
         "recurring": {
           "interval": "month"
         },
@@ -1267,7 +1267,7 @@
         "lookup_key": "chf-it-10m",
         "metadata": {
           "productSet": "mdnPlus",
-          "productOrder": 3,
+          "productOrder": "3",
           "capabilities:b6f5727337fefe8e": "mdn_plus_10m",
           "capabilities:e7bc284c2d3b4a90": "mdn_plus_10m",
           "capabilities:ed18cbc69ec23491": "mdn_plus_10m",
@@ -1277,12 +1277,12 @@
           "product:details:2": "Collections of articles",
           "product:details:3": "MDN offline"
         },
-        "price_id": "price_1KqeXNJNcmPzuWtRRb5z07dQ"
+        "price_id": "price_1KqduqKb9q6OnNsLZ9yMm4To"
       },
       "mdn_plus_10y": {
         "unit_amount": 10000,
         "currency": "chf",
-        "product": "prod_LKvr8fYGbBxcaZ",
+        "product": "prod_Jtbg9tyGyLRuB0",
         "recurring": {
           "interval": "year"
         },
@@ -1290,7 +1290,7 @@
         "lookup_key": "chf-it-10y",
         "metadata": {
           "productSet": "mdnPlus",
-          "productOrder": 4,
+          "productOrder": "4",
           "capabilities:b6f5727337fefe8e": "mdn_plus_10y",
           "capabilities:e7bc284c2d3b4a90": "mdn_plus_10y",
           "capabilities:ed18cbc69ec23491": "mdn_plus_10y",
@@ -1300,7 +1300,7 @@
           "product:details:2": "Collections of articles",
           "product:details:3": "MDN offline"
         },
-        "price_id": "price_1KqeXOJNcmPzuWtRMBae7104"
+        "price_id": "price_1KqdurKb9q6OnNsLUOz4fnk3"
       }
     }
   }
