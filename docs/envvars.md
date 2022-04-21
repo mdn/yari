@@ -26,9 +26,23 @@ prefixed with `CONTENT_`. E.g. `CONTENT_ROOT`
 
 ### `CONTENT_ROOT`
 
-**Default: `content/files`**
+**Default: `../content/files`**
 
-Where the files are.
+Path to the content files, cloned from https://github.com/mdn/content.
+
+### `CONTENT_TRANSLATED_ROOT`
+
+**Default: `../translated-content/files`**
+
+Path to the translated content files, cloned from
+https://github.com/mdn/translated-content.
+
+### `CONTRIBUTOR_SPOTLIGHT_ROOT`
+
+**Default: `../mdn-contributor-spotlight/contributors`**
+
+Path to the contributor spotlight content, cloned from
+https://github.com/mdn/mdn-contributor-spotlight.
 
 ### `BUILD_FOLDERSEARCH`
 
