@@ -39,10 +39,12 @@
     tr {
       height: 3rem;
 
-      &:last-child {
-        th,
-        td {
-          border-bottom-width: 0;
+      @media screen and (min-width: $screen-md) {
+        &:last-child {
+          th,
+          td {
+            border-bottom-width: 0;
+          }
         }
       }
 
@@ -228,8 +230,6 @@
 
   .bc-version-label {
     display: inline;
-    font-weight: 650;
-    line-height: 1rem;
   }
 
   abbr {
@@ -259,9 +259,17 @@
 dl.bc-notes-list {
   dt.bc-supports {
     margin-top: 1rem;
+
+    &:first-child {
+      margin-top: 0rem;
+    }
   }
   dd.bc-supports-dd {
     margin-bottom: 1rem;
+
+    &:last-child {
+      margin-bottom: 0rem;
+    }
   }
 }
 
@@ -336,13 +344,11 @@ dl.bc-notes-list {
 
 .bcd-cell-text-wrapper {
   display: flex;
-  flex-direction: row-reverse;
   gap: 0.5rem;
 
   @media screen and (min-width: $screen-md) {
     align-items: center;
     flex-direction: column;
-    justify-content: space-between;
   }
 }
 
@@ -382,7 +388,6 @@ dl.bc-notes-list {
 .bc-notes-wrapper {
   .bcd-cell-text-wrapper {
     flex-direction: row;
-    justify-content: initial;
   }
 }
 
