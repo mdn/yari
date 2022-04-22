@@ -34,6 +34,11 @@
       flex-direction: column;
       align-items: center;
 
+      &-offline {
+        @extend .wrapper;
+        display: none;
+      }
+
       @media screen and (min-width: 66rem) {
         flex-direction: row;
         align-items: stretch;

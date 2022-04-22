@@ -5,6 +5,7 @@ import { BookmarkData } from "../collections";
 export const NOTIFICATIONS_BASE_PATH = "/api/v1/plus/notifications";
 export const WATCHED_BASE_PATH = "/api/v1/plus/watching";
 export const COLLECTION_BASE_PATH = "/api/v1/plus/collection";
+export const STRIPE_PLANS_PATH = "/api/v1/stripe/plans";
 
 export const NOTIFICATIONS_MARK_ALL_AS_READ_PATH = `${NOTIFICATIONS_BASE_PATH}/all/mark-as-read/`;
 const DEFAULT_LIMIT = 20;
@@ -253,6 +254,18 @@ export function useFrequentlyViewedData(searchTerms: string) {
     }
   }, [searchTerms, entries]);
   return { data, setFrequentlyViewed };
+}
+
+export async function getStripePlans() {
+  let res;
+  //This comes from edge lambda so must be from live.
+  if (window.location.hostname.includes("localhost")) {
+    res = await fetch("https://developer.allizom.org/api/v1/stripe/plans");
+  } else {
+    res = await fetch(STRIPE_PLANS_PATH);
+  }
+
+  return await res.json();
 }
 
 async function post(url: string, csrfToken: string, data?: object) {
