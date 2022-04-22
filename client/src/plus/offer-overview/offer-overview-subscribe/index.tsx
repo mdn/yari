@@ -273,7 +273,11 @@ function getLocalizedPlans(countrySpecific: StripePlans) {
 
 function OfferOverviewSubscribe() {
   const userData = useUserData();
-  const [offerDetails, setOfferDetails] = useState({
+  const [offerDetails, setOfferDetails] = useState<{
+    CORE: OfferDetailsProps;
+    PLUS_5: OfferDetailsProps | null;
+    PLUS_10: OfferDetailsProps | null;
+  }>({
     CORE: CORE,
     PLUS_5: PLUS_5,
     PLUS_10: PLUS_10,
@@ -283,8 +287,13 @@ function OfferOverviewSubscribe() {
   useEffect(() => {
     (async () => {
       if (ENABLE_PLUS_EU && isOnline) {
-        const plans: StripePlans = await getStripePlans();
-        setOfferDetails(getLocalizedPlans(plans));
+        try {
+          const plans: StripePlans = await getStripePlans();
+          setOfferDetails(getLocalizedPlans(plans));
+        } catch (error) {
+          //Paid subs Not supported by region just display Free subscription
+          setOfferDetails({ CORE: CORE, PLUS_5: null, PLUS_10: null });
+        }
       }
     })();
   }, [isOnline]);
@@ -309,16 +318,23 @@ function OfferOverviewSubscribe() {
         {isOnline && (
           <>
             <h2>Choose a plan</h2>
-            <Switch
-              name="period"
-              checked={period === Period.Year || false}
-              toggle={(e) => {
-                const period = e.target.checked ? Period.Year : Period.Month;
-                setPeriod(period);
-              }}
-            >
-              Pay yearly and get 2 months for free
-            </Switch>
+            {
+              /** Only display discount switch if paid plans available  */
+              offerDetails.PLUS_5 && (
+                <Switch
+                  name="period"
+                  checked={period === Period.Year || false}
+                  toggle={(e) => {
+                    const period = e.target.checked
+                      ? Period.Year
+                      : Period.Month;
+                    setPeriod(period);
+                  }}
+                >
+                  Pay yearly and get 2 months for free
+                </Switch>
+              )
+            }
           </>
         )}
         <div className={wrapperClass}>
@@ -326,14 +342,18 @@ function OfferOverviewSubscribe() {
             offerDetails={offerDetails.CORE}
             period={period}
           ></OfferDetails>
-          <OfferDetails
-            offerDetails={offerDetails.PLUS_5}
-            period={period}
-          ></OfferDetails>
-          <OfferDetails
-            offerDetails={offerDetails.PLUS_10}
-            period={period}
-          ></OfferDetails>
+          {offerDetails.PLUS_5 && (
+            <OfferDetails
+              offerDetails={offerDetails.PLUS_5}
+              period={period}
+            ></OfferDetails>
+          )}
+          {offerDetails.PLUS_10 && (
+            <OfferDetails
+              offerDetails={offerDetails.PLUS_10}
+              period={period}
+            ></OfferDetails>
+          )}
         </div>
       </section>
       <p className="plus-for-companies">
