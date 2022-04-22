@@ -25,6 +25,7 @@ import { ContributorSpotlight } from "./contributor-spotlight";
 import { Banner, hasActiveBanners } from "./banners";
 
 const AllFlaws = React.lazy(() => import("./flaws"));
+const AllTraits = React.lazy(() => import("./traits"));
 const Translations = React.lazy(() => import("./translations"));
 const DocumentEdit = React.lazy(() => import("./document/forms/edit"));
 const DocumentCreate = React.lazy(() => import("./document/forms/create"));
@@ -43,12 +44,13 @@ function Layout({ pageType, children }) {
   React.useEffect(() => {
     setCategory(docCategory({ pathname }));
   }, [pathname]);
+
   return (
     <>
       <A11yNav />
       {!isServer && hasActiveBanners && <Banner />}
       <div className={`page-wrapper  ${category || ""} ${pageType}`}>
-        <TopNavigation />
+        {pageType !== "document-page" && <TopNavigation />}
         {children}
       </div>
       <Footer />
@@ -64,9 +66,7 @@ function StandardLayout({
   children: React.ReactNode;
 }) {
   return (
-    <Layout pageType={`standard-page ${extraClasses ? extraClasses : ""}`}>
-      {children}
-    </Layout>
+    <Layout pageType={`standard-page ${extraClasses || ""}`}>{children}</Layout>
   );
 }
 function DocumentLayout({ children }) {
@@ -166,6 +166,14 @@ export function App(appProps) {
                   element={
                     <StandardLayout>
                       <Translations />
+                    </StandardLayout>
+                  }
+                />
+                <Route
+                  path="/_traits/*"
+                  element={
+                    <StandardLayout>
+                      <AllTraits />
                     </StandardLayout>
                   }
                 />

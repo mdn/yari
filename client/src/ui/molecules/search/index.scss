@@ -55,6 +55,10 @@
     &:invalid::placeholder {
       animation: blink 2s step-end infinite;
       caret-color: transparent;
+
+      @media (prefers-reduced-motion: reduce) {
+        caret-color: initial;
+      }
     }
 
     &:valid,
@@ -137,7 +141,7 @@
       padding: 0.5rem;
       word-break: break-word;
       background: var(--background-secondary);
-      font: var(--type-body-m);
+      font-size: var(--type-smaller-font-size);
 
       &:first-child {
         border-radius: var(--elem-radius) var(--elem-radius) 0 0;

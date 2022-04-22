@@ -2,16 +2,16 @@
 
 .main-page-content .metadata {
   background-color: var(--background-secondary);
-  --text-link: var(--code-color);
   margin: 2rem 0;
   padding: 1rem;
   border: 1px solid var(--border-primary);
   box-shadow: var(--shadow-01);
   border-radius: var(--elem-radius);
 
-  h4 {
+  h3 {
     padding: 0;
     margin-top: 0.5rem;
+    font: var(--type-heading-h4);
   }
 }
 

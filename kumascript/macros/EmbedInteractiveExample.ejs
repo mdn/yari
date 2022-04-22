@@ -26,6 +26,27 @@ if ($1) {
   }
 }
 
+const text = mdn.localStringMap({
+  "en-US": {
+    "title": "Try it",
+  },
+  "fr": {
+    "title": "Exemple interactif",
+  },
+  "ja": {
+    "title": "試してみましょう",
+  },
+  "ru": {
+    "title": "Интерактивный пример",
+  },
+  "pt-BR": {
+    "title": "Experimente",
+  },
+  "es": {
+    "title": "Pruébalo",
+  }
+});
+
 %>
-<h2>Try it</h2>
+<h2><%=text["title"]%></h2>
 <iframe class="interactive <%= heightClass %>" height="200" src="<%= url %>" title="MDN Web Docs Interactive Example"></iframe>

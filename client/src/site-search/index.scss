@@ -1,14 +1,5 @@
 @use "../ui/vars" as *;
 
-.site-search {
-  min-height: 500px;
-  padding-top: 2rem;
-
-  @media screen and (min-width: $screen-md) {
-    padding-top: 3rem;
-  }
-}
-
 .query-string {
   font-style: italic;
 }

@@ -1,52 +1,41 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 
 import "./index.scss";
 import { Toc } from "../../types";
-import { useDebouncedCallback } from "use-debounce";
+import { useFirstVisibleElement } from "../../hooks";
 
 export function TOC({ toc }: { toc: Toc[] }) {
-  const [currentViewedTocItem, setCurrentViewedTocItem] = useState(
-    toc[0].id.toLowerCase()
-  );
+  const [currentViewedTocItem, setCurrentViewedTocItem] = useState("");
 
-  const getCurrentHighlightedSectionId = () => {
-    const offsetY = window.scrollY;
-    if (offsetY < window.innerHeight * 0.1) {
-      setCurrentViewedTocItem(toc[0].id.toLowerCase());
-      return;
-    }
-
-    const headings = toc.map((item) =>
-      document.getElementById(item.id.toLowerCase())
+  const observedElements = React.useCallback(() => {
+    const mainElement = document.querySelector("main") ?? document;
+    const elements = mainElement.querySelectorAll(
+      "h1, h1 ~ *, h2, h2 ~ *, h3, h3 ~ *"
     );
-    let currentSectionId;
+    return Array.from(elements);
+  }, []);
 
-    headings.forEach((section) => {
-      const posY = section?.offsetTop;
-      if (posY && posY < offsetY + window.innerHeight * 0.1) {
-        currentSectionId = section.id;
+  const referencedIds = toc.map(({ id }) => id);
+  const idByObservedElement = React.useRef(new Map<Element, string>());
+
+  React.useEffect(() => {
+    observedElements().reduce((currentId, observedElement) => {
+      const observedId = observedElement.id.toLowerCase();
+      if (observedId && referencedIds.includes(observedId)) {
+        currentId = observedId;
       }
-    });
+      idByObservedElement.current.set(observedElement, currentId);
 
-    if (currentSectionId && currentSectionId !== currentViewedTocItem) {
-      setCurrentViewedTocItem(currentSectionId);
+      return currentId;
+    }, "");
+  }, [observedElements, referencedIds]);
+
+  useFirstVisibleElement(observedElements, (element: Element | null) => {
+    const id = element ? idByObservedElement.current.get(element) ?? "" : "";
+    if (id !== currentViewedTocItem) {
+      setCurrentViewedTocItem(id);
     }
-  };
-
-  const debouncedGetCurrentHighlightedSectionId = useDebouncedCallback(
-    getCurrentHighlightedSectionId,
-    25
-  );
-
-  useEffect(() => {
-    window.addEventListener("scroll", debouncedGetCurrentHighlightedSectionId);
-    return () => {
-      window.removeEventListener(
-        "scroll",
-        debouncedGetCurrentHighlightedSectionId
-      );
-    };
-  }, [debouncedGetCurrentHighlightedSectionId]);
+  });
 
   return (
     <aside className="document-toc-container">

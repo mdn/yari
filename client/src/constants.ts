@@ -49,6 +49,9 @@ export const MDN_PLUS_SUBSCRIBE_5M_URL = `${process.env.REACT_APP_MDN_PLUS_SUBSC
 export const MDN_PLUS_SUBSCRIBE_5Y_URL = `${process.env.REACT_APP_MDN_PLUS_SUBSCRIBE_URL}?plan=${process.env.REACT_APP_MDN_PLUS_5Y_PLAN}`;
 export const MDN_PLUS_SUBSCRIBE_10M_URL = `${process.env.REACT_APP_MDN_PLUS_SUBSCRIBE_URL}?plan=${process.env.REACT_APP_MDN_PLUS_10M_PLAN}`;
 export const MDN_PLUS_SUBSCRIBE_10Y_URL = `${process.env.REACT_APP_MDN_PLUS_SUBSCRIBE_URL}?plan=${process.env.REACT_APP_MDN_PLUS_10Y_PLAN}`;
+export const MDN_PLUS_SUBSCRIBE_BASE =
+  process.env.REACT_APP_MDN_PLUS_SUBSCRIBE_URL ||
+  "https://accounts.stage.mozaws.net/subscriptions/products/prod_Jtbg9tyGyLRuB0";
 
 export const FXA_SIGNIN_URL = process.env.REACT_APP_FXA_SIGNIN_URL || "";
 export const FXA_SETTINGS_URL = process.env.REACT_APP_FXA_SETTINGS_URL || "";
@@ -58,6 +61,10 @@ export const FXA_MANAGE_SUBSCRIPTIONS_URL =
 
 export const DEFAULT_GEO_COUNTRY =
   process.env.REACT_APP_DEFAULT_GEO_COUNTRY || "United States";
+
+export const ENABLE_PLUS_EU = Boolean(
+  JSON.parse(process.env.REACT_APP_ENABLE_PLUS_EU || "false")
+);
 
 export const PLUS_ENABLED_COUNTRIES =
   process.env.REACT_APP_PLUS_ENABLED_COUNTRIES?.split(",") || [
@@ -70,7 +77,7 @@ export const IEX_DOMAIN =
   "https://interactive-examples.mdn.mozilla.net";
 
 export const HEADER_NOTIFICATIONS_MENU_API_URL =
-  "/api/v1/plus/notifications?limit=1&unread=true";
+  "/api/v1/plus/notifications/?limit=1&unread=true";
 
 export const UPDATES_BASE_URL =
   process.env.REACT_APP_UPDATES_BASE_URL ||

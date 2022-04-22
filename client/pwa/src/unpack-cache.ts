@@ -1,7 +1,6 @@
 /* eslint no-restricted-globals: ["off", "self"] */
 import * as zip from "@zip.js/zip.js";
 import { openContentCache } from "./caches";
-import { INTERACTIVE_EXAMPLES_URL } from "./service-worker";
 
 zip.configure({
   useWebWorkers: false,
@@ -43,6 +42,7 @@ export async function unpackAndCache(data, progress = async (number) => {}) {
 
     await cache.put(location, response);
   }
+  await progress(1);
   await reader.close();
   if (removed) {
     await Promise.all(

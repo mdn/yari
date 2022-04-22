@@ -34,6 +34,11 @@
       flex-direction: column;
       align-items: center;
 
+      &-offline {
+        @extend .wrapper;
+        display: none;
+      }
+
       @media screen and (min-width: 66rem) {
         flex-direction: row;
         align-items: stretch;
@@ -148,7 +153,20 @@
               }
             }
           }
-
+          .sub-link {
+            background: $mdn-color-neutral-90;
+            width: calc(100% - 1rem);
+            height: 2rem;
+            border-radius: 1rem;
+            padding: 0.25rem 0.5rem;
+            color: white;
+            min-width: fit-content;
+            font-weight: 620;
+            align-self: center;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+          }
           .terms {
             margin-top: auto;
             font-size: 14px;
@@ -161,7 +179,7 @@
           }
 
           .sub-link {
-            background: $mdn-color-dark-grey-90;
+            background: $mdn-color-neutral-90;
             width: calc(100% - 1rem);
             height: 2rem;
             border-radius: 1rem;
@@ -200,4 +218,12 @@
       }
     }
   }
+}
+
+.plus-for-companies {
+  color: var(--text-primary);
+  margin: 0;
+  padding: 1rem;
+  padding-bottom: 2rem;
+  text-align: center;
 }

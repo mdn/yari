@@ -104,7 +104,7 @@ jobs:
         run: yarn --frozen-lockfile
 
       - name: Install Python
-        uses: actions/setup-python@v3.0.0
+        uses: actions/setup-python@v3.1.2
         with:
           python-version: "3.8"
 
@@ -178,6 +178,7 @@ jobs:
           REACT_APP_MDN_PLUS_5Y_PLAN: price_1JpIPwKb9q6OnNsLJLsIqMp7
           REACT_APP_MDN_PLUS_10M_PLAN: price_1K6X7gKb9q6OnNsLi44HdLcC
           REACT_APP_MDN_PLUS_10Y_PLAN: price_1K6X8VKb9q6OnNsLFlUcEiu4
+          REACT_APP_ENABLE_PLUS_EU: true
 
         run: |
 

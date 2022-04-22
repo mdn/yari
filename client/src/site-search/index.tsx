@@ -49,28 +49,30 @@ export function SiteSearch() {
   }, [query, page, ga]);
 
   return (
-    <div className="site-search main-page-content">
+    <div className="main-wrapper site-search main-page-content">
       <PageContentContainer>
-        {query ? (
-          <h1>
-            Search results for: <span className="query-string">{query}</span>{" "}
-            {page && page !== "1" && `(page ${page})`}
-          </h1>
-        ) : (
-          <h1>No query, no results.</h1>
-        )}
+        <article className="main-page-content">
+          {query ? (
+            <h1>
+              Search results for: <span className="query-string">{query}</span>{" "}
+              {page && page !== "1" && `(page ${page})`}
+            </h1>
+          ) : (
+            <h1>No query, no results.</h1>
+          )}
 
-        {!isServer && (
-          <React.Suspense fallback={<Loading />}>
-            <SiteSearchForm />
-          </React.Suspense>
-        )}
+          {!isServer && (
+            <React.Suspense fallback={<Loading />}>
+              <SiteSearchForm />
+            </React.Suspense>
+          )}
 
-        {!isServer && query && (
-          <React.Suspense fallback={<Loading />}>
-            <SearchResults />
-          </React.Suspense>
-        )}
+          {!isServer && query && (
+            <React.Suspense fallback={<Loading />}>
+              <SearchResults />
+            </React.Suspense>
+          )}
+        </article>
       </PageContentContainer>
     </div>
   );

@@ -26,14 +26,18 @@
       border: revert;
       padding: revert;
       margin: 1rem 0 2rem;
-      border: 1px solid var(--background-tertiary);
-      background-color: var(--background-tertiary);
       border-radius: var(--elem-radius);
       color: var(--text-primary);
+
       p:first-child {
-        font: var(--type-heading-h1);
+        font: var(--type-heading-h1-mobile);
         margin-bottom: 2rem;
+
+        @media screen and (min-width: $screen-md) {
+          font: var(--type-heading-h1);
+        }
       }
+
       p {
         font-style: italic;
       }

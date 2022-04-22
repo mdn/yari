@@ -15,16 +15,21 @@
   th {
     border: 1px solid var(--border-secondary);
     border-width: 0 0 1px 1px;
-    font: var(--type-body-m);
+    font-weight: 500;
+    padding: 0;
+
+    @media screen and (min-width: $screen-md) {
+      font-size: var(--type-smaller-font-size);
+      padding: 0.4rem;
+
+      code {
+        font-size: var(--type-smaller-font-size);
+      }
+    }
+  }
+
+  th {
     padding: 0.4rem;
-
-    &[aria-expanded="false"] {
-      height: 2rem;
-    }
-
-    code {
-      font-size: 0.75rem !important;
-    }
   }
 
   // these props allow us to add border-radius to the table.
@@ -34,10 +39,12 @@
     tr {
       height: 3rem;
 
-      &:last-child {
-        th,
-        td {
-          border-bottom-width: 0;
+      @media screen and (min-width: $screen-md) {
+        &:last-child {
+          th,
+          td {
+            border-bottom-width: 0;
+          }
         }
       }
 
@@ -48,6 +55,8 @@
     }
 
     .bc-support {
+      vertical-align: top;
+
       button {
         cursor: pointer;
         width: 100%;
@@ -91,6 +100,9 @@
       display: block;
     }
   }
+  .bc-feature-depth-2 {
+    border-left-width: 8px;
+  }
 }
 
 .bc-head-txt-label {
@@ -99,6 +111,14 @@
   writing-mode: vertical-rl;
   transform: rotate(180deg);
   white-space: nowrap;
+  left: calc(50% - 0.5rem);
+  line-height: 1;
+  position: relative;
+  padding-top: 0.5rem;
+}
+
+.bc-head-icon-symbol {
+  margin-bottom: 0.3rem;
 }
 
 .bc-support {
@@ -119,18 +139,20 @@
   flex-wrap: wrap;
   gap: 1.5rem;
   margin-bottom: 2rem;
-  font: var(--type-body-m);
+  font-size: var(--type-smaller-font-size);
 }
 
 .bc-legend-item {
+  align-items: center;
   display: flex;
   gap: 0.5rem;
 }
+
 .bc-legend-item-dt {
   display: flex;
 
   .icon {
-    background-color: var(--icon-secondary);
+    background-color: var(--icon-primary);
   }
 }
 
@@ -167,7 +189,8 @@
   &:before {
     position: absolute;
     z-index: -1;
-    height: 100%;
+    height: calc(100% - 0.25rem);
+    margin-top: 0.25rem;
     left: 7px;
     width: 2px;
     background: var(--border-primary);
@@ -196,20 +219,17 @@
     mask-image: url("../../../assets/icons/yes-circle.svg");
   }
 
-  .icon.icon-footnote {
-    mask-image: none;
-    border-radius: 50%;
-    border: 3px solid var(--background-primary);
-    background: var(--border-primary);
-  }
-
-  .icon.icon-disabled {
-    background-color: var(--icon-information);
+  .bc-supports-dd {
+    .icon {
+      mask-image: none;
+      border-radius: 50%;
+      border: 3px solid var(--background-primary);
+      background: var(--border-primary);
+    }
   }
 
   .bc-version-label {
     display: inline;
-    font-weight: 650;
   }
 
   abbr {
@@ -229,6 +249,7 @@
 
 .bc-notes-wrapper {
   margin-bottom: 1rem;
+  color: var(--text-primary);
 
   &:last-child {
     margin-bottom: 0;
@@ -238,9 +259,17 @@
 dl.bc-notes-list {
   dt.bc-supports {
     margin-top: 1rem;
+
+    &:first-child {
+      margin-top: 0rem;
+    }
   }
   dd.bc-supports-dd {
     margin-bottom: 1rem;
+
+    &:last-child {
+      margin-bottom: 0rem;
+    }
   }
 }
 
@@ -256,7 +285,6 @@ dl.bc-notes-list {
 
   code {
     overflow: hidden;
-    font-size: 0.75rem;
   }
 
   .left-side,
@@ -291,7 +319,7 @@ dl.bc-notes-list {
 }
 
 .bc-github-link {
-  font: var(--type-body-m);
+  font: var(--type-smaller-font-size);
 }
 
 .main-page-content {
@@ -303,6 +331,7 @@ dl.bc-notes-list {
       margin-left: 0;
     }
   }
+
   .bc-supports-dd {
     margin: 0;
   }
@@ -312,3 +341,64 @@ dl.bc-notes-list {
 @import "./index-desktop";
 @import "./index-desktop-md";
 @import "./index-desktop-lg";
+
+.bcd-cell-text-wrapper {
+  display: flex;
+  gap: 0.5rem;
+
+  @media screen and (min-width: $screen-md) {
+    align-items: center;
+    flex-direction: column;
+  }
+}
+
+.bcd-cell-text-copy {
+  color: var(--text-primary);
+  display: flex;
+  gap: 0.5rem;
+}
+
+.bc-supports-yes {
+  .bcd-cell-text-copy {
+    color: var(--text-primary-green);
+  }
+}
+
+.bc-supports-no {
+  .bcd-cell-text-copy {
+    color: var(--text-primary-red);
+  }
+}
+
+.bc-supports-partial {
+  .bcd-cell-text-copy {
+    color: var(--text-primary-yellow);
+  }
+}
+
+.bcd-cell-icons {
+  display: flex;
+  gap: 0.5rem;
+
+  @media screen and (min-width: $screen-md) {
+    display: block;
+  }
+}
+
+.bc-notes-wrapper {
+  .bcd-cell-text-wrapper {
+    flex-direction: row;
+  }
+}
+
+@media screen and (min-width: $screen-md) {
+  .bc-table {
+    td {
+      height: 2rem;
+    }
+
+    td.bc-support > button {
+      padding: 0.5rem 0.25rem;
+    }
+  }
+}

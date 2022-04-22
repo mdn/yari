@@ -1,9 +1,0 @@
-.select,
-select {
-  -webkit-appearance: none; /* stylelint-disable-line property-no-vendor-prefix */
-  appearance: none;
-
-  border: 1px solid var(--border-primary);
-  box-shadow: var(--shadow-01);
-  height: var(--form-elem-height);
-}

@@ -35,7 +35,7 @@ export default function SearchFilter({
         <Button
           type="action"
           extraClasses={
-            selectedFilter === filter.param ? "active-menu-item" : undefined
+            selectedFilter === filter.param ? "active-menu-item" : ""
           }
           onClickHandler={() => {
             setSelectedFilter(filter.param);
@@ -54,9 +54,7 @@ export default function SearchFilter({
       component: () => (
         <Button
           type="action"
-          extraClasses={
-            selectedSort === sort.param ? "active-menu-item" : undefined
-          }
+          extraClasses={selectedSort === sort.param ? "active-menu-item" : ""}
           onClickHandler={() => {
             setSelectedSort(sort.param);
           }}
@@ -102,7 +100,11 @@ export default function SearchFilter({
             {filterMenu.label}
           </Button>
           <DropdownMenu>
-            <Submenu menuEntry={filterMenu} isDropdown />
+            <Submenu
+              submenuId={filterMenu.id}
+              menuEntry={filterMenu}
+              isDropdown
+            />
           </DropdownMenu>
         </DropdownMenuWrapper>
       ) : null}
@@ -125,7 +127,7 @@ export default function SearchFilter({
             {sortMenu.label}
           </Button>
           <DropdownMenu>
-            <Submenu menuEntry={sortMenu} isDropdown />
+            <Submenu submenuId={sortMenu.id} menuEntry={sortMenu} isDropdown />
           </DropdownMenu>
         </DropdownMenuWrapper>
       ) : null}

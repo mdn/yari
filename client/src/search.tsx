@@ -9,7 +9,7 @@ import { preload, preloadSupported } from "./document/preloading";
 import { Button } from "./ui/atoms/button";
 
 import { useLocale } from "./hooks";
-import { SearchProps, useFocusOnSlash } from "./search-utils";
+import { SearchProps, useFocusViaKeyboard } from "./search-utils";
 
 const PRELOAD_WAIT_MS = 500;
 const SHOW_INDEXING_AFTER_MS = 500;
@@ -288,7 +288,7 @@ function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
     },
   });
 
-  useFocusOnSlash(inputRef);
+  useFocusViaKeyboard(inputRef);
 
   useEffect(() => {
     if (isFocused) {
@@ -399,6 +399,7 @@ function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
                 className:
                   "nothing-found result-item " +
                   (highlightedIndex === resultItems.length ? "highlight" : ""),
+                key: "nothing-found",
                 item: onlineSearch,
                 index: resultItems.length,
               })}
@@ -450,7 +451,6 @@ function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
             : "search-input-field",
           id: inputId,
           name: "q",
-          placeholder: "   ",
           onMouseOver: initializeSearchIndex,
           onFocus: () => {
             onChangeIsFocused(true);
@@ -481,6 +481,7 @@ function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
           ref: (input) => {
             inputRef.current = input;
           },
+          placeholder: "   ",
           required: true,
         })}
       />

@@ -12,12 +12,13 @@ import {
 } from "./hooks";
 import { Doc } from "./types";
 // Ingredients
-import { Prose, ProseWithHeading } from "./ingredients/prose";
+import { Prose } from "./ingredients/prose";
 import { LazyBrowserCompatibilityTable } from "./lazy-bcd-table";
 import { SpecificationSection } from "./ingredients/spec-section";
 
 // Misc
 // Sub-components
+import { TopNavigation } from "../ui/organisms/top-navigation";
 import { ArticleActionsContainer } from "../ui/organisms/article-actions-container";
 import { LocalizedContentNote } from "./molecules/localized-content-note";
 import { OfflineStatusBar } from "../ui/molecules/offline-status-bar";
@@ -172,11 +173,12 @@ export function Document(props /* TODO: define a TS interface for this */) {
 
   return (
     <>
-      <ArticleActionsContainer doc={doc} />
-
+      <div className="main-document-header-container">
+        <TopNavigation />
+        <ArticleActionsContainer doc={doc} />
+      </div>
       {/* only include this if we are not server-side rendering */}
       {!isServer && <OfflineStatusBar />}
-
       {doc.isTranslated ? (
         <div className="container">
           <LocalizedContentNote isActive={doc.isActive} locale={locale} />
@@ -188,7 +190,7 @@ export function Document(props /* TODO: define a TS interface for this */) {
           </div>
         )
       )}
-      <div className="article-wrapper">
+      <div className="main-wrapper">
         <RenderSideBar doc={doc} />
 
         <div className="toc">
@@ -226,24 +228,7 @@ export function Document(props /* TODO: define a TS interface for this */) {
 function RenderDocumentBody({ doc }) {
   return doc.body.map((section, i) => {
     if (section.type === "prose") {
-      // Only exceptional few should use the <Prose/> component,
-      // as opposed to <ProseWithHeading/>.
-      if (!section.value.id) {
-        return (
-          <Prose
-            key={section.value.id || `prose${i}`}
-            section={section.value}
-          />
-        );
-      } else {
-        return (
-          <ProseWithHeading
-            key={section.value.id}
-            id={section.value.id}
-            section={section.value}
-          />
-        );
-      }
+      return <Prose key={section.value.id} section={section.value} />;
     } else if (section.type === "browser_compatibility") {
       return (
         <LazyBrowserCompatibilityTable

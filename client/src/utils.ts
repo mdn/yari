@@ -1,5 +1,6 @@
 import { UserData } from "./user-context";
 import {
+  ENABLE_PLUS_EU,
   IEX_DOMAIN,
   PLUS_ENABLED_COUNTRIES,
   PLUS_IS_AVAILABLE_OVERRIDE,
@@ -84,6 +85,9 @@ export function isPlusSubscriber(user) {
 export function isPlusAvailable(userData: UserData | null) {
   if (typeof PLUS_IS_AVAILABLE_OVERRIDE === "boolean") {
     return PLUS_IS_AVAILABLE_OVERRIDE;
+  }
+  if (ENABLE_PLUS_EU) {
+    return true;
   }
 
   if (!userData) {

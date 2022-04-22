@@ -22,7 +22,7 @@ export const ThemeSwitcher = () => {
     return (
       <Button
         extraClasses={`
-          ${activeTheme === id ? "active-menu-item" : undefined}
+          ${activeTheme === id ? "active-menu-item" : ""}
         `}
         icon={`theme-${id}`}
         onClickHandler={() => {
@@ -62,7 +62,6 @@ export const ThemeSwitcher = () => {
     >
       <Button
         type="action"
-        ariaControls={menuId}
         ariaHasPopup={"menu"}
         ariaExpanded={isOpen || undefined}
         icon={`theme-${activeTheme}`}

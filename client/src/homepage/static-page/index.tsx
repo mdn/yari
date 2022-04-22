@@ -88,19 +88,13 @@ function StaticPage({
         </div>
       </div>
 
-      <div className="article-wrapper">
+      <div className="main-wrapper">
         <SidebarContainer doc={hyData}>
           {sidebarHeader || null}
         </SidebarContainer>
         <div className="toc">{toc || null}</div>
         <main id="content" className="main-content" role="main">
-          <article
-            className={
-              extraClasses
-                ? `main-page-content ${extraClasses}`
-                : "main-page-content"
-            }
-          >
+          <article className={`main-page-content ${extraClasses || ""}`}>
             {hyData.sections.map((section) => (
               <section dangerouslySetInnerHTML={{ __html: section }}></section>
             ))}

@@ -3,7 +3,6 @@
 @use "../../../ui/vars" as *;
 
 .document-toc {
-  font-size: 1rem;
   margin-bottom: 2rem;
   padding: 0;
   position: relative;
@@ -14,13 +13,14 @@
 
   // double classes to override specificity from root styles
   &-heading.document-toc-heading {
-    font: var(--type-heading-h6);
+    font: var(--type-heading-h5);
     letter-spacing: 1.5px;
     margin: 0 0 1rem 0;
-    text-transform: uppercase;
   }
+
   // double classes to override specificity from root styles
   &-list.document-toc-list {
+    font-size: var(--type-smaller-font-size);
     list-style: none;
     padding-left: 0;
 
@@ -33,7 +33,6 @@
   &-link.document-toc-link:not(.button) {
     display: block;
     padding: 0.5rem 1rem;
-    font: var(--type-body-m);
     border-left: 2px solid var(--border-secondary);
     color: var(--text-secondary);
     text-decoration: none;
@@ -45,8 +44,8 @@
     &[aria-current]:not([aria-current=""]):not([aria-current="false"]) {
       color: var(--text-primary);
       font-weight: 600;
-      border-left: 2px solid var(--text-link);
-      background-color: var(--category-color-background);
+      border-left: 2px solid var(--category-color);
+      background-color: var(--background-toc-active);
     }
   }
 
