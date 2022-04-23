@@ -84,6 +84,8 @@ export function EditActions({
         <a
           href={`https://developer.mozilla.org/${locale}/docs/${slug}`}
           className="button"
+          target="_blank"
+          rel="noopener noreferrer"
         >
           View on MDN
         </a>
