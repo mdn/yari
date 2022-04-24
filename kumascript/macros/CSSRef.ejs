@@ -500,7 +500,7 @@ function buildSublist(pages, title) {
       </details>
   </li>
 
-  <li><strong>Reference</strong></li>
+  <li><strong>References:</strong></li>
   <%-buildSublist(groups, 'Modules');%>
   <%-buildSublist(properties, 'Properties');%>
   <%-buildSublist(selectors, 'Selectors');%>
@@ -509,7 +509,7 @@ function buildSublist(pages, title) {
   <%-buildSublist(atRules, 'At-rules');%>
   <%-buildSublist(types, 'Types');%>
 
-  <li><strong>Guides</strong></li>
+  <li><strong>Guides:</strong></li>
   <li class="toggle">
       <details>
           <summary>Animations</summary>
@@ -722,7 +722,7 @@ function buildSublist(pages, title) {
       </details>
   </li>
 
-  <li><strong>Layout cookbook</strong></li>
+  <li><strong>Layout cookbook:</strong></li>
   <li class="toggle">
     <ol>
       <li><%-smartLink(`${cssURL}Layout_cookbook/Media_objects`, null, "Media objects", cssURL)%></li>
@@ -738,7 +738,7 @@ function buildSublist(pages, title) {
     </ol>
   </li>
 
-  <li><strong>Tools</strong></li>
+  <li><strong>Tools:</strong></li>
   <li class="toggle">
     <ol>
       <li><%-smartLink(`${cssURL}CSS_Colors/Color_picker_tool`, null, text['Color_picker_tool'], cssURL)%></li>
