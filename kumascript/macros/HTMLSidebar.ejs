@@ -26,14 +26,19 @@ var text = mdn.localStringMap({
       'Debugging_HTML': 'Debugging HTML',
       'Assessment_marking_up_a_letter': 'Assessment: Marking up a letter',
       'Assessment_structuring_a_page_of_content': 'Assessment: Structuring a page of content',
-    'Multimedia_and_embedding': 'Multimedia and embedding',
-      'Multimedia_and_embedding_overview': 'Multimedia and embedding overview',
+    'Multimedia_and_embedding': 'Multimedia and Embedding',
+      'Multimedia_and_embedding_overview': 'Multimedia and Embedding overview',
       'Images_in_HTML': 'Images in HTML',
       'Video_and_audio_content': 'Video and audio content',
       'Other_embedding_technologies': 'From object to iframe — other embedding technologies',
       'Adding_vector_graphics_to_the_Web': 'Adding vector graphics to the Web',
       'Responsive_images': 'Responsive images',
       'Assessment_Mozilla_splash_page': 'Assessment: Mozilla splash page',
+    'HTML_tables' : 'HTML tables',
+      'HTML_tables_overview' : 'HTML tables overview',
+      'HTML_table_basics' : 'HTML table basics',
+      'HTML_table_advanced' : 'HTML table advanced features and accessibility',
+      'Assessment_Structuring_planet_data' : 'Assessment: Structuring planet data',
     'Reference': 'References:',
     'HTML_Elements': 'HTML elements',
     'Global_attributes': 'Global attributes',
@@ -83,6 +88,11 @@ var text = mdn.localStringMap({
       'Adding_vector_graphics_to_the_Web': 'Adicionando gráficos vetoriais à Web',
       'Responsive_images': 'Imagens responsivas',
       'Assessment_Mozilla_splash_page': 'Avaliação: Página "splash" da Mozilla',
+    'HTML_tables' : 'Tabelas HTML',
+      'HTML_tables_overview' : 'Visão geral sobre tabelas HTML',
+      'HTML_table_basics' : 'O básico sobre Tabelas HTML',
+      'HTML_table_advanced' : 'Funcionalidades avançadas e acessibilidade de Tabelas HTML',
+      'Assessment_Structuring_planet_data' : 'Avaliação: Estruturação dos dados do planenta',
     'Reference': 'Referências:',
     'HTML_Elements': 'Elementos HTML',
     'Global_attributes': 'Atributos globais',
@@ -115,6 +125,11 @@ var text = mdn.localStringMap({
       'Adding_vector_graphics_to_the_Web': 'Добавление векторный графики в Веб',
       'Responsive_images': 'Отзывчивые изображения',
       'Assessment_Mozilla_splash_page': 'Задание: Страница о Mozilla',
+    'HTML_tables' : 'HTML таблицы',
+      'HTML_tables_overview' : 'HTML таблицы',
+      'HTML_table_basics' : 'HTML таблицы основы',
+      'HTML_table_advanced' : 'HTML таблицы продвинутые возможности и доступность',
+      'Assessment_Structuring_planet_data' : 'Задание: Структурирование данных о планетах',
     'Reference': 'Справочники:',
     'HTML_Elements': 'HTML элементы',
     'Global_attributes': 'Глобальные атрибуты',
@@ -160,6 +175,17 @@ var text = mdn.localStringMap({
         <li><a href="<%=learnBaseURL%>HTML/Multimedia_and_embedding/Adding_vector_graphics_to_the_Web"><%=text['Adding_vector_graphics_to_the_Web']%></a></li>
         <li><a href="<%=learnBaseURL%>HTML/Multimedia_and_embedding/Responsive_images"><%=text['Responsive_images']%></a></li>
         <li><a href="<%=learnBaseURL%>HTML/Multimedia_and_embedding/Mozilla_splash_page"><%=text['Assessment_Mozilla_splash_page']%></a></li>
+      </ol>
+    </details>
+  </li>
+  <li class="toggle">
+    <details <%=state('HTML_tables')%>>
+      <summary><%=text['HTML_tables']%></summary>
+      <ol>
+        <li><a href="<%=baseURL%>HTML/Tables"><%=text['HTML_tables_overview']%></a></li>
+        <li><a href="<%=baseURL%>HTML/Tables/Basics"><%=text['HTML_table_basics']%></a></li>
+        <li><a href="<%=baseURL%>HTML/Tables/Advanced"><%=text['HTML_table_advanced']%></a></li>
+        <li><a href="<%=baseURL%>HTML/Tables/Structuring_planet_data"><%=text['Assessment_Structuring_planet_data']%></a></li>
       </ol>
     </details>
   </li>
