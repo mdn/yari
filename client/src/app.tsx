@@ -27,9 +27,6 @@ import { Banner, hasActiveBanners } from "./banners";
 const AllFlaws = React.lazy(() => import("./flaws"));
 const AllTraits = React.lazy(() => import("./traits"));
 const Translations = React.lazy(() => import("./translations"));
-const DocumentEdit = React.lazy(() => import("./document/forms/edit"));
-const DocumentCreate = React.lazy(() => import("./document/forms/create"));
-const DocumentManage = React.lazy(() => import("./document/forms/manage"));
 const WritersHomepage = React.lazy(() => import("./writers-homepage"));
 const Sitemap = React.lazy(() => import("./sitemap"));
 
@@ -174,34 +171,6 @@ export function App(appProps) {
                   element={
                     <StandardLayout>
                       <AllTraits />
-                    </StandardLayout>
-                  }
-                />
-                <Route
-                  path="/_edit/*"
-                  element={
-                    <StandardLayout>
-                      <DocumentEdit />
-                    </StandardLayout>
-                  }
-                />
-
-                {/* The following two are not "enabled". I.e. no link to them.
-                    See https://github.com/mdn/yari/issues/1614
-                 */}
-                <Route
-                  path="/_create/*"
-                  element={
-                    <StandardLayout>
-                      <DocumentCreate />
-                    </StandardLayout>
-                  }
-                />
-                <Route
-                  path="/_manage/*"
-                  element={
-                    <StandardLayout>
-                      <DocumentManage />
                     </StandardLayout>
                   }
                 />

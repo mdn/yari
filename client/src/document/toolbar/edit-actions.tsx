@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Link, useLocation, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { CRUD_MODE_HOSTNAMES } from "../../constants";
 
 import "./edit-actions.scss";
@@ -11,8 +11,6 @@ export function EditActions({
   folder: string;
   filename: string;
 }) {
-  const location = useLocation();
-
   const [opening, setOpening] = useState(false);
   const [editorOpeningError, setEditorOpeningError] = useState<Error | null>(
     null
@@ -88,17 +86,6 @@ export function EditActions({
           View on MDN
         </a>
       </li>
-
-      {!isReadOnly && (
-        <li>
-          <Link
-            to={location.pathname.replace("/docs/", "/_edit/")}
-            className="button"
-          >
-            Quick-edit
-          </Link>
-        </li>
-      )}
 
       {editorOpeningError ? (
         <p className="error-message editor-opening-error">
