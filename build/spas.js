@@ -19,8 +19,9 @@ const cheerio = require("cheerio");
 const { findByURL } = require("../content/document");
 
 const FEATURED_ARTICLES = [
-  "Web/HTML/Element/dialog",
   "Web/CSS/color-scheme",
+  "Web/HTML/Element/dialog",
+  "Learn/JavaScript/Asynchronous",
   "Web/API/Canvas_API/Tutorial",
 ];
 
