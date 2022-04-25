@@ -97,12 +97,21 @@
   <body>
     <!-- If we modify this script we must update the CSP headers! -->
     <script>
-      const c = { light: "#ffffff", dark: "#1b1b1b" };
-      if (window && document.body) {
-        const o = window.localStorage.getItem("theme");
-        o &&
-          ((document.body.className = o),
-          (document.body.style.backgroundColor = c[o]));
+      const themes = { light: "#ffffff", dark: "#1b1b1b" };
+      if (window && document.documentElement) {
+        const storedTheme = window.localStorage.getItem("theme");
+        const preferDarkMode = window.matchMedia(
+          "(prefers-color-scheme: dark)"
+        ).matches;
+        const setColor = (themeName) => {
+          document.documentElement.className = themeName;
+          document.documentElement.style.backgroundColor = themes[themeName];
+        };
+        if (storedTheme) {
+          setColor(storedTheme);
+        } else {
+          setColor(preferDarkMode ? "dark" : "light");
+        }
       }
     </script>
     <div id="root"></div>
