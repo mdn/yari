@@ -209,6 +209,19 @@ jobs:
 
           poetry run deployer search-index ../client/build
 
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.DEPLOYER_STAGE_AND_DEV_AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.DEPLOYER_STAGE_AND_DEV_AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1
+
+      - name: Invalidate CDN
+        env:
+          DISTRIBUTION: E9813D0RN1QZI
+          PATHS: /*
+        run: aws cloudfront create-invalidation --distribution-id "$DISTRIBUTION" --paths "$PATHS"
+
       - name: Slack Notification
         if: failure()
         uses: rtCamp/action-slack-notify@v2
