@@ -185,7 +185,7 @@
   // specific styles to override base styles. The Markdown compiler
   // adds extra divs, so this is a way for these styles to not
   // stomp out component styles.
-  > div:not([class]) > {
+  .section-content {
     p {
       font: var(--type-article-p);
 
