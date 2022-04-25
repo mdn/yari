@@ -83,15 +83,39 @@
         "en": null,
         "de": {
           "product:successActionButtonLabel": "Weiter zu MDN Plus",
-          "product:subtitle": "Ein MDN Premium Service",
+          "product:subtitle": "Ein MDN-Premium-Dienst",
           "product:details:1": "Seitenbenachrichtigungen",
-          "product:details:2": "Artikelsammlungen",
+          "product:details:2": "Artikelsammlung",
           "product:details:3": "MDN offline"
         },
-        "es": null,
-        "fr": null,
-        "it": null,
-        "nl": null
+        "es": {
+          "product:successActionButtonLabel": "Continuar a MDN Plus",
+          "product:subtitle": "Un servicio MDN prémium",
+          "product:details:1": "Notificaciones de página",
+          "product:details:2": "Colecciones de artículos",
+          "product:details:3": "MDN disponible sin conexión"
+        },
+        "fr": {
+          "product:successActionButtonLabel": "Continuer vers MDN Plus",
+          "product:subtitle": "Un service MDN Premium",
+          "product:details:1": "Notifications de la page",
+          "product:details:2": "Collections d’articles",
+          "product:details:3": "MDN hors ligne"
+        },
+        "it": {
+          "product:successActionButtonLabel": "Prosegui su MDN Plus",
+          "product:subtitle": "Un servizio Premium MDN",
+          "product:details:1": "Notifiche delle pagine",
+          "product:details:2": "Raccolte di articoli",
+          "product:details:3": "MDN offline"
+        },
+        "nl": {
+          "product:successActionButtonLabel": "Doorgaan naar MDN Plus",
+          "product:subtitle": "Een MDN Premium-service",
+          "product:details:1": "Paginameldingen",
+          "product:details:2": "Verzamelingen artikelen",
+          "product:details:3": "MDN offline"
+        }
       },
       "defaultLanguage": "de"
     },
@@ -101,15 +125,39 @@
         "en": null,
         "de": {
           "product:successActionButtonLabel": "Weiter zu MDN Plus",
-          "product:subtitle": "Ein MDN Premium Service",
+          "product:subtitle": "Ein MDN-Premium-Dienst",
           "product:details:1": "Seitenbenachrichtigungen",
-          "product:details:2": "Artikelsammlungen",
+          "product:details:2": "Artikelsammlung",
           "product:details:3": "MDN offline"
         },
-        "es": null,
-        "fr": null,
-        "it": null,
-        "nl": null
+        "es": {
+          "product:successActionButtonLabel": "Continuar a MDN Plus",
+          "product:subtitle": "Un servicio MDN prémium",
+          "product:details:1": "Notificaciones de página",
+          "product:details:2": "Colecciones de artículos",
+          "product:details:3": "MDN disponible sin conexión"
+        },
+        "fr": {
+          "product:successActionButtonLabel": "Continuer vers MDN Plus",
+          "product:subtitle": "Un service MDN Premium",
+          "product:details:1": "Notifications de la page",
+          "product:details:2": "Collections d’articles",
+          "product:details:3": "MDN hors ligne"
+        },
+        "it": {
+          "product:successActionButtonLabel": "Prosegui su MDN Plus",
+          "product:subtitle": "Un servizio Premium MDN",
+          "product:details:1": "Notifiche delle pagine",
+          "product:details:2": "Raccolte di articoli",
+          "product:details:3": "MDN offline"
+        },
+        "nl": {
+          "product:successActionButtonLabel": "Doorgaan naar MDN Plus",
+          "product:subtitle": "Een MDN Premium-service",
+          "product:details:1": "Paginameldingen",
+          "product:details:2": "Verzamelingen artikelen",
+          "product:details:3": "MDN offline"
+        }
       },
       "defaultLanguage": "nl"
     },
@@ -119,15 +167,39 @@
         "en": null,
         "de": {
           "product:successActionButtonLabel": "Weiter zu MDN Plus",
-          "product:subtitle": "Ein MDN Premium Service",
+          "product:subtitle": "Ein MDN-Premium-Dienst",
           "product:details:1": "Seitenbenachrichtigungen",
-          "product:details:2": "Artikelsammlungen",
+          "product:details:2": "Artikelsammlung",
           "product:details:3": "MDN offline"
         },
-        "es": null,
-        "fr": null,
-        "it": null,
-        "nl": null
+        "es": {
+          "product:successActionButtonLabel": "Continuar a MDN Plus",
+          "product:subtitle": "Un servicio MDN prémium",
+          "product:details:1": "Notificaciones de página",
+          "product:details:2": "Colecciones de artículos",
+          "product:details:3": "MDN disponible sin conexión"
+        },
+        "fr": {
+          "product:successActionButtonLabel": "Continuer vers MDN Plus",
+          "product:subtitle": "Un service MDN Premium",
+          "product:details:1": "Notifications de la page",
+          "product:details:2": "Collections d’articles",
+          "product:details:3": "MDN hors ligne"
+        },
+        "it": {
+          "product:successActionButtonLabel": "Prosegui su MDN Plus",
+          "product:subtitle": "Un servizio Premium MDN",
+          "product:details:1": "Notifiche delle pagine",
+          "product:details:2": "Raccolte di articoli",
+          "product:details:3": "MDN offline"
+        },
+        "nl": {
+          "product:successActionButtonLabel": "Doorgaan naar MDN Plus",
+          "product:subtitle": "Een MDN Premium-service",
+          "product:details:1": "Paginameldingen",
+          "product:details:2": "Verzamelingen artikelen",
+          "product:details:3": "MDN offline"
+        }
       },
       "defaultLanguage": "de"
     },
@@ -137,15 +209,39 @@
         "en": null,
         "de": {
           "product:successActionButtonLabel": "Weiter zu MDN Plus",
-          "product:subtitle": "Ein MDN Premium Service",
+          "product:subtitle": "Ein MDN-Premium-Dienst",
           "product:details:1": "Seitenbenachrichtigungen",
-          "product:details:2": "Artikelsammlungen",
+          "product:details:2": "Artikelsammlung",
           "product:details:3": "MDN offline"
         },
-        "es": null,
-        "fr": null,
-        "it": null,
-        "nl": null
+        "es": {
+          "product:successActionButtonLabel": "Continuar a MDN Plus",
+          "product:subtitle": "Un servicio MDN prémium",
+          "product:details:1": "Notificaciones de página",
+          "product:details:2": "Colecciones de artículos",
+          "product:details:3": "MDN disponible sin conexión"
+        },
+        "fr": {
+          "product:successActionButtonLabel": "Continuer vers MDN Plus",
+          "product:subtitle": "Un service MDN Premium",
+          "product:details:1": "Notifications de la page",
+          "product:details:2": "Collections d’articles",
+          "product:details:3": "MDN hors ligne"
+        },
+        "it": {
+          "product:successActionButtonLabel": "Prosegui su MDN Plus",
+          "product:subtitle": "Un servizio Premium MDN",
+          "product:details:1": "Notifiche delle pagine",
+          "product:details:2": "Raccolte di articoli",
+          "product:details:3": "MDN offline"
+        },
+        "nl": {
+          "product:successActionButtonLabel": "Doorgaan naar MDN Plus",
+          "product:subtitle": "Een MDN Premium-service",
+          "product:details:1": "Paginameldingen",
+          "product:details:2": "Verzamelingen artikelen",
+          "product:details:3": "MDN offline"
+        }
       },
       "defaultLanguage": "es"
     },
@@ -155,15 +251,39 @@
         "en": null,
         "de": {
           "product:successActionButtonLabel": "Weiter zu MDN Plus",
-          "product:subtitle": "Ein MDN Premium Service",
+          "product:subtitle": "Ein MDN-Premium-Dienst",
           "product:details:1": "Seitenbenachrichtigungen",
-          "product:details:2": "Artikelsammlungen",
+          "product:details:2": "Artikelsammlung",
           "product:details:3": "MDN offline"
         },
-        "es": null,
-        "fr": null,
-        "it": null,
-        "nl": null
+        "es": {
+          "product:successActionButtonLabel": "Continuar a MDN Plus",
+          "product:subtitle": "Un servicio MDN prémium",
+          "product:details:1": "Notificaciones de página",
+          "product:details:2": "Colecciones de artículos",
+          "product:details:3": "MDN disponible sin conexión"
+        },
+        "fr": {
+          "product:successActionButtonLabel": "Continuer vers MDN Plus",
+          "product:subtitle": "Un service MDN Premium",
+          "product:details:1": "Notifications de la page",
+          "product:details:2": "Collections d’articles",
+          "product:details:3": "MDN hors ligne"
+        },
+        "it": {
+          "product:successActionButtonLabel": "Prosegui su MDN Plus",
+          "product:subtitle": "Un servizio Premium MDN",
+          "product:details:1": "Notifiche delle pagine",
+          "product:details:2": "Raccolte di articoli",
+          "product:details:3": "MDN offline"
+        },
+        "nl": {
+          "product:successActionButtonLabel": "Doorgaan naar MDN Plus",
+          "product:subtitle": "Een MDN Premium-service",
+          "product:details:1": "Paginameldingen",
+          "product:details:2": "Verzamelingen artikelen",
+          "product:details:3": "MDN offline"
+        }
       },
       "defaultLanguage": "fr"
     },
@@ -173,15 +293,39 @@
         "en": null,
         "de": {
           "product:successActionButtonLabel": "Weiter zu MDN Plus",
-          "product:subtitle": "Ein MDN Premium Service",
+          "product:subtitle": "Ein MDN-Premium-Dienst",
           "product:details:1": "Seitenbenachrichtigungen",
-          "product:details:2": "Artikelsammlungen",
+          "product:details:2": "Artikelsammlung",
           "product:details:3": "MDN offline"
         },
-        "es": null,
-        "fr": null,
-        "it": null,
-        "nl": null
+        "es": {
+          "product:successActionButtonLabel": "Continuar a MDN Plus",
+          "product:subtitle": "Un servicio MDN prémium",
+          "product:details:1": "Notificaciones de página",
+          "product:details:2": "Colecciones de artículos",
+          "product:details:3": "MDN disponible sin conexión"
+        },
+        "fr": {
+          "product:successActionButtonLabel": "Continuer vers MDN Plus",
+          "product:subtitle": "Un service MDN Premium",
+          "product:details:1": "Notifications de la page",
+          "product:details:2": "Collections d’articles",
+          "product:details:3": "MDN hors ligne"
+        },
+        "it": {
+          "product:successActionButtonLabel": "Prosegui su MDN Plus",
+          "product:subtitle": "Un servizio Premium MDN",
+          "product:details:1": "Notifiche delle pagine",
+          "product:details:2": "Raccolte di articoli",
+          "product:details:3": "MDN offline"
+        },
+        "nl": {
+          "product:successActionButtonLabel": "Doorgaan naar MDN Plus",
+          "product:subtitle": "Een MDN Premium-service",
+          "product:details:1": "Paginameldingen",
+          "product:details:2": "Verzamelingen artikelen",
+          "product:details:3": "MDN offline"
+        }
       },
       "defaultLanguage": "en"
     },
@@ -191,15 +335,39 @@
         "en": null,
         "de": {
           "product:successActionButtonLabel": "Weiter zu MDN Plus",
-          "product:subtitle": "Ein MDN Premium Service",
+          "product:subtitle": "Ein MDN-Premium-Dienst",
           "product:details:1": "Seitenbenachrichtigungen",
-          "product:details:2": "Artikelsammlungen",
+          "product:details:2": "Artikelsammlung",
           "product:details:3": "MDN offline"
         },
-        "es": null,
-        "fr": null,
-        "it": null,
-        "nl": null
+        "es": {
+          "product:successActionButtonLabel": "Continuar a MDN Plus",
+          "product:subtitle": "Un servicio MDN prémium",
+          "product:details:1": "Notificaciones de página",
+          "product:details:2": "Colecciones de artículos",
+          "product:details:3": "MDN disponible sin conexión"
+        },
+        "fr": {
+          "product:successActionButtonLabel": "Continuer vers MDN Plus",
+          "product:subtitle": "Un service MDN Premium",
+          "product:details:1": "Notifications de la page",
+          "product:details:2": "Collections d’articles",
+          "product:details:3": "MDN hors ligne"
+        },
+        "it": {
+          "product:successActionButtonLabel": "Prosegui su MDN Plus",
+          "product:subtitle": "Un servizio Premium MDN",
+          "product:details:1": "Notifiche delle pagine",
+          "product:details:2": "Raccolte di articoli",
+          "product:details:3": "MDN offline"
+        },
+        "nl": {
+          "product:successActionButtonLabel": "Doorgaan naar MDN Plus",
+          "product:subtitle": "Een MDN Premium-service",
+          "product:details:1": "Paginameldingen",
+          "product:details:2": "Verzamelingen artikelen",
+          "product:details:3": "MDN offline"
+        }
       },
       "defaultLanguage": "it"
     },
@@ -209,15 +377,39 @@
         "en": null,
         "de": {
           "product:successActionButtonLabel": "Weiter zu MDN Plus",
-          "product:subtitle": "Ein MDN Premium Service",
+          "product:subtitle": "Ein MDN-Premium-Dienst",
           "product:details:1": "Seitenbenachrichtigungen",
-          "product:details:2": "Artikelsammlungen",
+          "product:details:2": "Artikelsammlung",
           "product:details:3": "MDN offline"
         },
-        "es": null,
-        "fr": null,
-        "it": null,
-        "nl": null
+        "es": {
+          "product:successActionButtonLabel": "Continuar a MDN Plus",
+          "product:subtitle": "Un servicio MDN prémium",
+          "product:details:1": "Notificaciones de página",
+          "product:details:2": "Colecciones de artículos",
+          "product:details:3": "MDN disponible sin conexión"
+        },
+        "fr": {
+          "product:successActionButtonLabel": "Continuer vers MDN Plus",
+          "product:subtitle": "Un service MDN Premium",
+          "product:details:1": "Notifications de la page",
+          "product:details:2": "Collections d’articles",
+          "product:details:3": "MDN hors ligne"
+        },
+        "it": {
+          "product:successActionButtonLabel": "Prosegui su MDN Plus",
+          "product:subtitle": "Un servizio Premium MDN",
+          "product:details:1": "Notifiche delle pagine",
+          "product:details:2": "Raccolte di articoli",
+          "product:details:3": "MDN offline"
+        },
+        "nl": {
+          "product:successActionButtonLabel": "Doorgaan naar MDN Plus",
+          "product:subtitle": "Een MDN Premium-service",
+          "product:details:1": "Paginameldingen",
+          "product:details:2": "Verzamelingen artikelen",
+          "product:details:3": "MDN offline"
+        }
       },
       "defaultLanguage": "nl"
     },
@@ -227,15 +419,39 @@
         "en": null,
         "de": {
           "product:successActionButtonLabel": "Weiter zu MDN Plus",
-          "product:subtitle": "Ein MDN Premium Service",
+          "product:subtitle": "Ein MDN-Premium-Dienst",
           "product:details:1": "Seitenbenachrichtigungen",
-          "product:details:2": "Artikelsammlungen",
+          "product:details:2": "Artikelsammlung",
           "product:details:3": "MDN offline"
         },
-        "es": null,
-        "fr": null,
-        "it": null,
-        "nl": null
+        "es": {
+          "product:successActionButtonLabel": "Continuar a MDN Plus",
+          "product:subtitle": "Un servicio MDN prémium",
+          "product:details:1": "Notificaciones de página",
+          "product:details:2": "Colecciones de artículos",
+          "product:details:3": "MDN disponible sin conexión"
+        },
+        "fr": {
+          "product:successActionButtonLabel": "Continuer vers MDN Plus",
+          "product:subtitle": "Un service MDN Premium",
+          "product:details:1": "Notifications de la page",
+          "product:details:2": "Collections d’articles",
+          "product:details:3": "MDN hors ligne"
+        },
+        "it": {
+          "product:successActionButtonLabel": "Prosegui su MDN Plus",
+          "product:subtitle": "Un servizio Premium MDN",
+          "product:details:1": "Notifiche delle pagine",
+          "product:details:2": "Raccolte di articoli",
+          "product:details:3": "MDN offline"
+        },
+        "nl": {
+          "product:successActionButtonLabel": "Doorgaan naar MDN Plus",
+          "product:subtitle": "Een MDN Premium-service",
+          "product:details:1": "Paginameldingen",
+          "product:details:2": "Verzamelingen artikelen",
+          "product:details:3": "MDN offline"
+        }
       },
       "defaultLanguage": "en"
     },
@@ -245,15 +461,39 @@
         "en": null,
         "de": {
           "product:successActionButtonLabel": "Weiter zu MDN Plus",
-          "product:subtitle": "Ein MDN Premium Service",
+          "product:subtitle": "Ein MDN-Premium-Dienst",
           "product:details:1": "Seitenbenachrichtigungen",
-          "product:details:2": "Artikelsammlungen",
+          "product:details:2": "Artikelsammlung",
           "product:details:3": "MDN offline"
         },
-        "es": null,
-        "fr": null,
-        "it": null,
-        "nl": null
+        "es": {
+          "product:successActionButtonLabel": "Continuar a MDN Plus",
+          "product:subtitle": "Un servicio MDN prémium",
+          "product:details:1": "Notificaciones de página",
+          "product:details:2": "Colecciones de artículos",
+          "product:details:3": "MDN disponible sin conexión"
+        },
+        "fr": {
+          "product:successActionButtonLabel": "Continuer vers MDN Plus",
+          "product:subtitle": "Un service MDN Premium",
+          "product:details:1": "Notifications de la page",
+          "product:details:2": "Collections d’articles",
+          "product:details:3": "MDN hors ligne"
+        },
+        "it": {
+          "product:successActionButtonLabel": "Prosegui su MDN Plus",
+          "product:subtitle": "Un servizio Premium MDN",
+          "product:details:1": "Notifiche delle pagine",
+          "product:details:2": "Raccolte di articoli",
+          "product:details:3": "MDN offline"
+        },
+        "nl": {
+          "product:successActionButtonLabel": "Doorgaan naar MDN Plus",
+          "product:subtitle": "Een MDN Premium-service",
+          "product:details:1": "Paginameldingen",
+          "product:details:2": "Verzamelingen artikelen",
+          "product:details:3": "MDN offline"
+        }
       },
       "defaultLanguage": "en"
     },
@@ -261,9 +501,27 @@
       "currency": "chf",
       "supportedLanguages": {
         "en": null,
-        "de": null,
-        "fr": null,
-        "it": null
+        "de": {
+          "product:successActionButtonLabel": "Weiter zu MDN Plus",
+          "product:subtitle": "Ein MDN-Premium-Dienst",
+          "product:details:1": "Seitenbenachrichtigungen",
+          "product:details:2": "Artikelsammlung",
+          "product:details:3": "MDN offline"
+        },
+        "fr": {
+          "product:successActionButtonLabel": "Continuer vers MDN Plus",
+          "product:subtitle": "Un service MDN Premium",
+          "product:details:1": "Notifications de la page",
+          "product:details:2": "Collections d’articles",
+          "product:details:3": "MDN hors ligne"
+        },
+        "it": {
+          "product:successActionButtonLabel": "Prosegui su MDN Plus",
+          "product:subtitle": "Un servizio Premium MDN",
+          "product:details:1": "Notifiche delle pagine",
+          "product:details:2": "Raccolte di articoli",
+          "product:details:3": "MDN offline"
+        }
       },
       "defaultLanguage": "de"
     }
@@ -474,9 +732,9 @@
           "capabilities:e7bc284c2d3b4a90": "mdn_plus_5m",
           "capabilities:ed18cbc69ec23491": "mdn_plus_5m",
           "product:successActionButtonLabel": "Weiter zu MDN Plus",
-          "product:subtitle": "Ein MDN Premium Service",
+          "product:subtitle": "Ein MDN-Premium-Dienst",
           "product:details:1": "Seitenbenachrichtigungen",
-          "product:details:2": "Artikelsammlungen",
+          "product:details:2": "Artikelsammlung",
           "product:details:3": "MDN offline"
         },
         "price_id": "price_1Ko6oDKb9q6OnNsL3UV65T60"
@@ -497,9 +755,9 @@
           "capabilities:e7bc284c2d3b4a90": "mdn_plus_5y",
           "capabilities:ed18cbc69ec23491": "mdn_plus_5y",
           "product:successActionButtonLabel": "Weiter zu MDN Plus",
-          "product:subtitle": "Ein MDN Premium Service",
+          "product:subtitle": "Ein MDN-Premium-Dienst",
           "product:details:1": "Seitenbenachrichtigungen",
-          "product:details:2": "Artikelsammlungen",
+          "product:details:2": "Artikelsammlung",
           "product:details:3": "MDN offline"
         },
         "price_id": "price_1Ko6qAKb9q6OnNsLdsHFRRYW"
@@ -520,9 +778,9 @@
           "capabilities:e7bc284c2d3b4a90": "mdn_plus_10m",
           "capabilities:ed18cbc69ec23491": "mdn_plus_10m",
           "product:successActionButtonLabel": "Weiter zu MDN Plus",
-          "product:subtitle": "Ein MDN Premium Service",
+          "product:subtitle": "Ein MDN-Premium-Dienst",
           "product:details:1": "Seitenbenachrichtigungen",
-          "product:details:2": "Artikelsammlungen",
+          "product:details:2": "Artikelsammlung",
           "product:details:3": "MDN offline"
         },
         "price_id": "price_1Ko6rsKb9q6OnNsL9jMzlpUn"
@@ -543,9 +801,9 @@
           "capabilities:e7bc284c2d3b4a90": "mdn_plus_10y",
           "capabilities:ed18cbc69ec23491": "mdn_plus_10y",
           "product:successActionButtonLabel": "Weiter zu MDN Plus",
-          "product:subtitle": "Ein MDN Premium Service",
+          "product:subtitle": "Ein MDN-Premium-Dienst",
           "product:details:1": "Seitenbenachrichtigungen",
-          "product:details:2": "Artikelsammlungen",
+          "product:details:2": "Artikelsammlung",
           "product:details:3": "MDN offline"
         },
         "price_id": "price_1Ko6stKb9q6OnNsL4rnrw4Wn"
@@ -567,11 +825,11 @@
           "capabilities:b6f5727337fefe8e": "mdn_plus_5m",
           "capabilities:e7bc284c2d3b4a90": "mdn_plus_5m",
           "capabilities:ed18cbc69ec23491": "mdn_plus_5m",
-          "product:successActionButtonLabel": "Continue to MDN Plus",
-          "product:subtitle": "An MDN Premium Service",
-          "product:details:1": "Page notifications",
-          "product:details:2": "Collections of articles",
-          "product:details:3": "MDN offline"
+          "product:successActionButtonLabel": "Continuar a MDN Plus",
+          "product:subtitle": "Un servicio MDN prémium",
+          "product:details:1": "Notificaciones de página",
+          "product:details:2": "Colecciones de artículos",
+          "product:details:3": "MDN disponible sin conexión"
         },
         "price_id": "price_1KqdugKb9q6OnNsL41ATLMv6"
       },
@@ -590,11 +848,11 @@
           "capabilities:b6f5727337fefe8e": "mdn_plus_5y",
           "capabilities:e7bc284c2d3b4a90": "mdn_plus_5y",
           "capabilities:ed18cbc69ec23491": "mdn_plus_5y",
-          "product:successActionButtonLabel": "Continue to MDN Plus",
-          "product:subtitle": "An MDN Premium Service",
-          "product:details:1": "Page notifications",
-          "product:details:2": "Collections of articles",
-          "product:details:3": "MDN offline"
+          "product:successActionButtonLabel": "Continuar a MDN Plus",
+          "product:subtitle": "Un servicio MDN prémium",
+          "product:details:1": "Notificaciones de página",
+          "product:details:2": "Colecciones de artículos",
+          "product:details:3": "MDN disponible sin conexión"
         },
         "price_id": "price_1KqdugKb9q6OnNsLXv0GwhaT"
       },
@@ -613,11 +871,11 @@
           "capabilities:b6f5727337fefe8e": "mdn_plus_10m",
           "capabilities:e7bc284c2d3b4a90": "mdn_plus_10m",
           "capabilities:ed18cbc69ec23491": "mdn_plus_10m",
-          "product:successActionButtonLabel": "Continue to MDN Plus",
-          "product:subtitle": "An MDN Premium Service",
-          "product:details:1": "Page notifications",
-          "product:details:2": "Collections of articles",
-          "product:details:3": "MDN offline"
+          "product:successActionButtonLabel": "Continuar a MDN Plus",
+          "product:subtitle": "Un servicio MDN prémium",
+          "product:details:1": "Notificaciones de página",
+          "product:details:2": "Colecciones de artículos",
+          "product:details:3": "MDN disponible sin conexión"
         },
         "price_id": "price_1KqdugKb9q6OnNsLF5ZHUiBP"
       },
@@ -636,11 +894,11 @@
           "capabilities:b6f5727337fefe8e": "mdn_plus_10y",
           "capabilities:e7bc284c2d3b4a90": "mdn_plus_10y",
           "capabilities:ed18cbc69ec23491": "mdn_plus_10y",
-          "product:successActionButtonLabel": "Continue to MDN Plus",
-          "product:subtitle": "An MDN Premium Service",
-          "product:details:1": "Page notifications",
-          "product:details:2": "Collections of articles",
-          "product:details:3": "MDN offline"
+          "product:successActionButtonLabel": "Continuar a MDN Plus",
+          "product:subtitle": "Un servicio MDN prémium",
+          "product:details:1": "Notificaciones de página",
+          "product:details:2": "Colecciones de artículos",
+          "product:details:3": "MDN disponible sin conexión"
         },
         "price_id": "price_1KqduhKb9q6OnNsLfrNPlNDh"
       }
@@ -661,11 +919,11 @@
           "capabilities:b6f5727337fefe8e": "mdn_plus_5m",
           "capabilities:e7bc284c2d3b4a90": "mdn_plus_5m",
           "capabilities:ed18cbc69ec23491": "mdn_plus_5m",
-          "product:successActionButtonLabel": "Continue to MDN Plus",
-          "product:subtitle": "An MDN Premium Service",
-          "product:details:1": "Page notifications",
-          "product:details:2": "Collections of articles",
-          "product:details:3": "MDN offline"
+          "product:successActionButtonLabel": "Continuer vers MDN Plus",
+          "product:subtitle": "Un service MDN Premium",
+          "product:details:1": "Notifications de la page",
+          "product:details:2": "Collections d’articles",
+          "product:details:3": "MDN hors ligne"
         },
         "price_id": "price_1KqduhKb9q6OnNsLOPbGN60q"
       },
@@ -684,11 +942,11 @@
           "capabilities:b6f5727337fefe8e": "mdn_plus_5y",
           "capabilities:e7bc284c2d3b4a90": "mdn_plus_5y",
           "capabilities:ed18cbc69ec23491": "mdn_plus_5y",
-          "product:successActionButtonLabel": "Continue to MDN Plus",
-          "product:subtitle": "An MDN Premium Service",
-          "product:details:1": "Page notifications",
-          "product:details:2": "Collections of articles",
-          "product:details:3": "MDN offline"
+          "product:successActionButtonLabel": "Continuer vers MDN Plus",
+          "product:subtitle": "Un service MDN Premium",
+          "product:details:1": "Notifications de la page",
+          "product:details:2": "Collections d’articles",
+          "product:details:3": "MDN hors ligne"
         },
         "price_id": "price_1KqduhKb9q6OnNsL2Iio3oSP"
       },
@@ -707,11 +965,11 @@
           "capabilities:b6f5727337fefe8e": "mdn_plus_10m",
           "capabilities:e7bc284c2d3b4a90": "mdn_plus_10m",
           "capabilities:ed18cbc69ec23491": "mdn_plus_10m",
-          "product:successActionButtonLabel": "Continue to MDN Plus",
-          "product:subtitle": "An MDN Premium Service",
-          "product:details:1": "Page notifications",
-          "product:details:2": "Collections of articles",
-          "product:details:3": "MDN offline"
+          "product:successActionButtonLabel": "Continuer vers MDN Plus",
+          "product:subtitle": "Un service MDN Premium",
+          "product:details:1": "Notifications de la page",
+          "product:details:2": "Collections d’articles",
+          "product:details:3": "MDN hors ligne"
         },
         "price_id": "price_1KqduiKb9q6OnNsLzF5Ca5LV"
       },
@@ -730,11 +988,11 @@
           "capabilities:b6f5727337fefe8e": "mdn_plus_10y",
           "capabilities:e7bc284c2d3b4a90": "mdn_plus_10y",
           "capabilities:ed18cbc69ec23491": "mdn_plus_10y",
-          "product:successActionButtonLabel": "Continue to MDN Plus",
-          "product:subtitle": "An MDN Premium Service",
-          "product:details:1": "Page notifications",
-          "product:details:2": "Collections of articles",
-          "product:details:3": "MDN offline"
+          "product:successActionButtonLabel": "Continuer vers MDN Plus",
+          "product:subtitle": "Un service MDN Premium",
+          "product:details:1": "Notifications de la page",
+          "product:details:2": "Collections d’articles",
+          "product:details:3": "MDN hors ligne"
         },
         "price_id": "price_1KqduiKb9q6OnNsLH0G5Lmvk"
       }
@@ -755,10 +1013,10 @@
           "capabilities:b6f5727337fefe8e": "mdn_plus_5m",
           "capabilities:e7bc284c2d3b4a90": "mdn_plus_5m",
           "capabilities:ed18cbc69ec23491": "mdn_plus_5m",
-          "product:successActionButtonLabel": "Continue to MDN Plus",
-          "product:subtitle": "An MDN Premium Service",
-          "product:details:1": "Page notifications",
-          "product:details:2": "Collections of articles",
+          "product:successActionButtonLabel": "Prosegui su MDN Plus",
+          "product:subtitle": "Un servizio Premium MDN",
+          "product:details:1": "Notifiche delle pagine",
+          "product:details:2": "Raccolte di articoli",
           "product:details:3": "MDN offline"
         },
         "price_id": "price_1KqduiKb9q6OnNsL6Amq5kOo"
@@ -778,10 +1036,10 @@
           "capabilities:b6f5727337fefe8e": "mdn_plus_5y",
           "capabilities:e7bc284c2d3b4a90": "mdn_plus_5y",
           "capabilities:ed18cbc69ec23491": "mdn_plus_5y",
-          "product:successActionButtonLabel": "Continue to MDN Plus",
-          "product:subtitle": "An MDN Premium Service",
-          "product:details:1": "Page notifications",
-          "product:details:2": "Collections of articles",
+          "product:successActionButtonLabel": "Prosegui su MDN Plus",
+          "product:subtitle": "Un servizio Premium MDN",
+          "product:details:1": "Notifiche delle pagine",
+          "product:details:2": "Raccolte di articoli",
           "product:details:3": "MDN offline"
         },
         "price_id": "price_1KqdujKb9q6OnNsLhdfctEHd"
@@ -801,10 +1059,10 @@
           "capabilities:b6f5727337fefe8e": "mdn_plus_10m",
           "capabilities:e7bc284c2d3b4a90": "mdn_plus_10m",
           "capabilities:ed18cbc69ec23491": "mdn_plus_10m",
-          "product:successActionButtonLabel": "Continue to MDN Plus",
-          "product:subtitle": "An MDN Premium Service",
-          "product:details:1": "Page notifications",
-          "product:details:2": "Collections of articles",
+          "product:successActionButtonLabel": "Prosegui su MDN Plus",
+          "product:subtitle": "Un servizio Premium MDN",
+          "product:details:1": "Notifiche delle pagine",
+          "product:details:2": "Raccolte di articoli",
           "product:details:3": "MDN offline"
         },
         "price_id": "price_1KqdujKb9q6OnNsLPFNYmZdu"
@@ -824,10 +1082,10 @@
           "capabilities:b6f5727337fefe8e": "mdn_plus_10y",
           "capabilities:e7bc284c2d3b4a90": "mdn_plus_10y",
           "capabilities:ed18cbc69ec23491": "mdn_plus_10y",
-          "product:successActionButtonLabel": "Continue to MDN Plus",
-          "product:subtitle": "An MDN Premium Service",
-          "product:details:1": "Page notifications",
-          "product:details:2": "Collections of articles",
+          "product:successActionButtonLabel": "Prosegui su MDN Plus",
+          "product:subtitle": "Un servizio Premium MDN",
+          "product:details:1": "Notifiche delle pagine",
+          "product:details:2": "Raccolte di articoli",
           "product:details:3": "MDN offline"
         },
         "price_id": "price_1KqdukKb9q6OnNsLje4nw89h"
@@ -849,10 +1107,10 @@
           "capabilities:b6f5727337fefe8e": "mdn_plus_5m",
           "capabilities:e7bc284c2d3b4a90": "mdn_plus_5m",
           "capabilities:ed18cbc69ec23491": "mdn_plus_5m",
-          "product:successActionButtonLabel": "Continue to MDN Plus",
-          "product:subtitle": "An MDN Premium Service",
-          "product:details:1": "Page notifications",
-          "product:details:2": "Collections of articles",
+          "product:successActionButtonLabel": "Doorgaan naar MDN Plus",
+          "product:subtitle": "Een MDN Premium-service",
+          "product:details:1": "Paginameldingen",
+          "product:details:2": "Verzamelingen artikelen",
           "product:details:3": "MDN offline"
         },
         "price_id": "price_1KqdukKb9q6OnNsLjjA8mTpM"
@@ -872,10 +1130,10 @@
           "capabilities:b6f5727337fefe8e": "mdn_plus_5y",
           "capabilities:e7bc284c2d3b4a90": "mdn_plus_5y",
           "capabilities:ed18cbc69ec23491": "mdn_plus_5y",
-          "product:successActionButtonLabel": "Continue to MDN Plus",
-          "product:subtitle": "An MDN Premium Service",
-          "product:details:1": "Page notifications",
-          "product:details:2": "Collections of articles",
+          "product:successActionButtonLabel": "Doorgaan naar MDN Plus",
+          "product:subtitle": "Een MDN Premium-service",
+          "product:details:1": "Paginameldingen",
+          "product:details:2": "Verzamelingen artikelen",
           "product:details:3": "MDN offline"
         },
         "price_id": "price_1KqdukKb9q6OnNsLPCtBqPcw"
@@ -895,10 +1153,10 @@
           "capabilities:b6f5727337fefe8e": "mdn_plus_10m",
           "capabilities:e7bc284c2d3b4a90": "mdn_plus_10m",
           "capabilities:ed18cbc69ec23491": "mdn_plus_10m",
-          "product:successActionButtonLabel": "Continue to MDN Plus",
-          "product:subtitle": "An MDN Premium Service",
-          "product:details:1": "Page notifications",
-          "product:details:2": "Collections of articles",
+          "product:successActionButtonLabel": "Doorgaan naar MDN Plus",
+          "product:subtitle": "Een MDN Premium-service",
+          "product:details:1": "Paginameldingen",
+          "product:details:2": "Verzamelingen artikelen",
           "product:details:3": "MDN offline"
         },
         "price_id": "price_1KqdulKb9q6OnNsLWgRvCo2X"
@@ -918,10 +1176,10 @@
           "capabilities:b6f5727337fefe8e": "mdn_plus_10y",
           "capabilities:e7bc284c2d3b4a90": "mdn_plus_10y",
           "capabilities:ed18cbc69ec23491": "mdn_plus_10y",
-          "product:successActionButtonLabel": "Continue to MDN Plus",
-          "product:subtitle": "An MDN Premium Service",
-          "product:details:1": "Page notifications",
-          "product:details:2": "Collections of articles",
+          "product:successActionButtonLabel": "Doorgaan naar MDN Plus",
+          "product:subtitle": "Een MDN Premium-service",
+          "product:details:1": "Paginameldingen",
+          "product:details:2": "Verzamelingen artikelen",
           "product:details:3": "MDN offline"
         },
         "price_id": "price_1KqdulKb9q6OnNsLnNtjAc1b"
@@ -1037,10 +1295,10 @@
           "capabilities:b6f5727337fefe8e": "mdn_plus_5m",
           "capabilities:e7bc284c2d3b4a90": "mdn_plus_5m",
           "capabilities:ed18cbc69ec23491": "mdn_plus_5m",
-          "product:successActionButtonLabel": "Continue to MDN Plus",
-          "product:subtitle": "An MDN Premium Service",
-          "product:details:1": "Page notifications",
-          "product:details:2": "Collections of articles",
+          "product:successActionButtonLabel": "Weiter zu MDN Plus",
+          "product:subtitle": "Ein MDN-Premium-Dienst",
+          "product:details:1": "Seitenbenachrichtigungen",
+          "product:details:2": "Artikelsammlung",
           "product:details:3": "MDN offline"
         },
         "price_id": "price_1KqdunKb9q6OnNsLMgnnIma0"
@@ -1060,10 +1318,10 @@
           "capabilities:b6f5727337fefe8e": "mdn_plus_5y",
           "capabilities:e7bc284c2d3b4a90": "mdn_plus_5y",
           "capabilities:ed18cbc69ec23491": "mdn_plus_5y",
-          "product:successActionButtonLabel": "Continue to MDN Plus",
-          "product:subtitle": "An MDN Premium Service",
-          "product:details:1": "Page notifications",
-          "product:details:2": "Collections of articles",
+          "product:successActionButtonLabel": "Weiter zu MDN Plus",
+          "product:subtitle": "Ein MDN-Premium-Dienst",
+          "product:details:1": "Seitenbenachrichtigungen",
+          "product:details:2": "Artikelsammlung",
           "product:details:3": "MDN offline"
         },
         "price_id": "price_1KqdunKb9q6OnNsLiF9qvEVf"
@@ -1083,10 +1341,10 @@
           "capabilities:b6f5727337fefe8e": "mdn_plus_10m",
           "capabilities:e7bc284c2d3b4a90": "mdn_plus_10m",
           "capabilities:ed18cbc69ec23491": "mdn_plus_10m",
-          "product:successActionButtonLabel": "Continue to MDN Plus",
-          "product:subtitle": "An MDN Premium Service",
-          "product:details:1": "Page notifications",
-          "product:details:2": "Collections of articles",
+          "product:successActionButtonLabel": "Weiter zu MDN Plus",
+          "product:subtitle": "Ein MDN-Premium-Dienst",
+          "product:details:1": "Seitenbenachrichtigungen",
+          "product:details:2": "Artikelsammlung",
           "product:details:3": "MDN offline"
         },
         "price_id": "price_1KqdunKb9q6OnNsLnaEHicOP"
@@ -1106,10 +1364,10 @@
           "capabilities:b6f5727337fefe8e": "mdn_plus_10y",
           "capabilities:e7bc284c2d3b4a90": "mdn_plus_10y",
           "capabilities:ed18cbc69ec23491": "mdn_plus_10y",
-          "product:successActionButtonLabel": "Continue to MDN Plus",
-          "product:subtitle": "An MDN Premium Service",
-          "product:details:1": "Page notifications",
-          "product:details:2": "Collections of articles",
+          "product:successActionButtonLabel": "Weiter zu MDN Plus",
+          "product:subtitle": "Ein MDN-Premium-Dienst",
+          "product:details:1": "Seitenbenachrichtigungen",
+          "product:details:2": "Artikelsammlung",
           "product:details:3": "MDN offline"
         },
         "price_id": "price_1KqduoKb9q6OnNsLQrxviGu0"
@@ -1131,11 +1389,11 @@
           "capabilities:b6f5727337fefe8e": "mdn_plus_5m",
           "capabilities:e7bc284c2d3b4a90": "mdn_plus_5m",
           "capabilities:ed18cbc69ec23491": "mdn_plus_5m",
-          "product:successActionButtonLabel": "Continue to MDN Plus",
-          "product:subtitle": "An MDN Premium Service",
-          "product:details:1": "Page notifications",
-          "product:details:2": "Collections of articles",
-          "product:details:3": "MDN offline"
+          "product:successActionButtonLabel": "Continuer vers MDN Plus",
+          "product:subtitle": "Un service MDN Premium",
+          "product:details:1": "Notifications de la page",
+          "product:details:2": "Collections d’articles",
+          "product:details:3": "MDN hors ligne"
         },
         "price_id": "price_1KqduoKb9q6OnNsLv4AoSQJg"
       },
@@ -1154,11 +1412,11 @@
           "capabilities:b6f5727337fefe8e": "mdn_plus_5y",
           "capabilities:e7bc284c2d3b4a90": "mdn_plus_5y",
           "capabilities:ed18cbc69ec23491": "mdn_plus_5y",
-          "product:successActionButtonLabel": "Continue to MDN Plus",
-          "product:subtitle": "An MDN Premium Service",
-          "product:details:1": "Page notifications",
-          "product:details:2": "Collections of articles",
-          "product:details:3": "MDN offline"
+          "product:successActionButtonLabel": "Continuer vers MDN Plus",
+          "product:subtitle": "Un service MDN Premium",
+          "product:details:1": "Notifications de la page",
+          "product:details:2": "Collections d’articles",
+          "product:details:3": "MDN hors ligne"
         },
         "price_id": "price_1KqduoKb9q6OnNsLf9iSMYIf"
       },
@@ -1177,11 +1435,11 @@
           "capabilities:b6f5727337fefe8e": "mdn_plus_10m",
           "capabilities:e7bc284c2d3b4a90": "mdn_plus_10m",
           "capabilities:ed18cbc69ec23491": "mdn_plus_10m",
-          "product:successActionButtonLabel": "Continue to MDN Plus",
-          "product:subtitle": "An MDN Premium Service",
-          "product:details:1": "Page notifications",
-          "product:details:2": "Collections of articles",
-          "product:details:3": "MDN offline"
+          "product:successActionButtonLabel": "Continuer vers MDN Plus",
+          "product:subtitle": "Un service MDN Premium",
+          "product:details:1": "Notifications de la page",
+          "product:details:2": "Collections d’articles",
+          "product:details:3": "MDN hors ligne"
         },
         "price_id": "price_1KqdupKb9q6OnNsLWiJvcYUp"
       },
@@ -1200,11 +1458,11 @@
           "capabilities:b6f5727337fefe8e": "mdn_plus_10y",
           "capabilities:e7bc284c2d3b4a90": "mdn_plus_10y",
           "capabilities:ed18cbc69ec23491": "mdn_plus_10y",
-          "product:successActionButtonLabel": "Continue to MDN Plus",
-          "product:subtitle": "An MDN Premium Service",
-          "product:details:1": "Page notifications",
-          "product:details:2": "Collections of articles",
-          "product:details:3": "MDN offline"
+          "product:successActionButtonLabel": "Continuer vers MDN Plus",
+          "product:subtitle": "Un service MDN Premium",
+          "product:details:1": "Notifications de la page",
+          "product:details:2": "Collections d’articles",
+          "product:details:3": "MDN hors ligne"
         },
         "price_id": "price_1KqdupKb9q6OnNsLcVJfbhL9"
       }
@@ -1225,10 +1483,10 @@
           "capabilities:b6f5727337fefe8e": "mdn_plus_5m",
           "capabilities:e7bc284c2d3b4a90": "mdn_plus_5m",
           "capabilities:ed18cbc69ec23491": "mdn_plus_5m",
-          "product:successActionButtonLabel": "Continue to MDN Plus",
-          "product:subtitle": "An MDN Premium Service",
-          "product:details:1": "Page notifications",
-          "product:details:2": "Collections of articles",
+          "product:successActionButtonLabel": "Prosegui su MDN Plus",
+          "product:subtitle": "Un servizio Premium MDN",
+          "product:details:1": "Notifiche delle pagine",
+          "product:details:2": "Raccolte di articoli",
           "product:details:3": "MDN offline"
         },
         "price_id": "price_1KqdupKb9q6OnNsL1TqMroUf"
@@ -1248,10 +1506,10 @@
           "capabilities:b6f5727337fefe8e": "mdn_plus_5y",
           "capabilities:e7bc284c2d3b4a90": "mdn_plus_5y",
           "capabilities:ed18cbc69ec23491": "mdn_plus_5y",
-          "product:successActionButtonLabel": "Continue to MDN Plus",
-          "product:subtitle": "An MDN Premium Service",
-          "product:details:1": "Page notifications",
-          "product:details:2": "Collections of articles",
+          "product:successActionButtonLabel": "Prosegui su MDN Plus",
+          "product:subtitle": "Un servizio Premium MDN",
+          "product:details:1": "Notifiche delle pagine",
+          "product:details:2": "Raccolte di articoli",
           "product:details:3": "MDN offline"
         },
         "price_id": "price_1KqduqKb9q6OnNsLhNwOl77S"
@@ -1271,10 +1529,10 @@
           "capabilities:b6f5727337fefe8e": "mdn_plus_10m",
           "capabilities:e7bc284c2d3b4a90": "mdn_plus_10m",
           "capabilities:ed18cbc69ec23491": "mdn_plus_10m",
-          "product:successActionButtonLabel": "Continue to MDN Plus",
-          "product:subtitle": "An MDN Premium Service",
-          "product:details:1": "Page notifications",
-          "product:details:2": "Collections of articles",
+          "product:successActionButtonLabel": "Prosegui su MDN Plus",
+          "product:subtitle": "Un servizio Premium MDN",
+          "product:details:1": "Notifiche delle pagine",
+          "product:details:2": "Raccolte di articoli",
           "product:details:3": "MDN offline"
         },
         "price_id": "price_1KqduqKb9q6OnNsLZ9yMm4To"
@@ -1294,10 +1552,10 @@
           "capabilities:b6f5727337fefe8e": "mdn_plus_10y",
           "capabilities:e7bc284c2d3b4a90": "mdn_plus_10y",
           "capabilities:ed18cbc69ec23491": "mdn_plus_10y",
-          "product:successActionButtonLabel": "Continue to MDN Plus",
-          "product:subtitle": "An MDN Premium Service",
-          "product:details:1": "Page notifications",
-          "product:details:2": "Collections of articles",
+          "product:successActionButtonLabel": "Prosegui su MDN Plus",
+          "product:subtitle": "Un servizio Premium MDN",
+          "product:details:1": "Notifiche delle pagine",
+          "product:details:2": "Raccolte di articoli",
           "product:details:3": "MDN offline"
         },
         "price_id": "price_1KqdurKb9q6OnNsLUOz4fnk3"
