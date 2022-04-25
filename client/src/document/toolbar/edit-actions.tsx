@@ -1,16 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { CRUD_MODE_HOSTNAMES } from "../../constants";
+import { Source } from "../types";
 
 import "./edit-actions.scss";
 
-export function EditActions({
-  folder,
-  filename,
-}: {
-  folder: string;
-  filename: string;
-}) {
+export function EditActions({ source }: { source: Source }) {
+  const { folder, filename, github_url } = source;
+
   const [opening, setOpening] = useState(false);
   const [editorOpeningError, setEditorOpeningError] = useState<Error | null>(
     null
@@ -86,6 +83,20 @@ export function EditActions({
           View on MDN
         </a>
       </li>
+
+      {!isReadOnly && (
+        <li>
+          <a
+            href={github_url.replace("/blob/", "/edit/")}
+            className="button"
+            title={`You're going to need to sign in to GitHub first (Opens in a new tab)`}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Edit on <b>GitHub</b>
+          </a>
+        </li>
+      )}
 
       {editorOpeningError ? (
         <p className="error-message editor-opening-error">
