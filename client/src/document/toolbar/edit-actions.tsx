@@ -89,7 +89,6 @@ export function EditActions({ source }: { source: Source }) {
           <a
             href={github_url.replace("/blob/", "/edit/")}
             className="button"
-            title={`You're going to need to sign in to GitHub first (Opens in a new tab)`}
             target="_blank"
             rel="noopener noreferrer"
           >
