@@ -4,17 +4,18 @@ This document provides information on how to review changes to the Yari repo.
 
 ## Before you start
 
-Set up the Yari repo and the corresponding [content repo](https://github.com/mdn/content)
-locally, as described in the [Yari quickstart](../README.md#quickstart) guide. Once
-you've got them successfully set up, run the `yarn` and `yarn dev` commands to
-update your fork with the latest packages and start the MDN test server running
-locally on `localhost:3000`.
+Set up the Yari repo and the corresponding
+[content repo](https://github.com/mdn/content) locally, as described in the
+[Yari quickstart](../README.md#quickstart) guide. Once you've got them
+successfully set up, run the `yarn` and `yarn dev` commands to update your fork
+with the latest packages and start the MDN test server running locally on
+`localhost:3000`.
 
-`yarn dev` is slower to execute than `yarn start` but it makes sure `client/build/`
-is clean, and it also reloads the SSR part of the site (it does a fresh `webpack`
-build). This might matter after you've run `git pull` & `yarn`, since certain
-packages might be upgraded and it's always good to
-test with a clean, up-to-date build.
+`yarn dev` is slower to execute than `yarn start` but it makes sure
+`client/build/` is clean, and it also reloads the SSR part of the site (it does
+a fresh `webpack` build). This might matter after you've run `git pull` &
+`yarn`, since certain packages might be upgraded and it's always good to test
+with a clean, up-to-date build.
 
 Make sure you set the `CONTENT_ROOT` environment variable to an absolute path to
 the `content` repo `files` subdirectory before running `yarn dev`, so Yari can
@@ -47,17 +48,17 @@ When you are tasked with reviewing a Yari pull request:
 
 ## Testing KumaScript macro changes
 
-The legacy [KumaScript](https://developer.mozilla.org/en-US/docs/MDN/Tools/KumaScript)
+The legacy
+[KumaScript](https://developer.mozilla.org/en-US/docs/MDN/Tools/KumaScript)
 macro system is available inside the yari repo in the
 [kumascript](https://github.com/mdn/yari/tree/main/kumascript) subdirectory.
 
 Testing changes to KumaScript macros — whether you are making your own change or
-reviewing someone
-else's — is super easy with Yari. Once you have the development server running
-as described above, you can load up an MDN page that contains the appropriate
-macro call and see if it works.
+reviewing someone else's — is super easy with Yari. Once you have the
+development server running as described above, you can load up an MDN page that
+contains the appropriate macro call and see if it works.
 
 If you need to update a macro, you can make a change to the relevant `.ejs` file
-(see the [macros](https://github.com/mdn/yari/tree/main/kumascript/macros) subdirectory),
-save it, and reload the page in your browser to see the change in action
-immediately.
+(see the [macros](https://github.com/mdn/yari/tree/main/kumascript/macros)
+subdirectory), save it, and reload the page in your browser to see the change in
+action immediately.
