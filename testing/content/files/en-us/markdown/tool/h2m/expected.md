@@ -14,7 +14,8 @@ Nothing to say, really.
 
 Basic formatting such as **bold** and _emphasis_.
 
-Here's a section that simply mentions links like <https://www.peterbe.com> for example.
+Here's a section that simply mentions links like <https://www.peterbe.com> for
+example.
 
 ### Heading 3
 
