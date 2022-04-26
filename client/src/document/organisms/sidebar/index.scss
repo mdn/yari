@@ -74,7 +74,7 @@
     display: flex;
     overflow: auto;
     position: sticky;
-    top: var(--top-navigation-height);
+    top: var(--sticky-header-height);
     max-height: 100vh;
   }
 

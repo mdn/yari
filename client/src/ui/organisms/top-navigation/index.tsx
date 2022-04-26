@@ -29,10 +29,8 @@ export function TopNavigation() {
   const transparent = TRANSPARENT_NAV_ROUTES.some((r) => route.match(r));
 
   return (
-    <header
-      className={`main-document-header-container top-navigation ${
-        showMainMenu ? "show-nav" : ""
-      }
+    <div
+      className={`top-navigation ${showMainMenu ? "show-nav" : ""}
       ${dark ? " dark" : ""}
       ${transparent ? " is-transparent" : ""}`}
     >
@@ -55,6 +53,6 @@ export function TopNavigation() {
 
         <TopNavigationMain isOpenOnMobile={showMainMenu} />
       </Container>
-    </header>
+    </div>
   );
 }

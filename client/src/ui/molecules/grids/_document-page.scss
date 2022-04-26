@@ -66,7 +66,7 @@
       grid-area: toc;
       max-height: 100vh;
       position: sticky;
-      top: var(--top-navigation-height);
+      top: var(--sticky-header-height);
     }
 
     .in-nav-toc {

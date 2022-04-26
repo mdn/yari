@@ -38,6 +38,7 @@ import "./index.scss";
 // code could come with its own styling rather than it having to be part of the
 // main bundle all the time.
 import "./interactive-examples.scss";
+import { MainHeader } from "../ui/organisms/main-header";
 // import { useUIStatus } from "../ui-context";
 
 // Lazy sub-components
@@ -173,10 +174,10 @@ export function Document(props /* TODO: define a TS interface for this */) {
 
   return (
     <>
-      <div className="main-document-header-container">
+      <MainHeader>
         <TopNavigation />
         <ArticleActionsContainer doc={doc} />
-      </div>
+      </MainHeader>
       {/* only include this if we are not server-side rendering */}
       {!isServer && <OfflineStatusBar />}
       {doc.isTranslated ? (

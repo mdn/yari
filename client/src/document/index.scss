@@ -8,12 +8,6 @@
   --sticky-header-height: var(--main-document-header-height);
 }
 
-.main-document-header-container {
-  position: sticky;
-  top: 0;
-  z-index: var(--z-index-top);
-}
-
 .main-page-content {
   padding: 3rem 1rem 1rem;
   overflow-wrap: break-word;
