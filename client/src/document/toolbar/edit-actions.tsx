@@ -1,17 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { Link, useLocation, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { CRUD_MODE_HOSTNAMES } from "../../constants";
+import { Source } from "../types";
 
 import "./edit-actions.scss";
 
-export function EditActions({
-  folder,
-  filename,
-}: {
-  folder: string;
-  filename: string;
-}) {
-  const location = useLocation();
+export function EditActions({ source }: { source: Source }) {
+  const { folder, filename, github_url } = source;
 
   const [opening, setOpening] = useState(false);
   const [editorOpeningError, setEditorOpeningError] = useState<Error | null>(
@@ -91,12 +86,13 @@ export function EditActions({
 
       {!isReadOnly && (
         <li>
-          <Link
-            to={location.pathname.replace("/docs/", "/_edit/")}
+          <a
+            href={github_url.replace("/blob/", "/edit/")}
             className="button"
+            rel="noopener noreferrer"
           >
-            Quick-edit
-          </Link>
+            Edit on <b>GitHub</b>
+          </a>
         </li>
       )}
 
