@@ -5,6 +5,12 @@
       "options": {
         "plugins": ["prettier-plugin-packagejson"]
       }
+    },
+    {
+      "files": ["**/*.md"],
+      "options": {
+        "proseWrap": "always"
+      }
     }
   ]
 }
