@@ -53,7 +53,7 @@
     }
   }
 
-  @media screen and (min-width: $screen-lg) {
+  @media screen and (min-width: $screen-xl) {
     display: grid;
     grid-template-columns: minmax(0, 1fr) minmax(0, 2.5fr) minmax(0, 15rem);
     gap: 3rem;
