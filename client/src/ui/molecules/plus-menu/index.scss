@@ -6,7 +6,7 @@
     background-color: var(--plus-accent-color);
   }
 
-  @media screen and (min-width: $screen-md) {
+  @media screen and (min-width: $screen-lg) {
     .mobile-only {
       display: none;
     }

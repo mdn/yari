@@ -44,7 +44,7 @@
     }
   }
 
-  @media screen and (min-width: $screen-md) {
+  @media screen and (min-width: $screen-lg) {
     background-color: var(--background-secondary);
     border-radius: var(--elem-radius);
     border: 1px solid var(--border-primary);
@@ -93,7 +93,7 @@
     background: none;
   }
 
-  @media screen and (min-width: $screen-md) {
+  @media screen and (min-width: $screen-lg) {
     border-bottom: 1px solid var(--border-primary);
   }
 }
@@ -110,7 +110,7 @@
 .submenu-item {
   font-size: var(--type-smaller-font-size);
 
-  @media screen and (min-width: $screen-md) {
+  @media screen and (min-width: $screen-lg) {
     // If there is sub-text associated with this heading, make it bold.
     &:not(:only-child) {
       font-weight: var(--font-body-strong-weight);
@@ -121,7 +121,7 @@
 .submenu-item-description {
   display: none;
 
-  @media screen and (min-width: $screen-md) {
+  @media screen and (min-width: $screen-lg) {
     display: block;
     margin: 0.25rem 0 0 0;
     font-size: var(--type-tiny-font-size);
