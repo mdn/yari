@@ -89,7 +89,6 @@ export function EditActions({ source }: { source: Source }) {
           <a
             href={github_url.replace("/blob/", "/edit/")}
             className="button"
-            target="_blank"
             rel="noopener noreferrer"
           >
             Edit on <b>GitHub</b>
