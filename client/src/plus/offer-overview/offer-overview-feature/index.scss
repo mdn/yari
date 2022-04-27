@@ -18,7 +18,7 @@
     justify-content: space-between;
     margin: 0 auto;
 
-    @media screen and (min-width: $screen-lg) {
+    @media screen and (min-width: $screen-xl) {
       flex-direction: row;
     }
 
@@ -35,7 +35,7 @@
       border-radius: 1rem;
       max-width: 25rem;
       height: 100%;
-      @media screen and (min-width: $screen-lg) {
+      @media screen and (min-width: $screen-xl) {
         max-width: min(50%, 20rem);
       }
     }
@@ -63,7 +63,7 @@
       align-items: center;
       max-width: 40rem;
 
-      @media screen and (min-width: $screen-lg) {
+      @media screen and (min-width: $screen-xl) {
         text-align: initial;
         align-items: initial;
         height: 100%;
@@ -76,7 +76,7 @@
 .offer-overview-feature:nth-child(even) {
   .wrapper {
     flex-direction: column;
-    @media screen and (min-width: $screen-lg) {
+    @media screen and (min-width: $screen-xl) {
       flex-direction: row;
     }
   }
@@ -85,7 +85,7 @@
   background: var(--background-secondary);
   .wrapper {
     flex-direction: column;
-    @media screen and (min-width: $screen-lg) {
+    @media screen and (min-width: $screen-xl) {
       flex-direction: row-reverse;
     }
   }
