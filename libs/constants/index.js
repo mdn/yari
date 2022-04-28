@@ -83,7 +83,14 @@ const scriptSrcValues = [
   "assets.codepen.io",
   "production-assets.codepen.io",
 
-  "'sha256-x6Tv+AdV5e6dcolO0TEo+3BG4H2nG2ACjyG8mz6QCes='", // inline no flicker
+  /**
+   * If we modify the inline script in `client/public/index.html`,
+   * we must always update the CSP hash (see instructions there).
+   */
+  // - Previous hash (to avoid cache invalidation issues):
+  "'sha256-x6Tv+AdV5e6dcolO0TEo+3BG4H2nG2ACjyG8mz6QCes='",
+  // - Current hash:
+  "'sha256-GA8+DpFnqAM/vwERTpb5zyLUaN5KnOhctfTsqWfhaUA='",
 ];
 const CSP_DIRECTIVES = {
   "default-src": ["'self'"],
