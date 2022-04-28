@@ -3,7 +3,7 @@ These functions are more-or-less verbatim from https://github.com/syntax-tree/md
 Unfortunately the module was not exporting them, so they needed to be copied.
  */
 
-import u from "unist-builder";
+import { u } from "unist-builder";
 
 function text(node) {
   const data = node.data || {};

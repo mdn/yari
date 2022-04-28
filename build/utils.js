@@ -3,7 +3,7 @@ import path from "path";
 
 import cheerio from "cheerio";
 import got from "got"; // eslint-disable-line node/no-missing-import
-import FileType from "file-type";
+import { fileTypeFromBuffer } from "file-type";
 import imagemin from "imagemin";
 import imageminPngquant from "imagemin-pngquant";
 import imageminMozjpeg from "imagemin-mozjpeg";
@@ -11,7 +11,7 @@ import imageminGifsicle from "imagemin-gifsicle";
 import imageminSvgo from "imagemin-svgo";
 import sanitizeFilename from "sanitize-filename";
 
-import { VALID_MIME_TYPES } from "../filecheck/constants";
+import { VALID_MIME_TYPES } from "../filecheck/constants.js";
 
 function humanFileSize(size) {
   if (size < 1024) return `${size} B`;
@@ -48,7 +48,7 @@ async function downloadAndResizeImage(src, out, basePath) {
     retry: 3,
   });
   const imageBuffer = imageResponse.body;
-  let fileType = await FileType.fromBuffer(imageBuffer);
+  let fileType = await fileTypeFromBuffer(imageBuffer);
   if (
     !fileType &&
     src.toLowerCase().endsWith(".svg") &&

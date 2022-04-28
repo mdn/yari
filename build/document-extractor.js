@@ -4,7 +4,8 @@ import { createRequire } from "module";
 
 const require = createRequire(import.meta.url);
 const specs = require("browser-specs");
-const web = require("../kumascript/src/api/web.js");
+
+import web from "../kumascript/src/api/web.js";
 
 /** Extract and mutate the $ if it as a "Quick_links" section.
  * But only if it exists.

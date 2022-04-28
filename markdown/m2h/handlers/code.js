@@ -1,4 +1,4 @@
-import u from "unist-builder";
+import { u } from "unist-builder";
 
 /**
  * Transform a markdown code block into a <pre>.
