@@ -452,7 +452,7 @@
     "@babel/helper-create-class-features-plugin" "^7.17.12"
     "@babel/helper-plugin-utils" "^7.17.12"
 
-"@babel/plugin-proposal-private-property-in-object@^7.17.12":
+"@babel/plugin-proposal-private-property-in-object@^7.16.7", "@babel/plugin-proposal-private-property-in-object@^7.17.12":
   version "7.17.12"
   resolved "https://registry.yarnpkg.com/@babel/plugin-proposal-private-property-in-object/-/plugin-proposal-private-property-in-object-7.17.12.tgz#b02efb7f106d544667d91ae97405a9fd8c93952d"
   integrity sha512-/6BtVi57CJfrtDNKfK5b66ydK2J5pXUKBKSPD2G1whamMuEnZWgoOIfO8Vf9F/DoD4izBLD/Au4NMQfruzzykg==
