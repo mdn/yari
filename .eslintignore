@@ -1,5 +1,6 @@
 *.min.js
 client/build/
+deployer/aws-lambda/
 dist/
 ssr/dist/
 libs/
