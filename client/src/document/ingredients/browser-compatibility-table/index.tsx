@@ -128,7 +128,10 @@ export default function BrowserCompatibilityTable({
   function getNewIssueURL() {
     const url = "https://github.com/mdn/browser-compat-data/issues/new";
     const sp = new URLSearchParams();
-    const metadata = ISSUE_METADATA_TEMPLATE.replace(/\$DATE/g, new Date().toISOString())
+    const metadata = ISSUE_METADATA_TEMPLATE.replace(
+      /\$DATE/g,
+      new Date().toISOString()
+    )
       .replace(/\$QUERY_ID/g, query)
       .trim();
     sp.set("mdn-url", `https://developer.mozilla.org${location.pathname}`);
