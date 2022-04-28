@@ -324,7 +324,6 @@ body,
   --color-announcement-banner-accent: #{$mdn-color-light-theme-pink-40};
 }
 
-:root,
 .light {
   @include light-theme;
 }
@@ -333,14 +332,13 @@ body,
   @include dark-theme;
 }
 
-@media (prefers-color-scheme: light) {
-  :root {
+// OS Default.
+:root:not(.light, .dark) {
+  @media (prefers-color-scheme: light) {
     @include light-theme;
   }
-}
 
-@media (prefers-color-scheme: dark) {
-  :root {
+  @media (prefers-color-scheme: dark) {
     @include dark-theme;
   }
 }
