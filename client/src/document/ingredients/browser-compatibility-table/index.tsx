@@ -13,22 +13,12 @@ import { listFeatures } from "./utils";
 
 // This string is used to prefill the body when clicking to file a new BCD
 // issue over on github.com/mdn/browser-compat-data
-const NEW_ISSUE_TEMPLATE = `
-<!-- Tips: where applicable, specify browser name, browser version, and mobile operating system version -->
-
-#### What information was incorrect, unhelpful, or incomplete?
-
-#### What did you expect to see?
-
-#### Did you test this? If so, how?
-
-
+const ISSUE_METADATA_TEMPLATE = `
 <!-- Do not make changes below this line -->
 <details>
 <summary>MDN page report details</summary>
 
 * Query: \`$QUERY_ID\`
-* MDN URL: https://developer.mozilla.org$PATHNAME
 * Report started: $DATE
 
 </details>
@@ -138,12 +128,16 @@ export default function BrowserCompatibilityTable({
   function getNewIssueURL() {
     const url = "https://github.com/mdn/browser-compat-data/issues/new";
     const sp = new URLSearchParams();
-    const body = NEW_ISSUE_TEMPLATE.replace(/\$PATHNAME/g, location.pathname)
-      .replace(/\$DATE/g, new Date().toISOString())
+    const metadata = ISSUE_METADATA_TEMPLATE.replace(
+      /\$DATE/g,
+      new Date().toISOString()
+    )
       .replace(/\$QUERY_ID/g, query)
       .trim();
-    sp.set("body", body);
-    sp.set("title", `${query} - <PUT TITLE HERE>`);
+    sp.set("mdn-url", `https://developer.mozilla.org${location.pathname}`);
+    sp.set("metadata", metadata);
+    sp.set("title", `${query} - <SUMMARIZE THE PROBLEM>`);
+    sp.set("template", "data-problem.yml");
     return `${url}?${sp.toString()}`;
   }
 
