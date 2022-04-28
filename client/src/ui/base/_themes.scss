@@ -3,6 +3,8 @@
 @use "../color-palette" as *;
 
 @mixin light-theme {
+  color-scheme: light;
+
   --text-primary: #{$mdn-theme-light-text-primary};
   --text-secondary: #{$mdn-theme-light-text-secondary};
   --text-inactive: #{$mdn-theme-light-text-inactive};
@@ -181,6 +183,8 @@
 }
 
 @mixin dark-theme {
+  color-scheme: dark;
+
   --text-primary: #{$mdn-theme-dark-text-primary};
   --text-secondary: #{$mdn-theme-dark-text-secondary};
   --text-inactive: #{$mdn-theme-dark-text-inactive};
