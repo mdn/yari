@@ -93,8 +93,8 @@ function PlusLaunchAnnouncementBanner({
           <a href={plusUrl} className="mdn-plus">
             MDN Plus
           </a>{" "}
-          now available in <em>your</em> market! Support MDN <em>and</em> make
-          it your own.{" "}
+          now available in <span className="underlined">your</span> country!
+          Support MDN <span className="underlined">and</span> make it your own.{" "}
           <a
             href="https://hacks.mozilla.org/2022/04/mdn-plus-now-available-in-more-markets"
             target="_blank"
