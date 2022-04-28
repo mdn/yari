@@ -87,7 +87,7 @@
     }
   }
 
-  @media screen and (min-width: $screen-md) {
+  @media screen and (min-width: $screen-lg) {
     > .button {
       .button-wrap:after {
         content: unset;
