@@ -161,18 +161,6 @@
       $alpha: -0.3
     )};
 
-  --homepage-hero-bg: radial-gradient(
-    114.42% 123.24% at 6.69% 13.67%,
-    rgba(51, 178, 252, 0.2) 22.84%,
-    rgba(152, 82, 250, 0.2) 47.63%,
-    rgba(255, 230, 0, 0.2) 82.74%
-  );
-  --homepage-secondary-bg: linear-gradient(
-    90deg,
-    #8524ff -43.99%,
-    #4d7fff 159.52%
-  );
-
   --modal-backdrop-color: #{rgba($mdn-theme-dark-background-primary, 0.1)};
   --blend-color: #{$mdn-color-white}80;
 
