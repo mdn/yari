@@ -1,7 +1,7 @@
 @use "../../vars" as *;
 @use "../../base/typography" as *;
 
-@mixin inline-submenu {
+@mixin not-inline-submenu {
   background-color: var(--background-secondary);
   border-radius: var(--elem-radius);
   border: 1px solid var(--border-primary);
@@ -82,13 +82,13 @@
 
   &.inline-submenu-lg {
     @media screen and (min-width: $screen-lg) {
-      @include inline-submenu();
+      @include not-inline-submenu();
     }
   }
 
   &:not(.inline-submenu-lg) {
     @media screen and (min-width: $screen-md) {
-      @include inline-submenu();
+      @include not-inline-submenu();
     }
   }
 }
