@@ -10,7 +10,7 @@ import {
   CONTRIBUTOR_SPOTLIGHT_ROOT,
   VALID_LOCALES,
 } from "../content/index.js";
-import { BUILD_OUT_ROOT } from "./constants/index.js";
+import { BUILD_OUT_ROOT } from "./constants.js";
 import { renderHTML } from "../ssr/dist/main.js";
 // eslint-disable-next-line node/no-missing-import
 import { default as got } from "got";
