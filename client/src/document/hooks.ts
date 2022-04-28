@@ -304,6 +304,11 @@ export function useFirstVisibleElement(
   }, [stickyHeaderHeight]);
 
   useEffect(() => {
+    if (typeof IntersectionObserver === "undefined") {
+      // SSR or old browser.
+      return;
+    }
+
     const observedElements = observedElementsProvider();
     const visibilityByElement = new Map<Element, boolean>();
 
