@@ -1,4 +1,4 @@
-import got from "got";
+import got from "got"; // eslint-disable-line node/no-missing-import
 import braces from "braces";
 
 function serverURL(pathname = "/") {

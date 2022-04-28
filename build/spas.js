@@ -12,8 +12,7 @@ import {
 } from "../content/index.js";
 import { BUILD_OUT_ROOT } from "./constants.js";
 import { renderHTML } from "../ssr/dist/main.js";
-// eslint-disable-next-line node/no-missing-import
-import { default as got } from "got";
+import got from "got"; // eslint-disable-line node/no-missing-import
 import { splitSections } from "./utils.js";
 import cheerio from "cheerio";
 import { findByURL } from "../content/document.js";

@@ -2,8 +2,7 @@ import fs from "fs";
 import path from "path";
 
 import cheerio from "cheerio";
-// eslint-disable-next-line node/no-missing-import
-import got from "got";
+import got from "got"; // eslint-disable-line node/no-missing-import
 import FileType from "file-type";
 import imagemin from "imagemin";
 import imageminPngquant from "imagemin-pngquant";

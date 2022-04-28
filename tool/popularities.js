@@ -12,8 +12,7 @@
 import fs from "fs";
 
 import csv from "@fast-csv/parse";
-// eslint-disable-next-line node/no-missing-import
-import got from "got";
+import got from "got"; // eslint-disable-line node/no-missing-import
 
 const CURRENT_URL =
   "https://mdn-popularities-prod.s3.amazonaws.com/current.txt";

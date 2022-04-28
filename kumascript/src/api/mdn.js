@@ -1,5 +1,4 @@
-// eslint-disable-next-line node/no-missing-import
-import got from "got";
+import got from "got"; // eslint-disable-line node/no-missing-import
 import * as util from "./util.js";
 
 // Module level caching for repeat calls to fetchWebExtExamples().

@@ -1,5 +1,5 @@
 import { test, expect } from "@playwright/test";
-import got from "got";
+import got from "got"; // eslint-disable-line node/no-missing-import
 
 const DEV_BASE_URL =
   process.env.DEVELOPING_DEV_BASE_URL || "http://localhost:3000";

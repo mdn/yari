@@ -1,5 +1,5 @@
 // eslint-disable-next-line node/no-unpublished-import
-import got from "got";
+import got from "got"; // eslint-disable-line node/no-missing-import
 
 const BASE_URL = process.env.SERVER_BASE_URL || "http://localhost:7000";
 
