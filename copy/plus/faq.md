@@ -93,7 +93,7 @@ Malaysia, New Zealand and Singapore.
 ## I have an idea for MDN Plus, who should I contact?
 
 In case you have an idea you would like to share about MDN Plus, you can add
-your suggestions to our [MDN-feedback](https://github.com/mdn/MDN-feedback)
+your suggestions to our [mdn-community](https://github.com/mdn/mdn-community)
 repo.
 
 If a subscriber, you can also leave us feedback by accessing the ‘Feedback’
