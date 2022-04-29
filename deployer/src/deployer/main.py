@@ -10,6 +10,7 @@ from .constants import (
     DEFAULT_BUCKET_NAME,
     DEFAULT_BUCKET_PREFIX,
     DEFAULT_CACHE_CONTROL,
+    DEFAULT_DISTRIBUTION_ID,
     DEFAULT_NO_PROGRESSBAR,
     DEFAULT_REPO,
     DEFAULT_GITHUB_TOKEN,
@@ -17,7 +18,10 @@ from .constants import (
     SPEEDCURVE_DEPLOY_SITE_ID,
     ELASTICSEARCH_URL,
 )
-from .update_lambda_functions import update_all
+from .update_lambda_functions import (
+    update_all as update_lambdas,
+    deploy as deploy_lambdas,
+)
 from .upload import upload_content
 from .utils import log
 from .whatsdeployed import dump as dump_whatsdeployed
@@ -81,6 +85,12 @@ def cli(ctx, **kwargs):
 
 
 @cli.command()
+@click.option(
+    "--distribution",
+    help="Id of the CloudFront distribution",
+    default=DEFAULT_DISTRIBUTION_ID,
+    show_default=True,
+)
 @click.argument(
     "directory",
     type=click.Path(),
@@ -88,9 +98,12 @@ def cli(ctx, **kwargs):
     default="aws-lambda",
 )
 @click.pass_context
-def update_lambda_functions(ctx, directory):
+def update_lambda_functions(ctx, directory, distribution):
     log.info(f"Deployer ({__version__})", bold=True)
-    update_all(directory, dry_run=ctx.obj["dry_run"])
+    dry_run = ctx.obj["dry_run"]
+
+    updated_functions = update_lambdas(directory, dry_run=dry_run)
+    deploy_lambdas(updated_functions, distribution, dry_run=dry_run)
 
 
 @cli.command(
