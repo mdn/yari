@@ -62,7 +62,7 @@ def make_package(lambda_function_dir):
         )
 
 
-def update(lambda_function_dir, dry_run=False):
+def update(lambda_function_dir, dry_run=False, force=False):
     zip_filename = make_package(lambda_function_dir)
     function_name, region_name = get_aws_info(lambda_function_dir)
     client = boto3.client("lambda", region_name=region_name)
@@ -71,7 +71,7 @@ def update(lambda_function_dir, dry_run=False):
     function_hash = function_info["Configuration"]["CodeSha256"]
     zip_file_bytes = zip_filename.read_bytes()
     # If nothing has changed, don't do anything.
-    if get_sha256_hash(zip_file_bytes) != function_hash:
+    if force or get_sha256_hash(zip_file_bytes) != function_hash:
         if dry_run:
             # If this is a dry run, just return the existing function info.
             return function_info["Configuration"]
