@@ -138,9 +138,10 @@ function renderNode(name, node) {
         return span;
       } else {
         // the slug does not include the angle brackets
-        let stripped = name.replaceAll('<', '');
-        stripped = stripped.replaceAll('>', '');
-        return `<a href="/${locale}/docs/Web/CSS/${stripped}">${span}</a>`;
+        let slug = name.replaceAll('<', '');
+        slug = slug.replaceAll('>', '');
+        slug = slug.replace(/\[.*\]/, '')
+        return `<a href="/${locale}/docs/Web/CSS/${slug}">${span}</a>`;
       }
     }
     case 'Multiplier': {
