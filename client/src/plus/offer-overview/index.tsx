@@ -136,12 +136,10 @@ function OfferOverview() {
   }>(null);
 
   const { isOnline } = useOnlineStatus();
-  const [plansLoading, setPlansLoading] = useState(false);
 
   useEffect(() => {
     (async () => {
       if (ENABLE_PLUS_EU && isOnline) {
-        setPlansLoading(true);
         try {
           const plans: StripePlans = await getStripePlans();
           setOfferDetails(getLocalizedPlans(plans));
@@ -149,7 +147,6 @@ function OfferOverview() {
           //Paid subs Not supported by region just display Free subscription
           setOfferDetails({ CORE: CORE, PLUS_5: null, PLUS_10: null });
         }
-        setPlansLoading(false);
       }
     })();
   }, [isOnline]);
@@ -157,7 +154,6 @@ function OfferOverview() {
   return (
     <div className="offer-overview">
       <OfferHero
-        isLoading={plansLoading}
         currency={offerDetails?.PLUS_5?.currency || ""}
         plusAvailable={plusAvailable}
       />

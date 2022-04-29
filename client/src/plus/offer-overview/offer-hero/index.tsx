@@ -3,11 +3,9 @@ import Mandala from "../../../ui/molecules/mandala";
 import "./index.scss";
 
 function OfferHero({
-  isLoading,
   currency,
   plusAvailable,
 }: {
-  isLoading: boolean;
   currency: string;
   plusAvailable: boolean;
 }) {
@@ -15,7 +13,7 @@ function OfferHero({
   let container;
 
   //No currency, Pricing info still loading.Display spinner
-  if (isLoading) {
+  if (!currency) {
     container = (
       <>
         <div className="cash-container">
@@ -27,18 +25,10 @@ function OfferHero({
       </>
     );
   } else {
-    if (currency) {
-      container = new Intl.NumberFormat("en-US", {
-        style: "currency",
-        currency: currency,
-      }).format(5);
-    } else {
-      //Fallback to USD.
-      container = new Intl.NumberFormat("en-US", {
-        style: "currency",
-        currency: "USD",
-      }).format(5);
-    }
+    container = new Intl.NumberFormat("en-US", {
+      style: "currency",
+      currency: currency,
+    }).format(5);
   }
 
   return (
