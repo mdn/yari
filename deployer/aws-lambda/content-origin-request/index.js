@@ -33,6 +33,8 @@ const LEGACY_URI_NEEDING_TRAILING_SLASH = new RegExp(
 
 const CONTENT_DEVELOPMENT_DOMAIN = ".content.dev.mdn.mozit.cloud";
 
+const REDIRECTS = require("./redirects.json");
+
 function redirect(location, { status = 302, cacheControlSeconds = 0 } = {}) {
   /*
    * Create and return a redirect response.
@@ -134,6 +136,11 @@ exports.handler = async (event) => {
     // The only time we actually want a trailing slash is when the URL is just
     // the locale. E.g. `/en-US/` (not `/en-US`)
     return redirect(`/${locale}${path || "/"}` + qs);
+  }
+
+  // Redirect moved pages (see `_redirects.txt` in content/translated-content).
+  if (typeof REDIRECTS[requestURILowerCase] == "string") {
+    return redirect(REDIRECTS[requestURILowerCase]);
   }
 
   // At this point, the URI is guaranteed to start with a forward slash.
