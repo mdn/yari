@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useCombobox } from "downshift";
 import useSWR from "swr";
 
@@ -358,11 +358,23 @@ function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
               index: 0,
             })}
           >
-            No document titles found.
-            <br />
-            <Link to={searchPath}>
+            <a
+              href={searchPath}
+              onClick={(event: React.MouseEvent) => {
+                if (event.ctrlKey || event.metaKey) {
+                  // Open in new tab, don't navigate current tab.
+                  event.stopPropagation();
+                } else {
+                  // Open in same tab, navigate via combobox.
+                  event.preventDefault();
+                }
+              }}
+              tabIndex={-1}
+            >
+              No document titles found.
+              <br />
               Site search for <code>{inputValue}</code>
-            </Link>
+            </a>
           </div>
         ) : (
           [
@@ -404,11 +416,23 @@ function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
                 index: resultItems.length,
               })}
             >
-              Not seeing what you're searching for?
-              <br />
-              <Link to={searchPath}>
+              <a
+                href={searchPath}
+                onClick={(event: React.MouseEvent) => {
+                  if (event.ctrlKey || event.metaKey) {
+                    // Open in new tab, don't navigate current tab.
+                    event.stopPropagation();
+                  } else {
+                    // Open in same tab, navigate via combobox.
+                    event.preventDefault();
+                  }
+                }}
+                tabIndex={-1}
+              >
+                Not seeing what you're searching for?
+                <br />
                 Site search for <code>{inputValue}</code>
-              </Link>
+              </a>
             </div>,
           ]
         )}
