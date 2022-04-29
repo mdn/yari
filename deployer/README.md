@@ -307,6 +307,7 @@ poetry install
 That should have installed the CLI:
 
 ```sh
+cd deployer
 poetry run deployer --help
 ```
 
@@ -316,11 +317,13 @@ If you want to make a PR, make sure it's formatted with `black` and passes
 You can check that all files are `flake8` fine by running:
 
 ```sh
-flake8 deployer
+cd deployer
+poetry run flake8 .
 ```
 
-And to check that all files are formatted according to `black` run:
+And to format all files with `black` run:
 
 ```sh
-black --check deployer
+cd deployer
+poetry run black deployer
 ```
