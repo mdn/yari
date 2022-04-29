@@ -43,7 +43,7 @@ $text-stroke-width: 2px;
 
       h2 {
         width: 100%;
-        font: var(--type-heading-h4);
+        font: var(--type-heading-h3);
       }
 
       .button-wrapper {
@@ -87,31 +87,6 @@ $text-stroke-width: 2px;
       }
     }
   }
-
-  .cash-container {
-    width: 1.2rem;
-    border-top: 3px solid rgba(0, 0, 0, 0.1);
-    height: 1.4rem;
-    overflow: hidden;
-    display: inline-block;
-
-    .cash-spinner {
-      /* animation properties */
-      transform: translateY(100%);
-      animation: spin-up 2.2s linear infinite;
-    }
-  }
-
-  @keyframes spin-up {
-    from {
-      transform: translate(0, calc(var(--font-size) * -1));
-    }
-
-    to {
-      transform: translateY(-98%);
-    }
-  }
-
   .mandala-wrapper {
     grid-column: 1;
     grid-row: 1;
@@ -124,7 +99,6 @@ $text-stroke-width: 2px;
 
     .mandala-translate {
       transform: translate(10rem, -8rem) scale(1.2);
-
       @media screen and (min-width: $screen-sm) {
         transform: translate(12rem, -8rem);
       }

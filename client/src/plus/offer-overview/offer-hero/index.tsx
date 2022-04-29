@@ -2,45 +2,8 @@ import { CRUD_MODE } from "../../../constants";
 import Mandala from "../../../ui/molecules/mandala";
 import "./index.scss";
 
-function OfferHero({
-  isLoading,
-  currency,
-  plusAvailable,
-}: {
-  isLoading: boolean;
-  currency: string;
-  plusAvailable: boolean;
-}) {
+function OfferHero({ plusAvailable }: { plusAvailable: boolean }) {
   const animate = !CRUD_MODE;
-  let container;
-
-  //No currency, Pricing info still loading.Display spinner
-  if (isLoading) {
-    container = (
-      <>
-        <div className="cash-container">
-          <div className="cash-spinner">
-            $<br />€<br />£<br />$<br />€<br />£<br />$<br />€
-          </div>
-        </div>
-        <span>5.00</span>
-      </>
-    );
-  } else {
-    if (currency) {
-      container = new Intl.NumberFormat("en-US", {
-        style: "currency",
-        currency: currency,
-      }).format(5);
-    } else {
-      //Fallback to USD.
-      container = new Intl.NumberFormat("en-US", {
-        style: "currency",
-        currency: "USD",
-      }).format(5);
-    }
-  }
-
   return (
     <div className="dark offer-hero">
       <header className="container offer-hero-header">
@@ -51,8 +14,7 @@ function OfferHero({
           {(plusAvailable && (
             <>
               <h2>
-                Support MDN <u>and</u> make it your own. For just {container} a
-                month.
+                Support MDN <u>and</u> make it your own.
               </h2>
               <div className="button-wrapper">
                 <a href="#subscribe" className="button-primary">
