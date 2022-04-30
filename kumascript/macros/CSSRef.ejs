@@ -500,7 +500,7 @@ function buildSublist(pages, title) {
       </details>
   </li>
 
-  <li><strong>References:</strong></li>
+  <li><a href="/<%=locale%>/docs/Web/CSS/Reference"><strong>References:</strong></a></li>
   <%-buildSublist(groups, 'Modules');%>
   <%-buildSublist(properties, 'Properties');%>
   <%-buildSublist(selectors, 'Selectors');%>
@@ -722,7 +722,7 @@ function buildSublist(pages, title) {
       </details>
   </li>
 
-  <li><strong>Layout cookbook:</strong></li>
+  <li><a href="/<%=locale%>/docs/Web/CSS/Layout_cookbook"><strong>Layout cookbook:</strong></a></li>
   <li class="toggle">
     <ol>
       <li><%-smartLink(`${cssURL}Layout_cookbook/Media_objects`, null, "Media objects", cssURL)%></li>
