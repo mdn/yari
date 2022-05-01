@@ -67,11 +67,13 @@ $text-stroke-width: 2px;
         }
 
         .button-primary {
+          border: 2px solid var(--button-primary-border-white);
           background-color: var(--text-primary);
           color: var(--text-invert);
 
           &:hover {
             background-color: var(--text-secondary);
+            border: 2px solid var(--button-primary-border-white-focus);
           }
         }
 
