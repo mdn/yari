@@ -27,6 +27,7 @@ const loadAllLanguages = lazy(() => {
     "rust",
     "toml",
     "md",
+    "cs",
   ]);
 });
 
