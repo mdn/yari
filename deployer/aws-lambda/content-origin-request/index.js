@@ -138,11 +138,6 @@ exports.handler = async (event) => {
     return redirect(`/${locale}${path || "/"}` + qs);
   }
 
-  // Redirect moved pages (see `_redirects.txt` in content/translated-content).
-  if (typeof REDIRECTS[requestURILowerCase] == "string") {
-    return redirect(REDIRECTS[requestURILowerCase]);
-  }
-
   // At this point, the URI is guaranteed to start with a forward slash.
   const uriParts = request.uri.split("/");
   const uriFirstPart = uriParts[1];
@@ -191,6 +186,21 @@ exports.handler = async (event) => {
     });
   }
 
+  // Important: The request.uri may be URI-encoded.
+  // Example:
+  // - Encoded: /zh-TW/docs/AJAX:%E4%B8%8A%E6%89%8B%E7%AF%87
+  // - Decoded: /zh-TW/docs/AJAX:上手篇
+  const decodedUri = decodePath(request.uri);
+  const decodedUriLC = decodedUri.toLowerCase();
+
+  // Redirect moved pages (see `_redirects.txt` in content/translated-content).
+  // Example:
+  // - Source: /zh-TW/docs/AJAX:上手篇
+  // - Target: /zh-TW/docs/Web/Guide/AJAX/Getting_Started
+  if (typeof REDIRECTS[decodedUriLC] == "string") {
+    return redirect(REDIRECTS[decodedUriLC]);
+  }
+
   // This condition exists to accommodate AWS origin-groups, which
   // include two origins, the primary and the secondary, where the
   // secondary origin is only attempted if the primary fails. Since
@@ -205,7 +215,7 @@ exports.handler = async (event) => {
     // NOTE: The incoming URI should remain URI-encoded. However, it
     // must be passed to slugToFolder as decoded version to lowercase
     // non-ascii symbols and sanitize symbols like ":".
-    request.uri = encodePath(slugToFolder(decodePath(request.uri)));
+    request.uri = encodePath(slugToFolder(decodedUri));
     // Rewrite the HOST header to match the S3 bucket website domain.
     // This is required only because we're using S3 as a website, which
     // we need in order to do redirects from S3. NOTE: The origin is
