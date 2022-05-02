@@ -34,6 +34,7 @@ const LEGACY_URI_NEEDING_TRAILING_SLASH = new RegExp(
 const CONTENT_DEVELOPMENT_DOMAIN = ".content.dev.mdn.mozit.cloud";
 
 const REDIRECTS = require("./redirects.json");
+const REDIRECT_SUFFIXES = ["/index.json", "/bcd.json", ""];
 
 function redirect(location, { status = 302, cacheControlSeconds = 0 } = {}) {
   /*
@@ -197,8 +198,18 @@ exports.handler = async (event) => {
   // Example:
   // - Source: /zh-TW/docs/AJAX:上手篇
   // - Target: /zh-TW/docs/Web/Guide/AJAX/Getting_Started
-  if (typeof REDIRECTS[decodedUriLC] == "string") {
-    return redirect(REDIRECTS[decodedUriLC]);
+  for (const suffix of REDIRECT_SUFFIXES) {
+    if (!decodedUriLC.endsWith(suffix)) {
+      continue;
+    }
+    const source = decodedUriLC.substring(
+      0,
+      decodedUriLC.length - suffix.length
+    );
+    if (typeof REDIRECTS[source] == "string") {
+      const target = REDIRECTS[source] + suffix;
+      return redirect(target);
+    }
   }
 
   // This condition exists to accommodate AWS origin-groups, which
