@@ -219,6 +219,7 @@ exports.handler = async (event) => {
   // behavior, we have to ensure we only make adjustments for custom
   // S3 origins.
   if (
+    request.origin &&
     request.origin.custom &&
     request.origin.custom.domainName.includes("s3")
   ) {
