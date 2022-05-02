@@ -189,7 +189,7 @@
     "ts-loader": "^8.1.0",
     "ts-node": "^10.7.0",
     "typescript": "^4.6.4",
-    "use-debounce": "^7.0.1",
+    "use-debounce": "^8.0.0",
     "webpack": "4.44.2",
     "webpack-cli": "^4.9.2",
     "webpack-dev-middleware": "^5.3.1",
