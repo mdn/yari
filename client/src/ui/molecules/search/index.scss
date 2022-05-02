@@ -139,7 +139,6 @@
 
     .result-item {
       border-bottom: 1px solid var(--border-secondary);
-      padding: 0.5rem;
       word-break: break-word;
       background: var(--background-secondary);
       font-size: var(--type-smaller-font-size);
@@ -155,6 +154,10 @@
         code {
           font-size: 0.8125rem;
         }
+      }
+      a {
+        display: block;
+        padding: 0.5rem;
       }
     }
 
