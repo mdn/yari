@@ -2,10 +2,10 @@ const fs = require("fs");
 const crypto = require("crypto");
 const path = require("path");
 
-const glob = require("glob");
 const chalk = require("chalk");
 const fm = require("front-matter");
 const log = require("loglevel");
+const { fdir } = require("fdir");
 
 const {
   buildURL,
@@ -15,6 +15,8 @@ const {
   Redirect,
   CONTENT_ROOT,
   CONTENT_TRANSLATED_ROOT,
+  HTML_FILENAME,
+  MARKDOWN_FILENAME,
   VALID_LOCALES,
 } = require("../content");
 
@@ -28,9 +30,16 @@ function syncAllTranslatedContent(locale) {
     );
   }
   const redirects = new Map();
-  const files = glob.sync(
-    path.join(CONTENT_TRANSLATED_ROOT, locale, "**", "index.{html,md}")
-  );
+  const api = new fdir()
+    .withFullPaths()
+    .withErrors()
+    .filter((filePath) => {
+      return (
+        filePath.endsWith(HTML_FILENAME) || filePath.endsWith(MARKDOWN_FILENAME)
+      );
+    })
+    .crawl(path.join(CONTENT_TRANSLATED_ROOT, locale));
+  const files = [...api.sync()];
   const stats = {
     movedDocs: 0,
     conflictingDocs: 0,
