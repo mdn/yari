@@ -2,7 +2,7 @@
 
 .sidebar {
   --offset: var(--top-navigation-height);
-  --max-height: 100vh;
+  --max-height: calc(100vh - var(--offset));
   color: var(--text-secondary);
 
   .backdrop {
