@@ -220,6 +220,9 @@
   --button-secondary-hover: #{$mdn-theme-dark-button-secondary-hover};
   --button-secondary-active: #{$mdn-theme-dark-button-secondary-active};
   --button-secondary-inactive: #{$mdn-theme-dark-button-secondary-inactive};
+  --button-secondary-border-focus: #{$mdn-theme-light-button-secondary-border-focus};
+  --button-secondary-border-red: #{$mdn-theme-light-button-secondary-border-red};
+  --button-secondary-border-red-focus: #{$mdn-theme-light-button-secondary-border-red-focus};
 
   --icon-primary: #{$mdn-theme-dark-icon-primary};
   --icon-secondary: #{$mdn-theme-dark-icon-secondary};
@@ -287,6 +290,14 @@
   --http-mark-color: #{$mdn-color-dark-theme-green-70};
   --apis-mark-color: #{$mdn-color-dark-theme-violet-70};
   --learn-mark-color: #{$mdn-color-dark-theme-pink-70};
+
+  --plus-accent-background-color: #{$mdn-color-light-theme-red-50}30;
+  --html-accent-background-color: #{$mdn-color-light-theme-red-50}30;
+  --css-accent-background-color: #{$mdn-color-light-theme-blue-50}30;
+  --js-accent-background-color: #{$mdn-color-light-theme-yellow-50}30;
+  --http-accent-background-color: #{$mdn-color-light-theme-green-50}30;
+  --apis-accent-background-color: #{$mdn-color-light-theme-violet-50}30;
+  --learn-accent-background-color: #{$mdn-color-light-theme-pink-50}30;
 
   --plus-accent-engage: #{color.adjust(
       $mdn-color-dark-theme-red-40,
