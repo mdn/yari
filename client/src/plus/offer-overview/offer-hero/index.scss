@@ -67,20 +67,20 @@ $text-stroke-width: 2px;
         }
 
         .button-primary {
-          border: 2px solid var(--button-primary-border-white);
           background-color: var(--text-primary);
+          border: 2px solid var(--text-primary);
           color: var(--text-invert);
 
           &:hover {
             background-color: var(--text-secondary);
-            border: 2px solid var(--button-primary-border-white-focus);
+            border-color: var(--text-secondary);
           }
         }
 
         .button-secondary {
+          background: #15141a1a;
           border: 2px solid var(--button-secondary-border-red);
           color: white;
-          background: #15141a1a;
         }
 
         .button-secondary:hover {
