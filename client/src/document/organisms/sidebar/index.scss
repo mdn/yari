@@ -2,6 +2,7 @@
 
 .sidebar {
   --offset: var(--top-navigation-height);
+  --max-height: 100vh;
   color: var(--text-secondary);
 
   .backdrop {
@@ -28,8 +29,8 @@
       padding: 1rem;
       width: 80vw;
       max-width: 20rem;
-      height: 100vh;
-      max-height: 100vh;
+      height: var(--max-height);
+      max-height: var(--max-height);
       overflow: auto;
       background: var(--background-primary);
       border-right: 1px solid var(--border-primary);
@@ -76,7 +77,7 @@
     overflow: auto;
     position: sticky;
     top: var(--offset);
-    max-height: 100vh;
+    max-height: var(--max-height);
   }
 
   &-heading {
