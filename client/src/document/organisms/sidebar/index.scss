@@ -1,6 +1,8 @@
 @use "../../../ui/vars" as *;
 
 .sidebar {
+  --offset: var(--top-navigation-height);
+  --max-height: calc(100vh - var(--offset));
   color: var(--text-secondary);
 
   .backdrop {
@@ -27,8 +29,8 @@
       padding: 1rem;
       width: 80vw;
       max-width: 20rem;
-      height: 100vh;
-      max-height: 100vh;
+      height: var(--max-height);
+      max-height: var(--max-height);
       overflow: auto;
       background: var(--background-primary);
       border-right: 1px solid var(--border-primary);
@@ -74,8 +76,8 @@
     display: flex;
     overflow: auto;
     position: sticky;
-    top: var(--top-navigation-height);
-    max-height: 100vh;
+    top: var(--offset);
+    max-height: var(--max-height);
   }
 
   &-heading {
