@@ -39,11 +39,6 @@ LOG_EACH_SUCCESSFUL_UPLOAD = config(
     "DEPLOYER_LOG_EACH_SUCCESSFUL_UPLOAD", default=False, cast=bool
 )
 
-# You get this from https://speedcurve.com/mozilla-add-ons/mdn/admin/teams/
-SPEEDCURVE_DEPLOY_API_KEY = config("SPEEDCURVE_DEPLOY_API_KEY", default=None)
-# Use the API key and see instructions on https://api.speedcurve.com/#get-all-sites
-SPEEDCURVE_DEPLOY_SITE_ID = config("SPEEDCURVE_DEPLOY_SITE_ID", default=None)
-
 # If you're doing local development, you can download and install your own
 # instance of Elasticsearch 7 and start it. Then set this environment variable
 # value to `http://localhost:9200`

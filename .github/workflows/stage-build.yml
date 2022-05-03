@@ -153,11 +153,6 @@ jobs:
           # origin domain isn't what that account expects.
           BUILD_GOOGLE_ANALYTICS_ACCOUNT: UA-36116321-5
 
-          # See the code for a further explanation for this.
-          # You get the ID from
-          # https://speedcurve.com/mozilla-add-ons/mdn/settings/updated/#lux
-          BUILD_SPEEDCURVE_LUX_ID: 108906238
-
           # This enables the Plus call-to-action banner and the Plus landing page
           REACT_APP_ENABLE_PLUS: true
 
@@ -227,13 +222,6 @@ jobs:
           AWS_ACCESS_KEY_ID: ${{ secrets.DEPLOYER_STAGE_AND_DEV_AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.DEPLOYER_STAGE_AND_DEV_AWS_SECRET_ACCESS_KEY }}
 
-          # Note, command will pick up the site ID and deployment API key
-          # from environment variables and if either of them is falsy, the
-          # command will *not* fail. It will simply not deploy anything.
-          SPEEDCURVE_DEPLOY_API_KEY: ${{ secrets.SPEEDCURVE_DEPLOY_API_KEY }}
-          # Based on https://api.speedcurve.com/#get-all-sites using the API key
-          SPEEDCURVE_DEPLOY_SITE_ID: 354836
-
           DEPLOYER_ELASTICSEARCH_URL: ${{ secrets.DEPLOYER_STAGE_ELASTICSEARCH_URL }}
 
         run: |
@@ -253,13 +241,6 @@ jobs:
           poetry run deployer upload --prune ../client/build
           poetry run deployer update-lambda-functions ./aws-lambda
           poetry run deployer search-index ../client/build
-
-          # Record the deployment in our Speedcurve account. This should always
-          # be done after the upload of the documents and Lambda functions, as well
-          # as the search-index update, so those aren't affected if this fails.
-          poetry run deployer speedcurve-deploy \
-            --note "${GITHUB_SHA}" \
-            --detail "run_id=${GITHUB_RUN_ID} action=${GITHUB_ACTION}"
 
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v1
