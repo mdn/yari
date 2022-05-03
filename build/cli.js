@@ -2,6 +2,9 @@ import fs from "fs";
 import path from "path";
 import zlib from "zlib";
 
+// @TODO we can probably remove the line below once CRA 5.0 is released
+// https://github.com/facebook/create-react-app/pull/11375
+// eslint-disable-next-line node/no-missing-import
 import chalk from "chalk";
 import cliProgress from "cli-progress";
 import { default as program } from "@caporal/core";
