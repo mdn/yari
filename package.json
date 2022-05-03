@@ -132,6 +132,7 @@
     "@pmmmwh/react-refresh-webpack-plugin": "^0.5.7",
     "@svgr/webpack": "^5.5.0",
     "@testing-library/react": "^13.3.0",
+    "@types/cli-progress": "^3.9.2",
     "@types/hast": "^2.3.4",
     "@types/jest": "^27.5.1",
     "@types/mdast": "^3.0.10",
