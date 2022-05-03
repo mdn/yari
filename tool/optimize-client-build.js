@@ -11,7 +11,7 @@ import md5File from "md5-file";
 
 async function runOptimizeClientBuild(buildRoot) {
   const indexHtmlFilePath = path.join(buildRoot, "index.html");
-  const indexHtml = fs.readFileSync(indexHtmlFilePath, "utf-8");
+  const indexHtml = fs.readFileSync(indexHtmlFilePath, "utf8");
 
   const results = [];
 

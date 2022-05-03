@@ -10,7 +10,7 @@ test("all favicons on the home page", () => {
   // The home page SPA is built, in terms of the index.html template,
   // the same as for all document pages.
   const htmlFile = path.join(buildRoot, "en-us", "index.html");
-  const html = fs.readFileSync(htmlFile, "utf-8");
+  const html = fs.readFileSync(htmlFile, "utf8");
   const $ = cheerio.load(html);
   expect($('link[rel="icon"]').length).toBe(1);
   expect($('link[rel="apple-touch-icon"]').length).toBe(1);

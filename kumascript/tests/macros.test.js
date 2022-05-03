@@ -16,7 +16,7 @@ describe("macros/ directory", () => {
 
     it.each(macroNames)("%s", (macro) => {
       const filename = templateMap.get(macro);
-      const source = fs.readFileSync(filename, "utf-8");
+      const source = fs.readFileSync(filename, "utf8");
       ejs.compile(source, { async: true });
     });
   });

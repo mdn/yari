@@ -31,7 +31,7 @@ async function runBuildRobotsTxt(outfile) {
       content += `Disallow: /${locale}/search\n`;
     }
   }
-  fs.writeFileSync(outfile, `${content.trim()}\n`, "utf-8");
+  fs.writeFileSync(outfile, `${content.trim()}\n`, "utf8");
 }
 
 export { runBuildRobotsTxt };

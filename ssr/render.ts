@@ -96,10 +96,7 @@ const extractWebFontURLs = lazy(() => {
   );
   for (const entrypoint of manifest.entrypoints) {
     if (!entrypoint.endsWith(".css")) continue;
-    const css = fs.readFileSync(
-      path.join(clientBuildRoot, entrypoint),
-      "utf-8"
-    );
+    const css = fs.readFileSync(path.join(clientBuildRoot, entrypoint), "utf8");
     const generator = extractCSSURLs(
       css,
       (url) => url.endsWith(".woff2") && /Bold/i.test(url)
