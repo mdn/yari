@@ -6,7 +6,8 @@
     "strictBindCallApply": true,
     "target": "es2018",
     "preserveWatchOutput": true,
-    "esModuleInterop": true
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true
   },
   "ts-node": {
     "esm": true
