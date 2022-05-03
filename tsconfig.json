@@ -1,9 +1,9 @@
 {
   "compilerOptions": {
     "jsx": "react-jsx",
-    "module": "ES2020",
+    "module": "es2020",
     "strictBindCallApply": true,
-    "target": "ES2018",
+    "target": "es2018",
     "preserveWatchOutput": true
   },
   "files": []
