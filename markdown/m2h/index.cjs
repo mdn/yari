@@ -1,13 +1,13 @@
-import { unified } from "unified";
-import parse from "remark-parse";
-import remark2rehype from "remark-rehype";
-import stringify from "rehype-stringify";
-import gfm from "remark-gfm";
-import raw from "rehype-raw";
-import format from "rehype-format";
+const unified = require("unified");
+const parse = require("remark-parse");
+const remark2rehype = require("remark-rehype");
+const stringify = require("rehype-stringify");
+const gfm = require("remark-gfm");
+const raw = require("rehype-raw");
+const format = require("rehype-format");
 
-import { buildLocalizedHandlers } from "./handlers/index.js";
-import { decodeKS, encodeKS } from "../utils/index.js";
+const buildLocalizedHandlers = require("./handlers/index.cjs");
+const { decodeKS, encodeKS } = require("../utils/index.cjs");
 
 function makeProcessor(options) {
   const localizedHandlers = buildLocalizedHandlers(options.locale);
@@ -41,4 +41,4 @@ function m2hSync(md, options) {
   return decodeKS(String(file));
 }
 
-export { m2h, m2hSync };
+module.exports = { m2h, m2hSync };

@@ -17,7 +17,7 @@
     "dev": "yarn build:prepare && nf -j Procfile.dev start",
     "eslint": "eslint .",
     "filecheck": "cd filecheck && node cli.js",
-    "md": "ts-node markdown/cli.ts",
+    "md": "TS_NODE_PROJECT='./markdown/tsconfig.json' node --loader ts-node/esm markdown/cli.ts",
     "prepare": "husky install",
     "prettier-check": "prettier --check .",
     "prettier-format": "prettier --write .",

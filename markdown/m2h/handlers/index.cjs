@@ -1,11 +1,9 @@
-import fs from "fs";
-import path from "path";
-import { fileURLToPath } from "url";
-
-import { DEFAULT_LOCALE } from "../../../libs/constants/index.js";
-import { code } from "./code.js";
-import { asDefinitionList, isDefinitionList } from "./dl.js";
-import { one, all, wrap } from "./mdast-util-to-hast-utils.js";
+const fs = require("fs");
+const path = require("path");
+const { DEFAULT_LOCALE } = require("../../../libs/constants");
+const code = require("./code.cjs");
+const { asDefinitionList, isDefinitionList } = require("./dl.cjs");
+const { one, all, wrap } = require("./mdast-util-to-hast-utils.cjs");
 
 const dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -125,4 +123,4 @@ function buildLocalizedHandlers(locale) {
   };
 }
 
-export { buildLocalizedHandlers };
+module.exports = { buildLocalizedHandlers };

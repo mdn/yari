@@ -1,4 +1,4 @@
-import u from "unist-builder";
+const u = require("unist-builder");
 
 /**
  * Transform a markdown code block into a <pre>.
@@ -29,4 +29,4 @@ function code(h, node) {
   return h(node.position, "pre", props, [u("text", value)]);
 }
 
-export { code };
+module.exports = code;

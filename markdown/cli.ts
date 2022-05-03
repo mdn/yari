@@ -11,7 +11,7 @@ import { getRoot } from "../content/utils";
 
 import { h2m } from "./h2m";
 const { prettyAST } = require("./utils");
-import { m2h } from ".";
+const { m2h } = require("./m2h/index.cjs");
 import { toSelector } from "./h2m/utils";
 
 function tryOrExit(f) {
@@ -50,8 +50,8 @@ function saveProblemsReport(problems: Map<any, any>) {
           new Map()
         )
     )
-      .sort(([, c1], [, c2]) => (c1 > c2 ? -1 : 1))
-      .map(([label, count]) => `- ${label} (${count})`),
+      .sort(([, c1]: any, [, c2]: any) => (c1 > c2 ? -1 : 1))
+      .map(([label, count]: any) => `- ${label} (${count})`),
 
     "## Details per Document",
   ];
@@ -147,7 +147,8 @@ program
         {},
         cliProgress.Presets.shades_classic
       );
-      progressBar.start(documents.count);
+      // start the progress bar with a total value of ${documents.count} and start value of 0
+      progressBar.start(documents.count, 0);
 
       const problems = new Map<
         string,

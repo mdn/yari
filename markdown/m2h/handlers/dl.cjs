@@ -1,4 +1,4 @@
-import { all, wrap } from "./mdast-util-to-hast-utils.js";
+const { all, wrap } = require("./mdast-util-to-hast-utils.cjs");
 
 const DEFINITION_PREFIX = ": ";
 
@@ -61,4 +61,4 @@ function asDefinitionList(h, node) {
   return h(node, "dl", {}, wrap(children, true));
 }
 
-export { DEFINITION_PREFIX, isDefinitionList, asDefinitionList };
+module.exports = { DEFINITION_PREFIX, isDefinitionList, asDefinitionList };

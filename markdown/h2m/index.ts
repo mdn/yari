@@ -8,7 +8,7 @@ import {
   extractSummary,
 } from "../../build/document-extractor";
 
-import { decodeKS, encodeKS, prettyAST } from "../utils";
+const { decodeKS, encodeKS, prettyAST } = require("../utils/index.cjs");
 import { transform } from "./transform";
 
 const getTransformProcessor = (options) =>
