@@ -5,7 +5,17 @@
     "strictBindCallApply": true,
     "target": "ES2018",
     "preserveWatchOutput": true,
-    "allowSyntheticDefaultImports": true
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "allowJs": true,
+    "skipLibCheck": true,
+    "strict": true,
+    "forceConsistentCasingInFileNames": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "noImplicitAny": false,
+    "noEmit": true,
+    "noFallthroughCasesInSwitch": true
   },
   "files": []
 }
