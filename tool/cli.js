@@ -785,6 +785,7 @@ if (Mozilla && !Mozilla.dntEnabled()) {
   .command("spas", "Build (SSR) all the skeleton apps for single page apps")
   .action(
     tryOrExit(async ({ options }) => {
+      options.verbose = true;
       await buildSPAs(options);
     })
   )
