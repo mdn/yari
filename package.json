@@ -24,7 +24,7 @@
     "start": "(test -f client/build/index.html || yarn build:client) && (test -f ssr/dist/main.js || yarn build:ssr) && (test -d client/build/en-us/_spas || yarn tool spas) && nf -j Procfile.start start",
     "start:client": "cd client && cross-env BROWSER=none PORT=3000 node scripts/start.js",
     "start:dev-server": "nodemon server/index.js",
-    "start:server": "node server/index.js",
+    "start:server": "node --loader ts-node/esm server/index.js",
     "start:static-server": "cross-env ENV_FILE=testing/.env node server/static.js",
     "style-dictionary": "style-dictionary build -c sd-config.js",
     "test": "yarn prettier-check && yarn test:client && yarn test:kumascript && yarn test:content && yarn test:testing",
@@ -35,7 +35,7 @@
     "test:kumascript": "cross-env NODE_OPTIONS=--experimental-vm-modules jest kumascript --env=node",
     "test:prepare": "yarn build:prepare && yarn build && yarn start:static-server",
     "test:testing": "cross-env NODE_OPTIONS=--experimental-vm-modules jest --rootDir testing",
-    "tool": "node tool/cli.js",
+    "tool": "node --loader ts-node/esm tool/cli.js",
     "watch:ssr": "cd ssr && webpack --mode=production --watch"
   },
   "jest": {
