@@ -1,6 +1,6 @@
 import * as cheerio from "cheerio";
-import * as unified from "unified";
-import * as parseHTML from "rehype-parse";
+import { unified } from "unified";
+import rehypeParse from "rehype-parse";
 import * as gfm from "remark-gfm";
 import * as remarkPrettier from "remark-prettier";
 import {
@@ -8,12 +8,12 @@ import {
   extractSummary,
 } from "../../build/document-extractor";
 
-import { decodeKS, encodeKS, prettyAST } from "../utils";
+const { decodeKS, encodeKS, prettyAST } = require("../utils/index.cjs");
 import { transform } from "./transform";
 
 const getTransformProcessor = (options) =>
   unified()
-    .use(parseHTML)
+    .use(rehypeParse)
     .use(transform, options)
     .use(gfm)
     .use(remarkPrettier, {

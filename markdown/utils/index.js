@@ -1,4 +1,4 @@
-import { unified } from "unified";
+import unified from "unified";
 import parse from "rehype-parse";
 import format from "rehype-format";
 import stringify from "rehype-stringify";

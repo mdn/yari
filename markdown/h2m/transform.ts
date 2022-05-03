@@ -8,7 +8,7 @@ import { matchesQuery } from "./handlers/utils";
 
 const minify = require("rehype-minify-whitespace");
 
-function transformNode(node, options: Options = {}) {
+function transformNode(node: never, options: Options = {}) {
   const invalid: {
     source: Node;
     targetType: MDNodeUnion["type"];
@@ -22,7 +22,7 @@ function transformNode(node, options: Options = {}) {
       return [h("text", wrapText(node.value, newOptions))];
     } else {
       return (Array.isArray(node) ? node : node.children || [])
-        .map((child) => {
+        .map((child: never) => {
           const childResult = transformNode(child, newOptions);
           invalid.push(...childResult.invalid);
           unhandled.push(...childResult.unhandled);
@@ -68,7 +68,7 @@ function transformNode(node, options: Options = {}) {
   };
 }
 
-function toMdast(tree, options) {
+function toMdast(tree: never, options) {
   minify({ newlines: true })(tree);
   return transformNode(tree, options);
 }
@@ -84,8 +84,8 @@ export function transform(destination, options = null) {
   }
 
   return destination
-    ? function transformer(node, file, next) {
+    ? function transformer(node: never, file, next) {
         destination.run(toMdast(node, options), file, (err) => next(err));
       }
-    : (node) => toMdast(node, options);
+    : (node: never) => toMdast(node, options);
 }

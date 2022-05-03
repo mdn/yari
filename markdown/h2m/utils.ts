@@ -1,5 +1,5 @@
 import { Element } from "hast";
-import * as toHTML from "hast-util-to-html";
+import { toHtml } from "hast-util-to-html";
 import * as prettier from "prettier";
 
 import { MDNodeUnion } from "./h";
@@ -30,8 +30,8 @@ export class InvalidASTError extends Error {
   }
 }
 
-export const toPrettyHTML = (...args: Parameters<typeof toHTML>) => {
-  const source = toHTML(...args);
+export const toPrettyHTML = (...args: Parameters<typeof toHtml>) => {
+  const source = toHtml(...args);
 
   // Prettier often breaks starting tags but that does not seem to be an issue for
   // our <table> tags for which we are mainly interested in prettier HTML, hence

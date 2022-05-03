@@ -1,18 +1,18 @@
 import * as fs from "fs";
-const fm = require("front-matter");
+import fm from "front-matter";
 import { program } from "@caporal/core";
 import * as chalk from "chalk";
 import * as cliProgress from "cli-progress";
-import { Document } from "../content";
-import { saveFile } from "../content/document";
-import { VALID_LOCALES } from "../libs/constants";
-import { execGit } from "../content";
-import { getRoot } from "../content/utils";
+import { Document } from "../content/index.js";
+import { saveFile } from "../content/document.js";
+import { VALID_LOCALES } from "../libs/constants/index.js";
+import { execGit } from "../content/index.js";
+import { getRoot } from "../content/utils.js";
 
-import { h2m } from "./h2m";
-const { prettyAST } = require("./utils");
-import { m2h } from ".";
-import { toSelector } from "./h2m/utils";
+import { h2m } from "./h2m/index.js";
+import { prettyAST } from "./utils/index.js";
+import { m2h } from "./m2h/index.js";
+import { toSelector } from "./h2m/utils.js";
 
 function tryOrExit(f) {
   return async ({
@@ -50,8 +50,8 @@ function saveProblemsReport(problems: Map<any, any>) {
           new Map()
         )
     )
-      .sort(([, c1], [, c2]) => (c1 > c2 ? -1 : 1))
-      .map(([label, count]) => `- ${label} (${count})`),
+      .sort(([, c1]: any, [, c2]: any) => (c1 > c2 ? -1 : 1))
+      .map(([label, count]: any) => `- ${label} (${count})`),
 
     "## Details per Document",
   ];
@@ -147,7 +147,8 @@ program
         {},
         cliProgress.Presets.shades_classic
       );
-      progressBar.start(documents.count);
+      // start the progress bar with a total value of ${documents.count} and start value of 0
+      progressBar.start(documents.count, 0);
 
       const problems = new Map<
         string,
