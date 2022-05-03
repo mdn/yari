@@ -1,10 +1,12 @@
-/* eslint-disable node/no-unpublished-require */
-/* eslint-disable node/no-missing-require */
-const polka = require("polka");
-const kleur = require("kleur");
+// eslint-disable-next-line node/no-missing-import, node/no-unpublished-import
+import polka from "polka";
+// eslint-disable-next-line node/no-unpublished-import
+import kleur from "kleur";
 
-const requestHandler = require("../content-origin-request").handler;
-const responseHandler = require("../content-origin-response").handler;
+// eslint-disable-next-line node/no-unpublished-import
+import { handler as requestHandler } from "../content-origin-request/index.js";
+// eslint-disable-next-line node/no-unpublished-import
+import { handler as responseHandler } from "../content-origin-response/index.js";
 
 const PORT = parseInt(process.env.PORT || "7000");
 

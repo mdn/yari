@@ -1,11 +1,11 @@
-/**
- * @prettier
- */
+import { createRequire } from "module";
+import { fileURLToPath } from "url";
+import path from "path";
 
-const Templates = require("../src/templates.js");
-const path = require("path");
+import Templates from "../src/templates.js";
 
-const dirname = __dirname;
+const dirname = path.dirname(fileURLToPath(import.meta.url));
+const require = createRequire(import.meta.url);
 
 describe("Templates class", () => {
   it("has the expected methods", () => {

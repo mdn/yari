@@ -1,4 +1,4 @@
-const VALID_LOCALES = new Map(
+export const VALID_LOCALES = new Map(
   [
     "de",
     "en-US",
@@ -14,7 +14,7 @@ const VALID_LOCALES = new Map(
   ].map((x) => [x.toLowerCase(), x])
 );
 
-const RETIRED_LOCALES = new Map(
+export const RETIRED_LOCALES = new Map(
   [
     "ar",
     "bg",
@@ -41,9 +41,9 @@ const RETIRED_LOCALES = new Map(
   ].map((x) => [x.toLowerCase(), x])
 );
 
-const DEFAULT_LOCALE = "en-US";
+export const DEFAULT_LOCALE = "en-US";
 
-const LOCALE_ALIASES = new Map([
+export const LOCALE_ALIASES = new Map([
   // Case is not important on either the keys or the values.
   ["en", "en-us"],
   ["pt", "pt-br"],
@@ -55,8 +55,8 @@ const LOCALE_ALIASES = new Map([
 
 // This must match what we do in `language-menu/index.tsx` where the cookie
 // gets set in the client!
-const PREFERRED_LOCALE_COOKIE_NAME = "preferredlocale";
-const ACTIVE_LOCALES = new Set([
+export const PREFERRED_LOCALE_COOKIE_NAME = "preferredlocale";
+export const ACTIVE_LOCALES = new Set([
   "en-us",
   "es",
   "fr",
@@ -68,7 +68,7 @@ const ACTIVE_LOCALES = new Set([
   "zh-tw",
 ]);
 
-const scriptSrcValues = [
+export const scriptSrcValues = [
   "'report-sample'",
   "'self'",
 
@@ -89,7 +89,7 @@ const scriptSrcValues = [
   // - Current hash:
   "'sha256-GA8+DpFnqAM/vwERTpb5zyLUaN5KnOhctfTsqWfhaUA='",
 ];
-const CSP_DIRECTIVES = {
+export const CSP_DIRECTIVES = {
   "default-src": ["'self'"],
   "script-src": scriptSrcValues,
   "script-src-elem": scriptSrcValues,
@@ -151,20 +151,9 @@ const CSP_DIRECTIVES = {
   "worker-src": ["'self'"],
 };
 
-const cspToString = (csp) =>
+export const cspToString = (csp) =>
   Object.entries(csp)
     .map(([directive, values]) => `${directive} ${values.join(" ")};`)
     .join(" ");
 
-const CSP_VALUE = cspToString(CSP_DIRECTIVES);
-
-module.exports = {
-  ACTIVE_LOCALES,
-  VALID_LOCALES,
-  RETIRED_LOCALES,
-  DEFAULT_LOCALE,
-  LOCALE_ALIASES,
-  PREFERRED_LOCALE_COOKIE_NAME,
-
-  CSP_VALUE,
-};
+export const CSP_VALUE = cspToString(CSP_DIRECTIVES);

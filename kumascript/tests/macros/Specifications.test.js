@@ -1,12 +1,11 @@
-const { assert, itMacro, describeMacro, lintHTML } = require("./utils");
+import { assert, itMacro, describeMacro, lintHTML } from "./utils.js";
 
-const jsdom = require("jsdom");
-const { JSDOM } = jsdom;
+import { jsdom } from "jsdom";
 
 describeMacro("Specifications", function () {
   itMacro("Outputs a simple div tag", async (macro) => {
     const result = await macro.call("api.feature");
-    const dom = JSDOM.fragment(result);
+    const dom = jsdom.fragment(result);
     assert.equal(
       dom.querySelector("div.bc-specs").dataset.bcdQuery,
       "api.feature"

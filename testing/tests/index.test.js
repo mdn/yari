@@ -1,8 +1,8 @@
-const fs = require("fs");
-const path = require("path");
+import fs from "fs";
+import path from "path";
 
-const cheerio = require("cheerio");
-const sizeOf = require("image-size");
+import cheerio from "cheerio";
+import sizeOf from "image-size";
 
 const buildRoot = path.join("client", "build");
 

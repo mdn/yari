@@ -1,4 +1,4 @@
-const { Document } = require("../content");
+import { Document } from "../content/index.js";
 
 /**
  * Return the appropriate document title to go into the HTML <title>
@@ -49,4 +49,4 @@ function getRootURL(url) {
   return split.slice(0, index).join("/");
 }
 
-module.exports = { getPageTitle };
+export { getPageTitle };

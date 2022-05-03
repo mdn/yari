@@ -1,6 +1,6 @@
-const sanitizeFilename = require("sanitize-filename");
+import sanitizeFilename from "sanitize-filename";
 
-function slugToFolder(slug, joiner = "/") {
+function slugToFolderUtil(slug, joiner = "/") {
   return (
     slug
       // We have slugs with these special characters that would be
@@ -29,8 +29,4 @@ function encodePath(path) {
   return decoded;
 }
 
-module.exports = {
-  slugToFolder,
-  decodePath,
-  encodePath,
-};
+export { slugToFolderUtil, decodePath, encodePath };

@@ -1,14 +1,11 @@
-/**
- * @prettier
- */
-const fs = require("fs");
-const path = require("path");
+import fs from "fs";
+import path from "path";
 
-const util = require("./util.js");
+import * as util from "./util.js";
 
 const DUMMY_BASE_URL = "https://example.com";
 
-const { CONTENT_ROOT } = require("../../../content");
+import { CONTENT_ROOT } from "../../../content/index.js";
 
 const _warned = new Map();
 // The purpose of this function is to make sure `console.warn` is only called once
@@ -36,7 +33,7 @@ function warnBrokenFlawByMacro(macro, href, extra = "") {
   }
 }
 
-module.exports = {
+export default {
   // Insert a hyperlink.
   link(uri, text, title, target) {
     const out = [`<a href="${util.spacesToUnderscores(util.htmlEscape(uri))}"`];

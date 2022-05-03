@@ -1,11 +1,12 @@
-const { parse } = require("cookie");
-const acceptLanguageParser = require("accept-language-parser");
+import { parse } from "cookie";
+import acceptLanguageParser from "accept-language-parser";
 
-const {
+import {
   DEFAULT_LOCALE,
   VALID_LOCALES,
   PREFERRED_LOCALE_COOKIE_NAME,
-} = require("../constants");
+} from "../constants/index.js";
+
 const VALID_LOCALES_LIST = [...VALID_LOCALES.values()];
 
 // From https://github.com/aws-samples/cloudfront-authorization-at-edge/blob/01c1bc843d478977005bde86f5834ce76c479eec/src/lambda-edge/shared/shared.ts#L216
@@ -48,6 +49,4 @@ function getLocale(request, fallback = DEFAULT_LOCALE) {
   return locale || fallback;
 }
 
-module.exports = {
-  getLocale,
-};
+export { getLocale };

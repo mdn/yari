@@ -1,10 +1,9 @@
-#!/usr/bin/env node
-const path = require("path");
+import path from "path";
 
-const program = require("@caporal/core").default;
+import { default as program } from "@caporal/core";
 
-const { runChecker } = require("./checker");
-const { MAX_COMPRESSION_DIFFERENCE_PERCENTAGE } = require("./constants");
+import { runChecker } from "./checker.js";
+import { MAX_COMPRESSION_DIFFERENCE_PERCENTAGE } from "./constants.js";
 
 program
   .version("0.0.0")
@@ -20,7 +19,7 @@ program
   .option("--save-compression", "If it can be compressed, save the result", {
     validator: program.BOOL,
   })
-  .argument("[files...]", "list of files to check")
+  .argument("<files>", "list of space separated files to check")
   .action(({ args, options }) => {
     const cwd = options.cwd || process.cwd();
     const allFilePaths = (args.files || []).map((f) => path.resolve(cwd, f));
@@ -29,6 +28,7 @@ program
     }
     return runChecker(allFilePaths, options).catch((error) => {
       console.error(error);
+      // eslint-disable-next-line no-process-exit
       process.exit(1);
     });
   });

@@ -1,18 +1,17 @@
-/**
- * @prettier
- */
+import fs from "fs";
+import path from "path";
+import { fileURLToPath } from "url";
 
-const fs = require("fs");
-const Templates = require("../src/templates.js");
-const { render } = require("../src/render.js");
-const {
+import Templates from "../src/templates.js";
+import { render } from "../src/render.js";
+import {
   MacroInvocationError,
   MacroNotFoundError,
   MacroCompilationError,
   MacroExecutionError,
-} = require("../src/errors.js");
+} from "../src/errors.js";
 
-const dirname = __dirname;
+const dirname = path.dirname(fileURLToPath(import.meta.url));
 
 const PAGE_ENV = { slug: "" };
 

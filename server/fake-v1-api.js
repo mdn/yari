@@ -5,10 +5,10 @@
  * You can read more about it in the docs/proxying.md document.
  */
 
-const fs = require("fs");
-const path = require("path");
+import fs from "fs";
+import path from "path";
 
-const express = require("express");
+import express from "express";
 
 const router = express();
 
@@ -30,4 +30,4 @@ router.get("*", (req, res) => {
   }
 });
 
-module.exports = router;
+export { router };

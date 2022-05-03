@@ -1,12 +1,12 @@
-const fs = require("fs");
-const path = require("path");
+import fs from "fs";
+import path from "path";
 
-const readChunk = require("read-chunk");
-const imageType = require("image-type");
-const isSvg = require("is-svg");
+import { readChunkSync } from "read-chunk";
+import imageType from "image-type";
+import isSvg from "is-svg";
 
-const { ROOTS, DEFAULT_LOCALE } = require("./constants");
-const { memoize, slugToFolder } = require("./utils");
+import { ROOTS, DEFAULT_LOCALE } from "./constants.js";
+import { memoize, slugToFolder } from "./utils.js";
 
 function isImage(filePath) {
   if (fs.statSync(filePath).isDirectory()) {
@@ -15,8 +15,7 @@ function isImage(filePath) {
   if (filePath.toLowerCase().endsWith(".svg")) {
     return isSvg(fs.readFileSync(filePath));
   }
-
-  const buffer = readChunk.sync(filePath, 0, 12);
+  const buffer = readChunkSync(filePath, { length: 12, startPosition: 0 });
   if (buffer.length === 0) {
     return false;
   }
@@ -57,7 +56,7 @@ function findByURLWithFallback(url) {
   return filePath;
 }
 
-module.exports = {
+export {
   findByURL,
   findByURLWithFallback,
 };

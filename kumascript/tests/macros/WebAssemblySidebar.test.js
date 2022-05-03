@@ -1,7 +1,4 @@
-/**
- * @prettier
- */
-const { assert, itMacro, describeMacro, beforeEachMacro } = require("./utils");
+import { assert, itMacro, describeMacro, beforeEachMacro } from "./utils.js";
 
 const expected = `\
 <section id="Quick_links">

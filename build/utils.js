@@ -1,17 +1,18 @@
-const fs = require("fs");
-const path = require("path");
+import fs from "fs";
+import path from "path";
 
-const cheerio = require("cheerio");
-const got = require("got");
-const FileType = require("file-type");
-const imagemin = require("imagemin");
-const imageminPngquant = require("imagemin-pngquant");
-const imageminMozjpeg = require("imagemin-mozjpeg");
-const imageminGifsicle = require("imagemin-gifsicle");
-const imageminSvgo = require("imagemin-svgo");
-const sanitizeFilename = require("sanitize-filename");
+import cheerio from "cheerio";
+// eslint-disable-next-line node/no-missing-import
+import got from "got";
+import FileType from "file-type";
+import imagemin from "imagemin";
+import imageminPngquant from "imagemin-pngquant";
+import imageminMozjpeg from "imagemin-mozjpeg";
+import imageminGifsicle from "imagemin-gifsicle";
+import imageminSvgo from "imagemin-svgo";
+import sanitizeFilename from "sanitize-filename";
 
-const { VALID_MIME_TYPES } = require("../filecheck/constants");
+import { VALID_MIME_TYPES } from "../filecheck/constants";
 
 function humanFileSize(size) {
   if (size < 1024) return `${size} B`;
@@ -166,7 +167,7 @@ function splitSections(rawHTML) {
   return { sections, toc };
 }
 
-module.exports = {
+export {
   downloadAndResizeImage,
   forceExternalURL,
   humanFileSize,

@@ -1,9 +1,9 @@
-const path = require("path");
-const childProcess = require("child_process");
+import path from "path";
+import childProcess from "child_process";
 
-const { CONTENT_ROOT, CONTENT_TRANSLATED_ROOT } = require("./constants");
-const { slugToFolder } = require("../libs/slug-utils");
-const LRU = require("lru-cache");
+import { CONTENT_ROOT, CONTENT_TRANSLATED_ROOT } from "./constants.js";
+import { slugToFolderUtil } from "../libs/slug-utils/index.js";
+import LRU from "lru-cache";
 
 const MEMOIZE_INVALIDATE = Symbol("force cache update");
 
@@ -104,13 +104,17 @@ function execGit(args, opts = {}, root = null) {
 
 function urlToFolderPath(url) {
   const [, locale, , ...slugParts] = url.split("/");
-  return path.join(locale.toLowerCase(), slugToFolder(slugParts.join("/")));
+  return path.join(locale.toLowerCase(), slugToFolderUtil(slugParts.join("/")));
 }
 
-module.exports = {
+function slugToFolder(slug) {
+  return slugToFolderUtil(slug, path.sep);
+}
+
+export {
   buildURL,
   getRoot,
-  slugToFolder: (slug) => slugToFolder(slug, path.sep),
+  slugToFolder,
   memoize,
   execGit,
   urlToFolderPath,

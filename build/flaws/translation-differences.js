@@ -1,5 +1,5 @@
-const { Document, Translation } = require("../../content");
-const { DEFAULT_LOCALE } = require("../../libs/constants");
+import { Document, Translation } from "../../content/index.js";
+import { DEFAULT_LOCALE } from "../../libs/constants/index.js";
 
 function injectTranslationDifferences(doc, $, document) {
   const flaws = [];
@@ -39,4 +39,4 @@ function injectTranslationDifferences(doc, $, document) {
   return flaws;
 }
 
-module.exports = { injectTranslationDifferences };
+export { injectTranslationDifferences };

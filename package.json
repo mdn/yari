@@ -15,7 +15,7 @@
     "build:sw-dev": "cd client/pwa && yarn && yarn build",
     "dev": "yarn build:prepare && nf -j Procfile.dev start",
     "eslint": "eslint .",
-    "filecheck": "cd filecheck && node cli.mjs",
+    "filecheck": "cd filecheck && node cli.js",
     "md": "ts-node markdown/cli.ts",
     "prepare": "husky install",
     "prettier-check": "prettier --check .",
@@ -34,7 +34,7 @@
     "test:kumascript": "jest kumascript --env=node",
     "test:prepare": "yarn build:prepare && yarn build && yarn start:static-server",
     "test:testing": "jest --rootDir testing",
-    "tool": "node tool/cli.mjs",
+    "tool": "node tool/cli.js",
     "watch:ssr": "cd ssr && webpack --mode=production --watch"
   },
   "jest": {

@@ -1,5 +1,8 @@
-const cheerio = require("cheerio");
-const { packageBCD } = require("./resolve-bcd");
+import cheerio from "cheerio";
+import { packageBCD } from "./resolve-bcd.js";
+import { createRequire } from "module";
+
+const require = createRequire(import.meta.url);
 const specs = require("browser-specs");
 const web = require("../kumascript/src/api/web.js");
 
@@ -738,8 +741,4 @@ function extractSummary(sections) {
   return summary;
 }
 
-module.exports = {
-  extractSidebar,
-  extractSections,
-  extractSummary,
-};
+export { extractSidebar, extractSections, extractSummary };

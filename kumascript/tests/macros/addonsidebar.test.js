@@ -1,14 +1,6 @@
-/**
- * @prettier
- */
-const { JSDOM } = require("jsdom");
+import { jsdom } from "jsdom";
 
-const {
-  beforeEachMacro,
-  describeMacro,
-  itMacro,
-  lintHTML,
-} = require("./utils");
+import { beforeEachMacro, describeMacro, itMacro, lintHTML } from "./utils.js";
 
 const SUMMARIES = {
   "en-US": [
@@ -107,7 +99,7 @@ function getMockResultForGetChildren(doc_url) {
 function checkSidebarResult(html, locale, isUnderWebExtAPI = false) {
   // Lint the HTML
   expect(lintHTML(html)).toBeFalsy();
-  const dom = JSDOM.fragment(html);
+  const dom = jsdom.fragment(html);
   const section = dom.querySelector("section#Quick_links");
   // Check the basics
   expect(section).toBeTruthy();

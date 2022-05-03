@@ -1,44 +1,44 @@
-const fs = require("fs");
-const path = require("path");
+import fs from "fs";
+import path from "path";
+import { fileURLToPath } from "url";
 
-const klawSync = require("klaw-sync");
-const frontmatter = require("front-matter");
-const program = require("@caporal/core").default;
-const chalk = require("chalk");
-const { prompt } = require("inquirer");
-const openEditor = require("open-editor");
-const open = require("open");
-const {
-  syncAllTranslatedContent,
-} = require("../build/sync-translated-content");
-const log = require("loglevel");
-const cheerio = require("cheerio");
+import klawSync from "klaw-sync";
+import frontmatter from "front-matter";
+import { default as program } from "@caporal/core";
+import chalk from "chalk";
+import { prompt } from "inquirer";
+import openEditor from "open-editor";
+import open from "open";
+import { syncAllTranslatedContent } from "../build/sync-translated-content.js";
+import log from "loglevel";
+import cheerio from "cheerio";
 
-const dirname = __dirname;
-
-const { DEFAULT_LOCALE, VALID_LOCALES } = require("../libs/constants");
-const {
+import { DEFAULT_LOCALE, VALID_LOCALES } from "../libs/constants/index.js";
+import {
   CONTENT_ROOT,
   CONTENT_TRANSLATED_ROOT,
   Redirect,
   Document,
   buildURL,
   getRoot,
-} = require("../content");
-const { buildDocument, gatherGitHistory, buildSPAs } = require("../build");
-const {
+} from "../content/index.js";
+import { buildDocument, gatherGitHistory, buildSPAs } from "../build/index.js";
+import {
   ALWAYS_ALLOW_ROBOTS,
   BUILD_OUT_ROOT,
   GOOGLE_ANALYTICS_ACCOUNT,
   GOOGLE_ANALYTICS_DEBUG,
   VALID_FLAW_CHECKS,
-} = require("../build/constants");
-const { runMakePopularitiesFile } = require("./popularities");
-const { runOptimizeClientBuild } = require("./optimize-client-build");
-const { runBuildRobotsTxt } = require("./build-robots-txt");
-const kumascript = require("../kumascript");
+} from "../build/constants.js";
+import { runMakePopularitiesFile } from "./popularities.js";
+import { runOptimizeClientBuild } from "./optimize-client-build.js";
+import { runBuildRobotsTxt } from "./build-robots-txt.js";
+
+import { renderFromURL } from "../kumascript/index.js";
 
 const PORT = parseInt(process.env.SERVER_PORT || "5042");
+// eslint-disable-next-line
+const dirname = path.dirname(fileURLToPath(import.meta.url));
 
 // The Google Analytics pageviews CSV file parsed, sorted (most pageviews
 // first), and sliced to this number of URIs that goes into the JSON file.
@@ -827,7 +827,7 @@ if (Mozilla && !Mozilla.dntEnabled()) {
 
       async function renderOrRemoveMacros(document) {
         try {
-          return await kumascript.render(document.url, {
+          return await renderFromURL(document.url, {
             invalidateCache: true,
             selective_mode: [cmdLC, macros],
           });

@@ -1,8 +1,8 @@
-const {
+import {
   INTERACTIVE_EXAMPLES_BASE_URL,
   LIVE_SAMPLES_BASE_URL,
-} = require("../../kumascript/src/constants");
-const { findMatchesInText } = require("../matches-in-text");
+} from "../../kumascript/src/constants.js";
+import { findMatchesInText } from "../matches-in-text.js";
 
 const safeIFrameSrcs = [
   // EmbedGHLiveSample.ejs
@@ -107,4 +107,4 @@ function getAndMarkupUnsafeHTMLFlaws(doc, $, { rawContent, fileInfo }) {
   return flaws;
 }
 
-module.exports = { getUnsafeHTMLFlaws: getAndMarkupUnsafeHTMLFlaws };
+export { getAndMarkupUnsafeHTMLFlaws };

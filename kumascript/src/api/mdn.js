@@ -1,13 +1,10 @@
-/**
- * @prettier
- */
-const got = require("got");
-const util = require("./util.js");
+import got from "got";
+import * as util from "./util.js";
 
 // Module level caching for repeat calls to fetchWebExtExamples().
 let webExtExamples = null;
 
-module.exports = {
+export default {
   /**
    * Given a set of names and a corresponding list of values, apply HTML
    * escaping to each of the values and return an object with the results

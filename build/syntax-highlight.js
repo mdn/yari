@@ -1,4 +1,7 @@
-const Prism = require("prismjs");
+import Prism from "prismjs";
+import { createRequire } from "module";
+
+const require = createRequire(import.meta.url);
 const loadLanguages = require("prismjs/components/index");
 
 const lazy = (creator) => {
@@ -88,4 +91,4 @@ function syntaxHighlight($, doc) {
   });
 }
 
-module.exports = { syntaxHighlight };
+export { syntaxHighlight };

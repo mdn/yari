@@ -1,11 +1,9 @@
 /**
  * Utility functions are collected here. These are functions that are used
  * by the exported functions below. Some of them are themselves exported.
- *
- * @prettier
  */
-const sanitizeFilename = require("sanitize-filename");
-const cheerio = require("cheerio");
+import sanitizeFilename from "sanitize-filename";
+import cheerio from "cheerio";
 
 const H1_TO_H6_TAGS = new Set(["h1", "h2", "h3", "h4", "h5", "h6"]);
 const HEADING_TAGS = new Set([...H1_TO_H6_TAGS, "hgroup"]);
@@ -324,76 +322,76 @@ class HTMLTool {
   }
 }
 
+// Fill in undefined properties in object with values from the
+// defaults objects, and return the object. As soon as the property is
+// filled, further defaults will have no effect.
+//
+// Stolen from http://underscorejs.org/#defaults
+function defaults(obj, ...sources) {
+  for (const source of sources) {
+    for (const prop in source) {
+      if (obj[prop] === void 0) obj[prop] = source[prop];
+    }
+  }
+  return obj;
+}
+
+/**
+ * Prepares the provided path by looking for legacy paths that
+ * need to be prefixed by "/en-US/docs", as well as ensuring
+ * it starts with a "/" and replacing its spaces (whether
+ * encoded or not) with underscores.
+ */
+function preparePath(path) {
+  if (path.charAt(0) != "/") {
+    path = `/${path}`;
+  }
+  if (path.indexOf("/docs") == -1) {
+    // HACK: If this looks like a legacy wiki URL, throw /en-US/docs
+    // in front of it. That will trigger the proper redirection logic
+    // until/unless URLs are corrected in templates
+    path = `/en-US/docs${path}`;
+  }
+  return spacesToUnderscores(path);
+}
+
+/**
+ * #### htmlEscape(string)
+ * Escape the given string for HTML inclusion.
+ *
+ * @param {string} s
+ * @return {string}
+ */
+function htmlEscape(s) {
+  return `${s}`
+    .replace(/&/g, "&amp;")
+    .replace(/>/g, "&gt;")
+    .replace(/</g, "&lt;")
+    .replace(/"/g, "&quot;");
+}
+
+function escapeQuotes(a) {
+  let b = "";
+  for (let i = 0, len = a.length; i < len; i++) {
+    let c = a[i];
+    if (c == '"') {
+      c = "&quot;";
+    }
+    b += c;
+  }
+  return b.replace(/(<([^>]+)>)/gi, "");
+}
+
 // Utility functions are collected here. These are functions that are used
 // by the exported functions below. Some of them are themselves exported.
-module.exports = {
-  // Fill in undefined properties in object with values from the
-  // defaults objects, and return the object. As soon as the property is
-  // filled, further defaults will have no effect.
-  //
-  // Stolen from http://underscorejs.org/#defaults
-  defaults(obj, ...sources) {
-    for (const source of sources) {
-      for (const prop in source) {
-        if (obj[prop] === void 0) obj[prop] = source[prop];
-      }
-    }
-    return obj;
-  },
-
-  /**
-   * Prepares the provided path by looking for legacy paths that
-   * need to be prefixed by "/en-US/docs", as well as ensuring
-   * it starts with a "/" and replacing its spaces (whether
-   * encoded or not) with underscores.
-   */
-  preparePath(path) {
-    if (path.charAt(0) != "/") {
-      path = `/${path}`;
-    }
-    if (path.indexOf("/docs") == -1) {
-      // HACK: If this looks like a legacy wiki URL, throw /en-US/docs
-      // in front of it. That will trigger the proper redirection logic
-      // until/unless URLs are corrected in templates
-      path = `/en-US/docs${path}`;
-    }
-    return spacesToUnderscores(path);
-  },
-
-  /**
-   * #### htmlEscape(string)
-   * Escape the given string for HTML inclusion.
-   *
-   * @param {string} s
-   * @return {string}
-   */
-  htmlEscape(s) {
-    return `${s}`
-      .replace(/&/g, "&amp;")
-      .replace(/>/g, "&gt;")
-      .replace(/</g, "&lt;")
-      .replace(/"/g, "&quot;");
-  },
-
-  escapeQuotes(a) {
-    let b = "";
-    for (let i = 0, len = a.length; i < len; i++) {
-      let c = a[i];
-      if (c == '"') {
-        c = "&quot;";
-      }
-      b += c;
-    }
-    return b.replace(/(<([^>]+)>)/gi, "");
-  },
-
+export {
+  defaults,
+  preparePath,
+  htmlEscape,
+  escapeQuotes,
   safeDecodeURIComponent,
-
   spacesToUnderscores,
-
   slugify,
-
   HTMLTool,
-
   KumascriptError,
 };

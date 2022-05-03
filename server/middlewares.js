@@ -1,10 +1,10 @@
-const express = require("express");
+import express from "express";
 
-const { CSP_VALUE } = require("../libs/constants");
-const { resolveFundamental } = require("../libs/fundamental-redirects");
-const { getLocale } = require("../libs/get-locale");
-const { STATIC_ROOT } = require("./constants");
-const { devMiddlewares } = require("./dev");
+import { CSP_VALUE } from "../libs/constants/index.js";
+import { resolveFundamental } from "../libs/fundamental-redirects/index.js";
+import { getLocale } from "../libs/get-locale/index.js";
+import { STATIC_ROOT } from "./constants.js";
+import { devMiddlewares } from "./dev.js";
 
 // Lowercase every request because every possible file we might have
 // on disk is always in lowercase.
@@ -49,15 +49,14 @@ const originRequest = (req, res, next) => {
   }
 };
 
-module.exports = {
-  staticMiddlewares: [
-    ...devMiddlewares,
-    slugRewrite,
-    express.static(STATIC_ROOT, {
-      setHeaders: (res) => {
-        res.setHeader("Content-Security-Policy", CSP_VALUE);
-      },
-    }),
-  ],
-  originRequestMiddleware: originRequest,
-};
+export const staticMiddlewares = [
+  ...devMiddlewares,
+  slugRewrite,
+  express.static(STATIC_ROOT, {
+    setHeaders: (res) => {
+      res.setHeader("Content-Security-Policy", CSP_VALUE);
+    },
+  }),
+];
+
+export const originRequestMiddleware = originRequest;

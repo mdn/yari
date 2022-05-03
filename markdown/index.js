@@ -1,7 +1,2 @@
-const util = require("./utils");
-const m2h = require("./m2h");
-
-module.exports = {
-  ...util,
-  ...m2h,
-};
+export * from "./utils/index.js";
+export * from "./m2h/index.js";

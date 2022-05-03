@@ -1,22 +1,22 @@
-const fs = require("fs");
-const path = require("path");
+import fs from "fs";
+import path from "path";
 
-const { fdir } = require("fdir");
+import { fdir } from "fdir";
 
-const express = require("express");
+import express from "express";
 const router = express.Router();
 
-const {
+import {
   getPopularities,
   VALID_LOCALES,
   Document,
   Translation,
   CONTENT_ROOT,
   CONTENT_TRANSLATED_ROOT,
-} = require("../content");
-const { getLastCommitURL } = require("../build");
-const { ACTIVE_LOCALES, DEFAULT_LOCALE } = require("../libs/constants");
-const LANGUAGES_RAW = require("../content/languages.json");
+} from "../content/index.js";
+import { getLastCommitURL } from "../build/index.js";
+import { ACTIVE_LOCALES, DEFAULT_LOCALE } from "../libs/constants/index.js";
+import LANGUAGES_RAW from "../content/languages.json";
 
 // Module-level cache
 const allPopularityValues = [];
@@ -52,7 +52,7 @@ function packageTranslationDifferences(translationDifferences) {
 }
 
 const _foundDocumentsCache = new Map();
-function findDocuments({ locale }) {
+export function findDocuments({ locale }) {
   const counts = {
     // Number of documents found that aren't skipped
     found: 0,
@@ -626,4 +626,4 @@ router.get("/dashboard", async (req, res) => {
   res.json(data);
 });
 
-module.exports = { router };
+export { router };

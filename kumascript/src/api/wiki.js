@@ -1,9 +1,6 @@
-/**
- * @prettier
- */
-const util = require("./util.js");
+import * as util from "./util.js";
 
-module.exports = {
+export default {
   //
   // Given a string, escape any quotes within it so it can be
   // passed to other functions.

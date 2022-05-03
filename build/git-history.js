@@ -1,7 +1,7 @@
-const fs = require("fs");
-const path = require("path");
+import fs from "fs";
+import path from "path";
 
-const { CONTENT_ROOT, execGit } = require("../content");
+import { CONTENT_ROOT, execGit } from "../content/index.js";
 
 function getFromGit(contentRoot = CONTENT_ROOT) {
   // If `contentRoot` was a symlink, the `repoRoot` won't be. That'll make it
@@ -90,6 +90,4 @@ function gather(contentRoots, previousFile = null) {
   return map;
 }
 
-module.exports = {
-  gather,
-};
+export { gather };

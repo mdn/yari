@@ -3,10 +3,10 @@
  * process.env.BUILD_ALWAYS_ALLOW_ROBOTS.
  *
  */
-const fs = require("fs");
+import fs from "fs";
 
-const { VALID_LOCALES } = require("../libs/constants");
-const { ALWAYS_ALLOW_ROBOTS } = require("../build/constants");
+import { VALID_LOCALES } from "../libs/constants/index.js";
+import { ALWAYS_ALLOW_ROBOTS } from "../build/constants.js";
 
 const ALLOW_TEXT = `
 User-agent: *
@@ -34,4 +34,4 @@ async function runBuildRobotsTxt(outfile) {
   fs.writeFileSync(outfile, `${content.trim()}\n`, "utf-8");
 }
 
-module.exports = { runBuildRobotsTxt };
+export { runBuildRobotsTxt };
