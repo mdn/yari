@@ -1,7 +1,7 @@
 import LRU from "lru-cache";
 
 import { Document } from "../content/index.js";
-import { m2h } from "@mdn/markdown-converter/src/index.js";
+import { m2h } from "../markdown/index.js";
 
 import {
   INTERACTIVE_EXAMPLES_BASE_URL,
