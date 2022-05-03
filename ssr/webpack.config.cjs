@@ -1,6 +1,8 @@
 const path = require("path");
 
+// eslint-disable-next-line node/no-unpublished-require
 const nodeExternals = require("webpack-node-externals");
+// eslint-disable-next-line node/no-unpublished-require
 const webpack = require("webpack");
 
 const dirname = __dirname;

@@ -5,7 +5,7 @@ import fs from "fs";
 import { fileURLToPath } from "url";
 import path from "path";
 import ejs from "ejs";
-import Templates from "../src/templates.js";
+import { Templates } from "../src/templates.js";
 
 describe("macros/ directory", () => {
   describe("compile all macros", () => {
