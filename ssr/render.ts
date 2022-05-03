@@ -1,5 +1,6 @@
 import fs from "fs";
 import path from "path";
+import { cwd } from "process";
 import { renderToString } from "react-dom/server";
 import cheerio from "cheerio";
 
@@ -54,7 +55,7 @@ const lazy = (creator) => {
   };
 };
 
-const clientBuildRoot = path.resolve(dirname, "../../client/build");
+const clientBuildRoot = path.resolve(cwd(), "client/build");
 
 const readBuildHTML = lazy(() => {
   const html = fs.readFileSync(
