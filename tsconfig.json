@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "jsx": "react-jsx",
-    "module": "es2020",
+    "module": "esnext",
     "strictBindCallApply": true,
     "target": "es2018",
     "preserveWatchOutput": true
