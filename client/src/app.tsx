@@ -25,9 +25,13 @@ import { useIsServer } from "./hooks";
 
 import { Banner, hasActiveBanners } from "./banners";
 
+// @ts-ignore
 const AllFlaws = React.lazy(() => import("./flaws"));
+// @ts-ignore
 const Translations = React.lazy(() => import("./translations"));
+// @ts-ignore
 const WritersHomepage = React.lazy(() => import("./writers-homepage"));
+// @ts-ignore
 const Sitemap = React.lazy(() => import("./sitemap"));
 
 function Layout({ pageType, children }) {
