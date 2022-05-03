@@ -1,6 +1,7 @@
 import base64
 import hashlib
 import json
+import os
 import subprocess
 from pathlib import Path
 
@@ -42,6 +43,12 @@ def make_package(lambda_function_dir):
     # Remove any existing zip package(s).
     for zip_filename in lambda_function_dir.glob("*.zip"):
         zip_filename.unlink()
+
+    # Reset timestamp of files for reproducible zips.
+    times = (0, 0)
+    for file in lambda_function_dir.glob("**/*"):
+        os.utime(file, times)
+
     # Create a new zip package.
     subprocess_result = subprocess.run(
         "yarn run make-package",
