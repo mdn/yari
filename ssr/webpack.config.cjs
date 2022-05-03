@@ -10,7 +10,7 @@ module.exports = {
   entry: "./index.ts",
   output: {
     path: path.resolve(dirname, "dist"),
-    filename: "[name].js",
+    filename: "[name].cjs",
     sourceMapFilename: "[name].js.map",
     libraryTarget: "commonjs2",
   },
