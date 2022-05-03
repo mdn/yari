@@ -1,7 +1,7 @@
-const fs = require("fs");
-const path = require("path");
+import fs from "fs";
+import path from "path";
 
-const Document = require("./document");
+import Document from "./document.js";
 
 describe("Document.findAll()", () => {
   it("should always return files that exist", () => {

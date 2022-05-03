@@ -1,5 +1,5 @@
-const fs = require("fs");
-const path = require("path");
+import fs from "fs";
+import path from "path";
 
 // Module-level cache
 const gitHistoryMaps = new Map();
@@ -23,4 +23,4 @@ function getGitHistories(root, locale) {
   return gitHistoryMaps.get(folder);
 }
 
-module.exports = { getGitHistories };
+export { getGitHistories };

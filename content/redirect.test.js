@@ -1,4 +1,4 @@
-const Redirect = require("./redirect");
+import * as Redirect from "./redirect.js";
 
 describe("short cuts", () => {
   it("simple chain", () => {

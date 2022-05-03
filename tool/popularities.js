@@ -9,10 +9,10 @@
  * dynamically on every single production build.
  *
  */
-const fs = require("fs");
+import fs from "fs";
 
-const csv = require("@fast-csv/parse");
-const got = require("got");
+import csv from "@fast-csv/parse";
+import got from "got";
 
 const CURRENT_URL =
   "https://mdn-popularities-prod.s3.amazonaws.com/current.txt";
@@ -70,4 +70,4 @@ async function runMakePopularitiesFile(options) {
   });
 }
 
-module.exports = { runMakePopularitiesFile };
+export { runMakePopularitiesFile };

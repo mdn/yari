@@ -1,7 +1,6 @@
-const { assert, itMacro, describeMacro, lintHTML } = require("./utils");
+import { assert, itMacro, describeMacro, lintHTML } from "./utils.js";
 
-const jsdom = require("jsdom");
-const { JSDOM } = jsdom;
+import { JSDOM } from "jsdom";
 
 describeMacro("Specifications", function () {
   itMacro("Outputs a simple div tag", async (macro) => {

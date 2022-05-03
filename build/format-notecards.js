@@ -1,7 +1,7 @@
 // Remove h4s from any existing notecards and transform them
 // from <div class="note notecard"><h4>Note:</h4>foobar</div> to
 // <div class="note notecard"><p><strong>Note:</strong>foobar</p></div>
-function formatNotecards($) {
+export function formatNotecards($) {
   $("div.notecard h4").each((_, element) => {
     const h4 = $(element);
     const text = h4.text();
@@ -30,5 +30,3 @@ function formatNotecards($) {
     h4.remove();
   });
 }
-
-module.exports = { formatNotecards };

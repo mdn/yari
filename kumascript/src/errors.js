@@ -1,6 +1,5 @@
 /**
  * Error classes that can be thrown when trying to render the macros on a page.
- * @prettier
  */
 
 /**
@@ -273,7 +272,7 @@ class MacroPagesError extends MacroExecutionError {
   }
 }
 
-module.exports = {
+export {
   SourceCodeError,
   MacroInvocationError,
   MacroNotFoundError,

@@ -1,7 +1,7 @@
-/* eslint-disable node/no-missing-require */
-const { CSP_VALUE } = require("@yari-internal/constants");
+/* eslint-disable node/no-missing-import */
+import { CSP_VALUE } from "@yari-internal/constants/index.js";
 
-exports.handler = async (event) => {
+export default async function handler(event) {
   /*
    * This Lambda@Edge function is designed to handle origin-response
    * events, so for example we can modify the response before it's
@@ -69,4 +69,4 @@ exports.handler = async (event) => {
   }
 
   return response;
-};
+}

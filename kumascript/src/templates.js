@@ -22,18 +22,17 @@
  * The getTemplateMap() function returns a Map object that maps
  * template names to the name of the file that implements the
  * template (this is used by the /macros/ endpoint in server.js)
- *
- * @prettier
  */
-const fs = require("fs");
-const path = require("path");
-const ejs = require("ejs");
+import fs from "fs";
+import path from "path";
+import { fileURLToPath } from "url";
+import ejs from "ejs";
 
-const dirname = __dirname;
+const dirname = path.dirname(fileURLToPath(import.meta.url));
 
 const DEFAULT_MACROS_DIRECTORY = path.normalize(`${dirname}/../macros/`);
 
-class Templates {
+export class Templates {
   constructor(macroDirectory = DEFAULT_MACROS_DIRECTORY) {
     this.macroDirectory = macroDirectory;
     this.macroNameToPath = new Map();
@@ -126,4 +125,4 @@ class Templates {
   }
 }
 
-module.exports = Templates;
+export default Templates;

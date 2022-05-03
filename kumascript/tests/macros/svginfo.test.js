@@ -1,10 +1,11 @@
-/**
- * @prettier
- */
-const path = require("path");
-const cheerio = require("cheerio");
+import path from "path";
+import cheerio from "cheerio";
+import { createRequire } from "module";
 
-const { itMacro, describeMacro, beforeEachMacro } = require("./utils");
+import { itMacro, describeMacro, beforeEachMacro } from "./utils.js";
+
+const jest = import.meta.jest;
+const require = createRequire(import.meta.url);
 
 const CONTENT_ROOT = process.env.CONTENT_ROOT;
 if (!CONTENT_ROOT) {

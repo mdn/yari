@@ -1,14 +1,14 @@
-const fs = require("fs");
-const path = require("path");
+import fs from "fs";
+import path from "path";
 
-const { resolveFundamental } = require("../libs/fundamental-redirects");
-const { decodePath, slugToFolder } = require("../libs/slug-utils");
-const {
+import { resolveFundamental } from "../libs/fundamental-redirects/index.js";
+import { decodePath, slugToFolderUtil } from "../libs/slug-utils/index.js";
+import {
   CONTENT_ROOT,
   CONTENT_TRANSLATED_ROOT,
   VALID_LOCALES,
-} = require("./constants");
-const { getRoot } = require("./utils");
+} from "./constants.js";
+import { getRoot } from "./utils.js";
 
 const FORBIDDEN_URL_SYMBOLS = ["\n", "\t"];
 const VALID_LOCALES_SET = new Set([...VALID_LOCALES.values()]);
@@ -35,7 +35,10 @@ function resolveDocumentPath(url) {
 
   const [, locale, , ...slug] = bareURL.toLowerCase().split("/");
 
-  const relativeFolderPath = path.join(locale, slugToFolder(slug.join("/")));
+  const relativeFolderPath = path.join(
+    locale,
+    slugToFolderUtil(slug.join("/"))
+  );
   const relativeFilePath = path.join(relativeFolderPath, "index.html");
 
   const root = getRoot(locale);
@@ -483,15 +486,9 @@ function save(localeFolder, pairs) {
   writeStream.end();
 }
 
-module.exports = {
-  add,
-  remove,
-  resolve,
-  load,
-  validateLocale,
-
-  testing: {
-    shortCuts,
-    decodePairs,
-  },
+const testing = {
+  shortCuts,
+  decodePairs,
 };
+
+export { add, remove, resolve, load, validateLocale, testing };

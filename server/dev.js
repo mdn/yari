@@ -1,11 +1,11 @@
-const devMiddlewares = [];
+/* eslint-disable node/no-unpublished-import */
+import webpack from "webpack";
+import webpackDevMiddleware from "webpack-dev-middleware";
+import webpackHotMiddleware from "webpack-hot-middleware";
+
+export const devMiddlewares = [];
 
 if (process.env.NODE_ENV === "development") {
-  /* eslint-disable node/no-unpublished-require */
-  const webpack = require("webpack");
-  const webpackDevMiddleware = require("webpack-dev-middleware");
-  const webpackHotMiddleware = require("webpack-hot-middleware");
-
   const webpackConfig = {
     entry: {
       app: [
@@ -33,7 +33,3 @@ if (process.env.NODE_ENV === "development") {
     })
   );
 }
-
-module.exports = {
-  devMiddlewares,
-};

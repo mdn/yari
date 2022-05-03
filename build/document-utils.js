@@ -1,4 +1,4 @@
-const { Document } = require("../content");
+import { Document } from "../content/index.js";
 
 /**
  * Temporary fix for long titles in breadcrumbs
@@ -73,4 +73,4 @@ function addBreadcrumbData(url, document) {
   document.parents = parents;
 }
 
-module.exports = { addBreadcrumbData };
+export { addBreadcrumbData };

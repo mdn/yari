@@ -1,8 +1,8 @@
-const cheerio = require("cheerio");
-const ejs = require("ejs");
+import cheerio from "cheerio";
+import ejs from "ejs";
 
-const { MacroLiveSampleError } = require("./errors.js");
-const { HTMLTool, KumascriptError, slugify } = require("./api/util.js");
+import { MacroLiveSampleError } from "./errors.js";
+import { HTMLTool, KumascriptError, slugify } from "./api/util.js";
 
 const LIVE_SAMPLE_HTML = `
 <!DOCTYPE html>
@@ -103,4 +103,4 @@ function buildLiveSamplePages(uri, title, $, rawBody) {
     .get();
 }
 
-module.exports = { buildLiveSamplePages };
+export { buildLiveSamplePages };

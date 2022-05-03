@@ -1,13 +1,13 @@
-const { assert, itMacro, describeMacro, lintHTML } = require("./utils");
+import { assert, itMacro, describeMacro, lintHTML } from "./utils.js";
+import fs from "fs";
+import path from "path";
+import { JSDOM } from "jsdom";
+import extend from "extend";
 
-const fs = require("fs");
-const path = require("path");
-const jsdom = require("jsdom");
-const extend = require("extend");
-const dirname = __dirname;
+import { fileURLToPath } from "url";
+const dirname = path.dirname(fileURLToPath(import.meta.url));
+
 const fixture_dir = path.resolve(dirname, "fixtures/compat");
-
-const { JSDOM } = jsdom;
 
 let fixtureCompatData = {};
 fs.readdirSync(fixture_dir).forEach(function (fn) {

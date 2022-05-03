@@ -1,13 +1,13 @@
-const fs = require("fs");
-const crypto = require("crypto");
-const path = require("path");
+import fs from "fs";
+import crypto from "crypto";
+import path from "path";
 
-const chalk = require("chalk");
-const fm = require("front-matter");
-const log = require("loglevel");
-const { fdir } = require("fdir");
+import chalk from "chalk";
+import fm from "front-matter";
+import log from "loglevel";
+import { fdir } from "fdir";
 
-const {
+import {
   buildURL,
   execGit,
   slugToFolder,
@@ -18,7 +18,7 @@ const {
   HTML_FILENAME,
   MARKDOWN_FILENAME,
   VALID_LOCALES,
-} = require("../content");
+} from "../content/index.js";
 
 const CONFLICTING = "conflicting";
 const ORPHANED = "orphaned";
@@ -240,7 +240,7 @@ function syncTranslatedContentForAllLocales() {
   return moved;
 }
 
-module.exports = {
+export {
   syncTranslatedContent,
   syncAllTranslatedContent,
   syncTranslatedContentForAllLocales,

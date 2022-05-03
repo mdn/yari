@@ -1,12 +1,12 @@
-const fs = require("fs");
-const path = require("path");
-const util = require("util");
+import fs from "fs";
+import path from "path";
+import util from "util";
 
-const fm = require("front-matter");
-const yaml = require("js-yaml");
-const { fdir } = require("fdir");
+import fm from "front-matter";
+import yaml from "js-yaml";
+import { fdir } from "fdir";
 
-const {
+import {
   CONTENT_TRANSLATED_ROOT,
   CONTENT_ROOT,
   ACTIVE_LOCALES,
@@ -14,13 +14,13 @@ const {
   ROOTS,
   HTML_FILENAME,
   MARKDOWN_FILENAME,
-} = require("./constants");
-const { getPopularities } = require("./popularities");
-const { getWikiHistories } = require("./wikihistories");
-const { getGitHistories } = require("./githistories");
-const { childrenFoldersForPath } = require("./document-paths");
+} from "./constants.js";
+import { getPopularities } from "./popularities.js";
+import { getWikiHistories } from "./wikihistories.js";
+import { getGitHistories } from "./githistories.js";
+import { childrenFoldersForPath } from "./document-paths.js";
 
-const {
+import {
   buildURL,
   getRoot,
   memoize,
@@ -28,8 +28,9 @@ const {
   execGit,
   urlToFolderPath,
   MEMOIZE_INVALIDATE,
-} = require("./utils");
-const Redirect = require("./redirect");
+} from "./utils.js";
+
+import * as Redirect from "./redirect.js";
 
 function buildPath(localeFolder, slug) {
   return path.join(localeFolder, slugToFolder(slug));
@@ -38,7 +39,7 @@ function buildPath(localeFolder, slug) {
 const getHTMLPath = (folder) => path.join(folder, HTML_FILENAME);
 const getMarkdownPath = (folder) => path.join(folder, MARKDOWN_FILENAME);
 
-function updateWikiHistory(localeContentRoot, oldSlug, newSlug = null) {
+export function updateWikiHistory(localeContentRoot, oldSlug, newSlug = null) {
   const all = JSON.parse(
     fs.readFileSync(path.join(localeContentRoot, "_wikihistory.json"))
   );
@@ -88,7 +89,7 @@ function extractLocale(folder) {
   return locale;
 }
 
-function saveFile(filePath, rawBody, metadata, frontMatterKeys = null) {
+export function saveFile(filePath, rawBody, metadata, frontMatterKeys = null) {
   const requiredFrontMatterKeys = ["title", "slug"];
   const optionalFrontMatterKeys = [
     "tags",
@@ -127,14 +128,14 @@ function saveFile(filePath, rawBody, metadata, frontMatterKeys = null) {
   fs.writeFileSync(filePath, combined);
 }
 
-function trimLineEndings(string) {
+export function trimLineEndings(string) {
   return string
     .split("\n")
     .map((s) => s.trimEnd())
     .join("\n");
 }
 
-function createHTML(html, metadata, root = null) {
+export function createHTML(html, metadata, root = null) {
   const folderPath = getFolderPath(metadata, root);
 
   fs.mkdirSync(folderPath, { recursive: true });
@@ -143,7 +144,7 @@ function createHTML(html, metadata, root = null) {
   return folderPath;
 }
 
-function createMarkdown(md, metadata, root = null) {
+export function createMarkdown(md, metadata, root = null) {
   const folderPath = getFolderPath(metadata, root);
 
   fs.mkdirSync(folderPath, { recursive: true });
@@ -152,7 +153,7 @@ function createMarkdown(md, metadata, root = null) {
   return folderPath;
 }
 
-function getFolderPath(metadata, root = null) {
+export function getFolderPath(metadata, root = null) {
   if (!root) {
     root = getRoot(metadata.locale);
   }
@@ -162,7 +163,7 @@ function getFolderPath(metadata, root = null) {
   );
 }
 
-const read = memoize((folderOrFilePath, roots = ROOTS) => {
+export const read = memoize((folderOrFilePath, roots = ROOTS) => {
   let filePath = null;
   let folder = null;
   let root = null;
@@ -327,7 +328,7 @@ const read = memoize((folderOrFilePath, roots = ROOTS) => {
   };
 });
 
-function update(url, rawBody, metadata) {
+export function update(url, rawBody, metadata) {
   const folder = urlToFolderPath(url);
   const document = read(folder);
   const locale = document.metadata.locale;
@@ -402,7 +403,7 @@ function update(url, rawBody, metadata) {
   }
 }
 
-function findByURL(url, ...args) {
+export function findByURL(url, ...args) {
   const [bareURL, hash = ""] = url.split("#", 2);
   if (!bareURL.toLowerCase().includes("/docs/")) {
     return;
@@ -414,7 +415,7 @@ function findByURL(url, ...args) {
   return doc;
 }
 
-function findAll({
+export function findAll({
   files = new Set(),
   folderSearch = null,
   locales = new Map(),
@@ -497,7 +498,7 @@ function findAll({
   };
 }
 
-function findChildren(url, recursive = false) {
+export function findChildren(url, recursive = false) {
   const locale = url.split("/")[1];
   const root = getRoot(locale);
   const folder = urlToFolderPath(url);
@@ -506,7 +507,7 @@ function findChildren(url, recursive = false) {
   return childPaths.map((folder) => read(folder));
 }
 
-function move(oldSlug, newSlug, locale, { dry = false } = {}) {
+export function move(oldSlug, newSlug, locale, { dry = false } = {}) {
   const oldUrl = buildURL(locale, oldSlug);
   const doc = findByURL(oldUrl);
   if (!doc) {
@@ -536,19 +537,19 @@ function move(oldSlug, newSlug, locale, { dry = false } = {}) {
   return pairs;
 }
 
-function fileForSlug(slug, locale) {
+export function fileForSlug(slug, locale) {
   return getMarkdownPath(getFolderPath({ slug, locale }));
 }
 
-function exists(slug, locale) {
+export function exists(slug, locale) {
   return Boolean(read(buildPath(locale.toLowerCase(), slug)));
 }
 
-function parentSlug(slug) {
+export function parentSlug(slug) {
   return slug.split("/").slice(0, -1).join("/");
 }
 
-function validate(slug, locale) {
+export function validate(slug, locale) {
   const errors = [];
   const file = buildPath(locale.toLowerCase(), slug);
 
@@ -564,7 +565,7 @@ function validate(slug, locale) {
   }
 }
 
-function remove(
+export function remove(
   slug,
   locale,
   { recursive = false, dry = false, redirect = "" } = {}
@@ -624,7 +625,7 @@ function remove(
   return docs;
 }
 
-module.exports = {
+export default {
   createHTML,
   createMarkdown,
   read,
@@ -633,19 +634,15 @@ module.exports = {
   remove,
   move,
   validate,
-
   urlToFolderPath,
   getFolderPath,
   fileForSlug,
   parentSlug,
-
   updateWikiHistory,
   trimLineEndings,
   saveFile,
-
   findByURL,
   findAll,
   findChildren,
-
   MEMOIZE_INVALIDATE,
 };

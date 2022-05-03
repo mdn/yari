@@ -1,7 +1,4 @@
-/**
- * @prettier
- */
-const { assert, itMacro, describeMacro } = require("./utils");
+import { assert, itMacro, describeMacro } from "./utils.js";
 
 // TODO: Add tests for other {{Deprecated_*}} macros
 describeMacro("Deprecated_Inline", function () {

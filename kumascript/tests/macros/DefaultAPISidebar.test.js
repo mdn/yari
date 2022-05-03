@@ -1,22 +1,15 @@
-/**
- * @prettier
- */
-const { JSDOM } = require("jsdom");
+import { JSDOM } from "jsdom";
 
-const {
-  beforeEachMacro,
-  describeMacro,
-  itMacro,
-  lintHTML,
-} = require("./utils");
-
-const dirname = __dirname;
+import { beforeEachMacro, describeMacro, itMacro, lintHTML } from "./utils.js";
 
 /**
  * Load all the fixtures.
  */
-const fs = require("fs");
-const path = require("path");
+import fs from "fs";
+import path from "path";
+import { fileURLToPath } from "url";
+const jest = import.meta.jest;
+const dirname = path.dirname(fileURLToPath(import.meta.url));
 const pagesFixturePath = path.resolve(
   dirname,
   "fixtures/defaultapisidebar/pages.json"

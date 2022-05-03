@@ -1,7 +1,4 @@
-/**
- * @prettier
- */
-const { assert, itMacro, describeMacro } = require("./utils");
+import { assert, itMacro, describeMacro } from "./utils.js";
 
 describeMacro("SVGAttr", () => {
   for (const locale of ["en-US", "de", "fr"]) {

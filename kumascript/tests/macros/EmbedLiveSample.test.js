@@ -1,7 +1,6 @@
-/**
- * @prettier
- */
-const { assert, itMacro, describeMacro, beforeEachMacro } = require("./utils");
+import { assert, itMacro, describeMacro, beforeEachMacro } from "./utils.js";
+
+const jest = import.meta.jest;
 
 // This needs to match what the equivalent is inside the EmbedLiveSample.ejs file.
 // Duplicating it here to avoid hardcoding its number in multiple places.

@@ -1,12 +1,12 @@
-const fs = require("fs");
-const path = require("path");
+import fs from "fs";
+import path from "path";
 
-const { fdir } = require("fdir");
+import { fdir } from "fdir";
 
-const { getPopularities } = require("../content");
-const { FLAW_LEVELS, options: buildOptions } = require("../build");
+import { getPopularities } from "../content/index.js";
+import { FLAW_LEVELS, options as buildOptions } from "../build/index.js";
 
-const { BUILD_OUT_ROOT } = require("../build/constants");
+import { BUILD_OUT_ROOT } from "../build/constants.js";
 
 // Module-level cache
 const allPopularityValues = [];
@@ -133,7 +133,7 @@ function strMapToObject(map) {
   return obj;
 }
 
-module.exports = (req, res) => {
+export default (req, res) => {
   const locale = req.query.locale.toLowerCase();
   if (!locale) {
     return res.status(400).send("'locale' is always required");

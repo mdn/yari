@@ -1,5 +1,5 @@
-const { test, expect } = require("@playwright/test");
-const got = require("got");
+import { test, expect } from "@playwright/test";
+import got from "got";
 
 const DEV_BASE_URL =
   process.env.DEVELOPING_DEV_BASE_URL || "http://localhost:3000";

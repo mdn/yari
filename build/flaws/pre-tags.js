@@ -1,4 +1,5 @@
-const { getFirstMatchInText } = require("../matches-in-text");
+import { getFirstMatchInText } from "../matches-in-text.js";
+
 const escapeHTML = (s) =>
   s
     .replace(/&/g, "&amp;")
@@ -102,4 +103,4 @@ function getPreTagFlaws(doc, $, { rawContent }) {
   return flaws;
 }
 
-module.exports = { getPreTagFlaws };
+export { getPreTagFlaws };

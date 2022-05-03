@@ -1,6 +1,7 @@
 import * as Gettext from "node-gettext";
 import * as fs from "fs";
 import * as path from "path";
+import { fileURLToPath } from "url";
 import { DEFAULT_LOCALE } from "../../../libs/constants";
 import { h } from "../h";
 import { asArray } from "../utils";
@@ -8,7 +9,7 @@ import { toText } from "./to-text";
 import { QueryAndTransform } from "./utils";
 import { ElementContent, Parent } from "hast";
 
-const dirname = __dirname;
+const dirname = path.dirname(fileURLToPath(import.meta.url));
 
 const gettextLocalizationMap = (() => {
   const getTextDefaultDomainName = "messages";

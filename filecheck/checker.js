@@ -1,23 +1,23 @@
-const fs = require("fs");
-const path = require("path");
-const { promisify } = require("util");
+import fs from "fs";
+import path from "path";
+import { promisify } from "util";
 
-const fse = require("fs-extra");
-const tempy = require("tempy");
-const cheerio = require("cheerio");
-const FileType = require("file-type");
-const imagemin = require("imagemin");
-const imageminPngquant = require("imagemin-pngquant");
-const imageminMozjpeg = require("imagemin-mozjpeg");
-const imageminGifsicle = require("imagemin-gifsicle");
-const imageminSvgo = require("imagemin-svgo");
-const isSvg = require("is-svg");
+import fse from "fs-extra";
+import tempy from "tempy";
+import cheerio from "cheerio";
+import { fileTypeFromFile } from "file-type";
+import imagemin from "imagemin";
+import imageminPngquant from "imagemin-pngquant";
+import imageminMozjpeg from "imagemin-mozjpeg";
+import imageminGifsicle from "imagemin-gifsicle";
+import imageminSvgo from "imagemin-svgo";
+import isSvg from "is-svg";
 
-const {
+import {
   MAX_FILE_SIZE,
   VALID_MIME_TYPES,
   MAX_COMPRESSION_DIFFERENCE_PERCENTAGE,
-} = require("./constants");
+} from "./constants.js";
 
 function formatSize(bytes) {
   if (bytes > 1024 * 1024) {
@@ -29,7 +29,7 @@ function formatSize(bytes) {
   return `${bytes}b`;
 }
 
-async function checkFile(filePath, options) {
+export async function checkFile(filePath, options) {
   // Check that the filename is always lowercase.
   if (path.basename(filePath) !== path.basename(filePath).toLowerCase()) {
     throw new Error(
@@ -78,7 +78,7 @@ async function checkFile(filePath, options) {
     });
   } else {
     // Check that the file extension matches the file header.
-    const fileType = await FileType.fromFile(filePath);
+    const fileType = await fileTypeFromFile(filePath);
     if (!fileType) {
       // This can easily happen if the .png (for example) file is actually just
       // a text file and not a binary.
@@ -198,8 +198,6 @@ async function checkFile(filePath, options) {
   }
 }
 
-async function runChecker(files, options) {
+export async function runChecker(files, options) {
   return Promise.all(files.map((f) => checkFile(f, options)));
 }
-
-module.exports = { runChecker, checkFile };

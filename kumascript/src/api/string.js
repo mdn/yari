@@ -1,8 +1,4 @@
-/**
- * @prettier
- */
-
-module.exports = {
+export default {
   async asyncReplace(source, pattern, asyncReplacer) {
     // Find all the matches, replace with "", and discard the result
     const matches = [];

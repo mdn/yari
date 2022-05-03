@@ -1,13 +1,13 @@
-const path = require("path");
+import path from "path";
 
-const { fdir } = require("fdir");
+import { fdir } from "fdir";
 
-const {
+import {
   HTML_FILENAME,
   MARKDOWN_FILENAME,
   CONTENT_ROOT,
   CONTENT_TRANSLATED_ROOT,
-} = require("./constants");
+} from "./constants.js";
 
 function allDocumentPathsAsTree(root) {
   const api = new fdir()
@@ -98,7 +98,7 @@ function initAllDocumentsPathsTree() {
 
 const ALL_DOCUMENT_PATHS_TREE = initAllDocumentsPathsTree();
 
-function childrenFoldersForPath(root, folder, recursive) {
+export function childrenFoldersForPath(root, folder, recursive) {
   const base = path.join(root, folder);
   const baseHTML = path.join(base, HTML_FILENAME);
   const baseMarkdown = path.join(base, MARKDOWN_FILENAME);
@@ -130,5 +130,3 @@ function childrenFoldersForPath(root, folder, recursive) {
       .map((childFilePath) => path.relative(root, path.dirname(childFilePath)));
   }
 }
-
-module.exports = { childrenFoldersForPath };
