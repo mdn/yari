@@ -61,7 +61,7 @@
     "@use-it/interval": "^1.0.0",
     "accept-language-parser": "^1.5.0",
     "browser-specs": "^3.11.0",
-    "chalk": "^4.1.2",
+    "chalk": "^5.0.0",
     "cheerio": "^1.0.0-rc.10",
     "cli-progress": "^3.11.1",
     "compression": "^1.7.4",
