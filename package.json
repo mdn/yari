@@ -34,7 +34,7 @@
     "test:kumascript": "cross-env NODE_OPTIONS=--experimental-vm-modules jest kumascript --env=node",
     "test:prepare": "yarn build:prepare && yarn build && yarn start:static-server",
     "test:testing": "cross-env NODE_OPTIONS=--experimental-vm-modules jest --rootDir testing",
-    "tool": "ts-node tool/cli.js",
+    "tool": "node --loader ts-node/esm tool/cli.js",
     "watch:ssr": "cd ssr && webpack --mode=production --watch"
   },
   "jest": {
