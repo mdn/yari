@@ -4,7 +4,8 @@
     "module": "esnext",
     "strictBindCallApply": true,
     "target": "ES2018",
-    "preserveWatchOutput": true
+    "preserveWatchOutput": true,
+    "allowSyntheticDefaultImports": true
   },
   "files": []
 }
