@@ -208,7 +208,7 @@ exports.handler = async (event) => {
     );
     if (typeof REDIRECTS[source] == "string") {
       const target = REDIRECTS[source] + suffix;
-      return redirect(target);
+      return redirect(target, 301, { cacheControlSeconds: THIRTY_DAYS });
     }
   }
 
