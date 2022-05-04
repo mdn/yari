@@ -217,6 +217,8 @@ jobs:
           CONTENT_TRANSLATED_ROOT: ${{ github.workspace }}/mdn/translated-content/files
 
           DEPLOYER_BUCKET_NAME: mdn-content-prod
+          # Uncomment when we're confident that automatic Lambda deployment is flawless.
+          #DEPLOYER_DISTRIBUTION_ID: E2ZY2DGUN70EMI
 
           AWS_ACCESS_KEY_ID: ${{ secrets.DEPLOYER_PROD_AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.DEPLOYER_PROD_AWS_SECRET_ACCESS_KEY }}
