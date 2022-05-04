@@ -2,8 +2,9 @@ import React from "react";
 import { useSearchParams, useParams, useNavigate } from "react-router-dom";
 import useSWR, { mutate } from "swr";
 
-import { CRUD_MODE, MDN_APP_ANDROID, MDN_APP_DESKTOP } from "../constants";
+import { CRUD_MODE } from "../constants";
 import { useGA } from "../ga-context";
+
 import {
   useDocumentURL,
   useCopyExamplesToClipboard,
@@ -11,14 +12,16 @@ import {
 } from "./hooks";
 import { Doc } from "./types";
 // Ingredients
-import { Prose, ProseWithHeading } from "./ingredients/prose";
+import { Prose } from "./ingredients/prose";
 import { LazyBrowserCompatibilityTable } from "./lazy-bcd-table";
 import { SpecificationSection } from "./ingredients/spec-section";
 
 // Misc
 // Sub-components
+import { TopNavigation } from "../ui/organisms/top-navigation";
 import { ArticleActionsContainer } from "../ui/organisms/article-actions-container";
 import { LocalizedContentNote } from "./molecules/localized-content-note";
+import { OfflineStatusBar } from "../ui/molecules/offline-status-bar";
 import { TOC } from "./organisms/toc";
 import { RenderSideBar } from "./organisms/sidebar";
 import { RetiredLocaleNote } from "./molecules/retired-locale-note";
@@ -43,6 +46,7 @@ const MathMLPolyfillMaybe = React.lazy(() => import("./mathml-polyfill"));
 
 export function Document(props /* TODO: define a TS interface for this */) {
   const ga = useGA();
+
   const mountCounter = React.useRef(0);
   const documentURL = useDocumentURL();
   const { locale } = useParams();
@@ -50,22 +54,36 @@ export function Document(props /* TODO: define a TS interface for this */) {
 
   const navigate = useNavigate();
 
+  const previousDoc = React.useRef(null);
+
   const dataURL = `${documentURL}/index.json`;
   const { data: doc, error } = useSWR<Doc>(
     dataURL,
     async (url) => {
       const response = await fetch(url);
+
       if (!response.ok) {
-        if (response.status === 404) {
-          throw new Error(`${response.status} on ${url}: Page not found`);
+        switch (response.status) {
+          case 404:
+            throw new Error(`${response.status} on ${url}: Page not found`);
+
+          case 504:
+            if (previousDoc.current) {
+              return previousDoc.current;
+            }
         }
+
         const text = await response.text();
         throw new Error(`${response.status} on ${url}: ${text}`);
       }
+
       const { doc } = await response.json();
+      previousDoc.current = doc;
+
       if (response.redirected) {
         navigate(doc.mdn_url);
       }
+
       return doc;
     },
     {
@@ -88,12 +106,6 @@ export function Document(props /* TODO: define a TS interface for this */) {
       document.title = "💔 Loading error";
     } else if (doc) {
       document.title = doc.pageTitle;
-      MDN_APP_DESKTOP &&
-        window.Desktop &&
-        window.Desktop.setTitle(doc.pageTitle);
-      MDN_APP_ANDROID &&
-        window.Android &&
-        window.Android.setTitle(doc.pageTitle);
     }
   }, [doc, error]);
 
@@ -161,7 +173,12 @@ export function Document(props /* TODO: define a TS interface for this */) {
 
   return (
     <>
-      <ArticleActionsContainer doc={doc} />
+      <div className="main-document-header-container">
+        <TopNavigation />
+        <ArticleActionsContainer doc={doc} />
+      </div>
+      {/* only include this if we are not server-side rendering */}
+      {!isServer && <OfflineStatusBar />}
       {doc.isTranslated ? (
         <div className="container">
           <LocalizedContentNote isActive={doc.isActive} locale={locale} />
@@ -173,7 +190,7 @@ export function Document(props /* TODO: define a TS interface for this */) {
           </div>
         )
       )}
-      <div className="article-wrapper">
+      <div className="main-wrapper">
         <RenderSideBar doc={doc} />
 
         <div className="toc">
@@ -211,24 +228,7 @@ export function Document(props /* TODO: define a TS interface for this */) {
 function RenderDocumentBody({ doc }) {
   return doc.body.map((section, i) => {
     if (section.type === "prose") {
-      // Only exceptional few should use the <Prose/> component,
-      // as opposed to <ProseWithHeading/>.
-      if (!section.value.id) {
-        return (
-          <Prose
-            key={section.value.id || `prose${i}`}
-            section={section.value}
-          />
-        );
-      } else {
-        return (
-          <ProseWithHeading
-            key={section.value.id}
-            id={section.value.id}
-            section={section.value}
-          />
-        );
-      }
+      return <Prose key={section.value.id} section={section.value} />;
     } else if (section.type === "browser_compatibility") {
       return (
         <LazyBrowserCompatibilityTable
@@ -249,22 +249,32 @@ function RenderDocumentBody({ doc }) {
 
 function LoadingError({ error }) {
   return (
-    <div className="page-content-container loading-error">
-      <h3>Loading Error</h3>
-      {error instanceof window.Response ? (
+    <div className="standard-page">
+      <div id="content" className="page-content-container loading-error">
+        <h3>Loading Error</h3>
+        {error instanceof window.Response ? (
+          <p>
+            <b>{error.status}</b> on <b>{error.url}</b>
+            <br />
+            <small>{error.statusText}</small>
+          </p>
+        ) : (
+          <p>
+            <code>{error.toString()}</code>
+          </p>
+        )}
         <p>
-          <b>{error.status}</b> on <b>{error.url}</b>
-          <br />
-          <small>{error.statusText}</small>
+          <button
+            className="button"
+            type="button"
+            onClick={() => {
+              window.location.reload();
+            }}
+          >
+            Try reloading the page
+          </button>
         </p>
-      ) : (
-        <p>
-          <code>{error.toString()}</code>
-        </p>
-      )}
-      <p>
-        <a href=".">Try reloading the page</a>
-      </p>
+      </div>
     </div>
   );
 }

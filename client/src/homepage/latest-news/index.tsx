@@ -1,0 +1,99 @@
+import dayjs from "dayjs";
+import relativeTime from "dayjs/plugin/relativeTime";
+import useSWR from "swr";
+import { CRUD_MODE } from "../../constants";
+import { HydrationData } from "../../types/hydration";
+
+import "./index.scss";
+
+dayjs.extend(relativeTime);
+
+interface NewsItem {
+  url: string;
+  title: string;
+  source: {
+    name: string;
+    url: string;
+  };
+  published_at: string;
+}
+
+export function LatestNews(props: HydrationData<any>) {
+  const { data: { hyData } = {} } = useSWR<any>(
+    "./index.json",
+    async (url) => {
+      const response = await fetch(url);
+      if (!response.ok) {
+        const text = await response.text();
+        throw new Error(`${response.status} on ${url}: ${text}`);
+      }
+      return await response.json();
+    },
+    {
+      initialData: props.hyData ? props : undefined,
+      revalidateOnFocus: CRUD_MODE,
+    }
+  );
+
+  const newsItems: NewsItem[] = hyData?.latestNews?.items.slice(0, 3) ?? [];
+
+  if (!newsItems.length) {
+    return null;
+  }
+
+  function NewsItemTitle({ newsItem }: { newsItem: NewsItem }) {
+    const ageInDays = dayjs().diff(newsItem.published_at, "day");
+    const isNew = ageInDays < 7;
+
+    return (
+      <>
+        <a href={newsItem.url}>{newsItem.title}</a>
+        {isNew && (
+          <>
+            {" "}
+            <span className="badge">New</span>
+          </>
+        )}
+      </>
+    );
+  }
+
+  function NewsItemSource({ newsItem }: { newsItem: NewsItem }) {
+    const { source } = newsItem;
+
+    return (
+      <a className="news-source" href={source.url}>
+        {source.name}
+      </a>
+    );
+  }
+
+  function NewsItemDate({ newsItem }: { newsItem: NewsItem }) {
+    const relativeTime = dayjs(newsItem.published_at).fromNow();
+
+    return <>{relativeTime}</>;
+  }
+
+  return (
+    <section className="latest-news">
+      <h2>Latest news</h2>
+      <ul className="news-list">
+        {newsItems.map((newsItem) => (
+          <li className="news-item" key={newsItem.url}>
+            <p className="news-title">
+              <span>
+                <NewsItemTitle newsItem={newsItem} />
+              </span>
+              <span>
+                <NewsItemSource newsItem={newsItem} />
+              </span>
+            </p>
+            <span className="news-date">
+              <NewsItemDate newsItem={newsItem} />
+            </span>
+          </li>
+        ))}
+      </ul>
+    </section>
+  );
+}

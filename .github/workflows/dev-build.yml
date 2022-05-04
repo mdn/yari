@@ -58,13 +58,18 @@ jobs:
           # See matching warning for mdn/content checkout step
           fetch-depth: 0
 
+      - uses: actions/checkout@v3
+        with:
+          repository: mdn/mdn-contributor-spotlight
+          path: mdn/mdn-contributor-spotlight
+
       - name: Setup Node.js environment
         uses: actions/setup-node@v3
         with:
           node-version: "12"
 
       - name: Cache node_modules
-        uses: actions/cache@v2.1.7
+        uses: actions/cache@v3
         id: cached-node_modules
         with:
           path: |
@@ -76,7 +81,7 @@ jobs:
         run: yarn --frozen-lockfile
 
       - name: Install Python
-        uses: actions/setup-python@v3.0.0
+        uses: actions/setup-python@v3.1.2
         with:
           python-version: "3.8"
 
@@ -105,6 +110,7 @@ jobs:
           # sub-folder called "mdn/content"
           CONTENT_ROOT: ${{ github.workspace }}/mdn/content/files
           CONTENT_TRANSLATED_ROOT: ${{ github.workspace }}/mdn/translated-content/files
+          CONTRIBUTOR_SPOTLIGHT_ROOT: ${{ github.workspace }}/mdn/mdn-contributor-spotlight/contributors
 
           # This basically means that all live-sample iframes run on the same
           # host as the page that includes the iframe. Not great security but the
@@ -122,8 +128,6 @@ jobs:
           # This just makes sure the Google Analytics script gets used even if
           # it goes nowhere.
           BUILD_GOOGLE_ANALYTICS_ACCOUNT: UA-00000000-0
-          # Same with the Speedcurve LUX
-          BUILD_SPEEDCURVE_LUX_ID: 000000000
 
           # This removes the ability to sign in
           REACT_APP_DISABLE_AUTH: true
@@ -202,6 +206,19 @@ jobs:
           # (Or, make it an optional flag to the `update-lambda-functions` command)
 
           poetry run deployer search-index ../client/build
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.DEPLOYER_STAGE_AND_DEV_AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.DEPLOYER_STAGE_AND_DEV_AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1
+
+      - name: Invalidate CDN
+        env:
+          DISTRIBUTION: E9813D0RN1QZI
+          PATHS: /*
+        run: aws cloudfront create-invalidation --distribution-id "$DISTRIBUTION" --paths "$PATHS"
 
       - name: Slack Notification
         if: failure()

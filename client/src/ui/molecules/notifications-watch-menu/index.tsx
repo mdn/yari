@@ -5,11 +5,14 @@ import { NotificationsWatchMenuStart } from "./menu-start";
 
 import "./index.scss";
 import useSWR from "swr";
-import { useCSRFMiddlewareToken } from "../../../hooks";
+import { useCSRFMiddlewareToken, useOnlineStatus } from "../../../hooks";
 import { DropdownMenu, DropdownMenuWrapper } from "../dropdown";
+import { ManageOrUpgradeDialogNotifications } from "../manage-upgrade-dialog";
+import { useUIStatus } from "../../../ui-context";
 
 interface WatchModeData {
   status: string;
+  subscription_limit_reached: boolean;
 }
 
 export const NotificationsWatchMenu = ({ doc }) => {
@@ -24,6 +27,8 @@ export const NotificationsWatchMenu = ({ doc }) => {
   const slug = doc.mdn_url; // Unique ID for the page
   const apiURL = `/api/v1/plus/watching/?url=${slug}`;
   const csrfMiddlewareToken = useCSRFMiddlewareToken();
+  const ui = useUIStatus();
+  const { isOffline } = useOnlineStatus();
 
   const { data, mutate } = useSWR<WatchModeData>(
     apiURL,
@@ -40,6 +45,7 @@ export const NotificationsWatchMenu = ({ doc }) => {
     }
   );
   const watching = data?.status && data.status !== "unwatched";
+  const canWatchMore = !Boolean(data?.subscription_limit_reached);
 
   async function handleWatchSubmit({ unwatch }: { unwatch?: boolean }) {
     if (!data) {
@@ -76,10 +82,14 @@ export const NotificationsWatchMenu = ({ doc }) => {
     });
 
     if (!response.ok) {
-      console.log(response);
-      // if (response.error === "max_subscriptions"){
-      //   ToDo: Handle Error here
-      // }
+      const json = await response.json();
+      if (json?.error === "max_subscriptions") {
+        ui.setToastData({
+          mainText: "Couldn't watch article - Max subscriptions reached!",
+          isImportant: false,
+        });
+        return;
+      }
 
       throw new Error(`${response.status} on ${slug}`);
     }
@@ -87,9 +97,10 @@ export const NotificationsWatchMenu = ({ doc }) => {
     return true;
   }
 
+  const watchIcon = watching ? "eye-filled" : canWatchMore ? "eye" : "padlock";
   return (
     <DropdownMenuWrapper
-      className="watch-menu open-on-focus-within"
+      className="watch-menu"
       isOpen={show}
       setIsOpen={setShow}
     >
@@ -97,7 +108,8 @@ export const NotificationsWatchMenu = ({ doc }) => {
         <Button
           type="action"
           id="watch-menu-button"
-          icon={watching ? "eye-filled" : "eye"}
+          isDisabled={isOffline}
+          icon={watchIcon}
           extraClasses={`small watch-menu ${watching ? "highlight" : ""}`}
           ariaHasPopup={"menu"}
           aria-label="Watch this page for updates"
@@ -109,8 +121,11 @@ export const NotificationsWatchMenu = ({ doc }) => {
           {watching ? "Watching" : "Watch"}
         </Button>
       </React.Suspense>
-
-      {data && (
+      {!canWatchMore && !watching ? (
+        <DropdownMenu>
+          <ManageOrUpgradeDialogNotifications setShow={setShow} />
+        </DropdownMenu>
+      ) : (
         <DropdownMenu>
           <div
             className={`${menuId} show`}
@@ -121,7 +136,9 @@ export const NotificationsWatchMenu = ({ doc }) => {
               closeDropdown={closeDropdown}
               data={data}
               handleSelection={(unwatch: boolean) => {
-                handleWatchSubmit({ unwatch });
+                if (!watching || unwatch) {
+                  handleWatchSubmit({ unwatch });
+                }
               }}
             />
           </div>

@@ -4,7 +4,7 @@ import React from "react";
 type SubmenuItem = {
   component?: () => JSX.Element;
   description?: string;
-  extraClasses?: string;
+  extraClasses?: string | null;
   hasIcon?: boolean;
   iconClasses?: string;
   label?: string;
@@ -13,26 +13,32 @@ type SubmenuItem = {
   dot?: string;
 };
 
-type MenuEntry = {
+export type MenuEntry = {
   id: string;
   items: SubmenuItem[];
   label: string;
+  to?: string;
 };
 
 export const Submenu = ({
   menuEntry,
   defaultHidden = false,
   isDropdown = false,
+  submenuId,
+  extraClasses,
 }: {
   menuEntry: MenuEntry;
   defaultHidden?: boolean;
   isDropdown?: boolean;
+  submenuId?: string;
+  extraClasses?: string;
 }) => {
   return (
     <ul
+      id={submenuId}
       className={`${isDropdown ? "dropdown-list" : "submenu"} ${menuEntry.id} ${
         defaultHidden ? "hidden" : ""
-      }`}
+      } ${extraClasses || ""}`}
       role="menu"
       aria-labelledby={`${menuEntry.id}-button`}
     >
@@ -42,15 +48,21 @@ export const Submenu = ({
           return (
             <li
               key={key}
-              role="none"
-              className={`${item.extraClasses || undefined} ${
+              role="menuitem"
+              className={`${item.extraClasses || ""} ${
                 isDropdown ? "dropdown-item" : ""
               }`}
             >
               {item.component ? (
                 <item.component key={key} />
               ) : item.url ? (
-                <a href={item.url} className="submenu-item" role="menuitem">
+                <a
+                  href={item.url}
+                  className={`submenu-item ${
+                    item.url.startsWith("https://") ? "external" : ""
+                  }`}
+                  role="menuitem"
+                >
                   {item.hasIcon && <div className={item.iconClasses} />}
                   {item.dot && (
                     <span className="visually-hidden submenu-item-dot">

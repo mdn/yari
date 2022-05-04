@@ -19,7 +19,7 @@
   }
 }
 
-.article-wrapper {
+.main-wrapper {
   display: flex;
   max-width: var(--max-width);
   margin: 0 auto;
@@ -53,7 +53,7 @@
     }
   }
 
-  @media screen and (min-width: $screen-lg) {
+  @media screen and (min-width: $screen-xl) {
     display: grid;
     grid-template-columns: minmax(0, 1fr) minmax(0, 2.5fr) minmax(0, 15rem);
     gap: 3rem;
@@ -64,11 +64,9 @@
     .toc {
       display: block;
       grid-area: toc;
-
-      .document-toc-container {
-        position: sticky;
-        top: 3rem;
-      }
+      max-height: 100vh;
+      position: sticky;
+      top: var(--top-navigation-height);
     }
 
     .in-nav-toc {

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { useParams } from "react-router-dom";
 import useSWR from "swr";
 
@@ -26,10 +26,10 @@ export function useLocale() {
   return locale && VALID_LOCALES.has(locale) ? locale : "en-US";
 }
 
-export function useCSRFMiddlewareToken() {
+export function useCSRFMiddlewareToken(): string {
   const userData = useUserData();
   const userSettingsAPIURL = React.useMemo(() => {
-    return userData && userData.isAuthenticated ? "/api/v1/settings" : null;
+    return userData && userData.isAuthenticated ? "/api/v1/settings/" : null;
   }, [userData]);
   const { data, error } = useSWR<UserSettings>(
     userSettingsAPIURL,
@@ -43,7 +43,9 @@ export function useCSRFMiddlewareToken() {
   );
 
   if (!error) {
-    return data?.csrfmiddlewaretoken;
+    return data?.csrfmiddlewaretoken ?? "";
+  } else {
+    return "";
   }
 }
 
@@ -75,4 +77,26 @@ export function useOnClickOutside(ref, handler) {
     // ... passing it into this hook.
     [ref, handler]
   );
+}
+
+export function useOnlineStatus(): { isOnline: boolean; isOffline: boolean } {
+  const [isOnline, setIsOnline] = useState<boolean>(
+    window?.navigator.onLine ?? true
+  );
+  const isOffline = useMemo(() => !isOnline, [isOnline]);
+
+  useEffect(() => {
+    const handleOnline = () => setIsOnline(true);
+    const handleOffline = () => setIsOnline(false);
+
+    window.addEventListener("offline", handleOffline);
+    window.addEventListener("online", handleOnline);
+
+    return () => {
+      window.removeEventListener("offline", handleOffline);
+      window.removeEventListener("online", handleOnline);
+    };
+  }, []);
+
+  return { isOnline, isOffline };
 }

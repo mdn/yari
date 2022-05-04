@@ -25,8 +25,15 @@ const {
 const { renderHTML } = require("../ssr/dist/main");
 const { CSP_VALUE, DEFAULT_LOCALE } = require("../libs/constants");
 
-const { STATIC_ROOT, PROXY_HOSTNAME, FAKE_V1_API } = require("./constants");
+const {
+  STATIC_ROOT,
+  PROXY_HOSTNAME,
+  FAKE_V1_API,
+  CONTENT_HOSTNAME,
+  OFFLINE_CONTENT,
+} = require("./constants");
 const documentRouter = require("./document");
+const documentTraitsRouter = require("./traits");
 const fakeV1APIRouter = require("./fake-v1-api");
 const { searchIndexRoute } = require("./search-index");
 const flawsRoute = require("./flaws");
@@ -83,6 +90,15 @@ const proxy = FAKE_V1_API
       // timeout: 20000,
     });
 
+const contentProxy =
+  CONTENT_HOSTNAME &&
+  createProxyMiddleware({
+    target: `https://${CONTENT_HOSTNAME}`,
+    changeOrigin: true,
+    // proxyTimeout: 20000,
+    // timeout: 20000,
+  });
+
 app.use("/api/v1", proxy);
 // This is an exception and it's only ever relevant in development.
 app.use("/users/*", proxy);
@@ -110,6 +126,8 @@ app.post(
 );
 
 app.use("/_document", documentRouter);
+
+app.use("/_traits", documentTraitsRouter);
 
 app.get("/_open", (req, res) => {
   const { line, column, filepath, url } = req.query;
@@ -176,7 +194,7 @@ app.get("/*/contributors.txt", async (req, res) => {
   );
 });
 
-app.get("/*", async (req, res) => {
+app.get("/*", async (req, res, ...args) => {
   if (req.url.startsWith("/_")) {
     // URLs starting with _ is exclusively for the meta-work and if there
     // isn't already a handler, it's something wrong.
@@ -186,6 +204,13 @@ app.get("/*", async (req, res) => {
   // If the catch-all gets one of these something's gone wrong
   if (req.url.startsWith("/static")) {
     return res.status(404).send("Page not found");
+  }
+  if (OFFLINE_CONTENT) {
+    return res.status(404).send("Offline");
+  }
+  if (contentProxy) {
+    console.log(`proxying: ${req.url}`);
+    return contentProxy(req, res, ...args);
   }
 
   if (req.url.includes("/_sample_.")) {

@@ -37,6 +37,22 @@
 
   a {
     min-height: 0;
-    color: #f16b8c;
+    color: var(--color-announcement-banner-accent);
+
+    &:hover,
+    &:focus {
+      text-decoration: underline;
+    }
+  }
+
+  .underlined {
+    font-style: normal;
+    text-decoration: underline var(--color-announcement-banner-accent) 0.15rem;
+  }
+
+  .mdn-plus {
+    color: var(--color-announcement-banner-accent);
+    font-size: 1.2rem;
+    font-weight: 700;
   }
 }

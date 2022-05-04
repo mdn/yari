@@ -189,12 +189,6 @@ test("content built foo page", () => {
   // The ID should match what's set in `testing/.env`.
   expect($('script[src="/static/js/ga.js"]').length).toBe(1);
 
-  // The HTML should contain the Speedcurve LUX snippet.
-  // The ID should match what's set in `testing/.env`.
-  expect($('script[src^="https://cdn.speedcurve.com/"]').attr("src")).toContain(
-    "012345"
-  );
-
   // Because this en-US page has a French translation
   expect($('link[rel="alternate"]').length).toBe(3);
   expect($('link[rel="alternate"][hreflang="en"]').length).toBe(1);
@@ -1230,11 +1224,11 @@ test("plus page", () => {
   const html = fs.readFileSync(htmlFile, "utf-8");
   const $ = cheerio.load(html);
   expect($("title").text()).toContain("Plus");
-  expect($('meta[name="robots"]').attr("content")).toBe("noindex, nofollow");
+  expect($('meta[name="robots"]').attr("content")).toBe("index, follow");
 });
 
-test("plus bookmarks page", () => {
-  const builtFolder = path.join(buildRoot, "en-us", "plus", "collection");
+test("plus collections page", () => {
+  const builtFolder = path.join(buildRoot, "en-us", "plus", "collections");
   expect(fs.existsSync(builtFolder)).toBeTruthy();
   const htmlFile = path.join(builtFolder, "index.html");
   const html = fs.readFileSync(htmlFile, "utf-8");
@@ -1502,8 +1496,8 @@ test("external links always get the right attributes", () => {
   // 4 links on that page and we'll do 2 assertions for each one, plus
   // 1 for the extra sanity check.
   expect.assertions(4 * 2 + 1);
-  expect($("article > div a").length).toBe(4); // sanity check
-  $("article > div a").each((i, element) => {
+  expect($("article > section div a").length).toBe(4); // sanity check
+  $("article > section div a").each((i, element) => {
     const $a = $(element);
     expect($a.hasClass("external")).toBe(true);
     expect(

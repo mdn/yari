@@ -3,7 +3,6 @@ const path = require("path");
 const util = require("util");
 
 const fm = require("front-matter");
-const glob = require("glob");
 const yaml = require("js-yaml");
 const { fdir } = require("fdir");
 
@@ -13,6 +12,8 @@ const {
   ACTIVE_LOCALES,
   VALID_LOCALES,
   ROOTS,
+  HTML_FILENAME,
+  MARKDOWN_FILENAME,
 } = require("./constants");
 const { getPopularities } = require("./popularities");
 const { getWikiHistories } = require("./wikihistories");
@@ -33,9 +34,7 @@ function buildPath(localeFolder, slug) {
   return path.join(localeFolder, slugToFolder(slug));
 }
 
-const HTML_FILENAME = "index.html";
 const getHTMLPath = (folder) => path.join(folder, HTML_FILENAME);
-const MARKDOWN_FILENAME = "index.md";
 const getMarkdownPath = (folder) => path.join(folder, MARKDOWN_FILENAME);
 
 function updateWikiHistory(localeContentRoot, oldSlug, newSlug = null) {
@@ -501,15 +500,18 @@ function findChildren(url, recursive = false) {
   const locale = url.split("/")[1];
   const root = getRoot(locale);
   const folder = urlToFolderPath(url);
-  const globber = recursive ? ["*", "**"] : ["*"];
-  const childPaths = glob.sync(
-    path.join(
-      root,
-      folder,
-      ...globber,
-      `+(${HTML_FILENAME}|${MARKDOWN_FILENAME})`
-    )
-  );
+
+  const api = new fdir()
+    .withFullPaths()
+    .withErrors()
+    .filter((filePath) => {
+      return (
+        filePath.endsWith(HTML_FILENAME) || filePath.endsWith(MARKDOWN_FILENAME)
+      );
+    })
+    .withMaxDepth(recursive ? Infinity : 1)
+    .crawl(path.join(root, folder));
+  const childPaths = [...api.sync()];
   return childPaths
     .map((childFilePath) => path.relative(root, path.dirname(childFilePath)))
     .map((folder) => read(folder));
@@ -580,6 +582,10 @@ function remove(
 ) {
   const root = getRoot(locale);
   const url = buildURL(locale, slug);
+  let redirectUrl = redirect;
+  if (redirect && !redirect.match("^http(s)?://")) {
+    redirectUrl = buildURL(locale, redirect);
+  }
 
   const roots = [CONTENT_ROOT];
   if (CONTENT_TRANSLATED_ROOT) {
@@ -597,8 +603,8 @@ function remove(
   const docs = [slug, ...children.map(({ metadata }) => metadata.slug)];
 
   if (dry) {
-    if (redirect) {
-      Redirect.add(locale, [[url, redirect]], { dry });
+    if (redirectUrl) {
+      Redirect.add(locale, [[url, redirectUrl]], { dry });
     }
     return docs;
   }
@@ -612,10 +618,10 @@ function remove(
 
   execGit(["rm", "-r", path.dirname(fileInfo.path)], { cwd: root });
 
-  if (redirect) {
+  if (redirectUrl) {
     Redirect.add(locale, [
-      [url, redirect],
-      ...children.map(({ url: childUrl }) => [childUrl, redirect]),
+      [url, redirectUrl],
+      ...children.map(({ url: childUrl }) => [childUrl, redirectUrl]),
     ]);
   } else {
     Redirect.remove(locale, [url, ...removed]);

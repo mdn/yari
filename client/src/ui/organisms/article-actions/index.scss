@@ -22,11 +22,6 @@
   margin: 0;
   padding: 0;
 
-  .button {
-    white-space: nowrap;
-    width: 100%;
-  }
-
   @media screen and (min-width: $screen-md) {
     display: flex;
     gap: 0.5rem;
@@ -53,7 +48,7 @@
       height: 100vh;
       left: 0;
       position: fixed;
-      top: 0;
+      top: var(--top-navigation-height);
       width: 100vw;
       z-index: var(--z-index-low);
       overflow: auto;
@@ -66,7 +61,16 @@
 
         .button-wrap {
           justify-content: flex-start;
+          margin-top: 1px;
           padding: 1.5rem 1rem;
+        }
+      }
+      .watch-submenu-item {
+        padding-top: 0.5rem;
+        padding-bottom: 0.5rem;
+
+        .button {
+          width: auto;
         }
       }
 

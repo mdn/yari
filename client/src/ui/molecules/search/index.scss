@@ -2,15 +2,18 @@
 @use "../../vars" as *;
 
 .header-search {
+  max-width: 100%;
+
   .search-widget {
     position: relative;
     width: 100%;
+    margin: 0 auto;
+    max-width: 20rem;
 
     @media screen and (min-width: $screen-md) {
       align-items: center;
       display: flex;
       gap: 0.5rem;
-      margin: 0;
     }
   }
 
@@ -38,10 +41,25 @@
       }
     }
 
+    @media screen and (min-width: $screen-lg) {
+      &:invalid {
+        width: 1rem;
+      }
+    }
+
+    &:focus,
+    &:valid {
+      width: inherit;
+    }
+
     &:invalid,
     &:invalid::placeholder {
       animation: blink 2s step-end infinite;
       caret-color: transparent;
+
+      @media (prefers-reduced-motion: reduce) {
+        caret-color: initial;
+      }
     }
 
     &:valid,
@@ -86,7 +104,10 @@
     color: var(--icon-critical);
     margin: 0;
   }
+}
 
+.header-search,
+.homepage-hero-search {
   .search-results {
     border: 1px solid var(--border-secondary);
     border-radius: var(--elem-radius);
@@ -118,10 +139,9 @@
 
     .result-item {
       border-bottom: 1px solid var(--border-secondary);
-      padding: 0.5rem;
       word-break: break-word;
       background: var(--background-secondary);
-      font: var(--type-body-m);
+      font-size: var(--type-smaller-font-size);
 
       &:first-child {
         border-radius: var(--elem-radius) var(--elem-radius) 0 0;
@@ -134,6 +154,10 @@
         code {
           font-size: 0.8125rem;
         }
+      }
+      a {
+        display: block;
+        padding: 0.5rem;
       }
     }
 
@@ -170,10 +194,12 @@
 }
 
 .search-form {
+  display: flex;
   position: relative;
 }
 
-.button.search-button {
+.button.search-button,
+.button.clear-search-button {
   --button-color: var(--icon-secondary);
   --button-height: 1.5rem;
   --button-padding: 0;
@@ -187,15 +213,23 @@
   }
 
   @media screen and (min-width: $screen-md) {
-    right: 3.5rem;
+    right: 1.2rem;
     width: 1.5rem;
   }
 }
 
-.close-search-button {
+.button.clear-search-button {
   display: none;
+}
 
-  @media screen and (min-width: $screen-md) {
-    display: block;
+/* When the search input has focus or has content,
+   show the clear search button */
+.header-search .search-input-field {
+  &:valid,
+  &:focus {
+    & ~ .button.clear-search-button {
+      display: block;
+      right: 2.8rem;
+    }
   }
 }

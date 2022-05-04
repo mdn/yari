@@ -5,70 +5,100 @@ import { Loading } from "../ui/atoms/loading";
 import { PageContentContainer } from "../ui/atoms/page-content";
 import { PageNotFound } from "../page-not-found";
 import Notifications from "./notifications";
+import { MDN_PLUS_TITLE } from "../constants";
+import { OfflineSettings } from "../offline-settings";
 
 const OfferOverview = React.lazy(() => import("./offer-overview"));
-const Bookmarks = React.lazy(() => import("./bookmarks"));
-const FeatureHighlight = React.lazy(() => import("./feature-highlight"));
+const Collections = React.lazy(() => import("./collections"));
+const PlusDocs = React.lazy(() => import("./plus-docs"));
 
 export function Plus({ pageTitle, ...props }: { pageTitle?: string }) {
-  const defaultPageTitle = "MDN Plus";
   React.useEffect(() => {
-    document.title = pageTitle || defaultPageTitle;
+    document.title = pageTitle || MDN_PLUS_TITLE;
   }, [pageTitle]);
 
   const isServer = typeof window === "undefined";
   const loading = (
     <Loading
-      message={`Loading ${pageTitle || defaultPageTitle}…`}
+      message={`Loading ${pageTitle || MDN_PLUS_TITLE}…`}
       minHeight={800}
     />
   );
 
-  const routes = (
+  function Layout({ withoutContainer = false, children }) {
+    const inner = (
+      <>
+        {isServer ? (
+          loading
+        ) : (
+          <React.Suspense fallback={loading}>{children}</React.Suspense>
+        )}
+      </>
+    );
+
+    return withoutContainer ? (
+      inner
+    ) : (
+      <PageContentContainer extraClasses="fullwidth">
+        {inner}
+      </PageContentContainer>
+    );
+  }
+
+  return (
     <Routes>
       <Route
         path="/"
         element={
-          <React.Suspense fallback={loading}>
+          <Layout>
             <OfferOverview />
-          </React.Suspense>
+          </Layout>
         }
       />
       <Route
-        path="collection/*"
+        path="collections/*"
         element={
-          <React.Suspense fallback={loading}>
+          <Layout>
             <div className="bookmarks girdle">
-              <Bookmarks />
+              <Collections />
             </div>
-          </React.Suspense>
+          </Layout>
         }
       />
       <Route
         path="notifications/*"
         element={
-          <React.Suspense fallback={loading}>
+          <Layout>
             <div className="notifications girdle">
               <Notifications />
             </div>
-          </React.Suspense>
+          </Layout>
         }
       />
       <Route
-        path="feature/:feature"
+        path="/offline"
         element={
-          <React.Suspense fallback={loading}>
-            <FeatureHighlight {...props} />
-          </React.Suspense>
+          <Layout>
+            <OfflineSettings {...props} />
+          </Layout>
         }
       />
-      <Route path="*" element={<PageNotFound />} />
+      <Route
+        path="docs/*"
+        element={
+          <Layout withoutContainer>
+            <PlusDocs {...props} />
+          </Layout>
+        }
+      />
+      <Route
+        path="*"
+        element={
+          <Layout>
+            <PageNotFound />
+          </Layout>
+        }
+      />
     </Routes>
-  );
-
-  return (
-    <PageContentContainer extraClasses="fullwidth">
-      {isServer ? loading : routes}
-    </PageContentContainer>
   );
 }

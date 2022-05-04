@@ -15,7 +15,9 @@ $text-stroke-width: 2px;
     display: flex;
     flex-direction: row;
     align-items: center;
-    padding: 4rem 1rem;
+    padding: 1rem 1rem;
+    max-width: 52rem;
+    width: initial;
 
     color: var(--text-secondary);
     margin: 0 auto;
@@ -23,12 +25,12 @@ $text-stroke-width: 2px;
     transition: all 0.3s ease-in-out;
 
     .offer-hero-wrapper {
-      max-width: max(40%, 20rem);
       z-index: 1;
+      align-self: start;
 
       h1 {
         font-size: 3rem;
-        margin-top: 4rem;
+        margin-top: 1rem;
 
         span {
           display: block;
@@ -41,7 +43,7 @@ $text-stroke-width: 2px;
 
       h2 {
         width: 100%;
-        font: var(--type-heading-h4);
+        font: var(--type-heading-h3);
       }
 
       .button-wrapper {
@@ -66,17 +68,19 @@ $text-stroke-width: 2px;
 
         .button-primary {
           background-color: var(--text-primary);
+          border: 2px solid var(--text-primary);
           color: var(--text-invert);
 
           &:hover {
             background-color: var(--text-secondary);
+            border-color: var(--text-secondary);
           }
         }
 
         .button-secondary {
+          background: #15141a1a;
           border: 2px solid var(--button-secondary-border-red);
           color: white;
-          background: #15141a1a;
         }
 
         .button-secondary:hover {
@@ -98,13 +102,7 @@ $text-stroke-width: 2px;
     .mandala-translate {
       transform: translate(10rem, -8rem) scale(1.2);
       @media screen and (min-width: $screen-sm) {
-        transform: translate(25%, -8rem);
-      }
-    }
-    .mandala {
-      @media screen and (min-width: $screen-sm) {
-        width: 1000px;
-        height: 1000px;
+        transform: translate(12rem, -8rem);
       }
     }
   }

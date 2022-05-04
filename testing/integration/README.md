@@ -2,9 +2,9 @@
 
 These Python-based tests are meant to test the fully-deployed system from a
 black-box point of view, and the goal is to test every public-facing endpoint.
-These tests can, of course, be run manually as desired, but I think the plan
-is to eventually run these within their own GitHub Action cron workflow. In
-that form, they would provide a basic system-check "heartbeat".
+These tests can, of course, be run manually as desired, but I think the plan is
+to eventually run these within their own GitHub Action cron workflow. In that
+form, they would provide a basic system-check "heartbeat".
 
 ## Running the tests
 

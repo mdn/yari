@@ -1,6 +1,5 @@
 import { Button } from "../../atoms/button";
 import { NotificationsWatchMenu } from "../../molecules/notifications-watch-menu";
-import { ThemeSwitcher } from "../../molecules/theme-switcher";
 import { LanguageMenu } from "../../molecules/language-menu";
 
 import { useUserData } from "../../../user-context";
@@ -8,8 +7,8 @@ import { useUserData } from "../../../user-context";
 import { Doc } from "../../../document/types";
 
 import "./index.scss";
-import { MDN_APP } from "../../../constants";
-import { BookmarkContainer } from "../../molecules/bookmark";
+
+import { BookmarkContainer } from "../../molecules/collection";
 
 export const ArticleActions = ({
   doc,
@@ -33,8 +32,7 @@ export const ArticleActions = ({
   // const translations = doc.other_translations || [];
 
   return (
-    (((!MDN_APP && translations && !!translations.length) ||
-      isAuthenticated) && (
+    (((translations && !!translations.length) || isAuthenticated) && (
       <>
         <div
           className={`article-actions${
@@ -63,12 +61,7 @@ export const ArticleActions = ({
                   <BookmarkContainer doc={doc} />
                 </li>
               )}
-              {isAuthenticated && (
-                <li className="article-actions-entry">
-                  <ThemeSwitcher />
-                </li>
-              )}
-              {!MDN_APP && translations && !!translations.length && (
+              {translations && !!translations.length && (
                 <li className="article-actions-entry">
                   <LanguageMenu
                     onClose={toggleArticleActionsMenu}

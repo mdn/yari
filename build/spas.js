@@ -15,6 +15,15 @@ const { BUILD_OUT_ROOT } = require("./constants");
 const { renderHTML } = require("../ssr/dist/main");
 const { default: got } = require("got");
 const { splitSections } = require("./utils");
+const cheerio = require("cheerio");
+const { findByURL } = require("../content/document");
+
+const FEATURED_ARTICLES = [
+  "Web/CSS/color-scheme",
+  "Web/HTML/Element/dialog",
+  "Learn/JavaScript/Asynchronous",
+  "Web/API/Canvas_API/Tutorial",
+];
 
 const contributorSpotlightRoot = CONTRIBUTOR_SPOTLIGHT_ROOT;
 
@@ -107,12 +116,55 @@ async function buildSPAs(options) {
       if (!fs.statSync(path.join(root, locale)).isDirectory()) {
         continue;
       }
+
+      const MDN_PLUS_TITLE = "MDN Plus";
       const SPAs = [
         { prefix: "search", pageTitle: "Search" },
-        { prefix: "plus", pageTitle: "Plus", noIndexing: true },
+        { prefix: "plus", pageTitle: MDN_PLUS_TITLE },
         {
-          prefix: "plus/collection",
-          pageTitle: "Collection",
+          prefix: "plus/collections",
+          pageTitle: `Collections | ${MDN_PLUS_TITLE}`,
+          noIndexing: true,
+        },
+        {
+          prefix: "plus/collections/frequently_viewed",
+          pageTitle: `Frequently viewed articles | ${MDN_PLUS_TITLE}`,
+          noIndexing: true,
+        },
+        {
+          prefix: "plus/docs/collections",
+          pageTitle: `Collections | ${MDN_PLUS_TITLE}`,
+        },
+        {
+          prefix: "plus/docs/notifications",
+          pageTitle: `Notifications | ${MDN_PLUS_TITLE}`,
+        },
+        {
+          prefix: "plus/docs/offline",
+          pageTitle: `MDN Offline | ${MDN_PLUS_TITLE}`,
+        },
+        {
+          prefix: "plus/docs/faq",
+          pageTitle: `FAQ | ${MDN_PLUS_TITLE}`,
+        },
+        {
+          prefix: "plus/notifications",
+          pageTitle: `Notifications | ${MDN_PLUS_TITLE}`,
+          noIndexing: true,
+        },
+        {
+          prefix: "plus/notifications/starred",
+          pageTitle: `Starred | ${MDN_PLUS_TITLE}`,
+          noIndexing: true,
+        },
+        {
+          prefix: "plus/notifications/watched",
+          pageTitle: `Watch list | ${MDN_PLUS_TITLE}`,
+          noIndexing: true,
+        },
+        {
+          prefix: "plus/offline",
+          pageTitle: `MDN Offline | ${MDN_PLUS_TITLE}`,
           noIndexing: true,
         },
         { prefix: "about", pageTitle: "About MDN" },
@@ -139,55 +191,77 @@ async function buildSPAs(options) {
     }
   }
 
-  // Building the MDN Plus feature pages.
-  const featuresDir = path.join(__dirname, "../copy/plus/features");
-  for (const page of fs.readdirSync(featuresDir)) {
-    const locale = "en-US";
-    const feature = page.split(".")[0];
-    console.log(page);
-    const markdown = fs.readFileSync(path.join(featuresDir, page), "utf8");
+  // Building the MDN Plus pages.
 
-    const frontMatter = frontmatter(markdown);
-    const rawHTML = await m2h(frontMatter.body, locale);
+  /**
+   *
+   * @param {string} dirpath
+   * @param {string} slug
+   * @param {string} title
+   */
+  async function buildStaticPages(dirpath, slug, title = "MDN") {
+    for (const file of fs.readdirSync(dirpath)) {
+      const filepath = path.join(dirpath, file);
+      const stat = fs.lstatSync(filepath);
+      const page = file.split(".")[0];
 
-    const { sections, toc } = splitSections(rawHTML);
+      if (stat.isDirectory()) {
+        await buildStaticPages(filepath, `${slug}/${page}`, title);
+        return;
+      }
 
-    const url = `/${locale}/plus/feature/${feature}`;
-    const hyData = {
-      id: feature,
-      ...frontMatter.attributes,
-      sections,
-      toc,
-    };
-    const context = {
-      hyData,
-      pageTitle: `${frontMatter.attributes.title || ""} | MDN Plus`,
-    };
-    console.log(url);
-    const html = renderHTML(url, context);
-    const outPath = path.join(
-      BUILD_OUT_ROOT,
-      locale,
-      "plus",
-      "feature",
-      feature
-    );
-    fs.mkdirSync(outPath, { recursive: true });
-    const filePath = path.join(outPath, "index.html");
-    fs.writeFileSync(filePath, html);
-    buildCount++;
-    if (options.verbose) {
-      console.log("Wrote", filePath);
+      const locale = "en-us";
+      const markdown = fs.readFileSync(filepath, "utf8");
+
+      const frontMatter = frontmatter(markdown);
+      const rawHTML = await m2h(frontMatter.body, locale);
+
+      const { sections, toc } = splitSections(rawHTML);
+
+      const url = `/${locale}/${slug}/${page}`;
+      const hyData = {
+        id: page,
+        ...frontMatter.attributes,
+        sections,
+        toc,
+      };
+      const context = {
+        hyData,
+        pageTitle: `${frontMatter.attributes.title || ""} | ${title}`,
+      };
+
+      const html = renderHTML(url, context);
+      const outPath = path.join(
+        BUILD_OUT_ROOT,
+        locale,
+        ...slug.split("/"),
+        page
+      );
+      fs.mkdirSync(outPath, { recursive: true });
+      const filePath = path.join(outPath, "index.html");
+      fs.writeFileSync(filePath, html);
+      buildCount++;
+      if (options.verbose) {
+        console.log("Wrote", filePath);
+      }
+      const filePathContext = path.join(outPath, "index.json");
+      fs.writeFileSync(filePathContext, JSON.stringify(context));
     }
-    const filePathContext = path.join(outPath, "index.json");
-    fs.writeFileSync(filePathContext, JSON.stringify(context));
   }
+  await buildStaticPages(
+    path.join(__dirname, "../copy/plus"),
+    "plus/docs",
+    "MDN Plus"
+  );
 
   // Build all the home pages in all locales.
   // Fetch merged content PRs for the latest contribution section.
   const pullRequestsData = await got(
     "https://api.github.com/search/issues?q=repo:mdn/content+is:pr+is:merged+sort:updated&per_page=10"
   ).json();
+
+  // Fetch latest Hacks articles.
+  const latestNews = await fetchLatestNews();
 
   for (const root of [CONTENT_ROOT, CONTENT_TRANSLATED_ROOT]) {
     if (!root) {
@@ -201,6 +275,30 @@ async function buildSPAs(options) {
       if (!fs.statSync(path.join(root, locale)).isDirectory()) {
         continue;
       }
+
+      // circular dependency, so needs to be imported down here:
+      const { buildDocument } = require("./");
+      const featuredArticles = (
+        await Promise.all(
+          FEATURED_ARTICLES.map(async (url) => {
+            const document =
+              findByURL(`/${locale}/docs/${url}`) ||
+              findByURL(`/en-US/docs/${url}`);
+            if (document) {
+              const {
+                doc: { mdn_url, summary, title, parents },
+              } = await buildDocument(document);
+              return {
+                mdn_url,
+                summary,
+                title,
+                tag: parents.length > 2 ? parents[1] : null,
+              };
+            }
+          })
+        )
+      ).filter(Boolean);
+
       const url = `/${locale}/`;
       const hyData = {
         pullRequestsData: {
@@ -208,6 +306,8 @@ async function buildSPAs(options) {
           repo: { name: "mdn/content", url: "https://github.com/mdn/content" },
         },
         featuredContributor,
+        latestNews,
+        featuredArticles,
       };
       const context = { hyData };
       const html = renderHTML(url, context);
@@ -234,6 +334,33 @@ async function buildSPAs(options) {
   if (!options.quiet) {
     console.log(`Built ${buildCount} SPA related files`);
   }
+}
+
+async function fetchLatestNews() {
+  const xml = await got("https://hacks.mozilla.org/category/mdn/feed/").text();
+
+  const $ = cheerio.load(xml, { xmlMode: true });
+
+  const items = [];
+
+  $("item").each((i, item) => {
+    const $item = $(item);
+
+    items.push({
+      title: $item.find("title").text(),
+      url: $item.find("guid").text(),
+      author: $item.find("dc\\:creator").text(),
+      published_at: $item.find("pubDate").text(),
+      source: {
+        name: "hacks.mozilla.org",
+        url: "https://hacks.mozilla.org/category/mdn/",
+      },
+    });
+  });
+
+  return {
+    items,
+  };
 }
 
 module.exports = { buildSPAs };

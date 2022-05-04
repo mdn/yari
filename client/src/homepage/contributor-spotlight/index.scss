@@ -23,27 +23,32 @@
   }
 
   h4 {
-    font: var(--type-body-m);
+    font-family: var(--font-body);
+    font-size: var(--type-smaller-font-size);
   }
 
   .text-col {
+    border-radius: 0.3rem;
     display: flex;
     flex-direction: column;
     max-width: 52rem;
-    padding: 0 1rem;
     width: 100%;
     gap: 1rem;
     align-items: center;
+
+    h3 {
+      font-size: var(--type-heading-h5-font-size);
+    }
   }
 
   .spotlight-cta {
     width: fit-content;
     --button-bg: var(--text-link);
-    --button-border-color: #{$mdn-color-dark-grey-90};
+    --button-border-color: #{$mdn-color-neutral-90};
     --button-color: var(--mdn-color-black);
     --button-radius: 10rem;
     --button-padding: 1rem;
-    --button-primary-hover: #{$mdn-color-dark-grey-40};
+    --button-primary-hover: #{$mdn-color-neutral-60};
   }
 
   .wrapper {
@@ -70,7 +75,7 @@
   }
 
   .contributor-name {
-    // note: this deviates from var(--type-title-l),
+    // note: this deviates from var(--type-heading-h4-font-size),
     // as it uses the body font family.
     font-size: 1.5rem;
     font-weight: 650;

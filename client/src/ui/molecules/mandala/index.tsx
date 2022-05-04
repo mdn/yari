@@ -14,7 +14,7 @@ function Mandala({
   return (
     <div
       className={`mandala-container ${animateColors ? "animate-colors" : ""} ${
-        extraClasses ? extraClasses : ""
+        extraClasses || ""
       }`}
     >
       <div
@@ -93,7 +93,7 @@ function Mandala({
                   dur="500s"
                   type="rotate"
                   from="360 337.5 337.5"
-                  to="360 337.5 337.5"
+                  to="0 337.5 337.5"
                   repeatCount="indefinite"
                 />
               )}

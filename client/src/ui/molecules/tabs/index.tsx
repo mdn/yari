@@ -6,7 +6,7 @@ import "./index.scss";
 
 type TabItem = {
   component?: () => JSX.Element;
-  extraClasses?: string;
+  extraClasses?: string | null;
   label: string;
   path: string;
 };

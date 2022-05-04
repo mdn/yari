@@ -4,13 +4,13 @@ const SERVER_PORT = process.env.SERVER_PORT || 5042;
 
 console.log(`Setting up a Proxy to localhost:${SERVER_PORT}`);
 module.exports = function (app) {
-  const proxy = createProxyMiddleware({
+  const proxy = createProxyMiddleware(["!**/*.hot-update.json"], {
     target: `http://localhost:${SERVER_PORT}`,
     changeOrigin: true,
   });
   app.use("/api", proxy);
   app.use("/users", proxy);
-  app.use("/_+(flaws|translations|open|document)", proxy);
+  app.use("/_+(flaws|translations|open|document|traits)", proxy);
   // E.g. search-index.json or index.json
   app.use("**/*.json", proxy);
   // This has to match what we do in server/index.js in the catchall handler

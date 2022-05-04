@@ -5,7 +5,7 @@ import { Routes, Route, useLocation, useMatch } from "react-router-dom";
 // and applied before any component specific style
 import "./app.scss";
 
-import { MDN_APP, CRUD_MODE, MDN_APP_DESKTOP, ENABLE_PLUS } from "./constants";
+import { CRUD_MODE, PLUS_IS_ENABLED } from "./constants";
 import { Homepage } from "./homepage";
 import { Document } from "./document";
 import { A11yNav } from "./ui/molecules/a11y-nav";
@@ -17,7 +17,7 @@ import { PageContentContainer } from "./ui/atoms/page-content";
 import { PageNotFound } from "./page-not-found";
 import { Plus } from "./plus";
 import { About } from "./about";
-import { AppSettings } from "./app-settings";
+import { OfflineSettings } from "./offline-settings";
 import { docCategory } from "./utils";
 import { Contribute } from "./community";
 import { ContributorSpotlight } from "./contributor-spotlight";
@@ -25,10 +25,8 @@ import { ContributorSpotlight } from "./contributor-spotlight";
 import { Banner, hasActiveBanners } from "./banners";
 
 const AllFlaws = React.lazy(() => import("./flaws"));
+const AllTraits = React.lazy(() => import("./traits"));
 const Translations = React.lazy(() => import("./translations"));
-const DocumentEdit = React.lazy(() => import("./document/forms/edit"));
-const DocumentCreate = React.lazy(() => import("./document/forms/create"));
-const DocumentManage = React.lazy(() => import("./document/forms/manage"));
 const WritersHomepage = React.lazy(() => import("./writers-homepage"));
 const Sitemap = React.lazy(() => import("./sitemap"));
 
@@ -43,15 +41,16 @@ function Layout({ pageType, children }) {
   React.useEffect(() => {
     setCategory(docCategory({ pathname }));
   }, [pathname]);
+
   return (
     <>
       <A11yNav />
       {!isServer && hasActiveBanners && <Banner />}
       <div className={`page-wrapper  ${category || ""} ${pageType}`}>
-        <TopNavigation />
+        {pageType !== "document-page" && <TopNavigation />}
         {children}
       </div>
-      {!MDN_APP && <Footer />}
+      <Footer />
     </>
   );
 }
@@ -64,9 +63,7 @@ function StandardLayout({
   children: React.ReactNode;
 }) {
   return (
-    <Layout pageType={`standard-page ${extraClasses ? extraClasses : ""}`}>
-      {children}
-    </Layout>
+    <Layout pageType={`standard-page ${extraClasses || ""}`}>{children}</Layout>
   );
 }
 function DocumentLayout({ children }) {
@@ -170,30 +167,10 @@ export function App(appProps) {
                   }
                 />
                 <Route
-                  path="/_edit/*"
+                  path="/_traits/*"
                   element={
                     <StandardLayout>
-                      <DocumentEdit />
-                    </StandardLayout>
-                  }
-                />
-
-                {/* The following two are not "enabled". I.e. no link to them.
-                    See https://github.com/mdn/yari/issues/1614
-                 */}
-                <Route
-                  path="/_create/*"
-                  element={
-                    <StandardLayout>
-                      <DocumentCreate />
-                    </StandardLayout>
-                  }
-                />
-                <Route
-                  path="/_manage/*"
-                  element={
-                    <StandardLayout>
-                      <DocumentManage />
+                      <AllTraits />
                     </StandardLayout>
                   }
                 />
@@ -249,7 +226,7 @@ export function App(appProps) {
                 </StandardLayout>
               }
             />
-            {ENABLE_PLUS && (
+            {PLUS_IS_ENABLED && (
               <Route
                 path="/plus/*"
                 element={
@@ -259,12 +236,12 @@ export function App(appProps) {
                 }
               />
             )}
-            {MDN_APP_DESKTOP && (
+            {PLUS_IS_ENABLED && (
               <Route
-                path="/app-settings"
+                path="/offline-settings"
                 element={
                   <StandardLayout>
-                    <AppSettings {...appProps} />
+                    <OfflineSettings {...appProps} />
                   </StandardLayout>
                 }
               />

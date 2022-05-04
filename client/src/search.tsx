@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useCombobox } from "downshift";
 import useSWR from "swr";
 
@@ -9,7 +9,7 @@ import { preload, preloadSupported } from "./document/preloading";
 import { Button } from "./ui/atoms/button";
 
 import { useLocale } from "./hooks";
-import { SearchProps, useFocusOnSlash } from "./search-utils";
+import { SearchProps, useFocusViaKeyboard } from "./search-utils";
 
 const PRELOAD_WAIT_MS = 500;
 const SHOW_INDEXING_AFTER_MS = 500;
@@ -128,7 +128,6 @@ function BreadcrumbURI({
 }
 
 type InnerSearchNavigateWidgetProps = SearchProps & {
-  onCloseSearch?: () => void;
   onResultPicked?: () => void;
   defaultSelection: [number, number];
 };
@@ -164,7 +163,6 @@ function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
     onChangeInputValue,
     isFocused,
     onChangeIsFocused,
-    onCloseSearch,
     onResultPicked,
     defaultSelection,
   } = props;
@@ -196,7 +194,7 @@ function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
 
   const resultItems: ResultItem[] = useMemo(() => {
     if (!searchIndex || !inputValue || searchIndexError) {
-      // This can happen if the initialized hasn't completed yet or
+      // This can happen if the initialization hasn't completed yet or
       // completed un-successfully.
       return [];
     }
@@ -290,7 +288,7 @@ function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
     },
   });
 
-  useFocusOnSlash(inputRef);
+  useFocusViaKeyboard(inputRef);
 
   useEffect(() => {
     if (isFocused) {
@@ -360,11 +358,23 @@ function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
               index: 0,
             })}
           >
-            No document titles found.
-            <br />
-            <Link to={searchPath}>
+            <a
+              href={searchPath}
+              onClick={(event: React.MouseEvent) => {
+                if (event.ctrlKey || event.metaKey) {
+                  // Open in new tab, don't navigate current tab.
+                  event.stopPropagation();
+                } else {
+                  // Open in same tab, navigate via combobox.
+                  event.preventDefault();
+                }
+              }}
+              tabIndex={-1}
+            >
+              No document titles found.
+              <br />
               Site search for <code>{inputValue}</code>
-            </Link>
+            </a>
           </div>
         ) : (
           [
@@ -401,15 +411,28 @@ function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
                 className:
                   "nothing-found result-item " +
                   (highlightedIndex === resultItems.length ? "highlight" : ""),
+                key: "nothing-found",
                 item: onlineSearch,
                 index: resultItems.length,
               })}
             >
-              Not seeing what you're searching for?
-              <br />
-              <Link to={searchPath}>
+              <a
+                href={searchPath}
+                onClick={(event: React.MouseEvent) => {
+                  if (event.ctrlKey || event.metaKey) {
+                    // Open in new tab, don't navigate current tab.
+                    event.stopPropagation();
+                  } else {
+                    // Open in same tab, navigate via combobox.
+                    event.preventDefault();
+                  }
+                }}
+                tabIndex={-1}
+              >
+                Not seeing what you're searching for?
+                <br />
                 Site search for <code>{inputValue}</code>
-              </Link>
+              </a>
             </div>,
           ]
         )}
@@ -452,12 +475,13 @@ function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
             : "search-input-field",
           id: inputId,
           name: "q",
-          placeholder: "   ",
           onMouseOver: initializeSearchIndex,
           onFocus: () => {
             onChangeIsFocused(true);
           },
-          onBlur: () => onChangeIsFocused(false),
+          onBlur: () => {
+            onChangeIsFocused(false);
+          },
           onKeyDown(event) {
             if (event.key === "Escape" && inputRef.current) {
               onChangeInputValue("");
@@ -481,9 +505,19 @@ function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
           ref: (input) => {
             inputRef.current = input;
           },
+          placeholder: "   ",
           required: true,
         })}
       />
+
+      <Button
+        type="action"
+        icon="cancel"
+        extraClasses="clear-search-button"
+        onClickHandler={() => onChangeInputValue("")}
+      >
+        <span className="visually-hidden">Clear search input</span>
+      </Button>
 
       <Button
         type="action"
@@ -492,15 +526,6 @@ function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
         extraClasses="search-button"
       >
         <span className="visually-hidden">Search</span>
-      </Button>
-
-      <Button
-        type="action"
-        icon="cancel"
-        extraClasses="close-search-button"
-        onClickHandler={onCloseSearch}
-      >
-        <span className="visually-hidden">Close search</span>
       </Button>
 
       <div {...getMenuProps()}>

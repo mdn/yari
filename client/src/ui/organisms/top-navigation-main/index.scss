@@ -34,16 +34,12 @@
     }
   }
 
-  .toggle-search-button {
-    display: none;
-  }
-
   .theme-toggle {
     align-self: end;
     margin-bottom: 1.5rem;
   }
 
-  @media screen and (min-width: $screen-md) {
+  @media screen and (min-width: $screen-lg) {
     .theme-toggle {
       align-self: initial;
       margin-bottom: initial;
@@ -76,7 +72,7 @@
     cursor: pointer;
     padding: 1rem 0.5rem;
     text-align: left;
-    width: max-content;
+    width: 100%;
 
     &:link,
     &:visited {
@@ -88,9 +84,8 @@
       min-height: 53px;
     }
 
-    @media screen and (max-width: $screen-md) {
+    @media screen and (max-width: $screen-lg) {
       &.button {
-        --button-font: var(--type-body-l);
         --button-color: var(--text-secondary);
         --button-padding: 0;
         --button-radius: 0;
@@ -110,7 +105,7 @@
       }
     }
 
-    @media screen and (min-width: $screen-md) {
+    @media screen and (min-width: $screen-lg) {
       border-top: none;
       border-radius: var(--elem-radius);
       padding: 0.5rem;
@@ -129,9 +124,10 @@
   }
 
   .menu-toggle {
-    position: relative;
-    display: flex;
     align-items: center;
+    display: flex;
+    justify-content: space-between;
+    position: relative;
   }
 
   .menu-toggle:after {
@@ -153,11 +149,7 @@
     display: none;
   }
 
-  .header-search {
-    max-width: 100%;
-  }
-
-  @media screen and (min-width: $screen-md) {
+  @media screen and (min-width: $screen-lg) {
     align-items: center;
     display: flex;
     flex: 1;
@@ -196,39 +188,6 @@
 
     .menu-toggle + .top-level-entry {
       display: inline-flex;
-    }
-
-    .toggle-search-button {
-      display: inline-block;
-    }
-
-    .search-form {
-      display: none;
-    }
-  }
-}
-
-.top-navigation-main.has-search-open {
-  .header-search {
-    width: 240px;
-  }
-
-  .header-search ~ * {
-    display: none;
-  }
-
-  .search-form {
-    display: flex;
-  }
-}
-
-.category-home {
-  .header-search {
-    .search-input-field {
-      &:focus {
-        box-shadow: var(--focus-01);
-        border-color: var(--field-focus-border);
-      }
     }
   }
 }

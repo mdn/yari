@@ -9,15 +9,15 @@ readme = "README.md"
 
 [tool.poetry.dependencies]
 python = "^3.7"
-pytest = "^7.1.0"
-pytest-base-url = "^1.4.2"
+pytest = "^7.1.2"
+pytest-base-url = "^2.0.0"
 pytest-rerunfailures = "^10.2"
 requests = "^2.27.1"
 pyquery = "^1.4.3"
 braceexpand = "^0.1.7"
 
 [tool.poetry.dev-dependencies]
-black = "^22.1"
+black = "^22.3"
 flake8 = "^4.0.1"
 
 [build-system]

@@ -13,7 +13,7 @@ export function Quote({
   title?: string;
   org?: string;
   children: ReactNode;
-  extraClasses?: string;
+  extraClasses?: string | null;
 }) {
   return (
     <blockquote className={`quote ${extraClasses || ""}`}>

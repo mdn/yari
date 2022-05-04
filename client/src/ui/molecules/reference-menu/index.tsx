@@ -1,8 +1,5 @@
-import * as React from "react";
-import { Link } from "react-router-dom";
-
 import { useLocale } from "../../../hooks";
-import { Submenu } from "../submenu";
+import { Menu } from "../menu";
 
 import "./index.scss";
 
@@ -10,9 +7,18 @@ export const ReferenceMenu = ({ visibleSubMenuId, toggleMenu }) => {
   const locale = useLocale();
 
   const menu = {
-    label: "References",
     id: "references",
+    label: "References",
+    to: `/${locale}/docs/Web`,
     items: [
+      {
+        description: "Web technology reference for developers",
+        hasIcon: true,
+        extraClasses: "apis-link-container mobile-only",
+        iconClasses: "submenu-icon",
+        label: "Overview / Web Technology",
+        url: `/${locale}/docs/Web`,
+      },
       {
         description: "Structure of content on the web",
         extraClasses: "html-link-container",
@@ -55,41 +61,16 @@ export const ReferenceMenu = ({ visibleSubMenuId, toggleMenu }) => {
       },
       {
         description: "Web technology reference for developers",
-        extraClasses: "apis-link-container",
+        extraClasses: "apis-link-container desktop-only",
         hasIcon: true,
         iconClasses: "submenu-icon",
         label: "Web Technology",
-        url: `/${locale}/docs/Web/`,
+        url: `/${locale}/docs/Web`,
       },
     ],
   };
+
   const isOpen = visibleSubMenuId === menu.id;
 
-  return (
-    <li key={menu.id} className="top-level-entry-container">
-      <button
-        type="button"
-        id={`${menu.id}-button`}
-        className="top-level-entry menu-toggle"
-        aria-haspopup="menu"
-        aria-expanded={isOpen || undefined}
-        onClick={() => {
-          toggleMenu(menu.id);
-        }}
-      >
-        {menu.label}
-      </button>
-
-      <Link
-        to={`/${locale}/docs/Web/`}
-        className="top-level-entry"
-        // @ts-ignore
-        onClick={() => document?.activeElement?.blur()}
-      >
-        {menu.label}
-      </Link>
-
-      <Submenu menuEntry={menu} defaultHidden={!isOpen} />
-    </li>
-  );
+  return <Menu menu={menu} isOpen={isOpen} toggle={toggleMenu} />;
 };

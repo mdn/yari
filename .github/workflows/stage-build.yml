@@ -92,7 +92,7 @@ jobs:
           node-version: "12"
 
       - name: Cache node_modules
-        uses: actions/cache@v2.1.7
+        uses: actions/cache@v3
         id: cached-node_modules
         with:
           path: |
@@ -104,7 +104,7 @@ jobs:
         run: yarn --frozen-lockfile
 
       - name: Install Python
-        uses: actions/setup-python@v3.0.0
+        uses: actions/setup-python@v3.1.2
         with:
           python-version: "3.8"
 
@@ -153,13 +153,11 @@ jobs:
           # origin domain isn't what that account expects.
           BUILD_GOOGLE_ANALYTICS_ACCOUNT: UA-36116321-5
 
-          # See the code for a further explanation for this.
-          # You get the ID from
-          # https://speedcurve.com/mozilla-add-ons/mdn/settings/updated/#lux
-          BUILD_SPEEDCURVE_LUX_ID: 108906238
-
           # This enables the Plus call-to-action banner and the Plus landing page
           REACT_APP_ENABLE_PLUS: true
+
+          # This disables the Plus geo-fencing.
+          REACT_APP_PLUS_IS_AVAILABLE_OVERRIDE: true
 
           # This adds the ability to sign in (stage only for now)
           REACT_APP_DISABLE_AUTH: false
@@ -175,12 +173,15 @@ jobs:
           REACT_APP_MDN_PLUS_5Y_PLAN: price_1JpIPwKb9q6OnNsLJLsIqMp7
           REACT_APP_MDN_PLUS_10M_PLAN: price_1K6X7gKb9q6OnNsLi44HdLcC
           REACT_APP_MDN_PLUS_10Y_PLAN: price_1K6X8VKb9q6OnNsLFlUcEiu4
+          REACT_APP_ENABLE_PLUS_EU: true
 
         run: |
 
           # Info about which CONTENT_* environment variables were set and to what.
           echo "CONTENT_ROOT=$CONTENT_ROOT"
           echo "CONTENT_TRANSLATED_ROOT=$CONTENT_TRANSLATED_ROOT"
+          # Build the ServiceWorker first
+          yarn build:sw
           yarn prepare-build
 
           # (July 15, 2021) This is a temporary solution. This should become an
@@ -221,13 +222,6 @@ jobs:
           AWS_ACCESS_KEY_ID: ${{ secrets.DEPLOYER_STAGE_AND_DEV_AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.DEPLOYER_STAGE_AND_DEV_AWS_SECRET_ACCESS_KEY }}
 
-          # Note, command will pick up the site ID and deployment API key
-          # from environment variables and if either of them is falsy, the
-          # command will *not* fail. It will simply not deploy anything.
-          SPEEDCURVE_DEPLOY_API_KEY: ${{ secrets.SPEEDCURVE_DEPLOY_API_KEY }}
-          # Based on https://api.speedcurve.com/#get-all-sites using the API key
-          SPEEDCURVE_DEPLOY_SITE_ID: 354836
-
           DEPLOYER_ELASTICSEARCH_URL: ${{ secrets.DEPLOYER_STAGE_ELASTICSEARCH_URL }}
 
         run: |
@@ -248,12 +242,18 @@ jobs:
           poetry run deployer update-lambda-functions ./aws-lambda
           poetry run deployer search-index ../client/build
 
-          # Record the deployment in our Speedcurve account. This should always
-          # be done after the upload of the documents and Lambda functions, as well
-          # as the search-index update, so those aren't affected if this fails.
-          poetry run deployer speedcurve-deploy \
-            --note "${GITHUB_SHA}" \
-            --detail "run_id=${GITHUB_RUN_ID} action=${GITHUB_ACTION}"
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.DEPLOYER_STAGE_AND_DEV_AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.DEPLOYER_STAGE_AND_DEV_AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1
+
+      - name: Invalidate CDN
+        env:
+          DISTRIBUTION: E2MLRMA1VTVDHX
+          PATHS: /*
+        run: aws cloudfront create-invalidation --distribution-id "$DISTRIBUTION" --paths "$PATHS"
 
       - name: Slack Notification
         if: failure()

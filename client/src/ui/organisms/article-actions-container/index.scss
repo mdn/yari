@@ -59,10 +59,16 @@
     }
   }
 
-  @media screen and (min-width: $screen-xl) {
+  @media screen and (min-width: $screen-xxl) {
     .container {
       padding-right: 1rem;
       padding-left: 1rem;
     }
+  }
+}
+
+@media screen and (max-width: $screen-md) {
+  :root {
+    --sticky-header-height: 2rem;
   }
 }

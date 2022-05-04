@@ -1,6 +1,6 @@
 import * as React from "react";
-import { Link } from "react-router-dom";
 import { Icon } from "../icon";
+import InternalLink from "../internal-link";
 
 import "./index.scss";
 
@@ -18,7 +18,7 @@ type ButtonProps = {
    */
   buttonType?: "button" | "submit" | "reset";
   name?: string;
-  extraClasses?: string;
+  extraClasses?: string | null;
   href?: string;
   rel?: string;
   icon?: string;
@@ -85,7 +85,7 @@ export const Button = ({
 
   if (href) {
     return (
-      <Link
+      <InternalLink
         to={href}
         rel={rel}
         className={buttonClasses}
@@ -96,7 +96,7 @@ export const Button = ({
         title={title}
       >
         <span className="button-wrap">{renderContent()}</span>
-      </Link>
+      </InternalLink>
     );
   }
   return (

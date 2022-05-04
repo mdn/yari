@@ -2,7 +2,7 @@ import ReactModal from "react-modal";
 
 import "./index.scss";
 
-ReactModal.setAppElement("#root");
+if (process.env.NODE_ENV !== "test") ReactModal.setAppElement("#root");
 
 interface ModalProps extends ReactModal.Props {
   size?: "small";

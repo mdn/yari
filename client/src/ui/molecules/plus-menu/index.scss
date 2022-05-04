@@ -1,6 +1,14 @@
 @use "sass:color";
 @use "../../vars" as *;
 
-.mdn-plus .submenu-icon {
-  background-color: var(--accent-primary);
+.mdn-plus {
+  .submenu-icon {
+    background-color: var(--plus-accent-color);
+  }
+
+  @media screen and (min-width: $screen-lg) {
+    .mobile-only {
+      display: none;
+    }
+  }
 }

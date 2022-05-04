@@ -6,9 +6,5 @@ type IconProps = {
 };
 
 export const Icon = ({ name, extraClasses }: IconProps) => {
-  return (
-    <span
-      className={`icon icon-${name} ${extraClasses ? extraClasses : ""}`}
-    ></span>
-  );
+  return <span className={`icon icon-${name} ${extraClasses || ""}`}></span>;
 };
