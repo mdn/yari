@@ -7,7 +7,7 @@ const {
 
 const startRe = /^\^?\/?/;
 const startTemplate = /^\//;
-const LOCALE_PATTERN = "[a-zA-Z]{2}(?:-[a-zA-Z]{2})?";
+const LOCALE_PATTERN = "(?:[a-zA-Z]{2}|eng)(?:-[a-zA-Z]{2})?";
 
 function redirect(pattern, template, options = {}) {
   return (path) => {
