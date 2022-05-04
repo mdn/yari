@@ -52,6 +52,20 @@ const FIX_FLAWS = JSON.parse(process.env.BUILD_FIX_FLAWS || "false");
 const FIX_FLAWS_DRY_RUN = JSON.parse(
   process.env.BUILD_FIX_FLAWS_DRY_RUN || "false"
 );
+const FIX_FLAWS_TYPES = new Set(
+  (process.env.BUILD_FIX_FLAWS_TYPES &&
+    process.env.BUILD_FIX_FLAWS_TYPES.split(",")) || [...VALID_FLAW_CHECKS]
+);
+
+if ([...FIX_FLAWS_TYPES].some((flawType) => !VALID_FLAW_CHECKS.has(flawType))) {
+  console.log([...FIX_FLAWS_TYPES]);
+  throw new Error(
+    `Env var FIX_FLAWS_TYPES must be a subset of ${[
+      ...VALID_FLAW_CHECKS.values(),
+    ].join(",")}`
+  );
+}
+
 const FIX_FLAWS_VERBOSE = JSON.parse(
   // It's on by default because it's such a sensible option to always have
   // on.
@@ -75,6 +89,7 @@ module.exports = {
   VALID_FLAW_CHECKS,
   FIX_FLAWS,
   FIX_FLAWS_DRY_RUN,
+  FIX_FLAWS_TYPES,
   FIX_FLAWS_VERBOSE,
   ALWAYS_ALLOW_ROBOTS,
 };

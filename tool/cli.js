@@ -29,6 +29,7 @@ const {
   BUILD_OUT_ROOT,
   GOOGLE_ANALYTICS_ACCOUNT,
   GOOGLE_ANALYTICS_DEBUG,
+  VALID_FLAW_CHECKS,
 } = require("../build/constants");
 const { runMakePopularitiesFile } = require("./popularities");
 const { runOptimizeClientBuild } = require("./optimize-client-build");
@@ -503,6 +504,43 @@ program
         console.log(
           chalk.green(`Fixed ${redirectedDocs} redirected documents.`)
         );
+      }
+    })
+  )
+
+  .command("fix-flaws", "Fix all flaws")
+  .option("-l, --locale <locale>", "locale", {
+    default: DEFAULT_LOCALE,
+    validator: [...VALID_LOCALES.values()],
+  })
+  .option("--file-types <fileTypes...>", "File types to fix flaws in", {
+    default: ["md"],
+    validator: ["md", "html"],
+  })
+  .argument("<fix-flaws-types...>", "flaw types", {
+    default: ["broken_links"],
+    validator: [...VALID_FLAW_CHECKS],
+  })
+  .action(
+    tryOrExit(async ({ args, options }) => {
+      const { fixFlawsTypes } = args;
+      const { locale, fileTypes } = options;
+      console.log(fileTypes);
+      const allDocs = Document.findAll({
+        locales: new Map([[locale.toLowerCase(), true]]),
+      });
+      for (const document of allDocs.iter()) {
+        if (
+          document.isMarkdown
+            ? fileTypes.includes("md")
+            : fileTypes.includes("html")
+        ) {
+          await buildDocument(document, {
+            fixFlaws: true,
+            fixFlawsTypes: new Set(fixFlawsTypes),
+            fixFlawsVerbose: true,
+          });
+        }
       }
     })
   )

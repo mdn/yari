@@ -26,6 +26,17 @@ function getFirstMatchInText(needle, haystack) {
   return { line, column };
 }
 
+function replaceMatchingLinksInMarkdown(needle, haystack, replacement) {
+  // Need to remove any characters that can affect a regex if we're going
+  // use the string in a manually constructed regex.
+  const escaped = needle.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  console.log(escaped);
+  const rex = new RegExp(`\\[[^\\]]*\\]\\((${escaped})\\)`, "g");
+  return haystack.replace(rex, (match, p1) => {
+    return match.replace(p1, replacement);
+  });
+}
+
 function replaceMatchesInText(
   needle,
   haystack,
@@ -53,4 +64,5 @@ module.exports = {
   findMatchesInText,
   getFirstMatchInText,
   replaceMatchesInText,
+  replaceMatchingLinksInMarkdown,
 };
