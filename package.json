@@ -71,7 +71,6 @@
     "cookie": "0.5.0",
     "cookie-parser": "1.4.6",
     "css-tree": "^2.1.0",
-    "cssesc": "^3.0.0",
     "dayjs": "1.11.1",
     "dexie": "3.2.2",
     "dotenv": "14.3.0",
