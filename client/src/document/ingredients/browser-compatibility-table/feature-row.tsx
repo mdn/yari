@@ -29,8 +29,7 @@ interface CompatStatementExtended extends bcd.CompatStatement {
 
 function getSupportClassName(
   support: SupportStatementExtended | undefined,
-  browser: bcd.BrowserStatement,
-  timeline: boolean = false
+  browser: bcd.BrowserStatement
 ): string {
   if (!support) {
     return "unknown";
@@ -52,8 +51,11 @@ function getSupportClassName(
   } else {
     className = "no";
   }
-  if (partial_implementation && (!version_removed || timeline)) {
+  if (partial_implementation && !version_removed) {
     className = "partial";
+  }
+  if (partial_implementation && version_removed) {
+    className = "removed-partial";
   }
 
   return className;
@@ -119,6 +121,22 @@ function labelFromString(
   return <>{version}</>;
 }
 
+function versionLabelFromSupport(
+  added: string | boolean | null | undefined,
+  removed: string | boolean | null | undefined,
+  browser: bcd.BrowserStatement
+) {
+  if (typeof removed !== "string") {
+    return <>{labelFromString(added, browser)}</>;
+  }
+  return (
+    <>
+      {labelFromString(added, browser)}&#8202;&ndash;&#8202;
+      {labelFromString(removed, browser)}
+    </>
+  );
+}
+
 const CellText = React.memo(
   ({
     support,
@@ -160,17 +178,17 @@ const CellText = React.memo(
         if (versionIsPreview(added, browser)) {
           status = {
             isSupported: "preview",
-            label: labelFromString(added, browser),
+            label: versionLabelFromSupport(added, removed, browser),
           };
         } else if (currentSupport?.flags?.length) {
           status = {
             isSupported: "no",
-            label: labelFromString(added, browser),
+            label: versionLabelFromSupport(added, removed, browser),
           };
         } else {
           status = {
             isSupported: "yes",
-            label: labelFromString(added, browser),
+            label: versionLabelFromSupport(added, removed, browser),
           };
         }
         break;
@@ -179,12 +197,7 @@ const CellText = React.memo(
     if (removed) {
       status = {
         isSupported: "no",
-        label: (
-          <>
-            {labelFromString(added, browser)}&#8202;&ndash;&#8202;
-            {labelFromString(removed, browser)}
-          </>
-        ),
+        label: versionLabelFromSupport(added, removed, browser),
       };
     }
     if (
@@ -194,19 +207,7 @@ const CellText = React.memo(
     ) {
       status = {
         isSupported: "partial",
-        label:
-          typeof added === "string" ? (
-            typeof removed === "string" ? (
-              <>
-                {labelFromString(added, browser)}&#8202;&ndash;&#8202;
-                {labelFromString(removed, browser)}
-              </>
-            ) : (
-              labelFromString(added, browser)
-            )
-          ) : (
-            "Partial"
-          ),
+        label: versionLabelFromSupport(added, removed, browser),
       };
     }
 
@@ -238,7 +239,7 @@ const CellText = React.memo(
         label = "?";
         break;
     }
-    const supportClassName = getSupportClassName(support, browser, timeline);
+    const supportClassName = getSupportClassName(support, browser);
 
     return (
       <div className="bcd-cell-text-wrapper">
@@ -434,8 +435,7 @@ function getNotes(
                 <dt
                   className={`bc-supports-${getSupportClassName(
                     item,
-                    browser,
-                    true
+                    browser
                   )} bc-supports`}
                 >
                   <CellText support={item} browser={browser} timeline={true} />
