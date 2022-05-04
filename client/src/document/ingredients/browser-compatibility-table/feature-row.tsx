@@ -30,7 +30,7 @@ interface CompatStatementExtended extends bcd.CompatStatement {
 function getSupportClassName(
   support: SupportStatementExtended | undefined,
   browser: bcd.BrowserStatement,
-  timeline: boolean
+  timeline: boolean = false
 ): string {
   if (!support) {
     return "unknown";
@@ -123,11 +123,11 @@ const CellText = React.memo(
   ({
     support,
     browser,
-    timeline,
+    timeline = false,
   }: {
     support: bcd.SupportStatement | undefined;
     browser: bcd.BrowserStatement;
-    timeline: boolean;
+    timeline?: boolean;
   }) => {
     const currentSupport = getCurrentSupport(support);
 
@@ -477,7 +477,7 @@ function CompatCell({
   onToggle: () => void;
   locale: string;
 }) {
-  const supportClassName = getSupportClassName(support, browserInfo, false);
+  const supportClassName = getSupportClassName(support, browserInfo);
   // NOTE: 1-5-21, I've forced hasNotes to return true, in order to
   // make the details view open all the time.
   // Whenever the support statement is complex (array with more than one entry)
@@ -493,7 +493,7 @@ function CompatCell({
   const notes = getNotes(browserInfo, support!);
   const content = (
     <>
-      <CellText {...{ support }} browser={browserInfo} timeline={false} />
+      <CellText {...{ support }} browser={browserInfo} />
       {showNotes && (
         <dl className="bc-notes-list bc-history bc-history-mobile">{notes}</dl>
       )}
