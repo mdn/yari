@@ -216,8 +216,7 @@ function renderTerms(terms, combinator) {
  */
 function renderSyntax(type, syntax) {
   // write out the name of this type
-  const typeName = `&lt;${type}&gt;`;
-  let output = `<span class="token property" id="${typeName}">${typeName} = </span><br/>`;
+  let output = `<span class="token property" id="${type}">${type} = </span><br/>`;
 
   const ast = definitionSyntax.parse(syntax);
   // if the combinator is ' ', write the complete type syntax in a single line
@@ -300,7 +299,7 @@ function writeFormalSyntax(propertySyntax) {
   // and write each one out
   for (const type of types) {
     if (valuespaces[`<${type}>`] && valuespaces[`<${type}>`].value) {
-      output += renderSyntax(type, valuespaces[`<${type}>`].value);
+      output += renderSyntax(`&lt;${type}&gt;`, valuespaces[`<${type}>`].value);
       output += '<br/>';
     }
   }
