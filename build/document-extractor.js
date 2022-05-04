@@ -408,44 +408,36 @@ function _addSingleSpecialSection($) {
       browserReleaseData.set(name, releaseData);
     }
 
-    for (const [key, compat] of Object.entries(data)) {
-      let block;
-      if (key === "__compat") {
-        block = compat;
-      } else if (compat.__compat) {
-        block = compat.__compat;
-      }
-      if (block) {
-        for (let [browser, info] of Object.entries(block.support)) {
-          // `info` here will be one of the following:
-          //  - a single simple_support_statement:
-          //    { version_added: 42 }
-          //  - an array of simple_support_statements:
-          //    [ { version_added: 42 }, { prefix: '-moz', version_added: 35 } ]
-          //
-          // Standardize the first version to an array of one, so we don't have
-          // to deal with two different forms below
-          if (!Array.isArray(info)) {
-            info = [info];
-          }
-          for (const infoEntry of info) {
-            const added =
-              typeof infoEntry.version_added === "string" &&
-              infoEntry.version_added.startsWith("≤")
-                ? infoEntry.version_added.slice(1)
-                : infoEntry.version_added;
-            if (browserReleaseData.has(browser)) {
-              if (browserReleaseData.get(browser).has(added)) {
-                infoEntry.release_date = browserReleaseData
-                  .get(browser)
-                  .get(added).release_date;
-              }
+    for (const block of _extractCompatBlocks(data)) {
+      for (let [browser, info] of Object.entries(block.support)) {
+        // `info` here will be one of the following:
+        //  - a single simple_support_statement:
+        //    { version_added: 42 }
+        //  - an array of simple_support_statements:
+        //    [ { version_added: 42 }, { prefix: '-moz', version_added: 35 } ]
+        //
+        // Standardize the first version to an array of one, so we don't have
+        // to deal with two different forms below
+        if (!Array.isArray(info)) {
+          info = [info];
+        }
+        for (const infoEntry of info) {
+          const added =
+            typeof infoEntry.version_added === "string" &&
+            infoEntry.version_added.startsWith("≤")
+              ? infoEntry.version_added.slice(1)
+              : infoEntry.version_added;
+          if (browserReleaseData.has(browser)) {
+            if (browserReleaseData.get(browser).has(added)) {
+              infoEntry.release_date = browserReleaseData
+                .get(browser)
+                .get(added).release_date;
             }
           }
-          info.sort((a, b) =>
-            _compareVersions(_getFirstVersion(b), _getFirstVersion(a))
-          );
         }
+        info.sort((a, b) =>
+          _compareVersions(_getFirstVersion(b), _getFirstVersion(a))
+        );
       }
     }
 
@@ -516,6 +508,25 @@ function _addSingleSpecialSection($) {
     }
 
     return version.split(".").map(Number);
+  }
+
+  /**
+   * Recursively extracts `__compat` objects from the `feature` and from all
+   * nested features at any depth.
+   *
+   * @param {Object} feature The feature.
+   * @returns {Object[]} The array of `__compat` objects.
+   */
+  function _extractCompatBlocks(feature) {
+    const blocks = [];
+    for (const [key, value] of Object.entries(feature)) {
+      if (key === "__compat") {
+        blocks.push(value);
+      } else if (typeof value === "object") {
+        blocks.push(..._extractCompatBlocks(value));
+      }
+    }
+    return blocks;
   }
 
   function _buildSpecialSpecSection() {
