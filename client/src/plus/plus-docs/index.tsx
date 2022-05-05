@@ -36,7 +36,7 @@ function RelatedTopics({
   heading: string;
   items: { slug: string; title: string }[];
 }) {
-  const { locale } = useParams();
+  const { locale = "en-US" } = useParams();
   const { pathname: locationPathname } = useLocation();
 
   return (
@@ -71,7 +71,7 @@ function RelatedTopics({
 }
 
 function PlusDocs({ ...props }) {
-  const { locale, "*": slug } = useParams();
+  const { locale = "en-US", "*": slug } = useParams();
 
   return (
     <StaticPage
