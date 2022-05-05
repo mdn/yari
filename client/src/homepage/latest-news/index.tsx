@@ -30,7 +30,7 @@ export function LatestNews(props: HydrationData<any>) {
       return await response.json();
     },
     {
-      initialData: props.hyData ? props : undefined,
+      fallbackData: props.hyData ? props : undefined,
       revalidateOnFocus: CRUD_MODE,
     }
   );

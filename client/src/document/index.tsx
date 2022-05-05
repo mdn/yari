@@ -87,7 +87,7 @@ export function Document(props /* TODO: define a TS interface for this */) {
       return doc;
     },
     {
-      initialData:
+      fallbackData:
         props.doc &&
         props.doc.mdn_url.toLowerCase() === documentURL.toLowerCase()
           ? props.doc

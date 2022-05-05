@@ -22,7 +22,7 @@ interface StaticPageProps {
   locale: string;
   slug: string;
   parents: DocParent[];
-  initialData?: any;
+  fallbackData?: any;
   title?: string;
   sidebarHeader?: ReactElement;
 }
@@ -34,7 +34,7 @@ function StaticPage({
   locale,
   slug,
   parents = [],
-  initialData = undefined,
+  fallbackData = undefined,
   title = "MDN",
   sidebarHeader = <></>,
 }: StaticPageProps) {
@@ -52,7 +52,7 @@ function StaticPage({
       return await response.json();
     },
     {
-      initialData: isServer ? initialData : undefined,
+      fallbackData: isServer ? fallbackData : undefined,
       revalidateOnFocus: CRUD_MODE,
     }
   );
