@@ -20,7 +20,7 @@ const LANGUAGES = new Map(
 // like "Did you mean: <a href=$url>$doctitle</a>?"
 
 export default function FallbackLink({ url }: { url: string }) {
-  const { locale } = useParams();
+  const { locale = "en-US" } = useParams();
   const location = useLocation();
 
   const [fallbackCheckURL, setFallbackCheckURL] = React.useState<null | string>(

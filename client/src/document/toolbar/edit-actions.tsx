@@ -55,7 +55,7 @@ export function EditActions({
     }
   }
 
-  const { locale, "*": slug } = useParams();
+  const { locale = "en-US", "*": slug } = useParams();
 
   if (!folder) {
     return null;
