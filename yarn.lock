@@ -8317,10 +8317,10 @@ html-tags@^3.1.0:
   resolved "https://registry.npmjs.org/html-tags/-/html-tags-3.1.0.tgz"
   integrity sha512-1qYz89hW3lFDEazhjW0yVAV87lw8lVkrJocr72XmBkMKsoSVJCQx3W8BXsC7hO2qAt8BoVjYjtAcZ9perqGnNg==
 
-html-validate@6.8.0:
-  version "6.8.0"
-  resolved "https://registry.yarnpkg.com/html-validate/-/html-validate-6.8.0.tgz#cdd7d7a2eaa9abc8af42d305db8ecf1111eb581c"
-  integrity sha512-msZqvuM93I09GNXiUBS0VkMhZFUI2bZ/1qaeDLbUzHfjwDTZxi4d+ahDgdowkuf3Mt1hBudHO60Mq/5WhJJjcg==
+html-validate@6.10.0:
+  version "6.10.0"
+  resolved "https://registry.yarnpkg.com/html-validate/-/html-validate-6.10.0.tgz#66004c5977fcc722aef08ce8ea246358f91e2485"
+  integrity sha512-YFh8hEZgK0eqE8jnL7+yAZUdiiujy0Y51+nlkn4ULMbnsgWvKoWpW108S6Z7RAojTlF8qTmAgN/rOEWJaneEBA==
   dependencies:
     "@babel/code-frame" "^7.10.0"
     "@html-validate/stylish" "^2.0.0"
