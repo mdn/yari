@@ -76,7 +76,7 @@
     display: flex;
     overflow: auto;
     position: sticky;
-    top: var(--offset);
+    top: var(--main-document-header-height);
     max-height: var(--max-height);
   }
 
@@ -149,7 +149,7 @@
   }
 
   /* This is for sidebars where there is no sub-heading
-   * for example: https://developer-mozilla.org/en-US/docs/Web/HTML/Element/progress 
+   * for example: https://developer-mozilla.org/en-US/docs/Web/HTML/Element/progress
    */
   .sidebar-heading ~ ol,
   .sidebar-heading ~ div > ol {
