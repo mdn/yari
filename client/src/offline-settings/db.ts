@@ -5,14 +5,14 @@
 
 import Dexie from "dexie";
 
-interface Watched {
+export interface Watched {
   url: string;
   title: string;
   path: string;
   status: string;
 }
 
-interface Notifications {
+export interface Notifications {
   id: number;
   title: string;
   text: string;
@@ -27,7 +27,7 @@ interface Parent {
   title: string;
 }
 
-interface Collections {
+export interface Collections {
   id?: number;
   url: string;
   title: string;
@@ -36,7 +36,7 @@ interface Collections {
   created: Date;
 }
 
-interface Whoami {
+export interface Whoami {
   id?: number;
   username: string;
   is_authenticated: boolean;
