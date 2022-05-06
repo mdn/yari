@@ -155,7 +155,6 @@
     "husky": "^7.0.4",
     "ignore-loader": "^0.1.2",
     "jest-junit-reporter": "^1.1.0",
-    "jest-puppeteer": "6.1.0",
     "jsdom": "^19.0.0",
     "lint-staged": "^12.4.1",
     "node-dev": "7.4.3",
