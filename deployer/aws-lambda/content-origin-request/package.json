@@ -19,7 +19,7 @@
   },
   "devDependencies": {},
   "engines": {
-    "node": ">=12.x"
+    "node": ">=14.x"
   },
   "aws": {
     "name": "mdn-content-origin-request",
