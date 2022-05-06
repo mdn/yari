@@ -58,7 +58,7 @@ function normalizeBCDURLs(doc, options) {
     if (section.type !== "browser_compatibility") continue;
 
     // This happens if a query is "broken".
-    // E.g. <div class="bc-data" id="bcd:apii.TypoCatching">
+    // E.g. <div class="bc-data" data-query="apii.TypoCatching">
     if (!section.value.data) continue;
 
     for (const [key, data] of Object.entries(section.value.data)) {
@@ -127,7 +127,7 @@ function extractBCDData(doc) {
 
       if (!section.value.data) {
         // This happens if a query is "broken".
-        // E.g. <div class="bc-data" id="bcd:apii.TypoCatching">
+        // E.g. <div class="bc-data" data-query="apii.TypoCatching">
         continue;
       }
       const fileName = ++nextId > 1 ? `bcd-${nextId}.json` : "bcd.json";
