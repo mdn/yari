@@ -182,10 +182,10 @@ jobs:
           echo "CONTENT_TRANSLATED_ROOT=$CONTENT_TRANSLATED_ROOT"
           # Build the ServiceWorker first
           yarn build:sw
-          yarn prepare-build
+          yarn build:prepare
 
           # (July 15, 2021) This is a temporary solution. This should become an
-          # integrated part of 'prepare-build'.
+          # integrated part of 'build:prepare'.
           # See https://github.com/mdn/yari/issues/4217
           yarn tool popularities
 
