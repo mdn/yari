@@ -192,9 +192,13 @@ export default function render(
   }
 
   $("#root").after(
-    `<script type="application/json" id="hydration">${JSON.stringify(
-      hydrationData
-    )}</script>`
+    `<script type="application/json" id="hydration">${
+      // https://html.spec.whatwg.org/multipage/scripting.html#restrictions-for-contents-of-script-elements
+      JSON.stringify(hydrationData).replace(
+        /<(?=!--|\/?script)/gi,
+        String.raw`\u003c`
+      )
+    }</script>`
   );
 
   if (pageDescription) {
