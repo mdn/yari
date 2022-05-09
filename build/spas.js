@@ -301,8 +301,15 @@ async function buildSPAs(options) {
 
       const url = `/${locale}/`;
       const hyData = {
-        pullRequestsData: {
-          items: pullRequestsData.items,
+        recentContributions: {
+          items: pullRequestsData.items.map(
+            ({ number, title, updated_at, pull_request: { html_url } }) => ({
+              number,
+              title,
+              updated_at,
+              url: html_url,
+            })
+          ),
           repo: { name: "mdn/content", url: "https://github.com/mdn/content" },
         },
         featuredContributor,
