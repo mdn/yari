@@ -1513,10 +1513,10 @@ test("home page should have a /index.json file with pullRequestsData", () => {
   const builtFolder = path.join(buildRoot, "en-us");
 
   const jsonFile = path.join(builtFolder, "index.json");
-  const { hyData: { pullRequestsData } = {} } = JSON.parse(
+  const { hyData: { recentContributions } = {} } = JSON.parse(
     fs.readFileSync(jsonFile)
   );
-  expect(pullRequestsData.items.length).toBeGreaterThan(0);
+  expect(recentContributions.items.length).toBeGreaterThan(0);
 });
 
 test("headings with links in them are flaws", () => {
