@@ -152,7 +152,7 @@
     "fzf": "^0.5.1",
     "history": "^5.2.0",
     "html-validate": "^7.0.0",
-    "husky": "^7.0.4",
+    "husky": "^8.0.1",
     "ignore-loader": "^0.1.2",
     "jest-junit-reporter": "^1.1.0",
     "jsdom": "^19.0.0",
