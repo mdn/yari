@@ -20,7 +20,7 @@ To run these tests, first run:
 
 ```sh
 export ENV_FILE=testing/.env
-yarn prepare-build
+yarn build:prepare
 yarn build
 yarn start:static-server
 ```

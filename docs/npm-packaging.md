@@ -62,7 +62,7 @@ First of all, make you relevant edits in `~/yari` then run:
 
     export REACT_APP_DISABLE_AUTH=true
     export REACT_APP_CRUD_MODE=true
-    yarn prepare-build
+    yarn build:prepare
     echo .git/info/exclude >> .npmignore
     echo .env >> .npmignore
     npm pack

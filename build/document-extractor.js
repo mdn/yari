@@ -154,7 +154,7 @@ function extractSections($) {
  * first. For example BCD tables. If the input is this:
  *
  *   <h2 id="browser_compat">Browser Compat</h2>
- *   <div class="bc-data" id="bcd:foo.bar.thing">...</div>
+ *   <div class="bc-data" data-query="foo.bar.thing">...</div>
  *
  * Then, extract the ID, get the structured data and eventually return this:
  *
@@ -327,7 +327,9 @@ function _addSingleSpecialSection($) {
   let specialSectionType = null;
   if ($.find("div.bc-data").length) {
     specialSectionType = "browser_compatibility";
-    dataQuery = $.find("div.bc-data").attr("id");
+    const elem = $.find("div.bc-data");
+    // Macro adds "data-query", but some translated-content still uses "id".
+    dataQuery = elem.attr("data-query") || elem.attr("id");
   } else if ($.find("div.bc-specs").length) {
     specialSectionType = "specifications";
     dataQuery = $.find("div.bc-specs").attr("data-bcd-query");
@@ -335,9 +337,9 @@ function _addSingleSpecialSection($) {
   }
 
   // Some old legacy documents haven't been re-rendered yet, since it
-  // was added, so the `div.bc-data` tag doesn't have a `id="bcd:..."`
-  // attribute. If that's the case, bail and fail back on a regular
-  // prose section :(
+  // was added, so the `div.bc-data` tag doesn't have a a `id="bcd:..."`
+  // or `data-bcd="..."` attribute. If that's the case, bail and fall
+  // back on a regular prose section :(
   if (!dataQuery && specURLsString === "") {
     // I wish there was a good place to log this!
     const [proseSections] = _addSectionProse($);
