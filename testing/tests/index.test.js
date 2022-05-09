@@ -189,12 +189,6 @@ test("content built foo page", () => {
   // The ID should match what's set in `testing/.env`.
   expect($('script[src="/static/js/ga.js"]').length).toBe(1);
 
-  // The HTML should contain the Speedcurve LUX snippet.
-  // The ID should match what's set in `testing/.env`.
-  expect($('script[src^="https://cdn.speedcurve.com/"]').attr("src")).toContain(
-    "012345"
-  );
-
   // Because this en-US page has a French translation
   expect($('link[rel="alternate"]').length).toBe(3);
   expect($('link[rel="alternate"][hreflang="en"]').length).toBe(1);
@@ -1519,10 +1513,10 @@ test("home page should have a /index.json file with pullRequestsData", () => {
   const builtFolder = path.join(buildRoot, "en-us");
 
   const jsonFile = path.join(builtFolder, "index.json");
-  const { hyData: { pullRequestsData } = {} } = JSON.parse(
+  const { hyData: { recentContributions } = {} } = JSON.parse(
     fs.readFileSync(jsonFile)
   );
-  expect(pullRequestsData.items.length).toBeGreaterThan(0);
+  expect(recentContributions.items.length).toBeGreaterThan(0);
 });
 
 test("headings with links in them are flaws", () => {

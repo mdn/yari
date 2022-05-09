@@ -39,7 +39,7 @@ export default function Translations() {
 }
 
 function PickLocale() {
-  const { locale } = useParams();
+  const { locale = "en-US" } = useParams();
   React.useEffect(() => {
     let title = "All translations";
     if (locale.toLowerCase() !== "en-us") {

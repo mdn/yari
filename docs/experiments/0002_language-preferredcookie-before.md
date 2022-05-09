@@ -6,9 +6,9 @@
 
 ## Overview
 
-When someone changes the document language on the document-footer, we record
-a GA event. But unfortunately we don't know, at that event, if they already
-had a cookie before.
+When someone changes the document language on the document-footer, we record a
+GA event. But unfortunately we don't know, at that event, if they already had a
+cookie before.
 
 ## Start date
 
@@ -20,8 +20,8 @@ June 1 2021.
 
 ## Details
 
-We just need to change the existing event action `Change preferred language`
-to mention what value for the cookie they _had_.
+We just need to change the existing event action `Change preferred language` to
+mention what value for the cookie they _had_.
 
 ## Analysis
 

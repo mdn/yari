@@ -1,5 +1,5 @@
 import { Switch } from "../ui/atoms/switch";
-import { SettingsData, STATE, UpdateStatus } from "./mdn-worker";
+import { SettingsData, getMDNWorker } from "./mdn-worker";
 import useInterval from "@use-it/interval";
 
 import { useEffect, useRef, useState } from "react";
@@ -7,6 +7,7 @@ import UpdateButton from "./update";
 import ClearButton from "./clear";
 import { Spinner } from "../ui/atoms/spinner";
 import { MDN_PLUS_TITLE } from "../constants";
+import { ContentStatus, ContentStatusPhase } from "./db";
 
 function displayEstimate({ usage = 0, quota = Infinity }: StorageEstimate) {
   const usageInMib = Math.round(usage / (1024 * 1024));
@@ -37,7 +38,7 @@ export default function SettingsApp({ ...appProps }) {
 
 function Settings() {
   document.title = `MDN Offline | ${MDN_PLUS_TITLE}`;
-  const [status, setStatus] = useState<UpdateStatus>();
+  const [status, setStatus] = useState<ContentStatus>();
   const [saving, setSaving] = useState<boolean>(true);
 
   const [estimate, setEstimate] = useState<StorageEstimate | null>(null);
@@ -47,9 +48,10 @@ function Settings() {
 
   useEffect(() => {
     const init = async () => {
-      setSettings(await window.mdnWorker.offlineSettings());
-      setStatus(await window.mdnWorker.updateAvailable());
+      const mdnWorker = getMDNWorker();
+      setSettings(await mdnWorker.offlineSettings());
       setEstimate(await navigator?.storage?.estimate?.());
+      mdnWorker.checkForUpdate();
     };
     init().then(() => {});
   }, []);
@@ -60,25 +62,41 @@ function Settings() {
     init();
   }, [settings]);
 
+  useEffect(() => {
+    const mdnWorker = getMDNWorker();
+    const isWorkerBusy = status?.phase
+      ? status?.phase !== ContentStatusPhase.IDLE
+      : false;
+    mdnWorker.toggleKeepAlive(isWorkerBusy);
+
+    if (isWorkerBusy) {
+      // Warn when leaving page.
+      const listener = (e) => {
+        e.preventDefault();
+        e.returnValue = "";
+      };
+      window.addEventListener("beforeunload", listener);
+
+      return () => window.removeEventListener("beforeunload", listener);
+    }
+  }, [status?.phase]);
+
   const updateSettings = async (change: SettingsData) => {
     setSaving(true);
-    let newSettings = await window.mdnWorker.setOfflineSettings(change);
+    const mdnWorker = getMDNWorker();
+    let newSettings = await mdnWorker.setOfflineSettings(change);
     setSettings(newSettings);
   };
 
-  useInterval(() => {
-    const next = window.mdnWorker.status();
-    if (next.state === STATE.nothing) {
-      if (next.state !== status?.state) {
-        setStatus({ ...next });
-      }
-    } else {
-      setStatus({ ...next });
-    }
+  useInterval(async () => {
+    const mdnWorker = getMDNWorker();
+    const next = await mdnWorker.status();
+    setStatus({ ...next });
   }, 500);
 
   const update = () => {
-    window.mdnWorker.update();
+    const mdnWorker = getMDNWorker();
+    mdnWorker.update();
     setStatus(status);
   };
 
@@ -86,14 +104,15 @@ function Settings() {
     if (
       window.confirm("All downloaded content will be removed from your device")
     ) {
-      window.mdnWorker.clear();
+      const mdnWorker = getMDNWorker();
+      mdnWorker.clear();
       setStatus(status);
     }
   };
 
   if (
     settings?.autoUpdates &&
-    status?.state === STATE.updateAvailable &&
+    status?.remote?.latest !== status?.local?.version &&
     !updateTriggered.current
   ) {
     update();
@@ -165,7 +184,9 @@ function Settings() {
           {window?.location.hash === "#debug" && (
             <li>
               <h4>Debug</h4>
-              <span>{JSON.stringify(status, null, 2)}</span>
+              <span style={{ fontFamily: "monospace", whiteSpace: "pre" }}>
+                {JSON.stringify(status, null, 2)}
+              </span>
             </li>
           )}
           {usage && (

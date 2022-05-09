@@ -23,7 +23,7 @@ type ContributorDetails = {
 };
 
 export function ContributorSpotlight(props: HydrationData<ContributorDetails>) {
-  const { "*": slug, locale } = useParams();
+  const { "*": slug, locale = "en-US" } = useParams();
   const baseURL = `/${locale.toLowerCase()}/community/spotlight/${slug}`;
   const contributorJSONUrl = `${baseURL}/index.json`;
 

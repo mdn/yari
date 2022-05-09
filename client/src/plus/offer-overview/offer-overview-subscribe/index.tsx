@@ -237,7 +237,11 @@ function canUpgrade(user: UserData | null, subscriptionType: SubscriptionType) {
   );
 }
 
-function getLocalizedPlans(countrySpecific: StripePlans) {
+function getLocalizedPlans(countrySpecific: StripePlans): {
+  CORE: OfferDetailsProps;
+  PLUS_5: OfferDetailsProps;
+  PLUS_10: OfferDetailsProps;
+} {
   return {
     CORE: CORE,
     PLUS_5: {
@@ -248,7 +252,7 @@ function getLocalizedPlans(countrySpecific: StripePlans) {
         ctaLink: `${MDN_PLUS_SUBSCRIBE_BASE}?plan=${countrySpecific.plans["mdn_plus_5m"].id}`,
         monthlyPrice: countrySpecific.plans["mdn_plus_5m"].monthlyPriceInCents,
       },
-      discount: {
+      discounted: {
         ...PLUS_5.discounted,
         ctaLink: `${MDN_PLUS_SUBSCRIBE_BASE}?plan=${countrySpecific.plans["mdn_plus_5y"].id}`,
         monthlyPrice: countrySpecific.plans["mdn_plus_5y"].monthlyPriceInCents,
@@ -262,7 +266,7 @@ function getLocalizedPlans(countrySpecific: StripePlans) {
         ctaLink: `${MDN_PLUS_SUBSCRIBE_BASE}?plan=${countrySpecific.plans["mdn_plus_10m"].id}`,
         monthlyPrice: countrySpecific.plans["mdn_plus_10m"].monthlyPriceInCents,
       },
-      discount: {
+      discounted: {
         ...PLUS_10.discounted,
         ctaLink: `${MDN_PLUS_SUBSCRIBE_BASE}?plan=${countrySpecific.plans["mdn_plus_10y"].id}`,
         monthlyPrice: countrySpecific.plans["mdn_plus_10y"].monthlyPriceInCents,
@@ -273,15 +277,11 @@ function getLocalizedPlans(countrySpecific: StripePlans) {
 
 function OfferOverviewSubscribe() {
   const userData = useUserData();
-  const [offerDetails, setOfferDetails] = useState<{
+  const [offerDetails, setOfferDetails] = useState<null | {
     CORE: OfferDetailsProps;
     PLUS_5: OfferDetailsProps | null;
     PLUS_10: OfferDetailsProps | null;
-  }>({
-    CORE: CORE,
-    PLUS_5: PLUS_5,
-    PLUS_10: PLUS_10,
-  });
+  }>(null);
   const { isOnline } = useOnlineStatus();
 
   useEffect(() => {
@@ -317,8 +317,10 @@ function OfferOverviewSubscribe() {
         )}
         {isOnline && (
           <>
-            <h2>Choose a plan</h2>
-            {
+            {(offerDetails && <h2>Choose a plan</h2>) || (
+              <h2>Loading available plans…</h2>
+            )}
+            {offerDetails &&
               /** Only display discount switch if paid plans available  */
               offerDetails.PLUS_5 && (
                 <Switch
@@ -333,28 +335,29 @@ function OfferOverviewSubscribe() {
                 >
                   Pay yearly and get 2 months for free
                 </Switch>
-              )
-            }
+              )}
           </>
         )}
-        <div className={wrapperClass}>
-          <OfferDetails
-            offerDetails={offerDetails.CORE}
-            period={period}
-          ></OfferDetails>
-          {offerDetails.PLUS_5 && (
+        {offerDetails && (
+          <div className={wrapperClass}>
             <OfferDetails
-              offerDetails={offerDetails.PLUS_5}
+              offerDetails={offerDetails.CORE}
               period={period}
             ></OfferDetails>
-          )}
-          {offerDetails.PLUS_10 && (
-            <OfferDetails
-              offerDetails={offerDetails.PLUS_10}
-              period={period}
-            ></OfferDetails>
-          )}
-        </div>
+            {offerDetails.PLUS_5 && (
+              <OfferDetails
+                offerDetails={offerDetails.PLUS_5}
+                period={period}
+              ></OfferDetails>
+            )}
+            {offerDetails.PLUS_10 && (
+              <OfferDetails
+                offerDetails={offerDetails.PLUS_10}
+                period={period}
+              ></OfferDetails>
+            )}
+          </div>
+        )}
       </section>
       <p className="plus-for-companies">
         * Do you need MDN Plus for your company?{" "}

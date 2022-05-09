@@ -10,18 +10,19 @@ from .constants import (
     DEFAULT_BUCKET_NAME,
     DEFAULT_BUCKET_PREFIX,
     DEFAULT_CACHE_CONTROL,
+    DEFAULT_DISTRIBUTION_ID,
     DEFAULT_NO_PROGRESSBAR,
     DEFAULT_REPO,
     DEFAULT_GITHUB_TOKEN,
-    SPEEDCURVE_DEPLOY_API_KEY,
-    SPEEDCURVE_DEPLOY_SITE_ID,
     ELASTICSEARCH_URL,
 )
-from .update_lambda_functions import update_all
+from .update_lambda_functions import (
+    update_all as update_lambdas,
+    deploy as deploy_lambdas,
+)
 from .upload import upload_content
 from .utils import log
 from .whatsdeployed import dump as dump_whatsdeployed
-from .speedcurve import deploy_ping as speedcurve_deploy_ping
 from .analyze_pr import analyze_pr
 from . import search
 
@@ -81,6 +82,19 @@ def cli(ctx, **kwargs):
 
 
 @cli.command()
+@click.option(
+    "--distribution",
+    help="Id of the CloudFront distribution",
+    default=DEFAULT_DISTRIBUTION_ID,
+    show_default=True,
+)
+@click.option(
+    "--force",
+    default=False,
+    help="Overwrite Lambda function, even if the hash hasn't changed.",
+    show_default=True,
+    is_flag=True,
+)
 @click.argument(
     "directory",
     type=click.Path(),
@@ -88,9 +102,12 @@ def cli(ctx, **kwargs):
     default="aws-lambda",
 )
 @click.pass_context
-def update_lambda_functions(ctx, directory):
+def update_lambda_functions(ctx, directory, distribution, force):
     log.info(f"Deployer ({__version__})", bold=True)
-    update_all(directory, dry_run=ctx.obj["dry_run"])
+    dry_run = ctx.obj["dry_run"]
+
+    updated_functions = update_lambdas(directory, dry_run=dry_run, force=force)
+    deploy_lambdas(updated_functions, distribution, dry_run=dry_run)
 
 
 @cli.command(
@@ -256,56 +273,6 @@ def analyze_pr_build(ctx, directory: Path, **kwargs):
         log.info("POST".center(80, "_"), "\n")
         log.info(combined_comment)
         log.info("\n", "END POST".center(80, "_"))
-
-
-@cli.command()
-@click.option(
-    "--api-key",
-    help="Deploy API key",
-    default=SPEEDCURVE_DEPLOY_API_KEY,
-    show_default=False,
-)
-@click.option(
-    "--site-id",
-    help="Site ID ",
-    default=SPEEDCURVE_DEPLOY_SITE_ID,
-    show_default=True,
-)
-@click.option(
-    "--note",
-    help="Note string to add",
-    default="",
-    show_default=True,
-)
-@click.option(
-    "--detail",
-    help="Detail string to add",
-    default="",
-    show_default=True,
-)
-@click.pass_context
-def speedcurve_deploy(ctx, **kwargs):
-    # The reason we're not throwing an error is to make it super convenient
-    # to call this command, from bash, without first having to check and figure
-    # out if the relevant environment variables are available.
-
-    api_key = kwargs["api_key"]
-    if not api_key:
-        log.warning("SPEEDCURVE_DEPLOY_API_KEY not set or empty")
-        return
-
-    site_id = kwargs["site_id"]
-    if not site_id:
-        log.warning("SPEEDCURVE_DEPLOY_SITE_ID not set or empty")
-        return
-
-    log.info(f"Pinging Speedcurve Deploy API for {site_id}", bold=True)
-    note = kwargs["note"]
-    detail = kwargs["detail"]
-    log.info(f"Speedcurve Deploy note={note!r}, detail={detail!r}")
-    speedcurve_deploy_ping(
-        api_key, site_id, note, detail, dry_run=ctx.obj.get("dry_run")
-    )
 
 
 @cli.command()

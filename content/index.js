@@ -5,6 +5,8 @@ const {
   REPOSITORY_URLS,
   ROOTS,
   VALID_LOCALES,
+  HTML_FILENAME,
+  MARKDOWN_FILENAME,
 } = require("./constants");
 const Document = require("./document");
 const Translation = require("./translation");
@@ -28,6 +30,8 @@ module.exports = {
   REPOSITORY_URLS,
   ROOTS,
   VALID_LOCALES,
+  HTML_FILENAME,
+  MARKDOWN_FILENAME,
 
   getPopularities,
 

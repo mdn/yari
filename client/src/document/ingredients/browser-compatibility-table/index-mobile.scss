@@ -5,8 +5,9 @@
     display: none;
   }
 
-  .bc-support {
+  td.bc-support {
     display: block;
+    border-left-width: 0;
   }
 
   .bc-feature,
@@ -20,5 +21,9 @@
 
   .bc-history-desktop {
     display: none;
+  }
+
+  .table-scroll {
+    overflow-x: auto;
   }
 }
