@@ -8136,10 +8136,10 @@ html-tags@^3.1.0:
   resolved "https://registry.npmjs.org/html-tags/-/html-tags-3.1.0.tgz"
   integrity sha512-1qYz89hW3lFDEazhjW0yVAV87lw8lVkrJocr72XmBkMKsoSVJCQx3W8BXsC7hO2qAt8BoVjYjtAcZ9perqGnNg==
 
-html-validate@^6.11.0:
-  version "6.11.0"
-  resolved "https://registry.yarnpkg.com/html-validate/-/html-validate-6.11.0.tgz#d6721f708d2c154819263c2da4c273bb44b09c93"
-  integrity sha512-SCdYudJzDFodEpPmTlE4SyvZC50o5J4iqJMuXVIT6FWlAselbYd32UUSw+8HIR5winJpJeSHb+4aktxCYw7+LQ==
+html-validate@^7.0.0:
+  version "7.0.0"
+  resolved "https://registry.yarnpkg.com/html-validate/-/html-validate-7.0.0.tgz#fa95f4cb3f4da2fb00c0d1ff2e6711b6ae97195f"
+  integrity sha512-Sq+ZQQSnkabgjplF2qNjbA4RdTkOP/99V2Q7gP2rr4BLUEEjlpfJQx3DeHtpzfBJmKFA/NzT7wb2qrzGCpcilA==
   dependencies:
     "@babel/code-frame" "^7.10.0"
     "@html-validate/stylish" "^2.0.0"
