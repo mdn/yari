@@ -69,7 +69,7 @@
     "compression": "^1.7.4",
     "cookie": "^0.5.0",
     "cookie-parser": "^1.4.6",
-    "dayjs": "^1.11.1",
+    "dayjs": "^1.11.2",
     "dexie": "^3.2.2",
     "dotenv": "^16.0.0",
     "ejs": "^3.1.7",
