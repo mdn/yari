@@ -54,6 +54,7 @@ function StaticPage({
     {
       fallbackData: isServer ? fallbackData : undefined,
       revalidateOnFocus: CRUD_MODE,
+      revalidateOnMount: false,
     }
   );
 

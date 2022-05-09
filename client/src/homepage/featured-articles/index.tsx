@@ -18,6 +18,7 @@ export default function FeaturedArticles(props: HydrationData<any>) {
     {
       fallbackData: props.hyData ? props : undefined,
       revalidateOnFocus: CRUD_MODE,
+      revalidateOnMount: false,
     }
   );
 

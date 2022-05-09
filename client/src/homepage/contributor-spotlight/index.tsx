@@ -23,6 +23,7 @@ export function ContributorSpotlight(props: HydrationData<any>) {
     {
       fallbackData: props.hyData ? props : undefined,
       revalidateOnFocus: CRUD_MODE,
+      revalidateOnMount: false,
     }
   );
 
