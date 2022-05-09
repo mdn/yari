@@ -3,12 +3,14 @@ const acceptLanguageParser = require("accept-language-parser");
 const stageLookup = require("./plans-stage-lookup.json");
 const prodLookup = require("./plans-prod-lookup.json");
 
-const PROD_ENV = "prod";
+const STAGE_ENV = "stage";
 
 exports.handler = async (event) => {
   const request = event.Records[0].cf.request;
-  const ENV = request.origin.custom.customHeaders["x-mdn-env"] || "prod";
-  const lookupData = ENV === PROD_ENV ? prodLookup : stageLookup;
+  //This should fail if this header is not set.
+  const ENV = request.origin.custom.customHeaders["x-mdn-env"].value || "prod";
+  //Always fall back to prod
+  const lookupData = ENV === STAGE_ENV ? stageLookup : prodLookup;
 
   //https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/using-cloudfront-headers.html
   const countryHeader = request.headers["cloudfront-viewer-country"];

@@ -15,7 +15,7 @@ describe("checking files", () => {
     // Sanity check the test itself
     console.assert(fs.existsSync(filePath), `${filePath} does not exist`);
     await expect(checkFile(filePath)).rejects.toThrow(
-      "contains a <script> tag"
+      / does not appear to be an SVG$/
     );
   });
   it("should spot SVGs with onLoad inside an element", async () => {
@@ -23,7 +23,7 @@ describe("checking files", () => {
     // Sanity check the test itself
     console.assert(fs.existsSync(filePath), `${filePath} does not exist`);
     await expect(checkFile(filePath)).rejects.toThrow(
-      "<path> contains an unsafe attribute: 'onload'"
+      / does not appear to be an SVG$/
     );
   });
 

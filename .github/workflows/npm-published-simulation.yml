@@ -23,7 +23,7 @@ jobs:
       - name: Setup Node.js environment
         uses: actions/setup-node@v3
         with:
-          node-version: "12"
+          node-version: "14"
           cache: "yarn"
 
       - name: Cache node_modules
@@ -55,7 +55,7 @@ jobs:
           REACT_APP_DISABLE_AUTH: true
           CONTENT_ROOT: testing/content/files
         run: |
-          yarn prepare-build
+          yarn build:prepare
 
       - name: Build and install tarball
         run: |
