@@ -64,9 +64,13 @@
     .toc {
       display: block;
       grid-area: toc;
-      max-height: 100vh;
       position: sticky;
-      top: var(--top-navigation-height);
+      --offset: var(--main-document-header-height);
+      --max-height: calc(100vh - var(--offset));
+
+      overflow: auto;
+      top: var(--offset);
+      max-height: var(--max-height);
     }
 
     .in-nav-toc {
