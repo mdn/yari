@@ -19,7 +19,7 @@ if (!container) {
 // components will know to fetch it with XHR.
 const hydrationElement = document.getElementById("hydration");
 const appData = hydrationElement
-  ? JSON.parse(decodeURIComponent(hydrationElement.textContent!))
+  ? JSON.parse(hydrationElement.textContent!)
   : {};
 
 let app = (
