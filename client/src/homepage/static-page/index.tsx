@@ -27,8 +27,6 @@ interface StaticPageProps {
   sidebarHeader?: ReactElement;
 }
 
-const isServer = typeof window === "undefined";
-
 function StaticPage({
   extraClasses = "",
   locale,
@@ -40,7 +38,7 @@ function StaticPage({
 }: StaticPageProps) {
   const { isSidebarOpen, setIsSidebarOpen } = useUIStatus();
   const baseURL = `/${locale}/${slug}`;
-  const featureJSONUrl = `${baseURL.toLowerCase()}/index.json`;
+  const featureJSONUrl = `${baseURL}/index.json`;
   const { data: { hyData } = {}, error } = useSWR<{ hyData: StaticPageDoc }>(
     featureJSONUrl,
     async (url) => {
@@ -52,9 +50,9 @@ function StaticPage({
       return await response.json();
     },
     {
-      fallbackData: isServer ? fallbackData : undefined,
+      fallbackData,
       revalidateOnFocus: CRUD_MODE,
-      revalidateOnMount: false,
+      revalidateOnMount: !fallbackData,
     }
   );
 

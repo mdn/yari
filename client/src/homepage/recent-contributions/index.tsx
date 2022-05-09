@@ -9,6 +9,8 @@ import "./index.scss";
 dayjs.extend(relativeTime);
 
 function RecentContributions(props: HydrationData<any>) {
+  const fallbackData = props.hyData ? props : undefined;
+
   const { data: { hyData } = {} } = useSWR<any>(
     "./index.json",
     async (url) => {
@@ -20,9 +22,9 @@ function RecentContributions(props: HydrationData<any>) {
       return await response.json();
     },
     {
-      fallbackData: props.hyData ? props : undefined,
+      fallbackData,
       revalidateOnFocus: CRUD_MODE,
-      revalidateOnMount: false,
+      revalidateOnMount: !fallbackData,
     }
   );
 
