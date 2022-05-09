@@ -192,8 +192,8 @@ export default function render(
   }
 
   $("#root").after(
-    `<script type="application/json" id="hydration">${JSON.stringify(
-      hydrationData
+    `<script type="application/json" id="hydration">${encodeURIComponent(
+      JSON.stringify(hydrationData)
     )}</script>`
   );
 
