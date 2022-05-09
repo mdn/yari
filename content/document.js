@@ -98,6 +98,7 @@ function childrenForPath(
   return childrenForPath(parent, path, recurse, [...prefix, current]);
 }
 
+// When running a production build we can afford to look up all files upfront.
 const ALL_DOCUMENT_PATHS_TREE =
   process.env.NODE_ENV !== "production"
     ? {}
@@ -582,7 +583,17 @@ function findChildren(url, recursive = false) {
   const base = path.join(root, folder);
   const baseHTML = path.join(base, HTML_FILENAME);
   const baseMarkdown = path.join(base, MARKDOWN_FILENAME);
-  if (process.env.NODE_ENV !== "production") {
+  // When running a production build we use our lookup.
+  if (process.env.NODE_ENV === "production") {
+    const childPaths = childrenForPath(
+      ALL_DOCUMENT_PATHS_TREE[root],
+      folder.split(path.sep),
+      recursive
+    );
+    return childPaths
+      .map((childFilePath) => path.dirname(childFilePath))
+      .map((folder) => read(folder));
+  } else {
     const api = new fdir()
       .withFullPaths()
       .withErrors()
@@ -597,15 +608,6 @@ function findChildren(url, recursive = false) {
     const childPaths = [...api.sync()];
     return childPaths
       .map((childFilePath) => path.relative(root, path.dirname(childFilePath)))
-      .map((folder) => read(folder));
-  } else {
-    const childPaths = childrenForPath(
-      ALL_DOCUMENT_PATHS_TREE[root],
-      folder.split(path.sep),
-      recursive
-    );
-    return childPaths
-      .map((childFilePath) => path.dirname(childFilePath))
       .map((folder) => read(folder));
   }
 }
