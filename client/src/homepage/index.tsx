@@ -1,6 +1,6 @@
 import "./index.scss";
 import { HomepageHero } from "./homepage-hero";
-import { FeaturedArticles } from "./featured-articles";
+import FeaturedArticles from "./featured-articles";
 import { LatestNews } from "./latest-news";
 import RecentContributions from "./recent-contributions";
 import { ContributorSpotlight } from "./contributor-spotlight";
@@ -10,7 +10,7 @@ export function Homepage(props) {
     <main id="content" role="main">
       <div className="homepage mdn-ui-body-m">
         <HomepageHero />
-        <FeaturedArticles />
+        <FeaturedArticles {...props} />
         <LatestNews {...props} />
         <RecentContributions {...props} />
         <ContributorSpotlight {...props} />

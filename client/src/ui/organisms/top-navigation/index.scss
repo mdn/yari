@@ -1,7 +1,6 @@
 @use "../../vars" as *;
 
 .top-navigation {
-  height: var(--top-navigation-height);
   position: relative;
   width: 100%;
   background-color: var(--background-primary);
@@ -43,7 +42,7 @@
   }
 }
 
-@media screen and (min-width: $screen-md) {
+@media screen and (min-width: $screen-lg) {
   .main-menu-toggle {
     display: none;
   }

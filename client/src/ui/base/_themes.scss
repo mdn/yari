@@ -3,6 +3,8 @@
 @use "../color-palette" as *;
 
 @mixin light-theme {
+  color-scheme: light;
+
   --text-primary: #{$mdn-theme-light-text-primary};
   --text-secondary: #{$mdn-theme-light-text-secondary};
   --text-inactive: #{$mdn-theme-light-text-inactive};
@@ -159,18 +161,6 @@
       $alpha: -0.3
     )};
 
-  --homepage-hero-bg: radial-gradient(
-    114.42% 123.24% at 6.69% 13.67%,
-    rgba(51, 178, 252, 0.2) 22.84%,
-    rgba(152, 82, 250, 0.2) 47.63%,
-    rgba(255, 230, 0, 0.2) 82.74%
-  );
-  --homepage-secondary-bg: linear-gradient(
-    90deg,
-    #8524ff -43.99%,
-    #4d7fff 159.52%
-  );
-
   --modal-backdrop-color: #{rgba($mdn-theme-dark-background-primary, 0.1)};
   --blend-color: #{$mdn-color-white}80;
 
@@ -181,6 +171,8 @@
 }
 
 @mixin dark-theme {
+  color-scheme: dark;
+
   --text-primary: #{$mdn-theme-dark-text-primary};
   --text-secondary: #{$mdn-theme-dark-text-secondary};
   --text-inactive: #{$mdn-theme-dark-text-inactive};
@@ -195,6 +187,26 @@
       $mdn-color-dark-theme-yellow-30,
       $alpha: -0.6
     )};
+  --background-mark-green: #{color.adjust(
+      $mdn-color-light-theme-green-30,
+      $alpha: -0.6
+    )};
+  --background-information: #{color.adjust(
+      $mdn-theme-light-icon-information,
+      $alpha: -0.9
+    )};
+  --background-warning: #{color.adjust(
+      $mdn-theme-light-icon-warning,
+      $alpha: -0.9
+    )};
+  --background-critical: #{color.adjust(
+      $mdn-theme-light-icon-critical,
+      $alpha: -0.9
+    )};
+  --background-success: #{color.adjust(
+      $mdn-theme-light-icon-success,
+      $alpha: -0.9
+    )};
 
   --border-primary: #{$mdn-theme-dark-border-primary};
   --border-secondary: #{$mdn-theme-dark-border-secondary};
@@ -208,6 +220,9 @@
   --button-secondary-hover: #{$mdn-theme-dark-button-secondary-hover};
   --button-secondary-active: #{$mdn-theme-dark-button-secondary-active};
   --button-secondary-inactive: #{$mdn-theme-dark-button-secondary-inactive};
+  --button-secondary-border-focus: #{$mdn-theme-light-button-secondary-border-focus};
+  --button-secondary-border-red: #{$mdn-theme-light-button-secondary-border-red};
+  --button-secondary-border-red-focus: #{$mdn-theme-light-button-secondary-border-red-focus};
 
   --icon-primary: #{$mdn-theme-dark-icon-primary};
   --icon-secondary: #{$mdn-theme-dark-icon-secondary};
@@ -222,6 +237,10 @@
       $alpha: -0.9
     )};
   --accent-secondary: #{$mdn-theme-dark-accent-secondary};
+  --accent-tertiary: #{color.adjust(
+      $mdn-color-light-theme-blue-50,
+      $alpha: -0.9
+    )};
 
   --shadow-01: #{$mdn-theme-dark-shadow-01};
   --shadow-02: #{$mdn-theme-dark-shadow-02};
@@ -240,6 +259,7 @@
 
   --notecard-link-color: #{$mdn-color-neutral-10};
 
+  --scrollbar-bg: transparent;
   --scrollbar-color: rgba(255, 255, 255, 0.25);
 
   --category-color: #{$mdn-color-dark-theme-blue-30};
@@ -270,6 +290,14 @@
   --http-mark-color: #{$mdn-color-dark-theme-green-70};
   --apis-mark-color: #{$mdn-color-dark-theme-violet-70};
   --learn-mark-color: #{$mdn-color-dark-theme-pink-70};
+
+  --plus-accent-background-color: #{$mdn-color-light-theme-red-50}30;
+  --html-accent-background-color: #{$mdn-color-light-theme-red-50}30;
+  --css-accent-background-color: #{$mdn-color-light-theme-blue-50}30;
+  --js-accent-background-color: #{$mdn-color-light-theme-yellow-50}30;
+  --http-accent-background-color: #{$mdn-color-light-theme-green-50}30;
+  --apis-accent-background-color: #{$mdn-color-light-theme-violet-50}30;
+  --learn-accent-background-color: #{$mdn-color-light-theme-pink-50}30;
 
   --plus-accent-engage: #{color.adjust(
       $mdn-color-dark-theme-red-40,
@@ -320,7 +348,6 @@ body,
   --color-announcement-banner-accent: #{$mdn-color-light-theme-pink-40};
 }
 
-:root,
 .light {
   @include light-theme;
 }
@@ -329,14 +356,13 @@ body,
   @include dark-theme;
 }
 
-@media (prefers-color-scheme: light) {
-  :root {
+// OS Default.
+:root:not(.light, .dark) {
+  @media (prefers-color-scheme: light) {
     @include light-theme;
   }
-}
 
-@media (prefers-color-scheme: dark) {
-  :root {
+  @media (prefers-color-scheme: dark) {
     @include dark-theme;
   }
 }

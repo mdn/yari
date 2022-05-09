@@ -189,12 +189,6 @@ test("content built foo page", () => {
   // The ID should match what's set in `testing/.env`.
   expect($('script[src="/static/js/ga.js"]').length).toBe(1);
 
-  // The HTML should contain the Speedcurve LUX snippet.
-  // The ID should match what's set in `testing/.env`.
-  expect($('script[src^="https://cdn.speedcurve.com/"]').attr("src")).toContain(
-    "012345"
-  );
-
   // Because this en-US page has a French translation
   expect($('link[rel="alternate"]').length).toBe(3);
   expect($('link[rel="alternate"][hreflang="en"]').length).toBe(1);

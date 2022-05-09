@@ -38,7 +38,12 @@ export const Menu = ({ menu, isOpen, toggle }: MenuProps) => {
         </InternalLink>
       )}
 
-      <Submenu submenuId={submenuId} menuEntry={menu} defaultHidden={!isOpen} />
+      <Submenu
+        submenuId={submenuId}
+        menuEntry={menu}
+        defaultHidden={!isOpen}
+        extraClasses="inline-submenu-lg"
+      />
     </li>
   );
 };

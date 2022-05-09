@@ -27,7 +27,6 @@ module.exports = {
   },
   settings: {
     node: {
-      allowModules: ["expect-puppeteer"],
       resolvePaths: [__dirname],
       tryExtensions: [".js", ".json", ".node", ".tsx", ".ts"],
     },

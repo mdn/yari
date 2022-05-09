@@ -25,18 +25,20 @@ export const Submenu = ({
   defaultHidden = false,
   isDropdown = false,
   submenuId,
+  extraClasses,
 }: {
   menuEntry: MenuEntry;
   defaultHidden?: boolean;
   isDropdown?: boolean;
   submenuId?: string;
+  extraClasses?: string;
 }) => {
   return (
     <ul
       id={submenuId}
       className={`${isDropdown ? "dropdown-list" : "submenu"} ${menuEntry.id} ${
         defaultHidden ? "hidden" : ""
-      }`}
+      } ${extraClasses || ""}`}
       role="menu"
       aria-labelledby={`${menuEntry.id}-button`}
     >
