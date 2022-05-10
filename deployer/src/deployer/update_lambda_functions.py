@@ -91,8 +91,12 @@ def update(lambda_function_dir, dry_run=False, force=False):
 
         function_arn = function_config["FunctionArn"]
 
-        while function_config["State"] == "Pending":
-            time.sleep(1)
+        for tries in range(10):
+            if function_config["State"] != "Pending":
+                break
+
+            time.sleep(1 + tries)
+
             function_config = client.get_function_configuration(
                 FunctionName=function_arn
             )
