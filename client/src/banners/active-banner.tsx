@@ -2,11 +2,11 @@ import * as React from "react";
 
 import { ReactComponent as CloseIcon } from "@mdn/dinocons/general/close.svg";
 import { useGA } from "../ga-context";
-// import { COMMON_SURVEY_ID } from "./ids";
-import { PLUS_IDv1 } from "./ids";
-import { useLocale } from "../hooks";
-
-// const CATEGORY_LEARNING_SURVEY = "learning web development";
+import { useUserData } from "../user-context";
+import { PLUS_LAUNCH_ANNOUNCEMENT } from "./ids";
+import { isPlusAvailable } from "../utils";
+import { usePlusUrl } from "../plus/utils";
+import { ENABLE_PLUS_EU } from "../constants";
 
 // The <Banner> component displays a simple call-to-action banner at
 // the bottom of the window. The following props allow it to be customized.
@@ -15,8 +15,7 @@ import { useLocale } from "../hooks";
 // the banner configurable through props like these. For now, however,
 // that is hardcoded into the stylesheet.
 export type BannerProps = {
-  // A unique string associated with this banner. It must match the
-  // name of the waffle flag that controls the banner, and is also
+  // A unique string associated with this banner. Is also
   // used as part of a localStorage key.
   id: string;
   // class name used on main banner container. Exclusively used
@@ -26,18 +25,9 @@ export type BannerProps = {
   title?: string;
   // The banner description. e.g. "Help us understand the top 10 needs..."
   // Could also be a React Element such as that returned by `<Interpolated />`
-  copy: Object | string;
-  // The call to action button text. e.g. "Take the survey"
-  cta: string;
-  // The URL of the page to open when the button is clicked
-  url: string;
-  // An optional property. If present, it should be set to true to indicate
-  // that the main cta link should open in a new window
-  newWindow?: boolean;
-  // an optional property. If present, it will be called when the CTA
-  // link is clicked
   onCTAClick?: (event: React.SyntheticEvent<HTMLAnchorElement>) => any;
   onDismissed: () => void;
+  children: React.ReactNode;
 };
 
 function Banner(props: BannerProps) {
@@ -54,17 +44,7 @@ function Banner(props: BannerProps) {
     <div className={containerClassNames}>
       <div id="mdn-cta-content" className="mdn-cta-content">
         <div id={props.id} className="mdn-cta-content-container">
-          <p className="mdn-cta-copy">
-            {props.copy}{" "}
-            <a
-              href={props.url}
-              target={props.newWindow ? "_blank" : undefined}
-              rel={props.newWindow ? "noopener noreferrer" : undefined}
-              onClick={props.onCTAClick}
-            >
-              {props.cta}
-            </a>
-          </p>
+          {props.children}
         </div>
       </div>
       <div className="mdn-cta-controls">
@@ -85,59 +65,70 @@ function Banner(props: BannerProps) {
   );
 }
 
-// function CommonSurveyBanner({ onDismissed }: { onDismissed: () => void }) {
-//   const ga = useGA();
-
-//   return (
-//     <Banner
-//       id={COMMON_SURVEY_ID}
-//       title={"Learning web development survey"}
-//       copy={
-//         "Help us understand how to make MDN better for beginners (5 minute survey)"
-//       }
-//       cta={"Take the survey"}
-//       url="https://www.surveygizmo.com/s3/6175365/59cfad9c04cf"
-//       newWindow
-//       onDismissed={onDismissed}
-//       onCTAClick={() => {
-//         ga("send", {
-//           hitType: "event",
-//           eventCategory: CATEGORY_LEARNING_SURVEY,
-//           eventAction: "CTA clicked",
-//           eventLabel: "banner",
-//         });
-//       }}
-//     />
-//   );
-// }
-
-function PlusBanner({ onDismissed }: { onDismissed: () => void }) {
+function useSendCTAEventToGA() {
   const ga = useGA();
-  const locale = useLocale();
+
+  return (eventCategory: string) => {
+    ga("send", {
+      hitType: "event",
+      eventCategory: eventCategory,
+      eventAction: "CTA clicked",
+      eventLabel: "banner",
+    });
+  };
+}
+
+function PlusLaunchAnnouncementBanner({
+  onDismissed,
+}: {
+  onDismissed: () => void;
+}) {
+  const sendCTAEventToGA = useSendCTAEventToGA();
+  const plusUrl = usePlusUrl();
 
   return (
-    <Banner
-      id={PLUS_IDv1}
-      copy={"✨ Love MDN? Get even more! - "}
-      cta={"Discover MDN Plus »"}
-      url={`/${locale}/plus`}
-      newWindow={false}
-      onDismissed={onDismissed}
-      onCTAClick={() => {
-        ga("send", {
-          hitType: "event",
-          eventCategory: PLUS_IDv1,
-          eventAction: "CTA clicked",
-          eventLabel: "banner",
-        });
-      }}
-    />
+    <Banner id={PLUS_LAUNCH_ANNOUNCEMENT} onDismissed={onDismissed}>
+      {(ENABLE_PLUS_EU && (
+        <p className="mdn-cta-copy">
+          <a href={plusUrl} className="mdn-plus">
+            MDN Plus
+          </a>{" "}
+          now available in <span className="underlined">your</span> country!
+          Support MDN <span className="underlined">and</span> make it your own.{" "}
+          <a
+            href="https://hacks.mozilla.org/2022/04/mdn-plus-now-available-in-more-markets"
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={() => sendCTAEventToGA(PLUS_LAUNCH_ANNOUNCEMENT)}
+          >
+            Learn more
+          </a>{" "}
+          ✨
+        </p>
+      )) || (
+        <p className="mdn-cta-copy">
+          <a href={plusUrl} className="mdn-plus">
+            MDN Plus
+          </a>{" "}
+          is here! Support MDN <em>and</em> make it your own.{" "}
+          <a
+            href="https://hacks.mozilla.org/2022/03/introducing-mdn-plus-make-mdn-your-own"
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={() => sendCTAEventToGA(PLUS_LAUNCH_ANNOUNCEMENT)}
+          >
+            Learn more
+          </a>{" "}
+          ✨
+        </p>
+      )}
+    </Banner>
   );
 }
 
 // The reason we're not just exporting each individual banner is because to
 // be able to lazy-load the contents of this file it needs to export a
-// default function. This this one function is the link between the <App>
+// default function. This one function is the link between the <App>
 // and all the individual banner components.
 export default function ActiveBanner({
   id,
@@ -146,11 +137,16 @@ export default function ActiveBanner({
   id: string;
   onDismissed: () => void;
 }) {
-  if (id === PLUS_IDv1) {
-    return <PlusBanner onDismissed={onDismissed} />;
+  const userData = useUserData();
+
+  if (id === PLUS_LAUNCH_ANNOUNCEMENT) {
+    return (
+      <>
+        {isPlusAvailable(userData) && (
+          <PlusLaunchAnnouncementBanner onDismissed={onDismissed} />
+        )}
+      </>
+    );
   }
-  // if (id === COMMON_SURVEY_ID) {
-  //   return <CommonSurveyBanner onDismissed={onDismissed} />;
-  // }
   throw new Error(`Unrecognized banner to display (${id})`);
 }

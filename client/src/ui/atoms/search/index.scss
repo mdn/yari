@@ -1,0 +1,37 @@
+@use "../../vars.scss" as *;
+
+.search-widget {
+  position: relative;
+  width: 100%;
+
+  .search-filter-button {
+    right: 0.5rem;
+  }
+
+  @media screen and (min-width: $screen-md) {
+    align-items: center;
+    display: flex;
+    gap: 0.5rem;
+    margin: 0;
+  }
+}
+
+.search-input-field {
+  -webkit-appearance: none; /* stylelint-disable-line property-no-vendor-prefix */
+  background-color: var(--background-primary);
+  border: 1px solid var(--border-primary);
+  border-radius: var(--elem-radius);
+  color: var(--text-primary);
+  height: var(--form-elem-height);
+  min-width: 60px;
+  padding-left: 2rem;
+  width: 100%;
+
+  &:focus {
+    outline: var(--border-primary);
+  }
+
+  &::placeholder {
+    color: var(--text-inactive);
+  }
+}

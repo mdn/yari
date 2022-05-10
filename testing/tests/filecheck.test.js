@@ -3,7 +3,11 @@ const path = require("path");
 
 const { checkFile } = require("../../filecheck/checker");
 
-const SAMPLES_DIRECTORY = path.join(__dirname, "samplefiles");
+const SAMPLES_DIRECTORY = path.join(
+  __dirname,
+  "filechecker",
+  "samplefiles-html"
+);
 
 describe("checking files", () => {
   it("should spot SVGs with scripts inside them", async () => {
@@ -11,7 +15,7 @@ describe("checking files", () => {
     // Sanity check the test itself
     console.assert(fs.existsSync(filePath), `${filePath} does not exist`);
     await expect(checkFile(filePath)).rejects.toThrow(
-      "contains a <script> tag"
+      / does not appear to be an SVG$/
     );
   });
   it("should spot SVGs with onLoad inside an element", async () => {
@@ -19,12 +23,22 @@ describe("checking files", () => {
     // Sanity check the test itself
     console.assert(fs.existsSync(filePath), `${filePath} does not exist`);
     await expect(checkFile(filePath)).rejects.toThrow(
-      "<path> contains an unsafe attribute: 'onload'"
+      / does not appear to be an SVG$/
     );
   });
 
   it("should spot files that are not mentioned in source", async () => {
     const filePath = path.join(SAMPLES_DIRECTORY, "orphan.png");
+    // Sanity check the test itself
+    console.assert(fs.existsSync(filePath), `${filePath} does not exist`);
+    await expect(checkFile(filePath)).rejects.toThrow("is not mentioned in");
+  });
+
+  it("should spot files that are not mentioned in md source", async () => {
+    const filePath = path.join(
+      path.join(__dirname, "filechecker", "samplefiles-md"),
+      "orphan.png"
+    );
     // Sanity check the test itself
     console.assert(fs.existsSync(filePath), `${filePath} does not exist`);
     await expect(checkFile(filePath)).rejects.toThrow("is not mentioned in");

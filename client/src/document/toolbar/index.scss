@@ -1,25 +1,39 @@
-@import "~@mdn/minimalist/sass/vars/color-palette";
-@import "~@mdn/minimalist/sass/vars/layout";
+@use "../../ui/vars" as *;
 
 .toolbar {
-  display: none;
+  background: var(--background-secondary);
+  border: 1px solid var(--border-primary);
+  border-radius: var(--elem-radius);
+  padding: 0.5rem 1rem;
+  margin: 0.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  font-size: var(--type-smaller-font-size);
+  box-shadow: var(--shadow-01);
 
-  @media #{$mq-small-desktop-and-up} {
-    display: block;
-    margin: 0 auto;
-    padding: $base-unit $base-spacing;
+  &-first-row,
+  .edit-actions {
+    display: flex;
+    gap: 1rem;
   }
 
-  .toolbar-first-row {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
+  .button {
+    color: var(--text-color);
+    white-space: nowrap;
 
-    .edit-actions {
-      padding: $base-unit 0;
-      li {
-        margin-left: 0;
-      }
+    &:hover {
+      text-decoration: underline;
     }
+  }
+
+  .toggle-show-flaws {
+    white-space: nowrap;
+  }
+
+  @media screen and (min-width: $screen-md) {
+    margin: 0 0 2rem 0;
   }
 }

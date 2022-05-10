@@ -45,7 +45,6 @@ const GOOGLE_ANALYTICS_ACCOUNT =
 const GOOGLE_ANALYTICS_DEBUG = JSON.parse(
   process.env.BUILD_GOOGLE_ANALYTICS_DEBUG || "false"
 );
-const SPEEDCURVE_LUX_ID = process.env.BUILD_SPEEDCURVE_LUX_ID || "";
 const NO_PROGRESSBAR = Boolean(
   JSON.parse(process.env.BUILD_NO_PROGRESSBAR || process.env.CI || "false")
 );
@@ -60,15 +59,8 @@ const FIX_FLAWS_VERBOSE = JSON.parse(
 );
 
 // See explanation in docs/envvars.md
-const ALWAYS_NO_ROBOTS = JSON.parse(
-  process.env.BUILD_ALWAYS_NO_ROBOTS || "false"
-);
-
-const HOMEPAGE_FEED_URL =
-  process.env.BUILD_HOMEPAGE_FEED_URL || "https://hacks.mozilla.org/feed/";
-
-const HOMEPAGE_FEED_DISPLAY_MAX = JSON.parse(
-  process.env.BUILD_HOMEPAGE_FEED_DISPLAY_MAX || "5"
+const ALWAYS_ALLOW_ROBOTS = JSON.parse(
+  process.env.BUILD_ALWAYS_ALLOW_ROBOTS || "false"
 );
 
 module.exports = {
@@ -79,13 +71,10 @@ module.exports = {
   FOLDERSEARCH,
   GOOGLE_ANALYTICS_ACCOUNT,
   GOOGLE_ANALYTICS_DEBUG,
-  SPEEDCURVE_LUX_ID,
   NO_PROGRESSBAR,
   VALID_FLAW_CHECKS,
   FIX_FLAWS,
   FIX_FLAWS_DRY_RUN,
   FIX_FLAWS_VERBOSE,
-  ALWAYS_NO_ROBOTS,
-  HOMEPAGE_FEED_URL,
-  HOMEPAGE_FEED_DISPLAY_MAX,
+  ALWAYS_ALLOW_ROBOTS,
 };

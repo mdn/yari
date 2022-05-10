@@ -1,17 +1,18 @@
 const {
   CONTENT_ROOT,
-  CONTENT_ARCHIVED_ROOT,
   CONTENT_TRANSLATED_ROOT,
+  CONTRIBUTOR_SPOTLIGHT_ROOT,
   REPOSITORY_URLS,
   ROOTS,
   VALID_LOCALES,
+  HTML_FILENAME,
+  MARKDOWN_FILENAME,
 } = require("./constants");
 const Document = require("./document");
 const Translation = require("./translation");
 const { getPopularities } = require("./popularities");
 const Redirect = require("./redirect");
 const Image = require("./image");
-const Archive = require("./archive");
 const {
   buildURL,
   memoize,
@@ -24,18 +25,19 @@ const { translationsOf } = require("./translations");
 
 module.exports = {
   CONTENT_ROOT,
-  CONTENT_ARCHIVED_ROOT,
   CONTENT_TRANSLATED_ROOT,
+  CONTRIBUTOR_SPOTLIGHT_ROOT,
   REPOSITORY_URLS,
   ROOTS,
   VALID_LOCALES,
+  HTML_FILENAME,
+  MARKDOWN_FILENAME,
 
   getPopularities,
 
   Document,
   Redirect,
   Image,
-  Archive,
   Translation,
 
   buildURL,

@@ -1,0 +1,19 @@
+@use "../../vars.scss" as *;
+
+.limit-banner {
+  background: var(--background-tertiary);
+  border-radius: var(--elem-radius);
+  border: 1px solid var(--border-secondary);
+  margin-top: 0.5rem;
+  padding-bottom: 0.5rem;
+  padding-top: 0.5rem;
+  text-align: center;
+
+  p {
+    margin: 0.5rem;
+  }
+
+  a {
+    color: var(--text-link);
+  }
+}

@@ -4,7 +4,7 @@ import type bcd from "@mdn/browser-compat-data/types";
 import { BrowserInfoContext } from "./browser-info";
 import { BrowserCompatibilityErrorBoundary } from "./error-boundary";
 import { FeatureRow } from "./feature-row";
-import { PLATFORM_BROWSERS, Headers } from "./headers";
+import { Headers, PLATFORM_BROWSERS } from "./headers";
 import { Legend } from "./legend";
 import { listFeatures } from "./utils";
 
@@ -13,44 +13,52 @@ import { listFeatures } from "./utils";
 
 // This string is used to prefill the body when clicking to file a new BCD
 // issue over on github.com/mdn/browser-compat-data
-const NEW_ISSUE_TEMPLATE = `
-<!-- Tips: where applicable, specify browser name, browser version, and mobile operating system version -->
-
-#### What information was incorrect, unhelpful, or incomplete?
-
-#### What did you expect to see?
-
-#### Did you test this? If so, how?
-
-
+const ISSUE_METADATA_TEMPLATE = `
 <!-- Do not make changes below this line -->
 <details>
 <summary>MDN page report details</summary>
 
 * Query: \`$QUERY_ID\`
-* MDN URL: https://developer.mozilla.org$PATHNAME
 * Report started: $DATE
 
 </details>
 `;
 
+/**
+ * Return a list of platforms and browsers that are relevant for this category &
+ * data.
+ *
+ * If the category is "webextensions", only those are shown. In all other cases
+ * at least the entirety of the "desktop" and "mobile" platforms are shown. If
+ * the category is JavaScript, the entirety of the "server" category is also
+ * shown. In all other categories, if compat data has info about Deno / Node.js
+ * those are also shown. Deno is always shown if Node.js is shown.
+ */
 function gatherPlatformsAndBrowsers(
   category: string,
   data: bcd.Identifier
 ): [string[], bcd.BrowserNames[]] {
+  const hasNodeJSData = data.__compat && "nodejs" in data.__compat.support;
+  const hasDenoData = data.__compat && "deno" in data.__compat.support;
+
   let platforms = ["desktop", "mobile"];
-  if (
-    category === "javascript" ||
-    (data.__compat && data.__compat.support.nodejs)
-  ) {
+  if (category === "javascript" || hasNodeJSData || hasDenoData) {
     platforms.push("server");
   } else if (category === "webextensions") {
     platforms = ["webextensions-desktop", "webextensions-mobile"];
   }
-  return [
-    platforms,
-    platforms.map((platform) => PLATFORM_BROWSERS[platform] || []).flat(),
-  ];
+
+  const browsers = new Set(
+    platforms.map((platform) => PLATFORM_BROWSERS[platform] || []).flat()
+  );
+
+  // If there is no Node.js data for a category outside of "javascript", don't
+  // show it. It ended up in the browser list because there is data for Deno.
+  if (category !== "javascript" && !hasNodeJSData) {
+    browsers.delete("nodejs");
+  }
+
+  return [platforms, [...browsers]];
 }
 
 type CellIndex = [number, number];
@@ -120,12 +128,16 @@ export default function BrowserCompatibilityTable({
   function getNewIssueURL() {
     const url = "https://github.com/mdn/browser-compat-data/issues/new";
     const sp = new URLSearchParams();
-    const body = NEW_ISSUE_TEMPLATE.replace(/\$PATHNAME/g, location.pathname)
-      .replace(/\$DATE/g, new Date().toISOString())
+    const metadata = ISSUE_METADATA_TEMPLATE.replace(
+      /\$DATE/g,
+      new Date().toISOString()
+    )
       .replace(/\$QUERY_ID/g, query)
       .trim();
-    sp.set("body", body);
-    sp.set("title", `${query} - <PUT TITLE HERE>`);
+    sp.set("mdn-url", `https://developer.mozilla.org${location.pathname}`);
+    sp.set("metadata", metadata);
+    sp.set("title", `${query} - <SUMMARIZE THE PROBLEM>`);
+    sp.set("template", "data-problem.yml");
     return `${url}?${sp.toString()}`;
   }
 
@@ -141,16 +153,20 @@ export default function BrowserCompatibilityTable({
         >
           Report problems with this compatibility data on GitHub
         </a>
-        <table key="bc-table" className="bc-table bc-table-web">
-          <Headers {...{ platforms, browsers }} />
-          <tbody>
-            <FeatureListAccordion
-              browsers={browsers}
-              features={listFeatures(data, "", name)}
-              locale={locale}
-            />
-          </tbody>
-        </table>
+        <div className="table-scroll">
+          <div className="table-scroll-inner">
+            <table key="bc-table" className="bc-table bc-table-web">
+              <Headers {...{ platforms, browsers }} />
+              <tbody>
+                <FeatureListAccordion
+                  browsers={browsers}
+                  features={listFeatures(data, "", name)}
+                  locale={locale}
+                />
+              </tbody>
+            </table>
+          </div>
+        </div>
         <Legend compat={data} name={name} />
 
         {/* https://github.com/mdn/yari/issues/1191 */}

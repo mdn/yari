@@ -1,69 +1,57 @@
-import React, { Suspense, lazy, useEffect, useState } from "react";
+import React, { useState, useMemo } from "react";
+import { useSearchParams } from "react-router-dom";
 
-import { AUTOCOMPLETE_SEARCH_WIDGET } from "../../../constants";
-import { useLocale } from "../../../hooks";
+import SearchNavigateWidget from "../../../search";
 
 import "./index.scss";
 
-// The temporary solution... See below around the BasicSearchWidget component.
-import "./basic-search-widget.scss";
-// import { SearchNavigateWidget } from "../../../search";
-const LazySearchNavigateWidget = lazy(() => import("./lazy-search-widget"));
+function useQueryParamState() {
+  const [searchParams] = useSearchParams();
+  const queryState = searchParams.get("q") || "";
+  const [value, setValue] = useState(queryState);
 
-export function Search(props) {
-  const [useAutocompleteSearchWidget, setUseAutocompleteSearchWidget] =
-    useState(false);
-  useEffect(() => {
-    if (AUTOCOMPLETE_SEARCH_WIDGET) {
-      setUseAutocompleteSearchWidget(true);
-    }
-  }, []);
+  // The site-search page might trigger an update to the current
+  // `?q=...` value and if that happens we want to be reflected in the search inputs
+  React.useEffect(() => {
+    setValue(queryState);
+  }, [setValue, queryState]);
 
-  return (
-    <div className="header-search">
-      {/* See the code comment next to the <BasicSearchWidget> component */}
-      {useAutocompleteSearchWidget ? (
-        <Suspense fallback={<BasicSearchWidget />}>
-          <LazySearchNavigateWidget {...props} />
-        </Suspense>
-      ) : (
-        <BasicSearchWidget />
-      )}
-    </div>
-  );
+  return [value, setValue] as const;
 }
 
-// This is a TEMPORARY solution.
-// In the Yari1 launch we want to disable the auto-complete search that Yari has.
-// Instead we want it to look and behave just like the search widget you get
-// on the Kuma pages.
-// The general idea is that we keep it like this for the period of time when
-// the home page and site-search pages are still rendered in Kuma.
-// Once all pages come from Yari, we'll get rid of this.
-// For more context and discussion see https://github.com/mdn/yari/issues/1663
+export function Search({
+  id,
+  isHomepageSearch,
+  onResultPicked,
+}: {
+  id: string;
+  isHomepageSearch?: boolean;
+  onResultPicked?: () => void;
+}) {
+  const [value, setValue] = useQueryParamState();
+  const [isFocused, setIsFocused] = useState(false);
+  const [defaultSelection, setDefaultSelection] = useState([0, 0] as const);
 
-export function BasicSearchWidget() {
-  const locale = useLocale();
+  const searchProps = useMemo(
+    () => ({
+      id,
+      inputValue: value,
+      onChangeInputValue: (value) => setValue(value),
+      isFocused,
+      onChangeIsFocused: (isFocused) => {
+        setIsFocused(isFocused);
+      },
+      defaultSelection,
+      onChangeSelection: (selection) => setDefaultSelection(selection),
+    }),
+    [id, value, isFocused, defaultSelection, setValue]
+  );
+
   return (
-    <form action={`/${locale}/search`} className="search-form" role="search">
-      <label htmlFor="main-q" className="visually-hidden">
-        Search MDN
-      </label>
-      <input
-        type="search"
-        name="q"
-        id="main-q"
-        className="search-input-field"
-        placeholder="Search MDN"
-        pattern="(.|\s)*\S(.|\s)*"
-        required
-      />
-      <input
-        type="submit"
-        className="ghost search-button"
-        value=""
-        aria-label="Search"
-      />
-    </form>
+    <div
+      className={isHomepageSearch ? "homepage-hero-search" : "header-search"}
+    >
+      <SearchNavigateWidget {...searchProps} onResultPicked={onResultPicked} />
+    </div>
   );
 }

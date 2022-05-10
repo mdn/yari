@@ -1,4 +1,9 @@
 <%
+// Throw a MacroDeprecatedError flaw
+// Condition for removal: no more use in translated-content (May 2022: 22 occurrences)
+// 0 occurrences left in en-US
+mdn.deprecated();
+
 var id = "exception-" + $0;
 %>
 <a href="/<%-env.locale%>/docs/Web/API/DOMException#<%-id%>"><code><%- $0 %></code></a>

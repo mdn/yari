@@ -4,6 +4,7 @@ import useSWR from "swr";
 
 import { Doc } from "../document/types";
 import LANGUAGES_RAW from "../languages.json";
+import NoteCard from "../ui/molecules/notecards";
 
 const LANGUAGES = new Map(
   Object.entries(LANGUAGES_RAW).map(([locale, data]) => {
@@ -19,19 +20,37 @@ const LANGUAGES = new Map(
 // like "Did you mean: <a href=$url>$doctitle</a>?"
 
 export default function FallbackLink({ url }: { url: string }) {
-  const { locale } = useParams();
+  const { locale = "en-US" } = useParams();
   const location = useLocation();
 
-  const [fallbackCheckURL, setFallbackCheckURL] =
-    React.useState<null | string>(null);
+  const [fallbackCheckURL, setFallbackCheckURL] = React.useState<null | string>(
+    null
+  );
 
   const { error, data: document } = useSWR<null | Doc>(
     fallbackCheckURL,
     async (url) => {
       const response = await fetch(url);
       if (response.ok) {
-        const { doc } = await response.json();
-        return doc;
+        // If the URL is already for the JSON file, use  the response
+        if (response.url.endsWith("/index.json")) {
+          const { doc } = await response.json();
+          return doc;
+        }
+        // Otherwise, use the URL that gave the successful page (potentially
+        // including any redirects) and append index.json to get the data needed
+        let jsonURL = response.url;
+        if (!jsonURL.endsWith("/")) {
+          jsonURL += "/";
+        }
+        jsonURL += "index.json";
+        const jsonResponse = await fetch(jsonURL);
+        if (jsonResponse.ok) {
+          const { doc } = await jsonResponse.json();
+          return doc;
+        } else if (jsonResponse.status === 404) {
+          return null;
+        }
       } else if (response.status === 404) {
         return null;
       }
@@ -50,20 +69,15 @@ export default function FallbackLink({ url }: { url: string }) {
       // So remove that when constructing the English index.json URL.
       enUSURL = enUSURL.replace("/_404/", "/docs/");
 
-      // Lastly, because we're going to append `index.json` always make sure
-      // the URL, up to this point, has a trailing /. The "defensiveness" here
-      // is probably only necessary so it works in production and in local development.
-      if (!enUSURL.endsWith("/")) {
-        enUSURL += "/";
-      }
-      enUSURL += "index.json";
+      // The fallback check URL should not force append index.json so it can
+      // follow any redirects
       setFallbackCheckURL(enUSURL);
     }
   }, [url, locale, location]);
 
   if (error) {
     return (
-      <div className="fallback-document notecard negative">
+      <NoteCard type="negative" extraClasses="fallback-document">
         <h4>Oh no!</h4>
         <p>
           Unfortunately, when trying to look to see if there was an English
@@ -73,11 +87,11 @@ export default function FallbackLink({ url }: { url: string }) {
         <p>
           The error was: <code>{error.toString()}</code>
         </p>
-      </div>
+      </NoteCard>
     );
   } else if (document) {
     return (
-      <div className="fallback-document notecard success">
+      <NoteCard type="success" extraClasses="fallback-document">
         <h4>Good news!</h4>
         <p>
           The page you requested doesn't exist in{" "}
@@ -91,7 +105,7 @@ export default function FallbackLink({ url }: { url: string }) {
             <small>{document.mdn_url}</small>
           </a>
         </p>
-      </div>
+      </NoteCard>
     );
   } else if (document === null) {
     // It means the lookup "worked" in principle, but there wasn't an English

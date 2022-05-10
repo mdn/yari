@@ -13,8 +13,8 @@ displaying it in Yari is optional.
 
 ## How to enable it
 
-To display each search results `score` and `popularity`, simply add `&debug`
-to the current URL. E.g. `?q=foreach&debug` or `?debug=1&q=foreach`.
+To display each search results `score` and `popularity`, simply add `&debug` to
+the current URL. E.g. `?q=foreach&debug` or `?debug=1&q=foreach`.
 
 Now, when you open <http://localhost:3000/en-US/search?q=test&debug> the `score`
 and `popularity` is shown.
@@ -22,10 +22,10 @@ and `popularity` is shown.
 ## How to use it
 
 You can't affect the sorting algorithm in Yari. To try out different techniques
-for the `function_score` in the Python Elasticsearch code, you have to
-make changes within Kuma to try different combinations such as `popularity_factor`
-and `boost_mode` and `score_mode`. Most of these values are currently hardcoded in
-the Kuma Python code.
+for the `function_score` in the Python Elasticsearch code, you have to make
+changes within Kuma to try different combinations such as `popularity_factor`
+and `boost_mode` and `score_mode`. Most of these values are currently hardcoded
+in the Kuma Python code.
 
-It's hard to predict exactly what users really prefer and a lot of it depends
-on learning from how people react to the sorting.
+It's hard to predict exactly what users really prefer and a lot of it depends on
+learning from how people react to the sorting.

@@ -17,6 +17,13 @@
 
     <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
 
+    <link
+      rel="search"
+      type="application/opensearchdescription+xml"
+      href="/opensearch.xml"
+      title="MDN Web Docs"
+    />
+
     <script>
       // Only include the polyfill for browsers that seem to not have
       // certain JS features. E.g. Firefox 58.
@@ -69,22 +76,45 @@
       .document-toc-container,
       .on-github,
       nav.sidebar,
-      .page-header-main,
+      .top-navigation-main,
       .page-footer,
       ul.prev-next,
       .language-menu {
         display: none !important;
       }
+
       .main-page-content,
       .main-page-content pre {
         padding: 2px;
       }
+
       .main-page-content pre {
         border-left-width: 2px;
       }
     </style>
   </head>
+
   <body>
+    <script>
+      /**
+       * If we modify this script, we must update the CSP hash as follows:
+       * 1. Run `yarn build:client`
+       * 2. Open `client/build/index.html` and locate this (minified) <script> tag.
+       * 3. Copy the inner content of the <script> tag (excluding the script tags).
+       * 4. Open https://csplite.com/csp/sha/ and paste the content.
+       * 5. Copy the `sha256-...` hash.
+       * 6. Open `libs/constants/index.js` and find the current hash in scriptSrcValues.
+       * 7. Remove the old "previous" hash and replace it with the old "current" hash.
+       * 8. Replace the old "current" hash with the new hash (from step 5).
+       */
+      const c = { light: "#ffffff", dark: "#1b1b1b" };
+      if (window && document.documentElement) {
+        const o = window.localStorage.getItem("theme");
+        o &&
+          ((document.documentElement.className = o),
+          (document.documentElement.style.backgroundColor = c[o]));
+      }
+    </script>
     <div id="root"></div>
   </body>
 </html>

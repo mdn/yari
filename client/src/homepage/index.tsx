@@ -1,49 +1,19 @@
-import useSWR from "swr";
-
-import { CRUD_MODE } from "../constants";
-import { BlogFeed } from "../ui/molecules/blog-feed";
-import { Contribute } from "../ui/molecules/home-contribute";
-import { HomeHero } from "../ui/molecules/home-hero";
-
 import "./index.scss";
+import { HomepageHero } from "./homepage-hero";
+import FeaturedArticles from "./featured-articles";
+import { LatestNews } from "./latest-news";
+import RecentContributions from "./recent-contributions";
+import { ContributorSpotlight } from "./contributor-spotlight";
 
-import { FeedEntry } from "./types";
-
-interface HomepageData {
-  feedEntries: FeedEntry[];
-}
-
-export function Homepage(props /* TODO: define a TS interface for this */) {
-  const { data, error } = useSWR<HomepageData>(
-    "./index.json",
-    async (url) => {
-      const response = await fetch(url);
-      if (!response.ok) {
-        const text = await response.text();
-        throw new Error(`${response.status} on ${url}: ${text}`);
-      }
-      return await response.json();
-    },
-    {
-      initialData: props.feedEntries
-        ? { feedEntries: props.feedEntries }
-        : undefined,
-      revalidateOnFocus: CRUD_MODE,
-    }
-  );
-
+export function Homepage(props) {
   return (
     <main id="content" role="main">
-      <HomeHero />
-      <div className="home-content-container">
-        {error ? (
-          <p>
-            Error downloading feed entries (<code>{error.toString()}</code>)
-          </p>
-        ) : (
-          <BlogFeed feedEntries={data && data.feedEntries} />
-        )}
-        <Contribute />
+      <div className="homepage mdn-ui-body-m">
+        <HomepageHero />
+        <FeaturedArticles {...props} />
+        <LatestNews {...props} />
+        <RecentContributions {...props} />
+        <ContributorSpotlight {...props} />
       </div>
     </main>
   );

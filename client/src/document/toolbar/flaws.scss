@@ -1,4 +1,9 @@
 .toggle-show-flaws {
+  p {
+    margin: 0;
+    font: var(--type-smaller-font-size);
+  }
+
   button.button {
     display: inline-block;
   }
@@ -17,7 +22,7 @@
 
   .flaw .fetch-error {
     p {
-      font-weight: bold;
+      font-weight: var(--font-body-strong-weight);
     }
   }
   .flaw {

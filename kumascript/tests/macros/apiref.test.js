@@ -26,13 +26,16 @@ const commonl10nFixturePath = path.resolve(
   __dirname,
   "fixtures/apiref/commonl10n.json"
 );
-const commonl10nFixture = fs.readFileSync(commonl10nFixturePath, "utf8");
-const commonL10nJSON = JSON.parse(commonl10nFixture);
+const commonl10nFixture = JSON.parse(
+  fs.readFileSync(commonl10nFixturePath, "utf8")
+);
 const groupDataFixturePath = path.resolve(
   __dirname,
   "fixtures/apiref/groupdata.json"
 );
-const groupDataFixture = fs.readFileSync(groupDataFixturePath, "utf8");
+const groupDataFixture = JSON.parse(
+  fs.readFileSync(groupDataFixturePath, "utf8")
+);
 const interfaceDataNoEntriesFixturePath = path.resolve(
   __dirname,
   "fixtures/apiref/interfacedata_no_entries.json"
@@ -45,7 +48,9 @@ const interfaceDataFixturePath = path.resolve(
   __dirname,
   "fixtures/apiref/interfacedata.json"
 );
-const interfaceDataFixture = fs.readFileSync(interfaceDataFixturePath, "utf8");
+const interfaceDataFixture = JSON.parse(
+  fs.readFileSync(interfaceDataFixturePath, "utf8")
+);
 
 /**
  * All the const objects that follow define bits of the data we expect.
@@ -330,18 +335,26 @@ function checkInterfaceItem(actual, expected, config) {
     // (CTA is specified in the test data in the cases where it is expected)
     expect(actual.textContent).toContain(expected.text);
     const methodLink = actual.querySelector("a");
-    expect(methodLink.href).toEqual(expected.target);
+
+    if (methodLink.href !== "") {
+      expect(methodLink.href).toEqual(expected.target);
+    } else {
+      // if the page this would link to has not yet been created,
+      // `smartLink` will remove the `href` attribute and add
+      // a `class` with the value `page-not-created`
+      expect(methodLink.classList.toString()).toEqual("page-not-created");
+    }
   } else {
     // If we are on the current page, the item is just an <i>
     // and the text contents omits the CTA
     const methodLink = actual.querySelector("a");
     expect(methodLink).toBeNull();
-    const methodName = actual.querySelector("svg");
+    const methodName = actual.querySelector(".icon");
     expect(actual.textContent).toContain(methodName.textContent);
   }
 
   // Test that the badges are what we expect
-  const badgeClasses = actual.querySelectorAll("svg");
+  const badgeClasses = actual.querySelectorAll(".icon");
   expect(badgeClasses.length).toEqual(expected.badges.length);
   for (const badgeClass of badgeClasses) {
     badgeClass.classList.forEach((value) => {
@@ -360,7 +373,15 @@ function checkRelatedItem(actual, expected, config) {
   const itemLink = actual.querySelector("a");
   // For these items we just have to compare textContent and href
   expect(itemLink.textContent).toEqual(expected.text);
-  expect(itemLink.href).toEqual(`/${config.locale}${expected.target}`);
+
+  if (itemLink.href !== "") {
+    expect(itemLink.href).toEqual(`/${config.locale}${expected.target}`);
+  } else {
+    // if the page this would link to has not yet been created,
+    // `smartLink` will remove the `href` attribute and add
+    // a `class` with the value `page-not-created`
+    expect(itemLink.classList.toString()).toEqual("page-not-created");
+  }
 }
 
 function checkItemList(
@@ -400,16 +421,24 @@ function checkResult(html, config) {
   // Test main interface link
   const mainIfLink = dom.querySelector("ol>li>strong>a");
   expect(mainIfLink.textContent).toEqual(config.expected.mainIfLink.text);
-  expect(mainIfLink.href).toEqual(
-    `/${config.locale}${config.expected.mainIfLink.target}`
-  );
+
+  if (mainIfLink.href !== "") {
+    expect(mainIfLink.href).toEqual(
+      `/${config.locale}${config.expected.mainIfLink.target}`
+    );
+  } else {
+    // if the page this would link to has not yet been created,
+    // `smartLink` will remove the `href` attribute and add
+    // a `class` with the value `page-not-created`
+    expect(mainIfLink.classList.toString()).toEqual("page-not-created");
+  }
 
   // Test sublists
   const details = dom.querySelectorAll("ol>li>details");
   expect(details.length).toEqual(Object.keys(config.expected.details).length);
 
   // Test the properties sublist
-  const expectedPropertySummary = commonL10nJSON.Properties[config.locale];
+  const expectedPropertySummary = commonl10nFixture.Properties[config.locale];
   const expectedPropertyItems =
     config.expected.details.properties[config.locale];
   const properties = details[0];
@@ -422,7 +451,7 @@ function checkResult(html, config) {
   );
 
   // Test the methods sublist
-  const expectedMethodSummary = commonL10nJSON.Methods[config.locale];
+  const expectedMethodSummary = commonl10nFixture.Methods[config.locale];
   const expectedMethodItems = config.expected.details.methods[config.locale];
   const methods = details[1];
   checkItemList(
@@ -434,7 +463,7 @@ function checkResult(html, config) {
   );
 
   // Test the events sublist
-  const expectedEventSummary = commonL10nJSON.Events[config.locale];
+  const expectedEventSummary = commonl10nFixture.Events[config.locale];
   const expectedEventItems = config.expected.details.events[config.locale];
   const events = details[2];
   checkItemList(
@@ -448,7 +477,8 @@ function checkResult(html, config) {
   const hasInherited = config.expected.details.inherited;
   if (hasInherited) {
     // Test the inherited sublist
-    const expectedInheritedSummary = commonL10nJSON.Inheritance[config.locale];
+    const expectedInheritedSummary =
+      commonl10nFixture.Inheritance[config.locale];
     const expectedInheritedItems = config.expected.details.inherited;
     const inherited = details[3];
     checkItemList(
@@ -464,7 +494,7 @@ function checkResult(html, config) {
   if (hasImplemented) {
     // Test the implemented_by sublist
     const expectedImplementedSummary =
-      commonL10nJSON.Implemented_by[config.locale];
+      commonl10nFixture.Implemented_by[config.locale];
     const expectedImplementedItems = config.expected.details.implemented;
     const implemented = details[4];
     checkItemList(
@@ -479,7 +509,7 @@ function checkResult(html, config) {
   const hasRelated = config.expected.details.related;
   if (hasRelated) {
     // Test the related sublist
-    const expectedRelatedSummary = commonL10nJSON.Related_pages[
+    const expectedRelatedSummary = commonl10nFixture.Related_pages[
       config.locale
     ].replace("$1", config.argument);
     const expectedRelatedItems = config.expected.details.related;
@@ -501,19 +531,18 @@ function testMacro(config) {
       config.locale = locale;
       macro.ctx.env.slug = config.currentSlug;
       macro.ctx.env.locale = locale;
-      // Mock calls to L10n-Common, GroupData, and InterfaceData
-      const originalTemplate = macro.ctx.template;
-      macro.ctx.template = jest.fn(async (name, ...args) => {
-        if (name === "L10n:Common") {
-          return commonl10nFixture;
-        }
+      // Mock calls to getJSONData()
+      macro.ctx.web.getJSONData = jest.fn((name) => {
         if (name === "GroupData") {
           return groupDataFixture;
+        }
+        if (name === "L10n-Common") {
+          return commonl10nFixture;
         }
         if (name === "InterfaceData") {
           return config.interfaceData;
         }
-        return await originalTemplate(name, ...args);
+        throw new Error(`Unimplmeneted mock fixture ${name}`);
       });
       if (config.argument) {
         return macro.call(config.argument).then(function (result) {

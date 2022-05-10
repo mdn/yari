@@ -2,6 +2,12 @@
 /* creates a link to a method in an interface */
 /* parameters: interface name then method name */
 /* get a page's language (Don't use page.language!) */
+
+// Throw a MacroDeprecatedError flaw
+// Condition for removal: no more use in translated-content (currently 26 files)
+// 0 occurrences left in en-US
+mdn.deprecated();
+
 var lang = env.locale;
 var destNewType = lang + '/docs/XPCOM_Interface_Reference/' + $0;
 var apiString = $0 + '.' + $1 + '()';

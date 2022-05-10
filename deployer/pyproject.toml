@@ -9,23 +9,22 @@ readme = "README.md"
 
 [tool.poetry.dependencies]
 python = "^3.7"
-click = "^7.1.2"
-boto3 = "^1.17.84"
-python-decouple = "^3.4"
-requests = {extras = ["security"], version = "^2.25.0"}
-elasticsearch-dsl = "^7.3.0"
-selectolax = "^0.2.11"
+click = "^8.1.3"
+boto3 = "^1.22.9"
+python-decouple = "^3.6"
+requests = {extras = ["security"], version = "^2.27.1"}
+elasticsearch-dsl = "^7.4.0"
+selectolax = "^0.3.7"
 PyGithub = "^1.55"
-unidiff = "^0.6.0"
+unidiff = "^0.7.3"
 
 [tool.poetry.dev-dependencies]
-black = "^21.5b1"
-flake8 = "^3.9.2"
-pytest = "^6.2.4"
+black = "^22.3"
+flake8 = "^4.0.1"
+pytest = "^7.1.2"
 
 [tool.poetry.scripts]
 deployer = "deployer.main:cli"
 [build-system]
 requires = ["poetry>=0.12"]
 build-backend = "poetry.masonry.api"
-

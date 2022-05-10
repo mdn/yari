@@ -1,0 +1,29 @@
+blockquote.quote {
+  margin: 2rem 0;
+  padding: 2rem;
+  display: flex;
+  gap: 2rem;
+  border: none;
+  flex-direction: column-reverse;
+  border-radius: 0.5rem;
+
+  @media screen and (max-width: 40rem) {
+    flex-wrap: wrap-reverse;
+  }
+
+  p {
+    font-style: italic;
+    display: flex;
+
+    .icon {
+      margin-right: 1rem;
+      margin-top: 0.2rem;
+    }
+  }
+
+  .name {
+    font-size: var(--type-base-font-size-rem);
+    display: inline;
+    margin: 0;
+  }
+}

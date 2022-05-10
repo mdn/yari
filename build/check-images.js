@@ -18,7 +18,6 @@ const { DEFAULT_LOCALE } = require("../libs/constants");
  */
 function checkImageReferences(doc, $, options, { url, rawContent }) {
   const filePaths = new Set();
-  if (doc.isArchive) return filePaths;
 
   const checkImages = options.flawLevels.get("images") !== FLAW_LEVELS.IGNORE;
 
@@ -121,19 +120,6 @@ function checkImageReferences(doc, $, options, { url, rawContent }) {
           img.attr("src", absoluteURL.pathname);
         } else {
           let suggestion = null;
-          // If this document is *not* en-US, perhaps the external image has already
-          // been downloaded by the en-US equivalent. If so, make that the suggestion.
-          if (doc.locale !== DEFAULT_LOCALE) {
-            const filePath = Image.findByURL(
-              [
-                doc.mdn_url.replace(`/${doc.locale}/`, `/${DEFAULT_LOCALE}/`),
-                path.basename(src),
-              ].join("/")
-            );
-            if (filePath) {
-              suggestion = path.basename(filePath);
-            }
-          }
           addImageFlaw(img, src, {
             explanation: "External image URL",
             externalImage: true,
@@ -149,6 +135,9 @@ function checkImageReferences(doc, $, options, { url, rawContent }) {
       // We can use the `finalSrc` to look up and find the image independent
       // of the correct case because `Image.findByURL` operates case
       // insensitively.
+
+      // What follows uses the same algorithm as Image.findByURLWithFallback
+      // but only adds a filePath if it exists for the DEFAULT_LOCALE
       let filePath = Image.findByURL(finalSrc);
       let enUSFallback = false;
       if (
@@ -243,9 +232,6 @@ function checkImageReferences(doc, $, options, { url, rawContent }) {
  * best to set "centrally" with a style sheet.
  */
 function checkImageWidths(doc, $, options, { rawContent }) {
-  const filePaths = new Set();
-  if (doc.isArchive) return filePaths;
-
   const checkImages =
     options.flawLevels.get("image_widths") !== FLAW_LEVELS.IGNORE;
 
@@ -364,7 +350,7 @@ function checkImageWidths(doc, $, options, { rawContent }) {
           );
         }
       } else if (!imgSrc.includes("://") && imgSrc.startsWith("/")) {
-        const filePath = Image.findByURL(imgSrc);
+        const filePath = Image.findByURLWithFallback(imgSrc);
         if (filePath) {
           const dimensions = sizeOf(filePath);
           img.attr("width", `${dimensions.width}`);

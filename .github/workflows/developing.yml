@@ -8,32 +8,30 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v2.3.4
+      - uses: actions/checkout@v3
 
-      - uses: actions/checkout@v2.3.4
+      - uses: actions/checkout@v3
         with:
           repository: mdn/content
           path: mdn/content
 
       - name: Setup Node.js environment
-        uses: actions/setup-node@v2.1.5
+        uses: actions/setup-node@v3
         with:
-          node-version: "12"
+          node-version: "14"
+          cache: "yarn"
 
       - name: Cache node_modules
-        uses: actions/cache@v2.1.6
+        uses: actions/cache@v3
         id: cached-node_modules
         with:
           path: |
             node_modules
-          key: ${{ runner.os }}-${{ hashFiles('yarn.lock') }}
+          key: ${{ runner.os }}-${{ hashFiles('yarn.lock') }}-${{ hashFiles('.github/workflows/developing.yml') }}
 
       - name: Install all yarn packages
         if: steps.cached-node_modules.outputs.cache-hit != 'true'
-        env:
-          PUPPETEER_SKIP_CHROMIUM_DOWNLOAD: 1
-        run: |
-          yarn --frozen-lockfile
+        run: yarn --frozen-lockfile
 
       - name: Setup kernel for react native, increase watchers
         run: |
@@ -56,7 +54,7 @@ jobs:
           # the content if loading this page fails.
           ls "$CONTENT_ROOT/en-us/mdn/kitchensink"
 
-          yarn prepare-build
+          yarn build:prepare
           yarn start > /tmp/stdout.log 2> /tmp/stderr.log &
 
       - name: Wait for servers
@@ -64,7 +62,7 @@ jobs:
           # Just a slight delay to wait until the dev server is ready.
           sleep 3
 
-          curl --retry-connrefused --retry 5 http://localhost:5000 > /dev/null
+          curl --retry-connrefused --retry 5 http://localhost:5042 > /dev/null
           curl --retry-connrefused --retry 5 --silent http://localhost:3000 > /dev/null
 
       - name: Test viewing the dev server
@@ -72,11 +70,9 @@ jobs:
           # This will make sure the tests in `testing/tests/*.test.js` only run
           # if the development server is up and ready to be tested.
           TESTING_DEVELOPING: true
-          # Use local chrome installs since we skip downloading it as part
-          # of the yarn installs above
-          PUPPETEER_EXECUTABLE_PATH: /usr/bin/google-chrome
+          CONTENT_ROOT: mdn/content/files
         run: |
-          yarn test:testing developing
+          yarn test:developing
 
       - name: Debug server's stdout and stderr if tests failed
         if: failure()

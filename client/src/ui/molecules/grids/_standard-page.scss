@@ -1,38 +1,29 @@
-/* standard page grid */
-@supports (display: grid) {
-  .page-wrapper {
+@use "../../vars" as *;
+
+.page-wrapper {
+  grid-template-columns: 100%;
+}
+
+.standard-page {
+  max-width: inherit;
+
+  .page-content-container {
     display: grid;
     grid-template-columns: 100%;
   }
 
-  .standard-page {
-    max-width: inherit;
+  &.plus {
+    background-color: var(--background-primary);
+  }
 
-    .page-header,
+  @media screen and (min-width: $screen-md) {
     .page-content-container {
-      grid-column: 1/2;
-    }
+      margin: 0 auto;
+      max-width: var(--max-width);
+      width: 100%;
 
-    .page-header {
-      grid-row: 1/2;
-    }
-
-    .titlebar-container {
-      grid-row: 2/3;
-    }
-
-    .page-content-container {
-      display: grid;
-      grid-row: 3/4;
-      grid-template-columns: 100%;
-      padding: $base-spacing;
-    }
-
-    @media #{$mq-large-desktop-and-up} {
-      .page-content-container {
-        margin: 0 auto;
-        max-width: $max-width-default;
-        width: 100%;
+      &.fullwidth {
+        max-width: initial;
       }
     }
   }

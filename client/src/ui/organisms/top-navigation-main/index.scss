@@ -1,0 +1,193 @@
+@use "../../vars" as *;
+
+.top-navigation-main {
+  display: none;
+  justify-content: space-between;
+  padding: 0;
+  width: 100%;
+
+  .show-nav & {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .auth-container {
+    order: 0;
+  }
+  .header-search {
+    order: 1;
+  }
+  .main-nav {
+    order: 2;
+  }
+  .notifications-menu {
+    order: 3;
+  }
+  .user-menu {
+    order: 4;
+  }
+
+  .top-level-entry-container {
+    position: relative;
+    .submenu {
+      z-index: var(--z-index-nav-menu);
+    }
+  }
+
+  .theme-toggle {
+    align-self: end;
+    margin-bottom: 1.5rem;
+  }
+
+  @media screen and (min-width: $screen-lg) {
+    .theme-toggle {
+      align-self: initial;
+      margin-bottom: initial;
+    }
+  }
+
+  .button.action {
+    &:hover {
+      --button-bg: var(--border-secondary);
+    }
+
+    @at-root .is-transparent &:not(:focus):hover {
+      --button-border-color: transparent;
+    }
+
+    @at-root .is-transparent &:hover {
+      --button-bg: var(--accent-primary-engage);
+    }
+
+    &.search-button:hover {
+      --button-bg: transparent;
+    }
+  }
+
+  .top-level-entry {
+    display: block;
+    background: none;
+    border-top: 1px solid var(--border-secondary);
+    color: var(--text-secondary);
+    cursor: pointer;
+    padding: 1rem 0.5rem;
+    text-align: left;
+    width: 100%;
+
+    &:link,
+    &:visited {
+      color: var(--text-secondary);
+    }
+
+    &.menu-toggle {
+      padding: 0.5rem;
+      min-height: 53px;
+    }
+
+    @media screen and (max-width: $screen-lg) {
+      &.button {
+        --button-color: var(--text-secondary);
+        --button-padding: 0;
+        --button-radius: 0;
+
+        .button-wrap {
+          background: none;
+          border: none;
+          gap: 0.5rem;
+          justify-content: flex-start;
+          padding: 0;
+          text-transform: initial;
+        }
+
+        &:focus {
+          --button-focus-effect: none;
+        }
+      }
+    }
+
+    @media screen and (min-width: $screen-lg) {
+      border-top: none;
+      border-radius: var(--elem-radius);
+      padding: 0.5rem;
+
+      &:hover,
+      &:focus {
+        background-color: var(--category-color-background);
+        color: var(--category-color);
+        text-decoration: none;
+      }
+
+      &.button {
+        padding: 0;
+      }
+    }
+  }
+
+  .menu-toggle {
+    align-items: center;
+    display: flex;
+    justify-content: space-between;
+    position: relative;
+  }
+
+  .menu-toggle:after {
+    content: "";
+    width: var(--icon-size);
+    height: var(--icon-size);
+    background-color: var(--icon-primary);
+    margin-top: 0.2em;
+    margin-left: 0.2em;
+
+    mask-image: url("../../../assets/icons/chevron.svg");
+  }
+
+  .menu-toggle[aria-expanded="true"]::after {
+    transform: rotate(180deg);
+  }
+
+  .menu-toggle + .top-level-entry {
+    display: none;
+  }
+
+  @media screen and (min-width: $screen-lg) {
+    align-items: center;
+    display: flex;
+    flex: 1;
+    flex-direction: row;
+    gap: 0.5rem;
+    left: inherit;
+    padding: 0;
+    position: initial;
+    top: inherit;
+    z-index: inherit;
+
+    .show-nav & {
+      flex-direction: row;
+    }
+
+    .main-nav {
+      order: 0;
+    }
+    .header-search {
+      order: 1;
+    }
+    .notifications-menu {
+      order: 2;
+    }
+    .auth-container {
+      order: 3;
+    }
+    .user-menu {
+      order: 4;
+    }
+
+    .main-nav {
+      margin-right: auto;
+      width: max-content;
+    }
+
+    .menu-toggle + .top-level-entry {
+      display: inline-flex;
+    }
+  }
+}

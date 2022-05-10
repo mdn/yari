@@ -1,0 +1,53 @@
+@use "../../vars" as *;
+
+.top-navigation {
+  position: relative;
+  width: 100%;
+  background-color: var(--background-primary);
+  z-index: $bottom-layer;
+  border-bottom: 1px solid var(--border-primary);
+
+  .container {
+    background-color: var(--background-primary);
+    align-items: center;
+    display: flex;
+    flex-flow: row wrap;
+    gap: var(--gutter);
+
+    @media screen and (min-width: $screen-md) {
+      background-color: transparent;
+    }
+  }
+
+  &.is-transparent {
+    background-color: transparent;
+  }
+
+  /* Wrapper strictly used for containing the logo and menu toggle */
+  .top-navigation-wrap {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: var(--top-nav-height);
+  }
+
+  &.show-nav {
+    box-shadow: 0 0 10px 0px rgba(0, 0, 0, 0.2);
+    z-index: var(--z-index-top);
+
+    .container {
+      height: auto;
+    }
+  }
+}
+
+@media screen and (min-width: $screen-lg) {
+  .main-menu-toggle {
+    display: none;
+  }
+
+  .top-navigation .top-navigation-wrap {
+    flex: 0;
+  }
+}

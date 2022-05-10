@@ -1,68 +1,43 @@
-@import "~@mdn/minimalist/sass/vars/color-palette";
-@import "~@mdn/minimalist/sass/vars/layout";
-
-$menu-box-shadow: 0 2px 8px 0 $neutral-500;
-$menu-border: solid 1px $neutral-400;
-$menu-border-radius: 4px;
-
-.dropdown-container {
+.dropdown {
   position: relative;
 
-  .dropdown-menu-label {
-    align-items: center;
-    border: 0;
-    color: $text-color;
-    display: flex;
-    flex-direction: row;
-    font-weight: bold;
-    padding: 0;
-    white-space: nowrap;
-
-    &:active {
-      background-color: transparent;
-    }
+  &-list {
+    position: absolute;
+    top: calc(100% + 2px);
+    left: 0;
+    background: var(--background-secondary);
+    border: 1px solid var(--border-primary);
+    box-shadow: var(--shadow-01);
+    padding: 0.5rem;
+    border-radius: var(--elem-radius);
+    z-index: var(--z-index-low);
   }
 
-  .dropdown-menu-items {
-    background-color: $neutral-600;
-    display: none;
-    flex-direction: column;
-    margin: ($base-unit * 2) 0;
-    min-width: 100%;
+  &.is-flush-right .dropdown-list {
+    left: auto;
+    right: 0;
+  }
 
-    @media #{$mq-tablet-and-up} {
-      border: $menu-border;
-      border-radius: $menu-border-radius;
-      box-shadow: $menu-box-shadow;
-      position: absolute;
-      right: 0;
-      z-index: $top-layer;
-    }
-
-    a,
-    button {
-      color: $neutral-100;
-      display: inline-block;
-      padding: $base-unit ($base-unit * 2);
-      /* buttons have centered text by default */
-      text-align: left;
-      white-space: nowrap;
+  &-item {
+    .button.action {
       width: 100%;
 
-      &:hover,
-      &:focus {
-        background-color: $primary-200;
-        color: $neutral-600;
-        text-decoration: none;
+      .button-wrap {
+        --button-font: var(--type-smaller-font-size);
+        --button-bg: transparent;
+        justify-content: flex-start;
+        text-align: left;
+        text-transform: none;
+
+        &:hover {
+          --button-bg: var(--button-secondary-hover);
+        }
+      }
+
+      &.active-menu-item {
+        --button-bg: var(--background-primary);
+        --button-border-color: var(--border-secondary);
       }
     }
-
-    .signout-button {
-      text-decoration: none;
-    }
-  }
-
-  .show {
-    display: block;
   }
 }
