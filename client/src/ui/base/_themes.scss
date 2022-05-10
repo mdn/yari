@@ -357,7 +357,7 @@ body,
 }
 
 // OS Default.
-:root:not(.light, .dark) {
+:root:not(.light):not(.dark) {
   @media (prefers-color-scheme: light) {
     @include light-theme;
   }
