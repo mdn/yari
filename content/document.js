@@ -509,6 +509,13 @@ function findChildren(url, recursive = false) {
         filePath.endsWith(HTML_FILENAME) || filePath.endsWith(MARKDOWN_FILENAME)
       );
     })
+    .filter((filePath) => {
+      return !(
+        recursive &&
+        (filePath == path.join(root, folder, HTML_FILENAME) ||
+          filePath == path.join(root, folder, MARKDOWN_FILENAME))
+      );
+    })
     .withMaxDepth(recursive ? Infinity : 1)
     .crawl(path.join(root, folder));
   const childPaths = [...api.sync()];
