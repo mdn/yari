@@ -1,7 +1,6 @@
 import fs from "fs";
 import path from "path";
 import { renderToString } from "react-dom/server";
-import cheerio from "cheerio";
 
 import { ALWAYS_ALLOW_ROBOTS, BUILD_OUT_ROOT } from "../libs/env";
 
@@ -15,6 +14,18 @@ const PREFERRED_LOCALE = {
   pt: "pt-PT",
   zh: "zh-CN",
 };
+
+function htmlEscape(s) {
+  if (!s) {
+    return s;
+  }
+  return s
+    .replace(/&/gim, "&amp;")
+    .replace(/"/gim, "&quot;")
+    .replace(/</gim, "&lt;")
+    .replace(/>/gim, "&gt;")
+    .replace(/'/gim, "&apos;");
+}
 
 function getHrefLang(locale, otherLocales) {
   // In most cases, just return the language code, removing the country
@@ -56,7 +67,7 @@ const lazy = (creator) => {
 const clientBuildRoot = path.resolve(dirname, "../../client/build");
 
 const readBuildHTML = lazy(() => {
-  const html = fs.readFileSync(
+  let html = fs.readFileSync(
     path.join(clientBuildRoot, "index.html"),
     "utf-8"
   );
@@ -65,6 +76,17 @@ const readBuildHTML = lazy(() => {
       'The render depends on being able to inject into <div id="root"></div>'
     );
   }
+  const scripts = [];
+  const gaScriptPathName = getGAScriptPathName();
+  if (gaScriptPathName) {
+    scripts.push(`<script src="${gaScriptPathName}" defer=""></script>`);
+  }
+
+  html = html.replace(/(<script src="[^"]*")(><\/script>)/g, (_, pre, post) => {
+    scripts.push(`${pre} defer=""${post}`);
+    return "";
+  });
+  html = html.replace('<meta name="SSR_SCRIPTS"/>', scripts.join(""));
   return html;
 });
 
@@ -141,34 +163,27 @@ export default function render(
 ) {
   const buildHtml = readBuildHTML();
   const webfontURLs = extractWebFontURLs();
-  const $ = cheerio.load(buildHtml);
-
-  // Some day, we'll have the chrome localized and then this can no longer be
-  // hardcoded to 'en'. But for now, the chrome is always in "English (US)".
-  $("html").attr("lang", locale || DEFAULT_LOCALE);
-
   const rendered = renderToString(renderApp);
 
-  if (!pageTitle) {
-    pageTitle = "MDN Web Docs"; // default
-  }
   let canonicalURL = "https://developer.mozilla.org";
 
   let pageDescription = "";
+  let escapedPageTitle = htmlEscape(pageTitle);
 
   const hydrationData: HydrationData = {};
+  const translations = [];
   if (pageNotFound) {
-    pageTitle = `🤷🏽‍♀️ Page not found | ${pageTitle}`;
+    escapedPageTitle = `🤷🏽‍♀️ Page not found | ${escapedPageTitle}`;
     hydrationData.pageNotFound = true;
   } else if (hyData) {
     hydrationData.hyData = hyData;
   } else if (doc) {
     // Use the doc's title instead
-    pageTitle = doc.pageTitle;
+    escapedPageTitle = htmlEscape(doc.pageTitle);
     canonicalURL += doc.mdn_url;
 
     if (doc.summary) {
-      pageDescription = doc.summary;
+      pageDescription = htmlEscape(doc.summary);
     }
 
     hydrationData.doc = doc;
@@ -190,11 +205,14 @@ export default function render(
         // The locale used in `<link rel="alternate">` needs to be the ISO-639-1
         // code. For example, it's "en", not "en-US". And it's "sv" not "sv-SE".
         // See https://developers.google.com/search/docs/advanced/crawling/localized-versions?hl=en&visit_id=637411409912568511-3980844248&rd=1#language-codes
-        $('<link rel="alternate">')
-          .attr("title", translation.title)
-          .attr("href", `https://developer.mozilla.org${translationURL}`)
-          .attr("hreflang", getHrefLang(translation.locale, allOtherLocales))
-          .insertAfter("title");
+        translations.push(
+          `<link rel="alternate" title=${htmlEscape(
+            translation.title
+          )} href="https://developer.mozilla.org${translationURL}" hreflang="${getHrefLang(
+            translation.locale,
+            allOtherLocales
+          )}"/>`
+        );
       }
     }
   }
@@ -203,22 +221,31 @@ export default function render(
     hydrationData.possibleLocales = possibleLocales;
   }
 
-  $("#root").after(
-    `<script type="application/json" id="hydration">${
-      // https://html.spec.whatwg.org/multipage/scripting.html#restrictions-for-contents-of-script-elements
-      JSON.stringify(hydrationData).replace(
-        /<(?=!--|\/?script)/gi,
-        String.raw`\u003c`
-      )
-    }</script>`
-  );
+  const titleTag = `<title>${escapedPageTitle || "MDN Web Docs"}</title>`;
+  const webfontTags = webfontURLs
+    .map(
+      (url) =>
+        `<link rel="preload" as="font" type="font/woff2" href="${url}" crossorigin>`
+    )
+    .join("");
+
+  const og = new Map([
+    ["title", escapedPageTitle],
+    ["url", canonicalURL],
+    ["locale", locale || doc ? doc.locale : "en-US"],
+  ]);
 
   if (pageDescription) {
-    // This overrides the default description. Also assumes there's always
-    // one tag there already.
-    $('meta[name="description"]').attr("content", pageDescription);
-    $('meta[property="og:description"]').attr("content", pageDescription);
+    og.set("description", pageDescription);
   }
+
+  const root = `<div id="root">${rendered}</div><script type="application/json" id="hydration">${
+    // https://html.spec.whatwg.org/multipage/scripting.html#restrictions-for-contents-of-script-elements
+    JSON.stringify(hydrationData).replace(
+      /<(?=!--|\/?script)/gi,
+      String.raw`\u003c`
+    )
+  }</script>`;
 
   const robotsContent =
     !ALWAYS_ALLOW_ROBOTS ||
@@ -227,56 +254,34 @@ export default function render(
     noIndexing
       ? "noindex, nofollow"
       : "index, follow";
-  $(`<meta name="robots" content="${robotsContent}">`).insertAfter(
-    $("meta").eq(-1)
+  const robotsMeta = `<meta name="robots" content="${robotsContent}">`;
+  const ssr_data = [...translations, ...webfontTags, robotsMeta];
+  let html = buildHtml;
+  html = html.replace(
+    '<html lang="en"',
+    `<html lang="${locale || DEFAULT_LOCALE}"`
   );
+  html = html.replace(
+    /<meta property="og:([^"]*)" content="([^"]*)"\/>/g,
+    (_, typ, content) => {
+      return `<meta property="og:${typ}" content="${og.get(typ) || content}"/>`;
+    }
+  );
+  if (pageDescription) {
+    html = html.replace(/<meta name="description" content="[^"]*"\/>/g, () => {
+      return `<meta name="description" content="${pageDescription}"/>`;
+    });
+  }
+  html = html.replace("<title>MDN Web Docs</title>", `${titleTag}`);
 
   if (!pageNotFound) {
-    $('link[rel="canonical"]').attr("href", canonicalURL);
+    html = html.replace(
+      '<link rel="canonical" href="https://developer.mozilla.org"/>',
+      `<link rel="canonical" href="${canonicalURL}"/>`
+    );
   }
 
-  // As part of the pre-build steps, in the build root, a `ga.js` file is generated.
-  // The SSR rendering needs to know if exists and if so, what it's URL pathname is.
-  // The script will do two things:
-  //  1. created a `window.ga` object
-  //  2. async inject the download of that remote
-  //     https://www.google-analytics.com/analytics.js file.
-  // With this script appearing before any other (also deferred) JS bundles,
-  // the `window.ga` will be immediately available but the remote analytics.js
-  // can come in when it comes in and it will send.
-  const gaScriptPathName = getGAScriptPathName();
-  if (gaScriptPathName) {
-    $("<script>")
-      .attr("defer", "")
-      .attr("src", gaScriptPathName)
-      .appendTo($("head"));
-  }
-
-  const $title = $("title");
-  $title.text(pageTitle);
-  $('meta[property="og:url"]').attr("content", canonicalURL);
-  $('meta[property="og:title"]').attr("content", pageTitle);
-  $('meta[property="og:locale"]').attr(
-    "content",
-    locale ? locale : doc ? doc.locale : "en-US"
-  );
-
-  for (const webfontURL of webfontURLs) {
-    $('<link rel="preload" as="font" type="font/woff2" crossorigin>')
-      .attr("href", webfontURL)
-      .insertAfter($title);
-  }
-
-  $("#root").html(rendered);
-
-  // Every script tag that create-react-app inserts, make them defer
-  $("body script[src]").attr("defer", "");
-
-  // Move the script tags from the body to the head.
-  // That way the browser can notice, and start downloading these files sooner
-  // but they'll still be executed after the first render.
-  $("body script[src]").appendTo("head");
-  $("body script[src]").remove();
-
-  return $.html();
+  html = html.replace('<meta name="SSR_DATA"/>', ssr_data.join(""));
+  html = html.replace('<div id="root"></div>', root);
+  return html;
 }
