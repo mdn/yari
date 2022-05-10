@@ -3,6 +3,7 @@ import hashlib
 import json
 import os
 import subprocess
+import time
 from pathlib import Path
 
 import boto3
@@ -82,10 +83,26 @@ def update(lambda_function_dir, dry_run=False, force=False):
         if dry_run:
             # If this is a dry run, just return the existing function info.
             return function_info["Configuration"]
+
         # Return the function info of the freshly-published version.
-        return client.update_function_code(
+        function_config = client.update_function_code(
             FunctionName=function_name, ZipFile=zip_file_bytes, Publish=True
         )
+
+        function_arn = function_config["FunctionArn"]
+
+        for tries in range(10):
+            if function_config["State"] != "Pending":
+                break
+
+            time.sleep(1 + tries)
+
+            function_config = client.get_function_configuration(
+                FunctionName=function_arn
+            )
+
+        return function_config
+
     return None
 
 
@@ -132,9 +149,16 @@ def deploy(updated_functions: list, distribution_id, dry_run=False):
     # Pre-process updated functions.
     function_arn_by_prefix = {}
 
-    for update in updated_functions:
-        arn = update["FunctionArn"]
-        version = update["Version"]
+    for function_config in updated_functions:
+        arn = function_config["FunctionArn"]
+        version = function_config["Version"]
+        state = function_config["State"]
+
+        if state != "Active":
+            log.warning(
+                f"Skipping Lambda deployment of {arn}, because it has state {state}."
+            )
+            continue
 
         if arn.endswith(version):
             # update_function_code() returns FunctionArn with version.
