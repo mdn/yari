@@ -82,7 +82,7 @@ function PlusDocs({ ...props }) {
         title: MDN_PLUS_TITLE,
         parents: [{ uri: `/${locale}/plus`, title: MDN_PLUS_TITLE }],
         sidebarHeader: <PlusDocsNav />,
-        initialData: props.hyData ? props : undefined,
+        fallbackData: props.hyData ? props : undefined,
       }}
     />
   );
