@@ -218,7 +218,7 @@ let operators = [
         })
     },
     {
-        regexp: /\[|\]/g,
+        regexp: /(\[|\])(?![^<]*>)/g,
         title: mdn.localString({
             "en-US": "Brackets: enclose several entities, combinators, and multipliers to transform them as a single component",
             "de"   : "Eckige Klammern: umschließen mehrere Entitäten, Kombinatoren und Multiplikatoren, um diese als eine gesamte Komponente zu behandeln"
@@ -333,7 +333,7 @@ async function formatSyntax(rawSyntax) {
     });
     formattedSyntax = await string.asyncReplace(
         formattedSyntax,
-        /<([a-z0-9()'-]+?)>/gi,
+        /<([a-z0-9()'-]+?( \[-?(\d+|∞),(\d+|∞)\])?)>/gi,
         buildLink
     );
 

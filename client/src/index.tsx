@@ -5,6 +5,7 @@ import { BrowserRouter as Router } from "react-router-dom";
 import { App } from "./app";
 import { GAProvider } from "./ga-context";
 import { UserDataProvider } from "./user-context";
+import { UIProvider } from "./ui-context";
 
 // import * as serviceWorker from './serviceWorker';
 
@@ -24,9 +25,11 @@ const appData = hydrationElement
 let app = (
   <GAProvider>
     <UserDataProvider>
-      <Router>
-        <App {...appData} />
-      </Router>
+      <UIProvider>
+        <Router>
+          <App {...appData} />
+        </Router>
+      </UIProvider>
     </UserDataProvider>
   </GAProvider>
 );
@@ -41,7 +44,7 @@ if (container.firstElementChild) {
   ReactDOM.render(app, container);
 }
 
-// If you want your app to work offline and load faster, you can change
-// unregister() to register() below. Note this comes with some pitfalls.
-// Learn more about service workers: https://bit.ly/CRA-PWA
-// serviceWorker.unregister();
+// Initialize mdnWorker if there's a service worker already.
+if (navigator?.serviceWorker?.controller && !window.mdnWorker) {
+  import("./offline-settings/mdn-worker");
+}

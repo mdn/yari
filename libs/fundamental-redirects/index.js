@@ -7,6 +7,7 @@ const {
 
 const startRe = /^\^?\/?/;
 const startTemplate = /^\//;
+const LOCALE_PATTERN = "(?:[a-zA-Z]{2}|eng)(?:-[a-zA-Z]{2})?";
 
 function redirect(pattern, template, options = {}) {
   return (path) => {
@@ -36,7 +37,7 @@ function localeRedirect(
 ) {
   const patternStrWithLocale = pattern.source.replace(
     startRe,
-    "^(?<locale>\\w{2,3}(?:-\\w{2})?/)?"
+    "^(?<locale>" + LOCALE_PATTERN + "/)?"
   );
   const patternWithLocale = new RegExp(patternStrWithLocale, pattern.flags);
   let _template = template;
@@ -798,6 +799,17 @@ const SCL3_REDIRECT_PATTERNS = [
   // RewriteRule ^es4 http://www.ecma-international.org/memento/TC39.htm [R=302,L]
   redirect(/^es4.*/i, "http://www.ecma-international.org/memento/TC39.htm", {
     permanent: false,
+  }),
+  // Redirect for URL baked into Firefox releases.
+  // https://github.com/mdn/content/issues/9734
+  redirect(
+    /^en\/Optimizing_Your_Pages_for_Speculative_Parsing\/?$/i,
+    "/en-US/docs/Glossary/speculative_parsing",
+    { permanent: true }
+  ),
+  // Redirect for URL in Contribute video
+  redirect(/^MDN\/Contribute\/?$/i, "/en-US/docs/MDN/Contribute", {
+    permanent: true,
   }),
 ];
 

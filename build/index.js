@@ -12,6 +12,7 @@ const {
   execGit,
 } = require("../content");
 const kumascript = require("../kumascript");
+const { normalizeMacroName } = require("../kumascript/src/render.js");
 
 const { FLAW_LEVELS } = require("./constants");
 const {
@@ -33,6 +34,7 @@ const { buildSPAs } = require("./spas");
 const { renderCache: renderKumascriptCache } = require("../kumascript");
 const LANGUAGES_RAW = require("../content/languages.json");
 const { safeDecodeURIComponent } = require("../kumascript/src/api/util");
+const { wrapTables } = require("./wrap-tables");
 
 const LANGUAGES = new Map(
   Object.entries(LANGUAGES_RAW).map(([locale, data]) => {
@@ -155,9 +157,9 @@ function postLocalFileLinks($, doc) {
     const href = element.attribs.href;
 
     // This test is merely here to quickly bail if there's no hope to find the
-    // image as a local file link. `Image.findByURL()` is fast but there are
-    // a LOT of hyperlinks throughout the content and this simple if statement
-    // means we can skip 99% of the links, so it's presumed to be worth it.
+    // image as a local file link. There are a LOT of hyperlinks throughout
+    // the content and this simple if statement means we can skip 99% of the
+    // links, so it's presumed to be worth it.
     if (
       !href ||
       /^(\/|\.\.|http|#|mailto:|about:|ftp:|news:|irc:|ftp:)/i.test(href)
@@ -168,7 +170,7 @@ function postLocalFileLinks($, doc) {
     // So we'll look-up a lot "false positives" that are not images.
     // Thankfully, this lookup is fast.
     const url = `${doc.mdn_url}/${href}`;
-    const image = Image.findByURL(url);
+    const image = Image.findByURLWithFallback(url);
     if (image) {
       $(element).attr("href", url);
     }
@@ -305,7 +307,7 @@ async function buildDocument(document, documentOptions = {}) {
   const liveSamples = [];
 
   if (options.clearKumascriptRenderCache) {
-    renderKumascriptCache.reset();
+    renderKumascriptCache.clear();
   }
   try {
     [renderedHtml, flaws] = await kumascript.render(document.url);
@@ -452,6 +454,12 @@ async function buildDocument(document, documentOptions = {}) {
   doc.locale = metadata.locale;
   doc.native = LANGUAGES.get(doc.locale.toLowerCase()).native;
 
+  // If the document contains <math> HTML, it will set `doc.hasMathML=true`.
+  // The client (<Document/> component) needs to know this for loading polyfills.
+  if ($("math").length > 0) {
+    doc.hasMathML = true;
+  }
+
   // Note that 'extractSidebar' will always return a string.
   // And if it finds a sidebar section, it gets removed from '$' too.
   // Also note, these operations mutate the `$`.
@@ -528,6 +536,8 @@ async function buildDocument(document, documentOptions = {}) {
   injectNotecardOnWarnings($);
 
   formatNotecards($);
+
+  wrapTables($);
 
   // Turn the $ instance into an array of section blocks. Most of the
   // section blocks are of type "prose" and their value is a string blob
@@ -659,10 +669,129 @@ function renderContributorsTxt(wikiContributorNames = null, githubURL = null) {
   return txt;
 }
 
+function* fastKSParser(s, includeArgs = false) {
+  for (const match of s.matchAll(
+    /\{\{\s*(\w+[\w-.]*\w+)\s*(\((.*?)\)|)\s*\}\}/gms
+  )) {
+    const { index } = match;
+    if (s.charAt(index - 1) === "\\") {
+      continue;
+    }
+
+    const split = (match[3] || "").trim().split(",");
+    const found = { name: match[1] };
+    if (includeArgs) {
+      found.args = split
+        .map((s) => s.trim())
+        .map((s) => {
+          if (s.startsWith('"') && s.endsWith('"')) {
+            return s.slice(1, -1);
+          }
+          if (s.startsWith("'") && s.endsWith("'")) {
+            return s.slice(1, -1);
+          }
+          return s;
+        })
+        .filter((s, i) => {
+          if (!s) {
+            // Only return false if it's NOT first
+            if (i === 0) {
+              return Boolean(s);
+            }
+          }
+          return true;
+        });
+    }
+    yield found;
+  }
+}
+
+async function analyzeDocument(document) {
+  const { metadata } = document;
+
+  const doc = {
+    ...metadata,
+    contributors: metadata.contributors ? metadata.contributors.length : 0,
+    isArchive: !!document.isArchive,
+    isTranslated: !!document.isTranslated,
+  };
+
+  doc.normalizedMacrosCount = {};
+  for (const token of fastKSParser(document.rawBody)) {
+    const normalizedMacroName = normalizeMacroName(token.name);
+    if (!(normalizedMacroName in doc.normalizedMacrosCount)) {
+      doc.normalizedMacrosCount[normalizedMacroName] = 0;
+    }
+    doc.normalizedMacrosCount[normalizedMacroName]++;
+  }
+  doc.tags = document.metadata.tags || [];
+
+  doc.fileSize = fs.statSync(document.fileInfo.path).size;
+  doc.wordCount = document.rawBody
+    .replace(/(<([^>]+)>)/g, "")
+    .split(/\s+/).length;
+  const $ = cheerio.load(document.rawBody);
+  const imageCounts = countImages($);
+  doc.images = imageCounts.total;
+  doc.externalImages = imageCounts.external;
+  doc.internalImages = imageCounts.internal;
+  doc.h2s = $("h2").length;
+  doc.h3s = $("h3").length;
+  doc.pres = $("pre").length;
+  doc.title = metadata.title;
+  doc.mdn_url = document.url;
+  doc.depth = document.url.split("/").length - 3;
+
+  // If the document has a `.popularity` make sure don't bother with too
+  // many significant figures on it.
+  doc.popularity = metadata.popularity
+    ? Number(metadata.popularity.toFixed(4))
+    : 0.0;
+
+  doc.modified = metadata.modified || null;
+
+  const otherTranslations = document.translations || [];
+  if (!otherTranslations.length && metadata.translation_of) {
+    // If built just-in-time, we won't have a record of all the other translations
+    // available. But if the current document has a translation_of, we can
+    // at least use that.
+    otherTranslations.push({ locale: "en-US", slug: metadata.translation_of });
+  }
+
+  if (otherTranslations.length) {
+    doc.other_translations = otherTranslations;
+  }
+
+  return doc;
+}
+
+function countImages($) {
+  const counts = {
+    external: 0,
+    internal: 0,
+    total: 0,
+  };
+  $("img[src]").each((i, img) => {
+    const src = $(img).attr("src");
+    if (
+      src.includes("://") ||
+      src.startsWith("/@api/") ||
+      src.startsWith("/files")
+    ) {
+      counts.external++;
+    } else {
+      counts.internal++;
+    }
+  });
+  counts.total = counts.external + counts.internal;
+  return counts;
+}
+
 module.exports = {
   FLAW_LEVELS,
 
   buildDocument,
+  analyzeDocument,
 
   buildLiveSamplePageFromURL,
   renderContributorsTxt,

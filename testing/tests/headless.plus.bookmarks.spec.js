@@ -1,11 +1,13 @@
+/*
 const { test, expect } = require("@playwright/test");
 
 function testURL(pathname = "/") {
-  return "http://localhost:5000" + pathname;
+  const PORT = parseInt(process.env.SERVER_PORT || "5000");
+  return `http://localhost:${PORT}${pathname}`;
 }
 
 test.describe("Bookmarking pages", () => {
-  const SELECTOR = '[data-testid="bookmark-toggle"]';
+  const SELECTOR = ".bookmark-button";
 
   test.beforeEach(async ({ context }) => {
     // Necessary hack to make sure any existing 'sessionid' cookies don't
@@ -21,36 +23,47 @@ test.describe("Bookmarking pages", () => {
   });
 
   test("view a document and being a signed in subscriber", async ({ page }) => {
-    await page.goto(testURL("/en-US/signin"));
-    await page.click('a:has-text("Sign in with Firefox Accounts")');
+    await page.goto(testURL("/en-US/docs/Web/Foo"));
+
+    // Sign in
+    await page.click("text='Already a subscriber?'");
+    await page.waitForLoadState("networkidle");
+
     await page.goto(testURL("/en-US/docs/Web/Foo"));
     await page.waitForSelector(SELECTOR);
-    expect(
-      await page.isVisible('button[title="Not been bookmarked"]')
-    ).toBeTruthy();
-    await page.click('button[title="Not been bookmarked"]');
+
+    expect(await page.isVisible(SELECTOR)).toBeTruthy();
+
+    await page.click(SELECTOR);
     await page.waitForLoadState("networkidle");
+
     expect(
-      await page.isVisible('button[title="Not been bookmarked"]')
+      await page.isVisible('.bookmark-button-label:text-is("Save")')
     ).toBeFalsy();
-    expect(await page.isVisible('button[title^="Bookmarked"]')).toBeTruthy();
+    expect(
+      await page.isVisible('.bookmark-button-label:text-is("Saved")')
+    ).toBeTruthy();
 
     // Reload the page to prove that it sticks
     await page.goto(testURL("/en-US/docs/Web/Foo"));
     await page.waitForSelector(SELECTOR);
-    expect(await page.isVisible('button[title^="Bookmarked"]')).toBeTruthy();
+
+    expect(
+      await page.isVisible('.bookmark-button-label:text-is("Saved")')
+    ).toBeTruthy();
   });
 
   test("view your listing of all bookmarks", async ({ page }) => {
-    await page.goto(testURL("/en-US/plus/bookmarks"));
+    await page.goto(testURL("/en-US/plus/collections"));
     await page.waitForLoadState("networkidle");
     await page.waitForSelector("text=You have not signed in");
 
-    await page.goto(testURL("/en-US/signin"));
-    await page.click('a:has-text("Sign in with Firefox Accounts")');
+    // Sign in
+    await page.click("text='Already a subscriber?'");
+    await page.waitForLoadState("networkidle");
 
-    await page.goto(testURL("/en-US/plus/bookmarks"));
-    await page.waitForSelector("text=Nothing bookmarked yet.");
+    await page.goto(testURL("/en-US/plus/collections"));
+    await page.waitForSelector("text=Nothing saved yet.");
 
     // Open a bunch of pages
     const urls = [
@@ -64,14 +77,21 @@ test.describe("Bookmarking pages", () => {
     for (const url of urls) {
       await page.goto(testURL(url));
       await page.waitForSelector(SELECTOR);
-      await page.click('button[title="Not been bookmarked"]');
+      await page.click(SELECTOR);
     }
 
-    await page.goto(testURL("/en-US/plus/bookmarks"));
-    await page.waitForSelector("text=Your bookmarks (6)");
+    const locator = page.locator(".pagination");
+
+    await page.goto(testURL("/en-US/plus/collections"));
+    await page.waitForSelector("h3:has-text('Collections')");
+
+    await expect(locator).toBeVisible();
 
     // This picks one of the un-toggle buttons
-    await page.click('button[title="Click to remove this bookmark"]');
-    await page.waitForSelector("text=Your bookmarks (5)");
+    await page.click('button[title="Remove bookmark"]');
+    await page.waitForLoadState("networkidle");
+
+    await expect(locator).not.toBeVisible();
   });
 });
+*/

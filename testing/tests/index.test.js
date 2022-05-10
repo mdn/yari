@@ -189,12 +189,6 @@ test("content built foo page", () => {
   // The ID should match what's set in `testing/.env`.
   expect($('script[src="/static/js/ga.js"]').length).toBe(1);
 
-  // The HTML should contain the Speedcurve LUX snippet.
-  // The ID should match what's set in `testing/.env`.
-  expect($('script[src^="https://cdn.speedcurve.com/"]').attr("src")).toContain(
-    "012345"
-  );
-
   // Because this en-US page has a French translation
   expect($('link[rel="alternate"]').length).toBe(3);
   expect($('link[rel="alternate"][hreflang="en"]').length).toBe(1);
@@ -209,7 +203,7 @@ test("content built foo page", () => {
   expect(toFrURL).toBe("https://developer.mozilla.org/fr/docs/Web/Foo");
 
   // The h4 heading in there has its ID transformed to lowercase
-  expect($("h4").attr("id")).toBe($("h4").attr("id").toLowerCase());
+  expect($("main h4").attr("id")).toBe($("main h4").attr("id").toLowerCase());
 });
 
 test("icons mentioned in <head> should resolve", () => {
@@ -1223,50 +1217,6 @@ test("404 page", () => {
   expect($('meta[property="og:locale"]').attr("content")).toBe("en-US");
 });
 
-test("sign in page", () => {
-  const builtFolder = path.join(buildRoot, "en-us", "signin");
-  expect(fs.existsSync(builtFolder)).toBeTruthy();
-  const htmlFile = path.join(builtFolder, "index.html");
-  const html = fs.readFileSync(htmlFile, "utf-8");
-  const $ = cheerio.load(html);
-  expect($("h1").text()).toContain("Sign in to MDN Web Docs");
-  expect($("title").text()).toContain("Sign in");
-  expect($('meta[property="og:locale"]').attr("content")).toBe("en-US");
-  expect($('meta[property="og:title"]').attr("content")).toBe("Sign in");
-  expect($('meta[name="robots"]').attr("content")).toBe("noindex, nofollow");
-});
-
-test("French sign in page", () => {
-  const builtFolder = path.join(buildRoot, "fr", "signin");
-  expect(fs.existsSync(builtFolder)).toBeTruthy();
-  const htmlFile = path.join(builtFolder, "index.html");
-  const html = fs.readFileSync(htmlFile, "utf-8");
-  const $ = cheerio.load(html);
-  // This will be translated the day we support localized chrome.
-  expect($("h1").text()).toContain("Sign in to MDN Web Docs");
-  expect($("title").text()).toContain("Sign in");
-  expect($('meta[property="og:locale"]').attr("content")).toBe("fr");
-});
-
-test("settings page", () => {
-  const builtFolder = path.join(buildRoot, "en-us", "settings");
-  expect(fs.existsSync(builtFolder)).toBeTruthy();
-  const htmlFile = path.join(builtFolder, "index.html");
-  const html = fs.readFileSync(htmlFile, "utf-8");
-  const $ = cheerio.load(html);
-  expect($("h1").text()).toBe("Account settings");
-  expect($("title").text()).toContain("Account settings");
-  expect($('meta[name="robots"]').attr("content")).toBe("noindex, nofollow");
-
-  const jsonFile = path.join(builtFolder, "index.json");
-  const data = JSON.parse(fs.readFileSync(jsonFile));
-  expect(data.pageTitle).toBe("Account settings");
-  expect(data.possibleLocales).toBeTruthy();
-  const possibleLocale = data.possibleLocales.find((p) => p.locale === "en-US");
-  expect(possibleLocale.English).toBe("English (US)");
-  expect(possibleLocale.native).toBe("English (US)");
-});
-
 test("plus page", () => {
   const builtFolder = path.join(buildRoot, "en-us", "plus");
   expect(fs.existsSync(builtFolder)).toBeTruthy();
@@ -1274,23 +1224,17 @@ test("plus page", () => {
   const html = fs.readFileSync(htmlFile, "utf-8");
   const $ = cheerio.load(html);
   expect($("title").text()).toContain("Plus");
-  expect($('meta[name="robots"]').attr("content")).toBe("noindex, nofollow");
-  expect($("main.plus").length).toBe(1);
-  // because, by default, it just loads the blank skeleton page
-  expect($("main.plus h1").length).toBe(0);
+  expect($('meta[name="robots"]').attr("content")).toBe("index, follow");
 });
 
-test("plus bookmarks page", () => {
-  const builtFolder = path.join(buildRoot, "en-us", "plus", "bookmarks");
+test("plus collections page", () => {
+  const builtFolder = path.join(buildRoot, "en-us", "plus", "collections");
   expect(fs.existsSync(builtFolder)).toBeTruthy();
   const htmlFile = path.join(builtFolder, "index.html");
   const html = fs.readFileSync(htmlFile, "utf-8");
   const $ = cheerio.load(html);
-  expect($("title").text()).toMatch(/Bookmarks/);
+  expect($("title").text()).toMatch(/Collection/);
   expect($('meta[name="robots"]').attr("content")).toBe("noindex, nofollow");
-  expect($("main.plus").length).toBe(1);
-  // because, by default, it just loads the blank skeleton page
-  expect($("main.plus h1").length).toBe(0);
 });
 
 test("bcd table extraction followed by h3", () => {
@@ -1435,7 +1379,7 @@ test("img tags should always have their 'width' and 'height' set", () => {
       expect($img.attr("width")).toBe("250");
       expect($img.attr("height")).toBe("250");
     } else {
-      throw new Error("unexpected image");
+      throw new Error("unexpected image: " + $img.attr("src"));
     }
   });
 });
@@ -1500,7 +1444,7 @@ test("headings with HTML should be rendered as HTML", () => {
   expect($("article h3 a").html()).toBe(
     "You can use escaped HTML tags like &lt;pre&gt; still"
   );
-  expect($("article h3").text()).toBe(
+  expect($("article h3 a").text()).toBe(
     "You can use escaped HTML tags like <pre> still"
   );
 
@@ -1552,8 +1496,8 @@ test("external links always get the right attributes", () => {
   // 4 links on that page and we'll do 2 assertions for each one, plus
   // 1 for the extra sanity check.
   expect.assertions(4 * 2 + 1);
-  expect($("article a").length).toBe(4); // sanity check
-  $("article a").each((i, element) => {
+  expect($("article > section div a").length).toBe(4); // sanity check
+  $("article > section div a").each((i, element) => {
     const $a = $(element);
     expect($a.hasClass("external")).toBe(true);
     expect(
@@ -1565,12 +1509,14 @@ test("external links always get the right attributes", () => {
   });
 });
 
-test("home page should have a /index.json file with feedEntries", () => {
+test("home page should have a /index.json file with pullRequestsData", () => {
   const builtFolder = path.join(buildRoot, "en-us");
 
   const jsonFile = path.join(builtFolder, "index.json");
-  const { feedEntries } = JSON.parse(fs.readFileSync(jsonFile));
-  expect(feedEntries.length).toBeGreaterThan(0);
+  const { hyData: { recentContributions } = {} } = JSON.parse(
+    fs.readFileSync(jsonFile)
+  );
+  expect(recentContributions.items.length).toBeGreaterThan(0);
 });
 
 test("headings with links in them are flaws", () => {
@@ -1633,6 +1579,9 @@ test("basic markdown rendering", () => {
   const htmlFile = path.join(builtFolder, "index.html");
   const html = fs.readFileSync(htmlFile, "utf-8");
   const $ = cheerio.load(html);
+  // Following elements do not test TOC rendering
+  $("article > .metadata").remove();
+
   expect($("article h2[id]").length).toBe(2);
   expect($("article h3[id]").length).toBe(3);
   expect($("article p code").length).toBe(2);
@@ -1787,7 +1736,7 @@ test("duplicate IDs are de-duplicated", () => {
   const html = fs.readFileSync(htmlFile, "utf-8");
   const $ = cheerio.load(html);
   const h2IDs = [];
-  $("#content h2").each((i, element) => {
+  $("#content main h2").each((i, element) => {
     h2IDs.push($(element).attr("id"));
   });
   expect(new Set(h2IDs.map((id) => id.toLowerCase())).size).toEqual(

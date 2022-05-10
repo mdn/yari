@@ -50,9 +50,9 @@ jobs:
     if: github.repository == 'mdn/yari'
 
     steps:
-      - uses: actions/checkout@v2.3.4
+      - uses: actions/checkout@v3
 
-      - uses: actions/checkout@v2.3.4
+      - uses: actions/checkout@v3
         with:
           repository: mdn/content
           path: mdn/content
@@ -74,18 +74,25 @@ jobs:
           echo "DEPLOYER_BUCKET_PREFIX=${{ github.event.inputs.deployment_prefix || env.DEFAULT_DEPLOYMENT_PREFIX }}" >> $GITHUB_ENV
           echo "DEPLOYER_LOG_EACH_SUCCESSFUL_UPLOAD=${{ github.event.inputs.log_each_successful_upload || env.DEFAULT_LOG_EACH_SUCCESSFUL_UPLOAD }}" >> $GITHUB_ENV
 
-      - uses: actions/checkout@v2.3.4
+      - uses: actions/checkout@v3
         with:
           repository: mdn/translated-content
           path: mdn/translated-content
+          # See matching warning for mdn/content checkout step
+          fetch-depth: 0
+
+      - uses: actions/checkout@v3
+        with:
+          repository: mdn/mdn-contributor-spotlight
+          path: mdn/mdn-contributor-spotlight
 
       - name: Setup Node.js environment
-        uses: actions/setup-node@v2.4.0
+        uses: actions/setup-node@v3
         with:
-          node-version: "12"
+          node-version: "14"
 
       - name: Cache node_modules
-        uses: actions/cache@v2.1.6
+        uses: actions/cache@v3
         id: cached-node_modules
         with:
           path: |
@@ -97,12 +104,12 @@ jobs:
         run: yarn --frozen-lockfile
 
       - name: Install Python
-        uses: actions/setup-python@v2.2.2
+        uses: actions/setup-python@v3.1.2
         with:
           python-version: "3.8"
 
       - name: Install Python poetry
-        uses: snok/install-poetry@v1.1.8
+        uses: snok/install-poetry@v1.3
 
       - name: Install deployer
         run: |
@@ -126,6 +133,7 @@ jobs:
           # sub-folder called "mdn/content"
           CONTENT_ROOT: ${{ github.workspace }}/mdn/content/files
           CONTENT_TRANSLATED_ROOT: ${{ github.workspace }}/mdn/translated-content/files
+          CONTRIBUTOR_SPOTLIGHT_ROOT: ${{ github.workspace }}/mdn/mdn-contributor-spotlight/contributors
 
           # The default for this environment variable is geared for writers
           # (aka. local development). Usually defaults are supposed to be for
@@ -142,41 +150,59 @@ jobs:
           # origin domain isn't what that account expects.
           BUILD_GOOGLE_ANALYTICS_ACCOUNT: UA-36116321-5
 
-          # See the code for a further explanation for this.
-          # You get the ID from
-          # https://speedcurve.com/mozilla-add-ons/mdn/settings/updated/#lux
-          BUILD_SPEEDCURVE_LUX_ID: 108906238
-
-          # This enables the Plus call-to-action banner and the Plus landing page
+          # This enables the MDN Plus
           REACT_APP_ENABLE_PLUS: true
 
           # This removes the ability to sign in
-          REACT_APP_DISABLE_AUTH: true
+          REACT_APP_DISABLE_AUTH: false
 
           # The default is to always set no to robots. This deployment is the only
           # exception in the world where we actually want to welcome robots.
           BUILD_ALWAYS_ALLOW_ROBOTS: true
+
+          # Offline updates
+          REACT_APP_UPDATES_BASE_URL: https://updates.developer.mozilla.org
+
+          # Firefox Accounts and SubPlat settings
+          REACT_APP_FXA_SIGNIN_URL: /users/fxa/login/authenticate/
+          REACT_APP_FXA_SETTINGS_URL: https://accounts.firefox.com/settings/
+          REACT_APP_MDN_PLUS_SUBSCRIBE_URL: https://subscriptions.firefox.com/checkout/prod_LKvr8fYGbBxcaZ
+          REACT_APP_FXA_MANAGE_SUBSCRIPTIONS_URL: https://subscriptions.firefox.com/subscriptions/
+
+          REACT_APP_MDN_PLUS_5M_PLAN: price_1KeG02JNcmPzuWtR1oBrw8o6
+          REACT_APP_MDN_PLUS_5Y_PLAN: price_1KeG02JNcmPzuWtRslZijhQu
+          REACT_APP_MDN_PLUS_10M_PLAN: price_1KeG02JNcmPzuWtRuAnIgNHh
+          REACT_APP_MDN_PLUS_10Y_PLAN: price_1KeG02JNcmPzuWtRlrSiLTI6
+          REACT_APP_ENABLE_PLUS_EU: true
 
         run: |
 
           # Info about which CONTENT_* environment variables were set and to what.
           echo "CONTENT_ROOT=$CONTENT_ROOT"
           echo "CONTENT_TRANSLATED_ROOT=$CONTENT_TRANSLATED_ROOT"
-          yarn prepare-build
+          yarn build:sw
+          yarn build:prepare
 
           # (July 15, 2021) This is a temporary solution. This should become an
-          # integrated part of 'prepare-build'.
+          # integrated part of 'build:prepare'.
           # See https://github.com/mdn/yari/issues/4217
           yarn tool popularities
 
           yarn tool sync-translated-content
 
-          # Spread the work across 2 processes. Why 2? Because that's what you
-          # get in the default GitHub hosting Linux runners.
+          # Spread the work across 2 processes. Why 2? Because that's
+          # what you get in the default GitHub-hosted Linux runners.
           # See https://docs.github.com/en/actions/using-github-hosted-runners/about-github-hosted-runners#supported-runners-and-hardware-resources
           yarn build --locale     en-us --locale     ja --locale     fr &
+          build1=$!
           yarn build --not-locale en-us --not-locale ja --not-locale fr &
-          wait
+          build2=$!
+
+          # You must explicitly specify the job you're waiting-on to ensure
+          # that the exit status of the wait command reflects the exit status
+          # of the job it's waiting-on.
+          wait $build1
+          wait $build2
 
           du -sh client/build
 
@@ -191,16 +217,11 @@ jobs:
           CONTENT_TRANSLATED_ROOT: ${{ github.workspace }}/mdn/translated-content/files
 
           DEPLOYER_BUCKET_NAME: mdn-content-prod
+          # Uncomment when we're confident that automatic Lambda deployment is flawless.
+          #DEPLOYER_DISTRIBUTION_ID: E2ZY2DGUN70EMI
 
           AWS_ACCESS_KEY_ID: ${{ secrets.DEPLOYER_PROD_AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.DEPLOYER_PROD_AWS_SECRET_ACCESS_KEY }}
-
-          # Note, command will pick up the site ID and deployment API key
-          # from environment variables and if either of them is falsy, the
-          # command will *not* fail. It will simply not deploy anything.
-          SPEEDCURVE_DEPLOY_API_KEY: ${{ secrets.SPEEDCURVE_DEPLOY_API_KEY }}
-          # Based on https://api.speedcurve.com/#get-all-sites using the API key
-          SPEEDCURVE_DEPLOY_SITE_ID: 85742
 
           DEPLOYER_ELASTICSEARCH_URL: ${{ secrets.DEPLOYER_PROD_ELASTICSEARCH_URL }}
 
@@ -222,12 +243,18 @@ jobs:
           poetry run deployer update-lambda-functions ./aws-lambda
           poetry run deployer search-index ../client/build
 
-          # Record the deployment in our Speedcurve account. This should always
-          # be done after the upload of the documents and Lambda functions, as well
-          # as the search-index update, so those aren't affected if this fails.
-          poetry run deployer speedcurve-deploy \
-            --note "${GITHUB_SHA}" \
-            --detail "run_id=${GITHUB_RUN_ID} action=${GITHUB_ACTION}"
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.DEPLOYER_PROD_AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.DEPLOYER_PROD_AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1
+
+      - name: Invalidate CDN
+        env:
+          DISTRIBUTION: E2ZY2DGUN70EMI
+          PATHS: /*
+        run: aws cloudfront create-invalidation --distribution-id "$DISTRIBUTION" --paths "$PATHS"
 
       - name: Slack Notification
         if: failure()

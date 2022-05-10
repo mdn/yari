@@ -2,7 +2,8 @@ const got = require("got");
 const braces = require("braces");
 
 function serverURL(pathname = "/") {
-  return `http://localhost:5000${pathname}`;
+  const PORT = parseInt(process.env.SERVER_PORT || "5042");
+  return `http://localhost:${PORT}${pathname}`;
 }
 
 function url_test(from, to, { statusCode = 301 } = {}) {
@@ -242,7 +243,22 @@ const SCL3_REDIRECT_URLS = [].concat(
     "https://kripken.github.io/BananaBread/cube2/index.html"
   ),
   url_test("/en-US/demos", "/en-US/docs/Web/Demos_of_open_web_technologies"),
-  url_test("/en/demos", "/en/docs/Web/Demos_of_open_web_technologies")
+  url_test("/en/demos", "/en/docs/Web/Demos_of_open_web_technologies"),
+  url_test(
+    "/en/Optimizing_Your_Pages_for_Speculative_Parsing/",
+    "/en-US/docs/Glossary/speculative_parsing"
+  ),
+  url_test(
+    "/EN/optimizing_your_pages_for_speculative_parsing",
+    "/en-US/docs/Glossary/speculative_parsing"
+  ),
+  url_test("/MDN/Contribute", "/en-US/docs/MDN/Contribute"),
+  url_test("/mdn/contribute", "/en-US/docs/MDN/Contribute"),
+  url_test("/en-US/docs/MDN/Contribute", null, { statusCode: 404 }),
+  url_test(
+    "/Web/JavaScript/Reference/Global_Objects/Array/from",
+    "/docs/Web/JavaScript/Reference/Global_Objects/Array/from"
+  )
 );
 
 const GITHUB_IO_URLS = [].concat(

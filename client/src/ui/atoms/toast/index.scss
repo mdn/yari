@@ -1,0 +1,53 @@
+@use "../../vars.scss" as *;
+
+.toast {
+  --toast-bg: var(--text-primary);
+  --toast-color: var(--background-primary);
+
+  position: fixed;
+  bottom: 1rem;
+  padding: 1rem 1rem 1rem 2rem;
+  border-radius: var(--elem-radius);
+  left: 50%;
+  transform: translate(-50%, 0);
+  width: 90vw;
+  max-width: 680px;
+  background: var(--toast-bg);
+  box-shadow: var(--shadow-02);
+  display: flex;
+  gap: 0.5rem;
+
+  &-content {
+    margin-right: auto;
+    color: var(--toast-color);
+  }
+
+  .button.action {
+    white-space: nowrap;
+    --button-color: var(--toast-color);
+
+    &:hover {
+      --button-bg: rgba(58, 57, 68, 0.3);
+      --button-border-color: transparent;
+    }
+  }
+
+  &.is-important {
+    --toast-bg: var(--accent-secondary);
+    --toast-color: #fff;
+  }
+
+  &-verbose-text {
+    display: none;
+  }
+
+  @media screen and (min-width: $screen-md) {
+    &-verbose-text {
+      display: inline;
+    }
+
+    &-short-text {
+      display: none;
+    }
+  }
+}

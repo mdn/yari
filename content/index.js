@@ -1,9 +1,12 @@
 const {
   CONTENT_ROOT,
   CONTENT_TRANSLATED_ROOT,
+  CONTRIBUTOR_SPOTLIGHT_ROOT,
   REPOSITORY_URLS,
   ROOTS,
   VALID_LOCALES,
+  HTML_FILENAME,
+  MARKDOWN_FILENAME,
 } = require("./constants");
 const Document = require("./document");
 const Translation = require("./translation");
@@ -23,9 +26,12 @@ const { translationsOf } = require("./translations");
 module.exports = {
   CONTENT_ROOT,
   CONTENT_TRANSLATED_ROOT,
+  CONTRIBUTOR_SPOTLIGHT_ROOT,
   REPOSITORY_URLS,
   ROOTS,
   VALID_LOCALES,
+  HTML_FILENAME,
+  MARKDOWN_FILENAME,
 
   getPopularities,
 

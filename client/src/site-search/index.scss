@@ -1,7 +1,9 @@
-.site-search {
-  min-height: 500px;
-}
+@use "../ui/vars" as *;
 
 .query-string {
   font-style: italic;
+}
+
+.site-search {
+  display: block;
 }

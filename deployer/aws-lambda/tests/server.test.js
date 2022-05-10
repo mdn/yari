@@ -193,6 +193,27 @@ describe("always check for fundamental redirects first", () => {
       expect(r.headers["cache-control"]).toMatch(/max-age=\d\d+/);
     }
   });
+  it("should redirect speculative parsing URL baked into Firefox", async () => {
+    expect.assertions(2 * 2);
+    for (const url of [
+      "/en/Optimizing_Your_Pages_for_Speculative_Parsing/",
+      "/EN/optimizing_your_pages_for_speculative_parsing",
+    ]) {
+      const r = await get(url);
+      expect(r.statusCode).toBe(301);
+      expect(r.headers["location"]).toBe(
+        "/en-US/docs/Glossary/speculative_parsing"
+      );
+    }
+  });
+  it("should redirect Contribute link distributed by video", async () => {
+    expect.assertions(2 * 2);
+    for (const url of ["/mdn/contribute/", "/MDN/Contribute"]) {
+      const r = await get(url);
+      expect(r.statusCode).toBe(301);
+      expect(r.headers["location"]).toBe("/en-US/docs/MDN/Contribute");
+    }
+  });
 });
 
 describe("redirect double-slash prefix URIs", () => {
@@ -265,6 +286,7 @@ describe("response headers", () => {
     expect(r.headers["x-xss-protection"]).toBeTruthy();
     expect(r.headers["content-security-policy"]).toBeTruthy();
   });
+
   it("should set CSP and other security headers for non-samples (prod)", async () => {
     const r = await get("/en-US/docs/Web/HTTP", {
       origin_domain_name: "mdn-content-prod.s3-website-us-west-2.amazonaws.com",
@@ -275,6 +297,7 @@ describe("response headers", () => {
     expect(r.headers["x-xss-protection"]).toBeTruthy();
     expect(r.headers["content-security-policy"]).toBeTruthy();
   });
+
   it("should not set CSP but other security headers non-HTML", async () => {
     const r = await get("/en-US/docs/Web/HTTP/screenshot.png");
     expect(r.statusCode).toBe(200);

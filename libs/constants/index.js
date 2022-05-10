@@ -58,6 +58,7 @@ const LOCALE_ALIASES = new Map([
 const PREFERRED_LOCALE_COOKIE_NAME = "preferredlocale";
 const ACTIVE_LOCALES = new Set([
   "en-us",
+  "es",
   "fr",
   "ja",
   "ko",
@@ -71,9 +72,6 @@ const scriptSrcValues = [
   "'report-sample'",
   "'self'",
 
-  "*.speedcurve.com",
-  "'sha256-q7cJjDqNO2e1L5UltvJ1LhvnYN7yJXgGO7b6h9xkL1o='", // LUX
-
   "www.google-analytics.com/analytics.js",
 
   "'sha256-JEt9Nmc3BP88wxuTZm9aKNu87vEgGmKW1zzy/vb1KPs='", // polyfill check
@@ -81,6 +79,15 @@ const scriptSrcValues = [
 
   "assets.codepen.io",
   "production-assets.codepen.io",
+
+  /**
+   * If we modify the inline script in `client/public/index.html`,
+   * we must always update the CSP hash (see instructions there).
+   */
+  // - Previous hash (to avoid cache invalidation issues):
+  "'sha256-x6Tv+AdV5e6dcolO0TEo+3BG4H2nG2ACjyG8mz6QCes='",
+  // - Current hash:
+  "'sha256-GA8+DpFnqAM/vwERTpb5zyLUaN5KnOhctfTsqWfhaUA='",
 ];
 const CSP_DIRECTIVES = {
   "default-src": ["'self'"],
@@ -92,6 +99,9 @@ const CSP_DIRECTIVES = {
   "connect-src": [
     "'self'",
 
+    "updates.developer.allizom.org",
+    "updates.developer.mozilla.org",
+
     "www.google-analytics.com",
     "stats.g.doubleclick.net",
   ],
@@ -100,6 +110,8 @@ const CSP_DIRECTIVES = {
     "'self'",
 
     "interactive-examples.mdn.mozilla.net",
+    "interactive-examples.prod.mdn.mozilla.net",
+    "interactive-examples.stage.mdn.mozilla.net",
     "mdn.github.io",
     "yari-demos.prod.mdn.mozit.cloud",
     "mdn.mozillademos.org",
@@ -115,13 +127,18 @@ const CSP_DIRECTIVES = {
     // Avatars
     "*.githubusercontent.com",
     "*.googleusercontent.com",
-
-    "lux.speedcurve.com",
+    "*.gravatar.com",
+    "mozillausercontent.com",
+    "firefoxusercontent.com",
+    "profile.stage.mozaws.net",
+    "profile.accounts.firefox.com",
 
     "mdn.mozillademos.org",
     "media.prod.mdn.mozit.cloud",
     "media.stage.mdn.mozit.cloud",
     "interactive-examples.mdn.mozilla.net",
+    "interactive-examples.prod.mdn.mozilla.net",
+    "interactive-examples.stage.mdn.mozilla.net",
 
     "wikipedia.org",
 
@@ -130,7 +147,8 @@ const CSP_DIRECTIVES = {
   ],
   "manifest-src": ["'self'"],
   "media-src": ["'self'", "archive.org", "videos.cdn.mozilla.net"],
-  "worker-src": ["'none'"],
+  "child-src": ["'self'"],
+  "worker-src": ["'self'"],
 };
 
 const cspToString = (csp) =>

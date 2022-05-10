@@ -29,7 +29,7 @@ const renderFromURL = async (
   const urlLC = url.toLowerCase();
   if (renderCache.has(urlLC)) {
     if (invalidateCache) {
-      renderCache.del(urlLC);
+      renderCache.delete(urlLC);
     } else {
       return renderCache.get(urlLC);
     }
@@ -69,7 +69,9 @@ const renderFromURL = async (
   }
 
   const { rawBody, fileInfo, isMarkdown } = document;
-  const rawHTML = isMarkdown ? await m2h(rawBody) : rawBody;
+  const rawHTML = isMarkdown
+    ? await m2h(rawBody, { locale: metadata.locale })
+    : rawBody;
   const [renderedHtml, errors] = await renderMacros(
     rawHTML,
     {

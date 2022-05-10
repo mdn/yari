@@ -18,10 +18,13 @@ const getTransformProcessor = (options) =>
     .use(gfm)
     .use(remarkPrettier, {
       report: false,
-      options: { embeddedLanguageFormatting: "off" },
+      options: { embeddedLanguageFormatting: "off", proseWrap: "preserve" },
     });
 
-export async function h2m(html, { printAST }: { printAST?: boolean } = {}) {
+export async function h2m(
+  html,
+  { printAST, locale }: { printAST?: boolean; locale?: string } = {}
+) {
   const encodedHTML = encodeKS(html);
   const summary = extractSummary(
     extractSections(cheerio.load(`<div id="_body">${encodedHTML}</div>`))[0]
@@ -29,7 +32,7 @@ export async function h2m(html, { printAST }: { printAST?: boolean } = {}) {
 
   let unhandled;
   let invalid;
-  const file = await getTransformProcessor({ summary })
+  const file = await getTransformProcessor({ summary, locale })
     .use(() => (result: any) => {
       invalid = result.invalid;
       unhandled = result.unhandled;

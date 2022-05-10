@@ -1,18 +1,11 @@
 const { test, expect } = require("@playwright/test");
 
 function testURL(pathname = "/") {
-  return `http://localhost:5000${pathname}`;
+  const PORT = parseInt(process.env.SERVER_PORT || "5042");
+  return `http://localhost:${PORT}${pathname}`;
 }
 
 test.describe("Basic viewing of functional pages", () => {
-  test("open the temporary home page", async ({ page }) => {
-    await page.goto(testURL("/"));
-    expect(await page.title()).toContain("MDN Web Docs");
-    expect(await page.innerText("h1")).toBe(
-      "Resources for developers, by developers."
-    );
-  });
-
   test("open the /en-US/docs/Web/Foo page", async ({ page }) => {
     await page.goto(testURL("/en-US/docs/Web/Foo"));
     expect(await page.title()).toContain("<foo>: A test tag");
@@ -20,16 +13,17 @@ test.describe("Basic viewing of functional pages", () => {
     expect(await page.isVisible(".metadata time")).toBeTruthy();
   });
 
-  test("open the French /fr/docs/Web/Foo page and navigate to English", async ({
-    page,
-  }) => {
-    await page.goto(testURL("/fr/docs/Web/Foo"));
-    expect(await page.innerText("h1")).toBe("<foo>: Une page de test");
-    await page.click("text=View in English");
-    expect(await page.innerText("h1")).toBe("<foo>: A test tag");
-    // Should have been redirected too...
-    expect(page.url()).toBe(testURL("/en-US/docs/Web/Foo/"));
-  });
+  // @TODO Temporarily disabled until we reintroduce the language selector
+  // test("open the French /fr/docs/Web/Foo page and navigate to English", async ({
+  //   page,
+  // }) => {
+  //   await page.goto(testURL("/fr/docs/Web/Foo"));
+  //   expect(await page.innerText("h1")).toBe("<foo>: Une page de test");
+  //   await page.click("text=View in English");
+  //   expect(await page.innerText("h1")).toBe("<foo>: A test tag");
+  //   // Should have been redirected too...
+  //   expect(page.url()).toBe(testURL("/en-US/docs/Web/Foo/"));
+  // });
 
   test("open the /en-US/docs/Web/InteractiveExample page", async ({ page }) => {
     await page.goto(testURL("/en-US/docs/Web/InteractiveExample"));
@@ -42,10 +36,10 @@ test.describe("Basic viewing of functional pages", () => {
     page,
   }) => {
     const uri = "/en-US/docs/Learn/CSS/CSS_layout/Introduction";
-    const flexSample1Uri = `${uri}/Flex/_sample_.Flex_1.html`;
-    const flexSample2Uri = `${uri}/Flex/_sample_.Flex_2.html`;
-    const gridSample1Uri = `${uri}/Grid/_sample_.Grid_1.html`;
-    const gridSample2Uri = `${uri}/_sample_.Grid_2.html`;
+    const flexSample1Uri = `${uri}/Flex/_sample_.flex_1.html`;
+    const flexSample2Uri = `${uri}/Flex/_sample_.flex_2.html`;
+    const gridSample1Uri = `${uri}/Grid/_sample_.grid_1.html`;
+    const gridSample2Uri = `${uri}/_sample_.grid_2.html`;
     await page.goto(testURL(uri));
     expect(await page.title()).toContain("A Test Introduction to CSS layout");
     expect(await page.innerText("h1")).toBe(
@@ -62,7 +56,7 @@ test.describe("Basic viewing of functional pages", () => {
     expect(
       await page.isVisible(`iframe.sample-code-frame[src$="${gridSample1Uri}"]`)
     ).toBeTruthy();
-    expect(await page.innerText("#Grid_2 pre.css.notranslate")).toMatch(
+    expect(await page.innerText("#grid_2 pre.css.notranslate")).toMatch(
       /\.wrapper\s*\{\s*display:\s*grid;/
     );
     expect(
@@ -89,8 +83,8 @@ test.describe("Basic viewing of functional pages", () => {
     page,
   }) => {
     const uri = "/en-US/docs/Learn/CSS/CSS_layout/Introduction/Flex";
-    const flexSample1Uri = `${uri}/_sample_.Flex_1.html`;
-    const flexSample2Uri = `${uri}/_sample_.Flex_2.html`;
+    const flexSample1Uri = `${uri}/_sample_.flex_1.html`;
+    const flexSample2Uri = `${uri}/_sample_.flex_2.html`;
     await page.goto(testURL(uri));
     expect(await page.title()).toContain(
       "A Test Introduction to CSS Flexbox Layout"
@@ -100,14 +94,14 @@ test.describe("Basic viewing of functional pages", () => {
     );
     expect(await page.innerText("#flexbox")).toBe("Flexbox");
 
-    expect(await page.innerText("#Flex_1 pre.css.notranslate")).toMatch(
+    expect(await page.innerText("#flex_1 pre.css.notranslate")).toMatch(
       /\.wrapper\s*\{\s*display:\s*flex;\s*\}/
     );
     expect(
       await page.isVisible(`iframe.sample-code-frame[src$="${flexSample1Uri}"]`)
     ).toBeTruthy();
 
-    expect(await page.innerText("#Flex_2 pre.css.notranslate")).toMatch(
+    expect(await page.innerText("#flex_2 pre.css.notranslate")).toMatch(
       /\.wrapper {\s*display: flex;\s*\}\s*\.wrapper > div \{\s*flex: 1;\s*\}/
     );
     expect(
@@ -119,8 +113,8 @@ test.describe("Basic viewing of functional pages", () => {
     page,
   }) => {
     const uri = "/en-US/docs/Learn/CSS/CSS_layout/Introduction/Grid";
-    const gridSample1Uri = `${uri}/_sample_.Grid_1.html`;
-    const gridSample2Uri = `${uri}/_sample_.Grid_2.html`;
+    const gridSample1Uri = `${uri}/_sample_.grid_1.html`;
+    const gridSample2Uri = `${uri}/_sample_.grid_2.html`;
     await page.goto(testURL(uri));
     expect(await page.title()).toContain(
       "A Test Introduction to CSS Grid Layout"
@@ -129,14 +123,14 @@ test.describe("Basic viewing of functional pages", () => {
       "A Test Introduction to CSS Grid Layout"
     );
     expect(await page.innerText("#grid_layout")).toBe("Grid Layout");
-    expect(await page.innerText("#Grid_1 pre.css.notranslate")).toMatch(
+    expect(await page.innerText("#grid_1 pre.css.notranslate")).toMatch(
       /\.wrapper\s*\{\s*display:\s*grid;/
     );
     expect(
       await page.isVisible(`iframe.sample-code-frame[src$="${gridSample1Uri}"]`)
     ).toBeTruthy();
 
-    expect(await page.innerText("#Grid_2 pre.css.notranslate")).toMatch(
+    expect(await page.innerText("#grid_2 pre.css.notranslate")).toMatch(
       /grid-template-columns: 1fr 1fr 1fr;/
     );
     expect(
@@ -168,19 +162,11 @@ test.describe("Basic viewing of functional pages", () => {
     // stuff but do note that the page you're on is always a valid link
     expect(
       await page.innerText(
-        "nav a.breadcrumb-penultimate[property=item][typeof=WebPage]"
-      )
-    ).toBe(
-      // You gotta know your fixture documents
-      "Web technology for developers"
-    );
-    expect(
-      await page.innerText(
         "nav a.breadcrumb-current-page[property=item][typeof=WebPage]"
       )
     ).toBe(
       // Always includes a link to "self"
-      "<foo>: A test tag"
+      "<foo>"
     );
   });
 
@@ -205,16 +191,9 @@ test.describe("Basic viewing of functional pages", () => {
       "/en-US/docs/Web/Foo"
     );
   });
-
-  test("give the home page and see Hacks blog posts", async ({ page }) => {
-    await page.goto(testURL("/en-US/"));
-    expect(
-      await page.isVisible("text=Resources for developers, by developers.")
-    ).toBeTruthy();
-    expect(await page.isVisible("text=Hacks Blog")).toBeTruthy();
-  });
 });
 
+/*
 test.describe("changing language", () => {
   test("from French to English, set a cookie, and back again", async ({
     page,
@@ -256,6 +235,7 @@ test.describe("changing language", () => {
     expect(page.url()).toBe(testURL("/en-US/docs/Web/Foo/"));
   });
 });
+*/
 
 test.describe("viewing retired locales", () => {
   test("redirect retired locale to English (document)", async ({ page }) => {

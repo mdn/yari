@@ -9,7 +9,7 @@ function devURL(pathname = "/") {
 }
 
 const SERVER_BASE_URL =
-  process.env.DEVELOPING_SERVER_BASE_URL || "http://localhost:5000";
+  process.env.DEVELOPING_SERVER_BASE_URL || "http://localhost:5042";
 
 function serverURL(pathname = "/") {
   return `${SERVER_BASE_URL}${pathname}`;
@@ -68,8 +68,8 @@ test.describe("Testing the kitchensink page", () => {
     const { doc } = await got(
       serverURL("/en-US/docs/MDN/Kitchensink/index.json")
     ).json();
+
     expect(doc.title).toBe("The MDN Content Kitchensink");
-    // There should be no flaws
     expect(Object.keys(doc.flaws).length).toBe(0);
   });
 

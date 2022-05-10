@@ -13,24 +13,24 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v2.3.4
+      - uses: actions/checkout@v3
         with:
           # Needed because of
           # https://github.com/GoogleChrome/lighthouse-ci/issues/172
           ref: ${{ github.event.pull_request.head.sha }}
 
-      - uses: actions/checkout@v2.3.4
+      - uses: actions/checkout@v3
         with:
           repository: mdn/content
           path: mdn/content
 
       - name: Setup Node.js environment
-        uses: actions/setup-node@v2.4.0
+        uses: actions/setup-node@v3
         with:
-          node-version: "12"
+          node-version: "14"
 
       - name: Cache node_modules
-        uses: actions/cache@v2.1.6
+        uses: actions/cache@v3
         id: cached-node_modules
         with:
           path: |
@@ -52,7 +52,7 @@ jobs:
           # Google Analytics tag which is most realistic.
           BUILD_GOOGLE_ANALYTICS_ACCOUNT: UA-00000000-0
         run: |
-          yarn prepare-build
+          yarn build:prepare
           # BUILD_FOLDERSEARCH=mdn/kitchensink yarn build
           BUILD_FOLDERSEARCH=web/javascript/reference/global_objects/array/foreach yarn build
 
@@ -63,7 +63,7 @@ jobs:
           yarn start:static-server &
           sleep 1
           curl --retry-connrefused --retry 5 \
-            http://localhost:5000/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/forEach/ > /dev/null
+            http://localhost:5042/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/forEach/ > /dev/null
 
           npm install -g @lhci/cli@next
 
@@ -75,7 +75,7 @@ jobs:
 
           lhci autorun \
             --upload.target=temporary-public-storage \
-            --collect.url="http://localhost:5000/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/forEach/"
+            --collect.url="http://localhost:5042/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/forEach/"
 
           # TODO (as of Oct 2020)
           # Once our Lighthouse score starts to not be so terrible, we can start

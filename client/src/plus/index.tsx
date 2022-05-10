@@ -4,50 +4,101 @@ import { Routes, Route } from "react-router-dom";
 import { Loading } from "../ui/atoms/loading";
 import { PageContentContainer } from "../ui/atoms/page-content";
 import { PageNotFound } from "../page-not-found";
-const App = React.lazy(() => import("./app"));
-const Bookmarks = React.lazy(() => import("./bookmarks"));
+import Notifications from "./notifications";
+import { MDN_PLUS_TITLE } from "../constants";
+import { OfflineSettings } from "../offline-settings";
 
-export function Plus({ pageTitle }: { pageTitle?: string }) {
-  const defaultPageTitle = "MDN Plus";
+const OfferOverview = React.lazy(() => import("./offer-overview"));
+const Collections = React.lazy(() => import("./collections"));
+const PlusDocs = React.lazy(() => import("./plus-docs"));
+
+export function Plus({ pageTitle, ...props }: { pageTitle?: string }) {
   React.useEffect(() => {
-    document.title = pageTitle || defaultPageTitle;
+    document.title = pageTitle || MDN_PLUS_TITLE;
   }, [pageTitle]);
 
   const isServer = typeof window === "undefined";
   const loading = (
     <Loading
-      message={`Loading ${pageTitle || defaultPageTitle}…`}
+      message={`Loading ${pageTitle || MDN_PLUS_TITLE}…`}
       minHeight={800}
     />
   );
 
-  const routes = (
+  function Layout({ withoutContainer = false, children }) {
+    const inner = (
+      <>
+        {isServer ? (
+          loading
+        ) : (
+          <React.Suspense fallback={loading}>{children}</React.Suspense>
+        )}
+      </>
+    );
+
+    return withoutContainer ? (
+      inner
+    ) : (
+      <PageContentContainer extraClasses="fullwidth">
+        {inner}
+      </PageContentContainer>
+    );
+  }
+
+  return (
     <Routes>
       <Route
         path="/"
         element={
-          <React.Suspense fallback={loading}>
-            <App />
-          </React.Suspense>
+          <Layout>
+            <OfferOverview />
+          </Layout>
         }
       />
       <Route
-        path="bookmarks"
+        path="collections/*"
         element={
-          <React.Suspense fallback={loading}>
-            <div className="bookmarks">
-              <Bookmarks />
+          <Layout>
+            <div className="bookmarks girdle">
+              <Collections />
             </div>
-          </React.Suspense>
+          </Layout>
         }
       />
-      <Route path="*" element={<PageNotFound />} />
+      <Route
+        path="notifications/*"
+        element={
+          <Layout>
+            <div className="notifications girdle">
+              <Notifications />
+            </div>
+          </Layout>
+        }
+      />
+      <Route
+        path="/offline"
+        element={
+          <Layout>
+            <OfflineSettings {...props} />
+          </Layout>
+        }
+      />
+      <Route
+        path="docs/*"
+        element={
+          <Layout withoutContainer>
+            <PlusDocs {...props} />
+          </Layout>
+        }
+      />
+      <Route
+        path="*"
+        element={
+          <Layout>
+            <PageNotFound />
+          </Layout>
+        }
+      />
     </Routes>
-  );
-
-  return (
-    <PageContentContainer extraClasses="plus">
-      {isServer ? loading : routes}
-    </PageContentContainer>
   );
 }
