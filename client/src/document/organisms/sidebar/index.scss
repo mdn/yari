@@ -1,7 +1,7 @@
 @use "../../../ui/vars" as *;
 
 .sidebar {
-  --offset: var(--top-navigation-height);
+  --offset: var(--main-document-header-height);
   --max-height: calc(100vh - var(--offset));
   color: var(--text-secondary);
 
@@ -149,7 +149,7 @@
   }
 
   /* This is for sidebars where there is no sub-heading
-   * for example: https://developer-mozilla.org/en-US/docs/Web/HTML/Element/progress 
+   * for example: https://developer-mozilla.org/en-US/docs/Web/HTML/Element/progress
    */
   .sidebar-heading ~ ol,
   .sidebar-heading ~ div > ol {

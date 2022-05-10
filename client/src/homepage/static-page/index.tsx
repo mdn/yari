@@ -22,25 +22,23 @@ interface StaticPageProps {
   locale: string;
   slug: string;
   parents: DocParent[];
-  initialData?: any;
+  fallbackData?: any;
   title?: string;
   sidebarHeader?: ReactElement;
 }
-
-const isServer = typeof window === "undefined";
 
 function StaticPage({
   extraClasses = "",
   locale,
   slug,
   parents = [],
-  initialData = undefined,
+  fallbackData = undefined,
   title = "MDN",
   sidebarHeader = <></>,
 }: StaticPageProps) {
   const { isSidebarOpen, setIsSidebarOpen } = useUIStatus();
   const baseURL = `/${locale}/${slug}`;
-  const featureJSONUrl = `${baseURL.toLowerCase()}/index.json`;
+  const featureJSONUrl = `${baseURL}/index.json`;
   const { data: { hyData } = {}, error } = useSWR<{ hyData: StaticPageDoc }>(
     featureJSONUrl,
     async (url) => {
@@ -52,8 +50,9 @@ function StaticPage({
       return await response.json();
     },
     {
-      initialData: isServer ? initialData : undefined,
+      fallbackData,
       revalidateOnFocus: CRUD_MODE,
+      revalidateOnMount: !fallbackData,
     }
   );
 

@@ -254,7 +254,11 @@ const SCL3_REDIRECT_URLS = [].concat(
   ),
   url_test("/MDN/Contribute", "/en-US/docs/MDN/Contribute"),
   url_test("/mdn/contribute", "/en-US/docs/MDN/Contribute"),
-  url_test("/en-US/docs/MDN/Contribute", null, { statusCode: 404 })
+  url_test("/en-US/docs/MDN/Contribute", null, { statusCode: 404 }),
+  url_test(
+    "/Web/JavaScript/Reference/Global_Objects/Array/from",
+    "/docs/Web/JavaScript/Reference/Global_Objects/Array/from"
+  )
 );
 
 const GITHUB_IO_URLS = [].concat(

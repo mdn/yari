@@ -38,10 +38,10 @@ function useSearchIndex(): readonly [
 ] {
   const [shouldInitialize, setShouldInitialize] = useState(false);
   const [searchIndex, setSearchIndex] = useState<null | SearchIndex>(null);
-  const { locale } = useParams();
-
   // Default to 'en-US' if you're on the home page without the locale prefix.
-  const url = `/${locale || "en-US"}/search-index.json`;
+  const { locale = "en-US" } = useParams();
+
+  const url = `/${locale}/search-index.json`;
 
   const { error, data } = useSWR<null | Item[], Error | undefined>(
     shouldInitialize ? url : null,
