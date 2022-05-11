@@ -50,6 +50,7 @@
     ]
   },
   "resolutions": {
+    "@types/react": ">=18.0.0",
     "@typescript-eslint/typescript-estree": ">=5.14.0",
     "lodash": ">=4.17.15"
   },
