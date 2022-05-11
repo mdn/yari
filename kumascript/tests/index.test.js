@@ -117,18 +117,13 @@ describe("testing the main render() function", () => {
     expect(otherLinks.length).toBe(2);
     expect(otherLinks.eq(0).html()).toBe("<code>&lt;dumber&gt;</code>");
     expect(otherLinks.eq(1).html()).toBe("<code>&lt;number&gt;</code>");
-    for (const deprecatedID of [
-      "fx-header",
-      "fx-inline",
-      "gecko-header",
-      "gecko-inline",
-    ]) {
+    for (const deprecatedID of ["gecko-header", "gecko-inline"]) {
       const deprecated = $(`#${deprecatedID}`);
       expect(deprecated.length).toBe(1);
       expect(deprecated.html()).toBe("");
     }
     // Next, let's check the errors.
-    expect(errors.length).toBe(10);
+    expect(errors.length).toBe(8);
     expect(errors[0]).toBeInstanceOf(MacroBrokenLinkError);
     expect(errors[0]).toHaveProperty("line", 4);
     expect(errors[0]).toHaveProperty("column", 4);
@@ -185,7 +180,7 @@ describe("testing the main render() function", () => {
     expect(errors[3]).toHaveProperty("redirectInfo.current", "dumber");
     expect(errors[3]).toHaveProperty("redirectInfo.suggested", "number");
     expect(errors[4]).toBeInstanceOf(MacroDeprecatedError);
-    expect(errors[4]).toHaveProperty("line", 14);
+    expect(errors[4]).toHaveProperty("line", 12);
     expect(errors[4]).toHaveProperty("column", 28);
     expect(errors[4]).toHaveProperty(
       "filepath",
@@ -199,7 +194,7 @@ describe("testing the main render() function", () => {
       )
     );
     expect(errors[5]).toBeInstanceOf(MacroDeprecatedError);
-    expect(errors[5]).toHaveProperty("line", 15);
+    expect(errors[5]).toHaveProperty("line", 13);
     expect(errors[5]).toHaveProperty("column", 28);
     expect(errors[5]).toHaveProperty(
       "filepath",
@@ -213,7 +208,7 @@ describe("testing the main render() function", () => {
       )
     );
     expect(errors[6]).toBeInstanceOf(MacroExecutionError);
-    expect(errors[6]).toHaveProperty("line", 16);
+    expect(errors[6]).toHaveProperty("line", 14);
     expect(errors[6]).toHaveProperty("column", 7);
     expect(errors[6]).toHaveProperty(
       "filepath",
@@ -227,7 +222,7 @@ describe("testing the main render() function", () => {
       )
     );
     expect(errors[7]).toBeInstanceOf(MacroExecutionError);
-    expect(errors[7]).toHaveProperty("line", 18);
+    expect(errors[7]).toHaveProperty("line", 16);
     expect(errors[7]).toHaveProperty("column", 7);
     expect(errors[7]).toHaveProperty(
       "filepath",
