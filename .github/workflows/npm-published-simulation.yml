@@ -83,15 +83,11 @@ jobs:
 
       - name: Test viewing the dev server
         env:
-          # This will make sure the tests in `testing/tests/*.test.js` only run
-          # if the development server is up and ready to be tested.
-          TESTING_DEVELOPING: true
           # When running Yari from within mdn/content it only starts 1 server;
           # the one on localhost:5042. No React dev server; the one
           # on localhost:3000.
           # Testing that dev server is not relevant or important in this context.
           DEVELOPING_SKIP_DEV_URL: true
-          CONTENT_ROOT: mdn/content/files
         run: |
           yarn test:developing
 
