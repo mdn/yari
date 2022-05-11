@@ -22,19 +22,19 @@ const appData = hydrationElement
   ? JSON.parse(hydrationElement.textContent!)
   : {};
 
-let app = (
-  <GAProvider>
-    <UserDataProvider>
-      <UIProvider>
-        <Router>
-          <App {...appData} />
-        </Router>
-      </UIProvider>
-    </UserDataProvider>
-  </GAProvider>
+const app = (
+  <React.StrictMode>
+    <GAProvider>
+      <UserDataProvider>
+        <UIProvider>
+          <Router>
+            <App {...appData} />
+          </Router>
+        </UIProvider>
+      </UserDataProvider>
+    </GAProvider>
+  </React.StrictMode>
 );
-
-app = <React.StrictMode>{app}</React.StrictMode>;
 
 if (container.firstElementChild) {
   if (window.origin !== "https://translate.googleusercontent.com") {
