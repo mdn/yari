@@ -75,6 +75,8 @@ function.zip
 md-conversion-problems-report*.md
 
 testing/content/files/en-us/_githistory.json
+testing/content/files/en-us/markdown/tool/h2m/index.md
+testing/content/files/en-us/markdown/tool/m2h/index.html
 testing/translated-content/files/**/_githistory.json
 # eslintcache
 client/.eslintcache
