@@ -2,6 +2,11 @@
 /* one parameter: preference name */
 /* get the page language */
 
+// Throw a MacroDeprecatedError flaw
+// Condition for removal: no more use in translated-content (May 2022: 13 occurrences)
+// 0 occurrences left in en-US
+mdn.deprecated();
+
 var dest = "/" + env.locale + '/Mozilla/Preferences/Preference_reference/' + $0;
 
 
