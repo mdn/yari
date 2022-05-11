@@ -232,7 +232,7 @@ export default function render(
   const og = new Map([
     ["title", escapedPageTitle],
     ["url", canonicalURL],
-    ["locale", locale || doc ? doc.locale : "en-US"],
+    ["locale", locale || (doc && doc.locale) || "en-US"],
   ]);
 
   if (pageDescription) {
