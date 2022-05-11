@@ -535,7 +535,9 @@ function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
   );
 }
 
-class SearchErrorBoundary extends React.Component {
+class SearchErrorBoundary extends React.Component<{
+  children?: React.ReactNode;
+}> {
   state = { hasError: false };
 
   static getDerivedStateFromError(error: Error) {
