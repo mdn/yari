@@ -501,23 +501,21 @@ function findChildren(url, recursive = false) {
   const root = getRoot(locale);
   const folder = urlToFolderPath(url);
 
+  const base = path.join(root, folder);
+  const baseHTML = path.join(base, HTML_FILENAME);
+  const baseMarkdown = path.join(base, MARKDOWN_FILENAME);
   const api = new fdir()
     .withFullPaths()
     .withErrors()
     .filter((filePath) => {
       return (
-        filePath.endsWith(HTML_FILENAME) || filePath.endsWith(MARKDOWN_FILENAME)
-      );
-    })
-    .filter((filePath) => {
-      return !(
-        recursive &&
-        (filePath == path.join(root, folder, HTML_FILENAME) ||
-          filePath == path.join(root, folder, MARKDOWN_FILENAME))
+        filePath.endsWith(HTML_FILENAME) ||
+        (filePath.endsWith(MARKDOWN_FILENAME) &&
+          !(filePath === baseHTML || filePath === baseMarkdown))
       );
     })
     .withMaxDepth(recursive ? Infinity : 1)
-    .crawl(path.join(root, folder));
+    .crawl(base);
   const childPaths = [...api.sync()];
   return childPaths
     .map((childFilePath) => path.relative(root, path.dirname(childFilePath)))
