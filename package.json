@@ -29,7 +29,7 @@
     "test": "yarn prettier-check && yarn test:client && yarn test:kumascript && yarn test:content && yarn test:testing",
     "test:client": "cd client && tsc --noEmit && react-scripts test --env=jsdom",
     "test:content": "jest content",
-    "test:developing": "playwright test developing",
+    "test:developing": "cross-env CONTENT_ROOT=mdn/content/files TESTING_DEVELOPING=true playwright test developing",
     "test:headless": "playwright test headless",
     "test:kumascript": "jest kumascript --env=node",
     "test:prepare": "yarn build:prepare && yarn build && yarn start:static-server",
