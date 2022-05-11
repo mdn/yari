@@ -32,8 +32,7 @@ jobs:
 
       - name: Install all yarn packages
         if: steps.cached-node_modules.outputs.cache-hit != 'true'
-        run: |
-          yarn --frozen-lockfile
+        run: yarn --frozen-lockfile
 
       - name: Lint prettier
         run: yarn prettier-check
@@ -46,38 +45,13 @@ jobs:
 
       - name: Build and start server
         id: server
-        env:
-          ENV_FILE: testing/.env
-        run: |
-
-          # because `yarn build:prepare` is a wrapper for `yarn build:client` and
-          # `yarn build:client` can't respect the `$ENV_FILE` environment variable,
-          # because it has to build from the `./client/` directory, we have to
-          # manually copy the `testing/.env` file into `client/` so that when
-          # `yarn build:client` runs, it gets the same environment variables
-          # as you'd get when doing `yarn build:ssr`.
-          cp testing/.env client/
-
-          yarn build:prepare
-          yarn build
-
-          yarn start:static-server > /tmp/stdout.log 2> /tmp/stderr.log &
-          sleep 1
-          curl --fail --retry-connrefused --retry 5 http://localhost:5042 > /dev/null
+        run: testing/scripts/build-and-start-server.sh
 
       - name: Functional testing
-        run: |
-          yarn test:testing
-          yarn test:headless
+        run: yarn test:functional
 
       - name: Basic m2h/h2m tool testing
-        env:
-          ENV_FILE: testing/.env
-        run: |
-          yarn md m2h markdown/tool/m2h --locale en-US
-          diff -s testing/content/files/en-us/markdown/tool/m2h/index.html testing/content/files/en-us/markdown/tool/m2h/expected.html
-          yarn md h2m markdown/tool/h2m --locale en-US
-          diff -s testing/content/files/en-us/markdown/tool/h2m/index.md testing/content/files/en-us/markdown/tool/h2m/expected.md
+        run: yarn test:m2h-h2m
 
       - name: Debug server's stdout and stderr if tests failed
         if: failure() && steps.server.outcome != 'skipped'

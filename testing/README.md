@@ -49,8 +49,8 @@ Headless tests are all about using a headless browser to browse the built HTML
 files with `playwright`. It's based on the same steps as above, so first:
 
 ```sh
-export ENV_FILE=testing/.env
 yarn test:prepare
+yarn start:static-server &
 ```
 
 Now, to run the actual headless tests you run:
