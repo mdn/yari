@@ -1478,7 +1478,7 @@ test("deprecated macros are fixable", () => {
   // All fixable and all a suggestion of ''
   expect(doc.flaws.macros.filter((flaw) => flaw.fixable).length).toBe(2);
   expect(doc.flaws.macros.filter((flaw) => flaw.suggestion === "").length).toBe(
-    4
+    2
   );
 });
 
