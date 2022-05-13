@@ -2,11 +2,6 @@
 /* parameters: */
 /* $0 = name of specification */
 
-// Throw a MacroDeprecatedError flaw
-// Condition for removal: replace all spec tables with {{Specifications}} macro
-// May 2022: 73,596 occurrences, 745 occurrences left in en-US
-mdn.deprecated();
-
 var specList = web.getJSONData("SpecData");
 
 var status = {};
