@@ -11,6 +11,11 @@
 //      a specific method, property, or other entity to customize the
 //      appearance of the link.
 
+// Throw a MacroDeprecatedError flaw
+// Condition for removal: replace all spec tables with {{Specifications}} macro
+// May 2022: 81,189 occurrences, 924 occurrences left in en-US
+mdn.deprecated();
+
 var spec   = $0;
 if (spec.includes('\n')) {
   throw new Error("SpecName first argument can't have a newline character in it");
