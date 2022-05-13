@@ -9,6 +9,8 @@ import "./index.scss";
 dayjs.extend(relativeTime);
 
 function RecentContributions(props: HydrationData<any>) {
+  const fallbackData = props.hyData ? props : undefined;
+
   const { data: { hyData } = {} } = useSWR<any>(
     "./index.json",
     async (url) => {
@@ -20,39 +22,39 @@ function RecentContributions(props: HydrationData<any>) {
       return await response.json();
     },
     {
-      initialData: props.hyData ? props : undefined,
+      fallbackData,
       revalidateOnFocus: CRUD_MODE,
+      revalidateOnMount: !fallbackData,
     }
   );
 
-  return (
+  return hyData?.recentContributions ? (
     <section className="recent-contributions">
       <h2>Recent contributions</h2>
       <ul className="contribution-list">
-        {hyData &&
-          hyData.pullRequestsData.items.map((pullRequest) => (
-            <li className="request-item" key={pullRequest.number}>
+        {hyData.recentContributions.items.map(
+          ({ number, url, title, updated_at }) => (
+            <li className="request-item" key={number}>
               <p className="request-title">
-                <a href={pullRequest.pull_request.html_url}>
-                  {pullRequest.title}{" "}
-                </a>
+                <a href={url}>{title}</a>
                 <span>
                   <a
                     className="request-repo"
-                    href={hyData.pullRequestsData.repo.url}
+                    href={hyData.recentContributions.repo.url}
                   >
-                    {hyData.pullRequestsData.repo.name}
+                    {hyData.recentContributions.repo.name}
                   </a>
                 </span>
               </p>
               <span className="request-date">
-                {dayjs(pullRequest.updated_at).fromNow()}
+                {dayjs(updated_at).fromNow()}
               </span>
             </li>
-          ))}
+          )
+        )}
       </ul>
     </section>
-  );
+  ) : null;
 }
 
 export default RecentContributions;

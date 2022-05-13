@@ -34,9 +34,6 @@ Before you can start working with Yari, you need to:
         git clone https://github.com/[your_account]/content.git
         git clone https://github.com/[your_account]/yari.git
 
-    Take a note of the file path to the location where you've cloned that repo
-    before moving on.
-
 <!-- markdownlint-enable list-marker-space -->
 
 To run Yari locally, you'll first need to install its dependencies and build the
@@ -45,13 +42,13 @@ app locally. Do this like so:
     cd yari
     yarn install
 
-Now run the following command to create a `.env` file inside your `yari` repo
-root and set the `CONTENT_ROOT` environment variable equal to the path to the
-`content` repo. This is so the Yari app can find the content it needs to render.
-You'll need to replace `/path/to/mdn/content/files` with the path to the
-`/files` folder inside your clone of the `content` repo:
+Now copy the `.env-dist` file to `.env`:
 
-    echo CONTENT_ROOT=/path/to/mdn/content/files >> .env
+    cp .env-dist .env
+
+If you followed the instructions above and cloned the `content` repo as a
+sibling of your `yari` repo, the `CONTENT_ROOT` environment variable is already
+set and Yari will be able to find the content it needs to render.
 
 At this point, you can get started. Run the following lines to compile required
 files, start the Yari web server running, and open it in your browser:

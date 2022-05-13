@@ -66,7 +66,7 @@ jobs:
       - name: Setup Node.js environment
         uses: actions/setup-node@v3
         with:
-          node-version: "12"
+          node-version: "14"
 
       - name: Cache node_modules
         uses: actions/cache@v3
@@ -128,8 +128,6 @@ jobs:
           # This just makes sure the Google Analytics script gets used even if
           # it goes nowhere.
           BUILD_GOOGLE_ANALYTICS_ACCOUNT: UA-00000000-0
-          # Same with the Speedcurve LUX
-          BUILD_SPEEDCURVE_LUX_ID: 000000000
 
           # This removes the ability to sign in
           REACT_APP_DISABLE_AUTH: true
@@ -138,10 +136,10 @@ jobs:
           # Info about which CONTENT_* environment variables were set and to what.
           echo "CONTENT_ROOT=$CONTENT_ROOT"
           echo "CONTENT_TRANSLATED_ROOT=$CONTENT_TRANSLATED_ROOT"
-          yarn prepare-build
+          yarn build:prepare
 
           # (July 15, 2021) This is a temporary solution. This should become an
-          # integrated part of 'prepare-build'.
+          # integrated part of 'build:prepare'.
           # See https://github.com/mdn/yari/issues/4217
           yarn tool popularities
 
@@ -173,6 +171,7 @@ jobs:
 
           DEPLOYER_BUCKET_NAME: mdn-content-dev
           DEPLOYER_BUCKET_PREFIX: ${{ github.event.inputs.deployment_prefix }}
+          DEPLOYER_DISTRIBUTION_ID: E9813D0RN1QZI
           DEPLOYER_LOG_EACH_SUCCESSFUL_UPLOAD: ${{ github.event.inputs.log_each_successful_upload }}
 
           AWS_ACCESS_KEY_ID: ${{ secrets.DEPLOYER_STAGE_AND_DEV_AWS_ACCESS_KEY_ID }}

@@ -62,11 +62,15 @@
     padding-right: 1rem;
 
     .toc {
+      --offset: var(--main-document-header-height);
+      --max-height: calc(100vh - var(--offset));
+
       display: block;
       grid-area: toc;
-      max-height: 100vh;
+      max-height: var(--max-height);
       position: sticky;
-      top: var(--top-navigation-height);
+      overflow: auto;
+      top: var(--offset);
     }
 
     .in-nav-toc {

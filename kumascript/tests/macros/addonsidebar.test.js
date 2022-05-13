@@ -23,14 +23,14 @@ const SUMMARIES = {
     "Channels",
   ],
   fr: [
-    "Démarrage",
+    "Commencer",
     "Concepts",
-    "Interface Utilisateur",
+    "Interface utilisateur",
     "Mode d'emploi",
-    "Firefox differentiators",
+    "Différences de Firefox",
     "Les API JavaScript",
     "Clés de manifeste",
-    "Extension Workshop",
+    "Atelier des extensions",
     "Canaux de discussions",
   ],
   ja: [

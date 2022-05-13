@@ -132,20 +132,20 @@ async function buildSPAs(options) {
           noIndexing: true,
         },
         {
-          prefix: "plus/docs/collections",
+          prefix: "plus/docs/faq",
+          pageTitle: `FAQ | ${MDN_PLUS_TITLE}`,
+        },
+        {
+          prefix: "plus/docs/features/collections",
           pageTitle: `Collections | ${MDN_PLUS_TITLE}`,
         },
         {
-          prefix: "plus/docs/notifications",
+          prefix: "plus/docs/features/notifications",
           pageTitle: `Notifications | ${MDN_PLUS_TITLE}`,
         },
         {
-          prefix: "plus/docs/offline",
+          prefix: "plus/docs/features/offline",
           pageTitle: `MDN Offline | ${MDN_PLUS_TITLE}`,
-        },
-        {
-          prefix: "plus/docs/faq",
-          pageTitle: `FAQ | ${MDN_PLUS_TITLE}`,
         },
         {
           prefix: "plus/notifications",
@@ -301,8 +301,15 @@ async function buildSPAs(options) {
 
       const url = `/${locale}/`;
       const hyData = {
-        pullRequestsData: {
-          items: pullRequestsData.items,
+        recentContributions: {
+          items: pullRequestsData.items.map(
+            ({ number, title, updated_at, pull_request: { html_url } }) => ({
+              number,
+              title,
+              updated_at,
+              url: html_url,
+            })
+          ),
           repo: { name: "mdn/content", url: "https://github.com/mdn/content" },
         },
         featuredContributor,

@@ -105,7 +105,9 @@
       z-index: var(--z-index-search-results-home);
 
       .result-item {
-        padding: 0.5rem 1.5rem;
+        a {
+          padding: 0.5rem 1.5rem;
+        }
 
         mark {
           background: none;
