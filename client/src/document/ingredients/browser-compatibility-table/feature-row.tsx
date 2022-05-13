@@ -51,11 +51,8 @@ function getSupportClassName(
   } else {
     className = "no";
   }
-  if (partial_implementation && !version_removed) {
-    className = "partial";
-  }
-  if (partial_implementation && version_removed) {
-    className = "removed-partial";
+  if (partial_implementation) {
+    className = version_removed ? "removed-partial" : "partial";
   }
 
   return className;
