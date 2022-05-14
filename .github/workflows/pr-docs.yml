@@ -17,7 +17,22 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: "14"
-          cache: "yarn"
+
+      - name: Install Yarn Berry
+        run: corepack enable
+
+      - name: Cache node_modules
+        uses: actions/cache@v3
+        id: cached-node_modules
+        with:
+          path: |
+            node_modules
+          key: ${{ runner.os }}-${{ hashFiles('yarn.lock') }}-${{ hashFiles('.github/workflows/performance.yml') }}
+
+      - name: Install all yarn packages
+        if: steps.cached-node_modules.outputs.cache-hit != 'true'
+        run: |
+          yarn --immutable
 
       - name: Lint markdown files
         run: |
