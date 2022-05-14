@@ -1,5 +1,5 @@
 import React from "react";
-import ReactDOM from "react-dom";
+import { createRoot, hydrateRoot } from "react-dom/client";
 import { BrowserRouter as Router } from "react-router-dom";
 
 import { App } from "./app";
@@ -22,26 +22,26 @@ const appData = hydrationElement
   ? JSON.parse(hydrationElement.textContent!)
   : {};
 
-let app = (
-  <GAProvider>
-    <UserDataProvider>
-      <UIProvider>
-        <Router>
-          <App {...appData} />
-        </Router>
-      </UIProvider>
-    </UserDataProvider>
-  </GAProvider>
+const app = (
+  <React.StrictMode>
+    <GAProvider>
+      <UserDataProvider>
+        <UIProvider>
+          <Router>
+            <App {...appData} />
+          </Router>
+        </UIProvider>
+      </UserDataProvider>
+    </GAProvider>
+  </React.StrictMode>
 );
-
-app = <React.StrictMode>{app}</React.StrictMode>;
 
 if (container.firstElementChild) {
   if (window.origin !== "https://translate.googleusercontent.com") {
-    ReactDOM.hydrate(app, container);
+    hydrateRoot(container, app);
   }
 } else {
-  ReactDOM.render(app, container);
+  createRoot(container).render(app);
 }
 
 // Initialize mdnWorker if there's a service worker already.

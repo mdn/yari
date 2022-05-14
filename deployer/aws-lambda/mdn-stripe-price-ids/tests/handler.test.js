@@ -31,10 +31,10 @@ test("(PROD) Returns Italian language with Euro price_id for Italian in Germany"
   const res = await handler.handler(event);
   const bodyJson = JSON.parse(res.body);
   const expectedPriceArray = [
-    "ITALIAN_1",
-    "ITALIAN_2",
-    "ITALIAN_3",
-    "ITALIAN_4",
+    "PROD_ITALIAN_1",
+    "PROD_ITALIAN_2",
+    "PROD_ITALIAN_3",
+    "PROD_ITALIAN_4",
   ];
 
   expect(Object.values(bodyJson.plans).map((val) => val.id)).toEqual(
@@ -99,7 +99,7 @@ function getEventForAcceptHeaderAndCountry(
             origin: {
               custom: {
                 customHeaders: {
-                  "x-mdn-env": `${env}`,
+                  "x-mdn-env": { key: "x-mdn-env", value: env },
                 },
               },
             },

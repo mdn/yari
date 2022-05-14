@@ -15,3 +15,29 @@
     opacity: 1;
   }
 }
+
+@mixin line-clamp($lines, $line-height, $background-color) {
+  overflow: hidden;
+  max-height: calc(1em * $lines * $line-height);
+  position: relative;
+
+  &::after {
+    content: "";
+    pointer-events: none;
+    display: block;
+    position: absolute;
+    right: 0;
+    top: calc(1em * ($lines - 1) * $line-height);
+    width: 20ch;
+    height: calc(1em * $line-height);
+    background: linear-gradient(to right, transparent, $background-color 75%);
+  }
+
+  &:dir(rtl) {
+    &::after {
+      left: 0;
+      right: initial;
+      background: linear-gradient(to left, transparent, $background-color 75%);
+    }
+  }
+}

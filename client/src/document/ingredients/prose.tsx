@@ -4,7 +4,10 @@ export function Prose({ section }: { section: any }) {
   const { id } = section;
 
   const Content = () => (
-    <div dangerouslySetInnerHTML={{ __html: section.content }} />
+    <div
+      className="section-content"
+      dangerouslySetInnerHTML={{ __html: section.content }}
+    />
   );
 
   if (!id) {

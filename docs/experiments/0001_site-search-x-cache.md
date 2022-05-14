@@ -20,9 +20,8 @@ May 1 2021.
 ## Details
 
 As described in the issue, the current `Cache-Control` set by Kuma is 12h
-(`12 * 60 * 60 = 43200`).
-Perhaps we should increase it if too few people are getting cold caches from
-the CDN.
+(`12 * 60 * 60 = 43200`). Perhaps we should increase it if too few people are
+getting cold caches from the CDN.
 
 ## Analysis
 

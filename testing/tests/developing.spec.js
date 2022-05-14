@@ -38,7 +38,7 @@ test.describe("Testing the kitchensink page", () => {
     ).toBeTruthy();
     expect(
       await page.isVisible("text=No known flaws at the moment")
-    ).not.toBeTruthy();
+    ).toBeTruthy();
   });
 
   test("open a file attachement directly in the dev URL", async ({ page }) => {
@@ -70,7 +70,7 @@ test.describe("Testing the kitchensink page", () => {
     ).json();
 
     expect(doc.title).toBe("The MDN Content Kitchensink");
-    expect(Object.keys(doc.flaws).length).toBe(1);
+    expect(Object.keys(doc.flaws).length).toBe(0);
   });
 
   // XXX Do more advanced tasks that test the server and document "CRUD operations"
@@ -201,8 +201,11 @@ test.describe("Testing the CRUD apps", () => {
 
     await page.goto(devURL("/"));
     expect(await page.title()).toContain("MDN Web Docs");
+    await page.waitForLoadState("networkidle");
+
     expect(await page.isVisible("text=Writer's home page")).toBeTruthy();
     expect(await page.isVisible('a:has-text("Flaws Dashboard")')).toBeTruthy();
+    expect(await page.isVisible('a:has-text("Sitemap")')).toBeTruthy();
   });
 
   test("open the Flaws Dashboard", async ({ page }) => {
@@ -220,9 +223,14 @@ test.describe("Testing the CRUD apps", () => {
     test.skip(withCrud());
 
     await page.goto(devURL("/"));
+    await page.waitForLoadState("networkidle");
+
     expect(await page.isVisible("text=Writer's home page")).toBeTruthy();
     await page.click('a:has-text("Sitemap")');
     await page.waitForLoadState("networkidle");
+
+    await page.locator('#sitemap:has-text("root")').waitFor();
+
     expect(await page.isVisible('a:has-text("/Web")')).toBeTruthy();
     expect(await page.isVisible('a:has-text("/Learn")')).toBeTruthy();
     await page.click('a:has-text("/Glossary")');

@@ -18,7 +18,7 @@ const getTransformProcessor = (options) =>
     .use(gfm)
     .use(remarkPrettier, {
       report: false,
-      options: { embeddedLanguageFormatting: "off" },
+      options: { embeddedLanguageFormatting: "off", proseWrap: "preserve" },
     });
 
 export async function h2m(
