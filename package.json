@@ -55,7 +55,6 @@
     "lodash": ">=4.17.15"
   },
   "dependencies": {
-    "@babel/eslint-parser": "^7.17.0",
     "@babel/helper-builder-react-jsx": "^7.16.7",
     "@caporal/core": "^2.0.2",
     "@fast-csv/parse": "^4.3.6",
@@ -127,6 +126,7 @@
   },
   "devDependencies": {
     "@babel/core": "^7.17.10",
+    "@babel/eslint-parser": "^7.17.0",
     "@mdn/dinocons": "^0.5.5",
     "@mdn/minimalist": "^2.0.4",
     "@playwright/test": "^1.22.0",
