@@ -1,6 +1,8 @@
 const fs = require("fs");
 const path = require("path");
 
+const klawSync = require("klaw-sync");
+const frontmatter = require("front-matter");
 const program = require("@caporal/core").default;
 const chalk = require("chalk");
 const { prompt } = require("inquirer");
@@ -33,7 +35,7 @@ const { runOptimizeClientBuild } = require("./optimize-client-build");
 const { runBuildRobotsTxt } = require("./build-robots-txt");
 const kumascript = require("../kumascript");
 
-const PORT = parseInt(process.env.SERVER_PORT || "5000");
+const PORT = parseInt(process.env.SERVER_PORT || "5042");
 
 // The Google Analytics pageviews CSV file parsed, sorted (most pageviews
 // first), and sliced to this number of URIs that goes into the JSON file.
@@ -888,6 +890,38 @@ if (Mozilla && !Mozilla.dntEnabled()) {
       console.log(
         `modified: ${countModified} | no-change: ${countNoChange} | skipped: ${countSkipped} | total: ${countTotal}`
       );
+    })
+  )
+
+  .command("inventory", "Create content inventory as JSON")
+  .help(
+    "In order to run the command, ensure that you have CONTENT_ROOT set in your .env file. For example: CONTENT_ROOT=/Users/steve/mozilla/mdn-content/files"
+  )
+  .action(
+    tryOrExit(async () => {
+      if (!CONTENT_ROOT) {
+        throw new Error(
+          "CONTENT_ROOT not set. Please run yarn tool inventory --help for more information."
+        );
+      }
+
+      const allPaths = klawSync(CONTENT_ROOT, {
+        nodir: true,
+        filter: (entry) => path.extname(entry.path) === ".md",
+        traverseAll: true,
+      });
+
+      const inventory = allPaths.map((entry) => {
+        const fileContents = fs.readFileSync(entry.path, "utf8");
+        const parsed = frontmatter(fileContents);
+
+        return {
+          path: entry.path.substring(entry.path.indexOf("/files")),
+          frontmatter: parsed.attributes,
+        };
+      });
+
+      process.stdout.write(JSON.stringify(inventory, undefined, 2));
     })
   )
 

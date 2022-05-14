@@ -9,9 +9,11 @@ const { packageBCD } = require("../resolve-bcd");
 function getBadBCDQueriesFlaws(doc, $) {
   return $("div.bc-data")
     .map((i, element) => {
-      const dataQuery = $(element).attr("id");
+      const $element = $(element);
+      // Macro adds "data-query", but some translated-content still uses "id".
+      const dataQuery = $element.attr("data-query") || $element.attr("id");
       if (!dataQuery) {
-        return "BCD table without an ID";
+        return "BCD table without 'data-query' or 'id' attribute";
       }
       const query = dataQuery.replace(/^bcd:/, "");
       return !packageBCD(query).data && `No BCD data for query: ${query}`;

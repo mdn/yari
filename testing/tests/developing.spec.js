@@ -9,7 +9,7 @@ function devURL(pathname = "/") {
 }
 
 const SERVER_BASE_URL =
-  process.env.DEVELOPING_SERVER_BASE_URL || "http://localhost:5000";
+  process.env.DEVELOPING_SERVER_BASE_URL || "http://localhost:5042";
 
 function serverURL(pathname = "/") {
   return `${SERVER_BASE_URL}${pathname}`;
@@ -68,8 +68,8 @@ test.describe("Testing the kitchensink page", () => {
     const { doc } = await got(
       serverURL("/en-US/docs/MDN/Kitchensink/index.json")
     ).json();
+
     expect(doc.title).toBe("The MDN Content Kitchensink");
-    // There should be no flaws
     expect(Object.keys(doc.flaws).length).toBe(0);
   });
 
@@ -201,8 +201,11 @@ test.describe("Testing the CRUD apps", () => {
 
     await page.goto(devURL("/"));
     expect(await page.title()).toContain("MDN Web Docs");
+    await page.waitForLoadState("networkidle");
+
     expect(await page.isVisible("text=Writer's home page")).toBeTruthy();
     expect(await page.isVisible('a:has-text("Flaws Dashboard")')).toBeTruthy();
+    expect(await page.isVisible('a:has-text("Sitemap")')).toBeTruthy();
   });
 
   test("open the Flaws Dashboard", async ({ page }) => {
@@ -220,9 +223,14 @@ test.describe("Testing the CRUD apps", () => {
     test.skip(withCrud());
 
     await page.goto(devURL("/"));
+    await page.waitForLoadState("networkidle");
+
     expect(await page.isVisible("text=Writer's home page")).toBeTruthy();
     await page.click('a:has-text("Sitemap")');
     await page.waitForLoadState("networkidle");
+
+    await page.locator('#sitemap:has-text("root")').waitFor();
+
     expect(await page.isVisible('a:has-text("/Web")')).toBeTruthy();
     expect(await page.isVisible('a:has-text("/Learn")')).toBeTruthy();
     await page.click('a:has-text("/Glossary")');

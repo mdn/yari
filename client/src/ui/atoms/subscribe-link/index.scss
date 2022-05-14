@@ -1,0 +1,10 @@
+@use "../../vars" as *;
+
+.mdn-plus-subscribe-link {
+  --button-padding: 1rem;
+
+  margin: 0 auto;
+  max-width: 150px;
+  text-align: center;
+  white-space: nowrap;
+}

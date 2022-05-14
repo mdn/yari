@@ -1,0 +1,88 @@
+@use "../ui/vars" as *;
+@use "../ui/base/mdn" as *;
+
+main.contribute {
+  width: 100%;
+  margin-bottom: 3rem;
+
+  .stats-container {
+    background-color: var(--background-primary);
+    color: var(--text-primary);
+    width: 100%;
+    margin-bottom: 3rem;
+  }
+  section {
+    max-width: 52rem;
+    margin: 0 auto;
+    padding: 0 1rem;
+
+    &.stats-header {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 0 0.5rem 2rem;
+    }
+
+    h1 {
+      margin-top: 8rem;
+      font-size: 3rem;
+      text-align: center;
+
+      @include mify;
+    }
+
+    .quote {
+      &.owd {
+        background-color: var(--text-link);
+        color: var(--background-primary);
+
+        .icon {
+          background-color: var(--background-primary);
+        }
+      }
+
+      &.pab {
+        background-color: var(--background-primary);
+        color: var(--text-primary);
+
+        .icon {
+          background-color: var(--text-primary);
+        }
+      }
+    }
+
+    .stats {
+      display: grid;
+      gap: 0.3em;
+
+      @media screen and (max-width: $screen-md) {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      @media screen and (max-width: $screen-sm) {
+        grid-template-columns: 1fr;
+      }
+
+      @media screen and (min-width: $screen-md) {
+        grid-template-columns: 1fr 1fr 1fr 1fr;
+      }
+      li {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        background: var(--text-link);
+        padding: 0.5rem 2rem;
+        color: var(--background-primary);
+
+        .number {
+          font-size: 3rem;
+        }
+        .legend {
+          font-size: 0.8rem;
+          max-width: 5rem;
+          text-align: center;
+        }
+      }
+    }
+  }
+}

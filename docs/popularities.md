@@ -2,11 +2,11 @@
 
 A popular page is one that has lot of pageviews. We get this from our CDN access
 logs. Being popular helps search because when a certain search term matches many
-documents, too many to display all, we need to sort them to try to predict
-which one the user most probably wanted to find.
+documents, too many to display all, we need to sort them to try to predict which
+one the user most probably wanted to find.
 
-To accomplish this we check-in a file in the content repo called `popularities.json`
-which looks like this:
+To accomplish this we check-in a file in the content repo called
+`popularities.json` which looks like this:
 
 ```json
 {
@@ -23,10 +23,10 @@ which looks like this:
 }
 ```
 
-The number of pageviews is normalized. The popularity is a number between 0 and 1.
-Where the most popular page is `1`.
-Note that not all documents will have a popularity. So don't expect every known
-URL in the content to appear in the `popularities.json` file.
+The number of pageviews is normalized. The popularity is a number between 0
+and 1. Where the most popular page is `1`. Note that not all documents will have
+a popularity. So don't expect every known URL in the content to appear in the
+`popularities.json` file.
 
 ## Where's the data from
 

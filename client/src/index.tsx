@@ -1,10 +1,11 @@
 import React from "react";
-import ReactDOM from "react-dom";
+import { createRoot, hydrateRoot } from "react-dom/client";
 import { BrowserRouter as Router } from "react-router-dom";
 
 import { App } from "./app";
 import { GAProvider } from "./ga-context";
 import { UserDataProvider } from "./user-context";
+import { UIProvider } from "./ui-context";
 
 // import * as serviceWorker from './serviceWorker';
 
@@ -21,27 +22,29 @@ const appData = hydrationElement
   ? JSON.parse(hydrationElement.textContent!)
   : {};
 
-let app = (
-  <GAProvider>
-    <UserDataProvider>
-      <Router>
-        <App {...appData} />
-      </Router>
-    </UserDataProvider>
-  </GAProvider>
+const app = (
+  <React.StrictMode>
+    <GAProvider>
+      <UserDataProvider>
+        <UIProvider>
+          <Router>
+            <App {...appData} />
+          </Router>
+        </UIProvider>
+      </UserDataProvider>
+    </GAProvider>
+  </React.StrictMode>
 );
-
-app = <React.StrictMode>{app}</React.StrictMode>;
 
 if (container.firstElementChild) {
   if (window.origin !== "https://translate.googleusercontent.com") {
-    ReactDOM.hydrate(app, container);
+    hydrateRoot(container, app);
   }
 } else {
-  ReactDOM.render(app, container);
+  createRoot(container).render(app);
 }
 
-// If you want your app to work offline and load faster, you can change
-// unregister() to register() below. Note this comes with some pitfalls.
-// Learn more about service workers: https://bit.ly/CRA-PWA
-// serviceWorker.unregister();
+// Initialize mdnWorker if there's a service worker already.
+if (navigator?.serviceWorker?.controller && !window.mdnWorker) {
+  import("./offline-settings/mdn-worker");
+}

@@ -29,7 +29,7 @@ const renderFromURL = async (
   const urlLC = url.toLowerCase();
   if (renderCache.has(urlLC)) {
     if (invalidateCache) {
-      renderCache.del(urlLC);
+      renderCache.delete(urlLC);
     } else {
       return renderCache.get(urlLC);
     }

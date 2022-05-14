@@ -1,18 +1,283 @@
-@import "~@mdn/minimalist/sass/vars/typography";
-@import "~@mdn/minimalist/sass/vars/layout";
-@import "~@mdn/minimalist/sass/vars/mdn-web-docs-palette";
+@use "~@mdn/minimalist/sass/mixins/utils" as *;
+@use "../../../ui/vars" as *;
 
-@import "~@mdn/minimalist/sass/mixins/utils";
+// Style for mobile *and* desktop.
 
-@import "./atoms/bc-github";
-@import "./atoms/bc-table";
-@import "./atoms/bc-platforms";
-@import "./atoms/bc-icons";
-@import "./atoms/bc-supports";
-@import "./atoms/bc-browsers";
-@import "./atoms/bc-history";
-@import "./atoms/bc-history-link";
-@import "./atoms/bc-legend";
+.bc-table {
+  width: 100%;
+  margin: 1rem 0;
+  border: 1px solid var(--border-primary);
+  border-radius: var(--elem-radius);
+  border-collapse: separate;
+  border-spacing: 0;
+
+  td,
+  th {
+    border: 1px solid var(--border-secondary);
+    border-width: 0 0 1px 1px;
+    font-weight: 500;
+    padding: 0;
+
+    @media screen and (min-width: $screen-md) {
+      font-size: var(--type-smaller-font-size);
+      padding: 0.4rem;
+
+      code {
+        font-size: var(--type-smaller-font-size);
+      }
+    }
+  }
+
+  th {
+    padding: 0.4rem;
+  }
+
+  // these props allow us to add border-radius to the table.
+  // border-collapse: separate gets in the way of this
+  // being easy.
+  tbody {
+    tr {
+      height: 3rem;
+
+      @media screen and (min-width: $screen-md) {
+        &:last-child {
+          th,
+          td {
+            border-bottom-width: 0;
+          }
+        }
+      }
+
+      th {
+        border-left-width: 0;
+        vertical-align: middle;
+      }
+    }
+
+    .bc-support {
+      vertical-align: top;
+
+      button {
+        cursor: pointer;
+        width: 100%;
+      }
+
+      &.bc-supports-no > button > span {
+        color: var(--text-primary-red);
+      }
+      &.bc-supports-partial > button > span {
+        color: var(--text-primary-yellow);
+      }
+      &.bc-supports-preview > button > span {
+        color: var(--text-primary-blue);
+      }
+      &.bc-supports-yes > button > span {
+        color: var(--text-primary-green);
+      }
+    }
+
+    .bc-history {
+      td {
+        border-left-width: 0;
+      }
+    }
+  }
+
+  th {
+    vertical-align: bottom;
+    background: var(--background-tertiary);
+  }
+
+  .bc-supports {
+    margin-bottom: 1rem;
+
+    .icon-wrap {
+      background: var(--background-primary);
+    }
+  }
+
+  .icon-wrap {
+    .bc-support-level {
+      @include visually-hidden;
+    }
+  }
+  .bc-support {
+    > button > .icon-wrap {
+      display: block;
+    }
+  }
+  .bc-feature-depth-2 {
+    border-left-width: 8px;
+  }
+}
+
+.bc-head-txt-label {
+  -ms-writing-mode: tb-rl;
+  -webkit-writing-mode: vertical-rl;
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+  white-space: nowrap;
+  left: calc(50% - 0.5rem);
+  line-height: 1;
+  position: relative;
+  padding-top: 0.5rem;
+}
+
+.bc-head-icon-symbol {
+  margin-bottom: 0.3rem;
+}
+
+.bc-support {
+  text-align: center;
+  vertical-align: middle;
+}
+
+.bc-level-no {
+  background-color: var(--icon-critical);
+}
+
+.bc-level-preview {
+  background-color: var(--icon-information);
+}
+
+.bc-legend-items-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+  font-size: var(--type-smaller-font-size);
+}
+
+.bc-legend-item {
+  align-items: center;
+  display: flex;
+  gap: 0.5rem;
+}
+
+.bc-legend-item-dt {
+  display: flex;
+
+  .icon {
+    background-color: var(--icon-primary);
+  }
+}
+
+// Row with desktop / mobile icons.
+.bc-platforms {
+  height: 2rem;
+
+  th {
+    text-align: center;
+  }
+
+  td {
+    border: none;
+  }
+}
+
+// Row with browser names.
+.bc-browsers {
+  th {
+    text-align: center;
+  }
+
+  td {
+    border-width: 0 0 1px 0;
+  }
+}
+
+.bc-notes-list {
+  position: relative;
+  margin: 0.5rem 0;
+  text-align: left;
+  width: 100%;
+
+  &:before {
+    position: absolute;
+    z-index: -1;
+    height: calc(100% - 0.25rem);
+    margin-top: 0.25rem;
+    left: 7px;
+    width: 2px;
+    background: var(--border-primary);
+    content: "";
+  }
+
+  // complicated selector to cover the last bit of the grey line above.
+  .bc-notes-wrapper:last-child dd:last-child {
+    position: relative;
+
+    &:before {
+      position: absolute;
+      z-index: -1;
+      height: calc(100% - 6px);
+      left: 7px;
+      width: 2px;
+      bottom: 0;
+      background: var(--background-primary);
+      content: "";
+    }
+  }
+
+  .bc-level-yes.icon.icon-yes {
+    // override icon
+    background-color: var(--icon-success);
+    mask-image: url("../../../assets/icons/yes-circle.svg");
+  }
+
+  .bc-supports-dd {
+    .icon {
+      mask-image: none;
+      border-radius: 50%;
+      border: 3px solid var(--background-primary);
+      background: var(--border-primary);
+    }
+  }
+
+  .bc-version-label {
+    display: inline;
+  }
+
+  abbr {
+    margin-right: 4px;
+  }
+
+  dd {
+    margin-bottom: 1rem;
+    padding-left: 1.5rem;
+    text-indent: -1.5rem;
+
+    &:last-child {
+      margin-bottom: 2rem;
+    }
+  }
+}
+
+.bc-notes-wrapper {
+  margin-bottom: 1rem;
+  color: var(--text-primary);
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+dl.bc-notes-list {
+  dt.bc-supports {
+    margin-top: 1rem;
+
+    &:first-child {
+      margin-top: 0rem;
+    }
+  }
+  dd.bc-supports-dd {
+    margin-bottom: 1rem;
+
+    &:last-child {
+      margin-bottom: 0rem;
+    }
+  }
+}
 
 .offscreen,
 .only-icon span {
@@ -20,8 +285,11 @@
 }
 
 .bc-table-row-header {
+  width: 100%;
+  display: inline-flex;
+  align-items: baseline;
+
   code {
-    display: flex;
     overflow: hidden;
   }
 
@@ -31,7 +299,7 @@
     overflow: hidden;
   }
 
-  /* Can only flex-shrink and not flex-grow 
+  /* Can only flex-shrink and not flex-grow
   ie the "slider" in a sliding glass door */
   .left-side {
     flex: 0 1 auto;
@@ -41,5 +309,102 @@
   its the stationary portion */
   .right-side {
     flex: 1 0 auto;
+  }
+
+  .bc-icons {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: 0.25rem;
+    .icon {
+      background-color: var(--icon-secondary);
+      &:hover {
+        background-color: var(--icon-primary);
+      }
+    }
+  }
+}
+
+.bc-github-link {
+  font: var(--type-smaller-font-size);
+}
+
+.main-page-content {
+  .bc-legend {
+    dd,
+    dt {
+      margin-top: 0;
+      margin-bottom: 0;
+      margin-left: 0;
+    }
+  }
+
+  .bc-supports-dd {
+    margin: 0;
+  }
+}
+
+@import "./index-mobile";
+@import "./index-desktop";
+@import "./index-desktop-md";
+@import "./index-desktop-xl";
+
+.bcd-cell-text-wrapper {
+  display: flex;
+  gap: 0.5rem;
+
+  @media screen and (min-width: $screen-md) {
+    align-items: center;
+    flex-direction: column;
+  }
+}
+
+.bcd-cell-text-copy {
+  color: var(--text-primary);
+  display: flex;
+  gap: 0.5rem;
+}
+
+.bc-supports-yes {
+  .bcd-cell-text-copy {
+    color: var(--text-primary-green);
+  }
+}
+
+.bc-supports-no {
+  .bcd-cell-text-copy {
+    color: var(--text-primary-red);
+  }
+}
+
+.bc-supports-partial {
+  .bcd-cell-text-copy {
+    color: var(--text-primary-yellow);
+  }
+}
+
+.bcd-cell-icons {
+  display: flex;
+  gap: 0.5rem;
+
+  @media screen and (min-width: $screen-md) {
+    display: block;
+  }
+}
+
+.bc-notes-wrapper {
+  .bcd-cell-text-wrapper {
+    flex-direction: row;
+  }
+}
+
+@media screen and (min-width: $screen-md) {
+  .bc-table {
+    td {
+      height: 2rem;
+    }
+
+    td.bc-support > button {
+      padding: 0.5rem 0.25rem;
+    }
   }
 }

@@ -227,8 +227,9 @@ SCL3_REDIRECT_URLS = list(
             url_test("/en/demos", "/en/docs/Web/Demos_of_open_web_technologies"),
             url_test(
                 "/{en,EN}/optimizing_your_pages_for_speculative_{PARSING,parsing,parsing/}",
-                "/en-US/docs/Glossary/speculative_parsing"
+                "/en-US/docs/Glossary/speculative_parsing",
             ),
+            url_test("{mdn,MDN}/{Contribute,contribute}", "/en-US/docs/MDN/Contribute"),
         )
     )
 )
@@ -990,12 +991,12 @@ MISC_REDIRECT_URLS = list(
     flatten(
         (
             url_test(
-                "/fr/{plus,plus/,plus/bookmarks,plus/bookmarks/,plus/deep-dives,plus/deep-dives/}",
+                "/fr/{plus,plus/,plus/collections,plus/collections/,plus/deep-dives,plus/deep-dives/}",
                 "/fr/",
                 status_code=302,
             ),
             url_test(
-                "/en-US/{plus,plus/,plus/bookmarks,plus/bookmarks/,plus/deep-dives,plus/deep-dives/}",
+                "/en-US/{plus,plus/,plus/collections,plus/collections/,plus/deep-dives,plus/deep-dives/}",
                 "/en-US/",
                 status_code=302,
             ),

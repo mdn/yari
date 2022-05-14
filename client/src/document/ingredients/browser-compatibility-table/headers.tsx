@@ -13,7 +13,7 @@ export const PLATFORM_BROWSERS: { [key: string]: bcd.BrowserNames[] } = {
   ],
   server: ["deno", "nodejs"],
   "webextensions-desktop": ["chrome", "edge", "firefox", "opera", "safari"],
-  "webextensions-mobile": ["firefox_android"],
+  "webextensions-mobile": ["firefox_android", "safari_ios"],
 };
 
 function PlatformHeaders({ platforms, browsers }) {
@@ -31,10 +31,12 @@ function PlatformHeaders({ platforms, browsers }) {
         return (
           <th
             key={platform}
-            className={`bc-platform-${platformId}`}
+            className={`bc-platform bc-platform-${platformId}`}
             colSpan={browserCount}
+            title={platform}
           >
-            <span>{platform}</span>
+            <span className={`icon icon-${platformId}`}></span>
+            <span className="visually-hidden">{platform}</span>
           </th>
         );
       })}
@@ -46,13 +48,21 @@ function BrowserHeaders({ browsers }: { browsers }) {
   return (
     <tr className="bc-browsers">
       <td />
-      {browsers.map((browser) => (
-        <th key={browser} className={`bc-browser-${browser}`}>
-          <span className={`bc-head-txt-label bc-head-icon-${browser}`}>
-            <BrowserName id={browser} />
-          </span>
-        </th>
-      ))}
+      {browsers.map((browser) => {
+        const browserStart = browser.split("_")[0];
+        const browserIcon =
+          browserStart === "firefox" ? "simple-firefox" : browserStart;
+        return (
+          <th key={browser} className={`bc-browser bc-browser-${browser}`}>
+            <div className={`bc-head-txt-label bc-head-icon-${browser}`}>
+              <BrowserName id={browser} />
+            </div>
+            <div
+              className={`bc-head-icon-symbol icon icon-${browserIcon}`}
+            ></div>
+          </th>
+        );
+      })}
     </tr>
   );
 }

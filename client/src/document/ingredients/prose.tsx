@@ -1,19 +1,29 @@
 import { DisplayHeading } from "./utils";
 
-export function Prose({ section }) {
-  return <div dangerouslySetInnerHTML={{ __html: section.content }} />;
-}
+export function Prose({ section }: { section: any }) {
+  const { id } = section;
 
-export function ProseWithHeading({ id, section }) {
+  const Content = () => (
+    <div
+      className="section-content"
+      dangerouslySetInnerHTML={{ __html: section.content }}
+    />
+  );
+
+  if (!id) {
+    return <Content />;
+  }
+
+  const DisplayHx = section.isH3 ? DisplayH3 : DisplayH2;
+
   return (
-    <>
-      <DisplayHeading
-        level={section.isH4 ? 4 : section.isH3 ? 3 : 2}
+    <section aria-labelledby={id}>
+      <DisplayHx
         id={id}
         title={section.title}
         titleAsText={section.titleAsText}
       />
-      <Prose section={section} />
-    </>
+      <Content />
+    </section>
   );
 }

@@ -13,21 +13,21 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v2.4.0
+      - uses: actions/checkout@v3
 
-      - uses: actions/checkout@v2.4.0
+      - uses: actions/checkout@v3
         with:
           repository: mdn/content
           path: mdn/content
 
       - name: Setup Node.js environment
-        uses: actions/setup-node@v2.4.1
+        uses: actions/setup-node@v3
         with:
-          node-version: "12"
+          node-version: "14"
           cache: "yarn"
 
       - name: Cache node_modules
-        uses: actions/cache@v2.1.6
+        uses: actions/cache@v3
         id: cached-node_modules
         with:
           path: |
@@ -55,7 +55,7 @@ jobs:
           REACT_APP_DISABLE_AUTH: true
           CONTENT_ROOT: testing/content/files
         run: |
-          yarn prepare-build
+          yarn build:prepare
 
       - name: Build and install tarball
         run: |
@@ -73,25 +73,21 @@ jobs:
         run: |
           yarn start > /tmp/stdout.log 2> /tmp/stderr.log &
 
-      - name: View some URLs on localhost:5000
+      - name: View some URLs on localhost:5042
         run: |
-          curl --retry-connrefused --retry 5 -I http://localhost:5000
+          curl --retry-connrefused --retry 5 -I http://localhost:5042
 
           # Basically, test if it 200 OKs. If not, this'll exit non-zero.
-          curl http://localhost:5000/en-US/ > /dev/null
-          curl http://localhost:5000/en-US/docs/MDN/Kitchensink > /dev/null
+          curl http://localhost:5042/en-US/ > /dev/null
+          curl http://localhost:5042/en-US/docs/MDN/Kitchensink > /dev/null
 
       - name: Test viewing the dev server
         env:
-          # This will make sure the tests in `testing/tests/*.test.js` only run
-          # if the development server is up and ready to be tested.
-          TESTING_DEVELOPING: true
           # When running Yari from within mdn/content it only starts 1 server;
-          # the one on localhost:5000. No React dev server; the one
+          # the one on localhost:5042. No React dev server; the one
           # on localhost:3000.
           # Testing that dev server is not relevant or important in this context.
           DEVELOPING_SKIP_DEV_URL: true
-          CONTENT_ROOT: mdn/content/files
         run: |
           yarn test:developing
 

@@ -1,0 +1,16 @@
+<svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+<mask id="path-1-inside-1_461_486" fill="white">
+<path d="M2 2H14.5V15C14.5 15.5523 14.0523 16 13.5 16H3C2.44772 16 2 15.5523 2 15V2Z"/>
+</mask>
+<path d="M2 2H14.5V15C14.5 15.5523 14.0523 16 13.5 16H3C2.44772 16 2 15.5523 2 15V2Z" stroke="#5B5B66" stroke-width="3" mask="url(#path-1-inside-1_461_486)"/>
+<line x1="1" y1="2.75" x2="15.5" y2="2.75" stroke="#5B5B66" stroke-width="1.5"/>
+<mask id="mask0_461_486" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="5" y="0" width="7" height="2">
+<rect x="5" width="6.5" height="2" fill="#C4C4C4"/>
+</mask>
+<g mask="url(#mask0_461_486)">
+<path d="M10.75 14.25H5.75L5.75 1C5.75 0.917322 5.84159 0.75 6.08333 0.75L10.4167 0.75C10.6584 0.75 10.75 0.917323 10.75 1L10.75 14.25Z" stroke="#5B5B66" stroke-width="1.5"/>
+</g>
+<line x1="5.75" y1="5" x2="5.75" y2="13" stroke="#5B5B66" stroke-width="1.5"/>
+<line x1="8.25" y1="5" x2="8.25" y2="13" stroke="#5B5B66" stroke-width="1.5"/>
+<line x1="10.75" y1="5" x2="10.75" y2="13" stroke="#5B5B66" stroke-width="1.5"/>
+</svg>

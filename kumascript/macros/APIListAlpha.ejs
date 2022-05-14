@@ -102,7 +102,7 @@ for (var i = 0; i < numLetters; i++) {
             if (title[0].toUpperCase() == curLetter) {
                 if (!containsTag(tags, "junk")) {
                     if (!insertedHeading) {
-                        html += "<span>" + curLetter + "</span><ul>";
+                        html += "<h3>" + curLetter + "</h3><ul>";
                         insertedHeading = true;
                     }
                     html += '\n<li><span class="indexListRow"><span class="indexListTerm"><a href="' + url.replace("en-US", locale) + '">' + builtTitle + '</a></span>' + badge + '</span></li>';

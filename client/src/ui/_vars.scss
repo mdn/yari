@@ -1,0 +1,254 @@
+@use "./color-palette" as *;
+
+$mdn-color-neutral-light-70: #f9f9fb;
+$mdn-color-neutral-light-80: #f2f1f1;
+$mdn-color-neutral-light-90: #ebeaea;
+
+$mdn-color-neutral-10: #e2e2e2;
+$mdn-color-neutral-20: #cdcdcd;
+$mdn-color-neutral-30: #b3b3b3;
+$mdn-color-neutral-40: #9e9e9e;
+$mdn-color-neutral-50: #858585;
+$mdn-color-neutral-60: #696969;
+$mdn-color-neutral-70: #4e4e4e;
+$mdn-color-neutral-80: #343434;
+$mdn-color-neutral-90: #1b1b1b;
+
+$mdn-color-light-theme-blue: #0085f2;
+$mdn-color-light-theme-green: #009a46;
+$mdn-color-light-theme-yellow: #928700;
+$mdn-color-light-theme-red: #d30038;
+$mdn-color-light-theme-violet: #9b65ff;
+$mdn-color-light-theme-pink: #d00058;
+
+$mdn-color-dark-theme-blue: $mdn-color-light-theme-blue;
+$mdn-color-dark-theme-green: $mdn-color-light-theme-green;
+$mdn-color-dark-theme-yellow: $mdn-color-light-theme-yellow;
+$mdn-color-dark-theme-red: $mdn-color-light-theme-red;
+$mdn-color-dark-theme-violet: $mdn-color-light-theme-violet;
+$mdn-color-dark-theme-pink: $mdn-color-light-theme-pink;
+
+$mdn-color-light-theme-blue-10: #dce2f2;
+$mdn-color-light-theme-blue-20: #c1cff1;
+$mdn-color-light-theme-blue-30: #8cb4ff;
+$mdn-color-light-theme-blue-40: #5e9eff;
+$mdn-color-light-theme-blue-50: #0085f2;
+$mdn-color-light-theme-blue-60: #0069c2;
+$mdn-color-light-theme-blue-70: #004d92;
+$mdn-color-light-theme-blue-80: #003465;
+$mdn-color-light-theme-blue-90: #001b3a;
+
+$mdn-color-dark-theme-blue-10: $mdn-color-light-theme-blue-10;
+$mdn-color-dark-theme-blue-20: $mdn-color-light-theme-blue-20;
+$mdn-color-dark-theme-blue-30: $mdn-color-light-theme-blue-30;
+$mdn-color-dark-theme-blue-40: $mdn-color-light-theme-blue-40;
+$mdn-color-dark-theme-blue-50: $mdn-color-light-theme-blue-50;
+$mdn-color-dark-theme-blue-60: $mdn-color-light-theme-blue-60;
+$mdn-color-dark-theme-blue-70: $mdn-color-light-theme-blue-70;
+$mdn-color-dark-theme-blue-80: $mdn-color-light-theme-blue-80;
+$mdn-color-dark-theme-blue-90: $mdn-color-light-theme-blue-90;
+
+$mdn-color-light-theme-green-10: #a9f3ba;
+$mdn-color-light-theme-green-20: #73e693;
+$mdn-color-light-theme-green-30: #00d061;
+$mdn-color-light-theme-green-40: #00b755;
+$mdn-color-light-theme-green-50: #009a46;
+$mdn-color-light-theme-green-60: #007936;
+$mdn-color-light-theme-green-70: #005a26;
+$mdn-color-light-theme-green-80: #003d18;
+$mdn-color-light-theme-green-90: #00210a;
+
+$mdn-color-dark-theme-green-10: $mdn-color-light-theme-green-10;
+$mdn-color-dark-theme-green-20: $mdn-color-light-theme-green-20;
+$mdn-color-dark-theme-green-30: $mdn-color-light-theme-green-30;
+$mdn-color-dark-theme-green-40: $mdn-color-light-theme-green-40;
+$mdn-color-dark-theme-green-50: $mdn-color-light-theme-green-50;
+$mdn-color-dark-theme-green-60: $mdn-color-light-theme-green-60;
+$mdn-color-dark-theme-green-70: $mdn-color-light-theme-green-70;
+$mdn-color-dark-theme-green-80: $mdn-color-light-theme-green-80;
+$mdn-color-dark-theme-green-90: $mdn-color-light-theme-green-90;
+
+$mdn-color-light-theme-yellow-10: #f0e498;
+$mdn-color-light-theme-yellow-20: #dfd172;
+$mdn-color-light-theme-yellow-30: #c7b700;
+$mdn-color-light-theme-yellow-40: #afa100;
+$mdn-color-light-theme-yellow-50: #938700;
+$mdn-color-light-theme-yellow-60: #746a00;
+$mdn-color-light-theme-yellow-70: #564e00;
+$mdn-color-light-theme-yellow-80: #3a3500;
+$mdn-color-light-theme-yellow-90: #1f1c00;
+
+$mdn-color-dark-theme-yellow-10: $mdn-color-light-theme-yellow-10;
+$mdn-color-dark-theme-yellow-20: $mdn-color-light-theme-yellow-20;
+$mdn-color-dark-theme-yellow-30: $mdn-color-light-theme-yellow-30;
+$mdn-color-dark-theme-yellow-40: $mdn-color-light-theme-yellow-40;
+$mdn-color-dark-theme-yellow-50: $mdn-color-light-theme-yellow-50;
+$mdn-color-dark-theme-yellow-60: $mdn-color-light-theme-yellow-60;
+$mdn-color-dark-theme-yellow-70: $mdn-color-light-theme-yellow-70;
+$mdn-color-dark-theme-yellow-80: $mdn-color-light-theme-yellow-80;
+$mdn-color-dark-theme-yellow-90: $mdn-color-light-theme-yellow-90;
+
+$mdn-color-light-theme-red-10: #ffd9dc;
+$mdn-color-light-theme-red-20: #ffc0c4;
+$mdn-color-light-theme-red-30: #ff97a0;
+$mdn-color-light-theme-red-40: #ff707f;
+$mdn-color-light-theme-red-50: #ff2a51;
+$mdn-color-light-theme-red-60: #d30038;
+$mdn-color-light-theme-red-70: #9e0027;
+$mdn-color-light-theme-red-80: #6f0019;
+$mdn-color-light-theme-red-90: #40000a;
+
+$mdn-color-dark-theme-red-10: $mdn-color-light-theme-red-10;
+$mdn-color-dark-theme-red-20: $mdn-color-light-theme-red-20;
+$mdn-color-dark-theme-red-30: $mdn-color-light-theme-red-30;
+$mdn-color-dark-theme-red-40: $mdn-color-light-theme-red-40;
+$mdn-color-dark-theme-red-50: $mdn-color-light-theme-red-50;
+$mdn-color-dark-theme-red-60: $mdn-color-light-theme-red-60;
+$mdn-color-dark-theme-red-70: $mdn-color-light-theme-red-70;
+$mdn-color-dark-theme-red-80: $mdn-color-light-theme-red-80;
+$mdn-color-dark-theme-red-90: $mdn-color-light-theme-red-90;
+
+$mdn-color-light-theme-violet-10: #e6deff;
+$mdn-color-light-theme-violet-20: #d4c5ff;
+$mdn-color-light-theme-violet-30: #bea5ff;
+$mdn-color-light-theme-violet-40: #ae8aff;
+$mdn-color-light-theme-violet-50: #9b65ff;
+$mdn-color-light-theme-violet-60: #872bff;
+$mdn-color-light-theme-violet-70: #6800cf;
+$mdn-color-light-theme-violet-80: #480091;
+$mdn-color-light-theme-violet-90: #280056;
+
+$mdn-color-dark-theme-violet-10: $mdn-color-light-theme-violet-10;
+$mdn-color-dark-theme-violet-20: $mdn-color-light-theme-violet-20;
+$mdn-color-dark-theme-violet-30: $mdn-color-light-theme-violet-30;
+$mdn-color-dark-theme-violet-40: $mdn-color-light-theme-violet-40;
+$mdn-color-dark-theme-violet-50: $mdn-color-light-theme-violet-50;
+$mdn-color-dark-theme-violet-60: $mdn-color-light-theme-violet-60;
+$mdn-color-dark-theme-violet-70: $mdn-color-light-theme-violet-70;
+$mdn-color-dark-theme-violet-80: $mdn-color-light-theme-violet-80;
+$mdn-color-dark-theme-violet-90: $mdn-color-light-theme-violet-90;
+
+$mdn-color-light-theme-pink-10: #ffd9df;
+$mdn-color-light-theme-pink-20: #ffbbc8;
+$mdn-color-light-theme-pink-30: #ff93aa;
+$mdn-color-light-theme-pink-40: #ff6d91;
+$mdn-color-light-theme-pink-50: #ff1f72;
+$mdn-color-light-theme-pink-60: #d00058;
+$mdn-color-light-theme-pink-70: #9e0041;
+$mdn-color-light-theme-pink-80: #6d002b;
+$mdn-color-light-theme-pink-90: #3f0015;
+
+$mdn-color-dark-theme-pink-10: $mdn-color-light-theme-pink-10;
+$mdn-color-dark-theme-pink-20: $mdn-color-light-theme-pink-20;
+$mdn-color-dark-theme-pink-30: $mdn-color-light-theme-pink-30;
+$mdn-color-dark-theme-pink-40: $mdn-color-light-theme-pink-40;
+$mdn-color-dark-theme-pink-50: $mdn-color-light-theme-pink-50;
+$mdn-color-dark-theme-pink-60: $mdn-color-light-theme-pink-60;
+$mdn-color-dark-theme-pink-70: $mdn-color-light-theme-pink-70;
+$mdn-color-dark-theme-pink-80: $mdn-color-light-theme-pink-80;
+$mdn-color-dark-theme-pink-90: $mdn-color-light-theme-pink-90;
+
+$mdn-color-black: #000;
+$mdn-color-white: #fff;
+
+$mdn-theme-light-text-primary: $mdn-color-neutral-90;
+$mdn-theme-light-text-secondary: $mdn-color-neutral-70;
+$mdn-theme-light-text-inactive: #{$mdn-color-neutral-40}a6;
+$mdn-theme-light-text-link: $mdn-color-light-theme-blue-60;
+$mdn-theme-light-text-invert: $mdn-color-white;
+$mdn-theme-light-background-primary: $mdn-color-white;
+$mdn-theme-light-background-secondary: $mdn-color-neutral-light-70;
+$mdn-theme-light-background-tertiary: $mdn-color-white;
+$mdn-theme-light-background-toc-active: $mdn-color-neutral-light-90;
+$mdn-theme-light-border-primary: $mdn-color-neutral-20;
+$mdn-theme-light-border-secondary: $mdn-color-neutral-20;
+$mdn-theme-light-button-primary-default: $mdn-color-neutral-90;
+$mdn-theme-light-button-primary-hover: $mdn-color-neutral-60;
+$mdn-theme-light-button-primary-active: $mdn-color-neutral-40;
+$mdn-theme-light-button-primary-inactive: $mdn-color-neutral-90;
+$mdn-theme-light-button-secondary-default: $mdn-color-white;
+$mdn-theme-light-button-secondary-hover: $mdn-color-neutral-20;
+$mdn-theme-light-button-secondary-active: $mdn-color-neutral-20;
+$mdn-theme-light-button-secondary-inactive: $mdn-color-neutral-light-70;
+$mdn-theme-light-button-secondary-border-focus: $mdn-color-light-theme-blue-50;
+$mdn-theme-light-button-secondary-border-red: $mdn-color-light-theme-red-30;
+$mdn-theme-light-button-secondary-border-red-focus: $mdn-color-light-theme-red-10;
+$mdn-theme-light-icon-primary: $mdn-color-neutral-60;
+$mdn-theme-light-icon-secondary: $mdn-color-neutral-30;
+$mdn-theme-light-icon-information: $mdn-color-light-theme-blue-50;
+$mdn-theme-light-icon-warning: $mdn-color-light-theme-red-50;
+$mdn-theme-light-icon-critical: $mdn-color-light-theme-red-60;
+$mdn-theme-light-icon-success: $mdn-color-light-theme-green-60;
+$mdn-theme-light-accent-primary: $mdn-color-light-theme-blue-50;
+$mdn-theme-light-accent-secondary: $mdn-color-light-theme-blue-50;
+$mdn-theme-light-field-focus-border: $mdn-color-light-theme-blue-50;
+$mdn-theme-light-focus-01: 0px 0px 0px 3px rgba(0, 144, 237, 0.4);
+$mdn-theme-light-shadow-01: 0px 1px 2px rgba(43, 42, 51, 0.05);
+$mdn-theme-light-shadow-02: 0px 1px 6px rgba(43, 42, 51, 0.1);
+
+$mdn-theme-light-code-token-tag: $mdn-color-light-theme-blue-60;
+$mdn-theme-light-code-token-punctuation: $mdn-color-neutral-40;
+$mdn-theme-light-code-token-attribute-name: $mdn-color-light-theme-red-60;
+$mdn-theme-light-code-token-attribute-value: $mdn-color-light-theme-green-60;
+$mdn-theme-light-code-token-comment: $mdn-color-neutral-40;
+$mdn-theme-light-code-token-default: $mdn-color-neutral-90;
+$mdn-theme-light-code-token-selector: $mdn-color-light-theme-violet-60;
+$mdn-theme-light-code-background-inline: $mdn-color-neutral-light-80;
+$mdn-theme-light-code-background-block: $mdn-color-neutral-light-80;
+
+$mdn-theme-dark-text-primary: $mdn-color-white;
+$mdn-theme-dark-text-secondary: $mdn-color-neutral-20;
+$mdn-theme-dark-text-inactive: #{$mdn-color-neutral-20}a6;
+$mdn-theme-dark-text-link: $mdn-color-dark-theme-blue-30;
+$mdn-theme-dark-text-invert: $mdn-color-neutral-90;
+$mdn-theme-dark-background-primary: $mdn-color-neutral-90;
+$mdn-theme-dark-background-secondary: $mdn-color-neutral-80;
+$mdn-theme-dark-background-tertiary: $mdn-color-neutral-70;
+$mdn-theme-dark-background-toc-active: $mdn-color-neutral-80;
+$mdn-theme-dark-border-primary: $mdn-color-neutral-50;
+$mdn-theme-dark-border-secondary: $mdn-color-neutral-60;
+$mdn-theme-dark-button-primary-default: $mdn-color-white;
+$mdn-theme-dark-button-primary-hover: $mdn-color-neutral-20;
+$mdn-theme-dark-button-primary-active: $mdn-color-neutral-40;
+$mdn-theme-dark-button-primary-inactive: $mdn-color-white;
+$mdn-theme-dark-button-secondary-default: $mdn-color-neutral-70;
+$mdn-theme-dark-button-secondary-hover: $mdn-color-neutral-50;
+$mdn-theme-dark-button-secondary-active: $mdn-color-neutral-40;
+$mdn-theme-dark-button-secondary-inactive: $mdn-color-neutral-70;
+$mdn-theme-dark-shadow-01: 0px 1px 2px rgba(251, 251, 254, 0.2);
+$mdn-theme-dark-shadow-02: 0px 1px 6px rgba(251, 251, 254, 0.2);
+$mdn-theme-dark-icon-primary: $mdn-color-white;
+$mdn-theme-dark-icon-secondary: $mdn-color-neutral-30;
+$mdn-theme-dark-icon-information: $mdn-color-dark-theme-blue-40;
+$mdn-theme-dark-icon-warning: $mdn-color-dark-theme-yellow-40;
+$mdn-theme-dark-icon-critical: $mdn-color-dark-theme-red-40;
+$mdn-theme-dark-icon-success: $mdn-color-dark-theme-green-40;
+$mdn-theme-dark-accent-primary: $mdn-color-dark-theme-blue-40;
+$mdn-theme-dark-accent-secondary: $mdn-color-dark-theme-blue-40;
+$mdn-theme-dark-field-focus-border: $mdn-color-white;
+$mdn-theme-dark-focus-01: 0px 0px 0px 3px rgba(251, 251, 254, 0.5);
+
+$mdn-theme-dark-code-token-tag: $mdn-color-dark-theme-blue-20;
+$mdn-theme-dark-code-token-punctuation: $mdn-color-neutral-40;
+$mdn-theme-dark-code-token-attribute-name: $mdn-color-dark-theme-red-30;
+$mdn-theme-dark-code-token-attribute-value: $mdn-color-dark-theme-green-30;
+$mdn-theme-dark-code-token-comment: $mdn-color-neutral-40;
+$mdn-theme-dark-code-token-default: $mdn-color-white;
+$mdn-theme-dark-code-token-selector: $mdn-color-dark-theme-violet-30;
+$mdn-theme-dark-code-background-inline: $mdn-color-neutral-80;
+$mdn-theme-dark-code-background-block: $mdn-color-neutral-80;
+
+$screen-sm: 426px;
+$screen-md: 769px;
+$screen-lg: 992px;
+$screen-xl: 1200px;
+$screen-xxl: 1441px;
+
+/*
+ * z-index scale
+ */
+$send-to-back: -1;
+$bring-to-front: 9999;
+$bottom-layer: 100;
+$middle-layer: 200;
+$top-layer: 300;

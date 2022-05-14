@@ -1,4 +1,4 @@
-const SERVER_PORT = process.env.SERVER_PORT || 5000;
+const SERVER_PORT = process.env.SERVER_PORT || 5042;
 const SERVER_URL = `http://localhost:${SERVER_PORT}`;
 
 // Allow the `process.env.BUILD_LIVE_SAMPLES_BASE_URL` to be falsy

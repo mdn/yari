@@ -1,0 +1,97 @@
+@use "sass:color";
+
+@use "../../vars" as *;
+
+.theme-switcher-menu {
+  margin-bottom: 0.5rem;
+  .button.action > .button-wrap {
+    text-transform: none;
+  }
+
+  .themes-menu .button.button {
+    --button-bg: transparent;
+    --button-border-color: var(--button-bg);
+    --button-color: var(--text-primary);
+    border-bottom-width: 0;
+    font-size: var(--type-smaller-font-size);
+    width: 100%;
+
+    .button-wrap {
+      font-weight: 400;
+      justify-content: flex-start;
+      padding: 1rem;
+
+      border-width: 1px;
+    }
+
+    &:focus {
+      --button-border-color: var(--button-secondary-border-focus);
+    }
+
+    &:hover {
+      --button-bg: var(--border-secondary);
+    }
+  }
+
+  .active-menu-item,
+  .active-menu-item:hover {
+    .button-wrap {
+      --button-bg: var(--background-primary);
+      --button-border-color: var(--border-secondary);
+    }
+  }
+
+  .active-menu-item:focus .button-wrap {
+    --button-border-color: var(--button-secondary-border-focus);
+  }
+
+  @media screen and (min-width: $screen-md) {
+    border-bottom: 0;
+    margin-bottom: 0;
+
+    .themes-menu {
+      top: calc(100% - 1rem);
+    }
+    .themes-menu.show {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      max-width: max-content;
+      min-width: 130px;
+    }
+
+    .themes-menu .submenu-item {
+      padding: 0.5rem 1rem;
+    }
+  }
+}
+
+.theme-switcher-menu,
+.languages-switcher-menu {
+  > .button {
+    .button-wrap:after {
+      background-color: var(--icon-secondary);
+      content: "";
+      display: block;
+      height: 16px;
+      mask-image: url("../../../assets/icons/chevron.svg");
+      mask-size: 16px;
+      width: 16px;
+      margin-left: auto;
+    }
+
+    &[aria-expanded="true"] {
+      .button-wrap:after {
+        transform: rotate(180deg);
+      }
+    }
+  }
+
+  @media screen and (min-width: $screen-lg) {
+    > .button {
+      .button-wrap:after {
+        content: unset;
+      }
+    }
+  }
+}

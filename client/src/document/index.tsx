@@ -4,18 +4,24 @@ import useSWR, { mutate } from "swr";
 
 import { CRUD_MODE } from "../constants";
 import { useGA } from "../ga-context";
-import { useDocumentURL, useCopyExamplesToClipboard } from "./hooks";
+
+import {
+  useDocumentURL,
+  useCopyExamplesToClipboard,
+  usePersistFrequentlyViewed,
+} from "./hooks";
 import { Doc } from "./types";
 // Ingredients
-import { Prose, ProseWithHeading } from "./ingredients/prose";
+import { Prose } from "./ingredients/prose";
 import { LazyBrowserCompatibilityTable } from "./lazy-bcd-table";
 import { SpecificationSection } from "./ingredients/spec-section";
 
 // Misc
 // Sub-components
-import { Breadcrumbs } from "../ui/molecules/breadcrumbs";
-import { LanguageToggle } from "../ui/molecules/language-toggle";
+import { TopNavigation } from "../ui/organisms/top-navigation";
+import { ArticleActionsContainer } from "../ui/organisms/article-actions-container";
 import { LocalizedContentNote } from "./molecules/localized-content-note";
+import { OfflineStatusBar } from "../ui/molecules/offline-status-bar";
 import { TOC } from "./organisms/toc";
 import { RenderSideBar } from "./organisms/sidebar";
 import { RetiredLocaleNote } from "./molecules/retired-locale-note";
@@ -32,48 +38,67 @@ import "./index.scss";
 // code could come with its own styling rather than it having to be part of the
 // main bundle all the time.
 import "./interactive-examples.scss";
+// import { useUIStatus } from "../ui-context";
 
 // Lazy sub-components
 const Toolbar = React.lazy(() => import("./toolbar"));
+const MathMLPolyfillMaybe = React.lazy(() => import("./mathml-polyfill"));
 
 export function Document(props /* TODO: define a TS interface for this */) {
   const ga = useGA();
+
   const mountCounter = React.useRef(0);
   const documentURL = useDocumentURL();
-  const { locale } = useParams();
+  const { locale = "en-US" } = useParams();
   const [searchParams] = useSearchParams();
 
   const navigate = useNavigate();
+
+  const previousDoc = React.useRef(null);
+
+  const fallbackData =
+    props.doc && props.doc.mdn_url.toLowerCase() === documentURL.toLowerCase()
+      ? props.doc
+      : null;
 
   const dataURL = `${documentURL}/index.json`;
   const { data: doc, error } = useSWR<Doc>(
     dataURL,
     async (url) => {
       const response = await fetch(url);
+
       if (!response.ok) {
-        if (response.status === 404) {
-          throw new Error(`${response.status} on ${url}: Page not found`);
+        switch (response.status) {
+          case 404:
+            throw new Error(`${response.status} on ${url}: Page not found`);
+
+          case 504:
+            if (previousDoc.current) {
+              return previousDoc.current;
+            }
         }
+
         const text = await response.text();
         throw new Error(`${response.status} on ${url}: ${text}`);
       }
+
       const { doc } = await response.json();
+      previousDoc.current = doc;
+
       if (response.redirected) {
         navigate(doc.mdn_url);
       }
+
       return doc;
     },
     {
-      initialData:
-        props.doc &&
-        props.doc.mdn_url.toLowerCase() === documentURL.toLowerCase()
-          ? props.doc
-          : null,
+      fallbackData,
       revalidateOnFocus: CRUD_MODE,
+      revalidateOnMount: !fallbackData,
       refreshInterval: CRUD_MODE ? 500 : 0,
     }
   );
-
+  usePersistFrequentlyViewed(doc);
   useCopyExamplesToClipboard(doc);
 
   React.useEffect(() => {
@@ -132,9 +157,10 @@ export function Document(props /* TODO: define a TS interface for this */) {
       }
     }
   }, []);
+  // const { setToastData } = useUIStatus();
 
   if (!doc && !error) {
-    return <Loading minHeight={600} message="Loading document..." />;
+    return <Loading minHeight={800} message="Loading document..." />;
   }
 
   if (error) {
@@ -145,78 +171,66 @@ export function Document(props /* TODO: define a TS interface for this */) {
     return null;
   }
 
-  const translations = doc.other_translations || [];
-
   const isServer = typeof window === "undefined";
 
   return (
     <>
-      {/* if we have either breadcrumbs or translations for the current page,
-      continue rendering the section */}
-      {(doc.parents || !!translations.length) && (
-        <div className="breadcrumb-locale-container">
-          {doc.parents && <Breadcrumbs parents={doc.parents} />}
-          {translations && !!translations.length && (
-            <LanguageToggle locale={locale} translations={translations} />
-          )}
-        </div>
-      )}
-
+      <div className="main-document-header-container">
+        <TopNavigation />
+        <ArticleActionsContainer doc={doc} />
+      </div>
+      {/* only include this if we are not server-side rendering */}
+      {!isServer && <OfflineStatusBar />}
       {doc.isTranslated ? (
-        <LocalizedContentNote isActive={doc.isActive} locale={locale} />
+        <div className="container">
+          <LocalizedContentNote isActive={doc.isActive} locale={locale} />
+        </div>
       ) : (
-        searchParams.get("retiredLocale") && <RetiredLocaleNote />
+        searchParams.get("retiredLocale") && (
+          <div className="container">
+            <RetiredLocaleNote />
+          </div>
+        )
       )}
+      <div className="main-wrapper">
+        <RenderSideBar doc={doc} />
 
-      {doc.toc && !!doc.toc.length && <TOC toc={doc.toc} />}
+        <div className="toc">
+          {doc.toc && !!doc.toc.length && <TOC toc={doc.toc} />}
+        </div>
 
-      <MainContentContainer>
-        {!isServer && CRUD_MODE && !props.isPreview && doc.isActive && (
-          <React.Suspense fallback={<Loading message={"Loading toolbar"} />}>
-            <Toolbar
-              doc={doc}
-              reloadPage={() => {
-                mutate(dataURL);
-              }}
-            />
-          </React.Suspense>
-        )}
-        <article className="main-page-content" lang={doc.locale}>
-          <h1>{doc.title}</h1>
-          <RenderDocumentBody doc={doc} />
-        </article>
-        <Metadata doc={doc} locale={locale} />
-      </MainContentContainer>
+        <MainContentContainer>
+          {!isServer && CRUD_MODE && !props.isPreview && doc.isActive && (
+            <React.Suspense fallback={<Loading message={"Loading toolbar"} />}>
+              <Toolbar
+                doc={doc}
+                reloadPage={() => {
+                  mutate(dataURL);
+                }}
+              />
+            </React.Suspense>
+          )}
 
-      {doc.sidebarHTML && <RenderSideBar doc={doc} />}
+          {!isServer && doc.hasMathML && (
+            <React.Suspense fallback={null}>
+              <MathMLPolyfillMaybe />
+            </React.Suspense>
+          )}
+          <article className="main-page-content" lang={doc.locale}>
+            <h1>{doc.title}</h1>
+            <RenderDocumentBody doc={doc} />
+            <Metadata doc={doc} locale={locale} />
+          </article>
+        </MainContentContainer>
+      </div>
     </>
   );
 }
 
-/** These prose sections should be rendered WITHOUT a heading. */
-const PROSE_NO_HEADING = ["short_description", "overview"];
-
 function RenderDocumentBody({ doc }) {
   return doc.body.map((section, i) => {
     if (section.type === "prose") {
-      // Only exceptional few should use the <Prose/> component,
-      // as opposed to <ProseWithHeading/>.
-      if (!section.value.id || PROSE_NO_HEADING.includes(section.value.id)) {
-        return (
-          <Prose
-            key={section.value.id || `prose${i}`}
-            section={section.value}
-          />
-        );
-      } else {
-        return (
-          <ProseWithHeading
-            key={section.value.id}
-            id={section.value.id}
-            section={section.value}
-          />
-        );
-      }
+      return <Prose key={section.value.id} section={section.value} />;
     } else if (section.type === "browser_compatibility") {
       return (
         <LazyBrowserCompatibilityTable
@@ -237,22 +251,32 @@ function RenderDocumentBody({ doc }) {
 
 function LoadingError({ error }) {
   return (
-    <div className="page-content-container loading-error">
-      <h3>Loading Error</h3>
-      {error instanceof window.Response ? (
+    <div className="standard-page">
+      <div id="content" className="page-content-container loading-error">
+        <h3>Loading Error</h3>
+        {error instanceof window.Response ? (
+          <p>
+            <b>{error.status}</b> on <b>{error.url}</b>
+            <br />
+            <small>{error.statusText}</small>
+          </p>
+        ) : (
+          <p>
+            <code>{error.toString()}</code>
+          </p>
+        )}
         <p>
-          <b>{error.status}</b> on <b>{error.url}</b>
-          <br />
-          <small>{error.statusText}</small>
+          <button
+            className="button"
+            type="button"
+            onClick={() => {
+              window.location.reload();
+            }}
+          >
+            Try reloading the page
+          </button>
         </p>
-      ) : (
-        <p>
-          <code>{error.toString()}</code>
-        </p>
-      )}
-      <p>
-        <a href=".">Try reloading the page</a>
-      </p>
+      </div>
     </div>
   );
 }

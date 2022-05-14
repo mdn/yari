@@ -335,18 +335,26 @@ function checkInterfaceItem(actual, expected, config) {
     // (CTA is specified in the test data in the cases where it is expected)
     expect(actual.textContent).toContain(expected.text);
     const methodLink = actual.querySelector("a");
-    expect(methodLink.href).toEqual(expected.target);
+
+    if (methodLink.href !== "") {
+      expect(methodLink.href).toEqual(expected.target);
+    } else {
+      // if the page this would link to has not yet been created,
+      // `smartLink` will remove the `href` attribute and add
+      // a `class` with the value `page-not-created`
+      expect(methodLink.classList.toString()).toEqual("page-not-created");
+    }
   } else {
     // If we are on the current page, the item is just an <i>
     // and the text contents omits the CTA
     const methodLink = actual.querySelector("a");
     expect(methodLink).toBeNull();
-    const methodName = actual.querySelector("svg");
+    const methodName = actual.querySelector(".icon");
     expect(actual.textContent).toContain(methodName.textContent);
   }
 
   // Test that the badges are what we expect
-  const badgeClasses = actual.querySelectorAll("svg");
+  const badgeClasses = actual.querySelectorAll(".icon");
   expect(badgeClasses.length).toEqual(expected.badges.length);
   for (const badgeClass of badgeClasses) {
     badgeClass.classList.forEach((value) => {
@@ -365,7 +373,15 @@ function checkRelatedItem(actual, expected, config) {
   const itemLink = actual.querySelector("a");
   // For these items we just have to compare textContent and href
   expect(itemLink.textContent).toEqual(expected.text);
-  expect(itemLink.href).toEqual(`/${config.locale}${expected.target}`);
+
+  if (itemLink.href !== "") {
+    expect(itemLink.href).toEqual(`/${config.locale}${expected.target}`);
+  } else {
+    // if the page this would link to has not yet been created,
+    // `smartLink` will remove the `href` attribute and add
+    // a `class` with the value `page-not-created`
+    expect(itemLink.classList.toString()).toEqual("page-not-created");
+  }
 }
 
 function checkItemList(
@@ -405,9 +421,17 @@ function checkResult(html, config) {
   // Test main interface link
   const mainIfLink = dom.querySelector("ol>li>strong>a");
   expect(mainIfLink.textContent).toEqual(config.expected.mainIfLink.text);
-  expect(mainIfLink.href).toEqual(
-    `/${config.locale}${config.expected.mainIfLink.target}`
-  );
+
+  if (mainIfLink.href !== "") {
+    expect(mainIfLink.href).toEqual(
+      `/${config.locale}${config.expected.mainIfLink.target}`
+    );
+  } else {
+    // if the page this would link to has not yet been created,
+    // `smartLink` will remove the `href` attribute and add
+    // a `class` with the value `page-not-created`
+    expect(mainIfLink.classList.toString()).toEqual("page-not-created");
+  }
 
   // Test sublists
   const details = dom.querySelectorAll("ol>li>details");

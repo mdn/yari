@@ -14,10 +14,10 @@ export default function WritersHomepage() {
 
   return (
     <PageContentContainer>
-      <div id="writers-homepage">
+      <div className="container" id="writers-homepage">
         <h2>Writer's home page</h2>
 
-        <Search preload={true} />
+        <Search id="writers-hp" />
 
         {!isServer && (
           <React.Suspense fallback={null}>
@@ -102,6 +102,9 @@ export default function WritersHomepage() {
           </li>
           <li>
             <Link to={`/${locale}/_flaws`}>Flaws Dashboard</Link>
+          </li>
+          <li>
+            <Link to={`/${locale}/_traits`}>All Documents Traits</Link>
           </li>
         </ul>
       </div>
