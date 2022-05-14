@@ -24,9 +24,7 @@ jobs:
           node-version: "14"
 
       - name: Install Yarn Berry
-        run: |
-          npm i -g corepack # Neede for NodeJS v14
-          corepack enable
+        run: corepack enable
 
       # Note!
       # We need to install all node modules in each of the 3 directories.

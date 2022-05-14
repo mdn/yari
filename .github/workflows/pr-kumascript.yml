@@ -29,9 +29,7 @@ jobs:
           node-version: "14"
 
       - name: Install Yarn Berry
-        run: |
-          npm i -g corepack # Neede for NodeJS v14
-          corepack enable
+        run: corepack enable
 
       - name: Cache node_modules
         uses: actions/cache@v3
