@@ -1,4 +1,4 @@
 #!/bin/sh
 . "$(dirname "$0")/_/husky.sh"
 
-yarn install --ignore-scripts && yarn lint-staged
+yarn install --immutable --immutable-cache && yarn lint-staged

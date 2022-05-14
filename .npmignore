@@ -44,3 +44,5 @@ jest.config.js
 *.test.js
 .storybook/
 .nvmrc
+.yarn/*
+.pnp.*
