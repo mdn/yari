@@ -23,6 +23,11 @@ jobs:
         with:
           node-version: "14"
 
+      - name: Install Yarn Berry
+        run: |
+          npm i -g corepack # Neede for NodeJS v14
+          corepack enable
+
       # Note!
       # We need to install all node modules in each of the 3 directories.
       # 1. content-origin-request
@@ -46,7 +51,7 @@ jobs:
       - name: Install all yarn packages
         if: steps.cached-node_modules-content-origin-request.outputs.cache-hit != 'true'
         working-directory: deployer/aws-lambda/content-origin-request
-        run: yarn --frozen-lockfile
+        run: yarn --immutable
 
       - name: Cache node_modules content-origin-response
         uses: actions/cache@v3
@@ -58,7 +63,7 @@ jobs:
       - name: Install all yarn packages
         if: steps.cached-node_modules-content-origin-response.outputs.cache-hit != 'true'
         working-directory: deployer/aws-lambda/content-origin-response
-        run: yarn --frozen-lockfile
+        run: yarn --immutable
 
       - name: Cache node_modules
         uses: actions/cache@v3
@@ -70,7 +75,7 @@ jobs:
       - name: Install all yarn packages
         if: steps.cached-node_modules.outputs.cache-hit != 'true'
         working-directory: deployer/aws-lambda/tests
-        run: yarn --frozen-lockfile
+        run: yarn --immutable
 
       - name: Run test server
         working-directory: deployer/aws-lambda/tests

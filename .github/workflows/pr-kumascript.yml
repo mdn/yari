@@ -28,6 +28,11 @@ jobs:
         with:
           node-version: "14"
 
+      - name: Install Yarn Berry
+        run: |
+          npm i -g corepack # Neede for NodeJS v14
+          corepack enable
+
       - name: Cache node_modules
         uses: actions/cache@v3
         id: cached-node_modules
@@ -39,7 +44,7 @@ jobs:
       - name: Install all yarn packages
         if: steps.cached-node_modules.outputs.cache-hit != 'true'
         run: |
-          yarn --frozen-lockfile
+          yarn --immutable
 
       - name: Unit testing kumascript
         env:
