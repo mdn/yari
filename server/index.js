@@ -20,6 +20,7 @@ const {
   Redirect,
   Image,
   CONTENT_TRANSLATED_ROOT,
+  getRoot,
 } = require("../content");
 // eslint-disable-next-line node/no-missing-require
 const { renderHTML } = require("../ssr/dist/main");
@@ -39,7 +40,6 @@ const { searchIndexRoute } = require("./search-index");
 const flawsRoute = require("./flaws");
 const { router: translationsRouter } = require("./translations");
 const { staticMiddlewares, originRequestMiddleware } = require("./middlewares");
-const { getRoot } = require("../content/utils");
 
 async function buildDocumentFromURL(url) {
   const document = Document.findByURL(url);
