@@ -178,7 +178,7 @@ app.get("/_flaws", flawsRoute);
 
 app.use("/_translations", translationsRouter);
 
-app.get("/:locale/_yari/:namespace", (req, res) => {
+app.get("/:locale/_yari/:namespace", async (req, res) => {
   // Grab the i18next file for the Yari platform localization
   const { locale, namespace } = req.params;
   const fileroot =

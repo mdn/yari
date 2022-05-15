@@ -244,6 +244,18 @@ app.post("/users/fxa/login/logout/", async (req, res) => {
   }
 });
 
+// Mock i18next localization
+app.get("/:locale/_yari/:namespace", async (req, res) => {
+  const { locale, namespace } = req.params;
+
+  // Offer one successful localization file
+  if (locale === "en-US" && namespace === "bcd") {
+    res.status(200).json({ hello: "world" });
+  }
+
+  res.status(404).send("Locale file not found");
+});
+
 // To mimic what CloudFront does.
 app.get("/*", async (req, res) => {
   console.log(`Don't know how to mock: ${req.path}`, req.query);
