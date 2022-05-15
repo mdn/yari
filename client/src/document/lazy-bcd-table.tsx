@@ -1,5 +1,6 @@
 import React, { lazy, Suspense, useEffect, useState } from "react";
 import useSWR from "swr";
+import { useTranslation, Trans } from "react-i18next";
 
 import { DisplayH2, DisplayH3 } from "./ingredients/utils";
 import { Loading } from "../ui/atoms/loading";
@@ -11,7 +12,6 @@ import { Loading } from "../ui/atoms/loading";
 // That means that when the lazy-loading happens, it only needs to lazy-load
 // the JS (and the JSON XHR fetch of course)
 import "./ingredients/browser-compatibility-table/index.scss";
-import { useLocale } from "../hooks";
 import NoteCard from "../ui/molecules/notecards";
 
 const BrowserCompatibilityTable = lazy(
@@ -36,6 +36,7 @@ export function LazyBrowserCompatibilityTable({
   query: string;
   dataURL: string | null;
 }) {
+  const { t } = useTranslation("bcd");
   return (
     <>
       {title && !isH3 && <DisplayH2 id={id} title={title} />}
@@ -45,13 +46,16 @@ export function LazyBrowserCompatibilityTable({
       ) : (
         <NoteCard type="warning">
           <p>
-            No compatibility data found for <code>{query}</code>.<br />
-            <a href="#on-github">Check for problems with this page</a> or
-            contribute missing data to{" "}
-            <a href="https://github.com/mdn/browser-compat-data">
-              mdn/browser-compat-data
-            </a>
-            .
+            <Trans t={t} i18nKey="noData" values={{ query }}>
+              No compatibility data found for <code>[[query]]</code>
+              .<br />
+              <a href="#on-github">Check for problems with this page</a> or
+              contribute missing data to{" "}
+              <a href="https://github.com/mdn/browser-compat-data">
+                mdn/browser-compat-data
+              </a>
+              .
+            </Trans>
           </p>
         </NoteCard>
       )}
@@ -60,7 +64,7 @@ export function LazyBrowserCompatibilityTable({
 }
 
 function LazyBrowserCompatibilityTableInner({ dataURL }: { dataURL: string }) {
-  const locale = useLocale();
+  const { t } = useTranslation("bcd");
   const [bcdDataURL, setBCDDataURL] = useState("");
 
   const { error, data } = useSWR(
@@ -82,11 +86,13 @@ function LazyBrowserCompatibilityTableInner({ dataURL }: { dataURL: string }) {
   if (isServer) {
     return (
       <p>
-        BCD tables only load in the browser
-        <noscript>
-          {" "}
-          with JavaScript enabled. Enable JavaScript to view data.
-        </noscript>
+        <Trans t={t} i18nKey="isServer">
+          BCD tables only load in the browser
+          <noscript>
+            {" "}
+            with JavaScript enabled. Enable JavaScript to view data.
+          </noscript>
+        </Trans>
       </p>
     );
   }
@@ -94,21 +100,22 @@ function LazyBrowserCompatibilityTableInner({ dataURL }: { dataURL: string }) {
     return <Loading />;
   }
   if (error) {
-    return <p>Error loading BCD data</p>;
+    return <p>{t("error.simple")}</p>;
   }
 
   return (
-    <ErrorBoundary>
-      <Suspense fallback={<Loading message="Loading BCD table" />}>
-        <BrowserCompatibilityTable locale={locale} {...data} />
+    <ErrorBoundary t={t}>
+      <Suspense fallback={<Loading message={t("loading")} />}>
+        <BrowserCompatibilityTable {...data} />
       </Suspense>
     </ErrorBoundary>
   );
 }
 
-type ErrorBoundaryProps = { children?: React.ReactNode };
+type ErrorBoundaryProps = { children?: React.ReactNode; t: Function };
 type ErrorBoundaryState = {
   error: Error | null;
+  t: Function;
 };
 
 class ErrorBoundary extends React.Component<
@@ -117,7 +124,7 @@ class ErrorBoundary extends React.Component<
 > {
   constructor(props: ErrorBoundaryProps) {
     super(props);
-    this.state = { error: null };
+    this.state = { error: null, t: props.t };
   }
 
   static getDerivedStateFromError(error: Error) {
@@ -129,16 +136,14 @@ class ErrorBoundary extends React.Component<
   // }
 
   render() {
+    const { t } = this.state;
     if (this.state.error) {
       return (
         <NoteCard type="negative">
           <p>
-            <strong>Error loading browser compatibility table</strong>
+            <strong>{t("error.longer")}</strong>
           </p>
-          <p>
-            This can happen if the JavaScript, which is loaded later, didn't
-            successfully load.
-          </p>
+          <p>{t("error.reason")}</p>
           <p>
             <a
               href="."
@@ -149,12 +154,12 @@ class ErrorBoundary extends React.Component<
                 window.location.reload();
               }}
             >
-              Try reloading the page
+              {t("error.reload")}
             </a>
           </p>
           <hr style={{ margin: 20 }} />
           <p>
-            <small>If you're curious, this was the error:</small>
+            <small>{t("error.debug")}</small>
             <br />
             <small style={{ fontFamily: "monospace" }}>
               {this.state.error.toString()}

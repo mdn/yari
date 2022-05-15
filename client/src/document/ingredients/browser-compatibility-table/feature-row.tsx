@@ -1,4 +1,5 @@
 import React, { useContext } from "react";
+import { useTranslation } from "react-i18next";
 import type bcd from "@mdn/browser-compat-data/types";
 import { BrowserInfoContext } from "./browser-info";
 import {
@@ -14,7 +15,6 @@ import {
   versionIsPreview,
   SupportStatementExtended,
 } from "./utils";
-import { LEGEND_LABELS } from "./legend";
 
 // Yari builder will attach extra keys from the compat data
 // it gets from @mdn/browser-compat-data. These are "Yari'esque"
@@ -68,23 +68,20 @@ function getSupportBrowserReleaseDate(
 }
 
 function StatusIcons({ status }: { status: bcd.StatusBlock }) {
+  const { t } = useTranslation("bcd");
+
   const icons = [
-    status.experimental && {
-      title: "Experimental. Expect behavior to change in the future.",
-      text: "Experimental",
-      iconClassName: "icon-experimental",
-    },
-    status.deprecated && {
-      title: "Deprecated. Not for use in new websites.",
-      text: "Deprecated",
-      iconClassName: "icon-deprecated",
-    },
-    !status.standard_track && {
-      title: "Non-standard. Expect poor cross-browser support.",
-      text: "Non-standard",
-      iconClassName: "icon-nonstandard",
-    },
-  ].filter(isTruthy);
+    status.experimental && "experimental",
+    status.deprecated && "deprecated",
+    !status.standard_track && "nonstandard",
+  ]
+    .filter(isTruthy)
+    .map((icon) => ({
+      title: t(`compatLabels.${icon}.title`),
+      text: t(`compatLabels.${icon}.label`),
+      iconClassName: `icon-${icon}`,
+    }));
+
   return icons.length === 0 ? null : (
     <div className="bc-icons" data-test={icons.length}>
       {icons.map((icon) => (
@@ -127,6 +124,7 @@ const CellText = React.memo(
     browser: bcd.BrowserStatement;
   }) => {
     const currentSupport = getCurrentSupport(support);
+    const { t } = useTranslation("bcd");
 
     const added = currentSupport?.version_added ?? null;
     const removed = currentSupport?.version_removed ?? null;
@@ -189,36 +187,25 @@ const CellText = React.memo(
         label:
           typeof added === "string"
             ? labelFromString(added, browser)
-            : "Partial",
+            : t("compatLabels.partial.label"),
       };
     }
 
     let label: string | React.ReactNode;
-    let title = "";
+    let title = t(`compatLabels.${status.isSupported}.title`);
     switch (status.isSupported) {
       case "yes":
-        title = "Full support";
-        label = status.label || "Yes";
-        break;
-
       case "partial":
-        title = "Partial support";
-        label = status.label || "Partial";
-        break;
-
       case "no":
-        title = "No support";
-        label = status.label || "No";
+        label = status.label || t(`compatLabels.${status.isSupported}.label`);
         break;
 
       case "preview":
-        title = "Preview browser support";
         label = status.label || browser.preview_name;
         break;
 
       case "unknown":
-        title = "Compatibility unknown; please update this.";
-        label = "?";
+        label = t(`compatLabels.${status.isSupported}.label`);
         break;
     }
     const supportClassName = getSupportClassName(support, browser);
@@ -243,7 +230,9 @@ const CellText = React.memo(
           <span
             className="bc-version-label"
             title={
-              browserReleaseDate ? `Released ${browserReleaseDate}` : undefined
+              browserReleaseDate
+                ? t("releaseDate", { browserReleaseDate })
+                : undefined
             }
           >
             {label}
@@ -256,10 +245,10 @@ const CellText = React.memo(
 );
 
 function Icon({ name }: { name: string }) {
-  const title = LEGEND_LABELS[name] ?? name;
+  const { t } = useTranslation("bcd");
 
   return (
-    <abbr className="only-icon" title={title}>
+    <abbr className="only-icon" title={t(`compatLabels.${name}.title`)}>
       <span>{name}</span>
       <i className={`icon icon-${name}`} />
     </abbr>
@@ -293,47 +282,54 @@ function FlagsNote({
   supportItem: bcd.SimpleSupportStatement;
   browser: bcd.BrowserStatement;
 }) {
+  const { t } = useTranslation("bcd");
   const hasAddedVersion = typeof supportItem.version_added === "string";
   const hasRemovedVersion = typeof supportItem.version_removed === "string";
   const flags = supportItem.flags || [];
   return (
     <>
-      {hasAddedVersion && `From version ${supportItem.version_added}`}
-      {hasRemovedVersion && (
-        <>
-          {hasAddedVersion ? " until" : "Until"} version{" "}
-          {supportItem.version_removed} (exclusive)
-        </>
+      {t(
+        `flagNotes.${
+          hasAddedVersion && hasRemovedVersion
+            ? "addedAndRemoved"
+            : hasAddedVersion
+            ? "added"
+            : "removed"
+        }`,
+        {
+          versionAdded: supportItem.version_added,
+          versionRemoved: supportItem.version_removed,
+        }
       )}
-      {hasAddedVersion || hasRemovedVersion ? ": this" : "This"} feature is
-      behind the
-      {flags.map((flag, i) => {
-        const valueToSet = flag.value_to_set && (
-          <>
-            {" "}
-            (needs to be set to <code>{flag.value_to_set}</code>)
-          </>
-        );
-        return (
-          <React.Fragment key={flag.name}>
-            <code>{flag.name}</code>
-            {flag.type === "preference" && <> preferences{valueToSet}</>}
-            {flag.type === "runtime_flag" && <> runtime flag{valueToSet}</>}
-            {i < flags.length - 1 && " and the "}
-          </React.Fragment>
-        );
-      })}
+      {hasAddedVersion || hasRemovedVersion
+        ? t("flagNotes.versionKnown")
+        : t("flagNotes.versionUnknown")}
+      {flags.map((flag, i) => (
+        <React.Fragment key={flag.name}>
+          {t(`flagNotes.${flag.type}`, {
+            flag: flag.name,
+          })}
+          {flag.value_to_set &&
+            t("flagNotes.valueToSet", { value: flags["value_to_set"] })}
+          {i < flags.length - 1 && t("flagNotes.multipleFlags")}
+        </React.Fragment>
+      ))}
       .
       {browser.pref_url &&
         flags.some((flag) => flag.type === "preference") &&
-        ` To change preferences in ${browser.name}, visit ${browser.pref_url}.`}
+        t("flagNotes.preferencesHowTo", {
+          browser: browser.name,
+          prefUrl: browser.pref_url,
+        })}
     </>
   );
 }
 
 function getNotes(
   browser: bcd.BrowserStatement,
-  support: bcd.SupportStatement
+  support: bcd.SupportStatement,
+  locale: string,
+  t: Function
 ) {
   if (support) {
     return asList(support)
@@ -358,19 +354,23 @@ function getNotes(
           item.partial_implementation
             ? {
                 iconName: "footnote",
-                label: "Partial support",
+                label: t("compatLabels.partial.title"),
               }
             : null,
           item.prefix
             ? {
                 iconName: "prefix",
-                label: `Implemented with the vendor prefix: ${item.prefix}`,
+                label: t("compatLabels.prefix.description", {
+                  prefix: item.prefix,
+                }),
               }
             : null,
           item.alternative_name
             ? {
                 iconName: "altname",
-                label: `Alternate name: ${item.alternative_name}`,
+                label: t("compatLabels.prefix.description", {
+                  altname: item.alternative_name,
+                }),
               }
             : null,
           item.flags
@@ -387,7 +387,7 @@ function getNotes(
           versionIsPreview(item.version_added, browser)
             ? {
                 iconName: "footnote",
-                label: "Preview browser support",
+                label: t("compatLabels.preview.description"),
               }
             : null,
           // If we encounter nothing else than the required `version_added` and
@@ -397,12 +397,12 @@ function getNotes(
           !versionIsPreview(item.version_added, browser)
             ? {
                 iconName: "footnote",
-                label: "Full support",
+                label: t("compatLabels.yes.title"),
               }
             : isNotSupportedAtAll(item)
             ? {
                 iconName: "footnote",
-                label: "No support",
+                label: t("compatLabels.no.title"),
               }
             : null,
         ]
@@ -450,15 +450,15 @@ function CompatCell({
   support,
   showNotes,
   onToggle,
-  locale,
 }: {
   browserId: bcd.BrowserNames;
   browserInfo: bcd.BrowserStatement;
   support: bcd.SupportStatement | undefined;
   showNotes: boolean;
   onToggle: () => void;
-  locale: string;
 }) {
+  const { t, i18n } = useTranslation("bcd");
+
   const supportClassName = getSupportClassName(support, browserInfo);
   // NOTE: 1-5-21, I've forced hasNotes to return true, in order to
   // make the details view open all the time.
@@ -472,7 +472,7 @@ function CompatCell({
   //       (item) =>
   //         item.prefix || item.notes || item.alternative_name || item.flags
   //     ));
-  const notes = getNotes(browserInfo, support!);
+  const notes = getNotes(browserInfo, support!, i18n.language, t);
   const content = (
     <>
       <CellText {...{ support }} browser={browserInfo} />
@@ -491,9 +491,9 @@ function CompatCell({
         aria-expanded={showNotes ? "true" : "false"}
         onClick={notes ? () => onToggle() : undefined}
       >
-        <button type="button" disabled={!notes} title="Toggle history">
+        <button type="button" disabled={!notes} title={t("toggleHistory")}>
           {content}
-          <span className="offscreen">Toggle history</span>
+          <span className="offscreen">{t("toggleHistory")}</span>
         </button>
       </td>
     </>
@@ -507,7 +507,6 @@ export const FeatureRow = React.memo(
     browsers,
     activeCell,
     onToggleCell,
-    locale,
   }: {
     index: number;
     feature: {
@@ -518,12 +517,12 @@ export const FeatureRow = React.memo(
     browsers: bcd.BrowserNames[];
     activeCell: number | null;
     onToggleCell: ([row, column]: [number, number]) => void;
-    locale: string;
   }) => {
     const browserInfo = useContext(BrowserInfoContext);
+    const { t, i18n } = useTranslation("bcd");
 
     if (!browserInfo) {
-      throw new Error("Missing browser info");
+      throw new Error(t("error.missingBrowserInfo"));
     }
 
     const { name, compat, depth } = feature;
@@ -539,7 +538,10 @@ export const FeatureRow = React.memo(
     if (compat.bad_url && compat.mdn_url) {
       titleNode = (
         <div className="bc-table-row-header">
-          <abbr className="new" title={`${compat.mdn_url} does not exist`}>
+          <abbr
+            className="new"
+            title={t("error.mdnUrlInvalid", { mdnUrl: compat.mdn_url })}
+          >
             {title}
           </abbr>
           {compat.status && <StatusIcons status={compat.status} />}
@@ -575,7 +577,6 @@ export const FeatureRow = React.memo(
               support={compat.support[browser]}
               showNotes={activeCell === i}
               onToggle={() => onToggleCell([index, i])}
-              locale={locale}
             />
           ))}
         </tr>
@@ -585,7 +586,9 @@ export const FeatureRow = React.memo(
               <dl className="bc-notes-list">
                 {getNotes(
                   browserInfo[activeBrowser],
-                  compat.support[activeBrowser]!
+                  compat.support[activeBrowser]!,
+                  i18n.language,
+                  t
                 )}
               </dl>
             </td>

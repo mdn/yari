@@ -1,4 +1,5 @@
 import { useContext } from "react";
+import { useTranslation } from "react-i18next";
 import type bcd from "@mdn/browser-compat-data/types";
 import { BrowserInfoContext } from "./browser-info";
 import {
@@ -9,29 +10,28 @@ import {
   versionIsPreview,
 } from "./utils";
 
-// Also specifies the order in which the legend appears
-export const LEGEND_LABELS = {
-  yes: "Full support",
-  partial: "Partial support",
-  preview: "In development. Supported in a pre-release version.",
-  no: "No support",
-  unknown: "Compatibility unknown",
-  experimental: "Experimental. Expect behavior to change in the future.",
-  nonstandard: "Non-standard. Check cross-browser support before using.",
-  deprecated: "Deprecated. Not for use in new websites.",
-  footnote: "See implementation notes.",
-  disabled: "User must explicitly enable this feature.",
-  altname: "Uses a non-standard name.",
-  prefix: "Requires a vendor prefix or different name for use.",
-};
-type LEGEND_KEY = keyof typeof LEGEND_LABELS;
+// Specifies the order in which the legend appears
+export const LEGEND_KEYS = [
+  "yes",
+  "partial",
+  "preview",
+  "no",
+  "unknown",
+  "experimental",
+  "nonstandard",
+  "deprecated",
+  "footnote",
+  "disabled",
+  "altname",
+  "prefix",
+];
 
 function getActiveLegendItems(
   compat: bcd.Identifier,
   name: string,
   browserInfo: bcd.Browsers
 ) {
-  const legendItems = new Set<LEGEND_KEY>();
+  const legendItems = new Set<string>();
 
   for (const feature of listFeatures(compat, "", name)) {
     const { status } = feature.compat;
@@ -92,9 +92,7 @@ function getActiveLegendItems(
       }
     }
   }
-  return Object.keys(LEGEND_LABELS)
-    .filter((key) => legendItems.has(key as LEGEND_KEY))
-    .map((key) => [key, LEGEND_LABELS[key]]);
+  return LEGEND_KEYS.filter((key) => legendItems.has(key));
 }
 
 export function Legend({
@@ -105,9 +103,10 @@ export function Legend({
   name: string;
 }) {
   const browserInfo = useContext(BrowserInfoContext);
+  const { t } = useTranslation("bcd");
 
   if (!browserInfo) {
-    throw new Error("Missing browser info");
+    throw new Error(t("error.missingBrowserInfo"));
   }
 
   return (
@@ -116,8 +115,11 @@ export function Legend({
         Legend
       </h3>
       <dl className="bc-legend-items-container">
-        {getActiveLegendItems(compat, name, browserInfo).map(([key, label]) =>
-          ["yes", "partial", "no", "unknown", "preview"].includes(key) ? (
+        {getActiveLegendItems(compat, name, browserInfo).map((key) => {
+          const label = t(`compatLabels.${key}.title`);
+          return ["yes", "partial", "no", "unknown", "preview"].includes(
+            key
+          ) ? (
             <div className="bc-legend-item" key={key}>
               <dt className="bc-legend-item-dt" key={key}>
                 <span className={`bc-supports-${key} bc-supports`}>
@@ -141,8 +143,8 @@ export function Legend({
               </dt>
               <dd className="bc-legend-item-dd">{label}</dd>
             </div>
-          )
-        )}
+          );
+        })}
       </dl>
     </section>
   );

@@ -11,12 +11,15 @@ export class BrowserCompatibilityErrorBoundary extends React.Component<
   any,
   any
 > {
-  state = {
-    error: null,
-  };
+  constructor(props) {
+    super(props);
+    this.state = { error: null, t: props.t };
+  }
+
   componentDidCatch(error, _errorInfo) {
     this.setState({
       error,
+      t: this.state.t,
     });
     // TODO: Report this error to Sentry, https://github.com/mdn/yari/issues/99
   }
@@ -25,8 +28,7 @@ export class BrowserCompatibilityErrorBoundary extends React.Component<
       return (
         <>
           <div className="bc-table-error-boundary">
-            Unfortunately, this table has encountered unhandled error and the
-            content cannot be shown.
+            {this.state.t("error.unhandledError")}
             {/* TODO: When error reporting is set up, the message should include "We have been notified of this error" or something similar */}
           </div>
         </>

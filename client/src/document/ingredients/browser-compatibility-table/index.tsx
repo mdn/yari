@@ -1,5 +1,6 @@
 import React, { useReducer } from "react";
 import { useLocation } from "react-router-dom";
+import { useTranslation, Trans } from "react-i18next";
 import type bcd from "@mdn/browser-compat-data/types";
 import { BrowserInfoContext } from "./browser-info";
 import { BrowserCompatibilityErrorBoundary } from "./error-boundary";
@@ -66,11 +67,9 @@ type CellIndex = [number, number];
 function FeatureListAccordion({
   features,
   browsers,
-  locale,
 }: {
   features: ReturnType<typeof listFeatures>;
   browsers: bcd.BrowserNames[];
-  locale: string;
 }) {
   const [[activeRow, activeColumn], dispatchCellToggle] = useReducer<
     React.Reducer<CellIndex | [null, null], CellIndex>
@@ -93,7 +92,6 @@ function FeatureListAccordion({
           onToggleCell={([row, column]: [number, number]) => {
             dispatchCellToggle([row, column]);
           }}
-          locale={locale}
         />
       ))}
     </>
@@ -104,19 +102,16 @@ export default function BrowserCompatibilityTable({
   query,
   data,
   browsers: browserInfo,
-  locale,
 }: {
   query: string;
   data: bcd.Identifier;
   browsers: bcd.Browsers;
-  locale: string;
 }) {
   const location = useLocation();
+  const { t } = useTranslation("bcd");
 
   if (!data || !Object.keys(data).length) {
-    throw new Error(
-      "BrowserCompatibilityTable component called with empty data"
-    );
+    throw new Error(t("error.emptyData"));
   }
 
   const breadcrumbs = query.split(".");
@@ -142,16 +137,16 @@ export default function BrowserCompatibilityTable({
   }
 
   return (
-    <BrowserCompatibilityErrorBoundary>
+    <BrowserCompatibilityErrorBoundary t={t}>
       <BrowserInfoContext.Provider value={browserInfo}>
         <a
           className="bc-github-link external external-icon"
           href={getNewIssueURL()}
           target="_blank"
           rel="noopener noreferrer"
-          title="Report an issue with this compatibility data"
+          title={t("reportIssue.title")}
         >
-          Report problems with this compatibility data on GitHub
+          {t("reportIssue.body")}
         </a>
         <div className="table-scroll">
           <div className="table-scroll-inner">
@@ -161,7 +156,6 @@ export default function BrowserCompatibilityTable({
                 <FeatureListAccordion
                   browsers={browsers}
                   features={listFeatures(data, "", name)}
-                  locale={locale}
                 />
               </tbody>
             </table>
@@ -171,12 +165,14 @@ export default function BrowserCompatibilityTable({
 
         {/* https://github.com/mdn/yari/issues/1191 */}
         <div className="hidden">
-          The compatibility table on this page is generated from structured
-          data. If you'd like to contribute to the data, please check out{" "}
-          <a href="https://github.com/mdn/browser-compat-data">
-            https://github.com/mdn/browser-compat-data
-          </a>{" "}
-          and send us a pull request.
+          <Trans t={t} i18nKey="attribution">
+            The compatibility table on this page is generated from structured
+            data. If you'd like to contribute to the data, please check out{" "}
+            <a href="https://github.com/mdn/browser-compat-data">
+              https://github.com/mdn/browser-compat-data
+            </a>{" "}
+            and send us a pull request.
+          </Trans>
         </div>
       </BrowserInfoContext.Provider>
     </BrowserCompatibilityErrorBoundary>

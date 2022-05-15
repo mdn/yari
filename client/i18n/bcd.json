@@ -1,0 +1,69 @@
+{
+  "noData": "No compatibility data found for <1>[[query]]</1>.<br/><4>Check for problems with this page</4> or contribute missing data to <7>mdn/browser-compat-data</7>.",
+  "isServer": "BCD tables only load in the browser<1> with JavaScript enabled. Enable JavaScript to view data.</1>",
+  "loading": "Loading BCD table",
+  "attribution": "The compatibility table on this page is generated from structured data. If you'd like to contribute to the data, please check out <1>https://github.com/mdn/browser-compat-data</1> and send us a pull request.",
+  "releaseDate": "Released [[browserReleaseDate]]",
+  "toggleHistory": "Toggle history",
+  "error": {
+    "simple": "Error loading BCD data",
+    "longer": "Error loading browser compatibility table",
+    "reason": "This can happen if the JavaScript, which is loaded later, didn't successfully load.",
+    "reload": "Try reloading the page",
+    "debug": "If you're curious, this was the error:",
+    "unhandledError": "Unfortunately, this table has encountered an unhandled error and the content cannot be shown.",
+    "emptyData": "BrowserCompatibilityTable component called with empty data",
+    "missingBrowserInfo": "Missing browser info",
+    "mdnUrlInvalid": "[[mdnUrl]] does not exist"
+  },
+  "reportIssue": {
+    "title": "Report an issue with this compatibility data",
+    "body": "Report problems with this compatibility data on GitHub"
+  },
+  "compatLabels": {
+    "yes": { "title": "Full support", "label": "Yes" },
+    "partial": { "title": "Partial support", "label": "Partial" },
+    "preview": {
+      "title": "In development. Supported in a pre-release version.",
+      "description": "Preview browser support"
+    },
+    "no": { "title": "No support", "label": "No" },
+    "unknown": { "title": "Compatibility unknown", "label": "?" },
+    "experimental": {
+      "title": "Experimental. Expect behavior to change in the future.",
+      "label": "Experimental"
+    },
+    "nonstandard": {
+      "title": "Non-standard. Check cross-browser support before using.",
+      "label": "Non-standard"
+    },
+    "deprecated": {
+      "title": "Deprecated. Not for use in new websites.",
+      "label": "Deprecated"
+    },
+    "footnote": { "title": "See implementation notes." },
+    "disabled": {
+      "title": "User must explicitly enable this feature."
+    },
+    "altname": {
+      "title": "Uses a non-standard name.",
+      "description": "Alternate name: [[altname]]"
+    },
+    "prefix": {
+      "title": "Requires a vendor prefix or different name for use.",
+      "description": "Implemented with the vendor prefix: [[prefix]]"
+    }
+  },
+  "flagNotes": {
+    "added": "From version [[versionAdded]]",
+    "removed": "Until version [[versionRemoved]] (exclusive)",
+    "addedAndRemoved": "From version [[versionAdded]] until version [[versionRemoved]] (exclusive)",
+    "versionKnown": ": this feature is behind the",
+    "versionUnknown": "This feature is behind the",
+    "runtime_flag": "<1>[[flag]]</1> runtime flag",
+    "preference": "<1>[[flag]]</1> preference",
+    "valueToSet": "(needs to be set to [[value]])",
+    "multipleFlags": " and the ",
+    "preferencesHowTo": " To change preferences in [[browser]], visit [[prefUrl]]."
+  }
+}

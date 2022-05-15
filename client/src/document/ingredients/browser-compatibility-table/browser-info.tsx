@@ -1,4 +1,5 @@
 import React, { useContext } from "react";
+import { useTranslation } from "react-i18next";
 import type bcd from "@mdn/browser-compat-data/types";
 
 export const BrowserInfoContext = React.createContext<bcd.Browsers | null>(
@@ -7,8 +8,9 @@ export const BrowserInfoContext = React.createContext<bcd.Browsers | null>(
 
 export function BrowserName({ id }: { id: bcd.BrowserNames }) {
   const browserInfo = useContext(BrowserInfoContext);
+  const { t } = useTranslation("bcd");
   if (!browserInfo) {
-    throw new Error("Missing browser info");
+    throw new Error(t("error.missingBrowserInfo"));
   }
   return <>{browserInfo[id].name}</>;
 }
