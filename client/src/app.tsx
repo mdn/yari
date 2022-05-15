@@ -1,5 +1,6 @@
 import React, { useEffect } from "react";
 import { Routes, Route, useLocation, useMatch } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 // we include our base SASS here to ensure it is loaded
 // and applied before any component specific style
@@ -112,12 +113,14 @@ function LoadingFallback({ message }: { message?: string }) {
 
 export function App(appProps) {
   const localeMatch = useMatch("/:locale/*");
+  const { i18n } = useTranslation();
 
   useEffect(() => {
     const locale = localeMatch?.params.locale || appProps.locale;
 
     document.documentElement.setAttribute("lang", locale);
-  }, [appProps.locale, localeMatch]);
+    i18n.changeLanguage(locale);
+  }, [appProps.locale, localeMatch, i18n]);
 
   // When preparing a build for use in the NPM package, CRUD_MODE is always true.
   // But if the App is loaded from the code that builds the SPAs, then `isServer`

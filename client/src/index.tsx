@@ -7,6 +7,9 @@ import { GAProvider } from "./ga-context";
 import { UserDataProvider } from "./user-context";
 import { UIProvider } from "./ui-context";
 
+// Enable localization for Yari components
+import "./i18n";
+
 // import * as serviceWorker from './serviceWorker';
 
 const container = document.getElementById("root");
@@ -28,7 +31,9 @@ const app = (
       <UserDataProvider>
         <UIProvider>
           <Router>
-            <App {...appData} />
+            <React.Suspense fallback={null}>
+              <App {...appData} />
+            </React.Suspense>
           </Router>
         </UIProvider>
       </UserDataProvider>
