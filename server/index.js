@@ -178,6 +178,29 @@ app.get("/_flaws", flawsRoute);
 
 app.use("/_translations", translationsRouter);
 
+app.get("/:locale/_yari/:namespace", (req, res) => {
+  // Grab the i18next file for the Yari platform localization
+  const { locale, namespace } = req.params;
+  const fileroot =
+    locale === "en-us"
+      ? path.join(__dirname, "..", "client", "i18n")
+      : path.join(getRoot(locale), locale, "_yari");
+  const filepath = path.join(fileroot, `${namespace}.json`);
+
+  if (!fs.existsSync(filepath)) {
+    res.status(404).send("Locale file not found");
+    return;
+  }
+
+  try {
+    const localeJson = JSON.parse(fs.readFileSync(filepath));
+    res.setHeader("content-type", "text/json");
+    res.status(200).json(localeJson);
+  } catch (e) {
+    res.status(500).send("Locale file could not be parsed");
+  }
+});
+
 app.get("/*/contributors.txt", async (req, res) => {
   const url = req.path.replace(/\/contributors\.txt$/, "");
   const document = Document.findByURL(url);
