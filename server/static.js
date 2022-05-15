@@ -3,6 +3,7 @@ const path = require("path");
 const express = require("express");
 const compression = require("compression");
 const cookieParser = require("cookie-parser");
+const csrf = require("csurf");
 
 const { staticMiddlewares } = require("./middlewares");
 const { resolveFundamental } = require("../content");
@@ -30,6 +31,8 @@ app.get("/", async (req, res) => {
 app.use(staticMiddlewares);
 
 app.use(cookieParser());
+
+app.use(csrf({ cookie: true }));
 
 // This endpoint exists solely to accompany the headless tests.
 // They will trigger XHR requests to `/api/v1/search?....`
