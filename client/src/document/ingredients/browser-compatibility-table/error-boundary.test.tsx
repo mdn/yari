@@ -4,13 +4,16 @@ import { MemoryRouter } from "react-router-dom";
 
 import { BrowserCompatibilityErrorBoundary } from "./error-boundary";
 
+// Mock i18n function
+const t = () => "This is a dummy error message";
+
 function renderWithRouter(component) {
   return render(<MemoryRouter>{component}</MemoryRouter>);
 }
 
 it("renders without crashing", () => {
   const { container } = renderWithRouter(
-    <BrowserCompatibilityErrorBoundary>
+    <BrowserCompatibilityErrorBoundary t={t}>
       <div />
     </BrowserCompatibilityErrorBoundary>
   );
@@ -38,7 +41,7 @@ it("renders crashing mock component", () => {
     .mockImplementation(() => {});
 
   const { container } = renderWithRouter(
-    <BrowserCompatibilityErrorBoundary>
+    <BrowserCompatibilityErrorBoundary t={t}>
       <CrashingComponent />
     </BrowserCompatibilityErrorBoundary>
   );
