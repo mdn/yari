@@ -21,6 +21,7 @@ import { OfflineSettings } from "./offline-settings";
 import { docCategory } from "./utils";
 import { Contribute } from "./community";
 import { ContributorSpotlight } from "./contributor-spotlight";
+import { useIsServer } from "./hooks";
 
 import { Banner, hasActiveBanners } from "./banners";
 
@@ -30,13 +31,13 @@ const Translations = React.lazy(() => import("./translations"));
 const WritersHomepage = React.lazy(() => import("./writers-homepage"));
 const Sitemap = React.lazy(() => import("./sitemap"));
 
-const isServer = typeof window === "undefined";
-
 function Layout({ pageType, children }) {
   const { pathname } = useLocation();
   const [category, setCategory] = React.useState<string | null>(
     docCategory({ pathname })
   );
+
+  const isServer = useIsServer();
 
   React.useEffect(() => {
     setCategory(docCategory({ pathname }));
@@ -118,6 +119,8 @@ export function App(appProps) {
 
     document.documentElement.setAttribute("lang", locale);
   }, [appProps.locale, localeMatch]);
+
+  const isServer = useIsServer();
 
   // When preparing a build for use in the NPM package, CRUD_MODE is always true.
   // But if the App is loaded from the code that builds the SPAs, then `isServer`
