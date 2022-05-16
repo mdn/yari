@@ -223,6 +223,7 @@ test.describe("Testing the CRUD apps", () => {
     test.skip(withCrud());
 
     await page.goto(devURL("/"));
+    expect(await page.title()).toContain("MDN Web Docs");
     await page.waitForLoadState("networkidle");
 
     expect(await page.isVisible("text=Writer's home page")).toBeTruthy();

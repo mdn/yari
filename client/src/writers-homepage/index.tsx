@@ -1,5 +1,4 @@
 import React from "react";
-import { Link } from "react-router-dom";
 import { PageContentContainer } from "../ui/atoms/page-content";
 import { Search } from "../ui/molecules/search";
 import { useLocale } from "../hooks";
@@ -28,83 +27,77 @@ export default function WritersHomepage() {
         <h3>Sample pages</h3>
         <ul>
           <li>
-            <Link to="/en-US/docs/MDN/Kitchensink">
-              The Kitchensink (en-US)
-            </Link>
+            <a href="/en-US/docs/MDN/Kitchensink">The Kitchensink (en-US)</a>
           </li>
           <li>
-            <Link to={`/${locale}/docs/Web/HTML`}>Web/HTML index</Link>
+            <a href={`/${locale}/docs/Web/HTML`}>Web/HTML index</a>
             <ul>
               <li>
-                <Link to={`/${locale}/docs/Web/HTML/Element/video`}>
+                <a href={`/${locale}/docs/Web/HTML/Element/video`}>
                   HTML/video
-                </Link>
+                </a>
               </li>
             </ul>
           </li>
 
           <li>
-            <Link to={`/${locale}/docs/Web/API`}>Web/API index</Link>
+            <a href={`/${locale}/docs/Web/API`}>Web/API index</a>
             <ul>
               <li>
-                <Link to={`/${locale}/docs/Web/API/Fetch_API/Using_Fetch`}>
+                <a href={`/${locale}/docs/Web/API/Fetch_API/Using_Fetch`}>
                   Using Fetch API
-                </Link>
+                </a>
               </li>
             </ul>
           </li>
           <li>
-            <Link to={`/${locale}/docs/Web/CSS`}>Web/CSS index</Link>
+            <a href={`/${locale}/docs/Web/CSS`}>Web/CSS index</a>
             <ul>
               <li>
-                <Link to={`/${locale}/docs/Web/CSS/Specificity`}>
+                <a href={`/${locale}/docs/Web/CSS/Specificity`}>
                   CSS Specificity
-                </Link>
+                </a>
               </li>
             </ul>
           </li>
           <li>
-            <Link to={`/${locale}/docs/Web/JavaScript`}>
-              Web/JavaScript index
-            </Link>
+            <a href={`/${locale}/docs/Web/JavaScript`}>Web/JavaScript index</a>
             <ul>
               <li>
-                <Link
-                  to={`/${locale}/docs/Web/JavaScript/Reference/Global_Objects/Array/forEach`}
+                <a
+                  href={`/${locale}/docs/Web/JavaScript/Reference/Global_Objects/Array/forEach`}
                 >
                   Array.prototype.forEach()
-                </Link>
+                </a>
               </li>
             </ul>
           </li>
           <li>
-            <Link
-              to={`/${locale}/docs/Mozilla/Add-ons/WebExtensions/Browser_support_for_JavaScript_APIs`}
+            <a
+              href={`/${locale}/docs/Mozilla/Add-ons/WebExtensions/Browser_support_for_JavaScript_APIs`}
             >
               Page with lots of BCD tables
-            </Link>
+            </a>
           </li>
           <li>
-            <Link
-              to={`/${locale}/docs/Web/API/Document/#Browser_compatibility`}
-            >
+            <a href={`/${locale}/docs/Web/API/Document/#Browser_compatibility`}>
               Largest BCD table
-            </Link>
+            </a>
           </li>
         </ul>
         <h3>Tools</h3>
         <ul>
           <li>
-            <Link to={`/${locale}/_translations`}>Translations</Link>
+            <a href={`/${locale}/_translations`}>Translations</a>
           </li>
           <li>
-            <Link to={`/${locale}/_sitemap`}>Sitemap</Link>
+            <a href={`/${locale}/_sitemap`}>Sitemap</a>
           </li>
           <li>
-            <Link to={`/${locale}/_flaws`}>Flaws Dashboard</Link>
+            <a href={`/${locale}/_flaws`}>Flaws Dashboard</a>
           </li>
           <li>
-            <Link to={`/${locale}/_traits`}>All Documents Traits</Link>
+            <a href={`/${locale}/_traits`}>All Documents Traits</a>
           </li>
         </ul>
       </div>
