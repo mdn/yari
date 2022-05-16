@@ -16,6 +16,7 @@ const loadAllLanguages = lazy(() => {
   loadLanguages([
     "python",
     "bash",
+    "batch",
     "sql",
     "json",
     "glsl",
