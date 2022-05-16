@@ -31,9 +31,7 @@ const app = (
       <UserDataProvider>
         <UIProvider>
           <Router>
-            <React.Suspense fallback={null}>
-              <App {...appData} />
-            </React.Suspense>
+            <App {...appData} />
           </Router>
         </UIProvider>
       </UserDataProvider>
