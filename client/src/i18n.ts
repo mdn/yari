@@ -2,6 +2,8 @@ import i18n from "i18next";
 import { initReactI18next } from "react-i18next";
 import Backend from "i18next-http-backend";
 
+import { VALID_LOCALES } from "./constants";
+
 i18n
   .use(Backend)
   .use(initReactI18next)
@@ -9,6 +11,7 @@ i18n
     debug: true,
 
     fallbackLng: "en-US",
+    supportedLngs: Array.from(VALID_LOCALES),
 
     interpolation: {
       prefix: "[[",
