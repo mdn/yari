@@ -191,6 +191,7 @@ const CellText = React.memo(
         title = "Partial support";
         label = status.label || "Partial";
         break;
+
       case "removed-partial":
         if (timeline) {
           title = "Partial support";
