@@ -301,9 +301,7 @@ function FlagsNote({
           versionRemoved: supportItem.version_removed,
         }
       )}
-      {hasAddedVersion || hasRemovedVersion
-        ? t("flagNotes.versionKnown")
-        : t("flagNotes.versionUnknown")}
+      {t("flagNotes.main")}
       {flags.map((flag, i) => (
         <React.Fragment key={flag.name}>
           {t(`flagNotes.${flag.type}`, {

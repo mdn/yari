@@ -55,11 +55,10 @@
     }
   },
   "flagNotes": {
-    "added": "From version [[versionAdded]]",
-    "removed": "Until version [[versionRemoved]] (exclusive)",
-    "addedAndRemoved": "From version [[versionAdded]] until version [[versionRemoved]] (exclusive)",
-    "versionKnown": ": this feature is behind the",
-    "versionUnknown": "This feature is behind the",
+    "added": "From version [[versionAdded]]: ",
+    "removed": "Until version [[versionRemoved]] (exclusive): ",
+    "addedAndRemoved": "From version [[versionAdded]] until version [[versionRemoved]] (exclusive): ",
+    "main": "This feature is behind the",
     "runtime_flag": "<1>[[flag]]</1> runtime flag",
     "preference": "<1>[[flag]]</1> preference",
     "valueToSet": "(needs to be set to [[value]])",
