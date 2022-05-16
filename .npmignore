@@ -43,3 +43,4 @@ webpack.config.js
 jest.config.js
 *.test.js
 .storybook/
+.nvmrc

@@ -66,11 +66,6 @@ jobs:
           curl --retry-connrefused --retry 5 --silent http://localhost:3000 > /dev/null
 
       - name: Test viewing the dev server
-        env:
-          # This will make sure the tests in `testing/tests/*.test.js` only run
-          # if the development server is up and ready to be tested.
-          TESTING_DEVELOPING: true
-          CONTENT_ROOT: mdn/content/files
         run: |
           yarn test:developing
 

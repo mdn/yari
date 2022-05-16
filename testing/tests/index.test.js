@@ -1474,11 +1474,11 @@ test("deprecated macros are fixable", () => {
 
   const jsonFile = path.join(builtFolder, "index.json");
   const { doc } = JSON.parse(fs.readFileSync(jsonFile));
-  expect(doc.flaws.macros.length).toBe(4);
+  expect(doc.flaws.macros.length).toBe(2);
   // All fixable and all a suggestion of ''
-  expect(doc.flaws.macros.filter((flaw) => flaw.fixable).length).toBe(4);
+  expect(doc.flaws.macros.filter((flaw) => flaw.fixable).length).toBe(2);
   expect(doc.flaws.macros.filter((flaw) => flaw.suggestion === "").length).toBe(
-    4
+    2
   );
 });
 
@@ -1513,10 +1513,10 @@ test("home page should have a /index.json file with pullRequestsData", () => {
   const builtFolder = path.join(buildRoot, "en-us");
 
   const jsonFile = path.join(builtFolder, "index.json");
-  const { hyData: { pullRequestsData } = {} } = JSON.parse(
+  const { hyData: { recentContributions } = {} } = JSON.parse(
     fs.readFileSync(jsonFile)
   );
-  expect(pullRequestsData.items.length).toBeGreaterThan(0);
+  expect(recentContributions.items.length).toBeGreaterThan(0);
 });
 
 test("headings with links in them are flaws", () => {
