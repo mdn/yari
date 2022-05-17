@@ -21,7 +21,7 @@ const web = require("../kumascript/src/api/web.js");
  *
  * ...give or take some whitespace.
  */
-function extractSidebar($) {
+export function extractSidebar($) {
   const search = $("#Quick_links");
   if (!search.length) {
     return "";
@@ -31,7 +31,7 @@ function extractSidebar($) {
   return sidebarHtml;
 }
 
-function extractSections($) {
+export function extractSections($) {
   const flaws = [];
   const sections = [];
   const section = cheerio
@@ -747,7 +747,7 @@ function _addSectionProse($) {
  * Given an array of sections, return a plain text
  * string of a summary. No HTML or Kumascript allowed.
  */
-function extractSummary(sections) {
+export function extractSummary(sections) {
   let summary = ""; // default and fallback is an empty string.
 
   function extractFirstGoodParagraph($) {
@@ -796,9 +796,3 @@ function extractSummary(sections) {
   }
   return summary;
 }
-
-module.exports = {
-  extractSidebar,
-  extractSections,
-  extractSummary,
-};

@@ -50,7 +50,7 @@ const IGNORE = new Set(["none", "text", "plain", "unix"]);
  * syntax highlighted with Prism.
  *
  */
-function syntaxHighlight($, doc) {
+export function syntaxHighlight($, doc) {
   loadAllLanguages();
 
   // Our content will be like this: `<pre class="brush:js">` or
@@ -87,5 +87,3 @@ function syntaxHighlight($, doc) {
     $pre.empty().append($code);
   });
 }
-
-module.exports = { syntaxHighlight };

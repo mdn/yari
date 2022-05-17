@@ -3,7 +3,7 @@ const { getPopularities } = require("../content");
 // getPopularities() is memoized so it's fast to call repeatedly
 const getPopularity = (item) => getPopularities().get(item.url) || 0;
 
-module.exports = class SearchIndex {
+export default class SearchIndex {
   constructor() {
     this._itemsByLocale = {};
   }
@@ -33,4 +33,4 @@ module.exports = class SearchIndex {
   getItems() {
     return this._itemsByLocale;
   }
-};
+}

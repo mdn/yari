@@ -252,7 +252,7 @@ function loadLocaleAndAdd(
   };
 }
 
-function add(
+export function add(
   locale,
   updatePairs,
   { fix = false, strict = false, dry = false } = {}
@@ -267,7 +267,7 @@ function add(
   }
 }
 
-function remove(locale, urls, { strict = false } = {}) {
+export function remove(locale, urls, { strict = false } = {}) {
   const localeLC = locale.toLowerCase();
   const urlsLC = new Set(urls.map((url) => url.toLowerCase()));
   const { pairs, root } = loadLocaleAndAdd(localeLC, [], {
@@ -277,7 +277,7 @@ function remove(locale, urls, { strict = false } = {}) {
   save(path.join(root, localeLC), filteredPairs);
 }
 
-function validateLocale(locale, strict = false) {
+export function validateLocale(locale, strict = false) {
   const localeLC = locale.toLowerCase();
   // To validate strict we check if there is something to fix.
   const { changed } = loadLocaleAndAdd(localeLC, [], { fix: strict, strict });
@@ -311,7 +311,7 @@ function redirectFilePathForLocale(locale, throws = false) {
 // The module level cache
 const redirects = new Map();
 
-function load(locales = [...VALID_LOCALES.keys()], verbose = false) {
+export function load(locales = [...VALID_LOCALES.keys()], verbose = false) {
   for (const locale of locales) {
     const redirectsFilePath = redirectFilePathForLocale(locale);
     if (!redirectsFilePath) {
@@ -329,7 +329,7 @@ function load(locales = [...VALID_LOCALES.keys()], verbose = false) {
   }
 }
 
-const resolve = (url) => {
+export const resolve = (url) => {
   if (!redirects.size) {
     load();
   }
@@ -480,15 +480,7 @@ function save(localeFolder, pairs) {
   writeStream.end();
 }
 
-module.exports = {
-  add,
-  remove,
-  resolve,
-  load,
-  validateLocale,
-
-  testing: {
-    shortCuts,
-    decodePairs,
-  },
+export const testing = {
+  shortCuts,
+  decodePairs,
 };

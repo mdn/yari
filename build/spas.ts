@@ -85,7 +85,7 @@ async function buildContributorSpotlight(locale, options) {
   }
 }
 
-async function buildSPAs(options) {
+export async function buildSPAs(options) {
   let buildCount = 0;
 
   // The URL isn't very important as long as it triggers the right route in the <App/>
@@ -350,5 +350,3 @@ async function fetchLatestNews() {
     items,
   };
 }
-
-module.exports = { buildSPAs };

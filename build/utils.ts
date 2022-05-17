@@ -34,14 +34,14 @@ function humanFileSize(size) {
 // be able to process them and fix the problem we need to "temporarily"
 // pretend they were hosted on a remote working full domain.
 // See https://github.com/mdn/yari/issues/1103
-function forceExternalURL(url) {
+export function forceExternalURL(url) {
   if (url.startsWith("/")) {
     return `https://mdn.mozillademos.org${url}`;
   }
   return url;
 }
 
-async function downloadAndResizeImage(src, out, basePath) {
+export async function downloadAndResizeImage(src, out, basePath) {
   const imageResponse = await got(forceExternalURL(src), {
     responseType: "buffer",
     timeout: 10000,
@@ -115,7 +115,7 @@ async function downloadAndResizeImage(src, out, basePath) {
   return destination;
 }
 
-function getImageminPlugin(fileName) {
+export function getImageminPlugin(fileName) {
   const extension = path.extname(fileName).toLowerCase();
   if (extension === ".jpg" || extension === ".jpeg") {
     return imageminMozjpeg();
@@ -132,7 +132,7 @@ function getImageminPlugin(fileName) {
   throw new Error(`No imagemin plugin for ${extension}`);
 }
 
-function splitSections(rawHTML) {
+export function splitSections(rawHTML) {
   const $ = cheerio.load(`<div id="_body">${rawHTML}</div>`);
   const blocks = [];
   const toc = [];
@@ -165,10 +165,3 @@ function splitSections(rawHTML) {
   const sections = blocks.map((block) => block.html().trim());
   return { sections, toc };
 }
-
-module.exports = {
-  downloadAndResizeImage,
-  forceExternalURL,
-  humanFileSize,
-  splitSections,
-};

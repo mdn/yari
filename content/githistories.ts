@@ -4,7 +4,7 @@ const path = require("path");
 // Module-level cache
 const gitHistoryMaps = new Map();
 
-function getGitHistories(root, locale) {
+export function getGitHistories(root, locale) {
   const localeLC = locale.toLowerCase();
   const folder = path.join(root, localeLC);
   if (!gitHistoryMaps.has(folder)) {
@@ -22,5 +22,3 @@ function getGitHistories(root, locale) {
   }
   return gitHistoryMaps.get(folder);
 }
-
-module.exports = { getGitHistories };

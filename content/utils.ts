@@ -2,12 +2,12 @@ const path = require("path");
 const childProcess = require("child_process");
 
 const { CONTENT_ROOT, CONTENT_TRANSLATED_ROOT } = require("../libs/env");
-const { slugToFolder } = require("../libs/slug-utils");
+const { slugToFolder: _slugToFolder } = require("../libs/slug-utils");
 const LRU = require("lru-cache");
 
-const MEMOIZE_INVALIDATE = Symbol("force cache update");
+export const MEMOIZE_INVALIDATE = Symbol("force cache update");
 
-function getRoot(locale, throws = "") {
+export function getRoot(locale, throws = "") {
   const root =
     locale.toLowerCase() === "en-us" ? CONTENT_ROOT : CONTENT_TRANSLATED_ROOT;
   if (throws && !root) {
@@ -16,7 +16,7 @@ function getRoot(locale, throws = "") {
   return root;
 }
 
-function buildURL(locale, slug) {
+export function buildURL(locale, slug) {
   if (!locale) throw new Error("locale falsy!");
   if (!slug) throw new Error("slug falsy!");
   return `/${locale}/docs/${slug}`;
@@ -33,7 +33,7 @@ function isPromise(p) {
  * Note: The parameter are turned into a cache key quite naively, so
  * different object key order would lead to new cache entries.
  */
-function memoize(fn) {
+export function memoize(fn) {
   if (process.env.NODE_ENV !== "production") {
     return fn;
   }
@@ -67,7 +67,7 @@ function memoize(fn) {
   };
 }
 
-function execGit(args, opts = {}, root = null) {
+export function execGit(args, opts = {}, root = null) {
   let gitRoot = root;
   if (!gitRoot) {
     gitRoot = execGit(
@@ -102,17 +102,9 @@ function execGit(args, opts = {}, root = null) {
   return stdout.toString().trim();
 }
 
-function urlToFolderPath(url) {
+export function urlToFolderPath(url) {
   const [, locale, , ...slugParts] = url.split("/");
   return path.join(locale.toLowerCase(), slugToFolder(slugParts.join("/")));
 }
 
-module.exports = {
-  buildURL,
-  getRoot,
-  slugToFolder: (slug) => slugToFolder(slug, path.sep),
-  memoize,
-  execGit,
-  urlToFolderPath,
-  MEMOIZE_INVALIDATE,
-};
+export const slugToFolder = (slug) => _slugToFolder(slug, path.sep);

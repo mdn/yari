@@ -1,6 +1,10 @@
 const ESCAPE_CHARS_RE = /[.*+?^${}()|[\]\\]/g;
 
-function* findMatchesInText(needle, haystack, { attribute = null } = {}) {
+export function* findMatchesInText(
+  needle,
+  haystack,
+  { attribute = null } = {}
+) {
   // Need to remove any characters that can affect a regex if we're going
   // use the string in a manually constructed regex.
   const escaped = needle.replace(ESCAPE_CHARS_RE, "\\$&");
@@ -20,7 +24,7 @@ function* findMatchesInText(needle, haystack, { attribute = null } = {}) {
   }
 }
 
-function getFirstMatchInText(needle, haystack) {
+export function getFirstMatchInText(needle, haystack) {
   const index = haystack.indexOf(needle);
   const left = haystack.substring(0, index);
   const line = left.split("\n").length;
@@ -38,7 +42,7 @@ function replaceMatchingLinksInMarkdown(needle, haystack, replacement) {
   });
 }
 
-function replaceMatchesInText(
+export function replaceMatchesInText(
   needle,
   haystack,
   replacement,
@@ -60,10 +64,3 @@ function replaceMatchesInText(
     return match.replace(p1, replacement);
   });
 }
-
-module.exports = {
-  findMatchesInText,
-  getFirstMatchInText,
-  replaceMatchesInText,
-  replaceMatchingLinksInMarkdown,
-};

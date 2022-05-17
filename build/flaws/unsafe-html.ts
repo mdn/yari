@@ -107,4 +107,4 @@ function getAndMarkupUnsafeHTMLFlaws(doc, $, { rawContent, fileInfo }) {
   return flaws;
 }
 
-module.exports = { getUnsafeHTMLFlaws: getAndMarkupUnsafeHTMLFlaws };
+export const getUnsafeHTMLFlaws = getAndMarkupUnsafeHTMLFlaws;

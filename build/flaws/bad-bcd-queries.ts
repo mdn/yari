@@ -6,7 +6,7 @@ const { packageBCD } = require("../resolve-bcd");
 //
 //    <div class="bc-data" id="bcd:never.ever.heard.of">
 
-function getBadBCDQueriesFlaws(doc, $) {
+export function getBadBCDQueriesFlaws(doc, $) {
   return $("div.bc-data")
     .map((i, element) => {
       const $element = $(element);
@@ -26,5 +26,3 @@ function getBadBCDQueriesFlaws(doc, $) {
       suggestion: null,
     }));
 }
-
-module.exports = { getBadBCDQueriesFlaws };

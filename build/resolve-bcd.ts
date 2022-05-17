@@ -2,7 +2,7 @@
 
 const bcd = require("@mdn/browser-compat-data");
 
-function packageBCD(query) {
+export function packageBCD(query) {
   const data = query.split(".").reduce((prev, curr) => {
     return prev && Object.prototype.hasOwnProperty.call(prev, curr)
       ? prev[curr]
@@ -10,7 +10,3 @@ function packageBCD(query) {
   }, bcd);
   return { browsers: bcd.browsers, data };
 }
-
-module.exports = {
-  packageBCD,
-};

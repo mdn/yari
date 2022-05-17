@@ -16,7 +16,7 @@ const { DEFAULT_LOCALE } = require("../libs/constants");
  * log them as flaws if they're not passing linting.
  *
  */
-function checkImageReferences(doc, $, options, { url, rawContent }) {
+export function checkImageReferences(doc, $, options, { url, rawContent }) {
   const filePaths = new Set();
 
   const checkImages = options.flawLevels.get("images") !== FLAW_LEVELS.IGNORE;
@@ -231,7 +231,7 @@ function checkImageReferences(doc, $, options, { url, rawContent }) {
  * has some hardcoded patterns for margins and borders that would be
  * best to set "centrally" with a style sheet.
  */
-function checkImageWidths(doc, $, options, { rawContent }) {
+export function checkImageWidths(doc, $, options, { rawContent }) {
   const checkImages =
     options.flawLevels.get("image_widths") !== FLAW_LEVELS.IGNORE;
 
@@ -370,5 +370,3 @@ function checkImageWidths(doc, $, options, { rawContent }) {
     );
   }
 }
-
-module.exports = { checkImageReferences, checkImageWidths };

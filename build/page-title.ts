@@ -12,7 +12,7 @@ const { Document } = require("../content");
  * done when Kuma was the platform.
  *
  */
-function getPageTitle(doc) {
+export function getPageTitle(doc) {
   const docURL = doc.mdn_url;
   const rootParentURL = getRootURL(docURL);
   let title = doc.title;
@@ -36,7 +36,7 @@ const BAD_ROOTS = new Set(["Web"]);
 /**
  * Return the root URL based on specific rules.
  */
-function getRootURL(url) {
+export function getRootURL(url) {
   const split = url.split("/");
   // If "url" was "/$locale/docs/Foo/Bar/Bez" the thing to return
   // is "/$locale/docs/Foo".
@@ -48,5 +48,3 @@ function getRootURL(url) {
   }
   return split.slice(0, index).join("/");
 }
-
-module.exports = { getPageTitle };

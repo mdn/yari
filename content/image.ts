@@ -41,11 +41,11 @@ const find = memoize((relativePath) => {
   );
 });
 
-function findByURL(url) {
+export function findByURL(url) {
   return find(urlToFilePath(url));
 }
 
-function findByURLWithFallback(url) {
+export function findByURLWithFallback(url) {
   let filePath = findByURL(url);
   const urlParts = url.split("/");
   const locale = urlParts[1].toLowerCase();
@@ -56,8 +56,3 @@ function findByURLWithFallback(url) {
   }
   return filePath;
 }
-
-module.exports = {
-  findByURL,
-  findByURLWithFallback,
-};
