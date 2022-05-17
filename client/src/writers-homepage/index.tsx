@@ -103,9 +103,6 @@ export default function WritersHomepage() {
           <li>
             <Link to={`/${locale}/_flaws`}>Flaws Dashboard</Link>
           </li>
-          <li>
-            <Link to={`/${locale}/_traits`}>All Documents Traits</Link>
-          </li>
         </ul>
       </div>
     </PageContentContainer>
