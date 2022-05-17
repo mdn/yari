@@ -98,7 +98,7 @@ export interface TranslationDifferenceFlaw extends GenericFlaw {
   };
 }
 
-type Flaws = {
+export type Flaws = {
   broken_links: BrokenLink[];
   macros: MacroErrorMessage[];
   bad_bcd_queries: BadBCDQueryFlaw[];

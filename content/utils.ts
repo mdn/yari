@@ -67,7 +67,11 @@ export function memoize(fn) {
   };
 }
 
-export function execGit(args, opts = {}, root = null) {
+interface Opts {
+  cwd?: string;
+}
+
+export function execGit(args, opts: Opts = {}, root = null) {
   let gitRoot = root;
   if (!gitRoot) {
     gitRoot = execGit(

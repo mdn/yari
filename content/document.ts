@@ -395,7 +395,7 @@ export function update(url, rawBody, metadata) {
   }
 }
 
-export function findByURL(url, ...args) {
+export function findByURL(url: string, ...args) {
   const [bareURL, hash = ""] = url.split("#", 2);
   if (!bareURL.toLowerCase().includes("/docs/")) {
     return;

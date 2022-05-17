@@ -24,7 +24,9 @@ async function buildDocumentInteractive(
   documentPath,
   interactive,
   invalidate = false
-) {
+): Promise<
+  { doc: {}; skip: true } | { document: any; doc: BuiltDocument; skip: false }
+> {
   try {
     const document = invalidate
       ? Document.read(documentPath, Document.MEMOIZE_INVALIDATE)

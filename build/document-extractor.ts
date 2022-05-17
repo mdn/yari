@@ -1,7 +1,21 @@
-const cheerio = require("cheerio");
+import * as cheerio from "cheerio";
 const { packageBCD } = require("./resolve-bcd");
+import * as bcd from "@mdn/browser-compat-data/types";
+import {
+  BCDSection,
+  ProseSection,
+  Section,
+  SpecificationsSection,
+} from "../client/src/document/types";
 const specs = require("browser-specs");
 const web = require("../kumascript/src/api/web.js");
+
+interface SimpleSupportStatementWithReleaseDate
+  extends bcd.SimpleSupportStatement {
+  release_date?: string;
+}
+
+type SectionsAndFlaws = [Section[], string[]];
 
 /** Extract and mutate the $ if it as a "Quick_links" section.
  * But only if it exists.
@@ -21,7 +35,7 @@ const web = require("../kumascript/src/api/web.js");
  *
  * ...give or take some whitespace.
  */
-export function extractSidebar($) {
+export function extractSidebar($: cheerio.Root) {
   const search = $("#Quick_links");
   if (!search.length) {
     return "";
@@ -31,7 +45,7 @@ export function extractSidebar($) {
   return sidebarHtml;
 }
 
-export function extractSections($) {
+export function extractSections($: cheerio.Root) {
   const flaws = [];
   const sections = [];
   const section = cheerio
@@ -183,7 +197,7 @@ export function extractSections($) {
  *        specifications: {....}
  *   }]
  */
-function addSections($) {
+function addSections($: cheerio.Cheerio): SectionsAndFlaws {
   const flaws = [];
 
   const countPotentialSpecialDivs = $.find("div.bc-data, div.bc-specs").length;
@@ -304,7 +318,7 @@ function addSections($) {
   return [proseSections, flaws];
 }
 
-function _addSingleSpecialSection($) {
+function _addSingleSpecialSection($: cheerio.Cheerio): Section[] {
   let id = null;
   let title = null;
   let isH3 = false;
@@ -344,11 +358,10 @@ function _addSingleSpecialSection($) {
   // back on a regular prose section :(
   if (!dataQuery && specURLsString === "") {
     // I wish there was a good place to log this!
-    const [proseSections] = _addSectionProse($);
-    return proseSections;
+    return _addSectionProse($)[0];
   }
   const query = dataQuery.replace(/^bcd:/, "");
-  const { browsers, data } = packageBCD(query);
+  const { browsers, data }: bcd.CompatData = packageBCD(query);
 
   if (specialSectionType === "browser_compatibility") {
     if (data === undefined) {
@@ -387,7 +400,7 @@ function _addSingleSpecialSection($) {
 
   throw new Error(`Unrecognized special section type '${specialSectionType}'`);
 
-  function _buildSpecialBCDSection() {
+  function _buildSpecialBCDSection(): [BCDSection] {
     // First extract a map of all release data, keyed by (normalized) browser
     // name and the versions.
     // You'll have a map that looks like this:
@@ -413,8 +426,8 @@ function _addSingleSpecialSection($) {
     }
 
     for (const block of _extractCompatBlocks(data)) {
-      for (let [browser, info] of Object.entries(block.support)) {
-        // `info` here will be one of the following:
+      for (let [browser, originalInfo] of Object.entries(block.support)) {
+        // `originalInfo` here will be one of the following:
         //  - a single simple_support_statement:
         //    { version_added: 42 }
         //  - an array of simple_support_statements:
@@ -422,10 +435,14 @@ function _addSingleSpecialSection($) {
         //
         // Standardize the first version to an array of one, so we don't have
         // to deal with two different forms below
-        if (!Array.isArray(info)) {
-          info = [info];
-        }
-        for (const infoEntry of info) {
+
+        const infos: SimpleSupportStatementWithReleaseDate[] = Array.isArray(
+          originalInfo
+        )
+          ? originalInfo
+          : [originalInfo];
+
+        for (const infoEntry of infos) {
           const added =
             typeof infoEntry.version_added === "string" &&
             infoEntry.version_added.startsWith("≤")
@@ -439,9 +456,12 @@ function _addSingleSpecialSection($) {
             }
           }
         }
-        info.sort((a, b) =>
+
+        infos.sort((a, b) =>
           _compareVersions(_getFirstVersion(b), _getFirstVersion(a))
         );
+
+        block.support[browser] = infos;
       }
     }
 
@@ -465,11 +485,7 @@ function _addSingleSpecialSection($) {
     ];
   }
 
-  /**
-   * @param {object} support - {bcd.SimpleSupportStatement}
-   * @returns {string}
-   */
-  function _getFirstVersion(support) {
+  function _getFirstVersion(support: bcd.SimpleSupportStatement): string {
     if (typeof support.version_added === "string") {
       return support.version_added;
     } else if (typeof support.version_removed === "string") {
@@ -479,23 +495,14 @@ function _addSingleSpecialSection($) {
     }
   }
 
-  /**
-   * @param {string} a
-   * @param {string} b
-   */
-  function _compareVersions(a, b) {
+  function _compareVersions(a: string, b: string) {
     const x = _splitVersion(a);
     const y = _splitVersion(b);
 
     return _compareNumberArray(x, y);
   }
 
-  /**
-   * @param {number[]} a
-   * @param {number[]} b
-   * @return {number}
-   */
-  function _compareNumberArray(a, b) {
+  function _compareNumberArray(a: number[], b: number[]): number {
     while (a.length || b.length) {
       const x = a.shift() || 0;
       const y = b.shift() || 0;
@@ -506,12 +513,7 @@ function _addSingleSpecialSection($) {
 
     return 0;
   }
-
-  /**
-   * @param {string} version
-   * @return {number[]}
-   */
-  function _splitVersion(version) {
+  function _splitVersion(version: string): number[] {
     if (version.startsWith("≤")) {
       version = version.slice(1);
     }
@@ -523,10 +525,12 @@ function _addSingleSpecialSection($) {
    * Recursively extracts `__compat` objects from the `feature` and from all
    * nested features at any depth.
    *
-   * @param {Object} feature The feature.
-   * @returns {Object[]} The array of `__compat` objects.
+   * @param {bcd.Identifier} feature The feature.
+   * @returns {bcd.CompatStatement[]} The array of `__compat` objects.
    */
-  function _extractCompatBlocks(feature) {
+  function _extractCompatBlocks(
+    feature: bcd.Identifier
+  ): bcd.CompatStatement[] {
     const blocks = [];
     for (const [key, value] of Object.entries(feature)) {
       if (key === "__compat") {
@@ -538,7 +542,7 @@ function _addSingleSpecialSection($) {
     return blocks;
   }
 
-  function _buildSpecialSpecSection() {
+  function _buildSpecialSpecSection(): [SpecificationsSection] {
     // Collect spec URLs from a BCD feature, a 'spec-urls' value, or both;
     // For a BCD feature, it can either be a string or an array of strings.
     let specURLs = [];
@@ -660,7 +664,7 @@ function _addSingleSpecialSection($) {
   }
 }
 
-function _addSectionProse($) {
+function _addSectionProse($: cheerio.Cheerio): SectionsAndFlaws {
   let id = null;
   let title = null;
   let titleAsText = null;
@@ -719,7 +723,7 @@ function _addSectionProse($) {
     id = id.replace(/_+$/g, "");
   }
 
-  const value = {
+  const value: ProseSection["value"] = {
     id,
     title,
     isH3,
@@ -729,10 +733,10 @@ function _addSectionProse($) {
   // Only include it if it's useful. It's an optional property and it's
   // potentially a waste of space to include it if it's not different.
   if (titleAsText && titleAsText !== title) {
-    value.titleAsText = titleAsText;
+    value["titleAsText"] = titleAsText;
   }
 
-  const sections = [];
+  const sections: ProseSection[] = [];
   if (value.content || value.title) {
     sections.push({
       type: "prose",
@@ -747,10 +751,10 @@ function _addSectionProse($) {
  * Given an array of sections, return a plain text
  * string of a summary. No HTML or Kumascript allowed.
  */
-export function extractSummary(sections) {
+export function extractSummary(sections: Section[]): string {
   let summary = ""; // default and fallback is an empty string.
 
-  function extractFirstGoodParagraph($) {
+  function extractFirstGoodParagraph($): string {
     const seoSummary = $("span.seoSummary, .summary");
     if (seoSummary.length && seoSummary.text()) {
       return seoSummary.text();
@@ -771,7 +775,8 @@ export function extractSummary(sections) {
   // If the sections contains a "Summary" one, use that, otherwise
   // use the first prose one.
   const summarySections = sections.filter(
-    (section) => section.type === "prose" && section.value.title === "Summary"
+    (section: Section): section is ProseSection =>
+      section.type === "prose" && section.value.title === "Summary"
   );
   if (summarySections.length) {
     const $ = cheerio.load(summarySections[0].value.content);

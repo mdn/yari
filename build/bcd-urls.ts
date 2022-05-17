@@ -1,5 +1,7 @@
 const { Document, Redirect } = require("../content");
 const { FLAW_LEVELS } = require("../libs/constants");
+import { Doc } from "../client/src/document/types";
+
 /**
  * Loop over, and mutate, all 'browser_compatibility' sections.
  * BCD data comes from from a library with `mdn_url`'s that are absolute.
@@ -9,7 +11,7 @@ const { FLAW_LEVELS } = require("../libs/constants");
  * Also, if enabled, check all of these inner `mdn_url` for flaws.
  *
  */
-export function normalizeBCDURLs(doc, options) {
+export function normalizeBCDURLs(doc: Doc, options) {
   const checkLinks =
     options.flawLevels.get("bad_bcd_links") !== FLAW_LEVELS.IGNORE;
 

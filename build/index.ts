@@ -1,8 +1,10 @@
+import { Doc, Flaws } from "../client/src/document/types";
+
 const fs = require("fs");
 const path = require("path");
 
 const chalk = require("chalk");
-const cheerio = require("cheerio");
+import * as cheerio from "cheerio";
 
 const { Document, Image, execGit } = require("../content");
 const { CONTENT_ROOT, REPOSITORY_URLS } = require("../libs/env");
@@ -26,11 +28,20 @@ export const { default: buildOptions } = require("./build-options");
 export const { gather: gatherGitHistory } = require("./git-history");
 export const { buildSPAs } = require("./spas");
 const { renderCache: renderKumascriptCache } = require("../kumascript");
-const LANGUAGES_RAW = require("../libs/languages");
+const LANGUAGES_RAW = require("../libs/languages") as Record<
+string,
+Language
+>;
 const { safeDecodeURIComponent } = require("../kumascript/src/api/util");
 const { wrapTables } = require("./wrap-tables");
 
-const LANGUAGES = new Map(
+// TODO Deduplicate.
+interface Language {
+  sh: string;
+  native: string;
+}
+
+const LANGUAGES = new Map<string, Language>(
   Object.entries(LANGUAGES_RAW).map(([locale, data]) => {
     return [locale.toLowerCase(), data];
   })
@@ -275,7 +286,25 @@ function getAdjacentImages(documentDirectory) {
     .map((dirent) => path.join(documentDirectory, dirent.name));
 }
 
-export async function buildDocument(document, documentOptions = {}) {
+interface ExtendedDoc extends Omit<Doc, "flaws"> {
+  // TODO Check why these are not part of Doc.
+  flaws: Partial<Flaws>;
+  summary: string;
+  popularity: number;
+  noIndexing: boolean;
+}
+
+export interface BuiltDocument {
+  doc: Doc;
+  liveSamples: any;
+  fileAttachments: any;
+  bcdData: any;
+}
+
+export async function buildDocument(
+  document,
+  documentOptions = {}
+): Promise<BuiltDocument> {
   // Important that the "local" document options comes last.
   // And use Object.assign to create a new object instead of mutating the
   // global one.
@@ -292,9 +321,8 @@ export async function buildDocument(document, documentOptions = {}) {
     isMarkdown: document.isMarkdown,
     isTranslated: document.isTranslated,
     isActive: document.isActive,
-  };
-
-  doc.flaws = {};
+    flaws: {},
+  } as Partial<ExtendedDoc>;
 
   let flaws = [];
   let renderedHtml = "";
@@ -611,7 +639,8 @@ export async function buildDocument(document, documentOptions = {}) {
     document.metadata.slug.startsWith("orphaned/") ||
     document.metadata.slug.startsWith("conflicting/");
 
-  return { doc, liveSamples, fileAttachments, bcdData };
+  // TODO Refactor to avoid `as Doc` type assertion.
+  return { doc: doc as Doc, liveSamples, fileAttachments, bcdData };
 }
 
 export async function buildLiveSamplePageFromURL(url) {
