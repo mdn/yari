@@ -1,10 +1,11 @@
 import React, { useReducer } from "react";
 import { useLocation } from "react-router-dom";
+import { browsers as browserData } from "@mdn/browser-compat-data";
 import type bcd from "@mdn/browser-compat-data/types";
 import { BrowserInfoContext } from "./browser-info";
 import { BrowserCompatibilityErrorBoundary } from "./error-boundary";
 import { FeatureRow } from "./feature-row";
-import { Headers, PLATFORM_BROWSERS } from "./headers";
+import { Headers } from "./headers";
 import { Legend } from "./legend";
 import { listFeatures } from "./utils";
 
@@ -44,12 +45,15 @@ function gatherPlatformsAndBrowsers(
   let platforms = ["desktop", "mobile"];
   if (category === "javascript" || hasNodeJSData || hasDenoData) {
     platforms.push("server");
-  } else if (category === "webextensions") {
-    platforms = ["webextensions-desktop", "webextensions-mobile"];
   }
 
   const browsers = new Set(
-    platforms.map((platform) => PLATFORM_BROWSERS[platform] || []).flat()
+    Object.keys(browserData).filter(
+      (browser) =>
+        platforms.includes(browserData[browser].type) &&
+        (category !== "webextensions" ||
+          browserData[browser].accepts_webextensions)
+    ) as bcd.BrowserNames[]
   );
 
   // If there is no Node.js data for a category outside of "javascript", don't
