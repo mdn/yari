@@ -14,6 +14,14 @@
 //
 // See also : LiveSampleLink
 
+// We have deprecated the use of the $4 parameter (transclusion)
+// If this parameter is not empty, we raise a MacroDeprecationError flaw
+// When there will be 0 use left on translated-content (May 2022: 203 occurrences),
+// we will be able to simplify this macro (and likely the whole of MDN).
+if ($4 !== '') {
+  mdn.deprecated();
+}
+
 var sampleIdOrOffset = $0 || $token.location.start.offset;
 if(typeof sampleIdOrOffset === "string"){
   sampleIdOrOffset = sampleIdOrOffset.toLowerCase();
