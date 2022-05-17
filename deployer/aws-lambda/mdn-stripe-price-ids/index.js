@@ -7,7 +7,6 @@ const STAGE_ENV = "stage";
 
 exports.handler = async (event) => {
   const request = event.Records[0].cf.request;
-  console.log(request.origin.custom.customHeaders);
   //This should fail if this header is not set.
   const ENV =
     request.origin.custom.customHeaders["x-mdn-env"][0].value || "prod";
