@@ -74,7 +74,7 @@ export function extractSections($: cheerio.Root) {
     // which would exclude any node that isn't a tag, such as comments.
     // That might make the DOM nodes more compact and memory efficient.
     c++;
-    section.append(child);
+    section.append(child as unknown as cheerio.Cheerio);
   });
   if (c) {
     // last straggler
@@ -275,14 +275,14 @@ function addSections($: cheerio.Cheerio): SectionsAndFlaws {
             section.empty();
             c = 0; // reset the counter
           }
-          section.append(child);
+          section.append(child as unknown as cheerio.Cheerio);
           // XXX That `_addSingleSpecialSection(section.clone())` might return a
           // and empty array and that means it failed and we should
           // bail.
           subSections.push(..._addSingleSpecialSection(section.clone()));
           section.empty();
         } else {
-          section.append(child);
+          section.append(child as unknown as cheerio.Cheerio);
           c++;
         }
       });
