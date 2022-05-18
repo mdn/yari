@@ -1,3 +1,5 @@
+import { Flaw } from ".";
+
 const {
   INTERACTIVE_EXAMPLES_BASE_URL,
   LIVE_SAMPLES_BASE_URL,
@@ -37,7 +39,7 @@ function getAndMarkupUnsafeHTMLFlaws(doc, $, { rawContent, fileInfo }) {
     const fixable = false;
     const suggestion = null;
 
-    const flaw = {
+    const flaw: Flaw = {
       explanation,
       id,
       fixable,

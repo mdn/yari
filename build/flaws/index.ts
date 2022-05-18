@@ -18,6 +18,18 @@ export const { injectSectionFlaws } = require("./sections");
 const { getUnsafeHTMLFlaws } = require("./unsafe-html");
 const { injectTranslationDifferences } = require("./translation-differences");
 
+export interface Flaw {
+  explanation: any;
+  id: any;
+  fixable: any;
+  html?: any;
+  suggestion: any;
+  type?: any;
+  line?: any;
+  column?: any;
+  difference?: any;
+}
+
 export function injectFlaws(doc, $, options, document) {
   const flawChecks = [
     ["unsafe_html", getUnsafeHTMLFlaws, false],

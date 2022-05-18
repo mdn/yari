@@ -1,3 +1,5 @@
+import { Flaw } from ".";
+
 const { getFirstMatchInText } = require("../matches-in-text");
 const escapeHTML = (s) =>
   s
@@ -50,7 +52,7 @@ export function getPreTagFlaws(doc, $, { rawContent }) {
       }
     }
 
-    const flaw = { explanation, id, fixable, html, suggestion, type };
+    const flaw: Flaw = { explanation, id, fixable, html, suggestion, type };
     if (fixable) {
       // Only if it's fixable, is the `html` perfectly findable in the raw content.
       const { line, column } = getFirstMatchInText(html, rawContent);
