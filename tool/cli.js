@@ -529,11 +529,7 @@ program
         locales: new Map([[locale.toLowerCase(), true]]),
       });
       for (const document of allDocs.iter()) {
-        if (
-          document.isMarkdown
-            ? fileTypes.includes("md")
-            : fileTypes.includes("html")
-        ) {
+        if (fileTypes.includes(document.isMarkdown ? "md" : "html")) {
           await buildDocument(document, {
             fixFlaws: true,
             fixFlawsTypes: new Set(fixFlawsTypes),
