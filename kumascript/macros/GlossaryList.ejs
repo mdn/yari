@@ -11,6 +11,11 @@
 //      * `split` : A string with one of the value `h1`, `h2`, `h3`, `h4`, `h5`, `h6`. If this property is define with a valid value, the list of terms will be split with intermediate title for each letter.
 //      * `css`   : A sring representing some extra CSS class to apply to the list (to the top most UL elements)
 
+// Throw a MacroDeprecatedError flaw
+// Condition for removal: no more use in translated-content (May 2022: 42 occurrences)
+// 0 occurrences left in en-US
+mdn.deprecated();
+
 var URL    = "/en-US/docs/Glossary";
 
 var i;

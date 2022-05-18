@@ -1474,11 +1474,11 @@ test("deprecated macros are fixable", () => {
 
   const jsonFile = path.join(builtFolder, "index.json");
   const { doc } = JSON.parse(fs.readFileSync(jsonFile));
-  expect(doc.flaws.macros.length).toBe(4);
+  expect(doc.flaws.macros.length).toBe(2);
   // All fixable and all a suggestion of ''
-  expect(doc.flaws.macros.filter((flaw) => flaw.fixable).length).toBe(4);
+  expect(doc.flaws.macros.filter((flaw) => flaw.fixable).length).toBe(2);
   expect(doc.flaws.macros.filter((flaw) => flaw.suggestion === "").length).toBe(
-    4
+    2
   );
 });
 
