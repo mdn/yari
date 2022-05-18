@@ -683,45 +683,48 @@ function _addSectionProse($: cheerio.Cheerio): SectionsAndFlaws {
 
   let h2found = false;
   const h2s = $.find("h2");
-  for (const i of [...Array(h2s.length).keys()]) {
+  h2s.each((i) => {
+    const h2 = h2s.eq(i);
+
     if (i) {
       // Excess!
       flaws.push(
-        `Excess <h2> tag that is NOT at root-level (id='${h2s
-          .eq(i)
-          .attr("id")}', text='${h2s.eq(i).text()}')`
+        `Excess <h2> tag that is NOT at root-level (id='${h2.attr(
+          "id"
+        )}', text='${h2.text()}')`
       );
     } else {
       // First element
-      id = h2s.eq(i).attr("id");
-      title = h2s.eq(i).html();
-      titleAsText = h2s.eq(i).text();
-      h2s.eq(i).remove();
+      id = h2.attr("id");
+      title = h2.html();
+      titleAsText = h2.text();
+      h2.remove();
     }
     h2found = true;
-  }
+  });
 
   // If there was no <h2>, look through all the <h3>s.
   if (!h2found) {
     const h3s = $.find("h3");
-    for (const i of [...Array(h3s.length).keys()]) {
+    h3s.each((i) => {
+      const h3 = h3s.eq(i);
       if (i) {
         // Excess!
         flaws.push(
-          `Excess <h3> tag that is NOT at root-level (id='${h3s
-            .eq(i)
-            .attr("id")}', text='${h3s.eq(i).text()}')`
+          `Excess <h3> tag that is NOT at root-level (id='${h3.attr(
+            "id"
+          )}', text='${h3.text()}')`
         );
       } else {
-        id = h3s.eq(i).attr("id");
-        title = h3s.eq(i).html();
-        titleAsText = h3s.eq(i).text();
+        id = h3.attr("id");
+        title = h3.html();
+        titleAsText = h3.text();
         if (id && title) {
           isH3 = true;
-          h3s.eq(i).remove();
+          h3.remove();
         }
       }
-    }
+    });
   }
 
   if (id) {
