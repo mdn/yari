@@ -3,10 +3,13 @@ const { getPopularities } = require("../content");
 // getPopularities() is memoized so it's fast to call repeatedly
 const getPopularity = (item) => getPopularities().get(item.url) || 0;
 
+type Locale = string;
+interface SearchItem {
+  title: string;
+  url: string;
+}
 export default class SearchIndex {
-  constructor() {
-    this._itemsByLocale = {};
-  }
+  private _itemsByLocale: Record<Locale, SearchItem[]> = {};
 
   add({ metadata: { locale, title }, url }) {
     const localeLC = locale.toLowerCase();
