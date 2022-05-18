@@ -188,6 +188,12 @@ Which RSS feed URL to parse for displaying feed entries on the home page.
 
 How many RSS feed entries to display on the home page.
 
+### `BUILD_FIX_FLAWS_TYPES`
+
+**Default: `broken_links`**
+
+Flaw types to be fixed when running `fix-flaws`.
+
 ## Server
 
 ### `SERVER_PORT`

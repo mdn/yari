@@ -58,9 +58,8 @@ const FIX_FLAWS_TYPES = new Set(
 );
 
 if ([...FIX_FLAWS_TYPES].some((flawType) => !VALID_FLAW_CHECKS.has(flawType))) {
-  console.log([...FIX_FLAWS_TYPES]);
   throw new Error(
-    `Env var FIX_FLAWS_TYPES must be a subset of ${[
+    `Env var BUILD_FIX_FLAWS_TYPES must be a subset of ${[
       ...VALID_FLAW_CHECKS.values(),
     ].join(",")}`
   );

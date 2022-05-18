@@ -525,7 +525,6 @@ program
     tryOrExit(async ({ args, options }) => {
       const { fixFlawsTypes } = args;
       const { locale, fileTypes } = options;
-      console.log(fileTypes);
       const allDocs = Document.findAll({
         locales: new Map([[locale.toLowerCase(), true]]),
       });
