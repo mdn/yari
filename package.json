@@ -143,6 +143,7 @@
     "@pmmmwh/react-refresh-webpack-plugin": "^0.5.7",
     "@svgr/webpack": "^6.2.1",
     "@testing-library/react": "^13.3.0",
+    "@types/cheerio": "^0.22.31",
     "@types/hast": "^2.3.4",
     "@types/jest": "^28.1.4",
     "@types/mdast": "^3.0.10",
