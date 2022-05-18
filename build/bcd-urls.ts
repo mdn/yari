@@ -25,6 +25,7 @@ export function normalizeBCDURLs(doc: Doc, options) {
       suggestion,
       query,
       key,
+      explanation: "",
     });
   }
 
