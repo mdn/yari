@@ -509,9 +509,8 @@ function findChildren(url, recursive = false) {
     .withErrors()
     .filter((filePath) => {
       return (
-        filePath.endsWith(HTML_FILENAME) ||
-        (filePath.endsWith(MARKDOWN_FILENAME) &&
-          !(filePath === baseHTML || filePath === baseMarkdown))
+        (filePath.endsWith(HTML_FILENAME) && !(filePath === baseHTML)) ||
+        (filePath.endsWith(MARKDOWN_FILENAME) && !(filePath === baseMarkdown))
       );
     })
     .withMaxDepth(recursive ? Infinity : 1)
