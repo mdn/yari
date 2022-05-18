@@ -54,7 +54,10 @@ export function extractSections($: cheerio.Root) {
     })("div")
     .eq(0);
 
-  const iterable = [...$("#_body")[0].childNodes];
+  const body = $("#_body")[0] as cheerio.TagElement;
+  const iterable = [...body.childNodes].filter(
+    (child): child is cheerio.TagElement => child.type != "text"
+  );
 
   let c = 0;
   iterable.forEach((child) => {
@@ -248,10 +251,13 @@ function addSections($: cheerio.Cheerio): SectionsAndFlaws {
       // Loop over each and every "root element" in the node and keep piling
       // them up in a buffer, until you encounter a `div.bc-data` or `div.bc-specs` then
       // add that to the stack, clear and repeat.
-      const iterable = [...$[0].childNodes];
+      const div = $[0] as cheerio.TagElement;
+      const iterable = [...div.childNodes].filter(
+        (child): child is cheerio.TagElement => child.type !== "text"
+      );
       let c = 0;
       let countSpecialDivsFound = 0;
-      iterable.forEach((child) => {
+      iterable.forEach((child: cheerio.TagElement) => {
         if (
           child.tagName === "div" &&
           child.attribs &&
