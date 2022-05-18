@@ -3978,10 +3978,10 @@ browser-process-hrtime@^1.0.0:
   resolved "https://registry.npmjs.org/browser-process-hrtime/-/browser-process-hrtime-1.0.0.tgz"
   integrity sha512-9o5UecI3GhkpM6DrXr69PblIuWxPKk9Y0jHBRhdocZ2y7YECBFCsHm79Pr3OyR2AvjhDkabFJaDJMYRazHgsow==
 
-browser-specs@^3.10.0:
-  version "3.10.0"
-  resolved "https://registry.yarnpkg.com/browser-specs/-/browser-specs-3.10.0.tgz#f248e41f5aa22ace7b093362e5a47f88762b079c"
-  integrity sha512-YKSowYjucocAd4kioYA5AOoYtSOVkmVM7wkGoWq85ZfiiJE5LRFobbYFmIijnav7gl2UQ2hwhz+EWBe7AUUWuw==
+browser-specs@^3.11.0:
+  version "3.11.0"
+  resolved "https://registry.yarnpkg.com/browser-specs/-/browser-specs-3.11.0.tgz#baf60e637e5672ecb8239144cc6e26460c1c1ace"
+  integrity sha512-upxgBq5oc8TNet5stM+nv4/43gtGiMkce/WoAiEHHI4H7RcqBDa64T73CohBjjfPsKzxvTSgteOoQllDDpBEqg==
 
 browserslist@^4.0.0, browserslist@^4.12.0, browserslist@^4.14.5, browserslist@^4.14.7, browserslist@^4.16.6, browserslist@^4.18.1, browserslist@^4.20.2, browserslist@^4.20.3:
   version "4.20.3"
