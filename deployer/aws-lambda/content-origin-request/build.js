@@ -1,8 +1,9 @@
 /* eslint-disable node/no-unpublished-require */
 /* eslint-disable node/no-missing-require */
-const { VALID_LOCALES } = require("@yari-internal/constants");
-const fs = require("fs");
-const path = require("path");
+import { VALID_LOCALES } from "@yari-internal/constants";
+
+import fs from "fs";
+import path from "path";
 
 const root = path.join(__dirname, "..", "..", "..");
 require("dotenv").config({

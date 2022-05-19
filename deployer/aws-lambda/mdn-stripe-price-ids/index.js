@@ -1,11 +1,10 @@
-const acceptLanguageParser = require("accept-language-parser");
-
-const stageLookup = require("./plans-stage-lookup.json");
-const prodLookup = require("./plans-prod-lookup.json");
+import acceptLanguageParser from "accept-language-parser";
+import stageLookup from "./plans-stage-lookup.json";
+import prodLookup from "./plans-prod-lookup.json";
 
 const STAGE_ENV = "stage";
 
-exports.handler = async (event) => {
+export const handler = async (event) => {
   const request = event.Records[0].cf.request;
   //This should fail if this header is not set.
   const ENV =

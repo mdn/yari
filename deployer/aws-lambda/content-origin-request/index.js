@@ -1,12 +1,13 @@
 /* eslint-disable node/no-missing-require */
-const { resolveFundamental } = require("@yari-internal/fundamental-redirects");
-const { getLocale } = require("@yari-internal/get-locale");
-const {
+import { resolveFundamental } from "@yari-internal/fundamental-redirects";
+
+import { getLocale } from "@yari-internal/get-locale";
+import {
   decodePath,
   encodePath,
   slugToFolder,
-} = require("@yari-internal/slug-utils");
-const { VALID_LOCALES } = require("@yari-internal/constants");
+} from "@yari-internal/slug-utils";
+import { VALID_LOCALES } from "@yari-internal/constants";
 
 const THIRTY_DAYS = 3600 * 24 * 30;
 const NEEDS_LOCALE = /^\/(?:docs|search|settings|signin|signup|plus)(?:$|\/)/;
@@ -33,7 +34,7 @@ const LEGACY_URI_NEEDING_TRAILING_SLASH = new RegExp(
 
 const CONTENT_DEVELOPMENT_DOMAIN = ".content.dev.mdn.mozit.cloud";
 
-const REDIRECTS = require("./redirects.json");
+import REDIRECTS from "./redirects.json";
 const REDIRECT_SUFFIXES = ["/index.json", "/bcd.json", ""];
 
 function redirect(location, { status = 302, cacheControlSeconds = 0 } = {}) {
@@ -83,7 +84,7 @@ function redirect(location, { status = 302, cacheControlSeconds = 0 } = {}) {
   };
 }
 
-exports.handler = async (event) => {
+export const handler = async (event) => {
   /*
    * Modify the request before it's passed to the S3 origin.
    */

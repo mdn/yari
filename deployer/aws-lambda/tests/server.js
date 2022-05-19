@@ -1,10 +1,9 @@
-/* eslint-disable node/no-unpublished-require */
-/* eslint-disable node/no-missing-require */
-const polka = require("polka");
-const kleur = require("kleur");
+/* eslint-disable node/no-unpublished-import */
+import polka from "polka";
 
-const requestHandler = require("../content-origin-request").handler;
-const responseHandler = require("../content-origin-response").handler;
+import kleur from "kleur";
+import { handler as requestHandler } from "../content-origin-request";
+import { handler as responseHandler } from "../content-origin-response";
 
 const PORT = parseInt(process.env.PORT || "7000");
 

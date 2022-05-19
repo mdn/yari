@@ -1,4 +1,4 @@
-const handler = require("../index");
+import handler from "../index";
 jest.mock("../plans-stage-lookup.json", () => {
   return require("./__mocks__/plans-stage-lookup-test.json");
 });
