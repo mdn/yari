@@ -3,9 +3,9 @@ import path from "path";
 import { renderToString } from "react-dom/server";
 import cheerio from "cheerio";
 
-import { ALWAYS_ALLOW_ROBOTS, BUILD_OUT_ROOT } from "../build/constants";
+import buildConstants from "../build/constants.js";
 
-import { DEFAULT_LOCALE } from "../libs/constants";
+import libsConstants from "../libs/constants/index.js";
 
 import { fileURLToPath } from "url";
 const dirname = fileURLToPath(new URL(".", import.meta.url));
@@ -75,7 +75,7 @@ const getGAScriptPathName = lazy((relPath = "/static/js/ga.js") => {
   // Remember, unless explicitly set, the BUILD_OUT_ROOT defaults to a path
   // based on `dirname` but that's wrong when compared as a source and as
   // a webpack built asset. So we need to remove the `/ssr/` portion of the path.
-  let root = BUILD_OUT_ROOT;
+  let root = buildConstants.BUILD_OUT_ROOT;
   if (!fs.existsSync(root)) {
     root = root
       .split(path.sep)
@@ -136,7 +136,7 @@ export default function render(
 
   // Some day, we'll have the chrome localized and then this can no longer be
   // hardcoded to 'en'. But for now, the chrome is always in "English (US)".
-  $("html").attr("lang", locale || DEFAULT_LOCALE);
+  $("html").attr("lang", locale || libsConstants.DEFAULT_LOCALE);
 
   const rendered = renderToString(renderApp);
 
@@ -212,7 +212,7 @@ export default function render(
   }
 
   const robotsContent =
-    !ALWAYS_ALLOW_ROBOTS ||
+    !buildConstants.ALWAYS_ALLOW_ROBOTS ||
     (doc && doc.noIndexing) ||
     pageNotFound ||
     noIndexing

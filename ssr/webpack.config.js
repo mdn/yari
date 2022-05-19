@@ -9,11 +9,13 @@ export default {
   entry: "./index.js",
   output: {
     path: path.resolve(dirname, "dist"),
-    filename: "[name].js",
+    filename: "[name].cjs",
     sourceMapFilename: "[name].js.map",
-    libraryTarget: "commonjs2",
+    library: {
+      type: "commonjs2",
+    },
   },
-  target: "node",
+  target: ["node", "es2020"],
   node: {
     __dirname: false,
     __filename: false,
