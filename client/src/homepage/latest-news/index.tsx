@@ -8,9 +8,10 @@ import "./index.scss";
 
 dayjs.extend(relativeTime);
 
-interface NewsItem {
+export interface NewsItem {
   url: string;
   title: string;
+  author?: string;
   source: {
     name: string;
     url: string;

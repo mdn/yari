@@ -17,6 +17,8 @@ const { default: got } = require("got");
 const { splitSections } = require("./utils");
 const cheerio = require("cheerio");
 const { findByURL } = require("../content/document");
+import { buildDocument } from ".";
+import { NewsItem } from "../client/src/homepage/latest-news"
 
 const dirname = __dirname;
 
@@ -252,10 +254,7 @@ export async function buildSPAs(options) {
         continue;
       }
 
-      let featuredContributor = null;
-      if (contributorSpotlightRoot) {
-        featuredContributor = await buildContributorSpotlight(locale, options);
-      }
+      let featuredContributor = contributorSpotlightRoot ? await buildContributorSpotlight(locale, options) : null;
 
       // circular dependency, so needs to be imported down here:
       const { buildDocument } = require("./");
@@ -329,7 +328,7 @@ async function fetchLatestNews() {
 
   const $ = cheerio.load(xml, { xmlMode: true });
 
-  const items = [];
+  const items: NewsItem[] = [];
 
   $("item").each((i, item) => {
     const $item = $(item);
