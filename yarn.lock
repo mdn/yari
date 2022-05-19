@@ -14335,10 +14335,10 @@ webpack-cli@^4.9.2:
     rechoir "^0.7.0"
     webpack-merge "^5.7.3"
 
-webpack-dev-middleware@^5.3.1, webpack-dev-middleware@^5.3.2:
-  version "5.3.2"
-  resolved "https://registry.yarnpkg.com/webpack-dev-middleware/-/webpack-dev-middleware-5.3.2.tgz#a7621d9a4e5d16e6b59976f9c78873e47b5e6496"
-  integrity sha512-PKp4aIEDC2FFJgNMRjdXhpy5ad7xeTqHb+/90Vr3yMymzzDxOVZw3Paj+vqKEMDXfGjuIvh8y99USoBOHZJcEg==
+webpack-dev-middleware@^5.3.1, webpack-dev-middleware@^5.3.3:
+  version "5.3.3"
+  resolved "https://registry.yarnpkg.com/webpack-dev-middleware/-/webpack-dev-middleware-5.3.3.tgz#efae67c2793908e7311f1d9b06f2a08dcc97e51f"
+  integrity sha512-hj5CYrY0bZLB+eTO+x/j67Pkrquiy7kWepMHmUMoPsmcUaeEnQJqFzHJOyxgWlq746/wUuA64p9ta34Kyb01pA==
   dependencies:
     colorette "^2.0.10"
     memfs "^3.4.3"
