@@ -24,7 +24,7 @@ if (process.env.NODE_ENV === "development") {
   devMiddlewares.push(
     webpackDevMiddleware(compiler, {
       noInfo: true,
-      publicPath: webpackConfig.output.publicPath,
+      publicPath: (webpackConfig as any).output.publicPath,
     })
   );
 
