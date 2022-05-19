@@ -4,6 +4,5 @@
     "strictBindCallApply": true,
     "target": "ES2018",
     "preserveWatchOutput": true
-  },
-  "files": []
+  }
 }
