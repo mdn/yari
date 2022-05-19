@@ -1,5 +1,5 @@
-const Prism = require("prismjs");
-const loadLanguages = require("prismjs/components/index");
+import Prism from "prismjs";
+import loadLanguages from "prismjs/components/index";
 
 const lazy = (creator) => {
   let res;
@@ -88,4 +88,4 @@ function syntaxHighlight($, doc) {
   });
 }
 
-module.exports = { syntaxHighlight };
+export default { syntaxHighlight };

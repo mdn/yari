@@ -1,17 +1,15 @@
-const fs = require("fs");
-const path = require("path");
-
-const cheerio = require("cheerio");
-const got = require("got");
-const FileType = require("file-type");
-const imagemin = require("imagemin");
-const imageminPngquant = require("imagemin-pngquant");
-const imageminMozjpeg = require("imagemin-mozjpeg");
-const imageminGifsicle = require("imagemin-gifsicle");
-const imageminSvgo = require("imagemin-svgo");
-const sanitizeFilename = require("sanitize-filename");
-
-const { VALID_MIME_TYPES } = require("../filecheck/constants");
+import fs from "fs";
+import path from "path";
+import cheerio from "cheerio";
+import got from "got";
+import FileType from "file-type";
+import imagemin from "imagemin";
+import imageminPngquant from "imagemin-pngquant";
+import imageminMozjpeg from "imagemin-mozjpeg";
+import imageminGifsicle from "imagemin-gifsicle";
+import imageminSvgo from "imagemin-svgo";
+import sanitizeFilename from "sanitize-filename";
+import { VALID_MIME_TYPES } from "../filecheck/constants";
 
 function humanFileSize(size) {
   if (size < 1024) return `${size} B`;
@@ -166,7 +164,7 @@ function splitSections(rawHTML) {
   return { sections, toc };
 }
 
-module.exports = {
+export default {
   downloadAndResizeImage,
   forceExternalURL,
   humanFileSize,

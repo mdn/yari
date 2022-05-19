@@ -1,4 +1,4 @@
-const path = require("path");
+import path from "path";
 
 require("dotenv").config({
   path: path.join(__dirname, "..", process.env.ENV_FILE || ".env"),
@@ -63,7 +63,7 @@ const ALWAYS_ALLOW_ROBOTS = JSON.parse(
   process.env.BUILD_ALWAYS_ALLOW_ROBOTS || "false"
 );
 
-module.exports = {
+export default {
   BUILD_OUT_ROOT,
   DEFAULT_FLAW_LEVELS,
   FILES,

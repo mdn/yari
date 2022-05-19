@@ -49,7 +49,7 @@ function replaceMatchesInText(
   });
 }
 
-module.exports = {
+export default {
   findMatchesInText,
   getFirstMatchInText,
   replaceMatchesInText,

@@ -6,4 +6,4 @@ function wrapTables($) {
   $("table").wrap(div);
 }
 
-module.exports = { wrapTables };
+export default { wrapTables };

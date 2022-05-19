@@ -1,19 +1,17 @@
-const path = require("path");
-
-const chalk = require("chalk");
-
-const { Document } = require("../../content");
-const { FLAW_LEVELS, VALID_FLAW_CHECKS } = require("../constants");
-const { DEFAULT_LOCALE } = require("../../libs/constants");
-const { replaceMatchesInText } = require("../matches-in-text");
-const { forceExternalURL, downloadAndResizeImage } = require("../utils");
-const { getBadBCDQueriesFlaws } = require("./bad-bcd-queries");
-const { getBrokenLinksFlaws } = require("./broken-links");
-const { getHeadingLinksFlaws } = require("./heading-links");
-const { getPreTagFlaws } = require("./pre-tags");
-const { injectSectionFlaws } = require("./sections");
-const { getUnsafeHTMLFlaws } = require("./unsafe-html");
-const { injectTranslationDifferences } = require("./translation-differences");
+import path from "path";
+import chalk from "chalk";
+import { Document } from "../../content";
+import { FLAW_LEVELS, VALID_FLAW_CHECKS } from "../constants";
+import { DEFAULT_LOCALE } from "../../libs/constants";
+import { replaceMatchesInText } from "../matches-in-text";
+import { forceExternalURL, downloadAndResizeImage } from "../utils";
+import { getBadBCDQueriesFlaws } from "./bad-bcd-queries";
+import { getBrokenLinksFlaws } from "./broken-links";
+import { getHeadingLinksFlaws } from "./heading-links";
+import { getPreTagFlaws } from "./pre-tags";
+import { injectSectionFlaws } from "./sections";
+import { getUnsafeHTMLFlaws } from "./unsafe-html";
+import { injectTranslationDifferences } from "./translation-differences";
 
 function injectFlaws(doc, $, options, document) {
   const flawChecks = [
@@ -254,4 +252,4 @@ async function fixFixableFlaws(doc, options, document) {
   }
 }
 
-module.exports = { injectFlaws, injectSectionFlaws, fixFixableFlaws };
+export default { injectFlaws, injectSectionFlaws, fixFixableFlaws };

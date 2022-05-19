@@ -1,22 +1,24 @@
-const fs = require("fs");
-const path = require("path");
-const frontmatter = require("front-matter");
+import fs from "fs";
+import path from "path";
+import frontmatter from "front-matter";
+import { m2h } from "../markdown";
 
-const { m2h } = require("../markdown");
-
-const {
+import {
   CONTENT_ROOT,
   CONTENT_TRANSLATED_ROOT,
   CONTRIBUTOR_SPOTLIGHT_ROOT,
   VALID_LOCALES,
-} = require("../content");
-const { BUILD_OUT_ROOT } = require("./constants");
+} from "../content";
+
+import { BUILD_OUT_ROOT } from "./constants";
+
 // eslint-disable-next-line node/no-missing-require
-const { renderHTML } = require("../ssr/dist/main");
-const { default: got } = require("got");
-const { splitSections } = require("./utils");
-const cheerio = require("cheerio");
-const { findByURL } = require("../content/document");
+import { renderHTML } from "../ssr/dist/main";
+
+import { default as got } from "got";
+import { splitSections } from "./utils";
+import cheerio from "cheerio";
+import { findByURL } from "../content/document";
 
 const FEATURED_ARTICLES = [
   "Web/CSS/color-scheme",
@@ -370,4 +372,4 @@ async function fetchLatestNews() {
   };
 }
 
-module.exports = { buildSPAs };
+export default { buildSPAs };

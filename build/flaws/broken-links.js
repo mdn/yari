@@ -1,13 +1,11 @@
-const fs = require("fs");
-const path = require("path");
-
-const fromMarkdown = require("mdast-util-from-markdown");
-const visit = require("unist-util-visit");
-
-const { Document, Redirect, Image } = require("../../content");
-const { FLAW_LEVELS } = require("../constants");
-const { findMatchesInText } = require("../matches-in-text");
-const { DEFAULT_LOCALE, VALID_LOCALES } = require("../../libs/constants");
+import fs from "fs";
+import path from "path";
+import fromMarkdown from "mdast-util-from-markdown";
+import visit from "unist-util-visit";
+import { Document, Redirect, Image } from "../../content";
+import { FLAW_LEVELS } from "../constants";
+import { findMatchesInText } from "../matches-in-text";
+import { DEFAULT_LOCALE, VALID_LOCALES } from "../../libs/constants";
 
 function findMatchesInMarkdown(rawContent, href) {
   const matches = [];
@@ -362,4 +360,4 @@ function getBrokenLinksFlaws(doc, $, { rawContent }, level) {
   return flaws;
 }
 
-module.exports = { getBrokenLinksFlaws };
+export default { getBrokenLinksFlaws };

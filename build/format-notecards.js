@@ -31,4 +31,4 @@ function formatNotecards($) {
   });
 }
 
-module.exports = { formatNotecards };
+export default { formatNotecards };

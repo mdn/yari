@@ -1,7 +1,7 @@
-const cheerio = require("cheerio");
-const { packageBCD } = require("./resolve-bcd");
-const specs = require("browser-specs");
-const web = require("../kumascript/src/api/web.js");
+import cheerio from "cheerio";
+import { packageBCD } from "./resolve-bcd";
+import specs from "browser-specs";
+import web from "../kumascript/src/api/web.js";
 
 /** Extract and mutate the $ if it as a "Quick_links" section.
  * But only if it exists.
@@ -738,7 +738,7 @@ function extractSummary(sections) {
   return summary;
 }
 
-module.exports = {
+export default {
   extractSidebar,
   extractSections,
   extractSummary,

@@ -32,7 +32,7 @@ function makeSitemapIndexXML(pathnames) {
   ].join("\n");
 }
 
-module.exports = {
+export default {
   makeSitemapXML,
   makeSitemapIndexXML,
 };

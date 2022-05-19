@@ -1,39 +1,36 @@
-const fs = require("fs");
-const path = require("path");
-
-const chalk = require("chalk");
-const cheerio = require("cheerio");
-
-const {
+import fs from "fs";
+import path from "path";
+import chalk from "chalk";
+import cheerio from "cheerio";
+import {
   Document,
   CONTENT_ROOT,
   Image,
   REPOSITORY_URLS,
   execGit,
-} = require("../content");
-const kumascript = require("../kumascript");
-
-const { FLAW_LEVELS } = require("./constants");
-const {
+} from "../content";
+import kumascript from "../kumascript";
+import { FLAW_LEVELS } from "./constants";
+import {
   extractSections,
   extractSidebar,
   extractSummary,
-} = require("./document-extractor");
-const SearchIndex = require("./search-index");
-const { addBreadcrumbData } = require("./document-utils");
-const { fixFixableFlaws, injectFlaws, injectSectionFlaws } = require("./flaws");
-const { normalizeBCDURLs, extractBCDData } = require("./bcd-urls");
-const { checkImageReferences, checkImageWidths } = require("./check-images");
-const { getPageTitle } = require("./page-title");
-const { syntaxHighlight } = require("./syntax-highlight");
-const { formatNotecards } = require("./format-notecards");
-const buildOptions = require("./build-options");
-const { gather: gatherGitHistory } = require("./git-history");
-const { buildSPAs } = require("./spas");
-const { renderCache: renderKumascriptCache } = require("../kumascript");
-const LANGUAGES_RAW = require("../content/languages.json");
-const { safeDecodeURIComponent } = require("../kumascript/src/api/util");
-const { wrapTables } = require("./wrap-tables");
+} from "./document-extractor";
+import SearchIndex from "./search-index";
+import { addBreadcrumbData } from "./document-utils";
+import { fixFixableFlaws, injectFlaws, injectSectionFlaws } from "./flaws";
+import { normalizeBCDURLs, extractBCDData } from "./bcd-urls";
+import { checkImageReferences, checkImageWidths } from "./check-images";
+import { getPageTitle } from "./page-title";
+import { syntaxHighlight } from "./syntax-highlight";
+import { formatNotecards } from "./format-notecards";
+import buildOptions from "./build-options";
+import { gather as gatherGitHistory } from "./git-history";
+import { buildSPAs } from "./spas";
+import { renderCache as renderKumascriptCache } from "../kumascript";
+import LANGUAGES_RAW from "../content/languages.json";
+import { safeDecodeURIComponent } from "../kumascript/src/api/util";
+import { wrapTables } from "./wrap-tables";
 
 const LANGUAGES = new Map(
   Object.entries(LANGUAGES_RAW).map(([locale, data]) => {
@@ -668,7 +665,7 @@ function renderContributorsTxt(wikiContributorNames = null, githubURL = null) {
   return txt;
 }
 
-module.exports = {
+export default {
   FLAW_LEVELS,
 
   buildDocument,

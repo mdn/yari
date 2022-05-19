@@ -1,6 +1,6 @@
 require("dotenv").config();
 
-const {
+import {
   FLAW_LEVELS,
   DEFAULT_FLAW_LEVELS,
   VALID_FLAW_CHECKS,
@@ -10,7 +10,7 @@ const {
   FIX_FLAWS,
   FIX_FLAWS_DRY_RUN,
   FIX_FLAWS_VERBOSE,
-} = require("./constants");
+} from "./constants";
 
 const options = Object.freeze({
   flawLevels: parseFlawLevels(DEFAULT_FLAW_LEVELS),
@@ -113,4 +113,4 @@ function parseFlawLevels(flawChecks) {
   return checked;
 }
 
-module.exports = options;
+export default options;
