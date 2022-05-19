@@ -1,7 +1,6 @@
-const fs = require("fs");
-const path = require("path");
-
-const { checkFile } = require("../../filecheck/checker");
+import fs from "fs";
+import path from "path";
+import { checkFile } from "../../filecheck/checker";
 
 import { fileURLToPath } from "url";
 const dirname = fileURLToPath(new URL(".", import.meta.url));

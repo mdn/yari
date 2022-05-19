@@ -1,5 +1,5 @@
-const got = require("got");
-const braces = require("braces");
+import got from "got";
+import braces from "braces";
 
 function serverURL(pathname = "/") {
   const PORT = parseInt(process.env.SERVER_PORT || "5042");
