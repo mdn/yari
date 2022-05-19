@@ -2,9 +2,13 @@ import React from "react";
 import { useLocation, useParams } from "react-router-dom";
 import useSWR from "swr";
 
-import { Doc } from "../document/types";
-import LANGUAGES_RAW from "../../../libs/languages";
+import { Doc, LanguageItem } from "../document/types";
 import NoteCard from "../ui/molecules/notecards";
+
+const LANGUAGES_RAW = require("../../../libs/languages") as Record<
+  string,
+  LanguageItem
+>;
 
 const LANGUAGES = new Map(
   Object.entries(LANGUAGES_RAW).map(([locale, data]) => {

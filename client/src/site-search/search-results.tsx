@@ -8,10 +8,15 @@ import { useLocale } from "../hooks";
 import { appendURL } from "./utils";
 import { Button } from "../ui/atoms/button";
 
-import LANGUAGES_RAW from "../../../libs/languages";
 import "./search-results.scss";
 import { useGA } from "../ga-context";
 import NoteCard from "../ui/molecules/notecards";
+import { LanguageItem } from "../document/types";
+
+const LANGUAGES_RAW = require("../../../libs/languages") as Record<
+  string,
+  LanguageItem
+>;
 
 const LANGUAGES = new Map(
   Object.entries(LANGUAGES_RAW).map(([locale, data]) => {

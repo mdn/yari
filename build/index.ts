@@ -1,4 +1,4 @@
-import { Doc, Flaws } from "../client/src/document/types";
+import { Doc, Flaws, LanguageItem } from "../client/src/document/types";
 
 const fs = require("fs");
 const path = require("path");
@@ -29,19 +29,15 @@ export const { gather: gatherGitHistory } = require("./git-history");
 export const { buildSPAs } = require("./spas");
 const { renderCache: renderKumascriptCache } = require("../kumascript");
 const LANGUAGES_RAW = require("../libs/languages") as Record<
-string,
-Language
+  string,
+  LanguageItem
 >;
 const { safeDecodeURIComponent } = require("../kumascript/src/api/util");
 const { wrapTables } = require("./wrap-tables");
 
 // TODO Deduplicate.
-interface Language {
-  sh: string;
-  native: string;
-}
 
-const LANGUAGES = new Map<string, Language>(
+const LANGUAGES = new Map<string, LanguageItem>(
   Object.entries(LANGUAGES_RAW).map(([locale, data]) => {
     return [locale.toLowerCase(), data];
   })

@@ -1,12 +1,12 @@
+import { LanguageItem } from "../client/src/document/types";
+
 const Document = require("./document");
 const { VALID_LOCALES } = require("../libs/constants");
-const LANGUAGES_RAW = require("../libs/languages") as Record<string, Language>;
 
-// TODO Deduplicate.
-interface Language {
-  sh: string;
-  native: string;
-}
+const LANGUAGES_RAW = require("../libs/languages") as Record<
+  string,
+  LanguageItem
+>;
 
 const LANGUAGES = new Map(
   Object.entries(LANGUAGES_RAW).map(([locale, data]) => {
