@@ -5,7 +5,7 @@ import cheerio from "cheerio";
 
 import { ALWAYS_ALLOW_ROBOTS, BUILD_OUT_ROOT } from "../build/constants";
 
-const { DEFAULT_LOCALE } = require("../libs/constants");
+import { DEFAULT_LOCALE } from "../libs/constants";
 
 // When there are multiple options for a given language, this gives the
 // preferred locale for that language (language => preferred locale).

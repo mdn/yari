@@ -1,9 +1,8 @@
-const path = require("path");
+import path from "path";
+import nodeExternals from "webpack-node-externals";
+import webpack from "webpack";
 
-const nodeExternals = require("webpack-node-externals");
-const webpack = require("webpack");
-
-module.exports = {
+export default {
   context: path.resolve(__dirname, "."),
   entry: "./index.js",
   output: {
