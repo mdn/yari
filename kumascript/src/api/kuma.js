@@ -1,10 +1,11 @@
 /**
  * @prettier
  */
-const url = require("url");
-const util = require("./util.js");
+import url from "url";
 
-module.exports = {
+import util from "./util.js";
+
+export default {
   /**
    * Expose url from node.js to templates
    */

@@ -2,8 +2,9 @@
  * @prettier
  */
 
-const Templates = require("../src/templates.js");
-const path = require("path");
+import Templates from "../src/templates.js";
+
+import path from "path";
 
 describe("Templates class", () => {
   it("has the expected methods", () => {

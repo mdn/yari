@@ -1,8 +1,9 @@
 /**
  * @prettier
  */
-const { assert, itMacro, describeMacro } = require("./utils");
-const jsdom = require("jsdom");
+import { assert, itMacro, describeMacro } from "./utils";
+
+import jsdom from "jsdom";
 
 const locales = {
   "en-US": {

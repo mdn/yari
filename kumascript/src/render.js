@@ -40,10 +40,12 @@
  *
  * @prettier
  */
-const Parser = require("./parser.js");
-const Templates = require("./templates.js");
-const Environment = require("./environment.js");
-const {
+import Parser from "./parser.js";
+
+import Templates from "./templates.js";
+import Environment from "./environment.js";
+
+import {
   MacroInvocationError,
   MacroNotFoundError,
   MacroCompilationError,
@@ -53,7 +55,7 @@ const {
   MacroWrongXRefError,
   MacroDeprecatedError,
   MacroPagesError,
-} = require("./errors.js");
+} from "./errors.js";
 
 const defaultTemplates = new Templates();
 
@@ -262,4 +264,4 @@ async function render(
   return [output, errors];
 }
 
-module.exports = { normalizeMacroName, render };
+export default { normalizeMacroName, render };

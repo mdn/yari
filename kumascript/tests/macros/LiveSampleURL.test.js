@@ -1,7 +1,7 @@
 /**
  * @prettier
  */
-const { assert, itMacro, describeMacro, beforeEachMacro } = require("./utils");
+import { assert, itMacro, describeMacro, beforeEachMacro } from "./utils";
 
 describeMacro("LiveSampleURL", function () {
   beforeEachMacro(function (macro) {

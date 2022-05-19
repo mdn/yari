@@ -3,9 +3,10 @@
  *
  * @prettier
  */
-const fs = require("fs");
-const ejs = require("ejs");
-const Templates = require("../src/templates.js");
+import fs from "fs";
+
+import ejs from "ejs";
+import Templates from "../src/templates.js";
 
 describe("macros/ directory", () => {
   describe("compile all macros", () => {

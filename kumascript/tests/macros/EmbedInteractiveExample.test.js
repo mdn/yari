@@ -1,7 +1,7 @@
 /**
  * @prettier
  */
-const { assert, itMacro, describeMacro } = require("./utils");
+import { assert, itMacro, describeMacro } from "./utils";
 
 describeMacro("EmbedInteractiveExample", function () {
   itMacro("Typical settings and argument", function (macro) {

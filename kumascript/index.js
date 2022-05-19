@@ -1,21 +1,19 @@
-const LRU = require("lru-cache");
-
-const { Document } = require("../content");
-const { m2h } = require("../markdown");
-
-const {
+import LRU from "lru-cache";
+import { Document } from "../content";
+import { m2h } from "../markdown";
+import {
   INTERACTIVE_EXAMPLES_BASE_URL,
   LIVE_SAMPLES_BASE_URL,
-} = require("./src/constants");
-const info = require("./src/info.js");
-const { render: renderMacros } = require("./src/render.js");
-const {
+} from "./src/constants";
+import info from "./src/info.js";
+import { render as renderMacros } from "./src/render.js";
+import {
   getLiveSampleIDs,
   buildLiveSamplePages,
   LiveSampleError,
-} = require("./src/live-sample.js");
-const { HTMLTool } = require("./src/api/util.js");
-const { DEFAULT_LOCALE } = require("../libs/constants");
+} from "./src/live-sample.js";
+import { HTMLTool } from "./src/api/util.js";
+import { DEFAULT_LOCALE } from "../libs/constants";
 
 const DEPENDENCY_LOOP_INTRO =
   'The following documents form a circular dependency when rendering (via the "page" and/or "IncludeSubnav" macros):';
@@ -115,7 +113,7 @@ const renderFromURL = async (
   return renderCache.get(urlLC);
 };
 
-module.exports = {
+export default {
   buildLiveSamplePages,
   getLiveSampleIDs,
   LiveSampleError,

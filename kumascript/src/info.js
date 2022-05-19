@@ -1,8 +1,7 @@
-const cheerio = require("cheerio");
-
-const Parser = require("./parser.js");
-const { VALID_LOCALES, Document, Redirect } = require("../../content");
-const { m2hSync } = require("../../markdown");
+import cheerio from "cheerio";
+import Parser from "./parser.js";
+import { VALID_LOCALES, Document, Redirect } from "../../content";
+import { m2hSync } from "../../markdown";
 
 const DUMMY_BASE_URL = "https://example.com";
 
@@ -328,4 +327,4 @@ function postProcessSummaryHTMLSnippet(text, document) {
   return output.trim();
 }
 
-module.exports = info;
+export default info;

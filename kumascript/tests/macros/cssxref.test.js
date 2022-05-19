@@ -1,7 +1,7 @@
 /**
  * @prettier
  */
-const { assert, itMacro, describeMacro, beforeEachMacro } = require("./utils");
+import { assert, itMacro, describeMacro, beforeEachMacro } from "./utils";
 
 // Basic const
 const CSS_BASE_URL = "/en-US/docs/Web/CSS";

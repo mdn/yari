@@ -4,8 +4,9 @@
  *
  * @prettier
  */
-const sanitizeFilename = require("sanitize-filename");
-const cheerio = require("cheerio");
+import sanitizeFilename from "sanitize-filename";
+
+import cheerio from "cheerio";
 
 const H1_TO_H6_TAGS = new Set(["h1", "h2", "h3", "h4", "h5", "h6"]);
 const HEADING_TAGS = new Set([...H1_TO_H6_TAGS, "hgroup"]);
@@ -326,7 +327,7 @@ class HTMLTool {
 
 // Utility functions are collected here. These are functions that are used
 // by the exported functions below. Some of them are themselves exported.
-module.exports = {
+export default {
   // Fill in undefined properties in object with values from the
   // defaults objects, and return the object. As soon as the property is
   // filled, further defaults will have no effect.

@@ -1,17 +1,18 @@
 /**
  * @prettier
  */
-const fs = require("fs");
-const path = require("path");
-const jsdom = require("jsdom");
-const { Document } = require("../../../content");
-const {
+import fs from "fs";
+
+import path from "path";
+import jsdom from "jsdom";
+import { Document } from "../../../content";
+import {
   assert,
   itMacro,
   beforeEachMacro,
   describeMacro,
   lintHTML,
-} = require("./utils");
+} from "./utils";
 
 // Load fixture data.
 const fixtureData = JSON.parse(

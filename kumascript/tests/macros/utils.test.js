@@ -1,7 +1,7 @@
 /**
  * @prettier
  */
-const { lintHTML } = require("./utils");
+import { lintHTML } from "./utils";
 
 const ERROR_TEST_CASES = [
   {

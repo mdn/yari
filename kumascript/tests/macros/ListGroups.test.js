@@ -1,20 +1,16 @@
 /**
  * @prettier
  */
-const { JSDOM } = require("jsdom");
+import { JSDOM } from "jsdom";
 
-const {
-  beforeEachMacro,
-  describeMacro,
-  itMacro,
-  lintHTML,
-} = require("./utils");
+import { beforeEachMacro, describeMacro, itMacro, lintHTML } from "./utils";
 
 /**
  * Load all the fixtures.
  */
-const fs = require("fs");
-const path = require("path");
+import fs from "fs";
+
+import path from "path";
 const groupDataFixturePath = path.resolve(
   __dirname,
   "fixtures/listgroups/groupdata.json"

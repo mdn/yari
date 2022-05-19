@@ -1,10 +1,10 @@
 /**
  * @prettier
  */
-const path = require("path");
-const cheerio = require("cheerio");
+import path from "path";
 
-const { itMacro, describeMacro, beforeEachMacro } = require("./utils");
+import cheerio from "cheerio";
+import { itMacro, describeMacro, beforeEachMacro } from "./utils";
 
 const CONTENT_ROOT = process.env.CONTENT_ROOT;
 if (!CONTENT_ROOT) {

@@ -2,15 +2,17 @@
  * @prettier
  */
 
-const fs = require("fs");
-const Templates = require("../src/templates.js");
-const { render } = require("../src/render.js");
-const {
+import fs from "fs";
+
+import Templates from "../src/templates.js";
+import { render } from "../src/render.js";
+
+import {
   MacroInvocationError,
   MacroNotFoundError,
   MacroCompilationError,
   MacroExecutionError,
-} = require("../src/errors.js");
+} from "../src/errors.js";
 
 const PAGE_ENV = { slug: "" };
 

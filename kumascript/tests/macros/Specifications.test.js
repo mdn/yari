@@ -1,6 +1,5 @@
-const { assert, itMacro, describeMacro, lintHTML } = require("./utils");
-
-const jsdom = require("jsdom");
+import { assert, itMacro, describeMacro, lintHTML } from "./utils";
+import jsdom from "jsdom";
 const { JSDOM } = jsdom;
 
 describeMacro("Specifications", function () {

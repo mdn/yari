@@ -37,13 +37,13 @@ const globalsPrototype = {
   require,
 };
 
-const kumaPrototype = require("./api/kuma.js");
-const mdnPrototype = require("./api/mdn.js");
-const stringPrototype = require("./api/string.js");
-const wikiPrototype = require("./api/wiki.js");
-const webPrototype = require("./api/web.js");
-const pagePrototype = require("./api/page.js");
-const info = require("./info");
+import kumaPrototype from "./api/kuma.js";
+import mdnPrototype from "./api/mdn.js";
+import stringPrototype from "./api/string.js";
+import wikiPrototype from "./api/wiki.js";
+import webPrototype from "./api/web.js";
+import pagePrototype from "./api/page.js";
+import info from "./info";
 
 class Environment {
   // Initialize an environment object that will be used to render
@@ -196,4 +196,4 @@ class Environment {
   }
 }
 
-module.exports = Environment;
+export default Environment;

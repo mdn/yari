@@ -2,7 +2,7 @@
  * @prettier
  */
 
-const { assert, itMacro, describeMacro } = require("./utils");
+import { assert, itMacro, describeMacro } from "./utils";
 
 const js_ref_slug = "Web/JavaScript/Reference/";
 const js_ref_url = `/en-US/docs/${js_ref_slug}`;
