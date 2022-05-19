@@ -1,4 +1,4 @@
-const {
+import {
   CONTENT_ROOT,
   CONTENT_TRANSLATED_ROOT,
   CONTRIBUTOR_SPOTLIGHT_ROOT,
@@ -7,23 +7,18 @@ const {
   VALID_LOCALES,
   HTML_FILENAME,
   MARKDOWN_FILENAME,
-} = require("./constants");
-const Document = require("./document");
-const Translation = require("./translation");
-const { getPopularities } = require("./popularities");
-const Redirect = require("./redirect");
-const Image = require("./image");
-const {
-  buildURL,
-  memoize,
-  slugToFolder,
-  execGit,
-  getRoot,
-} = require("./utils");
-const { resolveFundamental } = require("../libs/fundamental-redirects");
-const { translationsOf } = require("./translations");
+} from "./constants";
 
-module.exports = {
+import Document from "./document";
+import Translation from "./translation";
+import { getPopularities } from "./popularities";
+import Redirect from "./redirect";
+import Image from "./image";
+import { buildURL, memoize, slugToFolder, execGit, getRoot } from "./utils";
+import { resolveFundamental } from "../libs/fundamental-redirects";
+import { translationsOf } from "./translations";
+
+export default {
   CONTENT_ROOT,
   CONTENT_TRANSLATED_ROOT,
   CONTRIBUTOR_SPOTLIGHT_ROOT,

@@ -1,5 +1,5 @@
-const fs = require("fs");
-const path = require("path");
+import fs from "fs";
+import path from "path";
 
 // Module-level cache
 const popularities = new Map();
@@ -19,4 +19,4 @@ function getPopularities() {
   return popularities;
 }
 
-module.exports = { getPopularities };
+export default { getPopularities };

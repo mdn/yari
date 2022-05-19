@@ -1,9 +1,8 @@
-const path = require("path");
-const childProcess = require("child_process");
-
-const { CONTENT_ROOT, CONTENT_TRANSLATED_ROOT } = require("./constants");
-const { slugToFolder } = require("../libs/slug-utils");
-const LRU = require("lru-cache");
+import path from "path";
+import childProcess from "child_process";
+import { CONTENT_ROOT, CONTENT_TRANSLATED_ROOT } from "./constants";
+import { slugToFolder } from "../libs/slug-utils";
+import LRU from "lru-cache";
 
 const MEMOIZE_INVALIDATE = Symbol("force cache update");
 
@@ -107,7 +106,7 @@ function urlToFolderPath(url) {
   return path.join(locale.toLowerCase(), slugToFolder(slugParts.join("/")));
 }
 
-module.exports = {
+export default {
   buildURL,
   getRoot,
   slugToFolder: (slug) => slugToFolder(slug, path.sep),

@@ -1,6 +1,6 @@
-const Document = require("./document");
-const { VALID_LOCALES } = require("./constants");
-const LANGUAGES_RAW = require("./languages.json");
+import Document from "./document";
+import { VALID_LOCALES } from "./constants";
+import LANGUAGES_RAW from "./languages.json";
 
 const LANGUAGES = new Map(
   Object.entries(LANGUAGES_RAW).map(([locale, data]) => {
@@ -76,7 +76,7 @@ function findDocumentTranslations(document) {
   return translations;
 }
 
-module.exports = {
+export default {
   translationsOf,
   findDocumentTranslations,
 };

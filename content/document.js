@@ -1,12 +1,11 @@
-const fs = require("fs");
-const path = require("path");
-const util = require("util");
+import fs from "fs";
+import path from "path";
+import util from "util";
+import fm from "front-matter";
+import yaml from "js-yaml";
+import { fdir } from "fdir";
 
-const fm = require("front-matter");
-const yaml = require("js-yaml");
-const { fdir } = require("fdir");
-
-const {
+import {
   CONTENT_TRANSLATED_ROOT,
   CONTENT_ROOT,
   ACTIVE_LOCALES,
@@ -14,12 +13,13 @@ const {
   ROOTS,
   HTML_FILENAME,
   MARKDOWN_FILENAME,
-} = require("./constants");
-const { getPopularities } = require("./popularities");
-const { getWikiHistories } = require("./wikihistories");
-const { getGitHistories } = require("./githistories");
+} from "./constants";
 
-const {
+import { getPopularities } from "./popularities";
+import { getWikiHistories } from "./wikihistories";
+import { getGitHistories } from "./githistories";
+
+import {
   buildURL,
   getRoot,
   memoize,
@@ -27,8 +27,9 @@ const {
   execGit,
   urlToFolderPath,
   MEMOIZE_INVALIDATE,
-} = require("./utils");
-const Redirect = require("./redirect");
+} from "./utils";
+
+import Redirect from "./redirect";
 
 function buildPath(localeFolder, slug) {
   return path.join(localeFolder, slugToFolder(slug));
@@ -639,7 +640,7 @@ function remove(
   return docs;
 }
 
-module.exports = {
+export default {
   createHTML,
   createMarkdown,
   read,

@@ -1,10 +1,10 @@
-const fs = require("fs");
-const path = require("path");
-const {
+import fs from "fs";
+import path from "path";
+import {
   ACTIVE_LOCALES,
   VALID_LOCALES,
   DEFAULT_LOCALE,
-} = require("../libs/constants");
+} from "../libs/constants";
 
 require("dotenv").config({
   path: path.join(__dirname, "..", process.env.ENV_FILE || ".env"),
@@ -63,7 +63,7 @@ function correctContentPathFromEnv(envVarName) {
   return pathName;
 }
 
-module.exports = {
+export default {
   CONTENT_ROOT,
   CONTENT_TRANSLATED_ROOT,
   CONTRIBUTOR_SPOTLIGHT_ROOT,
