@@ -1,3 +1,4 @@
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 /* globals __COMMIT_HASH__ */
 declare var __COMMIT_HASH__: string;
 export const cacheName = `mdn-app-${__COMMIT_HASH__}`;
