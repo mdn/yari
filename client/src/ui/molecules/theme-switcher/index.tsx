@@ -1,11 +1,8 @@
 import * as React from "react";
 import { useState } from "react";
 
-// @ts-expect-error ts-migrate(2792) FIXME: Cannot find module '../../atoms/button'. Did you m... Remove this comment to see the full error message
 import { Button } from "../../atoms/button";
-// @ts-expect-error ts-migrate(2792) FIXME: Cannot find module '../submenu'. Did you mean to s... Remove this comment to see the full error message
 import { Submenu } from "../submenu";
-// @ts-expect-error ts-migrate(2792) FIXME: Cannot find module '../dropdown'. Did you mean to ... Remove this comment to see the full error message
 import { DropdownMenu, DropdownMenuWrapper } from "../dropdown";
 
 import "./index.scss";

@@ -1,4 +1,3 @@
-// @ts-expect-error ts-migrate(2792) FIXME: Cannot find module '../ui/molecules/quote'. Did yo... Remove this comment to see the full error message
 import { Quote } from "../ui/molecules/quote";
 import "./index.scss";
 

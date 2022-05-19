@@ -1,16 +1,12 @@
 import { useState } from "react";
-// @ts-expect-error ts-migrate(2792) FIXME: Cannot find module 'react-router-dom'. Did you mea... Remove this comment to see the full error message
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 
 import { useGA } from "../../../ga-context";
 import { Translation } from "../../../document/types";
-// @ts-expect-error ts-migrate(2792) FIXME: Cannot find module '../../atoms/button'. Did you m... Remove this comment to see the full error message
 import { Button } from "../../atoms/button";
-// @ts-expect-error ts-migrate(2792) FIXME: Cannot find module '../submenu'. Did you mean to s... Remove this comment to see the full error message
 import { Submenu } from "../submenu";
 
 import "./index.scss";
-// @ts-expect-error ts-migrate(2792) FIXME: Cannot find module '../dropdown'. Did you mean to ... Remove this comment to see the full error message
 import { DropdownMenu, DropdownMenuWrapper } from "../dropdown";
 
 // This needs to match what's set in 'libs/constants.js' on the server/builder!

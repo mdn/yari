@@ -1,6 +1,4 @@
-// @ts-expect-error ts-migrate(2792) FIXME: Cannot find module '../../ui/atoms/signin-link'. D... Remove this comment to see the full error message
 import SignInLink from "../../ui/atoms/signin-link";
-// @ts-expect-error ts-migrate(2792) FIXME: Cannot find module '../../ui/molecules/notecards'.... Remove this comment to see the full error message
 import NoteCard from "../../ui/molecules/notecards";
 import { docCategory } from "../../utils";
 

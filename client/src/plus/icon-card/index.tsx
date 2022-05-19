@@ -1,13 +1,9 @@
-// @ts-expect-error ts-migrate(1259) FIXME: Module '"/Users/claas/github/mdn/yari/node_modules... Remove this comment to see the full error message
 import React from "react";
 import { useOnlineStatus } from "../../hooks";
-// @ts-expect-error ts-migrate(2792) FIXME: Cannot find module '../../ui/atoms/button'. Did yo... Remove this comment to see the full error message
 import { Button } from "../../ui/atoms/button";
-// @ts-expect-error ts-migrate(2792) FIXME: Cannot find module '../../ui/molecules/dropdown'. ... Remove this comment to see the full error message
 import { DropdownMenu, DropdownMenuWrapper } from "../../ui/molecules/dropdown";
 import { Checkbox } from "../../ui/molecules/notifications-watch-menu/atoms/checkbox";
 import { docCategory } from "../../utils";
-// @ts-expect-error ts-migrate(2792) FIXME: Cannot find module '../common'. Did you mean to se... Remove this comment to see the full error message
 import { _getIconLabel } from "../common";
 import "./index.scss";
 

@@ -1,5 +1,4 @@
 import { useLocale } from "../../../hooks";
-// @ts-expect-error ts-migrate(2792) FIXME: Cannot find module '../menu'. Did you mean to set ... Remove this comment to see the full error message
 import { Menu } from "../menu";
 
 import "./index.scss";

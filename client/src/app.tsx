@@ -1,6 +1,4 @@
-// @ts-expect-error ts-migrate(1259) FIXME: Module '"/Users/claas/github/mdn/yari/node_modules... Remove this comment to see the full error message
 import React, { useEffect } from "react";
-// @ts-expect-error ts-migrate(2792) FIXME: Cannot find module 'react-router-dom'. Did you mea... Remove this comment to see the full error message
 import { Routes, Route, useLocation, useMatch } from "react-router-dom";
 
 // we include our base SASS here to ensure it is loaded
@@ -8,47 +6,28 @@ import { Routes, Route, useLocation, useMatch } from "react-router-dom";
 import "./app.scss";
 
 import { CRUD_MODE, PLUS_IS_ENABLED } from "./constants";
-// @ts-expect-error ts-migrate(2792) FIXME: Cannot find module './homepage'. Did you mean to s... Remove this comment to see the full error message
 import { Homepage } from "./homepage";
-// @ts-expect-error ts-migrate(2792) FIXME: Cannot find module './document'. Did you mean to s... Remove this comment to see the full error message
 import { Document } from "./document";
-// @ts-expect-error ts-migrate(2792) FIXME: Cannot find module './ui/molecules/a11y-nav'. Did ... Remove this comment to see the full error message
 import { A11yNav } from "./ui/molecules/a11y-nav";
-// @ts-expect-error ts-migrate(2792) FIXME: Cannot find module './ui/organisms/footer'. Did yo... Remove this comment to see the full error message
 import { Footer } from "./ui/organisms/footer";
-// @ts-expect-error ts-migrate(2792) FIXME: Cannot find module './ui/organisms/top-navigation'... Remove this comment to see the full error message
 import { TopNavigation } from "./ui/organisms/top-navigation";
-// @ts-expect-error ts-migrate(2792) FIXME: Cannot find module './site-search'. Did you mean t... Remove this comment to see the full error message
 import { SiteSearch } from "./site-search";
-// @ts-expect-error ts-migrate(2792) FIXME: Cannot find module './ui/atoms/loading'. Did you m... Remove this comment to see the full error message
 import { Loading } from "./ui/atoms/loading";
-// @ts-expect-error ts-migrate(2792) FIXME: Cannot find module './ui/atoms/page-content'. Did ... Remove this comment to see the full error message
 import { PageContentContainer } from "./ui/atoms/page-content";
-// @ts-expect-error ts-migrate(2792) FIXME: Cannot find module './page-not-found'. Did you mea... Remove this comment to see the full error message
 import { PageNotFound } from "./page-not-found";
-// @ts-expect-error ts-migrate(2792) FIXME: Cannot find module './plus'. Did you mean to set t... Remove this comment to see the full error message
 import { Plus } from "./plus";
-// @ts-expect-error ts-migrate(2792) FIXME: Cannot find module './about'. Did you mean to set ... Remove this comment to see the full error message
 import { About } from "./about";
-// @ts-expect-error ts-migrate(2792) FIXME: Cannot find module './offline-settings'. Did you m... Remove this comment to see the full error message
 import { OfflineSettings } from "./offline-settings";
 import { docCategory } from "./utils";
-// @ts-expect-error ts-migrate(2792) FIXME: Cannot find module './community'. Did you mean to ... Remove this comment to see the full error message
 import { Contribute } from "./community";
-// @ts-expect-error ts-migrate(2792) FIXME: Cannot find module './contributor-spotlight'. Did ... Remove this comment to see the full error message
 import { ContributorSpotlight } from "./contributor-spotlight";
 import { useIsServer } from "./hooks";
 
-// @ts-expect-error ts-migrate(2792) FIXME: Cannot find module './banners'. Did you mean to se... Remove this comment to see the full error message
 import { Banner, hasActiveBanners } from "./banners";
 
-// @ts-expect-error ts-migrate(1323) FIXME: Dynamic imports are only supported when the '--mod... Remove this comment to see the full error message
 const AllFlaws = React.lazy(() => import("./flaws"));
-// @ts-expect-error ts-migrate(1323) FIXME: Dynamic imports are only supported when the '--mod... Remove this comment to see the full error message
 const Translations = React.lazy(() => import("./translations"));
-// @ts-expect-error ts-migrate(1323) FIXME: Dynamic imports are only supported when the '--mod... Remove this comment to see the full error message
 const WritersHomepage = React.lazy(() => import("./writers-homepage"));
-// @ts-expect-error ts-migrate(1323) FIXME: Dynamic imports are only supported when the '--mod... Remove this comment to see the full error message
 const Sitemap = React.lazy(() => import("./sitemap"));
 
 function Layout({ pageType, children }) {

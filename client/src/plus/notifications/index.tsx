@@ -1,8 +1,6 @@
 import { useContext, useEffect } from "react";
 import { useLocale } from "../../hooks";
-// @ts-expect-error ts-migrate(2792) FIXME: Cannot find module '../../ui/atoms/container'. Did... Remove this comment to see the full error message
 import Container from "../../ui/atoms/container";
-// @ts-expect-error ts-migrate(2792) FIXME: Cannot find module '../../ui/molecules/tabs'. Did ... Remove this comment to see the full error message
 import Tabs from "../../ui/molecules/tabs";
 
 import {
@@ -14,7 +12,6 @@ import "./index.scss";
 import { useUserData } from "../../user-context";
 import { TabVariant, TAB_INFO, useCurrentTab } from "../common/tabs";
 import { PlusTabs } from "../common/plus-tabs";
-// @ts-expect-error ts-migrate(2792) FIXME: Cannot find module '../common'. Did you mean to se... Remove this comment to see the full error message
 import { NotSignedIn } from "../common";
 
 function NotificationsLayout() {

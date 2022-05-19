@@ -1,12 +1,7 @@
-// @ts-expect-error ts-migrate(1259) FIXME: Module '"/Users/claas/github/mdn/yari/node_modules... Remove this comment to see the full error message
 import React, { useEffect, useRef, useState } from "react";
-// @ts-expect-error ts-migrate(2792) FIXME: Cannot find module 'react-router-dom'. Did you mea... Remove this comment to see the full error message
 import { useLocation, useNavigate } from "react-router-dom";
-// @ts-expect-error ts-migrate(2792) FIXME: Cannot find module 'rough-notation'. Did you mean ... Remove this comment to see the full error message
 import { annotate, annotationGroup } from "rough-notation";
-// @ts-expect-error ts-migrate(2792) FIXME: Cannot find module 'rough-notation/lib/model'. Did... Remove this comment to see the full error message
 import { RoughAnnotation } from "rough-notation/lib/model";
-// @ts-expect-error ts-migrate(2792) FIXME: Cannot find module 'diff'. Did you mean to set the... Remove this comment to see the full error message
 import { diffWords } from "diff";
 
 import { CRUD_MODE, CRUD_MODE_HOSTNAMES } from "../../constants";
@@ -221,7 +216,6 @@ function Flaws({
         (flaw) => !flaw.fixed && (flaw.fixable || flaw.externalImage)
       );
     })
-    // @ts-expect-error ts-migrate(2550) FIXME: Property 'flat' does not exist on type 'BadBCDQuer... Remove this comment to see the full error message
     .flat();
 
   const isReadOnly = !CRUD_MODE_HOSTNAMES.includes(window.location.hostname);

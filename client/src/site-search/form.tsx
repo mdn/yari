@@ -1,8 +1,5 @@
-// @ts-expect-error ts-migrate(1259) FIXME: Module '"/Users/claas/github/mdn/yari/node_modules... Remove this comment to see the full error message
 import React from "react";
-// @ts-expect-error ts-migrate(2792) FIXME: Cannot find module 'react-router-dom'. Did you mea... Remove this comment to see the full error message
 import { Link, useSearchParams } from "react-router-dom";
-// @ts-expect-error ts-migrate(2792) FIXME: Cannot find module '../languages.json'. Did you me... Remove this comment to see the full error message
 import LANGUAGES_RAW from "../languages.json";
 
 import { useLocale } from "../hooks";
@@ -68,7 +65,6 @@ export default function SiteSearchForm() {
             </li>
             <li>
               {queryLocales.length && equalLocales(queryLocales, ["en-us"]) ? (
-                // @ts-expect-error ts-migrate(2339) FIXME: Property 'native' does not exist on type 'unknown'... Remove this comment to see the full error message
                 <i>{LANGUAGES.get("en-us")?.native}</i>
               ) : (
                 <Link

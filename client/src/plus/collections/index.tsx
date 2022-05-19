@@ -1,21 +1,16 @@
 import { useContext, useEffect } from "react";
-// @ts-expect-error ts-migrate(2792) FIXME: Cannot find module 'dayjs'. Did you mean to set th... Remove this comment to see the full error message
 import dayjs from "dayjs";
-// @ts-expect-error ts-migrate(2792) FIXME: Cannot find module 'dayjs/plugin/relativeTime'. Di... Remove this comment to see the full error message
 import relativeTime from "dayjs/plugin/relativeTime";
 import "./index.scss";
 
 import "../icon-card/index.scss";
 
-// @ts-expect-error ts-migrate(2792) FIXME: Cannot find module '../common'. Did you mean to se... Remove this comment to see the full error message
 import { NotSignedIn } from "../common";
 import {
   searchFiltersContext,
   SearchFiltersProvider,
 } from "../contexts/search-filters";
-// @ts-expect-error ts-migrate(2792) FIXME: Cannot find module '../../ui/atoms/container'. Did... Remove this comment to see the full error message
 import Container from "../../ui/atoms/container";
-// @ts-expect-error ts-migrate(2792) FIXME: Cannot find module '../../ui/molecules/tabs'. Did ... Remove this comment to see the full error message
 import Tabs from "../../ui/molecules/tabs";
 import { useLocale } from "../../hooks";
 import { BookmarkData } from "./types";

@@ -3,7 +3,6 @@ import { useLocale } from "../../../hooks";
 
 import "./index.scss";
 import { usePlusUrl } from "../../../plus/utils";
-// @ts-expect-error ts-migrate(2792) FIXME: Cannot find module '../menu'. Did you mean to set ... Remove this comment to see the full error message
 import { Menu } from "../menu";
 
 export const PlusMenu = ({ visibleSubMenuId, toggleMenu }) => {

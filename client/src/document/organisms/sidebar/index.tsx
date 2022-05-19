@@ -1,14 +1,10 @@
-// @ts-expect-error ts-migrate(2792) FIXME: Cannot find module 'react-router-dom'. Did you mea... Remove this comment to see the full error message
 import { Link } from "react-router-dom";
-// @ts-expect-error ts-migrate(1259) FIXME: Module '"/Users/claas/github/mdn/yari/node_modules... Remove this comment to see the full error message
 import React, { useEffect, useState } from "react";
-// @ts-expect-error ts-migrate(2792) FIXME: Cannot find module '../../../ui/atoms/button'. Did... Remove this comment to see the full error message
 import { Button } from "../../../ui/atoms/button";
 
 import { useUIStatus } from "../../../ui-context";
 
 import "./index.scss";
-// @ts-expect-error ts-migrate(2792) FIXME: Cannot find module '../toc'. Did you mean to set t... Remove this comment to see the full error message
 import { TOC } from "../toc";
 
 function _setScrollLock(isSidebarOpen) {

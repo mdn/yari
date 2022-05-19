@@ -1,8 +1,5 @@
-// @ts-expect-error ts-migrate(1259) FIXME: Module '"/Users/claas/github/mdn/yari/node_modules... Remove this comment to see the full error message
 import React from "react";
-// @ts-expect-error ts-migrate(2792) FIXME: Cannot find module '@testing-library/react'. Did y... Remove this comment to see the full error message
 import { render, fireEvent } from "@testing-library/react";
-// @ts-expect-error ts-migrate(2792) FIXME: Cannot find module 'react-router-dom'. Did you mea... Remove this comment to see the full error message
 import { MemoryRouter } from "react-router-dom";
 
 import { BrowserCompatibilityErrorBoundary } from "./error-boundary";
@@ -14,11 +11,11 @@ function renderWithRouter(component) {
 // @ts-expect-error ts-migrate(2582) FIXME: Cannot find name 'it'. Do you need to install type... Remove this comment to see the full error message
 it("renders without crashing", () => {
   const { container } = renderWithRouter(
-    // @ts-expect-error ts-migrate(2786) FIXME: 'BrowserCompatibilityErrorBoundary' cannot be used... Remove this comment to see the full error message
     <BrowserCompatibilityErrorBoundary>
       <div />
     </BrowserCompatibilityErrorBoundary>
   );
+  // @ts-expect-error ts-migrate(2304) FIXME: Cannot find name 'expect'.
   expect(container).toBeDefined();
 });
 
@@ -45,19 +42,22 @@ it("renders crashing mock component", () => {
     .mockImplementation(() => {});
 
   const { container } = renderWithRouter(
-    // @ts-expect-error ts-migrate(2786) FIXME: 'BrowserCompatibilityErrorBoundary' cannot be used... Remove this comment to see the full error message
     <BrowserCompatibilityErrorBoundary>
       <CrashingComponent />
     </BrowserCompatibilityErrorBoundary>
   );
+  // @ts-expect-error ts-migrate(2304) FIXME: Cannot find name 'expect'.
   expect(container.querySelector(".bc-table-error-boundary")).toBeNull();
   const div = container.querySelector("div");
   div && fireEvent.click(div);
 
+  // @ts-expect-error ts-migrate(2304) FIXME: Cannot find name 'expect'.
   expect(consoleError).toHaveBeenCalledWith(
+    // @ts-expect-error ts-migrate(2304) FIXME: Cannot find name 'expect'.
     expect.stringMatching("The above error occurred")
   );
 
   // TODO: When `BrowserCompatibilityErrorBoundary` reports to Sentry, spy on the report function so that we can assert the error stack
+  // @ts-expect-error ts-migrate(2304) FIXME: Cannot find name 'expect'.
   expect(container.querySelector(".bc-table-error-boundary")).toBeDefined();
 });

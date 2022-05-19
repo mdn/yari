@@ -1,7 +1,5 @@
 import { Document } from "./index";
-// @ts-expect-error ts-migrate(2792) FIXME: Cannot find module 'react-router-dom'. Did you mea... Remove this comment to see the full error message
 import { Route, Routes, MemoryRouter } from "react-router-dom";
-// @ts-expect-error ts-migrate(1259) FIXME: Module '"/Users/claas/github/mdn/yari/node_modules... Remove this comment to see the full error message
 import React from "react";
 const { render, waitFor } = require("@testing-library/react");
 
@@ -44,6 +42,7 @@ const sampleDocumentState = Object.freeze({
 
 // @ts-expect-error ts-migrate(2582) FIXME: Cannot find name 'describe'. Do you need to instal... Remove this comment to see the full error message
 describe("test viewing a simple document", () => {
+  // @ts-expect-error ts-migrate(2582) FIXME: Cannot find name 'test'. Do you need to install ty... Remove this comment to see the full error message
   test("render document with props should not crash", async () => {
     // @ts-expect-error ts-migrate(2304) FIXME: Cannot find name 'jest'.
     const xhrSpy = jest.spyOn(global, "fetch");
@@ -61,11 +60,13 @@ describe("test viewing a simple document", () => {
       </MemoryRouter>
     );
 
+    // @ts-expect-error ts-migrate(2304) FIXME: Cannot find name 'expect'.
     expect(xhrSpy).not.toHaveBeenCalled();
     await waitFor(() => getByText(/Hello World!/));
     await waitFor(() => getAllByText(/Sample Page/));
   });
 
+  // @ts-expect-error ts-migrate(2582) FIXME: Cannot find name 'test'. Do you need to install ty... Remove this comment to see the full error message
   test("render document without props should not crash", async () => {
     // Mock Fetch API
     // @ts-expect-error ts-migrate(2304) FIXME: Cannot find name 'jest'.
@@ -86,6 +87,7 @@ describe("test viewing a simple document", () => {
 
     await waitFor(() => getByText(/Hello World!/));
     await waitFor(() => getAllByText(/Sample Page/));
+    // @ts-expect-error ts-migrate(2304) FIXME: Cannot find name 'expect'.
     expect(xhrSpy).toHaveBeenCalledTimes(1);
   });
 });

@@ -1,6 +1,4 @@
-// @ts-expect-error ts-migrate(1259) FIXME: Module '"/Users/claas/github/mdn/yari/node_modules... Remove this comment to see the full error message
 import React, { useEffect, useState } from "react";
-// @ts-expect-error ts-migrate(2792) FIXME: Cannot find module 'react-router-dom'. Did you mea... Remove this comment to see the full error message
 import { useParams } from "react-router-dom";
 import { CRUD_MODE_HOSTNAMES } from "../../constants";
 import { Source } from "../types";

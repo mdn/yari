@@ -1,5 +1,4 @@
 import { ReactNode } from "react";
-// @ts-expect-error ts-migrate(2792) FIXME: Cannot find module '../../atoms/icon'. Did you mea... Remove this comment to see the full error message
 import { Icon } from "../../atoms/icon";
 import "./index.scss";
 

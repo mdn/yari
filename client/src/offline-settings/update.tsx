@@ -11,7 +11,6 @@ export default function UpdateButton({
 }) {
   const current =
     updateStatus?.local?.date &&
-    // @ts-expect-error ts-migrate(2345) FIXME: Argument of type '{ dateStyle: string; }' is not a... Remove this comment to see the full error message
     `Last updated: ${Intl.DateTimeFormat([], { dateStyle: "medium" }).format(
       Date.parse(updateStatus?.local?.date)
     )}`;

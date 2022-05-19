@@ -1,5 +1,4 @@
 import { useLocale } from "../hooks";
-// @ts-expect-error ts-migrate(2792) FIXME: Cannot find module '../ui/molecules/get_involved'.... Remove this comment to see the full error message
 import { GetInvolved } from "../ui/molecules/get_involved";
 import "./index.scss";
 

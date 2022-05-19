@@ -1,20 +1,12 @@
-// @ts-expect-error ts-migrate(1259) FIXME: Module '"/Users/claas/github/mdn/yari/node_modules... Remove this comment to see the full error message
 import React from "react";
-// @ts-expect-error ts-migrate(2792) FIXME: Cannot find module '.'. Did you mean to set the 'm... Remove this comment to see the full error message
 import { BookmarkData } from ".";
-// @ts-expect-error ts-migrate(2792) FIXME: Cannot find module '../../ui/atoms/button'. Did yo... Remove this comment to see the full error message
 import { Button } from "../../ui/atoms/button";
 import { EditCollection } from "../../ui/molecules/collection/edit-collection";
-// @ts-expect-error ts-migrate(2792) FIXME: Cannot find module '../../ui/molecules/breadcrumbs... Remove this comment to see the full error message
 import { Breadcrumbs } from "../../ui/molecules/breadcrumbs";
-// @ts-expect-error ts-migrate(2792) FIXME: Cannot find module '../../ui/molecules/dropdown'. ... Remove this comment to see the full error message
 import { DropdownMenu, DropdownMenuWrapper } from "../../ui/molecules/dropdown";
 import { docCategory } from "../../utils";
-// @ts-expect-error ts-migrate(2792) FIXME: Cannot find module '../common'. Did you mean to se... Remove this comment to see the full error message
 import { _getIconLabel } from "../common";
-// @ts-expect-error ts-migrate(2792) FIXME: Cannot find module 'dayjs'. Did you mean to set th... Remove this comment to see the full error message
 import dayjs from "dayjs";
-// @ts-expect-error ts-migrate(2792) FIXME: Cannot find module 'dayjs/plugin/relativeTime'. Di... Remove this comment to see the full error message
 import relativeTime from "dayjs/plugin/relativeTime";
 import { useOnlineStatus } from "../../hooks";
 

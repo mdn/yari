@@ -1,5 +1,4 @@
 import "./index.scss";
-// @ts-expect-error ts-migrate(1259) FIXME: Module '"/Users/claas/github/mdn/yari/node_modules... Remove this comment to see the full error message
 import React from "react";
 
 type SubmenuItem = {

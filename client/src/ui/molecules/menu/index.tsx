@@ -1,6 +1,4 @@
-// @ts-expect-error ts-migrate(2792) FIXME: Cannot find module '../../atoms/internal-link'. Di... Remove this comment to see the full error message
 import InternalLink from "../../atoms/internal-link";
-// @ts-expect-error ts-migrate(2792) FIXME: Cannot find module '../submenu'. Did you mean to s... Remove this comment to see the full error message
 import { MenuEntry, Submenu } from "../submenu";
 
 interface MenuProps {

@@ -1,4 +1,3 @@
-// @ts-expect-error ts-migrate(1259) FIXME: Module '"/Users/claas/github/mdn/yari/node_modules... Remove this comment to see the full error message
 import React, { useEffect } from "react";
 import { CRUD_MODE_HOSTNAMES } from "../../constants";
 import { Doc } from "../types";

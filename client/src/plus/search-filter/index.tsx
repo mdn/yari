@@ -1,16 +1,11 @@
-// @ts-expect-error ts-migrate(1259) FIXME: Module '"/Users/claas/github/mdn/yari/node_modules... Remove this comment to see the full error message
 import React, { useContext, useState } from "react";
 
-// @ts-expect-error ts-migrate(2792) FIXME: Cannot find module '../../ui/atoms/button'. Did yo... Remove this comment to see the full error message
 import { Button } from "../../ui/atoms/button";
-// @ts-expect-error ts-migrate(2792) FIXME: Cannot find module '../../ui/atoms/search'. Did yo... Remove this comment to see the full error message
 import { Search } from "../../ui/atoms/search";
-// @ts-expect-error ts-migrate(2792) FIXME: Cannot find module '../../ui/molecules/submenu'. D... Remove this comment to see the full error message
 import { Submenu } from "../../ui/molecules/submenu";
 import { searchFiltersContext } from "../contexts/search-filters";
 
 import "./index.scss";
-// @ts-expect-error ts-migrate(2792) FIXME: Cannot find module '../../ui/molecules/dropdown'. ... Remove this comment to see the full error message
 import { DropdownMenu, DropdownMenuWrapper } from "../../ui/molecules/dropdown";
 
 export default function SearchFilter({

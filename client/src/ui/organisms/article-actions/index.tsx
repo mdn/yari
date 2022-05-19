@@ -1,8 +1,5 @@
-// @ts-expect-error ts-migrate(2792) FIXME: Cannot find module '../../atoms/button'. Did you m... Remove this comment to see the full error message
 import { Button } from "../../atoms/button";
-// @ts-expect-error ts-migrate(2792) FIXME: Cannot find module '../../molecules/notifications-... Remove this comment to see the full error message
 import { NotificationsWatchMenu } from "../../molecules/notifications-watch-menu";
-// @ts-expect-error ts-migrate(2792) FIXME: Cannot find module '../../molecules/language-menu'... Remove this comment to see the full error message
 import { LanguageMenu } from "../../molecules/language-menu";
 
 import { useUserData } from "../../../user-context";
@@ -11,7 +8,6 @@ import { Doc } from "../../../document/types";
 
 import "./index.scss";
 
-// @ts-expect-error ts-migrate(2792) FIXME: Cannot find module '../../molecules/collection'. D... Remove this comment to see the full error message
 import { BookmarkContainer } from "../../molecules/collection";
 
 export const ArticleActions = ({

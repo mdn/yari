@@ -1,10 +1,8 @@
 import { useState, useEffect } from "react";
-// @ts-expect-error ts-migrate(2792) FIXME: Cannot find module '.'. Did you mean to set the 'm... Remove this comment to see the full error message
 import { BookmarkData } from ".";
 import { useUIStatus } from "../../ui-context";
 import { useFrequentlyViewedData } from "../common/api";
 import { SORTS } from "../common/tabs";
-// @ts-expect-error ts-migrate(2792) FIXME: Cannot find module '../search-filter'. Did you mea... Remove this comment to see the full error message
 import SearchFilter from "../search-filter";
 import { CollectionListItem } from "./collection-list-item";
 

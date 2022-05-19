@@ -1,11 +1,9 @@
-// @ts-expect-error ts-migrate(2792) FIXME: Cannot find module 'react-router-dom'. Did you mea... Remove this comment to see the full error message
 import { useLocation } from "react-router-dom";
 
 import { removeSessionStorageData } from "../../../user-context";
 import { useCSRFMiddlewareToken, useLocale } from "../../../hooks";
 
 import "./index.scss";
-// @ts-expect-error ts-migrate(2792) FIXME: Cannot find module '../button'. Did you mean to se... Remove this comment to see the full error message
 import { Button } from "../button";
 
 export default function SignOut() {

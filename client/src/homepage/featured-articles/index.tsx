@@ -1,4 +1,3 @@
-// @ts-expect-error ts-migrate(2792) FIXME: Cannot find module 'swr'. Did you mean to set the ... Remove this comment to see the full error message
 import useSWR from "swr";
 import { CRUD_MODE } from "../../constants";
 import { HydrationData } from "../../types/hydration";
@@ -7,7 +6,6 @@ import "./index.scss";
 
 export default function FeaturedArticles(props: HydrationData<any>) {
   const fallbackData = props.hyData ? props : undefined;
-  // @ts-expect-error ts-migrate(2525) FIXME: Initializer provides no value for this binding ele... Remove this comment to see the full error message
   const { data: { hyData } = {} } = useSWR<any>(
     "./index.json",
     async (url) => {

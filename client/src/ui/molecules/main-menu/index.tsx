@@ -1,10 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 
-// @ts-expect-error ts-migrate(2792) FIXME: Cannot find module '../guides-menu'. Did you mean ... Remove this comment to see the full error message
 import { GuidesMenu } from "../guides-menu";
-// @ts-expect-error ts-migrate(2792) FIXME: Cannot find module '../reference-menu'. Did you me... Remove this comment to see the full error message
 import { ReferenceMenu } from "../reference-menu";
-// @ts-expect-error ts-migrate(2792) FIXME: Cannot find module '../plus-menu'. Did you mean to... Remove this comment to see the full error message
 import { PlusMenu } from "../plus-menu";
 
 import "./index.scss";

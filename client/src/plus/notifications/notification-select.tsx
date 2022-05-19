@@ -1,5 +1,4 @@
 import { useOnlineStatus } from "../../hooks";
-// @ts-expect-error ts-migrate(2792) FIXME: Cannot find module '../../ui/atoms/button'. Did yo... Remove this comment to see the full error message
 import { Button } from "../../ui/atoms/button";
 import { Checkbox } from "../../ui/molecules/notifications-watch-menu/atoms/checkbox";
 

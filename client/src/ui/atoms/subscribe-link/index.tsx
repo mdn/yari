@@ -1,5 +1,4 @@
 import "./index.scss";
-// @ts-expect-error ts-migrate(2792) FIXME: Cannot find module '../button'. Did you mean to se... Remove this comment to see the full error message
 import { Button } from "../button";
 import { usePlusUrl } from "../../../plus/utils";
 

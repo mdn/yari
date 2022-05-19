@@ -1,4 +1,3 @@
-// @ts-expect-error ts-migrate(2792) FIXME: Cannot find module '@mdn/browser-compat-data'. Did... Remove this comment to see the full error message
 import { browsers as browserData } from "@mdn/browser-compat-data";
 import { BrowserName } from "./browser-info";
 

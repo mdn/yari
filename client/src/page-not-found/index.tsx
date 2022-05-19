@@ -1,13 +1,9 @@
-// @ts-expect-error ts-migrate(1259) FIXME: Module '"/Users/claas/github/mdn/yari/node_modules... Remove this comment to see the full error message
 import React from "react";
-// @ts-expect-error ts-migrate(2792) FIXME: Cannot find module 'react-router-dom'. Did you mea... Remove this comment to see the full error message
 import { useLocation } from "react-router-dom";
 
-// @ts-expect-error ts-migrate(2792) FIXME: Cannot find module '../ui/atoms/page-content'. Did... Remove this comment to see the full error message
 import { PageContentContainer } from "../ui/atoms/page-content";
 import "./index.scss";
 
-// @ts-expect-error ts-migrate(1323) FIXME: Dynamic imports are only supported when the '--mod... Remove this comment to see the full error message
 const FallbackLink = React.lazy(() => import("./fallback-link"));
 
 // NOTE! To hack on this component, you have to use a trick to even get to this

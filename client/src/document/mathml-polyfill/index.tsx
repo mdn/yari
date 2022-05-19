@@ -1,7 +1,5 @@
-// @ts-expect-error ts-migrate(1259) FIXME: Module '"/Users/claas/github/mdn/yari/node_modules... Remove this comment to see the full error message
 import React from "react";
 
-// @ts-expect-error ts-migrate(1323) FIXME: Dynamic imports are only supported when the '--mod... Remove this comment to see the full error message
 const MathMLPolyfill = React.lazy(() => import("./polyfill"));
 
 // This component gets rendered if the document has MathML in it.

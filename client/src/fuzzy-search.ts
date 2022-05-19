@@ -1,4 +1,3 @@
-// @ts-expect-error ts-migrate(2792) FIXME: Cannot find module 'fzf'. Did you mean to set the ... Remove this comment to see the full error message
 import { Fzf, FzfResultItem } from "fzf";
 
 export interface Doc {

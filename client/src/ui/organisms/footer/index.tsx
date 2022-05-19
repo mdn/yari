@@ -1,7 +1,6 @@
 import * as React from "react";
 import { useLocale } from "../../../hooks";
 import "./index.scss";
-// @ts-expect-error ts-migrate(2792) FIXME: Cannot find module 'react-router-dom'. Did you mea... Remove this comment to see the full error message
 import { useLocation } from "react-router-dom";
 
 import { ReactComponent as MDNLogo } from "../../../assets/mdn-footer-logo.svg";
