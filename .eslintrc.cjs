@@ -20,7 +20,7 @@ module.exports = {
     SharedArrayBuffer: "readonly",
   },
   parserOptions: {
-    ecmaVersion: 2019,
+    ecmaVersion: 2020,
   },
   rules: {
     "one-var": ["error", "never"],
