@@ -1,3 +1,5 @@
+import { Doc } from "../client/src/document/types";
+
 const fs = require("fs");
 const path = require("path");
 const util = require("util");
@@ -482,7 +484,9 @@ export function findAll({
   }
   return {
     count: filePaths.length,
-    *iter({ pathOnly = false } = {}) {
+    *iter<B extends boolean>(
+      pathOnly: B
+    ): Generator<B extends true ? string : Doc> {
       for (const filePath of filePaths) {
         yield pathOnly ? filePath : read(filePath);
       }

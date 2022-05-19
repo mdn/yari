@@ -120,7 +120,7 @@ async function buildDocuments(
     progressBar.start(documents.count);
   }
 
-  for (const documentPath of documents.iter({ pathOnly: true })) {
+  for (const documentPath of documents.iter(true)) {
     const {
       doc: { doc: builtDocument, liveSamples, fileAttachments, bcdData },
       document,
