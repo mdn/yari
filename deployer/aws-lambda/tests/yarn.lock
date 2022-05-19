@@ -629,6 +629,14 @@
   dependencies:
     "@types/istanbul-lib-report" "*"
 
+"@types/jest@^27.0.0":
+  version "27.5.1"
+  resolved "https://registry.yarnpkg.com/@types/jest/-/jest-27.5.1.tgz#2c8b6dc6ff85c33bcd07d0b62cb3d19ddfdb3ab9"
+  integrity sha512-fUy7YRpT+rHXto1YlL+J9rs0uLGyiqVt3ZOTQR+4ROc47yNl8WLdVLgUloBRhOxP1PZvguHl44T3H0wAWxahYQ==
+  dependencies:
+    jest-matcher-utils "^27.0.0"
+    pretty-format "^27.0.0"
+
 "@types/json-buffer@~3.0.0":
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/@types/json-buffer/-/json-buffer-3.0.0.tgz#85c1ff0f0948fc159810d4b5be35bf8c20875f64"
@@ -696,10 +704,10 @@
 "@yari-internal/content-origin-request@file:../content-origin-request":
   version "0.0.1"
   dependencies:
-    "@yari-internal/constants" "file:../../../../../../Library/Caches/Yarn/v6/npm-@yari-internal-content-origin-request-0.0.1-ef7ae4f5-c467-4bd4-9270-042918b110bb-1653939349047/libs/constants"
-    "@yari-internal/fundamental-redirects" "file:../../../../../../Library/Caches/Yarn/v6/npm-@yari-internal-content-origin-request-0.0.1-ef7ae4f5-c467-4bd4-9270-042918b110bb-1653939349047/libs/fundamental-redirects"
-    "@yari-internal/get-locale" "file:../../../../../../Library/Caches/Yarn/v6/npm-@yari-internal-content-origin-request-0.0.1-ef7ae4f5-c467-4bd4-9270-042918b110bb-1653939349047/libs/get-locale"
-    "@yari-internal/slug-utils" "file:../../../../../../Library/Caches/Yarn/v6/npm-@yari-internal-content-origin-request-0.0.1-ef7ae4f5-c467-4bd4-9270-042918b110bb-1653939349047/libs/slug-utils"
+    "@yari-internal/constants" "file:../../../../../../Library/Caches/Yarn/v6/npm-@yari-internal-content-origin-request-0.0.1-00080ed5-c24b-40a4-80ee-0fdf202941c9-1653939364254/libs/constants"
+    "@yari-internal/fundamental-redirects" "file:../../../../../../Library/Caches/Yarn/v6/npm-@yari-internal-content-origin-request-0.0.1-00080ed5-c24b-40a4-80ee-0fdf202941c9-1653939364254/libs/fundamental-redirects"
+    "@yari-internal/get-locale" "file:../../../../../../Library/Caches/Yarn/v6/npm-@yari-internal-content-origin-request-0.0.1-00080ed5-c24b-40a4-80ee-0fdf202941c9-1653939364254/libs/get-locale"
+    "@yari-internal/slug-utils" "file:../../../../../../Library/Caches/Yarn/v6/npm-@yari-internal-content-origin-request-0.0.1-00080ed5-c24b-40a4-80ee-0fdf202941c9-1653939364254/libs/slug-utils"
     accept-language-parser "^1.5.0"
     cookie "0.5.0"
     sanitize-filename "^1.6.3"
@@ -707,7 +715,7 @@
 "@yari-internal/content-origin-response@file:../content-origin-response":
   version "0.0.1"
   dependencies:
-    "@yari-internal/constants" "file:../../../../../../Library/Caches/Yarn/v6/npm-@yari-internal-content-origin-response-0.0.1-3dab28e9-1ea3-4d08-b360-83a68cb8f3fe-1653939349053/libs/constants"
+    "@yari-internal/constants" "file:../../../../../../Library/Caches/Yarn/v6/npm-@yari-internal-content-origin-response-0.0.1-e3b5df1b-e8f0-4f59-a392-463a52b19b96-1653939364261/libs/constants"
 
 "@yari-internal/fundamental-redirects@file:../../../libs/fundamental-redirects":
   version "0.0.1"
@@ -785,6 +793,11 @@ ansi-styles@^4.0.0, ansi-styles@^4.1.0:
   integrity sha512-zbB9rCJAT1rbjiVDb2hqKFHNYLxgtk8NURxZ3IZwD3F6NtxbXZQCnnSi1Lkx+IDohdPlFp222wVALIheZJQSEg==
   dependencies:
     color-convert "^2.0.1"
+
+ansi-styles@^5.0.0:
+  version "5.2.0"
+  resolved "https://registry.yarnpkg.com/ansi-styles/-/ansi-styles-5.2.0.tgz#07449690ad45777d1924ac2abb2fc8895dba836b"
+  integrity sha512-Cxwpt2SfTzTtXcfOlzGEee8O+c+MmUgGrNiBcXnuWxuFJHe6a5Hz7qwhwe5OgaSYI0IJvkLqWX1ASG+cJOkEiA==
 
 anymatch@^2.0.0:
   version "2.0.0"
@@ -1347,6 +1360,11 @@ diff-sequences@^26.6.2:
   version "26.6.2"
   resolved "https://registry.yarnpkg.com/diff-sequences/-/diff-sequences-26.6.2.tgz#48ba99157de1923412eed41db6b6d4aa9ca7c0b1"
   integrity sha512-Mv/TDa3nZ9sbc5soK+OoA74BsS3mL37yixCvUAQkiuA4Wz6YtwP/K47n2rv2ovzHZvoiQeA5FTQOschKkEwB0Q==
+
+diff-sequences@^27.5.1:
+  version "27.5.1"
+  resolved "https://registry.yarnpkg.com/diff-sequences/-/diff-sequences-27.5.1.tgz#eaecc0d327fd68c8d9672a1e64ab8dccb2ef5327"
+  integrity sha512-k1gCAXAsNgLwEL+Y8Wvl+M6oEFj5bgazfZULpS5CneoPPXRaCCW7dm+q21Ky2VEE5X+VeRDBVg1Pcvvsr4TtNQ==
 
 diff@^4.0.1:
   version "4.0.2"
@@ -2129,6 +2147,16 @@ jest-diff@^26.6.2:
     jest-get-type "^26.3.0"
     pretty-format "^26.6.2"
 
+jest-diff@^27.5.1:
+  version "27.5.1"
+  resolved "https://registry.yarnpkg.com/jest-diff/-/jest-diff-27.5.1.tgz#a07f5011ac9e6643cf8a95a462b7b1ecf6680def"
+  integrity sha512-m0NvkX55LDt9T4mctTEgnZk3fmEg3NRYutvMPWM/0iPnkFj2wIeF45O1718cMSOFO1vINkqmxqD8vE37uTEbqw==
+  dependencies:
+    chalk "^4.0.0"
+    diff-sequences "^27.5.1"
+    jest-get-type "^27.5.1"
+    pretty-format "^27.5.1"
+
 jest-docblock@^26.0.0:
   version "26.0.0"
   resolved "https://registry.yarnpkg.com/jest-docblock/-/jest-docblock-26.0.0.tgz#3e2fa20899fc928cb13bd0ff68bd3711a36889b5"
@@ -2176,6 +2204,11 @@ jest-get-type@^26.3.0:
   version "26.3.0"
   resolved "https://registry.yarnpkg.com/jest-get-type/-/jest-get-type-26.3.0.tgz#e97dc3c3f53c2b406ca7afaed4493b1d099199e0"
   integrity sha512-TpfaviN1R2pQWkIihlfEanwOXK0zcxrKEE4MlU6Tn7keoXdN6/3gK/xl0yEh8DOunn5pOVGKf8hB4R9gVh04ig==
+
+jest-get-type@^27.5.1:
+  version "27.5.1"
+  resolved "https://registry.yarnpkg.com/jest-get-type/-/jest-get-type-27.5.1.tgz#3cd613c507b0f7ace013df407a1c1cd578bcb4f1"
+  integrity sha512-2KY95ksYSaK7DMBWQn6dQz3kqAf3BB64y2udeG+hv4KfSOb9qwcYQstTJc1KCbsix+wLZWZYN8t7nwX3GOBLRw==
 
 jest-haste-map@^26.6.2:
   version "26.6.2"
@@ -2239,6 +2272,16 @@ jest-matcher-utils@^26.6.2:
     jest-diff "^26.6.2"
     jest-get-type "^26.3.0"
     pretty-format "^26.6.2"
+
+jest-matcher-utils@^27.0.0:
+  version "27.5.1"
+  resolved "https://registry.yarnpkg.com/jest-matcher-utils/-/jest-matcher-utils-27.5.1.tgz#9c0cdbda8245bc22d2331729d1091308b40cf8ab"
+  integrity sha512-z2uTx/T6LBaCoNWNFWwChLBKYxTMcGBRjAt+2SbP929/Fflb9aa5LGma654Rz8z9HLxsrUaYzxE9T/EFIL/PAw==
+  dependencies:
+    chalk "^4.0.0"
+    jest-diff "^27.5.1"
+    jest-get-type "^27.5.1"
+    pretty-format "^27.5.1"
 
 jest-message-util@^26.6.2:
   version "26.6.2"
@@ -2993,6 +3036,15 @@ pretty-format@^26.6.2:
     "@jest/types" "^26.6.2"
     ansi-regex "^5.0.0"
     ansi-styles "^4.0.0"
+    react-is "^17.0.1"
+
+pretty-format@^27.0.0, pretty-format@^27.5.1:
+  version "27.5.1"
+  resolved "https://registry.yarnpkg.com/pretty-format/-/pretty-format-27.5.1.tgz#2181879fdea51a7a5851fb39d920faa63f01d88e"
+  integrity sha512-Qb1gy5OrP5+zDf2Bvnzdl3jsTf1qXVMazbvCoKhtKqVs4/YK4ozX4gKQJJVyNe+cajNPn0KoC0MC3FUmaHWEmQ==
+  dependencies:
+    ansi-regex "^5.0.1"
+    ansi-styles "^5.0.0"
     react-is "^17.0.1"
 
 prompts@^2.0.1:
