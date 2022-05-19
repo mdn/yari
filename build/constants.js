@@ -1,6 +1,7 @@
 import path from "path";
 
-require("dotenv").config({
+import dotenv from "dotenv";
+dotenv.config({
   path: path.join(__dirname, "..", process.env.ENV_FILE || ".env"),
 });
 

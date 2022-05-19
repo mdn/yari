@@ -8,7 +8,8 @@ import render from "./render";
 
 // This is necessary because the ssr.js is in dist/ssr.js
 // and we need to reach the .env this way.
-require("dotenv").config({
+import dotenv from "dotenv";
+dotenv.config({
   path: path.join(__dirname, "..", process.env.ENV_FILE || ".env"),
 });
 

@@ -5,8 +5,10 @@ import { VALID_LOCALES } from "@yari-internal/constants";
 import fs from "fs";
 import path from "path";
 
+// eslint-disable-next-line node/no-unpublished-import
+import dotenv from "dotenv";
 const root = path.join(__dirname, "..", "..", "..");
-require("dotenv").config({
+dotenv.config({
   path: path.join(root, process.env.ENV_FILE || ".env"),
 });
 
