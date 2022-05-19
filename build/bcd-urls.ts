@@ -1,6 +1,6 @@
 const { Document, Redirect } = require("../content");
 const { FLAW_LEVELS } = require("../libs/constants");
-import { Doc } from "../client/src/document/types";
+import { CompatStatementExtended, Doc } from "../client/src/document/types";
 
 /**
  * Loop over, and mutate, all 'browser_compatibility' sections.
@@ -70,7 +70,10 @@ export function normalizeBCDURLs(doc: Doc, options) {
       // `__compat` it is not the first block, and the information is nested
       // under `__compat`.
       const block = data.__compat ? data.__compat : data;
-      if (!block.mdn_url) {
+
+      const isCompatStatement = (value): value is CompatStatementExtended =>
+        !!value.mdn_url;
+      if (!isCompatStatement(block)) {
         continue;
       }
 
