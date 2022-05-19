@@ -8,7 +8,7 @@ const util = require("./util.js");
 
 const DUMMY_BASE_URL = "https://example.com";
 
-const { CONTENT_ROOT } = require("../../../libs/env");
+import { CONTENT_ROOT } from "../../../libs/env";
 
 const _warned = new Map();
 // The purpose of this function is to make sure `console.warn` is only called once

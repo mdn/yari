@@ -8,7 +8,7 @@ import {
   SpecificationsSection,
 } from "../client/src/document/types";
 const specs = require("browser-specs");
-const web = require("../kumascript/src/api/web.js");
+const web = require("../kumascript/src/api/web");
 
 interface SimpleSupportStatementWithReleaseDate
   extends bcd.SimpleSupportStatement {

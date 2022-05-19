@@ -1,17 +1,17 @@
 /**
  * @prettier
  */
-const cheerio = require("cheerio");
-const { Document } = require("../../content");
-const info = require("../src/info.js");
-const { render } = require("../index.js");
-const {
+import cheerio from "cheerio";
+import { Document } from "../../content";
+import info from "../src/info.js";
+import { render } from "../index.js";
+import {
   MacroNotFoundError,
   MacroBrokenLinkError,
   MacroRedirectedLinkError,
   MacroDeprecatedError,
   MacroExecutionError,
-} = require("../src/errors.js");
+} from "../src/errors.js";
 
 describe("testing the main render() function", () => {
   it("non-fatal errors in macros are returned by render()", async () => {

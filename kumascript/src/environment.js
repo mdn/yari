@@ -41,7 +41,7 @@ const kumaPrototype = require("./api/kuma.js");
 const mdnPrototype = require("./api/mdn.js");
 const stringPrototype = require("./api/string.js");
 const wikiPrototype = require("./api/wiki.js");
-const webPrototype = require("./api/web.js");
+const webPrototype = require("./api/web");
 const pagePrototype = require("./api/page.js");
 const info = require("./info");
 

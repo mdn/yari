@@ -1,14 +1,9 @@
 /**
  * @prettier
  */
-const { JSDOM } = require("jsdom");
+import { JSDOM } from "jsdom";
 
-const {
-  beforeEachMacro,
-  describeMacro,
-  itMacro,
-  lintHTML,
-} = require("./utils");
+import { beforeEachMacro, describeMacro, itMacro, lintHTML } from "./utils";
 
 const dirname = __dirname;
 
