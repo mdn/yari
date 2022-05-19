@@ -4,7 +4,7 @@
   "license": "MPL-2.0",
   "main": "index.js",
   "scripts": {
-    "serve": "node-dev server.js",
+    "serve": "ts-node-dev server.ts",
     "test-server": "jest"
   },
   "dependencies": {
@@ -15,8 +15,8 @@
     "got": "11.8.2",
     "jest": "26.6.3",
     "kleur": "4.1.4",
-    "node-dev": "7.0.0",
-    "polka": "0.5.2"
+    "polka": "0.5.2",
+    "ts-node-dev": "^1.1.8"
   },
   "engines": {
     "node": ">=16.x"
