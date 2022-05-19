@@ -1,6 +1,9 @@
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'assert'.
 const { assert, itMacro, describeMacro, lintHTML } = require("./utils");
 
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'jsdom'.
 const jsdom = require("jsdom");
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'JSDOM'.
 const { JSDOM } = jsdom;
 
 describeMacro("Specifications", function () {

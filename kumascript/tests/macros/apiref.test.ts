@@ -1,12 +1,17 @@
 /**
  * @prettier
  */
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'JSDOM'.
 const { JSDOM } = require("jsdom");
 
 const {
+  // @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'beforeEach... Remove this comment to see the full error message
   beforeEachMacro,
+  // @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'describeMa... Remove this comment to see the full error message
   describeMacro,
+  // @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'itMacro'.
   itMacro,
+  // @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'lintHTML'.
   lintHTML,
 } = require("./utils");
 
@@ -15,7 +20,9 @@ const dirname = __dirname;
 /**
  * Load all the fixtures.
  */
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'fs'.
 const fs = require("fs");
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'path'.
 const path = require("path");
 const subpagesFixturePath = path.resolve(
   dirname,
@@ -24,17 +31,21 @@ const subpagesFixturePath = path.resolve(
 const subpagesFixture = JSON.parse(
   fs.readFileSync(subpagesFixturePath, "utf8")
 );
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'commonl10n... Remove this comment to see the full error message
 const commonl10nFixturePath = path.resolve(
   dirname,
   "fixtures/apiref/commonl10n.json"
 );
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'commonl10n... Remove this comment to see the full error message
 const commonl10nFixture = JSON.parse(
   fs.readFileSync(commonl10nFixturePath, "utf8")
 );
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'groupDataF... Remove this comment to see the full error message
 const groupDataFixturePath = path.resolve(
   dirname,
   "fixtures/apiref/groupdata.json"
 );
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'groupDataF... Remove this comment to see the full error message
 const groupDataFixture = JSON.parse(
   fs.readFileSync(groupDataFixturePath, "utf8")
 );
@@ -534,6 +545,7 @@ function testMacro(config) {
       macro.ctx.env.slug = config.currentSlug;
       macro.ctx.env.locale = locale;
       // Mock calls to getJSONData()
+      // @ts-expect-error ts-migrate(2304) FIXME: Cannot find name 'jest'.
       macro.ctx.web.getJSONData = jest.fn((name) => {
         if (name === "GroupData") {
           return groupDataFixture;
@@ -561,6 +573,7 @@ function testMacro(config) {
 describeMacro("APIRef", function () {
   beforeEachMacro(function (macro) {
     // Mock calls to MDN.subpagesExpand
+    // @ts-expect-error ts-migrate(2304) FIXME: Cannot find name 'jest'.
     macro.ctx.page.subpagesExpand = jest.fn((page) => {
       expect(page).toEqual("/en-US/docs/Web/API/TestInterface");
       return subpagesFixture;

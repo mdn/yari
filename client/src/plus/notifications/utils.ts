@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+// @ts-expect-error ts-migrate(2792) FIXME: Cannot find module 'swr'. Did you mean to set the ... Remove this comment to see the full error message
 import { mutate } from "swr";
 import { HEADER_NOTIFICATIONS_MENU_API_URL } from "../../constants";
 import {

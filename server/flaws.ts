@@ -1,16 +1,24 @@
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'fs'.
 const fs = require("fs");
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'path'.
 const path = require("path");
 
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'fdir'.
 const { fdir } = require("fdir");
 
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'getPopular... Remove this comment to see the full error message
 const { getPopularities } = require("../content");
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'FLAW_LEVEL... Remove this comment to see the full error message
 const { FLAW_LEVELS, options: buildOptions } = require("../build");
 
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'BUILD_OUT_... Remove this comment to see the full error message
 const { BUILD_OUT_ROOT } = require("../build/constants");
 
 // Module-level cache
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'allPopular... Remove this comment to see the full error message
 const allPopularityValues = [];
 
+// @ts-expect-error ts-migrate(2393) FIXME: Duplicate function implementation.
 function getAllPopularityValues() {
   if (!allPopularityValues.length) {
     for (const value of getPopularities().values()) {
@@ -73,6 +81,7 @@ function validFixableFlawsFilter(value) {
     } else if (value.startsWith(">")) {
       filter = { min: parseInt(value.slice(1).trim()) };
     } else {
+      // @ts-expect-error ts-migrate(2345) FIXME: Argument of type 'number' is not assignable to par... Remove this comment to see the full error message
       filter = { equal: parseInt(parseInt(value)) };
     }
   }
@@ -236,6 +245,7 @@ module.exports = (req, res) => {
         }
         counts.flaws.type.set(flawKey, counts.flaws.type.get(flawKey) + 1);
 
+        // @ts-expect-error ts-migrate(2488) FIXME: Type 'unknown' must have a '[Symbol.iterator]()' m... Remove this comment to see the full error message
         for (const flaw of actualFlaws) {
           counts.flaws.total++;
           if (flaw.fixable) {

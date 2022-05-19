@@ -5,6 +5,7 @@
 // The functions defined by that macro have been moved to
 // ../../src/environment.js, but the tests that are still relevant remain here.
 
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'assert'.
 const { assert, itMacro, describeMacro } = require("./utils");
 
 describeMacro("dekiscript-wiki", function () {
@@ -17,6 +18,7 @@ describeMacro("dekiscript-wiki", function () {
     assert.isFunction(pkg.uri);
     assert.isFunction(pkg.tree);
   });
+  // @ts-expect-error ts-migrate(2582) FIXME: Cannot find name 'describe'. Do you need to instal... Remove this comment to see the full error message
   describe('test "uri"', function () {
     itMacro('with "/docs", leading "/", spaces', function (macro) {
       macro.ctx.env.url = "/en-US/docs/Web";

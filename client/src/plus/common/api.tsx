@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useFrequentlyViewed } from "../../document/hooks";
+// @ts-expect-error ts-migrate(2792) FIXME: Cannot find module '../collections'. Did you mean ... Remove this comment to see the full error message
 import { BookmarkData } from "../collections";
 
 export const NOTIFICATIONS_BASE_PATH = "/api/v1/plus/notifications";

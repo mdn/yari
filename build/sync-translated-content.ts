@@ -1,28 +1,46 @@
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'fs'.
 const fs = require("fs");
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'crypto'.
 const crypto = require("crypto");
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'path'.
 const path = require("path");
 
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'chalk'.
 const chalk = require("chalk");
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'fm'.
 const fm = require("front-matter");
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'log'.
 const log = require("loglevel");
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'fdir'.
 const { fdir } = require("fdir");
 
 const {
+  // @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'buildURL'.
   buildURL,
+  // @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'execGit'.
   execGit,
+  // @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'slugToFold... Remove this comment to see the full error message
   slugToFolder,
+  // @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'Document'.
   Document,
+  // @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'Redirect'.
   Redirect,
+  // @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'CONTENT_RO... Remove this comment to see the full error message
   CONTENT_ROOT,
+  // @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'CONTENT_TR... Remove this comment to see the full error message
   CONTENT_TRANSLATED_ROOT,
+  // @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'HTML_FILEN... Remove this comment to see the full error message
   HTML_FILENAME,
+  // @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'MARKDOWN_F... Remove this comment to see the full error message
   MARKDOWN_FILENAME,
+  // @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'VALID_LOCA... Remove this comment to see the full error message
   VALID_LOCALES,
 } = require("../content");
 
 const CONFLICTING = "conflicting";
 const ORPHANED = "orphaned";
 
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'syncAllTra... Remove this comment to see the full error message
 function syncAllTranslatedContent(locale) {
   if (!CONTENT_TRANSLATED_ROOT) {
     throw new Error(
@@ -75,6 +93,7 @@ function syncAllTranslatedContent(locale) {
   return stats;
 }
 
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'resolve'.
 function resolve(slug) {
   if (!slug) {
     return slug;
@@ -82,6 +101,7 @@ function resolve(slug) {
   const url = buildURL("en-us", slug);
   const resolved = Redirect.resolve(url);
   if (url !== resolved) {
+    // @ts-expect-error ts-migrate(2339) FIXME: Property 'read' does not exist on type '{ new (): ... Remove this comment to see the full error message
     const doc = Document.read(Document.urlToFolderPath(resolved));
     if (!doc) {
       return slug;
@@ -196,6 +216,7 @@ function syncTranslatedContent(inFilePath, locale) {
     filePath = getFilePath();
     if (fs.existsSync(filePath)) {
       metadata.slug = `${metadata.slug}_${crypto
+        // @ts-expect-error ts-migrate(2339) FIXME: Property 'createHash' does not exist on type 'Cryp... Remove this comment to see the full error message
         .createHash("md5")
         .update(oldMetadata.slug)
         .digest("hex")}`;
@@ -209,6 +230,7 @@ function syncTranslatedContent(inFilePath, locale) {
   ];
 
   log.log(`${inFilePath} → ${filePath}`);
+  // @ts-expect-error ts-migrate(2339) FIXME: Property 'updateWikiHistory' does not exist on typ... Remove this comment to see the full error message
   Document.updateWikiHistory(
     path.join(CONTENT_TRANSLATED_ROOT, locale.toLowerCase()),
     oldMetadata.slug,
@@ -217,6 +239,7 @@ function syncTranslatedContent(inFilePath, locale) {
   fs.mkdirSync(path.dirname(filePath), { recursive: true });
   execGit(["mv", inFilePath, filePath], { cwd: CONTENT_TRANSLATED_ROOT });
   metadata.original_slug = oldMetadata.slug;
+  // @ts-expect-error ts-migrate(2339) FIXME: Property 'saveFile' does not exist on type '{ new ... Remove this comment to see the full error message
   Document.saveFile(filePath, Document.trimLineEndings(rawBody), metadata);
   try {
     fs.rmdirSync(path.dirname(inFilePath));
@@ -234,6 +257,7 @@ function syncTranslatedContentForAllLocales() {
     if (locale == "en-us") {
       continue;
     }
+    // @ts-expect-error ts-migrate(2339) FIXME: Property 'stats' does not exist on type '{ movedDo... Remove this comment to see the full error message
     const { stats: { movedDocs = 0 } = {} } = syncAllTranslatedContent(locale);
     moved += movedDocs;
   }

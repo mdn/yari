@@ -1,12 +1,17 @@
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'assert'.
 const { assert, itMacro, describeMacro, lintHTML } = require("./utils");
 
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'fs'.
 const fs = require("fs");
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'path'.
 const path = require("path");
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'jsdom'.
 const jsdom = require("jsdom");
 const extend = require("extend");
 const dirname = __dirname;
 const fixture_dir = path.resolve(dirname, "fixtures/compat");
 
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'JSDOM'.
 const { JSDOM } = jsdom;
 
 let fixtureCompatData = {};

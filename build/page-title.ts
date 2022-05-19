@@ -1,3 +1,4 @@
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'Document'.
 const { Document } = require("../content");
 
 /**
@@ -12,11 +13,13 @@ const { Document } = require("../content");
  * done when Kuma was the platform.
  *
  */
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'getPageTit... Remove this comment to see the full error message
 function getPageTitle(doc) {
   const docURL = doc.mdn_url;
   const rootParentURL = getRootURL(docURL);
   let title = doc.title;
   if (rootParentURL && rootParentURL !== docURL) {
+    // @ts-expect-error ts-migrate(2339) FIXME: Property 'findByURL' does not exist on type '{ new... Remove this comment to see the full error message
     const parentDoc = Document.findByURL(rootParentURL.toLowerCase());
     if (parentDoc && parentDoc.metadata && parentDoc.metadata.title) {
       title += ` - ${parentDoc.metadata.title}`;

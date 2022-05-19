@@ -1,12 +1,17 @@
 /**
  * @prettier
  */
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'JSDOM'.
 const { JSDOM } = require("jsdom");
 
 const {
+  // @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'beforeEach... Remove this comment to see the full error message
   beforeEachMacro,
+  // @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'describeMa... Remove this comment to see the full error message
   describeMacro,
+  // @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'itMacro'.
   itMacro,
+  // @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'lintHTML'.
   lintHTML,
 } = require("./utils");
 
@@ -15,12 +20,16 @@ const dirname = __dirname;
 /**
  * Load all the fixtures.
  */
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'fs'.
 const fs = require("fs");
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'path'.
 const path = require("path");
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'groupDataF... Remove this comment to see the full error message
 const groupDataFixturePath = path.resolve(
   dirname,
   "fixtures/listgroups/groupdata.json"
 );
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'groupDataF... Remove this comment to see the full error message
 const groupDataFixture = JSON.parse(
   fs.readFileSync(groupDataFixturePath, "utf8")
 );
@@ -109,11 +118,13 @@ describeMacro("ListGroups", () => {
   beforeEachMacro((macro) => {
     macro.ctx.env.locale = "en-US";
     // Mock calls to wiki.page
+    // @ts-expect-error ts-migrate(2304) FIXME: Cannot find name 'jest'.
     macro.ctx.wiki.getPage = jest.fn((name) => {
       return overviewPages[name];
     });
     // Mock calls to GroupData
     const originalgetJSONData = macro.ctx.web.getJSONData;
+    // @ts-expect-error ts-migrate(2304) FIXME: Cannot find name 'jest'.
     macro.ctx.web.getJSONData = jest.fn((name) => {
       if (name === "GroupData") {
         return groupDataFixture;

@@ -1,4 +1,5 @@
 import { DisplayH2, DisplayH3 } from "./utils";
+// @ts-expect-error ts-migrate(2792) FIXME: Cannot find module '../../ui/molecules/notecards'.... Remove this comment to see the full error message
 import NoteCard from "../../ui/molecules/notecards";
 
 export function SpecificationSection({

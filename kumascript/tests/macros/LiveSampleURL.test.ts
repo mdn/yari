@@ -1,10 +1,12 @@
 /**
  * @prettier
  */
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'assert'.
 const { assert, itMacro, describeMacro, beforeEachMacro } = require("./utils");
 
 describeMacro("LiveSampleURL", function () {
   beforeEachMacro(function (macro) {
+    // @ts-expect-error ts-migrate(2304) FIXME: Cannot find name 'jest'.
     macro.ctx.info.hasPage = jest.fn(() => true);
   });
   itMacro("Production settings", function (macro) {
@@ -35,7 +37,9 @@ describeMacro("LiveSampleURL", function () {
     macro.ctx.env.live_samples = {
       base_url: "https://mdn.mozillademos.org",
     };
+    // @ts-expect-error ts-migrate(2304) FIXME: Cannot find name 'jest'.
     macro.ctx.info.hasPage = jest.fn(() => false);
+    // @ts-expect-error ts-migrate(2304) FIXME: Cannot find name 'jest'.
     macro.ctx.info.getDescription = jest.fn((url) => url.toLowerCase());
     macro.ctx.env.url = "/en-US/docs/Learn/HTML";
     await expect(

@@ -1,5 +1,7 @@
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'sanitizeFi... Remove this comment to see the full error message
 const sanitizeFilename = require("sanitize-filename");
 
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'slugToFold... Remove this comment to see the full error message
 function slugToFolder(slug, joiner = "/") {
   return (
     slug
@@ -19,11 +21,13 @@ function slugToFolder(slug, joiner = "/") {
   );
 }
 
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'decodePath... Remove this comment to see the full error message
 function decodePath(path) {
   const decoded = path.split("/").map(decodeURIComponent).join("/");
   return decoded;
 }
 
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'encodePath... Remove this comment to see the full error message
 function encodePath(path) {
   const decoded = path.split("/").map(encodeURIComponent).join("/");
   return decoded;

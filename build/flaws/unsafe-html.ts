@@ -1,7 +1,10 @@
 const {
+  // @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'INTERACTIV... Remove this comment to see the full error message
   INTERACTIVE_EXAMPLES_BASE_URL,
+  // @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'LIVE_SAMPL... Remove this comment to see the full error message
   LIVE_SAMPLES_BASE_URL,
 } = require("../../kumascript/src/constants");
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'findMatche... Remove this comment to see the full error message
 const { findMatchesInText } = require("../matches-in-text");
 
 const safeIFrameSrcs = [
@@ -47,7 +50,9 @@ function getAndMarkupUnsafeHTMLFlaws(doc, $, { rawContent, fileInfo }) {
     for (const { line, column } of findMatchesInText(html, rawContent)) {
       // This might not find anything because the HTML might have mutated
       // slightly because of how cheerio parses it. But it doesn't hurt to try.
+      // @ts-expect-error ts-migrate(2339) FIXME: Property 'line' does not exist on type '{ explanat... Remove this comment to see the full error message
       flaw.line = line;
+      // @ts-expect-error ts-migrate(2339) FIXME: Property 'column' does not exist on type '{ explan... Remove this comment to see the full error message
       flaw.column = column;
     }
 

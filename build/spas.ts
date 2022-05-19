@@ -1,21 +1,35 @@
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'fs'.
 const fs = require("fs");
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'path'.
 const path = require("path");
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'frontmatte... Remove this comment to see the full error message
 const frontmatter = require("front-matter");
 
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'm2h'.
 const { m2h } = require("../markdown");
 
 const {
+  // @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'CONTENT_RO... Remove this comment to see the full error message
   CONTENT_ROOT,
+  // @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'CONTENT_TR... Remove this comment to see the full error message
   CONTENT_TRANSLATED_ROOT,
+  // @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'CONTRIBUTO... Remove this comment to see the full error message
   CONTRIBUTOR_SPOTLIGHT_ROOT,
+  // @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'VALID_LOCA... Remove this comment to see the full error message
   VALID_LOCALES,
 } = require("../content");
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'BUILD_OUT_... Remove this comment to see the full error message
 const { BUILD_OUT_ROOT } = require("./constants");
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'renderHTML... Remove this comment to see the full error message
 // eslint-disable-next-line node/no-missing-require
 const { renderHTML } = require("../ssr/dist/main");
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'got'.
 const { default: got } = require("got");
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'splitSecti... Remove this comment to see the full error message
 const { splitSections } = require("./utils");
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'cheerio'.
 const cheerio = require("cheerio");
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'findByURL'... Remove this comment to see the full error message
 const { findByURL } = require("../content/document");
 
 const dirname = __dirname;
@@ -89,6 +103,7 @@ async function buildContributorSpotlight(options) {
   }
 }
 
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'buildSPAs'... Remove this comment to see the full error message
 async function buildSPAs(options) {
   let buildCount = 0;
 

@@ -2,10 +2,12 @@
  * @prettier
  */
 
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'assert'.
 const { assert, itMacro, describeMacro } = require("./utils");
 
 describeMacro("httpheader", function () {
   itMacro("No arguments (en-US)", function (macro) {
+    // @ts-expect-error ts-migrate(2304) FIXME: Cannot find name 'jest'.
     macro.ctx.wiki.getPage = jest.fn(() => undefined);
     return assert.eventually.equal(
       macro.call(),
@@ -13,6 +15,7 @@ describeMacro("httpheader", function () {
     );
   });
   itMacro("One argument (en-US)", function (macro) {
+    // @ts-expect-error ts-migrate(2304) FIXME: Cannot find name 'jest'.
     macro.ctx.wiki.getPage = jest.fn(() => ({
       summary:
         "The <strong><code>Accept</code></strong> request HTTP header...",
@@ -24,6 +27,7 @@ describeMacro("httpheader", function () {
   });
   itMacro("One argument (ko)", function (macro) {
     macro.ctx.env.locale = "ko";
+    // @ts-expect-error ts-migrate(2304) FIXME: Cannot find name 'jest'.
     macro.ctx.wiki.getPage = jest.fn(() => ({
       summary:
         "<strong><code>Date</code></strong> 일반 HTTP 헤더는 메시지가 만들어진 날짜와 시간을 포함합니다.",
@@ -34,6 +38,7 @@ describeMacro("httpheader", function () {
     );
   });
   itMacro("One unknown argument (en-US)", function (macro) {
+    // @ts-expect-error ts-migrate(2304) FIXME: Cannot find name 'jest'.
     macro.ctx.wiki.getPage = jest.fn(() => {});
     return assert.eventually.equal(
       macro.call("fleetwood-mac"),
@@ -41,6 +46,7 @@ describeMacro("httpheader", function () {
     );
   });
   itMacro("Two arguments (en-US)", function (macro) {
+    // @ts-expect-error ts-migrate(2304) FIXME: Cannot find name 'jest'.
     macro.ctx.wiki.getPage = jest.fn(() => ({
       summary:
         "The <strong><code>Accept-Language</code></strong> request HTTP header...",
@@ -51,6 +57,7 @@ describeMacro("httpheader", function () {
     );
   });
   itMacro("Three arguments (en-US)", function (macro) {
+    // @ts-expect-error ts-migrate(2304) FIXME: Cannot find name 'jest'.
     macro.ctx.wiki.getPage = jest.fn(() => ({
       summary:
         "The <strong><code>Accept-Language</code></strong> request HTTP header...",
@@ -61,6 +68,7 @@ describeMacro("httpheader", function () {
     );
   });
   itMacro("Four arguments (code) (en-US)", function (macro) {
+    // @ts-expect-error ts-migrate(2304) FIXME: Cannot find name 'jest'.
     macro.ctx.wiki.getPage = jest.fn(() => ({
       summary:
         "The <strong><code>Accept-Language</code></strong> request HTTP header...",
@@ -71,6 +79,7 @@ describeMacro("httpheader", function () {
     );
   });
   itMacro("Four arguments (not code) (en-US)", function (macro) {
+    // @ts-expect-error ts-migrate(2304) FIXME: Cannot find name 'jest'.
     macro.ctx.wiki.getPage = jest.fn(() => ({
       summary:
         "The <strong><code>Accept-Language</code></strong> request HTTP header...",

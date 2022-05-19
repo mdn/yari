@@ -1,13 +1,18 @@
 /**
  * @prettier
  */
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'fs'.
 const fs = require("fs");
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'path'.
 const path = require("path");
 
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'util'.
 const util = require("./util.js");
 
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'DUMMY_BASE... Remove this comment to see the full error message
 const DUMMY_BASE_URL = "https://example.com";
 
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'CONTENT_RO... Remove this comment to see the full error message
 const { CONTENT_ROOT } = require("../../../content");
 
 const _warned = new Map();

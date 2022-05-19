@@ -233,6 +233,7 @@ export const handlers: QueryAndTransform[] = [
     "sql",
     "example-good",
     "example-bad",
+    // @ts-expect-error ts-migrate(2550) FIXME: Property 'flatMap' does not exist on type 'string[... Remove this comment to see the full error message
   ].flatMap((lang) =>
     // shows up with/without semicolon
     ["brush:" + lang, `brush:${lang};`, lang, lang + ";"].map(
@@ -330,6 +331,7 @@ export const handlers: QueryAndTransform[] = [
           return node.tagName == "div" || node.tagName == "p"
             ? h(
                 "paragraph",
+                // @ts-expect-error ts-migrate(2550) FIXME: Property 'flatMap' does not exist on type 'MDNodeU... Remove this comment to see the full error message
                 t(node).flatMap((node) =>
                   node.type == "paragraph" ? node.children : node
                 )

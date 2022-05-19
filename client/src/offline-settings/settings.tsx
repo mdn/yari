@@ -1,10 +1,13 @@
+// @ts-expect-error ts-migrate(2792) FIXME: Cannot find module '../ui/atoms/switch'. Did you m... Remove this comment to see the full error message
 import { Switch } from "../ui/atoms/switch";
 import { SettingsData, getMDNWorker } from "./mdn-worker";
+// @ts-expect-error ts-migrate(2792) FIXME: Cannot find module '@use-it/interval'. Did you mea... Remove this comment to see the full error message
 import useInterval from "@use-it/interval";
 
 import { useEffect, useRef, useState } from "react";
 import UpdateButton from "./update";
 import ClearButton from "./clear";
+// @ts-expect-error ts-migrate(2792) FIXME: Cannot find module '../ui/atoms/spinner'. Did you ... Remove this comment to see the full error message
 import { Spinner } from "../ui/atoms/spinner";
 import { MDN_PLUS_TITLE } from "../constants";
 import { ContentStatus, ContentStatusPhase } from "./db";

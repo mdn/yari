@@ -1,9 +1,12 @@
+// @ts-expect-error ts-migrate(6200) FIXME: Definitions of the following identifiers conflict ... Remove this comment to see the full error message
 const dotenv = require("dotenv");
 dotenv.config();
 
 const {
+  // @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'FLAW_LEVEL... Remove this comment to see the full error message
   FLAW_LEVELS,
   DEFAULT_FLAW_LEVELS,
+  // @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'VALID_FLAW... Remove this comment to see the full error message
   VALID_FLAW_CHECKS,
   FILES,
   FOLDERSEARCH,
@@ -14,6 +17,7 @@ const {
   FIX_FLAWS_VERBOSE,
 } = require("./constants");
 
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'options'.
 const options = Object.freeze({
   flawLevels: parseFlawLevels(DEFAULT_FLAW_LEVELS),
   files: parseFiles(FILES),

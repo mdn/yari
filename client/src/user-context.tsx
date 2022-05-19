@@ -1,4 +1,5 @@
 import * as React from "react";
+// @ts-expect-error ts-migrate(2792) FIXME: Cannot find module 'swr'. Did you mean to set the ... Remove this comment to see the full error message
 import useSWR from "swr";
 
 import { DISABLE_AUTH, DEFAULT_GEO_COUNTRY } from "./constants";

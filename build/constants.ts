@@ -1,3 +1,4 @@
+// @ts-expect-error ts-migrate(6200) FIXME: Definitions of the following identifiers conflict ... Remove this comment to see the full error message
 const path = require("path");
 
 const dotenv = require("dotenv");
@@ -6,9 +7,11 @@ dotenv.config({
   path: path.join(dirname, "..", process.env.ENV_FILE || ".env"),
 });
 
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'BUILD_OUT_... Remove this comment to see the full error message
 const BUILD_OUT_ROOT =
   process.env.BUILD_OUT_ROOT || path.join(dirname, "..", "client", "build");
 
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'FLAW_LEVEL... Remove this comment to see the full error message
 const FLAW_LEVELS = Object.freeze({
   ERROR: "error",
   IGNORE: "ignore",
@@ -42,8 +45,10 @@ const DEFAULT_FLAW_LEVELS = process.env.BUILD_FLAW_LEVELS || "*:warn";
 
 const FILES = process.env.BUILD_FILES || "";
 const FOLDERSEARCH = process.env.BUILD_FOLDERSEARCH || "";
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'GOOGLE_ANA... Remove this comment to see the full error message
 const GOOGLE_ANALYTICS_ACCOUNT =
   process.env.BUILD_GOOGLE_ANALYTICS_ACCOUNT || "";
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'GOOGLE_ANA... Remove this comment to see the full error message
 const GOOGLE_ANALYTICS_DEBUG = JSON.parse(
   process.env.BUILD_GOOGLE_ANALYTICS_DEBUG || "false"
 );
@@ -74,6 +79,7 @@ const FIX_FLAWS_VERBOSE = JSON.parse(
 );
 
 // See explanation in docs/envvars.md
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'ALWAYS_ALL... Remove this comment to see the full error message
 const ALWAYS_ALLOW_ROBOTS = JSON.parse(
   process.env.BUILD_ALWAYS_ALLOW_ROBOTS || "false"
 );

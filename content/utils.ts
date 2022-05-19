@@ -1,12 +1,18 @@
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'path'.
 const path = require("path");
 const childProcess = require("child_process");
 
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'CONTENT_RO... Remove this comment to see the full error message
 const { CONTENT_ROOT, CONTENT_TRANSLATED_ROOT } = require("./constants");
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'slugToFold... Remove this comment to see the full error message
 const { slugToFolder } = require("../libs/slug-utils");
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'LRU'.
 const LRU = require("lru-cache");
 
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'MEMOIZE_IN... Remove this comment to see the full error message
 const MEMOIZE_INVALIDATE = Symbol("force cache update");
 
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'getRoot'.
 function getRoot(locale, throws = "") {
   const root =
     locale.toLowerCase() === "en-us" ? CONTENT_ROOT : CONTENT_TRANSLATED_ROOT;
@@ -16,6 +22,7 @@ function getRoot(locale, throws = "") {
   return root;
 }
 
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'buildURL'.
 function buildURL(locale, slug) {
   if (!locale) throw new Error("locale falsy!");
   if (!slug) throw new Error("slug falsy!");
@@ -33,6 +40,7 @@ function isPromise(p) {
  * Note: The parameter are turned into a cache key quite naively, so
  * different object key order would lead to new cache entries.
  */
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'memoize'.
 function memoize(fn) {
   if (process.env.NODE_ENV !== "production") {
     return fn;
@@ -67,12 +75,14 @@ function memoize(fn) {
   };
 }
 
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'execGit'.
 function execGit(args, opts = {}, root = null) {
   let gitRoot = root;
   if (!gitRoot) {
     gitRoot = execGit(
       ["rev-parse", "--show-toplevel"],
       opts,
+      // @ts-expect-error ts-migrate(2339) FIXME: Property 'cwd' does not exist on type '{}'.
       opts.cwd || CONTENT_ROOT
     );
   }
@@ -102,6 +112,7 @@ function execGit(args, opts = {}, root = null) {
   return stdout.toString().trim();
 }
 
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'urlToFolde... Remove this comment to see the full error message
 function urlToFolderPath(url) {
   const [, locale, , ...slugParts] = url.split("/");
   return path.join(locale.toLowerCase(), slugToFolder(slugParts.join("/")));

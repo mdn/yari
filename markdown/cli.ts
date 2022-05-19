@@ -1,16 +1,26 @@
 import * as fs from "fs";
 const fm = require("front-matter");
+// @ts-expect-error ts-migrate(2792) FIXME: Cannot find module '@caporal/core'. Did you mean t... Remove this comment to see the full error message
 import { program } from "@caporal/core";
+// @ts-expect-error ts-migrate(2792) FIXME: Cannot find module 'chalk'. Did you mean to set th... Remove this comment to see the full error message
 import * as chalk from "chalk";
+// @ts-expect-error ts-migrate(2792) FIXME: Cannot find module 'cli-progress'. Did you mean to... Remove this comment to see the full error message
 import * as cliProgress from "cli-progress";
+// @ts-expect-error ts-migrate(2792) FIXME: Cannot find module '../content'. Did you mean to s... Remove this comment to see the full error message
 import { Document } from "../content";
+// @ts-expect-error ts-migrate(2306) FIXME: File '/Users/claas/github/mdn/yari/content/documen... Remove this comment to see the full error message
 import { saveFile } from "../content/document";
+// @ts-expect-error ts-migrate(2792) FIXME: Cannot find module '../libs/constants'. Did you me... Remove this comment to see the full error message
 import { VALID_LOCALES } from "../libs/constants";
+// @ts-expect-error ts-migrate(2792) FIXME: Cannot find module '../content'. Did you mean to s... Remove this comment to see the full error message
 import { execGit } from "../content";
+// @ts-expect-error ts-migrate(2306) FIXME: File '/Users/claas/github/mdn/yari/content/utils.t... Remove this comment to see the full error message
 import { getRoot } from "../content/utils";
 
+// @ts-expect-error ts-migrate(2792) FIXME: Cannot find module './h2m'. Did you mean to set th... Remove this comment to see the full error message
 import { h2m } from "./h2m";
 const { prettyAST } = require("./utils");
+// @ts-expect-error ts-migrate(2792) FIXME: Cannot find module '.'. Did you mean to set the 'm... Remove this comment to see the full error message
 import { m2h } from ".";
 import { toSelector } from "./h2m/utils";
 
@@ -40,6 +50,7 @@ function saveProblemsReport(problems: Map<any, any>) {
     "## All unhandled elements",
     ...Array.from(
       Array.from(problems)
+        // @ts-expect-error ts-migrate(2550) FIXME: Property 'flatMap' does not exist on type '[any, a... Remove this comment to see the full error message
         .flatMap(([, { invalid, unhandled }]) => [
           ...invalid.map((e: any) => e.source),
           ...unhandled,

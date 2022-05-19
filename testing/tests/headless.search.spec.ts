@@ -1,3 +1,4 @@
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'test'.
 const { test, expect } = require("@playwright/test");
 
 function testURL(pathname = "/") {

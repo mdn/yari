@@ -4,7 +4,9 @@
  *
  * @prettier
  */
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'sanitizeFi... Remove this comment to see the full error message
 const sanitizeFilename = require("sanitize-filename");
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'cheerio'.
 const cheerio = require("cheerio");
 
 const H1_TO_H6_TAGS = new Set(["h1", "h2", "h3", "h4", "h5", "h6"]);
@@ -18,6 +20,7 @@ const INJECT_SECTION_ID_TAGS = new Set([
 const LIVE_SAMPLE_PARTS = ["html", "css", "js"];
 const SECTION_ID_DISALLOWED = /["#$%&+,/:;=?@[\]^`{|}~')(\\]/g;
 
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'Kumascript... Remove this comment to see the full error message
 class KumascriptError extends Error {
   constructor(message) {
     super(message);
@@ -25,6 +28,7 @@ class KumascriptError extends Error {
   }
 }
 
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'slugify'.
 function slugify(text) {
   // Turn the text content of a header, or the value of the "name" attribute,
   // into a slug for use as an ID as well as a filename. Trim it, collapse
@@ -56,6 +60,7 @@ function spacesToUnderscores(text) {
   return text.replace(/ |%20/g, "_");
 }
 
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'safeDecode... Remove this comment to see the full error message
 function safeDecodeURIComponent(text) {
   // This function will attempt to URI-decode the incoming text, which may
   // or may not be URI-encoded, and if it can't, it assumes the text is not
@@ -133,13 +138,17 @@ function collectClosestCode($start) {
     });
     if (pairs.some(([, code]) => !!code)) {
       $start.prop("title", $level.first(":header").text());
+      // @ts-expect-error ts-migrate(2550) FIXME: Property 'fromEntries' does not exist on type 'Obj... Remove this comment to see the full error message
       return Object.fromEntries(pairs);
     }
   }
   return null;
 }
 
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'HTMLTool'.
 class HTMLTool {
+  $: any;
+  pathDescription: any;
   constructor(html, pathDescription) {
     this.$ =
       typeof html == "string"

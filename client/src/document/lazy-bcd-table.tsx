@@ -1,7 +1,10 @@
+// @ts-expect-error ts-migrate(1259) FIXME: Module '"/Users/claas/github/mdn/yari/node_modules... Remove this comment to see the full error message
 import React, { lazy, Suspense, useEffect, useState } from "react";
+// @ts-expect-error ts-migrate(2792) FIXME: Cannot find module 'swr'. Did you mean to set the ... Remove this comment to see the full error message
 import useSWR from "swr";
 
 import { DisplayH2, DisplayH3 } from "./ingredients/utils";
+// @ts-expect-error ts-migrate(2792) FIXME: Cannot find module '../ui/atoms/loading'. Did you ... Remove this comment to see the full error message
 import { Loading } from "../ui/atoms/loading";
 // Because it's bad for web performance to lazy-load CSS during the initial render
 // (because the page is saying "Wait! Stop rendering, now that I've downloaded
@@ -12,11 +15,14 @@ import { Loading } from "../ui/atoms/loading";
 // the JS (and the JSON XHR fetch of course)
 import "./ingredients/browser-compatibility-table/index.scss";
 import { useLocale, useIsServer } from "../hooks";
+// @ts-expect-error ts-migrate(2792) FIXME: Cannot find module '../ui/molecules/notecards'. Di... Remove this comment to see the full error message
 import NoteCard from "../ui/molecules/notecards";
 
 const BrowserCompatibilityTable = lazy(
   () =>
+    // @ts-expect-error ts-migrate(1323) FIXME: Dynamic imports are only supported when the '--mod... Remove this comment to see the full error message
     import(
+      // @ts-expect-error ts-migrate(2792) FIXME: Cannot find module './ingredients/browser-compatib... Remove this comment to see the full error message
       /* webpackChunkName: "browser-compatibility-table" */ "./ingredients/browser-compatibility-table"
     )
 );
@@ -97,6 +103,7 @@ function LazyBrowserCompatibilityTableInner({ dataURL }: { dataURL: string }) {
   }
 
   return (
+    // @ts-expect-error ts-migrate(2786) FIXME: 'ErrorBoundary' cannot be used as a JSX component.
     <ErrorBoundary>
       <Suspense fallback={<Loading message="Loading BCD table" />}>
         <BrowserCompatibilityTable locale={locale} {...data} />
@@ -114,6 +121,8 @@ class ErrorBoundary extends React.Component<
   ErrorBoundaryProps,
   ErrorBoundaryState
 > {
+  props: any;
+  state: any;
   constructor(props: ErrorBoundaryProps) {
     super(props);
     this.state = { error: null };

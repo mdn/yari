@@ -1,9 +1,14 @@
+// @ts-expect-error ts-migrate(1259) FIXME: Module '"/Users/claas/github/mdn/yari/node_modules... Remove this comment to see the full error message
 import React from "react";
+// @ts-expect-error ts-migrate(2792) FIXME: Cannot find module 'react-router-dom'. Did you mea... Remove this comment to see the full error message
 import { useLocation, useParams } from "react-router-dom";
+// @ts-expect-error ts-migrate(2792) FIXME: Cannot find module 'swr'. Did you mean to set the ... Remove this comment to see the full error message
 import useSWR from "swr";
 
 import { Doc } from "../document/types";
+// @ts-expect-error ts-migrate(2792) FIXME: Cannot find module '../languages.json'. Did you me... Remove this comment to see the full error message
 import LANGUAGES_RAW from "../languages.json";
+// @ts-expect-error ts-migrate(2792) FIXME: Cannot find module '../ui/molecules/notecards'. Di... Remove this comment to see the full error message
 import NoteCard from "../ui/molecules/notecards";
 
 const LANGUAGES = new Map(
@@ -94,7 +99,9 @@ export default function FallbackLink({ url }: { url: string }) {
       <NoteCard type="success" extraClasses="fallback-document">
         <h4>Good news!</h4>
         <p>
-          The page you requested doesn't exist in{" "}
+          The page you requested doesn't exist in // @ts-expect-error
+          ts-migrate(2339) FIXME: Property 'English' does not exist on type
+          'unknown... Remove this comment to see the full error message
           <b>{LANGUAGES.get(locale.toLowerCase())?.English}</b> but it exists in{" "}
           <b>English</b>
         </p>

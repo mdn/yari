@@ -1,4 +1,5 @@
 /* eslint-disable node/no-missing-require */
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'CSP_VALUE'... Remove this comment to see the full error message
 const { CSP_VALUE } = require("@yari-internal/constants");
 
 exports.handler = async (event) => {

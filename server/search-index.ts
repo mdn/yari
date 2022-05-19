@@ -1,14 +1,22 @@
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'fs'.
 const fs = require("fs");
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'path'.
 const path = require("path");
 
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'fdir'.
 const { fdir } = require("fdir");
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'fm'.
 const fm = require("front-matter");
 
 const {
+  // @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'CONTENT_RO... Remove this comment to see the full error message
   CONTENT_ROOT,
+  // @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'CONTENT_TR... Remove this comment to see the full error message
   CONTENT_TRANSLATED_ROOT,
+  // @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'VALID_LOCA... Remove this comment to see the full error message
   VALID_LOCALES,
 } = require("../content");
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'SearchInde... Remove this comment to see the full error message
 const { SearchIndex } = require("../build");
 
 function populateSearchIndex(searchIndex, localeLC) {
@@ -32,6 +40,7 @@ function populateSearchIndex(searchIndex, localeLC) {
   }
 }
 
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'searchInde... Remove this comment to see the full error message
 async function searchIndexRoute(req, res) {
   // Remember, this is always in lowercase because of a middleware
   // that lowercases all incoming requests' pathname.

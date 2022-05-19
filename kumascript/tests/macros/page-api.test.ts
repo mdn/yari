@@ -6,14 +6,19 @@
 // tested its main functions. The features of that macro are now
 // part of ../../src/environment.js, but we're still testing them here.
 
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'fs'.
 const fs = require("fs");
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'path'.
 const path = require("path");
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'Document'.
 const { Document } = require("../../../content");
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'assert'.
 const { assert, itMacro, describeMacro, beforeEachMacro } = require("./utils");
 
 const dirname = __dirname;
 
 // Load fixture data.
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'fixtureDat... Remove this comment to see the full error message
 const fixtureData = JSON.parse(
   fs.readFileSync(
     path.resolve(dirname, "fixtures", "documentData1.json"),
@@ -78,9 +83,11 @@ function checkSubpagesResult(res) {
 
 describeMacro("page API tests", function () {
   beforeEachMacro(function (macro) {
+    // @ts-expect-error ts-migrate(2304) FIXME: Cannot find name 'jest'.
     macro.ctx.info.cleanURL = jest.fn((url) =>
       new URL(url, "https://example.com").pathname.toLowerCase()
     );
+    // @ts-expect-error ts-migrate(2339) FIXME: Property 'findByURL' does not exist on type '{ new... Remove this comment to see the full error message
     Document.findByURL = jest.fn((url) => {
       const data = fixtureData[url.toLowerCase()];
       if (!data) {
@@ -97,6 +104,7 @@ describeMacro("page API tests", function () {
         },
       };
     });
+    // @ts-expect-error ts-migrate(2339) FIXME: Property 'findChildren' does not exist on type '{ ... Remove this comment to see the full error message
     Document.findChildren = jest.fn((url) => {
       const result = [];
       const parent = `${url.toLowerCase()}/`;
@@ -104,12 +112,18 @@ describeMacro("page API tests", function () {
         if (!key.replace(parent, "").includes("/")) {
           key.replace(`${url.toLowerCase()}/`, "");
           result.push({
+            // @ts-expect-error ts-migrate(2339) FIXME: Property 'url' does not exist on type 'unknown'.
             url: data.url,
             metadata: {
+              // @ts-expect-error ts-migrate(2339) FIXME: Property 'title' does not exist on type 'unknown'.
               title: data.title,
+              // @ts-expect-error ts-migrate(2339) FIXME: Property 'locale' does not exist on type 'unknown'... Remove this comment to see the full error message
               locale: data.locale,
+              // @ts-expect-error ts-migrate(2339) FIXME: Property 'summary' does not exist on type 'unknown... Remove this comment to see the full error message
               summary: data.summary,
+              // @ts-expect-error ts-migrate(2339) FIXME: Property 'slug' does not exist on type 'unknown'.
               slug: data.slug,
+              // @ts-expect-error ts-migrate(2339) FIXME: Property 'tags' does not exist on type 'unknown'.
               tags: data.tags,
             },
           });
@@ -127,6 +141,7 @@ describeMacro("page API tests", function () {
     assert.isFunction(pkg.subPagesFlatten);
     assert.isFunction(pkg.translations);
   });
+  // @ts-expect-error ts-migrate(2582) FIXME: Cannot find name 'describe'. Do you need to instal... Remove this comment to see the full error message
   describe('test "subpages"', function () {
     itMacro("One argument (non-null)", function (macro) {
       const res = macro.ctx.page.subpages(fix_url);
@@ -145,6 +160,7 @@ describeMacro("page API tests", function () {
       checkSubpagesResult(res[0].subpages);
     });
   });
+  // @ts-expect-error ts-migrate(2582) FIXME: Cannot find name 'describe'. Do you need to instal... Remove this comment to see the full error message
   describe('test "subpagesExpand"', function () {
     itMacro("One argument (non-null)", function (macro) {
       const res = macro.ctx.page.subpagesExpand(fix_url);
@@ -163,6 +179,7 @@ describeMacro("page API tests", function () {
       checkSubpagesResult(res[0].subpages);
     });
   });
+  // @ts-expect-error ts-migrate(2582) FIXME: Cannot find name 'describe'. Do you need to instal... Remove this comment to see the full error message
   describe('test "translations"', function () {
     itMacro("One argument (non-null)", function (macro) {
       const res = macro.ctx.page.translations(fix_url);

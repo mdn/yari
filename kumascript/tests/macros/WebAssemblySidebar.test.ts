@@ -1,6 +1,7 @@
 /**
  * @prettier
  */
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'assert'.
 const { assert, itMacro, describeMacro, beforeEachMacro } = require("./utils");
 
 const expected = `\
@@ -49,6 +50,7 @@ describeMacro("WebAssemblySidebar", function () {
     const baseURL = "/en-US/docs/Web/JavaScript/Reference/Global_Objects/";
 
     // Mock calls to template("jsxref", [partialSlug])
+    // @ts-expect-error ts-migrate(2304) FIXME: Cannot find name 'jest'.
     macro.ctx.template = jest.fn((macro, args) => {
       const jsSlug = args[0];
       const partialSlug = jsSlug.replace(".", "/");

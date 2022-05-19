@@ -1,11 +1,15 @@
 /**
  * @prettier
  */
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'path'.
 const path = require("path");
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'cheerio'.
 const cheerio = require("cheerio");
 
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'itMacro'.
 const { itMacro, describeMacro, beforeEachMacro } = require("./utils");
 
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'CONTENT_RO... Remove this comment to see the full error message
 const CONTENT_ROOT = process.env.CONTENT_ROOT;
 if (!CONTENT_ROOT) {
   throw new Error("These tests assume you point to the real content root.");
@@ -144,6 +148,7 @@ function makeExpect(data, locale = "en-US") {
 // The `data` is the object returned by wiki.getPage
 // ----------------------------------------------------------------------------
 
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'MOCK_PAGES... Remove this comment to see the full error message
 const MOCK_PAGES = {
   "en-US": {
     a: {
@@ -380,6 +385,7 @@ const MOCK_PAGES = {
 //       describe all the possible inputs and their expected outputs.
 // ----------------------------------------------------------------------------
 
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'TEST_CASE'... Remove this comment to see the full error message
 const TEST_CASE = [
   {
     title: "Test preview mode display (no param, no slug)",
@@ -424,10 +430,13 @@ const TEST_CASE = [
 
 describeMacro("svginfo", () => {
   beforeEachMacro((macro) => {
+    // @ts-expect-error ts-migrate(2304) FIXME: Cannot find name 'jest'.
     macro.ctx.wiki.getPage = jest.fn(async (url) => {
       for (const locale of Object.keys(MOCK_PAGES)) {
         for (const page of Object.values(MOCK_PAGES[locale])) {
+          // @ts-expect-error ts-migrate(2339) FIXME: Property 'url' does not exist on type 'unknown'.
           if (url === page.url) {
+            // @ts-expect-error ts-migrate(2339) FIXME: Property 'data' does not exist on type 'unknown'.
             return page.data;
           }
         }
@@ -442,8 +451,11 @@ describeMacro("svginfo", () => {
           macroSource: "foo",
         };
       };
+      // @ts-expect-error ts-migrate(2339) FIXME: Property 'env' does not exist on type '{ title: st... Remove this comment to see the full error message
       if (test.env) {
+        // @ts-expect-error ts-migrate(2339) FIXME: Property 'env' does not exist on type '{ title: st... Remove this comment to see the full error message
         Object.keys(test.env).forEach((key) => {
+          // @ts-expect-error ts-migrate(2339) FIXME: Property 'env' does not exist on type '{ title: st... Remove this comment to see the full error message
           macro.ctx.env[key] = test.env[key];
         });
       }

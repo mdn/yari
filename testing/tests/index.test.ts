@@ -1,7 +1,11 @@
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'fs'.
 const fs = require("fs");
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'path'.
 const path = require("path");
 
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'cheerio'.
 const cheerio = require("cheerio");
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'sizeOf'.
 const sizeOf = require("image-size");
 
 const buildRoot = path.join("client", "build");
@@ -635,44 +639,59 @@ test("broken links flaws", () => {
   expect(flaws.broken_links.length).toBe(12);
   // Map them by 'href'
   const map = new Map(flaws.broken_links.map((x) => [x.href, x]));
+  // @ts-expect-error ts-migrate(2339) FIXME: Property 'suggestion' does not exist on type 'unkn... Remove this comment to see the full error message
   expect(map.get("/en-US/docs/Hopeless/Case").suggestion).toBeNull();
+  // @ts-expect-error ts-migrate(2339) FIXME: Property 'line' does not exist on type 'unknown'.
   expect(map.get("/en-US/docs/Web/CSS/dumber").line).toBe(10);
+  // @ts-expect-error ts-migrate(2339) FIXME: Property 'column' does not exist on type 'unknown'... Remove this comment to see the full error message
   expect(map.get("/en-US/docs/Web/CSS/dumber").column).toBe(13);
   expect(
+    // @ts-expect-error ts-migrate(2339) FIXME: Property 'suggestion' does not exist on type 'unkn... Remove this comment to see the full error message
     map.get("https://developer.mozilla.org/en-US/docs/Web/API/Blob").suggestion
   ).toBe("/en-US/docs/Web/API/Blob");
   expect(
+    // @ts-expect-error ts-migrate(2339) FIXME: Property 'suggestion' does not exist on type 'unkn... Remove this comment to see the full error message
     map.get("https://developer.mozilla.org/en-US/docs/Web/API/Blob#Anchor")
       .suggestion
   ).toBe("/en-US/docs/Web/API/Blob#Anchor");
   expect(
+    // @ts-expect-error ts-migrate(2339) FIXME: Property 'suggestion' does not exist on type 'unkn... Remove this comment to see the full error message
     map.get("https://developer.mozilla.org/en-US/docs/Web/API/Blob?a=b")
       .suggestion
   ).toBe("/en-US/docs/Web/API/Blob?a=b");
+  // @ts-expect-error ts-migrate(2339) FIXME: Property 'suggestion' does not exist on type 'unkn... Remove this comment to see the full error message
   expect(map.get("/en-us/DOCS/Web/api/BLOB").suggestion).toBe(
     "/en-US/docs/Web/API/Blob"
   );
   expect(
+    // @ts-expect-error ts-migrate(2339) FIXME: Property 'suggestion' does not exist on type 'unkn... Remove this comment to see the full error message
     map.get("/en-US/docs/Web/HTML/Element/anchor#fragment").suggestion
   ).toBe("/en-US/docs/Web/HTML/Element/a#fragment");
   expect(
+    // @ts-expect-error ts-migrate(2339) FIXME: Property 'suggestion' does not exist on type 'unkn... Remove this comment to see the full error message
     map.get("/en-US/docs/glossary/bézier_curve#identifier").suggestion
   ).toBe("/en-US/docs/Glossary/Bézier_curve#identifier");
+  // @ts-expect-error ts-migrate(2339) FIXME: Property 'explanation' does not exist on type 'unk... Remove this comment to see the full error message
   expect(map.get("/en-US/docs/Web/BrokenLinks").explanation).toBe(
     "Link points to the page it's already on"
   );
+  // @ts-expect-error ts-migrate(2339) FIXME: Property 'explanation' does not exist on type 'unk... Remove this comment to see the full error message
   expect(map.get("/en-US/docs/Web/BrokenLinks#anchor").explanation).toBe(
     "No need for the pathname in anchor links if it's the same page"
   );
+  // @ts-expect-error ts-migrate(2339) FIXME: Property 'suggestion' does not exist on type 'unkn... Remove this comment to see the full error message
   expect(map.get("/en-US/docs/Web/BrokenLinks#anchor").suggestion).toBe(
     "#anchor"
   );
+  // @ts-expect-error ts-migrate(2339) FIXME: Property 'explanation' does not exist on type 'unk... Remove this comment to see the full error message
   expect(map.get("http://www.mozilla.org").explanation).toBe(
     "Is currently http:// but can become https://"
   );
+  // @ts-expect-error ts-migrate(2339) FIXME: Property 'suggestion' does not exist on type 'unkn... Remove this comment to see the full error message
   expect(map.get("http://www.mozilla.org").suggestion).toBe(
     "https://www.mozilla.org"
   );
+  // @ts-expect-error ts-migrate(2339) FIXME: Property 'fixable' does not exist on type 'unknown... Remove this comment to see the full error message
   expect(map.get("http://www.mozilla.org").fixable).toBeTruthy();
 });
 
@@ -692,44 +711,59 @@ test("broken links markdown flaws", () => {
   expect(flaws.broken_links.length).toBe(12);
   // Map them by 'href'
   const map = new Map(flaws.broken_links.map((x) => [x.href, x]));
+  // @ts-expect-error ts-migrate(2339) FIXME: Property 'suggestion' does not exist on type 'unkn... Remove this comment to see the full error message
   expect(map.get("/en-US/docs/Hopeless/Case").suggestion).toBeNull();
+  // @ts-expect-error ts-migrate(2339) FIXME: Property 'line' does not exist on type 'unknown'.
   expect(map.get("/en-US/docs/Web/CSS/dumber").line).toBe(9);
+  // @ts-expect-error ts-migrate(2339) FIXME: Property 'column' does not exist on type 'unknown'... Remove this comment to see the full error message
   expect(map.get("/en-US/docs/Web/CSS/dumber").column).toBe(1);
   expect(
+    // @ts-expect-error ts-migrate(2339) FIXME: Property 'suggestion' does not exist on type 'unkn... Remove this comment to see the full error message
     map.get("https://developer.mozilla.org/en-US/docs/Web/API/Blob").suggestion
   ).toBe("/en-US/docs/Web/API/Blob");
   expect(
+    // @ts-expect-error ts-migrate(2339) FIXME: Property 'suggestion' does not exist on type 'unkn... Remove this comment to see the full error message
     map.get("https://developer.mozilla.org/en-US/docs/Web/API/Blob#Anchor")
       .suggestion
   ).toBe("/en-US/docs/Web/API/Blob#Anchor");
   expect(
+    // @ts-expect-error ts-migrate(2339) FIXME: Property 'suggestion' does not exist on type 'unkn... Remove this comment to see the full error message
     map.get("https://developer.mozilla.org/en-US/docs/Web/API/Blob?a=b")
       .suggestion
   ).toBe("/en-US/docs/Web/API/Blob?a=b");
+  // @ts-expect-error ts-migrate(2339) FIXME: Property 'suggestion' does not exist on type 'unkn... Remove this comment to see the full error message
   expect(map.get("/en-us/DOCS/Web/api/BLOB").suggestion).toBe(
     "/en-US/docs/Web/API/Blob"
   );
   expect(
+    // @ts-expect-error ts-migrate(2339) FIXME: Property 'suggestion' does not exist on type 'unkn... Remove this comment to see the full error message
     map.get("/en-US/docs/Web/HTML/Element/anchor#fragment").suggestion
   ).toBe("/en-US/docs/Web/HTML/Element/a#fragment");
   expect(
+    // @ts-expect-error ts-migrate(2339) FIXME: Property 'suggestion' does not exist on type 'unkn... Remove this comment to see the full error message
     map.get("/en-US/docs/glossary/bézier_curve#identifier").suggestion
   ).toBe("/en-US/docs/Glossary/Bézier_curve#identifier");
+  // @ts-expect-error ts-migrate(2339) FIXME: Property 'explanation' does not exist on type 'unk... Remove this comment to see the full error message
   expect(map.get("/en-US/docs/Web/BrokenLinks_Markdown").explanation).toBe(
     "Link points to the page it's already on"
   );
   expect(
+    // @ts-expect-error ts-migrate(2339) FIXME: Property 'explanation' does not exist on type 'unk... Remove this comment to see the full error message
     map.get("/en-US/docs/Web/BrokenLinks_Markdown#anchor").explanation
   ).toBe("No need for the pathname in anchor links if it's the same page");
   expect(
+    // @ts-expect-error ts-migrate(2339) FIXME: Property 'suggestion' does not exist on type 'unkn... Remove this comment to see the full error message
     map.get("/en-US/docs/Web/BrokenLinks_Markdown#anchor").suggestion
   ).toBe("#anchor");
+  // @ts-expect-error ts-migrate(2339) FIXME: Property 'explanation' does not exist on type 'unk... Remove this comment to see the full error message
   expect(map.get("http://www.mozilla.org").explanation).toBe(
     "Is currently http:// but can become https://"
   );
+  // @ts-expect-error ts-migrate(2339) FIXME: Property 'suggestion' does not exist on type 'unkn... Remove this comment to see the full error message
   expect(map.get("http://www.mozilla.org").suggestion).toBe(
     "https://www.mozilla.org"
   );
+  // @ts-expect-error ts-migrate(2339) FIXME: Property 'fixable' does not exist on type 'unknown... Remove this comment to see the full error message
   expect(map.get("http://www.mozilla.org").fixable).toBeTruthy();
 });
 
@@ -752,8 +786,11 @@ test("repeated broken links flaws", () => {
   // Map them by 'id'
   const map = new Map(flaws.broken_links.map((x) => [x.id, x]));
   expect(map.size).toBe(3);
+  // @ts-expect-error ts-migrate(2339) FIXME: Property 'suggestion' does not exist on type 'unkn... Remove this comment to see the full error message
   expect(map.get("link1").suggestion).toBe("/en-US/docs/Web/CSS/number");
+  // @ts-expect-error ts-migrate(2339) FIXME: Property 'suggestion' does not exist on type 'unkn... Remove this comment to see the full error message
   expect(map.get("link2").suggestion).toBe("/en-US/docs/Web/CSS/number");
+  // @ts-expect-error ts-migrate(2339) FIXME: Property 'suggestion' does not exist on type 'unkn... Remove this comment to see the full error message
   expect(map.get("link3").suggestion).toBe("/en-US/docs/Web/CSS/number");
 });
 
@@ -773,8 +810,11 @@ test("broken http:// link that is not a valid URL", () => {
 
   const map = new Map(flaws.broken_links.map((x) => [x.id, x]));
   expect(map.size).toBe(1);
+  // @ts-expect-error ts-migrate(2339) FIXME: Property 'suggestion' does not exist on type 'unkn... Remove this comment to see the full error message
   expect(map.get("link1").suggestion).toBeNull();
+  // @ts-expect-error ts-migrate(2339) FIXME: Property 'explanation' does not exist on type 'unk... Remove this comment to see the full error message
   expect(map.get("link1").explanation).toBe("Not a valid link URL");
+  // @ts-expect-error ts-migrate(2339) FIXME: Property 'fixable' does not exist on type 'unknown... Remove this comment to see the full error message
   expect(map.get("link1").fixable).toBeFalsy();
 });
 
@@ -794,19 +834,27 @@ test("broken links that are links to the current page", () => {
 
   const map = new Map(flaws.broken_links.map((x) => [x.id, x]));
   expect(map.size).toBe(4);
+  // @ts-expect-error ts-migrate(2339) FIXME: Property 'suggestion' does not exist on type 'unkn... Remove this comment to see the full error message
   expect(map.get("link1").suggestion).toBeNull();
+  // @ts-expect-error ts-migrate(2339) FIXME: Property 'explanation' does not exist on type 'unk... Remove this comment to see the full error message
   expect(map.get("link1").explanation).toBe(
     "Link points to the page it's already on"
   );
+  // @ts-expect-error ts-migrate(2339) FIXME: Property 'suggestion' does not exist on type 'unkn... Remove this comment to see the full error message
   expect(map.get("link2").suggestion).toBe("#anchored");
+  // @ts-expect-error ts-migrate(2339) FIXME: Property 'explanation' does not exist on type 'unk... Remove this comment to see the full error message
   expect(map.get("link2").explanation).toBe(
     "No need for the pathname in anchor links if it's the same page"
   );
+  // @ts-expect-error ts-migrate(2339) FIXME: Property 'suggestion' does not exist on type 'unkn... Remove this comment to see the full error message
   expect(map.get("link3").suggestion).toBeNull();
+  // @ts-expect-error ts-migrate(2339) FIXME: Property 'explanation' does not exist on type 'unk... Remove this comment to see the full error message
   expect(map.get("link3").explanation).toBe(
     "Link points to the page it's already on"
   );
+  // @ts-expect-error ts-migrate(2339) FIXME: Property 'suggestion' does not exist on type 'unkn... Remove this comment to see the full error message
   expect(map.get("link4").suggestion).toBe("#hash");
+  // @ts-expect-error ts-migrate(2339) FIXME: Property 'explanation' does not exist on type 'unk... Remove this comment to see the full error message
   expect(map.get("link4").explanation).toBe(
     "No need for the pathname in anchor links if it's the same page"
   );
@@ -839,8 +887,11 @@ test("without locale prefix broken links flaws", () => {
   // Map them by 'id'
   const map = new Map(flaws.broken_links.map((x) => [x.id, x]));
   expect(map.size).toBe(3);
+  // @ts-expect-error ts-migrate(2339) FIXME: Property 'suggestion' does not exist on type 'unkn... Remove this comment to see the full error message
   expect(map.get("link1").suggestion).toBe("/en-US/docs/Web/CSS/number");
+  // @ts-expect-error ts-migrate(2339) FIXME: Property 'suggestion' does not exist on type 'unkn... Remove this comment to see the full error message
   expect(map.get("link2").suggestion).toBe("/en-US/docs/Web/CSS/number");
+  // @ts-expect-error ts-migrate(2339) FIXME: Property 'suggestion' does not exist on type 'unkn... Remove this comment to see the full error message
   expect(map.get("link3").suggestion).toBeNull();
 });
 
@@ -860,30 +911,45 @@ test("broken anchor links flaws", () => {
   expect(flaws.broken_links.length).toBe(3);
   // Map them by 'href'
   const map = new Map(flaws.broken_links.map((x) => [x.href, x]));
+  // @ts-expect-error ts-migrate(2339) FIXME: Property 'suggestion' does not exist on type 'unkn... Remove this comment to see the full error message
   expect(map.get("#Heading1").suggestion).toBe("#heading1");
+  // @ts-expect-error ts-migrate(2339) FIXME: Property 'explanation' does not exist on type 'unk... Remove this comment to see the full error message
   expect(map.get("#Heading1").explanation).toBe("Anchor not lowercase");
+  // @ts-expect-error ts-migrate(2339) FIXME: Property 'fixable' does not exist on type 'unknown... Remove this comment to see the full error message
   expect(map.get("#Heading1").fixable).toBe(true);
+  // @ts-expect-error ts-migrate(2339) FIXME: Property 'line' does not exist on type 'unknown'.
   expect(map.get("#Heading1").line).toBe(7);
+  // @ts-expect-error ts-migrate(2339) FIXME: Property 'column' does not exist on type 'unknown'... Remove this comment to see the full error message
   expect(map.get("#Heading1").column).toBe(16);
 
+  // @ts-expect-error ts-migrate(2339) FIXME: Property 'suggestion' does not exist on type 'unkn... Remove this comment to see the full error message
   expect(map.get("/en-US/docs/Web/Foo#Heading2").suggestion).toBe(
     "/en-US/docs/Web/Foo#heading2"
   );
+  // @ts-expect-error ts-migrate(2339) FIXME: Property 'explanation' does not exist on type 'unk... Remove this comment to see the full error message
   expect(map.get("/en-US/docs/Web/Foo#Heading2").explanation).toBe(
     "Anchor not lowercase"
   );
+  // @ts-expect-error ts-migrate(2339) FIXME: Property 'fixable' does not exist on type 'unknown... Remove this comment to see the full error message
   expect(map.get("/en-US/docs/Web/Foo#Heading2").fixable).toBe(true);
+  // @ts-expect-error ts-migrate(2339) FIXME: Property 'line' does not exist on type 'unknown'.
   expect(map.get("/en-US/docs/Web/Foo#Heading2").line).toBe(8);
+  // @ts-expect-error ts-migrate(2339) FIXME: Property 'column' does not exist on type 'unknown'... Remove this comment to see the full error message
   expect(map.get("/en-US/docs/Web/Foo#Heading2").column).toBe(16);
 
+  // @ts-expect-error ts-migrate(2339) FIXME: Property 'suggestion' does not exist on type 'unkn... Remove this comment to see the full error message
   expect(map.get("/en-US/docs/Web/Fuu#Anchor").suggestion).toBe(
     "/en-US/docs/Web/Foo#anchor"
   );
+  // @ts-expect-error ts-migrate(2339) FIXME: Property 'explanation' does not exist on type 'unk... Remove this comment to see the full error message
   expect(map.get("/en-US/docs/Web/Fuu#Anchor").explanation).toBe(
     "Can't resolve /en-US/docs/Web/Fuu#Anchor"
   );
+  // @ts-expect-error ts-migrate(2339) FIXME: Property 'fixable' does not exist on type 'unknown... Remove this comment to see the full error message
   expect(map.get("/en-US/docs/Web/Fuu#Anchor").fixable).toBe(true);
+  // @ts-expect-error ts-migrate(2339) FIXME: Property 'line' does not exist on type 'unknown'.
   expect(map.get("/en-US/docs/Web/Fuu#Anchor").line).toBe(11);
+  // @ts-expect-error ts-migrate(2339) FIXME: Property 'column' does not exist on type 'unknown'... Remove this comment to see the full error message
   expect(map.get("/en-US/docs/Web/Fuu#Anchor").column).toBe(16);
 
   const htmlFile = path.join(builtFolder, "index.html");
@@ -1025,59 +1091,91 @@ test("image flaws kitchen sink", () => {
   let flaw = map.get(
     "https://www.peterbe.com/static/images/howsmywifi-scr.png"
   );
+  // @ts-expect-error ts-migrate(2339) FIXME: Property 'explanation' does not exist on type 'unk... Remove this comment to see the full error message
   expect(flaw.explanation).toBe("External image URL");
+  // @ts-expect-error ts-migrate(2339) FIXME: Property 'suggestion' does not exist on type 'unkn... Remove this comment to see the full error message
   expect(flaw.suggestion).toBeNull();
+  // @ts-expect-error ts-migrate(2339) FIXME: Property 'line' does not exist on type 'unknown'.
   expect(flaw.line).toBe(19);
+  // @ts-expect-error ts-migrate(2339) FIXME: Property 'column' does not exist on type 'unknown'... Remove this comment to see the full error message
   expect(flaw.column).toBe(13);
 
   flaw = map.get("idontexist.png");
+  // @ts-expect-error ts-migrate(2339) FIXME: Property 'explanation' does not exist on type 'unk... Remove this comment to see the full error message
   expect(flaw.explanation).toBe(
     "File not present on disk, an empty file, or not an image"
   );
+  // @ts-expect-error ts-migrate(2339) FIXME: Property 'suggestion' does not exist on type 'unkn... Remove this comment to see the full error message
   expect(flaw.suggestion).toBeNull();
+  // @ts-expect-error ts-migrate(2339) FIXME: Property 'line' does not exist on type 'unknown'.
   expect(flaw.line).toBe(34);
+  // @ts-expect-error ts-migrate(2339) FIXME: Property 'column' does not exist on type 'unknown'... Remove this comment to see the full error message
   expect(flaw.column).toBe(13);
 
   flaw = map.get("/en-US/docs/Web/Images/florian.png");
+  // @ts-expect-error ts-migrate(2339) FIXME: Property 'explanation' does not exist on type 'unk... Remove this comment to see the full error message
   expect(flaw.explanation).toBe("Pathname should be relative to document");
+  // @ts-expect-error ts-migrate(2339) FIXME: Property 'suggestion' does not exist on type 'unkn... Remove this comment to see the full error message
   expect(flaw.suggestion).toBe("florian.png");
+  // @ts-expect-error ts-migrate(2339) FIXME: Property 'line' does not exist on type 'unknown'.
   expect(flaw.line).toBe(39);
+  // @ts-expect-error ts-migrate(2339) FIXME: Property 'column' does not exist on type 'unknown'... Remove this comment to see the full error message
   expect(flaw.column).toBe(13);
 
   flaw = map.get("Florian.PNG");
+  // @ts-expect-error ts-migrate(2339) FIXME: Property 'explanation' does not exist on type 'unk... Remove this comment to see the full error message
   expect(flaw.explanation).toBe("Pathname should always be lowercase");
+  // @ts-expect-error ts-migrate(2339) FIXME: Property 'suggestion' does not exist on type 'unkn... Remove this comment to see the full error message
   expect(flaw.suggestion).toBe("florian.png");
+  // @ts-expect-error ts-migrate(2339) FIXME: Property 'line' does not exist on type 'unknown'.
   expect(flaw.line).toBe(44);
+  // @ts-expect-error ts-migrate(2339) FIXME: Property 'column' does not exist on type 'unknown'... Remove this comment to see the full error message
   expect(flaw.column).toBe(13);
 
   flaw = map.get("http://www.peterbe.com/static/images/favicon-32.png");
+  // @ts-expect-error ts-migrate(2339) FIXME: Property 'explanation' does not exist on type 'unk... Remove this comment to see the full error message
   expect(flaw.explanation).toBe("Insecure URL");
+  // @ts-expect-error ts-migrate(2339) FIXME: Property 'suggestion' does not exist on type 'unkn... Remove this comment to see the full error message
   expect(flaw.suggestion).toBe(
     "https://www.peterbe.com/static/images/favicon-32.png"
   );
+  // @ts-expect-error ts-migrate(2339) FIXME: Property 'line' does not exist on type 'unknown'.
   expect(flaw.line).toBe(49);
+  // @ts-expect-error ts-migrate(2339) FIXME: Property 'column' does not exist on type 'unknown'... Remove this comment to see the full error message
   expect(flaw.column).toBe(13);
 
   flaw = map.get(
     "https://developer.mozilla.org/en-US/docs/Web/Images/screenshot.png"
   );
+  // @ts-expect-error ts-migrate(2339) FIXME: Property 'explanation' does not exist on type 'unk... Remove this comment to see the full error message
   expect(flaw.explanation).toBe("Unnecessarily absolute URL");
+  // @ts-expect-error ts-migrate(2339) FIXME: Property 'suggestion' does not exist on type 'unkn... Remove this comment to see the full error message
   expect(flaw.suggestion).toBe("screenshot.png");
+  // @ts-expect-error ts-migrate(2339) FIXME: Property 'line' does not exist on type 'unknown'.
   expect(flaw.line).toBe(54);
+  // @ts-expect-error ts-migrate(2339) FIXME: Property 'column' does not exist on type 'unknown'... Remove this comment to see the full error message
   expect(flaw.column).toBe(13);
 
   flaw = map.get("/en-US/docs/Web/Foo/screenshot.png");
+  // @ts-expect-error ts-migrate(2339) FIXME: Property 'explanation' does not exist on type 'unk... Remove this comment to see the full error message
   expect(flaw.explanation).toBe("Pathname should be relative to document");
+  // @ts-expect-error ts-migrate(2339) FIXME: Property 'suggestion' does not exist on type 'unkn... Remove this comment to see the full error message
   expect(flaw.suggestion).toBe("../Foo/screenshot.png");
+  // @ts-expect-error ts-migrate(2339) FIXME: Property 'line' does not exist on type 'unknown'.
   expect(flaw.line).toBe(59);
+  // @ts-expect-error ts-migrate(2339) FIXME: Property 'column' does not exist on type 'unknown'... Remove this comment to see the full error message
   expect(flaw.column).toBe(13);
 
   flaw = map.get("../Foo/nonexistent.png");
+  // @ts-expect-error ts-migrate(2339) FIXME: Property 'explanation' does not exist on type 'unk... Remove this comment to see the full error message
   expect(flaw.explanation).toBe(
     "File not present on disk, an empty file, or not an image"
   );
+  // @ts-expect-error ts-migrate(2339) FIXME: Property 'suggestion' does not exist on type 'unkn... Remove this comment to see the full error message
   expect(flaw.suggestion).toBeNull();
+  // @ts-expect-error ts-migrate(2339) FIXME: Property 'line' does not exist on type 'unknown'.
   expect(flaw.line).toBe(64);
+  // @ts-expect-error ts-migrate(2339) FIXME: Property 'column' does not exist on type 'unknown'... Remove this comment to see the full error message
   expect(flaw.column).toBe(13);
 
   const htmlFile = path.join(builtFolder, "index.html");
@@ -1513,6 +1611,7 @@ test("home page should have a /index.json file with pullRequestsData", () => {
   const builtFolder = path.join(buildRoot, "en-us");
 
   const jsonFile = path.join(builtFolder, "index.json");
+  // @ts-expect-error ts-migrate(2525) FIXME: Initializer provides no value for this binding ele... Remove this comment to see the full error message
   const { hyData: { recentContributions } = {} } = JSON.parse(
     fs.readFileSync(jsonFile)
   );
@@ -1532,27 +1631,41 @@ test("headings with links in them are flaws", () => {
   const { doc } = JSON.parse(fs.readFileSync(jsonFile));
   expect(doc.flaws.heading_links.length).toBe(2);
   const map = new Map(doc.flaws.heading_links.map((x) => [x.id, x]));
+  // @ts-expect-error ts-migrate(2339) FIXME: Property 'explanation' does not exist on type 'unk... Remove this comment to see the full error message
   expect(map.get("heading_links1").explanation).toBe(
     "h2 heading contains an <a> tag"
   );
+  // @ts-expect-error ts-migrate(2339) FIXME: Property 'suggestion' does not exist on type 'unkn... Remove this comment to see the full error message
   expect(map.get("heading_links1").suggestion).toBe("One");
+  // @ts-expect-error ts-migrate(2339) FIXME: Property 'line' does not exist on type 'unknown'.
   expect(map.get("heading_links1").line).toBe(9);
+  // @ts-expect-error ts-migrate(2339) FIXME: Property 'column' does not exist on type 'unknown'... Remove this comment to see the full error message
   expect(map.get("heading_links1").column).toBe(19);
+  // @ts-expect-error ts-migrate(2339) FIXME: Property 'fixable' does not exist on type 'unknown... Remove this comment to see the full error message
   expect(map.get("heading_links1").fixable).toBe(false);
+  // @ts-expect-error ts-migrate(2339) FIXME: Property 'before' does not exist on type 'unknown'... Remove this comment to see the full error message
   expect(map.get("heading_links1").before).toBe('<a href="#something">One</a>');
+  // @ts-expect-error ts-migrate(2339) FIXME: Property 'html' does not exist on type 'unknown'.
   expect(map.get("heading_links1").html).toBe(
     '<h2 id="one"><a href="#something">One</a></h2>'
   );
+  // @ts-expect-error ts-migrate(2339) FIXME: Property 'explanation' does not exist on type 'unk... Remove this comment to see the full error message
   expect(map.get("heading_links2").explanation).toBe(
     "h3 heading contains an <a> tag"
   );
+  // @ts-expect-error ts-migrate(2339) FIXME: Property 'suggestion' does not exist on type 'unkn... Remove this comment to see the full error message
   expect(map.get("heading_links2").suggestion.trim()).toBe("Two");
+  // @ts-expect-error ts-migrate(2339) FIXME: Property 'line' does not exist on type 'unknown'.
   expect(map.get("heading_links2").line).toBe(11);
+  // @ts-expect-error ts-migrate(2339) FIXME: Property 'column' does not exist on type 'unknown'... Remove this comment to see the full error message
   expect(map.get("heading_links2").column).toBe(19);
+  // @ts-expect-error ts-migrate(2339) FIXME: Property 'fixable' does not exist on type 'unknown... Remove this comment to see the full error message
   expect(map.get("heading_links2").fixable).toBe(false);
+  // @ts-expect-error ts-migrate(2339) FIXME: Property 'before' does not exist on type 'unknown'... Remove this comment to see the full error message
   expect(map.get("heading_links2").before.trim()).toBe(
     '<a id="twoooo">Two</a>'
   );
+  // @ts-expect-error ts-migrate(2339) FIXME: Property 'html' does not exist on type 'unknown'.
   expect(map.get("heading_links2").html).toBe(
     '<h3 id="two">\n  <a id="twoooo">Two</a>\n</h3>'
   );
@@ -1628,9 +1741,11 @@ test("translated content broken links can fall back to en-us", () => {
   // We should be able to read it and expect certain values
   const { doc } = JSON.parse(fs.readFileSync(jsonFile));
   const map = new Map(doc.flaws.broken_links.map((x) => [x.href, x]));
+  // @ts-expect-error ts-migrate(2339) FIXME: Property 'explanation' does not exist on type 'unk... Remove this comment to see the full error message
   expect(map.get("/fr/docs/Web/CSS/dumber").explanation).toBe(
     "Can use the English (en-US) link as a fallback"
   );
+  // @ts-expect-error ts-migrate(2339) FIXME: Property 'explanation' does not exist on type 'unk... Remove this comment to see the full error message
   expect(map.get("/fr/docs/Web/CSS/number").explanation).toBe(
     "Can use the English (en-US) link as a fallback"
   );
@@ -1691,9 +1806,13 @@ test("homepage links and flaws", () => {
   const { doc } = JSON.parse(fs.readFileSync(jsonFile));
   expect(doc.flaws.broken_links.length).toBe(4);
   const map = new Map(doc.flaws.broken_links.map((x) => [x.href, x]));
+  // @ts-expect-error ts-migrate(2339) FIXME: Property 'suggestion' does not exist on type 'unkn... Remove this comment to see the full error message
   expect(map.get("/ru").suggestion).toBe("/ru/");
+  // @ts-expect-error ts-migrate(2339) FIXME: Property 'suggestion' does not exist on type 'unkn... Remove this comment to see the full error message
   expect(map.get("/JA/").suggestion).toBe("/ja/");
+  // @ts-expect-error ts-migrate(2339) FIXME: Property 'suggestion' does not exist on type 'unkn... Remove this comment to see the full error message
   expect(map.get("/ZH-CN").suggestion).toBe("/zh-CN/");
+  // @ts-expect-error ts-migrate(2339) FIXME: Property 'suggestion' does not exist on type 'unkn... Remove this comment to see the full error message
   expect(map.get("/notalocale/").suggestion).toBeFalsy();
 });
 

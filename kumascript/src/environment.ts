@@ -43,9 +43,13 @@ const stringPrototype = require("./api/string.js");
 const wikiPrototype = require("./api/wiki.js");
 const webPrototype = require("./api/web.js");
 const pagePrototype = require("./api/page.js");
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'info'.
 const info = require("./info");
 
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'Environmen... Remove this comment to see the full error message
 class Environment {
+  prototypeEnvironment: any;
+  templates: any;
   // Initialize an environment object that will be used to render
   // all of the macros in one document or page. We pass in a context
   // object (which may come from HTTP request headers) that gives
@@ -110,6 +114,7 @@ class Environment {
     }
 
     this.templates = templates;
+    // @ts-expect-error ts-migrate(2554) FIXME: Expected 2 arguments, but got 1.
     const globals = Object.create(prepareProto(globalsPrototype));
 
     const kuma = Object.create(prepareProto(kumaPrototype, globals));
@@ -118,6 +123,7 @@ class Environment {
     const wiki = Object.create(prepareProto(wikiPrototype, globals));
     const web = Object.create(prepareProto(webPrototype, globals));
     const page = Object.create(prepareProto(pagePrototype, globals));
+    // @ts-expect-error ts-migrate(2554) FIXME: Expected 2 arguments, but got 1.
     const env = Object.create(prepareProto(perPageContext));
 
     // The page object also gets some properties copied from

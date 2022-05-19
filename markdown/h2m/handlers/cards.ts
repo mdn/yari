@@ -1,6 +1,8 @@
+// @ts-expect-error ts-migrate(2792) FIXME: Cannot find module 'node-gettext'. Did you mean to... Remove this comment to see the full error message
 import * as Gettext from "node-gettext";
 import * as fs from "fs";
 import * as path from "path";
+// @ts-expect-error ts-migrate(2792) FIXME: Cannot find module '../../../libs/constants'. Did ... Remove this comment to see the full error message
 import { DEFAULT_LOCALE } from "../../../libs/constants";
 import { h } from "../h";
 import { asArray } from "../utils";

@@ -1,11 +1,17 @@
+// @ts-expect-error ts-migrate(1259) FIXME: Module '"/Users/claas/github/mdn/yari/node_modules... Remove this comment to see the full error message
 import React, { useEffect } from "react";
 
 import "../notifications-watch-menu/index.scss";
+// @ts-expect-error ts-migrate(2792) FIXME: Cannot find module '../../atoms/icon'. Did you mea... Remove this comment to see the full error message
 import { Icon } from "../../atoms/icon";
+// @ts-expect-error ts-migrate(2792) FIXME: Cannot find module '../../atoms/button'. Did you m... Remove this comment to see the full error message
 import { Button } from "../../atoms/button";
 import { Doc } from "../../../document/types";
+// @ts-expect-error ts-migrate(2792) FIXME: Cannot find module '.'. Did you mean to set the 'm... Remove this comment to see the full error message
 import { BookmarkedData } from ".";
+// @ts-expect-error ts-migrate(2792) FIXME: Cannot find module '../dropdown'. Did you mean to ... Remove this comment to see the full error message
 import { DropdownMenu, DropdownMenuWrapper } from "../dropdown";
+// @ts-expect-error ts-migrate(2792) FIXME: Cannot find module '../manage-upgrade-dialog'. Did... Remove this comment to see the full error message
 import { ManageOrUpgradeDialogCollections } from "../manage-upgrade-dialog";
 import { useUIStatus } from "../../../ui-context";
 import { useOnlineStatus } from "../../../hooks";
@@ -83,6 +89,7 @@ export function BookmarkMenu({
     } else {
       form = e.target as HTMLFormElement;
       formData = new FormData(form);
+      // @ts-expect-error ts-migrate(2304) FIXME: Cannot find name 'SubmitEvent'.
       submitter = (e.nativeEvent as SubmitEvent).submitter as HTMLButtonElement;
       if (submitter) {
         formData.append(submitter.name, submitter.value);

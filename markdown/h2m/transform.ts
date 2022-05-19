@@ -1,5 +1,6 @@
 import { Node } from "unist";
 
+// @ts-expect-error ts-migrate(2792) FIXME: Cannot find module './handlers'. Did you mean to s... Remove this comment to see the full error message
 import { handlers } from "./handlers";
 
 import { h, MDNodeUnion } from "./h";
@@ -41,7 +42,8 @@ function transformNode(node, options: Options = {}) {
     try {
       transformed =
         typeof handle == "string"
-          ? h(handle, transformChildren(node), options)
+          ? // @ts-expect-error ts-migrate(2345) FIXME: Argument of type 'string' is not assignable to par... Remove this comment to see the full error message
+            h(handle, transformChildren(node), options)
           : handle(node, transformChildren, options);
       if (!transformed) {
         unhandled.push(node);

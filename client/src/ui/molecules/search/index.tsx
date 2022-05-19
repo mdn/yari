@@ -1,4 +1,6 @@
+// @ts-expect-error ts-migrate(1259) FIXME: Module '"/Users/claas/github/mdn/yari/node_modules... Remove this comment to see the full error message
 import React, { useState, useMemo } from "react";
+// @ts-expect-error ts-migrate(2792) FIXME: Cannot find module 'react-router-dom'. Did you mea... Remove this comment to see the full error message
 import { useSearchParams } from "react-router-dom";
 
 import SearchNavigateWidget from "../../../search";

@@ -1,13 +1,21 @@
+// @ts-expect-error ts-migrate(1259) FIXME: Module '"/Users/claas/github/mdn/yari/node_modules... Remove this comment to see the full error message
 import React, { ReactElement } from "react";
+// @ts-expect-error ts-migrate(2792) FIXME: Cannot find module 'swr'. Did you mean to set the ... Remove this comment to see the full error message
 import useSWR from "swr";
 import { CRUD_MODE } from "../../constants";
+// @ts-expect-error ts-migrate(2792) FIXME: Cannot find module '../../document/organisms/sideb... Remove this comment to see the full error message
 import { SidebarContainer } from "../../document/organisms/sidebar";
+// @ts-expect-error ts-migrate(2792) FIXME: Cannot find module '../../document/organisms/toc'.... Remove this comment to see the full error message
 import { TOC } from "../../document/organisms/toc";
 import { DocParent, Toc } from "../../document/types";
+// @ts-expect-error ts-migrate(2792) FIXME: Cannot find module '../../page-not-found'. Did you... Remove this comment to see the full error message
 import { PageNotFound } from "../../page-not-found";
+// @ts-expect-error ts-migrate(2792) FIXME: Cannot find module '../../ui/atoms/loading'. Did y... Remove this comment to see the full error message
 import { Loading } from "../../ui/atoms/loading";
 import { useUIStatus } from "../../ui-context";
+// @ts-expect-error ts-migrate(2792) FIXME: Cannot find module '../../ui/atoms/button'. Did yo... Remove this comment to see the full error message
 import { Button } from "../../ui/atoms/button";
+// @ts-expect-error ts-migrate(2792) FIXME: Cannot find module '../../ui/molecules/breadcrumbs... Remove this comment to see the full error message
 import { Breadcrumbs } from "../../ui/molecules/breadcrumbs";
 
 interface StaticPageDoc {
@@ -39,6 +47,7 @@ function StaticPage({
   const { isSidebarOpen, setIsSidebarOpen } = useUIStatus();
   const baseURL = `/${locale}/${slug}`;
   const featureJSONUrl = `${baseURL}/index.json`;
+  // @ts-expect-error ts-migrate(2525) FIXME: Initializer provides no value for this binding ele... Remove this comment to see the full error message
   const { data: { hyData } = {}, error } = useSWR<{ hyData: StaticPageDoc }>(
     featureJSONUrl,
     async (url) => {

@@ -1,11 +1,16 @@
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'fs'.
 const fs = require("fs");
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'path'.
 const path = require("path");
 
 const readChunk = require("read-chunk");
 const imageType = require("image-type");
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'isSvg'.
 const isSvg = require("is-svg");
 
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'ROOTS'.
 const { ROOTS, DEFAULT_LOCALE } = require("./constants");
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'memoize'.
 const { memoize, slugToFolder } = require("./utils");
 
 function isImage(filePath) {
@@ -41,6 +46,7 @@ const find = memoize((relativePath) => {
   );
 });
 
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'findByURL'... Remove this comment to see the full error message
 function findByURL(url) {
   return find(urlToFilePath(url));
 }

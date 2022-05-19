@@ -6,6 +6,7 @@ const kleur = require("kleur");
 const requestHandler = require("../content-origin-request").handler;
 const responseHandler = require("../content-origin-response").handler;
 
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'PORT'.
 const PORT = parseInt(process.env.PORT || "7000");
 
 function ping(req, res) {
@@ -26,17 +27,21 @@ async function catchall(req, res) {
 
   const event = {};
   const origin = {};
+  // @ts-expect-error ts-migrate(2339) FIXME: Property 'custom' does not exist on type '{}'.
   origin.custom = {};
   // This always pretends to proceed and do a S3 lookup
   console.log(req.headers);
+  // @ts-expect-error ts-migrate(2339) FIXME: Property 'custom' does not exist on type '{}'.
   origin.custom.domainName =
     req.headers["origin_domain_name"] || "s3.fakey.fake";
   const cf = {};
   const headers = {};
+  // @ts-expect-error ts-migrate(2339) FIXME: Property 'host' does not exist on type '{}'.
   headers.host = [{ value: req.hostname }];
   for (const [key, value] of Object.entries(req.headers)) {
     headers[key] = [{ value }];
   }
+  // @ts-expect-error ts-migrate(2339) FIXME: Property 'request' does not exist on type '{}'.
   cf.request = {
     uri,
     querystring,
@@ -52,13 +57,16 @@ async function catchall(req, res) {
     // Let's pretend the S3 lookup returned HTML
     responseHeaders["content-type"] = [{ value: "text/html" }];
   }
+  // @ts-expect-error ts-migrate(2339) FIXME: Property 'response' does not exist on type '{}'.
   cf.response = {
     headers: responseHeaders,
   };
 
+  // @ts-expect-error ts-migrate(2339) FIXME: Property 'Records' does not exist on type '{}'.
   event.Records = [{ cf }];
   const handle = await requestHandler(event);
 
+  // @ts-expect-error ts-migrate(2339) FIXME: Property 'request' does not exist on type '{}'.
   if (handle === cf.request || handle.status) {
     const response = await responseHandler(event);
     Object.entries(response.headers).forEach(([key, value]) => {
@@ -66,6 +74,7 @@ async function catchall(req, res) {
     });
   }
 
+  // @ts-expect-error ts-migrate(2339) FIXME: Property 'request' does not exist on type '{}'.
   if (handle === cf.request) {
     // The request is allowed to pass through.
     // The URL might have been mutated.
@@ -80,6 +89,7 @@ async function catchall(req, res) {
     // It's a redirect.
     let location = null;
     for (const headers of Object.values(handle.headers || {})) {
+      // @ts-expect-error ts-migrate(2488) FIXME: Type 'unknown' must have a '[Symbol.iterator]()' m... Remove this comment to see the full error message
       for (const header of headers) {
         res.setHeader(header.key, header.value);
         if (header.key.toLowerCase() === "location") {

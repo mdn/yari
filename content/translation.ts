@@ -1,3 +1,4 @@
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'Parser'.
 const Parser = require("../kumascript/src/parser.js");
 
 function* fastKSParser(s) {

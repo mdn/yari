@@ -1,7 +1,11 @@
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'cheerio'.
 const cheerio = require("cheerio");
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'ejs'.
 const ejs = require("ejs");
 
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'MacroLiveS... Remove this comment to see the full error message
 const { MacroLiveSampleError } = require("./errors.js");
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'HTMLTool'.
 const { HTMLTool, KumascriptError, slugify } = require("./api/util.js");
 
 const LIVE_SAMPLE_HTML = `
@@ -63,6 +67,7 @@ const LIVE_SAMPLE_HTML = `
 
 const liveSampleTemplate = ejs.compile(LIVE_SAMPLE_HTML);
 
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'buildLiveS... Remove this comment to see the full error message
 function buildLiveSamplePages(uri, title, $, rawBody) {
   // Given the URI, title, and rendered HTML of a document, build
   // and return the HTML of the live-sample pages for the given

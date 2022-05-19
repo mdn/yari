@@ -50,6 +50,7 @@ const IGNORE = new Set(["none", "text", "plain", "unix"]);
  * syntax highlighted with Prism.
  *
  */
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'syntaxHigh... Remove this comment to see the full error message
 function syntaxHighlight($, doc) {
   loadAllLanguages();
 

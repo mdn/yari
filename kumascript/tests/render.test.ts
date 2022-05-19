@@ -2,13 +2,20 @@
  * @prettier
  */
 
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'fs'.
 const fs = require("fs");
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'Templates'... Remove this comment to see the full error message
 const Templates = require("../src/templates.js");
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'render'.
 const { render } = require("../src/render.js");
 const {
+  // @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'MacroInvoc... Remove this comment to see the full error message
   MacroInvocationError,
+  // @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'MacroNotFo... Remove this comment to see the full error message
   MacroNotFoundError,
+  // @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'MacroCompi... Remove this comment to see the full error message
   MacroCompilationError,
+  // @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'MacroExecu... Remove this comment to see the full error message
   MacroExecutionError,
 } = require("../src/errors.js");
 
@@ -16,6 +23,7 @@ const dirname = __dirname;
 
 const PAGE_ENV = { slug: "" };
 
+// @ts-expect-error ts-migrate(2582) FIXME: Cannot find name 'describe'. Do you need to instal... Remove this comment to see the full error message
 describe("render() function", () => {
   function fixture(name) {
     return `${dirname}/fixtures/render/${name}`;
@@ -27,11 +35,13 @@ describe("render() function", () => {
     throw new Error(`unexpected prerequisite: ${url}`);
   }
 
+  // @ts-expect-error ts-migrate(2582) FIXME: Cannot find name 'it'. Do you need to install type... Remove this comment to see the full error message
   it("is a function", () => {
     expect(typeof render).toBe("function");
   });
 
   const cases = ["testcase1", "testcase2", "testcase3", "testcase4"];
+  // @ts-expect-error ts-migrate(2582) FIXME: Cannot find name 'it'. Do you need to install type... Remove this comment to see the full error message
   it.each(cases)("handles basic rendering %s", async (casedir) => {
     const input = get(`${casedir}/input`);
     const expected = get(`${casedir}/output`);
@@ -48,6 +58,7 @@ describe("render() function", () => {
     expect(errors).toEqual([]);
   });
 
+  // @ts-expect-error ts-migrate(2582) FIXME: Cannot find name 'it'. Do you need to install type... Remove this comment to see the full error message
   it.each(["render", "remove"])("handles selective %s", async (mode) => {
     const input = get("testcase2/input");
     const expected = get(`testcase2/output_selective_${mode}`);
@@ -68,7 +79,9 @@ describe("render() function", () => {
     expect(errors).toEqual([]);
   });
 
+  // @ts-expect-error ts-migrate(2582) FIXME: Cannot find name 'it'. Do you need to install type... Remove this comment to see the full error message
   it("renders asynchronous macros", async () => {
+    // @ts-expect-error ts-migrate(2304) FIXME: Cannot find name 'jest'.
     jest.useFakeTimers();
     async function after(delay, value) {
       return new Promise((resolve) => {
@@ -85,12 +98,14 @@ describe("render() function", () => {
         templates,
       }
     );
+    // @ts-expect-error ts-migrate(2304) FIXME: Cannot find name 'jest'.
     jest.runAllTimers();
     const [result, errors] = await promise;
     expect(errors.length).toBe(0);
     expect(result).toEqual("yay!");
   });
 
+  // @ts-expect-error ts-migrate(2582) FIXME: Cannot find name 'it'. Do you need to install type... Remove this comment to see the full error message
   it("exposes the per-page env object", async () => {
     const templates = new Templates(fixture("macros"));
     const [result, errors] = await render(
@@ -110,6 +125,7 @@ describe("render() function", () => {
   });
 
   const syntaxCases = ["syntax1", "syntax2", "syntax3", "syntax4"];
+  // @ts-expect-error ts-migrate(2582) FIXME: Cannot find name 'it'. Do you need to install type... Remove this comment to see the full error message
   it.each(syntaxCases)("handles syntax errors: %s", async (fn) => {
     const input = get(fn);
     // null templates since we expect errors before we render any
@@ -126,6 +142,7 @@ describe("render() function", () => {
     }
   });
 
+  // @ts-expect-error ts-migrate(2582) FIXME: Cannot find name 'it'. Do you need to install type... Remove this comment to see the full error message
   it("handles undefined templates", async () => {
     const templates = new Templates(fixture("macros"));
     const [result, errors] = await render(
@@ -144,6 +161,7 @@ describe("render() function", () => {
     expect(errors[0]).toHaveProperty("column");
   });
 
+  // @ts-expect-error ts-migrate(2582) FIXME: Cannot find name 'it'. Do you need to install type... Remove this comment to see the full error message
   it("handles compilation errors", async () => {
     const templates = new Templates(fixture("macros"));
     const [result, errors] = await render(
@@ -162,6 +180,7 @@ describe("render() function", () => {
     expect(errors[0]).toHaveProperty("column");
   });
 
+  // @ts-expect-error ts-migrate(2582) FIXME: Cannot find name 'it'. Do you need to install type... Remove this comment to see the full error message
   it("handles execution errors", async () => {
     const templates = new Templates(fixture("macros"));
     const [result, errors] = await render(
@@ -180,6 +199,7 @@ describe("render() function", () => {
     expect(errors[0]).toHaveProperty("column");
   });
 
+  // @ts-expect-error ts-migrate(2582) FIXME: Cannot find name 'it'. Do you need to install type... Remove this comment to see the full error message
   it("handles undefined variables in macros", async () => {
     const templates = new Templates(fixture("macros"));
     const [result, errors] = await render(
@@ -198,6 +218,7 @@ describe("render() function", () => {
     expect(errors[0]).toHaveProperty("column");
   });
 
+  // @ts-expect-error ts-migrate(2582) FIXME: Cannot find name 'it'. Do you need to install type... Remove this comment to see the full error message
   it("handles multiple errors in one document", async () => {
     const templates = new Templates(fixture("macros"));
     const [result, errors] = await render(
@@ -215,6 +236,7 @@ describe("render() function", () => {
     expect(errors[2]).toBeInstanceOf(MacroCompilationError);
   });
 
+  // @ts-expect-error ts-migrate(2582) FIXME: Cannot find name 'it'. Do you need to install type... Remove this comment to see the full error message
   it("handles success plus errors in one document", async () => {
     const templates = new Templates(fixture("macros"));
     const [result, errors] = await render(
@@ -230,6 +252,7 @@ describe("render() function", () => {
     expect(errors[0]).toBeInstanceOf(MacroExecutionError);
   });
 
+  // @ts-expect-error ts-migrate(2582) FIXME: Cannot find name 'it'. Do you need to install type... Remove this comment to see the full error message
   it("macros can include other macros with template()", async () => {
     const input = "foo {{bar}} baz";
     const expected = "foo (included words) baz";
@@ -246,6 +269,7 @@ describe("render() function", () => {
     expect(errors).toEqual([]);
   });
 
+  // @ts-expect-error ts-migrate(2582) FIXME: Cannot find name 'it'. Do you need to install type... Remove this comment to see the full error message
   it("errors in included macros are reported", async () => {
     const templates = new Templates(fixture("macros"));
     const [result, errors] = await render(

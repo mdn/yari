@@ -4,7 +4,9 @@
 
 const { HtmlValidate } = require("html-validate");
 
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'Environmen... Remove this comment to see the full error message
 const Environment = require("../../src/environment.js");
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'Templates'... Remove this comment to see the full error message
 const Templates = require("../../src/templates.js");
 
 const dirname = __dirname;
@@ -98,8 +100,11 @@ function createMacroTestObject(macroName) {
  * @param {string} macroName
  * @param {function():void} runTests
  */
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'describeMa... Remove this comment to see the full error message
 function describeMacro(macroName, runTests) {
+  // @ts-expect-error ts-migrate(2582) FIXME: Cannot find name 'describe'. Do you need to instal... Remove this comment to see the full error message
   describe(`test "${macroName}"`, function () {
+    // @ts-expect-error ts-migrate(2304) FIXME: Cannot find name 'beforeEach'.
     beforeEach(function () {
       macro = createMacroTestObject(macroName);
     });
@@ -116,7 +121,9 @@ function describeMacro(macroName, runTests) {
  * @param {string} title
  * @param {function(Macro):void} runTest
  */
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'itMacro'.
 function itMacro(title, runTest) {
+  // @ts-expect-error ts-migrate(2582) FIXME: Cannot find name 'it'. Do you need to install type... Remove this comment to see the full error message
   it(title, function () {
     // Assumes that setup returns a promise (if async) or
     // undefined (if synchronous).
@@ -132,7 +139,9 @@ function itMacro(title, runTest) {
  *
  * @param {function(Macro):void} setup
  */
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'beforeEach... Remove this comment to see the full error message
 function beforeEachMacro(setup) {
+  // @ts-expect-error ts-migrate(2304) FIXME: Cannot find name 'beforeEach'.
   beforeEach(function () {
     // Assumes that setup returns a promise (if async) or
     // undefined (if synchronous).
@@ -149,6 +158,7 @@ function beforeEachMacro(setup) {
  * @param {function(Macro):void} teardown
  */
 function afterEachMacro(teardown) {
+  // @ts-expect-error ts-migrate(2304) FIXME: Cannot find name 'afterEach'.
   afterEach(function () {
     // Assumes that teardown returns a promise (if async) or
     // undefined (if synchronous).
@@ -166,6 +176,7 @@ function afterEachMacro(teardown) {
  * @param {boolean} fragment
  */
 let htmlValidator = null; // global cache
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'lintHTML'.
 function lintHTML(html) {
   if (!htmlValidator) {
     htmlValidator = new HtmlValidate({

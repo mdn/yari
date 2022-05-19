@@ -1,21 +1,36 @@
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'fs'.
 const fs = require("fs");
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'path'.
 const path = require("path");
 const { promisify } = require("util");
 
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'fse'.
 const fse = require("fs-extra");
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'tempy'.
 const tempy = require("tempy");
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'cheerio'.
 const cheerio = require("cheerio");
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'FileType'.
 const FileType = require("file-type");
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'imagemin'.
 const imagemin = require("imagemin");
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'imageminPn... Remove this comment to see the full error message
 const imageminPngquant = require("imagemin-pngquant");
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'imageminMo... Remove this comment to see the full error message
 const imageminMozjpeg = require("imagemin-mozjpeg");
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'imageminGi... Remove this comment to see the full error message
 const imageminGifsicle = require("imagemin-gifsicle");
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'imageminSv... Remove this comment to see the full error message
 const imageminSvgo = require("imagemin-svgo");
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'isSvg'.
 const isSvg = require("is-svg");
 
 const {
+  // @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'MAX_FILE_S... Remove this comment to see the full error message
   MAX_FILE_SIZE,
+  // @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'VALID_MIME... Remove this comment to see the full error message
   VALID_MIME_TYPES,
+  // @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'MAX_COMPRE... Remove this comment to see the full error message
   MAX_COMPRESSION_DIFFERENCE_PERCENTAGE,
 } = require("./constants");
 
@@ -29,6 +44,7 @@ function formatSize(bytes) {
   return `${bytes}b`;
 }
 
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'checkFile'... Remove this comment to see the full error message
 async function checkFile(filePath, options) {
   // Check that the filename is always lowercase.
   if (path.basename(filePath) !== path.basename(filePath).toLowerCase()) {
@@ -198,6 +214,7 @@ async function checkFile(filePath, options) {
   }
 }
 
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'runChecker... Remove this comment to see the full error message
 async function runChecker(files, options) {
   return Promise.all(files.map((f) => checkFile(f, options)));
 }

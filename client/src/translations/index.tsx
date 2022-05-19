@@ -1,14 +1,22 @@
+// @ts-expect-error ts-migrate(1259) FIXME: Module '"/Users/claas/github/mdn/yari/node_modules... Remove this comment to see the full error message
 import React from "react";
+// @ts-expect-error ts-migrate(2792) FIXME: Cannot find module 'react-router-dom'. Did you mea... Remove this comment to see the full error message
 import { Link, useParams, Routes, Route } from "react-router-dom";
+// @ts-expect-error ts-migrate(2792) FIXME: Cannot find module 'swr'. Did you mean to set the ... Remove this comment to see the full error message
 import useSWR from "swr";
 
 import "./index.scss";
 
+// @ts-expect-error ts-migrate(2792) FIXME: Cannot find module '../ui/atoms/loading'. Did you ... Remove this comment to see the full error message
 import { Loading } from "../ui/atoms/loading";
+// @ts-expect-error ts-migrate(2792) FIXME: Cannot find module '../ui/atoms/page-content'. Did... Remove this comment to see the full error message
 import { PageContentContainer } from "../ui/atoms/page-content";
 
+// @ts-expect-error ts-migrate(2792) FIXME: Cannot find module './differences'. Did you mean t... Remove this comment to see the full error message
 import { TranslationDifferences } from "./differences";
+// @ts-expect-error ts-migrate(2792) FIXME: Cannot find module './missing'. Did you mean to se... Remove this comment to see the full error message
 import { MissingTranslations } from "./missing";
+// @ts-expect-error ts-migrate(2792) FIXME: Cannot find module './dashboard'. Did you mean to ... Remove this comment to see the full error message
 import { TranslationDashboard } from "./dashboard";
 
 interface Locale {

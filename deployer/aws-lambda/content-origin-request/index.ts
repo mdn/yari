@@ -1,11 +1,17 @@
 /* eslint-disable node/no-missing-require */
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'resolveFun... Remove this comment to see the full error message
 const { resolveFundamental } = require("@yari-internal/fundamental-redirects");
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'getLocale'... Remove this comment to see the full error message
 const { getLocale } = require("@yari-internal/get-locale");
 const {
+  // @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'decodePath... Remove this comment to see the full error message
   decodePath,
+  // @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'encodePath... Remove this comment to see the full error message
   encodePath,
+  // @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'slugToFold... Remove this comment to see the full error message
   slugToFolder,
 } = require("@yari-internal/slug-utils");
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'VALID_LOCA... Remove this comment to see the full error message
 const { VALID_LOCALES } = require("@yari-internal/constants");
 
 const THIRTY_DAYS = 3600 * 24 * 30;
@@ -36,6 +42,7 @@ const CONTENT_DEVELOPMENT_DOMAIN = ".content.dev.mdn.mozit.cloud";
 const REDIRECTS = require("./redirects.json");
 const REDIRECT_SUFFIXES = ["/index.json", "/bcd.json", ""];
 
+// @ts-expect-error ts-migrate(2393) FIXME: Duplicate function implementation.
 function redirect(location, { status = 302, cacheControlSeconds = 0 } = {}) {
   /*
    * Create and return a redirect response.

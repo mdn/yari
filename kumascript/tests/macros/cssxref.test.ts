@@ -1,12 +1,14 @@
 /**
  * @prettier
  */
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'assert'.
 const { assert, itMacro, describeMacro, beforeEachMacro } = require("./utils");
 
 // Basic const
 const CSS_BASE_URL = "/en-US/docs/Web/CSS";
 
 // Template utils
+// @ts-expect-error ts-migrate(2393) FIXME: Duplicate function implementation.
 function makeExpect(url, summary, label) {
   if (!summary) return `<a href="${url}"><code>${label}</code></a>`;
 
@@ -15,6 +17,7 @@ function makeExpect(url, summary, label) {
   return `<a href="${url}"><code>${label}</code></a>`;
 }
 
+// @ts-expect-error ts-migrate(2393) FIXME: Duplicate function implementation.
 function getPathname(url) {
   return new URL(url, "https://example.com").pathname.replace(/\/$/, "");
 }
@@ -26,6 +29,7 @@ function getPathname(url) {
 // The `data` is the object returned by wiki.getPage
 // ----------------------------------------------------------------------------
 
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'MOCK_PAGES... Remove this comment to see the full error message
 const MOCK_PAGES = {
   display: {
     url: [CSS_BASE_URL, "display"].join("/"),
@@ -95,6 +99,7 @@ const MOCK_PAGES = {
 //       describe all the possible inputs and their expected outputs.
 // ----------------------------------------------------------------------------
 
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'TEST_CASE'... Remove this comment to see the full error message
 const TEST_CASE = [
   {
     title: "One argument (simple property)",
@@ -181,6 +186,7 @@ const TEST_CASE = [
 describeMacro("cssxref", () => {
   beforeEachMacro((macro) => {
     // let's make sure we have a clean calls to wiki.getPage
+    // @ts-expect-error ts-migrate(2304) FIXME: Cannot find name 'jest'.
     macro.ctx.info.getPageByURL = jest.fn((url) => {
       for (const page of Object.values(MOCK_PAGES)) {
         if (page.url === getPathname(url)) {

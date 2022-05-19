@@ -1,5 +1,7 @@
+// @ts-expect-error ts-migrate(2792) FIXME: Cannot find module 'react-router-dom'. Did you mea... Remove this comment to see the full error message
 import { useParams, useLocation } from "react-router-dom";
 import { MDN_PLUS_TITLE } from "../../constants";
+// @ts-expect-error ts-migrate(2792) FIXME: Cannot find module '../../homepage/static-page'. D... Remove this comment to see the full error message
 import StaticPage from "../../homepage/static-page";
 import "./index.scss";
 

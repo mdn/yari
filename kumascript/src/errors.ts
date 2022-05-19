@@ -8,7 +8,18 @@
  * It includes the code for excerpting the portion of the document that the
  * error occurs in and drawing an ASCII art arrow to point at it.
  */
+// @ts-expect-error ts-migrate(6200) FIXME: Definitions of the following identifiers conflict ... Remove this comment to see the full error message
 class SourceCodeError {
+  column: any;
+  error: any;
+  errorStack: any;
+  fatal: any;
+  filepath: any;
+  line: any;
+  macroName: any;
+  name: any;
+  offset: any;
+  sourceContext: any;
   constructor(name, error, source, line, column, macroName, fatal = true) {
     this.name = name;
     this.error = error;
@@ -119,6 +130,7 @@ class SourceCodeError {
  * the error object is from the parser class and tells us the location
  * of the error.
  */
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'MacroInvoc... Remove this comment to see the full error message
 class MacroInvocationError extends SourceCodeError {
   constructor(error, source) {
     // If the error is not a SyntaxError, with a location property then
@@ -143,6 +155,7 @@ class MacroInvocationError extends SourceCodeError {
  * a macro that does not exist. The error message shows the location of the
  * macro in the HTML document, which it determines from the token argument.
  */
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'MacroNotFo... Remove this comment to see the full error message
 class MacroNotFoundError extends SourceCodeError {
   constructor(error, source, token) {
     super(
@@ -161,6 +174,7 @@ class MacroNotFoundError extends SourceCodeError {
  * template compilation. The error message shows the location of the
  * macro in the HTML document and also includes the underlying error message.
  */
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'MacroCompi... Remove this comment to see the full error message
 class MacroCompilationError extends SourceCodeError {
   constructor(error, source, token) {
     super(
@@ -180,6 +194,7 @@ class MacroCompilationError extends SourceCodeError {
  * macro in the HTML document and also includes the error message
  * from the underlying runtime error.
  */
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'MacroExecu... Remove this comment to see the full error message
 class MacroExecutionError extends SourceCodeError {
   constructor(error, source, token, fatal = true) {
     super(
@@ -197,7 +212,11 @@ class MacroExecutionError extends SourceCodeError {
 /**
  * A MacroRedirectedLinkError is a special case of MacroExecutionError.
  */
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'MacroRedir... Remove this comment to see the full error message
 class MacroRedirectedLinkError extends MacroExecutionError {
+  macroSource: any;
+  name: any;
+  redirectInfo: any;
   constructor(error, source, token, redirectInfo) {
     super(error, source, token, false);
     this.name = "MacroRedirectedLinkError";
@@ -212,7 +231,10 @@ class MacroRedirectedLinkError extends MacroExecutionError {
 /**
  * A MacroBrokenLinkError is a special case of MacroExecutionError.
  */
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'MacroBroke... Remove this comment to see the full error message
 class MacroBrokenLinkError extends MacroExecutionError {
+  macroSource: any;
+  name: any;
   constructor(error, source, token) {
     super(error, source, token, false);
     this.name = "MacroBrokenLinkError";
@@ -224,6 +246,7 @@ class MacroBrokenLinkError extends MacroExecutionError {
 }
 
 class MacroWrongXRefError extends MacroBrokenLinkError {
+  name: any;
   constructor(error, source, token) {
     super(error, source, token);
     this.name = "MacroWrongXRefError";
@@ -233,7 +256,10 @@ class MacroWrongXRefError extends MacroBrokenLinkError {
 /**
  * A MacroDeprecatedError is a special case of MacroExecutionError.
  */
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'MacroDepre... Remove this comment to see the full error message
 class MacroDeprecatedError extends MacroExecutionError {
+  macroSource: any;
+  name: any;
   constructor(error, source, token) {
     super(error, source, token, false);
     this.name = "MacroDeprecatedError";
@@ -247,7 +273,10 @@ class MacroDeprecatedError extends MacroExecutionError {
 /**
  * A MacroLiveSampleError is a special case of MacroExecutionError.
  */
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'MacroLiveS... Remove this comment to see the full error message
 class MacroLiveSampleError extends MacroExecutionError {
+  macroSource: any;
+  name: any;
   constructor(error, source, token) {
     super(error, source, token, true);
     this.name = "MacroLiveSampleError";
@@ -263,6 +292,8 @@ class MacroLiveSampleError extends MacroExecutionError {
  * based on optimistically combining names to make URLs.
  */
 class MacroPagesError extends MacroExecutionError {
+  macroSource: any;
+  name: any;
   constructor(error, source, token) {
     super(error, source, token, false);
     this.name = "MacroPagesError";

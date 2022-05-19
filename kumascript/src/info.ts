@@ -1,9 +1,14 @@
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'cheerio'.
 const cheerio = require("cheerio");
 
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'Parser'.
 const Parser = require("./parser.js");
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'VALID_LOCA... Remove this comment to see the full error message
 const { VALID_LOCALES, Document, Redirect } = require("../../content");
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'm2hSync'.
 const { m2hSync } = require("../../markdown");
 
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'DUMMY_BASE... Remove this comment to see the full error message
 const DUMMY_BASE_URL = "https://example.com";
 
 const MACROS_IN_SUMMARY_TO_IGNORE = new Set([
@@ -60,6 +65,7 @@ function repairURL(url) {
   return url;
 }
 
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'info'.
 const info = {
   getPathname(url) {
     // This function returns just the pathname of the given "url", removing
@@ -162,10 +168,12 @@ const info = {
     { throwIfDoesNotExist = false, followRedirects = true } = {}
   ) {
     // Always start by looking it up *without* following redirects.
+    // @ts-expect-error ts-migrate(2339) FIXME: Property 'findByURL' does not exist on type '{ new... Remove this comment to see the full error message
     let document = Document.findByURL(info.cleanURL(url, false));
     // Usually, `followRedirects` is disabled if the caller definitely is not
     // not interested in following redirects (e.g. listing sub-pages)
     if (!document && followRedirects) {
+      // @ts-expect-error ts-migrate(2339) FIXME: Property 'findByURL' does not exist on type '{ new... Remove this comment to see the full error message
       document = Document.findByURL(info.cleanURL(url, true));
     }
     if (!document) {
@@ -252,6 +260,7 @@ const info = {
         return summary;
       },
       get subpages() {
+        // @ts-expect-error ts-migrate(2339) FIXME: Property 'findChildren' does not exist on type '{ ... Remove this comment to see the full error message
         return Document.findChildren(document.url)
           .map((document) => info.getPage(document))
           .filter((p) => p && p.url);
@@ -260,6 +269,7 @@ const info = {
   },
 
   hasPage(url) {
+    // @ts-expect-error ts-migrate(2339) FIXME: Property 'findByURL' does not exist on type '{ new... Remove this comment to see the full error message
     return Boolean(Document.findByURL(info.cleanURL(url)));
   },
 };

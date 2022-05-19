@@ -1,3 +1,4 @@
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'acceptLang... Remove this comment to see the full error message
 const acceptLanguageParser = require("accept-language-parser");
 
 const stageLookup = require("./plans-stage-lookup.json");
@@ -48,11 +49,15 @@ exports.handler = async (event) => {
   const planData = {};
   Object.entries(plans).forEach(([key, value]) => {
     let monthlyPriceInCents;
+    // @ts-expect-error ts-migrate(2339) FIXME: Property 'recurring' does not exist on type 'unkno... Remove this comment to see the full error message
     if (value.recurring.interval === "year") {
+      // @ts-expect-error ts-migrate(2339) FIXME: Property 'unit_amount' does not exist on type 'unk... Remove this comment to see the full error message
       monthlyPriceInCents = Math.floor(value.unit_amount / 12);
     } else {
+      // @ts-expect-error ts-migrate(2339) FIXME: Property 'unit_amount' does not exist on type 'unk... Remove this comment to see the full error message
       monthlyPriceInCents = value.unit_amount;
     }
+    // @ts-expect-error ts-migrate(2339) FIXME: Property 'price_id' does not exist on type 'unknow... Remove this comment to see the full error message
     planData[key] = { monthlyPriceInCents, id: value.price_id };
   });
 

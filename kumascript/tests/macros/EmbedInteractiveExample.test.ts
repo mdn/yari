@@ -1,6 +1,7 @@
 /**
  * @prettier
  */
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'assert'.
 const { assert, itMacro, describeMacro } = require("./utils");
 
 describeMacro("EmbedInteractiveExample", function () {

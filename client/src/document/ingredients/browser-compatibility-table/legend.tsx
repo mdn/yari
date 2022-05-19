@@ -1,4 +1,5 @@
 import { useContext } from "react";
+// @ts-expect-error ts-migrate(2792) FIXME: Cannot find module '@mdn/browser-compat-data/types... Remove this comment to see the full error message
 import type bcd from "@mdn/browser-compat-data/types";
 import { BrowserInfoContext } from "./browser-info";
 import {
@@ -61,31 +62,39 @@ function getActiveLegendItems(
       }
 
       for (const versionSupport of asList(browserSupport)) {
+        // @ts-expect-error ts-migrate(2339) FIXME: Property 'version_added' does not exist on type 'u... Remove this comment to see the full error message
         if (versionSupport.version_added) {
+          // @ts-expect-error ts-migrate(2339) FIXME: Property 'flags' does not exist on type 'unknown'.
           if (versionSupport.flags && versionSupport.flags.length) {
             legendItems.add("no");
           } else if (
+            // @ts-expect-error ts-migrate(2339) FIXME: Property 'version_added' does not exist on type 'u... Remove this comment to see the full error message
             versionIsPreview(versionSupport.version_added, browserInfo[browser])
           ) {
             legendItems.add("preview");
           } else {
             legendItems.add("yes");
           }
+          // @ts-expect-error ts-migrate(2339) FIXME: Property 'version_added' does not exist on type 'u... Remove this comment to see the full error message
         } else if (versionSupport.version_added == null) {
           legendItems.add("unknown");
         } else {
           legendItems.add("no");
         }
 
+        // @ts-expect-error ts-migrate(2339) FIXME: Property 'partial_implementation' does not exist o... Remove this comment to see the full error message
         if (versionSupport.partial_implementation) {
           legendItems.add("partial");
         }
+        // @ts-expect-error ts-migrate(2339) FIXME: Property 'prefix' does not exist on type 'unknown'... Remove this comment to see the full error message
         if (versionSupport.prefix) {
           legendItems.add("prefix");
         }
+        // @ts-expect-error ts-migrate(2339) FIXME: Property 'alternative_name' does not exist on type... Remove this comment to see the full error message
         if (versionSupport.alternative_name) {
           legendItems.add("altname");
         }
+        // @ts-expect-error ts-migrate(2339) FIXME: Property 'flags' does not exist on type 'unknown'.
         if (versionSupport.flags) {
           legendItems.add("disabled");
         }

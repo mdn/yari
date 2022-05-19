@@ -1,24 +1,39 @@
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'fs'.
 const fs = require("fs");
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'path'.
 const path = require("path");
 
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'fdir'.
 const { fdir } = require("fdir");
 
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'express'.
 const express = require("express");
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'router'.
 const router = express.Router();
 
 const {
+  // @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'getPopular... Remove this comment to see the full error message
   getPopularities,
+  // @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'VALID_LOCA... Remove this comment to see the full error message
   VALID_LOCALES,
+  // @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'Document'.
   Document,
+  // @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'Translatio... Remove this comment to see the full error message
   Translation,
+  // @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'CONTENT_RO... Remove this comment to see the full error message
   CONTENT_ROOT,
+  // @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'CONTENT_TR... Remove this comment to see the full error message
   CONTENT_TRANSLATED_ROOT,
 } = require("../content");
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'getLastCom... Remove this comment to see the full error message
 const { getLastCommitURL } = require("../build");
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'ACTIVE_LOC... Remove this comment to see the full error message
 const { ACTIVE_LOCALES, DEFAULT_LOCALE } = require("../libs/constants");
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'LANGUAGES_... Remove this comment to see the full error message
 const LANGUAGES_RAW = require("../content/languages.json");
 
 // Module-level cache
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'allPopular... Remove this comment to see the full error message
 const allPopularityValues = [];
 
 function getAllPopularityValues() {
@@ -68,6 +83,7 @@ function findDocuments({ locale }) {
   const documents = [];
 
   const t1 = new Date();
+  // @ts-expect-error ts-migrate(2339) FIXME: Property 'findAll' does not exist on type '{ new (... Remove this comment to see the full error message
   const documentsFound = Document.findAll({
     locales: new Map([[locale, true]]),
   });
@@ -164,7 +180,9 @@ function getDocument(filePath) {
     return { popularity, differences, edits, mdn_url, title };
   }
 
+  // @ts-expect-error ts-migrate(2339) FIXME: Property 'read' does not exist on type '{ new (): ... Remove this comment to see the full error message
   const document = Document.read(filePath);
+  // @ts-expect-error ts-migrate(2339) FIXME: Property 'read' does not exist on type '{ new (): ... Remove this comment to see the full error message
   const englishDocument = Document.read(
     document.fileInfo.folder.replace(
       document.metadata.locale.toLowerCase(),
@@ -260,6 +278,7 @@ function gatherL10NstatsSection({
   const upToDateDocuments = [];
 
   const t1 = new Date();
+  // @ts-expect-error ts-migrate(2339) FIXME: Property 'findAll' does not exist on type '{ new (... Remove this comment to see the full error message
   const foundTranslations = Document.findAll({
     locales: new Map([[locale, true]]),
     folderSearch:
@@ -278,6 +297,7 @@ function gatherL10NstatsSection({
       .join(path.sep);
     translatedFolderNames.add(asFolderWithoutLocale);
   }
+  // @ts-expect-error ts-migrate(2339) FIXME: Property 'findAll' does not exist on type '{ new (... Remove this comment to see the full error message
   const foundDefaultLocale = Document.findAll({
     locales: new Map([[DEFAULT_LOCALE.toLowerCase(), true]]),
     folderSearch:
@@ -300,6 +320,7 @@ function gatherL10NstatsSection({
       _defaultLocaleDocumentsCache.get(filePath).mtime < mtime
     ) {
       counts.cacheMisses++;
+      // @ts-expect-error ts-migrate(2339) FIXME: Property 'read' does not exist on type '{ new (): ... Remove this comment to see the full error message
       const document = packageDocument(Document.read(filePath));
       _defaultLocaleDocumentsCache.set(filePath, {
         document,
@@ -335,6 +356,7 @@ function gatherL10NstatsSection({
       );
 
       const translatedDocument = packageDocument(
+        // @ts-expect-error ts-migrate(2339) FIXME: Property 'findByURL' does not exist on type '{ new... Remove this comment to see the full error message
         Document.findByURL(translatedDocumentURL)
       );
       if (
@@ -400,6 +422,7 @@ function buildL10nDashboard({ locale, section }) {
   }
 
   const defaultLocaleDocs = [
+    // @ts-expect-error ts-migrate(2339) FIXME: Property 'findAll' does not exist on type '{ new (... Remove this comment to see the full error message
     ...Document.findAll({
       locales: new Map([[DEFAULT_LOCALE.toLowerCase(), true]]),
       folderSearch: DEFAULT_LOCALE.toLowerCase() + section.toLowerCase(),

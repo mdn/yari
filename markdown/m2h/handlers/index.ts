@@ -1,8 +1,14 @@
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'fs'.
 const fs = require("fs");
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'path'.
 const path = require("path");
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'DEFAULT_LO... Remove this comment to see the full error message
 const { DEFAULT_LOCALE } = require("../../../libs/constants");
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'code'.
 const code = require("./code");
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'asDefiniti... Remove this comment to see the full error message
 const { asDefinitionList, isDefinitionList } = require("./dl");
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'one'.
 const { one, all, wrap } = require("./mdast-util-to-hast-utils");
 
 const dirname = __dirname;
@@ -57,6 +63,7 @@ function getNotecardType(node, locale) {
   return type == "warning" || type == "note" || type == "callout" ? type : null;
 }
 
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'buildLocal... Remove this comment to see the full error message
 function buildLocalizedHandlers(locale) {
   /* This is only used for the Notecard parsing where the "magit" word depends on the locale */
   return {
@@ -107,6 +114,7 @@ function buildLocalizedHandlers(locale) {
 
       const props = {};
       if (typeof node.start === "number" && node.start !== 1) {
+        // @ts-expect-error ts-migrate(2339) FIXME: Property 'start' does not exist on type '{}'.
         props.start = node.start;
       }
 

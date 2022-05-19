@@ -1,7 +1,11 @@
 import { useEffect, useState } from "react";
+// @ts-expect-error ts-migrate(2792) FIXME: Cannot find module '../../atoms/avatar'. Did you m... Remove this comment to see the full error message
 import { Avatar } from "../../atoms/avatar";
+// @ts-expect-error ts-migrate(2792) FIXME: Cannot find module '../../atoms/button'. Did you m... Remove this comment to see the full error message
 import { Button } from "../../atoms/button";
+// @ts-expect-error ts-migrate(2792) FIXME: Cannot find module '../submenu'. Did you mean to s... Remove this comment to see the full error message
 import { Submenu } from "../submenu";
+// @ts-expect-error ts-migrate(2792) FIXME: Cannot find module '../../atoms/signout'. Did you ... Remove this comment to see the full error message
 import SignOut from "../../atoms/signout";
 
 import { useUserData } from "../../../user-context";
@@ -13,8 +17,10 @@ import {
 } from "../../../constants";
 
 import "./index.scss";
+// @ts-expect-error ts-migrate(2792) FIXME: Cannot find module '../dropdown'. Did you mean to ... Remove this comment to see the full error message
 import { DropdownMenu, DropdownMenuWrapper } from "../dropdown";
 import { NotificationData } from "../../../types/notifications";
+// @ts-expect-error ts-migrate(2792) FIXME: Cannot find module 'swr'. Did you mean to set the ... Remove this comment to see the full error message
 import useSWR from "swr";
 
 export const UserMenu = () => {

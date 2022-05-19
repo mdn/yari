@@ -1,5 +1,7 @@
+// @ts-expect-error ts-migrate(1259) FIXME: Module '"/Users/claas/github/mdn/yari/node_modules... Remove this comment to see the full error message
 import React from "react";
 import { createRoot, hydrateRoot } from "react-dom/client";
+// @ts-expect-error ts-migrate(2792) FIXME: Cannot find module 'react-router-dom'. Did you mea... Remove this comment to see the full error message
 import { BrowserRouter as Router } from "react-router-dom";
 
 import { App } from "./app";
@@ -46,5 +48,6 @@ if (container.firstElementChild) {
 
 // Initialize mdnWorker if there's a service worker already.
 if (navigator?.serviceWorker?.controller && !window.mdnWorker) {
+  // @ts-expect-error ts-migrate(1323) FIXME: Dynamic imports are only supported when the '--mod... Remove this comment to see the full error message
   import("./offline-settings/mdn-worker");
 }

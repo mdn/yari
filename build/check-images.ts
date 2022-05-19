@@ -2,13 +2,19 @@
 // Or, something. Checking for flaws should be very different from checking
 // for images.
 
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'path'.
 const path = require("path");
 
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'sizeOf'.
 const sizeOf = require("image-size");
 
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'Document'.
 const { Document, Image } = require("../content");
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'FLAW_LEVEL... Remove this comment to see the full error message
 const { FLAW_LEVELS } = require("./constants");
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'findMatche... Remove this comment to see the full error message
 const { findMatchesInText } = require("./matches-in-text");
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'DEFAULT_LO... Remove this comment to see the full error message
 const { DEFAULT_LOCALE } = require("../libs/constants");
 
 /**
@@ -16,6 +22,7 @@ const { DEFAULT_LOCALE } = require("../libs/constants");
  * log them as flaws if they're not passing linting.
  *
  */
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'checkImage... Remove this comment to see the full error message
 function checkImageReferences(doc, $, options, { url, rawContent }) {
   const filePaths = new Set();
 
@@ -92,24 +99,31 @@ function checkImageReferences(doc, $, options, { url, rawContent }) {
           explanation: "Empty img 'src' attribute",
         });
       }
+      // @ts-expect-error ts-migrate(2339) FIXME: Property 'host' does not exist on type 'string | U... Remove this comment to see the full error message
     } else if (absoluteURL.host !== "yari.placeholder") {
       // It's a remote file. Don't bother much with this. Unless...
       if (checkImages) {
+        // @ts-expect-error ts-migrate(2339) FIXME: Property 'protocol' does not exist on type 'string... Remove this comment to see the full error message
         if (absoluteURL.protocol === "http:") {
           // Force the image to be HTTPS
+          // @ts-expect-error ts-migrate(2339) FIXME: Property 'protocol' does not exist on type 'string... Remove this comment to see the full error message
           absoluteURL.protocol = "https:";
           addImageFlaw(img, src, {
             explanation: "Insecure URL",
             suggestion: absoluteURL.toString(),
           });
+          // @ts-expect-error ts-migrate(2339) FIXME: Property 'hostname' does not exist on type 'string... Remove this comment to see the full error message
         } else if (absoluteURL.hostname === "developer.mozilla.org") {
           // Suppose they typed this:
           // <img src=https://developer.mozilla.org/en-US/docs/Foo/img.png>
           // and the current page you're on is /en-US/docs/Foo then the
           // suggestion should be just `img.png`.
+          // @ts-expect-error ts-migrate(2339) FIXME: Property 'pathname' does not exist on type 'string... Remove this comment to see the full error message
           const suggestion = absoluteURL.pathname.includes(`${doc.mdn_url}/`)
-            ? absoluteURL.pathname.replace(`${doc.mdn_url}/`, "")
-            : absoluteURL.pathname;
+            ? // @ts-expect-error ts-migrate(2339) FIXME: Property 'pathname' does not exist on type 'string... Remove this comment to see the full error message
+              absoluteURL.pathname.replace(`${doc.mdn_url}/`, "")
+            : // @ts-expect-error ts-migrate(2339) FIXME: Property 'pathname' does not exist on type 'string... Remove this comment to see the full error message
+              absoluteURL.pathname;
           addImageFlaw(img, src, {
             explanation: "Unnecessarily absolute URL",
             suggestion,
@@ -117,6 +131,7 @@ function checkImageReferences(doc, $, options, { url, rawContent }) {
           // This one's a bit of an exception. Going forward the suggestion
           // might be something like `screenshot.png` for the sake of rendering
           // it now, we still want the full relative URL.
+          // @ts-expect-error ts-migrate(2339) FIXME: Property 'pathname' does not exist on type 'string... Remove this comment to see the full error message
           img.attr("src", absoluteURL.pathname);
         } else {
           let suggestion = null;
@@ -131,6 +146,7 @@ function checkImageReferences(doc, $, options, { url, rawContent }) {
       // Remember, you can not have search parameters on local images.
       // It might make sense on something like `https://unsplash.it/image/abc?size=100`
       // but all our images are going to be static.
+      // @ts-expect-error ts-migrate(2339) FIXME: Property 'pathname' does not exist on type 'string... Remove this comment to see the full error message
       finalSrc = absoluteURL.pathname;
       // We can use the `finalSrc` to look up and find the image independent
       // of the correct case because `Image.findByURL` operates case
@@ -138,6 +154,7 @@ function checkImageReferences(doc, $, options, { url, rawContent }) {
 
       // What follows uses the same algorithm as Image.findByURLWithFallback
       // but only adds a filePath if it exists for the DEFAULT_LOCALE
+      // @ts-expect-error ts-migrate(2339) FIXME: Property 'findByURL' does not exist on type 'new (... Remove this comment to see the full error message
       let filePath = Image.findByURL(finalSrc);
       let enUSFallback = false;
       if (
@@ -149,6 +166,7 @@ function checkImageReferences(doc, $, options, { url, rawContent }) {
           new RegExp(`^/${doc.locale}/`, "i"),
           `/${DEFAULT_LOCALE}/`
         );
+        // @ts-expect-error ts-migrate(2339) FIXME: Property 'findByURL' does not exist on type 'new (... Remove this comment to see the full error message
         if (Image.findByURL(enUSFinalSrc)) {
           // Use the en-US src instead
           finalSrc = enUSFinalSrc;
@@ -185,6 +203,7 @@ function checkImageReferences(doc, $, options, { url, rawContent }) {
         } else {
           // This will always be non-null because independent of the
           // image name, if the file didn't exist the document doesn't exist.
+          // @ts-expect-error ts-migrate(2339) FIXME: Property 'findByURL' does not exist on type '{ new... Remove this comment to see the full error message
           const parentDocument = Document.findByURL(path.dirname(finalSrc));
 
           // Base the final URL on the parent document + image file name lowercase.
@@ -231,6 +250,7 @@ function checkImageReferences(doc, $, options, { url, rawContent }) {
  * has some hardcoded patterns for margins and borders that would be
  * best to set "centrally" with a style sheet.
  */
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'checkImage... Remove this comment to see the full error message
 function checkImageWidths(doc, $, options, { rawContent }) {
   const checkImages =
     options.flawLevels.get("image_widths") !== FLAW_LEVELS.IGNORE;
@@ -350,6 +370,7 @@ function checkImageWidths(doc, $, options, { rawContent }) {
           );
         }
       } else if (!imgSrc.includes("://") && imgSrc.startsWith("/")) {
+        // @ts-expect-error ts-migrate(2339) FIXME: Property 'findByURLWithFallback' does not exist on... Remove this comment to see the full error message
         const filePath = Image.findByURLWithFallback(imgSrc);
         if (filePath) {
           const dimensions = sizeOf(filePath);

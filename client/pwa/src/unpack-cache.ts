@@ -1,4 +1,5 @@
 /* eslint no-restricted-globals: ["off", "self"] */
+// @ts-expect-error ts-migrate(2792) FIXME: Cannot find module '@zip.js/zip.js'. Did you mean ... Remove this comment to see the full error message
 import * as zip from "@zip.js/zip.js";
 import { openContentCache } from "./caches";
 

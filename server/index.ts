@@ -1,46 +1,73 @@
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'fs'.
 const fs = require("fs");
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'path'.
 const path = require("path");
 
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'chalk'.
 const chalk = require("chalk");
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'express'.
 const express = require("express");
 const send = require("send");
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'createProx... Remove this comment to see the full error message
 const { createProxyMiddleware } = require("http-proxy-middleware");
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'cookiePars... Remove this comment to see the full error message
 const cookieParser = require("cookie-parser");
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'openEditor... Remove this comment to see the full error message
 const openEditor = require("open-editor");
 
 const {
+  // @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'buildDocum... Remove this comment to see the full error message
   buildDocument,
+  // @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'buildLiveS... Remove this comment to see the full error message
   buildLiveSamplePageFromURL,
+  // @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'renderCont... Remove this comment to see the full error message
   renderContributorsTxt,
 } = require("../build");
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'findDocume... Remove this comment to see the full error message
 const { findDocumentTranslations } = require("../content/translations");
 const {
+  // @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'CONTENT_RO... Remove this comment to see the full error message
   CONTENT_ROOT,
+  // @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'Document'.
   Document,
+  // @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'Redirect'.
   Redirect,
+  // @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'Image'.
   Image,
+  // @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'CONTENT_TR... Remove this comment to see the full error message
   CONTENT_TRANSLATED_ROOT,
 } = require("../content");
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'renderHTML... Remove this comment to see the full error message
 // eslint-disable-next-line node/no-missing-require
 const { renderHTML } = require("../ssr/dist/main");
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'CSP_VALUE'... Remove this comment to see the full error message
 const { CSP_VALUE, DEFAULT_LOCALE } = require("../libs/constants");
 
 const {
+  // @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'STATIC_ROO... Remove this comment to see the full error message
   STATIC_ROOT,
+  // @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'PROXY_HOST... Remove this comment to see the full error message
   PROXY_HOSTNAME,
+  // @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'FAKE_V1_AP... Remove this comment to see the full error message
   FAKE_V1_API,
+  // @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'CONTENT_HO... Remove this comment to see the full error message
   CONTENT_HOSTNAME,
+  // @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'OFFLINE_CO... Remove this comment to see the full error message
   OFFLINE_CONTENT,
 } = require("./constants");
 const documentRouter = require("./document");
 const fakeV1APIRouter = require("./fake-v1-api");
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'searchInde... Remove this comment to see the full error message
 const { searchIndexRoute } = require("./search-index");
 const flawsRoute = require("./flaws");
 const { router: translationsRouter } = require("./translations");
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'staticMidd... Remove this comment to see the full error message
 const { staticMiddlewares, originRequestMiddleware } = require("./middlewares");
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'getRoot'.
 const { getRoot } = require("../content/utils");
 
 async function buildDocumentFromURL(url) {
+  // @ts-expect-error ts-migrate(2339) FIXME: Property 'findByURL' does not exist on type '{ new... Remove this comment to see the full error message
   const document = Document.findByURL(url);
   if (!document) {
     return null;
@@ -61,6 +88,7 @@ async function buildDocumentFromURL(url) {
   return await buildDocument(document, documentOptions);
 }
 
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'app'.
 const app = express();
 
 app.use(express.json());
@@ -144,6 +172,7 @@ app.get("/_open", (req, res) => {
       absoluteFilepath = path.join(root, filepath);
     }
   } else if (url) {
+    // @ts-expect-error ts-migrate(2339) FIXME: Property 'findByURL' does not exist on type '{ new... Remove this comment to see the full error message
     const document = Document.findByURL(url);
     if (!document) {
       res.status(410).send(`No known document by the URL '${url}'\n`);
@@ -177,6 +206,7 @@ app.use("/_translations", translationsRouter);
 
 app.get("/*/contributors.txt", async (req, res) => {
   const url = req.path.replace(/\/contributors\.txt$/, "");
+  // @ts-expect-error ts-migrate(2339) FIXME: Property 'findByURL' does not exist on type '{ new... Remove this comment to see the full error message
   const document = Document.findByURL(url);
   res.setHeader("content-type", "text/plain");
   if (!document) {
@@ -234,6 +264,7 @@ app.get("/*", async (req, res, ...args) => {
     // iff it exists on disk.
     // Using a "fallback" strategy here so that images embedded in live samples
     // are resolved if they exist in en-US but not in <locale>
+    // @ts-expect-error ts-migrate(2339) FIXME: Property 'findByURLWithFallback' does not exist on... Remove this comment to see the full error message
     const filePath = Image.findByURLWithFallback(req.path);
     if (filePath) {
       // The second parameter to `send()` has to be either a full absolute
@@ -329,6 +360,7 @@ console.log(
     : ""
 );
 
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'PORT'.
 const PORT = parseInt(process.env.SERVER_PORT || "5042");
 app.listen(PORT, () => {
   console.log(`Listening on port ${PORT}`);

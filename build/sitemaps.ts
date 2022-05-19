@@ -1,3 +1,4 @@
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'makeSitema... Remove this comment to see the full error message
 function makeSitemapXML(locale, docs) {
   // Based on https://support.google.com/webmasters/answer/183668?hl=en
   return [
@@ -15,6 +16,7 @@ function makeSitemapXML(locale, docs) {
   ].join("\n");
 }
 
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'makeSitema... Remove this comment to see the full error message
 function makeSitemapIndexXML(pathnames) {
   // Based on https://support.google.com/webmasters/answer/75712
   return [

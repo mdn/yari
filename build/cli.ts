@@ -1,27 +1,45 @@
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'fs'.
 const fs = require("fs");
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'path'.
 const path = require("path");
 const zlib = require("zlib");
 
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'chalk'.
 const chalk = require("chalk");
 const cliProgress = require("cli-progress");
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'program'.
 const program = require("@caporal/core").default;
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'prompt'.
 const { prompt } = require("inquirer");
 
 const {
+  // @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'Document'.
   Document,
+  // @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'slugToFold... Remove this comment to see the full error message
   slugToFolder,
+  // @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'translatio... Remove this comment to see the full error message
   translationsOf,
+  // @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'CONTENT_RO... Remove this comment to see the full error message
   CONTENT_ROOT,
+  // @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'CONTENT_TR... Remove this comment to see the full error message
   CONTENT_TRANSLATED_ROOT,
 } = require("../content");
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'VALID_LOCA... Remove this comment to see the full error message
 const { VALID_LOCALES } = require("../libs/constants");
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'renderHTML... Remove this comment to see the full error message
 // eslint-disable-next-line node/no-missing-require
 const { renderHTML } = require("../ssr/dist/main");
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'options'.
 const options = require("./build-options");
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'buildDocum... Remove this comment to see the full error message
 const { buildDocument, renderContributorsTxt } = require("./index");
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'SearchInde... Remove this comment to see the full error message
 const SearchIndex = require("./search-index");
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'BUILD_OUT_... Remove this comment to see the full error message
 const { BUILD_OUT_ROOT } = require("./constants");
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'makeSitema... Remove this comment to see the full error message
 const { makeSitemapXML, makeSitemapIndexXML } = require("./sitemaps");
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'humanFileS... Remove this comment to see the full error message
 const { humanFileSize } = require("./utils");
 
 async function buildDocumentInteractive(
@@ -31,8 +49,10 @@ async function buildDocumentInteractive(
 ) {
   try {
     const document = invalidate
-      ? Document.read(documentPath, Document.MEMOIZE_INVALIDATE)
-      : Document.read(documentPath);
+      ? // @ts-expect-error ts-migrate(2339) FIXME: Property 'read' does not exist on type '{ new (): ... Remove this comment to see the full error message
+        Document.read(documentPath, Document.MEMOIZE_INVALIDATE)
+      : // @ts-expect-error ts-migrate(2339) FIXME: Property 'read' does not exist on type '{ new (): ... Remove this comment to see the full error message
+        Document.read(documentPath);
 
     if (!document) {
       throw new Error(`${documentPath} could not be read`);
@@ -53,6 +73,7 @@ async function buildDocumentInteractive(
       throw e;
     }
     console.error(e);
+    // @ts-expect-error ts-migrate(2339) FIXME: Property 'action' does not exist on type 'String'.
     const { action } = await prompt([
       {
         type: "list",
@@ -87,9 +108,11 @@ async function buildDocuments(
   // Override whatever was in the build options.
   const findAllOptions = Object.assign({}, options, { locales });
   if (files) {
+    // @ts-expect-error ts-migrate(2540) FIXME: Cannot assign to 'files' because it is a read-only... Remove this comment to see the full error message
     findAllOptions.files = new Set(files);
   }
 
+  // @ts-expect-error ts-migrate(2339) FIXME: Property 'findAll' does not exist on type '{ new (... Remove this comment to see the full error message
   const documents = Document.findAll(findAllOptions);
   const progressBar = new cliProgress.SingleBar(
     {},
@@ -110,6 +133,7 @@ async function buildDocuments(
 
   function appendTotalFlaws(flaws) {
     for (const [key, actualFlaws] of Object.entries(flaws)) {
+      // @ts-expect-error ts-migrate(2339) FIXME: Property 'length' does not exist on type 'unknown'... Remove this comment to see the full error message
       const count = actualFlaws.length;
       if (!totalFlaws.has(key)) {
         totalFlaws.set(key, 0);
@@ -170,7 +194,9 @@ async function buildDocuments(
           // next to each version number where appropriate.
           // Therefore, we strip out all "retired" releases.
           if (key === "releases") {
+            // @ts-expect-error ts-migrate(2550) FIXME: Property 'fromEntries' does not exist on type 'Obj... Remove this comment to see the full error message
             return Object.fromEntries(
+              // @ts-expect-error ts-migrate(2339) FIXME: Property 'status' does not exist on type 'unknown'... Remove this comment to see the full error message
               Object.entries(value).filter(([, v]) => v.status !== "retired")
             );
           }
@@ -350,9 +376,11 @@ program
       );
       const t1 = new Date();
       const count = Object.values(slugPerLocale).reduce(
+        // @ts-expect-error ts-migrate(2339) FIXME: Property 'length' does not exist on type 'unknown'... Remove this comment to see the full error message
         (a, b) => a + b.length,
         0
       );
+      // @ts-expect-error ts-migrate(2362) FIXME: The left-hand side of an arithmetic operation must... Remove this comment to see the full error message
       const seconds = (t1 - t0) / 1000;
       const took =
         seconds > 60
@@ -361,9 +389,10 @@ program
       if (!options.quiet) {
         console.log(
           chalk.green(
-            `Built ${count.toLocaleString()} pages in ${took}, at a rate of ${(
-              count / seconds
-            ).toFixed(1)} documents per second.`
+            `Built ${count.toLocaleString()} pages in ${took}, at a rate of ${
+              // @ts-expect-error ts-migrate(2362) FIXME: The left-hand side of an arithmetic operation must... Remove this comment to see the full error message
+              (count / seconds).toFixed(1)
+            } documents per second.`
           )
         );
         if (locales.size) {

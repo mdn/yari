@@ -1,9 +1,14 @@
+// @ts-expect-error ts-migrate(2792) FIXME: Cannot find module 'dayjs'. Did you mean to set th... Remove this comment to see the full error message
 import dayjs from "dayjs";
+// @ts-expect-error ts-migrate(1259) FIXME: Module '"/Users/claas/github/mdn/yari/node_modules... Remove this comment to see the full error message
 import React from "react";
 import { useOnlineStatus } from "../../hooks";
+// @ts-expect-error ts-migrate(2792) FIXME: Cannot find module '../../ui/atoms/button'. Did yo... Remove this comment to see the full error message
 import { Button } from "../../ui/atoms/button";
+// @ts-expect-error ts-migrate(2792) FIXME: Cannot find module '../../ui/molecules/dropdown'. ... Remove this comment to see the full error message
 import { DropdownMenu, DropdownMenuWrapper } from "../../ui/molecules/dropdown";
 import { Checkbox } from "../../ui/molecules/notifications-watch-menu/atoms/checkbox";
+// @ts-expect-error ts-migrate(2792) FIXME: Cannot find module 'html-react-parser'. Did you me... Remove this comment to see the full error message
 import parse from "html-react-parser";
 
 const regex = /PR!(?<repo>.+\/.+)!(?<pr>\d+)!!/;

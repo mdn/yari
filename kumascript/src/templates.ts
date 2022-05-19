@@ -25,15 +25,21 @@
  *
  * @prettier
  */
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'fs'.
 const fs = require("fs");
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'path'.
 const path = require("path");
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'ejs'.
 const ejs = require("ejs");
 
 const dirname = __dirname;
 
 const DEFAULT_MACROS_DIRECTORY = path.normalize(`${dirname}/../macros/`);
 
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'Templates'... Remove this comment to see the full error message
 class Templates {
+  macroDirectory: any;
+  macroNameToPath: any;
   constructor(macroDirectory = DEFAULT_MACROS_DIRECTORY) {
     this.macroDirectory = macroDirectory;
     this.macroNameToPath = new Map();

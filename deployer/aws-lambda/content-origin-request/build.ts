@@ -1,7 +1,10 @@
 /* eslint-disable node/no-unpublished-require */
 /* eslint-disable node/no-missing-require */
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'VALID_LOCA... Remove this comment to see the full error message
 const { VALID_LOCALES } = require("@yari-internal/constants");
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'fs'.
 const fs = require("fs");
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'path'.
 const path = require("path");
 
 const dirname = __dirname;
@@ -49,6 +52,7 @@ function buildRedirectsMap() {
 
   const output = "redirects.json";
 
+  // @ts-expect-error ts-migrate(2550) FIXME: Property 'fromEntries' does not exist on type 'Obj... Remove this comment to see the full error message
   fs.writeFileSync(output, JSON.stringify(Object.fromEntries(redirectMap)));
 
   const count = redirectMap.size;

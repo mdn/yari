@@ -1,40 +1,69 @@
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'fs'.
 const fs = require("fs");
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'path'.
 const path = require("path");
 
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'chalk'.
 const chalk = require("chalk");
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'cheerio'.
 const cheerio = require("cheerio");
 
 const {
+  // @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'Document'.
   Document,
+  // @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'CONTENT_RO... Remove this comment to see the full error message
   CONTENT_ROOT,
+  // @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'Image'.
   Image,
+  // @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'REPOSITORY... Remove this comment to see the full error message
   REPOSITORY_URLS,
+  // @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'execGit'.
   execGit,
 } = require("../content");
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'kumascript... Remove this comment to see the full error message
 const kumascript = require("../kumascript");
 
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'FLAW_LEVEL... Remove this comment to see the full error message
 const { FLAW_LEVELS } = require("./constants");
 const {
+  // @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'extractSec... Remove this comment to see the full error message
   extractSections,
+  // @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'extractSid... Remove this comment to see the full error message
   extractSidebar,
+  // @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'extractSum... Remove this comment to see the full error message
   extractSummary,
 } = require("./document-extractor");
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'SearchInde... Remove this comment to see the full error message
 const SearchIndex = require("./search-index");
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'addBreadcr... Remove this comment to see the full error message
 const { addBreadcrumbData } = require("./document-utils");
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'fixFixable... Remove this comment to see the full error message
 const { fixFixableFlaws, injectFlaws, injectSectionFlaws } = require("./flaws");
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'normalizeB... Remove this comment to see the full error message
 const { normalizeBCDURLs, extractBCDData } = require("./bcd-urls");
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'checkImage... Remove this comment to see the full error message
 const { checkImageReferences, checkImageWidths } = require("./check-images");
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'getPageTit... Remove this comment to see the full error message
 const { getPageTitle } = require("./page-title");
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'syntaxHigh... Remove this comment to see the full error message
 const { syntaxHighlight } = require("./syntax-highlight");
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'formatNote... Remove this comment to see the full error message
 const { formatNotecards } = require("./format-notecards");
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'buildOptio... Remove this comment to see the full error message
 const buildOptions = require("./build-options");
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'gatherGitH... Remove this comment to see the full error message
 const { gather: gatherGitHistory } = require("./git-history");
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'buildSPAs'... Remove this comment to see the full error message
 const { buildSPAs } = require("./spas");
 const { renderCache: renderKumascriptCache } = require("../kumascript");
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'LANGUAGES_... Remove this comment to see the full error message
 const LANGUAGES_RAW = require("../content/languages.json");
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'safeDecode... Remove this comment to see the full error message
 const { safeDecodeURIComponent } = require("../kumascript/src/api/util");
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'wrapTables... Remove this comment to see the full error message
 const { wrapTables } = require("./wrap-tables");
 
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'LANGUAGES'... Remove this comment to see the full error message
 const LANGUAGES = new Map(
   Object.entries(LANGUAGES_RAW).map(([locale, data]) => {
     return [locale.toLowerCase(), data];
@@ -169,6 +198,7 @@ function postLocalFileLinks($, doc) {
     // So we'll look-up a lot "false positives" that are not images.
     // Thankfully, this lookup is fast.
     const url = `${doc.mdn_url}/${href}`;
+    // @ts-expect-error ts-migrate(2339) FIXME: Property 'findByURLWithFallback' does not exist on... Remove this comment to see the full error message
     const image = Image.findByURLWithFallback(url);
     if (image) {
       $(element).attr("href", url);
@@ -219,6 +249,7 @@ function getGitHubURL(root, folder, filename) {
  * Return the full URL directly to the last commit affecting this file on GitHub.
  * @param {String} hash - the full hash to point to.
  */
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'getLastCom... Remove this comment to see the full error message
 function getLastCommitURL(root, hash) {
   const baseURL = `https://github.com/${REPOSITORY_URLS[root]}`;
   return `${baseURL}/commit/${hash}`;
@@ -280,6 +311,7 @@ function getAdjacentImages(documentDirectory) {
     .map((dirent) => path.join(documentDirectory, dirent.name));
 }
 
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'buildDocum... Remove this comment to see the full error message
 async function buildDocument(document, documentOptions = {}) {
   // Important that the "local" document options comes last.
   // And use Object.assign to create a new object instead of mutating the
@@ -287,6 +319,7 @@ async function buildDocument(document, documentOptions = {}) {
   const options = Object.assign({}, buildOptions, documentOptions);
   const { metadata, fileInfo } = document;
 
+  // @ts-expect-error ts-migrate(2339) FIXME: Property 'urlToFolderPath' does not exist on type ... Remove this comment to see the full error message
   if (Document.urlToFolderPath(document.url) !== document.fileInfo.folder) {
     throw new Error(
       `The document's slug (${metadata.slug}) doesn't match its disk folder name (${document.fileInfo.folder})`
@@ -299,6 +332,7 @@ async function buildDocument(document, documentOptions = {}) {
     isActive: document.isActive,
   };
 
+  // @ts-expect-error ts-migrate(2339) FIXME: Property 'flaws' does not exist on type '{ isMarkd... Remove this comment to see the full error message
   doc.flaws = {};
 
   let flaws = [];
@@ -403,6 +437,7 @@ async function buildDocument(document, documentOptions = {}) {
       // The 'flaws' array don't have everything we need from the
       // kumascript rendering, so we "beef it up" to have convenient
       // attributes needed.
+      // @ts-expect-error ts-migrate(2339) FIXME: Property 'flaws' does not exist on type '{ isMarkd... Remove this comment to see the full error message
       doc.flaws.macros = flaws.map((flaw, i) => {
         let fixable = false;
         let suggestion = null;
@@ -448,20 +483,26 @@ async function buildDocument(document, documentOptions = {}) {
     $("[data-flaw-src]").removeAttr("data-flaw-src");
   }
 
+  // @ts-expect-error ts-migrate(2339) FIXME: Property 'title' does not exist on type '{ isMarkd... Remove this comment to see the full error message
   doc.title = metadata.title;
+  // @ts-expect-error ts-migrate(2339) FIXME: Property 'mdn_url' does not exist on type '{ isMar... Remove this comment to see the full error message
   doc.mdn_url = document.url;
+  // @ts-expect-error ts-migrate(2339) FIXME: Property 'locale' does not exist on type '{ isMark... Remove this comment to see the full error message
   doc.locale = metadata.locale;
+  // @ts-expect-error ts-migrate(2339) FIXME: Property 'native' does not exist on type '{ isMark... Remove this comment to see the full error message
   doc.native = LANGUAGES.get(doc.locale.toLowerCase()).native;
 
   // If the document contains <math> HTML, it will set `doc.hasMathML=true`.
   // The client (<Document/> component) needs to know this for loading polyfills.
   if ($("math").length > 0) {
+    // @ts-expect-error ts-migrate(2339) FIXME: Property 'hasMathML' does not exist on type '{ isM... Remove this comment to see the full error message
     doc.hasMathML = true;
   }
 
   // Note that 'extractSidebar' will always return a string.
   // And if it finds a sidebar section, it gets removed from '$' too.
   // Also note, these operations mutate the `$`.
+  // @ts-expect-error ts-migrate(2339) FIXME: Property 'sidebarHTML' does not exist on type '{ i... Remove this comment to see the full error message
   doc.sidebarHTML = extractSidebar($);
 
   // Check and scrutinize any local image references
@@ -543,6 +584,7 @@ async function buildDocument(document, documentOptions = {}) {
   // of HTML.
   try {
     const [sections, sectionFlaws] = extractSections($);
+    // @ts-expect-error ts-migrate(2339) FIXME: Property 'body' does not exist on type '{ isMarkdo... Remove this comment to see the full error message
     doc.body = sections;
     if (sectionFlaws.length) {
       injectSectionFlaws(doc, sectionFlaws, options);
@@ -554,16 +596,19 @@ async function buildDocument(document, documentOptions = {}) {
     // So we catch the error, log which file it happened to and then
     // rethrow the error. Now you get a clue at least as to where to look.
     console.error(
+      // @ts-expect-error ts-migrate(2339) FIXME: Property 'mdn_url' does not exist on type '{ isMar... Remove this comment to see the full error message
       `Extracting sections failed in ${doc.mdn_url} (${document.fileInfo.path})`
     );
     throw error;
   }
 
   // Extract all the <h2> tags as they appear into an array.
+  // @ts-expect-error ts-migrate(2339) FIXME: Property 'toc' does not exist on type '{ isMarkdow... Remove this comment to see the full error message
   doc.toc = makeTOC(doc);
 
   // The summary comes from the HTML and potentially the <h2>Summary</h2>
   // section. It's always a plain text string.
+  // @ts-expect-error ts-migrate(2339) FIXME: Property 'summary' does not exist on type '{ isMar... Remove this comment to see the full error message
   doc.summary = extractSummary(doc.body);
 
   // Creates new mdn_url's for the browser-compatibility-table to link to
@@ -574,10 +619,12 @@ async function buildDocument(document, documentOptions = {}) {
 
   // If the document has a `.popularity` make sure don't bother with too
   // many significant figures on it.
+  // @ts-expect-error ts-migrate(2339) FIXME: Property 'popularity' does not exist on type '{ is... Remove this comment to see the full error message
   doc.popularity = metadata.popularity
     ? Number(metadata.popularity.toFixed(4))
     : 0.0;
 
+  // @ts-expect-error ts-migrate(2339) FIXME: Property 'modified' does not exist on type '{ isMa... Remove this comment to see the full error message
   doc.modified = metadata.modified || null;
 
   const otherTranslations = document.translations || [];
@@ -585,6 +632,7 @@ async function buildDocument(document, documentOptions = {}) {
     // If built just-in-time, we won't have a record of all the other translations
     // available. But if the current document has a translation_of, we can
     // at least use that.
+    // @ts-expect-error ts-migrate(2339) FIXME: Property 'findByURL' does not exist on type '{ new... Remove this comment to see the full error message
     const translationOf = Document.findByURL(
       `/en-US/docs/${metadata.translation_of}`
     );
@@ -592,12 +640,14 @@ async function buildDocument(document, documentOptions = {}) {
       otherTranslations.push({
         locale: "en-US",
         title: translationOf.metadata.title,
+        // @ts-expect-error ts-migrate(2339) FIXME: Property 'native' does not exist on type 'unknown'... Remove this comment to see the full error message
         native: LANGUAGES.get("en-us").native,
       });
     }
   }
 
   if (otherTranslations.length) {
+    // @ts-expect-error ts-migrate(2339) FIXME: Property 'other_translations' does not exist on ty... Remove this comment to see the full error message
     doc.other_translations = otherTranslations;
   }
 
@@ -608,9 +658,11 @@ async function buildDocument(document, documentOptions = {}) {
   // a breadcrumb in the React component.
   addBreadcrumbData(document.url, doc);
 
+  // @ts-expect-error ts-migrate(2339) FIXME: Property 'pageTitle' does not exist on type '{ isM... Remove this comment to see the full error message
   doc.pageTitle = getPageTitle(doc);
 
   // Decide whether it should be indexed (sitemaps, robots meta tag, search-index)
+  // @ts-expect-error ts-migrate(2339) FIXME: Property 'noIndexing' does not exist on type '{ is... Remove this comment to see the full error message
   doc.noIndexing =
     metadata.slug === "MDN/Kitchensink" ||
     document.metadata.slug.startsWith("orphaned/") ||
@@ -619,6 +671,7 @@ async function buildDocument(document, documentOptions = {}) {
   return { doc, liveSamples, fileAttachments, bcdData };
 }
 
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'buildLiveS... Remove this comment to see the full error message
 async function buildLiveSamplePageFromURL(url) {
   // The 'url' is expected to be something
   // like '/en-us/docs/foo/bar/_sample_.myid.html' and from that we want to
@@ -628,6 +681,7 @@ async function buildLiveSamplePageFromURL(url) {
   }
   const [documentURL, sampleID] = url.split(/\.html$/)[0].split("/_sample_.");
   const decodedSampleID = safeDecodeURIComponent(sampleID).toLowerCase();
+  // @ts-expect-error ts-migrate(2339) FIXME: Property 'findByURL' does not exist on type '{ new... Remove this comment to see the full error message
   const document = Document.findByURL(documentURL);
   if (!document) {
     throw new Error(`No document found for ${documentURL}`);
@@ -656,6 +710,7 @@ async function buildLiveSamplePageFromURL(url) {
 // This is used by the builder (yarn build) and by the server (JIT).
 // Someday, this function might change if we decide to include the list
 // of GitHub usernames that have contributed to it since it moved to GitHub.
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'renderCont... Remove this comment to see the full error message
 function renderContributorsTxt(wikiContributorNames = null, githubURL = null) {
   let txt = "";
   if (githubURL) {

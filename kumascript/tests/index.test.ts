@@ -1,20 +1,32 @@
 /**
  * @prettier
  */
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'cheerio'.
 const cheerio = require("cheerio");
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'Document'.
 const { Document } = require("../../content");
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'info'.
 const info = require("../src/info.js");
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'render'.
 const { render } = require("../index.js");
 const {
+  // @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'MacroNotFo... Remove this comment to see the full error message
   MacroNotFoundError,
+  // @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'MacroBroke... Remove this comment to see the full error message
   MacroBrokenLinkError,
+  // @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'MacroRedir... Remove this comment to see the full error message
   MacroRedirectedLinkError,
+  // @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'MacroDepre... Remove this comment to see the full error message
   MacroDeprecatedError,
+  // @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'MacroExecu... Remove this comment to see the full error message
   MacroExecutionError,
 } = require("../src/errors.js");
 
+// @ts-expect-error ts-migrate(2582) FIXME: Cannot find name 'describe'. Do you need to instal... Remove this comment to see the full error message
 describe("testing the main render() function", () => {
+  // @ts-expect-error ts-migrate(2582) FIXME: Cannot find name 'it'. Do you need to install type... Remove this comment to see the full error message
   it("non-fatal errors in macros are returned by render()", async () => {
+    // @ts-expect-error ts-migrate(2304) FIXME: Cannot find name 'jest'.
     info.cleanURL = jest.fn((url) => {
       const result = url.toLowerCase();
       if (result === "/en-us/docs/web/css/dumber") {
@@ -34,6 +46,7 @@ describe("testing the main render() function", () => {
       {{page("/en-US/docs/Web/B", "bogus-section")}}
       {{page("/en-US/docs/Web/C")}}
     `.trim();
+    // @ts-expect-error ts-migrate(2339) FIXME: Property 'findByURL' does not exist on type '{ new... Remove this comment to see the full error message
     Document.findByURL = jest.fn((url) => {
       return {
         "/en-us/docs/web/a": {
@@ -98,6 +111,7 @@ describe("testing the main render() function", () => {
         },
       }[url];
     });
+    // @ts-expect-error ts-migrate(2554) FIXME: Expected 3-4 arguments, but got 1.
     const [result, errors] = await render("/en-us/docs/web/a");
     // First, let's check the result.
     expect(result).toEqual(

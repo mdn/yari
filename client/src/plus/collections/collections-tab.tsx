@@ -1,8 +1,12 @@
 import { useState, useRef, useEffect } from "react";
+// @ts-expect-error ts-migrate(2792) FIXME: Cannot find module '.'. Did you mean to set the 'm... Remove this comment to see the full error message
 import { BookmarkData } from ".";
 import { useUIStatus } from "../../ui-context";
+// @ts-expect-error ts-migrate(2792) FIXME: Cannot find module '../../ui/atoms/limit-banner'. ... Remove this comment to see the full error message
 import LimitBanner from "../../ui/atoms/limit-banner";
+// @ts-expect-error ts-migrate(2792) FIXME: Cannot find module '../../ui/atoms/loading'. Did y... Remove this comment to see the full error message
 import { Loading } from "../../ui/atoms/loading";
+// @ts-expect-error ts-migrate(2792) FIXME: Cannot find module '../common'. Did you mean to se... Remove this comment to see the full error message
 import { DataError } from "../common";
 import {
   useCollectionsApiEndpoint,
@@ -11,6 +15,7 @@ import {
 } from "../common/api";
 import { showMoreButton } from "../common/plus-tabs";
 import { SORTS } from "../common/tabs";
+// @ts-expect-error ts-migrate(2792) FIXME: Cannot find module '../search-filter'. Did you mea... Remove this comment to see the full error message
 import SearchFilter from "../search-filter";
 import { CollectionListItem } from "./collection-list-item";
 
@@ -64,6 +69,7 @@ export function CollectionsTab({
     formData = new FormData(form);
 
     // Determine if delete was clicked.
+    // @ts-expect-error ts-migrate(2304) FIXME: Cannot find name 'SubmitEvent'.
     const submitter = (e.nativeEvent as SubmitEvent)
       .submitter as HTMLButtonElement;
 

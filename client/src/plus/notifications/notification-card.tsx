@@ -1,10 +1,16 @@
+// @ts-expect-error ts-migrate(1259) FIXME: Module '"/Users/claas/github/mdn/yari/node_modules... Remove this comment to see the full error message
 import React from "react";
+// @ts-expect-error ts-migrate(2792) FIXME: Cannot find module '../../ui/atoms/button'. Did yo... Remove this comment to see the full error message
 import { Button } from "../../ui/atoms/button";
 import { post } from "./utils";
+// @ts-expect-error ts-migrate(2792) FIXME: Cannot find module 'dayjs'. Did you mean to set th... Remove this comment to see the full error message
 import dayjs from "dayjs";
+// @ts-expect-error ts-migrate(2792) FIXME: Cannot find module 'dayjs/plugin/relativeTime'. Di... Remove this comment to see the full error message
 import relativeTime from "dayjs/plugin/relativeTime";
+// @ts-expect-error ts-migrate(2792) FIXME: Cannot find module '../../ui/molecules/dropdown'. ... Remove this comment to see the full error message
 import { DropdownMenu, DropdownMenuWrapper } from "../../ui/molecules/dropdown";
 import { useUIStatus } from "../../ui-context";
+// @ts-expect-error ts-migrate(2792) FIXME: Cannot find module 'html-react-parser'. Did you me... Remove this comment to see the full error message
 import parse from "html-react-parser";
 
 dayjs.extend(relativeTime);

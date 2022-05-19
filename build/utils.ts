@@ -1,26 +1,41 @@
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'fs'.
 const fs = require("fs");
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'path'.
 const path = require("path");
 
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'cheerio'.
 const cheerio = require("cheerio");
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'got'.
 const got = require("got");
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'FileType'.
 const FileType = require("file-type");
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'imagemin'.
 const imagemin = require("imagemin");
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'imageminPn... Remove this comment to see the full error message
 const imageminPngquant = require("imagemin-pngquant");
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'imageminMo... Remove this comment to see the full error message
 const imageminMozjpeg = require("imagemin-mozjpeg");
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'imageminGi... Remove this comment to see the full error message
 const imageminGifsicle = require("imagemin-gifsicle");
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'imageminSv... Remove this comment to see the full error message
 const imageminSvgo = require("imagemin-svgo");
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'sanitizeFi... Remove this comment to see the full error message
 const sanitizeFilename = require("sanitize-filename");
 
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'VALID_MIME... Remove this comment to see the full error message
 const { VALID_MIME_TYPES } = require("../filecheck/constants");
 
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'humanFileS... Remove this comment to see the full error message
 function humanFileSize(size) {
   if (size < 1024) return `${size} B`;
   const i = Math.floor(Math.log(size) / Math.log(1024));
   let num = size / 1024 ** i;
   const round = Math.round(num);
   if (round < 10) {
+    // @ts-expect-error ts-migrate(2322) FIXME: Type 'string' is not assignable to type 'number'.
     num = num.toFixed(2);
   } else if (round < 100) {
+    // @ts-expect-error ts-migrate(2322) FIXME: Type 'string' is not assignable to type 'number'.
     num = num.toFixed(1);
   } else {
     num = round;
@@ -34,6 +49,7 @@ function humanFileSize(size) {
 // be able to process them and fix the problem we need to "temporarily"
 // pretend they were hosted on a remote working full domain.
 // See https://github.com/mdn/yari/issues/1103
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'forceExter... Remove this comment to see the full error message
 function forceExternalURL(url) {
   if (url.startsWith("/")) {
     return `https://mdn.mozillademos.org${url}`;
@@ -41,6 +57,7 @@ function forceExternalURL(url) {
   return url;
 }
 
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'downloadAn... Remove this comment to see the full error message
 async function downloadAndResizeImage(src, out, basePath) {
   const imageResponse = await got(forceExternalURL(src), {
     responseType: "buffer",
@@ -132,6 +149,7 @@ function getImageminPlugin(fileName) {
   throw new Error(`No imagemin plugin for ${extension}`);
 }
 
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'splitSecti... Remove this comment to see the full error message
 function splitSections(rawHTML) {
   const $ = cheerio.load(`<div id="_body">${rawHTML}</div>`);
   const blocks = [];

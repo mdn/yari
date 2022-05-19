@@ -1,4 +1,6 @@
+// @ts-expect-error ts-migrate(1259) FIXME: Module '"/Users/claas/github/mdn/yari/node_modules... Remove this comment to see the full error message
 import React, { useContext } from "react";
+// @ts-expect-error ts-migrate(2792) FIXME: Cannot find module '@mdn/browser-compat-data/types... Remove this comment to see the full error message
 import type bcd from "@mdn/browser-compat-data/types";
 import { BrowserInfoContext } from "./browser-info";
 import {
@@ -35,6 +37,7 @@ function getSupportClassName(
     return "unknown";
   }
 
+  // @ts-expect-error ts-migrate(2339) FIXME: Property 'flags' does not exist on type 'SimpleSup... Remove this comment to see the full error message
   let { flags, version_added, version_removed, partial_implementation } =
     getCurrentSupport(support)!;
 
@@ -146,7 +149,9 @@ const CellText = React.memo(
   }) => {
     const currentSupport = getCurrentSupport(support);
 
+    // @ts-expect-error ts-migrate(2339) FIXME: Property 'version_added' does not exist on type 'S... Remove this comment to see the full error message
     const added = currentSupport?.version_added ?? null;
+    // @ts-expect-error ts-migrate(2339) FIXME: Property 'version_removed' does not exist on type ... Remove this comment to see the full error message
     const removed = currentSupport?.version_removed ?? null;
 
     const browserReleaseDate = getSupportBrowserReleaseDate(support);
@@ -331,78 +336,81 @@ function getNotes(
   support: bcd.SupportStatement
 ) {
   if (support) {
-    return asList(support)
-      .slice()
-      .reverse()
-      .flatMap((item, i) => {
-        const supportNotes = [
-          item.version_removed &&
-          !asList(support).some(
-            (otherItem) => otherItem.version_added === item.version_removed
-          )
-            ? {
-                iconName: "disabled",
-                label: (
-                  <>
-                    Removed in {labelFromString(item.version_removed, browser)}{" "}
-                    and later
-                  </>
-                ),
-              }
-            : null,
-          item.partial_implementation
-            ? {
-                iconName: "footnote",
-                label: "Partial support",
-              }
-            : null,
-          item.prefix
-            ? {
-                iconName: "prefix",
-                label: `Implemented with the vendor prefix: ${item.prefix}`,
-              }
-            : null,
-          item.alternative_name
-            ? {
-                iconName: "altname",
-                label: `Alternate name: ${item.alternative_name}`,
-              }
-            : null,
-          item.flags
-            ? {
-                iconName: "disabled",
-                label: <FlagsNote browser={browser} supportItem={item} />,
-              }
-            : null,
-          item.notes
-            ? (Array.isArray(item.notes) ? item.notes : [item.notes]).map(
-                (note) => ({ iconName: "footnote", label: note })
-              )
-            : null,
-          versionIsPreview(item.version_added, browser)
-            ? {
-                iconName: "footnote",
-                label: "Preview browser support",
-              }
-            : null,
-          // If we encounter nothing else than the required `version_added` and
-          // `release_date` properties, assume full support.
-          // EDIT 1-5-21: if item.version_added doesn't exist, assume no support.
-          isFullySupportedWithoutLimitation(item) &&
-          !versionIsPreview(item.version_added, browser)
-            ? {
-                iconName: "footnote",
-                label: "Full support",
-              }
-            : isNotSupportedAtAll(item)
-            ? {
-                iconName: "footnote",
-                label: "No support",
-              }
-            : null,
-        ]
-          .flat()
-          .filter(isTruthy);
+    return (
+      asList(support)
+        .slice()
+        .reverse()
+        // @ts-expect-error ts-migrate(2550) FIXME: Property 'flatMap' does not exist on type 'any[]'.... Remove this comment to see the full error message
+        .flatMap((item, i) => {
+          const supportNotes = [
+            item.version_removed &&
+            !asList(support).some(
+              (otherItem) => otherItem.version_added === item.version_removed
+            )
+              ? {
+                  iconName: "disabled",
+                  label: (
+                    <>
+                      Removed in{" "}
+                      {labelFromString(item.version_removed, browser)} and later
+                    </>
+                  ),
+                }
+              : null,
+            item.partial_implementation
+              ? {
+                  iconName: "footnote",
+                  label: "Partial support",
+                }
+              : null,
+            item.prefix
+              ? {
+                  iconName: "prefix",
+                  label: `Implemented with the vendor prefix: ${item.prefix}`,
+                }
+              : null,
+            item.alternative_name
+              ? {
+                  iconName: "altname",
+                  label: `Alternate name: ${item.alternative_name}`,
+                }
+              : null,
+            item.flags
+              ? {
+                  iconName: "disabled",
+                  label: <FlagsNote browser={browser} supportItem={item} />,
+                }
+              : null,
+            item.notes
+              ? (Array.isArray(item.notes) ? item.notes : [item.notes]).map(
+                  (note) => ({ iconName: "footnote", label: note })
+                )
+              : null,
+            versionIsPreview(item.version_added, browser)
+              ? {
+                  iconName: "footnote",
+                  label: "Preview browser support",
+                }
+              : null,
+            // If we encounter nothing else than the required `version_added` and
+            // `release_date` properties, assume full support.
+            // EDIT 1-5-21: if item.version_added doesn't exist, assume no support.
+            isFullySupportedWithoutLimitation(item) &&
+            !versionIsPreview(item.version_added, browser)
+              ? {
+                  iconName: "footnote",
+                  label: "Full support",
+                }
+              : isNotSupportedAtAll(item)
+              ? {
+                  iconName: "footnote",
+                  label: "No support",
+                }
+              : null,
+          ]
+            // @ts-expect-error ts-migrate(2550) FIXME: Property 'flat' does not exist on type 'any[]'. Do... Remove this comment to see the full error message
+            .flat()
+            .filter(isTruthy);
 
         const hasNotes = supportNotes.length > 0;
         return (
@@ -522,7 +530,9 @@ export const FeatureRow = React.memo(
     }
 
     const { name, compat, depth } = feature;
+    // @ts-expect-error ts-migrate(2339) FIXME: Property 'description' does not exist on type 'Com... Remove this comment to see the full error message
     const title = compat.description ? (
+      // @ts-expect-error ts-migrate(2339) FIXME: Property 'description' does not exist on type 'Com... Remove this comment to see the full error message
       <span dangerouslySetInnerHTML={{ __html: compat.description }} />
     ) : (
       <code>{name}</code>
@@ -531,19 +541,31 @@ export const FeatureRow = React.memo(
 
     let titleNode: string | React.ReactNode;
 
+    // @ts-expect-error ts-migrate(2339) FIXME: Property 'mdn_url' does not exist on type 'CompatS... Remove this comment to see the full error message
     if (compat.bad_url && compat.mdn_url) {
       titleNode = (
         <div className="bc-table-row-header">
+          // @ts-expect-error ts-migrate(2339) FIXME: Property 'mdn_url' does
+          not exist on type 'CompatS... Remove this comment to see the full
+          error message
           <abbr className="new" title={`${compat.mdn_url} does not exist`}>
             {title}
           </abbr>
+          // @ts-expect-error ts-migrate(2339) FIXME: Property 'status' does not
+          exist on type 'CompatSt... Remove this comment to see the full error
+          message
           {compat.status && <StatusIcons status={compat.status} />}
         </div>
       );
+      // @ts-expect-error ts-migrate(2339) FIXME: Property 'mdn_url' does not exist on type 'CompatS... Remove this comment to see the full error message
     } else if (compat.mdn_url && depth > 0) {
       titleNode = (
+        // @ts-expect-error ts-migrate(2339) FIXME: Property 'mdn_url' does not exist on type 'CompatS... Remove this comment to see the full error message
         <a href={compat.mdn_url} className="bc-table-row-header">
           {title}
+          // @ts-expect-error ts-migrate(2339) FIXME: Property 'status' does not
+          exist on type 'CompatSt... Remove this comment to see the full error
+          message
           {compat.status && <StatusIcons status={compat.status} />}
         </a>
       );
@@ -551,6 +573,9 @@ export const FeatureRow = React.memo(
       titleNode = (
         <div className="bc-table-row-header">
           {title}
+          // @ts-expect-error ts-migrate(2339) FIXME: Property 'status' does not
+          exist on type 'CompatSt... Remove this comment to see the full error
+          message
           {compat.status && <StatusIcons status={compat.status} />}
         </div>
       );
@@ -567,6 +592,7 @@ export const FeatureRow = React.memo(
               key={browser}
               browserId={browser}
               browserInfo={browserInfo[browser]}
+              // @ts-expect-error ts-migrate(2339) FIXME: Property 'support' does not exist on type 'CompatS... Remove this comment to see the full error message
               support={compat.support[browser]}
               showNotes={activeCell === i}
               onToggle={() => onToggleCell([index, i])}
@@ -580,6 +606,7 @@ export const FeatureRow = React.memo(
               <dl className="bc-notes-list">
                 {getNotes(
                   browserInfo[activeBrowser],
+                  // @ts-expect-error ts-migrate(2339) FIXME: Property 'support' does not exist on type 'CompatS... Remove this comment to see the full error message
                   compat.support[activeBrowser]!
                 )}
               </dl>

@@ -1,12 +1,19 @@
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'fs'.
 const fs = require("fs");
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'path'.
 const path = require("path");
 
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'express'.
 const express = require("express");
 
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'Document'.
 const { Document, slugToFolder } = require("../content");
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'buildDocum... Remove this comment to see the full error message
 const { buildDocument } = require("../build");
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'BUILD_OUT_... Remove this comment to see the full error message
 const { BUILD_OUT_ROOT } = require("../build/constants");
 
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'router'.
 const router = express();
 
 // XXX deprecated anyway and doesn't work with Markdown
@@ -20,6 +27,7 @@ function withDocument(req, res, next) {
   if (!req.query.url) {
     return res.status(400).send("No ?url= query param");
   }
+  // @ts-expect-error ts-migrate(2339) FIXME: Property 'findByURL' does not exist on type '{ new... Remove this comment to see the full error message
   const document = Document.findByURL(req.query.url.toLowerCase());
   if (!document) {
     return res.status(404).send(`No document by the URL ${req.query.url}`);
@@ -64,6 +72,7 @@ router.get("/", withDocument, (req, res) => {
 router.put("/", withDocument, async (req, res) => {
   const { rawBody, metadata } = req.body;
   if (metadata.title && rawBody) {
+    // @ts-expect-error ts-migrate(2339) FIXME: Property 'update' does not exist on type '{ new ()... Remove this comment to see the full error message
     Document.update(req.document.url, `${rawBody.trim()}\n`, metadata);
   }
   res.sendStatus(200);
@@ -76,6 +85,7 @@ router.put("/", withDocument, async (req, res) => {
 // });
 
 router.delete("/", (req, res) => {
+  // @ts-expect-error ts-migrate(2339) FIXME: Property 'remove' does not exist on type '{ new ()... Remove this comment to see the full error message
   Document.remove(req.query.slug, req.query.locale, {
     recursive: true,
   });

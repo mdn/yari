@@ -1,4 +1,5 @@
 import { Element } from "hast";
+// @ts-expect-error ts-migrate(2792) FIXME: Cannot find module 'hast-util-to-html'. Did you me... Remove this comment to see the full error message
 import * as toHTML from "hast-util-to-html";
 import * as prettier from "prettier";
 

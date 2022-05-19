@@ -1,3 +1,4 @@
+// @ts-expect-error ts-migrate(2792) FIXME: Cannot find module '@mdn/browser-compat-data/types... Remove this comment to see the full error message
 import type bcd from "@mdn/browser-compat-data/types";
 
 // Extended for the fields, beyond the bcd types, that are extra-added
@@ -47,9 +48,11 @@ export function listFeatures(
   }
 
   for (const [subName, subIdentifier] of Object.entries(identifier)) {
+    // @ts-expect-error ts-migrate(2339) FIXME: Property '__compat' does not exist on type 'unknow... Remove this comment to see the full error message
     if (subName !== "__compat" && subIdentifier.__compat) {
       features.push({
         name: parentName ? `${parentName}.${subName}` : subName,
+        // @ts-expect-error ts-migrate(2339) FIXME: Property '__compat' does not exist on type 'unknow... Remove this comment to see the full error message
         compat: subIdentifier.__compat,
         depth: depth + 1,
       });
@@ -164,23 +167,27 @@ export function getCurrentSupport(
 
   // Full support with altname/prefix
   const altnamePrefixSupportItem = asList(support).find(
+    // @ts-expect-error ts-migrate(2339) FIXME: Property 'version_removed' does not exist on type ... Remove this comment to see the full error message
     (item) => !item.version_removed && (item.prefix || item.alternative_name)
   );
   if (altnamePrefixSupportItem) return altnamePrefixSupportItem;
 
   // Partial support
   const partialSupportItem = asList(support).find(
+    // @ts-expect-error ts-migrate(2339) FIXME: Property 'version_removed' does not exist on type ... Remove this comment to see the full error message
     (item) => !item.version_removed && item.partial_implementation
   );
   if (partialSupportItem) return partialSupportItem;
 
   // Support with flags only
   const flagSupportItem = asList(support).find(
+    // @ts-expect-error ts-migrate(2339) FIXME: Property 'version_removed' does not exist on type ... Remove this comment to see the full error message
     (item) => !item.version_removed && item.flags
   );
   if (flagSupportItem) return flagSupportItem;
 
   // No/Inactive support
+  // @ts-expect-error ts-migrate(2339) FIXME: Property 'version_removed' does not exist on type ... Remove this comment to see the full error message
   const noSupportItem = asList(support).find((item) => item.version_removed);
   if (noSupportItem) return noSupportItem;
 

@@ -1,6 +1,8 @@
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'path'.
 const path = require("path");
 
 const nodeExternals = require("webpack-node-externals");
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'webpack'.
 const webpack = require("webpack");
 
 const dirname = __dirname;

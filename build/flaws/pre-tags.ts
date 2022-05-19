@@ -1,3 +1,4 @@
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'getFirstMa... Remove this comment to see the full error message
 const { getFirstMatchInText } = require("../matches-in-text");
 const escapeHTML = (s) =>
   s
@@ -6,6 +7,7 @@ const escapeHTML = (s) =>
     .replace(/</g, "&lt;")
     .replace(/>/g, "&gt;");
 
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'getPreTagF... Remove this comment to see the full error message
 function getPreTagFlaws(doc, $, { rawContent }) {
   const flaws = [];
 
@@ -54,7 +56,9 @@ function getPreTagFlaws(doc, $, { rawContent }) {
     if (fixable) {
       // Only if it's fixable, is the `html` perfectly findable in the raw content.
       const { line, column } = getFirstMatchInText(html, rawContent);
+      // @ts-expect-error ts-migrate(2339) FIXME: Property 'line' does not exist on type '{ explanat... Remove this comment to see the full error message
       flaw.line = line;
+      // @ts-expect-error ts-migrate(2339) FIXME: Property 'column' does not exist on type '{ explan... Remove this comment to see the full error message
       flaw.column = column;
     }
 

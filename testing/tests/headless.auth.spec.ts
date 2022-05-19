@@ -1,5 +1,7 @@
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'test'.
 const { test, expect } = require("@playwright/test");
 
+// @ts-expect-error ts-migrate(2393) FIXME: Duplicate function implementation.
 function testURL(pathname = "/") {
   const PORT = parseInt(process.env.SERVER_PORT || "5042");
   return `http://localhost:${PORT}${pathname}`;

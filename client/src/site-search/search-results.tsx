@@ -1,16 +1,23 @@
+// @ts-expect-error ts-migrate(1259) FIXME: Module '"/Users/claas/github/mdn/yari/node_modules... Remove this comment to see the full error message
 import React from "react";
+// @ts-expect-error ts-migrate(2792) FIXME: Cannot find module 'react-router-dom'. Did you mea... Remove this comment to see the full error message
 import { createSearchParams, Link, useSearchParams } from "react-router-dom";
+// @ts-expect-error ts-migrate(2792) FIXME: Cannot find module 'swr'. Did you mean to set the ... Remove this comment to see the full error message
 import useSWR from "swr";
 
+// @ts-expect-error ts-migrate(2792) FIXME: Cannot find module '../ui/atoms/loading'. Did you ... Remove this comment to see the full error message
 import { Loading } from "../ui/atoms/loading";
 import { CRUD_MODE } from "../constants";
 import { useLocale } from "../hooks";
 import { appendURL } from "./utils";
+// @ts-expect-error ts-migrate(2792) FIXME: Cannot find module '../ui/atoms/button'. Did you m... Remove this comment to see the full error message
 import { Button } from "../ui/atoms/button";
 
+// @ts-expect-error ts-migrate(2792) FIXME: Cannot find module '../languages.json'. Did you me... Remove this comment to see the full error message
 import LANGUAGES_RAW from "../languages.json";
 import "./search-results.scss";
 import { useGA } from "../ga-context";
+// @ts-expect-error ts-migrate(2792) FIXME: Cannot find module '../ui/molecules/notecards'. Di... Remove this comment to see the full error message
 import NoteCard from "../ui/molecules/notecards";
 
 const LANGUAGES = new Map(
@@ -358,9 +365,13 @@ function Results({
                   <span
                     className="locale-indicator"
                     title={`The linked document is in ${
+                      // @ts-expect-error ts-migrate(2339) FIXME: Property 'English' does not exist on type 'unknown... Remove this comment to see the full error message
                       LANGUAGES.get(document.locale)?.English
                     } which is different from your current locale.`}
                   >
+                    // @ts-expect-error ts-migrate(2339) FIXME: Property
+                    'English' does not exist on type 'unknown... Remove this
+                    comment to see the full error message
                     {LANGUAGES.get(document.locale)?.English}
                   </span>
                 )}

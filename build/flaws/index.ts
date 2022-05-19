@@ -1,23 +1,37 @@
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'path'.
 const path = require("path");
 
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'chalk'.
 const chalk = require("chalk");
 
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'Document'.
 const { Document } = require("../../content");
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'FLAW_LEVEL... Remove this comment to see the full error message
 const { FLAW_LEVELS, VALID_FLAW_CHECKS } = require("../constants");
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'DEFAULT_LO... Remove this comment to see the full error message
 const { DEFAULT_LOCALE } = require("../../libs/constants");
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'replaceMat... Remove this comment to see the full error message
 const {
   replaceMatchesInText,
   replaceMatchingLinksInMarkdown,
 } = require("../matches-in-text");
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'forceExter... Remove this comment to see the full error message
 const { forceExternalURL, downloadAndResizeImage } = require("../utils");
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'getBadBCDQ... Remove this comment to see the full error message
 const { getBadBCDQueriesFlaws } = require("./bad-bcd-queries");
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'getBrokenL... Remove this comment to see the full error message
 const { getBrokenLinksFlaws } = require("./broken-links");
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'getHeading... Remove this comment to see the full error message
 const { getHeadingLinksFlaws } = require("./heading-links");
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'getPreTagF... Remove this comment to see the full error message
 const { getPreTagFlaws } = require("./pre-tags");
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'injectSect... Remove this comment to see the full error message
 const { injectSectionFlaws } = require("./sections");
 const { getUnsafeHTMLFlaws } = require("./unsafe-html");
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'injectTran... Remove this comment to see the full error message
 const { injectTranslationDifferences } = require("./translation-differences");
 
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'injectFlaw... Remove this comment to see the full error message
 function injectFlaws(doc, $, options, document) {
   const flawChecks = [
     ["unsafe_html", getUnsafeHTMLFlaws, false],
@@ -70,6 +84,7 @@ function injectFlaws(doc, $, options, document) {
   }
 }
 
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'fixFixable... Remove this comment to see the full error message
 async function fixFixableFlaws(doc, options, document) {
   if (!options.fixFlaws) return;
 
@@ -282,6 +297,7 @@ async function fixFixableFlaws(doc, options, document) {
         )
       );
     } else {
+      // @ts-expect-error ts-migrate(2339) FIXME: Property 'update' does not exist on type '{ new ()... Remove this comment to see the full error message
       Document.update(document.url, newRawBody, document.metadata, isMarkdown);
       if (options.fixFlawsVerbose) {
         console.log(

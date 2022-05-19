@@ -1,3 +1,4 @@
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'packageBCD... Remove this comment to see the full error message
 const { packageBCD } = require("../resolve-bcd");
 
 // Bad BCD queries are when the `<div class="bc-data">` tags have an
@@ -6,6 +7,7 @@ const { packageBCD } = require("../resolve-bcd");
 //
 //    <div class="bc-data" id="bcd:never.ever.heard.of">
 
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'getBadBCDQ... Remove this comment to see the full error message
 function getBadBCDQueriesFlaws(doc, $) {
   return $("div.bc-data")
     .map((i, element) => {

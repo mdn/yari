@@ -1,8 +1,12 @@
+// @ts-expect-error ts-migrate(1192) FIXME: Module '"fs"' has no default export.
 import fs from "fs";
+// @ts-expect-error ts-migrate(1259) FIXME: Module '"path"' can only be default-imported using... Remove this comment to see the full error message
 import path from "path";
 import { renderToString } from "react-dom/server";
+// @ts-expect-error ts-migrate(2792) FIXME: Cannot find module 'cheerio'. Did you mean to set ... Remove this comment to see the full error message
 import cheerio from "cheerio";
 
+// @ts-expect-error ts-migrate(2306) FIXME: File '/Users/claas/github/mdn/yari/build/constants... Remove this comment to see the full error message
 import { ALWAYS_ALLOW_ROBOTS, BUILD_OUT_ROOT } from "../build/constants";
 
 const { DEFAULT_LOCALE } = require("../libs/constants");
@@ -159,8 +163,10 @@ export default function render(
   const hydrationData: HydrationData = {};
   if (pageNotFound) {
     pageTitle = `🤷🏽‍♀️ Page not found | ${pageTitle}`;
+    // @ts-expect-error ts-migrate(2339) FIXME: Property 'pageNotFound' does not exist on type '{}... Remove this comment to see the full error message
     hydrationData.pageNotFound = true;
   } else if (hyData) {
+    // @ts-expect-error ts-migrate(2339) FIXME: Property 'hyData' does not exist on type '{}'.
     hydrationData.hyData = hyData;
   } else if (doc) {
     // Use the doc's title instead
@@ -171,6 +177,7 @@ export default function render(
       pageDescription = doc.summary;
     }
 
+    // @ts-expect-error ts-migrate(2339) FIXME: Property 'doc' does not exist on type '{}'.
     hydrationData.doc = doc;
 
     if (doc.other_translations) {
@@ -200,6 +207,7 @@ export default function render(
   }
 
   if (possibleLocales) {
+    // @ts-expect-error ts-migrate(2339) FIXME: Property 'possibleLocales' does not exist on type ... Remove this comment to see the full error message
     hydrationData.possibleLocales = possibleLocales;
   }
 

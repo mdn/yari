@@ -1,6 +1,7 @@
 /**
  * @prettier
  */
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'Environmen... Remove this comment to see the full error message
 const Environment = require("../src/environment.js");
 
 // We test using `with` because that is what EJS uses. But Jest
@@ -143,20 +144,27 @@ const expectedFunctions = [
 
 const expectedAsync = ["wiki.page", "template"];
 
+// @ts-expect-error ts-migrate(2582) FIXME: Cannot find name 'describe'. Do you need to instal... Remove this comment to see the full error message
 describe("Environment class", () => {
+  // @ts-expect-error ts-migrate(2582) FIXME: Cannot find name 'it'. Do you need to install type... Remove this comment to see the full error message
   it.each(expectedObjects)("defines global object %s", (global) => {
+    // @ts-expect-error ts-migrate(2554) FIXME: Expected 2-4 arguments, but got 1.
     const environment = new Environment({});
     const context = environment.getExecutionContext([]);
     expect(typeof getValue(context, global)).toBe("object");
   });
 
+  // @ts-expect-error ts-migrate(2582) FIXME: Cannot find name 'it'. Do you need to install type... Remove this comment to see the full error message
   it.each(expectedFunctions)("defines global function %s", (global) => {
+    // @ts-expect-error ts-migrate(2554) FIXME: Expected 2-4 arguments, but got 1.
     const environment = new Environment({});
     const context = environment.getExecutionContext([]);
     expect(typeof getValue(context, global)).toBe("function");
   });
 
+  // @ts-expect-error ts-migrate(2582) FIXME: Cannot find name 'it'. Do you need to install type... Remove this comment to see the full error message
   it.each(expectedAsync)("defines async function %s", (global) => {
+    // @ts-expect-error ts-migrate(2554) FIXME: Expected 2-4 arguments, but got 1.
     const environment = new Environment({});
     const context = environment.getExecutionContext([]);
     const value = getValue(context, global);
@@ -164,7 +172,9 @@ describe("Environment class", () => {
     expect(value.constructor.name).toBe("AsyncFunction");
   });
 
+  // @ts-expect-error ts-migrate(2582) FIXME: Cannot find name 'it'. Do you need to install type... Remove this comment to see the full error message
   it("defines values from the environment object", () => {
+    // @ts-expect-error ts-migrate(2554) FIXME: Expected 2-4 arguments, but got 1.
     const environment = new Environment({
       locale: "en-CA",
       tags: ["a", "b", "c"],
@@ -186,7 +196,9 @@ describe("Environment class", () => {
     expect(getValue(context, "env.mdn")).toBe(2);
   });
 
+  // @ts-expect-error ts-migrate(2582) FIXME: Cannot find name 'it'. Do you need to install type... Remove this comment to see the full error message
   it("defines values from arguments array", () => {
+    // @ts-expect-error ts-migrate(2554) FIXME: Expected 2-4 arguments, but got 1.
     const environment = new Environment({});
 
     // array of string arguments
@@ -221,7 +233,9 @@ describe("Environment class", () => {
     expect(getValue(context, "$9")).toBe("");
   });
 
+  // @ts-expect-error ts-migrate(2582) FIXME: Cannot find name 'it'. Do you need to install type... Remove this comment to see the full error message
   it("defines a template() function that renders templates", async () => {
+    // @ts-expect-error ts-migrate(2304) FIXME: Cannot find name 'jest'.
     const mockRender = jest.fn(() => "hello world");
     const mockTemplates = { render: mockRender };
     const environment = new Environment({}, mockTemplates);

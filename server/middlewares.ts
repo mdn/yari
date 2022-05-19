@@ -1,9 +1,15 @@
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'express'.
 const express = require("express");
 
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'CSP_VALUE'... Remove this comment to see the full error message
 const { CSP_VALUE } = require("../libs/constants");
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'resolveFun... Remove this comment to see the full error message
 const { resolveFundamental } = require("../libs/fundamental-redirects");
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'getLocale'... Remove this comment to see the full error message
 const { getLocale } = require("../libs/get-locale");
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'STATIC_ROO... Remove this comment to see the full error message
 const { STATIC_ROOT } = require("./constants");
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'devMiddlew... Remove this comment to see the full error message
 const { devMiddlewares } = require("./dev");
 
 // Lowercase every request because every possible file we might have

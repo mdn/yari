@@ -1,12 +1,19 @@
+// @ts-expect-error ts-migrate(1259) FIXME: Module '"/Users/claas/github/mdn/yari/node_modules... Remove this comment to see the full error message
 import React from "react";
+// @ts-expect-error ts-migrate(2792) FIXME: Cannot find module 'react-router-dom'. Did you mea... Remove this comment to see the full error message
 import { useSearchParams } from "react-router-dom";
 import { useIsServer } from "../hooks";
+
+// @ts-expect-error ts-migrate(2792) FIXME: Cannot find module '../ui/atoms/loading'. Did you ... Remove this comment to see the full error message
 import { Loading } from "../ui/atoms/loading";
+// @ts-expect-error ts-migrate(2792) FIXME: Cannot find module '../ui/atoms/page-content'. Did... Remove this comment to see the full error message
 import { PageContentContainer } from "../ui/atoms/page-content";
 import { useGA } from "../ga-context";
 import "./index.scss";
 
+// @ts-expect-error ts-migrate(1323) FIXME: Dynamic imports are only supported when the '--mod... Remove this comment to see the full error message
 const SiteSearchForm = React.lazy(() => import("./form"));
+// @ts-expect-error ts-migrate(1323) FIXME: Dynamic imports are only supported when the '--mod... Remove this comment to see the full error message
 const SearchResults = React.lazy(() => import("./search-results"));
 
 export function SiteSearch() {

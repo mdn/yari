@@ -1,20 +1,29 @@
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'LRU'.
 const LRU = require("lru-cache");
 
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'Document'.
 const { Document } = require("../content");
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'm2h'.
 const { m2h } = require("../markdown");
 
 const {
+  // @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'INTERACTIV... Remove this comment to see the full error message
   INTERACTIVE_EXAMPLES_BASE_URL,
+  // @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'LIVE_SAMPL... Remove this comment to see the full error message
   LIVE_SAMPLES_BASE_URL,
 } = require("./src/constants");
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'info'.
 const info = require("./src/info.js");
 const { render: renderMacros } = require("./src/render.js");
 const {
   getLiveSampleIDs,
+  // @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'buildLiveS... Remove this comment to see the full error message
   buildLiveSamplePages,
   LiveSampleError,
 } = require("./src/live-sample.js");
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'HTMLTool'.
 const { HTMLTool } = require("./src/api/util.js");
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'DEFAULT_LO... Remove this comment to see the full error message
 const { DEFAULT_LOCALE } = require("../libs/constants");
 
 const DEPENDENCY_LOOP_INTRO =
@@ -44,11 +53,14 @@ const renderFromURL = async (
   urlsSeen.add(urlLC);
   const prerequisiteErrorsByKey = new Map();
   const document = invalidateCache
-    ? Document.findByURL(url, Document.MEMOIZE_INVALIDATE)
-    : Document.findByURL(url);
+    ? // @ts-expect-error ts-migrate(2339) FIXME: Property 'findByURL' does not exist on type '{ new... Remove this comment to see the full error message
+      Document.findByURL(url, Document.MEMOIZE_INVALIDATE)
+    : // @ts-expect-error ts-migrate(2339) FIXME: Property 'findByURL' does not exist on type '{ new... Remove this comment to see the full error message
+      Document.findByURL(url);
   if (!document) {
     throw new Error(
       `From URL ${url} no folder on disk could be found. ` +
+        // @ts-expect-error ts-migrate(2339) FIXME: Property 'urlToFolderPath' does not exist on type ... Remove this comment to see the full error message
         `Tried to find a folder called ${Document.urlToFolderPath(url)}`
     );
   }
@@ -61,8 +73,10 @@ const renderFromURL = async (
       .replace(`/${metadata.locale.toLowerCase()}/`, `/${DEFAULT_LOCALE}/`);
 
     const parentDocument = invalidateCache
-      ? Document.findByURL(parentURL, Document.MEMOIZE_INVALIDATE)
-      : Document.findByURL(parentURL);
+      ? // @ts-expect-error ts-migrate(2339) FIXME: Property 'findByURL' does not exist on type '{ new... Remove this comment to see the full error message
+        Document.findByURL(parentURL, Document.MEMOIZE_INVALIDATE)
+      : // @ts-expect-error ts-migrate(2339) FIXME: Property 'findByURL' does not exist on type '{ new... Remove this comment to see the full error message
+        Document.findByURL(parentURL);
     if (parentDocument) {
       metadata = { ...parentDocument.metadata, ...metadata };
     }

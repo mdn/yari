@@ -1,10 +1,14 @@
 import * as React from "react";
+// @ts-expect-error ts-migrate(2792) FIXME: Cannot find module 'react-router-dom'. Did you mea... Remove this comment to see the full error message
 import { useParams } from "react-router-dom";
+// @ts-expect-error ts-migrate(2792) FIXME: Cannot find module 'swr'. Did you mean to set the ... Remove this comment to see the full error message
 import useSWR from "swr";
 
 import { CRUD_MODE } from "../constants";
 import { HydrationData } from "../types/hydration";
+// @ts-expect-error ts-migrate(2792) FIXME: Cannot find module '../ui/molecules/get_involved'.... Remove this comment to see the full error message
 import { GetInvolved } from "../ui/molecules/get_involved";
+// @ts-expect-error ts-migrate(2792) FIXME: Cannot find module '../ui/molecules/quote'. Did yo... Remove this comment to see the full error message
 import { Quote } from "../ui/molecules/quote";
 
 import "./index.scss";
@@ -29,6 +33,7 @@ export function ContributorSpotlight(props: HydrationData<ContributorDetails>) {
 
   const fallbackData = props.hyData ? props : undefined;
 
+  // @ts-expect-error ts-migrate(2525) FIXME: Initializer provides no value for this binding ele... Remove this comment to see the full error message
   const { data: { hyData } = {} } = useSWR<any>(
     contributorJSONUrl,
     async (url) => {

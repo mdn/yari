@@ -1,3 +1,4 @@
+// @ts-expect-error ts-migrate(1259) FIXME: Module '"/Users/claas/github/mdn/yari/node_modules... Remove this comment to see the full error message
 import React from "react";
 import {
   createSearchParams,
@@ -5,9 +6,12 @@ import {
   useParams,
   useSearchParams,
   useNavigate,
+  // @ts-expect-error ts-migrate(2792) FIXME: Cannot find module 'react-router-dom'. Did you mea... Remove this comment to see the full error message
 } from "react-router-dom";
+// @ts-expect-error ts-migrate(2792) FIXME: Cannot find module 'swr'. Did you mean to set the ... Remove this comment to see the full error message
 import useSWR from "swr";
 
+// @ts-expect-error ts-migrate(2792) FIXME: Cannot find module '../../ui/atoms/page-content'. ... Remove this comment to see the full error message
 import { PageContentContainer } from "../../ui/atoms/page-content";
 
 interface Data {

@@ -1,3 +1,4 @@
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'got'.
 const got = require("got");
 const braces = require("braces");
 
@@ -933,6 +934,7 @@ const WEBEXT_URLS = [].concat(
       "publish/what-does-review-rejection-mean-to-users/",
     ],
     ["AMO/Policy/Featured", "publish/recommended-extensions/"],
+    // @ts-expect-error ts-migrate(2550) FIXME: Property 'flatMap' does not exist on type 'string[... Remove this comment to see the full error message
   ].flatMap(([aoPath, ewPath]) =>
     url_test(
       `{/en-US,/fr,}/docs/Mozilla/Add-ons/${aoPath}`,
@@ -1314,80 +1316,106 @@ const MISC_REDIRECT_URLS = [].concat(
   )
 );
 
+// @ts-expect-error ts-migrate(2582) FIXME: Cannot find name 'describe'. Do you need to instal... Remove this comment to see the full error message
 describe("scl3 redirects", () => {
   for (const [url, t] of SCL3_REDIRECT_URLS) {
+    // @ts-expect-error ts-migrate(2582) FIXME: Cannot find name 'it'. Do you need to install type... Remove this comment to see the full error message
     it(url, t);
   }
 });
 
+// @ts-expect-error ts-migrate(2582) FIXME: Cannot find name 'describe'. Do you need to instal... Remove this comment to see the full error message
 describe("github io redirects", () => {
   for (const [url, t] of GITHUB_IO_URLS) {
+    // @ts-expect-error ts-migrate(2582) FIXME: Cannot find name 'it'. Do you need to install type... Remove this comment to see the full error message
     it(url, t);
   }
 });
 
+// @ts-expect-error ts-migrate(2582) FIXME: Cannot find name 'describe'. Do you need to instal... Remove this comment to see the full error message
 describe("mozilla demos redirects", () => {
   for (const [url, t] of MOZILLADEMOS_URLS) {
+    // @ts-expect-error ts-migrate(2582) FIXME: Cannot find name 'it'. Do you need to install type... Remove this comment to see the full error message
     it(url, t);
   }
 });
 
+// @ts-expect-error ts-migrate(2582) FIXME: Cannot find name 'describe'. Do you need to instal... Remove this comment to see the full error message
 describe("default samples redirects", () => {
   for (const [url, t] of DEFAULT_SAMPLES_URLS) {
+    // @ts-expect-error ts-migrate(2582) FIXME: Cannot find name 'it'. Do you need to install type... Remove this comment to see the full error message
     it(url, t);
   }
 });
 
+// @ts-expect-error ts-migrate(2582) FIXME: Cannot find name 'describe'. Do you need to instal... Remove this comment to see the full error message
 describe("legacy redirects", () => {
   for (const [url, t] of LEGACY_URLS) {
+    // @ts-expect-error ts-migrate(2582) FIXME: Cannot find name 'it'. Do you need to install type... Remove this comment to see the full error message
     it(url, t);
   }
 });
 
+// @ts-expect-error ts-migrate(2582) FIXME: Cannot find name 'describe'. Do you need to instal... Remove this comment to see the full error message
 describe("zone redirects", () => {
   for (const [url, t] of ZONE_REDIRECT_URLS) {
+    // @ts-expect-error ts-migrate(2582) FIXME: Cannot find name 'it'. Do you need to install type... Remove this comment to see the full error message
     it(url, t);
   }
 });
 
+// @ts-expect-error ts-migrate(2582) FIXME: Cannot find name 'describe'. Do you need to instal... Remove this comment to see the full error message
 describe("one off redirects", () => {
   for (const [url, t] of REDIRECT_URLS) {
+    // @ts-expect-error ts-migrate(2582) FIXME: Cannot find name 'it'. Do you need to install type... Remove this comment to see the full error message
     it(url, t);
   }
 });
 
+// @ts-expect-error ts-migrate(2582) FIXME: Cannot find name 'describe'. Do you need to instal... Remove this comment to see the full error message
 describe("marionette redirects", () => {
   for (const [url, t] of MARIONETTE_URLS) {
+    // @ts-expect-error ts-migrate(2582) FIXME: Cannot find name 'it'. Do you need to install type... Remove this comment to see the full error message
     it(url, t);
   }
 });
 
+// @ts-expect-error ts-migrate(2582) FIXME: Cannot find name 'describe'. Do you need to instal... Remove this comment to see the full error message
 describe("webext redirects", () => {
   for (const [url, t] of WEBEXT_URLS) {
+    // @ts-expect-error ts-migrate(2582) FIXME: Cannot find name 'it'. Do you need to install type... Remove this comment to see the full error message
     it(url, t);
   }
 });
 
+// @ts-expect-error ts-migrate(2582) FIXME: Cannot find name 'describe'. Do you need to instal... Remove this comment to see the full error message
 describe("firefox accounts redirects", () => {
   for (const [url, t] of FIREFOX_ACCOUNTS_URLS) {
+    // @ts-expect-error ts-migrate(2582) FIXME: Cannot find name 'it'. Do you need to install type... Remove this comment to see the full error message
     it(url, t);
   }
 });
 
+// @ts-expect-error ts-migrate(2582) FIXME: Cannot find name 'describe'. Do you need to instal... Remove this comment to see the full error message
 describe("firefox src docs redirects", () => {
   for (const [url, t] of FIREFOX_SOURCE_DOCS_URLS) {
+    // @ts-expect-error ts-migrate(2582) FIXME: Cannot find name 'it'. Do you need to install type... Remove this comment to see the full error message
     it(url, t);
   }
 });
 
+// @ts-expect-error ts-migrate(2582) FIXME: Cannot find name 'describe'. Do you need to instal... Remove this comment to see the full error message
 describe("locale alias redirects", () => {
   for (const [url, t] of LOCALE_ALIAS_URLS) {
+    // @ts-expect-error ts-migrate(2582) FIXME: Cannot find name 'it'. Do you need to install type... Remove this comment to see the full error message
     it(url, t);
   }
 });
 
+// @ts-expect-error ts-migrate(2582) FIXME: Cannot find name 'describe'. Do you need to instal... Remove this comment to see the full error message
 describe("retired locale redirects", () => {
   for (const [url, t] of RETIRED_LOCALE_URLS) {
+    // @ts-expect-error ts-migrate(2582) FIXME: Cannot find name 'it'. Do you need to install type... Remove this comment to see the full error message
     it(url, t);
   }
 });
@@ -1407,14 +1435,18 @@ const CORE_JAVASCRIPT_1_5_URLs = [].concat(
   )
 );
 
+// @ts-expect-error ts-migrate(2582) FIXME: Cannot find name 'describe'. Do you need to instal... Remove this comment to see the full error message
 describe("Core_JavaScript_1.5 redirects", () => {
   for (const [url, t] of CORE_JAVASCRIPT_1_5_URLs) {
+    // @ts-expect-error ts-migrate(2582) FIXME: Cannot find name 'it'. Do you need to install type... Remove this comment to see the full error message
     it(url, t);
   }
 });
 
+// @ts-expect-error ts-migrate(2582) FIXME: Cannot find name 'describe'. Do you need to instal... Remove this comment to see the full error message
 describe("misc redirects", () => {
   for (const [url, t] of MISC_REDIRECT_URLS) {
+    // @ts-expect-error ts-migrate(2582) FIXME: Cannot find name 'it'. Do you need to install type... Remove this comment to see the full error message
     it(url, t);
   }
 });

@@ -1,9 +1,14 @@
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'parse'.
 const { parse } = require("cookie");
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'acceptLang... Remove this comment to see the full error message
 const acceptLanguageParser = require("accept-language-parser");
 
 const {
+  // @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'DEFAULT_LO... Remove this comment to see the full error message
   DEFAULT_LOCALE,
+  // @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'VALID_LOCA... Remove this comment to see the full error message
   VALID_LOCALES,
+  // @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'PREFERRED_... Remove this comment to see the full error message
   PREFERRED_LOCALE_COOKIE_NAME,
 } = require("../constants");
 const VALID_LOCALES_LIST = [...VALID_LOCALES.values()];
@@ -29,6 +34,7 @@ function getCookie(headers, cookieKey) {
   return extractCookiesFromHeaders(headers)[cookieKey];
 }
 
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'getLocale'... Remove this comment to see the full error message
 function getLocale(request, fallback = DEFAULT_LOCALE) {
   // First try by cookie.
   const cookieLocale = getCookie(request.headers, PREFERRED_LOCALE_COOKIE_NAME);

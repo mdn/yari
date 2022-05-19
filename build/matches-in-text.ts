@@ -1,5 +1,6 @@
 const ESCAPE_CHARS_RE = /[.*+?^${}()|[\]\\]/g;
 
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'findMatche... Remove this comment to see the full error message
 function* findMatchesInText(needle, haystack, { attribute = null } = {}) {
   // Need to remove any characters that can affect a regex if we're going
   // use the string in a manually constructed regex.
@@ -20,6 +21,7 @@ function* findMatchesInText(needle, haystack, { attribute = null } = {}) {
   }
 }
 
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'getFirstMa... Remove this comment to see the full error message
 function getFirstMatchInText(needle, haystack) {
   const index = haystack.indexOf(needle);
   const left = haystack.substring(0, index);
@@ -38,6 +40,7 @@ function replaceMatchingLinksInMarkdown(needle, haystack, replacement) {
   });
 }
 
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'replaceMat... Remove this comment to see the full error message
 function replaceMatchesInText(
   needle,
   haystack,

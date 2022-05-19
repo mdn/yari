@@ -1,8 +1,11 @@
+// @ts-expect-error ts-migrate(1259) FIXME: Module '"/Users/claas/github/mdn/yari/node_modules... Remove this comment to see the full error message
 import React from "react";
 
 import "../notifications-watch-menu/index.scss";
 
+// @ts-expect-error ts-migrate(2792) FIXME: Cannot find module '../../atoms/modal'. Did you me... Remove this comment to see the full error message
 import MDNModal from "../../atoms/modal";
+// @ts-expect-error ts-migrate(2792) FIXME: Cannot find module '../../atoms/button'. Did you m... Remove this comment to see the full error message
 import { Button } from "../../atoms/button";
 import { BookmarkData } from "../../../plus/collections/types";
 

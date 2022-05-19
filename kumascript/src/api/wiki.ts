@@ -1,6 +1,7 @@
 /**
  * @prettier
  */
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'util'.
 const util = require("./util.js");
 
 module.exports = {
@@ -138,8 +139,10 @@ module.exports = {
 
       while ((i = (j = t.charAt(x++)).charCodeAt(0))) {
         const m = i == 46 || (i >= 48 && i <= 57);
+        // @ts-expect-error ts-migrate(2367) FIXME: This condition will always return 'true' since the... Remove this comment to see the full error message
         if (m !== n) {
           tz[++y] = "";
+          // @ts-expect-error ts-migrate(2322) FIXME: Type 'boolean' is not assignable to type 'number'.
           n = m;
         }
         tz[y] += j;

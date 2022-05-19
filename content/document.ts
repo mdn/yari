@@ -1,34 +1,57 @@
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'fs'.
 const fs = require("fs");
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'path'.
 const path = require("path");
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'util'.
 const util = require("util");
 
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'fm'.
 const fm = require("front-matter");
 const yaml = require("js-yaml");
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'fdir'.
 const { fdir } = require("fdir");
 
 const {
+  // @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'CONTENT_TR... Remove this comment to see the full error message
   CONTENT_TRANSLATED_ROOT,
+  // @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'CONTENT_RO... Remove this comment to see the full error message
   CONTENT_ROOT,
+  // @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'ACTIVE_LOC... Remove this comment to see the full error message
   ACTIVE_LOCALES,
+  // @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'VALID_LOCA... Remove this comment to see the full error message
   VALID_LOCALES,
+  // @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'ROOTS'.
   ROOTS,
+  // @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'HTML_FILEN... Remove this comment to see the full error message
   HTML_FILENAME,
+  // @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'MARKDOWN_F... Remove this comment to see the full error message
   MARKDOWN_FILENAME,
 } = require("./constants");
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'getPopular... Remove this comment to see the full error message
 const { getPopularities } = require("./popularities");
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'getWikiHis... Remove this comment to see the full error message
 const { getWikiHistories } = require("./wikihistories");
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'getGitHist... Remove this comment to see the full error message
 const { getGitHistories } = require("./githistories");
 const { childrenFoldersForPath } = require("./document-paths");
 
 const {
+  // @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'buildURL'.
   buildURL,
+  // @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'getRoot'.
   getRoot,
+  // @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'memoize'.
   memoize,
+  // @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'slugToFold... Remove this comment to see the full error message
   slugToFolder,
+  // @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'execGit'.
   execGit,
+  // @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'urlToFolde... Remove this comment to see the full error message
   urlToFolderPath,
+  // @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'MEMOIZE_IN... Remove this comment to see the full error message
   MEMOIZE_INVALIDATE,
 } = require("./utils");
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'Redirect'.
 const Redirect = require("./redirect");
 
 function buildPath(localeFolder, slug) {
@@ -53,6 +76,7 @@ function updateWikiHistory(localeContentRoot, oldSlug, newSlug = null) {
     // and by default, the new entries will be added to the bottom of the
     // file. So by making it sorted, the location of adding new entries will
     // not cause git merge conflicts.
+    // @ts-expect-error ts-migrate(2550) FIXME: Property 'fromEntries' does not exist on type 'Obj... Remove this comment to see the full error message
     const sorted = Object.fromEntries(
       Object.keys(all)
         .sort()
@@ -402,6 +426,7 @@ function update(url, rawBody, metadata) {
   }
 }
 
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'findByURL'... Remove this comment to see the full error message
 function findByURL(url, ...args) {
   const [bareURL, hash = ""] = url.split("#", 2);
   if (!bareURL.toLowerCase().includes("/docs/")) {
@@ -564,6 +589,7 @@ function validate(slug, locale) {
   }
 }
 
+// @ts-expect-error ts-migrate(2393) FIXME: Duplicate function implementation.
 function remove(
   slug,
   locale,

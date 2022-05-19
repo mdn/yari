@@ -1,5 +1,7 @@
 import * as React from "react";
+// @ts-expect-error ts-migrate(2792) FIXME: Cannot find module '../icon'. Did you mean to set ... Remove this comment to see the full error message
 import { Icon } from "../icon";
+// @ts-expect-error ts-migrate(2792) FIXME: Cannot find module '../internal-link'. Did you mea... Remove this comment to see the full error message
 import InternalLink from "../internal-link";
 
 import "./index.scss";

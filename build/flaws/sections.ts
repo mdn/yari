@@ -1,5 +1,7 @@
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'FLAW_LEVEL... Remove this comment to see the full error message
 const { FLAW_LEVELS } = require("../constants");
 
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'injectSect... Remove this comment to see the full error message
 function injectSectionFlaws(doc, flaws, options) {
   if (!flaws.length) {
     return;

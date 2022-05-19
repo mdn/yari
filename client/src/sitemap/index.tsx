@@ -1,13 +1,19 @@
+// @ts-expect-error ts-migrate(1259) FIXME: Module '"/Users/claas/github/mdn/yari/node_modules... Remove this comment to see the full error message
 import React from "react";
+// @ts-expect-error ts-migrate(2792) FIXME: Cannot find module 'react-router-dom'. Did you mea... Remove this comment to see the full error message
 import { Link, useNavigate, useLocation } from "react-router-dom";
+// @ts-expect-error ts-migrate(2792) FIXME: Cannot find module 'swr'. Did you mean to set the ... Remove this comment to see the full error message
 import useSWR from "swr";
 
 import { CRUD_MODE, CRUD_MODE_HOSTNAMES } from "../constants";
 import { useLocale } from "../hooks";
+// @ts-expect-error ts-migrate(2792) FIXME: Cannot find module '../ui/atoms/loading'. Did you ... Remove this comment to see the full error message
 import { Loading } from "../ui/atoms/loading";
+// @ts-expect-error ts-migrate(2792) FIXME: Cannot find module '../ui/atoms/page-content'. Did... Remove this comment to see the full error message
 import { PageContentContainer } from "../ui/atoms/page-content";
 
 import "./index.scss";
+// @ts-expect-error ts-migrate(2792) FIXME: Cannot find module '../ui/molecules/notecards'. Di... Remove this comment to see the full error message
 import NoteCard from "../ui/molecules/notecards";
 
 interface SearchIndexDoc {

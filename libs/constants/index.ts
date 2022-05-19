@@ -1,3 +1,4 @@
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'VALID_LOCA... Remove this comment to see the full error message
 const VALID_LOCALES = new Map(
   [
     "de",
@@ -14,6 +15,7 @@ const VALID_LOCALES = new Map(
   ].map((x) => [x.toLowerCase(), x])
 );
 
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'RETIRED_LO... Remove this comment to see the full error message
 const RETIRED_LOCALES = new Map(
   [
     "ar",
@@ -41,8 +43,10 @@ const RETIRED_LOCALES = new Map(
   ].map((x) => [x.toLowerCase(), x])
 );
 
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'DEFAULT_LO... Remove this comment to see the full error message
 const DEFAULT_LOCALE = "en-US";
 
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'LOCALE_ALI... Remove this comment to see the full error message
 const LOCALE_ALIASES = new Map([
   // Case is not important on either the keys or the values.
   ["en", "en-us"],
@@ -55,7 +59,9 @@ const LOCALE_ALIASES = new Map([
 
 // This must match what we do in `language-menu/index.tsx` where the cookie
 // gets set in the client!
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'PREFERRED_... Remove this comment to see the full error message
 const PREFERRED_LOCALE_COOKIE_NAME = "preferredlocale";
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'ACTIVE_LOC... Remove this comment to see the full error message
 const ACTIVE_LOCALES = new Set([
   "en-us",
   "es",
@@ -153,9 +159,11 @@ const CSP_DIRECTIVES = {
 
 const cspToString = (csp) =>
   Object.entries(csp)
+    // @ts-expect-error ts-migrate(2339) FIXME: Property 'join' does not exist on type 'unknown'.
     .map(([directive, values]) => `${directive} ${values.join(" ")};`)
     .join(" ");
 
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'CSP_VALUE'... Remove this comment to see the full error message
 const CSP_VALUE = cspToString(CSP_DIRECTIVES);
 
 module.exports = {

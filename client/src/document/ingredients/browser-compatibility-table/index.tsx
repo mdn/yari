@@ -1,6 +1,10 @@
+// @ts-expect-error ts-migrate(1259) FIXME: Module '"/Users/claas/github/mdn/yari/node_modules... Remove this comment to see the full error message
 import React, { useReducer } from "react";
+// @ts-expect-error ts-migrate(2792) FIXME: Cannot find module 'react-router-dom'. Did you mea... Remove this comment to see the full error message
 import { useLocation } from "react-router-dom";
+// @ts-expect-error ts-migrate(2792) FIXME: Cannot find module '@mdn/browser-compat-data'. Did... Remove this comment to see the full error message
 import { browsers as browserData } from "@mdn/browser-compat-data";
+// @ts-expect-error ts-migrate(2792) FIXME: Cannot find module '@mdn/browser-compat-data/types... Remove this comment to see the full error message
 import type bcd from "@mdn/browser-compat-data/types";
 import { BrowserInfoContext } from "./browser-info";
 import { BrowserCompatibilityErrorBoundary } from "./error-boundary";
@@ -85,6 +89,7 @@ function FeatureListAccordion({
   browsers: bcd.BrowserNames[];
   locale: string;
 }) {
+  // @ts-expect-error ts-migrate(2488) FIXME: Type 'unknown' must have a '[Symbol.iterator]()' m... Remove this comment to see the full error message
   const [[activeRow, activeColumn], dispatchCellToggle] = useReducer<
     React.Reducer<CellIndex | [null, null], CellIndex>
   >(
@@ -104,6 +109,7 @@ function FeatureListAccordion({
           index={i}
           activeCell={activeRow === i ? activeColumn : null}
           onToggleCell={([row, column]: [number, number]) => {
+            // @ts-expect-error ts-migrate(2554) FIXME: Expected 0 arguments, but got 1.
             dispatchCellToggle([row, column]);
           }}
           locale={locale}
@@ -155,6 +161,7 @@ export default function BrowserCompatibilityTable({
   }
 
   return (
+    // @ts-expect-error ts-migrate(2786) FIXME: 'BrowserCompatibilityErrorBoundary' cannot be used... Remove this comment to see the full error message
     <BrowserCompatibilityErrorBoundary>
       <BrowserInfoContext.Provider value={browserInfo}>
         <a

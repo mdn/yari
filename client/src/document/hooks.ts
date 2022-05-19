@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+// @ts-expect-error ts-migrate(2792) FIXME: Cannot find module 'react-router-dom'. Did you mea... Remove this comment to see the full error message
 import { useLocation, useParams } from "react-router-dom";
 import { Doc, FrequentlyViewedEntry } from "./types";
 

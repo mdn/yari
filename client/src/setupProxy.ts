@@ -1,5 +1,7 @@
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'createProx... Remove this comment to see the full error message
 const { createProxyMiddleware } = require("http-proxy-middleware");
 
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'SERVER_POR... Remove this comment to see the full error message
 const SERVER_PORT = process.env.SERVER_PORT || 5042;
 
 console.log(`Setting up a Proxy to localhost:${SERVER_PORT}`);

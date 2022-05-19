@@ -1,6 +1,9 @@
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'Redirect'.
 const Redirect = require("./redirect");
 
+// @ts-expect-error ts-migrate(2582) FIXME: Cannot find name 'describe'. Do you need to instal... Remove this comment to see the full error message
 describe("short cuts", () => {
+  // @ts-expect-error ts-migrate(2582) FIXME: Cannot find name 'it'. Do you need to install type... Remove this comment to see the full error message
   it("simple chain", () => {
     const r = Redirect.testing.shortCuts([
       ["/en-US/docs/A", "/en-US/docs/B"],
@@ -11,6 +14,7 @@ describe("short cuts", () => {
       ["/en-US/docs/B", "/en-US/docs/C"],
     ]);
   });
+  // @ts-expect-error ts-migrate(2582) FIXME: Cannot find name 'it'. Do you need to install type... Remove this comment to see the full error message
   it("a = a", () => {
     const r = Redirect.testing.shortCuts([
       ["/en-US/docs/A", "/en-US/docs/A"],
@@ -18,6 +22,7 @@ describe("short cuts", () => {
     ]);
     expect(r).toEqual([]);
   });
+  // @ts-expect-error ts-migrate(2582) FIXME: Cannot find name 'it'. Do you need to install type... Remove this comment to see the full error message
   it("simple cycle", () => {
     const r = Redirect.testing.shortCuts([
       ["/en-US/docs/A", "/en-US/docs/B"],
@@ -25,6 +30,7 @@ describe("short cuts", () => {
     ]);
     expect(r).toEqual([]);
   });
+  // @ts-expect-error ts-migrate(2582) FIXME: Cannot find name 'it'. Do you need to install type... Remove this comment to see the full error message
   it("hashes", () => {
     const r = Redirect.testing.shortCuts([
       ["/en-US/docs/A", "/en-US/docs/B#Foo"],
@@ -37,7 +43,9 @@ describe("short cuts", () => {
   });
 });
 
+// @ts-expect-error ts-migrate(2582) FIXME: Cannot find name 'describe'. Do you need to instal... Remove this comment to see the full error message
 describe("decode", () => {
+  // @ts-expect-error ts-migrate(2582) FIXME: Cannot find name 'it'. Do you need to install type... Remove this comment to see the full error message
   it("decode internal", () => {
     const r = Redirect.testing.decodePairs([
       ["/en-US/docs/%40/%20/", "/en-US/docs/%3Cfoo%3E"],
@@ -48,6 +56,7 @@ describe("decode", () => {
       ["/en-US/docs/B", "/en-US/docs/C"],
     ]);
   });
+  // @ts-expect-error ts-migrate(2582) FIXME: Cannot find name 'it'. Do you need to install type... Remove this comment to see the full error message
   it("decode internal", () => {
     const r = Redirect.testing.decodePairs([
       [

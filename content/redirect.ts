@@ -1,13 +1,21 @@
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'fs'.
 const fs = require("fs");
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'path'.
 const path = require("path");
 
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'resolveFun... Remove this comment to see the full error message
 const { resolveFundamental } = require("../libs/fundamental-redirects");
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'decodePath... Remove this comment to see the full error message
 const { decodePath, slugToFolder } = require("../libs/slug-utils");
 const {
+  // @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'CONTENT_RO... Remove this comment to see the full error message
   CONTENT_ROOT,
+  // @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'CONTENT_TR... Remove this comment to see the full error message
   CONTENT_TRANSLATED_ROOT,
+  // @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'VALID_LOCA... Remove this comment to see the full error message
   VALID_LOCALES,
 } = require("./constants");
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'getRoot'.
 const { getRoot } = require("./utils");
 
 const FORBIDDEN_URL_SYMBOLS = ["\n", "\t"];
@@ -332,6 +340,7 @@ function load(locales = [...VALID_LOCALES.keys()], verbose = false) {
   }
 }
 
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'resolve'.
 const resolve = (url) => {
   if (!redirects.size) {
     load();

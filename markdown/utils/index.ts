@@ -1,10 +1,15 @@
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'unified'.
 const unified = require("unified");
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'parse'.
 const parse = require("rehype-parse");
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'format'.
 const format = require("rehype-format");
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'stringify'... Remove this comment to see the full error message
 const stringify = require("rehype-stringify");
 
 const KS_RE = /{{([^}]*)}}/g;
 
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'encodeKS'.
 function encodeKS(raw) {
   return raw.replace(
     KS_RE,
@@ -12,6 +17,7 @@ function encodeKS(raw) {
   );
 }
 
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'decodeKS'.
 function decodeKS(raw) {
   return raw.replace(
     KS_RE,

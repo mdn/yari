@@ -1,5 +1,8 @@
+// @ts-expect-error ts-migrate(1259) FIXME: Module '"/Users/claas/github/mdn/yari/node_modules... Remove this comment to see the full error message
 import React from "react";
+// @ts-expect-error ts-migrate(2792) FIXME: Cannot find module 'react-router-dom'. Did you mea... Remove this comment to see the full error message
 import { useSearchParams, useParams, useNavigate } from "react-router-dom";
+// @ts-expect-error ts-migrate(2792) FIXME: Cannot find module 'swr'. Did you mean to set the ... Remove this comment to see the full error message
 import useSWR, { mutate } from "swr";
 
 import { CRUD_MODE } from "../constants";
@@ -19,15 +22,25 @@ import { SpecificationSection } from "./ingredients/spec-section";
 
 // Misc
 // Sub-components
+// @ts-expect-error ts-migrate(2792) FIXME: Cannot find module '../ui/organisms/top-navigation... Remove this comment to see the full error message
 import { TopNavigation } from "../ui/organisms/top-navigation";
+// @ts-expect-error ts-migrate(2792) FIXME: Cannot find module '../ui/organisms/article-action... Remove this comment to see the full error message
 import { ArticleActionsContainer } from "../ui/organisms/article-actions-container";
+// @ts-expect-error ts-migrate(2792) FIXME: Cannot find module './molecules/localized-content-... Remove this comment to see the full error message
 import { LocalizedContentNote } from "./molecules/localized-content-note";
+// @ts-expect-error ts-migrate(2792) FIXME: Cannot find module '../ui/molecules/offline-status... Remove this comment to see the full error message
 import { OfflineStatusBar } from "../ui/molecules/offline-status-bar";
+// @ts-expect-error ts-migrate(2792) FIXME: Cannot find module './organisms/toc'. Did you mean... Remove this comment to see the full error message
 import { TOC } from "./organisms/toc";
+// @ts-expect-error ts-migrate(2792) FIXME: Cannot find module './organisms/sidebar'. Did you ... Remove this comment to see the full error message
 import { RenderSideBar } from "./organisms/sidebar";
+// @ts-expect-error ts-migrate(2792) FIXME: Cannot find module './molecules/retired-locale-not... Remove this comment to see the full error message
 import { RetiredLocaleNote } from "./molecules/retired-locale-note";
+// @ts-expect-error ts-migrate(2792) FIXME: Cannot find module '../ui/atoms/page-content'. Did... Remove this comment to see the full error message
 import { MainContentContainer } from "../ui/atoms/page-content";
+// @ts-expect-error ts-migrate(2792) FIXME: Cannot find module '../ui/atoms/loading'. Did you ... Remove this comment to see the full error message
 import { Loading } from "../ui/atoms/loading";
+// @ts-expect-error ts-migrate(2792) FIXME: Cannot find module './organisms/metadata'. Did you... Remove this comment to see the full error message
 import { Metadata } from "./organisms/metadata";
 
 import "./index.scss";
@@ -42,7 +55,9 @@ import "./interactive-examples.scss";
 // import { useUIStatus } from "../ui-context";
 
 // Lazy sub-components
+// @ts-expect-error ts-migrate(1323) FIXME: Dynamic imports are only supported when the '--mod... Remove this comment to see the full error message
 const Toolbar = React.lazy(() => import("./toolbar"));
+// @ts-expect-error ts-migrate(1323) FIXME: Dynamic imports are only supported when the '--mod... Remove this comment to see the full error message
 const MathMLPolyfillMaybe = React.lazy(() => import("./mathml-polyfill"));
 
 export function Document(props /* TODO: define a TS interface for this */) {

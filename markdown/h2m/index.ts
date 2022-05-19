@@ -1,13 +1,20 @@
+// @ts-expect-error ts-migrate(2792) FIXME: Cannot find module 'cheerio'. Did you mean to set ... Remove this comment to see the full error message
 import * as cheerio from "cheerio";
+// @ts-expect-error ts-migrate(2792) FIXME: Cannot find module 'unified'. Did you mean to set ... Remove this comment to see the full error message
 import * as unified from "unified";
+// @ts-expect-error ts-migrate(2792) FIXME: Cannot find module 'rehype-parse'. Did you mean to... Remove this comment to see the full error message
 import * as parseHTML from "rehype-parse";
+// @ts-expect-error ts-migrate(2792) FIXME: Cannot find module 'remark-gfm'. Did you mean to s... Remove this comment to see the full error message
 import * as gfm from "remark-gfm";
+// @ts-expect-error ts-migrate(2792) FIXME: Cannot find module 'remark-prettier'. Did you mean... Remove this comment to see the full error message
 import * as remarkPrettier from "remark-prettier";
 import {
   extractSections,
   extractSummary,
+  // @ts-expect-error ts-migrate(2306) FIXME: File '/Users/claas/github/mdn/yari/build/document-... Remove this comment to see the full error message
 } from "../../build/document-extractor";
 
+// @ts-expect-error ts-migrate(2792) FIXME: Cannot find module '../utils'. Did you mean to set... Remove this comment to see the full error message
 import { decodeKS, encodeKS, prettyAST } from "../utils";
 import { transform } from "./transform";
 

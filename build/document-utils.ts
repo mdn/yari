@@ -1,3 +1,4 @@
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'Document'.
 const { Document } = require("../content");
 
 /**
@@ -36,6 +37,7 @@ function transformTitle(title) {
  * The breadcrumb is an array of parents including the document itself.
  * It is only added to the document if there are actual parents.
  */
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'addBreadcr... Remove this comment to see the full error message
 function addBreadcrumbData(url, document) {
   const parents = [];
   const split = url.split("/");
@@ -53,6 +55,7 @@ function addBreadcrumbData(url, document) {
     // be a page on its own. For example: /en-US/docs/Web/ is a page,
     // and so is /en-US/ but there might not be a page for /end-US/docs/.
 
+    // @ts-expect-error ts-migrate(2339) FIXME: Property 'findByURL' does not exist on type '{ new... Remove this comment to see the full error message
     const parentDoc = Document.findByURL(parentURL);
     if (parentDoc) {
       parents.unshift({

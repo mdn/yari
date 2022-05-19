@@ -3,6 +3,7 @@
 // - client/src/offline-settings/db.ts
 // Until we find a solution, keep both files in sync.
 
+// @ts-expect-error ts-migrate(2792) FIXME: Cannot find module 'dexie'. Did you mean to set th... Remove this comment to see the full error message
 import Dexie from "dexie";
 
 export interface Watched {
@@ -74,6 +75,7 @@ export interface ContentStatus {
 }
 
 export class MDNOfflineDB extends Dexie {
+  version: any;
   // Declare implicit table properties.
   // (just to inform Typescript. Instanciated by Dexie in stores() method)
   whoami!: Dexie.Table<Whoami, number>; // number = type of the primkey
@@ -119,6 +121,7 @@ async function patchContentStatus(
   const db = offlineDb;
   const table = db.contentStatusHistory;
 
+  // @ts-expect-error ts-migrate(2339) FIXME: Property 'transaction' does not exist on type 'MDN... Remove this comment to see the full error message
   await db.transaction("rw", table, async () => {
     const oldStatus = await getContentStatus();
     const newStatus = {

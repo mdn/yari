@@ -2,12 +2,16 @@
  * @prettier
  */
 
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'Templates'... Remove this comment to see the full error message
 const Templates = require("../src/templates.js");
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'path'.
 const path = require("path");
 
 const dirname = __dirname;
 
+// @ts-expect-error ts-migrate(2582) FIXME: Cannot find name 'describe'. Do you need to instal... Remove this comment to see the full error message
 describe("Templates class", () => {
+  // @ts-expect-error ts-migrate(2582) FIXME: Cannot find name 'it'. Do you need to install type... Remove this comment to see the full error message
   it("has the expected methods", () => {
     expect(typeof Templates).toBe("function");
     expect(Templates.prototype.render).toBeInstanceOf(Function);
@@ -18,24 +22,28 @@ describe("Templates class", () => {
     return path.resolve(dirname, "fixtures", "templates", name);
   }
 
+  // @ts-expect-error ts-migrate(2582) FIXME: Cannot find name 'it'. Do you need to install type... Remove this comment to see the full error message
   it("throws on non-existent dir", () => {
     expect(() => new Templates(dir("no_such_directory"))).toThrow(
       "no such file or directory"
     );
   });
 
+  // @ts-expect-error ts-migrate(2582) FIXME: Cannot find name 'it'. Do you need to install type... Remove this comment to see the full error message
   it("throws on an empty dir", () => {
     expect(() => new Templates(dir("empty_macro_dir"))).toThrow(
       "No macros found"
     );
   });
 
+  // @ts-expect-error ts-migrate(2582) FIXME: Cannot find name 'it'. Do you need to install type... Remove this comment to see the full error message
   it("throws on duplicate macros", () => {
     expect(() => new Templates(dir("duplicate_macros"))).toThrow(
       "Duplicate macros"
     );
   });
 
+  // @ts-expect-error ts-migrate(2582) FIXME: Cannot find name 'it'. Do you need to install type... Remove this comment to see the full error message
   it("creates a macros map", () => {
     const directory = dir("macros");
     const macros = new Templates(directory);
@@ -48,6 +56,7 @@ describe("Templates class", () => {
     );
   });
 
+  // @ts-expect-error ts-migrate(2582) FIXME: Cannot find name 'it'. Do you need to install type... Remove this comment to see the full error message
   it("can render macros", async () => {
     const macros = new Templates(dir("macros"));
 
@@ -58,6 +67,7 @@ describe("Templates class", () => {
     expect(result2).toEqual("3");
   });
 
+  // @ts-expect-error ts-migrate(2582) FIXME: Cannot find name 'it'. Do you need to install type... Remove this comment to see the full error message
   it("macros can use await", async () => {
     const macros = new Templates(dir("macros"));
 
@@ -71,6 +81,7 @@ describe("Templates class", () => {
     expect(result).toEqual("2\n3");
   });
 
+  // @ts-expect-error ts-migrate(2582) FIXME: Cannot find name 'it'. Do you need to install type... Remove this comment to see the full error message
   it("macro arguments can be inherited", async () => {
     const macros = new Templates(dir("macros"));
     const result = await macros.render("test2", Object.create({ n: 2 }));
@@ -78,9 +89,11 @@ describe("Templates class", () => {
   });
 
   ["development", "production"].forEach((mode) => {
+    // @ts-expect-error ts-migrate(2582) FIXME: Cannot find name 'it'. Do you need to install type... Remove this comment to see the full error message
     it(`loads files ${
       mode === "production" ? "only once" : "for each call"
     } in ${mode} mode`, async () => {
+      // @ts-expect-error ts-migrate(2540) FIXME: Cannot assign to 'NODE_ENV' because it is a read-o... Remove this comment to see the full error message
       process.env.NODE_ENV = mode;
       const EJS = require("ejs");
       /**
@@ -94,6 +107,7 @@ describe("Templates class", () => {
        * odejs...kumascript	ests␌ixtures	emplates	est.ejs
        * ```
        */
+      // @ts-expect-error ts-migrate(2304) FIXME: Cannot find name 'jest'.
       const mockLoader = jest.fn(
         (filename) => `<%= ${JSON.stringify(filename)} -%>`
       );

@@ -3,12 +3,16 @@
  * (react-scripts) can't do.
  *
  */
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'fs'.
 const fs = require("fs");
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'path'.
 const path = require("path");
 
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'cheerio'.
 const cheerio = require("cheerio");
 const md5File = require("md5-file");
 
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'runOptimiz... Remove this comment to see the full error message
 async function runOptimizeClientBuild(buildRoot) {
   const indexHtmlFilePath = path.join(buildRoot, "index.html");
   const indexHtml = fs.readFileSync(indexHtmlFilePath, "utf-8");

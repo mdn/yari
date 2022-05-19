@@ -3,6 +3,7 @@ These functions are more-or-less verbatim from https://github.com/syntax-tree/md
 Unfortunately the module was not exporting them, so they needed to be copied.
  */
 
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'u'.
 const u = require("unist-builder");
 
 function text(node) {
@@ -27,6 +28,7 @@ function returnNode(h, node) {
   return node.children ? { ...node, children: all(h, node) } : node;
 }
 
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'one'.
 function one(h, node, parent) {
   const type = node && node.type;
   let fn;
@@ -46,6 +48,7 @@ function one(h, node, parent) {
   return (typeof fn === "function" ? fn : unknown)(h, node, parent);
 }
 
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'all'.
 function all(h, parent) {
   const nodes = parent.children || [];
   let values = [];
@@ -77,6 +80,7 @@ function all(h, parent) {
   return values;
 }
 
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'wrap'.
 function wrap(nodes, loose) {
   const result = [];
   let index = -1;

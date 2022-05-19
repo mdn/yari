@@ -1,7 +1,11 @@
 const {
+  // @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'DEFAULT_LO... Remove this comment to see the full error message
   DEFAULT_LOCALE,
+  // @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'VALID_LOCA... Remove this comment to see the full error message
   VALID_LOCALES,
+  // @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'LOCALE_ALI... Remove this comment to see the full error message
   LOCALE_ALIASES,
+  // @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'RETIRED_LO... Remove this comment to see the full error message
   RETIRED_LOCALES,
 } = require("../constants");
 
@@ -15,6 +19,7 @@ function redirect(pattern, template, options = {}) {
     if (match === null) {
       return null;
     }
+    // @ts-expect-error ts-migrate(2339) FIXME: Property 'permanent' does not exist on type '{}'.
     const status = options.permanent ? 301 : 302;
     if (typeof template === "string") {
       return { url: template, status };
@@ -22,6 +27,7 @@ function redirect(pattern, template, options = {}) {
     const { [0]: subString, index, groups } = match;
     const before = path.substring(0, index);
     let after = path.substring(index + subString.length);
+    // @ts-expect-error ts-migrate(2339) FIXME: Property 'colonToSlash' does not exist on type '{}... Remove this comment to see the full error message
     if (options.colonToSlash) {
       after = after.replace(/:/g, "/");
     }
@@ -42,7 +48,7 @@ function localeRedirect(
   const patternWithLocale = new RegExp(patternStrWithLocale, pattern.flags);
   let _template = template;
   if (prependLocale) {
-    _template = ({ locale, ...group } = {}) =>
+    _template = ({ locale, ...group }: any = {}) =>
       `/${locale ? `${locale}` : ""}${(typeof template === "string"
         ? template
         : template(group)
@@ -54,6 +60,7 @@ function localeRedirect(
 function externalRedirect(pattern, template, options = {}) {
   return localeRedirect(pattern, template, {
     prependLocale: false,
+    // @ts-expect-error ts-migrate(2345) FIXME: Argument of type '{ prependLocale: false; permanen... Remove this comment to see the full error message
     permanent: true,
     ...options,
   });
@@ -694,16 +701,21 @@ const SCL3_REDIRECT_PATTERNS = [
   // Old landing pages. The regex, adapted from Bedrock, captures locale prefixes.
   // RewriteRule ^(\w{2,3}(?:-\w{2})?/)?mobile/?$ /$1docs/Mozilla/Mobile
   // [R=301,L]
+  // @ts-expect-error ts-migrate(2345) FIXME: Argument of type '{ permanent: boolean; }' is not ... Remove this comment to see the full error message
   localeRedirect(/^mobile\/?$/i, "/docs/Mozilla/Mobile", { permanent: true }),
   // RewriteRule ^(\w{2,3}(?:-\w{2})?/)?addons/?$ /$1Add-ons [R=301,L]
+  // @ts-expect-error ts-migrate(2345) FIXME: Argument of type '{ permanent: boolean; }' is not ... Remove this comment to see the full error message
   localeRedirect(/^addons\/?$/i, "/Add-ons", { permanent: true }),
   // RewriteRule ^(\w{2,3}(?:-\w{2})?/)?mozilla/?$ /$1docs/Mozilla [R=301,L]
+  // @ts-expect-error ts-migrate(2345) FIXME: Argument of type '{ permanent: boolean; }' is not ... Remove this comment to see the full error message
   localeRedirect(/^mozilla\/?$/i, "/docs/Mozilla", { permanent: true }),
   // RewriteRule ^(\w{2,3}(?:-\w{2})?/)?web/?$ /$1docs/Web [R=301,L]
+  // @ts-expect-error ts-migrate(2345) FIXME: Argument of type '{ permanent: boolean; }' is not ... Remove this comment to see the full error message
   localeRedirect(/^web\/?$/i, "/docs/Web", { permanent: true }),
   // RewriteRule ^(\w{2,3}(?:-\w{2})?/)?learn/html5/?$
   // /$1docs/Web/Guide/HTML/HTML5 [R=301,L]
   localeRedirect(/^learn\/html5\/?$/i, "/docs/Web/Guide/HTML/HTML5", {
+    // @ts-expect-error ts-migrate(2345) FIXME: Argument of type '{ permanent: boolean; }' is not ... Remove this comment to see the full error message
     permanent: true,
   }),
   // Some blanket section moves / renames
@@ -736,6 +748,7 @@ const SCL3_REDIRECT_PATTERNS = [
     { permanent: true }
   ),
   // RewriteRule ^([\w\-]*)/HTML5$ $1/docs/HTML/HTML5 [R=301,L,NC]
+  // @ts-expect-error ts-migrate(2345) FIXME: Argument of type '{ permanent: boolean; }' is not ... Remove this comment to see the full error message
   localeRedirect(/^HTML5$/i, "/docs/HTML/HTML5", { permanent: true }),
   // RewriteRule web-tech/2008/09/12/css-transforms
   // /docs/CSS/Using_CSS_transforms [R=301,L]
@@ -745,6 +758,7 @@ const SCL3_REDIRECT_PATTERNS = [
     { permanent: true }
   ),
   // RewriteRule ^([\w\-]*)/docs/?$ $1/docs/Web [R=301,L,NC]
+  // @ts-expect-error ts-migrate(2345) FIXME: Argument of type '{ permanent: boolean; }' is not ... Remove this comment to see the full error message
   localeRedirect(/^docs\/?$/i, "/docs/Web", { permanent: true }),
   // DevNews
   // RewriteRule ^(\w{2,3}(?:-\w{2})?/)?devnews/index.php/feed.*
@@ -752,25 +766,31 @@ const SCL3_REDIRECT_PATTERNS = [
   localeRedirect(
     /^devnews\/index.php\/feed.*/i,
     "https://blog.mozilla.org/feed/",
+    // @ts-expect-error ts-migrate(2345) FIXME: Argument of type '{ prependLocale: false; permanen... Remove this comment to see the full error message
     { prependLocale: false, permanent: true }
   ),
   // RewriteRule ^(\w{2,3}(?:-\w{2})?/)?devnews.*
   // https://wiki.mozilla.org/Releases [R=301,L]
   localeRedirect(/^devnews.*/i, "https://wiki.mozilla.org/Releases", {
     prependLocale: false,
+    // @ts-expect-error ts-migrate(2345) FIXME: Argument of type '{ prependLocale: false; permanen... Remove this comment to see the full error message
     permanent: true,
   }),
   // Old "Learn" pages
   // RewriteRule ^(\w{2,3}(?:-\w{2})?/)?learn/html /$1Learn/HTML [R=301,L]
+  // @ts-expect-error ts-migrate(2345) FIXME: Argument of type '{ permanent: boolean; }' is not ... Remove this comment to see the full error message
   localeRedirect(/^learn\/html/i, "/docs/Learn/HTML", { permanent: true }),
   // RewriteRule ^(\w{2,3}(?:-\w{2})?/)?learn/css /$1Learn/CSS [R=301,L]
+  // @ts-expect-error ts-migrate(2345) FIXME: Argument of type '{ permanent: boolean; }' is not ... Remove this comment to see the full error message
   localeRedirect(/^learn\/css/i, "/docs/Learn/CSS", { permanent: true }),
   // RewriteRule ^(\w{2,3}(?:-\w{2})?/)?learn/javascript /$1Learn/JavaScript
   // [R=301,L]
   localeRedirect(/^learn\/javascript/i, "/docs/Learn/JavaScript", {
+    // @ts-expect-error ts-migrate(2345) FIXME: Argument of type '{ permanent: boolean; }' is not ... Remove this comment to see the full error message
     permanent: true,
   }),
   // RewriteRule ^(\w{2,3}(?:-\w{2})?/)?learn /$1Learn [R=301,L]
+  // @ts-expect-error ts-migrate(2345) FIXME: Argument of type '{ permanent: boolean; }' is not ... Remove this comment to see the full error message
   localeRedirect(/^learn/i, "/docs/Learn", { permanent: true }),
   // BananaBread demo (bug 1238041)
   // RewriteRule ^(\w{2,3}(?:-\w{2})?/)?demos/detail/bananabread$
@@ -778,6 +798,7 @@ const SCL3_REDIRECT_PATTERNS = [
   localeRedirect(
     /^demos\/detail\/bananabread$/i,
     "https://github.com/kripken/BananaBread/",
+    // @ts-expect-error ts-migrate(2345) FIXME: Argument of type '{ prependLocale: false; permanen... Remove this comment to see the full error message
     { prependLocale: false, permanent: true }
   ),
   // RewriteRule ^(\w{2,3}(?:-\w{2})?/)?demos/detail/bananabread/launch$
@@ -785,12 +806,14 @@ const SCL3_REDIRECT_PATTERNS = [
   localeRedirect(
     /^demos\/detail\/bananabread\/launch$/i,
     "https://kripken.github.io/BananaBread/cube2/index.html",
+    // @ts-expect-error ts-migrate(2345) FIXME: Argument of type '{ prependLocale: false; permanen... Remove this comment to see the full error message
     { prependLocale: false, permanent: true }
   ),
   // All other Demo Studio and Dev Derby paths (bug 1238037)
   // RewriteRule ^(\w{2,3}(?:-\w{2})?/)?demos
   // /$1docs/Web/Demos_of_open_web_technologies? [R=301,L]
   localeRedirect(/^demos.*/i, "/docs/Web/Demos_of_open_web_technologies", {
+    // @ts-expect-error ts-migrate(2345) FIXME: Argument of type '{ permanent: boolean; }' is not ... Remove this comment to see the full error message
     permanent: true,
   }),
   // Legacy off-site redirects (bug 1362438)
@@ -1190,6 +1213,7 @@ const MISC_REDIRECT_PATTERNS = [
   }),
   localeRedirect(/^events\/?$/i, "https://community.mozilla.org/events/", {
     prependLocale: false,
+    // @ts-expect-error ts-migrate(2345) FIXME: Argument of type '{ prependLocale: false; permanen... Remove this comment to see the full error message
     permanent: false,
   }),
   redirect(
@@ -1200,19 +1224,23 @@ const MISC_REDIRECT_PATTERNS = [
     }
   ),
   localeRedirect(/^account\/?$/i, "/settings", {
+    // @ts-expect-error ts-migrate(2345) FIXME: Argument of type '{ permanent: boolean; }' is not ... Remove this comment to see the full error message
     permanent: false,
   }),
   localeRedirect(/^profile(?:|\/edit)\/?$/i, "/settings", {
+    // @ts-expect-error ts-migrate(2345) FIXME: Argument of type '{ permanent: boolean; }' is not ... Remove this comment to see the full error message
     permanent: false,
   }),
   localeRedirect(
     /^profiles\/(?:[^\/]+)(?:|\/edit|\/delete)\/?$/i,
     "/settings",
     {
+      // @ts-expect-error ts-migrate(2345) FIXME: Argument of type '{ permanent: boolean; }' is not ... Remove this comment to see the full error message
       permanent: false,
     }
   ),
   localeRedirect(/^docs\/Core_JavaScript_1.5_/i, "/docs/Web/JavaScript/", {
+    // @ts-expect-error ts-migrate(2345) FIXME: Argument of type '{ permanent: boolean; colonToSla... Remove this comment to see the full error message
     permanent: true,
     // This will convert :
     //   /en-US/docs/Core_JavaScript_1.5_Reference:Statements:block
@@ -1230,6 +1258,7 @@ const MISC_REDIRECT_PATTERNS = [
   localeRedirect(
     /^(?<prefix>AJAX|CSS|DOM|DragDrop|HTML|JavaScript|SVG|Tools|Using_files_from_web_applications|Web|XMLHttpRequest|Security)(?<subPath>\/.+?)?\/?$/i,
     ({ prefix, subPath = "" }) => `/docs/${prefix}${subPath}`,
+    // @ts-expect-error ts-migrate(2345) FIXME: Argument of type '{ permanent: boolean; }' is not ... Remove this comment to see the full error message
     { permanent: true }
   ),
 ];
@@ -1246,12 +1275,14 @@ const REDIRECT_PATTERNS = [].concat(
       /^fellowship.*/i,
       "/docs/Archive/2015_MDN_Fellowship_Program",
       {
+        // @ts-expect-error ts-migrate(2345) FIXME: Argument of type '{ permanent: boolean; }' is not ... Remove this comment to see the full error message
         permanent: true,
       }
     ),
     localeRedirect(
       /^docs\/(ServerJS|CommonJS)(?<subPath>$|\/.+)/i,
       ({ subPath }) => `https://wiki.mozilla.org/docs/ServerJS${subPath}`,
+      // @ts-expect-error ts-migrate(2345) FIXME: Argument of type '{ prependLocale: false; permanen... Remove this comment to see the full error message
       { prependLocale: false, permanent: true }
     ),
   ],
@@ -1262,6 +1293,7 @@ const REDIRECT_PATTERNS = [].concat(
 const STARTING_SLASH = /^\//;
 const ABSOLUTE_URL = /^https?:\/\/.*/;
 
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'resolveFun... Remove this comment to see the full error message
 function resolveFundamental(path) {
   if (ABSOLUTE_URL.exec(path)) {
     return {};

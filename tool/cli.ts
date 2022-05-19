@@ -1,43 +1,71 @@
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'fs'.
 const fs = require("fs");
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'path'.
 const path = require("path");
 
 const klawSync = require("klaw-sync");
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'frontmatte... Remove this comment to see the full error message
 const frontmatter = require("front-matter");
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'program'.
 const program = require("@caporal/core").default;
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'chalk'.
 const chalk = require("chalk");
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'prompt'.
 const { prompt } = require("inquirer");
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'openEditor... Remove this comment to see the full error message
 const openEditor = require("open-editor");
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'open'.
 const open = require("open");
 const {
+  // @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'syncAllTra... Remove this comment to see the full error message
   syncAllTranslatedContent,
 } = require("../build/sync-translated-content");
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'log'.
 const log = require("loglevel");
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'cheerio'.
 const cheerio = require("cheerio");
 
 const dirname = __dirname;
 
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'DEFAULT_LO... Remove this comment to see the full error message
 const { DEFAULT_LOCALE, VALID_LOCALES } = require("../libs/constants");
 const {
+  // @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'CONTENT_RO... Remove this comment to see the full error message
   CONTENT_ROOT,
+  // @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'CONTENT_TR... Remove this comment to see the full error message
   CONTENT_TRANSLATED_ROOT,
+  // @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'Redirect'.
   Redirect,
+  // @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'Document'.
   Document,
+  // @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'buildURL'.
   buildURL,
+  // @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'getRoot'.
   getRoot,
 } = require("../content");
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'buildDocum... Remove this comment to see the full error message
 const { buildDocument, gatherGitHistory, buildSPAs } = require("../build");
 const {
+  // @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'ALWAYS_ALL... Remove this comment to see the full error message
   ALWAYS_ALLOW_ROBOTS,
+  // @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'BUILD_OUT_... Remove this comment to see the full error message
   BUILD_OUT_ROOT,
+  // @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'GOOGLE_ANA... Remove this comment to see the full error message
   GOOGLE_ANALYTICS_ACCOUNT,
+  // @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'GOOGLE_ANA... Remove this comment to see the full error message
   GOOGLE_ANALYTICS_DEBUG,
   VALID_FLAW_CHECKS,
 } = require("../build/constants");
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'runMakePop... Remove this comment to see the full error message
 const { runMakePopularitiesFile } = require("./popularities");
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'runOptimiz... Remove this comment to see the full error message
 const { runOptimizeClientBuild } = require("./optimize-client-build");
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'runBuildRo... Remove this comment to see the full error message
 const { runBuildRobotsTxt } = require("./build-robots-txt");
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'kumascript... Remove this comment to see the full error message
 const kumascript = require("../kumascript");
 
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'PORT'.
 const PORT = parseInt(process.env.SERVER_PORT || "5042");
 
 // The Google Analytics pageviews CSV file parsed, sorted (most pageviews
@@ -51,6 +79,7 @@ function tryOrExit(f) {
     try {
       await f({ options, ...args });
     } catch (error) {
+      // @ts-expect-error ts-migrate(2339) FIXME: Property 'verbose' does not exist on type '{}'.
       if (options.verbose || options.v) {
         console.error(chalk.red(error.stack));
       }
@@ -162,6 +191,7 @@ program
     tryOrExit(async ({ args, options }) => {
       const { slug, locale } = args;
       const { recursive, redirect, yes } = options;
+      // @ts-expect-error ts-migrate(2339) FIXME: Property 'remove' does not exist on type '{ new ()... Remove this comment to see the full error message
       const changes = Document.remove(slug, locale, {
         recursive,
         redirect,
@@ -184,15 +214,18 @@ program
           )
         );
       }
+      // @ts-expect-error ts-migrate(2339) FIXME: Property 'run' does not exist on type 'string | { ... Remove this comment to see the full error message
       const { run } = yes
         ? { run: true }
-        : await prompt({
+        : // @ts-expect-error ts-migrate(2345) FIXME: Argument of type '{ type: string; message: string;... Remove this comment to see the full error message
+          await prompt({
             type: "confirm",
             message: "Proceed?",
             name: "run",
             default: true,
           });
       if (run) {
+        // @ts-expect-error ts-migrate(2339) FIXME: Property 'remove' does not exist on type '{ new ()... Remove this comment to see the full error message
         const removed = Document.remove(slug, locale, { recursive, redirect });
         console.log(chalk.green(`Moved ${removed.length} documents.`));
       }
@@ -218,6 +251,7 @@ program
     tryOrExit(async ({ args, options }) => {
       const { oldSlug, newSlug, locale } = args;
       const { yes } = options;
+      // @ts-expect-error ts-migrate(2339) FIXME: Property 'move' does not exist on type '{ new (): ... Remove this comment to see the full error message
       const changes = Document.move(oldSlug, newSlug, locale, {
         dry: true,
       });
@@ -231,15 +265,18 @@ program
           .map(([from, to]) => `${chalk.red(from)} → ${chalk.green(to)}`)
           .join("\n")
       );
+      // @ts-expect-error ts-migrate(2339) FIXME: Property 'run' does not exist on type 'string | { ... Remove this comment to see the full error message
       const { run } = yes
         ? { run: true }
-        : await prompt({
+        : // @ts-expect-error ts-migrate(2345) FIXME: Argument of type '{ type: string; message: string;... Remove this comment to see the full error message
+          await prompt({
             type: "confirm",
             message: "Proceed?",
             name: "run",
             default: true,
           });
       if (run) {
+        // @ts-expect-error ts-migrate(2339) FIXME: Property 'move' does not exist on type '{ new (): ... Remove this comment to see the full error message
         const moved = Document.move(oldSlug, newSlug, locale);
         console.log(chalk.green(`Moved ${moved.length} documents.`));
       }
@@ -255,9 +292,11 @@ program
   .action(
     tryOrExit(({ args }) => {
       const { slug, locale } = args;
+      // @ts-expect-error ts-migrate(2339) FIXME: Property 'exists' does not exist on type '{ new ()... Remove this comment to see the full error message
       if (!Document.exists(slug, locale)) {
         throw new Error(`${slug} does not exists for ${locale}`);
       }
+      // @ts-expect-error ts-migrate(2339) FIXME: Property 'fileForSlug' does not exist on type '{ n... Remove this comment to see the full error message
       const filePath = Document.fileForSlug(slug, locale);
       openEditor([filePath]);
     })
@@ -272,13 +311,17 @@ program
   .action(
     tryOrExit(({ args }) => {
       const { slug, locale } = args;
+      // @ts-expect-error ts-migrate(2339) FIXME: Property 'parentSlug' does not exist on type '{ ne... Remove this comment to see the full error message
       const parentSlug = Document.parentSlug(slug);
+      // @ts-expect-error ts-migrate(2339) FIXME: Property 'exists' does not exist on type '{ new ()... Remove this comment to see the full error message
       if (!Document.exists(parentSlug, locale)) {
         throw new Error(`Parent ${parentSlug} does not exists for ${locale}`);
       }
+      // @ts-expect-error ts-migrate(2339) FIXME: Property 'exists' does not exist on type '{ new ()... Remove this comment to see the full error message
       if (Document.exists(slug, locale)) {
         throw new Error(`${slug} already exists for ${locale}`);
       }
+      // @ts-expect-error ts-migrate(2339) FIXME: Property 'fileForSlug' does not exist on type '{ n... Remove this comment to see the full error message
       const filePath = Document.fileForSlug(slug, locale);
       fs.mkdirSync(path.basename(filePath), { recursive: true });
       openEditor([filePath]);
@@ -295,6 +338,7 @@ program
     tryOrExit(async ({ args }) => {
       const { slug, locale } = args;
       let okay = true;
+      // @ts-expect-error ts-migrate(2339) FIXME: Property 'findByURL' does not exist on type '{ new... Remove this comment to see the full error message
       const document = Document.findByURL(buildURL(locale, slug));
       if (!document) {
         throw new Error(`Slug ${slug} does not exist for ${locale}`);
@@ -302,6 +346,7 @@ program
       const { doc } = await buildDocument(document);
 
       const flaws = Object.values(doc.flaws || {})
+        // @ts-expect-error ts-migrate(2339) FIXME: Property 'length' does not exist on type 'unknown'... Remove this comment to see the full error message
         .map((a) => a.length || 0)
         .reduce((a, b) => a + b, 0);
       if (flaws > 0) {
@@ -309,6 +354,7 @@ program
         okay = false;
       }
       try {
+        // @ts-expect-error ts-migrate(2339) FIXME: Property 'validate' does not exist on type '{ new ... Remove this comment to see the full error message
         Document.validate(slug, locale);
       } catch (e) {
         console.log(chalk.red(e));
@@ -362,6 +408,7 @@ program
           .replace(CONTENT_ROOT, "")
           .replace(CONTENT_TRANSLATED_ROOT ? CONTENT_TRANSLATED_ROOT : "", "")
           .split(path.sep);
+        // @ts-expect-error ts-migrate(2339) FIXME: Property 'read' does not exist on type '{ new (): ... Remove this comment to see the full error message
         const document = Document.read(
           // Remove that leading 'files' and the trailing 'index.(html|md)'
           slugSplit.slice(1, -1).join(path.sep)
@@ -553,6 +600,7 @@ program
     tryOrExit(async ({ args, options }) => {
       const { slug, locale } = args;
       const { yes } = options;
+      // @ts-expect-error ts-migrate(2339) FIXME: Property 'findByURL' does not exist on type '{ new... Remove this comment to see the full error message
       const document = Document.findByURL(buildURL(locale, slug));
       if (!document) {
         throw new Error(`Slug ${slug} does not exist for ${locale}`);
@@ -563,15 +611,18 @@ program
       });
 
       const flaws = Object.values(doc.flaws || {})
+        // @ts-expect-error ts-migrate(2339) FIXME: Property 'filter' does not exist on type 'unknown'... Remove this comment to see the full error message
         .map((a) => a.filter((f) => f.fixable).length || 0)
         .reduce((a, b) => a + b, 0);
       if (flaws === 0) {
         console.log(chalk.green("Found no fixable flaws!"));
         return;
       }
+      // @ts-expect-error ts-migrate(2339) FIXME: Property 'run' does not exist on type 'string | { ... Remove this comment to see the full error message
       const { run } = yes
         ? { run: true }
-        : await prompt({
+        : // @ts-expect-error ts-migrate(2345) FIXME: Argument of type '{ type: string; message: string;... Remove this comment to see the full error message
+          await prompt({
             type: "confirm",
             message: `Proceed fixing ${flaws} flaws?`,
             name: "run",
@@ -592,6 +643,7 @@ program
       if (!fs.existsSync(CONTENT_TRANSLATED_ROOT)) {
         throw new Error(`${CONTENT_TRANSLATED_ROOT} does not exist`);
       }
+      // @ts-expect-error ts-migrate(2339) FIXME: Property 'findAll' does not exist on type '{ new (... Remove this comment to see the full error message
       const documents = Document.findAll();
       if (!documents.count) {
         throw new Error("No documents to analyze");
@@ -672,6 +724,7 @@ program
         );
         return;
       }
+      // @ts-expect-error ts-migrate(2339) FIXME: Property 'rowCount' does not exist on type '{}'.
       const { rowCount, popularities, pageviews } =
         await runMakePopularitiesFile(options);
       logger.info(chalk.green(`Parsed ${rowCount.toLocaleString()} rows.`));
@@ -817,6 +870,7 @@ if (Mozilla && !Mozilla.dntEnabled()) {
           .map((m) => `"${m}"`)
           .join(", ")} within content folder(s) matching "${foldersearch}"`
       );
+      // @ts-expect-error ts-migrate(2339) FIXME: Property 'findAll' does not exist on type '{ new (... Remove this comment to see the full error message
       const documents = Document.findAll({
         folderSearch: foldersearch,
         quiet: true,
@@ -885,6 +939,7 @@ if (Mozilla && !Mozilla.dntEnabled()) {
                 console.log(`${flaw.macroSource} --> ${suggestion}`);
               }
               console.groupEnd();
+              // @ts-expect-error ts-migrate(2339) FIXME: Property 'update' does not exist on type '{ new ()... Remove this comment to see the full error message
               Document.update(
                 document.url,
                 document.rawBody,
@@ -910,6 +965,7 @@ if (Mozilla && !Mozilla.dntEnabled()) {
         const $ = cheerio.load(renderedHTML);
         const newRawHTML = $("body").html();
         if (newRawHTML !== originalRawBody) {
+          // @ts-expect-error ts-migrate(2339) FIXME: Property 'update' does not exist on type '{ new ()... Remove this comment to see the full error message
           Document.update(document.url, newRawHTML, document.metadata);
           console.log(`modified`);
           countModified++;

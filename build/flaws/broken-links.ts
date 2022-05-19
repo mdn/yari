@@ -1,12 +1,18 @@
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'fs'.
 const fs = require("fs");
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'path'.
 const path = require("path");
 
 const fromMarkdown = require("mdast-util-from-markdown");
 const visit = require("unist-util-visit");
 
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'Document'.
 const { Document, Redirect, Image } = require("../../content");
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'FLAW_LEVEL... Remove this comment to see the full error message
 const { FLAW_LEVELS } = require("../constants");
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'findMatche... Remove this comment to see the full error message
 const { findMatchesInText } = require("../matches-in-text");
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'DEFAULT_LO... Remove this comment to see the full error message
 const { DEFAULT_LOCALE, VALID_LOCALES } = require("../../libs/constants");
 
 const dirname = __dirname;
@@ -74,6 +80,7 @@ function mutateLink(
 
 // The 'broken_links' flaw check looks for internal links that
 // link to a document that's going to fail with a 404 Not Found.
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'getBrokenL... Remove this comment to see the full error message
 function getBrokenLinksFlaws(doc, $, { rawContent }, level) {
   const flaws = [];
 
@@ -266,9 +273,11 @@ function getBrokenLinksFlaws(doc, $, { rawContent }, level) {
     } else if (href.startsWith("/") && !href.startsWith("//")) {
       // Got to fake the domain to sensible extract the .search and .hash
       const absoluteURL = new URL(href, "http://www.example.com");
+      // @ts-expect-error ts-migrate(2339) FIXME: Property 'findByURL' does not exist on type '{ new... Remove this comment to see the full error message
       const found = Document.findByURL(hrefNormalized);
       if (!found) {
         // Before we give up, check if it's an image.
+        // @ts-expect-error ts-migrate(2339) FIXME: Property 'findByURLWithFallback' does not exist on... Remove this comment to see the full error message
         if (!Image.findByURLWithFallback(hrefNormalized)) {
           // Even if it's a redirect, it's still a flaw, but it'll be nice to
           // know what it *should* be.
@@ -297,6 +306,7 @@ function getBrokenLinksFlaws(doc, $, { rawContent }, level) {
                 `/${doc.locale}/`,
                 `/${DEFAULT_LOCALE}/`
               );
+              // @ts-expect-error ts-migrate(2339) FIXME: Property 'findByURL' does not exist on type '{ new... Remove this comment to see the full error message
               let enUSFound = Document.findByURL(enUSHrefNormalized);
               if (enUSFound) {
                 enUSFallbackURL = enUSFound.url;

@@ -1,3 +1,4 @@
+// @ts-expect-error ts-migrate(2792) FIXME: Cannot find module '../note-banner'. Did you mean ... Remove this comment to see the full error message
 import { NoteBanner } from "../note-banner";
 
 export function LocalizedContentNote({

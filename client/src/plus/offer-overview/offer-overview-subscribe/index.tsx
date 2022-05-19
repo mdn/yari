@@ -9,6 +9,7 @@ import {
   MDN_PLUS_SUBSCRIBE_BASE,
 } from "../../../constants";
 import { SubscriptionType, UserData, useUserData } from "../../../user-context";
+// @ts-expect-error ts-migrate(2792) FIXME: Cannot find module '../../../ui/atoms/switch'. Did... Remove this comment to see the full error message
 import { Switch } from "../../../ui/atoms/switch";
 import { useEffect, useState } from "react";
 import { getStripePlans } from "../../common/api";

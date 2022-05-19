@@ -1,5 +1,8 @@
+// @ts-expect-error ts-migrate(1259) FIXME: Module '"/Users/claas/github/mdn/yari/node_modules... Remove this comment to see the full error message
 import React from "react";
+// @ts-expect-error ts-migrate(2792) FIXME: Cannot find module 'react-router-dom'. Did you mea... Remove this comment to see the full error message
 import { Link, useSearchParams } from "react-router-dom";
+// @ts-expect-error ts-migrate(2792) FIXME: Cannot find module '../languages.json'. Did you me... Remove this comment to see the full error message
 import LANGUAGES_RAW from "../languages.json";
 
 import { useLocale } from "../hooks";
@@ -36,7 +39,13 @@ export default function SiteSearchForm() {
               (queryLocales.length === 1 &&
                 equalLocales(queryLocales, [locale])) ? (
                 <i>
-                  {LANGUAGES.get(locale.toLowerCase())?.native} (
+                  // @ts-expect-error ts-migrate(2339) FIXME: Property 'native'
+                  does not exist on type 'unknown'... Remove this comment to see
+                  the full error message
+                  {LANGUAGES.get(locale.toLowerCase())?.native} ( //
+                  @ts-expect-error ts-migrate(2339) FIXME: Property 'English'
+                  does not exist on type 'unknown... Remove this comment to see
+                  the full error message
                   {LANGUAGES.get(locale.toLowerCase())?.English})
                 </i>
               ) : (
@@ -46,13 +55,20 @@ export default function SiteSearchForm() {
                     page: undefined,
                   })}`}
                 >
-                  {LANGUAGES.get(locale.toLowerCase())?.native} (
+                  // @ts-expect-error ts-migrate(2339) FIXME: Property 'native'
+                  does not exist on type 'unknown'... Remove this comment to see
+                  the full error message
+                  {LANGUAGES.get(locale.toLowerCase())?.native} ( //
+                  @ts-expect-error ts-migrate(2339) FIXME: Property 'English'
+                  does not exist on type 'unknown... Remove this comment to see
+                  the full error message
                   {LANGUAGES.get(locale.toLowerCase())?.English})
                 </Link>
               )}
             </li>
             <li>
               {queryLocales.length && equalLocales(queryLocales, ["en-us"]) ? (
+                // @ts-expect-error ts-migrate(2339) FIXME: Property 'native' does not exist on type 'unknown'... Remove this comment to see the full error message
                 <i>{LANGUAGES.get("en-us")?.native}</i>
               ) : (
                 <Link
@@ -61,6 +77,9 @@ export default function SiteSearchForm() {
                     page: undefined,
                   })}`}
                 >
+                  // @ts-expect-error ts-migrate(2339) FIXME: Property 'native'
+                  does not exist on type 'unknown'... Remove this comment to see
+                  the full error message
                   {LANGUAGES.get("en-us")?.native}
                 </Link>
               )}

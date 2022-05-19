@@ -1,7 +1,9 @@
 /**
  * @prettier
  */
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'got'.
 const got = require("got");
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'util'.
 const util = require("./util.js");
 
 // Module level caching for repeat calls to fetchWebExtExamples().

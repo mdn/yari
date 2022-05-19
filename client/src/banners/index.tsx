@@ -12,6 +12,7 @@ import "./banner.scss";
 
 import { PLUS_LAUNCH_ANNOUNCEMENT } from "./ids";
 
+// @ts-expect-error ts-migrate(1323) FIXME: Dynamic imports are only supported when the '--mod... Remove this comment to see the full error message
 const ActiveBanner = React.lazy(() => import("./active-banner"));
 
 export const hasActiveBanners = true;

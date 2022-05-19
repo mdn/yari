@@ -1,3 +1,4 @@
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'devMiddlew... Remove this comment to see the full error message
 const devMiddlewares = [];
 
 if (process.env.NODE_ENV === "development") {
@@ -22,6 +23,7 @@ if (process.env.NODE_ENV === "development") {
   devMiddlewares.push(
     webpackDevMiddleware(compiler, {
       noInfo: true,
+      // @ts-expect-error ts-migrate(2339) FIXME: Property 'output' does not exist on type '{ entry:... Remove this comment to see the full error message
       publicPath: webpackConfig.output.publicPath,
     })
   );

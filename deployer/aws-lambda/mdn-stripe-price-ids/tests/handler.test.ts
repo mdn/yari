@@ -1,7 +1,9 @@
 const handler = require("../index");
+// @ts-expect-error ts-migrate(2304) FIXME: Cannot find name 'jest'.
 jest.mock("../plans-stage-lookup.json", () => {
   return require("./__mocks__/plans-stage-lookup-test.json");
 });
+// @ts-expect-error ts-migrate(2304) FIXME: Cannot find name 'jest'.
 jest.mock("../plans-prod-lookup.json", () => {
   return require("./__mocks__/plans-prod-lookup-test.json");
 });
@@ -17,6 +19,7 @@ test("Returns Italian language with Euro price_id for Italian in Germany", async
     "ITALIAN_4",
   ];
 
+  // @ts-expect-error ts-migrate(2339) FIXME: Property 'id' does not exist on type 'unknown'.
   expect(Object.values(bodyJson.plans).map((val) => val.id)).toEqual(
     expect.arrayContaining(expectedPriceArray)
   );
@@ -37,6 +40,7 @@ test("(PROD) Returns Italian language with Euro price_id for Italian in Germany"
     "PROD_ITALIAN_4",
   ];
 
+  // @ts-expect-error ts-migrate(2339) FIXME: Property 'id' does not exist on type 'unknown'.
   expect(Object.values(bodyJson.plans).map((val) => val.id)).toEqual(
     expect.arrayContaining(expectedPriceArray)
   );
@@ -54,6 +58,7 @@ test("Returns French language with CHF price_id for Swiss person in Switzerland"
     "SWISS_FRENCH_4",
   ];
 
+  // @ts-expect-error ts-migrate(2339) FIXME: Property 'id' does not exist on type 'unknown'.
   expect(Object.values(bodyJson.plans).map((val) => val.id)).toEqual(
     expect.arrayContaining(expectedPriceArray)
   );
@@ -71,6 +76,7 @@ test("Returns English (default) language with USD price_id for German person in 
     "USD_ENGLISH_4",
   ];
 
+  // @ts-expect-error ts-migrate(2339) FIXME: Property 'id' does not exist on type 'unknown'.
   expect(Object.values(bodyJson.plans).map((val) => val.id)).toEqual(
     expect.arrayContaining(expectedPriceArray)
   );

@@ -1,4 +1,6 @@
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'test'.
 const { test, expect } = require("@playwright/test");
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'got'.
 const got = require("got");
 
 const DEV_BASE_URL =
@@ -11,6 +13,7 @@ function devURL(pathname = "/") {
 const SERVER_BASE_URL =
   process.env.DEVELOPING_SERVER_BASE_URL || "http://localhost:5042";
 
+// @ts-expect-error ts-migrate(2393) FIXME: Duplicate function implementation.
 function serverURL(pathname = "/") {
   return `${SERVER_BASE_URL}${pathname}`;
 }

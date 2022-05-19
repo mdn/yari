@@ -1,8 +1,11 @@
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'path'.
 const path = require("path");
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'commitHash... Remove this comment to see the full error message
 const commitHash = require("child_process")
   .execSync("git rev-parse --short HEAD")
   .toString()
   .trim();
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'webpack'.
 const webpack = require("webpack");
 
 const dirname = __dirname;

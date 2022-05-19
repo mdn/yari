@@ -2,6 +2,7 @@
  * @prettier
  */
 
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'assert'.
 const { assert, itMacro, describeMacro } = require("./utils");
 
 const js_ref_slug = "Web/JavaScript/Reference/";
@@ -21,6 +22,7 @@ describeMacro("jsxref", function () {
     const glob_url = `${js_ref_url}Global_Objects/${partial_slug}`;
     const expected = `<a href="${glob_url}"><code>${name}</code></a>`;
 
+    // @ts-expect-error ts-migrate(2304) FIXME: Cannot find name 'jest'.
     macro.ctx.info.getPageByURL = jest.fn((url) => {
       if (url === glob_url) {
         return {
@@ -45,6 +47,7 @@ describeMacro("jsxref", function () {
     const glob_url = `${js_ref_url}Global_Objects/${partial_slug}`;
     const expected = `<a href="${glob_url}"><code>${name}</code></a>`;
 
+    // @ts-expect-error ts-migrate(2304) FIXME: Cannot find name 'jest'.
     macro.ctx.info.getPageByURL = jest.fn((url) => {
       if (url === glob_url) {
         return {
@@ -70,6 +73,7 @@ describeMacro("jsxref", function () {
     const glob_url = `${js_ref_url}Global_Objects/${partial_slug}`;
     const expected = `<a href="${glob_url}"><code>${name}</code></a>`;
 
+    // @ts-expect-error ts-migrate(2304) FIXME: Cannot find name 'jest'.
     macro.ctx.info.getPageByURL = jest.fn((url) => {
       if (url === glob_url) {
         return {
@@ -95,6 +99,7 @@ describeMacro("jsxref", function () {
     const glob_url = `${js_ref_url}Global_Objects/${partial_slug}`;
     const expected = `<a href="${ref_url}"><code>${name}</code></a>`;
 
+    // @ts-expect-error ts-migrate(2304) FIXME: Cannot find name 'jest'.
     macro.ctx.info.getPageByURL = jest.fn((url) => {
       if (url === ref_url) {
         return {
@@ -121,6 +126,7 @@ describeMacro("jsxref", function () {
     const glob_url = `${js_ref_url}Global_Objects/${partial_slug}`;
     const expected = `<a href="${glob_url}${anchor}"><code>${name}</code></a>`;
 
+    // @ts-expect-error ts-migrate(2304) FIXME: Cannot find name 'jest'.
     macro.ctx.info.getPageByURL = jest.fn((url) => {
       url = getPathname(url);
       if (url === glob_url) {
@@ -161,6 +167,7 @@ describeMacro("jsxref", function () {
 
       macro.ctx.env.locale = "ru";
 
+      // @ts-expect-error ts-migrate(2304) FIXME: Cannot find name 'jest'.
       macro.ctx.info.getPageByURL = jest.fn((url) => {
         url = getPathname(url);
         if (url === glob_url) {
@@ -193,6 +200,7 @@ describeMacro("jsxref", function () {
       const glob_url = `${js_ref_url}Global_Objects/${partial_slug}`;
       const expected = `<a href="${ref_url}">${name}</a>`;
 
+      // @ts-expect-error ts-migrate(2304) FIXME: Cannot find name 'jest'.
       macro.ctx.info.getPageByURL = jest.fn((url) => {
         if (url === ref_url) {
           return {
@@ -222,6 +230,7 @@ describeMacro("jsxref", function () {
     const glob_url = `${js_ref_url}Global_Objects/${partial_slug}`;
     const expected = `<a href="${glob_url}"><code>${name}</code></a>`;
 
+    // @ts-expect-error ts-migrate(2304) FIXME: Cannot find name 'jest'.
     macro.ctx.info.getPageByURL = jest.fn((url) => {
       if (url === glob_url) {
         return {

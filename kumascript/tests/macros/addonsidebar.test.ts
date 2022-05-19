@@ -1,12 +1,17 @@
 /**
  * @prettier
  */
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'JSDOM'.
 const { JSDOM } = require("jsdom");
 
 const {
+  // @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'beforeEach... Remove this comment to see the full error message
   beforeEachMacro,
+  // @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'describeMa... Remove this comment to see the full error message
   describeMacro,
+  // @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'itMacro'.
   itMacro,
+  // @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'lintHTML'.
   lintHTML,
 } = require("./utils");
 
@@ -147,12 +152,14 @@ function checkSidebarResult(html, locale, isUnderWebExtAPI = false) {
 describeMacro("AddonSidebar", function () {
   beforeEachMacro(function (macro) {
     // Mock the call to template('WebExtAPISidebar', []).
+    // @ts-expect-error ts-migrate(2304) FIXME: Cannot find name 'jest'.
     macro.ctx.template = jest.fn(() => {
       // This template will be tested on its own, so nothing needed here.
       return "";
     });
     // Mock calls to info.getChildren, which indirectly mocks the
     // call to wiki.tree within AddonSidebar.ejs.
+    // @ts-expect-error ts-migrate(2304) FIXME: Cannot find name 'jest'.
     macro.ctx.info.getChildren = jest.fn(getMockResultForGetChildren);
   });
 

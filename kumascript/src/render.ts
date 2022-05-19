@@ -40,8 +40,11 @@
  *
  * @prettier
  */
+// @ts-expect-error ts-migrate(6200) FIXME: Definitions of the following identifiers conflict ... Remove this comment to see the full error message
 const Parser = require("./parser.js");
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'Templates'... Remove this comment to see the full error message
 const Templates = require("./templates.js");
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'Environmen... Remove this comment to see the full error message
 const Environment = require("./environment.js");
 const {
   MacroInvocationError,
@@ -61,6 +64,7 @@ function normalizeMacroName(name) {
   return name.replace(/:/g, "-").toLowerCase();
 }
 
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'render'.
 async function render(
   source,
   pageEnvironment,
@@ -160,6 +164,7 @@ async function render(
 
     if (selectiveMode) {
       if (selectMacros.includes(macroName)) {
+        // @ts-expect-error ts-migrate(2367) FIXME: This condition will always return 'false' since th... Remove this comment to see the full error message
         if (selectiveMode === "remove") {
           continue;
         }

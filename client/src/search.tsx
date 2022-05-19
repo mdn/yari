@@ -1,11 +1,16 @@
+// @ts-expect-error ts-migrate(1259) FIXME: Module '"/Users/claas/github/mdn/yari/node_modules... Remove this comment to see the full error message
 import React, { useEffect, useMemo, useRef, useState } from "react";
+// @ts-expect-error ts-migrate(2792) FIXME: Cannot find module 'react-router-dom'. Did you mea... Remove this comment to see the full error message
 import { useNavigate, useParams } from "react-router-dom";
+// @ts-expect-error ts-migrate(2792) FIXME: Cannot find module 'downshift'. Did you mean to se... Remove this comment to see the full error message
 import { useCombobox } from "downshift";
+// @ts-expect-error ts-migrate(2792) FIXME: Cannot find module 'swr'. Did you mean to set the ... Remove this comment to see the full error message
 import useSWR from "swr";
 
 import { Doc, FuzzySearch } from "./fuzzy-search";
 import { preload, preloadSupported } from "./document/preloading";
 
+// @ts-expect-error ts-migrate(2792) FIXME: Cannot find module './ui/atoms/button'. Did you me... Remove this comment to see the full error message
 import { Button } from "./ui/atoms/button";
 
 import { useLocale } from "./hooks";
@@ -538,6 +543,7 @@ function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
 class SearchErrorBoundary extends React.Component<{
   children?: React.ReactNode;
 }> {
+  props: any;
   state = { hasError: false };
 
   static getDerivedStateFromError(error: Error) {
@@ -555,6 +561,7 @@ class SearchErrorBoundary extends React.Component<{
 
 export default function SearchNavigateWidget(props) {
   return (
+    // @ts-expect-error ts-migrate(2786) FIXME: 'SearchErrorBoundary' cannot be used as a JSX comp... Remove this comment to see the full error message
     <SearchErrorBoundary>
       <InnerSearchNavigateWidget {...props} />
     </SearchErrorBoundary>

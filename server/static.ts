@@ -1,13 +1,20 @@
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'path'.
 const path = require("path");
 
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'express'.
 const express = require("express");
 const compression = require("compression");
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'cookiePars... Remove this comment to see the full error message
 const cookieParser = require("cookie-parser");
 
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'staticMidd... Remove this comment to see the full error message
 const { staticMiddlewares } = require("./middlewares");
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'resolveFun... Remove this comment to see the full error message
 const { resolveFundamental } = require("../content");
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'STATIC_ROO... Remove this comment to see the full error message
 const { STATIC_ROOT } = require("./constants");
 
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'app'.
 const app = express();
 app.use(express.json());
 app.use(compression());
@@ -252,5 +259,6 @@ app.get("/*", async (req, res) => {
     .sendFile(path.join(STATIC_ROOT, "en-us", "_spas", "404.html"));
 });
 
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'PORT'.
 const PORT = parseInt(process.env.SERVER_PORT || "5042");
 app.listen(PORT, () => console.log(`Listening on port ${PORT}`));

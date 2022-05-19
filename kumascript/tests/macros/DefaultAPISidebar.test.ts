@@ -1,12 +1,17 @@
 /**
  * @prettier
  */
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'JSDOM'.
 const { JSDOM } = require("jsdom");
 
 const {
+  // @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'beforeEach... Remove this comment to see the full error message
   beforeEachMacro,
+  // @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'describeMa... Remove this comment to see the full error message
   describeMacro,
+  // @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'itMacro'.
   itMacro,
+  // @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'lintHTML'.
   lintHTML,
 } = require("./utils");
 
@@ -15,7 +20,9 @@ const dirname = __dirname;
 /**
  * Load all the fixtures.
  */
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'fs'.
 const fs = require("fs");
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'path'.
 const path = require("path");
 const pagesFixturePath = path.resolve(
   dirname,
@@ -26,17 +33,21 @@ const subpagesJSON = [
   pagesJSON["/en-US/docs/Web/API/TestInterface_API/MyGuidePage1"],
   pagesJSON["/en-US/docs/Web/API/TestInterface_API/MyGuidePage2"],
 ];
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'commonl10n... Remove this comment to see the full error message
 const commonl10nFixturePath = path.resolve(
   dirname,
   "fixtures/defaultapisidebar/commonl10n.json"
 );
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'commonl10n... Remove this comment to see the full error message
 const commonl10nFixture = JSON.parse(
   fs.readFileSync(commonl10nFixturePath, "utf8")
 );
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'groupDataF... Remove this comment to see the full error message
 const groupDataFixturePath = path.resolve(
   dirname,
   "fixtures/defaultapisidebar/groupdata.json"
 );
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'groupDataF... Remove this comment to see the full error message
 const groupDataFixture = JSON.parse(
   fs.readFileSync(groupDataFixturePath, "utf8")
 );
@@ -251,6 +262,7 @@ function checkSubList(name, config, details, checker, next) {
  * config.expected contains the expected results, and we use other bits
  * of config, most notably locale.
  */
+// @ts-expect-error ts-migrate(2393) FIXME: Duplicate function implementation.
 function checkResult(html, config) {
   // Lint the HTML
   expect(lintHTML(html)).toBeFalsy();
@@ -284,6 +296,7 @@ function checkResult(html, config) {
  * Call the macro for each of three locales,
  * using the given config, and check the result.
  */
+// @ts-expect-error ts-migrate(2393) FIXME: Duplicate function implementation.
 function testMacro(config) {
   for (const locale of ["en-US", "fr", "ja"]) {
     const testName = `${config.name}; locale: ${locale}`;
@@ -291,6 +304,7 @@ function testMacro(config) {
       config.locale = locale;
       macro.ctx.env.locale = locale;
       // Mock calls to MDN.subpagesExpand
+      // @ts-expect-error ts-migrate(2304) FIXME: Cannot find name 'jest'.
       macro.ctx.page.subpagesExpand = jest.fn(() => {
         return config.subpages;
       });
@@ -308,6 +322,7 @@ describeMacro("DefaultAPISidebar", function () {
     // env.slug only has to be truthy
     macro.ctx.env.slug = "not undefined";
     // Mock calls to getJSONData()
+    // @ts-expect-error ts-migrate(2304) FIXME: Cannot find name 'jest'.
     macro.ctx.web.getJSONData = jest.fn((name) => {
       if (name === "GroupData") {
         return groupDataFixture;
@@ -318,6 +333,7 @@ describeMacro("DefaultAPISidebar", function () {
       throw new Error(`Unimplemented mock fixture ${name}`);
     });
     // Mock calls to wiki.getPage()
+    // @ts-expect-error ts-migrate(2304) FIXME: Cannot find name 'jest'.
     macro.ctx.wiki.getPage = jest.fn(async (url) => {
       return pagesJSON[url];
     });

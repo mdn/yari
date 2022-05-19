@@ -1,5 +1,7 @@
 import { Document } from "./index";
+// @ts-expect-error ts-migrate(2792) FIXME: Cannot find module 'react-router-dom'. Did you mea... Remove this comment to see the full error message
 import { Route, Routes, MemoryRouter } from "react-router-dom";
+// @ts-expect-error ts-migrate(1259) FIXME: Module '"/Users/claas/github/mdn/yari/node_modules... Remove this comment to see the full error message
 import React from "react";
 const { render, waitFor } = require("@testing-library/react");
 
@@ -40,8 +42,10 @@ const sampleDocumentState = Object.freeze({
   }),
 });
 
+// @ts-expect-error ts-migrate(2582) FIXME: Cannot find name 'describe'. Do you need to instal... Remove this comment to see the full error message
 describe("test viewing a simple document", () => {
   test("render document with props should not crash", async () => {
+    // @ts-expect-error ts-migrate(2304) FIXME: Cannot find name 'jest'.
     const xhrSpy = jest.spyOn(global, "fetch");
 
     const { getByText, getAllByText } = render(
@@ -64,6 +68,7 @@ describe("test viewing a simple document", () => {
 
   test("render document without props should not crash", async () => {
     // Mock Fetch API
+    // @ts-expect-error ts-migrate(2304) FIXME: Cannot find name 'jest'.
     const xhrSpy = jest.spyOn(global, "fetch").mockImplementation(() =>
       Promise.resolve({
         status: 200,

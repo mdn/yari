@@ -8,11 +8,15 @@
  * with any of the files there.
  */
 
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'fs'.
 const fs = require("fs");
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'fse'.
 const fse = require("fs-extra");
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'path'.
 const path = require("path");
 const { execSync } = require("child_process");
 
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'tempy'.
 const tempy = require("tempy");
 
 const CONTENT_DIR = path.resolve(path.join("testing", "content"));
@@ -32,6 +36,7 @@ function* walker(root) {
   }
 }
 
+// @ts-expect-error ts-migrate(2582) FIXME: Cannot find name 'describe'. Do you need to instal... Remove this comment to see the full error message
 describe("fixing flaws", () => {
   const pattern = path.join("web", "fixable_flaws");
   const baseDir = path.resolve(".");
@@ -58,6 +63,7 @@ describe("fixing flaws", () => {
     return changed;
   }
 
+  // @ts-expect-error ts-migrate(2304) FIXME: Cannot find name 'beforeEach'.
   beforeEach(() => {
     // Copy the whole content directory
     tempdir = tempy.directory();
@@ -68,6 +74,7 @@ describe("fixing flaws", () => {
     fse.copySync(BUILD_DIR, tempBuildDir);
   });
 
+  // @ts-expect-error ts-migrate(2304) FIXME: Cannot find name 'afterEach'.
   afterEach(() => {
     // Note! This isn't strictly needed since the OS will take care of
     // deleting things from the temp directory natively and we strictly
@@ -78,6 +85,7 @@ describe("fixing flaws", () => {
     fse.removeSync(tempdir);
   });
 
+  // @ts-expect-error ts-migrate(2582) FIXME: Cannot find name 'it'. Do you need to install type... Remove this comment to see the full error message
   it("can be run in dry-run mode", () => {
     const stdout = execSync("yarn build", {
       cwd: baseDir,
@@ -107,6 +115,7 @@ describe("fixing flaws", () => {
     expect(dryrunFiles.length).toBe(0);
   });
 
+  // @ts-expect-error ts-migrate(2582) FIXME: Cannot find name 'it'. Do you need to install type... Remove this comment to see the full error message
   it("can actually change the files", () => {
     const stdout = execSync("yarn build", {
       cwd: baseDir,

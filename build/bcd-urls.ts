@@ -1,4 +1,6 @@
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'Document'.
 const { Document, Redirect } = require("../content");
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'FLAW_LEVEL... Remove this comment to see the full error message
 const { FLAW_LEVELS } = require("./constants");
 /**
  * Loop over, and mutate, all 'browser_compatibility' sections.
@@ -9,6 +11,7 @@ const { FLAW_LEVELS } = require("./constants");
  * Also, if enabled, check all of these inner `mdn_url` for flaws.
  *
  */
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'normalizeB... Remove this comment to see the full error message
 function normalizeBCDURLs(doc, options) {
   const checkLinks =
     options.flawLevels.get("bad_bcd_links") !== FLAW_LEVELS.IGNORE;
@@ -66,6 +69,7 @@ function normalizeBCDURLs(doc, options) {
       // so mdn_url is accessible at the root. If the block has a key for
       // `__compat` it is not the first block, and the information is nested
       // under `__compat`.
+      // @ts-expect-error ts-migrate(2339) FIXME: Property '__compat' does not exist on type 'unknow... Remove this comment to see the full error message
       const block = data.__compat ? data.__compat : data;
       if (!block.mdn_url) {
         continue;
@@ -81,6 +85,7 @@ function normalizeBCDURLs(doc, options) {
       // Now we need to scrutinize if that's a url we can fully
       // recognize. (But only if it's a relative link)
       const urlLC = url.toLowerCase();
+      // @ts-expect-error ts-migrate(2339) FIXME: Property 'findByURL' does not exist on type '{ new... Remove this comment to see the full error message
       const found = Document.findByURL(urlLC);
       if (found) {
         continue;
@@ -97,6 +102,7 @@ function normalizeBCDURLs(doc, options) {
         // For example, there might be a redirect but where it
         // goes to is not in this.allTitles.
         // This can happen if it's a "fundamental redirect" for example.
+        // @ts-expect-error ts-migrate(2339) FIXME: Property 'findByURL' does not exist on type '{ new... Remove this comment to see the full error message
         const finalDocument = Document.findByURL(resolved);
         const suggestion = finalDocument ? finalDocument.url : null;
         addBadBCDLinkFlaw(query, key, url, suggestion);
@@ -118,6 +124,7 @@ function normalizeBCDURLs(doc, options) {
  * for each BCD section in the doc and mutate it from the doc itself.
  * @param {Doc} doc
  */
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'extractBCD... Remove this comment to see the full error message
 function extractBCDData(doc) {
   const data = [];
   let nextId = 0;

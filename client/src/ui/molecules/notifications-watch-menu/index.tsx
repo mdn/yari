@@ -1,12 +1,17 @@
+// @ts-expect-error ts-migrate(1259) FIXME: Module '"/Users/claas/github/mdn/yari/node_modules... Remove this comment to see the full error message
 import React from "react";
 
+// @ts-expect-error ts-migrate(2792) FIXME: Cannot find module '../../atoms/button'. Did you m... Remove this comment to see the full error message
 import { Button } from "../../atoms/button";
 import { NotificationsWatchMenuStart } from "./menu-start";
 
 import "./index.scss";
+// @ts-expect-error ts-migrate(2792) FIXME: Cannot find module 'swr'. Did you mean to set the ... Remove this comment to see the full error message
 import useSWR from "swr";
 import { useCSRFMiddlewareToken, useOnlineStatus } from "../../../hooks";
+// @ts-expect-error ts-migrate(2792) FIXME: Cannot find module '../dropdown'. Did you mean to ... Remove this comment to see the full error message
 import { DropdownMenu, DropdownMenuWrapper } from "../dropdown";
+// @ts-expect-error ts-migrate(2792) FIXME: Cannot find module '../manage-upgrade-dialog'. Did... Remove this comment to see the full error message
 import { ManageOrUpgradeDialogNotifications } from "../manage-upgrade-dialog";
 import { useUIStatus } from "../../../ui-context";
 

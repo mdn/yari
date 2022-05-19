@@ -1,7 +1,9 @@
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'all'.
 const { all, wrap } = require("./mdast-util-to-hast-utils");
 
 const DEFINITION_PREFIX = ": ";
 
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'isDefiniti... Remove this comment to see the full error message
 function isDefinitionList(node) {
   return (
     !node.ordered &&
@@ -28,6 +30,7 @@ function isDefinitionList(node) {
   );
 }
 
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'asDefiniti... Remove this comment to see the full error message
 function asDefinitionList(h, node) {
   const children = node.children.flatMap((listItem) => {
     const terms = listItem.children.slice(0, -1);

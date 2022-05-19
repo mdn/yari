@@ -1,4 +1,6 @@
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'cheerio'.
 const cheerio = require("cheerio");
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'packageBCD... Remove this comment to see the full error message
 const { packageBCD } = require("./resolve-bcd");
 const specs = require("browser-specs");
 const web = require("../kumascript/src/api/web.js");
@@ -21,6 +23,7 @@ const web = require("../kumascript/src/api/web.js");
  *
  * ...give or take some whitespace.
  */
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'extractSid... Remove this comment to see the full error message
 function extractSidebar($) {
   const search = $("#Quick_links");
   if (!search.length) {
@@ -31,6 +34,7 @@ function extractSidebar($) {
   return sidebarHtml;
 }
 
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'extractSec... Remove this comment to see the full error message
 function extractSections($) {
   const flaws = [];
   const sections = [];
@@ -402,6 +406,7 @@ function _addSingleSpecialSection($) {
     const browserReleaseData = new Map();
     for (const [name, browser] of Object.entries(browsers)) {
       const releaseData = new Map();
+      // @ts-expect-error ts-migrate(2339) FIXME: Property 'releases' does not exist on type 'unknow... Remove this comment to see the full error message
       for (const [version, data] of Object.entries(browser.releases || [])) {
         if (data) {
           releaseData.set(version, data);
@@ -423,6 +428,7 @@ function _addSingleSpecialSection($) {
         if (!Array.isArray(info)) {
           info = [info];
         }
+        // @ts-expect-error ts-migrate(2488) FIXME: Type 'unknown' must have a '[Symbol.iterator]()' m... Remove this comment to see the full error message
         for (const infoEntry of info) {
           const added =
             typeof infoEntry.version_added === "string" &&
@@ -437,6 +443,7 @@ function _addSingleSpecialSection($) {
             }
           }
         }
+        // @ts-expect-error ts-migrate(2339) FIXME: Property 'sort' does not exist on type 'unknown'.
         info.sort((a, b) =>
           _compareVersions(_getFirstVersion(b), _getFirstVersion(a))
         );
@@ -540,10 +547,14 @@ function _addSingleSpecialSection($) {
       // If 'data' is non-null, that means we have data for a BCD feature
       // that we can extract spec URLs from.
       for (const [key, compat] of Object.entries(data)) {
+        // @ts-expect-error ts-migrate(2339) FIXME: Property 'spec_url' does not exist on type 'unknow... Remove this comment to see the full error message
         if (key === "__compat" && compat.spec_url) {
+          // @ts-expect-error ts-migrate(2339) FIXME: Property 'spec_url' does not exist on type 'unknow... Remove this comment to see the full error message
           if (Array.isArray(compat.spec_url)) {
+            // @ts-expect-error ts-migrate(2339) FIXME: Property 'spec_url' does not exist on type 'unknow... Remove this comment to see the full error message
             specURLs = compat.spec_url;
           } else {
+            // @ts-expect-error ts-migrate(2339) FIXME: Property 'spec_url' does not exist on type 'unknow... Remove this comment to see the full error message
             specURLs.push(compat.spec_url);
           }
         }
@@ -670,6 +681,7 @@ function _addSectionProse($) {
   // Only include it if it's useful. It's an optional property and it's
   // potentially a waste of space to include it if it's not different.
   if (titleAsText && titleAsText !== title) {
+    // @ts-expect-error ts-migrate(2339) FIXME: Property 'titleAsText' does not exist on type '{ i... Remove this comment to see the full error message
     value.titleAsText = titleAsText;
   }
 
@@ -688,6 +700,7 @@ function _addSectionProse($) {
  * Given an array of sections, return a plain text
  * string of a summary. No HTML or Kumascript allowed.
  */
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'extractSum... Remove this comment to see the full error message
 function extractSummary(sections) {
   let summary = ""; // default and fallback is an empty string.
 

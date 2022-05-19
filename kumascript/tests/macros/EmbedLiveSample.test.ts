@@ -1,6 +1,7 @@
 /**
  * @prettier
  */
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'assert'.
 const { assert, itMacro, describeMacro, beforeEachMacro } = require("./utils");
 
 // This needs to match what the equivalent is inside the EmbedLiveSample.ejs file.
@@ -12,6 +13,7 @@ describeMacro("EmbedLiveSample", function () {
     macro.ctx.env.live_samples = {
       base_url: "https://mdn.mozillademos.org",
     };
+    // @ts-expect-error ts-migrate(2304) FIXME: Cannot find name 'jest'.
     macro.ctx.info.hasPage = jest.fn(() => true);
   });
   itMacro("One argument: ID", function (macro) {
@@ -250,7 +252,9 @@ describeMacro("EmbedLiveSample", function () {
     'Five arguments: ID, "", "", "", other non-existent slug',
     async function (macro) {
       macro.ctx.env.url = "/en-US/docs/Web/Events/focus";
+      // @ts-expect-error ts-migrate(2304) FIXME: Cannot find name 'jest'.
       macro.ctx.info.cleanURL = jest.fn((url) => url.toLowerCase());
+      // @ts-expect-error ts-migrate(2304) FIXME: Cannot find name 'jest'.
       macro.ctx.info.hasPage = jest.fn(() => false);
       await expect(
         macro.call("Event delegation", "", "", "", "Web/Events/blur")

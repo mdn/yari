@@ -1,4 +1,5 @@
 import { WatchMenuItem } from "./atoms/menu-item";
+// @ts-expect-error ts-migrate(2792) FIXME: Cannot find module '../../atoms/icon'. Did you mea... Remove this comment to see the full error message
 import { Icon } from "../../atoms/icon";
 
 export function NotificationsWatchMenuStart({

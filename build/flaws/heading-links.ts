@@ -1,3 +1,4 @@
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'findMatche... Remove this comment to see the full error message
 const { findMatchesInText } = require("../matches-in-text");
 
 // You're not allowed to have `<a>` elements inside `<h2>` or `<h3>` elements
@@ -5,6 +6,7 @@ const { findMatchesInText } = require("../matches-in-text");
 // I.e. a source of `<h2 id="foo">Foo</h2>` renders out as:
 // `<h2 id="foo"><a href="#foo">Foo</a></h2>` in the final HTML. That makes
 // it easy to (perma)link to specific headings in the document.
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'getHeading... Remove this comment to see the full error message
 function getHeadingLinksFlaws(doc, $, { rawContent }) {
   const flaws = [];
 

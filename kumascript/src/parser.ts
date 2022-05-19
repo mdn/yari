@@ -223,10 +223,13 @@ function peg$parse(input, options) {
       } catch (e) {
         // Try to provide better diagnostics than
         // "Syntax error at line , column" using PEG's internal APIs.
+        // @ts-expect-error ts-migrate(2304) FIXME: Cannot find name 'computeErrorPosition'.
         var errorPosition = computeErrorPosition();
+        // @ts-expect-error ts-migrate(2304) FIXME: Cannot find name 'PEG'.
         throw new PEG.parser.SyntaxError(
           ["valid JSON object as the parameter of the preceding macro"],
           json_args.join(""),
+          // @ts-expect-error ts-migrate(2304) FIXME: Cannot find name 'offset'.
           offset,
           errorPosition.line,
           errorPosition.column
