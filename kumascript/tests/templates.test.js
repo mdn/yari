@@ -3,8 +3,12 @@
  */
 
 import Templates from "../src/templates.js";
+import EJS from "ejs";
 
 import path from "path";
+
+import { fileURLToPath } from "url";
+const dirname = fileURLToPath(new URL(".", import.meta.url));
 
 describe("Templates class", () => {
   it("has the expected methods", () => {
@@ -14,7 +18,7 @@ describe("Templates class", () => {
   });
 
   function dir(name) {
-    return path.resolve(__dirname, "fixtures", "templates", name);
+    return path.resolve(dirname, "fixtures", "templates", name);
   }
 
   it("throws on non-existent dir", () => {
@@ -81,7 +85,6 @@ describe("Templates class", () => {
       mode === "production" ? "only once" : "for each call"
     } in ${mode} mode`, async () => {
       process.env.NODE_ENV = mode;
-      const EJS = require("ejs");
       /**
        * Without `JSON.stringify(…)`, `\` in the file path would be treated
        * as part of an escape sequence (e.g.:
