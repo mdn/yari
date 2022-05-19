@@ -1,39 +1,39 @@
-const fs = require("fs");
-const path = require("path");
+import fs from "fs";
+import path from "path";
+import klawSync from "klaw-sync";
+import frontmatter from "front-matter";
+import program from "@caporal/core";
+import chalk from "chalk";
+import { prompt } from "inquirer";
+import openEditor from "open-editor";
+import open from "open";
+import { syncAllTranslatedContent } from "../build/sync-translated-content";
+import log from "loglevel";
+import cheerio from "cheerio";
+import { DEFAULT_LOCALE, VALID_LOCALES } from "../libs/constants";
 
-const klawSync = require("klaw-sync");
-const frontmatter = require("front-matter");
-const program = require("@caporal/core").default;
-const chalk = require("chalk");
-const { prompt } = require("inquirer");
-const openEditor = require("open-editor");
-const open = require("open");
-const {
-  syncAllTranslatedContent,
-} = require("../build/sync-translated-content");
-const log = require("loglevel");
-const cheerio = require("cheerio");
-
-const { DEFAULT_LOCALE, VALID_LOCALES } = require("../libs/constants");
-const {
+import {
   CONTENT_ROOT,
   CONTENT_TRANSLATED_ROOT,
   Redirect,
   Document,
   buildURL,
   getRoot,
-} = require("../content");
-const { buildDocument, gatherGitHistory, buildSPAs } = require("../build");
-const {
+} from "../content";
+
+import { buildDocument, gatherGitHistory, buildSPAs } from "../build";
+
+import {
   ALWAYS_ALLOW_ROBOTS,
   BUILD_OUT_ROOT,
   GOOGLE_ANALYTICS_ACCOUNT,
   GOOGLE_ANALYTICS_DEBUG,
-} = require("../build/constants");
-const { runMakePopularitiesFile } = require("./popularities");
-const { runOptimizeClientBuild } = require("./optimize-client-build");
-const { runBuildRobotsTxt } = require("./build-robots-txt");
-const kumascript = require("../kumascript");
+} from "../build/constants";
+
+import { runMakePopularitiesFile } from "./popularities";
+import { runOptimizeClientBuild } from "./optimize-client-build";
+import { runBuildRobotsTxt } from "./build-robots-txt";
+import kumascript from "../kumascript";
 
 const PORT = parseInt(process.env.SERVER_PORT || "5042");
 
