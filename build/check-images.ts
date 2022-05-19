@@ -78,7 +78,7 @@ export function checkImageReferences(doc, $, options, { url, rawContent }) {
     // will be recognized as an external image (which is fixable).
     // Also any `<img src="/files/1234/foo.png">` should match.
     const absoluteURL = /^\/(@api\/deki\/|files\/\d+)/.test(src)
-      ? `https://mdn.mozillademos.org${src}`
+      ? new URL(`https://mdn.mozillademos.org${src}`)
       : new URL(src, baseURL);
 
     // NOTE: Checking for lacking 'alt' text is to be done as part
