@@ -58,7 +58,7 @@ function gatherPlatformsAndBrowsers(
     );
   }
 
-  //
+  // Filter WebExtension browsers in corresponding tables.
   if (category === "webextensions") {
     browsers = browsers.filter(
       (browser) => browserData[browser].accepts_webextensions
