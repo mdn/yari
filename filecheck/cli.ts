@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-const path = require("path");
+import path from "path";
 
 const program = require("@caporal/core").default;
 

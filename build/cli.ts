@@ -6,7 +6,7 @@ const zlib = require("zlib");
 const chalk = require("chalk");
 const cliProgress = require("cli-progress");
 const program = require("@caporal/core").default;
-const { prompt } = require("inquirer");
+import { prompt } from "inquirer";
 
 const { Document, slugToFolder, translationsOf } = require("../content");
 const { CONTENT_ROOT, CONTENT_TRANSLATED_ROOT } = require("../libs/env");
@@ -14,7 +14,7 @@ const { VALID_LOCALES } = require("../libs/constants");
 // eslint-disable-next-line node/no-missing-require
 const { renderHTML } = require("../ssr/dist/main");
 const options = require("./build-options");
-const { buildDocument, renderContributorsTxt } = require("./index");
+import { buildDocument, BuiltDocument, renderContributorsTxt } from ".";
 const SearchIndex = require("./search-index");
 const { BUILD_OUT_ROOT } = require("../libs/env");
 const { makeSitemapXML, makeSitemapIndexXML } = require("./sitemaps");

@@ -16,7 +16,7 @@ const {
   extractSidebar,
   extractSummary,
 } = require("./document-extractor");
-export const SearchIndex = require("./search-index");
+export { default as SearchIndex } from "./search-index";
 const { addBreadcrumbData } = require("./document-utils");
 const { fixFixableFlaws, injectFlaws, injectSectionFlaws } = require("./flaws");
 const { normalizeBCDURLs, extractBCDData } = require("./bcd-urls");
