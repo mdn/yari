@@ -1,7 +1,7 @@
-const util = require("./utils");
-const m2h = require("./m2h");
+import util from "./utils";
+import m2h from "./m2h";
 
-module.exports = {
+export default {
   ...util,
   ...m2h,
 };
