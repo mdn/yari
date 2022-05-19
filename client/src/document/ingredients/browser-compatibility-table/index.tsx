@@ -47,19 +47,28 @@ function gatherPlatformsAndBrowsers(
     platforms.push("server");
   }
 
-  const browsers = new Set(
-    Object.keys(browserData).filter(
-      (browser) =>
-        platforms.includes(browserData[browser].type) &&
-        (category !== "webextensions" ||
-          browserData[browser].accepts_webextensions)
-    ) as bcd.BrowserNames[]
-  );
+  let browsers: bcd.BrowserNames[] = [];
+
+  // Add browsers in platform order to align table cells
+  for (const platform of platforms) {
+    browsers.push(
+      ...(Object.keys(browserData).filter(
+        (browser) => browserData[browser].type === platform
+      ) as bcd.BrowserNames[])
+    );
+  }
+
+  // Filter WebExtension browsers in corresponding tables.
+  if (category === "webextensions") {
+    browsers = browsers.filter(
+      (browser) => browserData[browser].accepts_webextensions
+    );
+  }
 
   // If there is no Node.js data for a category outside of "javascript", don't
   // show it. It ended up in the browser list because there is data for Deno.
   if (category !== "javascript" && !hasNodeJSData) {
-    browsers.delete("nodejs");
+    browsers = browsers.filter((browser) => browser !== "nodejs");
   }
 
   return [platforms, [...browsers]];
