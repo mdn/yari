@@ -158,7 +158,7 @@ const cspToString = (csp) =>
 
 const CSP_VALUE = cspToString(CSP_DIRECTIVES);
 
-module.exports = {
+export default {
   ACTIVE_LOCALES,
   VALID_LOCALES,
   RETIRED_LOCALES,

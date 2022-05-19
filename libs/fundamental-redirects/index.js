@@ -1,9 +1,9 @@
-const {
+import {
   DEFAULT_LOCALE,
   VALID_LOCALES,
   LOCALE_ALIASES,
   RETIRED_LOCALES,
-} = require("../constants");
+} from "../constants";
 
 const startRe = /^\^?\/?/;
 const startTemplate = /^\//;
@@ -1276,6 +1276,6 @@ function resolveFundamental(path) {
   return {};
 }
 
-module.exports = {
+export default {
   resolveFundamental,
 };
