@@ -1,7 +1,7 @@
 import path from "path";
 
 import React from "react";
-import { StaticRouter } from "react-router-dom/server";
+import { StaticRouter } from "react-router-dom/server.js";
 
 import { App } from "../client/src/app.tsx";
 import render from "./render.js";
