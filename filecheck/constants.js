@@ -10,7 +10,7 @@ const VALID_MIME_TYPES = new Set([
 
 const MAX_COMPRESSION_DIFFERENCE_PERCENTAGE = 25; // percent
 
-module.exports = {
+export default {
   MAX_FILE_SIZE,
   VALID_MIME_TYPES,
   MAX_COMPRESSION_DIFFERENCE_PERCENTAGE,
