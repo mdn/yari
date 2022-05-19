@@ -1,12 +1,10 @@
-const path = require("path");
-
-const express = require("express");
-const compression = require("compression");
-const cookieParser = require("cookie-parser");
-
-const { staticMiddlewares } = require("./middlewares");
-const { resolveFundamental } = require("../content");
-const { STATIC_ROOT } = require("./constants");
+import path from "path";
+import express from "express";
+import compression from "compression";
+import cookieParser from "cookie-parser";
+import { staticMiddlewares } from "./middlewares";
+import { resolveFundamental } from "../content";
+import { STATIC_ROOT } from "./constants";
 
 const app = express();
 app.use(express.json());

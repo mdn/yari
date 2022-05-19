@@ -1,15 +1,13 @@
-const fs = require("fs");
-const path = require("path");
-
-const { fdir } = require("fdir");
-const fm = require("front-matter");
-
-const {
+import fs from "fs";
+import path from "path";
+import { fdir } from "fdir";
+import fm from "front-matter";
+import {
   CONTENT_ROOT,
   CONTENT_TRANSLATED_ROOT,
   VALID_LOCALES,
-} = require("../content");
-const { SearchIndex } = require("../build");
+} from "../content";
+import { SearchIndex } from "../build";
 
 function populateSearchIndex(searchIndex, localeLC) {
   const root = path.join(
@@ -66,6 +64,6 @@ async function searchIndexRoute(req, res) {
   res.json(searchIndex.getItems()[locale]);
 }
 
-module.exports = {
+export default {
   searchIndexRoute,
 };

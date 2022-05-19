@@ -1,22 +1,21 @@
-const fs = require("fs");
-const path = require("path");
-
-const { fdir } = require("fdir");
-
-const express = require("express");
+import fs from "fs";
+import path from "path";
+import { fdir } from "fdir";
+import express from "express";
 const router = express.Router();
 
-const {
+import {
   getPopularities,
   VALID_LOCALES,
   Document,
   Translation,
   CONTENT_ROOT,
   CONTENT_TRANSLATED_ROOT,
-} = require("../content");
-const { getLastCommitURL } = require("../build");
-const { ACTIVE_LOCALES, DEFAULT_LOCALE } = require("../libs/constants");
-const LANGUAGES_RAW = require("../content/languages.json");
+} from "../content";
+
+import { getLastCommitURL } from "../build";
+import { ACTIVE_LOCALES, DEFAULT_LOCALE } from "../libs/constants";
+import LANGUAGES_RAW from "../content/languages.json";
 
 // Module-level cache
 const allPopularityValues = [];
@@ -626,4 +625,4 @@ router.get("/dashboard", async (req, res) => {
   res.json(data);
 });
 
-module.exports = { router };
+export default { router };

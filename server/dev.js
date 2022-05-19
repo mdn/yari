@@ -34,6 +34,6 @@ if (process.env.NODE_ENV === "development") {
   );
 }
 
-module.exports = {
+export default {
   devMiddlewares,
 };

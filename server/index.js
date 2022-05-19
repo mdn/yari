@@ -1,44 +1,45 @@
-const fs = require("fs");
-const path = require("path");
-
-const chalk = require("chalk");
-const express = require("express");
-const send = require("send");
-const { createProxyMiddleware } = require("http-proxy-middleware");
-const cookieParser = require("cookie-parser");
-const openEditor = require("open-editor");
-
-const {
+import fs from "fs";
+import path from "path";
+import chalk from "chalk";
+import express from "express";
+import send from "send";
+import { createProxyMiddleware } from "http-proxy-middleware";
+import cookieParser from "cookie-parser";
+import openEditor from "open-editor";
+import {
   buildDocument,
   buildLiveSamplePageFromURL,
   renderContributorsTxt,
-} = require("../build");
-const { findDocumentTranslations } = require("../content/translations");
-const {
+} from "../build";
+import { findDocumentTranslations } from "../content/translations";
+import {
   CONTENT_ROOT,
   Document,
   Redirect,
   Image,
   CONTENT_TRANSLATED_ROOT,
-} = require("../content");
-// eslint-disable-next-line node/no-missing-require
-const { renderHTML } = require("../ssr/dist/main");
-const { CSP_VALUE, DEFAULT_LOCALE } = require("../libs/constants");
+} from "../content";
 
-const {
+// eslint-disable-next-line node/no-missing-require
+import { renderHTML } from "../ssr/dist/main";
+
+import { CSP_VALUE, DEFAULT_LOCALE } from "../libs/constants";
+
+import {
   STATIC_ROOT,
   PROXY_HOSTNAME,
   FAKE_V1_API,
   CONTENT_HOSTNAME,
   OFFLINE_CONTENT,
-} = require("./constants");
-const documentRouter = require("./document");
-const fakeV1APIRouter = require("./fake-v1-api");
-const { searchIndexRoute } = require("./search-index");
-const flawsRoute = require("./flaws");
-const { router: translationsRouter } = require("./translations");
-const { staticMiddlewares, originRequestMiddleware } = require("./middlewares");
-const { getRoot } = require("../content/utils");
+} from "./constants";
+
+import documentRouter from "./document";
+import fakeV1APIRouter from "./fake-v1-api";
+import { searchIndexRoute } from "./search-index";
+import flawsRoute from "./flaws";
+import { router as translationsRouter } from "./translations";
+import { staticMiddlewares, originRequestMiddleware } from "./middlewares";
+import { getRoot } from "../content/utils";
 
 async function buildDocumentFromURL(url) {
   const document = Document.findByURL(url);
