@@ -11,8 +11,12 @@ import { beforeEachMacro, describeMacro, itMacro, lintHTML } from "./utils";
 import fs from "fs";
 
 import path from "path";
+
+import { fileURLToPath } from "url";
+const dirname = fileURLToPath(new URL(".", import.meta.url));
+
 const groupDataFixturePath = path.resolve(
-  __dirname,
+  dirname,
   "fixtures/listgroups/groupdata.json"
 );
 const groupDataFixture = JSON.parse(

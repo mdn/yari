@@ -30,7 +30,10 @@ import fs from "fs";
 import path from "path";
 import ejs from "ejs";
 
-const DEFAULT_MACROS_DIRECTORY = path.normalize(`${__dirname}/../macros/`);
+import { fileURLToPath } from "url";
+const dirname = fileURLToPath(new URL(".", import.meta.url));
+
+const DEFAULT_MACROS_DIRECTORY = path.normalize(`${dirname}/../macros/`);
 
 class Templates {
   constructor(macroDirectory = DEFAULT_MACROS_DIRECTORY) {

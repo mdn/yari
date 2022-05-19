@@ -14,10 +14,13 @@ import {
   lintHTML,
 } from "./utils";
 
+import { fileURLToPath } from "url";
+const dirname = fileURLToPath(new URL(".", import.meta.url));
+
 // Load fixture data.
 const fixtureData = JSON.parse(
   fs.readFileSync(
-    path.resolve(__dirname, "fixtures", "documentData2.json"),
+    path.resolve(dirname, "fixtures", "documentData2.json"),
     "utf8"
   )
 );

@@ -7,7 +7,9 @@ import path from "path";
 
 // eslint-disable-next-line node/no-unpublished-import
 import dotenv from "dotenv";
-const root = path.join(__dirname, "..", "..", "..");
+import { fileURLToPath } from "url";
+const dirname = fileURLToPath(new URL(".", import.meta.url));
+const root = path.join(dirname, "..", "..", "..");
 dotenv.config({
   path: path.join(root, process.env.ENV_FILE || ".env"),
 });

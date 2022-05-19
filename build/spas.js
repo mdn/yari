@@ -20,6 +20,9 @@ import { splitSections } from "./utils";
 import cheerio from "cheerio";
 import { findByURL } from "../content/document";
 
+import { fileURLToPath } from "url";
+const dirname = fileURLToPath(new URL(".", import.meta.url));
+
 const FEATURED_ARTICLES = [
   "Web/CSS/color-scheme",
   "Web/HTML/Element/dialog",
@@ -251,7 +254,7 @@ async function buildSPAs(options) {
     }
   }
   await buildStaticPages(
-    path.join(__dirname, "../copy/plus"),
+    path.join(dirname, "../copy/plus"),
     "plus/docs",
     "MDN Plus"
   );

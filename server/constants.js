@@ -1,8 +1,11 @@
 import path from "path";
 import "dotenv";
 
+import { fileURLToPath } from "url";
+const dirname = fileURLToPath(new URL(".", import.meta.url));
+
 const STATIC_ROOT =
-  process.env.SERVER_STATIC_ROOT || path.join(__dirname, "../client/build");
+  process.env.SERVER_STATIC_ROOT || path.join(dirname, "../client/build");
 const PROXY_HOSTNAME =
   process.env.REACT_APP_KUMA_HOST || "developer.mozilla.org";
 const CONTENT_HOSTNAME = process.env.SERVER_CONTENT_HOST;

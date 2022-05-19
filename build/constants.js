@@ -1,12 +1,15 @@
 import path from "path";
 
 import dotenv from "dotenv";
+
+import { fileURLToPath } from "url";
+const dirname = fileURLToPath(new URL(".", import.meta.url));
 dotenv.config({
-  path: path.join(__dirname, "..", process.env.ENV_FILE || ".env"),
+  path: path.join(dirname, "..", process.env.ENV_FILE || ".env"),
 });
 
 const BUILD_OUT_ROOT =
-  process.env.BUILD_OUT_ROOT || path.join(__dirname, "..", "client", "build");
+  process.env.BUILD_OUT_ROOT || path.join(dirname, "..", "client", "build");
 
 const FLAW_LEVELS = Object.freeze({
   ERROR: "error",

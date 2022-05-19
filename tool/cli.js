@@ -35,6 +35,9 @@ import { runOptimizeClientBuild } from "./optimize-client-build";
 import { runBuildRobotsTxt } from "./build-robots-txt";
 import kumascript from "../kumascript";
 
+import { fileURLToPath } from "url";
+
+const dirname = fileURLToPath(new URL(".", import.meta.url));
 const PORT = parseInt(process.env.SERVER_PORT || "5042");
 
 // The Google Analytics pageviews CSV file parsed, sorted (most pageviews
@@ -614,7 +617,7 @@ program
     "Convert an AWS Athena log aggregation CSV into a popularities.json file"
   )
   .option("--outfile <path>", "output file", {
-    default: path.resolve(path.join(__dirname, "..", "popularities.json")),
+    default: path.resolve(path.join(dirname, "..", "popularities.json")),
   })
   .option("--max-uris <number>", "limit to top <number> entries", {
     default: MAX_GOOGLE_ANALYTICS_URIS,
@@ -689,10 +692,7 @@ program
       const { outfile, debug, account } = options;
       if (account) {
         const dntHelperCode = fs
-          .readFileSync(
-            path.join(__dirname, "mozilla.dnthelper.min.js"),
-            "utf-8"
-          )
+          .readFileSync(path.join(dirname, "mozilla.dnthelper.min.js"), "utf-8")
           .trim();
 
         const gaScriptURL = `https://www.google-analytics.com/${

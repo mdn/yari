@@ -14,11 +14,14 @@ import {
   MacroExecutionError,
 } from "../src/errors.js";
 
+import { fileURLToPath } from "url";
+const dirname = fileURLToPath(new URL(".", import.meta.url));
+
 const PAGE_ENV = { slug: "" };
 
 describe("render() function", () => {
   function fixture(name) {
-    return `${__dirname}/fixtures/render/${name}`;
+    return `${dirname}/fixtures/render/${name}`;
   }
   function get(name) {
     return fs.readFileSync(fixture(name), "utf8");

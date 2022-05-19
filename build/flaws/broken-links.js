@@ -6,6 +6,8 @@ import { Document, Redirect, Image } from "../../content";
 import { FLAW_LEVELS } from "../constants";
 import { findMatchesInText } from "../matches-in-text";
 import { DEFAULT_LOCALE, VALID_LOCALES } from "../../libs/constants";
+import { fileURLToPath } from "url";
+const dirname = fileURLToPath(new URL(".", import.meta.url));
 
 function findMatchesInMarkdown(rawContent, href) {
   const matches = [];
@@ -22,10 +24,7 @@ const _safeToHttpsDomains = new Map();
 function getSafeToHttpDomains() {
   if (!_safeToHttpsDomains.size) {
     const fileParsed = JSON.parse(
-      fs.readFileSync(
-        path.join(__dirname, "safe-to-https-domains.json"),
-        "utf-8"
-      )
+      fs.readFileSync(path.join(dirname, "safe-to-https-domains.json"), "utf-8")
     );
     Object.entries(fileParsed).forEach(([key, value]) =>
       _safeToHttpsDomains.set(key, value)

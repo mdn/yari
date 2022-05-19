@@ -7,6 +7,9 @@ import { HtmlValidate } from "html-validate";
 import Environment from "../../src/environment.js";
 import Templates from "../../src/templates.js";
 
+import { fileURLToPath } from "url";
+const dirname = fileURLToPath(new URL(".", import.meta.url));
+
 // When we were doing mocha testing, we used this.macro to hold this.
 // But Jest doesn't use the this object, so we just store the object here.
 let macro = null;
@@ -57,7 +60,7 @@ assert.sameMembers = (a1, a2) => {
 };
 
 function createMacroTestObject(macroName) {
-  const templates = new Templates(`${__dirname}/../../macros/`);
+  const templates = new Templates(`${dirname}/../../macros/`);
   const pageContext = {
     locale: "en-US",
     url: "",

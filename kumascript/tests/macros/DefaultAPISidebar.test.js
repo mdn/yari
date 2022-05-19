@@ -11,8 +11,12 @@ import { beforeEachMacro, describeMacro, itMacro, lintHTML } from "./utils";
 import fs from "fs";
 
 import path from "path";
+
+import { fileURLToPath } from "url";
+const dirname = fileURLToPath(new URL(".", import.meta.url));
+
 const pagesFixturePath = path.resolve(
-  __dirname,
+  dirname,
   "fixtures/defaultapisidebar/pages.json"
 );
 const pagesJSON = JSON.parse(fs.readFileSync(pagesFixturePath, "utf8"));
@@ -21,14 +25,14 @@ const subpagesJSON = [
   pagesJSON["/en-US/docs/Web/API/TestInterface_API/MyGuidePage2"],
 ];
 const commonl10nFixturePath = path.resolve(
-  __dirname,
+  dirname,
   "fixtures/defaultapisidebar/commonl10n.json"
 );
 const commonl10nFixture = JSON.parse(
   fs.readFileSync(commonl10nFixturePath, "utf8")
 );
 const groupDataFixturePath = path.resolve(
-  __dirname,
+  dirname,
   "fixtures/defaultapisidebar/groupdata.json"
 );
 const groupDataFixture = JSON.parse(

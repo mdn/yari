@@ -3,7 +3,10 @@ import fs from "fs";
 import path from "path";
 import jsdom from "jsdom";
 import extend from "extend";
-const fixture_dir = path.resolve(__dirname, "fixtures/compat");
+import { fileURLToPath } from "url";
+const dirname = fileURLToPath(new URL(".", import.meta.url));
+
+const fixture_dir = path.resolve(dirname, "fixtures/compat");
 
 const { JSDOM } = jsdom;
 

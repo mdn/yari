@@ -7,8 +7,10 @@ import {
 } from "../libs/constants";
 
 import dotenv from "dotenv";
+import { fileURLToPath } from "url";
+const dirname = fileURLToPath(new URL(".", import.meta.url));
 dotenv.config({
-  path: path.join(__dirname, "..", process.env.ENV_FILE || ".env"),
+  path: path.join(dirname, "..", process.env.ENV_FILE || ".env"),
 });
 
 const CONTENT_ROOT = correctContentPathFromEnv("CONTENT_ROOT");

@@ -1,12 +1,14 @@
 import path from "path";
 import nodeExternals from "webpack-node-externals";
 import webpack from "webpack";
+import { fileURLToPath } from "url";
+const dirname = fileURLToPath(new URL(".", import.meta.url));
 
 export default {
-  context: path.resolve(__dirname, "."),
+  context: path.resolve(dirname, "."),
   entry: "./index.js",
   output: {
-    path: path.resolve(__dirname, "dist"),
+    path: path.resolve(dirname, "dist"),
     filename: "[name].js",
     sourceMapFilename: "[name].js.map",
     libraryTarget: "commonjs2",
