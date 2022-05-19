@@ -24,6 +24,9 @@
  * @prettier
  */
 
+import { createRequire } from "module";
+const require = createRequire(import.meta.url);
+
 // The properties of this object will be globals in the macro
 // execution environment.
 const globalsPrototype = {

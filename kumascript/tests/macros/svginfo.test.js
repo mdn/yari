@@ -6,6 +6,9 @@ import path from "path";
 import cheerio from "cheerio";
 import { itMacro, describeMacro, beforeEachMacro } from "./utils";
 
+import { createRequire } from "module";
+const require = createRequire(import.meta.url);
+
 const CONTENT_ROOT = process.env.CONTENT_ROOT;
 if (!CONTENT_ROOT) {
   throw new Error("These tests assume you point to the real content root.");
