@@ -11,6 +11,8 @@ import Templates from "../src/templates.js";
 import { fileURLToPath } from "url";
 const dirname = fileURLToPath(new URL(".", import.meta.url));
 
+import.meta.jest.useFakeTimers();
+
 describe("macros/ directory", () => {
   describe("compile all macros", () => {
     const templates = new Templates(`${dirname}/../macros`);

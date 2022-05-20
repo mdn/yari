@@ -19,6 +19,8 @@ const dirname = fileURLToPath(new URL(".", import.meta.url));
 
 const PAGE_ENV = { slug: "" };
 
+import.meta.jest.useFakeTimers();
+
 describe("render() function", () => {
   function fixture(name) {
     return `${dirname}/fixtures/render/${name}`;

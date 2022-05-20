@@ -15,6 +15,8 @@ import {
   MacroExecutionError,
 } from "../src/errors.js";
 
+import.meta.jest.useFakeTimers();
+
 describe("testing the main render() function", () => {
   it("non-fatal errors in macros are returned by render()", async () => {
     info.cleanURL = jest.fn((url) => {

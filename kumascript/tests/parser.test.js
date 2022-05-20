@@ -4,6 +4,8 @@
 
 import Parser from "../src/parser.js";
 
+import.meta.jest.useFakeTimers();
+
 describe("Parser", function () {
   it("input with no macros", () => {
     const input = "<p>This is a test.\n<h1>Hello world!</h1>";

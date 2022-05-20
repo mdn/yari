@@ -10,6 +10,8 @@ import path from "path";
 import { fileURLToPath } from "url";
 const dirname = fileURLToPath(new URL(".", import.meta.url));
 
+import.meta.jest.useFakeTimers();
+
 describe("Templates class", () => {
   it("has the expected methods", () => {
     expect(typeof Templates).toBe("function");

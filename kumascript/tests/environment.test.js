@@ -143,6 +143,8 @@ const expectedFunctions = [
 
 const expectedAsync = ["wiki.page", "template"];
 
+import.meta.jest.useFakeTimers();
+
 describe("Environment class", () => {
   it.each(expectedObjects)("defines global object %s", (global) => {
     const environment = new Environment({});
