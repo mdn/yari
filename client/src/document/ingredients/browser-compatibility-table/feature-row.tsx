@@ -188,11 +188,11 @@ const CellText = React.memo(
 
       case "removed-partial":
         if (timeline) {
-          title = t('compatLabels.partial.title');
-          label = status.label || t('compatLabels.partial.label');
+          title = t("compatLabels.partial.title");
+          label = status.label || t("compatLabels.partial.label");
         } else {
-          title = t('compatLabels.no.title');
-          label = status.label || t('compatLabels.no.label');
+          title = t("compatLabels.no.title");
+          label = status.label || t("compatLabels.no.label");
         }
         break;
 
