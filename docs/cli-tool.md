@@ -5,7 +5,7 @@
 Run the CLI tool:
 
 ```sh
-yarn tool --help
+npm run tool --help
 ```
 
 ## Commands
@@ -51,7 +51,7 @@ Run basic validation for a document (only verifies the slug for now).
 ### preview
 
 Open a preview of a given slug in your browser. This depends on a running
-dev-server (`yarn start`).
+dev-server (`npm run start`).
 
 ### flaws
 

@@ -21,7 +21,7 @@ Lambda function if it contains the following:
     "main": "index.js",
     "license": "MPL-2.0",
     "scripts": {
-      "make-package": "yarn install && zip -r -X function.zip . -i index.js 'node_modules/*'"
+      "make-package": "npm install && zip -r -X function.zip . -i index.js 'node_modules/*'"
     },
     "dependencies": {
       "sanitize-filename": "^1.6.3"
@@ -49,7 +49,7 @@ will discover every folder that contains a Lambda function, create a deployment
 package (Zip file) for each one by running:
 
 ```sh
-yarn make-package
+npm run make-package
 ```
 
 and if the deployment package is different from what is already in AWS, it will
@@ -62,8 +62,8 @@ You can simulate what Lambda@Edge does, but on your laptop. To start it, run:
 ```sh
 cd aws-lambda
 cd content-origin-request
-yarn install
-yarn serve
+npm run install
+npm run serve
 ```
 
 This will start a server at <http://localhost:7000>. It's meant to work much the
@@ -78,13 +78,13 @@ But it's a great tool for end-to-end testing our redirect rules.
 
 ### An important caveat about `@yari-internals`
 
-The `yarn serve` server will automatically restart itself if a change is made to
-the `index.js` or the `server.js` code. But, if you make an edit to any of the
-`/libs/**/index.js` files (they're called `@yari-internal/...` from within the
-code), then the only way to get them to become the latest version is to run:
+The `npm run serve` server will automatically restart itself if a change is made
+to the `index.js` or the `server.js` code. But, if you make an edit to any of
+the `/libs/**/index.js` files (they're called `@yari-internal/...` from within
+the code), then the only way to get them to become the latest version is to run:
 
 ```sh
-yarn install --force
+npm install --force
 ```
 
 This is necessary because they're not versioned.

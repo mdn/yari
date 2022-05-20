@@ -6,10 +6,10 @@ For example the `404` page. These are rendered server-side but without a "doc".
 To build these you run:
 
 ```sh
-yarn tool spas
+npm run tool spas
 ```
 
-The SPAs are also built when running `yarn build:prepare` or `yarn start`.
+The SPAs are also built when running `npm run build:prepare` or `npm run start`.
 
 Below we describe each SPA and this is a work in progress.
 
