@@ -10,7 +10,7 @@ module.exports = function (app) {
   });
   app.use("/api", proxy);
   app.use("/users", proxy);
-  app.use("/_+(flaws|translations|open|document|traits)", proxy);
+  app.use("/_+(flaws|translations|open|document)", proxy);
   // E.g. search-index.json or index.json
   app.use("**/*.json", proxy);
   // This has to match what we do in server/index.js in the catchall handler

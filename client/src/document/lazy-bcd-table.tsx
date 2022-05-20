@@ -106,7 +106,7 @@ function LazyBrowserCompatibilityTableInner({ dataURL }: { dataURL: string }) {
   );
 }
 
-type ErrorBoundaryProps = {};
+type ErrorBoundaryProps = { children?: React.ReactNode };
 type ErrorBoundaryState = {
   error: Error | null;
 };

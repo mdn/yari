@@ -200,17 +200,24 @@ test.describe("Testing the CRUD apps", () => {
     test.skip(withCrud());
 
     await page.goto(devURL("/"));
+    await page.waitForSelector("#writers-homepage");
+
     expect(await page.title()).toContain("MDN Web Docs");
+
     expect(await page.isVisible("text=Writer's home page")).toBeTruthy();
     expect(await page.isVisible('a:has-text("Flaws Dashboard")')).toBeTruthy();
+    expect(await page.isVisible('a:has-text("Sitemap")')).toBeTruthy();
   });
 
   test("open the Flaws Dashboard", async ({ page }) => {
     test.skip(withCrud());
 
     await page.goto(devURL("/"));
+    await page.waitForSelector("#writers-homepage");
+
     await page.click('a:has-text("Flaws Dashboard")');
-    await page.waitForLoadState("networkidle");
+    await page.waitForSelector(".all-flaws");
+
     expect(
       await page.isVisible("text=Documents with flaws found (0)")
     ).toBeTruthy();
@@ -220,12 +227,17 @@ test.describe("Testing the CRUD apps", () => {
     test.skip(withCrud());
 
     await page.goto(devURL("/"));
+    await page.waitForSelector("#writers-homepage");
+
     expect(await page.isVisible("text=Writer's home page")).toBeTruthy();
     await page.click('a:has-text("Sitemap")');
-    await page.waitForLoadState("networkidle");
+    await page.waitForSelector('#sitemap:has-text("root")');
+
     expect(await page.isVisible('a:has-text("/Web")')).toBeTruthy();
     expect(await page.isVisible('a:has-text("/Learn")')).toBeTruthy();
+
     await page.click('a:has-text("/Glossary")');
+    await page.waitForSelector('a:has-text("Glossary/PNG")');
     expect(await page.isVisible('a:has-text("Glossary/PNG")')).toBeTruthy();
   });
 });

@@ -5,6 +5,11 @@
 // Parameters:
 //  $0 - Gecko version
 
+// Throw a MacroDeprecatedError flaw
+// Condition for removal: no more use in translated-content (May 2022: 12 occurrences)
+// 0 occurrences left in en-US
+mdn.deprecated();
+
 var lang = env.locale;
 var str = "Gecko " + $0 + " note";
 
