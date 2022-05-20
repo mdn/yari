@@ -1395,7 +1395,7 @@ test("img tags without 'src' should not crash", () => {
   );
   const jsonFile = path.join(builtFolder, "index.json");
   const { doc } = JSON.parse(fs.readFileSync(jsonFile));
-  expect(Object.keys(doc.flaws).length).toBe(0);
+  expect(doc.flaws).toEqual({});
 });
 
 test("/Web/Embeddable should have 3 valid live samples", () => {
@@ -1413,7 +1413,7 @@ test("/Web/Embeddable should have 3 valid live samples", () => {
 
   const jsonFile = path.join(builtFolder, "index.json");
   const { doc } = JSON.parse(fs.readFileSync(jsonFile));
-  expect(Object.keys(doc.flaws).length).toBe(0);
+  expect(doc.flaws).toEqual({});
 
   const builtFiles = fs.readdirSync(path.join(builtFolder));
   expect(
