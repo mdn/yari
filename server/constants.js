@@ -1,5 +1,4 @@
 const path = require("path");
-require("dotenv");
 
 const STATIC_ROOT =
   process.env.SERVER_STATIC_ROOT || path.join(__dirname, "../client/build");
