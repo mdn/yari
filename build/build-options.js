@@ -10,6 +10,7 @@ const {
   NO_PROGRESSBAR,
   FIX_FLAWS,
   FIX_FLAWS_DRY_RUN,
+  FIX_FLAWS_TYPES,
   FIX_FLAWS_VERBOSE,
 } = require("./constants");
 
@@ -22,6 +23,7 @@ const options = Object.freeze({
   noProgressbar: NO_PROGRESSBAR || FIX_FLAWS_DRY_RUN || FIX_FLAWS_VERBOSE,
   fixFlaws: FIX_FLAWS,
   fixFlawsDryRun: FIX_FLAWS_DRY_RUN,
+  fixFlawsTypes: FIX_FLAWS_TYPES,
   fixFlawsVerbose: FIX_FLAWS_VERBOSE,
 });
 
