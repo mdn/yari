@@ -1,6 +1,6 @@
 // Style for mobile.
 
-@media screen and (max-width: $screen-sm) {
+@media screen and (max-width: $screen-sm - 1px) {
   thead {
     display: none;
   }
