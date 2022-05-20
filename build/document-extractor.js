@@ -496,14 +496,39 @@ function _getSpecifications(specURLsString, data) {
   let specURLs = [];
 
   if (data) {
-    // If 'data' is non-null, that means we have data for a BCD feature
-    // that we can extract spec URLs from.
-    for (const [key, compat] of Object.entries(data)) {
-      if (key === "__compat" && compat.spec_url) {
+    // If 'data' is non-null, that means we have data for one or more BCD
+    // features that we can extract spec URLs from.
+    //
+    // If we’re processing data for just one feature, then the 'data'
+    // variable will have a __compat key. So we get the one spec_url value
+    // from that, and move on.
+    //
+    // (The value may contain data for subfeatures too — each subfeature
+    // with its own __compat key that may contain a spec_url — but in that
+    // case, for the purposes of the Specifications section, we don’t want
+    // to recurse through all the subfeatures to get those spec_url values;
+    // instead we only want the spec_url from the top-level __compat key.
+    if (data.__compat) {
+      const compat = data.__compat;
+      if (compat.spec_url) {
         if (Array.isArray(compat.spec_url)) {
           specURLs = compat.spec_url;
         } else {
           specURLs.push(compat.spec_url);
+        }
+      }
+    } else {
+      for (const block of Object.values(data)) {
+        // If we reach here, we’re processing data for two or more features
+        // and the 'data' variable will contain multiple blocks (objects) —
+        // one for each feature — each with its own __compat key
+        const compat = block.__compat;
+        if (compat.spec_url) {
+          if (Array.isArray(compat.spec_url)) {
+            specURLs = compat.spec_url;
+          } else {
+            specURLs.push(compat.spec_url);
+          }
         }
       }
     }
