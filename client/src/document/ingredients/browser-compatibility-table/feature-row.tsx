@@ -30,7 +30,7 @@ interface CompatStatementExtended extends bcd.CompatStatement {
 function getSupportClassName(
   support: SupportStatementExtended | undefined,
   browser: bcd.BrowserStatement
-): string {
+): "no" | "yes" | "partial" | "preview" | "removed-partial" | "unknown" {
   if (!support) {
     return "unknown";
   }
@@ -51,8 +51,8 @@ function getSupportClassName(
   } else {
     className = "no";
   }
-  if (partial_implementation && !version_removed) {
-    className = "partial";
+  if (partial_implementation) {
+    className = version_removed ? "removed-partial" : "partial";
   }
 
   return className;
@@ -115,13 +115,31 @@ function labelFromString(
   return <>{version}</>;
 }
 
+function versionLabelFromSupport(
+  added: string | boolean | null | undefined,
+  removed: string | boolean | null | undefined,
+  browser: bcd.BrowserStatement
+) {
+  if (typeof removed !== "string") {
+    return <>{labelFromString(added, browser)}</>;
+  }
+  return (
+    <>
+      {labelFromString(added, browser)}&#8202;&ndash;&#8202;
+      {labelFromString(removed, browser)}
+    </>
+  );
+}
+
 const CellText = React.memo(
   ({
     support,
     browser,
+    timeline = false,
   }: {
     support: bcd.SupportStatement | undefined;
     browser: bcd.BrowserStatement;
+    timeline?: boolean;
   }) => {
     const currentSupport = getCurrentSupport(support);
     const { t } = useTranslation("bcd");
@@ -130,14 +148,14 @@ const CellText = React.memo(
     const removed = currentSupport?.version_removed ?? null;
 
     const browserReleaseDate = getSupportBrowserReleaseDate(support);
+    const supportClassName = getSupportClassName(support, browser);
 
     let status:
       | { isSupported: "unknown" }
       | {
-          isSupported: "no" | "yes" | "partial" | "preview";
+          isSupported: "no" | "yes" | "partial" | "preview" | "removed-partial";
           label?: React.ReactNode;
         };
-
     switch (added) {
       case null:
         status = { isSupported: "unknown" };
@@ -152,43 +170,11 @@ const CellText = React.memo(
         status = { isSupported: "preview" };
         break;
       default:
-        if (versionIsPreview(added, browser)) {
-          status = {
-            isSupported: "preview",
-            label: labelFromString(added, browser),
-          };
-        } else if (currentSupport?.flags?.length) {
-          status = {
-            isSupported: "no",
-            label: labelFromString(added, browser),
-          };
-        } else {
-          status = {
-            isSupported: "yes",
-            label: labelFromString(added, browser),
-          };
-        }
+        status = {
+          isSupported: supportClassName,
+          label: versionLabelFromSupport(added, removed, browser),
+        };
         break;
-    }
-
-    if (removed) {
-      status = {
-        isSupported: "no",
-        label: (
-          <>
-            {labelFromString(added, browser)}&#8202;&ndash;&#8202;
-            {labelFromString(removed, browser)}
-          </>
-        ),
-      };
-    } else if (currentSupport && currentSupport.partial_implementation) {
-      status = {
-        isSupported: "partial",
-        label:
-          typeof added === "string"
-            ? labelFromString(added, browser)
-            : t("compatLabels.partial.label"),
-      };
     }
 
     let label: string | React.ReactNode;
@@ -200,6 +186,16 @@ const CellText = React.memo(
         label = status.label || t(`compatLabels.${status.isSupported}.label`);
         break;
 
+      case "removed-partial":
+        if (timeline) {
+          title = t('compatLabels.partial.title');
+          label = status.label || t('compatLabels.partial.label');
+        } else {
+          title = t('compatLabels.no.title');
+          label = status.label || t('compatLabels.no.label');
+        }
+        break;
+
       case "preview":
         label = status.label || browser.preview_name;
         break;
@@ -208,7 +204,6 @@ const CellText = React.memo(
         label = t(`compatLabels.${status.isSupported}.label`);
         break;
     }
-    const supportClassName = getSupportClassName(support, browser);
 
     return (
       <div className="bcd-cell-text-wrapper">
@@ -418,7 +413,7 @@ function getNotes(
                     browser
                   )} bc-supports`}
                 >
-                  <CellText support={item} browser={browser} />
+                  <CellText support={item} browser={browser} timeline={true} />
                 </dt>
                 {supportNotes.map(({ iconName, label }, i) => {
                   return (
