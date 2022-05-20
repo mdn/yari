@@ -113,7 +113,7 @@ function buildLocaleMap(locale) {
 }
 
 program
-  .bin("yarn md")
+  .bin("npm run md")
   .name("md")
   .version("0.0.1")
   .disableGlobalOption("--silent")

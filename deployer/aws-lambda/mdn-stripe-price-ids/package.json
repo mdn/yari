@@ -6,7 +6,7 @@
   "license": "MPL-2.0",
   "main": "index.js",
   "scripts": {
-    "make-package": "yarn install && zip -r -X function.zip . -i index.js 'node_modules/*' 'plans-stage-lookup.json' 'plans-prod-lookup.json'",
+    "make-package": "npm install && zip -r -X function.zip . -i index.js 'node_modules/*' 'plans-stage-lookup.json' 'plans-prod-lookup.json'",
     "test": "jest ./tests"
   },
   "dependencies": {

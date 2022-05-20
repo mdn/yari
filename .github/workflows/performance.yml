@@ -6,7 +6,7 @@ on:
       - client/src/**
       - .github/workflows/performance.yml
       - package.json
-      - yarn.lock
+      - package-lock.json
 
 jobs:
   lighthouse:
@@ -35,12 +35,12 @@ jobs:
         with:
           path: |
             node_modules
-          key: ${{ runner.os }}-${{ hashFiles('yarn.lock') }}-${{ hashFiles('.github/workflows/performance.yml') }}
+          key: ${{ runner.os }}-${{ hashFiles('package-lock.json') }}-${{ hashFiles('.github/workflows/performance.yml') }}
 
-      - name: Install all yarn packages
+      - name: Install all npm packages
         if: steps.cached-node_modules.outputs.cache-hit != 'true'
         run: |
-          yarn --frozen-lockfile
+          npm ci
 
       - name: Build select important pages
         env:
@@ -52,15 +52,15 @@ jobs:
           # Google Analytics tag which is most realistic.
           BUILD_GOOGLE_ANALYTICS_ACCOUNT: UA-00000000-0
         run: |
-          yarn build:prepare
-          # BUILD_FOLDERSEARCH=mdn/kitchensink yarn build
-          BUILD_FOLDERSEARCH=web/javascript/reference/global_objects/array/foreach yarn build
+          npm run build:prepare
+          # BUILD_FOLDERSEARCH=mdn/kitchensink npm run build
+          BUILD_FOLDERSEARCH=web/javascript/reference/global_objects/array/foreach npm run build
 
       - name: Serve and lhci
         env:
           LHCI_GITHUB_APP_TOKEN: ${{ secrets.LHCI_GITHUB_APP_TOKEN }}
         run: |
-          yarn start:static-server &
+          npm run start:static-server &
           sleep 1
           curl --retry-connrefused --retry 5 \
             http://localhost:5042/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/forEach/ > /dev/null

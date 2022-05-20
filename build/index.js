@@ -548,7 +548,7 @@ async function buildDocument(document, documentOptions = {}) {
       injectSectionFlaws(doc, sectionFlaws, options);
     }
   } catch (error) {
-    // If you run `yarn build` and an error is thrown inside `extractSections()`
+    // If you run `npm run build` and an error is thrown inside `extractSections()`
     // you won't know which file it was in the middle processing because
     // the error won't be able to mention that.
     // So we catch the error, log which file it happened to and then
@@ -653,7 +653,7 @@ async function buildLiveSamplePageFromURL(url) {
   );
 }
 
-// This is used by the builder (yarn build) and by the server (JIT).
+// This is used by the builder (npm run build) and by the server (JIT).
 // Someday, this function might change if we decide to include the list
 // of GitHub usernames that have contributed to it since it moved to GitHub.
 function renderContributorsTxt(wikiContributorNames = null, githubURL = null) {

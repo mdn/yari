@@ -1195,7 +1195,7 @@ test("chicken_and_egg page should build with flaws", () => {
   // The filepath will be that of the "egg" or the "chicken" page.
   // Let's not try to predict which one exactly, because that'd mean this
   // test would need to use the exact same sort order as the glob used
-  // when we ran "yarn build" to set up the build fixtures.
+  // when we ran "npm run build" to set up the build fixtures.
   const flaw = doc.flaws.macros[0];
   expect(flaw.name).toBe("MacroExecutionError");
   expect(
