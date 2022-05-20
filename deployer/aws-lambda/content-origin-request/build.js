@@ -4,8 +4,9 @@ const { VALID_LOCALES } = require("@yari-internal/constants");
 const fs = require("fs");
 const path = require("path");
 
+const dotenv = require("dotenv");
 const root = path.join(__dirname, "..", "..", "..");
-require("dotenv").config({
+dotenv.config({
   path: path.join(root, process.env.ENV_FILE || ".env"),
 });
 
