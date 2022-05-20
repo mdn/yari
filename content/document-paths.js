@@ -27,11 +27,13 @@ function allDocumentPathsAsTree(root) {
 
   return tree;
 }
+
 function addToTree(tree = {}, [current, ...rest]) {
   if (rest.length === 0) {
     tree[current] = null;
     return tree;
   }
+
   tree[current] = addToTree(tree[current], rest);
   return tree;
 }
@@ -50,6 +52,7 @@ function flattenSubTree(t, prefix = [], recurse = false) {
         t[k][MARKDOWN_FILENAME] === null ? MARKDOWN_FILENAME : HTML_FILENAME,
       ].join("/")
     );
+
   if (!recurse) {
     return directChildren;
   }
@@ -57,6 +60,7 @@ function flattenSubTree(t, prefix = [], recurse = false) {
   const recursiveChildren = [...Object.entries(t)]
     .filter(([, v]) => v !== null)
     .flatMap(([k, v]) => flattenSubTree(v, [...prefix, k], recurse));
+
   return [...directChildren, ...recursiveChildren];
 }
 
@@ -69,10 +73,12 @@ function childrenForPath(
   if (!current) {
     return flattenSubTree(tree, prefix, recurse);
   }
+
   const child = tree[current];
   if (!child) {
     return [];
   }
+
   return childrenForPath(child, path, recurse, [...prefix, current]);
 }
 
@@ -86,6 +92,7 @@ function initAllDocumentsPathsTree() {
         : {},
     };
   }
+
   return {};
 }
 
@@ -95,6 +102,7 @@ function childrenFoldersForPath(root, folder, recursive) {
   const base = path.join(root, folder);
   const baseHTML = path.join(base, HTML_FILENAME);
   const baseMarkdown = path.join(base, MARKDOWN_FILENAME);
+
   if (process.env.NODE_ENV === "production") {
     // When running a production build we use our lookup.
     const childPaths = childrenForPath(
@@ -102,6 +110,7 @@ function childrenFoldersForPath(root, folder, recursive) {
       folder.split(path.sep),
       recursive
     );
+
     return childPaths.map((childFilePath) => path.dirname(childFilePath));
   } else {
     const api = new fdir()
@@ -115,6 +124,7 @@ function childrenFoldersForPath(root, folder, recursive) {
       })
       .withMaxDepth(recursive ? Infinity : 1)
       .crawl(base);
+
     return api
       .sync()
       .map((childFilePath) => path.relative(root, path.dirname(childFilePath)));
