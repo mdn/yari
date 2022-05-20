@@ -83,7 +83,7 @@
     "hast-util-to-text": "^2.0.1",
     "html-react-parser": "^1.4.12",
     "http-proxy-middleware": "^2.0.6",
-    "i18next": "^21.8.2",
+    "i18next": "^21.8.3",
     "i18next-http-backend": "^1.4.0",
     "image-size": "^1.0.1",
     "image-type": "^4.1.0",
@@ -129,6 +129,7 @@
   "devDependencies": {
     "@babel/core": "^7.18.0",
     "@babel/eslint-parser": "^7.17.0",
+    "@babel/plugin-proposal-private-property-in-object": "^7.17.12",
     "@mdn/dinocons": "^0.5.5",
     "@mdn/minimalist": "^2.0.4",
     "@playwright/test": "^1.22.1",
