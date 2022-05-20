@@ -85,7 +85,7 @@ export default function UpdateButton({
       <h3>Update status</h3>
       <span>
         {current}
-        <br />
+        {current && <br />}
         {info}
       </span>
       {button}

@@ -76,8 +76,8 @@ self.addEventListener("fetch", (e) => {
   } else {
     e.respondWith(respond(e));
   }
-  if (e.request.method === "POST") {
-    synchronizeDb();
+  if (e.request.method !== "GET") {
+    messageAllClients(self, { type: "mutate" });
   }
 });
 

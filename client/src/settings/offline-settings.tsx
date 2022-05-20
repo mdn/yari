@@ -8,6 +8,8 @@ import ClearButton from "./clear";
 import { Spinner } from "../ui/atoms/spinner";
 import { MDN_PLUS_TITLE } from "../constants";
 import { ContentStatus, ContentStatusPhase } from "./db";
+import { useUserData } from "../user-context";
+import { useLocale } from "../hooks";
 
 function displayEstimate({ usage = 0, quota = Infinity }: StorageEstimate) {
   const usageInMib = Math.round(usage / (1024 * 1024));
@@ -17,19 +19,28 @@ function displayEstimate({ usage = 0, quota = Infinity }: StorageEstimate) {
 
 export default function SettingsApp({ ...appProps }) {
   const serviceWorkerAvailable = window?.navigator?.serviceWorker;
+  const user = useUserData();
+  const locale = useLocale();
 
   return (
     <section className="field-group">
       <h2>MDN Offline</h2>
-      {serviceWorkerAvailable ? (
-        <Settings />
+      {user?.isSubscriber ? (
+        serviceWorkerAvailable ? (
+          <Settings />
+        ) : (
+          <>
+            <h3>Offline mode is unavailable </h3>{" "}
+            <p>
+              Please make sure that you are not using a private or incognito
+              window.
+            </p>
+          </>
+        )
       ) : (
         <>
-          <h3>Offline mode is unavailable </h3>{" "}
-          <p>
-            Please make sure that you are not using a private or incognito
-            window.
-          </p>
+          MDN Offline is only available to MDN Plus subscribers.{" "}
+          <a href={`/${locale}/plus#subscribe`}>Learn more</a> about our plans.
         </>
       )}
     </section>

@@ -6,9 +6,24 @@ export const NOTIFICATIONS_BASE_PATH = "/api/v1/plus/notifications";
 export const WATCHED_BASE_PATH = "/api/v1/plus/watching";
 export const COLLECTION_BASE_PATH = "/api/v1/plus/collection";
 export const STRIPE_PLANS_PATH = "/api/v1/stripe/plans";
+export const SETTINGS_BASE_PATH = "/api/v1/plus/settings/";
 
 export const NOTIFICATIONS_MARK_ALL_AS_READ_PATH = `${NOTIFICATIONS_BASE_PATH}/all/mark-as-read/`;
 const DEFAULT_LIMIT = 20;
+
+export type PLUS_SETTINGS = {
+  col_in_search: boolean;
+};
+
+export async function toggleCollectionsInQuickSearch(enabled: boolean) {
+  return await fetch(SETTINGS_BASE_PATH, {
+    body: JSON.stringify({ col_in_search: enabled }),
+    method: "POST",
+    headers: {
+      "content-type": "application/json",
+    },
+  });
+}
 
 export async function markNotificationsAsRead(formData: FormData) {
   return fetch(NOTIFICATIONS_MARK_ALL_AS_READ_PATH, {
@@ -214,6 +229,7 @@ export function useCollectionsApiEndpoint(
   const [error, setError] = useState<Error | null>();
   const [isLoading, setIsLoading] = useState(true);
   const [hasMore, setHasMore] = useState(false);
+  console.log(offset, searchTerms, selectedFilter, selectedSort);
 
   useEffect(() => {
     (async () => {
