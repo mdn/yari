@@ -14,6 +14,8 @@ const {
 const log = require("loglevel");
 const cheerio = require("cheerio");
 
+const dirname = __dirname;
+
 const { DEFAULT_LOCALE, VALID_LOCALES } = require("../libs/constants");
 const {
   CONTENT_ROOT,
@@ -614,7 +616,7 @@ program
     "Convert an AWS Athena log aggregation CSV into a popularities.json file"
   )
   .option("--outfile <path>", "output file", {
-    default: path.resolve(path.join(__dirname, "..", "popularities.json")),
+    default: path.resolve(path.join(dirname, "..", "popularities.json")),
   })
   .option("--max-uris <number>", "limit to top <number> entries", {
     default: MAX_GOOGLE_ANALYTICS_URIS,
@@ -689,10 +691,7 @@ program
       const { outfile, debug, account } = options;
       if (account) {
         const dntHelperCode = fs
-          .readFileSync(
-            path.join(__dirname, "mozilla.dnthelper.min.js"),
-            "utf-8"
-          )
+          .readFileSync(path.join(dirname, "mozilla.dnthelper.min.js"), "utf-8")
           .trim();
 
         const gaScriptURL = `https://www.google-analytics.com/${
