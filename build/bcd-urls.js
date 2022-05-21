@@ -66,6 +66,9 @@ function normalizeBCDURLs(doc, options) {
       // so mdn_url is accessible at the root. If the block has a key for
       // `__compat` it is not the first block, and the information is nested
       // under `__compat`.
+      if (!data) {
+        continue;
+      }
       const block = data.__compat ? data.__compat : data;
       if (!block.mdn_url) {
         continue;
