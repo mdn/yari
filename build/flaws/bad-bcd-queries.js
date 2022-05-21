@@ -15,8 +15,15 @@ function getBadBCDQueriesFlaws(doc, $) {
       if (!dataQuery) {
         return "BCD table without 'data-query' or 'id' attribute";
       }
-      const query = dataQuery.replace(/^bcd:/, "");
-      return !queryBCD(query) && `No BCD data for query: ${query}`;
+      const queryArray = dataQuery
+        .replace(/^bcd:/, "")
+        .split(",")
+        .map((query) => query.trim());
+      for (const query of queryArray) {
+        if (!queryBCD(query)) {
+          return `No BCD data for query: ${query}`;
+        }
+      }
     })
     .get()
     .filter((explanation) => !!explanation)
