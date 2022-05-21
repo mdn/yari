@@ -446,7 +446,7 @@ function _addSingleSpecialSection($) {
       let block;
       if (key === "__compat") {
         block = compat;
-      } else if (compat.__compat) {
+      } else if (compat && compat.__compat) {
         block = compat.__compat;
       }
       if (block) {
@@ -522,8 +522,11 @@ function _getSpecifications(specURLsString, data) {
         // If we reach here, we’re processing data for two or more features
         // and the 'data' variable will contain multiple blocks (objects) —
         // one for each feature — each with its own __compat key
+        if (!block) {
+          continue;
+        }
         const compat = block.__compat;
-        if (compat.spec_url) {
+        if (compat && compat.spec_url) {
           if (Array.isArray(compat.spec_url)) {
             specURLs = compat.spec_url;
           } else {
