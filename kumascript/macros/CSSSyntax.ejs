@@ -67,8 +67,8 @@ const propertyName = $0 || env.slug.split('/').pop().toLowerCase();
 
 /**
  * Get the formal syntax for a property from the webref data, given:
- * `propertyName`: the name of the property
- * `parsedWebRef`: the webref data
+ * @param {string} propertyName - the name of the property
+ * @param {object} parsedWebRef - the webref data
  */
 function getPropertySyntax(propertyName, parsedWebRef) {
   // 1) get all specs which list this property
