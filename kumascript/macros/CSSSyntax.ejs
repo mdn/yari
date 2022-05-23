@@ -238,7 +238,7 @@ function getTypesForSyntaxes(syntaxes, constituents) {
 
   function processNode(node) {
     if (node.type === 'Type' &&
-       (constituents.indexOf(node.name) === -1)) {
+       (!constituents.includes(node.name))) {
       constituents.push(node.name);
     }
   }
