@@ -54,7 +54,6 @@
     "lodash": ">=4.17.15"
   },
   "dependencies": {
-    "@babel/helper-builder-react-jsx": "^7.16.7",
     "@caporal/core": "^2.0.2",
     "@fast-csv/parse": "^4.3.6",
     "@mdn/browser-compat-data": "^4.2.1",
