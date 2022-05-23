@@ -191,7 +191,7 @@ function renderTerms(terms, combinator) {
     termArray.push(termText);
   }
 
-  let maxTermLength = Math.max(...termTextLengths);
+  const maxTermLength = Math.max(...termTextLengths);
 
   // write out the translated terms, padding with spaces for alignment
   // and separating terms using their combinator symbol
