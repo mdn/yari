@@ -70,7 +70,7 @@ const propertyName = $0 || env.slug.split('/').pop().toLowerCase();
  * @param {string} propertyName - the name of the property
  * @param {object} parsedWebRef - the webref data
  */
-function getPropertySyntax(propertyName, parsedWebRef) {
+function getPropertySyntax(propertyName) {
   // 1) get all specs which list this property
   let specsForProp = [];
   for (const [shortname, data] of Object.entries(parsedWebRef)) {
