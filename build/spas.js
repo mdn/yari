@@ -18,6 +18,8 @@ const { splitSections } = require("./utils");
 const cheerio = require("cheerio");
 const { findByURL } = require("../content/document");
 
+const dirname = __dirname;
+
 const FEATURED_ARTICLES = [
   "Web/CSS/Cascade",
   "Web/HTML/Element/dialog",
@@ -249,7 +251,7 @@ async function buildSPAs(options) {
     }
   }
   await buildStaticPages(
-    path.join(__dirname, "../copy/plus"),
+    path.join(dirname, "../copy/plus"),
     "plus/docs",
     "MDN Plus"
   );

@@ -11,10 +11,12 @@ const path = require("path");
 const { Document } = require("../../../content");
 const { assert, itMacro, describeMacro, beforeEachMacro } = require("./utils");
 
+const dirname = __dirname;
+
 // Load fixture data.
 const fixtureData = JSON.parse(
   fs.readFileSync(
-    path.resolve(__dirname, "fixtures", "documentData1.json"),
+    path.resolve(dirname, "fixtures", "documentData1.json"),
     "utf8"
   )
 );
