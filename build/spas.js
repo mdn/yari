@@ -19,7 +19,7 @@ const cheerio = require("cheerio");
 const { findByURL } = require("../content/document");
 
 const FEATURED_ARTICLES = [
-  "Web/CSS/color-scheme",
+  "Web/CSS/Cascade",
   "Web/HTML/Element/dialog",
   "Learn/JavaScript/Asynchronous",
   "Web/API/Canvas_API/Tutorial",
