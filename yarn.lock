@@ -1235,13 +1235,12 @@
     lodash.isundefined "^3.0.1"
     lodash.uniq "^4.5.0"
 
-"@html-validate/stylish@^2.0.0":
-  version "2.0.1"
-  resolved "https://registry.yarnpkg.com/@html-validate/stylish/-/stylish-2.0.1.tgz#a21dac99e7bbf7d25a564b8560d9d2a17aa84dd4"
-  integrity sha512-iRLjgQnNq66rcsTukun6KwMhPEoUV2R3atPbTSapnEvD1aETjD+pfS+1yYrmaPeJFgXHzfsSYjAuyUVq7EID/Q==
+"@html-validate/stylish@^3.0.0":
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/@html-validate/stylish/-/stylish-3.0.0.tgz#8e25c3ac392d147505912ef2717b409c83b25e6b"
+  integrity sha512-ferooEEXbMyWzMAyEPxHP/1i5a79ELXlN67ECwhQz2t3tzjxZcxew6CIPSTHlGlrii6w+XdvyBXLajMKWyiN8Q==
   dependencies:
     kleur "^4.0.0"
-    text-table "^0.2.0"
 
 "@humanwhocodes/config-array@^0.9.2":
   version "0.9.5"
@@ -6449,13 +6448,13 @@ html-tags@^3.1.0:
   resolved "https://registry.yarnpkg.com/html-tags/-/html-tags-3.2.0.tgz#dbb3518d20b726524e4dd43de397eb0a95726961"
   integrity sha512-vy7ClnArOZwCnqZgvv+ddgHgJiAFXe3Ge9ML5/mBctVJoUoYPCdxVucOywjDARn6CVoh3dRSFdPHy2sX80L0Wg==
 
-html-validate@^7.1.0:
-  version "7.1.0"
-  resolved "https://registry.yarnpkg.com/html-validate/-/html-validate-7.1.0.tgz#668936381af11e7ccee9082dd3cfe667b69a8ce5"
-  integrity sha512-sp/dyAk57tXfqpMP87jbnrX8UiyXvclVyQE7GK0RJBX5caPI5rJ4RaE3L9R4isT0rdeORXXLVdyxkH4KnKLprQ==
+html-validate@^7.1.1:
+  version "7.1.1"
+  resolved "https://registry.yarnpkg.com/html-validate/-/html-validate-7.1.1.tgz#20efdeb93e35513d4407f75c154e56a4911ee137"
+  integrity sha512-T2/VAg9EsgZ1Xcn5hzfimCf8qdtXHiRXw6vI+B6w+y62vDJYC1/Z/2Prhr+kkus7mtjZIKxQUd12BaCzHYGbgg==
   dependencies:
     "@babel/code-frame" "^7.10.0"
-    "@html-validate/stylish" "^2.0.0"
+    "@html-validate/stylish" "^3.0.0"
     "@sidvind/better-ajv-errors" "^2.0.0"
     acorn-walk "^8.0.0"
     ajv "^8.0.0"
