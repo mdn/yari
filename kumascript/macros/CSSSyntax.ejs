@@ -206,7 +206,7 @@ function renderTerms(terms, combinator) {
     }
     // omit the combinator for the final term
     combinatorText = (i < termArray.length-1 ? combinatorText : '');
-    output += `  ${termText}${Array(spaceCount).join(' ')}${combinatorText}<br/>`;
+    output += `  ${termText}${' '.repeat(spaceCount)}${combinatorText}<br/>`;
   }
 
   return output;
