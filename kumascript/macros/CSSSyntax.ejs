@@ -257,13 +257,18 @@ function getTypesForSyntaxes(syntaxes, constituents) {
  */
 function getConstituentTypes(propertySyntax) {
   const allConstituents = [];
-  let oldConstituentsLength = allConstituents.length;
+  let oldConstituentsLength = 0;
   // get all the types in the top-level syntax
   let constituentSyntaxes = [propertySyntax];
-  getTypesForSyntaxes(constituentSyntaxes, allConstituents);
 
   // while an iteration added more types...
-  while (allConstituents.length > oldConstituentsLength) {
+  while (true) {
+    oldConstituentsLength = allConstituents.length;
+    getTypesForSyntaxes(constituentSyntaxes, allConstituents);
+  
+    if (allConstituents.length <= oldConstituentsLength) {
+      break;
+    }
     // get the syntaxes for all newly added constituents,
     // and then get the types in those syntaxes
     constituentSyntaxes = [];
@@ -275,9 +280,6 @@ function getConstituentTypes(propertySyntax) {
         constituentSyntaxes.push(constituentSyntaxEntry.value);
       }
     }
-
-    oldConstituentsLength = allConstituents.length;
-    getTypesForSyntaxes(constituentSyntaxes, allConstituents);
   }
   return allConstituents;
 }
