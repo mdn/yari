@@ -37,17 +37,6 @@
     "tool": "node tool/cli.js",
     "watch:ssr": "cd ssr && webpack --mode=production --watch"
   },
-  "jest": {
-    "globals": {
-      "ts-test": {
-        "babelConfig": true
-      }
-    },
-    "testPathIgnorePatterns": [
-      "headless*",
-      "developing.spec.js"
-    ]
-  },
   "resolutions": {
     "@types/react": ">=18.0.0",
     "@typescript-eslint/typescript-estree": ">=5.14.0",
