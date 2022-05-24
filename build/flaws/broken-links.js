@@ -7,7 +7,7 @@ const visit = require("unist-util-visit");
 const { Document, Redirect, Image } = require("../../content");
 const { FLAW_LEVELS } = require("../constants");
 const { findMatchesInText } = require("../matches-in-text");
-const { DEFAULT_LOCALE, VALID_LOCALES } = require("../../libs/constants");
+const { DEFAULT_LOCALE, VALID_LOCALES } = require("@yari-internal/constants");
 
 const dirname = __dirname;
 

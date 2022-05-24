@@ -1,5 +1,5 @@
 const { Document, Translation } = require("../../content");
-const { DEFAULT_LOCALE } = require("../../libs/constants");
+const { DEFAULT_LOCALE } = require("@yari-internal/constants");
 
 function injectTranslationDifferences(doc, $, document) {
   const flaws = [];

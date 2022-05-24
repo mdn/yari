@@ -4,7 +4,7 @@ const chalk = require("chalk");
 
 const { Document } = require("../../content");
 const { FLAW_LEVELS, VALID_FLAW_CHECKS } = require("../constants");
-const { DEFAULT_LOCALE } = require("../../libs/constants");
+const { DEFAULT_LOCALE } = require("@yari-internal/constants");
 const {
   replaceMatchesInText,
   replaceMatchingLinksInMarkdown,

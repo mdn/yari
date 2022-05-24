@@ -1,6 +1,6 @@
 const fs = require("fs");
 const path = require("path");
-const { DEFAULT_LOCALE } = require("../../../libs/constants");
+const { DEFAULT_LOCALE } = require("@yari-internal/constants");
 const code = require("./code");
 const { asDefinitionList, isDefinitionList } = require("./dl");
 const { one, all, wrap } = require("./mdast-util-to-hast-utils");

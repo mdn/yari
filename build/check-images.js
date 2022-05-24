@@ -9,7 +9,7 @@ const sizeOf = require("image-size");
 const { Document, Image } = require("../content");
 const { FLAW_LEVELS } = require("./constants");
 const { findMatchesInText } = require("./matches-in-text");
-const { DEFAULT_LOCALE } = require("../libs/constants");
+const { DEFAULT_LOCALE } = require("@yari-internal/constants");
 
 /**
  * Mutate the `$` instance for image reference and if appropriate,

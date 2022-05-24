@@ -14,7 +14,7 @@ const {
   CONTENT_ROOT,
   CONTENT_TRANSLATED_ROOT,
 } = require("../content");
-const { VALID_LOCALES } = require("../libs/constants");
+const { VALID_LOCALES } = require("@yari-internal/constants");
 // eslint-disable-next-line node/no-missing-require
 const { renderHTML } = require("../ssr/dist/main");
 const options = require("./build-options");

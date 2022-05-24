@@ -4,7 +4,7 @@ const {
   ACTIVE_LOCALES,
   VALID_LOCALES,
   DEFAULT_LOCALE,
-} = require("../libs/constants");
+} = require("@yari-internal/constants");
 
 const dotenv = require("dotenv");
 const dirname = __dirname;

@@ -1,7 +1,7 @@
 import * as Gettext from "node-gettext";
 import * as fs from "fs";
 import * as path from "path";
-import { DEFAULT_LOCALE } from "../../../libs/constants";
+import { DEFAULT_LOCALE } from "@yari-internal/constants";
 import { h } from "../h";
 import { asArray } from "../utils";
 import { toText } from "./to-text";

@@ -15,7 +15,7 @@ const {
   CONTENT_TRANSLATED_ROOT,
 } = require("../content");
 const { getLastCommitURL } = require("../build");
-const { ACTIVE_LOCALES, DEFAULT_LOCALE } = require("../libs/constants");
+const { ACTIVE_LOCALES, DEFAULT_LOCALE } = require("@yari-internal/constants");
 const LANGUAGES_RAW = require("../content/languages.json");
 
 // Module-level cache

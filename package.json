@@ -65,6 +65,7 @@
     "@fast-csv/parse": "^4.3.6",
     "@mdn/browser-compat-data": "^4.2.1",
     "@use-it/interval": "^1.0.0",
+    "@yari-internal/constants": "*",
     "accept-language-parser": "^1.5.0",
     "browser-specs": "^3.11.0",
     "chalk": "^4.1.2",

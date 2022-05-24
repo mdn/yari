@@ -23,7 +23,7 @@ const {
 } = require("../content");
 // eslint-disable-next-line node/no-missing-require
 const { renderHTML } = require("../ssr/dist/main");
-const { CSP_VALUE, DEFAULT_LOCALE } = require("../libs/constants");
+const { CSP_VALUE, DEFAULT_LOCALE } = require("@yari-internal/constants");
 
 const {
   STATIC_ROOT,

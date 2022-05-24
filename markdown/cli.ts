@@ -5,7 +5,7 @@ import * as chalk from "chalk";
 import * as cliProgress from "cli-progress";
 import { Document } from "../content";
 import { saveFile } from "../content/document";
-import { VALID_LOCALES } from "../libs/constants";
+import { VALID_LOCALES } from "@yari-internal/constants";
 import { execGit } from "../content";
 import { getRoot } from "../content/utils";
 

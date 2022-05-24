@@ -5,7 +5,7 @@
  */
 const fs = require("fs");
 
-const { VALID_LOCALES } = require("../libs/constants");
+const { VALID_LOCALES } = require("@yari-internal/constants");
 const { ALWAYS_ALLOW_ROBOTS } = require("../build/constants");
 
 const ALLOW_TEXT = `

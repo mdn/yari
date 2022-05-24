@@ -15,7 +15,7 @@ const {
   LiveSampleError,
 } = require("./src/live-sample.js");
 const { HTMLTool } = require("./src/api/util.js");
-const { DEFAULT_LOCALE } = require("../libs/constants");
+const { DEFAULT_LOCALE } = require("@yari-internal/constants");
 
 const DEPENDENCY_LOOP_INTRO =
   'The following documents form a circular dependency when rendering (via the "page" and/or "IncludeSubnav" macros):';

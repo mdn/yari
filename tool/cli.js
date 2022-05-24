@@ -16,7 +16,7 @@ const cheerio = require("cheerio");
 
 const dirname = __dirname;
 
-const { DEFAULT_LOCALE, VALID_LOCALES } = require("../libs/constants");
+const { DEFAULT_LOCALE, VALID_LOCALES } = require("@yari-internal/constants");
 const {
   CONTENT_ROOT,
   CONTENT_TRANSLATED_ROOT,
