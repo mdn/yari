@@ -522,11 +522,39 @@ export const FeatureRow = React.memo(
     }
 
     const { name, compat, depth } = feature;
-    const title = compat.description ? (
+    let title = compat.description ? (
       <span dangerouslySetInnerHTML={{ __html: compat.description }} />
     ) : (
       <code>{name}</code>
     );
+    // When we’re showing a row for a subfeature, the subfeature name or
+    // description on its own may not provide enough context — especially
+    // in the case where we have a BCD table with multiple top-level
+    // features (that is, from a browser-compat value which is an array) —
+    // so in this case, we prefix the subfeature name/description with the
+    // (parent) feature name, acquired from the current mdn_url value.
+    let featureName = "";
+    if (compat.mdn_url) {
+      const nameFromMdnURL = compat.mdn_url.split("/").pop();
+      if (nameFromMdnURL) {
+        featureName = nameFromMdnURL.toLowerCase();
+      }
+    }
+    if (
+      featureName &&
+      !featureName.includes("_") && // only subfeatures have "_" in BCD
+      !name.toLowerCase().includes(featureName) &&
+      !(
+        compat.description &&
+        compat.description.toLowerCase().includes(featureName)
+      )
+    ) {
+      title = (
+        <span>
+          <code>{featureName}</code> ({title})
+        </span>
+      );
+    }
     const activeBrowser = activeCell !== null ? browsers[activeCell] : null;
 
     let titleNode: string | React.ReactNode;
