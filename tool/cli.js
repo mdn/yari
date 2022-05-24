@@ -14,6 +14,8 @@ const {
 const log = require("loglevel");
 const cheerio = require("cheerio");
 
+const dirname = __dirname;
+
 const { DEFAULT_LOCALE, VALID_LOCALES } = require("../libs/constants");
 const {
   CONTENT_ROOT,
@@ -29,6 +31,7 @@ const {
   BUILD_OUT_ROOT,
   GOOGLE_ANALYTICS_ACCOUNT,
   GOOGLE_ANALYTICS_DEBUG,
+  VALID_FLAW_CHECKS,
 } = require("../build/constants");
 const { runMakePopularitiesFile } = require("./popularities");
 const { runOptimizeClientBuild } = require("./optimize-client-build");
@@ -507,6 +510,38 @@ program
     })
   )
 
+  .command("fix-flaws", "Fix all flaws")
+  .option("-l, --locale <locale>", "locale", {
+    default: DEFAULT_LOCALE,
+    validator: [...VALID_LOCALES.values()],
+  })
+  .option("--file-types <fileTypes...>", "File types to fix flaws in", {
+    default: ["md"],
+    validator: ["md", "html"],
+  })
+  .argument("<fix-flaws-types...>", "flaw types", {
+    default: ["broken_links"],
+    validator: [...VALID_FLAW_CHECKS],
+  })
+  .action(
+    tryOrExit(async ({ args, options }) => {
+      const { fixFlawsTypes } = args;
+      const { locale, fileTypes } = options;
+      const allDocs = Document.findAll({
+        locales: new Map([[locale.toLowerCase(), true]]),
+      });
+      for (const document of allDocs.iter()) {
+        if (fileTypes.includes(document.isMarkdown ? "md" : "html")) {
+          await buildDocument(document, {
+            fixFlaws: true,
+            fixFlawsTypes: new Set(fixFlawsTypes),
+            fixFlawsVerbose: true,
+          });
+        }
+      }
+    })
+  )
+
   .command("flaws", "Find (and fix) flaws in a document")
   .argument("<slug>", "Slug of the document in question")
   .argument("[locale]", "Locale", {
@@ -614,7 +649,7 @@ program
     "Convert an AWS Athena log aggregation CSV into a popularities.json file"
   )
   .option("--outfile <path>", "output file", {
-    default: path.resolve(path.join(__dirname, "..", "popularities.json")),
+    default: path.resolve(path.join(dirname, "..", "popularities.json")),
   })
   .option("--max-uris <number>", "limit to top <number> entries", {
     default: MAX_GOOGLE_ANALYTICS_URIS,
@@ -689,10 +724,7 @@ program
       const { outfile, debug, account } = options;
       if (account) {
         const dntHelperCode = fs
-          .readFileSync(
-            path.join(__dirname, "mozilla.dnthelper.min.js"),
-            "utf-8"
-          )
+          .readFileSync(path.join(dirname, "mozilla.dnthelper.min.js"), "utf-8")
           .trim();
 
         const gaScriptURL = `https://www.google-analytics.com/${

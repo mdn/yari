@@ -7,6 +7,8 @@ import { ALWAYS_ALLOW_ROBOTS, BUILD_OUT_ROOT } from "../build/constants";
 
 const { DEFAULT_LOCALE } = require("../libs/constants");
 
+const dirname = __dirname;
+
 // When there are multiple options for a given language, this gives the
 // preferred locale for that language (language => preferred locale).
 const PREFERRED_LOCALE = {
@@ -51,7 +53,7 @@ const lazy = (creator) => {
   };
 };
 
-const clientBuildRoot = path.resolve(__dirname, "../../client/build");
+const clientBuildRoot = path.resolve(dirname, "../../client/build");
 
 const readBuildHTML = lazy(() => {
   const html = fs.readFileSync(
@@ -70,7 +72,7 @@ const getGAScriptPathName = lazy((relPath = "/static/js/ga.js") => {
   // Return the relative path if there exists a `BUILD_ROOT/static/js/ga.js`.
   // If the file doesn't exist, return falsy.
   // Remember, unless explicitly set, the BUILD_OUT_ROOT defaults to a path
-  // based on `__dirname` but that's wrong when compared as a source and as
+  // based on `dirname` but that's wrong when compared as a source and as
   // a webpack built asset. So we need to remove the `/ssr/` portion of the path.
   let root = BUILD_OUT_ROOT;
   if (!fs.existsSync(root)) {

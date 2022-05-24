@@ -10,13 +10,15 @@ const {
   lintHTML,
 } = require("./utils");
 
+const dirname = __dirname;
+
 /**
  * Load all the fixtures.
  */
 const fs = require("fs");
 const path = require("path");
 const pagesFixturePath = path.resolve(
-  __dirname,
+  dirname,
   "fixtures/defaultapisidebar/pages.json"
 );
 const pagesJSON = JSON.parse(fs.readFileSync(pagesFixturePath, "utf8"));
@@ -25,14 +27,14 @@ const subpagesJSON = [
   pagesJSON["/en-US/docs/Web/API/TestInterface_API/MyGuidePage2"],
 ];
 const commonl10nFixturePath = path.resolve(
-  __dirname,
+  dirname,
   "fixtures/defaultapisidebar/commonl10n.json"
 );
 const commonl10nFixture = JSON.parse(
   fs.readFileSync(commonl10nFixturePath, "utf8")
 );
 const groupDataFixturePath = path.resolve(
-  __dirname,
+  dirname,
   "fixtures/defaultapisidebar/groupdata.json"
 );
 const groupDataFixture = JSON.parse(

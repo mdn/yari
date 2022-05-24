@@ -10,34 +10,36 @@ const {
   lintHTML,
 } = require("./utils");
 
+const dirname = __dirname;
+
 /**
  * Load all the fixtures.
  */
 const fs = require("fs");
 const path = require("path");
 const subpagesFixturePath = path.resolve(
-  __dirname,
+  dirname,
   "fixtures/apiref/subpages.json"
 );
 const subpagesFixture = JSON.parse(
   fs.readFileSync(subpagesFixturePath, "utf8")
 );
 const commonl10nFixturePath = path.resolve(
-  __dirname,
+  dirname,
   "fixtures/apiref/commonl10n.json"
 );
 const commonl10nFixture = JSON.parse(
   fs.readFileSync(commonl10nFixturePath, "utf8")
 );
 const groupDataFixturePath = path.resolve(
-  __dirname,
+  dirname,
   "fixtures/apiref/groupdata.json"
 );
 const groupDataFixture = JSON.parse(
   fs.readFileSync(groupDataFixturePath, "utf8")
 );
 const interfaceDataNoEntriesFixturePath = path.resolve(
-  __dirname,
+  dirname,
   "fixtures/apiref/interfacedata_no_entries.json"
 );
 const interfaceDataNoEntriesFixture = fs.readFileSync(
@@ -45,7 +47,7 @@ const interfaceDataNoEntriesFixture = fs.readFileSync(
   "utf8"
 );
 const interfaceDataFixturePath = path.resolve(
-  __dirname,
+  dirname,
   "fixtures/apiref/interfacedata.json"
 );
 const interfaceDataFixture = JSON.parse(

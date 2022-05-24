@@ -26,7 +26,6 @@ import { useIsServer } from "./hooks";
 import { Banner, hasActiveBanners } from "./banners";
 
 const AllFlaws = React.lazy(() => import("./flaws"));
-const AllTraits = React.lazy(() => import("./traits"));
 const Translations = React.lazy(() => import("./translations"));
 const WritersHomepage = React.lazy(() => import("./writers-homepage"));
 const Sitemap = React.lazy(() => import("./sitemap"));
@@ -166,14 +165,6 @@ export function App(appProps) {
                   element={
                     <StandardLayout>
                       <Translations />
-                    </StandardLayout>
-                  }
-                />
-                <Route
-                  path="/_traits/*"
-                  element={
-                    <StandardLayout>
-                      <AllTraits />
                     </StandardLayout>
                   }
                 />

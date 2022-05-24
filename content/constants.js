@@ -6,8 +6,10 @@ const {
   DEFAULT_LOCALE,
 } = require("../libs/constants");
 
-require("dotenv").config({
-  path: path.join(__dirname, "..", process.env.ENV_FILE || ".env"),
+const dotenv = require("dotenv");
+const dirname = __dirname;
+dotenv.config({
+  path: path.join(dirname, "..", process.env.ENV_FILE || ".env"),
 });
 
 const CONTENT_ROOT = correctContentPathFromEnv("CONTENT_ROOT");
