@@ -2,7 +2,7 @@ const express = require("express");
 
 const { CSP_VALUE } = require("@yari-internal/constants");
 const { resolveFundamental } = require("@yari-internal/fundamental-redirects");
-const { getLocale } = require("../libs/get-locale");
+const { getLocale } = require("@yari-internal/get-locale");
 const { STATIC_ROOT } = require("./constants");
 const { devMiddlewares } = require("./dev");
 
