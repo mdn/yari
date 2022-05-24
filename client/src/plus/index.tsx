@@ -1,6 +1,7 @@
 import React from "react";
 import { Routes, Route } from "react-router-dom";
 
+import { useIsServer } from "../hooks";
 import { Loading } from "../ui/atoms/loading";
 import { PageContentContainer } from "../ui/atoms/page-content";
 import { PageNotFound } from "../page-not-found";
@@ -17,7 +18,7 @@ export function Plus({ pageTitle, ...props }: { pageTitle?: string }) {
     document.title = pageTitle || MDN_PLUS_TITLE;
   }, [pageTitle]);
 
-  const isServer = typeof window === "undefined";
+  const isServer = useIsServer();
   const loading = (
     <Loading
       message={`Loading ${pageTitle || MDN_PLUS_TITLE}…`}

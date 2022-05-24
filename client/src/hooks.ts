@@ -100,3 +100,14 @@ export function useOnlineStatus(): { isOnline: boolean; isOffline: boolean } {
 
   return { isOnline, isOffline };
 }
+
+/**
+ * If we want to render different markup on client/server, we have to delay this
+ * until the first client render. Otherwise, hydration will throw an error, or
+ * more dangerously, correlate its v-dom with the wrong markup.
+ */
+export function useIsServer(): boolean {
+  const [isServer, setIsServer] = useState(true);
+  useEffect(() => setIsServer(false), []);
+  return isServer;
+}

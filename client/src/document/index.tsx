@@ -4,6 +4,7 @@ import useSWR, { mutate } from "swr";
 
 import { CRUD_MODE } from "../constants";
 import { useGA } from "../ga-context";
+import { useIsServer } from "../hooks";
 
 import {
   useDocumentURL,
@@ -46,6 +47,7 @@ const MathMLPolyfillMaybe = React.lazy(() => import("./mathml-polyfill"));
 
 export function Document(props /* TODO: define a TS interface for this */) {
   const ga = useGA();
+  const isServer = useIsServer();
 
   const mountCounter = React.useRef(0);
   const documentURL = useDocumentURL();
@@ -170,8 +172,6 @@ export function Document(props /* TODO: define a TS interface for this */) {
   if (!doc) {
     return null;
   }
-
-  const isServer = typeof window === "undefined";
 
   return (
     <>
