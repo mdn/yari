@@ -8,11 +8,13 @@ import { toText } from "./to-text";
 import { QueryAndTransform } from "./utils";
 import { ElementContent, Parent } from "hast";
 
+const dirname = __dirname;
+
 const gettextLocalizationMap = (() => {
   const getTextDefaultDomainName = "messages";
   let gtLocalizationMap = new Map();
   let localesOnFS = fs
-    .readdirSync(path.join(__dirname, "../../localizations"))
+    .readdirSync(path.join(dirname, "../../localizations"))
     .map((str) => str.split(".")[0]);
   localesOnFS.forEach((localeStr) => {
     const translations = require("../../localizations/" + localeStr + ".json");
