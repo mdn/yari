@@ -1,7 +1,7 @@
 const fs = require("fs");
 const path = require("path");
 
-const { checkFile } = require("../../filecheck/checker");
+const { checkFile } = require("@yari-internal/filecheck");
 
 const dirname = __dirname;
 

@@ -7,6 +7,7 @@
   "author": "MDN Web Docs",
   "workspaces": [
     "libs/constants",
+    "libs/filecheck",
     "libs/fundamental-redirects",
     "libs/get-locale",
     "libs/slug-utils"
@@ -66,6 +67,7 @@
     "@mdn/browser-compat-data": "^4.2.1",
     "@use-it/interval": "^1.0.0",
     "@yari-internal/constants": "*",
+    "@yari-internal/filecheck": "*",
     "@yari-internal/fundamental-redirects": "*",
     "@yari-internal/get-locale": "*",
     "@yari-internal/slug-utils": "*",
