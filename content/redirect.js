@@ -1,7 +1,7 @@
 const fs = require("fs");
 const path = require("path");
 
-const { resolveFundamental } = require("../libs/fundamental-redirects");
+const { resolveFundamental } = require("@yari-internal/fundamental-redirects");
 const { decodePath, slugToFolder } = require("../libs/slug-utils");
 const {
   CONTENT_ROOT,
