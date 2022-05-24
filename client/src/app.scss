@@ -4,6 +4,7 @@
 @use "./ui/base/reset";
 @use "./ui/base/themes";
 @use "./ui/base/prism";
+@use "./ui/base/utils";
 
 // These classes are used across several components.
 @use "./ui/molecules/notecards";

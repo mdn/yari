@@ -1,0 +1,14 @@
+// Background colors for usage in mdn/content.
+td {
+  &.bg-green {
+    background-color: var(--background-mark-green);
+  }
+
+  &.bg-yellow {
+    background-color: var(--background-mark-yellow);
+  }
+
+  &.bg-red {
+    background-color: var(--background-critical);
+  }
+}
