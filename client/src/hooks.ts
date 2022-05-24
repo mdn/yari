@@ -108,8 +108,6 @@ export function useOnlineStatus(): { isOnline: boolean; isOffline: boolean } {
  */
 export function useIsServer(): boolean {
   const [isServer, setIsServer] = useState(true);
-  useEffect(() => {
-    setIsServer(false);
-  }, []);
+  useEffect(() => setIsServer(false), []);
   return isServer;
 }
