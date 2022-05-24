@@ -2,7 +2,7 @@ const fs = require("fs");
 const path = require("path");
 
 const { resolveFundamental } = require("@yari-internal/fundamental-redirects");
-const { decodePath, slugToFolder } = require("../libs/slug-utils");
+const { decodePath, slugToFolder } = require("@yari-internal/slug-utils");
 const {
   CONTENT_ROOT,
   CONTENT_TRANSLATED_ROOT,

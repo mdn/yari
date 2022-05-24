@@ -2,7 +2,7 @@ const path = require("path");
 const childProcess = require("child_process");
 
 const { CONTENT_ROOT, CONTENT_TRANSLATED_ROOT } = require("./constants");
-const { slugToFolder } = require("../libs/slug-utils");
+const { slugToFolder } = require("@yari-internal/slug-utils");
 const LRU = require("lru-cache");
 
 const MEMOIZE_INVALIDATE = Symbol("force cache update");
