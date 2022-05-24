@@ -504,7 +504,7 @@ function _getSpecifications(specURLsString, data) {
   // For a BCD feature, it can either be a string or an array of strings.
   let specURLs = [];
 
-  if (data) {
+  function getData(data) {
     // If 'data' is non-null, that means we have data for one or more BCD
     // features that we can extract spec URLs from.
     //
@@ -521,7 +521,7 @@ function _getSpecifications(specURLsString, data) {
       const compat = data.__compat;
       if (compat.spec_url) {
         if (Array.isArray(compat.spec_url)) {
-          specURLs = compat.spec_url;
+          specURLs.push(...compat.spec_url);
         } else {
           specURLs.push(compat.spec_url);
         }
@@ -534,10 +534,20 @@ function _getSpecifications(specURLsString, data) {
         if (!block) {
           continue;
         }
+        if (!block.__compat) {
+          // Some features — e.g., css.properties.justify-content — have no
+          // compat data themselves but have subfeatures with compat data.
+          // So we keep recursing through the nested property values until
+          // we either do or don’t find any subfeatures with compat data.
+          // Otherwise, if we’re processing multiple top-level features
+          // (that is, from a browser-compat value which is an array), we’d
+          // end up entirely missing the data for this feature.
+          getData(block);
+        }
         const compat = block.__compat;
         if (compat && compat.spec_url) {
           if (Array.isArray(compat.spec_url)) {
-            specURLs = compat.spec_url;
+            specURLs.push(...compat.spec_url);
           } else {
             specURLs.push(compat.spec_url);
           }
@@ -546,11 +556,18 @@ function _getSpecifications(specURLsString, data) {
     }
   }
 
+  if (data) {
+    getData(data);
+  }
+
   if (specURLsString !== "") {
     // If specURLsString is non-empty, then it has the string contents of
     // the document’s 'spec-urls' frontmatter key: one or more URLs.
     specURLs.push(...specURLsString.split(",").map((url) => url.trim()));
   }
+
+  // Eliminate any duplicate spec URLs
+  specURLs = [...new Set(specURLs)];
 
   // Use BCD specURLs to look up more specification data
   // from the browser-specs package
