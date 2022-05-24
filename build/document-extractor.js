@@ -442,12 +442,21 @@ function _addSingleSpecialSection($) {
       return data;
     }
 
-    for (const [key, compat] of Object.entries(data)) {
+    for (const [key, value] of Object.entries(data)) {
       let block;
       if (key === "__compat") {
-        block = compat;
-      } else if (compat && compat.__compat) {
-        block = compat.__compat;
+        block = value;
+      } else if (value && value.__compat) {
+        block = value.__compat;
+      } else {
+        // Some features — e.g., css.properties.justify-content — have no
+        // compat data themselves but have subfeatures with compat data.
+        // So we keep recursing through the nested property values until we
+        // either do or don’t find any subfeatures with compat data.
+        // Otherwise, if we’re processing multiple top-level features (that
+        // is, from a browser-compat value which is an array), we’d end up
+        // entirely missing the data for this feature.
+        _processBCDData(value);
       }
       if (block) {
         for (let [browser, info] of Object.entries(block.support)) {

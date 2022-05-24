@@ -54,6 +54,25 @@ export function listFeatures(
         depth: depth + 1,
       });
       features.push(...listFeatures(subIdentifier, subName, "", depth + 1));
+    } else {
+      // Some features — e.g., css.properties.justify-content — have no
+      // compat data themselves but have subfeatures with compat data. So
+      // we go down one level to check for subfeatures with compat data.
+      // Otherwise, in the case where we’re processing multiple top-level
+      // features (that is, from a browser-compat value which is an array),
+      // we’d end up entirely missing the data for this feature.
+      for (const [subName, subSubIdentifier] of Object.entries(subIdentifier)) {
+        if (subName !== "__compat" && subSubIdentifier.__compat) {
+          features.push({
+            name: parentName ? `${parentName}.${subName}` : subName,
+            compat: subSubIdentifier.__compat,
+            depth: depth + 1,
+          });
+          features.push(
+            ...listFeatures(subSubIdentifier, subName, "", depth + 1)
+          );
+        }
+      }
     }
   }
   return features;
