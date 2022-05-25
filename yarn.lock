@@ -4071,57 +4071,20 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@yari-internal/constants@file:../../../libs/constants::locator=%40yari-internal%2Fcontent-origin-request%40file%3A..%2Fcontent-origin-request%23..%2Fcontent-origin-request%3A%3Ahash%3D1dfa6c%26locator%3Dtests-6e426b%2540workspace%253Adeployer%252Faws-lambda%252Ftests":
-  version: 0.0.1
-  resolution: "@yari-internal/constants@file:../../../libs/constants#../../../libs/constants::hash=f91892&locator=%40yari-internal%2Fcontent-origin-request%40file%3A..%2Fcontent-origin-request%23..%2Fcontent-origin-request%3A%3Ahash%3D1dfa6c%26locator%3Dtests-6e426b%2540workspace%253Adeployer%252Faws-lambda%252Ftests"
-  checksum: ddf15b76f7a3e5e8bc64d19aebb9c132e273f8cb2d9b3477fdebb499b060c71deff86b0ca1e242a8c582caf2e7e3b79583d8a22130b6777341bd36067b35d2fc
-  languageName: node
-  linkType: hard
+"@yari-internal/constants@workspace:*, @yari-internal/constants@workspace:libs/constants":
+  version: 0.0.0-use.local
+  resolution: "@yari-internal/constants@workspace:libs/constants"
+  languageName: unknown
+  linkType: soft
 
-"@yari-internal/constants@file:../../../libs/constants::locator=%40yari-internal%2Fcontent-origin-request%40workspace%3Adeployer%2Faws-lambda%2Fcontent-origin-request":
-  version: 0.0.1
-  resolution: "@yari-internal/constants@file:../../../libs/constants#../../../libs/constants::hash=f91892&locator=%40yari-internal%2Fcontent-origin-request%40workspace%3Adeployer%2Faws-lambda%2Fcontent-origin-request"
-  checksum: ddf15b76f7a3e5e8bc64d19aebb9c132e273f8cb2d9b3477fdebb499b060c71deff86b0ca1e242a8c582caf2e7e3b79583d8a22130b6777341bd36067b35d2fc
-  languageName: node
-  linkType: hard
-
-"@yari-internal/constants@file:../../../libs/constants::locator=%40yari-internal%2Fcontent-origin-response%40file%3A..%2Fcontent-origin-response%23..%2Fcontent-origin-response%3A%3Ahash%3Dc8be19%26locator%3Dtests-6e426b%2540workspace%253Adeployer%252Faws-lambda%252Ftests":
-  version: 0.0.1
-  resolution: "@yari-internal/constants@file:../../../libs/constants#../../../libs/constants::hash=f91892&locator=%40yari-internal%2Fcontent-origin-response%40file%3A..%2Fcontent-origin-response%23..%2Fcontent-origin-response%3A%3Ahash%3Dc8be19%26locator%3Dtests-6e426b%2540workspace%253Adeployer%252Faws-lambda%252Ftests"
-  checksum: ddf15b76f7a3e5e8bc64d19aebb9c132e273f8cb2d9b3477fdebb499b060c71deff86b0ca1e242a8c582caf2e7e3b79583d8a22130b6777341bd36067b35d2fc
-  languageName: node
-  linkType: hard
-
-"@yari-internal/constants@file:../../../libs/constants::locator=%40yari-internal%2Fcontent-origin-response%40workspace%3Adeployer%2Faws-lambda%2Fcontent-origin-response":
-  version: 0.0.1
-  resolution: "@yari-internal/constants@file:../../../libs/constants#../../../libs/constants::hash=f91892&locator=%40yari-internal%2Fcontent-origin-response%40workspace%3Adeployer%2Faws-lambda%2Fcontent-origin-response"
-  checksum: ddf15b76f7a3e5e8bc64d19aebb9c132e273f8cb2d9b3477fdebb499b060c71deff86b0ca1e242a8c582caf2e7e3b79583d8a22130b6777341bd36067b35d2fc
-  languageName: node
-  linkType: hard
-
-"@yari-internal/content-origin-request@file:../content-origin-request::locator=tests-6e426b%40workspace%3Adeployer%2Faws-lambda%2Ftests":
-  version: 0.0.1
-  resolution: "@yari-internal/content-origin-request@file:../content-origin-request#../content-origin-request::hash=1dfa6c&locator=tests-6e426b%40workspace%3Adeployer%2Faws-lambda%2Ftests"
-  dependencies:
-    "@yari-internal/constants": "file:../../../libs/constants"
-    "@yari-internal/fundamental-redirects": "file:../../../libs/fundamental-redirects"
-    "@yari-internal/get-locale": "file:../../../libs/get-locale"
-    "@yari-internal/slug-utils": "file:../../../libs/slug-utils"
-    accept-language-parser: ^1.5.0
-    cookie: 0.5.0
-    sanitize-filename: ^1.6.3
-  checksum: f0afcf16fb6524d9f6e45aef0891a068f0ff22f7c63d656d5588a4b49fb2c7e446ea0a8555ad642dd8430b55be17eaee6766e43910eaa25c91bfbcd2d982fd38
-  languageName: node
-  linkType: hard
-
-"@yari-internal/content-origin-request@workspace:deployer/aws-lambda/content-origin-request":
+"@yari-internal/content-origin-request@workspace:*, @yari-internal/content-origin-request@workspace:deployer/aws-lambda/content-origin-request":
   version: 0.0.0-use.local
   resolution: "@yari-internal/content-origin-request@workspace:deployer/aws-lambda/content-origin-request"
   dependencies:
-    "@yari-internal/constants": "file:../../../libs/constants"
-    "@yari-internal/fundamental-redirects": "file:../../../libs/fundamental-redirects"
-    "@yari-internal/get-locale": "file:../../../libs/get-locale"
-    "@yari-internal/slug-utils": "file:../../../libs/slug-utils"
+    "@yari-internal/constants": "workspace:*"
+    "@yari-internal/fundamental-redirects": "workspace:*"
+    "@yari-internal/get-locale": "workspace:*"
+    "@yari-internal/slug-utils": "workspace:*"
     accept-language-parser: ^1.5.0
     cookie: 0.5.0
     dotenv: ^16.0.1
@@ -4129,50 +4092,25 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@yari-internal/content-origin-response@file:../content-origin-response::locator=tests-6e426b%40workspace%3Adeployer%2Faws-lambda%2Ftests":
-  version: 0.0.1
-  resolution: "@yari-internal/content-origin-response@file:../content-origin-response#../content-origin-response::hash=c8be19&locator=tests-6e426b%40workspace%3Adeployer%2Faws-lambda%2Ftests"
-  dependencies:
-    "@yari-internal/constants": "file:../../../libs/constants"
-  checksum: 00a97a8a1514b100f899ead0eb4ad29298723bcdc67ca909f28dc8a7931ca82ca6a69330dd9363633aeb5281e900acd25c69da62a8817f49d06b3a4f01f2a5ad
-  languageName: node
-  linkType: hard
-
-"@yari-internal/content-origin-response@workspace:deployer/aws-lambda/content-origin-response":
+"@yari-internal/content-origin-response@workspace:*, @yari-internal/content-origin-response@workspace:deployer/aws-lambda/content-origin-response":
   version: 0.0.0-use.local
   resolution: "@yari-internal/content-origin-response@workspace:deployer/aws-lambda/content-origin-response"
   dependencies:
-    "@yari-internal/constants": "file:../../../libs/constants"
+    "@yari-internal/constants": "workspace:*"
   languageName: unknown
   linkType: soft
 
-"@yari-internal/fundamental-redirects@file:../../../libs/fundamental-redirects::locator=%40yari-internal%2Fcontent-origin-request%40file%3A..%2Fcontent-origin-request%23..%2Fcontent-origin-request%3A%3Ahash%3D1dfa6c%26locator%3Dtests-6e426b%2540workspace%253Adeployer%252Faws-lambda%252Ftests":
-  version: 0.0.1
-  resolution: "@yari-internal/fundamental-redirects@file:../../../libs/fundamental-redirects#../../../libs/fundamental-redirects::hash=1f58b4&locator=%40yari-internal%2Fcontent-origin-request%40file%3A..%2Fcontent-origin-request%23..%2Fcontent-origin-request%3A%3Ahash%3D1dfa6c%26locator%3Dtests-6e426b%2540workspace%253Adeployer%252Faws-lambda%252Ftests"
-  checksum: 30d8d4aca415686fb7c321048d54afdbd0a6c95126137b62025531541bf28c6412d2bbe9e1654d4625a2da297e7666058078507ff03308f631934a3ac26d327b
-  languageName: node
-  linkType: hard
+"@yari-internal/fundamental-redirects@workspace:*, @yari-internal/fundamental-redirects@workspace:libs/fundamental-redirects":
+  version: 0.0.0-use.local
+  resolution: "@yari-internal/fundamental-redirects@workspace:libs/fundamental-redirects"
+  languageName: unknown
+  linkType: soft
 
-"@yari-internal/fundamental-redirects@file:../../../libs/fundamental-redirects::locator=%40yari-internal%2Fcontent-origin-request%40workspace%3Adeployer%2Faws-lambda%2Fcontent-origin-request":
-  version: 0.0.1
-  resolution: "@yari-internal/fundamental-redirects@file:../../../libs/fundamental-redirects#../../../libs/fundamental-redirects::hash=1f58b4&locator=%40yari-internal%2Fcontent-origin-request%40workspace%3Adeployer%2Faws-lambda%2Fcontent-origin-request"
-  checksum: 30d8d4aca415686fb7c321048d54afdbd0a6c95126137b62025531541bf28c6412d2bbe9e1654d4625a2da297e7666058078507ff03308f631934a3ac26d327b
-  languageName: node
-  linkType: hard
-
-"@yari-internal/get-locale@file:../../../libs/get-locale::locator=%40yari-internal%2Fcontent-origin-request%40file%3A..%2Fcontent-origin-request%23..%2Fcontent-origin-request%3A%3Ahash%3D1dfa6c%26locator%3Dtests-6e426b%2540workspace%253Adeployer%252Faws-lambda%252Ftests":
-  version: 0.0.1
-  resolution: "@yari-internal/get-locale@file:../../../libs/get-locale#../../../libs/get-locale::hash=3fcfcf&locator=%40yari-internal%2Fcontent-origin-request%40file%3A..%2Fcontent-origin-request%23..%2Fcontent-origin-request%3A%3Ahash%3D1dfa6c%26locator%3Dtests-6e426b%2540workspace%253Adeployer%252Faws-lambda%252Ftests"
-  checksum: a427c4592a2313e38e0a987d20adf793be089d80a0cc858b4bf917d350d0a3fbb4875f983ae89794342abb663d005a22334cf594cba0992404ec3d7f4150480f
-  languageName: node
-  linkType: hard
-
-"@yari-internal/get-locale@file:../../../libs/get-locale::locator=%40yari-internal%2Fcontent-origin-request%40workspace%3Adeployer%2Faws-lambda%2Fcontent-origin-request":
-  version: 0.0.1
-  resolution: "@yari-internal/get-locale@file:../../../libs/get-locale#../../../libs/get-locale::hash=3fcfcf&locator=%40yari-internal%2Fcontent-origin-request%40workspace%3Adeployer%2Faws-lambda%2Fcontent-origin-request"
-  checksum: a427c4592a2313e38e0a987d20adf793be089d80a0cc858b4bf917d350d0a3fbb4875f983ae89794342abb663d005a22334cf594cba0992404ec3d7f4150480f
-  languageName: node
-  linkType: hard
+"@yari-internal/get-locale@workspace:*, @yari-internal/get-locale@workspace:libs/get-locale":
+  version: 0.0.0-use.local
+  resolution: "@yari-internal/get-locale@workspace:libs/get-locale"
+  languageName: unknown
+  linkType: soft
 
 "@yari-internal/mdn-stripe-price-ids@workspace:deployer/aws-lambda/mdn-stripe-price-ids":
   version: 0.0.0-use.local
@@ -4183,23 +4121,13 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@yari-internal/slug-utils@file:../../../libs/slug-utils::locator=%40yari-internal%2Fcontent-origin-request%40file%3A..%2Fcontent-origin-request%23..%2Fcontent-origin-request%3A%3Ahash%3D1dfa6c%26locator%3Dtests-6e426b%2540workspace%253Adeployer%252Faws-lambda%252Ftests":
-  version: 0.0.1
-  resolution: "@yari-internal/slug-utils@file:../../../libs/slug-utils#../../../libs/slug-utils::hash=7210f5&locator=%40yari-internal%2Fcontent-origin-request%40file%3A..%2Fcontent-origin-request%23..%2Fcontent-origin-request%3A%3Ahash%3D1dfa6c%26locator%3Dtests-6e426b%2540workspace%253Adeployer%252Faws-lambda%252Ftests"
+"@yari-internal/slug-utils@workspace:*, @yari-internal/slug-utils@workspace:libs/slug-utils":
+  version: 0.0.0-use.local
+  resolution: "@yari-internal/slug-utils@workspace:libs/slug-utils"
   dependencies:
     sanitize-filename: ^1.6.3
-  checksum: 0a07b58b7b1530ab1f76247e39127605e2a198f81b7b1c53c24efa97f4324036cb844483c377b2c2aa6fcd1d0d87abb590dd129928098ca0c21bbb73ddc3d1cd
-  languageName: node
-  linkType: hard
-
-"@yari-internal/slug-utils@file:../../../libs/slug-utils::locator=%40yari-internal%2Fcontent-origin-request%40workspace%3Adeployer%2Faws-lambda%2Fcontent-origin-request":
-  version: 0.0.1
-  resolution: "@yari-internal/slug-utils@file:../../../libs/slug-utils#../../../libs/slug-utils::hash=7210f5&locator=%40yari-internal%2Fcontent-origin-request%40workspace%3Adeployer%2Faws-lambda%2Fcontent-origin-request"
-  dependencies:
-    sanitize-filename: ^1.6.3
-  checksum: 0a07b58b7b1530ab1f76247e39127605e2a198f81b7b1c53c24efa97f4324036cb844483c377b2c2aa6fcd1d0d87abb590dd129928098ca0c21bbb73ddc3d1cd
-  languageName: node
-  linkType: hard
+  languageName: unknown
+  linkType: soft
 
 "@zip.js/zip.js@npm:2.4.5":
   version: 2.4.5
@@ -19263,8 +19191,8 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "tests-6e426b@workspace:deployer/aws-lambda/tests"
   dependencies:
-    "@yari-internal/content-origin-request": "file:../content-origin-request"
-    "@yari-internal/content-origin-response": "file:../content-origin-response"
+    "@yari-internal/content-origin-request": "workspace:*"
+    "@yari-internal/content-origin-response": "workspace:*"
     got: 11.8.2
     jest: 26.6.3
     kleur: 4.1.4

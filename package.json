@@ -10,6 +10,9 @@
     "deployer/aws-lambda/content-origin-response",
     "deployer/aws-lambda/mdn-stripe-price-ids",
     "deployer/aws-lambda/tests",
+    "libs/constants",
+    "libs/fundamental-redirects",
+    "libs/get-locale",
     "libs/slug-utils"
   ],
   "scripts": {

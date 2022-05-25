@@ -9,7 +9,7 @@
     "make-package": "yarn install && zip -r -X function.zip . -i index.js 'node_modules/*'"
   },
   "dependencies": {
-    "@yari-internal/constants": "file:../../../libs/constants"
+    "@yari-internal/constants": "workspace:*"
   },
   "engines": {
     "node": ">=16.x"
