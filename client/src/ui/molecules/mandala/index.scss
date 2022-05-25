@@ -5,11 +5,13 @@
   justify-content: center;
   // transform: skew(-7deg, 10deg);
 
-  --mandala-primary: #{$mdn-color-neutral-70};
-  --mandala-accent-1: var(--html-accent-color);
-  --mandala-accent-2: var(--http-accent-color);
-  --mandala-accent-3: var(--js-accent-color);
-  --mandala-accent-4: #{$mdn-color-neutral-30};
+  --mandala-primary: #760188;
+  --mandala-accent-1: #e50000;
+  --mandala-accent-2: #ff8d00;
+  --mandala-accent-3: #ffee00;
+  --mandala-accent-4: #008121;
+  --mandala-accent-5: #004cff;
+  --mandala-accent-6: #760188;
 
   @keyframes rotation {
     from {
@@ -53,9 +55,13 @@
     font-size: 1rem;
   }
 
+  .mandala-accent-6 {
+    font-size: 0.9rem;
+  }
+
   &.animate-colors {
     svg > text > textPath > tspan {
-      animation: mandala-color-change 50s infinite;
+      animation: mandala-color-change 60s infinite;
       animation-timing-function: ease-in-out;
     }
 
@@ -65,22 +71,32 @@
 
     .mandala-accent-1 > textPath > tspan {
       fill: var(--mandala-accent-1);
-      animation-delay: -15s;
+      animation-delay: -5s;
     }
 
     .mandala-accent-2 > textPath > tspan {
       fill: var(--mandala-accent-2);
-      animation-delay: -20s;
+      animation-delay: -15s;
     }
 
     .mandala-accent-3 > textPath > tspan {
       fill: var(--mandala-accent-3);
-      animation-delay: -30s;
+      animation-delay: -25s;
+    }
+
+    .mandala-accent-4 > textPath > tspan {
+      fill: var(--mandala-accent-4);
+      animation-delay: -35s;
     }
 
     .mandala-accent-5 > textPath > tspan {
-      fill: var(--mandala-accent-4);
-      animation-delay: -40s;
+      fill: var(--mandala-accent-5);
+      animation-delay: -45s;
+    }
+
+    .mandala-accent-6 > textPath > tspan {
+      fill: var(--mandala-accent-6);
+      animation-delay: -55s;
     }
   }
   @keyframes mandala-color-change {
@@ -89,15 +105,15 @@
     }
 
     10% {
-      fill: var(--mandala-primary);
-    }
-
-    15% {
       fill: var(--mandala-accent-1);
     }
 
-    20% {
+    15% {
       fill: var(--mandala-primary);
+    }
+
+    20% {
+      fill: var(--mandala-accent-2);
     }
 
     25% {
@@ -105,7 +121,7 @@
     }
 
     30% {
-      fill: var(--mandala-accent-2);
+      fill: var(--mandala-accent-3);
     }
 
     35% {
@@ -113,15 +129,15 @@
     }
 
     40% {
-      fill: var(--mandala-primary);
+      fill: var(--mandala-accent-4);
     }
 
     50% {
-      fill: var(--mandala-accent-3);
+      fill: var(--mandala-primary);
     }
 
     55% {
-      fill: var(--mandala-primary);
+      fill: var(--mandala-accent-5);
     }
 
     60% {
@@ -129,7 +145,7 @@
     }
 
     65% {
-      fill: var(--mandala-accent-4);
+      fill: var(--mandala-accent-6);
     }
 
     70% {
