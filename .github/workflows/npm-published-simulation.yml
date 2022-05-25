@@ -60,18 +60,25 @@ jobs:
         run: |
           yarn build:prepare
 
-      - name: Build and install tarball
+      - name: Build tarball
         run: |
           echo mdn/content/ >> .npmignore
           npm pack
           TARBALL=`ls mdn-yari-*.tgz`
           echo $TARBALL
           ls -lh $TARBALL
-          mv $TARBALL mdn/content/
-          cd mdn/content
-          corepack disable
+          mv $TARBALL mdn/content/mdn-yari.tgz
+
+      - name: Install Yarn Classic
+        run: |
           yarn set version classic
-          yarn add file:$TARBALL
+          corepack disable
+          yarn --version
+
+      - name: Install tarball
+        working-directory: mdn/content
+        run: |
+          yarn add file:mdn-yari.tgz
 
       - name: Start Yari from mock content repo
         working-directory: mdn/content
