@@ -39,6 +39,7 @@ import "./index.scss";
 // code could come with its own styling rather than it having to be part of the
 // main bundle all the time.
 import "./interactive-examples.scss";
+import { DocumentSurvey } from "../ui/molecules/document-survey";
 // import { useUIStatus } from "../ui-context";
 
 // Lazy sub-components
@@ -218,6 +219,7 @@ export function Document(props /* TODO: define a TS interface for this */) {
           )}
           <article className="main-page-content" lang={doc.locale}>
             <h1>{doc.title}</h1>
+            <DocumentSurvey doc={doc} />
             <RenderDocumentBody doc={doc} />
             <Metadata doc={doc} locale={locale} />
           </article>
