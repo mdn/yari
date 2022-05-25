@@ -70,31 +70,37 @@
       fill: var(--mandala-primary);
     }
 
+    .mandala-accent-1 > textPath,
     .mandala-accent-1 > textPath > tspan {
       fill: var(--mandala-accent-1);
       animation-delay: -5s;
     }
 
+    .mandala-accent-2 > textPath,
     .mandala-accent-2 > textPath > tspan {
       fill: var(--mandala-accent-2);
       animation-delay: -15s;
     }
 
+    .mandala-accent-3 > textPath,
     .mandala-accent-3 > textPath > tspan {
       fill: var(--mandala-accent-3);
       animation-delay: -25s;
     }
 
+    .mandala-accent-4 > textPath,
     .mandala-accent-4 > textPath > tspan {
       fill: var(--mandala-accent-4);
       animation-delay: -35s;
     }
 
+    .mandala-accent-5 > textPath,
     .mandala-accent-5 > textPath > tspan {
       fill: var(--mandala-accent-5);
       animation-delay: -45s;
     }
 
+    .mandala-accent-6 > textPath,
     .mandala-accent-6 > textPath > tspan {
       fill: var(--mandala-accent-6);
       animation-delay: -55s;
