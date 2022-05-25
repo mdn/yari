@@ -69,6 +69,7 @@ jobs:
           ls -lh $TARBALL
           mv $TARBALL mdn/content/
           cd mdn/content
+          yarn set version classic
           yarn add file:$TARBALL
 
       - name: Start Yari from mock content repo
