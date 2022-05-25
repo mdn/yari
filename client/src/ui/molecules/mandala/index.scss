@@ -5,14 +5,14 @@
   justify-content: center;
   // transform: skew(-7deg, 10deg);
 
-  --accent-alpha: 0.8;
+  --mandala-accent-alpha: 0.8;
   --mandala-primary: #{$mdn-color-neutral-70};
-  --mandala-accent-1: rgba(229, 0, 0, var(--accent-alpha));
-  --mandala-accent-2: rgba(255, 141, 0, var(--accent-alpha));
-  --mandala-accent-3: rgba(255, 238, 0, var(--accent-alpha));
-  --mandala-accent-4: rgba(0, 129, 33, var(--accent-alpha));
-  --mandala-accent-5: rgba(0, 76, 255, var(--accent-alpha));
-  --mandala-accent-6: rgba(118, 1, 136, var(--accent-alpha));
+  --mandala-accent-1: rgba(229, 0, 0, var(--mandala-accent-alpha));
+  --mandala-accent-2: rgba(255, 141, 0, var(--mandala-accent-alpha));
+  --mandala-accent-3: rgba(255, 238, 0, var(--mandala-accent-alpha));
+  --mandala-accent-4: rgba(0, 129, 33, var(--mandala-accent-alpha));
+  --mandala-accent-5: rgba(0, 76, 255, var(--mandala-accent-alpha));
+  --mandala-accent-6: rgba(118, 1, 136, var(--mandala-accent-alpha));
 
   @keyframes rotation {
     from {
