@@ -10,7 +10,7 @@
     "deployer/aws-lambda/content-origin-response",
     "deployer/aws-lambda/mdn-stripe-price-ids",
     "deployer/aws-lambda/tests",
-    "libs/lsug-utils"
+    "libs/slug-utils"
   ],
   "scripts": {
     "analyze": "source-map-explorer 'client/build/static/js/*.js'",
