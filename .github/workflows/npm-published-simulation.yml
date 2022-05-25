@@ -69,6 +69,7 @@ jobs:
           ls -lh $TARBALL
           mv $TARBALL mdn/content/
           cd mdn/content
+          corepack disable
           yarn set version classic
           yarn add file:$TARBALL
 
