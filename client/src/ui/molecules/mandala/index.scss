@@ -68,101 +68,62 @@
   }
 
   &.animate-colors {
-    svg > text > textPath > tspan {
-      animation: mandala-color-change 60s infinite;
+    svg > text > textPath {
+      animation: mandala-color-change 50s infinite;
       animation-timing-function: ease-in-out;
     }
-
-    svg > text > textPath > tspan {
-      fill: var(--mandala-primary);
-    }
-
-    .mandala-accent-1 > textPath,
-    .mandala-accent-1 > textPath > tspan {
-      fill: var(--mandala-accent-1);
-      animation-delay: -5s;
-    }
-
-    .mandala-accent-2 > textPath,
-    .mandala-accent-2 > textPath > tspan {
-      fill: var(--mandala-accent-2);
-      animation-delay: -15s;
-    }
-
-    .mandala-accent-3 > textPath,
-    .mandala-accent-3 > textPath > tspan {
-      fill: var(--mandala-accent-3);
-      animation-delay: -25s;
-    }
-
-    .mandala-accent-4 > textPath,
-    .mandala-accent-4 > textPath > tspan {
-      fill: var(--mandala-accent-4);
-      animation-delay: -35s;
-    }
-
-    .mandala-accent-5 > textPath,
-    .mandala-accent-5 > textPath > tspan {
-      fill: var(--mandala-accent-5);
-      animation-delay: -45s;
-    }
-
-    .mandala-accent-6 > textPath,
-    .mandala-accent-6 > textPath > tspan {
-      fill: var(--mandala-accent-6);
-      animation-delay: -55s;
-    }
   }
+
   @keyframes mandala-color-change {
     0% {
       fill: var(--mandala-primary);
     }
 
     10% {
-      fill: var(--mandala-accent-1);
-    }
-
-    15% {
-      fill: var(--mandala-primary);
+      fill: var(--mandala-accent);
     }
 
     20% {
-      fill: var(--mandala-accent-2);
-    }
-
-    25% {
-      fill: var(--mandala-primary);
+      fill: var(--mandala-accent);
     }
 
     30% {
-      fill: var(--mandala-accent-3);
+      fill: var(--mandala-primary);
     }
 
     35% {
       fill: var(--mandala-primary);
     }
 
-    40% {
-      fill: var(--mandala-accent-4);
-    }
-
-    50% {
-      fill: var(--mandala-primary);
+    45% {
+      fill: var(--mandala-accent);
     }
 
     55% {
-      fill: var(--mandala-accent-5);
-    }
-
-    60% {
-      fill: var(--mandala-primary);
+      fill: var(--mandala-accent);
     }
 
     65% {
-      fill: var(--mandala-accent-6);
+      fill: var(--mandala-primary);
     }
 
     70% {
+      fill: var(--mandala-primary);
+    }
+
+    80% {
+      fill: var(--mandala-accent);
+    }
+
+    90% {
+      fill: var(--mandala-accent);
+    }
+
+    100% {
+      fill: var(--mandala-primary);
+    }
+
+    90% {
       fill: var(--mandala-primary);
     }
 
