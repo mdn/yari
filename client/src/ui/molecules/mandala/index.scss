@@ -37,26 +37,32 @@
   }
 
   .mandala-accent-1 {
+    --mandala-accent: var(--mandala-accent-1);
     font-size: 1.5rem;
   }
 
   .mandala-accent-2 {
+    --mandala-accent: var(--mandala-accent-2);
     font-size: 1.3rem;
   }
 
   .mandala-accent-3 {
+    --mandala-accent: var(--mandala-accent-3);
     font-size: 1.2rem;
   }
 
   .mandala-accent-4 {
+    --mandala-accent: var(--mandala-accent-4);
     font-size: 1.1rem;
   }
 
   .mandala-accent-5 {
+    --mandala-accent: var(--mandala-accent-5);
     font-size: 1rem;
   }
 
   .mandala-accent-6 {
+    --mandala-accent: var(--mandala-accent-6);
     font-size: 0.9rem;
     font-weight: 500;
   }
