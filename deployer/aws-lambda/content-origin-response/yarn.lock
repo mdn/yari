@@ -3,19 +3,17 @@
 
 __metadata:
   version: 6
-  cacheKey: 8
 
-"@yari-internal/constants@file:../../../libs/constants::locator=%40yari-internal%2Fcontent-origin-response%40workspace%3A.":
-  version: 0.0.1
-  resolution: "@yari-internal/constants@file:../../../libs/constants#../../../libs/constants::hash=45ca56&locator=%40yari-internal%2Fcontent-origin-response%40workspace%3A."
-  checksum: d4f480a620c8af8e994c5cffbb61dacecc7c4ab6a6a9f1d7abaeaeef70ee588954ea2cda7150281e6d83a211b8844f5081155c847e47b9841fc0a6e7db38a285
+"@yari-internal/constants@portal:../../../libs/constants::locator=%40yari-internal%2Fcontent-origin-response%40workspace%3A.":
+  version: 0.0.0-use.local
+  resolution: "@yari-internal/constants@portal:../../../libs/constants::locator=%40yari-internal%2Fcontent-origin-response%40workspace%3A."
   languageName: node
-  linkType: hard
+  linkType: soft
 
 "@yari-internal/content-origin-response@workspace:.":
   version: 0.0.0-use.local
   resolution: "@yari-internal/content-origin-response@workspace:."
   dependencies:
-    "@yari-internal/constants": "file:../../../libs/constants"
+    "@yari-internal/constants": "portal:../../../libs/constants"
   languageName: unknown
   linkType: soft

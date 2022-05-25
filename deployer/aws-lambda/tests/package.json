@@ -8,8 +8,8 @@
     "test-server": "jest"
   },
   "dependencies": {
-    "@yari-internal/content-origin-request": "file:../content-origin-request",
-    "@yari-internal/content-origin-response": "file:../content-origin-response"
+    "@yari-internal/content-origin-request": "portal:../content-origin-request",
+    "@yari-internal/content-origin-response": "portal:../content-origin-response"
   },
   "devDependencies": {
     "got": "11.8.2",
