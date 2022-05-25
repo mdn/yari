@@ -123,7 +123,7 @@
     "unist-util-visit": "^2.0.3"
   },
   "devDependencies": {
-    "@babel/core": "^7.18.0",
+    "@babel/core": "^7.18.2",
     "@babel/eslint-parser": "^7.18.2",
     "@babel/preset-env": "^7.18.2",
     "@mdn/dinocons": "^0.5.5",
