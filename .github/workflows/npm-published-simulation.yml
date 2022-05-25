@@ -72,7 +72,6 @@ jobs:
       - name: Install Yarn Classic
         run: |
           yarn set version classic
-          corepack disable
           yarn --version
 
       - name: Install tarball
