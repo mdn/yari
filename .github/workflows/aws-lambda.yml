@@ -21,7 +21,7 @@ jobs:
       - name: Setup Node.js environment
         uses: actions/setup-node@v3
         with:
-          node-version: "14"
+          node-version: "16"
 
       # Note!
       # We need to install all node modules in each of the 3 directories.

@@ -27,7 +27,7 @@ Lambda function if it contains the following:
       "sanitize-filename": "^1.6.3"
     },
     "engines": {
-      "node": "14.x"
+      "node": ">=16.x"
     },
     "aws": {
       "name": "mdn-content-origin-request",
