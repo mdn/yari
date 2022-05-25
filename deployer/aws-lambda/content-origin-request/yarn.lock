@@ -43,10 +43,10 @@ __metadata:
 
 "@yari-internal/slug-utils@file:../../../libs/slug-utils::locator=%40yari-internal%2Fcontent-origin-request%40workspace%3A.":
   version: 0.0.1
-  resolution: "@yari-internal/slug-utils@file:../../../libs/slug-utils#../../../libs/slug-utils::hash=a0d57d&locator=%40yari-internal%2Fcontent-origin-request%40workspace%3A."
+  resolution: "@yari-internal/slug-utils@file:../../../libs/slug-utils#../../../libs/slug-utils::hash=7210f5&locator=%40yari-internal%2Fcontent-origin-request%40workspace%3A."
   dependencies:
     sanitize-filename: ^1.6.3
-  checksum: dedd6c0ad115ead261e3df8dc123dcfdbba1a40be887ff5aeb424652de65a408e29d577631d884590be8fc246bf61e341ad2fbcb285e5d4cdc4fa77163e9a22e
+  checksum: 0a07b58b7b1530ab1f76247e39127605e2a198f81b7b1c53c24efa97f4324036cb844483c377b2c2aa6fcd1d0d87abb590dd129928098ca0c21bbb73ddc3d1cd
   languageName: node
   linkType: hard
 
