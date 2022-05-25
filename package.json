@@ -125,7 +125,7 @@
   "devDependencies": {
     "@babel/core": "^7.18.0",
     "@babel/eslint-parser": "^7.17.0",
-    "@babel/preset-env": "^7.18.0",
+    "@babel/preset-env": "^7.18.2",
     "@mdn/dinocons": "^0.5.5",
     "@mdn/minimalist": "^2.0.4",
     "@playwright/test": "^1.22.2",
