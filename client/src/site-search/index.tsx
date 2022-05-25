@@ -1,6 +1,6 @@
 import React from "react";
 import { useSearchParams } from "react-router-dom";
-
+import { useIsServer } from "../hooks";
 import { Loading } from "../ui/atoms/loading";
 import { PageContentContainer } from "../ui/atoms/page-content";
 import { useGA } from "../ga-context";
@@ -10,7 +10,7 @@ const SiteSearchForm = React.lazy(() => import("./form"));
 const SearchResults = React.lazy(() => import("./search-results"));
 
 export function SiteSearch() {
-  const isServer = typeof window === "undefined";
+  const isServer = useIsServer();
   const ga = useGA();
   const [searchParams] = useSearchParams();
 

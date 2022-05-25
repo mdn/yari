@@ -99,7 +99,7 @@ function getEventForAcceptHeaderAndCountry(
             origin: {
               custom: {
                 customHeaders: {
-                  "x-mdn-env": { key: "x-mdn-env", value: env },
+                  "x-mdn-env": [{ key: "x-mdn-env", value: env }],
                 },
               },
             },

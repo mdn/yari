@@ -1,10 +1,11 @@
 import React, { useReducer } from "react";
 import { useLocation } from "react-router-dom";
+import { browsers as browserData } from "@mdn/browser-compat-data";
 import type bcd from "@mdn/browser-compat-data/types";
 import { BrowserInfoContext } from "./browser-info";
 import { BrowserCompatibilityErrorBoundary } from "./error-boundary";
 import { FeatureRow } from "./feature-row";
-import { Headers, PLATFORM_BROWSERS } from "./headers";
+import { Headers } from "./headers";
 import { Legend } from "./legend";
 import { listFeatures } from "./utils";
 
@@ -44,18 +45,30 @@ function gatherPlatformsAndBrowsers(
   let platforms = ["desktop", "mobile"];
   if (category === "javascript" || hasNodeJSData || hasDenoData) {
     platforms.push("server");
-  } else if (category === "webextensions") {
-    platforms = ["webextensions-desktop", "webextensions-mobile"];
   }
 
-  const browsers = new Set(
-    platforms.map((platform) => PLATFORM_BROWSERS[platform] || []).flat()
-  );
+  let browsers: bcd.BrowserNames[] = [];
+
+  // Add browsers in platform order to align table cells
+  for (const platform of platforms) {
+    browsers.push(
+      ...(Object.keys(browserData).filter(
+        (browser) => browserData[browser].type === platform
+      ) as bcd.BrowserNames[])
+    );
+  }
+
+  // Filter WebExtension browsers in corresponding tables.
+  if (category === "webextensions") {
+    browsers = browsers.filter(
+      (browser) => browserData[browser].accepts_webextensions
+    );
+  }
 
   // If there is no Node.js data for a category outside of "javascript", don't
   // show it. It ended up in the browser list because there is data for Deno.
   if (category !== "javascript" && !hasNodeJSData) {
-    browsers.delete("nodejs");
+    browsers = browsers.filter((browser) => browser !== "nodejs");
   }
 
   return [platforms, [...browsers]];

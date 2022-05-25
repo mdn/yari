@@ -29,7 +29,9 @@ const fs = require("fs");
 const path = require("path");
 const ejs = require("ejs");
 
-const DEFAULT_MACROS_DIRECTORY = path.normalize(`${__dirname}/../macros/`);
+const dirname = __dirname;
+
+const DEFAULT_MACROS_DIRECTORY = path.normalize(`${dirname}/../macros/`);
 
 class Templates {
   constructor(macroDirectory = DEFAULT_MACROS_DIRECTORY) {

@@ -3,11 +3,13 @@ const path = require("path");
 const nodeExternals = require("webpack-node-externals");
 const webpack = require("webpack");
 
+const dirname = __dirname;
+
 module.exports = {
-  context: path.resolve(__dirname, "."),
+  context: path.resolve(dirname, "."),
   entry: "./index.js",
   output: {
-    path: path.resolve(__dirname, "dist"),
+    path: path.resolve(dirname, "dist"),
     filename: "[name].js",
     sourceMapFilename: "[name].js.map",
     libraryTarget: "commonjs2",

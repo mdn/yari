@@ -5,18 +5,17 @@ const code = require("./code");
 const { asDefinitionList, isDefinitionList } = require("./dl");
 const { one, all, wrap } = require("./mdast-util-to-hast-utils");
 
+const dirname = __dirname;
+
 /* A utilitary function which parses a JSON gettext file
   to return a Map with each localized string and its matching ID  */
 function getL10nCardMap(locale = DEFAULT_LOCALE) {
   // Test if target localization file exists, if
   // not, fallback on English
-  let localeFilePath = path.join(
-    __dirname,
-    `../../localizations/${locale}.json`
-  );
+  let localeFilePath = path.join(dirname, `../../localizations/${locale}.json`);
   if (!fs.existsSync(localeFilePath)) {
     localeFilePath = path.join(
-      __dirname,
+      dirname,
       `../../localizations/${DEFAULT_LOCALE}.json`
     );
   }
