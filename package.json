@@ -4,6 +4,14 @@
   "repository": "https://github.com/mdn/yari",
   "license": "MPL-2.0",
   "author": "MDN Web Docs",
+  "workspaces": [
+    "client/pwa",
+    "deployer/aws-lambda/content-origin-request",
+    "deployer/aws-lambda/content-origin-response",
+    "deployer/aws-lambda/mdn-stripe-price-ids",
+    "deployer/aws-lambda/tests",
+    "libs/lsug-utils"
+  ],
   "scripts": {
     "analyze": "source-map-explorer 'client/build/static/js/*.js'",
     "analyze:css": "source-map-explorer 'client/build/static/css/*.css'",
