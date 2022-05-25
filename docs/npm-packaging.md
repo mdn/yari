@@ -74,7 +74,7 @@ will produce a `mdn-yari-x.y.z.tgz` file on your disk.
 Now, go to `~/content` and run:
 
     rm -fr node_modules
-    yarn add ~/yari/mdn-yari-x.y.z.tgz
+    yarn add --ignore-workspace-root-check ~/yari/mdn-yari-x.y.z.tgz
     yarn start
     open http://localhost:5042
 

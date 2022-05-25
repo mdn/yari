@@ -66,7 +66,7 @@ jobs:
           ls -lh $TARBALL
           mv $TARBALL mdn/content/
           cd mdn/content
-          yarn add file:$TARBALL
+          yarn add --ignore-workspace-root-check file:$TARBALL
 
       - name: Start Yari from mock content repo
         working-directory: mdn/content
