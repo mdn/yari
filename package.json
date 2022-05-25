@@ -54,7 +54,6 @@
     "lodash": ">=4.17.15"
   },
   "dependencies": {
-    "@babel/helper-builder-react-jsx": "^7.16.7",
     "@caporal/core": "^2.0.2",
     "@fast-csv/parse": "^4.3.6",
     "@mdn/browser-compat-data": "^4.2.1",
@@ -130,6 +129,7 @@
     "@babel/core": "^7.18.0",
     "@babel/eslint-parser": "^7.17.0",
     "@babel/plugin-proposal-private-property-in-object": "^7.17.12",
+    "@babel/preset-env": "^7.18.0",
     "@mdn/dinocons": "^0.5.5",
     "@mdn/minimalist": "^2.0.4",
     "@playwright/test": "^1.22.2",
@@ -140,8 +140,8 @@
     "@types/react": "^18.0.9",
     "@types/react-dom": "^18.0.3",
     "@types/react-modal": "^3.13.1",
-    "@typescript-eslint/eslint-plugin": "^5.25.0",
-    "@typescript-eslint/parser": "^5.25.0",
+    "@typescript-eslint/eslint-plugin": "^5.26.0",
+    "@typescript-eslint/parser": "^5.26.0",
     "braces": "^3.0.2",
     "cross-env": "^7.0.3",
     "diff": "^5.1.0",

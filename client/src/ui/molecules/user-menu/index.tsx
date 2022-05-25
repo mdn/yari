@@ -5,7 +5,7 @@ import { Submenu } from "../submenu";
 import SignOut from "../../atoms/signout";
 
 import { useUserData } from "../../../user-context";
-import { useLocale } from "../../../hooks";
+import { useIsServer, useLocale } from "../../../hooks";
 import {
   FXA_SETTINGS_URL,
   HEADER_NOTIFICATIONS_MENU_API_URL,
@@ -20,6 +20,7 @@ import useSWR from "swr";
 export const UserMenu = () => {
   const userData = useUserData();
   const locale = useLocale();
+  const isServer = useIsServer();
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [newNotifications, setNewNotifications] = useState<boolean>(false);
   const { data } = useSWR<NotificationData>(
@@ -42,7 +43,7 @@ export const UserMenu = () => {
   }, [data]);
 
   // if we don't have the user data yet, don't render anything
-  if (!userData || typeof window === "undefined") {
+  if (!userData || isServer) {
     return null;
   }
 

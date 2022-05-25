@@ -16,6 +16,7 @@ function Mandala({
       className={`mandala-container ${animateColors ? "animate-colors" : ""} ${
         extraClasses || ""
       }`}
+      aria-hidden="true"
     >
       <div
         className={`mandala-translate ${
