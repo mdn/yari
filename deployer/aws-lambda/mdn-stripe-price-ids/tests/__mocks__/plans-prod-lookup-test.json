@@ -659,7 +659,7 @@
           "product:details:2": "Collections of articles",
           "product:details:3": "MDN offline"
         },
-        "price_id": "ITALIAN_1"
+        "price_id": "PROD_ITALIAN_1"
       },
       "mdn_plus_5y": {
         "unit_amount": 5000,
@@ -680,7 +680,7 @@
           "product:details:2": "Collections of articles",
           "product:details:3": "MDN offline"
         },
-        "price_id": "ITALIAN_2"
+        "price_id": "PROD_ITALIAN_2"
       },
       "mdn_plus_10m": {
         "unit_amount": 1000,
@@ -701,7 +701,7 @@
           "product:details:2": "Collections of articles",
           "product:details:3": "MDN offline"
         },
-        "price_id": "ITALIAN_3"
+        "price_id": "PROD_ITALIAN_3"
       },
       "mdn_plus_10y": {
         "unit_amount": 10000,
@@ -722,7 +722,7 @@
           "product:details:2": "Collections of articles",
           "product:details:3": "MDN offline"
         },
-        "price_id": "ITALIAN_4"
+        "price_id": "PROD_ITALIAN_4"
       }
     },
     "eur-nl": {

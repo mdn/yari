@@ -16,6 +16,16 @@ const { renderHTML } = require("../ssr/dist/main");
 const { default: got } = require("got");
 const { splitSections } = require("./utils");
 const cheerio = require("cheerio");
+const { findByURL } = require("../content/document");
+
+const dirname = __dirname;
+
+const FEATURED_ARTICLES = [
+  "Web/CSS/Cascade",
+  "Web/HTML/Element/dialog",
+  "Learn/JavaScript/Asynchronous",
+  "Web/API/Canvas_API/Tutorial",
+];
 
 const contributorSpotlightRoot = CONTRIBUTOR_SPOTLIGHT_ROOT;
 
@@ -124,20 +134,20 @@ async function buildSPAs(options) {
           noIndexing: true,
         },
         {
-          prefix: "plus/docs/collections",
+          prefix: "plus/docs/faq",
+          pageTitle: `FAQ | ${MDN_PLUS_TITLE}`,
+        },
+        {
+          prefix: "plus/docs/features/collections",
           pageTitle: `Collections | ${MDN_PLUS_TITLE}`,
         },
         {
-          prefix: "plus/docs/notifications",
+          prefix: "plus/docs/features/notifications",
           pageTitle: `Notifications | ${MDN_PLUS_TITLE}`,
         },
         {
-          prefix: "plus/docs/offline",
+          prefix: "plus/docs/features/offline",
           pageTitle: `MDN Offline | ${MDN_PLUS_TITLE}`,
-        },
-        {
-          prefix: "plus/docs/faq",
-          pageTitle: `FAQ | ${MDN_PLUS_TITLE}`,
         },
         {
           prefix: "plus/notifications",
@@ -241,7 +251,7 @@ async function buildSPAs(options) {
     }
   }
   await buildStaticPages(
-    path.join(__dirname, "../copy/plus"),
+    path.join(dirname, "../copy/plus"),
     "plus/docs",
     "MDN Plus"
   );
@@ -267,14 +277,46 @@ async function buildSPAs(options) {
       if (!fs.statSync(path.join(root, locale)).isDirectory()) {
         continue;
       }
+
+      // circular dependency, so needs to be imported down here:
+      const { buildDocument } = require("./");
+      const featuredArticles = (
+        await Promise.all(
+          FEATURED_ARTICLES.map(async (url) => {
+            const document =
+              findByURL(`/${locale}/docs/${url}`) ||
+              findByURL(`/en-US/docs/${url}`);
+            if (document) {
+              const {
+                doc: { mdn_url, summary, title, parents },
+              } = await buildDocument(document);
+              return {
+                mdn_url,
+                summary,
+                title,
+                tag: parents.length > 2 ? parents[1] : null,
+              };
+            }
+          })
+        )
+      ).filter(Boolean);
+
       const url = `/${locale}/`;
       const hyData = {
-        pullRequestsData: {
-          items: pullRequestsData.items,
+        recentContributions: {
+          items: pullRequestsData.items.map(
+            ({ number, title, updated_at, pull_request: { html_url } }) => ({
+              number,
+              title,
+              updated_at,
+              url: html_url,
+            })
+          ),
           repo: { name: "mdn/content", url: "https://github.com/mdn/content" },
         },
         featuredContributor,
         latestNews,
+        featuredArticles,
       };
       const context = { hyData };
       const html = renderHTML(url, context);

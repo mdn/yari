@@ -39,7 +39,7 @@
     margin-bottom: 1.5rem;
   }
 
-  @media screen and (min-width: $screen-md) {
+  @media screen and (min-width: $screen-lg) {
     .theme-toggle {
       align-self: initial;
       margin-bottom: initial;
@@ -84,7 +84,7 @@
       min-height: 53px;
     }
 
-    @media screen and (max-width: $screen-md) {
+    @media screen and (max-width: $screen-lg) {
       &.button {
         --button-color: var(--text-secondary);
         --button-padding: 0;
@@ -105,7 +105,7 @@
       }
     }
 
-    @media screen and (min-width: $screen-md) {
+    @media screen and (min-width: $screen-lg) {
       border-top: none;
       border-radius: var(--elem-radius);
       padding: 0.5rem;
@@ -149,7 +149,7 @@
     display: none;
   }
 
-  @media screen and (min-width: $screen-md) {
+  @media screen and (min-width: $screen-lg) {
     align-items: center;
     display: flex;
     flex: 1;

@@ -229,20 +229,19 @@ function Flaws({
     <div id="document-flaws">
       {!!fixableFlaws.length && !isReadOnly && fixableFlaws.length > 0 && (
         <>
-          {doc.isMarkdown ? (
+          {doc.isMarkdown && (
             <small>
-              Automatic fixing fixable flaws not yet enabled for Markdown
+              Automatic fixing fixable flaws is experimental for Markdown
               documents. See{" "}
               <a href="https://github.com/mdn/yari/issues/4333">
                 mdn/yari#4333
               </a>
             </small>
-          ) : (
-            <FixableFlawsAction
-              count={fixableFlaws.length}
-              reloadPage={reloadPage}
-            />
           )}
+          <FixableFlawsAction
+            count={fixableFlaws.length}
+            reloadPage={reloadPage}
+          />
         </>
       )}{" "}
       {flaws.map((flaw) => {

@@ -3,13 +3,11 @@ import path from "path";
 import { renderToString } from "react-dom/server";
 import cheerio from "cheerio";
 
-import {
-  ALWAYS_ALLOW_ROBOTS,
-  BUILD_OUT_ROOT,
-  SPEEDCURVE_LUX_ID,
-} from "../build/constants";
+import { ALWAYS_ALLOW_ROBOTS, BUILD_OUT_ROOT } from "../build/constants";
 
 const { DEFAULT_LOCALE } = require("../libs/constants");
+
+const dirname = __dirname;
 
 // When there are multiple options for a given language, this gives the
 // preferred locale for that language (language => preferred locale).
@@ -55,7 +53,7 @@ const lazy = (creator) => {
   };
 };
 
-const clientBuildRoot = path.resolve(__dirname, "../../client/build");
+const clientBuildRoot = path.resolve(dirname, "../../client/build");
 
 const readBuildHTML = lazy(() => {
   const html = fs.readFileSync(
@@ -74,7 +72,7 @@ const getGAScriptPathName = lazy((relPath = "/static/js/ga.js") => {
   // Return the relative path if there exists a `BUILD_ROOT/static/js/ga.js`.
   // If the file doesn't exist, return falsy.
   // Remember, unless explicitly set, the BUILD_OUT_ROOT defaults to a path
-  // based on `__dirname` but that's wrong when compared as a source and as
+  // based on `dirname` but that's wrong when compared as a source and as
   // a webpack built asset. So we need to remove the `/ssr/` portion of the path.
   let root = BUILD_OUT_ROOT;
   if (!fs.existsSync(root)) {
@@ -88,16 +86,6 @@ const getGAScriptPathName = lazy((relPath = "/static/js/ga.js") => {
     return relPath;
   }
   return null;
-});
-
-const getSpeedcurveJS = lazy(() => {
-  return fs
-    .readFileSync(
-      // The file is called `...js.txt` so that Prettier never touches it.
-      path.join(__dirname, "..", "speedcurve-lux-snippet.js.txt"),
-      "utf-8"
-    )
-    .trim();
 });
 
 const extractWebFontURLs = lazy(() => {
@@ -206,9 +194,13 @@ export default function render(
   }
 
   $("#root").after(
-    `<script type="application/json" id="hydration">${JSON.stringify(
-      hydrationData
-    )}</script>`
+    `<script type="application/json" id="hydration">${
+      // https://html.spec.whatwg.org/multipage/scripting.html#restrictions-for-contents-of-script-elements
+      JSON.stringify(hydrationData).replace(
+        /<(?=!--|\/?script)/gi,
+        String.raw`\u003c`
+      )
+    }</script>`
   );
 
   if (pageDescription) {
@@ -231,16 +223,6 @@ export default function render(
 
   if (!pageNotFound) {
     $('link[rel="canonical"]').attr("href", canonicalURL);
-  }
-
-  if (SPEEDCURVE_LUX_ID) {
-    // The snippet is always the same, if it's present, but the ID varies
-    // See LUX settings here https://speedcurve.com/mozilla-add-ons/mdn/settings/lux/
-    const speedcurveJS = getSpeedcurveJS();
-    $("<script>").text(speedcurveJS).appendTo($("head"));
-    $(
-      `<script src="https://cdn.speedcurve.com/js/lux.js?id=${SPEEDCURVE_LUX_ID}" async defer crossorigin="anonymous"></script>`
-    ).appendTo($("head"));
   }
 
   // As part of the pre-build steps, in the build root, a `ga.js` file is generated.

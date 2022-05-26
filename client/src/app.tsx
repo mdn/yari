@@ -21,25 +21,22 @@ import { OfflineSettings } from "./offline-settings";
 import { docCategory } from "./utils";
 import { Contribute } from "./community";
 import { ContributorSpotlight } from "./contributor-spotlight";
+import { useIsServer } from "./hooks";
 
 import { Banner, hasActiveBanners } from "./banners";
 
 const AllFlaws = React.lazy(() => import("./flaws"));
-const AllTraits = React.lazy(() => import("./traits"));
 const Translations = React.lazy(() => import("./translations"));
-const DocumentEdit = React.lazy(() => import("./document/forms/edit"));
-const DocumentCreate = React.lazy(() => import("./document/forms/create"));
-const DocumentManage = React.lazy(() => import("./document/forms/manage"));
 const WritersHomepage = React.lazy(() => import("./writers-homepage"));
 const Sitemap = React.lazy(() => import("./sitemap"));
-
-const isServer = typeof window === "undefined";
 
 function Layout({ pageType, children }) {
   const { pathname } = useLocation();
   const [category, setCategory] = React.useState<string | null>(
     docCategory({ pathname })
   );
+
+  const isServer = useIsServer();
 
   React.useEffect(() => {
     setCategory(docCategory({ pathname }));
@@ -122,6 +119,8 @@ export function App(appProps) {
     document.documentElement.setAttribute("lang", locale);
   }, [appProps.locale, localeMatch]);
 
+  const isServer = useIsServer();
+
   // When preparing a build for use in the NPM package, CRUD_MODE is always true.
   // But if the App is loaded from the code that builds the SPAs, then `isServer`
   // is true. So you have to have `isServer && CRUD_MODE` at the same time.
@@ -166,42 +165,6 @@ export function App(appProps) {
                   element={
                     <StandardLayout>
                       <Translations />
-                    </StandardLayout>
-                  }
-                />
-                <Route
-                  path="/_traits/*"
-                  element={
-                    <StandardLayout>
-                      <AllTraits />
-                    </StandardLayout>
-                  }
-                />
-                <Route
-                  path="/_edit/*"
-                  element={
-                    <StandardLayout>
-                      <DocumentEdit />
-                    </StandardLayout>
-                  }
-                />
-
-                {/* The following two are not "enabled". I.e. no link to them.
-                    See https://github.com/mdn/yari/issues/1614
-                 */}
-                <Route
-                  path="/_create/*"
-                  element={
-                    <StandardLayout>
-                      <DocumentCreate />
-                    </StandardLayout>
-                  }
-                />
-                <Route
-                  path="/_manage/*"
-                  element={
-                    <StandardLayout>
-                      <DocumentManage />
                     </StandardLayout>
                   }
                 />

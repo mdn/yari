@@ -38,10 +38,7 @@ export default function Toolbar({
   return (
     <div className="toolbar">
       <div className="toolbar-first-row">
-        <EditActions
-          folder={doc.source.folder}
-          filename={doc.source.filename}
-        />
+        <EditActions source={doc.source} />
       </div>
       {isReadOnly && (
         <p>

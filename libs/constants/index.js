@@ -72,9 +72,6 @@ const scriptSrcValues = [
   "'report-sample'",
   "'self'",
 
-  "*.speedcurve.com",
-  "'sha256-q7cJjDqNO2e1L5UltvJ1LhvnYN7yJXgGO7b6h9xkL1o='", // LUX
-
   "www.google-analytics.com/analytics.js",
 
   "'sha256-JEt9Nmc3BP88wxuTZm9aKNu87vEgGmKW1zzy/vb1KPs='", // polyfill check
@@ -83,7 +80,14 @@ const scriptSrcValues = [
   "assets.codepen.io",
   "production-assets.codepen.io",
 
-  "'sha256-x6Tv+AdV5e6dcolO0TEo+3BG4H2nG2ACjyG8mz6QCes='", // inline no flicker
+  /**
+   * If we modify the inline script in `client/public/index.html`,
+   * we must always update the CSP hash (see instructions there).
+   */
+  // - Previous hash (to avoid cache invalidation issues):
+  "'sha256-x6Tv+AdV5e6dcolO0TEo+3BG4H2nG2ACjyG8mz6QCes='",
+  // - Current hash:
+  "'sha256-GA8+DpFnqAM/vwERTpb5zyLUaN5KnOhctfTsqWfhaUA='",
 ];
 const CSP_DIRECTIVES = {
   "default-src": ["'self'"],
@@ -128,8 +132,6 @@ const CSP_DIRECTIVES = {
     "firefoxusercontent.com",
     "profile.stage.mozaws.net",
     "profile.accounts.firefox.com",
-
-    "lux.speedcurve.com",
 
     "mdn.mozillademos.org",
     "media.prod.mdn.mozit.cloud",

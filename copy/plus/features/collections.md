@@ -6,7 +6,11 @@ title: Collections
 
 > MDN. Hand _selected_ by you.
 >
-> Collections allow you to save MDN articles and share your library across devices. We also automatically save for you the pages you visit most frequently. They wil help you find what you need quicker by showing first in your search results when looking for a relevant topic and you’ll be able to curate the lists to your liking.
+> Collections allow you to save MDN articles and share your library across
+> devices. We also automatically save for you the pages you visit most
+> frequently. They wil help you find what you need quicker by showing first in
+> your search results when looking for a relevant topic and you’ll be able to
+> curate the lists to your liking.
 
 ## Getting started
 
@@ -43,7 +47,8 @@ You can reach Collections in two ways:
 
 ### Mobile
 
-1. Open the main menu by tapping on the **burger menu icon** at the top right of the page.
+1. Open the main menu by tapping on the **burger menu icon** at the top right of
+   the page.
    ![Screenshot showing the burger menu icon highlighted.](/assets/plus-docs/collections/mobile-burger-menu.png)
 2. Tap on **MDN Plus**.
    ![Screenshot showing the expanded main menu with MDN Plus highlighted.](/assets/plus-docs/collections/mobile-plus-menu.png)
@@ -52,7 +57,8 @@ You can reach Collections in two ways:
 
 ## The Collections page overview
 
-Your saved articles will appear on the collections dashboard accessible from the **MDN Plus → Collections** link.
+Your saved articles will appear on the collections dashboard accessible from the
+**MDN Plus → Collections** link.
 
 ### Desktop
 
@@ -115,7 +121,8 @@ Remove a saved page from **Collections**
 
 1. Click the **⋮ menu** to the right of the saved page and select **Delete**.
    ![Screenshot showing the expanded three dots icon. There are two options, the second of which is delete.](/assets/plus-docs/collections/desktop-collections-dashboard-delete.png)
-2. Your saved page has now been removed. Select **Undo** in the notification at the bottom of the screen to revert this action.
+2. Your saved page has now been removed. Select **Undo** in the notification at
+   the bottom of the screen to revert this action.
    ![Screenshot showing the undo toast dialog at the bottom of the page. The undo button located on the right is highlighted](/assets/plus-docs/collections/desktop-collections-undo.png)
 
 ### Mobile
@@ -133,30 +140,36 @@ Remove a saved page from **Collections**
 
 1. Click the **⋮ menu** to the right of the saved page and select **Delete**.
    ![Screenshot showing the expanded three dots icon. There are two options, the second of which is delete.](/assets/plus-docs/collections/mobile-collections-dashboard-delete-entry.png)
-2. Your saved page has now been removed. Select **Undo** in the notification at the bottom of the screen to revert this action.
+2. Your saved page has now been removed. Select **Undo** in the notification at
+   the bottom of the screen to revert this action.
    ![Screenshot showing the undo toast dialog at the bottom of the page. The undo button located on the right is highlighted](/assets/plus-docs/collections/mobile-collections-undo.png)
 
 ## Filtering saved pages
 
-Saved pages can be filtered by searching Title keywords through the page search bar.
+Saved pages can be filtered by searching Title keywords through the page search
+bar.
 
 ![Screenshot showing collections dashboard highlighting text inside the filter input element.](/assets/plus-docs/collections/desktop-collections-filter.png)
 
 ## Sorting saved pages
 
-Saved pages can be sorted by Date added and Title. The input element is located to the right of the Collections search input.
+Saved pages can be sorted by Date added and Title. The input element is located
+to the right of the Collections search input.
 
 ![Screenshot showing collections dashboard with sort element expanded showing the date and title sorting options.](/assets/plus-docs/collections/desktop-collections-sort.png)
 
 ## Frequently viewed articles
 
-These are collections we automatically create for you, based on your activity while being logged into MDN Plus. As an MDN Plus user, you are automatically opted into this feature.
+These are collections we automatically create for you, based on your activity
+while being logged into MDN Plus. As an MDN Plus user, you are automatically
+opted into this feature.
 
 ![Screenshot showing collections dashboard with the frequently viewed articles tab active.](/assets/plus-docs/collections/desktop-collections-fva.png)
 
 ## How are these articles generated?
 
-Frequently viewed pages are articles you visit most frequently while logged into MDN Plus. We will always show you your most recent top viewed 20 pages.
+Frequently viewed pages are articles you visit most frequently while logged into
+MDN Plus. We will always show you your most recent top viewed 20 pages.
 
 ## Remove a saved page from Frequently viewed articles
 
@@ -164,15 +177,18 @@ Frequently viewed pages are articles you visit most frequently while logged into
 
 1. Click the **⋮ menu** to the right of the saved page and select **Delete**.
    ![Screenshot showing the expanded three dots icon. There are two options, the second of which is delete.](/assets/plus-docs/collections/desktop-collections-delete-fva.png)
-2. Your saved page has now been removed. Select **Undo** in the notification at the bottom of the screen to revert this action.
+2. Your saved page has now been removed. Select **Undo** in the notification at
+   the bottom of the screen to revert this action.
    ![Screenshot showing the undo toast dialog at the bottom of the page. The undo button located on the right is highlighted](/assets/plus-docs/collections/desktop-collections-undo.png)
 
 ### Mobile
 
-Click the **⋮ menu** to the right of the saved page and select **Delete**.
-Your saved page has now been removed. Select **Undo** in the notification at the bottom of the screen to revert this action.
+Click the **⋮ menu** to the right of the saved page and select **Delete**. Your
+saved page has now been removed. Select **Undo** in the notification at the
+bottom of the screen to revert this action.
 
 1. Click the **⋮ menu** to the right of the saved page and select **Delete**.
    ![Screenshot showing the expanded three dots icon. There are two options, the second of which is delete.](/assets/plus-docs/collections/desktop-collections-delete-fva.png)
-2. Your saved page has now been removed. Select **Undo** in the notification at the bottom of the screen to revert this action.
+2. Your saved page has now been removed. Select **Undo** in the notification at
+   the bottom of the screen to revert this action.
    ![Screenshot showing the undo toast dialog at the bottom of the page. The undo button located on the right is highlighted](/assets/plus-docs/collections/mobile-collections-fva-undo.png)

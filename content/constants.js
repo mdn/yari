@@ -6,8 +6,10 @@ const {
   DEFAULT_LOCALE,
 } = require("../libs/constants");
 
-require("dotenv").config({
-  path: path.join(__dirname, "..", process.env.ENV_FILE || ".env"),
+const dotenv = require("dotenv");
+const dirname = __dirname;
+dotenv.config({
+  path: path.join(dirname, "..", process.env.ENV_FILE || ".env"),
 });
 
 const CONTENT_ROOT = correctContentPathFromEnv("CONTENT_ROOT");
@@ -39,6 +41,9 @@ if (CONTENT_TRANSLATED_ROOT) {
   REPOSITORY_URLS[CONTENT_TRANSLATED_ROOT] = "mdn/translated-content";
 }
 
+const HTML_FILENAME = "index.html";
+const MARKDOWN_FILENAME = "index.md";
+
 function correctContentPathFromEnv(envVarName) {
   let pathName = process.env[envVarName];
   if (!pathName) {
@@ -69,4 +74,6 @@ module.exports = {
   VALID_LOCALES,
   ACTIVE_LOCALES,
   DEFAULT_LOCALE,
+  HTML_FILENAME,
+  MARKDOWN_FILENAME,
 };

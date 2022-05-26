@@ -4,6 +4,7 @@ import useSWR, { mutate } from "swr";
 
 import { CRUD_MODE } from "../constants";
 import { useGA } from "../ga-context";
+import { useIsServer } from "../hooks";
 
 import {
   useDocumentURL,
@@ -46,15 +47,21 @@ const MathMLPolyfillMaybe = React.lazy(() => import("./mathml-polyfill"));
 
 export function Document(props /* TODO: define a TS interface for this */) {
   const ga = useGA();
+  const isServer = useIsServer();
 
   const mountCounter = React.useRef(0);
   const documentURL = useDocumentURL();
-  const { locale } = useParams();
+  const { locale = "en-US" } = useParams();
   const [searchParams] = useSearchParams();
 
   const navigate = useNavigate();
 
   const previousDoc = React.useRef(null);
+
+  const fallbackData =
+    props.doc && props.doc.mdn_url.toLowerCase() === documentURL.toLowerCase()
+      ? props.doc
+      : null;
 
   const dataURL = `${documentURL}/index.json`;
   const { data: doc, error } = useSWR<Doc>(
@@ -87,12 +94,9 @@ export function Document(props /* TODO: define a TS interface for this */) {
       return doc;
     },
     {
-      initialData:
-        props.doc &&
-        props.doc.mdn_url.toLowerCase() === documentURL.toLowerCase()
-          ? props.doc
-          : null,
+      fallbackData,
       revalidateOnFocus: CRUD_MODE,
+      revalidateOnMount: !fallbackData,
       refreshInterval: CRUD_MODE ? 500 : 0,
     }
   );
@@ -168,8 +172,6 @@ export function Document(props /* TODO: define a TS interface for this */) {
   if (!doc) {
     return null;
   }
-
-  const isServer = typeof window === "undefined";
 
   return (
     <>

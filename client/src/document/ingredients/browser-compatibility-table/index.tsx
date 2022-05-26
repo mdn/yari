@@ -1,10 +1,11 @@
 import React, { useReducer } from "react";
 import { useLocation } from "react-router-dom";
+import { browsers as browserData } from "@mdn/browser-compat-data";
 import type bcd from "@mdn/browser-compat-data/types";
 import { BrowserInfoContext } from "./browser-info";
 import { BrowserCompatibilityErrorBoundary } from "./error-boundary";
 import { FeatureRow } from "./feature-row";
-import { Headers, PLATFORM_BROWSERS } from "./headers";
+import { Headers } from "./headers";
 import { Legend } from "./legend";
 import { listFeatures } from "./utils";
 
@@ -13,22 +14,12 @@ import { listFeatures } from "./utils";
 
 // This string is used to prefill the body when clicking to file a new BCD
 // issue over on github.com/mdn/browser-compat-data
-const NEW_ISSUE_TEMPLATE = `
-<!-- Tips: where applicable, specify browser name, browser version, and mobile operating system version -->
-
-#### What information was incorrect, unhelpful, or incomplete?
-
-#### What did you expect to see?
-
-#### Did you test this? If so, how?
-
-
+const ISSUE_METADATA_TEMPLATE = `
 <!-- Do not make changes below this line -->
 <details>
 <summary>MDN page report details</summary>
 
 * Query: \`$QUERY_ID\`
-* MDN URL: https://developer.mozilla.org$PATHNAME
 * Report started: $DATE
 
 </details>
@@ -54,18 +45,30 @@ function gatherPlatformsAndBrowsers(
   let platforms = ["desktop", "mobile"];
   if (category === "javascript" || hasNodeJSData || hasDenoData) {
     platforms.push("server");
-  } else if (category === "webextensions") {
-    platforms = ["webextensions-desktop", "webextensions-mobile"];
   }
 
-  const browsers = new Set(
-    platforms.map((platform) => PLATFORM_BROWSERS[platform] || []).flat()
-  );
+  let browsers: bcd.BrowserNames[] = [];
+
+  // Add browsers in platform order to align table cells
+  for (const platform of platforms) {
+    browsers.push(
+      ...(Object.keys(browserData).filter(
+        (browser) => browserData[browser].type === platform
+      ) as bcd.BrowserNames[])
+    );
+  }
+
+  // Filter WebExtension browsers in corresponding tables.
+  if (category === "webextensions") {
+    browsers = browsers.filter(
+      (browser) => browserData[browser].accepts_webextensions
+    );
+  }
 
   // If there is no Node.js data for a category outside of "javascript", don't
   // show it. It ended up in the browser list because there is data for Deno.
   if (category !== "javascript" && !hasNodeJSData) {
-    browsers.delete("nodejs");
+    browsers = browsers.filter((browser) => browser !== "nodejs");
   }
 
   return [platforms, [...browsers]];
@@ -138,12 +141,16 @@ export default function BrowserCompatibilityTable({
   function getNewIssueURL() {
     const url = "https://github.com/mdn/browser-compat-data/issues/new";
     const sp = new URLSearchParams();
-    const body = NEW_ISSUE_TEMPLATE.replace(/\$PATHNAME/g, location.pathname)
-      .replace(/\$DATE/g, new Date().toISOString())
+    const metadata = ISSUE_METADATA_TEMPLATE.replace(
+      /\$DATE/g,
+      new Date().toISOString()
+    )
       .replace(/\$QUERY_ID/g, query)
       .trim();
-    sp.set("body", body);
-    sp.set("title", `${query} - <PUT TITLE HERE>`);
+    sp.set("mdn-url", `https://developer.mozilla.org${location.pathname}`);
+    sp.set("metadata", metadata);
+    sp.set("title", `${query} - <SUMMARIZE THE PROBLEM>`);
+    sp.set("template", "data-problem.yml");
     return `${url}?${sp.toString()}`;
   }
 

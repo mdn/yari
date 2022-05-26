@@ -116,16 +116,6 @@ async function initOncePerRun(self: ServiceWorkerGlobalScope) {
     phase: ContentStatusPhase.IDLE,
     progress: null,
   });
-
-  // Deprecated.
-  const contentStatus = await getContentStatus();
-  await messageAllClients(self, {
-    type: "updateStatus",
-    progress: 0,
-    state: "init",
-    currentVersion: contentStatus.local?.version,
-    currentDate: contentStatus.local?.date,
-  });
 }
 
 self.addEventListener("activate", (e: ExtendableEvent) => {
@@ -232,13 +222,6 @@ export async function updateContent(
       phase: ContentStatusPhase.DOWNLOAD,
     });
 
-    // Deprecated.
-    await messageAllClients(self, {
-      type: "updateStatus",
-      progress: 0,
-      state: "downloading",
-    });
-
     const useDiff = local && remote.updates.includes(local.version);
 
     const url = new URL(
@@ -263,24 +246,10 @@ export async function updateContent(
       progress: 0,
     });
 
-    // Deprecated.
-    await messageAllClients(self, {
-      type: "updateStatus",
-      progress: 0,
-      state: "unpacking",
-    });
-
     await unpackAndCache(buf, async (progress) => {
       await patchContentStatus({
         phase: ContentStatusPhase.UNPACK,
         progress: progress,
-      });
-
-      // Deprecated.
-      await messageAllClients(self, {
-        type: "updateStatus",
-        progress,
-        state: "unpacking",
       });
     });
 
@@ -293,15 +262,6 @@ export async function updateContent(
       progress: null,
     });
 
-    // Deprecated.
-    await messageAllClients(self, {
-      type: "updateStatus",
-      progress: 0,
-      state: "init",
-      currentVersion: remote.latest,
-      currentDate: remote.date,
-    });
-
     console.log(`[update] synchronizing`);
     await synchronizeDb();
 
@@ -312,15 +272,6 @@ export async function updateContent(
     await patchContentStatus({
       phase: ContentStatusPhase.IDLE,
       progress: null,
-    });
-
-    // Deprecated.
-    await messageAllClients(self, {
-      type: "updateStatus",
-      progress: 0,
-      state: "init",
-      currentVersion: remote.latest,
-      currentDate: remote.date,
     });
   } finally {
     updating = false;
@@ -339,13 +290,6 @@ async function clearContent(self: ServiceWorkerGlobalScope) {
       phase: ContentStatusPhase.CLEAR,
     });
 
-    // Deprecated.
-    await messageAllClients(self, {
-      type: "updateStatus",
-      progress: 0,
-      state: "clearing",
-    });
-
     console.log(`[clear] deleting`);
     const success = await deleteContentCache();
     console.log(`[clear] done: ${success}`);
@@ -354,15 +298,6 @@ async function clearContent(self: ServiceWorkerGlobalScope) {
   } finally {
     await patchContentStatus({
       phase: ContentStatusPhase.IDLE,
-    });
-
-    // Deprecated.
-    await messageAllClients(self, {
-      type: "updateStatus",
-      progress: -1,
-      state: "init",
-      currentVersion: null,
-      currentDate: null,
     });
   }
 }

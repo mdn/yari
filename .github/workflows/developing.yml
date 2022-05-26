@@ -18,7 +18,7 @@ jobs:
       - name: Setup Node.js environment
         uses: actions/setup-node@v3
         with:
-          node-version: "12"
+          node-version: "16"
           cache: "yarn"
 
       - name: Cache node_modules
@@ -54,7 +54,7 @@ jobs:
           # the content if loading this page fails.
           ls "$CONTENT_ROOT/en-us/mdn/kitchensink"
 
-          yarn prepare-build
+          yarn build:prepare
           yarn start > /tmp/stdout.log 2> /tmp/stderr.log &
 
       - name: Wait for servers
@@ -66,11 +66,6 @@ jobs:
           curl --retry-connrefused --retry 5 --silent http://localhost:3000 > /dev/null
 
       - name: Test viewing the dev server
-        env:
-          # This will make sure the tests in `testing/tests/*.test.js` only run
-          # if the development server is up and ready to be tested.
-          TESTING_DEVELOPING: true
-          CONTENT_ROOT: mdn/content/files
         run: |
           yarn test:developing
 

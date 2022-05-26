@@ -5,14 +5,16 @@ const commitHash = require("child_process")
   .trim();
 const webpack = require("webpack");
 
+const dirname = __dirname;
+
 module.exports = {
   entry: {
-    bundle: path.join(__dirname, "./src/service-worker.ts"),
+    bundle: path.join(dirname, "./src/service-worker.ts"),
   },
 
   output: {
     filename: "service-worker.js",
-    path: path.join(__dirname, "../public/"),
+    path: path.join(dirname, "../public/"),
   },
 
   mode: "development",
