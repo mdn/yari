@@ -408,13 +408,20 @@ function _addSingleSpecialSection($) {
 
     const data = queries.reduce((data, query) => {
       const dataForQuery = queryBCD(query);
-
-      const breadcrumbs = query.split(".");
-      const name = breadcrumbs[breadcrumbs.length - 1];
-
       return {
         ...data,
-        [name]: dataForQuery,
+        // When processing multiple BCD queries, queryString can be, e.g.,
+        // html.elements.link.rel,html.elements.a.rel,html.elements.area.rel
+        // So as the key here, to ensure the key is unique, we use the full
+        // 'query' value rather than some portion of it. Otherwise, if we
+        // use, e.g., just the part after the last dot, then for the
+        // example above, that ends up being just 'rel' for all three
+        // 'query' values from that full 'queryString' value. And because
+        // 'rel' is not unique, if we used it as the key here, then in each
+        // iteration of the reduce through the 'queryString', we’d end up
+        // setting a new value ('dataForQuery') for the 'rel' key — and
+        // clobbering whatever value was set in the previous iteration.
+        [query]: dataForQuery,
       };
     }, {});
 

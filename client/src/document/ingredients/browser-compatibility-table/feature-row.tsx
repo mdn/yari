@@ -506,7 +506,7 @@ export const FeatureRow = React.memo(
   }: {
     index: number;
     feature: {
-      name: string;
+      query: string;
       compat: CompatStatementExtended;
       depth: number;
     };
@@ -521,7 +521,19 @@ export const FeatureRow = React.memo(
       throw new Error("Missing browser info");
     }
 
-    const { name, compat, depth } = feature;
+    const { query, compat, depth } = feature;
+    const breadcrumbs = query.split(".");
+    let name = breadcrumbs[breadcrumbs.length - 1];
+    if (query.startsWith("html.elements") && breadcrumbs.length > 3) {
+      // When we’re processing multiple BCD queries/features, they can end
+      // up with the same 'name' unless we further qualify them; e.g.,
+      // the query string "html.elements.label.for,html.elements.output.for"
+      // would result in a rendered BCD table that has just 'for' as the
+      // feature name in each row. So in this case, we take the last _two_
+      // parts of the query/feature name — that is, e.g., 'label.for' and
+      // 'output.for' — and output those in the rendered table.
+      name = breadcrumbs.slice(-2).join(".");
+    }
     let title = compat.description ? (
       <span dangerouslySetInnerHTML={{ __html: compat.description }} />
     ) : (

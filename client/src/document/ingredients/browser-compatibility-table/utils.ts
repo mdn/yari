@@ -26,7 +26,7 @@ export function isTruthy<T>(t: T | false | undefined | null): t is T {
 }
 
 interface Feature {
-  name: string;
+  query: string;
   compat: BCD.CompatStatement;
   depth: number;
 }
@@ -40,7 +40,7 @@ export function listFeatures(
   const features: Feature[] = [];
   if (rootName && identifier.__compat) {
     features.push({
-      name: rootName,
+      query: rootName,
       compat: identifier.__compat,
       depth,
     });
@@ -49,7 +49,7 @@ export function listFeatures(
   for (const [subName, subIdentifier] of Object.entries(identifier)) {
     if (subName !== "__compat" && subIdentifier.__compat) {
       features.push({
-        name: parentName ? `${parentName}.${subName}` : subName,
+        query: parentName ? `${parentName}.${subName}` : subName,
         compat: subIdentifier.__compat,
         depth: depth + 1,
       });
@@ -64,7 +64,7 @@ export function listFeatures(
       for (const [subName, subSubIdentifier] of Object.entries(subIdentifier)) {
         if (subName !== "__compat" && subSubIdentifier.__compat) {
           features.push({
-            name: parentName ? `${parentName}.${subName}` : subName,
+            query: parentName ? `${parentName}.${subName}` : subName,
             compat: subSubIdentifier.__compat,
             depth: depth + 1,
           });
