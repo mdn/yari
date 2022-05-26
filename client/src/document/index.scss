@@ -548,6 +548,41 @@ pre {
   .example-bad {
     padding: 1rem;
   }
+
+  .line {
+    display: block;
+    position: relative;
+    padding-left: 0.5rem;
+    margin-left: 0.5rem;
+    white-space: pre-wrap;
+    border-left: 1px solid var(--code-line-number);
+  }
+
+  .lineno {
+    display: flex;
+    justify-content: flex-end;
+    padding-top: 0.35rem;
+    width: 1rem;
+    height: 100%;
+    left: -1.3rem;
+    position: absolute;
+    user-select: none;
+  }
+
+  .highlight {
+    background-color: var(--code-line-number);
+  }
+
+  a {
+    color: var(--code-token-comment) !important;
+    font-size: var(--type-tiny-font-size);
+    text-decoration: none !important;
+  }
+
+  a:hover {
+    text-decoration: underline !important;
+    color: var(--code-line-number-hover) !important;
+  }
 }
 
 .only-in-en-us {
