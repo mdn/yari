@@ -8,3 +8,5 @@ on:
 jobs:
   label-new-issues:
     uses: mdn/workflows/.github/workflows/new-issues.yml@main
+    with:
+      target-repo: "mdn/yari"
