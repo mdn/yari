@@ -404,6 +404,29 @@ function getNotes(
           .flat()
           .filter(isTruthy);
 
+        if (item.impl_url) {
+          supportNotes.push(
+            ...(Array.isArray(item.impl_url)
+              ? item.impl_url
+              : [item.impl_url]
+            ).map((url) => {
+              const urlParts = item.impl_url.split("/");
+              const type = ["bugzil.la", "crbug.com", "webkit.org/b/"].some(
+                (x) => item.impl_url.includes(x)
+              )
+                ? "bug"
+                : "commit";
+
+              return {
+                iconName: "footnote",
+                label: `See <a href='${item.impl_url}'>${type} ${
+                  urlParts[urlParts.length - 1]
+                }</a>.`,
+              };
+            })
+          );
+        }
+
         const hasNotes = supportNotes.length > 0;
         return (
           (i === 0 || hasNotes) && (
