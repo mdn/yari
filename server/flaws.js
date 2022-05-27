@@ -6,7 +6,7 @@ const { fdir } = require("fdir");
 const { getPopularities } = require("../content");
 const { FLAW_LEVELS, options: buildOptions } = require("../build");
 
-const { BUILD_OUT_ROOT } = require("../build/constants");
+const { BUILD_OUT_ROOT } = require("../libs/env");
 
 // Module-level cache
 const allPopularityValues = [];

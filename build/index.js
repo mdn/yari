@@ -13,7 +13,7 @@ const {
 } = require("../content");
 const kumascript = require("../kumascript");
 
-const { FLAW_LEVELS } = require("./constants");
+const { FLAW_LEVELS } = require("../libs/env");
 const {
   extractSections,
   extractSidebar,

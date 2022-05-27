@@ -5,7 +5,7 @@ const fromMarkdown = require("mdast-util-from-markdown");
 const visit = require("unist-util-visit");
 
 const { Document, Redirect, Image } = require("../../content");
-const { FLAW_LEVELS } = require("../constants");
+const { FLAW_LEVELS } = require("../../libs/env");
 const { findMatchesInText } = require("../matches-in-text");
 const { DEFAULT_LOCALE, VALID_LOCALES } = require("../../libs/constants");
 

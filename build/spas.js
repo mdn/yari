@@ -10,7 +10,7 @@ const {
   CONTRIBUTOR_SPOTLIGHT_ROOT,
   VALID_LOCALES,
 } = require("../content");
-const { BUILD_OUT_ROOT } = require("./constants");
+const { BUILD_OUT_ROOT } = require("../libs/env");
 // eslint-disable-next-line node/no-missing-require
 const { renderHTML } = require("../ssr/dist/main");
 const { default: got } = require("got");

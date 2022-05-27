@@ -12,7 +12,7 @@ const {
   FIX_FLAWS_DRY_RUN,
   FIX_FLAWS_TYPES,
   FIX_FLAWS_VERBOSE,
-} = require("./constants");
+} = require("../libs/env");
 
 const options = Object.freeze({
   flawLevels: parseFlawLevels(DEFAULT_FLAW_LEVELS),

@@ -1,4 +1,4 @@
-const { FLAW_LEVELS } = require("../constants");
+const { FLAW_LEVELS } = require("../../libs/env");
 
 function injectSectionFlaws(doc, flaws, options) {
   if (!flaws.length) {

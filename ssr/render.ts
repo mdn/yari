@@ -3,7 +3,7 @@ import path from "path";
 import { renderToString } from "react-dom/server";
 import cheerio from "cheerio";
 
-import { ALWAYS_ALLOW_ROBOTS, BUILD_OUT_ROOT } from "../build/constants";
+import { ALWAYS_ALLOW_ROBOTS, BUILD_OUT_ROOT } from "../libs/env";
 
 const { DEFAULT_LOCALE } = require("../libs/constants");
 
