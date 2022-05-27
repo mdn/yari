@@ -149,6 +149,19 @@ const MAX_FILE_SIZE = JSON.parse(
   process.env.FILECHECK_MAX_FILE_SIZE || 1024 * 1024 * 100 // ~100MiB
 );
 
+// ------
+// server
+// ------
+
+const STATIC_ROOT =
+  process.env.SERVER_STATIC_ROOT || path.join(dirname, "../../client/build");
+const PROXY_HOSTNAME =
+  process.env.REACT_APP_KUMA_HOST || "developer.mozilla.org";
+const CONTENT_HOSTNAME = process.env.SERVER_CONTENT_HOST;
+const OFFLINE_CONTENT = process.env.SERVER_OFFLINE_CONTENT === "true";
+
+const FAKE_V1_API = JSON.parse(process.env.SERVER_FAKE_V1_API || false);
+
 module.exports = {
   // build
   BUILD_OUT_ROOT,
@@ -175,4 +188,10 @@ module.exports = {
   MARKDOWN_FILENAME,
   // filecheck
   MAX_FILE_SIZE,
+  // server
+  STATIC_ROOT,
+  PROXY_HOSTNAME,
+  CONTENT_HOSTNAME,
+  OFFLINE_CONTENT,
+  FAKE_V1_API,
 };

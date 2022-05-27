@@ -24,14 +24,14 @@ const {
 // eslint-disable-next-line node/no-missing-require
 const { renderHTML } = require("../ssr/dist/main");
 const { CSP_VALUE, DEFAULT_LOCALE } = require("../libs/constants");
-
 const {
   STATIC_ROOT,
   PROXY_HOSTNAME,
   FAKE_V1_API,
   CONTENT_HOSTNAME,
   OFFLINE_CONTENT,
-} = require("./constants");
+} = require("../libs/env");
+
 const documentRouter = require("./document");
 const fakeV1APIRouter = require("./fake-v1-api");
 const { searchIndexRoute } = require("./search-index");
