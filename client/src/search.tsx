@@ -167,7 +167,6 @@ function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
     defaultSelection,
   } = props;
 
-  const inputId = `${id}-q`;
   const formId = `${id}-form`;
   const navigate = useNavigate();
   const locale = useLocale();
@@ -261,6 +260,7 @@ function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
     reset,
     toggleMenu,
   } = useCombobox({
+    id: id,
     items:
       resultItems.length === 0
         ? [nothingFoundItem]
@@ -463,7 +463,7 @@ function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
         },
       })}
     >
-      <label htmlFor={inputId} className="visually-hidden">
+      <label htmlFor={`${id}-input`} className="visually-hidden">
         Search MDN
       </label>
 
@@ -473,8 +473,7 @@ function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
           className: isOpen
             ? "has-search-results search-input-field"
             : "search-input-field",
-          id: inputId,
-          name: "q",
+          name: `input`,
           onMouseOver: initializeSearchIndex,
           onFocus: () => {
             onChangeIsFocused(true);
