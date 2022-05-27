@@ -4,7 +4,7 @@ const path = require("path");
 const program = require("@caporal/core").default;
 
 const { runChecker } = require("./checker");
-const { MAX_COMPRESSION_DIFFERENCE_PERCENTAGE } = require("./constants");
+const { MAX_COMPRESSION_DIFFERENCE_PERCENTAGE } = require("../libs/constants");
 
 program
   .version("0.0.0")

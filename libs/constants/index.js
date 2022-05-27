@@ -158,6 +158,18 @@ const cspToString = (csp) =>
 
 const CSP_VALUE = cspToString(CSP_DIRECTIVES);
 
+// ---------
+// filecheck
+// ---------
+
+const VALID_MIME_TYPES = new Set([
+  "image/png",
+  "image/jpeg", // this is what you get for .jpeg *and* .jpg file extensions
+  "image/gif",
+]);
+
+const MAX_COMPRESSION_DIFFERENCE_PERCENTAGE = 25; // percent
+
 module.exports = {
   ACTIVE_LOCALES,
   VALID_LOCALES,
@@ -167,4 +179,8 @@ module.exports = {
   PREFERRED_LOCALE_COOKIE_NAME,
 
   CSP_VALUE,
+
+  // filecheck
+  VALID_MIME_TYPES,
+  MAX_COMPRESSION_DIFFERENCE_PERCENTAGE,
 };

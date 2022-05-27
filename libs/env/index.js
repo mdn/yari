@@ -141,6 +141,14 @@ function correctContentPathFromEnv(envVarName) {
   return pathName;
 }
 
+// ---------
+// filecheck
+// ---------
+
+const MAX_FILE_SIZE = JSON.parse(
+  process.env.FILECHECK_MAX_FILE_SIZE || 1024 * 1024 * 100 // ~100MiB
+);
+
 module.exports = {
   // build
   BUILD_OUT_ROOT,
@@ -165,4 +173,6 @@ module.exports = {
   ROOTS,
   HTML_FILENAME,
   MARKDOWN_FILENAME,
+  // filecheck
+  MAX_FILE_SIZE,
 };
