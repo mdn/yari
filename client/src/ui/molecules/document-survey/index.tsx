@@ -6,7 +6,7 @@ const SURVEYS = {
     filter: (doc: Doc) => /CSS/i.test(doc.mdn_url),
     rate: 1,
     src: "https://www.surveygizmo.com/s3/6818801/MDN-Short-survey-CSS-Cascade-Layers",
-    teaser: "Shape the future of the web by answering the following question:",
+    teaser: "Shape the future of the web by taking a 2 questions micro survey:",
     question: "Have you heard of CSS Cascade Layers?",
   },
 };
