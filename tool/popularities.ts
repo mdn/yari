@@ -23,7 +23,7 @@ async function fetchPopularities() {
   return csv;
 }
 
-async function runMakePopularitiesFile(options) {
+export async function runMakePopularitiesFile(options) {
   const { outfile, maxUris } = options;
   const pageviews = [];
   let biggestCount = null;
@@ -69,5 +69,3 @@ async function runMakePopularitiesFile(options) {
       });
   });
 }
-
-module.exports = { runMakePopularitiesFile };
