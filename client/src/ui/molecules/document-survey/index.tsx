@@ -45,16 +45,12 @@ function SurveyDisplay({ survey }: { survey: Survey }) {
       return;
     }
 
-    function markOpened() {
-      setState({
-        ...state,
-        opened_at: Date.now(),
-      });
-    }
-
     const listener = () => {
-      if (current.open) {
-        markOpened();
+      if (current.open && !state.opened_at) {
+        setState({
+          ...state,
+          opened_at: Date.now(),
+        });
       }
     };
 
@@ -63,7 +59,16 @@ function SurveyDisplay({ survey }: { survey: Survey }) {
     return () => current.removeEventListener("toggle", listener);
   }, [details, state, survey]);
 
-  if (!survey || !state || state.dismissed_at) {
+  React.useEffect(() => {
+    if (!state.seen_at) {
+      setState({
+        ...state,
+        seen_at: Date.now(),
+      });
+    }
+  }, [state]);
+
+  if (state.dismissed_at) {
     return <></>;
   }
 
