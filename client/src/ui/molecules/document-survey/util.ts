@@ -2,9 +2,9 @@ interface SurveyState {
   // Random number between 0 and 1.
   random: number;
   // When the user has manually hidden the survey.
-  dismissed_at: Date | null;
+  dismissed_at: number | null;
   // When the user has first opened the survey.
-  opened_at: Date | null;
+  opened_at: number | null;
 }
 
 export function getSurveyState(key: string): SurveyState {

@@ -35,7 +35,7 @@ function SurveyDisplay({ survey }: { survey: Survey }) {
   function dismiss() {
     setState({
       ...state,
-      dismissed_at: new Date(),
+      dismissed_at: Date.now(),
     });
   }
 
@@ -48,7 +48,7 @@ function SurveyDisplay({ survey }: { survey: Survey }) {
     function markOpened() {
       setState({
         ...state,
-        opened_at: new Date(),
+        opened_at: Date.now(),
       });
     }
 
