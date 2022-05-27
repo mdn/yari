@@ -186,12 +186,10 @@ function Mandala({
           </text>
           <text className="mandala-accent-4" dy="70" textLength="1257">
             <textPath textLength="1257" href="#circle4">
-              <tspan>
-                &nbsp;&nbsp;&nbsp;../../ &nbsp;&nbsp;&nbsp;../../
-                &nbsp;&nbsp;&nbsp;../../ &nbsp;&nbsp;&nbsp;../../
-                &nbsp;&nbsp;&nbsp;../../ &nbsp;&nbsp;&nbsp;../../
-                &nbsp;&nbsp;&nbsp;../../
-              </tspan>
+              &nbsp;&nbsp;&nbsp;../../ &nbsp;&nbsp;&nbsp;../../
+              &nbsp;&nbsp;&nbsp;../../ &nbsp;&nbsp;&nbsp;../../
+              &nbsp;&nbsp;&nbsp;../../ &nbsp;&nbsp;&nbsp;../../
+              &nbsp;&nbsp;&nbsp;../../
             </textPath>
           </text>
           <text className="mandala-accent-5" dy="70" textLength="1005">
