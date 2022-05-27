@@ -16,6 +16,6 @@ export const SURVEYS: Survey[] = [
     rate: 1,
     src: "https://www.surveygizmo.com/s3/6818801/MDN-Short-survey-CSS-Cascade-Layers",
     teaser: "Shape the future of the web by taking a 3 questions micro survey:",
-    question: "Have you used CSS Cascade Layers?",
+    question: "What's your experience with Cascade Layers?",
   },
 ];
