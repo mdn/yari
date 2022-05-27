@@ -13,7 +13,7 @@ export const SURVEYS: Survey[] = [
   {
     key: "css_cascade_2022",
     show: (doc: Doc) =>
-      /CSS/i.test(
+      /en-US\/docs\/Web\/CSS(\/|$)/i.test(
         doc.mdn_url
       ) /* && startTime <= Date.now() && Date.now() <= endTime */,
     rate: 1 /* 0.05 */,
