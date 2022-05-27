@@ -463,7 +463,11 @@ function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
         },
       })}
     >
-      <label htmlFor={`${id}-input`} className="visually-hidden">
+      <label
+        id={`${id}-label`}
+        htmlFor={`${id}-input`}
+        className="visually-hidden"
+      >
         Search MDN
       </label>
 
