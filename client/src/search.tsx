@@ -477,7 +477,7 @@ function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
           className: isOpen
             ? "has-search-results search-input-field"
             : "search-input-field",
-          name: `input`,
+          name: `q`,
           onMouseOver: initializeSearchIndex,
           onFocus: () => {
             onChangeIsFocused(true);
