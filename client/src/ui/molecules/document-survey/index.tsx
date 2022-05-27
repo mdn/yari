@@ -1,62 +1,100 @@
 import React from "react";
 import { Doc } from "../../../document/types";
-
-const SURVEYS = {
-  cssCascade2022: {
-    filter: (doc: Doc) => /CSS/i.test(doc.mdn_url),
-    rate: 1,
-    src: "https://www.surveygizmo.com/s3/6818801/MDN-Short-survey-CSS-Cascade-Layers",
-    teaser: "Shape the future of the web by taking a 2 questions micro survey:",
-    question: "Have you heard of CSS Cascade Layers?",
-  },
-};
+import { ReactComponent as CloseIcon } from "@mdn/dinocons/general/close.svg";
+import "./index.scss";
+import { Survey, SURVEYS } from "./surveys";
+import { getSurveyState, writeSurveyState } from "./util";
 
 export function DocumentSurvey({ doc }: { doc: Doc }) {
-  const [isOpen, setOpen] = React.useState(false);
+  const surveys = React.useMemo(
+    () =>
+      SURVEYS.filter((survey) => {
+        if (!survey.filter(doc)) {
+          return false;
+        }
 
-  if (!("localStorage" in window)) {
+        const state = getSurveyState(survey.key);
+
+        return state.random < survey.rate;
+      }),
+    [doc]
+  );
+
+  return surveys.length > 0 ? <SurveyDisplay survey={surveys[0]} /> : <></>;
+}
+
+function SurveyDisplay({ survey }: { survey: Survey }) {
+  const details = React.useRef<HTMLDetailsElement | null>(null);
+
+  const [state, setState] = React.useState(() => getSurveyState(survey.key));
+
+  React.useEffect(() => {
+    writeSurveyState(survey.key, state);
+  }, [state, survey.key]);
+
+  function dismiss() {
+    setState({
+      ...state,
+      dismissed_at: new Date(),
+    });
+  }
+
+  React.useEffect(() => {
+    const { current } = details;
+    if (!(current instanceof HTMLDetailsElement)) {
+      return;
+    }
+
+    function markOpened() {
+      setState({
+        ...state,
+        opened_at: new Date(),
+      });
+    }
+
+    const listener = () => {
+      if (current.open) {
+        markOpened();
+      }
+    };
+
+    current.addEventListener("toggle", listener);
+
+    return () => current.removeEventListener("toggle", listener);
+  }, [details, state, survey]);
+
+  if (!survey || !state || state.dismissed_at) {
     return <></>;
   }
 
-  for (const [surveyKey, survey] of Object.entries(SURVEYS)) {
-    if (!survey.filter(doc)) {
-      continue;
-    }
+  return (
+    <div className="notecard document-survey">
+      <div className="survey-header">
+        <div className="survey-teaser">{survey.teaser}</div>
 
-    const storageKey = `DocumentSurvey[${surveyKey}]`;
-    const random = localStorage.getItem(storageKey) ?? Math.random();
-    localStorage.setItem(storageKey, String(random));
-
-    if (random > survey.rate) {
-      continue;
-    }
-
-    return (
-      <div className="notecard">
-        {survey.teaser}
-        <div>
-          <a
-            href="#"
-            onClick={(event) => {
-              event.preventDefault();
-              setOpen(!isOpen);
-            }}
-            title="Open survey"
+        <div className="survey-dismiss">
+          <button
+            type="button"
+            aria-label={"Hide this survey"}
+            onClick={() => dismiss()}
+            title={"Hide this survey"}
           >
-            {survey.question}
-          </a>
+            <CloseIcon />
+          </button>
         </div>
-        {isOpen && (
+      </div>
+      <details ref={details}>
+        <summary>{survey.question}</summary>
+
+        {state.opened_at && (
           <iframe
-            title={surveyKey}
+            title={survey.question}
             src={survey.src}
             height={500}
             style={{ overflow: "hidden", width: "100%" }}
           ></iframe>
         )}
-      </div>
-    );
-  }
-
-  return <></>;
+      </details>
+    </div>
+  );
 }
