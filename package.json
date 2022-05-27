@@ -22,7 +22,7 @@
     "build:sw-dev": "cd client/pwa && yarn && yarn build",
     "dev": "yarn build:prepare && nf -j Procfile.dev start",
     "eslint": "eslint .",
-    "filecheck": "cd filecheck && node cli.js",
+    "filecheck": "cd filecheck && ts-node cli.ts",
     "md": "ts-node markdown/cli.ts",
     "prepack": "yarn build:dist",
     "prepare": "husky install",
