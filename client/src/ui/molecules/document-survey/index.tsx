@@ -37,7 +37,6 @@ export function DocumentSurvey({ doc }: { doc: Doc }) {
         <div>
           <a
             href="#"
-            className="external"
             onClick={(event) => {
               event.preventDefault();
               setOpen(!isOpen);
