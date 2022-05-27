@@ -3,8 +3,11 @@ const path = require("path");
 
 const dotenv = require("dotenv");
 const dirname = __dirname;
+
+const ROOT = path.join(dirname, "..", "..");
+
 dotenv.config({
-  path: path.join(dirname, "..", "..", process.env.ENV_FILE || ".env"),
+  path: path.join(ROOT, process.env.ENV_FILE || ".env"),
 });
 
 // -----
@@ -12,8 +15,7 @@ dotenv.config({
 // -----
 
 const BUILD_OUT_ROOT =
-  process.env.BUILD_OUT_ROOT ||
-  path.join(dirname, "..", "..", "client", "build");
+  process.env.BUILD_OUT_ROOT || path.join(ROOT, "client", "build");
 
 const FLAW_LEVELS = Object.freeze({
   ERROR: "error",
@@ -172,7 +174,7 @@ const INTERACTIVE_EXAMPLES_BASE_URL =
 // ------
 
 const STATIC_ROOT =
-  process.env.SERVER_STATIC_ROOT || path.join(dirname, "../../client/build");
+  process.env.SERVER_STATIC_ROOT || path.join(ROOT, "client", "build");
 const PROXY_HOSTNAME =
   process.env.REACT_APP_KUMA_HOST || "developer.mozilla.org";
 const CONTENT_HOSTNAME = process.env.SERVER_CONTENT_HOST;
@@ -181,6 +183,7 @@ const OFFLINE_CONTENT = process.env.SERVER_OFFLINE_CONTENT === "true";
 const FAKE_V1_API = JSON.parse(process.env.SERVER_FAKE_V1_API || false);
 
 module.exports = {
+  ROOT,
   // build
   BUILD_OUT_ROOT,
   DEFAULT_FLAW_LEVELS,
