@@ -117,6 +117,16 @@ function* extractCSSURLs(css, filterFunction) {
   }
 }
 
+interface HydrationData {
+  doc?: any;
+  pageNotFound?: boolean;
+  hyData?: any;
+  pageTitle?: any;
+  possibleLocales?: any;
+  locale?: any;
+  noIndexing?: any;
+}
+
 export default function render(
   renderApp,
   {
@@ -127,7 +137,7 @@ export default function render(
     possibleLocales = null,
     locale = null,
     noIndexing = null,
-  } = {}
+  }: HydrationData = {}
 ) {
   const buildHtml = readBuildHTML();
   const webfontURLs = extractWebFontURLs();
@@ -146,7 +156,7 @@ export default function render(
 
   let pageDescription = "";
 
-  const hydrationData = {};
+  const hydrationData: HydrationData = {};
   if (pageNotFound) {
     pageTitle = `🤷🏽‍♀️ Page not found | ${pageTitle}`;
     hydrationData.pageNotFound = true;
