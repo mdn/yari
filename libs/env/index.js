@@ -149,6 +149,24 @@ const MAX_FILE_SIZE = JSON.parse(
   process.env.FILECHECK_MAX_FILE_SIZE || 1024 * 1024 * 100 // ~100MiB
 );
 
+// ----------
+// kumascript
+// ----------
+
+const SERVER_PORT = process.env.SERVER_PORT || 5042;
+const SERVER_URL = `http://localhost:${SERVER_PORT}`;
+
+// Allow the `process.env.BUILD_LIVE_SAMPLES_BASE_URL` to be falsy
+// if it *is* set.
+const LIVE_SAMPLES_BASE_URL =
+  process.env.BUILD_LIVE_SAMPLES_BASE_URL !== undefined
+    ? process.env.BUILD_LIVE_SAMPLES_BASE_URL
+    : SERVER_URL;
+
+const INTERACTIVE_EXAMPLES_BASE_URL =
+  process.env.BUILD_INTERACTIVE_EXAMPLES_BASE_URL ||
+  "https://interactive-examples.mdn.mozilla.net";
+
 // ------
 // server
 // ------
@@ -188,6 +206,9 @@ module.exports = {
   MARKDOWN_FILENAME,
   // filecheck
   MAX_FILE_SIZE,
+  // kumascript,
+  LIVE_SAMPLES_BASE_URL,
+  INTERACTIVE_EXAMPLES_BASE_URL,
   // server
   STATIC_ROOT,
   PROXY_HOSTNAME,
