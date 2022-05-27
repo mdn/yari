@@ -6,9 +6,9 @@ import { Survey, SURVEYS } from "./surveys";
 import { getSurveyState, writeSurveyState } from "./util";
 
 export function DocumentSurvey({ doc }: { doc: Doc }) {
-  const surveys = React.useMemo(
+  const survey = React.useMemo(
     () =>
-      SURVEYS.filter((survey) => {
+      SURVEYS.find((survey) => {
         if (!survey.show(doc)) {
           return false;
         }
@@ -20,7 +20,7 @@ export function DocumentSurvey({ doc }: { doc: Doc }) {
     [doc]
   );
 
-  return surveys.length > 0 ? <SurveyDisplay survey={surveys[0]} /> : <></>;
+  return survey ? <SurveyDisplay survey={survey} /> : <></>;
 }
 
 function SurveyDisplay({ survey }: { survey: Survey }) {
