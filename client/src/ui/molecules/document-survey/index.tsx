@@ -4,11 +4,18 @@ import { ReactComponent as CloseIcon } from "@mdn/dinocons/general/close.svg";
 import "./index.scss";
 import { Survey, SURVEYS } from "./surveys";
 import { getSurveyState, writeSurveyState } from "./util";
+import { useIsServer } from "../../../hooks";
 
 export function DocumentSurvey({ doc }: { doc: Doc }) {
+  const isServer = useIsServer();
+
   const survey = React.useMemo(
     () =>
       SURVEYS.find((survey) => {
+        if (isServer) {
+          return false;
+        }
+
         if (!survey.show(doc)) {
           return false;
         }
@@ -17,7 +24,7 @@ export function DocumentSurvey({ doc }: { doc: Doc }) {
 
         return state.random < survey.rate;
       }),
-    [doc]
+    [doc, isServer]
   );
 
   return survey ? <SurveyDisplay survey={survey} /> : <></>;
