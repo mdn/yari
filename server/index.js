@@ -14,13 +14,8 @@ const {
   renderContributorsTxt,
 } = require("../build");
 const { findDocumentTranslations } = require("../content/translations");
-const {
-  CONTENT_ROOT,
-  Document,
-  Redirect,
-  Image,
-  CONTENT_TRANSLATED_ROOT,
-} = require("../content");
+const { Document, Redirect, Image } = require("../content");
+const { CONTENT_ROOT, CONTENT_TRANSLATED_ROOT } = require("../libs/env");
 // eslint-disable-next-line node/no-missing-require
 const { renderHTML } = require("../ssr/dist/main");
 const { CSP_VALUE, DEFAULT_LOCALE } = require("../libs/constants");

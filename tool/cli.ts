@@ -19,14 +19,8 @@ const cheerio = require("cheerio");
 const dirname = __dirname;
 
 const { DEFAULT_LOCALE, VALID_LOCALES } = require("../libs/constants");
-const {
-  CONTENT_ROOT,
-  CONTENT_TRANSLATED_ROOT,
-  Redirect,
-  Document,
-  buildURL,
-  getRoot,
-} = require("../content");
+const { CONTENT_ROOT, CONTENT_TRANSLATED_ROOT } = require("../libs/env");
+const { Redirect, Document, buildURL, getRoot } = require("../content");
 const { buildDocument, gatherGitHistory, buildSPAs } = require("../build");
 const {
   ALWAYS_ALLOW_ROBOTS,
