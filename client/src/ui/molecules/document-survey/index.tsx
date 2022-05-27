@@ -9,7 +9,7 @@ export function DocumentSurvey({ doc }: { doc: Doc }) {
   const surveys = React.useMemo(
     () =>
       SURVEYS.filter((survey) => {
-        if (!survey.filter(doc)) {
+        if (!survey.show(doc)) {
           return false;
         }
 
