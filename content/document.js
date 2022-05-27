@@ -9,12 +9,11 @@ const { fdir } = require("fdir");
 const {
   CONTENT_TRANSLATED_ROOT,
   CONTENT_ROOT,
-  ACTIVE_LOCALES,
-  VALID_LOCALES,
   ROOTS,
   HTML_FILENAME,
   MARKDOWN_FILENAME,
-} = require("./constants");
+} = require("../libs/env");
+const { ACTIVE_LOCALES, VALID_LOCALES } = require("../libs/constants");
 const { getPopularities } = require("./popularities");
 const { getWikiHistories } = require("./wikihistories");
 const { getGitHistories } = require("./githistories");

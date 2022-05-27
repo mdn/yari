@@ -7,7 +7,7 @@ const {
   MARKDOWN_FILENAME,
   CONTENT_ROOT,
   CONTENT_TRANSLATED_ROOT,
-} = require("./constants");
+} = require("../libs/env");
 
 function allDocumentPathsAsTree(root) {
   const api = new fdir()
