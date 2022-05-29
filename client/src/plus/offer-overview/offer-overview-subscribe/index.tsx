@@ -307,7 +307,7 @@ function OfferOverviewSubscribe() {
   const wrapperClass = !isOnline ? "wrapper-offline" : "wrapper";
 
   return (
-    <div className="dark subscribe-wrapper">
+    <div className="dark plus-subscribe-wrapper">
       <section className="container subscribe" id="subscribe">
         {!isOnline && (
           <h2>
