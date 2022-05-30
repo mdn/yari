@@ -1,4 +1,3 @@
-import React from "react";
 import { useLocation } from "react-router-dom";
 
 import { useLocale } from "../../../hooks";
@@ -14,20 +13,12 @@ export function Logo() {
   const locale = useLocale();
   const location = useLocation();
 
-  const [mdnLogo, setMdnLogo] = React.useState<React.ReactNode>(<MDNLogo />);
-  React.useEffect(() => {
-    if (isPlus(location.pathname)) {
-      setMdnLogo(<MDNPlusLogo />);
-    } else if (isDocs(location.pathname)) {
-      setMdnLogo(<MDNDocsLogo />);
-    } else {
-      setMdnLogo(<MDNLogo />);
-    }
-  }, [location]);
+  const plus = isPlus(location.pathname);
+  const docs = isDocs(location.pathname);
 
   return (
     <a href={`/${locale}/`} className="logo" aria-label="MDN homepage">
-      {mdnLogo}
+      {(plus && <MDNPlusLogo />) || (docs && <MDNDocsLogo />) || <MDNLogo />}
     </a>
   );
 }
