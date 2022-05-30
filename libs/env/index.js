@@ -91,9 +91,6 @@ const ALWAYS_ALLOW_ROBOTS = JSON.parse(
 // -------
 
 const CONTENT_ROOT = correctContentPathFromEnv("CONTENT_ROOT");
-if (!CONTENT_ROOT) {
-  throw new Error("Env var CONTENT_ROOT must be set");
-}
 
 const CONTENT_TRANSLATED_ROOT = correctContentPathFromEnv(
   "CONTENT_TRANSLATED_ROOT"
