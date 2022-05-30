@@ -19,7 +19,7 @@ export function Footer() {
       <div className="page-footer-grid">
         <div className="page-footer-logo-col">
           <a href="/" className="mdn-footer-logo" aria-label="MDN homepage">
-            <MDNLogo />
+            <MDNLogo aria-labelledby="mdn-footer-logo-svg" />
           </a>
           <p>Your blueprint for a better internet.</p>
           <ul className="social-icons">
