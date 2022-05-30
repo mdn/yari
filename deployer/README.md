@@ -87,7 +87,7 @@ will discover every folder that contains a Lambda function, create a deployment
 package (Zip file) for each one by running:
 
 ```sh
-yarn make-package
+npm run make-package
 ```
 
 and if the deployment package is different from what is already in AWS, it will
@@ -255,7 +255,7 @@ debug and develop further without having to rely on landing code in `main` and
 seeing how it worked.
 
 The first thing you need to do is to download a `build` artifact or to simply
-run `yarn build` and use the `../client/build` directory. To download the
+run `npm run build` and use the `../client/build` directory. To download the
 artifact go to a finished "PR Test" workflow, like
 <https://github.com/mdn/content/pull/3381/checks?check_run_id=2169672013> for
 example. Near the upper right-hand corner of the content (near the "Re-run jobs"

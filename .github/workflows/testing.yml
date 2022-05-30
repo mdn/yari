@@ -20,7 +20,6 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: "16"
-          cache: "yarn"
 
       - name: Cache node_modules
         uses: actions/cache@v3
@@ -28,21 +27,20 @@ jobs:
         with:
           path: |
             node_modules
-          key: ${{ runner.os }}-${{ hashFiles('yarn.lock') }}-${{ hashFiles('.github/workflows/testing.yml') }}
+          key: ${{ runner.os }}-${{ hashFiles('package-lock.json') }}-${{ hashFiles('.github/workflows/testing.yml') }}
 
-      - name: Install all yarn packages
+      - name: Install all NodeJS packages
         if: steps.cached-node_modules.outputs.cache-hit != 'true'
-        run: |
-          yarn --frozen-lockfile
+        run: npm ci
 
       - name: Lint prettier
-        run: yarn prettier-check
+        run: npm run prettier-check
 
       - name: Lint ESLint
-        run: yarn eslint
+        run: npm run eslint
 
       - name: Unit testing client
-        run: yarn test:client
+        run: npm run test:client
 
       - name: Build and start server
         id: server
@@ -50,33 +48,33 @@ jobs:
           ENV_FILE: testing/.env
         run: |
 
-          # because `yarn build:prepare` is a wrapper for `yarn build:client` and
-          # `yarn build:client` can't respect the `$ENV_FILE` environment variable,
+          # because `npm run build:prepare` is a wrapper for `npm run build:client` and
+          # `npm run build:client` can't respect the `$ENV_FILE` environment variable,
           # because it has to build from the `./client/` directory, we have to
           # manually copy the `testing/.env` file into `client/` so that when
-          # `yarn build:client` runs, it gets the same environment variables
-          # as you'd get when doing `yarn build:ssr`.
+          # `npm run build:client` runs, it gets the same environment variables
+          # as you'd get when doing `npm run build:ssr`.
           cp testing/.env client/
 
-          yarn build:prepare
-          yarn build
+          npm run build:prepare
+          npm run build
 
-          yarn start:static-server > /tmp/stdout.log 2> /tmp/stderr.log &
+          npm run start:static-server > /tmp/stdout.log 2> /tmp/stderr.log &
           sleep 1
           curl --fail --retry-connrefused --retry 5 http://localhost:5042 > /dev/null
 
       - name: Functional testing
         run: |
-          yarn test:testing
-          yarn test:headless
+          npm run test:testing
+          npm run test:headless
 
       - name: Basic m2h/h2m tool testing
         env:
           ENV_FILE: testing/.env
         run: |
-          yarn md m2h markdown/tool/m2h --locale en-US
+          npm run md m2h markdown/tool/m2h --locale en-US
           diff -s testing/content/files/en-us/markdown/tool/m2h/index.html testing/content/files/en-us/markdown/tool/m2h/expected.html
-          yarn md h2m markdown/tool/h2m --locale en-US
+          npm run md h2m markdown/tool/h2m --locale en-US
           diff -s testing/content/files/en-us/markdown/tool/h2m/index.md testing/content/files/en-us/markdown/tool/h2m/expected.md
 
       - name: Debug server's stdout and stderr if tests failed

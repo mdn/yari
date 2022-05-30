@@ -24,7 +24,6 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: "16"
-          cache: "yarn"
 
       - name: Cache node_modules
         uses: actions/cache@v3
@@ -32,11 +31,11 @@ jobs:
         with:
           path: |
             node_modules
-          key: ${{ runner.os }}-${{ hashFiles('yarn.lock') }}-${{ hashFiles('.github/workflows/npm-published-simulation.yml') }}
+          key: ${{ runner.os }}-${{ hashFiles('package-lock.json') }}-${{ hashFiles('.github/workflows/npm-published-simulation.yml') }}
 
-      - name: Install all yarn packages
+      - name: Install all NodeJS packages
         if: steps.cached-node_modules.outputs.cache-hit != 'true'
-        run: yarn --frozen-lockfile
+        run: npm ci
 
       - name: Setup kernel for react native, increase watchers
         run: |
@@ -54,8 +53,7 @@ jobs:
           REACT_APP_CRUD_MODE: true
           REACT_APP_DISABLE_AUTH: true
           CONTENT_ROOT: testing/content/files
-        run: |
-          yarn build:prepare
+        run: npm run build:prepare
 
       - name: Build and install tarball
         run: |
@@ -66,12 +64,11 @@ jobs:
           ls -lh $TARBALL
           mv $TARBALL mdn/content/
           cd mdn/content
-          yarn add file:$TARBALL
+          npm run add file:$TARBALL
 
       - name: Start Yari from mock content repo
         working-directory: mdn/content
-        run: |
-          yarn start > /tmp/stdout.log 2> /tmp/stderr.log &
+        run: npm run start > /tmp/stdout.log 2> /tmp/stderr.log &
 
       - name: View some URLs on localhost:5042
         run: |
@@ -88,13 +85,11 @@ jobs:
           # on localhost:3000.
           # Testing that dev server is not relevant or important in this context.
           DEVELOPING_SKIP_DEV_URL: true
-        run: |
-          yarn test:developing
+        run: npm run test:developing
 
       - name: SSR build a page
         working-directory: mdn/content
-        run: |
-          yarn build files/en-us/mdn/kitchensink/index.md
+        run: npm run build files/en-us/mdn/kitchensink/index.md
 
       - name: Debug server's stdout and stderr if tests failed
         if: failure()

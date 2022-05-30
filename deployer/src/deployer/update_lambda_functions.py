@@ -52,7 +52,7 @@ def make_package(lambda_function_dir):
 
     # Create a new zip package.
     subprocess_result = subprocess.run(
-        "yarn run make-package",
+        "npm run make-package",
         cwd=lambda_function_dir,
         shell=True,
         check=True,
