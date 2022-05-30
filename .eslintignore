@@ -4,3 +4,4 @@ dist/
 libs/
 client/public/service-worker.js
 client/public/
+mdn/content/

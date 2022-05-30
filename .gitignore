@@ -7,6 +7,7 @@ node_modules/
 
 # testing
 /coverage
+/mdn/content/
 
 # pwa
 /client/public/service-worker.js
