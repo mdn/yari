@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useCombobox } from "downshift";
 import useSWR from "swr";
 
@@ -9,7 +9,7 @@ import { preload, preloadSupported } from "./document/preloading";
 import { Button } from "./ui/atoms/button";
 
 import { useLocale } from "./hooks";
-import { SearchProps, useFocusOnSlash } from "./search-utils";
+import { SearchProps, useFocusViaKeyboard } from "./search-utils";
 
 const PRELOAD_WAIT_MS = 500;
 const SHOW_INDEXING_AFTER_MS = 500;
@@ -38,10 +38,10 @@ function useSearchIndex(): readonly [
 ] {
   const [shouldInitialize, setShouldInitialize] = useState(false);
   const [searchIndex, setSearchIndex] = useState<null | SearchIndex>(null);
-  const { locale } = useParams();
-
   // Default to 'en-US' if you're on the home page without the locale prefix.
-  const url = `/${locale || "en-US"}/search-index.json`;
+  const { locale = "en-US" } = useParams();
+
+  const url = `/${locale}/search-index.json`;
 
   const { error, data } = useSWR<null | Item[], Error | undefined>(
     shouldInitialize ? url : null,
@@ -167,7 +167,6 @@ function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
     defaultSelection,
   } = props;
 
-  const inputId = `${id}-q`;
   const formId = `${id}-form`;
   const navigate = useNavigate();
   const locale = useLocale();
@@ -261,6 +260,7 @@ function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
     reset,
     toggleMenu,
   } = useCombobox({
+    id: id,
     items:
       resultItems.length === 0
         ? [nothingFoundItem]
@@ -288,7 +288,7 @@ function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
     },
   });
 
-  useFocusOnSlash(inputRef);
+  useFocusViaKeyboard(inputRef);
 
   useEffect(() => {
     if (isFocused) {
@@ -358,11 +358,23 @@ function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
               index: 0,
             })}
           >
-            No document titles found.
-            <br />
-            <Link to={searchPath}>
+            <a
+              href={searchPath}
+              onClick={(event: React.MouseEvent) => {
+                if (event.ctrlKey || event.metaKey) {
+                  // Open in new tab, don't navigate current tab.
+                  event.stopPropagation();
+                } else {
+                  // Open in same tab, navigate via combobox.
+                  event.preventDefault();
+                }
+              }}
+              tabIndex={-1}
+            >
+              No document titles found.
+              <br />
               Site search for <code>{inputValue}</code>
-            </Link>
+            </a>
           </div>
         ) : (
           [
@@ -399,15 +411,28 @@ function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
                 className:
                   "nothing-found result-item " +
                   (highlightedIndex === resultItems.length ? "highlight" : ""),
+                key: "nothing-found",
                 item: onlineSearch,
                 index: resultItems.length,
               })}
             >
-              Not seeing what you're searching for?
-              <br />
-              <Link to={searchPath}>
+              <a
+                href={searchPath}
+                onClick={(event: React.MouseEvent) => {
+                  if (event.ctrlKey || event.metaKey) {
+                    // Open in new tab, don't navigate current tab.
+                    event.stopPropagation();
+                  } else {
+                    // Open in same tab, navigate via combobox.
+                    event.preventDefault();
+                  }
+                }}
+                tabIndex={-1}
+              >
+                Not seeing what you're searching for?
+                <br />
                 Site search for <code>{inputValue}</code>
-              </Link>
+              </a>
             </div>,
           ]
         )}
@@ -438,7 +463,11 @@ function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
         },
       })}
     >
-      <label htmlFor={inputId} className="visually-hidden">
+      <label
+        id={`${id}-label`}
+        htmlFor={`${id}-input`}
+        className="visually-hidden"
+      >
         Search MDN
       </label>
 
@@ -448,9 +477,7 @@ function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
           className: isOpen
             ? "has-search-results search-input-field"
             : "search-input-field",
-          id: inputId,
-          name: "q",
-          placeholder: "   ",
+          name: `q`,
           onMouseOver: initializeSearchIndex,
           onFocus: () => {
             onChangeIsFocused(true);
@@ -481,6 +508,7 @@ function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
           ref: (input) => {
             inputRef.current = input;
           },
+          placeholder: "   ",
           required: true,
         })}
       />
@@ -510,7 +538,9 @@ function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
   );
 }
 
-class SearchErrorBoundary extends React.Component {
+class SearchErrorBoundary extends React.Component<{
+  children?: React.ReactNode;
+}> {
   state = { hasError: false };
 
   static getDerivedStateFromError(error: Error) {
