@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { useLocation } from "react-router-dom";
 
 import { useLocale } from "../../../hooks";
@@ -14,8 +14,8 @@ export function Logo() {
   const locale = useLocale();
   const location = useLocation();
 
-  const [mdnLogo, setMdnLogo] = useState<any>(null);
-  useEffect(() => {
+  const [mdnLogo, setMdnLogo] = React.useState<React.ReactNode>(<MDNLogo />);
+  React.useEffect(() => {
     if (isPlus(location.pathname)) {
       setMdnLogo(<MDNPlusLogo />);
     } else if (isDocs(location.pathname)) {
