@@ -2,9 +2,9 @@ import { useLocation } from "react-router-dom";
 
 import { useLocale } from "../../../hooks";
 
-import { ReactComponent as MDNDocsLogo } from "../../../assets/mdn-docs-logo.svg";
-import { ReactComponent as MDNPlusLogo } from "../../../assets/mdn-plus-logo.svg";
-import { ReactComponent as MDNLogo } from "../../../assets/mdn-logo.svg";
+import MDNLogo from "../mdn-logo";
+import MDNDocsLogo from "../mdn-docs-logo";
+import MDNPlusLogo from "../mdn-plus-logo";
 
 import "./index.scss";
 import { isDocs, isPlus } from "../../../utils";

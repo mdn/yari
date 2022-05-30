@@ -3,9 +3,9 @@ import { useLocale } from "../../../hooks";
 import "./index.scss";
 import { useLocation } from "react-router-dom";
 
-import { ReactComponent as MDNLogo } from "../../../assets/mdn-footer-logo.svg";
-import { ReactComponent as MozLogo } from "../../../assets/moz-logo.svg";
 import { PLUS_IS_ENABLED } from "../../../constants";
+import MdnLogo from "../../atoms/mdn-footer-logo";
+import MozLogo from "../../atoms/moz-logo";
 const DARK_NAV_ROUTES = [/\/plus\/?$/i];
 
 export function Footer() {
@@ -19,7 +19,7 @@ export function Footer() {
       <div className="page-footer-grid">
         <div className="page-footer-logo-col">
           <a href="/" className="mdn-footer-logo" aria-label="MDN homepage">
-            <MDNLogo />
+            <MdnLogo />
           </a>
           <p>Your blueprint for a better internet.</p>
           <ul className="social-icons">
