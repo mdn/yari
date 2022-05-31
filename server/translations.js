@@ -16,7 +16,13 @@ import {
 } from "../content/index.js";
 import { getLastCommitURL } from "../build/index.js";
 import { ACTIVE_LOCALES, DEFAULT_LOCALE } from "../libs/constants/index.js";
-import LANGUAGES_RAW from "../content/languages.json";
+
+import { fileURLToPath } from "url";
+const dirname = path.dirname(fileURLToPath(import.meta.url));
+
+const LANGUAGES_RAW = JSON.parse(
+  fs.readFileSync(path.join(dirname, "../content/languages.json"), "utf8")
+);
 
 // Module-level cache
 const allPopularityValues = [];

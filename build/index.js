@@ -35,9 +35,15 @@ import buildOptions from "./build-options.js";
 import { gather as gatherGitHistory } from "./git-history.js";
 import { buildSPAs } from "./spas.js";
 import { renderCache as renderKumascriptCache } from "../kumascript/index.js";
-import LANGUAGES_RAW from "../content/languages.json";
 import { safeDecodeURIComponent } from "../kumascript/src/api/util.js";
 import { wrapTables } from "./wrap-tables.js";
+
+import { fileURLToPath } from "url";
+const dirname = path.dirname(fileURLToPath(import.meta.url));
+
+const LANGUAGES_RAW = JSON.parse(
+  fs.readFileSync(path.join(dirname, "../content/languages.json"), "utf8")
+);
 
 const LANGUAGES = new Map(
   Object.entries(LANGUAGES_RAW).map(([locale, data]) => {
