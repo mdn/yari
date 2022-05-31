@@ -129,7 +129,7 @@
     "@mdn/dinocons": "^0.5.5",
     "@mdn/minimalist": "^2.0.4",
     "@playwright/test": "^1.22.2",
-    "@pmmmwh/react-refresh-webpack-plugin": "^0.5.3",
+    "@pmmmwh/react-refresh-webpack-plugin": "^0.5.7",
     "@svgr/webpack": "^5.5.0",
     "@testing-library/react": "^13.3.0",
     "@types/hast": "^2.3.4",
