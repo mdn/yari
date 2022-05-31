@@ -2,7 +2,7 @@
   "compilerOptions": {
     "jsx": "react-jsx",
     "module": "esnext",
-    "moduleResolution": "NodeNext",
+    "moduleResolution": "node",
     "strictBindCallApply": true,
     "target": "ES2018",
     "preserveWatchOutput": true,
