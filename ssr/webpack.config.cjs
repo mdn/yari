@@ -12,11 +12,11 @@ module.exports = {
   entry: "./index.ts",
   output: {
     path: path.resolve(dirname, "dist"),
-    filename: "[name].cjs",
+    filename: "[name].js",
     sourceMapFilename: "[name].js.map",
-    libraryTarget: "commonjs2",
+    libraryTarget: "module",
   },
-  target: "node",
+  target: "node16",
   node: {
     __dirname: false,
     __filename: false,
@@ -60,6 +60,9 @@ module.exports = {
       },
       { test: /\.(css|scss)$/, loader: "ignore-loader" },
     ],
+  },
+  experiments: {
+    outputModule: true,
   },
   externals: nodeExternals(),
   devtool: "source-map",
