@@ -36,7 +36,7 @@ const {
   VALID_FLAW_CHECKS,
 } = require("../build/constants");
 const { runMakePopularitiesFile } = require("./popularities");
-export const { runOptimizeClientBuild } = require("./optimize-client-build");
+const { runOptimizeClientBuild } = require("./optimize-client-build");
 const { runBuildRobotsTxt } = require("./build-robots-txt");
 const kumascript = require("../kumascript");
 
