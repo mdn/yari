@@ -1,12 +1,12 @@
-/* eslint-disable node/no-missing-import */
-import { resolveFundamental } from "@yari-internal/fundamental-redirects/index.js";
-import { getLocale } from "@yari-internal/get-locale/index.js";
-import {
+/* eslint-disable node/no-missing-require */
+const { resolveFundamental } = require("@yari-internal/fundamental-redirects");
+const { getLocale } = require("@yari-internal/get-locale");
+const {
   decodePath,
   encodePath,
   slugToFolder,
-} from "@yari-internal/slug-utils/index.js";
-import { VALID_LOCALES } from "@yari-internal/constants/index.js";
+} = require("@yari-internal/slug-utils");
+const { VALID_LOCALES } = require("@yari-internal/constants");
 
 const THIRTY_DAYS = 3600 * 24 * 30;
 const NEEDS_LOCALE = /^\/(?:docs|search|settings|signin|signup|plus)(?:$|\/)/;
@@ -83,7 +83,7 @@ function redirect(location, { status = 302, cacheControlSeconds = 0 } = {}) {
   };
 }
 
-export default async function handler(event) {
+exports.handler = async (event) => {
   /*
    * Modify the request before it's passed to the S3 origin.
    */
@@ -243,4 +243,4 @@ export default async function handler(event) {
     }
   }
   return request;
-}
+};
