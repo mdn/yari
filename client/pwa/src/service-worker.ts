@@ -83,7 +83,7 @@ self.addEventListener("message", (e: ExtendableMessageEvent) => {
           return checkForUpdate(self);
 
         case "update":
-          unpacking = updateContent(self, e?.data);
+          unpacking = updateContent(self);
           return unpacking;
 
         case "clear":
@@ -185,25 +185,10 @@ export async function checkForUpdate(self: ServiceWorkerGlobalScope) {
   });
 }
 
-export async function updateContent(
-  self: ServiceWorkerGlobalScope,
-  { current = null }: { current?: string }
-) {
+export async function updateContent(self: ServiceWorkerGlobalScope) {
   await checkForUpdate(self);
 
   const contentStatus = await getContentStatus();
-
-  if (!contentStatus.local && current) {
-    // Fallback to local version from client (LocalStorage).
-    const local = {
-      version: current,
-      date: "1970-01-01",
-    };
-    await patchContentStatus({
-      local,
-    });
-    contentStatus.local = local;
-  }
 
   const { local, remote } = contentStatus;
 

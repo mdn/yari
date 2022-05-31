@@ -5,17 +5,10 @@ export class SettingsData {
   preferOnline?: boolean;
   autoUpdates?: boolean;
 
-  /** @deprecated Now managed by PWA in IndexedDB. */
-  currentVersion?: string | null;
-  /** @deprecated Now managed by PWA in IndexedDB. */
-  currentDate?: string | null;
-
   constructor() {
     this.offline = false;
     this.preferOnline = false;
     this.autoUpdates = false;
-    this.currentVersion = null;
-    this.currentDate = null;
   }
 }
 
