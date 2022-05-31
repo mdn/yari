@@ -17,5 +17,8 @@
     "noEmit": true,
     "noFallthroughCasesInSwitch": true
   },
+  "ts-node": {
+    "esm": true
+  },
   "files": []
 }
