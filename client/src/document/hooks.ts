@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { useLocation, useParams } from "react-router-dom";
+import { useIsServer } from "../hooks";
 import { Doc, FrequentlyViewedEntry } from "./types";
 
 export function useDocumentURL() {
@@ -13,20 +14,23 @@ export function useDocumentURL() {
 
 export function useCopyExamplesToClipboard(doc: Doc | undefined) {
   const location = useLocation();
+  const isServer = useIsServer();
 
   useEffect(() => {
-    if (!doc) {
-      return;
-    }
-    if (!navigator.clipboard) {
-      console.log(
-        "Copy-to-clipboard disabled because your browser does not appear to support it."
-      );
-      return;
-    }
+    if (!isServer) {
+      if (!doc) {
+        return;
+      }
+      if (!navigator.clipboard) {
+        console.log(
+          "Copy-to-clipboard disabled because your browser does not appear to support it."
+        );
+        return;
+      }
 
-    [...document.querySelectorAll("div.code-example pre:not(.hidden)")].forEach(
-      (element) => {
+      [
+        ...document.querySelectorAll("div.code-example pre:not(.hidden)"),
+      ].forEach((element) => {
         const wrapper = element.parentElement;
         // No idea how a parentElement could be falsy in practice, but it can
         // in theory and hence in TypeScript. So to having to test for it, bail
@@ -78,9 +82,9 @@ export function useCopyExamplesToClipboard(doc: Doc | undefined) {
             copiedSuccessfully ? 1000 : 3000
           );
         };
-      }
-    );
-  }, [doc, location]);
+      });
+    }
+  }, [doc, location, isServer]);
 }
 
 function showCopiedMessage(wrapper: HTMLElement, msg: string) {
