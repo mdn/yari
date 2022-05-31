@@ -46,6 +46,13 @@ function SurveyDisplay({ survey }: { survey: Survey }) {
     });
   }
 
+  function submitted() {
+    setState({
+      ...state,
+      submitted_at: Date.now(),
+    });
+  }
+
   React.useEffect(() => {
     const { current } = details;
     if (!(current instanceof HTMLDetailsElement)) {
@@ -74,6 +81,26 @@ function SurveyDisplay({ survey }: { survey: Survey }) {
       });
     }
   }, [state]);
+
+  React.useEffect(() => {
+    // For this to work, the Survey needs this JavaScript action:
+    // window.parent && window.parent.postMessage("submit", "*");
+
+    const listener = (event: MessageEvent) => {
+      if (
+        event.origin === "https://www.surveygizmo.com" &&
+        event.data === "submit"
+      ) {
+        submitted();
+      }
+    };
+
+    window.addEventListener("message", listener, false);
+
+    return () => {
+      window.removeEventListener("message", listener, false);
+    };
+  });
 
   if (state.dismissed_at) {
     return <></>;

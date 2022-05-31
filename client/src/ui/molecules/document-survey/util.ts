@@ -5,6 +5,8 @@ interface SurveyState {
   seen_at: number | null;
   // When the user has manually hidden the survey.
   dismissed_at: number | null;
+  // When the user has submitted the survey.
+  submitted_at: number | null;
   // When the user has first opened the survey.
   opened_at: number | null;
 }
@@ -19,6 +21,7 @@ export function getSurveyState(key: string): SurveyState {
     state.random ??= Math.random();
     state.seen_at ??= null;
     state.dismissed_at ??= null;
+    state.submitted_at ??= null;
     state.opened_at ??= null;
     writeSurveyState(key, state);
   }
