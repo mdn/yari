@@ -17,20 +17,23 @@ export function useCopyExamplesToClipboard(doc: Doc | undefined) {
   const isServer = useIsServer();
 
   useEffect(() => {
-    if (!isServer) {
-      if (!doc) {
-        return;
-      }
-      if (!navigator.clipboard) {
-        console.log(
-          "Copy-to-clipboard disabled because your browser does not appear to support it."
-        );
-        return;
-      }
+    if (isServer) {
+      return;
+    }
 
-      [
-        ...document.querySelectorAll("div.code-example pre:not(.hidden)"),
-      ].forEach((element) => {
+    if (!doc) {
+      return;
+    }
+
+    if (!navigator.clipboard) {
+      console.log(
+        "Copy-to-clipboard disabled because your browser does not appear to support it."
+      );
+      return;
+    }
+
+    [...document.querySelectorAll("div.code-example pre:not(.hidden)")].forEach(
+      (element) => {
         const wrapper = element.parentElement;
         // No idea how a parentElement could be falsy in practice, but it can
         // in theory and hence in TypeScript. So to having to test for it, bail
@@ -82,8 +85,8 @@ export function useCopyExamplesToClipboard(doc: Doc | undefined) {
             copiedSuccessfully ? 1000 : 3000
           );
         };
-      });
-    }
+      }
+    );
   }, [doc, location, isServer]);
 }
 
