@@ -44,7 +44,6 @@ module.exports = {
           {
             loader: "@svgr/webpack",
             options: {
-              expandProps: "end",
               // these properties cause hydration errors when enabled
               svgo: false,
               titleProp: false,
