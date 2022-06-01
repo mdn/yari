@@ -70,26 +70,8 @@ function DocumentLayout({ children }) {
   return <Layout pageType="document-page">{children}</Layout>;
 }
 
-/** This component exists so you can dynamically change which sub-component to
- * render depending on the conditions. In particular, we need to be able to
- * render the <PageNotFound> component, in server-side rendering, if told to do
- * so. But if the client then changes the location (by clicking a <Link>
- * or a react-router navigate() call) we need to ignore the fact that it was
- * originally not found. Perhaps, this new location that the client is
- * requesting is going to work.
- */
-function PageOrPageNotFound({ pageNotFound, initialPathname, children }) {
-  // It's true by default if the SSR rendering says so.
-  const [notFound, setNotFound] = React.useState<boolean>(!!pageNotFound);
-  const { pathname } = useLocation();
-
-  React.useEffect(() => {
-    if (initialPathname.current && initialPathname.current !== pathname) {
-      setNotFound(false);
-    }
-  }, [initialPathname, pathname]);
-
-  return notFound ? (
+function PageOrPageNotFound({ pageNotFound, children }) {
+  return pageNotFound ? (
     <StandardLayout>
       <PageNotFound />
     </StandardLayout>
@@ -112,14 +94,24 @@ function LoadingFallback({ message }: { message?: string }) {
 
 export function App(appProps) {
   const localeMatch = useMatch("/:locale/*");
-  const { pathname } = useLocation();
-  const initialPathname = React.useRef(pathname);
 
   useEffect(() => {
     const locale = localeMatch?.params.locale || appProps.locale;
 
     document.documentElement.setAttribute("lang", locale);
   }, [appProps.locale, localeMatch]);
+
+  const [pageNotFound, setPageNotFound] = React.useState<boolean>(
+    appProps.pageNotFound
+  );
+  const { pathname } = useLocation();
+  const initialPathname = React.useRef(pathname);
+
+  React.useEffect(() => {
+    if (initialPathname.current !== pathname) {
+      setPageNotFound(false);
+    }
+  }, [pathname]);
 
   const isServer = useIsServer();
 
@@ -132,10 +124,7 @@ export function App(appProps) {
         <WritersHomepage />
       </Layout>
     ) : (
-      <PageOrPageNotFound
-        pageNotFound={appProps.pageNotFound}
-        initialPathname={initialPathname}
-      >
+      <PageOrPageNotFound pageNotFound={pageNotFound}>
         <Layout pageType="standard-page">
           <Homepage {...appProps} />
         </Layout>
@@ -248,10 +237,7 @@ export function App(appProps) {
             <Route
               path="/docs/*"
               element={
-                <PageOrPageNotFound
-                  pageNotFound={appProps.pageNotFound}
-                  initialPathname={initialPathname}
-                >
+                <PageOrPageNotFound pageNotFound={pageNotFound}>
                   <DocumentLayout>
                     <Document {...appProps} />
                   </DocumentLayout>
