@@ -43,10 +43,14 @@ module.exports = {
         use: [
           {
             loader: "@svgr/webpack",
-            options: {
-              // these properties cause hydration errors when enabled
+             options: {
+              prettier: false,
               svgo: false,
-              titleProp: false,
+              svgoConfig: {
+                plugins: [{ removeViewBox: false }],
+              },
+              titleProp: true,
+              ref: true,
             },
           },
         ],
