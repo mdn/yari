@@ -33,7 +33,8 @@ export function DocumentSurvey({ doc }: { doc: Doc }) {
 function SurveyDisplay({ survey }: { survey: Survey }) {
   const details = React.useRef<HTMLDetailsElement | null>(null);
 
-  const [state, setState] = React.useState(() => getSurveyState(survey.key));
+  const [originalState] = React.useState(() => getSurveyState(survey.key));
+  const [state, setState] = React.useState(() => originalState);
 
   React.useEffect(() => {
     writeSurveyState(survey.key, state);
@@ -102,7 +103,7 @@ function SurveyDisplay({ survey }: { survey: Survey }) {
     };
   });
 
-  if (state.dismissed_at) {
+  if (state.dismissed_at || originalState.submitted_at) {
     return <></>;
   }
 
