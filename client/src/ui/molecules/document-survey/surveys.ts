@@ -1,7 +1,7 @@
 import { Doc } from "../../../document/types";
 
 export interface Survey {
-  key: string;
+  key: SurveyKey;
   show: (doc: Doc) => boolean;
   rate: number;
   src: string;
@@ -9,9 +9,13 @@ export interface Survey {
   question: string;
 }
 
+enum SurveyKey {
+  CSS_CASCADE_2022 = "css_cascade_2022",
+}
+
 export const SURVEYS: Survey[] = [
   {
-    key: "css_cascade_2022",
+    key: SurveyKey.CSS_CASCADE_2022,
     show: (doc: Doc) =>
       /en-US\/docs\/Web\/CSS(\/|$)/i.test(
         doc.mdn_url
