@@ -83,11 +83,17 @@ function PageOrPageNotFound({ pageNotFound, children }) {
   const [notFound, setNotFound] = React.useState<boolean>(!!pageNotFound);
   const { pathname } = useLocation();
   const initialPathname = React.useRef(pathname);
+  const isServer = useIsServer();
+
   React.useEffect(() => {
+    if (!isServer) {
+      setNotFound(false);
+    }
+
     if (initialPathname.current && initialPathname.current !== pathname) {
       setNotFound(false);
     }
-  }, [pathname]);
+  }, [isServer, pathname]);
 
   return notFound ? (
     <StandardLayout>
