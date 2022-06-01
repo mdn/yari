@@ -1,4 +1,4 @@
-import { browsers as browserData } from "@mdn/browser-compat-data";
+import bcd from "@mdn/browser-compat-data";
 import { BrowserName } from "./browser-info";
 
 function PlatformHeaders({ platforms, browsers }) {
@@ -9,7 +9,7 @@ function PlatformHeaders({ platforms, browsers }) {
         // Get the intersection of browsers in the `browsers` array and the
         // `PLATFORM_BROWSERS[platform]`.
         const browsersInPlatform = browsers.filter(
-          (browser) => browserData[browser].type === platform
+          (browser) => bcd.browsers[browser].type === platform
         );
         const browserCount = browsersInPlatform.length;
         return (
