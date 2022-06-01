@@ -3,7 +3,7 @@ import { Doc } from "../../../document/types";
 import { ReactComponent as CloseIcon } from "@mdn/dinocons/general/close.svg";
 import "./index.scss";
 import { Survey, SURVEYS } from "./surveys";
-import { getSurveyState, writeSurveyState } from "./util";
+import { getSurveyState, writeSurveyState } from "./utils";
 import { useIsServer } from "../../../hooks";
 
 export function DocumentSurvey({ doc }: { doc: Doc }) {
