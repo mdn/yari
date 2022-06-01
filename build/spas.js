@@ -114,7 +114,6 @@ async function buildSPAs(options) {
 
       if (contributorSpotlightRoot) {
         buildContributorSpotlight(options, locale);
-        buildCount++;
       }
 
       const MDN_PLUS_TITLE = "MDN Plus";
