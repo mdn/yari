@@ -78,22 +78,16 @@ function DocumentLayout({ children }) {
  * originally not found. Perhaps, this new location that the client is
  * requesting is going to work.
  */
-function PageOrPageNotFound({ pageNotFound, children }) {
+function PageOrPageNotFound({ pageNotFound, initialPathname, children }) {
   // It's true by default if the SSR rendering says so.
   const [notFound, setNotFound] = React.useState<boolean>(!!pageNotFound);
   const { pathname } = useLocation();
-  const initialPathname = React.useRef(pathname);
-  const isServer = useIsServer();
 
   React.useEffect(() => {
-    if (!isServer) {
-      setNotFound(false);
-    }
-
     if (initialPathname.current && initialPathname.current !== pathname) {
       setNotFound(false);
     }
-  }, [isServer, pathname]);
+  }, [initialPathname, pathname]);
 
   return notFound ? (
     <StandardLayout>
@@ -118,6 +112,8 @@ function LoadingFallback({ message }: { message?: string }) {
 
 export function App(appProps) {
   const localeMatch = useMatch("/:locale/*");
+  const { pathname } = useLocation();
+  const initialPathname = React.useRef(pathname);
 
   useEffect(() => {
     const locale = localeMatch?.params.locale || appProps.locale;
@@ -136,7 +132,10 @@ export function App(appProps) {
         <WritersHomepage />
       </Layout>
     ) : (
-      <PageOrPageNotFound pageNotFound={appProps.pageNotFound}>
+      <PageOrPageNotFound
+        pageNotFound={appProps.pageNotFound}
+        initialPathname={initialPathname}
+      >
         <Layout pageType="standard-page">
           <Homepage {...appProps} />
         </Layout>
@@ -249,7 +248,10 @@ export function App(appProps) {
             <Route
               path="/docs/*"
               element={
-                <PageOrPageNotFound pageNotFound={appProps.pageNotFound}>
+                <PageOrPageNotFound
+                  pageNotFound={appProps.pageNotFound}
+                  initialPathname={initialPathname}
+                >
                   <DocumentLayout>
                     <Document {...appProps} />
                   </DocumentLayout>
