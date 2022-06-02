@@ -23,6 +23,9 @@ export const CRUD_MODE_HOSTNAMES = (
   .map((x) => x.trim())
   .filter(Boolean);
 
+export const KUMA_HOST =
+  process.env.REACT_APP_KUMA_HOST || "developer.mozilla.org";
+
 export const PLUS_IS_ENABLED = Boolean(
   process.env.REACT_APP_ENABLE_PLUS || "false"
 );
