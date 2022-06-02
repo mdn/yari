@@ -3,7 +3,8 @@
     "stylelint-config-recommended",
     "stylelint-config-sass-guidelines",
     "stylelint-a11y/recommended",
-    "stylelint-prettier/recommended"
+    "stylelint-prettier/recommended",
+    "stylelint-order"
   ],
   "plugins": ["stylelint-scss"],
   "rules": {
@@ -20,6 +21,7 @@
       {
         "ignore": ["class"]
       }
-    ]
+    ],
+    "order/properties-alphabetical-order": true
   }
 }
