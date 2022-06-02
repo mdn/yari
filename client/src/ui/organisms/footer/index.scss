@@ -43,13 +43,13 @@
   }
 
   &-moz {
+    align-items: center;
+    border-top: 1px solid var(--border-primary);
     display: flex;
     flex-flow: row wrap;
-    align-items: center;
     gap: 2rem;
 
     padding-top: 1.5rem;
-    border-top: 1px solid var(--border-primary);
   }
 
   &-legal-text {
@@ -59,7 +59,8 @@
     a {
       text-decoration: underline;
 
-      &:hover {
+      &:hover,
+      &:focus {
         text-decoration: none;
       }
     }
@@ -70,8 +71,8 @@
   &-list {
     display: flex;
     flex-wrap: wrap;
-    gap: 1rem;
     font-size: var(--type-tiny-font-size);
+    gap: 1rem;
   }
 
   &-logo-link {
@@ -81,7 +82,8 @@
   &-link {
     text-decoration: underline;
 
-    &:hover {
+    &:hover,
+    &:focus {
       text-decoration: none;
     }
   }
@@ -94,8 +96,8 @@
 
 .social-icons {
   display: flex;
-  margin-top: 0.5rem;
   gap: 1rem;
+  margin-top: 0.5rem;
 
   li {
     flex: 0 0 auto;
@@ -111,7 +113,7 @@
 .footer-nav {
   &-heading {
     font: var(--type-smaller-font-size);
-    margin: 0 0 0.5rem 0;
+    margin: 0 0 0.5rem;
   }
 
   &-list {
@@ -138,13 +140,13 @@
     &-grid {
       display: grid;
       gap: 2.5rem;
-      grid-template-columns: 1fr 1fr;
       grid-template-areas:
         "logo  . "
         "nav1  nav2"
         "nav3  nav4"
         "moz   moz"
         "legal legal";
+      grid-template-columns: 1fr 1fr;
     }
 
     &-logo-col {
@@ -195,12 +197,12 @@
 @media screen and (min-width: $screen-md) {
   .page-footer {
     &-grid {
-      grid-template-columns: minmax(260px, 2fr) repeat(4, minmax(0, 1fr));
+      gap: 1rem;
       grid-template-areas:
         "logo  nav1  nav2  nav3  nav4"
         "moz   moz   moz   moz   moz"
         "legal legal legal legal  . ";
-      gap: 1rem;
+      grid-template-columns: minmax(260px, 2fr) repeat(4, minmax(0, 1fr));
     }
 
     &-app-list {

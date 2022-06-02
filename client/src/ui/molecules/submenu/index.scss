@@ -3,8 +3,8 @@
 
 @mixin not-inline-submenu {
   background-color: var(--background-secondary);
-  border-radius: var(--elem-radius);
   border: 1px solid var(--border-primary);
+  border-radius: var(--elem-radius);
   box-shadow: var(--shadow-02);
   max-width: 25rem;
   padding: 0.5rem;
@@ -26,7 +26,7 @@
       Creates a space between the top-level menu and the submenu that
       keeps the menu open when the cursor moves to the menu
     */
-  &:before {
+  &::before {
     content: "";
     display: block;
     height: 8px;
@@ -101,7 +101,8 @@
     padding: 0;
   }
 
-  .submenu-item:hover {
+  .submenu-item:hover,
+  .submenu-item:focus {
     background: none;
   }
 
@@ -113,9 +114,9 @@
 .submenu-icon {
   background-color: var(--icon-primary);
   height: 2rem;
+  margin-right: 0.75rem;
   position: relative;
   width: 0.2rem;
-  margin-right: 0.75rem;
 }
 
 .submenu-item-heading,
@@ -135,8 +136,8 @@
 
   @media screen and (min-width: $screen-md) {
     display: block;
-    margin: 0.25rem 0 0 0;
     font-size: var(--type-tiny-font-size);
+    margin: 0.25rem 0 0;
   }
 }
 
@@ -145,14 +146,14 @@
 }
 
 .submenu-item-dot ~ .submenu-content-container > .submenu-item-heading::after {
-  content: "";
-  display: inline-block;
+  background: var(--text-primary-blue);
   border: 1px solid var(--background-primary);
   border-radius: 2rem;
-  background: var(--text-primary-blue);
-  width: 0.5rem;
+  content: "";
+  display: inline-block;
   height: 0.5rem;
   margin-left: 0.5rem;
+  width: 0.5rem;
 }
 
 .active-menu-item {

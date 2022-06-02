@@ -7,27 +7,27 @@
 
   .main-page-content {
     em {
-      text-decoration: underline;
       font-style: normal;
+      text-decoration: underline;
+      text-decoration-color: var(--text-link);
       text-decoration-thickness: 0.15rem;
       text-underline-offset: 0.1em;
-      text-decoration-color: var(--text-link);
     }
 
     h1 {
+      color: var(--plus-accent-color);
       /* MDN/Plus/Type/Overline/S */
       font: 700 12px/120% Inter;
       letter-spacing: 1.5px;
       text-transform: uppercase;
-      color: var(--plus-accent-color);
     }
 
     h1 + blockquote {
       border: revert;
-      padding: revert;
-      margin: 1rem 0 2rem;
       border-radius: var(--elem-radius);
       color: var(--text-primary);
+      margin: 1rem 0 2rem;
+      padding: revert;
 
       p:first-child {
         font: var(--type-heading-h1-mobile);

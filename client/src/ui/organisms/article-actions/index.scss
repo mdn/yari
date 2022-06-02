@@ -47,12 +47,12 @@
       display: block;
       height: 100vh;
       left: 0;
+      overflow: auto;
+      -webkit-overflow-scrolling: touch;
       position: fixed;
       top: var(--top-navigation-height);
       width: 100vw;
       z-index: var(--z-index-low);
-      overflow: auto;
-      -webkit-overflow-scrolling: touch;
 
       // Reset all buttons
       .button {
@@ -65,9 +65,10 @@
           padding: 1.5rem 1rem;
         }
       }
+
       .watch-submenu-item {
-        padding-top: 0.5rem;
         padding-bottom: 0.5rem;
+        padding-top: 0.5rem;
 
         .button {
           width: auto;
@@ -87,8 +88,8 @@
         --button-radius: var(--elem-radius);
 
         .button-wrap {
-          padding: 0 var(--button-padding);
           justify-content: center;
+          padding: 0 var(--button-padding);
         }
       }
 

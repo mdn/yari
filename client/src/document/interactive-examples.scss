@@ -5,13 +5,13 @@
   border: 1px solid var(--border-primary);
   border-radius: var(--elem-radius);
   color: var(--text-primary);
-  margin: 1rem 0;
-  padding: 0;
-  width: 100%;
 
   // Since heights are now responsive, these classes are added
   // in the EmbedInteractiveExample.ejs macro.
   height: 675px;
+  margin: 1rem 0;
+  padding: 0;
+  width: 100%;
 
   &.is-js-height,
   &.is-taller-height,
@@ -22,18 +22,23 @@
   &.is-js-height {
     height: 513px;
   }
+
   &.is-shorter-height {
     height: 433px;
   }
+
   &.is-taller-height {
     height: 725px;
   }
+
   &.is-tabbed-shorter-height {
     height: 487px;
   }
+
   &.is-tabbed-standard-height {
     height: 548px;
   }
+
   &.is-tabbed-taller-height {
     height: 774px;
   }
@@ -57,18 +62,23 @@
     &.is-js-height {
       height: 444px;
     }
+
     &.is-shorter-height {
       height: 364px;
     }
+
     &.is-taller-height {
       height: 654px;
     }
+
     &.is-tabbed-shorter-height {
       height: 351px;
     }
+
     &.is-tabbed-standard-height {
       height: 421px;
     }
+
     &.is-tabbed-taller-height {
       height: 631px;
     }

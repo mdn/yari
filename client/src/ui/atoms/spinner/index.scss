@@ -1,27 +1,44 @@
 .spinner {
   display: inline-block;
+  height: 1rem;
   position: relative;
   width: 1rem;
-  height: 1rem;
+  @media screen and (prefers-reduced-motion: reduce) {
+    div {
+      animation: none;
+      border: 0.1rem solid var(--text-primary);
+      border-color: var(--text-primary) transparent transparent transparent;
+      border-radius: 50%;
+      box-sizing: border-box;
+      display: block;
+      height: 0.8rem;
+      margin: 0.1rem;
+      position: absolute;
+      width: 0.8rem;
+    }
+  }
 
   div {
+    animation: spinner 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+    border: 0.1rem solid var(--text-primary);
+    border-color: var(--text-primary) transparent transparent transparent;
+    border-radius: 50%;
     box-sizing: border-box;
     display: block;
-    position: absolute;
-    width: 0.8rem;
     height: 0.8rem;
     margin: 0.1rem;
-    border: 0.1rem solid var(--text-primary);
-    border-radius: 50%;
-    animation: spinner 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
-    border-color: var(--text-primary) transparent transparent transparent;
+    position: absolute;
+    width: 0.8rem;
   }
+
   div:nth-child(1) {
     animation-delay: -0.45s;
   }
+
   div:nth-child(2) {
     animation-delay: -0.3s;
   }
+
   div:nth-child(3) {
     animation-delay: -0.15s;
   }
@@ -30,6 +47,7 @@
   0% {
     transform: rotate(0deg);
   }
+
   100% {
     transform: rotate(360deg);
   }

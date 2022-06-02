@@ -5,28 +5,112 @@ $text-stroke-width: 2px;
 .offer-hero {
   background-color: var(--background-primary);
   color: var(--text-primary);
-  width: 100%;
   display: grid;
   grid-template-rows: fit-content(24rem);
+  width: 100%;
+  @media screen and (prefers-reduced-motion: reduce) {
+    .offer-hero-header {
+      align-items: center;
+
+      color: var(--text-secondary);
+      display: flex;
+      flex-direction: row;
+      grid-column: 1;
+      grid-row: 1;
+      margin: 0 auto;
+      max-width: 52rem;
+      padding: 1rem;
+      transition: all 0.3s ease-in-out;
+      transition: none;
+      width: initial;
+
+      .offer-hero-wrapper {
+        align-self: start;
+        z-index: 1;
+
+        h1 {
+          font-size: 3rem;
+          margin-top: 1rem;
+
+          span {
+            display: block;
+          }
+
+          span:first-child {
+            margin-bottom: 0.5rem;
+          }
+        }
+
+        h2 {
+          font: var(--type-heading-h3);
+          width: 100%;
+        }
+
+        .button-wrapper {
+          display: flex;
+          gap: 1rem;
+          width: 100%;
+
+          a {
+            border-radius: var(--elem-radius);
+            font-size: 14px;
+            font-weight: 600;
+            line-height: 175%;
+            padding: 0.5rem;
+            position: relative;
+            text-align: center;
+            transition: all 0.2s ease;
+            transition: all 0.2s ease;
+            width: 140px;
+            width: 100%;
+            z-index: 1;
+          }
+
+          .button-primary {
+            background-color: var(--text-primary);
+            border: 2px solid var(--text-primary);
+            color: var(--text-invert);
+
+            &:hover,
+            &:focus {
+              background-color: var(--text-secondary);
+              border-color: var(--text-secondary);
+            }
+          }
+
+          .button-secondary {
+            background: #15141a1a;
+            border: 2px solid var(--button-secondary-border-red);
+            color: white;
+          }
+
+          .button-secondary:hover,
+          .button-secondary:focus {
+            border: 2px solid var(--button-secondary-border-red-focus);
+          }
+        }
+      }
+    }
+  }
 
   .offer-hero-header {
-    grid-column: 1;
-    grid-row: 1;
-    display: flex;
-    flex-direction: row;
     align-items: center;
-    padding: 1rem 1rem;
-    max-width: 52rem;
-    width: initial;
 
     color: var(--text-secondary);
+    display: flex;
+    flex-direction: row;
+    grid-column: 1;
+    grid-row: 1;
     margin: 0 auto;
-    -moz-transition: all 0.3s ease-in-out;
+    max-width: 52rem;
+    padding: 1rem;
     transition: all 0.3s ease-in-out;
+    transition: all 0.3s ease-in-out;
+    width: initial;
 
     .offer-hero-wrapper {
-      z-index: 1;
       align-self: start;
+      z-index: 1;
 
       h1 {
         font-size: 3rem;
@@ -42,28 +126,44 @@ $text-stroke-width: 2px;
       }
 
       h2 {
-        width: 100%;
         font: var(--type-heading-h3);
+        width: 100%;
       }
 
       .button-wrapper {
         display: flex;
-        width: 100%;
         gap: 1rem;
+        width: 100%;
+        @media screen and (prefers-reduced-motion: reduce) {
+          a {
+            border-radius: var(--elem-radius);
+            font-size: 14px;
+            font-weight: 600;
+            line-height: 175%;
+            padding: 0.5rem;
+            position: relative;
+            text-align: center;
+            transition: all 0.2s ease;
+            transition: none;
+            width: 140px;
+            width: 100%;
+            z-index: 1;
+          }
+        }
 
         a {
-          padding: 0.5rem;
-          font-size: 14px;
           border-radius: var(--elem-radius);
-          line-height: 175%;
-          width: 140px;
-          text-align: center;
+          font-size: 14px;
           font-weight: 600;
-          z-index: 1;
+          line-height: 175%;
+          padding: 0.5rem;
           position: relative;
-          -moz-transition: all 0.2s ease;
+          text-align: center;
           transition: all 0.2s ease;
+          transition: all 0.2s ease;
+          width: 140px;
           width: 100%;
+          z-index: 1;
         }
 
         .button-primary {
@@ -71,7 +171,8 @@ $text-stroke-width: 2px;
           border: 2px solid var(--text-primary);
           color: var(--text-invert);
 
-          &:hover {
+          &:hover,
+          &:focus {
             background-color: var(--text-secondary);
             border-color: var(--text-secondary);
           }
@@ -83,21 +184,42 @@ $text-stroke-width: 2px;
           color: white;
         }
 
-        .button-secondary:hover {
+        .button-secondary:hover,
+        .button-secondary:focus {
           border: 2px solid var(--button-secondary-border-red-focus);
         }
       }
     }
   }
+  @media screen and (prefers-reduced-motion: reduce) {
+    .mandala-wrapper {
+      --mandala-primary: var(--border-primary);
+      grid-column: 1;
+      grid-row: 1;
+      overflow: hidden;
+      top: 0;
+      transition: all 1s ease-in-out;
+      transition: none;
+      width: 100%;
+
+      .mandala-translate {
+        transform: translate(10rem, -8rem) scale(1.2);
+        @media screen and (min-width: $screen-sm) {
+          transform: translate(12rem, -8rem);
+        }
+      }
+    }
+  }
+
   .mandala-wrapper {
+    --mandala-primary: var(--border-primary);
     grid-column: 1;
     grid-row: 1;
-    width: 100%;
-    top: 0;
     overflow: hidden;
-    --mandala-primary: var(--border-primary);
-    -moz-transition: all 1s ease-in-out;
+    top: 0;
     transition: all 1s ease-in-out;
+    transition: all 1s ease-in-out;
+    width: 100%;
 
     .mandala-translate {
       transform: translate(10rem, -8rem) scale(1.2);

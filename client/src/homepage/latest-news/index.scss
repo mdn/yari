@@ -3,10 +3,10 @@
 .latest-news {
   display: flex;
   flex-direction: column;
-  max-width: 52rem;
-  width: 100%;
   gap: 1rem;
+  max-width: 52rem;
   padding: 0 1rem;
+  width: 100%;
 
   @media screen and (min-width: $screen-xl) {
     padding: 0;
@@ -22,25 +22,25 @@
   }
 
   .news-item {
-    padding: 0.7rem;
     display: flex;
-    justify-content: space-between;
     flex-direction: column;
+    justify-content: space-between;
+    padding: 0.7rem;
 
     @media screen and (min-width: $screen-md) {
       flex-direction: revert;
     }
 
     &:nth-child(odd) {
-      border-radius: var(--elem-radius);
       background: var(--background-secondary);
+      border-radius: var(--elem-radius);
     }
 
     .news-date {
+      align-items: center;
+      display: flex;
       font-size: 12px;
       line-height: 175%;
-      display: flex;
-      align-items: center;
     }
   }
 
@@ -54,15 +54,16 @@
     a {
       color: var(--text-primary);
 
-      &:hover {
-        text-decoration: underline;
+      &:hover,
+      &:focus {
         color: var(--text-primary);
+        text-decoration: underline;
       }
     }
 
     .news-source {
-      font-size: var(--type-tiny-font-size);
       color: var(--text-secondary);
+      font-size: var(--type-tiny-font-size);
     }
   }
 }

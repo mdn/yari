@@ -14,19 +14,19 @@ button,
   --button-font: var(--type-emphasis-m);
   --button-padding: 0.5rem;
   --button-radius: var(--elem-radius, 0.25rem);
+  border-radius: var(--button-radius);
 
   cursor: pointer;
   display: inline-block;
   padding: 0;
   text-decoration: none;
-  border-radius: var(--button-radius);
 }
 
 .button-wrap {
   align-items: center;
   background-color: var(--button-bg);
-  border-radius: var(--button-radius);
   border: 1px solid var(--button-border-color);
+  border-radius: var(--button-radius);
   color: var(--button-color);
   display: flex;
   font: var(--button-font);
@@ -62,17 +62,18 @@ button,
   outline: none;
 
   .button-wrap {
-    box-shadow: var(--button-focus-effect);
     border: 1px solid var(--button-secondary-border-focus);
+    box-shadow: var(--button-focus-effect);
   }
 }
 
 .button.button[disabled],
 .button.button.inactive {
-  opacity: 0.65;
   cursor: default;
+  opacity: 0.65;
 
-  &:hover {
+  &:hover,
+  &:focus {
     --button-bg: inherit;
     --button-border-color: transparent;
   }
@@ -152,22 +153,22 @@ button,
   text-decoration: none;
 
   .button-wrap {
-    position: relative;
-    padding-right: 26px;
     box-shadow: var(--shadow-01);
+    padding-right: 26px;
+    position: relative;
   }
 
   .button-wrap::after {
-    position: absolute;
-    top: calc(50% - 0.5rem);
-    right: 0.5rem;
-    display: block;
-    width: 16px;
-    height: 16px;
     background-color: var(--icon-primary);
+    content: "";
+    display: block;
+    height: 16px;
     mask-image: url("../../../assets/icons/small-arrow.svg");
     mask-size: cover;
-    content: "";
+    position: absolute;
+    right: 0.5rem;
+    top: calc(50% - 0.5rem);
+    width: 16px;
   }
 }
 

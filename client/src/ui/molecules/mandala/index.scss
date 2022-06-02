@@ -1,28 +1,27 @@
 @use "../../../ui/vars" as *;
 
 .mandala-container {
-  display: flex;
-  justify-content: center;
   // transform: skew(-7deg, 10deg);
 
   --mandala-primary: #{$mdn-color-neutral-70};
-  --mandala-accent-1: var(--html-accent-color);
-  --mandala-accent-2: var(--http-accent-color);
-  --mandala-accent-3: var(--js-accent-color);
-  --mandala-accent-4: #{$mdn-color-neutral-30};
-
-  @keyframes rotation {
-    from {
-      transform: rotate(0deg);
-    }
-    to {
-      transform: rotate(360deg);
+  --mandala-accent-1: rgba(229, 0, 0, var(--mandala-accent-alpha));
+  --mandala-accent-2: rgba(255, 141, 0, var(--mandala-accent-alpha));
+  --mandala-accent-3: rgba(255, 238, 0, var(--mandala-accent-alpha));
+  --mandala-accent-4: rgba(0, 129, 33, var(--mandala-accent-alpha));
+  --mandala-accent-5: rgba(0, 76, 255, var(--mandala-accent-alpha));
+  --mandala-accent-6: rgba(118, 1, 136, var(--mandala-accent-alpha));
+  display: flex;
+  justify-content: center;
+  @media screen and (prefers-reduced-motion: reduce) {
+    .mandala-rotate > svg {
+      animation: none;
     }
   }
 
   .mandala-rotate > svg {
     animation: rotation 500s linear infinite;
   }
+
   svg {
     font-size: 1.5rem;
     font-weight: 300;
@@ -54,35 +53,28 @@
   }
 
   &.animate-colors {
-    svg > text > textPath > tspan {
+    @media screen and (prefers-reduced-motion: reduce) {
+      svg > text > textPath {
+        animation: none;
+        animation-timing-function: ease-in-out;
+      }
+    }
+
+    svg > text > textPath {
       animation: mandala-color-change 50s infinite;
       animation-timing-function: ease-in-out;
     }
 
-    svg > text > textPath > tspan {
-      fill: var(--mandala-primary);
+  @keyframes rotation {
+    from {
+      transform: rotate(0deg);
     }
 
-    .mandala-accent-1 > textPath > tspan {
-      fill: var(--mandala-accent-1);
-      animation-delay: -15s;
-    }
-
-    .mandala-accent-2 > textPath > tspan {
-      fill: var(--mandala-accent-2);
-      animation-delay: -20s;
-    }
-
-    .mandala-accent-3 > textPath > tspan {
-      fill: var(--mandala-accent-3);
-      animation-delay: -30s;
-    }
-
-    .mandala-accent-5 > textPath > tspan {
-      fill: var(--mandala-accent-4);
-      animation-delay: -40s;
+    to {
+      transform: rotate(360deg);
     }
   }
+
   @keyframes mandala-color-change {
     0% {
       fill: var(--mandala-primary);

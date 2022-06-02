@@ -5,16 +5,18 @@
     float: right;
     font-size: 0.8125rem;
   }
+
   ul.breadcrumb {
     li {
-      list-style-type: none;
       display: inline-block;
+      list-style-type: none;
       margin-right: 5px;
 
       &::after {
         content: " /";
       }
     }
+
     li.last,
     li.this-doc {
       &::after {

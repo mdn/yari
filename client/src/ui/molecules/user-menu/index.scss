@@ -6,22 +6,24 @@
   .submenu-header {
     display: none;
   }
+
   .button.user-menu-toggle {
     .notification-dot ~ .avatar-wrap::after {
-      content: "";
-      position: absolute;
-      bottom: 0;
-      right: 0;
+      background: var(--text-primary-blue);
       border: 1px solid var(--background-primary);
       border-radius: 2rem;
-      background: var(--text-primary-blue);
-      width: 0.5rem;
+      bottom: 0;
+      content: "";
       height: 0.5rem;
+      position: absolute;
+      right: 0;
+      width: 0.5rem;
     }
   }
 
   @media screen and (max-width: $screen-lg) {
-    .user-menu-toggle:hover {
+    .user-menu-toggle:hover,
+    .user-menu-toggle:focus {
       --button-bg: transparent;
     }
   }
@@ -36,8 +38,8 @@
       &:focus {
         &,
         .button-wrap {
-          border-color: transparent;
           background: transparent;
+          border-color: transparent;
           box-shadow: none;
         }
       }
@@ -56,8 +58,8 @@
 
     .submenu-header {
       display: block;
-      padding: 0 0 0.5rem;
       margin-bottom: 0.5rem;
+      padding: 0 0 0.5rem;
     }
 
     .submenu-item {

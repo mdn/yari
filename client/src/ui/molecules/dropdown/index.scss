@@ -2,14 +2,14 @@
   position: relative;
 
   &-list {
-    position: absolute;
-    top: calc(100% + 2px);
-    left: 0;
     background: var(--background-secondary);
     border: 1px solid var(--border-primary);
-    box-shadow: var(--shadow-01);
-    padding: 0.5rem;
     border-radius: var(--elem-radius);
+    box-shadow: var(--shadow-01);
+    left: 0;
+    padding: 0.5rem;
+    position: absolute;
+    top: calc(100% + 2px);
     z-index: var(--z-index-low);
   }
 
@@ -29,7 +29,8 @@
         text-align: left;
         text-transform: none;
 
-        &:hover {
+        &:hover,
+        &:focus {
           --button-bg: var(--button-secondary-hover);
         }
       }

@@ -9,6 +9,11 @@
     padding: 1rem;
     text-align: center;
   }
+  @media screen and (prefers-reduced-motion: reduce) {
+    &.is-online {
+      animation: none;
+    }
+  }
 
   &.is-online {
     animation: fade-out 3s ease-out 0.5s;
@@ -19,6 +24,7 @@
   0% {
     opacity: 1;
   }
+
   100% {
     opacity: 0;
   }

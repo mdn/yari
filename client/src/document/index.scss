@@ -15,8 +15,8 @@
 }
 
 .main-page-content {
-  padding: 3rem 1rem 1rem;
   overflow-wrap: break-word;
+  padding: 3rem 1rem 1rem;
 
   h1,
   h2,
@@ -39,15 +39,16 @@
       background-color: transparent;
     }
 
-    a[href^="#"]:hover {
-      &:after {
-        display: inline-flex;
-        margin-left: 4px;
-        line-height: 1;
-        font-size: 0.7em;
-        text-decoration: none;
+    a[href^="#"]:hover,
+    a[href^="#"]:focus {
+      &::after {
         color: var(--text-inactive);
         content: "#";
+        display: inline-flex;
+        font-size: 0.7em;
+        line-height: 1;
+        margin-left: 4px;
+        text-decoration: none;
       }
     }
   }
@@ -102,13 +103,13 @@
   }
 
   img {
-    display: inline-block;
-    height: auto;
-    margin: 2rem auto;
-    display: flex;
+    background: white;
     border: 1px solid var(--border-primary) !important;
     border-radius: var(--elem-radius);
-    background: white;
+    display: inline-block;
+    display: flex;
+    height: auto;
+    margin: 2rem auto;
   }
 
   ul,
@@ -125,8 +126,8 @@
     list-style: disc;
 
     ul {
-      margin: 0;
       list-style-type: circle;
+      margin: 0;
       padding-left: 1rem;
     }
   }
@@ -142,8 +143,8 @@
 
   dd ol,
   dd ul {
-    padding-left: 3rem;
     margin-bottom: 1rem;
+    padding-left: 3rem;
   }
 
   td ul,
@@ -161,8 +162,8 @@
 
   dl {
     dt {
-      margin-top: 2rem;
       margin-bottom: 0.5rem;
+      margin-top: 2rem;
     }
 
     dd {
@@ -177,7 +178,7 @@
     }
 
     p {
-      margin: 0 0 1rem 0;
+      margin: 0 0 1rem;
     }
   }
 
@@ -198,12 +199,12 @@
     }
 
     .prev-next {
+      display: flex;
+      gap: 0.5rem;
+      justify-content: space-between;
       list-style: none;
       margin: 1rem 0;
       padding: 0;
-      display: flex;
-      justify-content: space-between;
-      gap: 0.5rem;
       text-align: center;
 
       li {
@@ -246,16 +247,16 @@ table {
   width: 100%;
 
   th {
-    text-align: left;
     background: var(--background-tertiary);
     font-weight: var(--font-body-strong-weight);
     line-height: 1.5;
+    text-align: left;
   }
 
   td,
   th {
-    padding: 0.5rem 0.75rem;
     border: 1px solid var(--border-primary);
+    padding: 0.5rem 0.75rem;
     vertical-align: middle;
   }
 
@@ -312,9 +313,9 @@ table {
 }
 
 iframe {
+  border: 1px solid var(--border-primary);
   max-width: 100%;
   width: 100%;
-  border: 1px solid var(--border-primary);
 
   /* "Live Samples" discussion here:
   https://github.com/mdn/yari-private/issues/370,
@@ -404,9 +405,9 @@ p {
 
 blockquote {
   border-left: 4px solid var(--border-secondary);
-  padding: 1rem 2rem;
-  margin-bottom: 2rem;
   color: var(--text-secondary);
+  margin-bottom: 2rem;
+  padding: 1rem 2rem;
 
   p {
     margin: 0;
@@ -427,14 +428,14 @@ code {
 }
 
 pre {
-  padding: 1rem 2.5rem 1rem 1rem;
-  margin: 1rem 0 2rem 0;
   background-color: var(--code-background-block);
   border: 1px solid transparent;
+  margin: 1rem 0 2rem;
+  padding: 1rem 2.5rem 1rem 1rem;
 
   code {
-    color: var(--text-primary);
     background: none;
+    color: var(--text-primary);
     padding: 0;
   }
 }
@@ -449,10 +450,10 @@ pre {
     content: "";
     display: block;
     height: 16px;
-    width: 16px;
     position: absolute;
     right: 16px;
     top: 18px;
+    width: 16px;
   }
 }
 
@@ -519,23 +520,23 @@ pre {
 
 .callout {
   background: var(--background-secondary);
-  padding: 1rem;
-  border-radius: var(--elem-radius);
   border: 1px solid var(--border-primary);
+  border-radius: var(--elem-radius);
   box-shadow: var(--shadow-01);
   display: flex;
-  text-align: left;
-  gap: 1rem;
   flex-direction: column;
+  gap: 1rem;
   margin: 2rem 0;
+  padding: 1rem;
+  text-align: left;
 
   h4 {
     margin: 0;
   }
 
   p {
-    margin: 0;
     font: var(--type-smaller-font-size);
+    margin: 0;
   }
 }
 
@@ -547,15 +548,15 @@ pre {
     border-radius: var(--elem-radius);
     cursor: pointer;
     height: 1.25rem;
+    margin: 0;
     mask-image: url("../assets/clippy.svg");
     mask-size: cover;
-    margin: 0;
+    opacity: 0.4;
     padding: 0.25rem;
     position: absolute;
     right: 0.5rem;
     top: 0.75rem;
     width: 1.25rem;
-    opacity: 0.4;
 
     &:hover,
     &:focus {
@@ -601,19 +602,19 @@ a.page-not-created {
 
 .badge {
   border: 1px solid var(--border-primary);
-  font-size: var(--type-tiny-font-size);
-  padding: 0.125rem 0.375rem;
   border-radius: 4rem;
   color: var(--text-secondary);
+  font-size: var(--type-tiny-font-size);
+  padding: 0.125rem 0.375rem;
   white-space: nowrap;
 }
 
 kbd {
   border: 2px solid var(--border-secondary);
-  padding: 0.25rem;
   border-radius: var(--elem-radius);
   box-shadow: var(--border-secondary);
-  font-size: 0.825rem;
-  box-shadow: inset 0px -1px 0px 0px var(--border-secondary);
+  box-shadow: inset 0 -1px 0 0 var(--border-secondary);
   color: var(--text-secondary);
+  font-size: 0.825rem;
+  padding: 0.25rem;
 }

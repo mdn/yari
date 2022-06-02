@@ -7,14 +7,161 @@
   gap: 0.5rem;
 }
 
+@media screen and (prefers-reduced-motion: reduce) {
+  .icon-card {
+    animation: none;
+    background-color: var(--background-primary);
+    border: 1px solid var(--border-secondary);
+    border-radius: var(--elem-radius);
+    padding: 1rem;
+    padding-left: 0.5rem;
+    transition: none; // this removes a flash from .doomed animations
+
+    a {
+      &:link,
+      &:visited {
+        color: var(--text-primary);
+      }
+    }
+
+    &:first-child {
+      margin-top: 1rem;
+    }
+
+    & > *:last-child {
+      margin-bottom: 0;
+    }
+
+    &-icon {
+      align-items: center;
+      background-color: var(--http-accent-color);
+      border-radius: 0.125rem;
+      color: var(--background-primary);
+      display: flex;
+      font-size: 0.75rem;
+      font-style: italic;
+      height: 3rem;
+      justify-content: center;
+      padding: 0.5rem;
+      width: 3rem;
+
+      span {
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      &.html {
+        background-color: var(--html-accent-color);
+      }
+
+      &.css {
+        background-color: var(--css-accent-color);
+      }
+
+      &.javascript {
+        background-color: var(--js-accent-color);
+      }
+
+      &.http {
+        background-color: var(--http-accent-color);
+      }
+
+      &.apis {
+        background-color: var(--apis-accent-color);
+      }
+    }
+
+    &-title-wrap {
+      display: flex;
+      gap: 1rem;
+
+      .dropdown {
+        align-self: center;
+      }
+
+      .breadcrumbs a:link,
+      .breadcrumbs a:visited {
+        color: var(--text-secondary);
+      }
+    }
+
+    &-title {
+      font-size: var(--type-base-font-size-rem);
+      font-weight: var(--font-body-strong-weight);
+      margin: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      word-wrap: break-word;
+    }
+
+    &-description {
+      color: var(--text-secondary);
+      font-size: var(--type-smaller-font-size);
+    }
+
+    &-actions {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .icon-card-content {
+      flex: 1 1 80%;
+      overflow: hidden;
+
+      @media screen and (max-width: $screen-sm) {
+        flex-basis: 95%;
+      }
+
+      h4 {
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+    }
+
+    .icon-card-actions {
+      align-self: center;
+      margin-left: auto;
+    }
+
+    .breadcrumbs {
+      color: var(--text-secondary);
+      font-size: var(--type-smaller-font-size);
+      list-style: none;
+      margin-bottom: 0;
+      margin-bottom: 0.5rem;
+
+      li {
+        display: inline-block;
+        margin: 0;
+
+        &::after {
+          background-color: var(--text-secondary);
+          content: "";
+          display: inline-block;
+          height: 8px;
+          margin: 0 4px;
+          mask-image: url("~@mdn/dinocons/arrows/chevron.svg");
+          transform: rotate(-90deg);
+          vertical-align: middle;
+          width: 8px;
+        }
+
+        &:last-child::after {
+          content: unset;
+        }
+      }
+    }
+  }
+}
+
 .icon-card {
+  animation: fade-in 0.2s;
+  background-color: var(--background-primary);
   border: 1px solid var(--border-secondary);
   border-radius: var(--elem-radius);
-  background-color: var(--background-primary);
   padding: 1rem;
   padding-left: 0.5rem;
   transition: 0.3s ease-out; // this removes a flash from .doomed animations
-  animation: fade-in 0.2s;
 
   a {
     &:link,
@@ -26,22 +173,23 @@
   &:first-child {
     margin-top: 1rem;
   }
+
   & > *:last-child {
     margin-bottom: 0;
   }
 
   &-icon {
-    width: 3rem;
-    height: 3rem;
+    align-items: center;
     background-color: var(--http-accent-color);
     border-radius: 0.125rem;
     color: var(--background-primary);
     display: flex;
-    align-items: center;
-    justify-content: center;
     font-size: 0.75rem;
     font-style: italic;
+    height: 3rem;
+    justify-content: center;
     padding: 0.5rem;
+    width: 3rem;
 
     span {
       overflow: hidden;
@@ -86,15 +234,15 @@
   &-title {
     font-size: var(--type-base-font-size-rem);
     font-weight: var(--font-body-strong-weight);
+    margin: 0;
     overflow: hidden;
     text-overflow: ellipsis;
     word-wrap: break-word;
-    margin: 0;
   }
 
   &-description {
-    font-size: var(--type-smaller-font-size);
     color: var(--text-secondary);
+    font-size: var(--type-smaller-font-size);
   }
 
   &-actions {
@@ -117,15 +265,15 @@
   }
 
   .icon-card-actions {
-    margin-left: auto;
     align-self: center;
+    margin-left: auto;
   }
 
   .breadcrumbs {
+    color: var(--text-secondary);
+    font-size: var(--type-smaller-font-size);
     list-style: none;
     margin-bottom: 0;
-    font-size: var(--type-smaller-font-size);
-    color: var(--text-secondary);
     margin-bottom: 0.5rem;
 
     li {
@@ -144,7 +292,7 @@
         width: 8px;
       }
 
-      &:last-child:after {
+      &:last-child::after {
         content: unset;
       }
     }

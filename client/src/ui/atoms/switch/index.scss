@@ -1,48 +1,85 @@
 .switch {
-  position: relative;
-  display: inline-flex;
   align-items: center;
+  display: inline-flex;
+  position: relative;
 
   input {
-    opacity: 0;
-    width: 2rem;
     height: 0;
     margin: 0;
+    opacity: 0;
+    width: 2rem;
 
     &:checked + .slider {
-      &:before {
+      background-color: var(--text-link);
+
+      &::before {
         left: 56.25%;
         right: 6.25%;
       }
-      background-color: var(--text-link);
     }
 
     &:focus-visible + .slider {
-      outline-style: auto;
       outline-color: var(--accent-primary);
       outline-offset: 1px;
+      outline-style: auto;
+    }
+  }
+  @media screen and (prefers-reduced-motion: reduce) {
+    .slider {
+      background-color: var(--text-secondary);
+      border-radius: 1em;
+      cursor: pointer;
+      height: 1rem;
+      position: absolute;
+      transition: none;
+      width: 2rem;
+
+      &::before {
+        background-color: var(--background-primary);
+        border-radius: 50%;
+        bottom: 12.5%;
+        content: "";
+        left: 6.25%;
+        position: absolute;
+        right: 56.25%;
+        top: 12.5%;
+        transition: 0.4s;
+      }
     }
   }
 
   .slider {
-    position: absolute;
-    cursor: pointer;
     background-color: var(--text-secondary);
-    transition: 0.4s;
     border-radius: 1em;
-    width: 2rem;
+    cursor: pointer;
     height: 1rem;
+    position: absolute;
+    transition: 0.4s;
+    width: 2rem;
+    @media screen and (prefers-reduced-motion: reduce) {
+      &::before {
+        background-color: var(--background-primary);
+        border-radius: 50%;
+        bottom: 12.5%;
+        content: "";
+        left: 6.25%;
+        position: absolute;
+        right: 56.25%;
+        top: 12.5%;
+        transition: none;
+      }
+    }
 
-    &:before {
-      position: absolute;
+    &::before {
+      background-color: var(--background-primary);
+      border-radius: 50%;
+      bottom: 12.5%;
       content: "";
       left: 6.25%;
+      position: absolute;
       right: 56.25%;
       top: 12.5%;
-      bottom: 12.5%;
-      background-color: var(--background-primary);
       transition: 0.4s;
-      border-radius: 50%;
     }
   }
 

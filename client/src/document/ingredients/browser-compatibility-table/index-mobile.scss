@@ -6,17 +6,17 @@
   }
 
   td.bc-support {
-    display: block;
     border-left-width: 0;
+    display: block;
   }
 
   .bc-feature,
   .bc-support > button,
   .bc-history > td {
+    align-content: center;
     display: flex;
     flex-wrap: wrap;
     gap: 0.5rem;
-    align-content: center;
   }
 
   .bc-history-desktop {

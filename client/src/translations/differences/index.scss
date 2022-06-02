@@ -1,8 +1,8 @@
 .all-translations {
   .error-message {
     background-color: rgb(252, 159, 159);
-    padding: 10px;
     margin: 25px 0;
+    padding: 10px;
 
     h3,
     h4 {
@@ -10,8 +10,8 @@
     }
 
     h3 span.page {
-      margin-left: 10px;
       color: #666;
+      margin-left: 10px;
     }
 
     p {
@@ -20,13 +20,13 @@
   }
 
   .loading {
-    text-align: center;
     margin: 200px;
+    text-align: center;
 
     progress {
-      width: 600px;
-      height: 30px;
       border-radius: 2px;
+      height: 30px;
+      width: 600px;
     }
   }
 
@@ -36,15 +36,17 @@
     th.sortable.active {
       background-color: rgb(237, 237, 237);
     }
+
     th.sortable.active.reverse {
       transform: rotate(-180deg);
     }
 
     td a .url-prefix {
-      margin-right: 2px;
       color: rgb(159, 159, 159);
       font-size: 80%;
+      margin-right: 2px;
     }
+
     td .document-title-preview {
       // color: rgb(118, 118, 118);
     }
@@ -52,6 +54,7 @@
     td .last_modified.ahead a {
       color: green;
     }
+
     td .last_modified.behind a {
       color: orange;
     }
@@ -63,17 +66,20 @@
 
   .search-times {
     margin-top: 60px;
+
     p {
       font-size: 70%;
     }
   }
 
   .pagination {
-    text-align: center;
     margin: 20px;
+    text-align: center;
+
     a.disabled {
       color: rgb(159, 159, 159);
     }
+
     a {
       padding: 10px;
     }
@@ -92,11 +98,13 @@
 
       ul.search-flaws-rows {
         padding-left: 0;
+
         li {
           list-style: none;
         }
       }
     }
+
     .documents {
       margin-left: 300px;
 

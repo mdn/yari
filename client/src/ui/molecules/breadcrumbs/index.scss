@@ -1,8 +1,8 @@
 @use "../../vars" as *;
 
 .breadcrumbs-container {
-  display: flex;
   align-items: center;
+  display: flex;
   margin-right: auto;
 
   ol {
@@ -21,12 +21,12 @@
 
     .breadcrumb {
       &::after {
-        margin-right: 0.5rem;
         background-color: var(--icon-secondary);
         content: "";
         display: block;
         flex-shrink: 0;
         height: 12px;
+        margin-right: 0.5rem;
         mask-image: url("../../../assets/icons/chevron.svg");
         mask-size: 12px;
         transform: rotate(-90deg);
@@ -43,7 +43,8 @@
         color: var(--text-secondary);
       }
 
-      &:hover {
+      &:hover,
+      &:focus {
         text-decoration: underline;
       }
 
@@ -51,9 +52,9 @@
         outline: 0;
 
         [property="name"] {
-          outline-style: auto;
           outline-color: var(--accent-primary);
           outline-offset: 1px;
+          outline-style: auto;
         }
       }
     }

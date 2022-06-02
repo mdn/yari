@@ -5,10 +5,10 @@
   max-width: 100%;
 
   .search-widget {
-    position: relative;
-    width: 100%;
     margin: 0 auto;
     max-width: 20rem;
+    position: relative;
+    width: 100%;
 
     @media screen and (min-width: $screen-md) {
       align-items: center;
@@ -23,19 +23,20 @@
     background-color: var(--background-primary);
     border: 1px solid var(--border-primary);
     border-radius: 100px;
-    padding-right: 2rem;
+    caret-color: var(--text-link);
     color: var(--text-primary);
     height: var(--form-elem-height);
     min-width: 5rem;
     padding-left: 1rem;
+    padding-right: 2rem;
     width: 100%;
-    caret-color: var(--text-link);
 
     @keyframes blink {
       from,
       to {
         text-decoration-line: none;
       }
+
       50% {
         text-decoration-line: underline;
       }
@@ -50,6 +51,17 @@
     &:focus,
     &:valid {
       width: inherit;
+    }
+    @media screen and (prefers-reduced-motion: reduce) {
+      &:invalid,
+      &:invalid::placeholder {
+        animation: none;
+        caret-color: transparent;
+
+        @media (prefers-reduced-motion: reduce) {
+          caret-color: initial;
+        }
+      }
     }
 
     &:invalid,
@@ -84,19 +96,18 @@
     }
 
     &:focus {
-      outline: 0 none;
-      box-shadow: 0px 0px 0px 3px var(--blend-color),
-        0px 0px 0px 3px var(--category-color);
       border-color: var(--category-color);
+      box-shadow: 0 0 0 3px var(--blend-color), 0 0 0 3px var(--category-color);
+      outline: 0 none;
     }
 
     &,
     &::placeholder {
       font: var(--type-body-l);
+      opacity: 1;
+      text-decoration-color: var(--text-link);
       text-decoration-thickness: 0.15rem;
       text-underline-offset: 0.1em;
-      text-decoration-color: var(--text-link);
-      opacity: 1;
     }
   }
 
@@ -138,10 +149,10 @@
     }
 
     .result-item {
-      border-bottom: 1px solid var(--border-secondary);
-      word-break: break-word;
       background: var(--background-secondary);
+      border-bottom: 1px solid var(--border-secondary);
       font-size: var(--type-smaller-font-size);
+      word-break: break-word;
 
       &:first-child {
         border-radius: var(--elem-radius) var(--elem-radius) 0 0;
@@ -150,11 +161,13 @@
       &:last-child {
         border-radius: 0 0 var(--elem-radius) var(--elem-radius);
       }
+
       &.nothing-found {
         code {
           font-size: 0.8125rem;
         }
       }
+
       a {
         display: block;
         padding: 0.5rem;
@@ -208,7 +221,8 @@
   top: 0.25rem;
   width: 1.5rem;
 
-  &:hover {
+  &:hover,
+  &:focus {
     background: transparent;
   }
 

@@ -8,14 +8,14 @@
 }
 
 .tabs .tab-item {
-  padding: 0.5rem 0;
   border-bottom: 2px solid transparent;
+  padding: 0.5rem 0;
 }
 
 .tabs a.tab-item {
+  color: var(--text-primary);
   display: block;
   font-size: var(--type-smaller-font-size);
-  color: var(--text-primary);
 }
 
 .tabs .tab-item[aria-current="true"] {

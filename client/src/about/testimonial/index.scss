@@ -1,11 +1,11 @@
 @use "../../ui/vars" as *;
 
 .testimonial {
-  width: 100%;
   display: flex;
   flex-direction: column;
   gap: 2rem;
   padding: 2rem 0;
+  width: 100%;
 
   @media screen and (min-width: $screen-md) {
     flex-direction: row;
@@ -16,15 +16,15 @@
     padding: 0;
 
     @media screen and (min-width: $screen-md) {
-      width: 48%;
       height: initial;
+      width: 48%;
     }
   }
 
   .testimonial-copy {
+    margin: 0 auto;
     max-width: 18rem;
     text-align: center;
-    margin: 0 auto;
 
     @media screen and (min-width: $screen-md) {
       margin: initial;
@@ -46,19 +46,19 @@
 
     .author-name,
     .author-title {
+      display: block;
       /* MDN UI / Body / M */
       font-size: 13px;
       line-height: 1.2;
-      display: block;
     }
   }
 
   .quotation-mark {
-    width: 10px;
+    background-color: var(--icon-primary);
     height: 10px;
     margin-left: 4px;
-    background-color: var(--icon-primary);
     mask-image: url("./quote.svg");
     mask-size: cover;
+    width: 10px;
   }
 }

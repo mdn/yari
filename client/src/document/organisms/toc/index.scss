@@ -15,7 +15,7 @@
   &-heading.document-toc-heading {
     font: var(--type-heading-h5);
     letter-spacing: 1.5px;
-    margin: 0 0 1rem 0;
+    margin: 0 0 1rem;
   }
 
   // double classes to override specificity from root styles
@@ -31,21 +31,22 @@
 
   // double classes to override specificity from root styles
   &-link.document-toc-link:not(.button) {
-    display: block;
-    padding: 0.5rem 1rem;
     border-left: 2px solid var(--border-secondary);
     color: var(--text-secondary);
+    display: block;
+    padding: 0.5rem 1rem;
     text-decoration: none;
 
-    &:hover {
+    &:hover,
+    &:focus {
       color: var(--text-link);
     }
 
     &[aria-current]:not([aria-current=""]):not([aria-current="false"]) {
+      background-color: var(--background-toc-active);
+      border-left: 2px solid var(--category-color);
       color: var(--text-primary);
       font-weight: 600;
-      border-left: 2px solid var(--category-color);
-      background-color: var(--background-toc-active);
     }
   }
 

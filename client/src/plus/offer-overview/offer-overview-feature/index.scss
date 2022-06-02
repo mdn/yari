@@ -3,20 +3,20 @@
 .offer-overview-feature {
   background-color: var(--background-primary);
   color: var(--text-primary);
-  width: 100%;
   min-height: 25rem;
+  width: 100%;
 
   .wrapper {
-    width: 100%;
-    max-width: 64rem;
+    align-items: center;
     display: flex;
     flex-direction: column-reverse;
-    align-items: center;
-    height: 100%;
-    padding: 4rem 1rem;
     gap: 4rem;
+    height: 100%;
     justify-content: space-between;
     margin: 0 auto;
+    max-width: 64rem;
+    padding: 4rem 1rem;
+    width: 100%;
 
     @media screen and (min-width: $screen-xl) {
       flex-direction: row;
@@ -24,33 +24,39 @@
 
     .copy-container,
     .img-container {
-      width: 100%;
       display: flex;
       flex-direction: column;
+      width: 100%;
     }
 
     .img-container {
       align-items: center;
-      box-shadow: 0px 3px 22px #2b2a331a;
       border-radius: 1rem;
-      max-width: 25rem;
+      box-shadow: 0 3px 22px #2b2a331a;
       height: 100%;
+      max-width: 25rem;
       @media screen and (min-width: $screen-xl) {
         max-width: min(50%, 20rem);
       }
     }
 
     .copy-container {
+      align-items: center;
+      max-width: 40rem;
+
+      text-align: center;
+
       a {
         justify-content: start;
       }
+
       h2 {
         color: var(--plus-accent-color);
         font: 700 12px/120% Inter;
         letter-spacing: 1.5px;
-        text-transform: uppercase;
         margin-bottom: 1rem;
         margin-top: 0;
+        text-transform: uppercase;
       }
 
       h3 {
@@ -59,15 +65,11 @@
         margin-top: 0;
       }
 
-      text-align: center;
-      align-items: center;
-      max-width: 40rem;
-
       @media screen and (min-width: $screen-xl) {
-        text-align: initial;
         align-items: initial;
         height: 100%;
         max-width: 50%;
+        text-align: initial;
       }
     }
   }
@@ -81,8 +83,10 @@
     }
   }
 }
+
 .offer-overview-feature:nth-child(odd) {
   background: var(--background-secondary);
+
   .wrapper {
     flex-direction: column;
     @media screen and (min-width: $screen-xl) {

@@ -4,6 +4,7 @@
 
 .theme-switcher-menu {
   margin-bottom: 0.5rem;
+
   .button.action > .button-wrap {
     text-transform: none;
   }
@@ -17,11 +18,10 @@
     width: 100%;
 
     .button-wrap {
+      border-width: 1px;
       font-weight: 400;
       justify-content: flex-start;
       padding: 1rem;
-
-      border-width: 1px;
     }
 
     &:focus {
@@ -34,7 +34,9 @@
   }
 
   .active-menu-item,
-  .active-menu-item:hover {
+  .active-menu-item:hover,
+  .active-menu-item,
+  .active-menu-item:focus {
     .button-wrap {
       --button-bg: var(--background-primary);
       --button-border-color: var(--border-secondary);
@@ -52,6 +54,7 @@
     .themes-menu {
       top: calc(100% - 1rem);
     }
+
     .themes-menu.show {
       display: flex;
       flex-direction: column;
@@ -69,19 +72,19 @@
 .theme-switcher-menu,
 .languages-switcher-menu {
   > .button {
-    .button-wrap:after {
+    .button-wrap::after {
       background-color: var(--icon-secondary);
       content: "";
       display: block;
       height: 16px;
+      margin-left: auto;
       mask-image: url("../../../assets/icons/chevron.svg");
       mask-size: 16px;
       width: 16px;
-      margin-left: auto;
     }
 
     &[aria-expanded="true"] {
-      .button-wrap:after {
+      .button-wrap::after {
         transform: rotate(180deg);
       }
     }
@@ -89,7 +92,7 @@
 
   @media screen and (min-width: $screen-lg) {
     > .button {
-      .button-wrap:after {
+      .button-wrap::after {
         content: unset;
       }
     }

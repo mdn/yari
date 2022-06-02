@@ -11,21 +11,21 @@
   padding: 0;
 
   &.show {
+    background: var(--background-primary);
+    bottom: 0;
     display: flex;
     flex-direction: column;
-    position: fixed;
-    top: 0;
-    bottom: 0;
     left: 0;
+    position: fixed;
     right: 0;
-    background: var(--background-primary);
+    top: 0;
     z-index: var(--z-index-mid);
   }
 
   &.is-in-modal {
     display: block;
-    position: static;
     inset: auto;
+    position: static;
 
     .watch-submenu-item {
       padding: 1rem 0 0;
@@ -40,38 +40,38 @@
     background: var(--background-primary);
     border: 1px solid var(--border-primary);
     color: var(--text-primary);
-    font-size: var(--type-smaller-font-size);
-    padding: 0.5rem;
     flex: 1 1 100%;
+    font-size: var(--type-smaller-font-size);
     min-width: 0;
+    padding: 0.5rem;
 
     &:focus {
-      outline: 0 none;
       border: 1px solid var(--button-secondary-border-focus);
       box-shadow: var(--focus-effect);
+      outline: 0 none;
     }
   }
 
   &-header,
   &-setGlobal {
+    color: var(--text-primary);
     display: block;
     font-family: var(--font-body);
     font-size: var(--type-smaller-font-size);
     font-weight: var(--font-body-strong-weight);
-    color: var(--text-primary);
     padding: 1rem;
     text-align: left;
     width: 100%;
   }
 
   &-header {
-    margin: 0;
     border-bottom: 1px solid var(--border-primary);
+    margin: 0;
 
     &-wrap {
-      position: relative;
       display: flex;
       gap: 0.5rem;
+      position: relative;
     }
 
     .icon {
@@ -85,10 +85,10 @@
 
   form > &-item,
   form > &-group {
-    padding-top: 0.5rem;
-    padding-bottom: 0.5rem;
-    border-top: 1px solid var(--border-primary);
     border-radius: 0;
+    border-top: 1px solid var(--border-primary);
+    padding-bottom: 0.5rem;
+    padding-top: 0.5rem;
 
     &.border-top-0 {
       border-top-width: 0;
@@ -101,18 +101,18 @@
 
   @media screen and (min-width: $screen-md) {
     &.show {
-      padding: 0;
-      left: initial;
-      position: absolute;
-      right: 0;
-      top: calc(100% + 6px);
-      bottom: auto;
-      width: 316px;
-      z-index: 1000;
       background-color: var(--background-secondary);
       border: 1px solid var(--border-primary);
       border-radius: var(--elem-radius);
+      bottom: auto;
       box-shadow: var(--shadow-02);
+      left: initial;
+      padding: 0;
+      position: absolute;
+      right: 0;
+      top: calc(100% + 6px);
+      width: 316px;
+      z-index: 1000;
     }
 
     &-header {
@@ -145,13 +145,13 @@
 }
 
 .watch-submenu-item {
-  display: flex;
   align-items: center;
+  display: flex;
   flex-wrap: wrap;
-  gap: 0.5rem;
   font-family: var(--font-body);
   font-size: var(--type-smaller-font-size);
   font-weight: var(--font-body-strong-weight);
+  gap: 0.5rem;
   padding: 1rem;
 
   &.is-button-row {
@@ -182,16 +182,16 @@
   }
 
   [type="checkbox"] + label + .button {
-    width: 28px;
     margin-left: auto;
+    width: 28px;
   }
 
   @media screen and (min-width: $screen-md) {
     padding: 0 0.5rem 0 1rem;
 
     &.pad-y {
-      padding-top: 1rem;
       padding-bottom: 1rem;
+      padding-top: 1rem;
     }
 
     &:last-child {
@@ -201,11 +201,11 @@
 }
 
 .watch-submenu-mobile-buttons {
-  position: absolute;
-  top: 0.5rem;
-  right: 1rem;
   display: flex;
   gap: 0.5rem;
+  position: absolute;
+  right: 1rem;
+  top: 0.5rem;
 
   @media screen and (min-width: $screen-md) {
     display: none;
@@ -215,25 +215,25 @@
 .watch-submenu-button {
   background-color: transparent;
   border-bottom: 1px solid var(--border-primary);
-  padding: 0;
   color: var(--text-primary);
   cursor: pointer;
+  padding: 0;
 
   &.is-custom {
-    position: relative;
     padding-right: 2.5rem;
+    position: relative;
 
-    &:after {
-      position: absolute;
-      width: 16px;
-      height: 16px;
-      top: 50%;
-      right: 1rem;
-      mask-image: url("../../../assets/icons/chevron.svg");
-      mask-size: 16px;
-      transform: rotate(-90deg) translateX(50%);
+    &::after {
       background-color: var(--text-primary);
       content: "";
+      height: 16px;
+      mask-image: url("../../../assets/icons/chevron.svg");
+      mask-size: 16px;
+      position: absolute;
+      right: 1rem;
+      top: 50%;
+      transform: rotate(-90deg) translateX(50%);
+      width: 16px;
     }
   }
 
@@ -243,18 +243,18 @@
 
   &-wrap {
     display: grid;
-    grid-template-columns: 16px 1fr;
+    gap: 0.5rem;
     grid-template-areas:
       "status label"
       "status text";
-    gap: 0.5rem;
+    grid-template-columns: 16px 1fr;
     padding: 0.8125rem var(--gutter-padding);
     text-align: left;
   }
 
   &:focus &-wrap {
-    outline: 1px solid var(--button-secondary-border-focus);
     box-shadow: var(--focus-effect);
+    outline: 1px solid var(--button-secondary-border-focus);
   }
 
   &:hover &-wrap {
@@ -289,9 +289,9 @@
 
   & & .watch-submenu-item {
     font-size: var(--type-smaller-font-size);
-    padding-top: 0;
-    padding-bottom: 0;
     min-height: 28px;
+    padding-bottom: 0;
+    padding-top: 0;
   }
 
   &.is-open {
@@ -302,8 +302,8 @@
 }
 
 .watch-submenu-setGlobal {
-  display: block;
   color: var(--text-link);
+  display: block;
   font-size: var(--type-smaller-font-size);
   text-align: right;
 }

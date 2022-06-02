@@ -1,10 +1,10 @@
 @use "../../../ui/vars" as *;
 
 .pagination {
-  display: flex;
-  justify-content: center;
   align-items: center;
+  display: flex;
   gap: 1rem;
+  justify-content: center;
   padding: 1rem 0;
 
   &-label {

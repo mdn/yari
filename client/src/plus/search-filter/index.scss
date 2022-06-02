@@ -2,9 +2,9 @@
 
 .search-filter {
   display: flex;
+  flex-wrap: wrap;
   gap: 0.5rem;
   padding: 1rem 0;
-  flex-wrap: wrap;
 
   &.inline-on-mobile {
     flex-wrap: nowrap;
@@ -45,8 +45,8 @@
   }
 
   .search-filter-category .dropdown-list.filters-menu {
-    width: 180px;
-    right: 0;
     left: auto;
+    right: 0;
+    width: 180px;
   }
 }

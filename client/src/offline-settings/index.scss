@@ -2,10 +2,10 @@
 
 .page-content-container.settings {
   display: block;
-  max-width: 60em;
-  width: min(90vw, 40em);
   margin: auto;
+  max-width: 60em;
   padding: 1rem;
+  width: min(90vw, 40em);
 
   .field-group {
     margin: 2rem 0;
@@ -21,6 +21,7 @@
         h4 {
           font-weight: 600;
         }
+
         span {
           font-size: 0.8rem;
           grid-column: 1/2;
@@ -30,29 +31,29 @@
 
         .loading,
         .switch {
-          justify-self: end;
+          align-self: center;
           grid-column: 2/3;
           grid-row: 2/3;
-          align-self: center;
+          justify-self: end;
         }
 
         button {
-          font-size: 0.8rem;
-          padding: 0.5rem 1rem;
-          height: max-content;
-          width: max-content;
-          justify-self: end;
           align-self: end;
-          grid-column: 2/3;
-          grid-row: 1/3;
           border: 1px solid var(--text-primary);
           border-radius: var(--elem-radius);
           color: var(--text-link);
+          font-size: 0.8rem;
+          grid-column: 2/3;
+          grid-row: 1/3;
+          height: max-content;
+          justify-self: end;
+          padding: 0.5rem 1rem;
+          width: max-content;
         }
 
         button[disabled] {
-          border: 1px solid var(--text-secondary);
           background-color: var(--background-secondary);
+          border: 1px solid var(--text-secondary);
           color: var(--text-secondary);
         }
       }

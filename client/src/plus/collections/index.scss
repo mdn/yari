@@ -6,16 +6,16 @@
 }
 
 .collection {
-  padding: 0 0 3rem 0;
+  padding: 0 0 3rem;
   position: relative;
 
   &-created {
-    color: var(--text-secondary);
-    font-size: var(--type-tiny-font-size);
-    text-align: center;
     align-self: center;
-    min-width: max-content;
+    color: var(--text-secondary);
     display: none;
+    font-size: var(--type-tiny-font-size);
+    min-width: max-content;
+    text-align: center;
     @media screen and (min-width: $screen-md) {
       display: inherit;
     }

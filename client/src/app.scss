@@ -110,16 +110,16 @@
 }
 
 body {
+  accent-color: var(--accent-primary); // for checkboxes, radios, etc.
   background-color: var(--background-primary);
   color: var(--text-primary);
-  accent-color: var(--accent-primary); // for checkboxes, radios, etc.
   scrollbar-color: var(--scrollbar-color) var(--scrollbar-bg);
 }
 
 :focus-visible {
-  outline-style: auto;
   outline-color: var(--accent-primary);
   outline-offset: 1px;
+  outline-style: auto;
 }
 
 main {
@@ -142,10 +142,10 @@ main {
 }
 
 .visually-hidden {
-  -webkit-clip-path: inset(50%) !important;
-  clip-path: inset(50%) !important;
   border: 0 !important;
   clip: rect(1px, 1px, 1px, 1px) !important;
+  clip-path: inset(50%) !important;
+  clip-path: inset(50%) !important;
   height: 1px !important;
   margin: -1px !important;
   overflow: hidden !important;
@@ -170,38 +170,39 @@ pre {
 a {
   color: var(--text-link);
 
-  &.external:after {
+  &.external::after {
+    background-color: var(--icon-primary);
+    content: "";
     display: inline-flex;
-    width: 10px;
     height: 10px;
     margin-left: 4px;
-    background-color: var(--icon-primary);
     mask-image: url("./assets/icons/external.svg");
     mask-size: cover;
-    content: "";
+    width: 10px;
   }
 }
 
-.expand-this-link:after {
-  position: absolute;
-  top: 0;
-  right: 0;
+.expand-this-link::after {
   bottom: 0;
-  left: 0;
   content: "";
+  left: 0;
+  position: absolute;
+  right: 0;
+  top: 0;
 }
 
 [type="search"] {
   /* clears the ‘X’ from Internet Explorer */
   &::-ms-clear {
     display: none;
-    width: 0;
     height: 0;
+    width: 0;
   }
+
   &::-ms-reveal {
     display: none;
-    width: 0;
     height: 0;
+    width: 0;
   }
   /* clears the ‘X’ from Chrome */
   &::-webkit-search-decoration,
@@ -213,9 +214,9 @@ a {
 }
 
 u {
+  text-decoration-color: var(--text-link);
   text-decoration-thickness: 0.15rem;
   text-underline-offset: 0.1em;
-  text-decoration-color: var(--text-link);
 }
 
 .plus .dark,

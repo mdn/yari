@@ -1,14 +1,14 @@
 .notecard {
   --note-background: var(--background-information);
   --note-theme: var(--icon-information);
-  position: relative;
-  padding: 1rem 1rem 1rem 3rem;
-  margin: 1rem 0;
   background-color: var(--note-background);
   border: 1px solid var(--border-secondary);
-  border-radius: var(--elem-radius);
   border-left: 4px solid var(--note-theme);
+  border-radius: var(--elem-radius);
   box-shadow: var(--shadow-01);
+  margin: 1rem 0;
+  padding: 1rem 1rem 1rem 3rem;
+  position: relative;
 
   &,
   p,
@@ -17,44 +17,44 @@
   }
 
   p {
-    margin: 0 !important;
     line-height: 2;
+    margin: 0 !important;
   }
 
-  &:before {
-    position: absolute;
-    top: 1.5rem;
-    left: 1rem;
-    display: block;
-    width: 1rem;
-    height: 1rem;
+  &::before {
     background-color: var(--note-theme);
+    content: "";
+    display: block;
+    height: 1rem;
+    left: 1rem;
     mask-image: url("../../../assets/icons/note-info.svg");
-    mask-size: contain;
     mask-position: center;
     mask-repeat: no-repeat;
-    content: "";
+    mask-size: contain;
+    position: absolute;
+    top: 1.5rem;
+    width: 1rem;
   }
 
   &.inline {
-    padding: 0.125rem 0.375rem 0.125rem 1.5rem;
-    margin: 0.5rem;
     font: var(--type-body-s);
+    margin: 0.5rem;
+    padding: 0.125rem 0.375rem 0.125rem 1.5rem;
   }
 
   &.inline::before {
-    top: 0.1875rem;
-    left: 0.2rem;
     display: block;
-    width: 0.8rem;
     height: 0.8rem;
+    left: 0.2rem;
+    top: 0.1875rem;
+    width: 0.8rem;
   }
 
   &.warning {
     --note-background: var(--background-warning);
     --note-theme: var(--icon-warning);
 
-    &:before {
+    &::before {
       mask-image: url("../../../assets/icons/note-warning.svg");
     }
   }
@@ -63,7 +63,7 @@
     --note-background: var(--background-warning);
     --note-theme: var(--icon-warning);
 
-    &:before {
+    &::before {
       mask-image: url("../../../assets/icons/nonstandard.svg");
     }
   }
@@ -73,7 +73,7 @@
     --note-background: var(--background-critical);
     --note-theme: var(--icon-critical);
 
-    &:before {
+    &::before {
       mask-image: url("../../../assets/icons/note-deprecated.svg");
     }
   }
@@ -82,13 +82,13 @@
     --note-background: var(--background-critical);
     --note-theme: var(--icon-critical);
 
-    &:before {
+    &::before {
       mask-image: url("../../../assets/icons/deprecated.svg");
     }
   }
 
   &.experimental {
-    &:before {
+    &::before {
       mask-image: url("../../../assets/icons/experimental.svg");
     }
   }
@@ -97,7 +97,7 @@
     --note-background: var(--background-success);
     --note-theme: var(--icon-success);
 
-    &:before {
+    &::before {
       mask-image: url("../../../assets/icons/note-info.svg");
     }
   }
@@ -136,8 +136,8 @@
   h4,
   h5,
   h6 {
-    font: var(--type-base-font-size-rem);
     color: var(--text-primary);
+    font: var(--type-base-font-size-rem);
     margin-bottom: 0.5rem;
   }
 }
@@ -148,7 +148,8 @@
     code {
       color: var(--notecard-link-color);
 
-      &:hover {
+      &:hover,
+      &:focus {
         text-decoration: none;
       }
     }

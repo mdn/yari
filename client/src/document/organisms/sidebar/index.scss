@@ -11,48 +11,85 @@
 
   // apply drawer styles only to the sizes that need them.
   @media screen and (max-width: #{$screen-md - 1}) {
-    position: fixed;
-    top: 0;
-    right: 0;
-    left: 0;
     height: 100vh;
+    left: 0;
     max-height: 100vh;
-    z-index: var(--z-index-top);
+    position: fixed;
+    right: 0;
+    top: 0;
     transform: translateX(-100%);
+    z-index: var(--z-index-top);
+    @media screen and (prefers-reduced-motion: reduce) {
+      .sidebar-inner {
+        background: var(--background-primary);
+        border-right: 1px solid var(--border-primary);
+        height: var(--max-height);
+        max-height: var(--max-height);
+        max-width: 20rem;
+        overflow: hidden; //animations look janky if scrollbars are present
+        overflow: auto;
+        padding: 1rem;
+        position: relative;
+        transform: translateX(-100%);
+        transition: none;
+        width: 80vw;
+        will-change: transform;
+        z-index: var(--z-index-top);
+      }
+    }
 
     .sidebar-inner {
-      transform: translateX(-100%);
-      overflow: hidden; //animations look janky if scrollbars are present
-      will-change: transform;
-      transition: 0.2s linear transform;
-      position: relative;
-      padding: 1rem;
-      width: 80vw;
-      max-width: 20rem;
-      height: var(--max-height);
-      max-height: var(--max-height);
-      overflow: auto;
       background: var(--background-primary);
       border-right: 1px solid var(--border-primary);
+      height: var(--max-height);
+      max-height: var(--max-height);
+      max-width: 20rem;
+      overflow: hidden; //animations look janky if scrollbars are present
+      overflow: auto;
+      padding: 1rem;
+      position: relative;
+      transform: translateX(-100%);
+      transition: 0.2s linear transform;
+      width: 80vw;
+      will-change: transform;
       z-index: var(--z-index-top);
+    }
+    @media screen and (prefers-reduced-motion: reduce) {
+      .backdrop {
+        background: rgba(0, 0, 0, 0.3);
+        border-radius: 0;
+        bottom: 0;
+        cursor: default;
+
+        display: flex;
+        left: 0;
+        opacity: 0;
+        position: fixed;
+        right: 0;
+        top: 0;
+        transition: none;
+        width: 100%;
+        will-change: opacity;
+        z-index: var(--z-index-mid);
+      }
     }
 
     .backdrop {
-      opacity: 0;
-      will-change: opacity;
-      transition: opacity 0.2s linear;
+      background: rgba(0, 0, 0, 0.3);
+      border-radius: 0;
+      bottom: 0;
+      cursor: default;
 
       display: flex;
-      position: fixed;
-      top: 0;
-      bottom: 0;
       left: 0;
+      opacity: 0;
+      position: fixed;
       right: 0;
+      top: 0;
+      transition: opacity 0.2s linear;
       width: 100%;
-      background: rgba(0, 0, 0, 0.3);
+      will-change: opacity;
       z-index: var(--z-index-mid);
-      border-radius: 0;
-      cursor: default;
     }
 
     &.is-animating {
@@ -74,15 +111,15 @@
 
   @media screen and (min-width: $screen-md) {
     display: flex;
+    max-height: var(--max-height);
     overflow: auto;
     position: sticky;
     top: var(--offset);
-    max-height: var(--max-height);
   }
 
   &-heading {
-    font: var(--type-heading-h5);
     color: var(--text-primary);
+    font: var(--type-heading-h5);
     letter-spacing: 1.5px;
     margin: 0;
   }
@@ -97,10 +134,10 @@
   }
 
   a {
-    display: inline-flex;
-    padding: 0.25rem;
     color: var(--text-secondary);
+    display: inline-flex;
     hyphens: auto;
+    padding: 0.25rem;
 
     &:hover,
     &:focus {
@@ -166,14 +203,14 @@
   }
 
   code {
-    white-space: normal;
-    word-wrap: break-word;
     background-color: initial;
     border-radius: var(--elem-radius);
     font-family: var(--font-code);
     font-size: var(--type-smaller-font-size);
-    padding: 0.125rem 0.125rem;
     line-height: 1.2;
+    padding: 0.125rem;
+    white-space: normal;
+    word-wrap: break-word;
   }
 
   summary {
@@ -189,12 +226,12 @@
   }
 
   .icon {
-    background-size: 14px;
-    mask-size: 14px;
-    height: 14px;
-    width: 14px;
-    margin-right: -0.25rem;
     align-self: center;
+    background-size: 14px;
+    height: 14px;
+    margin-right: -0.25rem;
+    mask-size: 14px;
+    width: 14px;
   }
 
   /* icons in sidebars */

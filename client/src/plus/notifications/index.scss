@@ -6,8 +6,8 @@
 }
 
 .plus-header h1 {
-  margin-bottom: 1rem;
   font: var(--type-heading-h4-font-size-mobile);
+  margin-bottom: 1rem;
 
   @media screen and (min-width: $screen-md) {
     font: var(--type-heading-h4-font-size);
@@ -19,30 +19,119 @@
   flex-direction: column;
 }
 
+@media screen and (prefers-reduced-motion: reduce) {
+  .notification-card {
+    align-items: center;
+    animation: none;
+    background-color: var(--background-primary);
+    border: 1px solid var(--border-secondary);
+    display: flex;
+    justify-content: space-between;
+
+    padding: 0.5rem;
+
+    & > div {
+      align-items: center;
+      display: flex;
+    }
+
+    .desktop-only {
+      display: hidden;
+    }
+
+    &.no-star {
+      grid-template-columns: 1fr auto;
+    }
+
+    .icon {
+      background-color: var(--icon-secondary);
+    }
+
+    & + & {
+      border-top: none;
+    }
+
+    &-description {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    &-title {
+      color: var(--text-primary);
+      font-family: var(--font-body);
+      font-size: var(--type-smaller-font-size);
+      font-weight: var(--font-body-strong-weight);
+      margin: 0;
+      word-wrap: anywhere;
+    }
+
+    &-text {
+      color: var(--text-primary);
+      font-size: var(--type-smaller-font-size);
+      margin: 0;
+    }
+
+    &-created {
+      color: var(--text-secondary);
+
+      display: none;
+      font-size: var(--type-tiny-font-size);
+      text-align: right;
+      @media screen and (min-width: $screen-md) {
+        display: inherit;
+      }
+    }
+
+    &:first-child {
+      border-top-left-radius: var(--elem-radius);
+      border-top-right-radius: var(--elem-radius);
+      margin-top: 1rem;
+    }
+
+    &:last-child {
+      border-bottom-left-radius: var(--elem-radius);
+      border-bottom-right-radius: var(--elem-radius);
+    }
+
+    &.unread {
+      background-color: var(--accent-tertiary);
+    }
+
+    @media screen and (min-width: $screen-md) {
+      .desktop-only {
+        display: inherit;
+      }
+    }
+
+    @media screen and (min-width: $screen-md) {
+      &-description {
+        align-items: center;
+        flex-direction: row;
+      }
+    }
+  }
+}
+
 .notification-card {
   align-items: center;
-  border: 1px solid var(--border-secondary);
+  animation: fade-in 0.2s;
   background-color: var(--background-primary);
+  border: 1px solid var(--border-secondary);
   display: flex;
   justify-content: space-between;
 
+  padding: 0.5rem;
+
   & > div {
-    display: flex;
     align-items: center;
+    display: flex;
   }
 
   .desktop-only {
     display: hidden;
   }
 
-  @media screen and (min-width: $screen-md) {
-    .desktop-only {
-      display: inherit;
-    }
-  }
-
-  padding: 0.5rem;
-  animation: fade-in 0.2s;
   &.no-star {
     grid-template-columns: 1fr auto;
   }
@@ -62,35 +151,35 @@
   }
 
   &-title {
+    color: var(--text-primary);
     font-family: var(--font-body);
     font-size: var(--type-smaller-font-size);
     font-weight: var(--font-body-strong-weight);
     margin: 0;
-    color: var(--text-primary);
     word-wrap: anywhere;
   }
 
   &-text {
+    color: var(--text-primary);
     font-size: var(--type-smaller-font-size);
     margin: 0;
-    color: var(--text-primary);
   }
 
   &-created {
     color: var(--text-secondary);
-    font-size: var(--type-tiny-font-size);
-    text-align: right;
 
     display: none;
+    font-size: var(--type-tiny-font-size);
+    text-align: right;
     @media screen and (min-width: $screen-md) {
       display: inherit;
     }
   }
 
   &:first-child {
-    margin-top: 1rem;
     border-top-left-radius: var(--elem-radius);
     border-top-right-radius: var(--elem-radius);
+    margin-top: 1rem;
   }
 
   &:last-child {
@@ -103,21 +192,27 @@
   }
 
   @media screen and (min-width: $screen-md) {
+    .desktop-only {
+      display: inherit;
+    }
+  }
+
+  @media screen and (min-width: $screen-md) {
     &-description {
-      flex-direction: row;
       align-items: center;
+      flex-direction: row;
     }
   }
 }
 
 .select-all-toolbar {
-  padding: 0.5rem;
-  display: flex;
-  background-color: var(--background-primary);
   align-items: center;
+  background-color: var(--background-primary);
   border: 1px solid var(--border-primary);
   border-radius: var(--elem-radius);
+  display: flex;
   gap: 1rem;
+  padding: 0.5rem;
 }
 
 .empty-card {
@@ -126,6 +221,7 @@
   border: 1px solid var(--border-secondary);
   margin-top: 0.5rem;
   padding: 0.5rem;
+
   p {
     font: var(--type-article-p);
     letter-spacing: 0.5px;

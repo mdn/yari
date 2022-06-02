@@ -2,31 +2,31 @@
 
 .homepage-hero {
   color: var(--text-primary);
-  width: 100%;
   display: grid;
   grid-template-rows: fit-content(24rem);
+  width: 100%;
 
   section {
-    height: 100%;
     display: flex;
-    justify-content: center;
     flex-direction: column;
-    max-width: 52rem;
-    width: 100%;
-    padding: 0 1rem;
-    margin: 0 auto;
     gap: 2rem;
-    padding: 0 1rem;
     grid-column: 1;
     grid-row: 1;
+    height: 100%;
+    justify-content: center;
+    margin: 0 auto;
+    max-width: 52rem;
+    padding: 0 1rem;
+    padding: 0 1rem;
+    width: 100%;
 
     h1 {
       /* Title */
       font-size: 2.2rem;
-      line-height: 120%;
-      letter-spacing: -0.5px;
-      margin: 0;
       font-weight: 200;
+      letter-spacing: -0.5px;
+      line-height: 120%;
+      margin: 0;
 
       @media screen and (min-width: $screen-sm) {
         font-size: 2.5rem;
@@ -40,9 +40,9 @@
     h1::after {
       content: " ";
       text-decoration: underline;
+      text-decoration-color: var(--text-link);
       text-decoration-thickness: 0.15rem;
       text-underline-offset: 0.1rem;
-      text-decoration-color: var(--text-link);
     }
 
     p {
@@ -51,14 +51,14 @@
   }
 
   .homepage-hero-bg {
-    width: 100%;
-    top: 0;
-    z-index: -1;
-    overflow: hidden;
     --mandala-primary: var(--border-primary);
     background-color: rgba(1, 1, 1, 0.9);
     grid-column: 1;
     grid-row: 1;
+    overflow: hidden;
+    top: 0;
+    width: 100%;
+    z-index: -1;
 
     .mandala-translate {
       transform: translate(10rem, -8rem) scale(1.2);
@@ -69,21 +69,21 @@
   }
 
   .homepage-hero-search {
-    width: 100%;
-    max-height: 4rem;
+    align-self: center;
     display: flex;
     margin-bottom: 1rem;
+    max-height: 4rem;
     max-width: 40rem;
-    align-self: center;
+    width: 100%;
 
     .search-input-field {
-      border-radius: 10rem;
       background-color: rgba(1, 1, 1, 0.5);
+      border-radius: 10rem;
       padding: 2rem;
 
       &:focus {
-        box-shadow: var(--focus-01);
         border-color: var(--field-focus-border);
+        box-shadow: var(--focus-01);
       }
 
       &::placeholder {
@@ -92,15 +92,15 @@
     }
 
     .search-widget {
-      gap: 0;
       display: flex;
+      gap: 0;
     }
 
     .search-results {
-      top: 4.2rem;
+      box-shadow: var(--shadow-02);
       margin: 0 1.5rem;
       text-align: left;
-      box-shadow: var(--shadow-02);
+      top: 4.2rem;
       width: calc(100% - 3rem);
       z-index: var(--z-index-search-results-home);
 
@@ -115,8 +115,8 @@
         }
 
         span {
-          font-weight: normal;
           color: var(--text-secondary);
+          font-weight: normal;
         }
 
         small {
@@ -127,20 +127,23 @@
   }
 
   .search-button.button {
+    height: 100%;
+    left: auto;
     position: absolute;
     right: 1.5rem;
-    left: auto;
     top: 0;
-    height: 100%;
 
-    &:hover {
+    &:hover,
+    &:focus {
       background: none;
       border-color: transparent;
     }
 
     .button-wrap {
       background: none;
-      &:hover {
+
+      &:hover,
+      &:focus {
         background: none;
         border: 1px solid transparent;
 

@@ -33,23 +33,23 @@
   }
 
   .table-scroll {
+    margin: 0 -3rem;
     overflow: auto;
     width: 100vw;
-    margin: 0 -3rem;
   }
 
   .table-scroll-inner {
+    min-width: max-content;
     padding: 0 3rem;
     position: relative;
-    min-width: max-content;
 
-    &:after {
-      position: absolute;
-      width: 10px;
-      height: 10px;
+    &::after {
       bottom: 0;
-      right: 0;
       content: "";
+      height: 10px;
+      position: absolute;
+      right: 0;
+      width: 10px;
     }
   }
 
@@ -71,14 +71,14 @@
     &[aria-expanded="true"] {
       position: relative;
 
-      &:after {
-        position: absolute;
-        left: 0;
-        bottom: -1px;
-        height: 2px;
-        width: 100%;
+      &::after {
         background: var(--text-primary);
+        bottom: -1px;
         content: "";
+        height: 2px;
+        left: 0;
+        position: absolute;
+        width: 100%;
       }
 
       .bc-history-mobile {
@@ -90,7 +90,8 @@
   .bc-has-history {
     cursor: pointer;
 
-    &:hover {
+    &:hover,
+    &:focus {
       background: var(--background-secondary);
     }
   }
