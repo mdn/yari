@@ -1,7 +1,10 @@
 // Set a localStorage key with a timestamp the specified number of
 // days into the future. When the user dismisses a banner we use this
+
+import { BannerId } from "./ids";
+
 // to prevent the redisplay of the banner for a while.
-export function setEmbargoed(id: string, days: number) {
+export function setEmbargoed(id: BannerId, days: number) {
   try {
     const key = `banner.${id}.embargoed_until`;
     localStorage.setItem(
@@ -16,7 +19,7 @@ export function setEmbargoed(id: string, days: number) {
 // See whether the specified id was passed to setEmbargoed() fewer than the
 // specified number of days ago. We check this before displaying a banner
 // so a user does not see a banner they recently dismissed.
-export function isEmbargoed(id: string) {
+export function isEmbargoed(id: BannerId) {
   try {
     const key = `banner.${id}.embargoed_until`;
     const value = localStorage.getItem(key);
