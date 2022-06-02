@@ -23,6 +23,20 @@ jobs:
         with:
           node-version: "16"
 
+      # Since we're using workspaces, we need to install in the root folder.
+
+      - name: Cache node_modules
+        uses: actions/cache@v3
+        id: cached-node_modules
+        with:
+          path: |
+            node_modules
+          key: ${{ runner.os }}-${{ hashFiles('package-lock.json') }}
+
+      - name: Install all npm packages
+        if: steps.cached-node_modules.outputs.cache-hit != 'true'
+        run: npm ci
+
       # Note!
       # We need to install all node modules in each of the 3 directories.
       # 1. content-origin-request
@@ -60,9 +74,9 @@ jobs:
         working-directory: deployer/aws-lambda/content-origin-response
         run: npm ci
 
-      - name: Cache node_modules
+      - name: Cache node_modules tests
         uses: actions/cache@v3
-        id: cached-node_modules
+        id: cached-node_modules-tests
         with:
           path: |
             deployer/aws-lambda/tests/node_modules
