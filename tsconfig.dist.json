@@ -3,7 +3,6 @@
   "compilerOptions": {
     "outDir": "dist",
     "skipLibCheck": true,
-    "target": "ESNext",
     "module": "CommonJS",
     "sourceMap": true
   },
