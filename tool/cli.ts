@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 import { Doc } from "../client/src/document/types";
 
 const fs = require("fs");
