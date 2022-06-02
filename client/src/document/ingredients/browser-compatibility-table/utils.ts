@@ -46,7 +46,9 @@ export function listFeatures(
     });
   }
 
-  for (const [subName, subIdentifier] of Object.entries(identifier)) {
+  let subName: string;
+  let subIdentifier: BCD.Identifier;
+  for ([subName, subIdentifier] of Object.entries(identifier)) {
     if (subName !== "__compat" && subIdentifier.__compat) {
       features.push({
         query: parentName ? `${parentName}.${subName}` : subName,
@@ -61,8 +63,10 @@ export function listFeatures(
       // Otherwise, in the case where we’re processing multiple top-level
       // features (that is, from a browser-compat value which is an array),
       // we’d end up entirely missing the data for this feature.
-      for (const [subName, subSubIdentifier] of Object.entries(subIdentifier)) {
-        if (subName !== "__compat" && subSubIdentifier.__compat) {
+      let subSubName: string;
+      let subSubIdentifier: BCD.Identifier;
+      for ([subSubName, subSubIdentifier] of Object.entries(subIdentifier)) {
+        if (subSubName !== "__compat" && subSubIdentifier.__compat) {
           features.push({
             query: parentName ? `${parentName}.${subName}` : subName,
             compat: subSubIdentifier.__compat,
