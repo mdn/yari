@@ -57,6 +57,7 @@ jobs:
           CONTENT_ROOT: testing/content/files
         run: |
           yarn build:prepare
+          yarn build:dist
 
       - name: Dry-run publish to see which files are included
         run: |
