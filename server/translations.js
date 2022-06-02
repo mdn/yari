@@ -16,7 +16,7 @@ const {
 } = require("../content");
 const { getLastCommitURL } = require("../build");
 const { ACTIVE_LOCALES, DEFAULT_LOCALE } = require("../libs/constants");
-const LANGUAGES_RAW = require("../content/languages.json");
+const LANGUAGES_RAW = require("../libs/languages");
 
 // Module-level cache
 const allPopularityValues = [];

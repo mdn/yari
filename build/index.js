@@ -31,7 +31,7 @@ const buildOptions = require("./build-options");
 const { gather: gatherGitHistory } = require("./git-history");
 const { buildSPAs } = require("./spas");
 const { renderCache: renderKumascriptCache } = require("../kumascript");
-const LANGUAGES_RAW = require("../content/languages.json");
+const LANGUAGES_RAW = require("../libs/languages");
 const { safeDecodeURIComponent } = require("../kumascript/src/api/util");
 const { wrapTables } = require("./wrap-tables");
 
