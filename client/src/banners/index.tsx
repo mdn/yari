@@ -1,7 +1,7 @@
 import * as React from "react";
 
 import { setEmbargoed, isEmbargoed } from "./banner-utils";
-import { CRUD_MODE } from "../constants";
+import { CRUD_MODE } from "../env";
 
 // We may or may not load any active banner. But if there's a small chance
 // that we might, it's best practice to not have to lazy-load the CSS

@@ -6,11 +6,8 @@ import SignOut from "../../atoms/signout";
 
 import { useUserData } from "../../../user-context";
 import { useIsServer, useLocale } from "../../../hooks";
-import {
-  FXA_SETTINGS_URL,
-  HEADER_NOTIFICATIONS_MENU_API_URL,
-  FXA_MANAGE_SUBSCRIPTIONS_URL,
-} from "../../../constants";
+import { HEADER_NOTIFICATIONS_MENU_API_URL } from "../../../constants";
+import { FXA_SETTINGS_URL, FXA_MANAGE_SUBSCRIPTIONS_URL } from "../../../env";
 
 import "./index.scss";
 import { DropdownMenu, DropdownMenuWrapper } from "../dropdown";

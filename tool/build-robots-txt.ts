@@ -6,7 +6,7 @@
 const fs = require("fs");
 
 const { VALID_LOCALES } = require("../libs/constants");
-const { ALWAYS_ALLOW_ROBOTS } = require("../build/constants");
+const { ALWAYS_ALLOW_ROBOTS } = require("../libs/env");
 
 const ALLOW_TEXT = `
 User-agent: *

@@ -1,9 +1,9 @@
 const express = require("express");
 
 const { CSP_VALUE } = require("../libs/constants");
+const { STATIC_ROOT } = require("../libs/env");
 const { resolveFundamental } = require("../libs/fundamental-redirects");
 const { getLocale } = require("../libs/get-locale");
-const { STATIC_ROOT } = require("./constants");
 const { devMiddlewares } = require("./dev");
 
 // Lowercase every request because every possible file we might have

@@ -6,7 +6,7 @@ import { useUserData } from "../user-context";
 import { PLUS_LAUNCH_ANNOUNCEMENT } from "./ids";
 import { isPlusAvailable } from "../utils";
 import { usePlusUrl } from "../plus/utils";
-import { ENABLE_PLUS_EU } from "../constants";
+import { ENABLE_PLUS_EU } from "../env";
 
 // The <Banner> component displays a simple call-to-action banner at
 // the bottom of the window. The following props allow it to be customized.

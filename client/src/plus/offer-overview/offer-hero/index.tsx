@@ -1,4 +1,4 @@
-import { CRUD_MODE } from "../../../constants";
+import { CRUD_MODE } from "../../../env";
 import Mandala from "../../../ui/molecules/mandala";
 import "./index.scss";
 

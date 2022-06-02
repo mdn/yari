@@ -1,7 +1,7 @@
 import * as React from "react";
 import useSWR from "swr";
 
-import { DISABLE_AUTH, DEFAULT_GEO_COUNTRY } from "./constants";
+import { DISABLE_AUTH, DEFAULT_GEO_COUNTRY } from "./env";
 
 export enum SubscriptionType {
   MDN_CORE = "",

@@ -19,22 +19,17 @@ const cheerio = require("cheerio");
 const dirname = __dirname;
 
 const { DEFAULT_LOCALE, VALID_LOCALES } = require("../libs/constants");
-const {
-  CONTENT_ROOT,
-  CONTENT_TRANSLATED_ROOT,
-  Redirect,
-  Document,
-  buildURL,
-  getRoot,
-} = require("../content");
+const { CONTENT_ROOT, CONTENT_TRANSLATED_ROOT } = require("../libs/env");
+const { Redirect, Document, buildURL, getRoot } = require("../content");
 const { buildDocument, gatherGitHistory, buildSPAs } = require("../build");
+
+const { VALID_FLAW_CHECKS } = require("../libs/constants");
 const {
   ALWAYS_ALLOW_ROBOTS,
   BUILD_OUT_ROOT,
   GOOGLE_ANALYTICS_ACCOUNT,
   GOOGLE_ANALYTICS_DEBUG,
-  VALID_FLAW_CHECKS,
-} = require("../build/constants");
+} = require("../libs/env");
 const { runMakePopularitiesFile } = require("./popularities");
 const { runOptimizeClientBuild } = require("./optimize-client-build");
 const { runBuildRobotsTxt } = require("./build-robots-txt");

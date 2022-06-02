@@ -4,16 +4,11 @@ const path = require("path");
 const chalk = require("chalk");
 const cheerio = require("cheerio");
 
-const {
-  Document,
-  CONTENT_ROOT,
-  Image,
-  REPOSITORY_URLS,
-  execGit,
-} = require("../content");
+const { Document, Image, execGit } = require("../content");
+const { CONTENT_ROOT, REPOSITORY_URLS } = require("../libs/env");
 const kumascript = require("../kumascript");
 
-const { FLAW_LEVELS } = require("./constants");
+const { FLAW_LEVELS } = require("../libs/constants");
 const {
   extractSections,
   extractSidebar,
@@ -669,8 +664,6 @@ function renderContributorsTxt(wikiContributorNames = null, githubURL = null) {
 }
 
 module.exports = {
-  FLAW_LEVELS,
-
   buildDocument,
 
   buildLiveSamplePageFromURL,

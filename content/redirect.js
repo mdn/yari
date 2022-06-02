@@ -3,11 +3,8 @@ const path = require("path");
 
 const { resolveFundamental } = require("../libs/fundamental-redirects");
 const { decodePath, slugToFolder } = require("../libs/slug-utils");
-const {
-  CONTENT_ROOT,
-  CONTENT_TRANSLATED_ROOT,
-  VALID_LOCALES,
-} = require("./constants");
+const { CONTENT_ROOT, CONTENT_TRANSLATED_ROOT } = require("../libs/env");
+const { VALID_LOCALES } = require("../libs/constants");
 const { getRoot } = require("./utils");
 
 const FORBIDDEN_URL_SYMBOLS = ["\n", "\t"];

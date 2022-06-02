@@ -2,7 +2,7 @@ import React from "react";
 import { useSearchParams, useParams, useNavigate } from "react-router-dom";
 import useSWR, { mutate } from "swr";
 
-import { CRUD_MODE } from "../constants";
+import { CRUD_MODE } from "../env";
 import { useGA } from "../ga-context";
 import { useIsServer } from "../hooks";
 

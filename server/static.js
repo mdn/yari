@@ -6,7 +6,7 @@ const cookieParser = require("cookie-parser");
 
 const { staticMiddlewares } = require("./middlewares");
 const { resolveFundamental } = require("../content");
-const { STATIC_ROOT } = require("./constants");
+const { STATIC_ROOT } = require("../libs/env");
 
 const app = express();
 app.use(express.json());
