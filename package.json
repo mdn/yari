@@ -9,6 +9,7 @@
     "analyze:css": "source-map-explorer 'client/build/static/css/*.css'",
     "build": "cross-env NODE_ENV=production node build/cli.js",
     "build:client": "cd client && cross-env INLINE_RUNTIME_CHUNK=false node scripts/build.js",
+    "build:dist": "tsc -p tsconfig.dist.json",
     "build:prepare": "yarn build:client && yarn build:ssr && yarn tool optimize-client-build && yarn tool google-analytics-code && yarn tool popularities && yarn tool spas && yarn tool gather-git-history && yarn tool build-robots-txt",
     "build:ssr": "cd ssr && webpack --mode=production",
     "build:sw": "cd client/pwa && yarn && yarn build:prod",
