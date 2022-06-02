@@ -5,6 +5,10 @@
   "license": "MPL-2.0",
   "author": "MDN Web Docs",
   "workspaces": [
+    "deployer/aws-lambda/content-origin-request",
+    "deployer/aws-lambda/content-origin-response",
+    "deployer/aws-lambda/mdn-stripe-price-ids",
+    "deployer/aws-lambda/tests",
     "libs/constants",
     "libs/fundamental-redirects",
     "libs/get-locale",
