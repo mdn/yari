@@ -23,4 +23,5 @@ _githistory.json
 /testing/content/
 /kumascript/coverage/
 /ssr/mozilla.dnthelper.min.js
+/mdn/content
 popularities.json

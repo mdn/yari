@@ -22,8 +22,9 @@ function buildRedirectsMap() {
     }
 
     const base = process.env[envvar];
+    console.log(`${envvar} = ${base}`);
 
-    VALID_LOCALES.forEach((locale) => {
+    for (const locale of VALID_LOCALES.keys()) {
       const path = [
         // Absolute path.
         `${base}/${locale}/_redirects.txt`,
@@ -43,8 +44,9 @@ function buildRedirectsMap() {
           const [source, target] = redirectLine.split("\t", 2);
           redirectMap.set(source.toLowerCase(), target);
         }
+        console.log(`- ${path}: ${redirectLines.length} redirects`);
       }
-    });
+    }
   });
 
   const output = "redirects.json";

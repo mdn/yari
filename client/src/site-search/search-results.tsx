@@ -8,7 +8,7 @@ import { useLocale } from "../hooks";
 import { appendURL } from "./utils";
 import { Button } from "../ui/atoms/button";
 
-import LANGUAGES_RAW from "../languages.json";
+import LANGUAGES_RAW from "../../../libs/languages";
 import "./search-results.scss";
 import { useGA } from "../ga-context";
 import NoteCard from "../ui/molecules/notecards";
