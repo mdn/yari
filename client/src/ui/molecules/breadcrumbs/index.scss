@@ -25,12 +25,12 @@
         background-color: var(--icon-secondary);
         content: "";
         display: block;
+        flex-shrink: 0;
         height: 12px;
         mask-image: url("../../../assets/icons/chevron.svg");
         mask-size: 12px;
         transform: rotate(-90deg);
         width: 12px;
-        flex-shrink: 0;
       }
     }
 
