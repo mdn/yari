@@ -1,4 +1,4 @@
-export { VALID_LOCALES } from "../../libs/constants";
+export { MDN_PLUS_TITLE, VALID_LOCALES } from "../../libs/constants";
 
 export const DISABLE_AUTH = Boolean(
   JSON.parse(process.env.REACT_APP_DISABLE_AUTH || "false")
@@ -18,8 +18,6 @@ export const CRUD_MODE_HOSTNAMES = (
   .split(",")
   .map((x) => x.trim())
   .filter(Boolean);
-
-export const MDN_PLUS_TITLE = "MDN Plus";
 
 export const PLUS_IS_ENABLED = Boolean(
   process.env.REACT_APP_ENABLE_PLUS || "false"

@@ -158,6 +158,12 @@ const cspToString = (csp) =>
 
 const CSP_VALUE = cspToString(CSP_DIRECTIVES);
 
+// ------
+// client
+// ------
+
+const MDN_PLUS_TITLE = "MDN Plus";
+
 // ---------
 // filecheck
 // ---------
@@ -179,6 +185,9 @@ module.exports = {
   PREFERRED_LOCALE_COOKIE_NAME,
 
   CSP_VALUE,
+
+  // client
+  MDN_PLUS_TITLE,
 
   // filecheck
   VALID_MIME_TYPES,
