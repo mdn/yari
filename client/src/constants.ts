@@ -1,3 +1,5 @@
+export { VALID_LOCALES } from "../../libs/constants";
+
 export const DISABLE_AUTH = Boolean(
   JSON.parse(process.env.REACT_APP_DISABLE_AUTH || "false")
 );
@@ -16,25 +18,6 @@ export const CRUD_MODE_HOSTNAMES = (
   .split(",")
   .map((x) => x.trim())
   .filter(Boolean);
-
-// Remember to keep this in sync with the list inside the Node code.
-// E.g. libs/constants.js
-// Hardcoding the list in both places is most convenient and most performant.
-// We could encode the list in the SSR rendering but that means the client side
-// code needs to depend on having access to the `window` global first.
-export const VALID_LOCALES = new Set([
-  "de",
-  "en-US",
-  "es",
-  "fr",
-  "ja",
-  "ko",
-  "pl",
-  "pt-BR",
-  "ru",
-  "zh-CN",
-  "zh-TW",
-]);
 
 export const MDN_PLUS_TITLE = "MDN Plus";
 
