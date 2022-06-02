@@ -4,7 +4,7 @@
     "outDir": "dist",
     "skipLibCheck": true,
     "target": "ESNext",
-    "module": "ESNext",
+    "module": "CommonJS",
     "sourceMap": true
   },
   "include": ["tool"]
