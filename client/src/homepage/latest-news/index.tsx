@@ -91,7 +91,7 @@ export function LatestNews(props: HydrationData<any>) {
                 <NewsItemSource newsItem={newsItem} />
               </span>
             </p>
-            <span className="news-date">
+            <span className="news-date" suppressHydrationWarning>
               <NewsItemDate newsItem={newsItem} />
             </span>
           </li>

@@ -46,7 +46,7 @@ function RecentContributions(props: HydrationData<any>) {
                   </a>
                 </span>
               </p>
-              <span className="request-date">
+              <span className="request-date" suppressHydrationWarning>
                 {dayjs(updated_at).fromNow()}
               </span>
             </li>
