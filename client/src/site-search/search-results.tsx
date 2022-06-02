@@ -3,7 +3,7 @@ import { createSearchParams, Link, useSearchParams } from "react-router-dom";
 import useSWR from "swr";
 
 import { Loading } from "../ui/atoms/loading";
-import { CRUD_MODE } from "../constants";
+import { CRUD_MODE } from "../env";
 import { useLocale } from "../hooks";
 import { appendURL } from "./utils";
 import { Button } from "../ui/atoms/button";

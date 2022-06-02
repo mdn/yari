@@ -1,6 +1,6 @@
 import React, { ReactElement } from "react";
 import useSWR from "swr";
-import { CRUD_MODE } from "../../constants";
+import { CRUD_MODE } from "../../env";
 import { SidebarContainer } from "../../document/organisms/sidebar";
 import { TOC } from "../../document/organisms/toc";
 import { DocParent, Toc } from "../../document/types";

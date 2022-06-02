@@ -1,7 +1,7 @@
 import { useLocation } from "react-router-dom";
 
 import { useLocale } from "../../../hooks";
-import { FXA_SIGNIN_URL } from "../../../constants";
+import { FXA_SIGNIN_URL } from "../../../env";
 
 import "./index.scss";
 
