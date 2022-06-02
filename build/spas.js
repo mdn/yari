@@ -4,7 +4,7 @@ const frontmatter = require("front-matter");
 
 const { m2h } = require("../markdown");
 
-const { VALID_LOCALES } = require("../libs/constants");
+const { VALID_LOCALES, MDN_PLUS_TITLE } = require("../libs/constants");
 const {
   CONTENT_ROOT,
   CONTENT_TRANSLATED_ROOT,
@@ -119,7 +119,6 @@ async function buildSPAs(options) {
         continue;
       }
 
-      const MDN_PLUS_TITLE = "MDN Plus";
       const SPAs = [
         { prefix: "search", pageTitle: "Search" },
         { prefix: "plus", pageTitle: MDN_PLUS_TITLE },
