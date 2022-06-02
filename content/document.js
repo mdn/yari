@@ -6,13 +6,8 @@ const fm = require("front-matter");
 const yaml = require("js-yaml");
 const { fdir } = require("fdir");
 
-const {
-  CONTENT_TRANSLATED_ROOT,
-  CONTENT_ROOT,
-  ROOTS,
-  HTML_FILENAME,
-  MARKDOWN_FILENAME,
-} = require("../libs/env");
+const { HTML_FILENAME, MARKDOWN_FILENAME } = require("../libs/constants");
+const { CONTENT_TRANSLATED_ROOT, CONTENT_ROOT, ROOTS } = require("../libs/env");
 const { ACTIVE_LOCALES, VALID_LOCALES } = require("../libs/constants");
 const { getPopularities } = require("./popularities");
 const { getWikiHistories } = require("./wikihistories");

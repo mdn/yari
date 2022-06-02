@@ -4,6 +4,8 @@ const path = require("path");
 const dotenv = require("dotenv");
 const dirname = __dirname;
 
+const { VALID_FLAW_CHECKS } = require("../constants");
+
 const ROOT = path.join(dirname, "..", "..");
 
 dotenv.config({
@@ -16,34 +18,6 @@ dotenv.config({
 
 const BUILD_OUT_ROOT =
   process.env.BUILD_OUT_ROOT || path.join(ROOT, "client", "build");
-
-const FLAW_LEVELS = Object.freeze({
-  ERROR: "error",
-  IGNORE: "ignore",
-  WARN: "warn",
-});
-
-// These names need to match what we have in the code where we have various
-// blocks of code that look something like this:
-//
-//    if (this.options.flawChecks.profanities) {
-//      ... analyze and possible add to doc.flaws.profanities ...
-//
-// This list needs to be synced with the code. And the CLI arguments
-// used with --flaw-checks needs to match this set.
-const VALID_FLAW_CHECKS = new Set([
-  "macros",
-  "broken_links",
-  "bad_bcd_queries",
-  "bad_bcd_links",
-  "images",
-  "image_widths",
-  "bad_pre_tags",
-  "sectioning",
-  "heading_links",
-  "translation_differences",
-  "unsafe_html",
-]);
 
 // TODO (far future): Switch to "error" when number of flaws drops.
 const DEFAULT_FLAW_LEVELS = process.env.BUILD_FLAW_LEVELS || "*:warn";
@@ -116,9 +90,6 @@ if (CONTENT_TRANSLATED_ROOT) {
   REPOSITORY_URLS[CONTENT_TRANSLATED_ROOT] = "mdn/translated-content";
 }
 
-const HTML_FILENAME = "index.html";
-const MARKDOWN_FILENAME = "index.md";
-
 function correctContentPathFromEnv(envVarName) {
   let pathName = process.env[envVarName];
   if (!pathName) {
@@ -185,12 +156,10 @@ module.exports = {
   BUILD_OUT_ROOT,
   DEFAULT_FLAW_LEVELS,
   FILES,
-  FLAW_LEVELS,
   FOLDERSEARCH,
   GOOGLE_ANALYTICS_ACCOUNT,
   GOOGLE_ANALYTICS_DEBUG,
   NO_PROGRESSBAR,
-  VALID_FLAW_CHECKS,
   FIX_FLAWS,
   FIX_FLAWS_DRY_RUN,
   FIX_FLAWS_TYPES,
@@ -202,8 +171,6 @@ module.exports = {
   CONTRIBUTOR_SPOTLIGHT_ROOT,
   REPOSITORY_URLS,
   ROOTS,
-  HTML_FILENAME,
-  MARKDOWN_FILENAME,
   // filecheck
   MAX_FILE_SIZE,
   // kumascript,

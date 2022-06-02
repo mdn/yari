@@ -4,8 +4,9 @@ const path = require("path");
 const { fdir } = require("fdir");
 
 const { getPopularities } = require("../content");
-const { FLAW_LEVELS, options: buildOptions } = require("../build");
+const { options: buildOptions } = require("../build");
 
+const { FLAW_LEVELS } = require("../libs/constants");
 const { BUILD_OUT_ROOT } = require("../libs/env");
 
 // Module-level cache

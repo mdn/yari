@@ -2,12 +2,8 @@ const path = require("path");
 
 const { fdir } = require("fdir");
 
-const {
-  HTML_FILENAME,
-  MARKDOWN_FILENAME,
-  CONTENT_ROOT,
-  CONTENT_TRANSLATED_ROOT,
-} = require("../libs/env");
+const { HTML_FILENAME, MARKDOWN_FILENAME } = require("../libs/constants");
+const { CONTENT_ROOT, CONTENT_TRANSLATED_ROOT } = require("../libs/env");
 
 function allDocumentPathsAsTree(root) {
   const api = new fdir()

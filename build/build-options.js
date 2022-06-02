@@ -1,10 +1,9 @@
 const dotenv = require("dotenv");
 dotenv.config();
 
+const { FLAW_LEVELS, VALID_FLAW_CHECKS } = require("../libs/constants");
 const {
-  FLAW_LEVELS,
   DEFAULT_FLAW_LEVELS,
-  VALID_FLAW_CHECKS,
   FILES,
   FOLDERSEARCH,
   NO_PROGRESSBAR,
