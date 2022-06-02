@@ -40,7 +40,7 @@ export function Footer() {
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                <span className="visually-hidden">MDN on Github</span>
+                <span className="visually-hidden">MDN on GitHub</span>
               </a>
             </li>
           </ul>

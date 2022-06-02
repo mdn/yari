@@ -4,6 +4,9 @@ import { useOnlineStatus } from "../../hooks";
 import { Button } from "../../ui/atoms/button";
 import { DropdownMenu, DropdownMenuWrapper } from "../../ui/molecules/dropdown";
 import { Checkbox } from "../../ui/molecules/notifications-watch-menu/atoms/checkbox";
+import parse from "html-react-parser";
+
+const regex = /PR!(?<repo>.+\/.+)!(?<pr>\d+)!!/;
 
 export default function NotificationCardListItem({
   toggleSelected,
@@ -12,7 +15,21 @@ export default function NotificationCardListItem({
   handleDelete,
 }) {
   const [show, setShow] = React.useState(false);
+  let textWithPr;
   const { isOnline } = useOnlineStatus();
+
+  const groups = item.text.match(regex)?.groups;
+  if (groups !== undefined) {
+    const content = item.text.replace(
+      regex,
+      `<a href="https://github.com/${groups.repo}/pull/${groups.pr}"  
+          target="_blank"
+          rel="noreferrer noopener"
+          className="external"
+          >#${groups.pr}</a>`
+    );
+    textWithPr = content;
+  }
 
   return (
     <li
@@ -40,7 +57,11 @@ export default function NotificationCardListItem({
 
         <a href={item.url} className="notification-card-description">
           <h2 className="notification-card-title">{item.title}</h2>
-          <p className="notification-card-text">{item.text}</p>
+          {textWithPr ? (
+            <p className="notification-card-text">{parse(textWithPr)}</p>
+          ) : (
+            <p className="notification-card-text">{item.text}</p>
+          )}
         </a>
       </div>
 

@@ -3,7 +3,7 @@ import React from "react";
 // What we use on the document pages
 export function MainContentContainer({
   children,
-  className = "main-content",
+  className = "",
 }: {
   children: React.ReactNode;
   className?: string;
@@ -13,7 +13,7 @@ export function MainContentContainer({
       // This exists for the benefit of a11y navigation which
       // uses anchor links to focus in on the content.
       id="content"
-      className={className}
+      className={`main-content ${className}`}
       role="main"
     >
       {children}

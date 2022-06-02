@@ -9,6 +9,7 @@ import { tables } from "./tables";
 import { code, wrap } from "./rehype-remark-utils";
 import { toText } from "./to-text";
 import { QueryAndTransform } from "./utils";
+import { Element, Literal } from "hast";
 
 /**
  * Some nodes like **strong** or __emphasis__ can't have leading/trailing spaces
@@ -60,12 +61,17 @@ export const handlers: QueryAndTransform[] = [
 
   [
     (node: Node) => node.type == "text",
-    (node, t, opts) => h("text", wrapText(node.value, opts)),
+    (node, t, opts) =>
+      h("text", wrapText((node as unknown as Literal).value, opts)),
   ],
 
   [
     (node: Node) => node.type == "comment",
-    (node, t, opts) => h("html", "<!--" + wrapText(node.value, opts) + "-->"),
+    (node, t, opts) =>
+      h(
+        "html",
+        "<!--" + wrapText((node as unknown as Literal).value, opts) + "-->"
+      ),
   ],
   // End of non-element types
 
@@ -82,7 +88,7 @@ export const handlers: QueryAndTransform[] = [
     },
     (node, t) =>
       h("heading", t(node, { shouldWrap: true, singleLine: true }), {
-        depth: Number(node.tagName.charAt(1)) || 1,
+        depth: (Number(node.tagName.charAt(1)) as 1 | 2 | 3 | 4 | 5) || 1,
       }),
   ],
 
@@ -131,18 +137,20 @@ export const handlers: QueryAndTransform[] = [
     },
     (node, t) =>
       h("link", t(node), {
-        title: node.properties.title || null,
-        url: node.properties.href,
+        title: (node.properties.title as string | undefined) || null,
+        url: node.properties.href as string | undefined,
       }),
   ],
 
   [
     { is: ["ul", "ol"], canHaveClass: "threecolumns" },
-    function list(node, t) {
+    (node, t) => {
       const ordered = node.tagName == "ol";
       return h("list", t(node), {
         ordered,
-        start: ordered ? node.properties.start || 1 : null,
+        start: ordered
+          ? (node.properties.start as number | undefined) || 1
+          : null,
         spread: false,
       });
     },
@@ -168,7 +176,7 @@ export const handlers: QueryAndTransform[] = [
           child.type == "element" && ["a", "strong"].includes(child.tagName)
       ),
     (node) =>
-      node.children.map((child) => {
+      node.children.map((child: Element) => {
         switch (child.tagName) {
           case "a":
             return h("link", h("inlineCode", toText(child)), {
@@ -189,7 +197,9 @@ export const handlers: QueryAndTransform[] = [
     "code",
     (node, t, opts) => {
       const targetNode =
-        node.children.length == 1 && node.children[0].tagName == "var"
+        node.children.length == 1 &&
+        "tagName" in node.children[0] &&
+        node.children[0].tagName == "var"
           ? node.children[0]
           : node;
       return h(
@@ -278,9 +288,9 @@ export const handlers: QueryAndTransform[] = [
     (node) => {
       const { src, title, alt } = node.properties;
       return h("image", null, {
-        url: src,
-        title: title || null,
-        alt: alt || "",
+        url: src as string,
+        title: (title as string | undefined) || null,
+        alt: (alt as string | undefined) || "",
       });
     },
   ],

@@ -1,6 +1,6 @@
 import React from "react";
 import { useSearchParams } from "react-router-dom";
-
+import { useIsServer } from "../hooks";
 import { Loading } from "../ui/atoms/loading";
 import { PageContentContainer } from "../ui/atoms/page-content";
 import { useGA } from "../ga-context";
@@ -10,7 +10,7 @@ const SiteSearchForm = React.lazy(() => import("./form"));
 const SearchResults = React.lazy(() => import("./search-results"));
 
 export function SiteSearch() {
-  const isServer = typeof window === "undefined";
+  const isServer = useIsServer();
   const ga = useGA();
   const [searchParams] = useSearchParams();
 
@@ -49,28 +49,30 @@ export function SiteSearch() {
   }, [query, page, ga]);
 
   return (
-    <div className="site-search main-page-content">
+    <div className="main-wrapper site-search">
       <PageContentContainer>
-        {query ? (
-          <h1>
-            Search results for: <span className="query-string">{query}</span>{" "}
-            {page && page !== "1" && `(page ${page})`}
-          </h1>
-        ) : (
-          <h1>No query, no results.</h1>
-        )}
+        <article className="main-page-content">
+          {query ? (
+            <h1>
+              Search results for: <span className="query-string">{query}</span>{" "}
+              {page && page !== "1" && `(page ${page})`}
+            </h1>
+          ) : (
+            <h1>No query, no results.</h1>
+          )}
 
-        {!isServer && (
-          <React.Suspense fallback={<Loading />}>
-            <SiteSearchForm />
-          </React.Suspense>
-        )}
+          {!isServer && (
+            <React.Suspense fallback={<Loading />}>
+              <SiteSearchForm />
+            </React.Suspense>
+          )}
 
-        {!isServer && query && (
-          <React.Suspense fallback={<Loading />}>
-            <SearchResults />
-          </React.Suspense>
-        )}
+          {!isServer && query && (
+            <React.Suspense fallback={<Loading />}>
+              <SearchResults />
+            </React.Suspense>
+          )}
+        </article>
       </PageContentContainer>
     </div>
   );

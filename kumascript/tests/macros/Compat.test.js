@@ -4,7 +4,8 @@ const fs = require("fs");
 const path = require("path");
 const jsdom = require("jsdom");
 const extend = require("extend");
-const fixture_dir = path.resolve(__dirname, "fixtures/compat");
+const dirname = __dirname;
+const fixture_dir = path.resolve(dirname, "fixtures/compat");
 
 const { JSDOM } = jsdom;
 
@@ -21,7 +22,8 @@ describeMacro("Compat", function () {
   itMacro("Outputs a simple div tag", async (macro) => {
     const result = await macro.call("api.feature");
     const dom = JSDOM.fragment(result);
-    assert.equal(dom.querySelector("div.bc-data").id, "bcd:api.feature");
+    assert.equal(dom.querySelector("div.bc-data").id, "");
+    assert.equal(dom.querySelector("div.bc-data").dataset.query, "api.feature");
     assert.equal(dom.querySelector("div.bc-data").dataset.depth, "1");
     assert.equal(
       dom.querySelector("div.bc-data").textContent.trim(),

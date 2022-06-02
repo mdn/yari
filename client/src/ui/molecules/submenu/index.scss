@@ -1,6 +1,42 @@
 @use "../../vars" as *;
 @use "../../base/typography" as *;
 
+@mixin not-inline-submenu {
+  background-color: var(--background-secondary);
+  border-radius: var(--elem-radius);
+  border: 1px solid var(--border-primary);
+  box-shadow: var(--shadow-02);
+  max-width: 25rem;
+  padding: 0.5rem;
+  position: absolute;
+  top: calc(100% + 4px);
+  width: max-content;
+  z-index: var(--z-index-mid);
+
+  @at-root .main-menu & {
+    background-color: var(--background-primary);
+  }
+
+  .submenu-item {
+    border-radius: var(--elem-radius);
+    padding: 0.75rem;
+  }
+
+  /*
+      Creates a space between the top-level menu and the submenu that
+      keeps the menu open when the cursor moves to the menu
+    */
+  &:before {
+    content: "";
+    display: block;
+    height: 8px;
+    left: 0;
+    position: absolute;
+    top: -8px;
+    width: 100%;
+  }
+}
+
 .submenu {
   background-color: var(--background-primary);
   list-style: none;
@@ -44,39 +80,15 @@
     }
   }
 
-  @media screen and (min-width: $screen-md) {
-    background-color: var(--background-secondary);
-    border-radius: var(--elem-radius);
-    border: 1px solid var(--border-primary);
-    box-shadow: var(--shadow-02);
-    max-width: 25rem;
-    padding: 0.5rem;
-    position: absolute;
-    top: calc(100% + 4px);
-    width: max-content;
-    z-index: var(--z-index-mid);
-
-    @at-root .main-menu & {
-      background-color: var(--background-primary);
+  &.inline-submenu-lg {
+    @media screen and (min-width: $screen-lg) {
+      @include not-inline-submenu();
     }
+  }
 
-    .submenu-item {
-      border-radius: var(--elem-radius);
-      padding: 0.75rem;
-    }
-
-    /*
-      Creates a space between the top-level menu and the submenu that
-      keeps the menu open when the cursor moves to the menu
-    */
-    &:before {
-      content: "";
-      display: block;
-      height: 8px;
-      left: 0;
-      position: absolute;
-      top: -8px;
-      width: 100%;
+  &:not(.inline-submenu-lg) {
+    @media screen and (min-width: $screen-md) {
+      @include not-inline-submenu();
     }
   }
 }
@@ -108,12 +120,12 @@
 
 .submenu-item-heading,
 .submenu-item {
-  font: var(--type-body-m);
+  font-size: var(--type-smaller-font-size);
 
   @media screen and (min-width: $screen-md) {
     // If there is sub-text associated with this heading, make it bold.
     &:not(:only-child) {
-      font: var(--type-emphasis-m);
+      font-weight: var(--font-body-strong-weight);
     }
   }
 }
@@ -124,12 +136,12 @@
   @media screen and (min-width: $screen-md) {
     display: block;
     margin: 0.25rem 0 0 0;
-    font: var(--type-body-s);
+    font-size: var(--type-tiny-font-size);
   }
 }
 
 .submenu-item-subtext {
-  font: var(--type-emphasis-m);
+  font-weight: var(--font-body-strong-weight);
 }
 
 .submenu-item-dot ~ .submenu-content-container > .submenu-item-heading::after {

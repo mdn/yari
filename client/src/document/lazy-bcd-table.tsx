@@ -11,7 +11,7 @@ import { Loading } from "../ui/atoms/loading";
 // That means that when the lazy-loading happens, it only needs to lazy-load
 // the JS (and the JSON XHR fetch of course)
 import "./ingredients/browser-compatibility-table/index.scss";
-import { useLocale } from "../hooks";
+import { useLocale, useIsServer } from "../hooks";
 import NoteCard from "../ui/molecules/notecards";
 
 const BrowserCompatibilityTable = lazy(
@@ -20,8 +20,6 @@ const BrowserCompatibilityTable = lazy(
       /* webpackChunkName: "browser-compatibility-table" */ "./ingredients/browser-compatibility-table"
     )
 );
-
-const isServer = typeof window === "undefined";
 
 export function LazyBrowserCompatibilityTable({
   id,
@@ -62,6 +60,7 @@ export function LazyBrowserCompatibilityTable({
 function LazyBrowserCompatibilityTableInner({ dataURL }: { dataURL: string }) {
   const locale = useLocale();
   const [bcdDataURL, setBCDDataURL] = useState("");
+  const isServer = useIsServer();
 
   const { error, data } = useSWR(
     bcdDataURL ? bcdDataURL : null,
@@ -80,7 +79,15 @@ function LazyBrowserCompatibilityTableInner({ dataURL }: { dataURL: string }) {
   }, [dataURL]);
 
   if (isServer) {
-    return <p>BCD tables only load in the browser</p>;
+    return (
+      <p>
+        BCD tables only load in the browser
+        <noscript>
+          {" "}
+          with JavaScript enabled. Enable JavaScript to view data.
+        </noscript>
+      </p>
+    );
   }
   if (!data && !error) {
     return <Loading />;
@@ -98,7 +105,7 @@ function LazyBrowserCompatibilityTableInner({ dataURL }: { dataURL: string }) {
   );
 }
 
-type ErrorBoundaryProps = {};
+type ErrorBoundaryProps = { children?: React.ReactNode };
 type ErrorBoundaryState = {
   error: Error | null;
 };

@@ -1,15 +1,7 @@
 @use "sass:math";
 
 .page-not-found {
-  p {
-    margin-top: 50px;
-  }
-
   .fallback-document {
-    p {
-      margin-top: 0.5rem;
-    }
-
     .fallback-link {
       font-size: 1rem;
     }

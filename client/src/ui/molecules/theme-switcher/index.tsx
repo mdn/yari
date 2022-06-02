@@ -62,7 +62,6 @@ export const ThemeSwitcher = () => {
     >
       <Button
         type="action"
-        ariaControls={menuId}
         ariaHasPopup={"menu"}
         ariaExpanded={isOpen || undefined}
         icon={`theme-${activeTheme}`}
@@ -75,7 +74,7 @@ export const ThemeSwitcher = () => {
       </Button>
 
       <DropdownMenu>
-        <Submenu menuEntry={menu} />
+        <Submenu menuEntry={menu} extraClasses="inline-submenu-lg" />
       </DropdownMenu>
     </DropdownMenuWrapper>
   );

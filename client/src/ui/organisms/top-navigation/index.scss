@@ -8,10 +8,15 @@
   border-bottom: 1px solid var(--border-primary);
 
   .container {
+    background-color: var(--background-primary);
     align-items: center;
     display: flex;
     flex-flow: row wrap;
     gap: var(--gutter);
+
+    @media screen and (min-width: $screen-md) {
+      background-color: transparent;
+    }
   }
 
   &.is-transparent {
@@ -37,7 +42,7 @@
   }
 }
 
-@media screen and (min-width: $screen-md) {
+@media screen and (min-width: $screen-lg) {
   .main-menu-toggle {
     display: none;
   }

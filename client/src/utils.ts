@@ -1,5 +1,6 @@
 import { UserData } from "./user-context";
 import {
+  ENABLE_PLUS_EU,
   IEX_DOMAIN,
   PLUS_ENABLED_COUNTRIES,
   PLUS_IS_AVAILABLE_OVERRIDE,
@@ -58,11 +59,11 @@ export function postToIEx(theme: string) {
 }
 
 export function switchTheme(theme: string, set: (theme: string) => void) {
-  const body = document.querySelector("body");
+  const html = document.documentElement;
 
-  if (window && body) {
-    body.className = theme;
-    body.style.backgroundColor = "";
+  if (window && html) {
+    html.className = theme;
+    html.style.backgroundColor = "";
     window.localStorage.setItem("theme", theme);
     set(theme);
     postToIEx(theme);
@@ -84,6 +85,9 @@ export function isPlusSubscriber(user) {
 export function isPlusAvailable(userData: UserData | null) {
   if (typeof PLUS_IS_AVAILABLE_OVERRIDE === "boolean") {
     return PLUS_IS_AVAILABLE_OVERRIDE;
+  }
+  if (ENABLE_PLUS_EU) {
+    return true;
   }
 
   if (!userData) {
