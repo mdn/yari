@@ -72,6 +72,7 @@ jobs:
       - name: Start Yari from mock content repo
         working-directory: mdn/content
         run: |
+          yarn @mdn/yari
           yarn start > /tmp/stdout.log 2> /tmp/stderr.log &
 
       - name: View some URLs on localhost:5042
