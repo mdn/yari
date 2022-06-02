@@ -410,16 +410,16 @@ function getNotes(
               ? item.impl_url
               : [item.impl_url]
             ).map((url) => {
-              const urlParts = item.impl_url.split("/");
+              const urlParts = url.split("/");
               const type = ["bugzil.la", "crbug.com", "webkit.org/b/"].some(
-                (x) => item.impl_url.includes(x)
+                (x) => url.includes(x)
               )
                 ? "bug"
                 : "commit";
 
               return {
                 iconName: "footnote",
-                label: `See <a href='${item.impl_url}'>${type} ${
+                label: `See <a href='${url}'>${type} ${
                   urlParts[urlParts.length - 1]
                 }</a>.`,
               };
