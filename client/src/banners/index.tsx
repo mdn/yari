@@ -17,8 +17,6 @@ const ActiveBanner = React.lazy(() => import("./active-banner"));
 const currentBannerId: BannerId | null = BannerId.PLUS_LAUNCH_ANNOUNCEMENT;
 const daysToEmbargo = 7;
 
-export const hasActiveBanners = currentBannerId !== null;
-
 export function Banner() {
   if (currentBannerId && (CRUD_MODE || !isEmbargoed(currentBannerId))) {
     return (
