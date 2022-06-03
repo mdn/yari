@@ -4,13 +4,13 @@ const frontmatter = require("front-matter");
 
 const { m2h } = require("../markdown");
 
+const { VALID_LOCALES, MDN_PLUS_TITLE } = require("../libs/constants");
 const {
   CONTENT_ROOT,
   CONTENT_TRANSLATED_ROOT,
   CONTRIBUTOR_SPOTLIGHT_ROOT,
-  VALID_LOCALES,
-} = require("../content");
-const { BUILD_OUT_ROOT } = require("./constants");
+  BUILD_OUT_ROOT,
+} = require("../libs/env");
 // eslint-disable-next-line node/no-missing-require
 const { renderHTML } = require("../ssr/dist/main");
 const { default: got } = require("got");
@@ -116,7 +116,6 @@ async function buildSPAs(options) {
         buildContributorSpotlight(options, locale);
       }
 
-      const MDN_PLUS_TITLE = "MDN Plus";
       const SPAs = [
         { prefix: "search", pageTitle: "Search" },
         { prefix: "plus", pageTitle: MDN_PLUS_TITLE },

@@ -13,12 +13,13 @@ const {
   slugToFolder,
   Document,
   Redirect,
-  CONTENT_ROOT,
-  CONTENT_TRANSLATED_ROOT,
+} = require("../content");
+const {
   HTML_FILENAME,
   MARKDOWN_FILENAME,
   VALID_LOCALES,
-} = require("../content");
+} = require("../libs/constants");
+const { CONTENT_ROOT, CONTENT_TRANSLATED_ROOT } = require("../libs/env");
 
 const CONFLICTING = "conflicting";
 const ORPHANED = "orphaned";

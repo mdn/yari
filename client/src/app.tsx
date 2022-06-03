@@ -5,7 +5,7 @@ import { Routes, Route, useLocation, useMatch } from "react-router-dom";
 // and applied before any component specific style
 import "./app.scss";
 
-import { CRUD_MODE, PLUS_IS_ENABLED } from "./constants";
+import { CRUD_MODE, PLUS_IS_ENABLED } from "./env";
 import { Homepage } from "./homepage";
 import { Document } from "./document";
 import { A11yNav } from "./ui/molecules/a11y-nav";
@@ -108,10 +108,10 @@ export function App(appProps) {
   const initialPathname = React.useRef(pathname);
 
   React.useEffect(() => {
-    if (initialPathname.current !== pathname) {
-      setPageNotFound(false);
-    }
-  }, [pathname]);
+    setPageNotFound(
+      appProps.pageNotFound && initialPathname.current === pathname
+    );
+  }, [appProps.pageNotFound, pathname]);
 
   const isServer = useIsServer();
 

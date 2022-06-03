@@ -1,7 +1,7 @@
 const path = require("path");
 const childProcess = require("child_process");
 
-const { CONTENT_ROOT, CONTENT_TRANSLATED_ROOT } = require("./constants");
+const { CONTENT_ROOT, CONTENT_TRANSLATED_ROOT } = require("../libs/env");
 const { slugToFolder } = require("../libs/slug-utils");
 const LRU = require("lru-cache");
 
