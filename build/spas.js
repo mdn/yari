@@ -80,7 +80,7 @@ async function buildContributorSpotlight(options, locale) {
     if (frontMatter.attributes.is_featured) {
       featuredContributor = {
         contributorName: frontMatter.attributes.contributor_name,
-        url: `${prefix}/${frontMatter.attributes.folder_name}`,
+        url: `/${locale}/${prefix}/${frontMatter.attributes.folder_name}`,
         quote: frontMatter.attributes.quote,
       };
     }
