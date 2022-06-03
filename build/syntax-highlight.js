@@ -79,15 +79,24 @@ function syntaxHighlight($, doc) {
     }
 
     const addLineNumbers = className.match(/linenumbers/);
+    const highlightsTag = className.match(/highlight[-\d]+/g);
+    let highlights;
+    if (highlightsTag) {
+      highlights = highlightsTag[0].match(/(?<=-)\d+/g);
+      highlights = highlights ? highlights : [];
+    }
+
     const code = $pre.text();
     let html = "";
 
     if (!addLineNumbers) {
+      if (highlightsTag) {
+        console.warn(
+          `Tag 'linenumbers' must be present to use '${highlightsTag}'.`
+        );
+      }
       html = Prism.highlight(code, grammar, language);
     } else {
-      let highlights = className.match(/(?<=-)\d+/g);
-      highlights = highlights ? highlights : [];
-
       const env = {
         code: code,
         grammar: grammar,
@@ -160,8 +169,14 @@ Prism.plugins.enhance = {
 
       if (children.length > 1) {
         newList.push(this.createLineToken(children, env, lineNo));
+        lineNo++;
       }
 
+      const outOfRangeNos = env.highlights.filter((h) => h >= lineNo);
+      if (outOfRangeNos.length > 0) {
+        outOfRangeNos.sort((a, b) => a - b);
+        console.warn(`Can not highlight lines: ${outOfRangeNos.join(", ")}`);
+      }
       env.tokens = newList;
     }
   },
