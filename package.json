@@ -5,7 +5,9 @@
   "license": "MPL-2.0",
   "author": "MDN Web Docs",
   "bin": {
+    "yari-build": "build/cli.js",
     "yari-filecheck": "filecheck/cli.js",
+    "yari-server": "server/index.js",
     "yari-tool": "tool/cli.js"
   },
   "scripts": {
