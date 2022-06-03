@@ -3,8 +3,9 @@
 const polka = require("polka");
 const kleur = require("kleur");
 
-const requestHandler = require("../content-origin-request").handler;
-const responseHandler = require("../content-origin-response").handler;
+const requestHandler = require("@yari-internal/content-origin-request").handler;
+const responseHandler =
+  require("@yari-internal/content-origin-response").handler;
 
 const PORT = parseInt(process.env.PORT || "7000");
 

@@ -3,7 +3,7 @@ const {
   VALID_LOCALES,
   LOCALE_ALIASES,
   RETIRED_LOCALES,
-} = require("../constants");
+} = require("@yari-internal/constants");
 
 const startRe = /^\^?\/?/;
 const startTemplate = /^\//;

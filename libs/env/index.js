@@ -4,7 +4,7 @@ const path = require("path");
 const dotenv = require("dotenv");
 const dirname = __dirname;
 
-const { VALID_FLAW_CHECKS } = require("../constants");
+const { VALID_FLAW_CHECKS } = require("@yari-internal/constants");
 
 const ROOT = path.join(dirname, "..", "..");
 

@@ -5,6 +5,7 @@
   "license": "MPL-2.0",
   "main": "index.js",
   "dependencies": {
+    "@yari-internal/constants": "file:../constants",
     "dotenv": "^16.0.1"
   }
 }
