@@ -108,10 +108,10 @@ export function App(appProps) {
   const initialPathname = React.useRef(pathname);
 
   React.useEffect(() => {
-    if (initialPathname.current !== pathname) {
-      setPageNotFound(false);
-    }
-  }, [pathname]);
+    setPageNotFound(
+      appProps.pageNotFound && initialPathname.current === pathname
+    );
+  }, [appProps.pageNotFound, pathname]);
 
   const isServer = useIsServer();
 
