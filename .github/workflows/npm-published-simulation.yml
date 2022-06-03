@@ -68,6 +68,10 @@ jobs:
           cd mdn/content
           yarn add file:$TARBALL
 
+      - name: (mdn/content) yarn yari-build --help
+        working-directory: mdn/content
+        run: yarn yari-build --help
+
       - name: (mdn/content) yarn yari-filecheck --help
         working-directory: mdn/content
         run: yarn yari-filecheck --help
