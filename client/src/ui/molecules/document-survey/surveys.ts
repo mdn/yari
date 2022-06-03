@@ -17,7 +17,7 @@ export const SURVEYS: Survey[] = [
   {
     key: SurveyKey.CSS_CASCADE_2022,
     show: (doc: Doc) =>
-      /en-US\/docs\/Web\/CSS(\/|$)/i.test(
+      /en-US\/docs\/(Learn|Web)\/CSS(\/|$)/i.test(
         doc.mdn_url
       ) /* && startTime <= Date.now() && Date.now() <= endTime */,
     rate: 1 /* 0.05 */,
