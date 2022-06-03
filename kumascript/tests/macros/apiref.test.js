@@ -22,21 +22,21 @@ const subpagesFixturePath = path.resolve(
   "fixtures/apiref/subpages.json"
 );
 const subpagesFixture = JSON.parse(
-  fs.readFileSync(subpagesFixturePath, "utf8")
+  fs.readFileSync(subpagesFixturePath, "utf-8")
 );
 const commonl10nFixturePath = path.resolve(
   dirname,
   "fixtures/apiref/commonl10n.json"
 );
 const commonl10nFixture = JSON.parse(
-  fs.readFileSync(commonl10nFixturePath, "utf8")
+  fs.readFileSync(commonl10nFixturePath, "utf-8")
 );
 const groupDataFixturePath = path.resolve(
   dirname,
   "fixtures/apiref/groupdata.json"
 );
 const groupDataFixture = JSON.parse(
-  fs.readFileSync(groupDataFixturePath, "utf8")
+  fs.readFileSync(groupDataFixturePath, "utf-8")
 );
 const interfaceDataNoEntriesFixturePath = path.resolve(
   dirname,
@@ -44,14 +44,14 @@ const interfaceDataNoEntriesFixturePath = path.resolve(
 );
 const interfaceDataNoEntriesFixture = fs.readFileSync(
   interfaceDataNoEntriesFixturePath,
-  "utf8"
+  "utf-8"
 );
 const interfaceDataFixturePath = path.resolve(
   dirname,
   "fixtures/apiref/interfacedata.json"
 );
 const interfaceDataFixture = JSON.parse(
-  fs.readFileSync(interfaceDataFixturePath, "utf8")
+  fs.readFileSync(interfaceDataFixturePath, "utf-8")
 );
 
 /**

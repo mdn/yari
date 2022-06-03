@@ -947,7 +947,7 @@ if (Mozilla && !Mozilla.dntEnabled()) {
       });
 
       const inventory = allPaths.map((entry) => {
-        const fileContents = fs.readFileSync(entry.path, "utf8");
+        const fileContents = fs.readFileSync(entry.path, "utf-8");
         const parsed = frontmatter(fileContents);
 
         return {

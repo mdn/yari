@@ -19,7 +19,7 @@ const dirname = __dirname;
 const fixtureData = JSON.parse(
   fs.readFileSync(
     path.resolve(dirname, "fixtures", "documentData2.json"),
-    "utf8"
+    "utf-8"
   )
 );
 

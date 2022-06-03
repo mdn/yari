@@ -232,7 +232,7 @@ const read = memoize((folderOrFilePath, roots = ROOTS) => {
     CONTENT_TRANSLATED_ROOT && filePath.startsWith(CONTENT_TRANSLATED_ROOT)
   );
 
-  const rawContent = fs.readFileSync(filePath, "utf8");
+  const rawContent = fs.readFileSync(filePath, "utf-8");
   if (!rawContent) {
     throw new Error(`${filePath} is an empty file`);
   }

@@ -14,7 +14,7 @@ fs.readdirSync(fixture_dir).forEach(function (fn) {
   fixtureCompatData = extend(
     true,
     fixtureCompatData,
-    JSON.parse(fs.readFileSync(path.resolve(fixture_dir, fn), "utf8"))
+    JSON.parse(fs.readFileSync(path.resolve(fixture_dir, fn), "utf-8"))
   );
 });
 
