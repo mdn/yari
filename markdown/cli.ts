@@ -1,4 +1,5 @@
 import * as fs from "fs";
+import * as os from "os";
 const fm = require("front-matter");
 import { program } from "@caporal/core";
 import * as chalk from "chalk";
@@ -96,7 +97,9 @@ function saveProblemsReport(problems: Map<any, any>) {
     }
   }
   if (problemCount > 0) {
-    const reportFileName = `md-conversion-problems-report-${now.toISOString()}.md`;
+    const reportFileName = `md-conversion-problems-report-${now
+      .toISOString()
+      .replace(/:/g, "_")}.md`;
     console.log(
       `Could not automatically convert ${problemCount} elements. Saving report to ${reportFileName}`
     );
@@ -138,8 +141,13 @@ program
       console.log(
         `Starting HTML to Markdown conversion in ${options.mode} mode`
       );
+      let folderSearch = args.folder;
+      // replace '\' and '/' with '\\' to make this regexp works on Windows
+      if (folderSearch && os.platform() === "win32") {
+        folderSearch = folderSearch.replace(/\\|\//g, "\\\\");
+      }
       const documents = Document.findAll({
-        folderSearch: args.folder,
+        folderSearch: folderSearch,
         locales: buildLocaleMap(options.locale),
       });
 
@@ -153,15 +161,15 @@ program
         string,
         { offset: number; invalid: []; unhandled: [] }
       >();
+      // replace '\' with '/' for Windows path
+      const slugPrefix = args.folder.toLowerCase().replace(/\\/g, "/");
       try {
         for (let doc of documents.iter()) {
           progressBar.increment();
           if (
             doc.isMarkdown ||
             // findAll's folderSearch is fuzzy which we don't want here
-            !doc.metadata.slug
-              .toLowerCase()
-              .startsWith(args.folder.toLowerCase())
+            !doc.metadata.slug.toLowerCase().startsWith(slugPrefix)
           ) {
             continue;
           }
