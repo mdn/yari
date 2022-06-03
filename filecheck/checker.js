@@ -13,11 +13,11 @@ const imageminGifsicle = require("imagemin-gifsicle");
 const imageminSvgo = require("imagemin-svgo");
 const isSvg = require("is-svg");
 
+const { MAX_FILE_SIZE } = require("../libs/env");
 const {
-  MAX_FILE_SIZE,
   VALID_MIME_TYPES,
   MAX_COMPRESSION_DIFFERENCE_PERCENTAGE,
-} = require("./constants");
+} = require("../libs/constants");
 
 function formatSize(bytes) {
   if (bytes > 1024 * 1024) {

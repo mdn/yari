@@ -5,11 +5,14 @@
   justify-content: center;
   // transform: skew(-7deg, 10deg);
 
+  --mandala-accent-alpha: 0.8;
   --mandala-primary: #{$mdn-color-neutral-70};
-  --mandala-accent-1: var(--html-accent-color);
-  --mandala-accent-2: var(--http-accent-color);
-  --mandala-accent-3: var(--js-accent-color);
-  --mandala-accent-4: #{$mdn-color-neutral-30};
+  --mandala-accent-1: rgba(229, 0, 0, var(--mandala-accent-alpha));
+  --mandala-accent-2: rgba(255, 141, 0, var(--mandala-accent-alpha));
+  --mandala-accent-3: rgba(255, 238, 0, var(--mandala-accent-alpha));
+  --mandala-accent-4: rgba(0, 129, 33, var(--mandala-accent-alpha));
+  --mandala-accent-5: rgba(0, 76, 255, var(--mandala-accent-alpha));
+  --mandala-accent-6: rgba(118, 1, 136, var(--mandala-accent-alpha));
 
   @keyframes rotation {
     from {
@@ -34,105 +37,93 @@
   }
 
   .mandala-accent-1 {
+    --mandala-accent: var(--mandala-accent-1);
     font-size: 1.5rem;
   }
 
   .mandala-accent-2 {
+    --mandala-accent: var(--mandala-accent-2);
     font-size: 1.3rem;
   }
 
   .mandala-accent-3 {
+    --mandala-accent: var(--mandala-accent-3);
     font-size: 1.2rem;
   }
 
   .mandala-accent-4 {
+    --mandala-accent: var(--mandala-accent-4);
     font-size: 1.1rem;
   }
 
   .mandala-accent-5 {
+    --mandala-accent: var(--mandala-accent-5);
     font-size: 1rem;
   }
 
+  .mandala-accent-6 {
+    --mandala-accent: var(--mandala-accent-6);
+    font-size: 0.9rem;
+    font-weight: 500;
+  }
+
   &.animate-colors {
-    svg > text > textPath > tspan {
+    svg > text > textPath {
       animation: mandala-color-change 50s infinite;
       animation-timing-function: ease-in-out;
     }
-
-    svg > text > textPath > tspan {
-      fill: var(--mandala-primary);
-    }
-
-    .mandala-accent-1 > textPath > tspan {
-      fill: var(--mandala-accent-1);
-      animation-delay: -15s;
-    }
-
-    .mandala-accent-2 > textPath > tspan {
-      fill: var(--mandala-accent-2);
-      animation-delay: -20s;
-    }
-
-    .mandala-accent-3 > textPath > tspan {
-      fill: var(--mandala-accent-3);
-      animation-delay: -30s;
-    }
-
-    .mandala-accent-5 > textPath > tspan {
-      fill: var(--mandala-accent-4);
-      animation-delay: -40s;
-    }
   }
+
   @keyframes mandala-color-change {
     0% {
       fill: var(--mandala-primary);
     }
 
     10% {
-      fill: var(--mandala-primary);
-    }
-
-    15% {
-      fill: var(--mandala-accent-1);
+      fill: var(--mandala-accent);
     }
 
     20% {
-      fill: var(--mandala-primary);
-    }
-
-    25% {
-      fill: var(--mandala-primary);
+      fill: var(--mandala-accent);
     }
 
     30% {
-      fill: var(--mandala-accent-2);
+      fill: var(--mandala-primary);
     }
 
     35% {
       fill: var(--mandala-primary);
     }
 
-    40% {
-      fill: var(--mandala-primary);
-    }
-
-    50% {
-      fill: var(--mandala-accent-3);
+    45% {
+      fill: var(--mandala-accent);
     }
 
     55% {
-      fill: var(--mandala-primary);
-    }
-
-    60% {
-      fill: var(--mandala-primary);
+      fill: var(--mandala-accent);
     }
 
     65% {
-      fill: var(--mandala-accent-4);
+      fill: var(--mandala-primary);
     }
 
     70% {
+      fill: var(--mandala-primary);
+    }
+
+    80% {
+      fill: var(--mandala-accent);
+    }
+
+    90% {
+      fill: var(--mandala-accent);
+    }
+
+    100% {
+      fill: var(--mandala-primary);
+    }
+
+    90% {
       fill: var(--mandala-primary);
     }
 

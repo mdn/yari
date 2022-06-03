@@ -7,7 +7,7 @@ const dirname = __dirname;
 
 module.exports = {
   context: path.resolve(dirname, "."),
-  entry: "./index.js",
+  entry: "./index.ts",
   output: {
     path: path.resolve(dirname, "dist"),
     filename: "[name].js",
@@ -46,8 +46,13 @@ module.exports = {
           {
             loader: "@svgr/webpack",
             options: {
-              svgo: true,
+              prettier: false,
+              svgo: false,
+              svgoConfig: {
+                plugins: [{ removeViewBox: false }],
+              },
               titleProp: true,
+              ref: true,
             },
           },
         ],

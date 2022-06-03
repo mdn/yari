@@ -19,7 +19,7 @@ export function renderHTML(url, context) {
   return render(
     React.createElement(
       StaticRouter,
-      { location: url, context },
+      { location: url },
       React.createElement(App, context)
     ),
     context

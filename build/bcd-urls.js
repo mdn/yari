@@ -1,5 +1,5 @@
 const { Document, Redirect } = require("../content");
-const { FLAW_LEVELS } = require("./constants");
+const { FLAW_LEVELS } = require("../libs/constants");
 /**
  * Loop over, and mutate, all 'browser_compatibility' sections.
  * BCD data comes from from a library with `mdn_url`'s that are absolute.

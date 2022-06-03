@@ -5,7 +5,7 @@ import { Routes, Route, useLocation, useMatch } from "react-router-dom";
 // and applied before any component specific style
 import "./app.scss";
 
-import { CRUD_MODE, PLUS_IS_ENABLED } from "./constants";
+import { CRUD_MODE, PLUS_IS_ENABLED } from "./env";
 import { Homepage } from "./homepage";
 import { Document } from "./document";
 import { A11yNav } from "./ui/molecules/a11y-nav";
@@ -21,6 +21,7 @@ import { OfflineSettings } from "./offline-settings";
 import { docCategory } from "./utils";
 import { Contribute } from "./community";
 import { ContributorSpotlight } from "./contributor-spotlight";
+import { useIsServer } from "./hooks";
 
 import { Banner, hasActiveBanners } from "./banners";
 
@@ -29,13 +30,13 @@ const Translations = React.lazy(() => import("./translations"));
 const WritersHomepage = React.lazy(() => import("./writers-homepage"));
 const Sitemap = React.lazy(() => import("./sitemap"));
 
-const isServer = typeof window === "undefined";
-
 function Layout({ pageType, children }) {
   const { pathname } = useLocation();
   const [category, setCategory] = React.useState<string | null>(
     docCategory({ pathname })
   );
+
+  const isServer = useIsServer();
 
   React.useEffect(() => {
     setCategory(docCategory({ pathname }));
@@ -69,26 +70,8 @@ function DocumentLayout({ children }) {
   return <Layout pageType="document-page">{children}</Layout>;
 }
 
-/** This component exists so you can dynamically change which sub-component to
- * render depending on the conditions. In particular, we need to be able to
- * render the <PageNotFound> component, in server-side rendering, if told to do
- * so. But if the client then changes the location (by clicking a <Link>
- * or a react-router navigate() call) we need to ignore the fact that it was
- * originally not found. Perhaps, this new location that the client is
- * requesting is going to work.
- */
 function PageOrPageNotFound({ pageNotFound, children }) {
-  // It's true by default if the SSR rendering says so.
-  const [notFound, setNotFound] = React.useState<boolean>(!!pageNotFound);
-  const { pathname } = useLocation();
-  const initialPathname = React.useRef(pathname);
-  React.useEffect(() => {
-    if (initialPathname.current && initialPathname.current !== pathname) {
-      setNotFound(false);
-    }
-  }, [pathname]);
-
-  return notFound ? (
+  return pageNotFound ? (
     <StandardLayout>
       <PageNotFound />
     </StandardLayout>
@@ -118,6 +101,20 @@ export function App(appProps) {
     document.documentElement.setAttribute("lang", locale);
   }, [appProps.locale, localeMatch]);
 
+  const [pageNotFound, setPageNotFound] = React.useState<boolean>(
+    appProps.pageNotFound
+  );
+  const { pathname } = useLocation();
+  const initialPathname = React.useRef(pathname);
+
+  React.useEffect(() => {
+    setPageNotFound(
+      appProps.pageNotFound && initialPathname.current === pathname
+    );
+  }, [appProps.pageNotFound, pathname]);
+
+  const isServer = useIsServer();
+
   // When preparing a build for use in the NPM package, CRUD_MODE is always true.
   // But if the App is loaded from the code that builds the SPAs, then `isServer`
   // is true. So you have to have `isServer && CRUD_MODE` at the same time.
@@ -127,7 +124,7 @@ export function App(appProps) {
         <WritersHomepage />
       </Layout>
     ) : (
-      <PageOrPageNotFound pageNotFound={appProps.pageNotFound}>
+      <PageOrPageNotFound pageNotFound={pageNotFound}>
         <Layout pageType="standard-page">
           <Homepage {...appProps} />
         </Layout>
@@ -240,7 +237,7 @@ export function App(appProps) {
             <Route
               path="/docs/*"
               element={
-                <PageOrPageNotFound pageNotFound={appProps.pageNotFound}>
+                <PageOrPageNotFound pageNotFound={pageNotFound}>
                   <DocumentLayout>
                     <Document {...appProps} />
                   </DocumentLayout>

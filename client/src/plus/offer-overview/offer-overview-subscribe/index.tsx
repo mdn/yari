@@ -7,7 +7,7 @@ import {
   MDN_PLUS_SUBSCRIBE_5M_URL,
   MDN_PLUS_SUBSCRIBE_5Y_URL,
   MDN_PLUS_SUBSCRIBE_BASE,
-} from "../../../constants";
+} from "../../../env";
 import { SubscriptionType, UserData, useUserData } from "../../../user-context";
 import { Switch } from "../../../ui/atoms/switch";
 import { useEffect, useState } from "react";
@@ -307,7 +307,7 @@ function OfferOverviewSubscribe() {
   const wrapperClass = !isOnline ? "wrapper-offline" : "wrapper";
 
   return (
-    <div className="dark subscribe-wrapper">
+    <div className="dark plus-subscribe-wrapper">
       <section className="container subscribe" id="subscribe">
         {!isOnline && (
           <h2>

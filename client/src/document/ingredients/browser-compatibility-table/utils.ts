@@ -1,8 +1,8 @@
-import type bcd from "@mdn/browser-compat-data/types";
+import type BCD from "@mdn/browser-compat-data/types";
 
 // Extended for the fields, beyond the bcd types, that are extra-added
 // exclusively in Yari.
-interface SimpleSupportStatementExtended extends bcd.SimpleSupportStatement {
+interface SimpleSupportStatementExtended extends BCD.SimpleSupportStatement {
   // Known for some support statements where the browser *version* is known,
   // as opposed to just "true" and if the version release date is known.
   release_date?: string;
@@ -27,12 +27,12 @@ export function isTruthy<T>(t: T | false | undefined | null): t is T {
 
 interface Feature {
   name: string;
-  compat: bcd.CompatStatement;
+  compat: BCD.CompatStatement;
   depth: number;
 }
 
 export function listFeatures(
-  identifier: bcd.Identifier,
+  identifier: BCD.Identifier,
   parentName: string = "",
   rootName: string = "",
   depth: number = 0
@@ -60,8 +60,8 @@ export function listFeatures(
 }
 
 export function versionIsPreview(
-  version: bcd.VersionValue | string | undefined,
-  browser: bcd.BrowserStatement
+  version: BCD.VersionValue | string | undefined,
+  browser: BCD.BrowserStatement
 ): boolean {
   if (version === "preview") {
     return true;
@@ -76,7 +76,7 @@ export function versionIsPreview(
   return false;
 }
 
-export function hasNoteworthyNotes(support: bcd.SimpleSupportStatement) {
+export function hasNoteworthyNotes(support: BCD.SimpleSupportStatement) {
   return (
     support.notes?.length &&
     !support.version_removed &&
@@ -84,11 +84,11 @@ export function hasNoteworthyNotes(support: bcd.SimpleSupportStatement) {
   );
 }
 
-function hasLimitation(support: bcd.SimpleSupportStatement) {
+function hasLimitation(support: BCD.SimpleSupportStatement) {
   return hasMajorLimitation(support) || support.notes;
 }
 
-function hasMajorLimitation(support: bcd.SimpleSupportStatement) {
+function hasMajorLimitation(support: BCD.SimpleSupportStatement) {
   return (
     support.partial_implementation ||
     support.alternative_name ||
@@ -99,7 +99,7 @@ function hasMajorLimitation(support: bcd.SimpleSupportStatement) {
 }
 
 export function isOnlySupportedWithAltName(
-  support: bcd.SupportStatement | undefined
+  support: BCD.SupportStatement | undefined
 ) {
   return (
     support &&
@@ -109,7 +109,7 @@ export function isOnlySupportedWithAltName(
 }
 
 export function isOnlySupportedWithPrefix(
-  support: bcd.SupportStatement | undefined
+  support: BCD.SupportStatement | undefined
 ) {
   return (
     support &&
@@ -119,7 +119,7 @@ export function isOnlySupportedWithPrefix(
 }
 
 export function isOnlySupportedWithFlags(
-  support: bcd.SupportStatement | undefined
+  support: BCD.SupportStatement | undefined
 ) {
   return (
     support &&
@@ -129,17 +129,17 @@ export function isOnlySupportedWithFlags(
 }
 
 export function isFullySupportedWithoutLimitation(
-  support: bcd.SimpleSupportStatement
+  support: BCD.SimpleSupportStatement
 ) {
   return support.version_added && !hasLimitation(support);
 }
 
-export function isNotSupportedAtAll(support: bcd.SimpleSupportStatement) {
+export function isNotSupportedAtAll(support: BCD.SimpleSupportStatement) {
   return !support.version_added && !hasLimitation(support);
 }
 
 function isFullySupportedWithoutMajorLimitation(
-  support: bcd.SimpleSupportStatement
+  support: BCD.SimpleSupportStatement
 ) {
   return support.version_added && !hasMajorLimitation(support);
 }

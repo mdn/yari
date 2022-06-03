@@ -3,7 +3,7 @@ import { useLocation, useParams } from "react-router-dom";
 import useSWR from "swr";
 
 import { Doc } from "../document/types";
-import LANGUAGES_RAW from "../languages.json";
+import LANGUAGES_RAW from "../../../libs/languages";
 import NoteCard from "../ui/molecules/notecards";
 
 const LANGUAGES = new Map(
