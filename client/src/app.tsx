@@ -23,7 +23,7 @@ import { Contribute } from "./community";
 import { ContributorSpotlight } from "./contributor-spotlight";
 import { useIsServer } from "./hooks";
 
-import { Banner, hasActiveBanners } from "./banners";
+import { Banner } from "./banners";
 
 const AllFlaws = React.lazy(() => import("./flaws"));
 const Translations = React.lazy(() => import("./translations"));
@@ -45,7 +45,7 @@ function Layout({ pageType, children }) {
   return (
     <>
       <A11yNav />
-      {!isServer && hasActiveBanners && <Banner />}
+      {!isServer && <Banner />}
       <div className={`page-wrapper  ${category || ""} ${pageType}`}>
         {pageType !== "document-page" && <TopNavigation />}
         {children}
