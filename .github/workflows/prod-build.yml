@@ -96,12 +96,11 @@ jobs:
         id: cached-node_modules
         with:
           path: |
-            node_modules
+            **/node_modules
           key: ${{ runner.os }}-${{ hashFiles('package-lock.json') }}
 
-      - name: Install all npm packages
+      - run: npm ci
         if: steps.cached-node_modules.outputs.cache-hit != 'true'
-        run: npm ci
 
       - name: Install Python
         uses: actions/setup-python@v3.1.2

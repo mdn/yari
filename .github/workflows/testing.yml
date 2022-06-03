@@ -27,7 +27,7 @@ jobs:
         id: cached-node_modules
         with:
           path: |
-            node_modules
+            **/node_modules
           key: ${{ runner.os }}-${{ hashFiles('package-lock.json') }}-${{ hashFiles('.github/workflows/testing.yml') }}
 
       - name: Install all npm packages
