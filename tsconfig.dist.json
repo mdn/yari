@@ -1,13 +1,11 @@
 {
   "extends": "./tsconfig.json",
   "compilerOptions": {
-    "allowJs": true,
-    "outDir": "dist",
     "esModuleInterop": true,
     "resolveJsonModule": true,
     "skipLibCheck": true,
     "module": "CommonJS",
     "sourceMap": true
   },
-  "include": ["build", "filecheck", "tool"]
+  "include": ["tool"]
 }

@@ -6,7 +6,7 @@
   "author": "MDN Web Docs",
   "bin": {
     "yari-filecheck": "filecheck/cli.js",
-    "yari-tool": "dist/tool/cli.js"
+    "yari-tool": "tool/cli.js"
   },
   "scripts": {
     "analyze": "source-map-explorer 'client/build/static/js/*.js'",
