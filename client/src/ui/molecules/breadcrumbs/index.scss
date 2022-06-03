@@ -25,6 +25,7 @@
         background-color: var(--icon-secondary);
         content: "";
         display: block;
+        flex-shrink: 0;
         height: 12px;
         mask-image: url("../../../assets/icons/chevron.svg");
         mask-size: 12px;
@@ -63,7 +64,7 @@
     }
   }
 
-  @media screen and (min-width: $screen-lg) {
+  @media screen and (min-width: $screen-xl) {
     li {
       display: inline-flex;
     }

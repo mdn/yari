@@ -16,6 +16,7 @@ function Mandala({
       className={`mandala-container ${animateColors ? "animate-colors" : ""} ${
         extraClasses || ""
       }`}
+      aria-hidden="true"
     >
       <div
         className={`mandala-translate ${
@@ -93,7 +94,7 @@ function Mandala({
                   dur="500s"
                   type="rotate"
                   from="360 337.5 337.5"
-                  to="360 337.5 337.5"
+                  to="0 337.5 337.5"
                   repeatCount="indefinite"
                 />
               )}
@@ -110,6 +111,22 @@ function Mandala({
                   type="rotate"
                   from="0 337.5 337.5"
                   to="360 337.5 337.5"
+                  repeatCount="indefinite"
+                />
+              )}
+            </path>
+            <path
+              d="M337.5,337.5 m-120,0 a120,120 0 1,1 240,0 a120,120 0 1,1 -240,0"
+              id="circle6"
+            >
+              {animate && (
+                <animateTransform
+                  attributeName="transform"
+                  begin="0s"
+                  dur="500s"
+                  type="rotate"
+                  from="360 337.5 337.5"
+                  to="0 337.5 337.5"
                   repeatCount="indefinite"
                 />
               )}
@@ -193,6 +210,13 @@ function Mandala({
               <tspan>&lt;&gt;</tspan>&lt;/&gt;
               <tspan>&lt;&gt;</tspan>&lt;/&gt;
               <tspan>&lt;&gt;</tspan>&lt;/&gt;
+            </textPath>
+          </text>
+          <text className="mandala-accent-6" dy="70" textLength="750">
+            <textPath textLength="755" href="#circle6">
+              <tspan>--&lt;3()</tspan>&nbsp;&nbsp; --&lt;3()&nbsp;&nbsp;
+              <tspan>--&lt;3()</tspan>&nbsp;&nbsp; --&lt;3()&nbsp;&nbsp;
+              <tspan>--&lt;3()</tspan>&nbsp;&nbsp; --&lt;3()&nbsp;&nbsp;
             </textPath>
           </text>
         </svg>

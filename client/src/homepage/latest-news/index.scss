@@ -1,0 +1,68 @@
+@use "../../ui/vars" as *;
+
+.latest-news {
+  display: flex;
+  flex-direction: column;
+  max-width: 52rem;
+  width: 100%;
+  gap: 1rem;
+  padding: 0 1rem;
+
+  @media screen and (min-width: $screen-xl) {
+    padding: 0;
+  }
+
+  h2 {
+    font: var(--type-heading-h4);
+    margin-top: 1rem;
+  }
+
+  h5 {
+    margin: 0;
+  }
+
+  .news-item {
+    padding: 0.7rem;
+    display: flex;
+    justify-content: space-between;
+    flex-direction: column;
+
+    @media screen and (min-width: $screen-md) {
+      flex-direction: revert;
+    }
+
+    &:nth-child(odd) {
+      border-radius: var(--elem-radius);
+      background: var(--background-secondary);
+    }
+
+    .news-date {
+      font-size: 12px;
+      line-height: 175%;
+      display: flex;
+      align-items: center;
+    }
+  }
+
+  .news-title {
+    display: flex;
+    flex-direction: column;
+    gap: 0.125rem;
+    line-height: var(--base-line-height);
+    margin: 0;
+
+    a {
+      color: var(--text-primary);
+
+      &:hover {
+        text-decoration: underline;
+        color: var(--text-primary);
+      }
+    }
+
+    .news-source {
+      font-size: var(--type-tiny-font-size);
+      color: var(--text-secondary);
+    }
+  }
+}

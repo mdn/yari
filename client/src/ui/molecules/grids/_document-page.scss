@@ -4,7 +4,6 @@
   .page-header,
   .generic-loading,
   .article-actions-container,
-  .localized-content-note,
   .document-toc-container,
   .main-content,
   .sidebar,
@@ -19,7 +18,7 @@
   }
 }
 
-.article-wrapper {
+.main-wrapper {
   display: flex;
   max-width: var(--max-width);
   margin: 0 auto;
@@ -53,7 +52,7 @@
     }
   }
 
-  @media screen and (min-width: $screen-lg) {
+  @media screen and (min-width: $screen-xl) {
     display: grid;
     grid-template-columns: minmax(0, 1fr) minmax(0, 2.5fr) minmax(0, 15rem);
     gap: 3rem;
@@ -62,13 +61,15 @@
     padding-right: 1rem;
 
     .toc {
+      --offset: var(--main-document-header-height);
+      --max-height: calc(100vh - var(--offset));
+
       display: block;
       grid-area: toc;
-
-      .document-toc-container {
-        position: sticky;
-        top: 3rem;
-      }
+      max-height: var(--max-height);
+      position: sticky;
+      overflow: auto;
+      top: var(--offset);
     }
 
     .in-nav-toc {

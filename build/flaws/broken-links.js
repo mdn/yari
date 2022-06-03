@@ -5,9 +5,11 @@ const fromMarkdown = require("mdast-util-from-markdown");
 const visit = require("unist-util-visit");
 
 const { Document, Redirect, Image } = require("../../content");
-const { FLAW_LEVELS } = require("../constants");
+const { FLAW_LEVELS } = require("../../libs/constants");
 const { findMatchesInText } = require("../matches-in-text");
 const { DEFAULT_LOCALE, VALID_LOCALES } = require("../../libs/constants");
+
+const dirname = __dirname;
 
 function findMatchesInMarkdown(rawContent, href) {
   const matches = [];
@@ -24,10 +26,7 @@ const _safeToHttpsDomains = new Map();
 function getSafeToHttpDomains() {
   if (!_safeToHttpsDomains.size) {
     const fileParsed = JSON.parse(
-      fs.readFileSync(
-        path.join(__dirname, "safe-to-https-domains.json"),
-        "utf-8"
-      )
+      fs.readFileSync(path.join(dirname, "safe-to-https-domains.json"), "utf-8")
     );
     Object.entries(fileParsed).forEach(([key, value]) =>
       _safeToHttpsDomains.set(key, value)

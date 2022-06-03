@@ -1,5 +1,6 @@
-import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useEffect, useRef, useState } from "react";
+import { useLocation, useParams } from "react-router-dom";
+import { useIsServer } from "../hooks";
 import { Doc, FrequentlyViewedEntry } from "./types";
 
 export function useDocumentURL() {
@@ -12,10 +13,18 @@ export function useDocumentURL() {
 }
 
 export function useCopyExamplesToClipboard(doc: Doc | undefined) {
-  React.useEffect(() => {
+  const location = useLocation();
+  const isServer = useIsServer();
+
+  useEffect(() => {
+    if (isServer) {
+      return;
+    }
+
     if (!doc) {
       return;
     }
+
     if (!navigator.clipboard) {
       console.log(
         "Copy-to-clipboard disabled because your browser does not appear to support it."
@@ -78,7 +87,7 @@ export function useCopyExamplesToClipboard(doc: Doc | undefined) {
         };
       }
     );
-  }, [doc]);
+  }, [doc, location, isServer]);
 }
 
 function showCopiedMessage(wrapper: HTMLElement, msg: string) {
@@ -219,4 +228,129 @@ export function usePersistFrequentlyViewed(doc: Doc | undefined) {
       console.error(`Failed to write to localStorage: ${err}`);
     }
   });
+}
+
+/**
+ * Provides the height of the sticky header.
+ */
+export function useStickyHeaderHeight() {
+  function determineStickyHeaderHeight(): number {
+    if (typeof getComputedStyle !== "function") {
+      // SSR.
+      return 0;
+    }
+
+    const styles = getComputedStyle(document.documentElement);
+    const stickyHeaderHeight = styles
+      .getPropertyValue("--sticky-header-height")
+      .trim();
+
+    if (stickyHeaderHeight.endsWith("rem")) {
+      const fontSize = styles.fontSize.trim();
+      if (fontSize.endsWith("px")) {
+        return parseFloat(stickyHeaderHeight) * parseFloat(fontSize);
+      } else {
+        console.warn(
+          `[useStickyHeaderHeight] fontSize has unexpected unit: ${fontSize}`
+        );
+        return 0;
+      }
+    } else if (stickyHeaderHeight.endsWith("px")) {
+      return parseFloat(stickyHeaderHeight);
+    } else {
+      console.warn(
+        `[useStickyHeaderHeight] --sticky-header-height has unexpected unit: ${stickyHeaderHeight}`
+      );
+      return 0;
+    }
+  }
+
+  const [height, setHeight] = useState<number>(determineStickyHeaderHeight());
+
+  const timeout = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  useEffect(() => {
+    // Unfortunately we cannot observe the CSS variable using MutationObserver,
+    // but we know that it may change when the width of the window changes.
+
+    const debouncedListener = () => {
+      if (timeout.current) {
+        window.clearTimeout(timeout.current);
+      }
+      timeout.current = setTimeout(() => {
+        setHeight(determineStickyHeaderHeight());
+        timeout.current = null;
+      }, 250);
+    };
+
+    window.addEventListener("resize", debouncedListener);
+
+    return () => window.removeEventListener("resize", debouncedListener);
+  }, []);
+
+  return height;
+}
+
+/**
+ * Observes elements and fires the callback when the first visible element changes.
+ */
+export function useFirstVisibleElement(
+  observedElementsProvider: () => Element[],
+  visibleElementCallback: (firstVisibleElement: Element | null) => void
+) {
+  const [firstVisibleElement, setFirstVisibleElement] =
+    useState<Element | null>(null);
+
+  useEffect(() => {
+    visibleElementCallback(firstVisibleElement);
+  }, [visibleElementCallback, firstVisibleElement]);
+
+  const [rootMargin, setRootMargin] = useState<string>("0px");
+  const stickyHeaderHeight = useStickyHeaderHeight();
+
+  useEffect(() => {
+    setRootMargin(`-${stickyHeaderHeight}px 0px 0px 0px`);
+  }, [stickyHeaderHeight]);
+
+  useEffect(() => {
+    if (typeof IntersectionObserver === "undefined") {
+      // SSR or old browser.
+      return;
+    }
+
+    const observedElements = observedElementsProvider();
+    const visibilityByElement = new Map<Element, boolean>();
+
+    function manageVisibility(entries: IntersectionObserverEntry[]) {
+      for (const entry of entries) {
+        visibilityByElement.set(entry.target, entry.isIntersecting);
+      }
+    }
+
+    function manageFirstVisibleElement() {
+      const visibleElements = Array.from(visibilityByElement.entries())
+        .filter(([, value]) => value)
+        .map(([key]) => key);
+
+      setFirstVisibleElement(visibleElements[0] ?? null);
+    }
+
+    const observer = new IntersectionObserver(
+      (entries: IntersectionObserverEntry[]) => {
+        manageVisibility(entries);
+        manageFirstVisibleElement();
+      },
+      {
+        rootMargin,
+        threshold: [0.0, 1.0],
+      }
+    );
+
+    observedElements.forEach((element) => {
+      visibilityByElement.set(element, false);
+      observer.observe(element);
+    });
+
+    return () => observer.disconnect();
+  }, [rootMargin, observedElementsProvider, visibleElementCallback]);
 }

@@ -6,12 +6,15 @@ import { h } from "../h";
 import { asArray } from "../utils";
 import { toText } from "./to-text";
 import { QueryAndTransform } from "./utils";
+import { ElementContent, Parent } from "hast";
+
+const dirname = __dirname;
 
 const gettextLocalizationMap = (() => {
   const getTextDefaultDomainName = "messages";
   let gtLocalizationMap = new Map();
   let localesOnFS = fs
-    .readdirSync(path.join(__dirname, "../../localizations"))
+    .readdirSync(path.join(dirname, "../../localizations"))
     .map((str) => str.split(".")[0]);
   localesOnFS.forEach((localeStr) => {
     const translations = require("../../localizations/" + localeStr + ".json");
@@ -44,11 +47,12 @@ export const cards: QueryAndTransform[] = [
             return false;
           }
           const [child] = node.children;
-          if (!child.children || !child.children[0]) {
+          if (!("children" in child) || !child.children[0]) {
             return false;
           }
           const grandChild = child.children[0];
           return (
+            "tagName" in grandChild &&
             grandChild.tagName == "strong" &&
             (toText(grandChild) ==
               currentLocaleGt.gettext("card_" + className + "_label") ||
@@ -66,7 +70,9 @@ export const cards: QueryAndTransform[] = [
               h("strong", [
                 h("text", gt.gettext("card_" + className + "_label")),
               ]),
-              ...asArray(t((node.children[0].children as any).slice(1))),
+              ...asArray(
+                t(((node.children[0] as Parent).children as any).slice(1))
+              ),
             ]),
             ...asArray(t(node.children.slice(1))),
           ]);

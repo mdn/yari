@@ -1,6 +1,7 @@
 const cheerio = require("cheerio");
 const { packageBCD } = require("./resolve-bcd");
 const specs = require("browser-specs");
+const web = require("../kumascript/src/api/web.js");
 
 /** Extract and mutate the $ if it as a "Quick_links" section.
  * But only if it exists.
@@ -153,7 +154,7 @@ function extractSections($) {
  * first. For example BCD tables. If the input is this:
  *
  *   <h2 id="browser_compat">Browser Compat</h2>
- *   <div class="bc-data" id="bcd:foo.bar.thing">...</div>
+ *   <div class="bc-data" data-query="foo.bar.thing">...</div>
  *
  * Then, extract the ID, get the structured data and eventually return this:
  *
@@ -326,7 +327,9 @@ function _addSingleSpecialSection($) {
   let specialSectionType = null;
   if ($.find("div.bc-data").length) {
     specialSectionType = "browser_compatibility";
-    dataQuery = $.find("div.bc-data").attr("id");
+    const elem = $.find("div.bc-data");
+    // Macro adds "data-query", but some translated-content still uses "id".
+    dataQuery = elem.attr("data-query") || elem.attr("id");
   } else if ($.find("div.bc-specs").length) {
     specialSectionType = "specifications";
     dataQuery = $.find("div.bc-specs").attr("data-bcd-query");
@@ -334,9 +337,9 @@ function _addSingleSpecialSection($) {
   }
 
   // Some old legacy documents haven't been re-rendered yet, since it
-  // was added, so the `div.bc-data` tag doesn't have a `id="bcd:..."`
-  // attribute. If that's the case, bail and fail back on a regular
-  // prose section :(
+  // was added, so the `div.bc-data` tag doesn't have a a `id="bcd:..."`
+  // or `data-bcd="..."` attribute. If that's the case, bail and fall
+  // back on a regular prose section :(
   if (!dataQuery && specURLsString === "") {
     // I wish there was a good place to log this!
     const [proseSections] = _addSectionProse($);
@@ -407,44 +410,36 @@ function _addSingleSpecialSection($) {
       browserReleaseData.set(name, releaseData);
     }
 
-    for (const [key, compat] of Object.entries(data)) {
-      let block;
-      if (key === "__compat") {
-        block = compat;
-      } else if (compat.__compat) {
-        block = compat.__compat;
-      }
-      if (block) {
-        for (let [browser, info] of Object.entries(block.support)) {
-          // `info` here will be one of the following:
-          //  - a single simple_support_statement:
-          //    { version_added: 42 }
-          //  - an array of simple_support_statements:
-          //    [ { version_added: 42 }, { prefix: '-moz', version_added: 35 } ]
-          //
-          // Standardize the first version to an array of one, so we don't have
-          // to deal with two different forms below
-          if (!Array.isArray(info)) {
-            info = [info];
-          }
-          for (const infoEntry of info) {
-            const added =
-              typeof infoEntry.version_added === "string" &&
-              infoEntry.version_added.startsWith("≤")
-                ? infoEntry.version_added.slice(1)
-                : infoEntry.version_added;
-            if (browserReleaseData.has(browser)) {
-              if (browserReleaseData.get(browser).has(added)) {
-                infoEntry.release_date = browserReleaseData
-                  .get(browser)
-                  .get(added).release_date;
-              }
+    for (const block of _extractCompatBlocks(data)) {
+      for (let [browser, info] of Object.entries(block.support)) {
+        // `info` here will be one of the following:
+        //  - a single simple_support_statement:
+        //    { version_added: 42 }
+        //  - an array of simple_support_statements:
+        //    [ { version_added: 42 }, { prefix: '-moz', version_added: 35 } ]
+        //
+        // Standardize the first version to an array of one, so we don't have
+        // to deal with two different forms below
+        if (!Array.isArray(info)) {
+          info = [info];
+        }
+        for (const infoEntry of info) {
+          const added =
+            typeof infoEntry.version_added === "string" &&
+            infoEntry.version_added.startsWith("≤")
+              ? infoEntry.version_added.slice(1)
+              : infoEntry.version_added;
+          if (browserReleaseData.has(browser)) {
+            if (browserReleaseData.get(browser).has(added)) {
+              infoEntry.release_date = browserReleaseData
+                .get(browser)
+                .get(added).release_date;
             }
           }
-          info.sort((a, b) =>
-            _compareVersions(_getFirstVersion(b), _getFirstVersion(a))
-          );
         }
+        info.sort((a, b) =>
+          _compareVersions(_getFirstVersion(b), _getFirstVersion(a))
+        );
       }
     }
 
@@ -517,6 +512,25 @@ function _addSingleSpecialSection($) {
     return version.split(".").map(Number);
   }
 
+  /**
+   * Recursively extracts `__compat` objects from the `feature` and from all
+   * nested features at any depth.
+   *
+   * @param {Object} feature The feature.
+   * @returns {Object[]} The array of `__compat` objects.
+   */
+  function _extractCompatBlocks(feature) {
+    const blocks = [];
+    for (const [key, value] of Object.entries(feature)) {
+      if (key === "__compat") {
+        blocks.push(value);
+      } else if (typeof value === "object") {
+        blocks.push(..._extractCompatBlocks(value));
+      }
+    }
+    return blocks;
+  }
+
   function _buildSpecialSpecSection() {
     // Collect spec URLs from a BCD feature, a 'spec-urls' value, or both;
     // For a BCD feature, it can either be a string or an array of strings.
@@ -558,6 +572,14 @@ function _addSingleSpecialSection($) {
         };
         if (spec) {
           specificationsData.title = spec.title;
+        } else {
+          const specList = web.getJSONData("SpecData");
+          const titleFromSpecData = Object.keys(specList).find(
+            (key) => specList[key]["url"] === specURL.split("#")[0]
+          );
+          if (titleFromSpecData) {
+            specificationsData.title = titleFromSpecData;
+          }
         }
 
         return specificationsData;

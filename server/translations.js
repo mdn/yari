@@ -6,17 +6,12 @@ const { fdir } = require("fdir");
 const express = require("express");
 const router = express.Router();
 
-const {
-  getPopularities,
-  VALID_LOCALES,
-  Document,
-  Translation,
-  CONTENT_ROOT,
-  CONTENT_TRANSLATED_ROOT,
-} = require("../content");
+const { getPopularities, Document, Translation } = require("../content");
+const { VALID_LOCALES } = require("../libs/constants");
+const { CONTENT_ROOT, CONTENT_TRANSLATED_ROOT } = require("../libs/env");
 const { getLastCommitURL } = require("../build");
 const { ACTIVE_LOCALES, DEFAULT_LOCALE } = require("../libs/constants");
-const LANGUAGES_RAW = require("../content/languages.json");
+const LANGUAGES_RAW = require("../libs/languages");
 
 // Module-level cache
 const allPopularityValues = [];

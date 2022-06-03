@@ -10,7 +10,7 @@ const locales = {
     About_MDN: "Contributing to MDN",
   },
   fr: {
-    About_MDN: "Contribuer au MDN",
+    About_MDN: "Contribuer à MDN",
   },
 };
 

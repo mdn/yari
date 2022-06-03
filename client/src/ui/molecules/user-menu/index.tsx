@@ -5,12 +5,9 @@ import { Submenu } from "../submenu";
 import SignOut from "../../atoms/signout";
 
 import { useUserData } from "../../../user-context";
-import { useLocale } from "../../../hooks";
-import {
-  FXA_SETTINGS_URL,
-  HEADER_NOTIFICATIONS_MENU_API_URL,
-  FXA_MANAGE_SUBSCRIPTIONS_URL,
-} from "../../../constants";
+import { useIsServer, useLocale } from "../../../hooks";
+import { HEADER_NOTIFICATIONS_MENU_API_URL } from "../../../constants";
+import { FXA_SETTINGS_URL, FXA_MANAGE_SUBSCRIPTIONS_URL } from "../../../env";
 
 import "./index.scss";
 import { DropdownMenu, DropdownMenuWrapper } from "../dropdown";
@@ -20,6 +17,7 @@ import useSWR from "swr";
 export const UserMenu = () => {
   const userData = useUserData();
   const locale = useLocale();
+  const isServer = useIsServer();
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [newNotifications, setNewNotifications] = useState<boolean>(false);
   const { data } = useSWR<NotificationData>(
@@ -42,7 +40,7 @@ export const UserMenu = () => {
   }, [data]);
 
   // if we don't have the user data yet, don't render anything
-  if (!userData || typeof window === "undefined") {
+  if (!userData || isServer) {
     return null;
   }
 
@@ -100,9 +98,10 @@ export const UserMenu = () => {
         type="action"
         id={`${userMenuItems.id}-button`}
         extraClasses="top-level-entry menu-toggle user-menu-toggle"
+        ariaControls={userMenuItems.id}
         ariaHasPopup="menu"
         ariaExpanded={isOpen || undefined}
-        onClickHandler={(event) => {
+        onClickHandler={() => {
           setIsOpen(!isOpen);
         }}
       >
@@ -116,7 +115,7 @@ export const UserMenu = () => {
       </Button>
 
       <DropdownMenu>
-        <Submenu menuEntry={userMenuItems} />
+        <Submenu submenuId={userMenuItems.id} menuEntry={userMenuItems} />
       </DropdownMenu>
     </DropdownMenuWrapper>
   );

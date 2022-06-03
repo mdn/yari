@@ -1,6 +1,6 @@
 import React, { ReactElement } from "react";
 import useSWR from "swr";
-import { CRUD_MODE } from "../../constants";
+import { CRUD_MODE } from "../../env";
 import { SidebarContainer } from "../../document/organisms/sidebar";
 import { TOC } from "../../document/organisms/toc";
 import { DocParent, Toc } from "../../document/types";
@@ -22,25 +22,23 @@ interface StaticPageProps {
   locale: string;
   slug: string;
   parents: DocParent[];
-  initialData?: any;
+  fallbackData?: any;
   title?: string;
   sidebarHeader?: ReactElement;
 }
-
-const isServer = typeof window === "undefined";
 
 function StaticPage({
   extraClasses = "",
   locale,
   slug,
   parents = [],
-  initialData = undefined,
+  fallbackData = undefined,
   title = "MDN",
   sidebarHeader = <></>,
 }: StaticPageProps) {
   const { isSidebarOpen, setIsSidebarOpen } = useUIStatus();
   const baseURL = `/${locale}/${slug}`;
-  const featureJSONUrl = `${baseURL.toLowerCase()}/index.json`;
+  const featureJSONUrl = `${baseURL}/index.json`;
   const { data: { hyData } = {}, error } = useSWR<{ hyData: StaticPageDoc }>(
     featureJSONUrl,
     async (url) => {
@@ -52,8 +50,9 @@ function StaticPage({
       return await response.json();
     },
     {
-      initialData: isServer ? initialData : undefined,
+      fallbackData,
       revalidateOnFocus: CRUD_MODE,
+      revalidateOnMount: !fallbackData,
     }
   );
 
@@ -88,15 +87,18 @@ function StaticPage({
         </div>
       </div>
 
-      <div className="article-wrapper">
+      <div className="main-wrapper">
         <SidebarContainer doc={hyData}>
           {sidebarHeader || null}
         </SidebarContainer>
         <div className="toc">{toc || null}</div>
         <main id="content" className="main-content" role="main">
           <article className={`main-page-content ${extraClasses || ""}`}>
-            {hyData.sections.map((section) => (
-              <section dangerouslySetInnerHTML={{ __html: section }}></section>
+            {hyData.sections.map((section, index) => (
+              <section
+                key={index}
+                dangerouslySetInnerHTML={{ __html: section }}
+              ></section>
             ))}
           </article>
         </main>

@@ -3,6 +3,8 @@
 @use "../color-palette" as *;
 
 @mixin light-theme {
+  color-scheme: light;
+
   --text-primary: #{$mdn-theme-light-text-primary};
   --text-secondary: #{$mdn-theme-light-text-secondary};
   --text-inactive: #{$mdn-theme-light-text-inactive};
@@ -12,6 +14,7 @@
   --background-primary: #{$mdn-theme-light-background-primary};
   --background-secondary: #{$mdn-theme-light-background-secondary};
   --background-tertiary: #{$mdn-theme-light-background-tertiary};
+  --background-toc-active: #{$mdn-theme-light-background-toc-active};
   --background-mark-yellow: #{color.adjust(
       $mdn-color-light-theme-yellow-30,
       $alpha: -0.6
@@ -90,6 +93,8 @@
   --code-line-number-hover: #{$mdn-theme-light-code-line-number-hover};
   --code-line-highlight: #{$mdn-theme-light-code-line-highlight};
 
+  --notecard-link-color: #{$mdn-color-neutral-80};
+
   --scrollbar-bg: transparent;
   --scrollbar-color: rgba(0, 0, 0, 0.25);
 
@@ -98,16 +103,16 @@
   --code-color: #{$mdn-color-light-theme-blue-40};
   --mark-color: #{$mdn-color-light-theme-blue-10};
 
-  --plus-accent-color: #{$mdn-color-light-theme-red-50};
-  --html-accent-color: #{$mdn-color-light-theme-red-50};
-  --css-accent-color: #{$mdn-color-light-theme-blue-50};
-  --js-accent-color: #{$mdn-color-light-theme-yellow-50};
-  --http-accent-color: #{$mdn-color-light-theme-green-50};
-  --apis-accent-color: #{$mdn-color-light-theme-violet-50};
-  --learn-accent-color: #{$mdn-color-light-theme-pink-50};
+  --plus-accent-color: #{$mdn-color-dark-theme-red-60};
+  --html-accent-color: #{$mdn-color-light-theme-red-60};
+  --css-accent-color: #{$mdn-color-light-theme-blue-60};
+  --js-accent-color: #{$mdn-color-light-theme-yellow-40};
+  --http-accent-color: #{$mdn-color-light-theme-green-60};
+  --apis-accent-color: #{$mdn-color-light-theme-violet-60};
+  --learn-accent-color: #{$mdn-color-light-theme-pink-60};
 
-  --plus-code-color: #{$mdn-color-light-theme-red-60};
-  --html-code-color: #{$mdn-color-light-theme-red-60};
+  --plus-code-color: #{$mdn-color-light-theme-blue-60};
+  --html-code-color: #{$mdn-color-light-theme-red-70};
   --css-code-color: #{$mdn-color-light-theme-blue-60};
   --js-code-color: #{$mdn-color-light-theme-yellow-60};
   --http-code-color: #{$mdn-color-light-theme-green-60};
@@ -122,13 +127,13 @@
   --apis-mark-color: #{$mdn-color-light-theme-violet-10};
   --learn-mark-color: #{$mdn-color-light-theme-pink-10};
 
-  --plus-accent-background-color: #{$mdn-color-light-theme-red-50}10;
-  --html-accent-background-color: #{$mdn-color-light-theme-red-50}10;
-  --css-accent-background-color: #{$mdn-color-light-theme-blue-50}10;
-  --js-accent-background-color: #{$mdn-color-light-theme-yellow-50}10;
-  --http-accent-background-color: #{$mdn-color-light-theme-green-50}10;
-  --apis-accent-background-color: #{$mdn-color-light-theme-violet-50}10;
-  --learn-accent-background-color: #{$mdn-color-light-theme-pink-50}10;
+  --plus-accent-background-color: #{$mdn-color-light-theme-red-50}30;
+  --html-accent-background-color: #{$mdn-color-light-theme-red-50}30;
+  --css-accent-background-color: #{$mdn-color-light-theme-blue-50}30;
+  --js-accent-background-color: #{$mdn-color-light-theme-yellow-50}30;
+  --http-accent-background-color: #{$mdn-color-light-theme-green-50}30;
+  --apis-accent-background-color: #{$mdn-color-light-theme-violet-50}30;
+  --learn-accent-background-color: #{$mdn-color-light-theme-pink-50}30;
 
   --plus-accent-engage: #{color.adjust(
       $mdn-color-light-theme-red-50,
@@ -159,18 +164,6 @@
       $alpha: -0.3
     )};
 
-  --homepage-hero-bg: radial-gradient(
-    114.42% 123.24% at 6.69% 13.67%,
-    rgba(51, 178, 252, 0.2) 22.84%,
-    rgba(152, 82, 250, 0.2) 47.63%,
-    rgba(255, 230, 0, 0.2) 82.74%
-  );
-  --homepage-secondary-bg: linear-gradient(
-    90deg,
-    #8524ff -43.99%,
-    #4d7fff 159.52%
-  );
-
   --modal-backdrop-color: #{rgba($mdn-theme-dark-background-primary, 0.1)};
   --blend-color: #{$mdn-color-white}80;
 
@@ -181,6 +174,8 @@
 }
 
 @mixin dark-theme {
+  color-scheme: dark;
+
   --text-primary: #{$mdn-theme-dark-text-primary};
   --text-secondary: #{$mdn-theme-dark-text-secondary};
   --text-inactive: #{$mdn-theme-dark-text-inactive};
@@ -190,9 +185,30 @@
   --background-primary: #{$mdn-theme-dark-background-primary};
   --background-secondary: #{$mdn-theme-dark-background-secondary};
   --background-tertiary: #{$mdn-theme-dark-background-tertiary};
+  --background-toc-active: #{$mdn-theme-dark-background-toc-active};
   --background-mark-yellow: #{color.adjust(
       $mdn-color-dark-theme-yellow-30,
       $alpha: -0.6
+    )};
+  --background-mark-green: #{color.adjust(
+      $mdn-color-light-theme-green-30,
+      $alpha: -0.6
+    )};
+  --background-information: #{color.adjust(
+      $mdn-theme-light-icon-information,
+      $alpha: -0.9
+    )};
+  --background-warning: #{color.adjust(
+      $mdn-theme-light-icon-warning,
+      $alpha: -0.9
+    )};
+  --background-critical: #{color.adjust(
+      $mdn-theme-light-icon-critical,
+      $alpha: -0.9
+    )};
+  --background-success: #{color.adjust(
+      $mdn-theme-light-icon-success,
+      $alpha: -0.9
     )};
 
   --border-primary: #{$mdn-theme-dark-border-primary};
@@ -207,6 +223,9 @@
   --button-secondary-hover: #{$mdn-theme-dark-button-secondary-hover};
   --button-secondary-active: #{$mdn-theme-dark-button-secondary-active};
   --button-secondary-inactive: #{$mdn-theme-dark-button-secondary-inactive};
+  --button-secondary-border-focus: #{$mdn-theme-light-button-secondary-border-focus};
+  --button-secondary-border-red: #{$mdn-theme-light-button-secondary-border-red};
+  --button-secondary-border-red-focus: #{$mdn-theme-light-button-secondary-border-red-focus};
 
   --icon-primary: #{$mdn-theme-dark-icon-primary};
   --icon-secondary: #{$mdn-theme-dark-icon-secondary};
@@ -221,6 +240,10 @@
       $alpha: -0.9
     )};
   --accent-secondary: #{$mdn-theme-dark-accent-secondary};
+  --accent-tertiary: #{color.adjust(
+      $mdn-color-light-theme-blue-50,
+      $alpha: -0.9
+    )};
 
   --shadow-01: #{$mdn-theme-dark-shadow-01};
   --shadow-02: #{$mdn-theme-dark-shadow-02};
@@ -240,6 +263,9 @@
   --code-line-number-hover: #{$mdn-theme-dark-code-line-number-hover};
   --code-line-highlight: #{$mdn-theme-dark-code-line-highlight};
 
+  --notecard-link-color: #{$mdn-color-neutral-10};
+
+  --scrollbar-bg: transparent;
   --scrollbar-color: rgba(255, 255, 255, 0.25);
 
   --category-color: #{$mdn-color-dark-theme-blue-30};
@@ -255,8 +281,8 @@
   --apis-accent-color: #{$mdn-color-dark-theme-violet-40};
   --learn-accent-color: #{$mdn-color-dark-theme-pink-40};
 
-  --plus-code-color: #{$mdn-color-dark-theme-red-20};
-  --html-code-color: #{$mdn-color-dark-theme-red-30};
+  --plus-code-color: #{$mdn-color-dark-theme-blue-20};
+  --html-code-color: #{$mdn-color-neutral-light-70};
   --css-code-color: #{$mdn-color-dark-theme-blue-20};
   --js-code-color: #{$mdn-color-dark-theme-yellow-30};
   --http-code-color: #{$mdn-color-dark-theme-green-30};
@@ -270,6 +296,14 @@
   --http-mark-color: #{$mdn-color-dark-theme-green-70};
   --apis-mark-color: #{$mdn-color-dark-theme-violet-70};
   --learn-mark-color: #{$mdn-color-dark-theme-pink-70};
+
+  --plus-accent-background-color: #{$mdn-color-light-theme-red-50}30;
+  --html-accent-background-color: #{$mdn-color-light-theme-red-50}30;
+  --css-accent-background-color: #{$mdn-color-light-theme-blue-50}30;
+  --js-accent-background-color: #{$mdn-color-light-theme-yellow-50}30;
+  --http-accent-background-color: #{$mdn-color-light-theme-green-50}30;
+  --apis-accent-background-color: #{$mdn-color-light-theme-violet-50}30;
+  --learn-accent-background-color: #{$mdn-color-light-theme-pink-50}30;
 
   --plus-accent-engage: #{color.adjust(
       $mdn-color-dark-theme-red-40,
@@ -313,14 +347,13 @@ body,
 :root {
   --mdn-color-white: #{$mdn-color-white};
   --mdn-color-black: #{$mdn-color-black};
-  --mdn-color-dark-grey: #{$mdn-color-dark-grey-30};
+  --mdn-color-dark-grey: #{$mdn-color-neutral-70};
   --mdn-background-dark: #{$mdn-theme-dark-background-primary};
   --mdn-background-light: #{$mdn-theme-light-background-primary};
-  --mdn-background-light-grey: #{$mdn-color-light-grey-30};
+  --mdn-background-light-grey: #{$mdn-color-neutral-10};
   --color-announcement-banner-accent: #{$mdn-color-light-theme-pink-40};
 }
 
-:root,
 .light {
   @include light-theme;
 }
@@ -329,14 +362,13 @@ body,
   @include dark-theme;
 }
 
-@media (prefers-color-scheme: light) {
-  :root {
+// OS Default.
+:root:not(.light):not(.dark) {
+  @media (prefers-color-scheme: light) {
     @include light-theme;
   }
-}
 
-@media (prefers-color-scheme: dark) {
-  :root {
+  @media (prefers-color-scheme: dark) {
     @include dark-theme;
   }
 }

@@ -94,7 +94,8 @@ for(let name of groupNames) {
 let keys = Object.keys(outputByLetter);
 
 keys.forEach(function(letter) {
-  output += "<span>" + letter + "</span><ul>" + outputByLetter[letter] + "</ul>";
+  output += `<h3>${letter}</h3>
+  <ul>${outputByLetter[letter]}</ul>`;
 });
 
 %><div class="index">

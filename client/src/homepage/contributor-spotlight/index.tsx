@@ -1,5 +1,5 @@
 import useSWR from "swr";
-import { CRUD_MODE } from "../../constants";
+import { CRUD_MODE } from "../../env";
 import { HydrationData } from "../../types/hydration";
 import { Icon } from "../../ui/atoms/icon";
 import Mandala from "../../ui/molecules/mandala";
@@ -10,6 +10,8 @@ const contributorGraphic = `${
 }/assets/mdn_contributor.png`;
 
 export function ContributorSpotlight(props: HydrationData<any>) {
+  const fallbackData = props.hyData ? props : undefined;
+
   const { data: { hyData } = {} } = useSWR<any>(
     "./index.json",
     async (url) => {
@@ -21,8 +23,9 @@ export function ContributorSpotlight(props: HydrationData<any>) {
       return await response.json();
     },
     {
-      initialData: props.hyData ? props : undefined,
+      fallbackData,
       revalidateOnFocus: CRUD_MODE,
+      revalidateOnMount: !fallbackData,
     }
   );
 
@@ -30,7 +33,7 @@ export function ContributorSpotlight(props: HydrationData<any>) {
     <div className="contributor-spotlight dark">
       <div className="wrapper">
         <div className="text-col">
-          <h2 className="mdn-ui-emphasis-l">Contributor Spotlight</h2>
+          <h3>Contributor Spotlight</h3>
           {hyData && hyData?.featuredContributor && (
             <>
               <a

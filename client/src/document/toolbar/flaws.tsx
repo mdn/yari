@@ -4,7 +4,7 @@ import { annotate, annotationGroup } from "rough-notation";
 import { RoughAnnotation } from "rough-notation/lib/model";
 import { diffWords } from "diff";
 
-import { CRUD_MODE, CRUD_MODE_HOSTNAMES } from "../../constants";
+import { CRUD_MODE, CRUD_MODE_HOSTNAMES } from "../../env";
 import { humanizeFlawName } from "../../flaw-utils";
 import { useDocumentURL } from "../hooks";
 import {
@@ -229,20 +229,19 @@ function Flaws({
     <div id="document-flaws">
       {!!fixableFlaws.length && !isReadOnly && fixableFlaws.length > 0 && (
         <>
-          {doc.isMarkdown ? (
+          {doc.isMarkdown && (
             <small>
-              Automatic fixing fixable flaws not yet enabled for Markdown
+              Automatic fixing fixable flaws is experimental for Markdown
               documents. See{" "}
               <a href="https://github.com/mdn/yari/issues/4333">
                 mdn/yari#4333
               </a>
             </small>
-          ) : (
-            <FixableFlawsAction
-              count={fixableFlaws.length}
-              reloadPage={reloadPage}
-            />
           )}
+          <FixableFlawsAction
+            count={fixableFlaws.length}
+            reloadPage={reloadPage}
+          />
         </>
       )}{" "}
       {flaws.map((flaw) => {

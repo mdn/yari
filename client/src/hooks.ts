@@ -29,7 +29,7 @@ export function useLocale() {
 export function useCSRFMiddlewareToken(): string {
   const userData = useUserData();
   const userSettingsAPIURL = React.useMemo(() => {
-    return userData && userData.isAuthenticated ? "/api/v1/settings" : null;
+    return userData && userData.isAuthenticated ? "/api/v1/settings/" : null;
   }, [userData]);
   const { data, error } = useSWR<UserSettings>(
     userSettingsAPIURL,
@@ -99,4 +99,15 @@ export function useOnlineStatus(): { isOnline: boolean; isOffline: boolean } {
   }, []);
 
   return { isOnline, isOffline };
+}
+
+/**
+ * If we want to render different markup on client/server, we have to delay this
+ * until the first client render. Otherwise, hydration will throw an error, or
+ * more dangerously, correlate its v-dom with the wrong markup.
+ */
+export function useIsServer(): boolean {
+  const [isServer, setIsServer] = useState(true);
+  useEffect(() => setIsServer(false), []);
+  return isServer;
 }

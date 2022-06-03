@@ -6,7 +6,7 @@ const cookieParser = require("cookie-parser");
 
 const { staticMiddlewares } = require("./middlewares");
 const { resolveFundamental } = require("../content");
-const { STATIC_ROOT } = require("./constants");
+const { STATIC_ROOT } = require("../libs/env");
 
 const app = express();
 app.use(express.json());
@@ -109,7 +109,7 @@ app.get("/api/v1/whoami", async (req, res) => {
 
 const mockSettingsDatabase = new Map();
 
-app.get("/api/v1/settings", async (req, res) => {
+app.get("/api/v1/settings/", async (req, res) => {
   const defaultContext = { locale: "en-US", csrfmiddlewaretoken: "xyz123" };
   if (!req.cookies.sessionid) {
     res.status(403).send("oh no you don't");
@@ -128,7 +128,7 @@ app.get("/api/v1/settings", async (req, res) => {
   }
 });
 
-app.post("/api/v1/settings", async (req, res) => {
+app.post("/api/v1/settings/", async (req, res) => {
   if (!req.cookies.sessionid) {
     res.status(403).send("oh no you don't");
   } else {

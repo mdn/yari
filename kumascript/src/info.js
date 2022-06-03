@@ -1,7 +1,8 @@
 const cheerio = require("cheerio");
 
 const Parser = require("./parser.js");
-const { VALID_LOCALES, Document, Redirect } = require("../../content");
+const { Document, Redirect } = require("../../content");
+const { VALID_LOCALES } = require("../../libs/constants");
 const { m2hSync } = require("../../markdown");
 
 const DUMMY_BASE_URL = "https://example.com";

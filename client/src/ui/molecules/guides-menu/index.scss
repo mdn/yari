@@ -3,15 +3,15 @@
 
 .guides {
   .submenu .submenu-item-heading {
+    font-size: var(--type-smaller-font-size);
     font-weight: initial;
-    font: var(--type-body-m);
   }
 
   .desktop-only {
     display: none;
   }
 
-  @media screen and (min-width: $screen-md) {
+  @media screen and (min-width: $screen-lg) {
     .desktop-only {
       display: inherit;
     }

@@ -72,9 +72,6 @@ const scriptSrcValues = [
   "'report-sample'",
   "'self'",
 
-  "*.speedcurve.com",
-  "'sha256-q7cJjDqNO2e1L5UltvJ1LhvnYN7yJXgGO7b6h9xkL1o='", // LUX
-
   "www.google-analytics.com/analytics.js",
 
   "'sha256-JEt9Nmc3BP88wxuTZm9aKNu87vEgGmKW1zzy/vb1KPs='", // polyfill check
@@ -83,7 +80,14 @@ const scriptSrcValues = [
   "assets.codepen.io",
   "production-assets.codepen.io",
 
-  "'sha256-CUy3BwqnmCSHS96nUyHoUsOB3r+s10eRpf5GbZdZqgk='", // inline no flicker
+  /**
+   * If we modify the inline script in `client/public/index.html`,
+   * we must always update the CSP hash (see instructions there).
+   */
+  // - Previous hash (to avoid cache invalidation issues):
+  "'sha256-x6Tv+AdV5e6dcolO0TEo+3BG4H2nG2ACjyG8mz6QCes='",
+  // - Current hash:
+  "'sha256-GA8+DpFnqAM/vwERTpb5zyLUaN5KnOhctfTsqWfhaUA='",
 ];
 const CSP_DIRECTIVES = {
   "default-src": ["'self'"],
@@ -123,12 +127,11 @@ const CSP_DIRECTIVES = {
     // Avatars
     "*.githubusercontent.com",
     "*.googleusercontent.com",
+    "*.gravatar.com",
     "mozillausercontent.com",
     "firefoxusercontent.com",
     "profile.stage.mozaws.net",
     "profile.accounts.firefox.com",
-
-    "lux.speedcurve.com",
 
     "mdn.mozillademos.org",
     "media.prod.mdn.mozit.cloud",
@@ -155,6 +158,63 @@ const cspToString = (csp) =>
 
 const CSP_VALUE = cspToString(CSP_DIRECTIVES);
 
+// -----
+// build
+// -----
+
+const FLAW_LEVELS = Object.freeze({
+  ERROR: "error",
+  IGNORE: "ignore",
+  WARN: "warn",
+});
+
+// These names need to match what we have in the code where we have various
+// blocks of code that look something like this:
+//
+//    if (this.options.flawChecks.profanities) {
+//      ... analyze and possible add to doc.flaws.profanities ...
+//
+// This list needs to be synced with the code. And the CLI arguments
+// used with --flaw-checks needs to match this set.
+const VALID_FLAW_CHECKS = new Set([
+  "macros",
+  "broken_links",
+  "bad_bcd_queries",
+  "bad_bcd_links",
+  "images",
+  "image_widths",
+  "bad_pre_tags",
+  "sectioning",
+  "heading_links",
+  "translation_differences",
+  "unsafe_html",
+]);
+
+// ------
+// client
+// ------
+
+const MDN_PLUS_TITLE = "MDN Plus";
+
+// -------
+// content
+// -------
+
+const HTML_FILENAME = "index.html";
+const MARKDOWN_FILENAME = "index.md";
+
+// ---------
+// filecheck
+// ---------
+
+const VALID_MIME_TYPES = new Set([
+  "image/png",
+  "image/jpeg", // this is what you get for .jpeg *and* .jpg file extensions
+  "image/gif",
+]);
+
+const MAX_COMPRESSION_DIFFERENCE_PERCENTAGE = 25; // percent
+
 module.exports = {
   ACTIVE_LOCALES,
   VALID_LOCALES,
@@ -164,4 +224,19 @@ module.exports = {
   PREFERRED_LOCALE_COOKIE_NAME,
 
   CSP_VALUE,
+
+  // build
+  FLAW_LEVELS,
+  VALID_FLAW_CHECKS,
+
+  // client
+  MDN_PLUS_TITLE,
+
+  // content
+  HTML_FILENAME,
+  MARKDOWN_FILENAME,
+
+  // filecheck
+  VALID_MIME_TYPES,
+  MAX_COMPRESSION_DIFFERENCE_PERCENTAGE,
 };

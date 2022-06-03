@@ -38,25 +38,22 @@ export function A11yNav() {
           Skip to main content
         </a>
       </li>
-      {/*
-        * Disabled for now as this does not work with our hidden search box.
 
-        * <li>
-        *   <a
-        *     id="skip-search"
-        *     href="#main-q"
-        *     onClick={sendAccessMenuItemClick}
-        *     onContextMenu={sendAccessMenuItemClick}
-        *   >
-        *     Skip to search
-        *   </a>
-        * </li>
-        */}
+      <li>
+        <a
+          id="skip-search"
+          href="#top-nav-search-q"
+          onClick={sendAccessMenuItemClick}
+          onContextMenu={sendAccessMenuItemClick}
+        >
+          Skip to search
+        </a>
+      </li>
       {showLangMenuSkiplink && (
         <li>
           <a
             id="skip-select-language"
-            href="#select-language"
+            href="#languages-switcher-button"
             onClick={sendAccessMenuItemClick}
             onContextMenu={sendAccessMenuItemClick}
           >

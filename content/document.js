@@ -3,20 +3,16 @@ const path = require("path");
 const util = require("util");
 
 const fm = require("front-matter");
-const glob = require("glob");
 const yaml = require("js-yaml");
 const { fdir } = require("fdir");
 
-const {
-  CONTENT_TRANSLATED_ROOT,
-  CONTENT_ROOT,
-  ACTIVE_LOCALES,
-  VALID_LOCALES,
-  ROOTS,
-} = require("./constants");
+const { HTML_FILENAME, MARKDOWN_FILENAME } = require("../libs/constants");
+const { CONTENT_TRANSLATED_ROOT, CONTENT_ROOT, ROOTS } = require("../libs/env");
+const { ACTIVE_LOCALES, VALID_LOCALES } = require("../libs/constants");
 const { getPopularities } = require("./popularities");
 const { getWikiHistories } = require("./wikihistories");
 const { getGitHistories } = require("./githistories");
+const { childrenFoldersForPath } = require("./document-paths");
 
 const {
   buildURL,
@@ -33,9 +29,7 @@ function buildPath(localeFolder, slug) {
   return path.join(localeFolder, slugToFolder(slug));
 }
 
-const HTML_FILENAME = "index.html";
 const getHTMLPath = (folder) => path.join(folder, HTML_FILENAME);
-const MARKDOWN_FILENAME = "index.md";
 const getMarkdownPath = (folder) => path.join(folder, MARKDOWN_FILENAME);
 
 function updateWikiHistory(localeContentRoot, oldSlug, newSlug = null) {
@@ -501,18 +495,9 @@ function findChildren(url, recursive = false) {
   const locale = url.split("/")[1];
   const root = getRoot(locale);
   const folder = urlToFolderPath(url);
-  const globber = recursive ? ["*", "**"] : ["*"];
-  const childPaths = glob.sync(
-    path.join(
-      root,
-      folder,
-      ...globber,
-      `+(${HTML_FILENAME}|${MARKDOWN_FILENAME})`
-    )
-  );
-  return childPaths
-    .map((childFilePath) => path.relative(root, path.dirname(childFilePath)))
-    .map((folder) => read(folder));
+
+  const childPaths = childrenFoldersForPath(root, folder, recursive);
+  return childPaths.map((folder) => read(folder));
 }
 
 function move(oldSlug, newSlug, locale, { dry = false } = {}) {

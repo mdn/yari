@@ -80,6 +80,6 @@ test.describe("Site search", () => {
     expect(await page.isVisible("text=Serial 19")).toBeTruthy();
     expect(await page.isVisible('a:has-text("Previous")')).toBeTruthy();
     expect(await page.isVisible('a:has-text("Next")')).toBeFalsy();
-    expect(page.url()).toBe(testURL("/en-US/search?q=SERIAL%2820%29&page=2"));
+    expect(page.url()).toBe(testURL("/en-US/search/?q=SERIAL%2820%29&page=2"));
   });
 });

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 
 import { useGA } from "../../../ga-context";
@@ -25,7 +25,7 @@ export function LanguageMenu({
   const ga = useGA();
   const { pathname } = useLocation();
   const navigate = useNavigate();
-  const { locale } = useParams();
+  const { locale = "en-US" } = useParams();
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
   function translateURL(destinationLocale: string) {
@@ -102,8 +102,8 @@ export function LanguageMenu({
       setIsOpen={setIsOpen}
     >
       <Button
+        id="languages-switcher-button"
         type="action"
-        ariaControls={menuId}
         ariaHasPopup={"menu"}
         ariaExpanded={isOpen || undefined}
         icon="language"

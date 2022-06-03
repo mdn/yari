@@ -16,7 +16,7 @@ export const Avatar = ({ userData }: { userData: UserData }) => {
         }
       >
         <img
-          alt={userData.username || ""}
+          alt="Avatar"
           className="avatar"
           src={userData.avatarUrl || avatarImage}
         />

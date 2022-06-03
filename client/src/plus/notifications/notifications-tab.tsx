@@ -101,7 +101,7 @@ export function NotificationsTab({
 
   const starMany = async () => {
     const toStar = list.filter((v) => v.checked).map((i) => i.id);
-    await starItemsById(data.csrfMiddlewareToken, toStar);
+    await starItemsById(data.csrfmiddlewaretoken, toStar);
     const updated = list.map((v) => {
       if (v.checked) {
         v.starred = true;
@@ -113,7 +113,7 @@ export function NotificationsTab({
 
   const unstarMany = async () => {
     const toUnstar = list.filter((v) => v.checked).map((i) => i.id);
-    await unstarItemsById(data.csrfMiddlewareToken, toUnstar);
+    await unstarItemsById(data.csrfmiddlewaretoken, toUnstar);
     const updated = list.map((v) => {
       if (v.checked) {
         v.starred = false;

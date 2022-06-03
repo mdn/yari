@@ -10,6 +10,11 @@
 //  $4  Twitter ID (null if none)
 //  $5  Stack Overflow tag (null if none)
 
+// Throw a MacroDeprecatedError flaw
+// Condition for removal: no more use in translated-content (May 2022: 150 occurrences)
+// 0 occurrences left in en-US
+mdn.deprecated();
+
 var lang = env.locale; /* get the page language */
 var mailingList;
 var newsgroup;

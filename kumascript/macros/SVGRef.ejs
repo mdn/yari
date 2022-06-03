@@ -48,7 +48,7 @@ function wrapSVGElement(name) {
 }
 
 if (s_svg_href) {  %>
-  <section class="Quick_links" id="Quick_Links">
+  <section class="Quick_links" id="Quick_links">
   <ol>
    <% if (foundTag) {
         for (aTitle of resultSVG) { // SVG entities matching
@@ -64,7 +64,6 @@ if (s_svg_href) {  %>
      <li class="deprecatedElement"><%-await wrapSVGElement("altGlyphDef")%></li>
      <li class="deprecatedElement"><%-await wrapSVGElement("altGlyphItem")%></li>
      <li><%-await wrapSVGElement("animate")%></li>
-     <li><%-await wrapSVGElement("animateColor")%></li>
      <li><%-await wrapSVGElement("animateMotion")%></li>
      <li><%-await wrapSVGElement("animateTransform")%></li>
    </ol>
