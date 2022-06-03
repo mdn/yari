@@ -1,7 +1,7 @@
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import useSWR from "swr";
-import { CRUD_MODE } from "../../constants";
+import { CRUD_MODE } from "../../env";
 import { HydrationData } from "../../types/hydration";
 
 import "./index.scss";
@@ -46,7 +46,7 @@ function RecentContributions(props: HydrationData<any>) {
                   </a>
                 </span>
               </p>
-              <span className="request-date">
+              <span className="request-date" suppressHydrationWarning>
                 {dayjs(updated_at).fromNow()}
               </span>
             </li>

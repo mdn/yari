@@ -89,7 +89,7 @@ jobs:
       - name: Setup Node.js environment
         uses: actions/setup-node@v3
         with:
-          node-version: "14"
+          node-version: "16"
 
       - name: Cache node_modules
         uses: actions/cache@v3
@@ -175,6 +175,11 @@ jobs:
           REACT_APP_MDN_PLUS_10Y_PLAN: price_1KeG02JNcmPzuWtRlrSiLTI6
           REACT_APP_ENABLE_PLUS_EU: true
 
+          # Document survey (https://github.com/mdn/yari/pull/6371).
+          REACT_APP_SURVEY_START: 0 # (new Date("2022-06-..")).getTime()
+          REACT_APP_SURVEY_END: 0 # (new Date("2022-06-..")).getTime()
+          REACT_APP_SURVEY_RATE: 0.05 # 5 Percent.
+
         run: |
 
           # Info about which CONTENT_* environment variables were set and to what.
@@ -217,8 +222,7 @@ jobs:
           CONTENT_TRANSLATED_ROOT: ${{ github.workspace }}/mdn/translated-content/files
 
           DEPLOYER_BUCKET_NAME: mdn-content-prod
-          # Uncomment when we're confident that automatic Lambda deployment is flawless.
-          #DEPLOYER_DISTRIBUTION_ID: E2ZY2DGUN70EMI
+          DEPLOYER_DISTRIBUTION_ID: E2ZY2DGUN70EMI
 
           AWS_ACCESS_KEY_ID: ${{ secrets.DEPLOYER_PROD_AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.DEPLOYER_PROD_AWS_SECRET_ACCESS_KEY }}

@@ -4,7 +4,8 @@ const fs = require("fs");
 const path = require("path");
 const jsdom = require("jsdom");
 const extend = require("extend");
-const fixture_dir = path.resolve(__dirname, "fixtures/compat");
+const dirname = __dirname;
+const fixture_dir = path.resolve(dirname, "fixtures/compat");
 
 const { JSDOM } = jsdom;
 
@@ -38,6 +39,13 @@ describeMacro("Compat", function () {
 
   itMacro("Outputs valid HTML", async (macro) => {
     const result = await macro.call("api.feature");
+    expect(lintHTML(result)).toBeFalsy();
+  });
+
+  itMacro("Accepts an array", async (macro) => {
+    const result = await macro.call(["api.feature1", "api.feature2"]);
+    const dom = JSDOM.fragment(result);
+    assert.equal(dom.querySelectorAll("div.bc-data").length, 2);
     expect(lintHTML(result)).toBeFalsy();
   });
 });

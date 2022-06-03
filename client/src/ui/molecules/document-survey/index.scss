@@ -1,0 +1,20 @@
+.document-survey {
+  button[type="button"],
+  summary {
+    cursor: pointer;
+  }
+
+  summary {
+    text-decoration: underline;
+
+    &:focus,
+    &:hover {
+      text-decoration: inherit;
+    }
+  }
+
+  .survey-header {
+    display: flex;
+    justify-content: space-between;
+  }
+}

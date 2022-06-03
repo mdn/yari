@@ -1,5 +1,8 @@
 const { readGitignoreFiles } = require("eslint-gitignore");
 const path = require("path");
+
+const dirname = __dirname;
+
 const ignores = readGitignoreFiles({
   cwd: path.join(".git", "info"),
   patterns: ["exclude"],
@@ -27,7 +30,7 @@ module.exports = {
   },
   settings: {
     node: {
-      resolvePaths: [__dirname],
+      resolvePaths: [dirname],
       tryExtensions: [".js", ".json", ".node", ".tsx", ".ts"],
     },
   },

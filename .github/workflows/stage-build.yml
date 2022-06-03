@@ -89,7 +89,7 @@ jobs:
       - name: Setup Node.js environment
         uses: actions/setup-node@v3
         with:
-          node-version: "14"
+          node-version: "16"
 
       - name: Cache node_modules
         uses: actions/cache@v3
@@ -174,6 +174,11 @@ jobs:
           REACT_APP_MDN_PLUS_10M_PLAN: price_1K6X7gKb9q6OnNsLi44HdLcC
           REACT_APP_MDN_PLUS_10Y_PLAN: price_1K6X8VKb9q6OnNsLFlUcEiu4
           REACT_APP_ENABLE_PLUS_EU: true
+
+          # Document survey (https://github.com/mdn/yari/pull/6371).
+          REACT_APP_SURVEY_START: 1654336800000 # (new Date("2022-06-04 12:00:00")).getTime()
+          REACT_APP_SURVEY_END: 1655546400000 # (new Date("2022-06-18 12:00:00")).getTime()
+          REACT_APP_SURVEY_RATE: 0.5 # 50 %
 
         run: |
 

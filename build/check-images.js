@@ -7,7 +7,7 @@ const path = require("path");
 const sizeOf = require("image-size");
 
 const { Document, Image } = require("../content");
-const { FLAW_LEVELS } = require("./constants");
+const { FLAW_LEVELS } = require("../libs/constants");
 const { findMatchesInText } = require("./matches-in-text");
 const { DEFAULT_LOCALE } = require("../libs/constants");
 

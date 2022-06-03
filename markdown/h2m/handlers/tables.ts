@@ -17,7 +17,7 @@ export const tables: QueryAndTransform[] = [
               ? node.children
               : node
           )
-          .filter((node) => node.tagName == "tr")
+          .filter((node) => "tagName" in node && node.tagName == "tr")
           .flatMap((node, i) => t([node], { rowIndex: i }))
       ),
   ],

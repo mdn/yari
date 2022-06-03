@@ -1,10 +1,11 @@
 import React, { useReducer } from "react";
 import { useLocation } from "react-router-dom";
-import type bcd from "@mdn/browser-compat-data/types";
+import bcd from "@mdn/browser-compat-data";
+import type BCD from "@mdn/browser-compat-data/types";
 import { BrowserInfoContext } from "./browser-info";
 import { BrowserCompatibilityErrorBoundary } from "./error-boundary";
 import { FeatureRow } from "./feature-row";
-import { Headers, PLATFORM_BROWSERS } from "./headers";
+import { Headers } from "./headers";
 import { Legend } from "./legend";
 import { listFeatures } from "./utils";
 
@@ -36,26 +37,38 @@ const ISSUE_METADATA_TEMPLATE = `
  */
 function gatherPlatformsAndBrowsers(
   category: string,
-  data: bcd.Identifier
-): [string[], bcd.BrowserNames[]] {
+  data: BCD.Identifier
+): [string[], BCD.BrowserNames[]] {
   const hasNodeJSData = data.__compat && "nodejs" in data.__compat.support;
   const hasDenoData = data.__compat && "deno" in data.__compat.support;
 
   let platforms = ["desktop", "mobile"];
   if (category === "javascript" || hasNodeJSData || hasDenoData) {
     platforms.push("server");
-  } else if (category === "webextensions") {
-    platforms = ["webextensions-desktop", "webextensions-mobile"];
   }
 
-  const browsers = new Set(
-    platforms.map((platform) => PLATFORM_BROWSERS[platform] || []).flat()
-  );
+  let browsers: BCD.BrowserNames[] = [];
+
+  // Add browsers in platform order to align table cells
+  for (const platform of platforms) {
+    browsers.push(
+      ...(Object.keys(bcd.browsers).filter(
+        (browser) => bcd.browsers[browser].type === platform
+      ) as BCD.BrowserNames[])
+    );
+  }
+
+  // Filter WebExtension browsers in corresponding tables.
+  if (category === "webextensions") {
+    browsers = browsers.filter(
+      (browser) => bcd.browsers[browser].accepts_webextensions
+    );
+  }
 
   // If there is no Node.js data for a category outside of "javascript", don't
   // show it. It ended up in the browser list because there is data for Deno.
   if (category !== "javascript" && !hasNodeJSData) {
-    browsers.delete("nodejs");
+    browsers = browsers.filter((browser) => browser !== "nodejs");
   }
 
   return [platforms, [...browsers]];
@@ -69,7 +82,7 @@ function FeatureListAccordion({
   locale,
 }: {
   features: ReturnType<typeof listFeatures>;
-  browsers: bcd.BrowserNames[];
+  browsers: BCD.BrowserNames[];
   locale: string;
 }) {
   const [[activeRow, activeColumn], dispatchCellToggle] = useReducer<
@@ -107,8 +120,8 @@ export default function BrowserCompatibilityTable({
   locale,
 }: {
   query: string;
-  data: bcd.Identifier;
-  browsers: bcd.Browsers;
+  data: BCD.Identifier;
+  browsers: BCD.Browsers;
   locale: string;
 }) {
   const location = useLocation();

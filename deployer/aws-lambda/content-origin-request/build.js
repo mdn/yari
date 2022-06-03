@@ -4,8 +4,11 @@ const { VALID_LOCALES } = require("@yari-internal/constants");
 const fs = require("fs");
 const path = require("path");
 
-const root = path.join(__dirname, "..", "..", "..");
-require("dotenv").config({
+const dirname = __dirname;
+
+const dotenv = require("dotenv");
+const root = path.join(dirname, "..", "..", "..");
+dotenv.config({
   path: path.join(root, process.env.ENV_FILE || ".env"),
 });
 
@@ -19,8 +22,9 @@ function buildRedirectsMap() {
     }
 
     const base = process.env[envvar];
+    console.log(`${envvar} = ${base}`);
 
-    VALID_LOCALES.forEach((locale) => {
+    for (const locale of VALID_LOCALES.keys()) {
       const path = [
         // Absolute path.
         `${base}/${locale}/_redirects.txt`,
@@ -40,8 +44,9 @@ function buildRedirectsMap() {
           const [source, target] = redirectLine.split("\t", 2);
           redirectMap.set(source.toLowerCase(), target);
         }
+        console.log(`- ${path}: ${redirectLines.length} redirects`);
       }
-    });
+    }
   });
 
   const output = "redirects.json";

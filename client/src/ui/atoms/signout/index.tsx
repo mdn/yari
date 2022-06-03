@@ -2,6 +2,7 @@ import { useLocation } from "react-router-dom";
 
 import { removeSessionStorageData } from "../../../user-context";
 import { useCSRFMiddlewareToken, useLocale } from "../../../hooks";
+import { KUMA_HOST } from "../../../env";
 
 import "./index.scss";
 import { Button } from "../button";
@@ -18,13 +19,10 @@ export default function SignOut() {
   // needs to be absolute. And we also need to send the absolute URL as the
   // `next` query string parameter so Kuma sends us back when the user has
   // authenticated there.
-  if (
-    process.env.NODE_ENV === "development" &&
-    process.env.REACT_APP_KUMA_HOST
-  ) {
+  if (process.env.NODE_ENV === "development") {
     const combined = new URL(next, window.location.href);
     next = combined.toString();
-    prefix = `http://${process.env.REACT_APP_KUMA_HOST}`;
+    prefix = `http://${KUMA_HOST}`;
   }
 
   return (
