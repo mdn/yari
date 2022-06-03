@@ -28,6 +28,7 @@ don't use any of that, we can safely ignore it.
 .token.constant,
 .token.symbol,
 .token.deleted {
+  /* stylelint-disable-next-line function-no-unknown */
   color: palette.var(--icon-critical);
 }
 

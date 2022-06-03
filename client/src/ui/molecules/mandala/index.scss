@@ -18,14 +18,14 @@
     }
   }
 
-  .mandala-rotate > svg {
-    animation: rotation 500s linear infinite;
-  }
-
   svg {
     font-size: 1.5rem;
     font-weight: 300;
     user-select: none;
+  }
+
+  .mandala-rotate > svg {
+    animation: rotation 500s linear infinite;
   }
 
   svg > text {

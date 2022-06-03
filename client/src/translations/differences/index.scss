@@ -30,6 +30,19 @@
     }
   }
 
+  .pagination {
+    margin: 20px;
+    text-align: center;
+
+    a {
+      padding: 10px;
+    }
+
+    a.disabled {
+      color: rgb(159, 159, 159);
+    }
+  }
+
   table {
     width: 100%;
 
@@ -47,16 +60,12 @@
       margin-right: 2px;
     }
 
-    td .document-title-preview {
-      // color: rgb(118, 118, 118);
+    td .last-modified.ahead a {
+      color: #008000;
     }
 
-    td .last_modified.ahead a {
-      color: green;
-    }
-
-    td .last_modified.behind a {
-      color: orange;
+    td .last-modified.behind a {
+      color: #ffa500;
     }
   }
 
@@ -69,19 +78,6 @@
 
     p {
       font-size: 70%;
-    }
-  }
-
-  .pagination {
-    margin: 20px;
-    text-align: center;
-
-    a.disabled {
-      color: rgb(159, 159, 159);
-    }
-
-    a {
-      padding: 10px;
     }
   }
 

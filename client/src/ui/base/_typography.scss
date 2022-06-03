@@ -3,6 +3,7 @@
   font-family: "Inter";
   font-stretch: 75% 100%;
   font-style: oblique 0deg 20deg;
+  /* stylelint-disable-next-line font-weight-notation */
   font-weight: 1 999;
   src: url("../../assets/fonts/Inter.var.woff2")
       format("woff2 supports variations"),

@@ -51,11 +51,13 @@
           width: max-content;
         }
 
+        /* stylelint-disable selector-no-qualifying-type  */
         button[disabled] {
           background-color: var(--background-secondary);
           border: 1px solid var(--text-secondary);
           color: var(--text-secondary);
         }
+        /* stylelint-enable selector-no-qualifying-type  */
       }
     }
   }

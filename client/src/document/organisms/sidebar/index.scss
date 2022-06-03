@@ -144,6 +144,7 @@
       text-decoration: underline;
     }
 
+    /* stylelint-disable-next-line selector-no-qualifying-type */
     &[aria-current="page"] {
       background: var(--border-secondary);
       border-radius: var(--elem-radius);
@@ -160,6 +161,20 @@
     display: flex;
     font-size: var(--type-base-font-size-rem);
     margin-top: 1rem;
+  }
+
+  .icon {
+    align-self: center;
+    background-size: 14px;
+    height: 14px;
+    margin-right: -0.25rem;
+    mask-size: 14px;
+    width: 14px;
+  }
+
+  summary,
+  li {
+    margin-bottom: 0.5rem;
   }
 
   ol {
@@ -185,6 +200,14 @@
     }
   }
 
+  details {
+    margin: 0.75rem 0;
+
+    ol {
+      padding-left: 0.75rem;
+    }
+  }
+
   /* This is for sidebars where there is no sub-heading
    * for example: https://developer-mozilla.org/en-US/docs/Web/HTML/Element/progress
    */
@@ -193,12 +216,8 @@
     margin-top: 1rem;
   }
 
-  summary,
-  li {
-    margin-bottom: 0.5rem;
-  }
-
   summary {
+    cursor: pointer;
     font-size: var(--type-smaller-font-size);
   }
 
@@ -211,27 +230,6 @@
     padding: 0.125rem;
     white-space: normal;
     word-wrap: break-word;
-  }
-
-  summary {
-    cursor: pointer;
-  }
-
-  details {
-    margin: 0.75rem 0;
-
-    ol {
-      padding-left: 0.75rem;
-    }
-  }
-
-  .icon {
-    align-self: center;
-    background-size: 14px;
-    height: 14px;
-    margin-right: -0.25rem;
-    mask-size: 14px;
-    width: 14px;
   }
 
   /* icons in sidebars */

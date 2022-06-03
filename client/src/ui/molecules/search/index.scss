@@ -1,6 +1,31 @@
 @use "sass:color";
 @use "../../vars" as *;
 
+.button.clear-search-button {
+  display: none;
+}
+
+.button.search-button,
+.button.clear-search-button {
+  --button-color: var(--icon-secondary);
+  --button-height: 1.5rem;
+  --button-padding: 0;
+  position: absolute;
+  right: 0.75rem;
+  top: 0.25rem;
+  width: 1.5rem;
+
+  &:hover,
+  &:focus {
+    background: transparent;
+  }
+
+  @media screen and (min-width: $screen-md) {
+    right: 1.2rem;
+    width: 1.5rem;
+  }
+}
+
 .header-search {
   max-width: 100%;
 
@@ -31,57 +56,25 @@
     padding-right: 2rem;
     width: 100%;
 
-    @keyframes blink {
-      from,
-      to {
-        text-decoration-line: none;
-      }
-
-      50% {
-        text-decoration-line: underline;
-      }
+    &,
+    &::placeholder {
+      font: var(--type-body-l);
+      opacity: 1;
+      text-decoration-color: var(--text-link);
+      text-decoration-thickness: 0.15rem;
+      text-underline-offset: 0.1em;
     }
 
-    @media screen and (min-width: $screen-lg) {
-      &:invalid {
-        width: 1rem;
-      }
-    }
-
-    &:focus,
-    &:valid {
-      width: inherit;
-    }
-    @media screen and (prefers-reduced-motion: reduce) {
-      &:invalid,
-      &:invalid::placeholder {
-        animation: none;
-        caret-color: transparent;
-
-        @media (prefers-reduced-motion: reduce) {
-          caret-color: initial;
-        }
-      }
-    }
-
-    &:invalid,
-    &:invalid::placeholder {
-      animation: blink 2s step-end infinite;
-      caret-color: transparent;
-
-      @media (prefers-reduced-motion: reduce) {
-        caret-color: initial;
-      }
-    }
-
+    /* When the search input has focus or has content,
+   show the clear search button */
     &:valid,
-    &:valid::placeholder {
-      animation: none;
-    }
+    &:focus {
+      width: inherit;
 
-    &:not(:focus):valid,
-    &:not(:focus):valid::placeholder {
-      text-decoration-line: none;
+      ~ .button.clear-search-button {
+        display: block;
+        right: 2.8rem;
+      }
     }
 
     &:not(:focus),
@@ -101,13 +94,55 @@
       outline: 0 none;
     }
 
-    &,
-    &::placeholder {
-      font: var(--type-body-l);
-      opacity: 1;
-      text-decoration-color: var(--text-link);
-      text-decoration-thickness: 0.15rem;
-      text-underline-offset: 0.1em;
+    @keyframes blink {
+      from,
+      to {
+        text-decoration-line: none;
+      }
+
+      50% {
+        text-decoration-line: underline;
+      }
+    }
+
+    @media screen and (min-width: $screen-lg) {
+      &:invalid {
+        width: 1rem;
+      }
+    }
+
+    @media screen and (prefers-reduced-motion: reduce) {
+      &:invalid,
+      &:invalid::placeholder {
+        animation: none;
+        caret-color: transparent;
+
+        @media (prefers-reduced-motion: reduce) {
+          caret-color: initial;
+        }
+      }
+    }
+
+    /* stylelint-disable a11y/media-prefers-reduced-motion */
+    &:invalid,
+    &:invalid::placeholder {
+      animation: blink 2s step-end infinite;
+      caret-color: transparent;
+
+      @media (prefers-reduced-motion: reduce) {
+        caret-color: initial;
+      }
+    }
+    /* stylelint-enable a11y/media-prefers-reduced-motion */
+
+    &:valid,
+    &:valid::placeholder {
+      animation: none;
+    }
+
+    &:not(:focus):valid,
+    &:not(:focus):valid::placeholder {
+      text-decoration-line: none;
     }
   }
 
@@ -129,11 +164,13 @@
     width: 100%;
     z-index: var(--z-index-search-results);
 
+    /* stylelint-disable selector-no-qualifying-type */
     &,
     a[href],
     mark {
       color: var(--text-primary);
     }
+    /* stylelint-enable selector-no-qualifying-type */
 
     .indexing-warning {
       color: var(--icon-warning);
@@ -146,6 +183,10 @@
     .fuzzy-engaged {
       background-color: var(--background-secondary);
       font-size: 0.8125rem;
+    }
+
+    a {
+      text-overflow: ellipsis;
     }
 
     .result-item {
@@ -196,10 +237,6 @@
       overflow-wrap: break-word;
     }
 
-    a {
-      text-overflow: ellipsis;
-    }
-
     div.searchindex-error {
       color: var(--icon-critical);
     }
@@ -209,41 +246,4 @@
 .search-form {
   display: flex;
   position: relative;
-}
-
-.button.search-button,
-.button.clear-search-button {
-  --button-color: var(--icon-secondary);
-  --button-height: 1.5rem;
-  --button-padding: 0;
-  position: absolute;
-  right: 0.75rem;
-  top: 0.25rem;
-  width: 1.5rem;
-
-  &:hover,
-  &:focus {
-    background: transparent;
-  }
-
-  @media screen and (min-width: $screen-md) {
-    right: 1.2rem;
-    width: 1.5rem;
-  }
-}
-
-.button.clear-search-button {
-  display: none;
-}
-
-/* When the search input has focus or has content,
-   show the clear search button */
-.header-search .search-input-field {
-  &:valid,
-  &:focus {
-    & ~ .button.clear-search-button {
-      display: block;
-      right: 2.8rem;
-    }
-  }
 }

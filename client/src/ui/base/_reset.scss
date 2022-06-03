@@ -1,3 +1,4 @@
+/* stylelint-disable declaration-no-important */
 /*
   Modern Reset
   See https://hankchizljaw.com/wrote/a-modern-css-reset/
@@ -46,13 +47,13 @@ body {
   text-rendering: optimizeSpeed;
 }
 
+a {
+  text-decoration: none;
+}
+
 /* A elements that don't have a class get default styles */
 a:not([class]) {
   text-decoration-skip-ink: auto;
-}
-
-a {
-  text-decoration: none;
 }
 
 /* Make images easier to work with */

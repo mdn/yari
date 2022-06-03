@@ -37,6 +37,36 @@
   }
 }
 
+.submenu-item-heading,
+.submenu-item {
+  font-size: var(--type-smaller-font-size);
+
+  @media screen and (min-width: $screen-md) {
+    // If there is sub-text associated with this heading, make it bold.
+    &:not(:only-child) {
+      font-weight: var(--font-body-strong-weight);
+    }
+  }
+}
+
+.submenu-header {
+  display: block;
+  padding: 1rem;
+
+  .submenu-item {
+    padding: 0;
+
+    &:hover,
+    &:focus {
+      background: none;
+    }
+  }
+
+  @media screen and (min-width: $screen-md) {
+    border-bottom: 1px solid var(--border-primary);
+  }
+}
+
 .submenu {
   background-color: var(--background-primary);
   list-style: none;
@@ -47,6 +77,7 @@
     width: 100%;
   }
 
+  /* stylelint-disable-next-line no-descending-specificity */
   a,
   .submenu-item {
     align-items: center;
@@ -57,22 +88,22 @@
     padding: 0.5rem;
     width: 100%;
 
-    li:last-child &:not(:focus) {
-      border-bottom-color: transparent;
-    }
-
     &:hover {
       background-color: var(--border-secondary);
       text-decoration: none;
     }
 
-    @at-root .main-menu &:hover {
-      background-color: var(--background-secondary);
-    }
-
     &:focus {
       border: 1px solid var(--button-secondary-border-focus);
       box-shadow: var(--button-focus-effect);
+    }
+
+    li:last-child &:not(:focus) {
+      border-bottom-color: transparent;
+    }
+
+    @at-root .main-menu &:hover {
+      background-color: var(--background-secondary);
     }
 
     .icon {
@@ -93,42 +124,12 @@
   }
 }
 
-.submenu-header {
-  display: block;
-  padding: 1rem;
-
-  .submenu-item {
-    padding: 0;
-  }
-
-  .submenu-item:hover,
-  .submenu-item:focus {
-    background: none;
-  }
-
-  @media screen and (min-width: $screen-md) {
-    border-bottom: 1px solid var(--border-primary);
-  }
-}
-
 .submenu-icon {
   background-color: var(--icon-primary);
   height: 2rem;
   margin-right: 0.75rem;
   position: relative;
   width: 0.2rem;
-}
-
-.submenu-item-heading,
-.submenu-item {
-  font-size: var(--type-smaller-font-size);
-
-  @media screen and (min-width: $screen-md) {
-    // If there is sub-text associated with this heading, make it bold.
-    &:not(:only-child) {
-      font-weight: var(--font-body-strong-weight);
-    }
-  }
 }
 
 .submenu-item-description {

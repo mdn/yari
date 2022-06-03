@@ -20,6 +20,12 @@ $icons: "add-filled", "add", "altname", "bell-filled", "bell", "bookmark-filled"
   mask-repeat: no-repeat;
   vertical-align: middle;
   width: var(--size);
+
+  @each $name in $icons {
+    &.icon-#{$name} {
+      mask-image: url("../../../assets/icons/" + $name + ".svg");
+    }
+  }
 }
 
 // The icon class is applied directly to SVGs sometimes. This
@@ -27,12 +33,4 @@ $icons: "add-filled", "add", "altname", "bell-filled", "bell", "bookmark-filled"
 svg.icon {
   background: transparent;
   color: var(--icon-primary);
-}
-
-.icon {
-  @each $name in $icons {
-    &.icon-#{$name} {
-      mask-image: url("../../../assets/icons/" + $name + ".svg");
-    }
-  }
 }

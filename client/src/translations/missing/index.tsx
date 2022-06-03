@@ -642,7 +642,7 @@ function DocumentsTable({
 function LastModified({ edits }: { edits: DocumentEdits }) {
   const modified = dayjs(edits.modified);
   return (
-    <span className="last_modified">
+    <span className="last-modified">
       <a href={edits.commitURL} target="_blank" rel="noreferrer">
         <time dateTime={modified.toISOString()} title={modified.toISOString()}>
           {modified.fromNow()}

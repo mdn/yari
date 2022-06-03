@@ -17,7 +17,7 @@
     h1 {
       color: var(--plus-accent-color);
       /* MDN/Plus/Type/Overline/S */
-      font: 700 12px/120% Inter;
+      font: bold 12px/120% Inter, sans-serif;
       letter-spacing: 1.5px;
       text-transform: uppercase;
     }
@@ -29,6 +29,10 @@
       margin: 1rem 0 2rem;
       padding: revert;
 
+      p {
+        font-style: italic;
+      }
+
       p:first-child {
         font: var(--type-heading-h1-mobile);
         margin-bottom: 2rem;
@@ -36,10 +40,6 @@
         @media screen and (min-width: $screen-md) {
           font: var(--type-heading-h1);
         }
-      }
-
-      p {
-        font-style: italic;
       }
     }
 

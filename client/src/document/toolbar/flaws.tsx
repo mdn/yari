@@ -472,7 +472,7 @@ function BrokenLinks({
           return (
             <li
               key={key}
-              className={flaw.fixed ? "fixed_flaw" : undefined}
+              className={flaw.fixed ? "fixed-flaw" : undefined}
               title={
                 flaw.fixed
                   ? "This broken link has been automatically fixed."
@@ -709,7 +709,7 @@ function Macros({
         return (
           <details
             key={flaw.id}
-            className={flaw.fixed ? "fixed_flaw" : undefined}
+            className={flaw.fixed ? "fixed-flaw" : undefined}
             title={
               flaw.fixed
                 ? "This macro flaw has been automatically fixed."

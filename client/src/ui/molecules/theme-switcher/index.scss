@@ -9,6 +9,22 @@
     text-transform: none;
   }
 
+  .active-menu-item {
+    &:focus {
+      .button-wrap {
+        --button-border-color: var(--button-secondary-border-focus);
+      }
+    }
+
+    &:hover,
+    &:focus {
+      .button-wrap {
+        --button-bg: var(--background-primary);
+        --button-border-color: var(--border-secondary);
+      }
+    }
+  }
+
   .themes-menu .button.button {
     --button-bg: transparent;
     --button-border-color: var(--button-bg);
@@ -19,7 +35,7 @@
 
     .button-wrap {
       border-width: 1px;
-      font-weight: 400;
+      font-weight: normal;
       justify-content: flex-start;
       padding: 1rem;
     }
@@ -31,20 +47,6 @@
     &:hover {
       --button-bg: var(--border-secondary);
     }
-  }
-
-  .active-menu-item,
-  .active-menu-item:hover,
-  .active-menu-item,
-  .active-menu-item:focus {
-    .button-wrap {
-      --button-bg: var(--background-primary);
-      --button-border-color: var(--border-secondary);
-    }
-  }
-
-  .active-menu-item:focus .button-wrap {
-    --button-border-color: var(--button-secondary-border-focus);
   }
 
   @media screen and (min-width: $screen-md) {

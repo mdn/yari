@@ -1,3 +1,4 @@
+/* stylelint-disable declaration-no-important */
 @use "./ui/vars" as *;
 @use "./ui/base/mdn";
 @use "./ui/base/typography";
@@ -126,6 +127,21 @@ main {
   min-height: 80vh;
 }
 
+a {
+  color: var(--text-link);
+
+  &.external::after {
+    background-color: var(--icon-primary);
+    content: "";
+    display: inline-flex;
+    height: 10px;
+    margin-left: 4px;
+    mask-image: url("./assets/icons/external.svg");
+    mask-size: cover;
+    width: 10px;
+  }
+}
+
 .about-container,
 .main-page-content {
   a {
@@ -144,7 +160,6 @@ main {
 .visually-hidden {
   border: 0 !important;
   clip: rect(1px, 1px, 1px, 1px) !important;
-  clip-path: inset(50%) !important;
   clip-path: inset(50%) !important;
   height: 1px !important;
   margin: -1px !important;
@@ -165,21 +180,6 @@ pre {
   white-space: -pre-wrap;
   white-space: -o-pre-wrap;
   word-wrap: break-word;
-}
-
-a {
-  color: var(--text-link);
-
-  &.external::after {
-    background-color: var(--icon-primary);
-    content: "";
-    display: inline-flex;
-    height: 10px;
-    margin-left: 4px;
-    mask-image: url("./assets/icons/external.svg");
-    mask-size: cover;
-    width: 10px;
-  }
 }
 
 .expand-this-link::after {
@@ -275,6 +275,7 @@ u {
   @include mdn.mify;
 }
 
+/* stylelint-disable-next-line selector-class-pattern */
 ._ify {
   @include mdn.uify;
 }

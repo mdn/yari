@@ -1,5 +1,7 @@
 .all-flaws {
   .search-error {
+    background-color: rgb(252, 159, 159);
+
     h3,
     h4 {
       margin-top: 0;
@@ -20,10 +22,6 @@
 
   td .document-title-preview {
     margin-left: 10px;
-  }
-
-  .search-error {
-    background-color: rgb(252, 159, 159);
   }
 
   .document-warnings {

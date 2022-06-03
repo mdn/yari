@@ -2,6 +2,13 @@
 
 @media screen and (min-width: $screen-sm) {
   .bc-table {
+    td,
+    th {
+      background: inherit;
+      padding: 0.25rem;
+      width: 2rem;
+    }
+
     thead {
       display: table-header-group;
 
@@ -10,13 +17,6 @@
           vertical-align: revert;
         }
       }
-    }
-
-    td,
-    th {
-      background: inherit;
-      padding: 0.25rem;
-      width: 2rem;
     }
 
     td.bc-support {

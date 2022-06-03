@@ -17,7 +17,6 @@
     margin: 0 auto;
     max-width: 52rem;
     padding: 0 1rem;
-    padding: 0 1rem;
     width: 100%;
 
     h1 {
@@ -38,6 +37,7 @@
     }
 
     h1::after {
+      /* stylelint-disable-next-line no-irregular-whitespace */
       content: " ";
       text-decoration: underline;
       text-decoration-color: var(--text-link);
@@ -142,6 +142,11 @@
     .button-wrap {
       background: none;
 
+      .icon {
+        background-color: var(--icon-primary);
+        border: 0;
+      }
+
       &:hover,
       &:focus {
         background: none;
@@ -151,16 +156,6 @@
           background-color: var(--text-link);
         }
       }
-
-      .icon {
-        background-color: var(--icon-primary);
-        border: none;
-      }
-    }
-  }
-
-  .search-form {
-    &[aria-expanded="true"] {
     }
   }
 }

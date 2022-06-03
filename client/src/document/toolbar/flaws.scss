@@ -46,13 +46,13 @@
   }
 
   .macro-filepath-in-prerequisite {
-    background-color: orange;
+    background-color: #ffa500;
     font-size: 80%;
     padding: 1px 5px;
   }
 
-  details.fixed_flaw summary,
-  li.fixed_flaw {
+  details.fixed-flaw summary,
+  li.fixed-flaw {
     text-decoration: line-through;
   }
 }

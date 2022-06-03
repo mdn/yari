@@ -35,7 +35,7 @@
       margin: 0 auto;
 
       &-offline {
-        @extend .wrapper;
+        @extend %wrapper;
         display: none;
       }
 
@@ -161,7 +161,7 @@
             align-self: center;
             background: $mdn-color-neutral-90;
             border-radius: 1rem;
-            color: white;
+            color: var(--text-primary);
             display: flex;
             font-weight: 620;
             height: 2rem;
@@ -181,21 +181,6 @@
             &.external::after {
               background-color: var(--text-invert);
             }
-          }
-
-          .sub-link {
-            align-items: center;
-            align-self: center;
-            background: $mdn-color-neutral-90;
-            border-radius: 1rem;
-            color: var(--text-primary);
-            display: flex;
-            font-weight: 620;
-            height: 2rem;
-            justify-content: center;
-            min-width: fit-content;
-            padding: 0.25rem 0.5rem;
-            width: calc(100% - 1rem);
           }
 
           .current {

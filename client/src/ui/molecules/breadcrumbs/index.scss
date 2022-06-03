@@ -34,6 +34,11 @@
       }
     }
 
+    [property="name"] {
+      display: inline-block;
+      margin-right: 0.5rem;
+    }
+
     a {
       align-items: center;
       display: flex;
@@ -48,6 +53,7 @@
         text-decoration: underline;
       }
 
+      /* stylelint-disable a11y/no-outline-none  */
       &:focus-visible {
         outline: 0;
 
@@ -57,11 +63,7 @@
           outline-style: auto;
         }
       }
-    }
-
-    [property="name"] {
-      display: inline-block;
-      margin-right: 0.5rem;
+      /* stylelint-enable a11y/no-outline-none */
     }
   }
 

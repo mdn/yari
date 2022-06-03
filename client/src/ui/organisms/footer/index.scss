@@ -6,6 +6,9 @@
   position: relative;
 
   &-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
     margin: 0 auto;
     max-width: 1440px;
   }
@@ -124,14 +127,6 @@
 
   &-item {
     font-size: var(--type-smaller-font-size);
-  }
-}
-
-.page-footer {
-  &-grid {
-    display: flex;
-    flex-direction: column;
-    gap: 1.5rem;
   }
 }
 

@@ -1,7 +1,79 @@
+@import "./index-mobile";
+@import "./index-desktop";
+@import "./index-desktop-md";
+@import "./index-desktop-xl";
 @use "~@mdn/minimalist/sass/mixins/utils" as *;
 @use "../../../ui/vars" as *;
 
 // Style for mobile *and* desktop.
+
+.bcd-cell-text-copy {
+  color: var(--text-primary);
+  display: flex;
+  gap: 0.5rem;
+}
+
+.bc-supports-yes {
+  .bcd-cell-text-copy {
+    color: var(--text-primary-green);
+  }
+}
+
+.bc-supports-no {
+  .bcd-cell-text-copy {
+    color: var(--text-primary-red);
+  }
+}
+
+.bc-supports-partial {
+  .bcd-cell-text-copy {
+    color: var(--text-primary-yellow);
+  }
+}
+
+.bcd-cell-text-wrapper {
+  display: flex;
+  gap: 0.5rem;
+
+  @media screen and (min-width: $screen-md) {
+    align-items: center;
+    flex-direction: column;
+  }
+}
+
+.offscreen,
+.only-icon span {
+  @include visually-hidden();
+}
+
+.bc-support {
+  text-align: center;
+  vertical-align: middle;
+}
+
+// Row with desktop / mobile icons.
+.bc-platforms {
+  height: 2rem;
+
+  th {
+    text-align: center;
+  }
+
+  td {
+    border: 0;
+  }
+}
+
+// Row with browser names.
+.bc-browsers {
+  th {
+    text-align: center;
+  }
+
+  td {
+    border-width: 0 0 1px;
+  }
+}
 
 .bc-table {
   border: 1px solid var(--border-primary);
@@ -29,7 +101,35 @@
   }
 
   th {
+    background: var(--background-tertiary);
     padding: 0.4rem;
+    vertical-align: bottom;
+  }
+
+  .icon-wrap {
+    .bc-support-level {
+      @include visually-hidden;
+    }
+  }
+
+  .bc-supports {
+    margin-bottom: 1rem;
+
+    .icon-wrap {
+      background: var(--background-primary);
+    }
+  }
+
+  .bc-support {
+    > button > .icon-wrap {
+      display: block;
+    }
+
+    .icon.icon-removed-partial {
+      background-color: var(--icon-critical);
+      // override icon
+      mask-image: url("../../../assets/icons/no.svg");
+    }
   }
 
   // these props allow us to add border-radius to the table.
@@ -91,40 +191,9 @@
     }
   }
 
-  th {
-    background: var(--background-tertiary);
-    vertical-align: bottom;
-  }
-
-  .bc-supports {
-    margin-bottom: 1rem;
-
-    .icon-wrap {
-      background: var(--background-primary);
-    }
-  }
-
   .bc-supports.bc-supports-removed-partial {
     .bcd-cell-text-copy {
       color: var(--text-primary-yellow);
-    }
-  }
-
-  .icon-wrap {
-    .bc-support-level {
-      @include visually-hidden;
-    }
-  }
-
-  .bc-support {
-    > button > .icon-wrap {
-      display: block;
-    }
-
-    .icon.icon-removed-partial {
-      background-color: var(--icon-critical);
-      // override icon
-      mask-image: url("../../../assets/icons/no.svg");
     }
   }
 
@@ -153,11 +222,6 @@
 
 .bc-head-icon-symbol {
   margin-bottom: 0.3rem;
-}
-
-.bc-support {
-  text-align: center;
-  vertical-align: middle;
 }
 
 .bc-level-no {
@@ -190,27 +254,18 @@
   }
 }
 
-// Row with desktop / mobile icons.
-.bc-platforms {
-  height: 2rem;
-
-  th {
-    text-align: center;
+.main-page-content {
+  .bc-legend {
+    dd,
+    dt {
+      margin-bottom: 0;
+      margin-left: 0;
+      margin-top: 0;
+    }
   }
 
-  td {
-    border: none;
-  }
-}
-
-// Row with browser names.
-.bc-browsers {
-  th {
-    text-align: center;
-  }
-
-  td {
-    border-width: 0 0 1px;
+  .bc-supports-dd {
+    margin: 0;
   }
 }
 
@@ -229,6 +284,17 @@
     position: absolute;
     width: 2px;
     z-index: -1;
+  }
+
+  /* stylelint-disable-next-line no-descending-specificity */
+  dd {
+    margin-bottom: 1rem;
+    padding-left: 1.5rem;
+    text-indent: -1.5rem;
+
+    &:last-child {
+      margin-bottom: 2rem;
+    }
   }
 
   // complicated selector to cover the last bit of the grey line above.
@@ -269,21 +335,15 @@
   abbr {
     margin-right: 4px;
   }
-
-  dd {
-    margin-bottom: 1rem;
-    padding-left: 1.5rem;
-    text-indent: -1.5rem;
-
-    &:last-child {
-      margin-bottom: 2rem;
-    }
-  }
 }
 
 .bc-notes-wrapper {
   color: var(--text-primary);
   margin-bottom: 1rem;
+
+  .bcd-cell-text-wrapper {
+    flex-direction: row;
+  }
 
   &:last-child {
     margin-bottom: 0;
@@ -306,11 +366,6 @@ dl.bc-notes-list {
       margin-bottom: 0;
     }
   }
-}
-
-.offscreen,
-.only-icon span {
-  @include visually-hidden();
 }
 
 .bc-table-row-header {
@@ -360,72 +415,12 @@ dl.bc-notes-list {
   font: var(--type-smaller-font-size);
 }
 
-.main-page-content {
-  .bc-legend {
-    dd,
-    dt {
-      margin-bottom: 0;
-      margin-left: 0;
-      margin-top: 0;
-    }
-  }
-
-  .bc-supports-dd {
-    margin: 0;
-  }
-}
-
-@import "./index-mobile";
-@import "./index-desktop";
-@import "./index-desktop-md";
-@import "./index-desktop-xl";
-
-.bcd-cell-text-wrapper {
-  display: flex;
-  gap: 0.5rem;
-
-  @media screen and (min-width: $screen-md) {
-    align-items: center;
-    flex-direction: column;
-  }
-}
-
-.bcd-cell-text-copy {
-  color: var(--text-primary);
-  display: flex;
-  gap: 0.5rem;
-}
-
-.bc-supports-yes {
-  .bcd-cell-text-copy {
-    color: var(--text-primary-green);
-  }
-}
-
-.bc-supports-no {
-  .bcd-cell-text-copy {
-    color: var(--text-primary-red);
-  }
-}
-
-.bc-supports-partial {
-  .bcd-cell-text-copy {
-    color: var(--text-primary-yellow);
-  }
-}
-
 .bcd-cell-icons {
   display: flex;
   gap: 0.5rem;
 
   @media screen and (min-width: $screen-md) {
     display: block;
-  }
-}
-
-.bc-notes-wrapper {
-  .bcd-cell-text-wrapper {
-    flex-direction: row;
   }
 }
 

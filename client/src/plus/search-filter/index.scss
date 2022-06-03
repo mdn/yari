@@ -6,6 +6,16 @@
   gap: 0.5rem;
   padding: 1rem 0;
 
+  .search-filter-category {
+    position: relative;
+    width: calc(50% - 0.25rem);
+
+    > .button,
+    .dropdown-list {
+      width: 100%;
+    }
+  }
+
   &.inline-on-mobile {
     flex-wrap: nowrap;
 
@@ -17,16 +27,6 @@
 
 .search-filter [type="search"] {
   flex: 1;
-}
-
-.search-filter-category {
-  position: relative;
-  width: calc(50% - 0.25rem);
-
-  > .button,
-  .dropdown-list {
-    width: 100%;
-  }
 }
 
 @media screen and (min-width: $screen-md) {

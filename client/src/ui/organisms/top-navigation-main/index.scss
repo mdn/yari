@@ -99,7 +99,7 @@
 
         .button-wrap {
           background: none;
-          border: none;
+          border: 0;
           gap: 0.5rem;
           justify-content: flex-start;
           padding: 0;
@@ -114,7 +114,7 @@
 
     @media screen and (min-width: $screen-lg) {
       border-radius: var(--elem-radius);
-      border-top: none;
+      border-top: 0;
       padding: 0.5rem;
 
       &:hover,
@@ -172,10 +172,6 @@
       flex-direction: row;
     }
 
-    .main-nav {
-      order: 0;
-    }
-
     .header-search {
       order: 1;
     }
@@ -194,6 +190,7 @@
 
     .main-nav {
       margin-right: auto;
+      order: 0;
       width: max-content;
     }
 

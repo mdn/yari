@@ -1,7 +1,7 @@
 .mdn-cta-container {
   align-items: center;
   background-color: #212121;
-  color: white;
+  color: #fff;
   display: flex;
   height: 100%;
   min-height: 40px;
@@ -15,7 +15,7 @@
 
   button {
     background: none;
-    border: none;
+    border: 0;
     opacity: 0.6;
 
     &:hover,
@@ -26,7 +26,7 @@
     }
 
     .icon {
-      color: white;
+      color: #fff;
       height: 16px;
     }
   }
@@ -53,6 +53,6 @@
   .mdn-plus {
     color: var(--color-announcement-banner-accent);
     font-size: 1.2rem;
-    font-weight: 700;
+    font-weight: bold;
   }
 }

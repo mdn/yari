@@ -8,229 +8,100 @@
   --sticky-header-height: var(--main-document-header-height);
 }
 
-.main-document-header-container {
-  position: sticky;
-  top: 0;
-  z-index: var(--z-index-top);
+pre,
+code,
+.code-example {
+  border-radius: var(--elem-radius);
+  font-size: var(--type-base-font-size-rem);
 }
 
-.main-page-content {
-  overflow-wrap: break-word;
-  padding: 3rem 1rem 1rem;
+code {
+  background: var(--code-background-inline);
+  padding: 0.125rem 0.25rem;
+  width: fit-content;
+}
 
-  h1,
-  h2,
-  h3,
-  h4,
-  h5,
-  h6 {
-    a:link,
-    a:visited {
-      color: var(--text-primary);
-      text-decoration: none;
-    }
+pre {
+  background-color: var(--code-background-block);
+  border: 1px solid transparent;
+  margin: 1rem 0 2rem;
+  padding: 1rem 2.5rem 1rem 1rem;
 
-    a:hover,
-    a:focus {
-      text-decoration: underline;
-    }
-
-    a:active {
-      background-color: transparent;
-    }
-
-    a[href^="#"]:hover,
-    a[href^="#"]:focus {
-      &::after {
-        color: var(--text-inactive);
-        content: "#";
-        display: inline-flex;
-        font-size: 0.7em;
-        line-height: 1;
-        margin-left: 4px;
-        text-decoration: none;
-      }
-    }
-  }
-
-  h1 {
-    &::after {
-      text-decoration-color: var(--category-color);
-    }
-  }
-
-  /* reduce the top margin of the interactive example heading */
-  h2:first-of-type {
-    margin-top: 2rem;
-  }
-
-  a:not(.button) {
-    color: var(--text-link);
-    width: fit-content;
-
-    &:active {
-      background-color: var(--text-link);
-      color: white;
-
-      code {
-        background-color: transparent;
-        color: white;
-      }
-    }
-
-    &[id^="attr-"] {
-      &:link,
-      &:visited {
-        color: var(--text-link);
-        text-decoration: none;
-      }
-
-      &:hover,
-      &:focus {
-        text-decoration: underline;
-      }
-
-      &:active {
-        color: white;
-      }
-    }
-
-    &[aria-current] {
-      color: var(--text-link);
-      font-weight: var(--font-body-strong-weight);
-      text-decoration: none;
-    }
-  }
-
-  img {
-    background: white;
-    border: 1px solid var(--border-primary) !important;
-    border-radius: var(--elem-radius);
-    display: inline-block;
-    display: flex;
-    height: auto;
-    margin: 2rem auto;
-  }
-
-  ul,
-  ol {
-    margin: 1rem 0 2rem;
-    padding-left: 2rem;
-
-    li {
-      margin: 0.5rem 0;
-    }
-  }
-
-  ul {
-    list-style: disc;
-
-    ul {
-      list-style-type: circle;
-      margin: 0;
-      padding-left: 1rem;
-    }
-  }
-
-  ol {
-    list-style: decimal;
-
-    ol {
-      list-style: lower-roman;
-      margin: 0;
-    }
-  }
-
-  dd ol,
-  dd ul {
-    margin-bottom: 1rem;
-    padding-left: 3rem;
-  }
-
-  td ul,
-  td ol {
-    padding-left: 1rem;
-  }
-
-  dd li {
-    margin-bottom: 1rem;
-  }
-
-  td li {
-    margin-bottom: 0.5rem;
-  }
-
-  dl {
-    dt {
-      margin-bottom: 0.5rem;
-      margin-top: 2rem;
-    }
-
-    dd {
-      margin-bottom: 1rem;
-      margin-left: 1rem;
-
-      .notecard {
-        p {
-          padding-left: 0;
-        }
-      }
-    }
-
-    p {
-      margin: 0 0 1rem;
-    }
-  }
-
-  // specific styles to override base styles. The Markdown compiler
-  // adds extra divs, so this is a way for these styles to not
-  // stomp out component styles.
-  .section-content {
-    p {
-      font: var(--type-article-p);
-
-      &:last-child {
-        margin-bottom: 2rem;
-      }
-    }
-
-    figure {
-      margin-bottom: 1rem;
-    }
-
-    .prev-next {
-      display: flex;
-      gap: 0.5rem;
-      justify-content: space-between;
-      list-style: none;
-      margin: 1rem 0;
-      padding: 0;
-      text-align: center;
-
-      li {
-        display: flex;
-        margin: 0;
-      }
-
-      .button {
-        margin: 0;
-        max-width: inherit;
-      }
-
-      .button-wrap {
-        color: inherit;
-      }
-    }
-  }
-
-  @media screen and (min-width: $screen-sm) {
-    padding: 3rem;
-  }
-
-  @media screen and (min-width: $screen-md) {
-    margin-bottom: 0.5rem;
+  code {
+    background: none;
+    color: var(--text-primary);
     padding: 0;
   }
+}
+
+h1,
+h2,
+h3 {
+  letter-spacing: var(--heading-letter-spacing);
+}
+
+h1 {
+  font: var(--type-heading-h1);
+  margin-bottom: 2rem;
+  word-break: break-word;
+
+  @media screen and (min-width: $screen-md) {
+    font: var(--type-heading-h1);
+  }
+}
+
+h2 {
+  font: var(--type-heading-h2);
+  margin: 4rem 0 0.5rem;
+}
+
+h3 {
+  font: var(--type-heading-h3);
+  margin: 2rem 0 0.5rem;
+}
+
+h4 {
+  font: var(--type-heading-h4);
+  letter-spacing: 0.5px;
+  margin: 2rem 0 1rem;
+}
+
+h5 {
+  font: var(--type-heading-h5);
+  letter-spacing: 1.5px;
+  margin: 2rem 0 1rem;
+  text-transform: uppercase;
+}
+
+h6 {
+  font: var(--type-heading-h6);
+  letter-spacing: 1.5px;
+  margin: 2rem 0 1rem;
+  text-transform: uppercase;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  code {
+    font-size: inherit;
+  }
+}
+
+/* When an h3 immediately follows an h2 we want to use
+ * a smaller top margin. We also make accommodation
+  for situations where there is an empty div
+  between the two elements */
+h2 ~ h3,
+h2 ~ div ~ h3 {
+  margin-top: 1rem;
+}
+
+p {
+  margin: 1rem 0 2rem;
 }
 
 // Base typography styles. Trying to remove as much as possible from
@@ -276,12 +147,12 @@ table {
   }
 
   &.properties {
-    border: none;
+    border: 0;
     font-size: var(--type-base-font-size);
 
     th,
     td {
-      border: none;
+      border: 0;
     }
 
     th {
@@ -301,6 +172,7 @@ table {
     }
   }
 
+  /* stylelint-disable no-descending-specificity  */
   &.properties,
   &.standard-table {
     tr {
@@ -310,6 +182,7 @@ table {
       }
     }
   }
+  /* stylelint-enable no-descending-specificity  */
 }
 
 iframe {
@@ -333,76 +206,6 @@ iframe {
   }
 }
 
-h1,
-h2,
-h3 {
-  letter-spacing: var(--heading-letter-spacing);
-}
-
-h1 {
-  font: var(--type-heading-h1);
-  margin-bottom: 2rem;
-  word-break: break-word;
-
-  @media screen and (min-width: $screen-md) {
-    font: var(--type-heading-h1);
-  }
-}
-
-h2 {
-  font: var(--type-heading-h2);
-  margin: 4rem 0 0.5rem;
-}
-
-h3 {
-  font: var(--type-heading-h3);
-  margin: 2rem 0 0.5rem;
-}
-
-/* When an h3 immediately follows an h2 we want to use
- * a smaller top margin. We also make accommodation
-  for situations where there is an empty div
-  between the two elements */
-h2 ~ div ~ h3,
-h2 ~ h3 {
-  margin-top: 1rem;
-}
-
-h4 {
-  font: var(--type-heading-h4);
-  letter-spacing: 0.5px;
-  margin: 2rem 0 1rem;
-}
-
-h5 {
-  font: var(--type-heading-h5);
-  letter-spacing: 1.5px;
-  margin: 2rem 0 1rem;
-  text-transform: uppercase;
-}
-
-h6 {
-  font: var(--type-heading-h6);
-  letter-spacing: 1.5px;
-  margin: 2rem 0 1rem;
-  text-transform: uppercase;
-}
-
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-  code {
-    font-size: inherit;
-  }
-}
-
-p {
-  margin: 1rem 0 2rem;
-}
-
 blockquote {
   border-left: 4px solid var(--border-secondary);
   color: var(--text-secondary);
@@ -414,30 +217,10 @@ blockquote {
   }
 }
 
-pre,
-code,
-.code-example {
-  border-radius: var(--elem-radius);
-  font-size: var(--type-base-font-size-rem);
-}
-
-code {
-  background: var(--code-background-inline);
-  padding: 0.125rem 0.25rem;
-  width: fit-content;
-}
-
-pre {
-  background-color: var(--code-background-block);
-  border: 1px solid transparent;
-  margin: 1rem 0 2rem;
-  padding: 1rem 2.5rem 1rem 1rem;
-
-  code {
-    background: none;
-    color: var(--text-primary);
-    padding: 0;
-  }
+.main-document-header-container {
+  position: sticky;
+  top: 0;
+  z-index: var(--z-index-top);
 }
 
 .example-good,
@@ -617,4 +400,231 @@ kbd {
   color: var(--text-secondary);
   font-size: 0.825rem;
   padding: 0.25rem;
+}
+
+.main-page-content {
+  overflow-wrap: break-word;
+  padding: 3rem 1rem 1rem;
+
+  /* stylelint-disable no-descending-specificity  */
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    a:link,
+    a:visited {
+      color: var(--text-primary);
+      text-decoration: none;
+    }
+
+    a:hover,
+    a:focus {
+      text-decoration: underline;
+    }
+
+    a:active {
+      background-color: transparent;
+    }
+
+    /* stylelint-disable selector-no-qualifying-type  */
+    a[href^="#"]:hover,
+    a[href^="#"]:focus {
+      &::after {
+        color: var(--text-inactive);
+        content: "#";
+        display: inline-flex;
+        font-size: 0.7em;
+        line-height: 1;
+        margin-left: 4px;
+        text-decoration: none;
+      }
+    }
+    /* stylelint-enable selector-no-qualifying-type  */
+  }
+
+  h1 {
+    &::after {
+      text-decoration-color: var(--category-color);
+    }
+  }
+
+  /* reduce the top margin of the interactive example heading */
+  h2:first-of-type {
+    margin-top: 2rem;
+  }
+
+  a:not(.button) {
+    color: var(--text-link);
+    width: fit-content;
+
+    &:active {
+      background-color: var(--text-link);
+      color: #fff;
+
+      code {
+        background-color: transparent;
+        color: #fff;
+      }
+    }
+
+    /* stylelint-disable selector-no-qualifying-type  */
+    &[id^="attr-"] {
+      &:link,
+      &:visited {
+        color: var(--text-link);
+        text-decoration: none;
+      }
+
+      &:hover,
+      &:focus {
+        text-decoration: underline;
+      }
+
+      &:active {
+        color: #fff;
+      }
+    }
+
+    &[aria-current] {
+      color: var(--text-link);
+      font-weight: var(--font-body-strong-weight);
+      text-decoration: none;
+    }
+    /* stylelint-enable selector-no-qualifying-type  */
+  }
+  /* stylelint-enable no-descending-specificity  */
+
+  img {
+    background: #fff;
+    /* stylelint-disable-next-line declaration-no-important */
+    border: 1px solid var(--border-primary) !important;
+    border-radius: var(--elem-radius);
+    display: inline-block;
+    display: flex;
+    height: auto;
+    margin: 2rem auto;
+  }
+
+  ul,
+  ol {
+    margin: 1rem 0 2rem;
+    padding-left: 2rem;
+
+    li {
+      margin: 0.5rem 0;
+    }
+  }
+
+  ul {
+    list-style: disc;
+
+    ul {
+      list-style-type: circle;
+      margin: 0;
+      padding-left: 1rem;
+    }
+  }
+
+  ol {
+    list-style: decimal;
+
+    ol {
+      list-style: lower-roman;
+      margin: 0;
+    }
+  }
+
+  dd ol,
+  dd ul {
+    margin-bottom: 1rem;
+    padding-left: 3rem;
+  }
+
+  td ul,
+  td ol {
+    padding-left: 1rem;
+  }
+
+  dd li {
+    margin-bottom: 1rem;
+  }
+
+  td li {
+    margin-bottom: 0.5rem;
+  }
+
+  dl {
+    dt {
+      margin-bottom: 0.5rem;
+      margin-top: 2rem;
+    }
+
+    p {
+      margin: 0 0 1rem;
+    }
+
+    dd {
+      margin-bottom: 1rem;
+      margin-left: 1rem;
+
+      .notecard {
+        p {
+          padding-left: 0;
+        }
+      }
+    }
+  }
+
+  // specific styles to override base styles. The Markdown compiler
+  // adds extra divs, so this is a way for these styles to not
+  // stomp out component styles.
+  .section-content {
+    /* stylelint-disable-next-line no-descending-specificity */
+    p {
+      font: var(--type-article-p);
+
+      &:last-child {
+        margin-bottom: 2rem;
+      }
+    }
+
+    figure {
+      margin-bottom: 1rem;
+    }
+
+    .prev-next {
+      display: flex;
+      gap: 0.5rem;
+      justify-content: space-between;
+      list-style: none;
+      margin: 1rem 0;
+      padding: 0;
+      text-align: center;
+
+      li {
+        display: flex;
+        margin: 0;
+      }
+
+      .button {
+        margin: 0;
+        max-width: inherit;
+      }
+
+      .button-wrap {
+        color: inherit;
+      }
+    }
+  }
+
+  @media screen and (min-width: $screen-sm) {
+    padding: 3rem;
+  }
+
+  @media screen and (min-width: $screen-md) {
+    margin-bottom: 0.5rem;
+    padding: 0;
+  }
 }

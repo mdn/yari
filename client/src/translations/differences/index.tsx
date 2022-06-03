@@ -685,7 +685,7 @@ function LastModified({ edits }: { edits: DocumentEdits }) {
   const parentModified = dayjs(edits.parentModified);
   return (
     <span
-      className={`last_modified ${
+      className={`last-modified ${
         parentModified < modified ? "ahead" : "behind"
       }`}
     >

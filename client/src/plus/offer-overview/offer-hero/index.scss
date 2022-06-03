@@ -51,6 +51,7 @@ $text-stroke-width: 2px;
           gap: 1rem;
           width: 100%;
 
+          /* stylelint-disable a11y/media-prefers-reduced-motion */
           a {
             border-radius: var(--elem-radius);
             font-size: 14px;
@@ -60,11 +61,11 @@ $text-stroke-width: 2px;
             position: relative;
             text-align: center;
             transition: all 0.2s ease;
-            transition: all 0.2s ease;
             width: 140px;
             width: 100%;
             z-index: 1;
           }
+          /* stylelint-enable a11y/media-prefers-reduced-motion */
 
           .button-primary {
             background-color: var(--text-primary);
@@ -81,7 +82,7 @@ $text-stroke-width: 2px;
           .button-secondary {
             background: #15141a1a;
             border: 2px solid var(--button-secondary-border-red);
-            color: white;
+            color: #fff;
           }
 
           .button-secondary:hover,
@@ -104,7 +105,6 @@ $text-stroke-width: 2px;
     margin: 0 auto;
     max-width: 52rem;
     padding: 1rem;
-    transition: all 0.3s ease-in-out;
     transition: all 0.3s ease-in-out;
     width: initial;
 
@@ -160,7 +160,6 @@ $text-stroke-width: 2px;
           position: relative;
           text-align: center;
           transition: all 0.2s ease;
-          transition: all 0.2s ease;
           width: 140px;
           width: 100%;
           z-index: 1;
@@ -181,7 +180,7 @@ $text-stroke-width: 2px;
         .button-secondary {
           background: #15141a1a;
           border: 2px solid var(--button-secondary-border-red);
-          color: white;
+          color: #fff;
         }
 
         .button-secondary:hover,
@@ -217,7 +216,6 @@ $text-stroke-width: 2px;
     grid-row: 1;
     overflow: hidden;
     top: 0;
-    transition: all 1s ease-in-out;
     transition: all 1s ease-in-out;
     width: 100%;
 

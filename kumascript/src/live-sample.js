@@ -22,7 +22,7 @@ const LIVE_SAMPLE_HTML = `
 
             .playable-code {
               background-color: #f4f7f8;
-              border: none;
+              border: 0;
               border-left: 6px solid #558abb;
               border-width: medium medium medium 6px;
               color: #4d4e53;

@@ -1,5 +1,6 @@
 @mixin uify {
   &::after {
+    /* stylelint-disable-next-line no-irregular-whitespace */
     content: " ";
     text-decoration: underline;
     text-decoration-color: var(--text-link);

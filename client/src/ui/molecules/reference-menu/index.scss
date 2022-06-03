@@ -1,5 +1,32 @@
+/* stylelint-disable declaration-no-important */
 @use "sass:color";
 @use "../../vars" as *;
+
+.submenu-icon {
+  &.html {
+    background-color: var(--html-accent-engage);
+  }
+
+  &.css {
+    background-color: var(--css-accent-engage);
+  }
+
+  &.javascript {
+    background-color: var(--js-accent-engage);
+  }
+
+  &.http {
+    background-color: var(--http-accent-engage);
+  }
+
+  &.apis {
+    background-color: var(--apis-accent-engage);
+  }
+
+  &.learn {
+    background-color: var(--learn-accent-engage);
+  }
+}
 
 .references {
   .desktop-only {
@@ -80,31 +107,5 @@
         background-color: var(--learn-accent-color) !important;
       }
     }
-  }
-}
-
-.submenu-icon {
-  &.html {
-    background-color: var(--html-accent-engage);
-  }
-
-  &.css {
-    background-color: var(--css-accent-engage);
-  }
-
-  &.javascript {
-    background-color: var(--js-accent-engage);
-  }
-
-  &.http {
-    background-color: var(--http-accent-engage);
-  }
-
-  &.apis {
-    background-color: var(--apis-accent-engage);
-  }
-
-  &.learn {
-    background-color: var(--learn-accent-engage);
   }
 }
