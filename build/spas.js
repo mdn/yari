@@ -31,10 +31,8 @@ const contributorSpotlightRoot = CONTRIBUTOR_SPOTLIGHT_ROOT;
 
 let featuredContributor;
 
-async function buildContributorSpotlight(options) {
-  // for now, these will only be available in English
-  const locale = "en-US";
-  const prefix = `/${locale}/community/spotlight`;
+async function buildContributorSpotlight(options, locale) {
+  const prefix = "community/spotlight";
   const profileImg = "profile-image.jpg";
 
   for (const contributor of fs.readdirSync(contributorSpotlightRoot)) {
@@ -82,7 +80,7 @@ async function buildContributorSpotlight(options) {
     if (frontMatter.attributes.is_featured) {
       featuredContributor = {
         contributorName: frontMatter.attributes.contributor_name,
-        url: `${prefix}/${frontMatter.attributes.folder_name}`,
+        url: `/${locale}/${prefix}/${frontMatter.attributes.folder_name}`,
         quote: frontMatter.attributes.quote,
       };
     }
@@ -103,11 +101,6 @@ async function buildSPAs(options) {
     console.log("Wrote", path.join(outPath, path.basename(url)));
   }
 
-  if (contributorSpotlightRoot) {
-    buildContributorSpotlight(options);
-    buildCount++;
-  }
-
   // Basically, this builds one (for example) `search/index.html` for every
   // locale we intend to build.
   for (const root of [CONTENT_ROOT, CONTENT_TRANSLATED_ROOT]) {
@@ -117,6 +110,10 @@ async function buildSPAs(options) {
     for (const locale of fs.readdirSync(root)) {
       if (!fs.statSync(path.join(root, locale)).isDirectory()) {
         continue;
+      }
+
+      if (contributorSpotlightRoot) {
+        buildContributorSpotlight(options, locale);
       }
 
       const SPAs = [
