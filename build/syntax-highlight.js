@@ -83,11 +83,6 @@ function syntaxHighlight($, doc) {
 
     const addLineNumbers = className.match(/linenumbers/);
     const highlightsTag = className.match(/highlight[-\d]+/g);
-    let highlights;
-    if (highlightsTag) {
-      highlights = highlightsTag[0].match(/(?<=-)\d+/g);
-      highlights = highlights ? highlights : [];
-    }
 
     const code = $pre.text();
     let html = "";
@@ -100,6 +95,10 @@ function syntaxHighlight($, doc) {
       }
       html = Prism.highlight(code, grammar, language);
     } else {
+      const highlights = highlightsTag
+        ? highlightsTag[0].match(/(?<=-)\d+/g) || []
+        : [];
+
       const env = {
         code: code,
         grammar: grammar,
