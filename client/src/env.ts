@@ -67,3 +67,8 @@ export const IEX_DOMAIN =
 export const UPDATES_BASE_URL =
   process.env.REACT_APP_UPDATES_BASE_URL ||
   "https://updates.developer.allizom.org";
+
+// TODO Inline after 2022-07-01.
+export const SURVEY_START = Number(process.env.REACT_APP_SURVEY_START || 0);
+export const SURVEY_RATE = Number(process.env.REACT_APP_SURVEY_RATE || 1);
+export const SURVEY_END = Number(process.env.REACT_APP_SURVEY_END || Infinity);
