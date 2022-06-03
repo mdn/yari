@@ -30,8 +30,12 @@ yarn-error.log*
 /kumascript/coverage/
 /kumascript/node_modules/
 /testing/node_modules/
-/client/build/
+/client/build
+/client/src/**/*.js
+/client/src/**/*.js.map
 /ssr/dist/
+/tool/*.js
+/tool/*.js.map
 
 # These are an effect of the dumper still producing all locales
 # We haven't decided what to do with them but for now we're *not*

@@ -1,4 +1,5 @@
-import { Doc } from "../client/src/document/types";
+#!/usr/bin/env node
+import type { Doc } from "../client/src/document/types";
 
 const fs = require("fs");
 const path = require("path");
