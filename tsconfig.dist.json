@@ -7,5 +7,5 @@
     "module": "CommonJS",
     "sourceMap": true
   },
-  "include": ["tool"]
+  "include": ["filecheck", "tool"]
 }
