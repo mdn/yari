@@ -89,11 +89,6 @@
     &.border-top-0 {
       border-top-width: 0;
     }
-
-    /* stylelint-disable-next-line selector-class-pattern */
-    &.watch-submenu-setGlobal {
-      padding-top: 1rem;
-    }
   }
 
   &.is-in-modal {
@@ -278,14 +273,6 @@
     font-size: var(--type-smaller-font-size);
     grid-area: text;
   }
-}
-
-/* stylelint-disable-next-line selector-class-pattern */
-.watch-submenu-setGlobal {
-  color: var(--text-link);
-  display: block;
-  font-size: var(--type-smaller-font-size);
-  text-align: right;
 }
 
 .manage-dialog {
