@@ -24,6 +24,7 @@
     "eslint": "eslint .",
     "filecheck": "cd filecheck && node cli.js",
     "md": "ts-node markdown/cli.ts",
+    "prepack": "yarn build:dist",
     "prepare": "husky install",
     "prettier-check": "prettier --check .",
     "prettier-format": "prettier --write .",
