@@ -21,6 +21,7 @@
         "ignore": ["class"]
       }
     ],
-    "selector-max-id": 1
+    "selector-max-id": 1,
+    "no-invalid-position-at-import-rule": [true, { "ignoreAtRules": ["use"] }]
   }
 }

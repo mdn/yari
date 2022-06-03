@@ -1,9 +1,10 @@
+@use "~@mdn/minimalist/sass/mixins/utils" as *;
+@use "../../../ui/vars" as *;
+
 @import "./index-mobile";
 @import "./index-desktop";
 @import "./index-desktop-md";
 @import "./index-desktop-xl";
-@use "~@mdn/minimalist/sass/mixins/utils" as *;
-@use "../../../ui/vars" as *;
 
 // Style for mobile *and* desktop.
 
