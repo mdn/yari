@@ -175,6 +175,11 @@ jobs:
           REACT_APP_MDN_PLUS_10Y_PLAN: price_1KeG02JNcmPzuWtRlrSiLTI6
           REACT_APP_ENABLE_PLUS_EU: true
 
+          # Document survey (https://github.com/mdn/yari/pull/6371).
+          REACT_APP_SURVEY_START: 0
+          REACT_APP_SURVEY_END: 0
+          REACT_APP_SURVEY_RATE: 0.05 # 5 Percent.
+
         run: |
 
           # Info about which CONTENT_* environment variables were set and to what.

@@ -20,6 +20,11 @@ export function DocumentSurvey({ doc }: { doc: Doc }) {
           return false;
         }
 
+        const now = Date.now();
+        if (now < survey.start || survey.end < now) {
+          return false;
+        }
+
         const state = getSurveyState(survey.key);
 
         return state.random < survey.rate;
