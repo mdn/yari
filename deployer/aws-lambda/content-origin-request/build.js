@@ -35,7 +35,7 @@ function buildRedirectsMap() {
       ].find((path) => fs.existsSync(path));
 
       if (path) {
-        const content = fs.readFileSync(path, "utf8");
+        const content = fs.readFileSync(path, "utf-8");
         const lines = content.split("\n");
         const redirectLines = lines.filter(
           (line) => line.startsWith("/") && line.includes("\t")

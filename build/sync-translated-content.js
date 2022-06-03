@@ -109,7 +109,7 @@ function syncTranslatedContent(inFilePath, locale) {
     followed: false,
   };
 
-  const rawDoc = fs.readFileSync(inFilePath, "utf8");
+  const rawDoc = fs.readFileSync(inFilePath, "utf-8");
   const fileName = path.basename(inFilePath);
   const extension = path.extname(fileName);
   const bareFileName = path.basename(inFilePath, extension);

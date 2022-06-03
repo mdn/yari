@@ -38,7 +38,7 @@ async function buildContributorSpotlight(options, locale) {
   for (const contributor of fs.readdirSync(contributorSpotlightRoot)) {
     const markdown = fs.readFileSync(
       `${contributorSpotlightRoot}/${contributor}/index.md`,
-      "utf8"
+      "utf-8"
     );
 
     const frontMatter = frontmatter(markdown);
@@ -209,7 +209,7 @@ async function buildSPAs(options) {
       }
 
       const locale = "en-us";
-      const markdown = fs.readFileSync(filepath, "utf8");
+      const markdown = fs.readFileSync(filepath, "utf-8");
 
       const frontMatter = frontmatter(markdown);
       const rawHTML = await m2h(frontMatter.body, locale);
