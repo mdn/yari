@@ -536,15 +536,50 @@ function _addSingleSpecialSection($) {
     // For a BCD feature, it can either be a string or an array of strings.
     let specURLs = [];
 
-    for (const feature of query.split(",").map((id) => id.trim())) {
-      const { data } = packageBCD(feature);
-      console.log("got here; data");
-      console.log(data);
-      if (data) {
-        // If 'data' is non-null, that means we have data for a BCD feature
-        // that we can extract spec URLs from.
-        for (const [key, compat] of Object.entries(data)) {
-          if (key === "__compat" && compat.spec_url) {
+    function getSpecURLs(data) {
+      // If we’re processing data for just one feature, then the 'data'
+      // variable will have a __compat key. So we get the one spec_url
+      // value from that, and move on.
+      //
+      // The value may have data for subfeatures too — each subfeature with
+      // its own __compat key that may have a spec_url — but in that case,
+      // for the purposes of the Specifications section, we don’t want to
+      // recurse through all the subfeatures to get those spec_url values;
+      // instead we only want the spec_url from the top-level __compat key.
+      if (data && data.__compat) {
+        const compat = data.__compat;
+        if (compat.spec_url) {
+          if (Array.isArray(compat.spec_url)) {
+            specURLs.push(...compat.spec_url);
+          } else {
+            specURLs.push(compat.spec_url);
+          }
+        }
+      } else {
+        // If we get here, we’re processing data for two or more features
+        // and the 'data' variable will contain multiple blocks (objects)
+        // — one for each feature.
+        if (!data) {
+          return;
+        }
+        for (const block of Object.values(data)) {
+          if (!block) {
+            continue;
+          }
+          if (!block.__compat) {
+            // Some features — e.g., css.properties.justify-content — have
+            // no compat data themselves but have subfeatures with compat
+            // data. So we recurse through the nested property values until
+            // we either do or don’t find any subfeatures with spec URLs.
+            // Otherwise, if we’re processing multiple top-level features
+            // (that is, from a browser-compat value which is an array),
+            // we’d end up entirely missing the data for this feature.
+            getSpecURLs(block);
+          }
+          // If we get here, we’ve got a __compat key, and we can extract
+          // any spec URLs its value may contain.
+          const compat = block.__compat;
+          if (compat && compat.spec_url) {
             if (Array.isArray(compat.spec_url)) {
               specURLs.push(...compat.spec_url);
             } else {
@@ -553,13 +588,25 @@ function _addSingleSpecialSection($) {
           }
         }
       }
+    }
 
-      if (specURLsString !== "") {
-        // If specURLsString is non-empty, then it has the string contents
-        // of the document’s 'spec-urls' frontmatter key: one or more URLs.
-        specURLs.push(...specURLsString.split(",").map((url) => url.trim()));
+    if (query) {
+      for (const feature of query.split(",").map((id) => id.trim())) {
+        const { data } = packageBCD(feature);
+        // If 'data' is non-null, we have data for one or more BCD features
+        // that we can extract spec URLs from.
+        getSpecURLs(data);
       }
     }
+
+    if (specURLsString !== "") {
+      // If specURLsString is non-empty, then it has the string contents
+      // of the document’s 'spec-urls' frontmatter key: one or more URLs.
+      specURLs.push(...specURLsString.split(",").map((url) => url.trim()));
+    }
+
+    // Eliminate any duplicate spec URLs
+    specURLs = [...new Set(specURLs)];
 
     // Use BCD specURLs to look up more specification data
     // from the browser-specs package
