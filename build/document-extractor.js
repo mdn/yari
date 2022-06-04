@@ -366,7 +366,7 @@ function _addSingleSpecialSection($) {
     }
     return _buildSpecialBCDSection();
   } else if (specialSectionType === "specifications") {
-    if (data === undefined && specURLsString === "") {
+    if (query === undefined && specURLsString === "") {
       return [
         {
           type: specialSectionType,
@@ -536,24 +536,29 @@ function _addSingleSpecialSection($) {
     // For a BCD feature, it can either be a string or an array of strings.
     let specURLs = [];
 
-    if (data) {
-      // If 'data' is non-null, that means we have data for a BCD feature
-      // that we can extract spec URLs from.
-      for (const [key, compat] of Object.entries(data)) {
-        if (key === "__compat" && compat.spec_url) {
-          if (Array.isArray(compat.spec_url)) {
-            specURLs = compat.spec_url;
-          } else {
-            specURLs.push(compat.spec_url);
+    for (const feature of query.split(",").map((id) => id.trim())) {
+      const { data } = packageBCD(feature);
+      console.log("got here; data");
+      console.log(data);
+      if (data) {
+        // If 'data' is non-null, that means we have data for a BCD feature
+        // that we can extract spec URLs from.
+        for (const [key, compat] of Object.entries(data)) {
+          if (key === "__compat" && compat.spec_url) {
+            if (Array.isArray(compat.spec_url)) {
+              specURLs.push(...compat.spec_url);
+            } else {
+              specURLs.push(compat.spec_url);
+            }
           }
         }
       }
-    }
 
-    if (specURLsString !== "") {
-      // If specURLsString is non-empty, then it has the string contents of
-      // the document’s 'spec-urls' frontmatter key: one or more URLs.
-      specURLs.push(...specURLsString.split(",").map((url) => url.trim()));
+      if (specURLsString !== "") {
+        // If specURLsString is non-empty, then it has the string contents
+        // of the document’s 'spec-urls' frontmatter key: one or more URLs.
+        specURLs.push(...specURLsString.split(",").map((url) => url.trim()));
+      }
     }
 
     // Use BCD specURLs to look up more specification data
