@@ -1,4 +1,5 @@
-import { Doc } from "../client/src/document/types";
+#!/usr/bin/env node
+import type { Doc } from "../client/src/document/types";
 
 const fs = require("fs");
 const path = require("path");
@@ -19,22 +20,17 @@ const cheerio = require("cheerio");
 const dirname = __dirname;
 
 const { DEFAULT_LOCALE, VALID_LOCALES } = require("../libs/constants");
-const {
-  CONTENT_ROOT,
-  CONTENT_TRANSLATED_ROOT,
-  Redirect,
-  Document,
-  buildURL,
-  getRoot,
-} = require("../content");
+const { CONTENT_ROOT, CONTENT_TRANSLATED_ROOT } = require("../libs/env");
+const { Redirect, Document, buildURL, getRoot } = require("../content");
 const { buildDocument, gatherGitHistory, buildSPAs } = require("../build");
+
+const { VALID_FLAW_CHECKS } = require("../libs/constants");
 const {
   ALWAYS_ALLOW_ROBOTS,
   BUILD_OUT_ROOT,
   GOOGLE_ANALYTICS_ACCOUNT,
   GOOGLE_ANALYTICS_DEBUG,
-  VALID_FLAW_CHECKS,
-} = require("../build/constants");
+} = require("../libs/env");
 const { runMakePopularitiesFile } = require("./popularities");
 const { runOptimizeClientBuild } = require("./optimize-client-build");
 const { runBuildRobotsTxt } = require("./build-robots-txt");
@@ -951,7 +947,7 @@ if (Mozilla && !Mozilla.dntEnabled()) {
       });
 
       const inventory = allPaths.map((entry) => {
-        const fileContents = fs.readFileSync(entry.path, "utf8");
+        const fileContents = fs.readFileSync(entry.path, "utf-8");
         const parsed = frontmatter(fileContents);
 
         return {

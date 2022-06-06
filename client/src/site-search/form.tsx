@@ -1,6 +1,6 @@
 import React from "react";
 import { Link, useSearchParams } from "react-router-dom";
-import LANGUAGES_RAW from "../languages.json";
+import LANGUAGES_RAW from "../../../libs/languages";
 
 import { useLocale } from "../hooks";
 import { appendURL } from "./utils";

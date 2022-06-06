@@ -4,7 +4,7 @@ import { annotate, annotationGroup } from "rough-notation";
 import { RoughAnnotation } from "rough-notation/lib/model";
 import { diffWords } from "diff";
 
-import { CRUD_MODE, CRUD_MODE_HOSTNAMES } from "../../constants";
+import { CRUD_MODE, CRUD_MODE_HOSTNAMES } from "../../env";
 import { humanizeFlawName } from "../../flaw-utils";
 import { useDocumentURL } from "../hooks";
 import {

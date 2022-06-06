@@ -8,7 +8,7 @@ import { Search } from "../../molecules/search";
 import { useUserData } from "../../../user-context";
 
 import "./index.scss";
-import { PLUS_IS_ENABLED } from "../../../constants";
+import { PLUS_IS_ENABLED } from "../../../env";
 import { isPlusAvailable } from "../../../utils";
 import { ThemeSwitcher } from "../../molecules/theme-switcher";
 
