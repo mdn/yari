@@ -335,6 +335,25 @@ function getNotes(
       .slice()
       .reverse()
       .flatMap((item, i) => {
+        const impl_url = item.impl_url
+          ? " (" +
+            (Array.isArray(item.impl_url) ? item.impl_url : [item.impl_url])
+              .map((url) => {
+                const urlParts = url.split("/");
+                const type = ["bugzil.la", "crbug.com", "webkit.org/b/"].some(
+                  (x) => url.includes(x)
+                )
+                  ? "bug"
+                  : "commit";
+
+                return `<a href='${url}'>${type} ${
+                  urlParts[urlParts.length - 1]
+                }</a>`;
+              })
+              .join(", ") +
+            ")"
+          : "";
+
         const supportNotes = [
           item.version_removed &&
           !asList(support).some(
@@ -382,7 +401,7 @@ function getNotes(
           versionIsPreview(item.version_added, browser)
             ? {
                 iconName: "footnote",
-                label: "Preview browser support",
+                label: "Preview browser support" + impl_url,
               }
             : null,
           // If we encounter nothing else than the required `version_added` and
@@ -392,40 +411,17 @@ function getNotes(
           !versionIsPreview(item.version_added, browser)
             ? {
                 iconName: "footnote",
-                label: "Full support",
+                label: "Full support" + impl_url,
               }
             : isNotSupportedAtAll(item)
             ? {
                 iconName: "footnote",
-                label: "No support",
+                label: "No support" + impl_url,
               }
             : null,
         ]
           .flat()
           .filter(isTruthy);
-
-        if (item.impl_url) {
-          supportNotes.push(
-            ...(Array.isArray(item.impl_url)
-              ? item.impl_url
-              : [item.impl_url]
-            ).map((url) => {
-              const urlParts = url.split("/");
-              const type = ["bugzil.la", "crbug.com", "webkit.org/b/"].some(
-                (x) => url.includes(x)
-              )
-                ? "bug"
-                : "commit";
-
-              return {
-                iconName: "footnote",
-                label: `See <a href='${url}'>${type} ${
-                  urlParts[urlParts.length - 1]
-                }</a>.`,
-              };
-            })
-          );
-        }
 
         const hasNotes = supportNotes.length > 0;
         return (
