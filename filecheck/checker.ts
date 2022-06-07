@@ -29,7 +29,11 @@ function formatSize(bytes) {
   return `${bytes}b`;
 }
 
-export async function checkFile(filePath, options) {
+interface CheckerOptions {
+  saveCompression?: boolean;
+}
+
+export async function checkFile(filePath, options: CheckerOptions = {}) {
   // Check that the filename is always lowercase.
   if (path.basename(filePath) !== path.basename(filePath).toLowerCase()) {
     throw new Error(
@@ -198,6 +202,6 @@ export async function checkFile(filePath, options) {
   }
 }
 
-export async function runChecker(files, options) {
+export async function runChecker(files, options: CheckerOptions) {
   return Promise.all(files.map((f) => checkFile(f, options)));
 }
