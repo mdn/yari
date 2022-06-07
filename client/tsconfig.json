@@ -4,7 +4,6 @@
     "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
     "strict": true,
-    "forceConsistentCasingInFileNames": true,
     "module": "esnext",
     "resolveJsonModule": true,
     "isolatedModules": true,
