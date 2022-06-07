@@ -1,7 +1,7 @@
-const fs = require("fs");
-const path = require("path");
+import fs from "fs";
+import path from "path";
 
-const { checkFile } = require("../../filecheck/checker");
+import { checkFile } from "../../filecheck/checker";
 
 const dirname = __dirname;
 
