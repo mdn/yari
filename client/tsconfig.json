@@ -5,7 +5,6 @@
     "allowJs": true,
     "strict": true,
     "module": "esnext",
-    "resolveJsonModule": true,
     "isolatedModules": true,
     "noImplicitAny": false,
     "noEmit": true,

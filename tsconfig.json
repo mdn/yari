@@ -5,6 +5,7 @@
     "forceConsistentCasingInFileNames": true,
     "jsx": "react-jsx",
     "moduleResolution": "node",
+    "resolveJsonModule": true,
     "skipLibCheck": true,
     "strictBindCallApply": true,
     "target": "ES2018",
