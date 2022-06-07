@@ -2,7 +2,6 @@
   "extends": "./tsconfig.json",
   "compilerOptions": {
     "resolveJsonModule": true,
-    "skipLibCheck": true,
     "module": "CommonJS",
     "sourceMap": true
   },
