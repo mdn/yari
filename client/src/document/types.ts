@@ -1,3 +1,5 @@
+import * as BCD from "@mdn/browser-compat-data/types";
+
 export interface Source {
   folder: string;
   github_url: string;
@@ -80,6 +82,10 @@ export interface MacroErrorMessage extends GenericFlaw {
   macroSource: string;
   macroName: string;
   fixed?: true;
+  redirectInfo?: {
+    current: string;
+    suggested: string;
+  };
 }
 
 export interface TranslationDifferenceFlaw extends GenericFlaw {
@@ -108,6 +114,7 @@ type Flaws = {
 export type Translation = {
   locale: string;
   native: string;
+  title: string;
 };
 
 export type DocParent = {
@@ -130,7 +137,7 @@ export interface Doc {
   related_content: any[];
   sidebarHTML: string;
   toc: Toc[];
-  body: string;
+  body: Section[];
   modified: string;
   flaws: Flaws;
   other_translations?: Translation[];
@@ -142,6 +149,45 @@ export interface Doc {
   isActive: boolean;
   hasMathML?: boolean;
   isMarkdown: boolean;
+  summary: string;
+}
+
+export type Section = ProseSection | SpecificationsSection | BCDSection;
+
+export interface ProseSection {
+  type: "prose";
+  value: {
+    id: string;
+    title: string;
+    isH3: boolean;
+    content?: string;
+    titleAsText?: string;
+  };
+}
+export interface SpecificationsSection {
+  type: "specifications";
+  value: {
+    id: string;
+    title: string;
+    isH3: boolean;
+    query: string;
+    specifications: {
+      bcdSpecificationURL: any;
+      title: string;
+    }[];
+  };
+}
+
+export interface BCDSection {
+  type: "browser_compatibility";
+  value: {
+    id: string;
+    title: string;
+    isH3: boolean;
+    data: BCD.Identifier;
+    query: string;
+    browsers: BCD.Browsers;
+  };
 }
 
 export type FrequentlyViewedEntry = {
