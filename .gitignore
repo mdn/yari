@@ -35,7 +35,11 @@ yarn-error.log*
 /client/src/**/*.js.map
 /filecheck/*.js
 /filecheck/*.js.map
+/server/*.js
+/server/*.js.map
 /ssr/dist/
+/ssr/*.js
+/ssr/*.js.map
 /tool/*.js
 /tool/*.js.map
 
