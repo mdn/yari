@@ -1,6 +1,7 @@
 {
   "extends": "../tsconfig.json",
   "compilerOptions": {
+    "esModuleInterop": false,
     "target": "es2019",
     "lib": ["esnext"],
     "skipLibCheck": true,
