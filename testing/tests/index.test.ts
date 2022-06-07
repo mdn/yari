@@ -65,7 +65,9 @@ test("content built foo page", () => {
   expect(fs.existsSync(jsonFile)).toBeTruthy();
 
   // We should be able to read it and expect certain values
-  const { doc } = JSON.parse(fs.readFileSync(jsonFile)) as { doc: Doc };
+  const { doc } = JSON.parse(fs.readFileSync(jsonFile, "utf-8")) as {
+    doc: Doc;
+  };
   expect(doc.title).toBe("<foo>: A test tag");
   expect(doc.pageTitle).toBe(`${doc.title} | MDN`);
   expect(doc.summary).toBe("This becomes the summary.");
@@ -234,7 +236,9 @@ test("content built French foo page", () => {
   expect(fs.existsSync(jsonFile)).toBeTruthy();
 
   // We should be able to read it and expect certain values
-  const { doc } = JSON.parse(fs.readFileSync(jsonFile)) as { doc: Doc };
+  const { doc } = JSON.parse(fs.readFileSync(jsonFile, "utf-8")) as {
+    doc: Doc;
+  };
   expect(doc.title).toBe("<foo>: Une page de test");
   expect(doc.isTranslated).toBe(true);
   expect(doc.other_translations[0].locale).toBe("en-US");
@@ -263,7 +267,9 @@ test("French translation using English front-matter bits", () => {
     "spec_section_extraction"
   );
   const jsonFile = path.join(builtFolder, "index.json");
-  const { doc } = JSON.parse(fs.readFileSync(jsonFile)) as { doc: Doc };
+  const { doc } = JSON.parse(fs.readFileSync(jsonFile, "utf-8")) as {
+    doc: Doc;
+  };
   expect(doc.title).toBe("Extraction de sections de spécifications");
   const specifications = doc.body.find(
     (section) => section.type === "specifications"
@@ -281,7 +287,9 @@ test("content built zh-TW page with en-US fallback image", () => {
   const builtFolder = path.join(buildRoot, "zh-tw", "docs", "web", "foo");
   const jsonFile = path.join(builtFolder, "index.json");
   expect(fs.existsSync(jsonFile)).toBeTruthy();
-  const { doc } = JSON.parse(fs.readFileSync(jsonFile)) as { doc: Doc };
+  const { doc } = JSON.parse(fs.readFileSync(jsonFile, "utf-8")) as {
+    doc: Doc;
+  };
   expect(Object.keys(doc.flaws).length).toBe(1);
   expect(doc.flaws.translation_differences.length).toBe(1);
   expect(doc.title).toBe("<foo>: 測試網頁");
@@ -309,7 +317,9 @@ test("content built zh-TW page with en-US fallback image", () => {
 test("content built French Embeddable page", () => {
   const builtFolder = path.join(buildRoot, "fr", "docs", "web", "embeddable");
   const jsonFile = path.join(builtFolder, "index.json");
-  const { doc } = JSON.parse(fs.readFileSync(jsonFile)) as { doc: Doc };
+  const { doc } = JSON.parse(fs.readFileSync(jsonFile, "utf-8")) as {
+    doc: Doc;
+  };
   expect(doc.flaws.translation_differences.length).toBe(1);
   const flaw = doc.flaws.translation_differences[0];
   expect(flaw.explanation).toBe(
@@ -329,7 +339,9 @@ test("wrong xref macro errors", () => {
     "wrong_xref_macro"
   );
   const jsonFile = path.join(builtFolder, "index.json");
-  const { doc } = JSON.parse(fs.readFileSync(jsonFile)) as { doc: Doc };
+  const { doc } = JSON.parse(fs.readFileSync(jsonFile, "utf-8")) as {
+    doc: Doc;
+  };
   // Expect the first flaw to be that we're using the wrong xref macro.
   expect(doc.flaws.macros[0].name).toBe("MacroBrokenLinkError");
   expect(doc.flaws.macros[0].macroSource).toBe('{{DOMxRef("Promise")}}');
@@ -354,7 +366,9 @@ test("summary extracted correctly by span class", () => {
   expect(fs.existsSync(jsonFile)).toBeTruthy();
 
   // We should be able to read it and expect certain values
-  const { doc } = JSON.parse(fs.readFileSync(jsonFile)) as { doc: Doc };
+  const { doc } = JSON.parse(fs.readFileSync(jsonFile, "utf-8")) as {
+    doc: Doc;
+  };
   expect(doc.summary).toBe("This is going to be the summary.");
 
   const htmlFile = path.join(builtFolder, "index.html");
@@ -369,7 +383,8 @@ test("summary extracted correctly by span class", () => {
 test("pageTitle on deeper docs within 'Web'", () => {
   const { doc: parentDoc } = JSON.parse(
     fs.readFileSync(
-      path.join(buildRoot, "en-us", "docs", "web", "api", "index.json")
+      path.join(buildRoot, "en-us", "docs", "web", "api", "index.json"),
+      "utf-8"
     )
   );
   const { doc } = JSON.parse(
@@ -382,7 +397,8 @@ test("pageTitle on deeper docs within 'Web'", () => {
         "api",
         "page_visibility_api",
         "index.json"
-      )
+      ),
+      "utf-8"
     )
   ) as { doc: Doc };
   expect(doc.pageTitle).toBe(`${doc.title} - ${parentDoc.title} | MDN`);
@@ -447,7 +463,9 @@ test("content with non-ascii characters in the slug", () => {
 
   const jsonFile = path.join(builtFolder, "index.json");
   expect(fs.existsSync(jsonFile)).toBeTruthy();
-  const { doc } = JSON.parse(fs.readFileSync(jsonFile)) as { doc: Doc };
+  const { doc } = JSON.parse(fs.readFileSync(jsonFile, "utf-8")) as {
+    doc: Doc;
+  };
   expect(doc.title).toBe("Bézier curve");
   expect(doc.mdn_url).toBe("/en-US/docs/Glossary/Bézier_curve");
 });
@@ -462,7 +480,9 @@ test("content built bar page", () => {
   expect(fs.existsSync(jsonFile)).toBeTruthy();
 
   // We should be able to read it and expect certain values
-  const { doc } = JSON.parse(fs.readFileSync(jsonFile)) as { doc: Doc };
+  const { doc } = JSON.parse(fs.readFileSync(jsonFile, "utf-8")) as {
+    doc: Doc;
+  };
   expect(doc.title).toBe("bar: A collection of xref macro calls");
   expect(doc.summary).toBe("Here is the summary of the document.");
   expect(doc.mdn_url).toBe("/en-US/docs/Web/Bar");
@@ -635,7 +655,9 @@ test("broken links flaws", () => {
     "brokenlinks"
   );
   const jsonFile = path.join(builtFolder, "index.json");
-  const { doc } = JSON.parse(fs.readFileSync(jsonFile)) as { doc: Doc };
+  const { doc } = JSON.parse(fs.readFileSync(jsonFile, "utf-8")) as {
+    doc: Doc;
+  };
   const { flaws } = doc;
   // You have to be intimately familiar with the fixture to understand
   // why these flaws come out as they do.
@@ -692,7 +714,9 @@ test("broken links markdown flaws", () => {
     "brokenlinks_markdown"
   );
   const jsonFile = path.join(builtFolder, "index.json");
-  const { doc } = JSON.parse(fs.readFileSync(jsonFile)) as { doc: Doc };
+  const { doc } = JSON.parse(fs.readFileSync(jsonFile, "utf-8")) as {
+    doc: Doc;
+  };
   const { flaws } = doc;
   // You have to be intimately familiar with the fixture to understand
   // why these flaws come out as they do.
@@ -750,7 +774,9 @@ test("repeated broken links flaws", () => {
     "brokenlinks_repeats"
   );
   const jsonFile = path.join(builtFolder, "index.json");
-  const { doc } = JSON.parse(fs.readFileSync(jsonFile)) as { doc: Doc };
+  const { doc } = JSON.parse(fs.readFileSync(jsonFile, "utf-8")) as {
+    doc: Doc;
+  };
   const { flaws } = doc;
   // You have to be intimately familiar with the fixture to understand
   // why these flaws come out as they do.
@@ -774,7 +800,9 @@ test("broken http:// link that is not a valid URL", () => {
     "broken_http_link"
   );
   const jsonFile = path.join(builtFolder, "index.json");
-  const { doc } = JSON.parse(fs.readFileSync(jsonFile)) as { doc: Doc };
+  const { doc } = JSON.parse(fs.readFileSync(jsonFile, "utf-8")) as {
+    doc: Doc;
+  };
   const { flaws } = doc;
   expect(flaws.broken_links.length).toBe(1);
 
@@ -795,7 +823,9 @@ test("broken links that are links to the current page", () => {
     "self_links"
   );
   const jsonFile = path.join(builtFolder, "index.json");
-  const { doc } = JSON.parse(fs.readFileSync(jsonFile)) as { doc: Doc };
+  const { doc } = JSON.parse(fs.readFileSync(jsonFile, "utf-8")) as {
+    doc: Doc;
+  };
   const { flaws } = doc;
   expect(flaws.broken_links.length).toBe(4);
 
@@ -837,7 +867,9 @@ test("without locale prefix broken links flaws", () => {
     "without_locale_prefix"
   );
   const jsonFile = path.join(builtFolder, "index.json");
-  const { doc } = JSON.parse(fs.readFileSync(jsonFile)) as { doc: Doc };
+  const { doc } = JSON.parse(fs.readFileSync(jsonFile, "utf-8")) as {
+    doc: Doc;
+  };
   const { flaws } = doc;
   // You have to be intimately familiar with the fixture to understand
   // why these flaws come out as they do.
@@ -860,7 +892,9 @@ test("broken anchor links flaws", () => {
     "not_lowercase_anchors"
   );
   const jsonFile = path.join(builtFolder, "index.json");
-  const { doc } = JSON.parse(fs.readFileSync(jsonFile)) as { doc: Doc };
+  const { doc } = JSON.parse(fs.readFileSync(jsonFile, "utf-8")) as {
+    doc: Doc;
+  };
   const { flaws } = doc;
   // You have to be intimately familiar with the fixture to understand
   // why these flaws come out as they do.
@@ -928,7 +962,9 @@ test("check built flaws for /en-us/learn/css/css_layout/introduction/grid page",
   expect(fs.existsSync(jsonFile)).toBeTruthy();
 
   // Let's make sure there are only 2 "macros" flaws.
-  const { doc } = JSON.parse(fs.readFileSync(jsonFile)) as { doc: Doc };
+  const { doc } = JSON.parse(fs.readFileSync(jsonFile, "utf-8")) as {
+    doc: Doc;
+  };
   expect(doc.flaws.macros.length).toBe(2);
 });
 
@@ -963,7 +999,9 @@ test("detect bad_bcd_queries flaws", () => {
   );
   expect(fs.existsSync(builtFolder)).toBeTruthy();
   const jsonFile = path.join(builtFolder, "index.json");
-  const { doc } = JSON.parse(fs.readFileSync(jsonFile)) as { doc: Doc };
+  const { doc } = JSON.parse(fs.readFileSync(jsonFile, "utf-8")) as {
+    doc: Doc;
+  };
   expect(doc.flaws.bad_bcd_queries.length).toBe(1);
   // If the flaw is there, it's always an array because a document could
   // potentially have multiple bad BCD queries.
@@ -985,7 +1023,9 @@ test("detect bad_bcd_links flaws from", () => {
   );
   expect(fs.existsSync(builtFolder)).toBeTruthy();
   const jsonFile = path.join(builtFolder, "index.json");
-  const { doc } = JSON.parse(fs.readFileSync(jsonFile)) as { doc: Doc };
+  const { doc } = JSON.parse(fs.readFileSync(jsonFile, "utf-8")) as {
+    doc: Doc;
+  };
   expect(doc.flaws.bad_bcd_links.length).toBe(1);
   // The reasons it's a bad link is because the @mdn/browser-compat-data,
   // for the query `api.Document.visibilityState` refers to a page
@@ -1007,7 +1047,9 @@ test("detect bad_pre_tags flaws", () => {
   );
   expect(fs.existsSync(builtFolder)).toBeTruthy();
   const jsonFile = path.join(builtFolder, "index.json");
-  const { doc } = JSON.parse(fs.readFileSync(jsonFile)) as { doc: Doc };
+  const { doc } = JSON.parse(fs.readFileSync(jsonFile, "utf-8")) as {
+    doc: Doc;
+  };
   expect(doc.flaws.bad_pre_tags.length).toBe(1);
   const flaw = doc.flaws.bad_pre_tags[0];
   expect(flaw.explanation).toBe("<pre><code>CODE can be just <pre>CODE");
@@ -1022,7 +1064,9 @@ test("detect bad_pre_tags flaws", () => {
 test("image flaws kitchen sink", () => {
   const builtFolder = path.join(buildRoot, "en-us", "docs", "web", "images");
   const jsonFile = path.join(builtFolder, "index.json");
-  const { doc } = JSON.parse(fs.readFileSync(jsonFile)) as { doc: Doc };
+  const { doc } = JSON.parse(fs.readFileSync(jsonFile, "utf-8")) as {
+    doc: Doc;
+  };
   const { flaws } = doc;
   // You have to be intimately familiar with the fixture to understand
   // why these flaws come out as they do.
@@ -1112,7 +1156,9 @@ test("image flaws with bad images", () => {
     "bad_src"
   );
   const jsonFile = path.join(builtFolder, "index.json");
-  const { doc } = JSON.parse(fs.readFileSync(jsonFile)) as { doc: Doc };
+  const { doc } = JSON.parse(fs.readFileSync(jsonFile, "utf-8")) as {
+    doc: Doc;
+  };
   const { flaws } = doc;
   // You have to be intimately familiar with the fixture to understand
   // why these flaws come out as they do.
@@ -1164,7 +1210,9 @@ test("image flaws with repeated external images", () => {
     "repeated_external_images"
   );
   const jsonFile = path.join(builtFolder, "index.json");
-  const { doc } = JSON.parse(fs.readFileSync(jsonFile)) as { doc: Doc };
+  const { doc } = JSON.parse(fs.readFileSync(jsonFile, "utf-8")) as {
+    doc: Doc;
+  };
   const { flaws } = doc;
   // You have to be intimately familiar with the fixture to understand
   // why these flaws come out as they do.
@@ -1197,7 +1245,9 @@ test("chicken_and_egg page should build with flaws", () => {
   const builtFolder = path.join(buildRoot, "en-us", "docs", "chicken_and_egg");
   expect(fs.existsSync(builtFolder)).toBeTruthy();
   const jsonFile = path.join(builtFolder, "index.json");
-  const { doc } = JSON.parse(fs.readFileSync(jsonFile)) as { doc: Doc };
+  const { doc } = JSON.parse(fs.readFileSync(jsonFile, "utf-8")) as {
+    doc: Doc;
+  };
   expect(doc.flaws.macros.length).toBe(1);
   // The filepath will be that of the "egg" or the "chicken" page.
   // Let's not try to predict which one exactly, because that'd mean this
@@ -1254,7 +1304,9 @@ test("bcd table extraction followed by h3", () => {
   );
   expect(fs.existsSync(builtFolder)).toBeTruthy();
   const jsonFile = path.join(builtFolder, "index.json");
-  const { doc } = JSON.parse(fs.readFileSync(jsonFile)) as { doc: Doc };
+  const { doc } = JSON.parse(fs.readFileSync(jsonFile, "utf-8")) as {
+    doc: Doc;
+  };
   expect(doc.body[0].type).toBe("prose");
   expect(doc.body[1].type).toBe("prose");
   expect(doc.body[2].type).toBe("browser_compatibility");
@@ -1274,7 +1326,9 @@ test("specifications and bcd extraction", () => {
   );
   expect(fs.existsSync(builtFolder)).toBeTruthy();
   const jsonFile = path.join(builtFolder, "index.json");
-  const { doc } = JSON.parse(fs.readFileSync(jsonFile)) as { doc: Doc };
+  const { doc } = JSON.parse(fs.readFileSync(jsonFile, "utf-8")) as {
+    doc: Doc;
+  };
   expect(doc.body[0].type).toBe("prose");
   expect(doc.body[1].type).toBe("specifications");
   expect(
@@ -1296,7 +1350,9 @@ test("headers within non-root elements is a 'sectioning' flaw", () => {
   );
   expect(fs.existsSync(builtFolder)).toBeTruthy();
   const jsonFile = path.join(builtFolder, "index.json");
-  const { doc } = JSON.parse(fs.readFileSync(jsonFile)) as { doc: Doc };
+  const { doc } = JSON.parse(fs.readFileSync(jsonFile, "utf-8")) as {
+    doc: Doc;
+  };
   expect(doc.flaws.sectioning[0].explanation).toBe(
     "Excess <h2> tag that is NOT at root-level (id='second', text='Second')"
   );
@@ -1312,7 +1368,9 @@ test("img tags with an empty 'src' should be a flaw", () => {
   );
   expect(fs.existsSync(builtFolder)).toBeTruthy();
   const jsonFile = path.join(builtFolder, "index.json");
-  const { doc } = JSON.parse(fs.readFileSync(jsonFile)) as { doc: Doc };
+  const { doc } = JSON.parse(fs.readFileSync(jsonFile, "utf-8")) as {
+    doc: Doc;
+  };
   expect(doc.flaws.images.length).toBe(2);
   expect(doc.flaws.images[0].explanation).toBe("Empty img 'src' attribute");
   expect(doc.flaws.images[0].fixable).toBeFalsy();
@@ -1337,7 +1395,9 @@ test("img with the image_widths flaw", () => {
   );
   expect(fs.existsSync(builtFolder)).toBeTruthy();
   const jsonFile = path.join(builtFolder, "index.json");
-  const { doc } = JSON.parse(fs.readFileSync(jsonFile)) as { doc: Doc };
+  const { doc } = JSON.parse(fs.readFileSync(jsonFile, "utf-8")) as {
+    doc: Doc;
+  };
 
   expect(doc.flaws.image_widths.length).toBe(3);
   const flaw1 = doc.flaws.image_widths[0];
@@ -1404,7 +1464,9 @@ test("img tags without 'src' should not crash", () => {
     "srcless"
   );
   const jsonFile = path.join(builtFolder, "index.json");
-  const { doc } = JSON.parse(fs.readFileSync(jsonFile)) as { doc: Doc };
+  const { doc } = JSON.parse(fs.readFileSync(jsonFile, "utf-8")) as {
+    doc: Doc;
+  };
   expect(Object.keys(doc.flaws).length).toBe(0);
 });
 
@@ -1422,7 +1484,9 @@ test("/Web/Embeddable should have 3 valid live samples", () => {
   expect($("iframe").length).toBe(3);
 
   const jsonFile = path.join(builtFolder, "index.json");
-  const { doc } = JSON.parse(fs.readFileSync(jsonFile)) as { doc: Doc };
+  const { doc } = JSON.parse(fs.readFileSync(jsonFile, "utf-8")) as {
+    doc: Doc;
+  };
   expect(Object.keys(doc.flaws).length).toBe(0);
 
   const builtFiles = fs.readdirSync(path.join(builtFolder));
@@ -1459,7 +1523,9 @@ test("headings with HTML should be rendered as HTML", () => {
   );
 
   const jsonFile = path.join(builtFolder, "index.json");
-  const { doc } = JSON.parse(fs.readFileSync(jsonFile)) as { doc: Doc };
+  const { doc } = JSON.parse(fs.readFileSync(jsonFile, "utf-8")) as {
+    doc: Doc;
+  };
   const [section1, section2] = doc.body as ProseSection[];
   // Because the title contains HTML, you can expect a 'titleAsText'
   expect(section1.value.title).toBe("Here's some <code>code</code>");
@@ -1483,7 +1549,9 @@ test("deprecated macros are fixable", () => {
   );
 
   const jsonFile = path.join(builtFolder, "index.json");
-  const { doc } = JSON.parse(fs.readFileSync(jsonFile)) as { doc: Doc };
+  const { doc } = JSON.parse(fs.readFileSync(jsonFile, "utf-8")) as {
+    doc: Doc;
+  };
   expect(doc.flaws.macros.length).toBe(2);
   // All fixable and all a suggestion of ''
   expect(doc.flaws.macros.filter((flaw) => flaw.fixable).length).toBe(2);
@@ -1525,7 +1593,7 @@ test("home page should have a /index.json file with pullRequestsData", () => {
   const jsonFile = path.join(builtFolder, "index.json");
   // @ts-ignore
   const { hyData: { recentContributions } = {} } = JSON.parse(
-    fs.readFileSync(jsonFile)
+    fs.readFileSync(jsonFile, "utf-8")
   );
   expect(recentContributions.items.length).toBeGreaterThan(0);
 });
@@ -1540,7 +1608,9 @@ test("headings with links in them are flaws", () => {
   );
 
   const jsonFile = path.join(builtFolder, "index.json");
-  const { doc } = JSON.parse(fs.readFileSync(jsonFile)) as { doc: Doc };
+  const { doc } = JSON.parse(fs.readFileSync(jsonFile, "utf-8")) as {
+    doc: Doc;
+  };
   expect(doc.flaws.heading_links.length).toBe(2);
   const map = new Map(doc.flaws.heading_links.map((x) => [x.id, x]));
   expect(map.get("heading_links1").explanation).toBe(
@@ -1608,7 +1678,9 @@ test("basic markdown rendering", () => {
   expect($("article .fancy strong").length).toBe(1);
 
   const jsonFile = path.join(builtFolder, "index.json");
-  const { doc } = JSON.parse(fs.readFileSync(jsonFile)) as { doc: Doc };
+  const { doc } = JSON.parse(fs.readFileSync(jsonFile, "utf-8")) as {
+    doc: Doc;
+  };
   expect(Object.keys(doc.flaws).length).toBe(1);
   expect(doc.flaws.bad_pre_tags.length).toBe(1);
 });
@@ -1623,7 +1695,9 @@ test("unsafe HTML gets flagged as flaws and replace with its raw HTML", () => {
   );
 
   const jsonFile = path.join(builtFolder, "index.json");
-  const { doc } = JSON.parse(fs.readFileSync(jsonFile)) as { doc: Doc };
+  const { doc } = JSON.parse(fs.readFileSync(jsonFile, "utf-8")) as {
+    doc: Doc;
+  };
   expect(doc.flaws.unsafe_html.length).toBe(7);
 
   const htmlFile = path.join(builtFolder, "index.html");
@@ -1637,7 +1711,9 @@ test("translated content broken links can fall back to en-us", () => {
   const jsonFile = path.join(builtFolder, "index.json");
 
   // We should be able to read it and expect certain values
-  const { doc } = JSON.parse(fs.readFileSync(jsonFile)) as { doc: Doc };
+  const { doc } = JSON.parse(fs.readFileSync(jsonFile, "utf-8")) as {
+    doc: Doc;
+  };
   const map = new Map(doc.flaws.broken_links.map((x) => [x.href, x]));
   expect(map.get("/fr/docs/Web/CSS/dumber").explanation).toBe(
     "Can use the English (en-US) link as a fallback"
@@ -1668,7 +1744,9 @@ test("notecards are correctly transformed by the formatNotecards utility", () =>
   );
 
   const jsonFile = path.join(builtFolder, "index.json");
-  const { doc } = JSON.parse(fs.readFileSync(jsonFile)) as { doc: Doc };
+  const { doc } = JSON.parse(fs.readFileSync(jsonFile, "utf-8")) as {
+    doc: Doc;
+  };
   expect(doc.flaws).toStrictEqual({});
   expect(doc.title).toBe(
     "A page representing some edge cases of div.notecard that we might encounter"
@@ -1699,7 +1777,9 @@ test("homepage links and flaws", () => {
     "homepage_links"
   );
   const jsonFile = path.join(builtFolder, "index.json");
-  const { doc } = JSON.parse(fs.readFileSync(jsonFile)) as { doc: Doc };
+  const { doc } = JSON.parse(fs.readFileSync(jsonFile, "utf-8")) as {
+    doc: Doc;
+  };
   expect(doc.flaws.broken_links.length).toBe(4);
   const map = new Map(doc.flaws.broken_links.map((x) => [x.href, x]));
   expect(map.get("/ru").suggestion).toBe("/ru/");
@@ -1710,7 +1790,7 @@ test("homepage links and flaws", () => {
 
 test("built search-index.json (en-US)", () => {
   const searchIndexFile = path.join(buildRoot, "en-us", "search-index.json");
-  const searchIndex = JSON.parse(fs.readFileSync(searchIndexFile));
+  const searchIndex = JSON.parse(fs.readFileSync(searchIndexFile, "utf-8"));
   const urlToTitle = new Map(searchIndex.map((o) => [o.url, o.title]));
   expect(urlToTitle.get("/en-US/docs/Web/Foo")).toBe("<foo>: A test tag");
 });
@@ -1735,7 +1815,9 @@ test("duplicate IDs are de-duplicated", () => {
     "duplicate_ids"
   );
   const jsonFile = path.join(builtFolder, "index.json");
-  const { doc } = JSON.parse(fs.readFileSync(jsonFile)) as { doc: Doc };
+  const { doc } = JSON.parse(fs.readFileSync(jsonFile, "utf-8")) as {
+    doc: Doc;
+  };
   const sectionIDs = doc.body.map((section) => section.value.id);
   // The section IDs aren't normalized to lowercase but the should be
   // unique if they were case normalized.
