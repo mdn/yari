@@ -2,6 +2,7 @@
   "compilerOptions": {
     "esModuleInterop": true,
     "jsx": "react-jsx",
+    "moduleResolution": "node",
     "skipLibCheck": true,
     "strictBindCallApply": true,
     "target": "ES2018",

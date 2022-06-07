@@ -1,8 +1,7 @@
 {
   "extends": "../tsconfig.json",
   "compilerOptions": {
-    "importsNotUsedAsValues": "remove",
-    "moduleResolution": "node"
+    "importsNotUsedAsValues": "remove"
   },
   "include": ["."]
 }

@@ -3,8 +3,7 @@
   "compilerOptions": {
     "esModuleInterop": false,
     "target": "es2019",
-    "lib": ["esnext"],
-    "moduleResolution": "node"
+    "lib": ["esnext"]
   },
   "include": ["h2m/**/*"],
   "exclude": ["node_modules"]
