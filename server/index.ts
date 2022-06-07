@@ -1,40 +1,40 @@
 #!/usr/bin/env node
-const fs = require("fs");
-const path = require("path");
+import fs from "fs";
+import path from "path";
 
-const chalk = require("chalk");
-const express = require("express");
-const send = require("send");
-const { createProxyMiddleware } = require("http-proxy-middleware");
-const cookieParser = require("cookie-parser");
-const openEditor = require("open-editor");
+import chalk from "chalk";
+import express from "express";
+import send from "send";
+import { createProxyMiddleware } from "http-proxy-middleware";
+import cookieParser from "cookie-parser";
+import openEditor from "open-editor";
 
-const {
+import {
   buildDocument,
   buildLiveSamplePageFromURL,
   renderContributorsTxt,
-} = require("../build");
-const { findDocumentTranslations } = require("../content/translations");
-const { Document, Redirect, Image } = require("../content");
-const { CONTENT_ROOT, CONTENT_TRANSLATED_ROOT } = require("../libs/env");
-// eslint-disable-next-line node/no-missing-require
-const { renderHTML } = require("../ssr/dist/main");
-const { CSP_VALUE, DEFAULT_LOCALE } = require("../libs/constants");
-const {
+} from "../build";
+import { findDocumentTranslations } from "../content/translations";
+import { Document, Redirect, Image } from "../content";
+import { CONTENT_ROOT, CONTENT_TRANSLATED_ROOT } from "../libs/env";
+import { CSP_VALUE, DEFAULT_LOCALE } from "../libs/constants";
+import {
   STATIC_ROOT,
   PROXY_HOSTNAME,
   FAKE_V1_API,
   CONTENT_HOSTNAME,
   OFFLINE_CONTENT,
-} = require("../libs/env");
+} from "../libs/env";
 
-const documentRouter = require("./document");
-const fakeV1APIRouter = require("./fake-v1-api");
-const { searchIndexRoute } = require("./search-index");
-const flawsRoute = require("./flaws");
-const { router: translationsRouter } = require("./translations");
-const { staticMiddlewares, originRequestMiddleware } = require("./middlewares");
-const { getRoot } = require("../content/utils");
+import documentRouter from "./document";
+import fakeV1APIRouter from "./fake-v1-api";
+import { searchIndexRoute } from "./search-index";
+import flawsRoute from "./flaws";
+import { router as translationsRouter } from "./translations";
+import { staticMiddlewares, originRequestMiddleware } from "./middlewares";
+import { getRoot } from "../content/utils";
+
+const { renderHTML } = require("../ssr/dist/main");
 
 async function buildDocumentFromURL(url) {
   const document = Document.findByURL(url);
@@ -122,7 +122,12 @@ app.post(
 app.use("/_document", documentRouter);
 
 app.get("/_open", (req, res) => {
-  const { line, column, filepath, url } = req.query;
+  const { line, column, filepath, url } = req.query as {
+    line: string;
+    column: string;
+    filepath: string;
+    url: string;
+  };
   // Sometimes that 'filepath' query string parameter is a full absolute
   // filepath (e.g. /Users/peterbe/yari/content.../index.html), which usually
   // happens when you this is used from the displayed flaws on a preview

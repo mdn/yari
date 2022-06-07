@@ -4,9 +4,9 @@ const path = require("path");
 const { fdir } = require("fdir");
 
 const express = require("express");
-const router = express.Router();
+export const router = express.Router();
 
-const { getPopularities, Document, Translation } = require("../content");
+import { getPopularities, Document, Translation } from "../content";
 const { VALID_LOCALES } = require("../libs/constants");
 const { CONTENT_ROOT, CONTENT_TRANSLATED_ROOT } = require("../libs/env");
 const { getLastCommitURL } = require("../build");
@@ -620,5 +620,3 @@ router.get("/dashboard", async (req, res) => {
   console.timeEnd(label);
   res.json(data);
 });
-
-module.exports = { router };

@@ -29,7 +29,7 @@ function populateSearchIndex(searchIndex, localeLC) {
   }
 }
 
-async function searchIndexRoute(req, res) {
+export async function searchIndexRoute(req, res) {
   // Remember, this is always in lowercase because of a middleware
   // that lowercases all incoming requests' pathname.
   const locale = req.params.locale;
@@ -62,7 +62,3 @@ async function searchIndexRoute(req, res) {
   console.timeEnd(label);
   res.json(searchIndex.getItems()[locale]);
 }
-
-module.exports = {
-  searchIndexRoute,
-};
