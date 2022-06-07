@@ -54,7 +54,7 @@
     "preset": "ts-jest",
     "testPathIgnorePatterns": [
       "headless*",
-      "developing.spec.js"
+      "developing.spec.ts"
     ]
   },
   "resolutions": {
