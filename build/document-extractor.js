@@ -323,6 +323,7 @@ function _addSingleSpecialSection($) {
   }
 
   let dataQuery = null;
+  let hasMultipleQueries = false;
   let specURLsString = "";
   let specialSectionType = null;
   if ($.find("div.bc-data").length) {
@@ -330,6 +331,7 @@ function _addSingleSpecialSection($) {
     const elem = $.find("div.bc-data");
     // Macro adds "data-query", but some translated-content still uses "id".
     dataQuery = elem.attr("data-query") || elem.attr("id");
+    hasMultipleQueries = elem.attr("data-multiple") === "true";
   } else if ($.find("div.bc-specs").length) {
     specialSectionType = "specifications";
     dataQuery = $.find("div.bc-specs").attr("data-bcd-query");
@@ -443,6 +445,11 @@ function _addSingleSpecialSection($) {
       }
     }
 
+    if (hasMultipleQueries) {
+      title = query;
+      id = query;
+      isH3 = true;
+    }
     return [
       {
         type: "browser_compatibility",
