@@ -222,6 +222,10 @@
   display: none;
 }
 
+.search-form:not(:focus-within) .search-results {
+  display: none;
+}
+
 /* When the search input has focus or has content,
    show the clear search button */
 .header-search .search-input-field {
