@@ -5,11 +5,21 @@
   "description": "Defines the deployment package for this AWS Lambda function.",
   "license": "MPL-2.0",
   "main": "index.js",
+  "files": [
+    "index.js",
+    "build.js",
+    "fallback-path.json"
+  ],
   "scripts": {
+    "build": "yarn install && node build.js",
     "make-package": "yarn install && zip -r -X function.zip . -i index.js 'node_modules/*'"
   },
   "dependencies": {
-    "@yari-internal/constants": "file:../../../libs/constants"
+    "@yari-internal/constants": "file:../../../libs/constants",
+    "@yari-internal/slug-utils": "file:../../../libs/slug-utils",
+    "dotenv": "^16.0.1",
+    "fdir": "^5.2.0",
+    "sanitize-filename": "^1.6.3"
   },
   "engines": {
     "node": ">=16.x"

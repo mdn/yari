@@ -1,5 +1,64 @@
 /* eslint-disable node/no-missing-require */
-const { CSP_VALUE } = require("@yari-internal/constants");
+const {
+  CSP_VALUE,
+  DEFAULT_LOCALE,
+  VALID_LOCALES,
+} = require("@yari-internal/constants");
+const fallbackPaths = new Set(require("./fallback-path.json"));
+const { decodePath, slugToFolder } = require("@yari-internal/slug-utils");
+
+const LEGACY_URI_MAY_NEED_REDIRECT = new RegExp(
+  `^/(?:${[...VALID_LOCALES.values()]
+    .filter((locale) => locale !== DEFAULT_LOCALE.toLowerCase())
+    .join("|")})/docs/`
+);
+
+function redirect(location, { status = 302, cacheControlSeconds = 0 } = {}) {
+  /*
+   * Create and return a redirect response.
+   */
+  let statusDescription;
+  let cacheControlValue;
+  if (status === 301) {
+    statusDescription = "Moved Permanently";
+  } else {
+    statusDescription = "Found";
+  }
+  if (cacheControlSeconds) {
+    cacheControlValue = `max-age=${cacheControlSeconds},public`;
+  } else {
+    cacheControlValue = "no-store";
+  }
+  // We need to URL encode the pathname, but leave the query string as is.
+  // Suppose the old URL was `/search?q=text%2Dshadow` and all we need to do
+  // is to inject the locale to that URL, we should not URL encode the whole
+  // new URL otherwise you'd end up with `/en-US/search?q=text%252Dshadow`
+  // since the already encoded `%2D` would become `%252D` which is wrong and
+  // different.
+  const [pathname, querystring] = location.split("?", 2);
+  let newLocation = encodeURI(pathname);
+  if (querystring) {
+    newLocation += `?${querystring}`;
+  }
+  return {
+    status,
+    statusDescription,
+    headers: {
+      location: [
+        {
+          key: "Location",
+          value: newLocation,
+        },
+      ],
+      "cache-control": [
+        {
+          key: "Cache-Control",
+          value: cacheControlValue,
+        },
+      ],
+    },
+  };
+}
 
 exports.handler = async (event) => {
   /*
@@ -34,6 +93,20 @@ exports.handler = async (event) => {
     request.origin.custom &&
     request.origin.custom.domainName.includes("s3")
   ) {
+    const decodedUri = decodePath(request.uri);
+    if (
+      response.status == 404 &&
+      LEGACY_URI_MAY_NEED_REDIRECT.test(decodedUri.toLowerCase()) &&
+      fallbackPaths.has(
+        slugToFolder(decodedUri.replace(LEGACY_URI_MAY_NEED_REDIRECT, ""))
+      )
+    ) {
+      const redirectUri = decodedUri.replace(
+        LEGACY_URI_MAY_NEED_REDIRECT,
+        `${DEFAULT_LOCALE}/docs/`
+      );
+      return redirect(redirectUri);
+    }
     // The live-sample pages should never respond with an X-Frame-Options
     // header, because they're explicitly created for rendering within an
     // iframe on a different origin.
