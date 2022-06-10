@@ -1,3 +1,5 @@
+/* eslint-disable node/no-unpublished-require */
+/* eslint-disable node/no-missing-require */
 const fs = require("fs");
 const fdir = require("fdir");
 const dotenv = require("dotenv");
