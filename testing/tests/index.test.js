@@ -66,7 +66,7 @@ test("content built foo page", () => {
   expect(new Date(doc.modified)).toBeTruthy();
   expect(doc.source).toBeTruthy();
 
-  expect(doc.flaws.macros.length).toBe(6);
+  expect(doc.flaws.macros.length).toBe(7);
   expect(doc.flaws.macros[0].name).toBe("MacroRedirectedLinkError");
   expect(doc.flaws.macros[0].macroSource).toBe("{{CSSxRef('dumber')}}");
   expect(doc.flaws.macros[0].line).toBe(8);
