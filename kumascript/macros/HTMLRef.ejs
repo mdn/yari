@@ -162,7 +162,7 @@ var resultAPI = [];
  </ol>
  </li><li class="no-bullet"><span class="no-link">G H</span>
  <ol>
-  <li><%-await wrapHTMLElement("Heading_elements")%></li>
+  <li><%- await template("HTMLelement", ["Heading_elements", "<code>&lt;h1&gt;-&lt;h6&gt;</code>"]) %></li>
   <li><%-await wrapHTMLElement("head")%></li>
   <li class="html5"><%-await wrapHTMLElement("header")%></li>
   <li class="html5"><s class="deprecatedElement obsoleteElement"><%-await wrapHTMLElement("hgroup")%></s></li>
