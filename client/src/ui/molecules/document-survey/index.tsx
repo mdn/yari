@@ -113,7 +113,7 @@ function SurveyDisplay({ survey }: { survey: Survey }) {
   }
 
   return (
-    <div className="notecard document-survey">
+    <div className="document-survey">
       <div className="survey-header">
         <div className="survey-teaser">{survey.teaser}</div>
 
@@ -128,7 +128,7 @@ function SurveyDisplay({ survey }: { survey: Survey }) {
           </button>
         </div>
       </div>
-      <details ref={details}>
+      <details className="survey-container" ref={details}>
         <summary>{survey.question}</summary>
 
         {state.opened_at && (
