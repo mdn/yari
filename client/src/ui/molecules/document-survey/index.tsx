@@ -1,10 +1,10 @@
 import React from "react";
 import { Doc } from "../../../document/types";
-import { ReactComponent as CloseIcon } from "@mdn/dinocons/general/close.svg";
 import "./index.scss";
 import { Survey, SURVEYS } from "./surveys";
 import { getSurveyState, writeSurveyState } from "./utils";
 import { useIsServer } from "../../../hooks";
+import { Icon } from "../../atoms/icon";
 
 export function DocumentSurvey({ doc }: { doc: Doc }) {
   const isServer = useIsServer();
@@ -25,9 +25,11 @@ export function DocumentSurvey({ doc }: { doc: Doc }) {
           return false;
         }
 
-        const state = getSurveyState(survey.key);
+        const state = getSurveyState(survey.bucket);
 
-        return state.random < survey.rate;
+        return (
+          state.random >= survey.rateFrom && state.random < survey.rateTill
+        );
       }),
     [doc, isServer]
   );
@@ -38,12 +40,12 @@ export function DocumentSurvey({ doc }: { doc: Doc }) {
 function SurveyDisplay({ survey }: { survey: Survey }) {
   const details = React.useRef<HTMLDetailsElement | null>(null);
 
-  const [originalState] = React.useState(() => getSurveyState(survey.key));
+  const [originalState] = React.useState(() => getSurveyState(survey.bucket));
   const [state, setState] = React.useState(() => originalState);
 
   React.useEffect(() => {
-    writeSurveyState(survey.key, state);
-  }, [state, survey.key]);
+    writeSurveyState(survey.bucket, state);
+  }, [state, survey.bucket]);
 
   function dismiss() {
     setState({
@@ -124,7 +126,7 @@ function SurveyDisplay({ survey }: { survey: Survey }) {
             onClick={() => dismiss()}
             title={"Hide this survey"}
           >
-            <CloseIcon />
+            <Icon name={"cancel"} />
           </button>
         </div>
       </div>
