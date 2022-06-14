@@ -266,7 +266,7 @@ function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
         ? [nothingFoundItem]
         : [...resultItems, onlineSearch],
     inputValue,
-    isOpen: inputValue !== "",
+    isOpen: isFocused,
     defaultIsOpen: isFocused,
     defaultHighlightedIndex: 0,
     onSelectedItemChange: ({ type, selectedItem }) => {
@@ -461,6 +461,15 @@ function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
             e.preventDefault();
           }
         },
+        onFocus: () => {
+          onChangeIsFocused(true);
+        },
+        onBlur: (e) => {
+          if (!e.currentTarget.contains(e.relatedTarget)) {
+            // focus has moved outside of container
+            onChangeIsFocused(false);
+          }
+        },
       })}
     >
       <label
@@ -479,12 +488,6 @@ function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
             : "search-input-field",
           name: "q",
           onMouseOver: initializeSearchIndex,
-          onFocus: () => {
-            onChangeIsFocused(true);
-          },
-          onBlur: () => {
-            onChangeIsFocused(false);
-          },
           onKeyDown(event) {
             if (event.key === "Escape" && inputRef.current) {
               onChangeInputValue("");

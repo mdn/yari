@@ -36,7 +36,7 @@ if (!query) {
 }
 var depth = $1 || 1;
 var queries = Array.isArray(query) ? query : [query];
-var output = queries.map(query => `<div class="bc-data" data-query="${query}" data-depth="${depth}">
+var output = queries.map(query => `<div class="bc-data" data-query="${query}" data-depth="${depth}" data-multiple="${queries.length > 1}">
   If you're able to see this, something went wrong on this page.
 </div>`).join("\n");
 %>

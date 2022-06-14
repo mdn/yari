@@ -1,19 +1,29 @@
 import React from "react";
 import { Doc } from "../../../document/types";
-import { ReactComponent as CloseIcon } from "@mdn/dinocons/general/close.svg";
 import "./index.scss";
 import { Survey, SURVEYS } from "./surveys";
 import { getSurveyState, writeSurveyState } from "./utils";
 import { useIsServer } from "../../../hooks";
+import { Icon } from "../../atoms/icon";
+import { useLocation } from "react-router";
+
+const FORCE_SURVEY_PREFIX = "#FORCE_SURVEY=";
 
 export function DocumentSurvey({ doc }: { doc: Doc }) {
   const isServer = useIsServer();
+  const location = useLocation();
+
+  let force = location.hash.startsWith(FORCE_SURVEY_PREFIX);
 
   const survey = React.useMemo(
     () =>
       SURVEYS.find((survey) => {
         if (isServer) {
           return false;
+        }
+
+        if (force) {
+          return survey.key === location.hash.slice(FORCE_SURVEY_PREFIX.length);
         }
 
         if (!survey.show(doc)) {
@@ -25,25 +35,27 @@ export function DocumentSurvey({ doc }: { doc: Doc }) {
           return false;
         }
 
-        const state = getSurveyState(survey.key);
+        const state = getSurveyState(survey.bucket);
 
-        return state.random < survey.rate;
+        return (
+          state.random >= survey.rateFrom && state.random < survey.rateTill
+        );
       }),
-    [doc, isServer]
+    [doc, isServer, location.hash, force]
   );
 
-  return survey ? <SurveyDisplay survey={survey} /> : <></>;
+  return survey ? <SurveyDisplay survey={survey} force={force} /> : <></>;
 }
 
-function SurveyDisplay({ survey }: { survey: Survey }) {
+function SurveyDisplay({ survey, force }: { survey: Survey; force: boolean }) {
   const details = React.useRef<HTMLDetailsElement | null>(null);
 
-  const [originalState] = React.useState(() => getSurveyState(survey.key));
+  const [originalState] = React.useState(() => getSurveyState(survey.bucket));
   const [state, setState] = React.useState(() => originalState);
 
   React.useEffect(() => {
-    writeSurveyState(survey.key, state);
-  }, [state, survey.key]);
+    writeSurveyState(survey.bucket, state);
+  }, [state, survey.bucket]);
 
   function dismiss() {
     setState({
@@ -108,12 +120,12 @@ function SurveyDisplay({ survey }: { survey: Survey }) {
     };
   });
 
-  if (state.dismissed_at || originalState.submitted_at) {
+  if (!force && (state.dismissed_at || originalState.submitted_at)) {
     return <></>;
   }
 
   return (
-    <div className="notecard document-survey">
+    <div className="document-survey">
       <div className="survey-header">
         <div className="survey-teaser">{survey.teaser}</div>
 
@@ -124,11 +136,11 @@ function SurveyDisplay({ survey }: { survey: Survey }) {
             onClick={() => dismiss()}
             title={"Hide this survey"}
           >
-            <CloseIcon />
+            <Icon name={"cancel"} />
           </button>
         </div>
       </div>
-      <details ref={details}>
+      <details className="survey-container" ref={details}>
         <summary>{survey.question}</summary>
 
         {state.opened_at && (

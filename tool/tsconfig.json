@@ -1,9 +1,7 @@
 {
   "extends": "../tsconfig.json",
   "compilerOptions": {
-    "skipLibCheck": true,
-    "importsNotUsedAsValues": "remove",
-    "moduleResolution": "node"
+    "importsNotUsedAsValues": "remove"
   },
   "include": ["."]
 }
