@@ -34,7 +34,7 @@ export const SURVEYS: Survey[] = [
       /en-US\/docs\/(Learn|Web)\/CSS(\/|$)/i.test(doc.mdn_url),
     src: "https://www.surveygizmo.com/s3/6818801/MDN-Short-survey-CSS-Cascade-Layers",
     teaser:
-      "Shape the future of the web by taking a 1-2 questions micro survey:",
+      "Shape the future of the web by taking a 1-3 questions micro survey:",
     question: "What's your experience with Cascade Layers?",
     ...survey_duration(SurveyBucket.CSS_CASCADE_2022),
     ...survey_rates(SurveyKey.CSS_CASCADE_2022_B),
@@ -46,7 +46,7 @@ export const SURVEYS: Survey[] = [
       /en-US\/docs\/(Learn|Web)\/CSS(\/|$)/i.test(doc.mdn_url),
     src: "https://www.surveygizmo.com/s3/6898398/CSS-Cascade-Layers-A",
     teaser:
-      "Shape the future of the web by taking a 1-2 questions micro survey:",
+      "Shape the future of the web by taking a 1-3 questions micro survey:",
     question: "What's your experience with Cascade Layers?",
     ...survey_duration(SurveyBucket.CSS_CASCADE_2022),
     ...survey_rates(SurveyKey.CSS_CASCADE_2022_A),
