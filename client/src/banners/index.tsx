@@ -14,7 +14,7 @@ import { BannerId } from "./ids";
 
 const ActiveBanner = React.lazy(() => import("./active-banner"));
 
-const currentBannerId: BannerId | null = null;
+const currentBannerId: BannerId | null = BannerId.PLUS_LAUNCH_ANNOUNCEMENT;
 const daysToEmbargo = 7;
 
 export function Banner() {
