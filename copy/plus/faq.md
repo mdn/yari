@@ -86,7 +86,7 @@ For more information about how our organizations work together, please check
 ## What regions is MDN Plus available in?
 
 The free version of MDN Plus is available worldwide. Anyone can create an MDN
-Plus account as try out a limited version of the premium features. As for the
+Plus account and try out a limited version of the premium features. As for the
 paid plans, they are currently available in the following countries: US, Canada
 (since March 24th, 2022), Austria, Belgium, Finland, France, United Kingdom,
 Germany, Ireland, Italy, Malaysia, the Netherlands, New Zealand, Puerto Rico,
