@@ -29,9 +29,7 @@ const FEATURED_ARTICLES = [
 
 const contributorSpotlightRoot = CONTRIBUTOR_SPOTLIGHT_ROOT;
 
-let featuredContributor;
-
-async function buildContributorSpotlight(options, locale) {
+async function buildContributorSpotlight(locale, options) {
   const prefix = "community/spotlight";
   const profileImg = "profile-image.jpg";
 
@@ -78,7 +76,7 @@ async function buildContributorSpotlight(options, locale) {
       console.log("Wrote", filePath);
     }
     if (frontMatter.attributes.is_featured) {
-      featuredContributor = {
+      return {
         contributorName: frontMatter.attributes.contributor_name,
         url: `/${locale}/${prefix}/${frontMatter.attributes.folder_name}`,
         quote: frontMatter.attributes.quote,
@@ -110,10 +108,6 @@ async function buildSPAs(options) {
     for (const locale of fs.readdirSync(root)) {
       if (!fs.statSync(path.join(root, locale)).isDirectory()) {
         continue;
-      }
-
-      if (contributorSpotlightRoot) {
-        buildContributorSpotlight(options, locale);
       }
 
       const SPAs = [
@@ -272,6 +266,11 @@ async function buildSPAs(options) {
       }
       if (!fs.statSync(path.join(root, locale)).isDirectory()) {
         continue;
+      }
+
+      let featuredContributor = null;
+      if (contributorSpotlightRoot) {
+        featuredContributor = await buildContributorSpotlight(locale, options);
       }
 
       // circular dependency, so needs to be imported down here:
