@@ -3595,9 +3595,9 @@ caniuse-lite@^1.0.0, caniuse-lite@^1.0.30001335:
   integrity sha512-2SodVrFFtvGENGCv0ChVJIDQ0KPaS1cg7/qtfMaICgeMolDdo/Z2OD32F0Aq9yl6F4YFwGPBS5AaPqNYiW4PoA==
 
 caniuse-lite@^1.0.30001332:
-  version "1.0.30001357"
-  resolved "https://registry.yarnpkg.com/caniuse-lite/-/caniuse-lite-1.0.30001357.tgz#dec7fc4158ef6ad24690d0eec7b91f32b8cb1b5d"
-  integrity sha512-b+KbWHdHePp+ZpNj+RDHFChZmuN+J5EvuQUlee9jOQIUAdhv9uvAZeEtUeLAknXbkiu1uxjQ9NLp1ie894CuWg==
+  version "1.0.30001354"
+  resolved "https://registry.yarnpkg.com/caniuse-lite/-/caniuse-lite-1.0.30001354.tgz#95c5efdb64148bb4870771749b9a619304755ce5"
+  integrity sha512-mImKeCkyGDAHNywYFA4bqnLAzTUvVkqPvhY4DV47X+Gl2c5Z8c3KNETnXp14GQt11LvxE8AwjzGxJ+rsikiOzg==
 
 caniuse-lite@^1.0.30001358:
   version "1.0.30001367"
@@ -4889,9 +4889,9 @@ ejs@^3.1.5, ejs@^3.1.6, ejs@^3.1.8:
     jake "^10.8.5"
 
 electron-to-chromium@^1.4.118:
-  version "1.4.161"
-  resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.4.161.tgz#49cb5b35385bfee6cc439d0a04fbba7a7a7f08a1"
-  integrity sha512-sTjBRhqh6wFodzZtc5Iu8/R95OkwaPNn7tj/TaDU5nu/5EFiQDtADGAXdR4tJcTEHlYfJpHqigzJqHvPgehP8A==
+  version "1.4.156"
+  resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.4.156.tgz#fc398e1bfbe586135351ebfaf198473a82923af5"
+  integrity sha512-/Wj5NC7E0wHaMCdqxWz9B0lv7CcycDTiHyXCtbbu3pXM9TV2AOp8BtMqkVuqvJNdEvltBG6LxT2Q+BxY4LUCIA==
 
 electron-to-chromium@^1.4.164:
   version "1.4.192"

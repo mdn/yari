@@ -65,71 +65,72 @@
       animation-timing-function: ease-in-out;
     }
 
-  @keyframes rotation {
-    from {
-      transform: rotate(0deg);
+    @keyframes rotation {
+      from {
+        transform: rotate(0deg);
+      }
+
+      to {
+        transform: rotate(360deg);
+      }
     }
 
-    to {
-      transform: rotate(360deg);
-    }
-  }
+    @keyframes mandala-color-change {
+      0% {
+        fill: var(--mandala-primary);
+      }
 
-  @keyframes mandala-color-change {
-    0% {
-      fill: var(--mandala-primary);
-    }
+      10% {
+        fill: var(--mandala-primary);
+      }
 
-    10% {
-      fill: var(--mandala-primary);
-    }
+      15% {
+        fill: var(--mandala-accent-1);
+      }
 
-    15% {
-      fill: var(--mandala-accent-1);
-    }
+      20% {
+        fill: var(--mandala-primary);
+      }
 
-    20% {
-      fill: var(--mandala-primary);
-    }
+      25% {
+        fill: var(--mandala-primary);
+      }
 
-    25% {
-      fill: var(--mandala-primary);
-    }
+      30% {
+        fill: var(--mandala-accent-2);
+      }
 
-    30% {
-      fill: var(--mandala-accent-2);
-    }
+      35% {
+        fill: var(--mandala-primary);
+      }
 
-    35% {
-      fill: var(--mandala-primary);
-    }
+      40% {
+        fill: var(--mandala-primary);
+      }
 
-    40% {
-      fill: var(--mandala-primary);
-    }
+      50% {
+        fill: var(--mandala-accent-3);
+      }
 
-    50% {
-      fill: var(--mandala-accent-3);
-    }
+      55% {
+        fill: var(--mandala-primary);
+      }
 
-    55% {
-      fill: var(--mandala-primary);
-    }
+      60% {
+        fill: var(--mandala-primary);
+      }
 
-    60% {
-      fill: var(--mandala-primary);
-    }
+      65% {
+        fill: var(--mandala-accent-4);
+      }
 
-    65% {
-      fill: var(--mandala-accent-4);
-    }
+      70% {
+        fill: var(--mandala-primary);
+      }
 
-    70% {
-      fill: var(--mandala-primary);
-    }
-
-    100% {
-      fill: var(--mandala-primary);
+      100% {
+        fill: var(--mandala-primary);
+      }
     }
   }
 }
