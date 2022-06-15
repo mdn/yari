@@ -83,12 +83,16 @@ together on MDN for the best possible web platform documentation for everyone.
 For more information about how our organizations work together, please check
 [this article](https://hacks.mozilla.org/2022/03/mozilla-and-open-web-docs-working-together-on-mdn/).
 
-## What regions will MDN Plus be available in?
+## What regions is MDN Plus available in?
 
-Today, MDN Plus is available in the US and Canada. In the coming months, we are
-planning to roll out to other countries including France, Germany, Italy, Spain,
-Belgium, Austria, the Netherlands, Ireland, United Kingdom, Switzerland,
-Malaysia, New Zealand and Singapore.
+The free version of MDN Plus is available worldwide. Anyone can create an MDN
+Plus account and try out a limited version of the premium features. As for the
+paid plans, they are currently available as follows: in the United States,
+Canada (since March 24th, 2022), Austria, Belgium, Finland, France, the United
+Kingdom, Germany, Ireland, Italy, Malaysia, the Netherlands, New Zealand, Puerto
+Rico, Sweden, Singapore, Switzerland, Spain (since April 28th, 2022), Turkey,
+Estonia, Greece, Latvia, Lithuania, Portugal, Slovakia and Slovenia (since June
+15th, 2022). We are working on expanding this list even further.
 
 ## I have an idea for MDN Plus, who should I contact?
 
