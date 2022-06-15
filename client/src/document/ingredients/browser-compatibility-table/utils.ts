@@ -47,7 +47,11 @@ export function listFeatures(
   }
 
   for (const [subName, subIdentifier] of Object.entries(identifier)) {
-    if (subName !== "__compat" && subIdentifier.__compat) {
+    if (
+      subName !== "__compat" &&
+      "__compat" in subIdentifier &&
+      subIdentifier.__compat
+    ) {
       features.push({
         name: parentName ? `${parentName}.${subName}` : subName,
         compat: subIdentifier.__compat,
