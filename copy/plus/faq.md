@@ -88,7 +88,7 @@ For more information about how our organizations work together, please check
 The free version of MDN Plus is available worldwide. Anyone can create an MDN
 Plus account and try out a limited version of the premium features. As for the
 paid plans, they are currently available as follows: in the United States,
-Canada (since March 24th, 2022), Austria, Belgium, Finland, France, United
+Canada (since March 24th, 2022), Austria, Belgium, Finland, France, the United
 Kingdom, Germany, Ireland, Italy, Malaysia, the Netherlands, New Zealand, Puerto
 Rico, Sweden, Singapore, Switzerland, Spain (since April 28th, 2022), Turkey,
 Estonia, Greece, Latvia, Lithuania, Portugal, Slovakia and Slovenia (since June
