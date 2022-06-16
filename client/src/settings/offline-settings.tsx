@@ -20,12 +20,12 @@ export default function SettingsApp({ ...appProps }) {
 
   return (
     <section className="field-group">
-      {/* <h3>MDN Offline</h3> */}
+      <h2>MDN Offline</h2>
       {serviceWorkerAvailable ? (
         <Settings />
       ) : (
         <>
-          <h4>Offline mode is unavailable </h4>{" "}
+          <h3>Offline mode is unavailable </h3>{" "}
           <p>
             Please make sure that you are not using a private or incognito
             window.
@@ -124,7 +124,7 @@ function Settings() {
   return (
     <ul>
       <li>
-        <h4>Enable offline storage</h4>
+        <h3>Enable offline storage</h3>
         <span>Allow MDN content to be downloaded for offline access</span>
         {(saving === true && <Spinner extraClasses="loading" />) || (
           <Switch
@@ -141,7 +141,7 @@ function Settings() {
       {settings?.offline && (
         <>
           <li>
-            <h4>Prefer online content</h4>
+            <h3>Prefer online content</h3>
             <span>
               Do not use offline content while connected to the internet
             </span>
@@ -165,7 +165,7 @@ function Settings() {
             />
           </li>
           <li>
-            <h4>Enable auto-update</h4>
+            <h3>Enable auto-update</h3>
             <span>
               Automatically download updates to content enabled for download
             </span>
@@ -183,7 +183,7 @@ function Settings() {
           </li>
           {window?.location.hash === "#debug" && (
             <li>
-              <h4>Debug</h4>
+              <h3>Debug</h3>
               <span style={{ fontFamily: "monospace", whiteSpace: "pre" }}>
                 {JSON.stringify(status, null, 2)}
               </span>
@@ -191,7 +191,7 @@ function Settings() {
           )}
           {usage && (
             <li>
-              <h4>Storage used</h4>
+              <h3>Storage used</h3>
               <span>
                 MDN Offline currently uses <b>{usage}</b>
               </span>

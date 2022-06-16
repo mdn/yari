@@ -9,6 +9,10 @@ function PlusDocsNav() {
       heading="MDN Plus"
       items={[
         {
+          slug: "plus/docs/features/overview",
+          title: "Overview",
+        },
+        {
           slug: "plus/docs/features/notifications",
           title: "Notifications",
         },
@@ -21,8 +25,8 @@ function PlusDocsNav() {
           title: "MDN Offline",
         },
         {
-          slug: "plus/docs/faq",
-          title: "Frequently asked questions",
+          slug: "plus#subscribe",
+          title: "Try MDN Plus",
         },
       ]}
     />

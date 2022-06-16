@@ -7,19 +7,23 @@ import { useUserData } from "../user-context";
 
 import "./index.scss";
 
-const SettingsApp = React.lazy(() => import("./settings"));
+const SettingsApp = React.lazy(() => import("./offline-settings"));
 
-export function OfflineSettings() {
+export function Settings() {
   const locale = useLocale();
   const user = useUserData();
-  const pageTitle = "MDN Offline";
+  const pageTitle = "My Settings";
 
   return (
     <>
       <OfflineStatusBar />
       <PageContentContainer extraClasses="settings">
         <h1 className="slab-highlight">{pageTitle} </h1>
-        {(user?.isSubscriber && <SettingsApp />) || (
+        {(user?.isSubscriber && (
+          <>
+            <SettingsApp />
+          </>
+        )) || (
           <section>
             MDN Offline is only available to MDN Plus subscribers.{" "}
             <a href={`/${locale}/plus#subscribe`}>Learn more</a> about our

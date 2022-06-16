@@ -2,7 +2,7 @@ import * as React from "react";
 import useSWR from "swr";
 
 import { DISABLE_AUTH, DEFAULT_GEO_COUNTRY } from "./env";
-import { MDNWorker } from "./offline-settings/mdn-worker";
+import { MDNWorker } from "./settings/mdn-worker";
 
 export enum SubscriptionType {
   MDN_CORE = "",
@@ -126,7 +126,7 @@ export function UserDataProvider(props: { children: React.ReactNode }) {
 
       // Let's initialize the MDN Worker if the user is signed in.
       if (!window.mdnWorker && data?.isAuthenticated) {
-        import("./offline-settings/mdn-worker").then(({ getMDNWorker }) => {
+        import("./settings/mdn-worker").then(({ getMDNWorker }) => {
           const mdnWorker = getMDNWorker();
           if (data?.isSubscriber === false) {
             mdnWorker.clearOfflineSettings();

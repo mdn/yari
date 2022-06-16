@@ -7,7 +7,7 @@ import { PageContentContainer } from "../ui/atoms/page-content";
 import { PageNotFound } from "../page-not-found";
 import Notifications from "./notifications";
 import { MDN_PLUS_TITLE } from "../constants";
-import { OfflineSettings } from "../offline-settings";
+import { Settings } from "../settings";
 import PlusDocs from "./plus-docs";
 
 const OfferOverview = React.lazy(() => import("./offer-overview"));
@@ -81,10 +81,10 @@ export function Plus({ pageTitle, ...props }: { pageTitle?: string }) {
         }
       />
       <Route
-        path="/offline"
+        path="/settings"
         element={
           <Layout>
-            <OfflineSettings {...props} />
+            <Settings {...props} />
           </Layout>
         }
       />

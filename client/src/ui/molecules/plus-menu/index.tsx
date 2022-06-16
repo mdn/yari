@@ -1,5 +1,4 @@
-import { useUserData } from "../../../user-context";
-import { useIsServer, useLocale } from "../../../hooks";
+import { useLocale } from "../../../hooks";
 
 import "./index.scss";
 import { usePlusUrl } from "../../../plus/utils";
@@ -7,12 +6,7 @@ import { Menu } from "../menu";
 
 export const PlusMenu = ({ visibleSubMenuId, toggleMenu }) => {
   const locale = useLocale();
-  const userData = useUserData();
-
   const plusUrl = usePlusUrl();
-
-  const isServer = useIsServer();
-  const isAuthenticated = userData && userData.isAuthenticated;
 
   const plusMenu = {
     label: "MDN Plus",
@@ -20,31 +14,23 @@ export const PlusMenu = ({ visibleSubMenuId, toggleMenu }) => {
     to: plusUrl,
     items: [
       {
-        description: "More MDN. Your MDN.",
+        description: "Collections and Notifications moved to the user menu",
+        extraClasses: "note",
+      },
+      {
+        description: "A customized MDN experience",
         hasIcon: true,
-        extraClasses: "mobile-only",
         iconClasses: "submenu-icon",
         label: "Overview",
         url: plusUrl,
       },
-      ...(!isServer && isAuthenticated
-        ? [
-            {
-              description: "Your saved articles from across MDN",
-              hasIcon: true,
-              iconClasses: "submenu-icon",
-              label: "Collections",
-              url: `/${locale}/plus/collections`,
-            },
-            {
-              description: "Updates from the pages you’re watching",
-              hasIcon: true,
-              iconClasses: "submenu-icon",
-              label: "Notifications",
-              url: `/${locale}/plus/notifications`,
-            },
-          ]
-        : []),
+      {
+        description: "Learn how to use MDN Plus",
+        hasIcon: true,
+        iconClasses: "submenu-icon",
+        label: "Documentation",
+        url: `/${locale}/plus/docs/features/overview`,
+      },
       {
         description: "Frequently asked questions about MDN Plus",
         hasIcon: true,
