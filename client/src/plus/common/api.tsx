@@ -273,7 +273,7 @@ async function post(url: string, csrfToken: string, data?: object) {
     method: "POST",
     headers: {
       "X-CSRFToken": csrfToken,
-      "content-type": "text/plain",
+      "content-type": "application/json",
     },
   };
   if (data) fetchData.body = JSON.stringify(data);
