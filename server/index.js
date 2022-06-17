@@ -59,15 +59,6 @@ async function buildDocumentFromURL(url) {
 
 const app = express();
 
-app.use(express.json());
-
-// Needed because we read cookies in the code that mimics what we do in Lambda@Edge.
-app.use(cookieParser());
-
-app.use(originRequestMiddleware);
-
-app.use(staticMiddlewares);
-
 // Depending on if FAKE_V1_API is set, we either respond with JSON based
 // on `.json` files on disk or we proxy the requests to Kuma.
 const proxy = FAKE_V1_API
@@ -98,9 +89,17 @@ app.use("/api/v1", proxy);
 // This is an exception and it's only ever relevant in development.
 app.use("/users/*", proxy);
 
-// It's important that this line comes *after* the setting up for the proxy
-// middleware for `/api/v1` above.
-// See https://github.com/chimurai/http-proxy-middleware/issues/40#issuecomment-163398924
+// The proxy middleware has to come before all other middleware to avoid modifying the requests we proxy.
+
+app.use(express.json());
+
+// Needed because we read cookies in the code that mimics what we do in Lambda@Edge.
+app.use(cookieParser());
+
+app.use(originRequestMiddleware);
+
+app.use(staticMiddlewares);
+
 app.use(express.urlencoded({ extended: true }));
 
 app.post(

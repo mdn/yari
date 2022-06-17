@@ -90,9 +90,9 @@ Plus account and try out a limited version of the premium features. As for the
 paid plans, they are currently available as follows: in the United States,
 Canada (since March 24th, 2022), Austria, Belgium, Finland, France, the United
 Kingdom, Germany, Ireland, Italy, Malaysia, the Netherlands, New Zealand, Puerto
-Rico, Sweden, Singapore, Switzerland, Spain (since April 28th, 2022), Turkey,
-Estonia, Greece, Latvia, Lithuania, Portugal, Slovakia and Slovenia (since June
-15th, 2022). We are working on expanding this list even further.
+Rico, Sweden, Singapore, Switzerland, Spain (since April 28th, 2022), Estonia,
+Greece, Latvia, Lithuania, Portugal, Slovakia and Slovenia (since June 15th,
+2022). We are working on expanding this list even further.
 
 ## I have an idea for MDN Plus, who should I contact?
 

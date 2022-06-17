@@ -2212,10 +2212,10 @@
   dependencies:
     "@types/react" "*"
 
-"@types/react@*", "@types/react@>=18.0.0", "@types/react@^18.0.12":
-  version "18.0.12"
-  resolved "https://registry.yarnpkg.com/@types/react/-/react-18.0.12.tgz#cdaa209d0a542b3fcf69cf31a03976ec4cdd8840"
-  integrity sha512-duF1OTASSBQtcigUvhuiTB1Ya3OvSy+xORCiEf20H0P0lzx+/KeVsA99U5UjLXSbyo1DRJDlLKqTeM1ngosqtg==
+"@types/react@*", "@types/react@>=18.0.0", "@types/react@^18.0.14":
+  version "18.0.14"
+  resolved "https://registry.yarnpkg.com/@types/react/-/react-18.0.14.tgz#e016616ffff51dba01b04945610fe3671fdbe06d"
+  integrity sha512-x4gGuASSiWmo0xjDLpm5mPb52syZHJx02VKbqUKdLmKtAwIh63XClGsiTI1K6DO5q7ox4xAsQrU+Gl3+gGXF9Q==
   dependencies:
     "@types/prop-types" "*"
     "@types/scheduler" "*"
@@ -3289,10 +3289,10 @@ browser-process-hrtime@^1.0.0:
   resolved "https://registry.yarnpkg.com/browser-process-hrtime/-/browser-process-hrtime-1.0.0.tgz#3c9b4b7d782c8121e56f10106d84c0d0ffc94626"
   integrity sha512-9o5UecI3GhkpM6DrXr69PblIuWxPKk9Y0jHBRhdocZ2y7YECBFCsHm79Pr3OyR2AvjhDkabFJaDJMYRazHgsow==
 
-browser-specs@^3.12.0:
-  version "3.12.0"
-  resolved "https://registry.yarnpkg.com/browser-specs/-/browser-specs-3.12.0.tgz#87252d060f191baa7d895f4e6ee7290691506903"
-  integrity sha512-wntVE7WNbCuTJ5KhzlHGtZIjmn+iZaBjSYu1IAms5WKTPvkAn6A9xf2+ed0qaXTuh+cLhS/FgV4SQ/CtYYkFhg==
+browser-specs@^3.13.0:
+  version "3.13.0"
+  resolved "https://registry.yarnpkg.com/browser-specs/-/browser-specs-3.13.0.tgz#cf9d896a36c7f46dd50f5ebf82968ad22c1ba95d"
+  integrity sha512-HU/pp210tqpGGnrAJzD2NLLrVFF1wZfuTEQ5C2UWwqutjvcBSIZsdOtnRWMiUOIT7QOlkBwZ1Iv/6kQye8tyTA==
 
 browserslist@^4.0.0, browserslist@^4.12.0, browserslist@^4.14.5, browserslist@^4.16.6, browserslist@^4.18.1, browserslist@^4.20.2, browserslist@^4.20.3, browserslist@^4.20.4:
   version "4.20.4"
@@ -8017,10 +8017,10 @@ lines-and-columns@^1.1.6:
   resolved "https://registry.yarnpkg.com/lines-and-columns/-/lines-and-columns-1.2.4.tgz#eca284f75d2965079309dc0ad9255abb2ebc1632"
   integrity sha512-7ylylesZQ/PV29jhEDl3Ufjo6ZX7gCqJr5F7PKrqc93v7fzSymt1BpwEU8nAUXs8qzzvqhbjhK5QZg6Mt/HkBg==
 
-lint-staged@^13.0.1:
-  version "13.0.1"
-  resolved "https://registry.yarnpkg.com/lint-staged/-/lint-staged-13.0.1.tgz#899e78065ab29b88fdd922482411121664ef66be"
-  integrity sha512-Ykaf4QTi0a02BF7cnq7JIPGOJxH4TkNMWhSlJdH9wOekd0X+gog47Jfh/0L31DqZe5AiydLGC7LkPqpaNm+Kvg==
+lint-staged@^13.0.2:
+  version "13.0.2"
+  resolved "https://registry.yarnpkg.com/lint-staged/-/lint-staged-13.0.2.tgz#35a1c57130e9ad5b1dea784972a40777ba433dd5"
+  integrity sha512-qQLfLTh9z34eMzfEHENC+QBskZfxjomrf+snF3xJ4BzilORbD989NLqQ00ughsF/A+PT41e87+WsMFabf9++pQ==
   dependencies:
     cli-truncate "^3.1.0"
     colorette "^2.0.17"
@@ -8602,10 +8602,10 @@ min-indent@^1.0.0:
   resolved "https://registry.yarnpkg.com/min-indent/-/min-indent-1.0.1.tgz#a63f681673b30571fbe8bc25686ae746eefa9869"
   integrity sha512-I9jwMn07Sy/IwOj3zVkVik2JTvgpaykDZEigL6Rx6N9LbMywwUSMtxET+7lVoDLLd3O3IXwJwvuuns8UB/HeAg==
 
-mini-css-extract-plugin@^2.4.5:
-  version "2.6.0"
-  resolved "https://registry.yarnpkg.com/mini-css-extract-plugin/-/mini-css-extract-plugin-2.6.0.tgz#578aebc7fc14d32c0ad304c2c34f08af44673f5e"
-  integrity sha512-ndG8nxCEnAemsg4FSgS+yNyHKgkTB4nPKqCOgh65j3/30qqC5RaSQQXMm++Y6sb6E1zRSxPkztj9fqxhS1Eo6w==
+mini-css-extract-plugin@^2.6.1:
+  version "2.6.1"
+  resolved "https://registry.yarnpkg.com/mini-css-extract-plugin/-/mini-css-extract-plugin-2.6.1.tgz#9a1251d15f2035c342d99a468ab9da7a0451b71e"
+  integrity sha512-wd+SD57/K6DiV7jIR34P+s3uckTRuQvx0tKPcvjFlrEylk6P4mQ2KSWk1hblj1Kxaqok7LogKOieygXqBczNlg==
   dependencies:
     schema-utils "^4.0.0"
 
@@ -10084,10 +10084,10 @@ prettier-plugin-packagejson@^2.2.18:
   dependencies:
     sort-package-json "1.57.0"
 
-prettier@^2.7.0:
-  version "2.7.0"
-  resolved "https://registry.yarnpkg.com/prettier/-/prettier-2.7.0.tgz#a4fdae07e5596c51c9857ea676cd41a0163879d6"
-  integrity sha512-nwoX4GMFgxoPC6diHvSwmK/4yU8FFH3V8XWtLQrbj4IBsK2pkYhG4kf/ljF/haaZ/aii+wNJqISrCDPgxGWDVQ==
+prettier@^2.7.1:
+  version "2.7.1"
+  resolved "https://registry.yarnpkg.com/prettier/-/prettier-2.7.1.tgz#e235806850d057f97bb08368a4f7d899f7760c64"
+  integrity sha512-ujppO+MkdPqoVINuDFDRLClm7D78qbDt0/NR+wp5FqEZOoTNAjPHWj17QRhu7geIHJfcNhRk1XVQmF8Bp3ye+g==
 
 pretty-bytes@^5.3.0, pretty-bytes@^5.4.1:
   version "5.6.0"
