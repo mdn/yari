@@ -22,6 +22,7 @@ import { docCategory } from "./utils";
 import { Contribute } from "./community";
 import { ContributorSpotlight } from "./contributor-spotlight";
 import { useIsServer } from "./hooks";
+import { useUserData } from "./user-context";
 
 import { Banner } from "./banners";
 
@@ -93,6 +94,14 @@ function LoadingFallback({ message }: { message?: string }) {
 }
 
 export function App(appProps) {
+  const userData = useUserData();
+
+  useEffect(() => {
+    if (userData?.isAuthenticated && !window.mdnWorker) {
+      import("./offline-settings/mdn-worker");
+    }
+  }, [userData?.isAuthenticated]);
+
   const localeMatch = useMatch("/:locale/*");
 
   useEffect(() => {

@@ -61,16 +61,31 @@ export class MDNWorker {
     this.controller()?.postMessage({ type: "update" });
   }
 
-  swName(onlineFirst: boolean | null | undefined = null) {
+  swName(
+    onlineFirst: boolean | null | undefined = null,
+    onlyApiCache: boolean = false
+  ) {
     const onlineFirstSW = onlineFirst ?? this.settings.preferOnline ?? false;
-    return `/service-worker.js?preferOnline=${onlineFirstSW}`;
+    return `/service-worker.js?preferOnline=${onlineFirstSW}&onlyApi=${onlyApiCache}`;
   }
 
-  async enableServiceWorker(onlineFirst: boolean | null | undefined = null) {
+  async enableApiCache() {
+    if (!this.registered) {
+      this.enableServiceWorker(true, true);
+    }
+  }
+
+  async enableServiceWorker(
+    onlineFirst: boolean | null | undefined = null,
+    onlyApiCache: boolean = false
+  ) {
     if ("serviceWorker" in navigator) {
-      await navigator.serviceWorker.register(this.swName(onlineFirst), {
-        scope: "/",
-      });
+      await navigator.serviceWorker.register(
+        this.swName(onlineFirst, onlyApiCache),
+        {
+          scope: "/",
+        }
+      );
       this.registered = true;
     }
     registerMessageHandler();
@@ -113,6 +128,7 @@ export class MDNWorker {
     const current = this.offlineSettings();
 
     if (!current.offline && settingsData.offline && !this.registered) {
+      await this.disableServiceWorker();
       await this.enableServiceWorker(settingsData.preferOnline);
     } else if (
       "preferOnline" in settingsData &&
@@ -123,6 +139,7 @@ export class MDNWorker {
     }
     if (current.offline && settingsData.offline === false) {
       await this.disableServiceWorker();
+      await this.enableApiCache();
     }
 
     if (settingsData.autoUpdates === false && this.timeout) {
@@ -166,4 +183,6 @@ function registerMessageHandler() {
 
 if (mdnWorker.settings.offline) {
   mdnWorker.enableServiceWorker(mdnWorker.settings.preferOnline);
+} else {
+  mdnWorker.enableApiCache();
 }

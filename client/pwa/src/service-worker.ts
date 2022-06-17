@@ -33,17 +33,21 @@ var unpacking = Promise.resolve();
 
 self.addEventListener("install", (e) => {
   // synchronizeDb();
-  e.waitUntil(
-    (async () => {
-      const cache = await openCache();
-      const { files = {} } =
-        (await (await fetch("/asset-manifest.json")).json()) || {};
-      const assets = [...Object.values(files)].filter(
-        (asset) => !(asset as string).endsWith(".map")
-      );
-      await cache.addAll(assets as string[]);
-    })().then(() => self.skipWaiting())
-  );
+  const onlyApi =
+    new URLSearchParams(location.search).get("onlyApi") === "true";
+  if (!onlyApi) {
+    e.waitUntil(
+      (async () => {
+        const cache = await openCache();
+        const { files = {} } =
+          (await (await fetch("/asset-manifest.json")).json()) || {};
+        const assets = [...Object.values(files)].filter(
+          (asset) => !(asset as string).endsWith(".map")
+        );
+        await cache.addAll(assets as string[]);
+      })().then(() => self.skipWaiting())
+    );
+  }
 
   initOncePerRun(self);
 });
