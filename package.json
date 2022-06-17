@@ -192,7 +192,7 @@
     "jest-resolve": "^28.1.1",
     "jest-watch-typeahead": "^1.0.0",
     "jsdom": "^19.0.0",
-    "lint-staged": "^13.0.1",
+    "lint-staged": "^13.0.2",
     "mini-css-extract-plugin": "^2.6.1",
     "node-dev": "^7.4.3",
     "pegjs": "^0.10.0",
