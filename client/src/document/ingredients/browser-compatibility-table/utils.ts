@@ -50,10 +50,12 @@ export function listFeatures(
     if (subName !== "__compat" && (subIdentifier as BCD.Identifier).__compat) {
       features.push({
         name: parentName ? `${parentName}.${subName}` : subName,
-        compat: (subIdentifier as BCD.Identifier).__compat,
+        compat: (subIdentifier as BCD.Identifier).__compat!,
         depth: depth + 1,
       });
-      features.push(...listFeatures(subIdentifier, subName, "", depth + 1));
+      features.push(
+        ...listFeatures(subIdentifier as BCD.Identifier, subName, "", depth + 1)
+      );
     }
   }
   return features;
