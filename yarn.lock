@@ -1552,9 +1552,9 @@
   integrity sha512-Hcv+nVC0kZnQ3tD9GVu5xSMR4VVYOteQIr/hwFPVEvPdlXqgGEuRjiheChHgdM+JyqdgNcmzZOX/tnl0JOiI7A==
 
 "@mdn/browser-compat-data@^5.1.0":
-  version "5.1.0"
-  resolved "https://registry.yarnpkg.com/@mdn/browser-compat-data/-/browser-compat-data-5.1.0.tgz#9752bc5f62e908b355726edda93bfc550566b8aa"
-  integrity sha512-gzkjaV4OBJxtQTySe3lvO0ey7Hz6OPLjPy4Gsa1rTbuHHukXWkNbKLq+yrW0KfCpXuKuG31GK8EsMIxBK0jKWg==
+  version "5.1.1"
+  resolved "https://registry.yarnpkg.com/@mdn/browser-compat-data/-/browser-compat-data-5.1.1.tgz#20b3040392242216ee7f9c3f0807fcb1f0b88872"
+  integrity sha512-odIvtuAoXePQL4UcPrhy3MSXMvz2vefTe5uQQoLzKHQ6+f6vAhVlZEbs92d6cz8oSjylF+KL3Z/G2eLCMFl7qw==
 
 "@mdn/dinocons@^0.5.5":
   version "0.5.5"
