@@ -175,7 +175,11 @@ export interface DocFrontmatter {
   original_slug?: string;
 }
 
-export type Section = ProseSection | SpecificationsSection | BCDSection;
+export type Section =
+  | ProseSection
+  | SpecificationsSection
+  | BCDSection
+  | MediaFeatureSection;
 
 export interface ProseSection {
   type: "prose";
@@ -215,6 +219,18 @@ export interface BCDSection {
     query: string;
     browsers?: BCD.Browsers | null;
   };
+}
+
+export interface MediaFeatureSection {
+  type: "media_feature_value";
+  value: MediaFeatureSectionProps;
+}
+
+export interface MediaFeatureSectionProps {
+  id: string;
+  query: string;
+  featureValueType?: string;
+  featureEnumArgs?: string;
 }
 
 // Yari builder will attach extra keys from the compat data

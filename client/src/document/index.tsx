@@ -12,6 +12,7 @@ import { Doc } from "../../../libs/types/document";
 import { Prose } from "./ingredients/prose";
 import { LazyBrowserCompatibilityTable } from "./lazy-bcd-table";
 import { SpecificationSection } from "./ingredients/spec-section";
+import { MediaFeatureSection } from "./ingredients/media-feature-section";
 
 // Misc
 // Sub-components
@@ -268,6 +269,13 @@ function RenderDocumentBody({ doc }) {
     } else if (section.type === "specifications") {
       return (
         <SpecificationSection key={`specifications${i}`} {...section.value} />
+      );
+    } else if (section.type === "media_feature_value") {
+      return (
+        <MediaFeatureSection
+          key={`media_feature_value${i}`}
+          {...section.value}
+        />
       );
     } else {
       console.warn(section);

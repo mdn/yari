@@ -1,0 +1,25 @@
+<%
+// Embeds a notecard informing user about current value of a given media feature on his device.
+//
+// Parameters:
+//  $0 - Name of the media feature. In case feature has optional 'min-' or 'max-' as a prefix, it shouldn't be included.
+//  $1 - Type of value that feature is expecting. Supported values: enum, integer, length, resolution, ratio.
+//  In case there are fixed number of possible values, 'enum' should be used and all possible values should be placed as next arguments.
+//
+//  Example calls:
+//  {{MediaFeatureValue("color-gamut", "enum", "rec2020", "p3", "srgb")}}
+//  {{MediaFeatureValue("height", "length")}}
+//  {{MediaFeatureValue("grid", "enum", "1", "0")}}
+//
+
+var featureName = $0;
+var featureValueType = $1;
+var enumerationValues = arguments.slice(2).join(" ");
+
+// Markup below is temporary. MediaFeatureSection is responsible for replacing it with values calculated by the browser.
+%>
+<div class="media-feature-note notecard success" data-media-feature-name="<%= featureName %>" data-media-feature-value-type="<%= featureValueType %>" data-media-feature-enum-args="<%= enumerationValues %>">
+  <p>
+    <strong>Media Feature:</strong> Current value of <strong><%= featureName %></strong> media feature is currently being loaded.
+  </p>
+</div>

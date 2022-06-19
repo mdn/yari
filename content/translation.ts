@@ -56,6 +56,7 @@ const IMPORTANT_MACROS = new Map(
     "JsSidebar",
     "LearnSidebar",
     "MDNSidebar",
+    "MediaFeatureValue",
     "SVGRef",
     "SeeCompatTable",
     "ServiceWorkerSidebar",

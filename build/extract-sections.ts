@@ -164,7 +164,9 @@ export function extractSections($: cheerio.CheerioAPI): [Section[], string[]] {
 function addSections($: cheerio.Cheerio<cheerio.Element>): SectionsAndFlaws {
   const flaws: string[] = [];
 
-  const countPotentialSpecialDivs = $.find("div.bc-data, div.bc-specs").length;
+  const countPotentialSpecialDivs = $.find(
+    "div.bc-data, div.bc-specs, div.media-feature-note"
+  ).length;
   if (countPotentialSpecialDivs) {
     /** If there's exactly 1 special table the only section to add is something
      * like this:
@@ -222,7 +224,8 @@ function addSections($: cheerio.Cheerio<cheerio.Element>): SectionsAndFlaws {
           child.attribs &&
           child.attribs.class &&
           (child.attribs.class.includes("bc-data") ||
-            child.attribs.class.includes("bc-specs"))
+            child.attribs.class.includes("bc-specs") ||
+            child.attribs.class.includes("media-feature-note"))
         ) {
           countSpecialDivsFound++;
           if (c) {
@@ -252,7 +255,7 @@ function addSections($: cheerio.Cheerio<cheerio.Element>): SectionsAndFlaws {
       }
       if (countSpecialDivsFound !== countPotentialSpecialDivs) {
         const leftoverCount = countPotentialSpecialDivs - countSpecialDivsFound;
-        const explanation = `${leftoverCount} 'div.bc-data' or 'div.bc-specs' element${
+        const explanation = `${leftoverCount} 'div.bc-data' or 'div.bc-specs' or 'div.media-feature-note' element${
           leftoverCount > 1 ? "s" : ""
         } found but deeply nested.`;
         flaws.push(explanation);
@@ -267,6 +270,7 @@ function addSections($: cheerio.Cheerio<cheerio.Element>): SectionsAndFlaws {
     // section underneath.
     $.find("div.bc-data, h2, h3").remove();
     $.find("div.bc-specs, h2, h3").remove();
+    $.find("div.media-feature-note, h2, h3").remove();
     const [proseSections, proseFlaws] = _addSectionProse($);
     specialSections.push(...proseSections);
     flaws.push(...proseFlaws);
@@ -307,6 +311,8 @@ function _addSingleSpecialSection(
   let hasMultipleQueries = false;
   let specURLsString = "";
   let specialSectionType: string | null = null;
+  let featureValueType = null;
+  let featureEnumArgs = null;
   if ($.find("div.bc-data").length) {
     specialSectionType = "browser_compatibility";
     const elem = $.find("div.bc-data");
@@ -317,6 +323,17 @@ function _addSingleSpecialSection(
     specialSectionType = "specifications";
     dataQuery = $.find("div.bc-specs").attr("data-bcd-query") ?? "";
     specURLsString = $.find("div.bc-specs").attr("data-spec-urls") ?? "";
+  } else if ($.find("div.media-feature-note").length) {
+    specialSectionType = "media_feature_value";
+    dataQuery = $.find("div.media-feature-note").attr(
+      "data-media-feature-name"
+    );
+    featureValueType = $.find("div.media-feature-note").attr(
+      "data-media-feature-value-type"
+    );
+    featureEnumArgs = $.find("div.media-feature-note").attr(
+      "data-media-feature-enum-args"
+    );
   }
 
   // Some old legacy documents haven't been re-rendered yet, since it
@@ -363,6 +380,18 @@ function _addSingleSpecialSection(
           isH3,
           specifications,
           query,
+        },
+      },
+    ];
+  } else if (specialSectionType === "media_feature_value") {
+    return [
+      {
+        type: "media_feature_value",
+        value: {
+          id,
+          query,
+          featureValueType,
+          featureEnumArgs,
         },
       },
     ];
