@@ -1591,8 +1591,7 @@ test("home page should have a /index.json file with pullRequestsData", () => {
   const builtFolder = path.join(buildRoot, "en-us");
 
   const jsonFile = path.join(builtFolder, "index.json");
-  // @ts-ignore
-  const { hyData: { recentContributions } = {} } = JSON.parse(
+  const { hyData: { recentContributions = {} } = {} } = JSON.parse(
     fs.readFileSync(jsonFile, "utf-8")
   );
   expect(recentContributions.items.length).toBeGreaterThan(0);
