@@ -219,6 +219,20 @@ test.describe("changing language", () => {
     await page.waitForLoadState("networkidle");
     expect(await page.isVisible("text=<foo>: Une page de test")).toBeTruthy();
     expect(page.url()).toBe(testURL("/fr/docs/Web/Foo/"));
+
+    // Now that you've picked a preferred locale, and that's stored in a
+    // cookie, if you go to a page whose URL doesn't match your
+    // preferred locale, it will automatically navigate to the
+    // locale you picked.
+    await page.goto(testURL("/en-us/docs/Web/Foo")); // NOT what you actually want
+    await page.waitForLoadState("networkidle");
+    expect(await page.isVisible("text=<foo>: Une page de test")).toBeTruthy();
+    expect(page.url()).toBe(testURL("/fr/docs/Web/Foo/"));
+    // Now delete the cookie and it should not redirect this second time.
+    await page.deleteCookie({ name: "preferredlocale" });
+    await page.goto(testURL("/en-US/docs/Web/Foo"));
+    expect(await page.isVisible("text=<foo>: A test tag")).toBeTruthy();
+    expect(page.url()).toBe(testURL("/en-US/docs/Web/Foo/"));
   });
 });
 */

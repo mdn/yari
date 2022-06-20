@@ -1,16 +1,18 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 
 import { useGA } from "../../../ga-context";
+import {
+  LOCALE_OVERRIDE_HASH,
+  getPreferredCookieLocale,
+  setPreferredCookieLocale,
+} from "../../../preferred-locale";
 import { Translation } from "../../../document/types";
 import { Button } from "../../atoms/button";
 import { Submenu } from "../submenu";
 
 import "./index.scss";
 import { DropdownMenu, DropdownMenuWrapper } from "../dropdown";
-
-// This needs to match what's set in 'libs/constants.js' on the server/builder!
-const PREFERRED_LOCALE_COOKIE_NAME = "preferredlocale";
 
 export function LanguageMenu({
   onClose,
@@ -23,14 +25,37 @@ export function LanguageMenu({
 }) {
   const menuId = "language-menu";
   const ga = useGA();
-  const { pathname } = useLocation();
+  const { hash, pathname } = useLocation();
   const navigate = useNavigate();
   const { locale = "en-US" } = useParams();
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
-  function translateURL(destinationLocale: string) {
-    return pathname.replace(`/${locale}/`, `/${destinationLocale}/`);
-  }
+  // This effect makes you automatically navigate to the locale your cookie
+  // prefers if the current page's locale isn't what you prefer and the
+  // locale you prefer is one of the valid translations.
+  React.useEffect(() => {
+    const cookieLocale = getPreferredCookieLocale(document);
+    if (
+      locale &&
+      cookieLocale &&
+      locale.toLowerCase() !== cookieLocale.toLowerCase() &&
+      // If the URL is something like `#localeOverride` we omit this
+      // automatic "redirect" because the user has most likely clicked
+      // a link that means that want to "peek" at a locale that is
+      // different from what their cookie prefers.
+      !hash.toLowerCase().includes(LOCALE_OVERRIDE_HASH.toLowerCase()) &&
+      translations
+        .map((t) => t.locale.toLowerCase())
+        .includes(cookieLocale.toLowerCase())
+    ) {
+      const newPathname = translateURL(pathname, locale, cookieLocale);
+      // Just to be absolutely paranoidly certain it's not going to redirect
+      // to the URL you're already on, we're doing this extra check.
+      if (newPathname !== pathname) {
+        navigate(newPathname);
+      }
+    }
+  }, [locale, hash, pathname, navigate, translations]);
 
   function changeLocale(event) {
     event.preventDefault();
@@ -39,28 +64,12 @@ export function LanguageMenu({
     // The default is the current locale itself. If that's what's chosen,
     // don't bother redirecting.
     if (preferredLocale !== locale) {
-      const localeURL = translateURL(preferredLocale);
-      let cookieValueBefore = document.cookie
-        .split("; ")
-        .find((row) => row.startsWith(`${PREFERRED_LOCALE_COOKIE_NAME}=`));
-      if (cookieValueBefore && cookieValueBefore.includes("=")) {
-        cookieValueBefore = cookieValueBefore.split("=")[1];
-      }
+      const localeURL = translateURL(pathname, locale, preferredLocale);
+      const cookieValueBefore = getPreferredCookieLocale(document);
 
       for (const translation of translations) {
         if (translation.locale === preferredLocale) {
-          let cookieValue = `${PREFERRED_LOCALE_COOKIE_NAME}=${
-            translation.locale
-          };max-age=${60 * 60 * 24 * 365 * 3};path=/`;
-          if (
-            !(
-              document.location.hostname === "localhost" ||
-              document.location.hostname === "localhost.org"
-            )
-          ) {
-            cookieValue += ";secure";
-          }
-          document.cookie = cookieValue;
+          setPreferredCookieLocale(document, translation.locale);
         }
       }
 
@@ -132,5 +141,16 @@ function LanguageMenuItem({ translation, changeLocale, native }) {
     >
       <span>{translation.native}</span>
     </button>
+  );
+}
+
+function translateURL(
+  pathname: string,
+  locale: string,
+  destinationLocale: string
+) {
+  return pathname.replace(
+    new RegExp(`^/${locale}/`, "i"),
+    `/${destinationLocale}/`
   );
 }
