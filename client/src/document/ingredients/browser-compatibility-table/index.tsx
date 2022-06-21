@@ -38,7 +38,7 @@ const ISSUE_METADATA_TEMPLATE = `
 function gatherPlatformsAndBrowsers(
   category: string,
   data: BCD.Identifier
-): [string[], BCD.BrowserNames[]] {
+): [string[], BCD.BrowserName[]] {
   const hasNodeJSData = data.__compat && "nodejs" in data.__compat.support;
   const hasDenoData = data.__compat && "deno" in data.__compat.support;
 
@@ -47,14 +47,14 @@ function gatherPlatformsAndBrowsers(
     platforms.push("server");
   }
 
-  let browsers: BCD.BrowserNames[] = [];
+  let browsers: BCD.BrowserName[] = [];
 
   // Add browsers in platform order to align table cells
   for (const platform of platforms) {
     browsers.push(
       ...(Object.keys(bcd.browsers).filter(
         (browser) => bcd.browsers[browser].type === platform
-      ) as BCD.BrowserNames[])
+      ) as BCD.BrowserName[])
     );
   }
 
@@ -82,7 +82,7 @@ function FeatureListAccordion({
   locale,
 }: {
   features: ReturnType<typeof listFeatures>;
-  browsers: BCD.BrowserNames[];
+  browsers: BCD.BrowserName[];
   locale: string;
 }) {
   const [[activeRow, activeColumn], dispatchCellToggle] = useReducer<

@@ -67,3 +67,30 @@ export const IEX_DOMAIN =
 export const UPDATES_BASE_URL =
   process.env.REACT_APP_UPDATES_BASE_URL ||
   "https://updates.developer.allizom.org";
+
+// TODO Inline after 2022-07-01.
+export function survey_duration(surveyBucket: string): {
+  start: number;
+  end: number;
+} {
+  const start = Number(
+    process.env[`REACT_APP_SURVEY_START_${surveyBucket}`] || 0
+  );
+  const end = Number(
+    process.env[`REACT_APP_SURVEY_END_${surveyBucket}`] || Infinity
+  );
+  return { start, end };
+}
+
+export function survey_rates(surveyKey: string): {
+  rateFrom: number;
+  rateTill: number;
+} {
+  const rateFrom = Number(
+    process.env[`REACT_APP_SURVEY_RATE_FROM_${surveyKey}`] || 0
+  );
+  const rateTill = Number(
+    process.env[`REACT_APP_SURVEY_RATE_TILL_${surveyKey}`] || 1
+  );
+  return { rateFrom, rateTill };
+}

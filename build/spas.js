@@ -29,16 +29,14 @@ const FEATURED_ARTICLES = [
 
 const contributorSpotlightRoot = CONTRIBUTOR_SPOTLIGHT_ROOT;
 
-let featuredContributor;
-
-async function buildContributorSpotlight(options, locale) {
+async function buildContributorSpotlight(locale, options) {
   const prefix = "community/spotlight";
   const profileImg = "profile-image.jpg";
 
   for (const contributor of fs.readdirSync(contributorSpotlightRoot)) {
     const markdown = fs.readFileSync(
       `${contributorSpotlightRoot}/${contributor}/index.md`,
-      "utf8"
+      "utf-8"
     );
 
     const frontMatter = frontmatter(markdown);
@@ -78,7 +76,7 @@ async function buildContributorSpotlight(options, locale) {
       console.log("Wrote", filePath);
     }
     if (frontMatter.attributes.is_featured) {
-      featuredContributor = {
+      return {
         contributorName: frontMatter.attributes.contributor_name,
         url: `/${locale}/${prefix}/${frontMatter.attributes.folder_name}`,
         quote: frontMatter.attributes.quote,
@@ -112,10 +110,6 @@ async function buildSPAs(options) {
         continue;
       }
 
-      if (contributorSpotlightRoot) {
-        buildContributorSpotlight(options, locale);
-      }
-
       const SPAs = [
         { prefix: "search", pageTitle: "Search" },
         { prefix: "plus", pageTitle: MDN_PLUS_TITLE },
@@ -128,22 +122,6 @@ async function buildSPAs(options) {
           prefix: "plus/collections/frequently_viewed",
           pageTitle: `Frequently viewed articles | ${MDN_PLUS_TITLE}`,
           noIndexing: true,
-        },
-        {
-          prefix: "plus/docs/faq",
-          pageTitle: `FAQ | ${MDN_PLUS_TITLE}`,
-        },
-        {
-          prefix: "plus/docs/features/collections",
-          pageTitle: `Collections | ${MDN_PLUS_TITLE}`,
-        },
-        {
-          prefix: "plus/docs/features/notifications",
-          pageTitle: `Notifications | ${MDN_PLUS_TITLE}`,
-        },
-        {
-          prefix: "plus/docs/features/offline",
-          pageTitle: `MDN Offline | ${MDN_PLUS_TITLE}`,
         },
         {
           prefix: "plus/notifications",
@@ -209,7 +187,7 @@ async function buildSPAs(options) {
       }
 
       const locale = "en-us";
-      const markdown = fs.readFileSync(filepath, "utf8");
+      const markdown = fs.readFileSync(filepath, "utf-8");
 
       const frontMatter = frontmatter(markdown);
       const rawHTML = await m2h(frontMatter.body, locale);
@@ -272,6 +250,11 @@ async function buildSPAs(options) {
       }
       if (!fs.statSync(path.join(root, locale)).isDirectory()) {
         continue;
+      }
+
+      let featuredContributor = null;
+      if (contributorSpotlightRoot) {
+        featuredContributor = await buildContributorSpotlight(locale, options);
       }
 
       // circular dependency, so needs to be imported down here:

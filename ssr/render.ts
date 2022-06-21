@@ -58,7 +58,7 @@ const clientBuildRoot = path.resolve(dirname, "../../client/build");
 const readBuildHTML = lazy(() => {
   const html = fs.readFileSync(
     path.join(clientBuildRoot, "index.html"),
-    "utf8"
+    "utf-8"
   );
   if (!html.includes('<div id="root"></div>')) {
     throw new Error(
@@ -91,7 +91,7 @@ const getGAScriptPathName = lazy((relPath = "/static/js/ga.js") => {
 const extractWebFontURLs = lazy(() => {
   const urls = [];
   const manifest = JSON.parse(
-    fs.readFileSync(path.join(clientBuildRoot, "asset-manifest.json"), "utf8")
+    fs.readFileSync(path.join(clientBuildRoot, "asset-manifest.json"), "utf-8")
   );
   for (const entrypoint of manifest.entrypoints) {
     if (!entrypoint.endsWith(".css")) continue;

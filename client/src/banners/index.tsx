@@ -10,20 +10,21 @@ import { CRUD_MODE } from "../env";
 // <ActiveBanner>, at least the CSS will be ready.
 import "./banner.scss";
 
-import { PLUS_LAUNCH_ANNOUNCEMENT } from "./ids";
+import { BannerId } from "./ids";
 
 const ActiveBanner = React.lazy(() => import("./active-banner"));
 
-export const hasActiveBanners = true;
+const currentBannerId: BannerId | null = BannerId.PLUS_LAUNCH_ANNOUNCEMENT;
+const daysToEmbargo = 30;
 
 export function Banner() {
-  if (CRUD_MODE || !isEmbargoed(PLUS_LAUNCH_ANNOUNCEMENT)) {
+  if (currentBannerId && (CRUD_MODE || !isEmbargoed(currentBannerId))) {
     return (
       <React.Suspense fallback={null}>
         <ActiveBanner
-          id={PLUS_LAUNCH_ANNOUNCEMENT}
+          id={currentBannerId}
           onDismissed={() => {
-            setEmbargoed(PLUS_LAUNCH_ANNOUNCEMENT, 7);
+            setEmbargoed(currentBannerId, daysToEmbargo);
           }}
         />
       </React.Suspense>
