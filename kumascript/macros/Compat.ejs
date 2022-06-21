@@ -30,6 +30,11 @@ Example calls
 
 */
 
+if ($0) {
+  throw new Error(`Calling the Compat macro with any arguments is
+  deprecated; instead use the 'browser-compat' front-matter key.`);
+}
+
 var query = $0 || env['browser-compat'];
 if (!query) {
   throw new Error("No first query argument or 'browser-compat' front-matter value passed");
