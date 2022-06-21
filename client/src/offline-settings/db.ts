@@ -5,6 +5,12 @@
 
 import Dexie from "dexie";
 
+export enum SwType {
+  PreferOnline,
+  PreferOffline,
+  ApiOnly,
+}
+
 export interface Watched {
   url: string;
   title: string;
@@ -36,6 +42,10 @@ export interface Collections {
   created: Date;
 }
 
+export interface PlusSettings {
+  col_in_search: boolean;
+}
+
 export interface Whoami {
   id?: number;
   username: string;
@@ -43,6 +53,7 @@ export interface Whoami {
   email: string;
   avatar_url: string;
   is_subscriber: boolean;
+  settings: PlusSettings | null;
 }
 
 export enum ContentStatusPhase {
@@ -93,6 +104,10 @@ export class MDNOfflineDB extends Dexie {
     });
     this.version(2).stores({
       contentStatusHistory: "++id",
+    });
+    this.version(3).stores({
+      whoami:
+        "++, username, is_authenticated, email, avatar_url, is_subscriber, settings",
     });
   }
 }

@@ -1,4 +1,4 @@
-import { getContentStatus } from "./db";
+import { getContentStatus, SwType } from "./db";
 
 export class SettingsData {
   offline?: boolean;
@@ -61,14 +61,13 @@ export class MDNWorker {
     this.controller()?.postMessage({ type: "update" });
   }
 
-  swName(onlineFirst: boolean | null | undefined = null) {
-    const onlineFirstSW = onlineFirst ?? this.settings.preferOnline ?? false;
-    return `/service-worker.js?preferOnline=${onlineFirstSW}`;
+  swName(type: SwType | null | undefined = null) {
+    return `/service-worker.js?type=${type ?? SwType.ApiOnly}`;
   }
 
-  async enableServiceWorker(onlineFirst: boolean | null | undefined = null) {
-    if ("serviceWorker" in navigator) {
-      await navigator.serviceWorker.register(this.swName(onlineFirst), {
+  async enableServiceWorker(type: SwType) {
+    if ("serviceWorker" in navigator && !this.registered) {
+      await navigator.serviceWorker.register(this.swName(type), {
         scope: "/",
       });
       this.registered = true;
@@ -112,17 +111,25 @@ export class MDNWorker {
   async setOfflineSettings(settingsData: SettingsData): Promise<SettingsData> {
     const current = this.offlineSettings();
 
-    if (!current.offline && settingsData.offline && !this.registered) {
-      await this.enableServiceWorker(settingsData.preferOnline);
+    if (!current.offline && settingsData.offline) {
+      await this.disableServiceWorker();
+      await this.enableServiceWorker(
+        settingsData.preferOnline || current.preferOnline
+          ? SwType.PreferOnline
+          : SwType.PreferOffline
+      );
     } else if (
       "preferOnline" in settingsData &&
       current.preferOnline !== settingsData.preferOnline
     ) {
       await this.disableServiceWorker();
-      await this.enableServiceWorker(settingsData.preferOnline);
+      await this.enableServiceWorker(
+        settingsData.preferOnline ? SwType.PreferOnline : SwType.PreferOffline
+      );
     }
     if (current.offline && settingsData.offline === false) {
       await this.disableServiceWorker();
+      await this.enableServiceWorker(SwType.ApiOnly);
     }
 
     if (settingsData.autoUpdates === false && this.timeout) {
@@ -165,5 +172,9 @@ function registerMessageHandler() {
 }
 
 if (mdnWorker.settings.offline) {
-  mdnWorker.enableServiceWorker(mdnWorker.settings.preferOnline);
+  mdnWorker.enableServiceWorker(
+    mdnWorker.settings.preferOnline ? SwType.PreferOnline : SwType.PreferOffline
+  );
+} else {
+  mdnWorker.enableServiceWorker(SwType.ApiOnly);
 }

@@ -10,6 +10,7 @@ import {
   offlineDb,
   patchContentStatus,
   RemoteContentStatus,
+  SwType,
 } from "./db";
 import { fetchWithExampleOverride } from "./fetcher";
 
@@ -25,6 +26,9 @@ const UPDATES_BASE_URL = `https://updates.${
   location.hostname === "localhost" ? "developer.allizom.org" : location.host
 }`;
 
+const SW_TYPE: SwType =
+  SwType[new URLSearchParams(location.search).get("type")] || SwType.ApiOnly;
+
 // export empty type because of tsc --isolatedModules flag
 export type {};
 declare const self: ServiceWorkerGlobalScope;
@@ -34,25 +38,25 @@ var unpacking = Promise.resolve();
 self.addEventListener("install", (e) => {
   // synchronizeDb();
   e.waitUntil(
-    (async () => {
-      const cache = await openCache();
-      const { files = {} } =
-        (await (await fetch("/asset-manifest.json")).json()) || {};
-      const assets = [...Object.values(files)].filter(
-        (asset) => !(asset as string).endsWith(".map")
-      );
-      await cache.addAll(assets as string[]);
-    })().then(() => self.skipWaiting())
+    SW_TYPE === SwType.ApiOnly
+      ? self.skipWaiting()
+      : (async () => {
+          const cache = await openCache();
+          const { files = {} } =
+            (await (await fetch("/asset-manifest.json")).json()) || {};
+          const assets = [...Object.values(files)].filter(
+            (asset) => !(asset as string).endsWith(".map")
+          );
+          await cache.addAll(assets as string[]);
+        })().then(() => self.skipWaiting())
   );
 
   initOncePerRun(self);
 });
 
 self.addEventListener("fetch", (e) => {
-  const preferOnline =
-    new URLSearchParams(location.search).get("preferOnline") === "true";
   if (
-    preferOnline &&
+    (SW_TYPE === SwType.ApiOnly || SW_TYPE === SwType.PreferOnline) &&
     !e.request.url.includes("/api/v1/") &&
     !e.request.url.includes("/users/fxa/")
   ) {

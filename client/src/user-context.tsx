@@ -111,6 +111,13 @@ export function UserDataProvider(props: { children: React.ReactNode }) {
       // At this point, the XHR request has set `data` to be an object.
       // The user is definitely signed in or not signed in.
       setSessionStorageData(data);
+
+      // Let's initialize the MDN Worker if the user is signed in.
+      if (!window.mdnWorker && data?.isAuthenticated) {
+        import("./offline-settings/mdn-worker");
+      } else if (window.mdnWorker && data?.isAuthenticated === false) {
+        window.mdnWorker.disableServiceWorker();
+      }
     }
   }, [data]);
 
