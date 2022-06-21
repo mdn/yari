@@ -2,6 +2,7 @@ import * as React from "react";
 import useSWR from "swr";
 
 import { DISABLE_AUTH, DEFAULT_GEO_COUNTRY } from "./env";
+import { MDNWorker } from "./offline-settings/mdn-worker";
 
 export enum SubscriptionType {
   MDN_CORE = "",
@@ -27,6 +28,7 @@ export type UserData = {
     country: string;
   };
   maintenance?: string;
+  mdnWorker?: MDNWorker;
 };
 
 const UserDataContext = React.createContext<UserData | null>(null);
@@ -60,7 +62,15 @@ function getSessionStorageData() {
   }
 }
 
-export function removeSessionStorageData() {
+export function cleanupUserData() {
+  removeSessionStorageData();
+  if (window.mdnWorker) {
+    window.mdnWorker.cleanDb();
+    window.mdnWorker.disableServiceWorker();
+  }
+}
+
+function removeSessionStorageData() {
   try {
     // It's safe to call .removeItem() on a key that doesn't already exist,
     // and it's pointless to first do a .hasItem() before the .removeItem()
@@ -113,11 +123,25 @@ export function UserDataProvider(props: { children: React.ReactNode }) {
       // At this point, the XHR request has set `data` to be an object.
       // The user is definitely signed in or not signed in.
       setSessionStorageData(data);
+
+      // Let's initialize the MDN Worker if the user is signed in.
+      if (!window.mdnWorker && data?.isAuthenticated) {
+        import("./offline-settings/mdn-worker").then(({ getMDNWorker }) =>
+          getMDNWorker()
+        );
+      } else if (window.mdnWorker && data?.isAuthenticated === false) {
+        window.mdnWorker.disableServiceWorker();
+      }
     }
   }, [data]);
 
+  let userData = data || getSessionStorageData();
+  if (userData && window?.mdnWorker) {
+    userData.mdnWorker = window.mdnWorker;
+  }
+
   return (
-    <UserDataContext.Provider value={data || getSessionStorageData() || null}>
+    <UserDataContext.Provider value={userData || null}>
       {props.children}
     </UserDataContext.Provider>
   );

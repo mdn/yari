@@ -46,5 +46,7 @@ if (container.firstElementChild) {
 
 // Initialize mdnWorker if there's a service worker already.
 if (navigator?.serviceWorker?.controller && !window.mdnWorker) {
-  import("./offline-settings/mdn-worker");
+  import("./offline-settings/mdn-worker").then(({ getMDNWorker }) =>
+    getMDNWorker()
+  );
 }

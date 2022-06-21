@@ -1,6 +1,6 @@
 import { useLocation } from "react-router-dom";
 
-import { removeSessionStorageData } from "../../../user-context";
+import { cleanupUserData } from "../../../user-context";
 import { useCSRFMiddlewareToken, useLocale } from "../../../hooks";
 import { KUMA_HOST } from "../../../env";
 
@@ -31,7 +31,7 @@ export default function SignOut() {
       method="post"
       action={`${prefix}/users/fxa/login/logout/`}
       onSubmit={() => {
-        removeSessionStorageData();
+        cleanupUserData();
       }}
     >
       {csrfMiddlewareToken && (
