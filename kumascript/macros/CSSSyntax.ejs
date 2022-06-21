@@ -21,43 +21,43 @@ const valueDefinitionUrl = `/${locale}/docs/Web/CSS/Value_definition_syntax`;
 const syntaxDescriptions = {
   '*': {
     fragment: 'asterisk',
-    tooltip: 'Asterisk: the entity may occur zero, one or several times'
+    tooltip: mdn.localString({ 'en-US': 'Asterisk: the entity may occur zero, one or several times' })
   },
   '+': {
     fragment: 'plus',
-    tooltip: 'Plus: the entity may occur one or several times'
+    tooltip: mdn.localString({ 'en-US': 'Plus: the entity may occur one or several times' })
   },
   '?': {
     fragment: 'question_mark',
-    tooltip: 'Question mark: the entity is optional'
+    tooltip: mdn.localString({ 'en-US': 'Question mark: the entity is optional' })
   },
   '{}': {
     fragment: 'curly_braces',
-    tooltip: 'Curly braces: encloses two integers defining the minimal and maximal numbers of occurrences of the entity'
+    tooltip: mdn.localString({ 'en-US': 'Curly braces: encloses two integers defining the minimal and maximal numbers of occurrences of the entity' })
   },
   '#': {
     fragment: 'hash_mark',
-    tooltip: 'Hash mark: the entity is repeated one or several times, each occurence separated by a comma'
+    tooltip: mdn.localString({ 'en-US': 'Hash mark: the entity is repeated one or several times, each occurence separated by a comma' })
   },
   '!': {
     fragment: 'exclamation_point_!',
-    tooltip: 'Exclamation point: the group must produce at least one value'
+    tooltip: mdn.localString({ 'en-US': 'Exclamation point: the group must produce at least one value' })
   },
   '[]': {
     fragment: 'brackets',
-    tooltip: 'Brackets: enclose several entities, combinators, and multipliers to transform them as a single component'
+    tooltip: mdn.localString({ 'en-US': 'Brackets: enclose several entities, combinators, and multipliers to transform them as a single component' })
   },
   '|': {
     fragment: 'single_bar',
-    tooltip: 'Single bar: exactly one of the entities must be present'
+    tooltip: mdn.localString({ 'en-US': 'Single bar: exactly one of the entities must be present' })
   },
   '||': {
     fragment: 'double_bar',
-    tooltip: 'Double bar: one or several of the entities must be present, in any order'
+    tooltip: mdn.localString({ 'en-US': 'Double bar: one or several of the entities must be present, in any order' })
   },
   '&&': {
     fragment: 'double_ampersand',
-    tooltip: 'Double ampersand: all of the entities must be present, in any order'
+    tooltip: mdn.localString({ 'en-US': 'Double ampersand: all of the entities must be present, in any order' })
   }
 }
 
