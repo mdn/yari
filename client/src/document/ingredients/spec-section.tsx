@@ -1,4 +1,4 @@
-import { DisplayH2, DisplayH3, DisplayHeading } from "./utils";
+import { DisplayHeading } from "./utils";
 import NoteCard from "../../ui/molecules/notecards";
 
 export function SpecificationSection({
