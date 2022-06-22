@@ -1248,18 +1248,19 @@ test("chicken_and_egg page should build with flaws", () => {
   const { doc } = JSON.parse(fs.readFileSync(jsonFile, "utf-8")) as {
     doc: Doc;
   };
-  expect(doc.flaws.macros.length).toBe(1);
+  expect(doc.flaws.macros.length).toBeGreaterThanOrEqual(1);
   // The filepath will be that of the "egg" or the "chicken" page.
   // Let's not try to predict which one exactly, because that'd mean this
   // test would need to use the exact same sort order as the glob used
   // when we ran "yarn build" to set up the build fixtures.
-  const flaw = doc.flaws.macros[0];
-  expect(flaw.name).toBe("MacroExecutionError");
-  expect(
-    flaw.errorStack.includes(
-      "documents form a circular dependency when rendering"
-    )
-  ).toBeTruthy();
+  for (const flaw of doc.flaws.macros) {
+    expect(flaw.name).toBe("MacroExecutionError");
+    expect(
+      flaw.errorStack.includes(
+        "documents form a circular dependency when rendering"
+      )
+    ).toBeTruthy();
+  }
 });
 
 test("404 page", () => {

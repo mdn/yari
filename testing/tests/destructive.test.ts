@@ -99,10 +99,17 @@ describe("fixing flaws", () => {
       .split("\n")
       .filter((line) => regexPattern.test(line));
     expect(dryRunNotices.length).toBe(4);
-    expect(dryRunNotices[0]).toContain(path.join(pattern, "bad_pre_tags"));
-    expect(dryRunNotices[1]).toContain(path.join(pattern, "deprecated_macros"));
-    expect(dryRunNotices[2]).toContain(path.join(pattern, "images"));
-    expect(dryRunNotices[3]).toContain(pattern);
+    const allDryRunNotices = dryRunNotices.join();
+    expect(allDryRunNotices).toContain(
+      path.join(pattern, "bad_pre_tags", "index.html")
+    );
+    expect(allDryRunNotices).toContain(
+      path.join(pattern, "deprecated_macros", "index.html")
+    );
+    expect(allDryRunNotices).toContain(
+      path.join(pattern, "images", "index.html")
+    );
+    expect(allDryRunNotices).toContain(path.join(pattern, "index.html"));
     const dryrunFiles = getChangedFiles(tempContentDir);
     expect(dryrunFiles.length).toBe(0);
   });
