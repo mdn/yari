@@ -1,4 +1,4 @@
-import { DisplayH2, DisplayH3, DisplayHeading } from "./utils";
+import { DisplayH2, DisplayH3 } from "./utils";
 
 export function Prose({ section }: { section: any }) {
   const { id } = section;
