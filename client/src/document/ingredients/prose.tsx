@@ -17,7 +17,7 @@ export function Prose({ section }: { section: any }) {
   return (
     <section aria-labelledby={id}>
       <DisplayHeading
-        level={isH4 ? 4 : isH3 ? 3 : 2}
+        level={section.isH4 ? 4 : section.isH3 ? 3 : 2}
         id={id}
         title={section.title}
         titleAsText={section.titleAsText}
