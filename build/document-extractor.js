@@ -41,11 +41,10 @@ function extractSections($) {
     .eq(0);
 
   const iterable = [...$("#_body")[0].childNodes];
-
   let c = 0;
-  const tagNames = new Set(["h2", "h3", "h4"]);
+
   iterable.forEach((child) => {
-    if (tagNames.has(child.tagName)) {
+    if (/^h[2-4]$/.test(child.tagName)) {
       if (c) {
         const [subSections, subFlaws] = addSections(section.clone());
         sections.push(...subSections);
