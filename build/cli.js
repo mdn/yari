@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-const fs = require("fs");
+const fs = require("fs/promises");
 const path = require("path");
 const zlib = require("zlib");
 
@@ -118,37 +118,37 @@ async function buildDocuments(
     progressBar.start(documents.count);
   }
 
-  for (const documentPath of documents.iter({ pathOnly: true })) {
+  async function buildDocument(documentPath) {
     const {
       doc: { doc: builtDocument, liveSamples, fileAttachments, bcdData },
       document,
       skip,
     } = await buildDocumentInteractive(documentPath, interactive);
     if (skip) {
-      continue;
+      return;
     }
 
     const outPath = path.join(BUILD_OUT_ROOT, slugToFolder(document.url));
-    fs.mkdirSync(outPath, { recursive: true });
+    await fs.mkdir(outPath, { recursive: true });
 
     if (builtDocument.flaws) {
       appendTotalFlaws(builtDocument.flaws);
     }
 
     if (!noHTML) {
-      fs.writeFileSync(
+      await fs.writeFile(
         path.join(outPath, "index.html"),
         renderHTML(document.url, { doc: builtDocument })
       );
     }
 
-    fs.writeFileSync(
+    await fs.writeFile(
       path.join(outPath, "index.json"),
       // This is exploiting the fact that renderHTML has the side-effect of
       // mutating the built document which makes this not great and refactor-worthy.
       JSON.stringify({ doc: builtDocument })
     );
-    fs.writeFileSync(
+    await fs.writeFile(
       path.join(outPath, "contributors.txt"),
       renderContributorsTxt(
         document.metadata.contributors,
@@ -156,7 +156,7 @@ async function buildDocuments(
       )
     );
     for (const { url, data } of bcdData) {
-      fs.writeFileSync(
+      await fs.writeFile(
         path.join(outPath, path.basename(url)),
         JSON.stringify(data, (key, value) => {
           // The BCD data object contains a bunch of data we don't need in the
@@ -177,13 +177,13 @@ async function buildDocuments(
 
     for (const { id, html } of liveSamples) {
       const liveSamplePath = path.join(outPath, `_sample_.${id}.html`);
-      fs.writeFileSync(liveSamplePath, html);
+      await fs.writeFile(liveSamplePath, html);
     }
 
     for (const filePath of fileAttachments) {
       // We *could* use symlinks instead. But, there's no point :)
       // Yes, a symlink is less disk I/O but it's nominal.
-      fs.copyFileSync(filePath, path.join(outPath, path.basename(filePath)));
+      await fs.copyFile(filePath, path.join(outPath, path.basename(filePath)));
     }
 
     // Collect active documents' slugs to be used in sitemap building and
@@ -212,6 +212,23 @@ async function buildDocuments(
     }
   }
 
+  const documentPaths = documents.iter({ pathOnly: true });
+  const CHUNK_SIZE = 100;
+
+  let doneBuilding = false;
+  while (!doneBuilding) {
+    const builtChunk = [];
+    for (let i = 0; i < CHUNK_SIZE; i++) {
+      const { done, value: path } = documentPaths.next();
+      if (done) {
+        doneBuilding = true;
+        break;
+      }
+      builtChunk.push(buildDocument(path));
+    }
+    await Promise.allSettled(builtChunk);
+  }
+
   if (!options.noProgressbar) {
     progressBar.stop();
   }
@@ -223,9 +240,9 @@ async function buildDocuments(
       "sitemaps",
       locale.toLowerCase()
     );
-    fs.mkdirSync(sitemapDir, { recursive: true });
+    await fs.mkdir(sitemapDir, { recursive: true });
     const sitemapFilePath = path.join(sitemapDir, "sitemap.xml.gz");
-    fs.writeFileSync(
+    await fs.writeFile(
       sitemapFilePath,
       zlib.gzipSync(makeSitemapXML(locale, docs))
     );
@@ -236,7 +253,7 @@ async function buildDocuments(
   // That means, that if you've done this at least once, consequent runs of
   if (CONTENT_TRANSLATED_ROOT) {
     const sitemapIndexFilePath = path.join(BUILD_OUT_ROOT, "sitemap.xml");
-    fs.writeFileSync(
+    await fs.writeFile(
       sitemapIndexFilePath,
       makeSitemapIndexXML(
         sitemapsBuilt.map((fp) => fp.replace(BUILD_OUT_ROOT, ""))
@@ -246,7 +263,7 @@ async function buildDocuments(
 
   searchIndex.sort();
   for (const [locale, items] of Object.entries(searchIndex.getItems())) {
-    fs.writeFileSync(
+    await fs.writeFile(
       path.join(BUILD_OUT_ROOT, locale.toLowerCase(), "search-index.json"),
       JSON.stringify(items)
     );
