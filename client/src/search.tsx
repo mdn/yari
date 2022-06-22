@@ -1,14 +1,15 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useCombobox } from "downshift";
-import FlexSearch from "flexsearch";
 import useSWR from "swr";
 
 import { Doc, FuzzySearch } from "./fuzzy-search";
 import { preload, preloadSupported } from "./document/preloading";
 
+import { Button } from "./ui/atoms/button";
+
 import { useLocale } from "./hooks";
-import { getPlaceholder, SearchProps, useFocusOnSlash } from "./search-utils";
+import { SearchProps, useFocusViaKeyboard } from "./search-utils";
 
 const PRELOAD_WAIT_MS = 500;
 const SHOW_INDEXING_AFTER_MS = 500;
@@ -37,10 +38,10 @@ function useSearchIndex(): readonly [
 ] {
   const [shouldInitialize, setShouldInitialize] = useState(false);
   const [searchIndex, setSearchIndex] = useState<null | SearchIndex>(null);
-  const { locale } = useParams();
-
   // Default to 'en-US' if you're on the home page without the locale prefix.
-  const url = `/${locale || "en-US"}/search-index.json`;
+  const { locale = "en-US" } = useParams();
+
+  const url = `/${locale}/search-index.json`;
 
   const { error, data } = useSWR<null | Item[], Error | undefined>(
     shouldInitialize ? url : null,
@@ -59,10 +60,7 @@ function useSearchIndex(): readonly [
       return;
     }
 
-    const flex = FlexSearch.create({ tokenize: "forward" });
-    data!.forEach(({ title }, i) => {
-      flex.add(i, title);
-    });
+    const flex = data.map(({ title }, i) => [i, title.toLowerCase()]);
     const fuzzy = new FuzzySearch(data as Doc[]);
 
     setSearchIndex({ flex, fuzzy, items: data! });
@@ -81,20 +79,15 @@ function isFuzzySearchString(str: string) {
 }
 
 function HighlightMatch({ title, q }: { title: string; q: string }) {
-  // FlexSearch doesn't support finding out which "typo corrections"
-  // were done unfortunately.
-  // See https://github.com/nextapps-de/flexsearch/issues/99
-
-  // Split on higlight term and include term into parts, ignore case.
+  // Split on highlight term and include term into parts, ignore case.
   const words = q.trim().toLowerCase().split(/[ ,]+/);
-
   // $& means the whole matched string
   const regexWords = words.map((s) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"));
-  const regex = `\\b(${regexWords.join("|")})`;
+  const regex = regexWords.map((word) => `(${word})`).join("|");
   const parts = title.split(new RegExp(regex, "gi"));
   return (
     <b>
-      {parts.map((part, i) => {
+      {parts.filter(Boolean).map((part, i) => {
         const key = `${part}:${i}`;
         if (words.includes(part.toLowerCase())) {
           return <mark key={key}>{part}</mark>;
@@ -142,6 +135,7 @@ type InnerSearchNavigateWidgetProps = SearchProps & {
 function useHasNotChangedFor(value: string, ms: number) {
   const [hasNotChanged, setHasNotChanged] = useState(false);
   const previousValue = useRef(value);
+
   useEffect(() => {
     if (previousValue.current === value) {
       return;
@@ -164,6 +158,7 @@ function useHasNotChangedFor(value: string, ms: number) {
 
 function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
   const {
+    id,
     inputValue,
     onChangeInputValue,
     isFocused,
@@ -172,6 +167,7 @@ function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
     defaultSelection,
   } = props;
 
+  const formId = `${id}-form`;
   const navigate = useNavigate();
   const locale = useLocale();
 
@@ -197,7 +193,7 @@ function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
 
   const resultItems: ResultItem[] = useMemo(() => {
     if (!searchIndex || !inputValue || searchIndexError) {
-      // This can happen if the initialized hasn't completed yet or
+      // This can happen if the initialization hasn't completed yet or
       // completed un-successfully.
       return [];
     }
@@ -221,11 +217,14 @@ function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
         }));
       }
     } else {
-      // Full-Text search
-      const indexResults: number[] = searchIndex.flex.search(inputValue, {
-        limit,
-        suggest: true, // This can give terrible result suggestions
-      });
+      const q: string[] = inputValue
+        .toLowerCase()
+        .split(" ")
+        .map((s) => s.trim());
+      const indexResults: number[] = searchIndex.flex
+        .filter(([_, title]) => q.every((q) => title.includes(q)))
+        .map(([i]) => i)
+        .slice(0, limit);
       return indexResults.map(
         (index: number) => (searchIndex.items || [])[index] as ResultItem
       );
@@ -244,6 +243,11 @@ function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
     [searchPath]
   );
 
+  const onlineSearch = useMemo(
+    () => ({ url: searchPath, title: "", positions: new Set() }),
+    [searchPath]
+  );
+
   const {
     getInputProps,
     getItemProps,
@@ -256,11 +260,17 @@ function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
     reset,
     toggleMenu,
   } = useCombobox({
-    items: resultItems.length === 0 ? [nothingFoundItem] : resultItems,
+    id: id,
+    items:
+      resultItems.length === 0
+        ? [nothingFoundItem]
+        : [...resultItems, onlineSearch],
     inputValue,
+    isOpen: isFocused,
     defaultIsOpen: isFocused,
-    onSelectedItemChange: ({ selectedItem }) => {
-      if (selectedItem) {
+    defaultHighlightedIndex: 0,
+    onSelectedItemChange: ({ type, selectedItem }) => {
+      if (type !== useCombobox.stateChangeTypes.InputBlur && selectedItem) {
         navigate(selectedItem.url);
         onChangeInputValue("");
         reset();
@@ -278,13 +288,19 @@ function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
     },
   });
 
-  useFocusOnSlash(inputRef);
+  useFocusViaKeyboard(inputRef);
 
   useEffect(() => {
     if (isFocused) {
       initializeSearchIndex();
+      onChangeIsFocused(true);
+      inputRef.current?.focus();
     }
-  }, [initializeSearchIndex, isFocused]);
+  }, [initializeSearchIndex, isFocused, onChangeIsFocused]);
+
+  const [resultsWithHighlighting, setResultsWithHighlighting] = useState<any>(
+    []
+  );
 
   useEffect(() => {
     const item = resultItems[highlightedIndex];
@@ -297,6 +313,20 @@ function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
       };
     }
   }, [highlightedIndex, resultItems]);
+
+  useEffect(() => {
+    setResultsWithHighlighting(
+      resultItems.map((item) => {
+        return (
+          <>
+            <HighlightMatch title={item.title} q={inputValue} />
+            <br />
+            <BreadcrumbURI uri={item.url} positions={item.positions} />
+          </>
+        );
+      })
+    );
+  }, [resultItems, inputValue]);
 
   const searchResults = (() => {
     if (!isOpen || !inputValue.trim()) {
@@ -316,7 +346,6 @@ function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
         </div>
       ) : null;
     }
-
     return (
       <>
         {resultItems.length === 0 && inputValue !== "/" ? (
@@ -329,28 +358,83 @@ function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
               index: 0,
             })}
           >
-            No document titles found.
-            <br />
-            <Link to={searchPath}>
+            <a
+              href={searchPath}
+              onClick={(event: React.MouseEvent) => {
+                if (event.ctrlKey || event.metaKey) {
+                  // Open in new tab, don't navigate current tab.
+                  event.stopPropagation();
+                } else {
+                  // Open in same tab, navigate via combobox.
+                  event.preventDefault();
+                }
+              }}
+              tabIndex={-1}
+            >
+              No document titles found.
+              <br />
               Site search for <code>{inputValue}</code>
-            </Link>
+            </a>
           </div>
         ) : (
-          resultItems.map((item, i) => (
+          [
+            ...resultItems.map((item, i) => (
+              <div
+                {...getItemProps({
+                  key: item.url,
+                  className:
+                    "result-item " +
+                    (i === highlightedIndex ? "highlight" : ""),
+                  item,
+                  index: i,
+                })}
+              >
+                <a
+                  href={item.url}
+                  onClick={(event: React.MouseEvent) => {
+                    if (event.ctrlKey || event.metaKey) {
+                      // Open in new tab, don't navigate current tab.
+                      event.stopPropagation();
+                    } else {
+                      // Open in same tab, navigate via combobox.
+                      event.preventDefault();
+                    }
+                  }}
+                  tabIndex={-1}
+                >
+                  {resultsWithHighlighting[i]}
+                </a>
+              </div>
+            )),
             <div
               {...getItemProps({
-                key: item.url,
                 className:
-                  "result-item " + (i === highlightedIndex ? "highlight" : ""),
-                item,
-                index: i,
+                  "nothing-found result-item " +
+                  (highlightedIndex === resultItems.length ? "highlight" : ""),
+                key: "nothing-found",
+                item: onlineSearch,
+                index: resultItems.length,
               })}
             >
-              <HighlightMatch title={item.title} q={inputValue} />
-              <br />
-              <BreadcrumbURI uri={item.url} positions={item.positions} />
-            </div>
-          ))
+              <a
+                href={searchPath}
+                onClick={(event: React.MouseEvent) => {
+                  if (event.ctrlKey || event.metaKey) {
+                    // Open in new tab, don't navigate current tab.
+                    event.stopPropagation();
+                  } else {
+                    // Open in same tab, navigate via combobox.
+                    event.preventDefault();
+                  }
+                }}
+                tabIndex={-1}
+              >
+                Not seeing what you're searching for?
+                <br />
+                Site search for <code>{inputValue}</code>
+              </a>
+            </div>,
+          ]
         )}
         {isFuzzySearchString(inputValue) && (
           <div className="fuzzy-engaged">Fuzzy searching by URI</div>
@@ -365,7 +449,7 @@ function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
       {...getComboboxProps({
         ref: formRef as any, // downshift's types hardcode it as a div
         className: "search-form search-widget",
-        id: "nav-main-search",
+        id: formId,
         role: "search",
         onSubmit: (e) => {
           // This comes into effect if the input is completely empty and the
@@ -373,11 +457,26 @@ function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
           // When something *is* entered, the onKeyDown event is triggered
           // on the <input> and within that handler you can
           // access `event.key === 'Enter'` as a signal to submit the form.
-          e.preventDefault();
+          if (!inputValue.trim()) {
+            e.preventDefault();
+          }
+        },
+        onFocus: () => {
+          onChangeIsFocused(true);
+        },
+        onBlur: (e) => {
+          if (!e.currentTarget.contains(e.relatedTarget)) {
+            // focus has moved outside of container
+            onChangeIsFocused(false);
+          }
         },
       })}
     >
-      <label htmlFor="main-q" className="visually-hidden">
+      <label
+        id={`${id}-label`}
+        htmlFor={`${id}-input`}
+        className="visually-hidden"
+      >
         Search MDN
       </label>
 
@@ -387,17 +486,14 @@ function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
           className: isOpen
             ? "has-search-results search-input-field"
             : "search-input-field",
-          id: "main-q",
           name: "q",
-          placeholder: getPlaceholder(isFocused),
           onMouseOver: initializeSearchIndex,
-          onFocus: () => {
-            onChangeIsFocused(true);
-          },
-          onBlur: () => onChangeIsFocused(false),
           onKeyDown(event) {
             if (event.key === "Escape" && inputRef.current) {
+              onChangeInputValue("");
+              reset();
               toggleMenu();
+              inputRef.current?.blur();
             } else if (
               event.key === "Enter" &&
               inputValue.trim() &&
@@ -415,15 +511,28 @@ function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
           ref: (input) => {
             inputRef.current = input;
           },
+          placeholder: "   ",
+          required: true,
         })}
       />
 
-      <input
-        type="submit"
-        className="ghost search-button"
-        value=""
-        aria-label="Search"
-      />
+      <Button
+        type="action"
+        icon="cancel"
+        extraClasses="clear-search-button"
+        onClickHandler={() => onChangeInputValue("")}
+      >
+        <span className="visually-hidden">Clear search input</span>
+      </Button>
+
+      <Button
+        type="action"
+        icon="search"
+        buttonType="submit"
+        extraClasses="search-button"
+      >
+        <span className="visually-hidden">Search</span>
+      </Button>
 
       <div {...getMenuProps()}>
         {searchResults && <div className="search-results">{searchResults}</div>}
@@ -432,7 +541,9 @@ function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
   );
 }
 
-class SearchErrorBoundary extends React.Component {
+class SearchErrorBoundary extends React.Component<{
+  children?: React.ReactNode;
+}> {
   state = { hasError: false };
 
   static getDerivedStateFromError(error: Error) {

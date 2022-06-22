@@ -2,3 +2,9 @@
 client/build/
 dist/
 libs/
+client/public/service-worker.js
+client/public/
+client/src/document/*.js
+filecheck/*.js
+mdn/content/
+tool/*.js

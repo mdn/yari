@@ -1,6 +1,6 @@
 const Document = require("./document");
-const { VALID_LOCALES } = require("./constants");
-const LANGUAGES_RAW = require("./languages.json");
+const { VALID_LOCALES } = require("../libs/constants");
+const LANGUAGES_RAW = require("../libs/languages");
 
 const LANGUAGES = new Map(
   Object.entries(LANGUAGES_RAW).map(([locale, data]) => {
@@ -15,6 +15,9 @@ function gatherTranslations() {
   for (const {
     metadata: { slug, locale, title },
   } of iter) {
+    if (!slug || !locale || !title) {
+      continue;
+    }
     const translation = {
       title,
       locale,

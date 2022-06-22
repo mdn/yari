@@ -5,7 +5,6 @@ import mimetypes
 import re
 from dataclasses import dataclass
 from functools import cached_property
-from itertools import chain
 from pathlib import Path
 
 import boto3
@@ -17,9 +16,10 @@ from .constants import (
     DEFAULT_CACHE_CONTROL,
     HASHED_CACHE_CONTROL,
     LOG_EACH_SUCCESSFUL_UPLOAD,
+    MANUAL_PREFIXES,
     MAX_WORKERS_PARALLEL_UPLOADS,
 )
-from .utils import StopWatch, fmt_size, iterdir, log
+from .utils import StopWatch, fmt_size, iterdir, log, slug_to_folder
 
 S3_MULTIPART_THRESHOLD = S3TransferConfig().multipart_threshold
 S3_MULTIPART_CHUNKSIZE = S3TransferConfig().multipart_chunksize
@@ -49,7 +49,6 @@ class Totals:
     failed: int = 0
     skipped: int = 0
     uploaded_files: int = 0
-    uploaded_redirects: int = 0
     uploaded_files_size: int = 0
     deleted_files: int = 0
 
@@ -58,8 +57,6 @@ class Totals:
             self.skipped += 1
         elif task.error:
             self.failed += 1
-        elif task.is_redirect:
-            self.uploaded_redirects += 1
         elif task.is_deletion:
             self.deleted_files += 1
         else:
@@ -321,14 +318,18 @@ class BucketManager:
             # its URL. Also, note that the content type is not determined by the
             # suffix of the S3 key, but is explicitly set from the full filepath
             # when uploading the file.
-            file_path = file_path.parent
+            # The only exception to this is the root level "index.html". We need that
+            # to cache it in our service worker.
+            if file_path.parent != build_directory:  # not the root level "index.html"
+                file_path = file_path.parent
         return f"{self.key_prefix}{str(file_path.relative_to(build_directory)).lower()}"
 
     def get_redirect_keys(self, from_url, to_url):
-        return (
-            f"{self.key_prefix}{from_url.strip('/').lower()}",
-            f"/{to_url.strip('/')}" if to_url.startswith("/") else to_url,
+        cleaned_from_path = slug_to_folder(from_url.strip("/"))
+        cleaned_to_url_or_path = (
+            slug_to_folder(to_url.rstrip("/")) if to_url.startswith("/") else to_url
         )
+        return (f"{self.key_prefix}{cleaned_from_path}", cleaned_to_url_or_path)
 
     def get_bucket_objects(self):
         result = {}
@@ -405,13 +406,6 @@ class BucketManager:
                 )
             done.add(key)
 
-        # Prepare a computation of what the root /index.html file would be
-        # called as a S3 key. Do this once so it becomes a quicker operation
-        # later when we compare *each* generated key to see if it matches this.
-        root_index_html_as_key = self.get_key(
-            build_directory, build_directory / "index.html"
-        )
-
         # Walk the build_directory and yield file upload tasks.
         for fp in iterdir(build_directory):
             # Exclude any files that aren't artifacts of the build.
@@ -425,16 +419,6 @@ class BucketManager:
                 # in the for-loop above. See comment at the beginning of this method.
                 continue
 
-            # The root index.html file is never useful. It's not the "home page"
-            # because the home page is actually `/$locale/` since `/` is handled
-            # specifically by the CDN.
-            # The client/build/index.html is actually just a template from
-            # create-react-app, used to server-side render all the other pages.
-            # But we don't want to upload it S3. So, delete it before doing the
-            # deployment step.
-            if root_index_html_as_key == key:
-                continue
-
             if for_counting_only:
                 yield 1
             else:
@@ -445,35 +429,6 @@ class BucketManager:
                     default_cache_control=default_cache_control,
                 )
 
-    def iter_redirect_tasks(
-        self, content_roots, for_counting_only=False, dry_run=False
-    ):
-        # Walk the content roots and yield redirect upload tasks.
-        for content_root in content_roots:
-            # Look for "_redirects.txt" files up to two levels deep to
-            # accommodate the content root specified as the root of the
-            # repo or the "files" sub-directory of the root of the repo.
-            for fp in chain(
-                content_root.glob("*/_redirects.txt"),
-                content_root.glob("*/*/_redirects.txt"),
-            ):
-                for line_num, line in enumerate(fp.read_text().split("\n"), start=1):
-                    line = line.strip()
-                    if line and not line.startswith("#"):
-                        parts = line.split("\t")
-                        if len(parts) != 2:
-                            raise Exception(
-                                f"Unable to parse {fp}:{line_num} into a from/to URL pair"
-                            )
-                        from_url, to_url = parts
-                        if for_counting_only:
-                            yield 1
-                        else:
-                            yield UploadRedirectTask(
-                                *self.get_redirect_keys(from_url, to_url),
-                                dry_run=dry_run,
-                            )
-
     def iter_delete_tasks(self, keys, dry_run=False):
         for key in keys:
             yield DeleteTask(key, dry_run=dry_run)
@@ -481,29 +436,19 @@ class BucketManager:
     def count_file_tasks(self, build_directory):
         return sum(self.iter_file_tasks(build_directory, for_counting_only=True))
 
-    def count_redirect_tasks(self, content_roots):
-        return sum(self.iter_redirect_tasks(content_roots, for_counting_only=True))
-
     def upload(
         self,
         build_directory,
         content_roots,
         existing_bucket_objects=None,
         on_task_complete=None,
-        skip_redirects=False,
         dry_run=False,
         default_cache_control=DEFAULT_CACHE_CONTROL,
     ):
         with concurrent.futures.ThreadPoolExecutor(
             max_workers=MAX_WORKERS_PARALLEL_UPLOADS
         ) as executor, StopWatch() as timer:
-            # Upload the redirects first, then the built files. This
-            # ensures that a built file overrides its stale redirect.
             task_iters = []
-            if not skip_redirects:
-                task_iters.append(
-                    self.iter_redirect_tasks(content_roots, dry_run=dry_run)
-                )
             task_iters.append(
                 self.iter_file_tasks(
                     build_directory,
@@ -554,8 +499,6 @@ class BucketManager:
         with concurrent.futures.ThreadPoolExecutor(
             max_workers=MAX_WORKERS_PARALLEL_UPLOADS
         ) as executor, StopWatch() as timer:
-            # Upload the redirects first, then the built files. This
-            # ensures that a built file overrides its stale redirect.
             task_iter = self.iter_delete_tasks(keys, dry_run=dry_run)
             futures = {}
             for task in task_iter:
@@ -583,32 +526,16 @@ def upload_content(build_directory, content_roots, config):
     bucket_prefix = config["prefix"]
     force_refresh = config["force_refresh"]
     show_progress_bar = not config["no_progressbar"]
-    upload_redirects = not config["no_redirects"]
     prune = config["prune"]
     default_cache_control = config["default_cache_control"]
 
     log.info(f"Upload files from: {build_directory}")
-    if upload_redirects:
-        log.info(f"Upload redirects from: {', '.join(str(fp) for fp in content_roots)}")
     log.info("Upload into: ", nl=False)
     if bucket_prefix:
         log.info(f"{bucket_prefix}/ of ", nl=False)
     log.info(bucket_name)
 
     mgr = BucketManager(bucket_name, bucket_prefix)
-
-    if upload_redirects:
-        with StopWatch() as timer:
-            total_redirects = mgr.count_redirect_tasks(content_roots)
-            if not total_redirects:
-                raise click.ClickException(
-                    "unable to find any redirects to upload "
-                    "(did you specify the right content-root?)"
-                )
-        log.info(f"Total pending redirect uploads: {total_redirects:,} ({timer})")
-    else:
-        total_redirects = 0
-        log.info("Not going to upload any redirects")
 
     with StopWatch() as timer:
         total_possible_files = mgr.count_file_tasks(build_directory)
@@ -624,9 +551,7 @@ def upload_content(build_directory, content_roots, config):
 
     totals = Totals()
 
-    with DisplayProgress(
-        total_redirects + total_possible_files, show_progress_bar
-    ) as progress:
+    with DisplayProgress(total_possible_files, show_progress_bar) as progress:
 
         def on_task_complete(task):
             progress.update(task)
@@ -637,7 +562,6 @@ def upload_content(build_directory, content_roots, config):
             content_roots,
             existing_bucket_objects,
             on_task_complete=on_task_complete,
-            skip_redirects=not upload_redirects,
             dry_run=dry_run,
             default_cache_control=default_cache_control,
         )
@@ -649,8 +573,6 @@ def upload_content(build_directory, content_roots, config):
             f"Total uploaded files: {totals.uploaded_files:,} "
             f"({fmt_size(totals.uploaded_files_size)})"
         )
-        if upload_redirects:
-            log.info(f"Total uploaded redirects: {totals.uploaded_redirects:,} ")
         log.info(f"Total skipped files: {totals.skipped:,} matched existing S3 objects")
         log.info(f"Total upload/skip time: {upload_timer}")
 
@@ -664,11 +586,17 @@ def upload_content(build_directory, content_roots, config):
         delete_keys = []
 
         for key in existing_bucket_objects:
-            if key.startswith(f"{bucket_prefix}/_whatsdeployed/"):
+            key_without_bucket_prefix = key.lstrip(f"{bucket_prefix}/")
+            if any(
+                map(
+                    lambda prefix: key_without_bucket_prefix.startswith(prefix),
+                    MANUAL_PREFIXES,
+                )
+            ):
                 # These are special and wouldn't have been uploaded
                 continue
 
-            if key.startswith(f"{bucket_prefix}/static/"):
+            if key_without_bucket_prefix.startswith("static/"):
                 # Careful with these!
                 # Static assets such as `main/static/js/8.0b83949c.chunk.js`
                 # are aggressively cached and they might still be referenced

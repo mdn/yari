@@ -1,10 +1,9 @@
 {
   "extends": "../tsconfig.json",
   "compilerOptions": {
+    "esModuleInterop": false,
     "target": "es2019",
-    "lib": ["esnext"],
-    "skipLibCheck": true,
-    "moduleResolution": "node"
+    "lib": ["esnext"]
   },
   "include": ["h2m/**/*"],
   "exclude": ["node_modules"]

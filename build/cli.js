@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 const fs = require("fs");
 const path = require("path");
 const zlib = require("zlib");
@@ -7,20 +8,15 @@ const cliProgress = require("cli-progress");
 const program = require("@caporal/core").default;
 const { prompt } = require("inquirer");
 
-const {
-  Document,
-  slugToFolder,
-  translationsOf,
-  CONTENT_ROOT,
-  CONTENT_TRANSLATED_ROOT,
-} = require("../content");
+const { Document, slugToFolder, translationsOf } = require("../content");
+const { CONTENT_ROOT, CONTENT_TRANSLATED_ROOT } = require("../libs/env");
 const { VALID_LOCALES } = require("../libs/constants");
 // eslint-disable-next-line node/no-missing-require
 const { renderHTML } = require("../ssr/dist/main");
 const options = require("./build-options");
 const { buildDocument, renderContributorsTxt } = require("./index");
 const SearchIndex = require("./search-index");
-const { BUILD_OUT_ROOT } = require("./constants");
+const { BUILD_OUT_ROOT } = require("../libs/env");
 const { makeSitemapXML, makeSitemapIndexXML } = require("./sitemaps");
 const { humanFileSize } = require("./utils");
 
@@ -168,11 +164,12 @@ async function buildDocuments(
           // The `.releases` block contains information about browsers (e.g
           // release dates) and that part has already been extracted and put
           // next to each version number where appropriate.
+          // Therefore, we strip out all "retired" releases.
           if (key === "releases") {
-            return undefined;
+            return Object.fromEntries(
+              Object.entries(value).filter(([, v]) => v.status !== "retired")
+            );
           }
-          // TODO: Instead of serializing with a exclusion, instead explicitly
-          // serialize exactly only the data that is needed.
           return value;
         })
       );

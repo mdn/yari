@@ -1,6 +1,6 @@
 import React from "react";
 import { Link, useSearchParams } from "react-router-dom";
-import LANGUAGES_RAW from "../languages.json";
+import LANGUAGES_RAW from "../../../libs/languages";
 
 import { useLocale } from "../hooks";
 import { appendURL } from "./utils";
@@ -16,11 +16,18 @@ export default function SiteSearchForm() {
   const [searchParams] = useSearchParams();
   const queryLocales = searchParams.getAll("locale");
 
+  const showLanguageOptions = locale.toLowerCase() !== "en-us";
+  const showAdvancedOptions = showLanguageOptions;
+
+  if (!showAdvancedOptions) {
+    return null;
+  }
+
   return (
     <div className="advanced-options">
       {/* Language only applies if you're browsing in, say, French
       and want to search in English too. */}
-      {locale.toLowerCase() !== "en-us" && (
+      {showLanguageOptions && (
         <div className="language-options">
           <h2>Language:</h2>
           <ul className="language-option-list">

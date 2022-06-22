@@ -1,12 +1,13 @@
 const fs = require("fs");
 const path = require("path");
 
-const glob = require("glob");
+const { fdir } = require("fdir");
 
 const { getPopularities } = require("../content");
-const { FLAW_LEVELS, options: buildOptions } = require("../build");
+const { options: buildOptions } = require("../build");
 
-const { BUILD_OUT_ROOT } = require("../build/constants");
+const { FLAW_LEVELS } = require("../libs/constants");
+const { BUILD_OUT_ROOT } = require("../libs/env");
 
 // Module-level cache
 const allPopularityValues = [];
@@ -211,9 +212,14 @@ module.exports = (req, res) => {
     }
   }
 
-  for (const filePath of glob.sync(
-    path.join(BUILD_OUT_ROOT, locale, "**", "index.json")
-  )) {
+  const api = new fdir()
+    .withFullPaths()
+    .withErrors()
+    .filter((filePath) => {
+      return filePath.endsWith("index.json");
+    })
+    .crawl(path.join(BUILD_OUT_ROOT, locale));
+  for (const filePath of api.sync()) {
     const { doc } = JSON.parse(fs.readFileSync(filePath));
 
     // The home page, for example, also uses a `index.json` but it doesn't have

@@ -11,7 +11,7 @@
       },
       "card_callout_label": {
         "msgid": "card_callout_label",
-        "msgstr": ["注意："]
+        "msgstr": ["标注："]
       }
     }
   }

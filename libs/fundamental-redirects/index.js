@@ -7,6 +7,7 @@ const {
 
 const startRe = /^\^?\/?/;
 const startTemplate = /^\//;
+const LOCALE_PATTERN = "(?:[a-zA-Z]{2}|eng)(?:-[a-zA-Z]{2})?";
 
 function redirect(pattern, template, options = {}) {
   return (path) => {
@@ -36,7 +37,7 @@ function localeRedirect(
 ) {
   const patternStrWithLocale = pattern.source.replace(
     startRe,
-    "^(?<locale>\\w{2,3}(?:-\\w{2})?/)?"
+    "^(?<locale>" + LOCALE_PATTERN + "/)?"
   );
   const patternWithLocale = new RegExp(patternStrWithLocale, pattern.flags);
   let _template = template;
@@ -806,6 +807,10 @@ const SCL3_REDIRECT_PATTERNS = [
     "/en-US/docs/Glossary/speculative_parsing",
     { permanent: true }
   ),
+  // Redirect for URL in Contribute video
+  redirect(/^MDN\/Contribute\/?$/i, "/en-US/docs/MDN/Contribute", {
+    permanent: true,
+  }),
 ];
 
 const zoneRedirects = [
@@ -1180,21 +1185,6 @@ for (const [pattern, path] of [
 }
 
 const MISC_REDIRECT_PATTERNS = [
-  // Temporarily redirect localized plus URLs to the home page.
-  redirect(
-    new RegExp(
-      `^(?<locale>${Array.from(VALID_LOCALES.keys()).join(
-        "|"
-      )})/plus(?:|\/bookmarks|\/deep-dives|\/deep-dives\/[^\/]+)\/?$`,
-      "i"
-    ),
-    ({ locale }) => {
-      return `/${VALID_LOCALES.get(locale.toLowerCase())}/`;
-    },
-    {
-      permanent: false,
-    }
-  ),
   redirect(/^events\/?$/i, "https://community.mozilla.org/events/", {
     permanent: false,
   }),

@@ -8,7 +8,7 @@ const util = require("./util.js");
 
 const DUMMY_BASE_URL = "https://example.com";
 
-const { CONTENT_ROOT } = require("../../../content");
+const { CONTENT_ROOT } = require("../../../libs/env");
 
 const _warned = new Map();
 // The purpose of this function is to make sure `console.warn` is only called once
@@ -139,7 +139,7 @@ module.exports = {
         } else {
           flaw = this.env.recordNonFatalError(
             "broken-link",
-            `${hrefpath} does not exist but fallbacked on ${enUSPage.url}`
+            `${hrefpath} does not exist but fell back to ${enUSPage.url}`
           );
           flawAttribute = ` data-flaw-src="${util.htmlEscape(
             flaw.macroSource
@@ -148,7 +148,7 @@ module.exports = {
         return (
           '<a class="only-in-en-us" ' +
           'title="Currently only available in English (US)" ' +
-          `href="${enUSPage.url}"${flawAttribute}>${content} <span>(en-US)</span></a>`
+          `href="${enUSPage.url}"${flawAttribute}>${content} <small>(en-US)</small></a>`
         );
       }
     }

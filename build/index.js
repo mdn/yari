@@ -4,16 +4,11 @@ const path = require("path");
 const chalk = require("chalk");
 const cheerio = require("cheerio");
 
-const {
-  Document,
-  CONTENT_ROOT,
-  Image,
-  REPOSITORY_URLS,
-  execGit,
-} = require("../content");
+const { Document, Image, execGit } = require("../content");
+const { CONTENT_ROOT, REPOSITORY_URLS } = require("../libs/env");
 const kumascript = require("../kumascript");
 
-const { FLAW_LEVELS } = require("./constants");
+const { FLAW_LEVELS } = require("../libs/constants");
 const {
   extractSections,
   extractSidebar,
@@ -31,8 +26,9 @@ const buildOptions = require("./build-options");
 const { gather: gatherGitHistory } = require("./git-history");
 const { buildSPAs } = require("./spas");
 const { renderCache: renderKumascriptCache } = require("../kumascript");
-const LANGUAGES_RAW = require("../content/languages.json");
+const LANGUAGES_RAW = require("../libs/languages");
 const { safeDecodeURIComponent } = require("../kumascript/src/api/util");
+const { wrapTables } = require("./wrap-tables");
 
 const LANGUAGES = new Map(
   Object.entries(LANGUAGES_RAW).map(([locale, data]) => {
@@ -155,9 +151,9 @@ function postLocalFileLinks($, doc) {
     const href = element.attribs.href;
 
     // This test is merely here to quickly bail if there's no hope to find the
-    // image as a local file link. `Image.findByURL()` is fast but there are
-    // a LOT of hyperlinks throughout the content and this simple if statement
-    // means we can skip 99% of the links, so it's presumed to be worth it.
+    // image as a local file link. There are a LOT of hyperlinks throughout
+    // the content and this simple if statement means we can skip 99% of the
+    // links, so it's presumed to be worth it.
     if (
       !href ||
       /^(\/|\.\.|http|#|mailto:|about:|ftp:|news:|irc:|ftp:)/i.test(href)
@@ -168,7 +164,7 @@ function postLocalFileLinks($, doc) {
     // So we'll look-up a lot "false positives" that are not images.
     // Thankfully, this lookup is fast.
     const url = `${doc.mdn_url}/${href}`;
-    const image = Image.findByURL(url);
+    const image = Image.findByURLWithFallback(url);
     if (image) {
       $(element).attr("href", url);
     }
@@ -306,7 +302,7 @@ async function buildDocument(document, documentOptions = {}) {
   const liveSamples = [];
 
   if (options.clearKumascriptRenderCache) {
-    renderKumascriptCache.reset();
+    renderKumascriptCache.clear();
   }
   try {
     [renderedHtml, flaws] = await kumascript.render(document.url);
@@ -453,6 +449,12 @@ async function buildDocument(document, documentOptions = {}) {
   doc.locale = metadata.locale;
   doc.native = LANGUAGES.get(doc.locale.toLowerCase()).native;
 
+  // If the document contains <math> HTML, it will set `doc.hasMathML=true`.
+  // The client (<Document/> component) needs to know this for loading polyfills.
+  if ($("math").length > 0) {
+    doc.hasMathML = true;
+  }
+
   // Note that 'extractSidebar' will always return a string.
   // And if it finds a sidebar section, it gets removed from '$' too.
   // Also note, these operations mutate the `$`.
@@ -529,6 +531,8 @@ async function buildDocument(document, documentOptions = {}) {
   injectNotecardOnWarnings($);
 
   formatNotecards($);
+
+  wrapTables($);
 
   // Turn the $ instance into an array of section blocks. Most of the
   // section blocks are of type "prose" and their value is a string blob
@@ -661,8 +665,6 @@ function renderContributorsTxt(wikiContributorNames = null, githubURL = null) {
 }
 
 module.exports = {
-  FLAW_LEVELS,
-
   buildDocument,
 
   buildLiveSamplePageFromURL,

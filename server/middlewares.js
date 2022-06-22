@@ -1,9 +1,10 @@
 const express = require("express");
 
 const { CSP_VALUE } = require("../libs/constants");
+const { STATIC_ROOT } = require("../libs/env");
 const { resolveFundamental } = require("../libs/fundamental-redirects");
 const { getLocale } = require("../libs/get-locale");
-const { STATIC_ROOT } = require("./constants");
+const { devMiddlewares } = require("./dev");
 
 // Lowercase every request because every possible file we might have
 // on disk is always in lowercase.
@@ -50,6 +51,7 @@ const originRequest = (req, res, next) => {
 
 module.exports = {
   staticMiddlewares: [
+    ...devMiddlewares,
     slugRewrite,
     express.static(STATIC_ROOT, {
       setHeaders: (res) => {

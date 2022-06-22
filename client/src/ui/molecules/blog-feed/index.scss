@@ -1,12 +1,8 @@
-@use "sass:math";
-
-@import "~@mdn/minimalist/sass/mixins/utils";
-@import "~@mdn/minimalist/sass/vars/mdn-web-docs-palette";
-@import "~@mdn/minimalist/sass/vars/layout";
-@import "~@mdn/minimalist/sass/vars/typography";
+@use "../../vars" as *;
+@use "~@mdn/minimalist/sass/mixins/utils" as *;
 
 .blog-feed {
-  @media #{$mq-small-desktop-and-up} {
+  @media screen and (min-width: $screen-md) {
     flex-basis: 65%;
   }
 
@@ -19,13 +15,13 @@
     @include reset-list();
 
     li {
-      border-bottom: 1px solid $mdn-neutral100;
-      margin-bottom: math.div($base-spacing, 2);
+      border-bottom: 1px solid var(--border-primary);
+      margin-bottom: 0.5rem;
     }
   }
 
   .post-meta {
-    font-size: $small-font-size;
+    font-size: 0.8125rem;
     font-style: italic;
   }
 }

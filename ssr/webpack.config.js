@@ -3,11 +3,13 @@ const path = require("path");
 const nodeExternals = require("webpack-node-externals");
 const webpack = require("webpack");
 
+const dirname = __dirname;
+
 module.exports = {
-  context: path.resolve(__dirname, "."),
-  entry: "./index.js",
+  context: path.resolve(dirname, "."),
+  entry: "./index.ts",
   output: {
-    path: path.resolve(__dirname, "dist"),
+    path: path.resolve(dirname, "dist"),
     filename: "[name].js",
     sourceMapFilename: "[name].js.map",
     libraryTarget: "commonjs2",
@@ -29,10 +31,14 @@ module.exports = {
       {
         test: /\.tsx?$/,
         exclude: /node_modules/,
-        loader: "ts-loader",
-        options: {
-          transpileOnly: true,
-        },
+        use: [
+          {
+            loader: "ts-loader",
+            options: {
+              transpileOnly: true,
+            },
+          },
+        ],
       },
       {
         test: /\.svg$/,
@@ -40,8 +46,13 @@ module.exports = {
           {
             loader: "@svgr/webpack",
             options: {
-              svgo: true,
+              prettier: false,
+              svgo: false,
+              svgoConfig: {
+                plugins: [{ removeViewBox: false }],
+              },
               titleProp: true,
+              ref: true,
             },
           },
         ],

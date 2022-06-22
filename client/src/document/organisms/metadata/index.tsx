@@ -1,4 +1,3 @@
-import { LanguageMenu } from "../../../ui/molecules/language-menu";
 import { OnGitHubLink } from "../../on-github";
 
 import "./index.scss";
@@ -25,9 +24,6 @@ function LastModified({ value, locale }) {
 }
 
 export function Metadata({ doc, locale }) {
-  const translations = doc.other_translations || [];
-  const { native } = doc;
-
   return (
     <aside className="metadata">
       <div className="metadata-content-container">
@@ -36,13 +32,6 @@ export function Metadata({ doc, locale }) {
           <LastModified value={doc.modified} locale={locale} />,{" "}
           <a href={`${doc.mdn_url}/contributors.txt`}>by MDN contributors</a>
         </p>
-        {translations && !!translations.length && (
-          <LanguageMenu
-            translations={translations}
-            native={native}
-            locale={locale}
-          />
-        )}
       </div>
     </aside>
   );

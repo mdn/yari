@@ -16,7 +16,16 @@ const sampleDocumentState = Object.freeze({
       {
         type: "prose",
         value: {
+          id: null,
           content: "<p>Hello World!</p>",
+        },
+      },
+      {
+        type: "prose",
+        value: {
+          id: "lorem_ipsum",
+          content:
+            "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit</p>",
         },
       },
     ],
@@ -35,7 +44,7 @@ describe("test viewing a simple document", () => {
   test("render document with props should not crash", async () => {
     const xhrSpy = jest.spyOn(global, "fetch");
 
-    const { getByText } = render(
+    const { getByText, getAllByText } = render(
       <MemoryRouter initialEntries={["/en-US/docs/Sample/Page"]}>
         <Routes>
           <Route
@@ -50,7 +59,7 @@ describe("test viewing a simple document", () => {
 
     expect(xhrSpy).not.toHaveBeenCalled();
     await waitFor(() => getByText(/Hello World!/));
-    await waitFor(() => getByText(/Sample Page/));
+    await waitFor(() => getAllByText(/Sample Page/));
   });
 
   test("render document without props should not crash", async () => {
@@ -62,7 +71,7 @@ describe("test viewing a simple document", () => {
         json: () => Promise.resolve(Object.assign({}, sampleDocumentState)),
       } as Response)
     );
-    const { getByText } = render(
+    const { getByText, getAllByText } = render(
       <MemoryRouter initialEntries={["/en-US/docs/Sample/Page"]}>
         <Routes>
           <Route path="/:locale/docs/*" element={<Document />} />
@@ -71,7 +80,7 @@ describe("test viewing a simple document", () => {
     );
 
     await waitFor(() => getByText(/Hello World!/));
-    await waitFor(() => getByText(/Sample Page/));
+    await waitFor(() => getAllByText(/Sample Page/));
     expect(xhrSpy).toHaveBeenCalledTimes(1);
   });
 });

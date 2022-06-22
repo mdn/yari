@@ -4,11 +4,8 @@ const path = require("path");
 const { fdir } = require("fdir");
 const fm = require("front-matter");
 
-const {
-  CONTENT_ROOT,
-  CONTENT_TRANSLATED_ROOT,
-  VALID_LOCALES,
-} = require("../content");
+const { VALID_LOCALES } = require("../libs/constants");
+const { CONTENT_ROOT, CONTENT_TRANSLATED_ROOT } = require("../libs/env");
 const { SearchIndex } = require("../build");
 
 function populateSearchIndex(searchIndex, localeLC) {

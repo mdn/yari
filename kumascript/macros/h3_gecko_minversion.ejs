@@ -5,6 +5,11 @@
     $2 = [String / Optional] name/id attribute
 */
 
+// Throw a MacroDeprecatedError flaw
+// Condition for removal: no more use in translated-content (currently 60 occurrences)
+// 0 occurrences left in en-US
+mdn.deprecated();
+
 var idAttr = $2 ? ' name="' + $2 + '" id="' + $2 + '"' : "";
 
 var str = mdn.localString({

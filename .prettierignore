@@ -11,7 +11,10 @@ _githistory.json
 /fake-v1-api/*.json
 # exclude these directories
 /client/build/
+/client/src/document/*.js
+/filecheck/*.js
 /ssr/dist/
+/tool/*.js
 /node_modules/
 /server/node_modules/
 /client/node_modules/
@@ -23,3 +26,5 @@ _githistory.json
 /testing/content/
 /kumascript/coverage/
 /ssr/mozilla.dnthelper.min.js
+/mdn/content
+popularities.json

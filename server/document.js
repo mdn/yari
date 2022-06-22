@@ -5,7 +5,7 @@ const express = require("express");
 
 const { Document, slugToFolder } = require("../content");
 const { buildDocument } = require("../build");
-const { BUILD_OUT_ROOT } = require("../build/constants");
+const { BUILD_OUT_ROOT } = require("../libs/env");
 
 const router = express();
 

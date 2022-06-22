@@ -1,3 +1,5 @@
+import NoteCard from "../../../ui/molecules/notecards";
+
 export function NoteBanner({
   linkText,
   url,
@@ -8,10 +10,12 @@ export function NoteBanner({
   type: "neutral" | "warning";
 }) {
   return (
-    <div className={`localized-content-note notecard inline ${type}`}>
-      <a href={url} className={!url.startsWith("/") ? "external" : undefined}>
-        {linkText}
-      </a>
-    </div>
+    <NoteCard extraClasses={`localized-content-note ${type || ""}`}>
+      <p>
+        <a href={url} className={!url.startsWith("/") ? "external" : undefined}>
+          {linkText}
+        </a>
+      </p>
+    </NoteCard>
   );
 }

@@ -13,11 +13,13 @@ const {
   lintHTML,
 } = require("./utils");
 
+const dirname = __dirname;
+
 // Load fixture data.
 const fixtureData = JSON.parse(
   fs.readFileSync(
-    path.resolve(__dirname, "fixtures", "documentData2.json"),
-    "utf8"
+    path.resolve(dirname, "fixtures", "documentData2.json"),
+    "utf-8"
   )
 );
 

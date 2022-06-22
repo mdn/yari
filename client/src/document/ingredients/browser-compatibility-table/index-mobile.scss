@@ -1,0 +1,29 @@
+// Style for mobile.
+
+@media screen and (max-width: $screen-sm - 1px) {
+  thead {
+    display: none;
+  }
+
+  td.bc-support {
+    display: block;
+    border-left-width: 0;
+  }
+
+  .bc-feature,
+  .bc-support > button,
+  .bc-history > td {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    align-content: center;
+  }
+
+  .bc-history-desktop {
+    display: none;
+  }
+
+  .table-scroll {
+    overflow-x: auto;
+  }
+}

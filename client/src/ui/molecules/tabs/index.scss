@@ -1,0 +1,23 @@
+.tabs {
+  border-bottom: 1px solid var(--border-primary);
+}
+
+.tabs ul {
+  display: flex;
+  gap: 1rem;
+}
+
+.tabs .tab-item {
+  padding: 0.5rem 0;
+  border-bottom: 2px solid transparent;
+}
+
+.tabs a.tab-item {
+  display: block;
+  font-size: var(--type-smaller-font-size);
+  color: var(--text-primary);
+}
+
+.tabs .tab-item[aria-current="true"] {
+  border-bottom-color: var(--text-link);
+}

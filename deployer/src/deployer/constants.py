@@ -13,6 +13,7 @@ CONTENT_TRANSLATED_ROOT = config("CONTENT_TRANSLATED_ROOT", default=None)
 
 DEFAULT_BUCKET_NAME = config("DEPLOYER_BUCKET_NAME", default="mdn-content-dev")
 DEFAULT_BUCKET_PREFIX = config("DEPLOYER_BUCKET_PREFIX", default="main")
+DEFAULT_DISTRIBUTION_ID = config("DEPLOYER_DISTRIBUTION_ID", default=None)
 
 # When uploading a bunch of files, the work is done in a thread pool.
 # If you use too many "workers" it might saturate your network, meaning it's
@@ -39,11 +40,6 @@ LOG_EACH_SUCCESSFUL_UPLOAD = config(
     "DEPLOYER_LOG_EACH_SUCCESSFUL_UPLOAD", default=False, cast=bool
 )
 
-# You get this from https://speedcurve.com/mozilla-add-ons/mdn/admin/teams/
-SPEEDCURVE_DEPLOY_API_KEY = config("SPEEDCURVE_DEPLOY_API_KEY", default=None)
-# Use the API key and see instructions on https://api.speedcurve.com/#get-all-sites
-SPEEDCURVE_DEPLOY_SITE_ID = config("SPEEDCURVE_DEPLOY_SITE_ID", default=None)
-
 # If you're doing local development, you can download and install your own
 # instance of Elasticsearch 7 and start it. Then set this environment variable
 # value to `http://localhost:9200`
@@ -53,3 +49,6 @@ ELASTICSEARCH_URL = config("DEPLOYER_ELASTICSEARCH_URL", default=None)
 DEFAULT_REPO = config("GITHUB_REPOSITORY", default=None)
 
 DEFAULT_GITHUB_TOKEN = config("GITHUB_TOKEN", default=None)
+
+# Object prefixes that are managed manually and must not be pruned.
+MANUAL_PREFIXES = ["opendesign", "_whatsdeployed"]

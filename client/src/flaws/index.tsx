@@ -156,7 +156,7 @@ function useFiltersURL(): [Filters, (filters: Partial<Filters>) => void] {
 }
 
 export default function AllFlaws() {
-  const { locale } = useParams();
+  const { locale = "en-US" } = useParams();
   const [filters] = useFiltersURL();
   const [lastData, setLastData] = useState<Data | null>(null);
 

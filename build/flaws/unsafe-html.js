@@ -1,7 +1,7 @@
 const {
   INTERACTIVE_EXAMPLES_BASE_URL,
   LIVE_SAMPLES_BASE_URL,
-} = require("../../kumascript/src/constants");
+} = require("../../libs/env");
 const { findMatchesInText } = require("../matches-in-text");
 
 const safeIFrameSrcs = [

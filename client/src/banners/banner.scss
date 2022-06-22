@@ -1,24 +1,16 @@
-@use "sass:math";
-
-@import "~@mdn/minimalist/sass/vars/color-palette";
-@import "~@mdn/minimalist/sass/vars/color-gradients";
-@import "~@mdn/minimalist/sass/vars/layout";
-@import "~@mdn/minimalist/sass/vars/typography";
-
 .mdn-cta-container {
   background-color: #212121;
   color: white;
   display: flex;
-  z-index: $bring-to-front;
+  z-index: 999;
   align-items: center;
-  font-family: $heading-font-family;
   min-height: 40px;
   height: 100%;
-  padding: 0 $base-spacing;
+  padding: 0 1rem;
 
   .mdn-cta-copy {
     margin: 0;
-    padding: 8px 0px;
+    padding: 8px 0;
   }
 
   button {
@@ -44,7 +36,23 @@
   }
 
   a {
-    min-height: 0px;
-    color: #31d2f7;
+    min-height: 0;
+    color: var(--color-announcement-banner-accent);
+
+    &:hover,
+    &:focus {
+      text-decoration: underline;
+    }
+  }
+
+  .underlined {
+    font-style: normal;
+    text-decoration: underline var(--color-announcement-banner-accent) 0.15rem;
+  }
+
+  .mdn-plus {
+    color: var(--color-announcement-banner-accent);
+    font-size: 1.2rem;
+    font-weight: 700;
   }
 }

@@ -14,7 +14,10 @@
 //
 // See also : LiveSampleLink
 
-var sampleId = $0 || $token.location.start.offset;
+var sampleIdOrOffset = $0 || $token.location.start.offset;
+if(typeof sampleIdOrOffset === "string"){
+  sampleIdOrOffset = sampleIdOrOffset.toLowerCase();
+}
 var width = $1;
 var height = $2;
 var screenshotUrl = $3;
@@ -57,7 +60,7 @@ if (sampleSlug) {
       }
     }
 }
-var url = await template('LiveSampleURL', [sampleId, sampleUrl]);
+var url = await template('LiveSampleURL', [sampleIdOrOffset, sampleUrl]);
 
 if (hasScreenshot) {
 %><table class="sample-code-table"><%
@@ -75,7 +78,7 @@ if (hasScreenshot) {
       %><td><%
 } // end hasScreenshot
 %><iframe class="<%= className %>"<%
-%> title="<%= title %> sample" id="frame_<%= web.slugify(web.safeDecodeURIComponent(sampleId)) %>"<%
+%> title="<%= title %> sample" id="frame_<%= web.slugify(web.safeDecodeURIComponent(sampleIdOrOffset)) %>"<%
 if (width) { %> width="<%= width %>"<% }
 if (height) { %> height="<%= height %>"<% }
 %> src="<%- url %>"<%

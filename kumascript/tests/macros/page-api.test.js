@@ -11,11 +11,13 @@ const path = require("path");
 const { Document } = require("../../../content");
 const { assert, itMacro, describeMacro, beforeEachMacro } = require("./utils");
 
+const dirname = __dirname;
+
 // Load fixture data.
 const fixtureData = JSON.parse(
   fs.readFileSync(
-    path.resolve(__dirname, "fixtures", "documentData1.json"),
-    "utf8"
+    path.resolve(dirname, "fixtures", "documentData1.json"),
+    "utf-8"
   )
 );
 const fix_url = "/en-US/docs/Web/HTTP/Basics_of_HTTP";

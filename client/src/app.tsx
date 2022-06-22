@@ -1,84 +1,77 @@
-import React from "react";
-import { Routes, Route, useLocation } from "react-router-dom";
+import React, { useEffect } from "react";
+import { Routes, Route, useLocation, useMatch } from "react-router-dom";
 
 // we include our base SASS here to ensure it is loaded
 // and applied before any component specific style
 import "./app.scss";
 
-import { CRUD_MODE } from "./constants";
+import { CRUD_MODE, PLUS_IS_ENABLED } from "./env";
 import { Homepage } from "./homepage";
 import { Document } from "./document";
 import { A11yNav } from "./ui/molecules/a11y-nav";
 import { Footer } from "./ui/organisms/footer";
-import { Header } from "./ui/organisms/header";
+import { TopNavigation } from "./ui/organisms/top-navigation";
 import { SiteSearch } from "./site-search";
 import { Loading } from "./ui/atoms/loading";
 import { PageContentContainer } from "./ui/atoms/page-content";
 import { PageNotFound } from "./page-not-found";
+import { Plus } from "./plus";
+import { About } from "./about";
+import { OfflineSettings } from "./offline-settings";
+import { docCategory } from "./utils";
+import { Contribute } from "./community";
+import { ContributorSpotlight } from "./contributor-spotlight";
+import { useIsServer } from "./hooks";
 
-import { SignIn, SignOut } from "./auth";
-import { Settings } from "./settings";
+import { Banner } from "./banners";
 
 const AllFlaws = React.lazy(() => import("./flaws"));
 const Translations = React.lazy(() => import("./translations"));
-const DocumentEdit = React.lazy(() => import("./document/forms/edit"));
-const DocumentCreate = React.lazy(() => import("./document/forms/create"));
-const DocumentManage = React.lazy(() => import("./document/forms/manage"));
 const WritersHomepage = React.lazy(() => import("./writers-homepage"));
 const Sitemap = React.lazy(() => import("./sitemap"));
 
-const isServer = typeof window === "undefined";
-
 function Layout({ pageType, children }) {
+  const { pathname } = useLocation();
+  const [category, setCategory] = React.useState<string | null>(
+    docCategory({ pathname })
+  );
+
+  const isServer = useIsServer();
+
+  React.useEffect(() => {
+    setCategory(docCategory({ pathname }));
+  }, [pathname]);
+
   return (
     <>
       <A11yNav />
-      {/* Commented out for now. Kept as a record/reminder of how we implement
-       banners. As of May 27, 2021 we don't have any banners to show. At all.
-
-       Note, if you do uncomment banners again (because there's one to possible
-       display), remember to go to
-       */}
-      {/* {!isServer && <Banner />} */}
-      <div className={`page-wrapper ${pageType}`}>
-        <Header />
+      {!isServer && <Banner />}
+      <div className={`page-wrapper  ${category || ""} ${pageType}`}>
+        {pageType !== "document-page" && <TopNavigation />}
         {children}
       </div>
       <Footer />
-
-      {/* Shown on mobile when main navigation is expanded to provide a clear distinction between the foreground menu and the page content */}
-      <div className="page-overlay hidden"></div>
     </>
   );
 }
 
-function StandardLayout({ children }) {
-  return <Layout pageType="standard-page">{children}</Layout>;
+function StandardLayout({
+  extraClasses,
+  children,
+}: {
+  extraClasses?: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <Layout pageType={`standard-page ${extraClasses || ""}`}>{children}</Layout>
+  );
 }
 function DocumentLayout({ children }) {
   return <Layout pageType="document-page">{children}</Layout>;
 }
 
-/** This component exists so you can dynamically change which sub-component to
- * render depending on the conditions. In particular, we need to be able to
- * render the <PageNotFound> component, in server-side rendering, if told to do
- * so. But if the client then changes the location (by clicking a <Link>
- * or a react-router navigate() call) we need to ignore the fact that it was
- * originally not found. Perhaps, this new location that the client is
- * requesting is going to work.
- */
 function PageOrPageNotFound({ pageNotFound, children }) {
-  // It's true by default if the SSR rendering says so.
-  const [notFound, setNotFound] = React.useState<boolean>(!!pageNotFound);
-  const { pathname } = useLocation();
-  const initialPathname = React.useRef(pathname);
-  React.useEffect(() => {
-    if (initialPathname.current && initialPathname.current !== pathname) {
-      setNotFound(false);
-    }
-  }, [pathname]);
-
-  return notFound ? (
+  return pageNotFound ? (
     <StandardLayout>
       <PageNotFound />
     </StandardLayout>
@@ -100,6 +93,28 @@ function LoadingFallback({ message }: { message?: string }) {
 }
 
 export function App(appProps) {
+  const localeMatch = useMatch("/:locale/*");
+
+  useEffect(() => {
+    const locale = localeMatch?.params.locale || appProps.locale;
+
+    document.documentElement.setAttribute("lang", locale);
+  }, [appProps.locale, localeMatch]);
+
+  const [pageNotFound, setPageNotFound] = React.useState<boolean>(
+    appProps.pageNotFound
+  );
+  const { pathname } = useLocation();
+  const initialPathname = React.useRef(pathname);
+
+  React.useEffect(() => {
+    setPageNotFound(
+      appProps.pageNotFound && initialPathname.current === pathname
+    );
+  }, [appProps.pageNotFound, pathname]);
+
+  const isServer = useIsServer();
+
   // When preparing a build for use in the NPM package, CRUD_MODE is always true.
   // But if the App is loaded from the code that builds the SPAs, then `isServer`
   // is true. So you have to have `isServer && CRUD_MODE` at the same time.
@@ -109,7 +124,7 @@ export function App(appProps) {
         <WritersHomepage />
       </Layout>
     ) : (
-      <PageOrPageNotFound pageNotFound={appProps.pageNotFound}>
+      <PageOrPageNotFound pageNotFound={pageNotFound}>
         <Layout pageType="standard-page">
           <Homepage {...appProps} />
         </Layout>
@@ -144,34 +159,6 @@ export function App(appProps) {
                   element={
                     <StandardLayout>
                       <Translations />
-                    </StandardLayout>
-                  }
-                />
-                <Route
-                  path="/_edit/*"
-                  element={
-                    <StandardLayout>
-                      <DocumentEdit />
-                    </StandardLayout>
-                  }
-                />
-
-                {/* The following two are not "enabled". I.e. no link to them.
-                    See https://github.com/mdn/yari/issues/1614
-                 */}
-                <Route
-                  path="/_create/*"
-                  element={
-                    <StandardLayout>
-                      <DocumentCreate />
-                    </StandardLayout>
-                  }
-                />
-                <Route
-                  path="/_manage/*"
-                  element={
-                    <StandardLayout>
-                      <DocumentManage />
                     </StandardLayout>
                   }
                 />
@@ -227,38 +214,58 @@ export function App(appProps) {
                 </StandardLayout>
               }
             />
-            <Route
-              path="/signin"
-              element={
-                <StandardLayout>
-                  <SignIn />
-                </StandardLayout>
-              }
-            />
-            <Route
-              path="/signout"
-              element={
-                <StandardLayout>
-                  <SignOut />
-                </StandardLayout>
-              }
-            />
-            <Route
-              path="/settings"
-              element={
-                <StandardLayout>
-                  <Settings {...appProps} />
-                </StandardLayout>
-              }
-            />
+            {PLUS_IS_ENABLED && (
+              <Route
+                path="/plus/*"
+                element={
+                  <StandardLayout extraClasses="plus">
+                    <Plus {...appProps} />
+                  </StandardLayout>
+                }
+              />
+            )}
+            {PLUS_IS_ENABLED && (
+              <Route
+                path="/offline-settings"
+                element={
+                  <StandardLayout>
+                    <OfflineSettings {...appProps} />
+                  </StandardLayout>
+                }
+              />
+            )}
             <Route
               path="/docs/*"
               element={
-                <PageOrPageNotFound pageNotFound={appProps.pageNotFound}>
+                <PageOrPageNotFound pageNotFound={pageNotFound}>
                   <DocumentLayout>
                     <Document {...appProps} />
                   </DocumentLayout>
                 </PageOrPageNotFound>
+              }
+            />
+            <Route
+              path="/about/*"
+              element={
+                <StandardLayout>
+                  <About />
+                </StandardLayout>
+              }
+            />
+            <Route
+              path="/community/*"
+              element={
+                <StandardLayout>
+                  <Contribute />
+                </StandardLayout>
+              }
+            />
+            <Route
+              path="/community/spotlight/*"
+              element={
+                <StandardLayout>
+                  <ContributorSpotlight {...appProps} />
+                </StandardLayout>
               }
             />
             <Route

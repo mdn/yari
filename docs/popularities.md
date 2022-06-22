@@ -2,11 +2,11 @@
 
 A popular page is one that has lot of pageviews. We get this from our CDN access
 logs. Being popular helps search because when a certain search term matches many
-documents, too many to display all, we need to sort them to try to predict
-which one the user most probably wanted to find.
+documents, too many to display all, we need to sort them to try to predict which
+one the user most probably wanted to find.
 
-To accomplish this we check-in a file in the content repo called `popularities.json`
-which looks like this:
+To accomplish this we check-in a file in the content repo called
+`popularities.json` which looks like this:
 
 ```json
 {
@@ -23,10 +23,10 @@ which looks like this:
 }
 ```
 
-The number of pageviews is normalized. The popularity is a number between 0 and 1.
-Where the most popular page is `1`.
-Note that not all documents will have a popularity. So don't expect every known
-URL in the content to appear in the `popularities.json` file.
+The number of pageviews is normalized. The popularity is a number between 0
+and 1. Where the most popular page is `1`. Note that not all documents will have
+a popularity. So don't expect every known URL in the content to appear in the
+`popularities.json` file.
 
 ## Where's the data from
 
@@ -59,7 +59,7 @@ FROM
             AND month = '{}'
             AND status = 200
             AND user_agent LIKE 'Mozilla%'
-            AND uri NOT LIKE '%/_sample%'
+            AND uri NOT LIKE '%/_sample_%'
             AND (uri LIKE '/%/docs/%'
             AND sc_content_type = 'text/html;%20charset=utf-8'
             OR uri LIKE '/%/docs/%/index.json'))
@@ -72,6 +72,8 @@ output='s3://mdn-popularities-prod/{}/{}/'.format(year, month)
 
 def lambda_handler(event, context):
     client = boto3.client('athena')
+
+    # Execution
     response = client.start_query_execution(
         QueryString=query,
         QueryExecutionContext={
@@ -83,14 +85,19 @@ def lambda_handler(event, context):
     )
     s3 = boto3.resource('s3')
     uuid=response["QueryExecutionId"]
+
+    current = None
     if uuid:
-        content = (
-          "https://mdn-popularities-prod.s3.amazonaws.com/"
-          "{year}/{month}/{uuid}.csv"
-        ).format(year=year, month=month, uuid=uuid)
-        s3.Object(
-          'mdn-popularities-prod', 'current.txt'
-        ).put(Body=content, ContentType="text/plain; charset=utf-8")
+        current = "https://mdn-popularities-prod.s3.amazonaws.com/{year}/{month}/{uuid}.csv".format(year=year, month=month, uuid=uuid)
+        s3.Object('mdn-popularities-prod', 'current.txt').put(Body=current, ContentType="text/plain; charset=utf-8")
+
+    bucket = s3.Bucket('mdn-popularities-prod')
+    history = ["https://mdn-popularities-prod.s3.amazonaws.com/{}".format(o.key) for o in bucket.objects.all() if o.key.endswith(".csv")]
+    if current is not None and (len(history) == 0 or history[-1] != current):
+        history.append(current)
+    body = "\n".join(history)
+    s3.Object('mdn-popularities-prod', 'history.txt').put(Body=body, ContentType="text/plain; charset=utf-8")
+
     return response
 ```
 

@@ -1,0 +1,10 @@
+name: mark-as-idle
+on:
+  schedule:
+    - cron: "49 11,23 * * *"
+
+jobs:
+  idle-issues-prs:
+    uses: mdn/workflows/.github/workflows/idle.yml@main
+    with:
+      target-repo: "mdn/yari"

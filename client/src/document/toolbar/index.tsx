@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { CRUD_MODE_HOSTNAMES } from "../../constants";
+import { CRUD_MODE_HOSTNAMES } from "../../env";
 import { Doc } from "../types";
 import { EditActions } from "./edit-actions";
 import { ToggleDocumentFlaws } from "./flaws";
@@ -38,10 +38,7 @@ export default function Toolbar({
   return (
     <div className="toolbar">
       <div className="toolbar-first-row">
-        <EditActions
-          folder={doc.source.folder}
-          filename={doc.source.filename}
-        />
+        <EditActions source={doc.source} />
       </div>
       {isReadOnly && (
         <p>

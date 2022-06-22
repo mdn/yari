@@ -14,16 +14,16 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v2.4.0
+      - uses: actions/checkout@v3
 
       - name: Setup Node.js environment
-        uses: actions/setup-node@v2.4.1
+        uses: actions/setup-node@v3
         with:
-          node-version: "12"
+          node-version: "16"
           cache: "yarn"
 
       - name: Cache node_modules
-        uses: actions/cache@v2.1.6
+        uses: actions/cache@v3
         id: cached-node_modules
         with:
           path: |
@@ -45,11 +45,12 @@ jobs:
         run: yarn test:client
 
       - name: Build and start server
+        id: server
         env:
           ENV_FILE: testing/.env
         run: |
 
-          # because `yarn prepare-build` is a wrapper for `yarn build:client` and
+          # because `yarn build:prepare` is a wrapper for `yarn build:client` and
           # `yarn build:client` can't respect the `$ENV_FILE` environment variable,
           # because it has to build from the `./client/` directory, we have to
           # manually copy the `testing/.env` file into `client/` so that when
@@ -57,12 +58,12 @@ jobs:
           # as you'd get when doing `yarn build:ssr`.
           cp testing/.env client/
 
-          yarn prepare-build
+          yarn build:prepare
           yarn build
 
           yarn start:static-server > /tmp/stdout.log 2> /tmp/stderr.log &
           sleep 1
-          curl --fail --retry-connrefused --retry 5 http://localhost:5000 > /dev/null
+          curl --fail --retry-connrefused --retry 5 http://localhost:5042 > /dev/null
 
       - name: Functional testing
         run: |
@@ -79,7 +80,7 @@ jobs:
           diff -s testing/content/files/en-us/markdown/tool/h2m/index.md testing/content/files/en-us/markdown/tool/h2m/expected.md
 
       - name: Debug server's stdout and stderr if tests failed
-        if: failure()
+        if: failure() && steps.server.outcome != 'skipped'
         run: |
           echo "STDOUT..................................................."
           cat /tmp/stdout.log

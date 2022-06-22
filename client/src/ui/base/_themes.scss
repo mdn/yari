@@ -1,0 +1,368 @@
+@use "sass:color";
+@use "../vars.scss" as *;
+@use "../color-palette" as *;
+
+@mixin light-theme {
+  color-scheme: light;
+
+  --text-primary: #{$mdn-theme-light-text-primary};
+  --text-secondary: #{$mdn-theme-light-text-secondary};
+  --text-inactive: #{$mdn-theme-light-text-inactive};
+  --text-link: #{$mdn-theme-light-text-link};
+  --text-invert: #{$mdn-theme-light-text-invert};
+
+  --background-primary: #{$mdn-theme-light-background-primary};
+  --background-secondary: #{$mdn-theme-light-background-secondary};
+  --background-tertiary: #{$mdn-theme-light-background-tertiary};
+  --background-toc-active: #{$mdn-theme-light-background-toc-active};
+  --background-mark-yellow: #{color.adjust(
+      $mdn-color-light-theme-yellow-30,
+      $alpha: -0.6
+    )};
+  --background-mark-green: #{color.adjust(
+      $mdn-color-light-theme-green-30,
+      $alpha: -0.6
+    )};
+  --background-information: #{color.adjust(
+      $mdn-theme-light-icon-information,
+      $alpha: -0.9
+    )};
+  --background-warning: #{color.adjust(
+      $mdn-theme-light-icon-warning,
+      $alpha: -0.9
+    )};
+  --background-critical: #{color.adjust(
+      $mdn-theme-light-icon-critical,
+      $alpha: -0.9
+    )};
+  --background-success: #{color.adjust(
+      $mdn-theme-light-icon-success,
+      $alpha: -0.9
+    )};
+
+  --border-primary: #{$mdn-theme-light-border-primary};
+  --border-secondary: #{$mdn-theme-light-border-secondary};
+
+  --button-primary-default: #{$mdn-theme-light-button-primary-default};
+  --button-primary-hover: #{$mdn-theme-light-button-primary-hover};
+  --button-primary-active: #{$mdn-theme-light-button-primary-active};
+  --button-primary-inactive: #{$mdn-theme-light-button-primary-inactive};
+
+  --button-secondary-default: #{$mdn-theme-light-button-secondary-default};
+  --button-secondary-hover: #{$mdn-theme-light-button-secondary-hover};
+  --button-secondary-active: #{$mdn-theme-light-button-secondary-active};
+  --button-secondary-inactive: #{$mdn-theme-light-button-secondary-inactive};
+  --button-secondary-border-focus: #{$mdn-theme-light-button-secondary-border-focus};
+  --button-secondary-border-red: #{$mdn-theme-light-button-secondary-border-red};
+  --button-secondary-border-red-focus: #{$mdn-theme-light-button-secondary-border-red-focus};
+
+  --icon-primary: #{$mdn-theme-light-icon-primary};
+  --icon-secondary: #{$mdn-theme-light-icon-secondary};
+  --icon-information: #{$mdn-theme-light-icon-information};
+  --icon-warning: #{$mdn-theme-light-icon-warning};
+  --icon-critical: #{$mdn-theme-light-icon-critical};
+  --icon-success: #{$mdn-theme-light-icon-success};
+
+  --accent-primary: #{$mdn-theme-light-accent-primary};
+  --accent-primary-engage: #{color.adjust(
+      $mdn-theme-light-accent-primary,
+      $alpha: -0.9
+    )};
+
+  --accent-secondary: #{$mdn-theme-light-accent-secondary};
+  --accent-tertiary: #{color.adjust(
+      $mdn-color-light-theme-blue-50,
+      $alpha: -0.9
+    )};
+
+  --shadow-01: #{$mdn-theme-light-shadow-01};
+  --shadow-02: #{$mdn-theme-light-shadow-02};
+  --focus-01: #{$mdn-theme-light-focus-01};
+  --field-focus-border: #{$mdn-theme-light-field-focus-border};
+
+  --code-token-tag: #{$mdn-theme-light-code-token-tag};
+  --code-token-punctuation: #{$mdn-theme-light-code-token-punctuation};
+  --code-token-attribute-name: #{$mdn-theme-light-code-token-attribute-name};
+  --code-token-attribute-value: #{$mdn-theme-light-code-token-attribute-value};
+  --code-token-comment: #{$mdn-theme-light-code-token-comment};
+  --code-token-default: #{$mdn-theme-light-code-token-default};
+  --code-token-selector: #{$mdn-theme-light-code-token-selector};
+  --code-background-inline: #{$mdn-theme-light-code-background-inline};
+  --code-background-block: #{$mdn-theme-light-code-background-block};
+
+  --notecard-link-color: #{$mdn-color-neutral-80};
+
+  --scrollbar-bg: transparent;
+  --scrollbar-color: rgba(0, 0, 0, 0.25);
+
+  --category-color: #{$mdn-color-light-theme-blue-50};
+  --category-color-background: #{$mdn-color-light-theme-blue-50}10;
+  --code-color: #{$mdn-color-light-theme-blue-40};
+  --mark-color: #{$mdn-color-light-theme-blue-10};
+
+  --plus-accent-color: #{$mdn-color-dark-theme-red-60};
+  --html-accent-color: #{$mdn-color-light-theme-red-60};
+  --css-accent-color: #{$mdn-color-light-theme-blue-60};
+  --js-accent-color: #{$mdn-color-light-theme-yellow-40};
+  --http-accent-color: #{$mdn-color-light-theme-green-60};
+  --apis-accent-color: #{$mdn-color-light-theme-violet-60};
+  --learn-accent-color: #{$mdn-color-light-theme-pink-60};
+
+  --plus-code-color: #{$mdn-color-light-theme-blue-60};
+  --html-code-color: #{$mdn-color-light-theme-red-70};
+  --css-code-color: #{$mdn-color-light-theme-blue-60};
+  --js-code-color: #{$mdn-color-light-theme-yellow-60};
+  --http-code-color: #{$mdn-color-light-theme-green-60};
+  --apis-code-color: #{$mdn-color-light-theme-violet-60};
+  --learn-code-color: #{$mdn-color-light-theme-pink-60};
+
+  --plus-mark-color: #{$mdn-color-light-theme-red-10};
+  --html-mark-color: #{$mdn-color-light-theme-red-10};
+  --css-mark-color: #{$mdn-color-light-theme-blue-10};
+  --js-mark-color: #{$mdn-color-light-theme-yellow-10};
+  --http-mark-color: #{$mdn-color-light-theme-green-10};
+  --apis-mark-color: #{$mdn-color-light-theme-violet-10};
+  --learn-mark-color: #{$mdn-color-light-theme-pink-10};
+
+  --plus-accent-background-color: #{$mdn-color-light-theme-red-50}30;
+  --html-accent-background-color: #{$mdn-color-light-theme-red-50}30;
+  --css-accent-background-color: #{$mdn-color-light-theme-blue-50}30;
+  --js-accent-background-color: #{$mdn-color-light-theme-yellow-50}30;
+  --http-accent-background-color: #{$mdn-color-light-theme-green-50}30;
+  --apis-accent-background-color: #{$mdn-color-light-theme-violet-50}30;
+  --learn-accent-background-color: #{$mdn-color-light-theme-pink-50}30;
+
+  --plus-accent-engage: #{color.adjust(
+      $mdn-color-light-theme-red-50,
+      $alpha: -0.3
+    )};
+  --html-accent-engage: #{color.adjust(
+      $mdn-color-light-theme-red-50,
+      $alpha: -0.3
+    )};
+  --css-accent-engage: #{color.adjust(
+      $mdn-color-light-theme-blue-50,
+      $alpha: -0.3
+    )};
+  --js-accent-engage: #{color.adjust(
+      $mdn-color-light-theme-yellow-50,
+      $alpha: -0.3
+    )};
+  --http-accent-engage: #{color.adjust(
+      $mdn-color-light-theme-green-50,
+      $alpha: -0.3
+    )};
+  --apis-accent-engage: #{color.adjust(
+      $mdn-color-light-theme-violet-50,
+      $alpha: -0.3
+    )};
+  --learn-accent-engage: #{color.adjust(
+      $mdn-color-light-theme-pink-50,
+      $alpha: -0.3
+    )};
+
+  --modal-backdrop-color: #{rgba($mdn-theme-dark-background-primary, 0.1)};
+  --blend-color: #{$mdn-color-white}80;
+
+  --text-primary-red: #{$mdn-color-light-theme-red-60};
+  --text-primary-green: #{$mdn-color-light-theme-green-60};
+  --text-primary-blue: #{$mdn-color-light-theme-blue-60};
+  --text-primary-yellow: #{$mdn-color-light-theme-yellow-60};
+}
+
+@mixin dark-theme {
+  color-scheme: dark;
+
+  --text-primary: #{$mdn-theme-dark-text-primary};
+  --text-secondary: #{$mdn-theme-dark-text-secondary};
+  --text-inactive: #{$mdn-theme-dark-text-inactive};
+  --text-link: #{$mdn-theme-dark-text-link};
+  --text-invert: #{$mdn-theme-dark-text-invert};
+
+  --background-primary: #{$mdn-theme-dark-background-primary};
+  --background-secondary: #{$mdn-theme-dark-background-secondary};
+  --background-tertiary: #{$mdn-theme-dark-background-tertiary};
+  --background-toc-active: #{$mdn-theme-dark-background-toc-active};
+  --background-mark-yellow: #{color.adjust(
+      $mdn-color-dark-theme-yellow-30,
+      $alpha: -0.6
+    )};
+  --background-mark-green: #{color.adjust(
+      $mdn-color-light-theme-green-30,
+      $alpha: -0.6
+    )};
+  --background-information: #{color.adjust(
+      $mdn-theme-light-icon-information,
+      $alpha: -0.9
+    )};
+  --background-warning: #{color.adjust(
+      $mdn-theme-light-icon-warning,
+      $alpha: -0.9
+    )};
+  --background-critical: #{color.adjust(
+      $mdn-theme-light-icon-critical,
+      $alpha: -0.9
+    )};
+  --background-success: #{color.adjust(
+      $mdn-theme-light-icon-success,
+      $alpha: -0.9
+    )};
+
+  --border-primary: #{$mdn-theme-dark-border-primary};
+  --border-secondary: #{$mdn-theme-dark-border-secondary};
+
+  --button-primary-default: #{$mdn-theme-dark-button-primary-default};
+  --button-primary-hover: #{$mdn-theme-dark-button-primary-hover};
+  --button-primary-active: #{$mdn-theme-dark-button-primary-active};
+  --button-primary-inactive: #{$mdn-theme-dark-button-primary-inactive};
+
+  --button-secondary-default: #{$mdn-theme-dark-button-secondary-default};
+  --button-secondary-hover: #{$mdn-theme-dark-button-secondary-hover};
+  --button-secondary-active: #{$mdn-theme-dark-button-secondary-active};
+  --button-secondary-inactive: #{$mdn-theme-dark-button-secondary-inactive};
+  --button-secondary-border-focus: #{$mdn-theme-light-button-secondary-border-focus};
+  --button-secondary-border-red: #{$mdn-theme-light-button-secondary-border-red};
+  --button-secondary-border-red-focus: #{$mdn-theme-light-button-secondary-border-red-focus};
+
+  --icon-primary: #{$mdn-theme-dark-icon-primary};
+  --icon-secondary: #{$mdn-theme-dark-icon-secondary};
+  --icon-information: #{$mdn-theme-dark-icon-information};
+  --icon-warning: #{$mdn-theme-dark-icon-warning};
+  --icon-critical: #{$mdn-theme-dark-icon-critical};
+  --icon-success: #{$mdn-theme-dark-icon-success};
+
+  --accent-primary: #{$mdn-theme-dark-accent-primary};
+  --accent-primary-engage: #{color.adjust(
+      $mdn-theme-dark-accent-primary,
+      $alpha: -0.9
+    )};
+  --accent-secondary: #{$mdn-theme-dark-accent-secondary};
+  --accent-tertiary: #{color.adjust(
+      $mdn-color-light-theme-blue-50,
+      $alpha: -0.9
+    )};
+
+  --shadow-01: #{$mdn-theme-dark-shadow-01};
+  --shadow-02: #{$mdn-theme-dark-shadow-02};
+  --focus-01: #{$mdn-theme-dark-focus-01};
+  --field-focus-border: #{$mdn-theme-dark-field-focus-border};
+
+  --code-token-tag: #{$mdn-theme-dark-code-token-tag};
+  --code-token-punctuation: #{$mdn-theme-dark-code-token-punctuation};
+  --code-token-attribute-name: #{$mdn-theme-dark-code-token-attribute-name};
+  --code-token-attribute-value: #{$mdn-theme-dark-code-token-attribute-value};
+  --code-token-comment: #{$mdn-theme-dark-code-token-comment};
+  --code-token-default: #{$mdn-theme-dark-code-token-default};
+  --code-token-selector: #{$mdn-theme-dark-code-token-selector};
+  --code-background-inline: #{$mdn-theme-dark-code-background-inline};
+  --code-background-block: #{$mdn-theme-dark-code-background-block};
+
+  --notecard-link-color: #{$mdn-color-neutral-10};
+
+  --scrollbar-bg: transparent;
+  --scrollbar-color: rgba(255, 255, 255, 0.25);
+
+  --category-color: #{$mdn-color-dark-theme-blue-30};
+  --category-color-background: #{$mdn-color-dark-theme-blue-30}70;
+  --code-color: #{$mdn-color-dark-theme-blue-20};
+  --mark-color: #{$mdn-color-dark-theme-blue-70};
+
+  --plus-accent-color: #{$mdn-color-dark-theme-red-30};
+  --html-accent-color: #{$mdn-color-dark-theme-red-40};
+  --css-accent-color: #{$mdn-color-dark-theme-blue-30};
+  --js-accent-color: #{$mdn-color-dark-theme-yellow-40};
+  --http-accent-color: #{$mdn-color-dark-theme-green-40};
+  --apis-accent-color: #{$mdn-color-dark-theme-violet-40};
+  --learn-accent-color: #{$mdn-color-dark-theme-pink-40};
+
+  --plus-code-color: #{$mdn-color-dark-theme-blue-20};
+  --html-code-color: #{$mdn-color-neutral-light-70};
+  --css-code-color: #{$mdn-color-dark-theme-blue-20};
+  --js-code-color: #{$mdn-color-dark-theme-yellow-30};
+  --http-code-color: #{$mdn-color-dark-theme-green-30};
+  --apis-code-color: #{$mdn-color-dark-theme-violet-30};
+  --learn-code-color: #{$mdn-color-dark-theme-pink-30};
+
+  --plus-mark-color: #{$mdn-color-dark-theme-red-70};
+  --html-mark-color: #{$mdn-color-dark-theme-red-70};
+  --css-mark-color: #{$mdn-color-dark-theme-blue-70};
+  --js-mark-color: #{$mdn-color-dark-theme-yellow-70};
+  --http-mark-color: #{$mdn-color-dark-theme-green-70};
+  --apis-mark-color: #{$mdn-color-dark-theme-violet-70};
+  --learn-mark-color: #{$mdn-color-dark-theme-pink-70};
+
+  --plus-accent-background-color: #{$mdn-color-light-theme-red-50}30;
+  --html-accent-background-color: #{$mdn-color-light-theme-red-50}30;
+  --css-accent-background-color: #{$mdn-color-light-theme-blue-50}30;
+  --js-accent-background-color: #{$mdn-color-light-theme-yellow-50}30;
+  --http-accent-background-color: #{$mdn-color-light-theme-green-50}30;
+  --apis-accent-background-color: #{$mdn-color-light-theme-violet-50}30;
+  --learn-accent-background-color: #{$mdn-color-light-theme-pink-50}30;
+
+  --plus-accent-engage: #{color.adjust(
+      $mdn-color-dark-theme-red-40,
+      $alpha: -0.3
+    )};
+  --html-accent-engage: #{color.adjust(
+      $mdn-color-dark-theme-red-40,
+      $alpha: -0.3
+    )};
+  --css-accent-engage: #{color.adjust(
+      $mdn-color-dark-theme-blue-30,
+      $alpha: -0.3
+    )};
+  --js-accent-engage: #{color.adjust(
+      $mdn-color-dark-theme-yellow-40,
+      $alpha: -0.3
+    )};
+  --http-accent-engage: #{color.adjust(
+      $mdn-color-dark-theme-green-40,
+      $alpha: -0.3
+    )};
+  --apis-accent-engage: #{color.adjust(
+      $mdn-color-dark-theme-violet-40,
+      $alpha: -0.3
+    )};
+  --learn-accent-engage: #{color.adjust(
+      $mdn-color-dark-theme-pink-40,
+      $alpha: -0.3
+    )};
+
+  --modal-backdrop-color: #{rgba($mdn-theme-dark-background-primary, 0.7)};
+  --blend-color: #{$mdn-color-black}80;
+
+  --text-primary-red: #{$mdn-color-dark-theme-red-30};
+  --text-primary-green: #{$mdn-color-dark-theme-green-30};
+  --text-primary-blue: #{$mdn-color-dark-theme-blue-30};
+  --text-primary-yellow: #{$mdn-color-dark-theme-yellow-30};
+}
+
+body,
+:root {
+  --mdn-color-white: #{$mdn-color-white};
+  --mdn-color-black: #{$mdn-color-black};
+  --mdn-color-dark-grey: #{$mdn-color-neutral-70};
+  --mdn-background-dark: #{$mdn-theme-dark-background-primary};
+  --mdn-background-light: #{$mdn-theme-light-background-primary};
+  --mdn-background-light-grey: #{$mdn-color-neutral-10};
+  --color-announcement-banner-accent: #{$mdn-color-light-theme-pink-40};
+}
+
+.light {
+  @include light-theme;
+}
+
+.dark {
+  @include dark-theme;
+}
+
+// OS Default.
+:root:not(.light):not(.dark) {
+  @media (prefers-color-scheme: light) {
+    @include light-theme;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    @include dark-theme;
+  }
+}

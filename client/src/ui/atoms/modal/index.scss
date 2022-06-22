@@ -1,0 +1,60 @@
+@use "../../vars" as *;
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: var(--modal-backdrop-color);
+  z-index: var(--z-index-top);
+}
+
+.modal-content {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: var(--background-primary);
+  overflow: auto;
+  -webkit-overflow-scrolling: touch;
+  outline: none;
+  z-index: var(--z-index-top);
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem 0.5rem 0.5rem 1rem;
+  border-bottom: 1px solid var(--border-secondary);
+}
+
+.modal-body {
+  padding: 1rem;
+}
+
+.modal-heading {
+  margin: 0;
+}
+
+@media screen and (min-width: $screen-md) {
+  .modal-content {
+    border: 1px solid var(--border-primary);
+    border-radius: var(--elem-radius);
+    width: 90vw;
+    max-width: 40rem;
+    height: fit-content;
+    top: 50%;
+    left: 50%;
+    bottom: auto;
+    right: auto;
+    transform: translate(-50%, -50%);
+    max-height: 90vh;
+
+    &.is-small {
+      max-width: 24rem;
+    }
+  }
+}
