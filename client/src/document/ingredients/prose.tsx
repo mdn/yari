@@ -1,4 +1,4 @@
-import { DisplayH2, DisplayH3 } from "./utils";
+import { DisplayHeading } from "./utils";
 
 export function Prose({ section }: { section: any }) {
   const { id } = section;
@@ -14,11 +14,10 @@ export function Prose({ section }: { section: any }) {
     return <Content />;
   }
 
-  const DisplayHx = section.isH3 ? DisplayH3 : DisplayH2;
-
   return (
     <section aria-labelledby={id}>
-      <DisplayHx
+      <DisplayHeading
+        level={isH4 ? 4 : isH3 ? 3 : 2}
         id={id}
         title={section.title}
         titleAsText={section.titleAsText}
