@@ -10,7 +10,6 @@
 
 const webRefData = require('@webref/css');
 const { definitionSyntax } = require('css-tree');
-const replaceAll = require('string.prototype.replaceall');
 
 const locale = env.locale;
 
@@ -125,8 +124,8 @@ function renderNode(name, node) {
     }
     case 'Type': {
       // encode < and >
-      let encoded = replaceAll(name, '<', '&lt;');
-      encoded = replaceAll(encoded, '>', '&gt;');
+      let encoded = name.replaceAll('<', '&lt;');
+      encoded = encoded.replaceAll('>', '&gt;');
       // add CSS class: we use "property" because there isn't one for types
       const span = `<span class="token property">${encoded}</span>`;
       // if this type is not included in the syntax, link to its dedicated page
@@ -134,8 +133,9 @@ function renderNode(name, node) {
         return span;
       } else {
         // the slug does not include the angle brackets
-        let slug = replaceAll(name, '<', '');
-        slug = replaceAll(slug, '>', '');
+        let slug = name.replaceAll('<', '');
+        slug = slug.replaceAll('>', '');
+        // also remove the range in square brackets, as in "<number [0,∞]>"
         slug = slug.replace(/\[.*\]/, '')
         return `<a href="/${locale}/docs/Web/CSS/${slug}">${span}</a>`;
       }
@@ -171,7 +171,7 @@ function renderNode(name, node) {
       if (node.combinator && (node.combinator !== ' ')) {
         const info = syntaxDescriptions[node.combinator];
         // note that we are replacing the combinator surrounded by spaces, like " | "
-        name = replaceAll(name, ` ${node.combinator} `, ` <a href="${valueDefinitionUrl}#${info.fragment}" title="${info.tooltip}">${node.combinator}</a> `);
+        name = name.replaceAll(` ${node.combinator} `, ` <a href="${valueDefinitionUrl}#${info.fragment}" title="${info.tooltip}">${node.combinator}</a> `);
       }
 
       return name;
