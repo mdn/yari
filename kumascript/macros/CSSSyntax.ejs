@@ -97,7 +97,6 @@ function getPropertySyntax(propertyName) {
   // 4) If we still have > 1 spec, assume that:
   // - one of them is the base spec, which defines `values`,
   // - the others define incremental additions as `newValues`
-  // Concatenate new values on to values to return a single syntax string
   let syntax = '';
   let newSyntaxes = '';
   for (const specName of specsForProp) {
@@ -109,6 +108,10 @@ function getPropertySyntax(propertyName) {
     if (newValues) {
       newSyntaxes += ` | ${newValues}`;
     }
+  }
+  // Concatenate new values on to values to return a single syntax string
+  if (newSyntaxes) {
+    syntax += newSyntaxes;
   }
   return syntax;
 }
