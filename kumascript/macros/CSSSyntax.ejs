@@ -109,7 +109,7 @@ function getPropertySyntax(propertyName) {
       newSyntaxes += ` | ${newValues}`;
     }
   }
-  // Concatenate new values on to values to return a single syntax string
+  // Concatenate newValues onto values to return a single syntax string
   if (newSyntaxes) {
     syntax += newSyntaxes;
   }
@@ -204,13 +204,18 @@ function renderTerms(terms, combinator) {
     });
   }
 
-  const maxTermLength = Math.max(...renderedTerms.map(t => t.length));
+  // we will space-pad all terms to the length of the longest term,
+  // so that lines are aligned, but padding must not cause lines to wrap,
+  // so the target width is clamped to the line length.
+  const maxLineLength = 50;
+  let maxTermLength = Math.max(...renderedTerms.map(t => t.length));
+  maxTermLength = Math.min(maxTermLength, maxLineLength);
 
   // write out the translated terms, padding with spaces for alignment
   // and separating terms using their combinator symbol
   for (let i = 0; i < renderedTerms.length; i++) {
     const termText = renderedTerms[i].text;
-    const spaceCount = (maxTermLength + 2) - renderedTerms[i].length;
+    const spaceCount = Math.max(2, (maxTermLength + 2) - renderedTerms[i].length);
     let combinatorText = '';
     if (combinator && combinator !== " ") {
       const info = syntaxDescriptions[combinator];
