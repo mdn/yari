@@ -8,12 +8,12 @@
  * with any of the files there.
  */
 
-const fs = require("fs");
-const fse = require("fs-extra");
-const path = require("path");
-const { execSync } = require("child_process");
+import fs from "fs";
+import fse from "fs-extra";
+import path from "path";
+import { execSync } from "child_process";
 
-const tempy = require("tempy");
+import tempy from "tempy";
 
 const CONTENT_DIR = path.resolve(path.join("testing", "content"));
 const BUILD_DIR = path.resolve(path.join("client", "build"));

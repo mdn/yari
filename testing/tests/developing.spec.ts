@@ -1,6 +1,8 @@
 const { test, expect } = require("@playwright/test");
 const got = require("got");
 
+export {};
+
 const DEV_BASE_URL =
   process.env.DEVELOPING_DEV_BASE_URL || "http://localhost:3000";
 
@@ -70,7 +72,7 @@ test.describe("Testing the kitchensink page", () => {
     ).json();
 
     expect(doc.title).toBe("The MDN Content Kitchensink");
-    expect(Object.keys(doc.flaws).length).toBe(0);
+    expect(doc.flaws).toEqual({});
   });
 
   // XXX Do more advanced tasks that test the server and document "CRUD operations"

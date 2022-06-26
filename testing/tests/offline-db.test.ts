@@ -1,6 +1,6 @@
-const fs = require("fs");
-const path = require("path");
-const crypto = require("crypto");
+import fs from "fs";
+import path from "path";
+import crypto from "crypto";
 
 test("db.ts should be identical (PWA vs. Client)", () => {
   function sha256sum(path) {

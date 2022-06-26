@@ -1,5 +1,7 @@
 const { test, expect } = require("@playwright/test");
 
+export {};
+
 function testURL(pathname = "/") {
   return "http://localhost:5042" + pathname;
 }

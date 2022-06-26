@@ -447,7 +447,7 @@ function CompatCell({
   onToggle,
   locale,
 }: {
-  browserId: BCD.BrowserNames;
+  browserId: BCD.BrowserName;
   browserInfo: BCD.BrowserStatement;
   support: BCD.SupportStatement | undefined;
   showNotes: boolean;
@@ -510,7 +510,7 @@ export const FeatureRow = React.memo(
       compat: CompatStatementExtended;
       depth: number;
     };
-    browsers: BCD.BrowserNames[];
+    browsers: BCD.BrowserName[];
     activeCell: number | null;
     onToggleCell: ([row, column]: [number, number]) => void;
     locale: string;

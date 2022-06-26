@@ -5,7 +5,7 @@ export const BrowserInfoContext = React.createContext<BCD.Browsers | null>(
   null
 );
 
-export function BrowserName({ id }: { id: BCD.BrowserNames }) {
+export function BrowserName({ id }: { id: BCD.BrowserName }) {
   const browserInfo = useContext(BrowserInfoContext);
   if (!browserInfo) {
     throw new Error("Missing browser info");

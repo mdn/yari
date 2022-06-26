@@ -8,10 +8,10 @@ import { PageNotFound } from "../page-not-found";
 import Notifications from "./notifications";
 import { MDN_PLUS_TITLE } from "../constants";
 import { OfflineSettings } from "../offline-settings";
+import PlusDocs from "./plus-docs";
 
 const OfferOverview = React.lazy(() => import("./offer-overview"));
 const Collections = React.lazy(() => import("./collections"));
-const PlusDocs = React.lazy(() => import("./plus-docs"));
 
 export function Plus({ pageTitle, ...props }: { pageTitle?: string }) {
   React.useEffect(() => {
@@ -26,11 +26,15 @@ export function Plus({ pageTitle, ...props }: { pageTitle?: string }) {
     />
   );
 
-  function Layout({ withoutContainer = false, children }) {
+  function Layout({ withoutContainer = false, withSSR = false, children }) {
     const inner = (
       <>
         {isServer ? (
-          loading
+          withSSR ? (
+            children
+          ) : (
+            loading
+          )
         ) : (
           <React.Suspense fallback={loading}>{children}</React.Suspense>
         )}
@@ -87,7 +91,7 @@ export function Plus({ pageTitle, ...props }: { pageTitle?: string }) {
       <Route
         path="docs/*"
         element={
-          <Layout withoutContainer>
+          <Layout withoutContainer withSSR={true}>
             <PlusDocs {...props} />
           </Layout>
         }
