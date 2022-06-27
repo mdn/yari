@@ -2,10 +2,10 @@ import { Quote } from "../ui/molecules/quote";
 import "./index.scss";
 
 const STATS = [
-  { number: "2005", legend: "year founded" },
-  { number: "45k", legend: "total contributors" },
-  { number: "200", legend: "commits per week" },
-  { number: ">95M", legend: "page views per month" },
+  { id: 1, number: "2005", legend: "year founded" },
+  { id: 2, number: "45k", legend: "total contributors" },
+  { id: 3, number: "200", legend: "commits per week" },
+  { id: 4, number: ">95M", legend: "page views per month" },
 ];
 
 export function Contribute() {
@@ -16,7 +16,7 @@ export function Contribute() {
           <h1>Community for a better Web</h1>
           <ul className="stats">
             {STATS.map((s) => (
-              <li>
+              <li key={s.id}>
                 <span className="number">{s.number}</span>
                 <span className="legend">{s.legend}</span>
               </li>
@@ -57,8 +57,7 @@ export function Contribute() {
         </p>
         <Quote
           name="Dan Appelquist"
-          title="Samsung Internet (charter member of the Product
-              Advisory Board)"
+          title="Samsung Internet (charter member of the Product Advisory Board)"
           extraClasses="pab dark"
         >
           MDN has a unique place right now as a vendor-neutral and authoritative
