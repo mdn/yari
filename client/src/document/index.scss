@@ -325,10 +325,13 @@ iframe {
   &[src*="https://test262.report"],
   &.nobutton,
   &.sample-code-frame {
-    background: #fff;
-    border: 1px solid var(--border-primary);
-    border-radius: var(--elem-radius);
     width: 100%;
+    background: #fff;
+    border: none;
+    border-radius: calc(var(--elem-radius) / 2);
+    outline: 1px solid var(--border-primary);
+    outline-offset: 0.25rem;
+    box-shadow: 0 0 1px 0.25rem #fff;
   }
 }
 
