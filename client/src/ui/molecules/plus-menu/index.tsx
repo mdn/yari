@@ -1,5 +1,5 @@
 import { useUserData } from "../../../user-context";
-import { useLocale } from "../../../hooks";
+import { useIsServer, useLocale } from "../../../hooks";
 
 import "./index.scss";
 import { usePlusUrl } from "../../../plus/utils";
@@ -11,6 +11,7 @@ export const PlusMenu = ({ visibleSubMenuId, toggleMenu }) => {
 
   const plusUrl = usePlusUrl();
 
+  const isServer = useIsServer();
   const isAuthenticated = userData && userData.isAuthenticated;
 
   const plusMenu = {
@@ -26,12 +27,12 @@ export const PlusMenu = ({ visibleSubMenuId, toggleMenu }) => {
         label: "Overview",
         url: plusUrl,
       },
-      ...(isAuthenticated
+      ...(!isServer && isAuthenticated
         ? [
             {
               description: "Your saved articles from across MDN",
               hasIcon: true,
-              iconClasses: "submenu-icon bookmarks-icon",
+              iconClasses: "submenu-icon",
               label: "Collections",
               url: `/${locale}/plus/collections`,
             },
