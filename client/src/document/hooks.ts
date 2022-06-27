@@ -146,8 +146,10 @@ export function useFrequentlyViewed(): [
       localStorage.getItem(FREQUENTLY_VIEWED_STORAGE_KEY) || "[]"
     ) as FrequentlyViewedEntry[];
     const newEntries: FrequentlyViewedEntry[] = [];
+    let index = 0;
     for (const entry of entries) {
       newEntries.push({
+        id: entry.id || index++,
         url: entry.url,
         title: entry.title,
         timestamp: entry.timestamp,
@@ -191,6 +193,7 @@ export function usePersistFrequentlyViewed(doc: Doc | undefined) {
     );
 
     const newEntry: FrequentlyViewedEntry = {
+      id: frequentlyViewed.length,
       url: doc.mdn_url,
       title: doc.title,
       parents: doc.parents,
