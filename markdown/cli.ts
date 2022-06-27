@@ -141,7 +141,7 @@ program
       console.log(
         `Starting HTML to Markdown conversion in ${options.mode} mode`
       );
-      let folderSearch = args.folder;
+      let folderSearch = args.folder + "/"; // add trailing slash to match folder only
       // replace '\' and '/' with '\\' to make this regexp works on Windows
       if (folderSearch && os.platform() === "win32") {
         folderSearch = folderSearch.replace(/\\|\//g, "\\\\");
@@ -162,14 +162,18 @@ program
         { offset: number; invalid: []; unhandled: [] }
       >();
       // replace '\' with '/' for Windows path
-      const slugPrefix = args.folder.toLowerCase().replace(/\\/g, "/");
+      const slugPrefix = args.folder.replace(/\\/g, "/");
       try {
         for (let doc of documents.iter()) {
           progressBar.increment();
           if (
             doc.isMarkdown ||
             // findAll's folderSearch is fuzzy which we don't want here
-            !doc.metadata.slug.toLowerCase().startsWith(slugPrefix)
+            !doc.fileInfo.folder
+              .split(/\\|\//) // split by '\' or '/'
+              .slice(1) // remove the locale
+              .join("/")
+              .startsWith(slugPrefix)
           ) {
             continue;
           }
