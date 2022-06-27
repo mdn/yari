@@ -165,17 +165,16 @@ program
         string,
         { offset: number; invalid: []; unhandled: [] }
       >();
-      const folderPrefix = folder?.slice(0, -1);
       try {
         for (let doc of documents.iter()) {
           progressBar.increment();
           if (
             doc.isMarkdown ||
             // findAll's folderSearch is fuzzy which we don't want here
-            (folderPrefix &&
-              !doc.fileInfo.folder
+            (folder &&
+              !(doc.fileInfo.folder + path.sep)
                 .slice(doc.fileInfo.folder.indexOf(path.sep) + 1)
-                .startsWith(folderPrefix))
+                .startsWith(folder))
           ) {
             continue;
           }
