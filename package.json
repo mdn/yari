@@ -100,7 +100,7 @@
     "imagemin-mozjpeg": "^9.0.0",
     "imagemin-pngquant": "^9.0.2",
     "imagemin-svgo": "^9.0.0",
-    "inquirer": "^8.2.4",
+    "inquirer": "^9.0.0",
     "is-svg": "^4.3.2",
     "js-yaml": "^4.1.0",
     "klaw-sync": "^6.0.0",
