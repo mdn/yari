@@ -78,6 +78,19 @@ function useSendCTAEventToGA() {
   };
 }
 
+function PrideBanner() {
+  const bannerId = BannerId.PRIDE_DAY_2022;
+
+  return (
+    <Banner id={bannerId} onDismissed={() => {}}>
+      <p className="mdn-cta-copy">
+        🏳️‍🌈 <span className="underlined">United</span> in <a href="/">love!</a>{" "}
+        🏳️‍🌈
+      </p>
+    </Banner>
+  );
+}
+
 function PlusLaunchAnnouncementBanner({
   onDismissed,
 }: {
@@ -141,6 +154,8 @@ export default function ActiveBanner({
   const userData = useUserData();
 
   switch (id) {
+    case BannerId.PRIDE_DAY_2022:
+      return <PrideBanner />;
     case BannerId.PLUS_LAUNCH_ANNOUNCEMENT:
       return (
         <>
