@@ -70,19 +70,19 @@ for (const spec of Object.values(parsedWebRef)) {
 }
 
 // get the property name from the page slug
-const propertyName = $0 || env.slug.split('/').pop().toLowerCase();
+let itemName = $0 || env.slug.split('/').pop().toLowerCase();
 
 /**
  * Get the formal syntax for a property from the webref data, given:
- * @param {string} propertyName - the name of the property
+ * @param {string} itemName - the name of the property
  * @param {object} parsedWebRef - the webref data
  */
-function getPropertySyntax(propertyName) {
+function getPropertySyntax(itemName) {
   // 1) get all specs which list this property
   let specsForProp = [];
   for (const [shortname, data] of Object.entries(parsedWebRef)) {
     const propNames = Object.keys(data.properties);
-    if (propNames.includes(propertyName)) {
+    if (propNames.includes(itemName)) {
       specsForProp.push(shortname);
     }
   }
@@ -92,7 +92,7 @@ function getPropertySyntax(propertyName) {
   }
   // 3) If we now have only one spec, return the syntax it lists
   if (specsForProp.length === 1) {
-    return parsedWebRef[specsForProp[0]].properties[propertyName].value;
+    return parsedWebRef[specsForProp[0]].properties[itemName].value;
   }
   // 4) If we still have > 1 spec, assume that:
   // - one of them is the base spec, which defines `values`,
@@ -100,11 +100,11 @@ function getPropertySyntax(propertyName) {
   let syntax = '';
   let newSyntaxes = '';
   for (const specName of specsForProp) {
-    const baseValue = parsedWebRef[specName].properties[propertyName].value;
+    const baseValue = parsedWebRef[specName].properties[itemName].value;
     if (baseValue) {
       syntax = baseValue;
     }
-    const newValues = parsedWebRef[specName].properties[propertyName].newValues;
+    const newValues = parsedWebRef[specName].properties[itemName].newValues;
     if (newValues) {
       newSyntaxes += ` | ${newValues}`;
     }
@@ -272,11 +272,11 @@ function getTypesForSyntaxes(syntaxes, constituents) {
  * Given an item (such as a CSS property), fetch all the types that participate
  * in its formal syntax definition, either directly or transitively.
  */
-function getConstituentTypes(propertySyntax) {
+function getConstituentTypes(itemSyntax) {
   const allConstituents = [];
   let oldConstituentsLength = 0;
   // get all the types in the top-level syntax
-  let constituentSyntaxes = [propertySyntax];
+  let constituentSyntaxes = [itemSyntax];
 
   // while an iteration added more types...
   while (true) {
@@ -304,18 +304,18 @@ function getConstituentTypes(propertySyntax) {
 /**
  * Write out the complete formal syntax for a property.
  *
- * This includes the property's own syntax, described in `propertySyntax`,
+ * This includes the property's own syntax, described in `itemSyntax`,
  * and also the syntax for any types that participate in the definition of
  * the property.
  */
-function writeFormalSyntax(propertySyntax) {
+function writeFormalSyntax(itemName, itemSyntax) {
   let output = '';
   output += '<pre>';
   // write the syntax for the property
-  output += renderSyntax(propertyName, propertySyntax);
+  output += renderSyntax(itemName, itemSyntax);
   output += '<br/>';
   // collect all the constituent types for the property
-  const types = getConstituentTypes(propertySyntax);
+  const types = getConstituentTypes(itemSyntax);
 
   // and write each one out
   for (const type of types) {
@@ -331,14 +331,30 @@ function writeFormalSyntax(propertySyntax) {
 
 let output = '';
 
-// get the syntax for this property
-const propertySyntax = getPropertySyntax(propertyName, parsedWebRef);
+let itemSyntax = '';
 
-if (!propertySyntax) {
+if (env.tags.includes("CSS Property")) {
+// get syntax for a CSS property
+itemSyntax = getPropertySyntax(itemName, parsedWebRef);
+} else if (env.tags.includes("CSS Data Type")) {
+// get syntax for a CSS type
+// some CSS type slugs have a `_value` suffix
+  if (itemName.endsWith("_value")) {
+    itemName = itemName.replace("_value", "");
+    console.log(itemName)
+  }
+// not all types have an entry in the syntax
+  if (valuespaces[`<${itemName}>`]) {
+    itemSyntax = valuespaces[`<${itemName}>`].value;
+    itemName = `&lt;${itemName}&gt;`;
+  }
+}
+
+if (!itemSyntax) {
   output = 'Error: could not find syntax for this item';
 } else {
   // write it out
-  output = writeFormalSyntax(propertySyntax);
+  output = writeFormalSyntax(itemName, itemSyntax);
 }
 %>
 <%-output%>
