@@ -97,6 +97,17 @@
 
   <body>
     <script>
+      document.body.addEventListener(
+        "load",
+        (e) => {
+          if (e.target.classList.contains("interactive")) {
+            e.target.setAttribute("data-readystate", "complete");
+          }
+        },
+        { capture: true }
+      );
+    </script>
+    <script>
       /**
        * If we modify this script, we must update the CSP hash as follows:
        * 1. Run `yarn build:client`
