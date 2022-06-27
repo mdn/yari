@@ -5,4 +5,5 @@ export enum BannerId {
   PLUS_IDv2 = "plus_banner_v2",
   REDESIGN_ANNOUNCEMENT = "redesign_announcement",
   PLUS_LAUNCH_ANNOUNCEMENT = "plus_launch_announcement",
+  PRIDE_DAY_2022 = "pride_day_2022",
 }
