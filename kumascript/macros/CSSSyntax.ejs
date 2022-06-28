@@ -101,14 +101,14 @@ function getNameAndSyntax() {
 
 /**
  * Get the formal syntax for a property from the webref data, given:
- * @param {string} itemName - the name of the property
+ * @param {string} propertyName - the name of the property
  */
-function getPropertySyntax(itemName) {
+function getPropertySyntax(propertyName) {
   // 1) get all specs which list this property
   let specsForProp = [];
   for (const [shortname, data] of Object.entries(parsedWebRef)) {
     const propNames = Object.keys(data.properties);
-    if (propNames.includes(itemName)) {
+    if (propNames.includes(propertyName)) {
       specsForProp.push(shortname);
     }
   }
@@ -118,7 +118,7 @@ function getPropertySyntax(itemName) {
   }
   // 3) If we now have only one spec, return the syntax it lists
   if (specsForProp.length === 1) {
-    return parsedWebRef[specsForProp[0]].properties[itemName].value;
+    return parsedWebRef[specsForProp[0]].properties[propertyName].value;
   }
   // 4) If we still have > 1 spec, assume that:
   // - one of them is the base spec, which defines `values`,
@@ -126,11 +126,11 @@ function getPropertySyntax(itemName) {
   let syntax = '';
   let newSyntaxes = '';
   for (const specName of specsForProp) {
-    const baseValue = parsedWebRef[specName].properties[itemName].value;
+    const baseValue = parsedWebRef[specName].properties[propertyName].value;
     if (baseValue) {
       syntax = baseValue;
     }
-    const newValues = parsedWebRef[specName].properties[itemName].newValues;
+    const newValues = parsedWebRef[specName].properties[propertyName].newValues;
     if (newValues) {
       newSyntaxes += ` | ${newValues}`;
     }
