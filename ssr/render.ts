@@ -67,16 +67,13 @@ const lazy = (creator) => {
 const clientBuildRoot = path.resolve(dirname, "../../client/build");
 
 const readBuildHTML = lazy(() => {
-  let html = fs.readFileSync(
-    path.join(clientBuildRoot, "index.html"),
-    "utf-8"
-  );
+  let html = fs.readFileSync(path.join(clientBuildRoot, "index.html"), "utf-8");
   if (!html.includes('<div id="root"></div>')) {
     throw new Error(
       'The render depends on being able to inject into <div id="root"></div>'
     );
   }
-  const scripts = [];
+  const scripts: String[] = [];
   const gaScriptPathName = getGAScriptPathName();
   if (gaScriptPathName) {
     scripts.push(`<script src="${gaScriptPathName}" defer=""></script>`);
@@ -111,7 +108,7 @@ const getGAScriptPathName = lazy((relPath = "/static/js/ga.js") => {
 });
 
 const extractWebFontURLs = lazy(() => {
-  const urls = [];
+  const urls: String[] = [];
   const manifest = JSON.parse(
     fs.readFileSync(path.join(clientBuildRoot, "asset-manifest.json"), "utf-8")
   );
@@ -171,7 +168,7 @@ export default function render(
   let escapedPageTitle = htmlEscape(pageTitle);
 
   const hydrationData: HydrationData = {};
-  const translations = [];
+  const translations: String[] = [];
   if (pageNotFound) {
     escapedPageTitle = `🤷🏽‍♀️ Page not found | ${escapedPageTitle}`;
     hydrationData.pageNotFound = true;
