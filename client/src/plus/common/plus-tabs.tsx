@@ -58,7 +58,7 @@ export function showMoreButton(setSelectAllChecked, setOffset, list: any[]) {
         type="primary"
         onClickHandler={() => {
           setSelectAllChecked(false);
-          setOffset((offset) => offset + list.length);
+          setOffset(list.length);
         }}
       >
         Show more
