@@ -69,13 +69,40 @@ for (const spec of Object.values(parsedWebRef)) {
   valuespaces = {...valuespaces, ...spec.valuespaces};
 }
 
-// get the property name from the page slug
-let itemName = $0 || env.slug.split('/').pop().toLowerCase();
+/**
+ * Get the formal syntax and properly formatted name for an item,
+ * depending on its type.
+ * Currently this supports properties and types
+ */
+function getNameAndSyntax() {
+  // get the item name from the page slug
+  let itemName = $0 || env.slug.split('/').pop().toLowerCase();
+  let itemSyntax;
+  if (env.tags.includes("CSS Property")) {
+  // get syntax for a CSS property
+    itemSyntax = getPropertySyntax(itemName, parsedWebRef);
+  } else if (env.tags.includes("CSS Data Type")) {
+  // get syntax for a CSS type
+    // some CSS type slugs have a `_value` suffix
+    if (itemName.endsWith("_value")) {
+      itemName = itemName.replace("_value", "");
+      console.log(itemName)
+    }
+    // not all types have an entry in the syntax
+    if (valuespaces[`<${itemName}>`]) {
+      itemSyntax = valuespaces[`<${itemName}>`].value;
+      itemName = `&lt;${itemName}&gt;`;
+    }
+  }
+  return {
+    name: itemName,
+    syntax: itemSyntax
+  }
+}
 
 /**
  * Get the formal syntax for a property from the webref data, given:
  * @param {string} itemName - the name of the property
- * @param {object} parsedWebRef - the webref data
  */
 function getPropertySyntax(itemName) {
   // 1) get all specs which list this property
@@ -331,30 +358,13 @@ function writeFormalSyntax(itemName, itemSyntax) {
 
 let output = '';
 
-let itemSyntax = '';
+const {name, syntax} = getNameAndSyntax();
 
-if (env.tags.includes("CSS Property")) {
-// get syntax for a CSS property
-itemSyntax = getPropertySyntax(itemName, parsedWebRef);
-} else if (env.tags.includes("CSS Data Type")) {
-// get syntax for a CSS type
-// some CSS type slugs have a `_value` suffix
-  if (itemName.endsWith("_value")) {
-    itemName = itemName.replace("_value", "");
-    console.log(itemName)
-  }
-// not all types have an entry in the syntax
-  if (valuespaces[`<${itemName}>`]) {
-    itemSyntax = valuespaces[`<${itemName}>`].value;
-    itemName = `&lt;${itemName}&gt;`;
-  }
-}
-
-if (!itemSyntax) {
+if (!syntax) {
   output = 'Error: could not find syntax for this item';
 } else {
   // write it out
-  output = writeFormalSyntax(itemName, itemSyntax);
+  output = writeFormalSyntax(name, syntax);
 }
 %>
 <%-output%>
