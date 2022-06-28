@@ -86,7 +86,6 @@ function getNameAndSyntax() {
     // some CSS type slugs have a `_value` suffix
     if (itemName.endsWith("_value")) {
       itemName = itemName.replace("_value", "");
-      console.log(itemName)
     }
     // not all types have an entry in the syntax
     if (valuespaces[`<${itemName}>`]) {
