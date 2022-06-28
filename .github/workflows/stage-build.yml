@@ -202,16 +202,22 @@ jobs:
           # Spread the work across 2 processes. Why 2? Because that's what you
           # get in the default GitHub hosting Linux runners.
           # See https://docs.github.com/en/actions/using-github-hosted-runners/about-github-hosted-runners#supported-runners-and-hardware-resources
-          yarn build --locale     en-us --locale     ja --locale     fr &
+          yarn build --locale en-us &
           build1=$!
-          yarn build --not-locale en-us --not-locale ja --not-locale fr &
+          yarn build --locale ja --locale fr &
           build2=$!
+          yarn build --locale ru --locale zh-cn --locale pt-br --locale es &
+          build3=$!
+          yarn build --not-locale en-us --not-locale ja --not-locale fr --not-locale ru --not-locale zh-cn --not-locale pt-br --not-locale es &
+          build4=$!
 
           # You must explicitly specify the job you're waiting-on to ensure
           # that the exit status of the wait command reflects the exit status
           # of the job it's waiting-on.
           wait $build1
           wait $build2
+          wait $build3
+          wait $build4
 
           du -sh client/build
 
