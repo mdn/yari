@@ -26,6 +26,7 @@ export type UserData = {
   geo: {
     country: string;
   };
+  maintenance?: string;
 };
 
 const UserDataContext = React.createContext<UserData | null>(null);
@@ -102,6 +103,7 @@ export function UserDataProvider(props: { children: React.ReactNode }) {
         geo: {
           country: (data.geo && data.geo.country) || DEFAULT_GEO_COUNTRY,
         },
+        maintenance: data.maintenance,
       };
     }
   );

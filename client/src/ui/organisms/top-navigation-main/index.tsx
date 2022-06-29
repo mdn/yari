@@ -12,6 +12,7 @@ import "./index.scss";
 import { PLUS_IS_ENABLED } from "../../../env";
 import { isPlusAvailable } from "../../../utils";
 import { ThemeSwitcher } from "../../molecules/theme-switcher";
+import Maintenance from "../../molecules/maintenance";
 
 export const TopNavigationMain = ({ isOpenOnMobile }) => {
   const userData = useUserData();
@@ -33,6 +34,7 @@ export const TopNavigationMain = ({ isOpenOnMobile }) => {
             <UserMenu />
           </>
         )) ||
+        (userData?.maintenance && <Maintenance />) ||
         (plusAvailable && <AuthContainer />) || <></>}
     </div>
   );
