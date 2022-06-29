@@ -70,9 +70,8 @@ for (const spec of Object.values(parsedWebRef)) {
 }
 
 /**
- * Get the formal syntax and properly formatted name for an item,
- * depending on its type.
- * Currently this supports properties and types
+ * Get the formal syntax and properly formatted name for an item.
+ * Currently we support CSS properties and CSS data types.
  */
 function getNameAndSyntax() {
   // get the item name from the page slug
@@ -82,8 +81,8 @@ function getNameAndSyntax() {
   // get syntax for a CSS property
     itemSyntax = getPropertySyntax(itemName, parsedWebRef);
   } else if (env.tags.includes("CSS Data Type")) {
-  // get syntax for a CSS type
-    // some CSS type slugs have a `_value` suffix
+  // get syntax for a CSS data type
+    // some CSS data type slugs have a `_value` suffix
     if (itemName.endsWith("_value")) {
       itemName = itemName.replace("_value", "");
     }
