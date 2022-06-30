@@ -96,10 +96,10 @@ function resolve(slug) {
 }
 
 function mdOrHtmlExists(filePath) {
-  const { dir, name } = path.parse(filePath);
+  const dir = path.dirname(filePath);
   return (
-    fs.existsSync(path.join(dir, name) + ".md") ||
-    fs.existsSync(path.join(dir, name) + ".html")
+    fs.existsSync(path.join(dir, MARKDOWN_FILENAME) ||
+    fs.existsSync(path.join(dir, HTML_FILENAME)
   );
 }
 
