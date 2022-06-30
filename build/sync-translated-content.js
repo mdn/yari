@@ -98,8 +98,8 @@ function resolve(slug) {
 function mdOrHtmlExists(filePath) {
   const dir = path.dirname(filePath);
   return (
-    fs.existsSync(path.join(dir, MARKDOWN_FILENAME) ||
-    fs.existsSync(path.join(dir, HTML_FILENAME)
+    fs.existsSync(path.join(dir, MARKDOWN_FILENAME)) ||
+    fs.existsSync(path.join(dir, HTML_FILENAME))
   );
 }
 
