@@ -35,6 +35,7 @@ const CONTENT_DEVELOPMENT_DOMAIN = ".content.dev.mdn.mozit.cloud";
 
 const REDIRECTS = require("./redirects.json");
 const REDIRECT_SUFFIXES = ["/index.json", "/bcd.json", ""];
+const FALLBACK_PATHS = new Set(require("./fallback-paths.json"));
 
 function redirect(location, { status = 302, cacheControlSeconds = 0 } = {}) {
   /*
@@ -227,7 +228,14 @@ exports.handler = async (event) => {
     // NOTE: The incoming URI should remain URI-encoded. However, it
     // must be passed to slugToFolder as decoded version to lowercase
     // non-ascii symbols and sanitize symbols like ":".
-    request.uri = encodePath(slugToFolder(decodedUri));
+    let filePath = slugToFolder(decodedUri);
+    // If the image file is not found in translated-content and
+    // exists in content, then fetch it from content.
+    // It's the same as the ssr mode.
+    if (FALLBACK_PATHS.has(filePath)) {
+      filePath = `/en-us/${filePath.slice(filePath.indexOf("/docs/") + 1)}`;
+    }
+    request.uri = encodePath(filePath);
     // Rewrite the HOST header to match the S3 bucket website domain.
     // This is required only because we're using S3 as a website, which
     // we need in order to do redirects from S3. NOTE: The origin is
