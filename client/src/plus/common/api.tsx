@@ -10,9 +10,9 @@ export const STRIPE_PLANS_PATH = "/api/v1/stripe/plans";
 export const NOTIFICATIONS_MARK_ALL_AS_READ_PATH = `${NOTIFICATIONS_BASE_PATH}/all/mark-as-read/`;
 const DEFAULT_LIMIT = 20;
 
-export async function markNotificationsAsRead(body: FormData) {
+export async function markNotificationsAsRead(formData: FormData) {
   return fetch(NOTIFICATIONS_MARK_ALL_AS_READ_PATH, {
-    body: body,
+    body: new URLSearchParams([...(formData as any)]),
     method: "POST",
   });
 }
@@ -92,13 +92,20 @@ export function useNotificationsApiEndpoint(
         setIsLoading(false);
         return;
       } else {
-        let data = await response.json();
-        if (data.items.length < DEFAULT_LIMIT) {
+        let newData = await response.json();
+        if (newData.items.length < DEFAULT_LIMIT) {
           setHasMore(false);
         } else {
           setHasMore(true);
         }
-        setData(data);
+        setData({
+          ...newData,
+          offset,
+          searchTerms,
+          selectedFilter,
+          selectedSort,
+          starred,
+        });
         setIsLoading(false);
         setError(null);
       }
@@ -139,17 +146,23 @@ export function useWatchedItemsApiEndpoint(
         setIsLoading(false);
         return;
       } else {
-        let data = await response.json();
+        let newData = await response.json();
         //We'll set an artificial id field here to make it share interface with notifications
-        data.items = data.items.map((item) => {
+        newData.items = newData.items.map((item) => {
           return { ...item, id: item.url };
         });
-        if (data.items.length < DEFAULT_LIMIT) {
+        if (newData.items.length < DEFAULT_LIMIT) {
           setHasMore(false);
         } else {
           setHasMore(true);
         }
-        setData(data);
+        setData({
+          ...newData,
+          offset,
+          searchTerms,
+          selectedFilter,
+          selectedSort,
+        });
         setIsLoading(false);
         setError(null);
       }
@@ -183,7 +196,7 @@ export async function updateDeleteCollectionItem(
   formData.append("delete", shouldDelete.toString());
   const res = await fetch(`${COLLECTION_BASE_PATH}/?url=${item.url}`, {
     method: "POST",
-    body: formData,
+    body: new URLSearchParams([...(formData as any)]),
     headers: {
       "X-CSRFToken": csrftoken,
     },
@@ -223,13 +236,19 @@ export function useCollectionsApiEndpoint(
         setHasMore(false);
         return;
       } else {
-        let data = await response.json();
-        if (data.items.length < DEFAULT_LIMIT) {
+        let newData = await response.json();
+        if (newData.items.length < DEFAULT_LIMIT) {
           setHasMore(false);
         } else {
           setHasMore(true);
         }
-        setData(data);
+        setData({
+          ...newData,
+          offset,
+          searchTerms,
+          selectedFilter,
+          selectedSort,
+        });
         setIsLoading(false);
         setError(null);
       }
