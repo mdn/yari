@@ -150,7 +150,7 @@
     "@types/react": "^18.0.14",
     "@types/react-dom": "^18.0.3",
     "@types/react-modal": "^3.13.1",
-    "@typescript-eslint/eslint-plugin": "^5.30.0",
+    "@typescript-eslint/eslint-plugin": "^5.30.5",
     "@typescript-eslint/parser": "^5.30.5",
     "babel-jest": "^28.1.1",
     "babel-loader": "^8.2.3",
