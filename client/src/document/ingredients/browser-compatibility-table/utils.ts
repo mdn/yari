@@ -106,7 +106,9 @@ export function isOnlySupportedWithAltName(
   return (
     support &&
     getFirst(support).alternative_name &&
-    !asList(support).some((item) => isFullySupportedWithoutLimitation(item))
+    !asList(support).some((item) =>
+      isFullySupportedWithoutMajorLimitation(item)
+    )
   );
 }
 
@@ -116,7 +118,9 @@ export function isOnlySupportedWithPrefix(
   return (
     support &&
     getFirst(support).prefix &&
-    !asList(support).some((item) => isFullySupportedWithoutLimitation(item))
+    !asList(support).some((item) =>
+      isFullySupportedWithoutMajorLimitation(item)
+    )
   );
 }
 
@@ -126,7 +130,9 @@ export function isOnlySupportedWithFlags(
   return (
     support &&
     getFirst(support).flags &&
-    !asList(support).some((item) => isFullySupportedWithoutLimitation(item))
+    !asList(support).some((item) =>
+      isFullySupportedWithoutMajorLimitation(item)
+    )
   );
 }
 
