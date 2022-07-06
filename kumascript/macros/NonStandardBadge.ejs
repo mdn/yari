@@ -1,18 +1,16 @@
 <%
 /* Inserts a badge indicating a term or API is non-standard.
 
-    Parameters:
-        $0  If specified and non-zero, a small badge is displayed.
+    Parameters: none
 
 */
 
-var titleAttrValue = mdn.localString({
-    "fr": "Cette API n'a pas été standardisée.",
-    "ja": "この API は標準化されていません。",
-    "ru": "Это API не было стандартизировано.",
-    "en-US": "This API has not been standardized."
+var title = mdn.localString({
+    "en-US": "Non-standard. Check cross-browser support before using.",
+    "zh-CN": "非标准的。请在使用前检查跨浏览器支持。",
+    "zh-TW": "非標準的。請在使用前檢查跨瀏覽器支援。"
 });
 %>
-<abbr class="icon icon-nonstandard" title="Non-standard. Check cross-browser support before using.">
+<abbr class="icon icon-nonstandard" title="<%= title %>">
     <span class="visually-hidden">Non-Standard</span>
 </abbr>
