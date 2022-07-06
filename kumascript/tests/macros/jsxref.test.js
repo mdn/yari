@@ -163,6 +163,7 @@ describeMacro("jsxref", function () {
 
       macro.ctx.info.getPageByURL = jest.fn((url) => {
         url = getPathname(url);
+        url = url.replace("/en-US/docs/", "/ru/docs/");
         if (url === glob_url) {
           return {
             url: glob_url,
