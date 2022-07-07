@@ -8,25 +8,38 @@ const cliProgress = require("cli-progress");
 const program = require("@caporal/core").default;
 import { prompt } from "inquirer";
 
-const { Document, slugToFolder, translationsOf } = require("../content");
+import { Document, slugToFolder, translationsOf } from "../content";
 const { CONTENT_ROOT, CONTENT_TRANSLATED_ROOT } = require("../libs/env");
 const { VALID_LOCALES } = require("../libs/constants");
 // eslint-disable-next-line node/no-missing-require
 const { renderHTML } = require("../ssr/dist/main");
 const { default: options } = require("./build-options");
 import { buildDocument, BuiltDocument, renderContributorsTxt } from ".";
+import { Flaws } from "../libs/types";
+import * as bcd from "@mdn/browser-compat-data/types";
 import SearchIndex from "./search-index";
 const { BUILD_OUT_ROOT } = require("../libs/env");
 const { makeSitemapXML, makeSitemapIndexXML } = require("./sitemaps");
 const { humanFileSize } = require("./utils");
 
+export type DocumentBuild = SkippedDocumentBuild | InteractiveDocumentBuild;
+
+export interface SkippedDocumentBuild {
+  doc: {};
+  skip: true;
+}
+
+export interface InteractiveDocumentBuild {
+  document: any;
+  doc: BuiltDocument;
+  skip: false;
+}
+
 async function buildDocumentInteractive(
   documentPath,
   interactive,
   invalidate = false
-): Promise<
-  { doc: {}; skip: true } | { document: any; doc: BuiltDocument; skip: false }
-> {
+): Promise<SkippedDocumentBuild | InteractiveDocumentBuild> {
   try {
     const document = invalidate
       ? Document.read(documentPath, Document.MEMOIZE_INVALIDATE)
@@ -74,13 +87,25 @@ async function buildDocumentInteractive(
   }
 }
 
+export interface BuiltDocuments {
+  slugPerLocale: Record<
+    string,
+    {
+      slug: string;
+      modified: string;
+    }[]
+  >;
+  peakHeapBytes: number;
+  totalFlaws: any;
+}
+
 async function buildDocuments(
   files = null,
   quiet = false,
   interactive = false,
   noHTML = false,
   locales = new Map()
-) {
+): Promise<BuiltDocuments> {
   // If a list of files was set, it came from the CLI.
   // Override whatever was in the build options.
   const findAllOptions = Object.assign({}, options, { locales });
@@ -104,15 +129,15 @@ async function buildDocuments(
   let peakHeapBytes = 0;
 
   // For keeping track of the total counts of flaws
-  const totalFlaws = new Map();
+  const totalFlaws = new Map<string, number>();
 
-  function appendTotalFlaws(flaws) {
+  function appendTotalFlaws(flaws: Partial<Flaws>) {
     for (const [key, actualFlaws] of Object.entries(flaws)) {
       const count = actualFlaws.length;
       if (!totalFlaws.has(key)) {
         totalFlaws.set(key, 0);
       }
-      totalFlaws.set(key, totalFlaws.get(key) + count);
+      totalFlaws.set(key, (totalFlaws.get(key) as number) + count);
     }
   }
 
@@ -120,15 +145,22 @@ async function buildDocuments(
     progressBar.start(documents.count);
   }
 
-  for (const documentPath of documents.iter(true)) {
+  for (const documentPath of documents.iter({
+    pathOnly: true,
+  }) as Iterable<string>) {
+    const result = await buildDocumentInteractive(documentPath, interactive);
+
+    const isSkippedDocumentBuild = (result): result is SkippedDocumentBuild =>
+      result.skip !== false;
+
+    if (isSkippedDocumentBuild(result)) {
+      continue;
+    }
+
     const {
       doc: { doc: builtDocument, liveSamples, fileAttachments, bcdData },
       document,
-      skip,
-    } = await buildDocumentInteractive(documentPath, interactive);
-    if (skip) {
-      continue;
-    }
+    } = result;
 
     const outPath = path.join(BUILD_OUT_ROOT, slugToFolder(document.url));
     fs.mkdirSync(outPath, { recursive: true });
@@ -169,7 +201,9 @@ async function buildDocuments(
           // Therefore, we strip out all "retired" releases.
           if (key === "releases") {
             return Object.fromEntries(
-              Object.entries(value).filter(([, v]) => v.status !== "retired")
+              Object.entries(value as bcd.ReleaseStatement).filter(
+                ([, v]) => v.status !== "retired"
+              )
             );
           }
           return value;
@@ -218,6 +252,7 @@ async function buildDocuments(
     progressBar.stop();
   }
 
+  const sitemapsBuilt: string[] = [];
   for (const [locale, docs] of Object.entries(docPerLocale)) {
     const sitemapDir = path.join(
       BUILD_OUT_ROOT,
@@ -377,7 +412,7 @@ program
         (a, b) => a + b.length,
         0
       );
-      const seconds = (t1 - t0) / 1000;
+      const seconds = (t1.getTime() - t0.getTime()) / 1000;
       const took =
         seconds > 60
           ? `${(seconds / 60).toFixed(1)} minutes`

@@ -1,6 +1,6 @@
 // Note! This is copied verbatim from stumptown-content
 
-const bcd = require("@mdn/browser-compat-data");
+import bcd from "@mdn/browser-compat-data";
 
 export function packageBCD(query) {
   const data = query.split(".").reduce((prev, curr) => {
