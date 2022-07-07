@@ -5,10 +5,10 @@
  * You can read more about it in the docs/proxying.md document.
  */
 
-const fs = require("fs");
-const path = require("path");
+import fs from "fs";
+import path from "path";
 
-const express = require("express");
+import express from "express";
 
 const router = express();
 
@@ -22,7 +22,7 @@ router.get("*", (req, res) => {
   const filepath = path.join(folder, `${req.url.slice(1)}.json`);
 
   if (fs.existsSync(filepath)) {
-    const payload = fs.readFileSync(filepath);
+    const payload = fs.readFileSync(filepath, "utf-8");
     res.json(JSON.parse(payload));
   } else {
     console.warn(`Tried to fake ${req.url} but ${filepath} doesn't exist.`);

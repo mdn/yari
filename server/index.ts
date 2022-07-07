@@ -34,7 +34,7 @@ import { router as translationsRouter } from "./translations";
 import { staticMiddlewares, originRequestMiddleware } from "./middlewares";
 import { getRoot } from "../content/utils";
 
-const { renderHTML } = require("../ssr/dist/main");
+import { renderHTML } from "../ssr/dist/main";
 
 async function buildDocumentFromURL(url) {
   const document = Document.findByURL(url);

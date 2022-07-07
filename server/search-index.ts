@@ -1,12 +1,17 @@
-const fs = require("fs");
-const path = require("path");
+import fs from "fs";
+import path from "path";
 
-const { fdir } = require("fdir");
-const fm = require("front-matter");
+import { fdir, PathsOutput } from "fdir";
+import fm from "front-matter";
 
-const { VALID_LOCALES } = require("../libs/constants");
-const { CONTENT_ROOT, CONTENT_TRANSLATED_ROOT } = require("../libs/env");
-const { SearchIndex } = require("../build");
+import { VALID_LOCALES } from "../libs/constants";
+import { CONTENT_ROOT, CONTENT_TRANSLATED_ROOT } from "../libs/env";
+import { SearchIndex } from "../build";
+
+interface DocAttributes {
+  locale: string;
+  slug: string;
+}
 
 function populateSearchIndex(searchIndex, localeLC) {
   const root = path.join(
@@ -15,12 +20,12 @@ function populateSearchIndex(searchIndex, localeLC) {
   );
   const locale = VALID_LOCALES.get(localeLC);
   const api = new fdir().withFullPaths().withErrors().crawl(root);
-  for (const filePath of api.sync()) {
+  for (const filePath of api.sync() as PathsOutput) {
     if (!(filePath.endsWith("index.html") || filePath.endsWith("index.md"))) {
       continue;
     }
     const rawContent = fs.readFileSync(filePath, "utf-8");
-    const { attributes: metadata } = fm(rawContent);
+    const { attributes: metadata } = fm<DocAttributes>(rawContent);
     metadata.locale = locale;
 
     const url = `/${locale}/docs/${metadata.slug}`;

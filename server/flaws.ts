@@ -1,16 +1,16 @@
 import { Doc } from "../client/src/document/types";
 import { FlawFilters } from "./types";
 
-const fs = require("fs");
-const path = require("path");
+import fs from "fs";
+import path from "path";
 
-const { fdir } = require("fdir");
+import { fdir, PathsOutput } from "fdir";
 
-const { getPopularities } = require("../content");
-const { options: buildOptions } = require("../build");
+import { getPopularities } from "../content";
+import { options as buildOptions } from "../build";
 
-const { FLAW_LEVELS } = require("../libs/constants");
-const { BUILD_OUT_ROOT } = require("../libs/env");
+import { FLAW_LEVELS } from "../libs/constants";
+import { BUILD_OUT_ROOT } from "../libs/env";
 
 // Module-level cache
 const allPopularityValues = [];
@@ -223,8 +223,10 @@ export default (req, res) => {
       return filePath.endsWith("index.json");
     })
     .crawl(path.join(BUILD_OUT_ROOT, locale));
-  for (const filePath of api.sync()) {
-    const { doc } = JSON.parse(fs.readFileSync(filePath)) as { doc: Doc };
+  for (const filePath of api.sync() as PathsOutput) {
+    const { doc } = JSON.parse(fs.readFileSync(filePath, "utf-8")) as {
+      doc: Doc;
+    };
 
     // The home page, for example, also uses a `index.json` but it doesn't have
     // flaws, so let's not count it if it doesn't have a `doc` key.

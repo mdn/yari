@@ -1,11 +1,11 @@
-const fs = require("fs");
-const path = require("path");
+import fs from "fs";
+import path from "path";
 
-const express = require("express");
+import express, { Request } from "express";
 
-const { Document, slugToFolder } = require("../content");
-const { buildDocument } = require("../build");
-const { BUILD_OUT_ROOT } = require("../libs/env");
+import { Document, slugToFolder } from "../content";
+import { buildDocument } from "../build";
+import { BUILD_OUT_ROOT } from "../libs/env";
 
 const router = express();
 
@@ -16,11 +16,15 @@ const router = express();
 //   res.sendStatus(201);
 // });
 
-function withDocument(req, res, next) {
+interface RequestWithDocument extends Request {
+  document: Document;
+}
+
+function withDocument(req: RequestWithDocument, res, next) {
   if (!req.query.url) {
     return res.status(400).send("No ?url= query param");
   }
-  const document = Document.findByURL(req.query.url.toLowerCase());
+  const document = Document.findByURL((req.query.url as string).toLowerCase());
   if (!document) {
     return res.status(404).send(`No document by the URL ${req.query.url}`);
   }
@@ -28,40 +32,44 @@ function withDocument(req, res, next) {
   next();
 }
 
-router.put("/fixfixableflaws", withDocument, async (req, res) => {
-  // To get the 'doc' we have to find the built art
-  try {
-    await buildDocument(req.document, {
-      fixFlaws: true,
-      fixFlawsVerbose: true,
-    });
-  } catch (error) {
-    console.error(`Error in buildDocument(${req.document.url})`, error);
-    return res.status(500).send(error.toString());
-  }
+router.put(
+  "/fixfixableflaws",
+  withDocument,
+  async (req: RequestWithDocument, res) => {
+    // To get the 'doc' we have to find the built art
+    try {
+      await buildDocument(req.document, {
+        fixFlaws: true,
+        fixFlawsVerbose: true,
+      });
+    } catch (error) {
+      console.error(`Error in buildDocument(${req.document.url})`, error);
+      return res.status(500).send(error.toString());
+    }
 
-  // Just because you *build* document, doesn't mean it writes the new
-  // built content to disk. So, if *was* already built, with all the flaws
-  // in place, it won't be written to disk until you use the build CLI next.
-  // Also, when viewing documents it will fetch the `./index.json` on the
-  // fly and if it's already present on disk it won't refresh from the
-  // server dynamically. So, delete any possible copies of this from disk.
-  const outPath = path.join(BUILD_OUT_ROOT, slugToFolder(req.document.url));
-  if (fs.existsSync(path.join(outPath, "index.html"))) {
-    fs.unlinkSync(path.join(outPath, "index.html"));
-  }
-  if (fs.existsSync(path.join(outPath, "index.json"))) {
-    fs.unlinkSync(path.join(outPath, "index.json"));
-  }
+    // Just because you *build* document, doesn't mean it writes the new
+    // built content to disk. So, if *was* already built, with all the flaws
+    // in place, it won't be written to disk until you use the build CLI next.
+    // Also, when viewing documents it will fetch the `./index.json` on the
+    // fly and if it's already present on disk it won't refresh from the
+    // server dynamically. So, delete any possible copies of this from disk.
+    const outPath = path.join(BUILD_OUT_ROOT, slugToFolder(req.document.url));
+    if (fs.existsSync(path.join(outPath, "index.html"))) {
+      fs.unlinkSync(path.join(outPath, "index.html"));
+    }
+    if (fs.existsSync(path.join(outPath, "index.json"))) {
+      fs.unlinkSync(path.join(outPath, "index.json"));
+    }
 
-  res.sendStatus(200);
-});
+    res.sendStatus(200);
+  }
+);
 
-router.get("/", withDocument, (req, res) => {
+router.get("/", withDocument, (req: RequestWithDocument, res) => {
   res.json(req.document);
 });
 
-router.put("/", withDocument, async (req, res) => {
+router.put("/", withDocument, async (req: RequestWithDocument, res) => {
   const { rawBody, metadata } = req.body;
   if (metadata.title && rawBody) {
     Document.update(req.document.url, `${rawBody.trim()}\n`, metadata);
