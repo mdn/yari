@@ -1,10 +1,15 @@
 import { Doc, Flaws, LanguageItem } from "../libs/types";
-
 const fs = require("fs");
 const path = require("path");
 
 const chalk = require("chalk");
 import * as cheerio from "cheerio";
+import {
+  MacroDeprecatedError,
+  MacroLiveSampleError,
+  MacroRedirectedLinkError,
+  SourceCodeError,
+} from "../kumascript/src/errors";
 
 const { Document, Image, execGit } = require("../content");
 const { CONTENT_ROOT, REPOSITORY_URLS } = require("../libs/env");
@@ -19,7 +24,7 @@ const {
 export { default as SearchIndex } from "./search-index";
 const { addBreadcrumbData } = require("./document-utils");
 const { fixFixableFlaws, injectFlaws, injectSectionFlaws } = require("./flaws");
-const { normalizeBCDURLs, extractBCDData } = require("./bcd-urls");
+import { normalizeBCDURLs, extractBCDData, BCDData } from "./bcd-urls";
 const { checkImageReferences, checkImageWidths } = require("./check-images");
 const { getPageTitle } = require("./page-title");
 const { syntaxHighlight } = require("./syntax-highlight");
@@ -294,7 +299,10 @@ export interface BuiltDocument {
   doc: Doc;
   liveSamples: any;
   fileAttachments: any;
-  bcdData: any;
+  bcdData: BCDData[];
+  source?: {
+    github_url: string;
+  };
 }
 
 export async function buildDocument(
@@ -320,9 +328,14 @@ export async function buildDocument(
     flaws: {},
   } as Partial<ExtendedDoc>;
 
-  let flaws = [];
+  interface LiveSample {
+    id: string;
+    html: string;
+  }
+
+  let flaws: any[] = [];
   let renderedHtml = "";
-  const liveSamples = [];
+  const liveSamples: LiveSample[] = [];
 
   if (options.clearKumascriptRenderCache) {
     renderKumascriptCache.clear();
@@ -422,20 +435,24 @@ export async function buildDocument(
       // The 'flaws' array don't have everything we need from the
       // kumascript rendering, so we "beef it up" to have convenient
       // attributes needed.
-      doc.flaws.macros = flaws.map((flaw, i) => {
+      doc.flaws = doc.flaws ?? {};
+      doc.flaws.macros = flaws.map((flaw: any, i) => {
         let fixable = false;
-        let suggestion = null;
+        let suggestion: string | null = null;
         if (flaw.name === "MacroDeprecatedError") {
           fixable = true;
           suggestion = "";
         } else if (
           flaw.name === "MacroRedirectedLinkError" &&
-          (!flaw.filepath || flaw.filepath === document.fileInfo.path)
+          (!(flaw as MacroRedirectedLinkError).filepath ||
+            (flaw as MacroRedirectedLinkError).filepath ===
+              document.fileInfo.path)
         ) {
           fixable = true;
-          suggestion = flaw.macroSource.replace(
-            flaw.redirectInfo.current,
-            flaw.redirectInfo.suggested
+          suggestion = (flaw as MacroRedirectedLinkError).macroSource.replace(
+            (flaw as MacroRedirectedLinkError).redirectInfo.current,
+
+            (flaw as MacroRedirectedLinkError).redirectInfo.suggested
           );
         }
         const id = `macro${i}`;
@@ -469,8 +486,8 @@ export async function buildDocument(
 
   doc.title = metadata.title || "";
   doc.mdn_url = document.url;
-  doc.locale = metadata.locale;
-  doc.native = LANGUAGES.get(doc.locale.toLowerCase()).native;
+  doc.locale = metadata.locale as string;
+  doc.native = LANGUAGES.get(doc.locale.toLowerCase())?.native;
 
   // If the document contains <math> HTML, it will set `doc.hasMathML=true`.
   // The client (<Document/> component) needs to know this for loading polyfills.
@@ -587,9 +604,9 @@ export async function buildDocument(
 
   // Creates new mdn_url's for the browser-compatibility-table to link to
   // pages within this project rather than use the absolute URLs
-  normalizeBCDURLs(doc, options);
+  normalizeBCDURLs(doc as Doc, options);
 
-  const bcdData = extractBCDData(doc);
+  const bcdData = extractBCDData(doc as Doc);
 
   // If the document has a `.popularity` make sure don't bother with too
   // many significant figures on it.
@@ -611,7 +628,7 @@ export async function buildDocument(
       otherTranslations.push({
         locale: "en-US",
         title: translationOf.metadata.title,
-        native: LANGUAGES.get("en-us").native,
+        native: LANGUAGES.get("en-us")?.native,
       });
     }
   }
@@ -639,6 +656,12 @@ export async function buildDocument(
   return { doc: doc as Doc, liveSamples, fileAttachments, bcdData };
 }
 
+interface BuiltLiveSamplePage {
+  id: string;
+  html: string | null;
+  flaw: MacroLiveSampleError | null;
+}
+
 export async function buildLiveSamplePageFromURL(url) {
   // The 'url' is expected to be something
   // like '/en-us/docs/foo/bar/_sample_.myid.html' and from that we want to
@@ -652,14 +675,14 @@ export async function buildLiveSamplePageFromURL(url) {
   if (!document) {
     throw new Error(`No document found for ${documentURL}`);
   }
-  const liveSamplePage = kumascript
-    .buildLiveSamplePages(
+  const liveSamplePage = (
+    kumascript.buildLiveSamplePages(
       document.url,
       document.metadata.title,
       (await kumascript.render(document.url))[0],
       document.rawBody
-    )
-    .find((page) => page.id.toLowerCase() == decodedSampleID);
+    ) as BuiltLiveSamplePage[]
+  ).find((page) => page.id.toLowerCase() == decodedSampleID);
 
   if (liveSamplePage) {
     if (liveSamplePage.flaw) {
@@ -677,8 +700,8 @@ export async function buildLiveSamplePageFromURL(url) {
 // Someday, this function might change if we decide to include the list
 // of GitHub usernames that have contributed to it since it moved to GitHub.
 export function renderContributorsTxt(
-  wikiContributorNames = null,
-  githubURL = null
+  wikiContributorNames: string[] | null = null,
+  githubURL: string | null = null
 ) {
   let txt = "";
   if (githubURL) {

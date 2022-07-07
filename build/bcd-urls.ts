@@ -1,6 +1,6 @@
 const { Document, Redirect } = require("../content");
 const { FLAW_LEVELS } = require("../libs/constants");
-import { CompatStatementExtended, Doc } from "../libs/types";
+import { BCDSection, CompatStatementExtended, Doc } from "../libs/types";
 
 /**
  * Loop over, and mutate, all 'browser_compatibility' sections.
@@ -69,7 +69,7 @@ export function normalizeBCDURLs(doc: Doc, options) {
       // so mdn_url is accessible at the root. If the block has a key for
       // `__compat` it is not the first block, and the information is nested
       // under `__compat`.
-      const block = data.__compat ? data.__compat : data;
+      const block = "__compat" in data ? data.__compat : data;
 
       const isCompatStatement = (value): value is CompatStatementExtended =>
         !!value.mdn_url;
@@ -119,13 +119,18 @@ export function normalizeBCDURLs(doc: Doc, options) {
   }
 }
 
+export interface BCDData {
+  url: string;
+  data: BCDSection["value"];
+}
+
 /**
  * Return an array of BCD data blocks like [{url: ..., data: ...},]
  * for each BCD section in the doc and mutate it from the doc itself.
  * @param {Doc} doc
  */
-export function extractBCDData(doc) {
-  const data = [];
+export function extractBCDData(doc: Doc) {
+  const data: BCDData[] = [];
   let nextId = 0;
   for (const section of doc.body) {
     if (section.type === "browser_compatibility") {

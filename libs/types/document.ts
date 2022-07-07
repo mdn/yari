@@ -73,6 +73,7 @@ export interface MacroErrorMessage extends GenericFlaw {
   name: string;
   error: {
     path?: string;
+    message?: string;
   };
   errorStack: string;
   explanation: string;
@@ -153,6 +154,7 @@ export interface Doc {
   summary: string;
   // Used for search.
   popularity?: number;
+  noIndexing?: boolean;
 }
 
 export type Section = ProseSection | SpecificationsSection | BCDSection;
@@ -187,9 +189,10 @@ export interface BCDSection {
     id: string;
     title: string;
     isH3: boolean;
-    data: BCD.Identifier;
+    data?: BCD.Identifier | null;
+    dataURL?: string;
     query: string;
-    browsers: BCD.Browsers;
+    browsers?: BCD.Browsers | null;
   };
 }
 

@@ -7,6 +7,7 @@ import {
   Section,
   SpecificationsSection,
 } from "../libs/types";
+import { BuiltDocument } from ".";
 const specs = require("browser-specs");
 const web = require("../kumascript/src/api/web");
 
@@ -46,8 +47,8 @@ export function extractSidebar($: cheerio.Root) {
 }
 
 export function extractSections($: cheerio.Root) {
-  const flaws = [];
-  const sections = [];
+  const flaws: string[] = [];
+  const sections: Section[] = [];
   const section = cheerio
     .load("<div></div>", {
       // decodeEntities: false
@@ -55,7 +56,7 @@ export function extractSections($: cheerio.Root) {
     .eq(0);
 
   const body = $("#_body")[0] as cheerio.TagElement;
-  const iterable = [...body.childNodes].filter(
+  const iterable = [...(body.childNodes as cheerio.Element[])].filter(
     (child): child is cheerio.TagElement => child.type != "text"
   );
 
@@ -201,7 +202,7 @@ export function extractSections($: cheerio.Root) {
  *   }]
  */
 function addSections($: cheerio.Cheerio): SectionsAndFlaws {
-  const flaws = [];
+  const flaws: string[] = [];
 
   const countPotentialSpecialDivs = $.find("div.bc-data, div.bc-specs").length;
   if (countPotentialSpecialDivs) {
@@ -241,7 +242,7 @@ function addSections($: cheerio.Cheerio): SectionsAndFlaws {
      *    },
      */
     if (countPotentialSpecialDivs > 1) {
-      const subSections = [];
+      const subSections: Section[] = [];
       const section = cheerio
         .load("<div></div>", {
           // decodeEntities: false
@@ -252,7 +253,7 @@ function addSections($: cheerio.Cheerio): SectionsAndFlaws {
       // them up in a buffer, until you encounter a `div.bc-data` or `div.bc-specs` then
       // add that to the stack, clear and repeat.
       const div = $[0] as cheerio.TagElement;
-      const iterable = [...div.childNodes].filter(
+      const iterable = [...(div.childNodes as cheerio.Element[])].filter(
         (child): child is cheerio.TagElement => child.type !== "text"
       );
       let c = 0;
@@ -325,37 +326,37 @@ function addSections($: cheerio.Cheerio): SectionsAndFlaws {
 }
 
 function _addSingleSpecialSection($: cheerio.Cheerio): Section[] {
-  let id = null;
-  let title = null;
+  let id: string = "";
+  let title: string = "";
   let isH3 = false;
 
   const h2s = $.find("h2");
   if (h2s.length === 1) {
-    id = h2s.attr("id");
+    id = h2s.attr("id") ?? "";
     title = h2s.text();
   } else {
     const h3s = $.find("h3");
     if (h3s.length === 1) {
-      id = h3s.attr("id");
+      id = h3s.attr("id") ?? "";
       title = h3s.text();
       isH3 = true;
     }
   }
 
-  let dataQuery = null;
+  let dataQuery: string = "";
   let hasMultipleQueries = false;
-  let specURLsString = "";
-  let specialSectionType = null;
+  let specURLsString: string = "";
+  let specialSectionType: string | null = null;
   if ($.find("div.bc-data").length) {
     specialSectionType = "browser_compatibility";
     const elem = $.find("div.bc-data");
     // Macro adds "data-query", but some translated-content still uses "id".
-    dataQuery = elem.attr("data-query") || elem.attr("id");
+    dataQuery = (elem.attr("data-query") || elem.attr("id")) ?? "";
     hasMultipleQueries = elem.attr("data-multiple") === "true";
   } else if ($.find("div.bc-specs").length) {
     specialSectionType = "specifications";
-    dataQuery = $.find("div.bc-specs").attr("data-bcd-query");
-    specURLsString = $.find("div.bc-specs").attr("data-spec-urls");
+    dataQuery = $.find("div.bc-specs").attr("data-bcd-query") ?? "";
+    specURLsString = $.find("div.bc-specs").attr("data-spec-urls") ?? "";
   }
 
   // Some old legacy documents haven't been re-rendered yet, since it
@@ -367,7 +368,8 @@ function _addSingleSpecialSection($: cheerio.Cheerio): Section[] {
     return _addSectionProse($)[0];
   }
   const query = dataQuery.replace(/^bcd:/, "");
-  const { browsers, data }: bcd.CompatData = packageBCD(query);
+  const { browsers, data }: { browsers: bcd.Browsers; data: bcd.Identifier } =
+    packageBCD(query);
 
   if (specialSectionType === "browser_compatibility") {
     if (data === undefined) {
@@ -537,12 +539,12 @@ function _addSingleSpecialSection($: cheerio.Cheerio): Section[] {
   function _extractCompatBlocks(
     feature: bcd.Identifier
   ): bcd.CompatStatement[] {
-    const blocks = [];
+    const blocks: bcd.CompatStatement[] = [];
     for (const [key, value] of Object.entries(feature)) {
       if (key === "__compat") {
-        blocks.push(value);
+        blocks.push(value as bcd.CompatStatement);
       } else if (typeof value === "object") {
-        blocks.push(..._extractCompatBlocks(value));
+        blocks.push(..._extractCompatBlocks(value as bcd.Identifier));
       }
     }
     return blocks;
@@ -551,9 +553,9 @@ function _addSingleSpecialSection($: cheerio.Cheerio): Section[] {
   function _buildSpecialSpecSection(): [SpecificationsSection] {
     // Collect spec URLs from a BCD feature, a 'spec-urls' value, or both;
     // For a BCD feature, it can either be a string or an array of strings.
-    let specURLs = [];
+    let specURLs: string[] = [];
 
-    function getSpecURLs(data) {
+    function getSpecURLs(data: bcd.Identifier) {
       // If we’re processing data for just one feature, then the 'data'
       // variable will have a __compat key. So we get the one spec_url
       // value from that, and move on.
@@ -583,7 +585,7 @@ function _addSingleSpecialSection($: cheerio.Cheerio): Section[] {
           if (!block) {
             continue;
           }
-          if (!block.__compat) {
+          if (!("__compat" in block)) {
             // Some features — e.g., css.properties.justify-content — have
             // no compat data themselves but have subfeatures with compat
             // data. So we recurse through the nested property values until
@@ -591,16 +593,17 @@ function _addSingleSpecialSection($: cheerio.Cheerio): Section[] {
             // Otherwise, if we’re processing multiple top-level features
             // (that is, from a browser-compat value which is an array),
             // we’d end up entirely missing the data for this feature.
-            getSpecURLs(block);
-          }
-          // If we get here, we’ve got a __compat key, and we can extract
-          // any spec URLs its value may contain.
-          const compat = block.__compat;
-          if (compat && compat.spec_url) {
-            if (Array.isArray(compat.spec_url)) {
-              specURLs.push(...compat.spec_url);
-            } else {
-              specURLs.push(compat.spec_url);
+            getSpecURLs(block as bcd.Identifier);
+          } else {
+            // If we get here, we’ve got a __compat key, and we can extract
+            // any spec URLs its value may contain.
+            const compat = block.__compat;
+            if (compat && compat.spec_url) {
+              if (Array.isArray(compat.spec_url)) {
+                specURLs.push(...compat.spec_url);
+              } else {
+                specURLs.push(compat.spec_url);
+              }
             }
           }
         }
@@ -671,12 +674,12 @@ function _addSingleSpecialSection($: cheerio.Cheerio): Section[] {
 }
 
 function _addSectionProse($: cheerio.Cheerio): SectionsAndFlaws {
-  let id = null;
-  let title = null;
-  let titleAsText = null;
+  let id: string = "";
+  let title: string = "";
+  let titleAsText: string = "";
   let isH3 = false;
 
-  const flaws = [];
+  const flaws: string[] = [];
 
   // The way this works...
   // Given a section of HTML, try to extract a id, title,
@@ -695,8 +698,8 @@ function _addSectionProse($: cheerio.Cheerio): SectionsAndFlaws {
       );
     } else {
       // First element
-      id = h2.attr("id");
-      title = h2.html();
+      id = h2.attr("id") ?? "";
+      title = h2.html() ?? "";
       titleAsText = h2.text();
       h2.remove();
     }
@@ -716,8 +719,8 @@ function _addSectionProse($: cheerio.Cheerio): SectionsAndFlaws {
           )}', text='${h3.text()}')`
         );
       } else {
-        id = h3.attr("id");
-        title = h3.html();
+        id = h3.attr("id") ?? "";
+        title = h3.html() ?? "";
         titleAsText = h3.text();
         if (id && title) {
           isH3 = true;
@@ -736,7 +739,7 @@ function _addSectionProse($: cheerio.Cheerio): SectionsAndFlaws {
     id,
     title,
     isH3,
-    content: $.html().trim(),
+    content: $.html()?.trim(),
   };
 
   // Only include it if it's useful. It's an optional property and it's
@@ -788,7 +791,7 @@ export function extractSummary(sections: Section[]): string {
       section.type === "prose" && section.value.title === "Summary"
   );
   if (summarySections.length) {
-    const $ = cheerio.load(summarySections[0].value.content);
+    const $ = cheerio.load(summarySections[0].value.content ?? "");
     summary = extractFirstGoodParagraph($);
   } else {
     for (const section of sections) {
