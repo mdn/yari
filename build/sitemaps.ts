@@ -1,4 +1,4 @@
-function makeSitemapXML(locale, docs) {
+export function makeSitemapXML(locale, docs) {
   // Based on https://support.google.com/webmasters/answer/183668?hl=en
   return [
     '<?xml version="1.0" encoding="UTF-8"?>',
@@ -15,7 +15,7 @@ function makeSitemapXML(locale, docs) {
   ].join("\n");
 }
 
-function makeSitemapIndexXML(pathnames) {
+export function makeSitemapIndexXML(pathnames) {
   // Based on https://support.google.com/webmasters/answer/75712
   return [
     '<?xml version="1.0" encoding="UTF-8"?>',
@@ -31,8 +31,3 @@ function makeSitemapIndexXML(pathnames) {
     "</sitemapindex>",
   ].join("\n");
 }
-
-module.exports = {
-  makeSitemapXML,
-  makeSitemapIndexXML,
-};

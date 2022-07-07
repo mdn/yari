@@ -6,7 +6,7 @@ const zlib = require("zlib");
 const chalk = require("chalk");
 const cliProgress = require("cli-progress");
 const program = require("@caporal/core").default;
-const { prompt } = require("inquirer");
+import { prompt } from "inquirer";
 
 const { Document, slugToFolder, translationsOf } = require("../content");
 const { CONTENT_ROOT, CONTENT_TRANSLATED_ROOT } = require("../libs/env");
@@ -14,8 +14,8 @@ const { VALID_LOCALES } = require("../libs/constants");
 // eslint-disable-next-line node/no-missing-require
 const { renderHTML } = require("../ssr/dist/main");
 const options = require("./build-options");
-const { buildDocument, renderContributorsTxt } = require("./index");
-const SearchIndex = require("./search-index");
+import { buildDocument, BuiltDocument, renderContributorsTxt } from ".";
+import SearchIndex from "./search-index";
 const { BUILD_OUT_ROOT } = require("../libs/env");
 const { makeSitemapXML, makeSitemapIndexXML } = require("./sitemaps");
 const { humanFileSize } = require("./utils");
@@ -24,7 +24,9 @@ async function buildDocumentInteractive(
   documentPath,
   interactive,
   invalidate = false
-) {
+): Promise<
+  { doc: {}; skip: true } | { document: any; doc: BuiltDocument; skip: false }
+> {
   try {
     const document = invalidate
       ? Document.read(documentPath, Document.MEMOIZE_INVALIDATE)
@@ -118,7 +120,7 @@ async function buildDocuments(
     progressBar.start(documents.count);
   }
 
-  for (const documentPath of documents.iter({ pathOnly: true })) {
+  for (const documentPath of documents.iter(true)) {
     const {
       doc: { doc: builtDocument, liveSamples, fileAttachments, bcdData },
       document,
