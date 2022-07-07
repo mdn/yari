@@ -1,6 +1,6 @@
 const { FLAW_LEVELS } = require("../../libs/constants");
 
-function injectSectionFlaws(doc, flaws, options) {
+export function injectSectionFlaws(doc, flaws, options) {
   if (!flaws.length) {
     return;
   }
@@ -15,5 +15,3 @@ function injectSectionFlaws(doc, flaws, options) {
     });
   }
 }
-
-module.exports = { injectSectionFlaws };

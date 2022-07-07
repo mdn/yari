@@ -1,8 +1,10 @@
+import { Doc, Flaws, LanguageItem } from "../libs/types";
+
 const fs = require("fs");
 const path = require("path");
 
 const chalk = require("chalk");
-const cheerio = require("cheerio");
+import * as cheerio from "cheerio";
 
 const { Document, Image, execGit } = require("../content");
 const { CONTENT_ROOT, REPOSITORY_URLS } = require("../libs/env");
@@ -14,7 +16,7 @@ const {
   extractSidebar,
   extractSummary,
 } = require("./document-extractor");
-const SearchIndex = require("./search-index");
+export { default as SearchIndex } from "./search-index";
 const { addBreadcrumbData } = require("./document-utils");
 const { fixFixableFlaws, injectFlaws, injectSectionFlaws } = require("./flaws");
 const { normalizeBCDURLs, extractBCDData } = require("./bcd-urls");
@@ -22,15 +24,20 @@ const { checkImageReferences, checkImageWidths } = require("./check-images");
 const { getPageTitle } = require("./page-title");
 const { syntaxHighlight } = require("./syntax-highlight");
 const { formatNotecards } = require("./format-notecards");
-const buildOptions = require("./build-options");
-const { gather: gatherGitHistory } = require("./git-history");
-const { buildSPAs } = require("./spas");
+export const { default: buildOptions } = require("./build-options");
+export const { gather: gatherGitHistory } = require("./git-history");
+export const { buildSPAs } = require("./spas");
 const { renderCache: renderKumascriptCache } = require("../kumascript");
-const LANGUAGES_RAW = require("../libs/languages");
+const LANGUAGES_RAW = require("../libs/languages") as Record<
+  string,
+  LanguageItem
+>;
 const { safeDecodeURIComponent } = require("../kumascript/src/api/util");
 const { wrapTables } = require("./wrap-tables");
 
-const LANGUAGES = new Map(
+// TODO Deduplicate.
+
+const LANGUAGES = new Map<string, LanguageItem>(
   Object.entries(LANGUAGES_RAW).map(([locale, data]) => {
     return [locale.toLowerCase(), data];
   })
@@ -214,7 +221,7 @@ function getGitHubURL(root, folder, filename) {
  * Return the full URL directly to the last commit affecting this file on GitHub.
  * @param {String} hash - the full hash to point to.
  */
-function getLastCommitURL(root, hash) {
+export function getLastCommitURL(root, hash) {
   const baseURL = `https://github.com/${REPOSITORY_URLS[root]}`;
   return `${baseURL}/commit/${hash}`;
 }
@@ -275,7 +282,25 @@ function getAdjacentImages(documentDirectory) {
     .map((dirent) => path.join(documentDirectory, dirent.name));
 }
 
-async function buildDocument(document, documentOptions = {}) {
+interface ExtendedDoc extends Omit<Doc, "flaws"> {
+  // TODO Check why these are not part of Doc.
+  flaws: Partial<Flaws>;
+  summary: string;
+  popularity: number;
+  noIndexing: boolean;
+}
+
+export interface BuiltDocument {
+  doc: Doc;
+  liveSamples: any;
+  fileAttachments: any;
+  bcdData: any;
+}
+
+export async function buildDocument(
+  document,
+  documentOptions = {}
+): Promise<BuiltDocument> {
   // Important that the "local" document options comes last.
   // And use Object.assign to create a new object instead of mutating the
   // global one.
@@ -292,9 +317,8 @@ async function buildDocument(document, documentOptions = {}) {
     isMarkdown: document.isMarkdown,
     isTranslated: document.isTranslated,
     isActive: document.isActive,
-  };
-
-  doc.flaws = {};
+    flaws: {},
+  } as Partial<ExtendedDoc>;
 
   let flaws = [];
   let renderedHtml = "";
@@ -611,10 +635,11 @@ async function buildDocument(document, documentOptions = {}) {
     document.metadata.slug.startsWith("orphaned/") ||
     document.metadata.slug.startsWith("conflicting/");
 
-  return { doc, liveSamples, fileAttachments, bcdData };
+  // TODO Refactor to avoid `as Doc` type assertion.
+  return { doc: doc as Doc, liveSamples, fileAttachments, bcdData };
 }
 
-async function buildLiveSamplePageFromURL(url) {
+export async function buildLiveSamplePageFromURL(url) {
   // The 'url' is expected to be something
   // like '/en-us/docs/foo/bar/_sample_.myid.html' and from that we want to
   // extract '/en-us/docs/foo/bar' and 'myid'. But only if it matches.
@@ -651,7 +676,10 @@ async function buildLiveSamplePageFromURL(url) {
 // This is used by the builder (yarn build) and by the server (JIT).
 // Someday, this function might change if we decide to include the list
 // of GitHub usernames that have contributed to it since it moved to GitHub.
-function renderContributorsTxt(wikiContributorNames = null, githubURL = null) {
+export function renderContributorsTxt(
+  wikiContributorNames = null,
+  githubURL = null
+) {
   let txt = "";
   if (githubURL) {
     // Always show this first
@@ -662,17 +690,3 @@ function renderContributorsTxt(wikiContributorNames = null, githubURL = null) {
   }
   return txt;
 }
-
-module.exports = {
-  buildDocument,
-
-  buildLiveSamplePageFromURL,
-  renderContributorsTxt,
-
-  SearchIndex,
-
-  options: buildOptions,
-  gatherGitHistory,
-  buildSPAs,
-  getLastCommitURL,
-};
