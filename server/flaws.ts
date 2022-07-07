@@ -1,13 +1,16 @@
-const fs = require("fs");
-const path = require("path");
+import { Doc } from "../client/src/document/types";
+import { FlawFilters } from "./types";
 
-const { fdir } = require("fdir");
+import fs from "fs";
+import path from "path";
 
-const { getPopularities } = require("../content");
-const { options: buildOptions } = require("../build");
+import { fdir, PathsOutput } from "fdir";
 
-const { FLAW_LEVELS } = require("../libs/constants");
-const { BUILD_OUT_ROOT } = require("../libs/env");
+import { getPopularities } from "../content";
+import { options as buildOptions } from "../build";
+
+import { FLAW_LEVELS } from "../libs/constants";
+import { BUILD_OUT_ROOT } from "../libs/env";
 
 // Module-level cache
 const allPopularityValues = [];
@@ -74,7 +77,7 @@ function validFixableFlawsFilter(value) {
     } else if (value.startsWith(">")) {
       filter = { min: parseInt(value.slice(1).trim()) };
     } else {
-      filter = { equal: parseInt(parseInt(value)) };
+      filter = { equal: parseInt(value) };
     }
   }
   return [filter, null];
@@ -134,12 +137,12 @@ function strMapToObject(map) {
   return obj;
 }
 
-module.exports = (req, res) => {
+export default (req, res) => {
   const locale = req.query.locale.toLowerCase();
   if (!locale) {
     return res.status(400).send("'locale' is always required");
   }
-  const filters = req.query;
+  const filters = req.query as FlawFilters;
 
   let page;
   try {
@@ -205,11 +208,12 @@ module.exports = (req, res) => {
 
   let searchFlaws = new Map();
   if (filters.search_flaws) {
-    if (Array.isArray(filters.search_flaws)) {
-      searchFlaws = new Map(filters.search_flaws.map((x) => x.split(":", 2)));
-    } else {
-      searchFlaws = new Map([filters.search_flaws].map((x) => x.split(":", 2)));
-    }
+    const items = Array.isArray(filters.search_flaws)
+      ? filters.search_flaws
+      : [filters.search_flaws];
+    searchFlaws = new Map(
+      items.map((x) => x.split(":", 2) as [string, string])
+    );
   }
 
   const api = new fdir()
@@ -219,8 +223,10 @@ module.exports = (req, res) => {
       return filePath.endsWith("index.json");
     })
     .crawl(path.join(BUILD_OUT_ROOT, locale));
-  for (const filePath of api.sync()) {
-    const { doc } = JSON.parse(fs.readFileSync(filePath));
+  for (const filePath of api.sync() as PathsOutput) {
+    const { doc } = JSON.parse(fs.readFileSync(filePath, "utf-8")) as {
+      doc: Doc;
+    };
 
     // The home page, for example, also uses a `index.json` but it doesn't have
     // flaws, so let's not count it if it doesn't have a `doc` key.

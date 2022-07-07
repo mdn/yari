@@ -1,17 +1,17 @@
-const fs = require("fs");
-const path = require("path");
+import fs from "fs";
+import path from "path";
 
-const { fdir } = require("fdir");
+import { fdir } from "fdir";
 
-const express = require("express");
-const router = express.Router();
+import express from "express";
+export const router = express.Router();
 
-const { getPopularities, Document, Translation } = require("../content");
-const { VALID_LOCALES } = require("../libs/constants");
-const { CONTENT_ROOT, CONTENT_TRANSLATED_ROOT } = require("../libs/env");
-const { getLastCommitURL } = require("../build");
-const { ACTIVE_LOCALES, DEFAULT_LOCALE } = require("../libs/constants");
-const LANGUAGES_RAW = require("../libs/languages");
+import { getPopularities, Document, Translation } from "../content";
+import { VALID_LOCALES } from "../libs/constants";
+import { CONTENT_ROOT, CONTENT_TRANSLATED_ROOT } from "../libs/env";
+import { getLastCommitURL } from "../build";
+import { ACTIVE_LOCALES, DEFAULT_LOCALE } from "../libs/constants";
+import LANGUAGES_RAW from "../libs/languages";
 
 // Module-level cache
 const allPopularityValues = [];
@@ -558,7 +558,7 @@ router.get("/differences", async (req, res) => {
   if (!CONTENT_TRANSLATED_ROOT) {
     return res.status(500).send("CONTENT_TRANSLATED_ROOT not set");
   }
-  const locale = req.query.locale && req.query.locale.toLowerCase();
+  const locale = (req.query.locale as string)?.toLowerCase();
   if (!locale) {
     return res.status(400).send("'locale' is always required");
   }
@@ -580,7 +580,7 @@ router.get("/missing", async (req, res) => {
   if (!CONTENT_TRANSLATED_ROOT) {
     return res.status(500).send("CONTENT_TRANSLATED_ROOT not set");
   }
-  const locale = req.query.locale && req.query.locale.toLowerCase();
+  const locale = (req.query.locale as string)?.toLowerCase();
   if (!locale) {
     return res.status(400).send("'locale' is always required");
   }
@@ -602,7 +602,7 @@ router.get("/dashboard", async (req, res) => {
   if (!CONTENT_TRANSLATED_ROOT) {
     return res.status(500).send("CONTENT_TRANSLATED_ROOT not set");
   }
-  const locale = req.query.locale && req.query.locale.toLowerCase();
+  const locale = (req.query.locale as string)?.toLowerCase();
   const section = req.query.section || "/";
   if (!locale) {
     return res.status(400).send("'locale' is always required");
@@ -620,5 +620,3 @@ router.get("/dashboard", async (req, res) => {
   console.timeEnd(label);
   res.json(data);
 });
-
-module.exports = { router };

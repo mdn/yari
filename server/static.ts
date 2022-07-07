@@ -1,12 +1,12 @@
-const path = require("path");
+import path from "path";
 
-const express = require("express");
-const compression = require("compression");
-const cookieParser = require("cookie-parser");
+import express from "express";
+import compression from "compression";
+import cookieParser from "cookie-parser";
 
-const { staticMiddlewares } = require("./middlewares");
-const { resolveFundamental } = require("../content");
-const { STATIC_ROOT } = require("../libs/env");
+import { staticMiddlewares } from "./middlewares";
+import { resolveFundamental } from "../content";
+import { STATIC_ROOT } from "../libs/env";
 
 const app = express();
 app.use(express.json());
@@ -35,7 +35,7 @@ app.use(cookieParser());
 // They will trigger XHR requests to `/api/v1/search?....`
 // and use different values as a way to make expectations.
 app.get("/api/v1/search", async (req, res) => {
-  const page = parseInt(req.query.page || "1");
+  const page = parseInt((req.query.page as string) || "1");
   const PAGE_SIZE = 10;
   const documents = [];
   const metadata = {
@@ -66,10 +66,12 @@ app.get("/api/v1/search", async (req, res) => {
         title: null,
       },
     });
-  } else if (req.query.q && /SERIAL\(\d+\)/.test(req.query.q)) {
+  } else if (req.query.q && /SERIAL\(\d+\)/.test(req.query.q as string)) {
     // A search for `?q=SERIAL(123)` will pretend it found 123 matches.
     // But paginate them and just make sure the URL and title are different.
-    const serial = parseInt(req.query.q.match(/SERIAL\((\d+)\)/)[1]);
+    const serial = parseInt(
+      (req.query.q as string).match(/SERIAL\((\d+)\)/)[1]
+    );
     metadata.total.value = serial;
 
     for (const i of Array(Math.max(PAGE_SIZE, serial)).keys()) {
@@ -143,7 +145,7 @@ const mockBookmarksDatabase = new Map();
 
 app.post("/api/v1/plus/collection/", async (req, res) => {
   // Toggle
-  const url = req.query.url;
+  const url = req.query.url as string;
   if (!url) {
     return res.status(400).send("missing url");
   }
@@ -194,7 +196,7 @@ app.get("/api/v1/plus/collection/", async (req, res) => {
       });
     } else {
       // Return all (paginated)
-      const page = parseInt(req.query.page || "1", 10);
+      const page = parseInt((req.query.page as string) || "1", 10);
       const pageSize = 5;
       let m = 0;
       let n = pageSize;
@@ -231,7 +233,7 @@ app.get("/users/fxa/login/authenticate/", async (req, res) => {
     // with authorization. I.e. use of the subscription platform and FxA.
     is_subscriber: true,
   });
-  res.redirect(req.query.next);
+  res.redirect(req.query.next as string);
 });
 
 app.post("/users/fxa/login/logout/", async (req, res) => {
