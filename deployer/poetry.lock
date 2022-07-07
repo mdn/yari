@@ -426,7 +426,7 @@ python-versions = "*"
 
 [[package]]
 name = "requests"
-version = "2.28.0"
+version = "2.28.1"
 description = "Python HTTP for Humans."
 category = "main"
 optional = false
@@ -434,13 +434,13 @@ python-versions = ">=3.7, <4"
 
 [package.dependencies]
 certifi = ">=2017.4.17"
-charset-normalizer = ">=2.0.0,<2.1.0"
+charset-normalizer = ">=2,<3"
 idna = ">=2.5,<4"
 urllib3 = ">=1.21.1,<1.27"
 
 [package.extras]
 socks = ["PySocks (>=1.5.6,!=1.5.7)"]
-use_chardet_on_py3 = ["chardet (>=3.0.2,<5)"]
+use_chardet_on_py3 = ["chardet (>=3.0.2,<6)"]
 
 [[package]]
 name = "s3transfer"
@@ -543,7 +543,7 @@ testing = ["pytest (>=4.6)", "pytest-checkdocs (>=1.2.3)", "pytest-flake8", "pyt
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.7"
-content-hash = "b4b1bef1b5f8082774e6b78948e910e57a3a6748598c1da8359597281a537906"
+content-hash = "cb7273e1d3f4a89fb09825abdeb2a8397a5d4a97e553bf27391525ce4fbd2756"
 
 [metadata.files]
 atomicwrites = [
@@ -813,8 +813,8 @@ python-decouple = [
     {file = "python_decouple-3.6-py3-none-any.whl", hash = "sha256:6cf502dc963a5c642ea5ead069847df3d916a6420cad5599185de6bab11d8c2e"},
 ]
 requests = [
-    {file = "requests-2.28.0-py3-none-any.whl", hash = "sha256:bc7861137fbce630f17b03d3ad02ad0bf978c844f3536d0edda6499dafce2b6f"},
-    {file = "requests-2.28.0.tar.gz", hash = "sha256:d568723a7ebd25875d8d1eaf5dfa068cd2fc8194b2e483d7b1f7c81918dbec6b"},
+    {file = "requests-2.28.1-py3-none-any.whl", hash = "sha256:8fefa2a1a1365bf5520aac41836fbee479da67864514bdb821f31ce07ce65349"},
+    {file = "requests-2.28.1.tar.gz", hash = "sha256:7c5599b102feddaa661c826c56ab4fee28bfd17f5abca1ebbe3e7f19d7c97983"},
 ]
 s3transfer = [
     {file = "s3transfer-0.6.0-py3-none-any.whl", hash = "sha256:06176b74f3a15f61f1b4f25a1fc29a4429040b7647133a463da8fa5bd28d5ecd"},
