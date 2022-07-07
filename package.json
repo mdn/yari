@@ -189,7 +189,7 @@
     "identity-obj-proxy": "^3.0.0",
     "ignore-loader": "^0.1.2",
     "jest": "^28.1.2",
-    "jest-environment-jsdom": "^28.1.1",
+    "jest-environment-jsdom": "^28.1.2",
     "jest-junit-reporter": "^1.1.0",
     "jest-resolve": "^28.1.1",
     "jest-watch-typeahead": "^1.0.0",
