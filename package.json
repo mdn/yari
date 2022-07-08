@@ -30,7 +30,7 @@
     "prettier-format": "prettier --write .",
     "start": "(test -f client/build/index.html || yarn build:client) && (test -f ssr/dist/main.js || yarn build:ssr) && (test -d client/build/en-us/_spas || yarn tool spas) && nf -j Procfile.start start",
     "start:client": "cd client && cross-env BROWSER=none PORT=3000 node scripts/start.js",
-    "start:dev-server": "node-dev server",
+    "start:dev-server": "node-dev server/index.ts",
     "start:server": "ts-node server",
     "start:static-server": "cross-env ENV_FILE=testing/.env ts-node server/static.ts",
     "style-dictionary": "style-dictionary build -c sd-config.js",
