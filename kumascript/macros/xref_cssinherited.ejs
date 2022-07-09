@@ -1,17 +1,4 @@
 <%
-let page = mdn.localString({
-    "en-US": "inheritance",
-    "de"   : "Vererbung",
-    "es"   : "inheritance",
-    "fr"   : "H%c3%a9ritage",
-    "ja"   : "inheritance",
-    "ko"   : "inheritance",
-    "pl"   : "dziedziczenie",
-    "zh-CN": "inheritance",
-    "zh-TW": "inheritance",
-    "ru"   : "inheritance"
-});
-
 let linkText = mdn.localString({
     "en-US": "Inherited",
     "de"   : "Vererbt",
@@ -24,7 +11,5 @@ let linkText = mdn.localString({
     "zh-TW": "繼承與否",
     "ru"   : "Наследуется"
 });
-
-let link = "<a href=\"/" + env.locale + "/docs/Web/CSS/$1$\">$2$</a>";
 %>
-<%- mdn.replacePlaceholders(link, [page, linkText]) %>
+<%- `<a href="/${env.locale}/docs/Web/CSS/inheritance">${linkText}</a>` %>
