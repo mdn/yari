@@ -69,7 +69,7 @@
     "@use-it/interval": "^1.0.0",
     "@webref/css": "^4.3.2",
     "accept-language-parser": "^1.5.0",
-    "browser-specs": "^3.15.0",
+    "browser-specs": "^3.16.0",
     "chalk": "^4.1.2",
     "cheerio": "^1.0.0-rc.12",
     "cli-progress": "^3.11.2",
