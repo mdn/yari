@@ -93,7 +93,7 @@
     "hast-util-to-text": "^2.0.1",
     "html-react-parser": "^2.0.0",
     "http-proxy-middleware": "^2.0.6",
-    "image-size": "^1.0.1",
+    "image-size": "^1.0.2",
     "image-type": "^4.1.0",
     "imagemin": "^7.0.1",
     "imagemin-gifsicle": "^7.0.0",
