@@ -21,6 +21,7 @@
         display: grid;
         grid-template-columns: 1fr minmax(5em);
         margin: 2em 0;
+        gap: 0 1rem;
 
         h3 {
           font-weight: 600;
@@ -41,7 +42,8 @@
           height: 100%;
         }
 
-        button {
+        button,
+        .manage {
           font-size: 0.8rem;
           padding: 0.5rem 1rem;
           height: max-content;
