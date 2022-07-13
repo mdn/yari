@@ -162,6 +162,11 @@ export class MDNWorker {
     this.settings = settings;
     return settings;
   }
+
+  async clearOfflineSettings() {
+    await this.setOfflineSettings(new SettingsData());
+  }
+
   async clear() {
     this.controller()?.postMessage({ type: "clear" });
   }

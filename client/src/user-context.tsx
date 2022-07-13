@@ -126,11 +126,18 @@ export function UserDataProvider(props: { children: React.ReactNode }) {
 
       // Let's initialize the MDN Worker if the user is signed in.
       if (!window.mdnWorker && data?.isAuthenticated) {
-        import("./offline-settings/mdn-worker").then(({ getMDNWorker }) =>
-          getMDNWorker()
-        );
-      } else if (window.mdnWorker && data?.isAuthenticated === false) {
-        window.mdnWorker.disableServiceWorker();
+        import("./offline-settings/mdn-worker").then(({ getMDNWorker }) => {
+          const mdnWorker = getMDNWorker();
+          if (data?.isSubscriber === false) {
+            mdnWorker.clearOfflineSettings();
+          }
+        });
+      } else if (window.mdnWorker) {
+        if (data?.isAuthenticated === false) {
+          window.mdnWorker.disableServiceWorker();
+        } else if (data?.isSubscriber === false) {
+          window.mdnWorker.clearOfflineSettings();
+        }
       }
     }
   }, [data]);

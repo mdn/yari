@@ -42,12 +42,16 @@ self.addEventListener("install", (e) => {
       ? self.skipWaiting()
       : (async () => {
           const cache = await openCache();
-          const { files = {} } =
+          const { files = {} }: { files: object } =
             (await (await fetch("/asset-manifest.json")).json()) || {};
           const assets = [...Object.values(files)].filter(
             (asset) => !(asset as string).endsWith(".map")
           );
-          await cache.addAll(assets as string[]);
+          let keys = new Set(
+            (await cache.keys()).map((r) => r.url.replace(location.origin, ""))
+          );
+          const toCache = assets.filter((file) => !keys.has(file));
+          await cache.addAll(toCache as string[]);
         })().then(() => self.skipWaiting())
   );
 
