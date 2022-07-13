@@ -25,6 +25,14 @@ export default function FeaturePreview() {
               <h3>Collections in quick search</h3>
               <span>
                 Prioritizes items from your collection when using quick search.
+                <br />
+                <a
+                  rel="noreferrer noopener"
+                  target="_blank"
+                  href="https://www.surveygizmo.com/s3/6918430/Feature-Preview-User-Feedback-Collections-in-Quicksearch"
+                >
+                  Give us some feedback.
+                </a>
               </span>
               {(saving === true && <Spinner extraClasses="loading" />) || (
                 <Switch
