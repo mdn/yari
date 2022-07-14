@@ -42,7 +42,7 @@ function gatherPlatformsAndBrowsers(
   const hasNodeJSData = data.__compat && "nodejs" in data.__compat.support;
   const hasDenoData = data.__compat && "deno" in data.__compat.support;
 
-  let platforms = ["desktop", "mobile"];
+  let platforms = ["desktop", "mobile", "xr"];
   if (category === "javascript" || hasNodeJSData || hasDenoData) {
     platforms.push("server");
   }
