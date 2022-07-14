@@ -7526,26 +7526,7 @@ jest-get-type@^28.0.2:
   resolved "https://registry.yarnpkg.com/jest-get-type/-/jest-get-type-28.0.2.tgz#34622e628e4fdcd793d46db8a242227901fcf203"
   integrity sha512-ioj2w9/DxSYHfOm5lJKCdcAmPJzQXmbM/Url3rhlghrPvT3tt+7a/+oXc9azkKmLvoiXjtV83bEWqi+vs5nlPA==
 
-jest-haste-map@^28.1.1:
-  version "28.1.1"
-  resolved "https://registry.yarnpkg.com/jest-haste-map/-/jest-haste-map-28.1.1.tgz#471685f1acd365a9394745bb97c8fc16289adca3"
-  integrity sha512-ZrRSE2o3Ezh7sb1KmeLEZRZ4mgufbrMwolcFHNRSjKZhpLa8TdooXOOFlSwoUzlbVs1t0l7upVRW2K7RWGHzbQ==
-  dependencies:
-    "@jest/types" "^28.1.1"
-    "@types/graceful-fs" "^4.1.3"
-    "@types/node" "*"
-    anymatch "^3.0.3"
-    fb-watchman "^2.0.0"
-    graceful-fs "^4.2.9"
-    jest-regex-util "^28.0.2"
-    jest-util "^28.1.1"
-    jest-worker "^28.1.1"
-    micromatch "^4.0.4"
-    walker "^1.0.8"
-  optionalDependencies:
-    fsevents "^2.3.2"
-
-jest-haste-map@^28.1.3:
+jest-haste-map@^28.1.1, jest-haste-map@^28.1.3:
   version "28.1.3"
   resolved "https://registry.yarnpkg.com/jest-haste-map/-/jest-haste-map-28.1.3.tgz#abd5451129a38d9841049644f34b034308944e2b"
   integrity sha512-3S+RQWDXccXDKSWnkHa/dPwt+2qwA8CJzR61w3FoYCvoo3Pn8tvGcysmMF0Bj0EX5RYvAI2EIvC57OmotfdtKA==
@@ -7660,17 +7641,17 @@ jest-resolve-dependencies@^28.1.2:
     jest-regex-util "^28.0.2"
     jest-snapshot "^28.1.2"
 
-jest-resolve@^28.1.1:
-  version "28.1.1"
-  resolved "https://registry.yarnpkg.com/jest-resolve/-/jest-resolve-28.1.1.tgz#bc2eaf384abdcc1aaf3ba7c50d1adf01e59095e5"
-  integrity sha512-/d1UbyUkf9nvsgdBildLe6LAD4DalgkgZcKd0nZ8XUGPyA/7fsnaQIlKVnDiuUXv/IeZhPEDrRJubVSulxrShA==
+jest-resolve@^28.1.1, jest-resolve@^28.1.3:
+  version "28.1.3"
+  resolved "https://registry.yarnpkg.com/jest-resolve/-/jest-resolve-28.1.3.tgz#cfb36100341ddbb061ec781426b3c31eb51aa0a8"
+  integrity sha512-Z1W3tTjE6QaNI90qo/BJpfnvpxtaFTFw5CDgwpyE/Kz8U/06N1Hjf4ia9quUhCh39qIGWF1ZuxFiBiJQwSEYKQ==
   dependencies:
     chalk "^4.0.0"
     graceful-fs "^4.2.9"
-    jest-haste-map "^28.1.1"
+    jest-haste-map "^28.1.3"
     jest-pnp-resolver "^1.2.2"
-    jest-util "^28.1.1"
-    jest-validate "^28.1.1"
+    jest-util "^28.1.3"
+    jest-validate "^28.1.3"
     resolve "^1.20.0"
     resolve.exports "^1.1.0"
     slash "^3.0.0"
@@ -7771,17 +7752,17 @@ jest-util@^28.0.0, jest-util@^28.1.0, jest-util@^28.1.1, jest-util@^28.1.3:
     graceful-fs "^4.2.9"
     picomatch "^2.2.3"
 
-jest-validate@^28.1.1:
-  version "28.1.1"
-  resolved "https://registry.yarnpkg.com/jest-validate/-/jest-validate-28.1.1.tgz#59b7b339b3c85b5144bd0c06ad3600f503a4acc8"
-  integrity sha512-Kpf6gcClqFCIZ4ti5++XemYJWUPCFUW+N2gknn+KgnDf549iLul3cBuKVe1YcWRlaF8tZV8eJCap0eECOEE3Ug==
+jest-validate@^28.1.1, jest-validate@^28.1.3:
+  version "28.1.3"
+  resolved "https://registry.yarnpkg.com/jest-validate/-/jest-validate-28.1.3.tgz#e322267fd5e7c64cea4629612c357bbda96229df"
+  integrity sha512-SZbOGBWEsaTxBGCOpsRWlXlvNkvTkY0XxRfh7zYmvd8uL5Qzyg0CHAXiXKROflh801quA6+/DsT4ODDthOC/OA==
   dependencies:
-    "@jest/types" "^28.1.1"
+    "@jest/types" "^28.1.3"
     camelcase "^6.2.0"
     chalk "^4.0.0"
     jest-get-type "^28.0.2"
     leven "^3.1.0"
-    pretty-format "^28.1.1"
+    pretty-format "^28.1.3"
 
 jest-watch-typeahead@^1.0.0:
   version "1.1.0"
