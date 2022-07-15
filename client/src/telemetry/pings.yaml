@@ -1,0 +1,14 @@
+---
+$schema: moz://mozilla.org/schemas/glean/pings/2-0-0
+
+page-view:
+  description: |
+    A ping that will be sent everytime a new page is visited.
+  include_client_id: true
+  send_if_empty: false
+  notification_emails:
+    - gsleigh@mozilla.org
+  bugs:
+    - "bug goes here"
+  data_reviews:
+    - "reveiw goes here"
