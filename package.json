@@ -146,7 +146,7 @@
     "@types/hast": "^2.3.4",
     "@types/jest": "^28.1.4",
     "@types/mdast": "^3.0.10",
-    "@types/node": "^16.11.44",
+    "@types/node": "^16.11.45",
     "@types/react": "^18.0.15",
     "@types/react-dom": "^18.0.3",
     "@types/react-modal": "^3.13.1",
