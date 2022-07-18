@@ -58,7 +58,7 @@ self.addEventListener("install", (e) => {
   initOncePerRun(self);
 });
 
-self.addEventListener("fetch", (e) => {
+self.addEventListener("fetch", async (e) => {
   if (
     (SW_TYPE === SwType.ApiOnly || SW_TYPE === SwType.PreferOnline) &&
     !e.request.url.includes("/api/v1/") &&
@@ -77,6 +77,7 @@ self.addEventListener("fetch", (e) => {
     e.respondWith(respond(e));
   }
   if (e.request.method !== "GET") {
+    await synchronizeDb();
     messageAllClients(self, { type: "mutate" });
   }
 });
