@@ -115,7 +115,11 @@ export const UserMenu = () => {
       </Button>
 
       <DropdownMenu>
-        <Submenu submenuId={userMenuItems.id} menuEntry={userMenuItems} />
+        <Submenu
+          submenuId={userMenuItems.id}
+          menuEntry={userMenuItems}
+          extraClasses="inline-submenu-lg"
+        />
       </DropdownMenu>
     </DropdownMenuWrapper>
   );
