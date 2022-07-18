@@ -78,7 +78,10 @@ export class MDNWorker {
   }
 
   registerMessageHandler() {
-    navigator.serviceWorker.addEventListener("message", this.messageHandler);
+    const self = this;
+    navigator.serviceWorker.addEventListener("message", (e) =>
+      self.messageHandler(e)
+    );
   }
 
   async enableServiceWorker(type: SwType) {
