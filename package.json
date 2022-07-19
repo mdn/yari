@@ -141,7 +141,7 @@
     "@mdn/minimalist": "^2.0.4",
     "@playwright/test": "^1.23.4",
     "@pmmmwh/react-refresh-webpack-plugin": "^0.5.7",
-    "@svgr/webpack": "^6.2.1",
+    "@svgr/webpack": "^6.3.0",
     "@testing-library/react": "^13.3.0",
     "@types/hast": "^2.3.4",
     "@types/jest": "^28.1.4",
