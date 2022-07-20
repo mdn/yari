@@ -1,11 +1,8 @@
-import { useLocale } from "../../../hooks";
-
 import "./index.scss";
 import { usePlusUrl } from "../../../plus/utils";
 import { Menu } from "../menu";
 
 export const PlusMenu = ({ visibleSubMenuId, toggleMenu }) => {
-  const locale = useLocale();
   const plusUrl = usePlusUrl();
 
   const plusMenu = {

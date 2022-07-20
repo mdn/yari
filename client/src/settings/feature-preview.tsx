@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { useLocale } from "../hooks";
 import { toggleCollectionsInQuickSearch } from "../plus/common/api";
 import { Spinner } from "../ui/atoms/spinner";
 import { Switch } from "../ui/atoms/switch";
@@ -10,7 +9,6 @@ export default function FeaturePreview() {
 
   const [saving, setSaving] = useState<boolean>(false);
   const user = useUserData();
-  const locale = useLocale();
 
   return (
     <section className="field-group">
