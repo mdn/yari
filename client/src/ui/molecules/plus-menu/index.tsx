@@ -17,10 +17,6 @@ export const PlusMenu = ({ visibleSubMenuId, toggleMenu }) => {
     to: plusUrl,
     items: [
       {
-        description: "Collections and Notifications moved to the user menu",
-        extraClasses: "note",
-      },
-      {
         description: "A customized MDN experience",
         hasIcon: true,
         iconClasses: "submenu-icon",
