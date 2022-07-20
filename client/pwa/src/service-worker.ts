@@ -58,6 +58,13 @@ self.addEventListener("install", (e) => {
   initOncePerRun(self);
 });
 
+async function syncDbAndMessage(e) {
+  if (e.request.method !== "GET") {
+    await synchronizeDb();
+    messageAllClients(self, { type: "mutate" });
+  }
+}
+
 self.addEventListener("fetch", async (e) => {
   if (
     (SW_TYPE === SwType.ApiOnly || SW_TYPE === SwType.PreferOnline) &&
@@ -67,6 +74,7 @@ self.addEventListener("fetch", async (e) => {
     e.respondWith(
       (async () => {
         const res = await fetchWithExampleOverride(e.request);
+        syncDbAndMessage(e);
         if (res.ok) {
           return res;
         }
@@ -74,11 +82,12 @@ self.addEventListener("fetch", async (e) => {
       })()
     );
   } else {
-    e.respondWith(respond(e));
-  }
-  if (e.request.method !== "GET") {
-    await synchronizeDb();
-    messageAllClients(self, { type: "mutate" });
+    e.respondWith(
+      respond(e).then((r) => {
+        syncDbAndMessage(e);
+        return r;
+      })
+    );
   }
 });
 
