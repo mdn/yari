@@ -17,7 +17,7 @@ function displayEstimate({ usage = 0, quota = Infinity }: StorageEstimate) {
   return `${usageInMib} MiB`;
 }
 
-export default function SettingsApp({ ...appProps }) {
+export default function OfflineSettings({ ...appProps }) {
   const serviceWorkerAvailable = window?.navigator?.serviceWorker;
   const user = useUserData();
   const locale = useLocale();
@@ -48,7 +48,7 @@ export default function SettingsApp({ ...appProps }) {
 }
 
 function Settings() {
-  document.title = `MDN Offline | ${MDN_PLUS_TITLE}`;
+  document.title = `Settings | ${MDN_PLUS_TITLE}`;
   const [status, setStatus] = useState<ContentStatus>();
   const [saving, setSaving] = useState<boolean>(true);
 

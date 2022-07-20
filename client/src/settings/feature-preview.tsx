@@ -34,7 +34,9 @@ export default function FeaturePreview() {
                   Give us some feedback.
                 </a>
               </span>
-              {(saving === true && <Spinner extraClasses="loading" />) || (
+              {saving ? (
+                <Spinner extraClasses="loading" />
+              ) : (
                 <Switch
                   name="offline"
                   checked={Boolean(user?.settings?.colInSearch)}
@@ -52,7 +54,7 @@ export default function FeaturePreview() {
           </ul>
         ) : (
           <>
-            <h3>Offline mode is unavailable </h3>{" "}
+            <h3>Collections in quick search is unavailable</h3>{" "}
             <p>
               Please make sure that you are not using a private or incognito
               window.
@@ -62,7 +64,7 @@ export default function FeaturePreview() {
       ) : (
         <>
           Feature preview is only available to MDN Plus 10 subscribers.{" "}
-          <a href={`/${locale}/plus#subscribe`}>Learn more</a> about our plans.
+          <a href={`/en-US/plus#subscribe`}>Learn more</a> about our plans.
         </>
       )}
     </section>

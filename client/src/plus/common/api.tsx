@@ -229,7 +229,6 @@ export function useCollectionsApiEndpoint(
   const [error, setError] = useState<Error | null>();
   const [isLoading, setIsLoading] = useState(true);
   const [hasMore, setHasMore] = useState(false);
-  console.log(offset, searchTerms, selectedFilter, selectedSort);
 
   useEffect(() => {
     (async () => {

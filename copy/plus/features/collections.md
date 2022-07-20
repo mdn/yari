@@ -47,7 +47,7 @@ When an article is saved, it appears in **Collections**.
    the page.
    ![Screenshot showing the burger menu icon highlighted.](/assets/plus-docs/collections/mobile-burger-menu.png)
 2. Click on your avatar / email address at the bottom of the menu.
-   ![Screenshot showing the expanded main menu with MDN Plus highlighted.](/assets/plus-docs/collections/mobile-menu.png)
+   ![Screenshot showing the expanded user menu.](/assets/plus-docs/collections/mobile-menu.png)
 3. From the submenu, tap on **Collections**.
    ![Screenshot showing the expanded submenu with Collections highlighted.](/assets/plus-docs/collections/mobile-collections-menu-item.png)
 

@@ -29,7 +29,7 @@ export const PlusMenu = ({ visibleSubMenuId, toggleMenu }) => {
         hasIcon: true,
         iconClasses: "submenu-icon",
         label: "Documentation",
-        url: `/${locale}/plus/docs/features/overview`,
+        url: `/en-US/plus/docs/features/overview`,
       },
       {
         description: "Frequently asked questions about MDN Plus",

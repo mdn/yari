@@ -139,8 +139,8 @@ async function buildSPAs(options) {
           noIndexing: true,
         },
         {
-          prefix: "plus/offline",
-          pageTitle: `MDN Offline | ${MDN_PLUS_TITLE}`,
+          prefix: "plus/settings",
+          pageTitle: `Settings | ${MDN_PLUS_TITLE}`,
           noIndexing: true,
         },
         { prefix: "about", pageTitle: "About MDN" },

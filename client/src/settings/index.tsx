@@ -6,7 +6,7 @@ import { PageContentContainer } from "../ui/atoms/page-content";
 import "./index.scss";
 import { Manage } from "./manage";
 
-const SettingsApp = React.lazy(() => import("./offline-settings"));
+const OfflineSettings = React.lazy(() => import("./offline-settings"));
 const FeaturePreview = React.lazy(() => import("./feature-preview"));
 
 export function Settings() {
@@ -19,7 +19,7 @@ export function Settings() {
         <h1 className="slab-highlight _ify">{pageTitle} </h1>
         <Manage />
         <FeaturePreview />
-        <SettingsApp />
+        <OfflineSettings />
       </PageContentContainer>
     </>
   );
