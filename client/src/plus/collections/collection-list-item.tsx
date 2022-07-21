@@ -9,19 +9,18 @@ import { _getIconLabel } from "../common";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import { useOnlineStatus } from "../../hooks";
+import { FrequentlyViewedEntry } from "../../document/types";
 
 dayjs.extend(relativeTime);
 
 export function CollectionListItem({
   item,
-  showEditButton,
   onEditSubmit,
   handleDelete,
 }: {
-  item: BookmarkData;
-  showEditButton: boolean;
-  onEditSubmit: CallableFunction;
-  handleDelete: (item: BookmarkData) => Promise<void>;
+  item: BookmarkData | FrequentlyViewedEntry;
+  onEditSubmit?: CallableFunction;
+  handleDelete: (item: BookmarkData | FrequentlyViewedEntry) => Promise<void>;
 }) {
   const [show, setShow] = React.useState(false);
   const { isOnline } = useOnlineStatus();
@@ -30,23 +29,27 @@ export function CollectionListItem({
   const iconLabel = _getIconLabel(item.url);
 
   return (
-    <article key={item.id} className="icon-card">
+    <article className="icon-card">
       <div className="icon-card-title-wrap">
         <div className={`icon-card-icon ${iconClass || ""}`}>
           <span>{iconLabel}</span>
         </div>
         <div className="icon-card-content">
-          {item.parents.length > 0 && <Breadcrumbs parents={item.parents} />}
+          {item.parents && item.parents.length > 0 && (
+            <Breadcrumbs parents={item.parents} />
+          )}
           <h2 className="icon-card-title">
             <a href={item.url}>{item.title}</a>
           </h2>
         </div>
-        <time
-          className="collection-created"
-          dateTime={dayjs(item.created).toISOString()}
-        >
-          {`Added ${dayjs(item.created).fromNow().toString()}`}
-        </time>
+        {"created" in item && (
+          <time
+            className="collection-created"
+            dateTime={dayjs(item.created).toISOString()}
+          >
+            {`Added ${dayjs(item.created).fromNow().toString()}`}
+          </time>
+        )}
         {isOnline && (
           <DropdownMenuWrapper
             className="dropdown is-flush-right"
@@ -73,7 +76,7 @@ export function CollectionListItem({
             />
             <DropdownMenu>
               <ul className="dropdown-list" id="collection-item-dropdown">
-                {showEditButton && (
+                {"id" in item && onEditSubmit && (
                   <li className="dropdown-item">
                     <EditCollection
                       item={item}
@@ -98,7 +101,9 @@ export function CollectionListItem({
           </DropdownMenuWrapper>
         )}
       </div>
-      {item.notes && <p className="icon-card-description">{item.notes}</p>}
+      {"notes" in item && item.notes && (
+        <p className="icon-card-description">{item.notes}</p>
+      )}
     </article>
   );
 }

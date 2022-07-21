@@ -99,7 +99,8 @@ export function CollectionsTab({
     setList(newList);
   };
 
-  const deleteCollectionItem = async (item) => {
+  const deleteCollectionItem = async (item: any) => {
+    item = item as BookmarkData;
     const res = await updateDeleteCollectionItem(
       item,
       data.csrfmiddlewaretoken,
@@ -141,10 +142,9 @@ export function CollectionsTab({
           {list.length
             ? list.map((item) => (
                 <CollectionListItem
+                  key={item.id}
                   item={item}
                   onEditSubmit={collectionsSaveHandler}
-                  key={item.id}
-                  showEditButton={true}
                   handleDelete={deleteCollectionItem}
                 />
               ))
