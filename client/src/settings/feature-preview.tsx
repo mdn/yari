@@ -61,7 +61,7 @@ export default function FeaturePreview() {
         )
       ) : (
         <>
-          Feature preview is only available to MDN Plus 10 subscribers.{" "}
+          Feature preview is only available to MDN Supporter 10 subscribers.{" "}
           <a href={`/en-US/plus#subscribe`}>Learn more</a> about our plans.
         </>
       )}
