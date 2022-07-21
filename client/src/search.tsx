@@ -3,7 +3,6 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useCombobox } from "downshift";
 import useSWR from "swr";
 
-import { Doc, FuzzySearch } from "./fuzzy-search";
 import { preload, preloadSupported } from "./document/preloading";
 
 import { Button } from "./ui/atoms/button";
@@ -23,7 +22,6 @@ type Item = {
 
 type SearchIndex = {
   flex: any;
-  fuzzy: FuzzySearch;
   items: null | Item[];
 };
 
@@ -86,11 +84,9 @@ function useSearchIndex(): readonly [
       ];
 
       const flex = mixed.map(({ title }, i) => [i, title.toLowerCase()]);
-      const fuzzy = new FuzzySearch(mixed as Doc[]);
 
       setSearchIndex({
         flex,
-        fuzzy,
         items: mixed!,
       });
     };
@@ -106,12 +102,6 @@ function useSearchIndex(): readonly [
     () => [searchIndex, error || null, () => setShouldInitialize(true)],
     [searchIndex, error, setShouldInitialize]
   );
-}
-
-// The fuzzy search is engaged if the search term starts with a '/'
-// and does not have any spaces in it.
-function isFuzzySearchString(str: string) {
-  return str.startsWith("/") && !/\s/.test(str);
 }
 
 function HighlightMatch({ title, q }: { title: string; q: string }) {
@@ -239,33 +229,17 @@ function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
     // overlaying search results don't trigger a scroll.
     const limit = window.innerHeight < 850 ? 5 : 10;
 
-    if (isFuzzySearchString(inputValue)) {
-      if (inputValue === "/") {
-        return [];
-      } else {
-        const fuzzyResults = searchIndex.fuzzy.search(inputValue.slice(1), {
-          limit,
-        });
-        return fuzzyResults.map((fuzzyResult) => ({
-          url: fuzzyResult.item.url,
-          title: fuzzyResult.item.title,
-          positions: fuzzyResult.positions,
-          collection: fuzzyResult.item.collection,
-        }));
-      }
-    } else {
-      const q: string[] = inputValue
-        .toLowerCase()
-        .split(" ")
-        .map((s) => s.trim());
-      const indexResults: number[] = searchIndex.flex
-        .filter(([_, title]) => q.every((q) => title.includes(q)))
-        .map(([i]) => i)
-        .slice(0, limit);
-      return indexResults.map(
-        (index: number) => (searchIndex.items || [])[index] as ResultItem
-      );
-    }
+    const q: string[] = inputValue
+      .toLowerCase()
+      .split(" ")
+      .map((s) => s.trim());
+    const indexResults: number[] = searchIndex.flex
+      .filter(([_, title]) => q.every((q) => title.includes(q)))
+      .map(([i]) => i)
+      .slice(0, limit);
+    return indexResults.map(
+      (index: number) => (searchIndex.items || [])[index] as ResultItem
+    );
   }, [inputValue, searchIndex, searchIndexError]);
 
   const formAction = `/${locale}/search`;
@@ -473,9 +447,6 @@ function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
               </a>
             </div>,
           ]
-        )}
-        {isFuzzySearchString(inputValue) && (
-          <div className="fuzzy-engaged">Fuzzy searching by URI</div>
         )}
       </>
     );
