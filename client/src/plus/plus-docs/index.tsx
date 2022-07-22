@@ -1,9 +1,11 @@
 import { useParams, useLocation } from "react-router-dom";
 import { MDN_PLUS_TITLE } from "../../constants";
 import StaticPage from "../../homepage/static-page";
+import { useUserData } from "../../user-context";
 import "./index.scss";
 
 function PlusDocsNav() {
+  const userData = useUserData();
   return (
     <RelatedTopics
       heading="MDN Plus"
@@ -24,10 +26,14 @@ function PlusDocsNav() {
           slug: "plus/docs/features/offline",
           title: "MDN Offline",
         },
-        {
-          slug: "plus#subscribe",
-          title: "Try MDN Plus",
-        },
+        ...(!userData?.isAuthenticated
+          ? [
+              {
+                slug: "plus#subscribe",
+                title: "Try MDN Plus",
+              },
+            ]
+          : []),
       ]}
     />
   );
