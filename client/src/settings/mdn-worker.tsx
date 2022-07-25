@@ -17,12 +17,14 @@ export class MDNWorker {
   registered: boolean;
   timeout?: ReturnType<typeof setTimeout> | null;
   keepAlive: ReturnType<typeof setInterval> | null;
+  mutationCounter: number;
 
   constructor() {
     this.settings = this.offlineSettings();
     this.registered = false;
     this.timeout = null;
     this.keepAlive = null;
+    this.mutationCounter = 0;
 
     if (this.settings.autoUpdates) {
       this.autoUpdate();
@@ -46,8 +48,11 @@ export class MDNWorker {
     this.timeout = setTimeout(() => this.autoUpdate(), 60 * 60 * 1000);
   }
 
-  async messageHandler(event) {
+  messageHandler(event) {
     switch (event.data.type) {
+      case "mutate":
+        this.mutationCounter++;
+        break;
       case "pong":
         console.log("pong");
         break;
@@ -73,7 +78,9 @@ export class MDNWorker {
   }
 
   registerMessageHandler() {
-    navigator.serviceWorker.addEventListener("message", this.messageHandler);
+    navigator.serviceWorker.addEventListener("message", (e) =>
+      this.messageHandler(e)
+    );
   }
 
   async enableServiceWorker(type: SwType) {

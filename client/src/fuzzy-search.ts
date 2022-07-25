@@ -3,6 +3,7 @@ import { Fzf, FzfResultItem } from "fzf";
 export interface Doc {
   url: string;
   title: string;
+  collection: boolean;
 }
 
 export class FuzzySearch {
