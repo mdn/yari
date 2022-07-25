@@ -21,7 +21,7 @@ import {
   HeadingLinksFlaw,
   TranslationDifferenceFlaw,
   UnsafeHTMLFlaw,
-} from "../types";
+} from "../../../../libs/types/document";
 import "./flaws.scss";
 
 interface FlawCount {

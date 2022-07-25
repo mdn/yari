@@ -1,4 +1,4 @@
-import { DocParent } from "../../../document/types";
+import { DocParent } from "../../../../../libs/types/document";
 import { PreloadingDocumentLink } from "../../../document/preloading";
 
 import "./index.scss";
