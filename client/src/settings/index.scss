@@ -7,6 +7,10 @@
   margin: auto;
   padding: 1rem;
 
+  h3 {
+    margin-top: 0.5rem;
+  }
+
   .field-group {
     margin: 2rem 0;
 
@@ -15,10 +19,11 @@
 
       li {
         display: grid;
-        grid-template-columns: 1fr 5em;
+        grid-template-columns: 1fr minmax(5em);
         margin: 2em 0;
+        gap: 0 1rem;
 
-        h4 {
+        h3 {
           font-weight: 600;
         }
         span {
@@ -32,17 +37,19 @@
         .switch {
           justify-self: end;
           grid-column: 2/3;
-          grid-row: 2/3;
+          grid-row: 1/3;
           align-self: center;
+          height: 100%;
         }
 
-        button {
+        button,
+        .manage {
           font-size: 0.8rem;
           padding: 0.5rem 1rem;
           height: max-content;
           width: max-content;
           justify-self: end;
-          align-self: end;
+          align-self: center;
           grid-column: 2/3;
           grid-row: 1/3;
           border: 1px solid var(--text-primary);

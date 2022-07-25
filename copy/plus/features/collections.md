@@ -38,11 +38,7 @@ When an article is saved, it appears in **Collections**.
 
 ### Desktop
 
-You can reach Collections in two ways:
-
-1. In the top navigation bar, select **MDN Plus → Collections**.
-   ![Screenshot showing the main MDN Plus menu entry expanded. This reveals three entries one of which is Collections.](/assets/plus-docs/collections/desktop-main-menu-collections.png)
-2. Click on your avatar at the top-right and select **Collections**.
+1. Click on your avatar at the top-right and select **Collections**.
    ![Screenshot showing the user menu entry expanded. This reveals a number of options the second of which is Collections.](/assets/plus-docs/collections/desktop-collections-user-menu.png)
 
 ### Mobile
@@ -50,8 +46,8 @@ You can reach Collections in two ways:
 1. Open the main menu by tapping on the **burger menu icon** at the top right of
    the page.
    ![Screenshot showing the burger menu icon highlighted.](/assets/plus-docs/collections/mobile-burger-menu.png)
-2. Tap on **MDN Plus**.
-   ![Screenshot showing the expanded main menu with MDN Plus highlighted.](/assets/plus-docs/collections/mobile-plus-menu.png)
+2. Click on your avatar / email address at the bottom of the menu.
+   ![Screenshot showing the expanded user menu.](/assets/plus-docs/collections/mobile-menu.png)
 3. From the submenu, tap on **Collections**.
    ![Screenshot showing the expanded submenu with Collections highlighted.](/assets/plus-docs/collections/mobile-collections-menu-item.png)
 

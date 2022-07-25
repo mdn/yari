@@ -34,15 +34,11 @@ page or in the notifications list.
 
 ## See what pages you’re watching
 
-You can see what pages you’re watching in two ways:
-
-1. Click on **MDN Plus -> Notifications**
-   ![Screenshot showing MDN Plus main menu expanded revealing a Notifications menu entry.](/assets/plus-docs/notifications/access-notifications-from-main-menu.png)
-2. On the notifications dashboard, click on **Watch list**
-   ![Screenshot showing notifications dashboard with the watch list tab active.](/assets/plus-docs/notifications/watch-list.png)
-3. Click on your profile photo in the right corner of your screen and select
+1. Click on your profile photo in the right corner of your screen and select
    **Notifications** from the drop-down list.
    ![Screenshot showing user menu at the top-right of the page expanded, revealing a notifications menu entry.](/assets/plus-docs/notifications/notifications-user-menu.png)
+2. On the notifications dashboard, click on **Watch list**
+   ![Screenshot showing notifications dashboard with the watch list tab active.](/assets/plus-docs/notifications/watch-list.png)
 
 ## Star a notification and review it
 

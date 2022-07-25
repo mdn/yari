@@ -10,6 +10,7 @@ import { Button } from "./ui/atoms/button";
 
 import { useLocale } from "./hooks";
 import { SearchProps, useFocusViaKeyboard } from "./search-utils";
+import { useUserData } from "./user-context";
 
 const PRELOAD_WAIT_MS = 500;
 const SHOW_INDEXING_AFTER_MS = 500;
@@ -17,6 +18,7 @@ const SHOW_INDEXING_AFTER_MS = 500;
 type Item = {
   url: string;
   title: string;
+  collection: boolean;
 };
 
 type SearchIndex = {
@@ -29,6 +31,7 @@ type ResultItem = {
   title: string;
   url: string;
   positions: Set<number>;
+  collection: boolean;
 };
 
 function useSearchIndex(): readonly [
@@ -40,6 +43,7 @@ function useSearchIndex(): readonly [
   const [searchIndex, setSearchIndex] = useState<null | SearchIndex>(null);
   // Default to 'en-US' if you're on the home page without the locale prefix.
   const { locale = "en-US" } = useParams();
+  const user = useUserData();
 
   const url = `/${locale}/search-index.json`;
 
@@ -56,15 +60,47 @@ function useSearchIndex(): readonly [
   );
 
   useEffect(() => {
-    if (!data || searchIndex) {
+    if (!data) {
       return;
     }
+    const gather = async () => {
+      const collection: Item[] = [];
+      if (user?.settings?.colInSearch) {
+        const all = await import("./settings/db").then(({ getCollection }) =>
+          getCollection()
+        );
+        collection.push(
+          ...all.map((item) => {
+            return { ...item, collection: true };
+          })
+        );
+      }
+      const collectionSet = new Set(collection.map(({ url }) => url));
+      const mixed = [
+        ...collection,
+        ...data
+          .filter(({ url }) => !collectionSet.has(url))
+          .map((item) => {
+            return { ...item, collection: false };
+          }),
+      ];
 
-    const flex = data.map(({ title }, i) => [i, title.toLowerCase()]);
-    const fuzzy = new FuzzySearch(data as Doc[]);
+      const flex = mixed.map(({ title }, i) => [i, title.toLowerCase()]);
+      const fuzzy = new FuzzySearch(mixed as Doc[]);
 
-    setSearchIndex({ flex, fuzzy, items: data! });
-  }, [searchIndex, shouldInitialize, data]);
+      setSearchIndex({
+        flex,
+        fuzzy,
+        items: mixed!,
+      });
+    };
+    gather();
+  }, [
+    shouldInitialize,
+    data,
+    user?.settings?.colInSearch,
+    user?.mdnWorker?.mutationCounter,
+  ]);
 
   return useMemo(
     () => [searchIndex, error || null, () => setShouldInitialize(true)],
@@ -214,6 +250,7 @@ function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
           url: fuzzyResult.item.url,
           title: fuzzyResult.item.title,
           positions: fuzzyResult.positions,
+          collection: fuzzyResult.item.collection,
         }));
       }
     } else {
@@ -384,7 +421,8 @@ function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
                   key: item.url,
                   className:
                     "result-item " +
-                    (i === highlightedIndex ? "highlight" : ""),
+                    (i === highlightedIndex ? "highlight " : " ") +
+                    (item.collection ? "qs-collection " : " "),
                   item,
                   index: i,
                 })}
