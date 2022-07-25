@@ -5,7 +5,7 @@ import useSWR from "swr";
 import "./index.scss";
 
 import { Loading } from "../ui/atoms/loading";
-import { PageContentContainer } from "../ui/atoms/page-content";
+import { MainContentContainer } from "../ui/atoms/page-content";
 
 import { TranslationDifferences } from "./differences";
 import { MissingTranslations } from "./missing";
@@ -91,9 +91,9 @@ function PickLocale() {
 
 function Container({ children }: { children: React.ReactNode }) {
   return (
-    <div className="all-translations">
-      <PageContentContainer>{children}</PageContentContainer>
-    </div>
+    <MainContentContainer className="all-translations" standalone={true}>
+      {children}
+    </MainContentContainer>
   );
 }
 
