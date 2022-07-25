@@ -73,7 +73,7 @@ const readBuildHTML = lazy(() => {
       'The render depends on being able to inject into <div id="root"></div>'
     );
   }
-  const scripts: String[] = [];
+  const scripts: string[] = [];
   const gaScriptPathName = getGAScriptPathName();
   if (gaScriptPathName) {
     scripts.push(`<script src="${gaScriptPathName}" defer=""></script>`);
@@ -108,7 +108,7 @@ const getGAScriptPathName = lazy((relPath = "/static/js/ga.js") => {
 });
 
 const extractWebFontURLs = lazy(() => {
-  const urls: String[] = [];
+  const urls: string[] = [];
   const manifest = JSON.parse(
     fs.readFileSync(path.join(clientBuildRoot, "asset-manifest.json"), "utf-8")
   );
@@ -168,7 +168,7 @@ export default function render(
   let escapedPageTitle = htmlEscape(pageTitle);
 
   const hydrationData: HydrationData = {};
-  const translations: String[] = [];
+  const translations: string[] = [];
   if (pageNotFound) {
     escapedPageTitle = `🤷🏽‍♀️ Page not found | ${escapedPageTitle}`;
     hydrationData.pageNotFound = true;
