@@ -9,7 +9,7 @@ test("db.ts should be identical (PWA vs. Client)", () => {
   }
 
   const pwaDb = path.join("client", "pwa", "src", "db.ts");
-  const clientDb = path.join("client", "src", "offline-settings", "db.ts");
+  const clientDb = path.join("client", "src", "settings", "db.ts");
 
   const [clientDbHash, pwaDbHash] = [clientDb, pwaDb].map(sha256sum);
 

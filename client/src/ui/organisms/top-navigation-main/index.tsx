@@ -5,15 +5,18 @@ import MainMenu from "../../molecules/main-menu";
 import { UserMenu } from "../../molecules/user-menu";
 import { Search } from "../../molecules/search";
 
+import { useIsServer } from "../../../hooks";
 import { useUserData } from "../../../user-context";
 
 import "./index.scss";
 import { PLUS_IS_ENABLED } from "../../../env";
 import { isPlusAvailable } from "../../../utils";
 import { ThemeSwitcher } from "../../molecules/theme-switcher";
+import Maintenance from "../../molecules/maintenance";
 
 export const TopNavigationMain = ({ isOpenOnMobile }) => {
   const userData = useUserData();
+  const isServer = useIsServer();
   const plusAvailable = isPlusAvailable(userData);
 
   return (
@@ -23,11 +26,15 @@ export const TopNavigationMain = ({ isOpenOnMobile }) => {
       <Search id="top-nav-search" />
       <ThemeSwitcher />
 
-      {(PLUS_IS_ENABLED && userData && userData.isAuthenticated && (
-        <>
-          <UserMenu />
-        </>
-      )) ||
+      {(PLUS_IS_ENABLED &&
+        !isServer &&
+        userData &&
+        userData.isAuthenticated && (
+          <>
+            <UserMenu />
+          </>
+        )) ||
+        (userData?.maintenance && <Maintenance />) ||
         (plusAvailable && <AuthContainer />) || <></>}
     </div>
   );

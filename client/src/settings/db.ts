@@ -1,9 +1,20 @@
 // WARNING - This file is duplicated at two locations:
 // - client/pwa/src/db.ts
-// - client/src/offline-settings/db.ts
+// - client/src/settings/db.ts
 // Until we find a solution, keep both files in sync.
 
 import Dexie from "dexie";
+
+export enum SwType {
+  PreferOnline = "PreferOnline",
+  PreferOffline = "PreferOffline",
+  ApiOnly = "ApiOnly",
+}
+
+export type Item = {
+  url: string;
+  title: string;
+};
 
 export interface Watched {
   url: string;
@@ -36,6 +47,10 @@ export interface Collections {
   created: Date;
 }
 
+export interface PlusSettings {
+  col_in_search: boolean;
+}
+
 export interface Whoami {
   id?: number;
   username: string;
@@ -43,6 +58,7 @@ export interface Whoami {
   email: string;
   avatar_url: string;
   is_subscriber: boolean;
+  settings: PlusSettings | null;
 }
 
 export enum ContentStatusPhase {
@@ -94,10 +110,21 @@ export class MDNOfflineDB extends Dexie {
     this.version(2).stores({
       contentStatusHistory: "++id",
     });
+    this.version(3).stores({
+      whoami:
+        "++, username, is_authenticated, email, avatar_url, is_subscriber, settings",
+    });
   }
 }
 
 const offlineDb = new MDNOfflineDB();
+
+async function getCollection(): Promise<Item[]> {
+  const all = await offlineDb.collections.toArray();
+  return all.map((val) => {
+    return { title: val.title, url: val.url };
+  });
+}
 
 async function getContentStatus(): Promise<ContentStatus> {
   const current = await offlineDb.contentStatusHistory.toCollection().last();
@@ -142,4 +169,4 @@ async function patchContentStatus(
   });
 }
 
-export { offlineDb, getContentStatus, patchContentStatus };
+export { offlineDb, getContentStatus, patchContentStatus, getCollection };

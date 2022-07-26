@@ -46,7 +46,7 @@ export function CollectionsTab({
     if (data && !!data.items) {
       setSubscriptionLimitReached(data.subscription_limit_reached);
       setList([
-        ...listRef.current,
+        ...(data?.offset === 0 ? [] : listRef.current),
         ...data.items.map((item) => {
           return { ...item, checked: false };
         }),

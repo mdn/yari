@@ -1,13 +1,19 @@
 import { useParams, useLocation } from "react-router-dom";
 import { MDN_PLUS_TITLE } from "../../constants";
 import StaticPage from "../../homepage/static-page";
+import { useUserData } from "../../user-context";
 import "./index.scss";
 
 function PlusDocsNav() {
+  const userData = useUserData();
   return (
     <RelatedTopics
       heading="MDN Plus"
       items={[
+        {
+          slug: "plus/docs/features/overview",
+          title: "Overview",
+        },
         {
           slug: "plus/docs/features/notifications",
           title: "Notifications",
@@ -20,10 +26,14 @@ function PlusDocsNav() {
           slug: "plus/docs/features/offline",
           title: "MDN Offline",
         },
-        {
-          slug: "plus/docs/faq",
-          title: "Frequently asked questions",
-        },
+        ...(!userData?.isAuthenticated
+          ? [
+              {
+                slug: "plus#subscribe",
+                title: "Try MDN Plus",
+              },
+            ]
+          : []),
       ]}
     />
   );

@@ -1,4 +1,6 @@
-const devMiddlewares = [];
+import { WebpackConfiguration } from "webpack-dev-server";
+
+export const devMiddlewares = [];
 
 if (process.env.NODE_ENV === "development") {
   /* eslint-disable node/no-unpublished-require */
@@ -6,7 +8,7 @@ if (process.env.NODE_ENV === "development") {
   const webpackDevMiddleware = require("webpack-dev-middleware");
   const webpackHotMiddleware = require("webpack-hot-middleware");
 
-  const webpackConfig = {
+  const webpackConfig: WebpackConfiguration = {
     entry: {
       app: [
         "react-hot-loader/patch",
@@ -33,7 +35,3 @@ if (process.env.NODE_ENV === "development") {
     })
   );
 }
-
-module.exports = {
-  devMiddlewares,
-};

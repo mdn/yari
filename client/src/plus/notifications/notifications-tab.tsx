@@ -91,7 +91,7 @@ export function NotificationsTab({
   useEffect(() => {
     if (data && !!data.items) {
       setList([
-        ...listRef.current,
+        ...(data?.offset === 0 ? [] : listRef.current),
         ...data.items.map((item) => {
           return { ...item, checked: false };
         }),

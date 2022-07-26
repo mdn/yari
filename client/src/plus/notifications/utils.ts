@@ -35,7 +35,10 @@ function registerSendBeaconHandler(formData: FormData) {
   // if the user clicks a hard link, we set notifications as read using a sendBeacon request
   const handler = () => {
     if (document.visibilityState === "hidden") {
-      navigator.sendBeacon(NOTIFICATIONS_MARK_ALL_AS_READ_PATH, formData);
+      navigator.sendBeacon(
+        NOTIFICATIONS_MARK_ALL_AS_READ_PATH,
+        new URLSearchParams([...(formData as any)])
+      );
     }
   };
   document.addEventListener("visibilitychange", handler);

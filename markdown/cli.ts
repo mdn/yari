@@ -1,5 +1,6 @@
 import * as fs from "fs";
 import * as os from "os";
+import * as path from "path";
 const fm = require("front-matter");
 import { program } from "@caporal/core";
 import * as chalk from "chalk";
@@ -141,11 +142,14 @@ program
       console.log(
         `Starting HTML to Markdown conversion in ${options.mode} mode`
       );
-      let folderSearch = args.folder;
-      // replace '\' and '/' with '\\' to make this regexp works on Windows
-      if (folderSearch && os.platform() === "win32") {
-        folderSearch = folderSearch.replace(/\\|\//g, "\\\\");
+      let folder = args.folder?.replace(/\\|\//g, path.sep); // using correct path separator
+      // add trailing path separator (if not exists) to match folder
+      if (folder && !folder.endsWith(path.sep)) {
+        folder += path.sep;
       }
+      // replace '\' with '\\' to make this regexp works on Windows
+      const folderSearch =
+        os.platform() === "win32" ? folder?.replace(/\\/g, "\\\\") : folder;
       const documents = Document.findAll({
         folderSearch: folderSearch,
         locales: buildLocaleMap(options.locale),
@@ -161,15 +165,16 @@ program
         string,
         { offset: number; invalid: []; unhandled: [] }
       >();
-      // replace '\' with '/' for Windows path
-      const slugPrefix = args.folder.toLowerCase().replace(/\\/g, "/");
       try {
         for (let doc of documents.iter()) {
           progressBar.increment();
           if (
             doc.isMarkdown ||
             // findAll's folderSearch is fuzzy which we don't want here
-            !doc.metadata.slug.toLowerCase().startsWith(slugPrefix)
+            (folder &&
+              !(doc.fileInfo.folder + path.sep)
+                .slice(doc.fileInfo.folder.indexOf(path.sep) + 1)
+                .startsWith(folder))
           ) {
             continue;
           }

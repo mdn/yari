@@ -2,7 +2,7 @@
   "extends": "../tsconfig.json",
   "compilerOptions": {
     "esModuleInterop": false,
-    "target": "es2019",
+    "target": "ES2020",
     "lib": ["esnext"]
   },
   "include": ["h2m/**/*"],

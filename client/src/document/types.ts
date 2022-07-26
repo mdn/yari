@@ -14,6 +14,7 @@ export interface GenericFlaw {
   fixable?: boolean;
   fixed?: true;
   externalImage?: boolean;
+  name?: string;
 }
 
 export interface BrokenLink extends GenericFlaw {
@@ -150,6 +151,8 @@ export interface Doc {
   hasMathML?: boolean;
   isMarkdown: boolean;
   summary: string;
+  // Used for search.
+  popularity?: number;
 }
 
 export type Section = ProseSection | SpecificationsSection | BCDSection;
