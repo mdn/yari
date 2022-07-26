@@ -276,6 +276,7 @@ function CellIcons({ support }: { support: BCD.SupportStatement | undefined }) {
     isOnlySupportedWithFlags(support) && (
       <Icon key="disabled" name="disabled" />
     ),
+    Array.isArray(support) && <Icon key="more" name="more" />,
   ].filter(Boolean);
 
   return icons.length ? <div className="bc-icons">{icons}</div> : null;
