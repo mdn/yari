@@ -79,10 +79,6 @@ const readBuildHTML = lazy(() => {
     scripts.push(`<script src="${gaScriptPathName}" defer=""></script>`);
   }
 
-  html = html.replace(/(<script src="[^"]*")(><\/script>)/g, (_, pre, post) => {
-    scripts.push(`${pre} defer=""${post}`);
-    return "";
-  });
   html = html.replace('<meta name="SSR_SCRIPTS"/>', scripts.join(""));
   return html;
 });
