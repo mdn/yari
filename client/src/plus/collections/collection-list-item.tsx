@@ -29,7 +29,7 @@ export function CollectionListItem({
   const iconLabel = _getIconLabel(item.url);
 
   return (
-    <article className="icon-card">
+    <li className="icon-card">
       <div className="icon-card-title-wrap">
         <div className={`icon-card-icon ${iconClass || ""}`}>
           <span>{iconLabel}</span>
@@ -104,6 +104,6 @@ export function CollectionListItem({
       {"notes" in item && item.notes && (
         <p className="icon-card-description">{item.notes}</p>
       )}
-    </article>
+    </li>
   );
 }
