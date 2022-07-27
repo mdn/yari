@@ -79,7 +79,7 @@ const readBuildHTML = lazy(() => {
     scripts.push(`<script src="${gaScriptPathName}" defer=""></script>`);
   }
 
-  html = html.replace('<meta name="SSR_SCRIPTS"/>', scripts.join(""));
+  html = html.replace('<meta name="SSR_SCRIPTS"/>', () => scripts.join(""));
   return html;
 });
 
@@ -193,7 +193,7 @@ export default function render(
       for (const translation of [...doc.other_translations, thisLocale]) {
         const translationURL = doc.mdn_url.replace(
           `/${doc.locale}/`,
-          `/${translation.locale}/`
+          () => `/${translation.locale}/`
         );
         // The locale used in `<link rel="alternate">` needs to be the ISO-639-1
         // code. For example, it's "en", not "en-US". And it's "sv" not "sv-SE".
@@ -252,7 +252,7 @@ export default function render(
   let html = buildHtml;
   html = html.replace(
     '<html lang="en"',
-    `<html lang="${locale || DEFAULT_LOCALE}"`
+    () => `<html lang="${locale || DEFAULT_LOCALE}"`
   );
   html = html.replace(
     /<meta property="og:([^"]*)" content="([^"]*)"\/>/g,
@@ -265,16 +265,16 @@ export default function render(
       return `<meta name="description" content="${pageDescription}"/>`;
     });
   }
-  html = html.replace("<title>MDN Web Docs</title>", `${titleTag}`);
+  html = html.replace("<title>MDN Web Docs</title>", () => `${titleTag}`);
 
   if (!pageNotFound) {
     html = html.replace(
       '<link rel="canonical" href="https://developer.mozilla.org"/>',
-      `<link rel="canonical" href="${canonicalURL}"/>`
+      () => `<link rel="canonical" href="${canonicalURL}"/>`
     );
   }
 
-  html = html.replace('<meta name="SSR_DATA"/>', ssr_data.join(""));
-  html = html.replace('<div id="root"></div>', root);
+  html = html.replace('<meta name="SSR_DATA"/>', () => ssr_data.join(""));
+  html = html.replace('<div id="root"></div>', () => root);
   return html;
 }
