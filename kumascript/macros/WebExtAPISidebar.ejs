@@ -54,22 +54,23 @@ function buildSublist(pages, title, ignoreBadges) {
 
     result += '<li>';
 
+    var pageBadges = '';
     if (!ignoreBadges) {
 
         if (hasTag(aPage, 'Experimental')) {
-            result += badges.ExperimentalBadge;
+            pageBadges += badges.ExperimentalBadge;
         }
 
         if (hasTag(aPage, 'Non-standard') || hasTag(aPage, 'Non Standard')) {
-            result += badges.NonStandardBadge;
+            pageBadges += badges.NonStandardBadge;
         }
 
         if (hasTag(aPage, 'Deprecated')) {
-            result += badges.DeprecatedBadge;
+            pageBadges += badges.DeprecatedBadge;
         }
 
         if (hasTag(aPage, 'Obsolete')) {
-            result += badges.ObsoleteBadge;
+            pageBadges += badges.ObsoleteBadge;
             result += '<s class="obsoleteElement">';
         }
     }
@@ -79,9 +80,9 @@ function buildSublist(pages, title, ignoreBadges) {
     }
 
     if (slug == aPage.slug) {
-        result += '<em><code>' + apiComponentName + '</code></em>'
+        result += '<em>' + pageBadges + ' <code>' + apiComponentName + '</code></em>'
     } else {
-        result += '<a href="' + url + '"><code>' + apiComponentName + '</code></a>';
+        result += pageBadges + '<a href="' + url + '"><code>' + apiComponentName + '</code></a>';
     }
 
     if (rtlLocales.indexOf(locale) != -1) {
