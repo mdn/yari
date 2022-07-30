@@ -216,7 +216,6 @@ async function buildDocuments(
     progressBar.stop();
   }
 
-  const sitemapsBuilt = [];
   for (const [locale, docs] of Object.entries(docPerLocale)) {
     const sitemapDir = path.join(
       BUILD_OUT_ROOT,
@@ -228,19 +227,6 @@ async function buildDocuments(
     fs.writeFileSync(
       sitemapFilePath,
       zlib.gzipSync(makeSitemapXML(locale, docs))
-    );
-    sitemapsBuilt.push(sitemapFilePath);
-  }
-
-  // do we bother generating the combined sitemaps index file.
-  // That means, that if you've done this at least once, consequent runs of
-  if (CONTENT_TRANSLATED_ROOT) {
-    const sitemapIndexFilePath = path.join(BUILD_OUT_ROOT, "sitemap.xml");
-    fs.writeFileSync(
-      sitemapIndexFilePath,
-      makeSitemapIndexXML(
-        sitemapsBuilt.map((fp) => fp.replace(BUILD_OUT_ROOT, ""))
-      )
     );
   }
 
@@ -287,6 +273,9 @@ program
     default: [],
     validator: [...VALID_LOCALES.keys()],
   })
+  .option("--sitemap-index", "Build a sitemap index file", {
+    default: false,
+  })
   .argument("[files...]", "specific files to build")
   .action(async ({ args, options }) => {
     try {
@@ -302,6 +291,41 @@ program
             }`
           );
         }
+      }
+
+      if (options.sitemapIndex) {
+        if (!options.quiet) {
+          console.log(chalk.yellow("Building sitemap index file..."));
+        }
+        const sitemapsBuilt = [];
+        const locales = [];
+        for (const locale of VALID_LOCALES.keys()) {
+          const sitemapFilePath = path.join(
+            BUILD_OUT_ROOT,
+            "sitemaps",
+            locale,
+            "sitemap.xml.gz"
+          );
+          if (fs.existsSync(sitemapFilePath)) {
+            sitemapsBuilt.push(sitemapFilePath);
+            locales.push(locale);
+          }
+        }
+
+        const sitemapIndexFilePath = path.join(BUILD_OUT_ROOT, "sitemap.xml");
+        fs.writeFileSync(
+          sitemapIndexFilePath,
+          makeSitemapIndexXML(
+            sitemapsBuilt.map((fp) => fp.replace(BUILD_OUT_ROOT, ""))
+          )
+        );
+
+        if (!options.quiet) {
+          console.log(
+            chalk.green(`Sitemap index file built with [${locales}].`)
+          );
+        }
+        return;
       }
       const { files } = args;
 
