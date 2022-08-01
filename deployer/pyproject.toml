@@ -20,7 +20,7 @@ unidiff = "^0.7.4"
 
 [tool.poetry.dev-dependencies]
 black = "^22.6"
-flake8 = "^4.0.1"
+flake8 = "^5.0.1"
 pytest = "^7.1.2"
 
 [tool.poetry.scripts]
