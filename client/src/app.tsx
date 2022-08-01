@@ -17,7 +17,6 @@ import { PageContentContainer } from "./ui/atoms/page-content";
 import { PageNotFound } from "./page-not-found";
 import { Plus } from "./plus";
 import { About } from "./about";
-import { OfflineSettings } from "./offline-settings";
 import { docCategory } from "./utils";
 import { Contribute } from "./community";
 import { ContributorSpotlight } from "./contributor-spotlight";
@@ -220,16 +219,6 @@ export function App(appProps) {
                 element={
                   <StandardLayout extraClasses="plus">
                     <Plus {...appProps} />
-                  </StandardLayout>
-                }
-              />
-            )}
-            {PLUS_IS_ENABLED && (
-              <Route
-                path="/offline-settings"
-                element={
-                  <StandardLayout>
-                    <OfflineSettings {...appProps} />
                   </StandardLayout>
                 }
               />

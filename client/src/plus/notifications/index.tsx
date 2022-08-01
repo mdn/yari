@@ -11,8 +11,9 @@ import "./index.scss";
 
 import { useUserData } from "../../user-context";
 import { TabVariant, TAB_INFO, useCurrentTab } from "../common/tabs";
-import { PlusTabs } from "../common/plus-tabs";
 import { NotSignedIn } from "../common";
+import { NotificationsTab, StarredNotificationsTab } from "./notifications-tab";
+import { WatchedTab } from "./watched-items-tab";
 
 function NotificationsLayout() {
   const locale = useLocale();
@@ -56,14 +57,27 @@ function NotificationsLayout() {
       </header>
       {showTabs && (
         <Container>
-          <>
-            <PlusTabs
-              currentTab={currentTab}
+          {currentTab === TabVariant.NOTIFICATIONS && (
+            <NotificationsTab
               selectedTerms={selectedTerms}
-              selectedFilter={selectedFilter}
               selectedSort={selectedSort}
+              selectedFilter={selectedFilter}
             />
-          </>
+          )}
+          {currentTab === TabVariant.STARRED && (
+            <StarredNotificationsTab
+              selectedTerms={selectedTerms}
+              selectedSort={selectedSort}
+              selectedFilter={selectedFilter}
+            />
+          )}
+          {currentTab === TabVariant.WATCHING && (
+            <WatchedTab
+              selectedTerms={selectedTerms}
+              selectedSort={selectedSort}
+              selectedFilter={selectedFilter}
+            />
+          )}
         </Container>
       )}
       {!userData && !isAuthed && <NotSignedIn />}

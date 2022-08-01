@@ -8,6 +8,8 @@ import ClearButton from "./clear";
 import { Spinner } from "../ui/atoms/spinner";
 import { MDN_PLUS_TITLE } from "../constants";
 import { ContentStatus, ContentStatusPhase } from "./db";
+import { useUserData } from "../user-context";
+import { useLocale } from "../hooks";
 
 function displayEstimate({ usage = 0, quota = Infinity }: StorageEstimate) {
   const usageInMib = Math.round(usage / (1024 * 1024));
@@ -15,21 +17,30 @@ function displayEstimate({ usage = 0, quota = Infinity }: StorageEstimate) {
   return `${usageInMib} MiB`;
 }
 
-export default function SettingsApp({ ...appProps }) {
+export default function OfflineSettings({ ...appProps }) {
   const serviceWorkerAvailable = window?.navigator?.serviceWorker;
+  const user = useUserData();
+  const locale = useLocale();
 
   return (
     <section className="field-group">
-      {/* <h3>MDN Offline</h3> */}
-      {serviceWorkerAvailable ? (
-        <Settings />
+      <h2>MDN Offline</h2>
+      {user?.isSubscriber ? (
+        serviceWorkerAvailable ? (
+          <Settings />
+        ) : (
+          <>
+            <h3>Offline mode is unavailable </h3>{" "}
+            <p>
+              Please make sure that you are not using a private or incognito
+              window.
+            </p>
+          </>
+        )
       ) : (
         <>
-          <h4>Offline mode is unavailable </h4>{" "}
-          <p>
-            Please make sure that you are not using a private or incognito
-            window.
-          </p>
+          MDN Offline is only available to MDN Plus subscribers.{" "}
+          <a href={`/${locale}/plus#subscribe`}>Learn more</a> about our plans.
         </>
       )}
     </section>
@@ -37,7 +48,7 @@ export default function SettingsApp({ ...appProps }) {
 }
 
 function Settings() {
-  document.title = `MDN Offline | ${MDN_PLUS_TITLE}`;
+  document.title = `Settings | ${MDN_PLUS_TITLE}`;
   const [status, setStatus] = useState<ContentStatus>();
   const [saving, setSaving] = useState<boolean>(true);
 
@@ -124,7 +135,7 @@ function Settings() {
   return (
     <ul>
       <li>
-        <h4>Enable offline storage</h4>
+        <h3>Enable offline storage</h3>
         <span>Allow MDN content to be downloaded for offline access</span>
         {(saving === true && <Spinner extraClasses="loading" />) || (
           <Switch
@@ -141,7 +152,7 @@ function Settings() {
       {settings?.offline && (
         <>
           <li>
-            <h4>Prefer online content</h4>
+            <h3>Prefer online content</h3>
             <span>
               Do not use offline content while connected to the internet
             </span>
@@ -165,7 +176,7 @@ function Settings() {
             />
           </li>
           <li>
-            <h4>Enable auto-update</h4>
+            <h3>Enable auto-update</h3>
             <span>
               Automatically download updates to content enabled for download
             </span>
@@ -183,7 +194,7 @@ function Settings() {
           </li>
           {window?.location.hash === "#debug" && (
             <li>
-              <h4>Debug</h4>
+              <h3>Debug</h3>
               <span style={{ fontFamily: "monospace", whiteSpace: "pre" }}>
                 {JSON.stringify(status, null, 2)}
               </span>
@@ -191,7 +202,7 @@ function Settings() {
           )}
           {usage && (
             <li>
-              <h4>Storage used</h4>
+              <h3>Storage used</h3>
               <span>
                 MDN Offline currently uses <b>{usage}</b>
               </span>

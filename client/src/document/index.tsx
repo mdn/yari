@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import { useSearchParams, useParams, useNavigate } from "react-router-dom";
 import useSWR, { mutate } from "swr";
 
@@ -40,6 +40,7 @@ import "./index.scss";
 // main bundle all the time.
 import "./interactive-examples.scss";
 import { DocumentSurvey } from "../ui/molecules/document-survey";
+import { GleanProvider, useGlean } from "../telemetry/glean-context";
 // import { useUIStatus } from "../ui-context";
 
 // Lazy sub-components
@@ -48,6 +49,7 @@ const MathMLPolyfillMaybe = React.lazy(() => import("./mathml-polyfill"));
 
 export function Document(props /* TODO: define a TS interface for this */) {
   const ga = useGA();
+  const glean = useGlean();
   const isServer = useIsServer();
 
   const mountCounter = React.useRef(0);
@@ -116,6 +118,12 @@ export function Document(props /* TODO: define a TS interface for this */) {
 
   React.useEffect(() => {
     if (doc && !error) {
+      console.log(window.location.toString());
+      console.log(document.referrer);
+      glean.page({
+        path: window.location.toString(),
+        referrer: document.referrer,
+      });
       if (mountCounter.current > 0) {
         // 'dimension19' means it's a client-side navigation.
         // I.e. not the initial load but the location has now changed.

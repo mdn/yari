@@ -6,7 +6,7 @@ import { App } from "./app";
 import { GAProvider } from "./ga-context";
 import { UserDataProvider } from "./user-context";
 import { UIProvider } from "./ui-context";
-import { GleanProvider } from "./glean-context";
+import { GleanProvider } from "./telemetry/glean-context";
 
 // import * as serviceWorker from './serviceWorker';
 
@@ -49,7 +49,5 @@ if (container.firstElementChild) {
 
 // Initialize mdnWorker if there's a service worker already.
 if (navigator?.serviceWorker?.controller && !window.mdnWorker) {
-  import("./offline-settings/mdn-worker").then(({ getMDNWorker }) =>
-    getMDNWorker()
-  );
+  import("./settings/mdn-worker").then(({ getMDNWorker }) => getMDNWorker());
 }

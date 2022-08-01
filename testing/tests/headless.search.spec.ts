@@ -50,41 +50,4 @@ test.describe("Autocomplete search", () => {
       "No document titles found"
     );
   });
-
-  test("find Foo page by fuzzy-search", async ({ page }) => {
-    await page.goto(testURL("/"));
-
-    // This will activate the fancy autocomplete search and it should start
-    // a download of the `/en-US/search-index.json` too.
-    await page.focus(SEARCH_SELECTOR);
-    await page.waitForSelector("#top-nav-search-form"); // autocomplete search form
-    await page.waitForLoadState("networkidle");
-
-    await page.fill(SEARCH_SELECTOR, "/");
-    await page.waitForSelector("#top-nav-search-form"); // autocomplete search form
-    expect(await page.isVisible("text=Fuzzy searching by URI")).toBeTruthy();
-    expect(await page.isVisible("text=No document titles found")).toBeFalsy();
-    await page.fill(SEARCH_SELECTOR, "/wboo");
-    expect(await page.isVisible("text=<foo>: A test tag")).toBeTruthy();
-
-    await page.click("div.result-item");
-    await page.waitForLoadState("networkidle");
-    expect(await page.innerText("h1")).toBe("<foo>: A test tag");
-    // Should have been redirected too...
-    expect(page.url()).toBe(testURL("/en-US/docs/Web/Foo"));
-  });
-
-  test("find nothing by fuzzy-search", async ({ page }) => {
-    await page.goto(testURL("/"));
-
-    // This will activate the fancy autocomplete search and it should start
-    // a download of the `/en-US/search-index.json` too.
-    await page.focus(SEARCH_SELECTOR);
-    await page.waitForSelector("#top-nav-search-form"); // autocomplete search form
-    await page.waitForLoadState("networkidle");
-
-    await page.fill(SEARCH_SELECTOR, "/gooblygook");
-    await page.waitForSelector("#top-nav-search-form"); // autocomplete search form
-    expect(await page.isVisible("text=No document titles found")).toBeTruthy();
-  });
 });

@@ -1,3 +1,4 @@
+import { useGlean } from "../../../telemetry/glean-context";
 import InternalLink from "../../atoms/internal-link";
 import { MenuEntry, Submenu } from "../submenu";
 
@@ -10,7 +11,7 @@ interface MenuProps {
 export const Menu = ({ menu, isOpen, toggle }: MenuProps) => {
   const buttonId = `${menu.id}-button`;
   const submenuId = `${menu.id}-menu`;
-
+  const glean = useGlean();
   return (
     <li key={menu.id} className="top-level-entry-container">
       <button
@@ -21,6 +22,7 @@ export const Menu = ({ menu, isOpen, toggle }: MenuProps) => {
         aria-haspopup="menu"
         aria-expanded={isOpen}
         onClick={() => {
+          glean.event({ label: menu.id, type: "clicked", position: "top" });
           toggle(menu.id);
         }}
       >
