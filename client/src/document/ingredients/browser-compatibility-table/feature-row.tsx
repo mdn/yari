@@ -268,12 +268,14 @@ function CellIcons({ support }: { support: BCD.SupportStatement | undefined }) {
   }
 
   const icons = [
-    isOnlySupportedWithPrefix(support) && <Icon key="prefix" name="prefix" />,
+    isOnlySupportedWithPrefix(supportItem) && (
+      <Icon key="prefix" name="prefix" />
+    ),
     hasNoteworthyNotes(supportItem) && <Icon key="footnote" name="footnote" />,
-    isOnlySupportedWithAltName(support) && (
+    isOnlySupportedWithAltName(supportItem) && (
       <Icon key="altname" name="altname" />
     ),
-    isOnlySupportedWithFlags(support) && (
+    isOnlySupportedWithFlags(supportItem) && (
       <Icon key="disabled" name="disabled" />
     ),
   ].filter(Boolean);
