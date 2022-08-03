@@ -7,11 +7,11 @@ page:
   include_client_id: true
   send_if_empty: false
   notification_emails:
-    - gsleigh@mozilla.org
+    - mdn-team@mozilla.com
   bugs:
-    - "bug goes here"
+    - "https://bugzilla.mozilla.org/show_bug.cgi?id=1782509"
   data_reviews:
-    - "reveiw goes here"
+    - "Data review bug #"
 
 action:
   description: |
@@ -19,8 +19,8 @@ action:
   include_client_id: true
   send_if_empty: false
   notification_emails:
-    - gsleigh@mozilla.org
+    - mdn-team@mozilla.com
   bugs:
-    - "bug goes here"
+    - "https://bugzilla.mozilla.org/show_bug.cgi?id=1782509"
   data_reviews:
-    - "reveiw goes here"
+    - "Data review bug #"

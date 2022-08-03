@@ -1,0 +1,101 @@
+---
+$schema: moz://mozilla.org/schemas/glean/metrics/2-0-0
+
+page:
+  path:
+    type: string
+    lifetime: application
+    send_in_pings:
+      - page
+      - action
+    description: |
+      The URL path of the page that was viewed.
+    data_sensitivity:
+      - "web_activity"
+    bugs:
+      - "https://bugzilla.mozilla.org/show_bug.cgi?id=1782509"
+    data_reviews:
+      - "Data review bug #"
+    notification_emails:
+      - mdn-team@mozilla.com
+    expires: never
+  referrer:
+    type: string
+    lifetime: application
+    send_in_pings:
+      - page
+      - action
+    description: |
+      The referring URL that linked to the page that was viewed.
+    data_sensitivity:
+      - "web_activity"
+    bugs:
+      - "https://bugzilla.mozilla.org/show_bug.cgi?id=1782509"
+    data_reviews:
+      - "Data review bug #"
+    notification_emails:
+      - mdn-team@mozilla.com
+    expires: never
+  page_event:
+    type: event
+    lifetime: ping
+    send_in_pings:
+      - action
+    description: |
+      An event describing any non-click type page interaction  E.g
+       'Logged in', 'Offer hero viewed'
+    data_sensitivity:
+      - "web_activity"
+    bugs:
+      - https://bugzilla.mozilla.org/show_bug.cgi?id=1782509
+    data_reviews:
+      - "Data review bug #"
+    notification_emails:
+      - mdn-team@mozilla.com
+    expires: never
+    extra_keys:
+      label:
+        description: |
+          The label used to describe the event.
+          Example: 'User Logged in'
+        type: string
+      type:
+        description: |
+          The type of event.
+          Example: 'Viewed Collections'
+        type: string
+
+event:
+  clicked:
+    type: event
+    lifetime: ping
+    send_in_pings:
+      - action
+    description: |
+      An event containing metrics related to page click events.
+    data_sensitivity:
+      - "web_activity"
+    bugs:
+      - "https://bugzilla.mozilla.org/show_bug.cgi?id=1782509"
+    data_reviews:
+      - "Data review bug #"
+    notification_emails:
+      - mdn-team@mozilla.com
+    expires: never
+    extra_keys:
+      label:
+        description: |
+          Description of the page element that was
+          clicked. Examples: 'Get MDN Plus'
+        type: string
+      type:
+        description: |
+          The type of element that was clicked.
+          Examples: 'Button', 'Link'. 'CTA'
+        type: string
+      position:
+        description: |
+          The position of the element in the page.
+          Examples: 'Primary', 'Secondary', 'Hero'
+          'Navigation', 'Footer'.
+        type: string
