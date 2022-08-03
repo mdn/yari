@@ -15,7 +15,7 @@ page:
     bugs:
       - "https://bugzilla.mozilla.org/show_bug.cgi?id=1782509"
     data_reviews:
-      - "Data review bug #"
+      - "https://github.com/mdn/yari/pull/6813#issuecomment-1203705308"
     notification_emails:
       - mdn-team@mozilla.com
     expires: never
@@ -32,7 +32,7 @@ page:
     bugs:
       - "https://bugzilla.mozilla.org/show_bug.cgi?id=1782509"
     data_reviews:
-      - "Data review bug #"
+      - "https://github.com/mdn/yari/pull/6813#issuecomment-1203705308"
     notification_emails:
       - mdn-team@mozilla.com
     expires: never
@@ -49,7 +49,7 @@ page:
     bugs:
       - https://bugzilla.mozilla.org/show_bug.cgi?id=1782509
     data_reviews:
-      - "Data review bug #"
+      - "https://github.com/mdn/yari/pull/6813#issuecomment-1203705308"
     notification_emails:
       - mdn-team@mozilla.com
     expires: never
@@ -78,7 +78,7 @@ event:
     bugs:
       - "https://bugzilla.mozilla.org/show_bug.cgi?id=1782509"
     data_reviews:
-      - "Data review bug #"
+      - "https://github.com/mdn/yari/pull/6813#issuecomment-1203705308"
     notification_emails:
       - mdn-team@mozilla.com
     expires: never
