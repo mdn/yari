@@ -20,10 +20,16 @@ export type EventProps = {
   type: string;
 };
 
+export type GleanAnalytics = {
+  page: (arg: PageProps) => void;
+  pageEvent: (arg: PageEventProps) => void;
+  event: (arg: EventProps) => void;
+};
+
 const FIRST_PARTY_DATA_OPT_OUT_COOKIE_NAME = "moz-1st-party-data-opt-out";
 const GLEAN_APP_ID = "mdn-yari";
 
-function glean() {
+function glean(): GleanAnalytics {
   if (typeof window === "undefined") {
     //SSR return noop.
     return {
@@ -94,12 +100,12 @@ function glean() {
   return gleanContext;
 }
 
-const gleanContext = glean();
-const GleanContext = React.createContext(gleanContext);
+const gleanAnalytics = glean();
+const GleanContext = React.createContext(gleanAnalytics);
 
 export function GleanProvider(props: { children: React.ReactNode }) {
   return (
-    <GleanContext.Provider value={gleanContext}>
+    <GleanContext.Provider value={gleanAnalytics}>
       {props.children}
     </GleanContext.Provider>
   );

@@ -118,8 +118,6 @@ export function Document(props /* TODO: define a TS interface for this */) {
 
   React.useEffect(() => {
     if (doc && !error) {
-      console.log(window.location.toString());
-      console.log(document.referrer);
       glean.page({
         path: window.location.toString(),
         referrer: document.referrer,
