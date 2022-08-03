@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React from "react";
 import { useSearchParams, useParams, useNavigate } from "react-router-dom";
 import useSWR, { mutate } from "swr";
 
@@ -40,7 +40,7 @@ import "./index.scss";
 // main bundle all the time.
 import "./interactive-examples.scss";
 import { DocumentSurvey } from "../ui/molecules/document-survey";
-import { GleanProvider, useGlean } from "../telemetry/glean-context";
+import { useGlean } from "../telemetry/glean-context";
 // import { useUIStatus } from "../ui-context";
 
 // Lazy sub-components
@@ -138,7 +138,7 @@ export function Document(props /* TODO: define a TS interface for this */) {
       // a client-side navigation happened.
       mountCounter.current++;
     }
-  }, [ga, doc, error]);
+  }, [ga, glean, doc, error]);
 
   React.useEffect(() => {
     const location = document.location;
