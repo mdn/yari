@@ -29,6 +29,9 @@
   & > *:last-child {
     margin-bottom: 0;
   }
+  &:last-child {
+    margin-bottom: 1rem;
+  }
 
   &-icon {
     width: 3rem;
