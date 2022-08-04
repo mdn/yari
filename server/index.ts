@@ -182,7 +182,7 @@ app.get("/:locale/_yari/:namespace", async (req, res) => {
     locale === "en-us"
       ? path.join(__dirname, "..", "client", "i18n")
       : path.join(getRoot(locale), locale, "_yari");
-  const filepath = path.join(fileroot, `${namespace}.json`);
+  const filepath = path.join(fileroot, namespace);
 
   if (!fs.existsSync(filepath)) {
     res.status(404).send("Locale file not found");

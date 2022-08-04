@@ -24,7 +24,7 @@ i18n
     },
 
     backend: {
-      loadPath: "/[[lng]]/_yari/[[ns]]",
+      loadPath: "/[[lng]]/_yari/[[ns]].json",
     },
   });
 
