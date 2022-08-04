@@ -185,7 +185,7 @@ app.get("/:locale/_yari/:namespace", async (req, res) => {
   const filepath = path.join(fileroot, namespace);
 
   if (!fs.existsSync(filepath)) {
-    res.status(404).send("Locale file not found");
+    res.status(404).send(`Locale file for ${locale}:${namespace} not found`);
     return;
   }
 
@@ -194,7 +194,9 @@ app.get("/:locale/_yari/:namespace", async (req, res) => {
     res.setHeader("content-type", "text/json");
     res.status(200).json(localeJson);
   } catch (e) {
-    res.status(500).send("Locale file could not be parsed");
+    res
+      .status(500)
+      .send(`Locale file for ${locale}:${namespace} could not be parsed`);
   }
 });
 
