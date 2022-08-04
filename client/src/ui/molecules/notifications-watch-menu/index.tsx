@@ -77,7 +77,7 @@ export const NotificationsWatchMenu = ({ doc }) => {
       body: JSON.stringify(postData),
       headers: {
         "X-CSRFToken": csrfMiddlewareToken || "",
-        "Content-Type": "text/plain", // This has to be "text/plain" cause otherwise django won't accept the request
+        "Content-Type": "application/json",
       },
     });
 

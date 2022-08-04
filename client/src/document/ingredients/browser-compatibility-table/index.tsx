@@ -1,8 +1,8 @@
 import React, { useReducer } from "react";
 import { useLocation } from "react-router-dom";
 import { useTranslation, Trans } from "react-i18next";
-import { browsers as browserData } from "@mdn/browser-compat-data";
-import type bcd from "@mdn/browser-compat-data/types";
+import bcd from "@mdn/browser-compat-data";
+import type BCD from "@mdn/browser-compat-data/types";
 import { BrowserInfoContext } from "./browser-info";
 import { BrowserCompatibilityErrorBoundary } from "./error-boundary";
 import { FeatureRow } from "./feature-row";
@@ -38,8 +38,8 @@ const ISSUE_METADATA_TEMPLATE = `
  */
 function gatherPlatformsAndBrowsers(
   category: string,
-  data: bcd.Identifier
-): [string[], bcd.BrowserNames[]] {
+  data: BCD.Identifier
+): [string[], BCD.BrowserName[]] {
   const hasNodeJSData = data.__compat && "nodejs" in data.__compat.support;
   const hasDenoData = data.__compat && "deno" in data.__compat.support;
 
@@ -48,21 +48,21 @@ function gatherPlatformsAndBrowsers(
     platforms.push("server");
   }
 
-  let browsers: bcd.BrowserNames[] = [];
+  let browsers: BCD.BrowserName[] = [];
 
   // Add browsers in platform order to align table cells
   for (const platform of platforms) {
     browsers.push(
-      ...(Object.keys(browserData).filter(
-        (browser) => browserData[browser].type === platform
-      ) as bcd.BrowserNames[])
+      ...(Object.keys(bcd.browsers).filter(
+        (browser) => bcd.browsers[browser].type === platform
+      ) as BCD.BrowserName[])
     );
   }
 
   // Filter WebExtension browsers in corresponding tables.
   if (category === "webextensions") {
     browsers = browsers.filter(
-      (browser) => browserData[browser].accepts_webextensions
+      (browser) => bcd.browsers[browser].accepts_webextensions
     );
   }
 
@@ -82,7 +82,7 @@ function FeatureListAccordion({
   browsers,
 }: {
   features: ReturnType<typeof listFeatures>;
-  browsers: bcd.BrowserNames[];
+  browsers: BCD.BrowserName[];
 }) {
   const [[activeRow, activeColumn], dispatchCellToggle] = useReducer<
     React.Reducer<CellIndex | [null, null], CellIndex>
@@ -117,8 +117,8 @@ export default function BrowserCompatibilityTable({
   browsers: browserInfo,
 }: {
   query: string;
-  data: bcd.Identifier;
-  browsers: bcd.Browsers;
+  data: BCD.Identifier;
+  browsers: BCD.Browsers;
 }) {
   const location = useLocation();
   const { t } = useTranslation("bcd");

@@ -14,7 +14,7 @@ fs.readdirSync(fixture_dir).forEach(function (fn) {
   fixtureCompatData = extend(
     true,
     fixtureCompatData,
-    JSON.parse(fs.readFileSync(path.resolve(fixture_dir, fn), "utf8"))
+    JSON.parse(fs.readFileSync(path.resolve(fixture_dir, fn), "utf-8"))
   );
 });
 
@@ -39,6 +39,13 @@ describeMacro("Compat", function () {
 
   itMacro("Outputs valid HTML", async (macro) => {
     const result = await macro.call("api.feature");
+    expect(lintHTML(result)).toBeFalsy();
+  });
+
+  itMacro("Accepts an array", async (macro) => {
+    const result = await macro.call(["api.feature1", "api.feature2"]);
+    const dom = JSDOM.fragment(result);
+    assert.equal(dom.querySelectorAll("div.bc-data").length, 2);
     expect(lintHTML(result)).toBeFalsy();
   });
 });

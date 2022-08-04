@@ -173,13 +173,6 @@ def whatsdeployed(ctx, directory: Path, output: str):
     is_flag=True,
 )
 @click.option(
-    "--no-redirects",
-    help="Don't upload redirects from the content roots",
-    default=False,
-    show_default=True,
-    is_flag=True,
-)
-@click.option(
     "--prune",
     help="Delete keys that were not uploaded this time (including those that didn't "
     "need to be uploaded)",
@@ -202,10 +195,6 @@ def upload(ctx, directory: Path, **kwargs):
         content_roots.append(kwargs["content_root"])
     if kwargs["content_translated_root"]:
         content_roots.append(kwargs["content_translated_root"])
-    if not kwargs["no_redirects"] and not content_roots:
-        raise Exception(
-            "if you don't use --no-redirects you have to have at least one content root"
-        )
 
     ctx.obj.update(kwargs)
     upload_content(directory, content_roots, ctx.obj)

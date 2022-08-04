@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { BookmarkData } from ".";
+import { FrequentlyViewedEntry } from "../../document/types";
 import { useUIStatus } from "../../ui-context";
 import { useFrequentlyViewedData } from "../common/api";
 import { SORTS } from "../common/tabs";
@@ -8,7 +8,7 @@ import { CollectionListItem } from "./collection-list-item";
 
 export function FrequentlyViewedTab({ selectedTerms }) {
   const { setToastData } = useUIStatus();
-  const [list, setList] = useState<Array<any>>([]);
+  const [list, setList] = useState<Array<FrequentlyViewedEntry>>([]);
 
   const { data, setFrequentlyViewed } = useFrequentlyViewedData(selectedTerms);
 
@@ -22,11 +22,10 @@ export function FrequentlyViewedTab({ selectedTerms }) {
     }
   }, [data]);
 
-  const deleteFrequentlyViewed = async (bookmarkData: BookmarkData) => {
+  const deleteFrequentlyViewed = async (item: any) => {
+    item = item as FrequentlyViewedEntry;
     const original = list;
-    const filteredEntries = list.filter(
-      (entry) => entry.url !== bookmarkData.url
-    );
+    const filteredEntries = list.filter((entry) => entry.url !== item.url);
     setFrequentlyViewed(filteredEntries);
     setList(filteredEntries);
     setToastData({
@@ -49,10 +48,8 @@ export function FrequentlyViewedTab({ selectedTerms }) {
           {list.length
             ? list.map((item) => (
                 <CollectionListItem
+                  key={item.url}
                   item={item}
-                  onEditSubmit={() => null}
-                  key={item.id}
-                  showEditButton={false}
                   handleDelete={deleteFrequentlyViewed}
                 />
               ))

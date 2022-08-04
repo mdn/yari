@@ -1,0 +1,41 @@
+@use "../../../ui/vars" as *;
+.maintenance {
+  color: var(--text-primary);
+  flex-flow: column;
+  cursor: help;
+
+  .maintenance-info-container {
+    cursor: default;
+    display: block;
+    top: 2rem;
+    margin: 0 1rem;
+    @media screen and (min-width: $screen-lg) {
+      padding-top: 1rem;
+      position: absolute;
+    }
+    .maintenance-info {
+      background-color: var(--background-primary);
+      border: 1px solid var(--border-primary);
+      border-radius: var(--elem-radius);
+      padding: 1rem;
+      font-weight: initial;
+    }
+  }
+  @media screen and (min-width: $screen-lg) {
+    &:not(:focus-within):not(:hover) {
+      .maintenance-info-container {
+        -webkit-clip-path: inset(50%) !important;
+        clip-path: inset(50%) !important;
+        border: 0 !important;
+        clip: rect(1px, 1px, 1px, 1px) !important;
+        height: 1px !important;
+        margin: -1px !important;
+        overflow: hidden !important;
+        padding: 0 !important;
+        position: absolute !important;
+        white-space: nowrap !important;
+        width: 1px !important;
+      }
+    }
+  }
+}

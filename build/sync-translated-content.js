@@ -13,12 +13,13 @@ const {
   slugToFolder,
   Document,
   Redirect,
-  CONTENT_ROOT,
-  CONTENT_TRANSLATED_ROOT,
+} = require("../content");
+const {
   HTML_FILENAME,
   MARKDOWN_FILENAME,
   VALID_LOCALES,
-} = require("../content");
+} = require("../libs/constants");
+const { CONTENT_ROOT, CONTENT_TRANSLATED_ROOT } = require("../libs/env");
 
 const CONFLICTING = "conflicting";
 const ORPHANED = "orphaned";
@@ -94,6 +95,14 @@ function resolve(slug) {
   return slug;
 }
 
+function mdOrHtmlExists(filePath) {
+  const dir = path.dirname(filePath);
+  return (
+    fs.existsSync(path.join(dir, MARKDOWN_FILENAME)) ||
+    fs.existsSync(path.join(dir, HTML_FILENAME))
+  );
+}
+
 function syncTranslatedContent(inFilePath, locale) {
   if (!CONTENT_TRANSLATED_ROOT) {
     throw new Error(
@@ -108,7 +117,7 @@ function syncTranslatedContent(inFilePath, locale) {
     followed: false,
   };
 
-  const rawDoc = fs.readFileSync(inFilePath, "utf8");
+  const rawDoc = fs.readFileSync(inFilePath, "utf-8");
   const fileName = path.basename(inFilePath);
   const extension = path.extname(fileName);
   const bareFileName = path.basename(inFilePath, extension);
@@ -184,17 +193,17 @@ function syncTranslatedContent(inFilePath, locale) {
     metadata.slug = `${ORPHANED}/${metadata.slug}`;
     status.moved = true;
     filePath = getFilePath();
-    if (fs.existsSync(filePath)) {
+    if (mdOrHtmlExists(filePath)) {
       log.log(`${inFilePath} → ${filePath}`);
       throw new Error(`file: ${filePath} already exists!`);
     }
-  } else if (fs.existsSync(filePath)) {
+  } else if (mdOrHtmlExists(filePath)) {
     `unrooting ${inFilePath} (conflicting translation)`;
     metadata.slug = `${CONFLICTING}/${metadata.slug}`;
     status.conflicting = true;
     status.moved = true;
     filePath = getFilePath();
-    if (fs.existsSync(filePath)) {
+    if (mdOrHtmlExists(filePath)) {
       metadata.slug = `${metadata.slug}_${crypto
         .createHash("md5")
         .update(oldMetadata.slug)

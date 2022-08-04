@@ -6,15 +6,9 @@ const fm = require("front-matter");
 const yaml = require("js-yaml");
 const { fdir } = require("fdir");
 
-const {
-  CONTENT_TRANSLATED_ROOT,
-  CONTENT_ROOT,
-  ACTIVE_LOCALES,
-  VALID_LOCALES,
-  ROOTS,
-  HTML_FILENAME,
-  MARKDOWN_FILENAME,
-} = require("./constants");
+const { HTML_FILENAME, MARKDOWN_FILENAME } = require("../libs/constants");
+const { CONTENT_TRANSLATED_ROOT, CONTENT_ROOT, ROOTS } = require("../libs/env");
+const { ACTIVE_LOCALES, VALID_LOCALES } = require("../libs/constants");
 const { getPopularities } = require("./popularities");
 const { getWikiHistories } = require("./wikihistories");
 const { getGitHistories } = require("./githistories");
@@ -238,7 +232,7 @@ const read = memoize((folderOrFilePath, roots = ROOTS) => {
     CONTENT_TRANSLATED_ROOT && filePath.startsWith(CONTENT_TRANSLATED_ROOT)
   );
 
-  const rawContent = fs.readFileSync(filePath, "utf8");
+  const rawContent = fs.readFileSync(filePath, "utf-8");
   if (!rawContent) {
     throw new Error(`${filePath} is an empty file`);
   }

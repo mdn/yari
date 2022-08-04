@@ -4,7 +4,7 @@ import {
   IEX_DOMAIN,
   PLUS_ENABLED_COUNTRIES,
   PLUS_IS_AVAILABLE_OVERRIDE,
-} from "./constants";
+} from "./env";
 
 const HOMEPAGE_RE = /^\/[A-Za-z-]*\/?(?:_homepage)?$/i;
 const DOCS_RE = /^\/[A-Za-z-]+\/docs\/.*$/i;

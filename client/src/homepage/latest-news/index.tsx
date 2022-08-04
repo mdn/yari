@@ -1,7 +1,7 @@
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import useSWR from "swr";
-import { CRUD_MODE } from "../../constants";
+import { CRUD_MODE } from "../../env";
 import { HydrationData } from "../../types/hydration";
 
 import "./index.scss";
@@ -91,7 +91,7 @@ export function LatestNews(props: HydrationData<any>) {
                 <NewsItemSource newsItem={newsItem} />
               </span>
             </p>
-            <span className="news-date">
+            <span className="news-date" suppressHydrationWarning>
               <NewsItemDate newsItem={newsItem} />
             </span>
           </li>

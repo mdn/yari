@@ -22,7 +22,7 @@ const groupDataFixturePath = path.resolve(
   "fixtures/listgroups/groupdata.json"
 );
 const groupDataFixture = JSON.parse(
-  fs.readFileSync(groupDataFixturePath, "utf8")
+  fs.readFileSync(groupDataFixturePath, "utf-8")
 );
 
 /**

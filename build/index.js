@@ -4,16 +4,11 @@ const path = require("path");
 const chalk = require("chalk");
 const cheerio = require("cheerio");
 
-const {
-  Document,
-  CONTENT_ROOT,
-  Image,
-  REPOSITORY_URLS,
-  execGit,
-} = require("../content");
+const { Document, Image, execGit } = require("../content");
+const { CONTENT_ROOT, REPOSITORY_URLS } = require("../libs/env");
 const kumascript = require("../kumascript");
 
-const { FLAW_LEVELS } = require("./constants");
+const { FLAW_LEVELS } = require("../libs/constants");
 const {
   extractSections,
   extractSidebar,
@@ -31,7 +26,7 @@ const buildOptions = require("./build-options");
 const { gather: gatherGitHistory } = require("./git-history");
 const { buildSPAs } = require("./spas");
 const { renderCache: renderKumascriptCache } = require("../kumascript");
-const LANGUAGES_RAW = require("../content/languages.json");
+const LANGUAGES_RAW = require("../libs/languages");
 const { safeDecodeURIComponent } = require("../kumascript/src/api/util");
 const { wrapTables } = require("./wrap-tables");
 
@@ -669,8 +664,6 @@ function renderContributorsTxt(wikiContributorNames = null, githubURL = null) {
 }
 
 module.exports = {
-  FLAW_LEVELS,
-
   buildDocument,
 
   buildLiveSamplePageFromURL,

@@ -10,6 +10,7 @@ import {
   offlineDb,
   patchContentStatus,
   RemoteContentStatus,
+  SwType,
 } from "./db";
 import { fetchWithExampleOverride } from "./fetcher";
 
@@ -25,6 +26,9 @@ const UPDATES_BASE_URL = `https://updates.${
   location.hostname === "localhost" ? "developer.allizom.org" : location.host
 }`;
 
+const SW_TYPE: SwType =
+  SwType[new URLSearchParams(location.search).get("type")] || SwType.ApiOnly;
+
 // export empty type because of tsc --isolatedModules flag
 export type {};
 declare const self: ServiceWorkerGlobalScope;
@@ -32,33 +36,45 @@ declare const self: ServiceWorkerGlobalScope;
 var unpacking = Promise.resolve();
 
 self.addEventListener("install", (e) => {
-  // synchronizeDb();
+  synchronizeDb();
   e.waitUntil(
-    (async () => {
-      const cache = await openCache();
-      const { files = {} } =
-        (await (await fetch("/asset-manifest.json")).json()) || {};
-      const assets = [...Object.values(files)].filter(
-        (asset) => !(asset as string).endsWith(".map")
-      );
-      await cache.addAll(assets as string[]);
-    })().then(() => self.skipWaiting())
+    SW_TYPE === SwType.ApiOnly
+      ? self.skipWaiting()
+      : (async () => {
+          const cache = await openCache();
+          const { files = {} }: { files: object } =
+            (await (await fetch("/asset-manifest.json")).json()) || {};
+          const assets = [...Object.values(files)].filter(
+            (asset) => !(asset as string).endsWith(".map")
+          );
+          let keys = new Set(
+            (await cache.keys()).map((r) => r.url.replace(location.origin, ""))
+          );
+          const toCache = assets.filter((file) => !keys.has(file));
+          await cache.addAll(toCache as string[]);
+        })().then(() => self.skipWaiting())
   );
 
   initOncePerRun(self);
 });
 
-self.addEventListener("fetch", (e) => {
-  const preferOnline =
-    new URLSearchParams(location.search).get("preferOnline") === "true";
+async function syncDbAndMessage(e) {
+  if (e.request.method !== "GET") {
+    await synchronizeDb();
+    messageAllClients(self, { type: "mutate" });
+  }
+}
+
+self.addEventListener("fetch", async (e) => {
   if (
-    preferOnline &&
+    (SW_TYPE === SwType.ApiOnly || SW_TYPE === SwType.PreferOnline) &&
     !e.request.url.includes("/api/v1/") &&
     !e.request.url.includes("/users/fxa/")
   ) {
     e.respondWith(
       (async () => {
         const res = await fetchWithExampleOverride(e.request);
+        syncDbAndMessage(e);
         if (res.ok) {
           return res;
         }
@@ -66,10 +82,12 @@ self.addEventListener("fetch", (e) => {
       })()
     );
   } else {
-    e.respondWith(respond(e));
-  }
-  if (e.request.method === "POST") {
-    synchronizeDb();
+    e.respondWith(
+      respond(e).then((r) => {
+        syncDbAndMessage(e);
+        return r;
+      })
+    );
   }
 });
 
@@ -83,7 +101,7 @@ self.addEventListener("message", (e: ExtendableMessageEvent) => {
           return checkForUpdate(self);
 
         case "update":
-          unpacking = updateContent(self, e?.data);
+          unpacking = updateContent(self);
           return unpacking;
 
         case "clear":
@@ -185,25 +203,10 @@ export async function checkForUpdate(self: ServiceWorkerGlobalScope) {
   });
 }
 
-export async function updateContent(
-  self: ServiceWorkerGlobalScope,
-  { current = null }: { current?: string }
-) {
+export async function updateContent(self: ServiceWorkerGlobalScope) {
   await checkForUpdate(self);
 
   const contentStatus = await getContentStatus();
-
-  if (!contentStatus.local && current) {
-    // Fallback to local version from client (LocalStorage).
-    const local = {
-      version: current,
-      date: "1970-01-01",
-    };
-    await patchContentStatus({
-      local,
-    });
-    contentStatus.local = local;
-  }
 
   const { local, remote } = contentStatus;
 

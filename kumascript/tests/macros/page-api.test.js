@@ -17,7 +17,7 @@ const dirname = __dirname;
 const fixtureData = JSON.parse(
   fs.readFileSync(
     path.resolve(dirname, "fixtures", "documentData1.json"),
-    "utf8"
+    "utf-8"
   )
 );
 const fix_url = "/en-US/docs/Web/HTTP/Basics_of_HTTP";

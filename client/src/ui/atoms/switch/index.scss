@@ -5,14 +5,14 @@
 
   input {
     opacity: 0;
-    width: 2rem;
+    width: 3rem;
     height: 0;
     margin: 0;
 
     &:checked + .slider {
       &:before {
-        left: 56.25%;
-        right: 6.25%;
+        left: 53.25%;
+        right: 3.25%;
       }
       background-color: var(--text-link);
     }
@@ -29,17 +29,17 @@
     cursor: pointer;
     background-color: var(--text-secondary);
     transition: 0.4s;
-    border-radius: 1em;
-    width: 2rem;
-    height: 1rem;
+    border-radius: 1.5em;
+    width: 3rem;
+    height: 1.5rem;
 
     &:before {
       position: absolute;
       content: "";
-      left: 6.25%;
-      right: 56.25%;
-      top: 12.5%;
-      bottom: 12.5%;
+      left: 3.25%;
+      right: 53.25%;
+      top: 7.5%;
+      bottom: 7.5%;
       background-color: var(--background-primary);
       transition: 0.4s;
       border-radius: 50%;

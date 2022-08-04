@@ -3,7 +3,7 @@ const path = require("path");
 const chalk = require("chalk");
 
 const { Document } = require("../../content");
-const { FLAW_LEVELS, VALID_FLAW_CHECKS } = require("../constants");
+const { FLAW_LEVELS, VALID_FLAW_CHECKS } = require("../../libs/constants");
 const { DEFAULT_LOCALE } = require("../../libs/constants");
 const {
   replaceMatchesInText,

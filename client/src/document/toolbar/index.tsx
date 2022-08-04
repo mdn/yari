@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { CRUD_MODE_HOSTNAMES } from "../../constants";
+import { CRUD_MODE_HOSTNAMES } from "../../env";
 import { Doc } from "../types";
 import { EditActions } from "./edit-actions";
 import { ToggleDocumentFlaws } from "./flaws";

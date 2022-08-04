@@ -21,7 +21,7 @@ describe("render() function", () => {
     return `${dirname}/fixtures/render/${name}`;
   }
   function get(name) {
-    return fs.readFileSync(fixture(name), "utf8");
+    return fs.readFileSync(fixture(name), "utf-8");
   }
   function renderPrerequisiteFromURL(url) {
     throw new Error(`unexpected prerequisite: ${url}`);

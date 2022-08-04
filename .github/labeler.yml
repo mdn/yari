@@ -1,2 +1,22 @@
+browser-compat:
+  - "client/src/document/ingredients/browser-compatability-table/**/*"
 macros:
-  - "kumascript/*"
+  - "kumascript/**/*"
+dependencies:
+  - "**/poetry.lock"
+  - "**/yarn.lock"
+deployer:
+  - "deployer/**/*"
+flaw-system:
+  - "build/flaws/**/*"
+github-actions:
+  - ".github/workflows/**/*"
+markdown:
+  - "markdown/**/*"
+plus:
+  - "client/src/plus/**/*"
+plus:offline:
+  - "client/pwa/src/**/*"
+  - "client/src/offline-settings/**/*"
+python:
+  - "**/*.py"

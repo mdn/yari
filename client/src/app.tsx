@@ -6,7 +6,7 @@ import { useTranslation } from "react-i18next";
 // and applied before any component specific style
 import "./app.scss";
 
-import { CRUD_MODE, PLUS_IS_ENABLED } from "./constants";
+import { CRUD_MODE, PLUS_IS_ENABLED } from "./env";
 import { Homepage } from "./homepage";
 import { Document } from "./document";
 import { A11yNav } from "./ui/molecules/a11y-nav";
@@ -18,13 +18,12 @@ import { PageContentContainer } from "./ui/atoms/page-content";
 import { PageNotFound } from "./page-not-found";
 import { Plus } from "./plus";
 import { About } from "./about";
-import { OfflineSettings } from "./offline-settings";
 import { docCategory } from "./utils";
 import { Contribute } from "./community";
 import { ContributorSpotlight } from "./contributor-spotlight";
 import { useIsServer } from "./hooks";
 
-import { Banner, hasActiveBanners } from "./banners";
+import { Banner } from "./banners";
 
 const AllFlaws = React.lazy(() => import("./flaws"));
 const Translations = React.lazy(() => import("./translations"));
@@ -46,7 +45,7 @@ function Layout({ pageType, children }) {
   return (
     <>
       <A11yNav />
-      {!isServer && hasActiveBanners && <Banner />}
+      {!isServer && <Banner />}
       <div className={`page-wrapper  ${category || ""} ${pageType}`}>
         {pageType !== "document-page" && <TopNavigation />}
         {children}
@@ -71,26 +70,8 @@ function DocumentLayout({ children }) {
   return <Layout pageType="document-page">{children}</Layout>;
 }
 
-/** This component exists so you can dynamically change which sub-component to
- * render depending on the conditions. In particular, we need to be able to
- * render the <PageNotFound> component, in server-side rendering, if told to do
- * so. But if the client then changes the location (by clicking a <Link>
- * or a react-router navigate() call) we need to ignore the fact that it was
- * originally not found. Perhaps, this new location that the client is
- * requesting is going to work.
- */
 function PageOrPageNotFound({ pageNotFound, children }) {
-  // It's true by default if the SSR rendering says so.
-  const [notFound, setNotFound] = React.useState<boolean>(!!pageNotFound);
-  const { pathname } = useLocation();
-  const initialPathname = React.useRef(pathname);
-  React.useEffect(() => {
-    if (initialPathname.current && initialPathname.current !== pathname) {
-      setNotFound(false);
-    }
-  }, [pathname]);
-
-  return notFound ? (
+  return pageNotFound ? (
     <StandardLayout>
       <PageNotFound />
     </StandardLayout>
@@ -122,6 +103,18 @@ export function App(appProps) {
     i18n.changeLanguage(locale);
   }, [appProps.locale, localeMatch, i18n]);
 
+  const [pageNotFound, setPageNotFound] = React.useState<boolean>(
+    appProps.pageNotFound
+  );
+  const { pathname } = useLocation();
+  const initialPathname = React.useRef(pathname);
+
+  React.useEffect(() => {
+    setPageNotFound(
+      appProps.pageNotFound && initialPathname.current === pathname
+    );
+  }, [appProps.pageNotFound, pathname]);
+
   const isServer = useIsServer();
 
   // When preparing a build for use in the NPM package, CRUD_MODE is always true.
@@ -133,7 +126,7 @@ export function App(appProps) {
         <WritersHomepage />
       </Layout>
     ) : (
-      <PageOrPageNotFound pageNotFound={appProps.pageNotFound}>
+      <PageOrPageNotFound pageNotFound={pageNotFound}>
         <Layout pageType="standard-page">
           <Homepage {...appProps} />
         </Layout>
@@ -233,20 +226,10 @@ export function App(appProps) {
                 }
               />
             )}
-            {PLUS_IS_ENABLED && (
-              <Route
-                path="/offline-settings"
-                element={
-                  <StandardLayout>
-                    <OfflineSettings {...appProps} />
-                  </StandardLayout>
-                }
-              />
-            )}
             <Route
               path="/docs/*"
               element={
-                <PageOrPageNotFound pageNotFound={appProps.pageNotFound}>
+                <PageOrPageNotFound pageNotFound={pageNotFound}>
                   <DocumentLayout>
                     <Document {...appProps} />
                   </DocumentLayout>

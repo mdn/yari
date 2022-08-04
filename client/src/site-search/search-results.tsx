@@ -3,12 +3,12 @@ import { createSearchParams, Link, useSearchParams } from "react-router-dom";
 import useSWR from "swr";
 
 import { Loading } from "../ui/atoms/loading";
-import { CRUD_MODE } from "../constants";
+import { CRUD_MODE, KUMA_HOST } from "../env";
 import { useLocale } from "../hooks";
 import { appendURL } from "./utils";
 import { Button } from "../ui/atoms/button";
 
-import LANGUAGES_RAW from "../languages.json";
+import LANGUAGES_RAW from "../../../libs/languages";
 import "./search-results.scss";
 import { useGA } from "../ga-context";
 import NoteCard from "../ui/molecules/notecards";
@@ -200,7 +200,7 @@ function RemoteSearchWarning() {
     // actively worked-on content isn't showing up in searches.
     // The default value in the server is not accessible from the react app,
     // so it's hardcoded here in the client.
-    const kumaHost = process.env.REACT_APP_KUMA_HOST || "developer.mozilla.org";
+    const kumaHost = KUMA_HOST;
     return (
       <NoteCard type="warning">
         <h4>Note!</h4>

@@ -2,7 +2,7 @@ import React from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import useSWR from "swr";
 
-import { CRUD_MODE, CRUD_MODE_HOSTNAMES } from "../constants";
+import { CRUD_MODE, CRUD_MODE_HOSTNAMES } from "../env";
 import { useLocale } from "../hooks";
 import { Loading } from "../ui/atoms/loading";
 import { PageContentContainer } from "../ui/atoms/page-content";

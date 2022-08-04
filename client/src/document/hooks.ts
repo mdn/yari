@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { useLocation, useParams } from "react-router-dom";
+import { useIsServer } from "../hooks";
 import { Doc, FrequentlyViewedEntry } from "./types";
 
 export function useDocumentURL() {
@@ -13,11 +14,17 @@ export function useDocumentURL() {
 
 export function useCopyExamplesToClipboard(doc: Doc | undefined) {
   const location = useLocation();
+  const isServer = useIsServer();
 
   useEffect(() => {
+    if (isServer) {
+      return;
+    }
+
     if (!doc) {
       return;
     }
+
     if (!navigator.clipboard) {
       console.log(
         "Copy-to-clipboard disabled because your browser does not appear to support it."
@@ -80,7 +87,7 @@ export function useCopyExamplesToClipboard(doc: Doc | undefined) {
         };
       }
     );
-  }, [doc, location]);
+  }, [doc, location, isServer]);
 }
 
 function showCopiedMessage(wrapper: HTMLElement, msg: string) {
