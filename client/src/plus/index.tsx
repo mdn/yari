@@ -66,8 +66,7 @@ export function Plus({ pageTitle, ...props }: { pageTitle?: string }) {
         element={
           <Layout>
             <div className="bookmarks girdle">
-              {/* <Collections /> */}
-              <CollectionsV2 />
+              {false ? <Collections /> : <CollectionsV2 />}
             </div>
           </Layout>
         }

@@ -27,6 +27,7 @@ export function BookmarkContainer({ doc }: { doc: Doc }) {
     }
   );
 
-  // return BookmarkMenu({ doc, data, isValidating, mutate });
-  return BookmarkV2Menu({ doc });
+  return false
+    ? BookmarkMenu({ doc, data, isValidating, mutate })
+    : BookmarkV2Menu({ doc });
 }
