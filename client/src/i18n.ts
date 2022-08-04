@@ -11,7 +11,7 @@ i18n
     debug: true,
 
     fallbackLng: "en-US",
-    supportedLngs: Array.from(VALID_LOCALES),
+    supportedLngs: Array.from(VALID_LOCALES).map((l) => l[1]),
 
     interpolation: {
       prefix: "[[",
