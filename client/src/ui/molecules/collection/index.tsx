@@ -2,6 +2,7 @@ import useSWR from "swr";
 import { Doc } from "../../../document/types";
 import { BookmarkData } from "../../../plus/collections";
 import { BookmarkMenu } from "./menu";
+import BookmarkV2Menu from "./menu-v2";
 
 export interface BookmarkedData {
   bookmarked: BookmarkData;
@@ -26,5 +27,6 @@ export function BookmarkContainer({ doc }: { doc: Doc }) {
     }
   );
 
-  return BookmarkMenu({ doc, data, isValidating, mutate });
+  // return BookmarkMenu({ doc, data, isValidating, mutate });
+  return BookmarkV2Menu({ doc });
 }

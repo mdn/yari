@@ -1,0 +1,101 @@
+import React, { useState } from "react";
+import { Button } from "../../../ui/atoms/button";
+import MDNModal from "../../../ui/atoms/modal";
+import { Collection, createCollection, NewCollection } from "./api";
+
+export default function NewCollectionModal({
+  show,
+  setShow,
+  collections,
+  setCollections,
+  callback,
+}: {
+  show: boolean;
+  setShow: React.Dispatch<React.SetStateAction<boolean>>;
+  collections: Collection[];
+  setCollections:
+    | React.Dispatch<React.SetStateAction<Collection[]>>
+    | React.Dispatch<React.SetStateAction<Collection[] | undefined>>;
+  callback?: (collection_id: string) => void;
+}) {
+  const [collection, setCollection] = useState<NewCollection>({
+    title: "",
+    description: "",
+  });
+
+  const changeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setCollection({ ...collection, [name]: value.trimStart() });
+  };
+
+  const cancelHandler = (e: React.MouseEvent) => {
+    e.preventDefault();
+    setCollection({ title: "", description: "" });
+    setShow(false);
+  };
+
+  const saveHandler = async (e: React.BaseSyntheticEvent) => {
+    e.preventDefault();
+    const createdCollection = await createCollection(collection);
+    setCollections([...collections, createdCollection]);
+    if (callback) callback(createdCollection.id);
+    setCollection({ title: "", description: "" });
+    setShow(false);
+  };
+
+  const enterHandler = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      saveHandler(e);
+    }
+  };
+
+  return (
+    <MDNModal isOpen={show} size="small" onRequestClose={() => setShow(false)}>
+      <header className="modal-header">
+        <h2 className="modal-heading">Create Collection</h2>
+        <Button
+          onClickHandler={() => setShow(false)}
+          type="action"
+          icon="cancel"
+          extraClasses="close-button"
+        />
+      </header>
+      <div className="modal-body">
+        <form method="post" onSubmit={saveHandler}>
+          <div className="watch-submenu-item border-top-0 padding-top-0">
+            <label htmlFor="collection-title">Title:</label>
+            <input
+              id="collection-title"
+              name="title"
+              value={collection.title}
+              onChange={changeHandler}
+              onKeyDown={enterHandler}
+              autoComplete="off"
+              type="text"
+              required={true}
+            />
+          </div>
+          <div className="watch-submenu-item border-top-0 padding-top-0">
+            <label htmlFor="collection-description">Description:</label>
+            <input
+              id="collection-description"
+              name="description"
+              value={collection.description}
+              onChange={changeHandler}
+              onKeyDown={enterHandler}
+              autoComplete="off"
+              type="text"
+            />
+          </div>
+          <div className="watch-submenu-item border-top-0 is-button-row is-always-visible">
+            <Button buttonType="submit">Create Collection</Button>
+            <Button onClickHandler={cancelHandler} type="secondary">
+              Cancel
+            </Button>
+          </div>
+        </form>
+      </div>
+    </MDNModal>
+  );
+}
