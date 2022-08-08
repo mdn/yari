@@ -44,8 +44,8 @@ const loadAllLanguages = lazy(() => {
 // have to stick to the exact naming conventions that Prism uses
 // because Prism is an implementation detail.
 const ALIASES = new Map([
-  ["sh", "bash"],
-  ["shell", "bash"],
+  ["sh", "shell"],
+  ["jssyntax", "js"],
   ["py", "python"],
 ]);
 
