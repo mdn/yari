@@ -47,7 +47,7 @@ const loadAllLanguages = lazy(() => {
     "uri",
     "wasm",
     "yaml",
-    "pug"
+    "pug",
   ]);
 });
 
