@@ -46,8 +46,8 @@ const loadAllLanguages = lazy(() => {
 const ALIASES = new Map([
   ["sh", "bash"],
   ["shell", "bash"],
-  ["py", "python"]
-);
+  ["py", "python"],
+]);
 
 // Over the years we have accumulated some weird <pre> tags whose
 // brush is more or less "junk".
