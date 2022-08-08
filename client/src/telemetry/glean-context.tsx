@@ -3,6 +3,7 @@ import { path, pageEvent, referrer } from "./generated/page";
 import { clicked } from "./generated/event";
 import * as pings from "./generated/pings";
 import * as Glean from "@mozilla/glean/web";
+import { GLEAN_CHANNEL, GLEAN_DEBUG, GLEAN_DISABLED } from "../env";
 
 export type PageProps = {
   referrer: string | undefined;
@@ -38,31 +39,20 @@ function glean(): GleanAnalytics {
       event: (event: EventProps) => {},
     };
   }
-  const channel = process.env.REACT_APP_GLEAN_CHANNEL || "stage";
-  const debugPings = Boolean(
-    JSON.parse(process.env.REACT_APP_GLEAN_DEBUG || "null")
-  );
-  const gleanEnabled = !Boolean(
-    JSON.parse(process.env.REACT_APP_GLEAN_DISABLED || "null")
+
+  const cookies = `; ${document.cookie};`;
+  const userIsOptedOut = cookies.includes(
+    `; ${FIRST_PARTY_DATA_OPT_OUT_COOKIE_NAME}=1;`
   );
 
-  let userIsOptedOut = false;
-
-  const value = `; ${document.cookie}`;
-
-  const parts = value.split(`; ${FIRST_PARTY_DATA_OPT_OUT_COOKIE_NAME}=`);
-  if (parts.length === 2) {
-    userIsOptedOut = !!parts.pop()?.split(";").shift();
-  }
-
-  const uploadEnabled = !userIsOptedOut && gleanEnabled;
+  const uploadEnabled = !userIsOptedOut && !GLEAN_DISABLED;
 
   Glean.default.initialize(GLEAN_APP_ID, uploadEnabled, {
     maxEvents: 1,
-    channel,
+    channel: GLEAN_CHANNEL,
   });
 
-  Glean.default.setLogPings(debugPings);
+  Glean.default.setLogPings(GLEAN_DEBUG);
   Glean.default.setDebugViewTag("mdn-dev");
   Glean.default.setUploadEnabled(uploadEnabled);
 

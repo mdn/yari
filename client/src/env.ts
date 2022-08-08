@@ -68,6 +68,14 @@ export const UPDATES_BASE_URL =
   process.env.REACT_APP_UPDATES_BASE_URL ||
   "https://updates.developer.allizom.org";
 
+export const GLEAN_CHANNEL = process.env.REACT_APP_GLEAN_CHANNEL || "stage";
+export const GLEAN_DEBUG = Boolean(
+  JSON.parse(process.env.REACT_APP_GLEAN_DEBUG || "false")
+);
+export const GLEAN_DISABLED = Boolean(
+  JSON.parse(process.env.REACT_APP_GLEAN_DISABLED || "true")
+);
+
 // TODO Inline after 2022-07-01.
 export function survey_duration(surveyBucket: string): {
   start: number;

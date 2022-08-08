@@ -10,6 +10,7 @@ interface MenuProps {
 export const Menu = ({ menu, isOpen, toggle }: MenuProps) => {
   const buttonId = `${menu.id}-button`;
   const submenuId = `${menu.id}-menu`;
+
   return (
     <li key={menu.id} className="top-level-entry-container">
       <button

@@ -305,3 +305,25 @@ included this value for `geo.country`.
 
 - Setting this to `true` allows everybody to access plus (disables geofencing).
 - Setting this to `false` shows everybody the "Coming to your region soon".
+
+## Glean (Analytics)
+
+### `REACT_APP_GLEAN_CHANNEL`
+
+**Default: `"stage"`**
+
+- This routes glean analytics to either prod/staging in the backend. See
+  [Glean docs](https://mozilla.github.io/glean/book/reference/general/initializing.html?highlight=channel#gleaninitializeconfiguration)
+
+### `REACT_APP_GLEAN_DEBUG`
+
+**Default: `false`**
+
+- Setting this to true logs glean pings to the console to to help debug.
+
+### `REACT_APP_GLEAN_DISABLED`
+
+**Default: `true`**
+
+- Disables/Enables glean upload. This should be set to `false` in prod and
+  staging to send glean telemetry to the server
