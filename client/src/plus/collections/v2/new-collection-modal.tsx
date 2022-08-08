@@ -8,7 +8,7 @@ export default function NewCollectionModal({
   setShow,
   collections,
   setCollections,
-  callback,
+  onClose,
 }: {
   show: boolean;
   setShow: React.Dispatch<React.SetStateAction<boolean>>;
@@ -16,7 +16,7 @@ export default function NewCollectionModal({
   setCollections:
     | React.Dispatch<React.SetStateAction<Collection[]>>
     | React.Dispatch<React.SetStateAction<Collection[] | undefined>>;
-  callback?: (collection_id: string) => void;
+  onClose?: (collection_id?: string) => void;
 }) {
   const [collection, setCollection] = useState<NewCollection>({
     title: "",
@@ -28,8 +28,9 @@ export default function NewCollectionModal({
     setCollection({ ...collection, [name]: value.trimStart() });
   };
 
-  const cancelHandler = (e: React.MouseEvent) => {
+  const cancelHandler = (e: React.MouseEvent | React.KeyboardEvent) => {
     e.preventDefault();
+    if (onClose) onClose();
     setCollection({ title: "", description: "" });
     setShow(false);
   };
@@ -38,7 +39,7 @@ export default function NewCollectionModal({
     e.preventDefault();
     const createdCollection = await createCollection(collection);
     setCollections([...collections, createdCollection]);
-    if (callback) callback(createdCollection.id);
+    if (onClose) onClose(createdCollection.id);
     setCollection({ title: "", description: "" });
     setShow(false);
   };
@@ -51,11 +52,11 @@ export default function NewCollectionModal({
   };
 
   return (
-    <MDNModal isOpen={show} size="small" onRequestClose={() => setShow(false)}>
+    <MDNModal isOpen={show} size="small" onRequestClose={cancelHandler}>
       <header className="modal-header">
         <h2 className="modal-heading">Create Collection</h2>
         <Button
-          onClickHandler={() => setShow(false)}
+          onClickHandler={cancelHandler}
           type="action"
           icon="cancel"
           extraClasses="close-button"

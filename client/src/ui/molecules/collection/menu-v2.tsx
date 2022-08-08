@@ -4,7 +4,6 @@ import "../notifications-watch-menu/index.scss";
 import { Button } from "../../atoms/button";
 import { Doc } from "../../../document/types";
 import { useOnlineStatus } from "../../../hooks";
-import MDNModal from "../../atoms/modal";
 import {
   Item,
   Collection,
@@ -14,6 +13,11 @@ import {
   saveItem,
 } from "../../../plus/collections/v2/api";
 import NewCollectionModal from "../../../plus/collections/v2/new-collection-modal";
+import { DropdownMenu, DropdownMenuWrapper } from "../dropdown";
+import { Icon } from "../../atoms/icon";
+
+const menuId = "watch-submenu";
+const addValue = "add";
 
 export default function BookmarkV2Menu({ doc }: { doc: Doc }) {
   const defaultItem: Item = {
@@ -26,6 +30,7 @@ export default function BookmarkV2Menu({ doc }: { doc: Doc }) {
   const { isOffline } = useOnlineStatus();
   const [show, setShow] = useState(false);
   const [showNewCollection, setShowNewCollection] = useState(false);
+  const [disableAutoClose, setDisableAutoClose] = useState(false);
   const [savedItem, setSavedItem] = useState<Item>();
   const [formItem, setFormItem] = useState(defaultItem);
   const [collections, setCollections] = useState<Collection[]>();
@@ -42,9 +47,25 @@ export default function BookmarkV2Menu({ doc }: { doc: Doc }) {
     if (savedItem) setFormItem(savedItem);
   }, [savedItem]);
 
+  useEffect(() => {
+    if (showNewCollection === false) {
+      setDisableAutoClose(false);
+    }
+  }, [showNewCollection]);
+
+  const collectionChangeHandler = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const { value } = e.target;
+    if (value === addValue) {
+      setDisableAutoClose(true);
+      setShowNewCollection(true);
+    }
+    changeHandler(e);
+  };
+
   const changeHandler = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
+    e.preventDefault();
     const { name, value } = e.target;
     setFormItem({ ...formItem, [name]: value });
   };
@@ -55,48 +76,39 @@ export default function BookmarkV2Menu({ doc }: { doc: Doc }) {
     setShow(false);
   };
 
-  const toItem = (formData: FormData) => {
-    return {
-      url: doc.mdn_url,
-      name: formData.get("name") as string,
-      notes: formData.get("notes") as string,
-      collection_id: formData.get("collection") as string,
-    };
-  };
-
   const saveHandler = async (
-    e: React.FormEvent<HTMLFormElement> | React.BaseSyntheticEvent,
-    form?: HTMLFormElement | null
+    e: React.FormEvent<HTMLFormElement> | React.BaseSyntheticEvent
   ) => {
     e.preventDefault();
     if (!collections) return;
-    const formData = new FormData(form || (e.target as HTMLFormElement));
-    const newItem = toItem(formData);
-    await saveItem(newItem);
-    setSavedItem(newItem);
+    await saveItem(formItem);
+    setSavedItem(formItem);
     setShow(false);
   };
 
   const enterHandler = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
       e.preventDefault();
-      saveHandler(e, (e.target as HTMLInputElement).form);
+      saveHandler(e);
     }
   };
 
   const deleteHandler = async (e: React.MouseEvent) => {
     e.preventDefault();
     if (!collections) return;
-    const formData = new FormData(
-      (e.target as HTMLInputElement).form || undefined
-    );
-    await deleteItem(toItem(formData));
-    setFormItem(savedItem || defaultItem);
+    await deleteItem(formItem);
+    setSavedItem(undefined);
+    setFormItem(defaultItem);
     setShow(false);
   };
 
   return (
-    <>
+    <DropdownMenuWrapper
+      className="watch-menu"
+      isOpen={show}
+      setIsOpen={setShow}
+      disableAutoClose={disableAutoClose}
+    >
       {doc ? (
         <Button
           type="action"
@@ -124,49 +136,51 @@ export default function BookmarkV2Menu({ doc }: { doc: Doc }) {
           <span className="visually-hidden">Edit bookmark</span>
         </Button>
       )}
-      <MDNModal
-        isOpen={show}
-        size="small"
-        onRequestClose={() => setShow(false)}
-      >
-        <header className="modal-header">
-          <h2 className="modal-heading">
-            {savedItem ? "Edit Item" : "Save to Collection"}
-          </h2>
-          <Button
-            onClickHandler={() => setShow(false)}
-            type="action"
-            icon="cancel"
-            extraClasses="close-button"
-          />
-        </header>
-        <div className="modal-body">
-          <form method="post" onSubmit={saveHandler}>
-            <div className="watch-submenu-item border-top-0 padding-top-0">
+      <form method="post" onSubmit={saveHandler}>
+        <DropdownMenu>
+          <div
+            className={`${menuId} show`}
+            role="menu"
+            aria-labelledby={`${menuId}-button`}
+          >
+            <button
+              onClick={cancelHandler}
+              className="watch-submenu-header mobile-only"
+            >
+              <span className="watch-submenu-header-wrap">
+                <Icon name="chevron" />
+                {savedItem ? "Edit Item" : "Add to Collection"}
+              </span>
+            </button>
+
+            <h2 className="watch-submenu-header desktop-only">
+              {savedItem ? "Edit Item" : "Add to Collection"}
+            </h2>
+
+            <div className="watch-submenu-item pad-y">
               <label htmlFor="bookmark-collection">Collection:</label>
-              <select
-                id="bookmark-collection"
-                name="collection"
-                value={formItem.collection_id}
-                autoComplete="off"
-                onChange={changeHandler}
-                disabled={!collections}
-              >
-                {collections?.map((c) => (
-                  <option key={c.id} value={c.id}>
-                    {c.title}
+              <div className="select-wrap">
+                <select
+                  id="bookmark-collection"
+                  name="collection_id"
+                  value={formItem.collection_id}
+                  autoComplete="off"
+                  onChange={collectionChangeHandler}
+                  disabled={!collections}
+                >
+                  {collections?.map((c) => (
+                    <option key={c.id} value={c.id}>
+                      {c.title}
+                    </option>
+                  )) || <option>Loading...</option>}
+                  <option disabled={true} role="separator">
+                    ——————————
                   </option>
-                )) || <option value="">Loading...</option>}
-              </select>
-              <Button
-                type="action"
-                onClickHandler={() => setShowNewCollection(true)}
-                isDisabled={!collections}
-              >
-                New collection
-              </Button>
+                  <option value={addValue}>+ New Collection</option>
+                </select>
+              </div>
             </div>
-            <div className="watch-submenu-item border-top-0 padding-top-0">
+            <div className="watch-submenu-item pad-y">
               <label htmlFor="bookmark-name">Name:</label>
               <input
                 id="bookmark-name"
@@ -178,7 +192,7 @@ export default function BookmarkV2Menu({ doc }: { doc: Doc }) {
                 onKeyDown={enterHandler}
               />
             </div>
-            <div className="watch-submenu-item border-top-0 padding-top-0">
+            <div className="watch-submenu-item pad-y">
               <label htmlFor="bookmark-note">Note:</label>
               <input
                 id="bookmark-note"
@@ -190,7 +204,7 @@ export default function BookmarkV2Menu({ doc }: { doc: Doc }) {
                 onKeyDown={enterHandler}
               />
             </div>
-            <div className="watch-submenu-item border-top-0 is-button-row is-always-visible">
+            <div className="watch-submenu-item is-button-row">
               <Button buttonType="submit" isDisabled={!collections}>
                 Save
               </Button>
@@ -208,19 +222,23 @@ export default function BookmarkV2Menu({ doc }: { doc: Doc }) {
                 </Button>
               )}
             </div>
-          </form>
-        </div>
-      </MDNModal>
+          </div>
+        </DropdownMenu>
+      </form>
       {collections && (
         <NewCollectionModal
           show={showNewCollection}
           setShow={setShowNewCollection}
-          callback={(collection_id) =>
-            setFormItem({ ...formItem, collection_id })
-          }
+          onClose={(collection_id) => {
+            setDisableAutoClose(false);
+            setFormItem({
+              ...formItem,
+              collection_id: collection_id || collections[0].id,
+            });
+          }}
           {...{ collections, setCollections }}
         />
       )}
-    </>
+    </DropdownMenuWrapper>
   );
 }

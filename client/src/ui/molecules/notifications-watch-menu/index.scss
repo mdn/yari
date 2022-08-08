@@ -36,7 +36,8 @@
     }
   }
 
-  [type="text"] {
+  [type="text"],
+  select {
     background: var(--background-primary);
     border: 1px solid var(--border-primary);
     color: var(--text-primary);
@@ -50,6 +51,30 @@
       border: 1px solid var(--button-secondary-border-focus);
       box-shadow: var(--focus-effect);
     }
+  }
+
+  select {
+    appearance: none;
+  }
+
+  .select-wrap {
+    position: relative;
+    flex: 1 1 100%;
+    display: flex;
+  }
+
+  .select-wrap::after {
+    position: absolute;
+    top: calc(50% - 0.5rem);
+    right: 0.5rem;
+    display: block;
+    width: 16px;
+    height: 16px;
+    background-color: var(--icon-primary);
+    mask-image: url("../../../assets/icons/small-arrow.svg");
+    mask-size: cover;
+    content: "";
+    pointer-events: none;
   }
 
   &-header,

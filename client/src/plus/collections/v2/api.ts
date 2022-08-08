@@ -29,7 +29,13 @@ export async function createCollection(
 }
 
 export async function getCollections(): Promise<Array<Collection>> {
-  return JSON.parse(window.localStorage.getItem("collections") || "[]");
+  const collections: Collection[] = JSON.parse(
+    window.localStorage.getItem("collections") || "[]"
+  );
+  if (collections.length === 0) {
+    collections.push({ id: "default", title: "Default", description: "" });
+  }
+  return collections;
 }
 
 export async function getCollection(
