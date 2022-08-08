@@ -22,6 +22,7 @@ const loadAllLanguages = lazy(() => {
     "python",
     "bash",
     "batch",
+    "powershell",
     "sql",
     "json",
     "glsl",
@@ -35,6 +36,18 @@ const loadAllLanguages = lazy(() => {
     "md",
     "cs",
     "jsx",
+    "typescript",
+    "diff",
+    "ini",
+    "ignore",
+    "less",
+    "regex",
+    "scss",
+    "sql",
+    "uri",
+    "wasm",
+    "yaml",
+    "pug"
   ]);
 });
 
@@ -46,7 +59,6 @@ const loadAllLanguages = lazy(() => {
 const ALIASES = new Map([
   ["sh", "shell"],
   ["jssyntax", "js"],
-  ["py", "python"],
 ]);
 
 // Over the years we have accumulated some weird <pre> tags whose
