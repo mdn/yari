@@ -75,21 +75,24 @@ for (const spec of Object.values(parsedWebRef)) {
  */
 function getNameAndSyntax() {
   // get the item name from the page slug
-  let itemName = $0 || env.slug.split('/').pop().toLowerCase();
+  let itemName = $0 || env.title;
   let itemSyntax;
   if (env.tags.includes("CSS Property")) {
-  // get syntax for a CSS property
+    // get syntax for a CSS property
     itemSyntax = getPropertySyntax(itemName, parsedWebRef);
   } else if (env.tags.includes("CSS Data Type")) {
-  // get syntax for a CSS data type
-    // some CSS data type slugs have a `_value` suffix
-    if (itemName.endsWith("_value")) {
-      itemName = itemName.replace("_value", "");
-    }
+    // get syntax for a CSS data type
     // not all types have an entry in the syntax
-    if (valuespaces[`<${itemName}>`]) {
-      itemSyntax = valuespaces[`<${itemName}>`].value;
-      itemName = `&lt;${itemName}&gt;`;
+    if (valuespaces[itemName]) {
+      itemSyntax = valuespaces[itemName].value;
+    }
+  } else if (env.tags.includes("CSS Function")) {
+    // get syntax for a CSS function
+    // CSS function titles omit the angled brackets
+    itemName = `<${itemName}>`;
+    // not all types have an entry in the syntax
+    if (valuespaces[itemName]) {
+      itemSyntax = valuespaces[itemName].value;
     }
   }
   return {
@@ -260,6 +263,8 @@ function renderTerms(terms, combinator) {
  */
 function renderSyntax(type, syntax) {
   // write out the name of this type
+  type = type.replaceAll('<', '&lt;');
+  type = type.replaceAll('>', '&gt;');
   let output = `<span class="token property" id="${type}">${type} = </span><br/>`;
 
   const ast = definitionSyntax.parse(syntax);
