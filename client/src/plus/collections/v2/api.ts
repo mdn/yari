@@ -114,7 +114,10 @@ async function deleter(key: string) {
 }
 
 export function useCollections() {
-  return useSWR<MultipleCollectionInfo[]>(COLLECTIONS_ENDPOINT, fetcher);
+  return useSWR<Collection[]>(COLLECTIONS_ENDPOINT, async (key: string) => {
+    const response = await fetcher<MultipleCollectionInfo[]>(key);
+    return response as Collection[];
+  });
 }
 
 export function useCollection(id: string | undefined) {
@@ -145,9 +148,16 @@ export async function addCollection(
 
 // }
 
-// export async function deleteCollection() {
-
-// }
+export async function deleteCollection(
+  collection: Collection
+): Promise<Response> {
+  const { id } = collection;
+  const response = await deleter(getCollectionKey(id));
+  mutate(COLLECTIONS_ENDPOINT);
+  mutate(getCollectionKey(id));
+  // mutate(getBookmarkKey());
+  return response;
+}
 
 export function useItems(id: string | undefined, initialSize = 1) {
   function key(page: number, previousPage: MultipleCollectionResponse) {

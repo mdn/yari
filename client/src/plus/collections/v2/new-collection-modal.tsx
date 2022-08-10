@@ -1,26 +1,24 @@
 import React, { useState } from "react";
 import { Button } from "../../../ui/atoms/button";
 import MDNModal from "../../../ui/atoms/modal";
-import {
-  Collection,
-  addCollection,
-  NewCollection,
-  useCollections,
-} from "./api";
+import { Collection, addCollection, NewCollection } from "./api";
 
-export default function NewCollectionModal({
+export default function NewEditCollectionModal({
   show,
   setShow,
   onClose,
+  editingCollection,
 }: {
   show: boolean;
   setShow: React.Dispatch<React.SetStateAction<boolean>>;
   onClose?: (collection_id?: string) => void;
+  editingCollection?: Collection;
 }) {
-  const [collection, setCollection] = useState<NewCollection>({
+  const defaultCollection: Collection | NewCollection = editingCollection || {
     name: "",
     description: "",
-  });
+  };
+  const [collection, setCollection] = useState(defaultCollection);
 
   const changeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -30,15 +28,15 @@ export default function NewCollectionModal({
   const cancelHandler = (e: React.MouseEvent | React.KeyboardEvent) => {
     e.preventDefault();
     if (onClose) onClose();
-    setCollection({ name: "", description: "" });
+    setCollection(defaultCollection);
     setShow(false);
   };
 
   const saveHandler = async (e: React.BaseSyntheticEvent) => {
     e.preventDefault();
-    const createdCollection = await addCollection(collection);
-    if (onClose) onClose(createdCollection.id.toString());
-    setCollection({ name: "", description: "" });
+    const savedCollection = await addCollection(collection);
+    if (onClose) onClose(savedCollection.id);
+    setCollection(defaultCollection);
     setShow(false);
   };
 
@@ -52,7 +50,9 @@ export default function NewCollectionModal({
   return (
     <MDNModal isOpen={show} size="small" onRequestClose={cancelHandler}>
       <header className="modal-header">
-        <h2 className="modal-heading">Create Collection</h2>
+        <h2 className="modal-heading">
+          {editingCollection ? "Edit Collection" : "Create Collection"}
+        </h2>
         <Button
           onClickHandler={cancelHandler}
           type="action"
@@ -88,7 +88,7 @@ export default function NewCollectionModal({
             />
           </div>
           <div className="mdn-form-item is-button-row">
-            <Button buttonType="submit">Create Collection</Button>
+            <Button buttonType="submit">Save</Button>
             <Button onClickHandler={cancelHandler} type="secondary">
               Cancel
             </Button>
