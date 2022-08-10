@@ -14,6 +14,11 @@
  * $0 - Name of the template to link to.
  */
 
+// Throw a MacroDeprecatedError flaw
+// Condition for removal: no more use in translated-content (May 2022: 915 occurrences)
+// 0 occurrences left in en-US
+mdn.deprecated();
+
 let dest = "https://github.com/mdn/yari/tree/main/kumascript/macros/" + $0 + ".ejs";
 let text = $0;
 %>

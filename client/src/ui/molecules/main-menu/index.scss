@@ -13,12 +13,12 @@ ul.main-menu {
   &.show {
     display: block;
 
-    @media screen and (min-width: $screen-md) {
+    @media screen and (min-width: $screen-lg) {
       display: flex;
     }
   }
 
-  @media screen and (min-width: $screen-md) {
+  @media screen and (min-width: $screen-lg) {
     align-items: center;
     display: flex;
     justify-content: space-around;
@@ -40,7 +40,7 @@ ul.main-menu {
 }
 
 /* Enable hover interaction if javascript is not available */
-@media screen and (min-width: $screen-md) {
+@media screen and (min-width: $screen-lg) {
   ul.main-menu .submenu {
     display: none;
   }

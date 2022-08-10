@@ -1,11 +1,3 @@
-const {
-  CONTENT_ROOT,
-  CONTENT_TRANSLATED_ROOT,
-  CONTRIBUTOR_SPOTLIGHT_ROOT,
-  REPOSITORY_URLS,
-  ROOTS,
-  VALID_LOCALES,
-} = require("./constants");
 const Document = require("./document");
 const Translation = require("./translation");
 const { getPopularities } = require("./popularities");
@@ -22,13 +14,6 @@ const { resolveFundamental } = require("../libs/fundamental-redirects");
 const { translationsOf } = require("./translations");
 
 module.exports = {
-  CONTENT_ROOT,
-  CONTENT_TRANSLATED_ROOT,
-  CONTRIBUTOR_SPOTLIGHT_ROOT,
-  REPOSITORY_URLS,
-  ROOTS,
-  VALID_LOCALES,
-
   getPopularities,
 
   Document,

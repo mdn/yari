@@ -2,8 +2,9 @@ import React from "react";
 import { useSearchParams, useParams, useNavigate } from "react-router-dom";
 import useSWR, { mutate } from "swr";
 
-import { CRUD_MODE } from "../constants";
+import { CRUD_MODE } from "../env";
 import { useGA } from "../ga-context";
+import { useIsServer } from "../hooks";
 
 import {
   useDocumentURL,
@@ -38,6 +39,7 @@ import "./index.scss";
 // code could come with its own styling rather than it having to be part of the
 // main bundle all the time.
 import "./interactive-examples.scss";
+import { DocumentSurvey } from "../ui/molecules/document-survey";
 // import { useUIStatus } from "../ui-context";
 
 // Lazy sub-components
@@ -46,15 +48,21 @@ const MathMLPolyfillMaybe = React.lazy(() => import("./mathml-polyfill"));
 
 export function Document(props /* TODO: define a TS interface for this */) {
   const ga = useGA();
+  const isServer = useIsServer();
 
   const mountCounter = React.useRef(0);
   const documentURL = useDocumentURL();
-  const { locale } = useParams();
+  const { locale = "en-US" } = useParams();
   const [searchParams] = useSearchParams();
 
   const navigate = useNavigate();
 
   const previousDoc = React.useRef(null);
+
+  const fallbackData =
+    props.doc && props.doc.mdn_url.toLowerCase() === documentURL.toLowerCase()
+      ? props.doc
+      : null;
 
   const dataURL = `${documentURL}/index.json`;
   const { data: doc, error } = useSWR<Doc>(
@@ -87,12 +95,9 @@ export function Document(props /* TODO: define a TS interface for this */) {
       return doc;
     },
     {
-      initialData:
-        props.doc &&
-        props.doc.mdn_url.toLowerCase() === documentURL.toLowerCase()
-          ? props.doc
-          : null,
+      fallbackData,
       revalidateOnFocus: CRUD_MODE,
+      revalidateOnMount: !fallbackData,
       refreshInterval: CRUD_MODE ? 500 : 0,
     }
   );
@@ -169,8 +174,6 @@ export function Document(props /* TODO: define a TS interface for this */) {
     return null;
   }
 
-  const isServer = typeof window === "undefined";
-
   return (
     <>
       <div className="main-document-header-container">
@@ -216,6 +219,7 @@ export function Document(props /* TODO: define a TS interface for this */) {
           )}
           <article className="main-page-content" lang={doc.locale}>
             <h1>{doc.title}</h1>
+            <DocumentSurvey doc={doc} />
             <RenderDocumentBody doc={doc} />
             <Metadata doc={doc} locale={locale} />
           </article>

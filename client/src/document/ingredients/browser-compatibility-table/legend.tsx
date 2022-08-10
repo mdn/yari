@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import type bcd from "@mdn/browser-compat-data/types";
+import type BCD from "@mdn/browser-compat-data/types";
 import { BrowserInfoContext } from "./browser-info";
 import {
   asList,
@@ -27,9 +27,9 @@ export const LEGEND_LABELS = {
 type LEGEND_KEY = keyof typeof LEGEND_LABELS;
 
 function getActiveLegendItems(
-  compat: bcd.Identifier,
+  compat: BCD.Identifier,
   name: string,
-  browserInfo: bcd.Browsers
+  browserInfo: BCD.Browsers
 ) {
   const legendItems = new Set<LEGEND_KEY>();
 
@@ -101,7 +101,7 @@ export function Legend({
   compat,
   name,
 }: {
-  compat: bcd.Identifier;
+  compat: BCD.Identifier;
   name: string;
 }) {
   const browserInfo = useContext(BrowserInfoContext);

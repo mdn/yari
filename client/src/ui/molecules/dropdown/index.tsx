@@ -1,5 +1,5 @@
 import * as React from "react";
-import { ReactChild, ReactChildren, useContext, useRef } from "react";
+import { useContext, useRef } from "react";
 import { useOnClickOutside } from "../../../hooks";
 
 import "./index.scss";
@@ -52,7 +52,7 @@ export function DropdownMenu({
   children,
   onClose = () => {},
 }: {
-  children: ReactChildren | ReactChild;
+  children: React.ReactNode;
   onClose?: (event?: Event) => void;
 }) {
   const { isOpen, wrapperRef, close } = useContext(DropdownMenuContext);

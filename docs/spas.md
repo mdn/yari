@@ -9,7 +9,7 @@ To build these you run:
 yarn tool spas
 ```
 
-The SPAs are also built when running `yarn prepare-build` or `yarn start`.
+The SPAs are also built when running `yarn build:prepare` or `yarn start`.
 
 Below we describe each SPA and this is a work in progress.
 

@@ -1,16 +1,17 @@
-require("dotenv").config();
+const dotenv = require("dotenv");
+dotenv.config();
 
+const { FLAW_LEVELS, VALID_FLAW_CHECKS } = require("../libs/constants");
 const {
-  FLAW_LEVELS,
   DEFAULT_FLAW_LEVELS,
-  VALID_FLAW_CHECKS,
   FILES,
   FOLDERSEARCH,
   NO_PROGRESSBAR,
   FIX_FLAWS,
   FIX_FLAWS_DRY_RUN,
+  FIX_FLAWS_TYPES,
   FIX_FLAWS_VERBOSE,
-} = require("./constants");
+} = require("../libs/env");
 
 const options = Object.freeze({
   flawLevels: parseFlawLevels(DEFAULT_FLAW_LEVELS),
@@ -21,6 +22,7 @@ const options = Object.freeze({
   noProgressbar: NO_PROGRESSBAR || FIX_FLAWS_DRY_RUN || FIX_FLAWS_VERBOSE,
   fixFlaws: FIX_FLAWS,
   fixFlawsDryRun: FIX_FLAWS_DRY_RUN,
+  fixFlawsTypes: FIX_FLAWS_TYPES,
   fixFlawsVerbose: FIX_FLAWS_VERBOSE,
 });
 

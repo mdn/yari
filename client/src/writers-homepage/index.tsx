@@ -2,14 +2,14 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { PageContentContainer } from "../ui/atoms/page-content";
 import { Search } from "../ui/molecules/search";
-import { useLocale } from "../hooks";
+import { useIsServer, useLocale } from "../hooks";
 import "./index.scss";
 
 // Lazy sub-components
 const ViewedDocuments = React.lazy(() => import("./viewed-documents"));
 
 export default function WritersHomepage() {
-  const isServer = typeof window === "undefined";
+  const isServer = useIsServer();
   const locale = useLocale();
 
   return (
@@ -102,9 +102,6 @@ export default function WritersHomepage() {
           </li>
           <li>
             <Link to={`/${locale}/_flaws`}>Flaws Dashboard</Link>
-          </li>
-          <li>
-            <Link to={`/${locale}/_traits`}>All Documents Traits</Link>
           </li>
         </ul>
       </div>

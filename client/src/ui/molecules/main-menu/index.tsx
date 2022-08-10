@@ -5,7 +5,7 @@ import { ReferenceMenu } from "../reference-menu";
 import { PlusMenu } from "../plus-menu";
 
 import "./index.scss";
-import { PLUS_IS_ENABLED } from "../../../constants";
+import { PLUS_IS_ENABLED } from "../../../env";
 
 export default function MainMenu({ isOpenOnMobile }) {
   const previousActiveElement = useRef<null | HTMLButtonElement>(null);

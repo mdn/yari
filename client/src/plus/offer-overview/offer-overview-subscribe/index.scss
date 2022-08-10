@@ -1,6 +1,6 @@
 @use "../../../ui/vars" as *;
 
-.subscribe-wrapper {
+.plus-subscribe-wrapper {
   background: var(--background-primary);
 
   .subscribe {
@@ -74,6 +74,7 @@
           font-size: 1em;
           margin: 0;
           width: 100%;
+          border-radius: 1rem 1rem 0 0;
           background: rgba(0, 0, 0, 0.5);
           color: var(--text-primary);
           padding: 0.5rem;

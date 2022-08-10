@@ -109,7 +109,14 @@ def index(
             else:
                 count_errors += 1
                 error_data = info["index"]["error"]
-                error_key = f"{error_data['type']}: {error_data['reason']}"
+
+                if isinstance(error_data, dict):
+                    error_key = f"{error_data['type']}: {error_data['reason']}"
+                elif isinstance(error_data, str):
+                    error_key = error_data
+                else:
+                    error_key = str(error_data)
+
                 errors_counter[error_key] += 1
             count_done += 1
             bar.update(1)

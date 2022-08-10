@@ -74,7 +74,7 @@ export const ThemeSwitcher = () => {
       </Button>
 
       <DropdownMenu>
-        <Submenu menuEntry={menu} />
+        <Submenu menuEntry={menu} extraClasses="inline-submenu-lg" />
       </DropdownMenu>
     </DropdownMenuWrapper>
   );

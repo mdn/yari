@@ -7,11 +7,6 @@ updates:
       interval: daily
     open-pull-requests-limit: 35
     ignore:
-      # Need manual updates with "resolutions" in package.json
-      # to property hoist versions from react-scripts
-      - dependency-name: "webpack"
-      - dependency-name: "eslint"
-
       # The @storybook dependencies come out a lot.
       # https://github.com/mdn/yari/pulls?q=is%3Apr++is%3Aclosed+storybook+
       # We don't use storybook at the moment.

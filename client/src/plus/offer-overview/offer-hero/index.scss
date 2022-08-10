@@ -43,7 +43,7 @@ $text-stroke-width: 2px;
 
       h2 {
         width: 100%;
-        font: var(--type-heading-h4);
+        font: var(--type-heading-h3);
       }
 
       .button-wrapper {
@@ -68,17 +68,19 @@ $text-stroke-width: 2px;
 
         .button-primary {
           background-color: var(--text-primary);
+          border: 2px solid var(--text-primary);
           color: var(--text-invert);
 
           &:hover {
             background-color: var(--text-secondary);
+            border-color: var(--text-secondary);
           }
         }
 
         .button-secondary {
+          background: #15141a1a;
           border: 2px solid var(--button-secondary-border-red);
           color: white;
-          background: #15141a1a;
         }
 
         .button-secondary:hover {

@@ -3,11 +3,8 @@ const path = require("path");
 
 const { resolveFundamental } = require("../libs/fundamental-redirects");
 const { decodePath, slugToFolder } = require("../libs/slug-utils");
-const {
-  CONTENT_ROOT,
-  CONTENT_TRANSLATED_ROOT,
-  VALID_LOCALES,
-} = require("./constants");
+const { CONTENT_ROOT, CONTENT_TRANSLATED_ROOT } = require("../libs/env");
+const { VALID_LOCALES } = require("../libs/constants");
 const { getRoot } = require("./utils");
 
 const FORBIDDEN_URL_SYMBOLS = ["\n", "\t"];
@@ -241,7 +238,7 @@ function loadLocaleAndAdd(
       const [a1, a2] = a[i] || [];
       const [b1, b2] = b[i] || [];
       if (a1 !== b1 || a2 !== b2) {
-        return [a1, b1, a2, b2];
+        return [a1, a2, b1, b2];
       }
     }
     return null;
@@ -285,8 +282,8 @@ function validateLocale(locale, strict = false) {
   // To validate strict we check if there is something to fix.
   const { changed } = loadLocaleAndAdd(localeLC, [], { fix: strict, strict });
   if (changed) {
-    const [a1, b1, a2, b2] = changed;
-    throw new Error(`Invalid redirect for ${a1} -> ${b1} or ${a2} -> ${b2}`);
+    const [a1, a2, b1, b2] = changed;
+    throw new Error(`Invalid redirect for ${a1} -> ${a2} or ${b1} -> ${b2}`);
   }
 }
 

@@ -109,10 +109,12 @@ function assertCorrectChildren<Type extends MDNodesWithChildren["type"]>(
   }
 }
 
+type Attributes = Record<string, boolean | number | string>;
+
 export function h<Type extends MDNodeUnion["type"], Node extends MDNode<Type>>(
   type: Type,
   childrenOrValue?: string | MDNodeUnion[] | MDNodeUnion,
-  props?: Omit<Node, "type" | "children" | "value">
+  props?: Omit<Node & Attributes, "type" | "children" | "value">
 ): MDNode<Type> {
   const mdNode = { type, ...props };
   if (typeof childrenOrValue === "string") {

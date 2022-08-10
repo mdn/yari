@@ -107,7 +107,7 @@ function getStorage(locale: string): LocaleStorageData | null {
 }
 
 export function TranslationDifferences() {
-  const { locale } = useParams();
+  const { locale = "en-US" } = useParams();
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
 

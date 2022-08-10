@@ -16,7 +16,16 @@ const sampleDocumentState = Object.freeze({
       {
         type: "prose",
         value: {
+          id: null,
           content: "<p>Hello World!</p>",
+        },
+      },
+      {
+        type: "prose",
+        value: {
+          id: "lorem_ipsum",
+          content:
+            "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit</p>",
         },
       },
     ],

@@ -12,14 +12,16 @@ const {
   MacroExecutionError,
 } = require("../src/errors.js");
 
+const dirname = __dirname;
+
 const PAGE_ENV = { slug: "" };
 
 describe("render() function", () => {
   function fixture(name) {
-    return `${__dirname}/fixtures/render/${name}`;
+    return `${dirname}/fixtures/render/${name}`;
   }
   function get(name) {
-    return fs.readFileSync(fixture(name), "utf8");
+    return fs.readFileSync(fixture(name), "utf-8");
   }
   function renderPrerequisiteFromURL(url) {
     throw new Error(`unexpected prerequisite: ${url}`);

@@ -10,7 +10,7 @@ const LIVE_SAMPLE_HTML = `
     <head>
         <meta charset="utf-8">
         <meta name="robots" content="noindex, nofollow">
-        <style type="text/css">
+        <style>
             body {
               padding: 0;
               margin: 0;
@@ -43,7 +43,7 @@ const LIVE_SAMPLE_HTML = `
             }
         </style>
         <% if (css) { %>
-        <style type="text/css">
+        <style>
             <%- css %>
         </style>
         <% } %>

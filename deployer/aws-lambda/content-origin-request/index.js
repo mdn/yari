@@ -33,6 +33,9 @@ const LEGACY_URI_NEEDING_TRAILING_SLASH = new RegExp(
 
 const CONTENT_DEVELOPMENT_DOMAIN = ".content.dev.mdn.mozit.cloud";
 
+const REDIRECTS = require("./redirects.json");
+const REDIRECT_SUFFIXES = ["/index.json", "/bcd.json", ""];
+
 function redirect(location, { status = 302, cacheControlSeconds = 0 } = {}) {
   /*
    * Create and return a redirect response.
@@ -184,6 +187,31 @@ exports.handler = async (event) => {
     });
   }
 
+  // Important: The request.uri may be URI-encoded.
+  // Example:
+  // - Encoded: /zh-TW/docs/AJAX:%E4%B8%8A%E6%89%8B%E7%AF%87
+  // - Decoded: /zh-TW/docs/AJAX:上手篇
+  const decodedUri = decodePath(request.uri);
+  const decodedUriLC = decodedUri.toLowerCase();
+
+  // Redirect moved pages (see `_redirects.txt` in content/translated-content).
+  // Example:
+  // - Source: /zh-TW/docs/AJAX:上手篇
+  // - Target: /zh-TW/docs/Web/Guide/AJAX/Getting_Started
+  for (const suffix of REDIRECT_SUFFIXES) {
+    if (!decodedUriLC.endsWith(suffix)) {
+      continue;
+    }
+    const source = decodedUriLC.substring(
+      0,
+      decodedUriLC.length - suffix.length
+    );
+    if (typeof REDIRECTS[source] == "string") {
+      const target = REDIRECTS[source] + suffix;
+      return redirect(target, 301, { cacheControlSeconds: THIRTY_DAYS });
+    }
+  }
+
   // This condition exists to accommodate AWS origin-groups, which
   // include two origins, the primary and the secondary, where the
   // secondary origin is only attempted if the primary fails. Since
@@ -191,6 +219,7 @@ exports.handler = async (event) => {
   // behavior, we have to ensure we only make adjustments for custom
   // S3 origins.
   if (
+    request.origin &&
     request.origin.custom &&
     request.origin.custom.domainName.includes("s3")
   ) {
@@ -198,7 +227,7 @@ exports.handler = async (event) => {
     // NOTE: The incoming URI should remain URI-encoded. However, it
     // must be passed to slugToFolder as decoded version to lowercase
     // non-ascii symbols and sanitize symbols like ":".
-    request.uri = encodePath(slugToFolder(decodePath(request.uri)));
+    request.uri = encodePath(slugToFolder(decodedUri));
     // Rewrite the HOST header to match the S3 bucket website domain.
     // This is required only because we're using S3 as a website, which
     // we need in order to do redirects from S3. NOTE: The origin is

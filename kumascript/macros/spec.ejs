@@ -14,6 +14,11 @@ parameters:
 	$2 = status of specification (optional). Possible values: ED, WD, LC, CR, PR, REC. ( Lowercase O.K ! )
 */
 
+// Throw a MacroDeprecatedError flaw
+// Condition for removal: no more use in any content (May 2022: 319 occurrences)
+// 0 occurrences left in en-US
+mdn.deprecated();
+
 var lang = env.locale;
 var status = ($2).toUpperCase();
 var title = "";

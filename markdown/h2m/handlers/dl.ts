@@ -72,6 +72,9 @@ export const dl: QueryAndTransform = [
     const children = [];
     let terms = [];
     for (const child of node.children) {
+      if (!("tagName" in child)) {
+        return null;
+      }
       if (child.tagName == "dt") {
         terms.push(h("paragraph", t(child)));
       } else if (child.tagName == "dd" && terms.length > 0) {

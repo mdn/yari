@@ -16,8 +16,9 @@ import { useLocale } from "../../hooks";
 import { BookmarkData } from "./types";
 import { useUserData } from "../../user-context";
 import { TabVariant, TAB_INFO, useCurrentTab } from "../common/tabs";
-import { PlusTabs } from "../common/plus-tabs";
 import { MDN_PLUS_TITLE } from "../../constants";
+import { CollectionsTab } from "./collections-tab";
+import { FrequentlyViewedTab } from "./frequently-viewed-tab";
 
 dayjs.extend(relativeTime);
 
@@ -77,14 +78,16 @@ function CollectionsLayout() {
       </header>
       {showTabs && (
         <Container>
-          <>
-            <PlusTabs
+          {currentTab === TabVariant.COLLECTIONS && (
+            <CollectionsTab
               selectedTerms={selectedTerms}
-              selectedFilter={selectedFilter}
               selectedSort={selectedSort}
-              currentTab={currentTab}
+              selectedFilter={selectedFilter}
             />
-          </>
+          )}
+          {currentTab === TabVariant.FREQUENTLY_VIEWED && (
+            <FrequentlyViewedTab selectedTerms={selectedTerms} />
+          )}
         </Container>
       )}
       {!userData && !isAuthed && <NotSignedIn />}

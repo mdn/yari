@@ -48,7 +48,7 @@
       height: 100vh;
       left: 0;
       position: fixed;
-      top: 0;
+      top: var(--top-navigation-height);
       width: 100vw;
       z-index: var(--z-index-low);
       overflow: auto;
@@ -61,6 +61,7 @@
 
         .button-wrap {
           justify-content: flex-start;
+          margin-top: 1px;
           padding: 1.5rem 1rem;
         }
       }

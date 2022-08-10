@@ -11,7 +11,7 @@ const imageminGifsicle = require("imagemin-gifsicle");
 const imageminSvgo = require("imagemin-svgo");
 const sanitizeFilename = require("sanitize-filename");
 
-const { VALID_MIME_TYPES } = require("../filecheck/constants");
+const { VALID_MIME_TYPES } = require("../libs/constants");
 
 function humanFileSize(size) {
   if (size < 1024) return `${size} B`;

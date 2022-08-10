@@ -5,7 +5,7 @@ const readChunk = require("read-chunk");
 const imageType = require("image-type");
 const isSvg = require("is-svg");
 
-const { ROOTS, DEFAULT_LOCALE } = require("./constants");
+const { ROOTS, DEFAULT_LOCALE } = require("../libs/env");
 const { memoize, slugToFolder } = require("./utils");
 
 function isImage(filePath) {

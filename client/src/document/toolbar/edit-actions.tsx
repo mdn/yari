@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { CRUD_MODE_HOSTNAMES } from "../../constants";
+import { CRUD_MODE_HOSTNAMES } from "../../env";
 import { Source } from "../types";
 
 import "./edit-actions.scss";
@@ -50,7 +50,7 @@ export function EditActions({ source }: { source: Source }) {
     }
   }
 
-  const { locale, "*": slug } = useParams();
+  const { locale = "en-US", "*": slug } = useParams();
 
   if (!folder) {
     return null;

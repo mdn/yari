@@ -1,7 +1,9 @@
+const ESCAPE_CHARS_RE = /[.*+?^${}()|[\]\\]/g;
+
 function* findMatchesInText(needle, haystack, { attribute = null } = {}) {
   // Need to remove any characters that can affect a regex if we're going
   // use the string in a manually constructed regex.
-  const escaped = needle.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  const escaped = needle.replace(ESCAPE_CHARS_RE, "\\$&");
   let rex;
   if (attribute) {
     rex = new RegExp(`${attribute}=['"](${escaped})['"]`, "g");
@@ -26,6 +28,16 @@ function getFirstMatchInText(needle, haystack) {
   return { line, column };
 }
 
+function replaceMatchingLinksInMarkdown(needle, haystack, replacement) {
+  // Need to remove any characters that can affect a regex if we're going
+  // use the string in a manually constructed regex.
+  const escaped = needle.replace(ESCAPE_CHARS_RE, "\\$&");
+  const rex = new RegExp(String.raw`\[([^\]]*)\]\((?:${escaped})\)`, "g");
+  return haystack.replace(rex, (_, p1) => {
+    return `[${p1}](${replacement})`;
+  });
+}
+
 function replaceMatchesInText(
   needle,
   haystack,
@@ -34,7 +46,7 @@ function replaceMatchesInText(
 ) {
   // Need to remove any characters that can affect a regex if we're going
   // use the string in a manually constructed regex.
-  const escaped = needle.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  const escaped = needle.replace(ESCAPE_CHARS_RE, "\\$&");
   let rex;
   if (inAttribute) {
     rex = new RegExp(`\\s*${inAttribute}=['"](${escaped})['"]`, "g");
@@ -53,4 +65,5 @@ module.exports = {
   findMatchesInText,
   getFirstMatchInText,
   replaceMatchesInText,
+  replaceMatchingLinksInMarkdown,
 };

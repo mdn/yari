@@ -10,17 +10,19 @@ const {
   lintHTML,
 } = require("./utils");
 
+const dirname = __dirname;
+
 /**
  * Load all the fixtures.
  */
 const fs = require("fs");
 const path = require("path");
 const groupDataFixturePath = path.resolve(
-  __dirname,
+  dirname,
   "fixtures/listgroups/groupdata.json"
 );
 const groupDataFixture = JSON.parse(
-  fs.readFileSync(groupDataFixturePath, "utf8")
+  fs.readFileSync(groupDataFixturePath, "utf-8")
 );
 
 /**

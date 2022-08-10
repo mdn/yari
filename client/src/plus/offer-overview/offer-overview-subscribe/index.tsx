@@ -7,7 +7,7 @@ import {
   MDN_PLUS_SUBSCRIBE_5M_URL,
   MDN_PLUS_SUBSCRIBE_5Y_URL,
   MDN_PLUS_SUBSCRIBE_BASE,
-} from "../../../constants";
+} from "../../../env";
 import { SubscriptionType, UserData, useUserData } from "../../../user-context";
 import { Switch } from "../../../ui/atoms/switch";
 import { useEffect, useState } from "react";
@@ -237,7 +237,11 @@ function canUpgrade(user: UserData | null, subscriptionType: SubscriptionType) {
   );
 }
 
-function getLocalizedPlans(countrySpecific: StripePlans) {
+function getLocalizedPlans(countrySpecific: StripePlans): {
+  CORE: OfferDetailsProps;
+  PLUS_5: OfferDetailsProps;
+  PLUS_10: OfferDetailsProps;
+} {
   return {
     CORE: CORE,
     PLUS_5: {
@@ -248,7 +252,7 @@ function getLocalizedPlans(countrySpecific: StripePlans) {
         ctaLink: `${MDN_PLUS_SUBSCRIBE_BASE}?plan=${countrySpecific.plans["mdn_plus_5m"].id}`,
         monthlyPrice: countrySpecific.plans["mdn_plus_5m"].monthlyPriceInCents,
       },
-      discount: {
+      discounted: {
         ...PLUS_5.discounted,
         ctaLink: `${MDN_PLUS_SUBSCRIBE_BASE}?plan=${countrySpecific.plans["mdn_plus_5y"].id}`,
         monthlyPrice: countrySpecific.plans["mdn_plus_5y"].monthlyPriceInCents,
@@ -262,7 +266,7 @@ function getLocalizedPlans(countrySpecific: StripePlans) {
         ctaLink: `${MDN_PLUS_SUBSCRIBE_BASE}?plan=${countrySpecific.plans["mdn_plus_10m"].id}`,
         monthlyPrice: countrySpecific.plans["mdn_plus_10m"].monthlyPriceInCents,
       },
-      discount: {
+      discounted: {
         ...PLUS_10.discounted,
         ctaLink: `${MDN_PLUS_SUBSCRIBE_BASE}?plan=${countrySpecific.plans["mdn_plus_10y"].id}`,
         monthlyPrice: countrySpecific.plans["mdn_plus_10y"].monthlyPriceInCents,
@@ -303,7 +307,7 @@ function OfferOverviewSubscribe() {
   const wrapperClass = !isOnline ? "wrapper-offline" : "wrapper";
 
   return (
-    <div className="dark subscribe-wrapper">
+    <div className="dark plus-subscribe-wrapper">
       <section className="container subscribe" id="subscribe">
         {!isOnline && (
           <h2>

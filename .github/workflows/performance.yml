@@ -27,7 +27,7 @@ jobs:
       - name: Setup Node.js environment
         uses: actions/setup-node@v3
         with:
-          node-version: "14"
+          node-version: "16"
 
       - name: Cache node_modules
         uses: actions/cache@v3
@@ -52,7 +52,7 @@ jobs:
           # Google Analytics tag which is most realistic.
           BUILD_GOOGLE_ANALYTICS_ACCOUNT: UA-00000000-0
         run: |
-          yarn prepare-build
+          yarn build:prepare
           # BUILD_FOLDERSEARCH=mdn/kitchensink yarn build
           BUILD_FOLDERSEARCH=web/javascript/reference/global_objects/array/foreach yarn build
 

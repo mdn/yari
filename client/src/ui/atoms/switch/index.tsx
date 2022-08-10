@@ -1,4 +1,3 @@
-import { ReactChildren } from "react";
 import "./index.scss";
 
 export function Switch({
@@ -12,7 +11,7 @@ export function Switch({
   hiddenLabel?: string;
   checked?: boolean;
   toggle?: (Event) => void;
-  children?: string | ReactChildren;
+  children?: React.ReactNode;
 }) {
   return (
     <label className="switch">

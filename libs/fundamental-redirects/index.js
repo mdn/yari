@@ -7,6 +7,7 @@ const {
 
 const startRe = /^\^?\/?/;
 const startTemplate = /^\//;
+const LOCALE_PATTERN = "(?:[a-zA-Z]{2}|eng)(?:-[a-zA-Z]{2})?";
 
 function redirect(pattern, template, options = {}) {
   return (path) => {
@@ -36,7 +37,7 @@ function localeRedirect(
 ) {
   const patternStrWithLocale = pattern.source.replace(
     startRe,
-    "^(?<locale>\\w{2,3}(?:-\\w{2})?/)?"
+    "^(?<locale>" + LOCALE_PATTERN + "/)?"
   );
   const patternWithLocale = new RegExp(patternStrWithLocale, pattern.flags);
   let _template = template;

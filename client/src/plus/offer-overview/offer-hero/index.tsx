@@ -1,4 +1,4 @@
-import { CRUD_MODE } from "../../../constants";
+import { CRUD_MODE } from "../../../env";
 import Mandala from "../../../ui/molecules/mandala";
 import "./index.scss";
 
@@ -14,7 +14,7 @@ function OfferHero({ plusAvailable }: { plusAvailable: boolean }) {
           {(plusAvailable && (
             <>
               <h2>
-                Support MDN <u>and</u> make it your own. For just $5 a month.
+                Support MDN <u>and</u> make it your own.
               </h2>
               <div className="button-wrapper">
                 <a href="#subscribe" className="button-primary">

@@ -2,6 +2,11 @@
 /* $0 = the URL of the previous page */
 /* $1 = the title of the previous page */
 
+// Throw a MacroDeprecatedError flaw
+// Condition for removal: no more use in translated-content (May 2022: 39 occurrences)
+// 0 occurrences left in en-US
+mdn.deprecated();
+
 var s_text = mdn.localString({
   "en-US": "Go to Previous Section:",
   "fr": "Retourner à la section précédente :",

@@ -28,7 +28,10 @@ export function ManageOrUpgradeDialogNotifications({ setShow }) {
         unlimited subscriptions
       </p>
       <div className="watch-submenu-item is-button-row">
-        <Button type="secondary" href={`/${locale}/plus/notifications`}>
+        <Button
+          type="secondary"
+          href={`/${locale}/plus/notifications/watching`}
+        >
           Manage
         </Button>
         <Button href={`/${locale}/plus`}>Upgrade</Button>

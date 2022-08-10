@@ -12,13 +12,13 @@
     "@yari-internal/content-origin-response": "file:../content-origin-response"
   },
   "devDependencies": {
-    "got": "11.8.2",
+    "got": "11.8.5",
     "jest": "26.6.3",
     "kleur": "4.1.4",
     "node-dev": "7.0.0",
     "polka": "0.5.2"
   },
   "engines": {
-    "node": ">=12.x"
+    "node": ">=16.x"
   }
 }

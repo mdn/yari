@@ -277,3 +277,9 @@ u {
 ._ify {
   @include mdn.uify;
 }
+
+@media (forced-colors: active) {
+  .icon {
+    background-color: CanvasText !important;
+  }
+}

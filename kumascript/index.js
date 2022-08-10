@@ -3,10 +3,6 @@ const LRU = require("lru-cache");
 const { Document } = require("../content");
 const { m2h } = require("../markdown");
 
-const {
-  INTERACTIVE_EXAMPLES_BASE_URL,
-  LIVE_SAMPLES_BASE_URL,
-} = require("./src/constants");
 const info = require("./src/info.js");
 const { render: renderMacros } = require("./src/render.js");
 const {
@@ -16,6 +12,10 @@ const {
 } = require("./src/live-sample.js");
 const { HTMLTool } = require("./src/api/util.js");
 const { DEFAULT_LOCALE } = require("../libs/constants");
+const {
+  INTERACTIVE_EXAMPLES_BASE_URL,
+  LIVE_SAMPLES_BASE_URL,
+} = require("../libs/env");
 
 const DEPENDENCY_LOOP_INTRO =
   'The following documents form a circular dependency when rendering (via the "page" and/or "IncludeSubnav" macros):';

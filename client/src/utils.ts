@@ -4,7 +4,7 @@ import {
   IEX_DOMAIN,
   PLUS_ENABLED_COUNTRIES,
   PLUS_IS_AVAILABLE_OVERRIDE,
-} from "./constants";
+} from "./env";
 
 const HOMEPAGE_RE = /^\/[A-Za-z-]*\/?(?:_homepage)?$/i;
 const DOCS_RE = /^\/[A-Za-z-]+\/docs\/.*$/i;
@@ -59,11 +59,11 @@ export function postToIEx(theme: string) {
 }
 
 export function switchTheme(theme: string, set: (theme: string) => void) {
-  const body = document.querySelector("body");
+  const html = document.documentElement;
 
-  if (window && body) {
-    body.className = theme;
-    body.style.backgroundColor = "";
+  if (window && html) {
+    html.className = theme;
+    html.style.backgroundColor = "";
     window.localStorage.setItem("theme", theme);
     set(theme);
     postToIEx(theme);

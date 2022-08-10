@@ -4,13 +4,13 @@ const frontmatter = require("front-matter");
 
 const { m2h } = require("../markdown");
 
+const { VALID_LOCALES, MDN_PLUS_TITLE } = require("../libs/constants");
 const {
   CONTENT_ROOT,
   CONTENT_TRANSLATED_ROOT,
   CONTRIBUTOR_SPOTLIGHT_ROOT,
-  VALID_LOCALES,
-} = require("../content");
-const { BUILD_OUT_ROOT } = require("./constants");
+  BUILD_OUT_ROOT,
+} = require("../libs/env");
 // eslint-disable-next-line node/no-missing-require
 const { renderHTML } = require("../ssr/dist/main");
 const { default: got } = require("got");
@@ -18,8 +18,10 @@ const { splitSections } = require("./utils");
 const cheerio = require("cheerio");
 const { findByURL } = require("../content/document");
 
+const dirname = __dirname;
+
 const FEATURED_ARTICLES = [
-  "Web/CSS/color-scheme",
+  "Web/CSS/Cascade",
   "Web/HTML/Element/dialog",
   "Learn/JavaScript/Asynchronous",
   "Web/API/Canvas_API/Tutorial",
@@ -27,18 +29,14 @@ const FEATURED_ARTICLES = [
 
 const contributorSpotlightRoot = CONTRIBUTOR_SPOTLIGHT_ROOT;
 
-let featuredContributor;
-
-async function buildContributorSpotlight(options) {
-  // for now, these will only be available in English
-  const locale = "en-US";
+async function buildContributorSpotlight(locale, options) {
   const prefix = "community/spotlight";
   const profileImg = "profile-image.jpg";
 
   for (const contributor of fs.readdirSync(contributorSpotlightRoot)) {
     const markdown = fs.readFileSync(
       `${contributorSpotlightRoot}/${contributor}/index.md`,
-      "utf8"
+      "utf-8"
     );
 
     const frontMatter = frontmatter(markdown);
@@ -78,9 +76,9 @@ async function buildContributorSpotlight(options) {
       console.log("Wrote", filePath);
     }
     if (frontMatter.attributes.is_featured) {
-      featuredContributor = {
+      return {
         contributorName: frontMatter.attributes.contributor_name,
-        url: `${prefix}/${frontMatter.attributes.folder_name}`,
+        url: `/${locale}/${prefix}/${frontMatter.attributes.folder_name}`,
         quote: frontMatter.attributes.quote,
       };
     }
@@ -101,11 +99,6 @@ async function buildSPAs(options) {
     console.log("Wrote", path.join(outPath, path.basename(url)));
   }
 
-  if (contributorSpotlightRoot) {
-    buildContributorSpotlight(options);
-    buildCount++;
-  }
-
   // Basically, this builds one (for example) `search/index.html` for every
   // locale we intend to build.
   for (const root of [CONTENT_ROOT, CONTENT_TRANSLATED_ROOT]) {
@@ -117,7 +110,6 @@ async function buildSPAs(options) {
         continue;
       }
 
-      const MDN_PLUS_TITLE = "MDN Plus";
       const SPAs = [
         { prefix: "search", pageTitle: "Search" },
         { prefix: "plus", pageTitle: MDN_PLUS_TITLE },
@@ -130,22 +122,6 @@ async function buildSPAs(options) {
           prefix: "plus/collections/frequently_viewed",
           pageTitle: `Frequently viewed articles | ${MDN_PLUS_TITLE}`,
           noIndexing: true,
-        },
-        {
-          prefix: "plus/docs/collections",
-          pageTitle: `Collections | ${MDN_PLUS_TITLE}`,
-        },
-        {
-          prefix: "plus/docs/notifications",
-          pageTitle: `Notifications | ${MDN_PLUS_TITLE}`,
-        },
-        {
-          prefix: "plus/docs/offline",
-          pageTitle: `MDN Offline | ${MDN_PLUS_TITLE}`,
-        },
-        {
-          prefix: "plus/docs/faq",
-          pageTitle: `FAQ | ${MDN_PLUS_TITLE}`,
         },
         {
           prefix: "plus/notifications",
@@ -163,8 +139,8 @@ async function buildSPAs(options) {
           noIndexing: true,
         },
         {
-          prefix: "plus/offline",
-          pageTitle: `MDN Offline | ${MDN_PLUS_TITLE}`,
+          prefix: "plus/settings",
+          pageTitle: `Settings | ${MDN_PLUS_TITLE}`,
           noIndexing: true,
         },
         { prefix: "about", pageTitle: "About MDN" },
@@ -211,7 +187,7 @@ async function buildSPAs(options) {
       }
 
       const locale = "en-us";
-      const markdown = fs.readFileSync(filepath, "utf8");
+      const markdown = fs.readFileSync(filepath, "utf-8");
 
       const frontMatter = frontmatter(markdown);
       const rawHTML = await m2h(frontMatter.body, locale);
@@ -249,7 +225,7 @@ async function buildSPAs(options) {
     }
   }
   await buildStaticPages(
-    path.join(__dirname, "../copy/plus"),
+    path.join(dirname, "../copy/plus"),
     "plus/docs",
     "MDN Plus"
   );
@@ -274,6 +250,11 @@ async function buildSPAs(options) {
       }
       if (!fs.statSync(path.join(root, locale)).isDirectory()) {
         continue;
+      }
+
+      let featuredContributor = null;
+      if (contributorSpotlightRoot) {
+        featuredContributor = await buildContributorSpotlight(locale, options);
       }
 
       // circular dependency, so needs to be imported down here:
@@ -301,8 +282,15 @@ async function buildSPAs(options) {
 
       const url = `/${locale}/`;
       const hyData = {
-        pullRequestsData: {
-          items: pullRequestsData.items,
+        recentContributions: {
+          items: pullRequestsData.items.map(
+            ({ number, title, updated_at, pull_request: { html_url } }) => ({
+              number,
+              title,
+              updated_at,
+              url: html_url,
+            })
+          ),
           repo: { name: "mdn/content", url: "https://github.com/mdn/content" },
         },
         featuredContributor,

@@ -8,7 +8,8 @@ const STAGE_ENV = "stage";
 exports.handler = async (event) => {
   const request = event.Records[0].cf.request;
   //This should fail if this header is not set.
-  const ENV = request.origin.custom.customHeaders["x-mdn-env"].value || "prod";
+  const ENV =
+    request.origin.custom.customHeaders["x-mdn-env"][0].value || "prod";
   //Always fall back to prod
   const lookupData = ENV === STAGE_ENV ? stageLookup : prodLookup;
 

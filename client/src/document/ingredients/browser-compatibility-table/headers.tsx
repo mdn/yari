@@ -1,20 +1,5 @@
-import type bcd from "@mdn/browser-compat-data/types";
+import bcd from "@mdn/browser-compat-data";
 import { BrowserName } from "./browser-info";
-
-export const PLATFORM_BROWSERS: { [key: string]: bcd.BrowserNames[] } = {
-  desktop: ["chrome", "edge", "firefox", "ie", "opera", "safari"],
-  mobile: [
-    "webview_android",
-    "chrome_android",
-    "firefox_android",
-    "opera_android",
-    "safari_ios",
-    "samsunginternet_android",
-  ],
-  server: ["deno", "nodejs"],
-  "webextensions-desktop": ["chrome", "edge", "firefox", "opera", "safari"],
-  "webextensions-mobile": ["firefox_android", "safari_ios"],
-};
 
 function PlatformHeaders({ platforms, browsers }) {
   return (
@@ -23,19 +8,18 @@ function PlatformHeaders({ platforms, browsers }) {
       {platforms.map((platform) => {
         // Get the intersection of browsers in the `browsers` array and the
         // `PLATFORM_BROWSERS[platform]`.
-        const browsersInPlatform = PLATFORM_BROWSERS[platform].filter(
-          (browser) => browsers.includes(browser)
+        const browsersInPlatform = browsers.filter(
+          (browser) => bcd.browsers[browser].type === platform
         );
-        const browserCount = Object.keys(browsersInPlatform).length;
-        const platformId = platform.replace("webextensions-", "");
+        const browserCount = browsersInPlatform.length;
         return (
           <th
             key={platform}
-            className={`bc-platform bc-platform-${platformId}`}
+            className={`bc-platform bc-platform-${platform}`}
             colSpan={browserCount}
             title={platform}
           >
-            <span className={`icon icon-${platformId}`}></span>
+            <span className={`icon icon-${platform}`}></span>
             <span className="visually-hidden">{platform}</span>
           </th>
         );

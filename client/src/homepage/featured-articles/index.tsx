@@ -1,10 +1,11 @@
 import useSWR from "swr";
-import { CRUD_MODE } from "../../constants";
+import { CRUD_MODE } from "../../env";
 import { HydrationData } from "../../types/hydration";
 
 import "./index.scss";
 
 export default function FeaturedArticles(props: HydrationData<any>) {
+  const fallbackData = props.hyData ? props : undefined;
   const { data: { hyData } = {} } = useSWR<any>(
     "./index.json",
     async (url) => {
@@ -16,8 +17,9 @@ export default function FeaturedArticles(props: HydrationData<any>) {
       return await response.json();
     },
     {
-      initialData: props.hyData ? props : undefined,
+      fallbackData,
       revalidateOnFocus: CRUD_MODE,
+      revalidateOnMount: !fallbackData,
     }
   );
 

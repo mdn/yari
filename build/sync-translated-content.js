@@ -2,10 +2,10 @@ const fs = require("fs");
 const crypto = require("crypto");
 const path = require("path");
 
-const glob = require("glob");
 const chalk = require("chalk");
 const fm = require("front-matter");
 const log = require("loglevel");
+const { fdir } = require("fdir");
 
 const {
   buildURL,
@@ -13,10 +13,13 @@ const {
   slugToFolder,
   Document,
   Redirect,
-  CONTENT_ROOT,
-  CONTENT_TRANSLATED_ROOT,
-  VALID_LOCALES,
 } = require("../content");
+const {
+  HTML_FILENAME,
+  MARKDOWN_FILENAME,
+  VALID_LOCALES,
+} = require("../libs/constants");
+const { CONTENT_ROOT, CONTENT_TRANSLATED_ROOT } = require("../libs/env");
 
 const CONFLICTING = "conflicting";
 const ORPHANED = "orphaned";
@@ -28,9 +31,16 @@ function syncAllTranslatedContent(locale) {
     );
   }
   const redirects = new Map();
-  const files = glob.sync(
-    path.join(CONTENT_TRANSLATED_ROOT, locale, "**", "index.{html,md}")
-  );
+  const api = new fdir()
+    .withFullPaths()
+    .withErrors()
+    .filter((filePath) => {
+      return (
+        filePath.endsWith(HTML_FILENAME) || filePath.endsWith(MARKDOWN_FILENAME)
+      );
+    })
+    .crawl(path.join(CONTENT_TRANSLATED_ROOT, locale));
+  const files = [...api.sync()];
   const stats = {
     movedDocs: 0,
     conflictingDocs: 0,
@@ -85,6 +95,14 @@ function resolve(slug) {
   return slug;
 }
 
+function mdOrHtmlExists(filePath) {
+  const dir = path.dirname(filePath);
+  return (
+    fs.existsSync(path.join(dir, MARKDOWN_FILENAME)) ||
+    fs.existsSync(path.join(dir, HTML_FILENAME))
+  );
+}
+
 function syncTranslatedContent(inFilePath, locale) {
   if (!CONTENT_TRANSLATED_ROOT) {
     throw new Error(
@@ -99,7 +117,7 @@ function syncTranslatedContent(inFilePath, locale) {
     followed: false,
   };
 
-  const rawDoc = fs.readFileSync(inFilePath, "utf8");
+  const rawDoc = fs.readFileSync(inFilePath, "utf-8");
   const fileName = path.basename(inFilePath);
   const extension = path.extname(fileName);
   const bareFileName = path.basename(inFilePath, extension);
@@ -175,17 +193,17 @@ function syncTranslatedContent(inFilePath, locale) {
     metadata.slug = `${ORPHANED}/${metadata.slug}`;
     status.moved = true;
     filePath = getFilePath();
-    if (fs.existsSync(filePath)) {
+    if (mdOrHtmlExists(filePath)) {
       log.log(`${inFilePath} → ${filePath}`);
       throw new Error(`file: ${filePath} already exists!`);
     }
-  } else if (fs.existsSync(filePath)) {
+  } else if (mdOrHtmlExists(filePath)) {
     `unrooting ${inFilePath} (conflicting translation)`;
     metadata.slug = `${CONFLICTING}/${metadata.slug}`;
     status.conflicting = true;
     status.moved = true;
     filePath = getFilePath();
-    if (fs.existsSync(filePath)) {
+    if (mdOrHtmlExists(filePath)) {
       metadata.slug = `${metadata.slug}_${crypto
         .createHash("md5")
         .update(oldMetadata.slug)

@@ -89,7 +89,7 @@ function getStorage(locale: string): LocaleStorageData | null {
 }
 
 export function TranslationDashboard() {
-  const { locale } = useParams();
+  const { locale = "en-US" } = useParams();
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
 

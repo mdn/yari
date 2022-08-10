@@ -1,13 +1,19 @@
-import { Link, useParams, useLocation } from "react-router-dom";
+import { useParams, useLocation } from "react-router-dom";
 import { MDN_PLUS_TITLE } from "../../constants";
 import StaticPage from "../../homepage/static-page";
+import { useUserData } from "../../user-context";
 import "./index.scss";
 
 function PlusDocsNav() {
+  const userData = useUserData();
   return (
     <RelatedTopics
       heading="MDN Plus"
       items={[
+        {
+          slug: "plus/docs/features/overview",
+          title: "Overview",
+        },
         {
           slug: "plus/docs/features/notifications",
           title: "Notifications",
@@ -20,10 +26,14 @@ function PlusDocsNav() {
           slug: "plus/docs/features/offline",
           title: "MDN Offline",
         },
-        {
-          slug: "plus/docs/faq",
-          title: "Frequently asked questions",
-        },
+        ...(!userData?.isAuthenticated
+          ? [
+              {
+                slug: "plus#subscribe",
+                title: "Try MDN Plus",
+              },
+            ]
+          : []),
       ]}
     />
   );
@@ -36,7 +46,7 @@ function RelatedTopics({
   heading: string;
   items: { slug: string; title: string }[];
 }) {
-  const { locale } = useParams();
+  const { locale = "en-US" } = useParams();
   const { pathname: locationPathname } = useLocation();
 
   return (
@@ -51,16 +61,16 @@ function RelatedTopics({
 
             return (
               <li key={itemPathname} className="document-toc-item">
-                <Link
+                <a
+                  href={itemPathname}
                   className="document-toc-link"
                   aria-current={
                     itemPathname.toLowerCase() ===
                     locationPathname.toLowerCase()
                   }
-                  to={itemPathname}
                 >
                   {title}
-                </Link>
+                </a>
               </li>
             );
           })}
@@ -71,7 +81,7 @@ function RelatedTopics({
 }
 
 function PlusDocs({ ...props }) {
-  const { locale, "*": slug } = useParams();
+  const { locale = "en-US", "*": slug } = useParams();
 
   return (
     <StaticPage
@@ -82,7 +92,7 @@ function PlusDocs({ ...props }) {
         title: MDN_PLUS_TITLE,
         parents: [{ uri: `/${locale}/plus`, title: MDN_PLUS_TITLE }],
         sidebarHeader: <PlusDocsNav />,
-        initialData: props.hyData ? props : undefined,
+        fallbackData: props.hyData ? props : undefined,
       }}
     />
   );

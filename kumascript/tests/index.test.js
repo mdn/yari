@@ -27,8 +27,6 @@ describe("testing the main render() function", () => {
       {{nonExistentMacro("yada")}}
       {{cssxref("dumber")}}
       {{cssxref("number")}}
-      <p id="fx-header">{{fx_minversion_header("36")}}</p>
-      <p id="fx-inline">{{fx_minversion_inline("36")}}</p>
       <p id="gecko-header">{{gecko_minversion_header("36")}}</p>
       <p id="gecko-inline">{{gecko_minversion_inline("36")}}</p>
       {{page("bogus")}}
@@ -119,18 +117,13 @@ describe("testing the main render() function", () => {
     expect(otherLinks.length).toBe(2);
     expect(otherLinks.eq(0).html()).toBe("<code>&lt;dumber&gt;</code>");
     expect(otherLinks.eq(1).html()).toBe("<code>&lt;number&gt;</code>");
-    for (const deprecatedID of [
-      "fx-header",
-      "fx-inline",
-      "gecko-header",
-      "gecko-inline",
-    ]) {
+    for (const deprecatedID of ["gecko-header", "gecko-inline"]) {
       const deprecated = $(`#${deprecatedID}`);
       expect(deprecated.length).toBe(1);
       expect(deprecated.html()).toBe("");
     }
     // Next, let's check the errors.
-    expect(errors.length).toBe(10);
+    expect(errors.length).toBe(8);
     expect(errors[0]).toBeInstanceOf(MacroBrokenLinkError);
     expect(errors[0]).toHaveProperty("line", 4);
     expect(errors[0]).toHaveProperty("column", 4);
@@ -188,12 +181,12 @@ describe("testing the main render() function", () => {
     expect(errors[3]).toHaveProperty("redirectInfo.suggested", "number");
     expect(errors[4]).toBeInstanceOf(MacroDeprecatedError);
     expect(errors[4]).toHaveProperty("line", 12);
-    expect(errors[4]).toHaveProperty("column", 25);
+    expect(errors[4]).toHaveProperty("column", 28);
     expect(errors[4]).toHaveProperty(
       "filepath",
       "testing/content/files/en-us/web/a"
     );
-    expect(errors[4]).toHaveProperty("macroName", "fx_minversion_header");
+    expect(errors[4]).toHaveProperty("macroName", "gecko_minversion_header");
     expect(errors[4]).toHaveProperty(
       "errorStack",
       expect.stringContaining(
@@ -202,69 +195,41 @@ describe("testing the main render() function", () => {
     );
     expect(errors[5]).toBeInstanceOf(MacroDeprecatedError);
     expect(errors[5]).toHaveProperty("line", 13);
-    expect(errors[5]).toHaveProperty("column", 25);
+    expect(errors[5]).toHaveProperty("column", 28);
     expect(errors[5]).toHaveProperty(
       "filepath",
       "testing/content/files/en-us/web/a"
     );
-    expect(errors[5]).toHaveProperty("macroName", "fx_minversion_inline");
+    expect(errors[5]).toHaveProperty("macroName", "gecko_minversion_inline");
     expect(errors[5]).toHaveProperty(
       "errorStack",
       expect.stringContaining(
         "This macro has been deprecated, and should be removed."
       )
     );
-    expect(errors[6]).toBeInstanceOf(MacroDeprecatedError);
+    expect(errors[6]).toBeInstanceOf(MacroExecutionError);
     expect(errors[6]).toHaveProperty("line", 14);
-    expect(errors[6]).toHaveProperty("column", 28);
+    expect(errors[6]).toHaveProperty("column", 7);
     expect(errors[6]).toHaveProperty(
       "filepath",
       "testing/content/files/en-us/web/a"
     );
-    expect(errors[6]).toHaveProperty("macroName", "gecko_minversion_header");
+    expect(errors[6]).toHaveProperty("macroName", "page");
     expect(errors[6]).toHaveProperty(
-      "errorStack",
-      expect.stringContaining(
-        "This macro has been deprecated, and should be removed."
-      )
-    );
-    expect(errors[7]).toBeInstanceOf(MacroDeprecatedError);
-    expect(errors[7]).toHaveProperty("line", 15);
-    expect(errors[7]).toHaveProperty("column", 28);
-    expect(errors[7]).toHaveProperty(
-      "filepath",
-      "testing/content/files/en-us/web/a"
-    );
-    expect(errors[7]).toHaveProperty("macroName", "gecko_minversion_inline");
-    expect(errors[7]).toHaveProperty(
-      "errorStack",
-      expect.stringContaining(
-        "This macro has been deprecated, and should be removed."
-      )
-    );
-    expect(errors[8]).toBeInstanceOf(MacroExecutionError);
-    expect(errors[8]).toHaveProperty("line", 16);
-    expect(errors[8]).toHaveProperty("column", 7);
-    expect(errors[8]).toHaveProperty(
-      "filepath",
-      "testing/content/files/en-us/web/a"
-    );
-    expect(errors[8]).toHaveProperty("macroName", "page");
-    expect(errors[8]).toHaveProperty(
       "errorStack",
       expect.stringContaining(
         "/en-us/docs/web/a references bogus, which does not exist"
       )
     );
-    expect(errors[9]).toBeInstanceOf(MacroExecutionError);
-    expect(errors[9]).toHaveProperty("line", 18);
-    expect(errors[9]).toHaveProperty("column", 7);
-    expect(errors[9]).toHaveProperty(
+    expect(errors[7]).toBeInstanceOf(MacroExecutionError);
+    expect(errors[7]).toHaveProperty("line", 16);
+    expect(errors[7]).toHaveProperty("column", 7);
+    expect(errors[7]).toHaveProperty(
       "filepath",
       "testing/content/files/en-us/web/a"
     );
-    expect(errors[9]).toHaveProperty("macroName", "page");
-    expect(errors[9]).toHaveProperty(
+    expect(errors[7]).toHaveProperty("macroName", "page");
+    expect(errors[7]).toHaveProperty(
       "errorStack",
       expect.stringContaining(
         'unable to find an HTML element with an "id" of "bogus-section" within /en-us/docs/web/b'

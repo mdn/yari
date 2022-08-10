@@ -5,6 +5,8 @@
 const Templates = require("../src/templates.js");
 const path = require("path");
 
+const dirname = __dirname;
+
 describe("Templates class", () => {
   it("has the expected methods", () => {
     expect(typeof Templates).toBe("function");
@@ -13,7 +15,7 @@ describe("Templates class", () => {
   });
 
   function dir(name) {
-    return path.resolve(__dirname, "fixtures", "templates", name);
+    return path.resolve(dirname, "fixtures", "templates", name);
   }
 
   it("throws on non-existent dir", () => {

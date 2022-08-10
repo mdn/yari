@@ -1,15 +1,15 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useCombobox } from "downshift";
 import useSWR from "swr";
 
-import { Doc, FuzzySearch } from "./fuzzy-search";
 import { preload, preloadSupported } from "./document/preloading";
 
 import { Button } from "./ui/atoms/button";
 
 import { useLocale } from "./hooks";
 import { SearchProps, useFocusViaKeyboard } from "./search-utils";
+import { useUserData } from "./user-context";
 
 const PRELOAD_WAIT_MS = 500;
 const SHOW_INDEXING_AFTER_MS = 500;
@@ -17,11 +17,11 @@ const SHOW_INDEXING_AFTER_MS = 500;
 type Item = {
   url: string;
   title: string;
+  collection: boolean;
 };
 
 type SearchIndex = {
   flex: any;
-  fuzzy: FuzzySearch;
   items: null | Item[];
 };
 
@@ -29,6 +29,7 @@ type ResultItem = {
   title: string;
   url: string;
   positions: Set<number>;
+  collection: boolean;
 };
 
 function useSearchIndex(): readonly [
@@ -38,10 +39,11 @@ function useSearchIndex(): readonly [
 ] {
   const [shouldInitialize, setShouldInitialize] = useState(false);
   const [searchIndex, setSearchIndex] = useState<null | SearchIndex>(null);
-  const { locale } = useParams();
-
   // Default to 'en-US' if you're on the home page without the locale prefix.
-  const url = `/${locale || "en-US"}/search-index.json`;
+  const { locale = "en-US" } = useParams();
+  const user = useUserData();
+
+  const url = `/${locale}/search-index.json`;
 
   const { error, data } = useSWR<null | Item[], Error | undefined>(
     shouldInitialize ? url : null,
@@ -56,26 +58,50 @@ function useSearchIndex(): readonly [
   );
 
   useEffect(() => {
-    if (!data || searchIndex) {
+    if (!data) {
       return;
     }
+    const gather = async () => {
+      const collection: Item[] = [];
+      if (user?.settings?.colInSearch) {
+        const all = await import("./settings/db").then(({ getCollection }) =>
+          getCollection()
+        );
+        collection.push(
+          ...all.map((item) => {
+            return { ...item, collection: true };
+          })
+        );
+      }
+      const collectionSet = new Set(collection.map(({ url }) => url));
+      const mixed = [
+        ...collection,
+        ...data
+          .filter(({ url }) => !collectionSet.has(url))
+          .map((item) => {
+            return { ...item, collection: false };
+          }),
+      ];
 
-    const flex = data.map(({ title }, i) => [i, title.toLowerCase()]);
-    const fuzzy = new FuzzySearch(data as Doc[]);
+      const flex = mixed.map(({ title }, i) => [i, title.toLowerCase()]);
 
-    setSearchIndex({ flex, fuzzy, items: data! });
-  }, [searchIndex, shouldInitialize, data]);
+      setSearchIndex({
+        flex,
+        items: mixed!,
+      });
+    };
+    gather();
+  }, [
+    shouldInitialize,
+    data,
+    user?.settings?.colInSearch,
+    user?.mdnWorker?.mutationCounter,
+  ]);
 
   return useMemo(
     () => [searchIndex, error || null, () => setShouldInitialize(true)],
     [searchIndex, error, setShouldInitialize]
   );
-}
-
-// The fuzzy search is engaged if the search term starts with a '/'
-// and does not have any spaces in it.
-function isFuzzySearchString(str: string) {
-  return str.startsWith("/") && !/\s/.test(str);
 }
 
 function HighlightMatch({ title, q }: { title: string; q: string }) {
@@ -167,7 +193,6 @@ function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
     defaultSelection,
   } = props;
 
-  const inputId = `${id}-q`;
   const formId = `${id}-form`;
   const navigate = useNavigate();
   const locale = useLocale();
@@ -204,32 +229,17 @@ function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
     // overlaying search results don't trigger a scroll.
     const limit = window.innerHeight < 850 ? 5 : 10;
 
-    if (isFuzzySearchString(inputValue)) {
-      if (inputValue === "/") {
-        return [];
-      } else {
-        const fuzzyResults = searchIndex.fuzzy.search(inputValue.slice(1), {
-          limit,
-        });
-        return fuzzyResults.map((fuzzyResult) => ({
-          url: fuzzyResult.item.url,
-          title: fuzzyResult.item.title,
-          positions: fuzzyResult.positions,
-        }));
-      }
-    } else {
-      const q: string[] = inputValue
-        .toLowerCase()
-        .split(" ")
-        .map((s) => s.trim());
-      const indexResults: number[] = searchIndex.flex
-        .filter(([_, title]) => q.every((q) => title.includes(q)))
-        .map(([i]) => i)
-        .slice(0, limit);
-      return indexResults.map(
-        (index: number) => (searchIndex.items || [])[index] as ResultItem
-      );
-    }
+    const q: string[] = inputValue
+      .toLowerCase()
+      .split(" ")
+      .map((s) => s.trim());
+    const indexResults: number[] = searchIndex.flex
+      .filter(([_, title]) => q.every((q) => title.includes(q)))
+      .map(([i]) => i)
+      .slice(0, limit);
+    return indexResults.map(
+      (index: number) => (searchIndex.items || [])[index] as ResultItem
+    );
   }, [inputValue, searchIndex, searchIndexError]);
 
   const formAction = `/${locale}/search`;
@@ -261,12 +271,13 @@ function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
     reset,
     toggleMenu,
   } = useCombobox({
+    id: id,
     items:
       resultItems.length === 0
         ? [nothingFoundItem]
         : [...resultItems, onlineSearch],
     inputValue,
-    isOpen: inputValue !== "",
+    isOpen: isFocused,
     defaultIsOpen: isFocused,
     defaultHighlightedIndex: 0,
     onSelectedItemChange: ({ type, selectedItem }) => {
@@ -358,11 +369,23 @@ function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
               index: 0,
             })}
           >
-            No document titles found.
-            <br />
-            <Link to={searchPath}>
+            <a
+              href={searchPath}
+              onClick={(event: React.MouseEvent) => {
+                if (event.ctrlKey || event.metaKey) {
+                  // Open in new tab, don't navigate current tab.
+                  event.stopPropagation();
+                } else {
+                  // Open in same tab, navigate via combobox.
+                  event.preventDefault();
+                }
+              }}
+              tabIndex={-1}
+            >
+              No document titles found.
+              <br />
               Site search for <code>{inputValue}</code>
-            </Link>
+            </a>
           </div>
         ) : (
           [
@@ -372,7 +395,8 @@ function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
                   key: item.url,
                   className:
                     "result-item " +
-                    (i === highlightedIndex ? "highlight" : ""),
+                    (i === highlightedIndex ? "highlight " : " ") +
+                    (item.collection ? "qs-collection " : " "),
                   item,
                   index: i,
                 })}
@@ -404,16 +428,25 @@ function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
                 index: resultItems.length,
               })}
             >
-              Not seeing what you're searching for?
-              <br />
-              <Link to={searchPath}>
+              <a
+                href={searchPath}
+                onClick={(event: React.MouseEvent) => {
+                  if (event.ctrlKey || event.metaKey) {
+                    // Open in new tab, don't navigate current tab.
+                    event.stopPropagation();
+                  } else {
+                    // Open in same tab, navigate via combobox.
+                    event.preventDefault();
+                  }
+                }}
+                tabIndex={-1}
+              >
+                Not seeing what you're searching for?
+                <br />
                 Site search for <code>{inputValue}</code>
-              </Link>
+              </a>
             </div>,
           ]
-        )}
-        {isFuzzySearchString(inputValue) && (
-          <div className="fuzzy-engaged">Fuzzy searching by URI</div>
         )}
       </>
     );
@@ -437,9 +470,22 @@ function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
             e.preventDefault();
           }
         },
+        onFocus: () => {
+          onChangeIsFocused(true);
+        },
+        onBlur: (e) => {
+          if (!e.currentTarget.contains(e.relatedTarget)) {
+            // focus has moved outside of container
+            onChangeIsFocused(false);
+          }
+        },
       })}
     >
-      <label htmlFor={inputId} className="visually-hidden">
+      <label
+        id={`${id}-label`}
+        htmlFor={`${id}-input`}
+        className="visually-hidden"
+      >
         Search MDN
       </label>
 
@@ -449,15 +495,8 @@ function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
           className: isOpen
             ? "has-search-results search-input-field"
             : "search-input-field",
-          id: inputId,
           name: "q",
           onMouseOver: initializeSearchIndex,
-          onFocus: () => {
-            onChangeIsFocused(true);
-          },
-          onBlur: () => {
-            onChangeIsFocused(false);
-          },
           onKeyDown(event) {
             if (event.key === "Escape" && inputRef.current) {
               onChangeInputValue("");
@@ -511,7 +550,9 @@ function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
   );
 }
 
-class SearchErrorBoundary extends React.Component {
+class SearchErrorBoundary extends React.Component<{
+  children?: React.ReactNode;
+}> {
   state = { hasError: false };
 
   static getDerivedStateFromError(error: Error) {

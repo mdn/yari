@@ -16,7 +16,7 @@
     "jest": "27.5.1"
   },
   "engines": {
-    "node": ">=12.x"
+    "node": ">=16.x"
   },
   "aws": {
     "name": "mdn-stripe-price-ids",
