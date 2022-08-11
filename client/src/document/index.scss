@@ -462,6 +462,8 @@ pre {
 }
 
 .example-bad {
+  background-color: var(--background-critical);
+
   &::after {
     background-color: var(--icon-critical);
     mask-image: url("../assets/icons/no.svg");
@@ -469,6 +471,8 @@ pre {
 }
 
 .example-good {
+  background-color: var(--background-success);
+
   &::after {
     background-color: var(--icon-success);
     mask-image: url("../assets/icons/checkmark.svg");
