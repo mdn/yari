@@ -63,7 +63,7 @@ export default function NewCollectionModal({
         />
       </header>
       <div className="modal-body">
-        <form method="post" onSubmit={saveHandler}>
+        <form className="watch-submenu is-in-modal" onSubmit={saveHandler}>
           <div className="watch-submenu-item border-top-0 padding-top-0">
             <label htmlFor="collection-title">Title:</label>
             <input
@@ -77,7 +77,7 @@ export default function NewCollectionModal({
               required={true}
             />
           </div>
-          <div className="watch-submenu-item border-top-0 padding-top-0">
+          <div className="watch-submenu-item border-top-0">
             <label htmlFor="collection-description">Description:</label>
             <input
               id="collection-description"
