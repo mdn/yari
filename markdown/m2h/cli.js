@@ -1,26 +1,14 @@
-import * as fs from "fs";
-import * as os from "os";
-import * as path from "path";
 const fm = require("front-matter");
-import { program } from "@caporal/core";
-import * as chalk from "chalk";
-import * as cliProgress from "cli-progress";
-import { Document } from "../../content";
-import { saveFile } from "../../content/document";
-import { VALID_LOCALES } from "../../libs/constants";
-import { execGit } from "../../content";
-import { getRoot } from "../../content/utils";
+const { program } = require("@caporal/core");
+const chalk = require("chalk");
+const { Document } = require("../../content");
+const { saveFile } = require("../../content/document");
+const { VALID_LOCALES } = require("../../libs/constants");
 
-const { prettyAST } = require("../utils");
-import { m2h } from "./index.js";
+const { m2h } = require("./");
 
 function tryOrExit(f) {
-  return async ({
-    options = {},
-    ...args
-  }: {
-    options: { verbose?: boolean; v?: boolean };
-  }) => {
+  return async ({ options = {}, ...args }) => {
     try {
       await f({ options, ...args });
     } catch (error) {
@@ -49,7 +37,7 @@ program
 
   .option("--locale", "Targets a specific locale", {
     default: "all",
-    validator: (Array.from(VALID_LOCALES.values()) as string[]).concat("all"),
+    validator: Array.from(VALID_LOCALES.values()).concat("all"),
   })
   .argument("[folder]", "convert by folder")
   .action(
