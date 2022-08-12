@@ -4,7 +4,7 @@ import { Breadcrumbs } from "../../molecules/breadcrumbs";
 import { ArticleActions } from "../article-actions";
 import { Button } from "../../atoms/button";
 
-import { Doc } from "../../../document/types";
+import { Doc } from "../../../../../libs/types/document";
 
 import { useUIStatus } from "../../../ui-context";
 

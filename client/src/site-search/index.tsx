@@ -2,7 +2,7 @@ import React from "react";
 import { useSearchParams } from "react-router-dom";
 import { useIsServer } from "../hooks";
 import { Loading } from "../ui/atoms/loading";
-import { PageContentContainer } from "../ui/atoms/page-content";
+import { MainContentContainer } from "../ui/atoms/page-content";
 import { useGA } from "../ga-context";
 import "./index.scss";
 
@@ -50,7 +50,7 @@ export function SiteSearch() {
 
   return (
     <div className="main-wrapper site-search">
-      <PageContentContainer>
+      <MainContentContainer>
         <article className="main-page-content">
           {query ? (
             <h1>
@@ -73,7 +73,7 @@ export function SiteSearch() {
             </React.Suspense>
           )}
         </article>
-      </PageContentContainer>
+      </MainContentContainer>
     </div>
   );
 }

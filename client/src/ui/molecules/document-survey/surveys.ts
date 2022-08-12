@@ -1,4 +1,4 @@
-import { Doc } from "../../../document/types";
+import { Doc } from "../../../../../libs/types/document";
 
 export interface Survey {
   key: SurveyKey;

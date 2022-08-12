@@ -1,5 +1,5 @@
 import useSWR from "swr";
-import { Doc } from "../../../document/types";
+import { Doc } from "../../../../../libs/types/document";
 import { BookmarkData } from "../../../plus/collections";
 import { BookmarkMenu } from "./menu";
 
