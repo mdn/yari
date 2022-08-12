@@ -322,7 +322,9 @@ program
 
         if (!options.quiet) {
           console.log(
-            chalk.green(`Sitemap index file built with [${locales}].`)
+            chalk.green(
+              `Sitemap index file built with locales: ${locales.join(", ")}.`
+            )
           );
         }
         return;
