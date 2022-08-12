@@ -16,6 +16,15 @@ const locale = env.locale;
 // URL where we describe value definition syntax
 const valueDefinitionUrl = `/${locale}/docs/Web/CSS/Value_definition_syntax`;
 
+// CSS types for which we want to link to another page, and not expand the syntax
+const typesToLink = ["<color>", "<gradient>"];
+
+// Map item names onto slugs, in cases where the slug can't be derived from the name
+const slugMap = {
+  "<color>": "color_value",
+  "<position>": "position_value"
+}
+
 // Used for building links and tooltips for parts of the value definition syntax
 const syntaxDescriptions = {
   '*': {
@@ -162,15 +171,23 @@ function renderNode(name, node) {
       encoded = encoded.replaceAll('>', '&gt;');
       // add CSS class: we use "property" because there isn't one for types
       const span = `<span class="token property">${encoded}</span>`;
-      // if this type is not included in the syntax, link to its dedicated page
-      if (valuespaces[name] && valuespaces[name].value) {
+      // if this type is not included in the syntax, or it is in "typesToLink",
+      // then link to its dedicated page
+      if ((valuespaces[name] && valuespaces[name].value) &&
+          (!typesToLink.includes(name))) {
         return span;
       } else {
-        // the slug does not include the angle brackets
-        let slug = name.replaceAll('<', '');
-        slug = slug.replaceAll('>', '');
-        // also remove the range in square brackets, as in "<number [0,∞]>"
-        slug = slug.replace(/\[.*\]/, '')
+        let slug;
+        // slugMap is for when we can't derive the slug from the name
+        if (slugMap[name]) {
+          slug = slugMap[name];
+        } else {
+          // the slug does not include the angle brackets
+          slug = name.replaceAll('<', '');
+          slug = slug.replaceAll('>', '');
+          // also remove the range in square brackets, as in "<number [0,∞]>"
+          slug = slug.replace(/\[.*\]/, '');
+        }
         return `<a href="/${locale}/docs/Web/CSS/${slug}">${span}</a>`;
       }
     }
@@ -288,6 +305,10 @@ function renderSyntax(type, syntax) {
 function getTypesForSyntaxes(syntaxes, constituents) {
 
   function processNode(node) {
+    // we want to ignore the constituent parts of "typesToLink" types
+    if (typesToLink.includes(`<${node.name}>`)) {
+      return;
+    }
     if (node.type === 'Type' &&
        (!constituents.includes(node.name))) {
       constituents.push(node.name);
@@ -323,7 +344,6 @@ function getConstituentTypes(itemSyntax) {
     // and then get the types in those syntaxes
     constituentSyntaxes = [];
     for (let constituent of allConstituents.slice(oldConstituentsLength)) {
-
       let constituentSyntaxEntry = valuespaces[`<${constituent}>`];
 
       if (constituentSyntaxEntry && constituentSyntaxEntry.value) {
