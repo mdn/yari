@@ -11,5 +11,5 @@
     "noFallthroughCasesInSwitch": true,
     "jsx": "react-jsx"
   },
-  "include": ["src", "../libs/types/types.ts"]
+  "include": ["src"]
 }
