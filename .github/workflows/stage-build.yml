@@ -211,6 +211,9 @@ jobs:
 
           du -sh client/build
 
+          # Generate sitemap index file
+          yarn build --sitemap-index
+
       - name: Deploy with deployer
         env:
           GITHUB_SHA: ${{ env.GITHUB_SHA }}
