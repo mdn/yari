@@ -2,11 +2,8 @@ import * as React from "react";
 
 import { ReactComponent as CloseIcon } from "@mdn/dinocons/general/close.svg";
 import { useGA } from "../ga-context";
-import { useUserData } from "../user-context";
 import { BannerId } from "./ids";
-import { isPlusAvailable } from "../utils";
 import { usePlusUrl } from "../plus/utils";
-import { ENABLE_PLUS_EU } from "../env";
 
 // The <Banner> component displays a simple call-to-action banner at
 // the bottom of the window. The following props allow it to be customized.
@@ -89,40 +86,22 @@ function PlusLaunchAnnouncementBanner({
 
   return (
     <Banner id={bannerId} onDismissed={onDismissed}>
-      {(ENABLE_PLUS_EU && (
-        <p className="mdn-cta-copy">
-          <a href={plusUrl} className="mdn-plus">
-            MDN Plus
-          </a>{" "}
-          now available in <span className="underlined">your</span> country!
-          Support MDN <span className="underlined">and</span> make it your own.{" "}
-          <a
-            href="https://hacks.mozilla.org/2022/04/mdn-plus-now-available-in-more-markets"
-            target="_blank"
-            rel="noopener noreferrer"
-            onClick={() => sendCTAEventToGA(bannerId)}
-          >
-            Learn more
-          </a>{" "}
-          ✨
-        </p>
-      )) || (
-        <p className="mdn-cta-copy">
-          <a href={plusUrl} className="mdn-plus">
-            MDN Plus
-          </a>{" "}
-          is here! Support MDN <em>and</em> make it your own.{" "}
-          <a
-            href="https://hacks.mozilla.org/2022/03/introducing-mdn-plus-make-mdn-your-own"
-            target="_blank"
-            rel="noopener noreferrer"
-            onClick={() => sendCTAEventToGA(bannerId)}
-          >
-            Learn more
-          </a>{" "}
-          ✨
-        </p>
-      )}
+      <p className="mdn-cta-copy">
+        <a href={plusUrl} className="mdn-plus">
+          MDN Plus
+        </a>{" "}
+        now available in <span className="underlined">your</span> country!
+        Support MDN <span className="underlined">and</span> make it your own.{" "}
+        <a
+          href="https://hacks.mozilla.org/2022/04/mdn-plus-now-available-in-more-markets"
+          target="_blank"
+          rel="noopener noreferrer"
+          onClick={() => sendCTAEventToGA(bannerId)}
+        >
+          Learn more
+        </a>{" "}
+        ✨
+      </p>
     </Banner>
   );
 }
@@ -138,15 +117,11 @@ export default function ActiveBanner({
   id: BannerId;
   onDismissed: () => void;
 }) {
-  const userData = useUserData();
-
   switch (id) {
     case BannerId.PLUS_LAUNCH_ANNOUNCEMENT:
       return (
         <>
-          {isPlusAvailable(userData) && (
-            <PlusLaunchAnnouncementBanner onDismissed={onDismissed} />
-          )}
+          <PlusLaunchAnnouncementBanner onDismissed={onDismissed} />
         </>
       );
 

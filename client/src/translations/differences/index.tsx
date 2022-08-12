@@ -12,7 +12,7 @@ import relativeTime from "dayjs/plugin/relativeTime";
 
 import "./index.scss";
 
-import { PageContentContainer } from "../../ui/atoms/page-content";
+import { MainContentContainer } from "../../ui/atoms/page-content";
 
 dayjs.extend(relativeTime);
 
@@ -242,9 +242,9 @@ export function TranslationDifferences() {
 
 function Container({ children }: { children: React.ReactNode }) {
   return (
-    <div className="all-translations">
-      <PageContentContainer>{children}</PageContentContainer>
-    </div>
+    <MainContentContainer className="all-translations" standalone={true}>
+      {children}
+    </MainContentContainer>
   );
 }
 
