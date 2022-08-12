@@ -1,4 +1,4 @@
-import { Doc } from "../client/src/document/types";
+import { Doc } from "../libs/types/document";
 import { FlawFilters } from "./types";
 
 import fs from "fs";

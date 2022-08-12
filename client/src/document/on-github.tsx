@@ -1,4 +1,4 @@
-import { Doc } from "./types";
+import { Doc } from "../../../libs/types/document";
 
 export function OnGitHubLink({ doc }: { doc: Doc }) {
   return (

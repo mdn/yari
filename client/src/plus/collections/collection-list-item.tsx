@@ -9,7 +9,7 @@ import { _getIconLabel } from "../common";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import { useOnlineStatus } from "../../hooks";
-import { FrequentlyViewedEntry } from "../../document/types";
+import { FrequentlyViewedEntry } from "../../../../libs/types/document";
 
 dayjs.extend(relativeTime);
 

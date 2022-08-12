@@ -1,6 +1,6 @@
 import { Link, useLocation } from "react-router-dom";
 
-import { Translation } from "../../../document/types";
+import { Translation } from "../../../../../libs/types/document";
 import { useGA } from "../../../ga-context";
 
 import "./index.scss";

@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { FrequentlyViewedEntry } from "../../document/types";
+import { FrequentlyViewedEntry } from "../../../../libs/types/document";
 import { useUIStatus } from "../../ui-context";
 import { useFrequentlyViewedData } from "../common/api";
 import { SORTS } from "../common/tabs";

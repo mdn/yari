@@ -5,7 +5,7 @@ import { LanguageMenu } from "../../molecules/language-menu";
 import { useIsServer } from "../../../hooks";
 import { useUserData } from "../../../user-context";
 
-import { Doc } from "../../../document/types";
+import { Doc } from "../../../../../libs/types/document";
 
 import "./index.scss";
 

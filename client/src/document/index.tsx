@@ -11,7 +11,7 @@ import {
   useCopyExamplesToClipboard,
   usePersistFrequentlyViewed,
 } from "./hooks";
-import { Doc } from "./types";
+import { Doc } from "../../../libs/types/document";
 // Ingredients
 import { Prose } from "./ingredients/prose";
 import { LazyBrowserCompatibilityTable } from "./lazy-bcd-table";
