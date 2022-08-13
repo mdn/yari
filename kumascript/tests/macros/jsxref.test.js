@@ -150,9 +150,12 @@ describeMacro("jsxref", function () {
       const name = "Array";
       const partial_slug = "Global_Objects/Array";
       const anchor = "массива";
-      const js_ref_ru_url = `/ru/docs/${js_ref_slug}`;
-      const ref_url = js_ref_ru_url + partial_slug;
-      const glob_url = `${js_ref_ru_url}Global_Objects/${partial_slug}`;
+      const ru_js_ref_url = `/ru/docs/${js_ref_slug}`;
+      const default_js_ref_url = `/en-US/docs/${js_ref_slug}`;
+      const ref_url = ru_js_ref_url + partial_slug;
+      const default_ref_url = default_js_ref_url + partial_slug;
+      const glob_url = `${ru_js_ref_url}Global_Objects/${partial_slug}`;
+      const default_glob_url = `${default_js_ref_url}Global_Objects/${partial_slug}`;
       const expected =
         `<a href="${glob_url}#` +
         `%D0%BC%D0%B0%D1%81%D1%81%D0%B8%D0%B2%D0%B0` +
@@ -163,13 +166,17 @@ describeMacro("jsxref", function () {
 
       macro.ctx.info.getPageByURL = jest.fn((url) => {
         url = getPathname(url);
-        url = url.replace("/en-US/docs/", "/ru/docs/");
         if (url === glob_url) {
           return {
             url: glob_url,
             slug: js_ref_slug + partial_slug,
           };
-        } else if (url === ref_url) {
+        } else if (url === default_glob_url) {
+          return {
+            url: default_glob_url,
+            slug: js_ref_slug + partial_slug,
+          };
+        } else if (url === default_ref_url || url === ref_url) {
           return {};
         }
       });
