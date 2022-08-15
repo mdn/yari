@@ -116,6 +116,10 @@ body {
   color: var(--text-primary);
   accent-color: var(--accent-primary); // for checkboxes, radios, etc.
   scrollbar-color: var(--scrollbar-color) var(--scrollbar-bg);
+
+  &.full-screen-overlay {
+    overflow: hidden;
+  }
 }
 
 :focus-visible {

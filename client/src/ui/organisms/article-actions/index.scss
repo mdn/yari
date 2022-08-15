@@ -18,6 +18,7 @@
   .article-actions-submenu {
     --gutter-padding: 1rem;
     display: none;
+    overflow: scroll;
 
     &.show {
       display: flex;
