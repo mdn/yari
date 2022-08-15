@@ -314,7 +314,7 @@ function getTypesForSyntaxes(syntaxes, constituents) {
   }
 
   for (const syntax of syntaxes) {
-    let ast = definitionSyntax.parse(syntax);
+    const ast = definitionSyntax.parse(syntax);
     definitionSyntax.walk(ast, processNode);
   }
 
