@@ -1,14 +1,13 @@
 import React from "react";
 
-import { Button } from "../../atoms/button";
+import { Button } from "../../../atoms/button";
 import { NotificationsWatchMenuStart } from "./menu-start";
 
-import "./index.scss";
 import useSWR from "swr";
-import { useCSRFMiddlewareToken, useOnlineStatus } from "../../../hooks";
-import { DropdownMenu, DropdownMenuWrapper } from "../dropdown";
+import { useCSRFMiddlewareToken, useOnlineStatus } from "../../../../hooks";
+import { DropdownMenu, DropdownMenuWrapper } from "../../../molecules/dropdown";
 import { ManageOrUpgradeDialogNotifications } from "../manage-upgrade-dialog";
-import { useUIStatus } from "../../../ui-context";
+import { useUIStatus } from "../../../../ui-context";
 
 interface WatchModeData {
   status: string;
@@ -99,18 +98,14 @@ export const NotificationsWatchMenu = ({ doc }) => {
 
   const watchIcon = watching ? "eye-filled" : canWatchMore ? "eye" : "padlock";
   return (
-    <DropdownMenuWrapper
-      className="watch-menu"
-      isOpen={show}
-      setIsOpen={setShow}
-    >
+    <DropdownMenuWrapper isOpen={show} setIsOpen={setShow}>
       <React.Suspense fallback={null}>
         <Button
           type="action"
           id="watch-menu-button"
           isDisabled={isOffline}
           icon={watchIcon}
-          extraClasses={`small watch-menu ${watching ? "highlight" : ""}`}
+          extraClasses={`small ${watching ? "highlight" : ""}`}
           ariaHasPopup={"menu"}
           aria-label="Watch this page for updates"
           ariaExpanded={show}
@@ -128,7 +123,7 @@ export const NotificationsWatchMenu = ({ doc }) => {
       ) : (
         <DropdownMenu>
           <div
-            className={`${menuId} show`}
+            className="article-actions-submenu show"
             role="menu"
             aria-labelledby={`${menuId}-button`}
           >

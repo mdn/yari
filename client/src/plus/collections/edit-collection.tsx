@@ -1,10 +1,8 @@
 import React from "react";
 
-import "../notifications-watch-menu/index.scss";
-
-import MDNModal from "../../atoms/modal";
-import { Button } from "../../atoms/button";
-import { BookmarkData } from "../../../plus/collections/types";
+import MDNModal from "../../ui/atoms/modal";
+import { Button } from "../../ui/atoms/button";
+import { BookmarkData } from "./types";
 
 export function EditCollection({
   item,
@@ -45,7 +43,7 @@ export function EditCollection({
           </header>
           <div className="modal-body">
             <form
-              className="watch-submenu is-in-modal"
+              className="mdn-form"
               method="post"
               onSubmit={async (event) => {
                 event.preventDefault();
@@ -53,7 +51,7 @@ export function EditCollection({
                 setShow(false);
               }}
             >
-              <div className="watch-submenu-item border-top-0 padding-top-0">
+              <div className="mdn-form-item">
                 <label htmlFor="bookmark-name">Name:</label>
                 <input
                   id="bookmark-name"
@@ -64,7 +62,7 @@ export function EditCollection({
                   onChange={(e) => setName(e.target.value)}
                 />
               </div>
-              <div className="watch-submenu-item border-top-0">
+              <div className="mdn-form-item">
                 <label htmlFor="bookmark-note">Note:</label>
                 <input
                   id="bookmark-note"
@@ -75,7 +73,7 @@ export function EditCollection({
                   onChange={(e) => setNotes(e.target.value)}
                 />
               </div>
-              <div className="watch-submenu-item border-top-0 is-button-row is-always-visible">
+              <div className="mdn-form-item is-button-row">
                 <Button buttonType="submit">Save</Button>
                 <Button
                   type="secondary"

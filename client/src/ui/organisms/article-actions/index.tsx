@@ -1,6 +1,6 @@
 import { Button } from "../../atoms/button";
-import { NotificationsWatchMenu } from "../../molecules/notifications-watch-menu";
-import { LanguageMenu } from "../../molecules/language-menu";
+import { NotificationsWatchMenu } from "./notifications-watch-menu";
+import { LanguageMenu } from "./language-menu";
 
 import { useIsServer } from "../../../hooks";
 import { useUserData } from "../../../user-context";
@@ -9,7 +9,7 @@ import { Doc } from "../../../../../libs/types/document";
 
 import "./index.scss";
 
-import { BookmarkContainer } from "../../molecules/collection";
+import { BookmarkContainer } from "./bookmark-menu";
 
 export const ArticleActions = ({
   doc,
