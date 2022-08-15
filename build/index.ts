@@ -118,7 +118,7 @@ function injectLoadingLazyAttributes($) {
 
 /**
  * For every `<a href="http...">` make it
- * `<a href="http..." class="external" and rel="noopener">`
+ * `<a href="http..." class="external" and rel="noopener noreferrer" target="_blank">`
  *
  *
  * @param {Cheerio document instance} $
