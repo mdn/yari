@@ -25,7 +25,7 @@ const slugMap = {
   "<position>": "position_value"
 }
 
-// Used for building links and tooltips for parts of the value definition syntax
+// Descriptions used for building links and tooltips for parts of the value definition syntax
 const syntaxDescriptions = {
   '*': {
     fragment: 'asterisk',
@@ -171,21 +171,20 @@ function renderNode(name, node) {
       encoded = encoded.replaceAll('>', '&gt;');
       // add CSS class: we use "property" because there isn't one for types
       const span = `<span class="token property">${encoded}</span>`;
-      // if this type is not included in the syntax, or it is in "typesToLink",
-      // then link to its dedicated page
-      if ((valuespaces[name] && valuespaces[name].value) &&
-          (!typesToLink.includes(name))) {
+      // If the type is not included in the syntax, or is in "typesToLink",
+      // link to its dedicated page (don't expand it)
+      if (valuespaces[name]?.value && !typesToLink.includes(name)) {
         return span;
       } else {
         let slug;
-        // slugMap is for when we can't derive the slug from the name
+        // If the name is in slugMap, we can't derive the slug from the name
         if (slugMap[name]) {
           slug = slugMap[name];
         } else {
-          // the slug does not include the angle brackets
+          // The slug should not include the angle brackets
           slug = name.replaceAll('<', '');
           slug = slug.replaceAll('>', '');
-          // also remove the range in square brackets, as in "<number [0,∞]>"
+          // The slug should not contain the range in square brackets, as in "<number [0,∞]>"
           slug = slug.replace(/\[.*\]/, '');
         }
         return `<a href="/${locale}/docs/Web/CSS/${slug}">${span}</a>`;
@@ -305,12 +304,11 @@ function renderSyntax(type, syntax) {
 function getTypesForSyntaxes(syntaxes, constituents) {
 
   function processNode(node) {
-    // we want to ignore the constituent parts of "typesToLink" types
+    // Ignore the constituent parts of "typesToLink" types
     if (typesToLink.includes(`<${node.name}>`)) {
       return;
     }
-    if (node.type === 'Type' &&
-       (!constituents.includes(node.name))) {
+    if (node.type === 'Type' && !constituents.includes(node.name)) {
       constituents.push(node.name);
     }
   }
@@ -343,10 +341,10 @@ function getConstituentTypes(itemSyntax) {
     // get the syntaxes for all newly added constituents,
     // and then get the types in those syntaxes
     constituentSyntaxes = [];
-    for (let constituent of allConstituents.slice(oldConstituentsLength)) {
-      let constituentSyntaxEntry = valuespaces[`<${constituent}>`];
+    for (const constituent of allConstituents.slice(oldConstituentsLength)) {
+      const constituentSyntaxEntry = valuespaces[`<${constituent}>`];
 
-      if (constituentSyntaxEntry && constituentSyntaxEntry.value) {
+      if (constituentSyntaxEntry?.value) {
         constituentSyntaxes.push(constituentSyntaxEntry.value);
       }
     }
