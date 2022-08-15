@@ -136,8 +136,9 @@ function postProcessExternalLinks($) {
     $a.addClass("external");
     const rel = ($a.attr("rel") || "").split(" ");
     if (!rel.includes("noopener")) {
-      rel.push("noopener");
+      rel.push("noopener", "noreferrer");
       $a.attr("rel", rel.join(" "));
+      $a.attr("target", "_blank");
     }
   });
 }
