@@ -16,6 +16,7 @@ import { Doc } from "../../../libs/types/document";
 import { Prose } from "./ingredients/prose";
 import { LazyBrowserCompatibilityTable } from "./lazy-bcd-table";
 import { SpecificationSection } from "./ingredients/spec-section";
+import { PolyfillsSubSection } from "./ingredients/polyfills-subsection";
 
 // Misc
 // Sub-components
@@ -235,10 +236,16 @@ function RenderDocumentBody({ doc }) {
       return <Prose key={section.value.id} section={section.value} />;
     } else if (section.type === "browser_compatibility") {
       return (
-        <LazyBrowserCompatibilityTable
-          key={`browser_compatibility${i}`}
-          {...section.value}
-        />
+        <>
+          <LazyBrowserCompatibilityTable
+            key={`browser_compatibility${i}`}
+            {...section.value}
+          />
+          <PolyfillsSubSection
+            id={"polyfills"}
+            polyfillURLs={section.value.polyfillURLs}
+          />
+        </>
       );
     } else if (section.type === "specifications") {
       return (

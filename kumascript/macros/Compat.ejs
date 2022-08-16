@@ -30,13 +30,20 @@ Example calls
 
 */
 
-var query = $0 || env['browser-compat'];
+// Read 'browser-compat' key
+const query = $0 || env['browser-compat'];
 if (!query) {
   throw new Error("No first query argument or 'browser-compat' front-matter value passed");
 }
-var depth = $1 || 1;
-var queries = Array.isArray(query) ? query : [query];
-var output = queries.map(query => `<div class="bc-data" data-query="${query}" data-depth="${depth}" data-multiple="${queries.length > 1}">
+
+// Read 'polyfills' key
+const polyfill = env['polyfills'];
+
+const depth = $1 || 1;
+const queries = Array.isArray(query) ? query : [query];
+
+//output = polyfills;
+var output = queries.map(query => `<div class="bc-data" data-query="${query}" data-depth="${depth}" data-multiple="${queries.length > 1}" data-polyfills="${polyfills}">
   If you're able to see this, something went wrong on this page.
 </div>`).join("\n");
 %>
