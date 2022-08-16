@@ -135,9 +135,12 @@ const sortByVisitsThenTimestampDesc = (
 };
 
 function getNextId(entries: FrequentlyViewedEntry[]): number {
-  return 1 + Math.max(
-    0,
-    ...entries.map(entry => entry.id).filter(id => !isNaN(id))
+  return (
+    1 +
+    Math.max(
+      0,
+      ...entries.map((entry) => entry.index).filter((index) => !isNaN(index))
+    )
   );
 }
 
@@ -155,13 +158,13 @@ export function useFrequentlyViewed(): [
 
     // give id to old entries
     entries.forEach((e) => {
-      e.id = e.id === undefined ? getNextUniqueID(entries) : e.id;
+      e.index = e.index === undefined ? getNextId(entries) : e.index;
     });
 
     const newEntries: FrequentlyViewedEntry[] = [];
     for (const entry of entries) {
       newEntries.push({
-        id: entry.id,
+        index: entry.index,
         url: entry.url,
         title: entry.title,
         timestamp: entry.timestamp,
@@ -205,7 +208,7 @@ export function usePersistFrequentlyViewed(doc: Doc | undefined) {
     );
 
     const newEntry: FrequentlyViewedEntry = {
-      id: getNextUniqueID(frequentlyViewed),
+      index: getNextId(frequentlyViewed),
       url: doc.mdn_url,
       title: doc.title,
       parents: doc.parents,

@@ -76,7 +76,7 @@ export function CollectionListItem({
             />
             <DropdownMenu>
               <ul className="dropdown-list" id="collection-item-dropdown">
-                {"notes" in item && onEditSubmit && (
+                {"id" in item && onEditSubmit && (
                   <li className="dropdown-item">
                     <EditCollection
                       item={item}
