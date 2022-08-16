@@ -1,73 +1,34 @@
 import useSWR, { mutate } from "swr";
 import useSWRInfinite from "swr/infinite";
+import {
+  MultipleCollectionInfo,
+  MultipleCollectionResponse,
+  MultipleCollectionCreationRequest,
+  MultipleCollectionLookupQueryResponse,
+  CollectionItemCreationRequest,
+  CollectionItemModificationRequest,
+} from "./rust-types";
 
 export interface NewCollection {
   name: string;
-  description: string;
+  description?: string;
 }
 
 export interface Collection extends NewCollection {
   id: string;
+  created_at: string;
+  updated_at: string;
 }
 
-export interface Item {
+export interface NewItem {
   collection_id: string;
-  item_id: string;
   url: string;
   title: string;
-  notes: string;
+  notes?: string;
 }
 
-interface MultipleCollectionInfo {
-  id: string;
-  name: string;
-  description?: string;
-  // created_at: NaiveDateTime,
-  // updated_at: NaiveDateTime,
-  article_count: number;
-}
-
-interface MultipleCollectionCreationRequest {
-  name: string;
-  description?: string;
-}
-
-interface MultipleCollectionResponse extends MultipleCollectionInfo {
-  items: CollectionItem[];
-}
-
-interface CollectionItem {
+export interface Item extends NewItem {
   id: number;
-  url: string;
-  title: string;
-  notes?: string;
-  parents: CollectionParent[];
-  // created: NaiveDateTime,
-}
-
-interface CollectionParent {
-  uri: string;
-  title: string;
-}
-
-interface CollectionItemCreationRequest {
-  title: string;
-  url: string;
-  notes?: string;
-}
-
-interface LookupEntry {
-  collection_id: number;
-  item: CollectionItem;
-}
-
-interface MultipleCollectionLookupQueryResponse {
-  results: LookupEntry[] | undefined[];
-}
-
-interface CollectionItemModificationRequest {
-  title: string;
-  notes?: string;
 }
 
 const COLLECTIONS_ENDPOINT = "/api/v2/collections/";
@@ -117,34 +78,28 @@ async function deleter(key: string) {
 }
 
 export function useCollections() {
-  return useSWR<Collection[]>(COLLECTIONS_ENDPOINT, async (key: string) => {
-    const response = await fetcher<MultipleCollectionInfo[]>(key);
-    return response as Collection[];
-  });
+  return useSWR<Collection[]>(
+    COLLECTIONS_ENDPOINT,
+    async (key: string) => await fetcher<MultipleCollectionInfo[]>(key)
+  );
 }
 
 export function useCollection(id: string | undefined) {
-  return useSWR<MultipleCollectionResponse>(
-    () => id && getCollectionKey(id),
-    fetcher
+  return useSWR<Collection>(
+    id && getCollectionKey(id),
+    async (key: string) => await fetcher<MultipleCollectionResponse>(key)
   );
 }
 
 export async function addCollection(
-  body: MultipleCollectionCreationRequest
-): Promise<MultipleCollectionInfo> {
-  const response = await poster(COLLECTIONS_ENDPOINT, body);
-  const newCollection: MultipleCollectionInfo = await response.json();
-  mutate<MultipleCollectionInfo[]>(
+  newCollection: NewCollection
+): Promise<Collection> {
+  const response = await poster<MultipleCollectionCreationRequest>(
     COLLECTIONS_ENDPOINT,
-    async (collections = []) => {
-      return [...collections, newCollection];
-    },
-    {
-      revalidate: false,
-    }
+    newCollection
   );
-  return newCollection;
+  mutate(COLLECTIONS_ENDPOINT);
+  return response.json() as Promise<MultipleCollectionInfo>;
 }
 
 export async function editCollection(
@@ -156,7 +111,7 @@ export async function editCollection(
   );
   mutate(COLLECTIONS_ENDPOINT);
   mutate(getCollectionKey(collection.id));
-  return response.json();
+  return response.json() as Promise<MultipleCollectionInfo>;
 }
 
 export async function deleteCollection(
@@ -176,31 +131,35 @@ export function useItems(id: string | undefined, initialSize = 1) {
     return getCollectionKey(id, { limit: "10", offset: `${10 * page}` });
   }
 
-  const returnValue = useSWRInfinite<MultipleCollectionResponse>(key, fetcher, {
-    initialSize,
-  });
-  return {
-    ...returnValue,
-    data: returnValue?.data?.map(({ items }) => items).flat(1), // flatten to array of items
-  };
+  return useSWRInfinite<Item[]>(
+    key,
+    async (key: string) => {
+      const data = await fetcher<MultipleCollectionResponse>(key);
+      return data.items.map((api_item) => ({
+        ...api_item,
+        collection_id: id as string,
+      }));
+    },
+    {
+      initialSize,
+    }
+  );
 }
 
 export function useBookmark(url: string) {
-  return useSWR(getBookmarkKey(url), async (key: string) => {
+  return useSWR<Item | undefined>(getBookmarkKey(url), async (key: string) => {
     const data = await fetcher<MultipleCollectionLookupQueryResponse>(key);
     const lookupEntry = data.results[0];
-    const item: Item | undefined = lookupEntry && {
-      collection_id: lookupEntry.collection_id.toString(),
-      item_id: lookupEntry.item.id.toString(),
-      title: lookupEntry.item.title,
-      url: lookupEntry.item.url,
-      notes: lookupEntry.item.notes || "",
-    };
-    return item;
+    return (
+      lookupEntry && {
+        ...lookupEntry.item,
+        collection_id: lookupEntry.collection_id.toString(),
+      }
+    );
   });
 }
 
-export async function addItem(item: Item): Promise<Response> {
+export async function addItem(item: NewItem): Promise<Response> {
   const { collection_id, ...body } = item;
   const response = await poster<CollectionItemCreationRequest>(
     getItemsKey(collection_id),
@@ -212,9 +171,9 @@ export async function addItem(item: Item): Promise<Response> {
 }
 
 export async function editItem(item: Item): Promise<Response> {
-  const { collection_id, item_id, ...body } = item;
+  const { collection_id, id, ...body } = item;
   const response = await poster<CollectionItemModificationRequest>(
-    getItemKey(collection_id, item_id),
+    getItemKey(collection_id, id.toString()),
     body
   );
   mutate(getCollectionKey(collection_id));
@@ -223,8 +182,8 @@ export async function editItem(item: Item): Promise<Response> {
 }
 
 export async function deleteItem(item: Item): Promise<Response> {
-  const { collection_id, item_id, url } = item;
-  const response = await deleter(getItemKey(collection_id, item_id));
+  const { collection_id, id, url } = item;
+  const response = await deleter(getItemKey(collection_id, id.toString()));
   mutate(getCollectionKey(collection_id));
   mutate(getBookmarkKey(url));
   return response;

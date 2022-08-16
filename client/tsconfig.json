@@ -9,6 +9,7 @@
     "noImplicitAny": false,
     "noEmit": true,
     "noFallthroughCasesInSwitch": true,
+    // "noUncheckedIndexedAccess": true,
     "jsx": "react-jsx"
   },
   "include": ["src"]
