@@ -81,8 +81,13 @@ export default function BookmarkV2Menu({ doc }: { doc: Doc }) {
   ) => {
     e.preventDefault();
     if (!collections) return;
-    if (formItem.item_id) {
-      await editItem(formItem);
+    if (savedItem) {
+      if (savedItem.collection_id !== formItem.collection_id) {
+        await deleteItem(savedItem);
+        await addItem(formItem);
+      } else {
+        await editItem(formItem);
+      }
     } else {
       await addItem(formItem);
     }
