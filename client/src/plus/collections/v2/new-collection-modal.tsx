@@ -1,25 +1,24 @@
 import React, { useState } from "react";
 import { Button } from "../../../ui/atoms/button";
 import MDNModal from "../../../ui/atoms/modal";
-import { Collection, createCollection, NewCollection } from "./api";
+import {
+  Collection,
+  addCollection,
+  NewCollection,
+  useCollections,
+} from "./api";
 
 export default function NewCollectionModal({
   show,
   setShow,
-  collections,
-  setCollections,
   onClose,
 }: {
   show: boolean;
   setShow: React.Dispatch<React.SetStateAction<boolean>>;
-  collections: Collection[];
-  setCollections:
-    | React.Dispatch<React.SetStateAction<Collection[]>>
-    | React.Dispatch<React.SetStateAction<Collection[] | undefined>>;
   onClose?: (collection_id?: string) => void;
 }) {
   const [collection, setCollection] = useState<NewCollection>({
-    title: "",
+    name: "",
     description: "",
   });
 
@@ -31,16 +30,15 @@ export default function NewCollectionModal({
   const cancelHandler = (e: React.MouseEvent | React.KeyboardEvent) => {
     e.preventDefault();
     if (onClose) onClose();
-    setCollection({ title: "", description: "" });
+    setCollection({ name: "", description: "" });
     setShow(false);
   };
 
   const saveHandler = async (e: React.BaseSyntheticEvent) => {
     e.preventDefault();
-    const createdCollection = await createCollection(collection);
-    setCollections([...collections, createdCollection]);
-    if (onClose) onClose(createdCollection.id);
-    setCollection({ title: "", description: "" });
+    const createdCollection = await addCollection(collection);
+    if (onClose) onClose(createdCollection.id.toString());
+    setCollection({ name: "", description: "" });
     setShow(false);
   };
 
@@ -65,11 +63,11 @@ export default function NewCollectionModal({
       <div className="modal-body">
         <form className="mdn-form" onSubmit={saveHandler}>
           <div className="mdn-form-item">
-            <label htmlFor="collection-title">Title:</label>
+            <label htmlFor="collection-name">Name:</label>
             <input
-              id="collection-title"
-              name="title"
-              value={collection.title}
+              id="collection-name"
+              name="name"
+              value={collection.name}
               onChange={changeHandler}
               onKeyDown={enterHandler}
               autoComplete="off"

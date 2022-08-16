@@ -1,50 +1,51 @@
-import { useEffect, useState } from "react";
 import { useParams } from "react-router";
 import { Link } from "react-router-dom";
+import { Button } from "../../../ui/atoms/button";
 import Container from "../../../ui/atoms/container";
 import { Loading } from "../../../ui/atoms/loading";
-import { Item, Collection, getItems, getCollection } from "./api";
+import { useCollection, useItems } from "./api";
 
 export default function CollectionComponent() {
-  const [collection, setCollection] = useState<Collection>();
-  const [items, setItems] = useState<Item[]>();
-
   const { collectionId } = useParams();
-
-  useEffect(() => {
-    getCollection(collectionId).then(setCollection);
-  }, [collectionId]);
-
-  useEffect(() => {
-    if (collection) {
-      getItems(collection).then(setItems);
-    }
-  }, [collection]);
+  const { data: collection } = useCollection(collectionId);
+  const { data: items, size, setSize } = useItems(collectionId);
 
   return collection ? (
     <>
       <header className="plus-header">
         <Container>
           <Link to="../">Exit Collection</Link>
-          <h1>{collection.title}</h1>
+          <h1>{collection.name}</h1>
           <p>{collection.description}</p>
         </Container>
       </header>
       <Container>
         <ul className="icon-card-list">
-          {items?.map((b) => (
-            <li key={b.url} className="icon-card">
+          {items?.map((item) => (
+            <li key={item.url} className="icon-card">
               <div className="icon-card-title-wrap">
                 <div className="icon-card-content">
                   <h2 className="icon-card-title">
-                    <Link to={b.url}>{b.name}</Link>
+                    <Link to={item.url}>{item.title}</Link>
                   </h2>
                 </div>
               </div>
-              {b.notes && <p className="icon-card-description">{b.notes}</p>}
+              {item.notes && (
+                <p className="icon-card-description">{item.notes}</p>
+              )}
             </li>
           ))}
         </ul>
+        <div className="pagination">
+          <Button
+            type="primary"
+            onClickHandler={() => {
+              setSize(size + 1);
+            }}
+          >
+            Show more
+          </Button>
+        </div>
       </Container>
     </>
   ) : (

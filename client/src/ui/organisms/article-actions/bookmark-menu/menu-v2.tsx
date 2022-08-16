@@ -7,9 +7,9 @@ import {
   Item,
   Collection,
   deleteItem,
-  getItem,
-  getCollections,
-  saveItem,
+  useCollections,
+  addItem,
+  useItem,
 } from "../../../../plus/collections/v2/api";
 import NewCollectionModal from "../../../../plus/collections/v2/new-collection-modal";
 import { DropdownMenu, DropdownMenuWrapper } from "../../../molecules/dropdown";
@@ -19,6 +19,9 @@ const menuId = "bookmark-submenu";
 const addValue = "add";
 
 export default function BookmarkV2Menu({ doc }: { doc: Doc }) {
+  const { data: collections } = useCollections();
+  const { data: savedItem } = useItem(doc.mdn_url);
+
   const defaultItem: Item = {
     url: doc.mdn_url,
     name: doc.title,
@@ -30,17 +33,13 @@ export default function BookmarkV2Menu({ doc }: { doc: Doc }) {
   const [show, setShow] = useState(false);
   const [showNewCollection, setShowNewCollection] = useState(false);
   const [disableAutoClose, setDisableAutoClose] = useState(false);
-  const [savedItem, setSavedItem] = useState<Item>();
   const [formItem, setFormItem] = useState(defaultItem);
-  const [collections, setCollections] = useState<Collection[]>();
 
   useEffect(() => {
-    getCollections().then(setCollections);
-  }, []);
-
-  useEffect(() => {
-    getItem(doc).then(setSavedItem);
-  }, [doc]);
+    if (collections && formItem.collection_id === "") {
+      setFormItem({ ...formItem, collection_id: collections[0].id });
+    }
+  }, [collections, formItem]);
 
   useEffect(() => {
     if (savedItem) setFormItem(savedItem);
@@ -80,8 +79,7 @@ export default function BookmarkV2Menu({ doc }: { doc: Doc }) {
   ) => {
     e.preventDefault();
     if (!collections) return;
-    await saveItem(formItem);
-    setSavedItem(formItem);
+    await addItem(formItem);
     setShow(false);
   };
 
@@ -95,8 +93,7 @@ export default function BookmarkV2Menu({ doc }: { doc: Doc }) {
   const deleteHandler = async (e: React.MouseEvent) => {
     e.preventDefault();
     if (!collections) return;
-    await deleteItem(formItem);
-    setSavedItem(undefined);
+    await deleteItem();
     setFormItem(defaultItem);
     setShow(false);
   };
@@ -164,9 +161,9 @@ export default function BookmarkV2Menu({ doc }: { doc: Doc }) {
                   onChange={collectionChangeHandler}
                   disabled={!collections}
                 >
-                  {collections?.map((c) => (
-                    <option key={c.id} value={c.id}>
-                      {c.title}
+                  {collections?.map((collection) => (
+                    <option key={collection.id} value={collection.id}>
+                      {collection.name}
                     </option>
                   )) || <option>Loading...</option>}
                   <option disabled={true} role="separator">
@@ -232,7 +229,6 @@ export default function BookmarkV2Menu({ doc }: { doc: Doc }) {
               collection_id: collection_id || collections[0].id,
             });
           }}
-          {...{ collections, setCollections }}
         />
       )}
     </DropdownMenuWrapper>

@@ -7,7 +7,7 @@ import Container from "../../../ui/atoms/container";
 import { Button } from "../../../ui/atoms/button";
 import NewCollectionModal from "./new-collection-modal";
 import { Route, Routes } from "react-router";
-import { Collection, getCollections } from "./api";
+import { Collection, useCollections } from "./api";
 import { Link } from "react-router-dom";
 import CollectionComponent from "./collection";
 
@@ -21,12 +21,9 @@ export default function Collections() {
 }
 
 function Base() {
-  const [showCreate, setShowCreate] = useState(false);
-  const [collections, setCollections] = useState<Collection[]>([]);
+  const { data } = useCollections();
 
-  useEffect(() => {
-    getCollections().then(setCollections);
-  }, [setCollections]);
+  const [showCreate, setShowCreate] = useState(false);
 
   return (
     <>
@@ -36,27 +33,24 @@ function Base() {
           <Button onClickHandler={() => setShowCreate(true)}>
             Create Collection
           </Button>
-          <NewCollectionModal
-            show={showCreate}
-            setShow={setShowCreate}
-            collections={collections}
-            setCollections={setCollections}
-          />
+          <NewCollectionModal show={showCreate} setShow={setShowCreate} />
         </Container>
       </header>
       <Container>
         <ul className="icon-card-list">
-          {collections.map((c) => (
-            <li key={c.id} className="icon-card">
+          {data?.map((collection) => (
+            <li key={collection.id} className="icon-card">
               <div className="icon-card-title-wrap">
                 <div className="icon-card-content">
                   <h2 className="icon-card-title">
-                    <Link to={c.id}>{c.title}</Link>
+                    <Link to={collection.id}>{collection.name}</Link>
                   </h2>
                 </div>
               </div>
-              {c.description && (
-                <p className="icon-card-description">{c.description}</p>
+              {collection.description && (
+                <p className="icon-card-description">
+                  {collection.description}
+                </p>
               )}
             </li>
           ))}
