@@ -23,7 +23,7 @@ export const LEGEND_LABELS = {
   disabled: "User must explicitly enable this feature.",
   altname: "Uses a non-standard name.",
   prefix: "Requires a vendor prefix or different name for use.",
-  more: "Has more compatibility info. Click to view.",
+  more: "Has more compatibility info.",
 };
 type LEGEND_KEY = keyof typeof LEGEND_LABELS;
 
