@@ -14,7 +14,7 @@ export interface Item {
   collection_id: string;
   item_id: string;
   url: string;
-  name: string;
+  title: string;
   notes: string;
 }
 
@@ -51,7 +51,7 @@ interface CollectionParent {
 }
 
 interface CollectionItemCreationRequest {
-  name: string;
+  title: string;
   url: string;
   notes?: string;
 }
@@ -71,17 +71,20 @@ interface CollectionItemModificationRequest {
 }
 
 const COLLECTIONS_ENDPOINT = "/api/v2/collections/";
-const ITEMS_ENDPOINT = (id: string) => `/api/v2/collections/${id}/items/`;
 
 function getCollectionKey(
   id: string,
   params?: URLSearchParams | Record<string, string>
 ) {
   params = new URLSearchParams(params);
-  if (!params.has("limit")) params.set("limit", "10");
+  if (!params.has("limit")) params.set("limit", "0");
   if (!params.has("offset")) params.set("offset", "0");
   params.sort();
   return `${COLLECTIONS_ENDPOINT}${id}/?${params}`;
+}
+
+function getItemsKey(collection_id: string) {
+  return `${COLLECTIONS_ENDPOINT}${collection_id}/items/`;
 }
 
 function getBookmarkKey(url: string) {
@@ -162,7 +165,7 @@ export async function deleteCollection(
 export function useItems(id: string | undefined, initialSize = 1) {
   function key(page: number, previousPage: MultipleCollectionResponse) {
     if ((previousPage && !previousPage.items.length) || !id) return null;
-    return getCollectionKey(id, { offset: `${10 * page}` });
+    return getCollectionKey(id, { limit: "10", offset: `${10 * page}` });
   }
 
   const returnValue = useSWRInfinite<MultipleCollectionResponse>(key, fetcher, {
@@ -181,7 +184,7 @@ export function useBookmark(url: string) {
     const item: Item | undefined = lookupEntry && {
       collection_id: lookupEntry.collection_id.toString(),
       item_id: lookupEntry.item.id.toString(),
-      name: lookupEntry.item.title,
+      title: lookupEntry.item.title,
       url: lookupEntry.item.url,
       notes: lookupEntry.item.notes || "",
     };
@@ -192,7 +195,7 @@ export function useBookmark(url: string) {
 export async function addItem(item: Item): Promise<Response> {
   const { collection_id, ...body } = item;
   const response = await poster<CollectionItemCreationRequest>(
-    ITEMS_ENDPOINT(collection_id),
+    getItemsKey(collection_id),
     body
   );
   mutate(getCollectionKey(collection_id));
@@ -204,7 +207,7 @@ export async function editItem(item: Item): Promise<Response> {
   const { collection_id, item_id, ...body } = item;
   const response = await poster<CollectionItemModificationRequest>(
     getItemKey(collection_id, item_id),
-    { ...body, title: body.name }
+    body
   );
   mutate(getCollectionKey(collection_id));
   mutate(getBookmarkKey(body.url));

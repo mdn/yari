@@ -25,7 +25,7 @@ export default function BookmarkV2Menu({ doc }: { doc: Doc }) {
 
   const defaultItem: Item = {
     url: doc.mdn_url,
-    name: doc.title,
+    title: doc.title,
     notes: "",
     item_id: "",
     collection_id: "",
@@ -187,11 +187,11 @@ export default function BookmarkV2Menu({ doc }: { doc: Doc }) {
               </div>
             </div>
             <div className="mdn-form-item">
-              <label htmlFor="bookmark-name">Name:</label>
+              <label htmlFor="bookmark-title">Name:</label>
               <input
-                id="bookmark-name"
-                name="name"
-                value={formItem.name}
+                id="bookmark-title"
+                name="title"
+                value={formItem.title}
                 autoComplete="off"
                 type="text"
                 onChange={changeHandler}
