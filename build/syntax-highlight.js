@@ -13,11 +13,11 @@ const lazy = (creator) => {
 };
 
 const loadAllLanguages = lazy(() => {
-  // Already loaded:
-  // Markup (markup, html, xml, svg, mathml, ssml, atom, rss)
-  // CSS (css)
-  // C-like (clike)
-  // JavaScript (javascript, js)
+  // Some languages are always loaded by Prism, so we can omit them here:
+  // - Markup (atom, html, markup, mathml, rss, ssml, svg, xml)
+  // - CSS (css)
+  // - C-like (clike)
+  // - JavaScript (javascript, js)
   loadLanguages([
     "python",
     "bash",
