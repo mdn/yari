@@ -12,7 +12,7 @@ import {
   useBookmark,
   editItem,
 } from "../../../../plus/collections/v2/api";
-import NewCollectionModal from "../../../../plus/collections/v2/new-collection-modal";
+import NewCollectionModal from "../../../../plus/collections/v2/new-edit-collection-modal";
 import { DropdownMenu, DropdownMenuWrapper } from "../../../molecules/dropdown";
 import { Icon } from "../../../atoms/icon";
 

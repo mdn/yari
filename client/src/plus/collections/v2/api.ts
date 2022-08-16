@@ -147,9 +147,17 @@ export async function addCollection(
   return newCollection;
 }
 
-// export async function editCollection() {
-
-// }
+export async function editCollection(
+  collection: Collection
+): Promise<MultipleCollectionInfo> {
+  const response = await poster<MultipleCollectionCreationRequest>(
+    getCollectionKey(collection.id),
+    collection
+  );
+  mutate(COLLECTIONS_ENDPOINT);
+  mutate(getCollectionKey(collection.id));
+  return response.json();
+}
 
 export async function deleteCollection(
   collection: Collection

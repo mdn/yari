@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 
 import Container from "../../../ui/atoms/container";
 import { Button } from "../../../ui/atoms/button";
-import NewCollectionModal from "./new-collection-modal";
+import NewCollectionModal from "./new-edit-collection-modal";
 import { Route, Routes } from "react-router";
 import { Collection, deleteCollection, useCollections } from "./api";
 import { Link } from "react-router-dom";

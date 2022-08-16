@@ -1,7 +1,12 @@
 import React, { useState } from "react";
 import { Button } from "../../../ui/atoms/button";
 import MDNModal from "../../../ui/atoms/modal";
-import { Collection, addCollection, NewCollection } from "./api";
+import {
+  Collection,
+  addCollection,
+  NewCollection,
+  editCollection,
+} from "./api";
 
 export default function NewEditCollectionModal({
   show,
@@ -34,7 +39,10 @@ export default function NewEditCollectionModal({
 
   const saveHandler = async (e: React.BaseSyntheticEvent) => {
     e.preventDefault();
-    const savedCollection = await addCollection(collection);
+    const savedCollection =
+      "id" in collection
+        ? await editCollection(collection)
+        : await addCollection(collection);
     if (onClose) onClose(savedCollection.id);
     setCollection(defaultCollection);
     setShow(false);
