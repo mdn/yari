@@ -134,14 +134,11 @@ const sortByVisitsThenTimestampDesc = (
   return 0;
 };
 
-function getNextUniqueID(entries: FrequentlyViewedEntry[]): number {
-  const ids = new Array(FREQUENTLY_VIEWED_MAX_ITEMS + 1);
-  for (const entry of entries) {
-    if (entry.id !== undefined) {
-      ids[entry.id] = true;
-    }
-  }
-  return ids.findIndex((id) => id === undefined);
+function getNextId(entries: FrequentlyViewedEntry[]): number {
+  return 1 + Math.max(
+    0,
+    ...entries.map(entry => entry.id).filter(id => !isNaN(id))
+  );
 }
 
 export function useFrequentlyViewed(): [
