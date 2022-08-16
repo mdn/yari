@@ -1,14 +1,13 @@
 import { useLocation } from "react-router-dom";
 
 import { cleanupUserData } from "../../../user-context";
-import { useCSRFMiddlewareToken, useLocale } from "../../../hooks";
+import { useLocale } from "../../../hooks";
 import { KUMA_HOST } from "../../../env";
 
 import "./index.scss";
 import { Button } from "../button";
 
 export default function SignOut() {
-  const csrfMiddlewareToken = useCSRFMiddlewareToken();
   const locale = useLocale();
   const { pathname } = useLocation();
 
@@ -34,13 +33,6 @@ export default function SignOut() {
         cleanupUserData();
       }}
     >
-      {csrfMiddlewareToken && (
-        <input
-          type="hidden"
-          name="csrfmiddlewaretoken"
-          value={csrfMiddlewareToken}
-        />
-      )}
       <input type="hidden" name="next" value={next} />
       <Button
         type="secondary"
