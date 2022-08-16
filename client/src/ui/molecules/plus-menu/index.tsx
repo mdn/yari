@@ -1,17 +1,14 @@
-import { useUserData } from "../../../user-context";
-import { useIsServer, useLocale } from "../../../hooks";
-
 import "./index.scss";
 import { usePlusUrl } from "../../../plus/utils";
 import { Menu } from "../menu";
+import { useIsServer, useLocale } from "../../../hooks";
+import { useUserData } from "../../../user-context";
 
 export const PlusMenu = ({ visibleSubMenuId, toggleMenu }) => {
-  const locale = useLocale();
-  const userData = useUserData();
-
   const plusUrl = usePlusUrl();
-
+  const locale = useLocale();
   const isServer = useIsServer();
+  const userData = useUserData();
   const isAuthenticated = userData && userData.isAuthenticated;
 
   const plusMenu = {
@@ -20,9 +17,8 @@ export const PlusMenu = ({ visibleSubMenuId, toggleMenu }) => {
     to: plusUrl,
     items: [
       {
-        description: "More MDN. Your MDN.",
+        description: "A customized MDN experience",
         hasIcon: true,
-        extraClasses: "mobile-only",
         iconClasses: "submenu-icon",
         label: "Overview",
         url: plusUrl,
@@ -45,6 +41,13 @@ export const PlusMenu = ({ visibleSubMenuId, toggleMenu }) => {
             },
           ]
         : []),
+      {
+        description: "Learn how to use MDN Plus",
+        hasIcon: true,
+        iconClasses: "submenu-icon",
+        label: "Documentation",
+        url: `/en-US/plus/docs/features/overview`,
+      },
       {
         description: "Frequently asked questions about MDN Plus",
         hasIcon: true,

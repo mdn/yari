@@ -5,7 +5,7 @@ import { NotificationsWatchMenuStart } from "./menu-start";
 
 import "./index.scss";
 import useSWR from "swr";
-import { useCSRFMiddlewareToken, useOnlineStatus } from "../../../hooks";
+import { useOnlineStatus } from "../../../hooks";
 import { DropdownMenu, DropdownMenuWrapper } from "../dropdown";
 import { ManageOrUpgradeDialogNotifications } from "../manage-upgrade-dialog";
 import { useUIStatus } from "../../../ui-context";
@@ -26,7 +26,6 @@ export const NotificationsWatchMenu = ({ doc }) => {
 
   const slug = doc.mdn_url; // Unique ID for the page
   const apiURL = `/api/v1/plus/watching/?url=${slug}`;
-  const csrfMiddlewareToken = useCSRFMiddlewareToken();
   const ui = useUIStatus();
   const { isOffline } = useOnlineStatus();
 
@@ -76,7 +75,6 @@ export const NotificationsWatchMenu = ({ doc }) => {
       method: "POST",
       body: JSON.stringify(postData),
       headers: {
-        "X-CSRFToken": csrfMiddlewareToken || "",
         "Content-Type": "application/json",
       },
     });

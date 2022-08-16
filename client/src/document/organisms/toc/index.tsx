@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 
 import "./index.scss";
-import { Toc } from "../../types";
+import { Toc } from "../../../../../libs/types/document";
 import { useFirstVisibleElement } from "../../hooks";
 
 export function TOC({ toc }: { toc: Toc[] }) {

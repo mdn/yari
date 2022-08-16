@@ -4,6 +4,9 @@
 // Parameters:
 //  $0  Page link
 
+// Throw a MacroDeprecatedError flaw
+ mdn.deprecated()
+
 let page = await wiki.getPage($0);
 let title = page.title;
 let url = page.url

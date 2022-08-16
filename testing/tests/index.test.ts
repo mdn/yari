@@ -9,7 +9,7 @@ import type {
   Doc,
   ProseSection,
   SpecificationsSection,
-} from "../../client/src/document/types";
+} from "../../libs/types/document";
 
 const buildRoot = path.join("client", "build");
 

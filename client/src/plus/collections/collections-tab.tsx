@@ -99,7 +99,8 @@ export function CollectionsTab({
     setList(newList);
   };
 
-  const deleteCollectionItem = async (item) => {
+  const deleteCollectionItem = async (item: any) => {
+    item = item as BookmarkData;
     const res = await updateDeleteCollectionItem(
       item,
       data.csrfmiddlewaretoken,
@@ -136,20 +137,17 @@ export function CollectionsTab({
       <SearchFilter filters={[]} sorts={SORTS} />
       {isLoading && <Loading message="Fetching your collection..." />}
       {error && <DataError error={error} />}
-      <ul className="notification-list">
-        <div className="icon-card-list">
-          {list.length
-            ? list.map((item) => (
-                <CollectionListItem
-                  item={item}
-                  onEditSubmit={collectionsSaveHandler}
-                  key={item.id}
-                  showEditButton={true}
-                  handleDelete={deleteCollectionItem}
-                />
-              ))
-            : "You don't have any saved pages in your collection."}
-        </div>
+      <ul className="icon-card-list">
+        {list.length
+          ? list.map((item) => (
+              <CollectionListItem
+                key={item.id}
+                item={item}
+                onEditSubmit={collectionsSaveHandler}
+                handleDelete={deleteCollectionItem}
+              />
+            ))
+          : "You don't have any saved pages in your collection."}
       </ul>
       {subscriptionLimitReached && <LimitBanner type="collections" />}
       {hasMore && showMoreButton(() => null, setOffset, list)}

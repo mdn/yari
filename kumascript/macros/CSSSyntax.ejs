@@ -16,7 +16,16 @@ const locale = env.locale;
 // URL where we describe value definition syntax
 const valueDefinitionUrl = `/${locale}/docs/Web/CSS/Value_definition_syntax`;
 
-// Used for building links and tooltips for parts of the value definition syntax
+// CSS types for which we want to link to another page, and not expand the syntax
+const typesToLink = ["<color>", "<gradient>"];
+
+// Map item names onto slugs, in cases where the slug can't be derived from the name
+const slugMap = {
+  "<color>": "color_value",
+  "<position>": "position_value"
+}
+
+// Descriptions used for building links and tooltips for parts of the value definition syntax
 const syntaxDescriptions = {
   '*': {
     fragment: 'asterisk',
@@ -69,13 +78,44 @@ for (const spec of Object.values(parsedWebRef)) {
   valuespaces = {...valuespaces, ...spec.valuespaces};
 }
 
-// get the property name from the page slug
-const propertyName = $0 || env.slug.split('/').pop().toLowerCase();
+/**
+ * Get the formal syntax and properly formatted name for an item.
+ */
+function getNameAndSyntax() {
+  // get the item name from the page slug
+  let itemName = $0 || env.slug.split('/').pop().toLowerCase();
+  let itemSyntax;
+  if (env.tags.includes("CSS Property")) {
+    // get syntax for a CSS property
+    itemSyntax = getPropertySyntax(itemName, parsedWebRef);
+  } else if (env.tags.includes("CSS Data Type")) {
+    // get syntax for a CSS data type
+    // some CSS data type slugs have a `_value` suffix
+    if (itemName.endsWith("_value")) {
+      itemName = itemName.replace("_value", "");
+    }
+    itemName = `<${itemName}>`;
+    // not all types have an entry in the syntax
+    if (valuespaces[itemName]) {
+      itemSyntax = valuespaces[itemName].value;
+    }
+  } else if (env.tags.includes("CSS Function")) {
+    // get syntax for a CSS function
+    itemName = `<${itemName}()>`;
+    // not all types have an entry in the syntax
+    if (valuespaces[itemName]) {
+      itemSyntax = valuespaces[itemName].value;
+    }
+  }
+  return {
+    name: itemName,
+    syntax: itemSyntax
+  }
+}
 
 /**
  * Get the formal syntax for a property from the webref data, given:
  * @param {string} propertyName - the name of the property
- * @param {object} parsedWebRef - the webref data
  */
 function getPropertySyntax(propertyName) {
   // 1) get all specs which list this property
@@ -131,15 +171,22 @@ function renderNode(name, node) {
       encoded = encoded.replaceAll('>', '&gt;');
       // add CSS class: we use "property" because there isn't one for types
       const span = `<span class="token property">${encoded}</span>`;
-      // if this type is not included in the syntax, link to its dedicated page
-      if (valuespaces[name] && valuespaces[name].value) {
+      // If the type is not included in the syntax, or is in "typesToLink",
+      // link to its dedicated page (don't expand it)
+      if (valuespaces[name]?.value && !typesToLink.includes(name)) {
         return span;
       } else {
-        // the slug does not include the angle brackets
-        let slug = name.replaceAll('<', '');
-        slug = slug.replaceAll('>', '');
-        // also remove the range in square brackets, as in "<number [0,∞]>"
-        slug = slug.replace(/\[.*\]/, '')
+        let slug;
+        // If the name is in slugMap, we can't derive the slug from the name
+        if (slugMap[name]) {
+          slug = slugMap[name];
+        } else {
+          // The slug should not include the angle brackets
+          slug = name.replaceAll('<', '');
+          slug = slug.replaceAll('>', '');
+          // The slug should not contain the range in square brackets, as in "<number [0,∞]>"
+          slug = slug.replace(/\[.*\]/, '');
+        }
         return `<a href="/${locale}/docs/Web/CSS/${slug}">${span}</a>`;
       }
     }
@@ -235,6 +282,8 @@ function renderTerms(terms, combinator) {
  */
 function renderSyntax(type, syntax) {
   // write out the name of this type
+  type = type.replaceAll('<', '&lt;');
+  type = type.replaceAll('>', '&gt;');
   let output = `<span class="token property" id="${type}">${type} = </span><br/>`;
 
   const ast = definitionSyntax.parse(syntax);
@@ -255,14 +304,17 @@ function renderSyntax(type, syntax) {
 function getTypesForSyntaxes(syntaxes, constituents) {
 
   function processNode(node) {
-    if (node.type === 'Type' &&
-       (!constituents.includes(node.name))) {
+    // Ignore the constituent parts of "typesToLink" types
+    if (typesToLink.includes(`<${node.name}>`)) {
+      return;
+    }
+    if (node.type === 'Type' && !constituents.includes(node.name)) {
       constituents.push(node.name);
     }
   }
 
   for (const syntax of syntaxes) {
-    let ast = definitionSyntax.parse(syntax);
+    const ast = definitionSyntax.parse(syntax);
     definitionSyntax.walk(ast, processNode);
   }
 
@@ -272,11 +324,11 @@ function getTypesForSyntaxes(syntaxes, constituents) {
  * Given an item (such as a CSS property), fetch all the types that participate
  * in its formal syntax definition, either directly or transitively.
  */
-function getConstituentTypes(propertySyntax) {
+function getConstituentTypes(itemSyntax) {
   const allConstituents = [];
   let oldConstituentsLength = 0;
   // get all the types in the top-level syntax
-  let constituentSyntaxes = [propertySyntax];
+  let constituentSyntaxes = [itemSyntax];
 
   // while an iteration added more types...
   while (true) {
@@ -289,11 +341,10 @@ function getConstituentTypes(propertySyntax) {
     // get the syntaxes for all newly added constituents,
     // and then get the types in those syntaxes
     constituentSyntaxes = [];
-    for (let constituent of allConstituents.slice(oldConstituentsLength)) {
+    for (const constituent of allConstituents.slice(oldConstituentsLength)) {
+      const constituentSyntaxEntry = valuespaces[`<${constituent}>`];
 
-      let constituentSyntaxEntry = valuespaces[`<${constituent}>`];
-
-      if (constituentSyntaxEntry && constituentSyntaxEntry.value) {
+      if (constituentSyntaxEntry?.value) {
         constituentSyntaxes.push(constituentSyntaxEntry.value);
       }
     }
@@ -302,20 +353,20 @@ function getConstituentTypes(propertySyntax) {
 }
 
 /**
- * Write out the complete formal syntax for a property.
+ * Write out the complete formal syntax for an item.
  *
- * This includes the property's own syntax, described in `propertySyntax`,
+ * This includes the item's own syntax, described in `itemSyntax`,
  * and also the syntax for any types that participate in the definition of
- * the property.
+ * the item.
  */
-function writeFormalSyntax(propertySyntax) {
+function writeFormalSyntax(itemName, itemSyntax) {
   let output = '';
   output += '<pre>';
   // write the syntax for the property
-  output += renderSyntax(propertyName, propertySyntax);
+  output += renderSyntax(itemName, itemSyntax);
   output += '<br/>';
   // collect all the constituent types for the property
-  const types = getConstituentTypes(propertySyntax);
+  const types = getConstituentTypes(itemSyntax);
 
   // and write each one out
   for (const type of types) {
@@ -331,14 +382,13 @@ function writeFormalSyntax(propertySyntax) {
 
 let output = '';
 
-// get the syntax for this property
-const propertySyntax = getPropertySyntax(propertyName, parsedWebRef);
+const {name, syntax} = getNameAndSyntax();
 
-if (!propertySyntax) {
+if (!syntax) {
   output = 'Error: could not find syntax for this item';
 } else {
   // write it out
-  output = writeFormalSyntax(propertySyntax);
+  output = writeFormalSyntax(name, syntax);
 }
 %>
 <%-output%>

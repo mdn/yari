@@ -58,7 +58,14 @@ self.addEventListener("install", (e) => {
   initOncePerRun(self);
 });
 
-self.addEventListener("fetch", (e) => {
+async function syncDbAndMessage(e) {
+  if (e.request.method !== "GET") {
+    await synchronizeDb();
+    messageAllClients(self, { type: "mutate" });
+  }
+}
+
+self.addEventListener("fetch", async (e) => {
   if (
     (SW_TYPE === SwType.ApiOnly || SW_TYPE === SwType.PreferOnline) &&
     !e.request.url.includes("/api/v1/") &&
@@ -67,6 +74,7 @@ self.addEventListener("fetch", (e) => {
     e.respondWith(
       (async () => {
         const res = await fetchWithExampleOverride(e.request);
+        syncDbAndMessage(e);
         if (res.ok) {
           return res;
         }
@@ -74,10 +82,12 @@ self.addEventListener("fetch", (e) => {
       })()
     );
   } else {
-    e.respondWith(respond(e));
-  }
-  if (e.request.method === "POST") {
-    synchronizeDb();
+    e.respondWith(
+      respond(e).then((r) => {
+        syncDbAndMessage(e);
+        return r;
+      })
+    );
   }
 });
 

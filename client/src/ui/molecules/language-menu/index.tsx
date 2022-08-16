@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 
 import { useGA } from "../../../ga-context";
-import { Translation } from "../../../document/types";
+import { Translation } from "../../../../../libs/types/document";
 import { Button } from "../../atoms/button";
 import { Submenu } from "../submenu";
 

@@ -1,0 +1,18 @@
+{
+  "translations": {
+    "": {
+      "card_note_label": {
+        "msgid": "card_note_label",
+        "msgstr": ["Uwaga:"]
+      },
+      "card_warning_label": {
+        "msgid": "card_warning_label",
+        "msgstr": ["Ważne:"]
+      },
+      "card_callout_label": {
+        "msgid": "card_callout_label",
+        "msgstr": ["Obserwacja:"]
+      }
+    }
+  }
+}

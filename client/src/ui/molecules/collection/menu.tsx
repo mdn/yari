@@ -3,7 +3,7 @@ import React, { useEffect } from "react";
 import "../notifications-watch-menu/index.scss";
 import { Icon } from "../../atoms/icon";
 import { Button } from "../../atoms/button";
-import { Doc } from "../../../document/types";
+import { Doc } from "../../../../../libs/types/document";
 import { BookmarkedData } from ".";
 import { DropdownMenu, DropdownMenuWrapper } from "../dropdown";
 import { ManageOrUpgradeDialogCollections } from "../manage-upgrade-dialog";
