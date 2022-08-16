@@ -84,13 +84,13 @@ export class MDNWorker {
   }
 
   async enableServiceWorker(type: SwType) {
-    if ("serviceWorker" in navigator && !this.registered) {
-      await navigator.serviceWorker.register(this.swName(type), {
-        scope: "/",
-      });
-      this.registered = true;
-    }
-    this.registerMessageHandler();
+    // if ("serviceWorker" in navigator && !this.registered) {
+    //   await navigator.serviceWorker.register(this.swName(type), {
+    //     scope: "/",
+    //   });
+    //   this.registered = true;
+    // }
+    // this.registerMessageHandler();
   }
 
   cleanDb() {

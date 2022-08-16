@@ -9,7 +9,8 @@ import {
   deleteItem,
   useCollections,
   addItem,
-  useItem,
+  useBookmark,
+  editItem,
 } from "../../../../plus/collections/v2/api";
 import NewCollectionModal from "../../../../plus/collections/v2/new-collection-modal";
 import { DropdownMenu, DropdownMenuWrapper } from "../../../molecules/dropdown";
@@ -20,12 +21,13 @@ const addValue = "add";
 
 export default function BookmarkV2Menu({ doc }: { doc: Doc }) {
   const { data: collections } = useCollections();
-  const { data: savedItem } = useItem(doc.mdn_url);
+  const { data: savedItem } = useBookmark(doc.mdn_url);
 
   const defaultItem: Item = {
     url: doc.mdn_url,
     name: doc.title,
     notes: "",
+    item_id: "",
     collection_id: "",
   };
 
@@ -79,7 +81,11 @@ export default function BookmarkV2Menu({ doc }: { doc: Doc }) {
   ) => {
     e.preventDefault();
     if (!collections) return;
-    await addItem(formItem);
+    if (formItem.item_id) {
+      await editItem(formItem);
+    } else {
+      await addItem(formItem);
+    }
     setShow(false);
   };
 
@@ -93,7 +99,9 @@ export default function BookmarkV2Menu({ doc }: { doc: Doc }) {
   const deleteHandler = async (e: React.MouseEvent) => {
     e.preventDefault();
     if (!collections) return;
-    await deleteItem();
+    if (savedItem) {
+      await deleteItem(savedItem);
+    }
     setFormItem(defaultItem);
     setShow(false);
   };

@@ -12,6 +12,7 @@ export interface Collection extends NewCollection {
 
 export interface Item {
   collection_id: string;
+  item_id: string;
   url: string;
   name: string;
   notes: string;
@@ -55,9 +56,22 @@ interface CollectionItemCreationRequest {
   notes?: string;
 }
 
+interface LookupEntry {
+  collection_id: number;
+  item: CollectionItem;
+}
+
+interface MultipleCollectionLookupQueryResponse {
+  results: LookupEntry[] | undefined[];
+}
+
+interface CollectionItemModificationRequest {
+  title: string;
+  notes?: string;
+}
+
 const COLLECTIONS_ENDPOINT = "/api/v2/collections/";
 const ITEMS_ENDPOINT = (id: string) => `/api/v2/collections/${id}/items/`;
-const FAKE_ITEM_ENDPOINT = (url: string) => `/fake/item/${url}/`;
 
 function getCollectionKey(
   id: string,
@@ -70,7 +84,15 @@ function getCollectionKey(
   return `${COLLECTIONS_ENDPOINT}${id}/?${params}`;
 }
 
-async function fetcher(key: string) {
+function getBookmarkKey(url: string) {
+  return `${COLLECTIONS_ENDPOINT}lookup/?url=${encodeURIComponent(url)}`;
+}
+
+function getItemKey(collection_id: string, item_id: string) {
+  return `${COLLECTIONS_ENDPOINT}${collection_id}/items/${item_id}/`;
+}
+
+async function fetcher<T>(key: string): Promise<T> {
   const response = await fetch(key);
   return response.json();
 }
@@ -82,6 +104,12 @@ async function poster<T>(key: string, body: T) {
     headers: {
       "content-type": "application/json",
     },
+  });
+}
+
+async function deleter(key: string) {
+  return fetch(key, {
+    method: "DELETE",
   });
 }
 
@@ -136,41 +164,47 @@ export function useItems(id: string | undefined, initialSize = 1) {
   };
 }
 
-export function useItem(url: string) {
-  return useSWR(FAKE_ITEM_ENDPOINT(url), async (key: string) => {
-    const collection_ids = (
-      (await fetcher(COLLECTIONS_ENDPOINT)) as MultipleCollectionInfo[]
-    ).map(({ id }) => id);
-    const all_collections = await Promise.all(
-      collection_ids.map(
-        (id) =>
-          fetcher(
-            getCollectionKey(id) as string
-          ) as Promise<MultipleCollectionResponse>
-      )
-    );
-    const all_items = all_collections
-      .map(({ id, items }) =>
-        items.map(
-          (item) => ({ collection_id: id, name: item.title, ...item } as Item)
-        )
-      )
-      .flat();
-    return all_items.find(({ url: item_url }) => item_url === url);
+export function useBookmark(url: string) {
+  return useSWR(getBookmarkKey(url), async (key: string) => {
+    const data = await fetcher<MultipleCollectionLookupQueryResponse>(key);
+    const lookupEntry = data.results[0];
+    const item: Item | undefined = lookupEntry && {
+      collection_id: lookupEntry.collection_id.toString(),
+      item_id: lookupEntry.item.id.toString(),
+      name: lookupEntry.item.title,
+      url: lookupEntry.item.url,
+      notes: lookupEntry.item.notes || "",
+    };
+    return item;
   });
 }
 
-export async function addItem(item: Item): Promise<void> {
+export async function addItem(item: Item): Promise<Response> {
   const { collection_id, ...body } = item;
   const response = await poster<CollectionItemCreationRequest>(
     ITEMS_ENDPOINT(collection_id),
     body
   );
-  // mutate(COLLECTION_ENDPOINT(collection_id));
-  mutate(FAKE_ITEM_ENDPOINT(body.url));
-  return response.json();
+  mutate(getCollectionKey(collection_id));
+  mutate(getBookmarkKey(body.url));
+  return response;
 }
 
-export async function editItem() {}
+export async function editItem(item: Item): Promise<Response> {
+  const { collection_id, item_id, ...body } = item;
+  const response = await poster<CollectionItemModificationRequest>(
+    getItemKey(collection_id, item_id),
+    { ...body, title: body.name }
+  );
+  mutate(getCollectionKey(collection_id));
+  mutate(getBookmarkKey(body.url));
+  return response;
+}
 
-export async function deleteItem(): Promise<void> {}
+export async function deleteItem(item: Item): Promise<Response> {
+  const { collection_id, item_id, url } = item;
+  const response = await deleter(getItemKey(collection_id, item_id));
+  mutate(getCollectionKey(collection_id));
+  mutate(getBookmarkKey(url));
+  return response;
+}
