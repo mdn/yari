@@ -36,7 +36,7 @@ type SectionsAndFlaws = [Section[], string[]];
  *
  * ...give or take some whitespace.
  */
-export function extractSidebar($: cheerio.Root) {
+export function extractSidebar($: cheerio.CheerioAPI) {
   const search = $("#Quick_links");
   if (!search.length) {
     return "";
@@ -46,7 +46,7 @@ export function extractSidebar($: cheerio.Root) {
   return sidebarHtml;
 }
 
-export function extractSections($: cheerio.Root) {
+export function extractSections($: cheerio.CheerioAPI) {
   const flaws: string[] = [];
   const sections: Section[] = [];
   const section = cheerio
@@ -55,9 +55,9 @@ export function extractSections($: cheerio.Root) {
     })("div")
     .eq(0);
 
-  const body = $("#_body")[0] as cheerio.TagElement;
-  const iterable = [...(body.childNodes as cheerio.Element[])].filter(
-    (child): child is cheerio.TagElement => child.type != "text"
+  const body = $("#_body")[0] as cheerio.ParentNode;
+  const iterable = [...body.childNodes].filter(
+    (child): child is cheerio.Element => child.type != "text"
   );
 
   let c = 0;
@@ -75,7 +75,7 @@ export function extractSections($: cheerio.Root) {
     // which would exclude any node that isn't a tag, such as comments.
     // That might make the DOM nodes more compact and memory efficient.
     c++;
-    section.append(child as unknown as cheerio.Cheerio);
+    section.append(child);
   });
   if (c) {
     // last straggler
@@ -201,7 +201,7 @@ export function extractSections($: cheerio.Root) {
  *        specifications: {....}
  *   }]
  */
-function addSections($: cheerio.Cheerio): SectionsAndFlaws {
+function addSections($: cheerio.Cheerio<cheerio.Element>): SectionsAndFlaws {
   const flaws: string[] = [];
 
   const countPotentialSpecialDivs = $.find("div.bc-data, div.bc-specs").length;
@@ -252,13 +252,13 @@ function addSections($: cheerio.Cheerio): SectionsAndFlaws {
       // Loop over each and every "root element" in the node and keep piling
       // them up in a buffer, until you encounter a `div.bc-data` or `div.bc-specs` then
       // add that to the stack, clear and repeat.
-      const div = $[0] as cheerio.TagElement;
-      const iterable = [...(div.childNodes as cheerio.Element[])].filter(
-        (child): child is cheerio.TagElement => child.type !== "text"
+      const div = $[0] as cheerio.ParentNode;
+      const iterable = [...div.childNodes].filter(
+        (child): child is cheerio.Element => child.type !== "text"
       );
       let c = 0;
       let countSpecialDivsFound = 0;
-      iterable.forEach((child: cheerio.TagElement) => {
+      iterable.forEach((child) => {
         if (
           child.tagName === "div" &&
           child.attribs &&
@@ -276,14 +276,14 @@ function addSections($: cheerio.Cheerio): SectionsAndFlaws {
             section.empty();
             c = 0; // reset the counter
           }
-          section.append(child as unknown as cheerio.Cheerio);
+          section.append(child);
           // XXX That `_addSingleSpecialSection(section.clone())` might return a
           // and empty array and that means it failed and we should
           // bail.
           subSections.push(..._addSingleSpecialSection(section.clone()));
           section.empty();
         } else {
-          section.append(child as unknown as cheerio.Cheerio);
+          section.append(child);
           c++;
         }
       });
@@ -325,7 +325,9 @@ function addSections($: cheerio.Cheerio): SectionsAndFlaws {
   return [proseSections, flaws];
 }
 
-function _addSingleSpecialSection($: cheerio.Cheerio): Section[] {
+function _addSingleSpecialSection(
+  $: cheerio.Cheerio<cheerio.Element>
+): Section[] {
   let id: string = "";
   let title: string = "";
   let isH3 = false;
@@ -673,7 +675,9 @@ function _addSingleSpecialSection($: cheerio.Cheerio): Section[] {
   }
 }
 
-function _addSectionProse($: cheerio.Cheerio): SectionsAndFlaws {
+function _addSectionProse(
+  $: cheerio.Cheerio<cheerio.Element>
+): SectionsAndFlaws {
   let id: string = "";
   let title: string = "";
   let titleAsText: string = "";
