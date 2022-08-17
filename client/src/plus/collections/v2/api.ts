@@ -31,6 +31,7 @@ export interface Item extends NewItem {
   id: number;
 }
 
+const PAGE_SIZE = 10;
 const COLLECTIONS_ENDPOINT = "/api/v2/collections/";
 
 function getCollectionKey(
@@ -146,12 +147,15 @@ export async function deleteCollection(
 }
 
 export function useItems(id: string | undefined, initialSize = 1) {
-  function key(page: number, previousPage: MultipleCollectionResponse) {
-    if ((previousPage && !previousPage.items.length) || !id) return null;
-    return getCollectionKey(id, { limit: "10", offset: `${10 * page}` });
+  function key(page: number, previousPage: Item[]) {
+    if ((previousPage && !previousPage.length) || !id) return null;
+    return getCollectionKey(id, {
+      limit: `${PAGE_SIZE}`,
+      offset: `${PAGE_SIZE * page}`,
+    });
   }
 
-  return useSWRInfinite<Item[]>(
+  const useData = useSWRInfinite<Item[]>(
     key,
     async (key: string) => {
       const data = await fetcher<MultipleCollectionResponse>(key);
@@ -164,6 +168,13 @@ export function useItems(id: string | undefined, initialSize = 1) {
       initialSize,
     }
   );
+  const pages = useData.data;
+  const lastPageLength = (pages && pages[pages.length - 1]?.length) || 0;
+
+  return {
+    ...useData,
+    atEnd: lastPageLength < PAGE_SIZE,
+  };
 }
 
 export function useBookmark(url: string) {

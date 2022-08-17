@@ -8,7 +8,7 @@ import { useCollection, useItems } from "./api";
 export default function CollectionComponent() {
   const { collectionId } = useParams();
   const { data: collection } = useCollection(collectionId);
-  const { data: items, size, setSize } = useItems(collectionId);
+  const { data: itemPages, size, setSize, atEnd } = useItems(collectionId);
 
   return collection ? (
     <>
@@ -21,7 +21,7 @@ export default function CollectionComponent() {
       </header>
       <Container>
         <ul className="icon-card-list">
-          {items?.flat(1).map((item) => (
+          {itemPages?.flat(1).map((item) => (
             <li key={item.url} className="icon-card">
               <div className="icon-card-title-wrap">
                 <div className="icon-card-content">
@@ -36,16 +36,18 @@ export default function CollectionComponent() {
             </li>
           ))}
         </ul>
-        <div className="pagination">
-          <Button
-            type="primary"
-            onClickHandler={() => {
-              setSize(size + 1);
-            }}
-          >
-            Show more
-          </Button>
-        </div>
+        {!atEnd && (
+          <div className="pagination">
+            <Button
+              type="primary"
+              onClickHandler={() => {
+                setSize(size + 1);
+              }}
+            >
+              Show more
+            </Button>
+          </div>
+        )}
       </Container>
     </>
   ) : (
