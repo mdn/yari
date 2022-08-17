@@ -9,6 +9,7 @@
 @use "./ui/molecules/notecards";
 @use "./ui/molecules/pagination";
 @use "./ui/atoms/button";
+@use "./ui/atoms/form";
 
 /*
   Global :root variables, for those independent of themes
@@ -115,6 +116,10 @@ body {
   color: var(--text-primary);
   accent-color: var(--accent-primary); // for checkboxes, radios, etc.
   scrollbar-color: var(--scrollbar-color) var(--scrollbar-bg);
+
+  &.full-screen-overlay {
+    overflow: hidden;
+  }
 }
 
 :focus-visible {

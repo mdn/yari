@@ -1,6 +1,6 @@
 import useSWR from "swr";
-import { Doc } from "../../../../../libs/types/document";
-import { BookmarkData } from "../../../plus/collections";
+import { Doc } from "../../../../../../libs/types/document";
+import { BookmarkData } from "../../../../plus/collections";
 import { BookmarkMenu } from "./menu";
 
 export interface BookmarkedData {

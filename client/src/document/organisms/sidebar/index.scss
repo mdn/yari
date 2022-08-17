@@ -12,7 +12,7 @@
   // apply drawer styles only to the sizes that need them.
   @media screen and (max-width: #{$screen-md - 1}) {
     position: fixed;
-    top: 0;
+    top: --var(--offset);
     right: 0;
     left: 0;
     height: 100vh;

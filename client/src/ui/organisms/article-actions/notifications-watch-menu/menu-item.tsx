@@ -1,6 +1,8 @@
 import React from "react";
 import { Icon } from "../../../atoms/icon";
 
+import "./menu-item.scss";
+
 type WatchMenuItemProps = {
   value: string;
   checked: boolean;
@@ -20,19 +22,19 @@ export function WatchMenuItem({
     <button
       role="menuitemradio"
       aria-checked={checked}
-      className={`watch-submenu-button is-${value}`}
+      className="watch-menu-item"
       value={value}
       onClick={onClickHandler}
     >
-      <span className="watch-submenu-button-wrap">
+      <span className="watch-menu-item-inner">
         {checked && (
-          <span className="watch-submenu-button-status">
+          <span className="watch-menu-item-status">
             <Icon name="checkmark" />
           </span>
         )}
 
-        <span className="watch-submenu-button-label">{label}</span>
-        {text && <span className="watch-submenu-button-text">{text}</span>}
+        <span className="watch-menu-item-label">{label}</span>
+        {text && <span className="watch-menu-item-text">{text}</span>}
       </span>
     </button>
   );
