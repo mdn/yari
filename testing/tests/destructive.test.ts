@@ -98,13 +98,13 @@ describe("fixing flaws", () => {
     const dryRunNotices = stdout
       .split("\n")
       .filter((line) => regexPattern.test(line));
-    expect(dryRunNotices.length).toBe(4);
+    expect(dryRunNotices).toHaveLength(4);
     expect(dryRunNotices[0]).toContain(path.join(pattern, "bad_pre_tags"));
     expect(dryRunNotices[1]).toContain(path.join(pattern, "deprecated_macros"));
     expect(dryRunNotices[2]).toContain(path.join(pattern, "images"));
     expect(dryRunNotices[3]).toContain(pattern);
     const dryrunFiles = getChangedFiles(tempContentDir);
-    expect(dryrunFiles.length).toBe(0);
+    expect(dryrunFiles).toHaveLength(0);
   });
 
   it("can actually change the files", () => {
@@ -125,7 +125,7 @@ describe("fixing flaws", () => {
     expect(stdout).toContain(pattern);
 
     const files = getChangedFiles(tempContentDir);
-    expect(files.length).toBe(4);
+    expect(files).toHaveLength(4);
     const imagesFile = files.find((f) =>
       f.includes(path.join(pattern, "images"))
     );
