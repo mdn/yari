@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 import Container from "../../../ui/atoms/container";
 import { Button } from "../../../ui/atoms/button";

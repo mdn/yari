@@ -5,12 +5,12 @@ import { Doc } from "../../../../../../libs/types/document";
 import { useOnlineStatus } from "../../../../hooks";
 import {
   Item,
-  Collection,
   deleteItem,
   useCollections,
   addItem,
   useBookmark,
   editItem,
+  NewItem,
 } from "../../../../plus/collections/v2/api";
 import NewCollectionModal from "../../../../plus/collections/v2/new-edit-collection-modal";
 import { DropdownMenu, DropdownMenuWrapper } from "../../../molecules/dropdown";
@@ -23,11 +23,10 @@ export default function BookmarkV2Menu({ doc }: { doc: Doc }) {
   const { data: collections } = useCollections();
   const { data: savedItem } = useBookmark(doc.mdn_url);
 
-  const defaultItem: Item = {
+  const defaultItem: NewItem = {
     url: doc.mdn_url,
     title: doc.title,
     notes: "",
-    item_id: "",
     collection_id: "",
   };
 
@@ -35,7 +34,7 @@ export default function BookmarkV2Menu({ doc }: { doc: Doc }) {
   const [show, setShow] = useState(false);
   const [showNewCollection, setShowNewCollection] = useState(false);
   const [disableAutoClose, setDisableAutoClose] = useState(false);
-  const [formItem, setFormItem] = useState(defaultItem);
+  const [formItem, setFormItem] = useState<Item | NewItem>(defaultItem);
 
   useEffect(() => {
     if (collections && formItem.collection_id === "") {
@@ -81,7 +80,7 @@ export default function BookmarkV2Menu({ doc }: { doc: Doc }) {
   ) => {
     e.preventDefault();
     if (!collections) return;
-    if (savedItem) {
+    if ("id" in formItem && savedItem) {
       if (savedItem.collection_id !== formItem.collection_id) {
         await deleteItem(savedItem);
         await addItem(formItem);

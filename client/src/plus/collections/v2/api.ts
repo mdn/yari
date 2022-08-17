@@ -34,9 +34,10 @@ export interface Item extends NewItem {
 const COLLECTIONS_ENDPOINT = "/api/v2/collections/";
 
 function getCollectionKey(
-  id: string,
+  id: string | undefined,
   params?: URLSearchParams | Record<string, string>
 ) {
+  if (!id) return;
   params = new URLSearchParams(params);
   if (!params.has("limit")) params.set("limit", "0");
   if (!params.has("offset")) params.set("offset", "0");
@@ -44,34 +45,53 @@ function getCollectionKey(
   return `${COLLECTIONS_ENDPOINT}${id}/?${params}`;
 }
 
-function getItemsKey(collection_id: string) {
-  return `${COLLECTIONS_ENDPOINT}${collection_id}/items/`;
+function getItemsKey(collection_id: string | undefined) {
+  return collection_id && `${COLLECTIONS_ENDPOINT}${collection_id}/items/`;
 }
 
-function getBookmarkKey(url: string) {
-  return `${COLLECTIONS_ENDPOINT}lookup/?url=${encodeURIComponent(url)}`;
+function getBookmarkKey(url: string | undefined) {
+  return url && `${COLLECTIONS_ENDPOINT}lookup/?url=${encodeURIComponent(url)}`;
 }
 
-function getItemKey(collection_id: string, item_id: string) {
-  return `${COLLECTIONS_ENDPOINT}${collection_id}/items/${item_id}/`;
+function getItemKey(
+  collection_id: string | undefined,
+  item_id: string | undefined
+) {
+  return (
+    collection_id &&
+    item_id &&
+    `${COLLECTIONS_ENDPOINT}${collection_id}/items/${item_id}/`
+  );
 }
 
-async function fetcher<T>(key: string): Promise<T> {
+async function fetcher<T>(key: string | undefined): Promise<T> {
+  if (!key) throw Error("Invalid key");
   const response = await fetch(key);
+  if (!response.ok) throw Error(response.statusText);
   return response.json();
 }
 
-async function poster<T>(key: string, body: T) {
-  return fetch(key, {
+async function poster<B, R>(key: string | undefined, body: B): Promise<R>;
+async function poster<B>(key: string | undefined, body: B): Promise<Response>;
+async function poster(key: string | undefined, body: any): Promise<any> {
+  if (!key) throw Error("Invalid key");
+  const response = await fetch(key, {
     body: JSON.stringify(body),
     method: "POST",
     headers: {
       "content-type": "application/json",
     },
   });
+  if (!response.ok) throw Error(response.statusText);
+  try {
+    return await response.json();
+  } catch {
+    return response;
+  }
 }
 
-async function deleter(key: string) {
+async function deleter(key: string | undefined) {
+  if (!key) throw Error("Invalid key");
   return fetch(key, {
     method: "DELETE",
   });
@@ -86,32 +106,32 @@ export function useCollections() {
 
 export function useCollection(id: string | undefined) {
   return useSWR<Collection>(
-    id && getCollectionKey(id),
+    getCollectionKey(id),
     async (key: string) => await fetcher<MultipleCollectionResponse>(key)
   );
 }
 
 export async function addCollection(
-  newCollection: NewCollection
+  collection: NewCollection
 ): Promise<Collection> {
-  const response = await poster<MultipleCollectionCreationRequest>(
-    COLLECTIONS_ENDPOINT,
-    newCollection
-  );
+  const response = await poster<
+    MultipleCollectionCreationRequest,
+    MultipleCollectionInfo
+  >(COLLECTIONS_ENDPOINT, collection);
   mutate(COLLECTIONS_ENDPOINT);
-  return response.json() as Promise<MultipleCollectionInfo>;
+  return response;
 }
 
 export async function editCollection(
   collection: Collection
-): Promise<MultipleCollectionInfo> {
-  const response = await poster<MultipleCollectionCreationRequest>(
-    getCollectionKey(collection.id),
-    collection
-  );
+): Promise<Collection> {
+  const response = await poster<
+    MultipleCollectionCreationRequest,
+    MultipleCollectionInfo
+  >(getCollectionKey(collection.id), collection);
   mutate(COLLECTIONS_ENDPOINT);
   mutate(getCollectionKey(collection.id));
-  return response.json() as Promise<MultipleCollectionInfo>;
+  return response;
 }
 
 export async function deleteCollection(
@@ -121,7 +141,7 @@ export async function deleteCollection(
   const response = await deleter(getCollectionKey(id));
   mutate(COLLECTIONS_ENDPOINT);
   mutate(getCollectionKey(id));
-  // mutate(getBookmarkKey());
+  // TODO: mutate(getBookmarkKey());
   return response;
 }
 

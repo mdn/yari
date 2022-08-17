@@ -21,7 +21,7 @@ export default function CollectionComponent() {
       </header>
       <Container>
         <ul className="icon-card-list">
-          {items?.map((item) => (
+          {items?.flat(1).map((item) => (
             <li key={item.url} className="icon-card">
               <div className="icon-card-title-wrap">
                 <div className="icon-card-content">
