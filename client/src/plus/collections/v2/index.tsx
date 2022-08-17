@@ -68,79 +68,81 @@ function CollectionCard({ collection }: { collection: Collection }) {
             <Link to={collection.id}>{collection.name}</Link>
           </h2>
         </div>
-        <DropdownMenuWrapper
-          className="dropdown is-flush-right"
-          isOpen={showDropdown}
-          setIsOpen={setShowDropdown}
-          disableAutoClose={showEdit || showDelete}
-        >
-          <Button
-            type="action"
-            icon="ellipses"
-            ariaControls="collection-dropdown"
-            ariaHasPopup={"menu"}
-            ariaExpanded={showDropdown || undefined}
-            onClickHandler={() => {
-              setShowDropdown(!showDropdown);
-            }}
-          />
-          <DropdownMenu>
-            <ul className="dropdown-list" id="collection-dropdown">
-              <li className="dropdown-item">
-                <Button
-                  type="action"
-                  title="Edit"
-                  onClickHandler={() => setShowEdit(true)}
-                >
-                  Edit
-                </Button>
-                <NewCollectionModal
-                  editingCollection={collection}
-                  show={showEdit}
-                  setShow={setShowEdit}
-                />
-              </li>
-              <li className="dropdown-item">
-                <Button
-                  type="action"
-                  title="Delete"
-                  onClickHandler={() => setShowDelete(true)}
-                >
-                  Delete
-                </Button>
-                <MDNModal
-                  isOpen={showDelete}
-                  size="small"
-                  onRequestClose={() => setShowDelete(false)}
-                >
-                  <header className="modal-header">
-                    <h2 className="modal-heading">
-                      Are you sure you want to delete your collection "
-                      {collection.name}"
-                    </h2>
-                    <Button
-                      onClickHandler={() => setShowDelete(false)}
-                      type="action"
-                      icon="cancel"
-                      extraClasses="close-button"
-                    />
-                  </header>
-                  <div className="modal-body">
-                    <div className="watch-submenu-item border-top-0 is-button-row is-always-visible">
-                      <Button onClickHandler={deleteHandler}>Delete</Button>
+        {collection.name !== "Default" ? (
+          <DropdownMenuWrapper
+            className="dropdown is-flush-right"
+            isOpen={showDropdown}
+            setIsOpen={setShowDropdown}
+            disableAutoClose={showEdit || showDelete}
+          >
+            <Button
+              type="action"
+              icon="ellipses"
+              ariaControls="collection-dropdown"
+              ariaHasPopup={"menu"}
+              ariaExpanded={showDropdown || undefined}
+              onClickHandler={() => {
+                setShowDropdown(!showDropdown);
+              }}
+            />
+            <DropdownMenu>
+              <ul className="dropdown-list" id="collection-dropdown">
+                <li className="dropdown-item">
+                  <Button
+                    type="action"
+                    title="Edit"
+                    onClickHandler={() => setShowEdit(true)}
+                  >
+                    Edit
+                  </Button>
+                  <NewCollectionModal
+                    editingCollection={collection}
+                    show={showEdit}
+                    setShow={setShowEdit}
+                  />
+                </li>
+                <li className="dropdown-item">
+                  <Button
+                    type="action"
+                    title="Delete"
+                    onClickHandler={() => setShowDelete(true)}
+                  >
+                    Delete
+                  </Button>
+                  <MDNModal
+                    isOpen={showDelete}
+                    size="small"
+                    onRequestClose={() => setShowDelete(false)}
+                  >
+                    <header className="modal-header">
+                      <h2 className="modal-heading">
+                        Are you sure you want to delete your collection "
+                        {collection.name}"
+                      </h2>
                       <Button
                         onClickHandler={() => setShowDelete(false)}
-                        type="secondary"
-                      >
-                        Cancel
-                      </Button>
+                        type="action"
+                        icon="cancel"
+                        extraClasses="close-button"
+                      />
+                    </header>
+                    <div className="modal-body">
+                      <div className="watch-submenu-item border-top-0 is-button-row is-always-visible">
+                        <Button onClickHandler={deleteHandler}>Delete</Button>
+                        <Button
+                          onClickHandler={() => setShowDelete(false)}
+                          type="secondary"
+                        >
+                          Cancel
+                        </Button>
+                      </div>
                     </div>
-                  </div>
-                </MDNModal>
-              </li>
-            </ul>
-          </DropdownMenu>
-        </DropdownMenuWrapper>
+                  </MDNModal>
+                </li>
+              </ul>
+            </DropdownMenu>
+          </DropdownMenuWrapper>
+        ) : null}
       </div>
       {collection.description && (
         <p className="icon-card-description">{collection.description}</p>
