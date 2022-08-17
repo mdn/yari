@@ -28,7 +28,7 @@ export interface NewItem {
 }
 
 export interface Item extends NewItem {
-  id: number;
+  id: string;
 }
 
 const PAGE_SIZE = 10;
@@ -184,7 +184,7 @@ export function useBookmark(url: string) {
     return (
       lookupEntry && {
         ...lookupEntry.item,
-        collection_id: lookupEntry.collection_id.toString(),
+        collection_id: lookupEntry.collection_id,
       }
     );
   });
@@ -204,7 +204,7 @@ export async function addItem(item: NewItem): Promise<Response> {
 export async function editItem(item: Item): Promise<Response> {
   const { collection_id, id, ...body } = item;
   const response = await poster<CollectionItemModificationRequest>(
-    getItemKey(collection_id, id.toString()),
+    getItemKey(collection_id, id),
     body
   );
   mutate(getCollectionKey(collection_id));
@@ -214,7 +214,7 @@ export async function editItem(item: Item): Promise<Response> {
 
 export async function deleteItem(item: Item): Promise<Response> {
   const { collection_id, id, url } = item;
-  const response = await deleter(getItemKey(collection_id, id.toString()));
+  const response = await deleter(getItemKey(collection_id, id));
   mutate(getCollectionKey(collection_id));
   mutate(getBookmarkKey(url));
   return response;

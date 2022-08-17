@@ -1,3 +1,6 @@
+// currently this is manually kept in sync with the types used in rumba
+// eventually it would be nice to automatically export those types for use here
+
 export interface MultipleCollectionInfo {
   id: string;
   name: string;
@@ -17,7 +20,7 @@ export interface MultipleCollectionResponse extends MultipleCollectionInfo {
 }
 
 export interface CollectionItem {
-  id: number;
+  id: string;
   url: string;
   title: string;
   notes?: string;
@@ -37,7 +40,7 @@ export interface CollectionItemCreationRequest {
 }
 
 export interface LookupEntry {
-  collection_id: number;
+  collection_id: string;
   item: CollectionItem;
 }
 
