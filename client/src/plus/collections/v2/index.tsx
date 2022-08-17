@@ -135,7 +135,7 @@ function CollectionCard({ collection }: { collection: Collection }) {
           </header>
           <div className="modal-body">
             Are you sure you want to delete your collection "{collection.name}"?
-            <div className="watch-submenu-item border-top-0 is-button-row is-always-visible">
+            <div className="mdn-form-item is-button-row">
               <Button onClickHandler={deleteHandler}>Delete</Button>
               <Button
                 onClickHandler={() => setShowDelete(false)}

@@ -16,7 +16,6 @@ import NewCollectionModal from "../../../../plus/collections/v2/new-edit-collect
 import { DropdownMenu, DropdownMenuWrapper } from "../../../molecules/dropdown";
 import { Icon } from "../../../atoms/icon";
 
-const menuId = "bookmark-submenu";
 const addValue = "add";
 
 export default function BookmarkV2Menu({ doc }: { doc: Doc }) {
@@ -112,7 +111,6 @@ export default function BookmarkV2Menu({ doc }: { doc: Doc }) {
 
   return (
     <DropdownMenuWrapper
-      className="watch-menu"
       isOpen={show}
       setIsOpen={setShow}
       disableAutoClose={disableAutoClose}
@@ -146,13 +144,9 @@ export default function BookmarkV2Menu({ doc }: { doc: Doc }) {
       )}
       <form className="mdn-form" method="post" onSubmit={saveHandler}>
         <DropdownMenu>
-          <div
-            className="article-actions-submenu show"
-            role="menu"
-            aria-labelledby={`${menuId}-button`}
-          >
+          <div className="article-actions-submenu show" role="menu">
             <button onClick={cancelHandler} className="header mobile-only">
-              <span className="header-wrap">
+              <span className="header-inner">
                 <Icon name="chevron" />
                 {savedItem ? "Edit Item" : "Add to Collection"}
               </span>

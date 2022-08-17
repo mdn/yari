@@ -166,8 +166,8 @@ function ItemComponent({
             />
           </header>
           <div className="modal-body">
-            <form className="watch-submenu is-in-modal" onSubmit={saveHandler}>
-              <div className="watch-submenu-item border-top-0 padding-top-0">
+            <form className="mdn-form" onSubmit={saveHandler}>
+              <div className="mdn-form-item">
                 <label htmlFor="item-title">Title:</label>
                 <input
                   id="item-title"
@@ -180,7 +180,7 @@ function ItemComponent({
                   required={true}
                 />
               </div>
-              <div className="watch-submenu-item border-top-0">
+              <div className="mdn-form-item">
                 <label htmlFor="item-notes">Notes:</label>
                 <input
                   id="item-notes"
@@ -192,7 +192,7 @@ function ItemComponent({
                   type="text"
                 />
               </div>
-              <div className="watch-submenu-item border-top-0 is-button-row is-always-visible">
+              <div className="mdn-form-item is-button-row">
                 <Button buttonType="submit">Save</Button>
                 <Button onClickHandler={cancelEditHandler} type="secondary">
                   Cancel
@@ -217,7 +217,7 @@ function ItemComponent({
           </header>
           <div className="modal-body">
             Are you sure you want to delete "{item.title}" from your collection?
-            <div className="watch-submenu-item border-top-0 is-button-row is-always-visible">
+            <div className="mdn-form-item is-button-row">
               <Button onClickHandler={deleteHandler}>Delete</Button>
               <Button
                 onClickHandler={() => setShowDelete(false)}
