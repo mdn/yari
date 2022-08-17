@@ -1,4 +1,4 @@
-import useSWR, { mutate } from "swr";
+import useSWR, { KeyedMutator, mutate } from "swr";
 import useSWRInfinite from "swr/infinite";
 import {
   MultipleCollectionInfo,
@@ -44,6 +44,14 @@ function getCollectionKey(
   if (!params.has("offset")) params.set("offset", "0");
   params.sort();
   return `${COLLECTIONS_ENDPOINT}${id}/?${params}`;
+}
+
+function getCollectionPageKey(id: string | undefined, page: number) {
+  if (!id || page < 0) return;
+  return getCollectionKey(id, {
+    limit: `${PAGE_SIZE}`,
+    offset: `${PAGE_SIZE * page}`,
+  });
 }
 
 function getItemsKey(collection_id: string | undefined) {
@@ -149,10 +157,7 @@ export async function deleteCollection(
 export function useItems(id: string | undefined, initialSize = 1) {
   function key(page: number, previousPage: Item[]) {
     if ((previousPage && !previousPage.length) || !id) return null;
-    return getCollectionKey(id, {
-      limit: `${PAGE_SIZE}`,
-      offset: `${PAGE_SIZE * page}`,
-    });
+    return getCollectionPageKey(id, page);
   }
 
   const useData = useSWRInfinite<Item[]>(
@@ -201,7 +206,10 @@ export async function addItem(item: NewItem): Promise<Response> {
   return response;
 }
 
-export async function editItem(item: Item): Promise<Response> {
+export async function editItem(
+  item: Item,
+  scopedMutator?: KeyedMutator<Item[][]>
+): Promise<Response> {
   const { collection_id, id, ...body } = item;
   const response = await poster<CollectionItemModificationRequest>(
     getItemKey(collection_id, id),
@@ -209,13 +217,18 @@ export async function editItem(item: Item): Promise<Response> {
   );
   mutate(getCollectionKey(collection_id));
   mutate(getBookmarkKey(body.url));
+  if (scopedMutator) scopedMutator();
   return response;
 }
 
-export async function deleteItem(item: Item): Promise<Response> {
+export async function deleteItem(
+  item: Item,
+  scopedMutator?: KeyedMutator<Item[][]>
+): Promise<Response> {
   const { collection_id, id, url } = item;
   const response = await deleter(getItemKey(collection_id, id));
   mutate(getCollectionKey(collection_id));
   mutate(getBookmarkKey(url));
+  if (scopedMutator) scopedMutator();
   return response;
 }
