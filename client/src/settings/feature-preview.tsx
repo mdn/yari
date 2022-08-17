@@ -1,5 +1,8 @@
 import { useState } from "react";
-import { toggleCollectionsInQuickSearch } from "../plus/common/api";
+import {
+  toggleCollectionsInQuickSearch,
+  toggleMultipleCollections,
+} from "../plus/common/api";
 import { Spinner } from "../ui/atoms/spinner";
 import { Switch } from "../ui/atoms/switch";
 import { SubscriptionType, useUserData } from "../user-context";
@@ -36,13 +39,41 @@ export default function FeaturePreview() {
                 <Spinner extraClasses="loading" />
               ) : (
                 <Switch
-                  name="offline"
+                  name="col_in_search"
                   checked={Boolean(user?.settings?.colInSearch)}
                   toggle={async (e) => {
                     setSaving(true);
                     await toggleCollectionsInQuickSearch(
                       Boolean(e.target.checked)
                     );
+                    user?.mutate();
+                    setSaving(false);
+                  }}
+                ></Switch>
+              )}
+            </li>
+            <li>
+              <h3>Multiple collections</h3>
+              <span>
+                Allows you to create and manage multiple collections.
+                <br />
+                <a
+                  rel="noreferrer noopener"
+                  target="_blank"
+                  href="https://www.surveygizmo.com/s3/6918430/Feature-Preview-User-Feedback-Collections-in-Quicksearch"
+                >
+                  Give us some feedback.
+                </a>
+              </span>
+              {saving ? (
+                <Spinner extraClasses="loading" />
+              ) : (
+                <Switch
+                  name="multiple_collections"
+                  checked={Boolean(user?.settings?.multipleCollections)}
+                  toggle={async (e) => {
+                    setSaving(true);
+                    await toggleMultipleCollections(Boolean(e.target.checked));
                     user?.mutate();
                     setSaving(false);
                   }}
