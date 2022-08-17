@@ -2,6 +2,7 @@ import * as React from "react";
 import useSWR from "swr";
 
 import { DISABLE_AUTH, DEFAULT_GEO_COUNTRY } from "./env";
+import { fetchAllCollectionsItems } from "./search-utils";
 import { MDNWorker } from "./settings/mdn-worker";
 
 export enum SubscriptionType {
@@ -141,6 +142,9 @@ export function UserDataProvider(props: { children: React.ReactNode }) {
       // The user is definitely signed in or not signed in.
       setSessionStorageData(data);
 
+      if (data.settings?.colInSearch) {
+        fetchAllCollectionsItems();
+      }
       // Let's initialize the MDN Worker if the user is signed in.
       if (!window.mdnWorker && data?.isAuthenticated) {
         import("./settings/mdn-worker").then(({ getMDNWorker }) => {

@@ -8,7 +8,11 @@ import { preload, preloadSupported } from "./document/preloading";
 import { Button } from "./ui/atoms/button";
 
 import { useLocale } from "./hooks";
-import { SearchProps, useFocusViaKeyboard } from "./search-utils";
+import {
+  getCollectionItems,
+  SearchProps,
+  useFocusViaKeyboard,
+} from "./search-utils";
 import { useUserData } from "./user-context";
 
 const PRELOAD_WAIT_MS = 500;
@@ -64,9 +68,7 @@ function useSearchIndex(): readonly [
     const gather = async () => {
       const collection: Item[] = [];
       if (user?.settings?.colInSearch) {
-        const all = await import("./settings/db").then(({ getCollection }) =>
-          getCollection()
-        );
+        const all = getCollectionItems();
         collection.push(
           ...all.map((item) => {
             return { ...item, collection: true };
