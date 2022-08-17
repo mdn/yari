@@ -10,7 +10,6 @@ interface Notification {
 
 interface NotificationData {
   items: Array<Notification>;
-  csrfmiddlewaretoken: string;
 }
 
 export type { Notification, NotificationData };
