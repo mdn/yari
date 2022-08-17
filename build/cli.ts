@@ -150,11 +150,10 @@ async function buildDocuments(
   }) as Iterable<string>) {
     const result = await buildDocumentInteractive(documentPath, interactive);
 
-    const isInteractiveDocumentBuild = (
-      result
-    ): result is InteractiveDocumentBuild => result.skip !== false;
+    const isSkippedDocumentBuild = (result): result is SkippedDocumentBuild =>
+      result.skip !== false;
 
-    if (!isInteractiveDocumentBuild(result)) {
+    if (isSkippedDocumentBuild(result)) {
       continue;
     }
 
