@@ -151,20 +151,18 @@
       overflow: auto;
       -webkit-overflow-scrolling: touch;
 
-      // Reset all buttons
-      .button {
-        width: 8rem;
-
-        .button-wrap {
-          justify-content: center;
-          margin-top: 1px;
-          padding: 0.5rem 1rem;
-        }
-      }
-
+      & > .button,
       .article-actions-entries > li > .button,
       .article-actions-entries > li > div > .button {
+        --button-radius: 0;
+        width: 100%;
         border-bottom: 1px solid var(--border-secondary);
+
+        .button-wrap {
+          justify-content: flex-start;
+          margin-top: 1px;
+          padding: 1.5rem 1rem;
+        }
       }
 
       .article-actions-dialog-heading {
