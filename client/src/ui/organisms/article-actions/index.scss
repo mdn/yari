@@ -154,12 +154,12 @@
       // Reset all buttons
       .button {
         --button-radius: 0;
-        width: 100%;
+        width: 8rem;
 
         .button-wrap {
-          justify-content: flex-start;
+          justify-content: center;
           margin-top: 1px;
-          padding: 1.5rem 1rem;
+          padding: 0.5rem 1rem;
         }
       }
 
