@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useParams } from "react-router";
 import { Link } from "react-router-dom";
-import { KeyedMutator, useSWRConfig } from "swr";
+import { KeyedMutator } from "swr";
 import { Button } from "../../../ui/atoms/button";
 import Container from "../../../ui/atoms/container";
 import { Loading } from "../../../ui/atoms/loading";
