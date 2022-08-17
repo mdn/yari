@@ -1,4 +1,4 @@
-import { DisplayH2, DisplayH3 } from "./utils";
+import { DisplayH3 } from "./utils";
 
 const ALLOWED_POLYFILL_SERVICE = [
   {
