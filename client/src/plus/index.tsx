@@ -9,6 +9,7 @@ import Notifications from "./notifications";
 import { MDN_PLUS_TITLE } from "../constants";
 import { Settings } from "../settings";
 import PlusDocs from "./plus-docs";
+import { useUserData } from "../user-context";
 
 const OfferOverview = React.lazy(() => import("./offer-overview"));
 const Collections = React.lazy(() => import("./collections"));
@@ -18,6 +19,8 @@ export function Plus({ pageTitle, ...props }: { pageTitle?: string }) {
   React.useEffect(() => {
     document.title = pageTitle || MDN_PLUS_TITLE;
   }, [pageTitle]);
+
+  const userData = useUserData();
 
   const isServer = useIsServer();
   const loading = (
@@ -64,7 +67,11 @@ export function Plus({ pageTitle, ...props }: { pageTitle?: string }) {
         element={
           <Layout>
             <div className="bookmarks girdle">
-              {false ? <Collections /> : <CollectionsV2 />}
+              {userData?.settings?.multipleCollections ? (
+                <CollectionsV2 />
+              ) : (
+                <Collections />
+              )}
             </div>
           </Layout>
         }

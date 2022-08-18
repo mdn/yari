@@ -142,10 +142,7 @@ export default function BookmarkV2Menu({ doc }: { doc: Doc }) {
             role="menu"
             aria-labelledby={`${menuId}-button`}
           >
-            <button
-              onClick={cancelHandler}
-              className="header mobile-only"
-            >
+            <button onClick={cancelHandler} className="header mobile-only">
               <span className="header-wrap">
                 <Icon name="chevron" />
                 {savedItem ? "Edit Item" : "Add to Collection"}
