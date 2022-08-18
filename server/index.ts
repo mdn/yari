@@ -85,7 +85,7 @@ const contentProxy =
     // timeout: 20000,
   });
 
-app.use("/api/v1", proxy);
+app.use("/api/*", proxy);
 // This is an exception and it's only ever relevant in development.
 app.use("/users/*", proxy);
 

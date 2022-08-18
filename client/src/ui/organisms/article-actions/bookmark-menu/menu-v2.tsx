@@ -5,23 +5,26 @@ import { Doc } from "../../../../../../libs/types/document";
 import { useOnlineStatus } from "../../../../hooks";
 import {
   Item,
-  Collection,
   deleteItem,
-  getItem,
-  getCollections,
-  saveItem,
+  useCollections,
+  addItem,
+  useBookmark,
+  editItem,
+  NewItem,
 } from "../../../../plus/collections/v2/api";
-import NewCollectionModal from "../../../../plus/collections/v2/new-collection-modal";
+import NewCollectionModal from "../../../../plus/collections/v2/new-edit-collection-modal";
 import { DropdownMenu, DropdownMenuWrapper } from "../../../molecules/dropdown";
 import { Icon } from "../../../atoms/icon";
 
-const menuId = "bookmark-submenu";
 const addValue = "add";
 
 export default function BookmarkV2Menu({ doc }: { doc: Doc }) {
-  const defaultItem: Item = {
+  const { data: collections } = useCollections();
+  const { data: savedItem } = useBookmark(doc.mdn_url);
+
+  const defaultItem: NewItem = {
     url: doc.mdn_url,
-    name: doc.title,
+    title: doc.title,
     notes: "",
     collection_id: "",
   };
@@ -30,17 +33,13 @@ export default function BookmarkV2Menu({ doc }: { doc: Doc }) {
   const [show, setShow] = useState(false);
   const [showNewCollection, setShowNewCollection] = useState(false);
   const [disableAutoClose, setDisableAutoClose] = useState(false);
-  const [savedItem, setSavedItem] = useState<Item>();
-  const [formItem, setFormItem] = useState(defaultItem);
-  const [collections, setCollections] = useState<Collection[]>();
+  const [formItem, setFormItem] = useState<Item | NewItem>(defaultItem);
 
   useEffect(() => {
-    getCollections().then(setCollections);
-  }, []);
-
-  useEffect(() => {
-    getItem(doc).then(setSavedItem);
-  }, [doc]);
+    if (collections && formItem.collection_id === "") {
+      setFormItem({ ...formItem, collection_id: collections[0].id });
+    }
+  }, [collections, formItem]);
 
   useEffect(() => {
     if (savedItem) setFormItem(savedItem);
@@ -80,8 +79,16 @@ export default function BookmarkV2Menu({ doc }: { doc: Doc }) {
   ) => {
     e.preventDefault();
     if (!collections) return;
-    await saveItem(formItem);
-    setSavedItem(formItem);
+    if ("id" in formItem && savedItem) {
+      if (savedItem.collection_id !== formItem.collection_id) {
+        await deleteItem(savedItem);
+        await addItem(formItem);
+      } else {
+        await editItem(formItem);
+      }
+    } else {
+      await addItem(formItem);
+    }
     setShow(false);
   };
 
@@ -95,15 +102,15 @@ export default function BookmarkV2Menu({ doc }: { doc: Doc }) {
   const deleteHandler = async (e: React.MouseEvent) => {
     e.preventDefault();
     if (!collections) return;
-    await deleteItem(formItem);
-    setSavedItem(undefined);
+    if (savedItem) {
+      await deleteItem(savedItem);
+    }
     setFormItem(defaultItem);
     setShow(false);
   };
 
   return (
     <DropdownMenuWrapper
-      className="watch-menu"
       isOpen={show}
       setIsOpen={setShow}
       disableAutoClose={disableAutoClose}
@@ -137,13 +144,9 @@ export default function BookmarkV2Menu({ doc }: { doc: Doc }) {
       )}
       <form className="mdn-form" method="post" onSubmit={saveHandler}>
         <DropdownMenu>
-          <div
-            className="article-actions-submenu show"
-            role="menu"
-            aria-labelledby={`${menuId}-button`}
-          >
+          <div className="article-actions-submenu show" role="menu">
             <button onClick={cancelHandler} className="header mobile-only">
-              <span className="header-wrap">
+              <span className="header-inner">
                 <Icon name="chevron" />
                 {savedItem ? "Edit Item" : "Add to Collection"}
               </span>
@@ -164,9 +167,9 @@ export default function BookmarkV2Menu({ doc }: { doc: Doc }) {
                   onChange={collectionChangeHandler}
                   disabled={!collections}
                 >
-                  {collections?.map((c) => (
-                    <option key={c.id} value={c.id}>
-                      {c.title}
+                  {collections?.map((collection) => (
+                    <option key={collection.id} value={collection.id}>
+                      {collection.name}
                     </option>
                   )) || <option>Loading...</option>}
                   <option disabled={true} role="separator">
@@ -177,11 +180,11 @@ export default function BookmarkV2Menu({ doc }: { doc: Doc }) {
               </div>
             </div>
             <div className="mdn-form-item">
-              <label htmlFor="bookmark-name">Name:</label>
+              <label htmlFor="bookmark-title">Name:</label>
               <input
-                id="bookmark-name"
-                name="name"
-                value={formItem.name}
+                id="bookmark-title"
+                name="title"
+                value={formItem.title}
                 autoComplete="off"
                 type="text"
                 onChange={changeHandler}
@@ -232,7 +235,6 @@ export default function BookmarkV2Menu({ doc }: { doc: Doc }) {
               collection_id: collection_id || collections[0].id,
             });
           }}
-          {...{ collections, setCollections }}
         />
       )}
     </DropdownMenuWrapper>
