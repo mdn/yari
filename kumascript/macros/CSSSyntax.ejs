@@ -16,7 +16,16 @@ const locale = env.locale;
 // URL where we describe value definition syntax
 const valueDefinitionUrl = `/${locale}/docs/Web/CSS/Value_definition_syntax`;
 
-// Used for building links and tooltips for parts of the value definition syntax
+// CSS types for which we want to link to another page, and not expand the syntax
+const typesToLink = ["<color>", "<gradient>"];
+
+// Map item names onto slugs, in cases where the slug can't be derived from the name
+const slugMap = {
+  "<color>": "color_value",
+  "<position>": "position_value"
+}
+
+// Descriptions used for building links and tooltips for parts of the value definition syntax
 const syntaxDescriptions = {
   '*': {
     fragment: 'asterisk',
@@ -162,15 +171,22 @@ function renderNode(name, node) {
       encoded = encoded.replaceAll('>', '&gt;');
       // add CSS class: we use "property" because there isn't one for types
       const span = `<span class="token property">${encoded}</span>`;
-      // if this type is not included in the syntax, link to its dedicated page
-      if (valuespaces[name] && valuespaces[name].value) {
+      // If the type is not included in the syntax, or is in "typesToLink",
+      // link to its dedicated page (don't expand it)
+      if (valuespaces[name]?.value && !typesToLink.includes(name)) {
         return span;
       } else {
-        // the slug does not include the angle brackets
-        let slug = name.replaceAll('<', '');
-        slug = slug.replaceAll('>', '');
-        // also remove the range in square brackets, as in "<number [0,∞]>"
-        slug = slug.replace(/\[.*\]/, '')
+        let slug;
+        // If the name is in slugMap, we can't derive the slug from the name
+        if (slugMap[name]) {
+          slug = slugMap[name];
+        } else {
+          // The slug should not include the angle brackets
+          slug = name.replaceAll('<', '');
+          slug = slug.replaceAll('>', '');
+          // The slug should not contain the range in square brackets, as in "<number [0,∞]>"
+          slug = slug.replace(/\[.*\]/, '');
+        }
         return `<a href="/${locale}/docs/Web/CSS/${slug}">${span}</a>`;
       }
     }
@@ -288,14 +304,17 @@ function renderSyntax(type, syntax) {
 function getTypesForSyntaxes(syntaxes, constituents) {
 
   function processNode(node) {
-    if (node.type === 'Type' &&
-       (!constituents.includes(node.name))) {
+    // Ignore the constituent parts of "typesToLink" types
+    if (typesToLink.includes(`<${node.name}>`)) {
+      return;
+    }
+    if (node.type === 'Type' && !constituents.includes(node.name)) {
       constituents.push(node.name);
     }
   }
 
   for (const syntax of syntaxes) {
-    let ast = definitionSyntax.parse(syntax);
+    const ast = definitionSyntax.parse(syntax);
     definitionSyntax.walk(ast, processNode);
   }
 
@@ -322,11 +341,10 @@ function getConstituentTypes(itemSyntax) {
     // get the syntaxes for all newly added constituents,
     // and then get the types in those syntaxes
     constituentSyntaxes = [];
-    for (let constituent of allConstituents.slice(oldConstituentsLength)) {
+    for (const constituent of allConstituents.slice(oldConstituentsLength)) {
+      const constituentSyntaxEntry = valuespaces[`<${constituent}>`];
 
-      let constituentSyntaxEntry = valuespaces[`<${constituent}>`];
-
-      if (constituentSyntaxEntry && constituentSyntaxEntry.value) {
+      if (constituentSyntaxEntry?.value) {
         constituentSyntaxes.push(constituentSyntaxEntry.value);
       }
     }

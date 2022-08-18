@@ -1,5 +1,5 @@
-import { WatchMenuItem } from "./atoms/menu-item";
-import { Icon } from "../../atoms/icon";
+import { WatchMenuItem } from "./menu-item";
+import { Icon } from "../../../atoms/icon";
 
 export function NotificationsWatchMenuStart({
   data,
@@ -12,16 +12,13 @@ export function NotificationsWatchMenuStart({
   return (
     <>
       <div>
-        <button
-          onClick={closeDropdown}
-          className="watch-submenu-header mobile-only"
-        >
-          <span className="watch-submenu-header-wrap">
+        <button onClick={closeDropdown} className="header mobile-only">
+          <span className="header-inner">
             <Icon name="chevron" />
             Notifications
           </span>
         </button>
-        <h2 className="watch-submenu-header desktop-only">Notifications</h2>
+        <h2 className="header desktop-only">Notifications</h2>
       </div>
 
       <WatchMenuItem

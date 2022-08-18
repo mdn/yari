@@ -10,7 +10,7 @@ import useSWR from "swr";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 
-import { PageContentContainer } from "../../ui/atoms/page-content";
+import { MainContentContainer } from "../../ui/atoms/page-content";
 
 dayjs.extend(relativeTime);
 
@@ -239,9 +239,9 @@ export function MissingTranslations() {
 
 function Container({ children }: { children: React.ReactNode }) {
   return (
-    <div className="missing-translations">
-      <PageContentContainer>{children}</PageContentContainer>
-    </div>
+    <MainContentContainer className="missing-translations" standalone={true}>
+      {children}
+    </MainContentContainer>
   );
 }
 

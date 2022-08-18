@@ -1,13 +1,13 @@
 import { useState } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 
-import { useGA } from "../../../ga-context";
-import { Translation } from "../../../document/types";
-import { Button } from "../../atoms/button";
-import { Submenu } from "../submenu";
+import { useGA } from "../../../../ga-context";
+import { Translation } from "../../../../../../libs/types/document";
+import { Button } from "../../../atoms/button";
+import { Submenu } from "../../../molecules/submenu";
 
 import "./index.scss";
-import { DropdownMenu, DropdownMenuWrapper } from "../dropdown";
+import { DropdownMenu, DropdownMenuWrapper } from "../../../molecules/dropdown";
 
 // This needs to match what's set in 'libs/constants.js' on the server/builder!
 const PREFERRED_LOCALE_COOKIE_NAME = "preferredlocale";

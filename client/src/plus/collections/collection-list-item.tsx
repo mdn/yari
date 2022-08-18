@@ -1,7 +1,7 @@
 import React from "react";
 import { BookmarkData } from ".";
 import { Button } from "../../ui/atoms/button";
-import { EditCollection } from "../../ui/molecules/collection/edit-collection";
+import { EditCollection } from "./edit-collection";
 import { Breadcrumbs } from "../../ui/molecules/breadcrumbs";
 import { DropdownMenu, DropdownMenuWrapper } from "../../ui/molecules/dropdown";
 import { docCategory } from "../../utils";
@@ -9,7 +9,7 @@ import { _getIconLabel } from "../common";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import { useOnlineStatus } from "../../hooks";
-import { FrequentlyViewedEntry } from "../../document/types";
+import { FrequentlyViewedEntry } from "../../../../libs/types/document";
 
 dayjs.extend(relativeTime);
 

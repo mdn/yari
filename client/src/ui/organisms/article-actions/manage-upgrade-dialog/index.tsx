@@ -1,23 +1,18 @@
-import React from "react";
-import { useLocale } from "../../../hooks";
-import { Button } from "../../atoms/button";
-import { Icon } from "../../atoms/icon";
-import "./index.scss";
+import { useLocale } from "../../../../hooks";
+import { Button } from "../../../atoms/button";
+import { Icon } from "../../../atoms/icon";
 
 export function ManageOrUpgradeDialogNotifications({ setShow }) {
   const locale = useLocale();
 
   return (
     <div
-      className={`watch-submenu manage-upgrade-dialog show`}
+      className="article-actions-submenu manage-upgrade-dialog show"
       role="menu"
       aria-labelledby={`manage-upgrade-dialog-button`}
     >
-      <button
-        onClick={() => setShow(false)}
-        className="watch-submenu-header mobile-only"
-      >
-        <span className="watch-submenu-header-wrap">
+      <button onClick={() => setShow(false)} className="header mobile-only">
+        <span className="header-inner">
           <Icon name="chevron" />
           Back
         </span>
@@ -27,7 +22,7 @@ export function ManageOrUpgradeDialogNotifications({ setShow }) {
         Manage your notifications settings or upgrade to MDN Plus to unlock
         unlimited subscriptions
       </p>
-      <div className="watch-submenu-item is-button-row">
+      <div className="mdn-form-item is-button-row">
         <Button
           type="secondary"
           href={`/${locale}/plus/notifications/watching`}
@@ -45,15 +40,12 @@ export function ManageOrUpgradeDialogCollections({ setShow }) {
 
   return (
     <div
-      className={`manage-upgrade-dialog show`}
+      className="article-actions-submenu manage-upgrade-dialog show"
       role="menu"
-      aria-labelledby={`manage-upgrade-dialog-button`}
+      aria-labelledby="manage-upgrade-dialog-button"
     >
-      <button
-        onClick={() => setShow(false)}
-        className="watch-submenu-header mobile-only"
-      >
-        <span className="watch-submenu-header-wrap">
+      <button onClick={() => setShow(false)} className="header mobile-only">
+        <span className="header-inner">
           <Icon name="chevron" />
           Back
         </span>
@@ -62,7 +54,7 @@ export function ManageOrUpgradeDialogCollections({ setShow }) {
       <p>
         Manage your collection or upgrade to MDN Plus to unlock unlimited saves
       </p>
-      <div className="watch-submenu-item is-button-row">
+      <div className="mdn-form-item is-button-row">
         <Button type="secondary" href={`/${locale}/plus/collections`}>
           Manage
         </Button>
