@@ -37,7 +37,7 @@ if (!query) {
 }
 
 // Read 'polyfills' key
-const polyfill = env['polyfills'];
+const polyfill = env['polyfills'] || "";
 
 const depth = $1 || 1;
 const queries = Array.isArray(query) ? query : [query];
