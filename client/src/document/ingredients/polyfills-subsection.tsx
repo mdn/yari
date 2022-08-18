@@ -62,5 +62,5 @@ export function PolyfillsSubSection({
       );
     }
   }
-  return "";
+  return <></>;
 }
