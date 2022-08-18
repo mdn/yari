@@ -269,6 +269,7 @@ function CellIcons({ support }: { support: BCD.SupportStatement | undefined }) {
     hasNoteworthyNotes(supportItem) && <Icon key="footnote" name="footnote" />,
     supportItem.alternative_name && <Icon key="altname" name="altname" />,
     supportItem.flags && <Icon key="disabled" name="disabled" />,
+    Array.isArray(support) && <Icon key="more" name="more" />,
   ].filter(Boolean);
 
   return icons.length ? <div className="bc-icons">{icons}</div> : null;

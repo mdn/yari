@@ -23,6 +23,7 @@ export const LEGEND_LABELS = {
   disabled: "User must explicitly enable this feature.",
   altname: "Uses a non-standard name.",
   prefix: "Requires a vendor prefix or different name for use.",
+  more: "Has more compatibility info.",
 };
 type LEGEND_KEY = keyof typeof LEGEND_LABELS;
 
@@ -90,6 +91,10 @@ function getActiveLegendItems(
           legendItems.add("disabled");
         }
       }
+
+      if (Array.isArray(browserSupport)) {
+        legendItems.add("more");
+      }
     }
   }
   return Object.keys(LEGEND_LABELS)
@@ -115,6 +120,9 @@ export function Legend({
       <h3 className="visually-hidden" id="Legend">
         Legend
       </h3>
+      <p className="bc-legend-tip">
+        Tip: you can click/tap on a cell for more information.
+      </p>
       <dl className="bc-legend-items-container">
         {getActiveLegendItems(compat, name, browserInfo).map(([key, label]) =>
           ["yes", "partial", "no", "unknown", "preview"].includes(key) ? (

@@ -1,6 +1,6 @@
 import { Button } from "../../atoms/button";
-import { NotificationsWatchMenu } from "../../molecules/notifications-watch-menu";
-import { LanguageMenu } from "../../molecules/language-menu";
+import { NotificationsWatchMenu } from "./notifications-watch-menu";
+import { LanguageMenu } from "./language-menu";
 
 import { useIsServer } from "../../../hooks";
 import { useUserData } from "../../../user-context";
@@ -9,7 +9,8 @@ import { Doc } from "../../../../../libs/types/document";
 
 import "./index.scss";
 
-import { BookmarkContainer } from "../../molecules/collection";
+import { BookmarkContainer } from "./bookmark-menu";
+import { useUIStatus } from "../../../ui-context";
 
 export const ArticleActions = ({
   doc,
@@ -22,12 +23,14 @@ export const ArticleActions = ({
 }) => {
   const userData = useUserData();
   const isServer = useIsServer();
+  const { fullScreenOverlay, setFullScreenOverlay } = useUIStatus();
   const isAuthenticated = userData && userData.isAuthenticated;
   const translations = doc.other_translations || [];
   const { native } = doc;
 
   function toggleArticleActionsMenu() {
     setShowArticleActionsMenu(!showArticleActionsMenu);
+    setFullScreenOverlay(!fullScreenOverlay);
   }
 
   // @TODO we will need the following when including the language drop-down

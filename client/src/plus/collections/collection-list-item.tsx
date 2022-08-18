@@ -1,7 +1,7 @@
 import React from "react";
 import { BookmarkData } from ".";
 import { Button } from "../../ui/atoms/button";
-import { EditCollection } from "../../ui/molecules/collection/edit-collection";
+import { EditCollection } from "./edit-collection";
 import { Breadcrumbs } from "../../ui/molecules/breadcrumbs";
 import { DropdownMenu, DropdownMenuWrapper } from "../../ui/molecules/dropdown";
 import { docCategory } from "../../utils";
