@@ -37,12 +37,11 @@ if (!query) {
 }
 
 // Read 'polyfills' key
-const polyfill = env['polyfills'] || "";
+const polyfills = env['polyfills'] || "";
 
 const depth = $1 || 1;
 const queries = Array.isArray(query) ? query : [query];
 
-//output = polyfills;
 var output = queries.map(query => `<div class="bc-data" data-query="${query}" data-depth="${depth}" data-multiple="${queries.length > 1}" data-polyfills="${polyfills}">
   If you're able to see this, something went wrong on this page.
 </div>`).join("\n");
