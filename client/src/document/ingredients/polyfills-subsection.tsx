@@ -41,23 +41,26 @@ export function PolyfillsSubSection({
   id: string;
   polyfillURLs: string;
 }) {
-  const title = "Polyfills";
+  if (polyfillURLs) {
+    const title = "Polyfills";
 
-  const service = polyfillService(polyfillURLs);
-  if (service === undefined) {
-    return (
-      <>
-        <DisplayH3 id={id} title={title} />
-        Error: Polyfill url not in allowed list.
-      </>
-    );
-  } else {
-    return (
-      <>
-        <DisplayH3 id={id} title={title} />A{" "}
-        <a href={polyfillURLs}> polyfill</a> for this feature is available at{" "}
-        <a href={service.serviceURL}>{service.serviceName}</a>.
-      </>
-    );
+    const service = polyfillService(polyfillURLs);
+    if (service === undefined) {
+      return (
+        <>
+          <DisplayH3 id={id} title={title} />
+          Error: Polyfill url not in allowed list.
+        </>
+      );
+    } else {
+      return (
+        <>
+          <DisplayH3 id={id} title={title} />A{" "}
+          <a href={polyfillURLs}> polyfill</a> for this feature is available at{" "}
+          <a href={service.serviceURL}>{service.serviceName}</a>.
+        </>
+      );
+    }
   }
+  return "";
 }
