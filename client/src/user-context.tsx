@@ -143,7 +143,7 @@ export function UserDataProvider(props: { children: React.ReactNode }) {
       setSessionStorageData(data);
 
       if (data.settings?.colInSearch) {
-        fetchAllCollectionsItems();
+        fetchAllCollectionsItems(null);
       }
       // Let's initialize the MDN Worker if the user is signed in.
       if (!window.mdnWorker && data?.isAuthenticated) {
