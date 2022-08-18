@@ -3,7 +3,7 @@ import { Button } from "../../../ui/atoms/button";
 import MDNModal from "../../../ui/atoms/modal";
 import {
   Collection,
-  addCollection,
+  createCollection,
   NewCollection,
   editCollection,
 } from "./api";
@@ -42,7 +42,7 @@ export default function NewEditCollectionModal({
     const savedCollection =
       "id" in collection
         ? await editCollection(collection)
-        : await addCollection(collection);
+        : await createCollection(collection);
     if (onClose) onClose(savedCollection.id);
     setCollection(defaultCollection);
     setShow(false);

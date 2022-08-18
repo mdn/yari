@@ -120,7 +120,7 @@ export function useCollection(id: string | undefined) {
   );
 }
 
-export async function addCollection(
+export async function createCollection(
   collection: NewCollection
 ): Promise<Collection> {
   const response = await poster<
@@ -150,7 +150,6 @@ export async function deleteCollection(
   const response = await deleter(getCollectionKey(id));
   mutate(COLLECTIONS_ENDPOINT);
   mutate(getCollectionKey(id));
-  // TODO: mutate(getBookmarkKey());
   return response;
 }
 
@@ -201,7 +200,6 @@ export async function addItem(item: NewItem): Promise<Response> {
     getItemsKey(collection_id),
     body
   );
-  mutate(getCollectionKey(collection_id));
   mutate(getBookmarkKey(body.url));
   return response;
 }
