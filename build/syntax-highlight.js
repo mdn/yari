@@ -48,7 +48,7 @@ const loadAllLanguages = lazy(() => {
     "wasm",
     "yaml",
     "pug",
-    "webidl",
+    // "webidl", // block list
   ]);
 });
 
