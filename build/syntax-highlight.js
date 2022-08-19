@@ -60,7 +60,7 @@ const loadAllLanguages = lazy(() => {
 const ALIASES = new Map([
   ["sh", "shell"],
   ["jssyntax", "js"],
-  ["idl", "webidl"],
+  // ["idl", "webidl"],  // block list
 ]);
 
 // Over the years we have accumulated some weird <pre> tags whose
