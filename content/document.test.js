@@ -26,7 +26,7 @@ describe("Document.findAll()", () => {
         pathOnly: true,
       }),
     ];
-    expect(specificFilePaths.length).toBe(1);
+    expect(specificFilePaths).toHaveLength(1);
     expect(specificFilePaths[0]).toBe(randomFile);
   });
 

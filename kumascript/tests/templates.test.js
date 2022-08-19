@@ -104,11 +104,11 @@ describe("Templates class", () => {
 
       const result1 = await macros.render("test1");
       expect(result1).toBe(path.resolve(directory, "test1.ejs"));
-      expect(mockLoader.mock.calls.length).toBe(1);
+      expect(mockLoader.mock.calls).toHaveLength(1);
 
       const result2 = await macros.render("test2");
       expect(result2).toBe(path.resolve(directory, "Test2.ejs"));
-      expect(mockLoader.mock.calls.length).toBe(2);
+      expect(mockLoader.mock.calls).toHaveLength(2);
 
       // Render the macros again, but don't expect any more loads
       // when we're in production mode.
@@ -116,7 +116,7 @@ describe("Templates class", () => {
       await macros.render("test2");
       await macros.render("test1");
       await macros.render("test2");
-      expect(mockLoader.mock.calls.length).toBe(mode === "production" ? 2 : 6);
+      expect(mockLoader.mock.calls).toHaveLength(mode === "production" ? 2 : 6);
     });
   });
 });

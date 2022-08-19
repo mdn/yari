@@ -2,7 +2,7 @@ import React from "react";
 import { useOnlineStatus } from "../../hooks";
 import { Button } from "../../ui/atoms/button";
 import { DropdownMenu, DropdownMenuWrapper } from "../../ui/molecules/dropdown";
-import { Checkbox } from "../../ui/molecules/notifications-watch-menu/atoms/checkbox";
+import { Checkbox } from "../../ui/atoms/checkbox";
 import { docCategory } from "../../utils";
 import { _getIconLabel } from "../common";
 import "./index.scss";

@@ -112,7 +112,7 @@ function checkSidebarResult(html, locale, isUnderWebExtAPI = false) {
   // Check the basics
   expect(section).toBeTruthy();
   // Check the total number of top-level list items that can be toggled
-  expect(section.querySelectorAll("ol > li.toggle").length).toBe(
+  expect(section.querySelectorAll("ol > li.toggle")).toHaveLength(
     SUMMARIES[locale].length
   );
   // Check that all links reference the proper locale or use https

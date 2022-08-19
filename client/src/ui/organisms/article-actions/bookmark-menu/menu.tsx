@@ -1,16 +1,15 @@
 import React, { useEffect } from "react";
 
-import "../notifications-watch-menu/index.scss";
-import { Icon } from "../../atoms/icon";
-import { Button } from "../../atoms/button";
-import { Doc } from "../../../../../libs/types/document";
+import { Icon } from "../../../atoms/icon";
+import { Button } from "../../../atoms/button";
+import { Doc } from "../../../../../../libs/types/document";
 import { BookmarkedData } from ".";
-import { DropdownMenu, DropdownMenuWrapper } from "../dropdown";
+import { DropdownMenu, DropdownMenuWrapper } from "../../../molecules/dropdown";
 import { ManageOrUpgradeDialogCollections } from "../manage-upgrade-dialog";
-import { useUIStatus } from "../../../ui-context";
-import { useOnlineStatus } from "../../../hooks";
+import { useUIStatus } from "../../../../ui-context";
+import { useOnlineStatus } from "../../../../hooks";
 
-const menuId = "watch-submenu";
+const menuId = "bookmark-submenu";
 
 export function getBookmarkApiUrl(params?: URLSearchParams) {
   let url = "/api/v1/plus/collection/";
@@ -127,11 +126,7 @@ export function BookmarkMenu({
     : "padlock";
 
   return (
-    <DropdownMenuWrapper
-      className="watch-menu"
-      isOpen={show}
-      setIsOpen={setShow}
-    >
+    <DropdownMenuWrapper isOpen={show} setIsOpen={setShow}>
       {doc ? (
         <Button
           type="action"
@@ -164,28 +159,30 @@ export function BookmarkMenu({
           <ManageOrUpgradeDialogCollections setShow={setShow} />
         </DropdownMenu>
       ) : (
-        <form method="post" action={apiURL} onSubmit={saveHandler}>
+        <form
+          className="mdn-form"
+          method="post"
+          action={apiURL}
+          onSubmit={saveHandler}
+        >
           <DropdownMenu>
             <div
-              className={`${menuId} show`}
+              className="article-actions-submenu show"
               role="menu"
               aria-labelledby={`${menuId}-button`}
             >
-              <button
-                onClick={cancelHandler}
-                className="watch-submenu-header mobile-only"
-              >
-                <span className="watch-submenu-header-wrap">
+              <button onClick={cancelHandler} className="header mobile-only">
+                <span className="header-inner">
                   <Icon name="chevron" />
                   {saved ? "Edit Collection" : "Add to Collection"}
                 </span>
               </button>
 
-              <h2 className="watch-submenu-header desktop-only">
+              <h2 className="header desktop-only">
                 {saved ? "Edit Collection" : "Add to Collection"}
               </h2>
 
-              <div className="watch-submenu-item pad-y">
+              <div className="mdn-form-item">
                 <label htmlFor="bookmark-name">Name:</label>
                 <input
                   id="bookmark-name"
@@ -197,7 +194,7 @@ export function BookmarkMenu({
                   onKeyDown={enterHandler}
                 />
               </div>
-              <div className="watch-submenu-item">
+              <div className="mdn-form-item">
                 <label htmlFor="bookmark-note">Note:</label>
                 <input
                   id="bookmark-note"
@@ -209,7 +206,7 @@ export function BookmarkMenu({
                   onKeyDown={enterHandler}
                 />
               </div>
-              <div className="watch-submenu-item is-button-row">
+              <div className="mdn-form-item is-button-row">
                 <Button buttonType="submit" isDisabled={isValidating}>
                   Save
                 </Button>
