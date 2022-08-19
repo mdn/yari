@@ -1,6 +1,5 @@
 import "./index.scss";
 import {
-  ENABLE_PLUS_EU,
   FXA_SIGNIN_URL,
   MDN_PLUS_SUBSCRIBE_10M_URL,
   MDN_PLUS_SUBSCRIBE_10Y_URL,
@@ -286,7 +285,7 @@ function OfferOverviewSubscribe() {
 
   useEffect(() => {
     (async () => {
-      if (ENABLE_PLUS_EU && isOnline) {
+      if (isOnline) {
         try {
           const plans: StripePlans = await getStripePlans();
           setOfferDetails(getLocalizedPlans(plans));

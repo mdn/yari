@@ -85,6 +85,7 @@ function extractLocale(folder) {
 function saveFile(filePath, rawBody, metadata, frontMatterKeys = null) {
   const requiredFrontMatterKeys = ["title", "slug"];
   const optionalFrontMatterKeys = [
+    "page-type",
     "tags",
     "translation_of",
     "translation_of_original",

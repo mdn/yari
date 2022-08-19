@@ -42,7 +42,7 @@ export function A11yNav() {
       <li>
         <a
           id="skip-search"
-          href="#top-nav-search-q"
+          href="#top-nav-search-input"
           onClick={sendAccessMenuItemClick}
           onContextMenu={sendAccessMenuItemClick}
         >

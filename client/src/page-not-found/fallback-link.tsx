@@ -2,7 +2,7 @@ import React from "react";
 import { useLocation, useParams } from "react-router-dom";
 import useSWR from "swr";
 
-import { Doc } from "../document/types";
+import { Doc } from "../../../libs/types/document";
 import LANGUAGES_RAW from "../../../libs/languages";
 import NoteCard from "../ui/molecules/notecards";
 
