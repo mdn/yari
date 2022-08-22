@@ -162,7 +162,6 @@ module.exports = {
       flawAttribute = ` data-flaw-src="${util.htmlEscape(flaw.macroSource)}"`;
     }
     // Let's get a potentially localized title for when the document is missing.
-    fs.appendFileSync("/tmp/reads.log", `titleWhenMissing\n`, "utf-8");
     const titleWhenMissing = this.mdn.getLocalString(
       this.web.getJSONData("L10n-Common"),
       "summary"

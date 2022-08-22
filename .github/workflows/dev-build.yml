@@ -81,7 +81,7 @@ jobs:
         run: yarn --frozen-lockfile
 
       - name: Install Python
-        uses: actions/setup-python@v4.0.0
+        uses: actions/setup-python@v4.2.0
         with:
           python-version: "3.8"
 
@@ -162,6 +162,9 @@ jobs:
           # TODO: When the deployer is available this is where we
           # would upload the whole content of client/build
           du -sh client/build
+
+          # Generate sitemap index file
+          yarn build --sitemap-index
 
       - name: Deploy with deployer
         env:

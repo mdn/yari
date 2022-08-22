@@ -11,17 +11,17 @@ export function LocalizedContentNote({
     "en-US": {
       linkText:
         "This page was translated from English by the community. Learn more and join the MDN Web Docs community.",
-      url: "/en-US/docs/MDN/Contribute/Localize#active_locales",
+      url: "/en-US/docs/MDN/Community/Contributing/Translated_content#active_locales",
     },
     fr: {
       linkText:
         "Cette page a été traduite à partir de l'anglais par la communauté. Vous pouvez également contribuer en rejoignant la communauté francophone sur MDN Web Docs.",
-      url: "/fr/docs/MDN/Contribute/Localize#langues_actives",
+      url: "/fr/docs/MDN/Community/Contributing/Translated_content#langues_actives",
     },
     ja: {
       linkText:
         "このページはコミュニティーの尽力で英語から翻訳されました。MDN Web Docs コミュニティーについてもっと知り、仲間になるにはこちらから。",
-      url: "/ja/docs/MDN/Contribute/Localize#active_locales",
+      url: "/ja/docs/MDN/Community/Contributing/Translated_content#アクティブなロケール",
     },
     ko: {
       linkText:
@@ -34,7 +34,7 @@ export function LocalizedContentNote({
     "zh-CN": {
       linkText:
         "此页面由社区从英文翻译而来。了解更多并加入 MDN Web Docs 社区。",
-      url: "/zh-CN/docs/MDN/Contribute/Localize#活跃语言",
+      url: "/zh-CN/docs/MDN/Community/Contributing/Translated_content#活跃语言",
     },
   };
   const inactiveLocaleNoteContent = {
@@ -53,15 +53,12 @@ export function LocalizedContentNote({
   };
 
   const linkText = isActive
-    ? (activeLocaleNoteContent[locale] &&
-        activeLocaleNoteContent[locale].linkText) ||
+    ? activeLocaleNoteContent[locale]?.linkText ||
       activeLocaleNoteContent["en-US"].linkText
-    : (inactiveLocaleNoteContent[locale] &&
-        inactiveLocaleNoteContent[locale].linkText) ||
+    : inactiveLocaleNoteContent[locale]?.linkText ||
       inactiveLocaleNoteContent["en-US"].linkText;
   const url = isActive
-    ? (activeLocaleNoteContent[locale] &&
-        activeLocaleNoteContent[locale].url) ||
+    ? activeLocaleNoteContent[locale]?.url ||
       activeLocaleNoteContent["en-US"].url
     : "https://github.com/mdn/translated-content/blob/main/PEERS_GUIDELINES.md#activating-a-locale";
 

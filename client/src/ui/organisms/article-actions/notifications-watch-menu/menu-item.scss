@@ -1,0 +1,47 @@
+.watch-menu-item {
+  background-color: transparent;
+  border-bottom: 1px solid var(--border-primary);
+  padding: 0;
+  color: var(--text-primary);
+  cursor: pointer;
+
+  &:first-of-type {
+    border-top-width: 0;
+  }
+
+  &-inner {
+    display: grid;
+    grid-template-columns: 16px 1fr;
+    grid-template-areas:
+      "status label"
+      "status text";
+    gap: 0.5rem;
+    padding: 0.8125rem var(--gutter-padding);
+    text-align: left;
+  }
+
+  &:focus &-inner {
+    outline: 1px solid var(--button-secondary-border-focus);
+    box-shadow: var(--focus-effect);
+  }
+
+  &:hover &-inner {
+    background-color: var(--border-secondary);
+  }
+
+  &-status {
+    grid-area: status;
+  }
+
+  &-label {
+    font-family: var(--font-body);
+    font-size: var(--type-smaller-font-size);
+    font-weight: var(--font-body-strong-weight);
+    grid-area: label;
+  }
+
+  &-text {
+    font-size: var(--type-smaller-font-size);
+    grid-area: text;
+  }
+}

@@ -67,6 +67,8 @@ class CollectionsInterceptor implements FetchInterceptor {
   }
 
   async onGet(req: Request): Promise<Response> {
+    const params = new URL(req.url).searchParams;
+    const url = params.get("url");
     try {
       const res = await fetch(req);
       const json = await res.clone().json();
@@ -74,11 +76,11 @@ class CollectionsInterceptor implements FetchInterceptor {
         this.db.collections.bulkPut(json.items);
       } else if (json?.bookmarked) {
         this.db.collections.put(json.bookmarked);
+      } else if (json?.bookmarked === null && url) {
+        this.db.collections.where("url").equals(url).delete();
       }
       return res;
     } catch (err) {
-      const params = new URL(req.url).searchParams;
-      const url = params.get("url");
       if (url) {
         //Single request case.
         const item = await this.db.collections.get({ url: url });

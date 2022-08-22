@@ -3,13 +3,13 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useCombobox } from "downshift";
 import useSWR from "swr";
 
-import { Doc, FuzzySearch } from "./fuzzy-search";
 import { preload, preloadSupported } from "./document/preloading";
 
 import { Button } from "./ui/atoms/button";
 
 import { useLocale } from "./hooks";
 import { SearchProps, useFocusViaKeyboard } from "./search-utils";
+import { useUserData } from "./user-context";
 
 const PRELOAD_WAIT_MS = 500;
 const SHOW_INDEXING_AFTER_MS = 500;
@@ -17,11 +17,11 @@ const SHOW_INDEXING_AFTER_MS = 500;
 type Item = {
   url: string;
   title: string;
+  collection: boolean;
 };
 
 type SearchIndex = {
   flex: any;
-  fuzzy: FuzzySearch;
   items: null | Item[];
 };
 
@@ -29,6 +29,7 @@ type ResultItem = {
   title: string;
   url: string;
   positions: Set<number>;
+  collection: boolean;
 };
 
 function useSearchIndex(): readonly [
@@ -40,6 +41,7 @@ function useSearchIndex(): readonly [
   const [searchIndex, setSearchIndex] = useState<null | SearchIndex>(null);
   // Default to 'en-US' if you're on the home page without the locale prefix.
   const { locale = "en-US" } = useParams();
+  const user = useUserData();
 
   const url = `/${locale}/search-index.json`;
 
@@ -56,26 +58,50 @@ function useSearchIndex(): readonly [
   );
 
   useEffect(() => {
-    if (!data || searchIndex) {
+    if (!data) {
       return;
     }
+    const gather = async () => {
+      const collection: Item[] = [];
+      if (user?.settings?.colInSearch) {
+        const all = await import("./settings/db").then(({ getCollection }) =>
+          getCollection()
+        );
+        collection.push(
+          ...all.map((item) => {
+            return { ...item, collection: true };
+          })
+        );
+      }
+      const collectionSet = new Set(collection.map(({ url }) => url));
+      const mixed = [
+        ...collection,
+        ...data
+          .filter(({ url }) => !collectionSet.has(url))
+          .map((item) => {
+            return { ...item, collection: false };
+          }),
+      ];
 
-    const flex = data.map(({ title }, i) => [i, title.toLowerCase()]);
-    const fuzzy = new FuzzySearch(data as Doc[]);
+      const flex = mixed.map(({ title }, i) => [i, title.toLowerCase()]);
 
-    setSearchIndex({ flex, fuzzy, items: data! });
-  }, [searchIndex, shouldInitialize, data]);
+      setSearchIndex({
+        flex,
+        items: mixed!,
+      });
+    };
+    gather();
+  }, [
+    shouldInitialize,
+    data,
+    user?.settings?.colInSearch,
+    user?.mdnWorker?.mutationCounter,
+  ]);
 
   return useMemo(
     () => [searchIndex, error || null, () => setShouldInitialize(true)],
     [searchIndex, error, setShouldInitialize]
   );
-}
-
-// The fuzzy search is engaged if the search term starts with a '/'
-// and does not have any spaces in it.
-function isFuzzySearchString(str: string) {
-  return str.startsWith("/") && !/\s/.test(str);
 }
 
 function HighlightMatch({ title, q }: { title: string; q: string }) {
@@ -203,32 +229,17 @@ function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
     // overlaying search results don't trigger a scroll.
     const limit = window.innerHeight < 850 ? 5 : 10;
 
-    if (isFuzzySearchString(inputValue)) {
-      if (inputValue === "/") {
-        return [];
-      } else {
-        const fuzzyResults = searchIndex.fuzzy.search(inputValue.slice(1), {
-          limit,
-        });
-        return fuzzyResults.map((fuzzyResult) => ({
-          url: fuzzyResult.item.url,
-          title: fuzzyResult.item.title,
-          positions: fuzzyResult.positions,
-        }));
-      }
-    } else {
-      const q: string[] = inputValue
-        .toLowerCase()
-        .split(" ")
-        .map((s) => s.trim());
-      const indexResults: number[] = searchIndex.flex
-        .filter(([_, title]) => q.every((q) => title.includes(q)))
-        .map(([i]) => i)
-        .slice(0, limit);
-      return indexResults.map(
-        (index: number) => (searchIndex.items || [])[index] as ResultItem
-      );
-    }
+    const q: string[] = inputValue
+      .toLowerCase()
+      .split(" ")
+      .map((s) => s.trim());
+    const indexResults: number[] = searchIndex.flex
+      .filter(([_, title]) => q.every((q) => title.includes(q)))
+      .map(([i]) => i)
+      .slice(0, limit);
+    return indexResults.map(
+      (index: number) => (searchIndex.items || [])[index] as ResultItem
+    );
   }, [inputValue, searchIndex, searchIndexError]);
 
   const formAction = `/${locale}/search`;
@@ -384,7 +395,8 @@ function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
                   key: item.url,
                   className:
                     "result-item " +
-                    (i === highlightedIndex ? "highlight" : ""),
+                    (i === highlightedIndex ? "highlight " : " ") +
+                    (item.collection ? "qs-collection " : " "),
                   item,
                   index: i,
                 })}
@@ -435,9 +447,6 @@ function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
               </a>
             </div>,
           ]
-        )}
-        {isFuzzySearchString(inputValue) && (
-          <div className="fuzzy-engaged">Fuzzy searching by URI</div>
         )}
       </>
     );

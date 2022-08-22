@@ -29,9 +29,6 @@ export const KUMA_HOST =
 export const PLUS_IS_ENABLED = Boolean(
   process.env.REACT_APP_ENABLE_PLUS || "false"
 );
-export const PLUS_IS_AVAILABLE_OVERRIDE = JSON.parse(
-  process.env.REACT_APP_PLUS_IS_AVAILABLE_OVERRIDE || "null"
-);
 
 export const MDN_PLUS_SUBSCRIBE_5M_URL = `${process.env.REACT_APP_MDN_PLUS_SUBSCRIBE_URL}?plan=${process.env.REACT_APP_MDN_PLUS_5M_PLAN}`;
 export const MDN_PLUS_SUBSCRIBE_5Y_URL = `${process.env.REACT_APP_MDN_PLUS_SUBSCRIBE_URL}?plan=${process.env.REACT_APP_MDN_PLUS_5Y_PLAN}`;
@@ -50,16 +47,6 @@ export const FXA_MANAGE_SUBSCRIPTIONS_URL =
 export const DEFAULT_GEO_COUNTRY =
   process.env.REACT_APP_DEFAULT_GEO_COUNTRY || "United States";
 
-export const ENABLE_PLUS_EU = Boolean(
-  JSON.parse(process.env.REACT_APP_ENABLE_PLUS_EU || "false")
-);
-
-export const PLUS_ENABLED_COUNTRIES =
-  process.env.REACT_APP_PLUS_ENABLED_COUNTRIES?.split(",") || [
-    "United States",
-    "Canada",
-  ];
-
 export const IEX_DOMAIN =
   process.env.REACT_APP_INTERACTIVE_EXAMPLES_BASE_URL ||
   "https://interactive-examples.mdn.mozilla.net";
@@ -69,6 +56,28 @@ export const UPDATES_BASE_URL =
   "https://updates.developer.allizom.org";
 
 // TODO Inline after 2022-07-01.
-export const SURVEY_START = Number(process.env.REACT_APP_SURVEY_START || 0);
-export const SURVEY_RATE = Number(process.env.REACT_APP_SURVEY_RATE || 1);
-export const SURVEY_END = Number(process.env.REACT_APP_SURVEY_END || Infinity);
+export function survey_duration(surveyBucket: string): {
+  start: number;
+  end: number;
+} {
+  const start = Number(
+    process.env[`REACT_APP_SURVEY_START_${surveyBucket}`] || 0
+  );
+  const end = Number(
+    process.env[`REACT_APP_SURVEY_END_${surveyBucket}`] || Infinity
+  );
+  return { start, end };
+}
+
+export function survey_rates(surveyKey: string): {
+  rateFrom: number;
+  rateTill: number;
+} {
+  const rateFrom = Number(
+    process.env[`REACT_APP_SURVEY_RATE_FROM_${surveyKey}`] || 0
+  );
+  const rateTill = Number(
+    process.env[`REACT_APP_SURVEY_RATE_TILL_${surveyKey}`] || 1
+  );
+  return { rateFrom, rateTill };
+}

@@ -47,13 +47,15 @@ export function listFeatures(
   }
 
   for (const [subName, subIdentifier] of Object.entries(identifier)) {
-    if (subName !== "__compat" && subIdentifier.__compat) {
+    if (subName !== "__compat" && (subIdentifier as BCD.Identifier).__compat) {
       features.push({
         name: parentName ? `${parentName}.${subName}` : subName,
-        compat: subIdentifier.__compat,
+        compat: (subIdentifier as BCD.Identifier).__compat!,
         depth: depth + 1,
       });
-      features.push(...listFeatures(subIdentifier, subName, "", depth + 1));
+      features.push(
+        ...listFeatures(subIdentifier as BCD.Identifier, subName, "", depth + 1)
+      );
     }
   }
   return features;
@@ -97,37 +99,6 @@ function hasMajorLimitation(support: BCD.SimpleSupportStatement) {
     support.version_removed
   );
 }
-
-export function isOnlySupportedWithAltName(
-  support: BCD.SupportStatement | undefined
-) {
-  return (
-    support &&
-    getFirst(support).alternative_name &&
-    !asList(support).some((item) => isFullySupportedWithoutLimitation(item))
-  );
-}
-
-export function isOnlySupportedWithPrefix(
-  support: BCD.SupportStatement | undefined
-) {
-  return (
-    support &&
-    getFirst(support).prefix &&
-    !asList(support).some((item) => isFullySupportedWithoutLimitation(item))
-  );
-}
-
-export function isOnlySupportedWithFlags(
-  support: BCD.SupportStatement | undefined
-) {
-  return (
-    support &&
-    getFirst(support).flags &&
-    !asList(support).some((item) => isFullySupportedWithoutLimitation(item))
-  );
-}
-
 export function isFullySupportedWithoutLimitation(
   support: BCD.SimpleSupportStatement
 ) {

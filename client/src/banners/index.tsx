@@ -14,8 +14,8 @@ import { BannerId } from "./ids";
 
 const ActiveBanner = React.lazy(() => import("./active-banner"));
 
-const currentBannerId: BannerId | null = null;
-const daysToEmbargo = 7;
+const currentBannerId: BannerId | null = BannerId.PLUS_LAUNCH_ANNOUNCEMENT;
+const daysToEmbargo = 30;
 
 export function Banner() {
   if (currentBannerId && (CRUD_MODE || !isEmbargoed(currentBannerId))) {

@@ -4,5 +4,5 @@
     "module": "CommonJS",
     "sourceMap": true
   },
-  "include": ["filecheck", "tool"]
+  "include": ["filecheck", "server", "tool"]
 }
