@@ -231,7 +231,7 @@ describe("Environment class", () => {
     const rendered = await templateFunction("foo", ["1", "2"]);
 
     expect(rendered).toBe("hello world");
-    expect(mockRender.mock.calls.length).toBe(1);
+    expect(mockRender.mock.calls).toHaveLength(1);
     expect(mockRender.mock.calls[0][0]).toBe("foo");
     expect(getValue(mockRender.mock.calls[0][1], "$0")).toBe("1");
     expect(getValue(mockRender.mock.calls[0][1], "$1")).toBe("2");

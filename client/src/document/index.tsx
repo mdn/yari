@@ -11,7 +11,7 @@ import {
   useCopyExamplesToClipboard,
   usePersistFrequentlyViewed,
 } from "./hooks";
-import { Doc } from "./types";
+import { Doc } from "../../../libs/types/document";
 // Ingredients
 import { Prose } from "./ingredients/prose";
 import { LazyBrowserCompatibilityTable } from "./lazy-bcd-table";
@@ -259,8 +259,8 @@ function RenderDocumentBody({ doc }) {
 
 function LoadingError({ error }) {
   return (
-    <div className="standard-page">
-      <div id="content" className="page-content-container loading-error">
+    <div className="main-wrapper">
+      <div id="content" className="main-content loading-error">
         <h3>Loading Error</h3>
         {error instanceof window.Response ? (
           <p>

@@ -13,10 +13,16 @@ const lazy = (creator) => {
 };
 
 const loadAllLanguages = lazy(() => {
+  // Some languages are always loaded by Prism, so we can omit them here:
+  // - Markup (atom, html, markup, mathml, rss, ssml, svg, xml)
+  // - CSS (css)
+  // - C-like (clike)
+  // - JavaScript (javascript, js)
   loadLanguages([
     "python",
     "bash",
     "batch",
+    "powershell",
     "sql",
     "json",
     "glsl",
@@ -29,6 +35,20 @@ const loadAllLanguages = lazy(() => {
     "toml",
     "md",
     "cs",
+    "jsx",
+    "typescript",
+    "diff",
+    "ini",
+    "ignore",
+    "less",
+    "regex",
+    "scss",
+    "sql",
+    "uri",
+    "wasm",
+    "yaml",
+    "pug",
+    // "webidl", // block list
   ]);
 });
 
@@ -37,7 +57,11 @@ const loadAllLanguages = lazy(() => {
 // Prism expects. It'd be hard to require that content writers
 // have to stick to the exact naming conventions that Prism uses
 // because Prism is an implementation detail.
-const ALIASES = new Map([["sh", "shell"]]);
+const ALIASES = new Map([
+  ["sh", "shell"],
+  ["jssyntax", "js"],
+  // ["idl", "webidl"],  // block list
+]);
 
 // Over the years we have accumulated some weird <pre> tags whose
 // brush is more or less "junk".

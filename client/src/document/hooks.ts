@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useLocation, useParams } from "react-router-dom";
 import { useIsServer } from "../hooks";
-import { Doc, FrequentlyViewedEntry } from "./types";
+import { Doc, FrequentlyViewedEntry } from "../../../libs/types/document";
 
 export function useDocumentURL() {
   const { "*": slug, locale } = useParams();

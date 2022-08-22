@@ -13,24 +13,6 @@ describeMacro("Deprecated_Inline", function () {
 </abbr>`
     );
   });
-  itMacro('"semver" string only (en-US)', function (macro) {
-    return assert.eventually.equal(
-      macro.call("1.9.2"),
-      `<span class="notecard inline deprecated" title="(Firefox 3.6 / Thunderbird 3.1 / Fennec 1.0)">Deprecated since Gecko 1.9.2</span>`
-    );
-  });
-  itMacro("Numeric version only (en-US)", function (macro) {
-    return assert.eventually.equal(
-      macro.call(45),
-      `<span class="notecard inline deprecated" title="(Firefox 45 / Thunderbird 45 / SeaMonkey 2.42)">Deprecated since Gecko 45</span>`
-    );
-  });
-  itMacro("Gecko-prefixed version (en-US)", function (macro) {
-    return assert.eventually.equal(
-      macro.call("gecko45"),
-      `<span class="notecard inline deprecated" title="(Firefox 45 / Thunderbird 45 / SeaMonkey 2.42)">Deprecated since Gecko 45</span>`
-    );
-  });
   itMacro("HTML-prefixed version (en-US)", function (macro) {
     return assert.eventually.equal(
       macro.call("html4"),
