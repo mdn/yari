@@ -18,7 +18,6 @@ export const Menu = ({ menu, isOpen, toggle }: MenuProps) => {
         id={buttonId}
         className="top-level-entry menu-toggle"
         aria-controls={submenuId}
-        aria-haspopup="menu"
         aria-expanded={isOpen}
         onClick={() => {
           toggle(menu.id);
