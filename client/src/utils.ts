@@ -58,7 +58,11 @@ export function switchTheme(theme: string, set: (theme: string) => void) {
   if (window && html) {
     html.className = theme;
     html.style.backgroundColor = "";
-    window.localStorage.setItem("theme", theme);
+    try {
+      window.localStorage.setItem("theme", theme);
+    } catch (err) {
+      console.warn("Failed to write theme to localStorage", err);
+    }
     set(theme);
     postToIEx(theme);
   }

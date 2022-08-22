@@ -124,10 +124,16 @@ export class MDNWorker {
   }
 
   offlineSettings(): SettingsData {
-    return (
-      JSON.parse(window.localStorage.getItem("MDNSettings") || "null") ??
-      new SettingsData()
-    );
+    let settingsData: SettingsData | null = null;
+    try {
+      settingsData = JSON.parse(
+        window.localStorage.getItem("MDNSettings") || "null"
+      );
+    } catch (err) {
+      console.warn("Unable to retreive MDNSettings from localStorage", err);
+    }
+
+    return settingsData ?? new SettingsData();
   }
 
   async setOfflineSettings(settingsData: SettingsData): Promise<SettingsData> {
@@ -165,7 +171,11 @@ export class MDNWorker {
     }
 
     const settings = { ...current, ...settingsData };
-    window.localStorage.setItem("MDNSettings", JSON.stringify(settings));
+    try {
+      window.localStorage.setItem("MDNSettings", JSON.stringify(settings));
+    } catch (err) {
+      console.warn("Unable to save MDNSettings to localStorage", err);
+    }
     this.settings = settings;
     return settings;
   }

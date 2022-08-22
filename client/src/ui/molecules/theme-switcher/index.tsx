@@ -46,7 +46,12 @@ export const ThemeSwitcher = () => {
   };
 
   React.useEffect(() => {
-    const theme = localStorage.getItem("theme");
+    let theme: string | null = null;
+    try {
+      theme = localStorage.getItem("theme");
+    } catch (e) {
+      // If localStorage is not supported, then we always use OS theme
+    }
 
     if (theme) {
       switchTheme(theme, setActiveTheme);
