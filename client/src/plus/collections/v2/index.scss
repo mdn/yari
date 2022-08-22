@@ -1,0 +1,130 @@
+@use "../../../ui/vars" as *;
+
+.collections-v2 {
+  padding: 1rem 0;
+
+  & > header {
+    padding: 1rem 0;
+
+    .container {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      flex-wrap: wrap;
+
+      & > * {
+        margin-bottom: 1rem;
+      }
+    }
+
+    .exit {
+      margin-top: -1rem;
+      flex: 100%;
+    }
+
+    h1 {
+      font-size: 20px;
+      margin-right: 1rem;
+    }
+
+    .count {
+      color: var(--text-secondary);
+    }
+
+    p {
+      color: var(--text-secondary);
+      margin-top: 0;
+      display: none;
+    }
+
+    @media screen and (min-width: $screen-md) {
+      h1 {
+        font-size: 24px;
+      }
+
+      .count {
+        flex: 1;
+      }
+
+      p {
+        display: block;
+        flex: 100%;
+      }
+    }
+  }
+
+  & > .container {
+    display: grid;
+    gap: 1em;
+
+    @media screen and (min-width: $screen-md) {
+      grid-template-columns: repeat(auto-fill, minmax(20rem, 1fr));
+    }
+  }
+
+  article {
+    border: 1px solid var(--border-secondary);
+    border-radius: var(--elem-radius);
+    box-shadow: var(--shadow-02);
+    padding: 1em;
+    display: flex;
+    flex-direction: column;
+
+    header {
+      display: grid;
+      grid-template-columns: auto min-content;
+    }
+
+    h2 {
+      font-size: var(--type-base-font-size-rem);
+      line-height: var(--heading-line-height);
+      margin: calc(
+          (
+              var(--form-elem-height) - var(--type-base-font-size-rem) *
+                var(--heading-line-height)
+            ) / 2
+        )
+        0;
+      overflow-wrap: anywhere;
+      align-self: center;
+
+      a {
+        color: var(--text-primary);
+      }
+    }
+
+    .breadcrumbs {
+      color: var(--text-secondary);
+      font-size: var(--type-smaller-font-size);
+      font-style: italic;
+    }
+
+    p {
+      margin: 0;
+    }
+
+    footer {
+      margin-top: auto;
+      padding-top: 1rem;
+      color: var(--text-secondary);
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      flex-wrap: wrap;
+    }
+
+    time {
+      font-size: var(--type-smaller-font-size);
+    }
+
+    @media screen and (max-width: $screen-md) {
+      .count {
+        display: none;
+      }
+    }
+  }
+
+  .pagination {
+    grid-column: 1/-1;
+  }
+}

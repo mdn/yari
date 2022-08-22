@@ -13,12 +13,20 @@ import {
 } from "../../../ui/molecules/dropdown";
 import MDNModal from "../../../ui/atoms/modal";
 
+import "./index.scss";
+
+import dayjs from "dayjs";
+import relativeTime from "dayjs/plugin/relativeTime";
+dayjs.extend(relativeTime);
+
 export default function Collections() {
   return (
-    <Routes>
-      <Route path="/" element={<Overview />} />
-      <Route path=":collectionId" element={<CollectionComponent />} />
-    </Routes>
+    <div className="collections-v2">
+      <Routes>
+        <Route path="/" element={<Overview />} />
+        <Route path=":collectionId" element={<CollectionComponent />} />
+      </Routes>
+    </div>
   );
 }
 
@@ -29,21 +37,19 @@ function Overview() {
 
   return (
     <>
-      <header className="plus-header">
+      <header>
         <Container>
           <h1>Collections</h1>
           <Button onClickHandler={() => setShowCreate(true)}>
-            Create Collection
+            New Collection
           </Button>
           <NewCollectionModal show={showCreate} setShow={setShowCreate} />
         </Container>
       </header>
       <Container>
-        <ul className="icon-card-list">
-          {data?.map((collection) => (
-            <CollectionCard key={collection.id} {...{ collection }} />
-          ))}
-        </ul>
+        {data?.map((collection) => (
+          <CollectionCard key={collection.id} {...{ collection }} />
+        ))}
       </Container>
     </>
   );
@@ -61,13 +67,11 @@ function CollectionCard({ collection }: { collection: Collection }) {
   };
 
   return (
-    <li key={collection.id} className="icon-card">
-      <div className="icon-card-title-wrap">
-        <div className="icon-card-content">
-          <h2 className="icon-card-title">
-            <Link to={collection.id}>{collection.name}</Link>
-          </h2>
-        </div>
+    <article key={collection.id}>
+      <header>
+        <h2>
+          <Link to={collection.id}>{collection.name}</Link>
+        </h2>
         {collection.name !== "Default" ? (
           <DropdownMenuWrapper
             className="dropdown is-flush-right"
@@ -146,10 +150,17 @@ function CollectionCard({ collection }: { collection: Collection }) {
             </div>
           </div>
         </MDNModal>
-      </div>
-      {collection.description && (
-        <p className="icon-card-description">{collection.description}</p>
-      )}
-    </li>
+      </header>
+      {collection.description && <p>{collection.description}</p>}
+      <footer>
+        <span className="count">
+          {collection.article_count}{" "}
+          {collection.article_count === 1 ? "article" : "articles"}
+        </span>
+        <time dateTime={dayjs(collection.updated_at).toISOString()}>
+          Edited {dayjs(collection.updated_at).fromNow().toString()}
+        </time>
+      </footer>
+    </article>
   );
 }
