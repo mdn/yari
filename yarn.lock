@@ -2305,10 +2305,10 @@
   resolved "https://registry.yarnpkg.com/@types/node/-/node-14.18.18.tgz#5c9503030df484ccffcbb935ea9a9e1d6fad1a20"
   integrity sha512-B9EoJFjhqcQ9OmQrNorItO+OwEOORNn3S31WuiHvZY/dm9ajkB7AKD/8toessEtHHNL+58jofbq7hMMY9v4yig==
 
-"@types/node@^16.11.49":
-  version "16.11.49"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-16.11.49.tgz#560b1ea774b61e19a89c3fc72d2dcaa3863f38b2"
-  integrity sha512-Abq9fBviLV93OiXMu+f6r0elxCzRwc0RC5f99cU892uBITL44pTvgvEqlRlPRi8EGcO1z7Cp8A4d0s/p3J/+Nw==
+"@types/node@^16.11.52":
+  version "16.11.52"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-16.11.52.tgz#d797437435455f237800c171d05639f0335c37b9"
+  integrity sha512-GnstYouCa9kbYokBCWEVrszJ1P2rGAQpKrqACHKuixkaT8XGu8nsqHvEUIGqDs5vwtsJ7LrYqnPDKRD1V+M39A==
 
 "@types/normalize-package-data@^2.4.0":
   version "2.4.1"
@@ -6615,10 +6615,10 @@ hpack.js@^2.1.6:
     readable-stream "^2.0.1"
     wbuf "^1.1.0"
 
-html-dom-parser@3.1.0:
-  version "3.1.0"
-  resolved "https://registry.yarnpkg.com/html-dom-parser/-/html-dom-parser-3.1.0.tgz#67b30022809fd88c116ec5be3ab3baf4af37ef8f"
-  integrity sha512-8j4aA7la5X4R2ilxCNuj+2Rt/DolMO3bVk6rGQIbegljmfwjog7P92CYPdwWsVctRc+EY5gyxBKuoYHtyUB5Sg==
+html-dom-parser@3.1.1:
+  version "3.1.1"
+  resolved "https://registry.yarnpkg.com/html-dom-parser/-/html-dom-parser-3.1.1.tgz#1d39b708c93a2bff2fa9c61a3848aeb864560416"
+  integrity sha512-yYRQBPQ/Z2Lo0cW8YE0DtKhA6BtLoCRz2subcEVkVMymBRVH6kkCTrau/DimD9BvME6+tXpUSqNGvR08y3NMlQ==
   dependencies:
     domhandler "5.0.3"
     htmlparser2 "8.0.1"
@@ -6653,13 +6653,13 @@ html-minifier-terser@^6.0.2:
     relateurl "^0.2.7"
     terser "^5.10.0"
 
-html-react-parser@^3.0.2:
-  version "3.0.2"
-  resolved "https://registry.yarnpkg.com/html-react-parser/-/html-react-parser-3.0.2.tgz#065a61939ff248b495a146e2bd5f78e43755e04f"
-  integrity sha512-01mExjRWLvb+vKySk0SkxCQgrH3Iyvl+Ze+l63EH91ON2Brdp75JvPxK7n+4FsCsKECdob/Ol2xa7BLmbKN8hw==
+html-react-parser@^3.0.3:
+  version "3.0.3"
+  resolved "https://registry.yarnpkg.com/html-react-parser/-/html-react-parser-3.0.3.tgz#7eb1a128e99622cfe05aadb45c052c3de73e2a1b"
+  integrity sha512-LIrqhoW6bi2LMc0/+9tIjHaJYb0NaTgIggZPPF+fpkqVj/Yl7+pzsNw4ubD5BVjqt+Ym3P29bzDNSzccXgnJmA==
   dependencies:
     domhandler "5.0.3"
-    html-dom-parser "3.1.0"
+    html-dom-parser "3.1.1"
     react-property "2.0.0"
     style-to-js "1.1.1"
 
@@ -6668,10 +6668,10 @@ html-tags@^3.1.0:
   resolved "https://registry.yarnpkg.com/html-tags/-/html-tags-3.2.0.tgz#dbb3518d20b726524e4dd43de397eb0a95726961"
   integrity sha512-vy7ClnArOZwCnqZgvv+ddgHgJiAFXe3Ge9ML5/mBctVJoUoYPCdxVucOywjDARn6CVoh3dRSFdPHy2sX80L0Wg==
 
-html-validate@^7.3.0:
-  version "7.3.0"
-  resolved "https://registry.yarnpkg.com/html-validate/-/html-validate-7.3.0.tgz#ba6bb829ecd264e59438590adb1cf3e92d94b7f5"
-  integrity sha512-gv8HCN/2O8P78ENNNzSfLxxqSLv6u28+49Nyib7uLQKOwkUj06mvH7XKFN7kA196vvxST6f9X+MJCwYi8rUhTQ==
+html-validate@^7.3.1:
+  version "7.3.1"
+  resolved "https://registry.yarnpkg.com/html-validate/-/html-validate-7.3.1.tgz#5d79658fc4d84bc4809595f753bcbca2f8e35f5a"
+  integrity sha512-iG3oIi4O5ehXLodxvOzrhUeilGNL5H1RbShCVp4Gx29HiKbnpDxGd3kribYqNMpPUau9mIBBLzkClhakccYZ1Q==
   dependencies:
     "@babel/code-frame" "^7.10.0"
     "@html-validate/stylish" "^3.0.0"
@@ -11106,10 +11106,10 @@ sass-loader@^13.0.2:
     klona "^2.0.4"
     neo-async "^2.6.2"
 
-sass@^1.54.4:
-  version "1.54.4"
-  resolved "https://registry.yarnpkg.com/sass/-/sass-1.54.4.tgz#803ff2fef5525f1dd01670c3915b4b68b6cba72d"
-  integrity sha512-3tmF16yvnBwtlPrNBHw/H907j8MlOX8aTBnlNX1yrKx24RKcJGPyLhFUwkoKBKesR3unP93/2z14Ll8NicwQUA==
+sass@^1.54.5:
+  version "1.54.5"
+  resolved "https://registry.yarnpkg.com/sass/-/sass-1.54.5.tgz#93708f5560784f6ff2eab8542ade021a4a947b3a"
+  integrity sha512-p7DTOzxkUPa/63FU0R3KApkRHwcVZYC0PLnLm5iyZACyp15qSi32x7zVUhRdABAATmkALqgGrjCJAcWvobmhHw==
   dependencies:
     chokidar ">=3.0.0 <4.0.0"
     immutable "^4.0.0"
