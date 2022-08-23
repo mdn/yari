@@ -443,7 +443,7 @@ async function buildDocument(document, documentOptions = {}) {
     $("[data-flaw-src]").removeAttr("data-flaw-src");
   }
 
-  doc.title = metadata.title;
+  doc.title = metadata.title || "";
   doc.mdn_url = document.url;
   doc.locale = metadata.locale;
   doc.native = LANGUAGES.get(doc.locale.toLowerCase()).native;
