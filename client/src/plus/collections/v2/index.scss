@@ -73,6 +73,7 @@
     header {
       display: grid;
       grid-template-columns: auto min-content;
+      align-items: start;
     }
 
     h2 {

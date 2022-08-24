@@ -1,7 +1,8 @@
-import { useEffect, useState } from "react";
-import { useNavigationType, useParams } from "react-router";
+import { useState } from "react";
+import { useParams } from "react-router";
 import { Link } from "react-router-dom";
 import { KeyedMutator } from "swr";
+import { useScrollToTop } from "../../../hooks";
 import { Button } from "../../../ui/atoms/button";
 import Container from "../../../ui/atoms/container";
 import { Loading } from "../../../ui/atoms/loading";
@@ -28,22 +29,19 @@ export default function CollectionComponent() {
     mutate,
   } = useItems(collectionId);
 
-  const navigationType = useNavigationType();
-  useEffect(() => {
-    if (navigationType === "PUSH") document.documentElement.scrollTo(0, 0);
-  }, [navigationType]);
+  useScrollToTop();
 
   return collection ? (
     <>
       <header>
         <Container>
           <Link to="../" className="exit">
-            &larr; Exit
+            &larr; Back
           </Link>
           <h1>{collection.name}</h1>
           <span className="count">
             {collection.article_count}{" "}
-            {collection.article_count > 0 ? "articles" : "article"}
+            {collection.article_count === 1 ? "article" : "articles"}
           </span>
           {collection.description && <p>{collection.description}</p>}
         </Container>
@@ -82,6 +80,14 @@ function ItemComponent({
   const [showEdit, setShowEdit] = useState(false);
   const [showDelete, setShowDelete] = useState(false);
   const [formItem, setFormItem] = useState(item);
+
+  const breadcrumbs = item.parents
+    .slice(0, -1)
+    .map((parent) => parent.title)
+    .filter(
+      // remove duplicated titles
+      (title, index, titles) => title !== titles[index + 1]
+    );
 
   const deleteHandler = async (e: React.MouseEvent) => {
     e.preventDefault();
@@ -241,15 +247,7 @@ function ItemComponent({
           </div>
         </MDNModal>
       </header>
-      <div className="breadcrumbs">
-        {item.parents
-          .slice(0, -1)
-          .map(
-            (parent, index, parents) =>
-              parent.title !== parents[index + 1]?.title &&
-              (index ? " > " : "") + parent.title
-          )}
-      </div>
+      <div className="breadcrumbs">{breadcrumbs.join(" > ")}</div>
       {item.notes && <p>{item.notes}</p>}
       <footer>
         <time dateTime={dayjs(item.updated_at).toISOString()}>
