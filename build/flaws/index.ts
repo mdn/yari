@@ -291,7 +291,8 @@ export async function fixFixableFlaws(doc, options, document) {
       console.log(
         chalk.yellow(
           `Would modify "${document.fileInfo.path}" from fixable flaws.`
-        )
+        ),
+        { newRawBody, rawBody }
       );
     } else {
       Document.update(document.url, newRawBody, document.metadata, isMarkdown);
