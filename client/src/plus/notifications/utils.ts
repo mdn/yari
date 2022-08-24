@@ -6,11 +6,10 @@ import {
   NOTIFICATIONS_MARK_ALL_AS_READ_PATH,
 } from "../common/api";
 
-export async function post(url: string, csrfToken: string, data?: object) {
+export async function post(url: string, data?: object) {
   const fetchData: { method: string; headers: HeadersInit; body?: string } = {
     method: "POST",
     headers: {
-      "X-CSRFToken": csrfToken,
       "Content-Type": "application/json",
     },
   };
@@ -30,15 +29,11 @@ export function getCookie(name) {
   if (parts.length === 2) return parts.pop()?.split(";").shift();
 }
 
-function registerSendBeaconHandler(formData: FormData) {
-  formData.append("csrfmiddlewaretoken", getCookie("csrftoken") || "");
+function registerSendBeaconHandler() {
   // if the user clicks a hard link, we set notifications as read using a sendBeacon request
   const handler = () => {
     if (document.visibilityState === "hidden") {
-      navigator.sendBeacon(
-        NOTIFICATIONS_MARK_ALL_AS_READ_PATH,
-        new URLSearchParams([...(formData as any)])
-      );
+      navigator.sendBeacon(NOTIFICATIONS_MARK_ALL_AS_READ_PATH);
     }
   };
   document.addEventListener("visibilitychange", handler);
@@ -47,15 +42,13 @@ function registerSendBeaconHandler(formData: FormData) {
 
 export function useVisibilityChangeListener() {
   return useEffect(() => {
-    const formData = new FormData();
-    formData.append("csrfmiddlewaretoken", getCookie("csrftoken") || "");
-    const visibilityChangeHandler = registerSendBeaconHandler(formData);
+    const visibilityChangeHandler = registerSendBeaconHandler();
 
     return () => {
       // if the user clicks a react-router Link, we remove the sendBeacon handler
       // and send a fetch request to mark notifications as read
       document.removeEventListener("visibilitychange", visibilityChangeHandler);
-      markNotificationsAsRead(formData).then(async () => {
+      markNotificationsAsRead().then(async () => {
         // await mutate(apiUrl);
         await mutate(HEADER_NOTIFICATIONS_MENU_API_URL);
       });

@@ -90,9 +90,6 @@ export function BookmarkMenu({
     const response = await fetch(form.action, {
       method: form.method,
       body: new URLSearchParams([...(formData as any)]),
-      headers: {
-        "X-CSRFToken": data.csrfmiddlewaretoken,
-      },
     });
     if (!response.ok) {
       const json = await response.json();
