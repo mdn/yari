@@ -56,13 +56,14 @@ export function extractSections($: cheerio.CheerioAPI) {
     .eq(0);
 
   const body = $("#_body")[0] as cheerio.ParentNode;
-  const iterable = [...body.childNodes].filter(
-    (child): child is cheerio.Element => child.type != "text"
-  );
+  const iterable = [...body.childNodes];
 
   let c = 0;
   iterable.forEach((child) => {
-    if (child.tagName === "h2" || child.tagName === "h3") {
+    if (
+      (child as cheerio.Element).tagName === "h2" ||
+      (child as cheerio.Element).tagName === "h3"
+    ) {
       if (c) {
         const [subSections, subFlaws] = addSections(section.clone());
         sections.push(...subSections);
