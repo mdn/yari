@@ -9,7 +9,7 @@ export interface Source {
 
 export interface GenericFlaw {
   id: string;
-  explanation: string;
+  explanation?: string;
   suggestion: string | null;
   fixable?: boolean;
   fixed?: true;
