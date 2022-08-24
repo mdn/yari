@@ -168,6 +168,11 @@ var text = mdn.localStringMap({
       'Accessible_multimedia' : 'Accessible multimedia',
       'Mobile_accessibility' : 'Mobile accessibility',
       'Assessment_Accessibility_troubleshooting' : 'Assessment: Accessibility troubleshooting',
+    'MathML_Writing_mathematics' : 'MathML — Writing mathematics with MathML',
+      'MathML_first_steps': 'MathML first steps',
+        'MathML_first_steps_overview': 'MathML first steps overview',
+        'Getting_started_with_MathML': 'Getting started with MathML',
+        'Assessment_Three_famous_mathematical_formulas': 'Assessment: Three famous mathematical formulas',
     'Tools_and_testing' : 'Tools and testing',
       'Cross_browser_testing' : 'Cross browser testing',
         'Cross_browser_testing_overview' : 'Cross browser testing overview',
@@ -1870,6 +1875,17 @@ var text = mdn.localStringMap({
             <li><a href="<%=baseURL%>Accessibility/Accessibility_troubleshooting"><%=text['Assessment_Accessibility_troubleshooting']%></a></li>
         </ol>
     </details>
+  </li>
+  <li data-default-state="<%=currentPageIsUnder('MathML')%>"><a href="<%=baseURL%>MathML"><strong><%=text['MathML_Writing_mathematics']%></strong></a></li>
+  <li class="toggle">
+      <details <%=currentPageIsUnder('MathML/First_steps')%>>
+          <summary><%=text['MathML_first_steps']%></summary>
+          <ol>
+            <li><a href="<%=baseURL%>MathML/First_steps"><%=text['MathML_first_steps_overview']%></a></li>
+            <li><a href="<%=baseURL%>MathML/First_steps/Getting_started"><%=text['Getting_started_with_MathML']%></a></li>
+            <li><a href="<%=baseURL%>MathML/First_steps/Three_famous_mathematical_formulas"><%=text['Assessment_Three_famous_mathematical_formulas']%></a></li>
+          </ol>
+      </details>
   </li>
   <li><a href="<%=baseURL%>Tools_and_testing"><strong><%=text['Tools_and_testing']%></strong></a></li>
   <li class="toggle">
