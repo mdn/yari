@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useParams } from "react-router";
 import { Link } from "react-router-dom";
 import { KeyedMutator } from "swr";
+import { useScrollToTop } from "../../../hooks";
 import { Button } from "../../../ui/atoms/button";
 import Container from "../../../ui/atoms/container";
 import { Loading } from "../../../ui/atoms/loading";
@@ -10,7 +11,12 @@ import {
   DropdownMenu,
   DropdownMenuWrapper,
 } from "../../../ui/molecules/dropdown";
+import { camelWrap } from "../../../utils";
 import { deleteItem, editItem, Item, useCollection, useItems } from "./api";
+
+import dayjs from "dayjs";
+import relativeTime from "dayjs/plugin/relativeTime";
+dayjs.extend(relativeTime);
 
 export default function CollectionComponent() {
   const { collectionId } = useParams();
@@ -23,21 +29,27 @@ export default function CollectionComponent() {
     mutate,
   } = useItems(collectionId);
 
+  useScrollToTop();
+
   return collection ? (
     <>
-      <header className="plus-header">
+      <header>
         <Container>
-          <Link to="../">Exit Collection</Link>
+          <Link to="../" className="exit">
+            &larr; Back
+          </Link>
           <h1>{collection.name}</h1>
-          <p>{collection.description}</p>
+          <span className="count">
+            {collection.article_count}{" "}
+            {collection.article_count === 1 ? "article" : "articles"}
+          </span>
+          {collection.description && <p>{collection.description}</p>}
         </Container>
       </header>
       <Container>
-        <ul className="icon-card-list">
-          {itemPages?.flat(1).map((item) => (
-            <ItemComponent key={item.id} {...{ item, mutate }} />
-          ))}
-        </ul>
+        {itemPages?.flat(1).map((item) => (
+          <ItemComponent key={item.id} {...{ item, mutate }} />
+        ))}
         {!atEnd && (
           <div className="pagination">
             <Button
@@ -68,6 +80,14 @@ function ItemComponent({
   const [showEdit, setShowEdit] = useState(false);
   const [showDelete, setShowDelete] = useState(false);
   const [formItem, setFormItem] = useState(item);
+
+  const breadcrumbs = item.parents
+    .slice(0, -1)
+    .map((parent) => parent.title)
+    .filter(
+      // remove duplicated titles
+      (title, index, titles) => title !== titles[index + 1]
+    );
 
   const deleteHandler = async (e: React.MouseEvent) => {
     e.preventDefault();
@@ -100,13 +120,11 @@ function ItemComponent({
   };
 
   return (
-    <li key={item.url} className="icon-card">
-      <div className="icon-card-title-wrap">
-        <div className="icon-card-content">
-          <h2 className="icon-card-title">
-            <Link to={item.url}>{item.title}</Link>
-          </h2>
-        </div>
+    <article key={item.url}>
+      <header>
+        <h2>
+          <Link to={item.url}>{camelWrap(item.title)}</Link>
+        </h2>
         <DropdownMenuWrapper
           className="dropdown is-flush-right"
           isOpen={showDropdown}
@@ -228,8 +246,14 @@ function ItemComponent({
             </div>
           </div>
         </MDNModal>
-      </div>
-      {item.notes && <p className="icon-card-description">{item.notes}</p>}
-    </li>
+      </header>
+      <div className="breadcrumbs">{breadcrumbs.join(" > ")}</div>
+      {item.notes && <p>{item.notes}</p>}
+      <footer>
+        <time dateTime={dayjs(item.updated_at).toISOString()}>
+          Edited {dayjs(item.updated_at).fromNow().toString()}
+        </time>
+      </footer>
+    </article>
   );
 }

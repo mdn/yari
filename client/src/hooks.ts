@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigationType, useParams } from "react-router-dom";
 
 // This is a bit of a necessary hack!
 // The only reason this list is needed is because of the PageNotFound rendering.
@@ -81,4 +81,11 @@ export function useIsServer(): boolean {
   const [isServer, setIsServer] = useState(true);
   useEffect(() => setIsServer(false), []);
   return isServer;
+}
+
+export function useScrollToTop() {
+  const navigationType = useNavigationType();
+  useEffect(() => {
+    if (navigationType === "PUSH") document.documentElement.scrollTo(0, 0);
+  }, [navigationType]);
 }

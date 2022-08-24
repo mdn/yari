@@ -18,6 +18,7 @@ export interface Collection extends NewCollection {
   id: string;
   created_at: string;
   updated_at: string;
+  article_count: number;
 }
 
 export interface NewItem {
@@ -29,9 +30,17 @@ export interface NewItem {
 
 export interface Item extends NewItem {
   id: string;
+  created_at: string;
+  updated_at: string;
+  parents: ItemParent[];
 }
 
-const PAGE_SIZE = 10;
+export interface ItemParent {
+  uri: string;
+  title: string;
+}
+
+const PAGE_SIZE = 12; // 12 is a nice composite number for our grids
 const COLLECTIONS_ENDPOINT = "/api/v2/collections/";
 
 function getCollectionKey(

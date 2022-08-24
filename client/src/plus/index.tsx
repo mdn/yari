@@ -66,13 +66,13 @@ export function Plus({ pageTitle, ...props }: { pageTitle?: string }) {
         path="collections/*"
         element={
           <Layout>
-            <div className="bookmarks girdle">
-              {userData?.settings?.multipleCollections ? (
-                <CollectionsV2 />
-              ) : (
+            {userData?.settings?.multipleCollections ? (
+              <CollectionsV2 />
+            ) : (
+              <div className="bookmarks girdle">
                 <Collections />
-              )}
-            </div>
+              </div>
+            )}
           </Layout>
         }
       />

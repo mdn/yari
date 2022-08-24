@@ -25,7 +25,8 @@ export interface CollectionItem {
   title: string;
   notes?: string;
   parents: CollectionParent[];
-  created: string;
+  created_at: string;
+  updated_at: string;
 }
 
 export interface CollectionParent {
