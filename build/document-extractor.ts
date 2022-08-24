@@ -328,18 +328,18 @@ function addSections($: cheerio.Cheerio<cheerio.Element>): SectionsAndFlaws {
 function _addSingleSpecialSection(
   $: cheerio.Cheerio<cheerio.Element>
 ): Section[] {
-  let id: string = "";
-  let title: string = "";
+  let id: string | null = null;
+  let title: string | null = null;
   let isH3 = false;
 
   const h2s = $.find("h2");
   if (h2s.length === 1) {
-    id = h2s.attr("id") ?? "";
+    id = h2s.attr("id");
     title = h2s.text();
   } else {
     const h3s = $.find("h3");
     if (h3s.length === 1) {
-      id = h3s.attr("id") ?? "";
+      id = h3s.attr("id");
       title = h3s.text();
       isH3 = true;
     }
@@ -678,8 +678,8 @@ function _addSingleSpecialSection(
 function _addSectionProse(
   $: cheerio.Cheerio<cheerio.Element>
 ): SectionsAndFlaws {
-  let id: string = "";
-  let title: string = "";
+  let id: string | null = null;
+  let title: string | null = null;
   let titleAsText: string = "";
   let isH3 = false;
 
