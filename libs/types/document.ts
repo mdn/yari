@@ -162,8 +162,8 @@ export type Section = ProseSection | SpecificationsSection | BCDSection;
 export interface ProseSection {
   type: "prose";
   value: {
-    id: string;
-    title: string;
+    id: string | null;
+    title: string | null;
     isH3: boolean;
     content?: string;
     titleAsText?: string;
