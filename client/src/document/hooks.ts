@@ -207,6 +207,12 @@ export function usePersistFrequentlyViewed(doc: Doc | undefined) {
       localStorage.getItem(FREQUENTLY_VIEWED_STORAGE_KEY) || "[]"
     );
 
+    // give id to old entries
+    frequentlyViewed.forEach((e) => {
+      e.index =
+        e.index === undefined ? getNextIndex(frequentlyViewed) : e.index;
+    });
+
     const newEntry: FrequentlyViewedEntry = {
       index: getNextIndex(frequentlyViewed),
       url: doc.mdn_url,
