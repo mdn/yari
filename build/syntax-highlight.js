@@ -19,36 +19,36 @@ const loadAllLanguages = lazy(() => {
   // - C-like (clike)
   // - JavaScript (javascript, js)
   loadLanguages([
-    "python",
     "bash",
     "batch",
-    "powershell",
-    "sql",
-    "json",
-    "glsl",
-    "php",
+    "c",
     "cpp",
-    "java",
-    "http",
-    "wasm",
-    "rust",
-    "toml",
-    "md",
     "cs",
-    "jsx",
-    "typescript",
     "diff",
-    "ini",
+    "glsl",
+    "http",
     "ignore",
+    "ini",
+    "java",
+    "json",
+    "jsx",
     "less",
+    "md",
+    "php",
+    "powershell",
+    "pug",
+    "python",
     "regex",
+    "rust",
     "scss",
     "sql",
+    "toml",
+    "tsx",
+    "typescript",
     "uri",
     "wasm",
-    "yaml",
-    "pug",
     // "webidl", // block list
+    "yaml",
   ]);
 });
 
@@ -58,9 +58,9 @@ const loadAllLanguages = lazy(() => {
 // have to stick to the exact naming conventions that Prism uses
 // because Prism is an implementation detail.
 const ALIASES = new Map([
-  ["sh", "shell"],
-  ["jssyntax", "js"],
   // ["idl", "webidl"],  // block list
+  ["jssyntax", "js"],
+  ["sh", "shell"],
 ]);
 
 // Over the years we have accumulated some weird <pre> tags whose
