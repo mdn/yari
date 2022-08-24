@@ -47,8 +47,8 @@ const loadAllLanguages = lazy(() => {
     "typescript",
     "uri",
     "wasm",
-    "yaml",
     // "webidl", // block list
+    "yaml",
   ]);
 });
 
@@ -58,9 +58,9 @@ const loadAllLanguages = lazy(() => {
 // have to stick to the exact naming conventions that Prism uses
 // because Prism is an implementation detail.
 const ALIASES = new Map([
-  ["sh", "shell"],
-  ["jssyntax", "js"],
   // ["idl", "webidl"],  // block list
+  ["jssyntax", "js"],
+  ["sh", "shell"],
 ]);
 
 // Over the years we have accumulated some weird <pre> tags whose
