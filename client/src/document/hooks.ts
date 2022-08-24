@@ -156,7 +156,7 @@ export function useFrequentlyViewed(): [
       localStorage.getItem(FREQUENTLY_VIEWED_STORAGE_KEY) || "[]"
     ) as FrequentlyViewedEntry[];
 
-    // give id to old entries
+    // give index to old entries
     entries.forEach((e) => {
       e.index = e.index === undefined ? getNextIndex(entries) : e.index;
     });
@@ -207,7 +207,7 @@ export function usePersistFrequentlyViewed(doc: Doc | undefined) {
       localStorage.getItem(FREQUENTLY_VIEWED_STORAGE_KEY) || "[]"
     );
 
-    // give id to old entries
+    // give index to old entries
     frequentlyViewed.forEach((e) => {
       e.index =
         e.index === undefined ? getNextIndex(frequentlyViewed) : e.index;
