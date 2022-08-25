@@ -46,7 +46,7 @@ export function extractSidebar($: cheerio.CheerioAPI) {
   return sidebarHtml;
 }
 
-export function extractSections($: cheerio.CheerioAPI) {
+export function extractSections($: cheerio.CheerioAPI): [Section[], string[]] {
   const flaws: string[] = [];
   const sections: Section[] = [];
   const section = cheerio

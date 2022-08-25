@@ -1,8 +1,8 @@
 import { Doc, Flaws, LanguageItem } from "../libs/types";
-const fs = require("fs");
-const path = require("path");
+import fs from "fs";
+import path from "path";
 
-const chalk = require("chalk");
+import chalk from "chalk";
 import * as cheerio from "cheerio";
 import {
   MacroDeprecatedError,
@@ -11,34 +11,34 @@ import {
   SourceCodeError,
 } from "../kumascript/src/errors";
 
-const { Document, Image, execGit } = require("../content");
-const { CONTENT_ROOT, REPOSITORY_URLS } = require("../libs/env");
-const kumascript = require("../kumascript");
+import { Document, Image, execGit } from "../content";
+import { CONTENT_ROOT, REPOSITORY_URLS } from "../libs/env";
+import kumascript from "../kumascript";
 
-const { FLAW_LEVELS } = require("../libs/constants");
-const {
+import { FLAW_LEVELS } from "../libs/constants";
+import {
   extractSections,
   extractSidebar,
   extractSummary,
-} = require("./document-extractor");
+} from "./document-extractor";
 export { default as SearchIndex } from "./search-index";
-const { addBreadcrumbData } = require("./document-utils");
-const { fixFixableFlaws, injectFlaws, injectSectionFlaws } = require("./flaws");
+import { addBreadcrumbData } from "./document-utils";
+import { fixFixableFlaws, injectFlaws, injectSectionFlaws } from "./flaws";
 import { normalizeBCDURLs, extractBCDData, BCDData } from "./bcd-urls";
-const { checkImageReferences, checkImageWidths } = require("./check-images");
-const { getPageTitle } = require("./page-title");
-const { syntaxHighlight } = require("./syntax-highlight");
-const { formatNotecards } = require("./format-notecards");
-export const { default: buildOptions } = require("./build-options");
-export const { gather: gatherGitHistory } = require("./git-history");
-export const { buildSPAs } = require("./spas");
-const { renderCache: renderKumascriptCache } = require("../kumascript");
+import { checkImageReferences, checkImageWidths } from "./check-images";
+import { getPageTitle } from "./page-title";
+import { syntaxHighlight } from "./syntax-highlight";
+import { formatNotecards } from "./format-notecards";
+import { default as buildOptions } from "./build-options";
+export { gather as gatherGitHistory } from "./git-history";
+export { buildSPAs } from "./spas";
+import { renderCache as renderKumascriptCache } from "../kumascript";
 const LANGUAGES_RAW = require("../libs/languages") as Record<
   string,
   LanguageItem
 >;
-const { safeDecodeURIComponent } = require("../kumascript/src/api/util");
-const { wrapTables } = require("./wrap-tables");
+import { safeDecodeURIComponent } from "../kumascript/src/api/util";
+import { wrapTables } from "./wrap-tables";
 
 // TODO Deduplicate.
 
@@ -305,14 +305,21 @@ export interface BuiltDocument {
   };
 }
 
+interface DocumentOptions {
+  clearKumascriptRenderCache?: boolean;
+}
+
 export async function buildDocument(
   document,
-  documentOptions = {}
+  documentOptions: DocumentOptions = {}
 ): Promise<BuiltDocument> {
   // Important that the "local" document options comes last.
   // And use Object.assign to create a new object instead of mutating the
   // global one.
-  const options = Object.assign({}, buildOptions, documentOptions);
+  const options = {
+    ...buildOptions,
+    ...documentOptions,
+  };
   const { metadata, fileInfo } = document;
 
   if (Document.urlToFolderPath(document.url) !== document.fileInfo.folder) {
