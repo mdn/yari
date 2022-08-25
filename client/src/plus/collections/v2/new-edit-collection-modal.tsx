@@ -44,7 +44,7 @@ export default function NewEditCollectionModal({
         ? await editCollection(collection)
         : await createCollection(collection);
     if (onClose) onClose(savedCollection.id);
-    setCollection(defaultCollection);
+    setCollection(savedCollection);
     setShow(false);
   };
 
