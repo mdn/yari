@@ -1,8 +1,15 @@
+import { Doc, Flaws, LanguageItem } from "../libs/types";
 const fs = require("fs");
 const path = require("path");
 
 const chalk = require("chalk");
-const cheerio = require("cheerio");
+import * as cheerio from "cheerio";
+import {
+  MacroDeprecatedError,
+  MacroLiveSampleError,
+  MacroRedirectedLinkError,
+  SourceCodeError,
+} from "../kumascript/src/errors";
 
 const { Document, Image, execGit } = require("../content");
 const { CONTENT_ROOT, REPOSITORY_URLS } = require("../libs/env");
@@ -14,23 +21,28 @@ const {
   extractSidebar,
   extractSummary,
 } = require("./document-extractor");
-const SearchIndex = require("./search-index");
+export { default as SearchIndex } from "./search-index";
 const { addBreadcrumbData } = require("./document-utils");
 const { fixFixableFlaws, injectFlaws, injectSectionFlaws } = require("./flaws");
-const { normalizeBCDURLs, extractBCDData } = require("./bcd-urls");
+import { normalizeBCDURLs, extractBCDData, BCDData } from "./bcd-urls";
 const { checkImageReferences, checkImageWidths } = require("./check-images");
 const { getPageTitle } = require("./page-title");
 const { syntaxHighlight } = require("./syntax-highlight");
 const { formatNotecards } = require("./format-notecards");
-const buildOptions = require("./build-options");
-const { gather: gatherGitHistory } = require("./git-history");
-const { buildSPAs } = require("./spas");
+export const { default: buildOptions } = require("./build-options");
+export const { gather: gatherGitHistory } = require("./git-history");
+export const { buildSPAs } = require("./spas");
 const { renderCache: renderKumascriptCache } = require("../kumascript");
-const LANGUAGES_RAW = require("../libs/languages");
+const LANGUAGES_RAW = require("../libs/languages") as Record<
+  string,
+  LanguageItem
+>;
 const { safeDecodeURIComponent } = require("../kumascript/src/api/util");
 const { wrapTables } = require("./wrap-tables");
 
-const LANGUAGES = new Map(
+// TODO Deduplicate.
+
+const LANGUAGES = new Map<string, LanguageItem>(
   Object.entries(LANGUAGES_RAW).map(([locale, data]) => {
     return [locale.toLowerCase(), data];
   })
@@ -214,7 +226,7 @@ function getGitHubURL(root, folder, filename) {
  * Return the full URL directly to the last commit affecting this file on GitHub.
  * @param {String} hash - the full hash to point to.
  */
-function getLastCommitURL(root, hash) {
+export function getLastCommitURL(root, hash) {
   const baseURL = `https://github.com/${REPOSITORY_URLS[root]}`;
   return `${baseURL}/commit/${hash}`;
 }
@@ -275,7 +287,28 @@ function getAdjacentImages(documentDirectory) {
     .map((dirent) => path.join(documentDirectory, dirent.name));
 }
 
-async function buildDocument(document, documentOptions = {}) {
+interface ExtendedDoc extends Omit<Doc, "flaws"> {
+  // TODO Check why these are not part of Doc.
+  flaws: Partial<Flaws>;
+  summary: string;
+  popularity: number;
+  noIndexing: boolean;
+}
+
+export interface BuiltDocument {
+  doc: Doc;
+  liveSamples: any;
+  fileAttachments: any;
+  bcdData: BCDData[];
+  source?: {
+    github_url: string;
+  };
+}
+
+export async function buildDocument(
+  document,
+  documentOptions = {}
+): Promise<BuiltDocument> {
   // Important that the "local" document options comes last.
   // And use Object.assign to create a new object instead of mutating the
   // global one.
@@ -292,13 +325,17 @@ async function buildDocument(document, documentOptions = {}) {
     isMarkdown: document.isMarkdown,
     isTranslated: document.isTranslated,
     isActive: document.isActive,
-  };
+    flaws: {},
+  } as Partial<ExtendedDoc>;
 
-  doc.flaws = {};
+  interface LiveSample {
+    id: string;
+    html: string;
+  }
 
-  let flaws = [];
+  let flaws: any[] = [];
   let renderedHtml = "";
-  const liveSamples = [];
+  const liveSamples: LiveSample[] = [];
 
   if (options.clearKumascriptRenderCache) {
     renderKumascriptCache.clear();
@@ -398,20 +435,24 @@ async function buildDocument(document, documentOptions = {}) {
       // The 'flaws' array don't have everything we need from the
       // kumascript rendering, so we "beef it up" to have convenient
       // attributes needed.
-      doc.flaws.macros = flaws.map((flaw, i) => {
+      doc.flaws = doc.flaws ?? {};
+      doc.flaws.macros = flaws.map((flaw: any, i) => {
         let fixable = false;
-        let suggestion = null;
+        let suggestion: string | null = null;
         if (flaw.name === "MacroDeprecatedError") {
           fixable = true;
           suggestion = "";
         } else if (
           flaw.name === "MacroRedirectedLinkError" &&
-          (!flaw.filepath || flaw.filepath === document.fileInfo.path)
+          (!(flaw as MacroRedirectedLinkError).filepath ||
+            (flaw as MacroRedirectedLinkError).filepath ===
+              document.fileInfo.path)
         ) {
           fixable = true;
-          suggestion = flaw.macroSource.replace(
-            flaw.redirectInfo.current,
-            flaw.redirectInfo.suggested
+          suggestion = (flaw as MacroRedirectedLinkError).macroSource.replace(
+            (flaw as MacroRedirectedLinkError).redirectInfo.current,
+
+            (flaw as MacroRedirectedLinkError).redirectInfo.suggested
           );
         }
         const id = `macro${i}`;
@@ -445,8 +486,8 @@ async function buildDocument(document, documentOptions = {}) {
 
   doc.title = metadata.title || "";
   doc.mdn_url = document.url;
-  doc.locale = metadata.locale;
-  doc.native = LANGUAGES.get(doc.locale.toLowerCase()).native;
+  doc.locale = metadata.locale as string;
+  doc.native = LANGUAGES.get(doc.locale.toLowerCase())?.native;
 
   // If the document contains <math> HTML, it will set `doc.hasMathML=true`.
   // The client (<Document/> component) needs to know this for loading polyfills.
@@ -563,9 +604,9 @@ async function buildDocument(document, documentOptions = {}) {
 
   // Creates new mdn_url's for the browser-compatibility-table to link to
   // pages within this project rather than use the absolute URLs
-  normalizeBCDURLs(doc, options);
+  normalizeBCDURLs(doc as Doc, options);
 
-  const bcdData = extractBCDData(doc);
+  const bcdData = extractBCDData(doc as Doc);
 
   // If the document has a `.popularity` make sure don't bother with too
   // many significant figures on it.
@@ -587,7 +628,7 @@ async function buildDocument(document, documentOptions = {}) {
       otherTranslations.push({
         locale: "en-US",
         title: translationOf.metadata.title,
-        native: LANGUAGES.get("en-us").native,
+        native: LANGUAGES.get("en-us")?.native,
       });
     }
   }
@@ -611,10 +652,17 @@ async function buildDocument(document, documentOptions = {}) {
     document.metadata.slug.startsWith("orphaned/") ||
     document.metadata.slug.startsWith("conflicting/");
 
-  return { doc, liveSamples, fileAttachments, bcdData };
+  // TODO Refactor to avoid `as Doc` type assertion.
+  return { doc: doc as Doc, liveSamples, fileAttachments, bcdData };
 }
 
-async function buildLiveSamplePageFromURL(url) {
+interface BuiltLiveSamplePage {
+  id: string;
+  html: string | null;
+  flaw: MacroLiveSampleError | null;
+}
+
+export async function buildLiveSamplePageFromURL(url) {
   // The 'url' is expected to be something
   // like '/en-us/docs/foo/bar/_sample_.myid.html' and from that we want to
   // extract '/en-us/docs/foo/bar' and 'myid'. But only if it matches.
@@ -627,14 +675,14 @@ async function buildLiveSamplePageFromURL(url) {
   if (!document) {
     throw new Error(`No document found for ${documentURL}`);
   }
-  const liveSamplePage = kumascript
-    .buildLiveSamplePages(
+  const liveSamplePage = (
+    kumascript.buildLiveSamplePages(
       document.url,
       document.metadata.title,
       (await kumascript.render(document.url))[0],
       document.rawBody
-    )
-    .find((page) => page.id.toLowerCase() == decodedSampleID);
+    ) as BuiltLiveSamplePage[]
+  ).find((page) => page.id.toLowerCase() == decodedSampleID);
 
   if (liveSamplePage) {
     if (liveSamplePage.flaw) {
@@ -651,7 +699,10 @@ async function buildLiveSamplePageFromURL(url) {
 // This is used by the builder (yarn build) and by the server (JIT).
 // Someday, this function might change if we decide to include the list
 // of GitHub usernames that have contributed to it since it moved to GitHub.
-function renderContributorsTxt(wikiContributorNames = null, githubURL = null) {
+export function renderContributorsTxt(
+  wikiContributorNames: string[] | null = null,
+  githubURL: string | null = null
+) {
   let txt = "";
   if (githubURL) {
     // Always show this first
@@ -662,17 +713,3 @@ function renderContributorsTxt(wikiContributorNames = null, githubURL = null) {
   }
   return txt;
 }
-
-module.exports = {
-  buildDocument,
-
-  buildLiveSamplePageFromURL,
-  renderContributorsTxt,
-
-  SearchIndex,
-
-  options: buildOptions,
-  gatherGitHistory,
-  buildSPAs,
-  getLastCommitURL,
-};

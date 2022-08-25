@@ -7,7 +7,7 @@ import path from "path";
 import { fdir, PathsOutput } from "fdir";
 
 import { getPopularities } from "../content";
-import { options as buildOptions } from "../build";
+import { buildOptions } from "../build";
 
 import { FLAW_LEVELS } from "../libs/constants";
 import { BUILD_OUT_ROOT } from "../libs/env";

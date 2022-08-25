@@ -24,7 +24,7 @@ const { CONTENT_ROOT, CONTENT_TRANSLATED_ROOT } = require("../libs/env");
 const CONFLICTING = "conflicting";
 const ORPHANED = "orphaned";
 
-function syncAllTranslatedContent(locale) {
+export function syncAllTranslatedContent(locale) {
   if (!CONTENT_TRANSLATED_ROOT) {
     throw new Error(
       "CONTENT_TRANSLATED_ROOT must be set to sync translated content!"
@@ -103,7 +103,7 @@ function mdOrHtmlExists(filePath) {
   );
 }
 
-function syncTranslatedContent(inFilePath, locale) {
+export function syncTranslatedContent(inFilePath, locale) {
   if (!CONTENT_TRANSLATED_ROOT) {
     throw new Error(
       "CONTENT_TRANSLATED_ROOT must be set to sync translated content!"
@@ -237,20 +237,14 @@ function syncTranslatedContent(inFilePath, locale) {
   return status;
 }
 
-function syncTranslatedContentForAllLocales() {
+export function syncTranslatedContentForAllLocales() {
   let moved = 0;
   for (const locale of VALID_LOCALES.keys()) {
     if (locale == "en-us") {
       continue;
     }
-    const { stats: { movedDocs = 0 } = {} } = syncAllTranslatedContent(locale);
+    const { movedDocs = 0 } = syncAllTranslatedContent(locale);
     moved += movedDocs;
   }
   return moved;
 }
-
-module.exports = {
-  syncTranslatedContent,
-  syncAllTranslatedContent,
-  syncTranslatedContentForAllLocales,
-};
