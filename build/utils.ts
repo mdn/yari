@@ -1,17 +1,17 @@
-const fs = require("fs");
-const path = require("path");
+import fs from "fs";
+import path from "path";
 
-const cheerio = require("cheerio");
-const got = require("got");
-const FileType = require("file-type");
-const imagemin = require("imagemin");
-const imageminPngquant = require("imagemin-pngquant");
-const imageminMozjpeg = require("imagemin-mozjpeg");
-const imageminGifsicle = require("imagemin-gifsicle");
-const imageminSvgo = require("imagemin-svgo");
-const sanitizeFilename = require("sanitize-filename");
+import * as cheerio from "cheerio";
+import got from "got";
+import FileType from "file-type";
+import imagemin from "imagemin";
+import imageminPngquant from "imagemin-pngquant";
+import imageminMozjpeg from "imagemin-mozjpeg";
+import imageminGifsicle from "imagemin-gifsicle";
+import imageminSvgo from "imagemin-svgo";
+import sanitizeFilename from "sanitize-filename";
 
-const { VALID_MIME_TYPES } = require("../libs/constants");
+import { VALID_MIME_TYPES } from "../libs/constants";
 
 export function humanFileSize(size) {
   if (size < 1024) return `${size} B`;
@@ -144,9 +144,9 @@ export function splitSections(rawHTML) {
     .load("<div></div>", { decodeEntities: false })("div")
     .eq(0);
 
-  const iterable = [...$("#_body")[0].childNodes];
+  const iterable = [...($("#_body")[0] as cheerio.Element).childNodes];
   let c = 0;
-  iterable.forEach((child) => {
+  iterable.forEach((child: cheerio.Element) => {
     if (child.tagName === "h2") {
       if (c) {
         blocks.push(section.clone());
