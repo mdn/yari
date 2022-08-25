@@ -8,6 +8,7 @@
   "files": [
     "index.js",
     "build.js",
+    "mask.js",
     "redirects.json",
     "fallback-paths.json"
   ],

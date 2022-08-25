@@ -2,6 +2,7 @@
 /* eslint-disable node/no-missing-require */
 const { DEFAULT_LOCALE, VALID_LOCALES } = require("@yari-internal/constants");
 const DEFAULT_LOCALE_LC = DEFAULT_LOCALE.toLowerCase();
+const { LOCALE_MASK } = require("./mask");
 const fdir = require("fdir");
 const fs = require("fs");
 const path = require("path");
@@ -14,37 +15,44 @@ dotenv.config({
   path: path.join(root, process.env.ENV_FILE || ".env"),
 });
 
-function getPath(locale) {
-  locale = locale.toLowerCase();
-  const contentRoot =
-    locale === DEFAULT_LOCALE_LC ? "CONTENT_ROOT" : "CONTENT_TRANSLATED_ROOT";
-  const base = process.env[contentRoot];
+function getRoot(key) {
+  let base = process.env[key];
   if (!base) {
-    console.error(`Missing ENV variable: ${contentRoot}`);
+    console.error(`Missing ENV variable: ${key}`);
     return "";
   }
-  console.log(`${contentRoot} = ${base}`);
+  console.log(`${key} = ${base}`);
+
+  if (path.basename(base) !== "files") {
+    base = path.join(base, "files");
+  }
 
   const contentPath = [
     // Absolute path.
-    `${base}/${locale}/`,
-    `${base}/files/${locale}/`,
+    `${base}/`,
     // Relative path.
-    `${root}/${base}/${locale}/`,
-    `${root}/${base}/files/${locale}/`,
+    `${root}/${base}/`,
   ].find((path) => fs.existsSync(path));
 
   return contentPath;
 }
 
+const CONTENT_ROOT = getRoot("CONTENT_ROOT");
+const CONTENT_TRANSLATED_ROOT = getRoot("CONTENT_TRANSLATED_ROOT");
+
 function buildRedirectsMap() {
   const redirectMap = new Map();
 
   for (const locale of VALID_LOCALES.keys()) {
-    const path = getPath(locale);
+    let filepath =
+      locale === DEFAULT_LOCALE_LC ? CONTENT_ROOT : CONTENT_TRANSLATED_ROOT;
 
-    if (path) {
-      const content = fs.readFileSync(path, "utf-8");
+    if (filepath) {
+      filepath = path.join(filepath, locale, "_redirects.txt");
+      if (!fs.existsSync(filepath)) {
+        continue;
+      }
+      const content = fs.readFileSync(filepath, "utf-8");
       const lines = content.split("\n");
       const redirectLines = lines.filter(
         (line) => line.startsWith("/") && line.includes("\t")
@@ -53,7 +61,7 @@ function buildRedirectsMap() {
         const [source, target] = redirectLine.split("\t", 2);
         redirectMap.set(source.toLowerCase(), target);
       }
-      console.log(`- ${path}: ${redirectLines.length} redirects`);
+      console.log(`- ${filepath}: ${redirectLines.length} redirects`);
     }
   }
 
@@ -67,12 +75,12 @@ function buildRedirectsMap() {
 }
 
 function buildImageFallbackSet() {
-  const contentPath = getPath(DEFAULT_LOCALE);
-  if (!contentPath) {
+  if (!CONTENT_ROOT || !CONTENT_TRANSLATED_ROOT) {
     return;
   }
 
   // Find all images in the default locale.
+  const contentPath = path.join(CONTENT_ROOT, DEFAULT_LOCALE_LC);
   const baseDir = path.resolve(contentPath);
   const api = new fdir.fdir()
     .withFullPaths()
@@ -91,28 +99,36 @@ function buildImageFallbackSet() {
 
   // check if the image is also in l10n locales,
   // if not, add it to the fallback paths.
-  const sets = new Set();
-  for (const locale of VALID_LOCALES.keys()) {
-    if (locale === DEFAULT_LOCALE_LC) {
-      continue;
-    }
-    const translatedPath = getPath(locale);
-    if (!translatedPath) {
-      continue;
-    }
-    const translatedBaseDir = path.resolve(translatedPath);
-    for (const filePath of imageFiles) {
-      const translatedFile = path.join(translatedBaseDir, filePath);
-      if (!fs.existsSync(translatedFile)) {
-        sets.add(`/${locale}/docs/${filePath}`); // match the uri in aws lambda: `/${locale}/docs/path/to/file`
-      }
+  const notExistedmap = new Map();
+  const translatedLocale = [...VALID_LOCALES.keys()].filter(
+    (locale) => locale !== DEFAULT_LOCALE_LC
+  );
+
+  const translatedRootBaseDir = path.resolve(CONTENT_TRANSLATED_ROOT);
+
+  for (const imageFile of imageFiles) {
+    let NotExistedLocaleMask = translatedLocale
+      .filter((locale) => {
+        const translatedImageFile = path.join(
+          translatedRootBaseDir,
+          locale,
+          imageFile
+        );
+        return !fs.existsSync(translatedImageFile);
+      })
+      .map((locale) => LOCALE_MASK.get(locale))
+      .reduce((x, y) => x + y, 0);
+
+    // only add the image to the fallback paths if it is not in some locales.
+    if (NotExistedLocaleMask) {
+      notExistedmap.set(`docs/${imageFile}`, NotExistedLocaleMask);
     }
   }
 
   const output = "fallback-paths.json";
-  fs.writeFileSync(output, JSON.stringify(Array.from(sets)));
+  fs.writeFileSync(output, JSON.stringify(Object.fromEntries(notExistedmap)));
 
-  const count = sets.size;
+  const count = notExistedmap.size;
   const kb = Math.round(fs.statSync(output).size / 1024);
   console.log(`Wrote ${count} image fallback paths to ${output} in ${kb} KB`);
 }

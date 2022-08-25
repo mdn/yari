@@ -7,6 +7,7 @@ const {
   slugToFolder,
 } = require("@yari-internal/slug-utils");
 const { VALID_LOCALES } = require("@yari-internal/constants");
+const { LOCALE_MASK } = require("./mask");
 
 const THIRTY_DAYS = 3600 * 24 * 30;
 const NEEDS_LOCALE = /^\/(?:docs|search|settings|signin|signup|plus)(?:$|\/)/;
@@ -35,7 +36,7 @@ const CONTENT_DEVELOPMENT_DOMAIN = ".content.dev.mdn.mozit.cloud";
 
 const REDIRECTS = require("./redirects.json");
 const REDIRECT_SUFFIXES = ["/index.json", "/bcd.json", ""];
-const FALLBACK_PATHS = new Set(require("./fallback-paths.json"));
+const FALLBACK_PATHS = require("./fallback-paths.json");
 
 function redirect(location, { status = 302, cacheControlSeconds = 0 } = {}) {
   /*
@@ -232,8 +233,14 @@ exports.handler = async (event) => {
     // If the image file is not found in translated-content and
     // exists in content, then fetch it from content.
     // It's the same as the ssr mode.
-    if (FALLBACK_PATHS.has(filePath)) {
-      filePath = `/en-us/${filePath.slice(filePath.indexOf("/docs/") + 1)}`;
+    const uriParts = filePath.split("/");
+    const pathWithoutLocale = uriParts.slice(2).join("/");
+    if (
+      uriParts[1] !== "en-us" &&
+      FALLBACK_PATHS[pathWithoutLocale] &&
+      (FALLBACK_PATHS[pathWithoutLocale] & LOCALE_MASK[uriParts[1]]) !== 0
+    ) {
+      filePath = `/en-us/${pathWithoutLocale}`;
     }
     request.uri = encodePath(filePath);
     // Rewrite the HOST header to match the S3 bucket website domain.
