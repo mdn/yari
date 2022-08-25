@@ -1,8 +1,8 @@
-const dotenv = require("dotenv");
+import dotenv from "dotenv";
 dotenv.config();
 
-const { FLAW_LEVELS, VALID_FLAW_CHECKS } = require("../libs/constants");
-const {
+import { FLAW_LEVELS, VALID_FLAW_CHECKS } from "../libs/constants";
+import {
   DEFAULT_FLAW_LEVELS,
   FILES,
   FOLDERSEARCH,
@@ -11,7 +11,7 @@ const {
   FIX_FLAWS_DRY_RUN,
   FIX_FLAWS_TYPES,
   FIX_FLAWS_VERBOSE,
-} = require("../libs/env");
+} from "../libs/env";
 
 const options = Object.freeze({
   flawLevels: parseFlawLevels(DEFAULT_FLAW_LEVELS),

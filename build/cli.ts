@@ -1,26 +1,26 @@
 #!/usr/bin/env node
-const fs = require("fs");
-const path = require("path");
-const zlib = require("zlib");
+import fs from "fs";
+import path from "path";
+import zlib from "zlib";
 
-const chalk = require("chalk");
-const cliProgress = require("cli-progress");
+import chalk from "chalk";
+import cliProgress from "cli-progress";
 const program = require("@caporal/core").default;
 import { prompt } from "inquirer";
 
 import { Document, slugToFolder, translationsOf } from "../content";
-const { CONTENT_ROOT, CONTENT_TRANSLATED_ROOT } = require("../libs/env");
-const { VALID_LOCALES } = require("../libs/constants");
+import { CONTENT_ROOT, CONTENT_TRANSLATED_ROOT } from "../libs/env";
+import { VALID_LOCALES } from "../libs/constants";
 // eslint-disable-next-line node/no-missing-require
-const { renderHTML } = require("../ssr/dist/main");
+import { renderHTML } from "../ssr/dist/main";
 import options from "./build-options";
 import { buildDocument, BuiltDocument, renderContributorsTxt } from ".";
 import { Flaws } from "../libs/types";
 import * as bcd from "@mdn/browser-compat-data/types";
 import SearchIndex from "./search-index";
-const { BUILD_OUT_ROOT } = require("../libs/env");
-const { makeSitemapXML, makeSitemapIndexXML } = require("./sitemaps");
-const { humanFileSize } = require("./utils");
+import { BUILD_OUT_ROOT } from "../libs/env";
+import { makeSitemapXML, makeSitemapIndexXML } from "./sitemaps";
+import { humanFileSize } from "./utils";
 
 export type DocumentBuild = SkippedDocumentBuild | InteractiveDocumentBuild;
 

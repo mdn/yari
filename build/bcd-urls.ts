@@ -1,5 +1,5 @@
-const { Document, Redirect } = require("../content");
-const { FLAW_LEVELS } = require("../libs/constants");
+import { Document, Redirect } from "../content";
+import { FLAW_LEVELS } from "../libs/constants";
 import { BCDSection, CompatStatementExtended, Doc } from "../libs/types";
 
 /**

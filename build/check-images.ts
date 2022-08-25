@@ -2,14 +2,14 @@
 // Or, something. Checking for flaws should be very different from checking
 // for images.
 
-const path = require("path");
+import path from "path";
 
-const sizeOf = require("image-size");
+import sizeOf from "image-size";
 
-const { Document, Image } = require("../content");
-const { FLAW_LEVELS } = require("../libs/constants");
-const { findMatchesInText } = require("./matches-in-text");
-const { DEFAULT_LOCALE } = require("../libs/constants");
+import { Document, Image } from "../content";
+import { FLAW_LEVELS } from "../libs/constants";
+import { findMatchesInText } from "./matches-in-text";
+import { DEFAULT_LOCALE } from "../libs/constants";
 
 /**
  * Mutate the `$` instance for image reference and if appropriate,

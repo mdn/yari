@@ -1,4 +1,4 @@
-const { getPopularities } = require("../content");
+import { getPopularities } from "../content";
 
 // getPopularities() is memoized so it's fast to call repeatedly
 const getPopularity = (item) => getPopularities().get(item.url) || 0;

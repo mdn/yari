@@ -1,4 +1,4 @@
-const { Document } = require("../content");
+import { Document } from "../content";
 
 /**
  * Return the appropriate document title to go into the HTML <title>

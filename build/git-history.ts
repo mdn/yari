@@ -1,8 +1,8 @@
-const fs = require("fs");
-const path = require("path");
+import fs from "fs";
+import path from "path";
 
-const { execGit } = require("../content");
-const { CONTENT_ROOT } = require("../libs/env");
+import { execGit } from "../content";
+import { CONTENT_ROOT } from "../libs/env";
 
 function getFromGit(contentRoot = CONTENT_ROOT) {
   // If `contentRoot` was a symlink, the `repoRoot` won't be. That'll make it

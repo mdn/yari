@@ -1,4 +1,4 @@
-const { Document } = require("../content");
+import { Document } from "../content";
 
 /**
  * Temporary fix for long titles in breadcrumbs
