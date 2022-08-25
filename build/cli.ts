@@ -13,7 +13,7 @@ const { CONTENT_ROOT, CONTENT_TRANSLATED_ROOT } = require("../libs/env");
 const { VALID_LOCALES } = require("../libs/constants");
 // eslint-disable-next-line node/no-missing-require
 const { renderHTML } = require("../ssr/dist/main");
-const { default: options } = require("./build-options");
+import options from "./build-options";
 import { buildDocument, BuiltDocument, renderContributorsTxt } from ".";
 import { Flaws } from "../libs/types";
 import * as bcd from "@mdn/browser-compat-data/types";
@@ -108,7 +108,10 @@ async function buildDocuments(
 ): Promise<BuiltDocuments> {
   // If a list of files was set, it came from the CLI.
   // Override whatever was in the build options.
-  const findAllOptions = Object.assign({}, options, { locales });
+  const findAllOptions = {
+    ...options,
+    locales,
+  };
   if (files) {
     findAllOptions.files = new Set(files);
   }
