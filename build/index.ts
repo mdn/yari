@@ -29,7 +29,7 @@ import { checkImageReferences, checkImageWidths } from "./check-images";
 import { getPageTitle } from "./page-title";
 import { syntaxHighlight } from "./syntax-highlight";
 import { formatNotecards } from "./format-notecards";
-import { default as buildOptions } from "./build-options";
+import buildOptions from "./build-options";
 export { gather as gatherGitHistory } from "./git-history";
 export { buildSPAs } from "./spas";
 import { renderCache as renderKumascriptCache } from "../kumascript";
