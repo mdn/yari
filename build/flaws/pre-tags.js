@@ -1,5 +1,3 @@
-import { Flaw } from ".";
-
 const { getFirstMatchInText } = require("../matches-in-text");
 const escapeHTML = (s) =>
   s
@@ -8,7 +6,7 @@ const escapeHTML = (s) =>
     .replace(/</g, "&lt;")
     .replace(/>/g, "&gt;");
 
-export function getPreTagFlaws(doc, $, { rawContent }) {
+function getPreTagFlaws(doc, $, { rawContent }) {
   const flaws = [];
 
   // Over the years, we've accumulated a lot of Kuma-HTML where the <pre> tags
@@ -52,7 +50,7 @@ export function getPreTagFlaws(doc, $, { rawContent }) {
       }
     }
 
-    const flaw: Flaw = { explanation, id, fixable, html, suggestion, type };
+    const flaw = { explanation, id, fixable, html, suggestion, type };
     if (fixable) {
       // Only if it's fixable, is the `html` perfectly findable in the raw content.
       const { line, column } = getFirstMatchInText(html, rawContent);
@@ -103,3 +101,5 @@ export function getPreTagFlaws(doc, $, { rawContent }) {
 
   return flaws;
 }
+
+module.exports = { getPreTagFlaws };

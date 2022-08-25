@@ -1,9 +1,7 @@
-import { Flaw } from ".";
-
 const { Document, Translation } = require("../../content");
 const { DEFAULT_LOCALE } = require("../../libs/constants");
 
-export function injectTranslationDifferences(doc, $, document): Flaw[] {
+function injectTranslationDifferences(doc, $, document) {
   const flaws = [];
 
   const englishDocument = Document.read(
@@ -22,7 +20,7 @@ export function injectTranslationDifferences(doc, $, document): Flaw[] {
     const { explanation } = difference;
     const suggestion = null;
     const fixable = false;
-    const flaw: Flaw = {
+    const flaw = {
       id,
       explanation,
       suggestion,
@@ -40,3 +38,5 @@ export function injectTranslationDifferences(doc, $, document): Flaw[] {
   }
   return flaws;
 }
+
+module.exports = { injectTranslationDifferences };

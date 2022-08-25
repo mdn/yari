@@ -14,23 +14,11 @@ const { getBadBCDQueriesFlaws } = require("./bad-bcd-queries");
 const { getBrokenLinksFlaws } = require("./broken-links");
 const { getHeadingLinksFlaws } = require("./heading-links");
 const { getPreTagFlaws } = require("./pre-tags");
-export const { injectSectionFlaws } = require("./sections");
+const { injectSectionFlaws } = require("./sections");
 const { getUnsafeHTMLFlaws } = require("./unsafe-html");
 const { injectTranslationDifferences } = require("./translation-differences");
 
-export interface Flaw {
-  explanation: any;
-  id: any;
-  fixable: any;
-  html?: any;
-  suggestion: any;
-  type?: any;
-  line?: any;
-  column?: any;
-  difference?: any;
-}
-
-export function injectFlaws(doc, $, options, document) {
+function injectFlaws(doc, $, options, document) {
   const flawChecks = [
     ["unsafe_html", getUnsafeHTMLFlaws, false],
     ["broken_links", getBrokenLinksFlaws, true],
@@ -82,7 +70,7 @@ export function injectFlaws(doc, $, options, document) {
   }
 }
 
-export async function fixFixableFlaws(doc, options, document) {
+async function fixFixableFlaws(doc, options, document) {
   if (!options.fixFlaws) return;
 
   const { rawBody, isMarkdown } = document;
@@ -307,3 +295,5 @@ export async function fixFixableFlaws(doc, options, document) {
     }
   }
 }
+
+module.exports = { injectFlaws, injectSectionFlaws, fixFixableFlaws };
