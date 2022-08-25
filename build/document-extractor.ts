@@ -1,5 +1,5 @@
 import * as cheerio from "cheerio";
-const { packageBCD } = require("./resolve-bcd");
+import { packageBCD } from "./resolve-bcd";
 import * as bcd from "@mdn/browser-compat-data/types";
 import {
   BCDSection,
@@ -8,8 +8,8 @@ import {
   SpecificationsSection,
 } from "../libs/types";
 import { BuiltDocument } from ".";
-const specs = require("browser-specs");
-const web = require("../kumascript/src/api/web");
+import specs from "browser-specs";
+import web from "../kumascript/src/api/web";
 
 interface SimpleSupportStatementWithReleaseDate
   extends bcd.SimpleSupportStatement {
