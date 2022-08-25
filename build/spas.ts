@@ -20,7 +20,7 @@ import { findByURL } from "../content/document";
 import { buildDocument } from ".";
 import { NewsItem } from "../client/src/homepage/latest-news";
 
-interface DocFrontmatter {
+export interface DocFrontmatter {
   contributor_name?: string;
   folder_name?: string;
   is_featured?: boolean;
@@ -28,6 +28,8 @@ interface DocFrontmatter {
   usernames?: any;
   quote?: any;
   title?: string;
+  slug?: string;
+  original_slug?: string;
 }
 
 const dirname = __dirname;
