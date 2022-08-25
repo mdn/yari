@@ -178,10 +178,12 @@ export function syncTranslatedContent(inFilePath, locale) {
       )
     ) &&
     !fs.existsSync(
-      CONTENT_ROOT,
-      "en-us",
-      slugToFolder(metadata.slug),
-      bareFileName + ".html"
+      path.join(
+        CONTENT_ROOT,
+        "en-us",
+        slugToFolder(metadata.slug),
+        bareFileName + ".html"
+      )
     );
 
   if (!status.moved && !status.orphaned) {
