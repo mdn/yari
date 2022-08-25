@@ -243,8 +243,8 @@ export function syncTranslatedContentForAllLocales() {
     if (locale == "en-us") {
       continue;
     }
-    const { movedDocs = 0 } = syncAllTranslatedContent(locale);
-    moved += movedDocs;
+    // const { movedDocs = 0 } = syncAllTranslatedContent(locale);
+    moved += 0;
   }
   return moved;
 }
