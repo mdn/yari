@@ -273,7 +273,6 @@ export async function buildSPAs(options) {
         : null;
 
       // circular dependency, so needs to be imported down here:
-      const { buildDocument } = require("./");
       const featuredArticles = (
         await Promise.all(
           FEATURED_ARTICLES.map(async (url) => {
