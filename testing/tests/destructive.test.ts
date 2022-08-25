@@ -94,6 +94,8 @@ describe("fixing flaws", () => {
       ),
     }).toString();
 
+    console.log(`---stdout>>>\n${stdout}\n<<<stdout---`);
+
     const regexPattern = /Would modify "(.*)"./g;
     const dryRunNotices = stdout
       .split("\n")
@@ -122,6 +124,9 @@ describe("fixing flaws", () => {
         process.env
       ),
     }).toString();
+
+    console.log(`---stdout>>>\n${stdout}\n<<<stdout---`);
+
     expect(stdout).toContain(pattern);
 
     const files = getChangedFiles(tempContentDir);
