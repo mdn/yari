@@ -307,6 +307,8 @@ export interface BuiltDocument {
 
 interface DocumentOptions {
   clearKumascriptRenderCache?: boolean;
+  fixFlaws?: boolean;
+  fixFlawsVerbose?: boolean;
 }
 
 export async function buildDocument(
