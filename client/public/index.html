@@ -97,17 +97,6 @@
 
   <body>
     <script>
-      document.body.addEventListener(
-        "load",
-        (e) => {
-          if (e.target.classList.contains("interactive")) {
-            e.target.setAttribute("data-readystate", "complete");
-          }
-        },
-        { capture: true }
-      );
-    </script>
-    <script>
       /**
        * If we modify this script, we must update the CSP hash as follows:
        * 1. Run `yarn build:client`
@@ -119,6 +108,16 @@
        * 7. Remove the old "previous" hash and replace it with the old "current" hash.
        * 8. Replace the old "current" hash with the new hash (from step 5).
        */
+      document.body.addEventListener(
+        "load",
+        (e) => {
+          if (e.target.classList.contains("interactive")) {
+            e.target.setAttribute("data-readystate", "complete");
+          }
+        },
+        { capture: true }
+      );
+
       const c = { light: "#ffffff", dark: "#1b1b1b" };
       if (window && document.documentElement) {
         const o = window.localStorage.getItem("theme");
