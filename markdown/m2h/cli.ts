@@ -1,14 +1,19 @@
-const fm = require("front-matter");
-const { program } = require("@caporal/core");
-const chalk = require("chalk");
-const { Document } = require("../../content");
-const { saveFile } = require("../../content/document");
-const { VALID_LOCALES } = require("../../libs/constants");
+import fm from "front-matter";
+import { program } from "@caporal/core";
+import chalk from "chalk";
+import { Document } from "../../content";
+import { saveFile } from "../../content/document";
+import { VALID_LOCALES } from "../../libs/constants";
 
-const { m2h } = require("./");
+import { m2h } from "./";
 
-function tryOrExit(f) {
-  return async ({ options = {}, ...args }) => {
+interface CliOptions {
+  v?: boolean;
+  verbose?: boolean;
+}
+
+function tryOrExit(f: Function) {
+  return async ({ options = {}, ...args }: { options: CliOptions }) => {
     try {
       await f({ options, ...args });
     } catch (error) {

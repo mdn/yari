@@ -1,7 +1,7 @@
 const fs = require("fs");
 const path = require("path");
 const { DEFAULT_LOCALE } = require("../../../libs/constants");
-const code = require("./code");
+const { code } = require("./code");
 const { asDefinitionList, isDefinitionList } = require("./dl");
 const { one, all, wrap } = require("./mdast-util-to-hast-utils");
 
@@ -57,7 +57,7 @@ function getNotecardType(node, locale) {
   return type == "warning" || type == "note" || type == "callout" ? type : null;
 }
 
-function buildLocalizedHandlers(locale) {
+export function buildLocalizedHandlers(locale) {
   /* This is only used for the Notecard parsing where the "magit" word depends on the locale */
   return {
     code,
@@ -105,7 +105,7 @@ function buildLocalizedHandlers(locale) {
 
       const name = node.ordered ? "ol" : "ul";
 
-      const props = {};
+      const props: { start?: number } = {};
       if (typeof node.start === "number" && node.start !== 1) {
         props.start = node.start;
       }
@@ -122,5 +122,3 @@ function buildLocalizedHandlers(locale) {
     },
   };
 }
-
-module.exports = buildLocalizedHandlers;
