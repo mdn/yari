@@ -6,7 +6,8 @@ const {
   encodePath,
   slugToFolder,
 } = require("@yari-internal/slug-utils");
-const { VALID_LOCALES } = require("@yari-internal/constants");
+const { DEFAULT_LOCALE, VALID_LOCALES } = require("@yari-internal/constants");
+const DEFAULT_LOCALE_LC = DEFAULT_LOCALE.toLowerCase();
 const { LOCALE_MASK } = require("./mask");
 
 const THIRTY_DAYS = 3600 * 24 * 30;
@@ -236,11 +237,11 @@ exports.handler = async (event) => {
     const uriParts = filePath.split("/");
     const pathWithoutLocale = uriParts.slice(2).join("/");
     if (
-      uriParts[1] !== "en-us" &&
+      uriParts[1] !== DEFAULT_LOCALE_LC &&
       FALLBACK_PATHS[pathWithoutLocale] &&
       (FALLBACK_PATHS[pathWithoutLocale] & LOCALE_MASK[uriParts[1]]) !== 0
     ) {
-      filePath = `/en-us/${pathWithoutLocale}`;
+      filePath = `/${DEFAULT_LOCALE_LC}/${pathWithoutLocale}`;
     }
     request.uri = encodePath(filePath);
     // Rewrite the HOST header to match the S3 bucket website domain.
