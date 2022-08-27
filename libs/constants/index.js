@@ -85,7 +85,7 @@ const scriptSrcValues = [
    * we must always update the CSP hash (see instructions there).
    */
   // - Previous hash (to avoid cache invalidation issues):
-  "'sha256-GA8+DpFnqAM/vwERTpb5zyLUaN5KnOhctfTsqWfhaUA='",
+  "'sha256-ryRT1qGpDn+Y+tJ6gmb6XWaV28URicWtYzcBXNv1i+U='",
   // - Current hash:
   "'sha256-R1d+R+j7z1re3EpSIuqRpflohOvTm3fAxKvfEiXgC1o='",
 ];
