@@ -100,11 +100,11 @@ export interface BuiltDocuments {
 }
 
 async function buildDocuments(
-  files = null,
+  files: string[] = null,
   quiet = false,
   interactive = false,
   noHTML = false,
-  locales = new Map()
+  locales: Map<string, string> = new Map()
 ): Promise<BuiltDocuments> {
   // If a list of files was set, it came from the CLI.
   // Override whatever was in the build options.
