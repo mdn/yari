@@ -79,7 +79,6 @@ function ItemComponent({
   const [showDropdown, setShowDropdown] = useState(false);
   const [showEdit, setShowEdit] = useState(false);
   const [showDelete, setShowDelete] = useState(false);
-  const [formItem, setFormItem] = useState(item);
 
   const breadcrumbs = item.parents
     .slice(0, -1)
@@ -88,36 +87,6 @@ function ItemComponent({
       // remove duplicated titles
       (title, index, titles) => title !== titles[index + 1]
     );
-
-  const deleteHandler = async (e: React.MouseEvent) => {
-    e.preventDefault();
-    await deleteItem(item, mutate);
-    setShowDelete(false);
-  };
-
-  const changeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setFormItem({ ...formItem, [name]: value.trimStart() });
-  };
-
-  const cancelEditHandler = (e: React.MouseEvent | React.KeyboardEvent) => {
-    e.preventDefault();
-    setFormItem(item);
-    setShowEdit(false);
-  };
-
-  const saveHandler = async (e: React.BaseSyntheticEvent) => {
-    e.preventDefault();
-    await editItem(formItem, mutate);
-    setShowEdit(false);
-  };
-
-  const enterHandler = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "Enter") {
-      e.preventDefault();
-      saveHandler(e);
-    }
-  };
 
   return (
     <article key={item.url}>
@@ -169,83 +138,12 @@ function ItemComponent({
             </ul>
           </DropdownMenu>
         </DropdownMenuWrapper>
-        <MDNModal
-          isOpen={showEdit}
-          size="small"
-          onRequestClose={cancelEditHandler}
-        >
-          <header className="modal-header">
-            <h2 className="modal-heading">Edit item</h2>
-            <Button
-              onClickHandler={cancelEditHandler}
-              type="action"
-              icon="cancel"
-              extraClasses="close-button"
-            />
-          </header>
-          <div className="modal-body">
-            <form className="mdn-form" onSubmit={saveHandler}>
-              <div className="mdn-form-item">
-                <label htmlFor="item-title">Title:</label>
-                <input
-                  id="item-title"
-                  name="title"
-                  value={formItem.title}
-                  onChange={changeHandler}
-                  onKeyDown={enterHandler}
-                  autoComplete="off"
-                  type="text"
-                  required={true}
-                />
-              </div>
-              <div className="mdn-form-item">
-                <label htmlFor="item-notes">Notes:</label>
-                <input
-                  id="item-notes"
-                  name="notes"
-                  value={formItem.notes}
-                  onChange={changeHandler}
-                  onKeyDown={enterHandler}
-                  autoComplete="off"
-                  type="text"
-                />
-              </div>
-              <div className="mdn-form-item is-button-row">
-                <Button buttonType="submit">Save</Button>
-                <Button onClickHandler={cancelEditHandler} type="secondary">
-                  Cancel
-                </Button>
-              </div>
-            </form>
-          </div>
-        </MDNModal>
-        <MDNModal
-          isOpen={showDelete}
-          size="small"
-          onRequestClose={() => setShowDelete(false)}
-        >
-          <header className="modal-header">
-            <h2 className="modal-heading">Delete item</h2>
-            <Button
-              onClickHandler={() => setShowDelete(false)}
-              type="action"
-              icon="cancel"
-              extraClasses="close-button"
-            />
-          </header>
-          <div className="modal-body">
-            Are you sure you want to delete "{item.title}" from your collection?
-            <div className="mdn-form-item is-button-row">
-              <Button onClickHandler={deleteHandler}>Delete</Button>
-              <Button
-                onClickHandler={() => setShowDelete(false)}
-                type="secondary"
-              >
-                Cancel
-              </Button>
-            </div>
-          </div>
-        </MDNModal>
+        <ItemEdit show={showEdit} setShow={setShowEdit} {...{ item, mutate }} />
+        <ItemDelete
+          show={showDelete}
+          setShow={setShowDelete}
+          {...{ item, mutate }}
+        />
       </header>
       <div className="breadcrumbs">{breadcrumbs.join(" > ")}</div>
       {item.notes && <p>{item.notes}</p>}
@@ -255,5 +153,133 @@ function ItemComponent({
         </time>
       </footer>
     </article>
+  );
+}
+
+function ItemEdit({
+  show,
+  setShow,
+  item,
+  mutate,
+}: {
+  show: boolean;
+  setShow: React.Dispatch<React.SetStateAction<boolean>>;
+  item: Item;
+  mutate: KeyedMutator<Item[][]>;
+}) {
+  const [formItem, setFormItem] = useState(item);
+
+  const changeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setFormItem({ ...formItem, [name]: value.trimStart() });
+  };
+
+  const cancelHandler = (e: React.MouseEvent | React.KeyboardEvent) => {
+    e.preventDefault();
+    setFormItem(item);
+    setShow(false);
+  };
+
+  const saveHandler = async (e: React.BaseSyntheticEvent) => {
+    e.preventDefault();
+    await editItem(formItem, mutate);
+    setShow(false);
+  };
+
+  const enterHandler = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      saveHandler(e);
+    }
+  };
+
+  return (
+    <MDNModal isOpen={show} size="small" onRequestClose={cancelHandler}>
+      <header className="modal-header">
+        <h2 className="modal-heading">Edit item</h2>
+        <Button
+          onClickHandler={cancelHandler}
+          type="action"
+          icon="cancel"
+          extraClasses="close-button"
+        />
+      </header>
+      <div className="modal-body">
+        <form className="mdn-form" onSubmit={saveHandler}>
+          <div className="mdn-form-item">
+            <label htmlFor="item-title">Title:</label>
+            <input
+              id="item-title"
+              name="title"
+              value={formItem.title}
+              onChange={changeHandler}
+              onKeyDown={enterHandler}
+              autoComplete="off"
+              type="text"
+              required={true}
+            />
+          </div>
+          <div className="mdn-form-item">
+            <label htmlFor="item-notes">Notes:</label>
+            <input
+              id="item-notes"
+              name="notes"
+              value={formItem.notes}
+              onChange={changeHandler}
+              onKeyDown={enterHandler}
+              autoComplete="off"
+              type="text"
+            />
+          </div>
+          <div className="mdn-form-item is-button-row">
+            <Button buttonType="submit">Save</Button>
+            <Button onClickHandler={cancelHandler} type="secondary">
+              Cancel
+            </Button>
+          </div>
+        </form>
+      </div>
+    </MDNModal>
+  );
+}
+
+function ItemDelete({
+  show,
+  setShow,
+  item,
+  mutate,
+}: {
+  show: boolean;
+  setShow: React.Dispatch<React.SetStateAction<boolean>>;
+  item: Item;
+  mutate: KeyedMutator<Item[][]>;
+}) {
+  const deleteHandler = async (e: React.MouseEvent) => {
+    e.preventDefault();
+    await deleteItem(item, mutate);
+    setShow(false);
+  };
+
+  return (
+    <MDNModal isOpen={show} size="small" onRequestClose={() => setShow(false)}>
+      <header className="modal-header">
+        <h2 className="modal-heading">Delete item</h2>
+        <Button
+          onClickHandler={() => setShow(false)}
+          type="action"
+          icon="cancel"
+          extraClasses="close-button"
+        />
+      </header>
+      <div className="modal-body">
+        Are you sure you want to delete "{item.title}" from your collection?
+        <div className="mdn-form-item is-button-row">
+          <Button onClickHandler={deleteHandler}>Delete</Button>
+          <Button onClickHandler={() => setShow(false)} type="secondary">
+            Cancel
+          </Button>
+        </div>
+      </div>
+    </MDNModal>
   );
 }
