@@ -38,10 +38,6 @@ export function LocalizedContentNote({
     },
   };
   const inactiveLocaleNoteContent = {
-    de: {
-      linkText:
-        "Der Inhalt dieser Seite wurde von der Community übersetzt, jedoch wird er nicht mehr aktiv gepflegt und kann daher veraltet sein. Wenn du mithelfen möchtest, kannst du hier herausfinden wie deaktivierte Übersetzungen reaktiviert werden können.",
-    },
     "en-US": {
       linkText:
         "This page was translated from English by the community, but it's not maintained and may be out-of-date. To help maintain it, learn how to activate locales.",
