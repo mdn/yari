@@ -47,8 +47,12 @@ export function forceExternalURL(url) {
 export async function downloadAndResizeImage(src, out, basePath) {
   const imageResponse = await got(forceExternalURL(src), {
     responseType: "buffer",
-    timeout: 10000,
-    retry: 3,
+    timeout: {
+      request: 10000,
+    },
+    retry: {
+      limit: 3,
+    },
   });
   const imageBuffer = imageResponse.body;
   let fileType = await FileType.fromBuffer(imageBuffer);

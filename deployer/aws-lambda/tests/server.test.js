@@ -12,7 +12,9 @@ async function get(uri, headers = {}) {
   const response = await got(getURL(uri), {
     headers,
     followRedirect: false,
-    retry: 0,
+    retry: {
+      limit: 0,
+    },
     throwHttpErrors: false,
   });
   return response;
