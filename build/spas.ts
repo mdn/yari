@@ -204,7 +204,7 @@ export async function buildSPAs(options) {
       const markdown = fs.readFileSync(filepath, "utf-8");
 
       const frontMatter = frontmatter<DocFrontmatter>(markdown);
-      const rawHTML = await m2h(frontMatter.body, locale);
+      const rawHTML = await m2h(frontMatter.body, { locale });
 
       const { sections, toc } = splitSections(rawHTML);
 
