@@ -18,7 +18,7 @@ function makeProcessor(options) {
       handlers: localizedHandlers,
       allowDangerousHtml: true,
     })
-    .use(raw, { allowDangerousHtml: true })
+    .use(raw)
     .use(stringify, { allowDangerousHtml: true })
     .use(format);
 
