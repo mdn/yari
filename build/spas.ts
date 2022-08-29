@@ -272,7 +272,6 @@ export async function buildSPAs(options) {
         ? await buildContributorSpotlight(locale, options)
         : null;
 
-      // circular dependency, so needs to be imported down here:
       const featuredArticles = (
         await Promise.all(
           FEATURED_ARTICLES.map(async (url) => {
