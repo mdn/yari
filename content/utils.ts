@@ -2,12 +2,12 @@ import path from "path";
 import childProcess from "child_process";
 
 import { CONTENT_ROOT, CONTENT_TRANSLATED_ROOT } from "../libs/env";
-import { slugToFolder } from "../libs/slug-utils";
+import { slugToFolder as _slugToFolder } from "../libs/slug-utils";
 import LRU from "lru-cache";
 
-const MEMOIZE_INVALIDATE = Symbol("force cache update");
+export const MEMOIZE_INVALIDATE = Symbol("force cache update");
 
-function getRoot(locale, throws = "") {
+export function getRoot(locale, throws = "") {
   const root =
     locale.toLowerCase() === "en-us" ? CONTENT_ROOT : CONTENT_TRANSLATED_ROOT;
   if (throws && !root) {
@@ -16,7 +16,7 @@ function getRoot(locale, throws = "") {
   return root;
 }
 
-function buildURL(locale, slug) {
+export function buildURL(locale, slug) {
   if (!locale) throw new Error("locale falsy!");
   if (!slug) throw new Error("slug falsy!");
   return `/${locale}/docs/${slug}`;
@@ -33,7 +33,7 @@ function isPromise(p) {
  * Note: The parameter are turned into a cache key quite naively, so
  * different object key order would lead to new cache entries.
  */
-function memoize(fn) {
+export function memoize(fn: Function): Function {
   if (process.env.NODE_ENV !== "production") {
     return fn;
   }
@@ -67,7 +67,7 @@ function memoize(fn) {
   };
 }
 
-function execGit(args, opts = {}, root = null) {
+export function execGit(args, opts: { cwd?: string } = {}, root = null) {
   let gitRoot = root;
   if (!gitRoot) {
     gitRoot = execGit(
@@ -102,17 +102,11 @@ function execGit(args, opts = {}, root = null) {
   return stdout.toString().trim();
 }
 
-function urlToFolderPath(url) {
+export function urlToFolderPath(url) {
   const [, locale, , ...slugParts] = url.split("/");
   return path.join(locale.toLowerCase(), slugToFolder(slugParts.join("/")));
 }
 
-module.exports = {
-  buildURL,
-  getRoot,
-  slugToFolder: (slug) => slugToFolder(slug, path.sep),
-  memoize,
-  execGit,
-  urlToFolderPath,
-  MEMOIZE_INVALIDATE,
-};
+export function slugToFolder(slug) {
+  return _slugToFolder(slug, path.sep);
+}

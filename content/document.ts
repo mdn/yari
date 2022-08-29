@@ -4,7 +4,7 @@ import util from "util";
 
 import fm from "front-matter";
 import yaml from "js-yaml";
-import { fdir } from "fdir";
+import { fdir, PathsOutput } from "fdir";
 
 import { HTML_FILENAME, MARKDOWN_FILENAME } from "../libs/constants";
 import { CONTENT_TRANSLATED_ROOT, CONTENT_ROOT, ROOTS } from "../libs/env";
@@ -21,20 +21,28 @@ import {
   slugToFolder,
   execGit,
   urlToFolderPath,
-  MEMOIZE_INVALIDATE,
 } from "./utils";
-import Redirect from "./redirect";
+export { urlToFolderPath, MEMOIZE_INVALIDATE } from "./utils";
+import * as Redirect from "./redirect";
+import { DocFrontmatter } from "../build/spas";
 
-function buildPath(localeFolder, slug) {
+function buildPath(localeFolder: string, slug: string) {
   return path.join(localeFolder, slugToFolder(slug));
 }
 
-const getHTMLPath = (folder) => path.join(folder, HTML_FILENAME);
-const getMarkdownPath = (folder) => path.join(folder, MARKDOWN_FILENAME);
+const getHTMLPath = (folder: string) => path.join(folder, HTML_FILENAME);
+const getMarkdownPath = (folder: string) =>
+  path.join(folder, MARKDOWN_FILENAME);
 
-function updateWikiHistory(localeContentRoot, oldSlug, newSlug = null) {
+export function updateWikiHistory(
+  localeContentRoot: string,
+  oldSlug: string,
+  newSlug: string | null = null
+) {
   const all = JSON.parse(
-    fs.readFileSync(path.join(localeContentRoot, "_wikihistory.json"))
+    fs
+      .readFileSync(path.join(localeContentRoot, "_wikihistory.json"))
+      .toString()
   );
   if (oldSlug in all) {
     if (newSlug) {
@@ -66,7 +74,7 @@ function updateWikiHistory(localeContentRoot, oldSlug, newSlug = null) {
   }
 }
 
-function extractLocale(folder) {
+function extractLocale(folder: string) {
   // E.g. 'pr-br'
   const localeFolderName = folder.split(path.sep)[0].toLowerCase();
   // E.g. 'pt-BR'
@@ -82,7 +90,12 @@ function extractLocale(folder) {
   return locale;
 }
 
-function saveFile(filePath, rawBody, metadata, frontMatterKeys = null) {
+export function saveFile(
+  filePath: string,
+  rawBody: string,
+  metadata,
+  frontMatterKeys: string[] = []
+) {
   const requiredFrontMatterKeys = ["title", "slug"];
   const optionalFrontMatterKeys = [
     "page-type",
@@ -122,14 +135,14 @@ function saveFile(filePath, rawBody, metadata, frontMatterKeys = null) {
   fs.writeFileSync(filePath, combined);
 }
 
-function trimLineEndings(string) {
+export function trimLineEndings(string) {
   return string
     .split("\n")
     .map((s) => s.trimEnd())
     .join("\n");
 }
 
-function createHTML(html, metadata, root = null) {
+export function createHTML(html: string, metadata, root = null) {
   const folderPath = getFolderPath(metadata, root);
 
   fs.mkdirSync(folderPath, { recursive: true });
@@ -138,7 +151,11 @@ function createHTML(html, metadata, root = null) {
   return folderPath;
 }
 
-function createMarkdown(md, metadata, root = null) {
+export function createMarkdown(
+  md: string,
+  metadata,
+  root: string | null = null
+) {
   const folderPath = getFolderPath(metadata, root);
 
   fs.mkdirSync(folderPath, { recursive: true });
@@ -147,7 +164,7 @@ function createMarkdown(md, metadata, root = null) {
   return folderPath;
 }
 
-function getFolderPath(metadata, root = null) {
+export function getFolderPath(metadata, root: string | null = null) {
   if (!root) {
     root = getRoot(metadata.locale);
   }
@@ -157,172 +174,178 @@ function getFolderPath(metadata, root = null) {
   );
 }
 
-const read = memoize((folderOrFilePath, roots = ROOTS) => {
-  let filePath = null;
-  let folder = null;
-  let root = null;
-  let locale = null;
+export const read = memoize(
+  (folderOrFilePath: string, roots: string[] = ROOTS) => {
+    let filePath = null;
+    let folder = null;
+    let root = null;
+    let locale = null;
 
-  if (fs.existsSync(folderOrFilePath)) {
-    filePath = folderOrFilePath;
+    if (fs.existsSync(folderOrFilePath)) {
+      filePath = folderOrFilePath;
 
-    // It exists, but it is sane?
-    if (
-      !(
-        filePath.endsWith(HTML_FILENAME) || filePath.endsWith(MARKDOWN_FILENAME)
-      )
-    ) {
-      throw new Error(`'${filePath}' is not a HTML or Markdown file.`);
+      // It exists, but it is sane?
+      if (
+        !(
+          filePath.endsWith(HTML_FILENAME) ||
+          filePath.endsWith(MARKDOWN_FILENAME)
+        )
+      ) {
+        throw new Error(`'${filePath}' is not a HTML or Markdown file.`);
+      }
+
+      root = roots.find((possibleRoot) => filePath.startsWith(possibleRoot));
+      if (root) {
+        folder = filePath
+          .replace(root + path.sep, "")
+          .replace(path.sep + HTML_FILENAME, "")
+          .replace(path.sep + MARKDOWN_FILENAME, "");
+        locale = extractLocale(filePath.replace(root + path.sep, ""));
+      } else {
+        // The file exists but it doesn't appear to belong to any of our roots.
+        // That could happen if you pass in a file that is something completely
+        // different not a valid file anyway.
+        throw new Error(
+          `'${filePath}' does not appear to exist in any known content roots.`
+        );
+      }
+    } else {
+      folder = folderOrFilePath;
+      for (const possibleRoot of roots) {
+        const possibleMarkdownFilePath = path.join(
+          possibleRoot,
+          getMarkdownPath(folder)
+        );
+        if (fs.existsSync(possibleMarkdownFilePath)) {
+          root = possibleRoot;
+          filePath = possibleMarkdownFilePath;
+          break;
+        }
+        const possibleHTMLFilePath = path.join(
+          possibleRoot,
+          getHTMLPath(folder)
+        );
+        if (fs.existsSync(possibleHTMLFilePath)) {
+          root = possibleRoot;
+          filePath = possibleHTMLFilePath;
+          break;
+        }
+      }
+      if (!filePath) {
+        return;
+      }
+      locale = extractLocale(folder);
     }
 
-    root = roots.find((possibleRoot) => filePath.startsWith(possibleRoot));
-    if (root) {
-      folder = filePath
-        .replace(root + path.sep, "")
-        .replace(path.sep + HTML_FILENAME, "")
-        .replace(path.sep + MARKDOWN_FILENAME, "");
-      locale = extractLocale(filePath.replace(root + path.sep, ""));
-    } else {
-      // The file exists but it doesn't appear to belong to any of our roots.
-      // That could happen if you pass in a file that is something completely
-      // different not a valid file anyway.
+    if (filePath.includes(" ")) {
       throw new Error(
-        `'${filePath}' does not appear to exist in any known content roots.`
+        `Folder contains whitespace which is not allowed (${util.inspect(
+          filePath
+        )})`
       );
     }
-  } else {
-    folder = folderOrFilePath;
-    for (const possibleRoot of roots) {
-      const possibleMarkdownFilePath = path.join(
-        possibleRoot,
-        getMarkdownPath(folder)
+    if (filePath.includes("\u200b")) {
+      throw new Error(
+        `Folder contains zero width whitespace which is not allowed (${filePath})`
       );
-      if (fs.existsSync(possibleMarkdownFilePath)) {
-        root = possibleRoot;
-        filePath = possibleMarkdownFilePath;
-        break;
-      }
-      const possibleHTMLFilePath = path.join(possibleRoot, getHTMLPath(folder));
-      if (fs.existsSync(possibleHTMLFilePath)) {
-        root = possibleRoot;
-        filePath = possibleHTMLFilePath;
-        break;
-      }
     }
-    if (!filePath) {
-      return;
+    // Use Boolean() because otherwise, `isTranslated` might become `undefined`
+    // rather than an actuall boolean value.
+    const isTranslated = Boolean(
+      CONTENT_TRANSLATED_ROOT && filePath.startsWith(CONTENT_TRANSLATED_ROOT)
+    );
+
+    const rawContent = fs.readFileSync(filePath, "utf-8");
+    if (!rawContent) {
+      throw new Error(`${filePath} is an empty file`);
     }
-    locale = extractLocale(folder);
-  }
 
-  if (filePath.includes(" ")) {
-    throw new Error(
-      `Folder contains whitespace which is not allowed (${util.inspect(
-        filePath
-      )})`
-    );
-  }
-  if (filePath.includes("\u200b")) {
-    throw new Error(
-      `Folder contains zero width whitespace which is not allowed (${filePath})`
-    );
-  }
-  // Use Boolean() because otherwise, `isTranslated` might become `undefined`
-  // rather than an actuall boolean value.
-  const isTranslated = Boolean(
-    CONTENT_TRANSLATED_ROOT && filePath.startsWith(CONTENT_TRANSLATED_ROOT)
-  );
-
-  const rawContent = fs.readFileSync(filePath, "utf-8");
-  if (!rawContent) {
-    throw new Error(`${filePath} is an empty file`);
-  }
-
-  // This is very useful in CI where every page gets built. If there's an
-  // accidentally unresolved git conflict, that's stuck in the content,
-  // bail extra early.
-  if (
-    // If the document itself, is a page that explains and talks about git merge
-    // conflicts, i.e. a false positive, those angled brackets should be escaped
-    /^<<<<<<< HEAD\n/m.test(rawContent) &&
-    /^=======\n/m.test(rawContent) &&
-    /^>>>>>>>/m.test(rawContent)
-  ) {
-    throw new Error(`${filePath} contains git merge conflict markers`);
-  }
-
-  const {
-    attributes: metadata,
-    body: rawBody,
-    bodyBegin: frontMatterOffset,
-  } = fm(rawContent);
-
-  const url = `/${locale}/docs/${metadata.slug}`;
-
-  const isActive = ACTIVE_LOCALES.has(locale.toLowerCase());
-
-  // The last-modified is always coming from the git logs. Independent of
-  // which root it is.
-  const gitHistory = getGitHistories(root, locale).get(
-    path.relative(root, filePath)
-  );
-  let modified = null;
-  let hash = null;
-  if (gitHistory) {
+    // This is very useful in CI where every page gets built. If there's an
+    // accidentally unresolved git conflict, that's stuck in the content,
+    // bail extra early.
     if (
-      gitHistory.merged &&
-      gitHistory.merged.modified &&
-      gitHistory.merged.hash
+      // If the document itself, is a page that explains and talks about git merge
+      // conflicts, i.e. a false positive, those angled brackets should be escaped
+      /^<<<<<<< HEAD\n/m.test(rawContent) &&
+      /^=======\n/m.test(rawContent) &&
+      /^>>>>>>>/m.test(rawContent)
     ) {
-      modified = gitHistory.merged.modified;
-      hash = gitHistory.merged.hash;
-    } else {
-      modified = gitHistory.modified;
-      hash = gitHistory.hash;
+      throw new Error(`${filePath} contains git merge conflict markers`);
     }
-  }
-  // Use the wiki histories for a list of legacy contributors.
-  const wikiHistory = getWikiHistories(root, locale).get(url);
-  if (!modified && wikiHistory && wikiHistory.modified) {
-    modified = wikiHistory.modified;
-  }
-  const fullMetadata = {
-    metadata: {
-      ...metadata,
-      // This is our chance to record and remember which keys were actually
-      // dug up from the front-matter.
-      // It matters because the keys in front-matter are arbitrary.
-      // Meaning, if a document contains `foo: bar` as a front-matter key/value
-      // we need to take note of that and make sure we preserve that if we
-      // save the metadata back (e.g. fixable flaws).
-      frontMatterKeys: Object.keys(metadata),
-      locale,
-      popularity: getPopularities().get(url) || 0.0,
-      modified,
-      hash,
-      contributors: wikiHistory ? wikiHistory.contributors : [],
-    },
-    url,
-  };
 
-  return {
-    ...fullMetadata,
-    // ...{ rawContent },
-    rawContent, // HTML or Markdown whole string with all the front-matter
-    rawBody, // HTML or Markdown string without the front-matter
-    isMarkdown: filePath.endsWith(MARKDOWN_FILENAME),
-    isTranslated,
-    isActive,
-    fileInfo: {
-      folder,
-      path: filePath,
-      frontMatterOffset,
-      root,
-    },
-  };
-});
+    const {
+      attributes: metadata,
+      body: rawBody,
+      bodyBegin: frontMatterOffset,
+    } = fm<DocFrontmatter>(rawContent);
 
-function update(url, rawBody, metadata) {
+    const url = `/${locale}/docs/${metadata.slug}`;
+
+    const isActive = ACTIVE_LOCALES.has(locale.toLowerCase());
+
+    // The last-modified is always coming from the git logs. Independent of
+    // which root it is.
+    const gitHistory = getGitHistories(root, locale).get(
+      path.relative(root, filePath)
+    );
+    let modified = null;
+    let hash = null;
+    if (gitHistory) {
+      if (
+        gitHistory.merged &&
+        gitHistory.merged.modified &&
+        gitHistory.merged.hash
+      ) {
+        modified = gitHistory.merged.modified;
+        hash = gitHistory.merged.hash;
+      } else {
+        modified = gitHistory.modified;
+        hash = gitHistory.hash;
+      }
+    }
+    // Use the wiki histories for a list of legacy contributors.
+    const wikiHistory = getWikiHistories(root, locale).get(url);
+    if (!modified && wikiHistory && wikiHistory.modified) {
+      modified = wikiHistory.modified;
+    }
+    const fullMetadata = {
+      metadata: {
+        ...metadata,
+        // This is our chance to record and remember which keys were actually
+        // dug up from the front-matter.
+        // It matters because the keys in front-matter are arbitrary.
+        // Meaning, if a document contains `foo: bar` as a front-matter key/value
+        // we need to take note of that and make sure we preserve that if we
+        // save the metadata back (e.g. fixable flaws).
+        frontMatterKeys: Object.keys(metadata),
+        locale,
+        popularity: getPopularities().get(url) || 0.0,
+        modified,
+        hash,
+        contributors: wikiHistory ? wikiHistory.contributors : [],
+      },
+      url,
+    };
+
+    return {
+      ...fullMetadata,
+      // ...{ rawContent },
+      rawContent, // HTML or Markdown whole string with all the front-matter
+      rawBody, // HTML or Markdown string without the front-matter
+      isMarkdown: filePath.endsWith(MARKDOWN_FILENAME),
+      isTranslated,
+      isActive,
+      fileInfo: {
+        folder,
+        path: filePath,
+        frontMatterOffset,
+        root,
+      },
+    };
+  }
+);
+
+export function update(url: string, rawBody: string, metadata) {
   const folder = urlToFolderPath(url);
   const document = read(folder);
   const locale = document.metadata.locale;
@@ -397,7 +420,7 @@ function update(url, rawBody, metadata) {
   }
 }
 
-function findByURL(url, ...args) {
+export function findByURL(url: string, ...args: string[]) {
   const [bareURL, hash = ""] = url.split("#", 2);
   if (!bareURL.toLowerCase().includes("/docs/")) {
     return;
@@ -409,8 +432,8 @@ function findByURL(url, ...args) {
   return doc;
 }
 
-function findAll({
-  files = new Set(),
+export function findAll({
+  files = new Set<string>(),
   folderSearch = null,
   locales = new Map(),
 } = {}) {
@@ -480,7 +503,7 @@ function findAll({
         return true;
       })
       .crawl(root);
-    filePaths.push(...api.sync());
+    filePaths.push(...(api.sync() as PathsOutput));
   }
   return {
     count: filePaths.length,
@@ -492,7 +515,7 @@ function findAll({
   };
 }
 
-function findChildren(url, recursive = false) {
+export function findChildren(url: string, recursive = false) {
   const locale = url.split("/")[1];
   const root = getRoot(locale);
   const folder = urlToFolderPath(url);
@@ -501,7 +524,12 @@ function findChildren(url, recursive = false) {
   return childPaths.map((folder) => read(folder));
 }
 
-function move(oldSlug, newSlug, locale, { dry = false } = {}) {
+export function move(
+  oldSlug: string,
+  newSlug: string,
+  locale: string,
+  { dry = false } = {}
+) {
   const oldUrl = buildURL(locale, oldSlug);
   const doc = findByURL(oldUrl);
   if (!doc) {
@@ -531,19 +559,19 @@ function move(oldSlug, newSlug, locale, { dry = false } = {}) {
   return pairs;
 }
 
-function fileForSlug(slug, locale) {
+export function fileForSlug(slug: string, locale: string) {
   return getMarkdownPath(getFolderPath({ slug, locale }));
 }
 
-function exists(slug, locale) {
+export function exists(slug: string, locale: string) {
   return Boolean(read(buildPath(locale.toLowerCase(), slug)));
 }
 
-function parentSlug(slug) {
+export function parentSlug(slug: string) {
   return slug.split("/").slice(0, -1).join("/");
 }
 
-function validate(slug, locale) {
+export function validate(slug: string, locale: string) {
   const errors = [];
   const file = buildPath(locale.toLowerCase(), slug);
 
@@ -559,9 +587,9 @@ function validate(slug, locale) {
   }
 }
 
-function remove(
-  slug,
-  locale,
+export function remove(
+  slug: string,
+  locale: string,
   { recursive = false, dry = false, redirect = "" } = {}
 ) {
   const root = getRoot(locale);
@@ -575,7 +603,7 @@ function remove(
   if (CONTENT_TRANSLATED_ROOT) {
     roots.push(CONTENT_TRANSLATED_ROOT);
   }
-  const { metadata, fileInfo } = findByURL(url, roots) || {};
+  const { metadata, fileInfo } = findByURL(url, ...roots) || {};
   if (!metadata) {
     throw new Error(`document does not exists: ${url}`);
   }
@@ -605,7 +633,9 @@ function remove(
   if (redirectUrl) {
     Redirect.add(locale, [
       [url, redirectUrl],
-      ...children.map(({ url: childUrl }) => [childUrl, redirectUrl]),
+      ...children.map(
+        ({ url: childUrl }) => [childUrl, redirectUrl] as [string, string]
+      ),
     ]);
   } else {
     Redirect.remove(locale, [url, ...removed]);
@@ -618,29 +648,3 @@ function remove(
 
   return docs;
 }
-
-module.exports = {
-  createHTML,
-  createMarkdown,
-  read,
-  update,
-  exists,
-  remove,
-  move,
-  validate,
-
-  urlToFolderPath,
-  getFolderPath,
-  fileForSlug,
-  parentSlug,
-
-  updateWikiHistory,
-  trimLineEndings,
-  saveFile,
-
-  findByURL,
-  findAll,
-  findChildren,
-
-  MEMOIZE_INVALIDATE,
-};

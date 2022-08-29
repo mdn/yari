@@ -1,11 +1,13 @@
 import path from "path";
 
-import { fdir } from "fdir";
+import { fdir, PathsOutput } from "fdir";
 
 import { HTML_FILENAME, MARKDOWN_FILENAME } from "../libs/constants";
 import { CONTENT_ROOT, CONTENT_TRANSLATED_ROOT } from "../libs/env";
 
-function allDocumentPathsAsTree(root) {
+type Tree = { [key: string]: Tree | null };
+
+function allDocumentPathsAsTree(root: string) {
   const api = new fdir()
     .withErrors()
     .withRelativePaths()
@@ -16,15 +18,15 @@ function allDocumentPathsAsTree(root) {
     })
     .crawl(root);
 
-  let tree = {};
-  for (const p of api.sync()) {
+  let tree: Tree = {};
+  for (const p of api.sync() as PathsOutput) {
     tree = addToTree(tree, p.split(path.sep));
   }
 
   return tree;
 }
 
-function addToTree(tree = {}, [current, ...rest]) {
+function addToTree(tree: Tree = {}, [current, ...rest]: string[]) {
   if (rest.length === 0) {
     tree[current] = null;
     return tree;
@@ -34,7 +36,11 @@ function addToTree(tree = {}, [current, ...rest]) {
   return tree;
 }
 
-function flattenSubTree(t, prefix = [], recurse = false) {
+function flattenSubTree(
+  t: Tree,
+  prefix: string[] = [],
+  recurse = false
+): string[] {
   const directChildren = [...Object.keys(t)]
     .filter(
       (k) =>
@@ -61,11 +67,11 @@ function flattenSubTree(t, prefix = [], recurse = false) {
 }
 
 function childrenForPath(
-  tree,
-  [current, ...path],
+  tree: Tree,
+  [current, ...path]: string[],
   recurse = false,
-  prefix = []
-) {
+  prefix: string[] = []
+): string[] {
   if (!current) {
     return flattenSubTree(tree, prefix, recurse);
   }
@@ -78,7 +84,7 @@ function childrenForPath(
   return childrenForPath(child, path, recurse, [...prefix, current]);
 }
 
-function initAllDocumentsPathsTree() {
+function initAllDocumentsPathsTree(): Tree {
   // When running a production build we can afford to look up all files upfront.
   if (process.env.NODE_ENV === "production") {
     return {
@@ -94,7 +100,11 @@ function initAllDocumentsPathsTree() {
 
 const ALL_DOCUMENT_PATHS_TREE = initAllDocumentsPathsTree();
 
-function childrenFoldersForPath(root, folder, recursive) {
+export function childrenFoldersForPath(
+  root: string,
+  folder: string,
+  recursive: boolean
+) {
   const base = path.join(root, folder);
   const baseHTML = path.join(base, HTML_FILENAME);
   const baseMarkdown = path.join(base, MARKDOWN_FILENAME);
@@ -121,10 +131,8 @@ function childrenFoldersForPath(root, folder, recursive) {
       .withMaxDepth(recursive ? Infinity : 1)
       .crawl(base);
 
-    return api
-      .sync()
-      .map((childFilePath) => path.relative(root, path.dirname(childFilePath)));
+    return (api.sync() as PathsOutput).map((childFilePath) =>
+      path.relative(root, path.dirname(childFilePath))
+    );
   }
 }
-
-module.exports = { childrenFoldersForPath };
