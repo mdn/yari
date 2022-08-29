@@ -99,7 +99,7 @@ export interface TranslationDifferenceFlaw extends GenericFlaw {
   };
 }
 
-export type Flaws = {
+export type Flaws = Partial<{
   broken_links: BrokenLink[];
   macros: MacroErrorMessage[];
   bad_bcd_queries: BadBCDQueryFlaw[];
@@ -111,7 +111,7 @@ export type Flaws = {
   heading_links: HeadingLinksFlaw[];
   translation_differences: TranslationDifferenceFlaw[];
   unsafe_html: UnsafeHTMLFlaw[];
-};
+}>;
 
 export type Translation = {
   locale: string;
@@ -141,7 +141,7 @@ export interface Doc {
   toc: Toc[];
   body: Section[];
   modified: string;
-  flaws: Partial<Flaws>;
+  flaws: Flaws;
   other_translations?: Translation[];
   translation_of?: string;
   parents?: DocParent[];

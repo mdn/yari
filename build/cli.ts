@@ -134,7 +134,7 @@ async function buildDocuments(
   // For keeping track of the total counts of flaws
   const totalFlaws = new Map<string, number>();
 
-  function appendTotalFlaws(flaws: Partial<Flaws>) {
+  function appendTotalFlaws(flaws: Flaws) {
     for (const [key, actualFlaws] of Object.entries(flaws)) {
       const count = actualFlaws.length;
       if (!totalFlaws.has(key)) {
