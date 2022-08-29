@@ -33,14 +33,9 @@ import buildOptions from "./build-options";
 export { gather as gatherGitHistory } from "./git-history";
 export { buildSPAs } from "./spas";
 import { renderCache as renderKumascriptCache } from "../kumascript";
-const LANGUAGES_RAW = require("../libs/languages") as Record<
-  string,
-  LanguageItem
->;
+import LANGUAGES_RAW from "../libs/languages";
 import { safeDecodeURIComponent } from "../kumascript/src/api/util";
 import { wrapTables } from "./wrap-tables";
-
-// TODO Deduplicate.
 
 const LANGUAGES = new Map<string, LanguageItem>(
   Object.entries(LANGUAGES_RAW).map(([locale, data]) => {
