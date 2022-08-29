@@ -1,20 +1,20 @@
-const fs = require("fs");
-const path = require("path");
-const util = require("util");
+import fs from "fs";
+import path from "path";
+import util from "util";
 
-const fm = require("front-matter");
-const yaml = require("js-yaml");
-const { fdir } = require("fdir");
+import fm from "front-matter";
+import yaml from "js-yaml";
+import { fdir } from "fdir";
 
-const { HTML_FILENAME, MARKDOWN_FILENAME } = require("../libs/constants");
-const { CONTENT_TRANSLATED_ROOT, CONTENT_ROOT, ROOTS } = require("../libs/env");
-const { ACTIVE_LOCALES, VALID_LOCALES } = require("../libs/constants");
-const { getPopularities } = require("./popularities");
-const { getWikiHistories } = require("./wikihistories");
-const { getGitHistories } = require("./githistories");
-const { childrenFoldersForPath } = require("./document-paths");
+import { HTML_FILENAME, MARKDOWN_FILENAME } from "../libs/constants";
+import { CONTENT_TRANSLATED_ROOT, CONTENT_ROOT, ROOTS } from "../libs/env";
+import { ACTIVE_LOCALES, VALID_LOCALES } from "../libs/constants";
+import { getPopularities } from "./popularities";
+import { getWikiHistories } from "./wikihistories";
+import { getGitHistories } from "./githistories";
+import { childrenFoldersForPath } from "./document-paths";
 
-const {
+import {
   buildURL,
   getRoot,
   memoize,
@@ -22,8 +22,8 @@ const {
   execGit,
   urlToFolderPath,
   MEMOIZE_INVALIDATE,
-} = require("./utils");
-const Redirect = require("./redirect");
+} from "./utils";
+import Redirect from "./redirect";
 
 function buildPath(localeFolder, slug) {
   return path.join(localeFolder, slugToFolder(slug));

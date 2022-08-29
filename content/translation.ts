@@ -1,4 +1,4 @@
-const Parser = require("../kumascript/src/parser.js");
+import Parser from "../kumascript/src/parser.js";
 
 function* fastKSParser(s) {
   for (const match of s.matchAll(
