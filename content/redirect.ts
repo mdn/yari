@@ -7,10 +7,13 @@ import { CONTENT_ROOT, CONTENT_TRANSLATED_ROOT } from "../libs/env";
 import { VALID_LOCALES } from "../libs/constants";
 import { getRoot } from "./utils";
 
+type Pair = [string, string];
+type Pairs = Pair[];
+
 const FORBIDDEN_URL_SYMBOLS = ["\n", "\t"];
 const VALID_LOCALES_SET = new Set([...VALID_LOCALES.values()]);
 
-function checkURLInvalidSymbols(url) {
+function checkURLInvalidSymbols(url: string) {
   for (const character of FORBIDDEN_URL_SYMBOLS) {
     if (url.includes(character)) {
       throw new Error(`URL contains invalid character '${character}'`);
@@ -18,12 +21,12 @@ function checkURLInvalidSymbols(url) {
   }
 }
 
-function isVanityRedirectURL(url) {
+function isVanityRedirectURL(url: string) {
   const localeUrls = new Set([...VALID_LOCALES.values()].map((l) => `/${l}/`));
   return localeUrls.has(url);
 }
 
-function resolveDocumentPath(url) {
+function resolveDocumentPath(url: string) {
   // Let's keep vanity urls to /en-US/ ...
   if (isVanityRedirectURL(url)) {
     return url;
@@ -51,7 +54,7 @@ function resolveDocumentPath(url) {
 }
 
 // Throw if this can't be a redirect from-URL.
-function validateFromURL(url, locale, checkPath = true) {
+function validateFromURL(url: string, locale: string, checkPath = true) {
   if (!url.startsWith("/")) {
     throw new Error(`From-URL must start with a / was ${url}`);
   }
@@ -79,7 +82,7 @@ function validateFromURL(url, locale, checkPath = true) {
 }
 
 // Throw if this can't be a redirect to-URL.
-function validateToURL(url, locale, checkPath = true) {
+function validateToURL(url: string, locale: string, checkPath = true) {
   // Let's keep vanity urls to /en-US/ ...
   if (isVanityRedirectURL(url)) {
     return url;
@@ -111,7 +114,7 @@ function validateToURL(url, locale, checkPath = true) {
   }
 }
 
-function validateURLLocale(url) {
+function validateURLLocale(url: string) {
   // Check that it's a valid document URL
   const [nothing, locale, docs] = url.split("/");
   if (nothing || !locale || docs !== "docs") {
@@ -123,7 +126,7 @@ function validateURLLocale(url) {
   }
 }
 
-function errorOnEncoded(paris) {
+function errorOnEncoded(paris: Pairs) {
   for (const [from, to] of paris) {
     const [decodedFrom, decodedTo] = decodePair([from, to]);
     if (decodedFrom !== from) {
@@ -135,7 +138,7 @@ function errorOnEncoded(paris) {
   }
 }
 
-function errorOnDuplicated(pairs) {
+function errorOnDuplicated(pairs: Pairs) {
   const seen = new Set();
   for (const [from] of pairs) {
     const fromLower = from.toLowerCase();
@@ -146,7 +149,7 @@ function errorOnDuplicated(pairs) {
   }
 }
 
-function removeConflictingOldRedirects(oldPairs, updatePairs) {
+function removeConflictingOldRedirects(oldPairs: Pairs, updatePairs: Pairs) {
   if (oldPairs.length === 0) {
     return oldPairs;
   }
@@ -163,7 +166,7 @@ function removeConflictingOldRedirects(oldPairs, updatePairs) {
   });
 }
 
-function removeOrphanedRedirects(pairs, locale) {
+function removeOrphanedRedirects(pairs: Pairs, locale: string) {
   return pairs.filter(([from, to]) => {
     if (resolveDocumentPath(from)) {
       console.log(`removing orphaned redirect (from exists): ${from}\t${to}`);
@@ -184,14 +187,14 @@ function removeOrphanedRedirects(pairs, locale) {
   });
 }
 
-function loadPairsFromFile(filePath, locale, strict = true) {
+function loadPairsFromFile(filePath: string, locale: string, strict = true) {
   const content = fs.readFileSync(filePath, "utf-8");
   const pairs = content
     .trim()
     .split("\n")
     // Skip the header line.
     .filter((line) => line && !line.startsWith("#"))
-    .map((line) => line.trim().split(/\t+/));
+    .map((line) => line.trim().split(/\t+/, 2) as Pair);
 
   if (strict) {
     errorOnEncoded(pairs);
@@ -202,8 +205,8 @@ function loadPairsFromFile(filePath, locale, strict = true) {
 }
 
 function loadLocaleAndAdd(
-  locale,
-  updatePairs,
+  locale: string,
+  updatePairs: Pairs,
   { fix = false, strict = false } = {}
 ) {
   errorOnEncoded(updatePairs);
@@ -232,7 +235,7 @@ function loadLocaleAndAdd(
   }
   validatePairs(simplifiedPairs, locale, strict);
 
-  const pairsChanged = (a, b) => {
+  const pairsChanged = (a: Pairs, b: Pairs) => {
     // Compare tuple by tuple if they are the same.
     for (let i = 0; i < Math.max(a.length, b.length); i++) {
       const [a1, a2] = a[i] || [];
@@ -252,9 +255,9 @@ function loadLocaleAndAdd(
   };
 }
 
-function add(
-  locale,
-  updatePairs,
+export function add(
+  locale: string,
+  updatePairs: Pairs,
   { fix = false, strict = false, dry = false } = {}
 ) {
   const localeLC = locale.toLowerCase();
@@ -267,7 +270,11 @@ function add(
   }
 }
 
-function remove(locale, urls, { strict = false } = {}) {
+export function remove(
+  locale: string,
+  urls: string[],
+  { strict = false } = {}
+) {
   const localeLC = locale.toLowerCase();
   const urlsLC = new Set(urls.map((url) => url.toLowerCase()));
   const { pairs, root } = loadLocaleAndAdd(localeLC, [], {
@@ -277,7 +284,7 @@ function remove(locale, urls, { strict = false } = {}) {
   save(path.join(root, localeLC), filteredPairs);
 }
 
-function validateLocale(locale, strict = false) {
+export function validateLocale(locale: string, strict = false) {
   const localeLC = locale.toLowerCase();
   // To validate strict we check if there is something to fix.
   const { changed } = loadLocaleAndAdd(localeLC, [], { fix: strict, strict });
@@ -287,7 +294,7 @@ function validateLocale(locale, strict = false) {
   }
 }
 
-function redirectFilePathForLocale(locale, throws = false) {
+function redirectFilePathForLocale(locale: string, throws = false) {
   const makeFilePath = (root) =>
     path.join(root, locale.toLowerCase(), "_redirects.txt");
 
@@ -311,7 +318,10 @@ function redirectFilePathForLocale(locale, throws = false) {
 // The module level cache
 const redirects = new Map();
 
-function load(locales = [...VALID_LOCALES.keys()], verbose = false) {
+export function load(
+  locales: string[] = [...VALID_LOCALES.keys()],
+  verbose = false
+) {
   for (const locale of locales) {
     const redirectsFilePath = redirectFilePathForLocale(locale);
     if (!redirectsFilePath) {
@@ -329,7 +339,7 @@ function load(locales = [...VALID_LOCALES.keys()], verbose = false) {
   }
 }
 
-const resolve = (url) => {
+export const resolve = (url) => {
   if (!redirects.size) {
     load();
   }
@@ -340,19 +350,18 @@ const resolve = (url) => {
   );
 };
 
-function shortCuts(pairs, throws = false) {
+function shortCuts(pairs: Pairs, throws = false): Pairs {
   // We have mixed cases in the _redirects.txt like:
   // /en-US/docs/window.document     /en-US/docs/Web/API/window.document
   // /en-US/docs/Web/API/Window.document     /en-US/docs/Web/API/Window/document
   // therefore we have to lowercase everything and restore it later.
   const casing = new Map([
-    ...pairs.map(([from]) => [from.toLowerCase(), from]),
-    ...pairs.map(([, to]) => [to.toLowerCase(), to]),
+    ...pairs.map(([from]: Pair) => [from.toLowerCase(), from] as Pair),
+    ...pairs.map(([, to]: Pair) => [to.toLowerCase(), to] as Pair),
   ]);
-  const lowerCasePairs = pairs.map(([from, to]) => [
-    from.toLowerCase(),
-    to.toLowerCase(),
-  ]);
+  const lowerCasePairs = pairs.map(
+    ([from, to]) => [from.toLowerCase(), to.toLowerCase()] as Pair
+  );
   const hashPairs = pairs.filter(([, to]) => to.includes("#"));
 
   // Directed graph of all redirects.
@@ -361,7 +370,7 @@ function shortCuts(pairs, throws = false) {
   // Transitive directed acyclic graph of all redirects.
   // All redirects are expanded A -> B, B -> C becomes:
   // A -> B, B -> C, A -> C and all cycles are removed.
-  const transitiveDag = new Map();
+  const transitiveDag = new Map<string, string>();
 
   // Expand all "edges" and keep track of the nodes we traverse.
   const transit = (s, froms = []) => {
@@ -428,18 +437,19 @@ function shortCuts(pairs, throws = false) {
     }
   }
 
-  const transitivePairs = [...transitiveDag.entries()];
+  const transitivePairs: Pairs = [...transitiveDag.entries()];
 
   // Restore cases!
-  const mappedPairs = transitivePairs.map(([from, to]) => [
+  const mappedPairs: Pairs = transitivePairs.map(([from, to]) => [
     casing.get(from) || from,
     casing.get(to) || to,
   ]);
   mappedPairs.sort(sortTuples);
+
   return mappedPairs;
 }
 
-function decodePair([from, to]) {
+function decodePair([from, to]: Pair): Pair {
   const fromDecoded = decodePath(from);
   let toDecoded;
   if (to.startsWith("/")) {
@@ -450,11 +460,11 @@ function decodePair([from, to]) {
   return [fromDecoded, toDecoded];
 }
 
-function decodePairs(pairs) {
+function decodePairs(pairs: Pairs) {
   return pairs.map((pair) => decodePair(pair));
 }
 
-function validatePairs(pairs, locale, checkExists = true) {
+function validatePairs(pairs: Pairs, locale: string, checkExists = true) {
   for (const [from, to] of pairs) {
     validateFromURL(from, locale, checkExists);
     validateToURL(to, locale, checkExists);
@@ -470,7 +480,7 @@ const redirectsFileOpening = `
 # FROM-URL\tTO-URL
 `.trim();
 
-function save(localeFolder, pairs) {
+function save(localeFolder: string, pairs: Array<[string, string]>) {
   const filePath = path.join(localeFolder, "_redirects.txt");
   const writeStream = fs.createWriteStream(filePath);
   writeStream.write(`${redirectsFileOpening}\n`);
@@ -480,15 +490,7 @@ function save(localeFolder, pairs) {
   writeStream.end();
 }
 
-module.exports = {
-  add,
-  remove,
-  resolve,
-  load,
-  validateLocale,
-
-  testing: {
-    shortCuts,
-    decodePairs,
-  },
+export const testing = {
+  shortCuts,
+  decodePairs,
 };

@@ -1,6 +1,6 @@
 import Parser from "../kumascript/src/parser.js";
 
-function* fastKSParser(s) {
+function* fastKSParser(s: string) {
   for (const match of s.matchAll(
     /\{\{\s*(\w+[\w-.]*\w+)\s*(\((.*?)\)|)\s*\}\}/gms
   )) {
@@ -104,7 +104,7 @@ function getMacrosSlow(content) {
   return macros;
 }
 
-function getMacrosFast(content) {
+function getMacrosFast(content: string) {
   const tokens = fastKSParser(content);
   const macros = new Set();
 
@@ -130,7 +130,7 @@ function getMacrosFast(content) {
   return macros;
 }
 
-function* getTranslationDifferences(
+export function* getTranslationDifferences(
   englishDocument,
   translatedDocument,
   fast = false
@@ -161,12 +161,12 @@ function* getTranslationDifferences(
   }
 }
 
-function equalSets(setA, setB) {
+function equalSets<T>(setA: Set<T>, setB: Set<T>) {
   return setA.size === setB.size && [...setA].every((value) => setB.has(value));
 }
 
 // Given [1, 2, 3] and [2, 3, 4] the symmetric difference is [1, 4]
-function symmetricSetDifference(setA, setB) {
+function symmetricSetDifference<T>(setA: Set<T>, setB: Set<T>) {
   const difference = new Set(setA);
   for (const elem of setB) {
     if (difference.has(elem)) {
@@ -178,7 +178,7 @@ function symmetricSetDifference(setA, setB) {
   return difference;
 }
 
-function setIntersection(setA, setB) {
+function setIntersection<T>(setA: Set<T>, setB: Set<T>) {
   const intersection = new Set();
   for (const elem of setB) {
     if (setA.has(elem)) {
@@ -188,14 +188,10 @@ function setIntersection(setA, setB) {
   return intersection;
 }
 
-function setUnion(setA, setB) {
+function setUnion<T>(setA: Set<T>, setB: Set<T>) {
   const union = new Set(setA);
   for (const elem of setB) {
     union.add(elem);
   }
   return union;
 }
-
-module.exports = {
-  getTranslationDifferences,
-};

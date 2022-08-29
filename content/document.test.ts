@@ -1,7 +1,7 @@
 import fs from "fs";
 import path from "path";
 
-import Document from "./document";
+import * as Document from "./document";
 
 describe("Document.findAll()", () => {
   it("should always return files that exist", () => {

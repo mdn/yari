@@ -294,7 +294,7 @@ export async function fixFixableFlaws(doc, options, document) {
         )
       );
     } else {
-      Document.update(document.url, newRawBody, document.metadata, isMarkdown);
+      Document.update(document.url, newRawBody, document.metadata);
       if (options.fixFlawsVerbose) {
         console.log(
           chalk.green(
