@@ -280,14 +280,6 @@ function getAdjacentImages(documentDirectory) {
     .map((dirent) => path.join(documentDirectory, dirent.name));
 }
 
-interface ExtendedDoc extends Omit<Doc, "flaws"> {
-  // TODO Check why these are not part of Doc.
-  flaws: Partial<Flaws>;
-  summary: string;
-  popularity: number;
-  noIndexing: boolean;
-}
-
 export interface BuiltDocument {
   doc: Doc;
   liveSamples: any;
@@ -328,7 +320,7 @@ export async function buildDocument(
     isTranslated: document.isTranslated,
     isActive: document.isActive,
     flaws: {},
-  } as Partial<ExtendedDoc>;
+  } as Partial<Doc>;
 
   interface LiveSample {
     id: string;

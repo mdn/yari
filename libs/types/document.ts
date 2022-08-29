@@ -141,7 +141,7 @@ export interface Doc {
   toc: Toc[];
   body: Section[];
   modified: string;
-  flaws: Flaws;
+  flaws: Partial<Flaws>;
   other_translations?: Translation[];
   translation_of?: string;
   parents?: DocParent[];
