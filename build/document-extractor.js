@@ -324,6 +324,7 @@ function _addSingleSpecialSection($) {
 
   let dataQuery = null;
   let hasMultipleQueries = false;
+  let polyfillURLs = null;
   let specURLsString = "";
   let specialSectionType = null;
   if ($.find("div.bc-data").length) {
@@ -332,6 +333,8 @@ function _addSingleSpecialSection($) {
     // Macro adds "data-query", but some translated-content still uses "id".
     dataQuery = elem.attr("data-query") || elem.attr("id");
     hasMultipleQueries = elem.attr("data-multiple") === "true";
+    // Add polyfills info
+    polyfillURLs = elem.attr("data-polyfills");
   } else if ($.find("div.bc-specs").length) {
     specialSectionType = "specifications";
     dataQuery = $.find("div.bc-specs").attr("data-bcd-query");
@@ -460,6 +463,7 @@ function _addSingleSpecialSection($) {
           data,
           query,
           browsers,
+          polyfillURLs,
         },
       },
     ];
