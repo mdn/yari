@@ -9,7 +9,11 @@ import format from "rehype-format";
 import { buildLocalizedHandlers } from "./handlers";
 import { decodeKS, encodeKS } from "../utils";
 
-function makeProcessor(options) {
+interface ProcessorOptions {
+  locale?: string;
+}
+
+function makeProcessor(options: ProcessorOptions) {
   const localizedHandlers = buildLocalizedHandlers(options.locale);
   const processor = unified()
     .use(parse)
@@ -25,7 +29,7 @@ function makeProcessor(options) {
   return processor;
 }
 
-export async function m2h(md, options) {
+export async function m2h(md: string, options: ProcessorOptions) {
   const ksEncoded = encodeKS(md);
   const processor = makeProcessor(options);
 
@@ -33,7 +37,7 @@ export async function m2h(md, options) {
   return decodeKS(String(file));
 }
 
-export function m2hSync(md, options) {
+export function m2hSync(md: string, options: ProcessorOptions) {
   const ksEncoded = encodeKS(md);
   const processor = makeProcessor(options);
 

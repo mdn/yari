@@ -25,8 +25,8 @@ function tryOrExit(f: Function) {
   };
 }
 
-function buildLocaleMap(locale) {
-  let localesMap = new Map();
+function buildLocaleMap(locale: string) {
+  let localesMap = new Map<string, string>();
   if (locale !== "all") {
     localesMap = new Map([[locale.toLowerCase(), locale]]);
   }

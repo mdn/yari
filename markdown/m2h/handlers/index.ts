@@ -57,7 +57,7 @@ function getNotecardType(node, locale) {
   return type == "warning" || type == "note" || type == "callout" ? type : null;
 }
 
-export function buildLocalizedHandlers(locale) {
+export function buildLocalizedHandlers(locale: string) {
   /* This is only used for the Notecard parsing where the "magit" word depends on the locale */
   return {
     code,
