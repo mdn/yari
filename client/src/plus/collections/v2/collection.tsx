@@ -12,7 +12,14 @@ import {
   DropdownMenuWrapper,
 } from "../../../ui/molecules/dropdown";
 import { camelWrap } from "../../../utils";
-import { deleteItem, editItem, Item, useCollection, useItems } from "./api";
+import {
+  Item,
+  useCollection,
+  useItemDelete,
+  useItemEdit,
+  useItems,
+} from "./api";
+import NoteCard from "../../../ui/molecules/notecards";
 
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
@@ -20,9 +27,12 @@ dayjs.extend(relativeTime);
 
 export default function CollectionComponent() {
   const { collectionId } = useParams();
-  const { data: collection } = useCollection(collectionId);
+  const { data: collection, error: collectionError } =
+    useCollection(collectionId);
   const {
     data: itemPages,
+    error: itemError,
+    isLoading: itemLoading,
     size,
     setSize,
     atEnd,
@@ -47,9 +57,12 @@ export default function CollectionComponent() {
         </Container>
       </header>
       <Container>
-        {itemPages?.flat(1).map((item) => (
-          <ItemComponent key={item.id} {...{ item, mutate }} />
-        ))}
+        {itemPages
+          ?.flat(1)
+          .map((item) => (
+            <ItemComponent key={item.id} {...{ item, mutate }} />
+          )) ||
+          (itemLoading && <Loading />)}
         {!atEnd && (
           <div className="pagination">
             <Button
@@ -57,15 +70,38 @@ export default function CollectionComponent() {
               onClickHandler={() => {
                 setSize(size + 1);
               }}
+              isDisabled={itemLoading}
             >
-              Show more
+              {itemLoading
+                ? "Loading..."
+                : itemError
+                ? "Error (try again)"
+                : "Show more"}
             </Button>
           </div>
         )}
       </Container>
     </>
   ) : (
-    <Loading />
+    <>
+      <header>
+        <Container>
+          <Link to="../" className="exit">
+            &larr; Back
+          </Link>
+        </Container>
+      </header>
+      <Container>
+        {collectionError ? (
+          <NoteCard type="error">
+            <h4>Error</h4>
+            <p>{collectionError.message}</p>
+          </NoteCard>
+        ) : (
+          <Loading />
+        )}
+      </Container>
+    </>
   );
 }
 
@@ -79,7 +115,6 @@ function ItemComponent({
   const [showDropdown, setShowDropdown] = useState(false);
   const [showEdit, setShowEdit] = useState(false);
   const [showDelete, setShowDelete] = useState(false);
-  const [formItem, setFormItem] = useState(item);
 
   const breadcrumbs = item.parents
     .slice(0, -1)
@@ -88,36 +123,6 @@ function ItemComponent({
       // remove duplicated titles
       (title, index, titles) => title !== titles[index + 1]
     );
-
-  const deleteHandler = async (e: React.MouseEvent) => {
-    e.preventDefault();
-    await deleteItem(item, mutate);
-    setShowDelete(false);
-  };
-
-  const changeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setFormItem({ ...formItem, [name]: value.trimStart() });
-  };
-
-  const cancelEditHandler = (e: React.MouseEvent | React.KeyboardEvent) => {
-    e.preventDefault();
-    setFormItem(item);
-    setShowEdit(false);
-  };
-
-  const saveHandler = async (e: React.BaseSyntheticEvent) => {
-    e.preventDefault();
-    await editItem(formItem, mutate);
-    setShowEdit(false);
-  };
-
-  const enterHandler = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "Enter") {
-      e.preventDefault();
-      saveHandler(e);
-    }
-  };
 
   return (
     <article key={item.url}>
@@ -169,83 +174,12 @@ function ItemComponent({
             </ul>
           </DropdownMenu>
         </DropdownMenuWrapper>
-        <MDNModal
-          isOpen={showEdit}
-          size="small"
-          onRequestClose={cancelEditHandler}
-        >
-          <header className="modal-header">
-            <h2 className="modal-heading">Edit item</h2>
-            <Button
-              onClickHandler={cancelEditHandler}
-              type="action"
-              icon="cancel"
-              extraClasses="close-button"
-            />
-          </header>
-          <div className="modal-body">
-            <form className="mdn-form" onSubmit={saveHandler}>
-              <div className="mdn-form-item">
-                <label htmlFor="item-title">Title:</label>
-                <input
-                  id="item-title"
-                  name="title"
-                  value={formItem.title}
-                  onChange={changeHandler}
-                  onKeyDown={enterHandler}
-                  autoComplete="off"
-                  type="text"
-                  required={true}
-                />
-              </div>
-              <div className="mdn-form-item">
-                <label htmlFor="item-notes">Notes:</label>
-                <input
-                  id="item-notes"
-                  name="notes"
-                  value={formItem.notes}
-                  onChange={changeHandler}
-                  onKeyDown={enterHandler}
-                  autoComplete="off"
-                  type="text"
-                />
-              </div>
-              <div className="mdn-form-item is-button-row">
-                <Button buttonType="submit">Save</Button>
-                <Button onClickHandler={cancelEditHandler} type="secondary">
-                  Cancel
-                </Button>
-              </div>
-            </form>
-          </div>
-        </MDNModal>
-        <MDNModal
-          isOpen={showDelete}
-          size="small"
-          onRequestClose={() => setShowDelete(false)}
-        >
-          <header className="modal-header">
-            <h2 className="modal-heading">Delete item</h2>
-            <Button
-              onClickHandler={() => setShowDelete(false)}
-              type="action"
-              icon="cancel"
-              extraClasses="close-button"
-            />
-          </header>
-          <div className="modal-body">
-            Are you sure you want to delete "{item.title}" from your collection?
-            <div className="mdn-form-item is-button-row">
-              <Button onClickHandler={deleteHandler}>Delete</Button>
-              <Button
-                onClickHandler={() => setShowDelete(false)}
-                type="secondary"
-              >
-                Cancel
-              </Button>
-            </div>
-          </div>
-        </MDNModal>
+        <ItemEdit show={showEdit} setShow={setShowEdit} {...{ item, mutate }} />
+        <ItemDelete
+          show={showDelete}
+          setShow={setShowDelete}
+          {...{ item, mutate }}
+        />
       </header>
       <div className="breadcrumbs">{breadcrumbs.join(" > ")}</div>
       {item.notes && <p>{item.notes}</p>}
@@ -255,5 +189,184 @@ function ItemComponent({
         </time>
       </footer>
     </article>
+  );
+}
+
+function ItemEdit({
+  show,
+  setShow,
+  item,
+  mutate,
+}: {
+  show: boolean;
+  setShow: React.Dispatch<React.SetStateAction<boolean>>;
+  item: Item;
+  mutate: KeyedMutator<Item[][]>;
+}) {
+  const [formItem, setFormItem] = useState(item);
+
+  const { mutator, isPending, error, resetError } = useItemEdit(mutate);
+
+  const changeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setFormItem({ ...formItem, [name]: value.trimStart() });
+  };
+
+  const cancelHandler = (e: React.MouseEvent | React.KeyboardEvent) => {
+    e.preventDefault();
+    if (isPending) return;
+    resetError();
+    setFormItem(item);
+    setShow(false);
+  };
+
+  const saveHandler = async (e: React.BaseSyntheticEvent) => {
+    e.preventDefault();
+    if (isPending) return;
+    await mutator(formItem);
+    setShow(false);
+  };
+
+  const enterHandler = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      saveHandler(e);
+    }
+  };
+
+  return (
+    <MDNModal
+      isOpen={show}
+      size="small"
+      onRequestClose={cancelHandler}
+      extraOverlayClassName={isPending ? "wait" : ""}
+    >
+      <header className="modal-header">
+        <h2 className="modal-heading">Edit item</h2>
+        <Button
+          onClickHandler={cancelHandler}
+          type="action"
+          icon="cancel"
+          extraClasses="close-button"
+        />
+      </header>
+      <div className="modal-body">
+        {error && (
+          <NoteCard type="error">
+            <p>Error: {error.message}</p>
+          </NoteCard>
+        )}
+        <form className="mdn-form" onSubmit={saveHandler}>
+          <div className="mdn-form-item">
+            <label htmlFor="item-title">Title:</label>
+            <input
+              id="item-title"
+              name="title"
+              value={formItem.title}
+              onChange={changeHandler}
+              onKeyDown={enterHandler}
+              autoComplete="off"
+              type="text"
+              required={true}
+              disabled={isPending}
+            />
+          </div>
+          <div className="mdn-form-item">
+            <label htmlFor="item-notes">Notes:</label>
+            <input
+              id="item-notes"
+              name="notes"
+              value={formItem.notes}
+              onChange={changeHandler}
+              onKeyDown={enterHandler}
+              autoComplete="off"
+              type="text"
+              disabled={isPending}
+            />
+          </div>
+          <div className="mdn-form-item is-button-row">
+            <Button buttonType="submit" isDisabled={isPending}>
+              {isPending ? "Saving..." : "Save"}
+            </Button>
+            <Button
+              onClickHandler={cancelHandler}
+              type="secondary"
+              isDisabled={isPending}
+            >
+              Cancel
+            </Button>
+          </div>
+        </form>
+      </div>
+    </MDNModal>
+  );
+}
+
+function ItemDelete({
+  show,
+  setShow,
+  item,
+  mutate,
+}: {
+  show: boolean;
+  setShow: React.Dispatch<React.SetStateAction<boolean>>;
+  item: Item;
+  mutate: KeyedMutator<Item[][]>;
+}) {
+  const { mutator, isPending, error, resetError } = useItemDelete(mutate);
+
+  const cancelHandler = (e: React.MouseEvent) => {
+    e.preventDefault();
+    if (isPending) return;
+    resetError();
+    setShow(false);
+  };
+
+  const deleteHandler = async (e: React.MouseEvent) => {
+    e.preventDefault();
+    if (isPending) return;
+    await mutator(item);
+    setShow(false);
+  };
+
+  return (
+    <MDNModal
+      isOpen={show}
+      size="small"
+      onRequestClose={cancelHandler}
+      extraOverlayClassName={isPending ? "wait" : ""}
+    >
+      <header className="modal-header">
+        <h2 className="modal-heading">Delete item</h2>
+        <Button
+          onClickHandler={cancelHandler}
+          type="action"
+          icon="cancel"
+          extraClasses="close-button"
+        />
+      </header>
+      <div className="modal-body">
+        {error && (
+          <NoteCard type="error">
+            <p>Error: {error.message}</p>
+          </NoteCard>
+        )}
+        <p>
+          Are you sure you want to delete "{item.title}" from your collection?
+        </p>
+        <div className="mdn-form-item is-button-row">
+          <Button onClickHandler={deleteHandler} isDisabled={isPending}>
+            {isPending ? "Deleting..." : "Delete"}
+          </Button>
+          <Button
+            onClickHandler={cancelHandler}
+            type="secondary"
+            isDisabled={isPending}
+          >
+            Cancel
+          </Button>
+        </div>
+      </div>
+    </MDNModal>
   );
 }
