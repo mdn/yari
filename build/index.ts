@@ -646,7 +646,6 @@ export async function buildDocument(
     document.metadata.slug.startsWith("orphaned/") ||
     document.metadata.slug.startsWith("conflicting/");
 
-  // TODO Refactor to avoid `as Doc` type assertion.
   return { doc: doc as Doc, liveSamples, fileAttachments, bcdData };
 }
 
