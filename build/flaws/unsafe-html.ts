@@ -1,8 +1,10 @@
-const {
+import { Flaw } from ".";
+
+import {
   INTERACTIVE_EXAMPLES_BASE_URL,
   LIVE_SAMPLES_BASE_URL,
-} = require("../../libs/env");
-const { findMatchesInText } = require("../matches-in-text");
+} from "../../libs/env";
+import { findMatchesInText } from "../matches-in-text";
 
 const safeIFrameSrcs = [
   // EmbedGHLiveSample.ejs
@@ -37,7 +39,7 @@ function getAndMarkupUnsafeHTMLFlaws(doc, $, { rawContent, fileInfo }) {
     const fixable = false;
     const suggestion = null;
 
-    const flaw = {
+    const flaw: Flaw = {
       explanation,
       id,
       fixable,
@@ -107,4 +109,4 @@ function getAndMarkupUnsafeHTMLFlaws(doc, $, { rawContent, fileInfo }) {
   return flaws;
 }
 
-module.exports = { getUnsafeHTMLFlaws: getAndMarkupUnsafeHTMLFlaws };
+export const getUnsafeHTMLFlaws = getAndMarkupUnsafeHTMLFlaws;

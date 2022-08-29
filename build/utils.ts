@@ -1,31 +1,34 @@
-const fs = require("fs");
-const path = require("path");
+import fs from "fs";
+import path from "path";
 
-const cheerio = require("cheerio");
-const got = require("got");
-const FileType = require("file-type");
-const imagemin = require("imagemin");
-const imageminPngquant = require("imagemin-pngquant");
-const imageminMozjpeg = require("imagemin-mozjpeg");
-const imageminGifsicle = require("imagemin-gifsicle");
-const imageminSvgo = require("imagemin-svgo");
-const sanitizeFilename = require("sanitize-filename");
+import * as cheerio from "cheerio";
+import got from "got";
+import FileType from "file-type";
+import imagemin from "imagemin";
+import imageminPngquant from "imagemin-pngquant";
+import imageminMozjpeg from "imagemin-mozjpeg";
+import imageminGifsicle from "imagemin-gifsicle";
+import imageminSvgo from "imagemin-svgo";
+import sanitizeFilename from "sanitize-filename";
 
-const { VALID_MIME_TYPES } = require("../libs/constants");
+import { VALID_MIME_TYPES } from "../libs/constants";
 
-function humanFileSize(size) {
+export function humanFileSize(size) {
   if (size < 1024) return `${size} B`;
   const i = Math.floor(Math.log(size) / Math.log(1024));
-  let num = size / 1024 ** i;
+  const num = size / 1024 ** i;
   const round = Math.round(num);
+
+  let str: string;
   if (round < 10) {
-    num = num.toFixed(2);
+    str = num.toFixed(2);
   } else if (round < 100) {
-    num = num.toFixed(1);
+    str = num.toFixed(1);
   } else {
-    num = round;
+    str = String(round);
   }
-  return `${num} ${"KMGTPEZY"[i - 1]}B`;
+
+  return `${str} ${"KMGTPEZY"[i - 1]}B`;
 }
 
 // We have a lot of images that *should* be external, at least for the sake
@@ -34,14 +37,14 @@ function humanFileSize(size) {
 // be able to process them and fix the problem we need to "temporarily"
 // pretend they were hosted on a remote working full domain.
 // See https://github.com/mdn/yari/issues/1103
-function forceExternalURL(url) {
+export function forceExternalURL(url) {
   if (url.startsWith("/")) {
     return `https://mdn.mozillademos.org${url}`;
   }
   return url;
 }
 
-async function downloadAndResizeImage(src, out, basePath) {
+export async function downloadAndResizeImage(src, out, basePath) {
   const imageResponse = await got(forceExternalURL(src), {
     responseType: "buffer",
     timeout: 10000,
@@ -115,7 +118,7 @@ async function downloadAndResizeImage(src, out, basePath) {
   return destination;
 }
 
-function getImageminPlugin(fileName) {
+export function getImageminPlugin(fileName) {
   const extension = path.extname(fileName).toLowerCase();
   if (extension === ".jpg" || extension === ".jpeg") {
     return imageminMozjpeg();
@@ -132,7 +135,7 @@ function getImageminPlugin(fileName) {
   throw new Error(`No imagemin plugin for ${extension}`);
 }
 
-function splitSections(rawHTML) {
+export function splitSections(rawHTML) {
   const $ = cheerio.load(`<div id="_body">${rawHTML}</div>`);
   const blocks = [];
   const toc = [];
@@ -141,9 +144,9 @@ function splitSections(rawHTML) {
     .load("<div></div>", { decodeEntities: false })("div")
     .eq(0);
 
-  const iterable = [...$("#_body")[0].childNodes];
+  const iterable = [...($("#_body")[0] as cheerio.Element).childNodes];
   let c = 0;
-  iterable.forEach((child) => {
+  iterable.forEach((child: cheerio.Element) => {
     if (child.tagName === "h2") {
       if (c) {
         blocks.push(section.clone());
@@ -165,10 +168,3 @@ function splitSections(rawHTML) {
   const sections = blocks.map((block) => block.html().trim());
   return { sections, toc };
 }
-
-module.exports = {
-  downloadAndResizeImage,
-  forceExternalURL,
-  humanFileSize,
-  splitSections,
-};

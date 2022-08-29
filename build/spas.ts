@@ -1,22 +1,36 @@
-const fs = require("fs");
-const path = require("path");
-const frontmatter = require("front-matter");
+import fs from "fs";
+import path from "path";
+import frontmatter from "front-matter";
 
-const { m2h } = require("../markdown");
+import { m2h } from "../markdown";
 
-const { VALID_LOCALES, MDN_PLUS_TITLE } = require("../libs/constants");
-const {
+import { VALID_LOCALES, MDN_PLUS_TITLE } from "../libs/constants";
+import {
   CONTENT_ROOT,
   CONTENT_TRANSLATED_ROOT,
   CONTRIBUTOR_SPOTLIGHT_ROOT,
   BUILD_OUT_ROOT,
-} = require("../libs/env");
+} from "../libs/env";
 // eslint-disable-next-line node/no-missing-require
-const { renderHTML } = require("../ssr/dist/main");
-const { default: got } = require("got");
-const { splitSections } = require("./utils");
-const cheerio = require("cheerio");
-const { findByURL } = require("../content/document");
+import { renderHTML } from "../ssr/dist/main";
+import { default as got } from "got";
+import { splitSections } from "./utils";
+import cheerio from "cheerio";
+import { findByURL } from "../content/document";
+import { buildDocument } from ".";
+import { NewsItem } from "../client/src/homepage/latest-news";
+
+export interface DocFrontmatter {
+  contributor_name?: string;
+  folder_name?: string;
+  is_featured?: boolean;
+  img_alt?: string;
+  usernames?: any;
+  quote?: any;
+  title?: string;
+  slug?: string;
+  original_slug?: string;
+}
 
 const dirname = __dirname;
 
@@ -39,7 +53,7 @@ async function buildContributorSpotlight(locale, options) {
       "utf-8"
     );
 
-    const frontMatter = frontmatter(markdown);
+    const frontMatter = frontmatter<DocFrontmatter>(markdown);
     const contributorHTML = await m2h(frontMatter.body, locale);
 
     const { sections } = splitSections(contributorHTML);
@@ -85,7 +99,7 @@ async function buildContributorSpotlight(locale, options) {
   }
 }
 
-async function buildSPAs(options) {
+export async function buildSPAs(options) {
   let buildCount = 0;
 
   // The URL isn't very important as long as it triggers the right route in the <App/>
@@ -189,7 +203,7 @@ async function buildSPAs(options) {
       const locale = "en-us";
       const markdown = fs.readFileSync(filepath, "utf-8");
 
-      const frontMatter = frontmatter(markdown);
+      const frontMatter = frontmatter<DocFrontmatter>(markdown);
       const rawHTML = await m2h(frontMatter.body, locale);
 
       const { sections, toc } = splitSections(rawHTML);
@@ -232,9 +246,11 @@ async function buildSPAs(options) {
 
   // Build all the home pages in all locales.
   // Fetch merged content PRs for the latest contribution section.
-  const pullRequestsData = await got(
+  const pullRequestsData = (await got(
     "https://api.github.com/search/issues?q=repo:mdn/content+is:pr+is:merged+sort:updated&per_page=10"
-  ).json();
+  ).json()) as {
+    items: any[];
+  };
 
   // Fetch latest Hacks articles.
   const latestNews = await fetchLatestNews();
@@ -252,13 +268,10 @@ async function buildSPAs(options) {
         continue;
       }
 
-      let featuredContributor = null;
-      if (contributorSpotlightRoot) {
-        featuredContributor = await buildContributorSpotlight(locale, options);
-      }
+      let featuredContributor = contributorSpotlightRoot
+        ? await buildContributorSpotlight(locale, options)
+        : null;
 
-      // circular dependency, so needs to be imported down here:
-      const { buildDocument } = require("./");
       const featuredArticles = (
         await Promise.all(
           FEATURED_ARTICLES.map(async (url) => {
@@ -329,7 +342,7 @@ async function fetchLatestNews() {
 
   const $ = cheerio.load(xml, { xmlMode: true });
 
-  const items = [];
+  const items: NewsItem[] = [];
 
   $("item").each((i, item) => {
     const $item = $(item);
@@ -350,5 +363,3 @@ async function fetchLatestNews() {
     items,
   };
 }
-
-module.exports = { buildSPAs };

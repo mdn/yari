@@ -1,5 +1,7 @@
-const { Document, Redirect } = require("../content");
-const { FLAW_LEVELS } = require("../libs/constants");
+import { Document, Redirect } from "../content";
+import { FLAW_LEVELS } from "../libs/constants";
+import { BCDSection, CompatStatementExtended, Doc } from "../libs/types";
+
 /**
  * Loop over, and mutate, all 'browser_compatibility' sections.
  * BCD data comes from from a library with `mdn_url`'s that are absolute.
@@ -9,7 +11,7 @@ const { FLAW_LEVELS } = require("../libs/constants");
  * Also, if enabled, check all of these inner `mdn_url` for flaws.
  *
  */
-function normalizeBCDURLs(doc, options) {
+export function normalizeBCDURLs(doc: Doc, options) {
   const checkLinks =
     options.flawLevels.get("bad_bcd_links") !== FLAW_LEVELS.IGNORE;
 
@@ -66,8 +68,11 @@ function normalizeBCDURLs(doc, options) {
       // so mdn_url is accessible at the root. If the block has a key for
       // `__compat` it is not the first block, and the information is nested
       // under `__compat`.
-      const block = data.__compat ? data.__compat : data;
-      if (!block.mdn_url) {
+      const block = "__compat" in data ? data.__compat : data;
+
+      const isCompatStatement = (value): value is CompatStatementExtended =>
+        !!value.mdn_url;
+      if (!isCompatStatement(block)) {
         continue;
       }
 
@@ -113,13 +118,18 @@ function normalizeBCDURLs(doc, options) {
   }
 }
 
+export interface BCDData {
+  url: string;
+  data: BCDSection["value"];
+}
+
 /**
  * Return an array of BCD data blocks like [{url: ..., data: ...},]
  * for each BCD section in the doc and mutate it from the doc itself.
  * @param {Doc} doc
  */
-function extractBCDData(doc) {
-  const data = [];
+export function extractBCDData(doc: Doc) {
+  const data: BCDData[] = [];
   let nextId = 0;
   for (const section of doc.body) {
     if (section.type === "browser_compatibility") {
@@ -143,5 +153,3 @@ function extractBCDData(doc) {
   }
   return data;
 }
-
-module.exports = { normalizeBCDURLs, extractBCDData };

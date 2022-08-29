@@ -1,4 +1,4 @@
-const { Document } = require("../content");
+import { Document } from "../content";
 
 /**
  * Temporary fix for long titles in breadcrumbs
@@ -36,7 +36,7 @@ function transformTitle(title) {
  * The breadcrumb is an array of parents including the document itself.
  * It is only added to the document if there are actual parents.
  */
-function addBreadcrumbData(url, document) {
+export function addBreadcrumbData(url, document) {
   const parents = [];
   const split = url.split("/");
 
@@ -72,5 +72,3 @@ function addBreadcrumbData(url, document) {
   });
   document.parents = parents;
 }
-
-module.exports = { addBreadcrumbData };

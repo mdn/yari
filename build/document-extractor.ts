@@ -1,7 +1,22 @@
-const cheerio = require("cheerio");
-const { packageBCD } = require("./resolve-bcd");
-const specs = require("browser-specs");
-const web = require("../kumascript/src/api/web.js");
+import * as cheerio from "cheerio";
+import { packageBCD } from "./resolve-bcd";
+import * as bcd from "@mdn/browser-compat-data/types";
+import {
+  BCDSection,
+  ProseSection,
+  Section,
+  SpecificationsSection,
+} from "../libs/types";
+import { BuiltDocument } from ".";
+import specs from "browser-specs";
+import web from "../kumascript/src/api/web";
+
+interface SimpleSupportStatementWithReleaseDate
+  extends bcd.SimpleSupportStatement {
+  release_date?: string;
+}
+
+type SectionsAndFlaws = [Section[], string[]];
 
 /** Extract and mutate the $ if it as a "Quick_links" section.
  * But only if it exists.
@@ -21,7 +36,7 @@ const web = require("../kumascript/src/api/web.js");
  *
  * ...give or take some whitespace.
  */
-function extractSidebar($) {
+export function extractSidebar($: cheerio.CheerioAPI) {
   const search = $("#Quick_links");
   if (!search.length) {
     return "";
@@ -31,20 +46,24 @@ function extractSidebar($) {
   return sidebarHtml;
 }
 
-function extractSections($) {
-  const flaws = [];
-  const sections = [];
+export function extractSections($: cheerio.CheerioAPI): [Section[], string[]] {
+  const flaws: string[] = [];
+  const sections: Section[] = [];
   const section = cheerio
     .load("<div></div>", {
       // decodeEntities: false
     })("div")
     .eq(0);
 
-  const iterable = [...$("#_body")[0].childNodes];
+  const body = $("#_body")[0] as cheerio.ParentNode;
+  const iterable = [...(body.childNodes as cheerio.Element[])];
 
   let c = 0;
   iterable.forEach((child) => {
-    if (child.tagName === "h2" || child.tagName === "h3") {
+    if (
+      (child as cheerio.Element).tagName === "h2" ||
+      (child as cheerio.Element).tagName === "h3"
+    ) {
       if (c) {
         const [subSections, subFlaws] = addSections(section.clone());
         sections.push(...subSections);
@@ -183,8 +202,8 @@ function extractSections($) {
  *        specifications: {....}
  *   }]
  */
-function addSections($) {
-  const flaws = [];
+function addSections($: cheerio.Cheerio<cheerio.Element>): SectionsAndFlaws {
+  const flaws: string[] = [];
 
   const countPotentialSpecialDivs = $.find("div.bc-data, div.bc-specs").length;
   if (countPotentialSpecialDivs) {
@@ -224,7 +243,7 @@ function addSections($) {
      *    },
      */
     if (countPotentialSpecialDivs > 1) {
-      const subSections = [];
+      const subSections: Section[] = [];
       const section = cheerio
         .load("<div></div>", {
           // decodeEntities: false
@@ -234,7 +253,8 @@ function addSections($) {
       // Loop over each and every "root element" in the node and keep piling
       // them up in a buffer, until you encounter a `div.bc-data` or `div.bc-specs` then
       // add that to the stack, clear and repeat.
-      const iterable = [...$[0].childNodes];
+      const div = $[0] as cheerio.ParentNode;
+      const iterable = [...(div.childNodes as cheerio.Element[])];
       let c = 0;
       let countSpecialDivsFound = 0;
       iterable.forEach((child) => {
@@ -304,9 +324,11 @@ function addSections($) {
   return [proseSections, flaws];
 }
 
-function _addSingleSpecialSection($) {
-  let id = null;
-  let title = null;
+function _addSingleSpecialSection(
+  $: cheerio.Cheerio<cheerio.Element>
+): Section[] {
+  let id: string | null = null;
+  let title: string | null = null;
   let isH3 = false;
 
   const h2s = $.find("h2");
@@ -322,20 +344,20 @@ function _addSingleSpecialSection($) {
     }
   }
 
-  let dataQuery = null;
+  let dataQuery: string = "";
   let hasMultipleQueries = false;
-  let specURLsString = "";
-  let specialSectionType = null;
+  let specURLsString: string = "";
+  let specialSectionType: string | null = null;
   if ($.find("div.bc-data").length) {
     specialSectionType = "browser_compatibility";
     const elem = $.find("div.bc-data");
     // Macro adds "data-query", but some translated-content still uses "id".
-    dataQuery = elem.attr("data-query") || elem.attr("id");
+    dataQuery = (elem.attr("data-query") || elem.attr("id")) ?? "";
     hasMultipleQueries = elem.attr("data-multiple") === "true";
   } else if ($.find("div.bc-specs").length) {
     specialSectionType = "specifications";
-    dataQuery = $.find("div.bc-specs").attr("data-bcd-query");
-    specURLsString = $.find("div.bc-specs").attr("data-spec-urls");
+    dataQuery = $.find("div.bc-specs").attr("data-bcd-query") ?? "";
+    specURLsString = $.find("div.bc-specs").attr("data-spec-urls") ?? "";
   }
 
   // Some old legacy documents haven't been re-rendered yet, since it
@@ -344,11 +366,11 @@ function _addSingleSpecialSection($) {
   // back on a regular prose section :(
   if (!dataQuery && specURLsString === "") {
     // I wish there was a good place to log this!
-    const [proseSections] = _addSectionProse($);
-    return proseSections;
+    return _addSectionProse($)[0];
   }
   const query = dataQuery.replace(/^bcd:/, "");
-  const { browsers, data } = packageBCD(query);
+  const { browsers, data }: { browsers: bcd.Browsers; data: bcd.Identifier } =
+    packageBCD(query);
 
   if (specialSectionType === "browser_compatibility") {
     if (data === undefined) {
@@ -387,7 +409,7 @@ function _addSingleSpecialSection($) {
 
   throw new Error(`Unrecognized special section type '${specialSectionType}'`);
 
-  function _buildSpecialBCDSection() {
+  function _buildSpecialBCDSection(): [BCDSection] {
     // First extract a map of all release data, keyed by (normalized) browser
     // name and the versions.
     // You'll have a map that looks like this:
@@ -413,8 +435,8 @@ function _addSingleSpecialSection($) {
     }
 
     for (const block of _extractCompatBlocks(data)) {
-      for (let [browser, info] of Object.entries(block.support)) {
-        // `info` here will be one of the following:
+      for (let [browser, originalInfo] of Object.entries(block.support)) {
+        // `originalInfo` here will be one of the following:
         //  - a single simple_support_statement:
         //    { version_added: 42 }
         //  - an array of simple_support_statements:
@@ -422,10 +444,14 @@ function _addSingleSpecialSection($) {
         //
         // Standardize the first version to an array of one, so we don't have
         // to deal with two different forms below
-        if (!Array.isArray(info)) {
-          info = [info];
-        }
-        for (const infoEntry of info) {
+
+        const infos: SimpleSupportStatementWithReleaseDate[] = Array.isArray(
+          originalInfo
+        )
+          ? originalInfo
+          : [originalInfo];
+
+        for (const infoEntry of infos) {
           const added =
             typeof infoEntry.version_added === "string" &&
             infoEntry.version_added.startsWith("≤")
@@ -439,9 +465,12 @@ function _addSingleSpecialSection($) {
             }
           }
         }
-        info.sort((a, b) =>
+
+        infos.sort((a, b) =>
           _compareVersions(_getFirstVersion(b), _getFirstVersion(a))
         );
+
+        block.support[browser] = infos;
       }
     }
 
@@ -465,11 +494,7 @@ function _addSingleSpecialSection($) {
     ];
   }
 
-  /**
-   * @param {object} support - {bcd.SimpleSupportStatement}
-   * @returns {string}
-   */
-  function _getFirstVersion(support) {
+  function _getFirstVersion(support: bcd.SimpleSupportStatement): string {
     if (typeof support.version_added === "string") {
       return support.version_added;
     } else if (typeof support.version_removed === "string") {
@@ -479,23 +504,14 @@ function _addSingleSpecialSection($) {
     }
   }
 
-  /**
-   * @param {string} a
-   * @param {string} b
-   */
-  function _compareVersions(a, b) {
+  function _compareVersions(a: string, b: string) {
     const x = _splitVersion(a);
     const y = _splitVersion(b);
 
     return _compareNumberArray(x, y);
   }
 
-  /**
-   * @param {number[]} a
-   * @param {number[]} b
-   * @return {number}
-   */
-  function _compareNumberArray(a, b) {
+  function _compareNumberArray(a: number[], b: number[]): number {
     while (a.length || b.length) {
       const x = a.shift() || 0;
       const y = b.shift() || 0;
@@ -506,12 +522,7 @@ function _addSingleSpecialSection($) {
 
     return 0;
   }
-
-  /**
-   * @param {string} version
-   * @return {number[]}
-   */
-  function _splitVersion(version) {
+  function _splitVersion(version: string): number[] {
     if (version.startsWith("≤")) {
       version = version.slice(1);
     }
@@ -523,27 +534,29 @@ function _addSingleSpecialSection($) {
    * Recursively extracts `__compat` objects from the `feature` and from all
    * nested features at any depth.
    *
-   * @param {Object} feature The feature.
-   * @returns {Object[]} The array of `__compat` objects.
+   * @param {bcd.Identifier} feature The feature.
+   * @returns {bcd.CompatStatement[]} The array of `__compat` objects.
    */
-  function _extractCompatBlocks(feature) {
-    const blocks = [];
+  function _extractCompatBlocks(
+    feature: bcd.Identifier
+  ): bcd.CompatStatement[] {
+    const blocks: bcd.CompatStatement[] = [];
     for (const [key, value] of Object.entries(feature)) {
       if (key === "__compat") {
-        blocks.push(value);
+        blocks.push(value as bcd.CompatStatement);
       } else if (typeof value === "object") {
-        blocks.push(..._extractCompatBlocks(value));
+        blocks.push(..._extractCompatBlocks(value as bcd.Identifier));
       }
     }
     return blocks;
   }
 
-  function _buildSpecialSpecSection() {
+  function _buildSpecialSpecSection(): [SpecificationsSection] {
     // Collect spec URLs from a BCD feature, a 'spec-urls' value, or both;
     // For a BCD feature, it can either be a string or an array of strings.
-    let specURLs = [];
+    let specURLs: string[] = [];
 
-    function getSpecURLs(data) {
+    function getSpecURLs(data: bcd.Identifier) {
       // If we’re processing data for just one feature, then the 'data'
       // variable will have a __compat key. So we get the one spec_url
       // value from that, and move on.
@@ -573,7 +586,7 @@ function _addSingleSpecialSection($) {
           if (!block) {
             continue;
           }
-          if (!block.__compat) {
+          if (!("__compat" in block)) {
             // Some features — e.g., css.properties.justify-content — have
             // no compat data themselves but have subfeatures with compat
             // data. So we recurse through the nested property values until
@@ -581,16 +594,17 @@ function _addSingleSpecialSection($) {
             // Otherwise, if we’re processing multiple top-level features
             // (that is, from a browser-compat value which is an array),
             // we’d end up entirely missing the data for this feature.
-            getSpecURLs(block);
-          }
-          // If we get here, we’ve got a __compat key, and we can extract
-          // any spec URLs its value may contain.
-          const compat = block.__compat;
-          if (compat && compat.spec_url) {
-            if (Array.isArray(compat.spec_url)) {
-              specURLs.push(...compat.spec_url);
-            } else {
-              specURLs.push(compat.spec_url);
+            getSpecURLs(block as bcd.Identifier);
+          } else {
+            // If we get here, we’ve got a __compat key, and we can extract
+            // any spec URLs its value may contain.
+            const compat = block.__compat;
+            if (compat && compat.spec_url) {
+              if (Array.isArray(compat.spec_url)) {
+                specURLs.push(...compat.spec_url);
+              } else {
+                specURLs.push(compat.spec_url);
+              }
             }
           }
         }
@@ -660,58 +674,63 @@ function _addSingleSpecialSection($) {
   }
 }
 
-function _addSectionProse($) {
-  let id = null;
-  let title = null;
-  let titleAsText = null;
+function _addSectionProse(
+  $: cheerio.Cheerio<cheerio.Element>
+): SectionsAndFlaws {
+  let id: string | null = null;
+  let title: string | null = null;
+  let titleAsText: string = "";
   let isH3 = false;
 
-  const flaws = [];
+  const flaws: string[] = [];
 
   // The way this works...
   // Given a section of HTML, try to extract a id, title,
 
   let h2found = false;
   const h2s = $.find("h2");
-  for (const i of [...Array(h2s.length).keys()]) {
+  h2s.each((i) => {
+    const h2 = h2s.eq(i);
+
     if (i) {
       // Excess!
       flaws.push(
-        `Excess <h2> tag that is NOT at root-level (id='${h2s
-          .eq(i)
-          .attr("id")}', text='${h2s.eq(i).text()}')`
+        `Excess <h2> tag that is NOT at root-level (id='${h2.attr(
+          "id"
+        )}', text='${h2.text()}')`
       );
     } else {
       // First element
-      id = h2s.eq(i).attr("id");
-      title = h2s.eq(i).html();
-      titleAsText = h2s.eq(i).text();
-      h2s.eq(i).remove();
+      id = h2.attr("id") ?? "";
+      title = h2.html() ?? "";
+      titleAsText = h2.text();
+      h2.remove();
     }
     h2found = true;
-  }
+  });
 
   // If there was no <h2>, look through all the <h3>s.
   if (!h2found) {
     const h3s = $.find("h3");
-    for (const i of [...Array(h3s.length).keys()]) {
+    h3s.each((i) => {
+      const h3 = h3s.eq(i);
       if (i) {
         // Excess!
         flaws.push(
-          `Excess <h3> tag that is NOT at root-level (id='${h3s
-            .eq(i)
-            .attr("id")}', text='${h3s.eq(i).text()}')`
+          `Excess <h3> tag that is NOT at root-level (id='${h3.attr(
+            "id"
+          )}', text='${h3.text()}')`
         );
       } else {
-        id = h3s.eq(i).attr("id");
-        title = h3s.eq(i).html();
-        titleAsText = h3s.eq(i).text();
+        id = h3.attr("id") ?? "";
+        title = h3.html() ?? "";
+        titleAsText = h3.text();
         if (id && title) {
           isH3 = true;
-          h3s.eq(i).remove();
+          h3.remove();
         }
       }
-    }
+    });
   }
 
   if (id) {
@@ -719,20 +738,20 @@ function _addSectionProse($) {
     id = id.replace(/_+$/g, "");
   }
 
-  const value = {
+  const value: ProseSection["value"] = {
     id,
     title,
     isH3,
-    content: $.html().trim(),
+    content: $.html()?.trim(),
   };
 
   // Only include it if it's useful. It's an optional property and it's
   // potentially a waste of space to include it if it's not different.
   if (titleAsText && titleAsText !== title) {
-    value.titleAsText = titleAsText;
+    value["titleAsText"] = titleAsText;
   }
 
-  const sections = [];
+  const sections: ProseSection[] = [];
   if (value.content || value.title) {
     sections.push({
       type: "prose",
@@ -747,10 +766,10 @@ function _addSectionProse($) {
  * Given an array of sections, return a plain text
  * string of a summary. No HTML or Kumascript allowed.
  */
-function extractSummary(sections) {
+export function extractSummary(sections: Section[]): string {
   let summary = ""; // default and fallback is an empty string.
 
-  function extractFirstGoodParagraph($) {
+  function extractFirstGoodParagraph($): string {
     const seoSummary = $("span.seoSummary, .summary");
     if (seoSummary.length && seoSummary.text()) {
       return seoSummary.text();
@@ -771,10 +790,11 @@ function extractSummary(sections) {
   // If the sections contains a "Summary" one, use that, otherwise
   // use the first prose one.
   const summarySections = sections.filter(
-    (section) => section.type === "prose" && section.value.title === "Summary"
+    (section: Section): section is ProseSection =>
+      section.type === "prose" && section.value.title === "Summary"
   );
   if (summarySections.length) {
-    const $ = cheerio.load(summarySections[0].value.content);
+    const $ = cheerio.load(summarySections[0].value.content ?? "");
     summary = extractFirstGoodParagraph($);
   } else {
     for (const section of sections) {
@@ -796,9 +816,3 @@ function extractSummary(sections) {
   }
   return summary;
 }
-
-module.exports = {
-  extractSidebar,
-  extractSections,
-  extractSummary,
-};

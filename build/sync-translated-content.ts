@@ -1,30 +1,31 @@
-const fs = require("fs");
-const crypto = require("crypto");
-const path = require("path");
+import fs from "fs";
+import crypto from "crypto";
+import path from "path";
 
-const chalk = require("chalk");
-const fm = require("front-matter");
-const log = require("loglevel");
-const { fdir } = require("fdir");
+import chalk from "chalk";
+import fm from "front-matter";
+import log from "loglevel";
+import { fdir } from "fdir";
 
-const {
+import {
   buildURL,
   execGit,
   slugToFolder,
   Document,
   Redirect,
-} = require("../content");
-const {
+} from "../content";
+import {
   HTML_FILENAME,
   MARKDOWN_FILENAME,
   VALID_LOCALES,
-} = require("../libs/constants");
-const { CONTENT_ROOT, CONTENT_TRANSLATED_ROOT } = require("../libs/env");
+} from "../libs/constants";
+import { CONTENT_ROOT, CONTENT_TRANSLATED_ROOT } from "../libs/env";
+import { DocFrontmatter } from "./spas";
 
 const CONFLICTING = "conflicting";
 const ORPHANED = "orphaned";
 
-function syncAllTranslatedContent(locale) {
+export function syncAllTranslatedContent(locale) {
   if (!CONTENT_TRANSLATED_ROOT) {
     throw new Error(
       "CONTENT_TRANSLATED_ROOT must be set to sync translated content!"
@@ -40,7 +41,7 @@ function syncAllTranslatedContent(locale) {
       );
     })
     .crawl(path.join(CONTENT_TRANSLATED_ROOT, locale));
-  const files = [...api.sync()];
+  const files = [...(api.sync() as any)];
   const stats = {
     movedDocs: 0,
     conflictingDocs: 0,
@@ -103,7 +104,7 @@ function mdOrHtmlExists(filePath) {
   );
 }
 
-function syncTranslatedContent(inFilePath, locale) {
+export function syncTranslatedContent(inFilePath, locale) {
   if (!CONTENT_TRANSLATED_ROOT) {
     throw new Error(
       "CONTENT_TRANSLATED_ROOT must be set to sync translated content!"
@@ -121,7 +122,7 @@ function syncTranslatedContent(inFilePath, locale) {
   const fileName = path.basename(inFilePath);
   const extension = path.extname(fileName);
   const bareFileName = path.basename(inFilePath, extension);
-  const { attributes: oldMetadata, body: rawBody } = fm(rawDoc);
+  const { attributes: oldMetadata, body: rawBody } = fm<DocFrontmatter>(rawDoc);
   const resolvedSlug = resolve(oldMetadata.slug);
   const metadata = {
     ...oldMetadata,
@@ -177,10 +178,12 @@ function syncTranslatedContent(inFilePath, locale) {
       )
     ) &&
     !fs.existsSync(
-      CONTENT_ROOT,
-      "en-us",
-      slugToFolder(metadata.slug),
-      bareFileName + ".html"
+      path.join(
+        CONTENT_ROOT,
+        "en-us",
+        slugToFolder(metadata.slug),
+        bareFileName + ".html"
+      )
     );
 
   if (!status.moved && !status.orphaned) {
@@ -237,20 +240,14 @@ function syncTranslatedContent(inFilePath, locale) {
   return status;
 }
 
-function syncTranslatedContentForAllLocales() {
+export function syncTranslatedContentForAllLocales() {
   let moved = 0;
   for (const locale of VALID_LOCALES.keys()) {
     if (locale == "en-us") {
       continue;
     }
-    const { stats: { movedDocs = 0 } = {} } = syncAllTranslatedContent(locale);
+    const { movedDocs = 0 } = syncAllTranslatedContent(locale);
     moved += movedDocs;
   }
   return moved;
 }
-
-module.exports = {
-  syncTranslatedContent,
-  syncAllTranslatedContent,
-  syncTranslatedContentForAllLocales,
-};

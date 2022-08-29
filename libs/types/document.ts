@@ -9,7 +9,7 @@ export interface Source {
 
 export interface GenericFlaw {
   id: string;
-  explanation: string;
+  explanation?: string;
   suggestion: string | null;
   fixable?: boolean;
   fixed?: true;
@@ -73,6 +73,7 @@ export interface MacroErrorMessage extends GenericFlaw {
   name: string;
   error: {
     path?: string;
+    message?: string;
   };
   errorStack: string;
   explanation: string;
@@ -98,7 +99,7 @@ export interface TranslationDifferenceFlaw extends GenericFlaw {
   };
 }
 
-type Flaws = {
+export type Flaws = Partial<{
   broken_links: BrokenLink[];
   macros: MacroErrorMessage[];
   bad_bcd_queries: BadBCDQueryFlaw[];
@@ -110,7 +111,7 @@ type Flaws = {
   heading_links: HeadingLinksFlaw[];
   translation_differences: TranslationDifferenceFlaw[];
   unsafe_html: UnsafeHTMLFlaw[];
-};
+}>;
 
 export type Translation = {
   locale: string;
@@ -153,6 +154,7 @@ export interface Doc {
   summary: string;
   // Used for search.
   popularity?: number;
+  noIndexing?: boolean;
 }
 
 export type Section = ProseSection | SpecificationsSection | BCDSection;
@@ -160,8 +162,8 @@ export type Section = ProseSection | SpecificationsSection | BCDSection;
 export interface ProseSection {
   type: "prose";
   value: {
-    id: string;
-    title: string;
+    id: string | null;
+    title: string | null;
     isH3: boolean;
     content?: string;
     titleAsText?: string;
@@ -187,9 +189,10 @@ export interface BCDSection {
     id: string;
     title: string;
     isH3: boolean;
-    data: BCD.Identifier;
+    data?: BCD.Identifier | null;
+    dataURL?: string;
     query: string;
-    browsers: BCD.Browsers;
+    browsers?: BCD.Browsers | null;
   };
 }
 
@@ -200,3 +203,14 @@ export type FrequentlyViewedEntry = {
   visitCount: number;
   parents?: DocParent[];
 };
+
+// Yari builder will attach extra keys from the compat data
+// it gets from @mdn/browser-compat-data. These are "Yari'esque"
+// extras that helps us avoiding to have a separate data structure.
+export interface CompatStatementExtended extends BCD.CompatStatement {
+  // When a compat statement has a .mdn_url but it's actually not a good
+  // one, the Yari builder will attach an extra boolean that indicates
+  // that it's not a valid link.
+  // Note, it's only 'true' if it's present, hence this interface definition.
+  bad_url?: true;
+}
