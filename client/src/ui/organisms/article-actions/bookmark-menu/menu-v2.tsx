@@ -5,16 +5,18 @@ import { Doc } from "../../../../../../libs/types/document";
 import { useOnlineStatus } from "../../../../hooks";
 import {
   Item,
-  deleteItem,
   useCollections,
-  addItem,
   useBookmark,
-  editItem,
   NewItem,
+  useItemAdd,
+  useItemDelete,
+  useItemEdit,
+  combineMutationStatus,
 } from "../../../../plus/collections/v2/api";
-import NewCollectionModal from "../../../../plus/collections/v2/new-edit-collection-modal";
+import NewEditCollectionModal from "../../../../plus/collections/v2/new-edit-collection-modal";
 import { DropdownMenu, DropdownMenuWrapper } from "../../../molecules/dropdown";
 import { Icon } from "../../../atoms/icon";
+import NoteCard from "../../../molecules/notecards";
 
 const addValue = "add";
 
@@ -34,6 +36,16 @@ export default function BookmarkV2Menu({ doc }: { doc: Doc }) {
   const [showNewCollection, setShowNewCollection] = useState(false);
   const [disableAutoClose, setDisableAutoClose] = useState(false);
   const [formItem, setFormItem] = useState<Item | NewItem>(defaultItem);
+  const [lastAction, setLastAction] = useState("");
+
+  const { mutator: addItem, ...addStatus } = useItemAdd();
+  const { mutator: editItem, ...editStatus } = useItemEdit();
+  const { mutator: deleteItem, ...deleteStatus } = useItemDelete();
+  const { resetErrors, errors, isPending } = combineMutationStatus(
+    addStatus,
+    editStatus,
+    deleteStatus
+  );
 
   useEffect(() => {
     if (collections && formItem.collection_id === "") {
@@ -78,11 +90,12 @@ export default function BookmarkV2Menu({ doc }: { doc: Doc }) {
     e: React.FormEvent<HTMLFormElement> | React.BaseSyntheticEvent
   ) => {
     e.preventDefault();
-    if (!collections) return;
+    if (!collections || isPending) return;
+    setLastAction("save");
+    resetErrors();
     if ("id" in formItem && savedItem) {
       if (savedItem.collection_id !== formItem.collection_id) {
-        await deleteItem(savedItem);
-        await addItem(formItem);
+        await Promise.all([deleteItem(savedItem), addItem(formItem)]);
       } else {
         await editItem(formItem);
       }
@@ -101,7 +114,9 @@ export default function BookmarkV2Menu({ doc }: { doc: Doc }) {
 
   const deleteHandler = async (e: React.MouseEvent) => {
     e.preventDefault();
-    if (!collections) return;
+    if (!collections || isPending) return;
+    setLastAction("delete");
+    resetErrors();
     if (savedItem) {
       await deleteItem(savedItem);
     }
@@ -144,7 +159,12 @@ export default function BookmarkV2Menu({ doc }: { doc: Doc }) {
       )}
       <form className="mdn-form" method="post" onSubmit={saveHandler}>
         <DropdownMenu>
-          <div className="article-actions-submenu show" role="menu">
+          <div
+            className={`article-actions-submenu show ${
+              isPending ? "wait" : ""
+            }`}
+            role="menu"
+          >
             <button onClick={cancelHandler} className="header mobile-only">
               <span className="header-inner">
                 <Icon name="chevron" />
@@ -156,6 +176,12 @@ export default function BookmarkV2Menu({ doc }: { doc: Doc }) {
               {savedItem ? "Edit Item" : "Add to Collection"}
             </h2>
 
+            {Boolean(errors.length) && (
+              <NoteCard type="error">
+                <p>Error: {errors[0]?.message}</p>
+              </NoteCard>
+            )}
+
             <div className="mdn-form-item">
               <label htmlFor="bookmark-collection">Collection:</label>
               <div className="select-wrap">
@@ -165,7 +191,7 @@ export default function BookmarkV2Menu({ doc }: { doc: Doc }) {
                   value={formItem.collection_id}
                   autoComplete="off"
                   onChange={collectionChangeHandler}
-                  disabled={!collections}
+                  disabled={!collections || isPending}
                 >
                   {collections?.map((collection) => (
                     <option key={collection.id} value={collection.id}>
@@ -189,6 +215,7 @@ export default function BookmarkV2Menu({ doc }: { doc: Doc }) {
                 type="text"
                 onChange={changeHandler}
                 onKeyDown={enterHandler}
+                disabled={isPending}
               />
             </div>
             <div className="mdn-form-item">
@@ -201,22 +228,32 @@ export default function BookmarkV2Menu({ doc }: { doc: Doc }) {
                 value={formItem.notes}
                 onChange={changeHandler}
                 onKeyDown={enterHandler}
+                disabled={isPending}
               />
             </div>
             <div className="mdn-form-item is-button-row">
-              <Button buttonType="submit" isDisabled={!collections}>
-                Save
+              <Button
+                buttonType="submit"
+                isDisabled={!collections || isPending}
+              >
+                {isPending && lastAction === "save" ? "Saving..." : "Save"}
               </Button>
               {savedItem ? (
                 <Button
                   type="secondary"
                   onClickHandler={deleteHandler}
-                  isDisabled={!collections}
+                  isDisabled={!collections || isPending}
                 >
-                  Delete
+                  {isPending && lastAction === "delete"
+                    ? "Deleting..."
+                    : "Delete"}
                 </Button>
               ) : (
-                <Button onClickHandler={cancelHandler} type="secondary">
+                <Button
+                  onClickHandler={cancelHandler}
+                  isDisabled={!collections || isPending}
+                  type="secondary"
+                >
                   Cancel
                 </Button>
               )}
@@ -225,7 +262,7 @@ export default function BookmarkV2Menu({ doc }: { doc: Doc }) {
         </DropdownMenu>
       </form>
       {collections && (
-        <NewCollectionModal
+        <NewEditCollectionModal
           show={showNewCollection}
           setShow={setShowNewCollection}
           onClose={(collection_id) => {

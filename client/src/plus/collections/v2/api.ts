@@ -1,4 +1,5 @@
-import useSWR, { KeyedMutator, mutate } from "swr";
+import { useState } from "react";
+import useSWR, { KeyedMutator, mutate, SWRResponse } from "swr";
 import useSWRInfinite from "swr/infinite";
 import {
   MultipleCollectionInfo,
@@ -82,10 +83,17 @@ function getItemKey(
   );
 }
 
+function useLoading<T>(res: SWRResponse<T>) {
+  return {
+    ...res,
+    isLoading: res.isValidating && !res.data && !res.error,
+  };
+}
+
 async function fetcher<T>(key: string | undefined): Promise<T> {
   if (!key) throw Error("Invalid key");
   const response = await fetch(key);
-  if (!response.ok) throw Error(response.statusText);
+  if (!response.ok) throw Error(`${response.status}: ${response.statusText}`);
   return response.json();
 }
 
@@ -100,7 +108,7 @@ async function poster(key: string | undefined, body: any): Promise<any> {
       "content-type": "application/json",
     },
   });
-  if (!response.ok) throw Error(response.statusText);
+  if (!response.ok) throw Error(`${response.status}: ${response.statusText}`);
   try {
     return await response.json();
   } catch {
@@ -108,17 +116,63 @@ async function poster(key: string | undefined, body: any): Promise<any> {
   }
 }
 
-async function deleter(key: string | undefined) {
+async function deleter(key: string | undefined): Promise<Response> {
   if (!key) throw Error("Invalid key");
-  return fetch(key, {
+  const response = await fetch(key, {
     method: "DELETE",
   });
+  if (!response.ok) throw Error(`${response.status}: ${response.statusText}`);
+  return response;
+}
+
+function useMutation<B, R>(
+  mutator: (body: B) => Promise<R>,
+  success: (body: B) => void
+) {
+  const [error, setError] = useState<Error>();
+  const [isPending, setIsPending] = useState(false);
+
+  return {
+    mutator: async (body: B) => {
+      setIsPending(true);
+      setError(undefined);
+      try {
+        const response = await mutator(body);
+        success(body);
+        return response;
+      } catch (err: any) {
+        setError(err);
+        throw err;
+      } finally {
+        setIsPending(false);
+      }
+    },
+    resetError: () => setError(undefined),
+    error,
+    isPending,
+  };
+}
+
+export function combineMutationStatus(
+  ...data: Omit<ReturnType<typeof useMutation>, "mutator">[]
+) {
+  return {
+    resetErrors: () => {
+      data.forEach((x) => x.resetError());
+    },
+    errors: data.map((x) => x.error).filter((x) => x !== undefined),
+    isPending: data
+      .map((x) => x.isPending)
+      .reduce((previous, current) => previous || current, false),
+  };
 }
 
 export function useCollections() {
-  return useSWR<Collection[]>(
-    COLLECTIONS_ENDPOINT,
-    async (key: string) => await fetcher<MultipleCollectionInfo[]>(key)
+  return useLoading(
+    useSWR<Collection[]>(
+      COLLECTIONS_ENDPOINT,
+      async (key: string) => await fetcher<MultipleCollectionInfo[]>(key)
+    )
   );
 }
 
@@ -129,37 +183,39 @@ export function useCollection(id: string | undefined) {
   );
 }
 
-export async function createCollection(
-  collection: NewCollection
-): Promise<Collection> {
-  const response = await poster<
-    MultipleCollectionCreationRequest,
-    MultipleCollectionInfo
-  >(COLLECTIONS_ENDPOINT, collection);
-  mutate(COLLECTIONS_ENDPOINT);
-  return response;
+export function useCollectionCreate() {
+  return useMutation<NewCollection, Collection>(
+    (collection) =>
+      poster<MultipleCollectionCreationRequest, MultipleCollectionInfo>(
+        COLLECTIONS_ENDPOINT,
+        collection
+      ),
+    () => mutate(COLLECTIONS_ENDPOINT)
+  );
 }
 
-export async function editCollection(
-  collection: Collection
-): Promise<Collection> {
-  const response = await poster<
-    MultipleCollectionCreationRequest,
-    MultipleCollectionInfo
-  >(getCollectionKey(collection.id), collection);
-  mutate(COLLECTIONS_ENDPOINT);
-  mutate(getCollectionKey(collection.id));
-  return response;
+export function useCollectionEdit() {
+  return useMutation<Collection, Collection>(
+    (collection) =>
+      poster<MultipleCollectionCreationRequest, MultipleCollectionInfo>(
+        getCollectionKey(collection.id),
+        collection
+      ),
+    ({ id }) => {
+      mutate(COLLECTIONS_ENDPOINT);
+      mutate(getCollectionKey(id));
+    }
+  );
 }
 
-export async function deleteCollection(
-  collection: Collection
-): Promise<Response> {
-  const { id } = collection;
-  const response = await deleter(getCollectionKey(id));
-  mutate(COLLECTIONS_ENDPOINT);
-  mutate(getCollectionKey(id));
-  return response;
+export function useCollectionDelete() {
+  return useMutation<Collection, Response>(
+    ({ id }) => deleter(getCollectionKey(id)),
+    ({ id }) => {
+      mutate(COLLECTIONS_ENDPOINT);
+      mutate(getCollectionKey(id));
+    }
+  );
 }
 
 export function useItems(id: string | undefined, initialSize = 1) {
@@ -187,6 +243,10 @@ export function useItems(id: string | undefined, initialSize = 1) {
   return {
     ...useData,
     atEnd: lastPageLength < PAGE_SIZE,
+    isLoading:
+      useData.isValidating &&
+      !useData.error &&
+      (!pages || pages.length !== useData.size),
   };
 }
 
@@ -203,39 +263,36 @@ export function useBookmark(url: string) {
   });
 }
 
-export async function addItem(item: NewItem): Promise<Response> {
-  const { collection_id, ...body } = item;
-  const response = await poster<CollectionItemCreationRequest>(
-    getItemsKey(collection_id),
-    body
+export function useItemAdd() {
+  return useMutation<NewItem, Response>(
+    ({ collection_id, ...body }) =>
+      poster<CollectionItemCreationRequest>(getItemsKey(collection_id), body),
+    ({ url }) => mutate(getBookmarkKey(url))
   );
-  mutate(getBookmarkKey(body.url));
-  return response;
 }
 
-export async function editItem(
-  item: Item,
-  scopedMutator?: KeyedMutator<Item[][]>
-): Promise<Response> {
-  const { collection_id, id, ...body } = item;
-  const response = await poster<CollectionItemModificationRequest>(
-    getItemKey(collection_id, id),
-    body
+export function useItemEdit(scopedMutator?: KeyedMutator<Item[][]>) {
+  return useMutation<Item, Response>(
+    ({ collection_id, id, ...body }) =>
+      poster<CollectionItemModificationRequest>(
+        getItemKey(collection_id, id),
+        body
+      ),
+    ({ collection_id, url }) => {
+      mutate(getCollectionKey(collection_id));
+      mutate(getBookmarkKey(url));
+      if (scopedMutator) scopedMutator();
+    }
   );
-  mutate(getCollectionKey(collection_id));
-  mutate(getBookmarkKey(body.url));
-  if (scopedMutator) scopedMutator();
-  return response;
 }
 
-export async function deleteItem(
-  item: Item,
-  scopedMutator?: KeyedMutator<Item[][]>
-): Promise<Response> {
-  const { collection_id, id, url } = item;
-  const response = await deleter(getItemKey(collection_id, id));
-  mutate(getCollectionKey(collection_id));
-  mutate(getBookmarkKey(url));
-  if (scopedMutator) scopedMutator();
-  return response;
+export function useItemDelete(scopedMutator?: KeyedMutator<Item[][]>) {
+  return useMutation<Item, Response>(
+    ({ collection_id, id }) => deleter(getItemKey(collection_id, id)),
+    ({ collection_id, url }) => {
+      mutate(getCollectionKey(collection_id));
+      mutate(getBookmarkKey(url));
+      if (scopedMutator) scopedMutator();
+    }
+  );
 }
