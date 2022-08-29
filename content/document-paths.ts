@@ -1,9 +1,9 @@
-const path = require("path");
+import path from "path";
 
-const { fdir } = require("fdir");
+import { fdir } from "fdir";
 
-const { HTML_FILENAME, MARKDOWN_FILENAME } = require("../libs/constants");
-const { CONTENT_ROOT, CONTENT_TRANSLATED_ROOT } = require("../libs/env");
+import { HTML_FILENAME, MARKDOWN_FILENAME } from "../libs/constants";
+import { CONTENT_ROOT, CONTENT_TRANSLATED_ROOT } from "../libs/env";
 
 function allDocumentPathsAsTree(root) {
   const api = new fdir()

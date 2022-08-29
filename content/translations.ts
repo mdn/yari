@@ -1,6 +1,6 @@
-const Document = require("./document");
-const { VALID_LOCALES } = require("../libs/constants");
-const LANGUAGES_RAW = require("../libs/languages");
+import Document from "./document";
+import { VALID_LOCALES } from "../libs/constants";
+import LANGUAGES_RAW from "../libs/languages";
 
 const LANGUAGES = new Map(
   Object.entries(LANGUAGES_RAW).map(([locale, data]) => {

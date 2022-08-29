@@ -1,12 +1,12 @@
-const fs = require("fs");
-const path = require("path");
+import fs from "fs";
+import path from "path";
 
-const readChunk = require("read-chunk");
-const imageType = require("image-type");
-const isSvg = require("is-svg");
+import readChunk from "read-chunk";
+import imageType from "image-type";
+import isSvg from "is-svg";
 
-const { ROOTS, DEFAULT_LOCALE } = require("../libs/env");
-const { memoize, slugToFolder } = require("./utils");
+import { ROOTS, DEFAULT_LOCALE } from "../libs/env";
+import { memoize, slugToFolder } from "./utils";
 
 function isImage(filePath) {
   if (fs.statSync(filePath).isDirectory()) {

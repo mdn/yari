@@ -1,11 +1,11 @@
-const fs = require("fs");
-const path = require("path");
+import fs from "fs";
+import path from "path";
 
-const { resolveFundamental } = require("../libs/fundamental-redirects");
-const { decodePath, slugToFolder } = require("../libs/slug-utils");
-const { CONTENT_ROOT, CONTENT_TRANSLATED_ROOT } = require("../libs/env");
-const { VALID_LOCALES } = require("../libs/constants");
-const { getRoot } = require("./utils");
+import { resolveFundamental } from "../libs/fundamental-redirects";
+import { decodePath, slugToFolder } from "../libs/slug-utils";
+import { CONTENT_ROOT, CONTENT_TRANSLATED_ROOT } from "../libs/env";
+import { VALID_LOCALES } from "../libs/constants";
+import { getRoot } from "./utils";
 
 const FORBIDDEN_URL_SYMBOLS = ["\n", "\t"];
 const VALID_LOCALES_SET = new Set([...VALID_LOCALES.values()]);
