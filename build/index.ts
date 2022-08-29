@@ -5,10 +5,8 @@ import path from "path";
 import chalk from "chalk";
 import * as cheerio from "cheerio";
 import {
-  MacroDeprecatedError,
   MacroLiveSampleError,
   MacroRedirectedLinkError,
-  SourceCodeError,
 } from "../kumascript/src/errors";
 
 import { Document, Image, execGit } from "../content";
