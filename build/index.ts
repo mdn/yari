@@ -1,4 +1,4 @@
-import { Doc, Flaws, LanguageItem } from "../libs/types";
+import { Doc } from "../libs/types";
 import fs from "fs";
 import path from "path";
 
@@ -35,7 +35,7 @@ import LANGUAGES_RAW from "../libs/languages";
 import { safeDecodeURIComponent } from "../kumascript/src/api/util";
 import { wrapTables } from "./wrap-tables";
 
-const LANGUAGES = new Map<string, LanguageItem>(
+const LANGUAGES = new Map(
   Object.entries(LANGUAGES_RAW).map(([locale, data]) => {
     return [locale.toLowerCase(), data];
   })

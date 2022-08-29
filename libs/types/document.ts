@@ -214,8 +214,3 @@ export interface CompatStatementExtended extends BCD.CompatStatement {
   // Note, it's only 'true' if it's present, hence this interface definition.
   bad_url?: true;
 }
-
-export interface LanguageItem {
-  English: string;
-  native: string;
-}
