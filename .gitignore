@@ -35,8 +35,12 @@ yarn-error.log*
 /client/build
 /client/src/**/*.js
 /client/src/**/*.js.map
+/content/*.js
+/content/*.js.map
 /filecheck/*.js
 /filecheck/*.js.map
+/kumascript/*.js
+/kumascript/*.js.map
 /markdown/*.js
 /markdown/*.js.map
 /server/*.js
