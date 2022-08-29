@@ -38,6 +38,9 @@ test.describe("Testing the kitchensink page", () => {
     expect(
       await page.isVisible("text=The MDN Content Kitchensink")
     ).toBeTruthy();
+
+    // Toolbar.
+    await page.waitForSelector("#_flaws");
     expect(
       await page.isVisible("text=No known flaws at the moment")
     ).toBeTruthy();
