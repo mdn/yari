@@ -92,7 +92,7 @@ function getActiveLegendItems(
         }
       }
 
-      if (Array.isArray(browserSupport)) {
+      if (Array.isArray(browserSupport) && browserSupport.length > 1) {
         legendItems.add("more");
       }
     }
