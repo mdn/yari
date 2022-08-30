@@ -21,11 +21,6 @@ var note = productVersion + " note";
 var newIn = "New in ";
 
 switch(lang) {
-    case 'de':
-        text = "Dieser Artikel umfasst Features die in " + web.link(wiki.uri(link), productVersion) + " eingeführt wurden";
-        note = "Hinweis zu " + productVersion;
-        newIn = "Neu in ";
-        break;
     case 'es':
         text = "Este artículo cubre características introducidas en " + web.link(wiki.uri(link), productVersion);
         note = "Nota sobre " + productVersion;
@@ -42,11 +37,6 @@ switch(lang) {
         break;
     case 'ko':
         text = "이 문서는 " + product + "개발자들을 위한 정보입니다. " + web.link(wiki.uri(link), productVersion);
-        break;
-    case 'pl':
-        text = "Ten artykuł obejmuje funkcje wprowadzone w " + web.link(wiki.uri(link), productVersion);
-        note = "Uwaga dotycząca Firefoksa " + version;
-        newIn = "Nowość w ";
         break;
     case 'pt-PT':
         text = "Este artigo cobre características introduzidas no " + web.link(wiki.uri(link), productVersion);

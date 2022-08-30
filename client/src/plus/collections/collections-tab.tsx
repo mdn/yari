@@ -74,8 +74,7 @@ export function CollectionsTab({
 
     const res = await updateCollectionItem(
       item,
-      new URLSearchParams([...(formData as any)]),
-      data.csrfmiddlewaretoken
+      new URLSearchParams([...(formData as any)])
     );
 
     const limitReached =
@@ -101,11 +100,7 @@ export function CollectionsTab({
 
   const deleteCollectionItem = async (item: any) => {
     item = item as BookmarkData;
-    const res = await updateDeleteCollectionItem(
-      item,
-      data.csrfmiddlewaretoken,
-      true
-    );
+    const res = await updateDeleteCollectionItem(item, true);
     const limitReached =
       (await res.json())?.subscription_limit_reached || false;
     const previous = [...list];
@@ -118,11 +113,7 @@ export function CollectionsTab({
       shortText: "Article removed",
       buttonText: "Undo",
       buttonHandler: async () => {
-        const res = await updateDeleteCollectionItem(
-          item,
-          data.csrfmiddlewaretoken,
-          false
-        );
+        const res = await updateDeleteCollectionItem(item, false);
         const limitReached =
           (await res.json())?.subscription_limit_reached || false;
         setSubscriptionLimitReached(limitReached);
