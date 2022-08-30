@@ -59,7 +59,7 @@ const loadAllLanguages = lazy(() => {
 // because Prism is an implementation detail.
 const ALIASES = new Map([
   // ["idl", "webidl"],  // block list
-  ["htmlnolint", "html"]
+  ["htmlnolint", "html"],
   ["jsnolint", "js"],
   ["sh", "shell"],
 ]);
