@@ -11,7 +11,7 @@ page:
     description: |
       The URL path of the page that was viewed.
     data_sensitivity:
-      - "web_activity"
+      - web_activity
     bugs:
       - "https://bugzilla.mozilla.org/show_bug.cgi?id=1782509"
     data_reviews:
@@ -28,7 +28,7 @@ page:
     description: |
       The referring URL that linked to the page that was viewed.
     data_sensitivity:
-      - "web_activity"
+      - web_activity
     bugs:
       - "https://bugzilla.mozilla.org/show_bug.cgi?id=1782509"
     data_reviews:
@@ -45,7 +45,7 @@ page:
       An event describing any non-click type page interaction  E.g
        'Logged in', 'Offer hero viewed'
     data_sensitivity:
-      - "web_activity"
+      - web_activity
     bugs:
       - https://bugzilla.mozilla.org/show_bug.cgi?id=1782509
     data_reviews:
