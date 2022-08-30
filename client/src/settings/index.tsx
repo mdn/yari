@@ -1,7 +1,6 @@
 import React from "react";
 
 import { OfflineStatusBar } from "../ui/molecules/offline-status-bar";
-import { PageContentContainer } from "../ui/atoms/page-content";
 
 import "./index.scss";
 import { Manage } from "./manage";
@@ -15,12 +14,12 @@ export function Settings() {
   return (
     <>
       <OfflineStatusBar />
-      <PageContentContainer extraClasses="settings">
+      <article className="settings">
         <h1 className="slab-highlight _ify">{pageTitle} </h1>
         <Manage />
         <FeaturePreview />
         <OfflineSettings />
-      </PageContentContainer>
+      </article>
     </>
   );
 }

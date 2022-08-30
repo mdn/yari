@@ -1,7 +1,7 @@
 import React from "react";
 import { useLocation } from "react-router-dom";
 
-import { PageContentContainer } from "../ui/atoms/page-content";
+import { MainContentContainer } from "../ui/atoms/page-content";
 import "./index.scss";
 
 const FallbackLink = React.lazy(() => import("./fallback-link"));
@@ -27,7 +27,7 @@ export function PageNotFound() {
 
   return (
     <div className="main-wrapper page-not-found">
-      <PageContentContainer>
+      <MainContentContainer>
         <article className="main-page-content">
           {/* This string should match the `pageTitle` set in ssr/render.js */}
           <h1>Page not found</h1>
@@ -48,7 +48,7 @@ export function PageNotFound() {
             <a href="/">Go back to the home page</a>
           </p>
         </article>
-      </PageContentContainer>
+      </MainContentContainer>
     </div>
   );
 }

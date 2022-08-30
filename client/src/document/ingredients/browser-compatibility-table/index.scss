@@ -167,6 +167,13 @@
   font-size: var(--type-smaller-font-size);
 }
 
+.bc-legend-tip {
+  font-size: var(--type-smaller-font-size);
+  margin-top: 0rem;
+  margin-bottom: 1rem;
+  font-style: italic;
+}
+
 .bc-legend-item {
   align-items: center;
   display: flex;

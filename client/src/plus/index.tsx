@@ -3,7 +3,7 @@ import { Routes, Route } from "react-router-dom";
 
 import { useIsServer } from "../hooks";
 import { Loading } from "../ui/atoms/loading";
-import { PageContentContainer } from "../ui/atoms/page-content";
+import { MainContentContainer } from "../ui/atoms/page-content";
 import { PageNotFound } from "../page-not-found";
 import Notifications from "./notifications";
 import { MDN_PLUS_TITLE } from "../constants";
@@ -44,9 +44,7 @@ export function Plus({ pageTitle, ...props }: { pageTitle?: string }) {
     return withoutContainer ? (
       inner
     ) : (
-      <PageContentContainer extraClasses="fullwidth">
-        {inner}
-      </PageContentContainer>
+      <MainContentContainer>{inner}</MainContentContainer>
     );
   }
 

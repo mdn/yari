@@ -25,48 +25,44 @@ export async function toggleCollectionsInQuickSearch(enabled: boolean) {
   });
 }
 
-export async function markNotificationsAsRead(formData: FormData) {
+export async function markNotificationsAsRead() {
   return fetch(NOTIFICATIONS_MARK_ALL_AS_READ_PATH, {
-    body: new URLSearchParams([...(formData as any)]),
     method: "POST",
   });
 }
-export const starItem = async (csrfToken: string, id: number) => {
-  await post(`${NOTIFICATIONS_BASE_PATH}/${id}/toggle-starred/`, csrfToken);
+export const starItem = async (id: number) => {
+  await post(`${NOTIFICATIONS_BASE_PATH}/${id}/toggle-starred/`);
 };
 
-export async function starItemsById(csrfToken: string, ids: number[]) {
-  return await post(`${NOTIFICATIONS_BASE_PATH}/star-ids/`, csrfToken, {
+export async function starItemsById(ids: number[]) {
+  return await post(`${NOTIFICATIONS_BASE_PATH}/star-ids/`, {
     ids,
   });
 }
 
-export async function unstarItemsById(csrfToken: string, ids: number[]) {
-  return await post(`${NOTIFICATIONS_BASE_PATH}/unstar-ids/`, csrfToken, {
+export async function unstarItemsById(ids: number[]) {
+  return await post(`${NOTIFICATIONS_BASE_PATH}/unstar-ids/`, {
     ids,
   });
 }
 
-export async function deleteItemsById(csrfToken: string, ids: number[]) {
-  return await post(`${NOTIFICATIONS_BASE_PATH}/delete-ids/`, csrfToken, {
+export async function deleteItemsById(ids: number[]) {
+  return await post(`${NOTIFICATIONS_BASE_PATH}/delete-ids/`, {
     ids,
   });
 }
 
-export async function deleteItemById(csrfToken: string, id: number) {
-  return await post(`${NOTIFICATIONS_BASE_PATH}/${id}/delete/`, csrfToken);
+export async function deleteItemById(id: number) {
+  return await post(`${NOTIFICATIONS_BASE_PATH}/${id}/delete/`);
 }
 
-export async function unwatchItemsByUrls(csrfToken: string, data: any[]) {
+export async function unwatchItemsByUrls(data: any[]) {
   const payload = { unwatch: data.map((val) => val.url) };
-  return await post(`/api/v1/plus/unwatch-many/`, csrfToken, payload);
+  return await post(`/api/v1/plus/unwatch-many/`, payload);
 }
 
-export async function undoDeleteItemById(csrfToken: string, id: number) {
-  return await post(
-    `${NOTIFICATIONS_BASE_PATH}/${id}/undo-deletion/`,
-    csrfToken
-  );
+export async function undoDeleteItemById(id: number) {
+  return await post(`${NOTIFICATIONS_BASE_PATH}/${id}/undo-deletion/`);
 }
 
 export function useNotificationsApiEndpoint(
@@ -188,15 +184,11 @@ export function useWatchedItemsApiEndpoint(
 
 export async function updateCollectionItem(
   item: BookmarkData,
-  formData: URLSearchParams,
-  csrftoken: string
+  formData: URLSearchParams
 ) {
   const res = await fetch(`${COLLECTION_BASE_PATH}/?url=${item.url}`, {
     method: "POST",
     body: new URLSearchParams([...(formData as any)]),
-    headers: {
-      "X-CSRFToken": csrftoken,
-    },
   });
 
   return res;
@@ -204,7 +196,6 @@ export async function updateCollectionItem(
 
 export async function updateDeleteCollectionItem(
   item: BookmarkData,
-  csrftoken: string,
   shouldDelete: Boolean
 ) {
   const formData = new FormData();
@@ -212,9 +203,6 @@ export async function updateDeleteCollectionItem(
   const res = await fetch(`${COLLECTION_BASE_PATH}/?url=${item.url}`, {
     method: "POST",
     body: new URLSearchParams([...(formData as any)]),
-    headers: {
-      "X-CSRFToken": csrftoken,
-    },
   });
   return res;
 }
@@ -302,11 +290,10 @@ export async function getStripePlans() {
   return await res.json();
 }
 
-async function post(url: string, csrfToken: string, data?: object) {
+async function post(url: string, data?: object) {
   const fetchData: { method: string; headers: HeadersInit; body?: string } = {
     method: "POST",
     headers: {
-      "X-CSRFToken": csrfToken,
       "content-type": "application/json",
     },
   };

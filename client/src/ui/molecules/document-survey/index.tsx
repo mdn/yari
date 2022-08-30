@@ -1,5 +1,5 @@
 import React from "react";
-import { Doc } from "../../../document/types";
+import { Doc } from "../../../../../libs/types/document";
 import "./index.scss";
 import { Survey, SURVEYS } from "./surveys";
 import { getSurveyState, writeSurveyState } from "./utils";

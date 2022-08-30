@@ -6,25 +6,4 @@
 
 .standard-page {
   max-width: inherit;
-
-  .page-content-container {
-    display: grid;
-    grid-template-columns: 100%;
-  }
-
-  &.plus {
-    background-color: var(--background-primary);
-  }
-
-  @media screen and (min-width: $screen-md) {
-    .page-content-container {
-      margin: 0 auto;
-      max-width: var(--max-width);
-      width: 100%;
-
-      &.fullwidth {
-        max-width: initial;
-      }
-    }
-  }
 }

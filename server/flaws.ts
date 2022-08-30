@@ -1,4 +1,4 @@
-import { Doc } from "../client/src/document/types";
+import { Doc } from "../libs/types/document";
 import { FlawFilters } from "./types";
 
 import fs from "fs";
@@ -7,7 +7,7 @@ import path from "path";
 import { fdir, PathsOutput } from "fdir";
 
 import { getPopularities } from "../content";
-import { options as buildOptions } from "../build";
+import buildOptions from "../build/build-options";
 
 import { FLAW_LEVELS } from "../libs/constants";
 import { BUILD_OUT_ROOT } from "../libs/env";
