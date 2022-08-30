@@ -74,7 +74,7 @@ event:
     description: |
       An event containing metrics related to page click events.
     data_sensitivity:
-      - "web_activity"
+      - web_activity
     bugs:
       - "https://bugzilla.mozilla.org/show_bug.cgi?id=1782509"
     data_reviews:
