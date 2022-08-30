@@ -3,7 +3,7 @@ $schema: moz://mozilla.org/schemas/glean/metrics/2-0-0
 
 page:
   path:
-    type: string
+    type: url
     lifetime: application
     send_in_pings:
       - page
@@ -20,7 +20,7 @@ page:
       - mdn-team@mozilla.com
     expires: never
   referrer:
-    type: string
+    type: url
     lifetime: application
     send_in_pings:
       - page
