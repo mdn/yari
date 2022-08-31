@@ -4933,10 +4933,10 @@ dot-case@^3.0.4:
     no-case "^3.0.4"
     tslib "^2.0.3"
 
-dotenv-expand@^8.0.3:
-  version "8.0.3"
-  resolved "https://registry.yarnpkg.com/dotenv-expand/-/dotenv-expand-8.0.3.tgz#29016757455bcc748469c83a19b36aaf2b83dd6e"
-  integrity sha512-SErOMvge0ZUyWd5B0NXMQlDkN+8r+HhVUsxgOO7IoPDOdDRD2JjExpN6y3KnFR66jsJMwSn1pqIivhU5rcJiNg==
+dotenv-expand@^9.0.0:
+  version "9.0.0"
+  resolved "https://registry.yarnpkg.com/dotenv-expand/-/dotenv-expand-9.0.0.tgz#1fd37e2cd63ea0b5f7389fb87256efc38b035b26"
+  integrity sha512-uW8Hrhp5ammm9x7kBLR6jDfujgaDarNA02tprvZdyrJ7MpdzD1KyrIHG4l+YoC2fJ2UcdFdNWNWIjt+sexBHJw==
 
 dotenv@^16.0.2:
   version "16.0.2"
