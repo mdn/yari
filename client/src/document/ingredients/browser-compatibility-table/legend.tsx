@@ -4,6 +4,7 @@ import { BrowserInfoContext } from "./browser-info";
 import {
   asList,
   getFirst,
+  hasMore,
   hasNoteworthyNotes,
   listFeatures,
   versionIsPreview,
@@ -92,7 +93,7 @@ function getActiveLegendItems(
         }
       }
 
-      if (Array.isArray(browserSupport) && browserSupport.length > 1) {
+      if (hasMore(browserSupport)) {
         legendItems.add("more");
       }
     }
