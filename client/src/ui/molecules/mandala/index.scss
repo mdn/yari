@@ -64,23 +64,23 @@
     }
 
     .mandala-accent-1 > textPath > tspan {
-      fill: var(--mandala-accent-1);
       animation-delay: -15s;
+      fill: var(--mandala-accent-1);
     }
 
     .mandala-accent-2 > textPath > tspan {
-      fill: var(--mandala-accent-2);
       animation-delay: -20s;
+      fill: var(--mandala-accent-2);
     }
 
     .mandala-accent-3 > textPath > tspan {
-      fill: var(--mandala-accent-3);
       animation-delay: -30s;
+      fill: var(--mandala-accent-3);
     }
 
     .mandala-accent-5 > textPath > tspan {
-      fill: var(--mandala-accent-4);
       animation-delay: -40s;
+      fill: var(--mandala-accent-4);
     }
   }
   @keyframes mandala-color-change {
