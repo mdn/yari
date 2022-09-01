@@ -28,13 +28,10 @@ const displayName = $1 || '';
 const anchor = $2 || '';
 const wrap = !$3;
 
-let slug;
+let slug = apiName.replace('()', '').replace('.prototype.', '.');
 if (apiName.includes(".") && !apiName.includes("..")) {
-    const normalizedApiName = apiName.replace('()', '').replace('.prototype.', '.');
     // E.g. "Array.filter", but not "try...catch".
-    slug = normalizedApiName.replace('.', '/');
-} else {
-    slug = apiName;
+    slug = slug.replace('.', '/');
 }
 
 let basePath;
