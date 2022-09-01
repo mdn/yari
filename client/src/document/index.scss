@@ -325,13 +325,14 @@ iframe {
   &[src*="https://test262.report"],
   &.nobutton,
   &.sample-code-frame {
-    width: 100%;
+    width: calc(100% - 0.5rem);
     background: #fff;
     border: none;
     border-radius: calc(var(--elem-radius) / 2);
     outline: 1px solid var(--border-primary);
     outline-offset: 0.25rem;
     box-shadow: 0 0 1px 0.25rem #fff;
+    margin-left: 0.25rem;
   }
 }
 
