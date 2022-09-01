@@ -7,14 +7,14 @@
   ],
   "plugins": ["stylelint-scss"],
   "rules": {
+    "declaration-no-important": true,
+    "font-weight-notation": "named-where-possible",
     "max-nesting-depth": [
       3,
       {
         "ignoreAtRules": ["media"]
       }
     ],
-    "declaration-no-important": true,
-    "font-weight-notation": "named-where-possible",
     "selector-no-qualifying-type": [
       true,
       {
