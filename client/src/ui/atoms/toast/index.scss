@@ -23,8 +23,8 @@
   }
 
   .button.action {
-    white-space: nowrap;
     --button-color: var(--toast-color);
+    white-space: nowrap;
 
     &:hover {
       --button-bg: rgba(58, 57, 68, 0.3);

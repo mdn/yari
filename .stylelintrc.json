@@ -24,7 +24,6 @@
     "no-duplicate-selectors": null,
     "no-invalid-position-at-import-rule": null,
     "no-irregular-whitespace": null,
-    "order/order": null,
     "property-no-vendor-prefix": null,
     "rule-empty-line-before": null,
     "scss/at-extend-no-missing-placeholder": null,

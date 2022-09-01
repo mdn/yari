@@ -42,13 +42,13 @@
   }
 
   .spotlight-cta {
-    width: fit-content;
     --button-bg: var(--text-link);
     --button-border-color: #{$mdn-color-neutral-90};
     --button-color: var(--mdn-color-black);
     --button-radius: 10rem;
     --button-padding: 1rem;
     --button-primary-hover: #{$mdn-color-neutral-60};
+    width: fit-content;
   }
 
   .wrapper {
@@ -115,6 +115,7 @@
   }
 
   .mandala-container {
+    --mandala-primary: var(--border-primary);
     background: rgba(1, 1, 1, 0.9);
     height: 100%;
     overflow: hidden;
@@ -122,7 +123,6 @@
     top: 0;
     width: 100%;
     z-index: -1;
-    --mandala-primary: var(--border-primary);
 
     .mandala-translate {
       transform: translate(-5rem, -0rem);

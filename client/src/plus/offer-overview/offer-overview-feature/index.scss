@@ -41,6 +41,10 @@
     }
 
     .copy-container {
+      align-items: center;
+      max-width: 40rem;
+
+      text-align: center;
       a {
         justify-content: start;
       }
@@ -58,10 +62,6 @@
         font-weight: 400;
         margin-top: 0;
       }
-      align-items: center;
-      max-width: 40rem;
-
-      text-align: center;
 
       @media screen and (min-width: $screen-xl) {
         align-items: initial;

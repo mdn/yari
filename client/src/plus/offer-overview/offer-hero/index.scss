@@ -90,6 +90,7 @@ $text-stroke-width: 2px;
     }
   }
   .mandala-wrapper {
+    --mandala-primary: var(--border-primary);
     grid-column: 1;
     grid-row: 1;
     overflow: hidden;
@@ -97,7 +98,6 @@ $text-stroke-width: 2px;
     -moz-transition: all 1s ease-in-out;
     transition: all 1s ease-in-out;
     width: 100%;
-    --mandala-primary: var(--border-primary);
 
     .mandala-translate {
       transform: translate(10rem, -8rem) scale(1.2);

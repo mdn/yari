@@ -9,6 +9,8 @@
 }
 
 @mixin mify {
+  @include uify;
+  margin-left: 0.5rem;
   &::before {
     background-color: var(--text-link);
     content: "";
@@ -19,6 +21,4 @@
     transform: translate(-0.2em, 0.2em);
     width: 1.2em;
   }
-  @include uify;
-  margin-left: 0.5rem;
 }

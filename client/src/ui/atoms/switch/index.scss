@@ -10,11 +10,11 @@
     width: 3rem;
 
     &:checked + .slider {
+      background-color: var(--text-link);
       &:before {
         left: 53.25%;
         right: 3.25%;
       }
-      background-color: var(--text-link);
     }
 
     &:focus-visible + .slider {
