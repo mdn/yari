@@ -4,12 +4,12 @@
 // Style for mobile *and* desktop.
 
 .bc-table {
-  width: 100%;
-  margin: 1rem 0;
   border: 1px solid var(--border-primary);
-  border-radius: var(--elem-radius);
   border-collapse: separate;
+  border-radius: var(--elem-radius);
   border-spacing: 0;
+  margin: 1rem 0;
+  width: 100%;
 
   td,
   th {
@@ -88,8 +88,8 @@
   }
 
   th {
-    vertical-align: bottom;
     background: var(--background-tertiary);
+    vertical-align: bottom;
   }
 
   .bc-supports {
@@ -115,9 +115,9 @@
       display: block;
     }
     .icon.icon-removed-partial {
+      background-color: var(--icon-critical);
       // override icon
       mask-image: url("../../../assets/icons/no.svg");
-      background-color: var(--icon-critical);
     }
   }
   .bc-support.bc-supports-removed-partial {
@@ -131,15 +131,15 @@
 }
 
 .bc-head-txt-label {
+  left: calc(50% - 0.5rem);
+  line-height: 1;
+  padding-top: 0.5rem;
+  position: relative;
+  transform: rotate(180deg);
+  white-space: nowrap;
   -ms-writing-mode: tb-rl;
   -webkit-writing-mode: vertical-rl;
   writing-mode: vertical-rl;
-  transform: rotate(180deg);
-  white-space: nowrap;
-  left: calc(50% - 0.5rem);
-  line-height: 1;
-  position: relative;
-  padding-top: 0.5rem;
 }
 
 .bc-head-icon-symbol {
@@ -162,16 +162,16 @@
 .bc-legend-items-container {
   display: flex;
   flex-wrap: wrap;
+  font-size: var(--type-smaller-font-size);
   gap: 1.5rem;
   margin-bottom: 2rem;
-  font-size: var(--type-smaller-font-size);
 }
 
 .bc-legend-tip {
   font-size: var(--type-smaller-font-size);
-  margin-top: 0rem;
-  margin-bottom: 1rem;
   font-style: italic;
+  margin-bottom: 1rem;
+  margin-top: 0rem;
 }
 
 .bc-legend-item {
@@ -213,20 +213,20 @@
 }
 
 .bc-notes-list {
-  position: relative;
   margin: 0.5rem 0;
+  position: relative;
   text-align: left;
   width: 100%;
 
   &:before {
-    position: absolute;
-    z-index: -1;
-    height: calc(100% - 0.25rem);
-    margin-top: 0.25rem;
-    left: 7px;
-    width: 2px;
     background: var(--border-primary);
     content: "";
+    height: calc(100% - 0.25rem);
+    left: 7px;
+    margin-top: 0.25rem;
+    position: absolute;
+    width: 2px;
+    z-index: -1;
   }
 
   // complicated selector to cover the last bit of the grey line above.
@@ -234,14 +234,14 @@
     position: relative;
 
     &:before {
-      position: absolute;
-      z-index: -1;
+      background: var(--background-primary);
+      bottom: 0;
+      content: "";
       height: calc(100% - 6px);
       left: 7px;
+      position: absolute;
       width: 2px;
-      bottom: 0;
-      background: var(--background-primary);
-      content: "";
+      z-index: -1;
     }
   }
 
@@ -253,10 +253,10 @@
 
   .bc-supports-dd {
     .icon {
-      mask-image: none;
-      border-radius: 50%;
-      border: 3px solid var(--background-primary);
       background: var(--border-primary);
+      border: 3px solid var(--background-primary);
+      border-radius: 50%;
+      mask-image: none;
     }
   }
 
@@ -280,8 +280,8 @@
 }
 
 .bc-notes-wrapper {
-  margin-bottom: 1rem;
   color: var(--text-primary);
+  margin-bottom: 1rem;
 
   &:last-child {
     margin-bottom: 0;
@@ -311,9 +311,9 @@ dl.bc-notes-list {
 }
 
 .bc-table-row-header {
-  width: 100%;
-  display: inline-flex;
   align-items: baseline;
+  display: inline-flex;
+  width: 100%;
 
   code {
     overflow: hidden;
@@ -321,8 +321,8 @@ dl.bc-notes-list {
 
   .left-side,
   .right-side {
-    white-space: pre;
     overflow: hidden;
+    white-space: pre;
   }
 
   /* Can only flex-shrink and not flex-grow
@@ -358,9 +358,9 @@ dl.bc-notes-list {
   .bc-legend {
     dd,
     dt {
-      margin-top: 0;
       margin-bottom: 0;
       margin-left: 0;
+      margin-top: 0;
     }
   }
 

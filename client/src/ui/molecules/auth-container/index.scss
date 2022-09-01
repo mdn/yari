@@ -2,10 +2,10 @@
 
 .auth-container {
   display: flex;
+  flex-flow: column-reverse;
   font-family: var(--font-body);
   font-size: var(--type-smaller-font-size);
   font-weight: var(--font-body-strong-weight);
-  flex-flow: column-reverse;
   gap: 0.5rem;
   list-style: none;
   margin-bottom: 0.5rem;
