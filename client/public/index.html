@@ -125,7 +125,9 @@
           o &&
             ((document.documentElement.className = o),
             (document.documentElement.style.backgroundColor = c[o]));
-        } catch (e) {}
+        } catch (e) {
+          console.warn("Failed to read theme from localStorage", e);
+        }
       }
     </script>
     <div id="root"></div>

@@ -12,7 +12,7 @@ export function setEmbargoed(id: BannerId, days: number) {
       String(Date.now() + Math.round(days * 24 * 60 * 60 * 1000))
     );
   } catch (e) {
-    // If localStorage is not supported, then embargoes are not supported.
+    console.warn("Unable to write banner embargo to localStorage", e);
   }
 }
 
@@ -40,8 +40,8 @@ export function isEmbargoed(id: BannerId) {
       return false;
     }
   } catch (e) {
-    // If localStorage is not supported, then the embargo feature
-    // just won't work
+    console.warn("Unable to read banner embargo from localStorage", e);
+
     return false;
   }
 }

@@ -62,7 +62,7 @@ export function switchTheme(theme: string, set: (theme: string) => void) {
     try {
       window.localStorage.setItem("theme", theme);
     } catch (err) {
-      console.warn("Failed to write theme to localStorage", err);
+      console.warn("Unable to write theme to localStorage", err);
     }
     set(theme);
     postToIEx(theme);

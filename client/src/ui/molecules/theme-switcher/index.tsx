@@ -50,7 +50,7 @@ export const ThemeSwitcher = () => {
     try {
       theme = localStorage.getItem("theme");
     } catch (e) {
-      // If localStorage is not supported, then we always use OS theme
+      console.warn("Unable to read theme from localStorage", e);
     }
 
     if (theme) {

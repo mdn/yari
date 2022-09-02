@@ -128,7 +128,10 @@ function getFrequentlyViewed(): FrequentlyViewedEntry[] {
   try {
     frequentlyViewed = localStorage.getItem(FREQUENTLY_VIEWED_STORAGE_KEY);
   } catch (err) {
-    // If localStorage is not supported, there are no frequently viewed entries
+    console.warn(
+      "Unable to read frequently viewed documents from localStorage",
+      err
+    );
   }
   return JSON.parse(frequentlyViewed || "[]");
 }
