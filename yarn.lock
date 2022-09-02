@@ -12449,10 +12449,10 @@ tryer@^1.0.1:
   resolved "https://registry.yarnpkg.com/tryer/-/tryer-1.0.1.tgz#f2c85406800b9b0f74c9f7465b81eaad241252f8"
   integrity sha512-c3zayb8/kWWpycWYg87P71E1S1ZL6b6IJxfb5fvsUgsf0S2MVGaDhDXXjDMpdCpfWXqptc+4mXwmiy1ypXqRAA==
 
-ts-jest@^29.0.0-next.0:
-  version "29.0.0-next.0"
-  resolved "https://registry.yarnpkg.com/ts-jest/-/ts-jest-29.0.0-next.0.tgz#3045e458c377515b9eacf747432cff7c138fdb5b"
-  integrity sha512-eZS6d2uH4Piwp2k7SwyLpKhBpwL1idvba/5LnkkBd8YcPA5Q0h/OgpBwt7702gOYF8WRGNxhVj6OZ988zoGWtg==
+ts-jest@^29.0.0-next.1:
+  version "29.0.0-next.1"
+  resolved "https://registry.yarnpkg.com/ts-jest/-/ts-jest-29.0.0-next.1.tgz#bfd6c190f1eb30ce2e9408f6c3309784ccf96349"
+  integrity sha512-bVo2GDuJiV+cWEYB72tdz2Ips4JDKa04bcKikPULxxUHT4fsoY1zB2zvsrJym18qrFpXyVrIdgJFLfEx2YTkbg==
   dependencies:
     bs-logger "0.x"
     fast-json-stable-stringify "2.x"
