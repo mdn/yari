@@ -123,6 +123,37 @@ function getCopiedMessageElement(wrapper: HTMLElement) {
 const FREQUENTLY_VIEWED_STORAGE_KEY = "frequently-viewed-documents";
 const FREQUENTLY_VIEWED_MAX_ITEMS = 20;
 
+function getFrequentlyViewed(): FrequentlyViewedEntry[] {
+  let frequentlyViewed: string | null = null;
+  try {
+    frequentlyViewed = localStorage.getItem(FREQUENTLY_VIEWED_STORAGE_KEY);
+  } catch (err) {
+    console.warn(
+      "Unable to read frequently viewed documents from localStorage",
+      err
+    );
+  }
+  return JSON.parse(frequentlyViewed || "[]");
+}
+
+function setFrequentlyViewed(
+  frequentlyViewed: FrequentlyViewedEntry[],
+  done = () => {}
+) {
+  try {
+    localStorage.setItem(
+      FREQUENTLY_VIEWED_STORAGE_KEY,
+      JSON.stringify(frequentlyViewed.slice(0, FREQUENTLY_VIEWED_MAX_ITEMS))
+    );
+    done();
+  } catch (err) {
+    console.warn(
+      "Failed to write frequently viewed documents to localStorage",
+      err
+    );
+  }
+}
+
 const sortByVisitsThenTimestampDesc = (
   first: FrequentlyViewedEntry,
   second: FrequentlyViewedEntry
@@ -142,9 +173,7 @@ export function useFrequentlyViewed(): [
   const [updated, setUpdated] = useState(false);
 
   useEffect(() => {
-    const entries = JSON.parse(
-      localStorage.getItem(FREQUENTLY_VIEWED_STORAGE_KEY) || "[]"
-    ) as FrequentlyViewedEntry[];
+    const entries = getFrequentlyViewed();
     const newEntries: FrequentlyViewedEntry[] = [];
     for (const entry of entries) {
       newEntries.push({
@@ -161,16 +190,8 @@ export function useFrequentlyViewed(): [
   }, [updated]);
 
   const setStoredEntries = (value: FrequentlyViewedEntry[]) => {
-    try {
-      setEntries(entries);
-      window.localStorage.setItem(
-        FREQUENTLY_VIEWED_STORAGE_KEY,
-        JSON.stringify(value.slice(0, FREQUENTLY_VIEWED_MAX_ITEMS))
-      );
-      setUpdated(true);
-    } catch (err) {
-      console.error(`Failed to write to localStorage: ${err}`);
-    }
+    setEntries(value);
+    setFrequentlyViewed(value, () => setUpdated(true));
   };
 
   return [entries, setStoredEntries];
@@ -186,9 +207,7 @@ export function usePersistFrequentlyViewed(doc: Doc | undefined) {
     if (!doc) {
       return;
     }
-    let frequentlyViewed = JSON.parse(
-      localStorage.getItem(FREQUENTLY_VIEWED_STORAGE_KEY) || "[]"
-    );
+    let frequentlyViewed = getFrequentlyViewed();
 
     const newEntry: FrequentlyViewedEntry = {
       url: doc.mdn_url,
@@ -199,10 +218,7 @@ export function usePersistFrequentlyViewed(doc: Doc | undefined) {
     };
 
     if (frequentlyViewed.length === 0) {
-      localStorage.setItem(
-        FREQUENTLY_VIEWED_STORAGE_KEY,
-        JSON.stringify([newEntry])
-      );
+      setFrequentlyViewed([newEntry]);
       return;
     }
 
@@ -219,14 +235,7 @@ export function usePersistFrequentlyViewed(doc: Doc | undefined) {
 
     //Sort descending so most frequently viewed appears on top.
     frequentlyViewed = frequentlyViewed.sort(sortByVisitsThenTimestampDesc);
-    try {
-      localStorage.setItem(
-        FREQUENTLY_VIEWED_STORAGE_KEY,
-        JSON.stringify(frequentlyViewed.slice(0, FREQUENTLY_VIEWED_MAX_ITEMS))
-      );
-    } catch (err) {
-      console.error(`Failed to write to localStorage: ${err}`);
-    }
+    setFrequentlyViewed(frequentlyViewed);
   });
 }
 

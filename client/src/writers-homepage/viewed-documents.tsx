@@ -17,25 +17,37 @@ type Entry = {
 
 export default function ViewedDocuments() {
   const isVisible = usePageVisibility();
-  const [entries, setEntries] = React.useState<Entry[] | null>(null);
+  // undefined - list is still being loaded
+  // null - list could not be loaded (e.g., if localStorage is disabled)
+  // Entry[] - list was loaded (but could be empty)
+  const [entries, setEntries] = React.useState<Entry[] | null | undefined>(
+    undefined
+  );
+
+  const VIEWED_DOCUMENTS_STORAGE_KEY = "viewed-documents";
 
   React.useEffect(() => {
     if (isVisible) {
-      const localStorageKey = "viewed-documents";
-      const previousVisits = JSON.parse(
-        localStorage.getItem(localStorageKey) || "[]"
-      );
-      const newEntries: Entry[] = [];
-      for (const visit of previousVisits) {
-        newEntries.push({
-          url: visit.url,
-          title: visit.title,
-          timestamp: visit.timestamp,
-        });
-      }
+      try {
+        const data = localStorage.getItem(VIEWED_DOCUMENTS_STORAGE_KEY);
+        const previousVisits = JSON.parse(data || "[]");
+        const newEntries: Entry[] = [];
+        for (const visit of previousVisits) {
+          newEntries.push({
+            url: visit.url,
+            title: visit.title,
+            timestamp: visit.timestamp,
+          });
+        }
 
-      if (newEntries.length) {
         setEntries(newEntries);
+      } catch (err) {
+        // If localStorage is not supported, there are no viewed documents
+        console.warn(
+          "Failed to read recently viewed documents from localStorage",
+          err
+        );
+        setEntries(null);
       }
     }
   }, [isVisible]);
@@ -46,8 +58,10 @@ export default function ViewedDocuments() {
       aria-labelledby="recently-viewed-documents"
     >
       <h3>Recently viewed documents</h3>
-      {!entries ? (
+      {entries === undefined ? (
         <Banner>Loading recently viewed documents</Banner>
+      ) : entries === null ? (
+        <Banner>This feature requires cookies</Banner>
       ) : entries.length ? (
         <table>
           <thead>
