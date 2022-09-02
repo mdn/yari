@@ -4,7 +4,7 @@ export const RETIRED_LOCALES: Map<string, string>;
 export const DEFAULT_LOCALE: string;
 export const LOCALE_ALIASES: Map<string, string>;
 export const PREFERRED_LOCALE_COOKIE_NAME: string;
-export const scriptSrcValues: string[];
+export const CSP_SCRIPT_SRC_VALUES: string[];
 export const CSP_VALUE: string;
 export const FLAW_LEVELS: Readonly<Record<string, string>>;
 export const VALID_FLAW_CHECKS: Set<string>;

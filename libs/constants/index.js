@@ -59,7 +59,7 @@ const ACTIVE_LOCALES = new Set([
   "zh-tw",
 ]);
 
-const scriptSrcValues = [
+const CSP_SCRIPT_SRC_VALUES = [
   "'report-sample'",
   "'self'",
 
@@ -89,8 +89,8 @@ const scriptSrcValues = [
 ];
 const CSP_DIRECTIVES = {
   "default-src": ["'self'"],
-  "script-src": scriptSrcValues,
-  "script-src-elem": scriptSrcValues,
+  "script-src": CSP_SCRIPT_SRC_VALUES,
+  "script-src-elem": CSP_SCRIPT_SRC_VALUES,
   "style-src": ["'report-sample'", "'self'", "'unsafe-inline'"],
   "object-src": ["'none'"],
   "base-uri": ["'self'"],
@@ -222,7 +222,7 @@ module.exports = {
   LOCALE_ALIASES,
   PREFERRED_LOCALE_COOKIE_NAME,
 
-  scriptSrcValues,
+  CSP_SCRIPT_SRC_VALUES,
   CSP_VALUE,
 
   // build

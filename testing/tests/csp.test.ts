@@ -1,7 +1,7 @@
 import fs from "fs";
 import path from "path";
 import crypto from "crypto";
-import { scriptSrcValues } from "../../libs/constants";
+import { CSP_SCRIPT_SRC_VALUES } from "../../libs/constants";
 
 describe("Content-Security-Policy", () => {
   test('All inline <script> tags must have a corresponding "script-src" CSP entry.', () => {
@@ -29,7 +29,7 @@ describe("Content-Security-Policy", () => {
     const inlineScriptCspValues = inlineScriptContents.map(cspValueOf);
 
     const missingInlineScriptCspValues = inlineScriptCspValues.filter(
-      (value) => !scriptSrcValues.includes(value)
+      (value) => !CSP_SCRIPT_SRC_VALUES.includes(value)
     );
 
     // If this assertion fails, an inline script in `client/public/index.html` was
