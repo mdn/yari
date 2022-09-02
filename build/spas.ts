@@ -323,9 +323,16 @@ export async function buildSPAs(options) {
 }
 
 async function fetchRecentContributions() {
-  const pullRequestsData = (await got(
-    "https://api.github.com/search/issues?q=repo:mdn/content+is:pr+is:merged+sort:updated&per_page=10"
-  ).json()) as {
+  const twoDaysAgo = new Date(Date.now() - 48 * 60 * 60 * 1000);
+  const pullRequestsQuery = [
+    "repo:mdn/content",
+    "is:pr",
+    "is:merged",
+    `merged:>${twoDaysAgo.toISOString()}`,
+    "sort:updated",
+  ].join("+");
+  const pullRequestUrl = `https://api.github.com/search/issues?q=${pullRequestsQuery}&per_page=10`;
+  const pullRequestsData = (await got(pullRequestUrl).json()) as {
     items: any[];
   };
 
