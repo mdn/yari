@@ -6,7 +6,7 @@ import { Submenu } from "../submenu";
 import { DropdownMenu, DropdownMenuWrapper } from "../dropdown";
 
 import "./index.scss";
-import { postToIEx, switchTheme } from "../../../utils";
+import { switchTheme } from "../../../utils";
 
 type ThemeButton = {
   id: string;
@@ -46,11 +46,15 @@ export const ThemeSwitcher = () => {
   };
 
   React.useEffect(() => {
-    const theme = localStorage.getItem("theme");
+    let theme: string | null = null;
+    try {
+      theme = localStorage.getItem("theme");
+    } catch (e) {
+      console.warn("Unable to read theme from localStorage", e);
+    }
 
     if (theme) {
       switchTheme(theme, setActiveTheme);
-      postToIEx(theme);
     }
   }, [activeTheme]);
 
