@@ -133,7 +133,15 @@ function getFrequentlyViewed(): FrequentlyViewedEntry[] {
       err
     );
   }
-  return JSON.parse(frequentlyViewed || "[]");
+
+  const entries = JSON.parse(frequentlyViewed || "[]");
+
+  // Assign indices to old entries.
+  entries.forEach((e) => {
+    e.index = e.index === undefined ? getNextIndex(entries) : e.index;
+  });
+
+  return entries;
 }
 
 function setFrequentlyViewed(
@@ -185,10 +193,6 @@ export function useFrequentlyViewed(): [
   useEffect(() => {
     const entries = getFrequentlyViewed();
 
-    // give index to old entries
-    entries.forEach((e) => {
-      e.index = e.index === undefined ? getNextIndex(entries) : e.index;
-    });
     const newEntries: FrequentlyViewedEntry[] = [];
     for (const entry of entries) {
       newEntries.push({
@@ -224,12 +228,6 @@ export function usePersistFrequentlyViewed(doc: Doc | undefined) {
       return;
     }
     let frequentlyViewed = getFrequentlyViewed();
-
-    // give index to old entries
-    frequentlyViewed.forEach((e) => {
-      e.index =
-        e.index === undefined ? getNextIndex(frequentlyViewed) : e.index;
-    });
 
     const newEntry: FrequentlyViewedEntry = {
       index: getNextIndex(frequentlyViewed),
