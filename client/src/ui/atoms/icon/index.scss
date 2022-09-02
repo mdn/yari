@@ -14,12 +14,12 @@ $icons: "add-filled", "add", "altname", "bell-filled", "bell", "bookmark-filled"
   --size: var(--icon-size, 1rem);
   background-color: var(--icon-primary);
   display: inline-block;
+  flex-shrink: 0;
   height: var(--size);
-  width: var(--size);
-  vertical-align: middle;
   mask-position: center;
   mask-repeat: no-repeat;
-  flex-shrink: 0;
+  vertical-align: middle;
+  width: var(--size);
 }
 
 // The icon class is applied directly to SVGs sometimes. This

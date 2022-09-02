@@ -27,5 +27,4 @@ export interface BookmarksMetadata {
 export interface BookmarksData {
   items: BookmarkData[];
   metadata: BookmarksMetadata;
-  csrfmiddlewaretoken: string;
 }

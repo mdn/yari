@@ -1,9 +1,9 @@
 .watch-menu-item {
   background-color: transparent;
   border-bottom: 1px solid var(--border-primary);
-  padding: 0;
   color: var(--text-primary);
   cursor: pointer;
+  padding: 0;
 
   &:first-of-type {
     border-top-width: 0;
@@ -11,18 +11,18 @@
 
   &-inner {
     display: grid;
-    grid-template-columns: 16px 1fr;
+    gap: 0.5rem;
     grid-template-areas:
       "status label"
       "status text";
-    gap: 0.5rem;
+    grid-template-columns: 16px 1fr;
     padding: 0.8125rem var(--gutter-padding);
     text-align: left;
   }
 
   &:focus &-inner {
-    outline: 1px solid var(--button-secondary-border-focus);
     box-shadow: var(--focus-effect);
+    outline: 1px solid var(--button-secondary-border-focus);
   }
 
   &:hover &-inner {

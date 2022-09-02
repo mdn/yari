@@ -5,13 +5,13 @@
   border: 1px solid var(--border-primary);
   border-radius: var(--elem-radius);
   color: var(--text-primary);
-  margin: 1rem 0;
-  padding: 0;
-  width: 100%;
 
   // Since heights are now responsive, these classes are added
   // in the EmbedInteractiveExample.ejs macro.
   height: 675px;
+  margin: 1rem 0;
+  padding: 0;
+  width: 100%;
 
   &.is-js-height,
   &.is-taller-height,

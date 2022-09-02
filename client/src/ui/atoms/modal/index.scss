@@ -1,34 +1,34 @@
 @use "../../vars" as *;
 
 .modal-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
   background-color: var(--modal-backdrop-color);
+  bottom: 0;
+  left: 0;
+  position: fixed;
+  right: 0;
+  top: 0;
   z-index: var(--z-index-top);
 }
 
 .modal-content {
-  position: absolute;
-  top: 0;
+  background: var(--background-primary);
   bottom: 0;
   left: 0;
-  right: 0;
-  background: var(--background-primary);
+  outline: none;
   overflow: auto;
   -webkit-overflow-scrolling: touch;
-  outline: none;
+  position: absolute;
+  right: 0;
+  top: 0;
   z-index: var(--z-index-top);
 }
 
 .modal-header {
+  align-items: center;
+  border-bottom: 1px solid var(--border-secondary);
   display: flex;
   justify-content: space-between;
-  align-items: center;
   padding: 0.5rem 0.5rem 0.5rem 1rem;
-  border-bottom: 1px solid var(--border-secondary);
 }
 
 .modal-body {
@@ -43,15 +43,15 @@
   .modal-content {
     border: 1px solid var(--border-primary);
     border-radius: var(--elem-radius);
-    width: 90vw;
-    max-width: 40rem;
-    height: fit-content;
-    top: 50%;
-    left: 50%;
     bottom: auto;
-    right: auto;
-    transform: translate(-50%, -50%);
+    height: fit-content;
+    left: 50%;
     max-height: 90vh;
+    max-width: 40rem;
+    right: auto;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 90vw;
 
     &.is-small {
       max-width: 24rem;

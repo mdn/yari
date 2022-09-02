@@ -1,17 +1,7 @@
 const VALID_LOCALES = new Map(
-  [
-    "de",
-    "en-US",
-    "es",
-    "fr",
-    "ja",
-    "ko",
-    "pl",
-    "pt-BR",
-    "ru",
-    "zh-CN",
-    "zh-TW",
-  ].map((x) => [x.toLowerCase(), x])
+  ["en-US", "es", "fr", "ja", "ko", "pt-BR", "ru", "zh-CN", "zh-TW"].map(
+    (x) => [x.toLowerCase(), x]
+  )
 );
 
 const RETIRED_LOCALES = new Map(
@@ -20,6 +10,7 @@ const RETIRED_LOCALES = new Map(
     "bg",
     "bn",
     "ca",
+    "de",
     "el",
     "fa",
     "fi",
@@ -85,7 +76,7 @@ const scriptSrcValues = [
    * we must always update the CSP hash (see instructions there).
    */
   // - Previous hash (to avoid cache invalidation issues):
-  "'sha256-GA8+DpFnqAM/vwERTpb5zyLUaN5KnOhctfTsqWfhaUA='",
+  "'sha256-R1d+R+j7z1re3EpSIuqRpflohOvTm3fAxKvfEiXgC1o='",
   // - Current hash:
   "'sha256-t67f3DPa9tP18lAKHRKnE2s2Qndkrk2tTwS9MIx0sJk='",
 ];

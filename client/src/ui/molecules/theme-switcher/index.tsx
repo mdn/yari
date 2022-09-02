@@ -6,7 +6,7 @@ import { Submenu } from "../submenu";
 import { DropdownMenu, DropdownMenuWrapper } from "../dropdown";
 
 import "./index.scss";
-import { postToIEx, switchTheme } from "../../../utils";
+import { switchTheme } from "../../../utils";
 
 type ThemeButton = {
   id: string;
@@ -55,7 +55,6 @@ export const ThemeSwitcher = () => {
 
     if (theme) {
       switchTheme(theme, setActiveTheme);
-      postToIEx(theme);
     }
   }, [activeTheme]);
 

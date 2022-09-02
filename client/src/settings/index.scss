@@ -2,10 +2,10 @@
 
 article.settings {
   display: block;
-  max-width: 60em;
-  width: min(90vw, 40em);
   margin: auto;
+  max-width: 60em;
   padding: 1rem;
+  width: min(90vw, 40em);
 
   h3 {
     margin-top: 0.5rem;
@@ -19,9 +19,9 @@ article.settings {
 
       li {
         display: grid;
+        gap: 0 1rem;
         grid-template-columns: 1fr minmax(5em);
         margin: 2em 0;
-        gap: 0 1rem;
 
         h3 {
           font-weight: 600;
@@ -35,30 +35,30 @@ article.settings {
 
         .loading,
         .switch {
-          justify-self: end;
+          align-self: center;
           grid-column: 2/3;
           grid-row: 1/3;
-          align-self: center;
+          justify-self: end;
         }
 
         button,
         .manage {
-          font-size: 0.8rem;
-          padding: 0.5rem 1rem;
-          height: max-content;
-          width: max-content;
-          justify-self: end;
           align-self: center;
-          grid-column: 2/3;
-          grid-row: 1/3;
           border: 1px solid var(--text-primary);
           border-radius: var(--elem-radius);
           color: var(--text-link);
+          font-size: 0.8rem;
+          grid-column: 2/3;
+          grid-row: 1/3;
+          height: max-content;
+          justify-self: end;
+          padding: 0.5rem 1rem;
+          width: max-content;
         }
 
         button[disabled] {
-          border: 1px solid var(--text-secondary);
           background-color: var(--background-secondary);
+          border: 1px solid var(--text-secondary);
           color: var(--text-secondary);
         }
       }

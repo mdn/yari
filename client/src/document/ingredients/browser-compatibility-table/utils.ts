@@ -61,6 +61,10 @@ export function listFeatures(
   return features;
 }
 
+export function hasMore(support: BCD.SupportStatement | undefined) {
+  return Array.isArray(support) && support.length > 1;
+}
+
 export function versionIsPreview(
   version: BCD.VersionValue | string | undefined,
   browser: BCD.BrowserStatement
