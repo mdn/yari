@@ -37,7 +37,7 @@ export default function Toolbar({
       );
     } catch (err) {
       console.warn(
-        "Unable to update list of viewed documents in localStorage",
+        "Unable to write viewed documents to localStorage",
         err
       );
     }

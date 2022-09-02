@@ -130,7 +130,7 @@ export class MDNWorker {
         window.localStorage.getItem("MDNSettings") || "null"
       );
     } catch (err) {
-      console.warn("Unable to retreive MDNSettings from localStorage", err);
+      console.warn("Unable to read settings from localStorage", err);
     }
 
     return settingsData ?? new SettingsData();
@@ -174,7 +174,7 @@ export class MDNWorker {
     try {
       window.localStorage.setItem("MDNSettings", JSON.stringify(settings));
     } catch (err) {
-      console.warn("Unable to save MDNSettings to localStorage", err);
+      console.warn("Unable to write settings to localStorage", err);
     }
     this.settings = settings;
     return settings;
