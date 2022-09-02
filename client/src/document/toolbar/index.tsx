@@ -36,10 +36,7 @@ export default function Toolbar({
         JSON.stringify(visits.slice(0, 20))
       );
     } catch (err) {
-      console.warn(
-        "Unable to write viewed documents to localStorage",
-        err
-      );
+      console.warn("Unable to write viewed documents to localStorage", err);
     }
   }, [doc]);
 
