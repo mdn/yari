@@ -78,7 +78,7 @@ const scriptSrcValues = [
   // - Previous hash (to avoid cache invalidation issues):
   "'sha256-R1d+R+j7z1re3EpSIuqRpflohOvTm3fAxKvfEiXgC1o='",
   // - Current hash:
-  "'sha256-t67f3DPa9tP18lAKHRKnE2s2Qndkrk2tTwS9MIx0sJk='",
+  "'sha256-GA8+DpFnqAM/vwERTpb5zyLUaN5KnOhctfTsqWfhaUA='",
 ];
 const CSP_DIRECTIVES = {
   "default-src": ["'self'"],
