@@ -59,22 +59,29 @@ const ACTIVE_LOCALES = new Set([
   "zh-tw",
 ]);
 
-const scriptSrcValues = [
+const CSP_SCRIPT_SRC_VALUES = [
   "'report-sample'",
   "'self'",
 
   "www.google-analytics.com/analytics.js",
-
-  "'sha256-JEt9Nmc3BP88wxuTZm9aKNu87vEgGmKW1zzy/vb1KPs='", // polyfill check
   "polyfill.io/v3/polyfill.min.js",
 
   "assets.codepen.io",
   "production-assets.codepen.io",
 
-  /**
-   * If we modify the inline script in `client/public/index.html`,
-   * we must always update the CSP hash (see instructions there).
+  /*
+   * Inline scripts (defined in `client/public/index.html`).
+   *
+   * If we modify them, we must always update their CSP hash here.
+   *
+   * Important: Please make sure to always keep an entry for the
+   * previous hash to avoid issues shortly after cache invalidation.
    */
+
+  // 1. Polyfill.
+  "'sha256-JEt9Nmc3BP88wxuTZm9aKNu87vEgGmKW1zzy/vb1KPs='",
+
+  // 2. Theme switching.
   // - Previous hash (to avoid cache invalidation issues):
   "'sha256-GA8+DpFnqAM/vwERTpb5zyLUaN5KnOhctfTsqWfhaUA='",
   // - Current hash:
@@ -82,8 +89,8 @@ const scriptSrcValues = [
 ];
 const CSP_DIRECTIVES = {
   "default-src": ["'self'"],
-  "script-src": scriptSrcValues,
-  "script-src-elem": scriptSrcValues,
+  "script-src": CSP_SCRIPT_SRC_VALUES,
+  "script-src-elem": CSP_SCRIPT_SRC_VALUES,
   "style-src": ["'report-sample'", "'self'", "'unsafe-inline'"],
   "object-src": ["'none'"],
   "base-uri": ["'self'"],
@@ -215,6 +222,7 @@ module.exports = {
   LOCALE_ALIASES,
   PREFERRED_LOCALE_COOKIE_NAME,
 
+  CSP_SCRIPT_SRC_VALUES,
   CSP_VALUE,
 
   // build

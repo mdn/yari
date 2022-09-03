@@ -99,14 +99,10 @@
     <script>
       /**
        * If we modify this script, we must update the CSP hash as follows:
-       * 1. Run `yarn build:client`
-       * 2. Open `client/build/index.html` and locate this (minified) <script> tag.
-       * 3. Copy the inner content of the <script> tag (excluding the script tags).
-       * 4. Open https://csplite.com/csp/sha/ and paste the content.
-       * 5. Copy the `sha256-...` hash.
-       * 6. Open `libs/constants/index.js` and find the current hash in scriptSrcValues.
-       * 7. Remove the old "previous" hash and replace it with the old "current" hash.
-       * 8. Replace the old "current" hash with the new hash (from step 5).
+       * 1. Run `npx jest testing/tests/csp.test.ts --watch`
+       * 2. Open `libs/constants/index.js` and find the current hash in CSP_SCRIPT_SRC_VALUES.
+       * 3. Remove the old "previous" hash and replace it with the old "current" hash.
+       * 4. Replace the old "current" hash with the new hash from the failing test (step 1).
        */
       document.body.addEventListener(
         "load",
