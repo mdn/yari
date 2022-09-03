@@ -232,29 +232,29 @@ export function usePersistFrequentlyViewed(doc: Doc | undefined) {
     }
     let frequentlyViewed = getFrequentlyViewed();
 
-    const newEntry: FrequentlyViewedEntry = {
-      index: getNextFrequentlyViewedIndex(frequentlyViewed),
-      url: doc.mdn_url,
-      title: doc.title,
-      parents: doc.parents,
-      timestamp: new Date().getTime(),
-      visitCount: 1,
-    };
-
-    if (frequentlyViewed.length === 0) {
-      setFrequentlyViewed([newEntry]);
-      return;
-    }
-
     const index = frequentlyViewed.findIndex(
-      (entry) => entry.url === newEntry.url
+      (entry) => entry.url === doc.mdn_url
     );
 
     if (index !== -1) {
       frequentlyViewed[index].timestamp = new Date().getTime();
       frequentlyViewed[index].visitCount += 1;
     } else {
-      frequentlyViewed.unshift(newEntry);
+      const newEntry: FrequentlyViewedEntry = {
+        index: getNextFrequentlyViewedIndex(frequentlyViewed),
+        url: doc.mdn_url,
+        title: doc.title,
+        parents: doc.parents,
+        timestamp: new Date().getTime(),
+        visitCount: 1,
+      };
+
+      if (frequentlyViewed.length === 0) {
+        setFrequentlyViewed([newEntry]);
+        return;
+      } else {
+        frequentlyViewed.unshift(newEntry);
+      }
     }
 
     //Sort descending so most frequently viewed appears on top.
