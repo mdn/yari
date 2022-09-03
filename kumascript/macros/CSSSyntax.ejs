@@ -41,7 +41,7 @@ const syntaxDescriptions = {
   },
   '{}': {
     fragment: 'curly_braces',
-    tooltip: mdn.localString({ 'en-US': 'Curly braces: encloses two integers defining the minimal and maximal numbers of occurrences of the entity' })
+    tooltip: mdn.localString({ 'en-US': 'Curly braces: encloses two integers defining the minimal and maximal numbers of occurrences of the entity, or a single integer defining the exact number required' })
   },
   '#': {
     fragment: 'hash_mark',
@@ -165,12 +165,20 @@ function getPropertySyntax(propertyName) {
   if (multiplierName.startsWith('{')) {
     key = '{}';
   }
-  // these two multiplier combinations can appear, and in this case we want links to both parts
+  // these two multiplier combinations can appear, we want to annotate them separately
   if (multiplierName === '+#' || multiplierName === '#?') {
     const info1 =  syntaxDescriptions[multiplierName[0]];
     const info2 =  syntaxDescriptions[multiplierName[1]];
     const link1 = `<a href="${valueDefinitionUrl}#${info1.fragment}" title="${info1.tooltip}">${multiplierName[0]}</a>`;
     const link2 = `<a href="${valueDefinitionUrl}#${info2.fragment}" title="${info2.tooltip}">${multiplierName[1]}</a>`;
+    return `${link1}${link2}`;
+  }
+  // the "#" multipler can be followed by the curly brackets, we want to annotate them separately
+  if (multiplierName.startsWith("#{")) {
+    const info1 =  syntaxDescriptions[multiplierName[0]];
+    const info2 =  syntaxDescriptions["{}"];
+    const link1 = `<a href="${valueDefinitionUrl}#${info1.fragment}" title="${info1.tooltip}">${multiplierName[0]}</a>`;
+    const link2 = `<a href="${valueDefinitionUrl}#${info2.fragment}" title="${info2.tooltip}">${multiplierName.slice(1)}</a>`;
     return `${link1}${link2}`;
   }
   const info = syntaxDescriptions[key];
