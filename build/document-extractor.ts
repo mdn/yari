@@ -714,9 +714,7 @@ function _addSectionProse(
         id = heading.attr("id") ?? "";
         title = heading.html() ?? "";
         titleAsText = heading.text();
-        if (id && title) {
-          heading.remove();
-        }
+        heading.remove();
       }
       if (headingType == "h2") h2found = true;
       if (headingType == "h3") {
