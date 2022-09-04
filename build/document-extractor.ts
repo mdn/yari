@@ -684,6 +684,30 @@ function _addSingleSpecialSection(
   }
 }
 
+function extractHeadings($, headingLevel, id, title, titleAsText, flaws) {
+  const headings = $.find(headingLevel);
+  headings.each((i) => {
+    const heading = headings.eq(i);
+    if (i) {
+      // Excess!
+      flaws.push(
+        `Excess <${headingLevel}> tag that is NOT at root-level (id='${heading.attr(
+          "id"
+        )}', text='${heading.text()}')`
+      );
+    } else {
+      id = heading.attr("id") ?? "";
+      title = heading.html() ?? "";
+      titleAsText = heading.text();
+      if (id && title) {
+        if (headingLevel == "h3") isH3 = true;
+        if (headingLevel == "h4") isH4 = true;
+        heading.remove();
+      }
+    }
+  });
+}
+
 function _addSectionProse(
   $: cheerio.Cheerio<cheerio.Element>
 ): SectionsAndFlaws {
@@ -698,51 +722,44 @@ function _addSectionProse(
   // The way this works...
   // Given a section of HTML, try to extract a id, title,
 
-  let h2found = false;
-  const h2s = $.find("h2");
-  h2s.each((i) => {
-    const h2 = h2s.eq(i);
+  // Closure function to reduce duplication for heading extraction
+  function extractHeadings(headingType) {
+    const headings = $.find(headingType);
+    headings.each((i) => {
+      const heading = headings.eq(i);
+      if (i) {
+        // Excess!
+        flaws.push(
+          `Excess <${headingType}> tag that is NOT at root-level (id='${heading.attr(
+            "id"
+          )}', text='${heading.text()}')`
+        );
+      } else {
+        id = heading.attr("id") ?? "";
+        title = heading.html() ?? "";
+        titleAsText = heading.text();
+        if (id && title) {
+          if (headingType == "h2") h2found = true;
+          if (headingType == "h3") isH3 = true;
+          if (headingType == "h4") isH4 = true;
+          heading.remove();
+        }
+      }
+    });
+  }
 
-    if (i) {
-      // Excess!
-      flaws.push(
-        `Excess <h2> tag that is NOT at root-level (id='${h2.attr(
-          "id"
-        )}', text='${h2.text()}')`
-      );
-    } else {
-      // First element
-      id = h2.attr("id") ?? "";
-      title = h2.html() ?? "";
-      titleAsText = h2.text();
-      h2.remove();
-    }
-    h2found = true;
-  });
+  let h2found = false;
+  extractHeadings("h2");
 
   // If there was no <h2>, look through all the <h3>s.
   let h3found = false;
   if (!h2found) {
-    const h3s = $.find("h3");
-    h3s.each((i) => {
-      const h3 = h3s.eq(i);
-      if (i) {
-        // Excess!
-        flaws.push(
-          `Excess <h3> tag that is NOT at root-level (id='${h3.attr(
-            "id"
-          )}', text='${h3.text()}')`
-        );
-      } else {
-        id = h3.attr("id") ?? "";
-        title = h3.html() ?? "";
-        titleAsText = h3.text();
-        if (id && title) {
-          isH3 = true;
-          h3.remove();
-        }
-      }
-    });
+    extractHeadings("h3");
+  }
+
+  // If there was no <h3>, look through all the <h4>s.
+  if (!h3found) {
+    extractHeadings("h4");
   }
 
   if (id) {
