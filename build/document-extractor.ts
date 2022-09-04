@@ -698,33 +698,6 @@ function _addSectionProse(
   // The way this works...
   // Given a section of HTML, try to extract a id, title,
 
-  // Closure function to reduce duplication for heading extraction
-  // function extractHeadings(headingType) {
-  //   const headings = $.find(headingType);
-  //   headings.each((i) => {
-  //     const heading = headings.eq(i);
-  //     if (i) {
-  //       // Excess!
-  //       flaws.push(
-  //         `Excess <${headingType}> tag that is NOT at root-level (id='${heading.attr(
-  //           "id"
-  //         )}', text='${heading.text()}')`
-  //       );
-  //     } else {
-  //       id = heading.attr("id") ?? "";
-  //       title = heading.html() ?? "";
-  //       titleAsText = heading.text();
-  //       heading.remove();
-  //     }
-  //     if (headingType == "h2") h2found = true;
-  //     if (headingType == "h3") {
-  //       h3found = true;
-  //       isH3 = true;
-  //     }
-  //     if (headingType == "h4") isH4 = true;
-  //   });
-  // }
-
   let h2found = false;
   const h2s = $.find("h2");
   h2s.each((i) => {
