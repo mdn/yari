@@ -754,6 +754,7 @@ function _addSectionProse(
     id,
     title,
     isH3,
+    isH4,
     content: $.html()?.trim(),
   };
 
