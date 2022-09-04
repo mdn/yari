@@ -1788,21 +1788,21 @@ test("sections should be split by h2, h3 or h4", () => {
   const h2 = $("h2#some_heading");
   expect(h2.text()).toBe("Some heading");
   expect(h2.attr("id")).toBe("some_heading");
-  expect($.html(h2)).toBe(
+  expect(h2.html()).toBe(
     '<a href="#some_heading" title="Permalink to Some heading">Some heading</a>'
   );
 
   const h3 = $("h3#another_heading");
   expect(h3.text()).toBe("Another heading");
   expect(h3.attr("id")).toBe("another_heading");
-  expect($.html(h3)).toBe(
+  expect(h3.html()).toBe(
     '<a href="#another_heading" title="Permalink to Another heading">Another heading</a>'
   );
 
   const h4 = $("h4#final_heading");
   expect(h4.text()).toBe("Final heading");
   expect(h4.attr("id")).toBe("final_heading");
-  expect($.html(h4)).toBe(
+  expect(h4.html()).toBe(
     '<a href="#final_heading" title="Permalink to Final heading">Final heading</a>'
   );
 });
