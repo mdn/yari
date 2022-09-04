@@ -699,31 +699,31 @@ function _addSectionProse(
   // Given a section of HTML, try to extract a id, title,
 
   // Closure function to reduce duplication for heading extraction
-  function extractHeadings(headingType) {
-    const headings = $.find(headingType);
-    headings.each((i) => {
-      const heading = headings.eq(i);
-      if (i) {
-        // Excess!
-        flaws.push(
-          `Excess <${headingType}> tag that is NOT at root-level (id='${heading.attr(
-            "id"
-          )}', text='${heading.text()}')`
-        );
-      } else {
-        id = heading.attr("id") ?? "";
-        title = heading.html() ?? "";
-        titleAsText = heading.text();
-        heading.remove();
-      }
-      if (headingType == "h2") h2found = true;
-      if (headingType == "h3") {
-        h3found = true;
-        isH3 = true;
-      }
-      if (headingType == "h4") isH4 = true;
-    });
-  }
+  // function extractHeadings(headingType) {
+  //   const headings = $.find(headingType);
+  //   headings.each((i) => {
+  //     const heading = headings.eq(i);
+  //     if (i) {
+  //       // Excess!
+  //       flaws.push(
+  //         `Excess <${headingType}> tag that is NOT at root-level (id='${heading.attr(
+  //           "id"
+  //         )}', text='${heading.text()}')`
+  //       );
+  //     } else {
+  //       id = heading.attr("id") ?? "";
+  //       title = heading.html() ?? "";
+  //       titleAsText = heading.text();
+  //       heading.remove();
+  //     }
+  //     if (headingType == "h2") h2found = true;
+  //     if (headingType == "h3") {
+  //       h3found = true;
+  //       isH3 = true;
+  //     }
+  //     if (headingType == "h4") isH4 = true;
+  //   });
+  // }
 
   let h2found = false;
   const h2s = $.find("h2");
@@ -765,6 +765,7 @@ function _addSectionProse(
         title = h3.html() ?? "";
         titleAsText = h3.text();
         if (id && title) {
+          isH3 = true;
           h3.remove();
         }
       }
@@ -774,7 +775,28 @@ function _addSectionProse(
 
   // If there was no <h3>, look through all the <h4>s.
   if (!h3found) {
-    extractHeadings("h4");
+    const h4s = $.find("h4");
+    h4s.each((i) => {
+      const h4 = h4s.eq(i);
+      if (i) {
+        // Excess!
+        flaws.push(
+          `Excess <h4> tag that is NOT at root-level (id='${h4.attr(
+            "id"
+          )}', text='${h4.text()}')`
+        );
+      } else {
+        id = h4.attr("id") ?? "";
+        title = h4.html() ?? "";
+        titleAsText = h4.text();
+        if (id && title) {
+          isH4 = true;
+          h4.remove();
+        }
+      }
+      // h4found = true;
+    });
+    //   extractHeadings("h4");
   }
 
   if (id) {
