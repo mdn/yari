@@ -721,7 +721,6 @@ function _addSectionProse(
   });
 
   // If there was no <h2>, look through all the <h3>s.
-  let h3found = false;
   if (!h2found) {
     const h3s = $.find("h3");
     h3s.each((i) => {
@@ -742,34 +741,7 @@ function _addSectionProse(
           h3.remove();
         }
       }
-      h3found = true;
     });
-  }
-
-  // If there was no <h3>, look through all the <h4>s.
-  if (!h3found) {
-    const h4s = $.find("h4");
-    h4s.each((i) => {
-      const h4 = h4s.eq(i);
-      if (i) {
-        // Excess!
-        flaws.push(
-          `Excess <h4> tag that is NOT at root-level (id='${h4.attr(
-            "id"
-          )}', text='${h4.text()}')`
-        );
-      } else {
-        id = h4.attr("id") ?? "";
-        title = h4.html() ?? "";
-        titleAsText = h4.text();
-        if (id && title) {
-          isH4 = true;
-          h4.remove();
-        }
-      }
-      // h4found = true;
-    });
-    //   extractHeadings("h4");
   }
 
   if (id) {
