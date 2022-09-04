@@ -17,11 +17,10 @@
     width: 100%;
 
     .button-wrap {
+      border-width: 1px;
       font-weight: 400;
       justify-content: flex-start;
       padding: 1rem;
-
-      border-width: 1px;
     }
 
     &:focus {
@@ -74,10 +73,10 @@
       content: "";
       display: block;
       height: 16px;
+      margin-left: auto;
       mask-image: url("../../../assets/icons/chevron.svg");
       mask-size: 16px;
       width: 16px;
-      margin-left: auto;
     }
 
     &[aria-expanded="true"] {

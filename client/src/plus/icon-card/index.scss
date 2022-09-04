@@ -8,13 +8,13 @@
 }
 
 .icon-card {
+  animation: fade-in 0.2s;
+  background-color: var(--background-primary);
   border: 1px solid var(--border-secondary);
   border-radius: var(--elem-radius);
-  background-color: var(--background-primary);
   padding: 1rem;
   padding-left: 0.5rem;
   transition: 0.3s ease-out; // this removes a flash from .doomed animations
-  animation: fade-in 0.2s;
 
   a {
     &:link,
@@ -29,19 +29,22 @@
   & > *:last-child {
     margin-bottom: 0;
   }
+  &:last-child {
+    margin-bottom: 1rem;
+  }
 
   &-icon {
-    width: 3rem;
-    height: 3rem;
+    align-items: center;
     background-color: var(--http-accent-color);
     border-radius: 0.125rem;
     color: var(--background-primary);
     display: flex;
-    align-items: center;
-    justify-content: center;
     font-size: 0.75rem;
     font-style: italic;
+    height: 3rem;
+    justify-content: center;
     padding: 0.5rem;
+    width: 3rem;
 
     span {
       overflow: hidden;
@@ -86,15 +89,15 @@
   &-title {
     font-size: var(--type-base-font-size-rem);
     font-weight: var(--font-body-strong-weight);
+    margin: 0;
     overflow: hidden;
     text-overflow: ellipsis;
     word-wrap: break-word;
-    margin: 0;
   }
 
   &-description {
-    font-size: var(--type-smaller-font-size);
     color: var(--text-secondary);
+    font-size: var(--type-smaller-font-size);
   }
 
   &-actions {
@@ -117,15 +120,15 @@
   }
 
   .icon-card-actions {
-    margin-left: auto;
     align-self: center;
+    margin-left: auto;
   }
 
   .breadcrumbs {
+    color: var(--text-secondary);
+    font-size: var(--type-smaller-font-size);
     list-style: none;
     margin-bottom: 0;
-    font-size: var(--type-smaller-font-size);
-    color: var(--text-secondary);
     margin-bottom: 0.5rem;
 
     li {

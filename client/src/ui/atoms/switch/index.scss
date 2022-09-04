@@ -1,48 +1,48 @@
 .switch {
-  position: relative;
-  display: inline-flex;
   align-items: center;
+  display: inline-flex;
+  position: relative;
 
   input {
-    opacity: 0;
-    width: 2rem;
     height: 0;
     margin: 0;
+    opacity: 0;
+    width: 3rem;
 
     &:checked + .slider {
-      &:before {
-        left: 56.25%;
-        right: 6.25%;
-      }
       background-color: var(--text-link);
+      &:before {
+        left: 53.25%;
+        right: 3.25%;
+      }
     }
 
     &:focus-visible + .slider {
-      outline-style: auto;
       outline-color: var(--accent-primary);
       outline-offset: 1px;
+      outline-style: auto;
     }
   }
 
   .slider {
-    position: absolute;
-    cursor: pointer;
     background-color: var(--text-secondary);
+    border-radius: 1.5em;
+    cursor: pointer;
+    height: 1.5rem;
+    position: absolute;
     transition: 0.4s;
-    border-radius: 1em;
-    width: 2rem;
-    height: 1rem;
+    width: 3rem;
 
     &:before {
-      position: absolute;
-      content: "";
-      left: 6.25%;
-      right: 56.25%;
-      top: 12.5%;
-      bottom: 12.5%;
       background-color: var(--background-primary);
-      transition: 0.4s;
       border-radius: 50%;
+      bottom: 7.5%;
+      content: "";
+      left: 3.25%;
+      position: absolute;
+      right: 53.25%;
+      top: 7.5%;
+      transition: 0.4s;
     }
   }
 

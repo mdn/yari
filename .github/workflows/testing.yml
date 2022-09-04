@@ -10,7 +10,7 @@ on:
   pull_request:
 
 jobs:
-  build:
+  lint:
     runs-on: ubuntu-latest
 
     steps:
@@ -41,6 +41,34 @@ jobs:
       - name: Lint ESLint
         run: yarn eslint
 
+      - name: Lint stylelint
+        run: yarn stylelint
+
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup Node.js environment
+        uses: actions/setup-node@v3
+        with:
+          node-version: "16"
+          cache: "yarn"
+
+      - name: Cache node_modules
+        uses: actions/cache@v3
+        id: cached-node_modules
+        with:
+          path: |
+            node_modules
+          key: ${{ runner.os }}-${{ hashFiles('yarn.lock') }}-${{ hashFiles('.github/workflows/testing.yml') }}
+
+      - name: Install all yarn packages
+        if: steps.cached-node_modules.outputs.cache-hit != 'true'
+        run: |
+          yarn --frozen-lockfile
+
       - name: Unit testing client
         run: yarn test:client
 
@@ -70,14 +98,12 @@ jobs:
           yarn test:testing
           yarn test:headless
 
-      - name: Basic m2h/h2m tool testing
+      - name: Basic m2h tool testing
         env:
           ENV_FILE: testing/.env
         run: |
-          yarn md m2h markdown/tool/m2h --locale en-US
+          yarn m2h markdown/tool/m2h --locale en-US
           diff -s testing/content/files/en-us/markdown/tool/m2h/index.html testing/content/files/en-us/markdown/tool/m2h/expected.html
-          yarn md h2m markdown/tool/h2m --locale en-US
-          diff -s testing/content/files/en-us/markdown/tool/h2m/index.md testing/content/files/en-us/markdown/tool/h2m/expected.md
 
       - name: Debug server's stdout and stderr if tests failed
         if: failure() && steps.server.outcome != 'skipped'

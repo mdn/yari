@@ -1,18 +1,18 @@
 @use "../../ui/vars" as *;
 
 .toolbar {
+  align-items: center;
   background: var(--background-secondary);
   border: 1px solid var(--border-primary);
   border-radius: var(--elem-radius);
-  padding: 0.5rem 1rem;
-  margin: 0.5rem;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-  font-size: var(--type-smaller-font-size);
   box-shadow: var(--shadow-01);
+  display: flex;
+  flex-wrap: wrap;
+  font-size: var(--type-smaller-font-size);
+  gap: 0.5rem;
+  justify-content: space-between;
+  margin: 0.5rem;
+  padding: 0.5rem 1rem;
 
   &-first-row,
   .edit-actions {
@@ -27,10 +27,6 @@
     &:hover {
       text-decoration: underline;
     }
-  }
-
-  .toggle-show-flaws {
-    white-space: nowrap;
   }
 
   @media screen and (min-width: $screen-md) {

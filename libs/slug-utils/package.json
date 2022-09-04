@@ -4,6 +4,7 @@
   "private": true,
   "license": "MPL-2.0",
   "main": "index.js",
+  "types": "index.d.ts",
   "dependencies": {
     "sanitize-filename": "^1.6.3"
   }

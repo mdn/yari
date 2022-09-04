@@ -22,6 +22,7 @@ const {
   execGit,
   urlToFolderPath,
   MEMOIZE_INVALIDATE,
+  toPrettyJSON,
 } = require("./utils");
 const Redirect = require("./redirect");
 
@@ -61,7 +62,7 @@ function updateWikiHistory(localeContentRoot, oldSlug, newSlug = null) {
       // trailing newline character. So always doing in automation removes
       // the risk of a conflict at the last line from two independent PRs
       // that edit this file.
-      JSON.stringify(sorted, null, 2) + "\n"
+      toPrettyJSON(sorted)
     );
   }
 }
@@ -85,6 +86,7 @@ function extractLocale(folder) {
 function saveFile(filePath, rawBody, metadata, frontMatterKeys = null) {
   const requiredFrontMatterKeys = ["title", "slug"];
   const optionalFrontMatterKeys = [
+    "page-type",
     "tags",
     "translation_of",
     "translation_of_original",

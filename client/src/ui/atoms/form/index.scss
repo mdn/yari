@@ -1,0 +1,46 @@
+.mdn-form {
+  font-family: var(--font-body);
+  font-size: var(--type-smaller-font-size);
+  font-weight: var(--font-body-strong-weight);
+}
+
+.mdn-form-item {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  padding-top: 1rem;
+
+  &:first-child {
+    padding-top: 0;
+  }
+
+  &.is-button-row {
+    display: flex;
+    justify-content: flex-end;
+
+    .button {
+      width: auto;
+    }
+  }
+
+  [type="text"] {
+    background: var(--background-primary);
+    border: 1px solid var(--border-primary);
+    color: var(--text-primary);
+    flex: 1 1 100%;
+    font-size: var(--type-smaller-font-size);
+    min-width: 0;
+    padding: 0.5rem;
+
+    &:focus {
+      border: 1px solid var(--button-secondary-border-focus);
+      box-shadow: var(--focus-effect);
+      outline: 0 none;
+    }
+  }
+
+  label {
+    width: 100%;
+  }
+}

@@ -65,11 +65,11 @@
   }
 
   .top-level-entry {
-    display: block;
     background: none;
     border-top: 1px solid var(--border-secondary);
     color: var(--text-secondary);
     cursor: pointer;
+    display: block;
     padding: 1rem 0.5rem;
     text-align: left;
     width: 100%;
@@ -80,8 +80,8 @@
     }
 
     &.menu-toggle {
-      padding: 0.5rem;
       min-height: 53px;
+      padding: 0.5rem;
     }
 
     @media screen and (max-width: $screen-lg) {
@@ -106,8 +106,8 @@
     }
 
     @media screen and (min-width: $screen-lg) {
-      border-top: none;
       border-radius: var(--elem-radius);
+      border-top: none;
       padding: 0.5rem;
 
       &:hover,
@@ -131,14 +131,14 @@
   }
 
   .menu-toggle:after {
-    content: "";
-    width: var(--icon-size);
-    height: var(--icon-size);
     background-color: var(--icon-primary);
-    margin-top: 0.2em;
+    content: "";
+    height: var(--icon-size);
     margin-left: 0.2em;
+    margin-top: 0.2em;
 
     mask-image: url("../../../assets/icons/chevron.svg");
+    width: var(--icon-size);
   }
 
   .menu-toggle[aria-expanded="true"]::after {

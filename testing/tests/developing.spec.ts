@@ -38,6 +38,9 @@ test.describe("Testing the kitchensink page", () => {
     expect(
       await page.isVisible("text=The MDN Content Kitchensink")
     ).toBeTruthy();
+
+    // Toolbar.
+    await page.waitForSelector("#_flaws");
     expect(
       await page.isVisible("text=No known flaws at the moment")
     ).toBeTruthy();
@@ -72,7 +75,7 @@ test.describe("Testing the kitchensink page", () => {
     ).json();
 
     expect(doc.title).toBe("The MDN Content Kitchensink");
-    expect(Object.keys(doc.flaws).length).toBe(0);
+    expect(doc.flaws).toEqual({});
   });
 
   // XXX Do more advanced tasks that test the server and document "CRUD operations"

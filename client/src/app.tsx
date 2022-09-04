@@ -13,11 +13,10 @@ import { Footer } from "./ui/organisms/footer";
 import { TopNavigation } from "./ui/organisms/top-navigation";
 import { SiteSearch } from "./site-search";
 import { Loading } from "./ui/atoms/loading";
-import { PageContentContainer } from "./ui/atoms/page-content";
+import { MainContentContainer } from "./ui/atoms/page-content";
 import { PageNotFound } from "./page-not-found";
 import { Plus } from "./plus";
 import { About } from "./about";
-import { OfflineSettings } from "./offline-settings";
 import { docCategory } from "./utils";
 import { Contribute } from "./community";
 import { ContributorSpotlight } from "./contributor-spotlight";
@@ -83,11 +82,11 @@ function PageOrPageNotFound({ pageNotFound, children }) {
 function LoadingFallback({ message }: { message?: string }) {
   return (
     <StandardLayout>
-      <PageContentContainer>
+      <MainContentContainer standalone={true}>
         {/* This extra minHeight is just so that the footer doesn't flicker
           in and out as the fallback appears. */}
         <Loading minHeight={800} message={message || "Loading…"} />
-      </PageContentContainer>
+      </MainContentContainer>
     </StandardLayout>
   );
 }
@@ -220,16 +219,6 @@ export function App(appProps) {
                 element={
                   <StandardLayout extraClasses="plus">
                     <Plus {...appProps} />
-                  </StandardLayout>
-                }
-              />
-            )}
-            {PLUS_IS_ENABLED && (
-              <Route
-                path="/offline-settings"
-                element={
-                  <StandardLayout>
-                    <OfflineSettings {...appProps} />
                   </StandardLayout>
                 }
               />

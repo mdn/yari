@@ -16,11 +16,7 @@ export function HomepageHero() {
         </p>
         <Search id="hp-search" isHomepageSearch={true} />
       </section>
-      <Mandala
-        rotate={true}
-        animateColors={true}
-        extraClasses="homepage-hero-bg"
-      />
+      <Mandala rotate={true} extraClasses="homepage-hero-bg" />
     </div>
   );
 }

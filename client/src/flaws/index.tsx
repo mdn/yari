@@ -10,7 +10,7 @@ import useSWR from "swr";
 import "./index.scss";
 
 import { humanizeFlawName } from "../flaw-utils";
-import { PageContentContainer } from "../ui/atoms/page-content";
+import { MainContentContainer } from "../ui/atoms/page-content";
 
 interface DocumentPopularity {
   value: number;
@@ -226,39 +226,37 @@ export default function AllFlaws() {
   const { page } = filters;
   const pageCount = lastData ? lastData.counts.pages : 0;
   return (
-    <div className="all-flaws">
-      <PageContentContainer>
-        {loading}
-        {error && <ShowSearchError error={error} />}
-        {lastData && (
-          <div className="filter-documents">
-            <FilterControls flawLevels={lastData.flawLevels} />
-            <DocumentsTable
-              locale={locale}
-              counts={lastData.counts}
-              documents={lastData.documents}
-            />
-            {pageCount > 1 && (
-              <p className="pagination">
-                <PageLink number={1} disabled={page === 1}>
-                  First page
-                </PageLink>{" "}
-                {page > 2 && (
-                  <PageLink number={page - 1}>
-                    Previous page ({page - 1})
-                  </PageLink>
-                )}{" "}
-                <PageLink number={page + 1} disabled={page + 1 > pageCount}>
-                  Next page ({page + 1})
+    <MainContentContainer className="all-flaws" standalone={true}>
+      {loading}
+      {error && <ShowSearchError error={error} />}
+      {lastData && (
+        <div className="filter-documents">
+          <FilterControls flawLevels={lastData.flawLevels} />
+          <DocumentsTable
+            locale={locale}
+            counts={lastData.counts}
+            documents={lastData.documents}
+          />
+          {pageCount > 1 && (
+            <p className="pagination">
+              <PageLink number={1} disabled={page === 1}>
+                First page
+              </PageLink>{" "}
+              {page > 2 && (
+                <PageLink number={page - 1}>
+                  Previous page ({page - 1})
                 </PageLink>
-              </p>
-            )}
-          </div>
-        )}
-        {data && data.counts && <AllFlawCounts counts={data.counts.flaws} />}
-        {data && <BuildTimes times={data.times} />}
-      </PageContentContainer>
-    </div>
+              )}{" "}
+              <PageLink number={page + 1} disabled={page + 1 > pageCount}>
+                Next page ({page + 1})
+              </PageLink>
+            </p>
+          )}
+        </div>
+      )}
+      {data && data.counts && <AllFlawCounts counts={data.counts.flaws} />}
+      {data && <BuildTimes times={data.times} />}
+    </MainContentContainer>
   );
 }
 

@@ -61,6 +61,10 @@ export function listFeatures(
   return features;
 }
 
+export function hasMore(support: BCD.SupportStatement | undefined) {
+  return Array.isArray(support) && support.length > 1;
+}
+
 export function versionIsPreview(
   version: BCD.VersionValue | string | undefined,
   browser: BCD.BrowserStatement
@@ -99,37 +103,6 @@ function hasMajorLimitation(support: BCD.SimpleSupportStatement) {
     support.version_removed
   );
 }
-
-export function isOnlySupportedWithAltName(
-  support: BCD.SupportStatement | undefined
-) {
-  return (
-    support &&
-    getFirst(support).alternative_name &&
-    !asList(support).some((item) => isFullySupportedWithoutLimitation(item))
-  );
-}
-
-export function isOnlySupportedWithPrefix(
-  support: BCD.SupportStatement | undefined
-) {
-  return (
-    support &&
-    getFirst(support).prefix &&
-    !asList(support).some((item) => isFullySupportedWithoutLimitation(item))
-  );
-}
-
-export function isOnlySupportedWithFlags(
-  support: BCD.SupportStatement | undefined
-) {
-  return (
-    support &&
-    getFirst(support).flags &&
-    !asList(support).some((item) => isFullySupportedWithoutLimitation(item))
-  );
-}
-
 export function isFullySupportedWithoutLimitation(
   support: BCD.SimpleSupportStatement
 ) {

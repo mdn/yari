@@ -46,7 +46,7 @@ export function CollectionsTab({
     if (data && !!data.items) {
       setSubscriptionLimitReached(data.subscription_limit_reached);
       setList([
-        ...listRef.current,
+        ...(data?.offset === 0 ? [] : listRef.current),
         ...data.items.map((item) => {
           return { ...item, checked: false };
         }),
@@ -74,8 +74,7 @@ export function CollectionsTab({
 
     const res = await updateCollectionItem(
       item,
-      new URLSearchParams([...(formData as any)]),
-      data.csrfmiddlewaretoken
+      new URLSearchParams([...(formData as any)])
     );
 
     const limitReached =
@@ -99,12 +98,9 @@ export function CollectionsTab({
     setList(newList);
   };
 
-  const deleteCollectionItem = async (item) => {
-    const res = await updateDeleteCollectionItem(
-      item,
-      data.csrfmiddlewaretoken,
-      true
-    );
+  const deleteCollectionItem = async (item: any) => {
+    item = item as BookmarkData;
+    const res = await updateDeleteCollectionItem(item, true);
     const limitReached =
       (await res.json())?.subscription_limit_reached || false;
     const previous = [...list];
@@ -117,11 +113,7 @@ export function CollectionsTab({
       shortText: "Article removed",
       buttonText: "Undo",
       buttonHandler: async () => {
-        const res = await updateDeleteCollectionItem(
-          item,
-          data.csrfmiddlewaretoken,
-          false
-        );
+        const res = await updateDeleteCollectionItem(item, false);
         const limitReached =
           (await res.json())?.subscription_limit_reached || false;
         setSubscriptionLimitReached(limitReached);
@@ -136,20 +128,17 @@ export function CollectionsTab({
       <SearchFilter filters={[]} sorts={SORTS} />
       {isLoading && <Loading message="Fetching your collection..." />}
       {error && <DataError error={error} />}
-      <ul className="notification-list">
-        <div className="icon-card-list">
-          {list.length
-            ? list.map((item) => (
-                <CollectionListItem
-                  item={item}
-                  onEditSubmit={collectionsSaveHandler}
-                  key={item.id}
-                  showEditButton={true}
-                  handleDelete={deleteCollectionItem}
-                />
-              ))
-            : "You don't have any saved pages in your collection."}
-        </div>
+      <ul className="icon-card-list">
+        {list.length
+          ? list.map((item) => (
+              <CollectionListItem
+                key={item.id}
+                item={item}
+                onEditSubmit={collectionsSaveHandler}
+                handleDelete={deleteCollectionItem}
+              />
+            ))
+          : "You don't have any saved pages in your collection."}
       </ul>
       {subscriptionLimitReached && <LimitBanner type="collections" />}
       {hasMore && showMoreButton(() => null, setOffset, list)}

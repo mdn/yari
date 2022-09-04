@@ -3,7 +3,7 @@ import React from "react";
 import { useOnlineStatus } from "../../hooks";
 import { Button } from "../../ui/atoms/button";
 import { DropdownMenu, DropdownMenuWrapper } from "../../ui/molecules/dropdown";
-import { Checkbox } from "../../ui/molecules/notifications-watch-menu/atoms/checkbox";
+import { Checkbox } from "../../ui/atoms/checkbox";
 import parse from "html-react-parser";
 
 const regex = /PR!(?<repo>.+\/.+)!(?<pr>\d+)!!/;

@@ -9,7 +9,7 @@ import parse from "html-react-parser";
 
 dayjs.extend(relativeTime);
 
-export default function NotificationCard({ item, changedCallback, csrfToken }) {
+export default function NotificationCard({ item, changedCallback }) {
   const toggleStarUrl = `/api/v1/plus/notifications/${item.id}/toggle-starred/`;
   const deleteUrl = `/api/v1/plus/notifications/${item.id}/delete/`;
   const undoUrl = `/api/v1/plus/notifications/${item.id}/undo-deletion/`;
@@ -36,7 +36,7 @@ export default function NotificationCard({ item, changedCallback, csrfToken }) {
         extraClasses="notification-card-star"
         icon={item.starred ? "star-filled" : "star"}
         onClickHandler={async () => {
-          await post(toggleStarUrl, csrfToken);
+          await post(toggleStarUrl);
           changedCallback && changedCallback();
         }}
       >
@@ -82,13 +82,13 @@ export default function NotificationCard({ item, changedCallback, csrfToken }) {
               <Button
                 type="action"
                 onClickHandler={async () => {
-                  await post(deleteUrl, csrfToken);
+                  await post(deleteUrl);
                   setToastData({
                     mainText: "The page has been removed from your Watch list.",
                     shortText: "Article removed",
                     buttonText: "UNDO",
                     buttonHandler: async () => {
-                      await post(undoUrl, csrfToken);
+                      await post(undoUrl);
                       changedCallback && changedCallback();
                       setToastData(null);
                     },

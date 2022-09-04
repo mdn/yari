@@ -81,7 +81,7 @@ jobs:
         run: yarn --frozen-lockfile
 
       - name: Install Python
-        uses: actions/setup-python@v4.0.0
+        uses: actions/setup-python@v4.2.0
         with:
           python-version: "3.8"
 
@@ -163,6 +163,9 @@ jobs:
           # would upload the whole content of client/build
           du -sh client/build
 
+          # Generate sitemap index file
+          yarn build --sitemap-index
+
       - name: Deploy with deployer
         env:
           # Set the CONTENT_ROOT first
@@ -220,6 +223,13 @@ jobs:
           DISTRIBUTION: E9813D0RN1QZI
           PATHS: /*
         run: aws cloudfront create-invalidation --distribution-id "$DISTRIBUTION" --paths "$PATHS"
+
+      - name: Notify PRs about deployment
+        run: |
+          gh pr list -S "$GITHUB_SHA -is:merged" --json number --jq '.[].number' | xargs -i gh pr comment {} --body "Dev build for $GITHUB_SHA was deployed to: $DEPLOYMENT_URL" || true
+        env:
+          DEPLOYMENT_URL: https://${{ github.event.inputs.deployment_prefix }}.content.dev.mdn.mozit.cloud/
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Slack Notification
         if: failure()

@@ -6,6 +6,14 @@
     background-color: var(--plus-accent-color);
   }
 
+  .note {
+    background-color: var(--background-information);
+    .submenu-item-description {
+      display: block;
+      margin: 0.125rem;
+    }
+  }
+
   @media screen and (min-width: $screen-lg) {
     .mobile-only {
       display: none;

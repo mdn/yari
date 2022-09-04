@@ -1,6 +1,6 @@
 import { useOnlineStatus } from "../../hooks";
 import { Button } from "../../ui/atoms/button";
-import { Checkbox } from "../../ui/molecules/notifications-watch-menu/atoms/checkbox";
+import { Checkbox } from "../../ui/atoms/checkbox";
 
 export default function SelectedNotificationsBar({
   isChecked,

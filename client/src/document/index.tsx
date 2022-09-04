@@ -11,7 +11,7 @@ import {
   useCopyExamplesToClipboard,
   usePersistFrequentlyViewed,
 } from "./hooks";
-import { Doc } from "./types";
+import { Doc } from "../../../libs/types/document";
 // Ingredients
 import { Prose } from "./ingredients/prose";
 import { LazyBrowserCompatibilityTable } from "./lazy-bcd-table";
@@ -174,6 +174,8 @@ export function Document(props /* TODO: define a TS interface for this */) {
     return null;
   }
 
+  const retiredLocale = searchParams.get("retiredLocale");
+
   return (
     <>
       <div className="main-document-header-container">
@@ -187,9 +189,9 @@ export function Document(props /* TODO: define a TS interface for this */) {
           <LocalizedContentNote isActive={doc.isActive} locale={locale} />
         </div>
       ) : (
-        searchParams.get("retiredLocale") && (
+        retiredLocale && (
           <div className="container">
-            <RetiredLocaleNote />
+            <RetiredLocaleNote locale={retiredLocale} />
           </div>
         )
       )}
@@ -253,8 +255,8 @@ function RenderDocumentBody({ doc }) {
 
 function LoadingError({ error }) {
   return (
-    <div className="standard-page">
-      <div id="content" className="page-content-container loading-error">
+    <div className="main-wrapper">
+      <div id="content" className="main-content loading-error">
         <h3>Loading Error</h3>
         {error instanceof window.Response ? (
           <p>

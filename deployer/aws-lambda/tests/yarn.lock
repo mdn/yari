@@ -686,10 +686,10 @@
 "@yari-internal/content-origin-request@file:../content-origin-request":
   version "0.0.1"
   dependencies:
-    "@yari-internal/constants" "file:../../../../../../Library/Caches/Yarn/v6/npm-@yari-internal-content-origin-request-0.0.1-698d3445-1eb9-46c2-926c-c0d53ab04e12-1653037013741/libs/constants"
-    "@yari-internal/fundamental-redirects" "file:../../../../../../Library/Caches/Yarn/v6/npm-@yari-internal-content-origin-request-0.0.1-698d3445-1eb9-46c2-926c-c0d53ab04e12-1653037013741/libs/fundamental-redirects"
-    "@yari-internal/get-locale" "file:../../../../../../Library/Caches/Yarn/v6/npm-@yari-internal-content-origin-request-0.0.1-698d3445-1eb9-46c2-926c-c0d53ab04e12-1653037013741/libs/get-locale"
-    "@yari-internal/slug-utils" "file:../../../../../../Library/Caches/Yarn/v6/npm-@yari-internal-content-origin-request-0.0.1-698d3445-1eb9-46c2-926c-c0d53ab04e12-1653037013741/libs/slug-utils"
+    "@yari-internal/constants" "file:../../../libs/constants"
+    "@yari-internal/fundamental-redirects" "file:../../../libs/fundamental-redirects"
+    "@yari-internal/get-locale" "file:../../../libs/get-locale"
+    "@yari-internal/slug-utils" "file:../../../libs/slug-utils"
     accept-language-parser "^1.5.0"
     cookie "0.5.0"
     sanitize-filename "^1.6.3"
@@ -697,7 +697,7 @@
 "@yari-internal/content-origin-response@file:../content-origin-response":
   version "0.0.1"
   dependencies:
-    "@yari-internal/constants" "file:../../../../../../Library/Caches/Yarn/v6/npm-@yari-internal-content-origin-response-0.0.1-81b20360-7e4d-48cb-a69d-34c1595aa2e5-1653037013927/libs/constants"
+    "@yari-internal/constants" "file:../../../libs/constants"
 
 "@yari-internal/fundamental-redirects@file:../../../libs/fundamental-redirects":
   version "0.0.1"
@@ -992,7 +992,7 @@ cacheable-lookup@^5.0.3:
   resolved "https://registry.yarnpkg.com/cacheable-lookup/-/cacheable-lookup-5.0.4.tgz#5a6b865b2c44357be3d5ebc2a467b032719a7005"
   integrity sha512-2/kNscPhpcxrOigMZzbiWF7dz8ilhb/nIHU3EyZiXWXpeq/au8qJ8VhdftMkty3n7Gj6HIGalQG8oiBNB3AJgA==
 
-cacheable-request@^7.0.1:
+cacheable-request@^7.0.2:
   version "7.0.2"
   resolved "https://registry.yarnpkg.com/cacheable-request/-/cacheable-request-7.0.2.tgz#ea0d0b889364a25854757301ca12b2da77f91d27"
   integrity sha512-pouW8/FmiPQbuGpkXQ9BAPv/Mo5xDGANgSNXzTzJ8DrKGuXOssM4wIQRjfanNRh3Yu5cfYPvcorqbhg2KIJtew==
@@ -1631,17 +1631,17 @@ globals@^11.1.0:
   resolved "https://registry.yarnpkg.com/globals/-/globals-11.12.0.tgz#ab8795338868a0babd8525758018c2a7eb95c42e"
   integrity sha512-WOBp/EEGUiIsJSp7wcv/y6MO+lV9UoncWqxuFfm8eBwzWNgyfBd6Gz+IeKQ9jCmyhoH99g15M3T+QaVHFjizVA==
 
-got@11.8.2:
-  version "11.8.2"
-  resolved "https://registry.yarnpkg.com/got/-/got-11.8.2.tgz#7abb3959ea28c31f3576f1576c1effce23f33599"
-  integrity sha512-D0QywKgIe30ODs+fm8wMZiAcZjypcCodPNuMz5H9Mny7RJ+IjJ10BdmGW7OM7fHXP+O7r6ZwapQ/YQmMSvB0UQ==
+got@11.8.5:
+  version "11.8.5"
+  resolved "https://registry.yarnpkg.com/got/-/got-11.8.5.tgz#ce77d045136de56e8f024bebb82ea349bc730046"
+  integrity sha512-o0Je4NvQObAuZPHLFoRSkdG2lTgtcynqymzg2Vupdx6PorhaT5MCbIyXG6d4D94kk8ZG57QeosgdiqfJWhEhlQ==
   dependencies:
     "@sindresorhus/is" "^4.0.0"
     "@szmarczak/http-timer" "^4.0.5"
     "@types/cacheable-request" "^6.0.1"
     "@types/responselike" "^1.0.0"
     cacheable-lookup "^5.0.3"
-    cacheable-request "^7.0.1"
+    cacheable-request "^7.0.2"
     decompress-response "^6.0.0"
     http2-wrapper "^1.0.0-beta.5.2"
     lowercase-keys "^2.0.0"
