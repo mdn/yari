@@ -1777,7 +1777,7 @@ test("sections should be split by h2, h3 or h4", () => {
   );
 
   const jsonFile = path.join(builtFolder, "index.json");
-  const { doc } = JSON.parse(fs.readFileSync(jsonFile));
+  const { doc } = JSON.parse(fs.readFileSync(jsonFile, "utf-8"));
   expect(doc.flaws.length).toBeFalsy();
   expect(doc.title).toBe("Split section by heading");
 
