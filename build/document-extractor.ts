@@ -715,25 +715,63 @@ function _addSectionProse(
         title = heading.html() ?? "";
         titleAsText = heading.text();
         if (id && title) {
-          if (headingType == "h2") h2found = true;
-          if (headingType == "h3") {
-            h3found = true;
-            isH3 = true;
-          }
-          if (headingType == "h4") isH4 = true;
           heading.remove();
         }
       }
+      if (headingType == "h2") h2found = true;
+      if (headingType == "h3") {
+        h3found = true;
+        isH3 = true;
+      }
+      if (headingType == "h4") isH4 = true;
     });
   }
 
   let h2found = false;
-  extractHeadings("h2");
+  const h2s = $.find("h2");
+  h2s.each((i) => {
+    const h2 = h2s.eq(i);
+
+    if (i) {
+      // Excess!
+      flaws.push(
+        `Excess <h2> tag that is NOT at root-level (id='${h2.attr(
+          "id"
+        )}', text='${h2.text()}')`
+      );
+    } else {
+      // First element
+      id = h2.attr("id") ?? "";
+      title = h2.html() ?? "";
+      titleAsText = h2.text();
+      h2.remove();
+    }
+    h2found = true;
+  });
 
   // If there was no <h2>, look through all the <h3>s.
   let h3found = false;
   if (!h2found) {
-    extractHeadings("h3");
+    const h3s = $.find("h3");
+    h3s.each((i) => {
+      const h3 = h3s.eq(i);
+      if (i) {
+        // Excess!
+        flaws.push(
+          `Excess <h3> tag that is NOT at root-level (id='${h3.attr(
+            "id"
+          )}', text='${h3.text()}')`
+        );
+      } else {
+        id = h3.attr("id") ?? "";
+        title = h3.html() ?? "";
+        titleAsText = h3.text();
+        if (id && title) {
+          h3.remove();
+        }
+      }
+      h3found = true;
+    });
   }
 
   // If there was no <h3>, look through all the <h4>s.
