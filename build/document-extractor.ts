@@ -684,30 +684,6 @@ function _addSingleSpecialSection(
   }
 }
 
-function extractHeadings($, headingLevel, id, title, titleAsText, flaws) {
-  const headings = $.find(headingLevel);
-  headings.each((i) => {
-    const heading = headings.eq(i);
-    if (i) {
-      // Excess!
-      flaws.push(
-        `Excess <${headingLevel}> tag that is NOT at root-level (id='${heading.attr(
-          "id"
-        )}', text='${heading.text()}')`
-      );
-    } else {
-      id = heading.attr("id") ?? "";
-      title = heading.html() ?? "";
-      titleAsText = heading.text();
-      if (id && title) {
-        if (headingLevel == "h3") isH3 = true;
-        if (headingLevel == "h4") isH4 = true;
-        heading.remove();
-      }
-    }
-  });
-}
-
 function _addSectionProse(
   $: cheerio.Cheerio<cheerio.Element>
 ): SectionsAndFlaws {
