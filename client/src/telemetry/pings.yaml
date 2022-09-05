@@ -1,4 +1,5 @@
 ---
+# Schema
 $schema: moz://mozilla.org/schemas/glean/pings/2-0-0
 
 page:

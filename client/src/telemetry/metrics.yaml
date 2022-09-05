@@ -1,9 +1,10 @@
 ---
+# Schema
 $schema: moz://mozilla.org/schemas/glean/metrics/2-0-0
 
-page:
+page_view:
   path:
-    type: string
+    type: url
     lifetime: application
     send_in_pings:
       - page
@@ -11,16 +12,16 @@ page:
     description: |
       The URL path of the page that was viewed.
     data_sensitivity:
-      - "web_activity"
+      - web_activity
     bugs:
       - "https://bugzilla.mozilla.org/show_bug.cgi?id=1782509"
     data_reviews:
       - "https://github.com/mdn/yari/pull/6813#issuecomment-1203705308"
     notification_emails:
       - mdn-team@mozilla.com
-    expires: never
+    expires: 2023-09-05
   referrer:
-    type: string
+    type: url
     lifetime: application
     send_in_pings:
       - page
@@ -28,74 +29,39 @@ page:
     description: |
       The referring URL that linked to the page that was viewed.
     data_sensitivity:
-      - "web_activity"
+      - web_activity
     bugs:
       - "https://bugzilla.mozilla.org/show_bug.cgi?id=1782509"
     data_reviews:
       - "https://github.com/mdn/yari/pull/6813#issuecomment-1203705308"
     notification_emails:
       - mdn-team@mozilla.com
-    expires: never
-  page_event:
-    type: event
-    lifetime: ping
-    send_in_pings:
-      - action
-    description: |
-      An event describing any non-click type page interaction  E.g
-       'Logged in', 'Offer hero viewed'
-    data_sensitivity:
-      - "web_activity"
-    bugs:
-      - https://bugzilla.mozilla.org/show_bug.cgi?id=1782509
-    data_reviews:
-      - "https://github.com/mdn/yari/pull/6813#issuecomment-1203705308"
-    notification_emails:
-      - mdn-team@mozilla.com
-    expires: never
-    extra_keys:
-      label:
-        description: |
-          The label used to describe the event.
-          Example: 'User Logged in'
-        type: string
-      type:
-        description: |
-          The type of event.
-          Example: 'Viewed Collections'
-        type: string
+    expires: 2023-09-05
 
-event:
+element:
   clicked:
     type: event
     lifetime: ping
     send_in_pings:
       - action
     description: |
-      An event containing metrics related to page click events.
+      MDN Page element clicks.
     data_sensitivity:
-      - "web_activity"
+      - web_activity
     bugs:
       - "https://bugzilla.mozilla.org/show_bug.cgi?id=1782509"
     data_reviews:
       - "https://github.com/mdn/yari/pull/6813#issuecomment-1203705308"
     notification_emails:
       - mdn-team@mozilla.com
-    expires: never
+    expires: 2023-09-05
     extra_keys:
-      label:
+      source:
         description: |
-          Description of the page element that was
-          clicked. Examples: 'Get MDN Plus'
+          The click source/target
         type: string
-      type:
+      subscription_type:
         description: |
-          The type of element that was clicked.
-          Examples: 'Button', 'Link'. 'CTA'
-        type: string
-      position:
-        description: |
-          The position of the element in the page.
-          Examples: 'Primary', 'Secondary', 'Hero'
-          'Navigation', 'Footer'.
+          The subscription type of the user. can be one of
+          'core','mdn_plus_5m','mdn_plus_5y','mdn_plus_10m','mdn_plus_10y'
         type: string
