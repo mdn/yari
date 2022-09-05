@@ -71,13 +71,4 @@ class DefaultApiInterceptor implements FetchInterceptor {
   }
 }
 
-function filter(params: URLSearchParams, input: Array<any>) {
-  if (params.get("q")) {
-    input = input.filter((val) =>
-      val.title.toLowerCase().includes(params.get("q").toLowerCase())
-    );
-  }
-  return input;
-}
-
 export { WhoamiInterceptor, DefaultApiInterceptor };

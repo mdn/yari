@@ -108,10 +108,10 @@ export function UserDataProvider(props: { children: React.ReactNode }) {
       }
       const data = await response.json();
       const collectionLastModified =
-        data.settings.collections_last_modified_time;
+        data.settings?.collections_last_modified_time;
       const settings: UserPlusSettings | null = data.settings
         ? {
-            colInSearch: data.settings.col_in_search || false,
+            colInSearch: data.settings?.col_in_search || false,
             collectionLastModified:
               (collectionLastModified && new Date(collectionLastModified)) ||
               null,
