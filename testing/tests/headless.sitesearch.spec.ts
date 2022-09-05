@@ -76,7 +76,11 @@ test.describe("Site search", () => {
     expect(await page.isVisible('a:has-text("Next")')).toBeTruthy();
     expect(await page.isVisible("text=Serial 9")).toBeTruthy();
     expect(await page.isVisible('a:has-text("Previous")')).toBeFalsy();
+
+    // Page 2.
     await page.click('a:has-text("Next")');
+    await page.waitForLoadState("networkidle");
+
     expect(await page.isVisible("text=(page 2)")).toBeTruthy();
     expect(await page.isVisible("text=Serial 10")).toBeTruthy();
     expect(await page.isVisible("text=Serial 19")).toBeTruthy();

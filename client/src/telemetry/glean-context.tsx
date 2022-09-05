@@ -53,7 +53,7 @@ function glean(): GleanAnalytics {
   Glean.default.setDebugViewTag("mdn-dev");
   Glean.default.setUploadEnabled(uploadEnabled);
 
-  let gleanContext = {
+  const gleanContext = {
     page: (page: PageProps) => {
       if (page.path) {
         path.set(page.path);

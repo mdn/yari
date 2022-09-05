@@ -49,6 +49,9 @@ url = Web.spacesToUnderscores(url);
 url = url.replace(":", "");             // Remove colons
 
 switch(lang) {
+    case "ja":
+        text = `<a href="${url}">${section}</a>（<a href="${$0}">${title}</a> 内）`;
+        break;
     case "ru":
         text = `<a href="${url}">${section}</a> в <a href="${$0}">${title}</a>`;
         break;

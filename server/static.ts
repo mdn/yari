@@ -112,7 +112,7 @@ app.get("/api/v1/whoami", async (req, res) => {
 const mockSettingsDatabase = new Map();
 
 app.get("/api/v1/settings/", async (req, res) => {
-  const defaultContext = { locale: "en-US", csrfmiddlewaretoken: "xyz123" };
+  const defaultContext = { locale: "en-US" };
   if (!req.cookies.sessionid) {
     res.status(403).send("oh no you don't");
   } else {
@@ -189,7 +189,6 @@ app.get("/api/v1/plus/collection/", async (req, res) => {
         (bookmark) => bookmark.url === req.query.url
       );
       res.json({
-        csrfmiddlewaretoken: "xyz123",
         bookmarked: found
           ? { id: found.id, created: found.created.toISOString() }
           : null,
