@@ -138,7 +138,7 @@
     "@playwright/test": "^1.25.1",
     "@pmmmwh/react-refresh-webpack-plugin": "^0.5.7",
     "@svgr/webpack": "^6.3.1",
-    "@swc/core": "^1.2.246",
+    "@swc/core": "^1.2.247",
     "@testing-library/react": "^13.3.0",
     "@types/hast": "^2.3.4",
     "@types/jest": "^29.0.0",
