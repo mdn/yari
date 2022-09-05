@@ -717,7 +717,7 @@ function _addSectionProse(
       id = h2.attr("id") ?? "";
       title = h2.html() ?? "";
       titleAsText = h2.text();
-      h2.remove();
+      // h2.remove();
     }
     h2found = true;
   });
@@ -740,7 +740,7 @@ function _addSectionProse(
       titleAsText = h3.text();
       if (id && title) {
         isH3 = true;
-        h3.remove();
+        // h3.remove();
       }
     }
     h3found = true;
@@ -762,7 +762,7 @@ function _addSectionProse(
       titleAsText = h4.text();
       if (id && title) {
         isH4 = true;
-        h4.remove();
+        // h4.remove();
       }
     }
   });
