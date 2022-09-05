@@ -12,13 +12,14 @@ export function useFocusViaKeyboard(
   inputRef: React.RefObject<null | HTMLInputElement>
 ) {
   useEffect(() => {
-    function focusOnSearchMaybe(event) {
+    function focusOnSearchMaybe(event: KeyboardEvent) {
       const input = inputRef.current;
+      const target = event.target as HTMLElement;
       const keyPressed = event.key;
       const ctrlOrMetaPressed = event.ctrlKey || event.metaKey;
       const isSlash = keyPressed === "/" && !ctrlOrMetaPressed;
       const isCtrlK = keyPressed.toLowerCase() === "k" && ctrlOrMetaPressed;
-      const isTextField = ["TEXTAREA", "INPUT"].includes(event.target.tagName);
+      const isTextField = ["TEXTAREA", "INPUT"].includes(target.tagName);
       if ((isSlash || isCtrlK) && !isTextField) {
         if (input && document.activeElement !== input) {
           event.preventDefault();
