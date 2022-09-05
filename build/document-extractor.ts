@@ -717,55 +717,58 @@ function _addSectionProse(
       id = h2.attr("id") ?? "";
       title = h2.html() ?? "";
       titleAsText = h2.text();
-      // h2.remove();
+      h2.remove();
     }
     h2found = true;
   });
 
   // If there was no <h2>, look through all the <h3>s.
-
-  const h3s = $.find("h3");
-  h3s.each((i) => {
-    const h3 = h3s.eq(i);
-    if (i) {
-      // Excess!
-      flaws.push(
-        `Excess <h3> tag that is NOT at root-level (id='${h3.attr(
-          "id"
-        )}', text='${h3.text()}')`
-      );
-    } else {
-      id = h3.attr("id") ?? "";
-      title = h3.html() ?? "";
-      titleAsText = h3.text();
-      if (id && title) {
-        isH3 = true;
-        // h3.remove();
+  if (!h2found) {
+    const h3s = $.find("h3");
+    h3s.each((i) => {
+      const h3 = h3s.eq(i);
+      if (i) {
+        // Excess!
+        flaws.push(
+          `Excess <h3> tag that is NOT at root-level (id='${h3.attr(
+            "id"
+          )}', text='${h3.text()}')`
+        );
+      } else {
+        id = h3.attr("id") ?? "";
+        title = h3.html() ?? "";
+        titleAsText = h3.text();
+        if (id && title) {
+          isH3 = true;
+          h3.remove();
+        }
       }
-    }
-    h3found = true;
-  });
+      h3found = true;
+    });
+  }
 
-  const h4s = $.find("h4");
-  h4s.each((i) => {
-    const h4 = h4s.eq(i);
-    if (i) {
-      // Excess!
-      flaws.push(
-        `Excess <h4> tag that is NOT at root-level (id='${h4.attr(
-          "id"
-        )}', text='${h4.text()}')`
-      );
-    } else {
-      id = h4.attr("id") ?? "";
-      title = h4.html() ?? "";
-      titleAsText = h4.text();
-      if (id && title) {
-        isH4 = true;
-        // h4.remove();
-      }
-    }
-  });
+  // TODO: h4 elements are not being linkified and the
+  // tests are just picking up the initial text instead of the <a> tag
+  // const h4s = $.find("h4");
+  // h4s.each((i) => {
+  //   const h4 = h4s.eq(i);
+  //   if (i) {
+  //     // Excess!
+  //     flaws.push(
+  //       `Excess <h4> tag that is NOT at root-level (id='${h4.attr(
+  //         "id"
+  //       )}', text='${h4.text()}')`
+  //     );
+  //   } else {
+  //     id = h4.attr("id") ?? "";
+  //     title = h4.html() ?? "";
+  //     titleAsText = h4.text();
+  //     if (id && title) {
+  //       isH4 = true;
+  //       h4.remove();
+  //     }
+  //   }
+  // });
 
   if (id) {
     // Remove trailing underscores (https://github.com/mdn/yari/issues/5492).
