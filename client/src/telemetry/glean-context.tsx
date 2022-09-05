@@ -1,6 +1,6 @@
 import * as React from "react";
-import { path, pageEvent, referrer } from "./generated/page";
-import { clicked } from "./generated/event";
+import { path, referrer } from "./generated/pageView";
+import { clicked } from "./generated/element";
 import * as pings from "./generated/pings";
 import * as Glean from "@mozilla/glean/web";
 import { GLEAN_CHANNEL, GLEAN_DEBUG, GLEAN_DISABLED } from "../env";
@@ -15,16 +15,14 @@ export type PageEventProps = {
   path: string | undefined;
 };
 
-export type EventProps = {
-  label: string;
-  position: string;
-  type: string;
+export type ElementClickedProps = {
+  source: string;
+  subscription_type: string;
 };
 
 export type GleanAnalytics = {
   page: (arg: PageProps) => void;
-  pageEvent: (arg: PageEventProps) => void;
-  event: (arg: EventProps) => void;
+  click: (arg: ElementClickedProps) => void;
 };
 
 const FIRST_PARTY_DATA_OPT_OUT_COOKIE_NAME = "moz-1st-party-data-opt-out";
@@ -35,14 +33,13 @@ function glean(): GleanAnalytics {
     //SSR return noop.
     return {
       page: (page: PageProps) => {},
-      pageEvent: (page: PageEventProps) => {},
-      event: (event: EventProps) => {},
+      click: (element: ElementClickedProps) => {},
     };
   }
 
   const cookies = `; ${document.cookie};`;
   const userIsOptedOut = cookies.includes(
-    `; ${FIRST_PARTY_DATA_OPT_OUT_COOKIE_NAME}=1;`
+    `; ${FIRST_PARTY_DATA_OPT_OUT_COOKIE_NAME}=true;`
   );
 
   const uploadEnabled = !userIsOptedOut && !GLEAN_DISABLED;
@@ -67,22 +64,11 @@ function glean(): GleanAnalytics {
       }
       pings.page.submit();
     },
-    pageEvent: (page: PageEventProps) => {
-      if (page.path) {
-        pageEvent.record();
-      }
-
-      if (page.referrer) {
-        referrer.set(page.referrer);
-      }
-      pings.page.submit();
-    },
-    event: (event: EventProps) => {
-      const { label, position, type } = event;
+    click: (event: ElementClickedProps) => {
+      const { source, subscription_type } = event;
       clicked.record({
-        label,
-        position,
-        type,
+        source,
+        subscription_type,
       });
       pings.action.submit();
     },
