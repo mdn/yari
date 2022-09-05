@@ -18,7 +18,8 @@ export function useFocusViaKeyboard(
       const keyPressed = event.key;
       const ctrlOrMetaPressed = event.ctrlKey || event.metaKey;
       const isSlash = keyPressed === "/" && !ctrlOrMetaPressed;
-      const isCtrlK = keyPressed.toLowerCase() === "k" && ctrlOrMetaPressed;
+      const isCtrlK =
+        keyPressed === "k" && ctrlOrMetaPressed && !event.shiftKey;
       const isTextField = ["TEXTAREA", "INPUT"].includes(target.tagName);
       if ((isSlash || isCtrlK) && !isTextField) {
         if (input && document.activeElement !== input) {
