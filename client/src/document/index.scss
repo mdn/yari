@@ -315,7 +315,7 @@ table {
   border: none;
   border-radius: calc(var(--elem-radius) / 2);
   box-shadow: 0 0 $border-width var(--elem-radius) #fff;
-  margin: 0 var(--elem-radius);
+  margin: var(--elem-radius);
   outline: $border-width solid var(--border-primary);
   outline-offset: var(--elem-radius);
   width: calc(100% - 2 * var(--elem-radius));
