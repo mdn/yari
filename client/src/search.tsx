@@ -8,12 +8,9 @@ import { preload, preloadSupported } from "./document/preloading";
 import { Button } from "./ui/atoms/button";
 
 import { useLocale } from "./hooks";
-import {
-  getCollectionItems,
-  SearchProps,
-  useFocusViaKeyboard,
-} from "./search-utils";
+import { SearchProps, useFocusViaKeyboard } from "./search-utils";
 import { useUserData } from "./user-context";
+import { getCollectionItems } from "./plus/collections-quicksearch";
 
 const PRELOAD_WAIT_MS = 500;
 const SHOW_INDEXING_AFTER_MS = 500;

@@ -2,7 +2,7 @@ import * as React from "react";
 import useSWR from "swr";
 
 import { DISABLE_AUTH, DEFAULT_GEO_COUNTRY } from "./env";
-import { fetchAllCollectionsItems } from "./search-utils";
+import { fetchAllCollectionsItems } from "./plus/collections-quicksearch";
 import { MDNWorker } from "./settings/mdn-worker";
 
 export enum SubscriptionType {
