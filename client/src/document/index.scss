@@ -328,7 +328,9 @@ iframe {
     background: #fff;
     border: 1px solid var(--border-primary);
     border-radius: var(--elem-radius);
-    width: 100%;
+    box-sizing: content-box;
+    padding: 1rem;
+    width: calc(100% - 2rem);
   }
 }
 
