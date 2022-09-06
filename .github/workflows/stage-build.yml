@@ -180,6 +180,7 @@ jobs:
           REACT_APP_SURVEY_RATE_TILL_CSS_CASCADE_2022_B: 0.5 # 25 %
 
           REACT_APP_GLEAN_CHANNEL: stage
+          REACT_APP_GLEAN_ENABLED: true
 
         run: |
 

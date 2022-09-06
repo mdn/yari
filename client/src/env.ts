@@ -59,8 +59,8 @@ export const GLEAN_CHANNEL = process.env.REACT_APP_GLEAN_CHANNEL || "stage";
 export const GLEAN_DEBUG = Boolean(
   JSON.parse(process.env.REACT_APP_GLEAN_DEBUG || "false")
 );
-export const GLEAN_DISABLED = Boolean(
-  JSON.parse(process.env.REACT_APP_GLEAN_DISABLED || "true")
+export const GLEAN_ENABLED = Boolean(
+  JSON.parse(process.env.REACT_APP_GLEAN_ENABLED || "false")
 );
 
 // TODO Inline after 2022-07-01.

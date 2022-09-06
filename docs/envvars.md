@@ -314,9 +314,9 @@ included this value for `geo.country`.
 
 - Setting this to true logs glean pings to the console to to help debug.
 
-### `REACT_APP_GLEAN_DISABLED`
+### `REACT_APP_GLEAN_ENABLED`
 
-**Default: `true`**
+**Default: `false`**
 
-- Disables/Enables glean upload. This should be set to `false` in prod and
+- Disables/Enables glean upload. This should be set to `true` in prod and
   staging to send glean telemetry to the server

@@ -3,7 +3,7 @@ import { path, referrer } from "./generated/pageView";
 import { clicked } from "./generated/element";
 import * as pings from "./generated/pings";
 import * as Glean from "@mozilla/glean/web";
-import { GLEAN_CHANNEL, GLEAN_DEBUG, GLEAN_DISABLED } from "../env";
+import { GLEAN_CHANNEL, GLEAN_DEBUG, GLEAN_ENABLED } from "../env";
 
 export type PageProps = {
   referrer: string | undefined;
@@ -42,7 +42,7 @@ function glean(): GleanAnalytics {
     `; ${FIRST_PARTY_DATA_OPT_OUT_COOKIE_NAME}=true;`
   );
 
-  const uploadEnabled = !userIsOptedOut && !GLEAN_DISABLED;
+  const uploadEnabled = !userIsOptedOut && GLEAN_ENABLED;
 
   Glean.default.initialize(GLEAN_APP_ID, uploadEnabled, {
     maxEvents: 1,
