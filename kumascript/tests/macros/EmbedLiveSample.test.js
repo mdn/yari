@@ -173,7 +173,7 @@ describeMacro("EmbedLiveSample", function () {
     }
   );
   itMacro('Five arguments: ID, "", "", "", other slug', function (macro) {
-    macro.ctx.env.url = "Web/API/Element/focus_event";
+    macro.ctx.env.url = "/en-US/docs/Web/API/Element/focus_event";
     return assert.eventually.equal(
       macro.call("Event delegation", "", "", "", "Web/API/Element/focus_event"),
       '<iframe class="sample-code-frame"' +
