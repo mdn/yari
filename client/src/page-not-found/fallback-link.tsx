@@ -178,16 +178,6 @@ export default function FallbackLink({ url }: { url: string }) {
           ))}
         </ul>
       </p>
-      <p>
-        If this page was archived, you may find it in the{" "}
-        <a
-          className="external"
-          href={`https://github.com/mdn/archived-content/tree/main/files/${locale.toLowerCase()}`}
-        >
-          archived-content
-        </a>{" "}
-        repository.
-      </p>
     </NoteCard>
   );
 }
