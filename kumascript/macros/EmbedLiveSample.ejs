@@ -14,12 +14,12 @@
 //
 // See also : LiveSampleLink
 
-// We have deprecated the use of the $4 parameter (transclusion)
-// If this parameter is not empty, we raise a MacroDeprecationError flaw
-// When there will be 0 use left on translated-content (May 2022: 203 occurrences),
+// We have deprecated the use of the $4 to $6 parameters
+// If one of this parameter is not empty, we raise a MacroDeprecationError flaw
+// When there will be 0 use left on translated-content (May 2022: 203 occurrences for $4),
 // we will be able to simplify this macro (and likely the whole of MDN).
-if ($4 != '') {
-  mdn.deprecated("The fourth parameter of 'EmbedLiveSample' is deprecated. Please remove the transclusion");
+if ($4 !== "" || $5 !== "" || $6 !== "") {
+  mdn.deprecated("The fourth to sixth parameters of 'EmbedLiveSample' are deprecated");
 }
 
 var sampleIdOrOffset = $0 || $token.location.start.offset;
