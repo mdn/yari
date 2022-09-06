@@ -18,7 +18,7 @@
 // If this parameter is not empty, we raise a MacroDeprecationError flaw
 // When there will be 0 use left on translated-content (May 2022: 203 occurrences),
 // we will be able to simplify this macro (and likely the whole of MDN).
-if ($4 !== '') {
+if ($4 != '') {
   mdn.deprecated("The fourth parameter of 'EmbedLiveSample' is deprecated. Please remove the transclusion");
 }
 
