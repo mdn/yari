@@ -197,7 +197,7 @@ export interface BCDSection {
 }
 
 export type FrequentlyViewedEntry = {
-  index: number;
+  serial: number;
   url: string;
   title: string;
   timestamp: number;

@@ -134,12 +134,16 @@ function getFrequentlyViewed(): FrequentlyViewedEntry[] {
     );
   }
 
-  const entries = JSON.parse(frequentlyViewed || "[]");
+  const entries = JSON.parse(
+    frequentlyViewed || "[]"
+  ) as FrequentlyViewedEntry[];
 
-  // Assign indices to old entries.
+  // Assign serials to old entries.
   entries.forEach((e) => {
-    e.index =
-      e.index === undefined ? getNextFrequentlyViewedIndex(entries) : e.index;
+    e.serial =
+      e.serial === undefined
+        ? getNextFrequentlyViewedSerial(entries)
+        : e.serial;
   });
 
   return entries;
@@ -174,14 +178,14 @@ const sortByVisitsThenTimestampDesc = (
   return 0;
 };
 
-function getNextFrequentlyViewedIndex(
+function getNextFrequentlyViewedSerial(
   entries: FrequentlyViewedEntry[]
 ): number {
   return (
     1 +
     Math.max(
       0,
-      ...entries.map((entry) => entry.index).filter((index) => !isNaN(index))
+      ...entries.map((entry) => entry.serial).filter((serial) => !isNaN(serial))
     )
   );
 }
@@ -199,7 +203,7 @@ export function useFrequentlyViewed(): [
     const newEntries: FrequentlyViewedEntry[] = [];
     for (const entry of entries) {
       newEntries.push({
-        index: entry.index,
+        serial: entry.serial,
         url: entry.url,
         title: entry.title,
         timestamp: entry.timestamp,
@@ -241,7 +245,7 @@ export function usePersistFrequentlyViewed(doc: Doc | undefined) {
       frequentlyViewed[index].visitCount += 1;
     } else {
       const newEntry: FrequentlyViewedEntry = {
-        index: getNextFrequentlyViewedIndex(frequentlyViewed),
+        serial: getNextFrequentlyViewedSerial(frequentlyViewed),
         url: doc.mdn_url,
         title: doc.title,
         parents: doc.parents,
