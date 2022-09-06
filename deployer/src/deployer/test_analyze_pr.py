@@ -38,7 +38,10 @@ def test_analyze_pr_prefix():
     with mock_build_directory(doc) as build_directory:
         comment = analyze_pr(build_directory, dict(DEFAULT_CONFIG, prefix="pr007"))
         assert "## Preview URLs" in comment
-        assert "- <https://pr007.content.dev.mdn.mozit.cloud/en-US/docs/Foo>" in comment
+        assert (
+            "- [/en-US/docs/Foo](https://pr007.content.dev.mdn.mozit.cloud/en-US/docs/Foo)"
+            in comment
+        )
 
 
 def test_analyze_pr_flaws():
@@ -189,7 +192,10 @@ def test_analyze_pr_prefix_and_postcomment(mocked_github):
             dict(DEFAULT_CONFIG, prefix="pr007", pr_number=123, github_token="abc123"),
         )
         assert "## Preview URLs" in comment
-        assert "- <https://pr007.content.dev.mdn.mozit.cloud/en-US/docs/Foo>" in comment
+        assert (
+            "- [/en-US/docs/Foo](https://pr007.content.dev.mdn.mozit.cloud/en-US/docs/Foo)"
+            in comment
+        )
 
     mocked_github().get_repo().get_issue().create_comment.assert_called()
 

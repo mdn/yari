@@ -88,7 +88,8 @@ def post_about_deployment(build_directory: Path, **config):
     links = []
     for doc in get_built_docs(build_directory):
         url = mdn_url_to_dev_url(config["prefix"], doc["mdn_url"])
-        links.append(f"- <{url}>")
+        mdn_url = doc["mdn_url"]
+        links.append(f"- [{mdn_url}]({url})")
     links.sort()
 
     heading = "## Preview URLs\n\n"
