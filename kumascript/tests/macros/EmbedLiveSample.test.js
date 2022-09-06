@@ -173,9 +173,9 @@ describeMacro("EmbedLiveSample", function () {
     }
   );
   itMacro('Five arguments: ID, "", "", "", other slug', function (macro) {
-    macro.ctx.env.url = "/en-US/docs/Web/Events/focus";
+    macro.ctx.env.url = "Web/API/Element/focus_event";
     return assert.eventually.equal(
-      macro.call("Event delegation", "", "", "", "Web/Events/blur"),
+      macro.call("Event delegation", "", "", "", "Web/API/Element/focus_event"),
       '<iframe class="sample-code-frame"' +
         ' title="Event delegation sample"' +
         ' id="frame_event_delegation"' +
