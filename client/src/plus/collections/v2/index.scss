@@ -7,10 +7,10 @@
     padding: 1rem 0;
 
     .container {
-      display: flex;
       align-items: baseline;
-      justify-content: space-between;
+      display: flex;
       flex-wrap: wrap;
+      justify-content: space-between;
 
       & > * {
         margin-bottom: 1rem;
@@ -18,8 +18,8 @@
     }
 
     .exit {
-      margin-top: -1rem;
       flex: 100%;
+      margin-top: -1rem;
     }
 
     h1 {
@@ -33,8 +33,8 @@
 
     p {
       color: var(--text-secondary);
-      margin-top: 0;
       display: none;
+      margin-top: 0;
     }
 
     @media screen and (min-width: $screen-md) {
@@ -71,17 +71,18 @@
     border: 1px solid var(--border-secondary);
     border-radius: var(--elem-radius);
     box-shadow: var(--shadow-02);
-    padding: 1em;
     display: flex;
     flex-direction: column;
+    padding: 1em;
 
     header {
+      align-items: start;
       display: grid;
       grid-template-columns: auto min-content;
-      align-items: start;
     }
 
     h2 {
+      align-self: center;
       font-size: var(--type-base-font-size-rem);
       line-height: var(--heading-line-height);
       margin: calc(
@@ -92,7 +93,6 @@
         )
         0;
       overflow-wrap: anywhere;
-      align-self: center;
 
       a {
         color: var(--text-primary);
@@ -110,13 +110,13 @@
     }
 
     footer {
-      margin-top: auto;
-      padding-top: 1rem;
+      align-items: baseline;
       color: var(--text-secondary);
       display: flex;
-      align-items: baseline;
-      justify-content: space-between;
       flex-wrap: wrap;
+      justify-content: space-between;
+      margin-top: auto;
+      padding-top: 1rem;
     }
 
     time {
