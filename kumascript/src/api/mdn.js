@@ -124,11 +124,10 @@ module.exports = {
   /**
    * Throw a deprecation error.
    */
-  deprecated() {
-    this.env.recordNonFatalError(
-      "deprecated",
-      "This macro has been deprecated, and should be removed."
-    );
+  deprecated(
+    message = "This macro has been deprecated, and should be removed."
+  ) {
+    this.env.recordNonFatalError("deprecated", message);
   },
 
   async fetchWebExtExamples() {
