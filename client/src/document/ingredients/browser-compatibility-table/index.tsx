@@ -71,6 +71,9 @@ function gatherPlatformsAndBrowsers(
     browsers = browsers.filter((browser) => browser !== "nodejs");
   }
 
+  // Hide Internet Explorer compatibility data
+  browsers = browsers.filter((browser) => browser !== "ie");
+
   return [platforms, [...browsers]];
 }
 

@@ -111,19 +111,19 @@ describe("testing the main render() function", () => {
     const brokenLink = $(
       'a.page-not-created[title^="The documentation about this has not yet been written"]'
     );
-    expect(brokenLink.length).toBe(3);
+    expect(brokenLink).toHaveLength(3);
     expect(brokenLink.html()).toBe("<code>bigfoot</code>");
     const otherLinks = $(`a[href="/en-US/docs/Web/CSS/number"]`);
-    expect(otherLinks.length).toBe(2);
+    expect(otherLinks).toHaveLength(2);
     expect(otherLinks.eq(0).html()).toBe("<code>&lt;dumber&gt;</code>");
     expect(otherLinks.eq(1).html()).toBe("<code>&lt;number&gt;</code>");
     for (const deprecatedID of ["gecko-header", "gecko-inline"]) {
       const deprecated = $(`#${deprecatedID}`);
-      expect(deprecated.length).toBe(1);
+      expect(deprecated).toHaveLength(1);
       expect(deprecated.html()).toBe("");
     }
     // Next, let's check the errors.
-    expect(errors.length).toBe(8);
+    expect(errors).toHaveLength(8);
     expect(errors[0]).toBeInstanceOf(MacroBrokenLinkError);
     expect(errors[0]).toHaveProperty("line", 4);
     expect(errors[0]).toHaveProperty("column", 4);

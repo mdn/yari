@@ -1,6 +1,6 @@
 #!/usr/bin/env sh
 
-# Script equivalent of .github/workflows/testing.yml
+# Script equivalent of .github/workflows/testing.yml -> test
 
 set -e
 
@@ -9,18 +9,6 @@ echo "Install all yarn packages"
 echo "-------------------------"
 
 yarn --frozen-lockfile
-
-echo "-------------"
-echo "Lint prettier"
-echo "-------------"
-
-yarn prettier-check
-
-echo "-----------"
-echo "Lint ESLint"
-echo "-----------"
-
-yarn eslint
 
 echo "-------------------"
 echo "Unit testing client"

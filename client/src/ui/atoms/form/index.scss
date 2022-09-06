@@ -5,8 +5,8 @@
 }
 
 .mdn-form-item {
-  display: flex;
   align-items: center;
+  display: flex;
   flex-wrap: wrap;
   gap: 0.5rem;
   padding-top: 1rem;
@@ -29,15 +29,15 @@
     background: var(--background-primary);
     border: 1px solid var(--border-primary);
     color: var(--text-primary);
-    font-size: var(--type-smaller-font-size);
-    padding: 0.5rem;
     flex: 1 1 100%;
+    font-size: var(--type-smaller-font-size);
     min-width: 0;
+    padding: 0.5rem;
 
     &:focus {
-      outline: 0 none;
       border: 1px solid var(--button-secondary-border-focus);
       box-shadow: var(--focus-effect);
+      outline: 0 none;
     }
   }
 
@@ -46,23 +46,23 @@
   }
 
   .select-wrap {
-    position: relative;
-    flex: 1 1 100%;
     display: flex;
+    flex: 1 1 100%;
+    position: relative;
   }
 
   .select-wrap::after {
-    position: absolute;
-    top: calc(50% - 0.5rem);
-    right: 0.5rem;
-    display: block;
-    width: 16px;
-    height: 16px;
     background-color: var(--icon-primary);
+    content: "";
+    display: block;
+    height: 16px;
     mask-image: url("../../../assets/icons/small-arrow.svg");
     mask-size: cover;
-    content: "";
     pointer-events: none;
+    position: absolute;
+    right: 0.5rem;
+    top: calc(50% - 0.5rem);
+    width: 16px;
   }
 
   label {

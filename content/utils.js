@@ -102,6 +102,16 @@ function execGit(args, opts = {}, root = null) {
   return stdout.toString().trim();
 }
 
+function toPrettyJSON(value) {
+  const json = JSON.stringify(value, null, 2) + "\n";
+  try {
+    // eslint-disable-next-line node/no-unpublished-require
+    return require("prettier").format(json, { parser: "json" });
+  } catch (e) {
+    return json;
+  }
+}
+
 function urlToFolderPath(url) {
   const [, locale, , ...slugParts] = url.split("/");
   return path.join(locale.toLowerCase(), slugToFolder(slugParts.join("/")));
@@ -113,6 +123,7 @@ module.exports = {
   slugToFolder: (slug) => slugToFolder(slug, path.sep),
   memoize,
   execGit,
+  toPrettyJSON,
   urlToFolderPath,
   MEMOIZE_INVALIDATE,
 };

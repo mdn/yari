@@ -70,7 +70,9 @@ export const ArticleActions = ({
               {translations && !!translations.length && (
                 <li className="article-actions-entry">
                   <LanguageMenu
-                    onClose={toggleArticleActionsMenu}
+                    onClose={() =>
+                      showArticleActionsMenu && toggleArticleActionsMenu()
+                    }
                     translations={translations}
                     native={native}
                   />

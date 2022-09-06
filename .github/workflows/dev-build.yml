@@ -224,6 +224,13 @@ jobs:
           PATHS: /*
         run: aws cloudfront create-invalidation --distribution-id "$DISTRIBUTION" --paths "$PATHS"
 
+      - name: Notify PRs about deployment
+        run: |
+          gh pr list -S "$GITHUB_SHA -is:merged" --json number --jq '.[].number' | xargs -i gh pr comment {} --body "Dev build for $GITHUB_SHA was deployed to: $DEPLOYMENT_URL" || true
+        env:
+          DEPLOYMENT_URL: https://${{ github.event.inputs.deployment_prefix }}.content.dev.mdn.mozit.cloud/
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Slack Notification
         if: failure()
         uses: rtCamp/action-slack-notify@v2

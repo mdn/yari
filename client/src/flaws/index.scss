@@ -6,16 +6,16 @@
     }
 
     h3 span.page {
-      margin-left: 10px;
       color: #666;
+      margin-left: 10px;
     }
   }
 
   td a .url-prefix,
   td .document-title-preview {
     color: rgb(159, 159, 159);
-    margin-right: 2px;
     font-size: 80%;
+    margin-right: 2px;
   }
   td .document-title-preview {
     margin-left: 10px;
@@ -37,8 +37,8 @@
   }
 
   .pagination {
-    text-align: center;
     margin: 20px;
+    text-align: center;
     a.disabled {
       color: rgb(159, 159, 159);
     }

@@ -21,14 +21,14 @@
     overflow: scroll;
 
     &.show {
+      background: var(--background-primary);
+      bottom: 0;
       display: flex;
       flex-direction: column;
-      position: fixed;
-      top: var(--top-navigation-height);
-      bottom: 0;
       left: 0;
+      position: fixed;
       right: 0;
-      background: var(--background-primary);
+      top: var(--top-navigation-height);
       z-index: var(--z-index-mid);
     }
 
@@ -40,22 +40,22 @@
     }
 
     .header {
+      border-bottom: 1px solid var(--border-primary);
+      color: var(--text-primary);
       display: block;
       font-family: var(--font-body);
       font-size: var(--type-smaller-font-size);
       font-weight: var(--font-body-strong-weight);
-      color: var(--text-primary);
+      margin: 0;
       padding: 1rem;
       text-align: left;
       width: 100%;
-      margin: 0;
-      border-bottom: 1px solid var(--border-primary);
 
       .header-inner {
-        position: relative;
+        align-items: center;
         display: flex;
         gap: 0.5rem;
-        align-items: center;
+        position: relative;
       }
 
       .icon {
@@ -87,25 +87,25 @@
       }
 
       p {
-        padding: 0;
         margin: 0;
+        padding: 0;
       }
     }
 
     @media screen and (min-width: $screen-md) {
       &.show {
-        padding: 0;
-        left: initial;
-        position: absolute;
-        right: 0;
-        top: calc(100% + 6px);
-        bottom: auto;
-        width: 316px;
-        z-index: var(--z-index-mid);
         background-color: var(--background-secondary);
         border: 1px solid var(--border-primary);
         border-radius: var(--elem-radius);
+        bottom: auto;
         box-shadow: var(--shadow-02);
+        left: initial;
+        padding: 0;
+        position: absolute;
+        right: 0;
+        top: calc(100% + 6px);
+        width: 316px;
+        z-index: var(--z-index-mid);
       }
 
       .header {
@@ -165,19 +165,19 @@
       display: block;
       height: 100vh;
       left: 0;
+      overflow: auto;
+      -webkit-overflow-scrolling: touch;
       position: fixed;
       top: var(--top-navigation-height);
       width: 100vw;
       z-index: var(--z-index-low);
-      overflow: auto;
-      -webkit-overflow-scrolling: touch;
 
       & > .button,
       .article-actions-entries > li > .button,
       .article-actions-entries > li > div > .button {
         --button-radius: 0;
-        width: 100%;
         border-bottom: 1px solid var(--border-secondary);
+        width: 100%;
 
         .button-wrap {
           justify-content: flex-start;

@@ -87,7 +87,7 @@ describe("render() function", () => {
     );
     jest.runAllTimers();
     const [result, errors] = await promise;
-    expect(errors.length).toBe(0);
+    expect(errors).toHaveLength(0);
     expect(result).toEqual("yay!");
   });
 
@@ -105,7 +105,7 @@ describe("render() function", () => {
         templates,
       }
     );
-    expect(errors.length).toBe(0);
+    expect(errors).toHaveLength(0);
     expect(result).toEqual("3");
   });
 
@@ -137,7 +137,7 @@ describe("render() function", () => {
       }
     );
     expect(result).toEqual("foo{{nope}}bar");
-    expect(errors.length).toBe(1);
+    expect(errors).toHaveLength(1);
     expect(errors[0]).toBeInstanceOf(MacroNotFoundError);
     expect(errors[0].name).toBe("MacroNotFoundError");
     expect(errors[0]).toHaveProperty("line");
@@ -155,7 +155,7 @@ describe("render() function", () => {
       }
     );
     expect(result).toEqual("foo{{syntax}}bar");
-    expect(errors.length).toBe(1);
+    expect(errors).toHaveLength(1);
     expect(errors[0]).toBeInstanceOf(MacroCompilationError);
     expect(errors[0].name).toBe("MacroCompilationError");
     expect(errors[0]).toHaveProperty("line");
@@ -173,7 +173,7 @@ describe("render() function", () => {
       }
     );
     expect(result).toEqual("foo{{throw}}bar");
-    expect(errors.length).toBe(1);
+    expect(errors).toHaveLength(1);
     expect(errors[0]).toBeInstanceOf(MacroExecutionError);
     expect(errors[0].name).toBe("MacroExecutionError");
     expect(errors[0]).toHaveProperty("line");
@@ -191,7 +191,7 @@ describe("render() function", () => {
       }
     );
     expect(result).toEqual("foo{{ undefined() }}bar");
-    expect(errors.length).toBe(1);
+    expect(errors).toHaveLength(1);
     expect(errors[0]).toBeInstanceOf(MacroExecutionError);
     expect(errors[0].name).toBe("MacroExecutionError");
     expect(errors[0]).toHaveProperty("line");
@@ -209,7 +209,7 @@ describe("render() function", () => {
       }
     );
     expect(result).toEqual("foo{{nope(1)}}bar{{throw(2)}}baz{{syntax(3)}}");
-    expect(errors.length).toBe(3);
+    expect(errors).toHaveLength(3);
     expect(errors[0]).toBeInstanceOf(MacroNotFoundError);
     expect(errors[1]).toBeInstanceOf(MacroExecutionError);
     expect(errors[2]).toBeInstanceOf(MacroCompilationError);
@@ -226,7 +226,7 @@ describe("render() function", () => {
       }
     );
     expect(result).toEqual("foo! bar{{ throw(1,2) }}baz?");
-    expect(errors.length).toBe(1);
+    expect(errors).toHaveLength(1);
     expect(errors[0]).toBeInstanceOf(MacroExecutionError);
   });
 
@@ -257,7 +257,7 @@ describe("render() function", () => {
       }
     );
     expect(result).toEqual("foo{{includeError}}bar");
-    expect(errors.length).toBe(1);
+    expect(errors).toHaveLength(1);
     expect(errors[0]).toBeInstanceOf(MacroExecutionError);
     expect(errors[0]).toHaveProperty("line");
     expect(errors[0]).toHaveProperty("column");

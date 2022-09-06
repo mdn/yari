@@ -1,19 +1,19 @@
 blockquote.quote {
+  border: none;
+  border-radius: 0.5rem;
+  display: flex;
+  flex-direction: column-reverse;
+  gap: 2rem;
   margin: 2rem 0;
   padding: 2rem;
-  display: flex;
-  gap: 2rem;
-  border: none;
-  flex-direction: column-reverse;
-  border-radius: 0.5rem;
 
   @media screen and (max-width: 40rem) {
     flex-wrap: wrap-reverse;
   }
 
   p {
-    font-style: italic;
     display: flex;
+    font-style: italic;
 
     .icon {
       margin-right: 1rem;
@@ -22,8 +22,8 @@ blockquote.quote {
   }
 
   .name {
-    font-size: var(--type-base-font-size-rem);
     display: inline;
+    font-size: var(--type-base-font-size-rem);
     margin: 0;
   }
 }
