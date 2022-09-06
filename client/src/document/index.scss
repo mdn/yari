@@ -311,16 +311,6 @@ table {
   }
 }
 
-@mixin rounded-border-with-inner-spacing($border-width: 1px) {
-  border: none;
-  border-radius: calc(var(--elem-radius) / 2);
-  box-shadow: 0 0 $border-width var(--elem-radius) #fff;
-  margin: var(--elem-radius);
-  outline: $border-width solid var(--border-primary);
-  outline-offset: var(--elem-radius);
-  width: calc(100% - 2 * var(--elem-radius));
-}
-
 iframe {
   border: 1px solid var(--border-primary);
   max-width: 100%;
@@ -335,8 +325,14 @@ iframe {
   &[src*="https://test262.report"],
   &.nobutton,
   &.sample-code-frame {
-    @include rounded-border-with-inner-spacing();
     background: #fff;
+    border: none;
+    border-radius: calc(var(--elem-radius) / 2);
+    box-shadow: 0 0 1px 0.25rem #fff;
+    margin-left: 0.25rem;
+    outline: 1px solid var(--border-primary);
+    outline-offset: 0.25rem;
+    width: calc(100% - 0.5rem);
   }
 }
 
