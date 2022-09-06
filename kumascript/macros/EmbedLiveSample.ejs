@@ -19,7 +19,7 @@
 // When there will be 0 use left on translated-content (May 2022: 203 occurrences),
 // we will be able to simplify this macro (and likely the whole of MDN).
 if ($4 !== '') {
-  mdn.deprecated();
+  mdn.deprecated("The fourth parameter of 'EmbedLiveSample' is deprecated. Please remove the transclusion");
 }
 
 var sampleIdOrOffset = $0 || $token.location.start.offset;
