@@ -3,6 +3,7 @@ import { packageBCD } from "./resolve-bcd";
 import * as bcd from "@mdn/browser-compat-data/types";
 import {
   BCDSection,
+  Doc,
   ProseSection,
   Section,
   SpecificationsSection,
@@ -36,14 +37,21 @@ type SectionsAndFlaws = [Section[], string[]];
  *
  * ...give or take some whitespace.
  */
-export function extractSidebar($: cheerio.CheerioAPI) {
+export function extractSidebar($: cheerio.CheerioAPI, doc: Partial<Doc>) {
   const search = $("#Quick_links");
+
   if (!search.length) {
-    return "";
+    doc.sidebarHTML = "";
   }
-  const sidebarHtml = search.html();
+
+  // Open menu and highlight current page.
+  search.find(`a[href='${doc.mdn_url}']`).each((_i, el) => {
+    $(el).closest("details").prop("open", true);
+    $(el).attr("aria-current", "page");
+  });
+
+  doc.sidebarHTML = search.html();
   search.remove();
-  return sidebarHtml;
 }
 
 export function extractSections($: cheerio.CheerioAPI): [Section[], string[]] {
