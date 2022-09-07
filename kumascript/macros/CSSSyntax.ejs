@@ -175,8 +175,8 @@ function getPropertySyntax(propertyName) {
   }
   // the "#" multipler can be followed by the curly brackets, we want to annotate them separately
   if (multiplierName.startsWith("#{")) {
-    const info1 =  syntaxDescriptions[multiplierName[0]];
-    const info2 =  syntaxDescriptions["{}"];
+    const info1 = syntaxDescriptions["#"];
+    const info2 = syntaxDescriptions["{}"];
     const link1 = `<a href="${valueDefinitionUrl}#${info1.fragment}" title="${info1.tooltip}">${multiplierName[0]}</a>`;
     const link2 = `<a href="${valueDefinitionUrl}#${info2.fragment}" title="${info2.tooltip}">${multiplierName.slice(1)}</a>`;
     return `${link1}${link2}`;
