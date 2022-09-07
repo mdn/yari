@@ -37,7 +37,9 @@ function glean(): GleanAnalytics {
     };
   }
 
-  const userIsOptedOut = document.cookie.split('; ').includes(`${FIRST_PARTY_DATA_OPT_OUT_COOKIE_NAME}=true;`);
+  const userIsOptedOut = document.cookie
+    .split("; ")
+    .includes(`${FIRST_PARTY_DATA_OPT_OUT_COOKIE_NAME}=true;`);
 
   const uploadEnabled = !userIsOptedOut && GLEAN_ENABLED;
 
