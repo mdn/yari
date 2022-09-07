@@ -320,3 +320,6 @@ included this value for `geo.country`.
 
 - Disables/Enables glean upload. This should be set to `true` in prod and
   staging to send glean telemetry to the server
+  - Be aware of flipping this between true/false as any persisted metrics,
+    events and pings (other than first_run_date and first_run_hour) are cleared.
+    [More info](https://mozilla.github.io/glean/book/reference/general/initializing.html#when-upload-is-disabled)

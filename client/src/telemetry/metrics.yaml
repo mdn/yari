@@ -2,7 +2,7 @@
 # Schema
 $schema: moz://mozilla.org/schemas/glean/metrics/2-0-0
 
-page_view:
+page:
   path:
     type: url
     lifetime: application
@@ -14,9 +14,9 @@ page_view:
     data_sensitivity:
       - web_activity
     bugs:
-      - "https://bugzilla.mozilla.org/show_bug.cgi?id=1782509"
+      - https://bugzilla.mozilla.org/show_bug.cgi?id=1782509
     data_reviews:
-      - "https://github.com/mdn/yari/pull/6813#issuecomment-1203705308"
+      - https://github.com/mdn/yari/pull/6813#issuecomment-1203705308
     notification_emails:
       - mdn-team@mozilla.com
     expires: 2023-09-05
@@ -31,9 +31,9 @@ page_view:
     data_sensitivity:
       - web_activity
     bugs:
-      - "https://bugzilla.mozilla.org/show_bug.cgi?id=1782509"
+      - https://bugzilla.mozilla.org/show_bug.cgi?id=1782509
     data_reviews:
-      - "https://github.com/mdn/yari/pull/6813#issuecomment-1203705308"
+      - https://github.com/mdn/yari/pull/6813#issuecomment-1203705308
     notification_emails:
       - mdn-team@mozilla.com
     expires: 2023-09-05
@@ -49,9 +49,9 @@ element:
     data_sensitivity:
       - web_activity
     bugs:
-      - "https://bugzilla.mozilla.org/show_bug.cgi?id=1782509"
+      - https://bugzilla.mozilla.org/show_bug.cgi?id=1782509
     data_reviews:
-      - "https://github.com/mdn/yari/pull/6813#issuecomment-1203705308"
+      - https://github.com/mdn/yari/pull/6813#issuecomment-1203705308
     notification_emails:
       - mdn-team@mozilla.com
     expires: 2023-09-05

@@ -1,8 +1,8 @@
 import * as React from "react";
-import { path, referrer } from "./generated/pageView";
+import { path, referrer } from "./generated/page";
 import { clicked } from "./generated/element";
 import * as pings from "./generated/pings";
-import * as Glean from "@mozilla/glean/web";
+import Glean from "@mozilla/glean/web";
 import { GLEAN_CHANNEL, GLEAN_DEBUG, GLEAN_ENABLED } from "../env";
 
 export type PageProps = {
@@ -44,14 +44,12 @@ function glean(): GleanAnalytics {
 
   const uploadEnabled = !userIsOptedOut && GLEAN_ENABLED;
 
-  Glean.default.initialize(GLEAN_APP_ID, uploadEnabled, {
+  Glean.initialize(GLEAN_APP_ID, uploadEnabled, {
     maxEvents: 1,
     channel: GLEAN_CHANNEL,
   });
 
-  Glean.default.setLogPings(GLEAN_DEBUG);
-  Glean.default.setDebugViewTag("mdn-dev");
-  Glean.default.setUploadEnabled(uploadEnabled);
+  Glean.setLogPings(GLEAN_DEBUG);
 
   const gleanContext = {
     page: (page: PageProps) => {
