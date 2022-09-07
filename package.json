@@ -25,6 +25,7 @@
     "eslint": "eslint .",
     "filecheck": "cd filecheck && ts-node cli.ts",
     "m2h": "ts-node markdown/m2h/cli.ts",
+    "macro-usage-report": "ts-node scripts/macro-usage-report.ts",
     "md": "echo 'The HTML to Markdown conversion command has been moved to https://github.com/mdn/markdown!' && exit 1",
     "prepack": "yarn build:dist",
     "prepare": "husky install",
