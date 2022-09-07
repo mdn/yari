@@ -330,7 +330,7 @@ iframe {
     border-radius: var(--elem-radius);
     box-sizing: content-box;
     padding: 1rem;
-    width: calc(100% - 2rem);
+    width: calc(100% - 2rem - 2px);
   }
 }
 
