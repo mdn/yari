@@ -85,6 +85,12 @@ module.exports = {
     return this.info.getPageByURL(path || this.env.url);
   },
 
+  hasPage(path) {
+    const page = this.info.getPageByURL(path || this.env.url);
+
+    return Boolean(page.slug);
+  },
+
   ensureExistence(path) {
     if (!this.info.hasPage(path)) {
       throw new Error(

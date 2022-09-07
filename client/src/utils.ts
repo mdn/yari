@@ -43,12 +43,13 @@ export function postToIEx(theme: string) {
   const iexFrame = document.querySelector(".interactive") as HTMLIFrameElement;
 
   if (iexFrame) {
-    iexFrame.contentWindow?.postMessage(
-      { theme: theme },
-      window?.mdnWorker?.settings?.preferOnline === false
-        ? window.location.origin
-        : IEX_DOMAIN
-    );
+    if (iexFrame.getAttribute("data-readystate") === "complete") {
+      const origin =
+        window?.mdnWorker?.settings?.preferOnline === false
+          ? window.location.origin
+          : IEX_DOMAIN;
+      iexFrame.contentWindow?.postMessage({ theme: theme }, origin);
+    }
   }
 }
 
@@ -58,7 +59,11 @@ export function switchTheme(theme: string, set: (theme: string) => void) {
   if (window && html) {
     html.className = theme;
     html.style.backgroundColor = "";
-    window.localStorage.setItem("theme", theme);
+    try {
+      window.localStorage.setItem("theme", theme);
+    } catch (err) {
+      console.warn("Unable to write theme to localStorage", err);
+    }
     set(theme);
     postToIEx(theme);
   }

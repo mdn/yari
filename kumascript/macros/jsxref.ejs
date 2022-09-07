@@ -9,42 +9,57 @@
 //  $2 - anchor (#xyz) (optional)
 //  $3 - If set, do not put the text in <code></code>
 //
+// Examples:
+//
 //  {{jsxref("Date")}}
-//  {{jsxref("Date.prototype.getNumber()")}}
-//  {{jsxref("Global_Objects/Date/getNumber", "Date.prototype.getNumber()")}}
+//  {{jsxref("Date.prototype.toString()")}}
+//  {{jsxref("Global_Objects/Date/toString", "Date.prototype.toString()")}}
 //
 
-const slug = 'Global_Objects';
+// Constants.
+const baseSlug = 'Web/JavaScript/Reference/';
+const localUrl = `/${env.locale}/docs/${baseSlug}`;
+const defaultUrl = `/en-US/docs/${baseSlug}`;
+const globalObjects = 'Global_Objects';
 
-let str = $1 || $0;
+// Parameters.
+const apiName = $0;
+const displayName = $1 || '';
+const anchor = $2 || '';
+const wrap = !$3;
 
-let URL = `/${env.locale}/docs/Web/JavaScript/Reference/`;
-let basePath = URL;
+let slug = apiName.replace('()', '').replace('.prototype.', '.');
+if (apiName.includes(".") && !apiName.includes("..")) {
+    // E.g. "Array.filter", but not "try...catch".
+    slug = slug.replace('.', '/');
+}
 
-let api  = $0.replace('()', '').replace('.prototype.', '.');
-
-let page = wiki.getPage(URL + $0);
-let objectPage = wiki.getPage(URL + slug + '/' + $0);
-
-if ((api.indexOf("..") === -1) && (api.indexOf(".") !== -1)) { // Handle try...catch case
-    basePath += slug + '/';
-    URL += slug + '/' + api.replace('.', '/');
-} else if (!page.slug && objectPage.slug) {
-    basePath += slug + '/';
-    URL += slug + '/' + $0;
+let basePath;
+if (wiki.hasPage(defaultUrl + slug)) {
+    // Page exists as is.
+    basePath = localUrl;
+} else if (wiki.hasPage(defaultUrl + globalObjects + '/' + slug)) {
+    // Page exists in "Global_Objects" section.
+    basePath = localUrl + globalObjects + '/';
 } else {
-    URL += web.safeDecodeURIComponent($0);
+    // Page does not exist.
+    basePath = localUrl;
 }
 
-let anchor = $2 || '';
-if (anchor && anchor[0] != '#') {
-    anchor = "#" + anchor;
+let href = basePath + web.safeDecodeURIComponent(slug);
+if (anchor) {
+    if (anchor[0].startsWith('#')) {
+        href += anchor;
+    } else {
+        href += "#" + anchor;
+    }
 }
 
-if (!$3) {
-  str = `<code>${str}</code>`;
+let content = displayName || apiName;
+if (wrap) {
+  content = `<code>${content}</code>`;
 }
 
-const link = web.smartLink(URL + anchor, null, str, $0, basePath);
+const link = web.smartLink(href, null, content, apiName, basePath);
 
 %><%- link %>

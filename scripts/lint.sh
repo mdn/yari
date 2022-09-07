@@ -21,3 +21,9 @@ echo "Lint ESLint"
 echo "-----------"
 
 yarn eslint
+
+echo "--------------"
+echo "Lint stylelint"
+echo "--------------"
+
+yarn stylelint

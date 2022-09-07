@@ -180,6 +180,8 @@ export function Document(props /* TODO: define a TS interface for this */) {
     return null;
   }
 
+  const retiredLocale = searchParams.get("retiredLocale");
+
   return (
     <>
       <div className="main-document-header-container">
@@ -193,9 +195,9 @@ export function Document(props /* TODO: define a TS interface for this */) {
           <LocalizedContentNote isActive={doc.isActive} locale={locale} />
         </div>
       ) : (
-        searchParams.get("retiredLocale") && (
+        retiredLocale && (
           <div className="container">
-            <RetiredLocaleNote />
+            <RetiredLocaleNote locale={retiredLocale} />
           </div>
         )
       )}
