@@ -486,18 +486,6 @@ pre {
 .index {
   margin-bottom: 1rem;
 
-  h3 {
-    background-color: var(--background-secondary);
-    border-radius: 0.5rem;
-    font-size: var(--type-heading-h4-font-size-mobile);
-    font-weight: var(--font-body-strong-weight);
-    padding: 0.5rem 1rem;
-
-    @media screen and (min-width: $screen-md) {
-      font-size: var(--type-heading-h4-font-size);
-    }
-  }
-
   ul {
     margin: 0.5rem 0 2rem;
 
