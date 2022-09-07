@@ -492,7 +492,7 @@ export async function buildDocument(
   // Note that 'extractSidebar' will always return a string.
   // And if it finds a sidebar section, it gets removed from '$' too.
   // Also note, these operations mutate the `$`.
-  doc.sidebarHTML = extractSidebar($);
+  extractSidebar($, doc);
 
   // Check and scrutinize any local image references
   const fileAttachments = checkImageReferences(doc, $, options, document);
