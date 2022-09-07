@@ -29,7 +29,7 @@ const FIRST_PARTY_DATA_OPT_OUT_COOKIE_NAME = "moz-1st-party-data-opt-out";
 const GLEAN_APP_ID = "mdn-yari";
 
 function glean(): GleanAnalytics {
-  if (typeof window === "undefined") {
+  if (typeof window === "undefined" || !GLEAN_ENABLED) {
     //SSR return noop.
     return {
       page: (page: PageProps) => {},
