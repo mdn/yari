@@ -303,7 +303,7 @@ included this value for `geo.country`.
 
 ### `REACT_APP_GLEAN_CHANNEL`
 
-**Default: `"stage"`**
+**Default: `"dev"`**
 
 - This routes glean analytics to either prod/staging in the backend. See
   [Glean docs](https://mozilla.github.io/glean/book/reference/general/initializing.html?highlight=channel#gleaninitializeconfiguration)
