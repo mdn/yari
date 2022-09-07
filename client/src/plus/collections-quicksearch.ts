@@ -1,6 +1,5 @@
-const COLLECTION_ITEMS_KEY: string = "collection-items";
-const COLLECTION_ITEMS_UPDATED_DATE_KEY: string =
-  "collection-items-updated-date";
+const COLLECTION_ITEMS_KEY = "collection-items";
+const COLLECTION_ITEMS_UPDATED_DATE_KEY = "collection-items-updated-date";
 
 type CollectionItem = {
   id: number;
@@ -9,31 +8,55 @@ type CollectionItem = {
 };
 
 function getCollectionItemsUpdatedDate(): Date | null {
-  let dateString = window?.localStorage?.getItem(
-    COLLECTION_ITEMS_UPDATED_DATE_KEY
-  );
-  if (!dateString) {
-    return null;
+  try {
+    let dateString = window?.localStorage?.getItem(
+      COLLECTION_ITEMS_UPDATED_DATE_KEY
+    );
+    if (dateString) {
+      return new Date(dateString);
+    }
+  } catch (err) {
+    console.warn(
+      "Unable to read collection items update date from localStorage",
+      err
+    );
   }
-  return new Date(dateString);
+  return null;
 }
 
 function setCollectionItemsUpdatedDate(updated: Date) {
-  window?.localStorage?.setItem(
-    COLLECTION_ITEMS_UPDATED_DATE_KEY,
-    updated.toISOString()
-  );
+  try {
+    window?.localStorage?.setItem(
+      COLLECTION_ITEMS_UPDATED_DATE_KEY,
+      updated.toISOString()
+    );
+  } catch (err) {
+    console.warn(
+      "Unable to write collection items update date to localStorage",
+      err
+    );
+  }
 }
 
 export function getCollectionItems(): CollectionItem[] {
-  return JSON.parse(
-    window?.localStorage?.getItem(COLLECTION_ITEMS_KEY) || "[]"
-  );
+  let collectionItemString;
+  try {
+    collectionItemString = window?.localStorage?.getItem(COLLECTION_ITEMS_KEY);
+  } catch (err) {
+    console.warn("Unable to read collection items from localStorage", err);
+  }
+  return JSON.parse(collectionItemString || "[]");
 }
 
 function setCollectionItems(items: CollectionItem[]) {
-  window?.localStorage?.setItem(COLLECTION_ITEMS_KEY, JSON.stringify(items));
-  window?.mdnWorker?.mutationCounter ?? window.mdnWorker.mutationCounter++;
+  try {
+    window?.localStorage?.setItem(COLLECTION_ITEMS_KEY, JSON.stringify(items));
+    if (Number.isFinite(window?.mdnWorker?.mutationCounter)) {
+      window.mdnWorker.mutationCounter++;
+    }
+  } catch (err) {
+    console.warn("Unable to write collection items to localStorage", err);
+  }
 }
 
 export async function fetchAllCollectionsItems(remoteUpdated: null | Date) {
