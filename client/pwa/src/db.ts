@@ -75,11 +75,14 @@ export class MDNOfflineDB extends Dexie {
       whoami:
         "++, username, is_authenticated, email, avatar_url, is_subscriber, settings",
     });
+    // We can drop the tables only after we stop using thing in the sw
+    /*
     this.version(4).stores({
       collections: null,
       watched: null,
       notifications: null,
     });
+    */
   }
 }
 
