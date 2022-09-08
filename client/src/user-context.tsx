@@ -2,6 +2,7 @@ import * as React from "react";
 import useSWR from "swr";
 
 import { DISABLE_AUTH, DEFAULT_GEO_COUNTRY } from "./env";
+import { fetchAllCollectionsItems } from "./plus/collections-quicksearch";
 import { MDNWorker } from "./settings/mdn-worker";
 
 export enum SubscriptionType {
@@ -14,6 +15,7 @@ export enum SubscriptionType {
 
 export type UserPlusSettings = {
   colInSearch: boolean;
+  collectionLastModified: Date | null;
 };
 
 export type UserData = {
@@ -105,9 +107,14 @@ export function UserDataProvider(props: { children: React.ReactNode }) {
         throw new Error(`${response.status} on ${response.url}`);
       }
       const data = await response.json();
+      const collectionLastModified =
+        data.settings?.collections_last_modified_time;
       const settings: UserPlusSettings | null = data.settings
         ? {
-            colInSearch: data.settings.col_in_search || false,
+            colInSearch: data.settings?.col_in_search || false,
+            collectionLastModified:
+              (collectionLastModified && new Date(collectionLastModified)) ||
+              null,
           }
         : null;
 
@@ -141,6 +148,9 @@ export function UserDataProvider(props: { children: React.ReactNode }) {
       // The user is definitely signed in or not signed in.
       setSessionStorageData(data);
 
+      if (data.settings?.colInSearch) {
+        fetchAllCollectionsItems(data.settings?.collectionLastModified || null);
+      }
       // Let's initialize the MDN Worker if the user is signed in.
       if (!window.mdnWorker && data?.isAuthenticated) {
         import("./settings/mdn-worker").then(({ getMDNWorker }) => {
