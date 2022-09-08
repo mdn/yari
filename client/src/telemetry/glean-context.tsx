@@ -3,7 +3,7 @@ import { path, referrer } from "./generated/page";
 import { clicked } from "./generated/element";
 import * as pings from "./generated/pings";
 import Glean from "@mozilla/glean/web";
-import { GLEAN_CHANNEL, GLEAN_DEBUG, GLEAN_ENABLED } from "../env";
+import { CRUD_MODE, GLEAN_CHANNEL, GLEAN_DEBUG, GLEAN_ENABLED } from "../env";
 
 export type PageProps = {
   referrer: string | undefined;
@@ -46,8 +46,14 @@ function glean(): GleanAnalytics {
   Glean.initialize(GLEAN_APP_ID, uploadEnabled, {
     maxEvents: 1,
     channel: GLEAN_CHANNEL,
+    serverEndpoint: CRUD_MODE
+      ? "https://developer.allizom.org"
+      : document.location.origin,
   });
 
+  if (CRUD_MODE) {
+    Glean.setDebugViewTag("mdn-dev");
+  }
   Glean.setLogPings(GLEAN_DEBUG);
 
   const gleanContext = {
