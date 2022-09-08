@@ -33,12 +33,16 @@ async function exec(
 
 async function findMatches(pattern: string, paths: string[]) {
   const stdout = await exec("rg", ["-i", pattern, ...paths]);
+
   const lines = stdout.split("\n").filter((line) => line.length > 0);
-  const filenamesWithMatch = lines.map((line) => line.split(":", 2));
 
   const regexp = new RegExp(pattern, "ig");
   const matches: { macro: string; file: string }[] = [];
-  for (const [file, match] of filenamesWithMatch) {
+
+  for (const line of lines) {
+    const parts = line.split(":");
+    const file = parts[0];
+    const match = parts.slice(1).join(":");
     for (const [, macro] of match.matchAll(regexp)) {
       matches.push({ macro, file });
     }
