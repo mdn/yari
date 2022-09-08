@@ -298,3 +298,28 @@ Determines if the MDN++ SPA should be reachable or not.
 If the `/api/v1/whoami` does not include a `geo.country` value, fall back on
 this. Setting this allows you to pretend the XHR request to `/api/v1/whoami`
 included this value for `geo.country`.
+
+## Glean (Analytics)
+
+### `REACT_APP_GLEAN_CHANNEL`
+
+**Default: `"dev"`**
+
+- This routes glean analytics to either prod/staging in the backend. See
+  [Glean docs](https://mozilla.github.io/glean/book/reference/general/initializing.html?highlight=channel#gleaninitializeconfiguration)
+
+### `REACT_APP_GLEAN_DEBUG`
+
+**Default: `false`**
+
+- Setting this to true logs glean pings to the console to to help debug.
+
+### `REACT_APP_GLEAN_ENABLED`
+
+**Default: `false`**
+
+- Disables/Enables glean upload. This should be set to `true` in prod and
+  staging to send glean telemetry to the server
+  - Be aware of flipping this between true/false as any persisted metrics,
+    events and pings (other than first_run_date and first_run_hour) are cleared.
+    [More info](https://mozilla.github.io/glean/book/reference/general/initializing.html#when-upload-is-disabled)

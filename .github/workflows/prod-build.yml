@@ -182,6 +182,9 @@ jobs:
           REACT_APP_SURVEY_RATE_FROM_CSS_CASCADE_2022_B: 0.05
           REACT_APP_SURVEY_RATE_TILL_CSS_CASCADE_2022_B: 0.1
 
+          REACT_APP_GLEAN_CHANNEL: prod
+          REACT_APP_GLEAN_ENABLED: true
+
         run: |
 
           # Info about which CONTENT_* environment variables were set and to what.

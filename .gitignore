@@ -99,3 +99,5 @@ popularities.json
 
 client/src/.linaria_cache
 ssr/.linaria-cache/
+
+client/venv
