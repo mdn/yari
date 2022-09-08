@@ -53,6 +53,9 @@ function getActiveLegendItems(
     for (const [browser, browserSupport] of Object.entries(
       feature.compat.support
     )) {
+      if (browser === "ie") {
+        continue;
+      }
       if (!browserSupport) {
         legendItems.add("no");
         continue;
