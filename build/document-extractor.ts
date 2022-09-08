@@ -48,6 +48,10 @@ export function extractSidebar($: cheerio.CheerioAPI, doc: Partial<Doc>) {
   search.find(`a[href='${doc.mdn_url}']`).each((_i, el) => {
     $(el).closest("details").prop("open", true);
     $(el).attr("aria-current", "page");
+    // Highlight, unless it already is highlighted (e.g. heading).
+    if ($(el).find("em,strong").length === 0) {
+      $(el).parent().wrapInner("<em></em>");
+    }
   });
 
   doc.sidebarHTML = search.html();
