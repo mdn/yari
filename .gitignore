@@ -100,5 +100,4 @@ popularities.json
 client/src/.linaria_cache
 ssr/.linaria-cache/
 
-client/src/telemetry/generated/*
 client/venv
