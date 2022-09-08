@@ -63,7 +63,7 @@
       "^(?!.*\\.(js|jsx|mjs|cjs|ts|tsx|css|json)$)": "<rootDir>/config/jest/fileTransform.js"
     },
     "transformIgnorePatterns": [
-      "node_modules/@mozilla/(?!glean)/",
+      "/node_modules/(?!@mozilla/glean/.*)/",
       "^.+\\.module\\.(css|sass|scss)$"
     ],
     "watchPlugins": [
