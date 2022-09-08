@@ -183,7 +183,6 @@ def post_about_dangerous_content(
             else:
                 lines.append(f"URL: `{doc['mdn_url']}`")
             lines.append(f"Title: `{doc['title']}`")
-            lines.append(f"[on GitHub]({doc['source']['github_url']})")
             lines.append("")
             lines.append(comment)
             lines.append("")
@@ -254,7 +253,6 @@ def post_about_flaws(build_directory: Path, **config):
             else:
                 lines.append(f"URL: `{doc['mdn_url']}`")
             lines.append(f"Title: `{doc['title']}`")
-            lines.append(f"[on GitHub]({doc['source']['github_url']})")
             if count_flaws(doc["flaws"]):
                 lines.append(f"Flaw count: {count_flaws(doc['flaws'])}")
             lines.append("")
