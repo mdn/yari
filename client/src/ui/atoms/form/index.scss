@@ -24,7 +24,8 @@
     }
   }
 
-  [type="text"] {
+  [type="text"],
+  select {
     background: var(--background-primary);
     border: 1px solid var(--border-primary);
     color: var(--text-primary);
@@ -38,6 +39,30 @@
       box-shadow: var(--focus-effect);
       outline: 0 none;
     }
+  }
+
+  select {
+    appearance: none;
+  }
+
+  .select-wrap {
+    display: flex;
+    flex: 1 1 100%;
+    position: relative;
+  }
+
+  .select-wrap::after {
+    background-color: var(--icon-primary);
+    content: "";
+    display: block;
+    height: 16px;
+    mask-image: url("../../../assets/icons/small-arrow.svg");
+    mask-size: cover;
+    pointer-events: none;
+    position: absolute;
+    right: 0.5rem;
+    top: calc(50% - 0.5rem);
+    width: 16px;
   }
 
   label {

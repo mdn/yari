@@ -8,6 +8,13 @@
   right: 0;
   top: 0;
   z-index: var(--z-index-top);
+
+  &.wait {
+    &,
+    * {
+      cursor: wait !important;
+    }
+  }
 }
 
 .modal-content {
@@ -33,6 +40,11 @@
 
 .modal-body {
   padding: 1rem;
+
+  .notecard {
+    margin: 0;
+    margin-bottom: 1rem;
+  }
 }
 
 .modal-heading {
