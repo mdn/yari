@@ -19,7 +19,7 @@
           rgba(232, 8, 64, 0.3) 100%
         );
         /* Light/Color/Icon/Critical */
-        border: 1px solid #e22850;
+        border: 1px solid var(--text-primary-red);
         display: grid;
         grid-template-rows: fit-content(12rem);
         margin: 1rem;
@@ -31,7 +31,7 @@
           padding: 1rem;
 
           h1 {
-            font-size: 20px;
+            font-size: 1.25rem;
             margin-right: 1rem;
           }
 
@@ -47,8 +47,6 @@
         grid-row: 1;
         overflow: hidden;
         top: 0;
-        -moz-transition: all 1s ease-in-out;
-        transition: all 1s ease-in-out;
         width: 100%;
         .mandala-container {
           --mandala-primary: var(--text-secondary);

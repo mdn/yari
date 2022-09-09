@@ -229,7 +229,7 @@ function DefaultCollectionCard({ collection }: { collection: Collection }) {
           <Link to={collection.id}>Saved Articles</Link>
         </h2>
       </header>
-      <p>Articles you had previously saved in your collections.</p>
+      <p>Articles you had previously saved in your collection.</p>
       <footer>
         <span className="count">
           {collection.article_count}{" "}
