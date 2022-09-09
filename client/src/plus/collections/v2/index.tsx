@@ -19,6 +19,8 @@ import "./index.scss";
 
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
+import Mandala from "../../../ui/molecules/mandala";
+import { Icon } from "../../../ui/atoms/icon";
 dayjs.extend(relativeTime);
 
 export default function Collections() {
@@ -39,17 +41,26 @@ function Overview() {
 
   return (
     <>
-      <header>
-        <Container>
-          <h1>Collections</h1>
-          <Button
-            onClickHandler={() => setShowCreate(true)}
-            isDisabled={isLoading}
-          >
-            New Collection
-          </Button>
-          <NewEditCollectionModal show={showCreate} setShow={setShowCreate} />
-        </Container>
+      <header className="container">
+        <div className="collections-hero">
+          <section className="collections-hero-cta">
+            <h1>Collections</h1>
+            <p>
+              Save and group your favorite MDN articles <br />
+              to easily find them later on.
+            </p>
+            <Button
+              onClickHandler={() => setShowCreate(true)}
+              isDisabled={isLoading}
+            >
+              New Collection
+            </Button>
+            <NewEditCollectionModal show={showCreate} setShow={setShowCreate} />
+          </section>
+          <div className="mandala-wrapper">
+            <Mandala />
+          </div>
+        </div>
       </header>
       <Container>
         {isLoading ? (
@@ -97,7 +108,9 @@ function CollectionCard({ collection }: { collection: Collection }) {
     setShowDelete(false);
   };
 
-  return (
+  return collection.name === "Default" ? (
+    <DefaultCollectionCard collection={collection} />
+  ) : (
     <article key={collection.id}>
       <header>
         <h2>
@@ -195,6 +208,29 @@ function CollectionCard({ collection }: { collection: Collection }) {
         </MDNModal>
       </header>
       {collection.description && <p>{collection.description}</p>}
+      <footer>
+        <span className="count">
+          {collection.article_count}{" "}
+          {collection.article_count === 1 ? "article" : "articles"}
+        </span>
+        <time dateTime={dayjs(collection.updated_at).toISOString()}>
+          Edited {dayjs(collection.updated_at).fromNow().toString()}
+        </time>
+      </footer>
+    </article>
+  );
+}
+
+//Todo remove this post V1.0 -> V2.0 Migration
+function DefaultCollectionCard({ collection }: { collection: Collection }) {
+  return (
+    <article key={collection.id} className="default">
+      <header>
+        <h2>
+          <Link to={collection.id}>Saved Articles</Link>
+        </h2>
+      </header>
+      <p>Articles you had previously saved in your collections.</p>
       <footer>
         <span className="count">
           {collection.article_count}{" "}
