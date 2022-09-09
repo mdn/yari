@@ -20,7 +20,8 @@ fs.readdirSync(fixture_dir).forEach(function (fn) {
 
 describeMacro("Compat", function () {
   itMacro("Outputs a simple div tag", async (macro) => {
-    const result = await macro.call("api.feature");
+    macro.ctx.env["browser-compat"] = "api.feature";
+    const result = await macro.call();
     const dom = JSDOM.fragment(result);
     assert.equal(dom.querySelector("div.bc-data").id, "");
     assert.equal(dom.querySelector("div.bc-data").dataset.query, "api.feature");
@@ -31,19 +32,15 @@ describeMacro("Compat", function () {
     );
   });
 
-  itMacro("Outputs the data-depth on the second parameter", async (macro) => {
-    const result = await macro.call("api.feature", 2);
-    const dom = JSDOM.fragment(result);
-    assert.equal(dom.querySelector("div.bc-data").dataset.depth, "2");
-  });
-
   itMacro("Outputs valid HTML", async (macro) => {
-    const result = await macro.call("api.feature");
+    macro.ctx.env["browser-compat"] = "api.feature";
+    const result = await macro.call();
     expect(lintHTML(result)).toBeFalsy();
   });
 
   itMacro("Accepts an array", async (macro) => {
-    const result = await macro.call(["api.feature1", "api.feature2"]);
+    macro.ctx.env["browser-compat"] = ["api.feature1", "api.feature2"];
+    const result = await macro.call();
     const dom = JSDOM.fragment(result);
     assert.equal(dom.querySelectorAll("div.bc-data").length, 2);
     expect(lintHTML(result)).toBeFalsy();
