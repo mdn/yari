@@ -1,6 +1,7 @@
 import { useContext } from "react";
 import type BCD from "@mdn/browser-compat-data/types";
 import { BrowserInfoContext } from "./browser-info";
+import { HIDDEN_BROWSERS } from "./index";
 import {
   asList,
   getFirst,
@@ -53,7 +54,7 @@ function getActiveLegendItems(
     for (const [browser, browserSupport] of Object.entries(
       feature.compat.support
     )) {
-      if (browser === "ie") {
+      if (HIDDEN_BROWSERS.includes(browser)) {
         continue;
       }
       if (!browserSupport) {
