@@ -194,8 +194,11 @@ export default function BookmarkV2Menu({ doc }: { doc: Doc }) {
                   disabled={!collections || isPending}
                 >
                   {collections?.map((collection) => (
+                    /** Todo remove hard coded name post Migration */
                     <option key={collection.id} value={collection.id}>
-                      {collection.name}
+                      {collection.name === "Default"
+                        ? "Saved Articles"
+                        : collection.name}
                     </option>
                   )) || <option>Loading...</option>}
                   <option disabled={true} role="separator">

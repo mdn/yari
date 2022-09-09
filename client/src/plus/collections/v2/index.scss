@@ -6,11 +6,61 @@
   & > header {
     padding: 1rem 0;
 
-    .container {
+    &.container {
       align-items: baseline;
       display: flex;
       flex-wrap: wrap;
       justify-content: space-between;
+
+      .collections-hero {
+        background: linear-gradient(
+          270deg,
+          rgba(232, 8, 64, 0.05) 0%,
+          rgba(232, 8, 64, 0.3) 100%
+        );
+        /* Light/Color/Icon/Critical */
+        border: 1px solid var(--text-primary-red);
+        display: grid;
+        grid-template-rows: fit-content(12rem);
+        margin: 1rem;
+        width: 100%;
+
+        .collections-hero-cta {
+          grid-column: 1;
+          grid-row: 1;
+          padding: 1rem;
+
+          h1 {
+            font-size: 1.25rem;
+            margin-right: 1rem;
+          }
+
+          p {
+            display: block;
+            flex: 100%;
+          }
+        }
+      }
+
+      .mandala-wrapper {
+        grid-column: 1;
+        grid-row: 1;
+        overflow: hidden;
+        top: 0;
+        width: 100%;
+        .mandala-container {
+          --mandala-primary: var(--text-secondary);
+        }
+        .mandala-translate {
+          @media screen and (max-width: $screen-md) {
+            display: none;
+          }
+
+          @media screen and (min-width: $screen-md) {
+            transform: scale(0.95) translate(24rem, -15.4rem);
+          }
+        }
+      }
 
       & > * {
         margin-bottom: 1rem;
@@ -74,6 +124,10 @@
     display: flex;
     flex-direction: column;
     padding: 1em;
+
+    &.default {
+      background-color: var(--background-secondary);
+    }
 
     header {
       align-items: start;
