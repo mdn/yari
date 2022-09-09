@@ -25,6 +25,8 @@ const ISSUE_METADATA_TEMPLATE = `
 </details>
 `;
 
+export const HIDDEN_BROWSERS = ["ie"];
+
 /**
  * Return a list of platforms and browsers that are relevant for this category &
  * data.
@@ -72,7 +74,7 @@ function gatherPlatformsAndBrowsers(
   }
 
   // Hide Internet Explorer compatibility data
-  browsers = browsers.filter((browser) => browser !== "ie");
+  browsers = browsers.filter((browser) => !HIDDEN_BROWSERS.includes(browser));
 
   return [platforms, [...browsers]];
 }
