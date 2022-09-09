@@ -20,7 +20,6 @@ import "./index.scss";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import Mandala from "../../../ui/molecules/mandala";
-import { Icon } from "../../../ui/atoms/icon";
 dayjs.extend(relativeTime);
 
 export default function Collections() {
