@@ -42,6 +42,7 @@ export function extractSidebar($: cheerio.CheerioAPI, doc: Partial<Doc>) {
 
   if (!search.length) {
     doc.sidebarHTML = "";
+    return;
   }
 
   // Open menu and highlight current page.
