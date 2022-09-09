@@ -180,6 +180,7 @@ def test_analyze_pr_dangerous_content_with_diff_file_not_matched():
         )
         assert not comment
 
+
 @patch("deployer.analyze_pr.Github")
 def test_analyze_pr_prefix_and_postcomment(mocked_github):
     doc = {"doc": {"mdn_url": "/en-US/docs/Foo"}}
