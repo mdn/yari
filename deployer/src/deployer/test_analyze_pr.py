@@ -178,10 +178,7 @@ def test_analyze_pr_dangerous_content_with_diff_file_not_matched():
                 diff_file=diff_file,
             ),
         )
-        assert "## External URLs" in comment
-        assert "No *new* external URLs" in comment
-        assert "https://www.mozilla.org" not in comment
-
+        assert not comment
 
 @patch("deployer.analyze_pr.Github")
 def test_analyze_pr_prefix_and_postcomment(mocked_github):
