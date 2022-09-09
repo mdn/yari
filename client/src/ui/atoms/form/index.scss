@@ -65,7 +65,9 @@
     width: 16px;
   }
 
+  select,
   label {
+    text-overflow: ellipsis;
     width: 100%;
   }
 }
