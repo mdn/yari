@@ -92,9 +92,11 @@ def post_about_deployment(build_directory: Path, **config):
         links.append(f"- [{mdn_url}]({url})")
     links.sort()
 
-    heading = "## Preview URLs\n\n"
     if links:
-        return heading + "\n".join(links)
+        heading = (
+            f"<details><summary><h4>Preview URLs ({len(links)})</h4></summary>\n\n"
+        )
+        return heading + "\n".join(links) + "\n</details>"
 
     return heading + "*seems not a single file was built!* 🙀"
 
@@ -113,6 +115,8 @@ def post_about_dangerous_content(
     ]
 
     comments = []
+
+    total_urls = 0
 
     patch_lines = get_patch_lines(patch) if patch else {}
 
@@ -167,9 +171,10 @@ def post_about_dangerous_content(
                     line += " (Note! This may be a new URL 👀)"
                 external_urls_list.append(line)
             comments.append((doc, "\n".join(external_urls_list)))
+            total_urls += len(external_urls_list)
 
     if comments:
-        heading = "## External URLs\n\n"
+        heading = f"\n---\n<details><summary><h4>External URLs ({total_urls})</h4></summary>\n\n"
         per_doc_comments = []
         for doc, comment in comments:
             lines = []
@@ -184,7 +189,7 @@ def post_about_dangerous_content(
             lines.append("")
 
             per_doc_comments.append("\n".join(lines))
-        return heading + "\n---\n".join(per_doc_comments)
+        return heading + "\n---\n".join(per_doc_comments) + "</details>"
 
 
 def post_about_flaws(build_directory: Path, **config):
@@ -194,6 +199,8 @@ def post_about_flaws(build_directory: Path, **config):
     MAX_FLAW_EXPLANATION = 5
 
     docs_with_zero_flaws = 0
+
+    total_flaws = 0
 
     for doc in get_built_docs(build_directory):
         if not doc.get("flaws"):
@@ -222,20 +229,14 @@ def post_about_flaws(build_directory: Path, **config):
         comments.append((doc, "\n".join(flaws_list)))
 
     def count_flaws(flaws):
+        nonlocal total_flaws
         count = 0
         for flaw in flaws.values():
             count += len(flaw)
+        total_flaws += count
         return count
 
     if comments:
-        heading = "## Flaws\n\n"
-        if docs_with_zero_flaws:
-            heading += (
-                f"Note! *{docs_with_zero_flaws} "
-                f"document{'' if docs_with_zero_flaws == 1 else 's'} with no flaws "
-                "that don't need to be listed. 🎉*\n\n"
-            )
-
         # Now turn all of these individual comments into one big one
         per_doc_comments = []
         for doc, comment in comments:
@@ -246,13 +247,26 @@ def post_about_flaws(build_directory: Path, **config):
             else:
                 lines.append(f"URL: `{doc['mdn_url']}`")
             lines.append(f"Title: `{doc['title']}`")
-            if count_flaws(doc["flaws"]):
-                lines.append(f"Flaw count: {count_flaws(doc['flaws'])}")
+            flaw_count = count_flaws(doc["flaws"])
+            if flaw_count:
+                lines.append(f"Flaw count: {flaw_count}")
             lines.append("")
             lines.append(comment)
 
             per_doc_comments.append("\n".join(lines))
-        return heading + "\n\n---\n\n".join(per_doc_comments)
+
+        heading = (
+            f"\n---\n<details><summary><h4>Flaws ({total_flaws})</h4></summary>\n\n"
+        )
+
+        if docs_with_zero_flaws:
+            heading += (
+                f"Note! *{docs_with_zero_flaws} "
+                f"document{'' if docs_with_zero_flaws == 1 else 's'} with no flaws "
+                "that don't need to be listed. 🎉*\n\n"
+            )
+
+        return heading + "\n\n---\n\n".join(per_doc_comments) + "\n</details>"
 
 
 def get_built_docs(build_directory: Path):
