@@ -1665,22 +1665,22 @@
     jest-haste-map "^29.0.2"
     slash "^3.0.0"
 
-"@jest/transform@^29.0.2":
-  version "29.0.2"
-  resolved "https://registry.yarnpkg.com/@jest/transform/-/transform-29.0.2.tgz#eef90ebd939b68bf2c2508d9e914377871869146"
-  integrity sha512-lajVQx2AnsR+Pa17q2zR7eikz2PkPs1+g/qPbZkqQATeS/s6eT55H+yHcsLfuI/0YQ/4VSBepSu3bOX+44q0aA==
+"@jest/transform@^29.0.2", "@jest/transform@^29.0.3":
+  version "29.0.3"
+  resolved "https://registry.yarnpkg.com/@jest/transform/-/transform-29.0.3.tgz#9eb1fed2072a0354f190569807d1250572fb0970"
+  integrity sha512-C5ihFTRYaGDbi/xbRQRdbo5ddGtI4VSpmL6AIcZxdhwLbXMa7PcXxxqyI91vGOFHnn5aVM3WYnYKCHEqmLVGzg==
   dependencies:
     "@babel/core" "^7.11.6"
-    "@jest/types" "^29.0.2"
+    "@jest/types" "^29.0.3"
     "@jridgewell/trace-mapping" "^0.3.15"
     babel-plugin-istanbul "^6.1.1"
     chalk "^4.0.0"
     convert-source-map "^1.4.0"
     fast-json-stable-stringify "^2.1.0"
     graceful-fs "^4.2.9"
-    jest-haste-map "^29.0.2"
+    jest-haste-map "^29.0.3"
     jest-regex-util "^29.0.0"
-    jest-util "^29.0.2"
+    jest-util "^29.0.3"
     micromatch "^4.0.4"
     pirates "^4.0.4"
     slash "^3.0.0"
@@ -3302,12 +3302,12 @@ axobject-query@^2.2.0:
   resolved "https://registry.yarnpkg.com/axobject-query/-/axobject-query-2.2.0.tgz#943d47e10c0b704aa42275e20edf3722648989be"
   integrity sha512-Td525n+iPOOyUQIeBfcASuG6uJsDOITl7Mds5gFyerkWiX7qhUTdYUBlSgNMyVqtSJqwpt1kXGLdUt6SykLMRA==
 
-babel-jest@^29.0.2:
-  version "29.0.2"
-  resolved "https://registry.yarnpkg.com/babel-jest/-/babel-jest-29.0.2.tgz#7efde496c07607949e9be499bf277aa1543ded95"
-  integrity sha512-yTu4/WSi/HzarjQtrJSwV+/0maoNt+iP0DmpvFJdv9yY+5BuNle8TbheHzzcSWj5gIHfuhpbLYHWRDYhWKyeKQ==
+babel-jest@^29.0.2, babel-jest@^29.0.3:
+  version "29.0.3"
+  resolved "https://registry.yarnpkg.com/babel-jest/-/babel-jest-29.0.3.tgz#64e156a47a77588db6a669a88dedff27ed6e260f"
+  integrity sha512-ApPyHSOhS/sVzwUOQIWJmdvDhBsMG01HX9z7ogtkp1TToHGGUWFlnXJUIzCgKPSfiYLn3ibipCYzsKSURHEwLg==
   dependencies:
-    "@jest/transform" "^29.0.2"
+    "@jest/transform" "^29.0.3"
     "@types/babel__core" "^7.1.14"
     babel-plugin-istanbul "^6.1.1"
     babel-preset-jest "^29.0.2"
