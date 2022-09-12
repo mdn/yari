@@ -69,10 +69,7 @@ export default function BookmarkV2Menu({ doc }: { doc: Doc }) {
       setDisableAutoClose(true);
       setShowNewCollection(true);
       changeHandler(e);
-    } else if (
-      collections &&
-      collections.some((collection) => collection.id === value)
-    ) {
+    } else {
       const item = savedItems?.find((item) => item.collection_id === value);
       const previousItem = savedItems?.find(
         (item) => item.collection_id === formItem.collection_id
@@ -89,8 +86,6 @@ export default function BookmarkV2Menu({ doc }: { doc: Doc }) {
           title: modifiedTitle ? formItem.title : defaultItem.title,
         }
       );
-    } else {
-      changeHandler(e);
     }
   };
 
