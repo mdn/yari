@@ -104,7 +104,7 @@ export default function BookmarkV2Menu({ doc }: { doc: Doc }) {
 
   const cancelHandler = (e: React.MouseEvent) => {
     e.preventDefault();
-    setFormItem((savedItems && savedItems[0]) || defaultItem);
+    setFormItem(savedItems?.[0] || defaultItem);
     setShow(false);
   };
 
