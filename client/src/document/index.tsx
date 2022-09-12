@@ -272,7 +272,7 @@ function LoadingError({ error }) {
           </p>
         ) : (
           <p>
-            <code>{error.toString()}</code>
+            <pre>{error.toString()}</pre>
           </p>
         )}
         <p>
