@@ -109,7 +109,6 @@ export default function BookmarkV2Menu({ doc }: { doc: Doc }) {
   };
 
   const isCurrentInCollection = () =>
-    "id" in formItem &&
     savedItems?.length &&
     savedItems.some((item) => item.collection_id === formItem.collection_id);
 
@@ -120,8 +119,8 @@ export default function BookmarkV2Menu({ doc }: { doc: Doc }) {
     if (!collections || isPending) return;
     setLastAction("save");
     resetErrors();
-    if (isCurrentInCollection()) {
-      await editItem(formItem as Item);
+    if ("id" in formItem && isCurrentInCollection()) {
+      await editItem(formItem);
     } else {
       await addItem(formItem);
     }
