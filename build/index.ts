@@ -345,7 +345,7 @@ export async function buildDocument(
       // message.
       error.updateFileInfo(document.fileInfo);
       throw new Error(
-        `MacroInvocationError trying to parse ${error.filepath}, line ${error.line} column ${error.column} (${error.error.message})`
+        `MacroInvocationError trying to parse file.\n\nFile:    ${error.filepath}\nMessage: ${error.error.message}\n\n${error.sourceContext}`
       );
     }
     // Any other unexpected error re-thrown.
