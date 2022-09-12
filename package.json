@@ -162,7 +162,7 @@
     "case-sensitive-paths-webpack-plugin": "^2.4.0",
     "cross-env": "^7.0.3",
     "css-loader": "^6.5.1",
-    "css-minimizer-webpack-plugin": "^4.0.0",
+    "css-minimizer-webpack-plugin": "^4.1.0",
     "diff": "^5.1.0",
     "dotenv-expand": "^9.0.0",
     "downshift": "^6.1.9",
