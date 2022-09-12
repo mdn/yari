@@ -17,7 +17,7 @@
 
 var path = $0;
 var locale = env.locale;
-var parent = $2 ? 1 : 0;
+var includeParent = $2 ? 1 : 0;
 var startDelim = $3;
 var endDelim = $4;
 
@@ -26,7 +26,21 @@ if (path.substr(-1, 1) === '/') {
     path = path.slice(0, -1);
 }
 
-var pages = await page.subpagesExpand(path, -1, parent);
+const overview = mdn.localString({
+    'en-US': 'Overview',
+    'es': 'Generalidades',
+    'fr': 'Aperçu',
+    'ja': 'の概要',
+    'ko': '개요',
+    'ru': 'Обзор',
+    'zh-CN': '概述',
+});
+
+var parent = await wiki.getPage(path);
+var pages = includeParent ? [{
+    ...parent,
+    title: overview
+}, ...parent.subpages] : [...parent.subpages];
 var containsTag = page.hasTag;
 var htmlEscape = kuma.htmlEscape;
 

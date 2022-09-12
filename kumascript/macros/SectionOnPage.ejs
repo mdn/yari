@@ -55,6 +55,12 @@ switch(lang) {
     case "ru":
         text = `<a href="${url}">${section}</a> в <a href="${$0}">${title}</a>`;
         break;
+    case "zh-CN":
+        text = `<a href="${$0}">${title}</a> 中的 <a href="${url}">${section}</a>`;
+        break;
+    case "zh-TW":
+        text = `<a href="${$0}">${title}</a> 中的 <a href="${url}">${section}</a>`;
+        break;
     default:
         text = `<a href="${url}">${section}</a> in <a href="${$0}">${title}</a>`;
         break;

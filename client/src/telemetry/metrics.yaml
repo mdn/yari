@@ -1,0 +1,67 @@
+---
+# Schema
+$schema: moz://mozilla.org/schemas/glean/metrics/2-0-0
+
+page:
+  path:
+    type: url
+    lifetime: application
+    send_in_pings:
+      - page
+      - action
+    description: |
+      The URL path of the page that was viewed.
+    data_sensitivity:
+      - web_activity
+    bugs:
+      - https://bugzilla.mozilla.org/show_bug.cgi?id=1782509
+    data_reviews:
+      - https://github.com/mdn/yari/pull/6813#issuecomment-1203705308
+    notification_emails:
+      - mdn-team@mozilla.com
+    expires: 2023-09-05
+  referrer:
+    type: url
+    lifetime: application
+    send_in_pings:
+      - page
+      - action
+    description: |
+      The referring URL that linked to the page that was viewed.
+    data_sensitivity:
+      - web_activity
+    bugs:
+      - https://bugzilla.mozilla.org/show_bug.cgi?id=1782509
+    data_reviews:
+      - https://github.com/mdn/yari/pull/6813#issuecomment-1203705308
+    notification_emails:
+      - mdn-team@mozilla.com
+    expires: 2023-09-05
+
+element:
+  clicked:
+    type: event
+    lifetime: ping
+    send_in_pings:
+      - action
+    description: |
+      MDN Page element clicks.
+    data_sensitivity:
+      - web_activity
+    bugs:
+      - https://bugzilla.mozilla.org/show_bug.cgi?id=1782509
+    data_reviews:
+      - https://github.com/mdn/yari/pull/6813#issuecomment-1203705308
+    notification_emails:
+      - mdn-team@mozilla.com
+    expires: 2023-09-05
+    extra_keys:
+      source:
+        description: |
+          The click source/target
+        type: string
+      subscription_type:
+        description: |
+          The subscription type of the user. can be one of
+          'core','mdn_plus_5m','mdn_plus_5y','mdn_plus_10m','mdn_plus_10y'
+        type: string

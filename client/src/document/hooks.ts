@@ -133,7 +133,20 @@ function getFrequentlyViewed(): FrequentlyViewedEntry[] {
       err
     );
   }
-  return JSON.parse(frequentlyViewed || "[]");
+
+  const entries = JSON.parse(
+    frequentlyViewed || "[]"
+  ) as FrequentlyViewedEntry[];
+
+  // Assign serials to old entries.
+  entries.forEach((e) => {
+    e.serial =
+      e.serial === undefined
+        ? getNextFrequentlyViewedSerial(entries)
+        : e.serial;
+  });
+
+  return entries;
 }
 
 function setFrequentlyViewed(
@@ -165,6 +178,18 @@ const sortByVisitsThenTimestampDesc = (
   return 0;
 };
 
+function getNextFrequentlyViewedSerial(
+  entries: FrequentlyViewedEntry[]
+): number {
+  return (
+    1 +
+    Math.max(
+      0,
+      ...entries.map((entry) => entry.serial).filter((serial) => !isNaN(serial))
+    )
+  );
+}
+
 export function useFrequentlyViewed(): [
   FrequentlyViewedEntry[],
   (arg: FrequentlyViewedEntry[]) => void
@@ -174,9 +199,11 @@ export function useFrequentlyViewed(): [
 
   useEffect(() => {
     const entries = getFrequentlyViewed();
+
     const newEntries: FrequentlyViewedEntry[] = [];
     for (const entry of entries) {
       newEntries.push({
+        serial: entry.serial,
         url: entry.url,
         title: entry.title,
         timestamp: entry.timestamp,
@@ -209,28 +236,29 @@ export function usePersistFrequentlyViewed(doc: Doc | undefined) {
     }
     let frequentlyViewed = getFrequentlyViewed();
 
-    const newEntry: FrequentlyViewedEntry = {
-      url: doc.mdn_url,
-      title: doc.title,
-      parents: doc.parents,
-      timestamp: new Date().getTime(),
-      visitCount: 1,
-    };
-
-    if (frequentlyViewed.length === 0) {
-      setFrequentlyViewed([newEntry]);
-      return;
-    }
-
     const index = frequentlyViewed.findIndex(
-      (entry) => entry.url === newEntry.url
+      (entry) => entry.url === doc.mdn_url
     );
 
     if (index !== -1) {
       frequentlyViewed[index].timestamp = new Date().getTime();
       frequentlyViewed[index].visitCount += 1;
     } else {
-      frequentlyViewed.unshift(newEntry);
+      const newEntry: FrequentlyViewedEntry = {
+        serial: getNextFrequentlyViewedSerial(frequentlyViewed),
+        url: doc.mdn_url,
+        title: doc.title,
+        parents: doc.parents,
+        timestamp: new Date().getTime(),
+        visitCount: 1,
+      };
+
+      if (frequentlyViewed.length === 0) {
+        setFrequentlyViewed([newEntry]);
+        return;
+      } else {
+        frequentlyViewed.unshift(newEntry);
+      }
     }
 
     //Sort descending so most frequently viewed appears on top.

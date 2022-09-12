@@ -88,7 +88,8 @@ def post_about_deployment(build_directory: Path, **config):
     links = []
     for doc in get_built_docs(build_directory):
         url = mdn_url_to_dev_url(config["prefix"], doc["mdn_url"])
-        links.append(f"- <{url}>")
+        mdn_url = doc["mdn_url"]
+        links.append(f"- [{mdn_url}]({url})")
     links.sort()
 
     heading = "## Preview URLs\n\n"
@@ -166,13 +167,9 @@ def post_about_dangerous_content(
                     line += " (Note! This may be a new URL 👀)"
                 external_urls_list.append(line)
             comments.append((doc, "\n".join(external_urls_list)))
-        elif diff_lines:
-            comments.append((doc, "No *new* external URLs"))
-        else:
-            comments.append((doc, "No external URLs"))
 
-    heading = "## External URLs\n\n"
     if comments:
+        heading = "## External URLs\n\n"
         per_doc_comments = []
         for doc, comment in comments:
             lines = []
@@ -182,15 +179,12 @@ def post_about_dangerous_content(
             else:
                 lines.append(f"URL: `{doc['mdn_url']}`")
             lines.append(f"Title: `{doc['title']}`")
-            lines.append(f"[on GitHub]({doc['source']['github_url']})")
             lines.append("")
             lines.append(comment)
             lines.append("")
 
             per_doc_comments.append("\n".join(lines))
         return heading + "\n---\n".join(per_doc_comments)
-    else:
-        return heading + "*no external links in the built pages* 👱🏽"
 
 
 def post_about_flaws(build_directory: Path, **config):
@@ -233,9 +227,8 @@ def post_about_flaws(build_directory: Path, **config):
             count += len(flaw)
         return count
 
-    heading = "## Flaws\n\n"
-
     if comments:
+        heading = "## Flaws\n\n"
         if docs_with_zero_flaws:
             heading += (
                 f"Note! *{docs_with_zero_flaws} "
@@ -253,7 +246,6 @@ def post_about_flaws(build_directory: Path, **config):
             else:
                 lines.append(f"URL: `{doc['mdn_url']}`")
             lines.append(f"Title: `{doc['title']}`")
-            lines.append(f"[on GitHub]({doc['source']['github_url']})")
             if count_flaws(doc["flaws"]):
                 lines.append(f"Flaw count: {count_flaws(doc['flaws'])}")
             lines.append("")
@@ -261,8 +253,6 @@ def post_about_flaws(build_directory: Path, **config):
 
             per_doc_comments.append("\n".join(lines))
         return heading + "\n\n---\n\n".join(per_doc_comments)
-    else:
-        return heading + "*None!* 🎉"
 
 
 def get_built_docs(build_directory: Path):

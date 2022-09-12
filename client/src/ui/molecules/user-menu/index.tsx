@@ -35,7 +35,7 @@ export const UserMenu = () => {
   );
 
   useEffect(() => {
-    setNewNotifications(Boolean(data?.items.length));
+    setNewNotifications(Boolean(data?.items?.length));
   }, [data]);
 
   // if we don't have the user data yet, don't render anything

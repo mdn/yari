@@ -538,7 +538,8 @@ for (let characterIndex in characters) {
     let character = characters[characterIndex];
 
     if (groupingType === "alphabetically") {
-        output += `<span>${character}</span><ul>`;
+        output += `<h3>${character}</h3>`;
+        output += '<ul>';
     }
 
     for (let i = 0; i < index[character].length; i++) {

@@ -1,0 +1,27 @@
+---
+# Schema
+$schema: moz://mozilla.org/schemas/glean/pings/2-0-0
+
+page:
+  description: |
+    A ping that will be sent everytime a new page is visited.
+  include_client_id: true
+  send_if_empty: false
+  notification_emails:
+    - mdn-team@mozilla.com
+  bugs:
+    - "https://bugzilla.mozilla.org/show_bug.cgi?id=1782509"
+  data_reviews:
+    - "https://github.com/mdn/yari/pull/6813#issuecomment-1203705308"
+
+action:
+  description: |
+    A ping that will be sent everytime a page event happens (user interaction).
+  include_client_id: true
+  send_if_empty: false
+  notification_emails:
+    - mdn-team@mozilla.com
+  bugs:
+    - "https://bugzilla.mozilla.org/show_bug.cgi?id=1782509"
+  data_reviews:
+    - "https://github.com/mdn/yari/pull/6813#issuecomment-1203705308"

@@ -1,15 +1,19 @@
-const unified = require("unified");
-const parse = require("remark-parse");
-const remark2rehype = require("remark-rehype");
-const stringify = require("rehype-stringify");
-const gfm = require("remark-gfm");
-const raw = require("rehype-raw");
-const format = require("rehype-format");
+import unified from "unified";
+import parse from "remark-parse";
+import remark2rehype from "remark-rehype";
+import stringify from "rehype-stringify";
+import gfm from "remark-gfm";
+import raw from "rehype-raw";
+import format from "rehype-format";
 
-const buildLocalizedHandlers = require("./handlers");
-const { decodeKS, encodeKS } = require("../utils");
+import { buildLocalizedHandlers } from "./handlers";
+import { decodeKS, encodeKS } from "../utils";
 
-function makeProcessor(options) {
+interface ProcessorOptions {
+  locale?: string;
+}
+
+function makeProcessor(options: ProcessorOptions) {
   const localizedHandlers = buildLocalizedHandlers(options.locale);
   const processor = unified()
     .use(parse)
@@ -18,14 +22,14 @@ function makeProcessor(options) {
       handlers: localizedHandlers,
       allowDangerousHtml: true,
     })
-    .use(raw, { allowDangerousHtml: true })
+    .use(raw)
     .use(stringify, { allowDangerousHtml: true })
     .use(format);
 
   return processor;
 }
 
-async function m2h(md, options) {
+export async function m2h(md: string, options: ProcessorOptions) {
   const ksEncoded = encodeKS(md);
   const processor = makeProcessor(options);
 
@@ -33,15 +37,10 @@ async function m2h(md, options) {
   return decodeKS(String(file));
 }
 
-function m2hSync(md, options) {
+export function m2hSync(md: string, options: ProcessorOptions) {
   const ksEncoded = encodeKS(md);
   const processor = makeProcessor(options);
 
   const file = processor.processSync(ksEncoded);
   return decodeKS(String(file));
 }
-
-module.exports = {
-  m2h,
-  m2hSync,
-};

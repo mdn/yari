@@ -7,7 +7,6 @@ import { unpackAndCache } from "./unpack-cache";
 import {
   ContentStatusPhase,
   getContentStatus,
-  offlineDb,
   patchContentStatus,
   RemoteContentStatus,
   SwType,
@@ -36,7 +35,6 @@ declare const self: ServiceWorkerGlobalScope;
 var unpacking = Promise.resolve();
 
 self.addEventListener("install", (e) => {
-  synchronizeDb();
   e.waitUntil(
     SW_TYPE === SwType.ApiOnly
       ? self.skipWaiting()
@@ -58,13 +56,6 @@ self.addEventListener("install", (e) => {
   initOncePerRun(self);
 });
 
-async function syncDbAndMessage(e) {
-  if (e.request.method !== "GET") {
-    await synchronizeDb();
-    messageAllClients(self, { type: "mutate" });
-  }
-}
-
 self.addEventListener("fetch", async (e) => {
   if (
     (SW_TYPE === SwType.ApiOnly || SW_TYPE === SwType.PreferOnline) &&
@@ -74,7 +65,6 @@ self.addEventListener("fetch", async (e) => {
     e.respondWith(
       (async () => {
         const res = await fetchWithExampleOverride(e.request);
-        syncDbAndMessage(e);
         if (res.ok) {
           return res;
         }
@@ -82,12 +72,7 @@ self.addEventListener("fetch", async (e) => {
       })()
     );
   } else {
-    e.respondWith(
-      respond(e).then((r) => {
-        syncDbAndMessage(e);
-        return r;
-      })
-    );
+    e.respondWith(respond(e));
   }
 });
 
@@ -265,9 +250,6 @@ export async function updateContent(self: ServiceWorkerGlobalScope) {
       progress: null,
     });
 
-    console.log(`[update] synchronizing`);
-    await synchronizeDb();
-
     console.log(`[update] done`);
   } catch (e) {
     console.error(`[update] failed`, e);
@@ -310,65 +292,4 @@ async function deleteContentCache() {
     local: null,
   });
   return await caches.delete(contentCache);
-}
-
-async function synchronizeDb() {
-  const NOTIFICATIONS_BASE_PATH = "/api/v1/plus/notifications";
-  const WATCHED_BASE_PATH = "/api/v1/plus/watching";
-  const PATH_COLLECTIONS = "/api/v1/plus/collection";
-
-  fetchAllLimitOffset(NOTIFICATIONS_BASE_PATH)
-    .then(async (update) => {
-      await offlineDb.notifications.clear();
-      await offlineDb.notifications.bulkPut(update);
-    })
-    .catch((err) => console.log(`Offline, skip sync`));
-
-  fetchAllLimitOffset(WATCHED_BASE_PATH)
-    .then(async (update) => {
-      await offlineDb.watched.clear();
-      await offlineDb.watched.bulkPut(update);
-    })
-    .catch((err) => console.log(`Offline, skip sync`));
-
-  fetchAllPaged(PATH_COLLECTIONS)
-    .then(async (update) => {
-      await offlineDb.collections.clear();
-      await offlineDb.collections.bulkPut(update);
-    })
-    .catch((err) => console.log(`Offline, skip sync`));
-}
-
-async function fetchAllLimitOffset(path: string) {
-  let offset = 0;
-  let limit = 50;
-  let items = 50;
-  let update = [];
-  while (items === limit) {
-    const res = await fetch(`${path}/?limit=${limit}&offset=${offset}`);
-    const body = await res.json();
-    items = body.items?.length;
-    offset += body.items?.length;
-    if (items) {
-      update = [...update, ...body.items];
-    }
-  }
-  return update;
-}
-
-async function fetchAllPaged(path: string) {
-  const limit = 50;
-  let page = 1;
-  let items = 50;
-  let update = [];
-  while (items === limit) {
-    const res = await fetch(`${path}/?limit=${limit}&page=${page}`);
-    const body = await res.json();
-    items = body.items?.length;
-    page += 1;
-    if (items) {
-      update = [...update, ...body.items];
-    }
-  }
-  return update;
 }

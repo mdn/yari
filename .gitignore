@@ -37,6 +37,8 @@ yarn-error.log*
 /client/src/**/*.js.map
 /filecheck/*.js
 /filecheck/*.js.map
+/markdown/*.js
+/markdown/*.js.map
 /server/*.js
 /server/*.js.map
 /ssr/dist/
@@ -99,3 +101,5 @@ popularities.json
 
 client/src/.linaria_cache
 ssr/.linaria-cache/
+
+client/venv
