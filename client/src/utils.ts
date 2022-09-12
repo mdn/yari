@@ -85,5 +85,5 @@ export function isPlusSubscriber(user) {
  * Makes camelCase strings wrap nicely
  */
 export function camelWrap(title: string) {
-  return title.replace(/(?<=[^A-Z])[A-Z]/g, "\u200B$&");
+  return title.replace(/([^A-Z])([A-Z])/g, "$1\u200B$2");
 }
