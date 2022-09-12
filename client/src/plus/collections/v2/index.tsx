@@ -20,6 +20,7 @@ import "./index.scss";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import Mandala from "../../../ui/molecules/mandala";
+import { camelWrap } from "../../../utils";
 dayjs.extend(relativeTime);
 
 export default function Collections() {
@@ -113,7 +114,7 @@ function CollectionCard({ collection }: { collection: Collection }) {
     <article key={collection.id}>
       <header>
         <h2>
-          <Link to={collection.id}>{collection.name}</Link>
+          <Link to={collection.id}>{camelWrap(collection.name)}</Link>
         </h2>
         {collection.name !== "Default" ? (
           <DropdownMenuWrapper
@@ -206,7 +207,7 @@ function CollectionCard({ collection }: { collection: Collection }) {
           </div>
         </MDNModal>
       </header>
-      {collection.description && <p>{collection.description}</p>}
+      {collection.description && <p>{camelWrap(collection.description)}</p>}
       <footer>
         <span className="count">
           {collection.article_count}{" "}
