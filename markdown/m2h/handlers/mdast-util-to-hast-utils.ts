@@ -3,7 +3,7 @@ These functions are more-or-less verbatim from https://github.com/syntax-tree/md
 Unfortunately the module was not exporting them, so they needed to be copied.
  */
 
-const u = require("unist-builder");
+import u from "unist-builder";
 
 function text(node) {
   const data = node.data || {};
@@ -27,7 +27,7 @@ function returnNode(h, node) {
   return node.children ? { ...node, children: all(h, node) } : node;
 }
 
-function one(h, node, parent) {
+export function one(h, node, parent) {
   const type = node && node.type;
   let fn;
 
@@ -46,7 +46,7 @@ function one(h, node, parent) {
   return (typeof fn === "function" ? fn : unknown)(h, node, parent);
 }
 
-function all(h, parent) {
+export function all(h, parent) {
   const nodes = parent.children || [];
   let values = [];
   let result;
@@ -77,8 +77,8 @@ function all(h, parent) {
   return values;
 }
 
-function wrap(nodes, loose) {
-  const result = [];
+export function wrap(nodes, loose) {
+  const result: any[] = [];
   let index = -1;
 
   if (loose) {
@@ -96,5 +96,3 @@ function wrap(nodes, loose) {
 
   return result;
 }
-
-module.exports = { one, all, wrap };

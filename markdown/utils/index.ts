@@ -1,20 +1,20 @@
 const KS_RE = /{{([^}]*)}}/g;
 
-function encodeKS(raw) {
+export function encodeKS(raw) {
   return raw.replace(
     KS_RE,
     (_, ks) => `{{${Buffer.from(ks).toString("base64")}}}`
   );
 }
 
-function decodeKS(raw) {
+export function decodeKS(raw) {
   return raw.replace(
     KS_RE,
     (_, ks) => `{{${Buffer.from(ks, "base64").toString()}}}`
   );
 }
 
-module.exports = {
+export default {
   encodeKS,
   decodeKS,
 };

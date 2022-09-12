@@ -91,8 +91,11 @@
     background-color: var(--background-toc-active);
     border-left: 2px solid var(--category-color);
     display: inline-block;
+    font-style: normal;
+    font-weight: 600;
     hyphens: auto;
     padding: 0.25rem;
+    padding-left: 0.5rem;
     width: 100%;
   }
 
@@ -105,11 +108,6 @@
     &:hover,
     &:focus {
       text-decoration: underline;
-    }
-
-    &[aria-current="page"] {
-      background: var(--border-secondary);
-      border-radius: var(--elem-radius);
     }
   }
 
