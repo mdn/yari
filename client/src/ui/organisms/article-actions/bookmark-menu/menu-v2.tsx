@@ -226,12 +226,14 @@ export default function BookmarkV2Menu({ doc }: { doc: Doc }) {
                   {collections?.map((collection) => (
                     /** Todo remove hard coded name post Migration */
                     <option key={collection.id} value={collection.id}>
-                      {collection.name === "Default"
-                        ? "Saved Articles"
-                        : collection.name}{" "}
                       {savedItems?.some(
                         (item) => item.collection_id === collection.id
-                      ) && "★"}
+                      )
+                        ? "★"
+                        : "☆"}{" "}
+                      {collection.name === "Default"
+                        ? "Saved Articles"
+                        : collection.name}
                     </option>
                   )) || <option>Loading...</option>}
                   <option disabled={true} role="separator">
