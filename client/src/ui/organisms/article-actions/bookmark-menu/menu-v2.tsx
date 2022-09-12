@@ -22,7 +22,7 @@ const addValue = "add";
 
 export default function BookmarkV2Menu({ doc }: { doc: Doc }) {
   const { data: collections } = useCollections();
-  const { data: savedItem } = useBookmark(doc.mdn_url);
+  const { data: savedItems } = useBookmark(doc.mdn_url);
 
   const defaultItem: NewItem = {
     url: doc.mdn_url,
@@ -54,8 +54,8 @@ export default function BookmarkV2Menu({ doc }: { doc: Doc }) {
   }, [collections, formItem]);
 
   useEffect(() => {
-    if (savedItem) setFormItem(savedItem);
-  }, [savedItem]);
+    if (savedItems?.length) setFormItem(savedItems[0]);
+  }, [savedItems]);
 
   useEffect(() => {
     if (showNewCollection === false) {
@@ -68,8 +68,25 @@ export default function BookmarkV2Menu({ doc }: { doc: Doc }) {
     if (value === addValue) {
       setDisableAutoClose(true);
       setShowNewCollection(true);
+      changeHandler(e);
+    } else {
+      const item = savedItems?.find((item) => item.collection_id === value);
+      const previousItem = savedItems?.find(
+        (item) => item.collection_id === formItem.collection_id
+      );
+      const modifiedNotes =
+        savedItems && previousItem?.notes !== formItem.notes;
+      const modifiedTitle =
+        savedItems && previousItem?.title !== formItem.title;
+      setFormItem(
+        item || {
+          ...defaultItem,
+          collection_id: value,
+          notes: modifiedNotes ? formItem.notes : defaultItem.notes,
+          title: modifiedTitle ? formItem.title : defaultItem.title,
+        }
+      );
     }
-    changeHandler(e);
   };
 
   const changeHandler = (
@@ -82,9 +99,13 @@ export default function BookmarkV2Menu({ doc }: { doc: Doc }) {
 
   const cancelHandler = (e: React.MouseEvent) => {
     e.preventDefault();
-    setFormItem(savedItem || defaultItem);
+    setFormItem(savedItems?.[0] || defaultItem);
     setShow(false);
   };
+
+  const isCurrentInCollection = () =>
+    savedItems?.length &&
+    savedItems.some((item) => item.collection_id === formItem.collection_id);
 
   const saveHandler = async (
     e: React.FormEvent<HTMLFormElement> | React.BaseSyntheticEvent
@@ -93,12 +114,8 @@ export default function BookmarkV2Menu({ doc }: { doc: Doc }) {
     if (!collections || isPending) return;
     setLastAction("save");
     resetErrors();
-    if ("id" in formItem && savedItem) {
-      if (savedItem.collection_id !== formItem.collection_id) {
-        await Promise.all([deleteItem(savedItem), addItem(formItem)]);
-      } else {
-        await editItem(formItem);
-      }
+    if ("id" in formItem && isCurrentInCollection()) {
+      await editItem(formItem);
     } else {
       await addItem(formItem);
     }
@@ -117,8 +134,13 @@ export default function BookmarkV2Menu({ doc }: { doc: Doc }) {
     if (!collections || isPending) return;
     setLastAction("delete");
     resetErrors();
-    if (savedItem) {
-      await deleteItem(savedItem);
+    if (isCurrentInCollection()) {
+      const selectedItem = savedItems?.find(
+        (item) => item.collection_id === formItem.collection_id
+      );
+      if (selectedItem) {
+        await deleteItem(selectedItem);
+      }
     }
     setFormItem(defaultItem);
     setShow(false);
@@ -134,14 +156,16 @@ export default function BookmarkV2Menu({ doc }: { doc: Doc }) {
         <Button
           type="action"
           isDisabled={isOffline}
-          icon={savedItem ? "bookmark-filled" : "bookmark"}
-          extraClasses={`bookmark-button small ${savedItem ? "highlight" : ""}`}
+          icon={savedItems?.length ? "bookmark-filled" : "bookmark"}
+          extraClasses={`bookmark-button small ${
+            savedItems?.length ? "highlight" : ""
+          }`}
           onClickHandler={() => {
             setShow((v) => !v);
           }}
         >
           <span className="bookmark-button-label">
-            {savedItem ? "Saved" : "Save"}
+            {savedItems?.length ? "Saved" : "Save"}
           </span>
         </Button>
       ) : (
@@ -168,12 +192,12 @@ export default function BookmarkV2Menu({ doc }: { doc: Doc }) {
             <button onClick={cancelHandler} className="header mobile-only">
               <span className="header-inner">
                 <Icon name="chevron" />
-                {savedItem ? "Edit Item" : "Add to Collection"}
+                {savedItems?.length ? "Edit Item" : "Add to Collection"}
               </span>
             </button>
 
             <h2 className="header desktop-only">
-              {savedItem ? "Edit Item" : "Add to Collection"}
+              {savedItems?.length ? "Edit Item" : "Add to Collection"}
             </h2>
 
             {Boolean(errors.length) && (
@@ -196,6 +220,11 @@ export default function BookmarkV2Menu({ doc }: { doc: Doc }) {
                   {collections?.map((collection) => (
                     /** Todo remove hard coded name post Migration */
                     <option key={collection.id} value={collection.id}>
+                      {savedItems?.some(
+                        (item) => item.collection_id === collection.id
+                      )
+                        ? "★"
+                        : "☆"}{" "}
                       {collection.name === "Default"
                         ? "Saved Articles"
                         : collection.name}
@@ -241,11 +270,13 @@ export default function BookmarkV2Menu({ doc }: { doc: Doc }) {
               >
                 {isPending && lastAction === "save" ? "Saving..." : "Save"}
               </Button>
-              {savedItem ? (
+              {savedItems?.length ? (
                 <Button
                   type="secondary"
                   onClickHandler={deleteHandler}
-                  isDisabled={!collections || isPending}
+                  isDisabled={
+                    !collections || isPending || !isCurrentInCollection()
+                  }
                 >
                   {isPending && lastAction === "delete"
                     ? "Deleting..."

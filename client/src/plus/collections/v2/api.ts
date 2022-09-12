@@ -251,16 +251,19 @@ export function useItems(id: string | undefined, initialSize = 1) {
 }
 
 export function useBookmark(url: string) {
-  return useSWR<Item | undefined>(getBookmarkKey(url), async (key: string) => {
-    const data = await fetcher<MultipleCollectionLookupQueryResponse>(key);
-    const lookupEntry = data.results[0];
-    return (
-      lookupEntry && {
-        ...lookupEntry.item,
-        collection_id: lookupEntry.collection_id,
-      }
-    );
-  });
+  return useSWR<Item[] | undefined>(
+    getBookmarkKey(url),
+    async (key: string) => {
+      const data = await fetcher<MultipleCollectionLookupQueryResponse>(key);
+      const entries = data?.results;
+      return (
+        entries &&
+        entries.map((entry) => {
+          return { ...entry.item, collection_id: entry.collection_id };
+        })
+      );
+    }
+  );
 }
 
 export function useItemAdd() {
