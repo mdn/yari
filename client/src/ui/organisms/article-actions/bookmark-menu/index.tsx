@@ -30,7 +30,18 @@ export function BookmarkContainer({ doc }: { doc: Doc }) {
     }
   );
 
-  return userData?.settings?.multipleCollections
-    ? BookmarkV2Menu({ doc })
-    : BookmarkMenu({ doc, data, isValidating, mutate });
+  return (
+    <>
+      {userData?.settings?.multipleCollections ? (
+        <BookmarkV2Menu doc={doc} />
+      ) : (
+        <BookmarkMenu
+          doc={doc}
+          data={data}
+          isValidating={isValidating}
+          mutate={mutate}
+        />
+      )}{" "}
+    </>
+  );
 }
