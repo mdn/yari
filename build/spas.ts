@@ -246,11 +246,7 @@ export async function buildSPAs(options) {
 
   // Build all the home pages in all locales.
   // Fetch merged content PRs for the latest contribution section.
-  const pullRequestsData = (await got(
-    "https://api.github.com/search/issues?q=repo:mdn/content+is:pr+is:merged+sort:updated&per_page=10"
-  ).json()) as {
-    items: any[];
-  };
+  const recentContributions = await fetchRecentContributions();
 
   // Fetch latest Hacks articles.
   const latestNews = await fetchLatestNews();
@@ -294,17 +290,7 @@ export async function buildSPAs(options) {
 
       const url = `/${locale}/`;
       const hyData = {
-        recentContributions: {
-          items: pullRequestsData.items.map(
-            ({ number, title, updated_at, pull_request: { html_url } }) => ({
-              number,
-              title,
-              updated_at,
-              url: html_url,
-            })
-          ),
-          repo: { name: "mdn/content", url: "https://github.com/mdn/content" },
-        },
+        recentContributions,
         featuredContributor,
         latestNews,
         featuredArticles,
@@ -334,6 +320,33 @@ export async function buildSPAs(options) {
   if (!options.quiet) {
     console.log(`Built ${buildCount} SPA related files`);
   }
+}
+
+async function fetchRecentContributions() {
+  const twoDaysAgo = new Date(Date.now() - 48 * 60 * 60 * 1000);
+  const pullRequestsQuery = [
+    "repo:mdn/content",
+    "is:pr",
+    "is:merged",
+    `merged:>${twoDaysAgo.toISOString()}`,
+    "sort:updated",
+  ].join("+");
+  const pullRequestUrl = `https://api.github.com/search/issues?q=${pullRequestsQuery}&per_page=10`;
+  const pullRequestsData = (await got(pullRequestUrl).json()) as {
+    items: any[];
+  };
+
+  return {
+    items: pullRequestsData.items.map(
+      ({ number, title, updated_at, pull_request: { html_url } }) => ({
+        number,
+        title,
+        updated_at,
+        url: html_url,
+      })
+    ),
+    repo: { name: "mdn/content", url: "https://github.com/mdn/content" },
+  };
 }
 
 async function fetchLatestNews() {
