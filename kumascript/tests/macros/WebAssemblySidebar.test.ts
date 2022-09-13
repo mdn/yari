@@ -1,4 +1,4 @@
-import { assert, itMacro, describeMacro, beforeEachMacro } from "./utils";
+import { assert, itMacro, describeMacro } from "./utils";
 
 const expected = `\
 <section id="Quick_links">
@@ -23,17 +23,19 @@ const expected = `\
   </li>
   <li class="toggle">
     <details open>
-      <summary>Object reference</summary>
+      <summary>JavaScript interface</summary>
       <ol>
-        <li><a href="/en-US/docs/Web/JavaScript/Reference/Global_Objects/WebAssembly" title="Title for WebAssembly"><code>WebAssembly</code></a></li>
-        <li><a href="/en-US/docs/Web/JavaScript/Reference/Global_Objects/WebAssembly/Module" title="Title for WebAssembly.Module"><code>WebAssembly.Module</code></a></li>
-        <li><a href="/en-US/docs/Web/JavaScript/Reference/Global_Objects/WebAssembly/Global" title="Title for WebAssembly.Global"><code>WebAssembly.Global</code></a></li>
-        <li><a href="/en-US/docs/Web/JavaScript/Reference/Global_Objects/WebAssembly/Instance" title="Title for WebAssembly.Instance"><code>WebAssembly.Instance</code></a></li>
-        <li><a href="/en-US/docs/Web/JavaScript/Reference/Global_Objects/WebAssembly/Memory" title="Title for WebAssembly.Memory"><code>WebAssembly.Memory</code></a></li>
-        <li><a href="/en-US/docs/Web/JavaScript/Reference/Global_Objects/WebAssembly/Table" title="Title for WebAssembly.Table"><code>WebAssembly.Table</code></a></li>
-        <li><a href="/en-US/docs/Web/JavaScript/Reference/Global_Objects/WebAssembly/CompileError" title="Title for WebAssembly.CompileError"><code>WebAssembly.CompileError</code></a></li>
-        <li><a href="/en-US/docs/Web/JavaScript/Reference/Global_Objects/WebAssembly/LinkError" title="Title for WebAssembly.LinkError"><code>WebAssembly.LinkError</code></a></li>
-        <li><a href="/en-US/docs/Web/JavaScript/Reference/Global_Objects/WebAssembly/RuntimeError" title="Title for WebAssembly.RuntimeError"><code>WebAssembly.RuntimeError</code></a></li>
+        <li><a href="/en-US/docs/WebAssembly/JavaScript_interface"><code>WebAssembly</code></a></li>
+        <li><a href="/en-US/docs/WebAssembly/JavaScript_interface/Module"><code>WebAssembly.Module</code></a></li>
+        <li><a href="/en-US/docs/WebAssembly/JavaScript_interface/Global"><code>WebAssembly.Global</code></a></li>
+        <li><a href="/en-US/docs/WebAssembly/JavaScript_interface/Instance"><code>WebAssembly.Instance</code></a></li>
+        <li><a href="/en-US/docs/WebAssembly/JavaScript_interface/Memory"><code>WebAssembly.Memory</code></a></li>
+        <li><a href="/en-US/docs/WebAssembly/JavaScript_interface/Table"><code>WebAssembly.Table</code></a></li>
+        <li><a href="/en-US/docs/WebAssembly/JavaScript_interface/Tag"><code>WebAssembly.Tag</code></a></li>
+        <li><a href="/en-US/docs/WebAssembly/JavaScript_interface/Exception"><code>WebAssembly.Exception</code></a></li>
+        <li><a href="/en-US/docs/WebAssembly/JavaScript_interface/CompileError"><code>WebAssembly.CompileError</code></a></li>
+        <li><a href="/en-US/docs/WebAssembly/JavaScript_interface/LinkError"><code>WebAssembly.LinkError</code></a></li>
+        <li><a href="/en-US/docs/WebAssembly/JavaScript_interface/RuntimeError"><code>WebAssembly.RuntimeError</code></a></li>
       </ol>
     </details>
   </li>
@@ -42,18 +44,6 @@ const expected = `\
 </section>`;
 
 describeMacro("WebAssemblySidebar", function () {
-  beforeEachMacro(function (macro) {
-    const baseURL = "/en-US/docs/Web/JavaScript/Reference/Global_Objects/";
-
-    // Mock calls to template("jsxref", [partialSlug])
-    macro.ctx.template = jest.fn((macro, args) => {
-      const jsSlug = args[0];
-      const partialSlug = jsSlug.replace(".", "/");
-      const url = baseURL + partialSlug;
-      return `<a href="${url}" title="Title for ${jsSlug}"><code>${jsSlug}</code></a>`;
-    });
-  });
-
   itMacro("Generates WebAssembly Sidebar", function (macro) {
     return assert.eventually.equal(macro.call(), expected);
   });
