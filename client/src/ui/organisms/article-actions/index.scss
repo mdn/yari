@@ -32,6 +32,13 @@
       z-index: var(--z-index-mid);
     }
 
+    &.wait {
+      &,
+      * {
+        cursor: wait !important;
+      }
+    }
+
     .header {
       border-bottom: 1px solid var(--border-primary);
       color: var(--text-primary);
@@ -68,6 +75,20 @@
 
       &:last-child {
         padding-bottom: 1rem;
+      }
+    }
+
+    .notecard {
+      margin: var(--gutter-padding);
+      margin-bottom: 0;
+
+      &::before {
+        top: 1.37rem;
+      }
+
+      p {
+        margin: 0;
+        padding: 0;
       }
     }
 

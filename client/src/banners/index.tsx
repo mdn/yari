@@ -11,13 +11,21 @@ import { CRUD_MODE } from "../env";
 import "./banner.scss";
 
 import { BannerId } from "./ids";
+import { SubscriptionType, useUserData } from "../user-context";
 
 const ActiveBanner = React.lazy(() => import("./active-banner"));
 
-const currentBannerId: BannerId | null = BannerId.PLUS_LAUNCH_ANNOUNCEMENT;
 const daysToEmbargo = 30;
 
 export function Banner() {
+  const userData = useUserData();
+  const currentBannerId: BannerId | null =
+    userData?.subscriptionType &&
+    [SubscriptionType.MDN_PLUS_10M, SubscriptionType.MDN_PLUS_10Y].includes(
+      userData?.subscriptionType
+    )
+      ? BannerId.PREVIEW_FEATURES
+      : BannerId.PLUS_LAUNCH_ANNOUNCEMENT;
   if (currentBannerId && (CRUD_MODE || !isEmbargoed(currentBannerId))) {
     return (
       <React.Suspense fallback={null}>

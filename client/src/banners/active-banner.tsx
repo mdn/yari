@@ -106,6 +106,25 @@ function PlusLaunchAnnouncementBanner({
   );
 }
 
+function PreviewFeaturesBanner({ onDismissed }: { onDismissed: () => void }) {
+  const bannerId = BannerId.PREVIEW_FEATURES;
+  const sendCTAEventToGA = useSendCTAEventToGA();
+
+  return (
+    <Banner id={bannerId} onDismissed={onDismissed}>
+      <p className="mdn-cta-copy">
+        MDN Plus preview features are now available.{" "}
+        <a
+          href="/en-US/plus/settings"
+          onClick={() => sendCTAEventToGA(bannerId)}
+        >
+          Manage settings
+        </a>
+      </p>
+    </Banner>
+  );
+}
+
 // The reason we're not just exporting each individual banner is because to
 // be able to lazy-load the contents of this file it needs to export a
 // default function. This one function is the link between the <App>
@@ -122,6 +141,13 @@ export default function ActiveBanner({
       return (
         <>
           <PlusLaunchAnnouncementBanner onDismissed={onDismissed} />
+        </>
+      );
+
+    case BannerId.PREVIEW_FEATURES:
+      return (
+        <>
+          <PreviewFeaturesBanner onDismissed={onDismissed} />
         </>
       );
 

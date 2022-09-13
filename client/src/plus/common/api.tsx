@@ -25,6 +25,16 @@ export async function toggleCollectionsInQuickSearch(enabled: boolean) {
   });
 }
 
+export async function toggleMultipleCollections(enabled: boolean) {
+  return await fetch(SETTINGS_BASE_PATH, {
+    body: JSON.stringify({ multiple_collections: enabled }),
+    method: "POST",
+    headers: {
+      "content-type": "application/json",
+    },
+  });
+}
+
 export async function markNotificationsAsRead() {
   return fetch(NOTIFICATIONS_MARK_ALL_AS_READ_PATH, {
     method: "POST",
