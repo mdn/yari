@@ -34,12 +34,11 @@ export function DataError({ error }: { error: Error }) {
 }
 
 export function _getIconLabel(url) {
-  let category = docCategory({ pathname: url });
+  const category = docCategory({ pathname: url });
 
   if (!category) {
     return "docs";
   }
-  category = category?.split("-")[1];
 
   if (category === "javascript") {
     return "js";
@@ -48,5 +47,6 @@ export function _getIconLabel(url) {
   if (category === "accessibility") {
     return "acc";
   }
+
   return category;
 }

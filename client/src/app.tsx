@@ -46,7 +46,11 @@ function Layout({ pageType, children }) {
     <>
       <A11yNav />
       {!isServer && <Banner />}
-      <div className={`page-wrapper  ${category || ""} ${pageType}`}>
+      <div
+        className={`page-wrapper  ${
+          category ? `category-${category}` : ""
+        } ${pageType}`}
+      >
         {pageType !== "document-page" && <TopNavigation />}
         {children}
       </div>

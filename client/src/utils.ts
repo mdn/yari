@@ -12,12 +12,12 @@ export function docCategory({ pathname = "" } = {}): string | null {
     webOrLearn?.toLowerCase() === "web"
   ) {
     if (CATEGORIES.includes(category?.toLocaleLowerCase?.())) {
-      return `category-${category.toLowerCase()}`;
+      return category.toLowerCase();
     }
-    return `category-${webOrLearn.toLowerCase()}`;
+    return webOrLearn.toLowerCase();
   }
   if (isHomePage(pathname)) {
-    return `category-home`;
+    return "home";
   }
   return null;
 }
