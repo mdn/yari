@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 import type { Doc } from "../libs/types/document";
 
-const fs = require("fs");
+const fs = require("fs/promises");
 const path = require("path");
 
 const klawSync = require("klaw-sync");
@@ -946,15 +946,17 @@ if (Mozilla && !Mozilla.dntEnabled()) {
         traverseAll: true,
       });
 
-      const inventory = allPaths.map((entry) => {
-        const fileContents = fs.readFileSync(entry.path, "utf-8");
-        const parsed = frontmatter(fileContents);
+      const inventory = await Promise.all(
+        allPaths.map(async (entry) => {
+          const fileContents = await fs.readFile(entry.path, "utf-8");
+          const parsed = frontmatter(fileContents);
 
-        return {
-          path: entry.path.substring(entry.path.indexOf("/files")),
-          frontmatter: parsed.attributes,
-        };
-      });
+          return {
+            path: entry.path.substring(entry.path.indexOf("/files")),
+            frontmatter: parsed.attributes,
+          };
+        })
+      );
 
       process.stdout.write(JSON.stringify(inventory, undefined, 2));
     })
