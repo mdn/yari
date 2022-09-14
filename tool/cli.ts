@@ -482,32 +482,53 @@ program
     "sync-translated-content",
     "Sync translated content (sync with en-US slugs) for a locale"
   )
-  .argument("<locale...>", "Locale", {
+  .argument("<locales...>", "Locale", {
     default: [...VALID_LOCALES.keys()].filter((l) => l !== "en-us"),
     validator: [...VALID_LOCALES.keys()].filter((l) => l !== "en-us"),
   })
   .action(
     tryOrExit(async ({ args, options }) => {
-      const { locale } = args;
+      const { locales } = args;
       const { verbose } = options;
       if (verbose) {
         log.setDefaultLevel(log.levels.DEBUG);
       }
-      for (const l of locale) {
+
+      const results = await Promise.all(
+        locales.map(async (locale) => {
+          const prefix = `[${locale}] `;
+          console.log(prefix + chalk.green(`Syncing...`));
+          const result = await syncAllTranslatedContent(locale);
+          console.log(prefix + chalk.green(`Synced.`));
+
+          return {
+            locale,
+            ...result,
+          };
+        })
+      );
+
+      for (const result of results) {
         const {
+          locale,
           movedDocs,
           conflictingDocs,
           orphanedDocs,
           redirectedDocs,
           totalDocs,
-        } = syncAllTranslatedContent(l);
-        console.log(chalk.green(`Syncing ${l}:`));
-        console.log(chalk.green(`Total of ${totalDocs} documents`));
-        console.log(chalk.green(`Moved ${movedDocs} documents`));
-        console.log(chalk.green(`Conflicting ${conflictingDocs} documents.`));
-        console.log(chalk.green(`Orphaned ${orphanedDocs} documents.`));
+        } = result;
+
+        const prefix = `[${locale}] `;
+        console.log(prefix + chalk.green(`Total of ${totalDocs} documents`));
+        console.log(prefix + chalk.green(`Moved ${movedDocs} documents`));
         console.log(
-          chalk.green(`Fixed ${redirectedDocs} redirected documents.`)
+          prefix + chalk.green(`Conflicting ${conflictingDocs} documents.`)
+        );
+        console.log(
+          prefix + chalk.green(`Orphaned ${orphanedDocs} documents.`)
+        );
+        console.log(
+          prefix + chalk.green(`Fixed ${redirectedDocs} redirected documents.`)
         );
       }
     })

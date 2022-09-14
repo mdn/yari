@@ -1,11 +1,12 @@
 import fs from "fs";
+import { readFile } from "fs/promises";
 import crypto from "crypto";
 import path from "path";
 
 import chalk from "chalk";
 import fm from "front-matter";
 import log from "loglevel";
-import { fdir } from "fdir";
+import { fdir, PathsOutput } from "fdir";
 
 import {
   buildURL,
@@ -25,7 +26,7 @@ import { DocFrontmatter } from "./spas";
 const CONFLICTING = "conflicting";
 const ORPHANED = "orphaned";
 
-export function syncAllTranslatedContent(locale) {
+export async function syncAllTranslatedContent(locale: string) {
   if (!CONTENT_TRANSLATED_ROOT) {
     throw new Error(
       "CONTENT_TRANSLATED_ROOT must be set to sync translated content!"
@@ -41,7 +42,7 @@ export function syncAllTranslatedContent(locale) {
       );
     })
     .crawl(path.join(CONTENT_TRANSLATED_ROOT, locale));
-  const files = [...(api.sync() as any)];
+  const files = [...(api.sync() as PathsOutput)];
   const stats = {
     movedDocs: 0,
     conflictingDocs: 0,
@@ -50,25 +51,27 @@ export function syncAllTranslatedContent(locale) {
     totalDocs: files.length,
   };
 
-  for (const f of files) {
-    const { moved, conflicting, redirect, orphaned, followed } =
-      syncTranslatedContent(f, locale);
-    if (redirect) {
-      redirects.set(redirect[0], redirect[1]);
-    }
-    if (moved) {
-      stats.movedDocs += 1;
-    }
-    if (conflicting) {
-      stats.conflictingDocs += 1;
-    }
-    if (orphaned) {
-      stats.orphanedDocs += 1;
-    }
-    if (followed) {
-      stats.redirectedDocs += 1;
-    }
-  }
+  await Promise.all(
+    files.map(async (f) => {
+      const { moved, conflicting, redirect, orphaned, followed } =
+        await syncTranslatedContent(f, locale);
+      if (redirect) {
+        redirects.set(redirect[0], redirect[1]);
+      }
+      if (moved) {
+        stats.movedDocs += 1;
+      }
+      if (conflicting) {
+        stats.conflictingDocs += 1;
+      }
+      if (orphaned) {
+        stats.orphanedDocs += 1;
+      }
+      if (followed) {
+        stats.redirectedDocs += 1;
+      }
+    })
+  );
 
   if (redirects.size > 0) {
     Redirect.add(locale, [...redirects.entries()], true);
@@ -104,7 +107,10 @@ function mdOrHtmlExists(filePath) {
   );
 }
 
-export function syncTranslatedContent(inFilePath, locale) {
+export async function syncTranslatedContent(
+  inFilePath: string,
+  locale: string
+) {
   if (!CONTENT_TRANSLATED_ROOT) {
     throw new Error(
       "CONTENT_TRANSLATED_ROOT must be set to sync translated content!"
@@ -118,7 +124,7 @@ export function syncTranslatedContent(inFilePath, locale) {
     followed: false,
   };
 
-  const rawDoc = fs.readFileSync(inFilePath, "utf-8");
+  const rawDoc = await readFile(inFilePath, "utf-8");
   const fileName = path.basename(inFilePath);
   const extension = path.extname(fileName);
   const bareFileName = path.basename(inFilePath, extension);
@@ -240,14 +246,20 @@ export function syncTranslatedContent(inFilePath, locale) {
   return status;
 }
 
-export function syncTranslatedContentForAllLocales() {
+export async function syncTranslatedContentForAllLocales() {
   let moved = 0;
-  for (const locale of VALID_LOCALES.keys()) {
-    if (locale == "en-us") {
-      continue;
-    }
-    const { movedDocs = 0 } = syncAllTranslatedContent(locale);
-    moved += movedDocs;
-  }
+
+  const locales = [...VALID_LOCALES.keys()];
+
+  await Promise.all(
+    locales.map(async (locale) => {
+      if (locale == "en-us") {
+        return;
+      }
+      const { movedDocs = 0 } = await syncAllTranslatedContent(locale);
+      moved += movedDocs;
+    })
+  );
+
   return moved;
 }
