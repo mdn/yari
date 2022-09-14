@@ -25,7 +25,7 @@ import {
 } from "./utils";
 export { urlToFolderPath, MEMOIZE_INVALIDATE } from "./utils";
 import * as Redirect from "./redirect";
-import { DocFrontmatter } from "../build/spas";
+import { DocFrontmatter } from "../libs/types";
 
 function buildPath(localeFolder: string, slug: string) {
   return path.join(localeFolder, slugToFolder(slug));

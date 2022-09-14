@@ -159,6 +159,18 @@ export interface Doc {
   noIndexing?: boolean;
 }
 
+export interface DocFrontmatter {
+  contributor_name?: string;
+  folder_name?: string;
+  is_featured?: boolean;
+  img_alt?: string;
+  usernames?: any;
+  quote?: any;
+  title?: string;
+  slug?: string;
+  original_slug?: string;
+}
+
 export type Section = ProseSection | SpecificationsSection | BCDSection;
 
 export interface ProseSection {

@@ -12,6 +12,7 @@ import {
   CONTRIBUTOR_SPOTLIGHT_ROOT,
   BUILD_OUT_ROOT,
 } from "../libs/env";
+import { DocFrontmatter } from "../libs/types/document";
 // eslint-disable-next-line n/no-missing-require
 import { renderHTML } from "../ssr/dist/main";
 import { default as got } from "got";
@@ -20,18 +21,6 @@ import cheerio from "cheerio";
 import { findByURL } from "../content/document";
 import { buildDocument } from ".";
 import { NewsItem } from "../client/src/homepage/latest-news";
-
-export interface DocFrontmatter {
-  contributor_name?: string;
-  folder_name?: string;
-  is_featured?: boolean;
-  img_alt?: string;
-  usernames?: any;
-  quote?: any;
-  title?: string;
-  slug?: string;
-  original_slug?: string;
-}
 
 const dirname = __dirname;
 
