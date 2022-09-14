@@ -10,9 +10,6 @@ const chalk = require("chalk");
 const { prompt } = require("inquirer");
 const openEditor = require("open-editor");
 const open = require("open");
-const {
-  syncAllTranslatedContent,
-} = require("../build/sync-translated-content");
 const log = require("loglevel");
 const cheerio = require("cheerio");
 
@@ -33,6 +30,7 @@ const {
 const { runMakePopularitiesFile } = require("./popularities");
 const { runOptimizeClientBuild } = require("./optimize-client-build");
 const { runBuildRobotsTxt } = require("./build-robots-txt");
+const { syncAllTranslatedContent } = require("./sync-translated-content");
 const kumascript = require("../kumascript");
 
 const PORT = parseInt(process.env.SERVER_PORT || "5042");

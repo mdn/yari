@@ -20,7 +20,7 @@ import {
   VALID_LOCALES,
 } from "../libs/constants";
 import { CONTENT_ROOT, CONTENT_TRANSLATED_ROOT } from "../libs/env";
-import { DocFrontmatter } from "./spas";
+import { DocFrontmatter } from "../build/spas";
 
 const CONFLICTING = "conflicting";
 const ORPHANED = "orphaned";
