@@ -3,7 +3,7 @@ import { useOnlineStatus } from "../../hooks";
 import { Button } from "../../ui/atoms/button";
 import { DropdownMenu, DropdownMenuWrapper } from "../../ui/molecules/dropdown";
 import { Checkbox } from "../../ui/atoms/checkbox";
-import { docCategory } from "../../utils";
+import { getCategoryByPathname } from "../../utils";
 import { _getIconLabel } from "../common";
 import "./index.scss";
 
@@ -15,7 +15,7 @@ export default function WatchedCardListItem({
   const [show, setShow] = React.useState(false);
   const { isOnline } = useOnlineStatus();
 
-  const iconClass = docCategory(item.url);
+  const iconClass = getCategoryByPathname(item.url);
   const iconLabel = _getIconLabel(item.url);
 
   return (

@@ -1,6 +1,6 @@
 import SignInLink from "../../ui/atoms/signin-link";
 import NoteCard from "../../ui/molecules/notecards";
-import { docCategory } from "../../utils";
+import { getCategoryByPathname } from "../../utils";
 
 export function NotSignedIn() {
   return (
@@ -34,7 +34,7 @@ export function DataError({ error }: { error: Error }) {
 }
 
 export function _getIconLabel(url: string) {
-  const category = docCategory(url);
+  const category = getCategoryByPathname(url);
 
   if (!category) {
     return "docs";
