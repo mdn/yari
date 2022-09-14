@@ -33,8 +33,8 @@ export function DataError({ error }: { error: Error }) {
   );
 }
 
-export function _getIconLabel(url) {
-  const category = docCategory({ pathname: url });
+export function _getIconLabel(url: string) {
+  const category = docCategory(url);
 
   if (!category) {
     return "docs";

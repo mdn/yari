@@ -33,13 +33,13 @@ const Sitemap = React.lazy(() => import("./sitemap"));
 function Layout({ pageType, children }) {
   const { pathname } = useLocation();
   const [category, setCategory] = React.useState<string | null>(
-    docCategory({ pathname })
+    docCategory(pathname)
   );
 
   const isServer = useIsServer();
 
   React.useEffect(() => {
-    setCategory(docCategory({ pathname }));
+    setCategory(docCategory(pathname));
   }, [pathname]);
 
   return (

@@ -15,7 +15,7 @@ export default function WatchedCardListItem({
   const [show, setShow] = React.useState(false);
   const { isOnline } = useOnlineStatus();
 
-  const iconClass = docCategory({ pathname: item.url });
+  const iconClass = docCategory(item.url);
   const iconLabel = _getIconLabel(item.url);
 
   return (
