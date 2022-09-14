@@ -5,7 +5,7 @@
 //  $0  Page link
 
 // Throw a MacroDeprecatedError flaw
- mdn.deprecated()
+ mdn.deprecated("The 'Link' macro is deprecated. See https://github.com/orgs/mdn/discussions/187 for details.")
 
 let page = await wiki.getPage($0);
 let title = page.title;
