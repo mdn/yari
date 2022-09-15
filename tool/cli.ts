@@ -3,8 +3,7 @@ import type { Doc } from "../libs/types/document";
 
 const fs = require("fs");
 const path = require("path");
-
-const klawSync = require("klaw-sync");
+const { fdir } = require("fdir");
 const frontmatter = require("front-matter");
 const program = require("@caporal/core").default;
 const chalk = require("chalk");
@@ -940,18 +939,19 @@ if (Mozilla && !Mozilla.dntEnabled()) {
         );
       }
 
-      const allPaths = klawSync(CONTENT_ROOT, {
-        nodir: true,
-        filter: (entry) => path.extname(entry.path) === ".md",
-        traverseAll: true,
-      });
+      const crawler = new fdir()
+        .withFullPaths()
+        .withErrors()
+        .filter((filePath) => filePath.endsWith(".md"))
+        .crawl(CONTENT_ROOT);
+      const paths = await crawler.withPromise();
 
-      const inventory = allPaths.map((entry) => {
-        const fileContents = fs.readFileSync(entry.path, "utf-8");
+      const inventory = paths.map((path) => {
+        const fileContents = fs.readFileSync(path, "utf-8");
         const parsed = frontmatter(fileContents);
 
         return {
-          path: entry.path.substring(entry.path.indexOf("/files")),
+          path: path.substring(path.indexOf("/files")),
           frontmatter: parsed.attributes,
         };
       });
