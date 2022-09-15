@@ -1,7 +1,7 @@
 import fs from "fs";
 import path from "path";
 import frontmatter from "front-matter";
-import klawSync from "klaw-sync";
+import { fdir, PathsOutput } from "fdir";
 
 import { m2h } from "../markdown";
 
@@ -191,14 +191,14 @@ export async function buildSPAs(options) {
    * @param {string} title
    */
   async function buildStaticPages(dirpath, slug, title = "MDN") {
-    const entries = klawSync(dirpath, {
-      nodir: true,
-      filter: (entry) => path.extname(entry.path) === ".md",
-      traverseAll: true,
-    });
+    const crawler = new fdir()
+      .withFullPaths()
+      .withErrors()
+      .filter((path) => path.endsWith(".md"))
+      .crawl(dirpath);
+    const filepaths = [...(crawler.sync() as PathsOutput)];
 
-    for (const entry of entries) {
-      const filepath = entry.path;
+    for (const filepath of filepaths) {
       const file = filepath.replace(dirpath, "");
       const page = file.split(".")[0];
 
