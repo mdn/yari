@@ -72,24 +72,6 @@ const METADATA_TEMPLATE = `
 </details>
 `;
 
-const NEW_ISSUE_TEMPLATE = `
-MDN URL: https://developer.mozilla.org$PATHNAME
-
-#### What information was incorrect, unhelpful, or incomplete?
-
-
-#### Specific section or headline?
-
-
-#### What did you expect to see?
-
-
-#### Did you test this? If so, how?
-
-
-${METADATA_TEMPLATE}
-  `.trim();
-
 function fillMetadata(string, doc) {
   const { folder, github_url, last_commit_url } = doc.source;
   return string
@@ -109,24 +91,10 @@ function NewIssueOnGitHubLink({ doc }: { doc: Doc }) {
   const url = new URL("https://github.com/");
   const sp = new URLSearchParams();
 
-  if (locale !== "en-US") {
-    url.pathname = "/mdn/translated-content/issues/new";
-
-    const body = fillMetadata(NEW_ISSUE_TEMPLATE, doc);
-    sp.set("body", body);
-
-    const maxLength = 50;
-    const titleShort =
-      doc.title.length > maxLength
-        ? `${doc.title.slice(0, maxLength)}…`
-        : doc.title;
-    sp.set("title", `Issue with "${titleShort}": (short summary here please)`);
-  } else {
-    url.pathname = "/mdn/content/issues/new";
-    sp.set("template", "page-report.yml");
-    sp.set("mdn-url", `https://developer.mozilla.org${doc.mdn_url}`);
-    sp.set("metadata", fillMetadata(METADATA_TEMPLATE, doc));
-  }
+  url.pathname = (locale !== "en-US") ? "/mdn/translated-content/issues/new" : "/mdn/content/issues/new";
+  sp.set("template", "page-report.yml");
+  sp.set("mdn-url", `https://developer.mozilla.org${doc.mdn_url}`);
+  sp.set("metadata", fillMetadata(METADATA_TEMPLATE, doc));
 
   url.search = sp.toString();
 
