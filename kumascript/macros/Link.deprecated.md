@@ -12,7 +12,7 @@ A common usage of the macro is as follows:
 The {{Link("/en-US/docs/Web/JavaScript/Guide")}} on MDN
 ```
 
-This can be replace with the following Markdown:
+This can be replaced with the following Markdown:
 
 ```md
 The [JavaScript Guide](/en-US/docs/Web/JavaScript/Guide) on MDN
