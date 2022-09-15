@@ -47,10 +47,10 @@ export function listFeatures(
   }
 
   for (const [subName, subIdentifier] of Object.entries(identifier)) {
-    if (subName !== "__compat" && (subIdentifier as BCD.Identifier).__compat) {
+    if (subName !== "__compat") {
       features.push({
         name: parentName ? `${parentName}.${subName}` : subName,
-        compat: (subIdentifier as BCD.Identifier).__compat!,
+        compat: (subIdentifier as BCD.Identifier).__compat || { support: {} },
         depth: depth + 1,
       });
       features.push(
