@@ -69,6 +69,11 @@ export interface UnsafeHTMLFlaw extends GenericFlaw {
   column: number | null;
 }
 
+export interface RedirectInfo {
+  current: string;
+  suggested: string;
+}
+
 export interface MacroErrorMessage extends GenericFlaw {
   name: string;
   error: {
@@ -84,10 +89,7 @@ export interface MacroErrorMessage extends GenericFlaw {
   macroSource: string;
   macroName: string;
   fixed?: true;
-  redirectInfo?: {
-    current: string;
-    suggested: string;
-  };
+  redirectInfo?: RedirectInfo;
 }
 
 export interface TranslationDifferenceFlaw extends GenericFlaw {

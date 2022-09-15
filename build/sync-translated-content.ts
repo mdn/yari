@@ -71,7 +71,7 @@ export function syncAllTranslatedContent(locale) {
   }
 
   if (redirects.size > 0) {
-    Redirect.add(locale, [...redirects.entries()], true);
+    Redirect.add(locale, [...redirects.entries()]);
   }
 
   return stats;

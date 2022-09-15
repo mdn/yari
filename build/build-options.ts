@@ -26,7 +26,7 @@ const options = Object.freeze({
   fixFlawsVerbose: FIX_FLAWS_VERBOSE,
 });
 
-function parseFiles(filesStringList) {
+function parseFiles(filesStringList: string): Set<string> {
   // The get-diff-action, which we use in the "PR Builds" CI,
   // will make this a massive string that looks like
   // this: `'content/files/en-us/a/index.html','content/files/en-us/a/index.html'`

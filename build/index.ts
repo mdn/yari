@@ -11,7 +11,7 @@ import {
 
 import { Document, Image, execGit } from "../content";
 import { CONTENT_ROOT, REPOSITORY_URLS } from "../libs/env";
-import kumascript from "../kumascript";
+import * as kumascript from "../kumascript";
 
 import { FLAW_LEVELS } from "../libs/constants";
 import {
