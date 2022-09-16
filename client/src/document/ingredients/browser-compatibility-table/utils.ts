@@ -31,11 +31,31 @@ interface Feature {
   depth: number;
 }
 
+function findAllCompatDepths(
+  identifier: BCD.Identifier,
+  depths: number[],
+  flattenedKey: string
+) {
+  for (let key in identifier) {
+    if (identifier.hasOwnProperty(key)) {
+      if (key === "__compat") {
+        depths.push(flattenedKey ? flattenedKey.split(".").length : 0);
+      }
+      const newKey = flattenedKey ? flattenedKey + "." + key : key;
+      const subIdentifier = identifier[key];
+      if (typeof subIdentifier === "object") {
+        findAllCompatDepths(subIdentifier as BCD.Identifier, depths, newKey);
+      }
+    }
+  }
+}
+
 export function listFeatures(
   identifier: BCD.Identifier,
   parentName: string = "",
   rootName: string = "",
-  depth: number = 0
+  depth: number = 0,
+  firstCompatDepth: number = 0
 ): Feature[] {
   const features: Feature[] = [];
   if (rootName && identifier.__compat) {
@@ -45,17 +65,34 @@ export function listFeatures(
       depth,
     });
   }
-
+  if (rootName) {
+    const compatDepths = [];
+    findAllCompatDepths(identifier, compatDepths, "");
+    firstCompatDepth = Math.min(...compatDepths);
+  }
   for (const [subName, subIdentifier] of Object.entries(identifier)) {
     if (subName !== "__compat") {
-      features.push({
-        name: parentName ? `${parentName}.${subName}` : subName,
-        compat: (subIdentifier as BCD.Identifier).__compat || { support: {} },
-        depth: depth + 1,
-      });
-      features.push(
-        ...listFeatures(subIdentifier as BCD.Identifier, subName, "", depth + 1)
-      );
+      if ((subIdentifier as BCD.Identifier).__compat) {
+        features.push({
+          name: parentName ? `${parentName}.${subName}` : subName,
+          compat: (subIdentifier as BCD.Identifier).__compat!,
+          depth: depth + 1,
+        });
+      }
+      if (
+        (subIdentifier as BCD.Identifier).__compat ||
+        depth + 1 < firstCompatDepth
+      ) {
+        features.push(
+          ...listFeatures(
+            subIdentifier as BCD.Identifier,
+            subName,
+            "",
+            depth + 1,
+            firstCompatDepth
+          )
+        );
+      }
     }
   }
   return features;
