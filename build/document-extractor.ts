@@ -646,11 +646,18 @@ function _addSingleSpecialSection(
     // from the browser-specs package
     const specifications = specURLs
       .map((specURL) => {
+        // BCD uses a new mirror for CSSWG Drafts, since drafts.csswg.org is down almost all the time. However, browser-specs still uses the old URLs.
+        // Remove `specURLSearch` and simply use `specURL` if https://github.com/w3c/browser-specs/issues/704 is resolved
+        const specURLSearch = specURL.replace(
+          "w3c.github.io/csswg-drafts",
+          "drafts.csswg.org"
+        );
+
         const spec = specs.find(
           (spec) =>
-            specURL.startsWith(spec.url) ||
-            specURL.startsWith(spec.nightly.url) ||
-            specURL.startsWith(spec.series.nightlyUrl)
+            specURLSearch.startsWith(spec.url) ||
+            specURLSearch.startsWith(spec.nightly.url) ||
+            specURLSearch.startsWith(spec.series.nightlyUrl)
         );
         const specificationsData = {
           bcdSpecificationURL: specURL,
