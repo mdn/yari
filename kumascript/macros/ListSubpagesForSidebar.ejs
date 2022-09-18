@@ -15,14 +15,14 @@
 // {{ListSubpagesForSidebar("/en-US/docs/Web/API/WebRTC_API", 1)}}
 // {{ListSubpagesForSidebar("/en-US/docs/Web/HTML/Element", 0, 0, "<", ">")}}
 
-var path = $0;
-var locale = env.locale;
-var includeParent = $2 ? 1 : 0;
-var startDelim = $3;
-var endDelim = $4;
+let path = $0;
+const locale = env.locale;
+const includeParent = $2 ? true : false;
+const startDelim = $3;
+const endDelim = $4;
 
 // If the path ends with a slash, remove it.
-if (path.substr(-1, 1) === '/') {
+if (path.endsWith('/')) {
     path = path.slice(0, -1);
 }
 
@@ -34,56 +34,51 @@ const overview = mdn.localString({
     'ko': '개요',
     'ru': 'Обзор',
     'zh-CN': '概述',
+    'zh-TW': '概述'
 });
 
-var parent = await wiki.getPage(path);
-var pages = includeParent ? [{
-    ...parent,
-    title: overview
-}, ...parent.subpages] : [...parent.subpages];
-var containsTag = page.hasTag;
-var htmlEscape = kuma.htmlEscape;
+const parent = await wiki.getPage(path);
+let pages = [...parent.subpages].filter(page => page?.url) // Filter out pages without a URL;
 
-var output = '';
-var openTag = '<ol>';
-var closeTag = '</ol>';
-var code    = !$1 ? '<code>'  : '';
-var endcode = !$1 ? '</code>' : '';
+for (const [_, page] in pages.entries()) {
+    page.title = trimTitle(page.title);
+}
 
-// Strings
-var commonl10n = web.getJSONData('L10n-Common');
-var text = {
-    'translate': mdn.getLocalString(commonl10n, '[Translate]'),
-    'title': mdn.getLocalString(commonl10n, 'TranslationCTA'),
-};
+pages.sort((a, b) => a.title.localeCompare(b.title)) // sorted by english title for subpages    
 
-var badges = {
-  ExperimentalBadge : await template("ExperimentalBadge"),
-  NonStandardBadge : await template("NonStandardBadge"),
-  DeprecatedBadge : await template("DeprecatedBadge"),
-  ObsoleteBadge : await template("ObsoleteBadge"),
+// always keep the parent page on top
+if (includeParent && parent.url) {
+    pages = [{
+        ...parent,
+        title: overview
+    }, ...pages];
+}
+
+let output = '';
+
+const containsTag = page.hasTag;
+const htmlEscape = kuma.htmlEscape;
+const openTag = '<ol>';
+const closeTag = '</ol>';
+const code = !$1 ? '<code>' : '';
+const endcode = !$1 ? '</code>' : '';
+
+const badges = {
+    ExperimentalBadge: await template("ExperimentalBadge"),
+    NonStandardBadge: await template("NonStandardBadge"),
+    DeprecatedBadge: await template("DeprecatedBadge"),
+    ObsoleteBadge: await template("ObsoleteBadge"),
 }
 
 // Trims the title, returning only the text
 // between the start and end delimiter characters.
 // Does nothing if both are null or empty.
 function trimTitle(title) {
-    var startIndex;
-    var endIndex;
+    const startIndex = startDelim ? title.indexOf(startDelim) + 1 : 0;
 
-    startIndex = 0;
-    if (startDelim) {
-        startIndex = title.indexOf(startDelim);
-        if (startIndex) {
-            startIndex += 1;
-        }
-    }
+    let endIndex = endDelim ? title.indexOf(endDelim) + 1 : title.length;
 
-    endIndex = 0;
-    if (endDelim) {
-        endIndex = title.indexOf(endDelim)+1;
-    }
-    if (!endIndex) {
+    if (endIndex === 0) {
         endIndex = title.length;
     }
 
@@ -91,54 +86,41 @@ function trimTitle(title) {
 }
 
 function createLink(item) {
-    var result = '';
-    if (!item.url) {
-        return '';
-    }
+    const url = item.url.replace('en-US', locale);
+    let title = htmlEscape(item.title);
 
-    var url = item.url.replace('en-US', locale);
-    var title = htmlEscape(trimTitle(item.title));
-
-    if (locale != 'en-US') {
-        item.translations.forEach(function(translation){
-            if(translation.locale === locale) {
-                url = translation.url;
+    if (locale !== 'en-US') {
+        for (const translation of item.translations) {
+            if (translation.locale === locale) {
                 title = htmlEscape(trimTitle(translation.title));
             }
-        });
+        }
     }
 
-    result += '<li>';
+    const badgeTexts = [];
 
     if (containsTag(item, 'Experimental')) {
-        result += badges.ExperimentalBadge;
+        badgeTexts.push(badges.ExperimentalBadge);
     }
 
     if (containsTag(item, 'Non-standard') || containsTag(item, 'Non Standard')) {
-        result += badges.NonStandardBadge;
+        badgeTexts.push(badges.NonStandardBadge);
     }
 
     if (containsTag(item, 'Deprecated')) {
-        result += badges.DeprecatedBadge;
+        badgeTexts.push(badges.DeprecatedBadge);
     }
 
     if (containsTag(item, 'Obsolete')) {
-        result += badges.ObsoleteBadge;
+        badgeTexts.push(badges.ObsoleteBadge);
     }
 
-    result += '<a href="' + url + '">' + code + title + endcode + '</a></li>';
+    const result = `<li>${badgeTexts.join('')}<a href="${url}">${code}${title}${endcode}</a></li>`
     return result;
 }
 
 if (pages.length) {
-    output += openTag;
-
-    pages.forEach(function(item) {
-        if (!item) { return; }
-        output += createLink(item);
-    });
-
-    output += closeTag;
+    output += `${openTag}${pages.map(createLink).join('')}${closeTag}`;
 }
 %>
 <%- output %>
