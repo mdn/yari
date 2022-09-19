@@ -37,7 +37,7 @@ const parent = await wiki.getPage(path);
 const pages = parent.subpages;
 
 // trim english title for sorting
-for (const [_, page] of pages.entries()) {
+for (const page of pages) {
     page.title = trimTitle(page.title);
 }
 pages.sort((a, b) => a.title.localeCompare(b.title)) // sorted by english title for subpages    
