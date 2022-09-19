@@ -90,25 +90,25 @@ function createLink(item) {
         }
     }
 
-    const badgeTexts = [];
+    const pageBadges = [];
 
     if (containsTag(item, 'Experimental')) {
-        badgeTexts.push(badges.ExperimentalBadge);
+        pageBadges.push(badges.ExperimentalBadge);
     }
 
     if (containsTag(item, 'Non-standard') || containsTag(item, 'Non Standard')) {
-        badgeTexts.push(badges.NonStandardBadge);
+        pageBadges.push(badges.NonStandardBadge);
     }
 
     if (containsTag(item, 'Deprecated')) {
-        badgeTexts.push(badges.DeprecatedBadge);
+        pageBadges.push(badges.DeprecatedBadge);
     }
 
     if (containsTag(item, 'Obsolete')) {
-        badgeTexts.push(badges.ObsoleteBadge);
+        pageBadges.push(badges.ObsoleteBadge);
     }
 
-    const result = `<li>${badgeTexts.join('')}<a href="${url}">${code}${title}${endcode}</a></li>`
+    const result = `<li>${pageBadges.join('')}<a href="${url}">${code}${title}${endcode}</a></li>`
     return result;
 }
 
