@@ -93,12 +93,14 @@ def post_about_deployment(build_directory: Path, **config):
     links.sort()
 
     if links:
-        heading = (
-            f"<details><summary><h4>Preview URLs ({len(links)})</h4></summary>\n\n"
-        )
-        return heading + "\n".join(links) + "\n</details>"
+        if len(links) > 5:
+            heading = f"<details><summary><b>Preview URLs ({len(links)} pages)</b></summary>\n\n"
+            return heading + "\n".join(links) + "\n\n</details>"
+        else:
+            heading = "<b>Preview URLs</b>\n\n"
+            return heading + "\n".join(links)
 
-    return heading + "*seems not a single file was built!* 🙀"
+    return "*seems not a single file was built!* 🙀"
 
 
 def mdn_url_to_dev_url(prefix, mdn_url):
@@ -174,7 +176,9 @@ def post_about_dangerous_content(
             total_urls += len(external_urls_list)
 
     if comments:
-        heading = f"\n---\n<details><summary><h4>External URLs ({total_urls})</h4></summary>\n\n"
+        heading = (
+            f"\n<details><summary><b>External URLs ({total_urls})</b></summary>\n\n"
+        )
         per_doc_comments = []
         for doc, comment in comments:
             lines = []
@@ -189,7 +193,7 @@ def post_about_dangerous_content(
             lines.append("")
 
             per_doc_comments.append("\n".join(lines))
-        return heading + "\n---\n".join(per_doc_comments) + "</details>"
+        return heading + "\n---\n".join(per_doc_comments) + "\n</details>"
 
 
 def post_about_flaws(build_directory: Path, **config):
@@ -255,9 +259,7 @@ def post_about_flaws(build_directory: Path, **config):
 
             per_doc_comments.append("\n".join(lines))
 
-        heading = (
-            f"\n---\n<details><summary><h4>Flaws ({total_flaws})</h4></summary>\n\n"
-        )
+        heading = f"\n<details><summary><b>Flaws ({total_flaws})</b></summary>\n\n"
 
         if docs_with_zero_flaws:
             heading += (
@@ -266,7 +268,7 @@ def post_about_flaws(build_directory: Path, **config):
                 "that don't need to be listed. 🎉*\n\n"
             )
 
-        return heading + "\n\n---\n\n".join(per_doc_comments) + "\n</details>"
+        return heading + "\n\n---\n\n".join(per_doc_comments) + "\n\n</details>"
 
 
 def get_built_docs(build_directory: Path):
