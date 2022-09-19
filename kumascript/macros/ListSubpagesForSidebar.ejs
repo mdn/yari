@@ -73,7 +73,7 @@ function trimTitle(title) {
     const startIndex = startDelim ? Math.max(title.indexOf(startDelim), 0) : 0;
 
     const endIndex = (endDelim ? title.indexOf(endDelim) + 1 : title.length) ||
-        title.length; // if endIndex is 0, then use title.length
+        title.length; // if endIndex is 0 (not found), then use title.length
 
     return title.substring(startIndex, endIndex);
 }
