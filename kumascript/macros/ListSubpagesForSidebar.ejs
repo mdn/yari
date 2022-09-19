@@ -7,24 +7,20 @@
 //  $0 - The path of the page whose subpages should be listed.
 //  $1 - If true, do not put the text in <code></code>.
 //  $2 - If true, do add the parent page to the list
-//  $3 - Open delimiter: only text after this in the title will be used
-//  $4 - Close delimiter: only text before this is used
+//  $3 - Open delimiter: only text after (including) this in the title will be used
+//  $4 - Close delimiter: only text before (including) this is used
 //
 // Examples:
 //
 // {{ListSubpagesForSidebar("/en-US/docs/Web/API/WebRTC_API", 1)}}
 // {{ListSubpagesForSidebar("/en-US/docs/Web/HTML/Element", 0, 0, "<", ">")}}
 
-let path = $0;
+// If the path ends with a slash, remove it.
+const path = $0.replace(/\/$/, '');
 const locale = env.locale;
 const includeParent = $2 ? true : false;
 const startDelim = $3;
 const endDelim = $4;
-
-// If the path ends with a slash, remove it.
-if (path.endsWith('/')) {
-    path = path.slice(0, -1);
-}
 
 const overview = mdn.localString({
     'en-US': 'Overview',
@@ -38,20 +34,20 @@ const overview = mdn.localString({
 });
 
 const parent = await wiki.getPage(path);
-let pages = [...parent.subpages].filter(page => page?.url) // Filter out pages without a URL;
+const pages = parent.subpages;
 
-for (const [_, page] in pages.entries()) {
+// trim english title for sorting
+for (const [_, page] of pages.entries()) {
     page.title = trimTitle(page.title);
 }
-
 pages.sort((a, b) => a.title.localeCompare(b.title)) // sorted by english title for subpages    
 
-// always keep the parent page on top
+// always keep the parent page on top, so insert it after sorting
 if (includeParent && parent.url) {
-    pages = [{
+    pages.unshift({
         ...parent,
         title: overview
-    }, ...pages];
+    });
 }
 
 let output = '';
@@ -74,13 +70,10 @@ const badges = {
 // between the start and end delimiter characters.
 // Does nothing if both are null or empty.
 function trimTitle(title) {
-    const startIndex = startDelim ? title.indexOf(startDelim) + 1 : 0;
+    const startIndex = startDelim ? Math.max(title.indexOf(startDelim), 0) : 0;
 
-    let endIndex = endDelim ? title.indexOf(endDelim) + 1 : title.length;
-
-    if (endIndex === 0) {
-        endIndex = title.length;
-    }
+    const endIndex = (endDelim ? title.indexOf(endDelim) + 1 : title.length) ||
+        title.length; // if endIndex is 0, then use title.length
 
     return title.substring(startIndex, endIndex);
 }
@@ -120,7 +113,7 @@ function createLink(item) {
 }
 
 if (pages.length) {
-    output += `${openTag}${pages.map(createLink).join('')}${closeTag}`;
+    output = `${openTag}${pages.map(createLink).join('')}${closeTag}`;
 }
 %>
 <%- output %>
