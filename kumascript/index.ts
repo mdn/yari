@@ -41,7 +41,7 @@ export async function render(
   urlsSeen.add(urlLC);
   const prerequisiteErrorsByKey = new Map();
   const document = invalidateCache
-    ? Document.findByURL(url, Document.MEMOIZE_INVALIDATE.toString())
+    ? Document.findByURL(url, Document.MEMOIZE_INVALIDATE)
     : Document.findByURL(url);
   if (!document) {
     throw new Error(
@@ -58,7 +58,7 @@ export async function render(
       .replace(`/${metadata.locale.toLowerCase()}/`, `/${DEFAULT_LOCALE}/`);
 
     const parentDocument = invalidateCache
-      ? Document.findByURL(parentURL, Document.MEMOIZE_INVALIDATE.toString())
+      ? Document.findByURL(parentURL, Document.MEMOIZE_INVALIDATE)
       : Document.findByURL(parentURL);
     if (parentDocument) {
       metadata = { ...parentDocument.metadata, ...metadata };
