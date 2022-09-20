@@ -236,7 +236,7 @@ export default function BookmarkV2Menu({ doc }: { doc: Doc }) {
                   value={formItem.collection_id}
                   autoComplete="off"
                   onChange={collectionChangeHandler}
-                  onFocus={(focusEvent) => {
+                  onFocus={() => {
                     if (!focusEventTriggered) {
                       glean.click({
                         source: ARTICLE_ACTIONS_COLLECTION_SELECT_OPENED,
