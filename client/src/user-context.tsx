@@ -6,7 +6,7 @@ import { fetchAllCollectionsItems } from "./plus/collections-quicksearch";
 import { MDNWorker } from "./settings/mdn-worker";
 
 export enum SubscriptionType {
-  MDN_CORE = "",
+  MDN_CORE = "core",
   MDN_PLUS_5M = "mdn_plus_5m",
   MDN_PLUS_5Y = "mdn_plus_5y",
   MDN_PLUS_10M = "mdn_plus_10m",

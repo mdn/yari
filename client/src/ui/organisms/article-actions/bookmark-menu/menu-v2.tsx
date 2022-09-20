@@ -17,6 +17,14 @@ import NewEditCollectionModal from "../../../../plus/collections/v2/new-edit-col
 import { DropdownMenu, DropdownMenuWrapper } from "../../../molecules/dropdown";
 import { Icon } from "../../../atoms/icon";
 import NoteCard from "../../../molecules/notecards";
+import { useGlean } from "../../../../telemetry/glean-context";
+import { useUserData } from "../../../../user-context";
+import {
+  ARTICLE_ACTIONS_COLLECTION_SELECT_OPENED,
+  ARTICLE_ACTIONS_NEW_COLLECTION,
+  ARTICLE_ACTIONS_OPENED,
+  SOURCE_ARTICLE_ACTIONS,
+} from "../../../../telemetry/constants";
 
 const addValue = "add";
 
@@ -34,10 +42,13 @@ export default function BookmarkV2Menu({ doc }: { doc: Doc }) {
   const { isOffline } = useOnlineStatus();
   const [show, setShow] = useState(false);
   const [showNewCollection, setShowNewCollection] = useState(false);
+  const [focusEventTriggered, setFocusEventTriggered] = useState(false);
+
   const [disableAutoClose, setDisableAutoClose] = useState(false);
   const [formItem, setFormItem] = useState<Item | NewItem>(defaultItem);
   const [lastAction, setLastAction] = useState("");
-
+  const glean = useGlean();
+  const userData = useUserData();
   const { mutator: addItem, ...addStatus } = useItemAdd();
   const { mutator: editItem, ...editStatus } = useItemEdit();
   const { mutator: deleteItem, ...deleteStatus } = useItemDelete();
@@ -66,6 +77,10 @@ export default function BookmarkV2Menu({ doc }: { doc: Doc }) {
   const collectionChangeHandler = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const { value } = e.target;
     if (value === addValue) {
+      glean.click({
+        source: ARTICLE_ACTIONS_NEW_COLLECTION,
+        subscription_type: userData?.subscriptionType?.toString() || "none",
+      });
       setDisableAutoClose(true);
       setShowNewCollection(true);
       changeHandler(e);
@@ -162,6 +177,12 @@ export default function BookmarkV2Menu({ doc }: { doc: Doc }) {
           }`}
           onClickHandler={() => {
             setShow((v) => !v);
+            if (!show) {
+              glean.click({
+                source: ARTICLE_ACTIONS_OPENED,
+                subscription_type: userData?.subscriptionType || "none",
+              });
+            }
           }}
         >
           <span className="bookmark-button-label">
@@ -215,6 +236,15 @@ export default function BookmarkV2Menu({ doc }: { doc: Doc }) {
                   value={formItem.collection_id}
                   autoComplete="off"
                   onChange={collectionChangeHandler}
+                  onFocus={(focusEvent) => {
+                    if (!focusEventTriggered) {
+                      glean.click({
+                        source: ARTICLE_ACTIONS_COLLECTION_SELECT_OPENED,
+                        subscription_type: userData?.subscriptionType || "none",
+                      });
+                      setFocusEventTriggered(true);
+                    }
+                  }}
                   disabled={!collections || isPending}
                 >
                   {collections?.map((collection) => (
@@ -306,6 +336,7 @@ export default function BookmarkV2Menu({ doc }: { doc: Doc }) {
               collection_id: collection_id || collections[0].id,
             });
           }}
+          source={SOURCE_ARTICLE_ACTIONS}
         />
       )}
     </DropdownMenuWrapper>

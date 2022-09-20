@@ -23,6 +23,7 @@ import { ContributorSpotlight } from "./contributor-spotlight";
 import { useIsServer } from "./hooks";
 
 import { Banner } from "./banners";
+import { useGleanPage } from "./telemetry/glean-context";
 
 const AllFlaws = React.lazy(() => import("./flaws"));
 const Translations = React.lazy(() => import("./translations"));
@@ -92,6 +93,7 @@ function LoadingFallback({ message }: { message?: string }) {
 }
 
 export function App(appProps) {
+  useGleanPage();
   const localeMatch = useMatch("/:locale/*");
 
   useEffect(() => {

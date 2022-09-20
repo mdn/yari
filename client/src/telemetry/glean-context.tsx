@@ -4,6 +4,9 @@ import { clicked } from "./generated/element";
 import * as pings from "./generated/pings";
 import Glean from "@mozilla/glean/web";
 import { CRUD_MODE, GLEAN_CHANNEL, GLEAN_DEBUG, GLEAN_ENABLED } from "../env";
+import { useEffect } from "react";
+import { useLocation } from "react-router";
+import { useIsServer } from "../hooks";
 
 export type PageProps = {
   referrer: string | undefined;
@@ -46,9 +49,6 @@ function glean(): GleanAnalytics {
   Glean.initialize(GLEAN_APP_ID, uploadEnabled, {
     maxEvents: 1,
     channel: GLEAN_CHANNEL,
-    serverEndpoint: CRUD_MODE
-      ? "https://developer.allizom.org"
-      : document.location.origin,
   });
 
   if (CRUD_MODE) {
@@ -92,4 +92,24 @@ export function GleanProvider(props: { children: React.ReactNode }) {
 
 export function useGlean() {
   return React.useContext(GleanContext);
+}
+
+export function useGleanPage() {
+  const loc = useLocation();
+  const isServer = useIsServer();
+
+  let referrer,
+    location = {};
+  if (!isServer) {
+    referrer = document?.referrer;
+    location = window?.location;
+  }
+  return useEffect(
+    () =>
+      gleanAnalytics.page({
+        path: window?.location.toString(),
+        referrer: document?.referrer,
+      }),
+    [referrer, location, loc.pathname]
+  );
 }
