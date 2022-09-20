@@ -23,7 +23,7 @@ import {
   ARTICLE_ACTIONS_COLLECTION_SELECT_OPENED,
   ARTICLE_ACTIONS_NEW_COLLECTION,
   ARTICLE_ACTIONS_OPENED,
-  SOURCE_ARTICLE_ACTIONS,
+  NEW_COLLECTION_MODEL_SUBMIT_ARTICLE_ACTIONS,
 } from "../../../../telemetry/constants";
 
 const addValue = "add";
@@ -336,7 +336,7 @@ export default function BookmarkV2Menu({ doc }: { doc: Doc }) {
               collection_id: collection_id || collections[0].id,
             });
           }}
-          source={SOURCE_ARTICLE_ACTIONS}
+          source={NEW_COLLECTION_MODEL_SUBMIT_ARTICLE_ACTIONS}
         />
       )}
     </DropdownMenuWrapper>

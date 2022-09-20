@@ -1,10 +1,5 @@
 import React, { useState } from "react";
-import {
-  NEW_COLLECTION_MODEL_SUBMIT_ARTICLE_ACTIONS,
-  NEW_COLLECTION_MODEL_SUBMIT_COLLECTIONS_PAGE,
-  SOURCE_ARTICLE_ACTIONS,
-} from "../../../telemetry/constants";
-import { GleanProvider, useGlean } from "../../../telemetry/glean-context";
+import { useGlean } from "../../../telemetry/glean-context";
 import { Button } from "../../../ui/atoms/button";
 import MDNModal from "../../../ui/atoms/modal";
 import NoteCard from "../../../ui/molecules/notecards";
@@ -62,12 +57,8 @@ export default function NewEditCollectionModal({
       savedCollection = await edit(collection);
     } else {
       savedCollection = await create(collection);
-      const modal_source =
-        source === SOURCE_ARTICLE_ACTIONS
-          ? NEW_COLLECTION_MODEL_SUBMIT_ARTICLE_ACTIONS
-          : NEW_COLLECTION_MODEL_SUBMIT_COLLECTIONS_PAGE;
       glean.click({
-        source: modal_source,
+        source,
         subscription_type: userData?.subscriptionType || "none",
       });
     }

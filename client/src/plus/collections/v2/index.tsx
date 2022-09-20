@@ -23,7 +23,7 @@ import Mandala from "../../../ui/molecules/mandala";
 import { useGlean } from "../../../telemetry/glean-context";
 import {
   COLLECTIONS_BANNER_NEW_COLLECTION,
-  SOURCE_COLLECTIONS_PAGE,
+  NEW_COLLECTION_MODEL_SUBMIT_COLLECTIONS_PAGE,
 } from "../../../telemetry/constants";
 import { useUserData } from "../../../user-context";
 dayjs.extend(relativeTime);
@@ -70,7 +70,7 @@ function Overview() {
             <NewEditCollectionModal
               show={showCreate}
               setShow={setShowCreate}
-              source={SOURCE_COLLECTIONS_PAGE}
+              source={NEW_COLLECTION_MODEL_SUBMIT_COLLECTIONS_PAGE}
             />
           </section>
           <div className="mandala-wrapper">
@@ -182,7 +182,7 @@ function CollectionCard({ collection }: { collection: Collection }) {
           editingCollection={collection}
           show={showEdit}
           setShow={setShowEdit}
-          source={SOURCE_COLLECTIONS_PAGE}
+          source={NEW_COLLECTION_MODEL_SUBMIT_COLLECTIONS_PAGE}
         />
         <MDNModal
           isOpen={showDelete}
