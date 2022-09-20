@@ -101,8 +101,7 @@ export function useGleanPage() {
   const loc = useLocation();
   const isServer = useIsServer();
 
-  let referrer,
-    location = {};
+  let referrer, location;
   if (!isServer) {
     referrer = document?.referrer;
     location = window?.location;

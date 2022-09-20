@@ -137,7 +137,6 @@ function Settings({ user }: { user?: UserData }) {
   }
 
   const usage = estimate && displayEstimate(estimate);
-  const subscriptionType = user;
   return (
     <ul>
       <li>
