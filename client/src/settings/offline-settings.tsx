@@ -11,6 +11,10 @@ import { ContentStatus, ContentStatusPhase } from "./db";
 import { UserData, useUserData } from "../user-context";
 import { useLocale } from "../hooks";
 import { useGlean } from "../telemetry/glean-context";
+import {
+  TOGGLE_PLUS_OFFLINE_DISABLED,
+  TOGGLE_PLUS_OFFLINE_ENABLED,
+} from "../telemetry/constants";
 
 function displayEstimate({ usage = 0, quota = Infinity }: StorageEstimate) {
   const usageInMib = Math.round(usage / (1024 * 1024));
@@ -145,11 +149,11 @@ function Settings({ user }: { user?: UserData }) {
             checked={settings?.offline || false}
             toggle={(e) => {
               const source = e.target.checked
-                ? "TOGGLE_PLUS_OFFLINE_ENABLED"
-                : "TOGGLE_PLUS_OFFLINE_DISABLED";
+                ? TOGGLE_PLUS_OFFLINE_ENABLED
+                : TOGGLE_PLUS_OFFLINE_DISABLED;
               glean.click({
                 source: source,
-                subscription_type: user?.subscriptionType || "core",
+                subscription_type: user?.subscriptionType || "none",
               });
               updateSettings({
                 offline: e.target.checked,

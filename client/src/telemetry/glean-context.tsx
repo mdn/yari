@@ -49,6 +49,9 @@ function glean(): GleanAnalytics {
   Glean.initialize(GLEAN_APP_ID, uploadEnabled, {
     maxEvents: 1,
     channel: GLEAN_CHANNEL,
+    serverEndpoint: CRUD_MODE
+      ? "https://developer.allizom.org"
+      : document.location.origin,
   });
 
   if (CRUD_MODE) {

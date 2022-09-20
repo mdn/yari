@@ -62,17 +62,14 @@ export default function NewEditCollectionModal({
       savedCollection = await edit(collection);
     } else {
       savedCollection = await create(collection);
-      if (source === SOURCE_ARTICLE_ACTIONS) {
-        glean.click({
-          source: NEW_COLLECTION_MODEL_SUBMIT_ARTICLE_ACTIONS,
-          subscription_type: userData?.subscriptionType || "none",
-        });
-      } else {
-        glean.click({
-          source: NEW_COLLECTION_MODEL_SUBMIT_COLLECTIONS_PAGE,
-          subscription_type: userData?.subscriptionType || "none",
-        });
-      }
+      const modal_source =
+        source === SOURCE_ARTICLE_ACTIONS
+          ? NEW_COLLECTION_MODEL_SUBMIT_ARTICLE_ACTIONS
+          : NEW_COLLECTION_MODEL_SUBMIT_COLLECTIONS_PAGE;
+      glean.click({
+        source: modal_source,
+        subscription_type: userData?.subscriptionType || "none",
+      });
     }
     if (onClose) onClose(savedCollection.id);
     setCollection(editingCollection ? savedCollection : defaultCollection);

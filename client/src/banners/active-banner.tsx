@@ -6,6 +6,10 @@ import { BannerId } from "./ids";
 import { usePlusUrl } from "../plus/utils";
 import { useGlean } from "../telemetry/glean-context";
 import { useUserData } from "../user-context";
+import {
+  BANNER_PREVIEW_FEATURES_DISMISSED,
+  BANNER_PREVIEW_FEATURES_SETTINGS_LINK,
+} from "../telemetry/constants";
 
 // The <Banner> component displays a simple call-to-action banner at
 // the bottom of the window. The following props allow it to be customized.
@@ -116,8 +120,8 @@ function PreviewFeaturesBanner({ onDismissed }: { onDismissed: () => void }) {
   const _onDismissed = onDismissed;
   onDismissed = () => {
     glean.click({
-      source: "BANNER_PREVIEW_FEATURES_DISMISSED",
-      subscription_type: user?.subscriptionType || "core",
+      source: BANNER_PREVIEW_FEATURES_DISMISSED,
+      subscription_type: user?.subscriptionType || "none",
     });
     _onDismissed();
   };
@@ -129,8 +133,8 @@ function PreviewFeaturesBanner({ onDismissed }: { onDismissed: () => void }) {
           href="/en-US/plus/settings"
           onClick={() => {
             glean.click({
-              source: "BANNER_PREVIEW_FEATURES_SETTINGS_LINK",
-              subscription_type: user?.subscriptionType || "",
+              source: BANNER_PREVIEW_FEATURES_SETTINGS_LINK,
+              subscription_type: user?.subscriptionType || "none",
             });
             sendCTAEventToGA(bannerId);
           }}

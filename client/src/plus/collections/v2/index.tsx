@@ -59,7 +59,7 @@ function Overview() {
               onClickHandler={() => {
                 glean.click({
                   source: COLLECTIONS_BANNER_NEW_COLLECTION,
-                  subscription_type: user?.subscriptionType || "core",
+                  subscription_type: user?.subscriptionType || "none",
                 });
                 setShowCreate(true);
               }}
