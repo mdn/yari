@@ -426,7 +426,7 @@ export function findByURL(url: string, ...args: string[]) {
   if (!bareURL.toLowerCase().includes("/docs/")) {
     return;
   }
-  const doc = read(urlToFolderPath(bareURL), ...args);
+  const doc = read(urlToFolderPath(bareURL), args);
   if (doc && hash) {
     return { ...doc, url: `${doc.url}#${hash}` };
   }
@@ -593,18 +593,14 @@ export function remove(
   locale: string,
   { recursive = false, dry = false, redirect = "" } = {}
 ) {
-  const root = getRoot(locale);
+  const root = getRoot(locale, `cannot find root of locale: ${locale}`);
   const url = buildURL(locale, slug);
   let redirectUrl = redirect;
   if (redirect && !redirect.match("^http(s)?://")) {
     redirectUrl = buildURL(locale, redirect);
   }
 
-  const roots = [CONTENT_ROOT];
-  if (CONTENT_TRANSLATED_ROOT) {
-    roots.push(CONTENT_TRANSLATED_ROOT);
-  }
-  const { metadata, fileInfo } = findByURL(url, ...roots) || {};
+  const { metadata, fileInfo } = findByURL(url, root) || {};
   if (!metadata) {
     throw new Error(`document does not exists: ${url}`);
   }
