@@ -95,7 +95,8 @@ describe("testing the main render() function", () => {
         },
       }[url];
     });
-    const [result, errors] = await render("/en-us/docs/web/a");
+    const [$, errors] = await render("/en-us/docs/web/a");
+    const result = $.html();
     // First, let's check the result.
     expect(result).toEqual(
       expect.stringContaining('{{nonExistentMacro("yada")}}')
@@ -104,7 +105,6 @@ describe("testing the main render() function", () => {
     expect(result).toEqual(
       expect.stringContaining('{{page("/en-US/docs/Web/B", "bogus-section")}}')
     );
-    const $ = cheerio.load(result);
     const brokenLink = $(
       'a.page-not-created[title^="The documentation about this has not yet been written"]'
     );
