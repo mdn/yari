@@ -68,7 +68,7 @@ export function extractSections($: cheerio.CheerioAPI): [Section[], string[]] {
     })("div")
     .eq(0);
 
-  const body = $("#_body")[0] as cheerio.ParentNode;
+  const body = $("body")[0] as cheerio.ParentNode;
   const iterable = [...(body.childNodes as cheerio.Element[])];
 
   let c = 0;

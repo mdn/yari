@@ -323,6 +323,10 @@ export class HTMLTool {
   html() {
     return this.$.html();
   }
+
+  cheerio() {
+    return this.$;
+  }
 }
 
 // Utility functions are collected here. These are functions that are used

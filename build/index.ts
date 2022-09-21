@@ -3,7 +3,6 @@ import fs from "fs";
 import path from "path";
 
 import chalk from "chalk";
-import * as cheerio from "cheerio";
 import {
   MacroLiveSampleError,
   MacroRedirectedLinkError,
@@ -30,7 +29,6 @@ import { formatNotecards } from "./format-notecards";
 import buildOptions from "./build-options";
 export { gather as gatherGitHistory } from "./git-history";
 export { buildSPAs } from "./spas";
-import { renderCache as renderKumascriptCache } from "../kumascript";
 import LANGUAGES_RAW from "../libs/languages";
 import { safeDecodeURIComponent } from "../kumascript/src/api/util";
 import { wrapTables } from "./wrap-tables";
@@ -291,7 +289,6 @@ export interface BuiltDocument {
 }
 
 interface DocumentOptions {
-  clearKumascriptRenderCache?: boolean;
   fixFlaws?: boolean;
   fixFlawsVerbose?: boolean;
 }
@@ -328,12 +325,9 @@ export async function buildDocument(
   }
 
   let flaws: any[] = [];
-  let renderedHtml = "";
+  let renderedHtml = null;
   const liveSamples: LiveSample[] = [];
 
-  if (options.clearKumascriptRenderCache) {
-    renderKumascriptCache.clear();
-  }
   try {
     [renderedHtml, flaws] = await kumascript.render(document.url);
   } catch (error) {
@@ -352,7 +346,7 @@ export async function buildDocument(
     throw error;
   }
 
-  const $ = cheerio.load(`<div id="_body">${renderedHtml}</div>`);
+  const $ = renderedHtml;
 
   const liveSamplePages = kumascript.buildLiveSamplePages(
     document.url,

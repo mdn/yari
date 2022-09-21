@@ -6,6 +6,7 @@ import { m2h } from "../markdown";
 import info from "./src/info";
 import { render as renderMacros } from "./src/render";
 export { buildLiveSamplePages } from "./src/live-sample";
+import { CheerioAPI } from "cheerio";
 import { HTMLTool } from "./src/api/util";
 import { DEFAULT_LOCALE } from "../libs/constants";
 import {
@@ -22,15 +23,8 @@ export const renderCache = new LRU<string, unknown>({ max: 2000 });
 export async function render(
   url: string,
   { urlsSeen = null, selective_mode = false, invalidateCache = false } = {}
-): Promise<[string, SourceCodeError[]]> {
+): Promise<[CheerioAPI, SourceCodeError[]]> {
   const urlLC = url.toLowerCase();
-  if (renderCache.has(urlLC)) {
-    if (invalidateCache) {
-      renderCache.delete(urlLC);
-    } else {
-      return renderCache.get(urlLC);
-    }
-  }
 
   urlsSeen = urlsSeen || new Set([]);
   if (urlsSeen.has(urlLC)) {
@@ -102,12 +96,11 @@ export async function render(
   //       attributes of any iframes.
   const tool = new HTMLTool(renderedHtml);
   tool.injectSectionIDs();
-  renderCache.set(urlLC, [
-    tool.html(),
+  return [
+    tool.cheerio(),
     // The prerequisite errors have already been updated with their own file information.
     [...prerequisiteErrorsByKey.values()].concat(
       errors.map((e) => e.updateFileInfo(fileInfo))
     ),
-  ]);
-  return renderCache.get(urlLC);
+  ];
 }
