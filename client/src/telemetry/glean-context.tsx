@@ -101,17 +101,12 @@ export function useGleanPage() {
   const loc = useLocation();
   const isServer = useIsServer();
 
-  let referrer, location;
-  if (!isServer) {
-    referrer = document?.referrer;
-    location = window?.location;
-  }
-  return useEffect(
-    () =>
+  return useEffect(() => {
+    if (!isServer) {
       gleanAnalytics.page({
         path: window?.location.toString(),
         referrer: document?.referrer,
-      }),
-    [referrer, location, loc.pathname]
-  );
+      });
+    }
+  }, [loc.pathname, isServer]);
 }
