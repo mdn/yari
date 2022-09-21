@@ -93,8 +93,13 @@ function useLoading<T>(res: SWRResponse<T>) {
 async function fetcher<T>(key: string | undefined): Promise<T> {
   if (!key) throw Error("Invalid key");
   const response = await fetch(key);
-  if (!response.ok) throw Error(`${response.status}: ${response.statusText}`);
-  return response.json();
+  let data: any;
+  try {
+    data = await response.json();
+  } catch {}
+  if (!response.ok)
+    throw Error(data?.message || `${response.status}: ${response.statusText}`);
+  return data;
 }
 
 async function poster<B, R>(key: string | undefined, body: B): Promise<R>;
@@ -108,12 +113,13 @@ async function poster(key: string | undefined, body: any): Promise<any> {
       "content-type": "application/json",
     },
   });
-  if (!response.ok) throw Error(`${response.status}: ${response.statusText}`);
+  let data: any;
   try {
-    return await response.json();
-  } catch {
-    return response;
-  }
+    data = await response.json();
+  } catch {}
+  if (!response.ok)
+    throw Error(data?.error || `${response.status}: ${response.statusText}`);
+  return data || response;
 }
 
 async function deleter(key: string | undefined): Promise<Response> {
