@@ -17,13 +17,13 @@ import NewEditCollectionModal from "../../../../plus/collections/v2/new-edit-col
 import { DropdownMenu, DropdownMenuWrapper } from "../../../molecules/dropdown";
 import { Icon } from "../../../atoms/icon";
 import NoteCard from "../../../molecules/notecards";
-import { useGlean } from "../../../../telemetry/glean-context";
+import { gleanClick, useGlean } from "../../../../telemetry/glean-context";
 import { useUserData } from "../../../../user-context";
 import {
   ARTICLE_ACTIONS_COLLECTION_SELECT_OPENED,
   ARTICLE_ACTIONS_NEW_COLLECTION,
-  ARTICLE_ACTIONS_OPENED,
-  NEW_COLLECTION_MODEL_SUBMIT_ARTICLE_ACTIONS,
+  ARTICLE_ACTIONS_COLLECTIONS_OPENED,
+  NEW_COLLECTION_MODAL_SUBMIT_ARTICLE_ACTIONS,
 } from "../../../../telemetry/constants";
 
 const addValue = "add";
@@ -77,10 +77,7 @@ export default function BookmarkV2Menu({ doc }: { doc: Doc }) {
   const collectionChangeHandler = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const { value } = e.target;
     if (value === addValue) {
-      glean.click({
-        source: ARTICLE_ACTIONS_NEW_COLLECTION,
-        subscription_type: userData?.subscriptionType?.toString() || "none",
-      });
+      gleanClick(ARTICLE_ACTIONS_NEW_COLLECTION, userData, glean);
       setDisableAutoClose(true);
       setShowNewCollection(true);
       changeHandler(e);
@@ -178,10 +175,7 @@ export default function BookmarkV2Menu({ doc }: { doc: Doc }) {
           onClickHandler={() => {
             setShow((v) => !v);
             if (!show) {
-              glean.click({
-                source: ARTICLE_ACTIONS_OPENED,
-                subscription_type: userData?.subscriptionType || "none",
-              });
+              gleanClick(ARTICLE_ACTIONS_COLLECTIONS_OPENED, userData, glean);
             }
           }}
         >
@@ -238,10 +232,11 @@ export default function BookmarkV2Menu({ doc }: { doc: Doc }) {
                   onChange={collectionChangeHandler}
                   onFocus={() => {
                     if (!focusEventTriggered) {
-                      glean.click({
-                        source: ARTICLE_ACTIONS_COLLECTION_SELECT_OPENED,
-                        subscription_type: userData?.subscriptionType || "none",
-                      });
+                      gleanClick(
+                        ARTICLE_ACTIONS_COLLECTION_SELECT_OPENED,
+                        userData,
+                        glean
+                      );
                       setFocusEventTriggered(true);
                     }
                   }}
@@ -336,7 +331,7 @@ export default function BookmarkV2Menu({ doc }: { doc: Doc }) {
               collection_id: collection_id || collections[0].id,
             });
           }}
-          source={NEW_COLLECTION_MODEL_SUBMIT_ARTICLE_ACTIONS}
+          source={NEW_COLLECTION_MODAL_SUBMIT_ARTICLE_ACTIONS}
         />
       )}
     </DropdownMenuWrapper>

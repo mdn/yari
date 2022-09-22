@@ -4,7 +4,7 @@ import { ReactComponent as CloseIcon } from "@mdn/dinocons/general/close.svg";
 import { useGA } from "../ga-context";
 import { BannerId } from "./ids";
 import { usePlusUrl } from "../plus/utils";
-import { useGlean } from "../telemetry/glean-context";
+import { gleanClick, useGlean } from "../telemetry/glean-context";
 import { useUserData } from "../user-context";
 import {
   BANNER_PREVIEW_FEATURES_DISMISSED,
@@ -117,25 +117,18 @@ function PreviewFeaturesBanner({ onDismissed }: { onDismissed: () => void }) {
   const sendCTAEventToGA = useSendCTAEventToGA();
   const glean = useGlean();
   const user = useUserData();
-  const _onDismissed = onDismissed;
-  onDismissed = () => {
-    glean.click({
-      source: BANNER_PREVIEW_FEATURES_DISMISSED,
-      subscription_type: user?.subscriptionType || "none",
-    });
-    _onDismissed();
+  const onDismissedWithGlean = () => {
+    gleanClick(BANNER_PREVIEW_FEATURES_DISMISSED, user, glean);
+    onDismissed();
   };
   return (
-    <Banner id={bannerId} onDismissed={onDismissed}>
+    <Banner id={bannerId} onDismissed={onDismissedWithGlean}>
       <p className="mdn-cta-copy">
         MDN Plus preview features are now available.{" "}
         <a
           href="/en-US/plus/settings"
           onClick={() => {
-            glean.click({
-              source: BANNER_PREVIEW_FEATURES_SETTINGS_LINK,
-              subscription_type: user?.subscriptionType || "none",
-            });
+            gleanClick(BANNER_PREVIEW_FEATURES_SETTINGS_LINK, user, glean);
             sendCTAEventToGA(bannerId);
           }}
         >

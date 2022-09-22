@@ -12,7 +12,7 @@ import "./index.scss";
 import { BookmarkContainer } from "./bookmark-menu";
 import { useUIStatus } from "../../../ui-context";
 import { useGlean } from "../../../telemetry/glean-context";
-import { ARTICLE_ACTIONS_OPENED } from "../../../telemetry/constants";
+import { ARTICLE_ACTIONS_COLLECTIONS_OPENED } from "../../../telemetry/constants";
 
 export const ArticleActions = ({
   doc,
@@ -32,12 +32,6 @@ export const ArticleActions = ({
   const glean = useGlean();
 
   function toggleArticleActionsMenu() {
-    if (showArticleActionsMenu) {
-      glean.click({
-        source: ARTICLE_ACTIONS_OPENED,
-        subscription_type: userData?.subscriptionType || "none",
-      });
-    }
     setShowArticleActionsMenu(!showArticleActionsMenu);
     setFullScreenOverlay(!fullScreenOverlay);
   }

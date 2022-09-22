@@ -1,16 +1,17 @@
 export const ARTICLE_ACTIONS_COLLECTION_SELECT_OPENED =
-  "ARTICLE_ACTIONS_COLLECTION_SELECT_OPENED";
-export const ARTICLE_ACTIONS_NEW_COLLECTION = "ARTICLE_ACTIONS_NEW_COLLECTION";
-export const ARTICLE_ACTIONS_OPENED = "ARTICLE_ACTIONS_OPENED";
+  "article_actions_collection_select_opened";
+export const ARTICLE_ACTIONS_NEW_COLLECTION = "article_actions_new_collection";
+export const ARTICLE_ACTIONS_COLLECTIONS_OPENED =
+  "article_actions_collections_opened";
 export const BANNER_PREVIEW_FEATURES_DISMISSED =
-  "BANNER_PREVIEW_FEATURES_DISMISSED";
+  "banner_preview_features_dismissed";
 export const BANNER_PREVIEW_FEATURES_SETTINGS_LINK =
-  "BANNER_PREVIEW_FEATURES_SETTINGS_LINK";
+  "banner_preview_features_settings_link";
 export const COLLECTIONS_BANNER_NEW_COLLECTION =
-  "COLLECTIONS_BANNER_NEW_COLLECTION";
-export const NEW_COLLECTION_MODEL_SUBMIT_ARTICLE_ACTIONS =
-  "NEW_COLLECTION_MODEL_SUBMIT_ARTICLE_ACTIONS";
-export const NEW_COLLECTION_MODEL_SUBMIT_COLLECTIONS_PAGE =
-  "NEW_COLLECTION_MODEL_SUBMIT_COLLECTIONS_PAGE";
-export const TOGGLE_PLUS_OFFLINE_DISABLED = "TOGGLE_PLUS_OFFLINE_DISABLED";
-export const TOGGLE_PLUS_OFFLINE_ENABLED = "TOGGLE_PLUS_OFFLINE_ENABLED";
+  "collections_banner_new_collection";
+export const NEW_COLLECTION_MODAL_SUBMIT_ARTICLE_ACTIONS =
+  "new_collection_modal_submit_article_actions";
+export const NEW_COLLECTION_MODAL_SUBMIT_COLLECTIONS_PAGE =
+  "new_collection_modal_submit_collections_page";
+export const TOGGLE_PLUS_OFFLINE_DISABLED = "toggle_plus_offline_disabled";
+export const TOGGLE_PLUS_OFFLINE_ENABLED = "toggle_plus_offline_enabled";

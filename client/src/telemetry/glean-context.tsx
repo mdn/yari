@@ -7,6 +7,7 @@ import { CRUD_MODE, GLEAN_CHANNEL, GLEAN_DEBUG, GLEAN_ENABLED } from "../env";
 import { useEffect } from "react";
 import { useLocation } from "react-router";
 import { useIsServer } from "../hooks";
+import { useUserData } from "../user-context";
 
 export type PageProps = {
   referrer: string | undefined;
@@ -109,4 +110,11 @@ export function useGleanPage() {
       });
     }
   }, [loc.pathname, isServer]);
+}
+
+export function gleanClick(source, user, glean) {
+  glean.click({
+    source,
+    subscription_type: user?.subscriptionType || "none",
+  });
 }

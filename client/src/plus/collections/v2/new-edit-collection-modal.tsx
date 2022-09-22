@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useGlean } from "../../../telemetry/glean-context";
+import { gleanClick, useGlean } from "../../../telemetry/glean-context";
 import { Button } from "../../../ui/atoms/button";
 import MDNModal from "../../../ui/atoms/modal";
 import NoteCard from "../../../ui/molecules/notecards";
@@ -56,11 +56,8 @@ export default function NewEditCollectionModal({
     if ("id" in collection) {
       savedCollection = await edit(collection);
     } else {
+      gleanClick(source, userData, glean);
       savedCollection = await create(collection);
-      glean.click({
-        source,
-        subscription_type: userData?.subscriptionType || "none",
-      });
     }
     if (onClose) onClose(savedCollection.id);
     setCollection(editingCollection ? savedCollection : defaultCollection);

@@ -10,7 +10,7 @@ import { MDN_PLUS_TITLE } from "../constants";
 import { ContentStatus, ContentStatusPhase } from "./db";
 import { UserData, useUserData } from "../user-context";
 import { useLocale } from "../hooks";
-import { useGlean } from "../telemetry/glean-context";
+import { gleanClick, useGlean } from "../telemetry/glean-context";
 import {
   TOGGLE_PLUS_OFFLINE_DISABLED,
   TOGGLE_PLUS_OFFLINE_ENABLED,
@@ -150,10 +150,7 @@ function Settings({ user }: { user?: UserData }) {
               const source = e.target.checked
                 ? TOGGLE_PLUS_OFFLINE_ENABLED
                 : TOGGLE_PLUS_OFFLINE_DISABLED;
-              glean.click({
-                source: source,
-                subscription_type: user?.subscriptionType || "none",
-              });
+              gleanClick(source, user, glean);
               updateSettings({
                 offline: e.target.checked,
               });
