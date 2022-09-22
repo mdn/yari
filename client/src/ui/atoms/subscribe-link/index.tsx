@@ -1,7 +1,7 @@
 import "./index.scss";
 import { Button } from "../button";
 import { usePlusUrl } from "../../../plus/utils";
-import { gleanClick, useGlean } from "../../../telemetry/glean-context";
+import { useGleanClick } from "../../../telemetry/glean-context";
 import { TOP_NAV_GET_MDN_PLUS } from "../../../telemetry/constants";
 
 /**
@@ -11,12 +11,12 @@ import { TOP_NAV_GET_MDN_PLUS } from "../../../telemetry/constants";
  */
 export const SubscribeLink = () => {
   const href = usePlusUrl();
-  const glean = useGlean();
+  const gleanClick = useGleanClick();
   return (
     <Button
       href={href}
       extraClasses="mdn-plus-subscribe-link"
-      onClickHandler={() => gleanClick(TOP_NAV_GET_MDN_PLUS, null, glean)}
+      onClickHandler={() => gleanClick(TOP_NAV_GET_MDN_PLUS)}
     >
       Get MDN Plus
     </Button>

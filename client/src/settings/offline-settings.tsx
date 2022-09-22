@@ -8,13 +8,13 @@ import ClearButton from "./clear";
 import { Spinner } from "../ui/atoms/spinner";
 import { MDN_PLUS_TITLE } from "../constants";
 import { ContentStatus, ContentStatusPhase } from "./db";
-import { UserData, useUserData } from "../user-context";
+import { useUserData } from "../user-context";
 import { useLocale } from "../hooks";
-import { gleanClick, useGlean } from "../telemetry/glean-context";
 import {
   TOGGLE_PLUS_OFFLINE_DISABLED,
   TOGGLE_PLUS_OFFLINE_ENABLED,
 } from "../telemetry/constants";
+import { useGleanClick } from "../telemetry/glean-context";
 
 function displayEstimate({ usage = 0, quota = Infinity }: StorageEstimate) {
   const usageInMib = Math.round(usage / (1024 * 1024));
@@ -32,7 +32,7 @@ export default function OfflineSettings({ ...appProps }) {
       <h2>MDN Offline</h2>
       {user?.isSubscriber ? (
         serviceWorkerAvailable ? (
-          <Settings user={user} />
+          <Settings />
         ) : (
           <>
             <h3>Offline mode is unavailable </h3>{" "}
@@ -52,7 +52,7 @@ export default function OfflineSettings({ ...appProps }) {
   );
 }
 
-function Settings({ user }: { user?: UserData }) {
+function Settings() {
   document.title = `Settings | ${MDN_PLUS_TITLE}`;
   const [status, setStatus] = useState<ContentStatus>();
   const [saving, setSaving] = useState<boolean>(true);
@@ -61,7 +61,7 @@ function Settings({ user }: { user?: UserData }) {
   const [settings, setSettings] = useState<SettingsData>();
   // Workaround to avoid "Error: Too many re-renders." (https://github.com/mdn/yari/pull/5744).
   const updateTriggered = useRef(false);
-  const glean = useGlean();
+  const gleanClick = useGleanClick();
 
   useEffect(() => {
     const init = async () => {
@@ -150,7 +150,7 @@ function Settings({ user }: { user?: UserData }) {
               const source = e.target.checked
                 ? TOGGLE_PLUS_OFFLINE_ENABLED
                 : TOGGLE_PLUS_OFFLINE_DISABLED;
-              gleanClick(source, user, glean);
+              gleanClick(source);
               updateSettings({
                 offline: e.target.checked,
               });

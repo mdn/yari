@@ -1,9 +1,8 @@
 import React, { useState } from "react";
-import { gleanClick, useGlean } from "../../../telemetry/glean-context";
+import { useGleanClick } from "../../../telemetry/glean-context";
 import { Button } from "../../../ui/atoms/button";
 import MDNModal from "../../../ui/atoms/modal";
 import NoteCard from "../../../ui/molecules/notecards";
-import { useUserData } from "../../../user-context";
 import {
   Collection,
   NewCollection,
@@ -29,8 +28,7 @@ export default function NewEditCollectionModal({
     description: "",
   };
   const [collection, setCollection] = useState(defaultCollection);
-  const glean = useGlean();
-  const userData = useUserData();
+  const gleanClick = useGleanClick();
   const { mutator: edit, ...editHook } = useCollectionEdit();
   const { mutator: create, ...createHook } = useCollectionCreate();
   const { isPending, resetError, error } =
@@ -56,7 +54,7 @@ export default function NewEditCollectionModal({
     if ("id" in collection) {
       savedCollection = await edit(collection);
     } else {
-      gleanClick(source, userData, glean);
+      gleanClick(source);
       savedCollection = await create(collection);
     }
     if (onClose) onClose(savedCollection.id);

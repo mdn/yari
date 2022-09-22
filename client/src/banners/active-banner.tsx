@@ -4,8 +4,7 @@ import { ReactComponent as CloseIcon } from "@mdn/dinocons/general/close.svg";
 import { useGA } from "../ga-context";
 import { BannerId } from "./ids";
 import { usePlusUrl } from "../plus/utils";
-import { gleanClick, useGlean } from "../telemetry/glean-context";
-import { useUserData } from "../user-context";
+import { useGleanClick } from "../telemetry/glean-context";
 import {
   BANNER_PREVIEW_FEATURES_DISMISSED,
   BANNER_PREVIEW_FEATURES_SETTINGS_LINK,
@@ -115,10 +114,9 @@ function PlusLaunchAnnouncementBanner({
 function PreviewFeaturesBanner({ onDismissed }: { onDismissed: () => void }) {
   const bannerId = BannerId.PREVIEW_FEATURES;
   const sendCTAEventToGA = useSendCTAEventToGA();
-  const glean = useGlean();
-  const user = useUserData();
+  const gleanClick = useGleanClick();
   const onDismissedWithGlean = () => {
-    gleanClick(BANNER_PREVIEW_FEATURES_DISMISSED, user, glean);
+    gleanClick(BANNER_PREVIEW_FEATURES_DISMISSED);
     onDismissed();
   };
   return (
@@ -128,7 +126,7 @@ function PreviewFeaturesBanner({ onDismissed }: { onDismissed: () => void }) {
         <a
           href="/en-US/plus/settings"
           onClick={() => {
-            gleanClick(BANNER_PREVIEW_FEATURES_SETTINGS_LINK, user, glean);
+            gleanClick(BANNER_PREVIEW_FEATURES_SETTINGS_LINK);
             sendCTAEventToGA(bannerId);
           }}
         >

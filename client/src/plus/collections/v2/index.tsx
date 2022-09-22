@@ -20,12 +20,11 @@ import "./index.scss";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import Mandala from "../../../ui/molecules/mandala";
-import { gleanClick, useGlean } from "../../../telemetry/glean-context";
+import { useGleanClick } from "../../../telemetry/glean-context";
 import {
   COLLECTIONS_BANNER_NEW_COLLECTION,
   NEW_COLLECTION_MODAL_SUBMIT_COLLECTIONS_PAGE,
 } from "../../../telemetry/constants";
-import { useUserData } from "../../../user-context";
 dayjs.extend(relativeTime);
 
 export default function Collections() {
@@ -41,10 +40,8 @@ export default function Collections() {
 
 function Overview() {
   const { data, isLoading, error } = useCollections();
-  const glean = useGlean();
-  const user = useUserData();
   const [showCreate, setShowCreate] = useState(false);
-
+  const gleanClick = useGleanClick();
   return (
     <>
       <header className="container">
@@ -57,7 +54,7 @@ function Overview() {
             </p>
             <Button
               onClickHandler={() => {
-                gleanClick(COLLECTIONS_BANNER_NEW_COLLECTION, user, glean);
+                gleanClick(COLLECTIONS_BANNER_NEW_COLLECTION);
                 setShowCreate(true);
               }}
               isDisabled={isLoading}

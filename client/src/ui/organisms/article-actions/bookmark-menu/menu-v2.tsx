@@ -17,8 +17,7 @@ import NewEditCollectionModal from "../../../../plus/collections/v2/new-edit-col
 import { DropdownMenu, DropdownMenuWrapper } from "../../../molecules/dropdown";
 import { Icon } from "../../../atoms/icon";
 import NoteCard from "../../../molecules/notecards";
-import { gleanClick, useGlean } from "../../../../telemetry/glean-context";
-import { useUserData } from "../../../../user-context";
+import { useGleanClick } from "../../../../telemetry/glean-context";
 import {
   ARTICLE_ACTIONS_COLLECTION_SELECT_OPENED,
   ARTICLE_ACTIONS_NEW_COLLECTION,
@@ -47,8 +46,7 @@ export default function BookmarkV2Menu({ doc }: { doc: Doc }) {
   const [disableAutoClose, setDisableAutoClose] = useState(false);
   const [formItem, setFormItem] = useState<Item | NewItem>(defaultItem);
   const [lastAction, setLastAction] = useState("");
-  const glean = useGlean();
-  const userData = useUserData();
+  const gleanClick = useGleanClick();
   const { mutator: addItem, ...addStatus } = useItemAdd();
   const { mutator: editItem, ...editStatus } = useItemEdit();
   const { mutator: deleteItem, ...deleteStatus } = useItemDelete();
@@ -77,7 +75,7 @@ export default function BookmarkV2Menu({ doc }: { doc: Doc }) {
   const collectionChangeHandler = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const { value } = e.target;
     if (value === addValue) {
-      gleanClick(ARTICLE_ACTIONS_NEW_COLLECTION, userData, glean);
+      gleanClick(ARTICLE_ACTIONS_NEW_COLLECTION);
       setDisableAutoClose(true);
       setShowNewCollection(true);
       changeHandler(e);
@@ -175,7 +173,7 @@ export default function BookmarkV2Menu({ doc }: { doc: Doc }) {
           onClickHandler={() => {
             setShow((v) => !v);
             if (!show) {
-              gleanClick(ARTICLE_ACTIONS_COLLECTIONS_OPENED, userData, glean);
+              gleanClick(ARTICLE_ACTIONS_COLLECTIONS_OPENED);
             }
           }}
         >
@@ -232,11 +230,7 @@ export default function BookmarkV2Menu({ doc }: { doc: Doc }) {
                   onChange={collectionChangeHandler}
                   onFocus={() => {
                     if (!focusEventTriggered) {
-                      gleanClick(
-                        ARTICLE_ACTIONS_COLLECTION_SELECT_OPENED,
-                        userData,
-                        glean
-                      );
+                      gleanClick(ARTICLE_ACTIONS_COLLECTION_SELECT_OPENED);
                       setFocusEventTriggered(true);
                     }
                   }}
