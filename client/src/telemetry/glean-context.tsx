@@ -7,7 +7,6 @@ import { CRUD_MODE, GLEAN_CHANNEL, GLEAN_DEBUG, GLEAN_ENABLED } from "../env";
 import { useEffect } from "react";
 import { useLocation } from "react-router";
 import { useIsServer } from "../hooks";
-import { useUserData } from "../user-context";
 
 export type PageProps = {
   referrer: string | undefined;

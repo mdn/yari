@@ -11,8 +11,6 @@ import "./index.scss";
 
 import { BookmarkContainer } from "./bookmark-menu";
 import { useUIStatus } from "../../../ui-context";
-import { useGlean } from "../../../telemetry/glean-context";
-import { ARTICLE_ACTIONS_COLLECTIONS_OPENED } from "../../../telemetry/constants";
 
 export const ArticleActions = ({
   doc,
@@ -29,7 +27,6 @@ export const ArticleActions = ({
   const isAuthenticated = userData && userData.isAuthenticated;
   const translations = doc.other_translations || [];
   const { native } = doc;
-  const glean = useGlean();
 
   function toggleArticleActionsMenu() {
     setShowArticleActionsMenu(!showArticleActionsMenu);
