@@ -325,11 +325,11 @@ export async function buildDocument(
   }
 
   let flaws: any[] = [];
-  let renderedHtml = null;
+  let $ = null;
   const liveSamples: LiveSample[] = [];
 
   try {
-    [renderedHtml, flaws] = await kumascript.render(document.url);
+    [$, flaws] = await kumascript.render(document.url);
   } catch (error) {
     if (error.name === "MacroInvocationError") {
       // The source HTML couldn't even be parsed! There's no point allowing
@@ -345,8 +345,6 @@ export async function buildDocument(
     // Any other unexpected error re-thrown.
     throw error;
   }
-
-  const $ = renderedHtml;
 
   const liveSamplePages = kumascript.buildLiveSamplePages(
     document.url,

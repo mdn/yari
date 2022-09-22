@@ -1,4 +1,3 @@
-import cheerio from "cheerio";
 import { Document } from "../../content";
 import info from "../src/info";
 import { render } from "../index";
