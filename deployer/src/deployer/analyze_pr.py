@@ -94,7 +94,7 @@ def post_about_deployment(build_directory: Path, **config):
 
     if links:
         if len(links) > 5:
-            heading = f"<details><summary><b>Preview URLs ({len(links)} pages)</b></summary>\n\n"
+            heading = f"<details><summary><b>Preview URLs</b> ({len(links)} pages)</summary>\n\n"
             return heading + "\n".join(links) + "\n\n</details>"
         else:
             heading = "<b>Preview URLs</b>\n\n"
@@ -177,7 +177,7 @@ def post_about_dangerous_content(
 
     if comments:
         heading = (
-            f"\n<details><summary><b>External URLs ({total_urls})</b></summary>\n\n"
+            f"\n<details><summary><b>External URLs</b> ({total_urls})</summary>\n\n"
         )
         per_doc_comments = []
         for doc, comment in comments:
@@ -233,11 +233,9 @@ def post_about_flaws(build_directory: Path, **config):
         comments.append((doc, "\n".join(flaws_list)))
 
     def count_flaws(flaws):
-        nonlocal total_flaws
         count = 0
         for flaw in flaws.values():
             count += len(flaw)
-        total_flaws += count
         return count
 
     if comments:
@@ -253,13 +251,14 @@ def post_about_flaws(build_directory: Path, **config):
             lines.append(f"Title: `{doc['title']}`")
             flaw_count = count_flaws(doc["flaws"])
             if flaw_count:
+                total_flaws += flaw_count
                 lines.append(f"Flaw count: {flaw_count}")
             lines.append("")
             lines.append(comment)
 
             per_doc_comments.append("\n".join(lines))
 
-        heading = f"\n<details><summary><b>Flaws ({total_flaws})</b></summary>\n\n"
+        heading = f"\n<details><summary><b>Flaws</b> ({total_flaws})</summary>\n\n"
 
         if docs_with_zero_flaws:
             heading += (

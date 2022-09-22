@@ -53,7 +53,7 @@ def test_analyze_pr_preview_urls():
     doc6 = {"doc": {"mdn_url": "/en-US/docs/Foo6"}}
     with mock_build_directory(doc1, doc2, doc3, doc4, doc5, doc6) as build_directory:
         comment = analyze_pr(build_directory, dict(DEFAULT_CONFIG, prefix="pr007"))
-        assert "<details><summary><b>Preview URLs (6 pages)</b></summary>" in comment
+        assert "<details><summary><b>Preview URLs</b> (6 pages)</summary>" in comment
         assert (
             "- [/en-US/docs/Foo6](https://pr007.content.dev.mdn.mozit.cloud/en-US/docs/Foo6)\n\n</details>"
             in comment
@@ -84,7 +84,7 @@ def test_analyze_pr_flaws():
     }
     with mock_build_directory(no_flaws_doc, doc) as build_directory:
         comment = analyze_pr(build_directory, dict(DEFAULT_CONFIG, analyze_flaws=True))
-        assert "<details><summary><b>Flaws (2)</b></summary>" in comment
+        assert "<details><summary><b>Flaws</b> (2)</summary>" in comment
         assert "1 document with no flaws that don't need to be listed" in comment
         assert "Flaw count: 2" in comment
         assert len(comment.split("\n---\n")) == 1
@@ -118,7 +118,7 @@ def test_analyze_pr_dangerous_content():
         comment = analyze_pr(
             build_directory, dict(DEFAULT_CONFIG, analyze_dangerous_content=True)
         )
-        assert "<details><summary><b>External URLs (1)</b></summary>" in comment
+        assert "<details><summary><b>External URLs</b> (1)</summary>" in comment
         assert "  - <https://www.peterbe.com> (1 time)" in comment
 
 
@@ -156,7 +156,7 @@ def test_analyze_pr_dangerous_content_with_diff_file_matched():
                 diff_file=diff_file,
             ),
         )
-        assert "<details><summary><b>External URLs (1)</b></summary>" in comment
+        assert "<details><summary><b>External URLs</b> (1)</summary>" in comment
         assert "  - <https://www.peterbe.com> (1 time)" in comment
 
 
