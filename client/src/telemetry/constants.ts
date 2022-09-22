@@ -13,5 +13,7 @@ export const NEW_COLLECTION_MODAL_SUBMIT_ARTICLE_ACTIONS =
   "new_collection_modal_submit_article_actions";
 export const NEW_COLLECTION_MODAL_SUBMIT_COLLECTIONS_PAGE =
   "new_collection_modal_submit_collections_page";
+export const TOP_NAV_ALREADY_SUBSCRIBER = "top_nav_already_subscriber";
+export const TOP_NAV_GET_MDN_PLUS = "top_nav_get_mdn_plus";
 export const TOGGLE_PLUS_OFFLINE_DISABLED = "toggle_plus_offline_disabled";
 export const TOGGLE_PLUS_OFFLINE_ENABLED = "toggle_plus_offline_enabled";
