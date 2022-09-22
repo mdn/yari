@@ -1755,15 +1755,15 @@
   resolved "https://registry.yarnpkg.com/@mdn/minimalist/-/minimalist-2.0.4.tgz#6488ab0cb65b059446dcd9bf542246b81febe241"
   integrity sha512-jocePw/fsGcBxO67D+iWQLZ0TQjwNVonaME2BFN98QIm/e1kTY1/k2s4fOqH5MMa3QYURxa098bI4sChn6s/7Q==
 
-"@mozilla/glean@1.1.0":
-  version "1.1.0"
-  resolved "https://registry.yarnpkg.com/@mozilla/glean/-/glean-1.1.0.tgz#1f745156c2c278db1876eac7d399ab9138c8781c"
-  integrity sha512-wpYQbzDeEfkvR2EO7xwamFu0Qasz8dWUon8VT+ErcYmeocPbflar6WYiAkt7gV9f4LJQGWVFSiDM1etpzEi4ug==
+"@mozilla/glean@1.2.0":
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/@mozilla/glean/-/glean-1.2.0.tgz#7489fd489e23acdf557af092743405ae38eb1294"
+  integrity sha512-zhLb9n6gGC7BcPT9jwBCqlkjlIWjd34hCrcLDSb0vxcrzL9s8eZu9gsXSR+SHW+ebpOZptdDOerrE4GwAbDznQ==
   dependencies:
     fflate "^0.7.1"
     jose "^4.0.4"
     tslib "^2.3.1"
-    uuid "^8.3.2"
+    uuid "^9.0.0"
 
 "@nicolo-ribaudo/eslint-scope-5-internals@5.1.1-v1":
   version "5.1.1-v1"
@@ -12710,6 +12710,11 @@ uuid@^8.3.0, uuid@^8.3.2:
   version "8.3.2"
   resolved "https://registry.yarnpkg.com/uuid/-/uuid-8.3.2.tgz#80d5b5ced271bb9af6c445f21a1a04c606cefbe2"
   integrity sha512-+NYs2QeMWy+GWFOEm9xnn6HCDp0l7QBD7ml8zLUmJ+93Q5NF0NocErnwkTkXVFNiX3/fpC6afS8Dhb/gz7R7eg==
+
+uuid@^9.0.0:
+  version "9.0.0"
+  resolved "https://registry.yarnpkg.com/uuid/-/uuid-9.0.0.tgz#592f550650024a38ceb0c562f2f6aa435761efb5"
+  integrity sha512-MXcSTerfPa4uqyzStbRoTgt5XIe3x5+42+q1sDuy3R5MDk66URdLMOZe5aPX/SQd+kuYAh0FdP/pO28IkQyTeg==
 
 v8-compile-cache-lib@^3.0.1:
   version "3.0.1"
