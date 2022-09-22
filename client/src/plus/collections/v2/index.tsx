@@ -20,6 +20,11 @@ import "./index.scss";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import Mandala from "../../../ui/molecules/mandala";
+import { useGleanClick } from "../../../telemetry/glean-context";
+import {
+  COLLECTIONS_BANNER_NEW_COLLECTION,
+  NEW_COLLECTION_MODAL_SUBMIT_COLLECTIONS_PAGE,
+} from "../../../telemetry/constants";
 dayjs.extend(relativeTime);
 
 export default function Collections() {
@@ -35,9 +40,8 @@ export default function Collections() {
 
 function Overview() {
   const { data, isLoading, error } = useCollections();
-
   const [showCreate, setShowCreate] = useState(false);
-
+  const gleanClick = useGleanClick();
   return (
     <>
       <header className="container">
@@ -49,12 +53,19 @@ function Overview() {
               to easily find them later on.
             </p>
             <Button
-              onClickHandler={() => setShowCreate(true)}
+              onClickHandler={() => {
+                gleanClick(COLLECTIONS_BANNER_NEW_COLLECTION);
+                setShowCreate(true);
+              }}
               isDisabled={isLoading}
             >
               New Collection
             </Button>
-            <NewEditCollectionModal show={showCreate} setShow={setShowCreate} />
+            <NewEditCollectionModal
+              show={showCreate}
+              setShow={setShowCreate}
+              source={NEW_COLLECTION_MODAL_SUBMIT_COLLECTIONS_PAGE}
+            />
           </section>
           <div className="mandala-wrapper">
             <Mandala />
@@ -85,7 +96,6 @@ function CollectionCard({ collection }: { collection: Collection }) {
   const [showDropdown, setShowDropdown] = useState(false);
   const [showEdit, setShowEdit] = useState(false);
   const [showDelete, setShowDelete] = useState(false);
-
   const {
     mutator: deleter,
     error,
@@ -139,6 +149,7 @@ function CollectionCard({ collection }: { collection: Collection }) {
                     title="Edit"
                     onClickHandler={() => {
                       setShowEdit(true);
+
                       setShowDropdown(false);
                     }}
                   >
@@ -165,6 +176,7 @@ function CollectionCard({ collection }: { collection: Collection }) {
           editingCollection={collection}
           show={showEdit}
           setShow={setShowEdit}
+          source={NEW_COLLECTION_MODAL_SUBMIT_COLLECTIONS_PAGE}
         />
         <MDNModal
           isOpen={showDelete}

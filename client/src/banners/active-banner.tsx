@@ -4,6 +4,11 @@ import { ReactComponent as CloseIcon } from "@mdn/dinocons/general/close.svg";
 import { useGA } from "../ga-context";
 import { BannerId } from "./ids";
 import { usePlusUrl } from "../plus/utils";
+import { useGleanClick } from "../telemetry/glean-context";
+import {
+  BANNER_PREVIEW_FEATURES_DISMISSED,
+  BANNER_PREVIEW_FEATURES_SETTINGS_LINK,
+} from "../telemetry/constants";
 
 // The <Banner> component displays a simple call-to-action banner at
 // the bottom of the window. The following props allow it to be customized.
@@ -109,14 +114,21 @@ function PlusLaunchAnnouncementBanner({
 function PreviewFeaturesBanner({ onDismissed }: { onDismissed: () => void }) {
   const bannerId = BannerId.PREVIEW_FEATURES;
   const sendCTAEventToGA = useSendCTAEventToGA();
-
+  const gleanClick = useGleanClick();
+  const onDismissedWithGlean = () => {
+    gleanClick(BANNER_PREVIEW_FEATURES_DISMISSED);
+    onDismissed();
+  };
   return (
-    <Banner id={bannerId} onDismissed={onDismissed}>
+    <Banner id={bannerId} onDismissed={onDismissedWithGlean}>
       <p className="mdn-cta-copy">
         MDN Plus preview features are now available.{" "}
         <a
           href="/en-US/plus/settings"
-          onClick={() => sendCTAEventToGA(bannerId)}
+          onClick={() => {
+            gleanClick(BANNER_PREVIEW_FEATURES_SETTINGS_LINK);
+            sendCTAEventToGA(bannerId);
+          }}
         >
           Manage settings
         </a>

@@ -19,7 +19,7 @@ export enum Period {
 }
 
 const SUBSCRIPTIONS = {
-  [SubscriptionType.MDN_CORE]: { order: 0 },
+  [SubscriptionType.MDN_CORE]: { order: 0, period: Period.Month },
   [SubscriptionType.MDN_PLUS_5M]: {
     order: 1,
     period: Period.Month,

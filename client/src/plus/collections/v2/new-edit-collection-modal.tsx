@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useGleanClick } from "../../../telemetry/glean-context";
 import { Button } from "../../../ui/atoms/button";
 import MDNModal from "../../../ui/atoms/modal";
 import NoteCard from "../../../ui/molecules/notecards";
@@ -14,18 +15,20 @@ export default function NewEditCollectionModal({
   setShow,
   onClose,
   editingCollection,
+  source,
 }: {
   show: boolean;
   setShow: React.Dispatch<React.SetStateAction<boolean>>;
   onClose?: (collection_id?: string) => void;
   editingCollection?: Collection;
+  source: string;
 }) {
   const defaultCollection: Collection | NewCollection = editingCollection || {
     name: "",
     description: "",
   };
   const [collection, setCollection] = useState(defaultCollection);
-
+  const gleanClick = useGleanClick();
   const { mutator: edit, ...editHook } = useCollectionEdit();
   const { mutator: create, ...createHook } = useCollectionCreate();
   const { isPending, resetError, error } =
@@ -47,8 +50,13 @@ export default function NewEditCollectionModal({
 
   const saveHandler = async (e: React.BaseSyntheticEvent) => {
     e.preventDefault();
-    const savedCollection =
-      "id" in collection ? await edit(collection) : await create(collection);
+    let savedCollection;
+    if ("id" in collection) {
+      savedCollection = await edit(collection);
+    } else {
+      gleanClick(source);
+      savedCollection = await create(collection);
+    }
     if (onClose) onClose(savedCollection.id);
     setCollection(editingCollection ? savedCollection : defaultCollection);
     setShow(false);

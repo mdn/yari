@@ -10,6 +10,11 @@ import { MDN_PLUS_TITLE } from "../constants";
 import { ContentStatus, ContentStatusPhase } from "./db";
 import { useUserData } from "../user-context";
 import { useLocale } from "../hooks";
+import {
+  TOGGLE_PLUS_OFFLINE_DISABLED,
+  TOGGLE_PLUS_OFFLINE_ENABLED,
+} from "../telemetry/constants";
+import { useGleanClick } from "../telemetry/glean-context";
 
 function displayEstimate({ usage = 0, quota = Infinity }: StorageEstimate) {
   const usageInMib = Math.round(usage / (1024 * 1024));
@@ -56,6 +61,7 @@ function Settings() {
   const [settings, setSettings] = useState<SettingsData>();
   // Workaround to avoid "Error: Too many re-renders." (https://github.com/mdn/yari/pull/5744).
   const updateTriggered = useRef(false);
+  const gleanClick = useGleanClick();
 
   useEffect(() => {
     const init = async () => {
@@ -131,7 +137,6 @@ function Settings() {
   }
 
   const usage = estimate && displayEstimate(estimate);
-
   return (
     <ul>
       <li>
@@ -141,11 +146,15 @@ function Settings() {
           <Switch
             name="offline"
             checked={settings?.offline || false}
-            toggle={(e) =>
+            toggle={(e) => {
+              const source = e.target.checked
+                ? TOGGLE_PLUS_OFFLINE_ENABLED
+                : TOGGLE_PLUS_OFFLINE_DISABLED;
+              gleanClick(source);
               updateSettings({
                 offline: e.target.checked,
-              })
-            }
+              });
+            }}
           ></Switch>
         )}
       </li>
