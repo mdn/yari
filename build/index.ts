@@ -34,6 +34,7 @@ import { renderCache as renderKumascriptCache } from "../kumascript";
 import LANGUAGES_RAW from "../libs/languages";
 import { safeDecodeURIComponent } from "../kumascript/src/api/util";
 import { wrapTables } from "./wrap-tables";
+import { injectBanners } from "./inject-banners";
 
 const LANGUAGES = new Map(
   Object.entries(LANGUAGES_RAW).map(([locale, data]) => {
@@ -567,6 +568,8 @@ export async function buildDocument(
   formatNotecards($);
 
   wrapTables($);
+
+  injectBanners($, CONTENT_ROOT, doc.locale, metadata);
 
   // Turn the $ instance into an array of section blocks. Most of the
   // section blocks are of type "prose" and their value is a string blob
