@@ -8,8 +8,8 @@
   padding: 1em;
 
   &::before {
-    background: transparent url(../../../assets/icons/survey.svg) center center
-      no-repeat;
+    background: transparent url("../../../assets/icons/survey.svg") center
+      center no-repeat;
     background-size: cover;
     content: "";
     display: inline-block;
