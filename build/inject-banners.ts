@@ -48,13 +48,17 @@ export function injectBanners(
     injectBanner($, locale, "SecureContextBanner", "secure");
   }
 
+  // Inject banners that are driven by BCD
   const bcdQuery = metadata["browser-compat"];
-  if (bcdQuery) {
+  // In a handful of cases BCD is an array.
+  // In these cases we can't properly answer
+  // status questions, so ignore them
+  if (bcdQuery && !Array.isArray(bcdQuery)) {
     const bcd = packageBCD(bcdQuery);
-    if (bcd.data.__compat.status.experimental) {
+    if (bcd?.data?.__compat?.status?.experimental) {
       injectBanner($, locale, "ExperimentalBanner", "experimental");
     }
-    if (bcd.data.__compat.status.deprecated) {
+    if (bcd?.data?.__compat?.status?.deprecated) {
       injectBanner($, locale, "DeprecatedBanner", "deprecated");
     }
   }
