@@ -6,40 +6,25 @@
 # And we don't want to have maintain both. So right before it runs the
 # `npm publish` step it will combine these two files.
 
-/node_modules/
-client/node_modules/
-ssr/node_modules/
-kumascript/node_modules/
-content/node_modules/
-server/node_modules/
-
-# This won't be relevant or needed once the content is gone.
-/content/files/en-us/
-
+CODE_OF_CONDUCT.md
 /deployer
-kumascript/tests
-testing/
-import/
-/mdn-web-docs.svg
-.github/
 /docs/
+/mdn-web-docs.svg
+kumascript/tests
 README.md
-client/search-experimentation.js
-yarn-error.log
-content/files/
+scripts/
+testing/
+*.log
 
 # Since we ship the built stuff, we actually no longer need any of the source
 client/src/
+*.ts
 
 # Build/Dev files
-.eslint*
-.prettier*
-.stylelint*
-.flake8
-tsconfig.json
+.*
+*.test.ts
+*.tgz
+**/node_modules/**
+*config.js
 Procfile.*
-webpack.config.js
-jest.config.js
-*.test.js
-.storybook/
-.nvmrc
+tsconfig*.json

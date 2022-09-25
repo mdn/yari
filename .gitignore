@@ -30,8 +30,8 @@ yarn-error.log*
 /kumascript/coverage/
 /kumascript/node_modules/
 /testing/node_modules/
-/build/*.js
-/build/*.js.map
+/build/**/*.js
+/build/**/*.js.map
 /client/build
 /client/src/**/*.js
 /client/src/**/*.js.map
@@ -39,10 +39,12 @@ yarn-error.log*
 /content/*.js.map
 /filecheck/*.js
 /filecheck/*.js.map
-/kumascript/*.js
-/kumascript/*.js.map
-/markdown/*.js
-/markdown/*.js.map
+/libs/types/*.js
+/libs/types/*.js.map
+/kumascript/**/*.js
+/kumascript/**/*.js.map
+/markdown/**/*.js
+/markdown/**/*.js.map
 /server/*.js
 /server/*.js.map
 /ssr/dist/
