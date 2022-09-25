@@ -1,6 +1,8 @@
 import fs from "fs";
 import path from "path";
 
+import { packageBCD } from "./resolve-bcd";
+
 // Module-level cache
 let l10nStrings = {};
 
@@ -25,14 +27,11 @@ function getL10nString(id, locale) {
   return null;
 }
 
-function injectSecureContextBanner($, metadata, locale) {
-  const security = metadata["security-requirements"];
-  if (security && security.includes("secure-context")) {
-    const message = getL10nString("SecureContext", locale);
-    if (message) {
-      const banner = $(`<div class="notecard secure">${message}</div>`);
-      $("div#_body").prepend(banner);
-    }
+function injectBanner($, locale, messageId, bannerClass) {
+  const message = getL10nString(messageId, locale);
+  if (message) {
+    const banner = $(`<div class="notecard ${bannerClass}">${message}</div>`);
+    $("div#_body").prepend(banner);
   }
 }
 
@@ -43,5 +42,20 @@ export function injectBanners(
   metadata: object
 ) {
   initL10nStrings(root);
-  injectSecureContextBanner($, metadata, locale);
+
+  const security = metadata["security-requirements"];
+  if (security && security.includes("secure-context")) {
+    injectBanner($, locale, "SecureContextBanner", "secure");
+  }
+
+  const bcdQuery = metadata["browser-compat"];
+  if (bcdQuery) {
+    const bcd = packageBCD(bcdQuery);
+    if (bcd.data.__compat.status.experimental) {
+      injectBanner($, locale, "ExperimentalBanner", "experimental");
+    }
+    if (bcd.data.__compat.status.deprecated) {
+      injectBanner($, locale, "DeprecatedBanner", "deprecated");
+    }
+  }
 }
