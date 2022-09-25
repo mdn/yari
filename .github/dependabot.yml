@@ -26,7 +26,37 @@ updates:
       interval: "weekly"
 
   - package-ecosystem: npm
+    directory: "/client/pwa"
+    schedule:
+      interval: daily
+    open-pull-requests-limit: 10
+
+  - package-ecosystem: npm
+    directory: "/lib/slug-utils"
+    schedule:
+      interval: daily
+    open-pull-requests-limit: 10
+
+  - package-ecosystem: npm
+    directory: "/deployer/aws-lambda/mdn-stripe-price-ids"
+    schedule:
+      interval: daily
+    open-pull-requests-limit: 10
+
+  - package-ecosystem: npm
     directory: "/deployer/aws-lambda/content-origin-request"
+    schedule:
+      interval: daily
+    open-pull-requests-limit: 10
+
+  - package-ecosystem: npm
+    directory: "/deployer/aws-lambda/content-origin-response"
+    schedule:
+      interval: daily
+    open-pull-requests-limit: 10
+
+  - package-ecosystem: npm
+    directory: "/deployer/aws-lambda/tests"
     schedule:
       interval: daily
     open-pull-requests-limit: 10
