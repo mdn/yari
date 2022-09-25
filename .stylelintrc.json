@@ -10,7 +10,6 @@
     "a11y/media-prefers-reduced-motion": null,
     "a11y/no-outline-none": null,
     "a11y/selector-pseudo-class-focus": null,
-    "block-no-empty": null,
     "color-named": null,
     "custom-property-no-missing-var-function": null,
     "declaration-block-no-duplicate-properties": null,
