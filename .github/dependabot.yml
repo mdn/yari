@@ -7,10 +7,6 @@ updates:
       interval: daily
     open-pull-requests-limit: 35
     ignore:
-      # The @storybook dependencies come out a lot.
-      # https://github.com/mdn/yari/pulls?q=is%3Apr++is%3Aclosed+storybook+
-      # We don't use storybook at the moment.
-      - dependency-name: "@storybook/*"
       # Temporarily disable updates to Dinocons
       - dependency-name: "@mdn/dinocons"
 
