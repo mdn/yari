@@ -3597,10 +3597,10 @@ browser-process-hrtime@^1.0.0:
   resolved "https://registry.yarnpkg.com/browser-process-hrtime/-/browser-process-hrtime-1.0.0.tgz#3c9b4b7d782c8121e56f10106d84c0d0ffc94626"
   integrity sha512-9o5UecI3GhkpM6DrXr69PblIuWxPKk9Y0jHBRhdocZ2y7YECBFCsHm79Pr3OyR2AvjhDkabFJaDJMYRazHgsow==
 
-browser-specs@^3.23.0:
-  version "3.23.0"
-  resolved "https://registry.yarnpkg.com/browser-specs/-/browser-specs-3.23.0.tgz#616525f51d6f5248d01f6751fcd6344f22497ab9"
-  integrity sha512-uDr05KkWDZiELkVnBKGafRd0Xk442CoJiFyHRIdlsOATrvgajQAdhtVCadBSr5W7btixJokSAhuHMl/irTIGNw==
+browser-specs@^3.24.0:
+  version "3.24.0"
+  resolved "https://registry.yarnpkg.com/browser-specs/-/browser-specs-3.24.0.tgz#7de448bc4846e7799c090cb498e10d2814e5b97c"
+  integrity sha512-DNEK8byCCWperJpleRp7KhbRbwpDL5RCP2OyHwnX/S/nqER9EtOPIGrH2dpZDRY7kU7c18B8bpn/eJGa8FvdMA==
 
 browserslist@^4.0.0, browserslist@^4.14.5, browserslist@^4.16.6, browserslist@^4.18.1, browserslist@^4.20.3, browserslist@^4.21.3, browserslist@^4.21.4:
   version "4.21.4"
