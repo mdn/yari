@@ -650,6 +650,7 @@ function _addSingleSpecialSection(
           (spec) =>
             specURL.startsWith(spec.url) ||
             specURL.startsWith(spec.nightly.url) ||
+            spec.nightly.alternateUrls.some((s) => specURL.startsWith(s)) ||
             specURL.startsWith(spec.series.nightlyUrl)
         );
         const specificationsData = {
