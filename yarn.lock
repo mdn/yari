@@ -1740,10 +1740,10 @@
   resolved "https://registry.yarnpkg.com/@leichtgewicht/ip-codec/-/ip-codec-2.0.4.tgz#b2ac626d6cb9c8718ab459166d4bb405b8ffa78b"
   integrity sha512-Hcv+nVC0kZnQ3tD9GVu5xSMR4VVYOteQIr/hwFPVEvPdlXqgGEuRjiheChHgdM+JyqdgNcmzZOX/tnl0JOiI7A==
 
-"@mdn/browser-compat-data@^5.2.3":
-  version "5.2.3"
-  resolved "https://registry.yarnpkg.com/@mdn/browser-compat-data/-/browser-compat-data-5.2.3.tgz#db4f0ffe5a18bad551c7a41ad34c22d34b0a6219"
-  integrity sha512-Cj8Yu+A3/n1H+37nHOK8Pgv6fm3ERpDPzIqCB2QtTmjh+c4Mr4YNt2Y2RAW2R89viq5RFZGCxuDZKAaEeOq4JQ==
+"@mdn/browser-compat-data@^5.2.4":
+  version "5.2.4"
+  resolved "https://registry.yarnpkg.com/@mdn/browser-compat-data/-/browser-compat-data-5.2.4.tgz#8a51db2a01435d8679df8c5a44a811456254b946"
+  integrity sha512-SaGBNAJPm2TJbi3QV8B9cRI6sviM7QGVOJyG8cDBQfesWfvjqZaM46KzVbSonxoD7Mo3iOU4RkrvHdeQcqx7Zg==
 
 "@mdn/dinocons@^0.5.5":
   version "0.5.5"
