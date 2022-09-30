@@ -13,11 +13,11 @@
     }
   }
   .col-note-tabs {
-    display: flex;
     align-items: center;
+    display: flex;
     .title {
-      width: 100%;
       margin: 0 0.5rem;
+      width: 100%;
     }
   }
   textarea {
@@ -38,6 +38,6 @@
   .actions {
     display: flex;
     flex-direction: row;
-    justify-content: end;
+    justify-content: flex-end;
   }
 }
