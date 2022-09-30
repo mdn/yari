@@ -1,36 +1,33 @@
 import React, { useState } from "react";
+import { useDocumentURL } from "../../../document/hooks";
 import {
+  Collection,
   Item,
   NewItem,
+  useCollection,
   useCollections,
+  useItems,
 } from "../../../plus/collections/v2/api";
 import { Switch } from "../../atoms/switch";
 import "./index.scss";
-interface Collection {
-  id: string;
-  name: string;
-  value: string;
-}
-
-const options: Collection[] = [
-  { name: "Default", id: "1'", value: "Default" },
-  { name: "Mega cool", id: "2'", value: "Default" },
-  {
-    value: "Default but very long annoying title omg wtf is up with this",
-    name: "Default but very long annoying title omg wtf is up with this",
-    id: "3'",
-  },
-];
 
 export default function Notes() {
-  const [selectedOption, setSelectedOption] = useState({ collection_id: "" });
+  const document = useDocumentURL();
+  const [selectedCollection, setSelectedCollection] = useState<
+    Collection | undefined
+  >(undefined);
   const [notesOpen, setNotesOpen] = useState(false);
+  const [notes, setNotes] = useState<string | undefined>("");
   const { data: collections } = useCollections();
-
+  const currentCollection = useItems(selectedCollection?.id);
   const onChange = (e) => {
     const { name, value } = e.target;
-    console.log(`${name} ${value}`);
-    setSelectedOption({ ...selectedOption, [name]: value });
+    let selected = collections?.filter((c) => c.id === value)[0];
+    let notes = currentCollection?.data?.flat(1)?.filter((item) => {
+      return item.url === document || undefined;
+    })[0];
+    setNotes(notes?.notes || undefined);
+    setSelectedCollection(selected);
   };
 
   let options = collections?.map((val) => (
@@ -49,7 +46,7 @@ export default function Notes() {
               <select
                 id="bookmark-collection"
                 name="collection_id"
-                value={selectedOption.collection_id}
+                value={selectedCollection?.id}
                 autoComplete="off"
                 onChange={onChange}
               >
@@ -71,9 +68,7 @@ export default function Notes() {
         </div>
       </section>
       {notesOpen && (
-        <section className="notes-container__contents">
-          ermergerd swerns!
-        </section>
+        <section className="notes-container__contents">{notes}</section>
       )}
     </section>
   );
