@@ -24,7 +24,7 @@
     "sanitize-filename": "^1.6.3"
   },
   "devDependencies": {
-    "dotenv": "^16.0.2"
+    "dotenv": "^16.0.3"
   },
   "engines": {
     "node": ">=16.x"
