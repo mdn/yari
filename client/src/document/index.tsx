@@ -40,6 +40,7 @@ import "./index.scss";
 // main bundle all the time.
 import "./interactive-examples.scss";
 import { DocumentSurvey } from "../ui/molecules/document-survey";
+import { Note } from "../plus/notes";
 // import { useUIStatus } from "../ui-context";
 
 // Lazy sub-components
@@ -220,6 +221,7 @@ export function Document(props /* TODO: define a TS interface for this */) {
             </React.Suspense>
           )}
           <article className="main-page-content" lang={doc.locale}>
+            <Note></Note>
             <h1>{doc.title}</h1>
             <DocumentSurvey doc={doc} />
             <RenderDocumentBody doc={doc} />
