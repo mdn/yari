@@ -1,0 +1,43 @@
+.col-note {
+  width: 100%;
+  button {
+    border: 1px solid var(--border-primary);
+    font-size: 0.75rem;
+    margin: 0.25rem;
+    padding: 0.25rem 1rem;
+    &.active {
+      background-color: var(--background-primary);
+    }
+    &.inactive {
+      background-color: var(--background-secondary);
+    }
+  }
+  .col-note-tabs {
+    display: flex;
+    align-items: center;
+    .title {
+      width: 100%;
+      margin: 0 0.5rem;
+    }
+  }
+  textarea {
+    border: none;
+    width: 100%;
+  }
+  .note {
+    margin: 0.25rem;
+    min-height: 6rem;
+    &.active {
+      border: 1px solid var(--border-primary);
+      display: block;
+    }
+    &.inactive {
+      display: none;
+    }
+  }
+  .actions {
+    display: flex;
+    flex-direction: row;
+    justify-content: end;
+  }
+}

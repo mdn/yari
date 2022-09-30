@@ -1,0 +1,10 @@
+.note-display {
+  display: grid;
+  grid-template-columns: auto 2rem;
+  padding: 0.5rem 1rem;
+
+  button {
+    grid-column: 2/3;
+    grid-row: 1/2;
+  }
+}
