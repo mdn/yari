@@ -6,7 +6,6 @@ import {
   Item,
   NewItem,
   useItemAdd,
-  useItemDelete,
   useItemEdit,
 } from "../../collections/v2/api";
 import { Doc } from "../../../../../libs/types/document";
@@ -47,7 +46,7 @@ export function NoteEdit({
   const [formItem, setFormItem] = useState<Item | NewItem>(defaultItem);
   const { mutator: addItem } = useItemAdd();
   const { mutator: editItem } = useItemEdit();
-  const { mutator: deleteItem } = useItemDelete();
+  // const { mutator: deleteItem } = useItemDelete();
 
   const changeHandler = (
     e: React.ChangeEvent<
@@ -63,10 +62,12 @@ export function NoteEdit({
     if (view === View.Preview) {
       setHtml(marked.parse(ref.current?.value || ""));
     }
-  }, [view]);
+  }, [view, ref]);
 
   useEffect(() => {
-    setFormItem({ ...formItem, ...item });
+    setFormItem((f) => {
+      return { ...f, ...item };
+    });
   }, [item]);
 
   const saveHandler = async (

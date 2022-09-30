@@ -40,7 +40,6 @@ import "./index.scss";
 // main bundle all the time.
 import "./interactive-examples.scss";
 import { DocumentSurvey } from "../ui/molecules/document-survey";
-import { useGlean } from "../telemetry/glean-context";
 import Notes from "../plus/notes";
 // import { useUIStatus } from "../ui-context";
 

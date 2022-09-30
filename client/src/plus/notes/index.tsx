@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Doc } from "../../../../libs/types/document";
 import {
   Collection,
@@ -28,16 +28,20 @@ export default function Notes({ doc }: { doc: Doc }) {
       undefined
   );
   const [notesOpen, setNotesOpen] = useState(true);
-  const getNotes = (selected?, saved?) => {
-    return (saved || savedItems)?.find((item) => {
-      return selected?.id === item.collection_id;
-    });
-  };
+  const getNotes = useCallback(
+    (selected?, saved?) => {
+      return (saved || savedItems)?.find((item) => {
+        return selected?.id === item.collection_id;
+      });
+    },
+    [savedItems]
+  );
+
   const [item, setItem] = useState<Item | NewItem | undefined>(
     getNotes(collections?.[0])
   );
   const onChange = (e) => {
-    const { name, value } = e.target;
+    const { value } = e.target;
     let selected = collections?.filter((c) => c.id === value)[0];
     setSelectedCollection(selected);
     const i = getNotes(selected);
@@ -47,7 +51,7 @@ export default function Notes({ doc }: { doc: Doc }) {
   useEffect(() => {
     setSelectedCollection(collections?.[0]);
     setItem(getNotes(collections?.[0], savedItems));
-  }, [collections, savedItems]);
+  }, [collections, savedItems, getNotes]);
 
   let options = collections?.map((val) => (
     <option key={val.id} value={val.id}>
