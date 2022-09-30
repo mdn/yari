@@ -41,6 +41,8 @@ import "./index.scss";
 import "./interactive-examples.scss";
 import { DocumentSurvey } from "../ui/molecules/document-survey";
 import { Note } from "../plus/notes";
+import { useGlean } from "../telemetry/glean-context";
+import Notes from "../ui/organisms/notes";
 // import { useUIStatus } from "../ui-context";
 
 // Lazy sub-components
@@ -220,6 +222,7 @@ export function Document(props /* TODO: define a TS interface for this */) {
               <MathMLPolyfillMaybe />
             </React.Suspense>
           )}
+          <Notes />
           <article className="main-page-content" lang={doc.locale}>
             <Note></Note>
             <h1>{doc.title}</h1>
