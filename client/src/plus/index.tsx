@@ -11,7 +11,7 @@ import { Settings } from "../settings";
 import PlusDocs from "./plus-docs";
 
 const OfferOverview = React.lazy(() => import("./offer-overview"));
-const CollectionsV2 = React.lazy(() => import("./collections/v2"));
+const Collections = React.lazy(() => import("./collections"));
 
 export function Plus({ pageTitle, ...props }: { pageTitle?: string }) {
   React.useEffect(() => {
@@ -62,7 +62,7 @@ export function Plus({ pageTitle, ...props }: { pageTitle?: string }) {
         path="collections/*"
         element={
           <Layout>
-            <CollectionsV2 />
+            <Collections />
           </Layout>
         }
       />

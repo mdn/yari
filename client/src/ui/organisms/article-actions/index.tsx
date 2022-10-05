@@ -9,7 +9,7 @@ import { Doc } from "../../../../../libs/types/document";
 
 import "./index.scss";
 
-import BookmarkV2Menu from "./bookmark-menu/menu-v2";
+import BookmarkMenu from "./bookmark-menu";
 import { useUIStatus } from "../../../ui-context";
 
 export const ArticleActions = ({
@@ -64,7 +64,7 @@ export const ArticleActions = ({
               )}
               {!isServer && isAuthenticated && (
                 <li className="article-actions-entry">
-                  <BookmarkV2Menu doc={doc} />
+                  <BookmarkMenu doc={doc} />
                 </li>
               )}
               {translations && !!translations.length && (

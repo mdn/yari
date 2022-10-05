@@ -1,30 +1,27 @@
 import React, { useState } from "react";
 
-import Container from "../../../ui/atoms/container";
-import { Button } from "../../../ui/atoms/button";
+import Container from "../../ui/atoms/container";
+import { Button } from "../../ui/atoms/button";
 import NewEditCollectionModal from "./new-edit-collection-modal";
 import { Route, Routes } from "react-router";
 import { Collection, useCollectionDelete, useCollections } from "./api";
 import { Link } from "react-router-dom";
 import CollectionComponent from "./collection";
-import {
-  DropdownMenuWrapper,
-  DropdownMenu,
-} from "../../../ui/molecules/dropdown";
-import MDNModal from "../../../ui/atoms/modal";
-import { Loading } from "../../../ui/atoms/loading";
-import NoteCard from "../../../ui/molecules/notecards";
+import { DropdownMenuWrapper, DropdownMenu } from "../../ui/molecules/dropdown";
+import MDNModal from "../../ui/atoms/modal";
+import { Loading } from "../../ui/atoms/loading";
+import NoteCard from "../../ui/molecules/notecards";
 
 import "./index.scss";
 
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
-import Mandala from "../../../ui/molecules/mandala";
-import { useGleanClick } from "../../../telemetry/glean-context";
+import Mandala from "../../ui/molecules/mandala";
+import { useGleanClick } from "../../telemetry/glean-context";
 import {
   COLLECTIONS_BANNER_NEW_COLLECTION,
   NEW_COLLECTION_MODAL_SUBMIT_COLLECTIONS_PAGE,
-} from "../../../telemetry/constants";
+} from "../../telemetry/constants";
 dayjs.extend(relativeTime);
 
 export default function Collections() {

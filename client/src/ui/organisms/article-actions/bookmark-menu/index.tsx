@@ -12,8 +12,8 @@ import {
   useItemDelete,
   useItemEdit,
   combineMutationStatus,
-} from "../../../../plus/collections/v2/api";
-import NewEditCollectionModal from "../../../../plus/collections/v2/new-edit-collection-modal";
+} from "../../../../plus/collections/api";
+import NewEditCollectionModal from "../../../../plus/collections/new-edit-collection-modal";
 import { DropdownMenu, DropdownMenuWrapper } from "../../../molecules/dropdown";
 import { Icon } from "../../../atoms/icon";
 import NoteCard from "../../../molecules/notecards";
