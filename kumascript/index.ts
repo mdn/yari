@@ -6,7 +6,6 @@ import { m2h } from "../markdown";
 import info from "./src/info";
 import { render as renderMacros } from "./src/render";
 export { buildLiveSamplePages } from "./src/live-sample";
-import { CheerioAPI } from "cheerio";
 import { HTMLTool } from "./src/api/util";
 import { DEFAULT_LOCALE } from "../libs/constants";
 import {
@@ -14,6 +13,7 @@ import {
   LIVE_SAMPLES_BASE_URL,
 } from "../libs/env";
 import { SourceCodeError } from "./src/errors";
+import { CheerioAPI, load } from "cheerio";
 
 const DEPENDENCY_LOOP_INTRO =
   'The following documents form a circular dependency when rendering (via the "page" and/or "IncludeSubnav" macros):';
@@ -25,6 +25,15 @@ export async function render(
   { urlsSeen = null, selective_mode = false, invalidateCache = false } = {}
 ): Promise<[CheerioAPI, SourceCodeError[]]> {
   const urlLC = url.toLowerCase();
+  if (renderCache.has(urlLC)) {
+    if (invalidateCache) {
+      renderCache.delete(urlLC);
+    } else {
+      const [renderedHtml, errors]: [string, SourceCodeError[]] =
+        renderCache.get(urlLC);
+      return [load(renderedHtml), errors];
+    }
+  }
 
   urlsSeen = urlsSeen || new Set([]);
   if (urlsSeen.has(urlLC)) {
@@ -96,11 +105,17 @@ export async function render(
   //       attributes of any iframes.
   const tool = new HTMLTool(renderedHtml);
   tool.injectSectionIDs();
-  return [
-    tool.cheerio(),
-    // The prerequisite errors have already been updated with their own file information.
-    [...prerequisiteErrorsByKey.values()].concat(
-      errors.map((e) => e.updateFileInfo(fileInfo))
-    ),
-  ];
+  const allErrors = [...prerequisiteErrorsByKey.values()].concat(
+    errors.map((e) => e.updateFileInfo(fileInfo))
+  );
+  if (urlsSeen?.size > 1) {
+    // This means we recursed so let's cache this
+    console.log(`caching ${urlLC}: (${[...urlsSeen].join(",")})`);
+    renderCache.set(urlLC, [
+      tool.html(),
+      // The prerequisite errors have already been updated with their own file information.
+      allErrors,
+    ]);
+  }
+  return [tool.cheerio(), allErrors];
 }
