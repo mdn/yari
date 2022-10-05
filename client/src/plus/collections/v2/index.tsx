@@ -220,10 +220,10 @@ function CollectionCard({ collection }: { collection: Collection }) {
       </header>
       {collection.description && <p>{collection.description}</p>}
       <footer>
-        <span className="count">
+        <Link to={collection.id} className="count">
           {collection.article_count}{" "}
           {collection.article_count === 1 ? "article" : "articles"}
-        </span>
+        </Link>
         <time dateTime={dayjs(collection.updated_at).toISOString()}>
           Edited {dayjs(collection.updated_at).fromNow().toString()}
         </time>
@@ -241,12 +241,12 @@ function DefaultCollectionCard({ collection }: { collection: Collection }) {
           <Link to={collection.id}>Saved Articles</Link>
         </h2>
       </header>
-      <p>Articles you had previously saved in your collection.</p>
+      <p>The default collection.</p>
       <footer>
-        <span className="count">
+        <Link to={collection.id} className="count">
           {collection.article_count}{" "}
           {collection.article_count === 1 ? "article" : "articles"}
-        </span>
+        </Link>
         <time dateTime={dayjs(collection.updated_at).toISOString()}>
           Edited {dayjs(collection.updated_at).fromNow().toString()}
         </time>

@@ -6,6 +6,8 @@ import { BannerId } from "./ids";
 import { usePlusUrl } from "../plus/utils";
 import { useGleanClick } from "../telemetry/glean-context";
 import {
+  BANNER_MULTIPLE_COLLECTIONS_DISMISSED,
+  BANNER_MULTIPLE_COLLECTIONS_LINK,
   BANNER_PREVIEW_FEATURES_DISMISSED,
   BANNER_PREVIEW_FEATURES_SETTINGS_LINK,
 } from "../telemetry/constants";
@@ -137,6 +139,36 @@ function PreviewFeaturesBanner({ onDismissed }: { onDismissed: () => void }) {
   );
 }
 
+function MultipleCollectionsBanner({
+  onDismissed,
+}: {
+  onDismissed: () => void;
+}) {
+  const bannerId = BannerId.PREVIEW_FEATURES;
+  const sendCTAEventToGA = useSendCTAEventToGA();
+  const gleanClick = useGleanClick();
+  const onDismissedWithGlean = () => {
+    gleanClick(BANNER_MULTIPLE_COLLECTIONS_DISMISSED);
+    onDismissed();
+  };
+  return (
+    <Banner id={bannerId} onDismissed={onDismissedWithGlean}>
+      <p className="mdn-cta-copy">
+        You can now create multiple collections.{" "}
+        <a
+          href="/en-US/plus/collections"
+          onClick={() => {
+            gleanClick(BANNER_MULTIPLE_COLLECTIONS_LINK);
+            sendCTAEventToGA(bannerId);
+          }}
+        >
+          Manage collections
+        </a>
+      </p>
+    </Banner>
+  );
+}
+
 // The reason we're not just exporting each individual banner is because to
 // be able to lazy-load the contents of this file it needs to export a
 // default function. This one function is the link between the <App>
@@ -153,6 +185,13 @@ export default function ActiveBanner({
       return (
         <>
           <PlusLaunchAnnouncementBanner onDismissed={onDismissed} />
+        </>
+      );
+
+    case BannerId.MULTIPLE_COLLECTIONS:
+      return (
+        <>
+          <MultipleCollectionsBanner onDismissed={onDismissed} />
         </>
       );
 
