@@ -46,11 +46,21 @@ function Overview() {
     <>
       <header className="container">
         <div className="collections-hero">
+          <div className="mandala-wrapper">
+            <Mandala />
+          </div>
           <section className="collections-hero-cta">
             <h1>Collections</h1>
             <p>
-              Save and group your favorite MDN articles <br />
-              to easily find them later on.
+              Save and group your favorite MDN articles to easily find them
+              later on. <br />
+              <a
+                rel="noreferrer noopener"
+                target="_blank"
+                href="https://www.surveygizmo.com/s3/6988450/Feature-Preview-User-Feedback-Multiple-Collections"
+              >
+                We'd love to hear your feedback!
+              </a>
             </p>
             <Button
               onClickHandler={() => {
@@ -67,9 +77,6 @@ function Overview() {
               source={NEW_COLLECTION_MODAL_SUBMIT_COLLECTIONS_PAGE}
             />
           </section>
-          <div className="mandala-wrapper">
-            <Mandala />
-          </div>
         </div>
       </header>
       <Container>
@@ -220,10 +227,10 @@ function CollectionCard({ collection }: { collection: Collection }) {
       </header>
       {collection.description && <p>{collection.description}</p>}
       <footer>
-        <span className="count">
+        <Link to={collection.id} className="count">
           {collection.article_count}{" "}
           {collection.article_count === 1 ? "article" : "articles"}
-        </span>
+        </Link>
         <time dateTime={dayjs(collection.updated_at).toISOString()}>
           Edited {dayjs(collection.updated_at).fromNow().toString()}
         </time>
@@ -241,12 +248,12 @@ function DefaultCollectionCard({ collection }: { collection: Collection }) {
           <Link to={collection.id}>Saved Articles</Link>
         </h2>
       </header>
-      <p>Articles you had previously saved in your collection.</p>
+      <p>The default collection.</p>
       <footer>
-        <span className="count">
+        <Link to={collection.id} className="count">
           {collection.article_count}{" "}
           {collection.article_count === 1 ? "article" : "articles"}
-        </span>
+        </Link>
         <time dateTime={dayjs(collection.updated_at).toISOString()}>
           Edited {dayjs(collection.updated_at).fromNow().toString()}
         </time>
