@@ -3,7 +3,6 @@ import fs from "fs";
 import path from "path";
 
 import chalk from "chalk";
-import * as cheerio from "cheerio";
 import {
   MacroLiveSampleError,
   MacroRedirectedLinkError,
@@ -30,7 +29,6 @@ import { formatNotecards } from "./format-notecards";
 import buildOptions from "./build-options";
 export { gather as gatherGitHistory } from "./git-history";
 export { buildSPAs } from "./spas";
-import { renderCache as renderKumascriptCache } from "../kumascript";
 import LANGUAGES_RAW from "../libs/languages";
 import { safeDecodeURIComponent } from "../kumascript/src/api/util";
 import { wrapTables } from "./wrap-tables";
@@ -291,7 +289,6 @@ export interface BuiltDocument {
 }
 
 interface DocumentOptions {
-  clearKumascriptRenderCache?: boolean;
   fixFlaws?: boolean;
   fixFlawsVerbose?: boolean;
 }
@@ -328,14 +325,11 @@ export async function buildDocument(
   }
 
   let flaws: any[] = [];
-  let renderedHtml = "";
+  let $ = null;
   const liveSamples: LiveSample[] = [];
 
-  if (options.clearKumascriptRenderCache) {
-    renderKumascriptCache.clear();
-  }
   try {
-    [renderedHtml, flaws] = await kumascript.render(document.url);
+    [$, flaws] = await kumascript.render(document.url);
   } catch (error) {
     if (error.name === "MacroInvocationError") {
       // The source HTML couldn't even be parsed! There's no point allowing
@@ -351,8 +345,6 @@ export async function buildDocument(
     // Any other unexpected error re-thrown.
     throw error;
   }
-
-  const $ = cheerio.load(`<div id="_body">${renderedHtml}</div>`);
 
   const liveSamplePages = kumascript.buildLiveSamplePages(
     document.url,
