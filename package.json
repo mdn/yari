@@ -208,7 +208,7 @@
     "react-dom": "^18.2.0",
     "react-is": "^18.2.0",
     "react-refresh": "^0.14",
-    "react-router": "^6.3.0",
+    "react-router": "^6.4.2",
     "react-router-dom": "^6.4.1",
     "rehype-minify-whitespace": "^4.0.5",
     "remark-prettier": "^2.0.0",
