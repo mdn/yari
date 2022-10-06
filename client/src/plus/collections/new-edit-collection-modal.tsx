@@ -1,8 +1,8 @@
 import React, { useState } from "react";
-import { useGleanClick } from "../../../telemetry/glean-context";
-import { Button } from "../../../ui/atoms/button";
-import MDNModal from "../../../ui/atoms/modal";
-import NoteCard from "../../../ui/molecules/notecards";
+import { useGleanClick } from "../../telemetry/glean-context";
+import { Button } from "../../ui/atoms/button";
+import MDNModal from "../../ui/atoms/modal";
+import NoteCard from "../../ui/molecules/notecards";
 import {
   Collection,
   NewCollection,

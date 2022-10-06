@@ -2,16 +2,13 @@ import { useState } from "react";
 import { useParams } from "react-router";
 import { Link } from "react-router-dom";
 import { KeyedMutator } from "swr";
-import { useScrollToTop } from "../../../hooks";
-import { Button } from "../../../ui/atoms/button";
-import Container from "../../../ui/atoms/container";
-import { Loading } from "../../../ui/atoms/loading";
-import MDNModal from "../../../ui/atoms/modal";
-import {
-  DropdownMenu,
-  DropdownMenuWrapper,
-} from "../../../ui/molecules/dropdown";
-import { camelWrap } from "../../../utils";
+import { useScrollToTop } from "../../hooks";
+import { Button } from "../../ui/atoms/button";
+import Container from "../../ui/atoms/container";
+import { Loading } from "../../ui/atoms/loading";
+import MDNModal from "../../ui/atoms/modal";
+import { DropdownMenu, DropdownMenuWrapper } from "../../ui/molecules/dropdown";
+import { camelWrap } from "../../utils";
 import {
   Item,
   useCollection,
@@ -19,7 +16,7 @@ import {
   useItemEdit,
   useItems,
 } from "./api";
-import NoteCard from "../../../ui/molecules/notecards";
+import NoteCard from "../../ui/molecules/notecards";
 
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
