@@ -46,11 +46,21 @@ function Overview() {
     <>
       <header className="container">
         <div className="collections-hero">
+          <div className="mandala-wrapper">
+            <Mandala />
+          </div>
           <section className="collections-hero-cta">
             <h1>Collections</h1>
             <p>
-              Save and group your favorite MDN articles <br />
-              to easily find them later on.
+              Save and group your favorite MDN articles to easily find them
+              later on. <br />
+              <a
+                rel="noreferrer noopener"
+                target="_blank"
+                href="https://www.surveygizmo.com/s3/6988450/Feature-Preview-User-Feedback-Multiple-Collections"
+              >
+                This is a new feature. Give us some feedback.
+              </a>
             </p>
             <Button
               onClickHandler={() => {
@@ -67,9 +77,6 @@ function Overview() {
               source={NEW_COLLECTION_MODAL_SUBMIT_COLLECTIONS_PAGE}
             />
           </section>
-          <div className="mandala-wrapper">
-            <Mandala />
-          </div>
         </div>
       </header>
       <Container>

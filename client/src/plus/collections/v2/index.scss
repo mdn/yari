@@ -35,8 +35,12 @@
           }
 
           p {
+            --text-link: var(--mdn-color-dark-red);
             display: block;
-            flex: 100%;
+            max-width: 80%;
+            @media screen and (max-width: $screen-md) {
+              max-width: 100%;
+            }
           }
         }
       }

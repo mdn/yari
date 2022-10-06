@@ -40,6 +40,12 @@ export default function CollectionComponent() {
   } = useItems(collectionId);
 
   useScrollToTop();
+  const name =
+    collection?.name === "Default" ? "Saved Articles" : collection?.name;
+  const description =
+    collection?.name === "Default"
+      ? "The default collection."
+      : collection?.description;
 
   return collection ? (
     <>
@@ -48,12 +54,12 @@ export default function CollectionComponent() {
           <Link to="../" className="exit">
             &larr; Back
           </Link>
-          <h1>{collection.name}</h1>
+          <h1>{name}</h1>
           <span className="count">
             {collection.article_count}{" "}
             {collection.article_count === 1 ? "article" : "articles"}
           </span>
-          {collection.description && <p>{collection.description}</p>}
+          {description && <p>{description}</p>}
         </Container>
       </header>
       <Container>
