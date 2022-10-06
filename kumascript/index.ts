@@ -110,7 +110,6 @@ export async function render(
   );
   if (urlsSeen?.size > 1) {
     // This means we recursed so let's cache this
-    console.log(`caching ${urlLC}: (${[...urlsSeen].join(",")})`);
     renderCache.set(urlLC, [
       tool.html(),
       // The prerequisite errors have already been updated with their own file information.
