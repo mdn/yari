@@ -3,12 +3,16 @@ import { useGleanClick } from "../../telemetry/glean-context";
 import { Button } from "../../ui/atoms/button";
 import MDNModal from "../../ui/atoms/modal";
 import NoteCard from "../../ui/molecules/notecards";
+import { SubscriptionType, useUserData } from "../../user-context";
+import { SubscribeLink } from "../../ui/atoms/subscribe-link";
 import {
   Collection,
   NewCollection,
   useCollectionCreate,
   useCollectionEdit,
+  useCollections,
 } from "./api";
+import { NEW_COLLECTION_MODAL_UPGRADE_LINK } from "../../telemetry/constants";
 
 export default function NewEditCollectionModal({
   show,
@@ -23,6 +27,12 @@ export default function NewEditCollectionModal({
   editingCollection?: Collection;
   source: string;
 }) {
+  const user = useUserData();
+  const { data: collections } = useCollections();
+  const freeLimitReached =
+    user?.subscriptionType === SubscriptionType["MDN_CORE"] &&
+    (collections?.length || 0) > 2;
+
   const defaultCollection: Collection | NewCollection = editingCollection || {
     name: "",
     description: "",
@@ -76,65 +86,96 @@ export default function NewEditCollectionModal({
       onRequestClose={cancelHandler}
       extraOverlayClassName={isPending ? "wait" : ""}
     >
-      <header className="modal-header">
-        <h2 className="modal-heading">
-          {editingCollection ? "Edit Collection" : "Create Collection"}
-        </h2>
-        <Button
-          onClickHandler={cancelHandler}
-          type="action"
-          icon="cancel"
-          extraClasses="close-button"
-        />
-      </header>
-      <div className="modal-body">
-        {error && (
-          <NoteCard type="error">
-            <p>Error: {error.message}</p>
-          </NoteCard>
-        )}
-        <form className="mdn-form" onSubmit={saveHandler}>
-          <div className="mdn-form-item">
-            <label htmlFor="collection-name">Name:</label>
-            <input
-              id="collection-name"
-              name="name"
-              value={collection.name}
-              onChange={changeHandler}
-              onKeyDown={enterHandler}
-              autoComplete="off"
-              type="text"
-              required={true}
-              disabled={isPending}
-            />
-          </div>
-          <div className="mdn-form-item">
-            <label htmlFor="collection-description">Description:</label>
-            <input
-              id="collection-description"
-              name="description"
-              value={collection.description}
-              onChange={changeHandler}
-              onKeyDown={enterHandler}
-              autoComplete="off"
-              type="text"
-              disabled={isPending}
-            />
-          </div>
-          <div className="mdn-form-item is-button-row">
-            <Button buttonType="submit" isDisabled={isPending}>
-              {isPending ? "Saving..." : "Save"}
-            </Button>
+      {!editingCollection && freeLimitReached ? (
+        <>
+          <header className="modal-header">
+            <h2 className="modal-heading">Want more?</h2>
             <Button
               onClickHandler={cancelHandler}
-              type="secondary"
-              isDisabled={isPending}
-            >
-              Cancel
-            </Button>
+              type="action"
+              icon="cancel"
+              extraClasses="close-button"
+            />
+          </header>
+          <div className="modal-body">
+            <p>
+              You've reached the maximum number of collections you can have as a
+              "Core" user.
+            </p>
+            <p>
+              Upgrade now to receive unlimited access to collections, and more:
+            </p>
+            <div className="mdn-form-item is-button-row">
+              <SubscribeLink
+                toPlans={true}
+                gleanContext={NEW_COLLECTION_MODAL_UPGRADE_LINK}
+              />
+            </div>
           </div>
-        </form>
-      </div>
+        </>
+      ) : (
+        <>
+          <header className="modal-header">
+            <h2 className="modal-heading">
+              {editingCollection ? "Edit Collection" : "Create Collection"}
+            </h2>
+            <Button
+              onClickHandler={cancelHandler}
+              type="action"
+              icon="cancel"
+              extraClasses="close-button"
+            />
+          </header>
+          <div className="modal-body">
+            {error && (
+              <NoteCard type="error">
+                <p>Error: {error.message}</p>
+              </NoteCard>
+            )}
+            <form className="mdn-form" onSubmit={saveHandler}>
+              <div className="mdn-form-item">
+                <label htmlFor="collection-name">Name:</label>
+                <input
+                  id="collection-name"
+                  name="name"
+                  value={collection.name}
+                  onChange={changeHandler}
+                  onKeyDown={enterHandler}
+                  autoComplete="off"
+                  type="text"
+                  required={true}
+                  disabled={isPending}
+                />
+              </div>
+              <div className="mdn-form-item">
+                <label htmlFor="collection-description">Description:</label>
+                <input
+                  id="collection-description"
+                  name="description"
+                  value={collection.description}
+                  onChange={changeHandler}
+                  onKeyDown={enterHandler}
+                  autoComplete="off"
+                  type="text"
+                  disabled={isPending}
+                />
+              </div>
+              <div className="mdn-form-item is-button-row">
+                <Button buttonType="submit" isDisabled={isPending}>
+                  {isPending ? "Saving..." : "Save"}
+                </Button>
+                <Button
+                  onClickHandler={cancelHandler}
+                  type="secondary"
+                  isDisabled={isPending}
+                >
+                  Cancel
+                </Button>
+              </div>
+            </form>
+          </div>
+        </>
+      )}
     </MDNModal>
   );
 }
