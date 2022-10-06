@@ -59,7 +59,7 @@ function Overview() {
                 target="_blank"
                 href="https://www.surveygizmo.com/s3/6988450/Feature-Preview-User-Feedback-Multiple-Collections"
               >
-                This is a new feature. Give us some feedback.
+                We'd love to hear your feedback!
               </a>
             </p>
             <Button

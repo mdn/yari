@@ -154,7 +154,7 @@ function MultipleCollectionsBanner({
   return (
     <Banner id={bannerId} onDismissed={onDismissedWithGlean}>
       <p className="mdn-cta-copy">
-        You can now create multiple collections.{" "}
+        We've added support for Multiple Collections! Check out your{" "}
         <a
           href="/en-US/plus/collections"
           onClick={() => {
@@ -162,8 +162,9 @@ function MultipleCollectionsBanner({
             sendCTAEventToGA(bannerId);
           }}
         >
-          Manage collections
-        </a>
+          Collections page
+        </a>{" "}
+        to see what's new!
       </p>
     </Banner>
   );
