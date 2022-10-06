@@ -35,7 +35,7 @@
           }
 
           p {
-            --text-link: var(--mdn-color-dark-red);
+            --text-link: var(--html-code-color);
             display: block;
             max-width: 80%;
             @media screen and (max-width: $screen-md) {
