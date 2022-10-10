@@ -79,64 +79,39 @@ for (const spec of Object.values(parsedWebRef)) {
 }
 
 /**
- * Get the formal syntax and properly formatted name for an item.
+ * Get the spec shortnames for an item, given:
+ * @param {string} itemName - the name of the item
+ * @param {string} itemType - this can only be "properties" or "atrules"
  */
-function getNameAndSyntax() {
-  // get the item name from the page slug
-  let itemName = $0 || env.slug.split('/').pop().toLowerCase();
-  let itemSyntax;
-  switch (env["page-type"]) {
-    case "css-shorthand-property":
-    case "css-property":
-      itemSyntax = getPropertySyntax(itemName, parsedWebRef);
-      break;
-    case "css-type":
-      // some CSS data type slugs have a `_value` suffix
-      if (itemName.endsWith("_value")) {
-        itemName = itemName.replace("_value", "");
-      }
-      itemName = `<${itemName}>`;
-      // not all types have an entry in the syntax
-      if (valuespaces[itemName]) {
-        itemSyntax = valuespaces[itemName].value;
-      }
-      break;
-    case "css-function":
-      itemName = `<${itemName}()>`;
-      // not all functions have an entry in the syntax
-      if (valuespaces[itemName]) {
-        itemSyntax = valuespaces[itemName].value;
-      }
-      break;
+function getSpecsForItem(itemName, itemType) {
+  // 1) Get all specs which list this item
+  let specsForItem = [];
+  for (const [shortname, data] of Object.entries(parsedWebRef)) {
+    const itemNames = Object.keys(data[itemType]);
+    if (itemNames.includes(itemName)) {
+      specsForItem.push(shortname);
+    }
   }
-  return {
-    name: itemName,
-    syntax: itemSyntax
+  // 2) If we have more than one spec, filter out specs that end "-n" where n is a number
+  if (specsForItem.length > 1) {
+    specsForItem = specsForItem.filter( specName => !(/-\d+$/.test(specName)) );
   }
+  return specsForItem;
 }
+
 
 /**
  * Get the formal syntax for a property from the webref data, given:
  * @param {string} propertyName - the name of the property
  */
-function getPropertySyntax(propertyName) {
-  // 1) get all specs which list this property
-  let specsForProp = [];
-  for (const [shortname, data] of Object.entries(parsedWebRef)) {
-    const propNames = Object.keys(data.properties);
-    if (propNames.includes(propertyName)) {
-      specsForProp.push(shortname);
-    }
-  }
-  // 2) If we have more than one spec, filter out specs that end "-n" where n is a number
-  if (specsForProp.length > 1) {
-    specsForProp = specsForProp.filter( specName => !(/-\d+$/.test(specName)) );
-  }
-  // 3) If we now have only one spec, return the syntax it lists
+ function getPropertySyntax(propertyName) {
+  // Get all specs which list this property
+  const specsForProp = getSpecsForItem(propertyName, "properties");
+  // If we have only one spec, return the syntax it lists
   if (specsForProp.length === 1) {
     return parsedWebRef[specsForProp[0]].properties[propertyName].value;
   }
-  // 4) If we still have > 1 spec, assume that:
+  // If we have > 1 spec, assume that:
   // - one of them is the base spec, which defines `values`,
   // - the others define incremental additions as `newValues`
   let syntax = '';
@@ -156,6 +131,88 @@ function getPropertySyntax(propertyName) {
     syntax += newSyntaxes;
   }
   return syntax;
+}
+
+/**
+ * Get the formal syntax for an at-rule from the webref data, given:
+ * @param {string} atRuleName - the name of the at-rule
+ */
+function getAtRuleSyntax(atRuleName) {
+  // An at-rule may appear in more than one spec: for example, if extra descriptors
+  // are defined in different specs. But we assume that the at-rule's own syntax,
+  // defined in the `value` property, only appears in one of them.
+  const specs = getSpecsForItem(atRuleName, "atrules");
+  for (const spec of specs) {
+    if (parsedWebRef[spec].atrules[atRuleName].value) {
+      return parsedWebRef[spec].atrules[atRuleName].value;
+    }
+  }
+  return '';
+}
+
+/**
+ * Get the formal syntax for an at-rule descriptor from the webref data, given:
+ * @param {string} atRuleDescriptorName - the name of the at-rule descriptor
+ */
+function getAtRuleDescriptorSyntax(atRuleDescriptorName) {
+  // We assume that the at-rule descriptor page is directly under
+  // the page for its at-rule.
+  const atRuleName = env.slug.split('/').at(-2);
+  const specs = getSpecsForItem(atRuleName, "atrules");
+  // Look through all the specs that define the at-rule, for the one
+  // that defines this descriptor.
+  for (const spec of specs) {
+    const atRule = parsedWebRef[spec].atrules[atRuleName];
+    for (const descriptor of atRule.descriptors) {
+      if (descriptor.name === atRuleDescriptorName) {
+        return descriptor.value;
+      }
+    }
+  }
+  return '';
+}
+
+/**
+ * Get the formal syntax and properly formatted name for an item.
+ */
+function getNameAndSyntax() {
+  // get the item name from the page slug
+  let itemName = $0 || env.slug.split('/').pop().toLowerCase();
+  let itemSyntax;
+  switch (env["page-type"]) {
+    case "css-shorthand-property":
+    case "css-property":
+      itemSyntax = getPropertySyntax(itemName);
+      break;
+    case "css-type":
+      // some CSS data type slugs have a `_value` suffix
+      if (itemName.endsWith("_value")) {
+        itemName = itemName.replace("_value", "");
+      }
+      itemName = `<${itemName}>`;
+      // not all types have an entry in the syntax
+      if (valuespaces[itemName]) {
+        itemSyntax = valuespaces[itemName].value;
+      }
+      break;
+    case "css-function":
+      itemName = `<${itemName}()>`;
+      // not all functions have an entry in the syntax
+      if (valuespaces[itemName]) {
+        itemSyntax = valuespaces[itemName].value;
+      }
+      break;
+    case "css-at-rule":
+        itemSyntax = getAtRuleSyntax(itemName);
+        break;
+      case "css-at-rule-descriptor":
+      itemSyntax = getAtRuleDescriptorSyntax(itemName);
+      break;
+  }
+  return {
+    name: itemName,
+    syntax: itemSyntax
+  }
 }
 
 /**
