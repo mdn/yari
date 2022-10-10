@@ -121,7 +121,7 @@ function ItemComponent({
 
   const breadcrumbs = item.parents
     .slice(0, -1)
-    .map((parent) => parent.title)
+    .map((parent) => camelWrap(parent.title))
     .filter(
       // remove duplicated titles
       (title, index, titles) => title !== titles[index + 1]
@@ -185,7 +185,7 @@ function ItemComponent({
         />
       </header>
       <div className="breadcrumbs">{breadcrumbs.join(" > ")}</div>
-      {item.notes && <p>{item.notes}</p>}
+      {item.notes && <p>{camelWrap(item.notes)}</p>}
       <footer>
         <time dateTime={dayjs(item.updated_at).toISOString()}>
           Edited {dayjs(item.updated_at).fromNow().toString()}

@@ -22,6 +22,7 @@ import {
   COLLECTIONS_BANNER_NEW_COLLECTION,
   NEW_COLLECTION_MODAL_SUBMIT_COLLECTIONS_PAGE,
 } from "../../telemetry/constants";
+import { camelWrap } from "../../utils";
 dayjs.extend(relativeTime);
 
 export default function Collections() {
@@ -127,7 +128,7 @@ function CollectionCard({ collection }: { collection: Collection }) {
     <article key={collection.id}>
       <header>
         <h2>
-          <Link to={collection.id}>{collection.name}</Link>
+          <Link to={collection.id}>{camelWrap(collection.name)}</Link>
         </h2>
         {collection.name !== "Default" ? (
           <DropdownMenuWrapper
@@ -222,7 +223,7 @@ function CollectionCard({ collection }: { collection: Collection }) {
           </div>
         </MDNModal>
       </header>
-      {collection.description && <p>{collection.description}</p>}
+      {collection.description && <p>{camelWrap(collection.description)}</p>}
       <footer>
         <Link to={collection.id} className="count">
           {collection.article_count}{" "}
