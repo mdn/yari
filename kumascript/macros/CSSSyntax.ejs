@@ -84,17 +84,13 @@ for (const spec of Object.values(parsedWebRef)) {
  * @param {string} itemType - this can only be "properties" or "atrules"
  */
 function getSpecsForItem(itemName, itemType) {
-  // 1) Get all specs which list this item
-  let specsForItem = [];
+  // Get all specs which list this item
+  const specsForItem = [];
   for (const [shortname, data] of Object.entries(parsedWebRef)) {
     const itemNames = Object.keys(data[itemType]);
     if (itemNames.includes(itemName)) {
       specsForItem.push(shortname);
     }
-  }
-  // 2) If we have more than one spec, filter out specs that end "-n" where n is a number
-  if (specsForItem.length > 1) {
-    specsForItem = specsForItem.filter( specName => !(/-\d+$/.test(specName)) );
   }
   return specsForItem;
 }
@@ -105,13 +101,17 @@ function getSpecsForItem(itemName, itemType) {
  * @param {string} propertyName - the name of the property
  */
  function getPropertySyntax(propertyName) {
-  // Get all specs which list this property
-  const specsForProp = getSpecsForItem(propertyName, "properties");
-  // If we have only one spec, return the syntax it lists
+  // 1) Get all specs which list this property
+  let specsForProp = getSpecsForItem(propertyName, "properties");
+  // 2) If we have more than one spec, filter out specs that end "-n" where n is a number
+  if (specsForProp.length > 1) {
+    specsForProp = specsForProp.filter( specName => !(/-\d+$/.test(specName)) );
+  }
+  // 3) If we have only one spec, return the syntax it lists
   if (specsForProp.length === 1) {
     return parsedWebRef[specsForProp[0]].properties[propertyName].value;
   }
-  // If we have > 1 spec, assume that:
+  // 4) If we have > 1 spec, assume that:
   // - one of them is the base spec, which defines `values`,
   // - the others define incremental additions as `newValues`
   let syntax = '';
