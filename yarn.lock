@@ -3615,10 +3615,10 @@ braces@^3.0.2, braces@~3.0.2:
   dependencies:
     fill-range "^7.0.1"
 
-browser-specs@^3.26.0:
-  version "3.26.0"
-  resolved "https://registry.yarnpkg.com/browser-specs/-/browser-specs-3.26.0.tgz#484714145f6ed44b43fd2f5d489543a3b2b63716"
-  integrity sha512-f2+9hFS0gXt8Tjs9ySPYYgw9NNLAHqwASbqRUfIFdHvvfV1d6oWXf7JBajSn/dggw6X9lQxtvL1funmf7HoluA==
+browser-specs@^3.27.0:
+  version "3.27.0"
+  resolved "https://registry.yarnpkg.com/browser-specs/-/browser-specs-3.27.0.tgz#4668f4db5fcc83002d0ca01995bd079c338b4637"
+  integrity sha512-AXibrBjro+n+5wIhEtQe8VChRt3LRSFZyTg8G5QK59p6ZIEzwo5zzcNNyjDoCdgToFhn2LkJlikGmm7t/g8ZiQ==
 
 browserslist@^4.0.0, browserslist@^4.14.5, browserslist@^4.16.6, browserslist@^4.18.1, browserslist@^4.20.3, browserslist@^4.21.3, browserslist@^4.21.4:
   version "4.21.4"
