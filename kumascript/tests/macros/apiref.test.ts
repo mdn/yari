@@ -60,51 +60,81 @@ const expectedMainIfLink = {
   },
 };
 
-const expectedProperties = {
+const expectedStaticProperties = {
   "en-US": [
     {
       badges: [],
-      text: "MyTestProperty1",
-      target: "/en-US/docs/Web/API/TestInterface/TestProperty1",
+      text: "MyTestStaticProperty1",
+      target: "/en-US/docs/Web/API/TestInterface/TestStaticProperty1",
       title:
-        "The MyTestProperty1 property of the TestInterface interface has no badges.",
+        "The TestStaticProperty1 property of the TestInterface interface has no badges.",
     },
   ],
   fr: [
     {
       badges: [],
-      text: "MyTestProperty1",
-      target: "/fr/docs/Web/API/TestInterface/TestProperty1",
+      text: "MyTestStaticProperty1",
+      target: "/fr/docs/Web/API/TestInterface/TestStaticProperty1",
       title:
-        "The MyTestProperty1 property of the TestInterface interface has no badges.",
+        "The TestStaticProperty1 property of the TestInterface interface has no badges.",
     },
   ],
   ja: [
     {
       badges: [],
-      text: "MyTestProperty1",
-      target: "/ja/docs/Web/API/TestInterface/TestProperty1",
+      text: "MyTestStaticProperty1",
+      target: "/ja/docs/Web/API/TestInterface/TestStaticProperty1",
       title:
-        "The MyTestProperty1 property of the TestInterface interface has no badges (ja translation).",
+        "The TestStaticProperty1 property of the TestInterface interface has no badges (ja translation).",
     },
   ],
 };
 
-const expectedMethods = {
+const expectedInstanceProperties = {
+  "en-US": [
+    {
+      badges: [],
+      text: "MyTestInstanceProperty1",
+      target: "/en-US/docs/Web/API/TestInterface/MyTestInstanceProperty1",
+      title:
+        "The MyTestInstanceProperty1 property of the TestInterface interface has no badges.",
+    },
+  ],
+  fr: [
+    {
+      badges: [],
+      text: "MyTestInstanceProperty1",
+      target: "/fr/docs/Web/API/TestInterface/MyTestInstanceProperty1",
+      title:
+        "The MyTestInstanceProperty1 property of the TestInterface interface has no badges.",
+    },
+  ],
+  ja: [
+    {
+      badges: [],
+      text: "MyTestInstanceProperty1",
+      target: "/ja/docs/Web/API/TestInterface/MyTestInstanceProperty1",
+      title:
+        "The MyTestInstanceProperty1 property of the TestInterface interface has no badges (ja translation).",
+    },
+  ],
+};
+
+const expectedStaticMethods = {
   "en-US": [
     {
       badges: ["icon-experimental"],
-      text: "MyTestMethod1",
-      target: "/en-US/docs/Web/API/TestInterface/TestMethod1",
+      text: "MyTestStaticMethod1",
+      target: "/en-US/docs/Web/API/TestInterface/MyTestStaticMethod1",
       title:
-        "The MyTestMethod1 property of the TestInterface interface is experimental.",
+        "The MyTestStaticMethod1 property of the TestInterface interface is experimental.",
     },
     {
       badges: ["icon-deprecated", "icon-nonstandard"],
-      text: "MyTestMethod2",
-      target: "/en-US/docs/Web/API/TestInterface/TestMethod2",
+      text: "MyTestStaticMethod2",
+      target: "/en-US/docs/Web/API/TestInterface/MyTestStaticMethod2",
       title:
-        "The MyTestMethod2 property of the TestInterface interface is deprecated and non-standard.",
+        "The MyTestStaticMethod2 property of the TestInterface interface is deprecated and non-standard.",
     },
     {
       badges: [
@@ -113,26 +143,26 @@ const expectedMethods = {
         "icon-nonstandard",
         "obsolete",
       ],
-      text: "MyTestMethod3",
-      target: "/en-US/docs/Web/API/TestInterface/TestMethod3",
+      text: "MyTestStaticMethod3",
+      target: "/en-US/docs/Web/API/TestInterface/MyTestStaticMethod3",
       title:
-        "The MyTestMethod3 property of the TestInterface interface has all the badges.",
+        "The MyTestStaticMethod3 property of the TestInterface interface has all the badges.",
     },
   ],
   fr: [
     {
       badges: ["icon-experimental"],
-      text: "MyTestMethod1",
-      target: "/fr/docs/Web/API/TestInterface/TestMethod1",
+      text: "MyTestStaticMethod1",
+      target: "/fr/docs/Web/API/TestInterface/MyTestStaticMethod1",
       title:
-        "The MyTestMethod1 property of the TestInterface interface is experimental.",
+        "The MyTestStaticMethod1 property of the TestInterface interface is experimental.",
     },
     {
       badges: ["icon-deprecated", "icon-nonstandard"],
-      text: "MyTestMethod2",
-      target: "/fr/docs/Web/API/TestInterface/TestMethod2",
+      text: "MyTestStaticMethod2",
+      target: "/fr/docs/Web/API/TestInterface/MyTestStaticMethod2",
       title:
-        "The MyTestMethod2 property of the TestInterface interface is deprecated and non-standard.",
+        "The MyTestStaticMethod2 property of the TestInterface interface is deprecated and non-standard.",
     },
     {
       badges: [
@@ -141,26 +171,26 @@ const expectedMethods = {
         "icon-nonstandard",
         "obsolete",
       ],
-      text: "MyTestMethod3",
-      target: "/fr/docs/Web/API/TestInterface/TestMethod3",
+      text: "MyTestStaticMethod3",
+      target: "/fr/docs/Web/API/TestInterface/MyTestStaticMethod3",
       title:
-        "The MyTestMethod3 property of the TestInterface interface has all the badges.",
+        "The MyTestStaticMethod3 property of the TestInterface interface has all the badges.",
     },
   ],
   ja: [
     {
       badges: ["icon-experimental"],
-      text: "MyTestMethod1",
-      target: "/ja/docs/Web/API/TestInterface/TestMethod1",
+      text: "MyTestStaticMethod1",
+      target: "/ja/docs/Web/API/TestInterface/MyTestStaticMethod1",
       title:
-        "The MyTestMethod1 property of the TestInterface interface is experimental (ja translation).",
+        "The MyTestStaticMethod1 property of the TestInterface interface is experimental (ja translation).",
     },
     {
       badges: ["icon-deprecated", "icon-nonstandard"],
-      text: "MyTestMethod2",
-      target: "/ja/docs/Web/API/TestInterface/TestMethod2",
+      text: "MyTestStaticMethod2",
+      target: "/ja/docs/Web/API/TestInterface/MyTestStaticMethod2",
       title:
-        "The MyTestMethod2 property of the TestInterface interface is deprecated and non-standard (ja translation).",
+        "The MyTestStaticMethod2 property of the TestInterface interface is deprecated and non-standard (ja translation).",
     },
     {
       badges: [
@@ -169,10 +199,97 @@ const expectedMethods = {
         "icon-nonstandard",
         "obsolete",
       ],
-      text: "MyTestMethod3",
-      target: "/ja/docs/Web/API/TestInterface/TestMethod3",
+      text: "MyTestStaticMethod3",
+      target: "/ja/docs/Web/API/TestInterface/MyTestStaticMethod3",
       title:
-        "The MyTestMethod3 property of the TestInterface interface has all the badges (ja translation).",
+        "The MyTestStaticMethod3 property of the TestInterface interface has all the badges (ja translation).",
+    },
+  ],
+};
+
+const expectedInstanceMethods = {
+  "en-US": [
+    {
+      badges: ["icon-experimental"],
+      text: "MyTestInstanceMethod1",
+      target: "/en-US/docs/Web/API/TestInterface/MyTestInstanceMethod1",
+      title:
+        "The MyTestInstanceMethod1 property of the TestInterface interface is experimental.",
+    },
+    {
+      badges: ["icon-deprecated", "icon-nonstandard"],
+      text: "MyTestInstanceMethod2",
+      target: "/en-US/docs/Web/API/TestInterface/MyTestInstanceMethod2",
+      title:
+        "The MyTestInstanceMethod2 property of the TestInterface interface is deprecated and non-standard.",
+    },
+    {
+      badges: [
+        "icon-experimental",
+        "icon-deprecated",
+        "icon-nonstandard",
+        "obsolete",
+      ],
+      text: "MyTestInstanceMethod3",
+      target: "/en-US/docs/Web/API/TestInterface/MyTestInstanceMethod3",
+      title:
+        "The MyTestInstanceMethod3 property of the TestInterface interface has all the badges.",
+    },
+  ],
+  fr: [
+    {
+      badges: ["icon-experimental"],
+      text: "MyTestInstanceMethod1",
+      target: "/fr/docs/Web/API/TestInterface/MyTestInstanceMethod1",
+      title:
+        "The MyTestInstanceMethod1 property of the TestInterface interface is experimental.",
+    },
+    {
+      badges: ["icon-deprecated", "icon-nonstandard"],
+      text: "MyTestInstanceMethod2",
+      target: "/fr/docs/Web/API/TestInterface/MyTestInstanceMethod2",
+      title:
+        "The MyTestInstanceMethod2 property of the TestInterface interface is deprecated and non-standard.",
+    },
+    {
+      badges: [
+        "icon-experimental",
+        "icon-deprecated",
+        "icon-nonstandard",
+        "obsolete",
+      ],
+      text: "MyTestInstanceMethod3",
+      target: "/fr/docs/Web/API/TestInterface/MyTestInstanceMethod3",
+      title:
+        "The MyTestInstanceMethod3 property of the TestInterface interface has all the badges.",
+    },
+  ],
+  ja: [
+    {
+      badges: ["icon-experimental"],
+      text: "MyTestInstanceMethod1",
+      target: "/ja/docs/Web/API/TestInterface/MyTestInstanceMethod1",
+      title:
+        "The MyTestInstanceMethod1 property of the TestInterface interface is experimental (ja translation).",
+    },
+    {
+      badges: ["icon-deprecated", "icon-nonstandard"],
+      text: "MyTestInstanceMethod2",
+      target: "/ja/docs/Web/API/TestInterface/MyTestInstanceMethod2",
+      title:
+        "The MyTestInstanceMethod2 property of the TestInterface interface is deprecated and non-standard (ja translation).",
+    },
+    {
+      badges: [
+        "icon-experimental",
+        "icon-deprecated",
+        "icon-nonstandard",
+        "obsolete",
+      ],
+      text: "MyTestInstanceMethod3",
+      target: "/ja/docs/Web/API/TestInterface/MyTestInstanceMethod3",
+      title:
+        "The MyTestInstanceMethod3 property of the TestInterface interface has all the badges (ja translation).",
     },
   ],
 };
@@ -289,8 +406,10 @@ const expectedImplemented = [
 const expectedBasic = {
   mainIfLink: expectedMainIfLink.withoutGroupData,
   details: {
-    properties: expectedProperties,
-    methods: expectedMethods,
+    staticProperties: expectedStaticProperties,
+    staticMethods: expectedStaticMethods,
+    instanceProperties: expectedInstanceProperties,
+    instanceMethods: expectedInstanceMethods,
     events: expectedEvents,
   },
 };
@@ -298,8 +417,10 @@ const expectedBasic = {
 const expectedWithGroupData = {
   mainIfLink: expectedMainIfLink.withGroupData,
   details: {
-    properties: expectedProperties,
-    methods: expectedMethods,
+    staticProperties: expectedStaticProperties,
+    staticMethods: expectedStaticMethods,
+    instanceProperties: expectedInstanceProperties,
+    instanceMethods: expectedInstanceMethods,
     events: expectedEvents,
     related: expectedRelated,
   },
@@ -308,8 +429,10 @@ const expectedWithGroupData = {
 const expectedWithInterfaceData = {
   mainIfLink: expectedMainIfLink.withoutGroupData,
   details: {
-    properties: expectedProperties,
-    methods: expectedMethods,
+    staticProperties: expectedStaticProperties,
+    staticMethods: expectedStaticMethods,
+    instanceProperties: expectedInstanceProperties,
+    instanceMethods: expectedInstanceMethods,
     events: expectedEvents,
     inherited: expectedInherited,
     implemented: expectedImplemented,
@@ -431,27 +554,58 @@ function checkResult(html, config) {
   const details = dom.querySelectorAll("ol>li>details");
   expect(details.length).toEqual(Object.keys(config.expected.details).length);
 
-  // Test the properties sublist
-  const expectedPropertySummary = commonl10nFixture.Properties[config.locale];
-  const expectedPropertyItems =
-    config.expected.details.properties[config.locale];
-  const properties = details[0];
+  // Test the static properties sublist
+  const expectedStaticPropertySummary =
+    commonl10nFixture.Static_properties[config.locale];
+  const expectedStaticPropertyItems =
+    config.expected.details.staticProperties[config.locale];
+  const staticProperties = details[0];
   checkItemList(
-    expectedPropertySummary,
-    expectedPropertyItems,
-    properties,
+    expectedStaticPropertySummary,
+    expectedStaticPropertyItems,
+    staticProperties,
     config,
     checkInterfaceItem
   );
 
-  // Test the methods sublist
-  const expectedMethodSummary = commonl10nFixture.Methods[config.locale];
-  const expectedMethodItems = config.expected.details.methods[config.locale];
-  const methods = details[1];
+  // Test the static methods sublist
+  const expectedStaticMethodSummary =
+    commonl10nFixture.Static_methods[config.locale];
+  const expectedStaticMethodItems =
+    config.expected.details.staticMethods[config.locale];
+  const staticMethods = details[1];
   checkItemList(
-    expectedMethodSummary,
-    expectedMethodItems,
-    methods,
+    expectedStaticMethodSummary,
+    expectedStaticMethodItems,
+    staticMethods,
+    config,
+    checkInterfaceItem
+  );
+
+  // Test the instance properties sublist
+  const expectedInstancePropertySummary =
+    commonl10nFixture.Instance_properties[config.locale];
+  const expectedInstancePropertyItems =
+    config.expected.details.instanceProperties[config.locale];
+  const instanceProperties = details[2];
+  checkItemList(
+    expectedInstancePropertySummary,
+    expectedInstancePropertyItems,
+    instanceProperties,
+    config,
+    checkInterfaceItem
+  );
+
+  // Test the instance methods sublist
+  const expectedInstanceMethodSummary =
+    commonl10nFixture.Instance_methods[config.locale];
+  const expectedInstanceMethodItems =
+    config.expected.details.instanceMethods[config.locale];
+  const instanceMethods = details[3];
+  checkItemList(
+    expectedInstanceMethodSummary,
+    expectedInstanceMethodItems,
+    instanceMethods,
     config,
     checkInterfaceItem
   );
@@ -459,7 +613,7 @@ function checkResult(html, config) {
   // Test the events sublist
   const expectedEventSummary = commonl10nFixture.Events[config.locale];
   const expectedEventItems = config.expected.details.events[config.locale];
-  const events = details[2];
+  const events = details[4];
   checkItemList(
     expectedEventSummary,
     expectedEventItems,
@@ -474,7 +628,7 @@ function checkResult(html, config) {
     const expectedInheritedSummary =
       commonl10nFixture.Inheritance[config.locale];
     const expectedInheritedItems = config.expected.details.inherited;
-    const inherited = details[3];
+    const inherited = details[5];
     checkItemList(
       expectedInheritedSummary,
       expectedInheritedItems,
@@ -490,7 +644,7 @@ function checkResult(html, config) {
     const expectedImplementedSummary =
       commonl10nFixture.Implemented_by[config.locale];
     const expectedImplementedItems = config.expected.details.implemented;
-    const implemented = details[4];
+    const implemented = details[6];
     checkItemList(
       expectedImplementedSummary,
       expectedImplementedItems,
@@ -507,7 +661,7 @@ function checkResult(html, config) {
       config.locale
     ].replace("$1", config.argument);
     const expectedRelatedItems = config.expected.details.related;
-    const related = details[3];
+    const related = details[5];
     checkItemList(
       expectedRelatedSummary,
       expectedRelatedItems,
@@ -570,8 +724,8 @@ describeMacro("APIRef", function () {
 
   // Test with current page as a subpage
   testMacro({
-    name: "slug: 'Web/API/TestInterface/TestMethod1'; no InterfaceData entries; no argument",
-    currentSlug: "Web/API/TestInterface/TestMethod1",
+    name: "slug: 'Web/API/TestInterface/TestStaticMethod1'; no InterfaceData entries; no argument",
+    currentSlug: "Web/API/TestInterface/TestStaticMethod1",
     argument: null,
     interfaceData: interfaceDataNoEntriesFixture,
     expected: expectedBasic,
