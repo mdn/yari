@@ -99,6 +99,9 @@ export default function CollectionComponent() {
           <NoteCard type="error">
             <h4>Error</h4>
             <p>{collectionError.message}</p>
+            <Button href="../" type="secondary">
+              Go Back
+            </Button>
           </NoteCard>
         ) : (
           <Loading />
