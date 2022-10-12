@@ -1,4 +1,4 @@
-import { Doc, BCDSection } from "../../../../../libs/types/document";
+import { Doc } from "../../../../../libs/types/document";
 import { survey_duration, survey_rates } from "../../../env";
 
 export interface Survey {
