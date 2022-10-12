@@ -36,8 +36,10 @@ if (group) {
 var commonl10n = web.getJSONData("L10n-Common");
 
 var text = {
-    'Methods': mdn.getLocalString(commonl10n, 'Methods'),
-    'Properties': mdn.getLocalString(commonl10n, 'Properties'),
+    'Static methods': mdn.getLocalString(commonl10n, 'Static_methods'),
+    'Static properties': mdn.getLocalString(commonl10n, 'Static_properties'),
+    'Instance methods': mdn.getLocalString(commonl10n, 'Instance_methods'),
+    'Instance properties': mdn.getLocalString(commonl10n, 'Instance_properties'),
     'Constructor': mdn.getLocalString(commonl10n, 'Constructor'),
     'Inheritance': mdn.getLocalString(commonl10n, 'Inheritance'),
     'Implemented_by': mdn.getLocalString(commonl10n, 'Implemented_by'),
@@ -46,7 +48,6 @@ var text = {
     'title': mdn.getLocalString(commonl10n, 'TranslationCTA'),
     'Events': mdn.getLocalString(commonl10n, 'Events'),
 };
-
 
 // Collect all the things
 var mainIFPages = await page.subpagesExpand('/en-US/docs/Web/API/' + mainIF);
@@ -66,8 +67,10 @@ if (group && webAPIGroups[0][group]) {
   related.sort();
 }
 
-var properties = [];
-var methods = [];
+var staticProperties = [];
+var staticMethods = [];
+var instanceProperties = [];
+var instanceMethods = [];
 var ctors = [];
 var events = [];
 var inheritedIF = [];
@@ -78,12 +81,16 @@ function collect(pageList) {
     var aPage = pageList[i];
     switch(aPage.pageType) {
       case "web-api-static-property":
-      case "web-api-instance-property":
-        properties.push(aPage);
+        staticProperties.push(aPage);
         break;
       case "web-api-static-method":
+        staticMethods.push(aPage);
+        break;
+      case "web-api-instance-property":
+        instanceProperties.push(aPage);
+        break;
       case "web-api-instance-method":
-        methods.push(aPage);
+        instanceMethods.push(aPage);
         break;
       case "web-api-constructor":
         ctors.push(aPage);
@@ -113,8 +120,10 @@ function APISort(a, b) {
   return a.toLowerCase().localeCompare(b.toLowerCase());
 }
 
-properties.sort(APISort);
-methods.sort(APISort);
+staticProperties.sort(APISort);
+staticMethods.sort(APISort);
+instanceProperties.sort(APISort);
+instanceMethods.sort(APISort);
 ctors.sort(APISort);
 events.sort(APISort);
 
@@ -252,12 +261,17 @@ output += `<li><strong>${web.smartLink(APIHref + '/' + mainIF, null, `<code>${ma
 if (ctors.length > 0) {
   output += buildSublist(ctors, text['Constructor']);
 }
-
-if (properties.length > 0) {
-  output += buildSublist(properties, text['Properties']);
+if (staticProperties.length > 0) {
+  output += buildSublist(staticProperties, text['Static properties']);
 }
-if (methods.length > 0) {
-  output += buildSublist(methods, text['Methods']);
+if (staticMethods.length > 0) {
+  output += buildSublist(staticMethods, text['Static methods']);
+}
+if (instanceProperties.length > 0) {
+  output += buildSublist(instanceProperties, text['Instance properties']);
+}
+if (instanceMethods.length > 0) {
+  output += buildSublist(instanceMethods, text['Instance methods']);
 }
 if (events.length > 0) {
   output += buildSublist(events, text['Events']);
