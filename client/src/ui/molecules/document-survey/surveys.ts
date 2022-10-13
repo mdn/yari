@@ -34,7 +34,7 @@ export const SURVEYS: Survey[] = [
     bucket: SurveyBucket.BROWSER_SURVEY_OCT_2022,
     show: (doc: Doc) =>
       doc?.body.some((section) => section.type === "browser_compatibility"),
-    src: "https://www.surveygizmo.com/collab/7049440/Short-survey-browsers",
+    src: "https://survey.alchemer.com/s3/7049440/Short-survey-browsers",
     teaser:
       "What is important to you when deciding which browser features to use? Take our 1 minute survey:",
     question:
