@@ -407,8 +407,8 @@ const expectedBasic = {
   mainIfLink: expectedMainIfLink.withoutGroupData,
   details: {
     staticProperties: expectedStaticProperties,
-    staticMethods: expectedStaticMethods,
     instanceProperties: expectedInstanceProperties,
+    staticMethods: expectedStaticMethods,
     instanceMethods: expectedInstanceMethods,
     events: expectedEvents,
   },
@@ -418,8 +418,8 @@ const expectedWithGroupData = {
   mainIfLink: expectedMainIfLink.withGroupData,
   details: {
     staticProperties: expectedStaticProperties,
-    staticMethods: expectedStaticMethods,
     instanceProperties: expectedInstanceProperties,
+    staticMethods: expectedStaticMethods,
     instanceMethods: expectedInstanceMethods,
     events: expectedEvents,
     related: expectedRelated,
@@ -430,8 +430,8 @@ const expectedWithInterfaceData = {
   mainIfLink: expectedMainIfLink.withoutGroupData,
   details: {
     staticProperties: expectedStaticProperties,
-    staticMethods: expectedStaticMethods,
     instanceProperties: expectedInstanceProperties,
+    staticMethods: expectedStaticMethods,
     instanceMethods: expectedInstanceMethods,
     events: expectedEvents,
     inherited: expectedInherited,
@@ -568,30 +568,30 @@ function checkResult(html, config) {
     checkInterfaceItem
   );
 
-  // Test the static methods sublist
-  const expectedStaticMethodSummary =
-    commonl10nFixture.Static_methods[config.locale];
-  const expectedStaticMethodItems =
-    config.expected.details.staticMethods[config.locale];
-  const staticMethods = details[1];
-  checkItemList(
-    expectedStaticMethodSummary,
-    expectedStaticMethodItems,
-    staticMethods,
-    config,
-    checkInterfaceItem
-  );
-
   // Test the instance properties sublist
   const expectedInstancePropertySummary =
     commonl10nFixture.Instance_properties[config.locale];
   const expectedInstancePropertyItems =
     config.expected.details.instanceProperties[config.locale];
-  const instanceProperties = details[2];
+  const instanceProperties = details[1];
   checkItemList(
     expectedInstancePropertySummary,
     expectedInstancePropertyItems,
     instanceProperties,
+    config,
+    checkInterfaceItem
+  );
+
+  // Test the static methods sublist
+  const expectedStaticMethodSummary =
+    commonl10nFixture.Static_methods[config.locale];
+  const expectedStaticMethodItems =
+    config.expected.details.staticMethods[config.locale];
+  const staticMethods = details[2];
+  checkItemList(
+    expectedStaticMethodSummary,
+    expectedStaticMethodItems,
+    staticMethods,
     config,
     checkInterfaceItem
   );

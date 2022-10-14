@@ -36,10 +36,10 @@ if (group) {
 var commonl10n = web.getJSONData("L10n-Common");
 
 var text = {
-    'Static methods': mdn.getLocalString(commonl10n, 'Static_methods'),
     'Static properties': mdn.getLocalString(commonl10n, 'Static_properties'),
-    'Instance methods': mdn.getLocalString(commonl10n, 'Instance_methods'),
     'Instance properties': mdn.getLocalString(commonl10n, 'Instance_properties'),
+    'Static methods': mdn.getLocalString(commonl10n, 'Static_methods'),
+    'Instance methods': mdn.getLocalString(commonl10n, 'Instance_methods'),
     'Constructor': mdn.getLocalString(commonl10n, 'Constructor'),
     'Inheritance': mdn.getLocalString(commonl10n, 'Inheritance'),
     'Implemented_by': mdn.getLocalString(commonl10n, 'Implemented_by'),
@@ -68,8 +68,8 @@ if (group && webAPIGroups[0][group]) {
 }
 
 var staticProperties = [];
-var staticMethods = [];
 var instanceProperties = [];
+var staticMethods = [];
 var instanceMethods = [];
 var ctors = [];
 var events = [];
@@ -83,11 +83,11 @@ function collect(pageList) {
       case "web-api-static-property":
         staticProperties.push(aPage);
         break;
-      case "web-api-static-method":
-        staticMethods.push(aPage);
-        break;
       case "web-api-instance-property":
         instanceProperties.push(aPage);
+        break;
+      case "web-api-static-method":
+        staticMethods.push(aPage);
         break;
       case "web-api-instance-method":
         instanceMethods.push(aPage);
@@ -121,8 +121,8 @@ function APISort(a, b) {
 }
 
 staticProperties.sort(APISort);
-staticMethods.sort(APISort);
 instanceProperties.sort(APISort);
+staticMethods.sort(APISort);
 instanceMethods.sort(APISort);
 ctors.sort(APISort);
 events.sort(APISort);
@@ -264,11 +264,11 @@ if (ctors.length > 0) {
 if (staticProperties.length > 0) {
   output += buildSublist(staticProperties, text['Static properties']);
 }
-if (staticMethods.length > 0) {
-  output += buildSublist(staticMethods, text['Static methods']);
-}
 if (instanceProperties.length > 0) {
   output += buildSublist(instanceProperties, text['Instance properties']);
+}
+if (staticMethods.length > 0) {
+  output += buildSublist(staticMethods, text['Static methods']);
 }
 if (instanceMethods.length > 0) {
   output += buildSublist(instanceMethods, text['Instance methods']);
