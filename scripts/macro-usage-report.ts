@@ -115,15 +115,18 @@ async function getDeprecatedMacros() {
 
 function formatCell(files: string[], limit = 2): string {
   if (files.length === 0) {
-    return "";
+    return "0";
   }
 
   return `<span title="${files[0]} …">${files.length}</span>`;
 }
 
-async function writeMarkdownTable(filesByMacro: {
-  [macro: string]: Iterable<string>;
-}) {
+async function writeMarkdownTable(
+  filesByMacro: {
+    [macro: string]: Iterable<string>;
+  },
+  deprecatedOnly: string
+) {
   const columns = ["yari", ...ACTIVE_LOCALES];
   process.stdout.write(
     `| macro |${columns.map((column) => ` ${column} `).join("|")}|\n`
@@ -148,15 +151,21 @@ async function writeMarkdownTable(filesByMacro: {
       ...paths.map((path) => formatCell(filterFilesByBase(files, path))),
     ];
 
-    process.stdout.write(`|${cells.map((cell) => ` ${cell} `).join("|")}|\n`);
+    if (deprecatedOnly && deprecatedMacros.includes(macro)) {
+      process.stdout.write(`|${cells.map((cell) => ` ${cell} `).join("|")}|\n`);
+    } else if (!deprecatedOnly) {
+      process.stdout.write(`|${cells.map((cell) => ` ${cell} `).join("|")}|\n`);
+    }
   }
 }
 
 async function main() {
   const macros = await getMacros();
   const filesByMacro = await getFilesByMacro(macros);
+  // get the optional `deprecated-only` flag
+  const deprecatedOnly = process.argv.slice(2, 3)[0];
 
-  await writeMarkdownTable(filesByMacro);
+  await writeMarkdownTable(filesByMacro, deprecatedOnly);
 }
 
 main();
