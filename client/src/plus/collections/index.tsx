@@ -55,7 +55,7 @@ function Overview() {
               <a
                 rel="noreferrer noopener"
                 target="_blank"
-                href="https://www.surveygizmo.com/s3/6988450/Feature-Preview-User-Feedback-Multiple-Collections"
+                href="https://survey.alchemer.com/s3/6988450/Feature-Preview-User-Feedback-Multiple-Collections"
               >
                 We'd love to hear your feedback!
               </a>
