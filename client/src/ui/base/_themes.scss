@@ -166,6 +166,9 @@
   --text-primary-green: #{$mdn-color-light-theme-green-60};
   --text-primary-blue: #{$mdn-color-light-theme-blue-60};
   --text-primary-yellow: #{$mdn-color-light-theme-yellow-60};
+
+  --collections-article-link: #{$mdn-color-light-theme-red-70};
+
   color-scheme: light;
 }
 
@@ -332,6 +335,9 @@
   --text-primary-green: #{$mdn-color-dark-theme-green-30};
   --text-primary-blue: #{$mdn-color-dark-theme-blue-30};
   --text-primary-yellow: #{$mdn-color-dark-theme-yellow-30};
+
+  --collections-article-link: #{$mdn-color-dark-theme-red-30};
+
   color-scheme: dark;
 }
 
