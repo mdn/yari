@@ -27,7 +27,7 @@ export default function FeaturePreview() {
                 <a
                   rel="noreferrer noopener"
                   target="_blank"
-                  href="https://www.surveygizmo.com/s3/6918430/Feature-Preview-User-Feedback-Collections-in-Quicksearch"
+                  href="https://survey.alchemer.com/s3/6918430/Feature-Preview-User-Feedback-Collections-in-Quicksearch"
                 >
                   Give us some feedback.
                 </a>

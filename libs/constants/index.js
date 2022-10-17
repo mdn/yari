@@ -118,7 +118,7 @@ const CSP_DIRECTIVES = {
     "jsfiddle.net",
     "www.youtube-nocookie.com",
     "codepen.io",
-    "www.surveygizmo.com",
+    "survey.alchemer.com",
   ],
   "img-src": [
     "'self'",

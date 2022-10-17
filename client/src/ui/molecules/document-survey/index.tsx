@@ -106,7 +106,7 @@ function SurveyDisplay({ survey, force }: { survey: Survey; force: boolean }) {
 
     const listener = (event: MessageEvent) => {
       if (
-        event.origin === "https://www.surveygizmo.com" &&
+        event.origin === "https://survey.alchemer.com" &&
         event.data === "submit"
       ) {
         submitted();
