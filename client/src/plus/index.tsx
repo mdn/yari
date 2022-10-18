@@ -15,6 +15,13 @@ import { DocParent } from "../../../libs/types/document";
 const OfferOverview = React.lazy(() => import("./offer-overview"));
 const Collections = React.lazy(() => import("./collections"));
 
+interface LayoutProps {
+  withoutContainer?: boolean;
+  withSSR?: boolean;
+  parents?: DocParent[];
+  children: React.ReactNode;
+}
+
 export function Plus({ pageTitle, ...props }: { pageTitle?: string }) {
   React.useEffect(() => {
     document.title = pageTitle || MDN_PLUS_TITLE;
@@ -36,12 +43,7 @@ export function Plus({ pageTitle, ...props }: { pageTitle?: string }) {
     withSSR = false,
     parents = undefined,
     children,
-  }: {
-    withoutContainer?: boolean;
-    withSSR?: boolean;
-    parents?: DocParent[];
-    children: React.ReactNode;
-  }) {
+  }: LayoutProps) {
     const inner = (
       <>
         {isServer ? (
