@@ -87,3 +87,11 @@ export function isPlusSubscriber(user) {
 export function camelWrap(text: string) {
   return text.replace(/([^A-Z])([A-Z])/g, "$1\u200B$2");
 }
+
+/**
+ * Gets the number of characters in a string.
+ * String.length returns the number of code units.
+ */
+export function charLength(string: string) {
+  return [...string].length;
+}

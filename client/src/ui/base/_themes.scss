@@ -169,6 +169,9 @@
 
   --collections-article-link: #{$mdn-color-light-theme-red-70};
 
+  --form-limit-color: #{$mdn-color-neutral-60};
+  --form-limit-color-emphasis: #{$mdn-color-neutral-70};
+
   color-scheme: light;
 }
 
@@ -337,6 +340,9 @@
   --text-primary-yellow: #{$mdn-color-dark-theme-yellow-30};
 
   --collections-article-link: #{$mdn-color-dark-theme-red-30};
+
+  --form-limit-color: #{$mdn-color-neutral-40};
+  --form-limit-color-emphasis: #{$mdn-color-neutral-30};
 
   color-scheme: dark;
 }

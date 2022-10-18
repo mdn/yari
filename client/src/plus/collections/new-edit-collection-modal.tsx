@@ -13,6 +13,8 @@ import {
   useCollections,
 } from "./api";
 import { NEW_COLLECTION_MODAL_UPGRADE_LINK } from "../../telemetry/constants";
+import LimitedInput from "../../ui/atoms/form/limited-input";
+import ExpandingTextarea from "../../ui/atoms/form/expanding-textarea";
 
 export default function NewEditCollectionModal({
   show,
@@ -44,7 +46,9 @@ export default function NewEditCollectionModal({
   const { isPending, resetError, error } =
     "id" in collection ? editHook : createHook;
 
-  const changeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const changeHandler: React.ChangeEventHandler<
+    HTMLInputElement | HTMLTextAreaElement
+  > = (e) => {
     const { name, value } = e.target;
     setCollection({ ...collection, [name]: value.trimStart() });
   };
@@ -128,28 +132,35 @@ export default function NewEditCollectionModal({
             <form className="mdn-form" onSubmit={saveHandler}>
               <div className="mdn-form-item">
                 <label htmlFor="collection-name">Name:</label>
-                <input
-                  id="collection-name"
-                  name="name"
-                  value={collection.name}
-                  onChange={changeHandler}
-                  autoComplete="off"
-                  type="text"
-                  required={true}
-                  disabled={isPending}
-                />
+                <LimitedInput value={collection.name} limit={60}>
+                  {({ value, changeWrapper }) => (
+                    <input
+                      value={value}
+                      onChange={changeWrapper(changeHandler)}
+                      id="collection-name"
+                      name="name"
+                      autoComplete="off"
+                      type="text"
+                      required={true}
+                      disabled={isPending}
+                    />
+                  )}
+                </LimitedInput>
               </div>
               <div className="mdn-form-item">
                 <label htmlFor="collection-description">Description:</label>
-                <input
-                  id="collection-description"
-                  name="description"
-                  value={collection.description}
-                  onChange={changeHandler}
-                  autoComplete="off"
-                  type="text"
-                  disabled={isPending}
-                />
+                <LimitedInput value={collection.description || ""} limit={160}>
+                  {({ value, changeWrapper }) => (
+                    <ExpandingTextarea
+                      value={value}
+                      onChange={changeWrapper(changeHandler)}
+                      id="collection-description"
+                      name="description"
+                      autoComplete="off"
+                      disabled={isPending}
+                    />
+                  )}
+                </LimitedInput>
               </div>
               <div className="mdn-form-item is-button-row">
                 <Button buttonType="submit" isDisabled={isPending}>

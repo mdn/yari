@@ -86,22 +86,13 @@
 
     p {
       color: var(--text-secondary);
-      display: none;
       margin-top: 0;
+      white-space: pre-wrap;
     }
 
     @media screen and (min-width: $screen-md) {
       h1 {
         font-size: 24px;
-      }
-
-      .count {
-        flex: 1;
-      }
-
-      p {
-        display: block;
-        flex: 100%;
       }
     }
   }
@@ -172,6 +163,7 @@
     p {
       margin: 0;
       overflow-wrap: anywhere;
+      white-space: pre-wrap;
     }
 
     footer {
