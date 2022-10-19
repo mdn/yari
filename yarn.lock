@@ -1696,18 +1696,6 @@
     "@types/yargs" "^17.0.8"
     chalk "^4.0.0"
 
-"@jest/types@^29.2.1":
-  version "29.2.1"
-  resolved "https://registry.yarnpkg.com/@jest/types/-/types-29.2.1.tgz#ec9c683094d4eb754e41e2119d8bdaef01cf6da0"
-  integrity sha512-O/QNDQODLnINEPAI0cl9U6zUIDXEWXt6IC1o2N2QENuos7hlGUIthlKyV4p6ki3TvXFX071blj8HUhgLGquPjw==
-  dependencies:
-    "@jest/schemas" "^29.0.0"
-    "@types/istanbul-lib-coverage" "^2.0.0"
-    "@types/istanbul-reports" "^3.0.0"
-    "@types/node" "*"
-    "@types/yargs" "^17.0.8"
-    chalk "^4.0.0"
-
 "@jridgewell/gen-mapping@^0.1.0":
   version "0.1.1"
   resolved "https://registry.yarnpkg.com/@jridgewell/gen-mapping/-/gen-mapping-0.1.1.tgz#e5d2e450306a9491e3bd77e323e38d7aff315996"
@@ -1789,10 +1777,10 @@
   resolved "https://registry.yarnpkg.com/@mdn/minimalist/-/minimalist-2.0.4.tgz#6488ab0cb65b059446dcd9bf542246b81febe241"
   integrity sha512-jocePw/fsGcBxO67D+iWQLZ0TQjwNVonaME2BFN98QIm/e1kTY1/k2s4fOqH5MMa3QYURxa098bI4sChn6s/7Q==
 
-"@mozilla/glean@1.2.0":
-  version "1.2.0"
-  resolved "https://registry.yarnpkg.com/@mozilla/glean/-/glean-1.2.0.tgz#7489fd489e23acdf557af092743405ae38eb1294"
-  integrity sha512-zhLb9n6gGC7BcPT9jwBCqlkjlIWjd34hCrcLDSb0vxcrzL9s8eZu9gsXSR+SHW+ebpOZptdDOerrE4GwAbDznQ==
+"@mozilla/glean@1.3.0":
+  version "1.3.0"
+  resolved "https://registry.yarnpkg.com/@mozilla/glean/-/glean-1.3.0.tgz#e8ed1a548393c1b70b5b0cfbd7ee247aa302aa59"
+  integrity sha512-2bEhpV8Tf4U/KEAJvaesVhe8SXk089jeDCHicEiBbznsRiIElHZVku7t7QHJI16oTqJEf/wHqjTDSQI9Wl3p3A==
   dependencies:
     fflate "^0.7.1"
     jose "^4.0.4"
@@ -7960,18 +7948,6 @@ jest-snapshot@^29.1.0:
     semver "^7.3.5"
 
 jest-util@^29.0.0, jest-util@^29.0.3, jest-util@^29.1.0, jest-util@^29.1.2, jest-util@^29.2.0, jest-util@^29.2.1:
-  version "29.2.1"
-  resolved "https://registry.yarnpkg.com/jest-util/-/jest-util-29.2.1.tgz#f26872ba0dc8cbefaba32c34f98935f6cf5fc747"
-  integrity sha512-P5VWDj25r7kj7kl4pN2rG/RN2c1TLfYYYZYULnS/35nFDjBai+hBeo3MDrYZS7p6IoY3YHZnt2vq4L6mKnLk0g==
-  dependencies:
-    "@jest/types" "^29.2.1"
-    "@types/node" "*"
-    chalk "^4.0.0"
-    ci-info "^3.2.0"
-    graceful-fs "^4.2.9"
-    picomatch "^2.2.3"
-
-jest-util@^29.2.1:
   version "29.2.1"
   resolved "https://registry.yarnpkg.com/jest-util/-/jest-util-29.2.1.tgz#f26872ba0dc8cbefaba32c34f98935f6cf5fc747"
   integrity sha512-P5VWDj25r7kj7kl4pN2rG/RN2c1TLfYYYZYULnS/35nFDjBai+hBeo3MDrYZS7p6IoY3YHZnt2vq4L6mKnLk0g==
