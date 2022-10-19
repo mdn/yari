@@ -143,7 +143,7 @@
     "@types/hast": "^2.3.4",
     "@types/jest": "^29.1.0",
     "@types/mdast": "^3.0.10",
-    "@types/node": "^16.11.66",
+    "@types/node": "^16.11.68",
     "@types/react": "^18.0.21",
     "@types/react-dom": "^18.0.6",
     "@types/react-modal": "^3.13.1",
