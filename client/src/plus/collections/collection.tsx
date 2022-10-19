@@ -233,13 +233,6 @@ function ItemEdit({
     setShow(false);
   };
 
-  const enterHandler = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "Enter") {
-      e.preventDefault();
-      saveHandler(e);
-    }
-  };
-
   return (
     <MDNModal
       isOpen={show}
@@ -270,7 +263,6 @@ function ItemEdit({
               name="title"
               value={formItem.title}
               onChange={changeHandler}
-              onKeyDown={enterHandler}
               autoComplete="off"
               type="text"
               required={true}
@@ -284,7 +276,6 @@ function ItemEdit({
               name="notes"
               value={formItem.notes}
               onChange={changeHandler}
-              onKeyDown={enterHandler}
               autoComplete="off"
               type="text"
               disabled={isPending}

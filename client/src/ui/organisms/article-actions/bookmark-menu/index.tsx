@@ -132,13 +132,6 @@ export default function BookmarkV2Menu({ doc }: { doc: Doc }) {
     setShow(false);
   };
 
-  const enterHandler = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "Enter") {
-      e.preventDefault();
-      saveHandler(e);
-    }
-  };
-
   const deleteHandler = async (e: React.MouseEvent) => {
     e.preventDefault();
     if (!collections || isPending) return;
@@ -202,7 +195,11 @@ export default function BookmarkV2Menu({ doc }: { doc: Doc }) {
             }`}
             role="menu"
           >
-            <button onClick={cancelHandler} className="header mobile-only">
+            <button
+              onClick={cancelHandler}
+              type="button"
+              className="header mobile-only"
+            >
               <span className="header-inner">
                 <Icon name="chevron" />
                 {savedItems?.length ? "Edit Item" : "Add to Collection"}
@@ -265,7 +262,7 @@ export default function BookmarkV2Menu({ doc }: { doc: Doc }) {
                 autoComplete="off"
                 type="text"
                 onChange={changeHandler}
-                onKeyDown={enterHandler}
+                required={true}
                 disabled={isPending}
               />
             </div>
@@ -278,7 +275,6 @@ export default function BookmarkV2Menu({ doc }: { doc: Doc }) {
                 autoComplete="off"
                 value={formItem.notes}
                 onChange={changeHandler}
-                onKeyDown={enterHandler}
                 disabled={isPending}
               />
             </div>
