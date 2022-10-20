@@ -13,7 +13,6 @@
     "declaration-block-no-duplicate-properties": null,
     "declaration-property-value-disallowed-list": null,
     "font-family-no-missing-generic-family-keyword": null,
-    "function-no-unknown": null,
     "length-zero-no-unit": null,
     "max-nesting-depth": null,
     "no-descending-specificity": null,
