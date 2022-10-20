@@ -1,5 +1,5 @@
 import React from "react";
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, useLocation, useParams } from "react-router-dom";
 
 import { useIsServer } from "../hooks";
 import { Loading } from "../ui/atoms/loading";
@@ -9,18 +9,26 @@ import Notifications from "./notifications";
 import { MDN_PLUS_TITLE } from "../constants";
 import { Settings } from "../settings";
 import PlusDocs from "./plus-docs";
-import { useUserData } from "../user-context";
+import { ArticleActionsContainer } from "../ui/organisms/article-actions-container";
+import { DocParent } from "../../../libs/types/document";
 
 const OfferOverview = React.lazy(() => import("./offer-overview"));
 const Collections = React.lazy(() => import("./collections"));
-const CollectionsV2 = React.lazy(() => import("./collections/v2"));
+
+interface LayoutProps {
+  withoutContainer?: boolean;
+  withSSR?: boolean;
+  parents?: DocParent[];
+  children: React.ReactNode;
+}
 
 export function Plus({ pageTitle, ...props }: { pageTitle?: string }) {
   React.useEffect(() => {
     document.title = pageTitle || MDN_PLUS_TITLE;
   }, [pageTitle]);
 
-  const userData = useUserData();
+  const { locale = "en-US" } = useParams();
+  const { pathname } = useLocation();
 
   const isServer = useIsServer();
   const loading = (
@@ -30,7 +38,12 @@ export function Plus({ pageTitle, ...props }: { pageTitle?: string }) {
     />
   );
 
-  function Layout({ withoutContainer = false, withSSR = false, children }) {
+  function Layout({
+    withoutContainer = false,
+    withSSR = false,
+    parents = undefined,
+    children,
+  }: LayoutProps) {
     const inner = (
       <>
         {isServer ? (
@@ -48,9 +61,14 @@ export function Plus({ pageTitle, ...props }: { pageTitle?: string }) {
     return withoutContainer ? (
       inner
     ) : (
-      <MainContentContainer>{inner}</MainContentContainer>
+      <>
+        {parents && <ArticleActionsContainer parents={parents} />}
+        <MainContentContainer>{inner}</MainContentContainer>
+      </>
     );
   }
+
+  const parents = [{ uri: `/${locale}/plus`, title: MDN_PLUS_TITLE }];
 
   return (
     <Routes>
@@ -65,21 +83,19 @@ export function Plus({ pageTitle, ...props }: { pageTitle?: string }) {
       <Route
         path="collections/*"
         element={
-          <Layout>
-            {userData?.settings?.multipleCollections ? (
-              <CollectionsV2 />
-            ) : (
-              <div className="bookmarks girdle">
-                <Collections />
-              </div>
-            )}
+          <Layout
+            parents={[...parents, { uri: pathname, title: "Collections" }]}
+          >
+            <Collections />
           </Layout>
         }
       />
       <Route
         path="notifications/*"
         element={
-          <Layout>
+          <Layout
+            parents={[...parents, { uri: pathname, title: "Notifications" }]}
+          >
             <div className="notifications girdle">
               <Notifications />
             </div>
@@ -89,7 +105,9 @@ export function Plus({ pageTitle, ...props }: { pageTitle?: string }) {
       <Route
         path="/settings"
         element={
-          <Layout>
+          <Layout
+            parents={[...parents, { uri: pathname, title: "My Settings" }]}
+          >
             <Settings {...props} />
           </Layout>
         }

@@ -95,7 +95,10 @@ function NewIssueOnGitHubLink({ doc }: { doc: Doc }) {
     locale !== "en-US"
       ? "/mdn/translated-content/issues/new"
       : "/mdn/content/issues/new";
-  sp.set("template", "page-report.yml");
+  sp.set(
+    "template",
+    locale !== "en-US" ? `page-report-${locale}.yml` : "page-report.yml"
+  );
   sp.set("mdn-url", `https://developer.mozilla.org${doc.mdn_url}`);
   sp.set("metadata", fillMetadata(METADATA_TEMPLATE, doc));
 

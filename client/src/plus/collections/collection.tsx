@@ -2,16 +2,13 @@ import { useState } from "react";
 import { useParams } from "react-router";
 import { Link } from "react-router-dom";
 import { KeyedMutator } from "swr";
-import { useScrollToTop } from "../../../hooks";
-import { Button } from "../../../ui/atoms/button";
-import Container from "../../../ui/atoms/container";
-import { Loading } from "../../../ui/atoms/loading";
-import MDNModal from "../../../ui/atoms/modal";
-import {
-  DropdownMenu,
-  DropdownMenuWrapper,
-} from "../../../ui/molecules/dropdown";
-import { camelWrap } from "../../../utils";
+import { useScrollToTop } from "../../hooks";
+import { Button } from "../../ui/atoms/button";
+import Container from "../../ui/atoms/container";
+import { Loading } from "../../ui/atoms/loading";
+import MDNModal from "../../ui/atoms/modal";
+import { DropdownMenu, DropdownMenuWrapper } from "../../ui/molecules/dropdown";
+import { camelWrap } from "../../utils";
 import {
   Item,
   useCollection,
@@ -19,7 +16,7 @@ import {
   useItemEdit,
   useItems,
 } from "./api";
-import NoteCard from "../../../ui/molecules/notecards";
+import NoteCard from "../../ui/molecules/notecards";
 
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
@@ -40,6 +37,12 @@ export default function CollectionComponent() {
   } = useItems(collectionId);
 
   useScrollToTop();
+  const name =
+    collection?.name === "Default" ? "Saved Articles" : collection?.name;
+  const description =
+    collection?.name === "Default"
+      ? "The default collection."
+      : collection?.description;
 
   return collection ? (
     <>
@@ -48,12 +51,12 @@ export default function CollectionComponent() {
           <Link to="../" className="exit">
             &larr; Back
           </Link>
-          <h1>{collection.name}</h1>
+          <h1>{name}</h1>
           <span className="count">
             {collection.article_count}{" "}
             {collection.article_count === 1 ? "article" : "articles"}
           </span>
-          {collection.description && <p>{collection.description}</p>}
+          {description && <p>{description}</p>}
         </Container>
       </header>
       <Container>
@@ -96,6 +99,9 @@ export default function CollectionComponent() {
           <NoteCard type="error">
             <h4>Error</h4>
             <p>{collectionError.message}</p>
+            <Button href="../" type="secondary">
+              Go Back
+            </Button>
           </NoteCard>
         ) : (
           <Loading />
@@ -118,7 +124,7 @@ function ItemComponent({
 
   const breadcrumbs = item.parents
     .slice(0, -1)
-    .map((parent) => parent.title)
+    .map((parent) => camelWrap(parent.title))
     .filter(
       // remove duplicated titles
       (title, index, titles) => title !== titles[index + 1]
@@ -182,7 +188,7 @@ function ItemComponent({
         />
       </header>
       <div className="breadcrumbs">{breadcrumbs.join(" > ")}</div>
-      {item.notes && <p>{item.notes}</p>}
+      {item.notes && <p>{camelWrap(item.notes)}</p>}
       <footer>
         <time dateTime={dayjs(item.updated_at).toISOString()}>
           Edited {dayjs(item.updated_at).fromNow().toString()}

@@ -199,6 +199,7 @@ const info = {
       slug,
       title,
       tags: tags || [],
+      pageType: document.metadata["page-type"],
       translations: [], // TODO Object.freeze(buildTranslationObjects(data)),
       summary() {
         // Back in the old Kuma days we used to store the summary as another piece

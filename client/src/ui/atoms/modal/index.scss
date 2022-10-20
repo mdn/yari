@@ -70,7 +70,12 @@ body.ReactModal__Body--open {
 
   p {
     margin: 0;
+    margin-top: 1rem;
     overflow-wrap: anywhere;
+
+    &:first-child {
+      margin: 0;
+    }
   }
 
   .mdn-form-item {

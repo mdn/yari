@@ -1,37 +1,197 @@
 @use "../../ui/vars" as *;
 
-.page-heading {
-  font: var(--type-heading-h3);
-  margin-bottom: 1rem;
-}
+.collections-v2 {
+  padding: 1rem 0;
 
-.collection {
-  padding: 0 0 3rem 0;
-  position: relative;
+  & > header {
+    padding: 1rem 0;
 
-  &-created {
-    align-self: center;
-    color: var(--text-secondary);
-    display: none;
-    font-size: var(--type-tiny-font-size);
-    min-width: max-content;
-    text-align: center;
+    &.container {
+      display: block;
+
+      .collections-hero {
+        background: linear-gradient(
+          270deg,
+          rgba(232, 8, 64, 0.05) 0%,
+          rgba(232, 8, 64, 0.3) 100%
+        );
+        /* Light/Color/Icon/Critical */
+        display: grid;
+        grid-template-rows: fit-content(12rem);
+        margin: 1rem;
+
+        .collections-hero-cta {
+          grid-column: 1;
+          grid-row: 1;
+          padding: 1rem;
+
+          h1 {
+            font-size: 1.25rem;
+            margin-right: 1rem;
+          }
+
+          p {
+            --text-link: var(--html-code-color);
+            display: block;
+            max-width: 80%;
+
+            @media screen and (max-width: $screen-md) {
+              max-width: 100%;
+            }
+          }
+        }
+      }
+
+      .mandala-wrapper {
+        grid-column: 1;
+        grid-row: 1;
+        overflow: hidden;
+        top: 0;
+        width: 100%;
+
+        .mandala-container {
+          --mandala-primary: var(--text-secondary);
+        }
+
+        .mandala-translate {
+          @media screen and (max-width: $screen-md) {
+            display: none;
+          }
+
+          @media screen and (min-width: $screen-md) {
+            transform: scale(0.95) translate(24rem, -15.4rem);
+          }
+        }
+      }
+
+      & > * {
+        margin-bottom: 1rem;
+      }
+    }
+
+    .exit {
+      flex: 100%;
+      margin-top: -1rem;
+    }
+
+    h1 {
+      font-size: 20px;
+      margin-right: 1rem;
+    }
+
+    .count {
+      color: var(--text-secondary);
+    }
+
+    p {
+      color: var(--text-secondary);
+      display: none;
+      margin-top: 0;
+    }
+
     @media screen and (min-width: $screen-md) {
-      display: inherit;
+      h1 {
+        font-size: 24px;
+      }
+
+      .count {
+        flex: 1;
+      }
+
+      p {
+        display: block;
+        flex: 100%;
+      }
     }
   }
-}
 
-.doomed {
-  /* stylelint-disable-line a11y/media-prefers-reduced-motion */
-  /* we already disable all animation and transitions globally
-  via a reset based on user prefs */
-  opacity: 0;
-  transition: 0.3s ease-out;
-}
+  & > .container {
+    display: grid;
+    gap: 1em;
 
-.unbookmark {
-  position: absolute;
-  right: 24px;
-  top: 0;
+    @media screen and (min-width: $screen-md) {
+      grid-template-columns: repeat(auto-fill, minmax(20rem, 1fr));
+    }
+  }
+
+  .notecard,
+  .generic-loading {
+    grid-column: 1/-1;
+  }
+
+  article {
+    border: 1px solid var(--border-secondary);
+    border-radius: var(--elem-radius);
+    box-shadow: var(--shadow-02);
+    display: flex;
+    flex-direction: column;
+    padding: 1rem;
+
+    &.default {
+      background-color: var(--background-secondary);
+    }
+
+    header {
+      align-items: start;
+      display: grid;
+      grid-template-columns: auto min-content;
+    }
+
+    h2 {
+      align-self: center;
+      font-size: var(--type-base-font-size-rem);
+      line-height: var(--heading-line-height);
+      // vertically centre first line of title, without increasing line height:
+      margin: calc(
+          (
+              var(--form-elem-height) - var(--type-base-font-size-rem) *
+                var(--heading-line-height)
+            ) / 2
+        )
+        0;
+      margin-right: 1rem;
+      overflow-wrap: anywhere;
+
+      a {
+        color: var(--text-primary);
+      }
+    }
+
+    .breadcrumbs {
+      color: var(--text-secondary);
+      font-size: var(--type-smaller-font-size);
+      font-style: italic;
+      overflow-wrap: anywhere;
+    }
+
+    p {
+      margin: 0;
+      overflow-wrap: anywhere;
+    }
+
+    footer {
+      align-items: baseline;
+      color: var(--text-secondary);
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      margin-top: auto;
+      overflow-wrap: anywhere;
+      padding-top: 1rem;
+    }
+
+    time {
+      font-size: var(--type-smaller-font-size);
+    }
+
+    @media screen and (max-width: $screen-md) {
+      .count {
+        display: none;
+      }
+    }
+  }
+
+  .pagination {
+    grid-column: 1/-1;
+  }
 }
