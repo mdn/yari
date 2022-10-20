@@ -175,176 +175,173 @@ export function getFolderPath(metadata, root: string | null = null) {
   );
 }
 
-export const read = memoize(
-  (folderOrFilePath: string, roots: string[] = ROOTS) => {
-    let filePath = null;
-    let folder = null;
-    let root = null;
-    let locale = null;
-
-    if (fs.existsSync(folderOrFilePath)) {
-      filePath = folderOrFilePath;
-
-      // It exists, but it is sane?
-      if (
-        !(
-          filePath.endsWith(HTML_FILENAME) ||
-          filePath.endsWith(MARKDOWN_FILENAME)
-        )
-      ) {
-        throw new Error(`'${filePath}' is not a HTML or Markdown file.`);
-      }
-
-      root = roots.find((possibleRoot) => filePath.startsWith(possibleRoot));
-      if (root) {
-        folder = filePath
-          .replace(root + path.sep, "")
-          .replace(path.sep + HTML_FILENAME, "")
-          .replace(path.sep + MARKDOWN_FILENAME, "");
-        locale = extractLocale(filePath.replace(root + path.sep, ""));
-      } else {
-        // The file exists but it doesn't appear to belong to any of our roots.
-        // That could happen if you pass in a file that is something completely
-        // different not a valid file anyway.
-        throw new Error(
-          `'${filePath}' does not appear to exist in any known content roots.`
-        );
-      }
-    } else {
-      folder = folderOrFilePath;
-      for (const possibleRoot of roots) {
-        const possibleMarkdownFilePath = path.join(
-          possibleRoot,
-          getMarkdownPath(folder)
-        );
-        if (fs.existsSync(possibleMarkdownFilePath)) {
-          root = possibleRoot;
-          filePath = possibleMarkdownFilePath;
-          break;
-        }
-        const possibleHTMLFilePath = path.join(
-          possibleRoot,
-          getHTMLPath(folder)
-        );
-        if (fs.existsSync(possibleHTMLFilePath)) {
-          root = possibleRoot;
-          filePath = possibleHTMLFilePath;
-          break;
-        }
-      }
-      if (!filePath) {
-        return;
-      }
-      locale = extractLocale(folder);
-    }
-
-    if (filePath.includes(" ")) {
-      throw new Error(
-        `Folder contains whitespace which is not allowed (${util.inspect(
-          filePath
-        )})`
-      );
-    }
-    if (filePath.includes("\u200b")) {
-      throw new Error(
-        `Folder contains zero width whitespace which is not allowed (${filePath})`
-      );
-    }
-    // Use Boolean() because otherwise, `isTranslated` might become `undefined`
-    // rather than an actuall boolean value.
-    const isTranslated = Boolean(
-      CONTENT_TRANSLATED_ROOT && filePath.startsWith(CONTENT_TRANSLATED_ROOT)
-    );
-
-    const rawContent = fs.readFileSync(filePath, "utf-8");
-    if (!rawContent) {
-      throw new Error(`${filePath} is an empty file`);
-    }
-
-    // This is very useful in CI where every page gets built. If there's an
-    // accidentally unresolved git conflict, that's stuck in the content,
-    // bail extra early.
-    if (
-      // If the document itself, is a page that explains and talks about git merge
-      // conflicts, i.e. a false positive, those angled brackets should be escaped
-      /^<<<<<<< HEAD\n/m.test(rawContent) &&
-      /^=======\n/m.test(rawContent) &&
-      /^>>>>>>>/m.test(rawContent)
-    ) {
-      throw new Error(`${filePath} contains git merge conflict markers`);
-    }
-
-    const {
-      attributes: metadata,
-      body: rawBody,
-      bodyBegin: frontMatterOffset,
-    } = fm<DocFrontmatter>(rawContent);
-
-    const url = `/${locale}/docs/${metadata.slug}`;
-
-    const isActive = ACTIVE_LOCALES.has(locale.toLowerCase());
-
-    // The last-modified is always coming from the git logs. Independent of
-    // which root it is.
-    const gitHistory = getGitHistories(root, locale).get(
-      path.relative(root, filePath)
-    );
-    let modified = null;
-    let hash = null;
-    if (gitHistory) {
-      if (
-        gitHistory.merged &&
-        gitHistory.merged.modified &&
-        gitHistory.merged.hash
-      ) {
-        modified = gitHistory.merged.modified;
-        hash = gitHistory.merged.hash;
-      } else {
-        modified = gitHistory.modified;
-        hash = gitHistory.hash;
-      }
-    }
-    // Use the wiki histories for a list of legacy contributors.
-    const wikiHistory = getWikiHistories(root, locale).get(url);
-    if (!modified && wikiHistory && wikiHistory.modified) {
-      modified = wikiHistory.modified;
-    }
-    const fullMetadata = {
-      metadata: {
-        ...metadata,
-        // This is our chance to record and remember which keys were actually
-        // dug up from the front-matter.
-        // It matters because the keys in front-matter are arbitrary.
-        // Meaning, if a document contains `foo: bar` as a front-matter key/value
-        // we need to take note of that and make sure we preserve that if we
-        // save the metadata back (e.g. fixable flaws).
-        frontMatterKeys: Object.keys(metadata),
-        locale,
-        popularity: getPopularities().get(url) || 0.0,
-        modified,
-        hash,
-        contributors: wikiHistory ? wikiHistory.contributors : [],
-      },
-      url,
-    };
-
-    return {
-      ...fullMetadata,
-      // ...{ rawContent },
-      rawContent, // HTML or Markdown whole string with all the front-matter
-      rawBody, // HTML or Markdown string without the front-matter
-      isMarkdown: filePath.endsWith(MARKDOWN_FILENAME),
-      isTranslated,
-      isActive,
-      fileInfo: {
-        folder,
-        path: filePath,
-        frontMatterOffset,
-        root,
-      },
-    };
+export const read = memoize((folderOrFilePath: string, ...roots: string[]) => {
+  if (roots.length === 0) {
+    roots = ROOTS;
   }
-);
+  let filePath: string = null;
+  let folder: string = null;
+  let root: string = null;
+  let locale: string = null;
+
+  if (fs.existsSync(folderOrFilePath)) {
+    filePath = folderOrFilePath;
+
+    // It exists, but it is sane?
+    if (
+      !(
+        filePath.endsWith(HTML_FILENAME) || filePath.endsWith(MARKDOWN_FILENAME)
+      )
+    ) {
+      throw new Error(`'${filePath}' is not a HTML or Markdown file.`);
+    }
+
+    root = roots.find((possibleRoot) => filePath.startsWith(possibleRoot));
+    if (root) {
+      folder = filePath
+        .replace(root + path.sep, "")
+        .replace(path.sep + HTML_FILENAME, "")
+        .replace(path.sep + MARKDOWN_FILENAME, "");
+      locale = extractLocale(filePath.replace(root + path.sep, ""));
+    } else {
+      // The file exists but it doesn't appear to belong to any of our roots.
+      // That could happen if you pass in a file that is something completely
+      // different not a valid file anyway.
+      throw new Error(
+        `'${filePath}' does not appear to exist in any known content roots.`
+      );
+    }
+  } else {
+    folder = folderOrFilePath;
+    for (const possibleRoot of roots) {
+      const possibleMarkdownFilePath = path.join(
+        possibleRoot,
+        getMarkdownPath(folder)
+      );
+      if (fs.existsSync(possibleMarkdownFilePath)) {
+        root = possibleRoot;
+        filePath = possibleMarkdownFilePath;
+        break;
+      }
+      const possibleHTMLFilePath = path.join(possibleRoot, getHTMLPath(folder));
+      if (fs.existsSync(possibleHTMLFilePath)) {
+        root = possibleRoot;
+        filePath = possibleHTMLFilePath;
+        break;
+      }
+    }
+    if (!filePath) {
+      return;
+    }
+    locale = extractLocale(folder);
+  }
+
+  if (filePath.includes(" ")) {
+    throw new Error(
+      `Folder contains whitespace which is not allowed (${util.inspect(
+        filePath
+      )})`
+    );
+  }
+  if (filePath.includes("\u200b")) {
+    throw new Error(
+      `Folder contains zero width whitespace which is not allowed (${filePath})`
+    );
+  }
+  // Use Boolean() because otherwise, `isTranslated` might become `undefined`
+  // rather than an actuall boolean value.
+  const isTranslated = Boolean(
+    CONTENT_TRANSLATED_ROOT && filePath.startsWith(CONTENT_TRANSLATED_ROOT)
+  );
+
+  const rawContent = fs.readFileSync(filePath, "utf-8");
+  if (!rawContent) {
+    throw new Error(`${filePath} is an empty file`);
+  }
+
+  // This is very useful in CI where every page gets built. If there's an
+  // accidentally unresolved git conflict, that's stuck in the content,
+  // bail extra early.
+  if (
+    // If the document itself, is a page that explains and talks about git merge
+    // conflicts, i.e. a false positive, those angled brackets should be escaped
+    /^<<<<<<< HEAD\n/m.test(rawContent) &&
+    /^=======\n/m.test(rawContent) &&
+    /^>>>>>>>/m.test(rawContent)
+  ) {
+    throw new Error(`${filePath} contains git merge conflict markers`);
+  }
+
+  const {
+    attributes: metadata,
+    body: rawBody,
+    bodyBegin: frontMatterOffset,
+  } = fm<DocFrontmatter>(rawContent);
+
+  const url = `/${locale}/docs/${metadata.slug}`;
+
+  const isActive = ACTIVE_LOCALES.has(locale.toLowerCase());
+
+  // The last-modified is always coming from the git logs. Independent of
+  // which root it is.
+  const gitHistory = getGitHistories(root, locale).get(
+    path.relative(root, filePath)
+  );
+  let modified = null;
+  let hash = null;
+  if (gitHistory) {
+    if (
+      gitHistory.merged &&
+      gitHistory.merged.modified &&
+      gitHistory.merged.hash
+    ) {
+      modified = gitHistory.merged.modified;
+      hash = gitHistory.merged.hash;
+    } else {
+      modified = gitHistory.modified;
+      hash = gitHistory.hash;
+    }
+  }
+  // Use the wiki histories for a list of legacy contributors.
+  const wikiHistory = getWikiHistories(root, locale).get(url);
+  if (!modified && wikiHistory && wikiHistory.modified) {
+    modified = wikiHistory.modified;
+  }
+  const fullMetadata = {
+    metadata: {
+      ...metadata,
+      // This is our chance to record and remember which keys were actually
+      // dug up from the front-matter.
+      // It matters because the keys in front-matter are arbitrary.
+      // Meaning, if a document contains `foo: bar` as a front-matter key/value
+      // we need to take note of that and make sure we preserve that if we
+      // save the metadata back (e.g. fixable flaws).
+      frontMatterKeys: Object.keys(metadata),
+      locale,
+      popularity: getPopularities().get(url) || 0.0,
+      modified,
+      hash,
+      contributors: wikiHistory ? wikiHistory.contributors : [],
+    },
+    url,
+  };
+
+  return {
+    ...fullMetadata,
+    // ...{ rawContent },
+    rawContent, // HTML or Markdown whole string with all the front-matter
+    rawBody, // HTML or Markdown string without the front-matter
+    isMarkdown: filePath.endsWith(MARKDOWN_FILENAME),
+    isTranslated,
+    isActive,
+    fileInfo: {
+      folder,
+      path: filePath,
+      frontMatterOffset,
+      root,
+    },
+  };
+});
 
 export function update(url: string, rawBody: string, metadata) {
   const folder = urlToFolderPath(url);
@@ -421,7 +418,7 @@ export function update(url: string, rawBody: string, metadata) {
   }
 }
 
-export function findByURL(url: string, ...args: string[]) {
+export function findByURL(url: string, ...args: (string | Symbol)[]) {
   const [bareURL, hash = ""] = url.split("#", 2);
   if (!bareURL.toLowerCase().includes("/docs/")) {
     return;
@@ -593,18 +590,14 @@ export function remove(
   locale: string,
   { recursive = false, dry = false, redirect = "" } = {}
 ) {
-  const root = getRoot(locale);
+  const root = getRoot(locale, `cannot find root of locale: ${locale}`);
   const url = buildURL(locale, slug);
   let redirectUrl = redirect;
   if (redirect && !redirect.match("^http(s)?://")) {
     redirectUrl = buildURL(locale, redirect);
   }
 
-  const roots = [CONTENT_ROOT];
-  if (CONTENT_TRANSLATED_ROOT) {
-    roots.push(CONTENT_TRANSLATED_ROOT);
-  }
-  const { metadata, fileInfo } = findByURL(url, ...roots) || {};
+  const { metadata, fileInfo } = findByURL(url, root) || {};
   if (!metadata) {
     throw new Error(`document does not exists: ${url}`);
   }

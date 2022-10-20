@@ -104,12 +104,12 @@ jobs:
         run: yarn --frozen-lockfile
 
       - name: Install Python
-        uses: actions/setup-python@v4.2.0
+        uses: actions/setup-python@v4
         with:
           python-version: "3.8"
 
       - name: Install Python poetry
-        uses: snok/install-poetry@v1.3
+        uses: snok/install-poetry@v1
 
       - name: Install deployer
         run: |
@@ -178,6 +178,11 @@ jobs:
           REACT_APP_SURVEY_RATE_TILL_CSS_CASCADE_2022_A: 0.25 # 25 %
           REACT_APP_SURVEY_RATE_FROM_CSS_CASCADE_2022_B: 0.25 # 25 %
           REACT_APP_SURVEY_RATE_TILL_CSS_CASCADE_2022_B: 0.5 # 25 %
+
+          REACT_APP_SURVEY_START_BROWSER_SURVEY_OCT_2022: 1665568800000 # (new Date("2022-10-12 12:00:00")).getTime()
+          REACT_APP_SURVEY_END_BROWSER_SURVEY_OCT_2022: 1666778400000 # (new Date("2022-10-26 12:00:00")).getTime()
+          REACT_APP_SURVEY_RATE_FROM_BROWSER_SURVEY_OCT_2022: 0.0 # 5 %
+          REACT_APP_SURVEY_RATE_TILL_BROWSER_SURVEY_OCT_2022: 0.05 # 5 %
 
           REACT_APP_GLEAN_CHANNEL: stage
           REACT_APP_GLEAN_ENABLED: true

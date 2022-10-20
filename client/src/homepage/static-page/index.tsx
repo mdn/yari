@@ -6,9 +6,7 @@ import { TOC } from "../../document/organisms/toc";
 import { DocParent, Toc } from "../../../../libs/types/document";
 import { PageNotFound } from "../../page-not-found";
 import { Loading } from "../../ui/atoms/loading";
-import { useUIStatus } from "../../ui-context";
-import { Button } from "../../ui/atoms/button";
-import { Breadcrumbs } from "../../ui/molecules/breadcrumbs";
+import { ArticleActionsContainer } from "../../ui/organisms/article-actions-container";
 
 interface StaticPageDoc {
   id: string;
@@ -36,7 +34,6 @@ function StaticPage({
   title = "MDN",
   sidebarHeader = <></>,
 }: StaticPageProps) {
-  const { isSidebarOpen, setIsSidebarOpen } = useUIStatus();
   const baseURL = `/${locale}/${slug}`;
   const featureJSONUrl = `${baseURL}/index.json`;
   const { data: { hyData } = {}, error } = useSWR<{ hyData: StaticPageDoc }>(
@@ -70,22 +67,9 @@ function StaticPage({
 
   return (
     <>
-      <div className="article-actions-container">
-        <div className="container">
-          <Button
-            extraClasses="sidebar-button"
-            icon="sidebar"
-            type="action"
-            onClickHandler={() => setIsSidebarOpen(!isSidebarOpen)}
-          />
-
-          {
-            <Breadcrumbs
-              parents={[...parents, { uri: baseURL, title: hyData.title }]}
-            />
-          }
-        </div>
-      </div>
+      <ArticleActionsContainer
+        parents={[...parents, { uri: baseURL, title: hyData.title }]}
+      />
 
       <div className="main-wrapper">
         <SidebarContainer doc={hyData}>

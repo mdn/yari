@@ -85,27 +85,29 @@ function getNameAndSyntax() {
   // get the item name from the page slug
   let itemName = $0 || env.slug.split('/').pop().toLowerCase();
   let itemSyntax;
-  if (env.tags.includes("CSS Property")) {
-    // get syntax for a CSS property
-    itemSyntax = getPropertySyntax(itemName, parsedWebRef);
-  } else if (env.tags.includes("CSS Data Type")) {
-    // get syntax for a CSS data type
-    // some CSS data type slugs have a `_value` suffix
-    if (itemName.endsWith("_value")) {
-      itemName = itemName.replace("_value", "");
-    }
-    itemName = `<${itemName}>`;
-    // not all types have an entry in the syntax
-    if (valuespaces[itemName]) {
-      itemSyntax = valuespaces[itemName].value;
-    }
-  } else if (env.tags.includes("CSS Function")) {
-    // get syntax for a CSS function
-    itemName = `<${itemName}()>`;
-    // not all types have an entry in the syntax
-    if (valuespaces[itemName]) {
-      itemSyntax = valuespaces[itemName].value;
-    }
+  switch (env["page-type"]) {
+    case "css-shorthand-property":
+    case "css-property":
+      itemSyntax = getPropertySyntax(itemName, parsedWebRef);
+      break;
+    case "css-type":
+      // some CSS data type slugs have a `_value` suffix
+      if (itemName.endsWith("_value")) {
+        itemName = itemName.replace("_value", "");
+      }
+      itemName = `<${itemName}>`;
+      // not all types have an entry in the syntax
+      if (valuespaces[itemName]) {
+        itemSyntax = valuespaces[itemName].value;
+      }
+      break;
+    case "css-function":
+      itemName = `<${itemName}()>`;
+      // not all functions have an entry in the syntax
+      if (valuespaces[itemName]) {
+        itemSyntax = valuespaces[itemName].value;
+      }
+      break;
   }
   return {
     name: itemName,
