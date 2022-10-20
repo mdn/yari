@@ -1,8 +1,5 @@
 import { useState } from "react";
-import {
-  toggleCollectionsInQuickSearch,
-  toggleMultipleCollections,
-} from "../plus/common/api";
+import { toggleCollectionsInQuickSearch } from "../plus/common/api";
 import { Spinner } from "../ui/atoms/spinner";
 import { Switch } from "../ui/atoms/switch";
 import { SubscriptionType, useUserData } from "../user-context";
@@ -30,7 +27,7 @@ export default function FeaturePreview() {
                 <a
                   rel="noreferrer noopener"
                   target="_blank"
-                  href="https://www.surveygizmo.com/s3/6918430/Feature-Preview-User-Feedback-Collections-in-Quicksearch"
+                  href="https://survey.alchemer.com/s3/6918430/Feature-Preview-User-Feedback-Collections-in-Quicksearch"
                 >
                   Give us some feedback.
                 </a>
@@ -46,34 +43,6 @@ export default function FeaturePreview() {
                     await toggleCollectionsInQuickSearch(
                       Boolean(e.target.checked)
                     );
-                    user?.mutate();
-                    setSaving(false);
-                  }}
-                ></Switch>
-              )}
-            </li>
-            <li>
-              <h3>Multiple collections</h3>
-              <span>
-                Allows you to create and manage multiple collections.
-                <br />
-                <a
-                  rel="noreferrer noopener"
-                  target="_blank"
-                  href="https://www.surveygizmo.com/s3/6988450/Feature-Preview-User-Feedback-Multiple-Collections"
-                >
-                  Give us some feedback.
-                </a>
-              </span>
-              {saving ? (
-                <Spinner extraClasses="loading" />
-              ) : (
-                <Switch
-                  name="multiple_collections"
-                  checked={Boolean(user?.settings?.multipleCollections)}
-                  toggle={async (e) => {
-                    setSaving(true);
-                    await toggleMultipleCollections(Boolean(e.target.checked));
                     user?.mutate();
                     setSaving(false);
                   }}

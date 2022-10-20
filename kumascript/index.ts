@@ -13,6 +13,7 @@ import {
   LIVE_SAMPLES_BASE_URL,
 } from "../libs/env";
 import { SourceCodeError } from "./src/errors";
+import { CheerioAPI, load } from "cheerio";
 
 const DEPENDENCY_LOOP_INTRO =
   'The following documents form a circular dependency when rendering (via the "page" and/or "IncludeSubnav" macros):';
@@ -22,13 +23,15 @@ export const renderCache = new LRU<string, unknown>({ max: 2000 });
 export async function render(
   url: string,
   { urlsSeen = null, selective_mode = false, invalidateCache = false } = {}
-): Promise<[string, SourceCodeError[]]> {
+): Promise<[CheerioAPI, SourceCodeError[]]> {
   const urlLC = url.toLowerCase();
   if (renderCache.has(urlLC)) {
     if (invalidateCache) {
       renderCache.delete(urlLC);
     } else {
-      return renderCache.get(urlLC);
+      const [renderedHtml, errors]: [string, SourceCodeError[]] =
+        renderCache.get(urlLC);
+      return [load(renderedHtml), errors];
     }
   }
 
@@ -41,7 +44,7 @@ export async function render(
   urlsSeen.add(urlLC);
   const prerequisiteErrorsByKey = new Map();
   const document = invalidateCache
-    ? Document.findByURL(url, Document.MEMOIZE_INVALIDATE.toString())
+    ? Document.findByURL(url, Document.MEMOIZE_INVALIDATE)
     : Document.findByURL(url);
   if (!document) {
     throw new Error(
@@ -58,7 +61,7 @@ export async function render(
       .replace(`/${metadata.locale.toLowerCase()}/`, `/${DEFAULT_LOCALE}/`);
 
     const parentDocument = invalidateCache
-      ? Document.findByURL(parentURL, Document.MEMOIZE_INVALIDATE.toString())
+      ? Document.findByURL(parentURL, Document.MEMOIZE_INVALIDATE)
       : Document.findByURL(parentURL);
     if (parentDocument) {
       metadata = { ...parentDocument.metadata, ...metadata };
@@ -102,12 +105,16 @@ export async function render(
   //       attributes of any iframes.
   const tool = new HTMLTool(renderedHtml);
   tool.injectSectionIDs();
-  renderCache.set(urlLC, [
-    tool.html(),
-    // The prerequisite errors have already been updated with their own file information.
-    [...prerequisiteErrorsByKey.values()].concat(
-      errors.map((e) => e.updateFileInfo(fileInfo))
-    ),
-  ]);
-  return renderCache.get(urlLC);
+  const allErrors = [...prerequisiteErrorsByKey.values()].concat(
+    errors.map((e) => e.updateFileInfo(fileInfo))
+  );
+  if (urlsSeen?.size > 1) {
+    // This means we recursed so let's cache this
+    renderCache.set(urlLC, [
+      tool.html(),
+      // The prerequisite errors have already been updated with their own file information.
+      allErrors,
+    ]);
+  }
+  return [tool.cheerio(), allErrors];
 }

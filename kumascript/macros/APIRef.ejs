@@ -76,17 +76,21 @@ var implementedBy = [];
 function collect(pageList) {
   for (var i in pageList) {
     var aPage = pageList[i];
-    if (hasTag(aPage, "Property")) {
+    switch(aPage.pageType) {
+      case "web-api-static-property":
+      case "web-api-instance-property":
         properties.push(aPage);
-    }
-    if (hasTag(aPage, "Method")) {
+        break;
+      case "web-api-static-method":
+      case "web-api-instance-method":
         methods.push(aPage);
-    }
-    if (hasTag(aPage, "Constructor")) {
+        break;
+      case "web-api-constructor":
         ctors.push(aPage);
-    }
-    if (hasTag(aPage, "Event")) {
+        break;
+      case "web-api-event":
         events.push(aPage);
+        break;
     }
   }
 }
@@ -171,7 +175,7 @@ function buildSublist(pages, title) {
     // in the sidebar. So for event pages we use the slug, which is supposed to be
     // in the form "eventname_event", and split off "_event" to leave us (hopefully)
     // with just "eventname" for the link text.
-    if (hasTag(aPage, 'Event')) {
+    if (aPage.pageType === 'web-api-event') {
         title = aPage.slug.split('/').pop();
         if (title.endsWith('_event')) {
             title = title.slice(0,-6);
