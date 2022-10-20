@@ -45,9 +45,11 @@
       max-width: 40rem;
 
       text-align: center;
+
       a {
         justify-content: start;
       }
+
       h2 {
         color: var(--plus-accent-color);
         font: 700 12px/120% Inter;
@@ -81,8 +83,10 @@
     }
   }
 }
+
 .offer-overview-feature:nth-child(odd) {
   background: var(--background-secondary);
+
   .wrapper {
     flex-direction: column;
     @media screen and (min-width: $screen-xl) {

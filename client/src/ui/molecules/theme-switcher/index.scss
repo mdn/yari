@@ -4,6 +4,7 @@
 
 .theme-switcher-menu {
   margin-bottom: 0.5rem;
+
   .button.action > .button-wrap {
     text-transform: none;
   }
@@ -51,6 +52,7 @@
     .themes-menu {
       top: calc(100% - 1rem);
     }
+
     .themes-menu.show {
       display: flex;
       flex-direction: column;
