@@ -171,7 +171,7 @@
   font-size: var(--type-smaller-font-size);
   font-style: italic;
   margin-bottom: 1rem;
-  margin-top: 0rem;
+  margin-top: 0;
 }
 
 .bc-legend-item {
@@ -293,14 +293,14 @@ dl.bc-notes-list {
     margin-top: 1rem;
 
     &:first-child {
-      margin-top: 0rem;
+      margin-top: 0;
     }
   }
   dd.bc-supports-dd {
     margin-bottom: 1rem;
 
     &:last-child {
-      margin-bottom: 0rem;
+      margin-bottom: 0;
     }
   }
 }
