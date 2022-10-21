@@ -42,7 +42,7 @@ export function SidebarContainer({ doc, children }) {
 
   return (
     <>
-      <nav id="sidebar-quicklinks" className={classes}>
+      <div id="sidebar-quicklinks" className={classes}>
         <Button
           extraClasses="backdrop"
           type="action"
@@ -52,9 +52,9 @@ export function SidebarContainer({ doc, children }) {
           <div className="in-nav-toc">
             {doc.toc && !!doc.toc.length && <TOC toc={doc.toc} />}
           </div>
-          {children}
+          <nav>{children}</nav>
         </div>
-      </nav>
+      </div>
     </>
   );
 }
