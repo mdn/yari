@@ -34,6 +34,7 @@ module.exports = {
       tryExtensions: [".js", ".json", ".node", ".tsx", ".ts"],
     },
   },
+  reportUnusedDisableDirectives: true,
   overrides: [
     {
       files: ["testing/**/*.js"],
