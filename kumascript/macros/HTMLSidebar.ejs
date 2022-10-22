@@ -42,6 +42,7 @@ var text = mdn.localStringMap({
     'Reference': 'References:',
     'HTML_Elements': 'HTML elements',
     'Global_attributes': 'Global attributes',
+    'Attributes': 'Attributes',
     'Input_types': '<code>&lt;input&gt;</code> types',
     'Guides': 'Guides:',
       'Allowing_cross-origin_images_and_canvas': 'Allowing cross-origin use of images and canvas',
@@ -83,6 +84,7 @@ var text = mdn.localStringMap({
     'Reference': 'Références\xa0:',
     'HTML_Elements': 'Éléments HTML',
     'Global_attributes': 'Attributs universels',
+    'Attributes': 'Attributs',
     'Input_types': 'Types <code>&lt;input&gt;</code>',
     'Guides': 'Guides:',
       'Allowing_cross-origin_images_and_canvas': 'Autoriser les images et canevas provenant d\'autres origines',
@@ -124,6 +126,7 @@ var text = mdn.localStringMap({
     'Reference': 'Referências:',
     'HTML_Elements': 'Elementos HTML',
     'Global_attributes': 'Atributos globais',
+    'Attributes': 'Atributos',
     'Input_types': 'Tipos de <code>&lt;input&gt;</code>',
     'Guides': 'Guides:',
       'Allowing_cross-origin_images_and_canvas': 'CORS habilitar imagens',
@@ -165,6 +168,7 @@ var text = mdn.localStringMap({
     'Reference': 'Справочники:',
     'HTML_Elements': 'HTML элементы',
     'Global_attributes': 'Глобальные атрибуты',
+    'Attributes': 'Aтрибуты',
     'Input_types': 'Типы <code>&lt;input&gt;</code>',
     'Guides': 'Путеводитель:',
       'Allowing_cross-origin_images_and_canvas': 'Разрешение использования изображений из разных источников и canvas',
@@ -206,6 +210,7 @@ var text = mdn.localStringMap({
     'Reference': '参考：',
     'HTML_Elements': 'HTML 元素',
     'Global_attributes': '全局属性',
+    'Attributes': '属性',
     'Input_types': '<code>&lt;input&gt;</code> types',
     'Guides': '指南：',
       'Allowing_cross-origin_images_and_canvas': '启用了 CORS 的图片',
@@ -277,6 +282,12 @@ var text = mdn.localStringMap({
     <details <%=state('Global_attributes')%>>
       <summary><%=text['Global_attributes']%></summary>
       <%-await template("ListSubpagesForSidebar", ['/en-US/docs/Web/HTML/Global_attributes'])%>
+    </details>
+  </li>
+  <li class="toggle">
+    <details <%=state('Attributes')%>>
+      <summary><%=text['Attributes']%></summary>
+        <%-await template("ListSubpagesForSidebar", ['/en-US/docs/Web/HTML/Attributes'])%>
     </details>
   </li>
   <li class="toggle">
