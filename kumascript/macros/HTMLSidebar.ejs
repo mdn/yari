@@ -43,7 +43,7 @@ var text = mdn.localStringMap({
     'HTML_Elements': 'HTML elements',
     'Global_attributes': 'Global attributes',
     'Input_types': '<code>&lt;input&gt;</code> types',
-    'Guides': 'Guides',
+    'Guides': 'Guides:',
       'Allowing_cross-origin_images_and_canvas': 'Allowing cross-origin use of images and canvas',
       'Block-level_elements': 'Block-level elements',
       'Inline_elements': 'Inline elements',
@@ -84,7 +84,7 @@ var text = mdn.localStringMap({
     'HTML_Elements': 'Éléments HTML',
     'Global_attributes': 'Attributs universels',
     'Input_types': 'Types <code>&lt;input&gt;</code>',
-    'Guides': 'Guides',
+    'Guides': 'Guides:',
       'Allowing_cross-origin_images_and_canvas': 'Autoriser les images et canevas provenant d\'autres origines',
       'Block-level_elements': 'Éléments de bloc',
       'Inline_elements': 'Éléments en ligne',
@@ -125,7 +125,7 @@ var text = mdn.localStringMap({
     'HTML_Elements': 'Elementos HTML',
     'Global_attributes': 'Atributos globais',
     'Input_types': 'Tipos de <code>&lt;input&gt;</code>',
-    'Guides': 'Guides',
+    'Guides': 'Guides:',
       'Allowing_cross-origin_images_and_canvas': 'CORS habilitar imagens',
       'Block-level_elements': 'Elementos block-level',
       'Inline_elements': 'Elementos inline',
@@ -166,7 +166,7 @@ var text = mdn.localStringMap({
     'HTML_Elements': 'HTML элементы',
     'Global_attributes': 'Глобальные атрибуты',
     'Input_types': 'Типы <code>&lt;input&gt;</code>',
-    'Guides': 'путеводитель',
+    'Guides': 'Путеводитель:',
       'Allowing_cross-origin_images_and_canvas': 'Разрешение использования изображений из разных источников и canvas',
       'Block-level_elements': 'Блочные элементы',
       'Inline_elements': 'Строчные элементы',
@@ -207,7 +207,7 @@ var text = mdn.localStringMap({
     'HTML_Elements': 'HTML 元素',
     'Global_attributes': '全局属性',
     'Input_types': '<code>&lt;input&gt;</code> types',
-    'Guides': '指南',
+    'Guides': '指南：',
       'Allowing_cross-origin_images_and_canvas': '启用了 CORS 的图片',
       'Block-level_elements': '块级元素',
       'Inline_elements': '行内元素',
@@ -285,20 +285,18 @@ var text = mdn.localStringMap({
       <%-await template("ListSubpagesForSidebar", ['/en-US/docs/Web/HTML/Element/input'])%>
     </details>
   </li>
-  <li class="toggle">
-    <details <%=state('Guides')%>>
-      <summary><%-text['Guides']%></summary>
-      <ol>
-        <li><a href="/<%=locale%>/docs/Web/HTML/CORS_enabled_image"><%=text["Allowing_cross-origin_images_and_canvas"]%></a></li>
-        <li><a href="/<%=locale%>/docs/Web/HTML/Block-level_elements"><%=text["Block-level_elements"]%></a></li>
-        <li><a href="/<%=locale%>/docs/Web/HTML/Inline_elements"><%=text["Inline_elements"]%></a></li>
-        <li><a href="/<%=locale%>/docs/Web/HTML/Date_and_time_formats"><%=text["Date_and_time_formats"]%></a></li>
-        <li><a href="/<%=locale%>/docs/Web/HTML/Microdata"><%=text["Microdata"]%></a></li>
-        <li><a href="/<%=locale%>/docs/Web/HTML/microformats"><%=text["Microformats"]%></a></li>
-        <li><a href="/<%=locale%>/docs/Web/HTML/Quirks_Mode_and_Standards_Mode"><%=text["Quirks_Mode_and_Standards_Mode"]%></a></li>
-        <li><a href="/<%=locale%>/docs/Web/HTML/Viewport_meta_tag"><%=text["Viewport_meta_tag"]%></a></li>
-      </ol>
-    </details>
+  <li><strong><%=text['Guides']%></strong></li>
+  <li>
+    <ol>
+      <li><a href="/<%=locale%>/docs/Web/HTML/Block-level_elements"><%=text["Block-level_elements"]%></a></li>
+      <li><a href="/<%=locale%>/docs/Web/HTML/Inline_elements"><%=text["Inline_elements"]%></a></li>
+      <li><a href="/<%=locale%>/docs/Web/HTML/Quirks_Mode_and_Standards_Mode"><%=text["Quirks_Mode_and_Standards_Mode"]%></a></li>
+      <li><a href="/<%=locale%>/docs/Web/HTML/Date_and_time_formats"><%=text["Date_and_time_formats"]%></a></li>
+      <li><a href="/<%=locale%>/docs/Web/HTML/Microdata"><%=text["Microdata"]%></a></li>
+      <li><a href="/<%=locale%>/docs/Web/HTML/microformats"><%=text["Microformats"]%></a></li>
+      <li><a href="/<%=locale%>/docs/Web/HTML/Viewport_meta_tag"><%=text["Viewport_meta_tag"]%></a></li>
+      <li><a href="/<%=locale%>/docs/Web/HTML/CORS_enabled_image"><%=text["Allowing_cross-origin_images_and_canvas"]%></a></li>
+    </ol>
   </li>
  </ol>
 </section>
