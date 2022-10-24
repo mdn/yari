@@ -70,29 +70,22 @@ export function listFeatures(
     findAllCompatDepths(identifier, compatDepths, "");
     firstCompatDepth = Math.min(...compatDepths);
   }
-  for (const [subName, subIdentifier] of Object.entries(identifier)) {
-    if (subName !== "__compat") {
-      if ((subIdentifier as BCD.Identifier).__compat) {
-        features.push({
-          name: parentName ? `${parentName}.${subName}` : subName,
-          compat: (subIdentifier as BCD.Identifier).__compat!,
-          depth: depth + 1,
-        });
-      }
-      if (
-        (subIdentifier as BCD.Identifier).__compat ||
-        depth + 1 < firstCompatDepth
-      ) {
-        features.push(
-          ...listFeatures(
-            subIdentifier as BCD.Identifier,
-            subName,
-            "",
-            depth + 1,
-            firstCompatDepth
-          )
-        );
-      }
+  for (const subName of Object.keys(identifier)) {
+    if (subName === "__compat") {
+      continue;
+    }
+    const subIdentifier = identifier[subName];
+    if (subIdentifier.__compat) {
+      features.push({
+        name: parentName ? `${parentName}.${subName}` : subName,
+        compat: subIdentifier.__compat,
+        depth: depth + 1,
+      });
+    }
+    if (subIdentifier.__compat || depth + 1 < firstCompatDepth) {
+      features.push(
+        ...listFeatures(subIdentifier, subName, "", depth + 1, firstCompatDepth)
+      );
     }
   }
   return features;
