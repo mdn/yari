@@ -100,6 +100,7 @@
     "imagemin-pngquant": "^9.0.2",
     "imagemin-svgo": "^9.0.0",
     "inquirer": "^8.2.5",
+    "inter-ui": "^3.19.3",
     "is-svg": "^4.3.2",
     "js-yaml": "^4.1.0",
     "loglevel": "^1.8.0",
