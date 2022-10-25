@@ -1,9 +1,17 @@
 @use "../../vars" as *;
 
+body.ReactModal__Body--open {
+  overflow: hidden;
+}
+
 .modal-overlay {
-  background-color: var(--modal-backdrop-color);
+  background: var(--background-primary);
   bottom: 0;
+  display: flex;
+  justify-content: center;
   left: 0;
+  overflow: auto;
+  -webkit-overflow-scrolling: touch;
   position: fixed;
   right: 0;
   top: 0;
@@ -19,54 +27,116 @@
 
 .modal-content {
   background: var(--background-primary);
-  bottom: 0;
-  left: 0;
+  flex-basis: 32.5rem;
   outline: none;
-  overflow: auto;
-  -webkit-overflow-scrolling: touch;
-  position: absolute;
-  right: 0;
-  top: 0;
+  padding: 1.5rem;
   z-index: var(--z-index-top);
 }
 
 .modal-header {
   align-items: center;
-  border-bottom: 1px solid var(--border-secondary);
   display: flex;
   justify-content: space-between;
-  padding: 0.5rem 0.5rem 0.5rem 1rem;
-}
+  padding-bottom: 1.5rem;
 
-.modal-body {
-  padding: 1rem;
+  .button.has-icon {
+    .button-wrap {
+      height: auto;
+      margin: -0.5rem;
+      padding: 0.5rem;
+      width: auto;
+    }
+  }
 
-  .notecard {
+  .icon {
+    background-color: #000;
+    height: 1.25rem;
     margin: 0;
-    margin-bottom: 1rem;
+    width: 1.25rem;
   }
 }
 
 .modal-heading {
+  font-size: 1.5rem;
+  font-weight: 700;
   margin: 0;
 }
 
-@media screen and (min-width: $screen-md) {
+.modal-body {
+  .notecard {
+    margin: 0;
+    margin-bottom: 1rem;
+  }
+
+  p {
+    margin: 0;
+    margin-top: 1rem;
+    overflow-wrap: anywhere;
+
+    &:first-child {
+      margin: 0;
+    }
+  }
+
+  .mdn-form-item {
+    padding-top: 1.5rem;
+
+    &:first-child {
+      padding-top: 0;
+    }
+
+    &.is-button-row {
+      flex-direction: row-reverse;
+      flex-wrap: wrap-reverse;
+      gap: 1.5rem;
+      justify-content: flex-start;
+    }
+
+    label,
+    [type="text"] {
+      font-size: 1rem;
+      font-weight: normal;
+    }
+  }
+
+  button {
+    flex: 1;
+  }
+
+  .button-wrap {
+    font-size: 1rem;
+    height: auto;
+    line-height: 1.5;
+    padding: 0.5rem 2rem;
+  }
+}
+
+@media screen and (min-width: $screen-lg) {
+  body.ReactModal__Body--open {
+    overflow: unset;
+  }
+
+  .modal-overlay {
+    align-items: center;
+    background-color: rgba(240, 240, 244, 0.66);
+  }
+
   .modal-content {
-    border: 1px solid var(--border-primary);
     border-radius: var(--elem-radius);
-    bottom: auto;
+    box-shadow: 0px 2px 14px rgba(58, 57, 68, 0.2);
     height: fit-content;
-    left: 50%;
     max-height: 90vh;
     max-width: 40rem;
-    right: auto;
-    top: 50%;
-    transform: translate(-50%, -50%);
+    overflow: auto;
+    -webkit-overflow-scrolling: touch;
     width: 90vw;
 
     &.is-small {
       max-width: 24rem;
+    }
+
+    button {
+      flex: unset;
     }
   }
 }

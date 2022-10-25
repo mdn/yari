@@ -1,6 +1,7 @@
 [
   {
-    "tags": ["Property"],
+    "tags": [],
+    "pageType": "web-api-instance-property",
     "locale": "en-US",
     "translations": [
       {
@@ -18,7 +19,8 @@
   },
 
   {
-    "tags": ["Method", "Experimental"],
+    "tags": ["Experimental"],
+    "pageType": "web-api-instance-method",
     "locale": "en-US",
     "translations": [
       {
@@ -36,7 +38,8 @@
   },
 
   {
-    "tags": ["Method", "Deprecated", "Non-standard"],
+    "tags": ["Deprecated", "Non-standard"],
+    "pageType": "web-api-instance-method",
     "locale": "en-US",
     "translations": [
       {
@@ -54,13 +57,8 @@
   },
 
   {
-    "tags": [
-      "Method",
-      "Deprecated",
-      "Non-standard",
-      "Obsolete",
-      "Experimental"
-    ],
+    "tags": ["Deprecated", "Non-standard", "Obsolete", "Experimental"],
+    "pageType": "web-api-instance-method",
     "locale": "en-US",
     "translations": [
       {
@@ -78,7 +76,8 @@
   },
 
   {
-    "tags": ["Event"],
+    "tags": [],
+    "pageType": "web-api-event",
     "locale": "en-US",
     "translations": [
       {
@@ -96,7 +95,8 @@
   },
 
   {
-    "tags": ["Event", "Deprecated", "Non-standard"],
+    "tags": ["Deprecated", "Non-standard"],
+    "pageType": "web-api-event",
     "locale": "en-US",
     "translations": [
       {
@@ -114,7 +114,8 @@
   },
 
   {
-    "tags": ["Event"],
+    "tags": [],
+    "pageType": "web-api-event",
     "locale": "en-US",
     "translations": [
       {

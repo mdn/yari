@@ -7,10 +7,13 @@ import express from "express";
 export const router = express.Router();
 
 import { getPopularities, Document, Translation } from "../content";
-import { VALID_LOCALES } from "../libs/constants";
+import {
+  VALID_LOCALES,
+  ACTIVE_LOCALES,
+  DEFAULT_LOCALE,
+} from "../libs/constants";
 import { CONTENT_ROOT, CONTENT_TRANSLATED_ROOT } from "../libs/env";
 import { getLastCommitURL } from "../build";
-import { ACTIVE_LOCALES, DEFAULT_LOCALE } from "../libs/constants";
 import LANGUAGES_RAW from "../libs/languages";
 
 // Module-level cache
@@ -23,6 +26,15 @@ function getAllPopularityValues() {
     }
   }
   return allPopularityValues;
+}
+
+function replaceSepPerOS(slug) {
+  if (path.sep !== "/") {
+    // In other words, we're on Windows
+    return slug.replaceAll("/", "\\\\");
+  } else {
+    return slug;
+  }
 }
 
 function packageTranslationDifferences(translationDifferences) {
@@ -255,10 +267,13 @@ function gatherL10NstatsSection({
   const upToDateDocuments = [];
 
   const t1 = new Date();
+  const folderSearch = replaceSepPerOS(
+    locale + mdnSection.toLowerCase() + (mdnSection.endsWith("/") ? "" : "/")
+  );
+
   const foundTranslations = Document.findAll({
     locales: new Map([[locale, true]]),
-    folderSearch:
-      locale + mdnSection.toLowerCase() + (mdnSection.endsWith("/") ? "" : "/"),
+    folderSearch,
   });
 
   const translatedFolderNames = new Set();
@@ -273,12 +288,15 @@ function gatherL10NstatsSection({
       .join(path.sep);
     translatedFolderNames.add(asFolderWithoutLocale);
   }
+  const folderSearchDefaultLocale = replaceSepPerOS(
+    DEFAULT_LOCALE.toLowerCase() +
+      mdnSection.toLowerCase() +
+      (mdnSection.endsWith("/") ? "" : "/")
+  );
+
   const foundDefaultLocale = Document.findAll({
     locales: new Map([[DEFAULT_LOCALE.toLowerCase(), true]]),
-    folderSearch:
-      DEFAULT_LOCALE.toLowerCase() +
-      mdnSection.toLowerCase() +
-      (mdnSection.endsWith("/") ? "" : "/"),
+    folderSearch: folderSearchDefaultLocale,
   });
 
   for (const filePath of foundDefaultLocale.iter({ pathOnly: true })) {
@@ -393,11 +411,11 @@ function buildL10nDashboard({ locale, section }) {
   if (!_detailsSectionCache.has(locale)) {
     _detailsSectionCache.set(locale, new Map());
   }
-
+  const sectionDirPath = replaceSepPerOS(section);
   const defaultLocaleDocs = [
     ...Document.findAll({
       locales: new Map([[DEFAULT_LOCALE.toLowerCase(), true]]),
-      folderSearch: DEFAULT_LOCALE.toLowerCase() + section.toLowerCase(),
+      folderSearch: DEFAULT_LOCALE.toLowerCase() + sectionDirPath.toLowerCase(),
     }).iter({ pathOnly: false }),
   ];
 

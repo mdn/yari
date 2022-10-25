@@ -4,6 +4,13 @@ import { ReactComponent as CloseIcon } from "@mdn/dinocons/general/close.svg";
 import { useGA } from "../ga-context";
 import { BannerId } from "./ids";
 import { usePlusUrl } from "../plus/utils";
+import { useGleanClick } from "../telemetry/glean-context";
+import {
+  BANNER_MULTIPLE_COLLECTIONS_DISMISSED,
+  BANNER_MULTIPLE_COLLECTIONS_LINK,
+  BANNER_PREVIEW_FEATURES_DISMISSED,
+  BANNER_PREVIEW_FEATURES_SETTINGS_LINK,
+} from "../telemetry/constants";
 
 // The <Banner> component displays a simple call-to-action banner at
 // the bottom of the window. The following props allow it to be customized.
@@ -109,17 +116,55 @@ function PlusLaunchAnnouncementBanner({
 function PreviewFeaturesBanner({ onDismissed }: { onDismissed: () => void }) {
   const bannerId = BannerId.PREVIEW_FEATURES;
   const sendCTAEventToGA = useSendCTAEventToGA();
-
+  const gleanClick = useGleanClick();
+  const onDismissedWithGlean = () => {
+    gleanClick(BANNER_PREVIEW_FEATURES_DISMISSED);
+    onDismissed();
+  };
   return (
-    <Banner id={bannerId} onDismissed={onDismissed}>
+    <Banner id={bannerId} onDismissed={onDismissedWithGlean}>
       <p className="mdn-cta-copy">
         MDN Plus preview features are now available.{" "}
         <a
           href="/en-US/plus/settings"
-          onClick={() => sendCTAEventToGA(bannerId)}
+          onClick={() => {
+            gleanClick(BANNER_PREVIEW_FEATURES_SETTINGS_LINK);
+            sendCTAEventToGA(bannerId);
+          }}
         >
           Manage settings
         </a>
+      </p>
+    </Banner>
+  );
+}
+
+function MultipleCollectionsBanner({
+  onDismissed,
+}: {
+  onDismissed: () => void;
+}) {
+  const bannerId = BannerId.PREVIEW_FEATURES;
+  const sendCTAEventToGA = useSendCTAEventToGA();
+  const gleanClick = useGleanClick();
+  const onDismissedWithGlean = () => {
+    gleanClick(BANNER_MULTIPLE_COLLECTIONS_DISMISSED);
+    onDismissed();
+  };
+  return (
+    <Banner id={bannerId} onDismissed={onDismissedWithGlean}>
+      <p className="mdn-cta-copy">
+        We've added support for Multiple Collections! Check out your{" "}
+        <a
+          href="/en-US/plus/collections"
+          onClick={() => {
+            gleanClick(BANNER_MULTIPLE_COLLECTIONS_LINK);
+            sendCTAEventToGA(bannerId);
+          }}
+        >
+          Collections page
+        </a>{" "}
+        to see what's new!
       </p>
     </Banner>
   );
@@ -141,6 +186,13 @@ export default function ActiveBanner({
       return (
         <>
           <PlusLaunchAnnouncementBanner onDismissed={onDismissed} />
+        </>
+      );
+
+    case BannerId.MULTIPLE_COLLECTIONS:
+      return (
+        <>
+          <MultipleCollectionsBanner onDismissed={onDismissed} />
         </>
       );
 

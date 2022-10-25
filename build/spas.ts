@@ -1,6 +1,7 @@
 import fs from "fs";
 import path from "path";
 import frontmatter from "front-matter";
+import { fdir, PathsOutput } from "fdir";
 
 import { m2h } from "../markdown";
 
@@ -190,15 +191,16 @@ export async function buildSPAs(options) {
    * @param {string} title
    */
   async function buildStaticPages(dirpath, slug, title = "MDN") {
-    for (const file of fs.readdirSync(dirpath)) {
-      const filepath = path.join(dirpath, file);
-      const stat = fs.lstatSync(filepath);
-      const page = file.split(".")[0];
+    const crawler = new fdir()
+      .withFullPaths()
+      .withErrors()
+      .filter((path) => path.endsWith(".md"))
+      .crawl(dirpath);
+    const filepaths = [...(crawler.sync() as PathsOutput)];
 
-      if (stat.isDirectory()) {
-        await buildStaticPages(filepath, `${slug}/${page}`, title);
-        return;
-      }
+    for (const filepath of filepaths) {
+      const file = filepath.replace(dirpath, "");
+      const page = file.split(".")[0];
 
       const locale = "en-us";
       const markdown = fs.readFileSync(filepath, "utf-8");
@@ -238,8 +240,9 @@ export async function buildSPAs(options) {
       fs.writeFileSync(filePathContext, JSON.stringify(context));
     }
   }
+
   await buildStaticPages(
-    path.join(dirname, "../copy/plus"),
+    path.join(dirname, "../copy/plus/"),
     "plus/docs",
     "MDN Plus"
   );

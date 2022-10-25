@@ -59,8 +59,8 @@ let l10n = {
 // UTILS
 // -----
 
-// Simple function to turn a string into lower case. This especialy made to work
-// as a walking function for Array.prototypt.map
+// Simple function to turn a string into lower case. This is especially made to work
+// as a walking function for Array.prototype.map
 function lowerMe(S) {
     return S.toLowerCase();
 }
@@ -127,7 +127,7 @@ for(let page of HTMLDocPages) {
                                    template("HTMLelement", ['h5']),
                                    template("HTMLelement", ['h6'])
                                ])).join(', ')),
-            summary      : (p && p.summary) || "",
+            summary      : (p?.summary?.()) || "",
             deprecated   : hasCommonTag(tags, ['deprecated', 'obsolete']),
             experimental : hasCommonTag(tags, ['experimental']),
             html5        : hasCommonTag(tags, ['html5']),

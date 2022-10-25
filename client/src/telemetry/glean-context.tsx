@@ -4,6 +4,10 @@ import { clicked } from "./generated/element";
 import * as pings from "./generated/pings";
 import Glean from "@mozilla/glean/web";
 import { CRUD_MODE, GLEAN_CHANNEL, GLEAN_DEBUG, GLEAN_ENABLED } from "../env";
+import { useEffect } from "react";
+import { useLocation } from "react-router";
+import { useIsServer } from "../hooks";
+import { useUserData } from "../user-context";
 
 export type PageProps = {
   referrer: string | undefined;
@@ -92,4 +96,28 @@ export function GleanProvider(props: { children: React.ReactNode }) {
 
 export function useGlean() {
   return React.useContext(GleanContext);
+}
+
+export function useGleanPage() {
+  const loc = useLocation();
+  const isServer = useIsServer();
+
+  return useEffect(() => {
+    if (!isServer) {
+      gleanAnalytics.page({
+        path: window?.location.toString(),
+        referrer: document?.referrer,
+      });
+    }
+  }, [loc.pathname, isServer]);
+}
+
+export function useGleanClick() {
+  const userData = useUserData();
+  const glean = useGlean();
+  return (source: string) =>
+    glean.click({
+      source,
+      subscription_type: userData?.subscriptionType || "none",
+    });
 }
