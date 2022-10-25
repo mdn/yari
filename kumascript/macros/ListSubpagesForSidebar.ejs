@@ -54,8 +54,6 @@ if (includeParent) {
 
 const containsTag = page.hasTag;
 const htmlEscape = kuma.htmlEscape;
-const code = wrapInCode ? '<code>' : '';
-const endcode = wrapInCode ? '</code>' : '';
 
 const badges = {
     ExperimentalBadge: await template("ExperimentalBadge"),
@@ -107,7 +105,12 @@ function createLink(item) {
         pageBadges.push(badges.ObsoleteBadge);
     }
 
-    const result = `<li>${pageBadges.join('')}<a href="${url}">${code}${title}${endcode}</a></li>`
+    let linkContent = title;
+    if (wrapInCode) {
+      linkContent = `<code>${linkContent}</code>`;
+    }
+
+    const result = `<li>${pageBadges.join('')}<a href="${url}">${linkContent}</a></li>`;
     return result;
 }
 
