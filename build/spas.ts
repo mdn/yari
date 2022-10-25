@@ -16,7 +16,7 @@ import { isValidLocale } from "../libs/locale-utils";
 import { DocFrontmatter } from "../libs/types/document";
 // eslint-disable-next-line n/no-missing-require
 import { renderHTML } from "../ssr/dist/main";
-import { default as got } from "got";
+import got from "got";
 import { splitSections } from "./utils";
 import cheerio from "cheerio";
 import { findByURL } from "../content/document";
