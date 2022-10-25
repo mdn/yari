@@ -11,7 +11,7 @@
  */
 import fs from "fs";
 
-import csv from "@fast-csv/parse";
+import * as csv from "@fast-csv/parse";
 import got from "got";
 
 const CURRENT_URL =
