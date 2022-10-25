@@ -160,6 +160,7 @@
   }
 
   summary {
+    cursor: pointer;
     font-size: var(--type-smaller-font-size);
   }
 
@@ -172,10 +173,6 @@
     padding: 0.125rem 0.125rem;
     white-space: normal;
     word-wrap: break-word;
-  }
-
-  summary {
-    cursor: pointer;
   }
 
   details {

@@ -29,7 +29,9 @@
   }
 
   th {
+    background: var(--background-tertiary);
     padding: 0.4rem;
+    vertical-align: bottom;
   }
 
   // these props allow us to add border-radius to the table.
@@ -89,11 +91,6 @@
         mask-image: url("../../../assets/icons/partial.svg");
       }
     }
-  }
-
-  th {
-    background: var(--background-tertiary);
-    vertical-align: bottom;
   }
 
   .bc-supports {
@@ -388,6 +385,7 @@ dl.bc-notes-list {
 
 .bcd-cell-text-wrapper {
   display: flex;
+  flex-direction: row;
   gap: 0.5rem;
 
   @media screen and (min-width: $screen-md) {
@@ -426,12 +424,6 @@ dl.bc-notes-list {
 
   @media screen and (min-width: $screen-md) {
     display: block;
-  }
-}
-
-.bc-notes-wrapper {
-  .bcd-cell-text-wrapper {
-    flex-direction: row;
   }
 }
 

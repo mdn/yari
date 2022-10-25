@@ -49,9 +49,6 @@
     svg > text > textPath > tspan {
       animation: mandala-color-change 50s infinite;
       animation-timing-function: ease-in-out;
-    }
-
-    svg > text > textPath > tspan {
       fill: var(--mandala-primary);
     }
 
