@@ -36,6 +36,7 @@
       to {
         text-decoration-line: none;
       }
+
       50% {
         text-decoration-line: underline;
       }
@@ -144,11 +145,13 @@
       &:last-child {
         border-radius: 0 0 var(--elem-radius) var(--elem-radius);
       }
+
       &.nothing-found {
         code {
           font-size: 0.8125rem;
         }
       }
+
       a {
         display: block;
         padding: 0.5rem;
@@ -159,6 +162,7 @@
     .result-item.highlight {
       background-color: var(--border-secondary);
     }
+
     .result-item.qs-collection {
       b::after {
         border: 1px solid var(--text-primary-red);

@@ -154,6 +154,7 @@
               }
             }
           }
+
           .sub-link {
             align-items: center;
             align-self: center;
@@ -168,12 +169,14 @@
             padding: 0.25rem 0.5rem;
             width: calc(100% - 1rem);
           }
+
           .terms {
             color: var(--text-invert);
             font-size: 14px;
             font-style: italic;
             margin-top: auto;
             text-decoration: underline;
+
             &.external::after {
               background-color: var(--text-invert);
             }

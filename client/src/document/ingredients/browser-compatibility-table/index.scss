@@ -65,12 +65,15 @@
       &.bc-supports-no > button > span {
         color: var(--text-primary-red);
       }
+
       &.bc-supports-partial > button > span {
         color: var(--text-primary-yellow);
       }
+
       &.bc-supports-preview > button > span {
         color: var(--text-primary-blue);
       }
+
       &.bc-supports-yes > button > span {
         color: var(--text-primary-green);
       }
@@ -80,6 +83,7 @@
       td {
         border-left-width: 0;
       }
+
       .icon.icon-removed-partial {
         // override icon
         mask-image: url("../../../assets/icons/partial.svg");
@@ -99,6 +103,7 @@
       background: var(--background-primary);
     }
   }
+
   .bc-supports.bc-supports-removed-partial {
     .bcd-cell-text-copy {
       color: var(--text-primary-yellow);
@@ -110,21 +115,25 @@
       @include visually-hidden;
     }
   }
+
   .bc-support {
     > button > .icon-wrap {
       display: block;
     }
+
     .icon.icon-removed-partial {
       background-color: var(--icon-critical);
       // override icon
       mask-image: url("../../../assets/icons/no.svg");
     }
   }
+
   .bc-support.bc-supports-removed-partial {
     .bcd-cell-text-copy {
       color: var(--text-primary-red);
     }
   }
+
   .bc-feature-depth-2 {
     border-left-width: 8px;
   }
@@ -296,6 +305,7 @@ dl.bc-notes-list {
       margin-top: 0;
     }
   }
+
   dd.bc-supports-dd {
     margin-bottom: 1rem;
 
@@ -341,8 +351,10 @@ dl.bc-notes-list {
     display: flex;
     gap: 0.5rem;
     margin-top: 0.25rem;
+
     .icon {
       background-color: var(--icon-secondary);
+
       &:hover {
         background-color: var(--icon-primary);
       }

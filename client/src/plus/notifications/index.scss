@@ -43,6 +43,7 @@
       display: inherit;
     }
   }
+
   &.no-star {
     grid-template-columns: 1fr auto;
   }
@@ -126,6 +127,7 @@
   border: 1px solid var(--border-secondary);
   margin-top: 0.5rem;
   padding: 0.5rem;
+
   p {
     font: var(--type-article-p);
     letter-spacing: 0.5px;

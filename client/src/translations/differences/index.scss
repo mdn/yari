@@ -36,6 +36,7 @@
     th.sortable.active {
       background-color: rgb(237, 237, 237);
     }
+
     th.sortable.active.reverse {
       transform: rotate(-180deg);
     }
@@ -45,6 +46,7 @@
       font-size: 80%;
       margin-right: 2px;
     }
+
     td .document-title-preview {
       // color: rgb(118, 118, 118);
     }
@@ -52,6 +54,7 @@
     td .last_modified.ahead a {
       color: #008000;
     }
+
     td .last_modified.behind a {
       color: #ffa500;
     }
@@ -63,6 +66,7 @@
 
   .search-times {
     margin-top: 60px;
+
     p {
       font-size: 70%;
     }
@@ -71,9 +75,11 @@
   .pagination {
     margin: 20px;
     text-align: center;
+
     a.disabled {
       color: rgb(159, 159, 159);
     }
+
     a {
       padding: 10px;
     }
@@ -92,11 +98,13 @@
 
       ul.search-flaws-rows {
         padding-left: 0;
+
         li {
           list-style: none;
         }
       }
     }
+
     .documents {
       margin-left: 300px;
 
