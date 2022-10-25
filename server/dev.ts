@@ -3,7 +3,7 @@ import { WebpackConfiguration } from "webpack-dev-server";
 export const devMiddlewares = [];
 
 if (process.env.NODE_ENV === "development") {
-  /* eslint-disable node/no-unpublished-require */
+  /* eslint-disable n/no-unpublished-require */
   const webpack = require("webpack");
   const webpackDevMiddleware = require("webpack-dev-middleware");
   const webpackHotMiddleware = require("webpack-hot-middleware");

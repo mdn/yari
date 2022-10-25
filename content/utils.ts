@@ -105,7 +105,7 @@ export function execGit(args, opts: { cwd?: string } = {}, root = null) {
 export function toPrettyJSON(value) {
   const json = JSON.stringify(value, null, 2) + "\n";
   try {
-    // eslint-disable-next-line node/no-unpublished-require
+    // eslint-disable-next-line n/no-unpublished-require
     return require("prettier").format(json, { parser: "json" });
   } catch (e) {
     return json;

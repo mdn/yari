@@ -12,7 +12,7 @@ import {
   CONTRIBUTOR_SPOTLIGHT_ROOT,
   BUILD_OUT_ROOT,
 } from "../libs/env";
-// eslint-disable-next-line node/no-missing-require
+// eslint-disable-next-line n/no-missing-require
 import { renderHTML } from "../ssr/dist/main";
 import { default as got } from "got";
 import { splitSections } from "./utils";
