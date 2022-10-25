@@ -18,6 +18,7 @@
 // If the path ends with a slash, remove it.
 const path = $0.replace(/\/$/, '');
 const locale = env.locale;
+const wrapInCode = !$1;
 const includeParent = $2 ? true : false;
 const startDelim = $3;
 const endDelim = $4;
@@ -36,28 +37,25 @@ const overview = mdn.localString({
 const parent = await wiki.getPage(path);
 const pages = parent.subpages;
 
-// trim english title for sorting
+// Trim english title for sorting.
 for (const page of pages) {
     page.title = trimTitle(page.title);
 }
-pages.sort((a, b) => a.title.localeCompare(b.title)) // sorted by english title for subpages    
+// sorted by english title for subpages
+pages.sort((a, b) => a.title.localeCompare(b.title));
 
 // always keep the parent page on top, so insert it after sorting
-if (includeParent && parent.url) {
+if (includeParent) {
     pages.unshift({
         ...parent,
         title: overview
     });
 }
 
-let output = '';
-
 const containsTag = page.hasTag;
 const htmlEscape = kuma.htmlEscape;
-const openTag = '<ol>';
-const closeTag = '</ol>';
-const code = !$1 ? '<code>' : '';
-const endcode = !$1 ? '</code>' : '';
+const code = wrapInCode ? '<code>' : '';
+const endcode = wrapInCode ? '</code>' : '';
 
 const badges = {
     ExperimentalBadge: await template("ExperimentalBadge"),
@@ -72,8 +70,9 @@ const badges = {
 function trimTitle(title) {
     const startIndex = startDelim ? Math.max(title.indexOf(startDelim), 0) : 0;
 
+    // if endIndex is 0 (not found), then use title.length
     const endIndex = (endDelim ? title.indexOf(endDelim) + 1 : title.length) ||
-        title.length; // if endIndex is 0 (not found), then use title.length
+        title.length;
 
     return title.substring(startIndex, endIndex);
 }
@@ -112,8 +111,7 @@ function createLink(item) {
     return result;
 }
 
-if (pages.length) {
-    output = `${openTag}${pages.map(createLink).join('')}${closeTag}`;
-}
+const output = pages.length ? `<ol>${pages.map(createLink).join('')}</ol>` : '';
+
 %>
 <%- output %>
