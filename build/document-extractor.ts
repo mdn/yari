@@ -68,7 +68,7 @@ export function extractSections($: cheerio.CheerioAPI): [Section[], string[]] {
     })("div")
     .eq(0);
 
-  const body = $("#_body")[0] as cheerio.ParentNode;
+  const body = $("body")[0] as cheerio.ParentNode;
   const iterable = [...(body.childNodes as cheerio.Element[])];
 
   let c = 0;
@@ -650,6 +650,7 @@ function _addSingleSpecialSection(
           (spec) =>
             specURL.startsWith(spec.url) ||
             specURL.startsWith(spec.nightly.url) ||
+            spec.nightly.alternateUrls.some((s) => specURL.startsWith(s)) ||
             specURL.startsWith(spec.series.nightlyUrl)
         );
         const specificationsData = {

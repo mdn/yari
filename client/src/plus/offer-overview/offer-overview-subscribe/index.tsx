@@ -78,7 +78,7 @@ const CORE: OfferDetailsProps = {
   name: "Core",
   features: [
     ["notifications", "Notifications for up to 3 pages"],
-    ["collections", "Up to 5 saved articles"],
+    ["collections", "Up to 3 collections"],
   ],
   includes: "Includes:",
   cta: "Start with Core",

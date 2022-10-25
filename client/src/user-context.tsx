@@ -15,7 +15,6 @@ export enum SubscriptionType {
 
 export type UserPlusSettings = {
   colInSearch: boolean;
-  multipleCollections: boolean;
   collectionLastModified: Date | null;
 };
 
@@ -113,7 +112,6 @@ export function UserDataProvider(props: { children: React.ReactNode }) {
       const settings: UserPlusSettings | null = data.settings
         ? {
             colInSearch: data.settings.col_in_search || false,
-            multipleCollections: data.settings.multiple_collections || false,
             collectionLastModified:
               (collectionLastModified && new Date(collectionLastModified)) ||
               null,

@@ -69,11 +69,11 @@
 
     &:active {
       background-color: var(--text-link);
-      color: white;
+      color: #fff;
 
       code {
         background-color: transparent;
-        color: white;
+        color: #fff;
       }
     }
 
@@ -90,7 +90,7 @@
       }
 
       &:active {
-        color: white;
+        color: #fff;
       }
     }
 
@@ -102,7 +102,7 @@
   }
 
   img {
-    background: white;
+    background: #fff;
     border: 1px solid var(--border-primary) !important;
     border-radius: var(--elem-radius);
     display: inline-block;

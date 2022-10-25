@@ -13,9 +13,9 @@
   },
   "devDependencies": {
     "got": "11.8.5",
-    "jest": "26.6.3",
-    "kleur": "4.1.4",
-    "node-dev": "7.0.0",
+    "jest": "29.2.2",
+    "kleur": "4.1.5",
+    "node-dev": "7.4.3",
     "polka": "0.5.2"
   },
   "engines": {
