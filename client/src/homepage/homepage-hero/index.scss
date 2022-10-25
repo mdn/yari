@@ -17,7 +17,6 @@
     margin: 0 auto;
     max-width: 52rem;
     padding: 0 1rem;
-    padding: 0 1rem;
     width: 100%;
 
     h1 {
@@ -140,6 +139,7 @@
 
     .button-wrap {
       background: none;
+
       &:hover {
         background: none;
         border: 1px solid transparent;

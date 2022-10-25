@@ -11,6 +11,7 @@
 
     &:checked + .slider {
       background-color: var(--text-link);
+
       &:before {
         left: 53.25%;
         right: 3.25%;

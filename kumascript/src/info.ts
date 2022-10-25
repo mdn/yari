@@ -256,7 +256,7 @@ const info = {
       get subpages() {
         return Document.findChildren(document.url)
           .map((document) => info.getPage(document))
-          .filter((p) => p && p.url);
+          .filter((p) => p?.url);
       },
     };
   },

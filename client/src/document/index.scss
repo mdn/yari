@@ -605,7 +605,7 @@ kbd {
   border: 2px solid var(--border-secondary);
   border-radius: var(--elem-radius);
   box-shadow: var(--border-secondary);
-  box-shadow: inset 0px -1px 0px 0px var(--border-secondary);
+  box-shadow: inset 0 -1px 0 0 var(--border-secondary);
   color: var(--text-secondary);
   font-size: 0.825rem;
   padding: 0.25rem;

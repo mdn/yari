@@ -14,21 +14,26 @@
   .auth-container {
     order: 0;
   }
+
   .header-search {
     order: 1;
   }
+
   .main-nav {
     order: 2;
   }
+
   .notifications-menu {
     order: 3;
   }
+
   .user-menu {
     order: 4;
   }
 
   .top-level-entry-container {
     position: relative;
+
     .submenu {
       z-index: var(--z-index-nav-menu);
     }
@@ -168,15 +173,19 @@
     .main-nav {
       order: 0;
     }
+
     .header-search {
       order: 1;
     }
+
     .notifications-menu {
       order: 2;
     }
+
     .auth-container {
       order: 3;
     }
+
     .user-menu {
       order: 4;
     }

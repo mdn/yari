@@ -132,7 +132,7 @@ export function saveFile(
     throw new Error("newSlug can not contain the '#' character");
   }
 
-  const combined = `---\n${yaml.dump(saveMetadata)}---\n${rawBody.trim()}\n`;
+  const combined = `---\n${yaml.dump(saveMetadata)}---\n\n${rawBody.trim()}\n`;
   fs.writeFileSync(filePath, combined);
 }
 

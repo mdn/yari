@@ -325,30 +325,47 @@ export async function buildSPAs(options) {
   }
 }
 
-async function fetchRecentContributions() {
+async function fetchGitHubPRs(repo, count = 5) {
   const twoDaysAgo = new Date(Date.now() - 48 * 60 * 60 * 1000);
   const pullRequestsQuery = [
-    "repo:mdn/content",
+    `repo:${repo}`,
     "is:pr",
     "is:merged",
     `merged:>${twoDaysAgo.toISOString()}`,
     "sort:updated",
   ].join("+");
-  const pullRequestUrl = `https://api.github.com/search/issues?q=${pullRequestsQuery}&per_page=10`;
+  const pullRequestUrl = `https://api.github.com/search/issues?q=${pullRequestsQuery}&per_page=${count}`;
   const pullRequestsData = (await got(pullRequestUrl).json()) as {
     items: any[];
   };
+  const prDataRepo = pullRequestsData.items.map((item) => ({
+    ...item,
+    repo: { name: repo, url: `https://github.com/${repo}` },
+  }));
+  return prDataRepo;
+}
 
+async function fetchRecentContributions() {
+  const repos = ["mdn/content", "mdn/translated-content"];
+  const countPerRepo = 5;
+  const pullRequests = (
+    await Promise.all(
+      repos.map(async (repo) => await fetchGitHubPRs(repo, countPerRepo))
+    )
+  ).flat();
+  const pullRequestsData = pullRequests.sort((a, b) =>
+    a.updated_at < b.updated_at ? 1 : -1
+  );
   return {
-    items: pullRequestsData.items.map(
-      ({ number, title, updated_at, pull_request: { html_url } }) => ({
+    items: pullRequestsData.map(
+      ({ number, title, updated_at, pull_request: { html_url }, repo }) => ({
         number,
         title,
         updated_at,
         url: html_url,
+        repo,
       })
     ),
-    repo: { name: "mdn/content", url: "https://github.com/mdn/content" },
   };
 }
 
