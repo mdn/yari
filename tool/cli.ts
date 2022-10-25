@@ -6,7 +6,7 @@ import fs from "fs";
 import path from "path";
 import { fdir } from "fdir";
 import frontmatter from "front-matter";
-const program = require("@caporal/core").default;
+import { program } from "@caporal/core";
 import chalk from "chalk";
 import { prompt } from "inquirer";
 import openEditor from "open-editor";

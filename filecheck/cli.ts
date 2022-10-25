@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 import path from "path";
 
-const program = require("@caporal/core").default;
+import { program } from "@caporal/core";
 
 import { runChecker } from "./checker";
 import { MAX_COMPRESSION_DIFFERENCE_PERCENTAGE } from "../libs/constants";

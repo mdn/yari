@@ -1,9 +1,11 @@
 import path from "path";
 import childProcess from "child_process";
 
+import LRU from "lru-cache";
+import prettier from "prettier";
+
 import { CONTENT_ROOT, CONTENT_TRANSLATED_ROOT } from "../libs/env";
 import { slugToFolder as _slugToFolder } from "../libs/slug-utils";
-import LRU from "lru-cache";
 
 export const MEMOIZE_INVALIDATE = Symbol("force cache update");
 
@@ -105,8 +107,7 @@ export function execGit(args, opts: { cwd?: string } = {}, root = null) {
 export function toPrettyJSON(value) {
   const json = JSON.stringify(value, null, 2) + "\n";
   try {
-    // eslint-disable-next-line n/no-unpublished-require
-    return require("prettier").format(json, { parser: "json" });
+    return prettier.format(json, { parser: "json" });
   } catch (e) {
     return json;
   }

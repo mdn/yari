@@ -5,7 +5,7 @@ import zlib from "zlib";
 
 import chalk from "chalk";
 import cliProgress from "cli-progress";
-const program = require("@caporal/core").default;
+import { program } from "@caporal/core";
 import { prompt } from "inquirer";
 
 import { Document, slugToFolder, translationsOf } from "../content";
