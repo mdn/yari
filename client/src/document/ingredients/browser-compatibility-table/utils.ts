@@ -31,23 +31,25 @@ interface Feature {
   depth: number;
 }
 
-function findAllCompatDepths(
-  identifier: BCD.Identifier,
-  depths: number[],
-  flattenedKey: string
-) {
-  for (let key in identifier) {
-    if (identifier.hasOwnProperty(key)) {
-      if (key === "__compat") {
-        depths.push(flattenedKey ? flattenedKey.split(".").length : 0);
-      }
-      const newKey = flattenedKey ? flattenedKey + "." + key : key;
-      const subIdentifier = identifier[key];
-      if (typeof subIdentifier === "object") {
-        findAllCompatDepths(subIdentifier as BCD.Identifier, depths, newKey);
-      }
+function findFirstCompatDepth(identifier: BCD.Identifier) {
+  const entries = [["", identifier]];
+
+  while (entries.length) {
+    const [path, value] = entries.shift() as [string, BCD.Identifier];
+
+    if (value.hasOwnProperty("__compat")) {
+      // Following entries have at least this depth.
+      return path.split(".").length;
+    }
+
+    for (const key of Object.keys(value)) {
+      const subpath = path ? `${path}.${key}` : key;
+      entries.push([subpath, value[key]]);
     }
   }
+
+  // Fallback.
+  return 0;
 }
 
 export function listFeatures(
@@ -66,9 +68,7 @@ export function listFeatures(
     });
   }
   if (rootName) {
-    const compatDepths = [];
-    findAllCompatDepths(identifier, compatDepths, "");
-    firstCompatDepth = Math.min(...compatDepths);
+    firstCompatDepth = findFirstCompatDepth(identifier);
   }
   for (const subName of Object.keys(identifier)) {
     if (subName === "__compat") {
