@@ -3,10 +3,10 @@
  * process.env.BUILD_ALWAYS_ALLOW_ROBOTS.
  *
  */
-const fs = require("fs");
+import fs from "fs";
 
-const { VALID_LOCALES } = require("../libs/constants");
-const { ALWAYS_ALLOW_ROBOTS } = require("../libs/env");
+import { VALID_LOCALES } from "../libs/constants";
+import { ALWAYS_ALLOW_ROBOTS } from "../libs/env";
 
 const ALLOW_TEXT = `
 User-agent: *

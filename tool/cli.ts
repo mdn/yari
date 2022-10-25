@@ -2,37 +2,37 @@
 import { isValidLocale } from "../libs/locale-utils";
 import type { Doc } from "../libs/types/document";
 
-const fs = require("fs");
-const path = require("path");
-const { fdir } = require("fdir");
-const frontmatter = require("front-matter");
+import fs from "fs";
+import path from "path";
+import { fdir } from "fdir";
+import frontmatter from "front-matter";
 const program = require("@caporal/core").default;
-const chalk = require("chalk");
-const { prompt } = require("inquirer");
-const openEditor = require("open-editor");
-const open = require("open");
-const log = require("loglevel");
-const cheerio = require("cheerio");
+import chalk from "chalk";
+import { prompt } from "inquirer";
+import openEditor from "open-editor";
+import open from "open";
+import log from "loglevel";
+import cheerio from "cheerio";
 
 const dirname = __dirname;
 
-const { DEFAULT_LOCALE, VALID_LOCALES } = require("../libs/constants");
-const { CONTENT_ROOT, CONTENT_TRANSLATED_ROOT } = require("../libs/env");
-const { Redirect, Document, buildURL, getRoot } = require("../content");
-const { buildDocument, gatherGitHistory, buildSPAs } = require("../build");
+import { DEFAULT_LOCALE, VALID_LOCALES } from "../libs/constants";
+import { CONTENT_ROOT, CONTENT_TRANSLATED_ROOT } from "../libs/env";
+import { Redirect, Document, buildURL, getRoot } from "../content";
+import { buildDocument, gatherGitHistory, buildSPAs } from "../build";
 
-const { VALID_FLAW_CHECKS } = require("../libs/constants");
-const {
+import { VALID_FLAW_CHECKS } from "../libs/constants";
+import {
   ALWAYS_ALLOW_ROBOTS,
   BUILD_OUT_ROOT,
   GOOGLE_ANALYTICS_ACCOUNT,
   GOOGLE_ANALYTICS_DEBUG,
-} = require("../libs/env");
-const { runMakePopularitiesFile } = require("./popularities");
-const { runOptimizeClientBuild } = require("./optimize-client-build");
-const { runBuildRobotsTxt } = require("./build-robots-txt");
-const { syncAllTranslatedContent } = require("./sync-translated-content");
-const kumascript = require("../kumascript");
+} from "../libs/env";
+import { runMakePopularitiesFile } from "./popularities";
+import { runOptimizeClientBuild } from "./optimize-client-build";
+import { runBuildRobotsTxt } from "./build-robots-txt";
+import { syncAllTranslatedContent } from "./sync-translated-content";
+import * as kumascript from "../kumascript";
 
 const PORT = parseInt(process.env.SERVER_PORT || "5042");
 

@@ -1,10 +1,10 @@
 #!/usr/bin/env node
-const path = require("path");
+import path from "path";
 
 const program = require("@caporal/core").default;
 
-const { runChecker } = require("./checker");
-const { MAX_COMPRESSION_DIFFERENCE_PERCENTAGE } = require("../libs/constants");
+import { runChecker } from "./checker";
+import { MAX_COMPRESSION_DIFFERENCE_PERCENTAGE } from "../libs/constants";
 
 program
   .version("0.0.0")
