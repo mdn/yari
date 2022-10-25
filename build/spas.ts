@@ -325,7 +325,7 @@ export async function buildSPAs(options) {
   }
 }
 
-async function fetchGitHubPRs(repo = "mdn/content", count = 5) {
+async function fetchGitHubPRs(repo, count = 5) {
   const twoDaysAgo = new Date(Date.now() - 48 * 60 * 60 * 1000);
   const pullRequestsQuery = [
     `repo:${repo}`,
@@ -346,18 +346,16 @@ async function fetchGitHubPRs(repo = "mdn/content", count = 5) {
 }
 
 async function fetchRecentContributions() {
-  const nbContribPerRepo = 5;
-  const contentRecentContribs = await fetchGitHubPRs(
-    "mdn/content",
-    nbContribPerRepo
+  const repos = ["mdn/content", "mdn/translated-content"];
+  const countPerRepo = 5;
+  const pullRequests = (
+    await Promise.all(
+      repos.map(async (repo) => await fetchGitHubPRs(repo, countPerRepo))
+    )
+  ).flat();
+  const pullRequestsData = pullRequests.sort((a, b) =>
+    a.updated_at < b.updated_at ? 1 : -1
   );
-  const translatedRecentContribs = await fetchGitHubPRs(
-    "mdn/translated-content",
-    nbContribPerRepo
-  );
-  const pullRequestsData = contentRecentContribs
-    .concat(translatedRecentContribs)
-    .sort((a, b) => a.updated_at - b.updated_at);
   return {
     items: pullRequestsData.map(
       ({ number, title, updated_at, pull_request: { html_url }, repo }) => ({
