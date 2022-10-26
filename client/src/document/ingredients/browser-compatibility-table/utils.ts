@@ -31,11 +31,33 @@ interface Feature {
   depth: number;
 }
 
+function findFirstCompatDepth(identifier: BCD.Identifier) {
+  const entries = [["", identifier]];
+
+  while (entries.length) {
+    const [path, value] = entries.shift() as [string, BCD.Identifier];
+
+    if (value.hasOwnProperty("__compat")) {
+      // Following entries have at least this depth.
+      return path.split(".").length;
+    }
+
+    for (const key of Object.keys(value)) {
+      const subpath = path ? `${path}.${key}` : key;
+      entries.push([subpath, value[key]]);
+    }
+  }
+
+  // Fallback.
+  return 0;
+}
+
 export function listFeatures(
   identifier: BCD.Identifier,
   parentName: string = "",
   rootName: string = "",
-  depth: number = 0
+  depth: number = 0,
+  firstCompatDepth: number = 0
 ): Feature[] {
   const features: Feature[] = [];
   if (rootName && identifier.__compat) {
@@ -45,16 +67,24 @@ export function listFeatures(
       depth,
     });
   }
-
-  for (const [subName, subIdentifier] of Object.entries(identifier)) {
-    if (subName !== "__compat" && (subIdentifier as BCD.Identifier).__compat) {
+  if (rootName) {
+    firstCompatDepth = findFirstCompatDepth(identifier);
+  }
+  for (const subName of Object.keys(identifier)) {
+    if (subName === "__compat") {
+      continue;
+    }
+    const subIdentifier = identifier[subName];
+    if (subIdentifier.__compat) {
       features.push({
         name: parentName ? `${parentName}.${subName}` : subName,
-        compat: (subIdentifier as BCD.Identifier).__compat!,
+        compat: subIdentifier.__compat,
         depth: depth + 1,
       });
+    }
+    if (subIdentifier.__compat || depth + 1 < firstCompatDepth) {
       features.push(
-        ...listFeatures(subIdentifier as BCD.Identifier, subName, "", depth + 1)
+        ...listFeatures(subIdentifier, subName, "", depth + 1, firstCompatDepth)
       );
     }
   }
