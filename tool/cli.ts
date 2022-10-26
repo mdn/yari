@@ -846,7 +846,7 @@ if (Mozilla && !Mozilla.dntEnabled()) {
         countTotal++;
         console.group(`${document.fileInfo.path}:`);
         const originalRawBody = document.rawBody;
-        let [renderedHTML, flaws] = await renderOrRemoveMacros(document);
+        let [$, flaws] = await renderOrRemoveMacros(document);
         if (flaws.length) {
           const fixableFlaws = flaws.filter((f) => f.redirectInfo);
           const nonFixableFlaws = flaws.filter((f) => !f.redirectInfo);
@@ -886,7 +886,7 @@ if (Mozilla && !Mozilla.dntEnabled()) {
                 document.metadata
               );
               // Ok, we've fixed the fixable flaws, now let's render again.
-              [renderedHTML, flaws] = await renderOrRemoveMacros(document);
+              [$, flaws] = await renderOrRemoveMacros(document);
             }
           } else {
             // There are one or more flaws that we can't fix, and we're not
@@ -899,10 +899,6 @@ if (Mozilla && !Mozilla.dntEnabled()) {
             continue;
           }
         }
-        // The Kumascript rendering wraps the result with a "body" tag
-        // (and more), so let's extract the HTML content of the "body"
-        // to get what we'll store in the document.
-        const $ = cheerio.load(renderedHTML);
         const newRawHTML = $("body").html();
         if (newRawHTML !== originalRawBody) {
           Document.update(document.url, newRawHTML, document.metadata);
