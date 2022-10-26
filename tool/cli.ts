@@ -12,7 +12,7 @@ import { prompt } from "inquirer";
 import openEditor from "open-editor";
 import open from "open";
 import log from "loglevel";
-import cheerio from "cheerio";
+import * as cheerio from "cheerio";
 
 const dirname = __dirname;
 

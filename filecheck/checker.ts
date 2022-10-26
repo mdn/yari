@@ -4,7 +4,7 @@ import { promisify } from "util";
 
 import fse from "fs-extra";
 import tempy from "tempy";
-import cheerio from "cheerio";
+import * as cheerio from "cheerio";
 import FileType from "file-type";
 import imagemin from "imagemin";
 import imageminPngquant from "imagemin-pngquant";
