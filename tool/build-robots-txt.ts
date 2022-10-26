@@ -23,7 +23,7 @@ User-Agent: *
 Disallow: /
 `;
 
-export async function runBuildRobotsTxt(outfile) {
+export async function runBuildRobotsTxt(outfile: string) {
   let content = ALWAYS_ALLOW_ROBOTS ? ALLOW_TEXT : DISALLOW_TEXT;
   if (ALWAYS_ALLOW_ROBOTS) {
     // Append extra lines specifically when we do allow robots.

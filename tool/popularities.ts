@@ -23,9 +23,20 @@ async function fetchPopularities() {
   return csv;
 }
 
-export async function runMakePopularitiesFile(options) {
-  const { outfile, maxUris } = options;
-  const pageviews = [];
+interface PopularitiesResult {
+  rowCount: number;
+  popularities: { [uri: string]: number };
+  pageviews: [string, number][];
+}
+
+export async function runMakePopularitiesFile({
+  outfile,
+  maxUris,
+}: {
+  outfile: string;
+  maxUris: number;
+}): Promise<PopularitiesResult> {
+  const pageviews: [string, number][] = [];
   let biggestCount = null;
   const raw = await fetchPopularities();
   return new Promise((resolve, reject) => {
@@ -56,11 +67,11 @@ export async function runMakePopularitiesFile(options) {
           pageviews.push([uri, count / biggestCount]);
         }
       })
-      .on("end", (rowCount) => {
+      .on("end", (rowCount: number) => {
         if (!pageviews.length) {
           return reject(new Error("No pageviews found!"));
         }
-        const popularities = {};
+        const popularities: { [uri: string]: number } = {};
         pageviews.slice(0, maxUris).forEach(([uri, popularity]) => {
           popularities[uri] = parseFloat(popularity.toFixed(5));
         });

@@ -67,7 +67,7 @@ export async function checkFile(filePath, options: CheckerOptions = {}) {
     }
     const $ = cheerio.load(content);
     const disallowedTagNames = new Set(["script", "object", "iframe", "embed"]);
-    $("*").each((i, element) => {
+    $("*").each((i, element: cheerio.Element) => {
       const { tagName } = element;
       if (disallowedTagNames.has(tagName)) {
         throw new Error(`${filePath} contains a <${tagName}> tag`);

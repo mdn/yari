@@ -20,9 +20,19 @@ const DEPENDENCY_LOOP_INTRO =
 
 export const renderCache = new LRU<string, unknown>({ max: 2000 });
 
+interface RenderOptions {
+  urlsSeen?: Set<string>;
+  selective_mode?: [boolean, string[]] | false;
+  invalidateCache?: boolean;
+}
+
 export async function render(
   url: string,
-  { urlsSeen = null, selective_mode = false, invalidateCache = false } = {}
+  {
+    urlsSeen = null,
+    selective_mode = false,
+    invalidateCache = false,
+  }: RenderOptions = {}
 ): Promise<[cheerio.CheerioAPI, SourceCodeError[]]> {
   const urlLC = url.toLowerCase();
   if (renderCache.has(urlLC)) {

@@ -4,7 +4,7 @@ import type { Doc } from "../libs/types/document";
 
 import fs from "fs";
 import path from "path";
-import { fdir } from "fdir";
+import { fdir, PathsOutput } from "fdir";
 import frontmatter from "front-matter";
 import { program } from "@caporal/core";
 import chalk from "chalk";
@@ -34,6 +34,7 @@ import { runBuildRobotsTxt } from "./build-robots-txt";
 import { syncAllTranslatedContent } from "./sync-translated-content";
 import * as kumascript from "../kumascript";
 import { Logger } from "types";
+import { MacroRedirectedLinkError } from "../kumascript/src/errors";
 
 const PORT = parseInt(process.env.SERVER_PORT || "5042");
 
@@ -216,7 +217,7 @@ program
   .command("move", "Move content to a new slug")
   .argument("<oldSlug>", "Old slug")
   .argument("<newSlug>", "New slug", {
-    validator: (value) => {
+    validator: (value: string) => {
       if (value.includes("#")) {
         throw new Error("slug can not contain the '#' character");
       }
@@ -404,7 +405,7 @@ program
       }) => {
         const { slug, locale } = args;
         const { hostname, port } = options;
-        let url;
+        let url: string;
         // Perhaps they typed in a path relative to the content root
         if (
           (slug.startsWith("files") || fs.existsSync(slug)) &&
@@ -445,7 +446,7 @@ program
           // Someone probably yarn `yarn build` and copy-n-pasted one of the lines
           // it spits out from its CLI.
           const { doc } = JSON.parse(
-            fs.readFileSync(path.join(slug, "index.json"))
+            fs.readFileSync(path.join(slug, "index.json"), "utf-8")
           );
           if (doc) {
             url = doc.mdn_url;
@@ -1001,8 +1002,13 @@ if (Mozilla && !Mozilla.dntEnabled()) {
         const originalRawBody = document.rawBody;
         let [$, flaws] = await renderOrRemoveMacros(document);
         if (flaws.length) {
-          const fixableFlaws = flaws.filter((f) => f.redirectInfo);
-          const nonFixableFlaws = flaws.filter((f) => !f.redirectInfo);
+          const fixableFlaws = flaws.filter(
+            (f): f is MacroRedirectedLinkError =>
+              f.hasOwnProperty("redirectInfo")
+          );
+          const nonFixableFlaws = flaws.filter(
+            (f) => !f.hasOwnProperty("redirectInfo")
+          );
           const nonFixableFlawNames = [
             ...new Set(nonFixableFlaws.map((f) => f.name)).values(),
           ].join(", ");
@@ -1086,7 +1092,7 @@ if (Mozilla && !Mozilla.dntEnabled()) {
         .withErrors()
         .filter((filePath) => filePath.endsWith(".md"))
         .crawl(CONTENT_ROOT);
-      const paths = await crawler.withPromise();
+      const paths = (await crawler.withPromise()) as PathsOutput;
 
       const inventory = paths.map((path) => {
         const fileContents = fs.readFileSync(path, "utf-8");
