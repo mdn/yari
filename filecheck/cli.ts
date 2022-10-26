@@ -24,16 +24,30 @@ program
     validator: program.BOOLEAN,
   })
   .argument("[files...]", "list of files to check")
-  .action(({ args, options }) => {
-    const cwd = options.cwd || process.cwd();
-    const allFilePaths = (args.files || []).map((f) => path.resolve(cwd, f));
-    if (!allFilePaths.length) {
-      throw new Error("no files to check");
+  .action(
+    ({
+      args,
+      options,
+    }: {
+      args: {
+        files?: string[];
+      };
+      options: {
+        cwd?: string;
+        maxCompressionDifferencePercentage?: number;
+        saveCompression?: boolean;
+      };
+    }) => {
+      const cwd = options.cwd || process.cwd();
+      const allFilePaths = (args.files || []).map((f) => path.resolve(cwd, f));
+      if (!allFilePaths.length) {
+        throw new Error("no files to check");
+      }
+      return runChecker(allFilePaths, options).catch((error) => {
+        console.error(error);
+        process.exit(1);
+      });
     }
-    return runChecker(allFilePaths, options).catch((error) => {
-      console.error(error);
-      process.exit(1);
-    });
-  });
+  );
 
 program.run();
