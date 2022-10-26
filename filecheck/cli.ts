@@ -9,16 +9,19 @@ import { MAX_COMPRESSION_DIFFERENCE_PERCENTAGE } from "../libs/constants";
 program
   .version("0.0.0")
   .option("--cwd <path>", "Explicit current-working-directory", {
-    validator: program.PATH,
+    validator: program.STRING,
     default: path.join(process.cwd(), ".."),
   })
   .option(
     "--max-compression-difference-percentage <amount>",
     "Max percentage for reduction after compression",
-    { validator: program.FLOAT, default: MAX_COMPRESSION_DIFFERENCE_PERCENTAGE }
+    {
+      validator: program.NUMBER,
+      default: MAX_COMPRESSION_DIFFERENCE_PERCENTAGE,
+    }
   )
   .option("--save-compression", "If it can be compressed, save the result", {
-    validator: program.BOOL,
+    validator: program.BOOLEAN,
   })
   .argument("[files...]", "list of files to check")
   .action(({ args, options }) => {
