@@ -764,6 +764,7 @@ const standardPages = pageList.filter(page => !hasTag(page, "Non-standard"));
 const groups = [];
 let properties = [];
 const selectors = [];
+const combinators = [];
 const pseudoClasses = [];
 const pseudoElements = [];
 const atRules = [];
@@ -780,6 +781,9 @@ for (const page of standardPages) {
       break;
     case "css-selector":
       selectors.push(page);
+      break;
+    case "css-combinator":
+      combinators.push(page);
       break;
     case "css-pseudo-class":
       pseudoClasses.push(page);
@@ -934,6 +938,7 @@ function buildSublist(pages, title) {
   <%-buildSublist(groups, 'Modules');%>
   <%-buildSublist(properties, 'Properties');%>
   <%-buildSublist(selectors, 'Selectors');%>
+  <%-buildSublist(combinators, 'Combinators');%>
   <%-buildSublist(pseudoClasses, 'Pseudo-classes');%>
   <%-buildSublist(pseudoElements, 'Pseudo-elements');%>
   <%-buildSublist(atRules, 'At-rules');%>
