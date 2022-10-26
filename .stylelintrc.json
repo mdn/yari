@@ -18,7 +18,6 @@
     "no-invalid-position-at-import-rule": null,
     "no-irregular-whitespace": null,
     "property-no-vendor-prefix": null,
-    "scss/at-extend-no-missing-placeholder": null,
     "scss/selector-no-redundant-nesting-selector": null,
     "selector-class-pattern": null,
     "selector-max-compound-selectors": null,

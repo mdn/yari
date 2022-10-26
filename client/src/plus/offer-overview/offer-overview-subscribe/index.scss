@@ -26,7 +26,8 @@
       margin-bottom: 2rem;
     }
 
-    .wrapper {
+    .wrapper,
+    .wrapper-offline {
       align-items: center;
       display: flex;
       flex-direction: column;
@@ -34,8 +35,7 @@
       justify-content: center;
       margin: 0 auto;
 
-      &-offline {
-        @extend .wrapper;
+      .wrapper-offline {
         display: none;
       }
 
