@@ -968,7 +968,6 @@ if (Mozilla && !Mozilla.dntEnabled()) {
       );
       const documents = Document.findAll({
         folderSearch: foldersearch,
-        quiet: true,
       });
       if (!documents.count) {
         throw new Error("no documents found");
