@@ -287,7 +287,19 @@ var text = mdn.localStringMap({
   <li class="toggle">
     <details <%=state('Attributes')%>>
       <summary><%=text['Attributes']%></summary>
-        <%-await template("ListSubpagesForSidebar", ['/en-US/docs/Web/HTML/Attributes'])%>
+        <ol>
+          <%
+            const attributesRoot = await wiki.getPage("/en-US/docs/Web/HTML/Attributes");
+            const attributes = attributesRoot.subpages;
+
+            for (const attr of attributes) {
+              const name = attr.slug.split('/').pop();
+          %>
+              <li><a href="/en-US/docs/Web/HTML/Attributes/<%-name%>"><%-name%></a></li>
+          <%
+            }
+          %>
+        </ol>
     </details>
   </li>
   <li class="toggle">
