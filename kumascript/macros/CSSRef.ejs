@@ -832,7 +832,7 @@ function smartLink(href, title, content, subpath) {
  * It then returns that object.
  */
 function groupProperties(properties) {
-  let groups = {};
+  const groups = {};
   for (const property of properties) {
     // The regex is: match at "-" but not at the start of the string,
     // because of properties like -webkit-line-clamp, where we want the
@@ -879,7 +879,7 @@ function makePageLink(page) {
     result += '<bdi>';
   }
 
-  result += `<code>${smartLink(url, null, title, cssURL)}</code>`;
+  result += smartLink(url, null, title, cssURL);
 
   if (rtlLocales.indexOf(locale) != -1) {
     result += '</bdi>';
@@ -926,7 +926,7 @@ function buildPropertylist(propertyGroups, pages, title) {
     } else {
       // otherwise, make a collapsible section for this group, and write
       // the page links out inside it.
-      result += `<li class="toggle"><details><summary><code>${propertyGroupName}-*</code></summary><ol>`;
+      result += `<li class="toggle"><details><summary>${propertyGroupName}-*</summary><ol>`;
       for (const propertyName of group) {
         result += makePageLink(pages.find(item => item.title === propertyName));
       }
