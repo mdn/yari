@@ -801,7 +801,6 @@ for (const page of standardPages) {
 }
 
 properties = properties.sort((a, b) => a.title.localeCompare(b.title));
-propertyGroups = groupProperties(properties);;
 
 const badges = {
   ExperimentalBadge : await template("ExperimentalBadge"),
@@ -813,38 +812,6 @@ function smartLink(href, title, content, subpath) {
   let basepath = subpath;
   let ignoreFlawMacro = "CSSRef";
   return web.smartLink(href, title, content, subpath, basepath, ignoreFlawMacro);
-}
-
-/**
- * This function takes as input an array of page objects, one for each CSS property page.
- *
- * It splits off the first part of each page title, where "parts" are demarcated by "-".
- *
- * For example, it splits "border" off "border-style".
- *
- * It assembles an object whose properties are all the different "first parts", and
- * for which the value of each property is an array of CSS property names which start
- * with that part.
- *
- * For example, it has a key "border" whose value is an array of all the CSS properties
- * that start with "border".
- *
- * It then returns that object.
- */
-function groupProperties(properties) {
-  const groups = {};
-  for (const property of properties) {
-    // The regex is: match at "-" but not at the start of the string,
-    // because of properties like -webkit-line-clamp, where we want the
-    // "first part" to be "-webkit"
-    const pieces = property.title.split(/(?<!^)-/);
-    if (Object.keys(groups).includes(pieces[0])) {
-      groups[pieces[0]].push(property.title);
-    } else {
-      groups[pieces[0]] = [property.title];
-    }
-  }
-  return groups;
 }
 
 /**
@@ -911,8 +878,33 @@ function buildSublist(pages, title) {
  * @param title : the title of this section of the sidebar
  * @returns : markup for the complete CSS property section
  */
-function buildPropertylist(propertyGroups, pages, title) {
+function buildPropertylist(pages, title) {
+
   let result = `<li class="toggle"><details><summary>${title}</summary><ol>`;
+
+  // Go through the array of property pages, splitting off the "first part"
+  // of each property name, where "parts" are demarcated by "-".
+  // For example, split "border" off "border-style".
+  //
+  // Make an object:
+  // - with a key for every distinct "first part"
+  // - whose value is an array of all CSS property names which start with that part.
+  //
+  // For example, it has a key "border" whose value is an array of all
+  // the CSS properties that start with "border".
+  const propertyGroups = {};
+
+  for (const property of properties) {
+    // The regex is: match at "-" but not at the start of the string,
+    // because of properties like -webkit-line-clamp, where we want the
+    // "first part" to be "-webkit"
+    const pieces = property.title.split(/(?<!^)-/);
+    if (Object.keys(propertyGroups).includes(pieces[0])) {
+      propertyGroups[pieces[0]].push(property.title);
+    } else {
+      propertyGroups[pieces[0]] = [property.title];
+    }
+  }
 
   for (const propertyGroupName of Object.keys(propertyGroups)) {
     const group = propertyGroups[propertyGroupName];
@@ -1018,7 +1010,7 @@ function buildPropertylist(propertyGroups, pages, title) {
 
   <li><a href="/<%=locale%>/docs/Web/CSS/Reference"><strong><%=text['Reference']%></strong></a></li>
   <%-buildSublist(groups, 'Modules');%>
-  <%-buildPropertylist(propertyGroups, properties, 'Properties');%>
+  <%-buildPropertylist(properties, 'Properties');%>
   <%-buildSublist(selectors, 'Selectors');%>
   <%-buildSublist(combinators, 'Combinators');%>
   <%-buildSublist(pseudoClasses, 'Pseudo-classes');%>
