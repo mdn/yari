@@ -109,10 +109,6 @@ export default function FallbackLink({ url }: { url: string }) {
         </p>
       </NoteCard>
     );
-  } else if (document === null) {
-    // It means the lookup "worked" in principle, but there wasn't an English
-    // document there. Bummer. But at least we tried.
-    // Should we say something??
   }
 
   const isRetiredLocale = RETIRED_LOCALES.has(locale.toLowerCase());
