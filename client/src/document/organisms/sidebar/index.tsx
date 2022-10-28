@@ -31,7 +31,7 @@ export function SidebarContainer({ doc, children }) {
   useEffect(() => {
     const currentSidebarItem = document.querySelector(".sidebar-content em");
     currentSidebarItem?.scrollIntoView();
-  }, []);
+  }, [isSidebarOpen]);
 
   return (
     <>
