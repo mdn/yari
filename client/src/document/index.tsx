@@ -29,6 +29,7 @@ import { RetiredLocaleNote } from "./molecules/retired-locale-note";
 import { MainContentContainer } from "../ui/atoms/page-content";
 import { Loading } from "../ui/atoms/loading";
 import { Metadata } from "./organisms/metadata";
+import { PageNotFound } from "../page-not-found";
 
 import "./index.scss";
 
@@ -45,6 +46,18 @@ import { DocumentSurvey } from "../ui/molecules/document-survey";
 // Lazy sub-components
 const Toolbar = React.lazy(() => import("./toolbar"));
 const MathMLPolyfillMaybe = React.lazy(() => import("./mathml-polyfill"));
+
+class HTTPError extends Error {
+  public readonly status: number;
+  public readonly url: string;
+  public readonly text: string;
+  constructor(status: number, url: string, text: string) {
+    super(`${status} on ${url}: ${text}`);
+    this.status = status;
+    this.url = url;
+    this.text = text;
+  }
+}
 
 export function Document(props /* TODO: define a TS interface for this */) {
   const ga = useGA();
@@ -73,7 +86,7 @@ export function Document(props /* TODO: define a TS interface for this */) {
       if (!response.ok) {
         switch (response.status) {
           case 404:
-            throw new Error(`${response.status} on ${url}: Page not found`);
+            throw new HTTPError(response.status, url, "Page not found");
 
           case 504:
             if (previousDoc.current) {
@@ -82,7 +95,7 @@ export function Document(props /* TODO: define a TS interface for this */) {
         }
 
         const text = await response.text();
-        throw new Error(`${response.status} on ${url}: ${text}`);
+        throw new HTTPError(response.status, url, text);
       }
 
       const { doc } = await response.json();
@@ -167,7 +180,20 @@ export function Document(props /* TODO: define a TS interface for this */) {
   }
 
   if (error) {
-    return <LoadingError error={error} />;
+    return (
+      <>
+        <div className="main-document-header-container">
+          <TopNavigation />
+        </div>
+        <MainContentContainer>
+          {error instanceof HTTPError && error.status === 404 ? (
+            <PageNotFound />
+          ) : (
+            <LoadingError error={error} />
+          )}
+        </MainContentContainer>
+      </>
+    );
   }
 
   if (!doc) {
