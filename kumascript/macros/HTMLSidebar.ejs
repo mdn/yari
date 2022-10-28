@@ -294,8 +294,11 @@ var text = mdn.localStringMap({
 
             for (const attr of attributes) {
               const name = attr.slug.split('/').pop();
+              const url = attr.url.replace('en-US', locale);
+              const subPath = `/${locale}/docs/Web/HTML/Attributes`;
+              const link = web.smartLink(url, null, name, subPath, null);
           %>
-              <li><a href="/en-US/docs/Web/HTML/Attributes/<%-name%>"><%-name%></a></li>
+              <li><%-link%></li>
           <%
             }
           %>
