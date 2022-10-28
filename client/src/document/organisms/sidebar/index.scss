@@ -9,6 +9,10 @@
     display: none;
   }
 
+  .sidebar-content {
+    overflow: scroll;
+  }
+
   // apply drawer styles only to the sizes that need them.
   @media screen and (max-width: #{$screen-md - 1}) {
     height: 100vh;
@@ -96,6 +100,7 @@
     hyphens: auto;
     padding: 0.25rem;
     padding-left: 0.5rem;
+    scroll-margin-top: 30vh;
     width: 100%;
   }
 

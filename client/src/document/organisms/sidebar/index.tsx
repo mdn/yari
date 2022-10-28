@@ -28,6 +28,11 @@ export function SidebarContainer({ doc, children }) {
     }
   }, [isSidebarOpen]);
 
+  useEffect(() => {
+    const currentSidebarItem = document.querySelector(".sidebar-content em");
+    currentSidebarItem?.scrollIntoView();
+  }, []);
+
   return (
     <>
       <nav id="sidebar-quicklinks" className={classes}>
@@ -55,6 +60,7 @@ export function RenderSideBar({ doc }) {
           <>
             <h4 className="sidebar-heading">Related Topics</h4>
             <div
+              className="sidebar-content"
               dangerouslySetInnerHTML={{
                 __html: `${doc.sidebarHTML}`,
               }}
