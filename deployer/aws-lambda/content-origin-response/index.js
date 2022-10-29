@@ -7,7 +7,7 @@ exports.handler = async (event) => {
    * events, so for example we can modify the response before it's
    * cached by CloudFront. More specifically, when serving content
    * from S3, only a small set of common headers, like Cache-Control
-   * and Content-Type, can be be associated and served with the content.
+   * and Content-Type, can be associated and served with the content.
    * The other headers are added to the response here.
    */
   const request = event.Records[0].cf.request;

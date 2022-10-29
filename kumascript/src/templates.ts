@@ -16,7 +16,7 @@
  * supports templates that are themselves async.
  *
  * render() relies on EJS's built-in caching and file-loading
- * capabilities so no template should ever need to be be loaded or
+ * capabilities so no template should ever need to be loaded or
  * compiled more than once.
  *
  * The getTemplateMap() function returns a Map object that maps
