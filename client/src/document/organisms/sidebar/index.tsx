@@ -29,8 +29,13 @@ export function SidebarContainer({ doc, children }) {
   }, [isSidebarOpen]);
 
   useEffect(() => {
-    const currentSidebarItem = document.querySelector(".sidebar-content em");
-    currentSidebarItem?.scrollIntoView();
+    const sidebar = document.querySelector(".sidebar");
+    const currentSidebarItem = sidebar?.querySelector("em");
+    if (sidebar && currentSidebarItem) {
+      sidebar.scrollTo({
+        top: currentSidebarItem.offsetTop - window.innerHeight / 3,
+      });
+    }
   }, [isSidebarOpen]);
 
   return (
