@@ -65,7 +65,6 @@ export function RenderSideBar({ doc }) {
           <>
             <h4 className="sidebar-heading">Related Topics</h4>
             <div
-              className="sidebar-content"
               dangerouslySetInnerHTML={{
                 __html: `${doc.sidebarHTML}`,
               }}
