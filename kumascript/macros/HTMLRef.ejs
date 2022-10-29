@@ -1,69 +1,61 @@
 <%
-function containsTag(tagList, tag) {
-    if (tagList == null || tagList == undefined) return 0;
-    if (tag == undefined || tag == null) return 0;
-    tag = tag.toLowerCase();
-    for (var i = 0, len = tagList.length; i < len; i++) {
-        if (tagList[i].toLowerCase() == tag) return 1;
-    }
-    return 0;
+function containsTag(tagList, matchTag) {
+  if (!tagList || !matchTag) return 0;
+  matchTag = matchTag.toLowerCase();
+  for (const tag of tagList) {
+    if (tag.toLowerCase() == tag) return 1;
+  }
+  return 0;
 }
 
-var s_html_href = '/'+env.locale+'/docs/Web/HTML';
-var s_html_ref_href = '/'+env.locale+'/docs/Web/HTML/Element';
-var s_html_ref_title = 'HTML Elements';
-switch (env.locale) {
-    case 'fr':
-        s_html_href = '/'+env.locale+'/docs/HTML';
-        s_html_ref_href = '/'+env.locale+'/docs/Web/HTML/Element';
-        s_html_ref_title = 'Éléments HTML';
-        break;
-    case 'ru':
-        s_html_ref_title = 'HTML элементы';
-        break;
-    default: break;
-}
+const s_html_ref_href = `/en-US/docs/Web/HTML/Element`;
+const s_html_ref_title = mdn.localString({
+  'en-US': 'HTML Elements',
+  'fr': 'Éléments HTML',
+  'ru': 'HTML элементы',
+  'zh-CN': 'HTML 元素',
+  'zh-TW': 'HTML 元素'
+})
 
-var text = mdn.localStringMap({
-    'en-US': {
-        'Input_types': '<code>&lt;input&gt;</code> types'
-    }
+const text = mdn.localStringMap({
+  'en-US': {
+    'Input_types': '<code>&lt;input&gt;</code> types'
+  },
+  'zh-CN': {
+    'Input_types': '<code>&lt;input&gt;</code> 类型'
+  },
+  'zh-TW': {
+    'Input_types': '<code>&lt;input&gt;</code> 類型'
+  }
 });
 
 // Find the section of HTML this page belongs to (that is the first tag of the form "HTML XYZ")
-var tags = env.tags;
-var found_tag = '';
-for (i in tags) {
-    if (tags[i] != s_html_ref_title) {
-        if (('' + tags[i]).substr(0, 5) == 'HTML ') {
-            found_tag = tags[i];
-            break;
-        }
-    }
-}
+const found_tag = env.tags.find(tag => {
+  return tag != s_html_ref_title &&
+    tag.startsWith('HTML ')
+});
 
 // Find the HTML Tags belonging to the same subject
 
-if (found_tag != undefined && found_tag != null && found_tag.length) {
-    // Find the pages, sub-pages of HTML/Element that are tagged with that specific tag
-    var pageList = await page.subpagesExpand(s_html_ref_href);   // Get subpages, including tags
-    var resultHTML = [];
+const resultHTML = [];
+if (found_tag) {
+  // Find the pages, sub-pages of HTML/Element that are tagged with that specific tag
+  const pageList = await page.subpagesExpand(s_html_ref_href);   // Get subpages, including tags
 
-    for (aPage in pageList) {
-        if (containsTag(pageList[aPage].tags, found_tag)) {
-            resultHTML.push(pageList[aPage].slug.split("/").pop(-1).toLowerCase());
-        }
-    }
+  pageList.filter(page => containsTag(page.tags, found_tag))
+    .forEach(page => {
+      resultHTML.push(page.slug.split("/").pop(-1).toLowerCase());
+    });
 }
 
 function wrapHTMLElement(name) {
-    return template("HTMLElement", [name, "", "", "HTMLRef"]);
+  return template("HTMLElement", [name, "", "", "HTMLRef"]);
 }
 
-var resultGuide = [];
-var resultAPI = [];
+const resultGuide = [];
+const resultAPI = [];
 
- if (s_html_href) {  %>
+%>
   <section id="Quick_links">
   <ol>
    <% if (found_tag) {
@@ -87,7 +79,8 @@ var resultAPI = [];
             <li><%- await template("domxref", [resultAPI[slugLeaf]]) %></li>
   <%    }
     } %>
-    <% if (env.slug.includes("/HTML/Element/input")) { %>
+    <% if (env.slug.toLowerCase().includes("/HTML/Element/input".toLowerCase())) { // this should be case insensitive
+    %>
    <li><details open><summary><%-text['Input_types']%></summary>
     <%-await template("ListSubpagesForSidebar", ['/en-US/docs/Web/HTML/Element/input'])%></details></li>
     <% } %>
@@ -294,4 +287,3 @@ var resultAPI = [];
    </details></li>
    </ol>
   </section>
-<%}%>
