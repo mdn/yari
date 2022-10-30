@@ -35,7 +35,7 @@ export function isHomePage(pathname: string): boolean {
 }
 
 /**
- * Posts the name of the theme we are changing to to the
+ * Posts the name of the theme we are changing to the
  * interactive examples `iframe`.
  * @param { string } theme - The theme to switch to
  */

@@ -374,7 +374,7 @@ function _addSingleSpecialSection(
   }
 
   // Some old legacy documents haven't been re-rendered yet, since it
-  // was added, so the `div.bc-data` tag doesn't have a a `id="bcd:..."`
+  // was added, so the `div.bc-data` tag doesn't have a `id="bcd:..."`
   // or `data-bcd="..."` attribute. If that's the case, bail and fall
   // back on a regular prose section :(
   if (!dataQuery && specURLsString === "") {
