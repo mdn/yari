@@ -29,7 +29,7 @@ program
     }
     return runChecker(allFilePaths, options).catch((error) => {
       console.error(error);
-      process.exit(1);
+      throw error;
     });
   });
 

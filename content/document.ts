@@ -418,7 +418,7 @@ export function update(url: string, rawBody: string, metadata) {
   }
 }
 
-export function findByURL(url: string, ...args: (string | Symbol)[]) {
+export function findByURL(url: string, ...args: (string | symbol)[]) {
   const [bareURL, hash = ""] = url.split("#", 2);
   if (!bareURL.toLowerCase().includes("/docs/")) {
     return;

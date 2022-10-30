@@ -22,7 +22,7 @@ function getL10nCardMap(locale = DEFAULT_LOCALE) {
   const listMsgObj = JSON.parse(fs.readFileSync(localeFilePath, "utf-8"))[
     "translations"
   ][""];
-  let l10nCardMap = new Map();
+  const l10nCardMap = new Map();
 
   Object.keys(listMsgObj).forEach((msgName) => {
     l10nCardMap.set(

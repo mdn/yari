@@ -297,7 +297,7 @@ export function getBrokenLinksFlaws(doc, $, { rawContent }, level) {
                 `/${doc.locale}/`,
                 `/${DEFAULT_LOCALE}/`
               );
-              let enUSFound = Document.findByURL(enUSHrefNormalized);
+              const enUSFound = Document.findByURL(enUSHrefNormalized);
               if (enUSFound) {
                 enUSFallbackURL = enUSFound.url;
               } else {
