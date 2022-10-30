@@ -81,18 +81,16 @@ program
             Redirect.validateLocale(locale, strict);
             logger.info(chalk.green(`✓ redirects for ${locale} looking good!`));
           } catch (e) {
-            logger.error(
-              chalk.red(`_redirects.txt for ${locale} is causing issues: ${e}`)
+            throw new Error(
+              `_redirects.txt for ${locale} is causing issues: ${e}`
             );
-            throw new Error("🔥 Errors loading redirects 🔥");
           }
         }
       } else {
         try {
           Redirect.load(locales, true);
         } catch (e) {
-          logger.error(chalk.red(`Unable to load redirects: ${e}`));
-          throw new Error("🔥 Errors loading redirects 🔥");
+          throw new Error(`Unable to load redirects: ${e}`);
         }
       }
 
