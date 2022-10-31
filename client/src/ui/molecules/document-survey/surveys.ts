@@ -20,26 +20,41 @@ export interface Survey {
 enum SurveyBucket {
   BROWSER_SURVEY_OCT_2022 = "BROWSER_SURVEY_OCT_2022",
   CSS_CASCADE_2022 = "CSS_CASCADE_2022",
+  INTEROP_2023 = "INTEROP_2023",
 }
 
 enum SurveyKey {
   BROWSER_SURVEY_OCT_2022 = "BROWSER_SURVEY_OCT_2022",
   CSS_CASCADE_2022_A = "CSS_CASCADE_2022_A",
   CSS_CASCADE_2022_B = "CSS_CASCADE_2022_B",
+  INTEROP_2023_CSS_HTML = "INTEROP_2023_CSS_HTML",
+  INTEROP_2023_API_JS = "INTEROP_2023_API_JS",
 }
 
 export const SURVEYS: Survey[] = [
   {
-    key: SurveyKey.BROWSER_SURVEY_OCT_2022,
-    bucket: SurveyBucket.BROWSER_SURVEY_OCT_2022,
-    show: (doc: Doc) =>
-      doc?.body.some((section) => section.type === "browser_compatibility"),
-    src: "https://survey.alchemer.com/s3/7049440/Short-survey-browsers",
+    key: SurveyKey.INTEROP_2023_CSS_HTML,
+    bucket: SurveyBucket.INTEROP_2023,
+    show: (doc: Doc) => /en-US\/docs\/Web\/(CSS|HTML)(\/|$)/i.test(doc.mdn_url),
+    src: "https://survey.alchemer.com/s3/7081564/MDN-Interop-2023-CSS-HTML",
     teaser:
-      "What is important to you when deciding which browser features to use? Take our 1 minute survey:",
+      "Browser vendors are working together to improve feature support across browsers. Shape the future of the web by taking this 1-question survey!",
     question:
-      "What's important to you when deciding which browser features to use?",
-    ...survey_duration(SurveyBucket.BROWSER_SURVEY_OCT_2022),
-    ...survey_rates(SurveyKey.BROWSER_SURVEY_OCT_2022),
+      "Which features should be improved across browsers in the coming year?",
+    ...survey_duration(SurveyBucket.INTEROP_2023),
+    ...survey_rates(SurveyKey.INTEROP_2023_CSS_HTML),
+  },
+  {
+    key: SurveyKey.INTEROP_2023_API_JS,
+    bucket: SurveyBucket.INTEROP_2023,
+    show: (doc: Doc) =>
+      /en-US\/docs\/Web\/(API|JavaScript)(\/|$)/i.test(doc.mdn_url),
+    src: "https://survey.alchemer.com/s3/7081727/MDN-Interop-2023-APIs-JavaScript",
+    teaser:
+      "Browser vendors are working together to improve feature support across browsers. Shape the future of the web by taking this 1-question survey!",
+    question:
+      "Which features should be improved across browsers in the coming year?",
+    ...survey_duration(SurveyBucket.INTEROP_2023),
+    ...survey_rates(SurveyKey.INTEROP_2023_API_JS),
   },
 ];
