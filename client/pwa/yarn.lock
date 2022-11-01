@@ -233,10 +233,10 @@
   resolved "https://registry.yarnpkg.com/@xtuc/long/-/long-4.2.2.tgz#d291c6a4e97989b5c61d9acf396ae4fe133a718d"
   integrity sha512-NuHqBY1PB/D8xU6s/thBgOAiAP7HOYDQ32+BFZILJ8ivkUkAHQnWfn6WhL79Owj1qmUnoN/YPhktdIoucipkAQ==
 
-"@zip.js/zip.js@2.6.51":
-  version "2.6.51"
-  resolved "https://registry.yarnpkg.com/@zip.js/zip.js/-/zip.js-2.6.51.tgz#4137e4267cf9a7d38d976772db97979b94e05314"
-  integrity sha512-mvSKSDC6Bekbn5rIUyosto+QeN6wGUr0sNz6DDEaL4JQFyCYWDfkKoqQNDl83ad6ORmpEGMpYfLj1E6+Dbhpdg==
+"@zip.js/zip.js@2.6.52":
+  version "2.6.52"
+  resolved "https://registry.yarnpkg.com/@zip.js/zip.js/-/zip.js-2.6.52.tgz#7a05b2680580771b8b246e1101a119638e3f8206"
+  integrity sha512-PMOV6c0wwR7+KHhzcoinyPUnGst9RmxLesSLmCsMKVkKp67KoYaHuLg8HG8B3mYxvpk2GDDrmaGaMfX3UxA7Gg==
 
 acorn-import-assertions@^1.7.6:
   version "1.8.0"
