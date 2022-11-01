@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+import crypto from "crypto";
 import fs from "fs";
 import path from "path";
 import zlib from "zlib";
@@ -116,6 +117,8 @@ async function buildDocuments(
     findAllOptions.files = new Set(files);
   }
 
+  const metadata = {};
+
   const documents = Document.findAll(findAllOptions);
   const progressBar = new cliProgress.SingleBar(
     {},
@@ -179,11 +182,12 @@ async function buildDocuments(
       );
     }
 
+    const docString = JSON.stringify({ doc: builtDocument });
     fs.writeFileSync(
       path.join(outPath, "index.json"),
       // This is exploiting the fact that renderHTML has the side-effect of
       // mutating the built document which makes this not great and refactor-worthy.
-      JSON.stringify({ doc: builtDocument })
+      docString
     );
     fs.writeFileSync(
       path.join(outPath, "contributors.txt"),
@@ -240,6 +244,17 @@ async function buildDocuments(
       searchIndex.add(document);
     }
 
+    delete builtDocument.body;
+    delete builtDocument.sidebarHTML;
+    delete builtDocument.toc;
+
+    const hash = crypto.createHash("sha256").update(docString).digest("hex");
+    if (metadata[document.metadata.locale]) {
+      metadata[document.metadata.locale].push({ ...builtDocument, hash });
+    } else {
+      metadata[document.metadata.locale] = [{ ...builtDocument, hash }];
+    }
+
     if (!options.noProgressbar) {
       progressBar.increment();
     } else if (!quiet) {
@@ -255,7 +270,6 @@ async function buildDocuments(
     progressBar.stop();
   }
 
-  const sitemapsBuilt: string[] = [];
   for (const [locale, docs] of Object.entries(docPerLocale)) {
     const sitemapDir = path.join(
       BUILD_OUT_ROOT,
@@ -275,6 +289,13 @@ async function buildDocuments(
     fs.writeFileSync(
       path.join(BUILD_OUT_ROOT, locale.toLowerCase(), "search-index.json"),
       JSON.stringify(items)
+    );
+  }
+
+  for (const [locale, meta] of Object.entries(metadata)) {
+    fs.writeFileSync(
+      path.join(BUILD_OUT_ROOT, locale.toLowerCase(), "metadata.json"),
+      JSON.stringify(meta)
     );
   }
   return { slugPerLocale: docPerLocale, peakHeapBytes, totalFlaws };
