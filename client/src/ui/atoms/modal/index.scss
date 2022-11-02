@@ -85,6 +85,12 @@ body.ReactModal__Body--open {
       padding-top: 0;
     }
 
+    @media screen and (max-width: $screen-lg) {
+      &:last-child {
+        padding-bottom: 1.5rem;
+      }
+    }
+
     &.is-button-row {
       flex-direction: row-reverse;
       flex-wrap: wrap-reverse;
