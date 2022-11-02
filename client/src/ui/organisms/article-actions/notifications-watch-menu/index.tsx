@@ -8,15 +8,15 @@ import { useOnlineStatus } from "../../../../hooks";
 import { DropdownMenu, DropdownMenuWrapper } from "../../../molecules/dropdown";
 import { ManageOrUpgradeDialogNotifications } from "../manage-upgrade-dialog";
 import { useUIStatus } from "../../../../ui-context";
+import { Doc, DocMetadata } from "../../../../../../libs/types/document";
 
 interface WatchModeData {
   status: string;
   subscription_limit_reached: boolean;
 }
 
-export const NotificationsWatchMenu = ({ doc }) => {
-  const compat = doc.body.find((e) => e.type === "browser_compatibility");
-  const path = compat ? compat.value?.query : doc.mdn_url;
+export const NotificationsWatchMenu = ({ doc }: { doc: Doc | DocMetadata }) => {
+  const path = doc.browserCompat?.[0] || doc.mdn_url;
   const title = doc.title;
 
   const menuId = "watch-submenu";

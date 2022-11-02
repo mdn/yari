@@ -27,12 +27,10 @@ dayjs.extend(relativeTime);
 
 export default function Collections() {
   return (
-    <div className="collections-v2">
-      <Routes>
-        <Route path="/" element={<Overview />} />
-        <Route path=":collectionId" element={<CollectionComponent />} />
-      </Routes>
-    </div>
+    <Routes>
+      <Route path="/" element={<Overview />} />
+      <Route path=":collectionId" element={<CollectionComponent />} />
+    </Routes>
   );
 }
 
@@ -41,7 +39,7 @@ function Overview() {
   const [showCreate, setShowCreate] = useState(false);
   const gleanClick = useGleanClick();
   return (
-    <>
+    <div className="collections-overview">
       <header className="container">
         <div className="collections-hero">
           <div className="mandala-wrapper">
@@ -93,7 +91,7 @@ function Overview() {
           "Create a new collection..."
         )}
       </Container>
-    </>
+    </div>
   );
 }
 

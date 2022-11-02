@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 
 import { Button } from "../../../atoms/button";
-import { Doc } from "../../../../../../libs/types/document";
+import { Doc, DocMetadata } from "../../../../../../libs/types/document";
 import { useOnlineStatus } from "../../../../hooks";
 import {
   Item,
@@ -25,12 +25,19 @@ import {
   NEW_COLLECTION_MODAL_SUBMIT_ARTICLE_ACTIONS,
 } from "../../../../telemetry/constants";
 import ExpandingTextarea from "../../../atoms/form/expanding-textarea";
+import { KeyedMutator } from "swr";
 
 import "./index.scss";
 
 const addValue = "add";
 
-export default function BookmarkMenu({ doc }: { doc: Doc }) {
+export default function BookmarkMenu({
+  doc,
+  scopedMutator,
+}: {
+  doc: Doc | DocMetadata;
+  scopedMutator?: KeyedMutator<Item[][]>;
+}) {
   const { data: collections } = useCollections();
   const { data: savedItems } = useBookmark(doc.mdn_url);
 
@@ -51,8 +58,8 @@ export default function BookmarkMenu({ doc }: { doc: Doc }) {
   const [lastAction, setLastAction] = useState("");
   const gleanClick = useGleanClick();
   const { mutator: addItem, ...addStatus } = useItemAdd();
-  const { mutator: editItem, ...editStatus } = useItemEdit();
-  const { mutator: deleteItem, ...deleteStatus } = useItemDelete();
+  const { mutator: editItem, ...editStatus } = useItemEdit(scopedMutator);
+  const { mutator: deleteItem, ...deleteStatus } = useItemDelete(scopedMutator);
   const { resetErrors, errors, isPending } = combineMutationStatus(
     addStatus,
     editStatus,
@@ -161,38 +168,24 @@ export default function BookmarkMenu({ doc }: { doc: Doc }) {
       setIsOpen={setShow}
       disableAutoClose={disableAutoClose}
     >
-      {doc ? (
-        <Button
-          type="action"
-          isDisabled={isOffline}
-          icon={savedItems?.length ? "bookmark-filled" : "bookmark"}
-          extraClasses={`bookmark-button small ${
-            savedItems?.length ? "highlight" : ""
-          }`}
-          onClickHandler={() => {
-            setShow((v) => !v);
-            if (!show) {
-              gleanClick(ARTICLE_ACTIONS_COLLECTIONS_OPENED);
-            }
-          }}
-        >
-          <span className="bookmark-button-label">
-            {savedItems?.length ? "Saved" : "Save"}
-          </span>
-        </Button>
-      ) : (
-        <Button
-          icon="edit"
-          type="action"
-          isDisabled={isOffline}
-          title="Edit"
-          onClickHandler={() => {
-            setShow((v) => !v);
-          }}
-        >
-          <span className="visually-hidden">Edit bookmark</span>
-        </Button>
-      )}
+      <Button
+        type="action"
+        isDisabled={isOffline}
+        icon={savedItems?.length ? "bookmark-filled" : "bookmark"}
+        extraClasses={`bookmark-button small ${
+          savedItems?.length ? "highlight" : ""
+        }`}
+        onClickHandler={() => {
+          setShow((v) => !v);
+          if (!show) {
+            gleanClick(ARTICLE_ACTIONS_COLLECTIONS_OPENED);
+          }
+        }}
+      >
+        <span className="bookmark-button-label">
+          {savedItems?.length ? "Saved" : "Save"}
+        </span>
+      </Button>
       <form className="mdn-form" method="post" onSubmit={saveHandler}>
         <DropdownMenu>
           <div
