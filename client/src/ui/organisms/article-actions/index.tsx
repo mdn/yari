@@ -11,16 +11,20 @@ import "./index.scss";
 
 import BookmarkMenu from "./bookmark-menu";
 import { useUIStatus } from "../../../ui-context";
+import { useState } from "react";
+import { KeyedMutator } from "swr";
+import { Item } from "../../../plus/collections/api";
 
 export const ArticleActions = ({
   doc,
-  showArticleActionsMenu,
-  setShowArticleActionsMenu,
+  showTranslations = true,
+  scopedMutator,
 }: {
   doc: Doc;
-  showArticleActionsMenu: boolean;
-  setShowArticleActionsMenu: (show: boolean) => void;
+  showTranslations?: boolean;
+  scopedMutator?: KeyedMutator<Item[][]>;
 }) => {
+  const [showArticleActionsMenu, setShowArticleActionsMenu] = useState(false);
   const userData = useUserData();
   const isServer = useIsServer();
   const { fullScreenOverlay, setFullScreenOverlay } = useUIStatus();
@@ -64,10 +68,10 @@ export const ArticleActions = ({
               )}
               {!isServer && isAuthenticated && (
                 <li className="article-actions-entry">
-                  <BookmarkMenu doc={doc} />
+                  <BookmarkMenu doc={doc} scopedMutator={scopedMutator} />
                 </li>
               )}
-              {translations && !!translations.length && (
+              {showTranslations && translations && !!translations.length && (
                 <li className="article-actions-entry">
                   <LanguageMenu
                     onClose={() =>
