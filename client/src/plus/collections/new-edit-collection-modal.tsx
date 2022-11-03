@@ -50,7 +50,7 @@ export default function NewEditCollectionModal({
     HTMLInputElement | HTMLTextAreaElement
   > = (e) => {
     const { name, value } = e.target;
-    setCollection({ ...collection, [name]: value.trimStart() });
+    setCollection({ ...collection, [name]: value });
   };
 
   const cancelHandler = (e: React.MouseEvent | React.KeyboardEvent) => {

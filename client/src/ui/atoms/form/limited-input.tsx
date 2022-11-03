@@ -20,10 +20,18 @@ export default function LimitedInput({ children, value, limit }: Props) {
   const changeWrapper: ChangeWrapper = (callback) => {
     return (e) => {
       const { value: newValue } = e.target;
-      const trimmed = newValue.trimStart();
-      const length = charLength(trimmed);
+      const length = charLength(newValue);
       if (length <= limit || length < charLength(value)) {
         callback(e);
+      } else {
+        // attempt to put cursor back where it was
+        // by default it moves to the end of the input
+        const cursor = e.target.selectionStart;
+        setTimeout(() => {
+          if (cursor !== null) {
+            e.target.setSelectionRange(cursor - 1, cursor - 1);
+          }
+        }, 0);
       }
     };
   };
