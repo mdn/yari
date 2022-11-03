@@ -72,6 +72,15 @@
     width: 100%;
   }
 
+  :invalid {
+    border-color: var(--form-invalid-color);
+
+    &:focus {
+      border-color: var(--form-invalid-focus-color);
+      box-shadow: 0 0 0 3px var(--form-invalid-focus-effect-color);
+    }
+  }
+
   .limit {
     color: var(--form-limit-color);
     font-size: 0.6875rem;
@@ -79,6 +88,10 @@
 
     b {
       color: var(--form-limit-color-emphasis);
+    }
+
+    &.invalid b {
+      color: var(--form-invalid-color);
     }
   }
 }

@@ -171,6 +171,9 @@
 
   --form-limit-color: #{$mdn-color-neutral-60};
   --form-limit-color-emphasis: #{$mdn-color-neutral-70};
+  --form-invalid-color: #{$mdn-color-light-theme-red-60};
+  --form-invalid-focus-color: #{$mdn-color-light-theme-red-50};
+  --form-invalid-focus-effect-color: #{rgba($mdn-color-light-theme-red-50, 0.2)};
 
   color-scheme: light;
 }
@@ -343,6 +346,9 @@
 
   --form-limit-color: #{$mdn-color-neutral-40};
   --form-limit-color-emphasis: #{$mdn-color-neutral-30};
+  --form-invalid-color: #{$mdn-color-light-theme-red-30};
+  --form-invalid-focus-color: #{$mdn-color-light-theme-red-40};
+  --form-invalid-focus-effect-color: #{rgba($mdn-color-light-theme-red-40, 0.2)};
 
   color-scheme: dark;
 }

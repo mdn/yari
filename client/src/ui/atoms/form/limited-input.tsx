@@ -19,20 +19,12 @@ type ChangeWrapper = (
 export default function LimitedInput({ children, value, limit }: Props) {
   const changeWrapper: ChangeWrapper = (callback) => {
     return (e) => {
-      const { value: newValue } = e.target;
-      const length = charLength(newValue);
-      if (length <= limit || length < charLength(value)) {
-        callback(e);
-      } else {
-        // attempt to put cursor back where it was
-        // by default it moves to the end of the input
-        const cursor = e.target.selectionStart;
-        setTimeout(() => {
-          if (cursor !== null) {
-            e.target.setSelectionRange(cursor - 1, cursor - 1);
-          }
-        }, 0);
-      }
+      callback(e);
+      e.target.setCustomValidity(
+        charLength(e.target.value) > limit
+          ? `Please ensure your input is no longer than ${limit} characters.`
+          : ""
+      );
     };
   };
 
@@ -53,9 +45,10 @@ interface LimitProps {
 }
 
 function Limit({ value, limit }: LimitProps) {
+  const length = charLength(value);
   return (
-    <div className="limit">
-      <b>{charLength(value)}</b>/{limit}
+    <div className={"limit" + (length > limit ? " invalid" : "")}>
+      <b>{length}</b>/{limit}
     </div>
   );
 }
