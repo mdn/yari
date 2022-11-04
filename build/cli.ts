@@ -16,7 +16,7 @@ import { VALID_LOCALES } from "../libs/constants";
 import { renderHTML } from "../ssr/dist/main";
 import options from "./build-options";
 import { buildDocument, BuiltDocument, renderContributorsTxt } from ".";
-import { Flaws } from "../libs/types";
+import { DocMetadata, Flaws } from "../libs/types";
 import * as bcd from "@mdn/browser-compat-data/types";
 import SearchIndex from "./search-index";
 import { BUILD_OUT_ROOT } from "../libs/env";
@@ -246,7 +246,7 @@ async function buildDocuments(
     delete builtDocument.toc;
 
     const hash = crypto.createHash("sha256").update(docString).digest("hex");
-    const metadata = { ...builtDocument, hash };
+    const metadata: DocMetadata = { ...builtDocument, hash };
     fs.writeFileSync(
       path.join(outPath, "metadata.json"),
       JSON.stringify(metadata)

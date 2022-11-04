@@ -132,16 +132,13 @@ export type Toc = {
   sub?: boolean;
 };
 
-export interface Doc {
+export interface DocMetadata {
   title: string;
   locale: string;
   native: string;
   pageTitle: string;
   mdn_url: string;
   related_content: any[];
-  sidebarHTML: string;
-  toc: Toc[];
-  body: Section[];
   modified: string;
   flaws: Flaws;
   other_translations?: Translation[];
@@ -158,6 +155,13 @@ export interface Doc {
   popularity?: number;
   noIndexing?: boolean;
   browserCompat?: string[];
+  hash?: string;
+}
+
+export interface Doc extends DocMetadata {
+  sidebarHTML: string;
+  toc: Toc[];
+  body: Section[];
 }
 
 export interface DocFrontmatter {
