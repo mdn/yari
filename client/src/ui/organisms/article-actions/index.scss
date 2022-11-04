@@ -18,7 +18,7 @@
   .article-actions-submenu {
     --gutter-padding: 1rem;
     display: none;
-    overflow: scroll;
+    overflow: auto;
 
     &.show {
       background: var(--background-primary);
