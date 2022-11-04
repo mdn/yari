@@ -157,6 +157,7 @@ export interface Doc {
   // Used for search.
   popularity?: number;
   noIndexing?: boolean;
+  browserCompat?: string[];
 }
 
 export interface DocFrontmatter {
