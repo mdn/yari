@@ -72,13 +72,6 @@ export default function NewEditCollectionModal({
     setShow(false);
   };
 
-  const enterHandler = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "Enter") {
-      e.preventDefault();
-      saveHandler(e);
-    }
-  };
-
   return (
     <MDNModal
       isOpen={show}
@@ -140,7 +133,6 @@ export default function NewEditCollectionModal({
                   name="name"
                   value={collection.name}
                   onChange={changeHandler}
-                  onKeyDown={enterHandler}
                   autoComplete="off"
                   type="text"
                   required={true}
@@ -154,7 +146,6 @@ export default function NewEditCollectionModal({
                   name="description"
                   value={collection.description}
                   onChange={changeHandler}
-                  onKeyDown={enterHandler}
                   autoComplete="off"
                   type="text"
                   disabled={isPending}
