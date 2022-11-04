@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+import crypto from "crypto";
 import fs from "fs";
 import path from "path";
 
@@ -242,6 +243,8 @@ app.get("/*", async (req, res, ...args) => {
   let lookupURL = decodeURI(req.path);
   let extraSuffix = "";
   let bcdDataURL = "";
+  let isMetadata = false;
+  let isDocument = false;
   const bcdDataURLRegex = /\/(bcd-\d+|bcd)\.json$/;
 
   if (req.path.endsWith("index.json")) {
@@ -251,7 +254,12 @@ app.get("/*", async (req, res, ...args) => {
     // and that won't be found in getRedirectUrl() since that doesn't
     // index things with the '/index.json' suffix. So we need to
     // temporarily remove it and remember to but it back when we're done.
+    isDocument = true;
     extraSuffix = "/index.json";
+    lookupURL = lookupURL.replace(extraSuffix, "");
+  } else if (req.path.endsWith("metadata.json")) {
+    isMetadata = true;
+    extraSuffix = "/metadata.json";
     lookupURL = lookupURL.replace(extraSuffix, "");
   } else if (bcdDataURLRegex.test(req.path)) {
     bcdDataURL = req.path;
@@ -304,7 +312,20 @@ app.get("/*", async (req, res, ...args) => {
     );
   }
 
-  if (isJSONRequest) {
+  if (isDocument) {
+    res.json({ doc: document });
+  } else if (isMetadata) {
+    const docString = JSON.stringify({ doc: document });
+    delete document.body;
+    delete document.sidebarHTML;
+    delete document.toc;
+
+    const hash = crypto.createHash("sha256").update(docString).digest("hex");
+    const metadata = { ...document, hash };
+
+    res.json(metadata);
+  } else if (isJSONRequest) {
+    // TODO: what's this for?
     res.json({ doc: document });
   } else {
     res.header("Content-Security-Policy", CSP_VALUE);

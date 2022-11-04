@@ -182,13 +182,10 @@ async function buildDocuments(
       );
     }
 
+    // This is exploiting the fact that renderHTML has the side-effect of
+    // mutating the built document which makes this not great and refactor-worthy.
     const docString = JSON.stringify({ doc: builtDocument });
-    fs.writeFileSync(
-      path.join(outPath, "index.json"),
-      // This is exploiting the fact that renderHTML has the side-effect of
-      // mutating the built document which makes this not great and refactor-worthy.
-      docString
-    );
+    fs.writeFileSync(path.join(outPath, "index.json"), docString);
     fs.writeFileSync(
       path.join(outPath, "contributors.txt"),
       renderContributorsTxt(
@@ -249,10 +246,15 @@ async function buildDocuments(
     delete builtDocument.toc;
 
     const hash = crypto.createHash("sha256").update(docString).digest("hex");
+    const metadata = { ...builtDocument, hash };
+    fs.writeFileSync(
+      path.join(outPath, "metadata.json"),
+      JSON.stringify(metadata)
+    );
     if (metadata[document.metadata.locale]) {
-      metadata[document.metadata.locale].push({ ...builtDocument, hash });
+      metadata[document.metadata.locale].push(metadata);
     } else {
-      metadata[document.metadata.locale] = [{ ...builtDocument, hash }];
+      metadata[document.metadata.locale] = [metadata];
     }
 
     if (!options.noProgressbar) {
