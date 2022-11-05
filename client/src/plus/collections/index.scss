@@ -4,7 +4,7 @@
 .collections-v2 {
   padding: 1rem 0;
 
-  & > header {
+  > header {
     padding: 1rem 0;
 
     &.container {
@@ -65,7 +65,7 @@
         }
       }
 
-      & > * {
+      > * {
         margin-bottom: 1rem;
       }
     }
@@ -97,7 +97,7 @@
     }
   }
 
-  & > .container {
+  > .container {
     display: grid;
     gap: 1em;
 
