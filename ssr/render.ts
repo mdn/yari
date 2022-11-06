@@ -200,8 +200,8 @@ export default function render(
         // code. For example, it's "en", not "en-US". And it's "sv" not "sv-SE".
         // See https://developers.google.com/search/docs/advanced/crawling/localized-versions?hl=en&visit_id=637411409912568511-3980844248&rd=1#language-codes
         translations.push(
-          `<link rel="alternate" title=${htmlEscape(
-            translation.title
+          `<link rel="alternate" title="${htmlEscape(
+            translation.title"
           )} href="https://developer.mozilla.org${translationURL}" hreflang="${getHrefLang(
             translation.locale,
             allOtherLocales
