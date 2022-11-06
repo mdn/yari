@@ -201,8 +201,8 @@ export default function render(
         // See https://developers.google.com/search/docs/advanced/crawling/localized-versions?hl=en&visit_id=637411409912568511-3980844248&rd=1#language-codes
         translations.push(
           `<link rel="alternate" title="${htmlEscape(
-            translation.title"
-          )} href="https://developer.mozilla.org${translationURL}" hreflang="${getHrefLang(
+            translation.title
+          )}" href="https://developer.mozilla.org${translationURL}" hreflang="${getHrefLang(
             translation.locale,
             allOtherLocales
           )}"/>`
