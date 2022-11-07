@@ -5,19 +5,16 @@ const DOCS_RE = /^\/[A-Za-z-]+\/docs\/.*$/i;
 const PLUS_RE = /^\/[A-Za-z-]*\/?plus(?:\/?.*)$/i;
 const CATEGORIES = ["html", "javascript", "css", "api", "http"];
 
-export function docCategory({ pathname = "" } = {}): string | null {
-  const [, , , webOrLearn, category] = pathname.split("/");
-  if (
-    webOrLearn?.toLowerCase() === "learn" ||
-    webOrLearn?.toLowerCase() === "web"
-  ) {
-    if (CATEGORIES.includes(category?.toLocaleLowerCase?.())) {
-      return `category-${category.toLowerCase()}`;
+export function getCategoryByPathname(pathname = ""): string | null {
+  const [, , , webOrLearn, category] = pathname.toLowerCase().split("/");
+  if (webOrLearn === "learn" || webOrLearn === "web") {
+    if (CATEGORIES.includes(category)) {
+      return category;
     }
-    return `category-${webOrLearn.toLowerCase()}`;
+    return webOrLearn;
   }
   if (isHomePage(pathname)) {
-    return `category-home`;
+    return "home";
   }
   return null;
 }
