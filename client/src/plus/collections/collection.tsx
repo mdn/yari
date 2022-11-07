@@ -17,6 +17,7 @@ import {
   useItems,
 } from "./api";
 import NoteCard from "../../ui/molecules/notecards";
+import ExpandingTextarea from "../../ui/atoms/form/expanding-textarea";
 
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
@@ -213,7 +214,9 @@ function ItemEdit({
 
   const { mutator, isPending, error, resetError } = useItemEdit(mutate);
 
-  const changeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const changeHandler = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
     const { name, value } = e.target;
     setFormItem({ ...formItem, [name]: value.trimStart() });
   };
@@ -271,13 +274,12 @@ function ItemEdit({
           </div>
           <div className="mdn-form-item">
             <label htmlFor="item-notes">Notes:</label>
-            <input
+            <ExpandingTextarea
               id="item-notes"
               name="notes"
               value={formItem.notes}
               onChange={changeHandler}
               autoComplete="off"
-              type="text"
               disabled={isPending}
             />
           </div>
