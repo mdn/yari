@@ -75,32 +75,26 @@ program
     tryOrExit(({ args, options, logger }) => {
       const { locales } = args;
       const { strict } = options;
-      let fine = true;
       if (strict) {
         for (const locale of locales) {
           try {
             Redirect.validateLocale(locale, strict);
             logger.info(chalk.green(`✓ redirects for ${locale} looking good!`));
           } catch (e) {
-            logger.info(
-              chalk.red(`_redirects.txt for ${locale} is causing issues: ${e}`)
+            throw new Error(
+              `_redirects.txt for ${locale} is causing issues: ${e}`
             );
-            fine = false;
           }
         }
       } else {
         try {
           Redirect.load(locales, true);
         } catch (e) {
-          logger.info(chalk.red(`Unable to load redirects: ${e}`));
-          fine = false;
+          throw new Error(`Unable to load redirects: ${e}`);
         }
       }
-      if (fine) {
-        logger.info(chalk.green("🍾 All is well in the world of redirects 🥂"));
-      } else {
-        throw new Error("🔥 Errors loading redirects 🔥");
-      }
+
+      logger.info(chalk.green("🍾 All is well in the world of redirects 🥂"));
     })
   )
 
