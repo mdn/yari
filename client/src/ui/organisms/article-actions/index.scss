@@ -147,7 +147,7 @@
       width: 100vw;
       z-index: var(--z-index-low);
 
-      & > .button,
+      > .button,
       .article-actions-entries > li > .button,
       .article-actions-entries > li > div > .button {
         --button-radius: 0;
