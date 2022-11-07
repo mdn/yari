@@ -151,7 +151,7 @@ const CellText = React.memo(
         status = { isSupported: "unknown" };
         break;
       case true:
-        status = { isSupported: "yes" };
+        status = { isSupported: removed ? "no" : "yes" };
         break;
       case false:
         status = { isSupported: "no" };
