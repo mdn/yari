@@ -610,3 +610,8 @@ kbd {
   font-size: 0.825rem;
   padding: 0.25rem;
 }
+
+.loading-error pre {
+  overflow-y: scroll;
+  white-space: pre;
+}
