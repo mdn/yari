@@ -151,8 +151,7 @@ export interface DocMetadata {
   hasMathML?: boolean;
   isMarkdown: boolean;
   summary: string;
-  // Used for search.
-  popularity?: number;
+  popularity?: number; // Used for search.
   noIndexing?: boolean;
   browserCompat?: string[];
   hash?: string;

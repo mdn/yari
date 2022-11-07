@@ -476,9 +476,8 @@ export async function buildDocument(
   doc.native = LANGUAGES.get(doc.locale.toLowerCase())?.native;
   const browserCompat = metadata["browser-compat"];
   doc.browserCompat =
-    browserCompat && Array.isArray(browserCompat)
-      ? browserCompat
-      : [browserCompat];
+    browserCompat &&
+    (Array.isArray(browserCompat) ? browserCompat : [browserCompat]);
 
   // If the document contains <math> HTML, it will set `doc.hasMathML=true`.
   // The client (<Document/> component) needs to know this for loading polyfills.

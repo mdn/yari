@@ -246,15 +246,16 @@ async function buildDocuments(
     delete builtDocument.toc;
 
     const hash = crypto.createHash("sha256").update(docString).digest("hex");
-    const metadata: DocMetadata = { ...builtDocument, hash };
+    const builtMetadata: DocMetadata = { ...builtDocument, hash };
+
     fs.writeFileSync(
       path.join(outPath, "metadata.json"),
-      JSON.stringify(metadata)
+      JSON.stringify(builtMetadata)
     );
-    if (metadata[document.metadata.locale]) {
-      metadata[document.metadata.locale].push(metadata);
+    if (builtMetadata[document.metadata.locale]) {
+      builtMetadata[document.metadata.locale].push(builtMetadata);
     } else {
-      metadata[document.metadata.locale] = [metadata];
+      builtMetadata[document.metadata.locale] = [builtMetadata];
     }
 
     if (!options.noProgressbar) {
