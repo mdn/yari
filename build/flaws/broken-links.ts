@@ -61,8 +61,6 @@ function mutateLink(
     $element.attr("href", suggestion);
   } else if (enUSFallback) {
     $element.attr("href", enUSFallback);
-    // This functionality here should match what we do inside
-    // the `web.smartLink()` function in kumascript rendering.
     $element.append(` <small>(${DEFAULT_LOCALE})<small>`);
     $element.addClass("only-in-en-us");
     $element.attr("title", "Currently only available in English (US)");
