@@ -17,5 +17,5 @@ export default function ExpandingTextarea(
     [value]
   );
 
-  return <textarea {...props} rows={1} ref={resizeCallback} />;
+  return <textarea {...props} rows={2} ref={resizeCallback} />;
 }
