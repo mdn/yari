@@ -12,6 +12,7 @@ import {
   CONTRIBUTOR_SPOTLIGHT_ROOT,
   BUILD_OUT_ROOT,
 } from "../libs/env";
+import { isValidLocale } from "../libs/locale-utils";
 import { DocFrontmatter } from "../libs/types/document";
 // eslint-disable-next-line n/no-missing-require
 import { renderHTML } from "../ssr/dist/main";
@@ -248,7 +249,7 @@ export async function buildSPAs(options) {
       continue;
     }
     for (const locale of fs.readdirSync(root)) {
-      if (!VALID_LOCALES.has(locale)) {
+      if (!isValidLocale(locale)) {
         continue;
       }
       if (!fs.statSync(path.join(root, locale)).isDirectory()) {
