@@ -149,7 +149,7 @@
     "@typescript-eslint/eslint-plugin": "^5.42.0",
     "@typescript-eslint/parser": "^5.42.0",
     "babel-jest": "^29.2.2",
-    "babel-loader": "^8.2.3",
+    "babel-loader": "^9.0.1",
     "babel-plugin-named-asset-import": "^0.3.8",
     "babel-preset-react-app": "^10.0.1",
     "bfj": "^7.0.2",
