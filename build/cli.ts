@@ -241,21 +241,23 @@ async function buildDocuments(
       searchIndex.add(document);
     }
 
-    delete builtDocument.body;
-    delete builtDocument.sidebarHTML;
-    delete builtDocument.toc;
-
     const hash = crypto.createHash("sha256").update(docString).digest("hex");
-    const builtMetadata: DocMetadata = { ...builtDocument, hash };
+    const {
+      body: _,
+      toc: __,
+      sidebarHTML: ___,
+      ...builtMetadata
+    } = builtDocument;
+    builtMetadata.hash = hash;
 
     fs.writeFileSync(
       path.join(outPath, "metadata.json"),
       JSON.stringify(builtMetadata)
     );
-    if (builtMetadata[document.metadata.locale]) {
-      builtMetadata[document.metadata.locale].push(builtMetadata);
+    if (metadata[document.metadata.locale]) {
+      metadata[document.metadata.locale].push(builtMetadata);
     } else {
-      builtMetadata[document.metadata.locale] = [builtMetadata];
+      metadata[document.metadata.locale] = [builtMetadata];
     }
 
     if (!options.noProgressbar) {
