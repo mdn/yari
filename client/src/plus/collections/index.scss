@@ -1,105 +1,114 @@
 @use "../../ui/vars" as *;
 @use "../../ui/mixins" as *;
 
+.collections {
+  color: var(--text-secondary);
+  font-weight: 500;
+  letter-spacing: var(--heading-letter-spacing);
+
+  h1,
+  h2 {
+    color: var(--text-primary);
+    font-size: 1.5rem;
+    font-weight: 700;
+
+    a {
+      color: inherit;
+    }
+  }
+
+  @media screen and (min-width: $screen-md) {
+    .container {
+      max-width: 43rem;
+    }
+  }
+
+  @media screen and (min-width: $screen-lg) {
+    .container {
+      max-width: 52rem;
+    }
+  }
+}
+
 .collections-overview {
-  padding: 1rem 0;
-
   > header {
-    padding: 1rem 0;
+    background: var(--collections-header);
+    overflow: hidden;
+    padding: 1.25rem 0;
 
-    &.container {
-      display: block;
-
-      .collections-hero {
-        background: linear-gradient(
-          270deg,
-          rgba(232, 8, 64, 0.05) 0%,
-          rgba(232, 8, 64, 0.3) 100%
-        );
-        /* Light/Color/Icon/Critical */
-        display: grid;
-        grid-template-rows: fit-content(12rem);
-        margin: 1rem;
-
-        .collections-hero-cta {
-          grid-column: 1;
-          grid-row: 1;
-          padding: 1rem;
-
-          h1 {
-            font-size: 1.25rem;
-            margin-right: 1rem;
-          }
-
-          p {
-            --text-link: var(--html-code-color);
-            display: block;
-            max-width: 80%;
-
-            @media screen and (max-width: $screen-md) {
-              max-width: 100%;
-            }
-          }
-        }
-      }
-
-      .mandala-wrapper {
-        grid-column: 1;
-        grid-row: 1;
-        overflow: hidden;
-        top: 0;
-        width: 100%;
-
-        .mandala-container {
-          --mandala-primary: var(--text-secondary);
-        }
-
-        .mandala-translate {
-          @media screen and (max-width: $screen-md) {
-            display: none;
-          }
-
-          @media screen and (min-width: $screen-md) {
-            transform: scale(0.95) translate(24rem, -15.4rem);
-          }
-        }
-      }
+    .container {
+      position: relative;
 
       > * {
-        margin-bottom: 1rem;
+        position: relative;
       }
-    }
 
-    .exit {
-      flex: 100%;
-      margin-top: -1rem;
-    }
+      .mandala-icon-wrapper {
+        position: relative;
+        display: inline-block;
+        margin-right: 0.5rem;
+        top: -0.2rem;
 
-    h1 {
-      font-size: 20px;
-      margin-right: 1rem;
-    }
+        @media screen and (min-width: $screen-lg) {
+          position: absolute;
+          top: 50%;
+          right: 10rem;
+          transform: translate(0, -50%);
+        }
 
-    .count {
-      color: var(--text-secondary);
-    }
+        .mandala-container {
+          position: absolute;
+          --mandala-primary: var(--collections-mandala);
+          left: 50%;
+          top: 50%;
+          transform: translate(-50%, -49.4%);
+        }
 
-    p {
-      color: var(--text-secondary);
-      margin-top: 0;
-      white-space: pre-wrap;
-    }
+        .icon-bookmark-filled {
+          width: 2rem;
+          height: 2rem;
+          background: var(--collections-icon);
+        }
+      }
 
-    @media screen and (min-width: $screen-md) {
       h1 {
-        font-size: 24px;
+        font-size: 2rem;
+        margin: 0;
+        position: static;
+
+        span {
+          position: relative;
+        }
+      }
+
+      p {
+        margin: 1rem 0;
+      }
+
+      h1 span,
+      p {
+        // improve text contrast against mandala
+        text-shadow: 2px 2px 3px var(--collections-header),
+          2px -2px 3px var(--collections-header),
+          -2px -2px 3px var(--collections-header),
+          -2px 2px 3px var(--collections-header);
+      }
+
+      a {
+        color: var(--collections-link);
+      }
+
+      .button-wrap {
+        font-size: 0.875rem;
+        font-weight: 700;
       }
     }
   }
 
   > .container {
     display: grid;
-    gap: 1em;
+    gap: 1rem;
+    padding: 1rem;
 
     @media screen and (min-width: $screen-md) {
       grid-template-columns: repeat(auto-fill, minmax(20rem, 1fr));
@@ -119,8 +128,6 @@
     color: var(--text-secondary);
     display: flex;
     flex-direction: column;
-    font-weight: 500;
-    letter-spacing: var(--heading-letter-spacing);
     padding: 1rem;
 
     .dropdown-list {
@@ -153,17 +160,15 @@
       }
     }
 
-    .breadcrumbs {
-      color: var(--text-secondary);
-      font-size: var(--type-smaller-font-size);
-      font-style: italic;
-      overflow-wrap: anywhere;
-    }
-
     p {
       margin: 0;
       overflow-wrap: anywhere;
       white-space: pre-wrap;
+      @include line-clamp(
+        4,
+        var(--font-content-line-height),
+        var(--background-primary)
+      );
     }
 
     footer {
@@ -177,7 +182,7 @@
       padding-top: 1rem;
 
       a {
-        color: var(--collections-article-link);
+        color: var(--collections-link);
       }
     }
 
@@ -190,9 +195,5 @@
         display: none;
       }
     }
-  }
-
-  .pagination {
-    grid-column: 1/-1;
   }
 }

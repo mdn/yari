@@ -12,6 +12,7 @@ import NoteCard from "../../ui/molecules/notecards";
 import { DocMetadata } from "../../../../libs/types/document";
 import { Authors, LastModified } from "../../document/organisms/metadata";
 import { ArticleActions } from "../../ui/organisms/article-actions";
+import { MDN_PLUS_TITLE } from "../../constants";
 
 import "./collection.scss";
 
@@ -36,13 +37,14 @@ export default function CollectionComponent() {
   useScrollToTop();
   const name =
     collection?.name === "Default" ? "Saved Articles" : collection?.name;
+  document.title = `${name || "Collections"} | ${MDN_PLUS_TITLE}`;
   const description =
     collection?.name === "Default"
       ? "The default collection."
       : collection?.description;
 
   return collection ? (
-    <div className="collections-collection">
+    <div className="collections collections-collection">
       <header>
         <Container>
           <Link to="../" className="exit">
@@ -83,7 +85,7 @@ export default function CollectionComponent() {
       </Container>
     </div>
   ) : (
-    <div className="collections-collection">
+    <div className="collections collections-collection">
       <header>
         <Container>
           <Link to="../" className="exit">

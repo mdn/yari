@@ -167,7 +167,10 @@
   --text-primary-blue: #{$mdn-color-light-theme-blue-60};
   --text-primary-yellow: #{$mdn-color-light-theme-yellow-60};
 
-  --collections-article-link: #{$mdn-color-light-theme-red-70};
+  --collections-link: #{$mdn-color-light-theme-red-70};
+  --collections-header: #{$mdn-color-light-theme-red-10};
+  --collections-mandala: #{$mdn-color-light-theme-red-30};
+  --collections-icon: #{$mdn-color-light-theme-red-50};
 
   --form-limit-color: #{$mdn-color-neutral-60};
   --form-limit-color-emphasis: #{$mdn-color-neutral-70};
@@ -342,7 +345,10 @@
   --text-primary-blue: #{$mdn-color-dark-theme-blue-30};
   --text-primary-yellow: #{$mdn-color-dark-theme-yellow-30};
 
-  --collections-article-link: #{$mdn-color-dark-theme-red-30};
+  --collections-link: #{$mdn-color-dark-theme-red-30};
+  --collections-header: #{$mdn-color-dark-theme-red-90};
+  --collections-mandala: #{$mdn-color-dark-theme-red-70};
+  --collections-icon: #{$mdn-color-dark-theme-red-60};
 
   --form-limit-color: #{$mdn-color-neutral-40};
   --form-limit-color-emphasis: #{$mdn-color-neutral-30};

@@ -130,6 +130,8 @@ body {
 
 main {
   min-height: 80vh;
+  // prevent margin-collapse for child elements
+  overflow-x: auto;
 }
 
 .about-container,
