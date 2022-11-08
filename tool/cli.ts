@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+import { isValidLocale } from "../libs/locale-utils";
 import type { Doc } from "../libs/types/document";
 
 const fs = require("fs");
@@ -426,7 +427,7 @@ program
       const allHistory = {};
       for (const [relPath, value] of map) {
         const locale = relPath.split(path.sep)[0];
-        if (!VALID_LOCALES.has(locale)) {
+        if (!isValidLocale(locale)) {
           continue;
         }
         allHistory[relPath] = value;

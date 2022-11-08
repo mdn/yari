@@ -926,7 +926,7 @@
   dependencies:
     "@yari-internal/constants" "file:../../../libs/constants"
     "@yari-internal/fundamental-redirects" "file:../../../libs/fundamental-redirects"
-    "@yari-internal/get-locale" "file:../../../libs/get-locale"
+    "@yari-internal/locale-utils" "file:../../../libs/locale-utils"
     "@yari-internal/slug-utils" "file:../../../libs/slug-utils"
     accept-language-parser "^1.5.0"
     cookie "0.5.0"
@@ -940,7 +940,7 @@
 "@yari-internal/fundamental-redirects@file:../../../libs/fundamental-redirects":
   version "0.0.1"
 
-"@yari-internal/get-locale@file:../../../libs/get-locale":
+"@yari-internal/locale-utils@file:../../../libs/locale-utils":
   version "0.0.1"
 
 "@yari-internal/slug-utils@file:../../../libs/slug-utils":
