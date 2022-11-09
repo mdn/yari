@@ -651,7 +651,9 @@ function _addSingleSpecialSection(
             specURL.startsWith(spec.url) ||
             specURL.startsWith(spec.nightly.url) ||
             spec.nightly.alternateUrls.some((s) => specURL.startsWith(s)) ||
-            specURL.startsWith(spec.series.nightlyUrl)
+            // When grabbing series nightly, make sure we're grabbing the latest spec version
+            (spec.shortname === spec.series.currentSpecification &&
+              specURL.startsWith(spec.series.nightlyUrl))
         );
         const specificationsData = {
           bcdSpecificationURL: specURL,
