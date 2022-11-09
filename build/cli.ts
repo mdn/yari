@@ -297,6 +297,20 @@ function formatTotalFlaws(flawsCountMap, header = "Total_Flaws_Count") {
   return out.join("\n");
 }
 
+interface BuildArgsAndOptions {
+  args: {
+    files?: string[];
+  };
+  options: {
+    quiet?: boolean;
+    interactive?: boolean;
+    nohtml?: boolean;
+    locale?: string[];
+    notLocale?: string[];
+    sitemapIndex?: boolean;
+  };
+}
+
 program
   .name("build")
   .option("-i, --interactive", "Ask what to do when encountering flaws", {
@@ -317,153 +331,133 @@ program
     default: false,
   })
   .argument("[files...]", "specific files to build")
-  .action(
-    async ({
-      args,
-      options,
-    }: {
-      args: {
-        files?: string[];
-      };
-      options: {
-        quiet?: boolean;
-        interactive?: boolean;
-        nohtml?: boolean;
-        locale?: string[];
-        notLocale?: string[];
-        sitemapIndex?: boolean;
-      };
-    }) => {
-      try {
+  .action(async ({ args, options }: BuildArgsAndOptions) => {
+    try {
+      if (!options.quiet) {
+        const roots = [
+          ["CONTENT_ROOT", CONTENT_ROOT],
+          ["CONTENT_TRANSLATED_ROOT", CONTENT_TRANSLATED_ROOT],
+        ];
+        for (const [key, value] of roots) {
+          console.log(
+            `${chalk.grey((key + ":").padEnd(25, " "))}${
+              value ? chalk.white(value) : chalk.grey("not set")
+            }`
+          );
+        }
+      }
+
+      if (options.sitemapIndex) {
         if (!options.quiet) {
-          const roots = [
-            ["CONTENT_ROOT", CONTENT_ROOT],
-            ["CONTENT_TRANSLATED_ROOT", CONTENT_TRANSLATED_ROOT],
-          ];
-          for (const [key, value] of roots) {
-            console.log(
-              `${chalk.grey((key + ":").padEnd(25, " "))}${
-                value ? chalk.white(value) : chalk.grey("not set")
-              }`
-            );
+          console.log(chalk.yellow("Building sitemap index file..."));
+        }
+        const sitemapsBuilt = [];
+        const locales = [];
+        for (const locale of VALID_LOCALES.keys()) {
+          const sitemapFilePath = path.join(
+            BUILD_OUT_ROOT,
+            "sitemaps",
+            locale,
+            "sitemap.xml.gz"
+          );
+          if (fs.existsSync(sitemapFilePath)) {
+            sitemapsBuilt.push(sitemapFilePath);
+            locales.push(locale);
           }
         }
 
-        if (options.sitemapIndex) {
-          if (!options.quiet) {
-            console.log(chalk.yellow("Building sitemap index file..."));
-          }
-          const sitemapsBuilt = [];
-          const locales = [];
-          for (const locale of VALID_LOCALES.keys()) {
-            const sitemapFilePath = path.join(
-              BUILD_OUT_ROOT,
-              "sitemaps",
-              locale,
-              "sitemap.xml.gz"
-            );
-            if (fs.existsSync(sitemapFilePath)) {
-              sitemapsBuilt.push(sitemapFilePath);
-              locales.push(locale);
-            }
-          }
-
-          const sitemapIndexFilePath = path.join(BUILD_OUT_ROOT, "sitemap.xml");
-          fs.writeFileSync(
-            sitemapIndexFilePath,
-            makeSitemapIndexXML(
-              sitemapsBuilt.map((fp) => fp.replace(BUILD_OUT_ROOT, ""))
-            )
-          );
-
-          if (!options.quiet) {
-            console.log(
-              chalk.green(
-                `Sitemap index file built with locales: ${locales.join(", ")}.`
-              )
-            );
-          }
-          return;
-        }
-        const { files } = args;
-
-        let locales = new Map();
-        if (options.notLocale && options.notLocale.length > 0) {
-          if (options.locale && options.locale.length) {
-            throw new Error(
-              "Can't use --not-locale and --locale at the same time"
-            );
-          }
-          const notLocales = Array.isArray(options.notLocale)
-            ? options.notLocale
-            : [options.notLocale];
-
-          locales = new Map(
-            [...VALID_LOCALES.keys()]
-              .filter((locale) => !notLocales.includes(locale))
-              .map((locale) => [locale, true])
-          );
-        } else {
-          // 'true' means we include this locale and all others get excluded.
-          // Some day we might make it an option to set `--not-locale` to
-          // filter out specific locales.
-          locales = new Map(
-            // The `options.locale` is either an empty array (e.g. no --locale used),
-            // a string (e.g. one single --locale) or an array of strings
-            // (e.g. multiple --locale options).
-            (Array.isArray(options.locale)
-              ? options.locale
-              : [options.locale]
-            ).map((locale) => [locale, true])
-          );
-        }
-
-        const t0 = new Date();
-        const { slugPerLocale, peakHeapBytes, totalFlaws } =
-          await buildDocuments(
-            files,
-            Boolean(options.quiet),
-            Boolean(options.interactive),
-            Boolean(options.nohtml),
-            locales
-          );
-        const t1 = new Date();
-        const count = Object.values(slugPerLocale).reduce(
-          (a, b) => a + b.length,
-          0
+        const sitemapIndexFilePath = path.join(BUILD_OUT_ROOT, "sitemap.xml");
+        fs.writeFileSync(
+          sitemapIndexFilePath,
+          makeSitemapIndexXML(
+            sitemapsBuilt.map((fp) => fp.replace(BUILD_OUT_ROOT, ""))
+          )
         );
-        const seconds = (t1.getTime() - t0.getTime()) / 1000;
-        const took =
-          seconds > 60
-            ? `${(seconds / 60).toFixed(1)} minutes`
-            : `${seconds.toFixed(1)} seconds`;
+
         if (!options.quiet) {
           console.log(
             chalk.green(
-              `Built ${count.toLocaleString()} pages in ${took}, at a rate of ${(
-                count / seconds
-              ).toFixed(1)} documents per second.`
+              `Sitemap index file built with locales: ${locales.join(", ")}.`
             )
           );
-          if (locales.size) {
-            console.log(
-              chalk.yellow(
-                `(only building locales: ${[...locales.keys()].join(", ")})`
-              )
-            );
-          }
-          console.log(
-            `Peak heap memory usage: ${humanFileSize(peakHeapBytes)}`
-          );
-          console.log(formatTotalFlaws(totalFlaws));
         }
-      } catch (error) {
-        // So you get a stacktrace in the CLI output
-        console.error(error);
-        // So that the CLI ultimately fails
-        throw error;
+        return;
       }
+      const { files } = args;
+
+      let locales = new Map();
+      if (options.notLocale && options.notLocale.length > 0) {
+        if (options.locale && options.locale.length) {
+          throw new Error(
+            "Can't use --not-locale and --locale at the same time"
+          );
+        }
+        const notLocales = Array.isArray(options.notLocale)
+          ? options.notLocale
+          : [options.notLocale];
+
+        locales = new Map(
+          [...VALID_LOCALES.keys()]
+            .filter((locale) => !notLocales.includes(locale))
+            .map((locale) => [locale, true])
+        );
+      } else {
+        // 'true' means we include this locale and all others get excluded.
+        // Some day we might make it an option to set `--not-locale` to
+        // filter out specific locales.
+        locales = new Map(
+          // The `options.locale` is either an empty array (e.g. no --locale used),
+          // a string (e.g. one single --locale) or an array of strings
+          // (e.g. multiple --locale options).
+          (Array.isArray(options.locale)
+            ? options.locale
+            : [options.locale]
+          ).map((locale) => [locale, true])
+        );
+      }
+
+      const t0 = new Date();
+      const { slugPerLocale, peakHeapBytes, totalFlaws } = await buildDocuments(
+        files,
+        Boolean(options.quiet),
+        Boolean(options.interactive),
+        Boolean(options.nohtml),
+        locales
+      );
+      const t1 = new Date();
+      const count = Object.values(slugPerLocale).reduce(
+        (a, b) => a + b.length,
+        0
+      );
+      const seconds = (t1.getTime() - t0.getTime()) / 1000;
+      const took =
+        seconds > 60
+          ? `${(seconds / 60).toFixed(1)} minutes`
+          : `${seconds.toFixed(1)} seconds`;
+      if (!options.quiet) {
+        console.log(
+          chalk.green(
+            `Built ${count.toLocaleString()} pages in ${took}, at a rate of ${(
+              count / seconds
+            ).toFixed(1)} documents per second.`
+          )
+        );
+        if (locales.size) {
+          console.log(
+            chalk.yellow(
+              `(only building locales: ${[...locales.keys()].join(", ")})`
+            )
+          );
+        }
+        console.log(`Peak heap memory usage: ${humanFileSize(peakHeapBytes)}`);
+        console.log(formatTotalFlaws(totalFlaws));
+      }
+    } catch (error) {
+      // So you get a stacktrace in the CLI output
+      console.error(error);
+      // So that the CLI ultimately fails
+      throw error;
     }
-  );
+  });
 
 program.run();

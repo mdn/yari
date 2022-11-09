@@ -6,6 +6,17 @@ import { program } from "@caporal/core";
 import { runChecker } from "./checker";
 import { MAX_COMPRESSION_DIFFERENCE_PERCENTAGE } from "../libs/constants";
 
+interface FilecheckArgsAndOptions {
+  args: {
+    files?: string[];
+  };
+  options: {
+    cwd?: string;
+    maxCompressionDifferencePercentage?: number;
+    saveCompression?: boolean;
+  };
+}
+
 program
   .version("0.0.0")
   .option("--cwd <path>", "Explicit current-working-directory", {
@@ -24,30 +35,16 @@ program
     validator: program.BOOLEAN,
   })
   .argument("[files...]", "list of files to check")
-  .action(
-    ({
-      args,
-      options,
-    }: {
-      args: {
-        files?: string[];
-      };
-      options: {
-        cwd?: string;
-        maxCompressionDifferencePercentage?: number;
-        saveCompression?: boolean;
-      };
-    }) => {
-      const cwd = options.cwd || process.cwd();
-      const allFilePaths = (args.files || []).map((f) => path.resolve(cwd, f));
-      if (!allFilePaths.length) {
-        throw new Error("no files to check");
-      }
-      return runChecker(allFilePaths, options).catch((error) => {
-        console.error(error);
-        process.exit(1);
-      });
+  .action(({ args, options }: FilecheckArgsAndOptions) => {
+    const cwd = options.cwd || process.cwd();
+    const allFilePaths = (args.files || []).map((f) => path.resolve(cwd, f));
+    if (!allFilePaths.length) {
+      throw new Error("no files to check");
     }
-  );
+    return runChecker(allFilePaths, options).catch((error) => {
+      console.error(error);
+      process.exit(1);
+    });
+  });
 
 program.run();

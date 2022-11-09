@@ -49,6 +49,83 @@ interface Options {
   verbose?: boolean;
 }
 
+interface DeleteArgsAndOptions {
+  args: {
+    slug: string;
+    locale: string;
+  };
+  options: {
+    recursive: boolean;
+    redirect?: string;
+    yes: boolean;
+  };
+}
+
+interface ValidateArgsAndOptions {
+  args: {
+    slug: string;
+    locale: string;
+  };
+}
+
+interface PreviewArgsAndOptions {
+  args: {
+    slug: string;
+    locale: string;
+  };
+  options: {
+    hostname: string;
+    port: string;
+  };
+}
+
+interface SyncTranslatedContentArgsAndOptions {
+  args: {
+    locale: string[];
+  };
+  options: {
+    verbose: boolean;
+  };
+}
+
+interface FixFlawsArgsAndOptions {
+  args: {
+    fixFlawsTypes: string[];
+  };
+  options: {
+    locale: string;
+    fileTypes: string[];
+  };
+}
+
+interface FlawsArgsAndOptions {
+  args: {
+    slug: string;
+    locale: string;
+  };
+  options: {
+    yes: boolean;
+  };
+}
+
+interface PopularitiesArgsAndOptions {
+  options: {
+    outfile: string;
+    maxUris: number;
+    refresh: boolean;
+  };
+  logger: Logger;
+}
+
+interface BuildRobotsTxtArgsAndOptions {
+  options: {
+    outfile: string;
+    maxUris: number;
+    refresh: boolean;
+  };
+  logger: Logger;
+}
+
 function tryOrExit(f) {
   return async ({ options = {}, ...args }: { options: Options }) => {
     try {
@@ -156,62 +233,47 @@ program
   )
   .option("-y, --yes", "Assume yes", { default: false })
   .action(
-    tryOrExit(
-      async ({
-        args,
-        options,
-      }: {
-        args: {
-          slug: string;
-          locale: string;
-        };
-        options: {
-          recursive: boolean;
-          redirect?: string;
-          yes: boolean;
-        };
-      }) => {
-        const { slug, locale } = args;
-        const { recursive, redirect, yes } = options;
-        const changes = Document.remove(slug, locale, {
+    tryOrExit(async ({ args, options }: DeleteArgsAndOptions) => {
+      const { slug, locale } = args;
+      const { recursive, redirect, yes } = options;
+      const changes = Document.remove(slug, locale, {
+        recursive,
+        redirect,
+        dry: true,
+      });
+      console.log(chalk.green(`Will remove ${changes.length} documents:`));
+      console.log(chalk.red(changes.join("\n")));
+      if (redirect) {
+        console.log(
+          chalk.green(
+            `Redirecting ${
+              recursive ? "each document" : "document"
+            } to: ${redirect}`
+          )
+        );
+      } else {
+        console.error(
+          chalk.yellow(
+            "Deleting without a redirect. Consider using the --redirect option with a related page instead."
+          )
+        );
+      }
+      const { run } = yes
+        ? { run: true }
+        : await prompt({
+            type: "confirm",
+            message: "Proceed?",
+            name: "run",
+            default: true,
+          });
+      if (run) {
+        const removed = Document.remove(slug, locale, {
           recursive,
           redirect,
-          dry: true,
         });
-        console.log(chalk.green(`Will remove ${changes.length} documents:`));
-        console.log(chalk.red(changes.join("\n")));
-        if (redirect) {
-          console.log(
-            chalk.green(
-              `Redirecting ${
-                recursive ? "each document" : "document"
-              } to: ${redirect}`
-            )
-          );
-        } else {
-          console.error(
-            chalk.yellow(
-              "Deleting without a redirect. Consider using the --redirect option with a related page instead."
-            )
-          );
-        }
-        const { run } = yes
-          ? { run: true }
-          : await prompt({
-              type: "confirm",
-              message: "Proceed?",
-              name: "run",
-              default: true,
-            });
-        if (run) {
-          const removed = Document.remove(slug, locale, {
-            recursive,
-            redirect,
-          });
-          console.log(chalk.green(`Moved ${removed.length} documents.`));
-        }
+        console.log(chalk.green(`Moved ${removed.length} documents.`));
       }
-    )
+    })
   )
 
   .command("move", "Move content to a new slug")
@@ -339,41 +401,32 @@ program
     validator: [...VALID_LOCALES.values()],
   })
   .action(
-    tryOrExit(
-      async ({
-        args,
-      }: {
-        args: {
-          slug: string;
-          locale: string;
-        };
-      }) => {
-        const { slug, locale } = args;
-        let okay = true;
-        const document = Document.findByURL(buildURL(locale, slug));
-        if (!document) {
-          throw new Error(`Slug ${slug} does not exist for ${locale}`);
-        }
-        const { doc }: { doc: Doc } = await buildDocument(document);
-
-        const flaws = Object.values(doc.flaws || {})
-          .map((a) => a.length || 0)
-          .reduce((a, b) => a + b, 0);
-        if (flaws > 0) {
-          console.log(chalk.red(`Found ${flaws} flaws.`));
-          okay = false;
-        }
-        try {
-          Document.validate(slug, locale);
-        } catch (e) {
-          console.log(chalk.red(e));
-          okay = false;
-        }
-        if (okay) {
-          console.log(chalk.green("✓ All seems fine"));
-        }
+    tryOrExit(async ({ args }: ValidateArgsAndOptions) => {
+      const { slug, locale } = args;
+      let okay = true;
+      const document = Document.findByURL(buildURL(locale, slug));
+      if (!document) {
+        throw new Error(`Slug ${slug} does not exist for ${locale}`);
       }
-    )
+      const { doc }: { doc: Doc } = await buildDocument(document);
+
+      const flaws = Object.values(doc.flaws || {})
+        .map((a) => a.length || 0)
+        .reduce((a, b) => a + b, 0);
+      if (flaws > 0) {
+        console.log(chalk.red(`Found ${flaws} flaws.`));
+        okay = false;
+      }
+      try {
+        Document.validate(slug, locale);
+      } catch (e) {
+        console.log(chalk.red(e));
+        okay = false;
+      }
+      if (okay) {
+        console.log(chalk.green("✓ All seems fine"));
+      }
+    })
   )
 
   .command("preview", "Open a preview of a slug")
@@ -389,87 +442,73 @@ program
     validator: [...VALID_LOCALES.values()],
   })
   .action(
-    tryOrExit(
-      async ({
-        args,
-        options,
-      }: {
-        args: {
-          slug: string;
-          locale: string;
-        };
-        options: {
-          hostname: string;
-          port: string;
-        };
-      }) => {
-        const { slug, locale } = args;
-        const { hostname, port } = options;
-        let url: string;
-        // Perhaps they typed in a path relative to the content root
+    tryOrExit(async ({ args, options }: PreviewArgsAndOptions) => {
+      const { slug, locale } = args;
+      const { hostname, port } = options;
+      let url: string;
+      // Perhaps they typed in a path relative to the content root
+      if (
+        (slug.startsWith("files") || fs.existsSync(slug)) &&
+        (slug.endsWith("index.html") || slug.endsWith("index.md"))
+      ) {
         if (
-          (slug.startsWith("files") || fs.existsSync(slug)) &&
-          (slug.endsWith("index.html") || slug.endsWith("index.md"))
-        ) {
-          if (
-            fs.existsSync(slug) &&
-            slug.includes("translated-content") &&
-            !CONTENT_TRANSLATED_ROOT
-          ) {
-            // Such an easy mistake to make that you pass it a file path
-            // that comes from the translated-content repo but forgot to
-            // set the environment variable first.
-            console.warn(
-              chalk.yellow(
-                `Did you forget to set the environment variable ${chalk.bold(
-                  "CONTENT_TRANSLATED_ROOT"
-                )}?`
-              )
-            );
-          }
-          const slugSplit = slug
-            .replace(CONTENT_ROOT, "")
-            .replace(CONTENT_TRANSLATED_ROOT ? CONTENT_TRANSLATED_ROOT : "", "")
-            .split(path.sep);
-          const document = Document.read(
-            // Remove that leading 'files' and the trailing 'index.(html|md)'
-            slugSplit.slice(1, -1).join(path.sep)
-          );
-          if (document) {
-            url = document.url;
-          }
-        } else if (
-          slug.includes(BUILD_OUT_ROOT) &&
           fs.existsSync(slug) &&
-          fs.existsSync(path.join(slug, "index.json"))
+          slug.includes("translated-content") &&
+          !CONTENT_TRANSLATED_ROOT
         ) {
-          // Someone probably yarn `yarn build` and copy-n-pasted one of the lines
-          // it spits out from its CLI.
-          const { doc } = JSON.parse(
-            fs.readFileSync(path.join(slug, "index.json"), "utf-8")
+          // Such an easy mistake to make that you pass it a file path
+          // that comes from the translated-content repo but forgot to
+          // set the environment variable first.
+          console.warn(
+            chalk.yellow(
+              `Did you forget to set the environment variable ${chalk.bold(
+                "CONTENT_TRANSLATED_ROOT"
+              )}?`
+            )
           );
-          if (doc) {
-            url = doc.mdn_url;
-          }
-        } else {
-          try {
-            const parsed = new URL(slug);
-            url = parsed.pathname + parsed.hash;
-          } catch (err) {
-            // If the `new URL()` constructor fails, it's probably not a URL
-          }
-          if (!url) {
-            url = buildURL(locale, slug);
-          }
         }
-
+        const slugSplit = slug
+          .replace(CONTENT_ROOT, "")
+          .replace(CONTENT_TRANSLATED_ROOT ? CONTENT_TRANSLATED_ROOT : "", "")
+          .split(path.sep);
+        const document = Document.read(
+          // Remove that leading 'files' and the trailing 'index.(html|md)'
+          slugSplit.slice(1, -1).join(path.sep)
+        );
+        if (document) {
+          url = document.url;
+        }
+      } else if (
+        slug.includes(BUILD_OUT_ROOT) &&
+        fs.existsSync(slug) &&
+        fs.existsSync(path.join(slug, "index.json"))
+      ) {
+        // Someone probably yarn `yarn build` and copy-n-pasted one of the lines
+        // it spits out from its CLI.
+        const { doc } = JSON.parse(
+          fs.readFileSync(path.join(slug, "index.json"), "utf-8")
+        );
+        if (doc) {
+          url = doc.mdn_url;
+        }
+      } else {
+        try {
+          const parsed = new URL(slug);
+          url = parsed.pathname + parsed.hash;
+        } catch (err) {
+          // If the `new URL()` constructor fails, it's probably not a URL
+        }
         if (!url) {
-          throw new Error(`Unable to turn '${slug}' into an absolute URL`);
+          url = buildURL(locale, slug);
         }
-        const absoluteURL = `http://${hostname}:${port}${url}`;
-        await open(absoluteURL);
       }
-    )
+
+      if (!url) {
+        throw new Error(`Unable to turn '${slug}' into an absolute URL`);
+      }
+      const absoluteURL = `http://${hostname}:${port}${url}`;
+      await open(absoluteURL);
+    })
   )
 
   .command(
@@ -571,17 +610,7 @@ program
   })
   .action(
     tryOrExit(
-      async ({
-        args,
-        options,
-      }: {
-        args: {
-          locale: string[];
-        };
-        options: {
-          verbose: boolean;
-        };
-      }) => {
+      async ({ args, options }: SyncTranslatedContentArgsAndOptions) => {
         const { locale } = args;
         const { verbose } = options;
         if (verbose) {
@@ -622,35 +651,22 @@ program
     validator: [...VALID_FLAW_CHECKS],
   })
   .action(
-    tryOrExit(
-      async ({
-        args,
-        options,
-      }: {
-        args: {
-          fixFlawsTypes: string[];
-        };
-        options: {
-          locale: string;
-          fileTypes: string[];
-        };
-      }) => {
-        const { fixFlawsTypes } = args;
-        const { locale, fileTypes } = options;
-        const allDocs = Document.findAll({
-          locales: new Map([[locale.toLowerCase(), true]]),
-        });
-        for (const document of allDocs.iter()) {
-          if (fileTypes.includes(document.isMarkdown ? "md" : "html")) {
-            await buildDocument(document, {
-              fixFlaws: true,
-              fixFlawsTypes: new Set(fixFlawsTypes),
-              fixFlawsVerbose: true,
-            });
-          }
+    tryOrExit(async ({ args, options }: FixFlawsArgsAndOptions) => {
+      const { fixFlawsTypes } = args;
+      const { locale, fileTypes } = options;
+      const allDocs = Document.findAll({
+        locales: new Map([[locale.toLowerCase(), true]]),
+      });
+      for (const document of allDocs.iter()) {
+        if (fileTypes.includes(document.isMarkdown ? "md" : "html")) {
+          await buildDocument(document, {
+            fixFlaws: true,
+            fixFlawsTypes: new Set(fixFlawsTypes),
+            fixFlawsVerbose: true,
+          });
         }
       }
-    )
+    })
   )
 
   .command("flaws", "Find (and fix) flaws in a document")
@@ -661,50 +677,37 @@ program
   })
   .option("-y, --yes", "Assume yes", { default: false })
   .action(
-    tryOrExit(
-      async ({
-        args,
-        options,
-      }: {
-        args: {
-          slug: string;
-          locale: string;
-        };
-        options: {
-          yes: boolean;
-        };
-      }) => {
-        const { slug, locale } = args;
-        const { yes } = options;
-        const document = Document.findByURL(buildURL(locale, slug));
-        if (!document) {
-          throw new Error(`Slug ${slug} does not exist for ${locale}`);
-        }
-        const { doc }: { doc: Doc } = await buildDocument(document, {
-          fixFlaws: true,
-          fixFlawsDryRun: true,
-        });
-
-        const flaws = Object.values(doc.flaws || {})
-          .map((a) => a.filter((f) => f.fixable).length || 0)
-          .reduce((a, b) => a + b, 0);
-        if (flaws === 0) {
-          console.log(chalk.green("Found no fixable flaws!"));
-          return;
-        }
-        const { run } = yes
-          ? { run: true }
-          : await prompt({
-              type: "confirm",
-              message: `Proceed fixing ${flaws} flaws?`,
-              name: "run",
-              default: true,
-            });
-        if (run) {
-          buildDocument(document, { fixFlaws: true, fixFlawsVerbose: true });
-        }
+    tryOrExit(async ({ args, options }: FlawsArgsAndOptions) => {
+      const { slug, locale } = args;
+      const { yes } = options;
+      const document = Document.findByURL(buildURL(locale, slug));
+      if (!document) {
+        throw new Error(`Slug ${slug} does not exist for ${locale}`);
       }
-    )
+      const { doc }: { doc: Doc } = await buildDocument(document, {
+        fixFlaws: true,
+        fixFlawsDryRun: true,
+      });
+
+      const flaws = Object.values(doc.flaws || {})
+        .map((a) => a.filter((f) => f.fixable).length || 0)
+        .reduce((a, b) => a + b, 0);
+      if (flaws === 0) {
+        console.log(chalk.green("Found no fixable flaws!"));
+        return;
+      }
+      const { run } = yes
+        ? { run: true }
+        : await prompt({
+            type: "confirm",
+            message: `Proceed fixing ${flaws} flaws?`,
+            name: "run",
+            default: true,
+          });
+      if (run) {
+        buildDocument(document, { fixFlaws: true, fixFlawsVerbose: true });
+      }
+    })
   )
 
   .command("redundant-translations", "Find redundant translations")
@@ -782,60 +785,44 @@ program
     default: false,
   })
   .action(
-    tryOrExit(
-      async ({
-        options,
-        logger,
-      }: {
-        options: {
-          outfile: string;
-          maxUris: number;
-          refresh: boolean;
-        };
-        logger: Logger;
-      }) => {
-        const { refresh, outfile } = options;
-        if (!refresh && fs.existsSync(outfile)) {
-          const stat = fs.statSync(outfile);
-          logger.info(
-            chalk.yellow(
-              `Reusing exising ${outfile} (${stat.mtime}) for popularities.`
-            )
-          );
-          logger.info(
-            `Reset ${outfile} by running: yarn tool popularities --refresh`
-          );
-          return;
-        }
-        const { rowCount, popularities, pageviews } =
-          await runMakePopularitiesFile(options);
-        logger.info(chalk.green(`Parsed ${rowCount.toLocaleString()} rows.`));
-
-        const numberKeys = Object.keys(popularities).length;
+    tryOrExit(async ({ options, logger }: PopularitiesArgsAndOptions) => {
+      const { refresh, outfile } = options;
+      if (!refresh && fs.existsSync(outfile)) {
+        const stat = fs.statSync(outfile);
         logger.info(
-          chalk.green(
-            `Wrote ${numberKeys.toLocaleString()} pages' popularities.`
+          chalk.yellow(
+            `Reusing exising ${outfile} (${stat.mtime}) for popularities.`
           )
         );
-
-        logger.debug("25 most popular URIs...");
-        pageviews.slice(0, 25).forEach(([uri, popularity], i) => {
-          logger.debug(
-            `${`${i}`.padEnd(2)} ${uri.padEnd(75)} ${popularity.toFixed(5)}`
-          );
-        });
-        function fmtBytes(bytes) {
-          return `${(bytes / 1024 / 1024).toFixed(1)}MB`;
-        }
         logger.info(
-          chalk.green(
-            `${options.outfile} is ${fmtBytes(
-              fs.statSync(options.outfile).size
-            )}`
-          )
+          `Reset ${outfile} by running: yarn tool popularities --refresh`
         );
+        return;
       }
-    )
+      const { rowCount, popularities, pageviews } =
+        await runMakePopularitiesFile(options);
+      logger.info(chalk.green(`Parsed ${rowCount.toLocaleString()} rows.`));
+
+      const numberKeys = Object.keys(popularities).length;
+      logger.info(
+        chalk.green(`Wrote ${numberKeys.toLocaleString()} pages' popularities.`)
+      );
+
+      logger.debug("25 most popular URIs...");
+      pageviews.slice(0, 25).forEach(([uri, popularity], i) => {
+        logger.debug(
+          `${`${i}`.padEnd(2)} ${uri.padEnd(75)} ${popularity.toFixed(5)}`
+        );
+      });
+      function fmtBytes(bytes) {
+        return `${(bytes / 1024 / 1024).toFixed(1)}MB`;
+      }
+      logger.info(
+        chalk.green(
+          `${options.outfile} is ${fmtBytes(fs.statSync(options.outfile).size)}`
+        )
+      );
+    })
   )
 
   .command(
@@ -907,28 +894,18 @@ if (Mozilla && !Mozilla.dntEnabled()) {
     default: path.join(BUILD_OUT_ROOT, "robots.txt"),
   })
   .action(
-    tryOrExit(
-      async ({
-        options,
-        logger,
-      }: {
-        options: {
-          outfile: string;
-        };
-        logger: Logger;
-      }) => {
-        const { outfile } = options;
-        await runBuildRobotsTxt(outfile);
-        logger.info(
-          chalk.yellow(
-            `Generated ${path.relative(
-              ".",
-              outfile
-            )} based on ALWAYS_ALLOW_ROBOTS=${ALWAYS_ALLOW_ROBOTS}`
-          )
-        );
-      }
-    )
+    tryOrExit(async ({ options, logger }: BuildRobotsTxtArgsAndOptions) => {
+      const { outfile } = options;
+      await runBuildRobotsTxt(outfile);
+      logger.info(
+        chalk.yellow(
+          `Generated ${path.relative(
+            ".",
+            outfile
+          )} based on ALWAYS_ALLOW_ROBOTS=${ALWAYS_ALLOW_ROBOTS}`
+        )
+      );
+    })
   )
 
   .command("spas", "Build (SSR) all the skeleton apps for single page apps")
