@@ -129,9 +129,9 @@ body {
 }
 
 main {
-  min-height: 80vh;
   // prevent margin-collapse for child elements
-  overflow-x: auto;
+  display: flow-root;
+  min-height: 80vh;
 }
 
 .about-container,
