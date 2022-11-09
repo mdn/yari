@@ -316,14 +316,12 @@ app.get("/*", async (req, res, ...args) => {
     res.json({ doc: document });
   } else if (isMetadata) {
     const docString = JSON.stringify({ doc: document });
-    delete document.body;
-    delete document.sidebarHTML;
-    delete document.toc;
 
     const hash = crypto.createHash("sha256").update(docString).digest("hex");
-    const metadata = { ...document, hash };
+    const { body: _, toc: __, sidebarHTML: ___, ...builtMetadata } = document;
+    builtMetadata.hash = hash;
 
-    res.json(metadata);
+    res.json(builtMetadata);
   } else if (isJSONRequest) {
     // TODO: what's this for?
     res.json({ doc: document });
