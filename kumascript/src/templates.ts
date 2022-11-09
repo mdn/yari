@@ -23,9 +23,9 @@
  * template names to the name of the file that implements the
  * template (this is used by the /macros/ endpoint in server.js)
  */
-const fs = require("fs");
-const path = require("path");
-const ejs = require("ejs");
+import fs from "fs";
+import path from "path";
+import ejs from "ejs";
 
 const dirname = __dirname;
 

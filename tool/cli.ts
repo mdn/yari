@@ -2,37 +2,39 @@
 import { isValidLocale } from "../libs/locale-utils";
 import type { Doc } from "../libs/types/document";
 
-const fs = require("fs");
-const path = require("path");
-const { fdir } = require("fdir");
-const frontmatter = require("front-matter");
-const program = require("@caporal/core").default;
-const chalk = require("chalk");
-const { prompt } = require("inquirer");
-const openEditor = require("open-editor");
-const open = require("open");
-const log = require("loglevel");
-const cheerio = require("cheerio");
+import fs from "fs";
+import path from "path";
+import { fdir, PathsOutput } from "fdir";
+import frontmatter from "front-matter";
+import { program } from "@caporal/core";
+import chalk from "chalk";
+import { prompt } from "inquirer";
+import openEditor from "open-editor";
+import open from "open";
+import log from "loglevel";
+import * as cheerio from "cheerio";
 
 const dirname = __dirname;
 
-const { DEFAULT_LOCALE, VALID_LOCALES } = require("../libs/constants");
-const { CONTENT_ROOT, CONTENT_TRANSLATED_ROOT } = require("../libs/env");
-const { Redirect, Document, buildURL, getRoot } = require("../content");
-const { buildDocument, gatherGitHistory, buildSPAs } = require("../build");
+import { DEFAULT_LOCALE, VALID_LOCALES } from "../libs/constants";
+import { CONTENT_ROOT, CONTENT_TRANSLATED_ROOT } from "../libs/env";
+import { Redirect, Document, buildURL, getRoot } from "../content";
+import { buildDocument, gatherGitHistory, buildSPAs } from "../build";
 
-const { VALID_FLAW_CHECKS } = require("../libs/constants");
-const {
+import { VALID_FLAW_CHECKS } from "../libs/constants";
+import {
   ALWAYS_ALLOW_ROBOTS,
   BUILD_OUT_ROOT,
   GOOGLE_ANALYTICS_ACCOUNT,
   GOOGLE_ANALYTICS_DEBUG,
-} = require("../libs/env");
-const { runMakePopularitiesFile } = require("./popularities");
-const { runOptimizeClientBuild } = require("./optimize-client-build");
-const { runBuildRobotsTxt } = require("./build-robots-txt");
-const { syncAllTranslatedContent } = require("./sync-translated-content");
-const kumascript = require("../kumascript");
+} from "../libs/env";
+import { runMakePopularitiesFile } from "./popularities";
+import { runOptimizeClientBuild } from "./optimize-client-build";
+import { runBuildRobotsTxt } from "./build-robots-txt";
+import { syncAllTranslatedContent } from "./sync-translated-content";
+import * as kumascript from "../kumascript";
+import { Logger } from "types";
+import { MacroRedirectedLinkError } from "../kumascript/src/errors";
 
 const PORT = parseInt(process.env.SERVER_PORT || "5042");
 
@@ -45,6 +47,83 @@ const MAX_GOOGLE_ANALYTICS_URIS = 20000;
 interface Options {
   v?: boolean;
   verbose?: boolean;
+}
+
+interface DeleteArgsAndOptions {
+  args: {
+    slug: string;
+    locale: string;
+  };
+  options: {
+    recursive: boolean;
+    redirect?: string;
+    yes: boolean;
+  };
+}
+
+interface ValidateArgsAndOptions {
+  args: {
+    slug: string;
+    locale: string;
+  };
+}
+
+interface PreviewArgsAndOptions {
+  args: {
+    slug: string;
+    locale: string;
+  };
+  options: {
+    hostname: string;
+    port: string;
+  };
+}
+
+interface SyncTranslatedContentArgsAndOptions {
+  args: {
+    locale: string[];
+  };
+  options: {
+    verbose: boolean;
+  };
+}
+
+interface FixFlawsArgsAndOptions {
+  args: {
+    fixFlawsTypes: string[];
+  };
+  options: {
+    locale: string;
+    fileTypes: string[];
+  };
+}
+
+interface FlawsArgsAndOptions {
+  args: {
+    slug: string;
+    locale: string;
+  };
+  options: {
+    yes: boolean;
+  };
+}
+
+interface PopularitiesArgsAndOptions {
+  options: {
+    outfile: string;
+    maxUris: number;
+    refresh: boolean;
+  };
+  logger: Logger;
+}
+
+interface BuildRobotsTxtArgsAndOptions {
+  options: {
+    outfile: string;
+    maxUris: number;
+    refresh: boolean;
+  };
+  logger: Logger;
 }
 
 function tryOrExit(f) {
@@ -154,7 +233,7 @@ program
   )
   .option("-y, --yes", "Assume yes", { default: false })
   .action(
-    tryOrExit(async ({ args, options }) => {
+    tryOrExit(async ({ args, options }: DeleteArgsAndOptions) => {
       const { slug, locale } = args;
       const { recursive, redirect, yes } = options;
       const changes = Document.remove(slug, locale, {
@@ -188,7 +267,10 @@ program
             default: true,
           });
       if (run) {
-        const removed = Document.remove(slug, locale, { recursive, redirect });
+        const removed = Document.remove(slug, locale, {
+          recursive,
+          redirect,
+        });
         console.log(chalk.green(`Moved ${removed.length} documents.`));
       }
     })
@@ -197,7 +279,7 @@ program
   .command("move", "Move content to a new slug")
   .argument("<oldSlug>", "Old slug")
   .argument("<newSlug>", "New slug", {
-    validator: (value) => {
+    validator: (value: string) => {
       if (value.includes("#")) {
         throw new Error("slug can not contain the '#' character");
       }
@@ -210,35 +292,49 @@ program
   })
   .option("-y, --yes", "Assume yes", { default: false })
   .action(
-    tryOrExit(async ({ args, options }) => {
-      const { oldSlug, newSlug, locale } = args;
-      const { yes } = options;
-      const changes = Document.move(oldSlug, newSlug, locale, {
-        dry: true,
-      });
-      console.log(
-        chalk.green(
-          `Will move ${changes.length} documents from ${oldSlug} to ${newSlug} for ${locale}`
-        )
-      );
-      console.log(
-        changes
-          .map(([from, to]) => `${chalk.red(from)} → ${chalk.green(to)}`)
-          .join("\n")
-      );
-      const { run } = yes
-        ? { run: true }
-        : await prompt({
-            type: "confirm",
-            message: "Proceed?",
-            name: "run",
-            default: true,
-          });
-      if (run) {
-        const moved = Document.move(oldSlug, newSlug, locale);
-        console.log(chalk.green(`Moved ${moved.length} documents.`));
+    tryOrExit(
+      async ({
+        args,
+        options,
+      }: {
+        args: {
+          oldSlug: string;
+          newSlug: string;
+          locale: string;
+        };
+        options: {
+          yes: boolean;
+        };
+      }) => {
+        const { oldSlug, newSlug, locale } = args;
+        const { yes } = options;
+        const changes = Document.move(oldSlug, newSlug, locale, {
+          dry: true,
+        });
+        console.log(
+          chalk.green(
+            `Will move ${changes.length} documents from ${oldSlug} to ${newSlug} for ${locale}`
+          )
+        );
+        console.log(
+          changes
+            .map(([from, to]) => `${chalk.red(from)} → ${chalk.green(to)}`)
+            .join("\n")
+        );
+        const { run } = yes
+          ? { run: true }
+          : await prompt({
+              type: "confirm",
+              message: "Proceed?",
+              name: "run",
+              default: true,
+            });
+        if (run) {
+          const moved = Document.move(oldSlug, newSlug, locale);
+          console.log(chalk.green(`Moved ${moved.length} documents.`));
+        }
       }
-    })
+    )
   )
 
   .command("edit", "Spawn your EDITOR for an existing slug")
@@ -248,14 +344,23 @@ program
     validator: [...VALID_LOCALES.values()],
   })
   .action(
-    tryOrExit(({ args }) => {
-      const { slug, locale } = args;
-      if (!Document.exists(slug, locale)) {
-        throw new Error(`${slug} does not exists for ${locale}`);
+    tryOrExit(
+      ({
+        args,
+      }: {
+        args: {
+          slug: string;
+          locale: string;
+        };
+      }) => {
+        const { slug, locale } = args;
+        if (!Document.exists(slug, locale)) {
+          throw new Error(`${slug} does not exists for ${locale}`);
+        }
+        const filePath = Document.fileForSlug(slug, locale);
+        openEditor([filePath]);
       }
-      const filePath = Document.fileForSlug(slug, locale);
-      openEditor([filePath]);
-    })
+    )
   )
 
   .command("create", "Spawn your Editor for a new slug")
@@ -265,19 +370,28 @@ program
     validator: [...VALID_LOCALES.values()],
   })
   .action(
-    tryOrExit(({ args }) => {
-      const { slug, locale } = args;
-      const parentSlug = Document.parentSlug(slug);
-      if (!Document.exists(parentSlug, locale)) {
-        throw new Error(`Parent ${parentSlug} does not exists for ${locale}`);
+    tryOrExit(
+      ({
+        args,
+      }: {
+        args: {
+          slug: string;
+          locale: string;
+        };
+      }) => {
+        const { slug, locale } = args;
+        const parentSlug = Document.parentSlug(slug);
+        if (!Document.exists(parentSlug, locale)) {
+          throw new Error(`Parent ${parentSlug} does not exists for ${locale}`);
+        }
+        if (Document.exists(slug, locale)) {
+          throw new Error(`${slug} already exists for ${locale}`);
+        }
+        const filePath = Document.fileForSlug(slug, locale);
+        fs.mkdirSync(path.basename(filePath), { recursive: true });
+        openEditor([filePath]);
       }
-      if (Document.exists(slug, locale)) {
-        throw new Error(`${slug} already exists for ${locale}`);
-      }
-      const filePath = Document.fileForSlug(slug, locale);
-      fs.mkdirSync(path.basename(filePath), { recursive: true });
-      openEditor([filePath]);
-    })
+    )
   )
 
   .command("validate", "Validate a document")
@@ -287,7 +401,7 @@ program
     validator: [...VALID_LOCALES.values()],
   })
   .action(
-    tryOrExit(async ({ args }) => {
+    tryOrExit(async ({ args }: ValidateArgsAndOptions) => {
       const { slug, locale } = args;
       let okay = true;
       const document = Document.findByURL(buildURL(locale, slug));
@@ -328,10 +442,10 @@ program
     validator: [...VALID_LOCALES.values()],
   })
   .action(
-    tryOrExit(async ({ args, options }) => {
+    tryOrExit(async ({ args, options }: PreviewArgsAndOptions) => {
       const { slug, locale } = args;
       const { hostname, port } = options;
-      let url;
+      let url: string;
       // Perhaps they typed in a path relative to the content root
       if (
         (slug.startsWith("files") || fs.existsSync(slug)) &&
@@ -372,7 +486,7 @@ program
         // Someone probably yarn `yarn build` and copy-n-pasted one of the lines
         // it spits out from its CLI.
         const { doc } = JSON.parse(
-          fs.readFileSync(path.join(slug, "index.json"))
+          fs.readFileSync(path.join(slug, "index.json"), "utf-8")
         );
         if (doc) {
           url = doc.mdn_url;
@@ -404,70 +518,86 @@ program
   .option("--save-history <path>", "File to save all previous history")
   .option("--load-history <path>", "Optional file to load all previous history")
   .action(
-    tryOrExit(async ({ options }) => {
-      const { saveHistory, loadHistory, verbose } = options;
-      if (loadHistory) {
-        if (fs.existsSync(loadHistory)) {
-          console.log(
-            chalk.yellow(`Reusing existing history from ${loadHistory}`)
-          );
+    tryOrExit(
+      async ({
+        options,
+      }: {
+        options: {
+          saveHistory: string;
+          loadHistory: string;
+          verbose: boolean;
+        };
+      }) => {
+        const { saveHistory, loadHistory, verbose } = options;
+        if (loadHistory) {
+          if (fs.existsSync(loadHistory)) {
+            console.log(
+              chalk.yellow(`Reusing existing history from ${loadHistory}`)
+            );
+          }
         }
-      }
-      const roots = [CONTENT_ROOT];
-      if (CONTENT_TRANSLATED_ROOT) {
-        roots.push(CONTENT_TRANSLATED_ROOT);
-      }
-      const map = gatherGitHistory(
-        roots,
-        loadHistory && fs.existsSync(loadHistory) ? loadHistory : null
-      );
-      const historyPerLocale = {};
+        const roots = [CONTENT_ROOT];
+        if (CONTENT_TRANSLATED_ROOT) {
+          roots.push(CONTENT_TRANSLATED_ROOT);
+        }
+        const map = gatherGitHistory(
+          roots,
+          loadHistory && fs.existsSync(loadHistory) ? loadHistory : null
+        );
+        const historyPerLocale = {};
 
-      // Someplace to put the map into an object so it can be saved into `saveHistory`
-      const allHistory = {};
-      for (const [relPath, value] of map) {
-        const locale = relPath.split(path.sep)[0];
-        if (!isValidLocale(locale)) {
-          continue;
+        // Someplace to put the map into an object so it can be saved into `saveHistory`
+        const allHistory = {};
+        for (const [relPath, value] of map) {
+          const locale = relPath.split(path.sep)[0];
+          if (!isValidLocale(locale)) {
+            continue;
+          }
+          allHistory[relPath] = value;
+          if (!historyPerLocale[locale]) {
+            historyPerLocale[locale] = {};
+          }
+          historyPerLocale[locale][relPath] = value;
         }
-        allHistory[relPath] = value;
-        if (!historyPerLocale[locale]) {
-          historyPerLocale[locale] = {};
+        let filesWritten = 0;
+        for (const [locale, history] of Object.entries(historyPerLocale)) {
+          const root = getRoot(locale);
+          const outputFile = path.join(root, locale, "_githistory.json");
+          fs.writeFileSync(
+            outputFile,
+            JSON.stringify(history, null, 2),
+            "utf-8"
+          );
+          filesWritten += 1;
+          if (verbose) {
+            console.log(
+              chalk.green(
+                `Wrote '${locale}' ${Object.keys(
+                  history
+                ).length.toLocaleString()} paths into ${outputFile}`
+              )
+            );
+          }
         }
-        historyPerLocale[locale][relPath] = value;
-      }
-      let filesWritten = 0;
-      for (const [locale, history] of Object.entries(historyPerLocale)) {
-        const root = getRoot(locale);
-        const outputFile = path.join(root, locale, "_githistory.json");
-        fs.writeFileSync(outputFile, JSON.stringify(history, null, 2), "utf-8");
-        filesWritten += 1;
-        if (verbose) {
+        console.log(
+          chalk.green(`Wrote ${filesWritten} _githistory.json files`)
+        );
+        if (saveHistory) {
+          fs.writeFileSync(
+            saveHistory,
+            JSON.stringify(allHistory, null, 2),
+            "utf-8"
+          );
           console.log(
             chalk.green(
-              `Wrote '${locale}' ${Object.keys(
-                history
-              ).length.toLocaleString()} paths into ${outputFile}`
+              `Saved ${Object.keys(
+                allHistory
+              ).length.toLocaleString()} paths into ${saveHistory}`
             )
           );
         }
       }
-      console.log(chalk.green(`Wrote ${filesWritten} _githistory.json files`));
-      if (saveHistory) {
-        fs.writeFileSync(
-          saveHistory,
-          JSON.stringify(allHistory, null, 2),
-          "utf-8"
-        );
-        console.log(
-          chalk.green(
-            `Saved ${Object.keys(
-              allHistory
-            ).length.toLocaleString()} paths into ${saveHistory}`
-          )
-        );
-      }
-    })
+    )
   )
 
   .command(
@@ -479,30 +609,32 @@ program
     validator: [...VALID_LOCALES.keys()].filter((l) => l !== "en-us"),
   })
   .action(
-    tryOrExit(async ({ args, options }) => {
-      const { locale } = args;
-      const { verbose } = options;
-      if (verbose) {
-        log.setDefaultLevel(log.levels.DEBUG);
+    tryOrExit(
+      async ({ args, options }: SyncTranslatedContentArgsAndOptions) => {
+        const { locale } = args;
+        const { verbose } = options;
+        if (verbose) {
+          log.setDefaultLevel(log.levels.DEBUG);
+        }
+        for (const l of locale) {
+          const {
+            movedDocs,
+            conflictingDocs,
+            orphanedDocs,
+            redirectedDocs,
+            totalDocs,
+          } = syncAllTranslatedContent(l);
+          console.log(chalk.green(`Syncing ${l}:`));
+          console.log(chalk.green(`Total of ${totalDocs} documents`));
+          console.log(chalk.green(`Moved ${movedDocs} documents`));
+          console.log(chalk.green(`Conflicting ${conflictingDocs} documents.`));
+          console.log(chalk.green(`Orphaned ${orphanedDocs} documents.`));
+          console.log(
+            chalk.green(`Fixed ${redirectedDocs} redirected documents.`)
+          );
+        }
       }
-      for (const l of locale) {
-        const {
-          movedDocs,
-          conflictingDocs,
-          orphanedDocs,
-          redirectedDocs,
-          totalDocs,
-        } = syncAllTranslatedContent(l);
-        console.log(chalk.green(`Syncing ${l}:`));
-        console.log(chalk.green(`Total of ${totalDocs} documents`));
-        console.log(chalk.green(`Moved ${movedDocs} documents`));
-        console.log(chalk.green(`Conflicting ${conflictingDocs} documents.`));
-        console.log(chalk.green(`Orphaned ${orphanedDocs} documents.`));
-        console.log(
-          chalk.green(`Fixed ${redirectedDocs} redirected documents.`)
-        );
-      }
-    })
+    )
   )
 
   .command("fix-flaws", "Fix all flaws")
@@ -519,7 +651,7 @@ program
     validator: [...VALID_FLAW_CHECKS],
   })
   .action(
-    tryOrExit(async ({ args, options }) => {
+    tryOrExit(async ({ args, options }: FixFlawsArgsAndOptions) => {
       const { fixFlawsTypes } = args;
       const { locale, fileTypes } = options;
       const allDocs = Document.findAll({
@@ -545,7 +677,7 @@ program
   })
   .option("-y, --yes", "Assume yes", { default: false })
   .action(
-    tryOrExit(async ({ args, options }) => {
+    tryOrExit(async ({ args, options }: FlawsArgsAndOptions) => {
       const { slug, locale } = args;
       const { yes } = options;
       const document = Document.findByURL(buildURL(locale, slug));
@@ -653,7 +785,7 @@ program
     default: false,
   })
   .action(
-    tryOrExit(async ({ options, logger }) => {
+    tryOrExit(async ({ options, logger }: PopularitiesArgsAndOptions) => {
       const { refresh, outfile } = options;
       if (!refresh && fs.existsSync(outfile)) {
         const stat = fs.statSync(outfile);
@@ -762,7 +894,7 @@ if (Mozilla && !Mozilla.dntEnabled()) {
     default: path.join(BUILD_OUT_ROOT, "robots.txt"),
   })
   .action(
-    tryOrExit(async ({ options, logger }) => {
+    tryOrExit(async ({ options, logger }: BuildRobotsTxtArgsAndOptions) => {
       const { outfile } = options;
       await runBuildRobotsTxt(outfile);
       logger.info(
@@ -814,7 +946,6 @@ if (Mozilla && !Mozilla.dntEnabled()) {
       );
       const documents = Document.findAll({
         folderSearch: foldersearch,
-        quiet: true,
       });
       if (!documents.count) {
         throw new Error("no documents found");
@@ -846,10 +977,15 @@ if (Mozilla && !Mozilla.dntEnabled()) {
         countTotal++;
         console.group(`${document.fileInfo.path}:`);
         const originalRawBody = document.rawBody;
-        let [renderedHTML, flaws] = await renderOrRemoveMacros(document);
+        let [$, flaws] = await renderOrRemoveMacros(document);
         if (flaws.length) {
-          const fixableFlaws = flaws.filter((f) => f.redirectInfo);
-          const nonFixableFlaws = flaws.filter((f) => !f.redirectInfo);
+          const fixableFlaws = flaws.filter(
+            (f): f is MacroRedirectedLinkError =>
+              f.hasOwnProperty("redirectInfo")
+          );
+          const nonFixableFlaws = flaws.filter(
+            (f) => !f.hasOwnProperty("redirectInfo")
+          );
           const nonFixableFlawNames = [
             ...new Set(nonFixableFlaws.map((f) => f.name)).values(),
           ].join(", ");
@@ -886,7 +1022,7 @@ if (Mozilla && !Mozilla.dntEnabled()) {
                 document.metadata
               );
               // Ok, we've fixed the fixable flaws, now let's render again.
-              [renderedHTML, flaws] = await renderOrRemoveMacros(document);
+              [$, flaws] = await renderOrRemoveMacros(document);
             }
           } else {
             // There are one or more flaws that we can't fix, and we're not
@@ -899,10 +1035,6 @@ if (Mozilla && !Mozilla.dntEnabled()) {
             continue;
           }
         }
-        // The Kumascript rendering wraps the result with a "body" tag
-        // (and more), so let's extract the HTML content of the "body"
-        // to get what we'll store in the document.
-        const $ = cheerio.load(renderedHTML);
         const newRawHTML = $("body").html();
         if (newRawHTML !== originalRawBody) {
           Document.update(document.url, newRawHTML, document.metadata);
@@ -937,7 +1069,7 @@ if (Mozilla && !Mozilla.dntEnabled()) {
         .withErrors()
         .filter((filePath) => filePath.endsWith(".md"))
         .crawl(CONTENT_ROOT);
-      const paths = await crawler.withPromise();
+      const paths = (await crawler.withPromise()) as PathsOutput;
 
       const inventory = paths.map((path) => {
         const fileContents = fs.readFileSync(path, "utf-8");

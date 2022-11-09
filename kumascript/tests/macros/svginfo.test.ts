@@ -1,3 +1,4 @@
+import fs from "fs";
 import path from "path";
 import cheerio from "cheerio";
 
@@ -8,16 +9,25 @@ if (!CONTENT_ROOT) {
   throw new Error("These tests assume you point to the real content root.");
 }
 // Basic const
-const SVG_DATA = require(path.resolve(
-  path.join(CONTENT_ROOT, "jsondata", "SVGData.json")
-));
-const L10N_SVG = require(path.resolve(
-  path.join(CONTENT_ROOT, "jsondata", "L10n-SVG.json")
-));
+const SVG_DATA = JSON.parse(
+  fs.readFileSync(
+    path.resolve(path.join(CONTENT_ROOT, "jsondata", "SVGData.json")),
+    "utf-8"
+  )
+);
+const L10N_SVG = JSON.parse(
+  fs.readFileSync(
+    path.resolve(path.join(CONTENT_ROOT, "jsondata", "L10n-SVG.json")),
+    "utf-8"
+  )
+);
 
-const L10N_COMMON = require(path.resolve(
-  path.join(CONTENT_ROOT, "jsondata", "L10n-Common.json")
-));
+const L10N_COMMON = JSON.parse(
+  fs.readFileSync(
+    path.resolve(path.join(CONTENT_ROOT, "jsondata", "L10n-Common.json")),
+    "utf-8"
+  )
+);
 
 const SVG_BASE_SLUG = "docs/Web/SVG";
 

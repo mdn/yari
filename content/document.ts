@@ -448,8 +448,8 @@ export function findAll({
   }
   const folderSearchRegExp = folderSearch ? new RegExp(folderSearch) : null;
 
-  const filePaths = [];
-  const roots = [];
+  const filePaths: string[] = [];
+  const roots: string[] = [];
   if (CONTENT_TRANSLATED_ROOT) {
     roots.push(CONTENT_TRANSLATED_ROOT);
   }

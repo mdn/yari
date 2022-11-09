@@ -5,7 +5,7 @@ import zlib from "zlib";
 
 import chalk from "chalk";
 import cliProgress from "cli-progress";
-const program = require("@caporal/core").default;
+import { program } from "@caporal/core";
 import { prompt } from "inquirer";
 
 import { Document, slugToFolder, translationsOf } from "../content";
@@ -297,6 +297,20 @@ function formatTotalFlaws(flawsCountMap, header = "Total_Flaws_Count") {
   return out.join("\n");
 }
 
+interface BuildArgsAndOptions {
+  args: {
+    files?: string[];
+  };
+  options: {
+    quiet?: boolean;
+    interactive?: boolean;
+    nohtml?: boolean;
+    locale?: string[];
+    notLocale?: string[];
+    sitemapIndex?: boolean;
+  };
+}
+
 program
   .name("build")
   .option("-i, --interactive", "Ask what to do when encountering flaws", {
@@ -317,7 +331,7 @@ program
     default: false,
   })
   .argument("[files...]", "specific files to build")
-  .action(async ({ args, options }) => {
+  .action(async ({ args, options }: BuildArgsAndOptions) => {
     try {
       if (!options.quiet) {
         const roots = [

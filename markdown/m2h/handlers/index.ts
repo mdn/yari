@@ -1,9 +1,9 @@
-const fs = require("fs");
-const path = require("path");
-const { DEFAULT_LOCALE } = require("../../../libs/constants");
-const { code } = require("./code");
-const { asDefinitionList, isDefinitionList } = require("./dl");
-const { one, all, wrap } = require("./mdast-util-to-hast-utils");
+import fs from "fs";
+import path from "path";
+import { DEFAULT_LOCALE } from "../../../libs/constants";
+import { code } from "./code";
+import { asDefinitionList, isDefinitionList } from "./dl";
+import { one, all, wrap } from "./mdast-util-to-hast-utils";
 
 const dirname = __dirname;
 

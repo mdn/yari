@@ -290,6 +290,8 @@ export interface BuiltDocument {
 
 interface DocumentOptions {
   fixFlaws?: boolean;
+  fixFlawsDryRun?: boolean;
+  fixFlawsTypes?: Iterable<string>;
   fixFlawsVerbose?: boolean;
 }
 
