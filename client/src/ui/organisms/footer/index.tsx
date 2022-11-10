@@ -89,7 +89,7 @@ export function Footer() {
             <li className="footer-nav-item">
               <a
                 className="footer-nav-link"
-                href={`/${locale}/docs/MDN/Contribute/Feedback#documentation_issues`}
+                href="https://github.com/mdn/content/issues/new/choose"
               >
                 Report a page issue
               </a>
@@ -97,7 +97,7 @@ export function Footer() {
             <li className="footer-nav-item">
               <a
                 className="footer-nav-link"
-                href={`/${locale}/docs/MDN/Contribute/Feedback#site_issues`}
+                href="https://github.com/mdn/yari/issues/new/choose"
               >
                 Report a site issue
               </a>
