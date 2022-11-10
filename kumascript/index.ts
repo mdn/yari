@@ -22,7 +22,7 @@ export const renderCache = new LRU<string, unknown>({ max: 2000 });
 
 interface RenderOptions {
   urlsSeen?: Set<string>;
-  selective_mode?: [boolean, string[]] | false;
+  selective_mode?: [string, string[]] | false;
   invalidateCache?: boolean;
 }
 
