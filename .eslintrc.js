@@ -37,8 +37,6 @@ module.exports = {
         "@typescript-eslint/no-var-requires": "off",
         "n/no-missing-import": "off",
         "@typescript-eslint/no-explicit-any": "off",
-        "n/no-missing-require": "off",
-        "n/no-unpublished-import": "off",
       },
     },
     {
