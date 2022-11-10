@@ -20,6 +20,7 @@ import NoteCard from "../../ui/molecules/notecards";
 
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
+import { useFrequentlyViewed } from "./frequently-viewed";
 dayjs.extend(relativeTime);
 
 export default function CollectionComponent() {
@@ -105,6 +106,63 @@ export default function CollectionComponent() {
           </NoteCard>
         ) : (
           <Loading />
+        )}
+      </Container>
+    </>
+  );
+}
+
+function FrequentlyViewedCollectionComponent() {
+  let [size, setSize] = useState(0);
+  let [atEnd, setAtEnd] = useState(false);
+  let frequentlyViewed = useFrequentlyViewed(10, size, setAtEnd);
+  let _vals: Item[] | undefined = frequentlyViewed?.items.map((v) => {
+    return {
+      collection_id: frequentlyViewed?.name || "",
+      updated_at: dayjs(v.timestamp).toISOString(),
+      created_at: dayjs(v.timestamp).toISOString(),
+      notes: "",
+      id: v.serial.toString(),
+      parents: [],
+      url: v.url,
+      title: v.title,
+    };
+  });
+  let mutate = (_vals) => Promise.resolve(_vals);
+  useScrollToTop();
+
+  return (
+    <>
+      <header>
+        <Container>
+          <Link to="../" className="exit">
+            &larr; Back
+          </Link>
+          <h1>{frequentlyViewed?.name}</h1>
+          <span className="count">
+            {frequentlyViewed?.article_count}{" "}
+            {frequentlyViewed?.article_count === 1 ? "article" : "articles"}
+          </span>
+          <p>{frequentlyViewed?.description}</p>
+        </Container>
+      </header>
+      <Container>
+        {_vals?.flat(1).map((item) => (
+          <ItemComponent key={item.id} {...{ item, mutate }} />
+        ))}
+        {!atEnd && (
+          <div className="pagination">
+            <Button
+              type="primary"
+              onClickHandler={() => {
+                console.log(`set size ${size}`);
+                setSize(size + 10);
+              }}
+              isDisabled={false}
+            >
+              Show more
+            </Button>
+          </div>
         )}
       </Container>
     </>
@@ -215,7 +273,7 @@ function ItemEdit({
 
   const changeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setFormItem({ ...formItem, [name]: value.trimStart() });
+    setFormItem({ ...formItem, [name]: value });
   };
 
   const cancelHandler = (e: React.MouseEvent | React.KeyboardEvent) => {
@@ -376,3 +434,5 @@ function ItemDelete({
     </MDNModal>
   );
 }
+
+export { FrequentlyViewedCollectionComponent };

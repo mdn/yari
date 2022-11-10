@@ -6,7 +6,9 @@ import NewEditCollectionModal from "./new-edit-collection-modal";
 import { Route, Routes } from "react-router";
 import { Collection, useCollectionDelete, useCollections } from "./api";
 import { Link } from "react-router-dom";
-import CollectionComponent from "./collection";
+import CollectionComponent, {
+  FrequentlyViewedCollectionComponent,
+} from "./collection";
 import { DropdownMenuWrapper, DropdownMenu } from "../../ui/molecules/dropdown";
 import MDNModal from "../../ui/atoms/modal";
 import { Loading } from "../../ui/atoms/loading";
@@ -23,6 +25,10 @@ import {
   NEW_COLLECTION_MODAL_SUBMIT_COLLECTIONS_PAGE,
 } from "../../telemetry/constants";
 import { camelWrap } from "../../utils";
+import {
+  FrequentlyViewedCollection,
+  useFrequentlyViewed,
+} from "./frequently-viewed";
 dayjs.extend(relativeTime);
 
 export default function Collections() {
@@ -30,6 +36,10 @@ export default function Collections() {
     <div className="collections-v2">
       <Routes>
         <Route path="/" element={<Overview />} />
+        <Route
+          path="frequently-viewed"
+          element={<FrequentlyViewedCollectionComponent />}
+        />
         <Route path=":collectionId" element={<CollectionComponent />} />
       </Routes>
     </div>
@@ -39,7 +49,23 @@ export default function Collections() {
 function Overview() {
   const { data, isLoading, error } = useCollections();
   const [showCreate, setShowCreate] = useState(false);
+  const frequentlyViewed = useFrequentlyViewed(0, 10, () => null);
   const gleanClick = useGleanClick();
+
+  let collections = data?.map((collection) => (
+    <CollectionCard key={collection.id} {...{ collection }} />
+  ));
+
+  if (collections) {
+    if (frequentlyViewed) {
+      collections.splice(
+        1,
+        0,
+        FrequentlyViewedCollectionCard(frequentlyViewed)
+      );
+    }
+  }
+
   return (
     <>
       <header className="container">
@@ -81,9 +107,7 @@ function Overview() {
         {isLoading ? (
           <Loading />
         ) : data ? (
-          data.map((collection) => (
-            <CollectionCard key={collection.id} {...{ collection }} />
-          ))
+          collections
         ) : error ? (
           <NoteCard type="error">
             <h4>Error</h4>
@@ -237,7 +261,6 @@ function CollectionCard({ collection }: { collection: Collection }) {
   );
 }
 
-//Todo remove this post V1.0 -> V2.0 Migration
 function DefaultCollectionCard({ collection }: { collection: Collection }) {
   return (
     <article key={collection.id} className="default">
@@ -249,6 +272,30 @@ function DefaultCollectionCard({ collection }: { collection: Collection }) {
       <p>The default collection.</p>
       <footer>
         <Link to={collection.id} className="count">
+          {collection.article_count}{" "}
+          {collection.article_count === 1 ? "article" : "articles"}
+        </Link>
+        <time dateTime={dayjs(collection.updated_at).toISOString()}>
+          Edited {dayjs(collection.updated_at).fromNow().toString()}
+        </time>
+      </footer>
+    </article>
+  );
+}
+
+function FrequentlyViewedCollectionCard(
+  collection: FrequentlyViewedCollection
+) {
+  return (
+    <article key={collection.name} className="default">
+      <header>
+        <h2>
+          <Link to={"frequently-viewed"}>{collection.name}</Link>
+        </h2>
+      </header>
+      <p>{collection.description}</p>
+      <footer>
+        <Link to={"frequently-viewed"} className="count">
           {collection.article_count}{" "}
           {collection.article_count === 1 ? "article" : "articles"}
         </Link>

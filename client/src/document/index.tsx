@@ -6,11 +6,7 @@ import { CRUD_MODE } from "../env";
 import { useGA } from "../ga-context";
 import { useIsServer } from "../hooks";
 
-import {
-  useDocumentURL,
-  useCopyExamplesToClipboard,
-  usePersistFrequentlyViewed,
-} from "./hooks";
+import { useDocumentURL, useCopyExamplesToClipboard } from "./hooks";
 import { Doc } from "../../../libs/types/document";
 // Ingredients
 import { Prose } from "./ingredients/prose";
@@ -41,6 +37,7 @@ import "./index.scss";
 // main bundle all the time.
 import "./interactive-examples.scss";
 import { DocumentSurvey } from "../ui/molecules/document-survey";
+import { useIncrementFrequentlyViewed } from "../plus/collections/frequently-viewed";
 // import { useUIStatus } from "../ui-context";
 
 // Lazy sub-components
@@ -114,7 +111,7 @@ export function Document(props /* TODO: define a TS interface for this */) {
       refreshInterval: CRUD_MODE ? 500 : 0,
     }
   );
-  usePersistFrequentlyViewed(doc);
+  useIncrementFrequentlyViewed(doc);
   useCopyExamplesToClipboard(doc);
 
   React.useEffect(() => {
