@@ -254,7 +254,6 @@ async function buildDocuments(
     progressBar.stop();
   }
 
-  const sitemapsBuilt: string[] = [];
   for (const [locale, docs] of Object.entries(docPerLocale)) {
     const sitemapDir = path.join(
       BUILD_OUT_ROOT,
