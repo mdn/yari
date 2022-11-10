@@ -1,5 +1,3 @@
-/* eslint-disable n/no-unpublished-require */
-/* eslint-disable n/no-missing-require */
 const { VALID_LOCALES } = require("@yari-internal/constants");
 const fs = require("fs");
 const path = require("path");
