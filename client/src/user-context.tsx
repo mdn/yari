@@ -18,6 +18,35 @@ export type UserPlusSettings = {
   collectionLastModified: Date | null;
 };
 
+export class OfflineSettingsData {
+  offline?: boolean;
+  preferOnline?: boolean;
+  autoUpdates?: boolean;
+
+  constructor({
+    offline = false,
+    preferOnline = false,
+    autoUpdates = false,
+  } = {}) {
+    this.offline = offline;
+    this.preferOnline = preferOnline;
+    this.autoUpdates = autoUpdates;
+  }
+
+  static read(): OfflineSettingsData {
+    let settingsData: OfflineSettingsData | undefined;
+    try {
+      settingsData = JSON.parse(
+        window.localStorage.getItem("MDNSettings") || "null"
+      );
+    } catch (err) {
+      console.warn("Unable to read settings from localStorage", err);
+    }
+
+    return new OfflineSettingsData(settingsData);
+  }
+}
+
 export type UserData = {
   username: string | null | undefined;
   isAuthenticated: boolean;
@@ -35,7 +64,7 @@ export type UserData = {
   };
   maintenance?: string;
   settings: null | UserPlusSettings;
-  mdnWorker?: MDNWorker;
+  offlineSettings: null | OfflineSettingsData;
   mutate: () => void;
 };
 
@@ -137,6 +166,7 @@ export function UserDataProvider(props: { children: React.ReactNode }) {
         },
         maintenance: data.maintenance,
         settings,
+        offlineSettings: OfflineSettingsData.read(),
         mutate,
       };
     }
@@ -151,28 +181,29 @@ export function UserDataProvider(props: { children: React.ReactNode }) {
       if (data.settings?.colInSearch) {
         fetchAllCollectionsItems(data.settings?.collectionLastModified || null);
       }
-      // Let's initialize the MDN Worker if the user is signed in.
-      if (!window.mdnWorker && data?.isAuthenticated) {
+      // Let's initialize the MDN Worker if applicable.
+      if (!window.mdnWorker && data?.offlineSettings?.offline) {
         import("./settings/mdn-worker").then(({ getMDNWorker }) => {
           const mdnWorker = getMDNWorker();
           if (data?.isSubscriber === false) {
             mdnWorker.clearOfflineSettings();
+            mdnWorker.disableServiceWorker();
+            data.offlineSettings = new OfflineSettingsData();
           }
         });
       } else if (window.mdnWorker) {
-        if (data?.isAuthenticated === false) {
-          window.mdnWorker.disableServiceWorker();
-        } else if (data?.isSubscriber === false) {
+        if (data?.isSubscriber === false) {
           window.mdnWorker.clearOfflineSettings();
+          data.offlineSettings = new OfflineSettingsData();
+        }
+        if (!data?.offlineSettings?.offline) {
+          window.mdnWorker.disableServiceWorker();
         }
       }
     }
   }, [data]);
 
   let userData = data || getSessionStorageData();
-  if (userData && window?.mdnWorker) {
-    userData.mdnWorker = window.mdnWorker;
-  }
 
   return (
     <UserDataContext.Provider value={userData || null}>
