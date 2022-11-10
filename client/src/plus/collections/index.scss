@@ -44,30 +44,30 @@
       }
 
       .mandala-icon-wrapper {
-        position: relative;
         display: inline-block;
         margin-right: 0.5rem;
+        position: relative;
         top: -0.2rem;
 
         @media screen and (min-width: $screen-lg) {
           position: absolute;
-          top: 50%;
           right: 10rem;
+          top: 50%;
           transform: translate(0, -50%);
         }
 
         .mandala-container {
-          position: absolute;
           --mandala-primary: var(--collections-mandala);
           left: 50%;
+          position: absolute;
           top: 50%;
           transform: translate(-50%, -49.4%);
         }
 
         .icon-bookmark-filled {
-          width: 2rem;
-          height: 2rem;
           background: var(--collections-icon);
+          height: 2rem;
+          width: 2rem;
         }
       }
 
@@ -161,14 +161,14 @@
     }
 
     p {
-      margin: 0;
-      overflow-wrap: anywhere;
-      white-space: pre-wrap;
       @include line-clamp(
         4,
         var(--font-content-line-height),
         var(--background-primary)
       );
+      margin: 0;
+      overflow-wrap: anywhere;
+      white-space: pre-wrap;
     }
 
     footer {
