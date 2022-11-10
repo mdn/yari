@@ -176,6 +176,7 @@ function ItemComponent({
           <ArticleActions
             doc={doc}
             showTranslations={false}
+            item={item}
             scopedMutator={mutate}
           />
         )}
