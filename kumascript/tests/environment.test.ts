@@ -219,7 +219,7 @@ describe("Environment class", () => {
   });
 
   it("defines a template() function that renders templates", async () => {
-    const mockRender = jest.fn(() => "hello world");
+    const mockRender = jest.fn((a, b) => `hello world (${a}, ${b})`);
     const mockTemplates = { render: mockRender };
     const environment = new Environment({}, mockTemplates);
     const context = environment.getExecutionContext([]);
@@ -227,7 +227,7 @@ describe("Environment class", () => {
 
     const rendered = await templateFunction("foo", ["1", "2"]);
 
-    expect(rendered).toBe("hello world");
+    expect(rendered).toBe("hello world (1, 2)");
     expect(mockRender.mock.calls).toHaveLength(1);
     expect(mockRender.mock.calls[0][0]).toBe("foo");
     expect(getValue(mockRender.mock.calls[0][1], "$0")).toBe("1");
