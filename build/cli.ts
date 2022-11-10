@@ -24,7 +24,7 @@ import { humanFileSize } from "./utils";
 export type DocumentBuild = SkippedDocumentBuild | InteractiveDocumentBuild;
 
 export interface SkippedDocumentBuild {
-  doc: {};
+  doc: Record<string, never>;
   skip: true;
 }
 
