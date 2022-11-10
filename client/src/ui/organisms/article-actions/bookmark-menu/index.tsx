@@ -24,10 +24,13 @@ import {
   ARTICLE_ACTIONS_COLLECTIONS_OPENED,
   NEW_COLLECTION_MODAL_SUBMIT_ARTICLE_ACTIONS,
 } from "../../../../telemetry/constants";
+import ExpandingTextarea from "../../../atoms/form/expanding-textarea";
+
+import "./index.scss";
 
 const addValue = "add";
 
-export default function BookmarkV2Menu({ doc }: { doc: Doc }) {
+export default function BookmarkMenu({ doc }: { doc: Doc }) {
   const { data: collections } = useCollections();
   const { data: savedItems } = useBookmark(doc.mdn_url);
 
@@ -100,7 +103,9 @@ export default function BookmarkV2Menu({ doc }: { doc: Doc }) {
   };
 
   const changeHandler = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >
   ) => {
     e.preventDefault();
     const { name, value } = e.target;
@@ -132,13 +137,6 @@ export default function BookmarkV2Menu({ doc }: { doc: Doc }) {
     setShow(false);
   };
 
-  const enterHandler = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "Enter") {
-      e.preventDefault();
-      saveHandler(e);
-    }
-  };
-
   const deleteHandler = async (e: React.MouseEvent) => {
     e.preventDefault();
     if (!collections || isPending) return;
@@ -158,6 +156,7 @@ export default function BookmarkV2Menu({ doc }: { doc: Doc }) {
 
   return (
     <DropdownMenuWrapper
+      className="bookmark-menu"
       isOpen={show}
       setIsOpen={setShow}
       disableAutoClose={disableAutoClose}
@@ -202,7 +201,11 @@ export default function BookmarkV2Menu({ doc }: { doc: Doc }) {
             }`}
             role="menu"
           >
-            <button onClick={cancelHandler} className="header mobile-only">
+            <button
+              onClick={cancelHandler}
+              type="button"
+              className="header mobile-only"
+            >
               <span className="header-inner">
                 <Icon name="chevron" />
                 {savedItems?.length ? "Edit Item" : "Add to Collection"}
@@ -265,20 +268,18 @@ export default function BookmarkV2Menu({ doc }: { doc: Doc }) {
                 autoComplete="off"
                 type="text"
                 onChange={changeHandler}
-                onKeyDown={enterHandler}
+                required={true}
                 disabled={isPending}
               />
             </div>
             <div className="mdn-form-item">
               <label htmlFor="bookmark-note">Note:</label>
-              <input
+              <ExpandingTextarea
                 id="bookmark-note"
                 name="notes"
-                type="text"
                 autoComplete="off"
                 value={formItem.notes}
                 onChange={changeHandler}
-                onKeyDown={enterHandler}
                 disabled={isPending}
               />
             </div>
@@ -289,25 +290,28 @@ export default function BookmarkV2Menu({ doc }: { doc: Doc }) {
               >
                 {isPending && lastAction === "save" ? "Saving..." : "Save"}
               </Button>
-              {savedItems?.length ? (
+              <Button
+                onClickHandler={cancelHandler}
+                isDisabled={!collections || isPending}
+                type="secondary"
+              >
+                Cancel
+              </Button>
+              {Boolean(savedItems?.length) && (
                 <Button
-                  type="secondary"
+                  id="bookmark-delete"
+                  type="action"
+                  icon="trash"
                   onClickHandler={deleteHandler}
                   isDisabled={
                     !collections || isPending || !isCurrentInCollection()
                   }
                 >
-                  {isPending && lastAction === "delete"
-                    ? "Deleting..."
-                    : "Delete"}
-                </Button>
-              ) : (
-                <Button
-                  onClickHandler={cancelHandler}
-                  isDisabled={!collections || isPending}
-                  type="secondary"
-                >
-                  Cancel
+                  <span className="visually-hidden">
+                    {isPending && lastAction === "delete"
+                      ? "Deleting..."
+                      : "Delete"}
+                  </span>
                 </Button>
               )}
             </div>

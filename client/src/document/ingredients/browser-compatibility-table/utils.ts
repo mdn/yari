@@ -36,8 +36,7 @@ function findFirstCompatDepth(identifier: BCD.Identifier) {
 
   while (entries.length) {
     const [path, value] = entries.shift() as [string, BCD.Identifier];
-
-    if (value.hasOwnProperty("__compat")) {
+    if (value.__compat) {
       // Following entries have at least this depth.
       return path.split(".").length;
     }

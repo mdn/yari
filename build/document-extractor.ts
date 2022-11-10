@@ -47,7 +47,7 @@ export function extractSidebar($: cheerio.CheerioAPI, doc: Partial<Doc>) {
 
   // Open menu and highlight current page.
   search.find(`a[href='${doc.mdn_url}']`).each((_i, el) => {
-    $(el).closest("details").prop("open", true);
+    $(el).parents("details").prop("open", true);
     $(el).attr("aria-current", "page");
     // Highlight, unless it already is highlighted (e.g. heading).
     if ($(el).find("em,strong").length === 0) {
@@ -651,7 +651,9 @@ function _addSingleSpecialSection(
             specURL.startsWith(spec.url) ||
             specURL.startsWith(spec.nightly.url) ||
             spec.nightly.alternateUrls.some((s) => specURL.startsWith(s)) ||
-            specURL.startsWith(spec.series.nightlyUrl)
+            // When grabbing series nightly, make sure we're grabbing the latest spec version
+            (spec.shortname === spec.series.currentSpecification &&
+              specURL.startsWith(spec.series.nightlyUrl))
         );
         const specificationsData = {
           bcdSpecificationURL: specURL,

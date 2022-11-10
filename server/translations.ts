@@ -15,6 +15,7 @@ import {
 import { CONTENT_ROOT, CONTENT_TRANSLATED_ROOT } from "../libs/env";
 import { getLastCommitURL } from "../build";
 import LANGUAGES_RAW from "../libs/languages";
+import { isValidLocale } from "../libs/locale-utils";
 
 // Module-level cache
 const allPopularityValues = [];
@@ -580,7 +581,7 @@ router.get("/differences", async (req, res) => {
   if (!locale) {
     return res.status(400).send("'locale' is always required");
   }
-  if (!VALID_LOCALES.has(locale)) {
+  if (!isValidLocale(locale)) {
     return res.status(400).send(`'${locale}' not a valid locale`);
   }
   if (locale === DEFAULT_LOCALE.toLowerCase()) {
@@ -602,7 +603,7 @@ router.get("/missing", async (req, res) => {
   if (!locale) {
     return res.status(400).send("'locale' is always required");
   }
-  if (!VALID_LOCALES.has(locale)) {
+  if (!isValidLocale(locale)) {
     return res.status(400).send(`'${locale}' not a valid locale`);
   }
   if (locale === DEFAULT_LOCALE.toLowerCase()) {
@@ -625,7 +626,7 @@ router.get("/dashboard", async (req, res) => {
   if (!locale) {
     return res.status(400).send("'locale' is always required");
   }
-  if (!VALID_LOCALES.has(locale)) {
+  if (!isValidLocale(locale)) {
     return res.status(400).send(`'${locale}' not a valid locale`);
   }
   if (locale === DEFAULT_LOCALE.toLowerCase()) {

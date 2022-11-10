@@ -6,9 +6,14 @@ import fm from "front-matter";
 import yaml from "js-yaml";
 import { fdir, PathsOutput } from "fdir";
 
-import { HTML_FILENAME, MARKDOWN_FILENAME } from "../libs/constants";
 import { CONTENT_TRANSLATED_ROOT, CONTENT_ROOT, ROOTS } from "../libs/env";
-import { ACTIVE_LOCALES, VALID_LOCALES } from "../libs/constants";
+import {
+  ACTIVE_LOCALES,
+  HTML_FILENAME,
+  MARKDOWN_FILENAME,
+  VALID_LOCALES,
+} from "../libs/constants";
+import { isValidLocale } from "../libs/locale-utils";
 import { getPopularities } from "./popularities";
 import { getWikiHistories } from "./wikihistories";
 import { getGitHistories } from "./githistories";
@@ -443,8 +448,8 @@ export function findAll({
   }
   const folderSearchRegExp = folderSearch ? new RegExp(folderSearch) : null;
 
-  const filePaths = [];
-  const roots = [];
+  const filePaths: string[] = [];
+  const roots: string[] = [];
   if (CONTENT_TRANSLATED_ROOT) {
     roots.push(CONTENT_TRANSLATED_ROOT);
   }
@@ -465,7 +470,7 @@ export function findAll({
         }
 
         const locale = filePath.replace(root, "").split(path.sep)[1];
-        if (!VALID_LOCALES.has(locale)) {
+        if (!isValidLocale(locale)) {
           return false;
         }
         if (locales.size) {

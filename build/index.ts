@@ -290,6 +290,8 @@ export interface BuiltDocument {
 
 interface DocumentOptions {
   fixFlaws?: boolean;
+  fixFlawsDryRun?: boolean;
+  fixFlawsTypes?: Iterable<string>;
   fixFlawsVerbose?: boolean;
 }
 
@@ -339,7 +341,7 @@ export async function buildDocument(
       // message.
       error.updateFileInfo(document.fileInfo);
       throw new Error(
-        `MacroInvocationError trying to parse ${error.filepath}, line ${error.line} column ${error.column} (${error.error.message})`
+        `MacroInvocationError trying to parse file.\n\nFile:    ${error.filepath}\nMessage: ${error.error.message}\n\n${error.sourceContext}`
       );
     }
     // Any other unexpected error re-thrown.
@@ -474,6 +476,10 @@ export async function buildDocument(
   doc.mdn_url = document.url;
   doc.locale = metadata.locale as string;
   doc.native = LANGUAGES.get(doc.locale.toLowerCase())?.native;
+  const browserCompat = metadata["browser-compat"];
+  doc.browserCompat =
+    browserCompat &&
+    (Array.isArray(browserCompat) ? browserCompat : [browserCompat]);
 
   // If the document contains <math> HTML, it will set `doc.hasMathML=true`.
   // The client (<Document/> component) needs to know this for loading polyfills.

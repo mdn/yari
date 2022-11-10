@@ -17,7 +17,7 @@ import { MainContentContainer } from "./ui/atoms/page-content";
 import { PageNotFound } from "./page-not-found";
 import { Plus } from "./plus";
 import { About } from "./about";
-import { docCategory } from "./utils";
+import { getCategoryByPathname } from "./utils";
 import { Contribute } from "./community";
 import { ContributorSpotlight } from "./contributor-spotlight";
 import { useIsServer } from "./hooks";
@@ -33,20 +33,24 @@ const Sitemap = React.lazy(() => import("./sitemap"));
 function Layout({ pageType, children }) {
   const { pathname } = useLocation();
   const [category, setCategory] = React.useState<string | null>(
-    docCategory({ pathname })
+    getCategoryByPathname(pathname)
   );
 
   const isServer = useIsServer();
 
   React.useEffect(() => {
-    setCategory(docCategory({ pathname }));
+    setCategory(getCategoryByPathname(pathname));
   }, [pathname]);
 
   return (
     <>
       <A11yNav />
       {!isServer && <Banner />}
-      <div className={`page-wrapper  ${category || ""} ${pageType}`}>
+      <div
+        className={`page-wrapper  ${
+          category ? `category-${category}` : ""
+        } ${pageType}`}
+      >
         {pageType !== "document-page" && <TopNavigation />}
         {children}
       </div>

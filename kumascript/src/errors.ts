@@ -83,18 +83,10 @@ export class SourceCodeError {
   // doesn't really make sense. Perhaps we can modify this function to
   // show the relevant context in a more useful way.
   getSourceContext(source) {
-    function arrow(column) {
-      let arrow = "";
-      for (let i = 0; i < column + 7; i++) {
-        arrow += "-";
-      }
-      return `${arrow}^`;
-    }
+    const arrow = (line) => (line === this.line ? ">" : " ");
+    const arrowLine = (column) => " ".repeat(column + 3) + "^";
 
-    function formatLine(i, line) {
-      const lnum = `      ${i + 1}`.substr(-5);
-      return `${lnum} | ${line}`;
-    }
+    const formatLine = (i, lineSource) => `${arrow(i + 1)} | ${lineSource}`;
 
     const lines = source.split("\n");
 
@@ -110,7 +102,7 @@ export class SourceCodeError {
     for (let i = startLine; i < endLine; i++) {
       context.push(formatLine(i, lines[i]));
       if (i == errorLine) {
-        context.push(arrow(this.column));
+        context.push(arrowLine(this.column));
       }
     }
     return context.join("\n");
@@ -118,8 +110,7 @@ export class SourceCodeError {
 
   toString() {
     return (
-      `${this.name} error on ${this.macroName} ` +
-      `at line ${this.line}, column ${this.column} in:\n` +
+      `${this.name} error on ${this.macroName}:\n` +
       `${this.sourceContext}\nOriginal error: ${this.error.message}`
     );
   }
