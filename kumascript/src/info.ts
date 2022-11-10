@@ -2,7 +2,7 @@ import cheerio from "cheerio";
 
 import Parser from "./parser.js";
 import { Document, Redirect } from "../../content";
-import { VALID_LOCALES } from "../../libs/constants";
+import { isValidLocale } from "../../libs/locale-utils";
 import { m2hSync } from "../../markdown";
 
 const DUMMY_BASE_URL = "https://example.com";
@@ -42,7 +42,7 @@ function repairURL(url) {
   url = url.replace(/\/{2,}/g, "/");
   // Ensure the URI starts with a valid locale.
   const maybeLocale = url.split("/")[1];
-  if (!VALID_LOCALES.has(maybeLocale)) {
+  if (!isValidLocale(maybeLocale)) {
     if (maybeLocale === "en") {
       // Converts URI's like "/en/..." to "/en-us/...".
       url = url.replace(`/${maybeLocale}`, "/en-us");

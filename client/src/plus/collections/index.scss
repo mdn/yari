@@ -1,9 +1,10 @@
 @use "../../ui/vars" as *;
+@use "../../ui/mixins" as *;
 
 .collections-v2 {
   padding: 1rem 0;
 
-  & > header {
+  > header {
     padding: 1rem 0;
 
     &.container {
@@ -64,7 +65,7 @@
         }
       }
 
-      & > * {
+      > * {
         margin-bottom: 1rem;
       }
     }
@@ -85,27 +86,18 @@
 
     p {
       color: var(--text-secondary);
-      display: none;
       margin-top: 0;
+      white-space: pre-wrap;
     }
 
     @media screen and (min-width: $screen-md) {
       h1 {
         font-size: 24px;
       }
-
-      .count {
-        flex: 1;
-      }
-
-      p {
-        display: block;
-        flex: 100%;
-      }
     }
   }
 
-  & > .container {
+  > .container {
     display: grid;
     gap: 1em;
 
@@ -120,12 +112,22 @@
   }
 
   article {
-    border: 1px solid var(--border-secondary);
+    background-color: var(--background-primary);
+    border: 1px solid var(--background-secondary);
     border-radius: var(--elem-radius);
     box-shadow: var(--shadow-02);
+    color: var(--text-secondary);
     display: flex;
     flex-direction: column;
+    font-weight: 500;
+    letter-spacing: var(--heading-letter-spacing);
     padding: 1rem;
+
+    .dropdown-list {
+      color: var(--text-primary);
+      font-weight: 400;
+      letter-spacing: 0;
+    }
 
     &.default {
       background-color: var(--background-secondary);
@@ -139,16 +141,10 @@
 
     h2 {
       align-self: center;
-      font-size: var(--type-base-font-size-rem);
-      line-height: var(--heading-line-height);
+      font-size: 1.25rem;
+      font-weight: 700;
       // vertically centre first line of title, without increasing line height:
-      margin: calc(
-          (
-              var(--form-elem-height) - var(--type-base-font-size-rem) *
-                var(--heading-line-height)
-            ) / 2
-        )
-        0;
+      margin: 0.25rem 0;
       margin-right: 1rem;
       overflow-wrap: anywhere;
 
@@ -167,6 +163,7 @@
     p {
       margin: 0;
       overflow-wrap: anywhere;
+      white-space: pre-wrap;
     }
 
     footer {
@@ -178,10 +175,14 @@
       margin-top: auto;
       overflow-wrap: anywhere;
       padding-top: 1rem;
+
+      a {
+        color: var(--collections-article-link);
+      }
     }
 
     time {
-      font-size: var(--type-smaller-font-size);
+      font-size: 0.875rem;
     }
 
     @media screen and (max-width: $screen-md) {

@@ -37,7 +37,7 @@ if (linkText === elementName && elementName.indexOf(" ") === -1) {
 //   {{HTMLElement("abbr")}}
 //
 // you *want* flaws to bubble up. E.g. a typo like `{{HTMLElement("abbbr")}}`
-// But this macro is called from another macro, like `HTMLRef` then, all those
+// But this macro is called from another macro, like `HTMLRefTable` then, all those
 // macro calls should be "supressed" because it's a problem with the that sidebar
 // macro, not the page the current user is viewing/working on.
 // So if this 4th argument is passed, it will potentially ignore the macro flaw.

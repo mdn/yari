@@ -12,9 +12,10 @@ import {
   CONTRIBUTOR_SPOTLIGHT_ROOT,
   BUILD_OUT_ROOT,
 } from "../libs/env";
+import { isValidLocale } from "../libs/locale-utils";
 import { DocFrontmatter } from "../libs/types/document";
 import { renderHTML } from "../ssr/dist/main";
-import { default as got } from "got";
+import got from "got";
 import { splitSections } from "./utils";
 import cheerio from "cheerio";
 import { findByURL } from "../content/document";
@@ -247,7 +248,7 @@ export async function buildSPAs(options) {
       continue;
     }
     for (const locale of fs.readdirSync(root)) {
-      if (!VALID_LOCALES.has(locale)) {
+      if (!isValidLocale(locale)) {
         continue;
       }
       if (!fs.statSync(path.join(root, locale)).isDirectory()) {

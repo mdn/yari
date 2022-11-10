@@ -1,23 +1,21 @@
 import { IEX_DOMAIN } from "./env";
+import { Theme } from "./types/theme";
 
 const HOMEPAGE_RE = /^\/[A-Za-z-]*\/?(?:_homepage)?$/i;
 const DOCS_RE = /^\/[A-Za-z-]+\/docs\/.*$/i;
 const PLUS_RE = /^\/[A-Za-z-]*\/?plus(?:\/?.*)$/i;
 const CATEGORIES = ["html", "javascript", "css", "api", "http"];
 
-export function docCategory({ pathname = "" } = {}): string | null {
-  const [, , , webOrLearn, category] = pathname.split("/");
-  if (
-    webOrLearn?.toLowerCase() === "learn" ||
-    webOrLearn?.toLowerCase() === "web"
-  ) {
-    if (CATEGORIES.includes(category?.toLocaleLowerCase?.())) {
-      return `category-${category.toLowerCase()}`;
+export function getCategoryByPathname(pathname = ""): string | null {
+  const [, , , webOrLearn, category] = pathname.toLowerCase().split("/");
+  if (webOrLearn === "learn" || webOrLearn === "web") {
+    if (CATEGORIES.includes(category)) {
+      return category;
     }
-    return `category-${webOrLearn.toLowerCase()}`;
+    return webOrLearn;
   }
   if (isHomePage(pathname)) {
-    return `category-home`;
+    return "home";
   }
   return null;
 }
@@ -35,11 +33,11 @@ export function isHomePage(pathname: string): boolean {
 }
 
 /**
- * Posts the name of the theme we are changing to to the
+ * Posts the name of the theme we are changing to the
  * interactive examples `iframe`.
- * @param { string } theme - The theme to switch to
+ * @param { Theme } theme - The theme to switch to
  */
-export function postToIEx(theme: string) {
+export function postToIEx(theme: Theme) {
   const iexFrame = document.querySelector(".interactive") as HTMLIFrameElement;
 
   if (iexFrame) {
@@ -53,7 +51,7 @@ export function postToIEx(theme: string) {
   }
 }
 
-export function switchTheme(theme: string, set: (theme: string) => void) {
+export function switchTheme(theme: Theme, set: (theme: Theme) => void) {
   const html = document.documentElement;
 
   if (window && html) {
@@ -86,4 +84,12 @@ export function isPlusSubscriber(user) {
  */
 export function camelWrap(text: string) {
   return text.replace(/([^A-Z])([A-Z])/g, "$1\u200B$2");
+}
+
+/**
+ * Gets the number of characters in a string.
+ * String.length returns the number of code units.
+ */
+export function charLength(string: string) {
+  return [...string].length;
 }

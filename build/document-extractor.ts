@@ -47,7 +47,7 @@ export function extractSidebar($: cheerio.CheerioAPI, doc: Partial<Doc>) {
 
   // Open menu and highlight current page.
   search.find(`a[href='${doc.mdn_url}']`).each((_i, el) => {
-    $(el).closest("details").prop("open", true);
+    $(el).parents("details").prop("open", true);
     $(el).attr("aria-current", "page");
     // Highlight, unless it already is highlighted (e.g. heading).
     if ($(el).find("em,strong").length === 0) {
@@ -374,7 +374,7 @@ function _addSingleSpecialSection(
   }
 
   // Some old legacy documents haven't been re-rendered yet, since it
-  // was added, so the `div.bc-data` tag doesn't have a a `id="bcd:..."`
+  // was added, so the `div.bc-data` tag doesn't have a `id="bcd:..."`
   // or `data-bcd="..."` attribute. If that's the case, bail and fall
   // back on a regular prose section :(
   if (!dataQuery && specURLsString === "") {

@@ -18,7 +18,7 @@
   .article-actions-submenu {
     --gutter-padding: 1rem;
     display: none;
-    overflow: scroll;
+    overflow: auto;
 
     &.show {
       background: var(--background-primary);
@@ -100,6 +100,7 @@
         bottom: auto;
         box-shadow: var(--shadow-02);
         left: initial;
+        max-height: calc(100vh - 12px - var(--main-document-header-height));
         padding: 0;
         position: absolute;
         right: 0;
@@ -147,7 +148,7 @@
       width: 100vw;
       z-index: var(--z-index-low);
 
-      & > .button,
+      > .button,
       .article-actions-entries > li > .button,
       .article-actions-entries > li > div > .button {
         --button-radius: 0;

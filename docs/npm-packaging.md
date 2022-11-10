@@ -41,9 +41,9 @@ Or, you can omit the `--dry-run`, let it create a `mdn-yari-0.x.y.tgz` which you
 can extract into your `/tmp/` directory and manually inspect the files in there.
 
 But note, it's not just about what's included in the tarball. What also matters
-is what what happens when someone installs the tarball. Because the tarball
-contains a `package.json` and consecuent `yarn install` (or `npm install` for
-that matter) will start to download those dependencies too.
+is what happens when someone installs the tarball. Because the tarball contains
+a `package.json` and consecuent `yarn install` (or `npm install` for that
+matter) will start to download those dependencies too.
 
 In Yari, any dependency that you don't need in Content, but you need in Yari
 should go into the `devDependencies` (rather than `dependencies`) in the

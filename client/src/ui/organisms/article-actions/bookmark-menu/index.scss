@@ -1,0 +1,24 @@
+@use "../../../../ui/vars" as *;
+
+.bookmark-menu {
+  .is-button-row {
+    flex-direction: row-reverse;
+    justify-content: flex-start;
+  }
+
+  #bookmark-delete {
+    margin-right: auto;
+
+    .icon {
+      background-color: var(--text-primary-red);
+    }
+  }
+
+  @media screen and (min-width: $screen-md) {
+    #bookmark-note {
+      // clamp height to ensure dropdown doesn't go off screen
+      // but set a minimum, so it doesn't become unusably small
+      max-height: max(calc(100vh - 30rem), 5rem);
+    }
+  }
+}
