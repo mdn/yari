@@ -33,10 +33,10 @@ module.exports = {
       parser: "@typescript-eslint/parser",
       extends: ["plugin:@typescript-eslint/recommended"],
       rules: {
-        "n/shebang": "off",
+        "@typescript-eslint/no-explicit-any": "off",
         "@typescript-eslint/no-var-requires": "off",
         "n/no-missing-import": "off",
-        "@typescript-eslint/no-explicit-any": "off",
+        "n/shebang": "off",
       },
     },
     {
