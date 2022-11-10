@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+import crypto from "crypto";
 import fs from "fs";
 import path from "path";
 import zlib from "zlib";
@@ -15,7 +16,7 @@ import { VALID_LOCALES } from "../libs/constants";
 import { renderHTML } from "../ssr/dist/main";
 import options from "./build-options";
 import { buildDocument, BuiltDocument, renderContributorsTxt } from ".";
-import { Flaws } from "../libs/types";
+import { DocMetadata, Flaws } from "../libs/types";
 import * as bcd from "@mdn/browser-compat-data/types";
 import SearchIndex from "./search-index";
 import { BUILD_OUT_ROOT } from "../libs/env";
@@ -116,6 +117,8 @@ async function buildDocuments(
     findAllOptions.files = new Set(files);
   }
 
+  const metadata = {};
+
   const documents = Document.findAll(findAllOptions);
   const progressBar = new cliProgress.SingleBar(
     {},
@@ -179,12 +182,10 @@ async function buildDocuments(
       );
     }
 
-    fs.writeFileSync(
-      path.join(outPath, "index.json"),
-      // This is exploiting the fact that renderHTML has the side-effect of
-      // mutating the built document which makes this not great and refactor-worthy.
-      JSON.stringify({ doc: builtDocument })
-    );
+    // This is exploiting the fact that renderHTML has the side-effect of
+    // mutating the built document which makes this not great and refactor-worthy.
+    const docString = JSON.stringify({ doc: builtDocument });
+    fs.writeFileSync(path.join(outPath, "index.json"), docString);
     fs.writeFileSync(
       path.join(outPath, "contributors.txt"),
       renderContributorsTxt(
@@ -240,6 +241,25 @@ async function buildDocuments(
       searchIndex.add(document);
     }
 
+    const hash = crypto.createHash("sha256").update(docString).digest("hex");
+    const {
+      body: _,
+      toc: __,
+      sidebarHTML: ___,
+      ...builtMetadata
+    } = builtDocument;
+    builtMetadata.hash = hash;
+
+    fs.writeFileSync(
+      path.join(outPath, "metadata.json"),
+      JSON.stringify(builtMetadata)
+    );
+    if (metadata[document.metadata.locale]) {
+      metadata[document.metadata.locale].push(builtMetadata);
+    } else {
+      metadata[document.metadata.locale] = [builtMetadata];
+    }
+
     if (!options.noProgressbar) {
       progressBar.increment();
     } else if (!quiet) {
@@ -255,7 +275,6 @@ async function buildDocuments(
     progressBar.stop();
   }
 
-  const sitemapsBuilt: string[] = [];
   for (const [locale, docs] of Object.entries(docPerLocale)) {
     const sitemapDir = path.join(
       BUILD_OUT_ROOT,
@@ -275,6 +294,13 @@ async function buildDocuments(
     fs.writeFileSync(
       path.join(BUILD_OUT_ROOT, locale.toLowerCase(), "search-index.json"),
       JSON.stringify(items)
+    );
+  }
+
+  for (const [locale, meta] of Object.entries(metadata)) {
+    fs.writeFileSync(
+      path.join(BUILD_OUT_ROOT, locale.toLowerCase(), "metadata.json"),
+      JSON.stringify(meta)
     );
   }
   return { slugPerLocale: docPerLocale, peakHeapBytes, totalFlaws };
