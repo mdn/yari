@@ -32,9 +32,11 @@ export function SidebarContainer({ doc, children }) {
     const sidebar = document.querySelector("#sidebar-quicklinks");
     const currentSidebarItem = sidebar?.querySelector("em");
     if (sidebar && currentSidebarItem) {
-      [sidebar, sidebar.querySelector(".sidebar-inner")].forEach(n => n?.scrollTo({
-        top: currentSidebarItem.offsetTop - window.innerHeight / 3,
-      }));
+      [sidebar, sidebar.querySelector(".sidebar-inner")].forEach((n) =>
+        n?.scrollTo({
+          top: currentSidebarItem.offsetTop - window.innerHeight / 3,
+        })
+      );
     }
   }, []);
 
