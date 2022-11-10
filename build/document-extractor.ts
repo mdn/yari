@@ -8,7 +8,6 @@ import {
   Section,
   SpecificationsSection,
 } from "../libs/types";
-import { BuiltDocument } from ".";
 import specs from "browser-specs";
 import web from "../kumascript/src/api/web";
 
