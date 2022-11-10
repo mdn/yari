@@ -219,7 +219,7 @@ describe("Environment class", () => {
   });
 
   it("defines a template() function that renders templates", async () => {
-    const mockRender = jest.fn((a, b) => "hello world");
+    const mockRender = jest.fn(() => "hello world");
     const mockTemplates = { render: mockRender };
     const environment = new Environment({}, mockTemplates);
     const context = environment.getExecutionContext([]);
