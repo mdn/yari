@@ -980,10 +980,10 @@ if (Mozilla && !Mozilla.dntEnabled()) {
         if (flaws.length) {
           const fixableFlaws = flaws.filter(
             (f): f is MacroRedirectedLinkError =>
-              f.hasOwnProperty("redirectInfo")
+              Object.prototype.hasOwnProperty.call(f, "redirectInfo")
           );
           const nonFixableFlaws = flaws.filter(
-            (f) => !f.hasOwnProperty("redirectInfo")
+            (f) => !Object.prototype.hasOwnProperty.call(f, "redirectInfo")
           );
           const nonFixableFlawNames = [
             ...new Set(nonFixableFlaws.map((f) => f.name)).values(),
