@@ -473,7 +473,7 @@ function CompatCell({
 
   // Sparkle opacity will slowly reduce over time, completely hidden after one year
   const sparkleOpacity =
-    age !== NaN &&
+    !isNaN(age) &&
     (supportClassName === "yes" || supportClassName === "partial")
       ? Math.floor(((365 - Math.min(365, Math.max(0, age))) / 365) * 25)
       : 0;
