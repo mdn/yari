@@ -5,7 +5,7 @@ import * as elementMetric from "./generated/element";
 import * as pings from "./generated/pings";
 import Glean from "@mozilla/glean/web";
 import { CRUD_MODE, GLEAN_CHANNEL, GLEAN_DEBUG, GLEAN_ENABLED } from "../env";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { useLocation } from "react-router";
 import { useIsServer } from "../hooks";
 import { useUserData } from "../user-context";
@@ -112,9 +112,11 @@ export function useGleanPage() {
   const loc = useLocation();
   const userData = useUserData();
   const isServer = useIsServer();
+  const path = useRef<String | null>(null);
 
   return useEffect(() => {
-    if (!isServer && userData) {
+    if (!isServer && userData && path.current !== loc.pathname) {
+      path.current = loc.pathname;
       gleanAnalytics.page({
         path: window?.location.toString(),
         referrer: document?.referrer,
