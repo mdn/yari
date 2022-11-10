@@ -43,7 +43,32 @@ const PORT = parseInt(process.env.SERVER_PORT || "5042");
 // will include very rarely used URIs.
 const MAX_GOOGLE_ANALYTICS_URIS = 20000;
 
-interface DeleteArgsAndOptions extends ActionParameters {
+interface ValidateRedirectsActionParameters extends ActionParameters {
+  args: {
+    locales: string[];
+  };
+  options: {
+    strict: boolean;
+  };
+}
+interface TestRedirectsActionParameters extends ActionParameters {
+  args: {
+    urls: string[];
+  };
+}
+interface AddRedirectActionParameters extends ActionParameters {
+  args: {
+    from: string;
+    to: string;
+  };
+}
+interface FixRedirectsActionParameters extends ActionParameters {
+  args: {
+    locales: string[];
+  };
+}
+
+interface DeleteActionParameters extends ActionParameters {
   args: {
     slug: string;
     locale: string;
@@ -202,38 +227,41 @@ program
   })
   .option("--strict", "Strict validation")
   .action(
-    tryOrExit(({ args, options, logger }) => {
-      const locales = args.locales as string[];
-      const strict = options.strict as boolean;
-      if (strict) {
-        for (const locale of locales) {
+    tryOrExit(
+      ({ args, options, logger }: ValidateRedirectsActionParameters) => {
+        const { locales } = args;
+        const { strict } = options;
+        if (strict) {
+          for (const locale of locales) {
+            try {
+              Redirect.validateLocale(locale, strict);
+              logger.info(
+                chalk.green(`✓ redirects for ${locale} looking good!`)
+              );
+            } catch (e) {
+              throw new Error(
+                `_redirects.txt for ${locale} is causing issues: ${e}`
+              );
+            }
+          }
+        } else {
           try {
-            Redirect.validateLocale(locale, strict);
-            logger.info(chalk.green(`✓ redirects for ${locale} looking good!`));
+            Redirect.load(locales, true);
           } catch (e) {
-            throw new Error(
-              `_redirects.txt for ${locale} is causing issues: ${e}`
-            );
+            throw new Error(`Unable to load redirects: ${e}`);
           }
         }
-      } else {
-        try {
-          Redirect.load(locales, true);
-        } catch (e) {
-          throw new Error(`Unable to load redirects: ${e}`);
-        }
-      }
 
-      logger.info(chalk.green("🍾 All is well in the world of redirects 🥂"));
-    })
+        logger.info(chalk.green("🍾 All is well in the world of redirects 🥂"));
+      }
+    )
   )
 
   .command("test-redirects", "Test URLs (pathnames) to see if they redirect")
   .argument("[urls...]", "URLs to test")
   .action(
-    tryOrExit(({ args, logger }) => {
-      const urls = args.urls as string[];
-      for (const url of urls) {
+    tryOrExit(({ args, logger }: TestRedirectsActionParameters) => {
+      for (const url of args.urls) {
         const resolved = Redirect.resolve(url);
         if (resolved === url) {
           logger.info(chalk.yellow(`${url.padEnd(50)} Not a redirecting URL`));
@@ -248,9 +276,8 @@ program
   .argument("<from>", "From-URL")
   .argument("<to>", "To-URL")
   .action(
-    tryOrExit(({ args, logger }) => {
-      const from = args.from as string;
-      const to = args.to as string;
+    tryOrExit(({ args, logger }: AddRedirectActionParameters) => {
+      const { from, to } = args;
       const locale = from.split("/")[1];
       Redirect.add(locale, [[from, to]]);
       logger.info(chalk.green(`Saved '${from}' → '${to}'`));
@@ -263,9 +290,8 @@ program
     validator: [...VALID_LOCALES.values(), ...VALID_LOCALES.keys()],
   })
   .action(
-    tryOrExit(({ args, logger }) => {
-      const locales = args.locales as string[];
-      for (const locale of locales) {
+    tryOrExit(({ args, logger }: FixRedirectsActionParameters) => {
+      for (const locale of args.locales) {
         Redirect.add(locale.toLowerCase(), [], { fix: true, strict: true });
         logger.info(chalk.green(`Fixed ${locale}`));
       }
@@ -285,7 +311,7 @@ program
   )
   .option("-y, --yes", "Assume yes", { default: false })
   .action(
-    tryOrExit(async ({ args, options }: DeleteArgsAndOptions) => {
+    tryOrExit(async ({ args, options }: DeleteActionParameters) => {
       const { slug, locale } = args;
       const { recursive, redirect, yes } = options;
       const changes = Document.remove(slug, locale, {
