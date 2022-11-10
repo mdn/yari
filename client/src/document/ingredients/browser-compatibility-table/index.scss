@@ -64,6 +64,38 @@
         width: 100%;
       }
 
+      &.bc-new-feature {
+        position: relative;
+
+        &:before {
+          background-image: url("../../../assets/sparkle-texture.svg");
+          background-size: cover;
+          content: " ";
+          filter: blur(1px);
+          height: 100%;
+          left: 0;
+          position: absolute;
+          top: 0;
+          width: 100%;
+
+          @media (prefers-color-scheme: light) {
+            .os-default & {
+              filter: blur(1px) invert(1);
+            }
+          }
+
+          .light & {
+            filter: blur(1px) invert(1);
+          }
+        }
+
+        @for $i from 1 through 100 {
+          &.bc-new-feature-#{$i}:before {
+            opacity: $i * 1%;
+          }
+        }
+      }
+
       &.bc-supports-no > button > span {
         color: var(--text-primary-red);
       }

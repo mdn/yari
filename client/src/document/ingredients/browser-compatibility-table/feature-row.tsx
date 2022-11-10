@@ -462,11 +462,30 @@ function CompatCell({
     </>
   );
 
+  // Get age of feature in days
+  const age = support
+    ? Math.floor(
+        (new Date().getTime() - new Date(support[0].release_date).getTime()) /
+          1000 /
+          (60 * 60 * 24)
+      )
+    : NaN;
+
+  // Sparkle opacity will slowly reduce over time, completely hidden after one year
+  const sparkleOpacity =
+    age === NaN
+      ? 0
+      : Math.floor(((365 - Math.min(365, Math.max(0, age))) / 365) * 25);
+
   return (
     <>
       <td
         className={`bc-support bc-browser-${browserId} bc-supports-${supportClassName} ${
           notes ? "bc-has-history" : ""
+        } ${
+          sparkleOpacity
+            ? `bc-new-feature bc-new-feature-${sparkleOpacity}`
+            : ""
         }`}
         aria-expanded={showNotes ? "true" : "false"}
         onClick={notes ? () => onToggle() : undefined}
