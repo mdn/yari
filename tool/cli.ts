@@ -125,7 +125,7 @@ interface BuildRobotsTxtArgsAndOptions {
   logger: Logger;
 }
 
-function tryOrExit(f) {
+function tryOrExit(f: ({ options, ...args }) => Promise<void>) {
   return async ({ options = {}, ...args }: { options: Options }) => {
     try {
       await f({ options, ...args });
