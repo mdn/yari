@@ -92,7 +92,12 @@ function useSearchIndex(): readonly [
       });
     };
     gather();
-  }, [shouldInitialize, data, user?.settings?.colInSearch]);
+  }, [
+    shouldInitialize,
+    data,
+    user?.settings?.colInSearch,
+    user?.settings?.collectionLastModified,
+  ]);
 
   return useMemo(
     () => [searchIndex, error || null, () => setShouldInitialize(true)],
