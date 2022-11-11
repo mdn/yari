@@ -153,7 +153,6 @@ function FrequentlyViewedCollectionComponent() {
             <Button
               type="primary"
               onClickHandler={() => {
-                console.log(`set size ${size}`);
                 setSize(size + 10);
               }}
               isDisabled={false}
@@ -218,7 +217,6 @@ function ItemComponent({
       revalidateOnReconnect: false,
     }
   );
-  console.log(item);
   const category = getCategoryByPathname(item.url);
 
   return (
