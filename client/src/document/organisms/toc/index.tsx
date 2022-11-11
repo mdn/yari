@@ -43,7 +43,7 @@ export function TOC({ toc }: { toc: Toc[] }) {
         <header>
           <h2 className="document-toc-heading">In this article</h2>
         </header>
-        <ul className="document-toc-list" id="toc-entries">
+        <ul className="document-toc-list">
           {toc.map((item) => {
             return (
               <TOCItem
