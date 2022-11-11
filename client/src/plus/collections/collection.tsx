@@ -137,10 +137,16 @@ function ItemComponent({
     );
 
   const openBookmarkMenu: React.MouseEventHandler = (e) => {
-    const button = e.currentTarget
-      .closest("article")
-      ?.querySelector(".bookmark-button");
-    if (button instanceof HTMLElement) button.click();
+    const article = e.currentTarget.closest("article");
+    [
+      article?.querySelector(".article-actions-toggle"),
+      article?.querySelector(".bookmark-button"),
+    ].forEach((button) => {
+      if (button instanceof HTMLElement) {
+        if (getComputedStyle(button).display === "none") return;
+        button.click();
+      }
+    });
   };
 
   const { data: doc } = useSWR(
@@ -194,9 +200,15 @@ function ItemComponent({
       {note ? (
         <div className="note">
           <div>
-            <Button icon="edit" type="action" onClickHandler={openBookmarkMenu}>
-              <span className="visually-hidden">Edit note</span>
-            </Button>
+            {doc && (
+              <Button
+                icon="edit"
+                type="action"
+                onClickHandler={openBookmarkMenu}
+              >
+                <span className="visually-hidden">Edit note</span>
+              </Button>
+            )}
           </div>
           <div className="text">
             <p className={item.notes?.includes("{") ? "code" : ""}>
@@ -226,7 +238,7 @@ function ItemComponent({
               ))}
           </div>
         </div>
-      ) : (
+      ) : doc ? (
         <Button
           extraClasses="add-note"
           icon="edit"
@@ -235,7 +247,7 @@ function ItemComponent({
         >
           Add note
         </Button>
-      )}
+      ) : null}
     </article>
   );
 }
