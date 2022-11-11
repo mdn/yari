@@ -219,6 +219,7 @@ describe("Environment class", () => {
   });
 
   it("defines a template() function that renders templates", async () => {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const mockRender = jest.fn((a, b) => "hello world");
     const mockTemplates = { render: mockRender };
     const environment = new Environment({}, mockTemplates);

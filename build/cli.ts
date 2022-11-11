@@ -12,7 +12,6 @@ import { prompt } from "inquirer";
 import { Document, slugToFolder, translationsOf } from "../content";
 import { CONTENT_ROOT, CONTENT_TRANSLATED_ROOT } from "../libs/env";
 import { VALID_LOCALES } from "../libs/constants";
-// eslint-disable-next-line n/no-missing-require
 import { renderHTML } from "../ssr/dist/main";
 import options from "./build-options";
 import { buildDocument, BuiltDocument, renderContributorsTxt } from ".";
@@ -26,7 +25,7 @@ import { humanFileSize } from "./utils";
 export type DocumentBuild = SkippedDocumentBuild | InteractiveDocumentBuild;
 
 export interface SkippedDocumentBuild {
-  doc: {};
+  doc: Record<string, never>;
   skip: true;
 }
 

@@ -29,6 +29,18 @@ module.exports = {
   reportUnusedDisableDirectives: true,
   overrides: [
     {
+      files: ["**/*.ts", "**/*.tsx"],
+      parser: "@typescript-eslint/parser",
+      extends: ["plugin:@typescript-eslint/recommended"],
+      rules: {
+        "@typescript-eslint/no-explicit-any": "off",
+        "@typescript-eslint/no-var-requires": "off",
+        "n/no-missing-import": "off",
+        "n/no-unpublished-import": "off",
+        "n/shebang": "off",
+      },
+    },
+    {
       files: ["testing/**/*.js"],
       globals: {
         page: "readonly",
