@@ -44,6 +44,7 @@
       h2 {
         font-size: 1.25rem;
         margin: 0;
+        overflow-wrap: anywhere;
       }
 
       .article-actions {
@@ -111,6 +112,7 @@
 
       p {
         display: inline;
+        overflow-wrap: anywhere;
         white-space: pre-wrap;
 
         &.code {
