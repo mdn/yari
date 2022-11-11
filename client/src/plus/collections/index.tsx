@@ -6,7 +6,8 @@ import NewEditCollectionModal from "./new-edit-collection-modal";
 import { Route, Routes } from "react-router";
 import { Collection, useCollectionDelete, useCollections } from "./api";
 import { Link } from "react-router-dom";
-import CollectionComponent, {
+import {
+  CollectionComponent,
   FrequentlyViewedCollectionComponent,
 } from "./collection";
 import { DropdownMenuWrapper, DropdownMenu } from "../../ui/molecules/dropdown";
@@ -67,7 +68,7 @@ function Overview() {
   }
 
   return (
-    <>
+    <div className="collections-overview">
       <header className="container">
         <div className="collections-hero">
           <div className="mandala-wrapper">
@@ -117,7 +118,7 @@ function Overview() {
           "Create a new collection..."
         )}
       </Container>
-    </>
+    </div>
   );
 }
 

@@ -19,7 +19,7 @@ export type FrequentlyViewedEntry = {
 
 const FREQUENTLY_VIEWED_STORAGE_KEY = "frequently-viewed-documents";
 
-const ThirtyDaysMilliseconds = 30 * 24 * 60 * 60 * 1000;
+const ThirtyDaysMilliseconds = 4 * 60 * 1000;
 const isWithinLastThirtyDays = (date: Date): boolean => {
   const currentDate = new Date().getTime();
   return date.getTime() >= currentDate - ThirtyDaysMilliseconds;
@@ -110,7 +110,8 @@ function getNextFrequentlyViewedSerial(
 }
 
 export function useFrequentlyViewed(limit: number, offset: number, setEnd) {
-  const [collection, setCollection] = useState<FrequentlyViewedCollection>();
+  const [collection, setCollection] =
+    useState<FrequentlyViewedCollection | null>();
   const [updated, setUpdated] = useState(false);
 
   useEffect(() => {
@@ -120,18 +121,27 @@ export function useFrequentlyViewed(limit: number, offset: number, setEnd) {
       setEnd(true);
     }
 
+    if (freqViewed.length === 0) {
+      setCollection(null);
+      return;
+    }
+
     let paged = freqViewed
       .sort(sortByTimestampThenVistsDesc)
       .slice(0, limit + offset);
 
     let collection: FrequentlyViewedCollection = {
       article_count: freqViewed.length,
-      created_at: new Date(freqViewed[0].timestamps[0]).toISOString(),
+      created_at: freqViewed[0]
+        ? new Date(freqViewed[0].timestamps[0]).toISOString()
+        : new Date().toISOString(),
       description: "Articles you viewed more than 2 times in the past 30 days.",
       id: "frequently-viewed",
       items: paged,
       name: "Frequently Viewed Articles",
-      updated_at: new Date(freqViewed[0].timestamps[0]).toISOString(),
+      updated_at: freqViewed[0]
+        ? new Date(freqViewed[0].timestamps[0]).toISOString()
+        : new Date().toISOString(),
     };
     setCollection(collection);
     setUpdated(false);

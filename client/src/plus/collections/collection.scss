@@ -1,0 +1,155 @@
+@use "../../ui/vars" as *;
+
+.collections-collection {
+  color: var(--text-secondary);
+  font-weight: 500;
+  letter-spacing: var(--heading-letter-spacing);
+
+  h1,
+  h2 {
+    color: var(--text-primary);
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-top: 0.5rem;
+
+    a {
+      color: inherit;
+    }
+  }
+
+  > header {
+    padding: 2rem 0;
+
+    p {
+      margin: 0;
+      white-space: pre-wrap;
+    }
+  }
+
+  article {
+    border-left: var(--category-color-engage, var(--border-primary)) 0.25rem
+      solid;
+
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-bottom: 3em;
+    padding-left: 1rem;
+    position: relative;
+
+    &:nth-last-of-type(n + 2)::after {
+      background: var(--border-primary);
+      bottom: -1.5rem;
+      content: "";
+      display: block;
+      height: 0.0625rem;
+      left: -0.25rem;
+      position: absolute;
+      right: 0;
+    }
+
+    header {
+      display: flex;
+
+      h2 {
+        font-size: 1.25rem;
+        margin: 0;
+      }
+
+      .article-actions {
+        margin-top: -0.125rem;
+
+        .article-actions-toggle {
+          margin-top: -0.125rem;
+        }
+
+        @media screen and (min-width: $screen-md) {
+          li > div > button {
+            .button-wrap {
+              --button-color: var(--text-secondary);
+              font-size: 0.875rem;
+              text-transform: none;
+            }
+          }
+        }
+      }
+    }
+
+    .breadcrumbs {
+      font-size: 0.6875rem;
+      font-style: italic;
+      margin-top: -0.5rem;
+    }
+
+    > p {
+      color: var(--text-primary);
+      margin: 0;
+    }
+
+    aside {
+      font-size: 0.875rem;
+
+      b {
+        font-weight: unset;
+      }
+
+      a {
+        text-decoration: underline;
+      }
+    }
+
+    .note {
+      background: var(--background-secondary);
+      border-radius: 0.25rem;
+
+      display: flex;
+      flex-direction: row-reverse;
+      font-size: 0.875rem;
+
+      font-style: italic;
+      gap: 1rem;
+      padding: 1rem;
+
+      .text {
+        margin-right: auto;
+        min-width: 0;
+      }
+
+      button.link .button-wrap {
+        text-decoration: underline;
+      }
+
+      p {
+        display: inline;
+        white-space: pre-wrap;
+
+        &.code {
+          font-family: var(--font-code);
+          font-style: normal;
+        }
+      }
+    }
+
+    .add-note {
+      --button-color: var(--text-link);
+      align-self: flex-start;
+
+      .button-wrap {
+        font-size: 0.875rem;
+        text-transform: none;
+      }
+    }
+  }
+
+  @media screen and (min-width: $screen-md) {
+    .container {
+      max-width: 41rem;
+    }
+  }
+
+  @media screen and (min-width: $screen-lg) {
+    .container {
+      max-width: 50rem;
+    }
+  }
+}
