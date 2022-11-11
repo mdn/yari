@@ -19,7 +19,7 @@ export type FrequentlyViewedEntry = {
 
 const FREQUENTLY_VIEWED_STORAGE_KEY = "frequently-viewed-documents";
 
-const ThirtyDaysMilliseconds = 4 * 60 * 1000;
+const ThirtyDaysMilliseconds = 30 * 24 * 60 * 60 * 1000;
 const isWithinLastThirtyDays = (date: Date): boolean => {
   const currentDate = new Date().getTime();
   return date.getTime() >= currentDate - ThirtyDaysMilliseconds;
