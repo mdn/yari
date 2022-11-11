@@ -107,7 +107,9 @@ body:
     attributes:
       label: Screenshot
       description: Please always add a screenshot or (even better) a screen recording to help us understand the problem.
-      placeholder: Paste screenshot or screen recording here.
+      placeholder: Attach screenshot or screen recording here.
+    validations:
+      required: true
   - type: textarea
     attributes:
       label: Anything else?
