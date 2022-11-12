@@ -127,7 +127,7 @@ export function Contribute() {
           MDN's resources are entirely available under various open source
           licenses. Detailed information on licensing for reuse of MDN content,
           especially regarding copyrights and attribution, can be found{" "}
-          <a href="/en-US/docs/MDN/About#using_mdn_web_docs_content">here.</a>
+          <a href="/en-US/docs/MDN/Writing_guidelines/Attrib_copyright_license">here.</a>
         </p>
         <h2>How to contribute</h2>
         <p>
@@ -136,7 +136,7 @@ export function Contribute() {
           and each person who does makes us stronger. Together we can continue
           to drive innovation on the Web to serve the greater good. It starts
           here, with you. Please,{" "}
-          <a href="/en-US/docs/MDN/Contribute">join us</a>!
+          <a href="/en-US/docs/MDN/Community">join us</a>!
         </p>
         <p>
           No matter your specific level of expertise, individual strengths and
@@ -147,10 +147,9 @@ export function Contribute() {
           Ready to become an active part of the MDN community but not sure where
           to begin? We've got you covered. See our step-by-step directions to{" "}
           <a
-            href="https://github.com/mdn/content/#readme"
+            href="/en-US/docs/MDN/Community/Contributing/Getting_started"
             target="_blank"
             rel="noreferrer noopener"
-            className="external"
           >
             making your first contribution to MDN on GitHub
           </a>
