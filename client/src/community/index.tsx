@@ -127,7 +127,9 @@ export function Contribute() {
           MDN's resources are entirely available under various open source
           licenses. Detailed information on licensing for reuse of MDN content,
           especially regarding copyrights and attribution, can be found{" "}
-          <a href="/en-US/docs/MDN/Writing_guidelines/Attrib_copyright_license">here.</a>
+          <a href="/en-US/docs/MDN/Writing_guidelines/Attrib_copyright_license">
+            here.
+          </a>
         </p>
         <h2>How to contribute</h2>
         <p>
@@ -135,7 +137,7 @@ export function Contribute() {
           web, regardless of brand, browser, or platform. Anyone can contribute
           and each person who does makes us stronger. Together we can continue
           to drive innovation on the web to serve the greater good. It starts
-          here, with you. 
+          here, with you.
           <a href="/en-US/docs/MDN/Community">Join us</a>!
         </p>
         <p>
