@@ -87,7 +87,7 @@ if (hasScreenshot) {
 } // end hasScreenshot
 %><iframe class="<%= className %>"<%
 %> title="<%= title %> sample" id="frame_<%= web.slugify(web.safeDecodeURIComponent(sampleIdOrOffset)) %>"<%
-if (width) { %> width="<%= width %>"<% }
+if (width) { %> style="width: <%= width %>;"<% }
 if (height) { %> height="<%= height %>"<% }
 %> src="<%- url %>"<%
 if (allowedFeatures) { %> allow="<%= allowedFeatures %>"<% }
