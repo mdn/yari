@@ -146,7 +146,11 @@ function FrequentlyViewedCollectionComponent() {
       </header>
       <Container>
         {_vals?.flat(1).map((item) => (
-          <ItemComponent key={item.id} {...{ item, mutate }} />
+          <ItemComponent
+            addNoteEnabled={false}
+            key={item.id}
+            {...{ item, mutate }}
+          />
         ))}
         {!atEnd && (
           <div className="pagination">
@@ -167,9 +171,11 @@ function FrequentlyViewedCollectionComponent() {
 }
 
 function ItemComponent({
+  addNoteEnabled = true,
   item,
   mutate,
 }: {
+  addNoteEnabled?: boolean;
   item: Item;
   mutate: KeyedMutator<Item[][]>;
 }) {
@@ -282,14 +288,16 @@ function ItemComponent({
           </div>
         </div>
       ) : (
-        <Button
-          extraClasses="add-note"
-          icon="edit"
-          type="action"
-          onClickHandler={openBookmarkMenu}
-        >
-          Add note
-        </Button>
+        addNoteEnabled && (
+          <Button
+            extraClasses="add-note"
+            icon="edit"
+            type="action"
+            onClickHandler={openBookmarkMenu}
+          >
+            Add note
+          </Button>
+        )
       )}
     </article>
   );
