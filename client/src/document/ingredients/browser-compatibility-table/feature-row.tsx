@@ -475,7 +475,7 @@ function CompatCell({
   const sparkleOpacity =
     !isNaN(age) &&
     (supportClassName === "yes" || supportClassName === "partial")
-      ? Math.floor(((365 - Math.min(365, Math.max(0, age))) / 365) * 25)
+      ? Math.floor(((365 - Math.min(365, Math.max(0, age))) / 365) * 100)
       : 0;
 
   return (
