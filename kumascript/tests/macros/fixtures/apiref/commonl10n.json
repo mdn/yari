@@ -17,28 +17,28 @@
     "en-US": "Static methods",
     "fr": "Méthodes",
     "ja": "メソッド",
-    "es": "Métodos"
+    "es": "Métodos estáticos"
   },
 
   "Static_properties": {
     "en-US": "Static properties",
     "fr": "Propriétés",
     "ja": "プロパティ",
-    "es": "Propiedades"
+    "es": "Propiedades estáticas"
   },
 
   "Instance_methods": {
     "en-US": "Instance methods",
     "fr": "Méthodes",
     "ja": "メソッド",
-    "es": "Métodos"
+    "es": "Métodos de instancia"
   },
 
   "Instance_properties": {
     "en-US": "Instance properties",
     "fr": "Propriétés",
     "ja": "プロパティ",
-    "es": "Propiedades"
+    "es": "Propiedades de instancia"
   },
 
   "Constructor": {
