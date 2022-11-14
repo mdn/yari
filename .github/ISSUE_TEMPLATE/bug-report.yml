@@ -1,4 +1,4 @@
----
+
 name: "\U0001F41E Bug report"
 description: Report a frontend bug on MDN Web Docs.
 labels:
@@ -110,7 +110,7 @@ body:
       description: Please always add a screenshot or (even better) a screen recording to help us understand the problem.
       placeholder: Attach screenshot or screen recording here.
     validations:
-      required: true
+      required: false
   - type: textarea
     attributes:
       label: Anything else?
