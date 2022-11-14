@@ -145,7 +145,7 @@ export function useFrequentlyViewed(limit: number, offset: number, setEnd) {
     };
     setCollection(collection);
     setUpdated(false);
-  }, [updated, offset]);
+  }, [limit, setEnd, updated, offset]);
 
   return collection;
 }
