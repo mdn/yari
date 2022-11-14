@@ -118,11 +118,11 @@ function FrequentlyViewedCollectionComponent() {
   let _vals: Item[] | undefined = frequentlyViewed?.items.map((v) => {
     return {
       collection_id: frequentlyViewed?.name || "",
-      updated_at: dayjs(v.timestamp).toISOString(),
-      created_at: dayjs(v.timestamp).toISOString(),
+      updated_at: dayjs(v.timestamps[0]).toISOString(),
+      created_at: dayjs(v.timestamps[0]).toISOString(),
       notes: "",
       id: v.serial.toString(),
-      parents: [],
+      parents: v.parents || [],
       url: v.url,
       title: v.title,
     };
