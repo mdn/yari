@@ -191,12 +191,6 @@ function ItemComponent({
     setNote(slicedNote);
   }, [item.notes]);
 
-  useEffect(() => {
-    const slicedNote = item.notes && charSlice(item.notes, 0, 180);
-    setSlicedNote(slicedNote);
-    setNote(slicedNote);
-  }, [item.notes]);
-
   const breadcrumbs = item.parents
     .slice(0, -1)
     .map((parent) => camelWrap(parent.title))
@@ -206,14 +200,20 @@ function ItemComponent({
     );
 
   const openBookmarkMenu: React.MouseEventHandler = (e) => {
-    const button = e.currentTarget
-      .closest("article")
-      ?.querySelector(".bookmark-button");
-    if (button instanceof HTMLElement) button.click();
+    const article = e.currentTarget.closest("article");
+    [
+      article?.querySelector(".article-actions-toggle"),
+      article?.querySelector(".bookmark-button"),
+    ].forEach((button) => {
+      if (button instanceof HTMLElement) {
+        if (getComputedStyle(button).display === "none") return;
+        button.click();
+      }
+    });
   };
 
   const { data: doc } = useSWR<DocMetadata>(
-    `${item.url}/index.json`,
+    `${item.url}/metadata.json`,
     async (url) => {
       const response = await fetch(url);
 
@@ -221,8 +221,7 @@ function ItemComponent({
         throw Error(response.statusText);
       }
 
-      const { doc } = await response.json();
-      return doc;
+      return (await response.json()) as DocMetadata;
     },
     {
       revalidateIfStale: false,
@@ -230,6 +229,7 @@ function ItemComponent({
       revalidateOnReconnect: false,
     }
   );
+
   const category = getCategoryByPathname(item.url);
 
   return (
@@ -245,6 +245,7 @@ function ItemComponent({
           <ArticleActions
             doc={doc}
             showTranslations={false}
+            item={item}
             scopedMutator={mutate}
           />
         )}
