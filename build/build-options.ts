@@ -29,9 +29,9 @@ const options = Object.freeze({
 function parseFiles(filesStringList: string): Set<string> {
   // The get-diff-action, which we use in the "PR Builds" CI,
   // will make this a massive string that looks like
-  // this: `'content/files/en-us/a/index.html','content/files/en-us/a/index.html'`
+  // this: `'content/files/en-us/a/index.md','content/files/en-us/a/index.md'`
   // so we need to turn that into an array:
-  // ["content/files/en-us/a/index.html", "content/files/en-us/b/index.html"]`
+  // ["content/files/en-us/a/index.md", "content/files/en-us/b/index.md"]`
   // Note, when you use get-diff-action in GitHub Actions, it's a comma
   // but if you use the manually `git diff --name-only ...` on your command
   // line it's a newline.

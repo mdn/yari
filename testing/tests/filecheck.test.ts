@@ -5,7 +5,7 @@ import { checkFile } from "../../filecheck/checker";
 
 const dirname = __dirname;
 
-const SAMPLES_DIRECTORY = path.join(dirname, "filechecker", "samplefiles-html");
+const SAMPLES_DIRECTORY = path.join(dirname, "filechecker", "samplefiles-md");
 
 describe("checking files", () => {
   it("should spot SVGs with scripts inside them", async () => {
@@ -27,16 +27,6 @@ describe("checking files", () => {
 
   it("should spot files that are not mentioned in source", async () => {
     const filePath = path.join(SAMPLES_DIRECTORY, "orphan.png");
-    // Sanity check the test itself
-    console.assert(fs.existsSync(filePath), `${filePath} does not exist`);
-    await expect(checkFile(filePath)).rejects.toThrow("is not mentioned in");
-  });
-
-  it("should spot files that are not mentioned in md source", async () => {
-    const filePath = path.join(
-      path.join(dirname, "filechecker", "samplefiles-md"),
-      "orphan.png"
-    );
     // Sanity check the test itself
     console.assert(fs.existsSync(filePath), `${filePath} does not exist`);
     await expect(checkFile(filePath)).rejects.toThrow("is not mentioned in");

@@ -500,7 +500,7 @@ program
       // Perhaps they typed in a path relative to the content root
       if (
         (slug.startsWith("files") || fs.existsSync(slug)) &&
-        (slug.endsWith("index.html") || slug.endsWith("index.md"))
+        slug.endsWith("index.md")
       ) {
         if (
           fs.existsSync(slug) &&

@@ -2,7 +2,7 @@ import path from "node:path";
 
 import { fdir, PathsOutput } from "fdir";
 
-import { HTML_FILENAME, MARKDOWN_FILENAME } from "../libs/constants";
+import { MARKDOWN_FILENAME } from "../libs/constants";
 import { CONTENT_ROOT, CONTENT_TRANSLATED_ROOT } from "../libs/env";
 
 type Tree = { [key: string]: Tree | null };
@@ -12,9 +12,7 @@ function allDocumentPathsAsTree(root: string) {
     .withErrors()
     .withRelativePaths()
     .filter((filePath) => {
-      return (
-        filePath.endsWith(HTML_FILENAME) || filePath.endsWith(MARKDOWN_FILENAME)
-      );
+      return filePath.endsWith(MARKDOWN_FILENAME);
     })
     .crawl(root);
 
@@ -42,18 +40,8 @@ function flattenSubTree(
   recurse = false
 ): string[] {
   const directChildren = [...Object.keys(t)]
-    .filter(
-      (k) =>
-        ![HTML_FILENAME, MARKDOWN_FILENAME].includes(k) &&
-        (t[k][HTML_FILENAME] === null || t[k][MARKDOWN_FILENAME] === null)
-    )
-    .map((k) =>
-      [
-        ...prefix,
-        k,
-        t[k][MARKDOWN_FILENAME] === null ? MARKDOWN_FILENAME : HTML_FILENAME,
-      ].join("/")
-    );
+    .filter((k) => k !== MARKDOWN_FILENAME && t[k][MARKDOWN_FILENAME] === null)
+    .map((k) => [...prefix, k, MARKDOWN_FILENAME].join("/"));
 
   if (!recurse) {
     return directChildren;
@@ -106,7 +94,6 @@ export function childrenFoldersForPath(
   recursive: boolean
 ) {
   const base = path.join(root, folder);
-  const baseHTML = path.join(base, HTML_FILENAME);
   const baseMarkdown = path.join(base, MARKDOWN_FILENAME);
 
   if (process.env.NODE_ENV === "production") {
@@ -124,8 +111,7 @@ export function childrenFoldersForPath(
       .withErrors()
       .filter((filePath) => {
         return (
-          (filePath.endsWith(HTML_FILENAME) && !(filePath === baseHTML)) ||
-          (filePath.endsWith(MARKDOWN_FILENAME) && !(filePath === baseMarkdown))
+          filePath.endsWith(MARKDOWN_FILENAME) && !(filePath === baseMarkdown)
         );
       })
       .withMaxDepth(recursive ? Infinity : 1)

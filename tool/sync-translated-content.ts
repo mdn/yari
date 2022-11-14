@@ -14,11 +14,7 @@ import {
   Document,
   Redirect,
 } from "../content";
-import {
-  HTML_FILENAME,
-  MARKDOWN_FILENAME,
-  VALID_LOCALES,
-} from "../libs/constants";
+import { MARKDOWN_FILENAME, VALID_LOCALES } from "../libs/constants";
 import { CONTENT_ROOT, CONTENT_TRANSLATED_ROOT } from "../libs/env";
 import { DocFrontmatter } from "../libs/types/document";
 
@@ -36,9 +32,7 @@ export function syncAllTranslatedContent(locale) {
     .withFullPaths()
     .withErrors()
     .filter((filePath) => {
-      return (
-        filePath.endsWith(HTML_FILENAME) || filePath.endsWith(MARKDOWN_FILENAME)
-      );
+      return filePath.endsWith(MARKDOWN_FILENAME);
     })
     .crawl(path.join(CONTENT_TRANSLATED_ROOT, locale));
   const files = [...(api.sync() as any)];
@@ -98,10 +92,7 @@ function resolve(slug) {
 
 function mdOrHtmlExists(filePath) {
   const dir = path.dirname(filePath);
-  return (
-    fs.existsSync(path.join(dir, MARKDOWN_FILENAME)) ||
-    fs.existsSync(path.join(dir, HTML_FILENAME))
-  );
+  return fs.existsSync(path.join(dir, MARKDOWN_FILENAME));
 }
 
 export function syncTranslatedContent(inFilePath, locale) {

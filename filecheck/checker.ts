@@ -139,13 +139,8 @@ export async function checkFile(
 
   // The image has to be mentioned in the adjacent index.html document
   const parentPath = path.dirname(filePath);
-  const htmlFilePath = path.join(parentPath, "index.html");
   const mdFilePath = path.join(parentPath, "index.md");
-  const docFilePath = (await fse.exists(htmlFilePath))
-    ? htmlFilePath
-    : (await fse.exists(mdFilePath))
-    ? mdFilePath
-    : null;
+  const docFilePath = (await fse.exists(mdFilePath)) ? mdFilePath : null;
   if (!docFilePath) {
     throw new FixableError(
       `${getRelativePath(

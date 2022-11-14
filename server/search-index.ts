@@ -22,7 +22,7 @@ function populateSearchIndex(searchIndex, localeLC) {
   const locale = VALID_LOCALES.get(localeLC);
   const api = new fdir().withFullPaths().withErrors().crawl(root);
   for (const filePath of api.sync() as PathsOutput) {
-    if (!(filePath.endsWith("index.html") || filePath.endsWith("index.md"))) {
+    if (!filePath.endsWith("index.md")) {
       continue;
     }
     const rawContent = fs.readFileSync(filePath, "utf-8");
