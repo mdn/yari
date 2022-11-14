@@ -1,4 +1,3 @@
-/* eslint-disable n/no-missing-require */
 const { CSP_VALUE } = require("@yari-internal/constants");
 
 exports.handler = async (event) => {

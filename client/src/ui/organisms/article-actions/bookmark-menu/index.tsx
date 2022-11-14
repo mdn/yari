@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 
 import { Button } from "../../../atoms/button";
-import { Doc } from "../../../../../../libs/types/document";
+import { Doc, DocMetadata } from "../../../../../../libs/types/document";
 import { useOnlineStatus } from "../../../../hooks";
 import {
   Item,
@@ -33,9 +33,11 @@ const addValue = "add";
 
 export default function BookmarkMenu({
   doc,
+  item,
   scopedMutator,
 }: {
-  doc: Doc;
+  doc: Doc | DocMetadata;
+  item?: Item;
   scopedMutator?: KeyedMutator<Item[][]>;
 }) {
   const { data: collections } = useCollections();
@@ -73,8 +75,9 @@ export default function BookmarkMenu({
   }, [collections, formItem]);
 
   useEffect(() => {
-    if (savedItems?.length) setFormItem(savedItems[0]);
-  }, [savedItems]);
+    if (item) setFormItem(item);
+    else if (savedItems?.length) setFormItem(savedItems[0]);
+  }, [item, savedItems]);
 
   useEffect(() => {
     if (showNewCollection === false) {
@@ -121,7 +124,7 @@ export default function BookmarkMenu({
 
   const cancelHandler = (e: React.MouseEvent) => {
     e.preventDefault();
-    setFormItem(savedItems?.[0] || defaultItem);
+    setFormItem(item || savedItems?.[0] || defaultItem);
     setShow(false);
   };
 

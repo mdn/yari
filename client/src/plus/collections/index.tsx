@@ -30,11 +30,14 @@ import {
   FrequentlyViewedCollection,
   useFrequentlyViewed,
 } from "./frequently-viewed";
+import { Icon } from "../../ui/atoms/icon";
+import { MDN_PLUS_TITLE } from "../../constants";
+import { SWRConfig } from "swr";
 dayjs.extend(relativeTime);
 
 export default function Collections() {
   return (
-    <div className="collections-v2">
+    <SWRConfig value={{ revalidateOnFocus: false, revalidateIfStale: false }}>
       <Routes>
         <Route path="/" element={<Overview />} />
         <Route
@@ -43,11 +46,12 @@ export default function Collections() {
         />
         <Route path=":collectionId" element={<CollectionComponent />} />
       </Routes>
-    </div>
+    </SWRConfig>
   );
 }
 
 function Overview() {
+  document.title = `Collections | ${MDN_PLUS_TITLE}`;
   const { data, isLoading, error } = useCollections();
   const [showCreate, setShowCreate] = useState(false);
   const frequentlyViewed = useFrequentlyViewed(0, 10, () => null);
@@ -68,41 +72,43 @@ function Overview() {
   }
 
   return (
-    <div className="collections-overview">
-      <header className="container">
-        <div className="collections-hero">
-          <div className="mandala-wrapper">
-            <Mandala />
-          </div>
-          <section className="collections-hero-cta">
-            <h1>Collections</h1>
-            <p>
-              Save and group your favorite MDN articles to easily find them
-              later on. <br />
-              <a
-                rel="noreferrer noopener"
-                target="_blank"
-                href="https://survey.alchemer.com/s3/6988450/Feature-Preview-User-Feedback-Multiple-Collections"
-              >
-                We'd love to hear your feedback!
-              </a>
-            </p>
-            <Button
-              onClickHandler={() => {
-                gleanClick(COLLECTIONS_BANNER_NEW_COLLECTION);
-                setShowCreate(true);
-              }}
-              isDisabled={isLoading}
+    <div className="collections collections-overview">
+      <header>
+        <Container>
+          <h1>
+            <div className="mandala-icon-wrapper">
+              <Mandala rotate={true} />
+              <Icon name="bookmark-filled" />
+            </div>
+            <span>Collections</span>
+          </h1>
+          <p>
+            Save and group your favorite MDN articles to easily find them later
+            on.
+            <br />
+            <a
+              rel="noreferrer noopener"
+              target="_blank"
+              href="https://survey.alchemer.com/s3/6988450/Feature-Preview-User-Feedback-Multiple-Collections"
             >
-              New Collection
-            </Button>
-            <NewEditCollectionModal
-              show={showCreate}
-              setShow={setShowCreate}
-              source={NEW_COLLECTION_MODAL_SUBMIT_COLLECTIONS_PAGE}
-            />
-          </section>
-        </div>
+              We'd love to hear your feedback!
+            </a>
+          </p>
+          <Button
+            onClickHandler={() => {
+              gleanClick(COLLECTIONS_BANNER_NEW_COLLECTION);
+              setShowCreate(true);
+            }}
+            isDisabled={isLoading}
+          >
+            New Collection
+          </Button>
+          <NewEditCollectionModal
+            show={showCreate}
+            setShow={setShowCreate}
+            source={NEW_COLLECTION_MODAL_SUBMIT_COLLECTIONS_PAGE}
+          />
+        </Container>
       </header>
       <Container>
         {isLoading ? (

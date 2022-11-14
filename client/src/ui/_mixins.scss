@@ -22,10 +22,11 @@
   position: relative;
 
   &::after {
-    background: linear-gradient(to right, transparent, $background-color 75%);
+    background: $background-color;
     content: "";
     display: block;
     height: calc(1em * $line-height);
+    mask-image: linear-gradient(to right, transparent, #000 75%);
     pointer-events: none;
     position: absolute;
     right: 0;
@@ -35,8 +36,8 @@
 
   &:dir(rtl) {
     &::after {
-      background: linear-gradient(to left, transparent, $background-color 75%);
       left: 0;
+      mask-image: linear-gradient(to left, transparent, #000 75%);
       right: initial;
     }
   }

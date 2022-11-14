@@ -129,6 +129,8 @@ body {
 }
 
 main {
+  // prevent margin-collapse for child elements
+  display: flow-root;
   min-height: 80vh;
 }
 

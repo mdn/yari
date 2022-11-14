@@ -5,7 +5,7 @@ import { LanguageMenu } from "./language-menu";
 import { useIsServer } from "../../../hooks";
 import { useUserData } from "../../../user-context";
 
-import { Doc } from "../../../../../libs/types/document";
+import { Doc, DocMetadata } from "../../../../../libs/types/document";
 
 import "./index.scss";
 
@@ -18,10 +18,12 @@ import { Item } from "../../../plus/collections/api";
 export const ArticleActions = ({
   doc,
   showTranslations = true,
+  item,
   scopedMutator,
 }: {
-  doc: Doc;
+  doc: Doc | DocMetadata;
   showTranslations?: boolean;
+  item?: Item;
   scopedMutator?: KeyedMutator<Item[][]>;
 }) => {
   const [showArticleActionsMenu, setShowArticleActionsMenu] = useState(false);
@@ -68,7 +70,11 @@ export const ArticleActions = ({
               )}
               {!isServer && isAuthenticated && (
                 <li className="article-actions-entry">
-                  <BookmarkMenu doc={doc} scopedMutator={scopedMutator} />
+                  <BookmarkMenu
+                    doc={doc}
+                    item={item}
+                    scopedMutator={scopedMutator}
+                  />
                 </li>
               )}
               {showTranslations && translations && !!translations.length && (

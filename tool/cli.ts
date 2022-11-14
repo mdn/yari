@@ -12,7 +12,6 @@ import { prompt } from "inquirer";
 import openEditor from "open-editor";
 import open from "open";
 import log from "loglevel";
-import * as cheerio from "cheerio";
 
 const dirname = __dirname;
 
@@ -33,7 +32,7 @@ import { runOptimizeClientBuild } from "./optimize-client-build";
 import { runBuildRobotsTxt } from "./build-robots-txt";
 import { syncAllTranslatedContent } from "./sync-translated-content";
 import * as kumascript from "../kumascript";
-import { Logger } from "types";
+import { Action, ActionParameters, Logger } from "types";
 import { MacroRedirectedLinkError } from "../kumascript/src/errors";
 
 const PORT = parseInt(process.env.SERVER_PORT || "5042");
@@ -44,12 +43,32 @@ const PORT = parseInt(process.env.SERVER_PORT || "5042");
 // will include very rarely used URIs.
 const MAX_GOOGLE_ANALYTICS_URIS = 20000;
 
-interface Options {
-  v?: boolean;
-  verbose?: boolean;
+interface ValidateRedirectsActionParameters extends ActionParameters {
+  args: {
+    locales: string[];
+  };
+  options: {
+    strict: boolean;
+  };
+}
+interface TestRedirectsActionParameters extends ActionParameters {
+  args: {
+    urls: string[];
+  };
+}
+interface AddRedirectActionParameters extends ActionParameters {
+  args: {
+    from: string;
+    to: string;
+  };
+}
+interface FixRedirectsActionParameters extends ActionParameters {
+  args: {
+    locales: string[];
+  };
 }
 
-interface DeleteArgsAndOptions {
+interface DeleteActionParameters extends ActionParameters {
   args: {
     slug: string;
     locale: string;
@@ -61,14 +80,38 @@ interface DeleteArgsAndOptions {
   };
 }
 
-interface ValidateArgsAndOptions {
+interface MoveActionParameters extends ActionParameters {
+  args: {
+    oldSlug: string;
+    newSlug: string;
+    locale: string;
+  };
+  options: {
+    yes: boolean;
+  };
+}
+
+interface CreateActionParameters extends ActionParameters {
   args: {
     slug: string;
     locale: string;
   };
 }
 
-interface PreviewArgsAndOptions {
+interface EditActionParameters extends ActionParameters {
+  args: {
+    slug: string;
+    locale: string;
+  };
+}
+interface ValidateActionParameters extends ActionParameters {
+  args: {
+    slug: string;
+    locale: string;
+  };
+}
+
+interface PreviewActionParameters extends ActionParameters {
   args: {
     slug: string;
     locale: string;
@@ -79,7 +122,15 @@ interface PreviewArgsAndOptions {
   };
 }
 
-interface SyncTranslatedContentArgsAndOptions {
+interface GatherGitHistoryActionParameters extends ActionParameters {
+  options: {
+    saveHistory: string;
+    loadHistory: string;
+    verbose: boolean;
+  };
+}
+
+interface SyncTranslatedContentActionParameters extends ActionParameters {
   args: {
     locale: string[];
   };
@@ -88,7 +139,7 @@ interface SyncTranslatedContentArgsAndOptions {
   };
 }
 
-interface FixFlawsArgsAndOptions {
+interface FixFlawsActionParameters extends ActionParameters {
   args: {
     fixFlawsTypes: string[];
   };
@@ -98,7 +149,7 @@ interface FixFlawsArgsAndOptions {
   };
 }
 
-interface FlawsArgsAndOptions {
+interface FlawsActionParameters extends ActionParameters {
   args: {
     slug: string;
     locale: string;
@@ -108,7 +159,7 @@ interface FlawsArgsAndOptions {
   };
 }
 
-interface PopularitiesArgsAndOptions {
+interface PopularitiesActionParameters extends ActionParameters {
   options: {
     outfile: string;
     maxUris: number;
@@ -117,7 +168,15 @@ interface PopularitiesArgsAndOptions {
   logger: Logger;
 }
 
-interface BuildRobotsTxtArgsAndOptions {
+interface GoogleAnalyticsCodeActionParameters extends ActionParameters {
+  options: {
+    account: string;
+    debug: boolean;
+    outfile: string;
+  };
+}
+
+interface BuildRobotsTxtActionParameters extends ActionParameters {
   options: {
     outfile: string;
     maxUris: number;
@@ -126,8 +185,24 @@ interface BuildRobotsTxtArgsAndOptions {
   logger: Logger;
 }
 
-function tryOrExit(f) {
-  return async ({ options = {}, ...args }: { options: Options }) => {
+interface MacrosActionParameters extends ActionParameters {
+  args: {
+    cmd: string;
+    foldersearch: string;
+    macros: string[];
+  };
+}
+
+interface OptimizeClientBuildActionParameters extends ActionParameters {
+  args: {
+    buildroot: string;
+  };
+}
+
+function tryOrExit(
+  f: ({ options, ...args }: ActionParameters) => unknown
+): Action {
+  return async ({ options = {}, ...args }: ActionParameters) => {
     try {
       await f({ options, ...args });
     } catch (error) {
@@ -152,36 +227,40 @@ program
   })
   .option("--strict", "Strict validation")
   .action(
-    tryOrExit(({ args, options, logger }) => {
-      const { locales } = args;
-      const { strict } = options;
-      if (strict) {
-        for (const locale of locales) {
+    tryOrExit(
+      ({ args, options, logger }: ValidateRedirectsActionParameters) => {
+        const { locales } = args;
+        const { strict } = options;
+        if (strict) {
+          for (const locale of locales) {
+            try {
+              Redirect.validateLocale(locale, strict);
+              logger.info(
+                chalk.green(`✓ redirects for ${locale} looking good!`)
+              );
+            } catch (e) {
+              throw new Error(
+                `_redirects.txt for ${locale} is causing issues: ${e}`
+              );
+            }
+          }
+        } else {
           try {
-            Redirect.validateLocale(locale, strict);
-            logger.info(chalk.green(`✓ redirects for ${locale} looking good!`));
+            Redirect.load(locales, true);
           } catch (e) {
-            throw new Error(
-              `_redirects.txt for ${locale} is causing issues: ${e}`
-            );
+            throw new Error(`Unable to load redirects: ${e}`);
           }
         }
-      } else {
-        try {
-          Redirect.load(locales, true);
-        } catch (e) {
-          throw new Error(`Unable to load redirects: ${e}`);
-        }
-      }
 
-      logger.info(chalk.green("🍾 All is well in the world of redirects 🥂"));
-    })
+        logger.info(chalk.green("🍾 All is well in the world of redirects 🥂"));
+      }
+    )
   )
 
   .command("test-redirects", "Test URLs (pathnames) to see if they redirect")
   .argument("[urls...]", "URLs to test")
   .action(
-    tryOrExit(({ args, logger }) => {
+    tryOrExit(({ args, logger }: TestRedirectsActionParameters) => {
       for (const url of args.urls) {
         const resolved = Redirect.resolve(url);
         if (resolved === url) {
@@ -197,7 +276,7 @@ program
   .argument("<from>", "From-URL")
   .argument("<to>", "To-URL")
   .action(
-    tryOrExit(({ args, logger }) => {
+    tryOrExit(({ args, logger }: AddRedirectActionParameters) => {
       const { from, to } = args;
       const locale = from.split("/")[1];
       Redirect.add(locale, [[from, to]]);
@@ -211,9 +290,8 @@ program
     validator: [...VALID_LOCALES.values(), ...VALID_LOCALES.keys()],
   })
   .action(
-    tryOrExit(({ args, logger }) => {
-      const { locales } = args;
-      for (const locale of locales) {
+    tryOrExit(({ args, logger }: FixRedirectsActionParameters) => {
+      for (const locale of args.locales) {
         Redirect.add(locale.toLowerCase(), [], { fix: true, strict: true });
         logger.info(chalk.green(`Fixed ${locale}`));
       }
@@ -233,7 +311,7 @@ program
   )
   .option("-y, --yes", "Assume yes", { default: false })
   .action(
-    tryOrExit(async ({ args, options }: DeleteArgsAndOptions) => {
+    tryOrExit(async ({ args, options }: DeleteActionParameters) => {
       const { slug, locale } = args;
       const { recursive, redirect, yes } = options;
       const changes = Document.remove(slug, locale, {
@@ -292,49 +370,35 @@ program
   })
   .option("-y, --yes", "Assume yes", { default: false })
   .action(
-    tryOrExit(
-      async ({
-        args,
-        options,
-      }: {
-        args: {
-          oldSlug: string;
-          newSlug: string;
-          locale: string;
-        };
-        options: {
-          yes: boolean;
-        };
-      }) => {
-        const { oldSlug, newSlug, locale } = args;
-        const { yes } = options;
-        const changes = Document.move(oldSlug, newSlug, locale, {
-          dry: true,
-        });
-        console.log(
-          chalk.green(
-            `Will move ${changes.length} documents from ${oldSlug} to ${newSlug} for ${locale}`
-          )
-        );
-        console.log(
-          changes
-            .map(([from, to]) => `${chalk.red(from)} → ${chalk.green(to)}`)
-            .join("\n")
-        );
-        const { run } = yes
-          ? { run: true }
-          : await prompt({
-              type: "confirm",
-              message: "Proceed?",
-              name: "run",
-              default: true,
-            });
-        if (run) {
-          const moved = Document.move(oldSlug, newSlug, locale);
-          console.log(chalk.green(`Moved ${moved.length} documents.`));
-        }
+    tryOrExit(async ({ args, options }: MoveActionParameters) => {
+      const { oldSlug, newSlug, locale } = args;
+      const { yes } = options;
+      const changes = Document.move(oldSlug, newSlug, locale, {
+        dry: true,
+      });
+      console.log(
+        chalk.green(
+          `Will move ${changes.length} documents from ${oldSlug} to ${newSlug} for ${locale}`
+        )
+      );
+      console.log(
+        changes
+          .map(([from, to]) => `${chalk.red(from)} → ${chalk.green(to)}`)
+          .join("\n")
+      );
+      const { run } = yes
+        ? { run: true }
+        : await prompt({
+            type: "confirm",
+            message: "Proceed?",
+            name: "run",
+            default: true,
+          });
+      if (run) {
+        const moved = Document.move(oldSlug, newSlug, locale);
+        console.log(chalk.green(`Moved ${moved.length} documents.`));
       }
-    )
+    })
   )
 
   .command("edit", "Spawn your EDITOR for an existing slug")
@@ -344,23 +408,14 @@ program
     validator: [...VALID_LOCALES.values()],
   })
   .action(
-    tryOrExit(
-      ({
-        args,
-      }: {
-        args: {
-          slug: string;
-          locale: string;
-        };
-      }) => {
-        const { slug, locale } = args;
-        if (!Document.exists(slug, locale)) {
-          throw new Error(`${slug} does not exists for ${locale}`);
-        }
-        const filePath = Document.fileForSlug(slug, locale);
-        openEditor([filePath]);
+    tryOrExit(({ args }: EditActionParameters) => {
+      const { slug, locale } = args;
+      if (!Document.exists(slug, locale)) {
+        throw new Error(`${slug} does not exists for ${locale}`);
       }
-    )
+      const filePath = Document.fileForSlug(slug, locale);
+      openEditor([filePath]);
+    })
   )
 
   .command("create", "Spawn your Editor for a new slug")
@@ -370,28 +425,19 @@ program
     validator: [...VALID_LOCALES.values()],
   })
   .action(
-    tryOrExit(
-      ({
-        args,
-      }: {
-        args: {
-          slug: string;
-          locale: string;
-        };
-      }) => {
-        const { slug, locale } = args;
-        const parentSlug = Document.parentSlug(slug);
-        if (!Document.exists(parentSlug, locale)) {
-          throw new Error(`Parent ${parentSlug} does not exists for ${locale}`);
-        }
-        if (Document.exists(slug, locale)) {
-          throw new Error(`${slug} already exists for ${locale}`);
-        }
-        const filePath = Document.fileForSlug(slug, locale);
-        fs.mkdirSync(path.basename(filePath), { recursive: true });
-        openEditor([filePath]);
+    tryOrExit(({ args }: CreateActionParameters) => {
+      const { slug, locale } = args;
+      const parentSlug = Document.parentSlug(slug);
+      if (!Document.exists(parentSlug, locale)) {
+        throw new Error(`Parent ${parentSlug} does not exists for ${locale}`);
       }
-    )
+      if (Document.exists(slug, locale)) {
+        throw new Error(`${slug} already exists for ${locale}`);
+      }
+      const filePath = Document.fileForSlug(slug, locale);
+      fs.mkdirSync(path.basename(filePath), { recursive: true });
+      openEditor([filePath]);
+    })
   )
 
   .command("validate", "Validate a document")
@@ -401,7 +447,7 @@ program
     validator: [...VALID_LOCALES.values()],
   })
   .action(
-    tryOrExit(async ({ args }: ValidateArgsAndOptions) => {
+    tryOrExit(async ({ args }: ValidateActionParameters) => {
       const { slug, locale } = args;
       let okay = true;
       const document = Document.findByURL(buildURL(locale, slug));
@@ -442,7 +488,7 @@ program
     validator: [...VALID_LOCALES.values()],
   })
   .action(
-    tryOrExit(async ({ args, options }: PreviewArgsAndOptions) => {
+    tryOrExit(async ({ args, options }: PreviewActionParameters) => {
       const { slug, locale } = args;
       const { hostname, port } = options;
       let url: string;
@@ -518,86 +564,70 @@ program
   .option("--save-history <path>", "File to save all previous history")
   .option("--load-history <path>", "Optional file to load all previous history")
   .action(
-    tryOrExit(
-      async ({
-        options,
-      }: {
-        options: {
-          saveHistory: string;
-          loadHistory: string;
-          verbose: boolean;
-        };
-      }) => {
-        const { saveHistory, loadHistory, verbose } = options;
-        if (loadHistory) {
-          if (fs.existsSync(loadHistory)) {
-            console.log(
-              chalk.yellow(`Reusing existing history from ${loadHistory}`)
-            );
-          }
+    tryOrExit(async ({ options }: GatherGitHistoryActionParameters) => {
+      const { saveHistory, loadHistory, verbose } = options;
+      if (loadHistory) {
+        if (fs.existsSync(loadHistory)) {
+          console.log(
+            chalk.yellow(`Reusing existing history from ${loadHistory}`)
+          );
         }
-        const roots = [CONTENT_ROOT];
-        if (CONTENT_TRANSLATED_ROOT) {
-          roots.push(CONTENT_TRANSLATED_ROOT);
-        }
-        const map = gatherGitHistory(
-          roots,
-          loadHistory && fs.existsSync(loadHistory) ? loadHistory : null
-        );
-        const historyPerLocale = {};
+      }
+      const roots = [CONTENT_ROOT];
+      if (CONTENT_TRANSLATED_ROOT) {
+        roots.push(CONTENT_TRANSLATED_ROOT);
+      }
+      const map = gatherGitHistory(
+        roots,
+        loadHistory && fs.existsSync(loadHistory) ? loadHistory : null
+      );
+      const historyPerLocale = {};
 
-        // Someplace to put the map into an object so it can be saved into `saveHistory`
-        const allHistory = {};
-        for (const [relPath, value] of map) {
-          const locale = relPath.split(path.sep)[0];
-          if (!isValidLocale(locale)) {
-            continue;
-          }
-          allHistory[relPath] = value;
-          if (!historyPerLocale[locale]) {
-            historyPerLocale[locale] = {};
-          }
-          historyPerLocale[locale][relPath] = value;
+      // Someplace to put the map into an object so it can be saved into `saveHistory`
+      const allHistory = {};
+      for (const [relPath, value] of map) {
+        const locale = relPath.split(path.sep)[0];
+        if (!isValidLocale(locale)) {
+          continue;
         }
-        let filesWritten = 0;
-        for (const [locale, history] of Object.entries(historyPerLocale)) {
-          const root = getRoot(locale);
-          const outputFile = path.join(root, locale, "_githistory.json");
-          fs.writeFileSync(
-            outputFile,
-            JSON.stringify(history, null, 2),
-            "utf-8"
-          );
-          filesWritten += 1;
-          if (verbose) {
-            console.log(
-              chalk.green(
-                `Wrote '${locale}' ${Object.keys(
-                  history
-                ).length.toLocaleString()} paths into ${outputFile}`
-              )
-            );
-          }
+        allHistory[relPath] = value;
+        if (!historyPerLocale[locale]) {
+          historyPerLocale[locale] = {};
         }
-        console.log(
-          chalk.green(`Wrote ${filesWritten} _githistory.json files`)
-        );
-        if (saveHistory) {
-          fs.writeFileSync(
-            saveHistory,
-            JSON.stringify(allHistory, null, 2),
-            "utf-8"
-          );
+        historyPerLocale[locale][relPath] = value;
+      }
+      let filesWritten = 0;
+      for (const [locale, history] of Object.entries(historyPerLocale)) {
+        const root = getRoot(locale);
+        const outputFile = path.join(root, locale, "_githistory.json");
+        fs.writeFileSync(outputFile, JSON.stringify(history, null, 2), "utf-8");
+        filesWritten += 1;
+        if (verbose) {
           console.log(
             chalk.green(
-              `Saved ${Object.keys(
-                allHistory
-              ).length.toLocaleString()} paths into ${saveHistory}`
+              `Wrote '${locale}' ${Object.keys(
+                history
+              ).length.toLocaleString()} paths into ${outputFile}`
             )
           );
         }
       }
-    )
+      console.log(chalk.green(`Wrote ${filesWritten} _githistory.json files`));
+      if (saveHistory) {
+        fs.writeFileSync(
+          saveHistory,
+          JSON.stringify(allHistory, null, 2),
+          "utf-8"
+        );
+        console.log(
+          chalk.green(
+            `Saved ${Object.keys(
+              allHistory
+            ).length.toLocaleString()} paths into ${saveHistory}`
+          )
+        );
+      }
+    })
   )
 
   .command(
@@ -610,7 +640,7 @@ program
   })
   .action(
     tryOrExit(
-      async ({ args, options }: SyncTranslatedContentArgsAndOptions) => {
+      async ({ args, options }: SyncTranslatedContentActionParameters) => {
         const { locale } = args;
         const { verbose } = options;
         if (verbose) {
@@ -651,7 +681,7 @@ program
     validator: [...VALID_FLAW_CHECKS],
   })
   .action(
-    tryOrExit(async ({ args, options }: FixFlawsArgsAndOptions) => {
+    tryOrExit(async ({ args, options }: FixFlawsActionParameters) => {
       const { fixFlawsTypes } = args;
       const { locale, fileTypes } = options;
       const allDocs = Document.findAll({
@@ -677,7 +707,7 @@ program
   })
   .option("-y, --yes", "Assume yes", { default: false })
   .action(
-    tryOrExit(async ({ args, options }: FlawsArgsAndOptions) => {
+    tryOrExit(async ({ args, options }: FlawsActionParameters) => {
       const { slug, locale } = args;
       const { yes } = options;
       const document = Document.findByURL(buildURL(locale, slug));
@@ -785,7 +815,7 @@ program
     default: false,
   })
   .action(
-    tryOrExit(async ({ options, logger }: PopularitiesArgsAndOptions) => {
+    tryOrExit(async ({ options, logger }: PopularitiesActionParameters) => {
       const { refresh, outfile } = options;
       if (!refresh && fs.existsSync(outfile)) {
         const stat = fs.statSync(outfile);
@@ -847,18 +877,22 @@ program
     }
   )
   .action(
-    tryOrExit(async ({ options, logger }) => {
-      const { outfile, debug, account } = options;
-      if (account) {
-        const dntHelperCode = fs
-          .readFileSync(path.join(dirname, "mozilla.dnthelper.min.js"), "utf-8")
-          .trim();
+    tryOrExit(
+      async ({ options, logger }: GoogleAnalyticsCodeActionParameters) => {
+        const { outfile, debug, account } = options;
+        if (account) {
+          const dntHelperCode = fs
+            .readFileSync(
+              path.join(dirname, "mozilla.dnthelper.min.js"),
+              "utf-8"
+            )
+            .trim();
 
-        const gaScriptURL = `https://www.google-analytics.com/${
-          debug ? "analytics_debug" : "analytics"
-        }.js`;
+          const gaScriptURL = `https://www.google-analytics.com/${
+            debug ? "analytics_debug" : "analytics"
+          }.js`;
 
-        const code = `
+          const code = `
 // Mozilla DNT Helper
 ${dntHelperCode}
 // only load GA if DNT is not enabled
@@ -872,18 +906,19 @@ if (Mozilla && !Mozilla.dntEnabled()) {
     gaScript.async = 1; gaScript.src = '${gaScriptURL}';
     document.head.appendChild(gaScript);
 }`.trim();
-        fs.writeFileSync(outfile, `${code}\n`, "utf-8");
-        logger.info(
-          chalk.green(
-            `Generated ${outfile} for SSR rendering using ${account}${
-              debug ? " (debug mode)" : ""
-            }.`
-          )
-        );
-      } else {
-        logger.info(chalk.yellow("No Google Analytics code file generated"));
+          fs.writeFileSync(outfile, `${code}\n`, "utf-8");
+          logger.info(
+            chalk.green(
+              `Generated ${outfile} for SSR rendering using ${account}${
+                debug ? " (debug mode)" : ""
+              }.`
+            )
+          );
+        } else {
+          logger.info(chalk.yellow("No Google Analytics code file generated"));
+        }
       }
-    })
+    )
   )
 
   .command(
@@ -894,7 +929,7 @@ if (Mozilla && !Mozilla.dntEnabled()) {
     default: path.join(BUILD_OUT_ROOT, "robots.txt"),
   })
   .action(
-    tryOrExit(async ({ options, logger }: BuildRobotsTxtArgsAndOptions) => {
+    tryOrExit(async ({ options, logger }: BuildRobotsTxtActionParameters) => {
       const { outfile } = options;
       await runBuildRobotsTxt(outfile);
       logger.info(
@@ -926,7 +961,7 @@ if (Mozilla && !Mozilla.dntEnabled()) {
   .argument("<foldersearch>", "folder of documents to target")
   .argument("<macros...>", "one or more macro names")
   .action(
-    tryOrExit(async ({ args, options }) => {
+    tryOrExit(async ({ args, options }: MacrosActionParameters) => {
       if (!CONTENT_ROOT) {
         throw new Error("CONTENT_ROOT not set");
       }
@@ -981,10 +1016,10 @@ if (Mozilla && !Mozilla.dntEnabled()) {
         if (flaws.length) {
           const fixableFlaws = flaws.filter(
             (f): f is MacroRedirectedLinkError =>
-              f.hasOwnProperty("redirectInfo")
+              Object.prototype.hasOwnProperty.call(f, "redirectInfo")
           );
           const nonFixableFlaws = flaws.filter(
-            (f) => !f.hasOwnProperty("redirectInfo")
+            (f) => !Object.prototype.hasOwnProperty.call(f, "redirectInfo")
           );
           const nonFixableFlawNames = [
             ...new Set(nonFixableFlaws.map((f) => f.name)).values(),
@@ -1093,24 +1128,30 @@ if (Mozilla && !Mozilla.dntEnabled()) {
     default: path.join("client", "build"),
   })
   .action(
-    tryOrExit(async ({ args, options, logger }) => {
-      const { buildroot } = args;
-      const { results } = await runOptimizeClientBuild(buildroot);
-      if (options.verbose) {
-        for (const result of results) {
-          logger.info(`${result.filePath} -> ${result.hashedHref}`);
+    tryOrExit(
+      async ({
+        args,
+        options,
+        logger,
+      }: OptimizeClientBuildActionParameters) => {
+        const { buildroot } = args;
+        const { results } = await runOptimizeClientBuild(buildroot);
+        if (options.verbose) {
+          for (const result of results) {
+            logger.info(`${result.filePath} -> ${result.hashedHref}`);
+          }
+        } else {
+          logger.info(
+            chalk.green(
+              `Hashed ${results.length} files in ${path.join(
+                buildroot,
+                "index.html"
+              )}`
+            )
+          );
         }
-      } else {
-        logger.info(
-          chalk.green(
-            `Hashed ${results.length} files in ${path.join(
-              buildroot,
-              "index.html"
-            )}`
-          )
-        );
       }
-    })
+    )
   );
 
 program.run();

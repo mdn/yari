@@ -89,17 +89,9 @@ export function Footer() {
             <li className="footer-nav-item">
               <a
                 className="footer-nav-link"
-                href={`/${locale}/docs/MDN/Contribute/Feedback#documentation_issues`}
+                href={`/${locale}/docs/MDN/Community/Issues`}
               >
-                Report a page issue
-              </a>
-            </li>
-            <li className="footer-nav-item">
-              <a
-                className="footer-nav-link"
-                href={`/${locale}/docs/MDN/Contribute/Feedback#site_issues`}
-              >
-                Report a site issue
+                Report an issue
               </a>
             </li>
           </ul>

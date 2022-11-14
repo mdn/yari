@@ -9,9 +9,10 @@ import { Loading } from "../../ui/atoms/loading";
 import { camelWrap, charSlice, getCategoryByPathname } from "../../utils";
 import { Item, useCollection, useItems } from "./api";
 import NoteCard from "../../ui/molecules/notecards";
-import { Doc } from "../../../../libs/types/document";
+import { DocMetadata } from "../../../../libs/types/document";
 import { Authors, LastModified } from "../../document/organisms/metadata";
 import { ArticleActions } from "../../ui/organisms/article-actions";
+import { MDN_PLUS_TITLE } from "../../constants";
 
 import "./collection.scss";
 
@@ -37,13 +38,14 @@ function CollectionComponent() {
   useScrollToTop();
   const name =
     collection?.name === "Default" ? "Saved Articles" : collection?.name;
+  document.title = `${name || "Collections"} | ${MDN_PLUS_TITLE}`;
   const description =
     collection?.name === "Default"
       ? "The default collection."
       : collection?.description;
 
   return collection ? (
-    <div className="collections-collection">
+    <div className="collections collections-collection">
       <header>
         <Container>
           <Link to="../" className="exit">
@@ -84,7 +86,7 @@ function CollectionComponent() {
       </Container>
     </div>
   ) : (
-    <div className="collections-collection">
+    <div className="collections collections-collection">
       <header>
         <Container>
           <Link to="../" className="exit">
@@ -113,7 +115,6 @@ function FrequentlyViewedCollectionComponent() {
   let [size, setSize] = useState(0);
   let [atEnd, setAtEnd] = useState(false);
   let frequentlyViewed = useFrequentlyViewed(10, size, setAtEnd);
-
   let _vals: Item[] | undefined = frequentlyViewed?.items.map((v) => {
     return {
       collection_id: frequentlyViewed?.name || "",
@@ -130,7 +131,7 @@ function FrequentlyViewedCollectionComponent() {
   useScrollToTop();
 
   return (
-    <div className="collections-collection">
+    <div className="collections collections-collection">
       <header>
         <Container>
           <Link to="../" className="exit">
@@ -190,6 +191,12 @@ function ItemComponent({
     setNote(slicedNote);
   }, [item.notes]);
 
+  useEffect(() => {
+    const slicedNote = item.notes && charSlice(item.notes, 0, 180);
+    setSlicedNote(slicedNote);
+    setNote(slicedNote);
+  }, [item.notes]);
+
   const breadcrumbs = item.parents
     .slice(0, -1)
     .map((parent) => camelWrap(parent.title))
@@ -205,7 +212,7 @@ function ItemComponent({
     if (button instanceof HTMLElement) button.click();
   };
 
-  const { data: doc } = useSWR<Doc>(
+  const { data: doc } = useSWR<DocMetadata>(
     `${item.url}/index.json`,
     async (url) => {
       const response = await fetch(url);
@@ -255,9 +262,15 @@ function ItemComponent({
       {note ? (
         <div className="note">
           <div>
-            <Button icon="edit" type="action" onClickHandler={openBookmarkMenu}>
-              <span className="visually-hidden">Edit note</span>
-            </Button>
+            {doc && (
+              <Button
+                icon="edit"
+                type="action"
+                onClickHandler={openBookmarkMenu}
+              >
+                <span className="visually-hidden">Edit note</span>
+              </Button>
+            )}
           </div>
           <div className="text">
             <p className={item.notes?.includes("{") ? "code" : ""}>
@@ -287,7 +300,7 @@ function ItemComponent({
               ))}
           </div>
         </div>
-      ) : (
+      ) : doc ? (
         addNoteEnabled && (
           <Button
             extraClasses="add-note"
@@ -298,7 +311,7 @@ function ItemComponent({
             Add note
           </Button>
         )
-      )}
+      ) : null}
     </article>
   );
 }

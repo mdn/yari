@@ -1,11 +1,13 @@
-import webpack from "webpack";
-import webpackDevMiddleware from "webpack-dev-middleware";
-import webpackHotMiddleware from "webpack-hot-middleware";
-import { WebpackConfiguration } from "webpack-dev-server";
+import type { WebpackConfiguration } from "webpack-dev-server";
 
 export const devMiddlewares = [];
 
 if (process.env.NODE_ENV === "development") {
+  /* eslint-disable n/no-unpublished-require */
+  const webpack = require("webpack");
+  const webpackDevMiddleware = require("webpack-dev-middleware");
+  const webpackHotMiddleware = require("webpack-hot-middleware");
+
   const webpackConfig: WebpackConfiguration = {
     entry: {
       app: [

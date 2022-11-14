@@ -1,20 +1,10 @@
 @use "../../ui/vars" as *;
 
 .collections-collection {
-  color: var(--text-secondary);
-  font-weight: 500;
-  letter-spacing: var(--heading-letter-spacing);
-
   h1,
   h2 {
-    color: var(--text-primary);
     font-size: 1.5rem;
-    font-weight: 700;
     margin-top: 0.5rem;
-
-    a {
-      color: inherit;
-    }
   }
 
   > header {
@@ -54,6 +44,7 @@
       h2 {
         font-size: 1.25rem;
         margin: 0;
+        overflow-wrap: anywhere;
       }
 
       .article-actions {
@@ -121,6 +112,7 @@
 
       p {
         display: inline;
+        overflow-wrap: anywhere;
         white-space: pre-wrap;
 
         &.code {
@@ -138,18 +130,6 @@
         font-size: 0.875rem;
         text-transform: none;
       }
-    }
-  }
-
-  @media screen and (min-width: $screen-md) {
-    .container {
-      max-width: 41rem;
-    }
-  }
-
-  @media screen and (min-width: $screen-lg) {
-    .container {
-      max-width: 50rem;
     }
   }
 }

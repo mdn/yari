@@ -27,6 +27,7 @@ import {
   execGit,
   urlToFolderPath,
   toPrettyJSON,
+  MEMOIZE_INVALIDATE,
 } from "./utils";
 export { urlToFolderPath, MEMOIZE_INVALIDATE } from "./utils";
 import * as Redirect from "./redirect";
@@ -423,7 +424,10 @@ export function update(url: string, rawBody: string, metadata) {
   }
 }
 
-export function findByURL(url: string, ...args: (string | Symbol)[]) {
+export function findByURL(
+  url: string,
+  ...args: (string | typeof MEMOIZE_INVALIDATE)[]
+) {
   const [bareURL, hash = ""] = url.split("#", 2);
   if (!bareURL.toLowerCase().includes("/docs/")) {
     return;
