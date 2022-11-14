@@ -25,14 +25,17 @@ import {
 import { camelWrap } from "../../utils";
 import { Icon } from "../../ui/atoms/icon";
 import { MDN_PLUS_TITLE } from "../../constants";
+import { SWRConfig } from "swr";
 dayjs.extend(relativeTime);
 
 export default function Collections() {
   return (
-    <Routes>
-      <Route path="/" element={<Overview />} />
-      <Route path=":collectionId" element={<CollectionComponent />} />
-    </Routes>
+    <SWRConfig value={{ revalidateOnFocus: false, revalidateIfStale: false }}>
+      <Routes>
+        <Route path="/" element={<Overview />} />
+        <Route path=":collectionId" element={<CollectionComponent />} />
+      </Routes>
+    </SWRConfig>
   );
 }
 
