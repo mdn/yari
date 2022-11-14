@@ -93,3 +93,11 @@ export function camelWrap(text: string) {
 export function charLength(string: string) {
   return [...string].length;
 }
+
+/**
+ * Slices by characters in a string.
+ * String.slice slices by code units.
+ */
+export function charSlice(string: string, start?: number, end?: number) {
+  return [...string].slice(start, end).join("");
+}
