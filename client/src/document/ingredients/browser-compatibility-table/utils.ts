@@ -191,3 +191,20 @@ export function getCurrentSupport(
   // Default (likely never reached)
   return getFirst(support);
 }
+
+export function getPreviousVersion(
+  version: BCD.VersionValue | string | undefined,
+  browser: BCD.BrowserStatement
+): BCD.VersionValue | string | undefined {
+  if (browser && typeof version === "string") {
+    const browserVersions = Object.keys(browser["releases"]).sort(
+      (a, b) => Number(a) - Number(b)
+    );
+    const currentVersionIndex = browserVersions.indexOf(version);
+    if (currentVersionIndex && currentVersionIndex > 0) {
+      return browserVersions[currentVersionIndex - 1];
+    }
+  }
+
+  return version;
+}
