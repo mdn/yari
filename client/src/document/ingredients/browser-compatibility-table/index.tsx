@@ -171,8 +171,8 @@ export default function BrowserCompatibilityTable({
         >
           Report problems with this compatibility data on GitHub
         </a>
-        <div className="table-scroll">
-          <div className="table-scroll-inner">
+        <div className="table-container">
+          <div className="table-container-inner">
             <table key="bc-table" className="bc-table bc-table-web">
               <Headers {...{ platforms, browsers }} />
               <tbody>
