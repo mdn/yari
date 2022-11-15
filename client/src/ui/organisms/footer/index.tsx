@@ -225,7 +225,7 @@ export function Footer() {
             <br />
             Portions of this content are ©1998–{new Date().getFullYear()} by
             individual mozilla.org contributors. Content available under{" "}
-            <a href="/docs/MDN/Writing_guidelines/Attrib_copyright_license">
+            <a href={`/${locale}/docs/MDN/Writing_guidelines/Attrib_copyright_license`}>
               a Creative Commons license
             </a>
             .
