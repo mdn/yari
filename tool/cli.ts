@@ -277,7 +277,8 @@ program
   .argument("<to>", "To-URL")
   .action(
     tryOrExit(({ args, logger }: AddRedirectActionParameters) => {
-      const { from, to } = args;
+      const from = new URL(args.from).pathname;
+      const to = new URL(args.to).pathname;
       const locale = from.split("/")[1];
       Redirect.add(locale, [[from, to]]);
       logger.info(chalk.green(`Saved '${from}' → '${to}'`));
