@@ -13,7 +13,7 @@ export function Contribute() {
     <main className="contribute">
       <div className="stats-container dark">
         <section className="stats-header">
-          <h1>Community for a better Web</h1>
+          <h1>Community for a better web</h1>
           <ul className="stats">
             {STATS.map((s) => (
               <li key={s.id}>
