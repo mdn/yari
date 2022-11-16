@@ -144,9 +144,11 @@ export function splitSections(rawHTML) {
     .load("<div></div>", { decodeEntities: false })("div")
     .eq(0);
 
-  const iterable = [...($("#_body")[0] as cheerio.Element).childNodes];
+  const iterable = [
+    ...($("#_body")[0] as cheerio.Element).childNodes,
+  ] as cheerio.Element[];
   let c = 0;
-  iterable.forEach((child: cheerio.Element) => {
+  iterable.forEach((child) => {
     if (child.tagName === "h2") {
       if (c) {
         blocks.push(section.clone());
