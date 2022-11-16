@@ -361,8 +361,8 @@ program
   .command("move", "Move content to a new slug")
   .argument("<oldSlug>", "Old slug")
   .argument("<newSlug>", "New slug", {
-    validator: (value: string) => {
-      if (value.includes("#")) {
+    validator: (value) => {
+      if (typeof value === "string" && value.includes("#")) {
         throw new Error("slug can not contain the '#' character");
       }
       return value;
