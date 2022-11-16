@@ -15,7 +15,7 @@ import { VALID_LOCALES } from "../libs/constants";
 import { renderHTML } from "../ssr/dist/main";
 import options from "./build-options";
 import { buildDocument, BuiltDocument, renderContributorsTxt } from ".";
-import { DocMetadata, Flaws } from "../libs/types";
+import { Flaws } from "../libs/types";
 import * as bcd from "@mdn/browser-compat-data/types";
 import SearchIndex from "./search-index";
 import { BUILD_OUT_ROOT } from "../libs/env";
