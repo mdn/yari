@@ -202,12 +202,12 @@ interface OptimizeClientBuildActionParameters extends ActionParameters {
   };
 }
 
-function tryOrExit(
-  f: ({ options, ...args }: ActionParameters) => unknown
+function tryOrExit<T extends ActionParameters>(
+  f: ({ options, ...args }: T) => unknown
 ): Action {
   return async ({ options = {}, ...args }: ActionParameters) => {
     try {
-      await f({ options, ...args });
+      await f({ options, ...args } as T);
     } catch (e) {
       const error = e as Error;
       if (options.verbose || options.v) {
