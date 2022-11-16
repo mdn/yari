@@ -235,7 +235,8 @@ export async function render(
           macroName,
           environment.getExecutionContext(token.args, token)
         );
-      } catch (e) {
+      } catch (error) {
+        const e = error as Error;
         let macroError;
         if (
           e instanceof ReferenceError &&

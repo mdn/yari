@@ -33,7 +33,10 @@ import { runBuildRobotsTxt } from "./build-robots-txt";
 import { syncAllTranslatedContent } from "./sync-translated-content";
 import * as kumascript from "../kumascript";
 import { Action, ActionParameters, Logger } from "types";
-import { MacroRedirectedLinkError } from "../kumascript/src/errors";
+import {
+  MacroInvocationError,
+  MacroRedirectedLinkError,
+} from "../kumascript/src/errors";
 
 const PORT = parseInt(process.env.SERVER_PORT || "5042");
 
@@ -205,7 +208,8 @@ function tryOrExit(
   return async ({ options = {}, ...args }: ActionParameters) => {
     try {
       await f({ options, ...args });
-    } catch (error) {
+    } catch (e) {
+      const error = e as Error;
       if (options.verbose || options.v) {
         console.error(chalk.red(error.stack));
       }
@@ -992,8 +996,13 @@ if (Mozilla && !Mozilla.dntEnabled()) {
             invalidateCache: true,
             selective_mode: [cmdLC, macros],
           });
-        } catch (error) {
-          if (error.name === "MacroInvocationError") {
+        } catch (error: any) {
+          const isMacroInvocationError = (
+            error: any
+          ): error is MacroInvocationError => {
+            return error.name === "MacroInvocationError";
+          };
+          if (isMacroInvocationError(error)) {
             error.updateFileInfo(document.fileInfo);
             throw new Error(
               `error trying to parse ${error.filepath}, line ${error.line} column ${error.column} (${error.error.message})`
