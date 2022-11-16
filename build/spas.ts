@@ -14,7 +14,6 @@ import {
 } from "../libs/env";
 import { isValidLocale } from "../libs/locale-utils";
 import { DocFrontmatter } from "../libs/types/document";
-// eslint-disable-next-line n/no-missing-require
 import { renderHTML } from "../ssr/dist/main";
 import got from "got";
 import { splitSections } from "./utils";
@@ -256,7 +255,7 @@ export async function buildSPAs(options) {
         continue;
       }
 
-      let featuredContributor = contributorSpotlightRoot
+      const featuredContributor = contributorSpotlightRoot
         ? await buildContributorSpotlight(locale, options)
         : null;
 

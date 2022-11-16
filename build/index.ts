@@ -354,7 +354,9 @@ export async function buildDocument(
     $,
     document.rawBody
   );
-  for (let { id, html, flaw } of liveSamplePages) {
+  for (const liveSamplePage of liveSamplePages) {
+    const { id, flaw } = liveSamplePage;
+    let { html } = liveSamplePage;
     if (flaw) {
       flaw.updateFileInfo(fileInfo);
       if (flaw.name === "MacroLiveSampleError") {

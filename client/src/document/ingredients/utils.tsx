@@ -42,7 +42,6 @@ function Permalink({
   return (
     <a
       href={`#${id.toLowerCase()}`}
-      title={`Permalink to ${titleAsText || title}`}
       dangerouslySetInnerHTML={{ __html: title }}
     ></a>
   );

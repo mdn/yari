@@ -169,6 +169,30 @@ button,
   }
 }
 
+.button.link {
+  --button-bg: none;
+  --button-bg-hover: none;
+  --button-bg-active: none;
+  --button-border-color: none;
+  --button-focus-effect: none;
+  --button-secondary-border-focus: none;
+  --button-height: auto;
+  --button-font: unset;
+  --button-padding: 0;
+  --button-radius: 0;
+
+  --button-color: var(--text-link);
+  appearance: none;
+  display: inline;
+  text-decoration: none;
+
+  &:focus-visible {
+    outline-color: var(--accent-primary);
+    outline-offset: 1px;
+    outline-style: auto;
+  }
+}
+
 /*
 .high-contrast-white {
   .button:focus {

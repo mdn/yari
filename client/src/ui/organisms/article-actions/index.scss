@@ -13,6 +13,10 @@
 
   @media screen and (min-width: $screen-md) {
     display: block;
+
+    .article-actions-toggle {
+      display: none;
+    }
   }
 
   .article-actions-submenu {

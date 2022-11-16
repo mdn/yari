@@ -2,7 +2,7 @@ import { OnGitHubLink } from "../../on-github";
 
 import "./index.scss";
 
-function LastModified({ value, locale }) {
+export function LastModified({ value, locale }) {
   if (!value) {
     return <span>Last modified date not known</span>;
   }
@@ -23,6 +23,10 @@ function LastModified({ value, locale }) {
   );
 }
 
+export function Authors({ url }) {
+  return <a href={`${url}/contributors.txt`}>by MDN contributors</a>;
+}
+
 export function Metadata({ doc, locale }) {
   return (
     <aside className="metadata">
@@ -30,7 +34,7 @@ export function Metadata({ doc, locale }) {
         {doc.isActive && <OnGitHubLink doc={doc} />}
         <p className="last-modified-date">
           <LastModified value={doc.modified} locale={locale} />,{" "}
-          <a href={`${doc.mdn_url}/contributors.txt`}>by MDN contributors</a>
+          <Authors url={doc.mdn_url} />
         </p>
       </div>
     </aside>

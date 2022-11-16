@@ -13,7 +13,7 @@ export function Contribute() {
     <main className="contribute">
       <div className="stats-container dark">
         <section className="stats-header">
-          <h1>Community for a better Web</h1>
+          <h1>Community for a better web</h1>
           <ul className="stats">
             {STATS.map((s) => (
               <li key={s.id}>
@@ -50,7 +50,7 @@ export function Contribute() {
             Product Advisory Board
           </a>{" "}
           (PAB). MDN is an influential resource and the PAB helps ensure that
-          MDN’s influence puts the Web first, not any one vendor or
+          MDN’s influence puts the web first, not any one vendor or
           organization, and respects the needs of web developers across the
           industry. Each quarter, the PAB meets to discuss problems, prioritize
           content creation, and make connections for future collaborations.
@@ -127,16 +127,18 @@ export function Contribute() {
           MDN's resources are entirely available under various open source
           licenses. Detailed information on licensing for reuse of MDN content,
           especially regarding copyrights and attribution, can be found{" "}
-          <a href="/en-US/docs/MDN/About#using_mdn_web_docs_content">here.</a>
+          <a href="/en-US/docs/MDN/Writing_guidelines/Attrib_copyright_license">
+            here.
+          </a>
         </p>
         <h2>How to contribute</h2>
         <p>
           We are an open community of developers building resources for a better
-          Web, regardless of brand, browser, or platform. Anyone can contribute
+          web, regardless of brand, browser, or platform. Anyone can contribute
           and each person who does makes us stronger. Together we can continue
-          to drive innovation on the Web to serve the greater good. It starts
-          here, with you. Please,{" "}
-          <a href="/en-US/docs/MDN/Contribute">join us</a>!
+          to drive innovation on the web to serve the greater good. It starts
+          here, with you.
+          <a href="/en-US/docs/MDN/Community">Join us</a>!
         </p>
         <p>
           No matter your specific level of expertise, individual strengths and
@@ -147,10 +149,9 @@ export function Contribute() {
           Ready to become an active part of the MDN community but not sure where
           to begin? We've got you covered. See our step-by-step directions to{" "}
           <a
-            href="https://github.com/mdn/content/#readme"
+            href="/en-US/docs/MDN/Community/Contributing/Getting_started"
             target="_blank"
             rel="noreferrer noopener"
-            className="external"
           >
             making your first contribution to MDN on GitHub
           </a>

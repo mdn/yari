@@ -30,8 +30,10 @@ export interface Flaw {
   difference?: any;
 }
 
+type GetFlawsFunction = (doc: any, $: any, document: any, level: any) => Flaw[];
+
 export function injectFlaws(doc, $, options, document) {
-  const flawChecks: Array<[string, Function, boolean]> = [
+  const flawChecks: Array<[string, GetFlawsFunction, boolean]> = [
     ["unsafe_html", getUnsafeHTMLFlaws, false],
     ["broken_links", getBrokenLinksFlaws, true],
     ["bad_bcd_queries", getBadBCDQueriesFlaws, false],

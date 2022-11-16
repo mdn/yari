@@ -8,7 +8,6 @@ import {
   Section,
   SpecificationsSection,
 } from "../libs/types";
-import { BuiltDocument } from ".";
 import specs from "browser-specs";
 import web from "../kumascript/src/api/web";
 
@@ -357,9 +356,9 @@ function _addSingleSpecialSection(
     }
   }
 
-  let dataQuery: string = "";
+  let dataQuery = "";
   let hasMultipleQueries = false;
-  let specURLsString: string = "";
+  let specURLsString = "";
   let specialSectionType: string | null = null;
   if ($.find("div.bc-data").length) {
     specialSectionType = "browser_compatibility";
@@ -448,7 +447,7 @@ function _addSingleSpecialSection(
     }
 
     for (const block of _extractCompatBlocks(data)) {
-      for (let [browser, originalInfo] of Object.entries(block.support)) {
+      for (const [browser, originalInfo] of Object.entries(block.support)) {
         // `originalInfo` here will be one of the following:
         //  - a single simple_support_statement:
         //    { version_added: 42 }
@@ -695,7 +694,7 @@ function _addSectionProse(
 ): SectionsAndFlaws {
   let id: string | null = null;
   let title: string | null = null;
-  let titleAsText: string = "";
+  let titleAsText = "";
   let isH3 = false;
 
   const flaws: string[] = [];

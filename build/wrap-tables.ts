@@ -1,7 +1,7 @@
-// Wraps tables in a scrollable div to avoid overlapping with the TOC sidebar.
+// Wraps tables in a scrollable figure to avoid overlapping with the TOC sidebar.
 // Before: <table>...</table>
-// After: <div class="table-scroll"><table>...</table></div>
+// After: <figure class="table-container"><table>...</table></figure>
 export function wrapTables($) {
-  const div = $('<div class="table-scroll"></div>');
-  $("table").wrap(div);
+  const figure = $('<figure class="table-container"></figure>');
+  $("table").wrap(figure);
 }
