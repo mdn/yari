@@ -318,6 +318,7 @@ app.get("/*", async (req, res, ...args) => {
     const docString = JSON.stringify({ doc: document });
 
     const hash = crypto.createHash("sha256").update(docString).digest("hex");
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { body: _, toc: __, sidebarHTML: ___, ...builtMetadata } = document;
     builtMetadata.hash = hash;
 
