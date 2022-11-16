@@ -241,7 +241,6 @@ async function buildDocuments(
     }
 
     const hash = crypto.createHash("sha256").update(docString).digest("hex");
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const {
       body: _,
       toc: __,
