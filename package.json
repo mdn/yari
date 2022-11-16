@@ -55,7 +55,7 @@
       "developing.spec.ts"
     ],
     "transform": {
-      "\\.[jt]sx?$": [
+      "\\.tsx?$": [
         "ts-jest",
         {
           "babelConfig": true
