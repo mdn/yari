@@ -171,8 +171,8 @@ export default function BrowserCompatibilityTable({
         >
           Report problems with this compatibility data on GitHub
         </a>
-        <div className="table-scroll">
-          <div className="table-scroll-inner">
+        <figure className="table-container">
+          <figure className="table-container-inner">
             <table key="bc-table" className="bc-table bc-table-web">
               <Headers {...{ platforms, browsers }} />
               <tbody>
@@ -183,8 +183,8 @@ export default function BrowserCompatibilityTable({
                 />
               </tbody>
             </table>
-          </div>
-        </div>
+          </figure>
+        </figure>
         <Legend compat={data} name={name} />
 
         {/* https://github.com/mdn/yari/issues/1191 */}
