@@ -1,3 +1,5 @@
+import { KumaThis } from "../environment";
+
 const page = {
   // Determines whether or not the page has the specified tag. Returns
   // true if it does, otherwise false. This is case-insensitive.
@@ -38,8 +40,8 @@ const page = {
   //
   // This is not called by any macros, and is only used here by
   // wiki.tree(), so we could move it to be part of that function.
-  subpages(path, depth, self) {
-    return this.page.subpagesExpand(path, depth, self);
+  subpages(this: KumaThis, path, depth, self) {
+    return (this.page as any).subpagesExpand(path, depth, self);
   },
 
   // Optional path, defaults to current page
@@ -50,10 +52,11 @@ const page = {
   // Optional self, defaults to false. Include the path page in
   // the results
   //
-  subpagesExpand(path, depth, self) {
+  subpagesExpand(this: KumaThis, path, depth, self) {
     try {
       return this.info.getChildren(path || this.env.url, self);
-    } catch (error) {
+    } catch (e) {
+      const error = e as Error;
       this.env.recordNonFatalError("bad-pages", error.message);
       // We allow ourselves to be forgiving with this function because
       // we justify it by the fact that at least we record a flaw!
@@ -87,7 +90,7 @@ const page = {
     }
   },
 
-  translations(path) {
+  translations(this: KumaThis, path) {
     return this.info.getTranslations(path || this.env.url);
   },
 };
