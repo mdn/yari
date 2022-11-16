@@ -7,7 +7,7 @@ import { Button } from "../../ui/atoms/button";
 import Container from "../../ui/atoms/container";
 import { Loading } from "../../ui/atoms/loading";
 import { camelWrap, charSlice, getCategoryByPathname } from "../../utils";
-import { Item, useCollection, useItems } from "./api";
+import { FrequentlyViewedItem, Item, useCollection, useItems } from "./api";
 import NoteCard from "../../ui/molecules/notecards";
 import { DocMetadata } from "../../../../libs/types/document";
 import { Authors, LastModified } from "../../document/organisms/metadata";
@@ -18,10 +18,13 @@ import "./collection.scss";
 
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
-import { useFrequentlyViewed } from "./frequently-viewed";
+import {
+  FrequentlyViewedCollection,
+  useFrequentlyViewed,
+} from "./frequently-viewed";
 dayjs.extend(relativeTime);
 
-function CollectionComponent() {
+export function CollectionComponent() {
   const { collectionId } = useParams();
   const { data: collection, error: collectionError } =
     useCollection(collectionId);
@@ -111,23 +114,15 @@ function CollectionComponent() {
   );
 }
 
-function FrequentlyViewedCollectionComponent() {
+export function FrequentlyViewedCollectionComponent() {
   let [size, setSize] = useState(0);
   let [atEnd, setAtEnd] = useState(false);
-  let frequentlyViewed = useFrequentlyViewed(10, size, setAtEnd);
-  let _vals: Item[] | undefined = frequentlyViewed?.items.map((v) => {
-    return {
-      collection_id: frequentlyViewed?.name || "",
-      updated_at: dayjs(v.timestamps[0]).toISOString(),
-      created_at: dayjs(v.timestamps[0]).toISOString(),
-      notes: "",
-      id: v.serial.toString(),
-      parents: v.parents || [],
-      url: v.url,
-      title: v.title,
-    };
-  });
-  let mutate = (_vals) => Promise.resolve(_vals);
+  let frequentlyViewed: FrequentlyViewedCollection = useFrequentlyViewed(
+    10,
+    size,
+    setAtEnd
+  );
+
   useScrollToTop();
 
   return (
@@ -137,21 +132,17 @@ function FrequentlyViewedCollectionComponent() {
           <Link to="../" className="exit">
             &larr; Back
           </Link>
-          <h1>{frequentlyViewed?.name}</h1>
+          <h1>{frequentlyViewed.name}</h1>
           <span className="count">
-            {frequentlyViewed?.article_count}{" "}
-            {frequentlyViewed?.article_count === 1 ? "article" : "articles"}
+            {frequentlyViewed.article_count}{" "}
+            {frequentlyViewed.article_count === 1 ? "article" : "articles"}
           </span>
-          <p>{frequentlyViewed?.description}</p>
+          <p>{frequentlyViewed.description}</p>
         </Container>
       </header>
       <Container>
-        {_vals?.flat(1).map((item) => (
-          <ItemComponent
-            addNoteEnabled={false}
-            key={item.id}
-            {...{ item, mutate }}
-          />
+        {frequentlyViewed.items.map((item) => (
+          <ItemComponent addNoteEnabled={false} key={item.id} {...{ item }} />
         ))}
         {!atEnd && (
           <div className="pagination">
@@ -160,7 +151,6 @@ function FrequentlyViewedCollectionComponent() {
               onClickHandler={() => {
                 setSize(size + 10);
               }}
-              isDisabled={false}
             >
               Show more
             </Button>
@@ -177,8 +167,8 @@ function ItemComponent({
   mutate,
 }: {
   addNoteEnabled?: boolean;
-  item: Item;
-  mutate: KeyedMutator<Item[][]>;
+  item: Item | FrequentlyViewedItem;
+  mutate?: KeyedMutator<Item[][]>;
 }) {
   const [slicedNote, setSlicedNote] = useState<string>();
   const [note, setNote] = useState<string>();
@@ -245,7 +235,7 @@ function ItemComponent({
           <ArticleActions
             doc={doc}
             showTranslations={false}
-            item={item}
+            item={"collection_id" in item ? item : undefined}
             scopedMutator={mutate}
           />
         )}
@@ -301,20 +291,16 @@ function ItemComponent({
               ))}
           </div>
         </div>
-      ) : doc ? (
-        addNoteEnabled && (
-          <Button
-            extraClasses="add-note"
-            icon="edit"
-            type="action"
-            onClickHandler={openBookmarkMenu}
-          >
-            Add note
-          </Button>
-        )
+      ) : doc && addNoteEnabled ? (
+        <Button
+          extraClasses="add-note"
+          icon="edit"
+          type="action"
+          onClickHandler={openBookmarkMenu}
+        >
+          Add note
+        </Button>
       ) : null}
     </article>
   );
 }
-
-export { FrequentlyViewedCollectionComponent, CollectionComponent };

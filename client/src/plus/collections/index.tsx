@@ -54,21 +54,14 @@ function Overview() {
   document.title = `Collections | ${MDN_PLUS_TITLE}`;
   const { data, isLoading, error } = useCollections();
   const [showCreate, setShowCreate] = useState(false);
-  const frequentlyViewed = useFrequentlyViewed(0, 10, () => null);
   const gleanClick = useGleanClick();
 
-  let collections = data?.map((collection) => (
+  let collectionCards = data?.map((collection) => (
     <CollectionCard key={collection.id} {...{ collection }} />
   ));
-
-  if (collections) {
-    if (frequentlyViewed) {
-      collections.splice(
-        1,
-        0,
-        FrequentlyViewedCollectionCard(frequentlyViewed)
-      );
-    }
+  const frequentlyViewedCard = <FrequentlyViewedCollectionCard />;
+  if (collectionCards && frequentlyViewedCard) {
+    collectionCards.splice(1, 0, frequentlyViewedCard);
   }
 
   return (
@@ -114,7 +107,7 @@ function Overview() {
         {isLoading ? (
           <Loading />
         ) : data ? (
-          collections
+          collectionCards
         ) : error ? (
           <NoteCard type="error">
             <h4>Error</h4>
@@ -290,9 +283,11 @@ function DefaultCollectionCard({ collection }: { collection: Collection }) {
   );
 }
 
-function FrequentlyViewedCollectionCard(
-  collection: FrequentlyViewedCollection
-) {
+function FrequentlyViewedCollectionCard() {
+  const collection = useFrequentlyViewed();
+  if (!collection.items.length) {
+    return null;
+  }
   return (
     <article key={collection.name} className="default">
       <header>
@@ -307,7 +302,7 @@ function FrequentlyViewedCollectionCard(
           {collection.article_count === 1 ? "article" : "articles"}
         </Link>
         <time dateTime={dayjs(collection.updated_at).toISOString()}>
-          Edited {dayjs(collection.updated_at).fromNow().toString()}
+          Updated {dayjs(collection.updated_at).fromNow().toString()}
         </time>
       </footer>
     </article>

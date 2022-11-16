@@ -1,15 +1,20 @@
 import { useEffect, useState } from "react";
 import { Doc, DocParent } from "../../../../libs/types/document";
-import { Collection } from "./api";
+import { FrequentlyViewedItem, ItemParent } from "./api";
 
-export interface FrequentlyViewedCollection extends Collection {
-  items: FrequentlyViewedEntry[];
+export interface FrequentlyViewedCollection {
+  name: string;
+  article_count: number;
+  created_at: string;
+  updated_at: string;
+  description: string;
+  items: FrequentlyViewedItem[];
 }
 
 export type FrequentlyViewedEntry = {
-  parents?: DocParent[];
+  parents?: ItemParent[];
   serial: number;
-  summary?: string;
+  //This timestamp is deprecated and should be removed
   timestamp?: number;
   timestamps: number[];
   title: string;
@@ -17,11 +22,11 @@ export type FrequentlyViewedEntry = {
   visitCount: number;
 };
 
-const FREQUENTLY_VIEWED_STORAGE_KEY = "frequently-viewed-documents";
+export const FREQUENTLY_VIEWED_STORAGE_KEY = "frequently-viewed-documents";
 
 const ThirtyDaysMilliseconds = 30 * 24 * 60 * 60 * 1000;
 const isWithinLastThirtyDays = (date: Date): boolean => {
-  const currentDate = new Date().getTime();
+  const currentDate = Date.now();
   return date.getTime() >= currentDate - ThirtyDaysMilliseconds;
 };
 
@@ -67,16 +72,12 @@ function getFrequentlyViewed(): FrequentlyViewedEntry[] {
   return filterFrequentlyViewed(entries);
 }
 
-function setFrequentlyViewed(
-  frequentlyViewed: FrequentlyViewedEntry[],
-  done = () => {}
-) {
+function setFrequentlyViewed(frequentlyViewed: FrequentlyViewedEntry[]) {
   try {
     localStorage.setItem(
       FREQUENTLY_VIEWED_STORAGE_KEY,
       JSON.stringify(frequentlyViewed)
     );
-    done();
   } catch (err) {
     console.warn(
       "Failed to write frequently viewed documents to localStorage",
@@ -109,43 +110,55 @@ function getNextFrequentlyViewedSerial(
   );
 }
 
-export function useFrequentlyViewed(limit: number, offset: number, setEnd) {
-  const [collection, setCollection] =
-    useState<FrequentlyViewedCollection | null>();
-  const [updated, setUpdated] = useState(false);
+export function useFrequentlyViewed(
+  limit: number = 0,
+  offset: number = 10,
+  setEnd?: (bool) => void
+): FrequentlyViewedCollection {
+  const [collection, setCollection] = useState<FrequentlyViewedCollection>({
+    article_count: 0,
+    created_at: new Date().toISOString(),
+    description: "Articles you viewed more than 2 times in the past 30 days.",
+    items: [],
+    name: "Frequently Viewed Articles",
+    updated_at: new Date().toISOString(),
+  });
 
   useEffect(() => {
     let freqViewed = getFrequentlyViewed();
     freqViewed = freqViewed.filter((val) => val.timestamps.length >= 2);
     if (limit + offset > freqViewed.length) {
-      setEnd(true);
+      setEnd && setEnd(true);
     }
-
-    if (freqViewed.length === 0) {
-      setCollection(null);
-      return;
-    }
-
-    let paged = freqViewed
+    let paged: FrequentlyViewedItem[] = freqViewed
       .sort(sortByTimestampThenVistsDesc)
-      .slice(0, limit + offset);
+      .slice(0, limit + offset)
+      .map((val) => {
+        const lastModified = val.timestamps[0]
+          ? new Date(freqViewed[0].timestamps[0]).toISOString()
+          : new Date().toISOString();
+        return {
+          created_at: lastModified,
+          updated_at: lastModified,
+          parents: val.parents || [],
+          title: val.title,
+          url: val.url,
+          id: val.serial,
+        };
+      });
 
-    let collection: FrequentlyViewedCollection = {
+    setCollection({
+      ...collection,
       article_count: freqViewed.length,
       created_at: freqViewed[0]
         ? new Date(freqViewed[0].timestamps[0]).toISOString()
         : new Date().toISOString(),
-      description: "Articles you viewed more than 2 times in the past 30 days.",
-      id: "frequently-viewed",
       items: paged,
-      name: "Frequently Viewed Articles",
       updated_at: freqViewed[0]
         ? new Date(freqViewed[0].timestamps[0]).toISOString()
         : new Date().toISOString(),
-    };
-    setCollection(collection);
-    setUpdated(false);
-  }, [limit, setEnd, updated, offset]);
+    });
+  }, [limit, setEnd, offset]);
 
   return collection;
 }
