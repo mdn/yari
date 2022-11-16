@@ -4,6 +4,7 @@ import { BrowserInfoContext } from "./browser-info";
 import {
   asList,
   getCurrentSupport,
+  getPreviousVersion,
   hasMore,
   hasNoteworthyNotes,
   isFullySupportedWithoutLimitation,
@@ -135,7 +136,10 @@ const CellText = React.memo(
     const currentSupport = getCurrentSupport(support);
 
     const added = currentSupport?.version_added ?? null;
-    const removed = currentSupport?.version_removed ?? null;
+    const removed = getPreviousVersion(
+      currentSupport?.version_removed ?? null,
+      browser
+    );
 
     const browserReleaseDate = getSupportBrowserReleaseDate(support);
     const supportClassName = getSupportClassName(support, browser);
