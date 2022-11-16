@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useLocation, useParams } from "react-router-dom";
 import { useIsServer } from "../hooks";
-import { Doc, FrequentlyViewedEntry } from "./types";
+import { Doc, FrequentlyViewedEntry } from "../../../libs/types/document";
 
 export function useDocumentURL() {
   const { "*": slug, locale } = useParams();
@@ -123,6 +123,50 @@ function getCopiedMessageElement(wrapper: HTMLElement) {
 const FREQUENTLY_VIEWED_STORAGE_KEY = "frequently-viewed-documents";
 const FREQUENTLY_VIEWED_MAX_ITEMS = 20;
 
+function getFrequentlyViewed(): FrequentlyViewedEntry[] {
+  let frequentlyViewed: string | null = null;
+  try {
+    frequentlyViewed = localStorage.getItem(FREQUENTLY_VIEWED_STORAGE_KEY);
+  } catch (err) {
+    console.warn(
+      "Unable to read frequently viewed documents from localStorage",
+      err
+    );
+  }
+
+  const entries = JSON.parse(
+    frequentlyViewed || "[]"
+  ) as FrequentlyViewedEntry[];
+
+  // Assign serials to old entries.
+  entries.forEach((e) => {
+    e.serial =
+      e.serial === undefined
+        ? getNextFrequentlyViewedSerial(entries)
+        : e.serial;
+  });
+
+  return entries;
+}
+
+function setFrequentlyViewed(
+  frequentlyViewed: FrequentlyViewedEntry[],
+  done = () => {}
+) {
+  try {
+    localStorage.setItem(
+      FREQUENTLY_VIEWED_STORAGE_KEY,
+      JSON.stringify(frequentlyViewed.slice(0, FREQUENTLY_VIEWED_MAX_ITEMS))
+    );
+    done();
+  } catch (err) {
+    console.warn(
+      "Failed to write frequently viewed documents to localStorage",
+      err
+    );
+  }
+}
+
 const sortByVisitsThenTimestampDesc = (
   first: FrequentlyViewedEntry,
   second: FrequentlyViewedEntry
@@ -134,6 +178,18 @@ const sortByVisitsThenTimestampDesc = (
   return 0;
 };
 
+function getNextFrequentlyViewedSerial(
+  entries: FrequentlyViewedEntry[]
+): number {
+  return (
+    1 +
+    Math.max(
+      0,
+      ...entries.map((entry) => entry.serial).filter((serial) => !isNaN(serial))
+    )
+  );
+}
+
 export function useFrequentlyViewed(): [
   FrequentlyViewedEntry[],
   (arg: FrequentlyViewedEntry[]) => void
@@ -142,12 +198,12 @@ export function useFrequentlyViewed(): [
   const [updated, setUpdated] = useState(false);
 
   useEffect(() => {
-    const entries = JSON.parse(
-      localStorage.getItem(FREQUENTLY_VIEWED_STORAGE_KEY) || "[]"
-    ) as FrequentlyViewedEntry[];
+    const entries = getFrequentlyViewed();
+
     const newEntries: FrequentlyViewedEntry[] = [];
     for (const entry of entries) {
       newEntries.push({
+        serial: entry.serial,
         url: entry.url,
         title: entry.title,
         timestamp: entry.timestamp,
@@ -161,16 +217,8 @@ export function useFrequentlyViewed(): [
   }, [updated]);
 
   const setStoredEntries = (value: FrequentlyViewedEntry[]) => {
-    try {
-      setEntries(entries);
-      window.localStorage.setItem(
-        FREQUENTLY_VIEWED_STORAGE_KEY,
-        JSON.stringify(value.slice(0, FREQUENTLY_VIEWED_MAX_ITEMS))
-      );
-      setUpdated(true);
-    } catch (err) {
-      console.error(`Failed to write to localStorage: ${err}`);
-    }
+    setEntries(value);
+    setFrequentlyViewed(value, () => setUpdated(true));
   };
 
   return [entries, setStoredEntries];
@@ -186,47 +234,36 @@ export function usePersistFrequentlyViewed(doc: Doc | undefined) {
     if (!doc) {
       return;
     }
-    let frequentlyViewed = JSON.parse(
-      localStorage.getItem(FREQUENTLY_VIEWED_STORAGE_KEY) || "[]"
-    );
-
-    const newEntry: FrequentlyViewedEntry = {
-      url: doc.mdn_url,
-      title: doc.title,
-      parents: doc.parents,
-      timestamp: new Date().getTime(),
-      visitCount: 1,
-    };
-
-    if (frequentlyViewed.length === 0) {
-      localStorage.setItem(
-        FREQUENTLY_VIEWED_STORAGE_KEY,
-        JSON.stringify([newEntry])
-      );
-      return;
-    }
+    let frequentlyViewed = getFrequentlyViewed();
 
     const index = frequentlyViewed.findIndex(
-      (entry) => entry.url === newEntry.url
+      (entry) => entry.url === doc.mdn_url
     );
 
     if (index !== -1) {
       frequentlyViewed[index].timestamp = new Date().getTime();
       frequentlyViewed[index].visitCount += 1;
     } else {
-      frequentlyViewed.unshift(newEntry);
+      const newEntry: FrequentlyViewedEntry = {
+        serial: getNextFrequentlyViewedSerial(frequentlyViewed),
+        url: doc.mdn_url,
+        title: doc.title,
+        parents: doc.parents,
+        timestamp: new Date().getTime(),
+        visitCount: 1,
+      };
+
+      if (frequentlyViewed.length === 0) {
+        setFrequentlyViewed([newEntry]);
+        return;
+      } else {
+        frequentlyViewed.unshift(newEntry);
+      }
     }
 
     //Sort descending so most frequently viewed appears on top.
     frequentlyViewed = frequentlyViewed.sort(sortByVisitsThenTimestampDesc);
-    try {
-      localStorage.setItem(
-        FREQUENTLY_VIEWED_STORAGE_KEY,
-        JSON.stringify(frequentlyViewed.slice(0, FREQUENTLY_VIEWED_MAX_ITEMS))
-      );
-    } catch (err) {
-      console.error(`Failed to write to localStorage: ${err}`);
-    }
+    setFrequentlyViewed(frequentlyViewed);
   });
 }
 

@@ -30,14 +30,20 @@ Example calls
 
 */
 
+if ($0) {
+  mdn.deprecated(`Calling the Compat macro with any arguments is
+  deprecated; instead use the 'browser-compat' front-matter key.`);
+}
+
 var query = $0 || env['browser-compat'];
 if (!query) {
   throw new Error("No first query argument or 'browser-compat' front-matter value passed");
 }
 var depth = $1 || 1;
-var output = `<div class="bc-data" data-query="${query}" data-depth="${depth}">
+var queries = Array.isArray(query) ? query : [query];
+var output = queries.map(query => `<div class="bc-data" data-query="${query}" data-depth="${depth}" data-multiple="${queries.length > 1}">
   If you're able to see this, something went wrong on this page.
-</div>`;
+</div>`).join("\n");
 %>
 
 <%-output%>

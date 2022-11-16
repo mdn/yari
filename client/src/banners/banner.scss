@@ -1,12 +1,12 @@
 .mdn-cta-container {
-  background-color: #212121;
-  color: white;
-  display: flex;
-  z-index: 999;
   align-items: center;
-  min-height: 40px;
+  background-color: #212121;
+  color: #fff;
+  display: flex;
   height: 100%;
+  min-height: 40px;
   padding: 0 1rem;
+  z-index: 999;
 
   .mdn-cta-copy {
     margin: 0;
@@ -26,8 +26,8 @@
     }
 
     .icon {
+      color: #fff;
       height: 16px;
-      color: white;
     }
   }
 
@@ -36,8 +36,8 @@
   }
 
   a {
-    min-height: 0;
     color: var(--color-announcement-banner-accent);
+    min-height: 0;
 
     &:hover,
     &:focus {
@@ -55,4 +55,8 @@
     font-size: 1.2rem;
     font-weight: 700;
   }
+}
+
+body.full-screen-overlay .mdn-cta-container {
+  display: none;
 }

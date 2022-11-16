@@ -5,7 +5,7 @@ import { Routes, Route, useLocation, useMatch } from "react-router-dom";
 // and applied before any component specific style
 import "./app.scss";
 
-import { CRUD_MODE, PLUS_IS_ENABLED } from "./constants";
+import { CRUD_MODE, PLUS_IS_ENABLED } from "./env";
 import { Homepage } from "./homepage";
 import { Document } from "./document";
 import { A11yNav } from "./ui/molecules/a11y-nav";
@@ -13,17 +13,17 @@ import { Footer } from "./ui/organisms/footer";
 import { TopNavigation } from "./ui/organisms/top-navigation";
 import { SiteSearch } from "./site-search";
 import { Loading } from "./ui/atoms/loading";
-import { PageContentContainer } from "./ui/atoms/page-content";
+import { MainContentContainer } from "./ui/atoms/page-content";
 import { PageNotFound } from "./page-not-found";
 import { Plus } from "./plus";
 import { About } from "./about";
-import { OfflineSettings } from "./offline-settings";
-import { docCategory } from "./utils";
+import { getCategoryByPathname } from "./utils";
 import { Contribute } from "./community";
 import { ContributorSpotlight } from "./contributor-spotlight";
 import { useIsServer } from "./hooks";
 
-import { Banner, hasActiveBanners } from "./banners";
+import { Banner } from "./banners";
+import { useGleanPage } from "./telemetry/glean-context";
 
 // @ts-ignore
 const AllFlaws = React.lazy(() => import("./flaws"));
@@ -37,20 +37,24 @@ const Sitemap = React.lazy(() => import("./sitemap"));
 function Layout({ pageType, children }) {
   const { pathname } = useLocation();
   const [category, setCategory] = React.useState<string | null>(
-    docCategory({ pathname })
+    getCategoryByPathname(pathname)
   );
 
   const isServer = useIsServer();
 
   React.useEffect(() => {
-    setCategory(docCategory({ pathname }));
+    setCategory(getCategoryByPathname(pathname));
   }, [pathname]);
 
   return (
     <>
       <A11yNav />
-      {!isServer && hasActiveBanners && <Banner />}
-      <div className={`page-wrapper  ${category || ""} ${pageType}`}>
+      {!isServer && <Banner />}
+      <div
+        className={`page-wrapper  ${
+          category ? `category-${category}` : ""
+        } ${pageType}`}
+      >
         {pageType !== "document-page" && <TopNavigation />}
         {children}
       </div>
@@ -74,26 +78,8 @@ function DocumentLayout({ children }) {
   return <Layout pageType="document-page">{children}</Layout>;
 }
 
-/** This component exists so you can dynamically change which sub-component to
- * render depending on the conditions. In particular, we need to be able to
- * render the <PageNotFound> component, in server-side rendering, if told to do
- * so. But if the client then changes the location (by clicking a <Link>
- * or a react-router navigate() call) we need to ignore the fact that it was
- * originally not found. Perhaps, this new location that the client is
- * requesting is going to work.
- */
 function PageOrPageNotFound({ pageNotFound, children }) {
-  // It's true by default if the SSR rendering says so.
-  const [notFound, setNotFound] = React.useState<boolean>(!!pageNotFound);
-  const { pathname } = useLocation();
-  const initialPathname = React.useRef(pathname);
-  React.useEffect(() => {
-    if (initialPathname.current && initialPathname.current !== pathname) {
-      setNotFound(false);
-    }
-  }, [pathname]);
-
-  return notFound ? (
+  return pageNotFound ? (
     <StandardLayout>
       <PageNotFound />
     </StandardLayout>
@@ -105,16 +91,17 @@ function PageOrPageNotFound({ pageNotFound, children }) {
 function LoadingFallback({ message }: { message?: string }) {
   return (
     <StandardLayout>
-      <PageContentContainer>
+      <MainContentContainer standalone={true}>
         {/* This extra minHeight is just so that the footer doesn't flicker
           in and out as the fallback appears. */}
         <Loading minHeight={800} message={message || "Loading…"} />
-      </PageContentContainer>
+      </MainContentContainer>
     </StandardLayout>
   );
 }
 
 export function App(appProps) {
+  useGleanPage();
   const localeMatch = useMatch("/:locale/*");
 
   useEffect(() => {
@@ -122,6 +109,18 @@ export function App(appProps) {
 
     document.documentElement.setAttribute("lang", locale);
   }, [appProps.locale, localeMatch]);
+
+  const [pageNotFound, setPageNotFound] = React.useState<boolean>(
+    appProps.pageNotFound
+  );
+  const { pathname } = useLocation();
+  const initialPathname = React.useRef(pathname);
+
+  React.useEffect(() => {
+    setPageNotFound(
+      appProps.pageNotFound && initialPathname.current === pathname
+    );
+  }, [appProps.pageNotFound, pathname]);
 
   const isServer = useIsServer();
 
@@ -134,7 +133,7 @@ export function App(appProps) {
         <WritersHomepage />
       </Layout>
     ) : (
-      <PageOrPageNotFound pageNotFound={appProps.pageNotFound}>
+      <PageOrPageNotFound pageNotFound={pageNotFound}>
         <Layout pageType="standard-page">
           <Homepage {...appProps} />
         </Layout>
@@ -234,20 +233,10 @@ export function App(appProps) {
                 }
               />
             )}
-            {PLUS_IS_ENABLED && (
-              <Route
-                path="/offline-settings"
-                element={
-                  <StandardLayout>
-                    <OfflineSettings {...appProps} />
-                  </StandardLayout>
-                }
-              />
-            )}
             <Route
               path="/docs/*"
               element={
-                <PageOrPageNotFound pageNotFound={appProps.pageNotFound}>
+                <PageOrPageNotFound pageNotFound={pageNotFound}>
                   <DocumentLayout>
                     <Document {...appProps} />
                   </DocumentLayout>

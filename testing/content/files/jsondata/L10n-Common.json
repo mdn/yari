@@ -2,46 +2,40 @@
   "summary": {
     "en-US": "The documentation about this has not yet been written; please consider contributing!",
     "ca": "Aquesta pàgina encara no ha estat traduïda. Si us plau considera contribuir-hi!",
-    "de": "Die Beschreibung hierüber wurde bisher noch nicht geschrieben. Bitte überlege, mitzuwirken!",
     "es": "La documentación acerca de este tema no ha sido escrita todavía . ¡Por favor  considera contribuir !",
     "fr": "Cette documentation n'a pas encore été rédigée, vous pouvez aider en contribuant&nbsp;!",
     "pt-BR": "A documentação sobre isto ainda não foi escrita; por favor considere contribuir!",
     "ru": "Документация об этом ещё не написана; пожалуйста, поспособствуйте её написанию!",
-    "zh-CN": "此页面仍未被本地化, 期待您的翻译!",
+    "zh-CN": "此页面仍未被本地化，期待你的翻译！",
     "ja": "この項目についての文書はまだ書かれていません。書いてみませんか？"
   },
 
   "Methods": {
     "en-US": "Methods",
-    "de": "Methoden",
     "fr": "Méthodes",
     "it": "Metodi",
     "es": "Métodos",
     "pt-BR": "Métodos",
     "ru": "Методы",
     "zh-CN": "方法",
-    "pl": "Metody",
     "ca": "Mètodes",
     "ja": "メソッド"
   },
 
   "Properties": {
     "en-US": "Properties",
-    "de": "Eigenschaften",
     "fr": "Propriétés",
     "es": "Propiedades",
     "pt-BR": "Propriedades",
     "ru": "Свойства",
     "zh-CN": "属性",
     "it": "Proprietà",
-    "pl": "Własności",
     "ca": "Propietats",
     "ja": "プロパティ"
   },
 
   "Event_handlers": {
     "en-US": "Event handlers",
-    "de": "Event-Handler",
     "fr": "Gestionnaires d'évènements",
     "ja": "イベントハンドラー",
     "ko": "이벤트 핸들러",
@@ -53,7 +47,6 @@
 
   "Constructor": {
     "en-US": "Constructor",
-    "de": "Konstruktor",
     "es": "Constructor",
     "pt-BR": "Construtor",
     "fr": "Constructeur",
@@ -65,7 +58,6 @@
 
   "Inheritance": {
     "en-US": "Inheritance:",
-    "de": "Vererbung:",
     "es": "Herencia",
     "pt-BR": "Herança:",
     "fr": "Héritage&nbsp;:",
@@ -77,7 +69,6 @@
 
   "Implemented_by": {
     "en-US": "Implemented by:",
-    "de": "Implementiert von:",
     "es": "Implementado por:",
     "pt-BR": "Implementado por:",
     "fr": "Implémenté par&nbsp;:",
@@ -89,7 +80,6 @@
 
   "Related_pages": {
     "en-US": "Related pages for $1",
-    "de": "Ähnliche Seiten zu $1",
     "es": "Páginas relacionadas a $1",
     "pt-BR": "Páginas relacionadas a $1",
     "fr": "Pages liées à $1",
@@ -101,7 +91,6 @@
 
   "Related_pages_wo_group": {
     "en-US": "Related pages:",
-    "de": "Ähnliche Seiten:",
     "es": "Páginas relacionadas:",
     "pt-BR": "Páginas relacionadas:",
     "fr": "Pages similaires&nbsp;:",
@@ -113,20 +102,17 @@
 
   "Reference": {
     "en-US": "Reference",
-    "de": "Referenz",
     "es": "Referencia",
     "fr": "Référence",
     "ja": "リファレンス",
     "pt-BR": "Referência",
     "zh-CN": "参考",
-    "pl": "Referencje",
     "ca": "Referència",
     "ru": "Руководство"
   },
 
   "section": {
     "en-US": "section",
-    "de": "Abschnitt",
     "fr": "section",
     "pt-BR": "sessão",
     "ru": "секция",
@@ -135,7 +121,6 @@
 
   "[Translate]": {
     "en-US": "[Translate]",
-    "de": "[Übersetzen]",
     "es": "[Traducir]",
     "fr": "[Traduire]",
     "pt-BR": "[Traduzir]",
@@ -147,11 +132,10 @@
 
   "TranslationCTA": {
     "en-US": "Our volunteers haven't translated this article into your language yet. Join us and help get the job done!",
-    "de": "Unsere Freiwilligen haben diesen Artikel noch nicht ins Deutsche übersetzt. Machen Sie mit und helfen Sie, das zu erledigen!",
     "es": "Nuestros voluntarios aún no han traducido este artículo al Español. ¡Únete a nosotros y ayuda a traducirlo!",
     "fr": "Nos volontaires n'ont pas encore traduit cet article en français. Rejoignez-nous et aidez-nous à le faire&nbsp;!",
     "pt-BR": "Nossos voluntários ainda não traduziram este artigo para sua linguagem. Junte-se a nós e nos ajude a traduzir!",
-    "zh-CN": "此页面仍未被本地化, 期待您的翻译!",
+    "zh-CN": "此页面仍未被本地化，期待你的翻译！",
     "ca": "Els nostres voluntaris encara no han traduït aquest article al Català. Uneix-te a nosaltres i ajuda-ns a acabar la feina!",
     "ru": "Наши волонтёры ещё не перевели данную статью на Русский. Присоединяйтесь к нам и помогите закончить эту работу!",
     "ja": "まだボランティアによって日本語に翻訳されていない記事です。MDNに参加して、翻訳してみませんか？"
@@ -159,7 +143,6 @@
 
   "Guides": {
     "en-US": "Guides",
-    "de": "Handbuch",
     "es": "Guías",
     "fr": "Guides",
     "pt-BR": "Guias",
@@ -169,7 +152,6 @@
 
   "Events": {
     "en-US": "Events",
-    "de": "Ereignisse",
     "es": "Eventos",
     "fr": "Événements",
     "pt-BR": "Eventos",
@@ -179,7 +161,6 @@
 
   "Interfaces": {
     "en-US": "Interfaces",
-    "de": "Schnittstellen",
     "es": "Interfaces",
     "fr": "Interfaces",
     "pt-BR": "Interfaces",
@@ -189,7 +170,6 @@
 
   "listSeparator": {
     "en-US": ", ",
-    "de": ", ",
     "es": ", ",
     "fr": ", ",
     "ja": " 、 ",
@@ -199,7 +179,6 @@
 
   "MissingPage": {
     "en-US": "[Page not yet written]",
-    "de": "[Seite noch nicht geschrieben]",
     "fr": "[Page qui reste à écrire]",
     "ja": "[ページがまだ書かれていません]",
     "pt-BR": "[Página ainda não foi escrita]"

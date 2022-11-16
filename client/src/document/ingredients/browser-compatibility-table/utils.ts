@@ -1,8 +1,10 @@
-import type bcd from "@mdn/browser-compat-data/types";
+import { compareVersions } from "compare-versions";
+
+import type BCD from "@mdn/browser-compat-data/types";
 
 // Extended for the fields, beyond the bcd types, that are extra-added
 // exclusively in Yari.
-interface SimpleSupportStatementExtended extends bcd.SimpleSupportStatement {
+interface SimpleSupportStatementExtended extends BCD.SimpleSupportStatement {
   // Known for some support statements where the browser *version* is known,
   // as opposed to just "true" and if the version release date is known.
   release_date?: string;
@@ -27,15 +29,36 @@ export function isTruthy<T>(t: T | false | undefined | null): t is T {
 
 interface Feature {
   name: string;
-  compat: bcd.CompatStatement;
+  compat: BCD.CompatStatement;
   depth: number;
 }
 
+function findFirstCompatDepth(identifier: BCD.Identifier) {
+  const entries = [["", identifier]];
+
+  while (entries.length) {
+    const [path, value] = entries.shift() as [string, BCD.Identifier];
+    if (value.__compat) {
+      // Following entries have at least this depth.
+      return path.split(".").length;
+    }
+
+    for (const key of Object.keys(value)) {
+      const subpath = path ? `${path}.${key}` : key;
+      entries.push([subpath, value[key]]);
+    }
+  }
+
+  // Fallback.
+  return 0;
+}
+
 export function listFeatures(
-  identifier: bcd.Identifier,
+  identifier: BCD.Identifier,
   parentName: string = "",
   rootName: string = "",
-  depth: number = 0
+  depth: number = 0,
+  firstCompatDepth: number = 0
 ): Feature[] {
   const features: Feature[] = [];
   if (rootName && identifier.__compat) {
@@ -45,23 +68,37 @@ export function listFeatures(
       depth,
     });
   }
-
-  for (const [subName, subIdentifier] of Object.entries(identifier)) {
-    if (subName !== "__compat" && subIdentifier.__compat) {
+  if (rootName) {
+    firstCompatDepth = findFirstCompatDepth(identifier);
+  }
+  for (const subName of Object.keys(identifier)) {
+    if (subName === "__compat") {
+      continue;
+    }
+    const subIdentifier = identifier[subName];
+    if (subIdentifier.__compat) {
       features.push({
         name: parentName ? `${parentName}.${subName}` : subName,
         compat: subIdentifier.__compat,
         depth: depth + 1,
       });
-      features.push(...listFeatures(subIdentifier, subName, "", depth + 1));
+    }
+    if (subIdentifier.__compat || depth + 1 < firstCompatDepth) {
+      features.push(
+        ...listFeatures(subIdentifier, subName, "", depth + 1, firstCompatDepth)
+      );
     }
   }
   return features;
 }
 
+export function hasMore(support: BCD.SupportStatement | undefined) {
+  return Array.isArray(support) && support.length > 1;
+}
+
 export function versionIsPreview(
-  version: bcd.VersionValue | string | undefined,
-  browser: bcd.BrowserStatement
+  version: BCD.VersionValue | string | undefined,
+  browser: BCD.BrowserStatement
 ): boolean {
   if (version === "preview") {
     return true;
@@ -76,7 +113,7 @@ export function versionIsPreview(
   return false;
 }
 
-export function hasNoteworthyNotes(support: bcd.SimpleSupportStatement) {
+export function hasNoteworthyNotes(support: BCD.SimpleSupportStatement) {
   return (
     support.notes?.length &&
     !support.version_removed &&
@@ -84,11 +121,11 @@ export function hasNoteworthyNotes(support: bcd.SimpleSupportStatement) {
   );
 }
 
-function hasLimitation(support: bcd.SimpleSupportStatement) {
+function hasLimitation(support: BCD.SimpleSupportStatement) {
   return hasMajorLimitation(support) || support.notes;
 }
 
-function hasMajorLimitation(support: bcd.SimpleSupportStatement) {
+function hasMajorLimitation(support: BCD.SimpleSupportStatement) {
   return (
     support.partial_implementation ||
     support.alternative_name ||
@@ -97,49 +134,18 @@ function hasMajorLimitation(support: bcd.SimpleSupportStatement) {
     support.version_removed
   );
 }
-
-export function isOnlySupportedWithAltName(
-  support: bcd.SupportStatement | undefined
-) {
-  return (
-    support &&
-    getFirst(support).alternative_name &&
-    !asList(support).some((item) => isFullySupportedWithoutLimitation(item))
-  );
-}
-
-export function isOnlySupportedWithPrefix(
-  support: bcd.SupportStatement | undefined
-) {
-  return (
-    support &&
-    getFirst(support).prefix &&
-    !asList(support).some((item) => isFullySupportedWithoutLimitation(item))
-  );
-}
-
-export function isOnlySupportedWithFlags(
-  support: bcd.SupportStatement | undefined
-) {
-  return (
-    support &&
-    getFirst(support).flags &&
-    !asList(support).some((item) => isFullySupportedWithoutLimitation(item))
-  );
-}
-
 export function isFullySupportedWithoutLimitation(
-  support: bcd.SimpleSupportStatement
+  support: BCD.SimpleSupportStatement
 ) {
   return support.version_added && !hasLimitation(support);
 }
 
-export function isNotSupportedAtAll(support: bcd.SimpleSupportStatement) {
+export function isNotSupportedAtAll(support: BCD.SimpleSupportStatement) {
   return !support.version_added && !hasLimitation(support);
 }
 
 function isFullySupportedWithoutMajorLimitation(
-  support: bcd.SimpleSupportStatement
+  support: BCD.SimpleSupportStatement
 ) {
   return support.version_added && !hasMajorLimitation(support);
 }
@@ -186,4 +192,21 @@ export function getCurrentSupport(
 
   // Default (likely never reached)
   return getFirst(support);
+}
+
+export function getPreviousVersion(
+  version: BCD.VersionValue,
+  browser: BCD.BrowserStatement
+): BCD.VersionValue {
+  if (browser && typeof version === "string") {
+    const browserVersions = Object.keys(browser["releases"]).sort(
+      compareVersions
+    );
+    const currentVersionIndex = browserVersions.indexOf(version);
+    if (currentVersionIndex > 0) {
+      return browserVersions[currentVersionIndex - 1];
+    }
+  }
+
+  return version;
 }

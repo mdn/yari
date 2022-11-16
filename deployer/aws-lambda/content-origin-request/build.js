@@ -1,5 +1,3 @@
-/* eslint-disable node/no-unpublished-require */
-/* eslint-disable node/no-missing-require */
 const { VALID_LOCALES } = require("@yari-internal/constants");
 const fs = require("fs");
 const path = require("path");
@@ -22,8 +20,9 @@ function buildRedirectsMap() {
     }
 
     const base = process.env[envvar];
+    console.log(`${envvar} = ${base}`);
 
-    VALID_LOCALES.forEach((locale) => {
+    for (const locale of VALID_LOCALES.keys()) {
       const path = [
         // Absolute path.
         `${base}/${locale}/_redirects.txt`,
@@ -34,7 +33,7 @@ function buildRedirectsMap() {
       ].find((path) => fs.existsSync(path));
 
       if (path) {
-        const content = fs.readFileSync(path, "utf8");
+        const content = fs.readFileSync(path, "utf-8");
         const lines = content.split("\n");
         const redirectLines = lines.filter(
           (line) => line.startsWith("/") && line.includes("\t")
@@ -43,8 +42,9 @@ function buildRedirectsMap() {
           const [source, target] = redirectLine.split("\t", 2);
           redirectMap.set(source.toLowerCase(), target);
         }
+        console.log(`- ${path}: ${redirectLines.length} redirects`);
       }
-    });
+    }
   });
 
   const output = "redirects.json";

@@ -2,11 +2,15 @@ import * as React from "react";
 
 import { ReactComponent as CloseIcon } from "@mdn/dinocons/general/close.svg";
 import { useGA } from "../ga-context";
-import { useUserData } from "../user-context";
-import { PLUS_LAUNCH_ANNOUNCEMENT } from "./ids";
-import { isPlusAvailable } from "../utils";
+import { BannerId } from "./ids";
 import { usePlusUrl } from "../plus/utils";
-import { ENABLE_PLUS_EU } from "../constants";
+import { useGleanClick } from "../telemetry/glean-context";
+import {
+  BANNER_MULTIPLE_COLLECTIONS_DISMISSED,
+  BANNER_MULTIPLE_COLLECTIONS_LINK,
+  BANNER_PREVIEW_FEATURES_DISMISSED,
+  BANNER_PREVIEW_FEATURES_SETTINGS_LINK,
+} from "../telemetry/constants";
 
 // The <Banner> component displays a simple call-to-action banner at
 // the bottom of the window. The following props allow it to be customized.
@@ -83,45 +87,85 @@ function PlusLaunchAnnouncementBanner({
 }: {
   onDismissed: () => void;
 }) {
+  const bannerId = BannerId.PLUS_LAUNCH_ANNOUNCEMENT;
   const sendCTAEventToGA = useSendCTAEventToGA();
   const plusUrl = usePlusUrl();
 
   return (
-    <Banner id={PLUS_LAUNCH_ANNOUNCEMENT} onDismissed={onDismissed}>
-      {(ENABLE_PLUS_EU && (
-        <p className="mdn-cta-copy">
-          <a href={plusUrl} className="mdn-plus">
-            MDN Plus
-          </a>{" "}
-          now available in <span className="underlined">your</span> country!
-          Support MDN <span className="underlined">and</span> make it your own.{" "}
-          <a
-            href="https://hacks.mozilla.org/2022/04/mdn-plus-now-available-in-more-markets"
-            target="_blank"
-            rel="noopener noreferrer"
-            onClick={() => sendCTAEventToGA(PLUS_LAUNCH_ANNOUNCEMENT)}
-          >
-            Learn more
-          </a>{" "}
-          ✨
-        </p>
-      )) || (
-        <p className="mdn-cta-copy">
-          <a href={plusUrl} className="mdn-plus">
-            MDN Plus
-          </a>{" "}
-          is here! Support MDN <em>and</em> make it your own.{" "}
-          <a
-            href="https://hacks.mozilla.org/2022/03/introducing-mdn-plus-make-mdn-your-own"
-            target="_blank"
-            rel="noopener noreferrer"
-            onClick={() => sendCTAEventToGA(PLUS_LAUNCH_ANNOUNCEMENT)}
-          >
-            Learn more
-          </a>{" "}
-          ✨
-        </p>
-      )}
+    <Banner id={bannerId} onDismissed={onDismissed}>
+      <p className="mdn-cta-copy">
+        <a href={plusUrl} className="mdn-plus">
+          MDN Plus
+        </a>{" "}
+        now available in <span className="underlined">your</span> country!
+        Support MDN <span className="underlined">and</span> make it your own.{" "}
+        <a
+          href="https://hacks.mozilla.org/2022/04/mdn-plus-now-available-in-more-markets"
+          target="_blank"
+          rel="noopener noreferrer"
+          onClick={() => sendCTAEventToGA(bannerId)}
+        >
+          Learn more
+        </a>{" "}
+        ✨
+      </p>
+    </Banner>
+  );
+}
+
+function PreviewFeaturesBanner({ onDismissed }: { onDismissed: () => void }) {
+  const bannerId = BannerId.PREVIEW_FEATURES;
+  const sendCTAEventToGA = useSendCTAEventToGA();
+  const gleanClick = useGleanClick();
+  const onDismissedWithGlean = () => {
+    gleanClick(BANNER_PREVIEW_FEATURES_DISMISSED);
+    onDismissed();
+  };
+  return (
+    <Banner id={bannerId} onDismissed={onDismissedWithGlean}>
+      <p className="mdn-cta-copy">
+        MDN Plus preview features are now available.{" "}
+        <a
+          href="/en-US/plus/settings"
+          onClick={() => {
+            gleanClick(BANNER_PREVIEW_FEATURES_SETTINGS_LINK);
+            sendCTAEventToGA(bannerId);
+          }}
+        >
+          Manage settings
+        </a>
+      </p>
+    </Banner>
+  );
+}
+
+function MultipleCollectionsBanner({
+  onDismissed,
+}: {
+  onDismissed: () => void;
+}) {
+  const bannerId = BannerId.PREVIEW_FEATURES;
+  const sendCTAEventToGA = useSendCTAEventToGA();
+  const gleanClick = useGleanClick();
+  const onDismissedWithGlean = () => {
+    gleanClick(BANNER_MULTIPLE_COLLECTIONS_DISMISSED);
+    onDismissed();
+  };
+  return (
+    <Banner id={bannerId} onDismissed={onDismissedWithGlean}>
+      <p className="mdn-cta-copy">
+        We've added support for Multiple Collections! Check out your{" "}
+        <a
+          href="/en-US/plus/collections"
+          onClick={() => {
+            gleanClick(BANNER_MULTIPLE_COLLECTIONS_LINK);
+            sendCTAEventToGA(bannerId);
+          }}
+        >
+          Collections page
+        </a>{" "}
+        to see what's new!
+      </p>
     </Banner>
   );
 }
@@ -134,19 +178,32 @@ export default function ActiveBanner({
   id,
   onDismissed,
 }: {
-  id: string;
+  id: BannerId;
   onDismissed: () => void;
 }) {
-  const userData = useUserData();
-
-  if (id === PLUS_LAUNCH_ANNOUNCEMENT) {
-    return (
-      <>
-        {isPlusAvailable(userData) && (
+  switch (id) {
+    case BannerId.PLUS_LAUNCH_ANNOUNCEMENT:
+      return (
+        <>
           <PlusLaunchAnnouncementBanner onDismissed={onDismissed} />
-        )}
-      </>
-    );
+        </>
+      );
+
+    case BannerId.MULTIPLE_COLLECTIONS:
+      return (
+        <>
+          <MultipleCollectionsBanner onDismissed={onDismissed} />
+        </>
+      );
+
+    case BannerId.PREVIEW_FEATURES:
+      return (
+        <>
+          <PreviewFeaturesBanner onDismissed={onDismissed} />
+        </>
+      );
+
+    default:
+      throw new Error(`Unrecognized banner to display (${id})`);
   }
-  throw new Error(`Unrecognized banner to display (${id})`);
 }

@@ -5,28 +5,28 @@ $text-stroke-width: 2px;
 .offer-hero {
   background-color: var(--background-primary);
   color: var(--text-primary);
-  width: 100%;
   display: grid;
   grid-template-rows: fit-content(24rem);
+  width: 100%;
 
   .offer-hero-header {
-    grid-column: 1;
-    grid-row: 1;
-    display: flex;
-    flex-direction: row;
     align-items: center;
-    padding: 1rem 1rem;
-    max-width: 52rem;
-    width: initial;
 
     color: var(--text-secondary);
+    display: flex;
+    flex-direction: row;
+    grid-column: 1;
+    grid-row: 1;
     margin: 0 auto;
+    max-width: 52rem;
+    padding: 1rem;
     -moz-transition: all 0.3s ease-in-out;
     transition: all 0.3s ease-in-out;
+    width: initial;
 
     .offer-hero-wrapper {
-      z-index: 1;
       align-self: start;
+      z-index: 1;
 
       h1 {
         font-size: 3rem;
@@ -42,28 +42,28 @@ $text-stroke-width: 2px;
       }
 
       h2 {
-        width: 100%;
         font: var(--type-heading-h3);
+        width: 100%;
       }
 
       .button-wrapper {
         display: flex;
-        width: 100%;
         gap: 1rem;
+        width: 100%;
 
         a {
-          padding: 0.5rem;
-          font-size: 14px;
           border-radius: var(--elem-radius);
-          line-height: 175%;
-          width: 140px;
-          text-align: center;
+          font-size: 14px;
           font-weight: 600;
-          z-index: 1;
+          line-height: 175%;
+          padding: 0.5rem;
           position: relative;
+          text-align: center;
           -moz-transition: all 0.2s ease;
           transition: all 0.2s ease;
+          width: 140px;
           width: 100%;
+          z-index: 1;
         }
 
         .button-primary {
@@ -80,7 +80,7 @@ $text-stroke-width: 2px;
         .button-secondary {
           background: #15141a1a;
           border: 2px solid var(--button-secondary-border-red);
-          color: white;
+          color: #fff;
         }
 
         .button-secondary:hover {
@@ -89,15 +89,16 @@ $text-stroke-width: 2px;
       }
     }
   }
+
   .mandala-wrapper {
+    --mandala-primary: var(--border-primary);
     grid-column: 1;
     grid-row: 1;
-    width: 100%;
-    top: 0;
     overflow: hidden;
-    --mandala-primary: var(--border-primary);
+    top: 0;
     -moz-transition: all 1s ease-in-out;
     transition: all 1s ease-in-out;
+    width: 100%;
 
     .mandala-translate {
       transform: translate(10rem, -8rem) scale(1.2);

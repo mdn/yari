@@ -4,7 +4,7 @@ import { annotate, annotationGroup } from "rough-notation";
 import { RoughAnnotation } from "rough-notation/lib/model";
 import { diffWords } from "diff";
 
-import { CRUD_MODE, CRUD_MODE_HOSTNAMES } from "../../constants";
+import { CRUD_MODE, CRUD_MODE_HOSTNAMES } from "../../env";
 import { humanizeFlawName } from "../../flaw-utils";
 import { useDocumentURL } from "../hooks";
 import {
@@ -21,7 +21,7 @@ import {
   HeadingLinksFlaw,
   TranslationDifferenceFlaw,
   UnsafeHTMLFlaw,
-} from "../types";
+} from "../../../../libs/types/document";
 import "./flaws.scss";
 
 interface FlawCount {
@@ -251,7 +251,7 @@ function Flaws({
               <BrokenLinks
                 key="broken_links"
                 sourceFilePath={filePath}
-                links={doc.flaws.broken_links}
+                links={doc.flaws.broken_links as BrokenLink[]}
                 isReadOnly={isReadOnly}
               />
             );
@@ -259,14 +259,14 @@ function Flaws({
             return (
               <BadBCDLinks
                 key="bad_bcd_links"
-                links={doc.flaws.bad_bcd_links}
+                links={doc.flaws.bad_bcd_links as BadBCDLinkFlaw[]}
               />
             );
           case "bad_bcd_queries":
             return (
               <BadBCDQueries
                 key="bad_bcd_queries"
-                flaws={doc.flaws.bad_bcd_queries}
+                flaws={doc.flaws.bad_bcd_queries as BadBCDQueryFlaw[]}
               />
             );
           case "bad_pre_tags":
@@ -274,7 +274,7 @@ function Flaws({
               <BadPreTag
                 key="bad_pre_tags"
                 sourceFilePath={filePath}
-                flaws={doc.flaws.bad_pre_tags}
+                flaws={doc.flaws.bad_pre_tags as BadPreTagFlaw[]}
                 isReadOnly={isReadOnly}
               />
             );
@@ -283,7 +283,7 @@ function Flaws({
               <Macros
                 key="macros"
                 sourceFilePath={filePath}
-                flaws={doc.flaws.macros}
+                flaws={doc.flaws.macros as MacroErrorMessage[]}
                 isReadOnly={isReadOnly}
               />
             );
@@ -292,7 +292,7 @@ function Flaws({
               <Images
                 key="images"
                 sourceFilePath={filePath}
-                images={doc.flaws.images}
+                images={doc.flaws.images as ImageReferenceFlaw[]}
                 isReadOnly={isReadOnly}
               />
             );
@@ -301,7 +301,7 @@ function Flaws({
               <ImageWidths
                 key="image_widths"
                 sourceFilePath={filePath}
-                flaws={doc.flaws.image_widths}
+                flaws={doc.flaws.image_widths as ImageWidthFlaw[]}
                 isReadOnly={isReadOnly}
               />
             );
@@ -310,23 +310,34 @@ function Flaws({
               <HeadingLinks
                 key="heading_links"
                 sourceFilePath={filePath}
-                flaws={doc.flaws.heading_links}
+                flaws={doc.flaws.heading_links as HeadingLinksFlaw[]}
                 isReadOnly={isReadOnly}
               />
             );
           case "unsafe_html":
             return (
-              <UnsafeHTML key="unsafe_html" flaws={doc.flaws.unsafe_html} />
+              <UnsafeHTML
+                key="unsafe_html"
+                flaws={doc.flaws.unsafe_html as UnsafeHTMLFlaw[]}
+              />
             );
           case "translation_differences":
             return (
               <TranslationDifferences
                 key="translation_differences"
-                flaws={doc.flaws.translation_differences}
+                flaws={
+                  doc.flaws
+                    .translation_differences as TranslationDifferenceFlaw[]
+                }
               />
             );
           case "sectioning":
-            return <Sectioning key="sectioning" flaws={doc.flaws.sectioning} />;
+            return (
+              <Sectioning
+                key="sectioning"
+                flaws={doc.flaws.sectioning as SectioningFlaw[]}
+              />
+            );
           default:
             throw new Error(`Unknown flaw check '${flaw.name}'`);
         }

@@ -7,22 +7,6 @@ import { useUIStatus } from "../../../ui-context";
 import "./index.scss";
 import { TOC } from "../toc";
 
-function _setScrollLock(isSidebarOpen) {
-  const mainContentElement = document.querySelector("main");
-
-  if (isSidebarOpen) {
-    document.body.style.overflow = "hidden";
-    if (mainContentElement) {
-      mainContentElement.style.overflow = "hidden";
-    }
-  } else {
-    document.body.style.overflow = "";
-    if (mainContentElement) {
-      mainContentElement.style.overflow = "";
-    }
-  }
-}
-
 export function SidebarContainer({ doc, children }) {
   const { isSidebarOpen, setIsSidebarOpen } = useUIStatus();
   const [classes, setClasses] = useState<string>("sidebar");
@@ -39,12 +23,22 @@ export function SidebarContainer({ doc, children }) {
       }, 300);
     }
 
-    _setScrollLock(isSidebarOpen);
-
     if (timeoutID) {
       return () => clearTimeout(timeoutID);
     }
   }, [isSidebarOpen]);
+
+  useEffect(() => {
+    const sidebar = document.querySelector("#sidebar-quicklinks");
+    const currentSidebarItem = sidebar?.querySelector("em");
+    if (sidebar && currentSidebarItem) {
+      [sidebar, sidebar.querySelector(".sidebar-inner")].forEach((n) =>
+        n?.scrollTo({
+          top: currentSidebarItem.offsetTop - window.innerHeight / 3,
+        })
+      );
+    }
+  }, []);
 
   return (
     <>

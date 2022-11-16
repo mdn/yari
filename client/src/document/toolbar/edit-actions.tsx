@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { CRUD_MODE_HOSTNAMES } from "../../constants";
-import { Source } from "../types";
+import { CRUD_MODE_HOSTNAMES } from "../../env";
+import { Source } from "../../../../libs/types/document";
 
 import "./edit-actions.scss";
 

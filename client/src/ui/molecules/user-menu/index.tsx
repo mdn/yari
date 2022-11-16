@@ -6,11 +6,7 @@ import SignOut from "../../atoms/signout";
 
 import { useUserData } from "../../../user-context";
 import { useIsServer, useLocale } from "../../../hooks";
-import {
-  FXA_SETTINGS_URL,
-  HEADER_NOTIFICATIONS_MENU_API_URL,
-  FXA_MANAGE_SUBSCRIPTIONS_URL,
-} from "../../../constants";
+import { HEADER_NOTIFICATIONS_MENU_API_URL } from "../../../constants";
 
 import "./index.scss";
 import { DropdownMenu, DropdownMenuWrapper } from "../dropdown";
@@ -39,7 +35,7 @@ export const UserMenu = () => {
   );
 
   useEffect(() => {
-    setNewNotifications(Boolean(data?.items.length));
+    setNewNotifications(Boolean(data?.items?.length));
   }, [data]);
 
   // if we don't have the user data yet, don't render anything
@@ -65,16 +61,8 @@ export const UserMenu = () => {
         url: `/${locale}/plus/collections`,
       },
       {
-        label: "MDN Offline",
-        url: "/en-US/plus/offline",
-      },
-      {
-        url: FXA_SETTINGS_URL,
-        label: "Manage account",
-      },
-      {
-        url: FXA_MANAGE_SUBSCRIPTIONS_URL,
-        label: "Manage subscription",
+        label: "My Settings",
+        url: "/en-US/plus/settings",
       },
       {
         url: "https://support.mozilla.org/products/mdn-plus",
@@ -118,7 +106,11 @@ export const UserMenu = () => {
       </Button>
 
       <DropdownMenu>
-        <Submenu submenuId={userMenuItems.id} menuEntry={userMenuItems} />
+        <Submenu
+          submenuId={userMenuItems.id}
+          menuEntry={userMenuItems}
+          extraClasses="inline-submenu-lg"
+        />
       </DropdownMenu>
     </DropdownMenuWrapper>
   );

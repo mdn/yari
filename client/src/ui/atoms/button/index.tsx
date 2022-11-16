@@ -11,7 +11,7 @@ type ButtonProps = {
   ariaLabel?: string;
   title?: string;
 
-  type?: "primary" | "secondary" | "action" | "select";
+  type?: "primary" | "secondary" | "action" | "select" | "link";
 
   /**
    * The `type` of the button. Not used with links.

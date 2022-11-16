@@ -1,5 +1,6 @@
 import path from "path";
 
+import dotenv from "dotenv";
 import React from "react";
 import { StaticRouter } from "react-router-dom/server";
 
@@ -8,7 +9,7 @@ import render from "./render";
 
 import dotenv from "dotenv";
 import { fileURLToPath } from "url";
-const dirname = path.dirname(fileURLToPath(import.meta.url));
+const dirname = fileURLToPath(new URL(".", import.meta.url));
 
 // This is necessary because the ssr.js is in dist/ssr.js
 // and we need to reach the .env this way.

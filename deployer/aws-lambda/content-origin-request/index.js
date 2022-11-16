@@ -1,6 +1,6 @@
-/* eslint-disable node/no-missing-require */
+/* eslint-disable n/no-missing-require */
 const { resolveFundamental } = require("@yari-internal/fundamental-redirects");
-const { getLocale } = require("@yari-internal/get-locale");
+const { getLocale } = require("@yari-internal/locale-utils");
 const {
   decodePath,
   encodePath,

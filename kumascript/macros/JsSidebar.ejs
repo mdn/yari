@@ -26,7 +26,7 @@ var text = mdn.localStringMap({
     'Guide_Indexed_collections': 'Indexed collections',
     'Guide_keyed_collections': 'Keyed collections',
     'Guide_Objects': 'Working with objects',
-    'Guide_OOP': 'Details of the object model',
+    'Guide_Classes': 'Using classes',
     'Guide_promises' : 'Using promises',
     'Guide_Iterators_Generators': 'Iterators and generators',
     'Guide_Meta': 'Meta programming',
@@ -39,7 +39,7 @@ var text = mdn.localStringMap({
     'Introducing_objects': 'Introducing JavaScript objects',
     'Client-side_APIs': 'Client-side web APIs',
     'Frameworks': 'Client-side JavaScript frameworks',
-    'Re-introduction': 'A re-introduction to JavaScript',
+    'Language_overview': 'Language overview',
     'Data_structures': 'JavaScript data structures',
     'Equality': 'Equality comparisons and sameness',
     'Closures': 'Closures',
@@ -61,8 +61,8 @@ var text = mdn.localStringMap({
     'Enumerability':'Enumerability and ownership of properties',
     'Data_types': 'Data types and data structures',
     'Iteration_protocols': 'Iteration protocols',
-    'Transitioning_to_strict_mode': 'Transitioning to strict mode',
     'Template_strings': 'Template literals',
+    'Trailing_commas': 'Trailing commas',
     'Deprecated_features': 'Deprecated features',
   },
   'ru': {
@@ -81,7 +81,7 @@ var text = mdn.localStringMap({
     'Guide_Indexed_collections': 'Упорядоченные наборы данных',
     'Guide_keyed_collections': 'Коллекции',
     'Guide_Objects': 'Работа с объектами',
-    'Guide_OOP': 'Подробнее об объектной модели',
+    'Guide_Classes': 'Using classes',
     'Guide_promises' : 'Использование промисов',
     'Guide_Iterators_Generators': 'Итераторы и генераторы',
     'Guide_Meta': 'Метапрограммирование',
@@ -94,7 +94,7 @@ var text = mdn.localStringMap({
     'Introducing_objects': 'Введение в объекты JavaScript',
     'Client-side_APIs': 'Клиентский API веба',
     'Frameworks': 'Понимание JavaScript-фреймворков для фронтенда',
-    'Re-introduction': 'Повторное введение в JavaScript',
+    'Language_overview': 'Language overview',
     'Data_structures': 'Структуры данных JavaScript',
     'Equality': 'Проверки на равенство и когда их использовать',
     'Closures': 'Замыкания',
@@ -116,8 +116,8 @@ var text = mdn.localStringMap({
     'Enumerability':'Перечисляемость и принадлежность свойств',
     'Data_types': 'Типы и структуры данных',
     'Iteration_protocols': 'Протоколы перебора',
-    'Transitioning_to_strict_mode': 'Переход в строгий режим',
     'Template_strings': 'Шаблонные строки',
+    'Trailing_commas': 'Висящие запятые',
     'Deprecated_features': 'Устаревшие возможности',
   },
   'fr': {
@@ -136,7 +136,7 @@ var text = mdn.localStringMap({
     'Guide_Indexed_collections': 'Collections indexées',
     'Guide_keyed_collections': 'Collections avec clés',
     'Guide_Objects': 'Manipuler les objets',
-    'Guide_OOP': 'Détails du modèle objet',
+    'Guide_Classes': 'Using classes',
     'Guide_promises' : 'Utiliser les promesses',
     'Guide_Iterators_Generators': 'Itérateurs et générateurs',
     'Guide_Meta': 'Métaprogrammation',
@@ -149,7 +149,7 @@ var text = mdn.localStringMap({
     'Introducing_objects': 'Introduction aux objets JavaScript',
     'Client-side_APIs': 'Les API web côté client',
     'Frameworks': 'Les frameworks JavaScript côté client',
-    'Re-introduction': 'Réintroduction à JavaScript',
+    'Language_overview': 'Language overview',
     'Data_structures': 'Structures de données en JavaScript',
     'Equality': 'Différents tests d\'égalité',
     'Closures': 'Fermetures (closures)',
@@ -171,119 +171,64 @@ var text = mdn.localStringMap({
     'Enumerability': 'Rattachement des propriétés',
     'Data_types': 'Types et structures de données',
     'Iteration_protocols': 'Protocoles d\'itération',
-    'Transitioning_to_strict_mode': 'Passer au mode strict',
     'Template_strings': 'Gabarits de chaînes de caractères',
+    'Trailing_commas': 'Virgules finales',
     'Deprecated_features': 'Fonctionnalités dépréciées',
   },
   'zh-CN': {
     'Overview': 'JavaScript 知识概要',
     'Tutorials': '教程:',
     'Guide': 'JavaScript 指南',
-    'Guide_Introduction': 'Introduction',
-    'Guide_Grammar': 'Grammar and types',
-    'Guide_Control_flow': 'Control flow and error handling',
-    'Guide_Loops': 'Loops and iteration',
-    'Guide_Functions': 'Functions',
-    'Guide_Expressions': 'Expressions and operators',
-    'Guide_Numbers': 'Numbers and dates',
-    'Guide_Text': 'Text formatting',
-    'Guide_RegExp': 'Regular expressions',
-    'Guide_Indexed_collections': 'Indexed collections',
-    'Guide_keyed_collections': 'Keyed collections',
-    'Guide_Objects': 'Working with objects',
-    'Guide_OOP': 'Details of the object model',
-    'Guide_promises' : 'Using promises',
-    'Guide_Iterators_Generators': 'Iterators and generators',
-    'Guide_Meta': 'Meta programming',
-    'Guide_Modules': 'JavaScript modules',
+    'Guide_Introduction': '介绍',
+    'Guide_Grammar': '语法和数据类型',
+    'Guide_Control_flow': '流程控制与错误处理',
+    'Guide_Loops': '循环与迭代',
+    'Guide_Functions': '函数',
+    'Guide_Expressions': '表达式与运算符',
+    'Guide_Numbers': '数字和日期',
+    'Guide_Text': '文本格式化',
+    'Guide_RegExp': '正则表达式',
+    'Guide_Indexed_collections': '索引集合类',
+    'Guide_keyed_collections': '带键的集合',
+    'Guide_Objects': '使用对象',
+    'Guide_Classes': '使用类',
+    'Guide_promises' : '使用 Promise',
+    'Guide_Iterators_Generators': '迭代器和生成器',
+    'Guide_Meta': '元编程',
+    'Guide_Modules': 'JavaScript 模块',
     'Complete_beginners': '快速入门',
     'Basics': 'JavaScript 基础知识',
-    'First_steps': 'JavaScript first steps',
-    'Building_blocks': 'JavaScript building blocks',
+    'First_steps': 'JavaScript 第一步',
+    'Building_blocks': '创建 JavaScript 代码块',
     'Intermediate': '中级教程',
-    'Introducing_objects': 'Introducing JavaScript objects',
-    'Client-side_APIs': 'Client-side web APIs',
-    'Frameworks': 'Client-side JavaScript frameworks',
-    'Re-introduction': '深入 JavaScript',
+    'Introducing_objects': '介绍 JavaScript 对象',
+    'Client-side_APIs': '客户端 Web API',
+    'Frameworks': '客户端 JavaScript 框架',
+    'Language_overview': '语言概述',
     'Data_structures': 'JavaScript 数据结构',
     'Equality': '如何正确判断相等性',
-    'Closures': 'Closures',
+    'Closures': '闭包',
     'Advanced': '高级',
     'Inheritance': '继承和原型链',
     'Strict_mode': '严格模式',
     'Typed_arrays': 'JavaScript 类型化数组',
     'Memory_Management': '内存管理',
-    'Event_Loop': 'Concurrency model and Event Loop',
-    'Reference': '引用:',
+    'Event_Loop': '并发模型与事件循环',
+    'Reference': '参考:',
     'Global_Objects': '内置对象',
     'Operators': '表达式和运算符',
     'Statements': '语句和声明',
     'Functions': '函数',
-    'Classes': 'Classes',
-    'Errors': 'Errors',
+    'Classes': '类',
+    'Errors': '错误',
     'More': '更多',
     'Lexical_grammar': '词法文法',
     'Enumerability':'属性的可枚举性和所有权',
     'Data_types': '数据类型和数据解构',
-    'Iteration_protocols': 'Iteration protocols',
-    'Transitioning_to_strict_mode': '切换到严格模式',
+    'Iteration_protocols': '迭代协议',
     'Template_strings': '模板字符串',
+    'Trailing_commas': '尾后逗号',
     'Deprecated_features': '已废弃的特性',
-  },
-  'de': {
-    'Overview': 'Technologienübersicht',
-    'Tutorials': 'Tutorials:',
-    'Guide': 'JavaScript Guide',
-    'Guide_Introduction': 'Einführung',
-    'Guide_Grammar': 'Grammatik und Typen',
-    'Guide_Control_flow': 'Kontrollfluss und Fehlerbehandlung',
-    'Guide_Loops': 'Schleifen und Iterationen',
-    'Guide_Functions': 'Funktionen',
-    'Guide_Expressions': 'Ausdrücke und Operatoren',
-    'Guide_Numbers': 'Zahlen und Zeitangaben',
-    'Guide_Text': 'Textformatierung',
-    'Guide_RegExp': 'Reguläre Ausdrücke',
-    'Guide_Indexed_collections': 'Indexierte Collections',
-    'Guide_keyed_collections': 'Collections mit Schlüsseln',
-    'Guide_Objects': 'Mit Objekten arbeiten',
-    'Guide_OOP': 'Feinheiten des Objektmodells',
-    'Guide_promises' : 'Using promises',
-    'Guide_Iterators_Generators': 'Iteratoren und Generatoren',
-    'Guide_Meta': 'Metaprogrammierung',
-    'Guide_Modules': 'JavaScript modules',
-    'Complete_beginners': 'Einleitend',
-    'Basics': 'JavaScript Grundlagen',
-    'First_steps': 'JavaScript first steps',
-    'Building_blocks': 'JavaScript building blocks',
-    'Intermediate': 'Fortgeschritten',
-    'Introducing_objects': 'Introducing JavaScript objects',
-    'Client-side_APIs': 'Client-side web APIs',
-    'Frameworks': 'Client-side JavaScript frameworks',
-    'Re-introduction': 'Eine Wiedereinführung in JavaScript',
-    'Data_structures': 'JavaScript Datenstrukturen',
-    'Equality': 'Vergleiche auf Gleichheit',
-    'Closures': 'Closures',
-    'Advanced': 'Erweitert',
-    'Inheritance': 'Vererbung und Prototypenkette',
-    'Strict_mode': 'Strict Modus',
-    'Typed_arrays': 'JavaScript Typed-Arrays',
-    'Memory_Management': 'Speicherverwaltung',
-    'Event_Loop': 'Laufzeitmodell und Event-Loop',
-    'Reference': 'Referenzen:',
-    'Global_Objects': 'Standardobjekte',
-    'Operators': 'Ausdrücke & Operatoren',
-    'Statements': 'Anweisungen & Deklarationen',
-    'Functions': 'Funktionen',
-    'Classes': 'Klassen',
-    'Errors': 'Fehler',
-    'More': 'Weiteres',
-    'Lexical_grammar': 'Lexikalische Grammatik',
-    'Enumerability':'Enumerability und Ownership von Eigenschaften',
-    'Data_types': 'Datentypen und Datenstrukturen',
-    'Iteration_protocols': 'Protokolle zur Iteration',
-    'Transitioning_to_strict_mode': 'Zum Strict Modus wechseln',
-    'Template_strings': 'Template Strings',
-    'Deprecated_features': 'Veraltete Bestandteile',
   },
   'ja': {
     'Overview': 'JavaScript 技術概説',
@@ -301,7 +246,7 @@ var text = mdn.localStringMap({
     'Guide_Indexed_collections': 'インデックス付きコレクション',
     'Guide_keyed_collections': 'キー付きコレクション',
     'Guide_Objects': 'オブジェクトを利用する',
-    'Guide_OOP': 'オブジェクトモデルの詳細',
+    'Guide_Classes': 'Using classes',
     'Guide_promises' : 'プロミスの使用',
     'Guide_Iterators_Generators': 'イテレーターとジェネレーター',
     'Guide_Meta': 'メタプログラミング',
@@ -314,7 +259,7 @@ var text = mdn.localStringMap({
     'Introducing_objects': 'JavaScript オブジェクト入門',
     'Client-side_APIs': 'クライアントサイド Web API',
     'Frameworks': 'クライアントサイド JavaScript フレームワーク',
-    'Re-introduction': 'JavaScript 「再」入門',
+    'Language_overview': 'Language overview',
     'Data_structures': 'JavaScript のデータ構造',
     'Equality': '等値比較と同一性',
     'Closures': 'クロージャ',
@@ -336,8 +281,8 @@ var text = mdn.localStringMap({
     'Enumerability': 'プロパティの列挙可能性と所有権',
     'Data_types': 'データ型とデータ構造',
     'Iteration_protocols': '反復処理プロトコル',
-    'Transitioning_to_strict_mode': 'strict モードへの移行',
     'Template_strings': 'テンプレート文字列',
+    'Trailing_commas': '末尾のカンマ',
     'Deprecated_features': '廃止予定の機能',
   },
   'pt-BR': {
@@ -356,7 +301,7 @@ var text = mdn.localStringMap({
     'Guide_Indexed_collections': 'Coleções indexadas',
     'Guide_keyed_collections': 'Coleções com chave (chave-valor)',
     'Guide_Objects': 'Trabalhando com objetos',
-    'Guide_OOP': 'Detalhes do modelo de objetos',
+    'Guide_Classes': 'Using classes',
     'Guide_promises' : 'Usando "promises"',
     'Guide_Iterators_Generators': 'Iteradores e geradores',
     'Guide_Meta': 'Metaprogramação',
@@ -369,7 +314,7 @@ var text = mdn.localStringMap({
     'Introducing_objects': 'Introdução a objetos JavaScript',
     'Client-side_APIs': 'APIs Web para aplicações Cliente',
     'Frameworks': 'Client-side JavaScript frameworks',
-    'Re-introduction': 'Uma reintrodução a JavaScript',
+    'Language_overview': 'Language overview',
     'Data_structures': 'Estruturas de dados de JavaScript',
     'Equality': 'Comparadores de igualdade e semelhança',
     'Closures': 'Closures',
@@ -391,8 +336,8 @@ var text = mdn.localStringMap({
     'Enumerability':'Enumerabilidade e domínio de propriedades',
     'Data_types': 'Tipos de dados e estruturas de dados',
     'Iteration_protocols': 'Protocolos de iteração',
-    'Transitioning_to_strict_mode': 'Migrando para o "strict mode"',
     'Template_strings': 'Template literals',
+    'Trailing_commas': 'Trailing commas',
     'Deprecated_features': 'Funcionalidades depreciadas',
   },
 });
@@ -428,7 +373,7 @@ var text = mdn.localStringMap({
           <li><a href="/<%=locale%>/docs/Web/JavaScript/Guide/Indexed_collections"><%=text['Guide_Indexed_collections']%></a></li>
           <li><a href="/<%=locale%>/docs/Web/JavaScript/Guide/Keyed_collections"><%=text['Guide_keyed_collections']%></a></li>
           <li><a href="/<%=locale%>/docs/Web/JavaScript/Guide/Working_with_Objects"><%=text['Guide_Objects']%></a></li>
-          <li><a href="/<%=locale%>/docs/Web/JavaScript/Guide/Details_of_the_Object_Model"><%=text['Guide_OOP']%></a></li>
+          <li><a href="/<%=locale%>/docs/Web/JavaScript/Guide/Using_Classes"><%=text['Guide_Classes']%></a></li>
           <li><a href="/<%=locale%>/docs/Web/JavaScript/Guide/Using_promises"><%=text['Guide_promises']%></a></li>
           <li><a href="/<%=locale%>/docs/Web/JavaScript/Guide/Iterators_and_generators"><%=text['Guide_Iterators_Generators']%></a></li>
           <li><a href="/<%=locale%>/docs/Web/JavaScript/Guide/Meta_programming"><%=text['Guide_Meta']%></a></li>
@@ -442,9 +387,10 @@ var text = mdn.localStringMap({
       <ol>
         <li><a href="/<%=locale%>/docs/Learn/Tools_and_testing/Client-side_JavaScript_frameworks"><%=text['Frameworks']%></a></li>
         <li><a href="/<%=locale%>/docs/Learn/JavaScript/Client-side_web_APIs"><%=text['Client-side_APIs']%></a></li>
-        <li><a href="/<%=locale%>/docs/Web/JavaScript/A_re-introduction_to_JavaScript"><%=text['Re-introduction']%></a></li>
+        <li><a href="/<%=locale%>/docs/Web/JavaScript/Language_overview"><%=text['Language_overview']%></a></li>
         <li><a href="/<%=locale%>/docs/Web/JavaScript/Data_structures"><%=text['Data_structures']%></a></li>
         <li><a href="/<%=locale%>/docs/Web/JavaScript/Equality_comparisons_and_sameness"><%=text['Equality']%></a></li>
+        <li><a href="/<%=locale%>/docs/Web/JavaScript/Enumerability_and_ownership_of_properties"><%=text['Enumerability']%></a></li>
         <li><a href="/<%=locale%>/docs/Web/JavaScript/Closures"><%=text['Closures']%></a></li>
       </ol>
     </details>
@@ -454,7 +400,6 @@ var text = mdn.localStringMap({
       <summary><%=text['Advanced']%></summary>
       <ol>
         <li><a href="/<%=locale%>/docs/Web/JavaScript/Inheritance_and_the_prototype_chain"><%=text['Inheritance']%></a></li>
-        <li><a href="/<%=locale%>/docs/Web/JavaScript/Reference/Strict_mode"><%=text['Strict_mode']%></a></li>
         <li><a href="/<%=locale%>/docs/Web/JavaScript/Typed_arrays"><%=text['Typed_arrays']%></a></li>
         <li><a href="/<%=locale%>/docs/Web/JavaScript/Memory_Management"><%=text['Memory_Management']%></a></li>
         <li><a href="/<%=locale%>/docs/Web/JavaScript/EventLoop"><%=text['Event_Loop']%></a></li>
@@ -465,37 +410,37 @@ var text = mdn.localStringMap({
   <li class="toggle">
     <details <%=state('Objects')%>>
        <summary><%=text['Global_Objects']%></summary>
-        <%-await template("ListSubpagesForSidebar", ['/en-US/docs/Web/JavaScript/Reference/Global_Objects', 1])%>
+        <%-await template("ListSubpagesForSidebar", ['/en-US/docs/Web/JavaScript/Reference/Global_Objects', true, true])%>
     </details>
   </li>
   <li class="toggle">
     <details <%=state('Operators')%>>
       <summary><%=text['Operators']%></summary>
-      <%-await template("ListSubpagesForSidebar", ['/en-US/docs/Web/JavaScript/Reference/Operators', 1])%>
+      <%-await template("ListSubpagesForSidebar", ['/en-US/docs/Web/JavaScript/Reference/Operators', true, true])%>
     </details>
   </li>
   <li class="toggle">
     <details <%=state('Statements')%>>
       <summary><%=text['Statements']%></summary>
-      <%-await template("ListSubpagesForSidebar", ['/en-US/docs/Web/JavaScript/Reference/Statements', 1])%>
+      <%-await template("ListSubpagesForSidebar", ['/en-US/docs/Web/JavaScript/Reference/Statements', true, true])%>
     </details>
   </li>
   <li class="toggle">
     <details <%=state('Functions')%>>
       <summary><%=text['Functions']%></summary>
-      <%-await template("ListSubpagesForSidebar", ['/en-US/docs/Web/JavaScript/Reference/Functions', 1])%>
+      <%-await template("ListSubpagesForSidebar", ['/en-US/docs/Web/JavaScript/Reference/Functions', true, true])%>
     </details>
   </li>
   <li class="toggle">
     <details <%=state('Classes')%>>
       <summary><%=text['Classes']%></summary>
-      <%-await template("ListSubpagesForSidebar", ['/en-US/docs/Web/JavaScript/Reference/Classes', 1])%>
+      <%-await template("ListSubpagesForSidebar", ['/en-US/docs/Web/JavaScript/Reference/Classes', true, true])%>
     </details>
   </li>
   <li class="toggle">
     <details <%=state('Errors')%>>
       <summary><%=text['Errors']%></summary>
-      <%-await template("ListSubpagesForSidebar", ['/en-US/docs/Web/JavaScript/Reference/Errors', 1])%>
+      <%-await template("ListSubpagesForSidebar", ['/en-US/docs/Web/JavaScript/Reference/Errors', true, true])%>
     </details>
   </li>
   <li class="toggle">
@@ -504,12 +449,10 @@ var text = mdn.localStringMap({
       <ol>
         <li><a href="/<%=locale%>/docs/Web/JavaScript/JavaScript_technologies_overview"><%=text['Overview']%></a></li>
         <li><a href="/<%=locale%>/docs/Web/JavaScript/Reference/Lexical_grammar"><%=text['Lexical_grammar']%></a></li>
-        <li><a href="/<%=locale%>/docs/Web/JavaScript/Data_structures"><%=text['Data_structures']%></a></li>
-        <li><a href="/<%=locale%>/docs/Web/JavaScript/Enumerability_and_ownership_of_properties"><%=text['Enumerability']%></a></li>
         <li><a href="/<%=locale%>/docs/Web/JavaScript/Reference/Iteration_protocols"><%=text['Iteration_protocols']%></a></li>
         <li><a href="/<%=locale%>/docs/Web/JavaScript/Reference/Strict_mode"><%=text['Strict_mode']%></a></li>
-        <li><a href="/<%=locale%>/docs/Web/JavaScript/Reference/Strict_mode/Transitioning_to_strict_mode"><%=text['Transitioning_to_strict_mode']%></a></li>
         <li><a href="/<%=locale%>/docs/Web/JavaScript/Reference/Template_literals"><%=text['Template_strings']%></a></li>
+        <li><a href="/<%=locale%>/docs/Web/JavaScript/Reference/Trailing_commas"><%=text['Trailing_commas']%></a></li>
         <li><a href="/<%=locale%>/docs/Web/JavaScript/Reference/Deprecated_and_obsolete_features"><%=text['Deprecated_features']%></a></li>
       </ol>
     </details>

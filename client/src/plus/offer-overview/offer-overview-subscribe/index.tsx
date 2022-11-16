@@ -1,13 +1,12 @@
 import "./index.scss";
 import {
-  ENABLE_PLUS_EU,
   FXA_SIGNIN_URL,
   MDN_PLUS_SUBSCRIBE_10M_URL,
   MDN_PLUS_SUBSCRIBE_10Y_URL,
   MDN_PLUS_SUBSCRIBE_5M_URL,
   MDN_PLUS_SUBSCRIBE_5Y_URL,
   MDN_PLUS_SUBSCRIBE_BASE,
-} from "../../../constants";
+} from "../../../env";
 import { SubscriptionType, UserData, useUserData } from "../../../user-context";
 import { Switch } from "../../../ui/atoms/switch";
 import { useEffect, useState } from "react";
@@ -20,7 +19,7 @@ export enum Period {
 }
 
 const SUBSCRIPTIONS = {
-  [SubscriptionType.MDN_CORE]: { order: 0 },
+  [SubscriptionType.MDN_CORE]: { order: 0, period: Period.Month },
   [SubscriptionType.MDN_PLUS_5M]: {
     order: 1,
     period: Period.Month,
@@ -79,7 +78,7 @@ const CORE: OfferDetailsProps = {
   name: "Core",
   features: [
     ["notifications", "Notifications for up to 3 pages"],
-    ["collections", "Up to 5 saved articles"],
+    ["collections", "Up to 3 collections"],
   ],
   includes: "Includes:",
   cta: "Start with Core",
@@ -286,7 +285,7 @@ function OfferOverviewSubscribe() {
 
   useEffect(() => {
     (async () => {
-      if (ENABLE_PLUS_EU && isOnline) {
+      if (isOnline) {
         try {
           const plans: StripePlans = await getStripePlans();
           setOfferDetails(getLocalizedPlans(plans));

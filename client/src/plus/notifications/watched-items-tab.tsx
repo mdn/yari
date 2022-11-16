@@ -32,7 +32,7 @@ export function WatchedTab({ selectedTerms, selectedFilter, selectedSort }) {
     if (data && !!data.items) {
       setSubscriptionLimitReached(data.subscription_limit_reached);
       setList([
-        ...listRef.current,
+        ...(data?.offset === 0 ? [] : listRef.current),
         ...data.items.map((item) => {
           return { ...item, checked: false };
         }),
@@ -82,7 +82,7 @@ export function WatchedTab({ selectedTerms, selectedFilter, selectedSort }) {
   };
   const unwatchMany = async () => {
     const toUnWatch = list.filter((v) => v.checked);
-    const res = await unwatchItemsByUrls(data.csrfmiddlewaretoken, toUnWatch);
+    const res = await unwatchItemsByUrls(toUnWatch);
     const limitReached =
       (await res.json())?.subscription_limit_reached || false;
     const updated = list.filter((v) => !v.checked);
@@ -91,7 +91,7 @@ export function WatchedTab({ selectedTerms, selectedFilter, selectedSort }) {
   };
 
   const unwatchItem = async (toUnWatch) => {
-    const res = await unwatchItemsByUrls(data.csrfmiddlewaretoken, [toUnWatch]);
+    const res = await unwatchItemsByUrls([toUnWatch]);
     const limitReached =
       (await res.json())?.subscription_limit_reached || false;
     const updated = list.filter((v) => v.id !== toUnWatch.id);

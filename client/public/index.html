@@ -35,6 +35,7 @@
     </script>
 
     <title>MDN Web Docs</title>
+    <meta name="SSR_DATA" />
     <meta
       name="description"
       content="The MDN Web Docs site provides information about Open Web technologies including HTML, CSS, and APIs for both Web sites and progressive web apps."
@@ -61,18 +62,17 @@
     -->
     <meta property="og:url" content="https://developer.mozilla.org" />
     <meta property="og:title" content="MDN Web Docs" />
+    <meta property="og:locale" content="en-US" />
     <meta
       property="og:description"
       content="The MDN Web Docs site provides information about Open Web technologies including HTML, CSS, and APIs for both Web sites and progressive web apps."
     />
-    <meta property="og:locale" content="en-US" />
     <meta property="og:image" content="%PUBLIC_URL%/mdn-social-share.png" />
     <meta property="twitter:card" content="summary_large_image" />
 
     <link rel="canonical" href="https://developer.mozilla.org" />
     <style media="print">
       .breadcrumbs-container,
-      .language-toggle,
       .document-toc-container,
       .on-github,
       nav.sidebar,
@@ -92,27 +92,38 @@
         border-left-width: 2px;
       }
     </style>
+    <meta name="SSR_SCRIPTS" />
   </head>
 
   <body>
     <script>
       /**
        * If we modify this script, we must update the CSP hash as follows:
-       * 1. Run `yarn build:client`
-       * 2. Open `client/build/index.html` and locate this (minified) <script> tag.
-       * 3. Copy the inner content of the <script> tag (excluding the script tags).
-       * 4. Open https://csplite.com/csp/sha/ and paste the content.
-       * 5. Copy the `sha256-...` hash.
-       * 6. Open `libs/constants/index.js` and find the current hash in scriptSrcValues.
-       * 7. Remove the old "previous" hash and replace it with the old "current" hash.
-       * 8. Replace the old "current" hash with the new hash (from step 5).
+       * 1. Run `npx jest testing/tests/csp.test.ts --watch`
+       * 2. Open `libs/constants/index.js` and find the current hash in CSP_SCRIPT_SRC_VALUES.
+       * 3. Remove the old "previous" hash and replace it with the old "current" hash.
+       * 4. Replace the old "current" hash with the new hash from the failing test (step 1).
        */
+      document.body.addEventListener(
+        "load",
+        (e) => {
+          if (e.target.classList.contains("interactive")) {
+            e.target.setAttribute("data-readystate", "complete");
+          }
+        },
+        { capture: true }
+      );
+
       const c = { light: "#ffffff", dark: "#1b1b1b" };
       if (window && document.documentElement) {
-        const o = window.localStorage.getItem("theme");
-        o &&
-          ((document.documentElement.className = o),
-          (document.documentElement.style.backgroundColor = c[o]));
+        try {
+          const o = window.localStorage.getItem("theme");
+          o &&
+            ((document.documentElement.className = o),
+            (document.documentElement.style.backgroundColor = c[o]));
+        } catch (e) {
+          console.warn("Unable to read theme from localStorage", e);
+        }
       }
     </script>
     <div id="root"></div>

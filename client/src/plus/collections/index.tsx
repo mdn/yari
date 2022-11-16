@@ -1,95 +1,267 @@
-import { useContext, useEffect } from "react";
-import dayjs from "dayjs";
-import relativeTime from "dayjs/plugin/relativeTime";
+import React, { useState } from "react";
+
+import Container from "../../ui/atoms/container";
+import { Button } from "../../ui/atoms/button";
+import NewEditCollectionModal from "./new-edit-collection-modal";
+import { Route, Routes } from "react-router";
+import { Collection, useCollectionDelete, useCollections } from "./api";
+import { Link } from "react-router-dom";
+import CollectionComponent from "./collection";
+import { DropdownMenuWrapper, DropdownMenu } from "../../ui/molecules/dropdown";
+import MDNModal from "../../ui/atoms/modal";
+import { Loading } from "../../ui/atoms/loading";
+import NoteCard from "../../ui/molecules/notecards";
+
 import "./index.scss";
 
-import "../icon-card/index.scss";
-
-import { NotSignedIn } from "../common";
+import dayjs from "dayjs";
+import relativeTime from "dayjs/plugin/relativeTime";
+import Mandala from "../../ui/molecules/mandala";
+import { useGleanClick } from "../../telemetry/glean-context";
 import {
-  searchFiltersContext,
-  SearchFiltersProvider,
-} from "../contexts/search-filters";
-import Container from "../../ui/atoms/container";
-import Tabs from "../../ui/molecules/tabs";
-import { useLocale } from "../../hooks";
-import { BookmarkData } from "./types";
-import { useUserData } from "../../user-context";
-import { TabVariant, TAB_INFO, useCurrentTab } from "../common/tabs";
-import { PlusTabs } from "../common/plus-tabs";
+  COLLECTIONS_BANNER_NEW_COLLECTION,
+  NEW_COLLECTION_MODAL_SUBMIT_COLLECTIONS_PAGE,
+} from "../../telemetry/constants";
+import { camelWrap } from "../../utils";
+import { Icon } from "../../ui/atoms/icon";
 import { MDN_PLUS_TITLE } from "../../constants";
-
+import { SWRConfig } from "swr";
 dayjs.extend(relativeTime);
 
 export default function Collections() {
   return (
-    <SearchFiltersProvider>
-      <CollectionsLayout />
-    </SearchFiltersProvider>
+    <SWRConfig value={{ revalidateOnFocus: false, revalidateIfStale: false }}>
+      <Routes>
+        <Route path="/" element={<Overview />} />
+        <Route path=":collectionId" element={<CollectionComponent />} />
+      </Routes>
+    </SWRConfig>
   );
 }
 
-function CollectionsLayout() {
-  const locale = useLocale();
-  const userData = useUserData();
-
-  const isAuthed = userData?.isAuthenticated;
-  const showTabs = userData && userData.isAuthenticated;
-
-  const {
-    selectedTerms,
-    selectedFilter,
-    selectedSort,
-    setSelectedSort,
-    setSelectedFilter,
-    setSelectedTerms,
-  } = useContext(searchFiltersContext);
-
-  const currentTab = useCurrentTab(locale);
-  useEffect(() => {
-    setSelectedTerms("");
-    setSelectedSort("");
-    setSelectedFilter("");
-  }, [currentTab, setSelectedTerms, setSelectedSort, setSelectedFilter]);
-
-  useEffect(() => {
-    document.title = TAB_INFO[currentTab].pageTitle || MDN_PLUS_TITLE;
-
-    return () => {
-      document.title = MDN_PLUS_TITLE;
-    };
-  }, [currentTab]);
-
-  const tabsForRoute = [
-    TAB_INFO[TabVariant.COLLECTIONS],
-    TAB_INFO[TabVariant.FREQUENTLY_VIEWED],
-  ].map((val) => {
-    return { ...val, path: `/${locale}${val?.path}` };
-  });
-
+function Overview() {
+  document.title = `Collections | ${MDN_PLUS_TITLE}`;
+  const { data, isLoading, error } = useCollections();
+  const [showCreate, setShowCreate] = useState(false);
+  const gleanClick = useGleanClick();
   return (
-    <>
-      <header className="plus-header">
+    <div className="collections collections-overview">
+      <header>
         <Container>
-          <h1>Collections</h1>
+          <h1>
+            <div className="mandala-icon-wrapper">
+              <Mandala rotate={true} />
+              <Icon name="bookmark-filled" />
+            </div>
+            <span>Collections</span>
+          </h1>
+          <p>
+            Save and group your favorite MDN articles to easily find them later
+            on.
+            <br />
+            <a
+              rel="noreferrer noopener"
+              target="_blank"
+              href="https://survey.alchemer.com/s3/6988450/Feature-Preview-User-Feedback-Multiple-Collections"
+            >
+              We'd love to hear your feedback!
+            </a>
+          </p>
+          <Button
+            onClickHandler={() => {
+              gleanClick(COLLECTIONS_BANNER_NEW_COLLECTION);
+              setShowCreate(true);
+            }}
+            isDisabled={isLoading}
+          >
+            New Collection
+          </Button>
+          <NewEditCollectionModal
+            show={showCreate}
+            setShow={setShowCreate}
+            source={NEW_COLLECTION_MODAL_SUBMIT_COLLECTIONS_PAGE}
+          />
         </Container>
-        <Tabs tabs={tabsForRoute} />
       </header>
-      {showTabs && (
-        <Container>
-          <>
-            <PlusTabs
-              selectedTerms={selectedTerms}
-              selectedFilter={selectedFilter}
-              selectedSort={selectedSort}
-              currentTab={currentTab}
-            />
-          </>
-        </Container>
-      )}
-      {!userData && !isAuthed && <NotSignedIn />}
-    </>
+      <Container>
+        {isLoading ? (
+          <Loading />
+        ) : data ? (
+          data.map((collection) => (
+            <CollectionCard key={collection.id} {...{ collection }} />
+          ))
+        ) : error ? (
+          <NoteCard type="error">
+            <h4>Error</h4>
+            <p>{error.message}</p>
+          </NoteCard>
+        ) : (
+          "Create a new collection..."
+        )}
+      </Container>
+    </div>
   );
 }
 
-export type { BookmarkData };
+function CollectionCard({ collection }: { collection: Collection }) {
+  const [showDropdown, setShowDropdown] = useState(false);
+  const [showEdit, setShowEdit] = useState(false);
+  const [showDelete, setShowDelete] = useState(false);
+  const {
+    mutator: deleter,
+    error,
+    resetError,
+    isPending,
+  } = useCollectionDelete();
+
+  const deleteHandler = async (e: React.MouseEvent) => {
+    e.preventDefault();
+    if (isPending) return;
+    await deleter(collection);
+    setShowDelete(false);
+  };
+
+  const deleteCancelHandler = async (e: React.MouseEvent) => {
+    e.preventDefault();
+    if (isPending) return;
+    resetError();
+    setShowDelete(false);
+  };
+
+  return collection.name === "Default" ? (
+    <DefaultCollectionCard collection={collection} />
+  ) : (
+    <article key={collection.id}>
+      <header>
+        <h2>
+          <Link to={collection.id}>{camelWrap(collection.name)}</Link>
+        </h2>
+        {collection.name !== "Default" ? (
+          <DropdownMenuWrapper
+            className="dropdown is-flush-right"
+            isOpen={showDropdown}
+            setIsOpen={setShowDropdown}
+          >
+            <Button
+              type="action"
+              icon="ellipses"
+              ariaControls="collection-dropdown"
+              ariaHasPopup="menu"
+              ariaExpanded={showDropdown || undefined}
+              onClickHandler={() => {
+                setShowDropdown(!showDropdown);
+              }}
+            />
+            <DropdownMenu>
+              <ul className="dropdown-list" id="collection-dropdown">
+                <li className="dropdown-item">
+                  <Button
+                    type="action"
+                    title="Edit"
+                    onClickHandler={() => {
+                      setShowEdit(true);
+
+                      setShowDropdown(false);
+                    }}
+                  >
+                    Edit
+                  </Button>
+                </li>
+                <li className="dropdown-item">
+                  <Button
+                    type="action"
+                    title="Delete"
+                    onClickHandler={() => {
+                      setShowDelete(true);
+                      setShowDropdown(false);
+                    }}
+                  >
+                    Delete
+                  </Button>
+                </li>
+              </ul>
+            </DropdownMenu>
+          </DropdownMenuWrapper>
+        ) : null}
+        <NewEditCollectionModal
+          editingCollection={collection}
+          show={showEdit}
+          setShow={setShowEdit}
+          source={NEW_COLLECTION_MODAL_SUBMIT_COLLECTIONS_PAGE}
+        />
+        <MDNModal
+          isOpen={showDelete}
+          size="small"
+          onRequestClose={deleteCancelHandler}
+          extraOverlayClassName={isPending ? "wait" : ""}
+        >
+          <header className="modal-header">
+            <h2 className="modal-heading">Delete collection</h2>
+            <Button
+              onClickHandler={deleteCancelHandler}
+              type="action"
+              icon="cancel"
+              extraClasses="close-button"
+            />
+          </header>
+          <div className="modal-body">
+            {error && (
+              <NoteCard type="error">
+                <p>Error: {error.message}</p>
+              </NoteCard>
+            )}
+            <p>
+              Are you sure you want to delete your collection "{collection.name}
+              "?
+            </p>
+            <div className="mdn-form-item is-button-row">
+              <Button onClickHandler={deleteHandler} isDisabled={isPending}>
+                {isPending ? "Deleting..." : "Delete"}
+              </Button>
+              <Button
+                onClickHandler={deleteCancelHandler}
+                type="secondary"
+                isDisabled={isPending}
+              >
+                Cancel
+              </Button>
+            </div>
+          </div>
+        </MDNModal>
+      </header>
+      {collection.description && <p>{camelWrap(collection.description)}</p>}
+      <footer>
+        <Link to={collection.id} className="count">
+          {collection.article_count}{" "}
+          {collection.article_count === 1 ? "article" : "articles"}
+        </Link>
+        <time dateTime={dayjs(collection.updated_at).toISOString()}>
+          Edited {dayjs(collection.updated_at).fromNow().toString()}
+        </time>
+      </footer>
+    </article>
+  );
+}
+
+//Todo remove this post V1.0 -> V2.0 Migration
+function DefaultCollectionCard({ collection }: { collection: Collection }) {
+  return (
+    <article key={collection.id} className="default">
+      <header>
+        <h2>
+          <Link to={collection.id}>Saved Articles</Link>
+        </h2>
+      </header>
+      <p>The default collection.</p>
+      <footer>
+        <Link to={collection.id} className="count">
+          {collection.article_count}{" "}
+          {collection.article_count === 1 ? "article" : "articles"}
+        </Link>
+        <time dateTime={dayjs(collection.updated_at).toISOString()}>
+          Edited {dayjs(collection.updated_at).fromNow().toString()}
+        </time>
+      </footer>
+    </article>
+  );
+}

@@ -1,0 +1,17 @@
+@use "../../../../ui/vars" as *;
+
+.languages-switcher-menu.open-on-focus-within {
+  .submenu {
+    display: block;
+  }
+}
+
+.language-menu {
+  .submenu-item {
+    padding: 0.5rem;
+  }
+
+  @media (min-width: $screen-md) {
+    right: 0;
+  }
+}

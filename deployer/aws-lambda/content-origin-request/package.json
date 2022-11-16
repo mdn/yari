@@ -17,14 +17,14 @@
   "dependencies": {
     "@yari-internal/constants": "file:../../../libs/constants",
     "@yari-internal/fundamental-redirects": "file:../../../libs/fundamental-redirects",
-    "@yari-internal/get-locale": "file:../../../libs/get-locale",
+    "@yari-internal/locale-utils": "file:../../../libs/locale-utils",
     "@yari-internal/slug-utils": "file:../../../libs/slug-utils",
     "accept-language-parser": "^1.5.0",
     "cookie": "0.5.0",
     "sanitize-filename": "^1.6.3"
   },
   "devDependencies": {
-    "dotenv": "^16.0.1"
+    "dotenv": "^16.0.3"
   },
   "engines": {
     "node": ">=16.x"

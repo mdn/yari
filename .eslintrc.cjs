@@ -1,8 +1,6 @@
 const { readGitignoreFiles } = require("eslint-gitignore");
 const path = require("path");
 
-const dirname = __dirname;
-
 const ignores = readGitignoreFiles({
   cwd: path.join(".git", "info"),
   patterns: ["exclude"],
@@ -16,7 +14,7 @@ module.exports = {
     es2020: true,
     "jest/globals": true,
   },
-  extends: ["eslint:recommended", "plugin:node/recommended"],
+  extends: ["eslint:recommended", "plugin:n/recommended"],
   plugins: ["jest"],
   globals: {
     Atomics: "readonly",
@@ -28,13 +26,24 @@ module.exports = {
   rules: {
     "one-var": ["error", "never"],
   },
-  settings: {
-    node: {
-      resolvePaths: [dirname],
-      tryExtensions: [".js", ".json", ".node", ".tsx", ".ts"],
-    },
-  },
+  reportUnusedDisableDirectives: true,
   overrides: [
+    {
+      files: ["**/*.ts", "**/*.tsx"],
+      parser: "@typescript-eslint/parser",
+      extends: ["plugin:@typescript-eslint/recommended"],
+      rules: {
+        "@typescript-eslint/no-explicit-any": "off",
+        "@typescript-eslint/no-var-requires": "off",
+        "@typescript-eslint/no-unused-vars": [
+          "warn",
+          { ignoreRestSiblings: true },
+        ],
+        "n/no-missing-import": "off",
+        "n/no-unpublished-import": "off",
+        "n/shebang": "off",
+      },
+    },
     {
       files: ["testing/**/*.js"],
       globals: {
@@ -45,7 +54,7 @@ module.exports = {
     {
       files: ["**/cli.js"],
       rules: {
-        "node/shebang": 0,
+        "n/shebang": 0,
         "no-process-exit": 0,
       },
     },
@@ -55,13 +64,13 @@ module.exports = {
         sourceType: "module",
       },
       rules: {
-        "node/no-unsupported-features/es-syntax": [
+        "n/no-unsupported-features/es-syntax": [
           "error",
           {
             ignores: ["modules"],
           },
         ],
-        "node/no-unpublished-import": "off",
+        "n/no-unpublished-import": "off",
       },
     },
   ],

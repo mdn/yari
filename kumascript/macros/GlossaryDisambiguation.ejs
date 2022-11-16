@@ -12,7 +12,7 @@ var ARTICLES  = [];
 (await page.subpagesExpand(env.url, 1)).forEach(function (p) {
     ARTICLES.push({
         title  : p.title,
-        summary: p.summary,
+        summary: p.summary(),
         url    : p.url,
     });
 });

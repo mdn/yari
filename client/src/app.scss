@@ -9,6 +9,7 @@
 @use "./ui/molecules/notecards";
 @use "./ui/molecules/pagination";
 @use "./ui/atoms/button";
+@use "./ui/atoms/form";
 
 /*
   Global :root variables, for those independent of themes
@@ -16,7 +17,7 @@
 :root {
   /* Typography */
   --font-fallback: BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu",
-    "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-sans;
+    "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
 
   --font-body: Inter, var(--font-fallback);
   --font-heading: Inter, var(--font-fallback);
@@ -74,6 +75,7 @@
 
   --z-index-back: -1;
   --z-index-top: 9999;
+  --z-index-a11y: 10000;
   --z-index-mid: 500;
   --z-index-nav-menu: 200;
   --z-index-search-results: 101;
@@ -110,19 +112,25 @@
 }
 
 body {
+  accent-color: var(--accent-primary); // for checkboxes, radios, etc.
   background-color: var(--background-primary);
   color: var(--text-primary);
-  accent-color: var(--accent-primary); // for checkboxes, radios, etc.
   scrollbar-color: var(--scrollbar-color) var(--scrollbar-bg);
+
+  &.full-screen-overlay {
+    overflow: hidden;
+  }
 }
 
 :focus-visible {
-  outline-style: auto;
   outline-color: var(--accent-primary);
   outline-offset: 1px;
+  outline-style: auto;
 }
 
 main {
+  // prevent margin-collapse for child elements
+  display: flow-root;
   min-height: 80vh;
 }
 
@@ -142,10 +150,10 @@ main {
 }
 
 .visually-hidden {
-  -webkit-clip-path: inset(50%) !important;
-  clip-path: inset(50%) !important;
   border: 0 !important;
   clip: rect(1px, 1px, 1px, 1px) !important;
+  -webkit-clip-path: inset(50%) !important;
+  clip-path: inset(50%) !important;
   height: 1px !important;
   margin: -1px !important;
   overflow: hidden !important;
@@ -157,6 +165,10 @@ main {
 
 .hidden {
   display: none;
+}
+
+.inline-block {
+  display: inline-block;
 }
 
 pre {
@@ -171,37 +183,38 @@ a {
   color: var(--text-link);
 
   &.external:after {
+    background-color: var(--icon-primary);
+    content: "";
     display: inline-flex;
-    width: 10px;
     height: 10px;
     margin-left: 4px;
-    background-color: var(--icon-primary);
     mask-image: url("./assets/icons/external.svg");
     mask-size: cover;
-    content: "";
+    width: 10px;
   }
 }
 
 .expand-this-link:after {
-  position: absolute;
-  top: 0;
-  right: 0;
   bottom: 0;
-  left: 0;
   content: "";
+  left: 0;
+  position: absolute;
+  right: 0;
+  top: 0;
 }
 
 [type="search"] {
   /* clears the ‘X’ from Internet Explorer */
   &::-ms-clear {
     display: none;
-    width: 0;
     height: 0;
+    width: 0;
   }
+
   &::-ms-reveal {
     display: none;
-    width: 0;
     height: 0;
+    width: 0;
   }
   /* clears the ‘X’ from Chrome */
   &::-webkit-search-decoration,
@@ -213,9 +226,9 @@ a {
 }
 
 u {
+  text-decoration-color: var(--text-link);
   text-decoration-thickness: 0.15rem;
   text-underline-offset: 0.1em;
-  text-decoration-color: var(--text-link);
 }
 
 .plus .dark,
@@ -223,6 +236,7 @@ u {
   --background-toc-active: var(--plus-accent-background-color);
   --text-link: var(--plus-accent-color);
   --category-color: var(--plus-accent-color);
+  --category-color-engage: var(--plus-accent-engage);
   --category-color-background: var(--plus-accent-background-color);
   --code-color: var(--plus-code-color);
   --mark-color: var(--plus-mark-color);
@@ -231,6 +245,7 @@ u {
 .category-html {
   --background-toc-active: var(--html-accent-background-color);
   --category-color: var(--html-accent-color);
+  --category-color-engage: var(--html-accent-engage);
   --category-color-background: var(--html-accent-background-color);
   --mark-color: var(--html-mark-color);
 }
@@ -238,6 +253,7 @@ u {
 .category-css {
   --background-toc-active: var(--css-accent-background-color);
   --category-color: var(--css-accent-color);
+  --category-color-engage: var(--css-accent-engage);
   --category-color-background: var(--css-accent-background-color);
   --mark-color: var(--css-mark-color);
 }
@@ -245,6 +261,7 @@ u {
 .category-javascript {
   --background-toc-active: var(--js-accent-background-color);
   --category-color: var(--js-accent-color);
+  --category-color-engage: var(--js-accent-engage);
   --category-color-background: var(--js-accent-background-color);
   --mark-color: var(--js-mark-color);
 }
@@ -252,6 +269,7 @@ u {
 .category-http {
   --background-toc-active: var(--http-accent-background-color);
   --category-color: var(--http-accent-color);
+  --category-color-engage: var(--http-accent-engage);
   --category-color-background: var(--http-accent-background-color);
   --mark-color: var(--http-mark-color);
 }
@@ -259,6 +277,7 @@ u {
 .category-api {
   --background-toc-active: var(--apis-accent-background-color);
   --category-color: var(--apis-accent-color);
+  --category-color-engage: var(--apis-accent-engage);
   --category-color-background: var(--apis-accent-background-color);
   --mark-color: var(--apis-mark-color);
 }
@@ -266,6 +285,7 @@ u {
 .category-learn {
   --background-toc-active: var(--learn-accent-background-color);
   --category-color: var(--learn-accent-color);
+  --category-color-engage: var(--learn-accent-engage);
   --category-color-background: var(--learn-accent-background-color);
   --mark-color: var(--api-mark-color);
 }

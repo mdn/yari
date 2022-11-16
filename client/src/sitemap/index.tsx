@@ -2,10 +2,10 @@ import React from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import useSWR from "swr";
 
-import { CRUD_MODE, CRUD_MODE_HOSTNAMES } from "../constants";
+import { CRUD_MODE, CRUD_MODE_HOSTNAMES } from "../env";
 import { useLocale } from "../hooks";
 import { Loading } from "../ui/atoms/loading";
-import { PageContentContainer } from "../ui/atoms/page-content";
+import { MainContentContainer } from "../ui/atoms/page-content";
 
 import "./index.scss";
 import NoteCard from "../ui/molecules/notecards";
@@ -187,7 +187,7 @@ export default function Sitemap() {
   }
 
   return (
-    <PageContentContainer>
+    <MainContentContainer>
       <div id="sitemap">
         {error && (
           <NoteCard type="error">
@@ -263,7 +263,7 @@ export default function Sitemap() {
           Note, this sitemap only shows documents. Not any other applications.
         </p>
       </div>
-    </PageContentContainer>
+    </MainContentContainer>
   );
 }
 

@@ -91,7 +91,7 @@ export function NotificationsTab({
   useEffect(() => {
     if (data && !!data.items) {
       setList([
-        ...listRef.current,
+        ...(data?.offset === 0 ? [] : listRef.current),
         ...data.items.map((item) => {
           return { ...item, checked: false };
         }),
@@ -101,7 +101,7 @@ export function NotificationsTab({
 
   const starMany = async () => {
     const toStar = list.filter((v) => v.checked).map((i) => i.id);
-    await starItemsById(data.csrfmiddlewaretoken, toStar);
+    await starItemsById(toStar);
     const updated = list.map((v) => {
       if (v.checked) {
         v.starred = true;
@@ -113,7 +113,7 @@ export function NotificationsTab({
 
   const unstarMany = async () => {
     const toUnstar = list.filter((v) => v.checked).map((i) => i.id);
-    await unstarItemsById(data.csrfmiddlewaretoken, toUnstar);
+    await unstarItemsById(toUnstar);
     const updated = list.map((v) => {
       if (v.checked) {
         v.starred = false;
@@ -124,7 +124,7 @@ export function NotificationsTab({
   };
 
   const deleteItem = async (item) => {
-    await deleteItemById(data.csrfmiddlewaretoken, item.id);
+    await deleteItemById(item.id);
     const listWithDelete = list.filter((v) => v.id !== item.id);
     setList(listWithDelete);
     setToastData({
@@ -132,7 +132,7 @@ export function NotificationsTab({
       shortText: "Article removed",
       buttonText: "Undo",
       buttonHandler: async () => {
-        await undoDeleteItemById((data as any).csrfmiddlewaretoken, item.id);
+        await undoDeleteItemById(item.id);
         setToastData(null);
       },
     });
@@ -150,7 +150,7 @@ export function NotificationsTab({
   };
 
   const toggleStarItem = async (item) => {
-    await starItem(data.csrfmiddlewaretoken, item.id);
+    await starItem(item.id);
     //Local updates
     const updated = list.map((v) => {
       if (v.id === item.id) {
@@ -163,7 +163,7 @@ export function NotificationsTab({
 
   const deleteMany = async () => {
     const toDelete = list.filter((v) => v.checked).map((i) => i.id);
-    await deleteItemsById(data.csrfmiddlewaretoken, toDelete);
+    await deleteItemsById(toDelete);
     const updated = list.filter((v) => !v.checked);
     setList(updated);
   };

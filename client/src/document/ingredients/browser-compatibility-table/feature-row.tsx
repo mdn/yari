@@ -1,35 +1,24 @@
 import React, { useContext } from "react";
-import type bcd from "@mdn/browser-compat-data/types";
+import type BCD from "@mdn/browser-compat-data/types";
 import { BrowserInfoContext } from "./browser-info";
 import {
   asList,
   getCurrentSupport,
+  getPreviousVersion,
+  hasMore,
   hasNoteworthyNotes,
   isFullySupportedWithoutLimitation,
   isNotSupportedAtAll,
-  isOnlySupportedWithAltName,
-  isOnlySupportedWithFlags,
-  isOnlySupportedWithPrefix,
   isTruthy,
   versionIsPreview,
   SupportStatementExtended,
 } from "./utils";
 import { LEGEND_LABELS } from "./legend";
-
-// Yari builder will attach extra keys from the compat data
-// it gets from @mdn/browser-compat-data. These are "Yari'esque"
-// extras that helps us avoiding to have a separate data structure.
-interface CompatStatementExtended extends bcd.CompatStatement {
-  // When a compat statement has a .mdn_url but it's actually not a good
-  // one, the Yari builder will attach an extra boolean that indicates
-  // that it's not a valid link.
-  // Note, it's only 'true' if it's present, hence this interface definition.
-  bad_url?: true;
-}
+import { CompatStatementExtended } from "../../../../../libs/types";
 
 function getSupportClassName(
   support: SupportStatementExtended | undefined,
-  browser: bcd.BrowserStatement
+  browser: BCD.BrowserStatement
 ): "no" | "yes" | "partial" | "preview" | "removed-partial" | "unknown" {
   if (!support) {
     return "unknown";
@@ -67,7 +56,7 @@ function getSupportBrowserReleaseDate(
   return getCurrentSupport(support)!.release_date;
 }
 
-function StatusIcons({ status }: { status: bcd.StatusBlock }) {
+function StatusIcons({ status }: { status: BCD.StatusBlock }) {
   const icons = [
     status.experimental && {
       title: "Experimental. Expect behavior to change in the future.",
@@ -102,7 +91,7 @@ function StatusIcons({ status }: { status: bcd.StatusBlock }) {
 
 function labelFromString(
   version: string | boolean | null | undefined,
-  browser: bcd.BrowserStatement
+  browser: BCD.BrowserStatement
 ) {
   if (typeof version !== "string") {
     return <>{"?"}</>;
@@ -121,7 +110,7 @@ function labelFromString(
 function versionLabelFromSupport(
   added: string | boolean | null | undefined,
   removed: string | boolean | null | undefined,
-  browser: bcd.BrowserStatement
+  browser: BCD.BrowserStatement
 ) {
   if (typeof removed !== "string") {
     return <>{labelFromString(added, browser)}</>;
@@ -140,14 +129,17 @@ const CellText = React.memo(
     browser,
     timeline = false,
   }: {
-    support: bcd.SupportStatement | undefined;
-    browser: bcd.BrowserStatement;
+    support: BCD.SupportStatement | undefined;
+    browser: BCD.BrowserStatement;
     timeline?: boolean;
   }) => {
     const currentSupport = getCurrentSupport(support);
 
     const added = currentSupport?.version_added ?? null;
-    const removed = currentSupport?.version_removed ?? null;
+    const removed = getPreviousVersion(
+      currentSupport?.version_removed ?? null,
+      browser
+    );
 
     const browserReleaseDate = getSupportBrowserReleaseDate(support);
     const supportClassName = getSupportClassName(support, browser);
@@ -163,7 +155,7 @@ const CellText = React.memo(
         status = { isSupported: "unknown" };
         break;
       case true:
-        status = { isSupported: "yes" };
+        status = { isSupported: removed ? "no" : "yes" };
         break;
       case false:
         status = { isSupported: "no" };
@@ -261,21 +253,18 @@ function Icon({ name }: { name: string }) {
   );
 }
 
-function CellIcons({ support }: { support: bcd.SupportStatement | undefined }) {
+function CellIcons({ support }: { support: BCD.SupportStatement | undefined }) {
   const supportItem = getCurrentSupport(support);
   if (!supportItem) {
     return null;
   }
 
   const icons = [
-    isOnlySupportedWithPrefix(support) && <Icon key="prefix" name="prefix" />,
+    supportItem.prefix && <Icon key="prefix" name="prefix" />,
     hasNoteworthyNotes(supportItem) && <Icon key="footnote" name="footnote" />,
-    isOnlySupportedWithAltName(support) && (
-      <Icon key="altname" name="altname" />
-    ),
-    isOnlySupportedWithFlags(support) && (
-      <Icon key="disabled" name="disabled" />
-    ),
+    supportItem.alternative_name && <Icon key="altname" name="altname" />,
+    supportItem.flags && <Icon key="disabled" name="disabled" />,
+    hasMore(support) && <Icon key="more" name="more" />,
   ].filter(Boolean);
 
   return icons.length ? <div className="bc-icons">{icons}</div> : null;
@@ -285,8 +274,8 @@ function FlagsNote({
   supportItem,
   browser,
 }: {
-  supportItem: bcd.SimpleSupportStatement;
-  browser: bcd.BrowserStatement;
+  supportItem: BCD.SimpleSupportStatement;
+  browser: BCD.BrowserStatement;
 }) {
   const hasAddedVersion = typeof supportItem.version_added === "string";
   const hasRemovedVersion = typeof supportItem.version_removed === "string";
@@ -327,8 +316,8 @@ function FlagsNote({
 }
 
 function getNotes(
-  browser: bcd.BrowserStatement,
-  support: bcd.SupportStatement
+  browser: BCD.BrowserStatement,
+  support: BCD.SupportStatement
 ) {
   if (support) {
     return asList(support)
@@ -447,9 +436,9 @@ function CompatCell({
   onToggle,
   locale,
 }: {
-  browserId: bcd.BrowserNames;
-  browserInfo: bcd.BrowserStatement;
-  support: bcd.SupportStatement | undefined;
+  browserId: BCD.BrowserName;
+  browserInfo: BCD.BrowserStatement;
+  support: BCD.SupportStatement | undefined;
   showNotes: boolean;
   onToggle: () => void;
   locale: string;
@@ -510,7 +499,7 @@ export const FeatureRow = React.memo(
       compat: CompatStatementExtended;
       depth: number;
     };
-    browsers: bcd.BrowserNames[];
+    browsers: BCD.BrowserName[];
     activeCell: number | null;
     onToggleCell: ([row, column]: [number, number]) => void;
     locale: string;

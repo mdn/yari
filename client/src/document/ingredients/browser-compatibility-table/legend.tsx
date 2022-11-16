@@ -1,9 +1,11 @@
 import { useContext } from "react";
-import type bcd from "@mdn/browser-compat-data/types";
+import type BCD from "@mdn/browser-compat-data/types";
 import { BrowserInfoContext } from "./browser-info";
+import { HIDDEN_BROWSERS } from "./index";
 import {
   asList,
   getFirst,
+  hasMore,
   hasNoteworthyNotes,
   listFeatures,
   versionIsPreview,
@@ -23,13 +25,14 @@ export const LEGEND_LABELS = {
   disabled: "User must explicitly enable this feature.",
   altname: "Uses a non-standard name.",
   prefix: "Requires a vendor prefix or different name for use.",
+  more: "Has more compatibility info.",
 };
 type LEGEND_KEY = keyof typeof LEGEND_LABELS;
 
 function getActiveLegendItems(
-  compat: bcd.Identifier,
+  compat: BCD.Identifier,
   name: string,
-  browserInfo: bcd.Browsers
+  browserInfo: BCD.Browsers
 ) {
   const legendItems = new Set<LEGEND_KEY>();
 
@@ -51,6 +54,9 @@ function getActiveLegendItems(
     for (const [browser, browserSupport] of Object.entries(
       feature.compat.support
     )) {
+      if (HIDDEN_BROWSERS.includes(browser)) {
+        continue;
+      }
       if (!browserSupport) {
         legendItems.add("no");
         continue;
@@ -90,6 +96,10 @@ function getActiveLegendItems(
           legendItems.add("disabled");
         }
       }
+
+      if (hasMore(browserSupport)) {
+        legendItems.add("more");
+      }
     }
   }
   return Object.keys(LEGEND_LABELS)
@@ -101,7 +111,7 @@ export function Legend({
   compat,
   name,
 }: {
-  compat: bcd.Identifier;
+  compat: BCD.Identifier;
   name: string;
 }) {
   const browserInfo = useContext(BrowserInfoContext);
@@ -115,6 +125,9 @@ export function Legend({
       <h3 className="visually-hidden" id="Legend">
         Legend
       </h3>
+      <p className="bc-legend-tip">
+        Tip: you can click/tap on a cell for more information.
+      </p>
       <dl className="bc-legend-items-container">
         {getActiveLegendItems(compat, name, browserInfo).map(([key, label]) =>
           ["yes", "partial", "no", "unknown", "preview"].includes(key) ? (

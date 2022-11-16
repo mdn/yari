@@ -1,17 +1,7 @@
 export const VALID_LOCALES = new Map(
-  [
-    "de",
-    "en-US",
-    "es",
-    "fr",
-    "ja",
-    "ko",
-    "pl",
-    "pt-BR",
-    "ru",
-    "zh-CN",
-    "zh-TW",
-  ].map((x) => [x.toLowerCase(), x])
+  ["en-US", "es", "fr", "ja", "ko", "pt-BR", "ru", "zh-CN", "zh-TW"].map(
+    (x) => [x.toLowerCase(), x]
+  )
 );
 
 export const RETIRED_LOCALES = new Map(
@@ -20,6 +10,7 @@ export const RETIRED_LOCALES = new Map(
     "bg",
     "bn",
     "ca",
+    "de",
     "el",
     "fa",
     "fi",
@@ -68,31 +59,38 @@ export const ACTIVE_LOCALES = new Set([
   "zh-tw",
 ]);
 
-export const scriptSrcValues = [
+export const CSP_SCRIPT_SRC_VALUES = [
   "'report-sample'",
   "'self'",
 
   "www.google-analytics.com/analytics.js",
-
-  "'sha256-JEt9Nmc3BP88wxuTZm9aKNu87vEgGmKW1zzy/vb1KPs='", // polyfill check
   "polyfill.io/v3/polyfill.min.js",
 
   "assets.codepen.io",
   "production-assets.codepen.io",
 
-  /**
-   * If we modify the inline script in `client/public/index.html`,
-   * we must always update the CSP hash (see instructions there).
+  /*
+   * Inline scripts (defined in `client/public/index.html`).
+   *
+   * If we modify them, we must always update their CSP hash here.
+   *
+   * Important: Please make sure to always keep an entry for the
+   * previous hash to avoid issues shortly after cache invalidation.
    */
+
+  // 1. Polyfill.
+  "'sha256-JEt9Nmc3BP88wxuTZm9aKNu87vEgGmKW1zzy/vb1KPs='",
+
+  // 2. Theme switching.
   // - Previous hash (to avoid cache invalidation issues):
-  "'sha256-x6Tv+AdV5e6dcolO0TEo+3BG4H2nG2ACjyG8mz6QCes='",
-  // - Current hash:
   "'sha256-GA8+DpFnqAM/vwERTpb5zyLUaN5KnOhctfTsqWfhaUA='",
+  // - Current hash:
+  "'sha256-uogddBLIKmJa413dyT0iPejBg3VFcO+4x6B+vw3jng0='",
 ];
 export const CSP_DIRECTIVES = {
   "default-src": ["'self'"],
-  "script-src": scriptSrcValues,
-  "script-src-elem": scriptSrcValues,
+  "script-src": CSP_SCRIPT_SRC_VALUES,
+  "script-src-elem": CSP_SCRIPT_SRC_VALUES,
   "style-src": ["'report-sample'", "'self'", "'unsafe-inline'"],
   "object-src": ["'none'"],
   "base-uri": ["'self'"],
@@ -120,6 +118,7 @@ export const CSP_DIRECTIVES = {
     "jsfiddle.net",
     "www.youtube-nocookie.com",
     "codepen.io",
+    "survey.alchemer.com",
   ],
   "img-src": [
     "'self'",
@@ -157,3 +156,60 @@ export const cspToString = (csp) =>
     .join(" ");
 
 export const CSP_VALUE = cspToString(CSP_DIRECTIVES);
+
+// -----
+// build
+// -----
+
+export const FLAW_LEVELS = Object.freeze({
+  ERROR: "error",
+  IGNORE: "ignore",
+  WARN: "warn",
+});
+
+// These names need to match what we have in the code where we have various
+// blocks of code that look something like this:
+//
+//    if (this.options.flawChecks.profanities) {
+//      ... analyze and possible add to doc.flaws.profanities ...
+//
+// This list needs to be synced with the code. And the CLI arguments
+// used with --flaw-checks needs to match this set.
+export const VALID_FLAW_CHECKS = new Set([
+  "macros",
+  "broken_links",
+  "bad_bcd_queries",
+  "bad_bcd_links",
+  "images",
+  "image_widths",
+  "bad_pre_tags",
+  "sectioning",
+  "heading_links",
+  "translation_differences",
+  "unsafe_html",
+]);
+
+// ------
+// client
+// ------
+
+export const MDN_PLUS_TITLE = "MDN Plus";
+
+// -------
+// content
+// -------
+
+export const HTML_FILENAME = "index.html";
+export const MARKDOWN_FILENAME = "index.md";
+
+// ---------
+// filecheck
+// ---------
+
+export const VALID_MIME_TYPES = new Set([
+  "image/png",
+  "image/jpeg", // this is what you get for .jpeg *and* .jpg file extensions
+  "image/gif",
+]);
+
+export const MAX_COMPRESSION_DIFFERENCE_PERCENTAGE = 25; // percent

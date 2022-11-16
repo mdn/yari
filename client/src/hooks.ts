@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useState } from "react";
-import { useParams } from "react-router-dom";
-import useSWR from "swr";
+import { useNavigationType, useParams } from "react-router-dom";
+import { DEFAULT_LOCALE } from "../../libs/constants";
+import { isValidLocale } from "../../libs/locale-utils";
 
 // This is a bit of a necessary hack!
 // The only reason this list is needed is because of the PageNotFound rendering.
@@ -14,39 +15,10 @@ import useSWR from "swr";
 // and get the current locale from the react-router context. Now the navbar menu
 // items, for example, will think the locale is `some-random-word` and make links
 // like `/some-random-word/docs/Web`.
-import { VALID_LOCALES } from "./constants";
-import { useUserData } from "./user-context";
-
-interface UserSettings {
-  csrfmiddlewaretoken: string;
-}
 
 export function useLocale() {
   const { locale } = useParams();
-  return locale && VALID_LOCALES.has(locale) ? locale : "en-US";
-}
-
-export function useCSRFMiddlewareToken(): string {
-  const userData = useUserData();
-  const userSettingsAPIURL = React.useMemo(() => {
-    return userData && userData.isAuthenticated ? "/api/v1/settings/" : null;
-  }, [userData]);
-  const { data, error } = useSWR<UserSettings>(
-    userSettingsAPIURL,
-    async (url) => {
-      const response = await fetch(url);
-      if (!response.ok) {
-        throw new Error(`${response.status} on ${url}`);
-      }
-      return await response.json();
-    }
-  );
-
-  if (!error) {
-    return data?.csrfmiddlewaretoken ?? "";
-  } else {
-    return "";
-  }
+  return isValidLocale(locale) ? locale : DEFAULT_LOCALE;
 }
 
 export function useOnClickOutside(ref, handler) {
@@ -110,4 +82,11 @@ export function useIsServer(): boolean {
   const [isServer, setIsServer] = useState(true);
   useEffect(() => setIsServer(false), []);
   return isServer;
+}
+
+export function useScrollToTop() {
+  const navigationType = useNavigationType();
+  useEffect(() => {
+    if (navigationType === "PUSH") document.documentElement.scrollTo(0, 0);
+  }, [navigationType]);
 }

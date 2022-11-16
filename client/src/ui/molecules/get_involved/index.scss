@@ -1,28 +1,29 @@
 .get-involved {
   background-color: var(--mdn-background-dark);
+
   section {
     color: var(--text-primary);
-    max-width: 52rem;
     display: flex;
     flex-direction: column;
     gap: 1rem;
-    margin: 0 auto;
     line-height: 1.75;
+    margin: 0 auto;
+    max-width: 52rem;
 
     padding: 2rem 1rem;
 
     h2 {
       font-family: var(--font-heading);
-      font-weight: 600;
       font-size: 1.3rem;
+      font-weight: 600;
       line-height: 120%;
       margin: 0;
     }
 
     .get-involved-cta {
       color: var(--category-color);
-      margin-top: 1rem;
       display: block;
+      margin-top: 1rem;
     }
   }
 }

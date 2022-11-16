@@ -20,9 +20,9 @@ a faster experience while saving data.
 
 To start using MDN Offline, you must first **Enable offline storage**.
 
-1. Click on your avatar(top-right) and open the **user menu → MDN Offline**
+1. Click on your avatar(top-right) and open the **user menu → My Settings**
    ![Screenshot showing expanded user menu revealing the MDN Offline menu option.](/assets/plus-docs/offline/desktop-offline-user-menu.png)
-2. **Enable offline storage**
+2. Under **MDN Offline** use the **Enable offline storage** switch.
    ![Screenshot showing MDN Offline page with the enable offline toggle highlighted.](/assets/plus-docs/offline/desktop-offline-enable-offline.png)
 
 You can also add it to your homescreen for an experience similar to using a
