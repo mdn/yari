@@ -1,3 +1,5 @@
+import { compareVersions } from "compare-versions";
+
 import type BCD from "@mdn/browser-compat-data/types";
 
 // Extended for the fields, beyond the bcd types, that are extra-added
@@ -198,7 +200,7 @@ export function getPreviousVersion(
 ): BCD.VersionValue | string | undefined {
   if (browser && typeof version === "string") {
     const browserVersions = Object.keys(browser["releases"]).sort(
-      (a, b) => Number(a) - Number(b)
+      compareVersions
     );
     const currentVersionIndex = browserVersions.indexOf(version);
     if (currentVersionIndex && currentVersionIndex > 0) {
