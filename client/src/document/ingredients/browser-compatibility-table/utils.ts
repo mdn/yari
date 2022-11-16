@@ -195,15 +195,15 @@ export function getCurrentSupport(
 }
 
 export function getPreviousVersion(
-  version: BCD.VersionValue | string | undefined,
+  version: BCD.VersionValue,
   browser: BCD.BrowserStatement
-): BCD.VersionValue | string | undefined {
+): BCD.VersionValue {
   if (browser && typeof version === "string") {
     const browserVersions = Object.keys(browser["releases"]).sort(
       compareVersions
     );
     const currentVersionIndex = browserVersions.indexOf(version);
-    if (currentVersionIndex && currentVersionIndex > 0) {
+    if (currentVersionIndex > 0) {
       return browserVersions[currentVersionIndex - 1];
     }
   }
