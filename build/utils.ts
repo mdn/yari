@@ -13,7 +13,7 @@ import { rgPath } from "@vscode/ripgrep";
 import sanitizeFilename from "sanitize-filename";
 
 import { VALID_MIME_TYPES } from "../libs/constants/index.js";
-import { Image } from "../content/index.js";
+import { FileAttachment } from "../content/index.js";
 import { spawnSync } from "node:child_process";
 import { BLOG_ROOT } from "../libs/env/index.js";
 
@@ -184,14 +184,14 @@ export function splitSections(rawHTML) {
  *
  * @param {Document} document
  */
-export function getAdjacentImages(documentDirectory) {
+export function getAdjacentFileAttachments(documentDirectory) {
   const dirents = fs.readdirSync(documentDirectory, { withFileTypes: true });
   return dirents
     .filter((dirent) => {
       // This needs to match what we do in filecheck/checker.py
       return (
         !dirent.isDirectory() &&
-        /\.(png|jpeg|jpg|gif|svg|webp)$/i.test(dirent.name)
+        /\.(mp3|mp4|png|jpeg|jpg|gif|ogg|svg|ttf|webm|webp)$/i.test(dirent.name)
       );
     })
     .map((dirent) => path.join(documentDirectory, dirent.name));
@@ -262,7 +262,7 @@ export function postLocalFileLinks($, doc) {
     // So we'll look-up a lot "false positives" that are not images.
     // Thankfully, this lookup is fast.
     const url = `${doc.mdn_url}/${href}`;
-    const image = Image.findByURLWithFallback(url);
+    const image = FileAttachment.findByURLWithFallback(url);
     if (image) {
       $(element).attr("href", url);
     }

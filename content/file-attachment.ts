@@ -9,6 +9,27 @@ import { DEFAULT_LOCALE } from "../libs/constants/index.js";
 import { ROOTS } from "../libs/env/index.js";
 import { memoize, slugToFolder } from "./utils.js";
 
+function isFileAttachment(filePath: string) {
+  return (
+    isAudio(filePath) ||
+    isFont(filePath) ||
+    isVideo(filePath) ||
+    isImage(filePath)
+  );
+}
+
+function isAudio(filePath) {
+  return /\.(mp3|ogg)$/i.test(filePath);
+}
+
+function isFont(filePath) {
+  return /\.(ttf)$/i.test(filePath);
+}
+
+function isVideo(filePath) {
+  return /\.(mp4|webm)$/i.test(filePath);
+}
+
 function isImage(filePath: string) {
   if (fs.statSync(filePath).isDirectory()) {
     return false;
@@ -37,7 +58,7 @@ function urlToFilePath(url: string) {
 
 const find = memoize((relativePath: string) => {
   return ROOTS.map((root) => path.join(root, relativePath)).find(
-    (filePath) => fs.existsSync(filePath) && isImage(filePath)
+    (filePath) => fs.existsSync(filePath) && isFileAttachment(filePath)
   );
 });
 
