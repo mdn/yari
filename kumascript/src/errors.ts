@@ -147,6 +147,10 @@ export class MacroInvocationError extends SourceCodeError {
       error.name
     );
   }
+
+  static is(value: any): value is MacroInvocationError {
+    return "name" in value && value.name === "MacroInvocationError";
+  }
 }
 
 /**

@@ -996,13 +996,8 @@ if (Mozilla && !Mozilla.dntEnabled()) {
             invalidateCache: true,
             selective_mode: [cmdLC, macros],
           });
-        } catch (error: any) {
-          const isMacroInvocationError = (
-            error: any
-          ): error is MacroInvocationError => {
-            return error.name === "MacroInvocationError";
-          };
-          if (isMacroInvocationError(error)) {
+        } catch (error) {
+          if (MacroInvocationError.is(error)) {
             error.updateFileInfo(document.fileInfo);
             throw new Error(
               `error trying to parse ${error.filepath}, line ${error.line} column ${error.column} (${error.error.message})`
