@@ -56,7 +56,9 @@ function Overview() {
   let collectionCards = data?.map((collection) => (
     <CollectionCard key={collection.id} {...{ collection }} />
   ));
-  const frequentlyViewedCard = <FrequentlyViewedCollectionCard />;
+  const frequentlyViewedCard = (
+    <FrequentlyViewedCollectionCard key={"frequently-viewed"} />
+  );
   if (collectionCards && frequentlyViewedCard) {
     collectionCards.splice(1, 0, frequentlyViewedCard);
   }
