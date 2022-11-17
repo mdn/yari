@@ -4,7 +4,6 @@ import { BrowserInfoContext } from "./browser-info";
 import {
   asList,
   getCurrentSupport,
-  getPreviousVersion,
   hasMore,
   hasNoteworthyNotes,
   isFullySupportedWithoutLimitation,
@@ -136,10 +135,7 @@ const CellText = React.memo(
     const currentSupport = getCurrentSupport(support);
 
     const added = currentSupport?.version_added ?? null;
-    const removed = getPreviousVersion(
-      currentSupport?.version_removed ?? null,
-      browser
-    );
+    const lastSupport = currentSupport?.version_supported_last ?? null;
 
     const browserReleaseDate = getSupportBrowserReleaseDate(support);
     const supportClassName = getSupportClassName(support, browser);
@@ -155,7 +151,7 @@ const CellText = React.memo(
         status = { isSupported: "unknown" };
         break;
       case true:
-        status = { isSupported: removed ? "no" : "yes" };
+        status = { isSupported: lastSupport ? "no" : "yes" };
         break;
       case false:
         status = { isSupported: "no" };
@@ -166,7 +162,7 @@ const CellText = React.memo(
       default:
         status = {
           isSupported: supportClassName,
-          label: versionLabelFromSupport(added, removed, browser),
+          label: versionLabelFromSupport(added, lastSupport, browser),
         };
         break;
     }

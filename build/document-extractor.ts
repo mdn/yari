@@ -14,6 +14,7 @@ import web from "../kumascript/src/api/web";
 interface SimpleSupportStatementWithReleaseDate
   extends bcd.SimpleSupportStatement {
   release_date?: string;
+  version_supported_last?: string;
 }
 
 type SectionsAndFlaws = [Section[], string[]];
@@ -469,11 +470,22 @@ function _addSingleSpecialSection(
             infoEntry.version_added.startsWith("≤")
               ? infoEntry.version_added.slice(1)
               : infoEntry.version_added;
+          const removed =
+            typeof infoEntry.version_removed === "string" &&
+            infoEntry.version_removed.startsWith("≤")
+              ? infoEntry.version_removed.slice(1)
+              : infoEntry.version_removed;
           if (browserReleaseData.has(browser)) {
             if (browserReleaseData.get(browser).has(added)) {
               infoEntry.release_date = browserReleaseData
                 .get(browser)
                 .get(added).release_date;
+              if (typeof removed === "string") {
+                infoEntry.version_supported_last = _getPreviousVersion(
+                  removed,
+                  browsers[browser]
+                );
+              }
             }
           }
         }
@@ -504,6 +516,23 @@ function _addSingleSpecialSection(
         },
       },
     ];
+  }
+
+  function _getPreviousVersion(
+    version: string,
+    browser: bcd.BrowserStatement
+  ): string {
+    if (browser) {
+      const browserVersions = Object.keys(browser["releases"]).sort(
+        _compareVersions
+      );
+      const currentVersionIndex = browserVersions.indexOf(version);
+      if (currentVersionIndex > 0) {
+        return browserVersions[currentVersionIndex - 1];
+      }
+    }
+
+    return version;
   }
 
   function _getFirstVersion(support: bcd.SimpleSupportStatement): string {

@@ -79,7 +79,6 @@
     "chalk": "^4.1.2",
     "cheerio": "^1.0.0-rc.12",
     "cli-progress": "^3.11.2",
-    "compare-versions": "^5.0.1",
     "compression": "^1.7.4",
     "cookie": "^0.5.0",
     "cookie-parser": "^1.4.6",
