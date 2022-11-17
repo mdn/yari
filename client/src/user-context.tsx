@@ -18,9 +18,9 @@ export type UserPlusSettings = {
 };
 
 export class OfflineSettingsData {
-  offline?: boolean;
-  preferOnline?: boolean;
-  autoUpdates?: boolean;
+  offline: boolean;
+  preferOnline: boolean;
+  autoUpdates: boolean;
 
   constructor({
     offline = false,
