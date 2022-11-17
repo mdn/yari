@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Doc, DocParent } from "../../../../libs/types/document";
+import { Doc } from "../../../../libs/types/document";
 import { FrequentlyViewedItem, ItemParent } from "./api";
 
 export interface FrequentlyViewedCollection {
@@ -218,14 +218,14 @@ export function useIncrementFrequentlyViewed(doc: Doc | undefined) {
     );
 
     if (index !== -1) {
-      frequentlyViewed[index].timestamps.unshift(new Date().getTime());
+      frequentlyViewed[index].timestamps.unshift(Date.now());
     } else {
       const newEntry: FrequentlyViewedEntry = {
         serial: getNextFrequentlyViewedSerial(frequentlyViewed),
         url: doc.mdn_url,
         title: doc.title,
         parents: doc.parents,
-        timestamps: [new Date().getTime()],
+        timestamps: [Date.now()],
       };
 
       if (frequentlyViewed.length === 0) {

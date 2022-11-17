@@ -26,10 +26,7 @@ import {
   NEW_COLLECTION_MODAL_SUBMIT_COLLECTIONS_PAGE,
 } from "../../telemetry/constants";
 import { camelWrap } from "../../utils";
-import {
-  FrequentlyViewedCollection,
-  useFrequentlyViewed,
-} from "./frequently-viewed";
+import { useFrequentlyViewed } from "./frequently-viewed";
 import { Icon } from "../../ui/atoms/icon";
 import { MDN_PLUS_TITLE } from "../../constants";
 import { SWRConfig } from "swr";
