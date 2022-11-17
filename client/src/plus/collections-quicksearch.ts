@@ -43,7 +43,7 @@ function setCollectionItemsUpdatedDate(updated: Date) {
 export async function getCollectionItems(
   remoteUpdated?: null | Date
 ): Promise<CollectionItem[]> {
-  remoteUpdated && fetchAllCollectionsItems(remoteUpdated);
+  remoteUpdated && (await fetchAllCollectionsItems(remoteUpdated));
   if (collectionItems) {
     return collectionItems;
   }

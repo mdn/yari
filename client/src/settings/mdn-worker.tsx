@@ -58,7 +58,7 @@ export class MDNWorker {
   }
 
   swName(type: SwType | null | undefined = null) {
-    return `/service-worker.js?type=${type ?? SwType.PreferOffline}`;
+    return `/service-worker.js?type=${type ?? SwType.PreferOnline}`;
   }
 
   registerMessageHandler() {
@@ -112,7 +112,7 @@ export class MDNWorker {
   }
 
   async setOfflineSettings(
-    settingsData: OfflineSettingsData
+    settingsData: Partial<OfflineSettingsData>
   ): Promise<OfflineSettingsData> {
     const current = this.offlineSettings();
 
@@ -146,13 +146,8 @@ export class MDNWorker {
       this.autoUpdate();
     }
 
-    const settings = { ...current, ...settingsData };
-    try {
-      window.localStorage.setItem("MDNSettings", JSON.stringify(settings));
-    } catch (err) {
-      console.warn("Unable to write settings to localStorage", err);
-    }
-    this.settings = new OfflineSettingsData(settings);
+    this.settings = new OfflineSettingsData({ ...current, ...settingsData });
+    this.settings.write();
     return this.settings;
   }
 

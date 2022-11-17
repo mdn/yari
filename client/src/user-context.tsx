@@ -44,6 +44,14 @@ export class OfflineSettingsData {
 
     return new OfflineSettingsData(settingsData);
   }
+
+  write() {
+    try {
+      window.localStorage.setItem("MDNSettings", JSON.stringify(this));
+    } catch (err) {
+      console.warn("Unable to write settings to localStorage", err);
+    }
+  }
 }
 
 export type UserData = {

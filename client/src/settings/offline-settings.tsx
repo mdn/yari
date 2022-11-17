@@ -98,7 +98,7 @@ function Settings() {
     }
   }, [status?.phase]);
 
-  const updateSettings = async (change: OfflineSettingsData) => {
+  const updateSettings = async (change: Partial<OfflineSettingsData>) => {
     setSaving(true);
     const mdnWorker = getMDNWorker();
     let newSettings = await mdnWorker.setOfflineSettings(change);
