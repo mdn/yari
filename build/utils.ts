@@ -184,7 +184,7 @@ export function splitSections(rawHTML) {
  *
  * @param {Document} document
  */
-export function getAdjacentFileAttachments(documentDirectory) {
+export function getAdjacentFileAttachments(documentDirectory: string) {
   const dirents = fs.readdirSync(documentDirectory, { withFileTypes: true });
   return dirents
     .filter((dirent) => {

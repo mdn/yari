@@ -18,15 +18,15 @@ function isFileAttachment(filePath: string) {
   );
 }
 
-function isAudio(filePath) {
+function isAudio(filePath: string) {
   return /\.(mp3|ogg)$/i.test(filePath);
 }
 
-function isFont(filePath) {
+function isFont(filePath: string) {
   return /\.(ttf)$/i.test(filePath);
 }
 
-function isVideo(filePath) {
+function isVideo(filePath: string) {
   return /\.(mp4|webm)$/i.test(filePath);
 }
 
