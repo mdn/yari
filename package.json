@@ -49,16 +49,19 @@
     "watch:ssr": "cd ssr && webpack --mode=production --watch"
   },
   "jest": {
-    "globals": {
-      "ts-jest": {
-        "babelConfig": true
-      }
-    },
     "preset": "ts-jest",
     "testPathIgnorePatterns": [
       "headless*",
       "developing.spec.ts"
-    ]
+    ],
+    "transform": {
+      "\\.tsx?$": [
+        "ts-jest",
+        {
+          "babelConfig": true
+        }
+      ]
+    }
   },
   "resolutions": {
     "@types/react": ">=18.0.0",
