@@ -35,6 +35,10 @@ function isVideo(filePath: string) {
 }
 
 function isImage(filePath: string) {
+  if (!/\.(gif|jpe?g|png|svg)$/i.test(filePath)) {
+    return false;
+  }
+
   if (filePath.toLowerCase().endsWith(".svg")) {
     return isSvg(fs.readFileSync(filePath, "utf-8"));
   }
