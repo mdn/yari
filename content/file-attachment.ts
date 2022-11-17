@@ -10,6 +10,10 @@ import { ROOTS } from "../libs/env/index.js";
 import { memoize, slugToFolder } from "./utils.js";
 
 function isFileAttachment(filePath: string) {
+  if (fs.statSync(filePath).isDirectory()) {
+    return false;
+  }
+
   return (
     isAudio(filePath) ||
     isFont(filePath) ||
@@ -31,9 +35,6 @@ function isVideo(filePath: string) {
 }
 
 function isImage(filePath: string) {
-  if (fs.statSync(filePath).isDirectory()) {
-    return false;
-  }
   if (filePath.toLowerCase().endsWith(".svg")) {
     return isSvg(fs.readFileSync(filePath, "utf-8"));
   }
