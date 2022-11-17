@@ -223,10 +223,7 @@ function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
       return [];
     }
 
-    // The iPhone X series is 812px high.
-    // If the window isn't very high, show fewer matches so that the
-    // overlaying search results don't trigger a scroll.
-    const limit = window.innerHeight < 850 ? 5 : 10;
+    const limit = 10;
 
     const q: string[] = inputValue
       .toLowerCase()
