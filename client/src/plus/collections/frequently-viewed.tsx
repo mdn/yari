@@ -131,16 +131,18 @@ export function useFrequentlyViewed(
         };
       });
 
-    setCollection({
-      ...collection,
-      article_count: freqViewed.length,
-      created_at: freqViewed[0]
-        ? new Date(freqViewed[0].timestamps[0]).toISOString()
-        : new Date().toISOString(),
-      items: paged,
-      updated_at: freqViewed[0]
-        ? new Date(freqViewed[0].timestamps[0]).toISOString()
-        : new Date().toISOString(),
+    setCollection((c) => {
+      return {
+        ...c,
+        article_count: freqViewed.length,
+        created_at: freqViewed[0]
+          ? new Date(freqViewed[0].timestamps[0]).toISOString()
+          : new Date().toISOString(),
+        items: paged,
+        updated_at: freqViewed[0]
+          ? new Date(freqViewed[0].timestamps[0]).toISOString()
+          : new Date().toISOString(),
+      };
     });
   }, [limit, setEnd, offset]);
 
