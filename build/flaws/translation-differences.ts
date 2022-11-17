@@ -1,7 +1,7 @@
 import { Flaw } from ".";
 
-import { Document, Translation } from "../../content";
-import { DEFAULT_LOCALE } from "../../libs/constants";
+import { Document, Translation } from "../../content/index.js";
+import { DEFAULT_LOCALE } from "../../libs/constants/index.js";
 
 export function injectTranslationDifferences(doc, $, document): Flaw[] {
   const flaws = [];

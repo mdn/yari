@@ -15,7 +15,7 @@ objects under that object, generating an aggregated table for each object.
 This macro can be inserted anywhere, and takes no arguments.
 */
 
-const bcd = require('@mdn/browser-compat-data');
+import bcd from '@mdn/browser-compat-data' assert { type: "json" };
 var features = bcd.webextensions.api;
 var featureList = Object.keys(features).sort();
 var output = '';

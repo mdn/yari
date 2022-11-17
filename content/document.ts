@@ -1,23 +1,27 @@
-import fs from "fs";
-import path from "path";
-import util from "util";
+import fs from "node:fs";
+import path from "node:path";
+import util from "node:util";
 
 import fm from "front-matter";
 import yaml from "js-yaml";
 import { fdir, PathsOutput } from "fdir";
 
-import { CONTENT_TRANSLATED_ROOT, CONTENT_ROOT, ROOTS } from "../libs/env";
+import {
+  CONTENT_TRANSLATED_ROOT,
+  CONTENT_ROOT,
+  ROOTS,
+} from "../libs/env/index.js";
 import {
   ACTIVE_LOCALES,
   HTML_FILENAME,
   MARKDOWN_FILENAME,
   VALID_LOCALES,
-} from "../libs/constants";
-import { isValidLocale } from "../libs/locale-utils";
-import { getPopularities } from "./popularities";
-import { getWikiHistories } from "./wikihistories";
-import { getGitHistories } from "./githistories";
-import { childrenFoldersForPath } from "./document-paths";
+} from "../libs/constants/index.js";
+import { isValidLocale } from "../libs/locale-utils/index.js";
+import { getPopularities } from "./popularities.js";
+import { getWikiHistories } from "./wikihistories.js";
+import { getGitHistories } from "./githistories.js";
+import { childrenFoldersForPath } from "./document-paths.js";
 
 import {
   buildURL,
@@ -28,10 +32,9 @@ import {
   urlToFolderPath,
   toPrettyJSON,
   MEMOIZE_INVALIDATE,
-} from "./utils";
-export { urlToFolderPath, MEMOIZE_INVALIDATE } from "./utils";
-import * as Redirect from "./redirect";
-import { DocFrontmatter } from "../libs/types";
+} from "./utils.js";
+import * as Redirect from "./redirect.js";
+import { DocFrontmatter } from "../libs/types/document.js";
 
 function buildPath(localeFolder: string, slug: string) {
   return path.join(localeFolder, slugToFolder(slug));

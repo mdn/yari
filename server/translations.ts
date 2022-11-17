@@ -1,28 +1,21 @@
-import fs from "fs";
-import path from "path";
-
-import { fdir } from "fdir";
+import fs from "node:fs";
+import path from "node:path";
 
 import express from "express";
-export const router = express.Router();
+import { fdir } from "fdir";
 
-import { getPopularities, Document, Translation } from "../content";
+import { getPopularities, Document, Translation } from "../content/index.js";
 import {
   VALID_LOCALES,
   ACTIVE_LOCALES,
   DEFAULT_LOCALE,
-} from "../libs/constants";
-import { CONTENT_ROOT, CONTENT_TRANSLATED_ROOT } from "../libs/env";
-import { getLastCommitURL } from "../build";
-import LANGUAGES_RAW from "../libs/languages";
-import { isValidLocale } from "../libs/locale-utils";
+} from "../libs/constants/index.js";
+import { CONTENT_ROOT, CONTENT_TRANSLATED_ROOT } from "../libs/env/index.js";
+import { getLastCommitURL } from "../build/index.js";
+import LANGUAGES_RAW from "../libs/languages/index.js";
+import { isValidLocale } from "../libs/locale-utils/index.js";
 
-import { fileURLToPath } from "url";
-const dirname = path.dirname(fileURLToPath(import.meta.url));
-
-const LANGUAGES_RAW = JSON.parse(
-  fs.readFileSync(path.join(dirname, "../content/languages.json"), "utf8")
-);
+export const router = express.Router();
 
 // Module-level cache
 const allPopularityValues = [];

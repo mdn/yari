@@ -1,5 +1,5 @@
+const path = require("node:path");
 const { readGitignoreFiles } = require("eslint-gitignore");
-const path = require("path");
 
 const ignores = readGitignoreFiles({
   cwd: path.join(".git", "info"),

@@ -3,8 +3,8 @@ import { Flaw } from ".";
 import {
   INTERACTIVE_EXAMPLES_BASE_URL,
   LIVE_SAMPLES_BASE_URL,
-} from "../../libs/env";
-import { findMatchesInText } from "../matches-in-text";
+} from "../../libs/env/index.js";
+import { findMatchesInText } from "../matches-in-text.js";
 
 const safeIFrameSrcs = [
   // EmbedGHLiveSample.ejs

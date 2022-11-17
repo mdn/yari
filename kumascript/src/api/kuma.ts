@@ -1,5 +1,5 @@
 import url from "url";
-import * as util from "./util";
+import * as util from "./util.js";
 
 const kuma = {
   /**

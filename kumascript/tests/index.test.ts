@@ -1,13 +1,13 @@
-import { Document } from "../../content";
-import info from "../src/info";
-import { render } from "../index";
+import { Document } from "../../content.js";
+import info from "../src/info.js";
+import { render } from "../index.js";
 import {
   MacroNotFoundError,
   MacroBrokenLinkError,
   MacroRedirectedLinkError,
   MacroDeprecatedError,
   MacroExecutionError,
-} from "../src/errors";
+} from "../src/errors.js";
 
 const jest = import.meta.jest;
 

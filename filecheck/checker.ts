@@ -1,11 +1,10 @@
-import fs from "fs";
-import path from "path";
-import { promisify } from "util";
+import fs from "node:fs";
+import path from "node:path";
+import { promisify } from "node:util";
 
 import fse from "fs-extra";
 import tempy from "tempy";
 import * as cheerio from "cheerio";
-import FileType from "file-type";
 import imagemin from "imagemin";
 import imageminPngquant from "imagemin-pngquant";
 import imageminMozjpeg from "imagemin-mozjpeg";
@@ -13,11 +12,11 @@ import imageminGifsicle from "imagemin-gifsicle";
 import imageminSvgo from "imagemin-svgo";
 import isSvg from "is-svg";
 
-import { MAX_FILE_SIZE } from "../libs/env";
+import { MAX_FILE_SIZE } from "../libs/env/index.js";
 import {
   VALID_MIME_TYPES,
   MAX_COMPRESSION_DIFFERENCE_PERCENTAGE,
-} from "../libs/constants";
+} from "../libs/constants/index.js";
 
 function formatSize(bytes) {
   if (bytes > 1024 * 1024) {

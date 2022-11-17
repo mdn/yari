@@ -1,14 +1,15 @@
-const { VALID_LOCALES } = require("@yari-internal/constants");
-const fs = require("fs");
-const path = require("path");
+import fs from "node:fs";
+import path from "node:path";
 
-const dirname = __dirname;
+import dotenv from "dotenv";
+import { VALID_LOCALES } from "@yari-internal/constants";
 
-const dotenv = require("dotenv");
 const root = path.join(dirname, "..", "..", "..");
 dotenv.config({
   path: path.join(root, process.env.ENV_FILE || ".env"),
 });
+
+const dirname = fileURLToPath(new URL(".", import.meta.url));
 
 function buildRedirectsMap() {
   const redirectMap = new Map();

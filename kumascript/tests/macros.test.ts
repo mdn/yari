@@ -1,12 +1,11 @@
 /**
  * Verify that all of the macros in ../macros/ compile without errors
  */
-import fs from "fs";
-import { fileURLToPath } from "url";
-import path from "path";
+import fs from "node:fs";
+import { fileURLToPath } from "node:url";
 
 import ejs from "ejs";
-import Templates from "../src/templates";
+import Templates from "../src/templates.js";
 
 const dirname = fileURLToPath(new URL(".", import.meta.url));
 

@@ -1,18 +1,18 @@
-import fs from "fs";
-import path from "path";
-import { fileURLToPath } from "url";
+import fs from "node:fs";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
 
 import fromMarkdown from "mdast-util-from-markdown";
 import visit from "unist-util-visit";
 
-import { Document, Redirect, Image } from "../../content";
-import { findMatchesInText } from "../matches-in-text";
+import { Document, Redirect, Image } from "../../content/index.js";
+import { findMatchesInText } from "../matches-in-text.js";
 import {
   DEFAULT_LOCALE,
   FLAW_LEVELS,
   VALID_LOCALES,
-} from "../../libs/constants";
-import { isValidLocale } from "../../libs/locale-utils";
+} from "../../libs/constants/index.js";
+import { isValidLocale } from "../../libs/locale-utils/index.js";
 
 const dirname = fileURLToPath(new URL(".", import.meta.url));
 

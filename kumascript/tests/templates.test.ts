@@ -1,8 +1,8 @@
-import { fileURLToPath } from "url";
-import path from "path";
+import { fileURLToPath } from "node:url";
+import path from "node:path";
 
 import EJS from "ejs";
-import Templates from "../src/templates";
+import Templates from "../src/templates.js";
 
 const jest = import.meta.jest;
 const dirname = fileURLToPath(new URL(".", import.meta.url));

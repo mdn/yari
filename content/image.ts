@@ -1,13 +1,13 @@
-import fs from "fs";
-import path from "path";
+import fs from "node:fs";
+import path from "node:path";
 
 import readChunk from "read-chunk";
 import imageType from "image-type";
 import isSvg from "is-svg";
 
-import { DEFAULT_LOCALE } from "../libs/constants";
-import { ROOTS } from "../libs/env";
-import { memoize, slugToFolder } from "./utils";
+import { DEFAULT_LOCALE } from "../libs/constants/index.js";
+import { ROOTS } from "../libs/env/index.js";
+import { memoize, slugToFolder } from "./utils.js";
 
 function isImage(filePath) {
   if (fs.statSync(filePath).isDirectory()) {

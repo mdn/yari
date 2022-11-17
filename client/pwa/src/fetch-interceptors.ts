@@ -1,4 +1,4 @@
-import { MDNOfflineDB } from "./db";
+import { MDNOfflineDB } from "./db.js";
 
 const PATH_WHOAMI = "/api/v1/whoami";
 

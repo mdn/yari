@@ -1,5 +1,5 @@
 import Prism from "prismjs";
-import loadLanguages from "prismjs/components/index";
+import loadLanguages from "prismjs/components/index.js";
 
 const lazy = (creator) => {
   let res;

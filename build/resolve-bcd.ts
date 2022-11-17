@@ -1,7 +1,5 @@
 // Note! This is copied verbatim from stumptown-content
-import bcd from "@mdn/browser-compat-data";
-
-import bcd from "@mdn/browser-compat-data";
+import bcd from "@mdn/browser-compat-data" assert { type: "json" };
 
 export function packageBCD(query) {
   const data = query.split(".").reduce((prev, curr) => {

@@ -2,14 +2,13 @@
 // Or, something. Checking for flaws should be very different from checking
 // for images.
 
-import path from "path";
+import path from "node:path";
 
 import sizeOf from "image-size";
 
-import { Document, Image } from "../content";
-import { FLAW_LEVELS } from "../libs/constants";
-import { findMatchesInText } from "./matches-in-text";
-import { DEFAULT_LOCALE } from "../libs/constants";
+import { Document, Image } from "../content/index.js";
+import { FLAW_LEVELS, DEFAULT_LOCALE } from "../libs/constants/index.js";
+import { findMatchesInText } from "./matches-in-text.js";
 
 /**
  * Mutate the `$` instance for image reference and if appropriate,

@@ -1,9 +1,11 @@
-const fs = require("fs");
-const path = require("path");
-const paths = require("./paths");
+import fs from "node:fs";
+import path from "node:path";
+import dotenv from "dotenv";
+import dotenvExpand from "dotenv-expand";
+import paths from "./paths.js";
 
 // Make sure that including paths.js after env.js will read .env variables.
-delete require.cache[require.resolve("./paths")];
+// delete require.cache[require.resolve("./paths")];
 
 const NODE_ENV = process.env.NODE_ENV;
 if (!NODE_ENV) {
@@ -30,8 +32,8 @@ const dotenvFiles = [
 // https://github.com/motdotla/dotenv-expand
 dotenvFiles.forEach((dotenvFile) => {
   if (fs.existsSync(dotenvFile)) {
-    require("dotenv-expand").expand(
-      require("dotenv").config({
+    dotenvExpand.expand(
+      dotenv.config({
         path: dotenvFile,
       })
     );
@@ -99,4 +101,4 @@ function getClientEnvironment(publicUrl) {
   return { raw, stringified };
 }
 
-module.exports = getClientEnvironment;
+export default getClientEnvironment;

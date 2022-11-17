@@ -1,4 +1,3 @@
-/* eslint-disable node/no-unpublished-import */
 import webpack from "webpack";
 import webpackDevMiddleware from "webpack-dev-middleware";
 import webpackHotMiddleware from "webpack-hot-middleware";

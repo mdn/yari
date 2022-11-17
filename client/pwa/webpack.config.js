@@ -1,13 +1,13 @@
-const path = require("path");
-const commitHash = require("child_process")
-  .execSync("git rev-parse --short HEAD")
-  .toString()
-  .trim();
-const webpack = require("webpack");
+import path from "node:path";
+import { fileURLToPath } from "node:url";
+import { execSync } from "node:child_process";
+import webpack from "webpack";
 
-const dirname = __dirname;
+const dirname = fileURLToPath(new URL(".", import.meta.url));
 
-module.exports = {
+const commitHash = execSync("git rev-parse --short HEAD").toString().trim();
+
+export default {
   entry: {
     bundle: path.join(dirname, "./src/service-worker.ts"),
   },

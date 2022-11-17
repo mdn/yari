@@ -1,40 +1,47 @@
 #!/usr/bin/env node
-import { isValidLocale } from "../libs/locale-utils";
-import type { Doc } from "../libs/types/document";
 
-import fs from "fs";
-import path from "path";
-import { fileURLToPath } from "url";
+import fs from "node:fs";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
+
 import { fdir, PathsOutput } from "fdir";
 import frontmatter from "front-matter";
-import { program } from "@caporal/core";
+import caporal from "@caporal/core";
 import chalk from "chalk";
-import { prompt } from "inquirer";
+import inquirer from "inquirer";
 import openEditor from "open-editor";
 import open from "open";
 import log from "loglevel";
+import { Action, ActionParameters, Logger } from "types";
 
-const dirname = fileURLToPath(new URL(".", import.meta.url));
-
-import { DEFAULT_LOCALE, VALID_LOCALES } from "../libs/constants";
-import { CONTENT_ROOT, CONTENT_TRANSLATED_ROOT } from "../libs/env";
-import { Redirect, Document, buildURL, getRoot } from "../content";
-import { buildDocument, gatherGitHistory, buildSPAs } from "../build";
-
-import { VALID_FLAW_CHECKS } from "../libs/constants";
+import {
+  DEFAULT_LOCALE,
+  VALID_LOCALES,
+  VALID_FLAW_CHECKS,
+} from "../libs/constants/index.js";
+import { Redirect, Document, buildURL, getRoot } from "../content/index.js";
+import { buildDocument, gatherGitHistory, buildSPAs } from "../build/index.js";
+import { isValidLocale } from "../libs/locale-utils/index.js";
+import type { Doc } from "../libs/types/document.js";
 import {
   ALWAYS_ALLOW_ROBOTS,
   BUILD_OUT_ROOT,
+  CONTENT_ROOT,
+  CONTENT_TRANSLATED_ROOT,
   GOOGLE_ANALYTICS_ACCOUNT,
   GOOGLE_ANALYTICS_DEBUG,
-} from "../libs/env";
-import { runMakePopularitiesFile } from "./popularities";
-import { runOptimizeClientBuild } from "./optimize-client-build";
-import { runBuildRobotsTxt } from "./build-robots-txt";
-import { syncAllTranslatedContent } from "./sync-translated-content";
-import * as kumascript from "../kumascript";
-import { Action, ActionParameters, Logger } from "types";
-import { MacroRedirectedLinkError } from "../kumascript/src/errors";
+} from "../libs/env/index.js";
+import { runMakePopularitiesFile } from "./popularities.js";
+import { runOptimizeClientBuild } from "./optimize-client-build.js";
+import { runBuildRobotsTxt } from "./build-robots-txt.js";
+import { syncAllTranslatedContent } from "./sync-translated-content.js";
+import * as kumascript from "../kumascript/index.js";
+import { MacroRedirectedLinkError } from "../kumascript/src/errors.js";
+
+const { program } = caporal;
+const { prompt } = inquirer;
+
+const dirname = fileURLToPath(new URL(".", import.meta.url));
 
 const PORT = parseInt(process.env.SERVER_PORT || "5042");
 
@@ -215,8 +222,6 @@ function tryOrExit(
   };
 }
 
-const { program } = caporal;
-
 program
   .bin("yarn tool")
   .name("tool")
@@ -342,7 +347,7 @@ program
       }
       const { run } = yes
         ? { run: true }
-        : await inquirer.prompt({
+        : await prompt({
             type: "confirm",
             message: "Proceed?",
             name: "run",
@@ -392,7 +397,7 @@ program
       );
       const { run } = yes
         ? { run: true }
-        : await inquirer.prompt({
+        : await prompt({
             type: "confirm",
             message: "Proceed?",
             name: "run",
@@ -732,7 +737,7 @@ program
       }
       const { run } = yes
         ? { run: true }
-        : await inquirer.prompt({
+        : await prompt({
             type: "confirm",
             message: `Proceed fixing ${flaws} flaws?`,
             name: "run",

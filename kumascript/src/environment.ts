@@ -22,7 +22,7 @@
  * from the rest of the file which is well tested.
  */
 
-import { createRequire } from "module";
+import { createRequire } from "node:module";
 const require = createRequire(import.meta.url);
 
 // The properties of this object will be globals in the macro
@@ -38,14 +38,14 @@ const globalsPrototype = {
   require,
 };
 
-import kumaPrototype from "./api/kuma";
-import mdnPrototype from "./api/mdn";
-import stringPrototype from "./api/string";
-import wikiPrototype from "./api/wiki";
-import webPrototype from "./api/web";
-import pagePrototype from "./api/page";
-import info from "./info";
-import Templates from "./templates";
+import kumaPrototype from "./api/kuma.js";
+import mdnPrototype from "./api/mdn.js";
+import stringPrototype from "./api/string.js";
+import wikiPrototype from "./api/wiki.js";
+import webPrototype from "./api/web.js";
+import pagePrototype from "./api/page.js";
+import info from "./info.js";
+import Templates from "./templates.js";
 
 type PerPageContext = Partial<{
   [x: string]: any;

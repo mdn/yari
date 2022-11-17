@@ -1,4 +1,4 @@
-import Environment from "../src/environment";
+import Environment from "../src/environment.js";
 
 const jest = import.meta.jest;
 

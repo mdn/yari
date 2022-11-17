@@ -1,26 +1,29 @@
 #!/usr/bin/env node
-import crypto from "crypto";
-import fs from "fs";
-import path from "path";
-import zlib from "zlib";
+import crypto from "node:crypto";
+import fs from "node:fs";
+import path from "node:path";
+import zlib from "node:zlib";
 
 import chalk from "chalk";
 import cliProgress from "cli-progress";
 import { program } from "@caporal/core";
 import { prompt } from "inquirer";
 
-import { Document, slugToFolder, translationsOf } from "../content";
-import { CONTENT_ROOT, CONTENT_TRANSLATED_ROOT } from "../libs/env";
-import { VALID_LOCALES } from "../libs/constants";
-import { renderHTML } from "../ssr/dist/main";
-import options from "./build-options";
+import { Document, slugToFolder, translationsOf } from "../content/index.js";
+import {
+  CONTENT_ROOT,
+  CONTENT_TRANSLATED_ROOT,
+  BUILD_OUT_ROOT,
+} from "../libs/env/index.js";
+import { VALID_LOCALES } from "../libs/constants/index.js";
+import { renderHTML } from "../ssr/dist/main.js";
+import options from "./build-options.js";
 import { buildDocument, BuiltDocument, renderContributorsTxt } from ".";
-import { Flaws } from "../libs/types";
+import { Flaws } from "../libs/types/document.js";
 import * as bcd from "@mdn/browser-compat-data/types";
-import SearchIndex from "./search-index";
-import { BUILD_OUT_ROOT } from "../libs/env";
-import { makeSitemapXML, makeSitemapIndexXML } from "./sitemaps";
-import { humanFileSize } from "./utils";
+import SearchIndex from "./search-index.js";
+import { makeSitemapXML, makeSitemapIndexXML } from "./sitemaps.js";
+import { humanFileSize } from "./utils.js";
 
 export type DocumentBuild = SkippedDocumentBuild | InteractiveDocumentBuild;
 

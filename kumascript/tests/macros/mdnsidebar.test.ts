@@ -1,5 +1,5 @@
 import { assert, itMacro, describeMacro } from "./utils";
-import jsdom from "jsdom";
+import { JSDOM } from "jsdom";
 
 const locales = {
   "en-US": {

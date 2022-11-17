@@ -1,15 +1,14 @@
-import fs from "fs";
-import path from "path";
-import { fileURLToPath } from "url";
+import fs from "node:fs";
+import { fileURLToPath } from "node:url";
 
-import Templates from "../src/templates";
-import { render } from "../src/render";
+import Templates from "../src/templates.js";
+import { render } from "../src/render.js";
 import {
   MacroInvocationError,
   MacroNotFoundError,
   MacroCompilationError,
   MacroExecutionError,
-} from "../src/errors";
+} from "../src/errors.js";
 
 const jest = import.meta.jest;
 const dirname = fileURLToPath(new URL(".", import.meta.url));

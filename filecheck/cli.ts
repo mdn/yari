@@ -1,10 +1,10 @@
 #!/usr/bin/env node
-import path from "path";
+import path from "node:path";
 
 import { program } from "@caporal/core";
 
-import { runChecker } from "./checker";
-import { MAX_COMPRESSION_DIFFERENCE_PERCENTAGE } from "../libs/constants";
+import { runChecker } from "./checker.js";
+import { MAX_COMPRESSION_DIFFERENCE_PERCENTAGE } from "../libs/constants/index.js";
 
 interface FilecheckArgsAndOptions {
   args: {

@@ -1,11 +1,11 @@
-import fs from "fs";
-import path from "path";
-import { fileURLToPath } from "url";
+import fs from "node:fs";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
 
-import { DEFAULT_LOCALE } from "../../../libs/constants";
-import { code } from "./code";
-import { asDefinitionList, isDefinitionList } from "./dl";
-import { one, all, wrap } from "./mdast-util-to-hast-utils";
+import { DEFAULT_LOCALE } from "../../../libs/constants/index.js";
+import { code } from "./code.js";
+import { asDefinitionList, isDefinitionList } from "./dl.js";
+import { one, all, wrap } from "./mdast-util-to-hast-utils.js";
 
 const dirname = fileURLToPath(new URL(".", import.meta.url));
 

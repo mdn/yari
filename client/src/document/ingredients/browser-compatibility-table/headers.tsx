@@ -1,4 +1,4 @@
-import bcd from "@mdn/browser-compat-data";
+import bcd from "@mdn/browser-compat-data" assert { type: "json" };
 import { BrowserName } from "./browser-info";
 
 function PlatformHeaders({ platforms, browsers }) {

@@ -1,6 +1,10 @@
-import { Document, Redirect } from "../content";
-import { FLAW_LEVELS } from "../libs/constants";
-import { BCDSection, CompatStatementExtended, Doc } from "../libs/types";
+import { Document, Redirect } from "../content/index.js";
+import { FLAW_LEVELS } from "../libs/constants/index.js";
+import {
+  BCDSection,
+  CompatStatementExtended,
+  Doc,
+} from "../libs/types/document.js";
 
 /**
  * Loop over, and mutate, all 'browser_compatibility' sections.

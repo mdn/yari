@@ -1,6 +1,6 @@
 import React, { useReducer } from "react";
 import { useLocation } from "react-router-dom";
-import bcd from "@mdn/browser-compat-data";
+import bcd from "@mdn/browser-compat-data" assert { type: "json" };
 import type BCD from "@mdn/browser-compat-data/types";
 import { BrowserInfoContext } from "./browser-info";
 import { BrowserCompatibilityErrorBoundary } from "./error-boundary";

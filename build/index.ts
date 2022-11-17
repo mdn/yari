@@ -1,44 +1,41 @@
-import { Doc } from "../libs/types";
-import fs from "fs";
-import path from "path";
+import fs from "node:fs";
+import path from "node:path";
 
 import chalk from "chalk";
 import {
   MacroLiveSampleError,
   MacroRedirectedLinkError,
-} from "../kumascript/src/errors";
+} from "../kumascript/src/errors.js";
 
-import { Document, Image, execGit } from "../content";
-import { CONTENT_ROOT, REPOSITORY_URLS } from "../libs/env";
-import * as kumascript from "../kumascript";
+import { Doc } from "../libs/types/document.js";
+import { Document, Image, execGit, urlToFolderPath } from "../content/index.js";
+import { CONTENT_ROOT, REPOSITORY_URLS } from "../libs/env/index.js";
+import * as kumascript from "../kumascript/index.js";
 
-import { FLAW_LEVELS } from "../libs/constants";
+import { FLAW_LEVELS } from "../libs/constants/index.js";
 import {
   extractSections,
   extractSidebar,
   extractSummary,
-} from "./document-extractor";
-export { default as SearchIndex } from "./search-index";
-import { addBreadcrumbData } from "./document-utils";
-import { fixFixableFlaws, injectFlaws, injectSectionFlaws } from "./flaws";
-import { normalizeBCDURLs, extractBCDData, BCDData } from "./bcd-urls";
-import { checkImageReferences, checkImageWidths } from "./check-images";
-import { getPageTitle } from "./page-title";
-import { syntaxHighlight } from "./syntax-highlight";
-import { formatNotecards } from "./format-notecards";
-import buildOptions from "./build-options";
-export { gather as gatherGitHistory } from "./git-history";
-export { buildSPAs } from "./spas";
-import LANGUAGES_RAW from "../libs/languages";
-import { safeDecodeURIComponent } from "../kumascript/src/api/util";
-import { wrapTables } from "./wrap-tables";
-
-import { fileURLToPath } from "url";
-const dirname = fileURLToPath(new URL(".", import.meta.url));
-
-const LANGUAGES_RAW = JSON.parse(
-  fs.readFileSync(path.join(dirname, "../content/languages.json"), "utf8")
-);
+} from "./document-extractor.js";
+export { default as SearchIndex } from "./search-index.js";
+import { addBreadcrumbData } from "./document-utils.js";
+import {
+  fixFixableFlaws,
+  injectFlaws,
+  injectSectionFlaws,
+} from "./flaws/index.js";
+import { normalizeBCDURLs, extractBCDData, BCDData } from "./bcd-urls.js";
+import { checkImageReferences, checkImageWidths } from "./check-images.js";
+import { getPageTitle } from "./page-title.js";
+import { syntaxHighlight } from "./syntax-highlight.js";
+import { formatNotecards } from "./format-notecards.js";
+import buildOptions from "./build-options.js";
+export { gather as gatherGitHistory } from "./git-history.js";
+export { buildSPAs } from "./spas.js";
+import LANGUAGES_RAW from "../libs/languages/index.js";
+import { safeDecodeURIComponent } from "../kumascript/src/api/util.js";
+import { wrapTables } from "./wrap-tables.js";
 
 const LANGUAGES = new Map(
   Object.entries(LANGUAGES_RAW).map(([locale, data]) => {
@@ -315,7 +312,7 @@ export async function buildDocument(
   };
   const { metadata, fileInfo } = document;
 
-  if (Document.urlToFolderPath(document.url) !== document.fileInfo.folder) {
+  if (urlToFolderPath(document.url) !== document.fileInfo.folder) {
     throw new Error(
       `The document's slug (${metadata.slug}) doesn't match its disk folder name (${document.fileInfo.folder})`
     );

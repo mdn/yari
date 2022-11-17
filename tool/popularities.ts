@@ -9,7 +9,7 @@
  * dynamically on every single production build.
  *
  */
-import fs from "fs";
+import fs from "node:fs";
 
 import * as csv from "@fast-csv/parse";
 import got from "got";

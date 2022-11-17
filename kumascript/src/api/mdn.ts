@@ -1,5 +1,5 @@
 import got from "got";
-import * as util from "./util";
+import * as util from "./util.js";
 
 // Module level caching for repeat calls to fetchWebExtExamples().
 let webExtExamples: any = null;

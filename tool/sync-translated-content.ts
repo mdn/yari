@@ -1,6 +1,6 @@
-import fs from "fs";
-import crypto from "crypto";
-import path from "path";
+import fs from "node:fs";
+import crypto from "node:crypto";
+import path from "node:path";
 
 import chalk from "chalk";
 import fm from "front-matter";
@@ -13,14 +13,14 @@ import {
   slugToFolder,
   Document,
   Redirect,
-} from "../content";
+} from "../content/index.js";
 import {
   HTML_FILENAME,
   MARKDOWN_FILENAME,
   VALID_LOCALES,
-} from "../libs/constants";
-import { CONTENT_ROOT, CONTENT_TRANSLATED_ROOT } from "../libs/env";
-import { DocFrontmatter } from "../libs/types/document";
+} from "../libs/constants/index.js";
+import { CONTENT_ROOT, CONTENT_TRANSLATED_ROOT } from "../libs/env/index.js";
+import { DocFrontmatter } from "../libs/types/document.js";
 
 const CONFLICTING = "conflicting";
 const ORPHANED = "orphaned";

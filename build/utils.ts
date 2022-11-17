@@ -1,5 +1,5 @@
-import fs from "fs";
-import path from "path";
+import fs from "node:fs";
+import path from "node:path";
 
 import * as cheerio from "cheerio";
 import got from "got";
@@ -11,7 +11,7 @@ import imageminGifsicle from "imagemin-gifsicle";
 import imageminSvgo from "imagemin-svgo";
 import sanitizeFilename from "sanitize-filename";
 
-import { VALID_MIME_TYPES } from "../libs/constants";
+import { VALID_MIME_TYPES } from "../libs/constants/index.js";
 
 export function humanFileSize(size) {
   if (size < 1024) return `${size} B`;

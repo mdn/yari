@@ -1,11 +1,13 @@
-const path = require("path");
-const fs = require("fs");
-const getPublicUrlOrPath = require("react-dev-utils/getPublicUrlOrPath");
+import path from "node:path";
+import fs from "node:fs";
+import getPublicUrlOrPath from "react-dev-utils/getPublicUrlOrPath.js";
 
 // Make sure any symlinks in the project folder are resolved:
 // https://github.com/facebook/create-react-app/issues/637
 const appDirectory = fs.realpathSync(process.cwd());
 const resolveApp = (relativePath) => path.resolve(appDirectory, relativePath);
+
+const appPackage = JSON.parse(fs.readFileSync(resolveApp("package.json")));
 
 // We use `PUBLIC_URL` environment variable or "homepage" field to infer
 // "public path" at which the app is served.
@@ -15,7 +17,7 @@ const resolveApp = (relativePath) => path.resolve(appDirectory, relativePath);
 // like /todos/42/static/js/bundle.7289d.js. We have to know the root.
 const publicUrlOrPath = getPublicUrlOrPath(
   process.env.NODE_ENV === "development",
-  require(resolveApp("package.json")).homepage,
+  appPackage.homepage,
   process.env.PUBLIC_URL
 );
 
@@ -49,7 +51,7 @@ const resolveModule = (resolveFn, filePath) => {
 };
 
 // config after eject: we're in ./config/
-module.exports = {
+const config = {
   dotenv: resolveApp(".env"),
   appPath: resolveApp("."),
   appBuild: resolveApp(buildPath),
@@ -69,6 +71,7 @@ module.exports = {
   swSrc: resolveModule(resolveApp, "src/service-worker"),
   publicUrlOrPath,
   libsPath: resolveApp("../libs"),
+  moduleFileExtensions,
 };
 
-module.exports.moduleFileExtensions = moduleFileExtensions;
+export default config;

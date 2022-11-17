@@ -1,13 +1,11 @@
-import fs from "fs";
-import path from "path";
-import { fileURLToPath } from "url";
-import { cwd } from "process";
+import fs from "node:fs";
+import path from "node:path";
+import { cwd } from "node:process";
+
 import { renderToString } from "react-dom/server";
 
-import { DEFAULT_LOCALE } from "../libs/constants";
-import { ALWAYS_ALLOW_ROBOTS, BUILD_OUT_ROOT } from "../libs/env";
-
-const dirname = fileURLToPath(new URL(".", import.meta.url));
+import { DEFAULT_LOCALE } from "../libs/constants/index.js";
+import { ALWAYS_ALLOW_ROBOTS, BUILD_OUT_ROOT } from "../libs/env/index.js";
 
 // When there are multiple options for a given language, this gives the
 // preferred locale for that language (language => preferred locale).

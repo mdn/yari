@@ -1,9 +1,12 @@
-const handler = require("../index");
+import fs from "node:fs";
+import handler from "../index.js";
 jest.mock("../plans-stage-lookup.json", () => {
-  return require("./__mocks__/plans-stage-lookup-test.json");
+  return JSON.parse(
+    fs.readFileSync("./__mocks__/plans-stage-lookup-test.json")
+  );
 });
 jest.mock("../plans-prod-lookup.json", () => {
-  return require("./__mocks__/plans-prod-lookup-test.json");
+  return JSON.parse(fs.readFileSync("./__mocks__/plans-prod-lookup-test.json"));
 });
 
 test("Returns Italian language with Euro price_id for Italian in Germany", async () => {

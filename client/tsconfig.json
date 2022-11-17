@@ -4,12 +4,10 @@
     "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
     "strict": true,
-    "module": "esnext",
     "isolatedModules": true,
     "noImplicitAny": false,
     "noEmit": true,
-    "noFallthroughCasesInSwitch": true,
-    "jsx": "react-jsx"
+    "noFallthroughCasesInSwitch": true
   },
   "include": ["src"]
 }

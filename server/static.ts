@@ -1,12 +1,12 @@
-import path from "path";
+import path from "node:path";
 
 import express from "express";
 import compression from "compression";
 import cookieParser from "cookie-parser";
 
-import { staticMiddlewares } from "./middlewares";
-import { resolveFundamental } from "../content";
-import { STATIC_ROOT } from "../libs/env";
+import { staticMiddlewares } from "./middlewares.js";
+import { resolveFundamental } from "../content/index.js";
+import { STATIC_ROOT } from "../libs/env/index.js";
 
 const app = express();
 app.use(express.json());

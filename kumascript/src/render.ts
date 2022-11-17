@@ -38,9 +38,9 @@
  *   - the environment object that defines per-page values such as
  *     locale, title and slug.
  */
-import Parser from "./parser.js";
-import Templates from "./templates";
-import Environment from "./environment";
+import * as Parser from "./parser.js";
+import Templates from "./templates.js";
+import Environment from "./environment.js";
 import {
   MacroInvocationError,
   MacroNotFoundError,
@@ -51,8 +51,8 @@ import {
   MacroWrongXRefError,
   MacroDeprecatedError,
   MacroPagesError,
-} from "./errors";
-import { RedirectInfo } from "../../libs/types/document";
+} from "./errors.js";
+import { RedirectInfo } from "../../libs/types/document.js";
 
 const defaultTemplates = new Templates();
 

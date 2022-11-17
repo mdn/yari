@@ -1,5 +1,5 @@
 import * as cheerio from "cheerio";
-import { packageBCD } from "./resolve-bcd";
+import { packageBCD } from "./resolve-bcd.js";
 import * as bcd from "@mdn/browser-compat-data/types";
 import {
   BCDSection,
@@ -7,9 +7,9 @@ import {
   ProseSection,
   Section,
   SpecificationsSection,
-} from "../libs/types";
-import specs from "browser-specs";
-import web from "../kumascript/src/api/web";
+} from "../libs/types/index.js";
+import specs from "browser-specs" assert { type: "json" };
+import web from "../kumascript/src/api/web.js";
 
 interface SimpleSupportStatementWithReleaseDate
   extends bcd.SimpleSupportStatement {

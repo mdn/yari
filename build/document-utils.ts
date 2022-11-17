@@ -1,4 +1,4 @@
-import { Document } from "../content";
+import { Document } from "../content/index.js";
 
 /**
  * Temporary fix for long titles in breadcrumbs
