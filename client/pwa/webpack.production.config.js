@@ -7,7 +7,7 @@ const dirname = fileURLToPath(new URL(".", import.meta.url));
 
 const commitHash = execSync("git rev-parse --short HEAD").toString().trim();
 
-export default {
+const config = {
   entry: {
     bundle: path.join(dirname, "./src/service-worker.ts"),
   },
@@ -43,3 +43,5 @@ export default {
     ],
   },
 };
+
+export default config;

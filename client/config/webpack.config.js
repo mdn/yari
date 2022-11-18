@@ -91,7 +91,7 @@ const hasJsxRuntime = (() => {
 
 // This is the production and development configuration.
 // It is focused on developer experience, fast rebuilds, and a minimal bundle.
-export default function (webpackEnv) {
+function config(webpackEnv) {
   const isEnvDevelopment = webpackEnv === "development";
   const isEnvProduction = webpackEnv === "production";
 
@@ -760,3 +760,5 @@ export default function (webpackEnv) {
     performance: false,
   };
 }
+
+export default config;

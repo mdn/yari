@@ -3,7 +3,8 @@ import { createProxyMiddleware } from "http-proxy-middleware";
 const SERVER_PORT = process.env.SERVER_PORT || 5042;
 
 console.log(`Setting up a Proxy to localhost:${SERVER_PORT}`);
-export default function (app) {
+
+function config(app) {
   const proxy = createProxyMiddleware(["!**/*.hot-update.json"], {
     target: `http://localhost:${SERVER_PORT}`,
     changeOrigin: true,
@@ -18,3 +19,5 @@ export default function (app) {
   // All those root-level images like /favicon-48x48.png
   app.use("/*.(png|webp|gif|jpe?g|svg)", proxy);
 }
+
+export default config;
