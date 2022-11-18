@@ -335,26 +335,29 @@ function _addSingleSpecialSection(
     return _addSectionProse($)[0];
   }
   const query = dataQuery.replace(/^bcd:/, "");
-  const { browsers, data }: { browsers: bcd.Browsers; data: bcd.Identifier } =
-    packageBCD(query);
 
   if (specialSectionType === "browser_compatibility") {
-    if (data === undefined) {
-      return [
-        {
-          type: specialSectionType,
-          value: {
-            title,
-            id,
-            isH3,
-            data: null,
-            query,
-            browsers: null,
-          },
-        },
-      ];
+    const { data, browsers } = extractBCD(query);
+
+    if (hasMultipleQueries) {
+      title = query;
+      id = query;
+      isH3 = true;
     }
-    return _buildSpecialBCDSection();
+
+    return [
+      {
+        type: specialSectionType,
+        value: {
+          title,
+          id,
+          isH3,
+          data,
+          query,
+          browsers,
+        },
+      },
+    ];
   } else if (specialSectionType === "specifications") {
     const specifications = extractSpecifications(query, specURLsString);
 
@@ -374,7 +377,20 @@ function _addSingleSpecialSection(
 
   throw new Error(`Unrecognized special section type '${specialSectionType}'`);
 
-  function _buildSpecialBCDSection(): [BCDSection] {
+  function extractBCD(query: string): {
+    browsers: bcd.Browsers | null;
+    data: bcd.Identifier | null;
+  } {
+    const { browsers, data }: { browsers: bcd.Browsers; data: bcd.Identifier } =
+      packageBCD(query);
+
+    if (data === undefined) {
+      return {
+        browsers: null,
+        data: null,
+      };
+    }
+
     // First extract a map of all release data, keyed by (normalized) browser
     // name and the versions.
     // You'll have a map that looks like this:
@@ -440,24 +456,7 @@ function _addSingleSpecialSection(
       }
     }
 
-    if (hasMultipleQueries) {
-      title = query;
-      id = query;
-      isH3 = true;
-    }
-    return [
-      {
-        type: "browser_compatibility",
-        value: {
-          title,
-          id,
-          isH3,
-          data,
-          query,
-          browsers,
-        },
-      },
-    ];
+    return { data, browsers };
   }
 
   function _getPreviousVersion(
