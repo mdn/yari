@@ -222,19 +222,22 @@ export async function fixFixableFlaws(doc, options, document) {
           );
           console.log(`Downloaded ${flaw.src} to ${destination}`);
           newSrc = path.basename(destination);
-        } catch (e) {
-          const error = e as RequestError;
-          const { response } = error;
-          if (response && response.statusCode === 404) {
-            console.log(chalk.yellow(`Skipping ${flaw.src} (404)`));
-            continue;
-          } else if (error.code === "ETIMEDOUT" || error.code === "ENOTFOUND") {
-            console.log(chalk.yellow(`Skipping ${flaw.src} (${error.code})`));
-            continue;
-          } else {
-            console.error(error);
-            throw error;
+        } catch (error) {
+          if (error instanceof RequestError) {
+            if (error.response.statusCode === 404) {
+              console.log(chalk.yellow(`Skipping ${flaw.src} (404)`));
+              continue;
+            } else if (
+              error.code === "ETIMEDOUT" ||
+              error.code === "ENOTFOUND"
+            ) {
+              console.log(chalk.yellow(`Skipping ${flaw.src} (${error.code})`));
+              continue;
+            }
           }
+
+          console.error(error);
+          throw error;
         }
       }
       newRawBody = replaceMatchesInText(flaw.src, newRawBody, newSrc, {
