@@ -23,7 +23,7 @@
     "build:sw-dev": "cd client/pwa && yarn && yarn build",
     "dev": "yarn build:prepare && nf -j Procfile.dev start",
     "eslint": "eslint .",
-    "filecheck": "cd filecheck && ts-node cli.ts",
+    "filecheck": "ts-node filecheck/cli.ts",
     "m2h": "ts-node markdown/m2h/cli.ts",
     "md": "echo 'The HTML to Markdown conversion command has been moved to https://github.com/mdn/markdown!' && exit 1",
     "prepack": "yarn build:dist",
