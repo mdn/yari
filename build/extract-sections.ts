@@ -376,7 +376,7 @@ function _addSingleSpecialSection(
         },
       ];
     }
-    return _buildSpecialSpecSection();
+    return _buildSpecialSpecSection(query, specURLsString);
   }
 
   throw new Error(`Unrecognized special section type '${specialSectionType}'`);
@@ -547,7 +547,10 @@ function _addSingleSpecialSection(
     return blocks;
   }
 
-  function _buildSpecialSpecSection(): [SpecificationsSection] {
+  function _buildSpecialSpecSection(
+    query: string | undefined,
+    specURLsString: string
+  ): [SpecificationsSection] {
     // Collect spec URLs from a BCD feature, a 'spec-urls' value, or both;
     // For a BCD feature, it can either be a string or an array of strings.
     let specURLs: string[] = [];
