@@ -37,11 +37,9 @@ export interface Item extends NewItem {
 }
 
 export interface FrequentlyViewedItem {
-  created_at: string;
   notes?: string;
   parents: ItemParent[];
   title: string;
-  updated_at: string;
   url: string;
   id: number;
 }

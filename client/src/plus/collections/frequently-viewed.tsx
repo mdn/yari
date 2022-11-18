@@ -5,7 +5,6 @@ import { FrequentlyViewedItem, ItemParent } from "./api";
 export interface FrequentlyViewedCollection {
   name: string;
   article_count: number;
-  created_at: string;
   updated_at: string;
   description: string;
   items: FrequentlyViewedItem[];
@@ -102,7 +101,6 @@ export function useFrequentlyViewed(
 ): FrequentlyViewedCollection {
   const [collection, setCollection] = useState<FrequentlyViewedCollection>({
     article_count: 0,
-    created_at: new Date().toISOString(),
     description: "Articles you viewed more than 2 times in the past 30 days.",
     items: [],
     name: "Frequently Viewed Articles",
@@ -118,12 +116,7 @@ export function useFrequentlyViewed(
     let paged: FrequentlyViewedItem[] = freqViewed
       .slice(0, limit + offset)
       .map((val) => {
-        const lastModified = val.timestamps[0]
-          ? new Date(freqViewed[0].timestamps[0]).toISOString()
-          : new Date().toISOString();
         return {
-          created_at: lastModified,
-          updated_at: lastModified,
           parents: val.parents || [],
           title: val.title,
           url: val.url,
@@ -135,9 +128,6 @@ export function useFrequentlyViewed(
       return {
         ...c,
         article_count: freqViewed.length,
-        created_at: freqViewed[0]
-          ? new Date(freqViewed[0].timestamps[0]).toISOString()
-          : new Date().toISOString(),
         items: paged,
         updated_at: freqViewed[0]
           ? new Date(freqViewed[0].timestamps[0]).toISOString()
