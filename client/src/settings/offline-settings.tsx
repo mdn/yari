@@ -1,5 +1,5 @@
 import { Switch } from "../ui/atoms/switch";
-import { SettingsData, getMDNWorker } from "./mdn-worker";
+import { getMDNWorker } from "./mdn-worker";
 import useInterval from "@use-it/interval";
 
 import { useEffect, useRef, useState } from "react";
@@ -8,7 +8,7 @@ import ClearButton from "./clear";
 import { Spinner } from "../ui/atoms/spinner";
 import { MDN_PLUS_TITLE } from "../constants";
 import { ContentStatus, ContentStatusPhase } from "./db";
-import { useUserData } from "../user-context";
+import { OfflineSettingsData, useUserData } from "../user-context";
 import { useLocale } from "../hooks";
 import {
   TOGGLE_PLUS_OFFLINE_DISABLED,
@@ -58,7 +58,7 @@ function Settings() {
   const [saving, setSaving] = useState<boolean>(true);
 
   const [estimate, setEstimate] = useState<StorageEstimate | null>(null);
-  const [settings, setSettings] = useState<SettingsData>();
+  const [settings, setSettings] = useState<OfflineSettingsData>();
   // Workaround to avoid "Error: Too many re-renders." (https://github.com/mdn/yari/pull/5744).
   const updateTriggered = useRef(false);
   const gleanClick = useGleanClick();
@@ -98,7 +98,7 @@ function Settings() {
     }
   }, [status?.phase]);
 
-  const updateSettings = async (change: SettingsData) => {
+  const updateSettings = async (change: Partial<OfflineSettingsData>) => {
     setSaving(true);
     const mdnWorker = getMDNWorker();
     let newSettings = await mdnWorker.setOfflineSettings(change);
