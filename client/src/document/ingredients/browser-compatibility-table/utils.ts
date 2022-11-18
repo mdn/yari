@@ -1,5 +1,3 @@
-import { compareVersions } from "compare-versions";
-
 import type BCD from "@mdn/browser-compat-data/types";
 
 // Extended for the fields, beyond the bcd types, that are extra-added
@@ -8,6 +6,9 @@ interface SimpleSupportStatementExtended extends BCD.SimpleSupportStatement {
   // Known for some support statements where the browser *version* is known,
   // as opposed to just "true" and if the version release date is known.
   release_date?: string;
+  // The version before the version_removed if the *version* removed is known,
+  // as opposed to just "true". Otherwise the version_removed.
+  version_last?: BCD.VersionValue;
 }
 
 export type SupportStatementExtended =
@@ -192,21 +193,4 @@ export function getCurrentSupport(
 
   // Default (likely never reached)
   return getFirst(support);
-}
-
-export function getPreviousVersion(
-  version: BCD.VersionValue,
-  browser: BCD.BrowserStatement
-): BCD.VersionValue {
-  if (browser && typeof version === "string") {
-    const browserVersions = Object.keys(browser["releases"]).sort(
-      compareVersions
-    );
-    const currentVersionIndex = browserVersions.indexOf(version);
-    if (currentVersionIndex > 0) {
-      return browserVersions[currentVersionIndex - 1];
-    }
-  }
-
-  return version;
 }

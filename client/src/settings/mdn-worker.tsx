@@ -1,30 +1,17 @@
+import { OfflineSettingsData } from "../user-context";
 import { getContentStatus, SwType, offlineDb } from "./db";
 
-export class SettingsData {
-  offline?: boolean;
-  preferOnline?: boolean;
-  autoUpdates?: boolean;
-
-  constructor() {
-    this.offline = false;
-    this.preferOnline = false;
-    this.autoUpdates = false;
-  }
-}
-
 export class MDNWorker {
-  settings: SettingsData;
+  settings: OfflineSettingsData;
   registered: boolean;
   timeout?: ReturnType<typeof setTimeout> | null;
   keepAlive: ReturnType<typeof setInterval> | null;
-  mutationCounter: number;
 
   constructor() {
     this.settings = this.offlineSettings();
     this.registered = false;
     this.timeout = null;
     this.keepAlive = null;
-    this.mutationCounter = 0;
 
     if (this.settings.autoUpdates) {
       this.autoUpdate();
@@ -34,7 +21,7 @@ export class MDNWorker {
         this.settings.preferOnline ? SwType.PreferOnline : SwType.PreferOffline
       );
     } else {
-      this.enableServiceWorker(SwType.ApiOnly);
+      this.disableServiceWorker();
     }
   }
 
@@ -50,9 +37,6 @@ export class MDNWorker {
 
   messageHandler(event) {
     switch (event.data.type) {
-      case "mutate":
-        this.mutationCounter++;
-        break;
       case "pong":
         console.log("pong");
         break;
@@ -74,7 +58,7 @@ export class MDNWorker {
   }
 
   swName(type: SwType | null | undefined = null) {
-    return `/service-worker.js?type=${type ?? SwType.ApiOnly}`;
+    return `/service-worker.js?type=${type ?? SwType.PreferOnline}`;
   }
 
   registerMessageHandler() {
@@ -123,20 +107,13 @@ export class MDNWorker {
     return await getContentStatus();
   }
 
-  offlineSettings(): SettingsData {
-    let settingsData: SettingsData | null = null;
-    try {
-      settingsData = JSON.parse(
-        window.localStorage.getItem("MDNSettings") || "null"
-      );
-    } catch (err) {
-      console.warn("Unable to read settings from localStorage", err);
-    }
-
-    return settingsData ?? new SettingsData();
+  offlineSettings(): OfflineSettingsData {
+    return OfflineSettingsData.read();
   }
 
-  async setOfflineSettings(settingsData: SettingsData): Promise<SettingsData> {
+  async setOfflineSettings(
+    settingsData: Partial<OfflineSettingsData>
+  ): Promise<OfflineSettingsData> {
     const current = this.offlineSettings();
 
     if (!current.offline && settingsData.offline) {
@@ -157,7 +134,6 @@ export class MDNWorker {
     }
     if (current.offline && settingsData.offline === false) {
       await this.disableServiceWorker();
-      await this.enableServiceWorker(SwType.ApiOnly);
     }
 
     if (settingsData.autoUpdates === false && this.timeout) {
@@ -170,18 +146,13 @@ export class MDNWorker {
       this.autoUpdate();
     }
 
-    const settings = { ...current, ...settingsData };
-    try {
-      window.localStorage.setItem("MDNSettings", JSON.stringify(settings));
-    } catch (err) {
-      console.warn("Unable to write settings to localStorage", err);
-    }
-    this.settings = settings;
-    return settings;
+    this.settings = new OfflineSettingsData({ ...current, ...settingsData });
+    this.settings.write();
+    return this.settings;
   }
 
   async clearOfflineSettings() {
-    await this.setOfflineSettings(new SettingsData());
+    await this.setOfflineSettings(new OfflineSettingsData());
   }
 
   async clear() {
