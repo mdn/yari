@@ -14,7 +14,7 @@ import web from "../kumascript/src/api/web";
 interface SimpleSupportStatementWithReleaseDate
   extends bcd.SimpleSupportStatement {
   release_date?: string;
-  version_last?: string;
+  version_last?: bcd.VersionValue;
 }
 
 type SectionsAndFlaws = [Section[], string[]];
@@ -472,12 +472,10 @@ function _addSingleSpecialSection(
               infoEntry.release_date = browserReleaseData
                 .get(browser)
                 .get(added).release_date;
-              if (typeof removed === "string") {
-                infoEntry.version_last = _getPreviousVersion(
-                  removed,
-                  browsers[browser]
-                );
-              }
+              infoEntry.version_last = _getPreviousVersion(
+                removed,
+                browsers[browser]
+              );
             }
           }
         }
@@ -511,10 +509,10 @@ function _addSingleSpecialSection(
   }
 
   function _getPreviousVersion(
-    version: string,
+    version: bcd.VersionValue,
     browser: bcd.BrowserStatement
-  ): string {
-    if (browser) {
+  ): bcd.VersionValue {
+    if (browser && typeof version === "string") {
       const browserVersions = Object.keys(browser["releases"]).sort(
         _compareVersions
       );
