@@ -187,6 +187,12 @@ export interface ProseSection {
     titleAsText?: string;
   };
 }
+
+export interface Specification {
+  bcdSpecificationURL: string;
+  title: string;
+}
+
 export interface SpecificationsSection {
   type: "specifications";
   value: {
@@ -194,10 +200,7 @@ export interface SpecificationsSection {
     title: string;
     isH3: boolean;
     query: string;
-    specifications: {
-      bcdSpecificationURL: any;
-      title: string;
-    }[];
+    specifications: Specification[];
   };
 }
 
