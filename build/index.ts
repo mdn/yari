@@ -7,7 +7,6 @@ import {
   MacroInvocationError,
   MacroLiveSampleError,
   MacroRedirectedLinkError,
-  SourceCodeError,
 } from "../kumascript/src/errors";
 
 import { Document, Image, execGit } from "../content";
