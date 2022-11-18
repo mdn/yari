@@ -7,6 +7,7 @@ import zlib from "node:zlib";
 import chalk from "chalk";
 import cliProgress from "cli-progress";
 import caporal from "@caporal/core";
+import { fileTypeFromFile } from "file-type";
 import inquirer from "inquirer";
 
 import { Document, slugToFolder, translationsOf } from "../content/index.js";
@@ -213,7 +214,23 @@ async function buildDocuments(
     }
 
     for (const filePath of fileAttachments) {
-      // We *could* use symlinks instead. But, there's no point :)
+      // Ensure that binary files contain what their extension indicates.
+      if (/\.(mp3|mp4|ttf|webm|woff2?)$/i.test(filePath)) {
+        const ext = filePath.split(".").pop();
+        const type = await fileTypeFromFile(filePath);
+        if (!type) {
+          throw new Error(
+            `Failed to detect type of file attachment: ${filePath}`
+          );
+        }
+        if (ext.toLowerCase() !== type.ext) {
+          throw new Error(
+            `Unexpected type '${type.mime}' (*.${ext}) detected for file attachment: ${filePath}.`
+          );
+        }
+      }
+
+      // We *could* use symlinks instead. But, there's no point :
       // Yes, a symlink is less disk I/O but it's nominal.
       fs.copyFileSync(filePath, path.join(outPath, path.basename(filePath)));
     }
