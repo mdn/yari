@@ -8,7 +8,7 @@ interface SimpleSupportStatementExtended extends BCD.SimpleSupportStatement {
   release_date?: string;
   // The version before the version_removed if the *version* removed is known,
   // as opposed to just "true".
-  version_supported_last?: string;
+  version_last?: string;
 }
 
 export type SupportStatementExtended =
