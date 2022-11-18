@@ -191,7 +191,7 @@ export function getAdjacentFileAttachments(documentDirectory: string) {
       // This needs to match what we do in filecheck/checker.py
       return (
         !dirent.isDirectory() &&
-        /\.(mp3|mp4|png|jpeg|jpg|gif|ogg|svg|ttf|webm|webp)$/i.test(dirent.name)
+        /\.(mp3|mp4|png|jpeg|jpg|gif|ogg|svg|ttf|webm|webp|woff2?)$/i.test(dirent.name)
       );
     })
     .map((dirent) => path.join(documentDirectory, dirent.name));
