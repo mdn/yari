@@ -10,6 +10,11 @@ tags:
   - Learn
   - flexbox
 ---
+
+## Examples
+
+### Flexbox Example 1
+
 ```css hidden
 * {box-sizing: border-box;}
 
@@ -34,6 +39,8 @@ tags:
   <div class="box3">Three</div>
 </div>
 ```
+
+### Flexbox Example 2
 
 ```css hidden
     * {box-sizing: border-box;}

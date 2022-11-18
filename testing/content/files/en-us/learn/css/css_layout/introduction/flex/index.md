@@ -18,10 +18,10 @@ and also tests that prerequisites are handled as part of the rendering
 and live-sample-building process.
 -->
 
-{{ Page("Learn/CSS/CSS_layout/Introduction/Flex/Stuff", "Flex_1") }}
+{{ Page("Learn/CSS/CSS_layout/Introduction/Flex/Stuff", "Flexbox_Example_1") }}
 
-{{ EmbedLiveSample('Flex_1', '300', '200') }}
+{{ EmbedLiveSample('Flexbox_Example_1', '300', '200') }}
 
-{{ Page("Learn/CSS/CSS_layout/Introduction/Flex/Stuff", "Flex_2") }}>
+{{ Page("Learn/CSS/CSS_layout/Introduction/Flex/Stuff", "Flexbox_Example_2") }}>
 
-{{ EmbedLiveSample('Flex_2', '300', '200') }}
+{{ EmbedLiveSample('Flexbox_Example_2', '300', '200') }}
