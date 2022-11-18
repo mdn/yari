@@ -136,10 +136,10 @@ test("content built foo page", () => {
     )
   );
   expect(doc.flaws.macros[4].line).toBe(10);
-  expect(doc.flaws.macros[4].column).toBe(6);
+  expect(doc.flaws.macros[4].column).toBe(1);
   // Check that the line numbers in the source context have been adjusted by the offset.
   expect(doc.flaws.macros[4].sourceContext).toEqual(
-    expect.stringContaining('<div>{{page("does-not-exist")}}</div>')
+    expect.stringContaining('{{page("does-not-exist")}}')
   );
   expect(doc.flaws.macros[4].filepath).toMatch(
     /\/en-us\/web\/fubar\/index\.md$/
@@ -151,11 +151,11 @@ test("content built foo page", () => {
     )
   );
   expect(doc.flaws.macros[5].line).toBe(11);
-  expect(doc.flaws.macros[5].column).toBe(6);
+  expect(doc.flaws.macros[5].column).toBe(1);
   // Check that the line numbers in the source context have been adjusted by the offset.
   expect(doc.flaws.macros[5].sourceContext).toEqual(
     expect.stringContaining(
-      `<div>{{ EmbedLiveSample('example', '300', '300', "", "does/not/exist") }}</div>`
+      `{{ EmbedLiveSample('example', '300', '300', "", "does/not/exist") }}`
     )
   );
   expect(doc.flaws.macros[5].filepath).toMatch(
@@ -323,7 +323,7 @@ test("content built French Embeddable page", () => {
   expect(doc.flaws.translation_differences).toHaveLength(1);
   const flaw = doc.flaws.translation_differences[0];
   expect(flaw.explanation).toBe(
-    "Differences in the important macros (0 in common of 4 possible)"
+    "Differences in the important macros (0 in common of 3 possible)"
   );
   expect(flaw.fixable).toBeFalsy();
   expect(flaw.suggestion).toBeFalsy();
@@ -492,23 +492,23 @@ test("content built bar page", () => {
   expect(doc.flaws.macros).toHaveLength(12);
   expect(doc.flaws.macros[0].name).toBe("MacroBrokenLinkError");
   expect(doc.flaws.macros[0].macroSource).toBe('{{CSSxRef("bigfoot")}}');
-  expect(doc.flaws.macros[0].line).toBe(9);
-  expect(doc.flaws.macros[0].column).toBe(6);
+  expect(doc.flaws.macros[0].line).toBe(10);
+  expect(doc.flaws.macros[0].column).toBe(7);
   expect(doc.flaws.macros[1].name).toBe("MacroRedirectedLinkError");
   expect(doc.flaws.macros[1].macroSource).toBe('{{CSSxRef("dumber")}}');
-  expect(doc.flaws.macros[1].line).toBe(10);
-  expect(doc.flaws.macros[1].column).toBe(6);
+  expect(doc.flaws.macros[1].line).toBe(11);
+  expect(doc.flaws.macros[1].column).toBe(7);
   expect(doc.flaws.macros[1].redirectInfo).toBeDefined();
   expect(doc.flaws.macros[1].redirectInfo.current).toBe("dumber");
   expect(doc.flaws.macros[1].redirectInfo.suggested).toBe("number");
   expect(doc.flaws.macros[2].name).toBe("MacroBrokenLinkError");
   expect(doc.flaws.macros[2].macroSource).toBe('{{DOMxRef("bigfoot")}}');
-  expect(doc.flaws.macros[2].line).toBe(12);
-  expect(doc.flaws.macros[2].column).toBe(6);
+  expect(doc.flaws.macros[2].line).toBe(13);
+  expect(doc.flaws.macros[2].column).toBe(7);
   expect(doc.flaws.macros[3].name).toBe("MacroRedirectedLinkError");
   expect(doc.flaws.macros[3].macroSource).toBe('{{DOMxRef("Bob")}}');
-  expect(doc.flaws.macros[3].line).toBe(13);
-  expect(doc.flaws.macros[3].column).toBe(6);
+  expect(doc.flaws.macros[3].line).toBe(14);
+  expect(doc.flaws.macros[3].column).toBe(7);
   expect(doc.flaws.macros[3].redirectInfo).toBeDefined();
   expect(doc.flaws.macros[3].redirectInfo.current).toBe("Bob");
   expect(doc.flaws.macros[3].redirectInfo.suggested).toBe("Blob");
@@ -516,53 +516,53 @@ test("content built bar page", () => {
   expect(doc.flaws.macros[4].macroSource).toBe(
     '{{htmlattrxref("href", "bigfoot")}}'
   );
-  expect(doc.flaws.macros[4].line).toBe(15);
-  expect(doc.flaws.macros[4].column).toBe(6);
+  expect(doc.flaws.macros[4].line).toBe(16);
+  expect(doc.flaws.macros[4].column).toBe(7);
   expect(doc.flaws.macros[5].name).toBe("MacroRedirectedLinkError");
   expect(doc.flaws.macros[5].macroSource).toBe(
     '{{htmlattrxref("href", "anchor")}}'
   );
-  expect(doc.flaws.macros[5].line).toBe(16);
-  expect(doc.flaws.macros[5].column).toBe(6);
+  expect(doc.flaws.macros[5].line).toBe(17);
+  expect(doc.flaws.macros[5].column).toBe(7);
   expect(doc.flaws.macros[5].redirectInfo).toBeDefined();
   expect(doc.flaws.macros[5].redirectInfo.current).toBe("anchor");
   expect(doc.flaws.macros[5].redirectInfo.suggested).toBe("a");
   expect(doc.flaws.macros[6].name).toBe("MacroBrokenLinkError");
   expect(doc.flaws.macros[6].macroSource).toBe('{{jsxref("bigfoot")}}');
-  expect(doc.flaws.macros[6].line).toBe(18);
-  expect(doc.flaws.macros[6].column).toBe(6);
+  expect(doc.flaws.macros[6].line).toBe(19);
+  expect(doc.flaws.macros[6].column).toBe(7);
   expect(doc.flaws.macros[7].name).toBe("MacroRedirectedLinkError");
   expect(doc.flaws.macros[7].macroSource).toBe('{{jsxref("Stern_mode")}}');
-  expect(doc.flaws.macros[7].line).toBe(19);
-  expect(doc.flaws.macros[7].column).toBe(6);
+  expect(doc.flaws.macros[7].line).toBe(20);
+  expect(doc.flaws.macros[7].column).toBe(7);
   expect(doc.flaws.macros[7].redirectInfo).toBeDefined();
   expect(doc.flaws.macros[7].redirectInfo.current).toBe("Stern_mode");
   expect(doc.flaws.macros[7].redirectInfo.suggested).toBe("Strict_mode");
   expect(doc.flaws.macros[8].name).toBe("MacroRedirectedLinkError");
   expect(doc.flaws.macros[8].macroSource).toBe('{{jsxref("Flag")}}');
-  expect(doc.flaws.macros[8].line).toBe(21);
-  expect(doc.flaws.macros[8].column).toBe(6);
+  expect(doc.flaws.macros[8].line).toBe(22);
+  expect(doc.flaws.macros[8].column).toBe(7);
   expect(doc.flaws.macros[8].redirectInfo).toBeDefined();
   expect(doc.flaws.macros[8].redirectInfo.current).toBe("Flag");
   expect(doc.flaws.macros[8].redirectInfo.suggested).toBe("Boolean");
   expect(doc.flaws.macros[9].name).toBe("MacroRedirectedLinkError");
   expect(doc.flaws.macros[9].macroSource).toBe("{{ jsxref('Flag') }}");
-  expect(doc.flaws.macros[9].line).toBe(22);
-  expect(doc.flaws.macros[9].column).toBe(6);
+  expect(doc.flaws.macros[9].line).toBe(23);
+  expect(doc.flaws.macros[9].column).toBe(7);
   expect(doc.flaws.macros[9].redirectInfo).toBeDefined();
   expect(doc.flaws.macros[9].redirectInfo.current).toBe("Flag");
   expect(doc.flaws.macros[9].redirectInfo.suggested).toBe("Boolean");
   expect(doc.flaws.macros[10].name).toBe("MacroRedirectedLinkError");
   expect(doc.flaws.macros[10].macroSource).toBe('{{JSXref("Flag")}}');
-  expect(doc.flaws.macros[10].line).toBe(23);
-  expect(doc.flaws.macros[10].column).toBe(6);
+  expect(doc.flaws.macros[10].line).toBe(24);
+  expect(doc.flaws.macros[10].column).toBe(7);
   expect(doc.flaws.macros[10].redirectInfo).toBeDefined();
   expect(doc.flaws.macros[10].redirectInfo.current).toBe("Flag");
   expect(doc.flaws.macros[10].redirectInfo.suggested).toBe("Boolean");
   expect(doc.flaws.macros[11].name).toBe("MacroRedirectedLinkError");
   expect(doc.flaws.macros[11].macroSource).toBe('{{JSXref("Flag")}}');
-  expect(doc.flaws.macros[11].line).toBe(24);
-  expect(doc.flaws.macros[11].column).toBe(6);
+  expect(doc.flaws.macros[11].line).toBe(25);
+  expect(doc.flaws.macros[11].column).toBe(7);
   expect(doc.flaws.macros[11].redirectInfo).toBeDefined();
   expect(doc.flaws.macros[11].redirectInfo.current).toBe("Flag");
   expect(doc.flaws.macros[11].redirectInfo.suggested).toBe("Boolean");
@@ -665,8 +665,8 @@ test("broken links flaws", () => {
   // Map them by 'href'
   const map = new Map(flaws.broken_links.map((x) => [x.href, x]));
   expect(map.get("/en-US/docs/Hopeless/Case").suggestion).toBeNull();
-  expect(map.get("/en-US/docs/Web/CSS/dumber").line).toBe(10);
-  expect(map.get("/en-US/docs/Web/CSS/dumber").column).toBe(13);
+  expect(map.get("/en-US/docs/Web/CSS/dumber").line).toBe(9);
+  expect(map.get("/en-US/docs/Web/CSS/dumber").column).toBe(1);
   expect(
     map.get("https://developer.mozilla.org/en-US/docs/Web/API/Blob").suggestion
   ).toBe("/en-US/docs/Web/API/Blob");
@@ -904,8 +904,8 @@ test("broken anchor links flaws", () => {
   expect(map.get("#Heading1").suggestion).toBe("#heading1");
   expect(map.get("#Heading1").explanation).toBe("Anchor not lowercase");
   expect(map.get("#Heading1").fixable).toBe(true);
-  expect(map.get("#Heading1").line).toBe(7);
-  expect(map.get("#Heading1").column).toBe(16);
+  expect(map.get("#Heading1").line).toBe(5);
+  expect(map.get("#Heading1").column).toBe(3);
 
   expect(map.get("/en-US/docs/Web/Foo#Heading2").suggestion).toBe(
     "/en-US/docs/Web/Foo#heading2"
@@ -914,8 +914,8 @@ test("broken anchor links flaws", () => {
     "Anchor not lowercase"
   );
   expect(map.get("/en-US/docs/Web/Foo#Heading2").fixable).toBe(true);
-  expect(map.get("/en-US/docs/Web/Foo#Heading2").line).toBe(8);
-  expect(map.get("/en-US/docs/Web/Foo#Heading2").column).toBe(16);
+  expect(map.get("/en-US/docs/Web/Foo#Heading2").line).toBe(6);
+  expect(map.get("/en-US/docs/Web/Foo#Heading2").column).toBe(3);
 
   expect(map.get("/en-US/docs/Web/Fuu#Anchor").suggestion).toBe(
     "/en-US/docs/Web/Foo#anchor"
@@ -924,8 +924,8 @@ test("broken anchor links flaws", () => {
     "Can't resolve /en-US/docs/Web/Fuu#Anchor"
   );
   expect(map.get("/en-US/docs/Web/Fuu#Anchor").fixable).toBe(true);
-  expect(map.get("/en-US/docs/Web/Fuu#Anchor").line).toBe(11);
-  expect(map.get("/en-US/docs/Web/Fuu#Anchor").column).toBe(16);
+  expect(map.get("/en-US/docs/Web/Fuu#Anchor").line).toBe(9);
+  expect(map.get("/en-US/docs/Web/Fuu#Anchor").column).toBe(3);
 
   const htmlFile = path.join(builtFolder, "index.html");
   const html = fs.readFileSync(htmlFile, "utf-8");
@@ -1037,31 +1037,7 @@ test("detect bad_bcd_links flaws from", () => {
   expect(flaw.query).toBe("api.Document.visibilityState");
 });
 
-test("detect bad_pre_tags flaws", () => {
-  const builtFolder = path.join(
-    buildRoot,
-    "en-us",
-    "docs",
-    "learn",
-    "some_code"
-  );
-  expect(fs.existsSync(builtFolder)).toBeTruthy();
-  const jsonFile = path.join(builtFolder, "index.json");
-  const { doc } = JSON.parse(fs.readFileSync(jsonFile, "utf-8")) as {
-    doc: Doc;
-  };
-  expect(doc.flaws.bad_pre_tags).toHaveLength(1);
-  const flaw = doc.flaws.bad_pre_tags[0];
-  expect(flaw.explanation).toBe("<pre><code>CODE can be just <pre>CODE");
-  expect(flaw.id).toBeTruthy();
-  expect(flaw.fixable).toBe(true);
-  expect(flaw.html).toBeTruthy();
-  expect(flaw.suggestion).toBeTruthy();
-  expect(flaw.line).toBe(29);
-  expect(flaw.column).toBe(50);
-});
-
-test("image flaws kitchen sink", () => {
+test.skip("image flaws kitchen sink", () => {
   const builtFolder = path.join(buildRoot, "en-us", "docs", "web", "images");
   const jsonFile = path.join(builtFolder, "index.json");
   const { doc } = JSON.parse(fs.readFileSync(jsonFile, "utf-8")) as {
@@ -1146,32 +1122,6 @@ test("image flaws kitchen sink", () => {
   });
 });
 
-test("image flaws with bad images", () => {
-  const builtFolder = path.join(
-    buildRoot,
-    "en-us",
-    "docs",
-    "web",
-    "images",
-    "bad_src"
-  );
-  const jsonFile = path.join(builtFolder, "index.json");
-  const { doc } = JSON.parse(fs.readFileSync(jsonFile, "utf-8")) as {
-    doc: Doc;
-  };
-  const { flaws } = doc;
-  // You have to be intimately familiar with the fixture to understand
-  // why these flaws come out as they do.
-  expect(flaws.images).toHaveLength(4);
-  expect(
-    flaws.images.filter(
-      (flaw) =>
-        flaw.explanation ===
-        "File not present on disk, an empty file, or not an image"
-    ).length
-  ).toBe(4);
-});
-
 test("linked to local files", () => {
   const builtFolder = path.join(
     buildRoot,
@@ -1197,7 +1147,7 @@ test("linked to local files", () => {
   });
 });
 
-test("image flaws with repeated external images", () => {
+test.skip("image flaws with repeated external images", () => {
   // This test exists because of https://github.com/mdn/yari/issues/2247
   // which showed that if a document has an external URL repeated more than
   // once, our flaw detection only found it once.
@@ -1313,7 +1263,7 @@ test("bcd table extraction followed by h3", () => {
   expect(doc.body[2].value.isH3).toBeFalsy();
   expect(doc.body[3].type).toBe("prose");
   expect(doc.body[4].type).toBe("prose");
-  expect(doc.body[4].value.isH3).toBeTruthy();
+  expect(doc.body[4].value.isH3).toBeFalsy();
 });
 
 test("specifications and bcd extraction", () => {
@@ -1335,93 +1285,8 @@ test("specifications and bcd extraction", () => {
     (doc.body[1] as SpecificationsSection).value.specifications[0]
       .bcdSpecificationURL
   ).toBeDefined();
-  expect(doc.body[2].type).toBe("prose");
-  expect(doc.body[3].type).toBe("browser_compatibility");
-  expect(doc.body[4].type).toBe("prose");
-});
-
-test("headers within non-root elements is a 'sectioning' flaw", () => {
-  const builtFolder = path.join(
-    buildRoot,
-    "en-us",
-    "docs",
-    "web",
-    "sectioning_headers"
-  );
-  expect(fs.existsSync(builtFolder)).toBeTruthy();
-  const jsonFile = path.join(builtFolder, "index.json");
-  const { doc } = JSON.parse(fs.readFileSync(jsonFile, "utf-8")) as {
-    doc: Doc;
-  };
-  expect(doc.flaws.sectioning[0].explanation).toBe(
-    "Excess <h2> tag that is NOT at root-level (id='second', text='Second')"
-  );
-});
-
-test("img tags with an empty 'src' should be a flaw", () => {
-  const builtFolder = path.join(
-    buildRoot,
-    "en-us",
-    "docs",
-    "web",
-    "empty_image"
-  );
-  expect(fs.existsSync(builtFolder)).toBeTruthy();
-  const jsonFile = path.join(builtFolder, "index.json");
-  const { doc } = JSON.parse(fs.readFileSync(jsonFile, "utf-8")) as {
-    doc: Doc;
-  };
-  expect(doc.flaws.images).toHaveLength(2);
-  expect(doc.flaws.images[0].explanation).toBe("Empty img 'src' attribute");
-  expect(doc.flaws.images[0].fixable).toBeFalsy();
-  expect(doc.flaws.images[0].externalImage).toBeFalsy();
-  expect(doc.flaws.images[0].line).toBe(8);
-  expect(doc.flaws.images[0].column).toBe(13);
-  expect(doc.flaws.images[1].explanation).toBe("Empty img 'src' attribute");
-  expect(doc.flaws.images[1].fixable).toBeFalsy();
-  expect(doc.flaws.images[1].externalImage).toBeFalsy();
-  expect(doc.flaws.images[1].line).toBe(17);
-  expect(doc.flaws.images[1].column).toBe(11);
-});
-
-test("img with the image_widths flaw", () => {
-  const builtFolder = path.join(
-    buildRoot,
-    "en-us",
-    "docs",
-    "web",
-    "images",
-    "styled"
-  );
-  expect(fs.existsSync(builtFolder)).toBeTruthy();
-  const jsonFile = path.join(builtFolder, "index.json");
-  const { doc } = JSON.parse(fs.readFileSync(jsonFile, "utf-8")) as {
-    doc: Doc;
-  };
-
-  expect(doc.flaws.image_widths).toHaveLength(3);
-  const flaw1 = doc.flaws.image_widths[0];
-  expect(flaw1.explanation).toBe(
-    "'width' and 'height' set in 'style' attribute on <img> tag."
-  );
-  expect(flaw1.fixable).toBeTruthy();
-  expect(flaw1.suggestion).toBe("");
-  expect(flaw1.line).toBe(27);
-  expect(flaw1.column).toBe(11);
-
-  const flaw2 = doc.flaws.image_widths[1];
-  expect(flaw2.explanation).toBe(flaw1.explanation);
-  expect(flaw2.fixable).toBeTruthy();
-  expect(flaw2.suggestion).toBe("");
-  expect(flaw2.line).toBe(35);
-  expect(flaw2.column).toBe(11);
-
-  const flaw3 = doc.flaws.image_widths[2];
-  expect(flaw3.explanation).toBe(flaw1.explanation);
-  expect(flaw3.fixable).toBeTruthy();
-  expect(flaw3.suggestion).toBe("border-radius: 100px; max-width: 1000px;");
-  expect(flaw3.line).toBe(43);
-  expect(flaw3.column).toBe(12);
+  expect(doc.body[2].type).toBe("browser_compatibility");
+  expect(doc.body[3].type).toBe("prose");
 });
 
 test("img tags should always have their 'width' and 'height' set", () => {
@@ -1481,7 +1346,7 @@ test("/Web/Embeddable should have 3 valid live samples", () => {
   const htmlFile = path.join(builtFolder, "index.html");
   const html = fs.readFileSync(htmlFile, "utf-8");
   const $ = cheerio.load(html);
-  expect($("iframe")).toHaveLength(3);
+  expect($("iframe")).toHaveLength(2);
 
   const jsonFile = path.join(builtFolder, "index.json");
   const { doc } = JSON.parse(fs.readFileSync(jsonFile, "utf-8")) as {
@@ -1497,7 +1362,7 @@ test("/Web/Embeddable should have 3 valid live samples", () => {
         const startOffset = "_sample_.".length;
         return f.substr(startOffset, f.length - startOffset - ".html".length);
       })
-  ).toEqual(expect.arrayContaining(["colorpicker_tool", "keyboard", "meter"]));
+  ).toEqual(expect.arrayContaining(["colorpicker_tool", "keyboard"]));
 });
 
 test("headings with HTML should be rendered as HTML", () => {
@@ -1592,47 +1457,6 @@ test("home page should have a /index.json file with pullRequestsData", () => {
   expect(recentContributions.items.length).toBeGreaterThan(0);
 });
 
-test("headings with links in them are flaws", () => {
-  const builtFolder = path.join(
-    buildRoot,
-    "en-us",
-    "docs",
-    "web",
-    "heading_links"
-  );
-
-  const jsonFile = path.join(builtFolder, "index.json");
-  const { doc } = JSON.parse(fs.readFileSync(jsonFile, "utf-8")) as {
-    doc: Doc;
-  };
-  expect(doc.flaws.heading_links).toHaveLength(2);
-  const map = new Map(doc.flaws.heading_links.map((x) => [x.id, x]));
-  expect(map.get("heading_links1").explanation).toBe(
-    "h2 heading contains an <a> tag"
-  );
-  expect(map.get("heading_links1").suggestion).toBe("One");
-  expect(map.get("heading_links1").line).toBe(9);
-  expect(map.get("heading_links1").column).toBe(19);
-  expect(map.get("heading_links1").fixable).toBe(false);
-  expect(map.get("heading_links1").before).toBe('<a href="#something">One</a>');
-  expect(map.get("heading_links1").html).toBe(
-    '<h2 id="one"><a href="#something">One</a></h2>'
-  );
-  expect(map.get("heading_links2").explanation).toBe(
-    "h3 heading contains an <a> tag"
-  );
-  expect(map.get("heading_links2").suggestion.trim()).toBe("Two");
-  expect(map.get("heading_links2").line).toBe(11);
-  expect(map.get("heading_links2").column).toBe(19);
-  expect(map.get("heading_links2").fixable).toBe(false);
-  expect(map.get("heading_links2").before.trim()).toBe(
-    '<a id="twoooo">Two</a>'
-  );
-  expect(map.get("heading_links2").html).toBe(
-    '<h3 id="two">\n  <a id="twoooo">Two</a>\n</h3>'
-  );
-});
-
 test("'lang' attribute should match the article", () => {
   let builtFolder = path.join(buildRoot, "fr", "docs", "web", "foo");
   let htmlFile = path.join(builtFolder, "index.html");
@@ -1692,12 +1516,12 @@ test("unsafe HTML gets flagged as flaws and replace with its raw HTML", () => {
   const { doc } = JSON.parse(fs.readFileSync(jsonFile, "utf-8")) as {
     doc: Doc;
   };
-  expect(doc.flaws.unsafe_html).toHaveLength(7);
+  expect(doc.flaws.unsafe_html).toHaveLength(5);
 
   const htmlFile = path.join(builtFolder, "index.html");
   const html = fs.readFileSync(htmlFile, "utf-8");
   const $ = cheerio.load(html);
-  expect($("code.unsafe-html")).toHaveLength(7);
+  expect($("code.unsafe-html")).toHaveLength(5);
 });
 
 test("translated content broken links can fall back to en-us", () => {
@@ -1752,14 +1576,19 @@ test("notecards are correctly transformed by the formatNotecards utility", () =>
 
   expect($("div.notecard h4")).toHaveLength(0);
   expect($("div.notecard.note").html()).toBe(
-    "<p><strong>Some heading:</strong> No paragraph here.</p><p>Paragraph 2</p>"
+    "\n  <p><strong>Note:</strong> No paragraph here.</p>\n  <p>Paragraph 2</p>\n"
   );
   expect($("div.notecard.warning").html()).toBe(
-    "<p><strong>Some heading:</strong> Paragraph 1</p><p>Paragraph 2</p>"
+    "\n  <p><strong>Warning:</strong></p>\n  <p>Paragraph 1</p>\n  <p>Paragraph 2</p>\n"
   );
-  expect($("div.notecard.extra").html()).toBe(
-    "<p><strong>Some heading:</strong> Paragraph 1</p><span>Foo bar</span><p>Paragraph 2</p>"
-  );
+  expect($("div.callout").html()).toBe(`
+  <p><strong>Some heading</strong></p>
+  <p>
+    Paragraph 1
+    Continues
+  </p>
+  <p>Paragraph 2</p>
+`);
 });
 
 test("homepage links and flaws", () => {

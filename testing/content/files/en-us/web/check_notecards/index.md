@@ -4,8 +4,25 @@ slug: Web/Check_notecards
 ---
 This page exists to test the formatNotecards utility for transforming notecards from h4 to strong
 
-> **Note:** #### Some headingNo paragraph here.Paragraph 2
+## Note
 
-<div class="notecard warning"><h4>Some heading</h4><p>Paragraph 1</p><p>Paragraph 2</p></div>
+> **Note:** No paragraph here.
+>
+> Paragraph 2
 
-<div class="notecard extra"><h4>Some heading</h4><p>Paragraph 1</p><span>Foo bar</span><p>Paragraph 2</p></div>
+## Warning
+
+> **Warning:**
+>
+> Paragraph 1
+>
+> Paragraph 2
+
+## Callout
+
+> **Callout:** **Some heading**
+>
+> Paragraph 1
+> Continues
+>
+> Paragraph 2

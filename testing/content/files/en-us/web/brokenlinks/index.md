@@ -10,11 +10,11 @@ slug: Web/BrokenLinks
 
 `/en-US/docs/Web/CSS/dumber`
 
-[Too verbose!](/en-US/docs/Web/API/Blob)
+[Too verbose!](https://developer.mozilla.org/en-US/docs/Web/API/Blob)
 
-[Also, too verbose but with anchor](/en-US/docs/Web/API/Blob#Anchor)
+[Also, too verbose but with anchor](https://developer.mozilla.org/en-US/docs/Web/API/Blob#Anchor)
 
-[Also, too verbose but with query string](/en-US/docs/Web/API/Blob?a=b)
+[Also, too verbose but with query string](https://developer.mozilla.org/en-US/docs/Web/API/Blob?a=b)
 
 [This should have a suggestion and the suggestion should
 keep the `#fragment` on the suggested href.](/en-US/docs/Web/HTML/Element/anchor#fragment)

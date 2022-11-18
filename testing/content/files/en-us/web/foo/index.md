@@ -13,7 +13,11 @@ This becomes the summary.
 
 Let's include some other pages:
 
-{{page("web/fubar")}}{{page("web/fixable_flaws")}}![Screenshot of colors](screenshot.png)
+{{page("web/fubar")}}
+
+{{page("web/fixable_flaws")}}
+
+![Screenshot of colors](screenshot.png)
 
 <figcaption>A perfectly normal image</figcaption>
 

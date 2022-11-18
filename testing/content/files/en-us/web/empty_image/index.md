@@ -3,7 +3,7 @@ title: Empty <img> tag
 slug: Web/Empty_image
 ---
 Check out this image:
-![]()
+![Test]()
 Pretty nihilistic, eh?
 
 This one is based on make sure we've solved:
