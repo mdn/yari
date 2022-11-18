@@ -1,8 +1,7 @@
-/* Adding the following based on https://developer.mozilla.org/en-US/docs/Web/MathML/Fonts */
 @font-face {
   font-family: "STIXRegular";
-  src: url("./font/STIXTwoMath-Regular.otf") format("opentype");
   font-weight: normal;
+  src: url("./font/STIXTwoMath-Regular.woff2") format("woff2");
 }
 
 math {
