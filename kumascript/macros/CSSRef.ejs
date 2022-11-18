@@ -892,37 +892,30 @@ function buildPropertylist(pages, title) {
   //
   // For example, it has a key "border" whose value is an array of all
   // the CSS properties that start with "border".
-  const propertyGroups = {};
+  const groups = {};
 
-  for (const property of properties) {
+  for (const page of pages) {
     // The regex is: match at "-" but not at the start of the string,
     // because of properties like -webkit-line-clamp, where we want the
     // "first part" to be "-webkit"
-    const pieces = property.title.split(/(?<!^)-/);
-    if (Object.keys(propertyGroups).includes(pieces[0])) {
-      propertyGroups[pieces[0]].push(property.title);
-    } else {
-      propertyGroups[pieces[0]] = [property.title];
+    const prefix = page.title.split(/(?<!^)-/).pop();
+    propertyGroups[prefix] ??= [];
+    propertyGroups[prefix].push(page);
     }
   }
 
-  for (const propertyGroupName of Object.keys(propertyGroups)) {
-    const group = propertyGroups[propertyGroupName];
+  for (const [prefix, group] of Object.entries(groups)) {
     if (group.length < 3) {
       // if a group contains fewer than 3 entries (that is, there are fewer than 3
       // properties with the given prefix) then just write them out as a list
       // of links
-      for (const propertyName of group) {
-        result += makePageLink(pages.find(item => item.title === propertyName));
+      for (const page of group) {
+        result += makePageLink(page);
       }
     } else {
       // otherwise, make a collapsible section for this group, and write
       // the page links out inside it.
-      result += `<li class="toggle"><details><summary>${propertyGroupName}-*</summary><ol>`;
-      for (const propertyName of group) {
-        result += makePageLink(pages.find(item => item.title === propertyName));
-      }
-      result += "</ol></details></li>";
+      result += buildSubList(group, prefix);
     }
   }
 
