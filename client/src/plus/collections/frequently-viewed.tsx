@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { Doc } from "../../../../libs/types/document";
+import { useUserData } from "../../user-context";
 import { FrequentlyViewedItem, ItemParent } from "./api";
 
 export interface FrequentlyViewedCollection {
@@ -198,8 +199,10 @@ function migrateOld() {
  *
  */
 export function useIncrementFrequentlyViewed(doc: Doc | undefined) {
+  const user = useUserData();
+
   useEffect(() => {
-    if (!doc) {
+    if (!doc || !user?.isAuthenticated) {
       return;
     }
 
@@ -230,7 +233,7 @@ export function useIncrementFrequentlyViewed(doc: Doc | undefined) {
     //Sort descending so most frequently viewed appears on top.
     frequentlyViewed = frequentlyViewed.sort(sortByVisitsThenTimestampsDesc);
     setFrequentlyViewed(frequentlyViewed);
-  });
+  }, [user]);
 }
 
 const filterFrequentlyViewed = (frequentlyViewed) => {
