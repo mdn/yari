@@ -87,7 +87,7 @@ test("content built foo page", () => {
   expect(doc.flaws.macros[0].redirectInfo.current).toBe("dumber");
   expect(doc.flaws.macros[0].redirectInfo.suggested).toBe("number");
   expect(doc.flaws.macros[0].filepath).toMatch(
-    /\/en-us\/web\/fixable_flaws\/index\.html$/
+    /\/en-us\/web\/fixable_flaws\/index\.md$/
   );
   expect(doc.flaws.macros[1].name).toBe("MacroRedirectedLinkError");
   expect(doc.flaws.macros[1].macroSource).toBe(
@@ -102,7 +102,7 @@ test("content built foo page", () => {
   expect(doc.flaws.macros[1].redirectInfo.current).toBe("anchor");
   expect(doc.flaws.macros[1].redirectInfo.suggested).toBe("a");
   expect(doc.flaws.macros[1].filepath).toMatch(
-    /\/en-us\/web\/fixable_flaws\/index\.html$/
+    /\/en-us\/web\/fixable_flaws\/index\.md$/
   );
   expect(doc.flaws.macros[2].name).toBe("MacroBrokenLinkError");
   expect(doc.flaws.macros[2].macroSource).toBe(
@@ -114,7 +114,7 @@ test("content built foo page", () => {
     expect.stringContaining('<li>{{CSSxRef("will-never-be-fixable")}}</li>')
   );
   expect(doc.flaws.macros[2].filepath).toMatch(
-    /\/en-us\/web\/fixable_flaws\/index\.html$/
+    /\/en-us\/web\/fixable_flaws\/index\.md$/
   );
   expect(doc.flaws.macros[3].name).toBe("MacroRedirectedLinkError");
   expect(doc.flaws.macros[3].macroSource).toBe("{{CSSxRef('dumber')}}");
@@ -127,7 +127,7 @@ test("content built foo page", () => {
   expect(doc.flaws.macros[3].redirectInfo.current).toBe("dumber");
   expect(doc.flaws.macros[3].redirectInfo.suggested).toBe("number");
   expect(doc.flaws.macros[3].filepath).toMatch(
-    /\/en-us\/web\/fixable_flaws\/index\.html$/
+    /\/en-us\/web\/fixable_flaws\/index\.md$/
   );
   expect(doc.flaws.macros[4].name).toBe("MacroExecutionError");
   expect(doc.flaws.macros[4].errorStack).toEqual(
@@ -142,7 +142,7 @@ test("content built foo page", () => {
     expect.stringContaining('<div>{{page("does-not-exist")}}</div>')
   );
   expect(doc.flaws.macros[4].filepath).toMatch(
-    /\/en-us\/web\/fubar\/index\.html$/
+    /\/en-us\/web\/fubar\/index\.md$/
   );
   expect(doc.flaws.macros[5].name).toBe("MacroExecutionError");
   expect(doc.flaws.macros[5].errorStack).toEqual(
@@ -159,7 +159,7 @@ test("content built foo page", () => {
     )
   );
   expect(doc.flaws.macros[5].filepath).toMatch(
-    /\/en-us\/web\/fubar\/index\.html$/
+    /\/en-us\/web\/fubar\/index\.md$/
   );
 
   const htmlFile = path.join(builtFolder, "index.html");
