@@ -997,13 +997,13 @@ if (Mozilla && !Mozilla.dntEnabled()) {
             selective_mode: [cmdLC, macros],
           });
         } catch (error) {
-          if (MacroInvocationError.is(error)) {
+          if (error instanceof MacroInvocationError) {
             error.updateFileInfo(document.fileInfo);
             throw new Error(
               `error trying to parse ${error.filepath}, line ${error.line} column ${error.column} (${error.error.message})`
             );
           }
-          // Any other unexpected error re-thrown.
+
           throw error;
         }
       }

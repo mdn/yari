@@ -115,8 +115,8 @@ describe("render() function", () => {
         templates: null,
       });
     } catch (error) {
+      expect(error).toBeInstanceOf(MacroInvocationError);
       const e = error as MacroInvocationError;
-      expect(e).toBeInstanceOf(MacroInvocationError);
       expect(e.name).toBe("MacroInvocationError");
       expect(e).toHaveProperty("line");
       expect(e).toHaveProperty("column");

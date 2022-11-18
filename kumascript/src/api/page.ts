@@ -55,9 +55,10 @@ const page = {
   subpagesExpand(this: KumaThis, path, depth, self) {
     try {
       return this.info.getChildren(path || this.env.url, self);
-    } catch (e) {
-      const error = e as Error;
-      this.env.recordNonFatalError("bad-pages", error.message);
+    } catch (error) {
+      if (error instanceof Error) {
+        this.env.recordNonFatalError("bad-pages", error.message);
+      }
       // We allow ourselves to be forgiving with this function because
       // we justify it by the fact that at least we record a flaw!
       return [];

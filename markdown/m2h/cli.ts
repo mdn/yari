@@ -16,9 +16,8 @@ function tryOrExit(f: ({ options, ...args }) => Promise<void>) {
   return async ({ options = {}, ...args }: { options: CliOptions }) => {
     try {
       await f({ options, ...args });
-    } catch (e) {
-      const error = e as Error;
-      if (options.verbose || options.v) {
+    } catch (error) {
+      if (error instanceof Error && (options.verbose || options.v)) {
         console.error(chalk.red(error.stack));
       }
       throw error;

@@ -4,6 +4,7 @@ import path from "path";
 
 import chalk from "chalk";
 import {
+  MacroInvocationError,
   MacroLiveSampleError,
   MacroRedirectedLinkError,
   SourceCodeError,
@@ -333,9 +334,11 @@ export async function buildDocument(
 
   try {
     [$, flaws] = await kumascript.render(document.url);
-  } catch (e) {
-    const error = e as SourceCodeError;
-    if (error.name === "MacroInvocationError") {
+  } catch (error) {
+    if (
+      error instanceof MacroInvocationError &&
+      error.name === "MacroInvocationError"
+    ) {
       // The source HTML couldn't even be parsed! There's no point allowing
       // anything else move on.
       // But considering that this might just be one of many documents you're
