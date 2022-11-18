@@ -13,11 +13,8 @@ import { CONTENT_ROOT, REPOSITORY_URLS } from "../libs/env";
 import * as kumascript from "../kumascript";
 
 import { FLAW_LEVELS } from "../libs/constants";
-import {
-  extractSections,
-  extractSidebar,
-  extractSummary,
-} from "./document-extractor";
+import { extractSections, extractSidebar } from "./document-extractor";
+import { extractSummary } from "./extract-summary";
 export { default as SearchIndex } from "./search-index";
 import { addBreadcrumbData } from "./document-utils";
 import { fixFixableFlaws, injectFlaws, injectSectionFlaws } from "./flaws";
