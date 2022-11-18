@@ -5,6 +5,7 @@ import {
   BCDSection,
   ProseSection,
   Section,
+  Specification,
   SpecificationsSection,
 } from "../libs/types";
 import specs from "browser-specs";
@@ -362,21 +363,20 @@ function _addSingleSpecialSection(
     }
     return _buildSpecialBCDSection();
   } else if (specialSectionType === "specifications") {
-    if (query === undefined && specURLsString === "") {
-      return [
-        {
-          type: specialSectionType,
-          value: {
-            title,
-            id,
-            isH3,
-            query,
-            specifications: [],
-          },
+    const specifications = extractSpecifications(query, specURLsString);
+
+    return [
+      {
+        type: "specifications",
+        value: {
+          title,
+          id,
+          isH3,
+          specifications,
+          query,
         },
-      ];
-    }
-    return _buildSpecialSpecSection(query, specURLsString);
+      },
+    ];
   }
 
   throw new Error(`Unrecognized special section type '${specialSectionType}'`);
@@ -547,10 +547,14 @@ function _addSingleSpecialSection(
     return blocks;
   }
 
-  function _buildSpecialSpecSection(
+  function extractSpecifications(
     query: string | undefined,
     specURLsString: string
-  ): [SpecificationsSection] {
+  ): Specification[] {
+    if (query === undefined && specURLsString === "") {
+      return [];
+    }
+
     // Collect spec URLs from a BCD feature, a 'spec-urls' value, or both;
     // For a BCD feature, it can either be a string or an array of strings.
     let specURLs: string[] = [];
@@ -661,18 +665,7 @@ function _addSingleSpecialSection(
       })
       .filter(Boolean);
 
-    return [
-      {
-        type: "specifications",
-        value: {
-          title,
-          id,
-          isH3,
-          specifications,
-          query,
-        },
-      },
-    ];
+    return specifications;
   }
 }
 
