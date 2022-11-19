@@ -30,8 +30,6 @@ const { default: ForkTsCheckerWebpackPlugin } = await import(
     : "react-dev-utils/ForkTsCheckerWebpackPlugin.js"
 );
 
-const dirname = fileURLToPath(new URL(".", import.meta.url));
-
 // Source maps are resource heavy and can cause out of memory issue for large source files.
 const shouldUseSourceMap = process.env.GENERATE_SOURCEMAP !== "false";
 
@@ -744,7 +742,7 @@ function config(webpackEnv) {
           ),
           // ESLint class options
           cwd: paths.appPath,
-          resolvePluginsRelativeTo: dirname,
+          resolvePluginsRelativeTo: new URL(".", import.meta.url),
           baseConfig: {
             extends: [resolve.sync("eslint-config-react-app/base")],
             rules: {

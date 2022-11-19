@@ -1,36 +1,33 @@
 import { JSDOM } from "jsdom";
-import fs from "fs";
-import path from "path";
-import { fileURLToPath } from "url";
+import fs from "node:fs";
 
-import { beforeEachMacro, describeMacro, itMacro, lintHTML } from "./utils";
+import { beforeEachMacro, describeMacro, itMacro, lintHTML } from "./utils.js";
 
 const jest = import.meta.jest;
-const dirname = fileURLToPath(new URL(".", import.meta.url));
 
 /**
  * Load all the fixtures.
  */
 
-const pagesFixturePath = path.resolve(
-  dirname,
-  "fixtures/defaultapisidebar/pages.json"
+const pagesFixturePath = new URL(
+  "./fixtures/defaultapisidebar/pages.json",
+  import.meta.url
 );
 const pagesJSON = JSON.parse(fs.readFileSync(pagesFixturePath, "utf-8"));
 const subpagesJSON = [
   pagesJSON["/en-US/docs/Web/API/TestInterface_API/MyGuidePage1"],
   pagesJSON["/en-US/docs/Web/API/TestInterface_API/MyGuidePage2"],
 ];
-const commonl10nFixturePath = path.resolve(
-  dirname,
-  "fixtures/defaultapisidebar/commonl10n.json"
+const commonl10nFixturePath = new URL(
+  "./fixtures/defaultapisidebar/commonl10n.json",
+  import.meta.url
 );
 const commonl10nFixture = JSON.parse(
   fs.readFileSync(commonl10nFixturePath, "utf-8")
 );
-const groupDataFixturePath = path.resolve(
-  dirname,
-  "fixtures/defaultapisidebar/groupdata.json"
+const groupDataFixturePath = new URL(
+  "./fixtures/defaultapisidebar/groupdata.json",
+  import.meta.url
 );
 const groupDataFixture = JSON.parse(
   fs.readFileSync(groupDataFixturePath, "utf-8")

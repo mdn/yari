@@ -41,8 +41,6 @@ import { MacroRedirectedLinkError } from "../kumascript/src/errors.js";
 const { program } = caporal;
 const { prompt } = inquirer;
 
-const dirname = fileURLToPath(new URL(".", import.meta.url));
-
 const PORT = parseInt(process.env.SERVER_PORT || "5042");
 
 // The Google Analytics pageviews CSV file parsed, sorted (most pageviews
@@ -815,7 +813,7 @@ program
     "Convert an AWS Athena log aggregation CSV into a popularities.json file"
   )
   .option("--outfile <path>", "output file", {
-    default: path.resolve(path.join(dirname, "..", "popularities.json")),
+    default: fileURLToPath(new URL("../popularities.json", import.meta.url)),
   })
   .option("--max-uris <number>", "limit to top <number> entries", {
     default: MAX_GOOGLE_ANALYTICS_URIS,
@@ -892,7 +890,7 @@ program
         if (account) {
           const dntHelperCode = fs
             .readFileSync(
-              path.join(dirname, "mozilla.dnthelper.min.js"),
+              new URL("mozilla.dnthelper.min.js", import.meta.url),
               "utf-8"
             )
             .trim();

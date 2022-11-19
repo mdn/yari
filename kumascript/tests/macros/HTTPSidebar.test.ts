@@ -1,5 +1,4 @@
-import fs from "fs";
-import path from "path";
+import fs from "node:fs";
 import jsdom from "jsdom";
 import { Document } from "../../../content";
 import {
@@ -10,15 +9,12 @@ import {
   lintHTML,
 } from "./utils";
 
-import { fileURLToPath } from "url";
-
 const jest = import.meta.jest;
-const dirname = fileURLToPath(new URL(".", import.meta.url));
 
 // Load fixture data.
 const fixtureData = JSON.parse(
   fs.readFileSync(
-    path.resolve(dirname, "fixtures", "documentData2.json"),
+    new URL("./fixtures/documentData2.json", import.meta.url),
     "utf-8"
   )
 ) as any;

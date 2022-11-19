@@ -1,20 +1,16 @@
-import fs from "fs";
-import path from "path";
-import { fileURLToPath } from "url";
+import fs from "node:fs";
 
 import { JSDOM } from "jsdom";
 
-import { beforeEachMacro, describeMacro, itMacro, lintHTML } from "./utils";
-
-const dirname = fileURLToPath(new URL(".", import.meta.url));
+import { beforeEachMacro, describeMacro, itMacro, lintHTML } from "./utils.js";
 
 /**
  * Load all the fixtures.
  */
 
-const groupDataFixturePath = path.resolve(
-  dirname,
-  "fixtures/listgroups/groupdata.json"
+const groupDataFixturePath = new URL(
+  "./fixtures/listgroups/groupdata.json",
+  import.meta.url
 );
 const groupDataFixture = JSON.parse(
   fs.readFileSync(groupDataFixturePath, "utf-8")

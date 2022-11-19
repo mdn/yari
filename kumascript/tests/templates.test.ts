@@ -5,7 +5,6 @@ import EJS from "ejs";
 import Templates from "../src/templates.js";
 
 const jest = import.meta.jest;
-const dirname = fileURLToPath(new URL(".", import.meta.url));
 
 describe("Templates class", () => {
   it("has the expected methods", () => {
@@ -15,7 +14,9 @@ describe("Templates class", () => {
   });
 
   function dir(name) {
-    return path.resolve(dirname, "fixtures", "templates", name);
+    return fileURLToPath(
+      new URL(`./fixtures/templates/${name}`, import.meta.url)
+    );
   }
 
   it("throws on non-existent dir", () => {
@@ -90,7 +91,7 @@ describe("Templates class", () => {
        *
        * ```none
        * C:
-       * odejs...kumascript	ests␌ixtures	emplates	est.ejs
+       * odejs...kumascript  ests␌ixtures  emplates  est.ejs
        * ```
        */
       const mockLoader = jest.fn(

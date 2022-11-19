@@ -1,24 +1,23 @@
 import fs from "node:fs";
-import path from "node:path";
-import { fileURLToPath } from "node:url";
 
 import { DEFAULT_LOCALE } from "../../../libs/constants/index.js";
 import { code } from "./code.js";
 import { asDefinitionList, isDefinitionList } from "./dl.js";
 import { one, all, wrap } from "./mdast-util-to-hast-utils.js";
 
-const dirname = fileURLToPath(new URL(".", import.meta.url));
-
 /* A utilitary function which parses a JSON gettext file
   to return a Map with each localized string and its matching ID  */
 function getL10nCardMap(locale = DEFAULT_LOCALE) {
   // Test if target localization file exists, if
   // not, fallback on English
-  let localeFilePath = path.join(dirname, `../../localizations/${locale}.json`);
+  let localeFilePath = new URL(
+    `../../localizations/${locale}.json`,
+    import.meta.url
+  );
   if (!fs.existsSync(localeFilePath)) {
-    localeFilePath = path.join(
-      dirname,
-      `../../localizations/${DEFAULT_LOCALE}.json`
+    localeFilePath = new URL(
+      `../../localizations/${DEFAULT_LOCALE}.json`,
+      import.meta.url
     );
   }
   const listMsgObj = JSON.parse(fs.readFileSync(localeFilePath, "utf8"))[

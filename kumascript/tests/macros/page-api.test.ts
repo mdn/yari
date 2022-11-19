@@ -2,20 +2,17 @@
 // tested its main functions. The features of that macro are now
 // part of ../../src/environment.js, but we're still testing them here.
 
-import fs from "fs";
-import path from "path";
-import { fileURLToPath } from "url";
+import fs from "node:fs";
 
 import { Document } from "../../../content";
-import { assert, itMacro, describeMacro, beforeEachMacro } from "./utils";
+import { assert, itMacro, describeMacro, beforeEachMacro } from "./utils.js";
 
 const jest = import.meta.jest;
-const dirname = fileURLToPath(new URL(".", import.meta.url));
 
 // Load fixture data.
 const fixtureData = JSON.parse(
   fs.readFileSync(
-    path.resolve(dirname, "fixtures", "documentData1.json"),
+    new URL("./fixtures/documentData1.json", import.meta.url),
     "utf-8"
   )
 );

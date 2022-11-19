@@ -1,5 +1,6 @@
 import fs from "node:fs";
 import path from "node:path";
+import { fileURLToPath } from "node:url";
 
 import cheerio from "cheerio";
 import frontmatter from "front-matter";
@@ -22,9 +23,6 @@ import { splitSections } from "./utils.js";
 import { findByURL } from "../content/document.js";
 import { buildDocument } from "./index.js";
 import { NewsItem } from "../client/src/homepage/latest-news/index.js";
-
-import { fileURLToPath } from "url";
-const dirname = fileURLToPath(new URL(".", import.meta.url));
 
 const FEATURED_ARTICLES = [
   "Web/CSS/Cascade",
@@ -233,7 +231,7 @@ export async function buildSPAs(options) {
   }
 
   await buildStaticPages(
-    path.join(dirname, "../copy/plus/"),
+    fileURLToPath(new URL("../copy/plus/", import.meta.url)),
     "plus/docs",
     "MDN Plus"
   );

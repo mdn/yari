@@ -11,13 +11,14 @@ import {
 } from "../src/errors.js";
 
 const jest = import.meta.jest;
-const dirname = fileURLToPath(new URL(".", import.meta.url));
 
 const PAGE_ENV = { slug: "" };
 
 describe("render() function", () => {
   function fixture(name) {
-    return `${dirname}/fixtures/render/${name}`;
+    return fileURLToPath(
+      new URL(`./fixtures/templates/${name}`, import.meta.url)
+    );
   }
   function get(name) {
     return fs.readFileSync(fixture(name), "utf-8");

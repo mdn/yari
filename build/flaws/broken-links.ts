@@ -1,6 +1,4 @@
 import fs from "node:fs";
-import path from "node:path";
-import { fileURLToPath } from "node:url";
 
 import fromMarkdown from "mdast-util-from-markdown";
 import visit from "unist-util-visit";
@@ -13,8 +11,6 @@ import {
   VALID_LOCALES,
 } from "../../libs/constants/index.js";
 import { isValidLocale } from "../../libs/locale-utils/index.js";
-
-const dirname = fileURLToPath(new URL(".", import.meta.url));
 
 function findMatchesInMarkdown(rawContent, href) {
   const matches = [];
@@ -32,7 +28,10 @@ const _safeToHttpsDomains = new Map();
 function getSafeToHttpDomains() {
   if (!_safeToHttpsDomains.size) {
     const fileParsed = JSON.parse(
-      fs.readFileSync(path.join(dirname, "safe-to-https-domains.json"), "utf-8")
+      fs.readFileSync(
+        new URL("safe-to-https-domains.json", import.meta.url),
+        "utf-8"
+      )
     );
     Object.entries(fileParsed).forEach(([key, value]) =>
       _safeToHttpsDomains.set(key, value)

@@ -28,9 +28,9 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import ejs from "ejs";
 
-const dirname = fileURLToPath(new URL(".", import.meta.url));
-
-const DEFAULT_MACROS_DIRECTORY = path.normalize(`${dirname}/../macros/`);
+const DEFAULT_MACROS_DIRECTORY = path.normalize(
+  fileURLToPath(new URL("../macros", import.meta.url))
+);
 
 export default class Templates {
   private macroDirectory: string;

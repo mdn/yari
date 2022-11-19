@@ -1,15 +1,14 @@
 import fs from "node:fs";
 import path from "node:path";
+import { fileURLToPath } from "node:url";
 
 import dotenv from "dotenv";
 import { VALID_LOCALES } from "@yari-internal/constants";
 
-const root = path.join(dirname, "..", "..", "..");
+const root = fileURLToPath(new URL("../../..", import.meta.url));
 dotenv.config({
   path: path.join(root, process.env.ENV_FILE || ".env"),
 });
-
-const dirname = fileURLToPath(new URL(".", import.meta.url));
 
 function buildRedirectsMap() {
   const redirectMap = new Map();
