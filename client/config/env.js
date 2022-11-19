@@ -4,9 +4,7 @@ import dotenv from "dotenv";
 import dotenvExpand from "dotenv-expand";
 import paths from "./paths.js";
 
-// Make sure that including paths.js after env.js will read .env variables.
-// delete require.cache[require.resolve("./paths")];
-
+// Double-check to make sure NODE_ENV is defined
 const NODE_ENV = process.env.NODE_ENV;
 if (!NODE_ENV) {
   throw new Error(
