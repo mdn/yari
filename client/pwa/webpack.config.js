@@ -32,6 +32,9 @@ const config = {
 
   resolve: {
     extensions: [".ts", ".tsx", ".js", ".json"],
+    extensionAlias: {
+      ".js": [".ts", ".js"],
+    },
     plugins: [],
   },
   //  plugins: [new webpack.optimize.ModuleConcatenationPlugin()],
