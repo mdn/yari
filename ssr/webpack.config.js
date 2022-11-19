@@ -13,7 +13,8 @@ const config = {
     path: path.resolve(dirname, "dist"),
     filename: "[name].js",
     sourceMapFilename: "[name].js.map",
-    libraryTarget: "commonjs2",
+    library: { type: "module" },
+    chunkFormat: "module",
   },
   target: "node",
   node: {
@@ -76,6 +77,9 @@ const config = {
       maxChunks: 1,
     }),
   ],
+  experiments: {
+    outputModule: true,
+  },
 };
 
 export default config;
