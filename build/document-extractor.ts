@@ -7,7 +7,7 @@ import {
   ProseSection,
   Section,
   SpecificationsSection,
-} from "../libs/types/index.js";
+} from "../libs/types/document.js";
 import specs from "browser-specs" assert { type: "json" };
 import web from "../kumascript/src/api/web.js";
 

@@ -1,4 +1,4 @@
-import { Document } from "../../content.js";
+import { Document } from "../../content/index.js";
 import info from "../src/info.js";
 import { render } from "../index.js";
 import {

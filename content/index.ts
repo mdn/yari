@@ -10,6 +10,7 @@ export {
   execGit,
   getRoot,
   urlToFolderPath,
+  MEMOIZE_INVALIDATE,
 } from "./utils.js";
 export { resolveFundamental } from "../libs/fundamental-redirects/index.js";
 export { translationsOf } from "./translations.js";

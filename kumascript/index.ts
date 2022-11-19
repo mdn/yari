@@ -1,7 +1,11 @@
 import LRU from "lru-cache";
 import * as cheerio from "cheerio";
 
-import { Document, urlToFolderPath } from "../content/index.js";
+import {
+  Document,
+  urlToFolderPath,
+  MEMOIZE_INVALIDATE,
+} from "../content/index.js";
 import { m2h } from "../markdown/index.js";
 
 import info from "./src/info.js";
@@ -54,7 +58,7 @@ export async function render(
   urlsSeen.add(urlLC);
   const prerequisiteErrorsByKey = new Map();
   const document = invalidateCache
-    ? Document.findByURL(url, Document.MEMOIZE_INVALIDATE)
+    ? Document.findByURL(url, MEMOIZE_INVALIDATE)
     : Document.findByURL(url);
   if (!document) {
     throw new Error(
@@ -71,7 +75,7 @@ export async function render(
       .replace(`/${metadata.locale.toLowerCase()}/`, `/${DEFAULT_LOCALE}/`);
 
     const parentDocument = invalidateCache
-      ? Document.findByURL(parentURL, Document.MEMOIZE_INVALIDATE)
+      ? Document.findByURL(parentURL, MEMOIZE_INVALIDATE)
       : Document.findByURL(parentURL);
     if (parentDocument) {
       metadata = { ...parentDocument.metadata, ...metadata };

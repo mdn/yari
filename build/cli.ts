@@ -9,7 +9,12 @@ import cliProgress from "cli-progress";
 import { program } from "@caporal/core";
 import { prompt } from "inquirer";
 
-import { Document, slugToFolder, translationsOf } from "../content/index.js";
+import {
+  Document,
+  slugToFolder,
+  translationsOf,
+  MEMOIZE_INVALIDATE,
+} from "../content/index.js";
 import {
   CONTENT_ROOT,
   CONTENT_TRANSLATED_ROOT,
@@ -45,7 +50,7 @@ async function buildDocumentInteractive(
 ): Promise<SkippedDocumentBuild | InteractiveDocumentBuild> {
   try {
     const document = invalidate
-      ? Document.read(documentPath, Document.MEMOIZE_INVALIDATE)
+      ? Document.read(documentPath, MEMOIZE_INVALIDATE)
       : Document.read(documentPath);
 
     if (!document) {

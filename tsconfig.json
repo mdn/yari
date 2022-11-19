@@ -12,7 +12,6 @@
     "target": "ES2020",
     "preserveWatchOutput": true
   },
-  "files": [],
   "ts-node": {
     "esm": true,
     "swc": true
