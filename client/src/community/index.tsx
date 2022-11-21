@@ -134,20 +134,20 @@ export function Contribute() {
         <h2>How to contribute</h2>
         <p>
           We are an open community of developers building resources for a better
-          web, regardless of brand, browser, or platform. Anyone can contribute
+          web, regardless of brand, browser, or platform. Anyone can contribute,
           and each person who does makes us stronger. Together we can continue
           to drive innovation on the web to serve the greater good. It starts
-          here, with you.
-          <a href="/en-US/docs/MDN/Community">Join us</a>!
+          here, with you. <a href="/en-US/docs/MDN/Community">Join us</a>!
         </p>
         <p>
-          No matter your specific level of expertise, individual strengths and
+          No matter your specific level of expertise, individual strengths, and
           interests in coding or writing, there are many ways for you to get
           involved and tackle important documentation tasks.
         </p>
         <p>
-          Ready to become an active part of the MDN community but not sure where
-          to begin? We've got you covered. See our step-by-step directions to{" "}
+          Are you ready to become an active part of the MDN community but not
+          sure where to begin? We've got you covered. See our step-by-step
+          directions for{" "}
           <a
             href="/en-US/docs/MDN/Community/Contributing/Getting_started"
             target="_blank"
