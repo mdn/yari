@@ -214,15 +214,6 @@ export interface BCDSection {
   };
 }
 
-export type FrequentlyViewedEntry = {
-  serial: number;
-  url: string;
-  title: string;
-  timestamp: number;
-  visitCount: number;
-  parents?: DocParent[];
-};
-
 // Yari builder will attach extra keys from the compat data
 // it gets from @mdn/browser-compat-data. These are "Yari'esque"
 // extras that helps us avoiding to have a separate data structure.

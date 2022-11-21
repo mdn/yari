@@ -3,6 +3,7 @@ import useSWR from "swr";
 
 import { DISABLE_AUTH, DEFAULT_GEO_COUNTRY } from "./env";
 import { fetchAllCollectionsItems } from "./plus/collections-quicksearch";
+import { FREQUENTLY_VIEWED_STORAGE_KEY } from "./plus/collections/frequently-viewed";
 
 export enum SubscriptionType {
   MDN_CORE = "core",
@@ -108,6 +109,7 @@ function getSessionStorageData() {
 
 export function cleanupUserData() {
   removeSessionStorageData();
+  removeLocalStorageData();
   if (window.mdnWorker) {
     window.mdnWorker.cleanDb();
     window.mdnWorker.disableServiceWorker();
@@ -122,6 +124,17 @@ function removeSessionStorageData() {
     sessionStorage.removeItem(SESSION_STORAGE_KEY);
   } catch (error: any) {
     console.warn("sessionStorage.removeItem didn't work", error.toString());
+  }
+}
+
+function removeLocalStorageData() {
+  try {
+    localStorage.removeItem(FREQUENTLY_VIEWED_STORAGE_KEY);
+  } catch (e) {
+    console.warn(
+      "Unable to delete frequently viewed items from localStorage",
+      e
+    );
   }
 }
 
