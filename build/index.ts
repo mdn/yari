@@ -134,11 +134,7 @@ function postProcessExternalLinks($) {
       return;
     }
     $a.addClass("external");
-    const rel = ($a.attr("rel") || "").split(" ");
-    if (!rel.includes("noopener")) {
-      rel.push("noopener");
-      $a.attr("rel", rel.join(" "));
-    }
+    $a.attr("target", "_blank");
   });
 }
 

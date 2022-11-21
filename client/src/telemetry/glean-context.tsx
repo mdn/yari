@@ -44,7 +44,6 @@ function glean(): GleanAnalytics {
       click: (element: ElementClickedProps) => {},
     };
   }
-
   const userIsOptedOut = document.cookie
     .split("; ")
     .includes(`${FIRST_PARTY_DATA_OPT_OUT_COOKIE_NAME}=true`);
@@ -90,6 +89,16 @@ function glean(): GleanAnalytics {
       pings.action.submit();
     },
   };
+  window?.addEventListener("click", (ev) => {
+    const anchor = ev?.target as Element;
+    if (anchor?.nodeName === "A" && anchor?.classList.contains("external")) {
+      gleanContext.click({
+        source: `external-link: ${anchor.getAttribute("href") || ""}`,
+        subscriptionType: "",
+      });
+    }
+  });
+
   return gleanContext;
 }
 
