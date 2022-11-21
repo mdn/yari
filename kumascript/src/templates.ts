@@ -115,11 +115,16 @@ export default class Templates {
         );
       }
     }
-    const rendered = await ejs.renderFile(path, args, {
-      async: true,
-      cache: process.env.NODE_ENV === "production",
-    });
-    return rendered.trim();
+    try {
+      const rendered = await ejs.renderFile(path, args, {
+        async: true,
+        cache: process.env.NODE_ENV === "production",
+      });
+      return rendered.trim();
+    } catch (error) {
+      console.error(`${name} macro failed:`, error);
+      throw error;
+    }
   }
 
   getTemplateMap() {

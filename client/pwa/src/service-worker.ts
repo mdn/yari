@@ -26,7 +26,8 @@ const UPDATES_BASE_URL = `https://updates.${
 }`;
 
 const SW_TYPE: SwType =
-  SwType[new URLSearchParams(location.search).get("type")] || SwType.ApiOnly;
+  SwType[new URLSearchParams(location.search).get("type")] ||
+  SwType.PreferOnline;
 
 // export empty type because of tsc --isolatedModules flag
 export type {};
@@ -36,21 +37,19 @@ var unpacking = Promise.resolve();
 
 self.addEventListener("install", (e) => {
   e.waitUntil(
-    SW_TYPE === SwType.ApiOnly
-      ? self.skipWaiting()
-      : (async () => {
-          const cache = await openCache();
-          const { files = {} }: { files: object } =
-            (await (await fetch("/asset-manifest.json")).json()) || {};
-          const assets = [...Object.values(files)].filter(
-            (asset) => !(asset as string).endsWith(".map")
-          );
-          let keys = new Set(
-            (await cache.keys()).map((r) => r.url.replace(location.origin, ""))
-          );
-          const toCache = assets.filter((file) => !keys.has(file));
-          await cache.addAll(toCache as string[]);
-        })().then(() => self.skipWaiting())
+    (async () => {
+      const cache = await openCache();
+      const { files = {} }: { files: object } =
+        (await (await fetch("/asset-manifest.json")).json()) || {};
+      const assets = [...Object.values(files)].filter(
+        (asset) => !(asset as string).endsWith(".map")
+      );
+      let keys = new Set(
+        (await cache.keys()).map((r) => r.url.replace(location.origin, ""))
+      );
+      const toCache = assets.filter((file) => !keys.has(file));
+      await cache.addAll(toCache as string[]);
+    })().then(() => self.skipWaiting())
   );
 
   initOncePerRun(self);
@@ -58,7 +57,7 @@ self.addEventListener("install", (e) => {
 
 self.addEventListener("fetch", async (e) => {
   if (
-    (SW_TYPE === SwType.ApiOnly || SW_TYPE === SwType.PreferOnline) &&
+    SW_TYPE === SwType.PreferOnline &&
     !e.request.url.includes("/api/v1/") &&
     !e.request.url.includes("/users/fxa/")
   ) {

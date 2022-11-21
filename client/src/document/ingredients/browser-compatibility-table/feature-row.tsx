@@ -135,7 +135,7 @@ const CellText = React.memo(
     const currentSupport = getCurrentSupport(support);
 
     const added = currentSupport?.version_added ?? null;
-    const removed = currentSupport?.version_removed ?? null;
+    const lastVersion = currentSupport?.version_last ?? null;
 
     const browserReleaseDate = getSupportBrowserReleaseDate(support);
     const supportClassName = getSupportClassName(support, browser);
@@ -151,7 +151,7 @@ const CellText = React.memo(
         status = { isSupported: "unknown" };
         break;
       case true:
-        status = { isSupported: removed ? "no" : "yes" };
+        status = { isSupported: lastVersion ? "no" : "yes" };
         break;
       case false:
         status = { isSupported: "no" };
@@ -162,7 +162,7 @@ const CellText = React.memo(
       default:
         status = {
           isSupported: supportClassName,
-          label: versionLabelFromSupport(added, removed, browser),
+          label: versionLabelFromSupport(added, lastVersion, browser),
         };
         break;
     }

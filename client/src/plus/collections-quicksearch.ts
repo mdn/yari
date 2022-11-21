@@ -1,6 +1,8 @@
 const COLLECTION_ITEMS_KEY = "collection-items";
 const COLLECTION_ITEMS_UPDATED_DATE_KEY = "collection-items-updated-date";
 
+let collectionItems: CollectionItem[] | null = null;
+
 type CollectionItem = {
   id: number;
   title: string;
@@ -38,22 +40,27 @@ function setCollectionItemsUpdatedDate(updated: Date) {
   }
 }
 
-export function getCollectionItems(): CollectionItem[] {
+export async function getCollectionItems(
+  remoteUpdated?: null | Date
+): Promise<CollectionItem[]> {
+  remoteUpdated && (await fetchAllCollectionsItems(remoteUpdated));
+  if (collectionItems) {
+    return collectionItems;
+  }
+
   let collectionItemString;
   try {
     collectionItemString = window?.localStorage?.getItem(COLLECTION_ITEMS_KEY);
   } catch (err) {
     console.warn("Unable to read collection items from localStorage", err);
   }
-  return JSON.parse(collectionItemString || "[]");
+  collectionItems = JSON.parse(collectionItemString || "[]");
+  return collectionItems || [];
 }
 
 function setCollectionItems(items: CollectionItem[]) {
   try {
     window?.localStorage?.setItem(COLLECTION_ITEMS_KEY, JSON.stringify(items));
-    if (Number.isFinite(window?.mdnWorker?.mutationCounter)) {
-      window.mdnWorker.mutationCounter++;
-    }
   } catch (err) {
     console.warn("Unable to write collection items to localStorage", err);
   }
@@ -66,31 +73,6 @@ export async function fetchAllCollectionsItems(remoteUpdated: null | Date) {
     const { items = [] } = await res.json();
     setCollectionItems(items);
     setCollectionItemsUpdatedDate(remoteUpdated || new Date());
+    collectionItems = items;
   }
-}
-
-export function addCollectionItem({ id, title, url }: CollectionItem) {
-  const items = getCollectionItems();
-  items.push({
-    id,
-    title,
-    url,
-  });
-  setCollectionItems(items);
-}
-
-export function updateCollectionItem({ id, title }: CollectionItem) {
-  const items = getCollectionItems();
-  const index = items.findIndex((item) => item.id === id);
-  items[index].title = title;
-  setCollectionItems(items);
-}
-
-export function removeCollectionItem({ id }: CollectionItem) {
-  const items = getCollectionItems();
-  const index = items.findIndex((item) => item.id === id);
-  if (index >= 0) {
-    items.splice(index, 1);
-  }
-  setCollectionItems(items);
 }

@@ -23,7 +23,7 @@
     "build:sw-dev": "cd client/pwa && yarn && yarn build",
     "dev": "yarn build:prepare && nf -j Procfile.dev start",
     "eslint": "eslint .",
-    "filecheck": "cd filecheck && ts-node cli.ts",
+    "filecheck": "ts-node filecheck/cli.ts",
     "m2h": "ts-node markdown/m2h/cli.ts",
     "md": "echo 'The HTML to Markdown conversion command has been moved to https://github.com/mdn/markdown!' && exit 1",
     "prepack": "yarn build:dist",
@@ -49,16 +49,19 @@
     "watch:ssr": "cd ssr && webpack --mode=production --watch"
   },
   "jest": {
-    "globals": {
-      "ts-jest": {
-        "babelConfig": true
-      }
-    },
     "preset": "ts-jest",
     "testPathIgnorePatterns": [
       "headless*",
       "developing.spec.ts"
-    ]
+    ],
+    "transform": {
+      "\\.tsx?$": [
+        "ts-jest",
+        {
+          "babelConfig": true
+        }
+      ]
+    }
   },
   "resolutions": {
     "@types/react": ">=18.0.0",
@@ -67,7 +70,7 @@
   "dependencies": {
     "@caporal/core": "^2.0.2",
     "@fast-csv/parse": "^4.3.6",
-    "@mdn/browser-compat-data": "^5.2.15",
+    "@mdn/browser-compat-data": "^5.2.16",
     "@mozilla/glean": "1.3.0",
     "@use-it/interval": "^1.0.0",
     "@webref/css": "^5.4.2",
@@ -134,20 +137,20 @@
     "@babel/preset-env": "^7.20.2",
     "@mdn/dinocons": "^0.5.5",
     "@mdn/minimalist": "^2.0.4",
-    "@playwright/test": "^1.27.1",
+    "@playwright/test": "^1.28.0",
     "@pmmmwh/react-refresh-webpack-plugin": "^0.5.9",
     "@svgr/webpack": "^6.5.1",
-    "@swc/core": "^1.3.16",
+    "@swc/core": "^1.3.18",
     "@testing-library/react": "^13.4.0",
     "@types/hast": "^2.3.4",
-    "@types/jest": "^29.2.2",
+    "@types/jest": "^29.2.3",
     "@types/mdast": "^3.0.10",
     "@types/node": "^16.18.3",
     "@types/react": "^18.0.25",
-    "@types/react-dom": "^18.0.8",
+    "@types/react-dom": "^18.0.9",
     "@types/react-modal": "^3.13.1",
-    "@typescript-eslint/eslint-plugin": "^5.42.1",
-    "@typescript-eslint/parser": "^5.42.1",
+    "@typescript-eslint/eslint-plugin": "^5.43.0",
+    "@typescript-eslint/parser": "^5.43.0",
     "babel-jest": "^29.3.1",
     "babel-loader": "^9.1.0",
     "babel-plugin-named-asset-import": "^0.3.8",
@@ -178,7 +181,7 @@
     "file-loader": "^6.2.0",
     "foreman": "^3.0.1",
     "history": "^5.2.0",
-    "html-validate": "^7.8.0",
+    "html-validate": "^7.10.0",
     "html-webpack-plugin": "^5.5.0",
     "husky": "^8.0.2",
     "identity-obj-proxy": "^3.0.0",
@@ -187,17 +190,17 @@
     "jest-environment-jsdom": "^29.3.1",
     "jest-junit-reporter": "^1.1.0",
     "jest-resolve": "^29.3.1",
-    "jest-watch-typeahead": "^2.2.0",
+    "jest-watch-typeahead": "^2.2.1",
     "jsdom": "^20.0.2",
     "lint-staged": "^13.0.3",
-    "mini-css-extract-plugin": "^2.6.1",
+    "mini-css-extract-plugin": "^2.7.0",
     "node-dev": "^7.4.3",
     "pegjs": "^0.10.0",
     "postcss": "^8.4.19",
     "postcss-flexbugs-fixes": "^5.0.2",
     "postcss-loader": "^7.0.1",
     "postcss-normalize": "^10.0.1",
-    "postcss-preset-env": "^7.8.2",
+    "postcss-preset-env": "^7.8.3",
     "prettier": "^2.7.1",
     "prettier-plugin-packagejson": "^2.3.0",
     "prompts": "^2.4.2",
@@ -234,10 +237,10 @@
     "ts-jest": "^29.0.3",
     "ts-loader": "^9.4.1",
     "ts-node": "^10.9.1",
-    "typescript": "^4.8.4",
+    "typescript": "^4.9.3",
     "use-debounce": "^8.0.4",
     "webpack": "^5.75.0",
-    "webpack-cli": "^4.10.0",
+    "webpack-cli": "^5.0.0",
     "webpack-dev-middleware": "^5.3.3",
     "webpack-dev-server": "^4.11.1",
     "webpack-hot-middleware": "^2.25.3",

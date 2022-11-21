@@ -8,7 +8,6 @@ import Dexie from "dexie";
 export enum SwType {
   PreferOnline = "PreferOnline",
   PreferOffline = "PreferOffline",
-  ApiOnly = "ApiOnly",
 }
 
 export interface PlusSettings {

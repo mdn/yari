@@ -65,7 +65,9 @@ function useSearchIndex(): readonly [
     const gather = async () => {
       const collection: Item[] = [];
       if (user?.settings?.colInSearch) {
-        const all = getCollectionItems();
+        const all = await getCollectionItems(
+          user?.settings?.collectionLastModified
+        );
         collection.push(
           ...all.map((item) => {
             return { ...item, collection: true };
@@ -94,7 +96,7 @@ function useSearchIndex(): readonly [
     shouldInitialize,
     data,
     user?.settings?.colInSearch,
-    user?.mdnWorker?.mutationCounter,
+    user?.settings?.collectionLastModified,
   ]);
 
   return useMemo(

@@ -768,6 +768,7 @@ const combinators = [];
 const pseudoClasses = [];
 const pseudoElements = [];
 const atRules = [];
+const functions = [];
 const types = [];
 
 for (const page of standardPages) {
@@ -793,6 +794,9 @@ for (const page of standardPages) {
       break;
     case "css-at-rule":
       atRules.push(page);
+      break;
+    case "css-function":
+      functions.push(page);
       break;
     case "css-type":
       types.push(page);
@@ -942,6 +946,7 @@ function buildSublist(pages, title) {
   <%-buildSublist(pseudoClasses, 'Pseudo-classes');%>
   <%-buildSublist(pseudoElements, 'Pseudo-elements');%>
   <%-buildSublist(atRules, 'At-rules');%>
+  <%-buildSublist(functions, 'Functions');%>
   <%-buildSublist(types, 'Types');%>
 
   <li><strong><%=text['Guides']%></strong></li>

@@ -14,6 +14,7 @@ import web from "../kumascript/src/api/web";
 interface SimpleSupportStatementWithReleaseDate
   extends bcd.SimpleSupportStatement {
   release_date?: string;
+  version_last?: bcd.VersionValue;
 }
 
 type SectionsAndFlaws = [Section[], string[]];
@@ -464,16 +465,17 @@ function _addSingleSpecialSection(
           : [originalInfo];
 
         for (const infoEntry of infos) {
-          const added =
-            typeof infoEntry.version_added === "string" &&
-            infoEntry.version_added.startsWith("≤")
-              ? infoEntry.version_added.slice(1)
-              : infoEntry.version_added;
+          const added = _normalizeVersion(infoEntry.version_added);
+          const removed = _normalizeVersion(infoEntry.version_removed);
           if (browserReleaseData.has(browser)) {
             if (browserReleaseData.get(browser).has(added)) {
               infoEntry.release_date = browserReleaseData
                 .get(browser)
                 .get(added).release_date;
+              infoEntry.version_last = _getPreviousVersion(
+                removed,
+                browsers[browser]
+              );
             }
           }
         }
@@ -504,6 +506,29 @@ function _addSingleSpecialSection(
         },
       },
     ];
+  }
+
+  function _getPreviousVersion(
+    version: bcd.VersionValue,
+    browser: bcd.BrowserStatement
+  ): bcd.VersionValue {
+    if (browser && typeof version === "string") {
+      const browserVersions = Object.keys(browser["releases"]).sort(
+        _compareVersions
+      );
+      const currentVersionIndex = browserVersions.indexOf(version);
+      if (currentVersionIndex > 0) {
+        return browserVersions[currentVersionIndex - 1];
+      }
+    }
+
+    return version;
+  }
+
+  function _normalizeVersion(version: bcd.VersionValue): bcd.VersionValue {
+    return typeof version === "string" && version.startsWith("≤")
+      ? version.slice(1)
+      : version;
   }
 
   function _getFirstVersion(support: bcd.SimpleSupportStatement): string {
