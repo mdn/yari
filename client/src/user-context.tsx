@@ -186,7 +186,7 @@ export function UserDataProvider(props: { children: React.ReactNode }) {
         },
         maintenance: data.maintenance,
         settings,
-        offlineSettings: OfflineSettingsData.read(),
+        offlineSettings: null,
         mutate,
       };
     }
@@ -196,6 +196,7 @@ export function UserDataProvider(props: { children: React.ReactNode }) {
     if (data) {
       // At this point, the XHR request has set `data` to be an object.
       // The user is definitely signed in or not signed in.
+      data.offlineSettings = OfflineSettingsData.read();
       setSessionStorageData(data);
 
       if (data.settings?.colInSearch) {
