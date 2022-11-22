@@ -59,12 +59,10 @@ function buildSublist(pages, title) {
   for (var i in pages) {
     var aPage = pages[i];
     var url = aPage.url.replace('en-US', locale);
-
     var title = htmlEscape(aPage.title);
 
     if (locale != 'en-US' && aPage.translations) {
         aPage.translations.forEach(function(translation){
-
             if(translation.locale === locale) {
                 url = translation.url;
                 title = htmlEscape(translation.title);
