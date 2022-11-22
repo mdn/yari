@@ -24,6 +24,7 @@ var text = {
     'Events': mdn.getLocalString(commonl10n, 'Events'),
     'Interfaces': mdn.getLocalString(commonl10n, 'Interfaces'),
     'Guides': mdn.getLocalString(commonl10n, 'Guides'),
+    'Tutorial': mdn.getLocalString(commonl10n, 'Tutorial'),
     'translate': mdn.getLocalString(commonl10n, '[Translate]'),
     'title': mdn.getLocalString(commonl10n, 'TranslationCTA'),
 };
@@ -36,13 +37,21 @@ var properties = webAPIGroups[0][group].properties || [];
 var events = webAPIGroups[0][group].events || [];
 var groupGuides = webAPIGroups[0][group].guides || [];
 var guides = [];
+var groupTutorial = webAPIGroups[0][group].tutorial || [];
+var tutorial = [];
 
-for (let guideUrl of groupGuides) {
-    const page = await wiki.getPage(guideUrl);
-    if (page && page.url) {
-        guides.push(page);
-    }
+// convert a groupData entry to a Page object
+// we need this so we can access the page title
+async function entryToPage(entry) {
+  const page = await wiki.getPage(entry);
+  if (page && page.url) {
+    return page;
+  }
+  return null;
 }
+
+var guides = await Promise.all(groupGuides.map(entryToPage).filter(e => e !== null));
+var tutorial = await Promise.all(groupTutorial.map(entryToPage).filter(e => e !== null));
 
 function buildSublist(pages, title) {
   var result = '<li class="toggle"><details open><summary>' + title + '</summary><ol>';
@@ -50,10 +59,12 @@ function buildSublist(pages, title) {
   for (var i in pages) {
     var aPage = pages[i];
     var url = aPage.url.replace('en-US', locale);
+
     var title = htmlEscape(aPage.title);
 
     if (locale != 'en-US' && aPage.translations) {
         aPage.translations.forEach(function(translation){
+
             if(translation.locale === locale) {
                 url = translation.url;
                 title = htmlEscape(translation.title);
@@ -110,6 +121,10 @@ if (webAPIGroups[0][group].overview) {
 
 if (guides.length > 0) {
   output += buildSublist(guides, text['Guides']);
+}
+
+if (tutorial.length > 0) {
+  output += buildSublist(tutorial, text['Tutorial']);
 }
 
 interfaces = interfaces.map(convert);
