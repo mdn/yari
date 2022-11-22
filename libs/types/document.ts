@@ -183,6 +183,7 @@ export interface ProseSection {
     id: string | null;
     title: string | null;
     isH3: boolean;
+    isH4: boolean;
     content?: string;
     titleAsText?: string;
   };
@@ -193,6 +194,7 @@ export interface SpecificationsSection {
     id: string;
     title: string;
     isH3: boolean;
+    isH4: boolean;
     query: string;
     specifications: {
       bcdSpecificationURL: any;
@@ -207,6 +209,7 @@ export interface BCDSection {
     id: string;
     title: string;
     isH3: boolean;
+    isH4: boolean;
     data?: BCD.Identifier | null;
     dataURL?: string;
     query: string;

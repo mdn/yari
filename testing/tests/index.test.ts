@@ -1762,6 +1762,46 @@ test("notecards are correctly transformed by the formatNotecards utility", () =>
   );
 });
 
+test("sections should be split by h2, h3 or h4", () => {
+  const builtFolder = path.join(
+    buildRoot,
+    "en-us",
+    "docs",
+    "web",
+    "split_section_by_heading"
+  );
+
+  const jsonFile = path.join(builtFolder, "index.json");
+  const { doc } = JSON.parse(fs.readFileSync(jsonFile, "utf-8"));
+  expect(doc.flaws.length).toBeFalsy();
+  expect(doc.title).toBe("Split section by heading");
+
+  const htmlFile = path.join(builtFolder, "index.html");
+  const html = fs.readFileSync(htmlFile, "utf-8");
+  const $ = cheerio.load(html);
+
+  const h2 = $("h2#some_heading");
+  expect(h2.text()).toBe("Some heading");
+  expect(h2.attr("id")).toBe("some_heading");
+  expect(h2.html()).toBe(
+    '<a href="#some_heading" title="Permalink to Some heading">Some heading</a>'
+  );
+
+  const h3 = $("h3#another_heading");
+  expect(h3.text()).toBe("Another heading");
+  expect(h3.attr("id")).toBe("another_heading");
+  expect(h3.html()).toBe(
+    '<a href="#another_heading" title="Permalink to Another heading">Another heading</a>'
+  );
+
+  const h4 = $("h4#final_heading");
+  expect(h4.text()).toBe("Final heading");
+  expect(h4.attr("id")).toBe("final_heading");
+  expect(h4.html()).toBe(
+    '<a href="#final_heading" title="Permalink to Final heading">Final heading</a>'
+  );
+});
+
 test("homepage links and flaws", () => {
   const builtFolder = path.join(
     buildRoot,

@@ -72,6 +72,7 @@ export function extractSections($: cheerio.CheerioAPI): [Section[], string[]] {
   const iterable = [...(body.childNodes as cheerio.Element[])];
 
   let c = 0;
+
   iterable.forEach((child) => {
     if (
       (child as cheerio.Element).tagName === "h2" ||
@@ -316,11 +317,11 @@ function addSections($: cheerio.Cheerio<cheerio.Element>): SectionsAndFlaws {
     const specialSections = _addSingleSpecialSection($);
 
     // The _addSingleSpecialSection() function will have sucked up the <h2> or <h3>
-    // and the `div.bc-data` or `div.bc-specs` to turn it into a special section.
+    // or <h4> and the `div.bc-data` or `div.bc-specs` to turn it into a special section.
     // First remove that, then put whatever HTML is left as a prose
     // section underneath.
-    $.find("div.bc-data, h2, h3").remove();
-    $.find("div.bc-specs, h2, h3").remove();
+    $.find("div.bc-data, h2, h3, h4").remove();
+    $.find("div.bc-specs, h2, h3, h4").remove();
     const [proseSections, proseFlaws] = _addSectionProse($);
     specialSections.push(...proseSections);
     flaws.push(...proseFlaws);
@@ -343,18 +344,23 @@ function _addSingleSpecialSection(
   let id: string | null = null;
   let title: string | null = null;
   let isH3 = false;
+  let isH4 = false;
 
   const h2s = $.find("h2");
+  const h3s = $.find("h3");
   if (h2s.length === 1) {
     id = h2s.attr("id");
     title = h2s.text();
+  } else if (h3s.length === 1) {
+    id = h3s.attr("id");
+    title = h3s.text();
+    isH3 = true;
   } else {
-    const h3s = $.find("h3");
-    if (h3s.length === 1) {
-      id = h3s.attr("id");
-      title = h3s.text();
-      isH3 = true;
-    }
+    // Look for <h4>s
+    const h4s = $.find("h4");
+    id = h4s.attr("id");
+    title = h4s.text();
+    isH4 = true;
   }
 
   let dataQuery = "";
@@ -394,6 +400,7 @@ function _addSingleSpecialSection(
             title,
             id,
             isH3,
+            isH4,
             data: null,
             query,
             browsers: null,
@@ -411,6 +418,7 @@ function _addSingleSpecialSection(
             title,
             id,
             isH3,
+            isH4,
             query,
             specifications: [],
           },
@@ -500,6 +508,7 @@ function _addSingleSpecialSection(
           title,
           id,
           isH3,
+          isH4,
           data,
           query,
           browsers,
@@ -706,6 +715,7 @@ function _addSingleSpecialSection(
           title,
           id,
           isH3,
+          isH4,
           specifications,
           query,
         },
@@ -721,6 +731,7 @@ function _addSectionProse(
   let title: string | null = null;
   let titleAsText = "";
   let isH3 = false;
+  let isH4 = false;
 
   const flaws: string[] = [];
 
@@ -728,6 +739,8 @@ function _addSectionProse(
   // Given a section of HTML, try to extract a id, title,
 
   let h2found = false;
+  let h3found = false;
+
   const h2s = $.find("h2");
   h2s.each((i) => {
     const h2 = h2s.eq(i);
@@ -770,8 +783,32 @@ function _addSectionProse(
           h3.remove();
         }
       }
+      h3found = true;
     });
   }
+
+  // TODO: h4 elements are not being linkified and the
+  // tests are just picking up the initial text instead of the <a> tag
+  // const h4s = $.find("h4");
+  // h4s.each((i) => {
+  //   const h4 = h4s.eq(i);
+  //   if (i) {
+  //     // Excess!
+  //     flaws.push(
+  //       `Excess <h4> tag that is NOT at root-level (id='${h4.attr(
+  //         "id"
+  //       )}', text='${h4.text()}')`
+  //     );
+  //   } else {
+  //     id = h4.attr("id") ?? "";
+  //     title = h4.html() ?? "";
+  //     titleAsText = h4.text();
+  //     if (id && title) {
+  //       isH4 = true;
+  //       h4.remove();
+  //     }
+  //   }
+  // });
 
   if (id) {
     // Remove trailing underscores (https://github.com/mdn/yari/issues/5492).
@@ -782,6 +819,7 @@ function _addSectionProse(
     id,
     title,
     isH3,
+    isH4,
     content: $.html()?.trim(),
   };
 
