@@ -276,13 +276,5 @@ export function App(appProps) {
       />
     </Routes>
   );
-  /* This might look a bit odd but it's actually quite handy.
-   * This way, when rendering client-side, we wrap all the routes in
-   * <React.Suspense> but in server-side rendering that goes away.
-   */
-  return isServer ? (
-    routes
-  ) : (
-    <React.Suspense fallback={<LoadingFallback />}>{routes}</React.Suspense>
-  );
+  return routes;
 }
