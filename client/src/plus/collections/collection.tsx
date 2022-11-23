@@ -142,7 +142,7 @@ export function FrequentlyViewedCollectionComponent() {
       </header>
       <Container>
         {frequentlyViewed.items.map((item) => (
-          <ItemComponent addNoteEnabled={false} key={item.id} {...{ item }} />
+          <ItemComponent addNoteEnabled={false} key={item.id} item={item} />
         ))}
         {!atEnd && (
           <div className="pagination">
