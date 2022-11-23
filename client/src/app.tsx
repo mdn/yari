@@ -57,6 +57,17 @@ function Layout({ pageType, children }) {
   );
 }
 
+function LazyStandardLayout(props: {
+  extraClasses?: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <React.Suspense>
+      <StandardLayout {...props}></StandardLayout>
+    </React.Suspense>
+  );
+}
+
 function StandardLayout({
   extraClasses,
   children,
@@ -111,14 +122,14 @@ export function App(appProps) {
   // is true. So you have to have `isServer && CRUD_MODE` at the same time.
   const homePage =
     !isServer && CRUD_MODE ? (
-      <Layout pageType="standard-page">
+      <LazyStandardLayout>
         <WritersHomepage />
-      </Layout>
+      </LazyStandardLayout>
     ) : (
       <PageOrPageNotFound pageNotFound={pageNotFound}>
-        <Layout pageType="standard-page">
+        <StandardLayout>
           <Homepage {...appProps} />
-        </Layout>
+        </StandardLayout>
       </PageOrPageNotFound>
     );
 
@@ -140,17 +151,17 @@ export function App(appProps) {
                 <Route
                   path="/_flaws"
                   element={
-                    <StandardLayout>
+                    <LazyStandardLayout>
                       <AllFlaws />
-                    </StandardLayout>
+                    </LazyStandardLayout>
                   }
                 />
                 <Route
                   path="/_translations/*"
                   element={
-                    <StandardLayout>
+                    <LazyStandardLayout>
                       <Translations />
-                    </StandardLayout>
+                    </LazyStandardLayout>
                   }
                 />
 
@@ -189,9 +200,9 @@ export function App(appProps) {
                 <Route
                   path="/_sitemap/*"
                   element={
-                    <StandardLayout>
+                    <LazyStandardLayout>
                       <Sitemap />
-                    </StandardLayout>
+                    </LazyStandardLayout>
                   }
                 />
               </>
