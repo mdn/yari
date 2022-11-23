@@ -22,6 +22,37 @@ interface LayoutProps {
   children: React.ReactNode;
 }
 
+function Layout({
+  withoutContainer = false,
+  withSSR = false,
+  parents = undefined,
+  children,
+}: LayoutProps) {
+  const loading = <Loading message={`Loading …`} minHeight={800} />;
+  const isServer = useIsServer();
+  const inner = (
+    <>
+      {isServer ? (
+        withSSR ? (
+          children
+        ) : (
+          loading
+        )
+      ) : (
+        <React.Suspense fallback={loading}>{children}</React.Suspense>
+      )}
+    </>
+  );
+
+  return withoutContainer ? (
+    inner
+  ) : (
+    <>
+      {parents && <ArticleActionsContainer parents={parents} />}
+      <MainContentContainer>{inner}</MainContentContainer>
+    </>
+  );
+}
 export function Plus({ pageTitle, ...props }: { pageTitle?: string }) {
   React.useEffect(() => {
     document.title = pageTitle || MDN_PLUS_TITLE;
@@ -29,44 +60,6 @@ export function Plus({ pageTitle, ...props }: { pageTitle?: string }) {
 
   const { locale = "en-US" } = useParams();
   const { pathname } = useLocation();
-
-  const isServer = useIsServer();
-  const loading = (
-    <Loading
-      message={`Loading ${pageTitle || MDN_PLUS_TITLE}…`}
-      minHeight={800}
-    />
-  );
-
-  function Layout({
-    withoutContainer = false,
-    withSSR = false,
-    parents = undefined,
-    children,
-  }: LayoutProps) {
-    const inner = (
-      <>
-        {isServer ? (
-          withSSR ? (
-            children
-          ) : (
-            loading
-          )
-        ) : (
-          <React.Suspense fallback={loading}>{children}</React.Suspense>
-        )}
-      </>
-    );
-
-    return withoutContainer ? (
-      inner
-    ) : (
-      <>
-        {parents && <ArticleActionsContainer parents={parents} />}
-        <MainContentContainer>{inner}</MainContentContainer>
-      </>
-    );
-  }
 
   const parents = [{ uri: `/${locale}/plus`, title: MDN_PLUS_TITLE }];
 

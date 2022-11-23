@@ -233,7 +233,7 @@ export function useIncrementFrequentlyViewed(doc: Doc | undefined) {
     //Sort descending so most frequently viewed appears on top.
     frequentlyViewed = frequentlyViewed.sort(sortByVisitsThenTimestampsDesc);
     setFrequentlyViewed(frequentlyViewed);
-  }, [user, doc]);
+  }, [user?.isAuthenticated, doc]);
 }
 
 const filterFrequentlyViewed = (frequentlyViewed) => {
