@@ -1,0 +1,6 @@
+---
+name: Glean probe-scraper
+on: [push, pull_request]
+jobs:
+  glean-probe-scraper:
+    uses: mozilla/probe-scraper/.github/workflows/glean.yaml@main
