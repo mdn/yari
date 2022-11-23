@@ -32,10 +32,10 @@ import { MDN_PLUS_TITLE } from "../../constants";
 import { SWRConfig } from "swr";
 dayjs.extend(relativeTime);
 
-const config = { revalidateOnFocus: false, revalidateIfStale: false };
+const swrConfig = { revalidateOnFocus: false, revalidateIfStale: false };
 export default function Collections() {
   return (
-    <SWRConfig value={config}>
+    <SWRConfig value={swrConfig}>
       <Routes>
         <Route path="/" element={<Overview />} />
         <Route

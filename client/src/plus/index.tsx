@@ -28,7 +28,7 @@ function Layout({
   parents = undefined,
   children,
 }: LayoutProps) {
-  const loading = <Loading message={`Loading …`} minHeight={800} />;
+  const loading = <Loading message={`Loading…`} minHeight={800} />;
   const isServer = useIsServer();
   const inner = (
     <>
