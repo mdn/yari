@@ -6,6 +6,9 @@ interface SimpleSupportStatementExtended extends BCD.SimpleSupportStatement {
   // Known for some support statements where the browser *version* is known,
   // as opposed to just "true" and if the version release date is known.
   release_date?: string;
+  // The version before the version_removed if the *version* removed is known,
+  // as opposed to just "true". Otherwise the version_removed.
+  version_last?: BCD.VersionValue;
 }
 
 export type SupportStatementExtended =
@@ -36,8 +39,7 @@ function findFirstCompatDepth(identifier: BCD.Identifier) {
 
   while (entries.length) {
     const [path, value] = entries.shift() as [string, BCD.Identifier];
-
-    if (value.hasOwnProperty("__compat")) {
+    if (value.__compat) {
       // Following entries have at least this depth.
       return path.split(".").length;
     }

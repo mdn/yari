@@ -1,17 +1,17 @@
 #!/usr/bin/env node
+import crypto from "crypto";
 import fs from "fs";
 import path from "path";
 import zlib from "zlib";
 
 import chalk from "chalk";
 import cliProgress from "cli-progress";
-const program = require("@caporal/core").default;
+import { program } from "@caporal/core";
 import { prompt } from "inquirer";
 
 import { Document, slugToFolder, translationsOf } from "../content";
 import { CONTENT_ROOT, CONTENT_TRANSLATED_ROOT } from "../libs/env";
 import { VALID_LOCALES } from "../libs/constants";
-// eslint-disable-next-line n/no-missing-require
 import { renderHTML } from "../ssr/dist/main";
 import options from "./build-options";
 import { buildDocument, BuiltDocument, renderContributorsTxt } from ".";
@@ -25,7 +25,7 @@ import { humanFileSize } from "./utils";
 export type DocumentBuild = SkippedDocumentBuild | InteractiveDocumentBuild;
 
 export interface SkippedDocumentBuild {
-  doc: {};
+  doc: Record<string, never>;
   skip: true;
 }
 
@@ -116,6 +116,8 @@ async function buildDocuments(
     findAllOptions.files = new Set(files);
   }
 
+  const metadata = {};
+
   const documents = Document.findAll(findAllOptions);
   const progressBar = new cliProgress.SingleBar(
     {},
@@ -179,12 +181,10 @@ async function buildDocuments(
       );
     }
 
-    fs.writeFileSync(
-      path.join(outPath, "index.json"),
-      // This is exploiting the fact that renderHTML has the side-effect of
-      // mutating the built document which makes this not great and refactor-worthy.
-      JSON.stringify({ doc: builtDocument })
-    );
+    // This is exploiting the fact that renderHTML has the side-effect of
+    // mutating the built document which makes this not great and refactor-worthy.
+    const docString = JSON.stringify({ doc: builtDocument });
+    fs.writeFileSync(path.join(outPath, "index.json"), docString);
     fs.writeFileSync(
       path.join(outPath, "contributors.txt"),
       renderContributorsTxt(
@@ -240,6 +240,25 @@ async function buildDocuments(
       searchIndex.add(document);
     }
 
+    const hash = crypto.createHash("sha256").update(docString).digest("hex");
+    const {
+      body: _,
+      toc: __,
+      sidebarHTML: ___,
+      ...builtMetadata
+    } = builtDocument;
+    builtMetadata.hash = hash;
+
+    fs.writeFileSync(
+      path.join(outPath, "metadata.json"),
+      JSON.stringify(builtMetadata)
+    );
+    if (metadata[document.metadata.locale]) {
+      metadata[document.metadata.locale].push(builtMetadata);
+    } else {
+      metadata[document.metadata.locale] = [builtMetadata];
+    }
+
     if (!options.noProgressbar) {
       progressBar.increment();
     } else if (!quiet) {
@@ -255,7 +274,6 @@ async function buildDocuments(
     progressBar.stop();
   }
 
-  const sitemapsBuilt: string[] = [];
   for (const [locale, docs] of Object.entries(docPerLocale)) {
     const sitemapDir = path.join(
       BUILD_OUT_ROOT,
@@ -275,6 +293,13 @@ async function buildDocuments(
     fs.writeFileSync(
       path.join(BUILD_OUT_ROOT, locale.toLowerCase(), "search-index.json"),
       JSON.stringify(items)
+    );
+  }
+
+  for (const [locale, meta] of Object.entries(metadata)) {
+    fs.writeFileSync(
+      path.join(BUILD_OUT_ROOT, locale.toLowerCase(), "metadata.json"),
+      JSON.stringify(meta)
     );
   }
   return { slugPerLocale: docPerLocale, peakHeapBytes, totalFlaws };
@@ -297,6 +322,20 @@ function formatTotalFlaws(flawsCountMap, header = "Total_Flaws_Count") {
   return out.join("\n");
 }
 
+interface BuildArgsAndOptions {
+  args: {
+    files?: string[];
+  };
+  options: {
+    quiet?: boolean;
+    interactive?: boolean;
+    nohtml?: boolean;
+    locale?: string[];
+    notLocale?: string[];
+    sitemapIndex?: boolean;
+  };
+}
+
 program
   .name("build")
   .option("-i, --interactive", "Ask what to do when encountering flaws", {
@@ -317,7 +356,7 @@ program
     default: false,
   })
   .argument("[files...]", "specific files to build")
-  .action(async ({ args, options }) => {
+  .action(async ({ args, options }: BuildArgsAndOptions) => {
     try {
       if (!options.quiet) {
         const roots = [

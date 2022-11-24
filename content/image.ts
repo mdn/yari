@@ -36,7 +36,7 @@ function urlToFilePath(url) {
   return path.join(locale.toLowerCase(), slugToFolder(slugParts.join("/")));
 }
 
-const find = memoize((relativePath) => {
+const find = memoize((relativePath: string) => {
   return ROOTS.map((root) => path.join(root, relativePath)).find(
     (filePath) => fs.existsSync(filePath) && isImage(filePath)
   );

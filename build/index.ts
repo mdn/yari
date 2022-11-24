@@ -134,11 +134,7 @@ function postProcessExternalLinks($) {
       return;
     }
     $a.addClass("external");
-    const rel = ($a.attr("rel") || "").split(" ");
-    if (!rel.includes("noopener")) {
-      rel.push("noopener");
-      $a.attr("rel", rel.join(" "));
-    }
+    $a.attr("target", "_blank");
   });
 }
 
@@ -290,6 +286,8 @@ export interface BuiltDocument {
 
 interface DocumentOptions {
   fixFlaws?: boolean;
+  fixFlawsDryRun?: boolean;
+  fixFlawsTypes?: Iterable<string>;
   fixFlawsVerbose?: boolean;
 }
 
@@ -339,7 +337,7 @@ export async function buildDocument(
       // message.
       error.updateFileInfo(document.fileInfo);
       throw new Error(
-        `MacroInvocationError trying to parse ${error.filepath}, line ${error.line} column ${error.column} (${error.error.message})`
+        `MacroInvocationError trying to parse file.\n\nFile:    ${error.filepath}\nMessage: ${error.error.message}\n\n${error.sourceContext}`
       );
     }
     // Any other unexpected error re-thrown.
@@ -352,7 +350,9 @@ export async function buildDocument(
     $,
     document.rawBody
   );
-  for (let { id, html, flaw } of liveSamplePages) {
+  for (const liveSamplePage of liveSamplePages) {
+    const { id, flaw } = liveSamplePage;
+    let { html } = liveSamplePage;
     if (flaw) {
       flaw.updateFileInfo(fileInfo);
       if (flaw.name === "MacroLiveSampleError") {
@@ -474,6 +474,10 @@ export async function buildDocument(
   doc.mdn_url = document.url;
   doc.locale = metadata.locale as string;
   doc.native = LANGUAGES.get(doc.locale.toLowerCase())?.native;
+  const browserCompat = metadata["browser-compat"];
+  doc.browserCompat =
+    browserCompat &&
+    (Array.isArray(browserCompat) ? browserCompat : [browserCompat]);
 
   // If the document contains <math> HTML, it will set `doc.hasMathML=true`.
   // The client (<Document/> component) needs to know this for loading polyfills.

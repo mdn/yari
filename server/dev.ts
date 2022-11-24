@@ -1,4 +1,4 @@
-import { WebpackConfiguration } from "webpack-dev-server";
+import type { WebpackConfiguration } from "webpack-dev-server";
 
 export const devMiddlewares = [];
 
@@ -23,7 +23,6 @@ if (process.env.NODE_ENV === "development") {
 
   devMiddlewares.push(
     webpackDevMiddleware(compiler, {
-      noInfo: true,
       publicPath: webpackConfig.output.publicPath,
     })
   );

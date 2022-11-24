@@ -1578,12 +1578,7 @@ test("external links always get the right attributes", () => {
   $("article > section div a").each((i, element) => {
     const $a = $(element);
     expect($a.hasClass("external")).toBe(true);
-    expect(
-      $a
-        .attr("rel")
-        .split(" ")
-        .filter((rel) => rel === "noopener").length
-    ).toBe(1);
+    expect($a.attr("target")).toBe("_blank");
   });
 });
 

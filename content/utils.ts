@@ -1,9 +1,9 @@
 import path from "path";
 import childProcess from "child_process";
+import LRU from "lru-cache";
 
 import { CONTENT_ROOT, CONTENT_TRANSLATED_ROOT } from "../libs/env";
 import { slugToFolder as _slugToFolder } from "../libs/slug-utils";
-import LRU from "lru-cache";
 
 export const MEMOIZE_INVALIDATE = Symbol("force cache update");
 
@@ -22,7 +22,7 @@ export function buildURL(locale, slug) {
   return `/${locale}/docs/${slug}`;
 }
 
-function isPromise(p) {
+function isPromise(p): p is Promise<unknown> {
   return p && Object.prototype.toString.call(p) === "[object Promise]";
 }
 
@@ -33,13 +33,15 @@ function isPromise(p) {
  * Note: The parameter are turned into a cache key quite naively, so
  * different object key order would lead to new cache entries.
  */
-export function memoize(fn: Function): Function {
+export function memoize<Args>(
+  fn: (...args: Args[]) => any
+): (...args: (Args | typeof MEMOIZE_INVALIDATE)[]) => any {
   if (process.env.NODE_ENV !== "production") {
     return fn;
   }
 
   const cache = new LRU({ max: 2000 });
-  return (...args) => {
+  return (...args: (Args | typeof MEMOIZE_INVALIDATE)[]) => {
     let invalidate = false;
     if (args.includes(MEMOIZE_INVALIDATE)) {
       args.splice(args.indexOf(MEMOIZE_INVALIDATE), 1);
@@ -55,7 +57,7 @@ export function memoize(fn: Function): Function {
       }
     }
 
-    const value = fn(...args);
+    const value = fn(...(args as Args[]));
     if (isPromise(value)) {
       return value.then((actualValue) => {
         cache.set(key, actualValue);

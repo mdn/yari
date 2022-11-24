@@ -1,3 +1,4 @@
+import EJS from "ejs";
 import Templates from "../src/templates";
 import path from "path";
 
@@ -78,7 +79,6 @@ describe("Templates class", () => {
       mode === "production" ? "only once" : "for each call"
     } in ${mode} mode`, async () => {
       process.env.NODE_ENV = mode;
-      const EJS = require("ejs");
       /**
        * Without `JSON.stringify(…)`, `\` in the file path would be treated
        * as part of an escape sequence (e.g.:

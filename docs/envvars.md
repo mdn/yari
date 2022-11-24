@@ -135,7 +135,7 @@ The base URL used in the Interactive Example iframes.
 
 **Default `not set`**
 
-This needs to be be a file path. E.g.
+This needs to be a file path. E.g.
 `export BUILD_MACROS_USED_LOGFILE=/tmp/macros-used.log` It will write one line
 for every (normalized) macro name used and its arguments in rendering.
 
@@ -312,7 +312,7 @@ included this value for `geo.country`.
 
 **Default: `false`**
 
-- Setting this to true logs glean pings to the console to to help debug.
+- Setting this to true logs glean pings to the console to help debug.
 
 ### `REACT_APP_GLEAN_ENABLED`
 

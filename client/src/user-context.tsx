@@ -3,7 +3,7 @@ import useSWR from "swr";
 
 import { DISABLE_AUTH, DEFAULT_GEO_COUNTRY } from "./env";
 import { fetchAllCollectionsItems } from "./plus/collections-quicksearch";
-import { MDNWorker } from "./settings/mdn-worker";
+import { FREQUENTLY_VIEWED_STORAGE_KEY } from "./plus/collections/frequently-viewed";
 
 export enum SubscriptionType {
   MDN_CORE = "core",
@@ -17,6 +17,43 @@ export type UserPlusSettings = {
   colInSearch: boolean;
   collectionLastModified: Date | null;
 };
+
+export class OfflineSettingsData {
+  offline: boolean;
+  preferOnline: boolean;
+  autoUpdates: boolean;
+
+  constructor({
+    offline = false,
+    preferOnline = false,
+    autoUpdates = false,
+  } = {}) {
+    this.offline = offline;
+    this.preferOnline = preferOnline;
+    this.autoUpdates = autoUpdates;
+  }
+
+  static read(): OfflineSettingsData {
+    let settingsData: OfflineSettingsData | undefined;
+    try {
+      settingsData = JSON.parse(
+        window.localStorage.getItem("MDNSettings") || "{}"
+      );
+    } catch (err) {
+      console.warn("Unable to read settings from localStorage", err);
+    }
+
+    return new OfflineSettingsData(settingsData);
+  }
+
+  write() {
+    try {
+      window.localStorage.setItem("MDNSettings", JSON.stringify(this));
+    } catch (err) {
+      console.warn("Unable to write settings to localStorage", err);
+    }
+  }
+}
 
 export type UserData = {
   username: string | null | undefined;
@@ -35,7 +72,7 @@ export type UserData = {
   };
   maintenance?: string;
   settings: null | UserPlusSettings;
-  mdnWorker?: MDNWorker;
+  offlineSettings: null | OfflineSettingsData;
   mutate: () => void;
 };
 
@@ -72,6 +109,7 @@ function getSessionStorageData() {
 
 export function cleanupUserData() {
   removeSessionStorageData();
+  removeLocalStorageData();
   if (window.mdnWorker) {
     window.mdnWorker.cleanDb();
     window.mdnWorker.disableServiceWorker();
@@ -86,6 +124,17 @@ function removeSessionStorageData() {
     sessionStorage.removeItem(SESSION_STORAGE_KEY);
   } catch (error: any) {
     console.warn("sessionStorage.removeItem didn't work", error.toString());
+  }
+}
+
+function removeLocalStorageData() {
+  try {
+    localStorage.removeItem(FREQUENTLY_VIEWED_STORAGE_KEY);
+  } catch (e) {
+    console.warn(
+      "Unable to delete frequently viewed items from localStorage",
+      e
+    );
   }
 }
 
@@ -108,10 +157,10 @@ export function UserDataProvider(props: { children: React.ReactNode }) {
       }
       const data = await response.json();
       const collectionLastModified =
-        data.settings?.collections_last_modified_time;
-      const settings: UserPlusSettings | null = data.settings
+        data?.settings?.collections_last_modified_time;
+      const settings: UserPlusSettings | null = data?.settings
         ? {
-            colInSearch: data.settings.col_in_search || false,
+            colInSearch: data?.settings?.col_in_search || false,
             collectionLastModified:
               (collectionLastModified && new Date(collectionLastModified)) ||
               null,
@@ -137,6 +186,7 @@ export function UserDataProvider(props: { children: React.ReactNode }) {
         },
         maintenance: data.maintenance,
         settings,
+        offlineSettings: null,
         mutate,
       };
     }
@@ -146,33 +196,35 @@ export function UserDataProvider(props: { children: React.ReactNode }) {
     if (data) {
       // At this point, the XHR request has set `data` to be an object.
       // The user is definitely signed in or not signed in.
+      data.offlineSettings = OfflineSettingsData.read();
       setSessionStorageData(data);
 
       if (data.settings?.colInSearch) {
         fetchAllCollectionsItems(data.settings?.collectionLastModified || null);
       }
-      // Let's initialize the MDN Worker if the user is signed in.
-      if (!window.mdnWorker && data?.isAuthenticated) {
+      // Let's initialize the MDN Worker if applicable.
+      if (!window.mdnWorker && data?.offlineSettings?.offline) {
         import("./settings/mdn-worker").then(({ getMDNWorker }) => {
           const mdnWorker = getMDNWorker();
           if (data?.isSubscriber === false) {
             mdnWorker.clearOfflineSettings();
+            mdnWorker.disableServiceWorker();
+            data.offlineSettings = new OfflineSettingsData();
           }
         });
       } else if (window.mdnWorker) {
-        if (data?.isAuthenticated === false) {
-          window.mdnWorker.disableServiceWorker();
-        } else if (data?.isSubscriber === false) {
+        if (data?.isSubscriber === false) {
           window.mdnWorker.clearOfflineSettings();
+          data.offlineSettings = new OfflineSettingsData();
+        }
+        if (!data?.offlineSettings?.offline) {
+          window.mdnWorker.disableServiceWorker();
         }
       }
     }
   }, [data]);
 
   let userData = data || getSessionStorageData();
-  if (userData && window?.mdnWorker) {
-    userData.mdnWorker = window.mdnWorker;
-  }
 
   return (
     <UserDataContext.Provider value={userData || null}>

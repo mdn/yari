@@ -12,7 +12,7 @@ interface CliOptions {
   verbose?: boolean;
 }
 
-function tryOrExit(f: Function) {
+function tryOrExit(f: ({ options, ...args }) => Promise<void>) {
   return async ({ options = {}, ...args }: { options: CliOptions }) => {
     try {
       await f({ options, ...args });
@@ -51,7 +51,7 @@ program
         folderSearch: args.folder,
         locales: buildLocaleMap(options.locale),
       });
-      for (let doc of all.iter()) {
+      for (const doc of all.iter()) {
         if (!doc.isMarkdown) {
           continue;
         }

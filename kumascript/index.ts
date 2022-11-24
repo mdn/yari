@@ -13,17 +13,27 @@ import {
   LIVE_SAMPLES_BASE_URL,
 } from "../libs/env";
 import { SourceCodeError } from "./src/errors";
-import { CheerioAPI, load } from "cheerio";
+import * as cheerio from "cheerio";
 
 const DEPENDENCY_LOOP_INTRO =
   'The following documents form a circular dependency when rendering (via the "page" and/or "IncludeSubnav" macros):';
 
 export const renderCache = new LRU<string, unknown>({ max: 2000 });
 
+interface RenderOptions {
+  urlsSeen?: Set<string>;
+  selective_mode?: [string, string[]] | false;
+  invalidateCache?: boolean;
+}
+
 export async function render(
   url: string,
-  { urlsSeen = null, selective_mode = false, invalidateCache = false } = {}
-): Promise<[CheerioAPI, SourceCodeError[]]> {
+  {
+    urlsSeen = null,
+    selective_mode = false,
+    invalidateCache = false,
+  }: RenderOptions = {}
+): Promise<[cheerio.CheerioAPI, SourceCodeError[]]> {
   const urlLC = url.toLowerCase();
   if (renderCache.has(urlLC)) {
     if (invalidateCache) {
@@ -31,7 +41,7 @@ export async function render(
     } else {
       const [renderedHtml, errors]: [string, SourceCodeError[]] =
         renderCache.get(urlLC);
-      return [load(renderedHtml), errors];
+      return [cheerio.load(renderedHtml), errors];
     }
   }
 

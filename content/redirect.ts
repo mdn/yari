@@ -214,7 +214,7 @@ function loadLocaleAndAdd(
   validatePairs(updatePairs, locale, strict);
 
   locale = locale.toLowerCase();
-  let root = getRoot(
+  const root = getRoot(
     locale,
     `trying to add redirects for ${locale} but CONTENT_TRANSLATED_ROOT not set`
   );

@@ -129,6 +129,8 @@ body {
 }
 
 main {
+  // prevent margin-collapse for child elements
+  display: flow-root;
   min-height: 80vh;
 }
 
@@ -163,6 +165,10 @@ main {
 
 .hidden {
   display: none;
+}
+
+.inline-block {
+  display: inline-block;
 }
 
 pre {
@@ -230,6 +236,7 @@ u {
   --background-toc-active: var(--plus-accent-background-color);
   --text-link: var(--plus-accent-color);
   --category-color: var(--plus-accent-color);
+  --category-color-engage: var(--plus-accent-engage);
   --category-color-background: var(--plus-accent-background-color);
   --code-color: var(--plus-code-color);
   --mark-color: var(--plus-mark-color);
@@ -238,6 +245,7 @@ u {
 .category-html {
   --background-toc-active: var(--html-accent-background-color);
   --category-color: var(--html-accent-color);
+  --category-color-engage: var(--html-accent-engage);
   --category-color-background: var(--html-accent-background-color);
   --mark-color: var(--html-mark-color);
 }
@@ -245,6 +253,7 @@ u {
 .category-css {
   --background-toc-active: var(--css-accent-background-color);
   --category-color: var(--css-accent-color);
+  --category-color-engage: var(--css-accent-engage);
   --category-color-background: var(--css-accent-background-color);
   --mark-color: var(--css-mark-color);
 }
@@ -252,6 +261,7 @@ u {
 .category-javascript {
   --background-toc-active: var(--js-accent-background-color);
   --category-color: var(--js-accent-color);
+  --category-color-engage: var(--js-accent-engage);
   --category-color-background: var(--js-accent-background-color);
   --mark-color: var(--js-mark-color);
 }
@@ -259,6 +269,7 @@ u {
 .category-http {
   --background-toc-active: var(--http-accent-background-color);
   --category-color: var(--http-accent-color);
+  --category-color-engage: var(--http-accent-engage);
   --category-color-background: var(--http-accent-background-color);
   --mark-color: var(--http-mark-color);
 }
@@ -266,6 +277,7 @@ u {
 .category-api {
   --background-toc-active: var(--apis-accent-background-color);
   --category-color: var(--apis-accent-color);
+  --category-color-engage: var(--apis-accent-engage);
   --category-color-background: var(--apis-accent-background-color);
   --mark-color: var(--apis-mark-color);
 }
@@ -273,6 +285,7 @@ u {
 .category-learn {
   --background-toc-active: var(--learn-accent-background-color);
   --category-color: var(--learn-accent-color);
+  --category-color-engage: var(--learn-accent-engage);
   --category-color-background: var(--learn-accent-background-color);
   --mark-color: var(--api-mark-color);
 }

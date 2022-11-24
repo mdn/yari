@@ -8,13 +8,13 @@ import {
   Section,
   SpecificationsSection,
 } from "../libs/types";
-import { BuiltDocument } from ".";
 import specs from "browser-specs";
 import web from "../kumascript/src/api/web";
 
 interface SimpleSupportStatementWithReleaseDate
   extends bcd.SimpleSupportStatement {
   release_date?: string;
+  version_last?: bcd.VersionValue;
 }
 
 type SectionsAndFlaws = [Section[], string[]];
@@ -357,9 +357,9 @@ function _addSingleSpecialSection(
     }
   }
 
-  let dataQuery: string = "";
+  let dataQuery = "";
   let hasMultipleQueries = false;
-  let specURLsString: string = "";
+  let specURLsString = "";
   let specialSectionType: string | null = null;
   if ($.find("div.bc-data").length) {
     specialSectionType = "browser_compatibility";
@@ -374,7 +374,7 @@ function _addSingleSpecialSection(
   }
 
   // Some old legacy documents haven't been re-rendered yet, since it
-  // was added, so the `div.bc-data` tag doesn't have a a `id="bcd:..."`
+  // was added, so the `div.bc-data` tag doesn't have a `id="bcd:..."`
   // or `data-bcd="..."` attribute. If that's the case, bail and fall
   // back on a regular prose section :(
   if (!dataQuery && specURLsString === "") {
@@ -448,7 +448,7 @@ function _addSingleSpecialSection(
     }
 
     for (const block of _extractCompatBlocks(data)) {
-      for (let [browser, originalInfo] of Object.entries(block.support)) {
+      for (const [browser, originalInfo] of Object.entries(block.support)) {
         // `originalInfo` here will be one of the following:
         //  - a single simple_support_statement:
         //    { version_added: 42 }
@@ -465,16 +465,17 @@ function _addSingleSpecialSection(
           : [originalInfo];
 
         for (const infoEntry of infos) {
-          const added =
-            typeof infoEntry.version_added === "string" &&
-            infoEntry.version_added.startsWith("≤")
-              ? infoEntry.version_added.slice(1)
-              : infoEntry.version_added;
+          const added = _normalizeVersion(infoEntry.version_added);
+          const removed = _normalizeVersion(infoEntry.version_removed);
           if (browserReleaseData.has(browser)) {
             if (browserReleaseData.get(browser).has(added)) {
               infoEntry.release_date = browserReleaseData
                 .get(browser)
                 .get(added).release_date;
+              infoEntry.version_last = _getPreviousVersion(
+                removed,
+                browsers[browser]
+              );
             }
           }
         }
@@ -505,6 +506,29 @@ function _addSingleSpecialSection(
         },
       },
     ];
+  }
+
+  function _getPreviousVersion(
+    version: bcd.VersionValue,
+    browser: bcd.BrowserStatement
+  ): bcd.VersionValue {
+    if (browser && typeof version === "string") {
+      const browserVersions = Object.keys(browser["releases"]).sort(
+        _compareVersions
+      );
+      const currentVersionIndex = browserVersions.indexOf(version);
+      if (currentVersionIndex > 0) {
+        return browserVersions[currentVersionIndex - 1];
+      }
+    }
+
+    return version;
+  }
+
+  function _normalizeVersion(version: bcd.VersionValue): bcd.VersionValue {
+    return typeof version === "string" && version.startsWith("≤")
+      ? version.slice(1)
+      : version;
   }
 
   function _getFirstVersion(support: bcd.SimpleSupportStatement): string {
@@ -651,7 +675,9 @@ function _addSingleSpecialSection(
             specURL.startsWith(spec.url) ||
             specURL.startsWith(spec.nightly.url) ||
             spec.nightly.alternateUrls.some((s) => specURL.startsWith(s)) ||
-            specURL.startsWith(spec.series.nightlyUrl)
+            // When grabbing series nightly, make sure we're grabbing the latest spec version
+            (spec.shortname === spec.series.currentSpecification &&
+              specURL.startsWith(spec.series.nightlyUrl))
         );
         const specificationsData = {
           bcdSpecificationURL: specURL,
@@ -693,7 +719,7 @@ function _addSectionProse(
 ): SectionsAndFlaws {
   let id: string | null = null;
   let title: string | null = null;
-  let titleAsText: string = "";
+  let titleAsText = "";
   let isH3 = false;
 
   const flaws: string[] = [];

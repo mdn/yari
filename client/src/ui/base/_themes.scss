@@ -166,6 +166,18 @@
   --text-primary-green: #{$mdn-color-light-theme-green-60};
   --text-primary-blue: #{$mdn-color-light-theme-blue-60};
   --text-primary-yellow: #{$mdn-color-light-theme-yellow-60};
+
+  --collections-link: #{$mdn-color-light-theme-red-70};
+  --collections-header: #{$mdn-color-light-theme-red-10};
+  --collections-mandala: #{$mdn-color-light-theme-red-30};
+  --collections-icon: #{$mdn-color-light-theme-red-50};
+
+  --form-limit-color: #{$mdn-color-neutral-60};
+  --form-limit-color-emphasis: #{$mdn-color-neutral-70};
+  --form-invalid-color: #{$mdn-color-light-theme-red-60};
+  --form-invalid-focus-color: #{$mdn-color-light-theme-red-50};
+  --form-invalid-focus-effect-color: #{rgba($mdn-color-light-theme-red-50, 0.2)};
+
   color-scheme: light;
 }
 
@@ -332,6 +344,18 @@
   --text-primary-green: #{$mdn-color-dark-theme-green-30};
   --text-primary-blue: #{$mdn-color-dark-theme-blue-30};
   --text-primary-yellow: #{$mdn-color-dark-theme-yellow-30};
+
+  --collections-link: #{$mdn-color-dark-theme-red-30};
+  --collections-header: #{$mdn-color-dark-theme-red-90};
+  --collections-mandala: #{$mdn-color-dark-theme-red-70};
+  --collections-icon: #{$mdn-color-dark-theme-red-60};
+
+  --form-limit-color: #{$mdn-color-neutral-40};
+  --form-limit-color-emphasis: #{$mdn-color-neutral-30};
+  --form-invalid-color: #{$mdn-color-light-theme-red-30};
+  --form-invalid-focus-color: #{$mdn-color-light-theme-red-40};
+  --form-invalid-focus-effect-color: #{rgba($mdn-color-light-theme-red-40, 0.2)};
+
   color-scheme: dark;
 }
 

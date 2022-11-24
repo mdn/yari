@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 
 import { Button } from "../../../atoms/button";
-import { Doc } from "../../../../../../libs/types/document";
+import { Doc, DocMetadata } from "../../../../../../libs/types/document";
 import { useOnlineStatus } from "../../../../hooks";
 import {
   Item,
@@ -24,10 +24,22 @@ import {
   ARTICLE_ACTIONS_COLLECTIONS_OPENED,
   NEW_COLLECTION_MODAL_SUBMIT_ARTICLE_ACTIONS,
 } from "../../../../telemetry/constants";
+import ExpandingTextarea from "../../../atoms/form/expanding-textarea";
+import { KeyedMutator } from "swr";
+
+import "./index.scss";
 
 const addValue = "add";
 
-export default function BookmarkV2Menu({ doc }: { doc: Doc }) {
+export default function BookmarkMenu({
+  doc,
+  item,
+  scopedMutator,
+}: {
+  doc: Doc | DocMetadata;
+  item?: Item;
+  scopedMutator?: KeyedMutator<Item[][]>;
+}) {
   const { data: collections } = useCollections();
   const { data: savedItems } = useBookmark(doc.mdn_url);
 
@@ -48,8 +60,8 @@ export default function BookmarkV2Menu({ doc }: { doc: Doc }) {
   const [lastAction, setLastAction] = useState("");
   const gleanClick = useGleanClick();
   const { mutator: addItem, ...addStatus } = useItemAdd();
-  const { mutator: editItem, ...editStatus } = useItemEdit();
-  const { mutator: deleteItem, ...deleteStatus } = useItemDelete();
+  const { mutator: editItem, ...editStatus } = useItemEdit(scopedMutator);
+  const { mutator: deleteItem, ...deleteStatus } = useItemDelete(scopedMutator);
   const { resetErrors, errors, isPending } = combineMutationStatus(
     addStatus,
     editStatus,
@@ -63,8 +75,9 @@ export default function BookmarkV2Menu({ doc }: { doc: Doc }) {
   }, [collections, formItem]);
 
   useEffect(() => {
-    if (savedItems?.length) setFormItem(savedItems[0]);
-  }, [savedItems]);
+    if (item) setFormItem(item);
+    else if (savedItems?.length) setFormItem(savedItems[0]);
+  }, [item, savedItems]);
 
   useEffect(() => {
     if (showNewCollection === false) {
@@ -100,7 +113,9 @@ export default function BookmarkV2Menu({ doc }: { doc: Doc }) {
   };
 
   const changeHandler = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >
   ) => {
     e.preventDefault();
     const { name, value } = e.target;
@@ -109,7 +124,7 @@ export default function BookmarkV2Menu({ doc }: { doc: Doc }) {
 
   const cancelHandler = (e: React.MouseEvent) => {
     e.preventDefault();
-    setFormItem(savedItems?.[0] || defaultItem);
+    setFormItem(item || savedItems?.[0] || defaultItem);
     setShow(false);
   };
 
@@ -132,13 +147,6 @@ export default function BookmarkV2Menu({ doc }: { doc: Doc }) {
     setShow(false);
   };
 
-  const enterHandler = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "Enter") {
-      e.preventDefault();
-      saveHandler(e);
-    }
-  };
-
   const deleteHandler = async (e: React.MouseEvent) => {
     e.preventDefault();
     if (!collections || isPending) return;
@@ -158,42 +166,29 @@ export default function BookmarkV2Menu({ doc }: { doc: Doc }) {
 
   return (
     <DropdownMenuWrapper
+      className="bookmark-menu"
       isOpen={show}
       setIsOpen={setShow}
       disableAutoClose={disableAutoClose}
     >
-      {doc ? (
-        <Button
-          type="action"
-          isDisabled={isOffline}
-          icon={savedItems?.length ? "bookmark-filled" : "bookmark"}
-          extraClasses={`bookmark-button small ${
-            savedItems?.length ? "highlight" : ""
-          }`}
-          onClickHandler={() => {
-            setShow((v) => !v);
-            if (!show) {
-              gleanClick(ARTICLE_ACTIONS_COLLECTIONS_OPENED);
-            }
-          }}
-        >
-          <span className="bookmark-button-label">
-            {savedItems?.length ? "Saved" : "Save"}
-          </span>
-        </Button>
-      ) : (
-        <Button
-          icon="edit"
-          type="action"
-          isDisabled={isOffline}
-          title="Edit"
-          onClickHandler={() => {
-            setShow((v) => !v);
-          }}
-        >
-          <span className="visually-hidden">Edit bookmark</span>
-        </Button>
-      )}
+      <Button
+        type="action"
+        isDisabled={isOffline}
+        icon={savedItems?.length ? "bookmark-filled" : "bookmark"}
+        extraClasses={`bookmark-button small ${
+          savedItems?.length ? "highlight" : ""
+        }`}
+        onClickHandler={() => {
+          setShow((v) => !v);
+          if (!show) {
+            gleanClick(ARTICLE_ACTIONS_COLLECTIONS_OPENED);
+          }
+        }}
+      >
+        <span className="bookmark-button-label">
+          {savedItems?.length ? "Saved" : "Save"}
+        </span>
+      </Button>
       <form className="mdn-form" method="post" onSubmit={saveHandler}>
         <DropdownMenu>
           <div
@@ -202,7 +197,11 @@ export default function BookmarkV2Menu({ doc }: { doc: Doc }) {
             }`}
             role="menu"
           >
-            <button onClick={cancelHandler} className="header mobile-only">
+            <button
+              onClick={cancelHandler}
+              type="button"
+              className="header mobile-only"
+            >
               <span className="header-inner">
                 <Icon name="chevron" />
                 {savedItems?.length ? "Edit Item" : "Add to Collection"}
@@ -265,20 +264,18 @@ export default function BookmarkV2Menu({ doc }: { doc: Doc }) {
                 autoComplete="off"
                 type="text"
                 onChange={changeHandler}
-                onKeyDown={enterHandler}
+                required={true}
                 disabled={isPending}
               />
             </div>
             <div className="mdn-form-item">
               <label htmlFor="bookmark-note">Note:</label>
-              <input
+              <ExpandingTextarea
                 id="bookmark-note"
                 name="notes"
-                type="text"
                 autoComplete="off"
                 value={formItem.notes}
                 onChange={changeHandler}
-                onKeyDown={enterHandler}
                 disabled={isPending}
               />
             </div>
@@ -289,25 +286,28 @@ export default function BookmarkV2Menu({ doc }: { doc: Doc }) {
               >
                 {isPending && lastAction === "save" ? "Saving..." : "Save"}
               </Button>
-              {savedItems?.length ? (
+              <Button
+                onClickHandler={cancelHandler}
+                isDisabled={!collections || isPending}
+                type="secondary"
+              >
+                Cancel
+              </Button>
+              {Boolean(savedItems?.length) && (
                 <Button
-                  type="secondary"
+                  id="bookmark-delete"
+                  type="action"
+                  icon="trash"
                   onClickHandler={deleteHandler}
                   isDisabled={
                     !collections || isPending || !isCurrentInCollection()
                   }
                 >
-                  {isPending && lastAction === "delete"
-                    ? "Deleting..."
-                    : "Delete"}
-                </Button>
-              ) : (
-                <Button
-                  onClickHandler={cancelHandler}
-                  isDisabled={!collections || isPending}
-                  type="secondary"
-                >
-                  Cancel
+                  <span className="visually-hidden">
+                    {isPending && lastAction === "delete"
+                      ? "Deleting..."
+                      : "Delete"}
+                  </span>
                 </Button>
               )}
             </div>

@@ -16,16 +16,16 @@
  * supports templates that are themselves async.
  *
  * render() relies on EJS's built-in caching and file-loading
- * capabilities so no template should ever need to be be loaded or
+ * capabilities so no template should ever need to be loaded or
  * compiled more than once.
  *
  * The getTemplateMap() function returns a Map object that maps
  * template names to the name of the file that implements the
  * template (this is used by the /macros/ endpoint in server.js)
  */
-const fs = require("fs");
-const path = require("path");
-const ejs = require("ejs");
+import fs from "fs";
+import path from "path";
+import ejs from "ejs";
 
 const dirname = __dirname;
 
@@ -115,11 +115,16 @@ export default class Templates {
         );
       }
     }
-    const rendered = await ejs.renderFile(path, args, {
-      async: true,
-      cache: process.env.NODE_ENV === "production",
-    });
-    return rendered.trim();
+    try {
+      const rendered = await ejs.renderFile(path, args, {
+        async: true,
+        cache: process.env.NODE_ENV === "production",
+      });
+      return rendered.trim();
+    } catch (error) {
+      console.error(`${name} macro failed:`, error);
+      throw error;
+    }
   }
 
   getTemplateMap() {

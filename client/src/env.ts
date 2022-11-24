@@ -63,7 +63,6 @@ export const GLEAN_ENABLED = Boolean(
   JSON.parse(process.env.REACT_APP_GLEAN_ENABLED || "false")
 );
 
-// TODO Inline after 2022-07-01.
 export function survey_duration(surveyBucket: string): {
   start: number;
   end: number;

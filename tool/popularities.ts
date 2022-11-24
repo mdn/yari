@@ -9,10 +9,10 @@
  * dynamically on every single production build.
  *
  */
-const fs = require("fs");
+import fs from "fs";
 
-const csv = require("@fast-csv/parse");
-const got = require("got");
+import * as csv from "@fast-csv/parse";
+import got from "got";
 
 const CURRENT_URL =
   "https://mdn-popularities-prod.s3.amazonaws.com/current.txt";
@@ -23,9 +23,20 @@ async function fetchPopularities() {
   return csv;
 }
 
-export async function runMakePopularitiesFile(options) {
-  const { outfile, maxUris } = options;
-  const pageviews = [];
+interface PopularitiesResult {
+  rowCount: number;
+  popularities: { [uri: string]: number };
+  pageviews: [string, number][];
+}
+
+export async function runMakePopularitiesFile({
+  outfile,
+  maxUris,
+}: {
+  outfile: string;
+  maxUris: number;
+}): Promise<PopularitiesResult> {
+  const pageviews: [string, number][] = [];
   let biggestCount = null;
   const raw = await fetchPopularities();
   return new Promise((resolve, reject) => {
@@ -56,11 +67,11 @@ export async function runMakePopularitiesFile(options) {
           pageviews.push([uri, count / biggestCount]);
         }
       })
-      .on("end", (rowCount) => {
+      .on("end", (rowCount: number) => {
         if (!pageviews.length) {
           return reject(new Error("No pageviews found!"));
         }
-        const popularities = {};
+        const popularities: { [uri: string]: number } = {};
         pageviews.slice(0, maxUris).forEach(([uri, popularity]) => {
           popularities[uri] = parseFloat(popularity.toFixed(5));
         });

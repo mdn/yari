@@ -47,6 +47,11 @@ const web = {
     return out.join("");
   },
 
+  // Creates a hyperlink for given document location(href).
+  // e.g /en-US/docs/Web/HTML/Attributes
+  //
+  // For translated content, if the document doesn't exist
+  // then hyperlink to corresponding en-US document is returned.
   smartLink(href, title, content, subpath, basepath, ignoreFlawMacro = null) {
     let flaw;
     let flawAttribute = "";

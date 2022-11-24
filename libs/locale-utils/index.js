@@ -48,6 +48,11 @@ function getLocale(request, fallback = DEFAULT_LOCALE) {
   return locale || fallback;
 }
 
+function isValidLocale(locale) {
+  return typeof locale === "string" && VALID_LOCALES.has(locale.toLowerCase());
+}
+
 module.exports = {
   getLocale,
+  isValidLocale,
 };
