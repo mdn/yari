@@ -150,11 +150,12 @@ export async function buildSPAs(options) {
         { prefix: "about", pageTitle: "About MDN" },
         { prefix: "community", pageTitle: "Contribute to MDN" },
       ];
+      const urlLocale = VALID_LOCALES.get(locale) || locale;
       for (const { prefix, pageTitle, noIndexing } of SPAs) {
-        const url = `/${locale}/${prefix}`;
+        const url = `/${urlLocale}/${prefix}`;
         const context = {
           pageTitle,
-          locale: VALID_LOCALES.get(locale) || locale,
+          locale: urlLocale,
           noIndexing,
         };
 
