@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { useNavigationType, useParams } from "react-router-dom";
 import { DEFAULT_LOCALE } from "../../libs/constants";
-import { isValidLocale } from "../../libs/locale-utils";
+import { isValidLocaleMC } from "../../libs/locale-utils";
 
 // This is a bit of a necessary hack!
 // The only reason this list is needed is because of the PageNotFound rendering.
@@ -18,7 +18,7 @@ import { isValidLocale } from "../../libs/locale-utils";
 
 export function useLocale() {
   const { locale } = useParams();
-  return isValidLocale(locale) ? locale : DEFAULT_LOCALE;
+  return isValidLocaleMC(locale) ? locale : DEFAULT_LOCALE;
 }
 
 export function useOnClickOutside(ref, handler) {

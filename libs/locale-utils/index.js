@@ -52,7 +52,12 @@ function isValidLocale(locale) {
   return typeof locale === "string" && VALID_LOCALES.has(locale.toLowerCase());
 }
 
+function isValidLocaleMC(locale) {
+  return typeof locale === "string" && VALID_LOCALES.has(locale);
+}
+
 module.exports = {
   getLocale,
   isValidLocale,
+  isValidLocaleMC,
 };
