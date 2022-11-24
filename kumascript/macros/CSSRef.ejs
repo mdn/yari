@@ -898,16 +898,16 @@ function buildPropertylist(pages, title) {
     // The regex is: match at "-" but not at the start of the string,
     // because of properties like -webkit-line-clamp, where we want the
     // "first part" to be "-webkit"
-    const pieces = property.title.split(/(?<!^)-/);
-    if (Object.keys(groups).includes(pieces[0])) {
-      groups[pieces[0]].push(property.title);
+    const prefix = property.title.split(/(?<!^)-/).shift();
+    if (Object.keys(groups).includes(prefix)) {
+      groups[prefix].push(property.title);
     } else {
-      groups[pieces[0]] = [property.title];
+      groups[prefix] = [property.title];
     }
   }
 
-  for (const propertyGroupName of Object.keys(groups)) {
-    const group = groups[propertyGroupName];
+  for (const prefix of Object.keys(groups)) {
+    const group = groups[prefix];
     if (group.length < 3) {
       // if a group contains fewer than 3 entries (that is, there are fewer than 3
       // properties with the given prefix) then just write them out as a list
@@ -918,7 +918,7 @@ function buildPropertylist(pages, title) {
     } else {
       // otherwise, make a collapsible section for this group, and write
       // the page links out inside it.
-      result += `<li class="toggle"><details><summary>${propertyGroupName}-*</summary><ol>`;
+      result += `<li class="toggle"><details><summary>${prefix}-*</summary><ol>`;
       for (const propertyName of group) {
         result += makePageLink(pages.find(item => item.title === propertyName));
       }
