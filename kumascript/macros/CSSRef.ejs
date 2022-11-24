@@ -894,15 +894,15 @@ function buildPropertylist(pages, title) {
   // the CSS properties that start with "border".
   const groups = {};
 
-  for (const property of properties) {
+  for (const page of pages) {
     // The regex is: match at "-" but not at the start of the string,
     // because of properties like -webkit-line-clamp, where we want the
     // "first part" to be "-webkit"
-    const prefix = property.title.split(/(?<!^)-/).shift();
+    const prefix = page.title.split(/(?<!^)-/).shift();
     if (Object.keys(groups).includes(prefix)) {
-      groups[prefix].push(property);
+      groups[prefix].push(page);
     } else {
-      groups[prefix] = [property];
+      groups[prefix] = [page];
     }
   }
 
@@ -912,15 +912,15 @@ function buildPropertylist(pages, title) {
       // if a group contains fewer than 3 entries (that is, there are fewer than 3
       // properties with the given prefix) then just write them out as a list
       // of links
-      for (const property of group) {
-        result += makePageLink(property);
+      for (const page of group) {
+        result += makePageLink(page);
       }
     } else {
       // otherwise, make a collapsible section for this group, and write
       // the page links out inside it.
       result += `<li class="toggle"><details><summary>${prefix}-*</summary><ol>`;
-      for (const property of group) {
-        result += makePageLink(property);
+      for (const page of group) {
+        result += makePageLink(page);
       }
       result += "</ol></details></li>";
     }
