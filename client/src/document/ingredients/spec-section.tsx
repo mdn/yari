@@ -1,5 +1,6 @@
 import { DisplayH2, DisplayH3 } from "./utils";
 import NoteCard from "../../ui/molecules/notecards";
+import { Specification } from "../../../../libs/types/document";
 
 export function SpecificationSection({
   id,
@@ -11,10 +12,7 @@ export function SpecificationSection({
   id: string;
   title: string;
   isH3: boolean;
-  specifications: Array<{
-    title: string;
-    bcdSpecificationURL: string;
-  }>;
+  specifications: Specification[];
   query: string;
 }) {
   return (
