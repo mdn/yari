@@ -22,6 +22,8 @@ import { useIsServer } from "./hooks";
 
 import { Banner } from "./banners";
 import { useGleanPage } from "./telemetry/glean-context";
+import { MainContentContainer } from "./ui/atoms/page-content";
+import { Loading } from "./ui/atoms/loading";
 
 const AllFlaws = React.lazy(() => import("./flaws"));
 const Translations = React.lazy(() => import("./translations"));
@@ -57,12 +59,24 @@ function Layout({ pageType, children }) {
   );
 }
 
+function LoadingFallback({ message }: { message?: string }) {
+  return (
+    <StandardLayout>
+      <MainContentContainer standalone={true}>
+        {/* This extra minHeight is just so that the footer doesn't flicker
+        in and out as the fallback appears. */}
+        <Loading minHeight={800} message={message || "Loading…"} />
+      </MainContentContainer>
+    </StandardLayout>
+  );
+}
+
 function LazyStandardLayout(props: {
   extraClasses?: string;
   children: React.ReactNode;
 }) {
   return (
-    <React.Suspense>
+    <React.Suspense fallback={<LoadingFallback />}>
       <StandardLayout {...props}></StandardLayout>
     </React.Suspense>
   );
