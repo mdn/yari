@@ -892,22 +892,22 @@ function buildPropertylist(pages, title) {
   //
   // For example, it has a key "border" whose value is an array of all
   // the CSS properties that start with "border".
-  const propertyGroups = {};
+  const groups = {};
 
   for (const property of properties) {
     // The regex is: match at "-" but not at the start of the string,
     // because of properties like -webkit-line-clamp, where we want the
     // "first part" to be "-webkit"
     const pieces = property.title.split(/(?<!^)-/);
-    if (Object.keys(propertyGroups).includes(pieces[0])) {
-      propertyGroups[pieces[0]].push(property.title);
+    if (Object.keys(groups).includes(pieces[0])) {
+      groups[pieces[0]].push(property.title);
     } else {
-      propertyGroups[pieces[0]] = [property.title];
+      groups[pieces[0]] = [property.title];
     }
   }
 
-  for (const propertyGroupName of Object.keys(propertyGroups)) {
-    const group = propertyGroups[propertyGroupName];
+  for (const propertyGroupName of Object.keys(groups)) {
+    const group = groups[propertyGroupName];
     if (group.length < 3) {
       // if a group contains fewer than 3 entries (that is, there are fewer than 3
       // properties with the given prefix) then just write them out as a list
