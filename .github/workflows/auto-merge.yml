@@ -16,7 +16,7 @@ jobs:
           github-token: ${{ secrets.AUTOMERGE_TOKEN }}
 
       - name: Squash and merge
-        if: ${{ steps.dependabot-metadata.outputs.update-type != 'version-update:semver-major' }}
+        if: ${{ steps.dependabot-metadata.outputs.update-type == 'version-update:semver-minor' || steps.dependabot-metadata.outputs.update-type == 'version-update:semver-patch' }}
         env:
           GITHUB_TOKEN: ${{ secrets.AUTOMERGE_TOKEN }}
         run: gh pr comment ${{ github.event.number }} --body "@dependabot squash and merge"
