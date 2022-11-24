@@ -37,7 +37,7 @@ export function memoize<Args>(
   fn: (...args: Args[]) => any
 ): (...args: (Args | typeof MEMOIZE_INVALIDATE)[]) => any {
   if (process.env.NODE_ENV !== "production") {
-    return fn;
+    return fn as (...args: (Args | typeof MEMOIZE_INVALIDATE)[]) => any;
   }
 
   const cache = new LRU({ max: 2000 });

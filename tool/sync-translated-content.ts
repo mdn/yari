@@ -232,7 +232,7 @@ export function syncTranslatedContent(inFilePath, locale) {
   Document.saveFile(filePath, Document.trimLineEndings(rawBody), metadata);
   try {
     fs.rmdirSync(path.dirname(inFilePath));
-  } catch (e) {
+  } catch (e: any) {
     if (e.code !== "ENOTEMPTY") {
       throw e;
     }

@@ -6,6 +6,7 @@ import * as util from "./util";
 const DUMMY_BASE_URL = "https://example.com";
 
 import { CONTENT_ROOT } from "../../../libs/env";
+import { KumaThis } from "../environment";
 
 const _warned = new Map();
 // The purpose of this function is to make sure `console.warn` is only called once
@@ -52,7 +53,15 @@ const web = {
   //
   // For translated content, if the document doesn't exist
   // then hyperlink to corresponding en-US document is returned.
-  smartLink(href, title, content, subpath, basepath, ignoreFlawMacro = null) {
+  smartLink(
+    this: KumaThis,
+    href,
+    title,
+    content,
+    subpath,
+    basepath,
+    ignoreFlawMacro = null
+  ) {
     let flaw;
     let flawAttribute = "";
     const page = this.info.getPageByURL(href);
@@ -164,7 +173,7 @@ const web = {
       flawAttribute = ` data-flaw-src="${util.htmlEscape(flaw.macroSource)}"`;
     }
     // Let's get a potentially localized title for when the document is missing.
-    const titleWhenMissing = this.mdn.getLocalString(
+    const titleWhenMissing = (this.mdn as any).getLocalString(
       this.web.getJSONData("L10n-Common"),
       "summary"
     );

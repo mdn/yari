@@ -114,8 +114,9 @@ describe("render() function", () => {
       await render(input, PAGE_ENV, renderPrerequisiteFromURL, {
         templates: null,
       });
-    } catch (e) {
-      expect(e).toBeInstanceOf(MacroInvocationError);
+    } catch (error) {
+      expect(error).toBeInstanceOf(MacroInvocationError);
+      const e = error as MacroInvocationError;
       expect(e.name).toBe("MacroInvocationError");
       expect(e).toHaveProperty("line");
       expect(e).toHaveProperty("column");

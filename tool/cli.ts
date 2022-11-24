@@ -33,7 +33,10 @@ import { runBuildRobotsTxt } from "./build-robots-txt";
 import { syncAllTranslatedContent } from "./sync-translated-content";
 import * as kumascript from "../kumascript";
 import { Action, ActionParameters, Logger } from "types";
-import { MacroRedirectedLinkError } from "../kumascript/src/errors";
+import {
+  MacroInvocationError,
+  MacroRedirectedLinkError,
+} from "../kumascript/src/errors";
 
 const PORT = parseInt(process.env.SERVER_PORT || "5042");
 
@@ -199,13 +202,14 @@ interface OptimizeClientBuildActionParameters extends ActionParameters {
   };
 }
 
-function tryOrExit(
-  f: ({ options, ...args }: ActionParameters) => unknown
+function tryOrExit<T extends ActionParameters>(
+  f: ({ options, ...args }: T) => unknown
 ): Action {
   return async ({ options = {}, ...args }: ActionParameters) => {
     try {
-      await f({ options, ...args });
-    } catch (error) {
+      await f({ options, ...args } as T);
+    } catch (e) {
+      const error = e as Error;
       if (options.verbose || options.v) {
         console.error(chalk.red(error.stack));
       }
@@ -358,8 +362,8 @@ program
   .command("move", "Move content to a new slug")
   .argument("<oldSlug>", "Old slug")
   .argument("<newSlug>", "New slug", {
-    validator: (value: string) => {
-      if (value.includes("#")) {
+    validator: (value) => {
+      if (typeof value === "string" && value.includes("#")) {
         throw new Error("slug can not contain the '#' character");
       }
       return value;
@@ -994,13 +998,13 @@ if (Mozilla && !Mozilla.dntEnabled()) {
             selective_mode: [cmdLC, macros],
           });
         } catch (error) {
-          if (error.name === "MacroInvocationError") {
+          if (error instanceof MacroInvocationError) {
             error.updateFileInfo(document.fileInfo);
             throw new Error(
               `error trying to parse ${error.filepath}, line ${error.line} column ${error.column} (${error.error.message})`
             );
           }
-          // Any other unexpected error re-thrown.
+
           throw error;
         }
       }
