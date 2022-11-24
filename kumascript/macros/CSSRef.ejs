@@ -900,9 +900,9 @@ function buildPropertylist(pages, title) {
     // "first part" to be "-webkit"
     const prefix = property.title.split(/(?<!^)-/).shift();
     if (Object.keys(groups).includes(prefix)) {
-      groups[prefix].push(property.title);
+      groups[prefix].push(property);
     } else {
-      groups[prefix] = [property.title];
+      groups[prefix] = [property];
     }
   }
 
@@ -912,15 +912,15 @@ function buildPropertylist(pages, title) {
       // if a group contains fewer than 3 entries (that is, there are fewer than 3
       // properties with the given prefix) then just write them out as a list
       // of links
-      for (const propertyName of group) {
-        result += makePageLink(pages.find(item => item.title === propertyName));
+      for (const property of group) {
+        result += makePageLink(property);
       }
     } else {
       // otherwise, make a collapsible section for this group, and write
       // the page links out inside it.
       result += `<li class="toggle"><details><summary>${prefix}-*</summary><ol>`;
-      for (const propertyName of group) {
-        result += makePageLink(pages.find(item => item.title === propertyName));
+      for (const property of group) {
+        result += makePageLink(property);
       }
       result += "</ol></details></li>";
     }
