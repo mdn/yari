@@ -12,8 +12,6 @@ import { A11yNav } from "./ui/molecules/a11y-nav";
 import { Footer } from "./ui/organisms/footer";
 import { TopNavigation } from "./ui/organisms/top-navigation";
 import { SiteSearch } from "./site-search";
-import { Loading } from "./ui/atoms/loading";
-import { MainContentContainer } from "./ui/atoms/page-content";
 import { PageNotFound } from "./page-not-found";
 import { Plus } from "./plus";
 import { About } from "./about";
@@ -24,6 +22,8 @@ import { useIsServer } from "./hooks";
 
 import { Banner } from "./banners";
 import { useGleanPage } from "./telemetry/glean-context";
+import { MainContentContainer } from "./ui/atoms/page-content";
+import { Loading } from "./ui/atoms/loading";
 
 const AllFlaws = React.lazy(() => import("./flaws"));
 const Translations = React.lazy(() => import("./translations"));
@@ -59,6 +59,29 @@ function Layout({ pageType, children }) {
   );
 }
 
+function LoadingFallback({ message }: { message?: string }) {
+  return (
+    <StandardLayout>
+      <MainContentContainer standalone={true}>
+        {/* This extra minHeight is just so that the footer doesn't flicker
+        in and out as the fallback appears. */}
+        <Loading minHeight={800} message={message || "Loading…"} />
+      </MainContentContainer>
+    </StandardLayout>
+  );
+}
+
+function LazyStandardLayout(props: {
+  extraClasses?: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <React.Suspense fallback={<LoadingFallback />}>
+      <StandardLayout {...props}></StandardLayout>
+    </React.Suspense>
+  );
+}
+
 function StandardLayout({
   extraClasses,
   children,
@@ -81,18 +104,6 @@ function PageOrPageNotFound({ pageNotFound, children }) {
     </StandardLayout>
   ) : (
     children
-  );
-}
-
-function LoadingFallback({ message }: { message?: string }) {
-  return (
-    <StandardLayout>
-      <MainContentContainer standalone={true}>
-        {/* This extra minHeight is just so that the footer doesn't flicker
-          in and out as the fallback appears. */}
-        <Loading minHeight={800} message={message || "Loading…"} />
-      </MainContentContainer>
-    </StandardLayout>
   );
 }
 
@@ -125,14 +136,14 @@ export function App(appProps) {
   // is true. So you have to have `isServer && CRUD_MODE` at the same time.
   const homePage =
     !isServer && CRUD_MODE ? (
-      <Layout pageType="standard-page">
+      <LazyStandardLayout>
         <WritersHomepage />
-      </Layout>
+      </LazyStandardLayout>
     ) : (
       <PageOrPageNotFound pageNotFound={pageNotFound}>
-        <Layout pageType="standard-page">
+        <StandardLayout>
           <Homepage {...appProps} />
-        </Layout>
+        </StandardLayout>
       </PageOrPageNotFound>
     );
 
@@ -154,17 +165,17 @@ export function App(appProps) {
                 <Route
                   path="/_flaws"
                   element={
-                    <StandardLayout>
+                    <LazyStandardLayout>
                       <AllFlaws />
-                    </StandardLayout>
+                    </LazyStandardLayout>
                   }
                 />
                 <Route
                   path="/_translations/*"
                   element={
-                    <StandardLayout>
+                    <LazyStandardLayout>
                       <Translations />
-                    </StandardLayout>
+                    </LazyStandardLayout>
                   }
                 />
 
@@ -203,9 +214,9 @@ export function App(appProps) {
                 <Route
                   path="/_sitemap/*"
                   element={
-                    <StandardLayout>
+                    <LazyStandardLayout>
                       <Sitemap />
-                    </StandardLayout>
+                    </LazyStandardLayout>
                   }
                 />
               </>
@@ -276,13 +287,5 @@ export function App(appProps) {
       />
     </Routes>
   );
-  /* This might look a bit odd but it's actually quite handy.
-   * This way, when rendering client-side, we wrap all the routes in
-   * <React.Suspense> but in server-side rendering that goes away.
-   */
-  return isServer ? (
-    routes
-  ) : (
-    <React.Suspense fallback={<LoadingFallback />}>{routes}</React.Suspense>
-  );
+  return routes;
 }

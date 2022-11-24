@@ -109,8 +109,8 @@ export async function buildSPAs(options) {
     if (!root) {
       continue;
     }
-    for (const locale of fs.readdirSync(root)) {
-      if (!fs.statSync(path.join(root, locale)).isDirectory()) {
+    for (const pathLocale of fs.readdirSync(root)) {
+      if (!fs.statSync(path.join(root, pathLocale)).isDirectory()) {
         continue;
       }
 
@@ -150,16 +150,17 @@ export async function buildSPAs(options) {
         { prefix: "about", pageTitle: "About MDN" },
         { prefix: "community", pageTitle: "Contribute to MDN" },
       ];
+      const locale = VALID_LOCALES.get(pathLocale) || pathLocale;
       for (const { prefix, pageTitle, noIndexing } of SPAs) {
         const url = `/${locale}/${prefix}`;
         const context = {
           pageTitle,
-          locale: VALID_LOCALES.get(locale) || locale,
+          locale,
           noIndexing,
         };
 
         const html = renderHTML(url, context);
-        const outPath = path.join(BUILD_OUT_ROOT, locale, prefix);
+        const outPath = path.join(BUILD_OUT_ROOT, pathLocale, prefix);
         fs.mkdirSync(outPath, { recursive: true });
         const filePath = path.join(outPath, "index.html");
         fs.writeFileSync(filePath, html);
