@@ -1,4 +1,4 @@
-import { packageBCD } from "./resolve-bcd";
+import { packageBCD } from "./resolve-bcd.js";
 import * as bcd from "@mdn/browser-compat-data/types";
 
 interface SimpleSupportStatementWithReleaseDate

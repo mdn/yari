@@ -20,7 +20,11 @@ import { extractSidebar } from "./extract-sidebar.js";
 import { extractSummary } from "./extract-summary.js";
 export { default as SearchIndex } from "./search-index.js";
 import { addBreadcrumbData } from "./document-utils.js";
-import { fixFixableFlaws, injectFlaws, injectSectionFlaws } from "./flaws.js";
+import {
+  fixFixableFlaws,
+  injectFlaws,
+  injectSectionFlaws,
+} from "./flaws/index.js";
 import { normalizeBCDURLs, extractBCDData, BCDData } from "./bcd-urls.js";
 import { checkImageReferences, checkImageWidths } from "./check-images.js";
 import { getPageTitle } from "./page-title.js";

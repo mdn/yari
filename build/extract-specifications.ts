@@ -1,8 +1,8 @@
-import { packageBCD } from "./resolve-bcd";
+import { packageBCD } from "./resolve-bcd.js";
 import * as bcd from "@mdn/browser-compat-data/types";
-import { Specification } from "../libs/types/document";
-import specs from "browser-specs";
-import web from "../kumascript/src/api/web";
+import { Specification } from "../libs/types/document.js";
+import specs from "browser-specs" assert { type: "json" };
+import web from "../kumascript/src/api/web.js";
 
 export function extractSpecifications(
   query: string | undefined,

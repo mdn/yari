@@ -4,9 +4,7 @@ import path from "node:path";
 import * as util from "./util.js";
 
 import { CONTENT_ROOT } from "../../../libs/env/index.js";
-
-import { CONTENT_ROOT } from "../../../libs/env";
-import { KumaThis } from "../environment";
+import { KumaThis } from "../environment.js";
 
 const DUMMY_BASE_URL = "https://example.com";
 
