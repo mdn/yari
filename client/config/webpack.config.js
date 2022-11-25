@@ -742,7 +742,9 @@ function config(webpackEnv) {
           ),
           // ESLint class options
           cwd: paths.appPath,
-          resolvePluginsRelativeTo: new URL(".", import.meta.url),
+          resolvePluginsRelativeTo: fileURLToPath(
+            new URL(".", import.meta.url)
+          ),
           baseConfig: {
             extends: [resolve.sync("eslint-config-react-app/base")],
             rules: {

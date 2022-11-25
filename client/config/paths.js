@@ -1,11 +1,13 @@
 import path from "node:path";
 import fs from "node:fs";
+import { fileURLToPath } from "node:url";
 import getPublicUrlOrPath from "react-dev-utils/getPublicUrlOrPath.js";
 
 // Make sure any symlinks in the project folder are resolved:
 // https://github.com/facebook/create-react-app/issues/637
-const appDirectory = fs.realpathSync(process.cwd());
-const resolveApp = (relativePath) => path.resolve(appDirectory, relativePath);
+const appDirectory = new URL("..", import.meta.url);
+const resolveApp = (relativePath) =>
+  fileURLToPath(new URL(relativePath, appDirectory));
 
 const appPackage = JSON.parse(fs.readFileSync(resolveApp("package.json")));
 

@@ -1,11 +1,12 @@
+import { fileURLToPath } from "node:url";
 import nodeExternals from "webpack-node-externals";
 import webpack from "webpack";
 
 const config = {
-  context: new URL(".", import.meta.url),
+  context: fileURLToPath(new URL(".", import.meta.url)),
   entry: "./index.ts",
   output: {
-    path: new URL("dist", import.meta.url),
+    path: fileURLToPath(new URL("dist", import.meta.url)),
     filename: "[name].js",
     sourceMapFilename: "[name].js.map",
     library: { type: "module" },
