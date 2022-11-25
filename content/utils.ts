@@ -1,5 +1,5 @@
-import path from "path";
-import childProcess from "child_process";
+import path from "node:path";
+import childProcess from "node:child_process";
 import LRU from "lru-cache";
 
 import { CONTENT_ROOT, CONTENT_TRANSLATED_ROOT } from "../libs/env";
@@ -37,7 +37,7 @@ export function memoize<Args>(
   fn: (...args: Args[]) => any
 ): (...args: (Args | typeof MEMOIZE_INVALIDATE)[]) => any {
   if (process.env.NODE_ENV !== "production") {
-    return fn;
+    return fn as (...args: (Args | typeof MEMOIZE_INVALIDATE)[]) => any;
   }
 
   const cache = new LRU({ max: 2000 });

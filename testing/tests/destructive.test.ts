@@ -8,10 +8,10 @@
  * with any of the files there.
  */
 
-import fs from "fs";
+import fs from "node:fs";
 import fse from "fs-extra";
-import path from "path";
-import { execSync } from "child_process";
+import path from "node:path";
+import { execSync } from "node:child_process";
 
 import tempy from "tempy";
 

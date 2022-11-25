@@ -1,5 +1,5 @@
-import fs from "fs";
-import path from "path";
+import fs from "node:fs";
+import path from "node:path";
 import { DEFAULT_LOCALE } from "../../../libs/constants";
 import { code } from "./code";
 import { asDefinitionList, isDefinitionList } from "./dl";

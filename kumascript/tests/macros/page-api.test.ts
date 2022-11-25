@@ -2,8 +2,8 @@
 // tested its main functions. The features of that macro are now
 // part of ../../src/environment.js, but we're still testing them here.
 
-import fs from "fs";
-import path from "path";
+import fs from "node:fs";
+import path from "node:path";
 import { Document } from "../../../content";
 import { assert, itMacro, describeMacro, beforeEachMacro } from "./utils";
 

@@ -1,8 +1,8 @@
 #!/usr/bin/env node
-import crypto from "crypto";
-import fs from "fs";
-import path from "path";
-import zlib from "zlib";
+import crypto from "node:crypto";
+import fs from "node:fs";
+import path from "node:path";
+import zlib from "node:zlib";
 
 import chalk from "chalk";
 import cliProgress from "cli-progress";

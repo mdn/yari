@@ -2,7 +2,7 @@
 // Or, something. Checking for flaws should be very different from checking
 // for images.
 
-import path from "path";
+import path from "node:path";
 
 import sizeOf from "image-size";
 

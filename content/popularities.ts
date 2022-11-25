@@ -1,5 +1,5 @@
-import fs from "fs";
-import path from "path";
+import fs from "node:fs";
+import path from "node:path";
 
 const dirname = __dirname;
 
@@ -13,8 +13,8 @@ export function getPopularities() {
       path.join(dirname, "..", "popularities.json")
     );
     Object.entries(JSON.parse(fs.readFileSync(filePath, "utf-8"))).forEach(
-      ([url, value]: [string, number]) => {
-        popularities.set(url, value);
+      ([url, value]: [string, unknown]) => {
+        popularities.set(url, value as number);
       }
     );
   }

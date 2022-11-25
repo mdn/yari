@@ -3,8 +3,8 @@
  * (react-scripts) can't do.
  *
  */
-import fs from "fs";
-import path from "path";
+import fs from "node:fs";
+import path from "node:path";
 
 import cheerio from "cheerio";
 import md5File from "md5-file";

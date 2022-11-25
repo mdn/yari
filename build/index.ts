@@ -1,9 +1,10 @@
 import { Doc } from "../libs/types";
-import fs from "fs";
-import path from "path";
+import fs from "node:fs";
+import path from "node:path";
 
 import chalk from "chalk";
 import {
+  MacroInvocationError,
   MacroLiveSampleError,
   MacroRedirectedLinkError,
 } from "../kumascript/src/errors";
@@ -13,11 +14,9 @@ import { CONTENT_ROOT, REPOSITORY_URLS } from "../libs/env";
 import * as kumascript from "../kumascript";
 
 import { FLAW_LEVELS } from "../libs/constants";
-import {
-  extractSections,
-  extractSidebar,
-  extractSummary,
-} from "./document-extractor";
+import { extractSections } from "./extract-sections";
+import { extractSidebar } from "./extract-sidebar";
+import { extractSummary } from "./extract-summary";
 export { default as SearchIndex } from "./search-index";
 import { addBreadcrumbData } from "./document-utils";
 import { fixFixableFlaws, injectFlaws, injectSectionFlaws } from "./flaws";
@@ -329,7 +328,10 @@ export async function buildDocument(
   try {
     [$, flaws] = await kumascript.render(document.url);
   } catch (error) {
-    if (error.name === "MacroInvocationError") {
+    if (
+      error instanceof MacroInvocationError &&
+      error.name === "MacroInvocationError"
+    ) {
       // The source HTML couldn't even be parsed! There's no point allowing
       // anything else move on.
       // But considering that this might just be one of many documents you're
