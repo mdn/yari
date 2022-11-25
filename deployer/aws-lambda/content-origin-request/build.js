@@ -1,6 +1,6 @@
 const { VALID_LOCALES } = require("@yari-internal/constants");
-const fs = require("fs");
-const path = require("path");
+const fs = require("node:fs");
+const path = require("node:path");
 
 const dirname = __dirname;
 

@@ -3,7 +3,7 @@
  * process.env.BUILD_ALWAYS_ALLOW_ROBOTS.
  *
  */
-import fs from "fs";
+import fs from "node:fs";
 
 import { VALID_LOCALES } from "../libs/constants";
 import { ALWAYS_ALLOW_ROBOTS } from "../libs/env";

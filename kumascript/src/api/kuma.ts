@@ -1,4 +1,4 @@
-import url from "url";
+import url from "node:url";
 import * as util from "./util";
 
 const kuma = {

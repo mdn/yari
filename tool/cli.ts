@@ -2,8 +2,8 @@
 import { isValidLocale } from "../libs/locale-utils";
 import type { Doc } from "../libs/types/document";
 
-import fs from "fs";
-import path from "path";
+import fs from "node:fs";
+import path from "node:path";
 import { fdir, PathsOutput } from "fdir";
 import frontmatter from "front-matter";
 import { program } from "@caporal/core";

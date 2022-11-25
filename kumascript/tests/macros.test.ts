@@ -1,7 +1,7 @@
 /**
  * Verify that all of the macros in ../macros/ compile without errors
  */
-import fs from "fs";
+import fs from "node:fs";
 import ejs from "ejs";
 import Templates from "../src/templates";
 const dirname = __dirname;

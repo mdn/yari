@@ -1,6 +1,6 @@
 import EJS from "ejs";
 import Templates from "../src/templates";
-import path from "path";
+import path from "node:path";
 
 const dirname = __dirname;
 

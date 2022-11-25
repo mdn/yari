@@ -23,8 +23,8 @@
  * template names to the name of the file that implements the
  * template (this is used by the /macros/ endpoint in server.js)
  */
-import fs from "fs";
-import path from "path";
+import fs from "node:fs";
+import path from "node:path";
 import ejs from "ejs";
 
 const dirname = __dirname;

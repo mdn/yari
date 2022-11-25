@@ -1,6 +1,6 @@
-import fs from "fs";
-import crypto from "crypto";
-import path from "path";
+import fs from "node:fs";
+import crypto from "node:crypto";
+import path from "node:path";
 
 import chalk from "chalk";
 import fm from "front-matter";

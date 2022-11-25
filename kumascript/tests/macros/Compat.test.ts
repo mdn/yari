@@ -1,7 +1,7 @@
 import { assert, itMacro, describeMacro, lintHTML } from "./utils";
 
-import fs from "fs";
-import path from "path";
+import fs from "node:fs";
+import path from "node:path";
 import jsdom from "jsdom";
 import extend from "extend";
 const dirname = __dirname;
