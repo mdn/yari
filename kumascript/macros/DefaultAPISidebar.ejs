@@ -36,22 +36,10 @@ var methods = webAPIGroups[0][group].methods || [];
 var properties = webAPIGroups[0][group].properties || [];
 var events = webAPIGroups[0][group].events || [];
 var groupGuides = webAPIGroups[0][group].guides || [];
-var guides = [];
 var groupTutorial = webAPIGroups[0][group].tutorial || [];
-var tutorial = [];
 
-// convert a groupData entry to a Page object
-// we need this so we can access the page title
-async function entryToPage(entry) {
-  const page = await wiki.getPage(entry);
-  if (page && page.url) {
-    return page;
-  }
-  return null;
-}
-
-var guides = await Promise.all(groupGuides.map(entryToPage).filter(e => e !== null));
-var tutorial = await Promise.all(groupTutorial.map(entryToPage).filter(e => e !== null));
+var guides = await wiki.getPages(...groupGuides);
+var tutorial = await wiki.getPages(...groupTutorial);
 
 function buildSublist(pages, title) {
   var result = '<li class="toggle"><details open><summary>' + title + '</summary><ol>';

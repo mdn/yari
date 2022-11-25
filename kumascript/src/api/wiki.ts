@@ -77,7 +77,16 @@ const wiki = {
     return adjustHeadings(result, section, show || 0, heading);
   },
 
-  // Returns the page object for the specified page.
+  // Returns all page objects for the specified page paths.
+  async getPages(...paths: string[]) {
+    const pages = await Promise.all(
+      paths.map((path) => this.wiki.getPage(path))
+    );
+
+    return pages.filter((page) => page && page.url);
+  },
+
+  // Returns the page object for the specified page path.
   getPage(path) {
     return this.info.getPageByURL(path || this.env.url);
   },
