@@ -1,7 +1,10 @@
+import { createRequire } from "node:module";
 import acceptLanguageParser from "accept-language-parser";
 
-import stageLookup from "./plans-stage-lookup.json";
-import prodLookup from "./plans-prod-lookup.json";
+const require = createRequire(import.meta.url);
+
+const stageLookup = require("./plans-stage-lookup.json");
+const prodLookup = require("./plans-prod-lookup.json");
 
 const STAGE_ENV = "stage";
 

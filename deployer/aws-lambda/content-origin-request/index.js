@@ -1,3 +1,4 @@
+import { createRequire } from "node:module";
 /* eslint-disable n/no-missing-import */
 import { resolveFundamental } from "@yari-internal/fundamental-redirects";
 import { getLocale } from "@yari-internal/locale-utils";
@@ -33,7 +34,8 @@ const LEGACY_URI_NEEDING_TRAILING_SLASH = new RegExp(
 
 const CONTENT_DEVELOPMENT_DOMAIN = ".content.dev.mdn.mozit.cloud";
 
-import REDIRECTS from "./redirects.json";
+const require = createRequire(import.meta.url);
+const REDIRECTS = require("./redirects.json");
 const REDIRECT_SUFFIXES = ["/index.json", "/bcd.json", ""];
 
 function redirect(location, { status = 302, cacheControlSeconds = 0 } = {}) {
