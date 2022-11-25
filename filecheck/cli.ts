@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-import path from "path";
+import path from "node:path";
 
 import { program } from "@caporal/core";
 

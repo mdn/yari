@@ -1,5 +1,5 @@
-import path from "path";
-import childProcess from "child_process";
+import path from "node:path";
+import childProcess from "node:child_process";
 import LRU from "lru-cache";
 
 import { CONTENT_ROOT, CONTENT_TRANSLATED_ROOT } from "../libs/env";

@@ -1,5 +1,5 @@
-import fs from "fs";
-import path from "path";
+import fs from "node:fs";
+import path from "node:path";
 
 import fromMarkdown from "mdast-util-from-markdown";
 import visit from "unist-util-visit";

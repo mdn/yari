@@ -1,4 +1,4 @@
-import fs from "fs";
+import fs from "node:fs";
 import Templates from "../src/templates";
 import { render } from "../src/render";
 import {
