@@ -1,9 +1,10 @@
 import { VALID_LOCALES } from "@yari-internal/constants";
 import fs from "node:fs";
 import path from "node:path";
+import { fileURLToPath } from "node:url";
 import dotenv from "dotenv";
 
-const dirname = __dirname;
+const dirname = path.dirname(fileURLToPath(import.meta.url));
 
 const root = path.join(dirname, "..", "..", "..");
 dotenv.config({
