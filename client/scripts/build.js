@@ -1,6 +1,3 @@
-// Do this as the first thing so that any code reading it knows the right env.
-import "../config/env.prod.js";
-
 // Ensure environment variables are read.
 import "../config/env.js";
 
