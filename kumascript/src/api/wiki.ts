@@ -81,7 +81,7 @@ const wiki = {
   // Returns all page objects for the specified page paths.
   async getPages(this: KumaThis, ...paths: string[]) {
     const pages = await Promise.all(
-      paths.map((path) => this.wiki.getPage(path))
+      paths.map((path) => (this.wiki as any).getPage(path))
     );
 
     return pages.filter((page) => page && page.url);
