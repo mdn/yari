@@ -2,6 +2,7 @@
   "private": true,
   "description": "End-to-end test AWS Lambda functions",
   "license": "MPL-2.0",
+  "type": "module",
   "main": "index.js",
   "scripts": {
     "serve": "node-dev server.js",

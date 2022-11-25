@@ -4,6 +4,7 @@
   "private": true,
   "description": "Defines the deployment package for this AWS Lambda function.",
   "license": "MPL-2.0",
+  "type": "module",
   "main": "index.js",
   "scripts": {
     "make-package": "yarn install && zip -r -X function.zip . -i index.js 'node_modules/*'"
