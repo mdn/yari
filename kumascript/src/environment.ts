@@ -47,6 +47,19 @@ import pagePrototype from "./api/page.js";
 import info from "./info.js";
 import Templates from "./templates.js";
 
+export interface KumaThis {
+  kuma: typeof kumaPrototype;
+  mdn: typeof mdnPrototype;
+  string: typeof stringPrototype;
+  wiki: typeof wikiPrototype;
+  web: typeof webPrototype;
+  page: typeof pagePrototype;
+  env: typeof Environment & PerPageContext;
+  info: typeof info;
+  renderPrerequisiteFromURL: (path: string) => unknown;
+  template: (name: string, args: any) => unknown;
+}
+
 type PerPageContext = Partial<{
   [x: string]: any;
   locale: string;

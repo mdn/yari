@@ -36,7 +36,10 @@ import { runOptimizeClientBuild } from "./optimize-client-build.js";
 import { runBuildRobotsTxt } from "./build-robots-txt.js";
 import { syncAllTranslatedContent } from "./sync-translated-content.js";
 import * as kumascript from "../kumascript/index.js";
-import { MacroRedirectedLinkError } from "../kumascript/src/errors.js";
+import {
+  MacroInvocationError,
+  MacroRedirectedLinkError,
+} from "../kumascript/src/errors.js";
 
 const { program } = caporal;
 const { prompt } = inquirer;
@@ -205,13 +208,14 @@ interface OptimizeClientBuildActionParameters extends ActionParameters {
   };
 }
 
-function tryOrExit(
-  f: ({ options, ...args }: ActionParameters) => unknown
+function tryOrExit<T extends ActionParameters>(
+  f: ({ options, ...args }: T) => unknown
 ): Action {
   return async ({ options = {}, ...args }: ActionParameters) => {
     try {
-      await f({ options, ...args });
-    } catch (error) {
+      await f({ options, ...args } as T);
+    } catch (e) {
+      const error = e as Error;
       if (options.verbose || options.v) {
         console.error(chalk.red(error.stack));
       }
@@ -364,8 +368,8 @@ program
   .command("move", "Move content to a new slug")
   .argument("<oldSlug>", "Old slug")
   .argument("<newSlug>", "New slug", {
-    validator: (value: string) => {
-      if (value.includes("#")) {
+    validator: (value) => {
+      if (typeof value === "string" && value.includes("#")) {
         throw new Error("slug can not contain the '#' character");
       }
       return value;
@@ -1001,13 +1005,13 @@ if (Mozilla && !Mozilla.dntEnabled()) {
             selective_mode: [cmdLC, macros],
           });
         } catch (error) {
-          if (error.name === "MacroInvocationError") {
+          if (error instanceof MacroInvocationError) {
             error.updateFileInfo(document.fileInfo);
             throw new Error(
               `error trying to parse ${error.filepath}, line ${error.line} column ${error.column} (${error.error.message})`
             );
           }
-          // Any other unexpected error re-thrown.
+
           throw error;
         }
       }

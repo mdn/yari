@@ -8,8 +8,8 @@ export function getPopularities() {
     // This is the file that's *not* checked into git.
     const filePath = new URL("../popularities.json", import.meta.url);
     Object.entries(JSON.parse(fs.readFileSync(filePath, "utf-8"))).forEach(
-      ([url, value]: [string, number]) => {
-        popularities.set(url, value);
+      ([url, value]: [string, unknown]) => {
+        popularities.set(url, value as number);
       }
     );
   }

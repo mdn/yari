@@ -187,6 +187,12 @@ export interface ProseSection {
     titleAsText?: string;
   };
 }
+
+export interface Specification {
+  bcdSpecificationURL: string;
+  title: string;
+}
+
 export interface SpecificationsSection {
   type: "specifications";
   value: {
@@ -194,10 +200,7 @@ export interface SpecificationsSection {
     title: string;
     isH3: boolean;
     query: string;
-    specifications: {
-      bcdSpecificationURL: any;
-      title: string;
-    }[];
+    specifications: Specification[];
   };
 }
 
@@ -213,15 +216,6 @@ export interface BCDSection {
     browsers?: BCD.Browsers | null;
   };
 }
-
-export type FrequentlyViewedEntry = {
-  serial: number;
-  url: string;
-  title: string;
-  timestamp: number;
-  visitCount: number;
-  parents?: DocParent[];
-};
 
 // Yari builder will attach extra keys from the compat data
 // it gets from @mdn/browser-compat-data. These are "Yari'esque"

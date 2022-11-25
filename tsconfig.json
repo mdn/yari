@@ -8,9 +8,11 @@
     "moduleResolution": "node",
     "resolveJsonModule": true,
     "skipLibCheck": true,
-    "strictBindCallApply": true,
     "target": "ES2020",
-    "preserveWatchOutput": true
+    "preserveWatchOutput": true,
+    "strict": true,
+    "noImplicitAny": false,
+    "strictNullChecks": false
   },
   "ts-node": {
     "esm": true,

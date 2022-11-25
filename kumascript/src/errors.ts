@@ -11,17 +11,25 @@ import { RedirectInfo } from "../../libs/types/document.js";
  */
 export class SourceCodeError {
   public name: string;
-  protected error;
-  protected errorStack;
-  protected offset;
-  protected line;
-  protected column;
-  protected macroName: string;
-  protected sourceContext;
-  protected fatal: boolean;
+  public readonly error: Error;
+  public readonly errorStack;
+  public offset;
+  public line;
+  public readonly column;
+  public readonly macroName: string;
+  public sourceContext;
+  public readonly fatal: boolean;
   public filepath;
 
-  constructor(name, error, source, line, column, macroName, fatal = true) {
+  constructor(
+    name: string,
+    error: Error,
+    source,
+    line,
+    column,
+    macroName,
+    fatal = true
+  ) {
     this.name = name;
     this.error = error;
     // So it becomes available in JSON.stringfy when doing that on

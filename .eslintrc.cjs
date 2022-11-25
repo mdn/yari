@@ -15,7 +15,7 @@ module.exports = {
     "jest/globals": true,
   },
   extends: ["eslint:recommended", "plugin:n/recommended"],
-  plugins: ["jest"],
+  plugins: ["jest", "unicorn"],
   globals: {
     Atomics: "readonly",
     SharedArrayBuffer: "readonly",
@@ -25,6 +25,7 @@ module.exports = {
   },
   rules: {
     "one-var": ["error", "never"],
+    "unicorn/prefer-node-protocol": "error",
   },
   reportUnusedDisableDirectives: true,
   overrides: [

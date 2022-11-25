@@ -36,6 +36,14 @@ export interface Item extends NewItem {
   parents: ItemParent[];
 }
 
+export interface FrequentlyViewedItem {
+  notes?: string;
+  parents: ItemParent[];
+  title: string;
+  url: string;
+  id: number;
+}
+
 export interface ItemParent {
   uri: string;
   title: string;

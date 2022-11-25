@@ -1,6 +1,5 @@
 import fs from "node:fs";
 import path from "node:path";
-import { cwd } from "node:process";
 
 import { renderToString } from "react-dom/server";
 
@@ -64,10 +63,10 @@ const lazy = (creator) => {
   };
 };
 
-const clientBuildRoot = path.resolve(cwd(), "client/build");
+const clientBuildRoot = new URL("../client/build", import.meta.url);
 
 const readBuildHTML = lazy(() => {
-  let html = fs.readFileSync(path.join(clientBuildRoot, "index.html"), "utf-8");
+  let html = fs.readFileSync(new URL("index.html", clientBuildRoot), "utf-8");
   if (!html.includes('<div id="root"></div>')) {
     throw new Error(
       'The render depends on being able to inject into <div id="root"></div>'
@@ -106,14 +105,11 @@ const getGAScriptPathName = lazy((relPath = "/static/js/ga.js") => {
 const extractWebFontURLs = lazy(() => {
   const urls: string[] = [];
   const manifest = JSON.parse(
-    fs.readFileSync(path.join(clientBuildRoot, "asset-manifest.json"), "utf-8")
+    fs.readFileSync(new URL("asset-manifest.json", clientBuildRoot), "utf-8")
   );
   for (const entrypoint of manifest.entrypoints) {
     if (!entrypoint.endsWith(".css")) continue;
-    const css = fs.readFileSync(
-      path.join(clientBuildRoot, entrypoint),
-      "utf-8"
-    );
+    const css = fs.readFileSync(new URL(entrypoint, clientBuildRoot), "utf-8");
     const generator = extractCSSURLs(
       css,
       (url) => url.endsWith(".woff2") && /Bold/i.test(url)

@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { useFrequentlyViewed } from "../../document/hooks";
 
 export const NOTIFICATIONS_BASE_PATH = "/api/v1/plus/notifications";
 export const WATCHED_BASE_PATH = "/api/v1/plus/watching";
@@ -178,23 +177,6 @@ export function useWatchedItemsApiEndpoint(
     })();
   }, [offset, searchTerms, selectedFilter, selectedSort]);
   return { data, error, isLoading, hasMore };
-}
-
-export function useFrequentlyViewedData(searchTerms: string) {
-  let [entries, setFrequentlyViewed] = useFrequentlyViewed();
-  const [data, setData] = useState(entries);
-  useEffect(() => {
-    if (searchTerms) {
-      const lowerSearchTerms = searchTerms.toLowerCase();
-      const filteredEntries = entries.filter((val) =>
-        val.title.toLowerCase().includes(lowerSearchTerms)
-      );
-      setData(filteredEntries);
-    } else {
-      setData(entries);
-    }
-  }, [searchTerms, entries]);
-  return { data, setFrequentlyViewed };
 }
 
 export async function getStripePlans() {

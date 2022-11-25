@@ -1,8 +1,10 @@
+import { Doc } from "../libs/types/document.js";
 import fs from "node:fs";
 import path from "node:path";
 
 import chalk from "chalk";
 import {
+  MacroInvocationError,
   MacroLiveSampleError,
   MacroRedirectedLinkError,
 } from "../kumascript/src/errors.js";
@@ -13,18 +15,12 @@ import { CONTENT_ROOT, REPOSITORY_URLS } from "../libs/env/index.js";
 import * as kumascript from "../kumascript/index.js";
 
 import { FLAW_LEVELS } from "../libs/constants/index.js";
-import {
-  extractSections,
-  extractSidebar,
-  extractSummary,
-} from "./document-extractor.js";
+import { extractSections } from "./extract-sections.js";
+import { extractSidebar } from "./extract-sidebar.js";
+import { extractSummary } from "./extract-summary.js";
 export { default as SearchIndex } from "./search-index.js";
 import { addBreadcrumbData } from "./document-utils.js";
-import {
-  fixFixableFlaws,
-  injectFlaws,
-  injectSectionFlaws,
-} from "./flaws/index.js";
+import { fixFixableFlaws, injectFlaws, injectSectionFlaws } from "./flaws.js";
 import { normalizeBCDURLs, extractBCDData, BCDData } from "./bcd-urls.js";
 import { checkImageReferences, checkImageWidths } from "./check-images.js";
 import { getPageTitle } from "./page-title.js";
@@ -138,11 +134,7 @@ function postProcessExternalLinks($) {
       return;
     }
     $a.addClass("external");
-    const rel = ($a.attr("rel") || "").split(" ");
-    if (!rel.includes("noopener")) {
-      rel.push("noopener");
-      $a.attr("rel", rel.join(" "));
-    }
+    $a.attr("target", "_blank");
   });
 }
 
@@ -337,7 +329,10 @@ export async function buildDocument(
   try {
     [$, flaws] = await kumascript.render(document.url);
   } catch (error) {
-    if (error.name === "MacroInvocationError") {
+    if (
+      error instanceof MacroInvocationError &&
+      error.name === "MacroInvocationError"
+    ) {
       // The source HTML couldn't even be parsed! There's no point allowing
       // anything else move on.
       // But considering that this might just be one of many documents you're

@@ -243,7 +243,7 @@ export async function render(
         ) {
           // The named macro does not exist
           macroError = new MacroNotFoundError(e, source, token);
-        } else if (e.name === "SyntaxError") {
+        } else if (e instanceof Error && e.name == "SyntaxError") {
           // There was a syntax error compiling the macro
           macroError = new MacroCompilationError(e, source, token);
         } else {

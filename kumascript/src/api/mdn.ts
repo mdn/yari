@@ -1,4 +1,5 @@
 import got from "got";
+import { KumaThis } from "../environment.js";
 import * as util from "./util.js";
 
 // Module level caching for repeat calls to fetchWebExtExamples().
@@ -23,7 +24,7 @@ const mdn = {
    *     { "en-US": "Foo", "de": "Bar", "es": "Baz" }
    * Return the one which matches the current locale.
    */
-  localString(strings) {
+  localString(this: KumaThis, strings) {
     let lang = this.env.locale;
     if (!(lang in strings)) lang = "en-US";
     return strings[lang];
@@ -35,7 +36,7 @@ const mdn = {
    * Return a map which matches the current locale, falling back to en-US
    * properties when the localized map contains partial properties.
    */
-  localStringMap(maps) {
+  localStringMap(this: KumaThis, maps) {
     const lang = this.env.locale;
     const defaultMap = maps["en-US"];
     if (lang == "en-US" || !(lang in maps)) {
@@ -66,7 +67,7 @@ const mdn = {
    *       "hello");
    *   => "Hallo!" (in case the locale is 'de')
    */
-  getLocalString(strings, key) {
+  getLocalString(this: KumaThis, strings, key) {
     if (!Object.prototype.hasOwnProperty.call(strings, key)) {
       return key;
     }
@@ -122,6 +123,7 @@ const mdn = {
    * Throw a deprecation error.
    */
   deprecated(
+    this: KumaThis,
     message = "This macro has been deprecated, and should be removed."
   ) {
     this.env.recordNonFatalError("deprecated", message);

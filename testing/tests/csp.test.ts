@@ -1,6 +1,6 @@
-import fs from "fs";
-import path from "path";
-import crypto from "crypto";
+import fs from "node:fs";
+import path from "node:path";
+import crypto from "node:crypto";
 import { CSP_SCRIPT_SRC_VALUES } from "../../libs/constants";
 
 describe("Content-Security-Policy", () => {
