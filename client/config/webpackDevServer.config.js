@@ -12,6 +12,10 @@ const sockHost = process.env.WDS_SOCKET_HOST;
 const sockPath = process.env.WDS_SOCKET_PATH; // default: '/ws'
 const sockPort = process.env.WDS_SOCKET_PORT;
 
+const proxySetup = fs.existsSync(paths.proxySetup)
+  ? (await import(paths.proxySetup)).default
+  : null;
+
 function config(proxy, allowedHost) {
   const disableFirewall =
     !proxy || process.env.DANGEROUSLY_DISABLE_HOST_CHECK === "true";
@@ -100,15 +104,14 @@ function config(proxy, allowedHost) {
     },
     // `proxy` is run between `before` and `after` `webpack-dev-server` hooks
     proxy,
-    async onBeforeSetupMiddleware(devServer) {
+    onBeforeSetupMiddleware(devServer) {
       // Keep `evalSourceMapMiddleware`
       // middlewares before `redirectServedPath` otherwise will not have any effect
       // This lets us fetch source contents from webpack for the error overlay
       devServer.app.use(evalSourceMapMiddleware(devServer));
 
-      if (fs.existsSync(paths.proxySetup)) {
+      if (proxySetup) {
         // This registers user provided middleware for proxy reasons
-        const { default: proxySetup } = await import(paths.proxySetup);
         proxySetup(devServer.app);
       }
     },
