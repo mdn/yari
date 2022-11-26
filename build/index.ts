@@ -1,4 +1,3 @@
-import { Doc } from "../libs/types/document.js";
 import fs from "node:fs";
 import path from "node:path";
 
