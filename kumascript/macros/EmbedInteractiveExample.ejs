@@ -3,28 +3,23 @@
 //
 // Parameters:
 //  $0 - The URL of interactive-examples.mdn.mozilla.net page (relative)
-//  $1 - Optional custom height class to set on iframe element
 //
-//  Example call {{EmbedInteractiveExample("pages/css/animation.html", "taller")}}
+//  Example call {{EmbedInteractiveExample("pages/css/animation.html")}}
 //
 
 const url = (new URL($0, env.interactive_examples.base_url)).toString();
-let heightClass = 'is-default-height';
+// Iframe height is acquired from height-data.json file exported by interactive-examples
+const heightData = await mdn.fetchInteractiveExampleHeightData();
 
-if ($0.includes('/js/')) {
-  heightClass = 'is-js-height';
+let height;
+if (heightData[$0]) {
+  height = heightData[$0];
+} else if ($0.includes('/js/')) {
+  height = 'js';
+} else {
+  height = 'default';
 }
-
-if ($1) {
-  let supportedHeights = ['shorter', 'taller', 'tabbed-shorter', 'tabbed-standard', 'tabbed-taller'];
-  let heightIsSupported = (supportedHeights.indexOf($1) > -1);
-
-  if (heightIsSupported) {
-    heightClass = 'is-' + $1 + '-height';
-  } else {
-    throw new Error(`An unrecognized second size parameter to EmbedInteractiveExample ('${$1}')`);
-  }
-}
+const heightClass = 'is-' + height + '-height';
 
 const text = mdn.localStringMap({
   "en-US": {

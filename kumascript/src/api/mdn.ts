@@ -1,9 +1,12 @@
 import got from "got";
 import { KumaThis } from "../environment.js";
 import * as util from "./util.js";
+import { INTERACTIVE_EXAMPLES_BASE_URL } from "../../../libs/env.js";
 
 // Module level caching for repeat calls to fetchWebExtExamples().
 let webExtExamples: any = null;
+
+let interactiveExampleHeightData: object = null;
 
 const mdn = {
   /**
@@ -162,6 +165,26 @@ const mdn = {
       throw new Error(webExtExamples.toString());
     }
     return webExtExamples;
+  },
+
+  /**
+   * Fetching height-data.json from interactive-examples, which contains height class for every interactive example.
+   */
+  async fetchInteractiveExampleHeightData() {
+    if (!interactiveExampleHeightData) {
+      try {
+        interactiveExampleHeightData = await got(
+          INTERACTIVE_EXAMPLES_BASE_URL + "/height-data.json",
+          {
+            timeout: 1000,
+            retry: 5,
+          }
+        ).json();
+      } catch (error) {
+        interactiveExampleHeightData = {};
+      }
+    }
+    return interactiveExampleHeightData;
   },
 };
 
