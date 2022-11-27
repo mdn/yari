@@ -6,8 +6,8 @@
   $1 - @-rule - defaults to the @-rule within the URL
 */
 
-import data from 'mdn-data/css';
-import localStrings from 'mdn-data/l10n/css';
+const data = require('mdn-data/css');
+const localStrings = require('mdn-data/l10n/css');
 
 let slug = env.slug;
 let name = $0 || (slug ? slug.split("/").pop().toLowerCase() :
