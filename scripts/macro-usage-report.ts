@@ -115,7 +115,7 @@ async function getDeprecatedMacros() {
 
 function formatCell(files: string[], limit = 2): string {
   if (files.length === 0) {
-    return "0";
+    return "-";
   }
 
   return `<span title="${files[0]} …">${files.length}</span>`;
