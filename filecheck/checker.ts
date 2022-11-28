@@ -207,9 +207,12 @@ async function checkCompression(filePath, options) {
       plugins.push(imageminGifsicle());
     } else if (extension === ".svg") {
       plugins.push(imageminSvgo());
-    } else {
-      throw new Error(`No plugin for ${extension}`);
     }
+
+    if (!plugins.length) {
+      return;
+    }
+
     const files = await imagemin([filePath], {
       destination: tempdir,
       plugins,
