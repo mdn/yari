@@ -78,6 +78,20 @@ export async function checkFile(
     throw new Error(`${filePath} is 0 bytes`);
   }
 
+  // Ensure that binary files contain what their extension indicates.
+  if (/\.(mp3|mp4|ttf|webm|woff2?)$/i.test(filePath)) {
+    const ext = filePath.split(".").pop();
+    const type = await fileTypeFromFile(filePath);
+    if (!type) {
+      throw new Error(`Failed to detect type of file attachment: ${filePath}`);
+    }
+    if (ext.toLowerCase() !== type.ext) {
+      throw new Error(
+        `Unexpected type '${type.mime}' (*.${type.ext}) detected for file attachment: ${filePath}.`
+      );
+    }
+  }
+
   // FileType can't check for .svg files.
   // So use special case for files called '*.svg'
   if (path.extname(filePath) === ".svg") {
