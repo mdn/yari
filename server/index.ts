@@ -294,9 +294,7 @@ app.get("/*", async (req, res, ...args) => {
 
   // TODO: Would be nice to have a list of all supported file extensions
   // in a constants file.
-  if (
-    /\.(gif|jpe?g|mp3|mp4|png|ogg|svg|ttf|webm|webp|woff2?)$/.test(req.path)
-  ) {
+  if (/\.(gif|jpe?g|mp3|mp4|png|ogg|svg|webm|webp|woff2?)$/.test(req.path)) {
     // Remember, FileAttachment.findByURLWithFallback() will return the absolute file path
     // iff it exists on disk.
     // Using a "fallback" strategy here so that images embedded in live samples

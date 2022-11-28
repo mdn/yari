@@ -27,7 +27,7 @@ function isAudio(filePath: string) {
 }
 
 function isFont(filePath: string) {
-  return /\.(ttf|woff2?)$/i.test(filePath);
+  return /\.(woff2?)$/i.test(filePath);
 }
 
 function isVideo(filePath: string) {
