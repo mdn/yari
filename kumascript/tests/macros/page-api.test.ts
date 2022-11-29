@@ -3,11 +3,10 @@
 // part of ../../src/environment.js, but we're still testing them here.
 
 import fs from "node:fs";
+import { jest } from "@jest/globals";
 
 import { Document } from "../../../content";
 import { assert, itMacro, describeMacro, beforeEachMacro } from "./utils.js";
-
-const jest = import.meta.jest;
 
 // Load fixture data.
 const fixtureData = JSON.parse(

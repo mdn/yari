@@ -1,5 +1,6 @@
 import fs from "node:fs";
 import jsdom from "jsdom";
+import { jest } from "@jest/globals";
 import { Document } from "../../../content";
 import {
   assert,
@@ -8,8 +9,6 @@ import {
   describeMacro,
   lintHTML,
 } from "./utils";
-
-const jest = import.meta.jest;
 
 // Load fixture data.
 const fixtureData = JSON.parse(

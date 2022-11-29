@@ -1,10 +1,9 @@
 import fs from "node:fs";
 import path from "node:path";
 import cheerio from "cheerio";
+import { jest } from "@jest/globals";
 
 import { itMacro, describeMacro, beforeEachMacro } from "./utils";
-
-const jest = import.meta.jest;
 
 const CONTENT_ROOT = process.env.CONTENT_ROOT;
 if (!CONTENT_ROOT) {

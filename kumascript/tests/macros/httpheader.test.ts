@@ -1,6 +1,5 @@
+import { jest } from "@jest/globals";
 import { assert, itMacro, describeMacro } from "./utils";
-
-const jest = import.meta.jest;
 
 describeMacro("httpheader", function () {
   itMacro("No arguments (en-US)", function (macro) {

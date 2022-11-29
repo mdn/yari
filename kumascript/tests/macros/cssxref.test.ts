@@ -1,6 +1,5 @@
+import { jest } from "@jest/globals";
 import { assert, itMacro, describeMacro, beforeEachMacro } from "./utils";
-
-const jest = import.meta.jest;
 
 // Basic const
 const CSS_BASE_URL = "/en-US/docs/Web/CSS";

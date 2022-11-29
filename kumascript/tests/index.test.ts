@@ -1,3 +1,5 @@
+import { jest } from "@jest/globals";
+
 import { Document } from "../../content/index.js";
 import info from "../src/info.js";
 import { render } from "../index.js";
@@ -9,18 +11,21 @@ import {
   MacroExecutionError,
 } from "../src/errors.js";
 
-const jest = import.meta.jest;
-
-describe("testing the main render() function", () => {
-  it("non-fatal errors in macros are returned by render()", async () => {
-    info.cleanURL = jest.fn((url) => {
+jest.mock("../src/info.js", () => ({
+  __esModule: true,
+  default: {
+    ...info,
+    cleanURL: jest.fn((url) => {
       const result = url.toLowerCase();
       if (result === "/en-us/docs/web/css/dumber") {
         return "/en-us/docs/web/css/number";
       }
       return result;
-    });
-    const source = `
+    }),
+  },
+}));
+
+const source = `
       {{cssxref("bigfoot")}}
       {{nonExistentMacro("yada")}}
       {{cssxref("dumber")}}
@@ -32,7 +37,12 @@ describe("testing the main render() function", () => {
       {{page("/en-US/docs/Web/B", "bogus-section")}}
       {{page("/en-US/docs/Web/C")}}
     `.trim();
-    Document.findByURL = jest.fn((url) => {
+
+jest.mock("../../content/index.js", () => ({
+  __esModule: true,
+  Document: {
+    ...Document,
+    findByURL: jest.fn((url) => {
       return {
         "/en-us/docs/web/a": {
           url: "/en-US/docs/Web/A",
@@ -95,7 +105,12 @@ describe("testing the main render() function", () => {
           },
         },
       }[url];
-    });
+    }),
+  },
+}));
+
+describe("testing the main render() function", () => {
+  it("non-fatal errors in macros are returned by render()", async () => {
     const [$, errors] = await render("/en-us/docs/web/a");
     const result = $.html();
     // First, let's check the result.

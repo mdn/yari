@@ -1,6 +1,5 @@
+import { jest } from "@jest/globals";
 import { assert, itMacro, describeMacro, beforeEachMacro } from "./utils";
-
-const jest = import.meta.jest;
 
 describeMacro("LiveSampleURL", function () {
   beforeEachMacro(function (macro) {

@@ -2,9 +2,8 @@ import { fileURLToPath } from "node:url";
 import path from "node:path";
 
 import EJS from "ejs";
+import { jest } from "@jest/globals";
 import Templates from "../src/templates.js";
-
-const jest = import.meta.jest;
 
 describe("Templates class", () => {
   it("has the expected methods", () => {

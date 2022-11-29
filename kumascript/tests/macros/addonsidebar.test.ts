@@ -1,8 +1,7 @@
 import { JSDOM } from "jsdom";
+import { jest } from "@jest/globals";
 
 import { beforeEachMacro, describeMacro, itMacro, lintHTML } from "./utils";
-
-const jest = import.meta.jest;
 
 const SUMMARIES = {
   "en-US": [

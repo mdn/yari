@@ -1,5 +1,6 @@
 import fs from "node:fs";
 import { fileURLToPath } from "node:url";
+import { jest } from "@jest/globals";
 
 import Templates from "../src/templates.js";
 import { render } from "../src/render.js";
@@ -9,8 +10,6 @@ import {
   MacroCompilationError,
   MacroExecutionError,
 } from "../src/errors.js";
-
-const jest = import.meta.jest;
 
 const PAGE_ENV = { slug: "" };
 
