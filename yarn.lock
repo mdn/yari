@@ -12522,10 +12522,10 @@ url-to-options@^1.0.1:
   resolved "https://registry.yarnpkg.com/url-to-options/-/url-to-options-1.0.1.tgz#1505a03a289a48cbd7a434efbaeec5055f5633a9"
   integrity sha512-0kQLIzG4fdk/G5NONku64rSH/x32NOA39LVQqlK8Le6lvTF6GGRJpqaQFGgU+CLwySIqBSMdwYM0sYcW9f6P4A==
 
-use-debounce@^8.0.4:
-  version "8.0.4"
-  resolved "https://registry.yarnpkg.com/use-debounce/-/use-debounce-8.0.4.tgz#27e93b2f010bd0b8ad06e9fc7de891d9ee5d6b8e"
-  integrity sha512-fGqsYQzl8kLHF2QpQSgIwgOgJmnh6j5L6SIzQiHdLfwp3q1egUL3btq5Bg2SJysH6A0ILLgT2IqXZKoNJr0nFw==
+use-debounce@^9.0.1:
+  version "9.0.1"
+  resolved "https://registry.yarnpkg.com/use-debounce/-/use-debounce-9.0.1.tgz#ea1022353afe26c1aced0809d63899f96936a79a"
+  integrity sha512-TQ94VpX8kj2wgVTYA027UnjdRojne6iLs9EUwEF17XdHwuPNoRw4+1J23Pyca6gL56nN09AAu2dSJa/j9aMbAw==
 
 utf8-byte-length@^1.0.1:
   version "1.0.4"
