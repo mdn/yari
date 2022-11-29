@@ -73,7 +73,8 @@ def analyze_pr(build_directory: Path, config):
             for comment in github_issue.get_comments():
                 if comment.user.login == "github-actions[bot]":
                     if hidden_comment_regex.search(comment.body):
-                        combined_comment += f"\n\n*(this comment was updated {datetime.datetime.utcnow()})*"
+                        now = datetime.datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S")
+                        combined_comment += f"\n\n*(comment last updated: {now})*"
                         comment.edit(body=combined_comment)
                         print(f"Updating existing comment ({comment})")
                         break
