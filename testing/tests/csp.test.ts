@@ -24,7 +24,7 @@ describe("Content-Security-Policy", () => {
 
     // If this assertion fails, an inline script was added to client/public/index.html`.
     // Please consider merging it with the other inline script, or increment this number.
-    expect(inlineScriptContents).toHaveLength(2);
+    expect(inlineScriptContents).toHaveLength(1);
 
     const inlineScriptCspValues = inlineScriptContents.map(cspValueOf);
 
