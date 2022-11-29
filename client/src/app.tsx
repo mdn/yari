@@ -25,13 +25,9 @@ import { useGleanPage } from "./telemetry/glean-context";
 import { MainContentContainer } from "./ui/atoms/page-content";
 import { Loading } from "./ui/atoms/loading";
 
-// @ts-ignore
 const AllFlaws = React.lazy(() => import("./flaws"));
-// @ts-ignore
 const Translations = React.lazy(() => import("./translations"));
-// @ts-ignore
 const WritersHomepage = React.lazy(() => import("./writers-homepage"));
-// @ts-ignore
 const Sitemap = React.lazy(() => import("./sitemap"));
 
 function Layout({ pageType, children }) {
