@@ -1,14 +1,10 @@
 # Security Policy
 
-## Reporting Security Issues
+## Reporting a Vulnerability
 
-### Bug Bounty Hunters
+If you've discovered a security issue, please report it through the form linked below, which will create a secure, private ticket. 
+https://bugzilla.mozilla.org/form.web.bounty
 
-Please see and follow the [Security Bug Bounty Program][bounty]
-
-### Everyone Else
-
-Please email <a href="mailto:security@mozilla.com">security@mozilla.com</a> with
-the details.
-
-[bounty]: https://www.mozilla.org/security/bug-bounty/
+MDN is also eligible for [Mozilla's Security Bug Bounty Program](https://www.mozilla.org/en-US/security/bug-bounty/).
+You can find more information about the bounty program in the [Mozilla Web Bug Bounty FAQ](https://www.mozilla.org/en-US/security/bug-bounty/faq-webapp/).
+You can use the above form even if you are not interested in a bounty reward.
