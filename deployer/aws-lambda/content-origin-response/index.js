@@ -1,6 +1,6 @@
-import { CSP_VALUE } from "@yari-internal/constants";
+const { CSP_VALUE } = require("@yari-internal/constants");
 
-export default async (event) => {
+exports.handler = async (event) => {
   /*
    * This Lambda@Edge function is designed to handle origin-response
    * events, so for example we can modify the response before it's

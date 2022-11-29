@@ -1,14 +1,12 @@
 /* eslint-disable n/no-missing-require */
-import fs from "node:fs";
-
-import { resolveFundamental } from "@yari-internal/fundamental-redirects";
-import { getLocale } from "@yari-internal/locale-utils";
-import {
+const { resolveFundamental } = require("@yari-internal/fundamental-redirects");
+const { getLocale } = require("@yari-internal/locale-utils");
+const {
   decodePath,
   encodePath,
   slugToFolder,
-} from "@yari-internal/slug-utils";
-import { VALID_LOCALES } from "@yari-internal/constants";
+} = require("@yari-internal/slug-utils");
+const { VALID_LOCALES } = require("@yari-internal/constants");
 
 const THIRTY_DAYS = 3600 * 24 * 30;
 const NEEDS_LOCALE = /^\/(?:docs|search|settings|signin|signup|plus)(?:$|\/)/;
@@ -35,9 +33,7 @@ const LEGACY_URI_NEEDING_TRAILING_SLASH = new RegExp(
 
 const CONTENT_DEVELOPMENT_DOMAIN = ".content.dev.mdn.mozit.cloud";
 
-const REDIRECTS = JSON.parse(
-  fs.readFileSync(new URL("./redirects.json", import.meta.url))
-);
+const REDIRECTS = require("./redirects.json");
 const REDIRECT_SUFFIXES = ["/index.json", "/bcd.json", ""];
 
 function redirect(location, { status = 302, cacheControlSeconds = 0 } = {}) {
@@ -87,7 +83,7 @@ function redirect(location, { status = 302, cacheControlSeconds = 0 } = {}) {
   };
 }
 
-export default async (event) => {
+exports.handler = async (event) => {
   /*
    * Modify the request before it's passed to the S3 origin.
    */

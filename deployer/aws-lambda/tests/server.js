@@ -1,8 +1,8 @@
-import polka from "polka";
-import kleur from "kleur";
+const polka = require("polka");
+const kleur = require("kleur");
 
-import requestHandler from "../content-origin-request.js";
-import responseHandler from "../content-origin-response.js";
+const requestHandler = require("../content-origin-request").handler;
+const responseHandler = require("../content-origin-response").handler;
 
 const PORT = parseInt(process.env.PORT || "7000");
 

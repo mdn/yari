@@ -1,11 +1,11 @@
-import fs from "node:fs";
-import path from "node:path";
-import { fileURLToPath } from "node:url";
+const { VALID_LOCALES } = require("@yari-internal/constants");
+const fs = require("node:fs");
+const path = require("node:path");
 
-import dotenv from "dotenv";
-import { VALID_LOCALES } from "@yari-internal/constants";
+const dirname = __dirname;
 
-const root = fileURLToPath(new URL("../../..", import.meta.url));
+const dotenv = require("dotenv");
+const root = path.join(dirname, "..", "..", "..");
 dotenv.config({
   path: path.join(root, process.env.ENV_FILE || ".env"),
 });
