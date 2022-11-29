@@ -15,6 +15,10 @@ import { getCollectionItems } from "./plus/collections-quicksearch";
 const PRELOAD_WAIT_MS = 500;
 const SHOW_INDEXING_AFTER_MS = 500;
 
+function qsURL(url, input) {
+  return `${url}?qs=${input}`;
+}
+
 type Item = {
   url: string;
   title: string;
@@ -283,7 +287,7 @@ function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
     defaultHighlightedIndex: 0,
     onSelectedItemChange: ({ type, selectedItem }) => {
       if (type !== useCombobox.stateChangeTypes.InputBlur && selectedItem) {
-        navigate(selectedItem.url);
+        navigate(qsURL(selectedItem.url, inputValue));
         onChangeInputValue("");
         reset();
         toggleMenu();
@@ -403,7 +407,7 @@ function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
                 })}
               >
                 <a
-                  href={item.url}
+                  href={qsURL(item.url, inputValue)}
                   onClick={(event: React.MouseEvent) => {
                     if (event.ctrlKey || event.metaKey) {
                       // Open in new tab, don't navigate current tab.
