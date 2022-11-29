@@ -3,6 +3,7 @@ import path from "node:path";
 import { promisify } from "node:util";
 
 import fse from "fs-extra";
+import FileType from "file-type";
 import tempy from "tempy";
 import * as cheerio from "cheerio";
 import imagemin from "imagemin";
@@ -84,7 +85,7 @@ export async function checkFile(filePath, options: CheckerOptions = {}) {
     });
   } else {
     // Check that the file extension matches the file header.
-    const fileType = await fileTypeFromFile(filePath);
+    const fileType = await FileType.fromFile(filePath);
     if (!fileType) {
       // This can easily happen if the .png (for example) file is actually just
       // a text file and not a binary.
