@@ -375,20 +375,6 @@ contents to be regenerated, but using cached templates and included content. A
 'Shift-Reload' is necessary to invalidate caches beyond just the content of the
 page itself.
 
-### Recovering from an Unknown Error
-
-Sometimes, you'll see a scripting message like this when you load a page:
-
-```plain
-Kumascript service failed unexpectedly: <class 'httplib.BadStatusLine'>
-```
-
-This is probably a temporary failure of the KumaScript service. If you Refresh
-the page, the error may disappear. If that doesn't work, try a Shift-Refresh.
-If, after a few tries, the error persists -
-[file an IT bug](https://bugzilla.mozilla.org/enter_bug.cgi?product=mozilla.org&format=itrequest)
-for Mozilla Developer Network to ask for an investigation.
-
 ### Broken wiki.languages() macros
 
 On some pages, you'll see a scripting error like this:
