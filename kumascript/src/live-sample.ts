@@ -48,6 +48,10 @@ const LIVE_SAMPLE_HTML = `
         </style>
         <% } %>
         <title><%= sampleTitle %></title>
+        <% if (hasMathML) { %>
+          <link rel="stylesheet" href="https://fred-wang.github.io/MathFonts/STIX/mathfonts.css" />
+          <script src="https://fred-wang.github.io/mathml.css/mspace.js"></script>
+        <% } %>
     </head>
     <body>
         <% if (html) { %>
