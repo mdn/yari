@@ -5,7 +5,7 @@ On the Yari platform that powers MDN, a legacy template/macro system called
 aspects of content. We are hoping to stop using it some day, but until then MDN
 will still rely on it. This article provides basic information about KumaScript.
 
-## What KumaScript is
+**KumaScript provides:**
 
 - A way to reuse and localize content that appears repeatedly between documents
   (e.g., compatibility labels, section navigation, warning banners).
@@ -13,16 +13,13 @@ will still rely on it. This article provides basic information about KumaScript.
 - A way to fetch and include content from other websites and services (e.g.,
   Bugzilla).
 
-## What KumaScript is not
+**KumaScript does not provide:**
 
-KumaScript does not
-
-- Support interactive scripting of the kind that can accept form submissions.
-- Have access to a database, files, or other ways to persistently store
-  information.
-- Support site personalization based on the currently logged in user.
-- Have access to user information, only to the content and metadata of an MDN
-  page being viewed.
+- Interactive scripting of the kind that can accept form submissions.
+- Access to a database, files, or other ways to persistently store information.
+- Site personalization based on the currently logged in user.
+- Access to user information, only to the content and metadata of an MDN page
+  being viewed.
 
 ## Overview
 
@@ -163,7 +160,7 @@ variables:
   - : A short, unique ID for the current MDN document
 - `env.files`
   - : An array of the files attached to the current MDN document; each object in
-    the array is as described under [File objects](#file_objects) below
+    the array is as described under [File objects](#file-objects) below
 - `env.review_tags`
   - : An array of the review tags on the article ("technical", "editorial",
     etc.)
