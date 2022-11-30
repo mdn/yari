@@ -214,5 +214,15 @@ export async function checkFile(
 }
 
 export async function runChecker(files: string[], options: CheckerOptions) {
-  return Promise.all(files.map((f) => checkFile(f, options)));
+  const errors = [];
+
+  await Promise.all(
+    files.map((file) =>
+      checkFile(file, options).catch((error) => errors.push(error))
+    )
+  );
+
+  if (errors.length) {
+    throw errors.map((error) => `${error}`).join("\n");
+  }
 }
