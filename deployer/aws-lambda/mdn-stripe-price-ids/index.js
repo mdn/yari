@@ -1,11 +1,14 @@
-const acceptLanguageParser = require("accept-language-parser");
+import { createRequire } from "node:module";
+import acceptLanguageParser from "accept-language-parser";
+
+const require = createRequire(import.meta.url);
 
 const stageLookup = require("./plans-stage-lookup.json");
 const prodLookup = require("./plans-prod-lookup.json");
 
 const STAGE_ENV = "stage";
 
-exports.handler = async (event) => {
+export async function handler(event) {
   const request = event.Records[0].cf.request;
   //This should fail if this header is not set.
   const ENV =
@@ -82,4 +85,4 @@ exports.handler = async (event) => {
   };
 
   return response;
-};
+}
