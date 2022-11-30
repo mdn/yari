@@ -60,6 +60,12 @@ module.exports = {
       },
     },
     {
+      files: ["deployer/aws-lambda/**/*.js"],
+      parserOptions: {
+        sourceType: "module",
+      },
+    },
+    {
       files: ["ssr/**/*.js"],
       parserOptions: {
         sourceType: "module",

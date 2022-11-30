@@ -167,7 +167,9 @@ export default function render(
   const hydrationData: HydrationData = {};
   const translations: string[] = [];
   if (pageNotFound) {
-    escapedPageTitle = `🤷🏽‍♀️ Page not found | ${escapedPageTitle}`;
+    escapedPageTitle = `🤷🏽‍♀️ Page not found | ${
+      escapedPageTitle || "MDN Web Docs"
+    }`;
     hydrationData.pageNotFound = true;
   } else if (hyData) {
     hydrationData.hyData = hyData;

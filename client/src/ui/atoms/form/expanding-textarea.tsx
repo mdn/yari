@@ -10,7 +10,7 @@ export default function ExpandingTextarea(
 
   const resizeCallback = useCallback(
     (node: HTMLTextAreaElement) => {
-      if (value && node && node.scrollHeight + 2 > node.clientHeight) {
+      if (value && node && node.scrollHeight > node.clientHeight) {
         node.style.height = `${node.scrollHeight + 2}px`;
       }
     },
