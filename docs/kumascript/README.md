@@ -152,50 +152,32 @@ When the wiki makes a call to the KumaScript service, it passes along some
 context on the current document that KumaScript makes available to templates as
 variables:
 
-- `env.path`
-  - : The path to the current MDN document
-- `env.url`
-  - : The full URL to the current MDN document
-- `env.id`
-  - : A short, unique ID for the current MDN document
-- `env.files`
-  - : An array of the files attached to the current MDN document; each object in
-    the array is as described under [File objects](#file-objects) below
-- `env.review_tags`
-  - : An array of the review tags on the article ("technical", "editorial",
-    etc.)
-- `env.locale`
-  - : The locale of the current MDN document
-- `env.title`
-  - : The title of the current MDN document
-- `env.slug`
-  - : The URL slug of the current MDN document
-- `env.tags`
-  - : An array list of tag names for the current MDN document
-- `env.modified`
-  - : Last modified timestamp for the current MDN document
-- `env.cache_control`
-  - : `Cache-Control` header sent in the request for the current MDN document,
-    useful in deciding whether to invalidate caches
+- `env.path` - The path to the current MDN document
+- `env.url` - The full URL to the current MDN document
+- `env.id` - A short, unique ID for the current MDN document
+- `env.files` - An array of the files attached to the current MDN document; each
+  object in the array is as described under [File objects](#file-objects) below
+- `env.review_tags` - An array of the review tags on the article ("technical",
+  "editorial", etc.)
+- `env.locale` - The locale of the current MDN document
+- `env.title` - The title of the current MDN document
+- `env.slug` - The URL slug of the current MDN document
+- `env.tags` - An array list of tag names for the current MDN document
+- `env.modified` - Last modified timestamp for the current MDN document
+- `env.cache_control` - The `Cache-Control` header sent in the request for the
+  current MDN document, useful in deciding whether to invalidate caches
 
 #### File objects
 
 Each file object has the following fields:
 
-- `title`
-  - : The attachment's title
-- `description`
-  - : A textual description of the current revision of the file
-- `filename`
-  - : The file's name
-- `size`
-  - : The size of the file in bytes
-- `author`
-  - : The username of the person who uploaded the file
-- `mime`
-  - : The MIME type of the file
-- `url`
-  - : The URL at which the file can be found
+- `title` - The attachment's title
+- `description` - A textual description of the current revision of the file
+- `filename` - The file's name
+- `size` - The size of the file in bytes
+- `author` - The username of the person who uploaded the file
+- `mime` - The MIME type of the file
+- `url` - The URL at which the file can be found
 
 ### Working with tags
 
@@ -234,44 +216,54 @@ can also use `module.exports` to export new API methods.
 
 This manually-maintained documentation is likely to fall out of date with the
 code. With that in mind, you can always check out the latest state of built-in
-APIs in the
-[KumaScript source](https://github.com/mdn/yari/tree/main/kumascript/src/api).
-But here is a selection of useful methods exposed to templates:
+APIs in the [KumaScript source](../kumascript/src/api). But here is a selection
+of useful methods exposed to templates:
 
-- `md5(string)`
-  - : Returns an MD5 hex digest of the given string.
-- `template("name", ["arg0", "arg1", …, "argN"])`
+- `md5(string)` - Returns an MD5 hex digest of the given string.
+- `cacheFn(key, timeout, function_to_cache)` - Using the given key and cache
+  entry lifetime, cache the results of the given function. Honors the value of
+  `env.cache_control` to invalidate cache on `no-cache`, which can be sent by a
+  logged-in user hitting shift-refresh.
+- `request` - Access to [`request/request`](https://github.com/request/request),
+  a library for making HTTP requests. Using this module in KumaScript templates
+  is not yet very friendly, so you may want to wrap usage in module APIs that
+  simplify things.
+- `log.debug(string)` - Outputs a debug message into the script log on the page
+  (i.e. the big red box that usually displays errors).
+- `require(name)` - Loads another template as a module; any output is ignored.
+  Anything assigned to `module.exports` in the template is returned. Used in
+  templates like so:
 
-  - : Executes and returns the result of the named template with the given list
-    of parameters.
+  ```ejs
+  <% const my_module = require('MyModule'); %>
+  ```
 
-    Example: `<%- template("warning", ["foo", "bar", "baz"]) %>`.
+- `template("name", ["arg0", "arg1", …, "argN"])` - Executes and returns the
+  result of the named template with the given list of parameters. For example:
 
-    Example using the `DOMxRef` macro:
-    `<%- template("DOMxRef", ["Event.bubbles", "bubbles"]) %>`.
+  ```ejs
+  <%- template("warning", ["foo", "bar", "baz"]) %>
+  ```
 
-    This is a JavaScript function. So, if one of the parameters is an arg
-    variable like `$2`, do not put it in quotes. Like this:
-    `<%- template("warning", [$1, $2, "baz"]) %>`. If you need to call another
-    template from within a block of code, do not use `<%` … `%>`. Example:
-    `myvar = "<li>" + template("LXRSearch", ["ident", "i", $1]) + "</li>";`
+  Example using the `DOMxRef` macro:
 
-- `require(name)`
-  - : Loads another template as a module; any output is ignored. Anything
-    assigned to `module.exports` in the template is returned. Used in templates
-    like so: `<% const my_module = require('MyModule'); %>`.
-- `cacheFn(key, timeout, function_to_cache)`
-  - : Using the given key and cache entry lifetime, cache the results of the
-    given function. Honors the value of `env.cache_control` to invalidate cache
-    on `no-cache`, which can be sent by a logged-in user hitting shift-refresh.
-- `request`
-  - : Access to [`request/request`](https://github.com/request/request), a
-    library for making HTTP requests. Using this module in KumaScript templates
-    is not yet very friendly, so you may want to wrap usage in module APIs that
-    simplify things.
-- `log.debug(string)`
-  - : Outputs a debug message into the script log on the page (i.e. the big red
-    box that usually displays errors).
+  ```ejs
+  <%- template("DOMxRef", ["Event.bubbles", "bubbles"]) %>
+  ```
+
+  This is a JavaScript function. So, if one of the parameters is an arg variable
+  like `$2`, do not put it in quotes. Like this:
+
+  ```ejs
+  <%- template("warning", [$1, $2, "baz"]) %>
+  ```
+
+  If you need to call another template from within a block of code, do not use
+  `<%` … `%>`. For example:
+
+  ```ejs
+  myvar = "<li>" + template("LXRSearch", ["ident", "i", $1]) + "</li>";
+  ```
 
 ### Built-in API modules
 
