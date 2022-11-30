@@ -1,14 +1,14 @@
 import fs from "node:fs";
 import jsdom from "jsdom";
 import { jest } from "@jest/globals";
-import { Document } from "../../../content";
+import { Document } from "../../../content/index.js";
 import {
   assert,
   itMacro,
   beforeEachMacro,
   describeMacro,
   lintHTML,
-} from "./utils";
+} from "./utils.js";
 
 // Load fixture data.
 const fixtureData = JSON.parse(

@@ -1,5 +1,6 @@
 import fs from "node:fs";
 
+import { jest } from "@jest/globals";
 import { JSDOM } from "jsdom";
 
 import { beforeEachMacro, describeMacro, itMacro, lintHTML } from "./utils.js";

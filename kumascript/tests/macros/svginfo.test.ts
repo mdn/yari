@@ -3,7 +3,7 @@ import path from "node:path";
 import cheerio from "cheerio";
 import { jest } from "@jest/globals";
 
-import { itMacro, describeMacro, beforeEachMacro } from "./utils";
+import { itMacro, describeMacro, beforeEachMacro } from "./utils.js";
 
 const CONTENT_ROOT = process.env.CONTENT_ROOT;
 if (!CONTENT_ROOT) {

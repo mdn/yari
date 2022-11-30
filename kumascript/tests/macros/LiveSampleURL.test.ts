@@ -1,5 +1,5 @@
 import { jest } from "@jest/globals";
-import { assert, itMacro, describeMacro, beforeEachMacro } from "./utils";
+import { assert, itMacro, describeMacro, beforeEachMacro } from "./utils.js";
 
 describeMacro("LiveSampleURL", function () {
   beforeEachMacro(function (macro) {
