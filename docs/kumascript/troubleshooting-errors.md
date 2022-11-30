@@ -12,13 +12,13 @@ macro.
 Check for:
 
 - Curly braces not meant to call a macro. If you need to write `{` in a document
-  without calling a macro you can escape it with a `\` like this: `\\{`
+  without calling a macro you can escape it with a `\` like this: `\\{`.
 - Special characters in a macro parameter. If you need to use a `"` or a `\`
   inside of a macro parameter, they can be escaped with a `\` like this: `\\` or
-  `\"`
+  `\"`.
 - Missing commas between macro parameters. Macro parameters need to be delimited
   by a comma (,) but not at the end of the list of parameters; for example
-  `\{\{compat("html.elements.link", 2)}}`.
+  `{{compat("html.elements.link", 2)}}`.
 - HTML tags appearing inside a macro call. If you apply styling to a macro, it
   will often break because, for example, a `</code>` tag may have appeared
   inside the macro code in the source code. Check the source view to see what's
