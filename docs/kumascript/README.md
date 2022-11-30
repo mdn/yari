@@ -77,7 +77,7 @@ As a semi-experimental feature (not guaranteed to work), you can supply a JSON
 object for the first and only parameter, like so:
 
 ```plain
-{{templateName({ "Alpha": "one", "Beta": ["a", "b", "c"], "Foo": "https:\/\/mozilla.org\/" })}}
+{{templateName({"Alpha": "one", "Beta": ["a", "b", "c"], "Foo": "https:\/\/mozilla.org\/"})}}
 ```
 
 The data from this macro is available in template code as an object in the `$0`
@@ -394,7 +394,8 @@ for Mozilla Developer Network to ask for an investigation.
 On some pages, you'll see a scripting error like this:
 
 ```plain
-Syntax error at line 436, column 461: Expected valid JSON object as the parameter of the preceding macro but…
+Syntax error at line 436, column 461: Expected valid JSON object as the
+parameter of the preceding macro but…
 ```
 
 If you edit the page, you'll probably see a macro like this at the bottom of the
