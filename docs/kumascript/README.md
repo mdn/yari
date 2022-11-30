@@ -31,7 +31,7 @@ A script in KumaScript is a _template_, and each template is a file in
 [the macros directory](https://github.com/mdn/yari/tree/main/kumascript/macros).
 A sample template might look like this:
 
-```js
+```ejs
 <% for (let i = 0; i < $0; i++) { %>
   Hello #<%= i %>
 <% } %>
@@ -129,7 +129,7 @@ KumaScript templates are processed by an
 - Nothing inside a `<% %>` block can ever contribute to the output stream. But,
   you can transition from JS mode to output mode using `<% %>` — for example:
 
-  ```js
+  ```ejs
   <% for (let i = 0; i < $0; i++) { %>
     Hello #<%= i %>
   <% } %>
@@ -289,17 +289,14 @@ These are used to share common variables and methods between templates:
 
 Other available APIs include:
 
-- `kuma.inspect(object)`
-  - : Renders any JS object as a string, handy for use with `log.debug()`. See
-    also:
-    [node.js `util.inspect()`](https://nodejs.org/api/util.html#util_util_inspect_object_options).
-- `kuma.htmlEscape(string)`
-  - : Escapes the characters `&, <, >, "` to `&amp, &lt;, &gt;, &quot;`,
-    respectively.
-- `kuma.url`
-  - : See also: [node.js `url` module](https://nodejs.org/api/url.html).
-- `kuma.fetchFeed(url)`
-  - : Fetch an RSS feed and parse it into a JS object.
+- `kuma.inspect(object)` - Renders any JS object as a string, handy for use with
+  `log.debug()`. See also:
+  [node.js `util.inspect()`](https://nodejs.org/api/util.html#util_util_inspect_object_options).
+- `kuma.htmlEscape(string)` - Escapes the characters `&, <, >, "` to
+  `&amp, &lt;, &gt;, &quot;`, respectively.
+- `kuma.url` - See also:
+  [node.js `url` module](https://nodejs.org/api/url.html).
+- `kuma.fetchFeed(url)` - Fetch an RSS feed and parse it into a JS object.
 
 ### Creating modules
 
@@ -307,7 +304,7 @@ Using the built-in `require()` method, you can load a template as a module to
 share common variables and methods between templates. A module can be defined in
 a template like this:
 
-```js
+```ejs
 <%
 module.exports = {
     add(a, b) {
@@ -320,7 +317,7 @@ module.exports = {
 Assuming this template were saved in the macros directory as `MathLib.ejs`, you
 could use it in another template like so:
 
-```js
+```ejs
 <%
 const math_lib = require("MathLib");
 %>
@@ -343,7 +340,7 @@ template. Note that you need to be really sure to remove these when you're done
 debugging, as they're visible to all users! To use it, just do something like
 this:
 
-```js
+```ejs
 <%- log.debug("Some text goes here"); %>
 ```
 
