@@ -10,17 +10,19 @@ interface SearchFiltersInterface {
   getSearchFiltersParams: () => URLSearchParams;
 }
 
-const searchFiltersContext = React.createContext<SearchFiltersInterface>({
-  selectedTerms: "",
-  selectedFilter: "",
-  selectedSort: "",
-  setSelectedTerms: () => {},
-  setSelectedFilter: () => {},
-  setSelectedSort: () => {},
-  getSearchFiltersParams: () => new URLSearchParams(),
-});
+export const searchFiltersContext = React.createContext<SearchFiltersInterface>(
+  {
+    selectedTerms: "",
+    selectedFilter: "",
+    selectedSort: "",
+    setSelectedTerms: () => {},
+    setSelectedFilter: () => {},
+    setSelectedSort: () => {},
+    getSearchFiltersParams: () => new URLSearchParams(),
+  }
+);
 
-const SearchFiltersProvider = (props) => {
+export const SearchFiltersProvider = (props) => {
   const [selectedTerms, setSelectedTerms] = React.useState<string>("");
   const [selectedFilter, setSelectedFilter] = React.useState<string>("");
   const [selectedSort, setSelectedSort] = React.useState<string>("");
@@ -54,5 +56,3 @@ const SearchFiltersProvider = (props) => {
     </searchFiltersContext.Provider>
   );
 };
-
-export { searchFiltersContext, SearchFiltersProvider };

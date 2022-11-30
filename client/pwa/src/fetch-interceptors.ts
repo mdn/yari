@@ -15,7 +15,7 @@ function jsonBlob(json) {
   });
 }
 
-class WhoamiInterceptor implements FetchInterceptor {
+export class WhoamiInterceptor implements FetchInterceptor {
   db: MDNOfflineDB;
 
   constructor(db: MDNOfflineDB) {
@@ -44,7 +44,7 @@ class WhoamiInterceptor implements FetchInterceptor {
   }
 }
 
-class DefaultApiInterceptor implements FetchInterceptor {
+export class DefaultApiInterceptor implements FetchInterceptor {
   db: MDNOfflineDB;
 
   constructor(db: MDNOfflineDB) {
@@ -70,5 +70,3 @@ class DefaultApiInterceptor implements FetchInterceptor {
     }
   }
 }
-
-export { WhoamiInterceptor, DefaultApiInterceptor };

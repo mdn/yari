@@ -1262,7 +1262,7 @@ const REDIRECT_PATTERNS = [].concat(
 const STARTING_SLASH = /^\//;
 const ABSOLUTE_URL = /^https?:\/\/.*/;
 
-function resolveFundamental(path) {
+export function resolveFundamental(path) {
   if (ABSOLUTE_URL.exec(path)) {
     return {};
   }
@@ -1275,5 +1275,3 @@ function resolveFundamental(path) {
   }
   return {};
 }
-
-export { resolveFundamental };
