@@ -83,15 +83,9 @@ describe("Templates class", () => {
     } in ${mode} mode`, async () => {
       process.env.NODE_ENV = mode;
       /**
-       * Without `JSON.stringify(…)`, `\` in the file path would be treated
-       * as part of an escape sequence (e.g.:
-       * `C:\nodejs\...\kumascript\tests\fixtures\templates\test.ejs`
-       * would be interpreted as:
-       *
-       * ```none
-       * C:
-       * odejs...kumascript  ests␌ixtures  emplates  est.ejs
-       * ```
+       * JSON.stringify is used here to handle Windows file paths. Without
+       * it, `\` in the file path would be treated as part of an escape
+       * sequence.
        */
       const mockLoader = jest.fn(
         (filename) => `<%= ${JSON.stringify(filename)} -%>`
