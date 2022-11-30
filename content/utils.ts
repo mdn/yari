@@ -5,7 +5,7 @@ import LRU from "lru-cache";
 import prettier from "prettier";
 
 import { CONTENT_ROOT, CONTENT_TRANSLATED_ROOT } from "../libs/env/index.js";
-import { slugToFolderUtil } from "../libs/slug-utils/index.js";
+import { slugToFolder as _slugToFolder } from "../libs/slug-utils/index.js";
 
 export const MEMOIZE_INVALIDATE = Symbol("force cache update");
 
@@ -117,9 +117,9 @@ export function toPrettyJSON(value) {
 
 export function urlToFolderPath(url) {
   const [, locale, , ...slugParts] = url.split("/");
-  return path.join(locale.toLowerCase(), slugToFolderUtil(slugParts.join("/")));
+  return path.join(locale.toLowerCase(), _slugToFolder(slugParts.join("/")));
 }
 
 export function slugToFolder(slug) {
-  return slugToFolderUtil(slug, path.sep);
+  return _slugToFolder(slug, path.sep);
 }

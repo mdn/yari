@@ -1,6 +1,6 @@
 import sanitizeFilename from "sanitize-filename";
 
-export function slugToFolderUtil(slug, joiner = "/") {
+export function slugToFolder(slug, joiner = "/") {
   return (
     slug
       // We have slugs with these special characters that would be

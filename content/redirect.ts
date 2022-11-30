@@ -2,7 +2,7 @@ import fs from "node:fs";
 import path from "node:path";
 
 import { resolveFundamental } from "../libs/fundamental-redirects/index.js";
-import { decodePath, slugToFolderUtil } from "../libs/slug-utils/index.js";
+import { decodePath, slugToFolder } from "../libs/slug-utils/index.js";
 import { CONTENT_ROOT, CONTENT_TRANSLATED_ROOT } from "../libs/env/index.js";
 import { VALID_LOCALES } from "../libs/constants/index.js";
 import { getRoot } from "./utils.js";
@@ -35,10 +35,7 @@ function resolveDocumentPath(url: string) {
 
   const [, locale, , ...slug] = bareURL.toLowerCase().split("/");
 
-  const relativeFolderPath = path.join(
-    locale,
-    slugToFolderUtil(slug.join("/"))
-  );
+  const relativeFolderPath = path.join(locale, slugToFolder(slug.join("/")));
   const relativeFilePath = path.join(relativeFolderPath, "index.html");
 
   const root = getRoot(locale);
