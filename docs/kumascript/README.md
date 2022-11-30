@@ -31,7 +31,7 @@ A script in KumaScript is a _template_, and each template is a file in
 [the macros directory](https://github.com/mdn/yari/tree/main/kumascript/macros).
 A sample template might look like this:
 
-```ejs
+```js
 <% for (let i = 0; i < $0; i++) { %>
   Hello #<%= i %>
 <% } %>
@@ -129,7 +129,7 @@ KumaScript templates are processed by an
 - Nothing inside a `<% %>` block can ever contribute to the output stream. But,
   you can transition from JS mode to output mode using `<% %>` — for example:
 
-  ```ejs
+  ```js
   <% for (let i = 0; i < $0; i++) { %>
     Hello #<%= i %>
   <% } %>
@@ -234,34 +234,34 @@ of useful methods exposed to templates:
   Anything assigned to `module.exports` in the template is returned. Used in
   templates like so:
 
-  ```ejs
+  ```js
   <% const my_module = require('MyModule'); %>
   ```
 
 - `template("name", ["arg0", "arg1", …, "argN"])` - Executes and returns the
   result of the named template with the given list of parameters. For example:
 
-  ```ejs
+  ```js
   <%- template("warning", ["foo", "bar", "baz"]) %>
   ```
 
   Example using the `DOMxRef` macro:
 
-  ```ejs
+  ```js
   <%- template("DOMxRef", ["Event.bubbles", "bubbles"]) %>
   ```
 
   This is a JavaScript function. So, if one of the parameters is an arg variable
   like `$2`, do not put it in quotes. Like this:
 
-  ```ejs
+  ```js
   <%- template("warning", [$1, $2, "baz"]) %>
   ```
 
   If you need to call another template from within a block of code, do not use
   `<%` … `%>`. For example:
 
-  ```ejs
+  ```js
   myvar = "<li>" + template("LXRSearch", ["ident", "i", $1]) + "</li>";
   ```
 
@@ -304,7 +304,7 @@ Using the built-in `require()` method, you can load a template as a module to
 share common variables and methods between templates. A module can be defined in
 a template like this:
 
-```ejs
+```js
 <%
 module.exports = {
     add(a, b) {
@@ -317,7 +317,7 @@ module.exports = {
 Assuming this template were saved in the macros directory as `MathLib.ejs`, you
 could use it in another template like so:
 
-```ejs
+```js
 <%
 const math_lib = require("MathLib");
 %>
@@ -340,7 +340,7 @@ template. Note that you need to be really sure to remove these when you're done
 debugging, as they're visible to all users! To use it, just do something like
 this:
 
-```ejs
+```js
 <%- log.debug("Some text goes here"); %>
 ```
 
