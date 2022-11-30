@@ -41,10 +41,8 @@ program
     if (!allFilePaths.length) {
       throw new Error("no files to check");
     }
-    return runChecker(allFilePaths, options).catch((error) => {
-      console.error(error);
-      throw error;
-    });
+
+    return runChecker(allFilePaths, options);
   });
 
 program.run();
