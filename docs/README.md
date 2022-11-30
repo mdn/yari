@@ -23,8 +23,8 @@ The core MDN platform consists of two GitHub repos:
 
 ### KumaScript
 
-KumaScript is a legacy template/macro system that automates certain
-aspects of MDN Web Docs content. For more information about KumaScript, see the
+KumaScript is a legacy template/macro system that automates certain aspects of
+MDN Web Docs content. For more information about KumaScript, see the
 [kumascript directory](./kumascript/) which describes macros, troubleshooting
 errors, usage, and more.
 
