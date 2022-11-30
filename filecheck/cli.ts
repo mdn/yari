@@ -37,14 +37,14 @@ program
   .argument("[files...]", "list of files to check")
   .action(({ args, options, logger }: FilecheckArgsAndOptions) => {
     const cwd = options.cwd || process.cwd();
-    const allFilePaths = (args.files || []).map((f) => path.resolve(cwd, f));
+    const files = (args.files || []).map((f) => path.resolve(cwd, f));
 
-    if (!allFilePaths.length) {
+    if (!files.length) {
       logger.info("No files to check.");
       return;
     }
 
-    return runChecker(allFilePaths, options);
+    return runChecker(files, options);
   });
 
 program.run();
