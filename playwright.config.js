@@ -1,4 +1,4 @@
-export const config = {
+export default {
   use: {
     channel: "chrome",
     // See more interesting options at https://playwright.dev/docs/test-configuration/
