@@ -16,8 +16,8 @@ const transform = {
       });
       const componentName = `Svg${pascalCaseFilename}`;
       return {
-        code: `import React from 'react';
-      export default {
+        code: `const React = require('react');
+      module.exports = {
         __esModule: true,
         default: ${assetFilename},
         ReactComponent: React.forwardRef(function ${componentName}(props, ref) {
@@ -35,7 +35,7 @@ const transform = {
       };
     }
 
-    return { code: `export default ${assetFilename};` };
+    return { code: `module.exports = ${assetFilename};` };
   },
 };
 

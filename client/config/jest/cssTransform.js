@@ -3,7 +3,7 @@
 
 const transform = {
   process() {
-    return { code: "export default {};" };
+    return { code: "module.exports = {};" };
   },
   getCacheKey() {
     // The output is always the same.
