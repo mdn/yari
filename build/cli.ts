@@ -6,8 +6,8 @@ import zlib from "node:zlib";
 
 import chalk from "chalk";
 import cliProgress from "cli-progress";
-import { program } from "@caporal/core";
-import { prompt } from "inquirer";
+import caporal from "@caporal/core";
+import inquirer from "inquirer";
 
 import {
   Document,
@@ -33,6 +33,9 @@ import * as bcd from "@mdn/browser-compat-data/types";
 import SearchIndex from "./search-index.js";
 import { makeSitemapXML, makeSitemapIndexXML } from "./sitemaps.js";
 import { humanFileSize } from "./utils.js";
+
+const { program } = caporal;
+const { prompt } = inquirer;
 
 export type DocumentBuild = SkippedDocumentBuild | InteractiveDocumentBuild;
 
