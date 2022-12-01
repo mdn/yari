@@ -45,7 +45,7 @@
     "test:headless": "playwright test headless",
     "test:kumascript": "cross-env NODE_OPTIONS=--experimental-vm-modules jest kumascript --env=node",
     "test:prepare": "yarn build:prepare && yarn build && yarn start:static-server",
-    "test:testing": "jest --rootDir testing",
+    "test:testing": "cross-env NODE_OPTIONS=--experimental-vm-modules jest --rootDir testing",
     "tool": "ts-node tool/cli.ts",
     "watch:ssr": "cd ssr && webpack --mode=production --watch"
   },
