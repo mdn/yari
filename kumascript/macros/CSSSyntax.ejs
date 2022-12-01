@@ -212,7 +212,7 @@ function getNameAndSyntax() {
       }
       break;
     case "css-function":
-      itemName = `<${itemName}()>`;
+      itemName = `${itemName}()`;
       // not all functions have an entry in the syntax
       if (valuespaces[itemName]) {
         itemSyntax = valuespaces[itemName].value;
