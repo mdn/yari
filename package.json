@@ -49,29 +49,6 @@
     "tool": "ts-node tool/cli.ts",
     "watch:ssr": "cd ssr && webpack --mode=production --watch"
   },
-  "jest": {
-    "extensionsToTreatAsEsm": [
-      ".ts",
-      ".tsx"
-    ],
-    "moduleNameMapper": {
-      "^(\\.{1,2}/.*)\\.js$": "$1"
-    },
-    "preset": "ts-jest/presets/default-esm",
-    "testPathIgnorePatterns": [
-      "headless*",
-      "developing.spec.ts"
-    ],
-    "transform": {
-      "\\.tsx?$": [
-        "ts-jest",
-        {
-          "babelConfig": true,
-          "useESM": true
-        }
-      ]
-    }
-  },
   "resolutions": {
     "@types/react": ">=18.0.0",
     "lodash": ">=4.17.15"
