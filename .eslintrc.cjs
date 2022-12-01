@@ -40,6 +40,12 @@ module.exports = {
           "warn",
           { ignoreRestSiblings: true },
         ],
+        "n/no-extraneous-import": [
+          "error",
+          {
+            allowModules: ["@jest/globals"],
+          },
+        ],
         "n/no-missing-import": "off",
         "n/no-unpublished-import": "off",
         "n/shebang": "off",
