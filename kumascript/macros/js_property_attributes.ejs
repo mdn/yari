@@ -84,9 +84,9 @@ const text = mdn.localStringMap({
   }
 })
 
-const writable = $0 == 1 ? text.yes : text.no;
-const enumerable = $1 == 1 ? text.yes : text.no;
-const configurable = $2 == 1 ? text.yes : text.no;
+const isWritable = $0 == 1;
+const isEnumerable = $1 == 1;
+const isConfigurable = $2 == 1;
 
 %>
 <table class="standard-table">
@@ -98,15 +98,15 @@ const configurable = $2 == 1 ? text.yes : text.no;
   <tbody>
     <tr>
       <td><%=text.writableName%></td>
-      <td><%=writable%></td>
+      <td><%=(isWritable ? text.yes : text.no)%></td>
     </tr>
     <tr>
       <td><%=text.enumerableName%></td>
-      <td><%=enumerable%></td>
+      <td><%=(isEnumerable ? text.yes : text.no)%></td>
     </tr>
     <tr>
       <td><%=text.configurableName%></td>
-      <td><%=configurable%></td>
+      <td><%=(isConfigurable ? text.yes : text.no)%></td>
     </tr>
   </tbody>
 </table>
