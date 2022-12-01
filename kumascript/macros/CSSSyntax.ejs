@@ -87,7 +87,7 @@ function getSpecsForItem(itemName, itemType) {
   // Get all specs which list this item
   const specsForItem = [];
   for (const [shortname, data] of Object.entries(parsedWebRef)) {
-    const itemNames = Object.keys(data[itemType]);
+    const itemNames = Object.values(data[itemType]).map(item => item.name);
     if (itemNames.includes(itemName)) {
       specsForItem.push(shortname);
     }
@@ -101,7 +101,10 @@ function getSpecsForItem(itemName, itemType) {
  * @param {string} propertyName - the name of the property
  */
 function getWebRefProperty(specName, propertyName) {
-  return parsedWebRef[specName].properties[propertyName];
+  const spec = parsedWebRef[specName];
+  const property = spec.properties.find(p => p.name === propertyName);
+
+  return property;
 }
 
 /**
@@ -153,8 +156,9 @@ function getAtRuleSyntax(atRuleName) {
   // defined in the `value` property, only appears in one of them.
   const specs = getSpecsForItem(atRuleName, "atrules");
   for (const spec of specs) {
-    if (parsedWebRef[spec].atrules[atRuleName].value) {
-      return parsedWebRef[spec].atrules[atRuleName].value;
+    const atRule = parsedWebRef[spec].atrules.find(r => r.name === atRuleName);
+    if (atRule.value) {
+      return atRule.value;
     }
   }
   return '';
@@ -172,7 +176,7 @@ function getAtRuleDescriptorSyntax(atRuleDescriptorName) {
   // Look through all the specs that define the at-rule, for the one
   // that defines this descriptor.
   for (const spec of specs) {
-    const atRule = parsedWebRef[spec].atrules[atRuleName];
+    const atRule = parsedWebRef[spec].atrules.find(r => r.name === atRuleName);
     for (const descriptor of atRule.descriptors) {
       if (descriptor.name === atRuleDescriptorName) {
         return descriptor.value;
