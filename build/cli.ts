@@ -23,7 +23,11 @@ import {
 import { VALID_LOCALES } from "../libs/constants/index.js";
 import { renderHTML } from "../ssr/dist/main.js";
 import options from "./build-options.js";
-import { buildDocument, BuiltDocument, renderContributorsTxt } from ".";
+import {
+  buildDocument,
+  BuiltDocument,
+  renderContributorsTxt,
+} from "./index.js";
 import { Flaws } from "../libs/types/document.js";
 import * as bcd from "@mdn/browser-compat-data/types";
 import SearchIndex from "./search-index.js";
