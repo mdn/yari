@@ -33,12 +33,17 @@ interface CheckerOptions {
   saveCompression?: boolean;
 }
 
+function _pathname(filePath) {
+  // Get file pathname from URL or string file path
+  return filePath.constructor === URL ? filePath.pathname : filePath;
+}
+
 export async function checkFile(filePath, options: CheckerOptions = {}) {
   // Check that the filename is always lowercase.
-  if (path.basename(filePath) !== path.basename(filePath).toLowerCase()) {
-    throw new Error(
-      `Base name must be lowercase (not ${path.basename(filePath)})`
-    );
+  let basename = path.basename(_pathname(filePath));
+
+  if (basename !== basename.toLowerCase()) {
+    throw new Error(`Base name must be lowercase (not ${basename})`);
   }
 
   // Check that the file size is >0 and <MAX_FILE_SIZE.
@@ -59,7 +64,7 @@ export async function checkFile(filePath, options: CheckerOptions = {}) {
 
   // FileType can't check for .svg files.
   // So use special case for files called '*.svg'
-  if (path.extname(filePath) === ".svg") {
+  if (path.extname(_pathname(filePath)) === ".svg") {
     // SVGs must not contain any script tags
     const content = fs.readFileSync(filePath, "utf-8");
     if (!isSvg(content)) {
