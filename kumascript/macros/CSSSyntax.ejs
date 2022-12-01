@@ -75,7 +75,9 @@ const parsedWebRef = await webRefData.listAll();
 // get all the value syntaxes
 let valuespaces = {};
 for (const spec of Object.values(parsedWebRef)) {
-  valuespaces = {...valuespaces, ...spec.valuespaces};
+  for (const value of spec.values) {
+    valuespaces[value.name] = value;
+  }
 }
 
 /**
