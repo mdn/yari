@@ -40,8 +40,7 @@ function _pathname(filePath) {
 
 export async function checkFile(filePath, options: CheckerOptions = {}) {
   // Check that the filename is always lowercase.
-  let basename = path.basename(_pathname(filePath));
-
+  const basename = path.basename(_pathname(filePath));
   if (basename !== basename.toLowerCase()) {
     throw new Error(`Base name must be lowercase (not ${basename})`);
   }
