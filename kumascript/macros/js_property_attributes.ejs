@@ -9,6 +9,10 @@
 // 
 // {{js_property_attributes(1,1,0)}}
 
+const isWritable = $0 == 1;
+const isEnumerable = $1 == 1;
+const isConfigurable = $2 == 1;
+
 const text = mdn.localStringMap({
   "en-US": {
     header: `Property attributes of <code>${env.title}</code>`,
@@ -83,10 +87,6 @@ const text = mdn.localStringMap({
     no: "否"
   }
 })
-
-const isWritable = $0 == 1;
-const isEnumerable = $1 == 1;
-const isConfigurable = $2 == 1;
 
 %>
 <table class="standard-table">
