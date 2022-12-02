@@ -1,3 +1,5 @@
+@use "./../ui/vars" as *;
+
 .mdn-cta-container {
   align-items: center;
   background-color: #212121;
@@ -57,6 +59,8 @@
   }
 }
 
-body.full-screen-overlay .mdn-cta-container {
-  display: none;
+body.mobile-overlay-active .mdn-cta-container {
+  @media screen and (max-width: $screen-md) {
+    display: none;
+  }
 }
