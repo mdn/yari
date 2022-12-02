@@ -83,7 +83,7 @@ describe("testing the main render() function", () => {
             title: "<number>",
             locale: "en-US",
             slug: "Web/Number",
-            tags: ["Web", "CSS", "CSS Data Type", "Layout", "Reference"],
+            "page-type": "css-type",
           },
           rawBody: "<p>This is the number test page.</p>",
           isMarkdown: false,
