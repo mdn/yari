@@ -26,6 +26,7 @@ export const ArticleActionsContainer = ({
           extraClasses="sidebar-button"
           icon="sidebar"
           type="action"
+          name="Expand sidebar"
           onClickHandler={() => setIsSidebarOpen(!isSidebarOpen)}
         />
 
