@@ -168,7 +168,8 @@ export async function checkFile(
     const sizeAfter = fs.statSync(compressed.destinationPath).size;
     const reductionPercentage = 100 - (100 * sizeAfter) / sizeBefore;
 
-    if (sizeAfter > MAX_FILE_SIZE) {
+    // this check should only be done if we want to save the compressed file
+    if (options.saveCompression && sizeAfter > MAX_FILE_SIZE) {
       const formattedAfter = formatSize(sizeAfter);
       throw new Error(
         `${filePath} is too large, even after compressing to ${formattedAfter} (still larger than ${formattedMax}).`
