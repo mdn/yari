@@ -47,6 +47,7 @@ export function SidebarContainer({ doc, children }) {
           extraClasses="backdrop"
           type="action"
           onClickHandler={() => setIsSidebarOpen(!isSidebarOpen)}
+          aria-label="Expand sidebar"
         />
         <nav className="sidebar-inner">
           <div className="in-nav-toc">
