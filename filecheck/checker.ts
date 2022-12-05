@@ -1,7 +1,9 @@
 import fs from "node:fs";
 import path from "node:path";
+import os from "node:os";
 import { promisify } from "node:util";
 
+import { eachLimit } from "async";
 import cliProgress from "cli-progress";
 import { fdir, PathsOutput } from "fdir";
 import fse from "fs-extra";
@@ -273,17 +275,15 @@ export async function runChecker(
   );
   progressBar.start(files.length, 0);
 
-  await Promise.all(
-    files.map(async (file) => {
-      try {
-        await checkFile(file, options);
-      } catch (error) {
-        errors.push(error);
-      } finally {
-        progressBar.increment();
-      }
-    })
-  );
+  await eachLimit(files, os.cpus().length, async (file) => {
+    try {
+      await checkFile(file, options);
+    } catch (error) {
+      errors.push(error);
+    } finally {
+      progressBar.increment();
+    }
+  });
 
   progressBar.stop();
 
