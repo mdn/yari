@@ -2,6 +2,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { promisify } from "node:util";
 
+import { fdir, PathsOutput } from "fdir";
 import fse from "fs-extra";
 import tempy from "tempy";
 import * as cheerio from "cheerio";
@@ -234,8 +235,36 @@ export async function checkFile(
   }
 }
 
-export async function runChecker(files: string[], options: CheckerOptions) {
+async function resolveDirectory(file: string): Promise<string[]> {
+  const stats = fs.lstatSync(file);
+  if (stats.isDirectory()) {
+    const api = new fdir()
+      .withErrors()
+      .withFullPaths()
+      .filter(
+        (filePath) =>
+          /\/files\//.test(filePath) &&
+          !/\/node_modules\//.test(filePath) &&
+          !/\.(DS_Store|html|json|md|txt|yml)$/i.test(filePath)
+      )
+      .crawl(file);
+    return api.withPromise() as Promise<PathsOutput>;
+  } else if (stats.isFile()) {
+    return [file];
+  } else {
+    return [];
+  }
+}
+
+export async function runChecker(
+  filesAndDirectories: string[],
+  options: CheckerOptions
+) {
   const errors = [];
+
+  const files = (
+    await Promise.all(filesAndDirectories.map(resolveDirectory))
+  ).flat();
 
   await Promise.all(
     files.map((file) =>

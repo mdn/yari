@@ -34,7 +34,7 @@ program
   .option("--save-compression", "If it can be compressed, save the result", {
     validator: program.BOOLEAN,
   })
-  .argument("[files...]", "list of files to check")
+  .argument("[files...]", "list of files and/or directories to check")
   .action(({ args, options, logger }: FilecheckArgsAndOptions) => {
     const cwd = options.cwd || process.cwd();
     const files = (args.files || []).map((f) => path.resolve(cwd, f));
