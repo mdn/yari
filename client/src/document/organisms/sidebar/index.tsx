@@ -48,12 +48,12 @@ export function SidebarContainer({ doc, children }) {
           type="action"
           onClickHandler={() => setIsSidebarOpen(!isSidebarOpen)}
         />
-        <div className="sidebar-inner">
+        <nav className="sidebar-inner">
           <div className="in-nav-toc">
             {doc.toc && !!doc.toc.length && <TOC toc={doc.toc} />}
           </div>
-          <nav>{children}</nav>
-        </div>
+          {children}
+        </nav>
       </aside>
     </>
   );
