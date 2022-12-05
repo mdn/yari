@@ -77,13 +77,6 @@ export async function checkFile(
   if (!stat.size) {
     throw new Error(`${filePath} is 0 bytes`);
   }
-  const formattedMax = formatSize(MAX_FILE_SIZE);
-  if (!options.saveCompression && stat.size > MAX_FILE_SIZE) {
-    const formatted = formatSize(stat.size);
-    throw new Error(
-      `${filePath} is too large (${formatted} > ${formattedMax})`
-    );
-  }
 
   // FileType can't check for .svg files.
   // So use special case for files called '*.svg'
@@ -206,11 +199,19 @@ export async function checkFile(
     const sizeAfter = fs.statSync(compressed.destinationPath).size;
     const reductionPercentage = 100 - (100 * sizeAfter) / sizeBefore;
 
+    const formattedBefore = formatSize(sizeBefore);
+    const formattedMax = formatSize(MAX_FILE_SIZE);
+    const formattedAfter = formatSize(sizeAfter);
+
     // this check should only be done if we want to save the compressed file
-    if (options.saveCompression && sizeAfter > MAX_FILE_SIZE) {
-      const formattedAfter = formatSize(sizeAfter);
+    if (sizeAfter > MAX_FILE_SIZE) {
       throw new Error(
-        `${filePath} is too large, even after compressing to ${formattedAfter} (still larger than ${formattedMax}).`
+        `${filePath} is too large (${formattedBefore} > ${formattedMax}), even after compressing to ${formattedAfter}.`
+      );
+    } else if (!options.saveCompression && stat.size > MAX_FILE_SIZE) {
+      throw new FixableError(
+        `${filePath} is too large (${formattedBefore} > ${formattedMax}), but can be compressed to ${formattedAfter}.`,
+        `yarn filecheck '${getRelativePath(filePath)}' --save-compression`
       );
     }
 
