@@ -2,6 +2,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { promisify } from "node:util";
 
+import cliProgress from "cli-progress";
 import { fdir, PathsOutput } from "fdir";
 import fse from "fs-extra";
 import tempy from "tempy";
@@ -266,11 +267,25 @@ export async function runChecker(
     await Promise.all(filesAndDirectories.map(resolveDirectory))
   ).flat();
 
-  await Promise.all(
-    files.map((file) =>
-      checkFile(file, options).catch((error) => errors.push(error))
-    )
+  const progressBar = new cliProgress.SingleBar(
+    { etaBuffer: 100 },
+    cliProgress.Presets.shades_grey
   );
+  progressBar.start(files.length, 0);
+
+  await Promise.all(
+    files.map(async (file) => {
+      try {
+        await checkFile(file, options);
+      } catch (error) {
+        errors.push(error);
+      } finally {
+        progressBar.increment();
+      }
+    })
+  );
+
+  progressBar.stop();
 
   if (errors.length) {
     let msg = errors.map((error) => `${error}`).join("\n");
