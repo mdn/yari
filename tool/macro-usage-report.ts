@@ -1,6 +1,7 @@
 import fs from "node:fs/promises";
 import path from "node:path";
-import { spawn } from "child_process";
+import { spawn } from "node:child_process";
+
 import { ACTIVE_LOCALES, DEFAULT_LOCALE } from "../libs/constants";
 import { CONTENT_ROOT, CONTENT_TRANSLATED_ROOT } from "../libs/env";
 
@@ -125,7 +126,7 @@ async function writeMarkdownTable(
   filesByMacro: {
     [macro: string]: Iterable<string>;
   },
-  deprecatedOnly: string
+  deprecatedOnly: boolean
 ) {
   const columns = ["yari", ...ACTIVE_LOCALES];
   process.stdout.write(
@@ -159,13 +160,13 @@ async function writeMarkdownTable(
   }
 }
 
-async function main() {
+export async function macroUsageReport({
+  deprecatedOnly,
+}: {
+  deprecatedOnly: boolean;
+}) {
   const macros = await getMacros();
   const filesByMacro = await getFilesByMacro(macros);
-  // get the optional `deprecated-only` flag
-  const deprecatedOnly = process.argv.slice(2, 3)[0];
 
   await writeMarkdownTable(filesByMacro, deprecatedOnly);
 }
-
-main();

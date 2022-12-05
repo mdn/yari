@@ -37,6 +37,7 @@ import {
   MacroInvocationError,
   MacroRedirectedLinkError,
 } from "../kumascript/src/errors";
+import { macroUsageReport } from "./macro-usage-report";
 
 const PORT = parseInt(process.env.SERVER_PORT || "5042");
 
@@ -1157,6 +1158,18 @@ if (Mozilla && !Mozilla.dntEnabled()) {
         }
       }
     )
+  )
+
+  .command(
+    "macro-usage-report",
+    "Counts occurrences of each macro and prints it as a table."
+  )
+  .option("--deprecated-only", "Only reports deprecated macros.")
+  .action(
+    tryOrExit(async ({ options }: ActionParameters) => {
+      const { deprecatedOnly } = options;
+      return macroUsageReport({ deprecatedOnly });
+    })
   );
 
 program.run();
