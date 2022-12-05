@@ -228,10 +228,8 @@ export async function checkFile(
         );
       }
     }
-  } catch (error) {
+  } finally {
     fse.removeSync(tempdir);
-    console.error(error);
-    throw error;
   }
 }
 
