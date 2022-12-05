@@ -7,15 +7,13 @@ import { CONTENT_ROOT, CONTENT_TRANSLATED_ROOT } from "../libs/env";
 
 const MACRO_PATH = path.join(__dirname, "..", "kumascript", "macros");
 
-async function getMacros(): Promise<Map<string, string>> {
+async function getMacros(): Promise<string[]> {
   const macroFilenames = await fs.readdir(MACRO_PATH);
   const macros = macroFilenames
     .map((filename) => path.basename(filename, ".ejs"))
     .sort((a, b) => a.toLowerCase().localeCompare(b.toLowerCase()));
 
-  return new Map<string, string>(
-    macros.map((macro) => [macro.toLowerCase(), macro])
-  );
+  return macros;
 }
 
 async function exec(
@@ -53,7 +51,7 @@ async function findMatches(pattern: string, paths: string[]) {
 }
 
 async function getFilesByMacro(
-  macros: Map<string, string>
+  macros: string[]
 ): Promise<{ [macro: string]: Iterable<string> }> {
   const macroNames = [...macros.values()];
   const matches = (
@@ -69,8 +67,12 @@ async function getFilesByMacro(
   const filesByMacro: { [macro: string]: Set<string> } = {};
   macroNames.forEach((macro) => (filesByMacro[macro] = new Set()));
 
+  const macroMap = new Map<string, string>(
+    macros.map((macro) => [macro.toLowerCase(), macro])
+  );
+
   for (const { macro, file } of matches) {
-    const macroName = macros.get(macro.toLowerCase()) as string;
+    const macroName = macroMap.get(macro.toLowerCase()) as string;
     filesByMacro[macroName].add(file);
   }
 
@@ -100,20 +102,6 @@ async function isMacroDeprecated(macro: string) {
   return content.includes("mdn.deprecated()");
 }
 
-async function getDeprecatedMacros() {
-  const macros = await getMacros();
-  const deprecatedMacros: string[] = [];
-
-  await Promise.all(
-    [...macros.values()].map(
-      async (macro) =>
-        (await isMacroDeprecated(macro)) && deprecatedMacros.push(macro)
-    )
-  );
-
-  return deprecatedMacros;
-}
-
 function formatCell(files: string[], limit = 2): string {
   if (files.length === 0) {
     return "-";
@@ -126,7 +114,11 @@ async function writeMarkdownTable(
   filesByMacro: {
     [macro: string]: Iterable<string>;
   },
-  deprecatedOnly: boolean
+  {
+    deprecatedMacros,
+  }: {
+    deprecatedMacros: string[];
+  }
 ) {
   const columns = ["yari", ...ACTIVE_LOCALES];
   process.stdout.write(
@@ -139,7 +131,6 @@ async function writeMarkdownTable(
   );
 
   const macros = Object.keys(filesByMacro);
-  const deprecatedMacros = await getDeprecatedMacros();
 
   for (const macro of macros) {
     const files = filesByMacro[macro];
@@ -152,11 +143,7 @@ async function writeMarkdownTable(
       ...paths.map((path) => formatCell(filterFilesByBase(files, path))),
     ];
 
-    if (deprecatedOnly && deprecatedMacros.includes(macro)) {
-      process.stdout.write(`|${cells.map((cell) => ` ${cell} `).join("|")}|\n`);
-    } else if (!deprecatedOnly) {
-      process.stdout.write(`|${cells.map((cell) => ` ${cell} `).join("|")}|\n`);
-    }
+    process.stdout.write(`|${cells.map((cell) => ` ${cell} `).join("|")}|\n`);
   }
 }
 
@@ -166,7 +153,11 @@ export async function macroUsageReport({
   deprecatedOnly: boolean;
 }) {
   const macros = await getMacros();
-  const filesByMacro = await getFilesByMacro(macros);
+  const deprecatedMacros = macros.filter((macro) => isMacroDeprecated(macro));
 
-  await writeMarkdownTable(filesByMacro, deprecatedOnly);
+  const filesByMacro = await getFilesByMacro(
+    deprecatedOnly ? deprecatedMacros : macros
+  );
+
+  await writeMarkdownTable(filesByMacro, { deprecatedMacros });
 }
