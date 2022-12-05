@@ -203,6 +203,12 @@ interface OptimizeClientBuildActionParameters extends ActionParameters {
   };
 }
 
+interface MacroUsageReportActionParameters extends ActionParameters {
+  options: {
+    deprecatedOnly: boolean;
+  };
+}
+
 function tryOrExit<T extends ActionParameters>(
   f: ({ options, ...args }: T) => unknown
 ): Action {
@@ -1166,7 +1172,7 @@ if (Mozilla && !Mozilla.dntEnabled()) {
   )
   .option("--deprecated-only", "Only reports deprecated macros.")
   .action(
-    tryOrExit(async ({ options }: ActionParameters) => {
+    tryOrExit(async ({ options }: MacroUsageReportActionParameters) => {
       const { deprecatedOnly } = options;
       return macroUsageReport({ deprecatedOnly });
     })
