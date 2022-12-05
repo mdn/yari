@@ -51,9 +51,7 @@ class FixableError extends Error {
 }
 
 function getRelativePath(filePath: string): string {
-  return process.env.CI === "true"
-    ? path.relative(process.cwd(), filePath)
-    : filePath;
+  return path.relative(process.cwd(), filePath);
 }
 
 export async function checkFile(
@@ -111,13 +109,17 @@ export async function checkFile(
       // This can easily happen if the .png (for example) file is actually just
       // a text file and not a binary.
       throw new Error(
-        `${filePath} file-type could not be extracted at all ` +
+        `${getRelativePath(
+          filePath
+        )} file-type could not be extracted at all ` +
           `(probably not a ${path.extname(filePath)} file)`
       );
     }
     if (!VALID_MIME_TYPES.has(fileType.mime)) {
       throw new Error(
-        `${filePath} has an unrecognized mime type: ${fileType.mime}`
+        `${getRelativePath(filePath)} has an unrecognized mime type: ${
+          fileType.mime
+        }`
       );
     } else if (
       path.extname(filePath).replace(".jpeg", ".jpg").slice(1) !== fileType.ext
@@ -128,7 +130,7 @@ export async function checkFile(
         "."
       );
       throw new FixableError(
-        `${filePath} is type '${
+        `${getRelativePath(filePath)} is type '${
           fileType.mime
         }' but named extension is '${path.extname(filePath)}'`,
         `mv '${relPath}' '${fixPath}`
@@ -147,7 +149,9 @@ export async function checkFile(
     : null;
   if (!docFilePath) {
     throw new FixableError(
-      `${filePath} can be removed, because it is not located in a folder with a document file.`,
+      `${getRelativePath(
+        filePath
+      )} can be removed, because it is not located in a folder with a document file.`,
       `rm -i '${getRelativePath(filePath)}'`
     );
   }
@@ -161,7 +165,11 @@ export async function checkFile(
   const rawContent = docFilePath ? fs.readFileSync(docFilePath, "utf-8") : null;
   if (!rawContent.includes(path.basename(filePath))) {
     throw new FixableError(
-      `${filePath} can be removed, because it is not mentioned in ${docFilePath}`,
+      `${getRelativePath(
+        filePath
+      )} can be removed, because it is not mentioned in ${getRelativePath(
+        docFilePath
+      )}`,
       `rm -i '${getRelativePath(filePath)}'`
     );
   }
@@ -206,11 +214,15 @@ export async function checkFile(
     // this check should only be done if we want to save the compressed file
     if (sizeAfter > MAX_FILE_SIZE) {
       throw new Error(
-        `${filePath} is too large (${formattedBefore} > ${formattedMax}), even after compressing to ${formattedAfter}.`
+        `${getRelativePath(
+          filePath
+        )} is too large (${formattedBefore} > ${formattedMax}), even after compressing to ${formattedAfter}.`
       );
     } else if (!options.saveCompression && stat.size > MAX_FILE_SIZE) {
       throw new FixableError(
-        `${filePath} is too large (${formattedBefore} > ${formattedMax}), but can be compressed to ${formattedAfter}.`,
+        `${getRelativePath(
+          filePath
+        )} is too large (${formattedBefore} > ${formattedMax}), but can be compressed to ${formattedAfter}.`,
         `yarn filecheck '${getRelativePath(filePath)}' --save-compression`
       );
     }
