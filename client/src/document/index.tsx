@@ -221,9 +221,9 @@ export function Document(props /* TODO: define a TS interface for this */) {
       <div className="main-wrapper">
         <RenderSideBar doc={doc} />
 
-        <div className="toc">
-          {doc.toc && !!doc.toc.length && <TOC toc={doc.toc} />}
-        </div>
+        <aside className="toc">
+          <nav>{doc.toc && !!doc.toc.length && <TOC toc={doc.toc} />}</nav>
+        </aside>
 
         <MainContentContainer>
           {!isServer && CRUD_MODE && !props.isPreview && doc.isActive && (
