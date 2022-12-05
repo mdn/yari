@@ -53,7 +53,7 @@ export const ArticleActions = ({
         >
           <Button
             type="action"
-            name="Article actions"
+            aria-label="Article actions"
             extraClasses="article-actions-toggle"
             onClickHandler={toggleArticleActionsMenu}
             icon={showArticleActionsMenu ? "cancel" : "ellipses"}
