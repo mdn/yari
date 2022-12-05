@@ -183,9 +183,11 @@ function writeJson(
 export async function macroUsageReport({
   deprecatedOnly,
   format,
+  unusedOnly,
 }: {
   deprecatedOnly: boolean;
   format: "md-table" | "json";
+  unusedOnly: boolean;
 }) {
   const macros = await getMacros();
   const deprecatedMacros = macros.filter((macro) => isMacroDeprecated(macro));
@@ -193,6 +195,14 @@ export async function macroUsageReport({
   const filesByMacro = await getFilesByMacro(
     deprecatedOnly ? deprecatedMacros : macros
   );
+
+  if (unusedOnly) {
+    for (const [macro, files] of Object.entries(filesByMacro)) {
+      if ([...files].length) {
+        delete filesByMacro[macro];
+      }
+    }
+  }
 
   switch (format) {
     case "md-table":

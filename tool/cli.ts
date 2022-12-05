@@ -207,6 +207,7 @@ interface MacroUsageReportActionParameters extends ActionParameters {
   options: {
     deprecatedOnly: boolean;
     format: "md-table" | "json";
+    unusedOnly: boolean;
   };
 }
 
@@ -1176,10 +1177,11 @@ if (Mozilla && !Mozilla.dntEnabled()) {
     default: "md-table",
     validator: ["json", "md-table"],
   })
+  .option("--unused-only", "Only reports unused macros.")
   .action(
     tryOrExit(async ({ options }: MacroUsageReportActionParameters) => {
-      const { deprecatedOnly, format } = options;
-      return macroUsageReport({ deprecatedOnly, format });
+      const { deprecatedOnly, format, unusedOnly } = options;
+      return macroUsageReport({ deprecatedOnly, format, unusedOnly });
     })
   );
 
