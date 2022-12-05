@@ -49,7 +49,7 @@ export async function checkFile(
   if (!stat.size) {
     throw new Error(`${filePath} is 0 bytes`);
   }
-  const formattedMax = `${(MAX_FILE_SIZE / 1024.0 / 1024).toFixed(1)}MB`;
+  const formattedMax = formatSize(MAX_FILE_SIZE);
   if (!options.saveCompression && stat.size > MAX_FILE_SIZE) {
     const formatted = formatSize(stat.size);
     throw new Error(
