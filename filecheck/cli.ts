@@ -5,6 +5,7 @@ import { ActionParameters, program } from "@caporal/core";
 
 import { runChecker } from "./checker";
 import { MAX_COMPRESSION_DIFFERENCE_PERCENTAGE } from "../libs/constants";
+import { CONTENT_ROOT, CONTENT_TRANSLATED_ROOT } from "../libs/env";
 
 interface FilecheckArgsAndOptions extends ActionParameters {
   args: {
@@ -34,7 +35,9 @@ program
   .option("--save-compression", "If it can be compressed, save the result", {
     validator: program.BOOLEAN,
   })
-  .argument("[files...]", "list of files and/or directories to check")
+  .argument("[files...]", "list of files and/or directories to check", {
+    default: [CONTENT_ROOT, CONTENT_TRANSLATED_ROOT],
+  })
   .action(({ args, options, logger }: FilecheckArgsAndOptions) => {
     const cwd = options.cwd || process.cwd();
     const files = (args.files || []).map((f) => path.resolve(cwd, f));
