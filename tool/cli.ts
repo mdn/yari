@@ -206,6 +206,7 @@ interface OptimizeClientBuildActionParameters extends ActionParameters {
 interface MacroUsageReportActionParameters extends ActionParameters {
   options: {
     deprecatedOnly: boolean;
+    format: "md-table" | "json";
   };
 }
 
@@ -1171,10 +1172,14 @@ if (Mozilla && !Mozilla.dntEnabled()) {
     "Counts occurrences of each macro and prints it as a table."
   )
   .option("--deprecated-only", "Only reports deprecated macros.")
+  .option("--format <type>", "Format of the report.", {
+    default: "md-table",
+    validator: ["json", "md-table"],
+  })
   .action(
     tryOrExit(async ({ options }: MacroUsageReportActionParameters) => {
-      const { deprecatedOnly } = options;
-      return macroUsageReport({ deprecatedOnly });
+      const { deprecatedOnly, format } = options;
+      return macroUsageReport({ deprecatedOnly, format });
     })
   );
 

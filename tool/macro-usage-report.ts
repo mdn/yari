@@ -5,7 +5,8 @@ import { spawn } from "node:child_process";
 import { ACTIVE_LOCALES, DEFAULT_LOCALE } from "../libs/constants";
 import { CONTENT_ROOT, CONTENT_TRANSLATED_ROOT } from "../libs/env";
 
-const MACRO_PATH = path.join(__dirname, "..", "kumascript", "macros");
+const YARI = path.normalize(path.join(__dirname, ".."));
+const MACRO_PATH = path.join(YARI, "kumascript", "macros");
 
 async function getMacros(): Promise<string[]> {
   const macroFilenames = await fs.readdir(MACRO_PATH);
@@ -147,10 +148,44 @@ async function writeMarkdownTable(
   }
 }
 
+function writeJson(
+  filesByMacro: {
+    [macro: string]: Iterable<string>;
+  },
+  {
+    deprecatedMacros,
+  }: {
+    deprecatedMacros: string[];
+  }
+) {
+  const result = {};
+  const macros = Object.keys(filesByMacro);
+
+  for (const macro of macros) {
+    const files = filesByMacro[macro];
+    result[macro] = {
+      name: macro,
+      deprecated: deprecatedMacros.includes(macro),
+      files: [...files].map((file) =>
+        file
+          .replace(CONTENT_ROOT, "content")
+          .replace(CONTENT_TRANSLATED_ROOT, "translated-content")
+          .replace(YARI, "yari")
+      ),
+    };
+  }
+
+  const json = JSON.stringify(result, null, 2);
+
+  process.stdout.write(json);
+}
+
 export async function macroUsageReport({
   deprecatedOnly,
+  format,
 }: {
   deprecatedOnly: boolean;
+  format: "md-table" | "json";
 }) {
   const macros = await getMacros();
   const deprecatedMacros = macros.filter((macro) => isMacroDeprecated(macro));
@@ -159,5 +194,11 @@ export async function macroUsageReport({
     deprecatedOnly ? deprecatedMacros : macros
   );
 
-  await writeMarkdownTable(filesByMacro, { deprecatedMacros });
+  switch (format) {
+    case "md-table":
+      return writeMarkdownTable(filesByMacro, { deprecatedMacros });
+
+    case "json":
+      return writeJson(filesByMacro, { deprecatedMacros });
+  }
 }
