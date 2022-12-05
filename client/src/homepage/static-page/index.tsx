@@ -75,7 +75,9 @@ function StaticPage({
         <SidebarContainer doc={hyData}>
           {sidebarHeader || null}
         </SidebarContainer>
-        <div className="toc">{toc || null}</div>
+        <aside className="toc">
+          <nav>{toc || null}</nav>
+        </aside>
         <main id="content" className="main-content" role="main">
           <article className={`main-page-content ${extraClasses || ""}`}>
             {hyData.sections.map((section, index) => (

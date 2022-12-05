@@ -42,19 +42,19 @@ export function SidebarContainer({ doc, children }) {
 
   return (
     <>
-      <nav id="sidebar-quicklinks" className={classes}>
+      <aside id="sidebar-quicklinks" className={classes}>
         <Button
           extraClasses="backdrop"
           type="action"
           onClickHandler={() => setIsSidebarOpen(!isSidebarOpen)}
         />
-        <div className="sidebar-inner">
+        <nav className="sidebar-inner">
           <div className="in-nav-toc">
             {doc.toc && !!doc.toc.length && <TOC toc={doc.toc} />}
           </div>
           {children}
-        </div>
-      </nav>
+        </nav>
+      </aside>
     </>
   );
 }

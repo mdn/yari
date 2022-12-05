@@ -586,6 +586,7 @@ a.page-not-created {
 
   &:link,
   &:hover,
+  &:visited,
   &:not([href]),
   &:focus {
     color: var(--icon-critical);
