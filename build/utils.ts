@@ -1,5 +1,5 @@
-import fs from "fs";
-import path from "path";
+import fs from "node:fs";
+import path from "node:path";
 
 import * as cheerio from "cheerio";
 import got from "got";
@@ -146,8 +146,8 @@ export function splitSections(rawHTML) {
 
   const iterable = [...($("#_body")[0] as cheerio.Element).childNodes];
   let c = 0;
-  iterable.forEach((child: cheerio.Element) => {
-    if (child.tagName === "h2") {
+  iterable.forEach((child) => {
+    if ("tagName" in child && child.tagName === "h2") {
       if (c) {
         blocks.push(section.clone());
         section.empty();

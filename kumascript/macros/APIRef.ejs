@@ -36,8 +36,10 @@ if (group) {
 var commonl10n = web.getJSONData("L10n-Common");
 
 var text = {
-    'Methods': mdn.getLocalString(commonl10n, 'Methods'),
-    'Properties': mdn.getLocalString(commonl10n, 'Properties'),
+    'Static properties': mdn.getLocalString(commonl10n, 'Static_properties'),
+    'Instance properties': mdn.getLocalString(commonl10n, 'Instance_properties'),
+    'Static methods': mdn.getLocalString(commonl10n, 'Static_methods'),
+    'Instance methods': mdn.getLocalString(commonl10n, 'Instance_methods'),
     'Constructor': mdn.getLocalString(commonl10n, 'Constructor'),
     'Inheritance': mdn.getLocalString(commonl10n, 'Inheritance'),
     'Implemented_by': mdn.getLocalString(commonl10n, 'Implemented_by'),
@@ -46,7 +48,6 @@ var text = {
     'title': mdn.getLocalString(commonl10n, 'TranslationCTA'),
     'Events': mdn.getLocalString(commonl10n, 'Events'),
 };
-
 
 // Collect all the things
 var mainIFPages = await page.subpagesExpand('/en-US/docs/Web/API/' + mainIF);
@@ -66,8 +67,10 @@ if (group && webAPIGroups[0][group]) {
   related.sort();
 }
 
-var properties = [];
-var methods = [];
+var staticProperties = [];
+var instanceProperties = [];
+var staticMethods = [];
+var instanceMethods = [];
 var ctors = [];
 var events = [];
 var inheritedIF = [];
@@ -76,17 +79,25 @@ var implementedBy = [];
 function collect(pageList) {
   for (var i in pageList) {
     var aPage = pageList[i];
-    if (hasTag(aPage, "Property")) {
-        properties.push(aPage);
-    }
-    if (hasTag(aPage, "Method")) {
-        methods.push(aPage);
-    }
-    if (hasTag(aPage, "Constructor")) {
+    switch(aPage.pageType) {
+      case "web-api-static-property":
+        staticProperties.push(aPage);
+        break;
+      case "web-api-instance-property":
+        instanceProperties.push(aPage);
+        break;
+      case "web-api-static-method":
+        staticMethods.push(aPage);
+        break;
+      case "web-api-instance-method":
+        instanceMethods.push(aPage);
+        break;
+      case "web-api-constructor":
         ctors.push(aPage);
-    }
-    if (hasTag(aPage, "Event")) {
+        break;
+      case "web-api-event":
         events.push(aPage);
+        break;
     }
   }
 }
@@ -109,8 +120,10 @@ function APISort(a, b) {
   return a.toLowerCase().localeCompare(b.toLowerCase());
 }
 
-properties.sort(APISort);
-methods.sort(APISort);
+staticProperties.sort(APISort);
+instanceProperties.sort(APISort);
+staticMethods.sort(APISort);
+instanceMethods.sort(APISort);
 ctors.sort(APISort);
 events.sort(APISort);
 
@@ -171,7 +184,7 @@ function buildSublist(pages, title) {
     // in the sidebar. So for event pages we use the slug, which is supposed to be
     // in the form "eventname_event", and split off "_event" to leave us (hopefully)
     // with just "eventname" for the link text.
-    if (hasTag(aPage, 'Event')) {
+    if (aPage.pageType === 'web-api-event') {
         title = aPage.slug.split('/').pop();
         if (title.endsWith('_event')) {
             title = title.slice(0,-6);
@@ -248,12 +261,17 @@ output += `<li><strong>${web.smartLink(APIHref + '/' + mainIF, null, `<code>${ma
 if (ctors.length > 0) {
   output += buildSublist(ctors, text['Constructor']);
 }
-
-if (properties.length > 0) {
-  output += buildSublist(properties, text['Properties']);
+if (staticProperties.length > 0) {
+  output += buildSublist(staticProperties, text['Static properties']);
 }
-if (methods.length > 0) {
-  output += buildSublist(methods, text['Methods']);
+if (instanceProperties.length > 0) {
+  output += buildSublist(instanceProperties, text['Instance properties']);
+}
+if (staticMethods.length > 0) {
+  output += buildSublist(staticMethods, text['Static methods']);
+}
+if (instanceMethods.length > 0) {
+  output += buildSublist(instanceMethods, text['Instance methods']);
 }
 if (events.length > 0) {
   output += buildSublist(events, text['Events']);

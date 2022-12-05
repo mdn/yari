@@ -1,11 +1,12 @@
-import fs from "fs";
-import path from "path";
+import fs from "node:fs";
+import path from "node:path";
 
 import express, { Request } from "express";
 
 import { Document, slugToFolder } from "../content";
 import { buildDocument } from "../build";
 import { BUILD_OUT_ROOT } from "../libs/env";
+import { Doc } from "../libs/types/document";
 
 const router = express();
 
@@ -17,7 +18,7 @@ const router = express();
 // });
 
 interface RequestWithDocument extends Request {
-  document: Document;
+  document: Partial<Doc & { url: string }>;
 }
 
 function withDocument(req: RequestWithDocument, res, next) {
@@ -84,7 +85,7 @@ router.put("/", withDocument, async (req: RequestWithDocument, res) => {
 // });
 
 router.delete("/", (req, res) => {
-  Document.remove(req.query.slug, req.query.locale, {
+  Document.remove(req.query.slug as string, req.query.locale as string, {
     recursive: true,
   });
   res.sendStatus(200);

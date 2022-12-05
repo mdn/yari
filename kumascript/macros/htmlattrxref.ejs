@@ -25,16 +25,16 @@ var text = ($2 && ($2!=undefined)) ? $2 : attrLC;
 let basePath;
 if ($1) {
     basePath = '/' + lang + '/docs/Web/HTML/Element/';
-    url = basePath + $1;
+    url = basePath + $1 + '#attr-' + attrLC;
 } else {
-    url = '/' + lang + '/docs/Web/HTML/' + globalAttrSlug;
+    url = '/' + lang + '/docs/Web/HTML/' + globalAttrSlug + '#' + attrLC;
 }
 
 if (!$3) {
   text = `<code>${text}</code>`;
 }
 
-const result = web.smartLink(`${url}#attr-${attrLC}`, null, text, $1, basePath);
+const result = web.smartLink(url, null, text, $1, basePath);
 
 %>
 <%- result %>

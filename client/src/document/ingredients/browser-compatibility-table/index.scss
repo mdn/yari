@@ -29,7 +29,9 @@
   }
 
   th {
+    background: var(--background-tertiary);
     padding: 0.4rem;
+    vertical-align: bottom;
   }
 
   // these props allow us to add border-radius to the table.
@@ -65,12 +67,15 @@
       &.bc-supports-no > button > span {
         color: var(--text-primary-red);
       }
+
       &.bc-supports-partial > button > span {
         color: var(--text-primary-yellow);
       }
+
       &.bc-supports-preview > button > span {
         color: var(--text-primary-blue);
       }
+
       &.bc-supports-yes > button > span {
         color: var(--text-primary-green);
       }
@@ -80,16 +85,12 @@
       td {
         border-left-width: 0;
       }
+
       .icon.icon-removed-partial {
         // override icon
         mask-image: url("../../../assets/icons/partial.svg");
       }
     }
-  }
-
-  th {
-    background: var(--background-tertiary);
-    vertical-align: bottom;
   }
 
   .bc-supports {
@@ -99,6 +100,7 @@
       background: var(--background-primary);
     }
   }
+
   .bc-supports.bc-supports-removed-partial {
     .bcd-cell-text-copy {
       color: var(--text-primary-yellow);
@@ -110,23 +112,31 @@
       @include visually-hidden;
     }
   }
+
   .bc-support {
     > button > .icon-wrap {
       display: block;
     }
+
     .icon.icon-removed-partial {
       background-color: var(--icon-critical);
       // override icon
       mask-image: url("../../../assets/icons/no.svg");
     }
   }
+
   .bc-support.bc-supports-removed-partial {
     .bcd-cell-text-copy {
       color: var(--text-primary-red);
     }
   }
+
   .bc-feature-depth-2 {
     border-left-width: 8px;
+  }
+
+  .bc-feature-depth-3 {
+    border-left-width: 16px;
   }
 }
 
@@ -171,7 +181,7 @@
   font-size: var(--type-smaller-font-size);
   font-style: italic;
   margin-bottom: 1rem;
-  margin-top: 0rem;
+  margin-top: 0;
 }
 
 .bc-legend-item {
@@ -208,7 +218,7 @@
   }
 
   td {
-    border-width: 0 0 1px 0;
+    border-width: 0 0 1px;
   }
 }
 
@@ -293,14 +303,15 @@ dl.bc-notes-list {
     margin-top: 1rem;
 
     &:first-child {
-      margin-top: 0rem;
+      margin-top: 0;
     }
   }
+
   dd.bc-supports-dd {
     margin-bottom: 1rem;
 
     &:last-child {
-      margin-bottom: 0rem;
+      margin-bottom: 0;
     }
   }
 }
@@ -341,8 +352,10 @@ dl.bc-notes-list {
     display: flex;
     gap: 0.5rem;
     margin-top: 0.25rem;
+
     .icon {
       background-color: var(--icon-secondary);
+
       &:hover {
         background-color: var(--icon-primary);
       }
@@ -376,6 +389,7 @@ dl.bc-notes-list {
 
 .bcd-cell-text-wrapper {
   display: flex;
+  flex-direction: row;
   gap: 0.5rem;
 
   @media screen and (min-width: $screen-md) {
@@ -414,12 +428,6 @@ dl.bc-notes-list {
 
   @media screen and (min-width: $screen-md) {
     display: block;
-  }
-}
-
-.bc-notes-wrapper {
-  .bcd-cell-text-wrapper {
-    flex-direction: row;
   }
 }
 

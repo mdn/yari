@@ -6,11 +6,7 @@ import { CRUD_MODE } from "../env";
 import { useGA } from "../ga-context";
 import { useIsServer } from "../hooks";
 
-import {
-  useDocumentURL,
-  useCopyExamplesToClipboard,
-  usePersistFrequentlyViewed,
-} from "./hooks";
+import { useDocumentURL, useCopyExamplesToClipboard } from "./hooks";
 import { Doc } from "../../../libs/types/document";
 // Ingredients
 import { Prose } from "./ingredients/prose";
@@ -29,6 +25,7 @@ import { RetiredLocaleNote } from "./molecules/retired-locale-note";
 import { MainContentContainer } from "../ui/atoms/page-content";
 import { Loading } from "../ui/atoms/loading";
 import { Metadata } from "./organisms/metadata";
+import { PageNotFound } from "../page-not-found";
 
 import "./index.scss";
 
@@ -40,16 +37,27 @@ import "./index.scss";
 // main bundle all the time.
 import "./interactive-examples.scss";
 import { DocumentSurvey } from "../ui/molecules/document-survey";
-import { useGlean } from "../telemetry/glean-context";
+import { useIncrementFrequentlyViewed } from "../plus/collections/frequently-viewed";
 // import { useUIStatus } from "../ui-context";
 
 // Lazy sub-components
 const Toolbar = React.lazy(() => import("./toolbar"));
 const MathMLPolyfillMaybe = React.lazy(() => import("./mathml-polyfill"));
 
+class HTTPError extends Error {
+  public readonly status: number;
+  public readonly url: string;
+  public readonly text: string;
+  constructor(status: number, url: string, text: string) {
+    super(`${status} on ${url}: ${text}`);
+    this.status = status;
+    this.url = url;
+    this.text = text;
+  }
+}
+
 export function Document(props /* TODO: define a TS interface for this */) {
   const ga = useGA();
-  const glean = useGlean();
   const isServer = useIsServer();
 
   const mountCounter = React.useRef(0);
@@ -75,7 +83,7 @@ export function Document(props /* TODO: define a TS interface for this */) {
       if (!response.ok) {
         switch (response.status) {
           case 404:
-            throw new Error(`${response.status} on ${url}: Page not found`);
+            throw new HTTPError(response.status, url, "Page not found");
 
           case 504:
             if (previousDoc.current) {
@@ -84,7 +92,7 @@ export function Document(props /* TODO: define a TS interface for this */) {
         }
 
         const text = await response.text();
-        throw new Error(`${response.status} on ${url}: ${text}`);
+        throw new HTTPError(response.status, url, text);
       }
 
       const { doc } = await response.json();
@@ -103,7 +111,7 @@ export function Document(props /* TODO: define a TS interface for this */) {
       refreshInterval: CRUD_MODE ? 500 : 0,
     }
   );
-  usePersistFrequentlyViewed(doc);
+  useIncrementFrequentlyViewed(doc);
   useCopyExamplesToClipboard(doc);
 
   React.useEffect(() => {
@@ -118,10 +126,6 @@ export function Document(props /* TODO: define a TS interface for this */) {
 
   React.useEffect(() => {
     if (doc && !error) {
-      glean.page({
-        path: window.location.toString(),
-        referrer: document.referrer,
-      });
       if (mountCounter.current > 0) {
         // 'dimension19' means it's a client-side navigation.
         // I.e. not the initial load but the location has now changed.
@@ -138,7 +142,7 @@ export function Document(props /* TODO: define a TS interface for this */) {
       // a client-side navigation happened.
       mountCounter.current++;
     }
-  }, [ga, glean, doc, error]);
+  }, [ga, doc, error]);
 
   React.useEffect(() => {
     const location = document.location;
@@ -173,7 +177,20 @@ export function Document(props /* TODO: define a TS interface for this */) {
   }
 
   if (error) {
-    return <LoadingError error={error} />;
+    return (
+      <>
+        <div className="main-document-header-container">
+          <TopNavigation />
+        </div>
+        <MainContentContainer>
+          {error instanceof HTTPError && error.status === 404 ? (
+            <PageNotFound />
+          ) : (
+            <LoadingError error={error} />
+          )}
+        </MainContentContainer>
+      </>
+    );
   }
 
   if (!doc) {
@@ -272,7 +289,7 @@ function LoadingError({ error }) {
           </p>
         ) : (
           <p>
-            <code>{error.toString()}</code>
+            <pre>{error.toString()}</pre>
           </p>
         )}
         <p>

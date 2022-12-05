@@ -4,15 +4,19 @@ import { Breadcrumbs } from "../../molecules/breadcrumbs";
 import { ArticleActions } from "../article-actions";
 import { Button } from "../../atoms/button";
 
-import { Doc } from "../../../../../libs/types/document";
+import { Doc, DocParent } from "../../../../../libs/types/document";
 
 import { useUIStatus } from "../../../ui-context";
 
 import "./index.scss";
 
-export const ArticleActionsContainer = ({ doc }: { doc: Doc }) => {
-  const [showArticleActionsMenu, setShowArticleActionsMenu] =
-    React.useState(false);
+export const ArticleActionsContainer = ({
+  doc,
+  parents = doc?.parents,
+}: {
+  doc?: Doc;
+  parents?: DocParent[];
+}) => {
   const { isSidebarOpen, setIsSidebarOpen } = useUIStatus();
 
   return (
@@ -26,13 +30,9 @@ export const ArticleActionsContainer = ({ doc }: { doc: Doc }) => {
         />
 
         {/* if we have breadcrumbs for the current page, continue rendering the section */}
-        {doc.parents && <Breadcrumbs parents={doc.parents} />}
+        {parents && <Breadcrumbs parents={parents} />}
 
-        <ArticleActions
-          doc={doc}
-          showArticleActionsMenu={showArticleActionsMenu}
-          setShowArticleActionsMenu={setShowArticleActionsMenu}
-        />
+        {doc && <ArticleActions doc={doc} />}
       </div>
     </div>
   );

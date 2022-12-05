@@ -32,13 +32,13 @@
     }
   }
 
-  .table-scroll {
+  .table-container {
     margin: 0 -3rem;
     overflow: auto;
     width: 100vw;
   }
 
-  .table-scroll-inner {
+  .table-container-inner {
     min-width: max-content;
     padding: 0 3rem;
     position: relative;

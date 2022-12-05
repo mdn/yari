@@ -69,11 +69,11 @@
 
     &:active {
       background-color: var(--text-link);
-      color: white;
+      color: #fff;
 
       code {
         background-color: transparent;
-        color: white;
+        color: #fff;
       }
     }
 
@@ -90,7 +90,7 @@
       }
 
       &:active {
-        color: white;
+        color: #fff;
       }
     }
 
@@ -102,7 +102,7 @@
   }
 
   img {
-    background: white;
+    background: #fff;
     border: 1px solid var(--border-primary) !important;
     border-radius: var(--elem-radius);
     display: inline-block;
@@ -177,7 +177,7 @@
     }
 
     p {
-      margin: 0 0 1rem 0;
+      margin: 0 0 1rem;
     }
   }
 
@@ -328,7 +328,9 @@ iframe {
     background: #fff;
     border: 1px solid var(--border-primary);
     border-radius: var(--elem-radius);
-    width: 100%;
+    box-sizing: content-box;
+    padding: 1rem;
+    width: calc(100% - 2rem - 2px);
   }
 }
 
@@ -417,7 +419,8 @@ pre,
 code,
 .code-example {
   border-radius: var(--elem-radius);
-  font-size: var(--type-base-font-size-rem);
+  font-family: var(--font-code);
+  font-size: var(--type-smaller-font-size);
 }
 
 code {
@@ -429,7 +432,7 @@ code {
 pre {
   background-color: var(--code-background-block);
   border: 1px solid transparent;
-  margin: 1rem 0 2rem 0;
+  margin: 1rem 0 2rem;
   padding: 1rem 2.5rem 1rem 1rem;
 
   code {
@@ -494,7 +497,7 @@ pre {
     }
 
     li {
-      margin: 0 0 0.5rem 0;
+      margin: 0 0 0.5rem;
     }
   }
 
@@ -603,8 +606,13 @@ kbd {
   border: 2px solid var(--border-secondary);
   border-radius: var(--elem-radius);
   box-shadow: var(--border-secondary);
-  box-shadow: inset 0px -1px 0px 0px var(--border-secondary);
+  box-shadow: inset 0 -1px 0 0 var(--border-secondary);
   color: var(--text-secondary);
   font-size: 0.825rem;
   padding: 0.25rem;
+}
+
+.loading-error pre {
+  overflow-y: scroll;
+  white-space: pre;
 }

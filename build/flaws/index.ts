@@ -1,6 +1,6 @@
-import path from "path";
-
+import path from "node:path";
 import chalk from "chalk";
+import { RequestError } from "got";
 
 import { Document } from "../../content";
 import { FLAW_LEVELS, VALID_FLAW_CHECKS } from "../../libs/constants";
@@ -30,8 +30,10 @@ export interface Flaw {
   difference?: any;
 }
 
+type GetFlawsFunction = (doc: any, $: any, document: any, level: any) => Flaw[];
+
 export function injectFlaws(doc, $, options, document) {
-  const flawChecks: Array<[string, Function, boolean]> = [
+  const flawChecks: Array<[string, GetFlawsFunction, boolean]> = [
     ["unsafe_html", getUnsafeHTMLFlaws, false],
     ["broken_links", getBrokenLinksFlaws, true],
     ["bad_bcd_queries", getBadBCDQueriesFlaws, false],
@@ -221,17 +223,21 @@ export async function fixFixableFlaws(doc, options, document) {
           console.log(`Downloaded ${flaw.src} to ${destination}`);
           newSrc = path.basename(destination);
         } catch (error) {
-          const { response } = error;
-          if (response && response.statusCode === 404) {
-            console.log(chalk.yellow(`Skipping ${flaw.src} (404)`));
-            continue;
-          } else if (error.code === "ETIMEDOUT" || error.code === "ENOTFOUND") {
-            console.log(chalk.yellow(`Skipping ${flaw.src} (${error.code})`));
-            continue;
-          } else {
-            console.error(error);
-            throw error;
+          if (error instanceof RequestError) {
+            if (error.response.statusCode === 404) {
+              console.log(chalk.yellow(`Skipping ${flaw.src} (404)`));
+              continue;
+            } else if (
+              error.code === "ETIMEDOUT" ||
+              error.code === "ENOTFOUND"
+            ) {
+              console.log(chalk.yellow(`Skipping ${flaw.src} (${error.code})`));
+              continue;
+            }
           }
+
+          console.error(error);
+          throw error;
         }
       }
       newRawBody = replaceMatchesInText(flaw.src, newRawBody, newSrc, {
@@ -294,7 +300,7 @@ export async function fixFixableFlaws(doc, options, document) {
         )
       );
     } else {
-      Document.update(document.url, newRawBody, document.metadata, isMarkdown);
+      Document.update(document.url, newRawBody, document.metadata);
       if (options.fixFlawsVerbose) {
         console.log(
           chalk.green(

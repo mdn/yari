@@ -24,7 +24,9 @@
     }
   }
 
-  [type="text"] {
+  [type="text"],
+  textarea,
+  select {
     background: var(--background-primary);
     border: 1px solid var(--border-primary);
     color: var(--text-primary);
@@ -40,7 +42,56 @@
     }
   }
 
+  select {
+    appearance: none;
+  }
+
+  .select-wrap {
+    display: flex;
+    flex: 1 1 100%;
+    position: relative;
+  }
+
+  .select-wrap::after {
+    background-color: var(--icon-primary);
+    content: "";
+    display: block;
+    height: 16px;
+    mask-image: url("../../../assets/icons/small-arrow.svg");
+    mask-size: cover;
+    pointer-events: none;
+    position: absolute;
+    right: 0.5rem;
+    top: calc(50% - 0.5rem);
+    width: 16px;
+  }
+
+  select,
   label {
+    text-overflow: ellipsis;
     width: 100%;
+  }
+
+  :invalid {
+    border-color: var(--form-invalid-color);
+
+    &:focus {
+      border-color: var(--form-invalid-focus-color);
+      box-shadow: 0 0 0 3px var(--form-invalid-focus-effect-color);
+    }
+  }
+
+  .limit {
+    color: var(--form-limit-color);
+    font-size: 0.6875rem;
+    margin-left: auto;
+
+    b {
+      color: var(--form-limit-color-emphasis);
+    }
+
+    &.invalid b {
+      color: var(--form-invalid-color);
+    }
   }
 }

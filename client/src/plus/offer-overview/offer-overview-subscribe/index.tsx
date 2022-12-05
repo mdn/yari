@@ -19,7 +19,7 @@ export enum Period {
 }
 
 const SUBSCRIPTIONS = {
-  [SubscriptionType.MDN_CORE]: { order: 0 },
+  [SubscriptionType.MDN_CORE]: { order: 0, period: Period.Month },
   [SubscriptionType.MDN_PLUS_5M]: {
     order: 1,
     period: Period.Month,
@@ -78,7 +78,7 @@ const CORE: OfferDetailsProps = {
   name: "Core",
   features: [
     ["notifications", "Notifications for up to 3 pages"],
-    ["collections", "Up to 5 saved articles"],
+    ["collections", "Up to 3 collections"],
   ],
   includes: "Includes:",
   cta: "Start with Core",

@@ -1,84 +1,159 @@
 [
   {
-    "tags": ["Property"],
+    "tags": [],
+    "pageType": "web-api-static-property",
     "locale": "en-US",
     "translations": [
       {
-        "title": "MyTestProperty1",
-        "url": "/ja/docs/Web/API/TestInterface/TestProperty1",
+        "title": "MyTestStaticProperty1",
+        "url": "/ja/docs/Web/API/TestInterface/MyTestStaticProperty1",
         "tags": [],
-        "summary": "The <code><strong>MyTestProperty1</strong></code> property of the <a href=\"/ja/docs/Web/API/TestInterface\" title=\"TestInterface summary stuff\"><code>TestInterface</code></a> interface has no badges (ja translation).",
+        "summary": "The <code><strong>MyTestStaticProperty1</strong></code> property of the <a href=\"/ja/docs/Web/API/TestInterface\" title=\"TestInterface summary stuff\"><code>TestInterface</code></a> interface has no badges (ja translation).",
         "locale": "ja"
       }
     ],
-    "summary": "The <code><strong>MyTestProperty1</strong></code> property of the <a href=\"/en-US/docs/Web/API/TestInterface\" title=\"TestInterface summary stuff\"><code>TestInterface</code></a> interface has no badges.",
-    "slug": "Web/API/TestInterface/TestProperty1",
-    "title": "TestInterface.MyTestProperty1",
-    "url": "/en-US/docs/Web/API/TestInterface/TestProperty1"
+    "summary": "The <code><strong>MyTestStaticProperty1</strong></code> property of the <a href=\"/en-US/docs/Web/API/TestInterface\" title=\"TestInterface summary stuff\"><code>TestInterface</code></a> interface has no badges.",
+    "slug": "Web/API/TestInterface/MyTestStaticProperty1",
+    "title": "TestInterface.MyTestStaticProperty1",
+    "url": "/en-US/docs/Web/API/TestInterface/MyTestStaticProperty1"
   },
 
   {
-    "tags": ["Method", "Experimental"],
+    "tags": [],
+    "pageType": "web-api-instance-property",
     "locale": "en-US",
     "translations": [
       {
-        "title": "MyTestMethod1",
-        "url": "/ja/docs/Web/API/TestInterface/TestMethod1",
+        "title": "MyTestInstanceProperty1",
+        "url": "/ja/docs/Web/API/TestInterface/MyTestInstanceProperty1",
         "tags": [],
-        "summary": "The <code><strong>MyTestMethod1</strong></code> property of the <a href=\"/ja/docs/Web/API/TestInterface\" title=\"TestInterface summary stuff\"><code>TestInterface</code></a> interface is experimental (ja translation).",
+        "summary": "The <code><strong>MyTestInstanceProperty1</strong></code> property of the <a href=\"/ja/docs/Web/API/TestInterface\" title=\"TestInterface summary stuff\"><code>TestInterface</code></a> interface has no badges (ja translation).",
         "locale": "ja"
       }
     ],
-    "summary": "The <code><strong>MyTestMethod1</strong></code> property of the <a href=\"/en-US/docs/Web/API/TestInterface\" title=\"TestInterface summary stuff\"><code>TestInterface</code></a> interface is experimental.",
-    "slug": "Web/API/TestInterface/TestMethod1",
-    "title": "MyTestMethod1",
-    "url": "/en-US/docs/Web/API/TestInterface/TestMethod1"
+    "summary": "The <code><strong>MyTestInstanceProperty1</strong></code> property of the <a href=\"/en-US/docs/Web/API/TestInterface\" title=\"TestInterface summary stuff\"><code>TestInterface</code></a> interface has no badges.",
+    "slug": "Web/API/TestInterface/MyTestInstanceProperty1",
+    "title": "TestInterface.MyTestInstanceProperty1",
+    "url": "/en-US/docs/Web/API/TestInterface/MyTestInstanceProperty1"
   },
 
   {
-    "tags": ["Method", "Deprecated", "Non-standard"],
+    "tags": ["Experimental"],
+    "pageType": "web-api-static-method",
     "locale": "en-US",
     "translations": [
       {
-        "title": "MyTestMethod2",
-        "url": "/ja/docs/Web/API/TestInterface/TestMethod2",
+        "title": "MyTestStaticMethod1",
+        "url": "/ja/docs/Web/API/TestInterface/MyTestStaticMethod1",
         "tags": [],
-        "summary": "The <code><strong>MyTestMethod2</strong></code> property of the <a href=\"/ja/docs/Web/API/TestInterface\" title=\"TestInterface summary stuff\"><code>TestInterface</code></a> interface is deprecated and non-standard (ja translation).",
+        "summary": "The <code><strong>MyTestStaticMethod1</strong></code> property of the <a href=\"/ja/docs/Web/API/TestInterface\" title=\"TestInterface summary stuff\"><code>TestInterface</code></a> interface is experimental (ja translation).",
         "locale": "ja"
       }
     ],
-    "summary": "The <code><strong>MyTestMethod2</strong></code> property of the <a href=\"/en-US/docs/Web/API/TestInterface\" title=\"TestInterface summary stuff\"><code>TestInterface</code></a> interface is deprecated and non-standard.",
-    "slug": "Web/API/TestInterface/TestMethod2",
-    "title": "MyTestMethod2",
-    "url": "/en-US/docs/Web/API/TestInterface/TestMethod2"
+    "summary": "The <code><strong>MyTestStaticMethod1</strong></code> property of the <a href=\"/en-US/docs/Web/API/TestInterface\" title=\"TestInterface summary stuff\"><code>TestInterface</code></a> interface is experimental.",
+    "slug": "Web/API/TestInterface/MyTestStaticMethod1",
+    "title": "MyTestStaticMethod1",
+    "url": "/en-US/docs/Web/API/TestInterface/MyTestStaticMethod1"
   },
 
   {
-    "tags": [
-      "Method",
-      "Deprecated",
-      "Non-standard",
-      "Obsolete",
-      "Experimental"
-    ],
+    "tags": ["Deprecated", "Non-standard"],
+    "pageType": "web-api-static-method",
     "locale": "en-US",
     "translations": [
       {
-        "title": "MyTestMethod3",
-        "url": "/ja/docs/Web/API/TestInterface/TestMethod3",
+        "title": "MyTestStaticMethod2",
+        "url": "/ja/docs/Web/API/TestInterface/MyTestStaticMethod2",
         "tags": [],
-        "summary": "The <code><strong>MyTestMethod3</strong></code> property of the <a href=\"/ja/docs/Web/API/TestInterface\" title=\"TestInterface summary stuff\"><code>TestInterface</code></a> interface has all the badges (ja translation).",
+        "summary": "The <code><strong>MyTestStaticMethod2</strong></code> property of the <a href=\"/ja/docs/Web/API/TestInterface\" title=\"TestInterface summary stuff\"><code>TestInterface</code></a> interface is deprecated and non-standard (ja translation).",
         "locale": "ja"
       }
     ],
-    "summary": "The <code><strong>MyTestMethod3</strong></code> property of the <a href=\"/en-US/docs/Web/API/TestInterface\" title=\"TestInterface summary stuff\"><code>TestInterface</code></a> interface has all the badges.",
-    "slug": "Web/API/TestInterface/TestMethod3",
-    "title": "MyTestMethod3",
-    "url": "/en-US/docs/Web/API/TestInterface/TestMethod3"
+    "summary": "The <code><strong>MyTestStaticMethod2</strong></code> property of the <a href=\"/en-US/docs/Web/API/TestInterface\" title=\"TestInterface summary stuff\"><code>TestInterface</code></a> interface is deprecated and non-standard.",
+    "slug": "Web/API/TestInterface/MyTestStaticMethod2",
+    "title": "MyTestStaticMethod2",
+    "url": "/en-US/docs/Web/API/TestInterface/MyTestStaticMethod2"
   },
 
   {
-    "tags": ["Event"],
+    "tags": ["Deprecated", "Non-standard", "Obsolete", "Experimental"],
+    "pageType": "web-api-static-method",
+    "locale": "en-US",
+    "translations": [
+      {
+        "title": "MyTestStaticMethod3",
+        "url": "/ja/docs/Web/API/TestInterface/MyTestStaticMethod3",
+        "tags": [],
+        "summary": "The <code><strong>MyTestStaticMethod3</strong></code> property of the <a href=\"/ja/docs/Web/API/TestInterface\" title=\"TestInterface summary stuff\"><code>TestInterface</code></a> interface has all the badges (ja translation).",
+        "locale": "ja"
+      }
+    ],
+    "summary": "The <code><strong>MyTestStaticMethod3</strong></code> property of the <a href=\"/en-US/docs/Web/API/TestInterface\" title=\"TestInterface summary stuff\"><code>TestInterface</code></a> interface has all the badges.",
+    "slug": "Web/API/TestInterface/MyTestStaticMethod3",
+    "title": "MyTestStaticMethod3",
+    "url": "/en-US/docs/Web/API/TestInterface/MyTestStaticMethod3"
+  },
+
+  {
+    "tags": ["Experimental"],
+    "pageType": "web-api-instance-method",
+    "locale": "en-US",
+    "translations": [
+      {
+        "title": "MyTestInstanceMethod1",
+        "url": "/ja/docs/Web/API/TestInterface/MyTestInstanceMethod1",
+        "tags": [],
+        "summary": "The <code><strong>MyTestInstanceMethod1</strong></code> property of the <a href=\"/ja/docs/Web/API/TestInterface\" title=\"TestInterface summary stuff\"><code>TestInterface</code></a> interface is experimental (ja translation).",
+        "locale": "ja"
+      }
+    ],
+    "summary": "The <code><strong>MyTestInstanceMethod1</strong></code> property of the <a href=\"/en-US/docs/Web/API/TestInterface\" title=\"TestInterface summary stuff\"><code>TestInterface</code></a> interface is experimental.",
+    "slug": "Web/API/TestInterface/MyTestInstanceMethod1",
+    "title": "MyTestInstanceMethod1",
+    "url": "/en-US/docs/Web/API/TestInterface/MyTestInstanceMethod1"
+  },
+
+  {
+    "tags": ["Deprecated", "Non-standard"],
+    "pageType": "web-api-instance-method",
+    "locale": "en-US",
+    "translations": [
+      {
+        "title": "MyTestInstanceMethod2",
+        "url": "/ja/docs/Web/API/TestInterface/MyTestInstanceMethod2",
+        "tags": [],
+        "summary": "The <code><strong>MyTestInstanceMethod2</strong></code> property of the <a href=\"/ja/docs/Web/API/TestInterface\" title=\"TestInterface summary stuff\"><code>TestInterface</code></a> interface is deprecated and non-standard (ja translation).",
+        "locale": "ja"
+      }
+    ],
+    "summary": "The <code><strong>MyTestInstanceMethod2</strong></code> property of the <a href=\"/en-US/docs/Web/API/TestInterface\" title=\"TestInterface summary stuff\"><code>TestInterface</code></a> interface is deprecated and non-standard.",
+    "slug": "Web/API/TestInterface/MyTestInstanceMethod2",
+    "title": "MyTestInstanceMethod2",
+    "url": "/en-US/docs/Web/API/TestInterface/MyTestInstanceMethod2"
+  },
+
+  {
+    "tags": ["Deprecated", "Non-standard", "Obsolete", "Experimental"],
+    "pageType": "web-api-instance-method",
+    "locale": "en-US",
+    "translations": [
+      {
+        "title": "MyTestInstanceMethod3",
+        "url": "/ja/docs/Web/API/TestInterface/MyTestInstanceMethod3",
+        "tags": [],
+        "summary": "The <code><strong>MyTestInstanceMethod3</strong></code> property of the <a href=\"/ja/docs/Web/API/TestInterface\" title=\"TestInterface summary stuff\"><code>TestInterface</code></a> interface has all the badges (ja translation).",
+        "locale": "ja"
+      }
+    ],
+    "summary": "The <code><strong>MyTestInstanceMethod3</strong></code> property of the <a href=\"/en-US/docs/Web/API/TestInterface\" title=\"TestInterface summary stuff\"><code>TestInterface</code></a> interface has all the badges.",
+    "slug": "Web/API/TestInterface/MyTestInstanceMethod3",
+    "title": "MyTestInstanceMethod3",
+    "url": "/en-US/docs/Web/API/TestInterface/MyTestInstanceMethod3"
+  },
+
+  {
+    "tags": [],
+    "pageType": "web-api-event",
     "locale": "en-US",
     "translations": [
       {
@@ -96,7 +171,8 @@
   },
 
   {
-    "tags": ["Event", "Deprecated", "Non-standard"],
+    "tags": ["Deprecated", "Non-standard"],
+    "pageType": "web-api-event",
     "locale": "en-US",
     "translations": [
       {
@@ -114,7 +190,8 @@
   },
 
   {
-    "tags": ["Event"],
+    "tags": [],
+    "pageType": "web-api-event",
     "locale": "en-US",
     "translations": [
       {

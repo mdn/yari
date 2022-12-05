@@ -27,7 +27,7 @@ export default function FeaturePreview() {
                 <a
                   rel="noreferrer noopener"
                   target="_blank"
-                  href="https://www.surveygizmo.com/s3/6918430/Feature-Preview-User-Feedback-Collections-in-Quicksearch"
+                  href="https://survey.alchemer.com/s3/6918430/Feature-Preview-User-Feedback-Collections-in-Quicksearch"
                 >
                   Give us some feedback.
                 </a>
@@ -36,7 +36,7 @@ export default function FeaturePreview() {
                 <Spinner extraClasses="loading" />
               ) : (
                 <Switch
-                  name="offline"
+                  name="col_in_search"
                   checked={Boolean(user?.settings?.colInSearch)}
                   toggle={async (e) => {
                     setSaving(true);

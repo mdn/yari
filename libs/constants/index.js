@@ -78,10 +78,7 @@ const CSP_SCRIPT_SRC_VALUES = [
    * previous hash to avoid issues shortly after cache invalidation.
    */
 
-  // 1. Polyfill.
-  "'sha256-JEt9Nmc3BP88wxuTZm9aKNu87vEgGmKW1zzy/vb1KPs='",
-
-  // 2. Theme switching.
+  // 1. Theme switching.
   // - Previous hash (to avoid cache invalidation issues):
   "'sha256-GA8+DpFnqAM/vwERTpb5zyLUaN5KnOhctfTsqWfhaUA='",
   // - Current hash:
@@ -118,7 +115,7 @@ const CSP_DIRECTIVES = {
     "jsfiddle.net",
     "www.youtube-nocookie.com",
     "codepen.io",
-    "www.surveygizmo.com",
+    "survey.alchemer.com",
   ],
   "img-src": [
     "'self'",

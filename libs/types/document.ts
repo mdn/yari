@@ -69,6 +69,11 @@ export interface UnsafeHTMLFlaw extends GenericFlaw {
   column: number | null;
 }
 
+export interface RedirectInfo {
+  current: string;
+  suggested: string;
+}
+
 export interface MacroErrorMessage extends GenericFlaw {
   name: string;
   error: {
@@ -84,10 +89,7 @@ export interface MacroErrorMessage extends GenericFlaw {
   macroSource: string;
   macroName: string;
   fixed?: true;
-  redirectInfo?: {
-    current: string;
-    suggested: string;
-  };
+  redirectInfo?: RedirectInfo;
 }
 
 export interface TranslationDifferenceFlaw extends GenericFlaw {
@@ -130,16 +132,13 @@ export type Toc = {
   sub?: boolean;
 };
 
-export interface Doc {
+export interface DocMetadata {
   title: string;
   locale: string;
   native: string;
   pageTitle: string;
   mdn_url: string;
   related_content: any[];
-  sidebarHTML: string;
-  toc: Toc[];
-  body: Section[];
   modified: string;
   flaws: Flaws;
   other_translations?: Translation[];
@@ -152,9 +151,28 @@ export interface Doc {
   hasMathML?: boolean;
   isMarkdown: boolean;
   summary: string;
-  // Used for search.
-  popularity?: number;
+  popularity?: number; // Used for search.
   noIndexing?: boolean;
+  browserCompat?: string[];
+  hash?: string;
+}
+
+export interface Doc extends DocMetadata {
+  sidebarHTML: string;
+  toc: Toc[];
+  body: Section[];
+}
+
+export interface DocFrontmatter {
+  contributor_name?: string;
+  folder_name?: string;
+  is_featured?: boolean;
+  img_alt?: string;
+  usernames?: any;
+  quote?: any;
+  title?: string;
+  slug?: string;
+  original_slug?: string;
 }
 
 export type Section = ProseSection | SpecificationsSection | BCDSection;
@@ -169,6 +187,12 @@ export interface ProseSection {
     titleAsText?: string;
   };
 }
+
+export interface Specification {
+  bcdSpecificationURL: string;
+  title: string;
+}
+
 export interface SpecificationsSection {
   type: "specifications";
   value: {
@@ -176,10 +200,7 @@ export interface SpecificationsSection {
     title: string;
     isH3: boolean;
     query: string;
-    specifications: {
-      bcdSpecificationURL: any;
-      title: string;
-    }[];
+    specifications: Specification[];
   };
 }
 
@@ -195,15 +216,6 @@ export interface BCDSection {
     browsers?: BCD.Browsers | null;
   };
 }
-
-export type FrequentlyViewedEntry = {
-  serial: number;
-  url: string;
-  title: string;
-  timestamp: number;
-  visitCount: number;
-  parents?: DocParent[];
-};
 
 // Yari builder will attach extra keys from the compat data
 // it gets from @mdn/browser-compat-data. These are "Yari'esque"

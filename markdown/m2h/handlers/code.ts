@@ -1,12 +1,12 @@
 import u from "unist-builder";
 
 /**
- * Transform a markdown code block into a <pre>.
+ * Transform a Markdown code block into a <pre>.
  * Adding the highlight tags as classes prefixed by "brush:"
  */
 export function code(h, node) {
-  var value = node.value ? node.value + "\n" : "";
-  const lang = node.lang;
+  const value = node.value ? node.value + "\n" : "";
+  const lang = node.lang?.replace(/-nolint$/, "");
   const meta = (node.meta || "").split(" ");
   const props: { className?: string | string[] } = {};
 
@@ -18,7 +18,7 @@ export function code(h, node) {
 
   /*
    * Prism will inject a <code> element so we don't.
-   * If we wanna change this uncomment the following code:
+   * If we want to change this, uncomment the following code:
    */
   // const code = h(node, "code", props, [u("text", value)]);
   // if (node.meta) {

@@ -25,6 +25,7 @@
       font-weight: var(--font-body-strong-weight);
     }
   }
+
   .flaw {
     li {
       margin-bottom: 15px;
@@ -33,6 +34,7 @@
     ins {
       background-color: #d4fcbc;
     }
+
     del {
       background-color: #fbb;
       text-decoration: none;
@@ -44,7 +46,7 @@
   }
 
   .macro-filepath-in-prerequisite {
-    background-color: orange;
+    background-color: #ffa500;
     font-size: 80%;
     padding: 1px 5px;
   }

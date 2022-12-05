@@ -1,6 +1,7 @@
 #!/usr/bin/env node
-import fs from "fs";
-import path from "path";
+import crypto from "node:crypto";
+import fs from "node:fs";
+import path from "node:path";
 
 import chalk from "chalk";
 import express from "express";
@@ -41,13 +42,7 @@ async function buildDocumentFromURL(url) {
   if (!document) {
     return null;
   }
-  const documentOptions = {
-    // The only times the server builds on the fly is basically when
-    // you're in "development mode". And when you're not building
-    // to ship you don't want the cache to stand have any hits
-    // since it might prevent reading fresh data from disk.
-    clearKumascriptRenderCache: true,
-  };
+  const documentOptions = {};
   if (CONTENT_TRANSLATED_ROOT) {
     // When you're running the dev server and build documents
     // every time a URL is requested, you won't have had the chance to do
@@ -85,7 +80,7 @@ const contentProxy =
     // timeout: 20000,
   });
 
-app.use("/api/v1", proxy);
+app.use("/api/*", proxy);
 // This is an exception and it's only ever relevant in development.
 app.use("/users/*", proxy);
 
@@ -248,6 +243,8 @@ app.get("/*", async (req, res, ...args) => {
   let lookupURL = decodeURI(req.path);
   let extraSuffix = "";
   let bcdDataURL = "";
+  let isMetadata = false;
+  let isDocument = false;
   const bcdDataURLRegex = /\/(bcd-\d+|bcd)\.json$/;
 
   if (req.path.endsWith("index.json")) {
@@ -257,7 +254,12 @@ app.get("/*", async (req, res, ...args) => {
     // and that won't be found in getRedirectUrl() since that doesn't
     // index things with the '/index.json' suffix. So we need to
     // temporarily remove it and remember to but it back when we're done.
+    isDocument = true;
     extraSuffix = "/index.json";
+    lookupURL = lookupURL.replace(extraSuffix, "");
+  } else if (req.path.endsWith("metadata.json")) {
+    isMetadata = true;
+    extraSuffix = "/metadata.json";
     lookupURL = lookupURL.replace(extraSuffix, "");
   } else if (bcdDataURLRegex.test(req.path)) {
     bcdDataURL = req.path;
@@ -310,7 +312,18 @@ app.get("/*", async (req, res, ...args) => {
     );
   }
 
-  if (isJSONRequest) {
+  if (isDocument) {
+    res.json({ doc: document });
+  } else if (isMetadata) {
+    const docString = JSON.stringify({ doc: document });
+
+    const hash = crypto.createHash("sha256").update(docString).digest("hex");
+    const { body: _, toc: __, sidebarHTML: ___, ...builtMetadata } = document;
+    builtMetadata.hash = hash;
+
+    res.json(builtMetadata);
+  } else if (isJSONRequest) {
+    // TODO: what's this for?
     res.json({ doc: document });
   } else {
     res.header("Content-Security-Policy", CSP_VALUE);

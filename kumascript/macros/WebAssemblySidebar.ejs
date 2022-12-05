@@ -15,7 +15,7 @@ var text = mdn.localStringMap({
       'Loading_and_running' : 'Loading and running WebAssembly code',
       'Caching_modules' : 'Caching compiled WebAssembly modules',
       'Exported_functions' : 'Exported WebAssembly functions',
-    'Object_reference' : 'Object reference'
+    'JavaScript_interface' : 'JavaScript interface'
   },
   'fr': {
     'WebAssembly_home_page' : "Page d'accueil WebAssembly",
@@ -29,7 +29,7 @@ var text = mdn.localStringMap({
       'Loading_and_running' : "Chargement et exécution de code WebAssembly",
       'Caching_modules' : "Mise en cache des modules WebAssembly compilés",
       'Exported_functions' : "Fonctions WebAssembly exportées",
-    'Object_reference' : "Référence objet"
+    'JavaScript_interface' : "JavaScript interface"
   },
   'ru': {
     'WebAssembly_home_page' : 'WebAssembly',
@@ -43,7 +43,7 @@ var text = mdn.localStringMap({
       'Loading_and_running' : 'Загрузка и запуск кода WebAssembly',
       'Caching_modules' : 'Кеширование скомпилированных модулей WebAssembly',
       'Exported_functions' : 'Экспортируемые функции WebAssembly',
-    'Object_reference' : 'Ссылки на API'
+    'JavaScript_interface' : 'JavaScript interface'
   }
 });
 %>
@@ -70,17 +70,19 @@ var text = mdn.localStringMap({
   </li>
   <li class="toggle">
     <details open>
-      <summary><%=text['Object_reference']%></summary>
+      <summary><%=text['JavaScript_interface']%></summary>
       <ol>
-        <li><%- await template("jsxref", ["WebAssembly"]) %></li>
-        <li><%- await template("jsxref", ["WebAssembly.Module"]) %></li>
-        <li><%- await template("jsxref", ["WebAssembly.Global"]) %></li>
-        <li><%- await template("jsxref", ["WebAssembly.Instance"]) %></li>
-        <li><%- await template("jsxref", ["WebAssembly.Memory"]) %></li>
-        <li><%- await template("jsxref", ["WebAssembly.Table"]) %></li>
-        <li><%- await template("jsxref", ["WebAssembly.CompileError"]) %></li>
-        <li><%- await template("jsxref", ["WebAssembly.LinkError"]) %></li>
-        <li><%- await template("jsxref", ["WebAssembly.RuntimeError"]) %></li>
+        <li><a href="<%=baseURL%>/JavaScript_interface"><code>WebAssembly</code></a></li>
+        <li><a href="<%=baseURL%>/JavaScript_interface/Module"><code>WebAssembly.Module</code></a></li>
+        <li><a href="<%=baseURL%>/JavaScript_interface/Global"><code>WebAssembly.Global</code></a></li>
+        <li><a href="<%=baseURL%>/JavaScript_interface/Instance"><code>WebAssembly.Instance</code></a></li>
+        <li><a href="<%=baseURL%>/JavaScript_interface/Memory"><code>WebAssembly.Memory</code></a></li>
+        <li><a href="<%=baseURL%>/JavaScript_interface/Table"><code>WebAssembly.Table</code></a></li>
+        <li><a href="<%=baseURL%>/JavaScript_interface/Tag"><code>WebAssembly.Tag</code></a></li>
+        <li><a href="<%=baseURL%>/JavaScript_interface/Exception"><code>WebAssembly.Exception</code></a></li>
+        <li><a href="<%=baseURL%>/JavaScript_interface/CompileError"><code>WebAssembly.CompileError</code></a></li>
+        <li><a href="<%=baseURL%>/JavaScript_interface/LinkError"><code>WebAssembly.LinkError</code></a></li>
+        <li><a href="<%=baseURL%>/JavaScript_interface/RuntimeError"><code>WebAssembly.RuntimeError</code></a></li>
       </ol>
     </details>
   </li>

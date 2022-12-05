@@ -1,24 +1,22 @@
 import { Doc } from "../libs/types";
-import fs from "fs";
-import path from "path";
+import fs from "node:fs";
+import path from "node:path";
 
 import chalk from "chalk";
-import * as cheerio from "cheerio";
 import {
+  MacroInvocationError,
   MacroLiveSampleError,
   MacroRedirectedLinkError,
 } from "../kumascript/src/errors";
 
 import { Document, Image, execGit } from "../content";
 import { CONTENT_ROOT, REPOSITORY_URLS } from "../libs/env";
-import kumascript from "../kumascript";
+import * as kumascript from "../kumascript";
 
 import { FLAW_LEVELS } from "../libs/constants";
-import {
-  extractSections,
-  extractSidebar,
-  extractSummary,
-} from "./document-extractor";
+import { extractSections } from "./extract-sections";
+import { extractSidebar } from "./extract-sidebar";
+import { extractSummary } from "./extract-summary";
 export { default as SearchIndex } from "./search-index";
 import { addBreadcrumbData } from "./document-utils";
 import { fixFixableFlaws, injectFlaws, injectSectionFlaws } from "./flaws";
@@ -30,7 +28,6 @@ import { formatNotecards } from "./format-notecards";
 import buildOptions from "./build-options";
 export { gather as gatherGitHistory } from "./git-history";
 export { buildSPAs } from "./spas";
-import { renderCache as renderKumascriptCache } from "../kumascript";
 import LANGUAGES_RAW from "../libs/languages";
 import { safeDecodeURIComponent } from "../kumascript/src/api/util";
 import { wrapTables } from "./wrap-tables";
@@ -136,11 +133,7 @@ function postProcessExternalLinks($) {
       return;
     }
     $a.addClass("external");
-    const rel = ($a.attr("rel") || "").split(" ");
-    if (!rel.includes("noopener")) {
-      rel.push("noopener");
-      $a.attr("rel", rel.join(" "));
-    }
+    $a.attr("target", "_blank");
   });
 }
 
@@ -291,8 +284,9 @@ export interface BuiltDocument {
 }
 
 interface DocumentOptions {
-  clearKumascriptRenderCache?: boolean;
   fixFlaws?: boolean;
+  fixFlawsDryRun?: boolean;
+  fixFlawsTypes?: Iterable<string>;
   fixFlawsVerbose?: boolean;
 }
 
@@ -328,16 +322,16 @@ export async function buildDocument(
   }
 
   let flaws: any[] = [];
-  let renderedHtml = "";
+  let $ = null;
   const liveSamples: LiveSample[] = [];
 
-  if (options.clearKumascriptRenderCache) {
-    renderKumascriptCache.clear();
-  }
   try {
-    [renderedHtml, flaws] = await kumascript.render(document.url);
+    [$, flaws] = await kumascript.render(document.url);
   } catch (error) {
-    if (error.name === "MacroInvocationError") {
+    if (
+      error instanceof MacroInvocationError &&
+      error.name === "MacroInvocationError"
+    ) {
       // The source HTML couldn't even be parsed! There's no point allowing
       // anything else move on.
       // But considering that this might just be one of many documents you're
@@ -345,14 +339,12 @@ export async function buildDocument(
       // message.
       error.updateFileInfo(document.fileInfo);
       throw new Error(
-        `MacroInvocationError trying to parse ${error.filepath}, line ${error.line} column ${error.column} (${error.error.message})`
+        `MacroInvocationError trying to parse file.\n\nFile:    ${error.filepath}\nMessage: ${error.error.message}\n\n${error.sourceContext}`
       );
     }
     // Any other unexpected error re-thrown.
     throw error;
   }
-
-  const $ = cheerio.load(`<div id="_body">${renderedHtml}</div>`);
 
   const liveSamplePages = kumascript.buildLiveSamplePages(
     document.url,
@@ -360,7 +352,9 @@ export async function buildDocument(
     $,
     document.rawBody
   );
-  for (let { id, html, flaw } of liveSamplePages) {
+  for (const liveSamplePage of liveSamplePages) {
+    const { id, flaw } = liveSamplePage;
+    let { html } = liveSamplePage;
     if (flaw) {
       flaw.updateFileInfo(fileInfo);
       if (flaw.name === "MacroLiveSampleError") {
@@ -482,6 +476,10 @@ export async function buildDocument(
   doc.mdn_url = document.url;
   doc.locale = metadata.locale as string;
   doc.native = LANGUAGES.get(doc.locale.toLowerCase())?.native;
+  const browserCompat = metadata["browser-compat"];
+  doc.browserCompat =
+    browserCompat &&
+    (Array.isArray(browserCompat) ? browserCompat : [browserCompat]);
 
   // If the document contains <math> HTML, it will set `doc.hasMathML=true`.
   // The client (<Document/> component) needs to know this for loading polyfills.

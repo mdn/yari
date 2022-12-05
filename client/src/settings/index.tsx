@@ -10,7 +10,6 @@ const FeaturePreview = React.lazy(() => import("./feature-preview"));
 
 export function Settings() {
   const pageTitle = "My Settings";
-
   return (
     <>
       <OfflineStatusBar />

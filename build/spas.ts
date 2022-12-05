@@ -1,6 +1,7 @@
-import fs from "fs";
-import path from "path";
+import fs from "node:fs";
+import path from "node:path";
 import frontmatter from "front-matter";
+import { fdir, PathsOutput } from "fdir";
 
 import { m2h } from "../markdown";
 
@@ -11,26 +12,15 @@ import {
   CONTRIBUTOR_SPOTLIGHT_ROOT,
   BUILD_OUT_ROOT,
 } from "../libs/env";
-// eslint-disable-next-line node/no-missing-require
+import { isValidLocale } from "../libs/locale-utils";
+import { DocFrontmatter } from "../libs/types/document";
 import { renderHTML } from "../ssr/dist/main";
-import { default as got } from "got";
+import got from "got";
 import { splitSections } from "./utils";
 import cheerio from "cheerio";
 import { findByURL } from "../content/document";
 import { buildDocument } from ".";
 import { NewsItem } from "../client/src/homepage/latest-news";
-
-export interface DocFrontmatter {
-  contributor_name?: string;
-  folder_name?: string;
-  is_featured?: boolean;
-  img_alt?: string;
-  usernames?: any;
-  quote?: any;
-  title?: string;
-  slug?: string;
-  original_slug?: string;
-}
 
 const dirname = __dirname;
 
@@ -119,8 +109,8 @@ export async function buildSPAs(options) {
     if (!root) {
       continue;
     }
-    for (const locale of fs.readdirSync(root)) {
-      if (!fs.statSync(path.join(root, locale)).isDirectory()) {
+    for (const pathLocale of fs.readdirSync(root)) {
+      if (!fs.statSync(path.join(root, pathLocale)).isDirectory()) {
         continue;
       }
 
@@ -160,16 +150,17 @@ export async function buildSPAs(options) {
         { prefix: "about", pageTitle: "About MDN" },
         { prefix: "community", pageTitle: "Contribute to MDN" },
       ];
+      const locale = VALID_LOCALES.get(pathLocale) || pathLocale;
       for (const { prefix, pageTitle, noIndexing } of SPAs) {
         const url = `/${locale}/${prefix}`;
         const context = {
           pageTitle,
-          locale: VALID_LOCALES.get(locale) || locale,
+          locale,
           noIndexing,
         };
 
         const html = renderHTML(url, context);
-        const outPath = path.join(BUILD_OUT_ROOT, locale, prefix);
+        const outPath = path.join(BUILD_OUT_ROOT, pathLocale, prefix);
         fs.mkdirSync(outPath, { recursive: true });
         const filePath = path.join(outPath, "index.html");
         fs.writeFileSync(filePath, html);
@@ -190,15 +181,16 @@ export async function buildSPAs(options) {
    * @param {string} title
    */
   async function buildStaticPages(dirpath, slug, title = "MDN") {
-    for (const file of fs.readdirSync(dirpath)) {
-      const filepath = path.join(dirpath, file);
-      const stat = fs.lstatSync(filepath);
-      const page = file.split(".")[0];
+    const crawler = new fdir()
+      .withFullPaths()
+      .withErrors()
+      .filter((path) => path.endsWith(".md"))
+      .crawl(dirpath);
+    const filepaths = [...(crawler.sync() as PathsOutput)];
 
-      if (stat.isDirectory()) {
-        await buildStaticPages(filepath, `${slug}/${page}`, title);
-        return;
-      }
+    for (const filepath of filepaths) {
+      const file = filepath.replace(dirpath, "");
+      const page = file.split(".")[0];
 
       const locale = "en-us";
       const markdown = fs.readFileSync(filepath, "utf-8");
@@ -238,19 +230,16 @@ export async function buildSPAs(options) {
       fs.writeFileSync(filePathContext, JSON.stringify(context));
     }
   }
+
   await buildStaticPages(
-    path.join(dirname, "../copy/plus"),
+    path.join(dirname, "../copy/plus/"),
     "plus/docs",
     "MDN Plus"
   );
 
   // Build all the home pages in all locales.
   // Fetch merged content PRs for the latest contribution section.
-  const pullRequestsData = (await got(
-    "https://api.github.com/search/issues?q=repo:mdn/content+is:pr+is:merged+sort:updated&per_page=10"
-  ).json()) as {
-    items: any[];
-  };
+  const recentContributions = await fetchRecentContributions();
 
   // Fetch latest Hacks articles.
   const latestNews = await fetchLatestNews();
@@ -260,14 +249,14 @@ export async function buildSPAs(options) {
       continue;
     }
     for (const locale of fs.readdirSync(root)) {
-      if (!VALID_LOCALES.has(locale)) {
+      if (!isValidLocale(locale)) {
         continue;
       }
       if (!fs.statSync(path.join(root, locale)).isDirectory()) {
         continue;
       }
 
-      let featuredContributor = contributorSpotlightRoot
+      const featuredContributor = contributorSpotlightRoot
         ? await buildContributorSpotlight(locale, options)
         : null;
 
@@ -294,17 +283,7 @@ export async function buildSPAs(options) {
 
       const url = `/${locale}/`;
       const hyData = {
-        recentContributions: {
-          items: pullRequestsData.items.map(
-            ({ number, title, updated_at, pull_request: { html_url } }) => ({
-              number,
-              title,
-              updated_at,
-              url: html_url,
-            })
-          ),
-          repo: { name: "mdn/content", url: "https://github.com/mdn/content" },
-        },
+        recentContributions,
         featuredContributor,
         latestNews,
         featuredArticles,
@@ -334,6 +313,50 @@ export async function buildSPAs(options) {
   if (!options.quiet) {
     console.log(`Built ${buildCount} SPA related files`);
   }
+}
+
+async function fetchGitHubPRs(repo, count = 5) {
+  const twoDaysAgo = new Date(Date.now() - 48 * 60 * 60 * 1000);
+  const pullRequestsQuery = [
+    `repo:${repo}`,
+    "is:pr",
+    "is:merged",
+    `merged:>${twoDaysAgo.toISOString()}`,
+    "sort:updated",
+  ].join("+");
+  const pullRequestUrl = `https://api.github.com/search/issues?q=${pullRequestsQuery}&per_page=${count}`;
+  const pullRequestsData = (await got(pullRequestUrl).json()) as {
+    items: any[];
+  };
+  const prDataRepo = pullRequestsData.items.map((item) => ({
+    ...item,
+    repo: { name: repo, url: `https://github.com/${repo}` },
+  }));
+  return prDataRepo;
+}
+
+async function fetchRecentContributions() {
+  const repos = ["mdn/content", "mdn/translated-content"];
+  const countPerRepo = 5;
+  const pullRequests = (
+    await Promise.all(
+      repos.map(async (repo) => await fetchGitHubPRs(repo, countPerRepo))
+    )
+  ).flat();
+  const pullRequestsData = pullRequests.sort((a, b) =>
+    a.updated_at < b.updated_at ? 1 : -1
+  );
+  return {
+    items: pullRequestsData.map(
+      ({ number, title, updated_at, pull_request: { html_url }, repo }) => ({
+        number,
+        title,
+        updated_at,
+        url: html_url,
+        repo,
+      })
+    ),
+  };
 }
 
 async function fetchLatestNews() {

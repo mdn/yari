@@ -1,23 +1,23 @@
-const fs = require("fs");
-const path = require("path");
-const { promisify } = require("util");
+import fs from "node:fs";
+import path from "node:path";
+import { promisify } from "node:util";
 
-const fse = require("fs-extra");
-const tempy = require("tempy");
-const cheerio = require("cheerio");
-const FileType = require("file-type");
-const imagemin = require("imagemin");
-const imageminPngquant = require("imagemin-pngquant");
-const imageminMozjpeg = require("imagemin-mozjpeg");
-const imageminGifsicle = require("imagemin-gifsicle");
-const imageminSvgo = require("imagemin-svgo");
-const isSvg = require("is-svg");
+import fse from "fs-extra";
+import tempy from "tempy";
+import * as cheerio from "cheerio";
+import FileType from "file-type";
+import imagemin from "imagemin";
+import imageminPngquant from "imagemin-pngquant";
+import imageminMozjpeg from "imagemin-mozjpeg";
+import imageminGifsicle from "imagemin-gifsicle";
+import imageminSvgo from "imagemin-svgo";
+import isSvg from "is-svg";
 
-const { MAX_FILE_SIZE } = require("../libs/env");
-const {
+import { MAX_FILE_SIZE } from "../libs/env";
+import {
   VALID_MIME_TYPES,
   MAX_COMPRESSION_DIFFERENCE_PERCENTAGE,
-} = require("../libs/constants");
+} from "../libs/constants";
 
 function formatSize(bytes) {
   if (bytes > 1024 * 1024) {
@@ -68,6 +68,9 @@ export async function checkFile(filePath, options: CheckerOptions = {}) {
     const $ = cheerio.load(content);
     const disallowedTagNames = new Set(["script", "object", "iframe", "embed"]);
     $("*").each((i, element) => {
+      if (!("tagName" in element)) {
+        return;
+      }
       const { tagName } = element;
       if (disallowedTagNames.has(tagName)) {
         throw new Error(`${filePath} contains a <${tagName}> tag`);

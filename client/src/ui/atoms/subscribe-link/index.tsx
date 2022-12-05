@@ -1,18 +1,18 @@
 import "./index.scss";
 import { Button } from "../button";
 import { usePlusUrl } from "../../../plus/utils";
+import { useGleanClick } from "../../../telemetry/glean-context";
 
-/**
- *
- * @param {boolean} toFXA - Whether this link goes to FXA, ot `/plus`
- * @returns {JSX.Element} - The anchor link with the appropriate URL
- */
-export const SubscribeLink = () => {
+export const SubscribeLink = ({ toPlans = false, gleanContext = "" }) => {
   const href = usePlusUrl();
-
+  const gleanClick = useGleanClick();
   return (
-    <Button href={href} extraClasses="mdn-plus-subscribe-link">
-      Get MDN Plus
+    <Button
+      href={href + (toPlans ? "#subscribe" : "")}
+      extraClasses="mdn-plus-subscribe-link"
+      onClickHandler={() => gleanContext && gleanClick(gleanContext)}
+    >
+      {toPlans ? "Upgrade Now" : "Get MDN Plus"}
     </Button>
   );
 };

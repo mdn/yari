@@ -4,7 +4,7 @@ import { BCDSection, CompatStatementExtended, Doc } from "../libs/types";
 
 /**
  * Loop over, and mutate, all 'browser_compatibility' sections.
- * BCD data comes from from a library with `mdn_url`'s that are absolute.
+ * BCD data comes from a library with `mdn_url`'s that are absolute.
  * This takes the `mdn_url` and sets it to a URI that can be used when
  * rendering the BCD table to link to a relative path.
  *

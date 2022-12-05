@@ -761,13 +761,50 @@ const rtlLocales = ['ar', 'he', 'fa'];
 const pageList = await page.subpagesExpand('/en-US/docs/Web/CSS');
 const standardPages = pageList.filter(page => !hasTag(page, "Non-standard"));
 
-const groups = standardPages.filter(page => hasTag(page, "Overview"));
-const properties = standardPages.filter(page => hasTag(page, "CSS Property")).sort((a, b) => a.title.localeCompare(b.title));
-const selectors = standardPages.filter(page => (hasTag(page, "Selector") && !hasTag(page, "Pseudo-element") && !hasTag(page, "Pseudo-class")));
-const pseudoClasses = standardPages.filter(page => hasTag(page, "Pseudo-class"));
-const pseudoElements = standardPages.filter(page => hasTag(page, "Pseudo-element"));
-const atRules = standardPages.filter(page => hasTag(page, "At-rule"));
-const types = standardPages.filter(page => hasTag(page, "CSS Data Type"));
+const groups = [];
+let properties = [];
+const selectors = [];
+const combinators = [];
+const pseudoClasses = [];
+const pseudoElements = [];
+const atRules = [];
+const functions = [];
+const types = [];
+
+for (const page of standardPages) {
+  switch(page.pageType) {
+    case "css-module":
+      groups.push(page);
+      break;
+    case "css-shorthand-property":
+    case "css-property":
+      properties.push(page);
+      break;
+    case "css-selector":
+      selectors.push(page);
+      break;
+    case "css-combinator":
+      combinators.push(page);
+      break;
+    case "css-pseudo-class":
+      pseudoClasses.push(page);
+      break;
+    case "css-pseudo-element":
+      pseudoElements.push(page);
+      break;
+    case "css-at-rule":
+      atRules.push(page);
+      break;
+    case "css-function":
+      functions.push(page);
+      break;
+    case "css-type":
+      types.push(page);
+      break;
+  }
+}
+
+properties = properties.sort((a, b) => a.title.localeCompare(b.title));
 
 const badges = {
   ExperimentalBadge : await template("ExperimentalBadge"),
@@ -781,42 +818,116 @@ function smartLink(href, title, content, subpath) {
   return web.smartLink(href, title, content, subpath, basepath, ignoreFlawMacro);
 }
 
+/**
+ * Create an entry in the sidebar for a single CSS page.
+ *
+ * @param page : an object containing information about a page, including title, url etc
+ * @returns : a string containing markup for that page's entry in the sidebar
+ */
+function makePageLink(page) {
+  const url = page.url.replace('en-US', locale);
+  const title = htmlEscape(page.title);
+
+  if (locale != 'en-US') {
+    page.translations.forEach(function(translation){
+      if (translation.locale === locale) {
+        title = htmlEscape(translation.title);
+      }
+    });
+  }
+
+  let result = '<li>';
+
+  if (hasTag(page, 'Experimental')) {
+    result += badges.ExperimentalBadge;
+  }
+
+  if (hasTag(page, 'Deprecated')) {
+    result += badges.DeprecatedBadge;
+  }
+
+  if (rtlLocales.indexOf(locale) != -1) {
+    result += '<bdi>';
+  }
+
+  result += smartLink(url, null, title, cssURL);
+
+  if (rtlLocales.indexOf(locale) != -1) {
+    result += '</bdi>';
+  }
+
+  result += '</li>';
+
+  return result;
+}
+
 function buildSublist(pages, title) {
   let result = `<li class="toggle"><details><summary>${title}</summary><ol>`;
 
   for (const page of pages) {
-    const url = page.url.replace('en-US', locale);
-    const title = htmlEscape(page.title);
+     result += makePageLink(page);
+  }
 
-    if (locale != 'en-US') {
-      page.translations.forEach(function(translation){
-        if (translation.locale === locale) {
-          title = htmlEscape(translation.title);
-        }
-      });
+  result += '</ol></details></li>';
+
+  return result;
+}
+
+/**
+ * Special case behavior for CSS properties. Instead of just listing them all,
+ * put properties with common prefixes (like `border-`) in collapsible groups.
+ *
+ * @param propertyGroups : an object returned by a call to groupProperties
+ * @param pages : an array of page objects
+ * @param title : the title of this section of the sidebar
+ * @returns : markup for the complete CSS property section
+ */
+function buildPropertylist(pages, title) {
+
+  let result = `<li class="toggle"><details><summary>${title}</summary><ol>`;
+
+  // Go through the array of property pages, splitting off the "first part"
+  // of each property name, where "parts" are demarcated by "-".
+  // For example, split "border" off "border-style".
+  //
+  // Make an object:
+  // - with a key for every distinct "first part"
+  // - whose value is an array of all CSS property names which start with that part.
+  //
+  // For example, it has a key "border" whose value is an array of all
+  // the CSS properties that start with "border".
+  const groups = {};
+
+  for (const page of pages) {
+    // The regex is: match at "-" but not at the start of the string,
+    // because of properties like -webkit-line-clamp, where we want the
+    // "first part" to be "-webkit"
+    const prefix = page.title.split(/(?<!^)-/).shift();
+    if (Object.keys(groups).includes(prefix)) {
+      groups[prefix].push(page);
+    } else {
+      groups[prefix] = [page];
     }
+  }
 
-    result += '<li>';
-
-    if (hasTag(page, 'Experimental')) {
-      result += badges.ExperimentalBadge;
+  for (const prefix of Object.keys(groups)) {
+    const group = groups[prefix];
+    if (group.length < 3) {
+      // if a group contains fewer than 3 entries (that is, there are fewer than 3
+      // properties with the given prefix) then just write them out as a list
+      // of links
+      for (const page of group) {
+        result += makePageLink(page);
+      }
+    } else {
+      // otherwise, make a collapsible section for this group, and write
+      // the page links out inside it.
+      result += `<li class="toggle"><details><summary>${prefix}-*</summary><ol>`;
+      for (const page of group) {
+        result += makePageLink(page);
+      }
+      result += "</ol></details></li>";
     }
-
-    if (hasTag(page, 'Deprecated')) {
-      result += badges.DeprecatedBadge;
-    }
-
-    if (rtlLocales.indexOf(locale) != -1) {
-      result += '<bdi>';
-    }
-
-    result += smartLink(url, null, title, cssURL);
-
-    if (rtlLocales.indexOf(locale) != -1) {
-      result += '</bdi>';
-    }
-
-    result += '</li>';
   }
 
   result += '</ol></details></li>';
@@ -903,11 +1014,13 @@ function buildSublist(pages, title) {
 
   <li><a href="/<%=locale%>/docs/Web/CSS/Reference"><strong><%=text['Reference']%></strong></a></li>
   <%-buildSublist(groups, 'Modules');%>
-  <%-buildSublist(properties, 'Properties');%>
+  <%-buildPropertylist(properties, 'Properties');%>
   <%-buildSublist(selectors, 'Selectors');%>
+  <%-buildSublist(combinators, 'Combinators');%>
   <%-buildSublist(pseudoClasses, 'Pseudo-classes');%>
   <%-buildSublist(pseudoElements, 'Pseudo-elements');%>
   <%-buildSublist(atRules, 'At-rules');%>
+  <%-buildSublist(functions, 'Functions');%>
   <%-buildSublist(types, 'Types');%>
 
   <li><strong><%=text['Guides']%></strong></li>

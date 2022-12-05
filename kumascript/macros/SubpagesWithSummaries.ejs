@@ -49,7 +49,7 @@ if (numTerms) {
 
         if (!page.hasTag(aPage, "junk") && (aPage.title != "Index")) {
             var title = aPage.title;
-            var summary = aPage.summary.replace(/<img[^>]*>/g," ");
+            var summary = aPage.summary().replace(/<img[^>]*>/g," ");
             var url = aPage.url;
 
             html += "<dt class='landingPageList'><a href='" + url + "'>" + title + "</a></dt><dd class='landingPageList'><p>" + summary + "</p></dd>";

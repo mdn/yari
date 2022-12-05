@@ -13,12 +13,16 @@
 
   @media screen and (min-width: $screen-md) {
     display: block;
+
+    .article-actions-toggle {
+      display: none;
+    }
   }
 
   .article-actions-submenu {
     --gutter-padding: 1rem;
     display: none;
-    overflow: scroll;
+    overflow: auto;
 
     &.show {
       background: var(--background-primary);
@@ -30,6 +34,13 @@
       right: 0;
       top: var(--top-navigation-height);
       z-index: var(--z-index-mid);
+    }
+
+    &.wait {
+      &,
+      * {
+        cursor: wait !important;
+      }
     }
 
     .header {
@@ -71,6 +82,20 @@
       }
     }
 
+    .notecard {
+      margin: var(--gutter-padding);
+      margin-bottom: 0;
+
+      &::before {
+        top: 1.37rem;
+      }
+
+      p {
+        margin: 0;
+        padding: 0;
+      }
+    }
+
     @media screen and (min-width: $screen-md) {
       &.show {
         background-color: var(--background-secondary);
@@ -79,6 +104,7 @@
         bottom: auto;
         box-shadow: var(--shadow-02);
         left: initial;
+        max-height: calc(100vh - 12px - var(--main-document-header-height));
         padding: 0;
         position: absolute;
         right: 0;
@@ -111,32 +137,7 @@
       }
     }
   }
-}
-
-.article-actions-entries {
-  display: none;
-  list-style: none;
-  margin: 0;
-  padding: 0;
-
-  @media screen and (min-width: $screen-md) {
-    display: flex;
-    gap: 0.5rem;
-
-    .sidebar-toggle {
-      display: none;
-    }
-  }
-}
-
-.article-actions-entry {
-  align-items: center;
-  display: flex;
-  position: relative;
-}
-
-/* Open state, mobile-only */
-.article-actions {
+  /* Open state, mobile-only */
   @media screen and (max-width: $screen-md) {
     &.show-actions {
       background-color: var(--background-primary);
@@ -151,7 +152,7 @@
       width: 100vw;
       z-index: var(--z-index-low);
 
-      & > .button,
+      > .button,
       .article-actions-entries > li > .button,
       .article-actions-entries > li > div > .button {
         --button-radius: 0;
@@ -184,4 +185,26 @@
       }
     }
   }
+}
+
+.article-actions-entries {
+  display: none;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+
+  @media screen and (min-width: $screen-md) {
+    display: flex;
+    gap: 0.5rem;
+
+    .sidebar-toggle {
+      display: none;
+    }
+  }
+}
+
+.article-actions-entry {
+  align-items: center;
+  display: flex;
+  position: relative;
 }

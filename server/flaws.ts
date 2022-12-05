@@ -1,8 +1,8 @@
 import { Doc } from "../libs/types/document";
 import { FlawFilters } from "./types";
 
-import fs from "fs";
-import path from "path";
+import fs from "node:fs";
+import path from "node:path";
 
 import { fdir, PathsOutput } from "fdir";
 

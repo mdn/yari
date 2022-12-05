@@ -1,5 +1,5 @@
-import fs from "fs";
-import path from "path";
+import fs from "node:fs";
+import path from "node:path";
 
 import { fdir, PathsOutput } from "fdir";
 import fm from "front-matter";
@@ -7,6 +7,7 @@ import fm from "front-matter";
 import { VALID_LOCALES } from "../libs/constants";
 import { CONTENT_ROOT, CONTENT_TRANSLATED_ROOT } from "../libs/env";
 import { SearchIndex } from "../build";
+import { isValidLocale } from "../libs/locale-utils";
 
 interface DocAttributes {
   locale: string;
@@ -42,7 +43,7 @@ export async function searchIndexRoute(req, res) {
     res.status(500).send("CONTENT_TRANSLATE_ROOT not set\n");
     return;
   }
-  if (!VALID_LOCALES.has(locale)) {
+  if (!isValidLocale(locale)) {
     res.status(500).send(`unrecognized locale ${locale}`);
     return;
   }

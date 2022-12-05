@@ -13,6 +13,12 @@ Example calls
 
 */
 
+if ($0) {
+  mdn.deprecated(`Calling the Specifications macro with any arguments is
+  deprecated; instead use either the 'browser-compat' or 'spec-urls'
+  front-matter key.`);
+}
+
 var query = $0 || env['browser-compat'];
 var specURLs = env['spec-urls'] || "";
 if (!query && !specURLs) {

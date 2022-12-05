@@ -1,5 +1,7 @@
 .all-flaws {
   .search-error {
+    background-color: rgb(252, 159, 159);
+
     h3,
     h4 {
       margin-top: 0;
@@ -17,12 +19,9 @@
     font-size: 80%;
     margin-right: 2px;
   }
+
   td .document-title-preview {
     margin-left: 10px;
-  }
-
-  .search-error {
-    background-color: rgb(252, 159, 159);
   }
 
   .document-warnings {
@@ -31,6 +30,7 @@
 
   .search-times {
     margin-top: 60px;
+
     p {
       font-size: 70%;
     }
@@ -39,9 +39,11 @@
   .pagination {
     margin: 20px;
     text-align: center;
+
     a.disabled {
       color: rgb(159, 159, 159);
     }
+
     a {
       padding: 10px;
     }
@@ -60,11 +62,13 @@
 
       ul.search-flaws-rows {
         padding-left: 0;
+
         li {
           list-style: none;
         }
       }
     }
+
     .documents {
       margin-left: 300px;
 

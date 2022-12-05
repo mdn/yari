@@ -6,11 +6,11 @@
   If you don't follow this template, your PR will very likely be closed.
 
   Before submitting the PR, please make sure the following is done:
-  1. Read the Community Participation Guidelines: https://www.mozilla.org/en-US/about/governance/policies/participation/
+  1. Read the Community Participation Guidelines: https://www.mozilla.org/about/governance/policies/participation/
   2. Ensure that there is an open issue for the problem you're solving, or create it first: https://github.com/mdn/yari/issues/new/choose
   3. Fork the repository and create your branch from `main`.
   4. Run `yarn` in the repository root.
-  5. Ensure the code is formatted: `yarn prettier --write .`
+  5. Make sure to sign all your commits: https://docs.github.com/authentication/managing-commit-signature-verification/signing-commits
 -->
 
 ## Summary

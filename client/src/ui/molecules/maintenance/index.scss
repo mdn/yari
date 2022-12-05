@@ -1,4 +1,5 @@
 @use "../../../ui/vars" as *;
+
 .maintenance {
   color: var(--text-primary);
   cursor: help;
@@ -13,6 +14,7 @@
       padding-top: 1rem;
       position: absolute;
     }
+
     .maintenance-info {
       background-color: var(--background-primary);
       border: 1px solid var(--border-primary);

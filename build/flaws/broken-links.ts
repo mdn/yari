@@ -1,13 +1,17 @@
-import fs from "fs";
-import path from "path";
+import fs from "node:fs";
+import path from "node:path";
 
 import fromMarkdown from "mdast-util-from-markdown";
 import visit from "unist-util-visit";
 
 import { Document, Redirect, Image } from "../../content";
-import { FLAW_LEVELS } from "../../libs/constants";
 import { findMatchesInText } from "../matches-in-text";
-import { DEFAULT_LOCALE, VALID_LOCALES } from "../../libs/constants";
+import {
+  DEFAULT_LOCALE,
+  FLAW_LEVELS,
+  VALID_LOCALES,
+} from "../../libs/constants";
+import { isValidLocale } from "../../libs/locale-utils";
 
 const dirname = __dirname;
 
@@ -44,7 +48,7 @@ function isHomepageURL(url) {
     url += "/";
   }
   const split = url.split("/");
-  return split.length === 3 && VALID_LOCALES.has(split[1].toLowerCase());
+  return split.length === 3 && isValidLocale(split[1]);
 }
 
 function mutateLink(
@@ -61,9 +65,7 @@ function mutateLink(
     $element.attr("href", suggestion);
   } else if (enUSFallback) {
     $element.attr("href", enUSFallback);
-    // This functionality here should match what we do inside
-    // the `web.smartLink()` function in kumascript rendering.
-    $element.text(`${$element.text()} (${DEFAULT_LOCALE})`);
+    $element.append(` <small>(${DEFAULT_LOCALE})<small>`);
     $element.addClass("only-in-en-us");
     $element.attr("title", "Currently only available in English (US)");
   } else {
@@ -297,7 +299,7 @@ export function getBrokenLinksFlaws(doc, $, { rawContent }, level) {
                 `/${doc.locale}/`,
                 `/${DEFAULT_LOCALE}/`
               );
-              let enUSFound = Document.findByURL(enUSHrefNormalized);
+              const enUSFound = Document.findByURL(enUSHrefNormalized);
               if (enUSFound) {
                 enUSFallbackURL = enUSFound.url;
               } else {

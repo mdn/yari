@@ -1,10 +1,9 @@
-import fs from "fs";
-import path from "path";
+import fs from "node:fs";
+import path from "node:path";
 import { renderToString } from "react-dom/server";
 
+import { DEFAULT_LOCALE } from "../libs/constants";
 import { ALWAYS_ALLOW_ROBOTS, BUILD_OUT_ROOT } from "../libs/env";
-
-const { DEFAULT_LOCALE } = require("../libs/constants");
 
 const dirname = __dirname;
 
@@ -24,7 +23,8 @@ function htmlEscape(s) {
     .replace(/"/gim, "&quot;")
     .replace(/</gim, "&lt;")
     .replace(/>/gim, "&gt;")
-    .replace(/'/gim, "&apos;");
+    .replace(/'/gim, "&apos;")
+    .replace(/:/gim, "&colon;");
 }
 
 function getHrefLang(locale, otherLocales) {
@@ -166,7 +166,9 @@ export default function render(
   const hydrationData: HydrationData = {};
   const translations: string[] = [];
   if (pageNotFound) {
-    escapedPageTitle = `🤷🏽‍♀️ Page not found | ${escapedPageTitle}`;
+    escapedPageTitle = `🤷🏽‍♀️ Page not found | ${
+      escapedPageTitle || "MDN Web Docs"
+    }`;
     hydrationData.pageNotFound = true;
   } else if (hyData) {
     hydrationData.hyData = hyData;
@@ -199,9 +201,9 @@ export default function render(
         // code. For example, it's "en", not "en-US". And it's "sv" not "sv-SE".
         // See https://developers.google.com/search/docs/advanced/crawling/localized-versions?hl=en&visit_id=637411409912568511-3980844248&rd=1#language-codes
         translations.push(
-          `<link rel="alternate" title=${htmlEscape(
+          `<link rel="alternate" title="${htmlEscape(
             translation.title
-          )} href="https://developer.mozilla.org${translationURL}" hreflang="${getHrefLang(
+          )}" href="https://developer.mozilla.org${translationURL}" hreflang="${getHrefLang(
             translation.locale,
             allOtherLocales
           )}"/>`
