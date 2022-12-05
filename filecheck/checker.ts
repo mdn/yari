@@ -66,7 +66,7 @@ export async function checkFile(
   if (filePath !== expectedPath) {
     throw new FixableError(
       `Base name must be lowercase (not ${path.basename(filePath)})`,
-      `mv '${getRelativePath(filePath)} '${getRelativePath(expectedPath)}`
+      `mv '${getRelativePath(filePath)} '${getRelativePath(expectedPath)}'`
     );
   }
 
