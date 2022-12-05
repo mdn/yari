@@ -33,14 +33,38 @@ interface CheckerOptions {
   saveCompression?: boolean;
 }
 
+class FixableError extends Error {
+  fixCommand: string;
+
+  constructor(message: string, fixCommand: string) {
+    super(message);
+    this.fixCommand = fixCommand;
+  }
+
+  toString() {
+    return `${this.constructor.name}: ${this.message}`;
+  }
+}
+
+function getRelativePath(filePath: string): string {
+  return process.env.CI === "true"
+    ? path.relative(process.cwd(), filePath)
+    : filePath;
+}
+
 export async function checkFile(
   filePath: string,
   options: CheckerOptions = {}
 ) {
   // Check that the filename is always lowercase.
-  if (path.basename(filePath) !== path.basename(filePath).toLowerCase()) {
-    throw new Error(
-      `Base name must be lowercase (not ${path.basename(filePath)})`
+  const expectedPath = path.join(
+    path.dirname(filePath),
+    path.basename(filePath)
+  );
+  if (filePath !== expectedPath) {
+    throw new FixableError(
+      `Base name must be lowercase (not ${path.basename(filePath)})`,
+      `mv '${getRelativePath(filePath)} '${getRelativePath(expectedPath)}`
     );
   }
 
@@ -102,10 +126,15 @@ export async function checkFile(
       path.extname(filePath).replace(".jpeg", ".jpg").slice(1) !== fileType.ext
     ) {
       // If the file is a 'image/png' but called '.jpe?g', that's wrong.
-      throw new Error(
+      const relPath = getRelativePath(filePath);
+      const fixPath = [...relPath.split(".").slice(0, -1), fileType.ext].join(
+        "."
+      );
+      throw new FixableError(
         `${filePath} is type '${
           fileType.mime
-        }' but named extension is '${path.extname(filePath)}'`
+        }' but named extension is '${path.extname(filePath)}'`,
+        `mv '${relPath}' '${fixPath}`
       );
     }
   }
@@ -120,8 +149,9 @@ export async function checkFile(
     ? fs.readFileSync(mdFilePath, "utf-8")
     : null;
   if (!rawContent) {
-    throw new Error(
-      `${filePath} is not located in a folder with a document file.`
+    throw new FixableError(
+      `${filePath} can be removed, because it is not located in a folder with a document file.`,
+      `rm -i '${getRelativePath(filePath)}'`
     );
   }
 
@@ -132,7 +162,10 @@ export async function checkFile(
   // Yes, this is pretty easy to fake if you really wanted to, but why
   // bother?
   if (!rawContent.includes(path.basename(filePath))) {
-    throw new Error(`${filePath} is not mentioned in ${htmlFilePath}`);
+    throw new FixableError(
+      `${filePath} can be removed, because it is not mentioned in ${htmlFilePath}`,
+      `rm -i '${getRelativePath(filePath)}'`
+    );
   }
 
   const tempdir = tempy.directory();
@@ -185,24 +218,13 @@ export async function checkFile(
         );
         fse.copyFileSync(compressed.destinationPath, filePath);
       } else {
-        const msg = `${filePath} is ${formatSize(
-          sizeBefore
-        )} can be compressed to ${formatSize(
-          sizeAfter
-        )} (${reductionPercentage.toFixed(0)}%)`;
-        console.warn(msg);
-        console.log(
-          "Consider running again with '--save-compression' and run again " +
-            "to automatically save the newly compressed file."
-        );
-        const relPath =
-          process.env.CI === "true"
-            ? path.relative(process.cwd(), filePath)
-            : filePath;
-        const cliCommand = `yarn filecheck "${relPath}" --save-compression`;
-        console.log(`HINT! Type the following command:\n\n\t${cliCommand}\n`);
-        throw new Error(
-          `${filePath} can be compressed by ~${reductionPercentage.toFixed(0)}%`
+        throw new FixableError(
+          `${filePath} is ${formatSize(
+            sizeBefore
+          )} and can be compressed to ${formatSize(
+            sizeAfter
+          )} (${reductionPercentage.toFixed(0)}%)`,
+          `yarn filecheck '${getRelativePath(filePath)}' --save-compression`
         );
       }
     }
@@ -223,6 +245,15 @@ export async function runChecker(files: string[], options: CheckerOptions) {
   );
 
   if (errors.length) {
-    throw errors.map((error) => `${error}`).join("\n");
+    let msg = errors.map((error) => `${error}`).join("\n");
+    const fixableErrors = errors.filter(
+      (error) => error instanceof FixableError
+    );
+    if (fixableErrors.length) {
+      const cmds = fixableErrors.map((error) => error.fixCommand).join("\n");
+      msg += `\n\n${fixableErrors.length} of ${errors.length} errors can be fixed:\n\n${cmds}`;
+    }
+
+    throw new Error(msg);
   }
 }
