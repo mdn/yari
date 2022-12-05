@@ -143,12 +143,12 @@ export async function checkFile(
   const parentPath = path.dirname(filePath);
   const htmlFilePath = path.join(parentPath, "index.html");
   const mdFilePath = path.join(parentPath, "index.md");
-  const rawContent = fs.existsSync(htmlFilePath)
-    ? fs.readFileSync(htmlFilePath, "utf-8")
+  const docFilePath = fs.existsSync(htmlFilePath)
+    ? htmlFilePath
     : fs.existsSync(mdFilePath)
-    ? fs.readFileSync(mdFilePath, "utf-8")
+    ? mdFilePath
     : null;
-  if (!rawContent) {
+  if (!docFilePath) {
     throw new FixableError(
       `${filePath} can be removed, because it is not located in a folder with a document file.`,
       `rm -i '${getRelativePath(filePath)}'`
@@ -161,9 +161,10 @@ export async function checkFile(
   // name at least once.
   // Yes, this is pretty easy to fake if you really wanted to, but why
   // bother?
+  const rawContent = docFilePath ? fs.readFileSync(docFilePath, "utf-8") : null;
   if (!rawContent.includes(path.basename(filePath))) {
     throw new FixableError(
-      `${filePath} can be removed, because it is not mentioned in ${htmlFilePath}`,
+      `${filePath} can be removed, because it is not mentioned in ${docFilePath}`,
       `rm -i '${getRelativePath(filePath)}'`
     );
   }
