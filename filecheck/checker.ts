@@ -1,7 +1,6 @@
-import fs from "node:fs";
+import fs from "node:fs/promises";
 import path from "node:path";
 import os from "node:os";
-import { promisify } from "node:util";
 
 import { eachLimit } from "async";
 import cliProgress from "cli-progress";
@@ -72,7 +71,7 @@ export async function checkFile(
   }
 
   // Check that the file size is >0 and <MAX_FILE_SIZE.
-  const stat = await promisify(fs.stat)(filePath);
+  const stat = await fs.stat(filePath);
   if (!stat.size) {
     throw new Error(`${filePath} is 0 bytes`);
   }
@@ -81,7 +80,7 @@ export async function checkFile(
   // So use special case for files called '*.svg'
   if (path.extname(filePath) === ".svg") {
     // SVGs must not contain any script tags
-    const content = fs.readFileSync(filePath, "utf-8");
+    const content = await fs.readFile(filePath, "utf-8");
     if (!isSvg(content)) {
       throw new Error(`${filePath} does not appear to be an SVG`);
     }
@@ -142,9 +141,9 @@ export async function checkFile(
   const parentPath = path.dirname(filePath);
   const htmlFilePath = path.join(parentPath, "index.html");
   const mdFilePath = path.join(parentPath, "index.md");
-  const docFilePath = fs.existsSync(htmlFilePath)
+  const docFilePath = (await fse.exists(htmlFilePath))
     ? htmlFilePath
-    : fs.existsSync(mdFilePath)
+    : (await fse.exists(mdFilePath))
     ? mdFilePath
     : null;
   if (!docFilePath) {
@@ -162,7 +161,9 @@ export async function checkFile(
   // name at least once.
   // Yes, this is pretty easy to fake if you really wanted to, but why
   // bother?
-  const rawContent = docFilePath ? fs.readFileSync(docFilePath, "utf-8") : null;
+  const rawContent = docFilePath
+    ? await fs.readFile(docFilePath, "utf-8")
+    : null;
   if (!rawContent.includes(path.basename(filePath))) {
     throw new FixableError(
       `${getRelativePath(
@@ -203,8 +204,12 @@ export async function checkFile(
       throw new Error(`${filePath} could not be compressed`);
     }
     const compressed = files[0];
-    const sizeBefore = fs.statSync(filePath).size;
-    const sizeAfter = fs.statSync(compressed.destinationPath).size;
+    const [sizeBefore, sizeAfter] = (
+      await Promise.all([
+        fs.stat(filePath),
+        fs.stat(compressed.destinationPath),
+      ])
+    ).map((stat) => stat.size);
     const reductionPercentage = 100 - (100 * sizeAfter) / sizeBefore;
 
     const formattedBefore = formatSize(sizeBefore);
@@ -252,7 +257,7 @@ export async function checkFile(
 }
 
 async function resolveDirectory(file: string): Promise<string[]> {
-  const stats = fs.lstatSync(file);
+  const stats = await fs.lstat(file);
   if (stats.isDirectory()) {
     const api = new fdir()
       .withErrors()
