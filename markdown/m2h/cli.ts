@@ -51,7 +51,7 @@ program
         folderSearch: args.folder,
         locales: buildLocaleMap(options.locale),
       });
-      for (const doc of all.iter()) {
+      for (const doc of all.iterDocs()) {
         if (!doc.isMarkdown) {
           continue;
         }

@@ -150,9 +150,7 @@ async function buildDocuments(
     progressBar.start(documents.count);
   }
 
-  for (const documentPath of documents.iter({
-    pathOnly: true,
-  }) as Iterable<string>) {
+  for (const documentPath of documents.iterPaths()) {
     const result = await buildDocumentInteractive(documentPath, interactive);
 
     const isSkippedDocumentBuild = (result): result is SkippedDocumentBuild =>
