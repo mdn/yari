@@ -126,15 +126,14 @@ export async function checkFile(
       path.extname(filePath).replace(".jpeg", ".jpg").slice(1) !== fileType.ext
     ) {
       // If the file is a 'image/png' but called '.jpe?g', that's wrong.
-      const relPath = getRelativePath(filePath);
-      const fixPath = [...relPath.split(".").slice(0, -1), fileType.ext].join(
-        "."
-      );
-      throw new FixableError(
-        `${getRelativePath(filePath)} is type '${
+      throw new Error(
+        `${getRelativePath(filePath)} of type '${
           fileType.mime
-        }' but named extension is '${path.extname(filePath)}'`,
-        `mv '${relPath}' '${fixPath}`
+        }' should have extension '${
+          fileType.ext
+        }', but has extension '${path.extname(
+          filePath
+        )}'. Please rename the file and update its usages.`
       );
     }
   }
