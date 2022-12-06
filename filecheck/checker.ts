@@ -256,21 +256,24 @@ export async function checkFile(
   }
 }
 
+function canCheckFile(filePath: string) {
+  return (
+    /\/files\//.test(filePath) &&
+    !/\/node_modules\//.test(filePath) &&
+    !/\.(DS_Store|html|json|md|txt|yml)$/i.test(filePath)
+  );
+}
+
 async function resolveDirectory(file: string): Promise<string[]> {
   const stats = await fs.lstat(file);
   if (stats.isDirectory()) {
     const api = new fdir()
       .withErrors()
       .withFullPaths()
-      .filter(
-        (filePath) =>
-          /\/files\//.test(filePath) &&
-          !/\/node_modules\//.test(filePath) &&
-          !/\.(DS_Store|html|json|md|txt|yml)$/i.test(filePath)
-      )
+      .filter((filePath) => canCheckFile(filePath))
       .crawl(file);
     return api.withPromise() as Promise<PathsOutput>;
-  } else if (stats.isFile()) {
+  } else if (stats.isFile() && canCheckFile(file)) {
     return [file];
   } else {
     return [];
