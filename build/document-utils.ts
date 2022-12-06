@@ -1,13 +1,7 @@
 import { Document } from "../content";
 
-/**
- * Temporary fix for long titles in breadcrumbs
- * @see https://github.com/mdn/yari-private/issues/612
- * @param {String} title : the title of the document
- * @returns transformed title or original title as a string
- */
-function transformTitle(title) {
-  const transformStrings = {
+const TRANSFORM_STRINGS = new Map(
+  Object.entries({
     "Web technology for developers": "References",
     "Learn web development": "Guides",
     "HTML: HyperText Markup Language": "HTML",
@@ -18,8 +12,15 @@ function transformTitle(title) {
     "Structuring the web with HTML": "HTML",
     "Learn to style HTML using CSS": "CSS",
     "Web forms — Working with user data": "Forms",
-  };
-
+  })
+);
+/**
+ * Temporary fix for long titles in breadcrumbs
+ * @see https://github.com/mdn/yari-private/issues/612
+ * @param {String} title : the title of the document
+ * @returns transformed title or original title as a string
+ */
+function transformTitle(title) {
   // if the title contains a string like `<input>: The Input (Form Input) element`,
   // return only the `<input>` portion of the title
   if (/<\w+>/g.test(title)) {
@@ -29,7 +30,7 @@ function transformTitle(title) {
   // if the above did not match, see if it is one of the strings in the
   // transformStrings object and return the relevant replacement or
   // the unmodified title string
-  return transformStrings[title] || title;
+  return TRANSFORM_STRINGS.get(title) || title;
 }
 
 /**
