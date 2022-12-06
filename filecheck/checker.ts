@@ -247,7 +247,7 @@ export async function checkFile(
           )} and can be compressed to ${formatSize(
             sizeAfter
           )} (${reductionPercentage.toFixed(0)}%)`,
-          `yarn filecheck '${getRelativePath(filePath)}' --save-compression`
+          `yarn filecheck --save-compression '${getRelativePath(filePath)}'`
         );
       }
     }
