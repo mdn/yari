@@ -103,7 +103,7 @@ async function isMacroDeprecated(macro: string) {
   return content.includes("mdn.deprecated()");
 }
 
-function formatCell(files: string[], limit = 2): string {
+function formatCell(files: string[]): string {
   if (files.length === 0) {
     return "-";
   }
