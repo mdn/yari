@@ -61,12 +61,13 @@ export async function checkFile(
   // Check that the filename is always lowercase.
   const expectedPath = path.join(
     path.dirname(filePath),
-    path.basename(filePath)
+    path.basename(filePath).toLowerCase()
   );
   if (filePath !== expectedPath) {
-    throw new FixableError(
-      `Base name must be lowercase (not ${path.basename(filePath)})`,
-      `mv '${getRelativePath(filePath)} '${getRelativePath(expectedPath)}'`
+    throw new Error(
+      `Base name must be lowercase (not ${path.basename(
+        filePath
+      )}). Please rename the file and update its usages.`
     );
   }
 
