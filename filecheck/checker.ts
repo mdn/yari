@@ -311,7 +311,10 @@ export async function runChecker(
       (error) => error instanceof FixableError
     );
     if (fixableErrors.length) {
-      const cmds = fixableErrors.map((error) => error.fixCommand).join("\n");
+      const cmds = fixableErrors
+        .map((error) => error.fixCommand)
+        .sort()
+        .join("\n");
       msg += `\n\n${fixableErrors.length} of ${errors.length} errors can be fixed:\n\n${cmds}`;
     }
 
