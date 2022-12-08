@@ -64,7 +64,6 @@ const CSP_SCRIPT_SRC_VALUES = [
   "'self'",
 
   "www.google-analytics.com/analytics.js",
-  "polyfill.io/v3/polyfill.min.js",
 
   "assets.codepen.io",
   "production-assets.codepen.io",

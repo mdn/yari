@@ -11,7 +11,7 @@ const LANGUAGES = new Map(
 const TRANSLATIONS_OF = new Map();
 
 function gatherTranslations() {
-  const iter = Document.findAll().iter();
+  const iter = Document.findAll().iterDocs();
   for (const {
     metadata: { slug, locale, title },
   } of iter) {

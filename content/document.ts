@@ -514,9 +514,14 @@ export function findAll({
   }
   return {
     count: filePaths.length,
-    *iter({ pathOnly = false } = {}) {
+    *iterPaths() {
       for (const filePath of filePaths) {
-        yield pathOnly ? filePath : read(filePath);
+        yield filePath;
+      }
+    },
+    *iterDocs() {
+      for (const filePath of filePaths) {
+        yield read(filePath);
       }
     },
   };

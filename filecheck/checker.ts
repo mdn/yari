@@ -19,7 +19,7 @@ import {
   MAX_COMPRESSION_DIFFERENCE_PERCENTAGE,
 } from "../libs/constants";
 
-function formatSize(bytes) {
+function formatSize(bytes: number): string {
   if (bytes > 1024 * 1024) {
     return `${(bytes / 1024.0 / 1024.0).toFixed(1)}MB`;
   }
@@ -33,7 +33,10 @@ interface CheckerOptions {
   saveCompression?: boolean;
 }
 
-export async function checkFile(filePath, options: CheckerOptions = {}) {
+export async function checkFile(
+  filePath: string,
+  options: CheckerOptions = {}
+) {
   // Check that the filename is always lowercase.
   if (path.basename(filePath) !== path.basename(filePath).toLowerCase()) {
     throw new Error(
@@ -46,12 +49,9 @@ export async function checkFile(filePath, options: CheckerOptions = {}) {
   if (!stat.size) {
     throw new Error(`${filePath} is 0 bytes`);
   }
-  if (stat.size > MAX_FILE_SIZE) {
-    const formatted =
-      stat.size > 1024 * 1024
-        ? `${(stat.size / 1024.0 / 1024).toFixed(1)}MB`
-        : `${(stat.size / 1024.0).toFixed(1)}KB`;
-    const formattedMax = `${(MAX_FILE_SIZE / 1024.0 / 1024).toFixed(1)}MB`;
+  const formattedMax = formatSize(MAX_FILE_SIZE);
+  if (!options.saveCompression && stat.size > MAX_FILE_SIZE) {
+    const formatted = formatSize(stat.size);
     throw new Error(
       `${filePath} is too large (${formatted} > ${formattedMax})`
     );
@@ -168,6 +168,14 @@ export async function checkFile(filePath, options: CheckerOptions = {}) {
     const sizeAfter = fs.statSync(compressed.destinationPath).size;
     const reductionPercentage = 100 - (100 * sizeAfter) / sizeBefore;
 
+    // this check should only be done if we want to save the compressed file
+    if (options.saveCompression && sizeAfter > MAX_FILE_SIZE) {
+      const formattedAfter = formatSize(sizeAfter);
+      throw new Error(
+        `${filePath} is too large, even after compressing to ${formattedAfter} (still larger than ${formattedMax}).`
+      );
+    }
+
     if (reductionPercentage > MAX_COMPRESSION_DIFFERENCE_PERCENTAGE) {
       if (options.saveCompression) {
         console.log(
@@ -205,6 +213,6 @@ export async function checkFile(filePath, options: CheckerOptions = {}) {
   }
 }
 
-export async function runChecker(files, options: CheckerOptions) {
+export async function runChecker(files: string[], options: CheckerOptions) {
   return Promise.all(files.map((f) => checkFile(f, options)));
 }

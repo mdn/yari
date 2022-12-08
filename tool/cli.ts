@@ -701,7 +701,7 @@ program
       const allDocs = Document.findAll({
         locales: new Map([[locale.toLowerCase(), true]]),
       });
-      for (const document of allDocs.iter()) {
+      for (const document of allDocs.iterDocs()) {
         if (fileTypes.includes(document.isMarkdown ? "md" : "html")) {
           await buildDocument(document, {
             fixFlaws: true,
@@ -769,7 +769,7 @@ program
       }
       // Build up a map of translations by their `translation_of`
       const map = new Map();
-      for (const document of documents.iter()) {
+      for (const document of documents.iterDocs()) {
         if (!document.isTranslated) continue;
         const { translation_of, locale } = document.metadata;
         if (!map.has(translation_of)) {
@@ -1022,7 +1022,7 @@ if (Mozilla && !Mozilla.dntEnabled()) {
       let countSkipped = 0;
       let countModified = 0;
       let countNoChange = 0;
-      for (const document of documents.iter()) {
+      for (const document of documents.iterDocs()) {
         countTotal++;
         console.group(`${document.fileInfo.path}:`);
         const originalRawBody = document.rawBody;

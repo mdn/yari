@@ -86,7 +86,7 @@ function findDocuments({ locale }) {
   }
   const cache = _foundDocumentsCache.get(locale);
 
-  for (const filePath of documentsFound.iter({ pathOnly: true })) {
+  for (const filePath of documentsFound.iterPaths()) {
     const mtime = fs.statSync(filePath).mtime;
 
     if (!cache.has(filePath) || cache.get(filePath).mtime < mtime) {
@@ -278,7 +278,7 @@ function gatherL10NstatsSection({
   });
 
   const translatedFolderNames = new Set();
-  for (const filePath of foundTranslations.iter({ pathOnly: true })) {
+  for (const filePath of foundTranslations.iterPaths()) {
     const asFolder = path.relative(
       CONTENT_TRANSLATED_ROOT,
       path.dirname(filePath)
@@ -300,7 +300,7 @@ function gatherL10NstatsSection({
     folderSearch: folderSearchDefaultLocale,
   });
 
-  for (const filePath of foundDefaultLocale.iter({ pathOnly: true })) {
+  for (const filePath of foundDefaultLocale.iterPaths()) {
     const asFolder = path.relative(CONTENT_ROOT, path.dirname(filePath));
     const asFolderWithoutLocale = asFolder
       .split(path.sep)
@@ -417,7 +417,7 @@ function buildL10nDashboard({ locale, section }) {
     ...Document.findAll({
       locales: new Map([[DEFAULT_LOCALE.toLowerCase(), true]]),
       folderSearch: DEFAULT_LOCALE.toLowerCase() + sectionDirPath.toLowerCase(),
-    }).iter({ pathOnly: false }),
+    }).iterDocs(),
   ];
 
   const subSectionsStartingWith = defaultLocaleDocs
