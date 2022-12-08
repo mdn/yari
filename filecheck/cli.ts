@@ -36,7 +36,7 @@ program
     validator: program.BOOLEAN,
   })
   .argument("[files...]", "list of files and/or directories to check", {
-    default: [CONTENT_ROOT, CONTENT_TRANSLATED_ROOT],
+    default: [CONTENT_ROOT, CONTENT_TRANSLATED_ROOT].filter(Boolean),
   })
   .action(({ args, options, logger }: FilecheckArgsAndOptions) => {
     const cwd = options.cwd || process.cwd();
