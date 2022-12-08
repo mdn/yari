@@ -137,7 +137,17 @@ async function writeMarkdownTable(
     deprecatedMacros: string[];
   }
 ) {
-  const columns = ["yari", ...ACTIVE_LOCALES];
+  const columns = ["yari"];
+  const paths = [MACRO_PATH];
+
+  for (const locale of ACTIVE_LOCALES) {
+    const path = getPathByLocale(locale);
+    if (path) {
+      columns.push(locale);
+      paths.push(path);
+    }
+  }
+
   process.stdout.write(
     `| macro |${columns.map((column) => ` ${column} `).join("|")}|\n`
   );
@@ -152,11 +162,6 @@ async function writeMarkdownTable(
   for (const macro of macros) {
     const files = filesByMacro[macro];
     const macroCell = deprecatedMacros.includes(macro) ? `${macro} 🗑` : macro;
-
-    const paths = [
-      MACRO_PATH,
-      ...[...ACTIVE_LOCALES].map(getPathByLocale),
-    ].filter(Boolean);
 
     const cells = [
       macroCell,
