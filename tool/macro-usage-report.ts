@@ -57,10 +57,10 @@ async function getFilesByMacro(
   const macroNames = [...macros.values()];
   const matches = (
     await Promise.all([
-      findMatches(`\\{\\{\\s*(${macroNames.join("|")})\\b`, [
-        CONTENT_ROOT,
-        CONTENT_TRANSLATED_ROOT,
-      ]),
+      findMatches(
+        `\\{\\{\\s*(${macroNames.join("|")})\\b`,
+        [CONTENT_ROOT, CONTENT_TRANSLATED_ROOT].filter(Boolean)
+      ),
       findMatches(`template\\(["'](${macroNames.join("|")})["']`, [MACRO_PATH]),
     ])
   ).flat();
@@ -87,11 +87,15 @@ function filterFilesByBase(files: Iterable<string>, base: string): string[] {
     .sort();
 }
 
-function getPathByLocale(locale: string): string {
+function getPathByLocale(locale: string): string | null {
   const root =
     locale.toLowerCase() === DEFAULT_LOCALE.toLowerCase()
       ? CONTENT_ROOT
       : CONTENT_TRANSLATED_ROOT;
+
+  if (!root) {
+    return null;
+  }
 
   return path.join(root, locale.toLowerCase());
 }
@@ -137,7 +141,10 @@ async function writeMarkdownTable(
     const files = filesByMacro[macro];
     const macroCell = deprecatedMacros.includes(macro) ? `${macro} 🗑` : macro;
 
-    const paths = [MACRO_PATH, ...[...ACTIVE_LOCALES].map(getPathByLocale)];
+    const paths = [
+      MACRO_PATH,
+      ...[...ACTIVE_LOCALES].map(getPathByLocale),
+    ].filter(Boolean);
 
     const cells = [
       macroCell,
