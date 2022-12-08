@@ -23,7 +23,7 @@ program
   .version("0.0.0")
   .option("--cwd <path>", "Explicit current-working-directory", {
     validator: program.STRING,
-    default: path.join(process.cwd(), ".."),
+    default: process.cwd(),
   })
   .option(
     "--max-compression-difference-percentage <amount>",

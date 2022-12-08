@@ -38,7 +38,7 @@ export function TOC({ toc }: { toc: Toc[] }) {
   });
 
   return (
-    <aside className="document-toc-container">
+    <div className="document-toc-container">
       <section className="document-toc">
         <header>
           <h2 className="document-toc-heading">In this article</h2>
@@ -57,7 +57,7 @@ export function TOC({ toc }: { toc: Toc[] }) {
           })}
         </ul>
       </section>
-    </aside>
+    </div>
   );
 }
 

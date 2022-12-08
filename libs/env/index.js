@@ -116,7 +116,7 @@ function correctContentPathFromEnv(envVarName) {
 // ---------
 
 export const MAX_FILE_SIZE = JSON.parse(
-  process.env.FILECHECK_MAX_FILE_SIZE || 500 * 1000 // 500KiB
+  process.env.FILECHECK_MAX_FILE_SIZE || 500 * 1024 // 500KiB
 );
 
 // ----------
