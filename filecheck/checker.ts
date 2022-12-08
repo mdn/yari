@@ -290,10 +290,7 @@ export async function runChecker(
     await Promise.all(filesAndDirectories.map(resolveDirectory))
   ).flat();
 
-  const progressBar = new cliProgress.SingleBar(
-    { etaBuffer: 100 },
-    cliProgress.Presets.shades_grey
-  );
+  const progressBar = new cliProgress.SingleBar({ etaBuffer: 100 });
   progressBar.start(files.length, 0);
 
   await eachLimit(files, os.cpus().length, async (file) => {
