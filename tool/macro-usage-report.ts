@@ -100,6 +100,18 @@ function getPathByLocale(locale: string): string | null {
   return path.join(root, locale.toLowerCase());
 }
 
+async function filterDeprecatedMacros(macros: string[]) {
+  return (
+    await Promise.all(
+      macros.map(async (macro) =>
+        isMacroDeprecated(macro).then((isDeprecated) =>
+          isDeprecated ? macro : null
+        )
+      )
+    )
+  ).filter(Boolean);
+}
+
 async function isMacroDeprecated(macro: string) {
   const file = path.join(MACRO_PATH, `${macro}.ejs`);
   const content = await fs.readFile(file, "utf-8");
@@ -197,7 +209,7 @@ export async function macroUsageReport({
   unusedOnly: boolean;
 }) {
   const macros = await getMacros();
-  const deprecatedMacros = macros.filter((macro) => isMacroDeprecated(macro));
+  const deprecatedMacros = await filterDeprecatedMacros(macros);
 
   const filesByMacro = await getFilesByMacro(
     deprecatedOnly ? deprecatedMacros : macros
