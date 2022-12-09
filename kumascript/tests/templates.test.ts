@@ -77,12 +77,10 @@ describe("Templates class", () => {
     expect(result).toEqual("3");
   });
 
-  ["development", "production"].forEach((mode) => {
-    it(`loads files ${
-      mode === "production" ? "only once" : "for each call"
-    } in ${mode} mode`, async () => {
-      // Casting to `any` because NODE_ENV is supposed to be read-only
-      (process.env as any).NODE_ENV = mode;
+  [false, true].forEach((doCache) => {
+    it(`loads files ${doCache ? "only once" : "for each call"} in ${
+      doCache ? "production" : "development"
+    } mode`, async () => {
       /**
        * JSON.stringify is used here to handle Windows file paths. Without
        * it, `\` in the file path would be treated as part of an escape
@@ -96,21 +94,25 @@ describe("Templates class", () => {
       const directory = dir("macros");
       const macros = new Templates(directory);
 
-      const result1 = await macros.render("test1");
+      const result1 = await macros.render("test1", {
+        cache: doCache,
+      });
       expect(result1).toBe(path.resolve(directory, "test1.ejs"));
       expect(mockLoader.mock.calls).toHaveLength(1);
 
-      const result2 = await macros.render("test2");
+      const result2 = await macros.render("test2", {
+        cache: doCache,
+      });
       expect(result2).toBe(path.resolve(directory, "Test2.ejs"));
       expect(mockLoader.mock.calls).toHaveLength(2);
 
       // Render the macros again, but don't expect any more loads
       // when we're in production mode.
-      await macros.render("test1");
-      await macros.render("test2");
-      await macros.render("test1");
-      await macros.render("test2");
-      expect(mockLoader.mock.calls).toHaveLength(mode === "production" ? 2 : 6);
+      await macros.render("test1", { cache: doCache });
+      await macros.render("test2", { cache: doCache });
+      await macros.render("test1", { cache: doCache });
+      await macros.render("test2", { cache: doCache });
+      expect(mockLoader.mock.calls).toHaveLength(doCache ? 2 : 6);
     });
   });
 });

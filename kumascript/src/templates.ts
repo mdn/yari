@@ -119,7 +119,7 @@ export default class Templates {
     try {
       const rendered = await ejs.renderFile(path, args, {
         async: true,
-        cache: process.env.NODE_ENV === "production",
+        cache: args.cache || process.env.NODE_ENV === "production",
       });
       return rendered.trim();
     } catch (error) {
