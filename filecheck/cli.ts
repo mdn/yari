@@ -1,12 +1,13 @@
 #!/usr/bin/env node
 import path from "node:path";
 
-import { program } from "@caporal/core";
+import { ActionParameters, program } from "@caporal/core";
 
 import { runChecker } from "./checker";
 import { MAX_COMPRESSION_DIFFERENCE_PERCENTAGE } from "../libs/constants";
+import { CONTENT_ROOT, CONTENT_TRANSLATED_ROOT } from "../libs/env";
 
-interface FilecheckArgsAndOptions {
+interface FilecheckArgsAndOptions extends ActionParameters {
   args: {
     files?: string[];
   };
@@ -34,17 +35,19 @@ program
   .option("--save-compression", "If it can be compressed, save the result", {
     validator: program.BOOLEAN,
   })
-  .argument("[files...]", "list of files to check")
-  .action(({ args, options }: FilecheckArgsAndOptions) => {
+  .argument("[files...]", "list of files and/or directories to check", {
+    default: [CONTENT_ROOT, CONTENT_TRANSLATED_ROOT].filter(Boolean),
+  })
+  .action(({ args, options, logger }: FilecheckArgsAndOptions) => {
     const cwd = options.cwd || process.cwd();
-    const allFilePaths = (args.files || []).map((f) => path.resolve(cwd, f));
-    if (!allFilePaths.length) {
-      throw new Error("no files to check");
+    const files = (args.files || []).map((f) => path.resolve(cwd, f));
+
+    if (!files.length) {
+      logger.info("No files to check.");
+      return;
     }
-    return runChecker(allFilePaths, options).catch((error) => {
-      console.error(error);
-      throw error;
-    });
+
+    return runChecker(files, options);
   });
 
 program.run();

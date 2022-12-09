@@ -54,7 +54,7 @@ describe("checking files", () => {
     // Sanity check the test itself
     console.assert(fs.existsSync(filePath), `${filePath} does not exist`);
     await expect(checkFile(filePath)).rejects.toThrow(
-      "is type 'image/png' but named extension is '.jpeg'"
+      "of type 'image/png' should have extension 'png', but has extension '.jpeg'"
     );
   });
 });
