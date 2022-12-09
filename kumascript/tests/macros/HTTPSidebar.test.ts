@@ -10,6 +10,49 @@ import {
   lintHTML,
 } from "./utils.js";
 
+jest.mock("../../../content/index.js", () => ({
+  __esModule: true,
+  Document: {
+    ...Document,
+    findByURL: jest.fn((url: string) => {
+      const data = fixtureData[url.toLowerCase()];
+      if (!data) {
+        return null;
+      }
+      return {
+        url: data.url,
+        metadata: {
+          title: data.title,
+          locale: data.locale,
+          summary: data.summary,
+          slug: data.slug,
+          tags: data.tags,
+        },
+      };
+    }),
+    findChildren: jest.fn((url: string) => {
+      const result: any[] = [];
+      const parent = `${url.toLowerCase()}/`;
+      for (const [key, data] of Object.entries(fixtureData) as any) {
+        if (!key.replace(parent, "").includes("/")) {
+          key.replace(`${url.toLowerCase()}/`, "");
+          result.push({
+            url: data.url,
+            metadata: {
+              title: data.title,
+              locale: data.locale,
+              summary: data.summary,
+              slug: data.slug,
+              tags: data.tags,
+            },
+          });
+        }
+      }
+      return result;
+    }),
+  },
+}));
+
 // Load fixture data.
 const fixtureData = JSON.parse(
   fs.readFileSync(
@@ -35,42 +78,6 @@ function checkSidebarDom(dom, locale) {
 describeMacro("HTTPSidebar", function () {
   beforeEachMacro(function (macro) {
     macro.ctx.env.url = "/en-US/docs/Web/HTTP/Overview";
-    Document.findByURL = jest.fn((url: string) => {
-      const data = fixtureData[url.toLowerCase()];
-      if (!data) {
-        return null;
-      }
-      return {
-        url: data.url,
-        metadata: {
-          title: data.title,
-          locale: data.locale,
-          summary: data.summary,
-          slug: data.slug,
-          tags: data.tags,
-        },
-      };
-    });
-    Document.findChildren = jest.fn((url: string) => {
-      const result: any[] = [];
-      const parent = `${url.toLowerCase()}/`;
-      for (const [key, data] of Object.entries(fixtureData) as any) {
-        if (!key.replace(parent, "").includes("/")) {
-          key.replace(`${url.toLowerCase()}/`, "");
-          result.push({
-            url: data.url,
-            metadata: {
-              title: data.title,
-              locale: data.locale,
-              summary: data.summary,
-              slug: data.slug,
-              tags: data.tags,
-            },
-          });
-        }
-      }
-      return result;
-    });
   });
 
   itMacro("Creates a sidebar object for en-US", function (macro) {
