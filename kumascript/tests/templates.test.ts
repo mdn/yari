@@ -81,7 +81,8 @@ describe("Templates class", () => {
     it(`loads files ${
       mode === "production" ? "only once" : "for each call"
     } in ${mode} mode`, async () => {
-      process.env.NODE_ENV = mode;
+      // Casting to `any` because NODE_ENV is supposed to be read-only
+      (process.env as any).NODE_ENV = mode;
       /**
        * JSON.stringify is used here to handle Windows file paths. Without
        * it, `\` in the file path would be treated as part of an escape
