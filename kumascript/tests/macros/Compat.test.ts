@@ -4,7 +4,7 @@ import fs from "node:fs";
 import { JSDOM } from "jsdom";
 import extend from "extend";
 
-const fixture_dir = new URL("./fixtures/compat", import.meta.url);
+const fixture_dir = new URL("./fixtures/compat/", import.meta.url);
 
 let fixtureCompatData = {};
 fs.readdirSync(fixture_dir).forEach(function (fn) {
