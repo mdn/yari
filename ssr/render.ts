@@ -1,11 +1,13 @@
 import fs from "node:fs";
 import path from "node:path";
-import { cwd } from "node:process";
+import { fileURLToPath } from "node:url";
 
 import { renderToString } from "react-dom/server";
 
 import { DEFAULT_LOCALE } from "../libs/constants/index.js";
 import { ALWAYS_ALLOW_ROBOTS, BUILD_OUT_ROOT } from "../libs/env/index.js";
+
+const dirname = path.dirname(fileURLToPath(new URL(".", import.meta.url)));
 
 // When there are multiple options for a given language, this gives the
 // preferred locale for that language (language => preferred locale).
@@ -65,7 +67,7 @@ const lazy = (creator) => {
 };
 
 // Path strings are preferred over URLs here to mitigate Webpack resolution
-const clientBuildRoot = path.resolve(cwd(), "client/build");
+const clientBuildRoot = path.resolve(dirname, "../../client/build");
 
 const readBuildHTML = lazy(() => {
   let html = fs.readFileSync(path.join(clientBuildRoot, "index.html"), "utf-8");
