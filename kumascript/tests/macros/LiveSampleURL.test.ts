@@ -34,7 +34,7 @@ describeMacro("LiveSampleURL", function () {
       base_url: "https://mdn.mozillademos.org",
     };
     macro.ctx.info.hasPage = jest.fn(() => false);
-    macro.ctx.info.getDescription = jest.fn((url) => url.toLowerCase());
+    macro.ctx.info.getDescription = jest.fn((url: string) => url.toLowerCase());
     macro.ctx.env.url = "/en-US/docs/Learn/HTML";
     await expect(
       macro.call("No_JS", "/en-US/docs/does/not/exist")

@@ -35,7 +35,7 @@ function checkSidebarDom(dom, locale) {
 describeMacro("HTTPSidebar", function () {
   beforeEachMacro(function (macro) {
     macro.ctx.env.url = "/en-US/docs/Web/HTTP/Overview";
-    Document.findByURL = jest.fn((url) => {
+    Document.findByURL = jest.fn((url: string) => {
       const data = fixtureData[url.toLowerCase()];
       if (!data) {
         return null;
@@ -51,7 +51,7 @@ describeMacro("HTTPSidebar", function () {
         },
       };
     });
-    Document.findChildren = jest.fn((url) => {
+    Document.findChildren = jest.fn((url: string) => {
       const result: any[] = [];
       const parent = `${url.toLowerCase()}/`;
       for (const [key, data] of Object.entries(fixtureData) as any) {

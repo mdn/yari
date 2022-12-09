@@ -73,10 +73,10 @@ function checkSubpagesResult(res) {
 
 describeMacro("page API tests", function () {
   beforeEachMacro(function (macro) {
-    macro.ctx.info.cleanURL = jest.fn((url) =>
+    macro.ctx.info.cleanURL = jest.fn((url: string) =>
       new URL(url, "https://example.com").pathname.toLowerCase()
     );
-    Document.findByURL = jest.fn((url) => {
+    Document.findByURL = jest.fn((url: string) => {
       const data = fixtureData[url.toLowerCase()];
       if (!data) {
         return null;
@@ -92,7 +92,7 @@ describeMacro("page API tests", function () {
         },
       };
     });
-    Document.findChildren = jest.fn((url) => {
+    Document.findChildren = jest.fn((url: string) => {
       const result = [];
       const parent = `${url.toLowerCase()}/`;
       for (const [key, data] of Object.entries(fixtureData) as any) {

@@ -15,7 +15,7 @@ jest.mock("../src/info.js", () => ({
   __esModule: true,
   default: {
     ...info,
-    cleanURL: jest.fn((url) => {
+    cleanURL: jest.fn((url: string) => {
       const result = url.toLowerCase();
       if (result === "/en-us/docs/web/css/dumber") {
         return "/en-us/docs/web/css/number";
@@ -42,7 +42,7 @@ jest.mock("../../content/index.js", () => ({
   __esModule: true,
   Document: {
     ...Document,
-    findByURL: jest.fn((url) => {
+    findByURL: jest.fn((url: string) => {
       return {
         "/en-us/docs/web/a": {
           url: "/en-US/docs/Web/A",

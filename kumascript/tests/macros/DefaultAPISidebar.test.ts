@@ -309,7 +309,7 @@ describeMacro("DefaultAPISidebar", function () {
       throw new Error(`Unimplemented mock fixture ${name}`);
     });
     // Mock calls to wiki.getPage()
-    macro.ctx.wiki.getPage = jest.fn(async (url) => {
+    macro.ctx.wiki.getPage = jest.fn(async (url: string) => {
       return pagesJSON[url];
     });
   });

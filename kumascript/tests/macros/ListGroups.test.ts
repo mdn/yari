@@ -101,7 +101,7 @@ describeMacro("ListGroups", () => {
   beforeEachMacro((macro) => {
     macro.ctx.env.locale = "en-US";
     // Mock calls to wiki.page
-    macro.ctx.wiki.getPage = jest.fn((name) => {
+    macro.ctx.wiki.getPage = jest.fn((name: string) => {
       return overviewPages[name];
     });
     // Mock calls to GroupData
