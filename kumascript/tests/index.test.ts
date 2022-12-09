@@ -10,8 +10,7 @@ import {
   MacroExecutionError,
 } from "../src/errors.js";
 
-jest.mock("../src/info.js", () => ({
-  __esModule: true,
+jest.unstable_mockModule("../src/info.js", () => ({
   default: {
     ...info,
     cleanURL: jest.fn((url: string) => {
