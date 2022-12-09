@@ -2,16 +2,8 @@ import fs from "node:fs";
 import jsdom from "jsdom";
 import { jest } from "@jest/globals";
 import { Document } from "../../../content/index.js";
-import {
-  assert,
-  itMacro,
-  beforeEachMacro,
-  describeMacro,
-  lintHTML,
-} from "./utils.js";
 
-jest.mock("../../../content/index.js", () => ({
-  __esModule: true,
+jest.unstable_mockModule("../../../content/index.js", () => ({
   Document: {
     ...Document,
     findByURL: jest.fn((url: string) => {
@@ -52,6 +44,9 @@ jest.mock("../../../content/index.js", () => ({
     }),
   },
 }));
+
+const { assert, itMacro, beforeEachMacro, describeMacro, lintHTML } =
+  await import("./utils.js");
 
 // Load fixture data.
 const fixtureData = JSON.parse(
