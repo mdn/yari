@@ -25,17 +25,17 @@ jest.mock("../src/info.js", () => ({
 }));
 
 const source = `
-      {{cssxref("bigfoot")}}
-      {{nonExistentMacro("yada")}}
-      {{cssxref("dumber")}}
-      {{cssxref("number")}}
-      <p id="gecko-header">{{gecko_minversion_header("36")}}</p>
-      <p id="gecko-inline">{{gecko_minversion_inline("36")}}</p>
-      {{page("bogus")}}
-      {{page("/en-US/docs/Web/B")}}
-      {{page("/en-US/docs/Web/B", "bogus-section")}}
-      {{page("/en-US/docs/Web/C")}}
-    `.trim();
+  {{cssxref("bigfoot")}}
+  {{nonExistentMacro("yada")}}
+  {{cssxref("dumber")}}
+  {{cssxref("number")}}
+  <p id="gecko-header">{{gecko_minversion_header("36")}}</p>
+  <p id="gecko-inline">{{gecko_minversion_inline("36")}}</p>
+  {{page("bogus")}}
+  {{page("/en-US/docs/Web/B")}}
+  {{page("/en-US/docs/Web/B", "bogus-section")}}
+  {{page("/en-US/docs/Web/C")}}
+`.trim();
 
 jest.unstable_mockModule("../../content/index.js", () => ({
   ...Content,
