@@ -22,88 +22,95 @@ const source = `
   {{page("/en-US/docs/Web/C")}}
 `.trim();
 
+const findByURL = jest.fn((url: string) => {
+  return {
+    "/en-us/docs/web/a": {
+      url: "/en-US/docs/Web/A",
+      metadata: {
+        title: "A",
+        locale: "en-US",
+        slug: "Web/A",
+        tags: ["Web"],
+      },
+      rawBody: source,
+      isMarkdown: false,
+      fileInfo: {
+        path: "testing/content/files/en-us/web/a",
+        frontMatterOffset: 8,
+      },
+    },
+    "/en-us/docs/web/b": {
+      url: "/en-US/docs/Web/B",
+      metadata: {
+        title: "B",
+        locale: "en-US",
+        slug: "Web/B",
+        tags: ["Web"],
+      },
+      rawBody: '<p>{{cssxref("bigfoot")}}</p>',
+      isMarkdown: false,
+      fileInfo: {
+        path: "testing/content/files/en-us/web/b",
+        frontMatterOffset: 4,
+      },
+    },
+    "/en-us/docs/web/c": {
+      url: "/en-US/docs/Web/C",
+      metadata: {
+        title: "C",
+        locale: "en-US",
+        slug: "Web/C",
+        tags: ["Web"],
+      },
+      rawBody: '{{page("/en-US/docs/Web/B")}}',
+      isMarkdown: false,
+      fileInfo: {
+        path: "testing/content/files/en-us/web/c",
+        frontMatterOffset: 5,
+      },
+    },
+    "/en-us/docs/web/css/number": {
+      url: "/en-US/docs/Web/CSS/number",
+      metadata: {
+        title: "<number>",
+        locale: "en-US",
+        slug: "Web/Number",
+        "page-type": "css-type",
+      },
+      rawBody: "<p>This is the number test page.</p>",
+      isMarkdown: false,
+      fileInfo: {
+        path: "testing/content/files/en-us/web/css/number",
+        frontMatterOffset: 12,
+      },
+    },
+  }[url];
+});
+
 jest.unstable_mockModule("../../content/index.js", () => ({
   ...Content,
   Document: {
     ...Content.Document,
-    findByURL: jest.fn((url: string) => {
-      return {
-        "/en-us/docs/web/a": {
-          url: "/en-US/docs/Web/A",
-          metadata: {
-            title: "A",
-            locale: "en-US",
-            slug: "Web/A",
-            tags: ["Web"],
-          },
-          rawBody: source,
-          isMarkdown: false,
-          fileInfo: {
-            path: "testing/content/files/en-us/web/a",
-            frontMatterOffset: 8,
-          },
-        },
-        "/en-us/docs/web/b": {
-          url: "/en-US/docs/Web/B",
-          metadata: {
-            title: "B",
-            locale: "en-US",
-            slug: "Web/B",
-            tags: ["Web"],
-          },
-          rawBody: '<p>{{cssxref("bigfoot")}}</p>',
-          isMarkdown: false,
-          fileInfo: {
-            path: "testing/content/files/en-us/web/b",
-            frontMatterOffset: 4,
-          },
-        },
-        "/en-us/docs/web/c": {
-          url: "/en-US/docs/Web/C",
-          metadata: {
-            title: "C",
-            locale: "en-US",
-            slug: "Web/C",
-            tags: ["Web"],
-          },
-          rawBody: '{{page("/en-US/docs/Web/B")}}',
-          isMarkdown: false,
-          fileInfo: {
-            path: "testing/content/files/en-us/web/c",
-            frontMatterOffset: 5,
-          },
-        },
-        "/en-us/docs/web/css/number": {
-          url: "/en-US/docs/Web/CSS/number",
-          metadata: {
-            title: "<number>",
-            locale: "en-US",
-            slug: "Web/Number",
-            "page-type": "css-type",
-          },
-          rawBody: "<p>This is the number test page.</p>",
-          isMarkdown: false,
-          fileInfo: {
-            path: "testing/content/files/en-us/web/css/number",
-            frontMatterOffset: 12,
-          },
-        },
-      }[url];
-    }),
+    findByURL,
   },
 }));
 
 // Depends on mocking Document.findByURL
 const { default: info } = await import("../src/info.js");
+const cleanURL = jest.fn((url: string) => {
+  const result = url.toLowerCase();
+  if (result === "/en-us/docs/web/css/dumber") {
+    return "/en-us/docs/web/css/number";
+  }
+  return result;
+});
 jest.unstable_mockModule("../src/info.js", () => ({
   default: {
     ...info,
-    cleanURL: jest.fn((url: string) => {
-      const result = url.toLowerCase();
-      if (result === "/en-us/docs/web/css/dumber") {
-        return "/en-us/docs/web/css/number";
-      }
-      return result;
+    cleanURL,
+    getPageByURL: jest.fn((url: string) => {
+      let document = findByURL(cleanURL(url));
+      return document ? info.getPage(document) : {};
     }),
   },
 }));
@@ -167,7 +174,7 @@ describe("testing the main render() function", () => {
     expect(errors[1]).toHaveProperty("macroSource", '{{cssxref("bigfoot")}}');
     expect(errors[2]).toBeInstanceOf(MacroNotFoundError);
     expect(errors[2]).toHaveProperty("line", 9);
-    expect(errors[2]).toHaveProperty("column", 7);
+    expect(errors[2]).toHaveProperty("column", 3);
     expect(errors[2]).toHaveProperty(
       "filepath",
       "testing/content/files/en-us/web/a"
@@ -179,7 +186,7 @@ describe("testing the main render() function", () => {
     );
     expect(errors[3]).toBeInstanceOf(MacroRedirectedLinkError);
     expect(errors[3]).toHaveProperty("line", 10);
-    expect(errors[3]).toHaveProperty("column", 7);
+    expect(errors[3]).toHaveProperty("column", 3);
     expect(errors[3]).toHaveProperty(
       "filepath",
       "testing/content/files/en-us/web/a"
@@ -196,7 +203,7 @@ describe("testing the main render() function", () => {
     expect(errors[3]).toHaveProperty("redirectInfo.suggested", "number");
     expect(errors[4]).toBeInstanceOf(MacroDeprecatedError);
     expect(errors[4]).toHaveProperty("line", 12);
-    expect(errors[4]).toHaveProperty("column", 28);
+    expect(errors[4]).toHaveProperty("column", 24);
     expect(errors[4]).toHaveProperty(
       "filepath",
       "testing/content/files/en-us/web/a"
@@ -210,7 +217,7 @@ describe("testing the main render() function", () => {
     );
     expect(errors[5]).toBeInstanceOf(MacroDeprecatedError);
     expect(errors[5]).toHaveProperty("line", 13);
-    expect(errors[5]).toHaveProperty("column", 28);
+    expect(errors[5]).toHaveProperty("column", 24);
     expect(errors[5]).toHaveProperty(
       "filepath",
       "testing/content/files/en-us/web/a"
@@ -224,7 +231,7 @@ describe("testing the main render() function", () => {
     );
     expect(errors[6]).toBeInstanceOf(MacroExecutionError);
     expect(errors[6]).toHaveProperty("line", 14);
-    expect(errors[6]).toHaveProperty("column", 7);
+    expect(errors[6]).toHaveProperty("column", 3);
     expect(errors[6]).toHaveProperty(
       "filepath",
       "testing/content/files/en-us/web/a"
@@ -233,12 +240,12 @@ describe("testing the main render() function", () => {
     expect(errors[6]).toHaveProperty(
       "errorStack",
       expect.stringContaining(
-        "/en-us/docs/web/a references bogus, which does not exist"
+        '/en-us/docs/web/a references /en-us/docs/bogus (derived from "bogus"), which does not exist'
       )
     );
     expect(errors[7]).toBeInstanceOf(MacroExecutionError);
     expect(errors[7]).toHaveProperty("line", 16);
-    expect(errors[7]).toHaveProperty("column", 7);
+    expect(errors[7]).toHaveProperty("column", 3);
     expect(errors[7]).toHaveProperty(
       "filepath",
       "testing/content/files/en-us/web/a"
