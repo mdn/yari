@@ -1,7 +1,6 @@
 import { jest } from "@jest/globals";
 
 import * as Content from "../../content/index.js";
-import info from "../src/info.js";
 import {
   MacroNotFoundError,
   MacroBrokenLinkError,
@@ -9,19 +8,6 @@ import {
   MacroDeprecatedError,
   MacroExecutionError,
 } from "../src/errors.js";
-
-jest.unstable_mockModule("../src/info.js", () => ({
-  default: {
-    ...info,
-    cleanURL: jest.fn((url: string) => {
-      const result = url.toLowerCase();
-      if (result === "/en-us/docs/web/css/dumber") {
-        return "/en-us/docs/web/css/number";
-      }
-      return result;
-    }),
-  },
-}));
 
 const source = `
   {{cssxref("bigfoot")}}
@@ -103,6 +89,21 @@ jest.unstable_mockModule("../../content/index.js", () => ({
           },
         },
       }[url];
+    }),
+  },
+}));
+
+// Depends on mocking Document.findByURL
+const { default: info } = await import("../src/info.js");
+jest.unstable_mockModule("../src/info.js", () => ({
+  default: {
+    ...info,
+    cleanURL: jest.fn((url: string) => {
+      const result = url.toLowerCase();
+      if (result === "/en-us/docs/web/css/dumber") {
+        return "/en-us/docs/web/css/number";
+      }
+      return result;
     }),
   },
 }));
