@@ -162,7 +162,7 @@ async function buildDocuments(
   }
 
   if (!options.noProgressbar) {
-    progressBar.start(documents.count);
+    progressBar.start(documents.count, 0);
   }
 
   for (const documentPath of documents.iterPaths()) {
