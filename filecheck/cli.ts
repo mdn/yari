@@ -1,13 +1,13 @@
 #!/usr/bin/env node
 import path from "node:path";
 
-import caporal from "@caporal/core";
+import caporal, { ActionParameters } from "@caporal/core";
 
 import { runChecker } from "./checker.js";
 import { MAX_COMPRESSION_DIFFERENCE_PERCENTAGE } from "../libs/constants/index.js";
 import { CONTENT_ROOT, CONTENT_TRANSLATED_ROOT } from "../libs/env/index.js";
 
-const { ActionParameters, program } = caporal;
+const { program } = caporal;
 
 interface FilecheckArgsAndOptions extends ActionParameters {
   args: {
