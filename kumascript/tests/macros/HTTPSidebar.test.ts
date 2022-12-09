@@ -1,11 +1,12 @@
 import fs from "node:fs";
 import jsdom from "jsdom";
 import { jest } from "@jest/globals";
-import { Document } from "../../../content/index.js";
+import * as Content from "../../../content/index.js";
 
 jest.unstable_mockModule("../../../content/index.js", () => ({
+  ...Content,
   Document: {
-    ...Document,
+    ...Content.Document,
     findByURL: jest.fn((url: string) => {
       const data = fixtureData[url.toLowerCase()];
       if (!data) {

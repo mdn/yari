@@ -28,7 +28,7 @@ jest.unstable_mockModule("../../../content/index.js", () => ({
       };
     }),
     findChildren: jest.fn((url: string) => {
-      const result = [];
+      const result: any[] = [];
       const parent = `${url.toLowerCase()}/`;
       for (const [key, data] of Object.entries(fixtureData) as any) {
         if (!key.replace(parent, "").includes("/")) {
