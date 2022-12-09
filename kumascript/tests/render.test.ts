@@ -16,7 +16,7 @@ const PAGE_ENV = { slug: "" };
 describe("render() function", () => {
   function fixture(name) {
     return fileURLToPath(
-      new URL(`./fixtures/templates/${name}`, import.meta.url)
+      new URL(`./fixtures/render/${name}`, import.meta.url)
     );
   }
   function get(name) {
