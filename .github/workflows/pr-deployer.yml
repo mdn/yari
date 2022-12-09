@@ -23,13 +23,13 @@ jobs:
         uses: actions/cache@v3
         with:
           path: deployer/.venv
-          key: venv-${{ runner.os }}-${{ hashFiles('**/poetry.lock') }}-${{ hashFiles('.github/workflows/pr-deployer.yml') }}
+          key: venv-${{ runner.os }}-${{ hashFiles('**/poetry.lock') }}-${{ hashFiles('.github/workflows/pr-deployer.yml') }}-${{ steps.setup-python.outputs.python-version }}
 
       - name: Load cached .local
         uses: actions/cache@v3
         with:
           path: ~/.local
-          key: dotlocal-${{ runner.os }}-${{ hashFiles('.github/workflows/pr-deployer.yml') }}
+          key: dotlocal-${{ runner.os }}-${{ hashFiles('.github/workflows/pr-deployer.yml') }}-${{ steps.setup-python.outputs.python-version }}
 
       - name: Install Python poetry
         uses: snok/install-poetry@v1
