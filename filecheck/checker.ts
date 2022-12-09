@@ -246,7 +246,7 @@ async function checkCompression(filePath: string, options: CheckerOptions) {
           filePath
         )} is too large (${formattedBefore} > ${formattedMax}), even after compressing to ${formattedAfter}.`
       );
-    } else if (!options.saveCompression && stat.size > MAX_FILE_SIZE) {
+    } else if (!options.saveCompression && sizeBefore > MAX_FILE_SIZE) {
       throw new FixableError(
         `${getRelativePath(
           filePath
