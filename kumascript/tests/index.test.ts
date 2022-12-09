@@ -109,7 +109,7 @@ jest.unstable_mockModule("../src/info.js", () => ({
     ...info,
     cleanURL,
     getPageByURL: jest.fn((url: string) => {
-      let document = findByURL(cleanURL(url));
+      const document = findByURL(cleanURL(url));
       return document ? info.getPage(document) : {};
     }),
   },
