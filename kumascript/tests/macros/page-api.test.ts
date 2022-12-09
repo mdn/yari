@@ -5,13 +5,12 @@
 import fs from "node:fs";
 import { jest } from "@jest/globals";
 
-import { Document } from "../../../content";
-import { assert, itMacro, describeMacro, beforeEachMacro } from "./utils.js";
+import * as Content from "../../../content/index.js";
 
-jest.mock("../../../content/index.js", () => ({
-  __esModule: true,
+jest.unstable_mockModule("../../../content/index.js", () => ({
+  ...Content,
   Document: {
-    ...Document,
+    ...Content.Document,
     findByURL: jest.fn((url: string) => {
       const data = fixtureData[url.toLowerCase()];
       if (!data) {
@@ -50,6 +49,11 @@ jest.mock("../../../content/index.js", () => ({
     }),
   },
 }));
+
+// Depends on module mocking
+const { assert, itMacro, describeMacro, beforeEachMacro } = await import(
+  "./utils.js"
+);
 
 // Load fixture data.
 const fixtureData = JSON.parse(

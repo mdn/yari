@@ -1,8 +1,7 @@
 import { jest } from "@jest/globals";
 
-import { Document } from "../../content/index.js";
+import * as Content from "../../content/index.js";
 import info from "../src/info.js";
-import { render } from "../index.js";
 import {
   MacroNotFoundError,
   MacroBrokenLinkError,
@@ -38,10 +37,10 @@ const source = `
       {{page("/en-US/docs/Web/C")}}
     `.trim();
 
-jest.mock("../../content/index.js", () => ({
-  __esModule: true,
+jest.unstable_mockModule("../../content/index.js", () => ({
+  ...Content,
   Document: {
-    ...Document,
+    ...Content.Document,
     findByURL: jest.fn((url: string) => {
       return {
         "/en-us/docs/web/a": {
@@ -108,6 +107,9 @@ jest.mock("../../content/index.js", () => ({
     }),
   },
 }));
+
+// Depends on module mocking
+const { render } = await import("../index.js");
 
 describe("testing the main render() function", () => {
   it("non-fatal errors in macros are returned by render()", async () => {
