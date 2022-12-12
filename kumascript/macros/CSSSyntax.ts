@@ -1,7 +1,7 @@
 const webRefData = require("@webref/css");
 const { definitionSyntax } = require("css-tree");
 
-import { KumaThis } from "../src/environment";
+const { KumaThis } = require("../src/environment");
 /*
  * Displays the formal syntax for a CSS property, using the values found in
  * the https://github.com/w3c/webref package.
