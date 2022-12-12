@@ -23,31 +23,15 @@ if ($0 && ($0 != undefined)) {
 var numTerms = termList.length;
 
 if (numTerms) {
-    var importantList = [];
-    var regularList = [];
-
     // Alphabetize the list
-
     termList.sort(pageSorter);
-
-    // Now move the important items to the top; these are items tagged "Important".
-
-    for (var i=0; i<numTerms; i++) {
-        if (page.hasTag(termList[i], "Important")) {
-            importantList.push(termList[i]);
-        } else {
-            regularList.push(termList[i]);
-        }
-    }
-
-    termList = importantList.concat(regularList);
 
     html += "<dl>";
 
     for (var i=0; i<numTerms; i++) {
         var aPage = termList[i];
 
-        if (!page.hasTag(aPage, "junk") && (aPage.title != "Index")) {
+        if (aPage.title != "Index") {
             var title = aPage.title;
             var summary = aPage.summary().replace(/<img[^>]*>/g," ");
             var url = aPage.url;
