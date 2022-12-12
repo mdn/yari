@@ -2,12 +2,10 @@ import { assert, itMacro, describeMacro, lintHTML } from "./utils";
 
 import fs from "node:fs";
 import path from "node:path";
-import jsdom from "jsdom";
+import { JSDOM } from "jsdom";
 import extend from "extend";
 const dirname = __dirname;
 const fixture_dir = path.resolve(dirname, "fixtures/compat");
-
-const { JSDOM } = jsdom;
 
 let fixtureCompatData = {};
 fs.readdirSync(fixture_dir).forEach(function (fn) {
