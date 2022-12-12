@@ -15,15 +15,15 @@ export function OnGitHubLink({ doc }: { doc: Doc }) {
           <NewIssueOnGitHubLink doc={doc} />
         </li>
         <li>
-          Want to fix the problem yourself? See the{" "}
+          Want to fix the problem yourself? Learn{" "}
           <a
             href="https://github.com/mdn/content/blob/main/CONTRIBUTING.md"
             target="_blank"
             rel="noopener noreferrer"
           >
-            MDN Web Docs contribution guide
+            how to contribute
           </a>
-          .
+          !
         </li>
       </ul>
     </div>
