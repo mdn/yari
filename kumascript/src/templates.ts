@@ -55,6 +55,7 @@ export default class Templates {
           dirs.push(fp);
         } else if (
           fp.endsWith(".js") ||
+          fp.endsWith(".ts") ||
           fp.endsWith(".ejs") ||
           fp.endsWith(".json")
         ) {
@@ -116,10 +117,16 @@ export default class Templates {
       }
     }
     try {
-      const rendered = await ejs.renderFile(path, args, {
-        async: true,
-        cache: process.env.NODE_ENV === "production",
-      });
+      let rendered;
+      if (path.endsWith(".ts")) {
+        const { render } = require(path);
+        rendered = await render.call(args, ...args.$$);
+      } else {
+        rendered = await ejs.renderFile(path, args, {
+          async: true,
+          cache: process.env.NODE_ENV === "production",
+        });
+      }
       return rendered.trim();
     } catch (error) {
       console.error(`${name} macro failed:`, error);
