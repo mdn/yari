@@ -39,10 +39,9 @@ async function createLink(apiName, area, linkName) {
     let url = "/" + locale + "/docs/Web/" + (area || "CSS") + "/" + apiName;
     let thisPage = await localWiki.getPage(url);
 
-    if (currentPage.hasTag(thisPage, "CSS Function")) {
+    if (thisPage.pageType === "css-function") {
         formattedLinkName += "()";
-    } else if (currentPage.hasTag(thisPage, "CSS Data Type") ||
-        currentPage.hasTag(thisPage, "Element")) {
+    } else if (thisPage.pageType === "css-type" || thisPage.pageType === "svg-element") {
         formattedLinkName = "&lt;" + formattedLinkName + "&gt;";
     }
 

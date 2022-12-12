@@ -25,8 +25,7 @@ function htmlEscape(s) {
     .replace(/"/gim, "&quot;")
     .replace(/</gim, "&lt;")
     .replace(/>/gim, "&gt;")
-    .replace(/'/gim, "&apos;")
-    .replace(/:/gim, "&colon;");
+    .replace(/'/gim, "&apos;");
 }
 
 function getHrefLang(locale, otherLocales) {
