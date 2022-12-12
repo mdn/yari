@@ -1,11 +1,7 @@
 import LRU from "lru-cache";
 import * as cheerio from "cheerio";
 
-import {
-  Document,
-  urlToFolderPath,
-  MEMOIZE_INVALIDATE,
-} from "../content/index.js";
+import { Document } from "../content/index.js";
 import { m2h } from "../markdown/index.js";
 
 import info from "./src/info.js";
@@ -58,12 +54,12 @@ export async function render(
   urlsSeen.add(urlLC);
   const prerequisiteErrorsByKey = new Map();
   const document = invalidateCache
-    ? Document.findByURL(url, MEMOIZE_INVALIDATE)
+    ? Document.findByURL(url, Document.MEMOIZE_INVALIDATE)
     : Document.findByURL(url);
   if (!document) {
     throw new Error(
       `From URL ${url} no folder on disk could be found. ` +
-        `Tried to find a folder called ${urlToFolderPath(url)}`
+        `Tried to find a folder called ${Document.urlToFolderPath(url)}`
     );
   }
   let { metadata } = document;
@@ -75,7 +71,7 @@ export async function render(
       .replace(`/${metadata.locale.toLowerCase()}/`, `/${DEFAULT_LOCALE}/`);
 
     const parentDocument = invalidateCache
-      ? Document.findByURL(parentURL, MEMOIZE_INVALIDATE)
+      ? Document.findByURL(parentURL, Document.MEMOIZE_INVALIDATE)
       : Document.findByURL(parentURL);
     if (parentDocument) {
       metadata = { ...parentDocument.metadata, ...metadata };

@@ -9,7 +9,7 @@ import {
 } from "../kumascript/src/errors.js";
 
 import { Doc } from "../libs/types/document.js";
-import { Document, Image, execGit, urlToFolderPath } from "../content/index.js";
+import { Document, Image, execGit } from "../content/index.js";
 import { CONTENT_ROOT, REPOSITORY_URLS } from "../libs/env/index.js";
 import * as kumascript from "../kumascript/index.js";
 
@@ -307,7 +307,7 @@ export async function buildDocument(
   };
   const { metadata, fileInfo } = document;
 
-  if (urlToFolderPath(document.url) !== document.fileInfo.folder) {
+  if (Document.urlToFolderPath(document.url) !== document.fileInfo.folder) {
     throw new Error(
       `The document's slug (${metadata.slug}) doesn't match its disk folder name (${document.fileInfo.folder})`
     );

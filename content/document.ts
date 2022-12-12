@@ -36,6 +36,8 @@ import {
 import * as Redirect from "./redirect.js";
 import { DocFrontmatter } from "../libs/types/document.js";
 
+export { urlToFolderPath, MEMOIZE_INVALIDATE } from "./utils.js";
+
 function buildPath(localeFolder: string, slug: string) {
   return path.join(localeFolder, slugToFolder(slug));
 }

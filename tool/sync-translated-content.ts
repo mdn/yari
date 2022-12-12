@@ -13,7 +13,6 @@ import {
   slugToFolder,
   Document,
   Redirect,
-  urlToFolderPath,
 } from "../content/index.js";
 import {
   HTML_FILENAME,
@@ -85,7 +84,7 @@ function resolve(slug) {
   const url = buildURL("en-us", slug);
   const resolved = Redirect.resolve(url);
   if (url !== resolved) {
-    const doc = Document.read(urlToFolderPath(resolved));
+    const doc = Document.read(Document.urlToFolderPath(resolved));
     if (!doc) {
       return slug;
     }
