@@ -48,21 +48,6 @@
     "tool": "ts-node tool/cli.ts",
     "watch:ssr": "cd ssr && webpack --mode=production --watch"
   },
-  "jest": {
-    "preset": "ts-jest",
-    "testPathIgnorePatterns": [
-      "headless*",
-      "developing.spec.ts"
-    ],
-    "transform": {
-      "\\.tsx?$": [
-        "ts-jest",
-        {
-          "babelConfig": true
-        }
-      ]
-    }
-  },
   "resolutions": {
     "lodash": ">=4.17.15"
   },
