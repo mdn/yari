@@ -2,10 +2,17 @@ import path from "node:path";
 import childProcess from "node:child_process";
 
 import LRU from "lru-cache";
-import prettier from "prettier";
 
 import { CONTENT_ROOT, CONTENT_TRANSLATED_ROOT } from "../libs/env/index.js";
 import { slugToFolder as _slugToFolder } from "../libs/slug-utils/index.js";
+
+let prettier = null;
+
+try {
+  prettier = (await import("prettier")).default;
+} catch (e) {
+  // If we failed to import Prettier, that's okay
+}
 
 export const MEMOIZE_INVALIDATE = Symbol("force cache update");
 
@@ -108,11 +115,14 @@ export function execGit(args, opts: { cwd?: string } = {}, root = null) {
 
 export function toPrettyJSON(value) {
   const json = JSON.stringify(value, null, 2) + "\n";
-  try {
-    return prettier.format(json, { parser: "json" });
-  } catch (e) {
-    return json;
+  if (prettier) {
+    try {
+      return prettier.format(json, { parser: "json" });
+    } catch (e) {
+      // If Prettier formatting failed, don't worry
+    }
   }
+  return json;
 }
 
 export function urlToFolderPath(url) {
