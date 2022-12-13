@@ -1,5 +1,5 @@
 import fs from "node:fs";
-import jsdom from "jsdom";
+import { JSDOM } from "jsdom";
 import { jest } from "@jest/globals";
 import * as Content from "../../../content/index.js";
 
@@ -80,7 +80,7 @@ describeMacro("HTTPSidebar", function () {
     macro.ctx.env.locale = "en-US";
     return macro.call().then(function (result) {
       expect(lintHTML(result)).toBeFalsy();
-      const dom = jsdom.JSDOM.fragment(result);
+      const dom = JSDOM.fragment(result);
       checkSidebarDom(dom, "en-US");
     });
   });
@@ -89,7 +89,7 @@ describeMacro("HTTPSidebar", function () {
     macro.ctx.env.locale = "es";
     return macro.call().then(function (result) {
       expect(lintHTML(result)).toBeFalsy();
-      const dom = jsdom.JSDOM.fragment(result);
+      const dom = JSDOM.fragment(result);
       checkSidebarDom(dom, "es");
     });
   });
