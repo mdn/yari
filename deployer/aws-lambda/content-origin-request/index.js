@@ -225,11 +225,15 @@ export async function handler(event) {
     request.origin.custom &&
     request.origin.custom.domainName.includes("s3")
   ) {
-    // Rewrite the URI to match the keys in S3.
-    // NOTE: The incoming URI should remain URI-encoded. However, it
-    // must be passed to slugToFolder as decoded version to lowercase
-    // non-ascii symbols and sanitize symbols like ":".
-    request.uri = encodePath(slugToFolder(decodedUri));
+    // If this is bcd request we must not change the uri as they are
+    // case sensitive.
+    if (!decodedUri.startsWith("/bcd/")) {
+      // Rewrite the URI to match the keys in S3.
+      // NOTE: The incoming URI should remain URI-encoded. However, it
+      // must be passed to slugToFolder as decoded version to lowercase
+      // non-ascii symbols and sanitize symbols like ":".
+      request.uri = encodePath(slugToFolder(decodedUri));
+    }
     // Rewrite the HOST header to match the S3 bucket website domain.
     // This is required only because we're using S3 as a website, which
     // we need in order to do redirects from S3. NOTE: The origin is
