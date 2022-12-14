@@ -24,7 +24,7 @@ export function LastModified({ value, locale }) {
 }
 
 export function Authors({ url }) {
-  return <a href={`${url}/contributors.txt`}>by MDN contributors</a>;
+  return <a href={`${url}/contributors.txt`}>MDN contributors</a>;
 }
 
 export function Metadata({ doc, locale }) {
@@ -33,7 +33,7 @@ export function Metadata({ doc, locale }) {
       <div className="metadata-content-container">
         {doc.isActive && <OnGitHubLink doc={doc} />}
         <p className="last-modified-date">
-          <LastModified value={doc.modified} locale={locale} />,{" "}
+          <LastModified value={doc.modified} locale={locale} />, by{" "}
           <Authors url={doc.mdn_url} />
         </p>
       </div>
