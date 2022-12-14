@@ -19,7 +19,7 @@ const samplePath = `${pagePath}/_sample_.${web.slugify(web.safeDecodeURIComponen
 
 let url;
 if (env.live_samples.base_url.includes('://')) {
-    url = new kuma.url.URL(env.live_samples.base_url);
+    url = new URL(env.live_samples.base_url);
     url.pathname = samplePath;
 } else {
     url = samplePath;
