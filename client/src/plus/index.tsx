@@ -12,8 +12,11 @@ import PlusDocs from "./plus-docs";
 import { ArticleActionsContainer } from "../ui/organisms/article-actions-container";
 import { DocParent } from "../../../libs/types/document";
 
+import "./index.scss";
+
 const OfferOverview = React.lazy(() => import("./offer-overview"));
 const Collections = React.lazy(() => import("./collections"));
+const Updates = React.lazy(() => import("./updates"));
 
 interface LayoutProps {
   withoutContainer?: boolean;
@@ -80,6 +83,14 @@ export function Plus({ pageTitle, ...props }: { pageTitle?: string }) {
             parents={[...parents, { uri: pathname, title: "Collections" }]}
           >
             <Collections />
+          </Layout>
+        }
+      />
+      <Route
+        path="updates/*"
+        element={
+          <Layout parents={[...parents, { uri: pathname, title: "Updates" }]}>
+            <Updates />
           </Layout>
         }
       />

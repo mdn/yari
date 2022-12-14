@@ -130,7 +130,7 @@ button,
   }
 
   .button-wrap {
-    text-transform: uppercase;
+    text-transform: var(--button-action-transform, uppercase);
   }
 
   &.highlight {

@@ -33,22 +33,26 @@ function BrowserHeaders({ browsers }: { browsers }) {
     <tr className="bc-browsers">
       <td />
       {browsers.map((browser) => {
-        const browserStart = browser.split("_")[0];
-        const browserIcon =
-          browserStart === "firefox" ? "simple-firefox" : browserStart;
         return (
           <th key={browser} className={`bc-browser bc-browser-${browser}`}>
             <div className={`bc-head-txt-label bc-head-icon-${browser}`}>
               <BrowserName id={browser} />
             </div>
             <div
-              className={`bc-head-icon-symbol icon icon-${browserIcon}`}
+              className={`bc-head-icon-symbol icon icon-${browserToIconName(
+                browser
+              )}`}
             ></div>
           </th>
         );
       })}
     </tr>
   );
+}
+
+export function browserToIconName(browser: string) {
+  const browserStart = browser.split("_")[0];
+  return browserStart === "firefox" ? "simple-firefox" : browserStart;
 }
 
 export function Headers({ platforms, browsers }) {

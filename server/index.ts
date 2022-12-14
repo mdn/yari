@@ -9,6 +9,7 @@ import send from "send";
 import { createProxyMiddleware } from "http-proxy-middleware";
 import cookieParser from "cookie-parser";
 import openEditor from "open-editor";
+import getBCDDataForPath from "@mdn/bcd-utils-api";
 
 import {
   buildDocument,
@@ -53,6 +54,23 @@ async function buildDocumentFromURL(url) {
 }
 
 const app = express();
+
+const bcdRouter = express.Router({ caseSensitive: true });
+
+bcdRouter.get("/api/v0/current/:path.json", async (req, res) => {
+  const data = getBCDDataForPath(req.params.path);
+  return data ? res.json(data) : res.status(404).send("BCD path not found");
+});
+
+bcdRouter.use(
+  "/updates/v0/",
+  createProxyMiddleware({
+    target: "http://localhost:8080",
+    pathRewrite: (path) => path.replace("/bcd/updates/v0/", "/"),
+  })
+);
+
+app.use("/bcd", bcdRouter);
 
 // Depending on if FAKE_V1_API is set, we either respond with JSON based
 // on `.json` files on disk or we proxy the requests to Kuma.

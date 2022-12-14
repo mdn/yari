@@ -66,7 +66,7 @@ function Overview() {
 
   return (
     <div className="collections collections-overview">
-      <header>
+      <header className="plus-header-mandala">
         <Container>
           <h1>
             <div className="mandala-icon-wrapper">
