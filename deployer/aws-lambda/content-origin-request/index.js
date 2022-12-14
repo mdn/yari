@@ -234,6 +234,7 @@ export async function handler(event) {
       // non-ascii symbols and sanitize symbols like ":".
       request.uri = encodePath(slugToFolder(decodedUri));
     }
+
     // Rewrite the HOST header to match the S3 bucket website domain.
     // This is required only because we're using S3 as a website, which
     // we need in order to do redirects from S3. NOTE: The origin is
