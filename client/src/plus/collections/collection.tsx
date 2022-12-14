@@ -231,14 +231,12 @@ function ItemComponent({
         <h2>
           <Link to={item.url}>{camelWrap(item.title)}</Link>
         </h2>
-        {doc && (
-          <ArticleActions
-            doc={doc}
-            showTranslations={false}
-            item={"collection_id" in item ? item : undefined}
-            scopedMutator={mutate}
-          />
-        )}
+        <ArticleActions
+          doc={doc}
+          showTranslations={false}
+          item={"collection_id" in item ? item : undefined}
+          scopedMutator={mutate}
+        />
       </header>
       <div className="breadcrumbs">{breadcrumbs.join(" > ")}</div>
       {doc && (

@@ -1,42 +1,67 @@
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 import Toast, { ToastData } from "./ui/atoms/toast";
 
 interface UIStatus {
-  fullScreenOverlay: boolean;
-  setFullScreenOverlay: React.Dispatch<React.SetStateAction<boolean>>;
+  toggleMobileOverlay: (id: Overlay, shown?: boolean) => void;
   isSidebarOpen: boolean;
   setIsSidebarOpen: React.Dispatch<React.SetStateAction<boolean>>;
   setToastData: React.Dispatch<React.SetStateAction<ToastData | null>>;
 }
 
+export enum Overlay {
+  Sidebar,
+  ArticleActions,
+  WatchMenu,
+  BookmarkMenu,
+}
+
 const UIContext = React.createContext<UIStatus>({
-  fullScreenOverlay: false,
-  setFullScreenOverlay: () => {},
+  toggleMobileOverlay: () => {},
   isSidebarOpen: false,
   setIsSidebarOpen: () => {},
   setToastData: () => {},
 });
 
 export function UIProvider(props: any) {
-  const [fullScreenOverlay, setFullScreenOverlay] = useState(false);
+  const [mobileOverlays, setMobileOverlays] = useState<Set<Overlay>>(new Set());
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [toastData, setToastData] = useState<ToastData | null>(null);
 
-  React.useEffect(() => {
-    setFullScreenOverlay(isSidebarOpen);
-  }, [isSidebarOpen]);
+  const toggleMobileOverlay = useCallback(
+    (overlay: Overlay, shown?: boolean) => {
+      setMobileOverlays((oldOverlays) => {
+        const overlays = new Set(oldOverlays);
+        if (typeof shown !== "boolean") {
+          overlays.has(overlay)
+            ? overlays.delete(overlay)
+            : overlays.add(overlay);
+        } else if (shown) {
+          overlays.add(overlay);
+        } else {
+          overlays.delete(overlay);
+        }
+        // if the set hasn't changed, return the old set object
+        // so react doesn't think it's been mutated
+        return oldOverlays.size === overlays.size ? oldOverlays : overlays;
+      });
+    },
+    []
+  );
 
   React.useEffect(() => {
-    fullScreenOverlay
-      ? document.body.classList.add("full-screen-overlay")
-      : document.body.classList.remove("full-screen-overlay");
-  }, [fullScreenOverlay]);
+    toggleMobileOverlay(Overlay.Sidebar, isSidebarOpen);
+  }, [isSidebarOpen, toggleMobileOverlay]);
+
+  React.useEffect(() => {
+    mobileOverlays.size
+      ? document.body.classList.add("mobile-overlay-active")
+      : document.body.classList.remove("mobile-overlay-active");
+  }, [mobileOverlays]);
 
   return (
     <UIContext.Provider
       value={{
-        fullScreenOverlay,
-        setFullScreenOverlay,
+        toggleMobileOverlay,
         isSidebarOpen,
         setIsSidebarOpen,
         setToastData,

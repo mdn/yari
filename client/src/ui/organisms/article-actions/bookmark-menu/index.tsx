@@ -28,6 +28,7 @@ import ExpandingTextarea from "../../../atoms/form/expanding-textarea";
 import { KeyedMutator } from "swr";
 
 import "./index.scss";
+import { Overlay, useUIStatus } from "../../../../ui-context";
 
 const addValue = "add";
 
@@ -36,7 +37,74 @@ export default function BookmarkMenu({
   item,
   scopedMutator,
 }: {
+  doc?: Doc | DocMetadata;
+  item?: Item;
+  scopedMutator?: KeyedMutator<Item[][]>;
+}) {
+  const [show, setShow] = useState(false);
+  const [disableAutoClose, setDisableAutoClose] = useState(false);
+  const { isOffline } = useOnlineStatus();
+  const [saved, setSaved] = useState(false);
+  const gleanClick = useGleanClick();
+  const { toggleMobileOverlay } = useUIStatus();
+
+  useEffect(() => {
+    if (item) setSaved(true);
+  }, [item]);
+
+  useEffect(() => {
+    toggleMobileOverlay(Overlay.BookmarkMenu, show);
+  }, [show, toggleMobileOverlay]);
+
+  return (
+    <DropdownMenuWrapper
+      className="bookmark-menu"
+      isOpen={show}
+      setIsOpen={setShow}
+      disableAutoClose={disableAutoClose}
+    >
+      <Button
+        type="action"
+        isDisabled={isOffline || !doc}
+        icon={saved ? "bookmark-filled" : "bookmark"}
+        extraClasses={`bookmark-button small ${saved ? "highlight" : ""}`}
+        onClickHandler={() => {
+          setShow((v) => !v);
+          if (!show) {
+            gleanClick(ARTICLE_ACTIONS_COLLECTIONS_OPENED);
+          }
+        }}
+      >
+        <span className="bookmark-button-label">
+          {saved ? "Saved" : "Save"}
+        </span>
+      </Button>
+      {doc && (
+        <BookmarkMenuDropdown
+          doc={doc}
+          setShow={setShow}
+          setSaved={setSaved}
+          setDisableAutoClose={setDisableAutoClose}
+          item={item}
+          scopedMutator={scopedMutator}
+        />
+      )}
+    </DropdownMenuWrapper>
+  );
+}
+
+function BookmarkMenuDropdown({
+  doc,
+  setShow,
+  setSaved,
+  setDisableAutoClose,
+  item,
+  scopedMutator,
+}: {
   doc: Doc | DocMetadata;
+  setShow: React.Dispatch<React.SetStateAction<boolean>>;
+  setSaved: React.Dispatch<React.SetStateAction<boolean>>;
+  setDisableAutoClose: React.Dispatch<React.SetStateAction<boolean>>;
   item?: Item;
   scopedMutator?: KeyedMutator<Item[][]>;
 }) {
@@ -50,12 +118,9 @@ export default function BookmarkMenu({
     collection_id: "",
   };
 
-  const { isOffline } = useOnlineStatus();
-  const [show, setShow] = useState(false);
   const [showNewCollection, setShowNewCollection] = useState(false);
   const [focusEventTriggered, setFocusEventTriggered] = useState(false);
 
-  const [disableAutoClose, setDisableAutoClose] = useState(false);
   const [formItem, setFormItem] = useState<Item | NewItem>(defaultItem);
   const [lastAction, setLastAction] = useState("");
   const gleanClick = useGleanClick();
@@ -76,14 +141,17 @@ export default function BookmarkMenu({
 
   useEffect(() => {
     if (item) setFormItem(item);
-    else if (savedItems?.length) setFormItem(savedItems[0]);
-  }, [item, savedItems]);
+    else if (savedItems?.length) {
+      setFormItem(savedItems[0]);
+      setSaved(true);
+    }
+  }, [item, savedItems, setSaved]);
 
   useEffect(() => {
     if (showNewCollection === false) {
       setDisableAutoClose(false);
     }
-  }, [showNewCollection]);
+  }, [showNewCollection, setDisableAutoClose]);
 
   const collectionChangeHandler = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const { value } = e.target;
@@ -165,30 +233,7 @@ export default function BookmarkMenu({
   };
 
   return (
-    <DropdownMenuWrapper
-      className="bookmark-menu"
-      isOpen={show}
-      setIsOpen={setShow}
-      disableAutoClose={disableAutoClose}
-    >
-      <Button
-        type="action"
-        isDisabled={isOffline}
-        icon={savedItems?.length ? "bookmark-filled" : "bookmark"}
-        extraClasses={`bookmark-button small ${
-          savedItems?.length ? "highlight" : ""
-        }`}
-        onClickHandler={() => {
-          setShow((v) => !v);
-          if (!show) {
-            gleanClick(ARTICLE_ACTIONS_COLLECTIONS_OPENED);
-          }
-        }}
-      >
-        <span className="bookmark-button-label">
-          {savedItems?.length ? "Saved" : "Save"}
-        </span>
-      </Button>
+    <>
       <form className="mdn-form" method="post" onSubmit={saveHandler}>
         <DropdownMenu>
           <div
@@ -328,6 +373,6 @@ export default function BookmarkMenu({
           source={NEW_COLLECTION_MODAL_SUBMIT_ARTICLE_ACTIONS}
         />
       )}
-    </DropdownMenuWrapper>
+    </>
   );
 }
