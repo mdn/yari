@@ -146,15 +146,15 @@ for (var object in source) {
     if (object == "iObject") {
         isObj = true;
     }
-    for (aPage in pageList) {
-        if (isObj && !isPrototypeMemberPage(aPage)) {
+    for (const page of pageList) {
+        if (isObj && !isPrototypeMemberPage(page)) {
             continue;
         }
-        if (isPropertyPage(aPage)) {
-            result[object].properties.push(pageList[aPage]);
+        if (isPropertyPage(page)) {
+            result[object].properties.push(page);
           }
-          if (isMethodPage(aPage)) {
-            result[object].methods.push(pageList[aPage]);
+          if (isMethodPage(page)) {
+            result[object].methods.push(page);
           }
     }
 }
