@@ -116,7 +116,30 @@ result['iObject'] = {
 
 var pageList;
 var isObj;
-var includeme;
+
+function isPrototypeMemberPage(page) {
+    return [
+        "javascript-instance-accessor-property",
+        "javascript-instance-data-property",
+        "javascript-instance-method",
+    ].includes(page.pageType);
+}
+
+function isPropertyPage(page) {
+    return [
+        "javascript-static-accessor-property",
+        "javascript-static-data-property",
+        "javascript-instance-accessor-property",
+        "javascript-instance-data-property",
+    ].includes(page.pageType);
+}
+
+function isMethodPage(page) {
+    return [
+        "javascript-static-method",
+        "javascript-instance-method",
+    ].includes(page.pageType);
+}
 
 for (var object in source) {
     pageList = source[object];
@@ -124,17 +147,15 @@ for (var object in source) {
         isObj = true;
     }
     for (aPage in pageList) {
-        if (isObj) {
-            includeme = containsTag(pageList[aPage], "prototype");
-        } else {
-            includeme = true;
+        if (isObj && !isPrototypeMemberPage(aPage)) {
+            continue;
         }
-        if (containsTag(pageList[aPage], 'Property') && includeme) {
+        if (isPropertyPage(aPage)) {
             result[object].properties.push(pageList[aPage]);
-        }
-        if (containsTag(pageList[aPage], 'Method') && includeme) {
+          }
+          if (isMethodPage(aPage)) {
             result[object].methods.push(pageList[aPage]);
-        }
+          }
     }
 }
 
