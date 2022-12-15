@@ -53,7 +53,6 @@ const IMPORTANT_MACROS = new Map(
     "GamesSidebar",
     "HTMLSidebar",
     "HTTPSidebar",
-    "IncludeSubnav",
     "JsSidebar",
     "LearnSidebar",
     "MDNSidebar",
