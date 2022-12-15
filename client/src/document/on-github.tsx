@@ -98,7 +98,7 @@ function NewIssueOnGitHubLink({ doc }: { doc: Doc }) {
   sp.set(
     "template",
     locale !== "en-US"
-      ? `page-report-${locale.toLocaleLowerCase()}.yml`
+      ? `page-report-${locale.toLowerCase()}.yml`
       : "page-report.yml"
   );
   sp.set("mdn-url", `https://developer.mozilla.org${doc.mdn_url}`);
