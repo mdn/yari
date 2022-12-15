@@ -25,10 +25,10 @@ import { NewsItem } from "../client/src/homepage/latest-news";
 const dirname = __dirname;
 
 const FEATURED_ARTICLES = [
-  "Web/API/PerformanceResourceTiming/renderBlockingStatus",
-  "Web/CSS/font-palette",
   "Web/API/WebGL_API/Tutorial/Getting_started_with_WebGL",
   "Web/CSS/CSS_Container_Queries",
+  "Web/API/PerformanceResourceTiming/renderBlockingStatus",
+  "Web/CSS/font-palette",
 ];
 
 const contributorSpotlightRoot = CONTRIBUTOR_SPOTLIGHT_ROOT;
