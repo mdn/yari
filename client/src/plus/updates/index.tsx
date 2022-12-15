@@ -51,7 +51,7 @@ export default function Updates() {
             <span>Updates</span>
           </h1>
           <p>
-            Browse changes in our Browser Compatibility Data.
+            Get the latest updates about browser compatibility of all the features in one place.
             {/* <br />
             <a rel="noreferrer noopener" target="_blank" href="TODO">
               We'd love to hear your feedback!
