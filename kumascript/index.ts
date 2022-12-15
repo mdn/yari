@@ -16,7 +16,7 @@ import { SourceCodeError } from "./src/errors";
 import * as cheerio from "cheerio";
 
 const DEPENDENCY_LOOP_INTRO =
-  'The following documents form a circular dependency when rendering (via the "page" and/or "IncludeSubnav" macros):';
+  'The following documents form a circular dependency when rendering (via the "page" macros):';
 
 export const renderCache = new LRU<string, unknown>({ max: 2000 });
 
