@@ -35,6 +35,7 @@ import { runMakePopularitiesFile } from "./popularities.js";
 import { runOptimizeClientBuild } from "./optimize-client-build.js";
 import { runBuildRobotsTxt } from "./build-robots-txt.js";
 import { syncAllTranslatedContent } from "./sync-translated-content.js";
+import { macroUsageReport } from "./macro-usage-report.js";
 import * as kumascript from "../kumascript/index.js";
 import {
   MacroInvocationError,
@@ -43,7 +44,6 @@ import {
 
 const { program } = caporal;
 const { prompt } = inquirer;
-import { macroUsageReport } from "./macro-usage-report";
 
 const PORT = parseInt(process.env.SERVER_PORT || "5042");
 

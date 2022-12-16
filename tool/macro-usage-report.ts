@@ -1,12 +1,13 @@
 import fs from "node:fs/promises";
 import path from "node:path";
+import { fileURLToPath } from "node:url";
 import { spawn } from "node:child_process";
 
-import { ACTIVE_LOCALES, DEFAULT_LOCALE } from "../libs/constants";
-import { CONTENT_ROOT, CONTENT_TRANSLATED_ROOT } from "../libs/env";
+import { ACTIVE_LOCALES, DEFAULT_LOCALE } from "../libs/constants/index.js";
+import { CONTENT_ROOT, CONTENT_TRANSLATED_ROOT } from "../libs/env/index.js";
 
-const YARI = path.normalize(path.join(__dirname, ".."));
-const MACRO_PATH = path.join(YARI, "kumascript", "macros");
+const YARI = new URL("..", import.meta.url);
+const MACRO_PATH = fileURLToPath(new URL("kumascript/macros", YARI));
 
 async function getMacros(): Promise<string[]> {
   const macroFilenames = await fs.readdir(MACRO_PATH);
