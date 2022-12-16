@@ -115,25 +115,43 @@ result['iObject'] = {
 }
 
 var pageList;
-var isObj;
-var includeme;
+
+function isPrototypeMemberPage(page) {
+    return [
+        "javascript-instance-accessor-property",
+        "javascript-instance-data-property",
+        "javascript-instance-method",
+    ].includes(page.pageType);
+}
+
+function isPropertyPage(page) {
+    return [
+        "javascript-static-accessor-property",
+        "javascript-static-data-property",
+        "javascript-instance-accessor-property",
+        "javascript-instance-data-property",
+    ].includes(page.pageType);
+}
+
+function isMethodPage(page) {
+    return [
+        "javascript-static-method",
+        "javascript-instance-method",
+    ].includes(page.pageType);
+}
 
 for (var object in source) {
     pageList = source[object];
-    if (object == "iObject") {
-        isObj = true;
+    if (object === "iObject") {
+        // For objects, we're only interested in prototype members.
+        pageList = pageList.filter(page => isPrototypeMemberPage(page));
     }
-    for (aPage in pageList) {
-        if (isObj) {
-            includeme = containsTag(pageList[aPage], "prototype");
-        } else {
-            includeme = true;
-        }
-        if (containsTag(pageList[aPage], 'Property') && includeme) {
-            result[object].properties.push(pageList[aPage]);
-        }
-        if (containsTag(pageList[aPage], 'Method') && includeme) {
-            result[object].methods.push(pageList[aPage]);
+    for (const page of pageList) {
+        if (isPropertyPage(page)) {
+            result[object].properties.push(page);
+          }
+        if (isMethodPage(page)) {
+            result[object].methods.push(page);
         }
     }
 }
