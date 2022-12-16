@@ -51,11 +51,17 @@ export default function Updates() {
             <span>Updates</span>
           </h1>
           <p>
-            Get the latest updates about browser compatibility of all the features in one place.
-            {/* <br />
-            <a rel="noreferrer noopener" target="_blank" href="TODO">
+            Get the latest updates about browser compatibility of all the
+            features in one place.
+            <br />
+            <a
+              href="https://survey.alchemer.com/s3/7149796/MDN-BCD-Updates"
+              target="_blank"
+              rel="noreferrer noopener"
+              className="external"
+            >
               We'd love to hear your feedback!
-            </a> */}
+            </a>
           </p>
         </Container>
       </header>
