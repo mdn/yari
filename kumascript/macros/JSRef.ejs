@@ -115,7 +115,6 @@ result['iObject'] = {
 }
 
 var pageList;
-var isObj;
 
 function isPrototypeMemberPage(page) {
     return [
@@ -143,13 +142,11 @@ function isMethodPage(page) {
 
 for (var object in source) {
     pageList = source[object];
-    if (object == "iObject") {
-        isObj = true;
+    if (object === "iObject") {
+        // For objects, we're only interested in prototype members.
+        pageList = pageList.filter(page => isPrototypeMemberPage(page));
     }
     for (const page of pageList) {
-        if (isObj && !isPrototypeMemberPage(page)) {
-            continue;
-        }
         if (isPropertyPage(page)) {
             result[object].properties.push(page);
           }
