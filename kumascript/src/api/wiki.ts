@@ -109,15 +109,6 @@ const wiki = {
     return path;
   },
 
-  // Build the URI of a given wiki page.
-  uri(path, query) {
-    let out = util.preparePath(path);
-    if (query) {
-      out += `?${query}`;
-    }
-    return out;
-  },
-
   // Inserts a pages sub tree
   // if reverse is non-zero, the sort is backward
   // if ordered is true, the output is an <ol> instead of <ul>
@@ -131,7 +122,7 @@ const wiki = {
       path = path.slice(0, -1);
     }
 
-    const pages = (this.page as any).subpages(path, depth, self);
+    const pages = (this.page as any).subpagesExpand(path, depth, self);
 
     if (reverse == 0) {
       pages.sort(alphanumForward);

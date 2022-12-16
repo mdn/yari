@@ -35,9 +35,7 @@ const globalsPrototype = {
   require,
 };
 
-import kumaPrototype from "./api/kuma";
 import mdnPrototype from "./api/mdn";
-import stringPrototype from "./api/string";
 import wikiPrototype from "./api/wiki";
 import webPrototype from "./api/web";
 import pagePrototype from "./api/page";
@@ -45,9 +43,7 @@ import info from "./info";
 import Templates from "./templates";
 
 export interface KumaThis {
-  kuma: typeof kumaPrototype;
   mdn: typeof mdnPrototype;
-  string: typeof stringPrototype;
   wiki: typeof wikiPrototype;
   web: typeof webPrototype;
   page: typeof pagePrototype;
@@ -135,9 +131,7 @@ export default class Environment {
     this.templates = templates;
     const globals = Object.create(prepareProto(globalsPrototype));
 
-    const kuma = Object.create(prepareProto(kumaPrototype, globals));
     const mdn = Object.create(prepareProto(mdnPrototype, globals));
-    const string = Object.create(prepareProto(stringPrototype, globals));
     const wiki = Object.create(prepareProto(wikiPrototype, globals));
     const web = Object.create(prepareProto(webPrototype, globals));
     const page = Object.create(prepareProto(pagePrototype, globals));
@@ -154,9 +148,7 @@ export default class Environment {
 
     // Now update the globals object to define each of the sub-objects
     // and the environment object as global variables
-    globals.kuma = globals.Kuma = freeze(kuma);
     globals.MDN = globals.mdn = freeze(mdn);
-    globals.string = globals.String = freeze(string);
     globals.wiki = globals.Wiki = freeze(wiki);
     globals.web = globals.Web = freeze(web);
     globals.page = globals.Page = freeze(page);

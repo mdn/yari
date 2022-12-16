@@ -19,6 +19,8 @@ const mdn = {
     return e;
   },
 
+  htmlEscape: util.htmlEscape,
+
   /**
    * Given a set of strings like this:
    *     { "en-US": "Foo", "de": "Bar", "es": "Baz" }
