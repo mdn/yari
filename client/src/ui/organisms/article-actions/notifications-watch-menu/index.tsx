@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 
 import { Button } from "../../../atoms/button";
 import { NotificationsWatchMenuStart } from "./menu-start";
@@ -7,7 +7,7 @@ import useSWR from "swr";
 import { useOnlineStatus } from "../../../../hooks";
 import { DropdownMenu, DropdownMenuWrapper } from "../../../molecules/dropdown";
 import { ManageOrUpgradeDialogNotifications } from "../manage-upgrade-dialog";
-import { useUIStatus } from "../../../../ui-context";
+import { Overlay, useUIStatus } from "../../../../ui-context";
 import { Doc, DocMetadata } from "../../../../../../libs/types/document";
 
 interface WatchModeData {
@@ -15,21 +15,29 @@ interface WatchModeData {
   subscription_limit_reached: boolean;
 }
 
-export const NotificationsWatchMenu = ({ doc }: { doc: Doc | DocMetadata }) => {
-  const path = doc.browserCompat?.[0] || doc.mdn_url;
-  const title = doc.title;
+export const NotificationsWatchMenu = ({
+  doc,
+}: {
+  doc?: Doc | DocMetadata;
+}) => {
+  const path = doc?.browserCompat?.[0] || doc?.mdn_url;
+  const title = doc?.title;
 
   const menuId = "watch-submenu";
   const [show, setShow] = React.useState(false);
   const closeDropdown = () => setShow(false);
 
-  const slug = doc.mdn_url; // Unique ID for the page
+  const slug = doc?.mdn_url; // Unique ID for the page
   const apiURL = `/api/v1/plus/watching/?url=${slug}`;
-  const ui = useUIStatus();
   const { isOffline } = useOnlineStatus();
+  const { setToastData, toggleMobileOverlay } = useUIStatus();
+
+  useEffect(() => {
+    toggleMobileOverlay(Overlay.WatchMenu, show);
+  }, [show, toggleMobileOverlay]);
 
   const { data, mutate } = useSWR<WatchModeData>(
-    apiURL,
+    () => slug && apiURL,
     async (url) => {
       const response = await fetch(url);
       if (!response.ok) {
@@ -81,7 +89,7 @@ export const NotificationsWatchMenu = ({ doc }: { doc: Doc | DocMetadata }) => {
     if (!response.ok) {
       const json = await response.json();
       if (json?.error === "max_subscriptions") {
-        ui.setToastData({
+        setToastData({
           mainText: "Couldn't watch article - Max subscriptions reached!",
           isImportant: false,
         });
@@ -101,7 +109,7 @@ export const NotificationsWatchMenu = ({ doc }: { doc: Doc | DocMetadata }) => {
         <Button
           type="action"
           id="watch-menu-button"
-          isDisabled={isOffline}
+          isDisabled={isOffline || !doc}
           icon={watchIcon}
           extraClasses={`small ${watching ? "highlight" : ""}`}
           ariaHasPopup={"menu"}

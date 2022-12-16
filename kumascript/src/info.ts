@@ -191,13 +191,14 @@ export const info = {
       return this.getPageByURL(document);
     }
 
-    const { locale, slug, title, tags } = document.metadata;
+    const { locale, slug, title, status, tags } = document.metadata;
     const { rawBody, isMarkdown } = document;
     return {
       url: document.url,
       locale,
       slug,
       title,
+      status: status || [],
       tags: tags || [],
       pageType: document.metadata["page-type"],
       translations: [], // TODO Object.freeze(buildTranslationObjects(data)),

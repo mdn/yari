@@ -43,6 +43,7 @@ import {
 
 const { program } = caporal;
 const { prompt } = inquirer;
+import { macroUsageReport } from "./macro-usage-report";
 
 const PORT = parseInt(process.env.SERVER_PORT || "5042");
 
@@ -205,6 +206,14 @@ interface MacrosActionParameters extends ActionParameters {
 interface OptimizeClientBuildActionParameters extends ActionParameters {
   args: {
     buildroot: string;
+  };
+}
+
+interface MacroUsageReportActionParameters extends ActionParameters {
+  options: {
+    deprecatedOnly: boolean;
+    format: "md-table" | "json";
+    unusedOnly: boolean;
   };
 }
 
@@ -1163,6 +1172,23 @@ if (Mozilla && !Mozilla.dntEnabled()) {
         }
       }
     )
+  )
+
+  .command(
+    "macro-usage-report",
+    "Counts occurrences of each macro and prints it as a table."
+  )
+  .option("--deprecated-only", "Only reports deprecated macros.")
+  .option("--format <type>", "Format of the report.", {
+    default: "md-table",
+    validator: ["json", "md-table"],
+  })
+  .option("--unused-only", "Only reports unused macros.")
+  .action(
+    tryOrExit(async ({ options }: MacroUsageReportActionParameters) => {
+      const { deprecatedOnly, format, unusedOnly } = options;
+      return macroUsageReport({ deprecatedOnly, format, unusedOnly });
+    })
   );
 
 program.run();

@@ -117,8 +117,10 @@ body {
   color: var(--text-primary);
   scrollbar-color: var(--scrollbar-color) var(--scrollbar-bg);
 
-  &.full-screen-overlay {
-    overflow: hidden;
+  &.mobile-overlay-active {
+    @media screen and (max-width: $screen-md) {
+      overflow: hidden;
+    }
   }
 }
 

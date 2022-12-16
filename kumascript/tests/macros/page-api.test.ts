@@ -128,23 +128,21 @@ describeMacro("page API tests", function () {
     const pkg = macro.ctx.page;
     assert.isObject(pkg);
     assert.isFunction(pkg.hasTag);
-    assert.isFunction(pkg.subpages);
     assert.isFunction(pkg.subpagesExpand);
-    assert.isFunction(pkg.subPagesFlatten);
     assert.isFunction(pkg.translations);
   });
-  describe('test "subpages"', function () {
+  describe('test "subpages(Expand)"', function () {
     itMacro("One argument (non-null)", function (macro) {
-      const res = macro.ctx.page.subpages(fix_url);
+      const res = macro.ctx.page.subpagesExpand(fix_url);
       checkSubpagesResult(res);
     });
     itMacro("One argument (null)", function (macro) {
       macro.ctx.env.url = fix_url;
-      const res = macro.ctx.page.subpages(null);
+      const res = macro.ctx.page.subpagesExpand(null);
       checkSubpagesResult(res);
     });
     itMacro("Two arguments (self=true)", function (macro) {
-      const res = macro.ctx.page.subpages(fix_url, 2, true);
+      const res = macro.ctx.page.subpagesExpand(fix_url, 2, true);
       assert.isArray(res);
       assert.equal(res.length, 1);
       assert.equal(res[0].slug, "Web/HTTP/Basics_of_HTTP");

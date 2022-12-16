@@ -257,9 +257,11 @@ export async function checkFile(
 }
 
 function canCheckFile(filePath: string) {
+  const filePathParts = filePath.split(path.sep);
+
   return (
-    /\/files\//.test(filePath) &&
-    !/\/node_modules\//.test(filePath) &&
+    filePathParts.includes("files") &&
+    !filePathParts.includes("node_modules") &&
     !/\.(DS_Store|html|json|md|txt|yml)$/i.test(filePath)
   );
 }
