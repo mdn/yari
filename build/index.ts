@@ -632,7 +632,7 @@ export async function buildDocument(
   injectSource(doc, document, metadata);
 
   if (document.metadata["short-title"]) {
-    doc.short_title = document.metadata["short-title"];
+    doc.shortTitle = document.metadata["short-title"];
   }
   // The `titles` object should contain every possible URI->Title mapping.
   // We can use that generate the necessary information needed to build
