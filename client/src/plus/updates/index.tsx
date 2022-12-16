@@ -52,7 +52,7 @@ export default function Updates() {
           </h1>
           <p>
             Get the latest updates about browser compatibility of all the
-            features in one place.
+            features.
             <br />
             <a
               href="https://survey.alchemer.com/s3/7149796/MDN-BCD-Updates"
