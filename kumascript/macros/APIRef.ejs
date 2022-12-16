@@ -157,7 +157,7 @@ var badges = {
 
 function getPageTitle(page) {
   if (page.shortTitle) {
-    return page.shortTitle;
+    return htmlEscape(page.shortTitle);
   }
   else {
     const titleSplit = htmlEscape(page.title).split('.'); // Two cases, as sometimes the interface name is forgotten in the title:
