@@ -113,11 +113,7 @@ if (impl.length > 0) {
 
 
 function APISort(a, b) {
-  var aSplit = a.title.split('.');
-  var a = aSplit[aSplit.length - 1];
-  var bSplit = b.title.split('.');
-  var b = bSplit[bSplit.length - 1];
-  return a.toLowerCase().localeCompare(b.toLowerCase());
+  return getPageTitle(a).toLowerCase().localeCompare(getPageTitle(b).toLowerCase());
 }
 
 staticProperties.sort(APISort);
@@ -159,37 +155,45 @@ var badges = {
   ObsoleteBadge : await template("ObsoleteBadge"),
 }
 
+function getPageTitle(page) {
+  if (page.shortTitle) {
+    return page.shortTitle;
+  }
+  else {
+    const titleSplit = htmlEscape(page.title).split('.'); // Two cases, as sometimes the interface name is forgotten in the title:
+    let title = titleSplit[titleSplit.length - 1];       // "WebGLRenderingContext.activeTexture()" and "activeTexture()" should both become "activeTexture()"
+    // Event pages have a title like "Interface: eventname event" which looks silly
+    // in the sidebar. So for event pages we use the slug, which is supposed to be
+    // in the form "eventname_event", and split off "_event" to leave us (hopefully)
+    // with just "eventname" for the link text.
+    if (page.pageType === 'web-api-event') {
+      title = page.slug.split('/').pop();
+      if (title.endsWith('_event')) {
+          title = title.slice(0,-6);
+      }
+    }
+    return title;
+  }
+}
+
 function buildSublist(pages, title) {
   var result = '<li class="toggle"><details open><summary>' + title + '</summary><ol>';
 
   for (var i in pages) {
     var aPage = pages[i];
     var url = aPage.url.replace('en-US', locale);
-    var titleSplit = htmlEscape(aPage.title).split('.'); // Two cases, as sometimes the interface name is forgotten in the title:
-    var title = titleSplit[titleSplit.length - 1];       // "WebGLRenderingContext.activeTexture()" and "activeTexture()" should both become "activeTexture()"
 
     var translated = false;
     if (locale != 'en-US') {
         aPage.translations.forEach(function(translation){
             if(translation.locale === locale) {
                 url = translation.url;
-                titleSplit = htmlEscape(translation.title).split('.');
-                title = titleSplit[titleSplit.length - 1];
                 translated = true;
             }
         });
     }
 
-    // Event pages have a title like "Interface: eventname event" which looks silly
-    // in the sidebar. So for event pages we use the slug, which is supposed to be
-    // in the form "eventname_event", and split off "_event" to leave us (hopefully)
-    // with just "eventname" for the link text.
-    if (aPage.pageType === 'web-api-event') {
-        title = aPage.slug.split('/').pop();
-        if (title.endsWith('_event')) {
-            title = title.slice(0,-6);
-        }
-    }
+    const title = getPageTitle(aPage);
 
     result += '<li>';
 

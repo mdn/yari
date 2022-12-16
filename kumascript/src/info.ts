@@ -198,6 +198,7 @@ const info = {
       locale,
       slug,
       title,
+      shortTitle: document.metadata["short-title"],
       status: status || [],
       tags: tags || [],
       pageType: document.metadata["page-type"],
