@@ -1,6 +1,6 @@
 import Container from "../../ui/atoms/container";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import useSWR from "swr";
 import { DocMetadata } from "../../../../libs/types/document";
@@ -42,11 +42,6 @@ export default function Updates() {
   const { data } = useUpdates(currentPage);
   const gleanClick = useGleanClick();
 
-  useEffect(
-    () => gleanClick(`${PLUS_UPDATES.PAGE}: ${currentPage}`),
-    [gleanClick, currentPage]
-  );
-
   return (
     <div className="updates">
       <header className="plus-header-mandala">
@@ -82,7 +77,13 @@ export default function Updates() {
                 group={group}
               />
             ))}
-            <Paginator current={currentPage} last={data.last} />
+            <Paginator
+              current={currentPage}
+              last={data.last}
+              onChange={(page, oldPage) =>
+                gleanClick(`${PLUS_UPDATES.PAGINATION}: ${oldPage} -> ${page}`)
+              }
+            />
           </>
         ) : (
           <Loading />
