@@ -89,15 +89,15 @@ function createLink(item) {
 
     const pageBadges = [];
 
-    if (containsTag(item, 'Experimental')) {
+    if (item.status.includes("experimental") || containsTag(item, 'Experimental')) {
         pageBadges.push(badges.ExperimentalBadge);
     }
 
-    if (containsTag(item, 'Non-standard') || containsTag(item, 'Non Standard')) {
+    if (item.status.includes("non-standard") || containsTag(item, 'Non-standard') || containsTag(item, 'Non Standard')) {
         pageBadges.push(badges.NonStandardBadge);
     }
 
-    if (containsTag(item, 'Deprecated')) {
+    if (item.status.includes("deprecated") || containsTag(item, 'Deprecated')) {
         pageBadges.push(badges.DeprecatedBadge);
     }
 
