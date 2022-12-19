@@ -194,15 +194,15 @@ function buildSublist(pages, title) {
     result += '<li>';
 
     var pageBadges = '';
-    if (hasTag(aPage, 'Experimental')) {
+    if (aPage.status.includes("experimental") || hasTag(aPage, 'Experimental')) {
         pageBadges += badges.ExperimentalBadge;
     }
 
-    if (hasTag(aPage, 'Non-standard') || hasTag(aPage, 'Non Standard')) {
+    if (aPage.status.includes("non-standard") || hasTag(aPage, 'Non-standard') || hasTag(aPage, 'Non Standard')) {
         pageBadges += badges.NonStandardBadge;
     }
 
-    if (hasTag(aPage, 'Deprecated')) {
+    if (aPage.status.includes("deprecated") || hasTag(aPage, 'Deprecated')) {
         pageBadges += badges.DeprecatedBadge;
     }
 
