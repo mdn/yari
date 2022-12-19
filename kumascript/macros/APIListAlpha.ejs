@@ -81,17 +81,17 @@ for (var i = 0; i < numLetters; i++) {
 
             // add badges if needed
 
-            if (containsTag(tags, "Non-standard") || containsTag(tags, "Non standard")) {
+            if (pages[p].status.includes("non-standard") || containsTag(tags, "Non-standard") || containsTag(tags, "Non standard")) {
                 badge = " " + await template("NonStandardBadge", ["1"]);
             }
 
             if (containsTag(tags, "Obsolete")) {
                 badge += " " + await template("ObsoleteBadge", [1]);
-            } else if (containsTag(tags, "Deprecated")) {
+            } else if (pages[p].status.includes("deprecated") ||  containsTag(tags, "Deprecated")) {
                 badge += " " + await template("DeprecatedBadge", [1]);
             }
 
-            if (containsTag(tags, "Experimental")) {
+            if (pages[p].status.includes("experimental") ||  containsTag(tags, "Experimental")) {
                 badge += " " + await template("ExperimentalBadge", ["1"]);
             }
 
