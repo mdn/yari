@@ -42,6 +42,13 @@ export const PlusMenu = ({ visibleSubMenuId, toggleMenu }) => {
           ]
         : []),
       {
+        description: "All browser compatibility updates at a glance",
+        hasIcon: true,
+        iconClasses: "submenu-icon",
+        label: "Updates",
+        url: `/${locale}/plus/updates`,
+      },
+      {
         description: "Learn how to use MDN Plus",
         hasIcon: true,
         iconClasses: "submenu-icon",
