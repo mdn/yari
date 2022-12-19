@@ -92,7 +92,7 @@ switch(env.locale) {
         break;
 }
 
-var pageuri = wiki.uri(prefix + $0);
+var pageuri = prefix + $0;
 
 var captionText = `${$1}`.charAt(0).toUpperCase() + `${$1}`.slice(1).toLowerCase();
 
@@ -142,7 +142,7 @@ for (var i = 0; i < desiredprototype.length; i++) {
 	p = p.replace(/__/g, '');
 	var pimproper = p.charAt(0).toUpperCase() + p.slice(1).toLowerCase();
 
-	pageuri = wiki.uri(prefix + $0 + '/' + pimproper);
+	pageuri = prefix + $0 + '/' + pimproper;
 	parts.push('<a class="internal" href="' + pageuri + '"><code>' + p + '</code></a>');
 }
 

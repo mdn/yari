@@ -8,7 +8,7 @@
 //  Example call {{EmbedInteractiveExample("pages/css/animation.html", "taller")}}
 //
 
-const url = kuma.url.resolve(env.interactive_examples.base_url, $0);
+const url = (new URL($0, env.interactive_examples.base_url)).toString();
 let heightClass = 'is-default-height';
 
 if ($0.includes('/js/')) {

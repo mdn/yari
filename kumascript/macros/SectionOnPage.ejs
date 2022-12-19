@@ -24,7 +24,7 @@ let section = $1;
 let lang = env.locale;
 let text = "";
 let page = await wiki.getPage($0);
-let title = kuma.htmlEscape(page.title);
+let title = mdn.htmlEscape(page.title);
 
 let commonLocalStrings = web.getJSONData("L10n-Common");
 let localize = mdn.getLocalString;
