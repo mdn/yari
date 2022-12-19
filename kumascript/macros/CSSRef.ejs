@@ -759,7 +759,9 @@ const hasTag = page.hasTag;
 const rtlLocales = ['ar', 'he', 'fa'];
 
 const pageList = await page.subpagesExpand('/en-US/docs/Web/CSS');
-const standardPages = pageList.filter(page => !hasTag(page, "Non-standard"));
+const standardPages = pageList.filter(page => {
+  return !(page.status.includes("non-standard") || hasTag(page, "Non-standard"))
+  });
 
 const groups = [];
 let properties = [];
@@ -838,11 +840,11 @@ function makePageLink(page) {
 
   let result = '<li>';
 
-  if (hasTag(page, 'Experimental')) {
+  if (page.status.includes("experimental") || hasTag(page, 'Experimental')) {
     result += badges.ExperimentalBadge;
   }
 
-  if (hasTag(page, 'Deprecated')) {
+  if (page.status.includes("deprecated") || hasTag(page, 'Deprecated')) {
     result += badges.DeprecatedBadge;
   }
 
