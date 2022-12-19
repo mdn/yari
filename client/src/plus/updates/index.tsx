@@ -155,8 +155,8 @@ function EventComponent({ event, status }: { event: Event; status: string }) {
         if (target instanceof HTMLDetailsElement) {
           setIsOpen(target.open);
           const source = target.open
-            ? PLUS_UPDATES.TOGGLE_EVENT.OPEN
-            : PLUS_UPDATES.TOGGLE_EVENT.CLOSE;
+            ? PLUS_UPDATES.EVENT_EXPAND
+            : PLUS_UPDATES.EVENT_COLLAPSE;
           gleanClick(source);
         }
       }}
