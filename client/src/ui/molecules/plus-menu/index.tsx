@@ -46,6 +46,7 @@ export const PlusMenu = ({ visibleSubMenuId, toggleMenu }) => {
         hasIcon: true,
         iconClasses: "submenu-icon",
         label: "Updates",
+        isNew: true,
         url: `/${locale}/plus/updates`,
       },
       {
