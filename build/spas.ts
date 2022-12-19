@@ -143,6 +143,11 @@ export async function buildSPAs(options) {
           noIndexing: true,
         },
         {
+          prefix: "plus/updates",
+          pageTitle: `Updates | ${MDN_PLUS_TITLE}`,
+          noIndexing: true,
+        },
+        {
           prefix: "plus/settings",
           pageTitle: `Settings | ${MDN_PLUS_TITLE}`,
           noIndexing: true,

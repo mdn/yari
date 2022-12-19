@@ -20,6 +20,7 @@ type ButtonProps = {
   name?: string;
   extraClasses?: string | null;
   href?: string;
+  target?: string;
   rel?: string;
   icon?: string;
 
@@ -49,6 +50,7 @@ export const Button = ({
   buttonType = "button",
   extraClasses,
   href,
+  target,
   rel,
   icon,
   id,
@@ -84,6 +86,23 @@ export const Button = ({
   }
 
   if (href) {
+    if (target) {
+      return (
+        <a
+          href={href}
+          target={target}
+          rel={rel}
+          className={buttonClasses}
+          id={id}
+          onClick={onClickHandler}
+          onFocus={onFocusHandler}
+          aria-label={ariaLabel}
+          title={title}
+        >
+          <span className="button-wrap">{renderContent()}</span>
+        </a>
+      );
+    }
     return (
       <InternalLink
         to={href}
