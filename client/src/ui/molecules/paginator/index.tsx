@@ -1,8 +1,14 @@
 import { Link } from "react-router-dom";
 import { range } from "../../../utils";
 
-function PageLink({ page }: { page: number }) {
-  return <Link to={`?page=${page}`}>{page}</Link>;
+function PageLink({
+  page,
+  children,
+}: {
+  page: number;
+  children?: React.ReactNode;
+}) {
+  return <Link to={`?page=${page}`}>{children || page}</Link>;
 }
 
 export function Paginator({
@@ -24,7 +30,7 @@ export function Paginator({
 
   return (
     <div className="pagination">
-      {current > 0 && <Link to={`?page=${current - 1}`}>{"<"} Previous</Link>}
+      {current > 0 && <PageLink page={current - 1}>{"<"} Previous</PageLink>}
       {left.map((page) => (
         <PageLink key={page} page={page} />
       ))}
@@ -42,7 +48,7 @@ export function Paginator({
       {right.map((page) => (
         <PageLink key={page} page={page} />
       ))}
-      {current < last && <Link to={`?page=${current + 1}`}>Next {">"}</Link>}
+      {current < last && <PageLink page={current + 1}>Next {">"}</PageLink>}
     </div>
   );
 }
