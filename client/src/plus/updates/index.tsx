@@ -1,6 +1,6 @@
 import Container from "../../ui/atoms/container";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import useSWR from "swr";
 import { DocMetadata } from "../../../../libs/types/document";
@@ -19,6 +19,8 @@ import { useUserData } from "../../user-context";
 import { camelWrap, range } from "../../utils";
 import { Event, Group, useBCD, useUpdates } from "./api";
 import "./index.scss";
+import { useGleanClick } from "../../telemetry/glean-context";
+import { PLUS_UPDATES } from "../../telemetry/constants";
 
 const CATEGORY_TO_NAME = {
   api: "Web APIs",
@@ -38,6 +40,12 @@ export default function Updates() {
   const [searchParams] = useSearchParams();
   const currentPage = parseInt(searchParams.get("page"), 10) || 0;
   const { data } = useUpdates(currentPage);
+  const gleanClick = useGleanClick();
+
+  useEffect(
+    () => gleanClick(`${PLUS_UPDATES.PAGE}: ${currentPage}`),
+    [gleanClick, currentPage]
+  );
 
   return (
     <div className="updates">
@@ -137,12 +145,20 @@ function EventComponent({ event, status }: { event: Event; status: string }) {
   const [isOpen, setIsOpen] = useState(false);
   const [category, ...displayPath] = event.path.split(".");
   const engines = event.compat.engines;
+  const gleanClick = useGleanClick();
+
   return (
     <details
       className={`category-${category}`}
-      onToggle={({ target }) =>
-        target instanceof HTMLDetailsElement && setIsOpen(target.open)
-      }
+      onToggle={({ target }) => {
+        if (target instanceof HTMLDetailsElement) {
+          setIsOpen(target.open);
+          const source = target.open
+            ? PLUS_UPDATES.TOGGLE_EVENT.OPEN
+            : PLUS_UPDATES.TOGGLE_EVENT.CLOSE;
+          gleanClick(source);
+        }
+      }}
     >
       <summary>
         <code>{camelWrap(displayPath.join("."))}</code>

@@ -23,3 +23,11 @@ export const TOP_NAV_ALREADY_SUBSCRIBER = "top_nav_already_subscriber";
 export const TOP_NAV_GET_MDN_PLUS = "top_nav_get_mdn_plus";
 export const TOGGLE_PLUS_OFFLINE_DISABLED = "toggle_plus_offline_disabled";
 export const TOGGLE_PLUS_OFFLINE_ENABLED = "toggle_plus_offline_enabled";
+
+export const PLUS_UPDATES = Object.freeze({
+  PAGE: "plus_updates_page",
+  TOGGLE_EVENT: Object.freeze({
+    OPEN: "plus_updates_toggle_event_open",
+    CLOSE: "plus_updates_toggle_event_close",
+  }),
+});
