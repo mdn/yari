@@ -81,7 +81,7 @@ export default function Updates() {
               current={currentPage}
               last={data.last}
               onChange={(page, oldPage) =>
-                gleanClick(`${PLUS_UPDATES.PAGINATION}: ${oldPage} -> ${page}`)
+                gleanClick(`${PLUS_UPDATES.PAGE_CHANGE}: ${oldPage} -> ${page}`)
               }
             />
           </>

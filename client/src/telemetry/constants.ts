@@ -27,5 +27,5 @@ export const TOGGLE_PLUS_OFFLINE_ENABLED = "toggle_plus_offline_enabled";
 export const PLUS_UPDATES = Object.freeze({
   EVENT_COLLAPSE: "plus_updates_event_collapse",
   EVENT_EXPAND: "plus_updates_event_expand",
-  PAGINATION: "plus_updates_pagination",
+  PAGE_CHANGE: "plus_updates_page_change",
 });
