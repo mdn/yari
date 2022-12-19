@@ -107,9 +107,10 @@ async function getModules() {
   // based on tsconfig.json
   if (hasTsConfig) {
     const { default: ts } = await import(
-      resolve.sync("typescript", {
-        basedir: paths.appNodeModules,
-      })
+      "file://" +
+        resolve.sync("typescript", {
+          basedir: paths.appNodeModules,
+        })
     );
     config = ts.readConfigFile(paths.appTsConfig, ts.sys.readFile).config;
     // Otherwise we'll check if there is jsconfig.json
