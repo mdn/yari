@@ -37,7 +37,7 @@ interface Page {
 
 export function useUpdates(page: number) {
   return useSWR(
-    `/bcd/updates/v0/bcd-updates-${page}.json`,
+    `/api/v2/updates/?page=${page}`,
     async (key) => {
       const res = await fetch(key);
       if (res.ok) {
