@@ -4,9 +4,9 @@ interface SearchFiltersInterface {
   selectedTerms: string;
   selectedFilter: string;
   selectedSort: string;
-  setSelectedTerms: Function;
-  setSelectedFilter: Function;
-  setSelectedSort: Function;
+  setSelectedTerms: (terms: string) => void;
+  setSelectedFilter: (filter: string) => void;
+  setSelectedSort: (sort: string) => void;
   clearSearchFilters: () => void;
   getSearchFiltersParams: () => URLSearchParams;
 }
