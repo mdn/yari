@@ -229,8 +229,7 @@ export interface MediaFeatureSection {
 export interface MediaFeatureSectionProps {
   id: string;
   query: string;
-  featureValueType?: string;
-  featureEnumArgs?: string;
+  featureValueType: string;
 }
 
 // Yari builder will attach extra keys from the compat data

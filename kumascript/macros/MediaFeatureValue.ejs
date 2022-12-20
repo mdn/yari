@@ -1,25 +1,50 @@
 <%
-// Embeds a notecard informing user about current value of a given media feature on his device.
+// Embeds a notecard informing the user about the current value of a given media feature on his device.
 //
 // Parameters:
-//  $0 - Name of the media feature. In case feature has optional 'min-' or 'max-' as a prefix, it shouldn't be included.
-//  $1 - Type of value that feature is expecting. Supported values: enum, integer, length, resolution, ratio.
-//  In case there are fixed number of possible values, 'enum' should be used and all possible values should be placed as next arguments.
+//  $0 - Name of the media feature. Optional prefix 'min-' or 'max-' shouldn't be included.
 //
 //  Example calls:
-//  {{MediaFeatureValue("color-gamut", "enum", "rec2020", "p3", "srgb")}}
-//  {{MediaFeatureValue("height", "length")}}
-//  {{MediaFeatureValue("grid", "enum", "1", "0")}}
+//  {{MediaFeatureValue("color-gamut")}}
+//  {{MediaFeatureValue("height")}}
 //
-
 var featureName = $0;
-var featureValueType = $1;
-var enumerationValues = arguments.slice(2).join(" ");
 
-// Markup below is temporary. MediaFeatureSection is responsible for replacing it with values calculated by the browser.
+const webRefData = require('@webref/css');
+
+// get the contents of webref
+const parsedWebRef = await webRefData.listAll();
+// get all media descriptors
+let mediaDescriptors = [];
+for (const spec of Object.values(parsedWebRef)) {
+    const specDescriptors = spec.atrules?.['@media']?.descriptors;
+    if(specDescriptors)
+        mediaDescriptors = [...mediaDescriptors, ...specDescriptors];
+}
+
+const requestedDescriptor = mediaDescriptors.find(d => d.name === featureName);
+// get specification value, for example: "<resolution> | infinite"
+const featureValueType = requestedDescriptor?.value || '';
+
+if(featureValueType.length === 0) {
+    console.error(`Media feature ${featureName} couldn't be found in @webref/css`);
 %>
-<div class="media-feature-note notecard success" data-media-feature-name="<%= featureName %>" data-media-feature-value-type="<%= featureValueType %>" data-media-feature-enum-args="<%= enumerationValues %>">
-  <p>
-    <strong>Media Feature:</strong> Current value of <strong><%= featureName %></strong> media feature is currently being loaded.
-  </p>
+<div class="media-feature-note notecard warning">
+    <p>
+        <strong>Media Feature:</strong> Calculation of <strong><%= featureName %></strong> is currently not supported.
+    </p>
 </div>
+<%
+} else {
+    // Markup below is temporary. media-feature-section is responsible for replacing it with values calculated by the browser.
+%>
+<div class="media-feature-note notecard success" data-media-feature-name="<%= featureName %>"
+     data-media-feature-value-type="<%= featureValueType %>">
+    <p>
+        <strong>Media Feature:</strong> Current value of <strong><%= featureName %></strong> media feature is currently
+        being loaded.
+    </p>
+</div>
+<%
+}
+%>

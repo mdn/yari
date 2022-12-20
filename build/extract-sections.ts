@@ -312,7 +312,6 @@ function _addSingleSpecialSection(
   let specURLsString = "";
   let specialSectionType: string | null = null;
   let featureValueType = null;
-  let featureEnumArgs = null;
   if ($.find("div.bc-data").length) {
     specialSectionType = "browser_compatibility";
     const elem = $.find("div.bc-data");
@@ -330,9 +329,6 @@ function _addSingleSpecialSection(
     );
     featureValueType = $.find("div.media-feature-note").attr(
       "data-media-feature-value-type"
-    );
-    featureEnumArgs = $.find("div.media-feature-note").attr(
-      "data-media-feature-enum-args"
     );
   }
 
@@ -390,8 +386,7 @@ function _addSingleSpecialSection(
         value: {
           id,
           query,
-          featureValueType,
-          featureEnumArgs,
+          featureValueType: featureValueType || "",
         },
       },
     ];
