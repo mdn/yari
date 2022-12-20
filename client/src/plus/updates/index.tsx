@@ -21,6 +21,8 @@ import { Event, Group, useBCD, useUpdates } from "./api";
 import "./index.scss";
 import { useGleanClick } from "../../telemetry/glean-context";
 import { PLUS_UPDATES } from "../../telemetry/constants";
+import SearchFilter from "../search-filter";
+import { SearchFiltersProvider } from "../contexts/search-filters";
 
 const CATEGORY_TO_NAME = {
   api: "Web APIs",
@@ -35,6 +37,14 @@ const CATEGORY_TO_NAME = {
 };
 
 export default function Updates() {
+  return (
+    <SearchFiltersProvider>
+      <UpdatesLayout />
+    </SearchFiltersProvider>
+  );
+}
+
+function UpdatesLayout() {
   document.title = `Updates | ${MDN_PLUS_TITLE}`;
   useScrollToTop();
   const [searchParams] = useSearchParams();
@@ -69,6 +79,8 @@ export default function Updates() {
         </Container>
       </header>
       <Container>
+        <SearchFilter />
+
         {data ? (
           <>
             {data.data.map((group) => (

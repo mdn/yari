@@ -1,4 +1,6 @@
 import useSWR from "swr";
+import { searchFiltersContext } from "../contexts/search-filters";
+import { useContext } from "react";
 
 export interface Event {
   path: string;
@@ -36,8 +38,16 @@ interface Page {
 }
 
 export function useUpdates(page: number) {
+  const { selectedTerms } = useContext(searchFiltersContext);
+
+  const sp = new URLSearchParams();
+  sp.append("page", page.toString());
+  if (selectedTerms) {
+    sp.append("q", selectedTerms);
+  }
+
   return useSWR(
-    `/api/v2/updates/?page=${page}`,
+    `/api/v2/updates/?${sp.toString()}`,
     async (key) => {
       const res = await fetch(key);
       if (res.ok) {
