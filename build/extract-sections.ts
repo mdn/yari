@@ -386,7 +386,9 @@ function _addSingleSpecialSection(
       {
         type: "media_feature_value",
         value: {
+          title,
           id,
+          isH3,
           query,
           featureValueType: featureValueType || "",
         },
