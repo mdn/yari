@@ -18,7 +18,7 @@ function PageLink({
 }
 
 export function Paginator({
-  first = 0,
+  first = 1,
   current,
   last,
   endPadding = 2,
