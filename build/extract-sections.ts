@@ -18,10 +18,12 @@ export function extractSections($: cheerio.CheerioAPI): [Section[], string[]] {
   const iterable = [...(body.childNodes as cheerio.Element[])];
 
   let c = 0;
-  iterable.forEach((child) => {
+  iterable.forEach((child: cheerio.Element) => {
     if (
-      (child as cheerio.Element).tagName === "h2" ||
-      (child as cheerio.Element).tagName === "h3"
+      child.tagName === "h2" ||
+      child.tagName === "h3" ||
+      (child.tagName === "div" &&
+        child.attribs.class.includes("media-feature-note")) // Unlike other special sections, Media Feature note might be placed within prose
     ) {
       if (c) {
         const [subSections, subFlaws] = addSections(section.clone());
@@ -265,7 +267,7 @@ function addSections($: cheerio.Cheerio<cheerio.Element>): SectionsAndFlaws {
     const specialSections = _addSingleSpecialSection($);
 
     // The _addSingleSpecialSection() function will have sucked up the <h2> or <h3>
-    // and the `div.bc-data` or `div.bc-specs` to turn it into a special section.
+    // and the `div.bc-data`, `div.bc-specs` or `div.media-feature-note` to turn it into a special section.
     // First remove that, then put whatever HTML is left as a prose
     // section underneath.
     $.find("div.bc-data, h2, h3").remove();
