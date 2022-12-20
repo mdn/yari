@@ -1,6 +1,5 @@
 import { MediaFeatureSectionProps } from "../../../../libs/types/document";
 import { ReactNode, useLayoutEffect, useState } from "react";
-import { useIsServer } from "../../hooks";
 
 /**
  * Creates a notecard informing the user about the current value of a given media feature on his device.
