@@ -3,9 +3,11 @@ import React from "react";
 interface SearchFiltersInterface {
   selectedTerms: string;
   selectedFilter: string;
+  selectedFilters: Record<string, string>;
   selectedSort: string;
   setSelectedTerms: (terms: string) => void;
   setSelectedFilter: (filter: string) => void;
+  setSelectedFilters: (filters: Record<string, string>) => void;
   setSelectedSort: (sort: string) => void;
   clearSearchFilters: () => void;
   getSearchFiltersParams: () => URLSearchParams;
@@ -14,9 +16,11 @@ interface SearchFiltersInterface {
 const searchFiltersContext = React.createContext<SearchFiltersInterface>({
   selectedTerms: "",
   selectedFilter: "",
+  selectedFilters: {},
   selectedSort: "",
   setSelectedTerms: () => {},
   setSelectedFilter: () => {},
+  setSelectedFilters: () => {},
   setSelectedSort: () => {},
   clearSearchFilters: () => {},
   getSearchFiltersParams: () => new URLSearchParams(),
@@ -25,15 +29,20 @@ const searchFiltersContext = React.createContext<SearchFiltersInterface>({
 const SearchFiltersProvider = (props) => {
   const [selectedTerms, setSelectedTerms] = React.useState<string>("");
   const [selectedFilter, setSelectedFilter] = React.useState<string>("");
+  const [selectedFilters, setSelectedFilters] = React.useState<
+    Record<string, string>
+  >({});
   const [selectedSort, setSelectedSort] = React.useState<string>("");
 
   const state = {
     selectedTerms,
     selectedFilter,
+    selectedFilters,
     selectedSort,
 
     setSelectedTerms,
     setSelectedFilter,
+    setSelectedFilters,
     setSelectedSort,
     clearSearchFilters: () => {
       setSelectedTerms("");
@@ -48,6 +57,7 @@ const SearchFiltersProvider = (props) => {
       if (selectedFilter) {
         params.push(selectedFilter.split("=", 2));
       }
+      params.push(...Object.entries(selectedFilters));
       if (selectedSort) {
         params.push(selectedSort.split("=", 2));
       }
