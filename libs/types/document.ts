@@ -228,6 +228,8 @@ export interface MediaFeatureSection {
 
 export interface MediaFeatureSectionProps {
   id: string;
+  title: string;
+  isH3: boolean;
   query: string;
   featureValueType: string;
 }
