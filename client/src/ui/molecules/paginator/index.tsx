@@ -18,21 +18,23 @@ function PageLink({
 }
 
 export function Paginator({
+  first = 0,
   current,
   last,
   endPadding = 2,
   middlePadding = 2,
   onChange,
 }: {
+  first?: number;
   current: number;
   last: number;
   endPadding?: number;
   middlePadding?: number;
   onChange?: (page: number, oldPage: number) => unknown;
 }) {
-  const middleFirst = Math.max(current - middlePadding, 0);
+  const middleFirst = Math.max(current - middlePadding, first);
   const middleLast = Math.min(middleFirst + middlePadding * 2 + 1, last + 1);
-  const left = range(0, Math.min(endPadding, middleFirst));
+  const left = range(first, Math.min(endPadding, middleFirst));
   const middle = range(middleFirst, middleLast);
   const right = range(Math.max(last + 1 - endPadding, middleLast), last + 1);
 
@@ -40,7 +42,7 @@ export function Paginator({
 
   return (
     <div className="pagination">
-      {current > 0 && (
+      {current > first && (
         <PageLink page={current - 1} onClick={onClick}>
           {"<"} Previous
         </PageLink>
