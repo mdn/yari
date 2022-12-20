@@ -19,11 +19,11 @@ const FREQUENTLY_VIEWED_URL = "/plus/collections/frequently_viewed";
 export const FILTERS = [
   {
     label: "Content updates",
-    param: "content",
+    param: "filterType=content",
   },
   {
     label: "Browser compatibility",
-    param: "compat",
+    param: "filterType=compat",
   },
 ];
 

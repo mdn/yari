@@ -1,4 +1,5 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
+import { searchFiltersContext } from "../contexts/search-filters";
 
 export const NOTIFICATIONS_BASE_PATH = "/api/v1/plus/notifications";
 export const WATCHED_BASE_PATH = "/api/v1/plus/watching";
@@ -74,14 +75,13 @@ export function useNotificationsApiEndpoint(
   const [isLoading, setIsLoading] = useState(true);
   const [hasMore, setHasMore] = useState(false);
 
+  const { getSearchFiltersParams } = useContext(searchFiltersContext);
+
   useEffect(() => {
     (async () => {
       setIsLoading(true);
-      const sp = new URLSearchParams();
+      const sp = getSearchFiltersParams();
 
-      searchTerms!! && sp.append("q", searchTerms);
-      selectedFilter!! && sp.append("filterType", selectedFilter);
-      selectedSort!! && sp.append("sort", selectedSort);
       starred!! && sp.append("starred", "true");
 
       sp.append("limit", DEFAULT_LIMIT.toString());
@@ -118,7 +118,14 @@ export function useNotificationsApiEndpoint(
         setError(null);
       }
     })();
-  }, [offset, searchTerms, selectedFilter, selectedSort, starred]);
+  }, [
+    getSearchFiltersParams,
+    offset,
+    searchTerms,
+    selectedFilter,
+    selectedSort,
+    starred,
+  ]);
   return { data, error, isLoading, hasMore };
 }
 
@@ -132,14 +139,11 @@ export function useWatchedItemsApiEndpoint(
   const [error, setError] = useState<Error | null>();
   const [isLoading, setIsLoading] = useState(true);
   const [hasMore, setHasMore] = useState(false);
+  const { getSearchFiltersParams } = useContext(searchFiltersContext);
 
   useEffect(() => {
     (async () => {
-      const sp = new URLSearchParams();
-
-      searchTerms!! && sp.append("q", searchTerms);
-      selectedFilter!! && sp.append("filterType", selectedFilter);
-      selectedSort!! && sp.append("sort", selectedSort);
+      const sp = getSearchFiltersParams();
 
       sp.append("limit", DEFAULT_LIMIT.toString());
       offset!! && sp.append("offset", offset.toString());
@@ -175,7 +179,13 @@ export function useWatchedItemsApiEndpoint(
         setError(null);
       }
     })();
-  }, [offset, searchTerms, selectedFilter, selectedSort]);
+  }, [
+    getSearchFiltersParams,
+    offset,
+    searchTerms,
+    selectedFilter,
+    selectedSort,
+  ]);
   return { data, error, isLoading, hasMore };
 }
 
