@@ -23,7 +23,7 @@ export function extractSections($: cheerio.CheerioAPI): [Section[], string[]] {
       child.tagName === "h2" ||
       child.tagName === "h3" ||
       (child.tagName === "div" &&
-        child.attribs.class.includes("media-feature-note")) // Unlike other special sections, Media Feature note might be placed within prose
+        child.attribs.class?.includes("media-feature-note")) // Unlike other special sections, Media Feature note might be placed within prose
     ) {
       if (c) {
         const [subSections, subFlaws] = addSections(section.clone());
