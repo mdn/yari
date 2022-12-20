@@ -27,6 +27,9 @@ export default function SearchFilter({
     setSelectedSort,
   } = useContext(searchFiltersContext);
 
+  const toggleSelectedFilter = (param) =>
+    setSelectedFilter(param === selectedFilter ? "" : param);
+
   const filterMenu = {
     label: "Filters",
     id: "filters-menu",
@@ -38,7 +41,7 @@ export default function SearchFilter({
             selectedFilter === filter.param ? "active-menu-item" : ""
           }
           onClickHandler={() => {
-            setSelectedFilter(filter.param);
+            toggleSelectedFilter(filter.param);
           }}
         >
           {filter.label}
