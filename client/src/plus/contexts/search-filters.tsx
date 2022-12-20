@@ -7,6 +7,7 @@ interface SearchFiltersInterface {
   setSelectedTerms: Function;
   setSelectedFilter: Function;
   setSelectedSort: Function;
+  clearSearchFilters: () => void;
   getSearchFiltersParams: () => URLSearchParams;
 }
 
@@ -17,6 +18,7 @@ const searchFiltersContext = React.createContext<SearchFiltersInterface>({
   setSelectedTerms: () => {},
   setSelectedFilter: () => {},
   setSelectedSort: () => {},
+  clearSearchFilters: () => {},
   getSearchFiltersParams: () => new URLSearchParams(),
 });
 
@@ -33,6 +35,11 @@ const SearchFiltersProvider = (props) => {
     setSelectedTerms,
     setSelectedFilter,
     setSelectedSort,
+    clearSearchFilters: () => {
+      setSelectedTerms("");
+      setSelectedSort("");
+      setSelectedFilter("");
+    },
     getSearchFiltersParams: (): URLSearchParams => {
       const params: string[][] = [];
       if (selectedTerms) {

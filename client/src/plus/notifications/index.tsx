@@ -19,22 +19,14 @@ function NotificationsLayout() {
   const locale = useLocale();
   const userData = useUserData();
 
-  const {
-    selectedTerms,
-    selectedFilter,
-    selectedSort,
-    setSelectedTerms,
-    setSelectedSort,
-    setSelectedFilter,
-  } = useContext(searchFiltersContext);
+  const { selectedTerms, selectedFilter, selectedSort, clearSearchFilters } =
+    useContext(searchFiltersContext);
 
   const currentTab = useCurrentTab(locale);
 
   useEffect(() => {
-    setSelectedTerms("");
-    setSelectedSort("");
-    setSelectedFilter("");
-  }, [currentTab, setSelectedTerms, setSelectedSort, setSelectedFilter]);
+    clearSearchFilters();
+  }, [currentTab, clearSearchFilters]);
 
   const showTabs = userData && userData.isAuthenticated;
   const isAuthed = userData?.isAuthenticated;
