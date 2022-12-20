@@ -36,6 +36,28 @@ const CATEGORY_TO_NAME = {
   webextensions: "Web Extensions",
 };
 
+const BROWSERS = {
+  chrome: "Chrome",
+  chrome_android: "Chrome Android",
+  deno: "Deno",
+  edge: "Edge",
+  firefox: "Firefox",
+  firefox_android: "Firefox for Android",
+  ie: "Internet Explorer",
+  nodejs: "Node.js",
+  opera: "Opera",
+  opera_android: "Opera Android",
+  safari: "Safari",
+  safari_ios: "Safari on iOS",
+  samsunginternet_android: "Samsung Internet",
+  webview_android: "WebView Android",
+};
+
+const FILTERS = Object.entries(BROWSERS).map(([key, label]) => ({
+  label,
+  param: `browsers=${key}`,
+}));
+
 export default function Updates() {
   return (
     <SearchFiltersProvider>
@@ -79,7 +101,7 @@ function UpdatesLayout() {
         </Container>
       </header>
       <Container>
-        <SearchFilter />
+        <SearchFilter filters={FILTERS} />
 
         {data ? (
           <>
