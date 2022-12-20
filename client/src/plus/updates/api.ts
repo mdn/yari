@@ -38,13 +38,10 @@ interface Page {
 }
 
 export function useUpdates(page: number) {
-  const { selectedTerms } = useContext(searchFiltersContext);
+  const { getSearchFiltersParams } = useContext(searchFiltersContext);
 
-  const sp = new URLSearchParams();
+  const sp = getSearchFiltersParams();
   sp.append("page", page.toString());
-  if (selectedTerms) {
-    sp.append("q", selectedTerms);
-  }
 
   return useSWR(
     `/api/v2/updates/?${sp.toString()}`,
