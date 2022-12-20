@@ -52,28 +52,24 @@ function getMediaQueryValue(
   }
 
   function getNumericalValue(featureName, minimumPossibleValue, unit) {
-    if (!testValue("min-" + featureName, minimumPossibleValue + unit))
+    if (!testValue(`min-${featureName}`, `${minimumPossibleValue}${unit}`))
       return undefined; //Feature is not supported
 
-    let reminder;
     let lower = 0;
     let higher = 8192;
     let triesLeft = 20;
-    let value = parseInt(String((lower + higher) / 2));
+    let value = Math.floor((lower + higher) / 2);
 
-    while (triesLeft > 0 && value - lower > 1 && higher - value > 1) {
+    while (triesLeft > 0 && higher - lower > 1) {
       triesLeft--;
-      if (testValue("min-" + featureName, value + unit)) {
+      if (testValue(`min-${featureName}`, `${value}${unit}`)) {
         lower = value;
-        reminder = 0;
       } else {
         higher = value;
-        reminder = 1;
       }
-      value = parseInt(String((higher + lower) / 2));
+      value = Math.floor((higher + lower) / 2);
     }
-    value -= reminder;
-    return value + unit;
+    return `${value}${unit}`;
   }
 
   function getAspectRatio(featureName, width, height) {
