@@ -21,7 +21,7 @@ import { Event, Group, useBCD, useUpdates } from "./api";
 import "./index.scss";
 import { useGleanClick } from "../../telemetry/glean-context";
 import { PLUS_UPDATES } from "../../telemetry/constants";
-import SearchFilter from "../search-filter";
+import SearchFilter, { AnyFilter } from "../search-filter";
 import { SearchFiltersProvider } from "../contexts/search-filters";
 
 const CATEGORY_TO_NAME = {
@@ -53,10 +53,17 @@ const BROWSERS = {
   webview_android: "WebView Android",
 };
 
-const FILTERS = Object.entries(BROWSERS).map(([key, label]) => ({
-  label,
-  param: `browsers=${key}`,
-}));
+const FILTERS: AnyFilter[] = [
+  {
+    type: "radio",
+    label: "Browsers",
+    key: "browsers",
+    options: Object.entries(BROWSERS).map(([value, label]) => ({
+      label,
+      value,
+    })),
+  },
+];
 
 export default function Updates() {
   return (

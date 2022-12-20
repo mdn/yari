@@ -21,7 +21,7 @@ import { useLocale } from "../../hooks";
 
 export function NotificationsTab({
   selectedTerms,
-  selectedFilter,
+  selectedFilters,
   selectedSort,
   starred = false,
 }) {
@@ -42,7 +42,7 @@ export function NotificationsTab({
   const { data, error, isLoading, hasMore } = useNotificationsApiEndpoint(
     offset,
     selectedTerms,
-    selectedFilter,
+    selectedFilters,
     selectedSort,
     starred
   );
@@ -69,7 +69,7 @@ export function NotificationsTab({
     setSelectAllChecked(false);
     setList([]);
     setOffset(0);
-  }, [selectedFilter, selectedSort, selectedTerms]);
+  }, [selectedFilters, selectedSort, selectedTerms]);
 
   const calculateBulkEditOptions = (items: any[]) => {
     editOptions.starEnabled = false;
@@ -236,7 +236,7 @@ export function NotificationsTab({
 
 export function StarredNotificationsTab({
   selectedTerms,
-  selectedFilter,
+  selectedFilters,
   selectedSort,
 }) {
   return (
@@ -244,7 +244,7 @@ export function StarredNotificationsTab({
       starred={true}
       selectedTerms={selectedTerms}
       selectedSort={selectedSort}
-      selectedFilter={selectedFilter}
+      selectedFilters={selectedFilters}
     />
   );
 }

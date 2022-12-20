@@ -8,11 +8,23 @@ import { searchFiltersContext } from "../contexts/search-filters";
 import "./index.scss";
 import { DropdownMenu, DropdownMenuWrapper } from "../../ui/molecules/dropdown";
 
+export type AnyFilter = RadioFilter;
+
+type RadioFilter = {
+  type: "radio";
+  key: string;
+  label: string;
+  options: {
+    label: string;
+    value: string;
+  }[];
+};
+
 export default function SearchFilter({
   filters = [],
   sorts = [],
 }: {
-  filters?: { label: string; param: string }[];
+  filters?: AnyFilter[];
   sorts?: { label: string; param: string }[];
 }) {
   const [isFiltersOpen, setIsFiltersOpen] = useState<boolean>(false);
@@ -20,35 +32,49 @@ export default function SearchFilter({
   const [terms, setTerms] = useState<string>("");
 
   const {
-    selectedFilter,
+    selectedFilters,
     selectedSort,
     setSelectedTerms,
-    setSelectedFilter,
+    setSelectedFilters,
     setSelectedSort,
   } = useContext(searchFiltersContext);
 
-  const toggleSelectedFilter = (param) =>
-    setSelectedFilter(param === selectedFilter ? "" : param);
+  const isCurrentFilter = (key: string, value: string) =>
+    (selectedFilters[key] ?? null) === value;
 
-  const filterMenu = {
-    label: "Filters",
+  const toggleSelectedFilter = (key: string, value: string) => {
+    const isCurrent = (selectedFilters[key] ?? null) === value;
+    const newFilters = {
+      ...selectedFilters,
+    };
+    if (isCurrent) {
+      delete newFilters[key];
+    } else {
+      newFilters[key] = value;
+    }
+    setSelectedFilters(newFilters);
+  };
+
+  const filterMenus = filters.map((filter) => ({
+    key: filter.key,
+    label: filter.label,
     id: "filters-menu",
-    items: filters.map((filter) => ({
+    items: filter.options.map((option) => ({
       component: () => (
         <Button
           type="action"
           extraClasses={
-            selectedFilter === filter.param ? "active-menu-item" : ""
+            isCurrentFilter(filter.key, option.value) ? "active-menu-item" : ""
           }
           onClickHandler={() => {
-            toggleSelectedFilter(filter.param);
+            toggleSelectedFilter(filter.key, option.value);
           }}
         >
-          {filter.label}
+          {option.label}
         </Button>
       ),
     })),
-  };
+  }));
 
   const sortMenu = {
     label: "Sort",
@@ -85,8 +111,9 @@ export default function SearchFilter({
         onChangeHandler={(e) => setTerms(e.target.value)}
       />
 
-      {filters.length ? (
+      {filterMenus.map((filterMenu) => (
         <DropdownMenuWrapper
+          key={filterMenu.key}
           className="search-filter-category search-filter-filters"
           isOpen={isFiltersOpen}
           setIsOpen={setIsFiltersOpen}
@@ -110,7 +137,7 @@ export default function SearchFilter({
             />
           </DropdownMenu>
         </DropdownMenuWrapper>
-      ) : null}
+      ))}
 
       {sorts.length ? (
         <DropdownMenuWrapper

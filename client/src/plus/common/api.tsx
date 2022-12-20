@@ -66,7 +66,7 @@ export async function undoDeleteItemById(id: number) {
 export function useNotificationsApiEndpoint(
   offset: number,
   searchTerms: string,
-  selectedFilter: string,
+  selectedFilters: Record<string, string>,
   selectedSort: string,
   starred: boolean
 ) {
@@ -110,7 +110,7 @@ export function useNotificationsApiEndpoint(
           ...newData,
           offset,
           searchTerms,
-          selectedFilter,
+          selectedFilters,
           selectedSort,
           starred,
         });
@@ -122,7 +122,7 @@ export function useNotificationsApiEndpoint(
     getSearchFiltersParams,
     offset,
     searchTerms,
-    selectedFilter,
+    selectedFilters,
     selectedSort,
     starred,
   ]);
@@ -132,7 +132,7 @@ export function useNotificationsApiEndpoint(
 export function useWatchedItemsApiEndpoint(
   offset: number,
   searchTerms: string,
-  selectedFilter: string,
+  selectedFilters: Record<string, string>,
   selectedSort: string
 ) {
   const [data, setData] = useState<any>({});
@@ -172,7 +172,7 @@ export function useWatchedItemsApiEndpoint(
           ...newData,
           offset,
           searchTerms,
-          selectedFilter,
+          selectedFilters,
           selectedSort,
         });
         setIsLoading(false);
@@ -183,7 +183,7 @@ export function useWatchedItemsApiEndpoint(
     getSearchFiltersParams,
     offset,
     searchTerms,
-    selectedFilter,
+    selectedFilters,
     selectedSort,
   ]);
   return { data, error, isLoading, hasMore };

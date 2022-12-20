@@ -19,7 +19,7 @@ function NotificationsLayout() {
   const locale = useLocale();
   const userData = useUserData();
 
-  const { selectedTerms, selectedFilter, selectedSort, clearSearchFilters } =
+  const { selectedTerms, selectedFilters, selectedSort, clearSearchFilters } =
     useContext(searchFiltersContext);
 
   const currentTab = useCurrentTab(locale);
@@ -53,21 +53,21 @@ function NotificationsLayout() {
             <NotificationsTab
               selectedTerms={selectedTerms}
               selectedSort={selectedSort}
-              selectedFilter={selectedFilter}
+              selectedFilters={selectedFilters}
             />
           )}
           {currentTab === TabVariant.STARRED && (
             <StarredNotificationsTab
               selectedTerms={selectedTerms}
               selectedSort={selectedSort}
-              selectedFilter={selectedFilter}
+              selectedFilters={selectedFilters}
             />
           )}
           {currentTab === TabVariant.WATCHING && (
             <WatchedTab
               selectedTerms={selectedTerms}
               selectedSort={selectedSort}
-              selectedFilter={selectedFilter}
+              selectedFilters={selectedFilters}
             />
           )}
         </Container>

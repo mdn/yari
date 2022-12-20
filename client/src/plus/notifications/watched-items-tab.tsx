@@ -9,7 +9,7 @@ import WatchedCardListItem from "../icon-card";
 import SearchFilter from "../search-filter";
 import SelectedNotificationsBar from "./notification-select";
 
-export function WatchedTab({ selectedTerms, selectedFilter, selectedSort }) {
+export function WatchedTab({ selectedTerms, selectedFilters, selectedSort }) {
   const [offset, setOffset] = useState(0);
   const [selectAllChecked, setSelectAllChecked] = useState(false);
   const [subscriptionLimitReached, setSubscriptionLimitReached] =
@@ -22,7 +22,7 @@ export function WatchedTab({ selectedTerms, selectedFilter, selectedSort }) {
   const { data, error, isLoading, hasMore } = useWatchedItemsApiEndpoint(
     offset,
     selectedTerms,
-    selectedFilter,
+    selectedFilters,
     selectedSort
   );
 
@@ -44,7 +44,7 @@ export function WatchedTab({ selectedTerms, selectedFilter, selectedSort }) {
     setSelectAllChecked(false);
     setList([]);
     setOffset(0);
-  }, [selectedFilter, selectedSort, selectedTerms]);
+  }, [selectedFilters, selectedSort, selectedTerms]);
 
   const [editOptions, setEditOptions] = useState({
     starEnabled: false,

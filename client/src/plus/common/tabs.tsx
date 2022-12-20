@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import { MDN_PLUS_TITLE } from "../../constants";
+import { AnyFilter } from "../search-filter";
 
 export enum TabVariant {
   NOTIFICATIONS,
@@ -16,14 +17,21 @@ const WATCHING_URL = "/plus/notifications/watching";
 const COLLECTIONS_URL = "/plus/collections";
 const FREQUENTLY_VIEWED_URL = "/plus/collections/frequently_viewed";
 
-export const FILTERS = [
+export const FILTERS: AnyFilter[] = [
   {
-    label: "Content updates",
-    param: "filterType=content",
-  },
-  {
-    label: "Browser compatibility",
-    param: "filterType=compat",
+    type: "radio",
+    key: "filterType",
+    label: "Filters",
+    options: [
+      {
+        label: "Content updates",
+        value: "content",
+      },
+      {
+        label: "Browser compatibility",
+        value: "compat",
+      },
+    ],
   },
 ];
 
