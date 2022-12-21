@@ -22,7 +22,7 @@ export function LoginBanner() {
             MDN Plus
           </a>
         </strong>
-        . Use filters to browse the updates.
+        . Get access to filters.
       </span>
       <AuthContainer gleanContext={`${PLUS_UPDATES.MDN_PLUS}: banner-button`} />
     </div>
