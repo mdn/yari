@@ -99,6 +99,8 @@ export default function SearchFilter({
       } else {
         newValue = null;
       }
+    } else if (isDefaultFilter(key, value)) {
+      newValue = null;
     } else {
       newValue = currentValue !== value ? value : null;
     }
@@ -114,6 +116,9 @@ export default function SearchFilter({
 
     setSelectedFilters(newFilters);
   };
+
+  const toggleSelectedSort = (param: string) =>
+    setSelectedSort(isDefaultSort(param) ? "" : param);
 
   const filterMenus = filters.map((filter) => ({
     key: filter.key,
@@ -146,9 +151,7 @@ export default function SearchFilter({
           isDisabled={isDisabled}
           type="action"
           extraClasses={isCurrentSort(sort.param) ? "active-menu-item" : ""}
-          onClickHandler={() => {
-            setSelectedSort(sort.param);
-          }}
+          onClickHandler={() => toggleSelectedSort(sort.param)}
         >
           {sort.label}
         </Button>
