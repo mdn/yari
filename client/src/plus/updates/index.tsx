@@ -82,6 +82,21 @@ const FILTERS: AnyFilter[] = [
       value,
     })),
   },
+  {
+    type: "select",
+    multiple: {
+      encode: (...values: string[]) => values.join(","),
+      decode: (value: string) => value.split(","),
+    },
+    label: "Content area",
+    key: "area",
+    options: Object.entries(CATEGORY_TO_NAME)
+      .sort(([, a], [, b]) => a.localeCompare(b))
+      .map(([value, label]) => ({
+        label,
+        value,
+      })),
+  },
 ];
 
 const SORTS = [
