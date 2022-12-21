@@ -101,3 +101,7 @@ export function charLength(string: string) {
 export function charSlice(string: string, start?: number, end?: number) {
   return [...string].slice(start, end).join("");
 }
+
+export function range(start: number, stop: number) {
+  return [...Array(Math.max(stop - start, 0)).keys()].map((n) => n + start);
+}

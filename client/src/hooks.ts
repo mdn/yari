@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from "react";
-import { useNavigationType, useParams } from "react-router-dom";
+import { useLocation, useNavigationType, useParams } from "react-router-dom";
 import { DEFAULT_LOCALE } from "../../libs/constants";
 import { isValidLocale } from "../../libs/locale-utils";
 
@@ -86,7 +86,8 @@ export function useIsServer(): boolean {
 
 export function useScrollToTop() {
   const navigationType = useNavigationType();
+  const location = useLocation();
   useEffect(() => {
     if (navigationType === "PUSH") document.documentElement.scrollTo(0, 0);
-  }, [navigationType]);
+  }, [navigationType, location]);
 }

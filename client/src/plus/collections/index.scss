@@ -16,95 +16,9 @@
       color: inherit;
     }
   }
-
-  @media screen and (min-width: $screen-md) {
-    .container {
-      max-width: 43rem;
-    }
-  }
-
-  @media screen and (min-width: $screen-lg) {
-    .container {
-      max-width: 52rem;
-    }
-  }
 }
 
 .collections-overview {
-  > header {
-    background: var(--collections-header);
-    overflow: hidden;
-    padding: 1.25rem 0;
-
-    .container {
-      position: relative;
-
-      > * {
-        position: relative;
-      }
-
-      .mandala-icon-wrapper {
-        display: inline-block;
-        margin-right: 0.5rem;
-        position: relative;
-        top: -0.2rem;
-
-        @media screen and (min-width: $screen-lg) {
-          position: absolute;
-          right: 10rem;
-          top: 50%;
-          transform: translate(0, -50%);
-        }
-
-        .mandala-container {
-          --mandala-primary: var(--collections-mandala);
-          left: 50%;
-          position: absolute;
-          top: 50%;
-          transform: translate(-50%, -49.4%);
-        }
-
-        .icon-bookmark-filled {
-          background: var(--collections-icon);
-          height: 2rem;
-          width: 2rem;
-        }
-      }
-
-      h1 {
-        font-size: 2rem;
-        margin: 0;
-        position: static;
-
-        span {
-          position: relative;
-        }
-      }
-
-      p {
-        margin: 1rem 0;
-      }
-
-      h1 span,
-      p {
-        // improve text contrast against mandala
-        text-shadow: 2px 2px 3px var(--collections-header),
-          2px -2px 3px var(--collections-header),
-          -2px -2px 3px var(--collections-header),
-          -2px 2px 3px var(--collections-header);
-      }
-
-      a {
-        color: var(--collections-link);
-      }
-
-      .button-wrap {
-        font-size: 0.875rem;
-        font-weight: 700;
-      }
-    }
-  }
-
   > .container {
     display: grid;
     gap: 1rem;
