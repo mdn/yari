@@ -21,8 +21,11 @@ type SelectFilter = {
   options: {
     label: string;
     value: string;
+    isDefault?: true;
   }[];
 };
+
+export type AnySort = { label: string; param: string; isDefault?: true };
 
 export default function SearchFilter({
   isDisabled = false,
@@ -31,7 +34,7 @@ export default function SearchFilter({
 }: {
   isDisabled?: boolean;
   filters?: AnyFilter[];
-  sorts?: { label: string; param: string }[];
+  sorts?: AnySort[];
 }) {
   const [openFilter, setOpenFilter] = useState<string | null>(null);
   const [isSortingOpen, setIsSortingOpen] = useState<boolean>(false);
@@ -45,6 +48,12 @@ export default function SearchFilter({
     setSelectedSort,
   } = useContext(searchFiltersContext);
 
+  const isDefaultFilter = (key: string, value: string) => {
+    const filter = filters.find((filter) => filter.key === key) as AnyFilter;
+    const option = filter.options.find((option) => option.value === value);
+    return option.isDefault ?? false;
+  };
+
   const isCurrentFilter = (key: string, value: string) => {
     const currentValue = selectedFilters[key] ?? null;
     const filter = filters.find((filter) => filter.key === key) as AnyFilter;
@@ -56,9 +65,19 @@ export default function SearchFilter({
           : [];
       return values.includes(value);
     } else {
-      return currentValue === value;
+      return currentValue
+        ? currentValue === value
+        : isDefaultFilter(key, value);
     }
   };
+
+  const isDefaultSort = (param: string) => {
+    const sort = sorts.find((sort) => sort.param === param);
+    return sort.isDefault ?? false;
+  };
+
+  const isCurrentSort = (param: string) =>
+    selectedSort ? selectedSort === param : isDefaultSort(param);
 
   const toggleSelectedFilter = (key: string, value: string) => {
     const currentValue = selectedFilters[key] ?? null;
@@ -126,7 +145,7 @@ export default function SearchFilter({
         <Button
           isDisabled={isDisabled}
           type="action"
-          extraClasses={selectedSort === sort.param ? "active-menu-item" : ""}
+          extraClasses={isCurrentSort(sort.param) ? "active-menu-item" : ""}
           onClickHandler={() => {
             setSelectedSort(sort.param);
           }}

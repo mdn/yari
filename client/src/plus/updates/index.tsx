@@ -21,7 +21,7 @@ import { Event, Group, useBCD, useUpdates } from "./api";
 import "./index.scss";
 import { useGleanClick } from "../../telemetry/glean-context";
 import { PLUS_UPDATES } from "../../telemetry/constants";
-import SearchFilter, { AnyFilter } from "../search-filter";
+import SearchFilter, { AnyFilter, AnySort } from "../search-filter";
 import { SearchFiltersProvider } from "../contexts/search-filters";
 
 const CATEGORY_TO_NAME = {
@@ -62,6 +62,7 @@ const FILTERS: AnyFilter[] = [
       {
         label: "All pages",
         value: "false",
+        isDefault: true,
       },
       {
         label: "Watched pages",
@@ -99,10 +100,11 @@ const FILTERS: AnyFilter[] = [
   },
 ];
 
-const SORTS = [
+const SORTS: AnySort[] = [
   {
     label: "Newest",
     param: "sort=desc",
+    isDefault: true,
   },
   {
     label: "Oldest",
