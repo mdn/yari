@@ -126,7 +126,7 @@ function UpdatesLayout() {
   useScrollToTop();
   const user = useUserData();
   const [searchParams] = useSearchParams();
-  const currentPage = parseInt(searchParams.get("page"), 10) || 0;
+  const currentPage = parseInt(searchParams.get("page"), 10) || 1;
   const { data } = useUpdates(currentPage);
   const gleanClick = useGleanClick();
 
