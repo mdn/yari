@@ -65,6 +65,17 @@ const FILTERS: AnyFilter[] = [
   },
 ];
 
+const SORTS = [
+  {
+    label: "Newest",
+    param: "sort=desc",
+  },
+  {
+    label: "Oldest",
+    param: "sort=asc",
+  },
+];
+
 export default function Updates() {
   return (
     <SearchFiltersProvider>
@@ -108,7 +119,7 @@ function UpdatesLayout() {
         </Container>
       </header>
       <Container>
-        <SearchFilter filters={FILTERS} />
+        <SearchFilter filters={FILTERS} sorts={SORTS} />
 
         {data ? (
           <>
