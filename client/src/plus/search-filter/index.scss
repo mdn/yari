@@ -17,16 +17,6 @@
   [type="search"] {
     flex: 1;
   }
-
-  .action {
-    > span:before {
-      content: "✓";
-    }
-
-    &:not(.active-menu-item) > span:before {
-      visibility: hidden;
-    }
-  }
 }
 
 .search-filter-category {
@@ -36,6 +26,16 @@
   > .button,
   .dropdown-list {
     width: 100%;
+  }
+
+  .action {
+    > span:before {
+      content: "✓";
+    }
+
+    &:not(.active-menu-item) > span:before {
+      visibility: hidden;
+    }
   }
 }
 
