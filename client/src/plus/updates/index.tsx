@@ -22,6 +22,7 @@ import { PLUS_UPDATES } from "../../telemetry/constants";
 import SearchFilter, { AnyFilter, AnySort } from "../search-filter";
 import { LoginBanner } from "./login-banner";
 import { useState } from "react";
+import { useSearchParams } from "react-router-dom";
 
 const CATEGORY_TO_NAME = {
   api: "Web APIs",
@@ -121,6 +122,7 @@ function UpdatesLayout() {
   const user = useUserData();
   const { data } = useUpdates();
   const gleanClick = useGleanClick();
+  const [, setSearchParams] = useSearchParams();
 
   const canFilter = user?.isAuthenticated === true;
 
@@ -157,12 +159,25 @@ function UpdatesLayout() {
 
         {data ? (
           <>
-            {data.data.map((group) => (
-              <GroupComponent
-                key={group.browser + group.version}
-                group={group}
-              />
-            ))}
+            {data.data.length ? (
+              data.data.map((group) => (
+                <GroupComponent
+                  key={group.browser + group.version}
+                  group={group}
+                />
+              ))
+            ) : (
+              <>
+                0 updates found{" "}
+                <Button
+                  type="action"
+                  extraClasses="reset-filters"
+                  onClickHandler={() => setSearchParams("")}
+                >
+                  Reset all filters
+                </Button>
+              </>
+            )}
             <Paginator
               last={data.last}
               onChange={(page, oldPage) =>

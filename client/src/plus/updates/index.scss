@@ -8,6 +8,19 @@
     --plus-link: var(--updates-link);
   }
 
+  .reset-filters {
+    --button-action-transform: none;
+
+    .button-wrap {
+      font-size: 1rem;
+      font-weight: 400;
+    }
+
+    .button-wrap:before {
+      content: "✖️";
+    }
+  }
+
   .group {
     background: var(--background-secondary);
     border-radius: 0.25rem;
