@@ -23,6 +23,7 @@ import { useGleanClick } from "../../telemetry/glean-context";
 import { PLUS_UPDATES } from "../../telemetry/constants";
 import SearchFilter, { AnyFilter, AnySort } from "../search-filter";
 import { SearchFiltersProvider } from "../contexts/search-filters";
+import { LoginBanner } from "./login-banner";
 
 const CATEGORY_TO_NAME = {
   api: "Web APIs",
@@ -159,6 +160,8 @@ function UpdatesLayout() {
       </header>
       <Container>
         <SearchFilter filters={FILTERS} sorts={SORTS} isDisabled={!canFilter} />
+
+        {user && !user.isAuthenticated && <LoginBanner />}
 
         {data ? (
           <>
