@@ -38,9 +38,9 @@ interface Page {
 }
 
 export function useUpdates(page: number) {
-  const { getSearchFiltersParams } = useContext(searchFiltersContext);
+  const { searchParams } = useContext(searchFiltersContext);
 
-  const sp = getSearchFiltersParams();
+  const sp = new URLSearchParams(searchParams);
   sp.append("page", page.toString());
 
   return useSWR(

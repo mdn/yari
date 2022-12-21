@@ -75,12 +75,12 @@ export function useNotificationsApiEndpoint(
   const [isLoading, setIsLoading] = useState(true);
   const [hasMore, setHasMore] = useState(false);
 
-  const { getSearchFiltersParams } = useContext(searchFiltersContext);
+  const { searchParams } = useContext(searchFiltersContext);
 
   useEffect(() => {
     (async () => {
       setIsLoading(true);
-      const sp = getSearchFiltersParams();
+      const sp = new URLSearchParams(searchParams);
 
       starred!! && sp.append("starred", "true");
 
@@ -110,7 +110,6 @@ export function useNotificationsApiEndpoint(
           ...newData,
           offset,
           searchTerms,
-          selectedFilters,
           selectedSort,
           starred,
         });
@@ -119,7 +118,7 @@ export function useNotificationsApiEndpoint(
       }
     })();
   }, [
-    getSearchFiltersParams,
+    searchParams,
     offset,
     searchTerms,
     selectedFilters,
@@ -139,11 +138,11 @@ export function useWatchedItemsApiEndpoint(
   const [error, setError] = useState<Error | null>();
   const [isLoading, setIsLoading] = useState(true);
   const [hasMore, setHasMore] = useState(false);
-  const { getSearchFiltersParams } = useContext(searchFiltersContext);
+  const { searchParams } = useContext(searchFiltersContext);
 
   useEffect(() => {
     (async () => {
-      const sp = getSearchFiltersParams();
+      const sp = new URLSearchParams(searchParams);
 
       sp.append("limit", DEFAULT_LIMIT.toString());
       offset!! && sp.append("offset", offset.toString());
@@ -172,20 +171,13 @@ export function useWatchedItemsApiEndpoint(
           ...newData,
           offset,
           searchTerms,
-          selectedFilters,
           selectedSort,
         });
         setIsLoading(false);
         setError(null);
       }
     })();
-  }, [
-    getSearchFiltersParams,
-    offset,
-    searchTerms,
-    selectedFilters,
-    selectedSort,
-  ]);
+  }, [searchParams, offset, searchTerms, selectedFilters, selectedSort]);
   return { data, error, isLoading, hasMore };
 }
 
