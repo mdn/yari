@@ -28,6 +28,10 @@
     width: 100%;
   }
 
+  .button-wrap {
+    white-space: nowrap;
+  }
+
   .action {
     > span:before {
       content: "✓";
