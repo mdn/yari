@@ -57,16 +57,16 @@ const FILTERS: AnyFilter[] = [
   {
     type: "select",
     label: "Pages",
-    key: "watching",
+    key: "show",
     options: [
       {
         label: "All pages",
-        value: "false",
+        value: "all",
         isDefault: true,
       },
       {
         label: "Watched pages",
-        value: "true",
+        value: "watched",
       },
     ],
   },
