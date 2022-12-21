@@ -236,7 +236,13 @@ function collapseEvents(events: Event[]): Event[] {
   );
 }
 
-function EventComponent({ event, status }: { event: Event; status: string }) {
+function EventComponent({
+  event,
+  status,
+}: {
+  event: Event;
+  status: "added" | "removed";
+}) {
   const [isOpen, setIsOpen] = useState(false);
   const [category, ...displayPath] = event.path.split(".");
   const engines = event.compat.engines;
@@ -258,7 +264,7 @@ function EventComponent({ event, status }: { event: Event; status: string }) {
       <summary>
         <code>{camelWrap(displayPath.join("."))}</code>
         <i>{CATEGORY_TO_NAME[category]}</i>
-        {status}
+        <EventStatus status={status} />
         {Boolean(engines.length) && (
           <span className="status" title={`Supported in ${engines.join(", ")}`}>
             <svg width="32" height="9" viewBox="0 0 32 9" role="img">
@@ -279,6 +285,10 @@ function EventComponent({ event, status }: { event: Event; status: string }) {
       {isOpen && <EventInnerComponent event={event} />}
     </details>
   );
+}
+
+function EventStatus({ status }: { status: "added" | "removed" }) {
+  return <span className={`badge status-${status}`}>{status}</span>;
 }
 
 function EventInnerComponent({
