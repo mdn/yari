@@ -38,11 +38,11 @@ export const FILTERS: AnyFilter[] = [
 export const SORTS = [
   {
     label: "Date",
-    param: "date",
+    param: "sort=date",
   },
   {
     label: "Title",
-    param: "title",
+    param: "sort=title",
   },
 ];
 
