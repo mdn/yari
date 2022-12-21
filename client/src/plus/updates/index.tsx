@@ -57,7 +57,7 @@ const BROWSERS = {
 const FILTERS: AnyFilter[] = [
   {
     type: "select",
-    label: "Pages",
+    label: "Show",
     key: "show",
     options: [
       {
