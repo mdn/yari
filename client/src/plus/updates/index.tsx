@@ -56,6 +56,21 @@ const BROWSERS = {
 const FILTERS: AnyFilter[] = [
   {
     type: "select",
+    label: "Pages",
+    key: "watching",
+    options: [
+      {
+        label: "All pages",
+        value: "false",
+      },
+      {
+        label: "Watched pages",
+        value: "true",
+      },
+    ],
+  },
+  {
+    type: "select",
     multiple: {
       encode: (...values: string[]) => values.join(","),
       decode: (value: string) => value.split(","),
