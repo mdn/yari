@@ -147,14 +147,6 @@ export default function SearchFilter({
         setSelectedTerms(terms);
       }}
     >
-      <Search
-        isDisabled={isDisabled}
-        name="terms"
-        placeholder="Filter by keyword"
-        onBlurHandler={() => setSelectedTerms(terms)}
-        onChangeHandler={(e) => setTerms(e.target.value)}
-      />
-
       {filterMenus.map((filterMenu) => (
         <DropdownMenuWrapper
           key={filterMenu.key}
@@ -186,6 +178,14 @@ export default function SearchFilter({
           </DropdownMenu>
         </DropdownMenuWrapper>
       ))}
+
+      <Search
+        isDisabled={isDisabled}
+        name="terms"
+        placeholder="Filter by keyword"
+        onBlurHandler={() => setSelectedTerms(terms)}
+        onChangeHandler={(e) => setTerms(e.target.value)}
+      />
 
       {sorts.length ? (
         <DropdownMenuWrapper
