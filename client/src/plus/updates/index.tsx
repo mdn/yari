@@ -55,7 +55,7 @@ const BROWSERS = {
 
 const FILTERS: AnyFilter[] = [
   {
-    type: "radio",
+    type: "select",
     label: "Browsers",
     key: "browsers",
     options: Object.entries(BROWSERS).map(([value, label]) => ({

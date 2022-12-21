@@ -19,7 +19,7 @@ const FREQUENTLY_VIEWED_URL = "/plus/collections/frequently_viewed";
 
 export const FILTERS: AnyFilter[] = [
   {
-    type: "radio",
+    type: "select",
     key: "filterType",
     label: "Filters",
     options: [

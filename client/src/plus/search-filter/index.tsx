@@ -8,10 +8,10 @@ import { searchFiltersContext } from "../contexts/search-filters";
 import "./index.scss";
 import { DropdownMenu, DropdownMenuWrapper } from "../../ui/molecules/dropdown";
 
-export type AnyFilter = RadioFilter;
+export type AnyFilter = SelectFilter;
 
-type RadioFilter = {
-  type: "radio";
+type SelectFilter = {
+  type: "select";
   key: string;
   label: string;
   options: {
