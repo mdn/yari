@@ -12,6 +12,7 @@ import "./index.scss";
 import { PLUS_IS_ENABLED } from "../../../env";
 import { ThemeSwitcher } from "../../molecules/theme-switcher";
 import Maintenance from "../../molecules/maintenance";
+import { TOP_NAV_GET_MDN_PLUS } from "../../../telemetry/constants";
 
 export const TopNavigationMain = ({ isOpenOnMobile }) => {
   const userData = useUserData();
@@ -32,7 +33,9 @@ export const TopNavigationMain = ({ isOpenOnMobile }) => {
             <UserMenu />
           </>
         )) ||
-        (userData?.maintenance && <Maintenance />) || <AuthContainer />}
+        (userData?.maintenance && <Maintenance />) || (
+          <AuthContainer gleanContext={TOP_NAV_GET_MDN_PLUS} />
+        )}
     </div>
   );
 };
