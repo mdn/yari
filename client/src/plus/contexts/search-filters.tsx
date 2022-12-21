@@ -4,7 +4,7 @@ interface SearchFiltersInterface {
   selectedTerms: string;
   selectedFilters: Record<string, string>;
   selectedSort: string;
-  searchParams: URLSearchParams;
+  searchParams: string;
   setSelectedTerms: (terms: string) => void;
   setSelectedFilters: (filters: Record<string, string>) => void;
   setSelectedSort: (sort: string) => void;
@@ -15,7 +15,7 @@ const searchFiltersContext = React.createContext<SearchFiltersInterface>({
   selectedTerms: "",
   selectedFilters: {},
   selectedSort: "",
-  searchParams: new URLSearchParams(),
+  searchParams: "",
   setSelectedTerms: () => {},
   setSelectedFilters: () => {},
   setSelectedSort: () => {},
@@ -28,20 +28,21 @@ const SearchFiltersProvider = (props) => {
   const [selectedFilters, setSelectedFilters] =
     React.useState<Record<string, string>>(defaultFilters);
   const [selectedSort, setSelectedSort] = React.useState<string>("");
-  const [searchParams, setSearchParams] = React.useState<URLSearchParams>(
-    new URLSearchParams()
-  );
+  const [searchParams, setSearchParams] = React.useState<string>("");
 
   useEffect(() => {
-    const params: string[][] = [];
+    const params = new URLSearchParams();
     if (selectedTerms) {
-      params.push(["q", selectedTerms]);
+      params.set("q", selectedTerms);
     }
-    params.push(...Object.entries(selectedFilters));
+    Object.entries(selectedFilters).forEach(([key, value]) =>
+      params.set(key, value)
+    );
     if (selectedSort) {
-      params.push(selectedSort.split("=", 2));
+      const [key, value] = selectedSort.split("=", 2);
+      params.set(key, value);
     }
-    setSearchParams(new URLSearchParams(params));
+    setSearchParams(params.toString());
   }, [selectedTerms, selectedFilters, selectedSort]);
 
   const state = {
