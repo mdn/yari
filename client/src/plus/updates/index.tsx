@@ -65,7 +65,7 @@ const FILTERS: AnyFilter[] = [
         isDefault: true,
       },
       {
-        label: "Watched pages",
+        label: "Pages I'm watching",
         value: "watched",
       },
     ],
