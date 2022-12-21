@@ -1,5 +1,7 @@
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import { range } from "../../../utils";
+
+const PARAM = "page";
 
 function PageLink({
   page,
@@ -10,8 +12,22 @@ function PageLink({
   children?: React.ReactNode;
   onClick?: (page: number) => unknown;
 }) {
+  const [searchParams, setSearchParams] = useSearchParams();
+
   return (
-    <Link to={`?page=${page}`} onClick={() => onClick && onClick(page)}>
+    <Link
+      to={{}}
+      onClick={(event) => {
+        event.preventDefault();
+        onClick && onClick(page);
+        setSearchParams({
+          ...Object.fromEntries(searchParams.entries()),
+          [PARAM]: page.toString(),
+        });
+
+        window.setTimeout(() => document.documentElement.scrollTo());
+      }}
+    >
       {children || page}
     </Link>
   );
@@ -19,26 +35,28 @@ function PageLink({
 
 export function Paginator({
   first = 1,
-  current,
   last,
   endPadding = 2,
   middlePadding = 2,
   onChange,
 }: {
   first?: number;
-  current: number;
   last: number;
   endPadding?: number;
   middlePadding?: number;
   onChange?: (page: number, oldPage: number) => unknown;
 }) {
+  const [searchParams] = useSearchParams();
+  const current = parseInt(searchParams.get("page"), 10) || first;
   const middleFirst = Math.max(current - middlePadding, first);
   const middleLast = Math.min(middleFirst + middlePadding * 2 + 1, last + 1);
   const left = range(first, Math.min(endPadding, middleFirst));
   const middle = range(middleFirst, middleLast);
   const right = range(Math.max(last + 1 - endPadding, middleLast), last + 1);
 
-  const onClick = (page: number) => onChange && onChange(page, current);
+  const onClick = (page: number) => {
+    onChange && onChange(page, current);
+  };
 
   return (
     <div className="pagination">

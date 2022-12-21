@@ -1,12 +1,7 @@
-import { useContext, useEffect } from "react";
 import { useLocale } from "../../hooks";
 import Container from "../../ui/atoms/container";
 import Tabs from "../../ui/molecules/tabs";
 
-import {
-  searchFiltersContext,
-  SearchFiltersProvider,
-} from "../contexts/search-filters";
 import "./index.scss";
 
 import { useUserData } from "../../user-context";
@@ -19,14 +14,7 @@ function NotificationsLayout() {
   const locale = useLocale();
   const userData = useUserData();
 
-  const { selectedTerms, selectedFilters, selectedSort, clearSearchFilters } =
-    useContext(searchFiltersContext);
-
   const currentTab = useCurrentTab(locale);
-
-  useEffect(() => {
-    clearSearchFilters();
-  }, [currentTab, clearSearchFilters]);
 
   const showTabs = userData && userData.isAuthenticated;
   const isAuthed = userData?.isAuthenticated;
@@ -49,27 +37,9 @@ function NotificationsLayout() {
       </header>
       {showTabs && (
         <Container>
-          {currentTab === TabVariant.NOTIFICATIONS && (
-            <NotificationsTab
-              selectedTerms={selectedTerms}
-              selectedSort={selectedSort}
-              selectedFilters={selectedFilters}
-            />
-          )}
-          {currentTab === TabVariant.STARRED && (
-            <StarredNotificationsTab
-              selectedTerms={selectedTerms}
-              selectedSort={selectedSort}
-              selectedFilters={selectedFilters}
-            />
-          )}
-          {currentTab === TabVariant.WATCHING && (
-            <WatchedTab
-              selectedTerms={selectedTerms}
-              selectedSort={selectedSort}
-              selectedFilters={selectedFilters}
-            />
-          )}
+          {currentTab === TabVariant.NOTIFICATIONS && <NotificationsTab />}
+          {currentTab === TabVariant.STARRED && <StarredNotificationsTab />}
+          {currentTab === TabVariant.WATCHING && <WatchedTab />}
         </Container>
       )}
       {!userData && !isAuthed && <NotSignedIn />}
@@ -78,9 +48,5 @@ function NotificationsLayout() {
 }
 
 export default function Notifications() {
-  return (
-    <SearchFiltersProvider>
-      <NotificationsLayout />
-    </SearchFiltersProvider>
-  );
+  return <NotificationsLayout />;
 }

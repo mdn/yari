@@ -1,7 +1,5 @@
 import Container from "../../ui/atoms/container";
 
-import { useState } from "react";
-import { useSearchParams } from "react-router-dom";
 import useSWR from "swr";
 import { DocMetadata } from "../../../../libs/types/document";
 import { MDN_PLUS_TITLE } from "../../constants";
@@ -22,8 +20,8 @@ import "./index.scss";
 import { useGleanClick } from "../../telemetry/glean-context";
 import { PLUS_UPDATES } from "../../telemetry/constants";
 import SearchFilter, { AnyFilter, AnySort } from "../search-filter";
-import { SearchFiltersProvider } from "../contexts/search-filters";
 import { LoginBanner } from "./login-banner";
+import { useState } from "react";
 
 const CATEGORY_TO_NAME = {
   api: "Web APIs",
@@ -114,20 +112,14 @@ const SORTS: AnySort[] = [
 ];
 
 export default function Updates() {
-  return (
-    <SearchFiltersProvider>
-      <UpdatesLayout />
-    </SearchFiltersProvider>
-  );
+  return <UpdatesLayout />;
 }
 
 function UpdatesLayout() {
   document.title = `Updates | ${MDN_PLUS_TITLE}`;
   useScrollToTop();
   const user = useUserData();
-  const [searchParams] = useSearchParams();
-  const currentPage = parseInt(searchParams.get("page"), 10) || 1;
-  const { data } = useUpdates(currentPage);
+  const { data } = useUpdates();
   const gleanClick = useGleanClick();
 
   const canFilter = user?.isAuthenticated === true;
@@ -172,7 +164,6 @@ function UpdatesLayout() {
               />
             ))}
             <Paginator
-              current={currentPage}
               last={data.last}
               onChange={(page, oldPage) =>
                 gleanClick(`${PLUS_UPDATES.PAGE_CHANGE}: ${oldPage} -> ${page}`)

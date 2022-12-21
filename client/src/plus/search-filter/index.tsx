@@ -1,12 +1,12 @@
-import React, { useContext, useState } from "react";
+import React, { useState } from "react";
 
 import { Button } from "../../ui/atoms/button";
 import { Search } from "../../ui/atoms/search";
 import { Submenu } from "../../ui/molecules/submenu";
-import { searchFiltersContext } from "../contexts/search-filters";
 
 import "./index.scss";
 import { DropdownMenu, DropdownMenuWrapper } from "../../ui/molecules/dropdown";
+import { useSearchParams } from "react-router-dom";
 
 export type AnyFilter = SelectFilter;
 
@@ -27,6 +27,11 @@ type SelectFilter = {
 
 export type AnySort = { label: string; param: string; isDefault?: true };
 
+enum Params {
+  PAGE = "page",
+  QUERY = "q",
+}
+
 export default function SearchFilter({
   isDisabled = false,
   filters = [],
@@ -36,17 +41,30 @@ export default function SearchFilter({
   filters?: AnyFilter[];
   sorts?: AnySort[];
 }) {
+  const [searchParams, setSearchParams] = useSearchParams();
+
   const [openFilter, setOpenFilter] = useState<string | null>(null);
   const [isSortingOpen, setIsSortingOpen] = useState<boolean>(false);
-  const [terms, setTerms] = useState<string>("");
+  const [terms, setTerms] = useState<string>(
+    searchParams.get(Params.QUERY) ?? ""
+  );
 
-  const {
-    selectedFilters,
-    selectedSort,
-    setSelectedTerms,
-    setSelectedFilters,
-    setSelectedSort,
-  } = useContext(searchFiltersContext);
+  const sortedParams = (params: URLSearchParams): URLSearchParams =>
+    new URLSearchParams(
+      [...params.entries()].sort(([a], [b]) => a.localeCompare(b))
+    );
+
+  const replaceSearchParam = (key: string, value: string) => {
+    setSearchParams((params) => {
+      if (value) {
+        params.set(key, value);
+      } else {
+        params.delete(key);
+      }
+      params.delete(Params.PAGE);
+      return sortedParams(params);
+    });
+  };
 
   const isDefaultFilter = (key: string, value: string) => {
     const filter = filters.find((filter) => filter.key === key) as AnyFilter;
@@ -55,7 +73,7 @@ export default function SearchFilter({
   };
 
   const isCurrentFilter = (key: string, value: string) => {
-    const currentValue = selectedFilters[key] ?? null;
+    const currentValue = searchParams.get(key) ?? null;
     const filter = filters.find((filter) => filter.key === key) as AnyFilter;
 
     if (filter.multiple) {
@@ -76,11 +94,14 @@ export default function SearchFilter({
     return sort.isDefault ?? false;
   };
 
-  const isCurrentSort = (param: string) =>
-    selectedSort ? selectedSort === param : isDefaultSort(param);
+  const isCurrentSort = (param: string) => {
+    const [key, value] = param.split("=", 2);
+    const currentValue = searchParams.get(key) ?? null;
+    return currentValue ? currentValue === value : isDefaultSort(param);
+  };
 
   const toggleSelectedFilter = (key: string, value: string) => {
-    const currentValue = selectedFilters[key] ?? null;
+    const currentValue = searchParams.get(key) ?? null;
     const filter = filters.find((filter) => filter.key === key) as AnyFilter;
     let newValue: string | null;
 
@@ -105,20 +126,19 @@ export default function SearchFilter({
       newValue = currentValue !== value ? value : null;
     }
 
-    const newFilters = {
-      ...selectedFilters,
-    };
-    if (newValue === null) {
-      delete newFilters[key];
-    } else {
-      newFilters[key] = newValue;
-    }
-
-    setSelectedFilters(newFilters);
+    replaceSearchParam(key, newValue);
   };
 
-  const toggleSelectedSort = (param: string) =>
-    setSelectedSort(isDefaultSort(param) ? "" : param);
+  const toggleSelectedSort = (param: string) => {
+    const [key, value] = param.split("=", 2);
+    const newValue = isDefaultSort(param) ? "" : value;
+
+    replaceSearchParam(key, newValue);
+  };
+
+  const setSelectedTerms = (newValue: string) => {
+    replaceSearchParam("q", newValue);
+  };
 
   const filterMenus = filters.map((filter) => ({
     key: filter.key,
@@ -205,6 +225,7 @@ export default function SearchFilter({
         isDisabled={isDisabled}
         name="terms"
         placeholder="Filter by keyword"
+        value={terms}
         onBlurHandler={() => setSelectedTerms(terms)}
         onChangeHandler={(e) => setTerms(e.target.value)}
       />

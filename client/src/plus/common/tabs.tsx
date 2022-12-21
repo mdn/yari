@@ -84,24 +84,24 @@ export const TAB_INFO: Record<TabVariant, TabDefinition> = {
 };
 
 export function useCurrentTab(locale): TabVariant {
-  const location = useLocation();
+  const { pathname } = useLocation();
   const initialTab = getInitialTab();
 
   const [currentTab, setTab] = useState<TabVariant>(initialTab);
 
   useEffect(() => {
-    if (location.pathname === `/${locale}${STARRED_URL}`) {
+    if (pathname === `/${locale}${STARRED_URL}`) {
       setTab(TabVariant.STARRED);
-    } else if (location.pathname === `/${locale}${WATCHING_URL}`) {
+    } else if (pathname === `/${locale}${WATCHING_URL}`) {
       setTab(TabVariant.WATCHING);
-    } else if (location.pathname === `/${locale}${COLLECTIONS_URL}`) {
+    } else if (pathname === `/${locale}${COLLECTIONS_URL}`) {
       setTab(TabVariant.COLLECTIONS);
-    } else if (location.pathname === `/${locale}${FREQUENTLY_VIEWED_URL}`) {
+    } else if (pathname === `/${locale}${FREQUENTLY_VIEWED_URL}`) {
       setTab(TabVariant.FREQUENTLY_VIEWED);
     } else {
       setTab(TabVariant.NOTIFICATIONS);
     }
-  }, [location, currentTab, locale]);
+  }, [pathname, currentTab, locale]);
 
   return currentTab;
 }

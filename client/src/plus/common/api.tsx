@@ -1,5 +1,5 @@
-import { useContext, useEffect, useState } from "react";
-import { searchFiltersContext } from "../contexts/search-filters";
+import { useEffect, useState } from "react";
+import { useSearchParams } from "react-router-dom";
 
 export const NOTIFICATIONS_BASE_PATH = "/api/v1/plus/notifications";
 export const WATCHED_BASE_PATH = "/api/v1/plus/watching";
@@ -63,19 +63,13 @@ export async function undoDeleteItemById(id: number) {
   return await post(`${NOTIFICATIONS_BASE_PATH}/${id}/undo-deletion/`);
 }
 
-export function useNotificationsApiEndpoint(
-  offset: number,
-  searchTerms: string,
-  selectedFilters: Record<string, string>,
-  selectedSort: string,
-  starred: boolean
-) {
+export function useNotificationsApiEndpoint(offset: number, starred: boolean) {
   const [data, setData] = useState<any>({});
   const [error, setError] = useState<Error | null>();
   const [isLoading, setIsLoading] = useState(true);
   const [hasMore, setHasMore] = useState(false);
 
-  const { searchParams } = useContext(searchFiltersContext);
+  const [searchParams] = useSearchParams();
 
   useEffect(() => {
     (async () => {
@@ -109,36 +103,22 @@ export function useNotificationsApiEndpoint(
         setData({
           ...newData,
           offset,
-          searchTerms,
-          selectedSort,
           starred,
         });
         setIsLoading(false);
         setError(null);
       }
     })();
-  }, [
-    searchParams,
-    offset,
-    searchTerms,
-    selectedFilters,
-    selectedSort,
-    starred,
-  ]);
+  }, [searchParams, offset, starred]);
   return { data, error, isLoading, hasMore };
 }
 
-export function useWatchedItemsApiEndpoint(
-  offset: number,
-  searchTerms: string,
-  selectedFilters: Record<string, string>,
-  selectedSort: string
-) {
+export function useWatchedItemsApiEndpoint(offset: number) {
   const [data, setData] = useState<any>({});
   const [error, setError] = useState<Error | null>();
   const [isLoading, setIsLoading] = useState(true);
   const [hasMore, setHasMore] = useState(false);
-  const { searchParams } = useContext(searchFiltersContext);
+  const [searchParams] = useSearchParams();
 
   useEffect(() => {
     (async () => {
@@ -170,14 +150,12 @@ export function useWatchedItemsApiEndpoint(
         setData({
           ...newData,
           offset,
-          searchTerms,
-          selectedSort,
         });
         setIsLoading(false);
         setError(null);
       }
     })();
-  }, [searchParams, offset, searchTerms, selectedFilters, selectedSort]);
+  }, [searchParams, offset]);
   return { data, error, isLoading, hasMore };
 }
 
