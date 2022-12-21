@@ -75,7 +75,7 @@ const FILTERS: AnyFilter[] = [
       decode: (value: string) => value.split(","),
     },
     label: "Content area",
-    key: "area",
+    key: "content_area",
     options: Object.entries(CATEGORY_TO_NAME)
       .sort(([, a], [, b]) => a.localeCompare(b))
       .map(([value, label]) => ({
