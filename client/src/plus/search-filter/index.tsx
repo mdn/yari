@@ -14,6 +14,10 @@ type SelectFilter = {
   type: "select";
   key: string;
   label: string;
+  multiple?: {
+    encode: (...values: string[]) => string;
+    decode: (value: string) => string[];
+  };
   options: {
     label: string;
     value: string;
@@ -39,19 +43,54 @@ export default function SearchFilter({
     setSelectedSort,
   } = useContext(searchFiltersContext);
 
-  const isCurrentFilter = (key: string, value: string) =>
-    (selectedFilters[key] ?? null) === value;
+  const isCurrentFilter = (key: string, value: string) => {
+    const currentValue = selectedFilters[key] ?? null;
+    const filter = filters.find((filter) => filter.key === key) as AnyFilter;
+
+    if (filter.multiple) {
+      const values =
+        typeof currentValue === "string"
+          ? filter.multiple.decode(currentValue)
+          : [];
+      return values.includes(value);
+    } else {
+      return currentValue === value;
+    }
+  };
 
   const toggleSelectedFilter = (key: string, value: string) => {
-    const isCurrent = (selectedFilters[key] ?? null) === value;
+    const currentValue = selectedFilters[key] ?? null;
+    const filter = filters.find((filter) => filter.key === key) as AnyFilter;
+    let newValue: string | null;
+
+    if (filter.multiple) {
+      let values =
+        typeof currentValue === "string"
+          ? filter.multiple.decode(currentValue)
+          : [];
+      if (values.includes(value)) {
+        values = values.filter((v) => v !== value);
+      } else {
+        values = [...values, value].sort();
+      }
+      if (values.length) {
+        newValue = filter.multiple.encode(...values);
+      } else {
+        newValue = null;
+      }
+    } else {
+      newValue = currentValue !== value ? value : null;
+    }
+
     const newFilters = {
       ...selectedFilters,
     };
-    if (isCurrent) {
+    if (newValue === null) {
       delete newFilters[key];
     } else {
-      newFilters[key] = value;
+      newFilters[key] = newValue;
     }
+
     setSelectedFilters(newFilters);
   };
 
