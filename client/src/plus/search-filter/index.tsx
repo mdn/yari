@@ -25,9 +25,11 @@ type SelectFilter = {
 };
 
 export default function SearchFilter({
+  isDisabled = false,
   filters = [],
   sorts = [],
 }: {
+  isDisabled?: boolean;
   filters?: AnyFilter[];
   sorts?: { label: string; param: string }[];
 }) {
@@ -101,6 +103,7 @@ export default function SearchFilter({
     items: filter.options.map((option) => ({
       component: () => (
         <Button
+          isDisabled={isDisabled}
           type="action"
           extraClasses={
             isCurrentFilter(filter.key, option.value) ? "active-menu-item" : ""
@@ -121,6 +124,7 @@ export default function SearchFilter({
     items: sorts.map((sort) => ({
       component: () => (
         <Button
+          isDisabled={isDisabled}
           type="action"
           extraClasses={selectedSort === sort.param ? "active-menu-item" : ""}
           onClickHandler={() => {
@@ -144,6 +148,7 @@ export default function SearchFilter({
       }}
     >
       <Search
+        isDisabled={isDisabled}
         name="terms"
         placeholder="Filter by keyword"
         onBlurHandler={() => setSelectedTerms(terms)}

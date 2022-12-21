@@ -91,10 +91,13 @@ export default function Updates() {
 function UpdatesLayout() {
   document.title = `Updates | ${MDN_PLUS_TITLE}`;
   useScrollToTop();
+  const user = useUserData();
   const [searchParams] = useSearchParams();
   const currentPage = parseInt(searchParams.get("page"), 10) || 0;
   const { data } = useUpdates(currentPage);
   const gleanClick = useGleanClick();
+
+  const canFilter = user?.isAuthenticated === true;
 
   return (
     <div className="updates">
@@ -123,7 +126,7 @@ function UpdatesLayout() {
         </Container>
       </header>
       <Container>
-        <SearchFilter filters={FILTERS} sorts={SORTS} />
+        <SearchFilter filters={FILTERS} sorts={SORTS} isDisabled={!canFilter} />
 
         {data ? (
           <>
