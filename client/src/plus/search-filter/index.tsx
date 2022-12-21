@@ -33,7 +33,7 @@ export default function SearchFilter({
   filters?: AnyFilter[];
   sorts?: { label: string; param: string }[];
 }) {
-  const [isFiltersOpen, setIsFiltersOpen] = useState<boolean>(false);
+  const [openFilter, setOpenFilter] = useState<string | null>(null);
   const [isSortingOpen, setIsSortingOpen] = useState<boolean>(false);
   const [terms, setTerms] = useState<string>("");
 
@@ -99,7 +99,7 @@ export default function SearchFilter({
   const filterMenus = filters.map((filter) => ({
     key: filter.key,
     label: filter.label,
-    id: "filters-menu",
+    id: `filters-menu-${filter.key}`,
     items: filter.options.map((option) => ({
       component: () => (
         <Button
@@ -159,17 +159,21 @@ export default function SearchFilter({
         <DropdownMenuWrapper
           key={filterMenu.key}
           className="search-filter-category search-filter-filters"
-          isOpen={isFiltersOpen}
-          setIsOpen={setIsFiltersOpen}
+          isOpen={openFilter === filterMenu.key}
+          setIsOpen={(isOpen: boolean) =>
+            setOpenFilter(isOpen ? filterMenu.key : null)
+          }
         >
           <Button
             type="select"
             ariaControls={filterMenu.id}
             ariaHasPopup={"menu"}
-            ariaExpanded={isFiltersOpen || undefined}
-            onClickHandler={() => {
-              setIsFiltersOpen(!isFiltersOpen);
-            }}
+            ariaExpanded={openFilter === filterMenu.key}
+            onClickHandler={() =>
+              setOpenFilter(
+                openFilter === filterMenu.key ? null : filterMenu.key
+              )
+            }
           >
             {filterMenu.label}
           </Button>
