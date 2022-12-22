@@ -23,6 +23,7 @@ import SearchFilter, { AnyFilter, AnySort } from "../search-filter";
 import { LoginBanner } from "./login-banner";
 import { useState } from "react";
 import { useSearchParams } from "react-router-dom";
+import { DataError } from "../common";
 
 const CATEGORY_TO_NAME = {
   api: "Web APIs",
@@ -120,7 +121,7 @@ function UpdatesLayout() {
   document.title = `Updates | ${MDN_PLUS_TITLE}`;
   useScrollToTop();
   const user = useUserData();
-  const { data } = useUpdates();
+  const { data, error } = useUpdates();
   const gleanClick = useGleanClick();
   const [searchParams, setSearchParams] = useSearchParams();
 
@@ -168,6 +169,8 @@ function UpdatesLayout() {
             Reset all filters
           </Button>
         )}
+
+        {error && <DataError error={error} />}
 
         {data ? (
           <>
