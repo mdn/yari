@@ -36,10 +36,16 @@ export default function SearchFilter({
   isDisabled = false,
   filters = [],
   sorts = [],
+  onChange = (key, newValue, oldValue) => {},
 }: {
   isDisabled?: boolean;
   filters?: AnyFilter[];
   sorts?: AnySort[];
+  onChange?: (
+    key: string,
+    newValue: string | null,
+    oldValue: string | null
+  ) => unknown;
 }) {
   const [searchParams, setSearchParams] = useSearchParams();
 
@@ -57,13 +63,15 @@ export default function SearchFilter({
       [...params.entries()].sort(([a], [b]) => a.localeCompare(b))
     );
 
-  const replaceSearchParam = (key: string, value: string) => {
+  const replaceSearchParam = (key: string, value: string | null) => {
     setSearchParams((params) => {
+      const oldValue = params.get(key);
       if (value) {
         params.set(key, value);
       } else {
         params.delete(key);
       }
+      onChange(key, value, oldValue);
       params.delete(Params.PAGE);
       return sortedParams(params);
     });

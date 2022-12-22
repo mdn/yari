@@ -155,7 +155,18 @@ function UpdatesLayout() {
         </Container>
       </header>
       <Container>
-        <SearchFilter filters={FILTERS} sorts={SORTS} isDisabled={!canFilter} />
+        <SearchFilter
+          filters={FILTERS}
+          sorts={SORTS}
+          isDisabled={!canFilter}
+          onChange={(key, newValue, oldValue) =>
+            gleanClick(
+              `${PLUS_UPDATES.FILTER_CHANGE}_${key}: ${
+                oldValue ?? "(default)"
+              } -> ${newValue ?? "(default)"}`
+            )
+          }
+        />
 
         {user && !user.isAuthenticated && <LoginBanner />}
 
