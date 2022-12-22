@@ -1,4 +1,3 @@
-import React from "react";
 import { AuthContainer } from "../../ui/molecules/auth-container";
 import "./login-banner.scss";
 import { usePlusUrl } from "../utils";
@@ -25,7 +24,10 @@ export function LoginBanner() {
           .
         </strong>
       </span>
-      <AuthContainer gleanContext={`${PLUS_UPDATES.MDN_PLUS}: banner-button`} />
+      <AuthContainer
+        signInGleanContext={`${PLUS_UPDATES.MDN_PLUS}: banner-login`}
+        subscribeGleanContext={`${PLUS_UPDATES.MDN_PLUS}: banner-button`}
+      />
     </div>
   );
 }

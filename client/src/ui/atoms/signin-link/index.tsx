@@ -4,10 +4,9 @@ import { useLocale } from "../../../hooks";
 import { FXA_SIGNIN_URL, KUMA_HOST } from "../../../env";
 
 import "./index.scss";
-import { TOP_NAV_ALREADY_SUBSCRIBER } from "../../../telemetry/constants";
 import { useGleanClick } from "../../../telemetry/glean-context";
 
-export default function SignInLink() {
+export default function SignInLink({ gleanContext }) {
   const locale = useLocale();
   const gleanClick = useGleanClick();
   const { pathname, search } = useLocation();
@@ -32,7 +31,7 @@ export default function SignInLink() {
       href={`${prefix}${FXA_SIGNIN_URL}?${sp.toString()}`}
       className="signin-link"
       rel="nofollow"
-      onClick={() => gleanClick(TOP_NAV_ALREADY_SUBSCRIBER)}
+      onClick={() => gleanClick(gleanContext)}
     >
       Already a subscriber?
     </a>
