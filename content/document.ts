@@ -194,11 +194,7 @@ export const read = memoize((folderOrFilePath: string, ...roots: string[]) => {
     filePath = folderOrFilePath;
 
     // It exists, but it is sane?
-    if (
-      !(
-        filePath.endsWith(HTML_FILENAME) || filePath.endsWith(MARKDOWN_FILENAME)
-      )
-    ) {
+    if (!filePath.endsWith(MARKDOWN_FILENAME)) {
       throw new Error(`'${filePath}' is not a HTML or Markdown file.`);
     }
 
@@ -206,7 +202,6 @@ export const read = memoize((folderOrFilePath: string, ...roots: string[]) => {
     if (root) {
       folder = filePath
         .replace(root + path.sep, "")
-        .replace(path.sep + HTML_FILENAME, "")
         .replace(path.sep + MARKDOWN_FILENAME, "");
       locale = extractLocale(filePath.replace(root + path.sep, ""));
     } else {
@@ -227,12 +222,6 @@ export const read = memoize((folderOrFilePath: string, ...roots: string[]) => {
       if (fs.existsSync(possibleMarkdownFilePath)) {
         root = possibleRoot;
         filePath = possibleMarkdownFilePath;
-        break;
-      }
-      const possibleHTMLFilePath = path.join(possibleRoot, getHTMLPath(folder));
-      if (fs.existsSync(possibleHTMLFilePath)) {
-        root = possibleRoot;
-        filePath = possibleHTMLFilePath;
         break;
       }
     }
@@ -464,12 +453,7 @@ export function findAll({
       .withErrors()
       .filter((filePath) => {
         // Exit early if it's not a sane kind of file we expect
-        if (
-          !(
-            filePath.endsWith(HTML_FILENAME) ||
-            filePath.endsWith(MARKDOWN_FILENAME)
-          )
-        ) {
+        if (!filePath.endsWith(MARKDOWN_FILENAME)) {
           return false;
         }
 
@@ -502,7 +486,6 @@ export function findAll({
         if (folderSearchRegExp) {
           const pure = filePath
             .replace(root + path.sep, "")
-            .replace(HTML_FILENAME, "")
             .replace(MARKDOWN_FILENAME, "");
           return pure.search(folderSearchRegExp) !== -1;
         }

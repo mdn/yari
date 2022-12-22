@@ -1,0 +1,5 @@
+---
+title: An img tag that doesn't have a src attribute
+slug: Web/Images/Srcless
+---
+<img alt="Just testing that the flaw checker doesn&#x27;t crash">

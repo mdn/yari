@@ -110,10 +110,9 @@ For content, see its
 
 Yari does a number of things, the most important of which is to render and serve
 the MDN content found in the [content repo](https://github.com/mdn/content).
-Each document is stored as an `index.md` (recommended) or `index.html` file that
-contains metadata presented as YAML
-[front-matter](https://github.com/mdn/content#fundamental-concepts) followed by
-the document source.
+Each document is stored as an `index.md` file that contains metadata presented
+as YAML [front-matter](https://github.com/mdn/content#fundamental-concepts)
+followed by the document source.
 
 The builder converts these "source files" into "build files" using a CLI tool
 that iterates over the files, builds the HTML, and lastly packages it up with
@@ -216,7 +215,7 @@ The most fundamental CLI command is:
 
 ### What gets built
 
-Every `index.html` becomes two files:
+Every `index.md` becomes two files:
 
 - `index.html` — a fully formed and complete HTML file
 - `index.json` — the state information React needs to build the page in the

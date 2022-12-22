@@ -297,7 +297,7 @@ def get_patch_lines(patch: PatchSet):
     patch_lines = {}
     for patched_file in patch:
         # This value is the file path as it would appear in `git diff`
-        # so for example: `files/en-us/mdn/kitchensink/index.html`
+        # so for example: `files/en-us/mdn/kitchensink/index.md`
         if patched_file.is_binary_file:
             continue
         file_path = patched_file.path
@@ -306,11 +306,11 @@ def get_patch_lines(patch: PatchSet):
             # with `b/` because the diff looks like this:
             #
             # ...
-            # rename from files/en-us/web/api/transitionevent/animationname/index.html
-            # rename to files/en-us/web/api/transitionevent/propertyname/index.html
+            # rename from files/en-us/web/api/transitionevent/animationname/index.md
+            # rename to files/en-us/web/api/transitionevent/propertyname/index.md
             # index e644c304b..d39c14b92 100644
-            # --- a/files/en-us/web/api/transitionevent/animationname/index.html
-            # +++ b/files/en-us/web/api/transitionevent/propertyname/index.html
+            # --- a/files/en-us/web/api/transitionevent/animationname/index.md
+            # +++ b/files/en-us/web/api/transitionevent/propertyname/index.md
             # @@ -1,6 +1,6 @@
             # ...
             # Boy I wish there was a better way to get to that new name!

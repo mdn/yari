@@ -98,11 +98,9 @@ describe("fixing flaws", () => {
     const dryRunNotices = stdout
       .split("\n")
       .filter((line) => regexPattern.test(line));
-    expect(dryRunNotices).toHaveLength(4);
-    expect(dryRunNotices[0]).toContain(path.join(pattern, "bad_pre_tags"));
-    expect(dryRunNotices[1]).toContain(path.join(pattern, "deprecated_macros"));
-    expect(dryRunNotices[2]).toContain(path.join(pattern, "images"));
-    expect(dryRunNotices[3]).toContain(pattern);
+    expect(dryRunNotices).toHaveLength(2);
+    expect(dryRunNotices[0]).toContain(path.join(pattern, "deprecated_macros"));
+    expect(dryRunNotices[1]).toContain(pattern);
     const dryrunFiles = getChangedFiles(tempContentDir);
     expect(dryrunFiles).toHaveLength(0);
   });
@@ -125,18 +123,7 @@ describe("fixing flaws", () => {
     expect(stdout).toContain(pattern);
 
     const files = getChangedFiles(tempContentDir);
-    expect(files).toHaveLength(4);
-    const imagesFile = files.find((f) =>
-      f.includes(path.join(pattern, "images"))
-    );
-    const newRawHtmlImages = fs.readFileSync(imagesFile, "utf-8");
-    expect(newRawHtmlImages).toContain('src="fixable.png"');
-
-    const badPreTagFile = files.find((f) =>
-      f.includes(path.join(pattern, "bad_pre_tags"))
-    );
-    const newRawHtmlPreWithHTML = fs.readFileSync(badPreTagFile, "utf-8");
-    expect(newRawHtmlPreWithHTML).not.toContain("<code>");
+    expect(files).toHaveLength(2);
 
     const deprecatedMacrosFile = files.find((f) =>
       f.includes(path.join(pattern, "deprecated_macros"))
@@ -147,17 +134,14 @@ describe("fixing flaws", () => {
     );
     expect(newRawHtmlDeprecatedMacros).not.toContain("{{");
 
-    const regularFile = files.find(
-      (f) =>
-        f !== imagesFile && f !== badPreTagFile && f !== deprecatedMacrosFile
-    );
-    const newRawHtml = fs.readFileSync(regularFile, "utf-8");
-    expect(newRawHtml).toContain("{{CSSxRef('number')}}");
-    expect(newRawHtml).toContain('{{htmlattrxref("href", "a")}}');
+    const regularFile = files.find((f) => f !== deprecatedMacrosFile);
+    const newRawMd = fs.readFileSync(regularFile, "utf-8");
+    expect(newRawMd).toContain("{{CSSxRef('number')}}");
+    expect(newRawMd).toContain('{{htmlattrxref("href", "a")}}');
     // Broken links that get fixed.
-    expect(newRawHtml).toContain('href="/en-US/docs/Web/CSS/number"');
-    expect(newRawHtml).toContain("href='/en-US/docs/Web/CSS/number'");
-    expect(newRawHtml).toContain('href="/en-US/docs/Glossary/Bézier_curve"');
-    expect(newRawHtml).toContain('href="/en-US/docs/Web/Foo"');
+    expect(newRawMd).toContain("(/en-US/docs/Web/CSS/number)");
+    expect(newRawMd).toContain("(/en-US/docs/Web/CSS/number)");
+    expect(newRawMd).toContain("(/en-US/docs/Glossary/Bézier_curve)");
+    expect(newRawMd).toContain("(/en-US/docs/Web/Foo)");
   });
 });
