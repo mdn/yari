@@ -1,5 +1,6 @@
 import useSWR from "swr";
 import { useSearchParams } from "react-router-dom";
+import { useUserData } from "../../user-context";
 
 export interface Event {
   path: string;
@@ -37,7 +38,16 @@ interface Page {
 }
 
 export function useUpdates() {
+  const user = useUserData();
   const [searchParams] = useSearchParams();
+
+  if (!user?.isAuthenticated) {
+    for (const key of searchParams.keys()) {
+      if (key !== "page") {
+        searchParams.delete(key);
+      }
+    }
+  }
 
   return useSWR(
     `/api/v2/updates/?${searchParams.toString()}`,
