@@ -119,14 +119,22 @@
         margin-right: 1rem;
       }
 
-      .status-added:before {
-        content: "✓";
-        padding-right: 0.25rem;
+      .status-added {
+        background-color: var(--background-success);
+
+        &:before {
+          content: "✓";
+          padding-right: 0.25rem;
+        }
       }
 
-      .status-removed:before {
-        content: "✗";
-        padding-right: 0.25rem;
+      .status-removed {
+        background-color: var(--background-critical);
+
+        &:before {
+          content: "✗";
+          padding-right: 0.25rem;
+        }
       }
 
       .status {
