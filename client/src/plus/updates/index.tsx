@@ -179,7 +179,11 @@ function UpdatesLayout() {
                 />
               ))
             ) : (
-              <>0 updates found </>
+              <div className="notecard">
+                {hasFilters
+                  ? "No updates match your filters."
+                  : "No updates found."}
+              </div>
             )}
             <Paginator
               last={data.last}
