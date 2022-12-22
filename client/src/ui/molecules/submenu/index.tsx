@@ -6,6 +6,7 @@ type SubmenuItem = {
   description?: string;
   extraClasses?: string | null;
   hasIcon?: boolean;
+  isNew?: boolean;
   iconClasses?: string;
   label?: string;
   subText?: string;
@@ -67,7 +68,15 @@ export const Submenu = ({
                     </span>
                   )}
                   <div className="submenu-content-container">
-                    <div className="submenu-item-heading">{item.label}</div>
+                    <div className="submenu-item-heading">
+                      {item.label}
+                      {item.isNew && (
+                        <>
+                          {" "}
+                          <span className="badge">New</span>
+                        </>
+                      )}
+                    </div>
                     {item.description && (
                       <p className="submenu-item-description">
                         {item.description}
@@ -84,7 +93,15 @@ export const Submenu = ({
                 <div key={key} className="submenu-item">
                   {item.hasIcon && <div className={item.iconClasses} />}
                   <div className="submenu-content-container">
-                    <div className="submenu-item-heading">{item.label}</div>
+                    <div className="submenu-item-heading">
+                      {item.label}
+                      {item.isNew && (
+                        <>
+                          {" "}
+                          <span className="badge">New</span>
+                        </>
+                      )}
+                    </div>
                     {item.description && (
                       <p className="submenu-item-description">
                         {item.description}
