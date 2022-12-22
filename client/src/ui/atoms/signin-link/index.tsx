@@ -14,7 +14,7 @@ export default function SignInLink() {
   const sp = new URLSearchParams();
 
   let next = pathname ? pathname + search : `/${locale}/`;
-  sp.set("next", window.encodeURI(next));
+  sp.set("next", encodeURI(next));
 
   let prefix = "";
   // When doing local development with Yari, the link to authenticate in Kuma
