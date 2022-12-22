@@ -6,7 +6,11 @@ import { FXA_SIGNIN_URL, KUMA_HOST } from "../../../env";
 import "./index.scss";
 import { useGleanClick } from "../../../telemetry/glean-context";
 
-export default function SignInLink({ gleanContext }) {
+export default function SignInLink({
+  gleanContext,
+}: {
+  gleanContext?: string;
+}) {
   const locale = useLocale();
   const gleanClick = useGleanClick();
   const { pathname, search } = useLocation();
@@ -31,7 +35,7 @@ export default function SignInLink({ gleanContext }) {
       href={`${prefix}${FXA_SIGNIN_URL}?${sp.toString()}`}
       className="signin-link"
       rel="nofollow"
-      onClick={() => gleanClick(gleanContext)}
+      onClick={() => gleanContext && gleanClick(gleanContext)}
     >
       Already a subscriber?
     </a>
