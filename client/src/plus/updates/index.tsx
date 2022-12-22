@@ -141,8 +141,7 @@ function UpdatesLayout() {
             <span>Updates</span>
           </h1>
           <p>
-            Get the latest updates about browser compatibility of all the
-            features.
+            Stay up-to-date with the latest browser features.
             <br />
             <a
               href="https://survey.alchemer.com/s3/7149796/MDN-BCD-Updates"
