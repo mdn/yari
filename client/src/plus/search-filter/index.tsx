@@ -226,7 +226,9 @@ export default function SearchFilter({
         name="terms"
         placeholder="Filter by keyword"
         value={terms}
-        onBlurHandler={() => setSelectedTerms(terms)}
+        onBlurHandler={() =>
+          setSelectedTerms(terms.replace(/[\u200B-\u200D\uFEFF]/g, ""))
+        }
         onChangeHandler={(e) => setTerms(e.target.value)}
       />
 
