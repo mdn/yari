@@ -51,6 +51,11 @@ export function useUpdates() {
 
   let url = `/api/v2/updates/`;
 
+  if (searchParams.get("show") === "watched") {
+    url += "watched/";
+    searchParams.delete("show");
+  }
+
   const search = searchParams.toString();
   if (search) {
     url += `?${search}`;
