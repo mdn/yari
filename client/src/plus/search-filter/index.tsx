@@ -7,7 +7,6 @@ import { Submenu } from "../../ui/molecules/submenu";
 import "./index.scss";
 import { DropdownMenu, DropdownMenuWrapper } from "../../ui/molecules/dropdown";
 import { useSearchParams } from "react-router-dom";
-import { useWatchedItemsApiEndpoint } from "../common/api";
 
 export type AnyFilter = SelectFilter;
 
