@@ -10,11 +10,11 @@ import { useGleanClick } from "../../../telemetry/glean-context";
 export default function SignInLink() {
   const locale = useLocale();
   const gleanClick = useGleanClick();
-  const { pathname } = useLocation();
+  const { pathname, search } = useLocation();
   const sp = new URLSearchParams();
 
-  let next = pathname || `/${locale}/`;
-  sp.set("next", next);
+  let next = pathname ? pathname + search : `/${locale}/`;
+  sp.set("next", window.encodeURI(next));
 
   let prefix = "";
   // When doing local development with Yari, the link to authenticate in Kuma
