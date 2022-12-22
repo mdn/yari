@@ -122,7 +122,9 @@ function UpdatesLayout() {
   const user = useUserData();
   const { data } = useUpdates();
   const gleanClick = useGleanClick();
-  const [, setSearchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  const hasFilters = [...searchParams.keys()].some((key) => key !== "page");
 
   const canFilter = user?.isAuthenticated === true;
 
@@ -157,6 +159,16 @@ function UpdatesLayout() {
 
         {user && !user.isAuthenticated && <LoginBanner />}
 
+        {user && user.isAuthenticated && hasFilters && (
+          <Button
+            type="action"
+            extraClasses="reset-filters"
+            onClickHandler={() => setSearchParams("")}
+          >
+            Reset all filters
+          </Button>
+        )}
+
         {data ? (
           <>
             {data.data.length ? (
@@ -167,16 +179,7 @@ function UpdatesLayout() {
                 />
               ))
             ) : (
-              <>
-                0 updates found{" "}
-                <Button
-                  type="action"
-                  extraClasses="reset-filters"
-                  onClickHandler={() => setSearchParams("")}
-                >
-                  Reset all filters
-                </Button>
-              </>
+              <>0 updates found </>
             )}
             <Paginator
               last={data.last}
