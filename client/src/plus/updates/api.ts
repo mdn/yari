@@ -49,8 +49,15 @@ export function useUpdates() {
     }
   }
 
+  let url = `/api/v2/updates/`;
+
+  const search = searchParams.toString();
+  if (search) {
+    url += `?${search}`;
+  }
+
   return useSWR(
-    `/api/v2/updates/?${searchParams.toString()}`,
+    url,
     async (key) => {
       const res = await fetch(key);
       if (res.ok) {
