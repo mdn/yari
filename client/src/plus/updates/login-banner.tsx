@@ -12,6 +12,7 @@ export function LoginBanner() {
   return (
     <div className="login-banner">
       <span>
+        <span>Want to use filters?</span>{" "}
         <strong>
           Upgrade to{" "}
           <a
@@ -21,8 +22,8 @@ export function LoginBanner() {
           >
             MDN Plus
           </a>
+          .
         </strong>
-        . Get access to filters.
       </span>
       <AuthContainer gleanContext={`${PLUS_UPDATES.MDN_PLUS}: banner-button`} />
     </div>
