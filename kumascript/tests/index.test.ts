@@ -111,7 +111,7 @@ describe("testing the main render() function", () => {
     expect(otherLinks.eq(0).html()).toBe("<code>&lt;dumber&gt;</code>");
     expect(otherLinks.eq(1).html()).toBe("<code>&lt;number&gt;</code>");
     // Next, let's check the errors.
-    expect(errors).toHaveLength(8);
+    expect(errors).toHaveLength(6);
     expect(errors[0]).toBeInstanceOf(MacroBrokenLinkError);
     expect(errors[0]).toHaveProperty("line", 4);
     expect(errors[0]).toHaveProperty("column", 4);
@@ -168,7 +168,7 @@ describe("testing the main render() function", () => {
     expect(errors[3]).toHaveProperty("redirectInfo.current", "dumber");
     expect(errors[3]).toHaveProperty("redirectInfo.suggested", "number");
     expect(errors[4]).toBeInstanceOf(MacroExecutionError);
-    expect(errors[4]).toHaveProperty("line", 14);
+    expect(errors[4]).toHaveProperty("line", 12);
     expect(errors[4]).toHaveProperty("column", 7);
     expect(errors[4]).toHaveProperty(
       "filepath",
@@ -182,7 +182,7 @@ describe("testing the main render() function", () => {
       )
     );
     expect(errors[5]).toBeInstanceOf(MacroExecutionError);
-    expect(errors[5]).toHaveProperty("line", 16);
+    expect(errors[5]).toHaveProperty("line", 14);
     expect(errors[5]).toHaveProperty("column", 7);
     expect(errors[5]).toHaveProperty(
       "filepath",
