@@ -7,6 +7,7 @@ import { Submenu } from "../../ui/molecules/submenu";
 import "./index.scss";
 import { DropdownMenu, DropdownMenuWrapper } from "../../ui/molecules/dropdown";
 import { useSearchParams } from "react-router-dom";
+import { camelUnwrap } from "../../utils";
 
 export type AnyFilter = SelectFilter;
 
@@ -240,9 +241,7 @@ export default function SearchFilter({
         name="terms"
         placeholder="Filter by keyword"
         value={terms}
-        onBlurHandler={() =>
-          setSelectedTerms(terms.replace(/[\u200B-\u200D\uFEFF]/g, ""))
-        }
+        onBlurHandler={() => setSelectedTerms(camelUnwrap(terms))}
         onChangeHandler={(e) => setTerms(e.target.value)}
       />
 
