@@ -37,29 +37,48 @@ interface Page {
   last: number;
 }
 
-export function useUpdates() {
-  const user = useUserData();
-  const [searchParams] = useSearchParams();
+function composeUrl({
+  isAuthenticated,
+  searchParams,
+}: {
+  isAuthenticated: boolean;
+  searchParams: URLSearchParams;
+}): string {
+  let url = "/api/v2/updates/";
+  let params = new URLSearchParams();
 
-  if (!user?.isAuthenticated) {
-    for (const key of searchParams.keys()) {
-      if (key !== "page") {
-        searchParams.delete(key);
-      }
+  for (const [key, value] of searchParams.entries()) {
+    switch (key) {
+      case "page":
+        params.set(key, value);
+        break;
+
+      case "show":
+        if (isAuthenticated) {
+          url += "watched/";
+        }
+        break;
+
+      default:
+        if (isAuthenticated) {
+          params.set(key, value);
+        }
+        break;
     }
   }
 
-  let url = `/api/v2/updates/`;
-
-  if (searchParams.get("show") === "watched") {
-    url += "watched/";
-    searchParams.delete("show");
+  if ([...params.keys()].length) {
+    url += `?${params.toString()}`;
   }
 
-  const search = searchParams.toString();
-  if (search) {
-    url += `?${search}`;
-  }
+  return url;
+}
+
+export function useUpdates() {
+  const { isAuthenticated } = useUserData();
+  const [searchParams] = useSearchParams();
+
+  const url = composeUrl({ isAuthenticated, searchParams });
 
   return useSWR(
     url,
