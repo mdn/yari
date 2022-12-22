@@ -203,6 +203,7 @@ export default function SearchFilter({
             ariaControls={filterMenu.id}
             ariaHasPopup={"menu"}
             ariaExpanded={openFilter === filterMenu.key}
+            extraClasses={searchParams.get(filterMenu.key) ? "active" : ""}
             onClickHandler={() =>
               setOpenFilter(
                 openFilter === filterMenu.key ? null : filterMenu.key
@@ -243,6 +244,7 @@ export default function SearchFilter({
             ariaControls={sortMenu.id}
             ariaHasPopup={"menu"}
             ariaExpanded={isSortingOpen || undefined}
+            extraClasses={searchParams.get("sort") ? "active" : ""}
             onClickHandler={() => {
               setIsSortingOpen(!isSortingOpen);
             }}
