@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import { Button } from "../../ui/atoms/button";
 import { Search } from "../../ui/atoms/search";
@@ -7,6 +7,7 @@ import { Submenu } from "../../ui/molecules/submenu";
 import "./index.scss";
 import { DropdownMenu, DropdownMenuWrapper } from "../../ui/molecules/dropdown";
 import { useSearchParams } from "react-router-dom";
+import { useWatchedItemsApiEndpoint } from "../common/api";
 
 export type AnyFilter = SelectFilter;
 
@@ -45,8 +46,11 @@ export default function SearchFilter({
 
   const [openFilter, setOpenFilter] = useState<string | null>(null);
   const [isSortingOpen, setIsSortingOpen] = useState<boolean>(false);
-  const [terms, setTerms] = useState<string>(
-    searchParams.get(Params.QUERY) ?? ""
+  const [terms, setTerms] = useState<string>("");
+
+  useEffect(
+    () => setTerms(searchParams.get(Params.QUERY) ?? ""),
+    [searchParams]
   );
 
   const sortedParams = (params: URLSearchParams): URLSearchParams =>
