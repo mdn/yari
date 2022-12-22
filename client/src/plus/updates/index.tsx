@@ -61,7 +61,7 @@ const FILTERS: AnyFilter[] = [
       encode: (...values: string[]) => values.join(","),
       decode: (value: string) => value.split(","),
     },
-    label: "Browsers",
+    label: "Browser",
     key: "browsers",
     options: Object.entries(BROWSERS).map(([value, label]) => ({
       label,
