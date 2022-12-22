@@ -5,7 +5,6 @@ import {
   MacroNotFoundError,
   MacroBrokenLinkError,
   MacroRedirectedLinkError,
-  MacroDeprecatedError,
   MacroExecutionError,
 } from "../src/errors";
 
@@ -111,11 +110,6 @@ describe("testing the main render() function", () => {
     expect(otherLinks).toHaveLength(2);
     expect(otherLinks.eq(0).html()).toBe("<code>&lt;dumber&gt;</code>");
     expect(otherLinks.eq(1).html()).toBe("<code>&lt;number&gt;</code>");
-    for (const deprecatedID of ["gecko-header", "gecko-inline"]) {
-      const deprecated = $(`#${deprecatedID}`);
-      expect(deprecated).toHaveLength(1);
-      expect(deprecated.html()).toBe("");
-    }
     // Next, let's check the errors.
     expect(errors).toHaveLength(8);
     expect(errors[0]).toBeInstanceOf(MacroBrokenLinkError);
