@@ -100,7 +100,8 @@ export function useViewedState() {
   return {
     isViewed: (id: FeatureId) => {
       if (isServer) {
-        return false;
+        // Avoids the dot from popping up quickly on each load.
+        return true;
       }
       try {
         return !!window?.localStorage?.getItem(key(id));
