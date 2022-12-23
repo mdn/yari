@@ -94,10 +94,14 @@ export function useScrollToTop() {
 }
 
 export function useViewedState() {
+  const isServer = useIsServer();
   const key = (id: FeatureId) => `viewed.${id}`;
 
   return {
     isViewed: (id: FeatureId) => {
+      if (isServer) {
+        return false;
+      }
       try {
         return !!window?.localStorage?.getItem(key(id));
       } catch (e) {
@@ -106,6 +110,9 @@ export function useViewedState() {
       }
     },
     setViewed: (id: FeatureId) => {
+      if (isServer) {
+        return;
+      }
       try {
         window?.localStorage?.setItem(key(id), Date.now().toString());
       } catch (e) {
