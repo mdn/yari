@@ -74,12 +74,11 @@ function useSearchIndex(): readonly [
     }
     const gather = async () => {
       const flex = data.map(
-        ({ title, url }, i) =>
-          [
-            i,
-            title.toLowerCase(),
-            url.split("/").pop().toLowerCase(),
-          ] as FlexItem
+        ({ title, url }, i): FlexItem => [
+          i,
+          title.toLowerCase(),
+          url.split("/").pop().toLowerCase(),
+        ]
       );
 
       setSearchIndex({
