@@ -15,12 +15,13 @@ export function OnGitHubLink({ doc }: { doc: Doc }) {
           <NewIssueOnGitHubLink doc={doc} />
         </li>
         <li>
+          Want to fix the problem yourself?{" "}
           <a
             href="https://github.com/mdn/content/blob/main/CONTRIBUTING.md"
             target="_blank"
             rel="noopener noreferrer"
           >
-            Learn how to contribute.
+            Learn how to contribute
           </a>
         </li>
       </ul>
@@ -37,7 +38,7 @@ function SourceOnGitHubLink({ doc }: { doc: Doc }) {
       target="_blank"
       rel="noopener noreferrer"
     >
-      View the source.
+      View the source on <b>GitHub</b>
     </a>
   );
 }
@@ -51,7 +52,7 @@ function EditOnGitHubLink({ doc }: { doc: Doc }) {
       target="_blank"
       rel="noopener noreferrer"
     >
-      Edit the page.
+      Edit it on <b>GitHub</b>
     </a>
   );
 }
@@ -109,7 +110,7 @@ function NewIssueOnGitHubLink({ doc }: { doc: Doc }) {
       target="_blank"
       rel="noopener noreferrer"
     >
-      Report a content issue.
+      Report a problem with this content on <b>GitHub</b>
     </a>
   );
 }
