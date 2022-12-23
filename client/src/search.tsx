@@ -38,6 +38,14 @@ function quicksearchPing(input) {
   return `quick-search: ${input}`;
 }
 
+function splitQuery(term: string): string[] {
+  return term
+    .trim()
+    .toLowerCase()
+    .replace(".", " .") // Allows to find `Map.prototype.get()` via `Map.get`.
+    .split(/[ ,]+/);
+}
+
 function useSearchIndex(): readonly [
   null | SearchIndex,
   null | Error,
@@ -112,7 +120,7 @@ function useSearchIndex(): readonly [
 
 function HighlightMatch({ title, q }: { title: string; q: string }) {
   // Split on highlight term and include term into parts, ignore case.
-  const words = q.trim().toLowerCase().split(/[ ,]+/);
+  const words = splitQuery(q);
   // $& means the whole matched string
   const regexWords = words.map((s) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"));
   const regex = regexWords.map((word) => `(${word})`).join("|");
@@ -236,10 +244,7 @@ function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
     // overlaying search results don't trigger a scroll.
     const limit = window.innerHeight < 850 ? 5 : 10;
 
-    const q: string[] = inputValue
-      .toLowerCase()
-      .split(" ")
-      .map((s) => s.trim());
+    const q: string[] = splitQuery(inputValue);
     const indexResults: number[] = searchIndex.flex
       .filter(([_, title]) => q.every((q) => title.includes(q)))
       .map(([i]) => i)
