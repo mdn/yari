@@ -229,7 +229,7 @@ function GroupComponent({ group }: { group: Group }) {
   const allEvents = [
     ...events.added.map((e) => ({ status: "added", ...e })),
     ...events.removed.map((e) => ({ status: "removed", ...e })),
-  ] as EventWithStatus[];
+  ].sort((a, b) => a.path.localeCompare(b.path)) as EventWithStatus[];
 
   return metadata ? (
     <div className="group">
