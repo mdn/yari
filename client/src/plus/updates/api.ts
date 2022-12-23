@@ -76,10 +76,13 @@ function composeUrl({
 }
 
 export function useUpdates() {
-  const { isAuthenticated } = useUserData();
+  const user = useUserData();
   const [searchParams] = useSearchParams();
 
-  const url = composeUrl({ isAuthenticated, searchParams });
+  const url = composeUrl({
+    isAuthenticated: user && user.isAuthenticated,
+    searchParams,
+  });
 
   return useSWR(
     url,
