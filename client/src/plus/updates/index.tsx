@@ -2,10 +2,10 @@ import Container from "../../ui/atoms/container";
 
 import useSWR from "swr";
 import { DocMetadata } from "../../../../libs/types/document";
-import { MDN_PLUS_TITLE } from "../../constants";
+import { FeatureId, MDN_PLUS_TITLE } from "../../constants";
 import BrowserCompatibilityTable from "../../document/ingredients/browser-compatibility-table";
 import { browserToIconName } from "../../document/ingredients/browser-compatibility-table/headers";
-import { useLocale, useScrollToTop } from "../../hooks";
+import { useLocale, useScrollToTop, useViewedState } from "../../hooks";
 import { Button } from "../../ui/atoms/button";
 import { Icon } from "../../ui/atoms/icon";
 import { Loading } from "../../ui/atoms/loading";
@@ -21,7 +21,7 @@ import { useGleanClick } from "../../telemetry/glean-context";
 import { PLUS_UPDATES } from "../../telemetry/constants";
 import SearchFilter, { AnyFilter, AnySort } from "../search-filter";
 import { LoginBanner } from "./login-banner";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { DataError } from "../common";
 
@@ -129,6 +129,9 @@ function UpdatesLayout() {
   const { data, error } = useUpdates();
   const gleanClick = useGleanClick();
   const [searchParams, setSearchParams] = useSearchParams();
+
+  const { setViewed } = useViewedState();
+  useEffect(() => setViewed(FeatureId.PLUS_UPDATES_V2));
 
   const hasFilters = [...searchParams.keys()].some((key) => key !== "page");
 

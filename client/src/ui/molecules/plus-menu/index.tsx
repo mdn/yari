@@ -1,8 +1,10 @@
 import "./index.scss";
 import { usePlusUrl } from "../../../plus/utils";
 import { Menu } from "../menu";
-import { useIsServer, useLocale } from "../../../hooks";
+import { useIsServer, useLocale, useViewedState } from "../../../hooks";
 import { useUserData } from "../../../user-context";
+import { MenuEntry } from "../submenu";
+import { FeatureId } from "../../../constants";
 
 export const PlusMenu = ({ visibleSubMenuId, toggleMenu }) => {
   const plusUrl = usePlusUrl();
@@ -11,7 +13,9 @@ export const PlusMenu = ({ visibleSubMenuId, toggleMenu }) => {
   const userData = useUserData();
   const isAuthenticated = userData && userData.isAuthenticated;
 
-  const plusMenu = {
+  const { isViewed } = useViewedState();
+
+  const plusMenu: MenuEntry = {
     label: "MDN Plus",
     id: "mdn-plus",
     to: plusUrl,
@@ -46,7 +50,11 @@ export const PlusMenu = ({ visibleSubMenuId, toggleMenu }) => {
         hasIcon: true,
         iconClasses: "submenu-icon",
         label: "Updates",
-        isNew: Date.now() < 1675209600000, // new Date("2023-02-01 00:00:00Z").getTime()
+        dot:
+          Date.now() < 1675209600000 && // new Date("2023-02-01 00:00:00Z").getTime()
+          !isViewed(FeatureId.PLUS_UPDATES_V2)
+            ? "New feature"
+            : undefined,
         url: `/${locale}/plus/updates`,
       },
       {
