@@ -186,7 +186,7 @@ function OfferDetails({
               href={ctaLink}
               className="sub-link"
               onClick={() =>
-                gleanClick(`${OFFER_OVERVIEW_CLICK}_${offerDetails.id}`)
+                gleanClick(`${OFFER_OVERVIEW_CLICK}: ${offerDetails.id}`)
               }
             >
               {offerDetails.cta}
