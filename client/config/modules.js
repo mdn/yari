@@ -116,7 +116,7 @@ async function getModules() {
     // Otherwise we'll check if there is jsconfig.json
     // for non TS projects.
   } else if (hasJsConfig) {
-    config = await import(paths.appJsConfig).default;
+    config = await import("file://" + paths.appJsConfig).default;
   }
 
   config = config || {};

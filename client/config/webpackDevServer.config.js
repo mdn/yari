@@ -13,7 +13,7 @@ const sockPath = process.env.WDS_SOCKET_PATH; // default: '/ws'
 const sockPort = process.env.WDS_SOCKET_PORT;
 
 const proxySetup = fs.existsSync(paths.proxySetup)
-  ? (await import(paths.proxySetup)).default
+  ? (await import("file://" + paths.proxySetup)).default
   : null;
 
 function config(proxy, allowedHost) {
