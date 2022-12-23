@@ -20,8 +20,7 @@ type Item = {
 };
 
 type SearchIndex = {
-  // [index, title, slugTail][]
-  flex: [number, string, string][];
+  flex: [index: number, title: string, slugTail: string][];
   items: null | Item[];
 };
 
@@ -223,14 +222,11 @@ function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
 
     const q = splitQuery(inputValue);
     const indexResults = searchIndex.flex
-      .reduce((results, item) => {
-        const [index, title, slugTail] = item;
-        if (q.every((q) => title.includes(q))) {
-          const exact = Number(q.length === 1 && q[0] === slugTail);
-          results.push([exact, index]);
-        }
-        return results;
-      }, [] as Array<[number, number]>)
+      .filter(([_, title]) => q.every((q) => title.includes(q)))
+      .map(([index, title, slugTail]) => {
+        const exact = Number(q.length === 1 && q[0] === slugTail);
+        return [exact, index];
+      })
       .sort(([aExact], [bExact]) => bExact - aExact) // Boost exact matches.
       .map(([_, i]) => i)
       .slice(0, limit);
