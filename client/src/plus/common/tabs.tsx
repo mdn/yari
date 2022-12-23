@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import { MDN_PLUS_TITLE } from "../../constants";
+import { AnyFilter } from "../search-filter";
 
 export enum TabVariant {
   NOTIFICATIONS,
@@ -16,25 +17,32 @@ const WATCHING_URL = "/plus/notifications/watching";
 const COLLECTIONS_URL = "/plus/collections";
 const FREQUENTLY_VIEWED_URL = "/plus/collections/frequently_viewed";
 
-export const FILTERS = [
+export const FILTERS: AnyFilter[] = [
   {
-    label: "Content updates",
-    param: "content",
-  },
-  {
-    label: "Browser compatibility",
-    param: "compat",
+    type: "select",
+    key: "filterType",
+    label: "Filters",
+    options: [
+      {
+        label: "Content updates",
+        value: "content",
+      },
+      {
+        label: "Browser compatibility",
+        value: "compat",
+      },
+    ],
   },
 ];
 
 export const SORTS = [
   {
     label: "Date",
-    param: "date",
+    param: "sort=date",
   },
   {
     label: "Title",
-    param: "title",
+    param: "sort=title",
   },
 ];
 
@@ -76,24 +84,24 @@ export const TAB_INFO: Record<TabVariant, TabDefinition> = {
 };
 
 export function useCurrentTab(locale): TabVariant {
-  const location = useLocation();
+  const { pathname } = useLocation();
   const initialTab = getInitialTab();
 
   const [currentTab, setTab] = useState<TabVariant>(initialTab);
 
   useEffect(() => {
-    if (location.pathname === `/${locale}${STARRED_URL}`) {
+    if (pathname === `/${locale}${STARRED_URL}`) {
       setTab(TabVariant.STARRED);
-    } else if (location.pathname === `/${locale}${WATCHING_URL}`) {
+    } else if (pathname === `/${locale}${WATCHING_URL}`) {
       setTab(TabVariant.WATCHING);
-    } else if (location.pathname === `/${locale}${COLLECTIONS_URL}`) {
+    } else if (pathname === `/${locale}${COLLECTIONS_URL}`) {
       setTab(TabVariant.COLLECTIONS);
-    } else if (location.pathname === `/${locale}${FREQUENTLY_VIEWED_URL}`) {
+    } else if (pathname === `/${locale}${FREQUENTLY_VIEWED_URL}`) {
       setTab(TabVariant.FREQUENTLY_VIEWED);
     } else {
       setTab(TabVariant.NOTIFICATIONS);
     }
-  }, [location, currentTab, locale]);
+  }, [pathname, currentTab, locale]);
 
   return currentTab;
 }

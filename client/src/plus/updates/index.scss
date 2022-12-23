@@ -8,6 +8,24 @@
     --plus-link: var(--updates-link);
   }
 
+  button.button[disabled],
+  input[disabled] {
+    cursor: not-allowed;
+  }
+
+  .reset-filters {
+    --button-action-transform: none;
+
+    .button-wrap {
+      font-size: var(--type-smaller-font-size);
+      font-weight: 400;
+    }
+
+    .button-wrap:before {
+      content: "✖️";
+    }
+  }
+
   .group {
     background: var(--background-secondary);
     border-radius: 0.25rem;
@@ -67,6 +85,7 @@
     summary {
       align-items: center;
       color: var(--text-secondary);
+      cursor: pointer;
       display: flex;
       flex-wrap: wrap;
       font-size: 0.875rem;
@@ -98,6 +117,24 @@
       i {
         font-size: var(--type-tiny-font-size);
         margin-right: 1rem;
+      }
+
+      .status-added {
+        background-color: var(--background-success);
+
+        &:before {
+          content: "✓";
+          padding-right: 0.25rem;
+        }
+      }
+
+      .status-removed {
+        background-color: var(--background-critical);
+
+        &:before {
+          content: "✗";
+          padding-right: 0.25rem;
+        }
       }
 
       .status {

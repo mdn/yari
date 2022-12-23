@@ -61,6 +61,10 @@ export const UserMenu = () => {
         url: `/${locale}/plus/collections`,
       },
       {
+        label: "Updates",
+        url: `/${locale}/plus/updates`,
+      },
+      {
         label: "My Settings",
         url: "/en-US/plus/settings",
       },

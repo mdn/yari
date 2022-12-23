@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useSearchParams } from "react-router-dom";
 
 export const NOTIFICATIONS_BASE_PATH = "/api/v1/plus/notifications";
 export const WATCHED_BASE_PATH = "/api/v1/plus/watching";
@@ -62,26 +63,19 @@ export async function undoDeleteItemById(id: number) {
   return await post(`${NOTIFICATIONS_BASE_PATH}/${id}/undo-deletion/`);
 }
 
-export function useNotificationsApiEndpoint(
-  offset: number,
-  searchTerms: string,
-  selectedFilter: string,
-  selectedSort: string,
-  starred: boolean
-) {
+export function useNotificationsApiEndpoint(offset: number, starred: boolean) {
   const [data, setData] = useState<any>({});
   const [error, setError] = useState<Error | null>();
   const [isLoading, setIsLoading] = useState(true);
   const [hasMore, setHasMore] = useState(false);
 
+  const [searchParams] = useSearchParams();
+
   useEffect(() => {
     (async () => {
       setIsLoading(true);
-      const sp = new URLSearchParams();
+      const sp = new URLSearchParams(searchParams);
 
-      searchTerms!! && sp.append("q", searchTerms);
-      selectedFilter!! && sp.append("filterType", selectedFilter);
-      selectedSort!! && sp.append("sort", selectedSort);
       starred!! && sp.append("starred", "true");
 
       sp.append("limit", DEFAULT_LIMIT.toString());
@@ -109,37 +103,26 @@ export function useNotificationsApiEndpoint(
         setData({
           ...newData,
           offset,
-          searchTerms,
-          selectedFilter,
-          selectedSort,
           starred,
         });
         setIsLoading(false);
         setError(null);
       }
     })();
-  }, [offset, searchTerms, selectedFilter, selectedSort, starred]);
+  }, [searchParams, offset, starred]);
   return { data, error, isLoading, hasMore };
 }
 
-export function useWatchedItemsApiEndpoint(
-  offset: number,
-  searchTerms: string,
-  selectedFilter: string,
-  selectedSort: string
-) {
+export function useWatchedItemsApiEndpoint(offset: number) {
   const [data, setData] = useState<any>({});
   const [error, setError] = useState<Error | null>();
   const [isLoading, setIsLoading] = useState(true);
   const [hasMore, setHasMore] = useState(false);
+  const [searchParams] = useSearchParams();
 
   useEffect(() => {
     (async () => {
-      const sp = new URLSearchParams();
-
-      searchTerms!! && sp.append("q", searchTerms);
-      selectedFilter!! && sp.append("filterType", selectedFilter);
-      selectedSort!! && sp.append("sort", selectedSort);
+      const sp = new URLSearchParams(searchParams);
 
       sp.append("limit", DEFAULT_LIMIT.toString());
       offset!! && sp.append("offset", offset.toString());
@@ -167,15 +150,12 @@ export function useWatchedItemsApiEndpoint(
         setData({
           ...newData,
           offset,
-          searchTerms,
-          selectedFilter,
-          selectedSort,
         });
         setIsLoading(false);
         setError(null);
       }
     })();
-  }, [offset, searchTerms, selectedFilter, selectedSort]);
+  }, [searchParams, offset]);
   return { data, error, isLoading, hasMore };
 }
 
