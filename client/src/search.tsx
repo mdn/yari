@@ -221,11 +221,12 @@ function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
     // overlaying search results don't trigger a scroll.
     const limit = window.innerHeight < 850 ? 5 : 10;
 
+    const inputValueLC = inputValue.toLowerCase().trim();
     const q = splitQuery(inputValue);
     const indexResults = searchIndex.flex
       .filter(([_, title]) => q.every((q) => title.includes(q)))
       .map(([index, title, slugTail]) => {
-        const exact = Number(q.length === 1 && q[0] === slugTail);
+        const exact = Number([title, slugTail].includes(inputValueLC));
         return [exact, index];
       })
       .sort(([aExact], [bExact]) => bExact - aExact) // Boost exact matches.
