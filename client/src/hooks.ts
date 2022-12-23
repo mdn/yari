@@ -97,8 +97,20 @@ export function useViewedState() {
   const key = (id: FeatureId) => `viewed.${id}`;
 
   return {
-    isViewed: (id: FeatureId) => !!window?.localStorage?.getItem(key(id)),
-    setViewed: (id: FeatureId) =>
-      window?.localStorage?.setItem(key(id), Date.now().toString()),
+    isViewed: (id: FeatureId) => {
+      try {
+        return !!window?.localStorage?.getItem(key(id));
+      } catch (e) {
+        console.warn("Unable to read viewed state from localStorage", e);
+        return false;
+      }
+    },
+    setViewed: (id: FeatureId) => {
+      try {
+        window?.localStorage?.setItem(key(id), Date.now().toString());
+      } catch (e) {
+        console.warn("Unable to write viewed state to localStorage", e);
+      }
+    },
   };
 }
