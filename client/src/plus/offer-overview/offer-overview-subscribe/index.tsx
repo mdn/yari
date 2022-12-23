@@ -12,6 +12,8 @@ import { Switch } from "../../../ui/atoms/switch";
 import { useEffect, useState } from "react";
 import { getStripePlans } from "../../common/api";
 import { useOnlineStatus } from "../../../hooks";
+import { useGleanClick } from "../../../telemetry/glean-context";
+import { OFFER_OVERVIEW_CLICK } from "../../../telemetry/constants";
 
 export enum Period {
   Month,
@@ -151,6 +153,7 @@ function OfferDetails({
   const userData = useUserData();
   const current = isCurrent(userData, subscriptionType);
   const upgrade = canUpgrade(userData, subscriptionType);
+  const gleanClick = useGleanClick();
   const displayMonthlyPrice =
     monthlyPrice &&
     new Intl.NumberFormat(undefined, {
@@ -179,7 +182,13 @@ function OfferDetails({
         )}
         {(current && <span className="sub-link current">Current plan</span>) ||
           (upgrade === null && (
-            <a href={ctaLink} className="sub-link">
+            <a
+              href={ctaLink}
+              className="sub-link"
+              onClick={() =>
+                gleanClick(`${OFFER_OVERVIEW_CLICK}: ${offerDetails.id}`)
+              }
+            >
               {offerDetails.cta}
             </a>
           )) ||
