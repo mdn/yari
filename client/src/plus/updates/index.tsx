@@ -25,6 +25,9 @@ import { useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { DataError } from "../common";
 
+type EventWithStatus = Event & { status: Status };
+type Status = "added" | "removed";
+
 const CATEGORY_TO_NAME = {
   api: "Web APIs",
   css: "CSS",
@@ -222,14 +225,11 @@ function GroupComponent({ group }: { group: Group }) {
     icon: browserToIconName(browser),
     title: `${name} ${version}`,
   };
-  // {
-  //   icon: "star",
-  //   title: "Subfeatures added",
-  // }
-  // {
-  //   icon: "add",
-  //   title: "Added missing compatibility data",
-  // }
+
+  const allEvents = [
+    ...events.added.map((e) => ({ status: "added", ...e })),
+    ...events.removed.map((e) => ({ status: "removed", ...e })),
+  ] as EventWithStatus[];
 
   return metadata ? (
     <div className="group">
@@ -245,17 +245,14 @@ function GroupComponent({ group }: { group: Group }) {
           })}
         </time>
       </header>
-      {collapseEvents(events.added).map((event) => (
-        <EventComponent key={event.path} event={event} status={"added"} />
-      ))}
-      {collapseEvents(events.removed).map((event) => (
-        <EventComponent key={event.path} event={event} status={"removed"} />
+      {collapseEvents(allEvents).map((event) => (
+        <EventComponent key={event.path} event={event} status={event.status} />
       ))}
     </div>
   ) : null;
 }
 
-function collapseEvents(events: Event[]): Event[] {
+function collapseEvents<T extends { path: string }>(events: T[]): T[] {
   return events.filter(
     (event) =>
       events.findIndex(
@@ -264,13 +261,7 @@ function collapseEvents(events: Event[]): Event[] {
   );
 }
 
-function EventComponent({
-  event,
-  status,
-}: {
-  event: Event;
-  status: "added" | "removed";
-}) {
+function EventComponent({ event, status }: { event: Event; status: Status }) {
   const [isOpen, setIsOpen] = useState(false);
   const [category, ...displayPath] = event.path.split(".");
   const engines = event.compat.engines;
@@ -315,7 +306,7 @@ function EventComponent({
   );
 }
 
-function EventStatus({ status }: { status: "added" | "removed" }) {
+function EventStatus({ status }: { status: Status }) {
   return <span className={`badge status-${status}`}>{status}</span>;
 }
 
