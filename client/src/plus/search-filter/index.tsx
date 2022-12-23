@@ -241,7 +241,12 @@ export default function SearchFilter({
         name="terms"
         placeholder="Filter by keyword"
         value={terms}
-        onBlurHandler={() => setSelectedTerms(camelUnwrap(terms))}
+        onBlurHandler={() =>
+          // The updates event list uses `camelWrap()` to insert
+          // zero-width spaces, so we `camelUnwrap()` them here.
+          // Otherwise we would not find a copy-pasted feature.
+          setSelectedTerms(camelUnwrap(terms))
+        }
         onChangeHandler={(e) => setTerms(e.target.value)}
       />
 

@@ -37,6 +37,8 @@ const CATEGORY_TO_NAME = {
   webextensions: "Web Extensions",
 };
 
+// At some point, these should come from the API
+// or from @mdn/browser-compat-data directly.
 const BROWSERS = {
   chrome: "Chrome",
   chrome_android: "Chrome Android",

@@ -55,6 +55,7 @@ function composeUrl({
 
       case "show":
         if (isAuthenticated) {
+          // Different endpoint for uncached personalized data.
           url += "watched/";
         }
         break;
