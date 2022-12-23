@@ -86,6 +86,10 @@ export function camelWrap(text: string) {
   return text.replace(/([^A-Z])([A-Z])/g, "$1\u200B$2");
 }
 
+export function camelUnwrap(text: string) {
+  return text.replace(/[\u200B]/g, "");
+}
+
 /**
  * Gets the number of characters in a string.
  * String.length returns the number of code units.

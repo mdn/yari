@@ -18,19 +18,16 @@ import { useVisibilityChangeListener } from "./utils";
 import { DataError } from "../common";
 import { Loading } from "../../ui/atoms/loading";
 import { useLocale } from "../../hooks";
+import { useSearchParams } from "react-router-dom";
 
-export function NotificationsTab({
-  selectedTerms,
-  selectedFilter,
-  selectedSort,
-  starred = false,
-}) {
+export function NotificationsTab({ starred = false }) {
   const [offset, setOffset] = useState(0);
   const { setToastData } = useUIStatus();
   const [selectAllChecked, setSelectAllChecked] = useState(false);
   const [list, setList] = useState<Array<any>>([]);
   const locale = useLocale();
   const currentTab = useCurrentTab(locale);
+  const [searchParams] = useSearchParams();
 
   const [editOptions, setEditOptions] = useState({
     starEnabled: false,
@@ -41,9 +38,6 @@ export function NotificationsTab({
 
   const { data, error, isLoading, hasMore } = useNotificationsApiEndpoint(
     offset,
-    selectedTerms,
-    selectedFilter,
-    selectedSort,
     starred
   );
 
@@ -69,7 +63,7 @@ export function NotificationsTab({
     setSelectAllChecked(false);
     setList([]);
     setOffset(0);
-  }, [selectedFilter, selectedSort, selectedTerms]);
+  }, [searchParams]);
 
   const calculateBulkEditOptions = (items: any[]) => {
     editOptions.starEnabled = false;
@@ -234,17 +228,6 @@ export function NotificationsTab({
   );
 }
 
-export function StarredNotificationsTab({
-  selectedTerms,
-  selectedFilter,
-  selectedSort,
-}) {
-  return (
-    <NotificationsTab
-      starred={true}
-      selectedTerms={selectedTerms}
-      selectedSort={selectedSort}
-      selectedFilter={selectedFilter}
-    />
-  );
+export function StarredNotificationsTab() {
+  return <NotificationsTab starred={true} />;
 }

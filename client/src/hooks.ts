@@ -2,6 +2,7 @@ import React, { useEffect, useMemo, useState } from "react";
 import { useLocation, useNavigationType, useParams } from "react-router-dom";
 import { DEFAULT_LOCALE } from "../../libs/constants";
 import { isValidLocale } from "../../libs/locale-utils";
+import { FeatureId } from "./constants";
 
 // This is a bit of a necessary hack!
 // The only reason this list is needed is because of the PageNotFound rendering.
@@ -90,4 +91,34 @@ export function useScrollToTop() {
   useEffect(() => {
     if (navigationType === "PUSH") document.documentElement.scrollTo(0, 0);
   }, [navigationType, location]);
+}
+
+export function useViewedState() {
+  const isServer = useIsServer();
+  const key = (id: FeatureId) => `viewed.${id}`;
+
+  return {
+    isViewed: (id: FeatureId) => {
+      if (isServer) {
+        // Avoids the dot from popping up quickly on each load.
+        return true;
+      }
+      try {
+        return !!window?.localStorage?.getItem(key(id));
+      } catch (e) {
+        console.warn("Unable to read viewed state from localStorage", e);
+        return false;
+      }
+    },
+    setViewed: (id: FeatureId) => {
+      if (isServer) {
+        return;
+      }
+      try {
+        window?.localStorage?.setItem(key(id), Date.now().toString());
+      } catch (e) {
+        console.warn("Unable to write viewed state to localStorage", e);
+      }
+    },
+  };
 }

@@ -5,7 +5,6 @@ import {
   MacroNotFoundError,
   MacroBrokenLinkError,
   MacroRedirectedLinkError,
-  MacroDeprecatedError,
   MacroExecutionError,
 } from "../src/errors.js";
 
@@ -14,8 +13,6 @@ const source = `
   {{nonExistentMacro("yada")}}
   {{cssxref("dumber")}}
   {{cssxref("number")}}
-  <p id="gecko-header">{{gecko_minversion_header("36")}}</p>
-  <p id="gecko-inline">{{gecko_minversion_inline("36")}}</p>
   {{page("bogus")}}
   {{page("/en-US/docs/Web/B")}}
   {{page("/en-US/docs/Web/B", "bogus-section")}}
@@ -139,13 +136,8 @@ describe("testing the main render() function", () => {
     expect(otherLinks).toHaveLength(2);
     expect(otherLinks.eq(0).html()).toBe("<code>&lt;dumber&gt;</code>");
     expect(otherLinks.eq(1).html()).toBe("<code>&lt;number&gt;</code>");
-    for (const deprecatedID of ["gecko-header", "gecko-inline"]) {
-      const deprecated = $(`#${deprecatedID}`);
-      expect(deprecated).toHaveLength(1);
-      expect(deprecated.html()).toBe("");
-    }
     // Next, let's check the errors.
-    expect(errors).toHaveLength(8);
+    expect(errors).toHaveLength(6);
     expect(errors[0]).toBeInstanceOf(MacroBrokenLinkError);
     expect(errors[0]).toHaveProperty("line", 4);
     expect(errors[0]).toHaveProperty("column", 4);
@@ -201,57 +193,29 @@ describe("testing the main render() function", () => {
     expect(errors[3]).toHaveProperty("macroSource", '{{cssxref("dumber")}}');
     expect(errors[3]).toHaveProperty("redirectInfo.current", "dumber");
     expect(errors[3]).toHaveProperty("redirectInfo.suggested", "number");
-    expect(errors[4]).toBeInstanceOf(MacroDeprecatedError);
+    expect(errors[4]).toBeInstanceOf(MacroExecutionError);
     expect(errors[4]).toHaveProperty("line", 12);
-    expect(errors[4]).toHaveProperty("column", 24);
+    expect(errors[4]).toHaveProperty("column", 3);
     expect(errors[4]).toHaveProperty(
       "filepath",
       "testing/content/files/en-us/web/a"
     );
-    expect(errors[4]).toHaveProperty("macroName", "gecko_minversion_header");
+    expect(errors[4]).toHaveProperty("macroName", "page");
     expect(errors[4]).toHaveProperty(
-      "errorStack",
-      expect.stringContaining(
-        "This macro has been deprecated, and should be removed."
-      )
-    );
-    expect(errors[5]).toBeInstanceOf(MacroDeprecatedError);
-    expect(errors[5]).toHaveProperty("line", 13);
-    expect(errors[5]).toHaveProperty("column", 24);
-    expect(errors[5]).toHaveProperty(
-      "filepath",
-      "testing/content/files/en-us/web/a"
-    );
-    expect(errors[5]).toHaveProperty("macroName", "gecko_minversion_inline");
-    expect(errors[5]).toHaveProperty(
-      "errorStack",
-      expect.stringContaining(
-        "This macro has been deprecated, and should be removed."
-      )
-    );
-    expect(errors[6]).toBeInstanceOf(MacroExecutionError);
-    expect(errors[6]).toHaveProperty("line", 14);
-    expect(errors[6]).toHaveProperty("column", 3);
-    expect(errors[6]).toHaveProperty(
-      "filepath",
-      "testing/content/files/en-us/web/a"
-    );
-    expect(errors[6]).toHaveProperty("macroName", "page");
-    expect(errors[6]).toHaveProperty(
       "errorStack",
       expect.stringContaining(
         '/en-us/docs/web/a references /en-us/docs/bogus (derived from "bogus"), which does not exist'
       )
     );
-    expect(errors[7]).toBeInstanceOf(MacroExecutionError);
-    expect(errors[7]).toHaveProperty("line", 16);
-    expect(errors[7]).toHaveProperty("column", 3);
-    expect(errors[7]).toHaveProperty(
+    expect(errors[5]).toBeInstanceOf(MacroExecutionError);
+    expect(errors[5]).toHaveProperty("line", 14);
+    expect(errors[5]).toHaveProperty("column", 3);
+    expect(errors[5]).toHaveProperty(
       "filepath",
       "testing/content/files/en-us/web/a"
     );
-    expect(errors[7]).toHaveProperty("macroName", "page");
-    expect(errors[7]).toHaveProperty(
+    expect(errors[5]).toHaveProperty("macroName", "page");
+    expect(errors[5]).toHaveProperty(
       "errorStack",
       expect.stringContaining(
         'unable to find an HTML element with an "id" of "bogus-section" within /en-us/docs/web/b'

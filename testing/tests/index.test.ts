@@ -1552,12 +1552,12 @@ test("deprecated macros are fixable", () => {
   const { doc } = JSON.parse(fs.readFileSync(jsonFile, "utf-8")) as {
     doc: Doc;
   };
-  expect(doc.flaws.macros).toHaveLength(2);
+  expect(doc.flaws.macros).toHaveLength(1);
   // All fixable and all a suggestion of ''
-  expect(doc.flaws.macros.filter((flaw) => flaw.fixable)).toHaveLength(2);
+  expect(doc.flaws.macros.filter((flaw) => flaw.fixable)).toHaveLength(1);
   expect(
     doc.flaws.macros.filter((flaw) => flaw.suggestion === "")
-  ).toHaveLength(2);
+  ).toHaveLength(1);
 });
 
 test("external links always get the right attributes", () => {
