@@ -46,7 +46,7 @@ export const PlusMenu = ({ visibleSubMenuId, toggleMenu }) => {
         hasIcon: true,
         iconClasses: "submenu-icon",
         label: "Updates",
-        isNew: Date.now() < 1675209600000, // new Date("2023-02-01 00:00:00Z").getTime()
+        dot: Date.now() < 1675209600000 ? "New feature" : undefined, // new Date("2023-02-01 00:00:00Z").getTime()
         url: `/${locale}/plus/updates`,
       },
       {
