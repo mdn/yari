@@ -97,8 +97,8 @@ export function useViewedState() {
   const key = (id: FeatureId) => `viewed.${id}`;
 
   return {
-    isViewed: (id: FeatureId) => !!localStorage?.getItem(key(id)),
+    isViewed: (id: FeatureId) => !!window?.localStorage?.getItem(key(id)),
     setViewed: (id: FeatureId) =>
-      localStorage?.setItem(key(id), Date.now().toString()),
+      window?.localStorage?.setItem(key(id), Date.now().toString()),
   };
 }
