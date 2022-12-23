@@ -98,6 +98,7 @@ export function useViewedState() {
 
   return {
     isViewed: (id: FeatureId) => !!localStorage?.getItem(key(id)),
-    setViewed: (id: FeatureId) => localStorage?.setItem(key(id), "1"),
+    setViewed: (id: FeatureId) =>
+      localStorage?.setItem(key(id), Date.now().toString()),
   };
 }
