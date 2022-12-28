@@ -6,18 +6,15 @@ export function OnGitHubLink({ doc }: { doc: Doc }) {
       <h3>Found a problem with this page?</h3>
       <ul>
         <li>
-          <EditOnGitHubLink doc={doc} />
-        </li>
-        <li>
-          <SourceOnGitHubLink doc={doc} />
-        </li>
-        <li>
           <NewIssueOnGitHubLink doc={doc} />
         </li>
         <li>
-          Want to fix the problem yourself?{" "}
+          <EditOnGitHubLink doc={doc} />
+        </li>
+        <li>
           <a
             href="https://github.com/mdn/content/blob/main/CONTRIBUTING.md"
+            title={`This will take you to our contribution guidelines on GitHub.`}
             target="_blank"
             rel="noopener noreferrer"
           >
@@ -29,30 +26,16 @@ export function OnGitHubLink({ doc }: { doc: Doc }) {
   );
 }
 
-function SourceOnGitHubLink({ doc }: { doc: Doc }) {
-  const { github_url, folder } = doc.source;
-  return (
-    <a
-      href={`${github_url}?plain=1`}
-      title={`Folder: ${folder} (Opens in a new tab)`}
-      target="_blank"
-      rel="noopener noreferrer"
-    >
-      View the source on <b>GitHub</b>
-    </a>
-  );
-}
-
 function EditOnGitHubLink({ doc }: { doc: Doc }) {
   const { github_url } = doc.source;
   return (
     <a
       href={github_url.replace("/blob/", "/edit/")}
-      title={`You're going to need to sign in to GitHub first (Opens in a new tab)`}
+      title={`This will take you to GitHub, where you'll need to sign in first.`}
       target="_blank"
       rel="noopener noreferrer"
     >
-      Edit it on <b>GitHub</b>
+      Fix the problem yourself
     </a>
   );
 }
@@ -106,11 +89,11 @@ function NewIssueOnGitHubLink({ doc }: { doc: Doc }) {
   return (
     <a
       href={url.href}
-      title="This will take you to GitHub to file a new issue"
+      title="This will take you to GitHub to file a new issue."
       target="_blank"
       rel="noopener noreferrer"
     >
-      Report a problem with this content on <b>GitHub</b>
+      Report the content issue
     </a>
   );
 }

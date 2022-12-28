@@ -15,7 +15,7 @@ export function LastModified({ value, locale }) {
   };
   return (
     <>
-      <b>Last modified:</b>{" "}
+      This page was last modified on{" "}
       <time dateTime={value}>
         {date.toLocaleString(locale, dateStringOptions)}
       </time>
@@ -33,8 +33,8 @@ export function Metadata({ doc, locale }) {
       <div className="metadata-content-container">
         {doc.isActive && <OnGitHubLink doc={doc} />}
         <p className="last-modified-date">
-          <LastModified value={doc.modified} locale={locale} />, by{" "}
-          <Authors url={doc.mdn_url} />
+          <LastModified value={doc.modified} locale={locale} /> by{" "}
+          <Authors url={doc.mdn_url} />.
         </p>
       </div>
     </aside>
