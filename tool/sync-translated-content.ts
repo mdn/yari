@@ -77,26 +77,17 @@ export function syncAllTranslatedContent(locale) {
   return stats;
 }
 
-function resolve(slug) {
+function resolve(slug: string) {
   if (!slug) {
     return slug;
   }
   const url = buildURL("en-us", slug);
   const resolved = Redirect.resolve(url);
-  if (url !== resolved) {
-    const doc = Document.read(Document.urlToFolderPath(resolved));
-    if (!doc) {
-      return slug;
-    }
-    const resolvedSlug = doc.metadata.slug;
-    if (slug !== resolvedSlug) {
-      return resolvedSlug;
-    }
-  }
-  return slug;
+  let doc = Document.read(Document.urlToFolderPath(resolved));
+  return doc?.metadata.slug ?? slug;
 }
 
-function mdOrHtmlExists(filePath) {
+function mdOrHtmlExists(filePath: string) {
   const dir = path.dirname(filePath);
   return (
     fs.existsSync(path.join(dir, MARKDOWN_FILENAME)) ||
@@ -104,7 +95,7 @@ function mdOrHtmlExists(filePath) {
   );
 }
 
-export function syncTranslatedContent(inFilePath, locale) {
+export function syncTranslatedContent(inFilePath: string, locale: string) {
   if (!CONTENT_TRANSLATED_ROOT) {
     throw new Error(
       "CONTENT_TRANSLATED_ROOT must be set to sync translated content!"
@@ -135,7 +126,10 @@ export function syncTranslatedContent(inFilePath, locale) {
   ) {
     return status;
   }
-  status.moved = oldMetadata.slug.toLowerCase() !== metadata.slug.toLowerCase();
+  status.moved = oldMetadata.slug !== metadata.slug; // slug changes (case sensitive)
+  const filePathChanged =
+    status.moved &&
+    oldMetadata.slug.toLowerCase() !== metadata.slug.toLowerCase();
 
   if (status.moved) {
     log.log(
@@ -200,7 +194,7 @@ export function syncTranslatedContent(inFilePath, locale) {
       log.log(`${inFilePath} → ${filePath}`);
       throw new Error(`file: ${filePath} already exists!`);
     }
-  } else if (mdOrHtmlExists(filePath)) {
+  } else if (filePathChanged && mdOrHtmlExists(filePath)) {
     `unrooting ${inFilePath} (conflicting translation)`;
     metadata.slug = `${CONFLICTING}/${metadata.slug}`;
     status.conflicting = true;
@@ -226,17 +220,24 @@ export function syncTranslatedContent(inFilePath, locale) {
     oldMetadata.slug,
     metadata.slug
   );
-  fs.mkdirSync(path.dirname(filePath), { recursive: true });
-  execGit(["mv", inFilePath, filePath], { cwd: CONTENT_TRANSLATED_ROOT });
-  metadata.original_slug = oldMetadata.slug;
+  if (filePathChanged) {
+    fs.mkdirSync(path.dirname(filePath), { recursive: true });
+    execGit(["mv", inFilePath, filePath], { cwd: CONTENT_TRANSLATED_ROOT });
+
+    metadata.original_slug = oldMetadata.slug;
+  }
   Document.saveFile(filePath, Document.trimLineEndings(rawBody), metadata);
-  try {
-    fs.rmdirSync(path.dirname(inFilePath));
-  } catch (e: any) {
-    if (e.code !== "ENOTEMPTY") {
-      throw e;
+
+  if (filePathChanged) {
+    try {
+      fs.rmdirSync(path.dirname(inFilePath));
+    } catch (e: any) {
+      if (e.code !== "ENOTEMPTY") {
+        throw e;
+      }
     }
   }
+
   return status;
 }
 
