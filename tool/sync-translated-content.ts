@@ -83,7 +83,7 @@ function resolve(slug: string) {
   }
   const url = buildURL("en-us", slug);
   const resolved = Redirect.resolve(url);
-  let doc = Document.read(Document.urlToFolderPath(resolved));
+  const doc = Document.read(Document.urlToFolderPath(resolved));
   return doc?.metadata.slug ?? slug;
 }
 
