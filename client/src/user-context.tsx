@@ -2,8 +2,12 @@ import * as React from "react";
 import useSWR from "swr";
 
 import { DISABLE_AUTH, DEFAULT_GEO_COUNTRY } from "./env";
-import { fetchAllCollectionsItems } from "./plus/collections-quicksearch";
 import { FREQUENTLY_VIEWED_STORAGE_KEY } from "./plus/collections/frequently-viewed";
+
+const DEPRECATED_LOCAL_STORAGE_KEYS = [
+  "collection-items",
+  "collection-items-updated-date",
+];
 
 export enum SubscriptionType {
   MDN_CORE = "core",
@@ -14,7 +18,6 @@ export enum SubscriptionType {
 }
 
 export type UserPlusSettings = {
-  colInSearch: boolean;
   collectionLastModified: Date | null;
 };
 
@@ -109,7 +112,7 @@ function getSessionStorageData() {
 
 export function cleanupUserData() {
   removeSessionStorageData();
-  removeLocalStorageData();
+  removeLocalStorageData(FREQUENTLY_VIEWED_STORAGE_KEY);
   if (window.mdnWorker) {
     window.mdnWorker.cleanDb();
     window.mdnWorker.disableServiceWorker();
@@ -127,14 +130,17 @@ function removeSessionStorageData() {
   }
 }
 
-function removeLocalStorageData() {
+function removeLocalStorageData(key: string) {
   try {
-    localStorage.removeItem(FREQUENTLY_VIEWED_STORAGE_KEY);
+    localStorage.removeItem(key);
   } catch (e) {
-    console.warn(
-      "Unable to delete frequently viewed items from localStorage",
-      e
-    );
+    console.warn(`Unable to delete ${key} from localStorage`, e);
+  }
+}
+
+function removeDeprecatedLocalStorageData() {
+  for (const key of DEPRECATED_LOCAL_STORAGE_KEYS) {
+    removeLocalStorageData(key);
   }
 }
 
@@ -160,7 +166,6 @@ export function UserDataProvider(props: { children: React.ReactNode }) {
         data?.settings?.collections_last_modified_time;
       const settings: UserPlusSettings | null = data?.settings
         ? {
-            colInSearch: data?.settings?.col_in_search || false,
             collectionLastModified:
               (collectionLastModified && new Date(collectionLastModified)) ||
               null,
@@ -193,15 +198,16 @@ export function UserDataProvider(props: { children: React.ReactNode }) {
   );
 
   React.useEffect(() => {
+    removeDeprecatedLocalStorageData();
+  }, []);
+
+  React.useEffect(() => {
     if (data) {
       // At this point, the XHR request has set `data` to be an object.
       // The user is definitely signed in or not signed in.
       data.offlineSettings = OfflineSettingsData.read();
       setSessionStorageData(data);
 
-      if (data.settings?.colInSearch) {
-        fetchAllCollectionsItems(data.settings?.collectionLastModified || null);
-      }
       // Let's initialize the MDN Worker if applicable.
       if (!window.mdnWorker && data?.offlineSettings?.offline) {
         import("./settings/mdn-worker").then(({ getMDNWorker }) => {

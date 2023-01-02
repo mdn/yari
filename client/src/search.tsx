@@ -9,8 +9,6 @@ import { Button } from "./ui/atoms/button";
 
 import { useLocale } from "./hooks";
 import { SearchProps, useFocusViaKeyboard } from "./search-utils";
-import { useUserData } from "./user-context";
-import { getCollectionItems } from "./plus/collections-quicksearch";
 import { useGleanClick } from "./telemetry/glean-context";
 
 const PRELOAD_WAIT_MS = 500;
@@ -19,7 +17,6 @@ const SHOW_INDEXING_AFTER_MS = 500;
 type Item = {
   url: string;
   title: string;
-  collection: boolean;
 };
 
 type SearchIndex = {
@@ -31,7 +28,6 @@ type ResultItem = {
   title: string;
   url: string;
   positions: Set<number>;
-  collection: boolean;
 };
 
 function quicksearchPing(input) {
@@ -47,7 +43,6 @@ function useSearchIndex(): readonly [
   const [searchIndex, setSearchIndex] = useState<null | SearchIndex>(null);
   // Default to 'en-US' if you're on the home page without the locale prefix.
   const { locale = "en-US" } = useParams();
-  const user = useUserData();
 
   const url = `/${locale}/search-index.json`;
 
@@ -68,41 +63,15 @@ function useSearchIndex(): readonly [
       return;
     }
     const gather = async () => {
-      const collection: Item[] = [];
-      if (user?.settings?.colInSearch) {
-        const all = await getCollectionItems(
-          user?.settings?.collectionLastModified
-        );
-        collection.push(
-          ...all.map((item) => {
-            return { ...item, collection: true };
-          })
-        );
-      }
-      const collectionSet = new Set(collection.map(({ url }) => url));
-      const mixed = [
-        ...collection,
-        ...data
-          .filter(({ url }) => !collectionSet.has(url))
-          .map((item) => {
-            return { ...item, collection: false };
-          }),
-      ];
-
-      const flex = mixed.map(({ title }, i) => [i, title.toLowerCase()]);
+      const flex = data.map(({ title }, i) => [i, title.toLowerCase()]);
 
       setSearchIndex({
         flex,
-        items: mixed!,
+        items: data,
       });
     };
     gather();
-  }, [
-    shouldInitialize,
-    data,
-    user?.settings?.colInSearch,
-    user?.settings?.collectionLastModified,
-  ]);
+  }, [shouldInitialize, data]);
 
   return useMemo(
     () => [searchIndex, error || null, () => setShouldInitialize(true)],
@@ -401,10 +370,9 @@ function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
               <div
                 {...getItemProps({
                   key: item.url,
-                  className:
-                    "result-item " +
-                    (i === highlightedIndex ? "highlight " : " ") +
-                    (item.collection ? "qs-collection " : " "),
+                  className: `result-item ${
+                    i === highlightedIndex ? "highlight " : ""
+                  }`,
                   item,
                   index: i,
                 })}

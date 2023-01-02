@@ -13,16 +13,6 @@ export type PLUS_SETTINGS = {
   col_in_search: boolean;
 };
 
-export async function toggleCollectionsInQuickSearch(enabled: boolean) {
-  return await fetch(SETTINGS_BASE_PATH, {
-    body: JSON.stringify({ col_in_search: enabled }),
-    method: "POST",
-    headers: {
-      "content-type": "application/json",
-    },
-  });
-}
-
 export async function markNotificationsAsRead() {
   return fetch(NOTIFICATIONS_MARK_ALL_AS_READ_PATH, {
     method: "POST",
