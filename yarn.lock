@@ -4851,10 +4851,10 @@ download@^7.1.0:
     p-event "^2.1.0"
     pify "^3.0.0"
 
-downshift@^6.1.12:
-  version "6.1.12"
-  resolved "https://registry.yarnpkg.com/downshift/-/downshift-6.1.12.tgz#f14476b41a6f6fd080c340bad1ddf449f7143f6f"
-  integrity sha512-7XB/iaSJVS4T8wGFT3WRXmSF1UlBHAA40DshZtkrIscIN+VC+Lh363skLxFTvJwtNgHxAMDGEHT4xsyQFWL+UA==
+downshift@^7.0.5:
+  version "7.0.5"
+  resolved "https://registry.yarnpkg.com/downshift/-/downshift-7.0.5.tgz#78e5e5d4a63a401869c01bbeb785431e7a5740ce"
+  integrity sha512-q52vBjtRkt4PLD0xQDUf3lM+uaUOpc5m0L8YfE9oPtn4RJLu5YITB/G4mr9OyPYwWIBe/h9g3RX6mggMVaBIDw==
   dependencies:
     "@babel/runtime" "^7.14.8"
     compute-scroll-into-view "^1.0.17"
