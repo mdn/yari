@@ -130,21 +130,6 @@ export async function buildSPAs(options) {
           noIndexing: true,
         },
         {
-          prefix: "plus/notifications",
-          pageTitle: `Notifications | ${MDN_PLUS_TITLE}`,
-          noIndexing: true,
-        },
-        {
-          prefix: "plus/notifications/starred",
-          pageTitle: `Starred | ${MDN_PLUS_TITLE}`,
-          noIndexing: true,
-        },
-        {
-          prefix: "plus/notifications/watched",
-          pageTitle: `Watch list | ${MDN_PLUS_TITLE}`,
-          noIndexing: true,
-        },
-        {
           prefix: "plus/updates",
           pageTitle: `Updates | ${MDN_PLUS_TITLE}`,
           noIndexing: true,
