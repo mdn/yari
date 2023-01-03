@@ -184,7 +184,7 @@
     "jsdom": "^20.0.3",
     "lint-staged": "^13.1.0",
     "mini-css-extract-plugin": "^2.7.2",
-    "node-dev": "^7.4.3",
+    "node-dev": "^8.0.0",
     "pegjs": "^0.10.0",
     "postcss": "^8.4.20",
     "postcss-flexbugs-fixes": "^5.0.2",
