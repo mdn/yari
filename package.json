@@ -54,6 +54,7 @@
   "dependencies": {
     "@caporal/core": "^2.0.2",
     "@fast-csv/parse": "^4.3.6",
+    "@mdn/bcd-utils-api": "^0.0.2",
     "@mdn/browser-compat-data": "^5.2.24",
     "@mozilla/glean": "1.3.0",
     "@use-it/interval": "^1.0.0",
@@ -120,7 +121,6 @@
     "@babel/core": "^7.20.7",
     "@babel/eslint-parser": "^7.19.1",
     "@babel/preset-env": "^7.20.2",
-    "@mdn/bcd-utils-api": "^0.0.2",
     "@mdn/dinocons": "^0.5.5",
     "@mdn/minimalist": "^2.0.4",
     "@playwright/test": "^1.29.1",
