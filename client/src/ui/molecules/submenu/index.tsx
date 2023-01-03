@@ -19,6 +19,10 @@ export type MenuEntry = {
   to?: string;
 };
 
+function external(item: SubmenuItem) {
+  return Boolean(item?.url?.startsWith("https://"));
+}
+
 export const Submenu = ({
   menuEntry,
   defaultHidden = false,
@@ -55,9 +59,8 @@ export const Submenu = ({
               ) : item.url ? (
                 <a
                   href={item.url}
-                  className={`submenu-item ${
-                    item.url.startsWith("https://") ? "external" : ""
-                  }`}
+                  className="submenu-item"
+                  {...(external(item) ? { target: "_blank" } : {})}
                 >
                   {item.hasIcon && <div className={item.iconClasses} />}
                   {item.dot && (
@@ -66,7 +69,13 @@ export const Submenu = ({
                     </span>
                   )}
                   <div className="submenu-content-container">
-                    <div className="submenu-item-heading">{item.label}</div>
+                    <div
+                      className={`submenu-item-heading ${
+                        external(item) ? "external-link" : ""
+                      }`}
+                    >
+                      {item.label}
+                    </div>
                     {item.description && (
                       <p className="submenu-item-description">
                         {item.description}

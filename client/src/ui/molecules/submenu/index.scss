@@ -57,6 +57,10 @@
     padding: 0.5rem;
     width: 100%;
 
+    &.external:after {
+      margin-left: 1rem;
+    }
+
     li:last-child &:not(:focus) {
       border-bottom-color: transparent;
     }

@@ -62,7 +62,7 @@ export const PlusMenu = ({ visibleSubMenuId, toggleMenu }) => {
         hasIcon: true,
         iconClasses: "submenu-icon",
         label: "Documentation",
-        url: `/en-US/plus/docs/features/overview`,
+        url: `https://support.mozilla.org/${locale}/products/mdn-plus`,
       },
       {
         description: "Frequently asked questions about MDN Plus",
