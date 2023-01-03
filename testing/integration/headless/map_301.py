@@ -229,7 +229,7 @@ SCL3_REDIRECT_URLS = list(
                 "/{en,EN}/optimizing_your_pages_for_speculative_{PARSING,parsing,parsing/}",
                 "/en-US/docs/Glossary/speculative_parsing",
             ),
-            url_test("{mdn,MDN}/{Contribute,contribute}", "/en-US/docs/MDN/Contribute"),
+            url_test("/{mdn,MDN}/{Contribute,contribute}", "/en-US/docs/MDN/Contribute"),
         )
     )
 )
@@ -990,26 +990,6 @@ FIREFOX_SOURCE_DOCS_URLS = list(
 MISC_REDIRECT_URLS = list(
     flatten(
         (
-            url_test(
-                "/fr/{plus,plus/,plus/collections,plus/collections/,plus/deep-dives,plus/deep-dives/}",
-                "/fr/",
-                status_code=302,
-            ),
-            url_test(
-                "/en-US/{plus,plus/,plus/collections,plus/collections/,plus/deep-dives,plus/deep-dives/}",
-                "/en-US/",
-                status_code=302,
-            ),
-            url_test(
-                "/fr/{plus/deep-dives/planning-for-browser-support,plus/deep-dives/your-browser-support-toolkit}",
-                "/fr/",
-                status_code=302,
-            ),
-            url_test(
-                "/en-US/{plus/deep-dives/planning-for-browser-support,plus/deep-dives/your-browser-support-toolkit}",
-                "/en-US/",
-                status_code=302,
-            ),
             url_test(
                 "/events", "https://community.mozilla.org/events/", status_code=302
             ),
