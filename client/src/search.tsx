@@ -323,14 +323,16 @@ function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
 
     if (searchIndexError) {
       return (
-        <div className="searchindex-error">Error initializing search index</div>
+        <div className="searchindex-error result-item">
+          <span>Failed to load search index!</span>
+        </div>
       );
     }
 
     if (!searchIndex) {
       return showIndexing ? (
-        <div className="indexing-warning">
-          <em>Initializing index</em>
+        <div className="indexing-warning result-item">
+          <em>Loading search index...</em>
         </div>
       ) : null;
     }
