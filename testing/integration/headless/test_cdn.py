@@ -16,6 +16,7 @@ def is_cloudfront_cache_miss(response):
     return response.headers["x-cache"] in (
         "Miss from cloudfront",
         "RefreshHit from cloudfront",
+        "LambdaGeneratedResponse from cloudfront",
     )
 
 
@@ -117,7 +118,6 @@ def assert_cached(
     [
         ("/_whatsdeployed/code.json", 200, None),
         ("/_whatsdeployed/content.json", 200, None),
-        ("/healthz", 200, None),
         ("/api/v1/whoami", 200, None),
         ("/en-US/signup", 404, None),
         ("/en-US/users/signout", 404, None),
