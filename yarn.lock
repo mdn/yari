@@ -1564,10 +1564,10 @@
   resolved "https://registry.yarnpkg.com/@leichtgewicht/ip-codec/-/ip-codec-2.0.4.tgz#b2ac626d6cb9c8718ab459166d4bb405b8ffa78b"
   integrity sha512-Hcv+nVC0kZnQ3tD9GVu5xSMR4VVYOteQIr/hwFPVEvPdlXqgGEuRjiheChHgdM+JyqdgNcmzZOX/tnl0JOiI7A==
 
-"@mdn/bcd-utils-api@^0.0.2":
-  version "0.0.2"
-  resolved "https://registry.yarnpkg.com/@mdn/bcd-utils-api/-/bcd-utils-api-0.0.2.tgz#c5bdda39d7d6f5a6dfa6547bd89a2633bf1711e5"
-  integrity sha512-U58OQDwi/NYd2dSkVeESSPCqJI+tA8wHUUiYGDpMQ6pq7lxUMW9bWkTzb0DpFKFKM+yeXrvhaNTyJCU4UevYVQ==
+"@mdn/bcd-utils-api@^0.0.3":
+  version "0.0.3"
+  resolved "https://registry.yarnpkg.com/@mdn/bcd-utils-api/-/bcd-utils-api-0.0.3.tgz#8ef135dc4985d0ed7cc8616b546055007ef77b07"
+  integrity sha512-plyZoNOtKGKPoMkQQ/KXziQswzrhO1rdrjslcM7J2TRCOAlusnmjhPf3NKyvv7mDm0nqHex+l8Chq2TUj8tehw==
   dependencies:
     "@mdn/browser-compat-data" latest
 
