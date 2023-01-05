@@ -1,0 +1,70 @@
+env:
+  DEFAULT_NOTES: ""
+
+on:
+  schedule:
+    # * is a special character in YAML so you have to quote this string
+    - cron: "0 1 * * *"
+
+  workflow_dispatch:
+    inputs:
+      notes:
+        description: "Notes"
+        required: false
+        default: ${DEFAULT_NOTES}
+
+  pull_request:
+    branches:
+      - main
+    paths:
+      - testing/integration/**
+      - .github/workflows/testing-integration.yml
+
+jobs:
+  testing-integration:
+    strategy:
+      matrix:
+        url:
+          - "http://developer.mozilla.org"
+          - "http://developer.allizom.org"
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Install Python
+        id: setup-python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.11"
+
+      - name: Load cached venv
+        id: cached-poetry-dependencies
+        uses: actions/cache@v3
+        with:
+          path: testing/integration/.venv
+          key: venv-${{ runner.os }}-${{ hashFiles('testing/integration/poetry.lock') }}-${{ hashFiles('.github/workflows/testing-integration.yml') }}-${{ steps.setup-python.outputs.python-version }}
+
+      - name: Load cached .local
+        uses: actions/cache@v3
+        with:
+          path: ~/.local
+          key: dotlocal-${{ runner.os }}-${{ hashFiles('.github/workflows/testing-integration.yml') }}-${{ steps.setup-python.outputs.python-version }}
+
+      - name: Install Python poetry
+        uses: snok/install-poetry@v1
+        with:
+          virtualenvs-create: true
+          virtualenvs-in-project: true
+
+      - name: Install dependencies
+        run: |
+          cd testing/integration
+          poetry install --no-ansi
+        if: steps.cached-poetry-dependencies.outputs.cache-hit != 'true'
+
+      - name: Run integration tests
+        run: |
+          cd testing/integration
+          poetry run pytest --base-url ${{ matrix.url }}
