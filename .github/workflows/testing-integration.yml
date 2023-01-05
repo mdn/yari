@@ -73,13 +73,13 @@ jobs:
           poetry run pytest --base-url ${{ matrix.url }}
 
       - name: Slack Notification
-        if: ${{ always() }}
+        if: ${{ failure() }}
         uses: rtCamp/action-slack-notify@v2
         env:
           SLACK_CHANNEL: mdn-dev
           SLACK_COLOR: ${{ job.status }}
           SLACK_ICON: https://avatars.slack-edge.com/2020-11-17/1513880588420_fedd7f0e9456888e69ff_96.png
           SLACK_TITLE: "Integration Tests"
-          SLACK_MESSAGE: "Integration tests test for ${{ matrix.url }} :collision:"
+          SLACK_MESSAGE: "Integration tests failed for ${{ matrix.url }} :collision:"
           SLACK_FOOTER: "Powered by testing-integration.yml"
           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
