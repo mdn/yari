@@ -24,6 +24,13 @@ on:
 
 jobs:
   testing-integration:
+    strategy:
+      fail-fast: false
+      matrix:
+        url:
+          - "https://developer.mozilla.org"
+          - "https://developer.allizom.org"
+
     runs-on: ubuntu-latest
 
     steps:
@@ -60,16 +67,10 @@ jobs:
           poetry install --no-ansi
         if: steps.cached-poetry-dependencies.outputs.cache-hit != 'true'
 
-      - name: Run integration tests against stage
+      - name: Run integration tests
         run: |
           cd testing/integration
-          poetry run pytest --base-url https://developer.allizom.org
-
-      - name: Run integration tests against prod
-        if: ${{ always() }}
-        run: |
-          cd testing/integration
-          poetry run pytest --base-url https://developer.mozilla.org
+          poetry run pytest --base-url ${{ matrix.url }}
 
       - name: Slack Notification
         if: ${{ always() }}
@@ -79,6 +80,6 @@ jobs:
           SLACK_COLOR: ${{ job.status }}
           SLACK_ICON: https://avatars.slack-edge.com/2020-11-17/1513880588420_fedd7f0e9456888e69ff_96.png
           SLACK_TITLE: "Integration Tests"
-          SLACK_MESSAGE: "Integration tests test :collision:"
+          SLACK_MESSAGE: "Integration tests test for ${{ matrix.url }} :collision:"
           SLACK_FOOTER: "Powered by testing-integration.yml"
           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
