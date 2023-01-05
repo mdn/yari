@@ -25,6 +25,7 @@ on:
 jobs:
   testing-integration:
     strategy:
+      fail-fast: false
       matrix:
         url:
           - "https://developer.mozilla.org"
