@@ -27,8 +27,8 @@ jobs:
     strategy:
       matrix:
         url:
-          - "http://developer.mozilla.org"
-          - "http://developer.allizom.org"
+          - "https://developer.mozilla.org"
+          - "https://developer.allizom.org"
 
     runs-on: ubuntu-latest
 
