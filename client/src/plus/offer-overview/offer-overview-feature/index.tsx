@@ -28,17 +28,18 @@ export default function OfferOverviewFeatures() {
         img="/assets/notifications_light.png"
         imgAlt=""
       >
-        <section aria-labelledby="notifications-section-title">
-          <h2 id="notifications-section-title">Notifications</h2>
+        <section aria-labelledby="updates-section-title">
+          <h2 id="updates-section-title">Updates</h2>
           <h3>
-            Development in real time:
+            Compatibility changes at a glance.
             <br />
-            Get custom alerts
+            Filter and sort changes that matters most to you.
           </h3>
           <p>
-            The Web doesn't have a changelog, but MDN can help. Follow pages and
-            get customizable notifications when documentation changes, CSS
-            features launch, and APIs ship.
+            The Web doesn't have a changelog, but MDN can help. You can
+            personalize this changelog and filter changes based on browsers or
+            the tech category you are interested in whether that is JavaScript,
+            CSS, etc.
           </p>
           <Button href="/en-US/plus/docs/features/notifications">
             Learn more →
