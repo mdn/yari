@@ -17,7 +17,8 @@ import { DEFAULT_LOCALE } from "../libs/constants";
  *
  */
 export function checkImageReferences(doc, $, options, { url, rawContent }) {
-  const filePaths = new Set();
+  // filePaths is a map of basename to full path
+  const filePaths = new Map<string, string>();
 
   const checkImages = options.flawLevels.get("images") !== FLAW_LEVELS.IGNORE;
 
@@ -137,9 +138,7 @@ export function checkImageReferences(doc, $, options, { url, rawContent }) {
       // insensitively.
 
       // What follows uses the same algorithm as Image.findByURLWithFallback
-      // but only adds a filePath if it exists for the DEFAULT_LOCALE
-      const filePath = Image.findByURL(finalSrc);
-      let enUSFallback = false;
+      let filePath = Image.findByURL(finalSrc);
       if (
         !filePath &&
         doc.locale !== DEFAULT_LOCALE &&
@@ -149,23 +148,15 @@ export function checkImageReferences(doc, $, options, { url, rawContent }) {
           new RegExp(`^/${doc.locale}/`, "i"),
           `/${DEFAULT_LOCALE}/`
         );
-        if (Image.findByURL(enUSFinalSrc)) {
-          // Use the en-US src instead
-          finalSrc = enUSFinalSrc;
-          // Note that this `<img src="...">` value can work if you use the
-          // en-US equivalent URL instead.
-          enUSFallback = true;
-        }
+        // try to find the image in the default locale
+        filePath = Image.findByURL(enUSFinalSrc);
       }
       if (filePath) {
-        filePaths.add(filePath);
+        filePaths.set(path.basename(filePath), filePath);
       }
 
       if (checkImages) {
-        if (enUSFallback) {
-          // If it worked by switching to the en-US src, don't do anything more.
-          // Do nothing! I.e. don't try to perfect the spelling.
-        } else if (!filePath) {
+        if (!filePath) {
           // E.g. <img src="doesnotexist.png"
           addImageFlaw(img, src, {
             explanation:

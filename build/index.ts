@@ -9,11 +9,11 @@ import {
   MacroRedirectedLinkError,
 } from "../kumascript/src/errors";
 
-import { Document, Image, execGit } from "../content";
+import { Document, Image, execGit, slugToFolder } from "../content";
 import { CONTENT_ROOT, REPOSITORY_URLS } from "../libs/env";
 import * as kumascript from "../kumascript";
 
-import { FLAW_LEVELS } from "../libs/constants";
+import { DEFAULT_LOCALE, FLAW_LEVELS } from "../libs/constants";
 import { extractSections } from "./extract-sections";
 import { extractSidebar } from "./extract-sidebar";
 import { extractSummary } from "./extract-summary";
@@ -154,7 +154,7 @@ function postLocalFileLinks($, doc) {
     // links, so it's presumed to be worth it.
     if (
       !href ||
-      /^(\/|\.\.|http|#|mailto:|about:|ftp:|news:|irc:|ftp:)/i.test(href)
+      /^(\/|\.\.|http|#|mailto:|about:|ftp:|news:|irc:)/i.test(href)
     ) {
       return;
     }
@@ -276,7 +276,7 @@ function getAdjacentImages(documentDirectory) {
 export interface BuiltDocument {
   doc: Doc;
   liveSamples: any;
-  fileAttachments: any;
+  fileAttachments: Map<string, string>;
   bcdData: BCDData[];
   source?: {
     github_url: string;
@@ -500,8 +500,27 @@ export async function buildDocument(
   // it returns which images it checked. But we'll need to complement any
   // other images in the folder.
   getAdjacentImages(path.dirname(document.fileInfo.path)).forEach((fp) =>
-    fileAttachments.add(fp)
+    fileAttachments.set(path.basename(fp), fp)
   );
+
+  if (doc.locale !== DEFAULT_LOCALE) {
+    // If it's not the default locale, we need to add the images
+    // from the default locale too.
+    const defaultLocaleDir = path.join(
+      CONTENT_ROOT,
+      DEFAULT_LOCALE.toLowerCase(),
+      slugToFolder(metadata.slug)
+    );
+
+    if (fs.existsSync(defaultLocaleDir)) {
+      getAdjacentImages(defaultLocaleDir).forEach((fp) => {
+        const basename = path.basename(fp);
+        if (!fileAttachments.has(basename)) {
+          fileAttachments.set(basename, fp);
+        }
+      });
+    }
+  }
 
   // Check the img tags for possible flaws and possible build-time rewrites
   checkImageWidths(doc, $, options, document);

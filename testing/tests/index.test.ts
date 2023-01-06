@@ -199,10 +199,11 @@ test("content built foo page", () => {
   expect($('script[src="/static/js/ga.js"]')).toHaveLength(1);
 
   // Because this en-US page has a French translation
-  expect($('link[rel="alternate"]')).toHaveLength(3);
+  expect($('link[rel="alternate"]')).toHaveLength(4);
   expect($('link[rel="alternate"][hreflang="en"]')).toHaveLength(1);
   expect($('link[rel="alternate"][hreflang="fr"]')).toHaveLength(1);
   expect($('link[rel="alternate"][hreflang="zh"]')).toHaveLength(1);
+  expect($('link[rel="alternate"][hreflang="zh-TW"]')).toHaveLength(1);
   const toEnUSURL = $('link[rel="alternate"][hreflang="en"]').attr("href");
   const toFrURL = $('link[rel="alternate"][hreflang="fr"]').attr("href");
   // The domain is hardcoded because the URL needs to be absolute and when
@@ -248,10 +249,11 @@ test("content built French foo page", () => {
   const htmlFile = path.join(builtFolder, "index.html");
   const html = fs.readFileSync(htmlFile, "utf-8");
   const $ = cheerio.load(html);
-  expect($('link[rel="alternate"]')).toHaveLength(3);
+  expect($('link[rel="alternate"]')).toHaveLength(4);
   expect($('link[rel="alternate"][hreflang="en"]')).toHaveLength(1);
   expect($('link[rel="alternate"][hreflang="fr"]')).toHaveLength(1);
   expect($('link[rel="alternate"][hreflang="zh"]')).toHaveLength(1);
+  expect($('link[rel="alternate"][hreflang="zh-TW"]')).toHaveLength(1);
   expect($('meta[property="og:locale"]').attr("content")).toBe("fr");
   expect($('meta[property="og:title"]').attr("content")).toBe(
     "<foo>: Une page de test | MDN"
@@ -283,6 +285,39 @@ test("French translation using English front-matter bits", () => {
   expect(bcd.value.query).toBe("javascript.builtins.Array.toLocaleString");
 });
 
+test("content built zh-CN page with en-US fallback image", () => {
+  const builtFolder = path.join(buildRoot, "zh-cn", "docs", "web", "foo");
+  const jsonFile = path.join(builtFolder, "index.json");
+  expect(fs.existsSync(jsonFile)).toBeTruthy();
+  const { doc } = JSON.parse(fs.readFileSync(jsonFile, "utf-8")) as {
+    doc: Doc;
+  };
+  expect(Object.keys(doc.flaws)).toHaveLength(1);
+  expect(doc.flaws.translation_differences).toHaveLength(1);
+  expect(doc.title).toBe("<foo>: 测试网页");
+  expect(doc.isTranslated).toBe(true);
+  expect(doc.other_translations[0].locale).toBe("en-US");
+  expect(doc.other_translations[0].native).toBe("English (US)");
+  expect(doc.other_translations[0].title).toBe("<foo>: A test tag");
+
+  const htmlFile = path.join(builtFolder, "index.html");
+  const html = fs.readFileSync(htmlFile, "utf-8");
+  const $ = cheerio.load(html);
+  expect($('link[rel="alternate"]')).toHaveLength(4);
+  expect($('link[rel="alternate"][hreflang="en"]')).toHaveLength(1);
+  expect($('link[rel="alternate"][hreflang="fr"]')).toHaveLength(1);
+  expect($('link[rel="alternate"][hreflang="zh"]')).toHaveLength(2);
+  expect($('meta[property="og:locale"]').attr("content")).toBe("zh-CN");
+  expect($('meta[property="og:title"]').attr("content")).toBe(
+    "<foo>: 测试网页 | MDN"
+  );
+
+  // The image should be in the built folder,
+  // even though it's not referenced in the translated content.
+  const imageFile = path.join(builtFolder, "screenshot.png");
+  expect(fs.existsSync(imageFile)).toBeTruthy();
+});
+
 test("content built zh-TW page with en-US fallback image", () => {
   const builtFolder = path.join(buildRoot, "zh-tw", "docs", "web", "foo");
   const jsonFile = path.join(builtFolder, "index.json");
@@ -301,17 +336,21 @@ test("content built zh-TW page with en-US fallback image", () => {
   const htmlFile = path.join(builtFolder, "index.html");
   const html = fs.readFileSync(htmlFile, "utf-8");
   const $ = cheerio.load(html);
-  expect($('link[rel="alternate"]')).toHaveLength(3);
+  expect($('link[rel="alternate"]')).toHaveLength(4);
   expect($('link[rel="alternate"][hreflang="en"]')).toHaveLength(1);
   expect($('link[rel="alternate"][hreflang="fr"]')).toHaveLength(1);
   expect($('link[rel="alternate"][hreflang="zh"]')).toHaveLength(1);
+  expect($('link[rel="alternate"][hreflang="zh-TW"]')).toHaveLength(1);
   expect($('meta[property="og:locale"]').attr("content")).toBe("zh-TW");
   expect($('meta[property="og:title"]').attr("content")).toBe(
     "<foo>: 測試網頁 | MDN"
   );
   expect($("#content img").attr("src")).toBe(
-    "/en-US/docs/Web/Foo/screenshot.png"
+    "/zh-TW/docs/Web/Foo/screenshot.png"
   );
+
+  const imageFile = path.join(builtFolder, "screenshot.png");
+  expect(fs.existsSync(imageFile)).toBeTruthy();
 });
 
 test("content built French Embeddable page", () => {
