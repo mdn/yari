@@ -285,7 +285,7 @@ test("French translation using English front-matter bits", () => {
   expect(bcd.value.query).toBe("javascript.builtins.Array.toLocaleString");
 });
 
-test("content built zh-CN page with en-US fallback image", () => {
+test("content built zh-CN page for hreflang tag testing", () => {
   const builtFolder = path.join(buildRoot, "zh-cn", "docs", "web", "foo");
   const jsonFile = path.join(builtFolder, "index.json");
   expect(fs.existsSync(jsonFile)).toBeTruthy();
@@ -303,6 +303,8 @@ test("content built zh-CN page with en-US fallback image", () => {
   const htmlFile = path.join(builtFolder, "index.html");
   const html = fs.readFileSync(htmlFile, "utf-8");
   const $ = cheerio.load(html);
+  // The built page should not have duplicate hreflang tags,
+  // when zh-TW translation is also available.
   expect($('link[rel="alternate"]')).toHaveLength(4);
   expect($('link[rel="alternate"][hreflang="en"]')).toHaveLength(1);
   expect($('link[rel="alternate"][hreflang="fr"]')).toHaveLength(1);
