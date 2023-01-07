@@ -26,7 +26,7 @@ function htmlEscape(s) {
     .replace(/'/gim, "&apos;");
 }
 
-function getHrefLang(locale, otherLocales) {
+function getHrefLang(locale: string, allLocales: Array<string>) {
   // In most cases, just return the language code, removing the country
   // code if present (so, for example, 'en-US' becomes 'en').
   const hreflang = locale.split("-")[0];
@@ -43,7 +43,7 @@ function getHrefLang(locale, otherLocales) {
     // e.g. `preferred===zh-CN` if hreflang was `zh`
     if (locale !== preferred) {
       // e.g. `locale===zh-TW`
-      if (otherLocales.includes(preferred)) {
+      if (allLocales.includes(preferred)) {
         // If the more preferred one was there, use the locale + region format.
         return locale;
       }
@@ -183,7 +183,6 @@ export default function render(
     hydrationData.doc = doc;
 
     if (doc.other_translations) {
-      const allOtherLocales = doc.other_translations.map((t) => t.locale);
       // Note, we also always include "self" as a locale. That's why we concat
       // this doc's locale plus doc.other_translations.
       const thisLocale = {
@@ -191,7 +190,11 @@ export default function render(
         title: doc.title,
         url: doc.mdn_url,
       };
-      for (const translation of [...doc.other_translations, thisLocale]) {
+
+      const allTranslations = [...doc.other_translations, thisLocale];
+      const allLocales = allTranslations.map((t) => t.locale);
+
+      for (const translation of allTranslations) {
         const translationURL = doc.mdn_url.replace(
           `/${doc.locale}/`,
           () => `/${translation.locale}/`
@@ -204,7 +207,7 @@ export default function render(
             translation.title
           )}" href="https://developer.mozilla.org${translationURL}" hreflang="${getHrefLang(
             translation.locale,
-            allOtherLocales
+            allLocales
           )}"/>`
         );
       }
