@@ -56,10 +56,11 @@ self.addEventListener("install", (e) => {
 });
 
 self.addEventListener("fetch", async (e) => {
+  const url = new URL(e.request.url);
   if (
     SW_TYPE === SwType.PreferOnline &&
-    !e.request.url.includes("/api/v1/") &&
-    !e.request.url.includes("/users/fxa/")
+    !url.pathname.startsWith("/api/") &&
+    !url.pathname.startsWith("/users/fxa/")
   ) {
     e.respondWith(
       (async () => {
