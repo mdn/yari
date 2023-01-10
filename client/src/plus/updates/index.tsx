@@ -25,7 +25,6 @@ import { useEffect, useRef, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { DataError } from "../common";
 import { useCollections } from "../collections/api";
-import { VALID_FLAW_CHECKS } from "../../../../libs/constants";
 
 type EventWithStatus = Event & { status: Status };
 type Status = "added" | "removed";
