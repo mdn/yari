@@ -54,8 +54,9 @@ export function useOnClickOutside(ref, handler) {
 }
 
 export function useOnlineStatus(): { isOnline: boolean; isOffline: boolean } {
+  const isServer = useIsServer();
   const [isOnline, setIsOnline] = useState<boolean>(
-    window?.navigator.onLine ?? true
+    isServer ? true : window.navigator.onLine
   );
   const isOffline = useMemo(() => !isOnline, [isOnline]);
 
@@ -127,7 +128,10 @@ export function useViewedState() {
 export function usePing() {
   const { isOnline } = useOnlineStatus();
   const user = useUserData();
-  const nextPing = React.useRef(new Date(localStorage.getItem("next-ping")));
+  const isServer = useIsServer();
+  const nextPing = React.useRef(
+    new Date(!isServer && localStorage.getItem("next-ping"))
+  );
 
   React.useEffect(() => {
     if (isOnline && user && nextPing.current < new Date()) {
