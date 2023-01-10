@@ -20,7 +20,7 @@ const daysToEmbargo = 30;
 export function Banner() {
   const userData = useUserData();
   const currentBannerId: BannerId | null = userData?.isAuthenticated
-    ? userData?.isSubscriber
+    ? userData?.isSubscriber && !userData?.settings?.mdnplusNewsletter
       ? BannerId.NEWSLETTER_ANNOUNCEMENT
       : BannerId.MULTIPLE_COLLECTIONS
     : BannerId.PLUS_LAUNCH_ANNOUNCEMENT;

@@ -26,7 +26,7 @@ export default function Newsletter() {
 
   return (
     <section className="field-group">
-      <h2>Emails</h2>
+      <h2>Newsletter</h2>
       {user?.subscriptionType &&
       user?.subscriptionType !== SubscriptionType.MDN_CORE ? (
         <ul>

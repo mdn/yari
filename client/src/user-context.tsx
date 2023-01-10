@@ -170,7 +170,7 @@ export function UserDataProvider(props: { children: React.ReactNode }) {
             collectionLastModified:
               (collectionLastModified && new Date(collectionLastModified)) ||
               null,
-            mdnplusNewsletter: null,
+            mdnplusNewsletter: data.settings?.mdnplus_newsletter || null,
           }
         : null;
 
