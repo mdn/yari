@@ -55,8 +55,17 @@ export function useOnClickOutside(ref, handler) {
 
 export function useOnlineStatus(): { isOnline: boolean; isOffline: boolean } {
   const isServer = useIsServer();
+  const trueStatus = useTrueOnlineStatus();
+  // ensure we don't get a hydration error due to mismatched markup:
+  return isServer ? { isOnline: true, isOffline: false } : trueStatus;
+}
+
+export function useTrueOnlineStatus(): {
+  isOnline: boolean;
+  isOffline: boolean;
+} {
   const [isOnline, setIsOnline] = useState<boolean>(
-    isServer ? true : window.navigator.onLine
+    typeof window === "undefined" ? false : window.navigator.onLine
   );
   const isOffline = useMemo(() => !isOnline, [isOnline]);
 
@@ -126,15 +135,12 @@ export function useViewedState() {
 }
 
 export function usePing() {
-  const { isOnline } = useOnlineStatus();
+  const { isOnline } = useTrueOnlineStatus();
   const user = useUserData();
-  const isServer = useIsServer();
-  const nextPing = React.useRef(
-    new Date(!isServer && localStorage.getItem("next-ping"))
-  );
 
   React.useEffect(() => {
-    if (isOnline && user && nextPing.current < new Date()) {
+    const nextPing = new Date(localStorage.getItem("next-ping"));
+    if (isOnline && user?.isAuthenticated && nextPing < new Date()) {
       const params = new URLSearchParams();
 
       // fetch offline settings from local storage as its
@@ -153,7 +159,6 @@ export function usePing() {
       newNextPing.setUTCSeconds(0);
       newNextPing.setUTCMilliseconds(0);
       localStorage.setItem("next-ping", newNextPing.toISOString());
-      nextPing.current = newNextPing;
     }
   }, [isOnline, user]);
 }
