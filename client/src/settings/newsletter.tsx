@@ -1,4 +1,6 @@
 import { useEffect, useState } from "react";
+import { FeatureId } from "../constants";
+import { useViewedState } from "../hooks";
 import {
   getNewsletterSubscription,
   toggleNewsletterSubscription,
@@ -8,14 +10,19 @@ import { Switch } from "../ui/atoms/switch";
 import { SubscriptionType, useUserData } from "../user-context";
 
 export default function Newsletter() {
-  const [loading, setLoading] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(true);
   const user = useUserData();
   const [enabled, setEnabled] = useState<boolean | null>(null);
   useEffect(() => {
     (async () => {
       setEnabled(await getNewsletterSubscription());
+      setLoading(false);
     })();
   }, []);
+  const { isViewed, setViewed } = useViewedState();
+  if (isViewed) {
+    setViewed(FeatureId.PLUS_NEWSLETTER);
+  }
 
   return (
     <section className="field-group">

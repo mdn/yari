@@ -8,7 +8,7 @@
   }
 
   .button.user-menu-toggle {
-    .notification-dot ~ .avatar-wrap::after {
+    .dot ~ .avatar-wrap::after {
       background: var(--text-primary-blue);
       border: 1px solid var(--background-primary);
       border-radius: 2rem;

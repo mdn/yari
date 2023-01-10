@@ -20,7 +20,9 @@ const daysToEmbargo = 30;
 export function Banner() {
   const userData = useUserData();
   const currentBannerId: BannerId | null = userData?.isAuthenticated
-    ? BannerId.MULTIPLE_COLLECTIONS
+    ? userData?.isSubscriber
+      ? BannerId.NEWSLETTER_ANNOUNCEMENT
+      : BannerId.MULTIPLE_COLLECTIONS
     : BannerId.PLUS_LAUNCH_ANNOUNCEMENT;
   if (currentBannerId && (CRUD_MODE || !isEmbargoed(currentBannerId))) {
     return (
