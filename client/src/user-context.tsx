@@ -154,6 +154,27 @@ function setSessionStorageData(data: UserData) {
   }
 }
 
+function handleOffline(data) {
+  if (!window.mdnWorker && data?.offlineSettings?.offline) {
+    import("./settings/mdn-worker").then(({ getMDNWorker }) => {
+      const mdnWorker = getMDNWorker();
+      if (data?.isSubscriber === false) {
+        mdnWorker.clearOfflineSettings();
+        mdnWorker.disableServiceWorker();
+        data.offlineSettings = new OfflineSettingsData();
+      }
+    });
+  } else if (window.mdnWorker) {
+    if (data?.isSubscriber === false) {
+      window.mdnWorker.clearOfflineSettings();
+      data.offlineSettings = new OfflineSettingsData();
+    }
+    if (!data?.offlineSettings?.offline) {
+      window.mdnWorker.disableServiceWorker();
+    }
+  }
+}
+
 export function UserDataProvider(props: { children: React.ReactNode }) {
   const { data, mutate } = useSWR<UserData | null, Error | null>(
     DISABLE_AUTH ? null : "/api/v1/whoami",
@@ -174,7 +195,7 @@ export function UserDataProvider(props: { children: React.ReactNode }) {
           }
         : null;
 
-      return {
+      const user = {
         username: data.username || null,
         isAuthenticated: data.is_authenticated || false,
         isBetaTester: data.is_beta_tester || false,
@@ -193,44 +214,18 @@ export function UserDataProvider(props: { children: React.ReactNode }) {
         },
         maintenance: data.maintenance,
         settings,
-        offlineSettings: null,
+        offlineSettings: OfflineSettingsData.read(),
         mutate,
       };
+      setSessionStorageData(user);
+      handleOffline(user);
+      return user;
     }
   );
 
   React.useEffect(() => {
     removeDeprecatedLocalStorageData();
   }, []);
-
-  React.useEffect(() => {
-    if (data) {
-      // At this point, the XHR request has set `data` to be an object.
-      // The user is definitely signed in or not signed in.
-      data.offlineSettings = OfflineSettingsData.read();
-      setSessionStorageData(data);
-
-      // Let's initialize the MDN Worker if applicable.
-      if (!window.mdnWorker && data?.offlineSettings?.offline) {
-        import("./settings/mdn-worker").then(({ getMDNWorker }) => {
-          const mdnWorker = getMDNWorker();
-          if (data?.isSubscriber === false) {
-            mdnWorker.clearOfflineSettings();
-            mdnWorker.disableServiceWorker();
-            data.offlineSettings = new OfflineSettingsData();
-          }
-        });
-      } else if (window.mdnWorker) {
-        if (data?.isSubscriber === false) {
-          window.mdnWorker.clearOfflineSettings();
-          data.offlineSettings = new OfflineSettingsData();
-        }
-        if (!data?.offlineSettings?.offline) {
-          window.mdnWorker.disableServiceWorker();
-        }
-      }
-    }
-  }, [data]);
 
   let userData = data || getSessionStorageData();
 

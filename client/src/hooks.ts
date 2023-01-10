@@ -3,7 +3,7 @@ import { useLocation, useNavigationType, useParams } from "react-router-dom";
 import { DEFAULT_LOCALE } from "../../libs/constants";
 import { isValidLocale } from "../../libs/locale-utils";
 import { FeatureId } from "./constants";
-import { OFFLINE_SETTINGS_KEY, useUserData } from "./user-context";
+import { useUserData } from "./user-context";
 
 // This is a bit of a necessary hack!
 // The only reason this list is needed is because of the PageNotFound rendering.
@@ -135,9 +135,7 @@ export function usePing() {
 
       // fetch offline settings from local storage as its
       // values are very inconsistent in the user context
-      const offlineSettings = JSON.parse(
-        localStorage.getItem(OFFLINE_SETTINGS_KEY) || "{}"
-      );
+      const offlineSettings = user.offlineSettings;
       if (offlineSettings?.offline) params.set("offline", "true");
 
       navigator.sendBeacon("/api/v1/ping", params);
