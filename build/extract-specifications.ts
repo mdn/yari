@@ -1,7 +1,7 @@
 import { packageBCD } from "./resolve-bcd";
 import * as bcd from "@mdn/browser-compat-data/types";
 import { Specification } from "../libs/types/document";
-import specs from "browser-specs";
+import specs from "web-specs";
 import web from "../kumascript/src/api/web";
 
 export function extractSpecifications(
@@ -91,7 +91,7 @@ export function extractSpecifications(
   specURLs = [...new Set(specURLs)];
 
   // Use BCD specURLs to look up more specification data
-  // from the browser-specs package
+  // from the web-specs package
   const specifications = specURLs
     .map((specURL) => {
       const spec = specs.find(
