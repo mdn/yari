@@ -139,7 +139,7 @@
     "@types/react-dom": "^18.0.10",
     "@types/react-modal": "^3.13.1",
     "@typescript-eslint/eslint-plugin": "^5.48.1",
-    "@typescript-eslint/parser": "^5.48.0",
+    "@typescript-eslint/parser": "^5.48.1",
     "babel-jest": "^29.3.1",
     "babel-loader": "^9.1.2",
     "babel-plugin-named-asset-import": "^0.3.8",
