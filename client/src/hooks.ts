@@ -3,6 +3,7 @@ import { useLocation, useNavigationType, useParams } from "react-router-dom";
 import { DEFAULT_LOCALE } from "../../libs/constants";
 import { isValidLocale } from "../../libs/locale-utils";
 import { FeatureId } from "./constants";
+import { OFFLINE_SETTINGS_KEY, useUserData } from "./user-context";
 
 // This is a bit of a necessary hack!
 // The only reason this list is needed is because of the PageNotFound rendering.
@@ -121,4 +122,34 @@ export function useViewedState() {
       }
     },
   };
+}
+
+export function usePing() {
+  const { isOnline } = useOnlineStatus();
+  const user = useUserData();
+  const nextPing = React.useRef(new Date(localStorage.getItem("next-ping")));
+
+  React.useEffect(() => {
+    if (isOnline && user && nextPing.current < new Date()) {
+      const params = new URLSearchParams();
+
+      // fetch offline settings from local storage as its
+      // values are very inconsistent in the user context
+      const offlineSettings = JSON.parse(
+        localStorage.getItem(OFFLINE_SETTINGS_KEY) || "{}"
+      );
+      if (offlineSettings?.offline) params.set("offline", "true");
+
+      navigator.sendBeacon("/api/v1/ping", params);
+
+      const newNextPing = new Date();
+      newNextPing.setUTCDate(newNextPing.getUTCDate() + 1);
+      newNextPing.setUTCHours(0);
+      newNextPing.setUTCMinutes(0);
+      newNextPing.setUTCSeconds(0);
+      newNextPing.setUTCMilliseconds(0);
+      localStorage.setItem("next-ping", newNextPing.toISOString());
+      nextPing.current = newNextPing;
+    }
+  }, [isOnline, user]);
 }

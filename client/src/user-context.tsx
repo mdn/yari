@@ -9,6 +9,8 @@ const DEPRECATED_LOCAL_STORAGE_KEYS = [
   "collection-items-updated-date",
 ];
 
+export const OFFLINE_SETTINGS_KEY = "MDNSettings";
+
 export enum SubscriptionType {
   MDN_CORE = "core",
   MDN_PLUS_5M = "mdn_plus_5m",
@@ -40,7 +42,7 @@ export class OfflineSettingsData {
     let settingsData: OfflineSettingsData | undefined;
     try {
       settingsData = JSON.parse(
-        window.localStorage.getItem("MDNSettings") || "{}"
+        window.localStorage.getItem(OFFLINE_SETTINGS_KEY) || "{}"
       );
     } catch (err) {
       console.warn("Unable to read settings from localStorage", err);
@@ -51,7 +53,7 @@ export class OfflineSettingsData {
 
   write() {
     try {
-      window.localStorage.setItem("MDNSettings", JSON.stringify(this));
+      window.localStorage.setItem(OFFLINE_SETTINGS_KEY, JSON.stringify(this));
     } catch (err) {
       console.warn("Unable to write settings to localStorage", err);
     }
