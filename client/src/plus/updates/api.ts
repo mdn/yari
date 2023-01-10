@@ -57,6 +57,7 @@ function composeUrl({
         if (isAuthenticated) {
           // Different endpoint for uncached personalized data.
           url += "collections/";
+          params.set(key, value);
         }
         break;
 
@@ -83,7 +84,7 @@ export function useUpdates() {
     isAuthenticated: user && user.isAuthenticated,
     searchParams,
   });
-
+  console.log(url);
   return useSWR(
     url,
     async (key) => {
