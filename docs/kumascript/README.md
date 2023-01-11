@@ -391,17 +391,8 @@ page:
 {{ wiki.languages({ "zh-tw": "zh_tw/Core_JavaScript_1.5_教學/JavaScript_概要", … }) }}
 ```
 
-To fix the problem, just delete the macro. Or, replace the curly braces on
-either side with HTML comments `<!-- -->` to preserve the information, like so:
-
-```html
-<!-- wiki.languages({ "zh-tw": "zh_tw/Core_JavaScript_1.5_教學/JavaScript_概要", ... }) -->
-```
-
-Because Kuma supports localization differently, these macros aren't actually
-needed any more. But, they've been left intact in case we need to revisit the
-relationships between localized pages. Unfortunately, it seems like migration
-has failed to convert some of them properly.
+To fix the problem, just delete the macro. Because Kuma supports localization
+differently, these macros aren't actually needed any more.
 
 ### Finding the Current Page Language
 
