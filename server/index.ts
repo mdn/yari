@@ -9,7 +9,7 @@ import send from "send";
 import { createProxyMiddleware } from "http-proxy-middleware";
 import cookieParser from "cookie-parser";
 import openEditor from "open-editor";
-import getBCDDataForPath from "@mdn/bcd-utils-api";
+import { getBCDDataForPath } from "@mdn/bcd-utils-api";
 
 import {
   buildDocument,

@@ -27,7 +27,7 @@ import { NewsItem } from "../client/src/homepage/latest-news/index.js";
 const FEATURED_ARTICLES = [
   "Web/API/WebGL_API/Tutorial/Getting_started_with_WebGL",
   "Web/CSS/CSS_Container_Queries",
-  "Web/API/PerformanceResourceTiming/renderBlockingStatus",
+  "Web/API/Performance_API",
   "Web/CSS/font-palette",
 ];
 

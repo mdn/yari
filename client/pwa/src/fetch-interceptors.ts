@@ -52,7 +52,7 @@ export class DefaultApiInterceptor implements FetchInterceptor {
   }
 
   handles(path: string): boolean {
-    return path.startsWith("/api/v1/") || path.startsWith("/users/fxa/");
+    return path.startsWith("/api/") || path.startsWith("/users/fxa/");
   }
 
   async onGet(req: Request): Promise<Response> {
