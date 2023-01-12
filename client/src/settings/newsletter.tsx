@@ -56,7 +56,7 @@ export default function Newsletter() {
         </ul>
       ) : (
         <>
-          Feature preview is only available to MDN Supporter 10 subscribers.{" "}
+          The MDN Plus newsletter is only available to MDN Plus subscribers.{" "}
           <a href={`/en-US/plus#subscribe`}>Learn more</a> about our plans.
         </>
       )}

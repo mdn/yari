@@ -76,7 +76,7 @@ export const UserMenu = () => {
           NEWSLETTER_ENABLED &&
           userData?.isSubscriber &&
           Date.now() < 1677628799000 && // new Date("2023-02-28 23:59:59Z").getTime()
-          !userData?.settings.mdnplusNewsletter &&
+          !userData?.settings?.mdnplusNewsletter &&
           !isViewed(FeatureId.PLUS_NEWSLETTER)
             ? "New feature"
             : undefined,

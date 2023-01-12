@@ -183,7 +183,7 @@ function NewsletterBanner({ onDismissed }: { onDismissed: () => void }) {
   return (
     <Banner id={bannerId} onDismissed={onDismissedWithGlean}>
       <p className="mdn-cta-copy">
-        You can now sign up for the MDN Plus Newsletter via the{" "}
+        You can now sign up to the MDN Plus Newsletter via the{" "}
         <a
           href="/en-US/plus/settings"
           onClick={() => {
