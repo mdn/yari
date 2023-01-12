@@ -6,22 +6,25 @@ export function OnGitHubLink({ doc }: { doc: Doc }) {
       <h3>Found a problem with this page?</h3>
       <ul>
         <li>
-          <NewIssueOnGitHubLink doc={doc} />
+          Edit the page <EditOnGitHubLink doc={doc} />.
         </li>
         <li>
-          <EditOnGitHubLink doc={doc} />
+          Report the <NewIssueOnGitHubLink doc={doc} />.
         </li>
         <li>
-          <a
-            href="https://github.com/mdn/content/blob/main/CONTRIBUTING.md"
-            title={`This will take you to our contribution guidelines on GitHub.`}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn how to contribute
-          </a>
+          View the source <SourceOnGitHubLink doc={doc} />.
         </li>
       </ul>
+      Want to get more involved? Learn{" "}
+      <a
+        href="https://github.com/mdn/content/blob/main/CONTRIBUTING.md"
+        title={`This will take you to our contribution guidelines on GitHub.`}
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        how to contribute
+      </a>
+      .
     </div>
   );
 }
@@ -35,7 +38,7 @@ function EditOnGitHubLink({ doc }: { doc: Doc }) {
       target="_blank"
       rel="noopener noreferrer"
     >
-      Fix the problem yourself
+      on Github
     </a>
   );
 }
@@ -93,7 +96,21 @@ function NewIssueOnGitHubLink({ doc }: { doc: Doc }) {
       target="_blank"
       rel="noopener noreferrer"
     >
-      Report the content issue
+      content issue
+    </a>
+  );
+}
+
+function SourceOnGitHubLink({ doc }: { doc: Doc }) {
+  const { github_url, folder } = doc.source;
+  return (
+    <a
+      href={`${github_url}?plain=1`}
+      title={`Folder: ${folder} (Opens in a new tab)`}
+      target="_blank"
+      rel="noopener noreferrer"
+    >
+      on GitHub
     </a>
   );
 }
