@@ -5,18 +5,23 @@ import { Submenu } from "../submenu";
 import SignOut from "../../atoms/signout";
 
 import { useUserData } from "../../../user-context";
-import { useIsServer, useLocale } from "../../../hooks";
-import { HEADER_NOTIFICATIONS_MENU_API_URL } from "../../../constants";
+import { useIsServer, useLocale, useViewedState } from "../../../hooks";
+import {
+  FeatureId,
+  HEADER_NOTIFICATIONS_MENU_API_URL,
+} from "../../../constants";
 
 import "./index.scss";
 import { DropdownMenu, DropdownMenuWrapper } from "../dropdown";
 import { NotificationData } from "../../../types/notifications";
 import useSWR from "swr";
+import { NEWSLETTER_ENABLED } from "../../../env";
 
 export const UserMenu = () => {
   const userData = useUserData();
   const locale = useLocale();
   const isServer = useIsServer();
+  const { isViewed } = useViewedState();
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [newNotifications, setNewNotifications] = useState<boolean>(false);
   const { data } = useSWR<NotificationData>(
@@ -67,6 +72,14 @@ export const UserMenu = () => {
       {
         label: "My Settings",
         url: "/en-US/plus/settings",
+        dot:
+          NEWSLETTER_ENABLED &&
+          userData?.isSubscriber &&
+          Date.now() < 1677628799000 && // new Date("2023-02-28 23:59:59Z").getTime()
+          !userData?.settings.mdnplusNewsletter &&
+          !isViewed(FeatureId.PLUS_NEWSLETTER)
+            ? "New feature"
+            : undefined,
       },
       {
         url: "https://support.mozilla.org/products/mdn-plus",
@@ -82,6 +95,8 @@ export const UserMenu = () => {
       },
     ],
   };
+
+  const hasAnyDot = userMenuItems.items.some((item) => item.dot);
 
   return (
     <DropdownMenuWrapper
@@ -100,11 +115,14 @@ export const UserMenu = () => {
           setIsOpen(!isOpen);
         }}
       >
-        {newNotifications && (
-          <span className="visually-hidden notification-dot">
+        {(newNotifications && (
+          <span className="visually-hidden dot">
             New notifications received.
           </span>
-        )}
+        )) ||
+          (hasAnyDot && (
+            <span className="visually-hidden dot">New feature</span>
+          ))}
         <Avatar userData={userData} />
         <span className="user-menu-id">{userData.email}</span>
       </Button>

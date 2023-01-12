@@ -7,4 +7,5 @@ export const HEADER_NOTIFICATIONS_MENU_API_URL =
 
 export enum FeatureId {
   PLUS_UPDATES_V2 = "plus_updates_v2",
+  PLUS_NEWSLETTER = "plus_newsletter",
 }
