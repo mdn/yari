@@ -11,7 +11,6 @@ import {
   Doc,
   BrokenLink,
   MacroErrorMessage,
-  BadBCDLinkFlaw,
   ImageReferenceFlaw,
   ImageWidthFlaw,
   GenericFlaw,
@@ -253,13 +252,6 @@ function Flaws({
                 sourceFilePath={filePath}
                 links={doc.flaws.broken_links as BrokenLink[]}
                 isReadOnly={isReadOnly}
-              />
-            );
-          case "bad_bcd_links":
-            return (
-              <BadBCDLinks
-                key="bad_bcd_links"
-                links={doc.flaws.bad_bcd_links as BadBCDLinkFlaw[]}
               />
             );
           case "bad_bcd_queries":
@@ -547,22 +539,6 @@ function BadBCDQueries({ flaws }: { flaws: BadBCDQueryFlaw[] }) {
         {flaws.map((flaw) => (
           <li key={flaw.id}>
             <code>{flaw.explanation}</code>
-          </li>
-        ))}
-      </ul>
-    </div>
-  );
-}
-
-function BadBCDLinks({ links }: { links: BadBCDLinkFlaw[] }) {
-  return (
-    <div className="flaw flaw__bad_bcd_links">
-      <h3>{humanizeFlawName("bad_bcd_links")}</h3>
-      <ul>
-        {links.map((link) => (
-          <li key={link.slug}>
-            In <code>{link.query}</code> under key <code>{link.key}</code> can't
-            find document: <code>{link.slug}</code>
           </li>
         ))}
       </ul>

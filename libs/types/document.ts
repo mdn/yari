@@ -23,12 +23,6 @@ export interface BrokenLink extends GenericFlaw {
   column: number;
 }
 
-export interface BadBCDLinkFlaw extends GenericFlaw {
-  slug: string;
-  query: string | null;
-  key: string;
-}
-
 export interface ImageReferenceFlaw extends GenericFlaw {
   src: string;
   line: number;
@@ -105,7 +99,6 @@ export type Flaws = Partial<{
   broken_links: BrokenLink[];
   macros: MacroErrorMessage[];
   bad_bcd_queries: BadBCDQueryFlaw[];
-  bad_bcd_links: BadBCDLinkFlaw[];
   images: ImageReferenceFlaw[];
   bad_pre_tags: BadPreTagFlaw[];
   sectioning: SectioningFlaw[];
