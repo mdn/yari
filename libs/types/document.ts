@@ -210,20 +210,6 @@ export interface BCDSection {
     id: string;
     title: string;
     isH3: boolean;
-    data?: BCD.Identifier | null;
-    dataURL?: string;
     query: string;
-    browsers?: BCD.Browsers | null;
   };
-}
-
-// Yari builder will attach extra keys from the compat data
-// it gets from @mdn/browser-compat-data. These are "Yari'esque"
-// extras that helps us avoiding to have a separate data structure.
-export interface CompatStatementExtended extends BCD.CompatStatement {
-  // When a compat statement has a .mdn_url but it's actually not a good
-  // one, the Yari builder will attach an extra boolean that indicates
-  // that it's not a valid link.
-  // Note, it's only 'true' if it's present, hence this interface definition.
-  bad_url?: true;
 }
