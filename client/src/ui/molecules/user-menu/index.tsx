@@ -15,6 +15,7 @@ import "./index.scss";
 import { DropdownMenu, DropdownMenuWrapper } from "../dropdown";
 import { NotificationData } from "../../../types/notifications";
 import useSWR from "swr";
+import { NEWSLETTER_ENABLED } from "../../../env";
 
 export const UserMenu = () => {
   const userData = useUserData();
@@ -72,6 +73,7 @@ export const UserMenu = () => {
         label: "My Settings",
         url: "/en-US/plus/settings",
         dot:
+          NEWSLETTER_ENABLED &&
           userData?.isSubscriber &&
           Date.now() < 1677628799000 && // new Date("2023-02-28 23:59:59Z").getTime()
           !userData?.settings.mdnplusNewsletter &&

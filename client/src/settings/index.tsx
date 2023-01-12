@@ -1,4 +1,5 @@
 import React from "react";
+import { NEWSLETTER_ENABLED } from "../env";
 
 import { OfflineStatusBar } from "../ui/molecules/offline-status-bar";
 
@@ -15,7 +16,7 @@ export function Settings() {
       <OfflineStatusBar />
       <article className="settings">
         <h1 className="slab-highlight _ify">{pageTitle} </h1>
-        <Newsletter />
+        {NEWSLETTER_ENABLED && <Newsletter />}
         <Manage />
         <OfflineSettings />
       </article>
