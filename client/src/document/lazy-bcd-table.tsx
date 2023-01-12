@@ -1,4 +1,4 @@
-import React, { lazy, Suspense, useEffect, useState } from "react";
+import React, { lazy, Suspense } from "react";
 import useSWR from "swr";
 
 import { DisplayH2, DisplayH3 } from "./ingredients/utils";
