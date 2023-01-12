@@ -223,6 +223,7 @@ export default function SearchFilter({
                 openFilter === filterMenu.key ? null : filterMenu.key
               )
             }
+            isDisabled={filterMenu.items.length === 0}
           >
             {filterMenu.label}
           </Button>
