@@ -139,7 +139,7 @@ export function usePing() {
   const user = useUserData();
 
   React.useEffect(() => {
-    const nextPing = new Date(localStorage.getItem("next-ping"));
+    const nextPing = new Date(localStorage.getItem("next-ping") || 0);
     if (isOnline && user?.isAuthenticated && nextPing < new Date()) {
       const params = new URLSearchParams();
 

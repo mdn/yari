@@ -81,7 +81,7 @@ export default function SearchFilter({
   const isDefaultFilter = (key: string, value: string) => {
     const filter = filters.find((filter) => filter.key === key) as AnyFilter;
     const option = filter.options.find((option) => option.value === value);
-    return option.isDefault ?? false;
+    return option?.isDefault ?? false;
   };
 
   const isCurrentFilter = (key: string, value: string) => {
@@ -103,7 +103,7 @@ export default function SearchFilter({
 
   const isDefaultSort = (param: string) => {
     const sort = sorts.find((sort) => sort.param === param);
-    return sort.isDefault ?? false;
+    return sort?.isDefault ?? false;
   };
 
   const isCurrentSort = (param: string) => {

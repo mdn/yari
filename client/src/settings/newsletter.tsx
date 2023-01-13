@@ -19,10 +19,8 @@ export default function Newsletter() {
       setLoading(false);
     })();
   }, []);
-  const { isViewed, setViewed } = useViewedState();
-  if (isViewed) {
-    setViewed(FeatureId.PLUS_NEWSLETTER);
-  }
+  const { setViewed } = useViewedState();
+  setViewed(FeatureId.PLUS_NEWSLETTER);
 
   return (
     <section className="field-group">
