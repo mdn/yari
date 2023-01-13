@@ -18,7 +18,7 @@ import { About } from "./about";
 import { getCategoryByPathname } from "./utils";
 import { Contribute } from "./community";
 import { ContributorSpotlight } from "./contributor-spotlight";
-import { useIsServer } from "./hooks";
+import { useIsServer, usePing } from "./hooks";
 
 import { Banner } from "./banners";
 import { useGleanPage } from "./telemetry/glean-context";
@@ -108,6 +108,7 @@ function PageOrPageNotFound({ pageNotFound, children }) {
 }
 
 export function App(appProps) {
+  usePing();
   useGleanPage();
   const localeMatch = useMatch("/:locale/*");
 
