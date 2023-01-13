@@ -33,9 +33,9 @@ export default function Newsletter() {
           <li>
             <h3>Receive updates from MDN Plus</h3>
             <span>
-              By activating this switch you will be signing up for our
-              newsletter to get product updates, meet our latest features, find
-              tips to get the most out of MD Plus, and more.
+              Opting in to our newsletter will allow us to email you product
+              updates, news about our latest features, tips to get the most out
+              of MDN Plus, and more.
             </span>
             {loading ? (
               <Spinner extraClasses="loading" />
