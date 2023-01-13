@@ -81,7 +81,7 @@ export function useUpdates() {
   const [searchParams] = useSearchParams();
 
   const url = composeUrl({
-    isAuthenticated: user && user.isAuthenticated,
+    isAuthenticated: user?.isAuthenticated || false,
     searchParams,
   });
 

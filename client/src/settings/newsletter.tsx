@@ -20,7 +20,7 @@ export default function Newsletter() {
     })();
   }, []);
   const { isViewed, setViewed } = useViewedState();
-  if (isViewed) {
+  if (!isViewed(FeatureId.PLUS_NEWSLETTER)) {
     setViewed(FeatureId.PLUS_NEWSLETTER);
   }
 
