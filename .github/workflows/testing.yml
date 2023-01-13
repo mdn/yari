@@ -52,6 +52,9 @@ jobs:
       - name: Lint stylelint
         run: yarn stylelint
 
+      - name: Check TypeScript
+        run: yarn check:tsc
+
   test:
     runs-on: ubuntu-latest
 

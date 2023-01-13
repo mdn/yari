@@ -21,6 +21,7 @@
     "build:ssr": "cd ssr && webpack --mode=production",
     "build:sw": "cd client/pwa && yarn && yarn build:prod",
     "build:sw-dev": "cd client/pwa && yarn && yarn build",
+    "check:tsc": "find . -mindepth 2 -name 'tsconfig.json' ! -wholename '**/node_modules/**' \\( -exec bash -c 'cd `dirname {}` && pwd && npx tsc --noEmit' \\; -o -quit \\)",
     "dev": "yarn build:prepare && nf -j Procfile.dev start",
     "eslint": "eslint .",
     "filecheck": "ts-node filecheck/cli.ts",
