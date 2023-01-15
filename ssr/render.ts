@@ -14,7 +14,15 @@ const PREFERRED_LOCALE = {
   zh: "zh-CN",
 };
 
-function htmlEscape(s) {
+// We should use the language tag (e.g. "zh-Hans") instead of the locale.
+// This is a map of locale => language tag.
+// See https://www.iana.org/assignments/language-subtag-registry/language-subtag-registry
+const LANGUAGE_TAGS = new Map([
+  ["zh-CN", "zh-Hans"],
+  ["zh-TW", "zh-Hant"],
+]);
+
+function htmlEscape(s: string) {
   if (!s) {
     return s;
   }
@@ -35,7 +43,7 @@ function getHrefLang(locale: string, allLocales: Array<string>) {
   // a preferred one. For example, if the document is available in 'zh-CN' and
   // in 'zh-TW', we need to output something like this:
   //   <link rel=alternate hreflang=zh href=...>
-  //   <link rel=alternate hreflang=zh-TW href=...>
+  //   <link rel=alternate hreflang=zh-Hant href=...>
   //
   // But other bother if both ambigious locale-to-hreflang are present.
   const preferred = PREFERRED_LOCALE[hreflang];
@@ -45,7 +53,7 @@ function getHrefLang(locale: string, allLocales: Array<string>) {
       // e.g. `locale===zh-TW`
       if (allLocales.includes(preferred)) {
         // If the more preferred one was there, use the locale + region format.
-        return locale;
+        return LANGUAGE_TAGS.get(locale) || locale;
       }
     }
   }
@@ -201,7 +209,7 @@ export default function render(
         );
         // The locale used in `<link rel="alternate">` needs to be the ISO-639-1
         // code. For example, it's "en", not "en-US". And it's "sv" not "sv-SE".
-        // See https://developers.google.com/search/docs/advanced/crawling/localized-versions?hl=en&visit_id=637411409912568511-3980844248&rd=1#language-codes
+        // See https://developers.google.com/search/docs/specialty/international/localized-versions#language-codes
         translations.push(
           `<link rel="alternate" title="${htmlEscape(
             translation.title
