@@ -15,7 +15,7 @@ import { VALID_LOCALES } from "../libs/constants";
 import { renderHTML } from "../ssr/dist/main";
 import options from "./build-options";
 import { buildDocument, BuiltDocument, renderContributorsTxt } from ".";
-import { Flaws } from "../libs/types";
+import { DocMetadata, Flaws } from "../libs/types";
 import SearchIndex from "./search-index";
 import { BUILD_OUT_ROOT } from "../libs/env";
 import { makeSitemapXML, makeSitemapIndexXML } from "./sitemaps";
@@ -32,6 +32,10 @@ export interface InteractiveDocumentBuild {
   document: any;
   doc: BuiltDocument;
   skip: false;
+}
+
+interface GlobalMetadata {
+  [locale: string]: Array<DocMetadata>;
 }
 
 async function buildDocumentInteractive(
@@ -115,7 +119,7 @@ async function buildDocuments(
     findAllOptions.files = new Set(files);
   }
 
-  const metadata = {};
+  const metadata: GlobalMetadata = {};
 
   const documents = Document.findAll(findAllOptions);
   const progressBar = new cliProgress.SingleBar(
@@ -278,6 +282,18 @@ async function buildDocuments(
       JSON.stringify(meta)
     );
   }
+
+  const allBrowserCompat = new Set<string>();
+  Object.values(metadata).forEach((localeMeta) =>
+    localeMeta.forEach((doc) =>
+      doc.browserCompat?.forEach((query) => allBrowserCompat.add(query))
+    )
+  );
+  fs.writeFileSync(
+    path.join(BUILD_OUT_ROOT, "allBrowserCompat.txt"),
+    [...allBrowserCompat].join(" ")
+  );
+
   return { slugPerLocale: docPerLocale, peakHeapBytes, totalFlaws };
 }
 
