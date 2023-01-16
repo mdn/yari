@@ -3,7 +3,7 @@ import { Doc } from "../../../libs/types/document";
 export function OnGitHubLink({ doc }: { doc: Doc }) {
   return (
     <div id="on-github" className="on-github">
-      <h3>Found a problem with this page?</h3>
+      <h3>Found a content problem with this page?</h3>
       <ul>
         <li>
           Edit the page <EditOnGitHubLink doc={doc} />.
