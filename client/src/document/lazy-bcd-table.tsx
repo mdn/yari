@@ -75,9 +75,6 @@ function LazyBrowserCompatibilityTableInner({ query }: { query: string }) {
       </p>
     );
   }
-  if (!data && !error) {
-    return <Loading />;
-  }
   if (error) {
     if (error.message === "404") {
       return (
@@ -95,6 +92,9 @@ function LazyBrowserCompatibilityTableInner({ query }: { query: string }) {
       );
     }
     return <p>Error loading BCD data</p>;
+  }
+  if (!data) {
+    return <Loading />;
   }
 
   return (
