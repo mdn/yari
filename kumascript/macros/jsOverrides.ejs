@@ -114,6 +114,11 @@ switch(env.locale) {
         if (captionText === "Methods") { captionText = "Методы"; }
         titleString = captionText  + ', унаследованные из <a href="' + pageuri + '"><code>' + $0 + '</code></a>:';
         break;
+    case "ko":
+        if (captionText === "Properties") { captionText = "속성"; }
+        if (captionText === "Methods") { captionText = "메서드"; }
+        titleString = '<a class="internal" href="' + pageuri + '"><code>' + $0 + '</code></a> 로부터 상속됨' + captionText;
+        break;
     default:
         titleString = captionText  + ' inherited from <a href="' + pageuri + '"><code>' + $0 + '</code></a>:';
         break;
