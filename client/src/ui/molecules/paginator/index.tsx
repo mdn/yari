@@ -47,7 +47,7 @@ export function Paginator({
   onChange?: (page: number, oldPage: number) => unknown;
 }) {
   const [searchParams] = useSearchParams();
-  const current = parseInt(searchParams.get(PARAM), 10) || first;
+  const current = parseInt(searchParams.get(PARAM) || "", 10) || first;
   const middleFirst = Math.max(current - middlePadding, first);
   const middleLast = Math.min(middleFirst + middlePadding * 2 + 1, last + 1);
   const left = range(first, Math.min(endPadding, middleFirst));

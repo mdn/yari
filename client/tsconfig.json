@@ -6,7 +6,9 @@
     "module": "esnext",
     "isolatedModules": true,
     "noEmit": true,
-    "noFallthroughCasesInSwitch": true
+    "noFallthroughCasesInSwitch": true,
+    "jsx": "react-jsx",
+    "strictNullChecks": true
   },
   "include": ["src"]
 }
