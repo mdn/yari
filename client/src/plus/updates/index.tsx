@@ -21,7 +21,7 @@ import { useGleanClick } from "../../telemetry/glean-context";
 import { PLUS_UPDATES } from "../../telemetry/constants";
 import SearchFilter, { AnyFilter, AnySort } from "../search-filter";
 import { LoginBanner } from "./login-banner";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { DataError } from "../common";
 import { useCollections } from "../collections/api";
