@@ -2,7 +2,10 @@ import got from "got";
 import { KumaThis } from "../environment.js";
 import * as util from "./util.js";
 import { INTERACTIVE_EXAMPLES_BASE_URL } from "../../../libs/env.js";
-import { InteractiveExamplesHeightData } from "../../../client/src/document/ingredients/interactive-example.js";
+import {
+  InteractiveEditorHeights,
+  InteractiveExamplesHeightData,
+} from "../../../client/src/document/ingredients/interactive-example.js";
 
 // Module level caching for repeat calls to fetchWebExtExamples().
 let webExtExamples: any = null;
@@ -169,9 +172,9 @@ const mdn = {
   },
 
   /**
-   * Fetching height-data.json from interactive-examples, which contains height class for every interactive example.
+   * Fetching height-data.json from interactive-examples, which contains height information of every interactive example
    */
-  async fetchInteractiveExampleHeightData() {
+  async fetchInteractiveExampleHeightData(): Promise<InteractiveExamplesHeightData | null> {
     if (!interactiveExampleHeightData) {
       try {
         interactiveExampleHeightData = await got<InteractiveExamplesHeightData>(
@@ -186,6 +189,35 @@ const mdn = {
       }
     }
     return interactiveExampleHeightData;
+  },
+
+  /**
+   * @param pagePath - for example "pages/css/animation.html"
+   * @returns exact information about height of a given interactive example. Exemplary output:
+   *  [
+   *     {
+   *        "minFrameWidth": 0,
+   *        "height": 723
+   *     },
+   *     {
+   *        "minFrameWidth": 590,
+   *        "height": 654
+   *     }
+   *  ]
+   */
+  async getInteractiveExampleHeight(
+    pagePath: string
+  ): Promise<InteractiveEditorHeights> {
+    const heightData = await mdn.fetchInteractiveExampleHeightData();
+
+    if (!heightData) {
+      return undefined;
+    }
+
+    const editorName = heightData.examples?.pagePath;
+    const editors = heightData.editors;
+    const editor = editors?.find((e) => e.name === editorName);
+    return editor?.heights;
   },
 };
 
