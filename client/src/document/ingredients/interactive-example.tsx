@@ -1,4 +1,4 @@
-import { useEffect, useLayoutEffect, useRef } from "react";
+import { useLayoutEffect, useRef } from "react";
 
 interface InteractiveEditorHeight {
   minFrameWidth: number;
@@ -28,18 +28,17 @@ export function InteractiveExample({
 
   useLayoutEffect(() => {
     if (ref.current) {
-      setHeight(ref.current, heights);
+      const iframe = ref.current;
+      setHeight(iframe, heights);
 
       // Updating height whenever iframe is resized
       const observer = new ResizeObserver((entries) =>
-        entries.forEach((e) =>
-          setHeight(e.target as typeof ref.current, heights)
-        )
+        entries.forEach((e) => setHeight(e.target as typeof iframe, heights))
       );
-      observer.observe(ref.current);
-      return () => (ref.current ? observer.unobserve(ref.current) : undefined);
+      observer.observe(iframe);
+      return () => (iframe ? observer.unobserve(iframe) : undefined);
     }
-  }, [ref.current]);
+  }, [ref.current, heights]);
 
   return (
     <iframe

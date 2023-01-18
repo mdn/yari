@@ -214,7 +214,7 @@ const mdn = {
       return undefined;
     }
 
-    const editorName = heightData.examples?.pagePath;
+    const editorName = heightData.examples?.[pagePath];
     const editors = heightData.editors;
     const editor = editors?.find((e) => e.name === editorName);
     return editor?.heights;
