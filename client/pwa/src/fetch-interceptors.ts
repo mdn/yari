@@ -59,14 +59,20 @@ export class DefaultApiInterceptor implements FetchInterceptor {
     try {
       return await fetch(req);
     } catch (err: any) {
-      return new Response(jsonBlob({ error: "offline" }));
+      return new Response(jsonBlob({ error: "offline" }), {
+        status: 418,
+        statusText: "You're offline",
+      });
     }
   }
   async onPost(req: Request): Promise<Response> {
     try {
       return await fetch(req);
     } catch (err) {
-      return new Response(jsonBlob({ error: "offline" }));
+      return new Response(jsonBlob({ error: "offline" }), {
+        status: 418,
+        statusText: "You're offline",
+      });
     }
   }
 }
