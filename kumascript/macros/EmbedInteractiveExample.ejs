@@ -11,15 +11,12 @@ const url = (new URL($0, env.interactive_examples.base_url)).toString();
 // Iframe height is acquired from height-data.json file exported by interactive-examples
 const heightData = await mdn.fetchInteractiveExampleHeightData();
 
-let height;
-if (heightData[$0]) {
-  height = heightData[$0];
-} else if ($0.includes('/js/')) {
-  height = 'js';
-} else {
-  height = 'default';
-}
-const heightClass = 'is-' + height + '-height';
+const editorName = heightData?.examples?.[$0];
+const editors = heightData?.editors;
+const editor = editors?.find(e => e.name === editorName);
+const heights = editor?.heights;
+// We get heights in form of a string, so we can place it in data-heights attribute, used by interactive-example.tsx
+const heightsStr = JSON.stringify(heights || "", null, "");
 
 const text = mdn.localStringMap({
   "en-US": {
@@ -51,6 +48,17 @@ const text = mdn.localStringMap({
   }
 });
 
+if (heights) {
+  // iframe is later replaced by interactive-example.tsx
 %>
-<h2><%=text["title"]%></h2>
-<iframe class="interactive <%= heightClass %>" height="200" src="<%= url %>" title="MDN Web Docs Interactive Example"></iframe>
+  <h2><%=text["title"]%></h2>
+  <iframe class="interactive" height="200" src="<%= url %>" title="MDN Web Docs Interactive Example" data-heights="<%= heightsStr %>"></iframe>
+<%
+} else {
+%>
+  <div class="notecard warning">
+    <p>
+      Error! Height of interactive example couldn't be fetched.
+    </p>
+  </div>
+<% } %>

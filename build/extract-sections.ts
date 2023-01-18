@@ -1,6 +1,7 @@
 import * as cheerio from "cheerio";
 import { ProseSection, Section } from "../libs/types/document.js";
 import { extractSpecifications } from "./extract-specifications.js";
+import { InteractiveEditorHeights } from "../client/src/document/ingredients/interactive-example.js";
 
 type SectionsAndFlaws = [Section[], string[]];
 
@@ -20,7 +21,9 @@ export function extractSections($: cheerio.CheerioAPI): [Section[], string[]] {
   iterable.forEach((child) => {
     if (
       (child as cheerio.Element).tagName === "h2" ||
-      (child as cheerio.Element).tagName === "h3"
+      (child as cheerio.Element).tagName === "h3" ||
+      (child.tagName === "iframe" &&
+        child.attribs.class?.includes("interactive")) // Interactive Example
     ) {
       if (c) {
         const [subSections, subFlaws] = addSections(section.clone());
@@ -163,7 +166,9 @@ export function extractSections($: cheerio.CheerioAPI): [Section[], string[]] {
 function addSections($: cheerio.Cheerio<cheerio.Element>): SectionsAndFlaws {
   const flaws: string[] = [];
 
-  const countPotentialSpecialDivs = $.find("div.bc-data, div.bc-specs").length;
+  const countPotentialSpecialDivs = $.find(
+    "div.bc-data, div.bc-specs, iframe.interactive"
+  ).length;
   if (countPotentialSpecialDivs) {
     /** If there's exactly 1 special table the only section to add is something
      * like this:
@@ -251,7 +256,7 @@ function addSections($: cheerio.Cheerio<cheerio.Element>): SectionsAndFlaws {
       }
       if (countSpecialDivsFound !== countPotentialSpecialDivs) {
         const leftoverCount = countPotentialSpecialDivs - countSpecialDivsFound;
-        const explanation = `${leftoverCount} 'div.bc-data' or 'div.bc-specs' element${
+        const explanation = `${leftoverCount} 'div.bc-data', 'div.bc-specs' or 'iframe.interactive' element${
           leftoverCount > 1 ? "s" : ""
         } found but deeply nested.`;
         flaws.push(explanation);
@@ -266,6 +271,7 @@ function addSections($: cheerio.Cheerio<cheerio.Element>): SectionsAndFlaws {
     // section underneath.
     $.find("div.bc-data, h2, h3").remove();
     $.find("div.bc-specs, h2, h3").remove();
+    $.find("iframe.interactive").remove();
     const [proseSections, proseFlaws] = _addSectionProse($);
     specialSections.push(...proseSections);
     flaws.push(...proseFlaws);
@@ -316,6 +322,9 @@ function _addSingleSpecialSection(
     specialSectionType = "specifications";
     dataQuery = $.find("div.bc-specs").attr("data-bcd-query") ?? "";
     specURLsString = $.find("div.bc-specs").attr("data-spec-urls") ?? "";
+  } else if ($.find("iframe.interactive").length) {
+    specialSectionType = "interactive_example";
+    dataQuery = $.find("iframe.interactive").attr("src");
   }
 
   // Some old legacy documents haven't been re-rendered yet, since it
@@ -358,6 +367,24 @@ function _addSingleSpecialSection(
           isH3,
           specifications,
           query,
+        },
+      },
+    ];
+  } else if (specialSectionType === "interactive_example") {
+    const iframe = $.find("iframe.interactive");
+    const heights = JSON.parse(
+      iframe.attr("data-heights")
+    ) as InteractiveEditorHeights;
+
+    return [
+      {
+        type: specialSectionType,
+        value: {
+          title,
+          id,
+          isH3,
+          src: query,
+          heights,
         },
       },
     ];

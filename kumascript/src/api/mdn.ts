@@ -2,11 +2,12 @@ import got from "got";
 import { KumaThis } from "../environment.js";
 import * as util from "./util.js";
 import { INTERACTIVE_EXAMPLES_BASE_URL } from "../../../libs/env.js";
+import { InteractiveExamplesHeightData } from "../../../client/src/document/ingredients/interactive-example.js";
 
 // Module level caching for repeat calls to fetchWebExtExamples().
 let webExtExamples: any = null;
 
-let interactiveExampleHeightData: object = null;
+let interactiveExampleHeightData: InteractiveExamplesHeightData | null = null;
 
 const mdn = {
   /**
@@ -173,7 +174,7 @@ const mdn = {
   async fetchInteractiveExampleHeightData() {
     if (!interactiveExampleHeightData) {
       try {
-        interactiveExampleHeightData = await got(
+        interactiveExampleHeightData = await got<InteractiveExamplesHeightData>(
           INTERACTIVE_EXAMPLES_BASE_URL + "/height-data.json",
           {
             timeout: 1000,
@@ -181,7 +182,7 @@ const mdn = {
           }
         ).json();
       } catch (error) {
-        interactiveExampleHeightData = {};
+        interactiveExampleHeightData = null;
       }
     }
     return interactiveExampleHeightData;

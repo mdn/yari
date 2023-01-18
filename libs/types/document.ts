@@ -1,3 +1,5 @@
+import { InteractiveEditorHeights } from "../../client/src/document/ingredients/interactive-example";
+
 export interface Source {
   folder: string;
   github_url: string;
@@ -168,7 +170,11 @@ export interface DocFrontmatter {
   original_slug?: string;
 }
 
-export type Section = ProseSection | SpecificationsSection | BCDSection;
+export type Section =
+  | ProseSection
+  | SpecificationsSection
+  | BCDSection
+  | InteractiveExample;
 
 export interface ProseSection {
   type: "prose";
@@ -204,6 +210,17 @@ export interface BCDSection {
     title: string;
     isH3: boolean;
     query: string;
+  };
+}
+
+export interface InteractiveExample {
+  type: "interactive_example";
+  value: {
+    id: string;
+    title: string;
+    isH3: boolean;
+    src: string;
+    heights: InteractiveEditorHeights;
   };
 }
 

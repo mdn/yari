@@ -38,6 +38,7 @@ import "./index.scss";
 import "./interactive-examples.scss";
 import { DocumentSurvey } from "../ui/molecules/document-survey";
 import { useIncrementFrequentlyViewed } from "../plus/collections/frequently-viewed";
+import { InteractiveExample } from "./ingredients/interactive-example";
 // import { useUIStatus } from "../ui-context";
 
 // Lazy sub-components
@@ -257,7 +258,12 @@ export function Document(props /* TODO: define a TS interface for this */) {
 function RenderDocumentBody({ doc }) {
   return doc.body.map((section, i) => {
     if (section.type === "prose") {
-      return <Prose key={section.value.id} section={section.value} />;
+      return (
+        <Prose
+          key={section.value.id || `top_level_prose${i}`}
+          section={section.value}
+        />
+      );
     } else if (section.type === "browser_compatibility") {
       return (
         <LazyBrowserCompatibilityTable
@@ -268,6 +274,13 @@ function RenderDocumentBody({ doc }) {
     } else if (section.type === "specifications") {
       return (
         <SpecificationSection key={`specifications${i}`} {...section.value} />
+      );
+    } else if (section.type === "interactive_example") {
+      return (
+        <InteractiveExample
+          key={`interactive_example${i}`}
+          {...section.value}
+        />
       );
     } else {
       console.warn(section);
