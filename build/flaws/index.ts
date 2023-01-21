@@ -17,11 +17,13 @@ import { getPreTagFlaws } from "./pre-tags";
 export { injectSectionFlaws } from "./sections";
 import { getUnsafeHTMLFlaws } from "./unsafe-html";
 import { injectTranslationDifferences } from "./translation-differences";
+import * as cheerio from "cheerio";
+import { Doc } from "../../libs/types/document";
 
 export interface Flaw {
   explanation: any;
   id: any;
-  fixable: any;
+  fixable?: any;
   html?: any;
   suggestion: any;
   type?: any;
@@ -30,9 +32,19 @@ export interface Flaw {
   difference?: any;
 }
 
-type GetFlawsFunction = (doc: any, $: any, document: any, level: any) => Flaw[];
+type GetFlawsFunction = (
+  doc: Partial<Doc>,
+  $: cheerio.CheerioAPI,
+  document: any,
+  level: any
+) => Flaw[];
 
-export function injectFlaws(doc, $, options, document) {
+export function injectFlaws(
+  doc: Partial<Doc>,
+  $: cheerio.CheerioAPI,
+  options,
+  document
+) {
   const flawChecks: Array<[string, GetFlawsFunction, boolean]> = [
     ["unsafe_html", getUnsafeHTMLFlaws, false],
     ["broken_links", getBrokenLinksFlaws, true],
@@ -84,7 +96,7 @@ export function injectFlaws(doc, $, options, document) {
   }
 }
 
-export async function fixFixableFlaws(doc, options, document) {
+export async function fixFixableFlaws(doc: Partial<Doc>, options, document) {
   if (!options.fixFlaws) return;
 
   const { rawBody, isMarkdown } = document;

@@ -36,8 +36,8 @@ export interface InteractiveDocumentBuild {
 }
 
 async function buildDocumentInteractive(
-  documentPath,
-  interactive,
+  documentPath: string,
+  interactive: boolean,
   invalidate = false
 ): Promise<SkippedDocumentBuild | InteractiveDocumentBuild> {
   try {
@@ -153,8 +153,9 @@ async function buildDocuments(
   for (const documentPath of documents.iterPaths()) {
     const result = await buildDocumentInteractive(documentPath, interactive);
 
-    const isSkippedDocumentBuild = (result): result is SkippedDocumentBuild =>
-      result.skip !== false;
+    const isSkippedDocumentBuild = (
+      result: SkippedDocumentBuild | InteractiveDocumentBuild
+    ): result is SkippedDocumentBuild => result.skip !== false;
 
     if (isSkippedDocumentBuild(result)) {
       continue;

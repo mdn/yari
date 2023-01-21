@@ -9,7 +9,7 @@ import { DEFAULT_LOCALE } from "../libs/constants";
 import { ROOTS } from "../libs/env";
 import { memoize, slugToFolder } from "./utils";
 
-function isImage(filePath) {
+function isImage(filePath: string) {
   if (fs.statSync(filePath).isDirectory()) {
     return false;
   }
@@ -31,7 +31,7 @@ function isImage(filePath) {
   return true;
 }
 
-function urlToFilePath(url) {
+function urlToFilePath(url: string) {
   const [, locale, , ...slugParts] = decodeURI(url).split("/");
   return path.join(locale.toLowerCase(), slugToFolder(slugParts.join("/")));
 }
@@ -42,7 +42,7 @@ const find = memoize((relativePath: string) => {
   );
 });
 
-export function findByURL(url) {
+export function findByURL(url: string) {
   return find(urlToFilePath(url));
 }
 

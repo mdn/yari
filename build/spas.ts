@@ -179,13 +179,11 @@ export async function buildSPAs(options) {
 
   // Building the MDN Plus pages.
 
-  /**
-   *
-   * @param {string} dirpath
-   * @param {string} slug
-   * @param {string} title
-   */
-  async function buildStaticPages(dirpath, slug, title = "MDN") {
+  async function buildStaticPages(
+    dirpath: string,
+    slug: string,
+    title = "MDN"
+  ) {
     const crawler = new fdir()
       .withFullPaths()
       .withErrors()

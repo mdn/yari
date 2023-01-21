@@ -13,7 +13,7 @@ import sanitizeFilename from "sanitize-filename";
 
 import { VALID_MIME_TYPES } from "../libs/constants";
 
-export function humanFileSize(size) {
+export function humanFileSize(size: number) {
   if (size < 1024) return `${size} B`;
   const i = Math.floor(Math.log(size) / Math.log(1024));
   const num = size / 1024 ** i;
@@ -37,14 +37,18 @@ export function humanFileSize(size) {
 // be able to process them and fix the problem we need to "temporarily"
 // pretend they were hosted on a remote working full domain.
 // See https://github.com/mdn/yari/issues/1103
-export function forceExternalURL(url) {
+export function forceExternalURL(url: string) {
   if (url.startsWith("/")) {
     return `https://mdn.mozillademos.org${url}`;
   }
   return url;
 }
 
-export async function downloadAndResizeImage(src, out, basePath) {
+export async function downloadAndResizeImage(
+  src: string,
+  out: string,
+  basePath: string
+) {
   const imageResponse = await got(forceExternalURL(src), {
     responseType: "buffer",
     timeout: 10000,
@@ -118,7 +122,7 @@ export async function downloadAndResizeImage(src, out, basePath) {
   return destination;
 }
 
-export function getImageminPlugin(fileName) {
+export function getImageminPlugin(fileName: string) {
   const extension = path.extname(fileName).toLowerCase();
   if (extension === ".jpg" || extension === ".jpeg") {
     return imageminMozjpeg();

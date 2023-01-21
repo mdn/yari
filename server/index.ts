@@ -38,7 +38,7 @@ import { getRoot } from "../content/utils";
 
 import { renderHTML } from "../ssr/dist/main";
 
-async function buildDocumentFromURL(url) {
+async function buildDocumentFromURL(url: string) {
   const document = Document.findByURL(url);
   if (!document) {
     return null;

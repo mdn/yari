@@ -1,5 +1,6 @@
 import Prism from "prismjs";
 import loadLanguages from "prismjs/components/index";
+import * as cheerio from "cheerio";
 
 const lazy = (creator) => {
   let res;
@@ -76,7 +77,7 @@ const IGNORE = new Set(["none", "text", "plain", "unix"]);
  * syntax highlighted with Prism.
  *
  */
-export function syntaxHighlight($, doc) {
+export function syntaxHighlight($: cheerio.CheerioAPI, doc) {
   loadAllLanguages();
 
   // Our content will be like this: `<pre class="brush:js">` or
