@@ -108,7 +108,7 @@ export function getBrokenLinksFlaws(
     suggestion: string = null,
     explanation: string = null,
     enUSFallback: string = null,
-    isSelfLink: boolean = false
+    isSelfLink = false
   ) {
     mutateLink($element, suggestion, enUSFallback, isSelfLink);
     if (level === FLAW_LEVELS.IGNORE) {
