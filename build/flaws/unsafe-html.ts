@@ -7,6 +7,7 @@ import {
 import { findMatchesInText } from "../matches-in-text";
 import * as cheerio from "cheerio";
 import { Doc } from "../../libs/types";
+import { isTag } from "domhandler/lib/node";
 
 const safeIFrameSrcs = [
   // EmbedGHLiveSample.ejs
@@ -85,6 +86,9 @@ function getAndMarkupUnsafeHTMLFlaws(
   });
 
   $("*").each((i, element) => {
+    if (!isTag(element)) {
+      return;
+    }
     const { tagName } = element;
     // E.g. `<script\x20type="text/javascript">javascript:alert(1);</script>`
     if (tagName.startsWith("script")) {
