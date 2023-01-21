@@ -7,7 +7,7 @@ import {
 import { findMatchesInText } from "../matches-in-text";
 import * as cheerio from "cheerio";
 import { Doc } from "../../libs/types";
-import { isTag } from "domhandler/lib/node";
+import { isTag } from "domhandler";
 
 const safeIFrameSrcs = [
   // EmbedGHLiveSample.ejs

@@ -1,6 +1,11 @@
 import { FLAW_LEVELS } from "../../libs/constants";
+import { Doc } from "../../libs/types";
 
-export function injectSectionFlaws(doc, flaws, options) {
+export function injectSectionFlaws(
+  doc: Partial<Doc>,
+  flaws: string[],
+  options
+) {
   if (!flaws.length) {
     return;
   }
