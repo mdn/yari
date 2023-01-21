@@ -64,7 +64,6 @@ const IMPORTANT_MACROS = new Map(
     "WebAssemblySidebar",
     "WebExtAPISidebar",
     "WebGLSidebar",
-    "WebRTCSidebar",
     "languages",
     "page",
   ].map((name) => [name.toLowerCase(), name])
