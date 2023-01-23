@@ -71,7 +71,8 @@ export function extractSpecifications(
     }
   }
 
-  if (query) {
+  // Look for spec URLS in BCD only if specURLsString is not set
+  if (query && !specURLsString) {
     for (const feature of query.split(",").map((id) => id.trim())) {
       const { data } = packageBCD(feature);
       // If 'data' is non-null, we have data for one or more BCD features
