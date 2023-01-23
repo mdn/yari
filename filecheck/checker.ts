@@ -80,6 +80,12 @@ export async function checkFile(
     );
   }
 
+  // Check that file path doesn't contain parantheses `(`, `)`
+  const bannedCharsRegExp = /\(|\)/;
+  if (bannedCharsRegExp.test(expectedPath)) {
+    throw new Error(`File path must not include characters: '(', ')'`);
+  }
+
   // Check that the file size is >0 and <MAX_FILE_SIZE.
   const stat = await fs.stat(filePath);
   if (!stat.size) {
