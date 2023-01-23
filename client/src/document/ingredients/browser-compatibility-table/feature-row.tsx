@@ -13,7 +13,6 @@ import {
   SupportStatementExtended,
 } from "./utils";
 import { LEGEND_LABELS } from "./legend";
-import { CompatStatementExtended } from "../../../../../libs/types";
 
 function getSupportClassName(
   support: SupportStatementExtended | undefined,
@@ -492,7 +491,7 @@ export const FeatureRow = React.memo(
     index: number;
     feature: {
       name: string;
-      compat: CompatStatementExtended;
+      compat: BCD.CompatStatement;
       depth: number;
     };
     browsers: BCD.BrowserName[];
@@ -516,16 +515,7 @@ export const FeatureRow = React.memo(
 
     let titleNode: string | React.ReactNode;
 
-    if (compat.bad_url && compat.mdn_url) {
-      titleNode = (
-        <div className="bc-table-row-header">
-          <abbr className="new" title={`${compat.mdn_url} does not exist`}>
-            {title}
-          </abbr>
-          {compat.status && <StatusIcons status={compat.status} />}
-        </div>
-      );
-    } else if (compat.mdn_url && depth > 0) {
+    if (compat.mdn_url && depth > 0) {
       titleNode = (
         <a href={compat.mdn_url} className="bc-table-row-header">
           {title}
