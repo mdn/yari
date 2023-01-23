@@ -175,7 +175,6 @@ export const VALID_FLAW_CHECKS = new Set([
   "macros",
   "broken_links",
   "bad_bcd_queries",
-  "bad_bcd_links",
   "images",
   "image_widths",
   "bad_pre_tags",

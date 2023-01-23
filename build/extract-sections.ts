@@ -1,7 +1,6 @@
 import * as cheerio from "cheerio";
 import { ProseSection, Section } from "../libs/types/document.js";
 import { extractSpecifications } from "./extract-specifications.js";
-import { extractBCD } from "./extract-bcd.js";
 
 type SectionsAndFlaws = [Section[], string[]];
 
@@ -330,8 +329,6 @@ function _addSingleSpecialSection(
   const query = dataQuery.replace(/^bcd:/, "");
 
   if (specialSectionType === "browser_compatibility") {
-    const { data, browsers } = extractBCD(query);
-
     if (hasMultipleQueries) {
       title = query;
       id = query;
@@ -345,9 +342,7 @@ function _addSingleSpecialSection(
           title,
           id,
           isH3,
-          data,
           query,
-          browsers,
         },
       },
     ];

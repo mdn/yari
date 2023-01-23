@@ -23,8 +23,7 @@ import {
   BuiltDocument,
   renderContributorsTxt,
 } from "./index.js";
-import { Flaws } from "../libs/types/document.js";
-import * as bcd from "@mdn/browser-compat-data/types";
+import { DocMetadata, Flaws } from "../libs/types/document.js";
 import SearchIndex from "./search-index.js";
 import { makeSitemapXML, makeSitemapIndexXML } from "./sitemaps.js";
 import { humanFileSize } from "./utils.js";
@@ -43,6 +42,10 @@ export interface InteractiveDocumentBuild {
   document: any;
   doc: BuiltDocument;
   skip: false;
+}
+
+interface GlobalMetadata {
+  [locale: string]: Array<DocMetadata>;
 }
 
 async function buildDocumentInteractive(
@@ -126,7 +129,7 @@ async function buildDocuments(
     findAllOptions.files = new Set(files);
   }
 
-  const metadata = {};
+  const metadata: GlobalMetadata = {};
 
   const documents = Document.findAll(findAllOptions);
   const progressBar = new cliProgress.SingleBar(
@@ -171,7 +174,7 @@ async function buildDocuments(
     }
 
     const {
-      doc: { doc: builtDocument, liveSamples, fileAttachments, bcdData },
+      doc: { doc: builtDocument, liveSamples, fileAttachments },
       document,
     } = result;
 
@@ -200,27 +203,6 @@ async function buildDocuments(
         builtDocument.source.github_url.replace("/blob/", "/commits/")
       )
     );
-    for (const { url, data } of bcdData) {
-      fs.writeFileSync(
-        path.join(outPath, path.basename(url)),
-        JSON.stringify(data, (key, value) => {
-          // The BCD data object contains a bunch of data we don't need in the
-          // React component that loads the `bcd.json` file and displays it.
-          // The `.releases` block contains information about browsers (e.g
-          // release dates) and that part has already been extracted and put
-          // next to each version number where appropriate.
-          // Therefore, we strip out all "retired" releases.
-          if (key === "releases") {
-            return Object.fromEntries(
-              Object.entries(value as bcd.ReleaseStatement).filter(
-                ([, v]) => v.status !== "retired"
-              )
-            );
-          }
-          return value;
-        })
-      );
-    }
 
     for (const { id, html } of liveSamples) {
       const liveSamplePath = path.join(outPath, `_sample_.${id}.html`);
@@ -310,6 +292,18 @@ async function buildDocuments(
       JSON.stringify(meta)
     );
   }
+
+  const allBrowserCompat = new Set<string>();
+  Object.values(metadata).forEach((localeMeta) =>
+    localeMeta.forEach((doc) =>
+      doc.browserCompat?.forEach((query) => allBrowserCompat.add(query))
+    )
+  );
+  fs.writeFileSync(
+    path.join(BUILD_OUT_ROOT, "allBrowserCompat.txt"),
+    [...allBrowserCompat].join(" ")
+  );
+
   return { slugPerLocale: docPerLocale, peakHeapBytes, totalFlaws };
 }
 
