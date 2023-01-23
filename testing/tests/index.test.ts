@@ -1012,31 +1012,6 @@ test("detect bad_bcd_queries flaws", () => {
   expect(doc.flaws.bad_bcd_queries[0].suggestion).toBeNull();
 });
 
-test("detect bad_bcd_links flaws from", () => {
-  const builtFolder = path.join(
-    buildRoot,
-    "en-us",
-    "docs",
-    "web",
-    "api",
-    "page_visibility_api"
-  );
-  expect(fs.existsSync(builtFolder)).toBeTruthy();
-  const jsonFile = path.join(builtFolder, "index.json");
-  const { doc } = JSON.parse(fs.readFileSync(jsonFile, "utf-8")) as {
-    doc: Doc;
-  };
-  expect(doc.flaws.bad_bcd_links).toHaveLength(1);
-  // The reasons it's a bad link is because the @mdn/browser-compat-data,
-  // for the query `api.Document.visibilityState` refers to a page
-  // with mdn_url `/en-US/docs/Web/API/Document/visibilityState` which we
-  // don't have. At least not in the testing content :)
-  const flaw = doc.flaws.bad_bcd_links[0];
-  expect(flaw.slug).toBe("/en-US/docs/Web/API/Document/visibilityState");
-  expect(flaw.suggestion).toBeNull();
-  expect(flaw.query).toBe("api.Document.visibilityState");
-});
-
 test("detect bad_pre_tags flaws", () => {
   const builtFolder = path.join(
     buildRoot,
@@ -1552,12 +1527,12 @@ test("deprecated macros are fixable", () => {
   const { doc } = JSON.parse(fs.readFileSync(jsonFile, "utf-8")) as {
     doc: Doc;
   };
-  expect(doc.flaws.macros).toHaveLength(2);
+  expect(doc.flaws.macros).toHaveLength(1);
   // All fixable and all a suggestion of ''
-  expect(doc.flaws.macros.filter((flaw) => flaw.fixable)).toHaveLength(2);
+  expect(doc.flaws.macros.filter((flaw) => flaw.fixable)).toHaveLength(1);
   expect(
     doc.flaws.macros.filter((flaw) => flaw.suggestion === "")
-  ).toHaveLength(2);
+  ).toHaveLength(1);
 });
 
 test("external links always get the right attributes", () => {

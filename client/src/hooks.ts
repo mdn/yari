@@ -2,6 +2,8 @@ import React, { useEffect, useMemo, useState } from "react";
 import { useLocation, useNavigationType, useParams } from "react-router-dom";
 import { DEFAULT_LOCALE } from "../../libs/constants";
 import { isValidLocale } from "../../libs/locale-utils";
+import { FeatureId } from "./constants";
+import { OFFLINE_SETTINGS_KEY, useUserData } from "./user-context";
 
 // This is a bit of a necessary hack!
 // The only reason this list is needed is because of the PageNotFound rendering.
@@ -52,8 +54,18 @@ export function useOnClickOutside(ref, handler) {
 }
 
 export function useOnlineStatus(): { isOnline: boolean; isOffline: boolean } {
+  const isServer = useIsServer();
+  const trueStatus = useTrueOnlineStatus();
+  // ensure we don't get a hydration error due to mismatched markup:
+  return isServer ? { isOnline: true, isOffline: false } : trueStatus;
+}
+
+export function useTrueOnlineStatus(): {
+  isOnline: boolean;
+  isOffline: boolean;
+} {
   const [isOnline, setIsOnline] = useState<boolean>(
-    window?.navigator.onLine ?? true
+    typeof window === "undefined" ? false : window.navigator.onLine
   );
   const isOffline = useMemo(() => !isOnline, [isOnline]);
 
@@ -90,4 +102,63 @@ export function useScrollToTop() {
   useEffect(() => {
     if (navigationType === "PUSH") document.documentElement.scrollTo(0, 0);
   }, [navigationType, location]);
+}
+
+export function useViewedState() {
+  const isServer = useIsServer();
+  const key = (id: FeatureId) => `viewed.${id}`;
+
+  return {
+    isViewed: (id: FeatureId) => {
+      if (isServer) {
+        // Avoids the dot from popping up quickly on each load.
+        return true;
+      }
+      try {
+        return !!window?.localStorage?.getItem(key(id));
+      } catch (e) {
+        console.warn("Unable to read viewed state from localStorage", e);
+        return false;
+      }
+    },
+    setViewed: (id: FeatureId) => {
+      if (isServer) {
+        return;
+      }
+      try {
+        window?.localStorage?.setItem(key(id), Date.now().toString());
+      } catch (e) {
+        console.warn("Unable to write viewed state to localStorage", e);
+      }
+    },
+  };
+}
+
+export function usePing() {
+  const { isOnline } = useTrueOnlineStatus();
+  const user = useUserData();
+
+  React.useEffect(() => {
+    const nextPing = new Date(localStorage.getItem("next-ping") || 0);
+    if (isOnline && user?.isAuthenticated && nextPing < new Date()) {
+      const params = new URLSearchParams();
+
+      // fetch offline settings from local storage as its
+      // values are very inconsistent in the user context
+      const offlineSettings = JSON.parse(
+        localStorage.getItem(OFFLINE_SETTINGS_KEY) || "{}"
+      );
+      if (offlineSettings?.offline) params.set("offline", "true");
+
+      navigator.sendBeacon("/api/v1/ping", params);
+
+      const newNextPing = new Date();
+      newNextPing.setUTCDate(newNextPing.getUTCDate() + 1);
+      newNextPing.setUTCHours(0);
+      newNextPing.setUTCMinutes(0);
+      newNextPing.setUTCSeconds(0);
+      newNextPing.setUTCMilliseconds(0);
+      localStorage.setItem("next-ping", newNextPing.toISOString());
+    }
+  }, [isOnline, user]);
 }

@@ -8,6 +8,8 @@ import { useGleanClick } from "../telemetry/glean-context";
 import {
   BANNER_MULTIPLE_COLLECTIONS_DISMISSED,
   BANNER_MULTIPLE_COLLECTIONS_LINK,
+  BANNER_NEWSLETTER_DISMISSED,
+  BANNER_NEWSLETTER_LINK,
   BANNER_PREVIEW_FEATURES_DISMISSED,
   BANNER_PREVIEW_FEATURES_SETTINGS_LINK,
 } from "../telemetry/constants";
@@ -170,6 +172,33 @@ function MultipleCollectionsBanner({
   );
 }
 
+function NewsletterBanner({ onDismissed }: { onDismissed: () => void }) {
+  const bannerId = BannerId.NEWSLETTER_ANNOUNCEMENT;
+  const sendCTAEventToGA = useSendCTAEventToGA();
+  const gleanClick = useGleanClick();
+  const onDismissedWithGlean = () => {
+    gleanClick(BANNER_NEWSLETTER_DISMISSED);
+    onDismissed();
+  };
+  return (
+    <Banner id={bannerId} onDismissed={onDismissedWithGlean}>
+      <p className="mdn-cta-copy">
+        You can now sign up to the MDN Plus Newsletter via the{" "}
+        <a
+          href="/en-US/plus/settings"
+          onClick={() => {
+            gleanClick(BANNER_NEWSLETTER_LINK);
+            sendCTAEventToGA(bannerId);
+          }}
+        >
+          Settings Page
+        </a>
+        .
+      </p>
+    </Banner>
+  );
+}
+
 // The reason we're not just exporting each individual banner is because to
 // be able to lazy-load the contents of this file it needs to export a
 // default function. This one function is the link between the <App>
@@ -200,6 +229,13 @@ export default function ActiveBanner({
       return (
         <>
           <PreviewFeaturesBanner onDismissed={onDismissed} />
+        </>
+      );
+
+    case BannerId.NEWSLETTER_ANNOUNCEMENT:
+      return (
+        <>
+          <NewsletterBanner onDismissed={onDismissed} />
         </>
       );
 

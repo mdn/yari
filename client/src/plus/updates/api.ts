@@ -1,4 +1,6 @@
 import useSWR from "swr";
+import { useSearchParams } from "react-router-dom";
+import { useUserData } from "../../user-context";
 
 export interface Event {
   path: string;
@@ -35,9 +37,56 @@ interface Page {
   last: number;
 }
 
-export function useUpdates(page: number) {
+function composeUrl({
+  isAuthenticated,
+  searchParams,
+}: {
+  isAuthenticated: boolean;
+  searchParams: URLSearchParams;
+}): string {
+  let url = "/api/v2/updates/";
+  let params = new URLSearchParams();
+
+  for (const [key, value] of searchParams.entries()) {
+    switch (key) {
+      case "page":
+        params.set(key, value);
+        break;
+
+      case "collections":
+        if (isAuthenticated) {
+          // Different endpoint for uncached personalized data.
+          url += "collections/";
+          params.set(key, value);
+        }
+        break;
+
+      default:
+        if (isAuthenticated) {
+          params.set(key, value);
+        }
+        break;
+    }
+  }
+
+  if ([...params.keys()].length) {
+    url += `?${params.toString()}`;
+  }
+
+  return url;
+}
+
+export function useUpdates() {
+  const user = useUserData();
+  const [searchParams] = useSearchParams();
+
+  const url = composeUrl({
+    isAuthenticated: user?.isAuthenticated || false,
+    searchParams,
+  });
+
   return useSWR(
-    `/bcd/updates/v0/bcd-updates-${page}.json`,
+    url,
     async (key) => {
       const res = await fetch(key);
       if (res.ok) {

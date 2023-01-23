@@ -176,6 +176,9 @@ jobs:
           REACT_APP_GLEAN_CHANNEL: stage
           REACT_APP_GLEAN_ENABLED: true
 
+          # Newsletter
+          REACT_APP_NEWSLETTER_ENABLED: true
+
         run: |
 
           # Info about which CONTENT_* environment variables were set and to what.

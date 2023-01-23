@@ -8,23 +8,21 @@ import { TabVariant, TAB_INFO } from "../common/tabs";
 import WatchedCardListItem from "../icon-card";
 import SearchFilter from "../search-filter";
 import SelectedNotificationsBar from "./notification-select";
+import { useSearchParams } from "react-router-dom";
 
-export function WatchedTab({ selectedTerms, selectedFilter, selectedSort }) {
+export function WatchedTab() {
   const [offset, setOffset] = useState(0);
   const [selectAllChecked, setSelectAllChecked] = useState(false);
   const [subscriptionLimitReached, setSubscriptionLimitReached] =
     useState(false);
   const [list, setList] = useState<Array<any>>([]);
   const listRef = useRef<Array<any>>([]);
+  const [searchParams] = useSearchParams();
 
   document.title = TAB_INFO[TabVariant.WATCHING].pageTitle;
 
-  const { data, error, isLoading, hasMore } = useWatchedItemsApiEndpoint(
-    offset,
-    selectedTerms,
-    selectedFilter,
-    selectedSort
-  );
+  const { data, error, isLoading, hasMore } =
+    useWatchedItemsApiEndpoint(offset);
 
   listRef.current = list;
 
@@ -44,7 +42,7 @@ export function WatchedTab({ selectedTerms, selectedFilter, selectedSort }) {
     setSelectAllChecked(false);
     setList([]);
     setOffset(0);
-  }, [selectedFilter, selectedSort, selectedTerms]);
+  }, [searchParams]);
 
   const [editOptions, setEditOptions] = useState({
     starEnabled: false,

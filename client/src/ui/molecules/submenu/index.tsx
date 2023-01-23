@@ -1,7 +1,6 @@
 import "./index.scss";
-import React from "react";
 
-type SubmenuItem = {
+export type SubmenuItem = {
   component?: () => JSX.Element;
   description?: string;
   extraClasses?: string | null;

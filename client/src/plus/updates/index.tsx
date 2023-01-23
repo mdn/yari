@@ -1,13 +1,11 @@
 import Container from "../../ui/atoms/container";
 
-import { useState } from "react";
-import { useSearchParams } from "react-router-dom";
 import useSWR from "swr";
 import { DocMetadata } from "../../../../libs/types/document";
-import { MDN_PLUS_TITLE } from "../../constants";
+import { FeatureId, MDN_PLUS_TITLE } from "../../constants";
 import BrowserCompatibilityTable from "../../document/ingredients/browser-compatibility-table";
 import { browserToIconName } from "../../document/ingredients/browser-compatibility-table/headers";
-import { useLocale, useScrollToTop } from "../../hooks";
+import { useLocale, useScrollToTop, useViewedState } from "../../hooks";
 import { Button } from "../../ui/atoms/button";
 import { Icon } from "../../ui/atoms/icon";
 import { Loading } from "../../ui/atoms/loading";
@@ -21,6 +19,15 @@ import { Event, Group, useBCD, useUpdates } from "./api";
 import "./index.scss";
 import { useGleanClick } from "../../telemetry/glean-context";
 import { PLUS_UPDATES } from "../../telemetry/constants";
+import SearchFilter, { AnyFilter, AnySort } from "../search-filter";
+import { LoginBanner } from "./login-banner";
+import { useEffect, useState } from "react";
+import { useSearchParams } from "react-router-dom";
+import { DataError } from "../common";
+import { useCollections } from "../collections/api";
+
+type EventWithStatus = Event & { status: Status };
+type Status = "added" | "removed";
 
 const CATEGORY_TO_NAME = {
   api: "Web APIs",
@@ -34,13 +41,127 @@ const CATEGORY_TO_NAME = {
   webextensions: "Web Extensions",
 };
 
+// At some point, these should come from the API
+// or from @mdn/browser-compat-data directly.
+const BROWSERS = {
+  chrome: "Chrome",
+  chrome_android: "Chrome Android",
+  deno: "Deno",
+  edge: "Edge",
+  firefox: "Firefox",
+  firefox_android: "Firefox for Android",
+  ie: "Internet Explorer",
+  nodejs: "Node.js",
+  opera: "Opera",
+  opera_android: "Opera Android",
+  safari: "Safari",
+  safari_ios: "Safari on iOS",
+  samsunginternet_android: "Samsung Internet",
+  webview_android: "WebView Android",
+};
+
+const FILTERS: AnyFilter[] = [
+  {
+    type: "select",
+    multiple: {
+      encode: (...values: string[]) => values.join(","),
+      decode: (value: string) => value.split(","),
+    },
+    label: "Browser",
+    key: "browsers",
+    options: Object.entries(BROWSERS).map(([value, label]) => ({
+      label,
+      value,
+    })),
+  },
+  {
+    type: "select",
+    multiple: {
+      encode: (...values: string[]) => values.join(","),
+      decode: (value: string) => value.split(","),
+    },
+    label: "Category",
+    key: "category",
+    options: Object.entries(CATEGORY_TO_NAME)
+      .sort(([, a], [, b]) => a.localeCompare(b))
+      .map(([value, label]) => ({
+        label,
+        value,
+      })),
+  },
+  {
+    type: "select",
+    label: "Collections",
+    key: "collections",
+    multiple: {
+      encode: (...values: string[]) => values.join(","),
+      decode: (value: string) => value.split(","),
+    },
+    options: [],
+  },
+];
+
+const SORTS: AnySort[] = [
+  {
+    label: "Newest",
+    param: "sort=desc",
+    isDefault: true,
+  },
+  {
+    label: "Oldest",
+    param: "sort=asc",
+  },
+];
+
 export default function Updates() {
+  return <UpdatesLayout />;
+}
+
+const useFilters = (canFilter: boolean) => {
+  const [filters, setFilters] = useState(FILTERS);
+  const { data, isLoading, error } = useCollections();
+  useEffect(() => {
+    if (!isLoading && data?.length && !error) {
+      setFilters((old) =>
+        old.map((val) => {
+          if (val.key === "collections") {
+            return {
+              ...val,
+              options: data
+                ?.filter((collection) => collection.article_count > 0)
+                .map((info) => {
+                  const label =
+                    info.name === "Default" ? "Saved Articles" : info.name;
+                  return {
+                    label,
+                    value: info.id,
+                  };
+                }),
+            };
+          } else {
+            return val;
+          }
+        })
+      );
+    }
+  }, [isLoading, canFilter, data, error]);
+  return filters;
+};
+
+function UpdatesLayout() {
   document.title = `Updates | ${MDN_PLUS_TITLE}`;
   useScrollToTop();
-  const [searchParams] = useSearchParams();
-  const currentPage = parseInt(searchParams.get("page"), 10) || 0;
-  const { data } = useUpdates(currentPage);
+  const user = useUserData();
+  const { data, error } = useUpdates();
   const gleanClick = useGleanClick();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const { setViewed } = useViewedState();
+  useEffect(() => setViewed(FeatureId.PLUS_UPDATES_V2));
+
+  const hasFilters = [...searchParams.keys()].some((key) => key !== "page");
+
+  const canFilter = user?.isAuthenticated === true;
+  const filters = useFilters(canFilter);
 
   return (
     <div className="updates">
@@ -54,8 +175,7 @@ export default function Updates() {
             <span>Updates</span>
           </h1>
           <p>
-            Get the latest updates about browser compatibility of all the
-            features.
+            Stay up-to-date with the latest browser features.
             <br />
             <a
               href="https://survey.alchemer.com/s3/7149796/MDN-BCD-Updates"
@@ -69,16 +189,50 @@ export default function Updates() {
         </Container>
       </header>
       <Container>
+        <SearchFilter
+          filters={filters}
+          sorts={SORTS}
+          isDisabled={!canFilter}
+          onChange={(key, newValue, oldValue) =>
+            gleanClick(
+              `${PLUS_UPDATES.FILTER_CHANGE}_${key}: ${
+                oldValue ?? "(default)"
+              } -> ${newValue ?? "(default)"}`
+            )
+          }
+        />
+
+        {user && !user.isAuthenticated && <LoginBanner />}
+
+        {user && user.isAuthenticated && hasFilters && (
+          <Button
+            type="action"
+            extraClasses="reset-filters"
+            onClickHandler={() => setSearchParams("")}
+          >
+            Reset all filters
+          </Button>
+        )}
+
+        {error && <DataError error={error} />}
+
         {data ? (
           <>
-            {data.data.map((group) => (
-              <GroupComponent
-                key={group.browser + group.version}
-                group={group}
-              />
-            ))}
+            {data.data.length ? (
+              data.data.map((group) => (
+                <GroupComponent
+                  key={group.browser + group.version}
+                  group={group}
+                />
+              ))
+            ) : (
+              <div className="notecard">
+                {hasFilters
+                  ? "No updates match your filters."
+                  : "No updates found."}
+              </div>
+            )}
             <Paginator
-              current={currentPage}
               last={data.last}
               onChange={(page, oldPage) =>
                 gleanClick(`${PLUS_UPDATES.PAGE_CHANGE}: ${oldPage} -> ${page}`)
@@ -100,14 +254,11 @@ function GroupComponent({ group }: { group: Group }) {
     icon: browserToIconName(browser),
     title: `${name} ${version}`,
   };
-  // {
-  //   icon: "star",
-  //   title: "Subfeatures added",
-  // }
-  // {
-  //   icon: "add",
-  //   title: "Added missing compatibility data",
-  // }
+
+  const allEvents = [
+    ...events.added.map((e) => ({ status: "added", ...e })),
+    ...events.removed.map((e) => ({ status: "removed", ...e })),
+  ].sort((a, b) => a.path.localeCompare(b.path)) as EventWithStatus[];
 
   return metadata ? (
     <div className="group">
@@ -123,17 +274,14 @@ function GroupComponent({ group }: { group: Group }) {
           })}
         </time>
       </header>
-      {collapseEvents(events.added).map((event) => (
-        <EventComponent key={event.path} event={event} status={"added"} />
-      ))}
-      {collapseEvents(events.removed).map((event) => (
-        <EventComponent key={event.path} event={event} status={"removed"} />
+      {collapseEvents(allEvents).map((event) => (
+        <EventComponent key={event.path} event={event} status={event.status} />
       ))}
     </div>
   ) : null;
 }
 
-function collapseEvents(events: Event[]): Event[] {
+function collapseEvents<T extends { path: string }>(events: T[]): T[] {
   return events.filter(
     (event) =>
       events.findIndex(
@@ -142,7 +290,7 @@ function collapseEvents(events: Event[]): Event[] {
   );
 }
 
-function EventComponent({ event, status }: { event: Event; status: string }) {
+function EventComponent({ event, status }: { event: Event; status: Status }) {
   const [isOpen, setIsOpen] = useState(false);
   const [category, ...displayPath] = event.path.split(".");
   const engines = event.compat.engines;
@@ -164,7 +312,7 @@ function EventComponent({ event, status }: { event: Event; status: string }) {
       <summary>
         <code>{camelWrap(displayPath.join("."))}</code>
         <i>{CATEGORY_TO_NAME[category]}</i>
-        {status}
+        <EventStatus status={status} />
         {Boolean(engines.length) && (
           <span className="status" title={`Supported in ${engines.join(", ")}`}>
             <svg width="32" height="9" viewBox="0 0 32 9" role="img">
@@ -185,6 +333,10 @@ function EventComponent({ event, status }: { event: Event; status: string }) {
       {isOpen && <EventInnerComponent event={event} />}
     </details>
   );
+}
+
+function EventStatus({ status }: { status: Status }) {
+  return <span className={`badge status-${status}`}>{status}</span>;
 }
 
 function EventInnerComponent({
