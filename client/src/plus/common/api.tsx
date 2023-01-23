@@ -5,6 +5,7 @@ export const NOTIFICATIONS_BASE_PATH = "/api/v1/plus/notifications";
 export const WATCHED_BASE_PATH = "/api/v1/plus/watching";
 export const STRIPE_PLANS_PATH = "/api/v1/stripe/plans";
 export const SETTINGS_BASE_PATH = "/api/v1/plus/settings/";
+export const NEWSLETTER_BASE_PATH = "/api/v1/plus/newsletter/";
 
 export const NOTIFICATIONS_MARK_ALL_AS_READ_PATH = `${NOTIFICATIONS_BASE_PATH}/all/mark-as-read/`;
 const DEFAULT_LIMIT = 20;
@@ -12,6 +13,33 @@ const DEFAULT_LIMIT = 20;
 export type PLUS_SETTINGS = {
   col_in_search: boolean;
 };
+
+export async function toggleNewsletterSubscription(
+  subscribed: boolean
+): Promise<boolean | null> {
+  try {
+    const res = await fetch(NEWSLETTER_BASE_PATH, {
+      method: subscribed ? "POST" : "DELETE",
+      headers: {
+        "content-type": "application/json",
+      },
+    });
+    const { subscribed: subscribedUpdated } = await res.json();
+    return subscribedUpdated;
+  } catch {
+    return null;
+  }
+}
+
+export async function getNewsletterSubscription(): Promise<boolean | null> {
+  try {
+    const res = await fetch(NEWSLETTER_BASE_PATH);
+    const { subscribed } = await res.json();
+    return subscribed;
+  } catch {
+    return null;
+  }
+}
 
 export async function markNotificationsAsRead() {
   return fetch(NOTIFICATIONS_MARK_ALL_AS_READ_PATH, {
