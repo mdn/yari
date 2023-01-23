@@ -80,12 +80,6 @@ export async function checkFile(
     );
   }
 
-  // Check that file path doesn't contain parantheses `(`, `)`
-  const bannedCharsRegExp = /\(|\)/;
-  if (bannedCharsRegExp.test(expectedPath)) {
-    throw new Error(`File path must not include characters: '(', ')'`);
-  }
-
   // Check that the file size is >0 and <MAX_FILE_SIZE.
   const stat = await fs.stat(filePath);
   if (!stat.size) {
@@ -307,16 +301,33 @@ function canCheckFile(filePath: string) {
 async function resolveDirectory(file: string): Promise<string[]> {
   const stats = await fs.lstat(file);
   if (stats.isDirectory()) {
-    const api = new fdir()
-      .withErrors()
-      .withFullPaths()
-      .filter((filePath) => canCheckFile(filePath))
-      .crawl(file);
+    const api = new fdir().withErrors().withFullPaths().crawl(file);
     return api.withPromise() as Promise<PathsOutput>;
-  } else if (stats.isFile() && canCheckFile(file)) {
+  } else if (stats.isFile()) {
     return [file];
   } else {
     return [];
+  }
+}
+
+function validatePath(filePath: string) {
+  // all characters must be lower case
+  const expectedPath = path.join(
+    path.basename(path.dirname(filePath)),
+    path.basename(filePath)
+  );
+  if (expectedPath !== expectedPath.toLowerCase()) {
+    throw new Error(
+      `Invalid path: ${expectedPath}. All characters must be lowercase.`
+    );
+  }
+
+  // file path should't contain banned characters: `(`, `)`
+  const bannedCharsRegExp = /\(|\)/;
+  if (bannedCharsRegExp.test(filePath)) {
+    throw new Error(
+      `Ivalid path: ${expectedPath}. File path must not include characters: '(', ')'`
+    );
   }
 }
 
@@ -325,11 +336,25 @@ export async function runChecker(
   options: CheckerOptions
 ) {
   const errors = [];
-
-  const files = (
+  let files = (
     await Promise.all(filesAndDirectories.map(resolveDirectory))
   ).flat();
 
+  // validate file paths
+  files = files.filter((fp) => !fp.includes(".json"));
+  for (const filePath of files) {
+    try {
+      validatePath(filePath);
+    } catch (error) {
+      errors.push(error);
+    }
+  }
+  if (errors.length) {
+    const msg = errors.map((error) => `${error}`).join("\n");
+    throw new Error(msg);
+  }
+
+  files = files.filter((f) => canCheckFile(f));
   const progressBar = new cliProgress.SingleBar({ etaBuffer: 100 });
   progressBar.start(files.length, 0);
 

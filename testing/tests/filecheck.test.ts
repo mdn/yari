@@ -1,7 +1,7 @@
 import fs from "node:fs";
 import { fileURLToPath } from "node:url";
 
-import { checkFile } from "../../filecheck/checker.js";
+import { checkFile, runChecker } from "../../filecheck/checker.js";
 
 const SAMPLES_DIRECTORY = new URL(
   "filechecker/samplefiles-html/",
@@ -57,6 +57,30 @@ describe("checking files", () => {
     console.assert(fs.existsSync(filePath), `${filePath} does not exist`);
     await expect(checkFile(filePath)).rejects.toThrow(
       "of type 'image/png' should have extension 'png', but has extension '.jpeg'"
+    );
+  });
+
+  it("should spot files with uppercase file names", async () => {
+    const filePath = path.join(
+      path.join(dirname, "filechecker", "samplefiles-upperCase"),
+      "index.md"
+    );
+    // Sanity check the test itself
+    console.assert(fs.existsSync(filePath), `${filePath} does not exist`);
+    await expect(runChecker([filePath], {})).rejects.toThrow(
+      "Error: Invalid path: samplefiles-upperCase/index.md. All characters must be lowercase."
+    );
+  });
+
+  it("should spot files with parenthese in file names", async () => {
+    const filePath = path.join(
+      path.join(dirname, "filechecker", "samplefiles-paren(theses)"),
+      "index.md"
+    );
+    // Sanity check the test itself
+    console.assert(fs.existsSync(filePath), `${filePath} does not exist`);
+    await expect(runChecker([filePath], {})).rejects.toThrow(
+      "Error: Ivalid path: samplefiles-paren(theses)/index.md. File path must not include characters: '(', ')'"
     );
   });
 });
