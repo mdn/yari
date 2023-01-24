@@ -206,7 +206,11 @@ const CellText = React.memo(
     }
 
     return (
-      <div className="bcd-cell-text-wrapper">
+      <div
+        className={
+          timeline ? "bcd-timeline-cell-text-wrapper" : "bcd-cell-text-wrapper"
+        }
+      >
         <div className="bcd-cell-icons">
           <span className="icon-wrap">
             <abbr
@@ -225,13 +229,18 @@ const CellText = React.memo(
           <span
             className="bc-version-label"
             title={
-              browserReleaseDate ? `Released ${browserReleaseDate}` : undefined
+              browserReleaseDate && !timeline
+                ? `Released ${browserReleaseDate}`
+                : undefined
             }
           >
             {label}
+            {browserReleaseDate && timeline
+              ? ` (Released ${browserReleaseDate})`
+              : ""}
           </span>
         </div>
-        <CellIcons support={support} />
+        <CellIcons support={support} timeline={timeline} />
       </div>
     );
   }
@@ -248,7 +257,13 @@ function Icon({ name }: { name: string }) {
   );
 }
 
-function CellIcons({ support }: { support: BCD.SupportStatement | undefined }) {
+function CellIcons({
+  support,
+  timeline,
+}: {
+  support: BCD.SupportStatement | undefined;
+  timeline?: boolean;
+}) {
   const supportItem = getCurrentSupport(support);
   if (!supportItem) {
     return null;
@@ -256,7 +271,9 @@ function CellIcons({ support }: { support: BCD.SupportStatement | undefined }) {
 
   const icons = [
     supportItem.prefix && <Icon key="prefix" name="prefix" />,
-    hasNoteworthyNotes(supportItem) && <Icon key="footnote" name="footnote" />,
+    !timeline && hasNoteworthyNotes(supportItem) && (
+      <Icon key="footnote" name="footnote" />
+    ),
     supportItem.alternative_name && <Icon key="altname" name="altname" />,
     supportItem.flags && <Icon key="disabled" name="disabled" />,
     hasMore(support) && <Icon key="more" name="more" />,
