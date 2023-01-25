@@ -180,7 +180,7 @@
     "jest-environment-jsdom": "^29.4.0",
     "jest-junit-reporter": "^1.1.0",
     "jest-resolve": "^29.4.0",
-    "jest-watch-typeahead": "^2.2.1",
+    "jest-watch-typeahead": "^2.2.2",
     "jsdom": "^20.0.3",
     "lint-staged": "^13.1.0",
     "mini-css-extract-plugin": "^2.7.2",
