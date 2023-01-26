@@ -1,0 +1,29 @@
+{
+  "name": "@yari-internal/kevel",
+  "version": "0.0.1",
+  "private": true,
+  "description": "Defines the deployment package for this AWS Lambda function.",
+  "license": "MPL-2.0",
+  "type": "module",
+  "main": "index.js",
+  "files": [
+    "index.js"
+  ],
+  "scripts": {
+    "build": "node build.js",
+    "make-package": "yarn build && yarn install --production && zip -r -X function.zip . -i index.js package.json 'env.js' 'node_modules/*'"
+  },
+  "dependencies": {
+    "@adzerk/decision-sdk": "^1.0.0-beta.20"
+  },
+  "devDependencies": {
+    "dotenv": "^16.0.3"
+  },
+  "engines": {
+    "node": ">=18.x"
+  },
+  "aws": {
+    "name": "mdn-content-origin-request",
+    "region": "us-east-1"
+  }
+}

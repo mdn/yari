@@ -231,6 +231,9 @@ jobs:
 
           DEPLOYER_LAMBDA_PREFIX: stage-
 
+          KEVEL_SITE_ID: ${{ secrets.DEPLOYER_STAGE_KEVEL_SITE_ID }}
+          KEVEL_NETWORK_ID: ${{ secrets.DEPLOYER_STAGE_KEVEL_NETWORK_ID }}
+
         run: |
 
           # Info about which CONTENT_* environment variables were set and to what.

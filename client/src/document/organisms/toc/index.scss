@@ -57,3 +57,22 @@
     display: block;
   }
 }
+
+.place {
+  border: 1px solid var(--border-primary);
+  display: flex;
+  flex-direction: column;
+  padding: 1rem;
+
+  .pong {
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .pong-note {
+    align-self: flex-end;
+    font-size: 0.8rem;
+    margin-top: 1rem;
+  }
+}

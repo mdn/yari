@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import "./index.scss";
 import { Toc } from "../../../../../libs/types/document";
 import { useFirstVisibleElement } from "../../hooks";
+import { Place } from "./place";
 
 export function TOC({ toc }: { toc: Toc[] }) {
   const [currentViewedTocItem, setCurrentViewedTocItem] = useState("");
@@ -38,26 +39,29 @@ export function TOC({ toc }: { toc: Toc[] }) {
   });
 
   return (
-    <div className="document-toc-container">
-      <section className="document-toc">
-        <header>
-          <h2 className="document-toc-heading">In this article</h2>
-        </header>
-        <ul className="document-toc-list">
-          {toc.map((item) => {
-            return (
-              <TOCItem
-                key={item.id}
-                id={item.id}
-                text={item.text}
-                sub={item.sub}
-                currentViewedTocItem={currentViewedTocItem}
-              />
-            );
-          })}
-        </ul>
-      </section>
-    </div>
+    <>
+      <div className="document-toc-container">
+        <section className="document-toc">
+          <header>
+            <h2 className="document-toc-heading">In this article</h2>
+          </header>
+          <ul className="document-toc-list">
+            {toc.map((item) => {
+              return (
+                <TOCItem
+                  key={item.id}
+                  id={item.id}
+                  text={item.text}
+                  sub={item.sub}
+                  currentViewedTocItem={currentViewedTocItem}
+                />
+              );
+            })}
+          </ul>
+        </section>
+      </div>
+      <Place></Place>
+    </>
   );
 }
 

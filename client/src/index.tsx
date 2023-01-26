@@ -7,6 +7,7 @@ import { GAProvider } from "./ga-context";
 import { UserDataProvider } from "./user-context";
 import { UIProvider } from "./ui-context";
 import { GleanProvider } from "./telemetry/glean-context";
+import { PlacementProvider } from "./placement-context";
 
 // import * as serviceWorker from './serviceWorker';
 
@@ -28,11 +29,13 @@ const app = (
     <GleanProvider>
       <GAProvider>
         <UserDataProvider>
-          <UIProvider>
-            <Router>
-              <App {...appData} />
-            </Router>
-          </UIProvider>
+          <PlacementProvider>
+            <UIProvider>
+              <Router>
+                <App {...appData} />
+              </Router>
+            </UIProvider>
+          </PlacementProvider>
         </UserDataProvider>
       </GAProvider>
     </GleanProvider>
