@@ -1483,7 +1483,7 @@
     slash "^3.0.0"
     write-file-atomic "^5.0.0"
 
-"@jest/types@^29.3.1", "@jest/types@^29.4.0":
+"@jest/types@^29.4.0":
   version "29.4.0"
   resolved "https://registry.yarnpkg.com/@jest/types/-/types-29.4.0.tgz#569115f2438cacf3cff92521c7d624fbb683de3d"
   integrity sha512-1S2Dt5uQp7R0bGY/L2BpuwCSji7v12kY3o8zqwlkbYBmOY956SKk+zOWqmfhHSINegiAVqOXydAYuWpzX6TYsQ==
@@ -3417,10 +3417,10 @@ braces@^3.0.2, braces@~3.0.2:
   dependencies:
     fill-range "^7.0.1"
 
-browser-specs@^3.40.0:
-  version "3.40.0"
-  resolved "https://registry.yarnpkg.com/browser-specs/-/browser-specs-3.40.0.tgz#3165b0ae2692ee3e504f59a00dda014736c88721"
-  integrity sha512-Iyg9JttUBJR+qSwxlgTVjsMi2TU/0yhNKkSiaHx3awoMqhJ4Rt1zqVObScKaWgTfVSOru2MQDWzP4ZaxKlknVw==
+browser-specs@^3.41.0:
+  version "3.41.0"
+  resolved "https://registry.yarnpkg.com/browser-specs/-/browser-specs-3.41.0.tgz#b05e22f9d485337fe4a4d8e28fdc76f4f5c30132"
+  integrity sha512-nECw4SMiJMceM1n+GMj5IsTkWtzzHJzfsbX6QaegN1jp4MOgyNKvkW5J39uwjbfLBihXnO94Vk0JChItNMPopw==
 
 browserslist@^4.0.0, browserslist@^4.14.5, browserslist@^4.16.6, browserslist@^4.18.1, browserslist@^4.20.3, browserslist@^4.21.3, browserslist@^4.21.4:
   version "4.21.4"
@@ -7735,21 +7735,6 @@ jest-matcher-utils@^29.4.0:
     jest-get-type "^29.2.0"
     pretty-format "^29.4.0"
 
-jest-message-util@^29.3.1:
-  version "29.3.1"
-  resolved "https://registry.yarnpkg.com/jest-message-util/-/jest-message-util-29.3.1.tgz#37bc5c468dfe5120712053dd03faf0f053bd6adb"
-  integrity sha512-lMJTbgNcDm5z+6KDxWtqOFWlGQxD6XaYwBqHR8kmpkP+WWWG90I35kdtQHY67Ay5CSuydkTBbJG+tH9JShFCyA==
-  dependencies:
-    "@babel/code-frame" "^7.12.13"
-    "@jest/types" "^29.3.1"
-    "@types/stack-utils" "^2.0.0"
-    chalk "^4.0.0"
-    graceful-fs "^4.2.9"
-    micromatch "^4.0.4"
-    pretty-format "^29.3.1"
-    slash "^3.0.0"
-    stack-utils "^2.0.3"
-
 jest-message-util@^29.4.0:
   version "29.4.0"
   resolved "https://registry.yarnpkg.com/jest-message-util/-/jest-message-util-29.4.0.tgz#60d3f3dd6b5ef08ec9b698f434fbbafdb0af761d"
@@ -7893,7 +7878,7 @@ jest-snapshot@^29.4.0:
     pretty-format "^29.4.0"
     semver "^7.3.5"
 
-jest-util@^29.0.0, jest-util@^29.2.1, jest-util@^29.3.1, jest-util@^29.4.0:
+jest-util@^29.0.0, jest-util@^29.2.1, jest-util@^29.4.0:
   version "29.4.0"
   resolved "https://registry.yarnpkg.com/jest-util/-/jest-util-29.4.0.tgz#1f3743c3dda843049623501c7e6f8fa5efdc2c2f"
   integrity sha512-lCCwlze7UEV8TpR9ArS8w0cTbcMry5tlBkg7QSc5og5kNyV59dnY2aKHu5fY2k5aDJMQpCUGpvL2w6ZU44lveA==
@@ -10341,7 +10326,7 @@ pretty-format@^27.0.2:
     ansi-styles "^5.0.0"
     react-is "^17.0.1"
 
-pretty-format@^29.0.0, pretty-format@^29.3.1, pretty-format@^29.4.0:
+pretty-format@^29.0.0, pretty-format@^29.4.0:
   version "29.4.0"
   resolved "https://registry.yarnpkg.com/pretty-format/-/pretty-format-29.4.0.tgz#766f071bb1c53f1ef8000c105bbeb649e86eb993"
   integrity sha512-J+EVUPXIBHCdWAbvGBwXs0mk3ljGppoh/076g1S8qYS8nVG4u/yrhMvyTFHYYYKWnDdgRLExx0vA7pzxVGdlNw==
