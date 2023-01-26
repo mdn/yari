@@ -23,7 +23,7 @@
     "node": ">=18.x"
   },
   "aws": {
-    "name": "mdn-content-origin-request",
+    "name": "kevel",
     "region": "us-east-1"
   }
 }
