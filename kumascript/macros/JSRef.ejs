@@ -158,14 +158,7 @@ for (var object in source) {
 
 // Output helper
 
-var badges = {
-  ExperimentalBadge : await template("ExperimentalBadge"),
-  NonStandardBadge  : await template("NonStandardBadge"),
-  DeprecatedBadge   : await template("DeprecatedBadge"),
-  ObsoleteBadge     : await template("ObsoleteBadge"),
-}
-
-function buildSublist(pages, title, opened) {
+async function buildSublist(pages, title, opened) {
   var result = '<li><details>';
   if (opened !== '') {
     result = '<li><details open>';
@@ -188,21 +181,10 @@ function buildSublist(pages, title, opened) {
         });
     }
 
-    var pageBadges = '';
-    if (containsTag(aPage, 'Experimental')) {
-        pageBadges += badges.ExperimentalBadge;
-    }
-
-    if (containsTag(aPage, 'Non-standard') || containsTag(aPage, 'Non Standard')) {
-        pageBadges += badges.NonStandardBadge;
-    }
-
-    if (containsTag(aPage, 'Deprecated')) {
-        pageBadges += badges.DeprecatedBadge;
-    }
+    const pageBadges = await page.badges(aPage);
+    console.log('pageBadges', pageBadges)
 
     if (containsTag(aPage, 'Obsolete')) {
-        pageBadges += badges.ObsoleteBadge;
         result += '<s class="obsoleteElement">';
     }
 
@@ -210,7 +192,8 @@ function buildSublist(pages, title, opened) {
         result += '<bdi>';
     }
 
-    result += pageBadges + web.smartLink(url, null, `<code>${title}</code>`, aPage.slug, slug_stdlib, "JSRef");
+    result += web.smartLink(url, null, `<code>${title}</code>`, aPage.slug, slug_stdlib, "JSRef");
+    result += pageBadges;
 
     if (rtlLocales.indexOf(locale) != -1) {
         result += '</bdi>';
@@ -256,10 +239,10 @@ for (object in result) {
     output += `<li><strong>${link}</strong></li>`;
 
     if (resultProperties.length > 0) {
-        output += buildSublist(resultProperties, text['Properties'], resultOpen);
+        output += await buildSublist(resultProperties, text['Properties'], resultOpen);
     }
     if (resultMethods.length > 0) {
-        output += buildSublist(resultMethods, text['Methods'], resultOpen);
+        output += await buildSublist(resultMethods, text['Methods'], resultOpen);
     }
 
     if (len == 1 && group.length > 0) {

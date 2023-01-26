@@ -1,5 +1,13 @@
 import { KumaThis } from "../environment";
 
+const badgeTemplates = {
+  ExperimentalBadge: "",
+  NonStandardBadge: "",
+  DeprecatedBadge: "",
+  ObsoleteBadge: "",
+};
+let badgeTemplatesLoaded = false;
+
 const page = {
   // Determines whether or not the page has the specified tag. Returns
   // true if it does, otherwise false. This is case-insensitive.
@@ -54,6 +62,50 @@ const page = {
   translations(this: KumaThis, path) {
     return this.info.getTranslations(path || this.env.url);
   },
+
+  async badges(this: KumaThis, aPage, spaceAround = false) {
+    const badgeTemplates = await getBadgeTemplates(this);
+
+    const space = spaceAround ? " " : "";
+    let pageBadges = "";
+
+    if (page.hasTag(aPage, "Experimental")) {
+      pageBadges += space + badgeTemplates.ExperimentalBadge;
+    }
+
+    if (
+      page.hasTag(aPage, "Non-standard") ||
+      page.hasTag(aPage, "Non Standard")
+    ) {
+      pageBadges += space + badgeTemplates.NonStandardBadge;
+    }
+
+    if (page.hasTag(aPage, "Deprecated")) {
+      pageBadges += space + badgeTemplates.DeprecatedBadge;
+    }
+
+    if (page.hasTag(aPage, "Obsolete")) {
+      pageBadges += space + badgeTemplates.ObsoleteBadge;
+    }
+    return pageBadges;
+  },
 };
+
+async function getBadgeTemplates(kuma: KumaThis) {
+  if (!badgeTemplatesLoaded) {
+    await loadBadgeTemplates(kuma);
+    badgeTemplatesLoaded = true;
+  }
+  return badgeTemplates;
+}
+
+async function loadBadgeTemplates(kuma: KumaThis) {
+  async function loadBadge(name: string) {
+    badgeTemplates[name] = (await kuma.template(name)) as string;
+  }
+
+  const templateNames = Object.getOwnPropertyNames(badgeTemplates);
+  await Promise.all(templateNames.map((n) => loadBadge(n)));
+}
 
 export default page;

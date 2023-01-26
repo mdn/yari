@@ -806,12 +806,6 @@ for (const page of standardPages) {
 
 properties = properties.sort((a, b) => a.title.localeCompare(b.title));
 
-const badges = {
-  ExperimentalBadge : await template("ExperimentalBadge"),
-  NonStandardBadge : await template("NonStandardBadge"),
-  DeprecatedBadge : await template("DeprecatedBadge"),
-}
-
 function smartLink(href, title, content, subpath) {
   let basepath = subpath;
   let ignoreFlawMacro = "CSSRef";
@@ -821,36 +815,31 @@ function smartLink(href, title, content, subpath) {
 /**
  * Create an entry in the sidebar for a single CSS page.
  *
- * @param page : an object containing information about a page, including title, url etc
+ * @param aPage : an object containing information about a page, including title, url etc
  * @returns : a string containing markup for that page's entry in the sidebar
  */
-function makePageLink(page) {
-  const url = page.url.replace('en-US', locale);
-  const title = htmlEscape(page.title);
+async function makePageLink(aPage) {
+  const url = aPage.url.replace('en-US', locale);
+  const title = htmlEscape(aPage.title);
 
   if (locale != 'en-US') {
-    page.translations.forEach(function(translation){
+    aPage.translations.forEach(function(translation){
       if (translation.locale === locale) {
         title = htmlEscape(translation.title);
       }
     });
   }
 
+  const pageBadges = await page.badges(aPage);
+
   let result = '<li>';
-
-  if (hasTag(page, 'Experimental')) {
-    result += badges.ExperimentalBadge;
-  }
-
-  if (hasTag(page, 'Deprecated')) {
-    result += badges.DeprecatedBadge;
-  }
-
+  
   if (rtlLocales.indexOf(locale) != -1) {
     result += '<bdi>';
   }
 
   result += smartLink(url, null, title, cssURL);
+  result += pageBadges;
 
   if (rtlLocales.indexOf(locale) != -1) {
     result += '</bdi>';
@@ -861,11 +850,11 @@ function makePageLink(page) {
   return result;
 }
 
-function buildSublist(pages, title) {
+async function buildSublist(pages, title) {
   let result = `<li class="toggle"><details><summary>${title}</summary><ol>`;
 
   for (const page of pages) {
-     result += makePageLink(page);
+     result += await makePageLink(page);
   }
 
   result += '</ol></details></li>';
@@ -882,7 +871,7 @@ function buildSublist(pages, title) {
  * @param title : the title of this section of the sidebar
  * @returns : markup for the complete CSS property section
  */
-function buildPropertylist(pages, title) {
+async function buildPropertylist(pages, title) {
 
   let result = `<li class="toggle"><details><summary>${title}</summary><ol>`;
 
@@ -917,14 +906,14 @@ function buildPropertylist(pages, title) {
       // properties with the given prefix) then just write them out as a list
       // of links
       for (const page of group) {
-        result += makePageLink(page);
+        result += await makePageLink(page);
       }
     } else {
       // otherwise, make a collapsible section for this group, and write
       // the page links out inside it.
       result += `<li class="toggle"><details><summary>${prefix}-*</summary><ol>`;
       for (const page of group) {
-        result += makePageLink(page);
+        result += await makePageLink(page);
       }
       result += "</ol></details></li>";
     }
@@ -1013,15 +1002,15 @@ function buildPropertylist(pages, title) {
   </li>
 
   <li><a href="/<%=locale%>/docs/Web/CSS/Reference"><strong><%=text['Reference']%></strong></a></li>
-  <%-buildSublist(groups, 'Modules');%>
-  <%-buildPropertylist(properties, 'Properties');%>
-  <%-buildSublist(selectors, 'Selectors');%>
-  <%-buildSublist(combinators, 'Combinators');%>
-  <%-buildSublist(pseudoClasses, 'Pseudo-classes');%>
-  <%-buildSublist(pseudoElements, 'Pseudo-elements');%>
-  <%-buildSublist(atRules, 'At-rules');%>
-  <%-buildSublist(functions, 'Functions');%>
-  <%-buildSublist(types, 'Types');%>
+  <%-await buildSublist(groups, 'Modules');%>
+  <%-await buildPropertylist(properties, 'Properties');%>
+  <%-await buildSublist(selectors, 'Selectors');%>
+  <%-await buildSublist(combinators, 'Combinators');%>
+  <%-await buildSublist(pseudoClasses, 'Pseudo-classes');%>
+  <%-await buildSublist(pseudoElements, 'Pseudo-elements');%>
+  <%-await buildSublist(atRules, 'At-rules');%>
+  <%-await buildSublist(functions, 'Functions');%>
+  <%-await buildSublist(types, 'Types');%>
 
   <li><strong><%=text['Guides']%></strong></li>
   <li class="toggle">
