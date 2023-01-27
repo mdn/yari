@@ -33,7 +33,7 @@ jobs:
         run: yarn --frozen-lockfile
 
       - name: Install all yarn packages (pwa)
-      working-directory: client/pwa
+        working-directory: client/pwa
         run: yarn --frozen-lockfile
 
       - name: Install all yarn packages (aws-lambda/content-origin-request)
