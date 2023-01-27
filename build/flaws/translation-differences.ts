@@ -1,4 +1,4 @@
-import { Flaw } from ".";
+import { Flaw } from "./index.js";
 
 import { Document, Translation } from "../../content/index.js";
 import { DEFAULT_LOCALE } from "../../libs/constants/index.js";

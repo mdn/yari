@@ -4,11 +4,13 @@
 
 import path from "node:path";
 
-import sizeOf from "image-size";
+import imagesize from "image-size";
 
 import { Document, Image } from "../content/index.js";
 import { FLAW_LEVELS, DEFAULT_LOCALE } from "../libs/constants/index.js";
 import { findMatchesInText } from "./matches-in-text.js";
+
+const { default: sizeOf } = imagesize;
 
 /**
  * Mutate the `$` instance for image reference and if appropriate,

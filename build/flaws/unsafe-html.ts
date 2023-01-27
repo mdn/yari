@@ -1,4 +1,4 @@
-import { Flaw } from ".";
+import { Flaw } from "./index.js";
 
 import {
   INTERACTIVE_EXAMPLES_BASE_URL,

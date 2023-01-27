@@ -13,10 +13,7 @@ const config = {
     chunkFormat: "module",
   },
   target: "node",
-  node: {
-    __dirname: false,
-    __filename: false,
-  },
+  node: false,
   // See all options here:
   // https://webpack.js.org/configuration/stats/
   stats: "errors-warnings",

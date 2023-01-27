@@ -1,3 +1,4 @@
+import { fileURLToPath } from "node:url";
 import { execSync } from "node:child_process";
 import webpack from "webpack";
 
@@ -5,12 +6,12 @@ const commitHash = execSync("git rev-parse --short HEAD").toString().trim();
 
 const config = {
   entry: {
-    bundle: new URL("./src/service-worker.ts", import.meta.url),
+    bundle: "./src/service-worker.ts",
   },
 
   output: {
     filename: "service-worker.js",
-    path: new URL("../public/", import.meta.url),
+    path: fileURLToPath(new URL("../public/", import.meta.url)),
   },
 
   mode: "production",

@@ -1,6 +1,8 @@
-import got from "got";
+import gotPkg from "got";
 import { KumaThis } from "../environment.js";
 import * as util from "./util.js";
+
+const { default: got } = gotPkg;
 
 // Module level caching for repeat calls to fetchWebExtExamples().
 let webExtExamples: any = null;

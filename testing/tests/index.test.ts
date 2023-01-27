@@ -2,14 +2,16 @@ import fs from "node:fs";
 import path from "node:path";
 
 import cheerio from "cheerio";
-import sizeOf from "image-size";
+import imagesize from "image-size";
+
+const { default: sizeOf } = imagesize;
 
 import type {
   BCDSection,
   Doc,
   ProseSection,
   SpecificationsSection,
-} from "../../libs/types/document";
+} from "../../libs/types/document.js";
 
 const buildRoot = path.join("client", "build");
 

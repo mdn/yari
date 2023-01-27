@@ -1,4 +1,4 @@
-import { Flaw } from ".";
+import { Flaw } from "./index.js";
 
 import { getFirstMatchInText } from "../matches-in-text.js";
 const escapeHTML = (s) =>

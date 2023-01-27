@@ -1,4 +1,4 @@
-import { KumaThis } from "../environment";
+import { KumaThis } from "../environment.js";
 
 const page = {
   // Determines whether or not the page has the specified tag. Returns

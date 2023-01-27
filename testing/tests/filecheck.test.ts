@@ -1,7 +1,7 @@
 import fs from "node:fs";
 import { fileURLToPath } from "node:url";
 
-import { checkFile } from "../../filecheck/checker";
+import { checkFile } from "../../filecheck/checker.js";
 
 const SAMPLES_DIRECTORY = new URL(
   "filechecker/samplefiles-html/",

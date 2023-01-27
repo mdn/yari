@@ -4,8 +4,8 @@ import { fileURLToPath } from "node:url";
 
 import { renderToString } from "react-dom/server";
 
-import { DEFAULT_LOCALE } from "../libs/constants/index.js";
-import { ALWAYS_ALLOW_ROBOTS, BUILD_OUT_ROOT } from "../libs/env/index.js";
+import { DEFAULT_LOCALE } from "../libs/constants";
+import { ALWAYS_ALLOW_ROBOTS, BUILD_OUT_ROOT } from "../libs/env";
 
 const dirname = path.dirname(fileURLToPath(new URL(".", import.meta.url)));
 

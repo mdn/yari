@@ -5,7 +5,7 @@ import { fileURLToPath } from "node:url";
 import cheerio from "cheerio";
 import frontmatter from "front-matter";
 import { fdir, PathsOutput } from "fdir";
-import got from "got";
+import gotPkg from "got";
 
 import { m2h } from "../markdown/index.js";
 
@@ -17,14 +17,15 @@ import {
   BUILD_OUT_ROOT,
 } from "../libs/env/index.js";
 import { isValidLocale } from "../libs/locale-utils/index.js";
-import { DocFrontmatter } from "../libs/types/document.js";
+import { DocFrontmatter, NewsItem } from "../libs/types/document.js";
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import { renderHTML } from "../ssr/dist/main.js";
 import { splitSections } from "./utils.js";
 import { findByURL } from "../content/document.js";
 import { buildDocument } from "./index.js";
-import { NewsItem } from "../client/src/homepage/latest-news/index.js";
+
+const { default: got } = gotPkg;
 
 const FEATURED_ARTICLES = [
   "Web/API/WebGL_API/Tutorial/Getting_started_with_WebGL",
