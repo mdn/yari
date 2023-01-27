@@ -36,6 +36,8 @@ import { router as translationsRouter } from "./translations";
 import { staticMiddlewares, originRequestMiddleware } from "./middlewares";
 import { getRoot } from "../content/utils";
 
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
 import { renderHTML } from "../ssr/dist/main";
 
 async function buildDocumentFromURL(url) {

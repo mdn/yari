@@ -23,12 +23,17 @@ jobs:
           cache: yarn
           cache-dependency-path: |
             yarn.lock
+            client/pwa/yarn.lock
             deployer/aws-lambda/content-origin-request/yarn.lock
             deployer/aws-lambda/content-origin-response/yarn.lock
             deployer/aws-lambda/tests/yarn.lock
             libs/**/*.js
 
       - name: Install all yarn packages (ROOT)
+        run: yarn --frozen-lockfile
+
+      - name: Install all yarn packages (pwa)
+        working-directory: client/pwa
         run: yarn --frozen-lockfile
 
       - name: Install all yarn packages (aws-lambda/content-origin-request)
@@ -51,6 +56,9 @@ jobs:
 
       - name: Lint stylelint
         run: yarn stylelint
+
+      - name: Check TypeScript
+        run: yarn check:tsc
 
   test:
     runs-on: ubuntu-latest
