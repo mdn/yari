@@ -8,6 +8,7 @@
     "sourceMap": true,
     "preserveConstEnums": true,
     "outDir": "../public",
+    "skipLibCheck": true,
     "moduleResolution": "node"
   },
   "include": ["src/*.ts", "src/**/*.ts", "src/*.tsx", "src/**/*.tsx"]
