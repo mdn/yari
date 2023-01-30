@@ -77,7 +77,7 @@ function useSearchIndex(): readonly [
         ({ title, url }, i): FlexItem => [
           i,
           title.toLowerCase(),
-          url.split("/").pop().toLowerCase(),
+          (url.split("/").pop() as string).toLowerCase(),
         ]
       );
 
