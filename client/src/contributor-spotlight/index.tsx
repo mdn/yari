@@ -3,33 +3,20 @@ import { useParams } from "react-router-dom";
 import useSWR from "swr";
 
 import { CRUD_MODE } from "../env";
-import { HydrationData } from "../types/hydration";
+import { HydrationData, isContributorDetails } from "../types/hydration";
 import { GetInvolved } from "../ui/molecules/get_involved";
 import { Quote } from "../ui/molecules/quote";
 
 import "./index.scss";
 
-type ContributorDetails = {
-  sections: [string];
-  contributorName: string;
-  folderName: string;
-  isFeatured: boolean;
-  profileImg: string;
-  profileImgAlt: string;
-  webLinks: {
-    github: string;
-  };
-  quote: string;
-};
-
-export function ContributorSpotlight(props: HydrationData<ContributorDetails>) {
+export function ContributorSpotlight(props: HydrationData) {
   const { "*": slug, locale = "en-US" } = useParams();
   const baseURL = `/${locale.toLowerCase()}/community/spotlight/${slug}`;
   const contributorJSONUrl = `${baseURL}/index.json`;
 
   const fallbackData = props.hyData ? props : undefined;
 
-  const { data: { hyData } = {} } = useSWR<any>(
+  const { data: { hyData } = {} } = useSWR<HydrationData>(
     contributorJSONUrl,
     async (url) => {
       const response = await fetch(url);
@@ -48,15 +35,15 @@ export function ContributorSpotlight(props: HydrationData<ContributorDetails>) {
 
   React.useEffect(() => {
     const pageTitle =
-      hyData &&
+      isContributorDetails(hyData) &&
       `Contributor Spotlight - ${hyData.contributorName} - MDN Web Docs`;
-    document.title = pageTitle;
+    document.title = pageTitle || `Contributor Spotlight`;
   }, [hyData]);
 
   return (
     <>
       <main className="contributor-spotlight-content-container">
-        {hyData && (
+        {isContributorDetails(hyData) && (
           <>
             <h1 className="_ify">Contributor profile</h1>
             <section className="profile-header">

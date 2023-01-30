@@ -24,6 +24,8 @@ import { Banner } from "./banners";
 import { useGleanPage } from "./telemetry/glean-context";
 import { MainContentContainer } from "./ui/atoms/page-content";
 import { Loading } from "./ui/atoms/loading";
+import { HydrationData } from "./types/hydration";
+import { DEFAULT_LOCALE } from "../../libs/constants";
 
 const AllFlaws = React.lazy(() => import("./flaws"));
 const Translations = React.lazy(() => import("./translations"));
@@ -107,7 +109,16 @@ function PageOrPageNotFound({ pageNotFound, children }) {
   );
 }
 
-export function App(appProps) {
+export interface AppProps extends HydrationData {
+  doc?: any;
+  pageNotFound?: boolean;
+  pageTitle?: string;
+  possibleLocales?: any;
+  locale?: string;
+  noIndexing?: boolean;
+}
+
+export function App(appProps: AppProps) {
   usePing();
   useGleanPage();
   const localeMatch = useMatch("/:locale/*");
@@ -115,18 +126,18 @@ export function App(appProps) {
   useEffect(() => {
     const locale = localeMatch?.params.locale || appProps.locale;
 
-    document.documentElement.setAttribute("lang", locale);
+    document.documentElement.setAttribute("lang", locale || DEFAULT_LOCALE);
   }, [appProps.locale, localeMatch]);
 
   const [pageNotFound, setPageNotFound] = React.useState<boolean>(
-    appProps.pageNotFound
+    !!appProps.pageNotFound
   );
   const { pathname } = useLocation();
   const initialPathname = React.useRef(pathname);
 
   React.useEffect(() => {
     setPageNotFound(
-      appProps.pageNotFound && initialPathname.current === pathname
+      !!appProps.pageNotFound && initialPathname.current === pathname
     );
   }, [appProps.pageNotFound, pathname]);
 

@@ -4,8 +4,9 @@ import FeaturedArticles from "./featured-articles";
 import { LatestNews } from "./latest-news";
 import RecentContributions from "./recent-contributions";
 import { ContributorSpotlight } from "./contributor-spotlight";
+import { AppProps } from "../app";
 
-export function Homepage(props) {
+export function Homepage(props: AppProps) {
   return (
     <main id="content" role="main">
       <div className="homepage mdn-ui-body-m">

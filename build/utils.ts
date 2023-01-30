@@ -12,6 +12,7 @@ import imageminSvgo from "imagemin-svgo";
 import sanitizeFilename from "sanitize-filename";
 
 import { VALID_MIME_TYPES } from "../libs/constants";
+import { Toc } from "../libs/types";
 
 export function humanFileSize(size) {
   if (size < 1024) return `${size} B`;
@@ -137,10 +138,10 @@ export function getImageminPlugin(fileName) {
 
 export function splitSections(rawHTML) {
   const $ = cheerio.load(`<div id="_body">${rawHTML}</div>`);
-  const blocks = [];
-  const toc = [];
+  const blocks: cheerio.Cheerio<cheerio.Element>[] = [];
+  const toc: Toc[] = [];
 
-  const section = cheerio
+  const section: cheerio.Cheerio<cheerio.Element> = cheerio
     .load("<div></div>", { decodeEntities: false })("div")
     .eq(0);
 

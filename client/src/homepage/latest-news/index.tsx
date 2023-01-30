@@ -2,7 +2,7 @@ import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import useSWR from "swr";
 import { CRUD_MODE } from "../../env";
-import { HydrationData } from "../../types/hydration";
+import { HydrationData, StaticPageData } from "../../types/hydration";
 
 import "./index.scss";
 
@@ -19,10 +19,10 @@ export interface NewsItem {
   published_at: string;
 }
 
-export function LatestNews(props: HydrationData<any>) {
+export function LatestNews(props: HydrationData) {
   const fallbackData = props.hyData ? props : undefined;
 
-  const { data: { hyData } = {} } = useSWR<any>(
+  const { data: { hyData } = {} } = useSWR<HydrationData>(
     "./index.json",
     async (url) => {
       const response = await fetch(url);
@@ -39,7 +39,8 @@ export function LatestNews(props: HydrationData<any>) {
     }
   );
 
-  const newsItems: NewsItem[] = hyData?.latestNews?.items.slice(0, 3) ?? [];
+  const newsItems: NewsItem[] =
+    (hyData as StaticPageData)?.latestNews?.items.slice(0, 3) ?? [];
 
   if (!newsItems.length) {
     return null;

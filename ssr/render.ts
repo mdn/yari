@@ -4,6 +4,7 @@ import { renderToString } from "react-dom/server";
 
 import { DEFAULT_LOCALE } from "../libs/constants";
 import { ALWAYS_ALLOW_ROBOTS, BUILD_OUT_ROOT } from "../libs/env";
+import { AppProps } from "../client/src/app";
 
 const dirname = __dirname;
 
@@ -14,7 +15,7 @@ const PREFERRED_LOCALE = {
   zh: "zh-CN",
 };
 
-function htmlEscape(s) {
+function htmlEscape(s?: string) {
   if (!s) {
     return s;
   }
@@ -131,16 +132,6 @@ function* extractCSSURLs(css, filterFunction) {
   }
 }
 
-interface HydrationData {
-  doc?: any;
-  pageNotFound?: boolean;
-  hyData?: any;
-  pageTitle?: any;
-  possibleLocales?: any;
-  locale?: any;
-  noIndexing?: any;
-}
-
 export default function render(
   renderApp,
   {
@@ -151,7 +142,7 @@ export default function render(
     possibleLocales = null,
     locale = null,
     noIndexing = null,
-  }: HydrationData = {}
+  }: AppProps = {}
 ) {
   const buildHtml = readBuildHTML();
   const webfontURLs = extractWebFontURLs();
@@ -162,7 +153,7 @@ export default function render(
   let pageDescription = "";
   let escapedPageTitle = htmlEscape(pageTitle);
 
-  const hydrationData: HydrationData = {};
+  const hydrationData: AppProps = {};
   const translations: string[] = [];
   if (pageNotFound) {
     escapedPageTitle = `🤷🏽‍♀️ Page not found | ${

@@ -1,6 +1,6 @@
 import useSWR from "swr";
 import { CRUD_MODE } from "../../env";
-import { HydrationData } from "../../types/hydration";
+import { HydrationData, isStaticPageData } from "../../types/hydration";
 import { Icon } from "../../ui/atoms/icon";
 import Mandala from "../../ui/molecules/mandala";
 
@@ -9,10 +9,10 @@ const contributorGraphic = `${
   process.env.PUBLIC_URL || ""
 }/assets/mdn_contributor.png`;
 
-export function ContributorSpotlight(props: HydrationData<any>) {
+export function ContributorSpotlight(props: HydrationData) {
   const fallbackData = props.hyData ? props : undefined;
 
-  const { data: { hyData } = {} } = useSWR<any>(
+  const { data: { hyData } = {} } = useSWR<HydrationData>(
     "./index.json",
     async (url) => {
       const response = await fetch(url);
@@ -34,17 +34,17 @@ export function ContributorSpotlight(props: HydrationData<any>) {
       <div className="wrapper">
         <div className="text-col">
           <h3>Contributor Spotlight</h3>
-          {hyData && hyData?.featuredContributor && (
+          {isStaticPageData(hyData, "featuredContributor") && (
             <>
               <a
                 className="contributor-name"
-                href={hyData?.featuredContributor?.url}
+                href={hyData.featuredContributor.url}
               >
-                {hyData?.featuredContributor?.contributorName}
+                {hyData.featuredContributor.contributorName}
               </a>
               <blockquote>
                 <Icon name="quote"></Icon>
-                {hyData?.featuredContributor?.quote}
+                {hyData.featuredContributor.quote}
               </blockquote>
             </>
           )}

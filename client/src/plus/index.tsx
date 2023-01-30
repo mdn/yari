@@ -13,6 +13,7 @@ import { ArticleActionsContainer } from "../ui/organisms/article-actions-contain
 import { DocParent } from "../../../libs/types/document";
 
 import "./index.scss";
+import { AppProps } from "../app";
 
 const OfferOverview = React.lazy(() => import("./offer-overview"));
 const Collections = React.lazy(() => import("./collections"));
@@ -56,7 +57,7 @@ function Layout({
     </>
   );
 }
-export function Plus({ pageTitle, ...props }: { pageTitle?: string }) {
+export function Plus({ pageTitle, ...props }: AppProps) {
   React.useEffect(() => {
     document.title = pageTitle || MDN_PLUS_TITLE;
   }, [pageTitle]);
@@ -112,7 +113,7 @@ export function Plus({ pageTitle, ...props }: { pageTitle?: string }) {
           <Layout
             parents={[...parents, { uri: pathname, title: "My Settings" }]}
           >
-            <Settings {...props} />
+            <Settings />
           </Layout>
         }
       />

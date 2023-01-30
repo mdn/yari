@@ -8,9 +8,9 @@ import { PageNotFound } from "../../page-not-found";
 import { Loading } from "../../ui/atoms/loading";
 import { ArticleActionsContainer } from "../../ui/organisms/article-actions-container";
 
-interface StaticPageDoc {
+export interface StaticPageDoc {
   id: string;
-  title: string;
+  title?: string;
   sections: string[];
   toc: Toc[];
 }
@@ -54,7 +54,7 @@ function StaticPage({
   );
 
   React.useEffect(() => {
-    document.title = hyData ? `${hyData.title} | ${title}` : title;
+    document.title = hyData?.title ? `${hyData.title} | ${title}` : title;
   }, [hyData, title]);
 
   if (error) {
@@ -68,7 +68,7 @@ function StaticPage({
   return (
     <>
       <ArticleActionsContainer
-        parents={[...parents, { uri: baseURL, title: hyData.title }]}
+        parents={[...parents, { uri: baseURL, title: hyData.title || title }]}
       />
 
       <div className="main-wrapper">

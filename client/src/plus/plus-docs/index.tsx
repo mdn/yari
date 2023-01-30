@@ -3,6 +3,7 @@ import { MDN_PLUS_TITLE } from "../../constants";
 import StaticPage from "../../homepage/static-page";
 import { useUserData } from "../../user-context";
 import "./index.scss";
+import { AppProps } from "../../app";
 
 function PlusDocsNav() {
   const userData = useUserData();
@@ -80,7 +81,7 @@ function RelatedTopics({
   );
 }
 
-function PlusDocs({ ...props }) {
+function PlusDocs({ ...props }: AppProps) {
   const { locale = "en-US", "*": slug } = useParams();
 
   return (

@@ -2,16 +2,16 @@ import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import useSWR from "swr";
 import { CRUD_MODE } from "../../env";
-import { HydrationData } from "../../types/hydration";
+import { HydrationData, isStaticPageData } from "../../types/hydration";
 
 import "./index.scss";
 
 dayjs.extend(relativeTime);
 
-function RecentContributions(props: HydrationData<any>) {
+function RecentContributions(props: HydrationData) {
   const fallbackData = props.hyData ? props : undefined;
 
-  const { data: { hyData } = {} } = useSWR<any>(
+  const { data: { hyData } = {} } = useSWR<HydrationData>(
     "./index.json",
     async (url) => {
       const response = await fetch(url);
@@ -28,7 +28,7 @@ function RecentContributions(props: HydrationData<any>) {
     }
   );
 
-  return hyData?.recentContributions ? (
+  return isStaticPageData(hyData, "recentContributions") ? (
     <section className="recent-contributions">
       <h2>Recent contributions</h2>
       <ul className="contribution-list">

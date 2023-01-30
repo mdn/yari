@@ -2,7 +2,7 @@ import React from "react";
 import { createRoot, hydrateRoot } from "react-dom/client";
 import { BrowserRouter as Router } from "react-router-dom";
 
-import { App } from "./app";
+import { App, AppProps } from "./app";
 import { GAProvider } from "./ga-context";
 import { UserDataProvider } from "./user-context";
 import { UIProvider } from "./ui-context";
@@ -19,7 +19,7 @@ if (!container) {
 // If it's there, great, if it's not there, this'll be `undefined` the
 // components will know to fetch it with XHR.
 const hydrationElement = document.getElementById("hydration");
-const appData = hydrationElement
+const appData: AppProps = hydrationElement
   ? JSON.parse(hydrationElement.textContent!)
   : {};
 

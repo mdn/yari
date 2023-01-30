@@ -1,12 +1,12 @@
 import useSWR from "swr";
 import { CRUD_MODE } from "../../env";
-import { HydrationData } from "../../types/hydration";
+import { HydrationData, isStaticPageData } from "../../types/hydration";
 
 import "./index.scss";
 
-export default function FeaturedArticles(props: HydrationData<any>) {
+export default function FeaturedArticles(props: HydrationData) {
   const fallbackData = props.hyData ? props : undefined;
-  const { data: { hyData } = {} } = useSWR<any>(
+  const { data: { hyData } = {} } = useSWR<HydrationData>(
     "./index.json",
     async (url) => {
       const response = await fetch(url);
@@ -23,7 +23,8 @@ export default function FeaturedArticles(props: HydrationData<any>) {
     }
   );
 
-  return hyData?.featuredArticles.length ? (
+  return isStaticPageData(hyData, "featuredArticles") &&
+    hyData.featuredArticles.length ? (
     <div className="featured-articles">
       <h2>Featured Articles</h2>
       <div className="tile-container">
