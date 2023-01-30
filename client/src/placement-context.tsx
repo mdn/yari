@@ -1,5 +1,6 @@
 import React from "react";
 import useSWR from "swr";
+import { useUserData } from "./user-context";
 
 interface PlacementStatus {
   contents: any[];
@@ -12,8 +13,9 @@ export const PlacementContext = React.createContext<
 >(undefined);
 
 export function PlacementProvider(props: { children: React.ReactNode }) {
+  const user = useUserData();
   const { data: pong } = useSWR<PlacementStatus>(
-    "/pong/get",
+    user?.settings?.noAds ? null : "/pong/get",
     async (url) => {
       const response = await fetch(url, {
         method: "POST",

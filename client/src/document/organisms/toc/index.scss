@@ -62,17 +62,21 @@
   border: 1px solid var(--border-primary);
   display: flex;
   flex-direction: column;
+  margin-bottom: 1rem;
+  max-width: 12rem;
   padding: 1rem;
 
   .pong {
     align-items: center;
     display: flex;
     flex-direction: column;
+    font-size: 0.8rem;
   }
 
-  .pong-note {
-    align-self: flex-end;
-    font-size: 0.8rem;
-    margin-top: 1rem;
+  .pong-note-container {
+    display: flex;
+    font-size: 0.6rem;
+    justify-content: space-between;
+    margin: 1rem 0 0;
   }
 }
