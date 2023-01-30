@@ -23,32 +23,26 @@ function OfferOverviewFeature({ id, img, imgAlt, children }) {
 export default function OfferOverviewFeatures() {
   return (
     <section id="features">
-      <OfferOverviewFeature
-        id="notifications"
-        img="/assets/notifications_light.png"
-        imgAlt=""
-      >
+      <OfferOverviewFeature id="updates" img="/assets/updates.png" imgAlt="">
         <section aria-labelledby="updates-section-title">
           <h2 id="updates-section-title">Updates</h2>
           <h3>
             Compatibility changes at a glance.
             <br />
-            Filter and sort changes that matters most to you.
+            Filter and sort updates that matter most to build your project
           </h3>
           <p>
             The Web doesn't have a changelog, but MDN can help. You can
-            personalize this changelog and filter changes based on browsers or
+            personalize and filter compatibility changes based on browsers or
             the tech category you are interested in whether that is JavaScript,
             CSS, etc.
           </p>
-          <Button href="/en-US/plus/docs/features/notifications">
-            Learn more →
-          </Button>
+          <Button href="/en-US/plus/docs/features/updates">Learn more →</Button>
         </section>
       </OfferOverviewFeature>
       <OfferOverviewFeature
         id="collections"
-        img="/assets/collections_light.png"
+        img="/assets/collections.png"
         imgAlt=""
       >
         <section aria-labelledby="collections-section-title">
@@ -67,11 +61,7 @@ export default function OfferOverviewFeatures() {
           </Button>
         </section>
       </OfferOverviewFeature>
-      <OfferOverviewFeature
-        id="offline"
-        img="/assets/offline_settings_light.png"
-        imgAlt=""
-      >
+      <OfferOverviewFeature id="offline" img="/assets/offline.png" imgAlt="">
         <section aria-labelledby="offline-section-title">
           <h2 id="offline-section-title">MDN Offline</h2>
           <h3>MDN's entire library at your fingertips: offline</h3>
