@@ -14,6 +14,8 @@ import {
 } from "../libs/env";
 import { isValidLocale } from "../libs/locale-utils";
 import { DocFrontmatter } from "../libs/types/document";
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
 import { renderHTML } from "../ssr/dist/main";
 import got from "got";
 import { splitSections } from "./utils";

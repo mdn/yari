@@ -36,6 +36,8 @@ import { router as translationsRouter } from "./translations";
 import { staticMiddlewares, originRequestMiddleware } from "./middlewares";
 import { getRoot } from "../content/utils";
 
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
 import { renderHTML } from "../ssr/dist/main";
 
 async function buildDocumentFromURL(url: string) {
@@ -260,10 +262,8 @@ app.get("/*", async (req, res, ...args) => {
 
   let lookupURL = decodeURI(req.path);
   let extraSuffix = "";
-  let bcdDataURL = "";
   let isMetadata = false;
   let isDocument = false;
-  const bcdDataURLRegex = /\/(bcd-\d+|bcd)\.json$/;
 
   if (req.path.endsWith("index.json")) {
     // It's a bit special then.
@@ -279,21 +279,16 @@ app.get("/*", async (req, res, ...args) => {
     isMetadata = true;
     extraSuffix = "/metadata.json";
     lookupURL = lookupURL.replace(extraSuffix, "");
-  } else if (bcdDataURLRegex.test(req.path)) {
-    bcdDataURL = req.path;
-    lookupURL = lookupURL.replace(bcdDataURLRegex, "");
   }
 
   const isJSONRequest = extraSuffix.endsWith(".json");
 
   let document;
-  let bcdData;
   try {
     console.time(`buildDocumentFromURL(${lookupURL})`);
     const built = await buildDocumentFromURL(lookupURL);
     if (built) {
       document = built.doc;
-      bcdData = built.bcdData;
     } else if (
       lookupURL.split("/")[1] &&
       lookupURL.split("/")[1].toLowerCase() !== DEFAULT_LOCALE.toLowerCase() &&
@@ -322,12 +317,6 @@ app.get("/*", async (req, res, ...args) => {
     return res
       .status(404)
       .sendFile(path.join(STATIC_ROOT, "en-us", "_spas", "404.html"));
-  }
-
-  if (bcdDataURL) {
-    return res.json(
-      bcdData.find((data) => data.url.toLowerCase() === bcdDataURL).data
-    );
   }
 
   if (isDocument) {

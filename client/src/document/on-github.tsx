@@ -38,7 +38,7 @@ function EditOnGitHubLink({ doc }: { doc: Doc }) {
       target="_blank"
       rel="noopener noreferrer"
     >
-      on Github
+      on GitHub
     </a>
   );
 }
