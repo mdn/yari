@@ -244,7 +244,7 @@ function InnerSearchNavigateWidget(props: InnerSearchNavigateWidgetProps) {
     // overlaying search results don't trigger a scroll.
     const limit = window.innerHeight < 850 ? 5 : 10;
 
-    const q: string[] = splitQuery(inputValue);
+    const q = splitQuery(inputValue);
     const indexResults: number[] = searchIndex.flex
       .filter(([_, title]) => q.every((q) => title.includes(q)))
       .map(([i]) => i)
