@@ -156,7 +156,7 @@
     "diff": "^5.1.0",
     "dotenv-expand": "^10.0.0",
     "downshift": "^6.1.12",
-    "eslint": "^8.32.0",
+    "eslint": "^8.33.0",
     "eslint-config-react-app": "^7.0.1",
     "eslint-gitignore": "^0.1.0",
     "eslint-plugin-flowtype": "^8.0.3",
