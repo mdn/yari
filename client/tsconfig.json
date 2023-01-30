@@ -1,13 +1,13 @@
 {
   "extends": "../tsconfig.json",
   "compilerOptions": {
-    "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
-    "module": "esnext",
     "isolatedModules": true,
+    "jsx": "react-jsx",
+    "lib": ["dom", "dom.iterable", "esnext"],
+    "module": "esnext",
     "noEmit": true,
     "noFallthroughCasesInSwitch": true,
-    "jsx": "react-jsx",
     "strictNullChecks": true
   },
   "include": ["src"]

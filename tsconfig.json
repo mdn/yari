@@ -6,13 +6,13 @@
     "jsx": "react-jsx",
     "module": "ESNext",
     "moduleResolution": "node",
+    "noImplicitAny": false,
+    "preserveWatchOutput": true,
     "resolveJsonModule": true,
     "skipLibCheck": true,
-    "target": "ES2020",
-    "preserveWatchOutput": true,
     "strict": true,
-    "noImplicitAny": false,
-    "strictNullChecks": false
+    "strictNullChecks": false,
+    "target": "ES2020"
   },
   "ts-node": {
     "esm": true,
