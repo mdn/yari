@@ -1563,10 +1563,10 @@
   dependencies:
     "@mdn/browser-compat-data" latest
 
-"@mdn/browser-compat-data@^5.2.31":
-  version "5.2.31"
-  resolved "https://registry.yarnpkg.com/@mdn/browser-compat-data/-/browser-compat-data-5.2.31.tgz#c8010d5b1abd3a2b0942703ee27695713ba90b23"
-  integrity sha512-tOav2FmnXMkdJqyq7ne3l/+YK6r+Q8JIOxnAxP+lfFx28HOLuYLI7thntMGK0eghG6p9ivXcCbDQ2Q58cw3zUw==
+"@mdn/browser-compat-data@^5.2.32":
+  version "5.2.32"
+  resolved "https://registry.yarnpkg.com/@mdn/browser-compat-data/-/browser-compat-data-5.2.32.tgz#8a2e2421015dc3b87b92bca62e7759e01968434b"
+  integrity sha512-EA8skQ+SM6VQNrToJjVEbooQ+B+eytVmJstaCI8UlB8IXvW5i/RfO3mZqu8pNUJK8zhKCIAX7PIdPE4k+rhyzw==
 
 "@mdn/browser-compat-data@latest":
   version "5.2.21"
