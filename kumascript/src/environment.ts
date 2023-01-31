@@ -50,7 +50,7 @@ export interface KumaThis {
   env: typeof Environment & PerPageContext;
   info: typeof info;
   renderPrerequisiteFromURL: (path: string) => unknown;
-  template: (name: string, args?: any) => unknown;
+  template: (name: string, args?: any[]) => unknown;
 }
 
 type PerPageContext = Partial<{
