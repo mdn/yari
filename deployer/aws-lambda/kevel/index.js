@@ -1,9 +1,31 @@
+import { createHmac } from "node:crypto";
+
 import { Client } from "@adzerk/decision-sdk";
-import { KEVEL_SITE_ID, KEVEL_NETWORK_ID } from "./env.js";
+
+import { KEVEL_SITE_ID, KEVEL_NETWORK_ID, SIGN_SECRET } from "./env.js";
 
 const siteId = KEVEL_SITE_ID;
 const networkId = KEVEL_NETWORK_ID;
 const client = new Client({ networkId, siteId });
+
+function encodeAndSign(s) {
+  const hmac = createHmac("sha256", SIGN_SECRET);
+  hmac.update(s);
+  return `${Buffer.from(s, "utf-8").toString("base64")}.${hmac.digest(
+    "base64"
+  )}`;
+}
+
+function decodeAndVerify(tuple = "") {
+  const [encoded, digest] = tuple.split(".");
+  const s = Buffer.from(encoded, "base64").toString("utf-8");
+  const hmac = createHmac("sha256", SIGN_SECRET);
+  hmac.update(s);
+  if (hmac.digest("base64") === digest) {
+    return s;
+  }
+  return null;
+}
 
 export async function handler(event) {
   const request = event.Records[0].cf.request;
@@ -33,13 +55,8 @@ export async function handler(event) {
     } = decisionRes;
     payload = {
       contents,
-      click: Buffer.from(clickUrl, "utf-8").toString("base64"),
-      impression: Buffer.from(impressionUrl).toString("base64"),
-    };
-    payload = {
-      contents,
-      click: Buffer.from(clickUrl).toString("base64"),
-      impression: Buffer.from(impressionUrl).toString("base64"),
+      click: encodeAndSign(clickUrl),
+      impression: encodeAndSign(impressionUrl),
     };
     const response = {
       status: 200,
@@ -70,21 +87,25 @@ export async function handler(event) {
       };
     }
     const params = new URLSearchParams(request.querystring);
-    const click = Buffer.from(params.get("code"), "base64").toString("utf-8");
-    const { headers, status } = await fetch(click, { redirect: "manual" }); // eslint-disable-line no-undef
-    if (status === 301 || status === 302) {
-      return {
-        status: 302,
-        statusDescription: "FOUND",
-        headers: {
-          location: [
-            {
-              key: "Location",
-              value: headers.get("location"),
-            },
-          ],
-        },
-      };
+    try {
+      const click = decodeAndVerify(params.get("code"));
+      const { headers, status } = await fetch(click, { redirect: "manual" }); // eslint-disable-line no-undef
+      if (status === 301 || status === 302) {
+        return {
+          status: 302,
+          statusDescription: "FOUND",
+          headers: {
+            location: [
+              {
+                key: "Location",
+                value: headers.get("location"),
+              },
+            ],
+          },
+        };
+      }
+    } catch (e) {
+      console.error(e);
     }
   } else if (request.uri === "/pong/viewed") {
     if (request.method !== "POST") {
@@ -94,12 +115,16 @@ export async function handler(event) {
       };
     }
     const params = new URLSearchParams(request.querystring);
-    const click = Buffer.from(params.get("code"), "base64").toString("utf-8");
-    await fetch(click, { redirect: "manual" }); // eslint-disable-line no-undef
-    return {
-      status: 200,
-      statusDescription: "OK",
-    };
+    try {
+      const view = decodeAndVerify(params.get("code"));
+      await fetch(view, { redirect: "manual" }); // eslint-disable-line no-undef
+      return {
+        status: 200,
+        statusDescription: "OK",
+      };
+    } catch (e) {
+      console.error(e);
+    }
   }
   return {
     status: 404,
