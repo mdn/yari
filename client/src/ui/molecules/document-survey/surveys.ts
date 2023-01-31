@@ -39,7 +39,7 @@ export const SURVEYS: Survey[] = [
     bucket: SurveyBucket.FIREFOX_WEB_COMPAT,
     show: (doc: Doc) =>
       /en-US\/docs\/Web\/(JavaScript|API)(\/|$)/i.test(doc.mdn_url),
-    src: "https://survey.alchemer.com/s3/7195211/Which-web-platform-features-should-be-implemented-in-Firefox",
+    src: "https://survey.alchemer.com/s3/7195211/Help-prioritize-cross-browser-web-platform-features",
     teaser:
       "Ensuring the web is open and accessible to all is central to Mozilla’s mission. The Firefox product team is interested in learning which features are most important to support across all major browsers.",
     question: "Let us know what you think.",
