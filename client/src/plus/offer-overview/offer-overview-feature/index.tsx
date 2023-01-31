@@ -3,7 +3,7 @@ import "./index.scss";
 
 function OfferOverviewFeature({ id, img, imgAlt, children }) {
   return (
-    <div className={`offer-overview-feature ${id}`}>
+    <div className={`offer-overview-feature`}>
       <div className="container">
         <div className="wrapper" id={id}>
           <img
