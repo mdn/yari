@@ -99,25 +99,25 @@ var captionText = `${$1}`.charAt(0).toUpperCase() + `${$1}`.slice(1).toLowerCase
 var titleString = "";
 
 switch(env.locale) {
-    case "ja":
-        if (captionText === "Properties") { captionText = "プロパティ"; }
-        if (captionText === "Methods") { captionText = "メソッド"; }
-        titleString = '<a class="internal" href="' + pageuri + '"><code>' + $0 + '</code></a> から継承される' + captionText;
-        break;
     case "fr":
         if (captionText === "Properties") { captionText = "Propriétés"; }
         if (captionText === "Methods") { captionText = "Méthodes"; }
         titleString = captionText  + ' héritées de <a href="' + pageuri + '"><code>' + $0 + '</code></a>:';
         break;
-    case "ru":
-        if (captionText === "Properties") { captionText = "Свойства"; }
-        if (captionText === "Methods") { captionText = "Методы"; }
-        titleString = captionText  + ', унаследованные из <a href="' + pageuri + '"><code>' + $0 + '</code></a>:';
+    case "ja":
+        if (captionText === "Properties") { captionText = "プロパティ"; }
+        if (captionText === "Methods") { captionText = "メソッド"; }
+        titleString = '<a class="internal" href="' + pageuri + '"><code>' + $0 + '</code></a> から継承される' + captionText;
         break;
     case "ko":
         if (captionText === "Properties") { captionText = "속성"; }
         if (captionText === "Methods") { captionText = "메서드"; }
         titleString = '<a class="internal" href="' + pageuri + '"><code>' + $0 + '</code></a> 로부터 상속됨' + captionText;
+        break;
+    case "ru":
+        if (captionText === "Properties") { captionText = "Свойства"; }
+        if (captionText === "Methods") { captionText = "Методы"; }
+        titleString = captionText  + ', унаследованные из <a href="' + pageuri + '"><code>' + $0 + '</code></a>:';
         break;
     default:
         titleString = captionText  + ' inherited from <a href="' + pageuri + '"><code>' + $0 + '</code></a>:';
