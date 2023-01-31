@@ -71,7 +71,8 @@ export function extractSpecifications(
     }
   }
 
-  if (query) {
+  // The `spec-url` frontmatter takes precedence over spec URLs derived from `browser-compat` frontmatter.
+  if (query && !specURLsString) {
     for (const feature of query.split(",").map((id) => id.trim())) {
       const { data } = packageBCD(feature);
       // If 'data' is non-null, we have data for one or more BCD features
