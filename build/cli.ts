@@ -12,6 +12,8 @@ import { prompt } from "inquirer";
 import { Document, slugToFolder, translationsOf } from "../content";
 import { CONTENT_ROOT, CONTENT_TRANSLATED_ROOT } from "../libs/env";
 import { VALID_LOCALES } from "../libs/constants";
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
 import { renderHTML } from "../ssr/dist/main";
 import options from "./build-options";
 import { buildDocument, BuiltDocument, renderContributorsTxt } from ".";

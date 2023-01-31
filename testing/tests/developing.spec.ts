@@ -72,7 +72,7 @@ test.describe("Testing the kitchensink page", () => {
     // Loading the index.json doesn't require a headless browser
     const { doc } = await got(
       serverURL("/en-US/docs/MDN/Kitchensink/index.json")
-    ).json();
+    ).json<any>();
 
     expect(doc.title).toBe("The MDN Content Kitchensink");
     expect(doc.flaws).toEqual({});
