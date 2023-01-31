@@ -71,7 +71,7 @@ export function extractSpecifications(
     }
   }
 
-  // Look for spec URLS in BCD only if specURLsString is not set
+  // The `spec-url` frontmatter takes precedence over spec URLs derived from `browser-compat` frontmatter.
   if (query && !specURLsString) {
     for (const feature of query.split(",").map((id) => id.trim())) {
       const { data } = packageBCD(feature);
