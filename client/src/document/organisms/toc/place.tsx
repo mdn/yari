@@ -21,6 +21,7 @@ export function Place() {
           const [{ isIntersecting = false } = {}] = entries;
           if (isIntersecting && typeof navigator !== "undefined") {
             navigator?.sendBeacon(`/pong/viewed?code=${pong?.impression}`);
+            observer.current?.disconnect();
           }
         }, observerOptions);
         observer.current = intersectionObserver;
