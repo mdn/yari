@@ -233,7 +233,7 @@ jobs:
 
           KEVEL_SITE_ID: ${{ secrets.DEPLOYER_STAGE_KEVEL_SITE_ID }}
           KEVEL_NETWORK_ID: ${{ secrets.DEPLOYER_STAGE_KEVEL_NETWORK_ID }}
-          SIGN_KEY: ${{ secrets.DEPLOYER_STAGE_SIGN_KEY }}
+          SIGN_SECRET: ${{ secrets.DEPLOYER_STAGE_SIGN_KEY }}
 
         run: |
 

@@ -21,7 +21,7 @@ function decodeAndVerify(tuple = "") {
   const s = Buffer.from(encoded, "base64").toString("utf-8");
   const hmac = createHmac("sha256", SIGN_SECRET);
   hmac.update(s);
-  if (hmac.digest("base64") === digest) {
+  if (hmac.digest("base64") == digest) {
     return s;
   }
   return null;
