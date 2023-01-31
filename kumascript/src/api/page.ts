@@ -73,10 +73,7 @@ const page = {
       pageBadges += space + badgeTemplates.ExperimentalBadge;
     }
 
-    if (
-      page.hasTag(aPage, "Non-standard") ||
-      page.hasTag(aPage, "Non Standard")
-    ) {
+    if (page.hasTag(aPage, "Non-standard")) {
       pageBadges += space + badgeTemplates.NonStandardBadge;
     }
 
