@@ -21,7 +21,7 @@
     "build:ssr": "cd ssr && webpack --mode=production",
     "build:sw": "cd client/pwa && yarn && yarn build:prod",
     "build:sw-dev": "cd client/pwa && yarn && yarn build",
-    "check:tsc": "if ! NPROC=$(nproc 2> /dev/null); then NPROC=\"2\"; fi; find . -mindepth 2 -name 'tsconfig.json' ! -wholename '**/node_modules/**' -print0 | xargs -n1 -P $NPROC -0 bash -c 'cd `dirname $0` && echo \"🔄 $(pwd)\" && npx tsc --noEmit && echo \"☑️  $(pwd)\" || exit 255'",
+    "check:tsc": "if ! NPROC=$(nproc); then NPROC=\"2\"; fi; find . -mindepth 2 -name 'tsconfig.json' ! -wholename '**/node_modules/**' -print0 | xargs -n1 -P $NPROC -0 bash -c 'cd `dirname $0` && echo \"🔄 $(pwd)\" && npx tsc --noEmit && echo \"☑️  $(pwd)\" || exit 255'",
     "dev": "yarn build:prepare && nf -j Procfile.dev start",
     "eslint": "eslint .",
     "filecheck": "ts-node filecheck/cli.ts",
