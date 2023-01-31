@@ -830,7 +830,7 @@ async function makePageLink(aPage) {
     });
   }
 
-  const pageBadges = await page.badges(aPage);
+  const pageBadges = await page.badges(aPage).then(b => b.join(""));
 
   let result = '<li>';
   

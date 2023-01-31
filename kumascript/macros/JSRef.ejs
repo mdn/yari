@@ -181,7 +181,7 @@ async function buildSublist(pages, title, opened) {
         });
     }
 
-    const pageBadges = await page.badges(aPage);
+    const pageBadges = await page.badges(aPage).then(b => b.join(""));
 
     if (containsTag(aPage, 'Obsolete')) {
         result += '<s class="obsoleteElement">';

@@ -78,7 +78,7 @@ for (var i = 0; i < numLetters; i++) {
                 continue;
             }
 
-            let pageBadges = await page.badges(aPage, true);
+            let pageBadges = await page.badges(aPage).then(b => " " + b.join(" "));
 
             // Wrap the badges in another span
 
