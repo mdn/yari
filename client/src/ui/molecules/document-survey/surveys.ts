@@ -46,29 +46,4 @@ export const SURVEYS: Survey[] = [
     ...survey_duration(SurveyBucket.FIREFOX_WEB_COMPAT),
     ...survey_rates(SurveyKey.FIREFOX_WEB_COMPAT),
   },
-  {
-    key: SurveyKey.INTEROP_2023_CSS_HTML,
-    bucket: SurveyBucket.INTEROP_2023,
-    show: (doc: Doc) => /en-US\/docs\/Web\/(CSS|HTML)(\/|$)/i.test(doc.mdn_url),
-    src: "https://survey.alchemer.com/s3/7081564/MDN-Interop-2023-CSS-HTML",
-    teaser:
-      "Browser vendors are working together to improve feature support across browsers. Shape the future of the web by taking this 1-question survey!",
-    question:
-      "Which features should be improved across browsers in the coming year?",
-    ...survey_duration(SurveyBucket.INTEROP_2023),
-    ...survey_rates(SurveyKey.INTEROP_2023_CSS_HTML),
-  },
-  {
-    key: SurveyKey.INTEROP_2023_API_JS,
-    bucket: SurveyBucket.INTEROP_2023,
-    show: (doc: Doc) =>
-      /en-US\/docs\/Web\/(API|JavaScript)(\/|$)/i.test(doc.mdn_url),
-    src: "https://survey.alchemer.com/s3/7081727/MDN-Interop-2023-APIs-JavaScript",
-    teaser:
-      "Browser vendors are working together to improve feature support across browsers. Shape the future of the web by taking this 1-question survey!",
-    question:
-      "Which features should be improved across browsers in the coming year?",
-    ...survey_duration(SurveyBucket.INTEROP_2023),
-    ...survey_rates(SurveyKey.INTEROP_2023_API_JS),
-  },
 ];
