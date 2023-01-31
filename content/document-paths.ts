@@ -85,6 +85,9 @@ function childrenForPath(
 }
 
 function initAllDocumentsPathsTree(): Tree {
+  if (!CONTENT_ROOT) {
+    throw new Error("Environmental variable CONTENT_ROOT has not been set");
+  }
   // When running a production build we can afford to look up all files upfront.
   if (process.env.NODE_ENV === "production") {
     return {
