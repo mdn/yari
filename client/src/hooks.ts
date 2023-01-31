@@ -167,7 +167,7 @@ export function usePing() {
         localStorage.setItem("next-ping", newNextPing.toISOString());
       }
     } catch (e) {
-      console.error(e);
+      console.error("Failed to send ping", e);
     }
   }, [isOnline, user]);
 }
