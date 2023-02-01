@@ -9,10 +9,10 @@ jobs:
 
     steps:
       - name: Fetch commits
-        run: curl -s "${{ github.event.pull_request._links.commits.href }}" > commits.json
+        run: curl -s "${{ github.event.pull_request._links.commits.href }}" | tee commits.json
 
       - name: Filter unverified commits
-        run: jq '[.[].commit | select(.verification.verified == false)]' < commits.json > unverified-commits.json
+        run: jq '[.[].commit | select(.verification.verified == false)]' < commits.json | tee unverified-commits.json
 
       - name: List unverified commits
         run: jq '.[] | [{message, tree, author, committer, verification}]' < unverified-commits.json
