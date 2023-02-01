@@ -31,17 +31,17 @@ removed support, and changes to existing browser compatibility data entries.
 
 ## Using MDN Plus Updates
 
-To use Updates, navigate to the [MDN Plus Updates](/en-US/plus/updates) page.
-You'll be taken to the Updates page, where you can see a list of all the changes
-to browser support for features on MDN Web Docs listed by date.
+To use Updates, navigate to the [MDN Plus Updates](/en-US/plus/updates) page,
+where you can see a list of all changes in browser support for features on MDN
+Web Docs listed by date.
 
 ![Screenshot of default view](/assets/plus-docs/updates/updates.png)
 
-For each feature, updates show the release version and the date when browser
-support changed. Expanding the feature shows more detailed Browser Compatibility
-Tables to show support for the feature across all browsers and devices. The
-feature includes links to the MDN Web Docs pages that provide detailed
-documentation and guidance on how to use it.
+For each feature, updates display the release version and the date when browser
+support changed. Expanding the update shows Browser Compatibility Tables to
+indicate support across all browsers and devices. The feature update includes
+links to MDN Web Docs pages with clear documentation and guidance on how to use
+it.
 
 ![Expanded feature screenshot with the table, link to docs, watch and save](/assets/plus-docs/updates/updates_bcd.png)
 
@@ -63,10 +63,11 @@ functionality you're looking for.
 
 ## Curating your own collection of updates
 
-Aside from Browser Compatibility Tables and links to the MDN Web Docs pages for
-the feature, expanding a feature provides you with an additional option, The
-ability to **Save** the feature to your own curated collection of features you
-want to track.
+Aside from Browser Compatibility Tables and links to the MDN Web Docs pages,
+expanding feature details provides an additional option to **Save** the feature.
+Saving a feature will add it to a curated collection of features you want to
+track. You can create multiple collections to organize and group features that
+matter most for your applications and projects.
 
 Saving a feature to a collection allows you to add the feature to a collection
 of saved features. You can create multiple collections to organize and group
