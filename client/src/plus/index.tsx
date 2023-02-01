@@ -5,7 +5,6 @@ import { useIsServer } from "../hooks";
 import { Loading } from "../ui/atoms/loading";
 import { MainContentContainer } from "../ui/atoms/page-content";
 import { PageNotFound } from "../page-not-found";
-import Notifications from "./notifications";
 import { MDN_PLUS_TITLE } from "../constants";
 import { Settings } from "../settings";
 import PlusDocs from "./plus-docs";
@@ -91,18 +90,6 @@ export function Plus({ pageTitle, ...props }: { pageTitle?: string }) {
         element={
           <Layout parents={[...parents, { uri: pathname, title: "Updates" }]}>
             <Updates />
-          </Layout>
-        }
-      />
-      <Route
-        path="notifications/*"
-        element={
-          <Layout
-            parents={[...parents, { uri: pathname, title: "Notifications" }]}
-          >
-            <div className="notifications girdle">
-              <Notifications />
-            </div>
           </Layout>
         }
       />

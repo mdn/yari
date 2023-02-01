@@ -15,8 +15,8 @@ function PlusDocsNav() {
           title: "Overview",
         },
         {
-          slug: "plus/docs/features/notifications",
-          title: "Notifications",
+          slug: "plus/docs/features/updates",
+          title: "Updates",
         },
         {
           slug: "plus/docs/features/collections",
