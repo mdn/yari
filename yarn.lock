@@ -3507,10 +3507,10 @@ braces@^3.0.2, braces@~3.0.2:
   dependencies:
     fill-range "^7.0.1"
 
-browser-specs@^3.42.0:
-  version "3.42.0"
-  resolved "https://registry.yarnpkg.com/browser-specs/-/browser-specs-3.42.0.tgz#ebc8967d1f17ed183b4779add86ea386d1952ebe"
-  integrity sha512-jO0vJ8vM+tswhFSOjAmK1OLy5mVifS0a9DZIkrm3119mFgoSi83alScjr86LOY0sVWWIkynQICQ0TG+LBq+VIA==
+browser-specs@^3.43.0:
+  version "3.43.0"
+  resolved "https://registry.yarnpkg.com/browser-specs/-/browser-specs-3.43.0.tgz#3d09bc2c99bc4a70a7e758512ceb8bbd31b8817e"
+  integrity sha512-d0iojN/iKDsGMdP8iP9L+iNfqjm8kz+YiEYCg7fEGUunsEIC8W0orB09AKXAv1n9et/jM3qzXWLghPOCmrhkJQ==
 
 browserslist@^4.0.0, browserslist@^4.14.5, browserslist@^4.16.6, browserslist@^4.18.1, browserslist@^4.20.3, browserslist@^4.21.3, browserslist@^4.21.4, browserslist@^4.21.5:
   version "4.21.5"
