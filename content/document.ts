@@ -242,14 +242,14 @@ export const read = memoize((folderOrFilePath: string, ...roots: string[]) => {
     locale = extractLocale(folder);
   }
 
-  if (filePath.includes(" ")) {
+  if (folder.includes(" ")) {
     throw new Error(
       `Folder contains whitespace which is not allowed (${util.inspect(
         filePath
       )})`
     );
   }
-  if (filePath.includes("\u200b")) {
+  if (folder.includes("\u200b")) {
     throw new Error(
       `Folder contains zero width whitespace which is not allowed (${filePath})`
     );

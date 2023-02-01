@@ -1,7 +1,7 @@
 # Yari
 
 ![Testing](https://github.com/mdn/yari/workflows/Testing%20Yari/badge.svg)
-![Production Build](https://github.com/mdn/yari/workflows/Production%20Build/badge.svg)
+![Prod Build](https://github.com/mdn/yari/workflows/Prod%20Build/badge.svg)
 
 ## Quickstart
 
