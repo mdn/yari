@@ -8,8 +8,7 @@ title: FAQ
 
 MDN Plus is a premium subscription service launched in March 2022 by Mozilla.
 The service allows users to customize their MDN Web Docs experience through
-premium features such as
-[Updates](/en-US/plus/docs/features/updates),
+premium features such as [Updates](/en-US/plus/docs/features/updates),
 [Collections](/en-US/plus/docs/features/collections) and
 [MDN Offline](/en-US/plus/docs/features/offline).
 

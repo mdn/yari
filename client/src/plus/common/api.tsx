@@ -2,7 +2,6 @@ export const STRIPE_PLANS_PATH = "/api/v1/stripe/plans";
 export const SETTINGS_BASE_PATH = "/api/v1/plus/settings/";
 export const NEWSLETTER_BASE_PATH = "/api/v1/plus/newsletter/";
 
-
 export type PLUS_SETTINGS = {
   col_in_search: boolean;
 };
