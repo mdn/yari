@@ -141,6 +141,7 @@
     "@types/react-modal": "^3.13.1",
     "@typescript-eslint/eslint-plugin": "^5.50.0",
     "@typescript-eslint/parser": "^5.50.0",
+    "@zip.js/zip.js": "^2.6.62",
     "babel-jest": "^29.4.1",
     "babel-loader": "^9.1.2",
     "babel-plugin-named-asset-import": "^0.3.8",
