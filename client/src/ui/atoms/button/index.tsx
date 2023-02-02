@@ -53,7 +53,7 @@ export const Button = ({
   state,
   value,
   children,
-  ...dashedProps
+  ...passthroughAttrs
 }: ButtonProps) => {
   let buttonClasses = "button";
   [type, size, state].forEach((attr) => {
@@ -90,7 +90,7 @@ export const Button = ({
           onClick={onClickHandler}
           onFocus={onFocusHandler}
           title={title}
-          {...dashedProps}
+          {...passthroughAttrs}
         >
           <span className="button-wrap">{renderContent()}</span>
         </a>
@@ -105,7 +105,7 @@ export const Button = ({
         onClick={onClickHandler}
         onFocus={onFocusHandler}
         title={title}
-        {...dashedProps}
+        {...passthroughAttrs}
       >
         <span className="button-wrap">{renderContent()}</span>
       </InternalLink>
@@ -122,7 +122,7 @@ export const Button = ({
       onFocus={onFocusHandler}
       value={value}
       name={name}
-      {...dashedProps}
+      {...passthroughAttrs}
     >
       <span className="button-wrap">{renderContent()}</span>
     </button>
