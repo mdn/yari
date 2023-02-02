@@ -163,9 +163,9 @@ function CollectionCard({ collection }: { collection: Collection }) {
             <Button
               type="action"
               icon="ellipses"
-              ariaControls="collection-dropdown"
-              ariaHasPopup="menu"
-              ariaExpanded={showDropdown || undefined}
+              aria-controls="collection-dropdown"
+              aria-haspopup="menu"
+              aria-expanded={showDropdown || undefined}
               onClickHandler={() => {
                 setShowDropdown(!showDropdown);
               }}
