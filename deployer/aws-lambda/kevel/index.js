@@ -1,8 +1,15 @@
+/* global fetch */
 import { createHmac } from "node:crypto";
 
 import { Client } from "@adzerk/decision-sdk";
 
-import { KEVEL_SITE_ID, KEVEL_NETWORK_ID, SIGN_SECRET } from "./env.js";
+import {
+  KEVEL_SITE_ID,
+  KEVEL_NETWORK_ID,
+  SIGN_SECRET,
+  CARBON_ZONE_KEY,
+} from "./env.js";
+import cc2ip from "./cc2ip.js";
 
 const siteId = KEVEL_SITE_ID;
 const networkId = KEVEL_NETWORK_ID;
@@ -30,7 +37,12 @@ function decodeAndVerify(tuple = "") {
 export async function handler(event) {
   const request = event.Records[0].cf.request;
   // https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/using-cloudfront-headers.html
-  // const countryHeader = request.headers["cloudfront-viewer-country"];
+  const countryHeader = request.headers["cloudfront-viewer-country"];
+  const countryCode = countryHeader ? countryHeader[0].value : "US";
+  const anonymousIp = cc2ip[countryCode] ?? "127.0.0.1";
+
+  const userAgentHeader = request.headers["user-agent"];
+  const userAgent = userAgentHeader ? userAgentHeader[0].value : null;
 
   let payload = {};
 
@@ -49,15 +61,59 @@ export async function handler(event) {
       keywords,
     };
 
-    const decisionRes = await client.decisions.get(decisionReq);
-    const {
-      decisions: { div0: [{ contents, clickUrl, impressionUrl }] = {} } = {},
-    } = decisionRes;
-    payload = {
-      contents,
-      click: encodeAndSign(clickUrl),
-      impression: encodeAndSign(impressionUrl),
-    };
+    const decisionRes = await client.decisions.get(decisionReq, {
+      ip: anonymousIp,
+    });
+    const { decisions: { div0 } = {} } = decisionRes;
+    if (div0 === null) {
+      return {
+        status: 400,
+        statusDescription: "BAD_REQUEST",
+      };
+    }
+
+    const [{ contents, clickUrl, impressionUrl }] = div0;
+    if (contents?.[0]?.data?.customData?.fallback) {
+      // fall back to carbon
+      try {
+        const {
+          ads: [
+            { description = null, statlink, statimp, smallImage, ad_via_link },
+          ] = [],
+        } = await (
+          await fetch(
+            `https://srv.buysellads.com/ads/${CARBON_ZONE_KEY}.json?forwaredip=${encodeURIComponent(
+              anonymousIp
+            )}${userAgent ? `&useragent=${encodeURIComponent(userAgent)}` : ""}`
+          )
+        ).json();
+        const image = await (await fetch(smallImage)).arrayBuffer();
+        payload = {
+          contents,
+          click: encodeAndSign(clickUrl),
+          impression: encodeAndSign(impressionUrl),
+          fallback: {
+            click: encodeAndSign(statlink),
+            impression: encodeAndSign(statimp),
+            image: Buffer.from(image).toString("base64"),
+            copy: description,
+            by: ad_via_link,
+          },
+        };
+      } catch (e) {
+        console.log(e);
+        return {
+          status: 400,
+          statusDescription: "BAD_REQUEST",
+        };
+      }
+    } else {
+      payload = {
+        contents,
+        click: encodeAndSign(clickUrl),
+        impression: encodeAndSign(impressionUrl),
+      };
+    }
     const response = {
       status: 200,
       statusDescription: "OK",
@@ -89,7 +145,17 @@ export async function handler(event) {
     const params = new URLSearchParams(request.querystring);
     try {
       const click = decodeAndVerify(params.get("code"));
-      const { headers, status } = await fetch(click, { redirect: "manual" }); // eslint-disable-line no-undef
+      const fallback = decodeAndVerify(params.get("fallback"));
+      const res = await fetch(click, { redirect: "manual" });
+      let status = res.status;
+      let headers = res.headers;
+      if (fallback) {
+        const fallbackRes = await fetch(`https:${fallback}`, {
+          redirect: "manual",
+        });
+        status = fallbackRes.status;
+        headers = fallbackRes.headers;
+      }
       if (status === 301 || status === 302) {
         return {
           status: 302,
@@ -117,7 +183,9 @@ export async function handler(event) {
     const params = new URLSearchParams(request.querystring);
     try {
       const view = decodeAndVerify(params.get("code"));
-      await fetch(view, { redirect: "manual" }); // eslint-disable-line no-undef
+      const fallback = decodeAndVerify(params.get("fallback"));
+      fallback && (await fetch(`https:${fallback}`, { redirect: "manual" }));
+      await fetch(view, { redirect: "manual" });
       return {
         status: 200,
         statusDescription: "OK",

@@ -21,7 +21,11 @@ export function Place() {
           const [{ isIntersecting = false } = {}] = entries;
           if (isIntersecting && typeof navigator !== "undefined") {
             navigator?.sendBeacon(
-              `/pong/viewed?code=${encodeURIComponent(pong?.impression)}`
+              `/pong/viewed?code=${encodeURIComponent(pong?.impression)}${
+                pong?.fallback
+                  ? `&fallback=${encodeURIComponent(pong?.fallback?.click)}`
+                  : ""
+              }`
             );
             observer.current?.disconnect();
           }
@@ -41,27 +45,58 @@ export function Place() {
     <>
       {!isServer && pong && (
         <section ref={place} className="place">
-          <a
-            className="pong"
-            href={`/pong/click?code=${encodeURIComponent(pong?.click)}`}
-            target="_blank"
-            rel="noreferrer"
-          >
-            <div
-              dangerouslySetInnerHTML={{
-                __html: `${pong?.contents?.[0]?.body}`,
-              }}
-            />
-            {pong?.contents?.[0]?.data?.customData?.copy}
-          </a>
-          <p className="pong-note-container">
-            {user?.isSubscriber && (
-              <a className="no-pong" href="/en-US/plus/settings">
-                No Ads
+          {pong?.fallback ? (
+            <>
+              <a
+                className="pong"
+                href={`/pong/click?code=${encodeURIComponent(
+                  pong?.click
+                )}&fallback=${encodeURIComponent(pong?.fallback?.click)}`}
+                target="_blank"
+                rel="noreferrer"
+              >
+                <img
+                  src={`data:image/png;base64,${pong?.fallback?.image}`}
+                  alt="an ad"
+                ></img>
+                {pong?.fallback?.copy}
               </a>
-            )}
-            <span className="pong-note">Ads by Mozilla</span>
-          </p>
+              <p className="pong-note-container">
+                {user?.isSubscriber && (
+                  <a className="no-pong" href="/en-US/plus/settings">
+                    No Ads
+                  </a>
+                )}
+                <a href={pong?.fallback?.by} className="pong-note">
+                  Ads by Carbon
+                </a>
+              </p>
+            </>
+          ) : (
+            <>
+              <a
+                className="pong"
+                href={`/pong/click?code=${encodeURIComponent(pong?.click)}`}
+                target="_blank"
+                rel="noreferrer"
+              >
+                <div
+                  dangerouslySetInnerHTML={{
+                    __html: `${pong?.contents?.[0]?.body}`,
+                  }}
+                />
+                {pong?.contents?.[0]?.data?.customData?.copy}
+              </a>
+              <p className="pong-note-container">
+                {user?.isSubscriber && (
+                  <a className="no-pong" href="/en-US/plus/settings">
+                    No Ads
+                  </a>
+                )}
+                <span className="pong-note">Ads by Mozilla</span>
+              </p>
+            </>
+          )}
         </section>
       )}
     </>
