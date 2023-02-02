@@ -80,7 +80,7 @@ describe("checking files", () => {
     // Sanity check the test itself
     console.assert(fs.existsSync(filePath), `${filePath} does not exist`);
     await expect(runChecker([filePath], {})).rejects.toThrow(
-      "Error: Ivalid path: samplefiles-paren(theses)/index.md. File path must not include characters: '(', ')'"
+      "Error: Invalid path: samplefiles-paren(theses)/index.md. File path must not include characters: '(', ')'"
     );
   });
 });
