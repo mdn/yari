@@ -27,6 +27,7 @@ const loadAllLanguages = lazy(() => {
     "diff",
     "django",
     "glsl",
+    "handlebars",
     "http",
     "ignore",
     "ini",
