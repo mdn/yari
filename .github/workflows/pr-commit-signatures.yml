@@ -9,7 +9,9 @@ jobs:
 
     steps:
       - name: Fetch commits
-        run: curl -s "${{ github.event.pull_request._links.commits.href }}" | tee commits.json
+        run: gh api "${{ github.event.pull_request._links.commits.href }}" | tee commits.json
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Filter unverified commits
         run: jq '[.[].commit | select(.verification.verified == false)]' < commits.json | tee unverified-commits.json
