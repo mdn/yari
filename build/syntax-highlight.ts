@@ -92,7 +92,10 @@ export function syntaxHighlight($, doc) {
     if (!match) {
       return;
     }
-    const name = match[1].replace("-nolint", "");
+    let name = match[1].replace("-nolint", "");
+    if (ALIASES.has(name)) {
+      name = ALIASES.get(name);
+    }
     if (IGNORE.has(name)) {
       // Seems to exist a couple of these in our docs. Just bail.
       return;
