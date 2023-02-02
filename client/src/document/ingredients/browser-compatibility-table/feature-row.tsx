@@ -240,7 +240,7 @@ const CellText = React.memo(
               : ""}
           </span>
         </div>
-        <CellIcons support={support} timeline={timeline} />
+        <CellIcons support={support} />
       </div>
     );
   }
@@ -257,13 +257,7 @@ function Icon({ name }: { name: string }) {
   );
 }
 
-function CellIcons({
-  support,
-  timeline,
-}: {
-  support: BCD.SupportStatement | undefined;
-  timeline?: boolean;
-}) {
+function CellIcons({ support }: { support: BCD.SupportStatement | undefined }) {
   const supportItem = getCurrentSupport(support);
   if (!supportItem) {
     return null;
@@ -271,9 +265,7 @@ function CellIcons({
 
   const icons = [
     supportItem.prefix && <Icon key="prefix" name="prefix" />,
-    !timeline && hasNoteworthyNotes(supportItem) && (
-      <Icon key="footnote" name="footnote" />
-    ),
+    hasNoteworthyNotes(supportItem) && <Icon key="footnote" name="footnote" />,
     supportItem.alternative_name && <Icon key="altname" name="altname" />,
     supportItem.flags && <Icon key="disabled" name="disabled" />,
     hasMore(support) && <Icon key="more" name="more" />,
