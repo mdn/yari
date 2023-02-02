@@ -313,7 +313,7 @@ function validatePath(filePath: string): string[] {
 
   // Must have supported extension
   const supportedFilesRegExp =
-    /\.(md|DS_Store|json|txt|yml|jpg|jpeg|png|gif|svg|mp3)$/i;
+    /\.(md|DS_Store|json|txt|yml|jpg|jpeg|png|gif|svg)$/i;
   if (!supportedFilesRegExp.test(filePath)) {
     reasons.push(
       `Error: Invalid file: ${shortPath}. The file extension is not supported.`
