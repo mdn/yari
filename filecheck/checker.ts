@@ -63,23 +63,10 @@ function getRelativePath(filePath: string): string {
   return path.relative(process.cwd(), filePath);
 }
 
-export async function checkFile(
+export async function checkBinaryFile(
   filePath: string,
   options: CheckerOptions = {}
 ) {
-  // Check that the filename is always lowercase.
-  const expectedPath = path.join(
-    path.dirname(filePath),
-    path.basename(filePath).toLowerCase()
-  );
-  if (filePath !== expectedPath) {
-    throw new Error(
-      `Base name must be lowercase (not ${path.basename(
-        filePath
-      )}). Please rename the file and update its usages.`
-    );
-  }
-
   // Check that the file size is >0 and <MAX_FILE_SIZE.
   const stat = await fs.stat(filePath);
   if (!stat.size) {
@@ -288,47 +275,78 @@ async function checkCompression(filePath: string, options: CheckerOptions) {
   }
 }
 
-function canCheckFile(filePath: string) {
-  const filePathParts = filePath.split(path.sep);
-
+function isRelevantFile(filePath: string) {
   return (
-    filePathParts.includes("files") &&
-    !filePathParts.includes("node_modules") &&
-    !/\.(DS_Store|html|json|md|txt|yml)$/i.test(filePath)
+    filePath.includes(`files${path.sep}en-us`) ||
+    filePath.includes(`files${path.sep}jsondata`)
   );
+}
+
+function isBinaryFile(filePath: string) {
+  return !/\.(DS_Store|html|json|md|txt|yml)$/i.test(filePath);
 }
 
 async function resolveDirectory(file: string): Promise<string[]> {
   const stats = await fs.lstat(file);
   if (stats.isDirectory()) {
-    const api = new fdir().withErrors().withFullPaths().crawl(file);
+    const api = new fdir()
+      .withErrors()
+      .withFullPaths()
+      .filter((filePath) => isRelevantFile(filePath))
+      .crawl(file);
     return api.withPromise() as Promise<PathsOutput>;
-  } else if (stats.isFile()) {
+  } else if (stats.isFile() && isRelevantFile(file)) {
     return [file];
   } else {
     return [];
   }
 }
 
-function validatePath(filePath: string) {
-  // All characters must be lower case.
-  const expectedPath = path.join(
+function validatePath(filePath: string): string[] {
+  const reasons = [];
+
+  const shortPath = path.join(
     path.basename(path.dirname(filePath)),
     path.basename(filePath)
   );
-  if (expectedPath !== expectedPath.toLowerCase()) {
-    throw new Error(
-      `Invalid path: ${expectedPath}. All characters must be lowercase.`
+
+  // Must have supported extension
+  const supportedFilesRegExp =
+    /\.(md|DS_Store|json|txt|yml|jpg|jpeg|png|gif|svg|mp3)$/i;
+  if (!supportedFilesRegExp.test(filePath)) {
+    reasons.push(
+      `Error: Invalid file: ${shortPath}. The file extension is not supported.`
     );
   }
 
-  // file path should't contain banned characters: `(`, `)`
-  const bannedCharsRegExp = /[()]/;
-  if (bannedCharsRegExp.test(filePath)) {
-    throw new Error(
-      `Invalid path: ${expectedPath}. File path must not include characters: '(', ')'`
+  // All characters must be lower case.
+  if (shortPath !== shortPath.toLowerCase() && !filePath.endsWith(".json")) {
+    reasons.push(
+      `Error: Invalid path: ${shortPath}. All characters must be lowercase.`
     );
   }
+
+  // Whitespaces are not allowed.
+  if (filePath.includes(" ")) {
+    reasons.push(
+      `Error: Invalid path: ${shortPath}. File path must not include whitespaces.`
+    );
+  }
+  if (filePath.includes("\u200b")) {
+    reasons.push(
+      `Error: Invalid path: ${shortPath}. File path must not include zero width whitespaces.`
+    );
+  }
+
+  // File path should't contain banned characters: `(`, `)`
+  const bannedCharsRegExp = /[()]/;
+  if (bannedCharsRegExp.test(filePath)) {
+    reasons.push(
+      `Error: Invalid path: ${shortPath}. File path must not include characters: '(', ')'`
+    );
+  }
+
+  return reasons;
 }
 
 export async function runChecker(
@@ -340,24 +358,18 @@ export async function runChecker(
     await Promise.all(filesAndDirectories.map(resolveDirectory))
   ).flat();
 
-  // validate file paths
-  files = files.filter((fp) => !fp.includes(".json"));
-  for (const filePath of files) {
-    try {
-      validatePath(filePath);
-    } catch (error) {
-      errors.push(error);
-    }
-  }
+  // Validate file paths.
+  files.forEach((f) => errors.push(...validatePath(f)));
 
-  files = files.filter((f) => canCheckFile(f));
+  // Check binary files.
+  files = files.filter((f) => isBinaryFile(f));
 
   const progressBar = new cliProgress.SingleBar({ etaBuffer: 100 });
   progressBar.start(files.length, 0);
 
   await eachLimit(files, os.cpus().length, async (file) => {
     try {
-      await checkFile(file, options);
+      await checkBinaryFile(file, options);
     } catch (error) {
       errors.push(error);
     } finally {
