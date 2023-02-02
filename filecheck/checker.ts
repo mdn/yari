@@ -311,7 +311,7 @@ async function resolveDirectory(file: string): Promise<string[]> {
 }
 
 function validatePath(filePath: string) {
-  // all characters must be lower case
+  // All characters must be lower case.
   const expectedPath = path.join(
     path.basename(path.dirname(filePath)),
     path.basename(filePath)
@@ -323,10 +323,10 @@ function validatePath(filePath: string) {
   }
 
   // file path should't contain banned characters: `(`, `)`
-  const bannedCharsRegExp = /\(|\)/;
+  const bannedCharsRegExp = /[()]/;
   if (bannedCharsRegExp.test(filePath)) {
     throw new Error(
-      `Ivalid path: ${expectedPath}. File path must not include characters: '(', ')'`
+      `Invalid path: ${expectedPath}. File path must not include characters: '(', ')'`
     );
   }
 }
@@ -349,12 +349,9 @@ export async function runChecker(
       errors.push(error);
     }
   }
-  if (errors.length) {
-    const msg = errors.map((error) => `${error}`).join("\n");
-    throw new Error(msg);
-  }
 
   files = files.filter((f) => canCheckFile(f));
+
   const progressBar = new cliProgress.SingleBar({ etaBuffer: 100 });
   progressBar.start(files.length, 0);
 
