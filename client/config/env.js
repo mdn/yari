@@ -12,16 +12,20 @@ if (!NODE_ENV) {
   );
 }
 
+const ENV_FILE = process.env.ENV_FILE;
+
 // https://github.com/bkeepers/dotenv#what-other-env-files-can-i-use
-const dotenvFiles = [
-  `${paths.dotenv}.${NODE_ENV}.local`,
-  // Don't include `.env.local` for `test` environment
-  // since normally you expect tests to produce the same
-  // results for everyone
-  NODE_ENV !== "test" && `${paths.dotenv}.local`,
-  `${paths.dotenv}.${NODE_ENV}`,
-  paths.dotenv,
-].filter(Boolean);
+const dotenvFiles = ENV_FILE
+  ? [paths.dotenv.replace(".env", ENV_FILE)]
+  : [
+      `${paths.dotenv}.${NODE_ENV}.local`,
+      // Don't include `.env.local` for `test` environment
+      // since normally you expect tests to produce the same
+      // results for everyone
+      NODE_ENV !== "test" && `${paths.dotenv}.local`,
+      `${paths.dotenv}.${NODE_ENV}`,
+      paths.dotenv,
+    ].filter(Boolean);
 
 // Load environment variables from .env* files. Suppress warnings using silent
 // if this file is missing. dotenv will never modify any environment variables
