@@ -31,7 +31,18 @@
     outline: var(--border-primary);
   }
 
+  &:not([value=""]):not(:focus) {
+    ~ .button.clear-search-button {
+      display: block;
+      right: 2rem;
+    }
+  }
+
   &::placeholder {
     color: var(--text-inactive);
+  }
+
+  .button.clear-search-button {
+    display: none;
   }
 }

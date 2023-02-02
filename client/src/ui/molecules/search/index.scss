@@ -51,13 +51,6 @@
     &:focus,
     &:valid {
       width: inherit;
-
-      /* When the search input has focus or has content,
-          show the clear search button */
-      ~ .button.clear-search-button {
-        display: block;
-        right: 2.8rem;
-      }
     }
 
     &:invalid,

@@ -11,6 +11,7 @@ type SearchProps = {
   onChangeHandler?: (event: React.ChangeEvent<HTMLInputElement>) => void;
   onClickHandler?: (event: React.MouseEvent<Element>) => void;
   onFocusHandler?: (event: React.FocusEvent<Element>) => void;
+  onResetHandler?: () => void;
 };
 
 export const Search = ({
@@ -20,6 +21,7 @@ export const Search = ({
   onChangeHandler,
   onClickHandler,
   onFocusHandler,
+  onResetHandler,
   placeholder,
   value,
 }: SearchProps) => {
@@ -27,7 +29,7 @@ export const Search = ({
     <div className="search-form search-widget">
       <input
         type="search"
-        className="search-input-field"
+        className={`search-input-field ${value ? "has-value" : ""}`}
         name={name}
         placeholder={placeholder}
         value={value}
@@ -37,6 +39,20 @@ export const Search = ({
         onChange={onChangeHandler}
         onClick={onClickHandler}
       />
+
+      {onResetHandler && (
+        <button
+          type="button"
+          className="button action has-icon clear-search-button"
+          onClickCapture={onResetHandler}
+        >
+          <span className="button-wrap">
+            <span className="icon icon-cancel undefined"></span>
+            <span className="visually-hidden">Clear search input</span>
+          </span>
+        </button>
+      )}
+
       <button
         type="submit"
         disabled={isDisabled}

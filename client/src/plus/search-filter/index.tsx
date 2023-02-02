@@ -249,6 +249,10 @@ export default function SearchFilter({
           setSelectedTerms(camelUnwrap(terms))
         }
         onChangeHandler={(e) => setTerms(e.target.value)}
+        onResetHandler={() => {
+          setTerms("");
+          setSelectedTerms("");
+        }}
       />
 
       {sorts.length ? (
