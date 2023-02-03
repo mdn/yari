@@ -1,4 +1,3 @@
-import InternalLink from "../../atoms/internal-link";
 import { MenuEntry, Submenu } from "../submenu";
 import "./index.scss";
 
