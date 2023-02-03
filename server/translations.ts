@@ -32,7 +32,7 @@ function getAllPopularityValues() {
 function replaceSepPerOS(slug: string) {
   if (path.sep !== "/") {
     // In other words, we're on Windows
-    return slug.replaceAll("/", "\\\\");
+    return slug.replace(/\//g, "\\\\");
   } else {
     return slug;
   }
