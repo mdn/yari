@@ -37,7 +37,9 @@ export default function OfferOverviewFeatures() {
             the tech category you are interested in whether that is JavaScript,
             CSS, etc.
           </p>
-          <Button href="/en-US/plus/docs/features/updates">Learn more →</Button>
+          <Button href="/en-US/plus/docs/features/updates" target="_self">
+            Learn more →
+          </Button>
         </section>
       </OfferOverviewFeature>
       <OfferOverviewFeature
@@ -56,7 +58,7 @@ export default function OfferOverviewFeatures() {
             your inner curator and collect your favorite articles in one place
             for convenient consultation.
           </p>
-          <Button href="/en-US/plus/docs/features/collections">
+          <Button href="/en-US/plus/docs/features/collections" target="_self">
             Learn more →
           </Button>
         </section>
@@ -70,7 +72,9 @@ export default function OfferOverviewFeatures() {
             inaccessible pages or cluttered tabs. With MDN Plus, have the fully
             navigable resources of MDN at your disposal even when offline.
           </p>
-          <Button href="/en-US/plus/docs/features/offline">Learn more →</Button>
+          <Button href="/en-US/plus/docs/features/offline" target="_self">
+            Learn more →
+          </Button>
         </section>
       </OfferOverviewFeature>
     </section>
