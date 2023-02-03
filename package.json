@@ -95,7 +95,7 @@
     "lru-cache": "^7.14.1",
     "md5-file": "^5.0.0",
     "mdast-util-from-markdown": "^0.8.5",
-    "mdast-util-phrasing": "^2.0.0",
+    "mdast-util-phrasing": "^3.0.1",
     "mdn-data": "^2.0.31",
     "open": "^8.4.0",
     "open-editor": "^3.0.0",
