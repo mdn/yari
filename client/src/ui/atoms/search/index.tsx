@@ -51,7 +51,7 @@ export const Search = ({
           onClick={onResetHandler}
         >
           <span className="button-wrap">
-            <span className="icon icon-cancel undefined"></span>
+            <span className="icon icon-cancel"></span>
             <span className="visually-hidden">Clear search input</span>
           </span>
         </button>
@@ -63,7 +63,7 @@ export const Search = ({
         className="button action has-icon search-button search-filter-button"
       >
         <span className="button-wrap">
-          <span className="icon icon-search undefined"></span>
+          <span className="icon icon-search"></span>
           <span className="visually-hidden">Search</span>
         </span>
       </button>
