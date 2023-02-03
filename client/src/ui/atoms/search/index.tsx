@@ -29,7 +29,7 @@ export const Search = ({
     <div className="search-form search-widget">
       <input
         type="search"
-        className={`search-input-field ${value ? "has-value" : ""}`}
+        className="search-input-field"
         name={name}
         placeholder={placeholder}
         value={value}
