@@ -29,7 +29,7 @@ function getAllPopularityValues() {
   return allPopularityValues;
 }
 
-function replaceSepPerOS(slug) {
+function replaceSepPerOS(slug: string) {
   if (path.sep !== "/") {
     // In other words, we're on Windows
     return slug.replaceAll("/", "\\\\");
@@ -404,7 +404,13 @@ function gatherL10NstatsSection({
 
 const _detailsSectionCache = new Map();
 
-function buildL10nDashboard({ locale, section }) {
+function buildL10nDashboard({
+  locale,
+  section,
+}: {
+  locale: string;
+  section: string;
+}) {
   if (locale === DEFAULT_LOCALE) {
     throw new Error("Can't run this for the default locale");
   }
@@ -464,7 +470,7 @@ function buildL10nDashboard({ locale, section }) {
     upToDate: l10nStatsSection.counts.upToDate,
   };
 
-  function filterChildrenDocs(url, section) {
+  function filterChildrenDocs(url: string, section: string) {
     return (
       (section.length === 1 && url.split("/").length > 4) ||
       url.split("/").length > section.split("/").length + 3
@@ -621,8 +627,8 @@ router.get("/dashboard", async (req, res) => {
   if (!CONTENT_TRANSLATED_ROOT) {
     return res.status(500).send("CONTENT_TRANSLATED_ROOT not set");
   }
-  const locale = (req.query.locale as string)?.toLowerCase();
-  const section = req.query.section || "/";
+  const locale = String(req.query.locale || "").toLowerCase();
+  const section = String(req.query.section || "/");
   if (!locale) {
     return res.status(400).send("'locale' is always required");
   }
