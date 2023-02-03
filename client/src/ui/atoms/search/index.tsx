@@ -44,7 +44,7 @@ export const Search = ({
         <button
           type="button"
           className="button action has-icon clear-search-button"
-          onClickCapture={onResetHandler}
+          onClick={onResetHandler}
         >
           <span className="button-wrap">
             <span className="icon icon-cancel undefined"></span>
