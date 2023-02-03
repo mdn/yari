@@ -9,7 +9,7 @@ import { TOC } from "../toc";
 
 export function SidebarContainer({
   doc,
-  label = undefined,
+  label,
   children,
 }: {
   doc: any;
