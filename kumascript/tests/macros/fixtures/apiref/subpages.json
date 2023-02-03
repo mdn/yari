@@ -80,7 +80,7 @@
   },
 
   {
-    "tags": ["Deprecated", "Non-standard", "Experimental"],
+    "tags": ["Deprecated", "Non-standard", "Obsolete", "Experimental"],
     "pageType": "web-api-static-method",
     "status": [],
     "locale": "en-US",
@@ -140,7 +140,7 @@
   },
 
   {
-    "tags": ["Deprecated", "Non-standard", "Experimental"],
+    "tags": ["Deprecated", "Non-standard", "Obsolete", "Experimental"],
     "pageType": "web-api-instance-method",
     "status": [],
     "locale": "en-US",
