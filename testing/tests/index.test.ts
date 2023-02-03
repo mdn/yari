@@ -120,7 +120,7 @@ test("content built foo page", () => {
   expect($('meta[name="robots"]').attr("content")).toBe("index, follow");
 
   // The HTML should contain the Google Analytics snippet.
-  // The ID should match what's set in `testing/.env`.
+  // The ID should match what's set in `.env.testing`.
   expect($('script[src="/static/js/ga.js"]')).toHaveLength(1);
 
   // Because this en-US page has a French translation
