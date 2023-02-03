@@ -40,7 +40,9 @@ self.addEventListener("install", (e) => {
     (async () => {
       const cache = await openCache();
       const { files = {} }: { files: object } =
-        (await (await fetch("/asset-manifest.json")).json()) || {};
+        (await (
+          await fetch("/asset-manifest.json", { cache: "no-cache" })
+        ).json()) || {};
       const assets = [...Object.values(files)].filter(
         (asset) => !(asset as string).endsWith(".map")
       );
@@ -56,10 +58,11 @@ self.addEventListener("install", (e) => {
 });
 
 self.addEventListener("fetch", async (e) => {
+  const url = new URL(e.request.url);
   if (
     SW_TYPE === SwType.PreferOnline &&
-    !e.request.url.includes("/api/v1/") &&
-    !e.request.url.includes("/users/fxa/")
+    !url.pathname.startsWith("/api/") &&
+    !url.pathname.startsWith("/users/fxa/")
   ) {
     e.respondWith(
       (async () => {

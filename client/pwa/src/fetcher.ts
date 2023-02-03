@@ -62,6 +62,8 @@ export async function respond(e): Promise<Response> {
       } else {
         return response;
       }
+    } else if (url.pathname.startsWith("/bcd/")) {
+      url.pathname = url.pathname.replace(/api\/v[0-9]\/[^/]+\//, "");
     } else if (url.pathname.startsWith("/examples/") && url.search) {
       url.search = "";
     } else if (!url.pathname.split("/").pop().includes(".")) {

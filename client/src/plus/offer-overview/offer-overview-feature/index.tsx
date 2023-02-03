@@ -3,7 +3,7 @@ import "./index.scss";
 
 function OfferOverviewFeature({ id, img, imgAlt, children }) {
   return (
-    <div className={`offer-overview-feature ${id}`}>
+    <div className={`offer-overview-feature`}>
       <div className="container">
         <div className="wrapper" id={id}>
           <img
@@ -23,31 +23,26 @@ function OfferOverviewFeature({ id, img, imgAlt, children }) {
 export default function OfferOverviewFeatures() {
   return (
     <section id="features">
-      <OfferOverviewFeature
-        id="notifications"
-        img="/assets/notifications_light.png"
-        imgAlt=""
-      >
-        <section aria-labelledby="notifications-section-title">
-          <h2 id="notifications-section-title">Notifications</h2>
+      <OfferOverviewFeature id="updates" img="/assets/updates.png" imgAlt="">
+        <section aria-labelledby="updates-section-title">
+          <h2 id="updates-section-title">Updates</h2>
           <h3>
-            Development in real time:
+            Compatibility changes at a glance.
             <br />
-            Get custom alerts
+            Filter and sort updates that matter most to build your project
           </h3>
           <p>
-            The Web doesn't have a changelog, but MDN can help. Follow pages and
-            get customizable notifications when documentation changes, CSS
-            features launch, and APIs ship.
+            The Web doesn't have a changelog, but MDN can help. You can
+            personalize and filter compatibility changes based on browsers or
+            the tech category you are interested in whether that is JavaScript,
+            CSS, etc.
           </p>
-          <Button href="/en-US/plus/docs/features/notifications">
-            Learn more →
-          </Button>
+          <Button href="/en-US/plus/docs/features/updates">Learn more →</Button>
         </section>
       </OfferOverviewFeature>
       <OfferOverviewFeature
         id="collections"
-        img="/assets/collections_light.png"
+        img="/assets/collections.png"
         imgAlt=""
       >
         <section aria-labelledby="collections-section-title">
@@ -66,11 +61,7 @@ export default function OfferOverviewFeatures() {
           </Button>
         </section>
       </OfferOverviewFeature>
-      <OfferOverviewFeature
-        id="offline"
-        img="/assets/offline_settings_light.png"
-        imgAlt=""
-      >
+      <OfferOverviewFeature id="offline" img="/assets/offline.png" imgAlt="">
         <section aria-labelledby="offline-section-title">
           <h2 id="offline-section-title">MDN Offline</h2>
           <h3>MDN's entire library at your fingertips: offline</h3>

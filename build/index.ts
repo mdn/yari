@@ -20,7 +20,6 @@ import { extractSummary } from "./extract-summary";
 export { default as SearchIndex } from "./search-index";
 import { addBreadcrumbData } from "./document-utils";
 import { fixFixableFlaws, injectFlaws, injectSectionFlaws } from "./flaws";
-import { normalizeBCDURLs, extractBCDData, BCDData } from "./bcd-urls";
 import { checkImageReferences, checkImageWidths } from "./check-images";
 import { getPageTitle } from "./page-title";
 import { syntaxHighlight } from "./syntax-highlight";
@@ -277,7 +276,6 @@ export interface BuiltDocument {
   doc: Doc;
   liveSamples: any;
   fileAttachments: any;
-  bcdData: BCDData[];
   source?: {
     github_url: string;
   };
@@ -594,12 +592,6 @@ export async function buildDocument(
   // section. It's always a plain text string.
   doc.summary = extractSummary(doc.body);
 
-  // Creates new mdn_url's for the browser-compatibility-table to link to
-  // pages within this project rather than use the absolute URLs
-  normalizeBCDURLs(doc as Doc, options);
-
-  const bcdData = extractBCDData(doc as Doc);
-
   // If the document has a `.popularity` make sure don't bother with too
   // many significant figures on it.
   doc.popularity = metadata.popularity
@@ -644,7 +636,7 @@ export async function buildDocument(
     document.metadata.slug.startsWith("orphaned/") ||
     document.metadata.slug.startsWith("conflicting/");
 
-  return { doc: doc as Doc, liveSamples, fileAttachments, bcdData };
+  return { doc: doc as Doc, liveSamples, fileAttachments };
 }
 
 interface BuiltLiveSamplePage {

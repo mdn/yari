@@ -6,6 +6,7 @@ type SearchProps = {
   name: string;
   placeholder?: string;
   value?: string;
+  isDisabled?: boolean;
   onBlurHandler?: (event: React.FocusEvent<HTMLInputElement>) => void;
   onChangeHandler?: (event: React.ChangeEvent<HTMLInputElement>) => void;
   onClickHandler?: (event: React.MouseEvent<Element>) => void;
@@ -14,6 +15,7 @@ type SearchProps = {
 
 export const Search = ({
   name,
+  isDisabled = false,
   onBlurHandler,
   onChangeHandler,
   onClickHandler,
@@ -29,6 +31,7 @@ export const Search = ({
         name={name}
         placeholder={placeholder}
         value={value}
+        disabled={isDisabled}
         onBlur={onBlurHandler}
         onFocus={onFocusHandler}
         onChange={onChangeHandler}
@@ -36,6 +39,7 @@ export const Search = ({
       />
       <button
         type="submit"
+        disabled={isDisabled}
         className="button action has-icon search-button search-filter-button"
       >
         <span className="button-wrap">

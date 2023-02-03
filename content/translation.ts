@@ -58,13 +58,10 @@ const IMPORTANT_MACROS = new Map(
     "MDNSidebar",
     "SVGRef",
     "SeeCompatTable",
-    "ServiceWorkerSidebar",
     "Specifications",
-    "ToolsSidebar",
     "WebAssemblySidebar",
     "WebExtAPISidebar",
     "WebGLSidebar",
-    "WebRTCSidebar",
     "languages",
     "page",
   ].map((name) => [name.toLowerCase(), name])
