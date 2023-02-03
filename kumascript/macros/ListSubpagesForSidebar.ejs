@@ -85,7 +85,7 @@ async function createLink(aPage) {
       linkContent = `<code>${linkContent}</code>`;
     }
     
-    const pageBadges = await page.badges(aPage).then(badges => badges.join(""));
+    const pageBadges = (await page.badges(aPage)).join("");
 
     const result = `<li><a href="${url}">${linkContent}</a>${pageBadges}</li>`;
     return result;

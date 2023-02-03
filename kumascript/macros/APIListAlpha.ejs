@@ -78,12 +78,12 @@ for (var i = 0; i < numLetters; i++) {
                 continue;
             }
 
-            let pageBadges = await page.badges(aPage).then(b => " " + b.join(" "));
+            let pageBadges = (await page.badges(aPage)).join(" ");
 
             // Wrap the badges in another span
 
             if (pageBadges.length)
-                pageBadges = `<span class="indexListBadges">${pageBadges}</span>`;
+                pageBadges = `<span class="indexListBadges"> ${pageBadges}</span>`;
 
             if (title[0].toUpperCase() == curLetter) {
                 if (!containsTag(tags, "junk")) {

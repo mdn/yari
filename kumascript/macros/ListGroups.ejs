@@ -50,10 +50,10 @@ for(let name of groupNames) {
   let groupUrl = APIHref + "/" + spacesToUnderscores(htmlEscape(overviewName));
   const aPage = await wiki.getPage(groupUrl);
 
-  let pageBadges = await page.badges(aPage).then(b => " " + b.join(" "));
+  let pageBadges = (await page.badges(aPage)).join(" ");
 
   if (pageBadges.length) {
-    pageBadges = `<span class='indexListBadges'>${pageBadges}</span>`;
+    pageBadges = `<span class='indexListBadges'> ${pageBadges}</span>`;
   }
 
   // Finish constructing the HTML and then append it to the text for the corresponding
