@@ -23,7 +23,7 @@ const mdn = {
 
   /**
    * Given a set of strings like this:
-   *     { "en-US": "Foo", "de": "Bar", "es": "Baz" }
+   *     { "en-US": "Foo", "es": "Baz", "fr": "Bar" }
    * Return the one which matches the current locale.
    */
   localString(this: KumaThis, strings) {
@@ -34,7 +34,7 @@ const mdn = {
 
   /**
    * Given a set of string maps like this:
-   *     { "en-US": {"name": "Foo"}, "de": {"name": "Bar"} }
+   *     { "en-US": {"name": "Foo"}, "fr": {"name": "Bar"} }
    * Return a map which matches the current locale, falling back to en-US
    * properties when the localized map contains partial properties.
    */
@@ -59,15 +59,15 @@ const mdn = {
   /**
    * Given a set of strings like this:
    *   {
-   *    "hello": { "en-US": "Hello!", "de": "Hallo!" },
-   *    "bye": { "en-US": "Goodbye!", "de": "Auf Wiedersehen!" }
+   *    "hello": { "en-US": "Hello!", "fr": "Bonjour !" },
+   *    "bye": { "en-US": "Goodbye!", "fr": "Au revoir !" }
    *   }
    * Returns the one, which matches the current locale.
    *
    * Example:
-   *   getLocalString({"hello": {"en-US": "Hello!", "de": "Hallo!"}},
+   *   getLocalString({"hello": {"en-US": "Hello!", "fr": "Bonjour !"}},
    *       "hello");
-   *   => "Hallo!" (in case the locale is 'de')
+   *   => "Bonjour!" (in case the locale is 'fr')
    */
   getLocalString(this: KumaThis, strings, key) {
     if (!Object.prototype.hasOwnProperty.call(strings, key)) {
