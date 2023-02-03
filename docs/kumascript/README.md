@@ -375,34 +375,6 @@ contents to be regenerated, but using cached templates and included content. A
 'Shift-Reload' is necessary to invalidate caches beyond just the content of the
 page itself.
 
-### Broken wiki.languages() macros
-
-On some pages, you'll see a scripting error like this:
-
-```plain
-Syntax error at line 436, column 461: Expected valid JSON object as the
-parameter of the preceding macro but…
-```
-
-If you edit the page, you'll probably see a macro like this at the bottom of the
-page:
-
-```plain
-{{ wiki.languages({ "zh-tw": "zh_tw/Core_JavaScript_1.5_教學/JavaScript_概要", … }) }}
-```
-
-To fix the problem, just delete the macro. Or, replace the curly braces on
-either side with HTML comments `<!-- -->` to preserve the information, like so:
-
-```html
-<!-- wiki.languages({ "zh-tw": "zh_tw/Core_JavaScript_1.5_教學/JavaScript_概要", ... }) -->
-```
-
-Because Kuma supports localization differently, these macros aren't actually
-needed any more. But, they've been left intact in case we need to revisit the
-relationships between localized pages. Unfortunately, it seems like migration
-has failed to convert some of them properly.
-
 ### Finding the Current Page Language
 
 In KumaScript, the locale of the current document is exposed as an environment
@@ -477,10 +449,6 @@ const text = mdn.localStringMap({
     'Complete_beginners_start_here': 'Complete beginners start here!',
     'Getting_started_with_the_web': 'Getting started with the web',
   },
-  'de': {
-    'Complete_beginners_start_here': 'Anfänger starten hier!',
-    'Getting_started_with_the_web': 'Lernen Sie das Internet kennen',
-  },
   'fr': {
     'Complete_beginners_start_here': 'Bienvenue aux débutants !',
     'Getting_started_with_the_web': 'Commencer avec le Web',
@@ -498,8 +466,8 @@ appropriate locale. If a string is missing for a locale, it will fall back to
 <%
 const s_title = mdn.localString({
   "en-US": "Firefox for Developers",
-  "de": "Firefox für Entwickler",
-  "es": "Firefox para desarrolladores"
+  "es": "Firefox para desarrolladores",
+  "fr": "Firefox pour les développeurs",
 });
 
 const body = mdn.localString({
@@ -507,22 +475,22 @@ const body = mdn.localString({
     "hello": "Hello!",
     "goodbye": "Goodbye!",
   },
-  "de": {
-    "hello": "Hallo!",
-    "goodbye": "Auf Wiedersehen!",
-  },
   "es": {
     "hello": "¡Hola!"
+  },
+  "fr": {
+    "hello": "Bonjour !",
+    "goodbye": "Au revoir !",
   }
 });
 %>
 <%= s_title %> / <%= body['hello'] %> / <%= body['goodbye'] %>
 ```
 
-Will render, for `de`:
+Will render, for `fr`:
 
 ```plain
-Firefox für Entwickler / Hallo! / Auf Wiedersehen!
+Firefox pour les développeurs / Bonjour ! / Au revoir !
 ```
 
 ...and for `es`:

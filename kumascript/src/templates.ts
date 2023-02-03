@@ -100,21 +100,6 @@ export default class Templates {
       // creates a more informative MacroNotFoundError
       throw new ReferenceError(`Unknown macro ${name}`);
     }
-    if (process.env.BUILD_MACROS_USED_LOGFILE) {
-      try {
-        fs.appendFileSync(
-          process.env.BUILD_MACROS_USED_LOGFILE,
-          `${name}|${args.arguments}\n`,
-          "utf-8"
-        );
-      } catch (err) {
-        console.warn(
-          "Unable to write BUILD_MACROS_USED_LOGFILE " +
-            `(${process.env.BUILD_MACROS_USED_LOGFILE})`,
-          err
-        );
-      }
-    }
     try {
       const rendered = await ejs.renderFile(path, args, {
         async: true,

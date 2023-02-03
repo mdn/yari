@@ -14,6 +14,8 @@ import {
 } from "../libs/env";
 import { isValidLocale } from "../libs/locale-utils";
 import { DocFrontmatter } from "../libs/types/document";
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
 import { renderHTML } from "../ssr/dist/main";
 import got from "got";
 import { splitSections } from "./utils";
@@ -27,7 +29,7 @@ const dirname = __dirname;
 const FEATURED_ARTICLES = [
   "Web/API/WebGL_API/Tutorial/Getting_started_with_WebGL",
   "Web/CSS/CSS_Container_Queries",
-  "Web/API/PerformanceResourceTiming/renderBlockingStatus",
+  "Web/API/Performance_API",
   "Web/CSS/font-palette",
 ];
 
@@ -128,18 +130,8 @@ export async function buildSPAs(options) {
           noIndexing: true,
         },
         {
-          prefix: "plus/notifications",
-          pageTitle: `Notifications | ${MDN_PLUS_TITLE}`,
-          noIndexing: true,
-        },
-        {
-          prefix: "plus/notifications/starred",
-          pageTitle: `Starred | ${MDN_PLUS_TITLE}`,
-          noIndexing: true,
-        },
-        {
-          prefix: "plus/notifications/watched",
-          pageTitle: `Watch list | ${MDN_PLUS_TITLE}`,
+          prefix: "plus/updates",
+          pageTitle: `Updates | ${MDN_PLUS_TITLE}`,
           noIndexing: true,
         },
         {

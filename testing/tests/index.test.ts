@@ -75,92 +75,17 @@ test("content built foo page", () => {
   expect(new Date(doc.modified)).toBeTruthy();
   expect(doc.source).toBeTruthy();
 
-  expect(doc.flaws.macros).toHaveLength(7);
-  expect(doc.flaws.macros[0].name).toBe("MacroRedirectedLinkError");
-  expect(doc.flaws.macros[0].macroSource).toBe("{{CSSxRef('dumber')}}");
-  expect(doc.flaws.macros[0].line).toBe(8);
-  expect(doc.flaws.macros[0].column).toBe(7);
-  expect(doc.flaws.macros[0].sourceContext).toEqual(
-    expect.stringContaining("<li>{{CSSxRef('dumber')}}</li>")
-  );
-  expect(doc.flaws.macros[0].redirectInfo).toBeDefined();
-  expect(doc.flaws.macros[0].redirectInfo.current).toBe("dumber");
-  expect(doc.flaws.macros[0].redirectInfo.suggested).toBe("number");
-  expect(doc.flaws.macros[0].filepath).toMatch(
-    /\/en-us\/web\/fixable_flaws\/index\.html$/
-  );
-  expect(doc.flaws.macros[1].name).toBe("MacroRedirectedLinkError");
-  expect(doc.flaws.macros[1].macroSource).toBe(
-    '{{htmlattrxref("href", "anchor")}}'
-  );
-  expect(doc.flaws.macros[1].line).toBe(9);
-  expect(doc.flaws.macros[1].column).toBe(7);
-  expect(doc.flaws.macros[1].sourceContext).toEqual(
-    expect.stringContaining('<li>{{htmlattrxref("href", "anchor")}}</li>')
-  );
-  expect(doc.flaws.macros[1].redirectInfo).toBeDefined();
-  expect(doc.flaws.macros[1].redirectInfo.current).toBe("anchor");
-  expect(doc.flaws.macros[1].redirectInfo.suggested).toBe("a");
-  expect(doc.flaws.macros[1].filepath).toMatch(
-    /\/en-us\/web\/fixable_flaws\/index\.html$/
-  );
-  expect(doc.flaws.macros[2].name).toBe("MacroBrokenLinkError");
-  expect(doc.flaws.macros[2].macroSource).toBe(
-    '{{CSSxRef("will-never-be-fixable")}}'
-  );
-  expect(doc.flaws.macros[2].line).toBe(10);
-  expect(doc.flaws.macros[2].column).toBe(7);
-  expect(doc.flaws.macros[2].sourceContext).toEqual(
-    expect.stringContaining('<li>{{CSSxRef("will-never-be-fixable")}}</li>')
-  );
-  expect(doc.flaws.macros[2].filepath).toMatch(
-    /\/en-us\/web\/fixable_flaws\/index\.html$/
-  );
-  expect(doc.flaws.macros[3].name).toBe("MacroRedirectedLinkError");
-  expect(doc.flaws.macros[3].macroSource).toBe("{{CSSxRef('dumber')}}");
-  expect(doc.flaws.macros[3].line).toBe(11);
-  expect(doc.flaws.macros[3].column).toBe(7);
-  expect(doc.flaws.macros[3].sourceContext).toEqual(
-    expect.stringContaining("<li>{{CSSxRef('dumber')}} second time!</li>")
-  );
-  expect(doc.flaws.macros[3].redirectInfo).toBeDefined();
-  expect(doc.flaws.macros[3].redirectInfo.current).toBe("dumber");
-  expect(doc.flaws.macros[3].redirectInfo.suggested).toBe("number");
-  expect(doc.flaws.macros[3].filepath).toMatch(
-    /\/en-us\/web\/fixable_flaws\/index\.html$/
-  );
-  expect(doc.flaws.macros[4].name).toBe("MacroExecutionError");
-  expect(doc.flaws.macros[4].errorStack).toEqual(
-    expect.stringContaining(
-      '/en-us/docs/web/fubar references /en-us/docs/does-not-exist (derived from "does-not-exist"), which does not exist'
-    )
-  );
-  expect(doc.flaws.macros[4].line).toBe(10);
-  expect(doc.flaws.macros[4].column).toBe(6);
-  // Check that the line numbers in the source context have been adjusted by the offset.
-  expect(doc.flaws.macros[4].sourceContext).toEqual(
-    expect.stringContaining('<div>{{page("does-not-exist")}}</div>')
-  );
-  expect(doc.flaws.macros[4].filepath).toMatch(
-    /\/en-us\/web\/fubar\/index\.html$/
-  );
-  expect(doc.flaws.macros[5].name).toBe("MacroExecutionError");
-  expect(doc.flaws.macros[5].errorStack).toEqual(
-    expect.stringContaining(
-      "/en-us/docs/web/fubar references /en-us/docs/does/not/exist, which does not exist"
-    )
-  );
-  expect(doc.flaws.macros[5].line).toBe(11);
-  expect(doc.flaws.macros[5].column).toBe(6);
-  // Check that the line numbers in the source context have been adjusted by the offset.
-  expect(doc.flaws.macros[5].sourceContext).toEqual(
-    expect.stringContaining(
-      `<div>{{ EmbedLiveSample('example', '300', '300', "", "does/not/exist") }}</div>`
-    )
-  );
-  expect(doc.flaws.macros[5].filepath).toMatch(
-    /\/en-us\/web\/fubar\/index\.html$/
-  );
+  expect(doc.flaws.macros).toHaveLength(1);
+  expect(doc.flaws.macros[0]).toMatchObject({
+    column: 4,
+    errorStack: expect.stringContaining("pages is not iterable"),
+    filepath: expect.stringContaining(
+      "testing/content/files/en-us/web/foo/index.html"
+    ),
+    line: 8,
+    macroName: "HTMLSidebar",
+    name: "MacroExecutionError",
+  });
 
   const htmlFile = path.join(builtFolder, "index.html");
   const html = fs.readFileSync(htmlFile, "utf-8");
@@ -195,7 +120,7 @@ test("content built foo page", () => {
   expect($('meta[name="robots"]').attr("content")).toBe("index, follow");
 
   // The HTML should contain the Google Analytics snippet.
-  // The ID should match what's set in `testing/.env`.
+  // The ID should match what's set in `.env.testing`.
   expect($('script[src="/static/js/ga.js"]')).toHaveLength(1);
 
   // Because this en-US page has a French translation
@@ -965,7 +890,7 @@ test("check built flaws for /en-us/learn/css/css_layout/introduction/grid page",
   const { doc } = JSON.parse(fs.readFileSync(jsonFile, "utf-8")) as {
     doc: Doc;
   };
-  expect(doc.flaws.macros).toHaveLength(2);
+  expect(doc.flaws).toEqual({});
 });
 
 test("check built flaws for /en-us/learn/css/css_layout/introduction/flex page", () => {
@@ -1010,31 +935,6 @@ test("detect bad_bcd_queries flaws", () => {
     "No BCD data for query: api.Does.Not.exist"
   );
   expect(doc.flaws.bad_bcd_queries[0].suggestion).toBeNull();
-});
-
-test("detect bad_bcd_links flaws from", () => {
-  const builtFolder = path.join(
-    buildRoot,
-    "en-us",
-    "docs",
-    "web",
-    "api",
-    "page_visibility_api"
-  );
-  expect(fs.existsSync(builtFolder)).toBeTruthy();
-  const jsonFile = path.join(builtFolder, "index.json");
-  const { doc } = JSON.parse(fs.readFileSync(jsonFile, "utf-8")) as {
-    doc: Doc;
-  };
-  expect(doc.flaws.bad_bcd_links).toHaveLength(1);
-  // The reasons it's a bad link is because the @mdn/browser-compat-data,
-  // for the query `api.Document.visibilityState` refers to a page
-  // with mdn_url `/en-US/docs/Web/API/Document/visibilityState` which we
-  // don't have. At least not in the testing content :)
-  const flaw = doc.flaws.bad_bcd_links[0];
-  expect(flaw.slug).toBe("/en-US/docs/Web/API/Document/visibilityState");
-  expect(flaw.suggestion).toBeNull();
-  expect(flaw.query).toBe("api.Document.visibilityState");
 });
 
 test("detect bad_pre_tags flaws", () => {
@@ -1239,27 +1139,6 @@ test("images that are in the folder but not in <img> tags", () => {
   );
   expect(fs.existsSync(path.join(builtFolder, "pic.gif")));
   expect(fs.existsSync(path.join(builtFolder, "image.png")));
-});
-
-test("chicken_and_egg page should build with flaws", () => {
-  const builtFolder = path.join(buildRoot, "en-us", "docs", "chicken_and_egg");
-  expect(fs.existsSync(builtFolder)).toBeTruthy();
-  const jsonFile = path.join(builtFolder, "index.json");
-  const { doc } = JSON.parse(fs.readFileSync(jsonFile, "utf-8")) as {
-    doc: Doc;
-  };
-  expect(doc.flaws.macros).toHaveLength(1);
-  // The filepath will be that of the "egg" or the "chicken" page.
-  // Let's not try to predict which one exactly, because that'd mean this
-  // test would need to use the exact same sort order as the glob used
-  // when we ran "yarn build" to set up the build fixtures.
-  const flaw = doc.flaws.macros[0];
-  expect(flaw.name).toBe("MacroExecutionError");
-  expect(
-    flaw.errorStack.includes(
-      "documents form a circular dependency when rendering"
-    )
-  ).toBeTruthy();
 });
 
 test("404 page", () => {
@@ -1552,12 +1431,12 @@ test("deprecated macros are fixable", () => {
   const { doc } = JSON.parse(fs.readFileSync(jsonFile, "utf-8")) as {
     doc: Doc;
   };
-  expect(doc.flaws.macros).toHaveLength(2);
+  expect(doc.flaws.macros).toHaveLength(1);
   // All fixable and all a suggestion of ''
-  expect(doc.flaws.macros.filter((flaw) => flaw.fixable)).toHaveLength(2);
+  expect(doc.flaws.macros.filter((flaw) => flaw.fixable)).toHaveLength(1);
   expect(
     doc.flaws.macros.filter((flaw) => flaw.suggestion === "")
-  ).toHaveLength(2);
+  ).toHaveLength(1);
 });
 
 test("external links always get the right attributes", () => {

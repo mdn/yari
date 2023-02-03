@@ -172,6 +172,11 @@
   --collections-mandala: #{$mdn-color-light-theme-red-30};
   --collections-icon: #{$mdn-color-light-theme-red-50};
 
+  --updates-link: #{$mdn-color-light-theme-blue-60};
+  --updates-header: #{$mdn-color-neutral-light-70};
+  --updates-mandala: #{$mdn-color-light-theme-blue-30};
+  --updates-icon: #{$mdn-color-light-theme-blue-50};
+
   --form-limit-color: #{$mdn-color-neutral-60};
   --form-limit-color-emphasis: #{$mdn-color-neutral-70};
   --form-invalid-color: #{$mdn-color-light-theme-red-60};
@@ -349,6 +354,11 @@
   --collections-header: #{$mdn-color-dark-theme-red-90};
   --collections-mandala: #{$mdn-color-dark-theme-red-70};
   --collections-icon: #{$mdn-color-dark-theme-red-60};
+
+  --updates-link: #{$mdn-color-dark-theme-blue-30};
+  --updates-header: #{$mdn-color-black};
+  --updates-mandala: #{$mdn-color-dark-theme-blue-20};
+  --updates-icon: #{$mdn-color-dark-theme-blue-30};
 
   --form-limit-color: #{$mdn-color-neutral-40};
   --form-limit-color-emphasis: #{$mdn-color-neutral-30};

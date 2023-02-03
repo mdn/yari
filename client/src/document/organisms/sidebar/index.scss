@@ -123,6 +123,10 @@
     margin-top: 1rem;
   }
 
+  li:first-of-type strong {
+    margin-top: unset;
+  }
+
   ol {
     font-size: var(--type-smaller-font-size);
 

@@ -9,6 +9,7 @@ import send from "send";
 import { createProxyMiddleware } from "http-proxy-middleware";
 import cookieParser from "cookie-parser";
 import openEditor from "open-editor";
+import { getBCDDataForPath } from "@mdn/bcd-utils-api";
 
 import {
   buildDocument,
@@ -35,6 +36,8 @@ import { router as translationsRouter } from "./translations";
 import { staticMiddlewares, originRequestMiddleware } from "./middlewares";
 import { getRoot } from "../content/utils";
 
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
 import { renderHTML } from "../ssr/dist/main";
 
 async function buildDocumentFromURL(url) {
@@ -53,6 +56,23 @@ async function buildDocumentFromURL(url) {
 }
 
 const app = express();
+
+const bcdRouter = express.Router({ caseSensitive: true });
+
+bcdRouter.get("/api/v0/current/:path.json", async (req, res) => {
+  const data = getBCDDataForPath(req.params.path);
+  return data ? res.json(data) : res.status(404).send("BCD path not found");
+});
+
+bcdRouter.use(
+  "/updates/v0/",
+  createProxyMiddleware({
+    target: "http://localhost:8080",
+    pathRewrite: (path) => path.replace("/bcd/updates/v0/", "/"),
+  })
+);
+
+app.use("/bcd", bcdRouter);
 
 // Depending on if FAKE_V1_API is set, we either respond with JSON based
 // on `.json` files on disk or we proxy the requests to Kuma.
@@ -242,10 +262,8 @@ app.get("/*", async (req, res, ...args) => {
 
   let lookupURL = decodeURI(req.path);
   let extraSuffix = "";
-  let bcdDataURL = "";
   let isMetadata = false;
   let isDocument = false;
-  const bcdDataURLRegex = /\/(bcd-\d+|bcd)\.json$/;
 
   if (req.path.endsWith("index.json")) {
     // It's a bit special then.
@@ -261,21 +279,16 @@ app.get("/*", async (req, res, ...args) => {
     isMetadata = true;
     extraSuffix = "/metadata.json";
     lookupURL = lookupURL.replace(extraSuffix, "");
-  } else if (bcdDataURLRegex.test(req.path)) {
-    bcdDataURL = req.path;
-    lookupURL = lookupURL.replace(bcdDataURLRegex, "");
   }
 
   const isJSONRequest = extraSuffix.endsWith(".json");
 
   let document;
-  let bcdData;
   try {
     console.time(`buildDocumentFromURL(${lookupURL})`);
     const built = await buildDocumentFromURL(lookupURL);
     if (built) {
       document = built.doc;
-      bcdData = built.bcdData;
     } else if (
       lookupURL.split("/")[1] &&
       lookupURL.split("/")[1].toLowerCase() !== DEFAULT_LOCALE.toLowerCase() &&
@@ -304,12 +317,6 @@ app.get("/*", async (req, res, ...args) => {
     return res
       .status(404)
       .sendFile(path.join(STATIC_ROOT, "en-us", "_spas", "404.html"));
-  }
-
-  if (bcdDataURL) {
-    return res.json(
-      bcdData.find((data) => data.url.toLowerCase() === bcdDataURL).data
-    );
   }
 
   if (isDocument) {

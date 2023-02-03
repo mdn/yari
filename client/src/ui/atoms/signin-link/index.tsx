@@ -4,17 +4,20 @@ import { useLocale } from "../../../hooks";
 import { FXA_SIGNIN_URL, KUMA_HOST } from "../../../env";
 
 import "./index.scss";
-import { TOP_NAV_ALREADY_SUBSCRIBER } from "../../../telemetry/constants";
 import { useGleanClick } from "../../../telemetry/glean-context";
 
-export default function SignInLink() {
+export default function SignInLink({
+  gleanContext,
+}: {
+  gleanContext?: string;
+}) {
   const locale = useLocale();
   const gleanClick = useGleanClick();
-  const { pathname } = useLocation();
+  const { pathname, search } = useLocation();
   const sp = new URLSearchParams();
 
-  let next = pathname || `/${locale}/`;
-  sp.set("next", next);
+  let next = pathname ? pathname + search : `/${locale}/`;
+  sp.set("next", encodeURI(next));
 
   let prefix = "";
   // When doing local development with Yari, the link to authenticate in Kuma
@@ -32,7 +35,7 @@ export default function SignInLink() {
       href={`${prefix}${FXA_SIGNIN_URL}?${sp.toString()}`}
       className="signin-link"
       rel="nofollow"
-      onClick={() => gleanClick(TOP_NAV_ALREADY_SUBSCRIBER)}
+      onClick={() => gleanContext && gleanClick(gleanContext)}
     >
       Already a subscriber?
     </a>

@@ -2,8 +2,14 @@ import * as React from "react";
 import useSWR from "swr";
 
 import { DISABLE_AUTH, DEFAULT_GEO_COUNTRY } from "./env";
-import { fetchAllCollectionsItems } from "./plus/collections-quicksearch";
 import { FREQUENTLY_VIEWED_STORAGE_KEY } from "./plus/collections/frequently-viewed";
+
+const DEPRECATED_LOCAL_STORAGE_KEYS = [
+  "collection-items",
+  "collection-items-updated-date",
+];
+
+export const OFFLINE_SETTINGS_KEY = "MDNSettings";
 
 export enum SubscriptionType {
   MDN_CORE = "core",
@@ -14,8 +20,8 @@ export enum SubscriptionType {
 }
 
 export type UserPlusSettings = {
-  colInSearch: boolean;
   collectionLastModified: Date | null;
+  mdnplusNewsletter: boolean | null;
 };
 
 export class OfflineSettingsData {
@@ -37,7 +43,7 @@ export class OfflineSettingsData {
     let settingsData: OfflineSettingsData | undefined;
     try {
       settingsData = JSON.parse(
-        window.localStorage.getItem("MDNSettings") || "{}"
+        window.localStorage.getItem(OFFLINE_SETTINGS_KEY) || "{}"
       );
     } catch (err) {
       console.warn("Unable to read settings from localStorage", err);
@@ -48,7 +54,7 @@ export class OfflineSettingsData {
 
   write() {
     try {
-      window.localStorage.setItem("MDNSettings", JSON.stringify(this));
+      window.localStorage.setItem(OFFLINE_SETTINGS_KEY, JSON.stringify(this));
     } catch (err) {
       console.warn("Unable to write settings to localStorage", err);
     }
@@ -109,7 +115,7 @@ function getSessionStorageData() {
 
 export function cleanupUserData() {
   removeSessionStorageData();
-  removeLocalStorageData();
+  removeLocalStorageData(FREQUENTLY_VIEWED_STORAGE_KEY);
   if (window.mdnWorker) {
     window.mdnWorker.cleanDb();
     window.mdnWorker.disableServiceWorker();
@@ -127,14 +133,17 @@ function removeSessionStorageData() {
   }
 }
 
-function removeLocalStorageData() {
+function removeLocalStorageData(key: string) {
   try {
-    localStorage.removeItem(FREQUENTLY_VIEWED_STORAGE_KEY);
+    localStorage.removeItem(key);
   } catch (e) {
-    console.warn(
-      "Unable to delete frequently viewed items from localStorage",
-      e
-    );
+    console.warn(`Unable to delete ${key} from localStorage`, e);
+  }
+}
+
+function removeDeprecatedLocalStorageData() {
+  for (const key of DEPRECATED_LOCAL_STORAGE_KEYS) {
+    removeLocalStorageData(key);
   }
 }
 
@@ -160,10 +169,10 @@ export function UserDataProvider(props: { children: React.ReactNode }) {
         data?.settings?.collections_last_modified_time;
       const settings: UserPlusSettings | null = data?.settings
         ? {
-            colInSearch: data?.settings?.col_in_search || false,
             collectionLastModified:
               (collectionLastModified && new Date(collectionLastModified)) ||
               null,
+            mdnplusNewsletter: data?.settings?.mdnplus_newsletter || null,
           }
         : null;
 
@@ -193,15 +202,16 @@ export function UserDataProvider(props: { children: React.ReactNode }) {
   );
 
   React.useEffect(() => {
+    removeDeprecatedLocalStorageData();
+  }, []);
+
+  React.useEffect(() => {
     if (data) {
       // At this point, the XHR request has set `data` to be an object.
       // The user is definitely signed in or not signed in.
       data.offlineSettings = OfflineSettingsData.read();
       setSessionStorageData(data);
 
-      if (data.settings?.colInSearch) {
-        fetchAllCollectionsItems(data.settings?.collectionLastModified || null);
-      }
       // Let's initialize the MDN Worker if applicable.
       if (!window.mdnWorker && data?.offlineSettings?.offline) {
         import("./settings/mdn-worker").then(({ getMDNWorker }) => {

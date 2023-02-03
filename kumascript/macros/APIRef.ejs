@@ -146,15 +146,6 @@ function getImplementedBy(data) {
 }
 getImplementedBy(webAPIData[0]);
 
-// output helpers
-
-var badges = {
-  ExperimentalBadge : await template("ExperimentalBadge"),
-  NonStandardBadge : await template("NonStandardBadge"),
-  DeprecatedBadge : await template("DeprecatedBadge"),
-  ObsoleteBadge : await template("ObsoleteBadge"),
-}
-
 function getPageTitle(page) {
   if (page.shortTitle) {
     return htmlEscape(page.shortTitle);
@@ -174,7 +165,7 @@ function getPageTitle(page) {
   return title;
 }
 
-function buildSublist(pages, title) {
+async function buildSublist(pages, title) {
   var result = '<li class="toggle"><details open><summary>' + title + '</summary><ol>';
 
   for (var i in pages) {
@@ -194,22 +185,10 @@ function buildSublist(pages, title) {
     const title = getPageTitle(aPage);
 
     result += '<li>';
-
-    var pageBadges = '';
-    if (hasTag(aPage, 'Experimental')) {
-        pageBadges += badges.ExperimentalBadge;
-    }
-
-    if (hasTag(aPage, 'Non-standard') || hasTag(aPage, 'Non Standard')) {
-        pageBadges += badges.NonStandardBadge;
-    }
-
-    if (hasTag(aPage, 'Deprecated')) {
-        pageBadges += badges.DeprecatedBadge;
-    }
+    
+    const pageBadges = (await page.badges(aPage)).join("");
 
     if (hasTag(aPage, 'Obsolete')) {
-        pageBadges += badges.ObsoleteBadge;
         result += '<s class="obsoleteElement">';
     }
 
@@ -218,9 +197,10 @@ function buildSublist(pages, title) {
     }
 
     if (slug == aPage.slug) {
-        result += '<em>' + pageBadges + ' <code>' + title + '</code></em>'
+        result += `<em><code>${title}</code> ${pageBadges}</em>`
     } else {
-        result += pageBadges + web.smartLink(url, null, `<code>${title}</code>`, APIHref, null, "APIRef");
+        result += web.smartLink(url, null, `<code>${title}</code>`, APIHref, null, "APIRef");
+        result += pageBadges;
     }
 
     if (rtlLocales.indexOf(locale) != -1) {
@@ -261,22 +241,22 @@ if (group && webAPIGroups[0][group] && webAPIGroups[0][group].overview) {
 output += `<li><strong>${web.smartLink(APIHref + '/' + mainIF, null, `<code>${mainIF}</code>`, APIHref, null, "APIRef")}</strong></li>`;
 
 if (ctors.length > 0) {
-  output += buildSublist(ctors, text['Constructor']);
+  output += await buildSublist(ctors, text['Constructor']);
 }
 if (staticProperties.length > 0) {
-  output += buildSublist(staticProperties, text['Static properties']);
+  output += await buildSublist(staticProperties, text['Static properties']);
 }
 if (instanceProperties.length > 0) {
-  output += buildSublist(instanceProperties, text['Instance properties']);
+  output += await buildSublist(instanceProperties, text['Instance properties']);
 }
 if (staticMethods.length > 0) {
-  output += buildSublist(staticMethods, text['Static methods']);
+  output += await buildSublist(staticMethods, text['Static methods']);
 }
 if (instanceMethods.length > 0) {
-  output += buildSublist(instanceMethods, text['Instance methods']);
+  output += await buildSublist(instanceMethods, text['Instance methods']);
 }
 if (events.length > 0) {
-  output += buildSublist(events, text['Events']);
+  output += await buildSublist(events, text['Events']);
 }
 if (inh.length > 0) {
   output += buildIFList(inheritedIF, text['Inheritance']);

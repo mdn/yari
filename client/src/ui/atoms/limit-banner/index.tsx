@@ -7,12 +7,9 @@ export default function LimitBanner({ type = "collections" }) {
     "You have 0 free saves remaining",
     "and unlock unlimited collections",
   ];
-  const notifications = [
-    "You have reached the limit of articles you can watch",
-    "and watch unlimited articles!",
-  ];
   const locale = useLocale();
-  const text = type === "collections" ? collections : notifications;
+  const text =
+    type === "collections" ? collections : ["This should not happen!", "🤷‍♂️"];
 
   return (
     <div className="limit-banner">

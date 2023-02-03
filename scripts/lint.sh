@@ -27,3 +27,9 @@ echo "Lint stylelint"
 echo "--------------"
 
 yarn stylelint
+
+echo "--------------"
+echo "Check TypeScript"
+echo "--------------"
+
+yarn check:tsc
