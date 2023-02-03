@@ -26,7 +26,6 @@
     "eslint": "eslint .",
     "filecheck": "ts-node filecheck/cli.ts",
     "m2h": "ts-node markdown/m2h/cli.ts",
-    "md": "echo 'The HTML to Markdown conversion command has been moved to https://github.com/mdn/markdown!' && exit 1",
     "prepack": "yarn build:dist",
     "prepare": "husky install",
     "prettier-check": "prettier --check .",
