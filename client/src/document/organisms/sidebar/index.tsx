@@ -7,7 +7,15 @@ import { useUIStatus } from "../../../ui-context";
 import "./index.scss";
 import { TOC } from "../toc";
 
-export function SidebarContainer({ doc, children }) {
+export function SidebarContainer({
+  doc,
+  label = undefined,
+  children,
+}: {
+  doc: any;
+  label?: string;
+  children: React.ReactNode;
+}) {
   const { isSidebarOpen, setIsSidebarOpen } = useUIStatus();
   const [classes, setClasses] = useState<string>("sidebar");
 
@@ -49,7 +57,7 @@ export function SidebarContainer({ doc, children }) {
           onClickHandler={() => setIsSidebarOpen(!isSidebarOpen)}
           aria-label="Collapse sidebar"
         />
-        <nav className="sidebar-inner">
+        <nav aria-label={label} className="sidebar-inner">
           <div className="in-nav-toc">
             {doc.toc && !!doc.toc.length && <TOC toc={doc.toc} />}
           </div>
@@ -63,7 +71,7 @@ export function SidebarContainer({ doc, children }) {
 export function RenderSideBar({ doc }) {
   if (!doc.related_content) {
     return (
-      <SidebarContainer doc={doc}>
+      <SidebarContainer doc={doc} label="Related Topics">
         {doc.sidebarHTML && (
           <>
             <div
