@@ -34,7 +34,11 @@ export const Search = ({
         placeholder={placeholder}
         value={value}
         disabled={isDisabled}
-        onBlur={onBlurHandler}
+        onBlur={(e) =>
+          onBlurHandler &&
+          !e.currentTarget.parentElement?.contains(e.relatedTarget) &&
+          onBlurHandler(e)
+        }
         onFocus={onFocusHandler}
         onChange={onChangeHandler}
         onClick={onClickHandler}

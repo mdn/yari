@@ -31,7 +31,7 @@
     outline: var(--border-primary);
   }
 
-  &:not([value=""]):not(:focus) {
+  &:not([value=""]) {
     ~ .button.clear-search-button {
       display: block;
       right: 2rem;
