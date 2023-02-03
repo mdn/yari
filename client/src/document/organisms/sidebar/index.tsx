@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "../../../ui/atoms/button";
 
 import { useUIStatus } from "../../../ui-context";
@@ -66,7 +66,6 @@ export function RenderSideBar({ doc }) {
       <SidebarContainer doc={doc}>
         {doc.sidebarHTML && (
           <>
-            <h4 className="sidebar-heading">Related Topics</h4>
             <div
               dangerouslySetInnerHTML={{
                 __html: `${doc.sidebarHTML}`,
