@@ -67,7 +67,7 @@ const mdn = {
    * Example:
    *   getLocalString({"hello": {"en-US": "Hello!", "fr": "Bonjour !"}},
    *       "hello");
-   *   => "Bonjour!" (in case the locale is 'fr')
+   *   => "Bonjour !" (in case the locale is 'fr')
    */
   getLocalString(this: KumaThis, strings, key) {
     if (!Object.prototype.hasOwnProperty.call(strings, key)) {
