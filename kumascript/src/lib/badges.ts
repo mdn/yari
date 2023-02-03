@@ -17,11 +17,6 @@ const badges = [
     macro: "DeprecatedBadge",
     template: "",
   },
-  {
-    tag: "Obsolete",
-    macro: "ObsoleteBadge",
-    template: "",
-  },
 ];
 
 let badgeTemplatesLoaded = false;
