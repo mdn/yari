@@ -277,8 +277,7 @@ async function checkCompression(filePath: string, options: CheckerOptions) {
 
 function isRelevantFile(filePath: string) {
   return (
-    (filePath.includes(`files${path.sep}`) ||
-      filePath.includes(`files${path.sep}jsondata`)) &&
+    filePath.includes(`files${path.sep}`) &&
     !/\.(DS_Store|ini)$/i.test(filePath)
   );
 }
@@ -312,29 +311,28 @@ function validatePath(filePath: string): string[] {
   );
 
   // Must have supported extension
-  const supportedFilesRegExp =
-    /\.(md|json|txt|yml|jpg|jpeg|png|gif|svg)$/i;
+  const supportedFilesRegExp = /\.(md|json|txt|yml|jpg|jpeg|png|gif|svg)$/i;
   if (!supportedFilesRegExp.test(filePath)) {
-    reasons.push(
+    errors.push(
       `Error: Invalid file: ${shortPath}. The file extension is not supported.`
     );
   }
 
   // All characters must be lower case.
   if (shortPath !== shortPath.toLowerCase() && !filePath.endsWith(".json")) {
-    reasons.push(
+    errors.push(
       `Error: Invalid path: ${shortPath}. All characters must be lowercase.`
     );
   }
 
   // Whitespaces are not allowed.
   if (filePath.includes(" ")) {
-    reasons.push(
+    errors.push(
       `Error: Invalid path: ${shortPath}. File path must not include whitespaces.`
     );
   }
   if (filePath.includes("\u200b")) {
-    reasons.push(
+    errors.push(
       `Error: Invalid path: ${shortPath}. File path must not include zero width whitespaces.`
     );
   }
@@ -342,12 +340,12 @@ function validatePath(filePath: string): string[] {
   // File path should't contain banned characters: `(`, `)`
   const bannedCharsRegExp = /[()]/;
   if (bannedCharsRegExp.test(filePath)) {
-    reasons.push(
+    errors.push(
       `Error: Invalid path: ${shortPath}. File path must not include characters: '(', ')'`
     );
   }
 
-  return reasons;
+  return errors;
 }
 
 export async function runChecker(
