@@ -1,27 +1,47 @@
+import fromMarkdown from "mdast-util-from-markdown";
+import visit from "unist-util-visit";
+
 const ESCAPE_CHARS_RE = /[.*+?^${}()|[\]\\]/g;
 
-export function* findMatchesInText(
-  needle,
-  haystack,
+type Match = { line: number; column: number };
+
+export function findMatchesInText(
+  needle: string,
+  haystack: string,
   { attribute = null } = {}
 ) {
   // Need to remove any characters that can affect a regex if we're going
   // use the string in a manually constructed regex.
   const escaped = needle.replace(ESCAPE_CHARS_RE, "\\$&");
-  let rex;
-  if (attribute) {
-    rex = new RegExp(`${attribute}=['"](${escaped})['"]`, "g");
-  } else {
-    rex = new RegExp(`(${escaped})`, "g");
-  }
+  const rex = attribute
+    ? new RegExp(`${attribute}=['"](${escaped})['"]`, "g")
+    : new RegExp(`(${escaped})`, "g");
+  const matches: Array<Match> = [];
   for (const match of haystack.matchAll(rex)) {
     const left = haystack.slice(0, match.index);
     const line = (left.match(/\n/g) || []).length + 1;
     const lastIndexOf = left.lastIndexOf("\n") + 1;
     const column =
       match.index - lastIndexOf + 1 + (attribute ? attribute.length + 2 : 0);
-    yield { line, column };
+    matches.push({ line, column });
   }
+  return matches;
+}
+
+export function findMatchesInMarkdown(
+  rawContent: string,
+  type: string,
+  url: string
+) {
+  const matches: Array<Match> = [];
+  const content = fromMarkdown(rawContent);
+  visit(content, type, (node: any) => {
+    if (node.url == url) {
+      const { line, column } = node.position.start;
+      matches.push({ line, column });
+    }
+  });
+  return matches;
 }
 
 export function getFirstMatchInText(needle, haystack) {
@@ -29,7 +49,7 @@ export function getFirstMatchInText(needle, haystack) {
   const left = haystack.substring(0, index);
   const line = left.split("\n").length;
   const column = left.length - left.lastIndexOf("\n");
-  return { line, column };
+  return { line, column } as Match;
 }
 
 export function replaceMatchingLinksInMarkdown(needle, haystack, replacement) {

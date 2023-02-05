@@ -8,7 +8,7 @@ import sizeOf from "image-size";
 
 import { Document, Image } from "../content";
 import { FLAW_LEVELS } from "../libs/constants";
-import { findMatchesInText } from "./matches-in-text";
+import { findMatchesInText, findMatchesInMarkdown } from "./matches-in-text";
 import { DEFAULT_LOCALE } from "../libs/constants";
 
 /**
@@ -23,6 +23,8 @@ export function checkImageReferences(doc, $, options, { url, rawContent }) {
 
   const checked = new Map();
 
+  const isMarkdown = doc.isMarkdown;
+
   function addImageFlaw(
     $img,
     src,
@@ -32,11 +34,11 @@ export function checkImageReferences(doc, $, options, { url, rawContent }) {
     // (addImageFlaw) is called two times. We can then assume the
     // findMatchesInText() will find it two times too. For each call,
     // we need to match the call based in counting matches from findMatchesInText().
-    const matches = [
-      ...findMatchesInText(src, rawContent, {
-        attribute: "src",
-      }),
-    ];
+    const matches = isMarkdown
+      ? findMatchesInMarkdown(rawContent, "image", src)
+      : findMatchesInText(src, rawContent, {
+          attribute: "src",
+        });
     const checkedBefore = checked.get(src) || 0;
     matches.forEach((match, i) => {
       if (i !== checkedBefore) {
@@ -243,11 +245,9 @@ export function checkImageWidths(doc, $, options, { rawContent }) {
     }
     const id = `image_widths${doc.flaws.image_widths.length + 1}`;
     $img.attr("data-flaw", id);
-    const matches = [
-      ...findMatchesInText(style, rawContent, {
-        attribute: "style",
-      }),
-    ];
+    const matches = findMatchesInText(style, rawContent, {
+      attribute: "style",
+    });
     const checkedBefore = checked.get(style) || 0;
     matches.forEach((match, i) => {
       if (i !== checkedBefore) {

@@ -4,13 +4,13 @@ slug: Web/Images/Bad_src
 ---
 
 <!-- exists on disk but isn't actually a real SVG file. -->
-<img src="actuallynota.svg">
+![](actuallynota.svg)
 
 <!-- resolves, intially, to a directory -->
-<img src="/en-us/web">
+![](/en-us/web)
 
 <!-- actually isn't a valid PNG -->
-<img src="actuallynota.png">
+![](actuallynota.png)
 
 <!-- is a zero byte image -->
-<img src="empty.gif">
+![](empty.gif)
