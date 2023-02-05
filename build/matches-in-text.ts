@@ -30,13 +30,12 @@ export function findMatchesInText(
 
 export function findMatchesInMarkdown(
   rawContent: string,
-  type: string,
+  type: "link" | "image",
   url: string
 ) {
   const matches: Array<Match> = [];
-  const content = fromMarkdown(rawContent);
-  visit(content, type, (node: any) => {
-    if (node.url == url) {
+  visit(fromMarkdown(rawContent), type, (node: any) => {
+    if (node.url === url) {
       const { line, column } = node.position.start;
       matches.push({ line, column });
     }
