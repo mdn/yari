@@ -31,6 +31,7 @@ const subSlug = slug.replace('Web/JavaScript/Reference/Global_Objects/', '');
 let subSlugParts = subSlug.split('/');
 // For Intl, we should use the first two parts of the slug if has
 // e.g. subSlug startswith 'Intl/Collator' we should use 'Intl.Collator'
+// note that Intl owns some methods, we have some special handling for it later
 subSlugParts = subSlugParts.slice(0, subSlugParts[0] === "Intl" ? 2 : 1);
 let mainObj = subSlugParts.join('.');
 
@@ -70,6 +71,11 @@ if (groupData.TypedArray.includes(mainObj)) {
   mainObj = "Error";
 } else if (groupData.Proxy.includes(mainObj)) {
   mainObj = "Proxy/handler";
+}
+// Special case for Intl, we should make sure that the main object is Intl
+// as Intl owns some methods (e.g. Intl.getCanonicalLocales)
+if (mainObj.startsWith('Intl') && !groupData.Intl.includes(mainObj)) {
+  mainObj = "Intl";
 }
 
 // Get related pages from groups and exclude self
