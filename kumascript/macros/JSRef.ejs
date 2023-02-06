@@ -181,13 +181,13 @@ async function buildSublist(pages, title, opened) {
   : page => page.translations.find(translation => translation.locale === locale)?.title ?? page.title;
 
   const items = pages.map(async aPage => {
-      const url = aPage.url.replace("en-US", locale);
-      const title = getTitle(aPage);
-      const pageBadges = (await page.badges(aPage)).join("");
+    const url = aPage.url.replace("en-US", locale);
+    const title = getTitle(aPage);
+    const pageBadges = (await page.badges(aPage)).join("");
 
-      const start = rtlLocales.includes(locale) ? "<li><bdi>" : "<li>";
-      const end = rtlLocales.includes(locale) ? "</bdi></li>" : "</li>";
-      return `${start}${web.smartLink(url, null, `<code>${title}</code>`, aPage.slug, slugStdlib, "JSRef")}${pageBadges}${end}`
+    const start = rtlLocales.includes(locale) ? "<li><bdi>" : "<li>";
+    const end = rtlLocales.includes(locale) ? "</bdi></li>" : "</li>";
+    return `${start}${web.smartLink(url, null, `<code>${title}</code>`, aPage.slug, slugStdlib, "JSRef")}${pageBadges}${end}`
   })
 
   // Wait for all the links to be built
