@@ -7,6 +7,7 @@ interface PlacementStatus {
   click: string;
   impression: string;
   fallback?: any;
+  image?: string;
 }
 
 export const PlacementContext = React.createContext<

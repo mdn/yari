@@ -102,7 +102,7 @@ const pongProxy = createProxyMiddleware({
   },
   logLevel: "debug",
   onProxyReq: (req) => {
-    console.log(req);
+    console.log(req.path);
   },
 });
 
@@ -116,6 +116,7 @@ const contentProxy =
   });
 
 app.use("/pong/*", pongProxy);
+app.use("/pimg/*", pongProxy);
 app.use("/api/*", proxy);
 // This is an exception and it's only ever relevant in development.
 app.use("/users/*", proxy);

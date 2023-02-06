@@ -10,6 +10,7 @@ import {
   CARBON_ZONE_KEY,
 } from "./env.js";
 import cc2ip from "./cc2ip.js";
+import { downloadAndResizeImage } from "./img.js";
 
 const siteId = KEVEL_SITE_ID;
 const networkId = KEVEL_NETWORK_ID;
@@ -24,6 +25,9 @@ function encodeAndSign(s) {
 }
 
 function decodeAndVerify(tuple = "") {
+  if (tuple === null) {
+    return null;
+  }
   const [encoded, digest] = tuple.split(".");
   const s = Buffer.from(encoded, "base64").toString("utf-8");
   const hmac = createHmac("sha256", SIGN_SECRET);
@@ -57,8 +61,8 @@ export async function handler(event) {
       Buffer.from(request.body.data, "base64").toString()
     );
     const decisionReq = {
-      placements: [{ adTypes: [465] }],
-      keywords,
+      placements: [{ adTypes: [465, 369] }],
+      keywords: [...keywords, countryCode],
     };
 
     const decisionRes = await client.decisions.get(decisionReq, {
@@ -87,7 +91,6 @@ export async function handler(event) {
             )}${userAgent ? `&useragent=${encodeURIComponent(userAgent)}` : ""}`
           )
         ).json();
-        const image = await (await fetch(smallImage)).arrayBuffer();
         payload = {
           contents,
           click: encodeAndSign(clickUrl),
@@ -95,7 +98,7 @@ export async function handler(event) {
           fallback: {
             click: encodeAndSign(statlink),
             impression: encodeAndSign(statimp),
-            image: Buffer.from(image).toString("base64"),
+            image: encodeAndSign(smallImage),
             copy: description,
             by: ad_via_link,
           },
@@ -110,6 +113,7 @@ export async function handler(event) {
     } else {
       payload = {
         contents,
+        image: encodeAndSign(contents[0]?.data?.imageUrl),
         click: encodeAndSign(clickUrl),
         impression: encodeAndSign(impressionUrl),
       };
@@ -193,6 +197,29 @@ export async function handler(event) {
     } catch (e) {
       console.error(e);
     }
+  } else if (request.uri.startsWith("/pimg/")) {
+    const src = decodeAndVerify(decodeURIComponent(request.uri.substring(6)));
+    const { buf, contentType } = downloadAndResizeImage(src);
+    return {
+      status: 200,
+      statusDescription: "OK",
+      headers: {
+        "cache-control": [
+          {
+            key: "Cache-Control",
+            value: "max-age=86400",
+          },
+        ],
+        "content-type": [
+          {
+            key: "Content-Type",
+            value: contentType,
+          },
+        ],
+      },
+      body: Buffer.from(buf).toString("base64"),
+      bodyEncoding: "base64",
+    };
   }
   return {
     status: 404,
