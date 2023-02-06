@@ -3,16 +3,19 @@ import page from "../api/page";
 
 const badges = [
   {
+    status: "experimental",
     tag: "Experimental",
     macro: "ExperimentalBadge",
     template: "",
   },
   {
+    status: "non-standard",
     tag: "Non-standard",
     macro: "NonStandardBadge",
     template: "",
   },
   {
+    status: "deprecated",
     tag: "Deprecated",
     macro: "DeprecatedBadge",
     template: "",
@@ -30,7 +33,10 @@ export async function getBadgeTemplates(kuma: KumaThis, aPage: any) {
   await assertTemplatesLoaded(kuma);
 
   return badges
-    .filter(({ tag }) => page.hasTag(aPage, tag))
+    .filter(
+      ({ status, tag }) =>
+        (status && aPage.status.includes(status)) || page.hasTag(aPage, tag)
+    )
     .map(({ template }) => template);
 }
 
