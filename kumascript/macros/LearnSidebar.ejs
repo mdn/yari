@@ -170,6 +170,7 @@ var text = mdn.localStringMap({
       'Assessment_Accessibility_troubleshooting' : 'Assessment: Accessibility troubleshooting',
     'Performance' : ' Performance — Making websites fast and responsive',
       'Performance_guides' : 'Performance guides',
+        'Performance_overview' : 'Performance overview',
         'The_why_of_performance' : 'The why of performance',
         'What_is_performance' : 'What is performance',
         'How_do_users_perceive_performance' : 'How do users perceive performance',
@@ -1896,10 +1897,11 @@ var text = mdn.localStringMap({
   </li>
 <li><a href="<%=baseURL%>Performance"><strong><%=text['Performance_—_Making_websites_fast_and_responsive']%></a></strong></li>
   <li class="toggle">
-    <details <%=currentPageIsUnder('Web_performance')%>>
-        <summary><%=text['Web_performance_guides']%></summary>
+    <details <%=currentPageIsUnder('Performance')%>>
+        <summary><%=text['Performance_guides']%></summary>
         <ol>
-          <li><a href="<%=baseURL%>Performance"><%=text['why_of_web_performance']%></a></li>
+          <li><a href="<%=baseURL%>Performance"><%=text['Performance_overview']%></a></li>
+          <li><a href="<%=baseURL%>Performance/why_web_performance"><%=text['why_web_performance']%></a></li>
           <li><a href="<%=baseURL%>Performance/What_is_web_performance"><%=text['What_is_web_performance']%></a></li>
           <li><a href="<%=baseURL%>Performance/Perceived_performance"><%=text['How_do_users_perceive_performance']%></a></li>
           <li><a href="<%=baseURL%>Performance/Measuring_performance"><%=text['Measuring_performance']%></a></li>
