@@ -144,6 +144,8 @@ function BookmarkMenuDropdown({
     else if (savedItems?.length) {
       setFormItem(savedItems[0]);
       setSaved(true);
+    } else if (!savedItems?.length) {
+      setSaved(false);
     }
   }, [item, savedItems, setSaved]);
 
