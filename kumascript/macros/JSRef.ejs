@@ -10,30 +10,31 @@
 //  $2 - Related objects to display (comma separated) – OBSOLETE
 
 // Strings
-const commonl10n = web.getJSONData('L10n-Common');
-const jsl10n = web.getJSONData('L10n-JavaScript');
+const commonl10n = web.getJSONData("L10n-Common");
+const jsl10n = web.getJSONData("L10n-JavaScript");
 
 const text = {
-  stdlib: mdn.getLocalString(jsl10n, 'stdlib'),
-  Constructor: mdn.getLocalString(commonl10n, 'Constructor'),
-  Properties: mdn.getLocalString(commonl10n, 'Properties'),
-  Methods: mdn.getLocalString(commonl10n, 'Methods'),
-  Inheritance: mdn.getLocalString(commonl10n, 'Inheritance'),
-  Related: mdn.getLocalString(commonl10n, 'Related_pages_wo_group'),
+  stdlib: mdn.getLocalString(jsl10n, "stdlib"),
+  Constructor: mdn.getLocalString(commonl10n, "Constructor"),
+  Properties: mdn.getLocalString(commonl10n, "Properties"),
+  Methods: mdn.getLocalString(commonl10n, "Methods"),
+  Inheritance: mdn.getLocalString(commonl10n, "Inheritance"),
+  Related: mdn.getLocalString(commonl10n, "Related_pages_wo_group"),
 };
 
 // Variables
 const slug = env.slug;
 let output = "";
 const locale = env.locale;
+const rtlLocales = ["ar", "he", "fa"];
 const slugStdlib = `/${env.locale}/docs/Web/JavaScript/Reference/Global_Objects`;
-const subSlug = slug.replace('Web/JavaScript/Reference/Global_Objects/', '');
-let subSlugParts = subSlug.split('/');
+const subPath = slug.replace("Web/JavaScript/Reference/Global_Objects/", "")
+let subPathParts = subPath.split("/");
 // For Intl, we should use the first two parts of the slug if has
-// e.g. subSlug startswith 'Intl/Collator' we should use 'Intl.Collator'
+// e.g. subPath startswith "Intl/Collator" we should use "Intl.Collator"
 // note that Intl owns some methods, we have some special handling for it later
-subSlugParts = subSlugParts.slice(0, subSlugParts[0] === "Intl" ? 2 : 1);
-let mainObj = subSlugParts.join('.');
+subPathParts = subPathParts.slice(0, subPathParts[0] === "Intl" ? 2 : 1);
+let mainObj = subPathParts.join(".");
 
 // Data for inheritance chain
 const inheritanceData = {
@@ -46,11 +47,10 @@ const inheritanceData = {
   arguments: [],
   Reflect: ["Object"],
   Proxy: [],
-  Atomics: ["Object"],
-  WebAssembly: ["Object"]
+  Atomics: ["Object"]
 };
 
-const inheritance = inheritanceData[mainObj] ?? ["Object", "Function"];
+const inheritance = inheritanceData[mainObj.split(".")[0]] ?? ["Object", "Function"];
 
 // Data for related pages
 const groupData = {
@@ -58,10 +58,7 @@ const groupData = {
   Intl: ["Intl", "Intl.Collator", "Intl.DateTimeFormat", "Intl.ListFormat", "Intl.NumberFormat", "Intl.PluralRules", "Intl.RelativeTimeFormat", "Intl.Segmenter"],
   TypedArray: ["TypedArray", "Int8Array", "Uint8Array", "Uint8ClampedArray", "Int16Array", "Uint16Array",
                 "Int32Array", "Uint32Array", "Float32Array", "Float64Array", "BigInt64Array", "BigUint64Array"],
-  Proxy: ["Proxy", "handler"],
-  WebAssembly: ["WebAssembly", "WebAssembly.Module", "WebAssembly.Global", "WebAssembly.Instance", "WebAssembly.Memory",
-                "WebAssembly.Table", "WebAssembly.CompileError", "WebAssembly.LinkError", "WebAssembly.RuntimeError",
-                "WebAssembly.Tag", "WebAssembly.Exception"]
+  Proxy: ["Proxy", "handler"]
 };
 
 // Exceptions, we want the main object in the sidebar (e.g. Int8Array -> TypedArray)
@@ -71,10 +68,9 @@ if (groupData.TypedArray.includes(mainObj)) {
   mainObj = "Error";
 } else if (groupData.Proxy.includes(mainObj)) {
   mainObj = "Proxy/handler";
-}
-// Special case for Intl, we should make sure that the main object is Intl
-// as Intl owns some methods (e.g. Intl.getCanonicalLocales)
-if (mainObj.startsWith('Intl') && !groupData.Intl.includes(mainObj)) {
+} else if (mainObj.startsWith("Intl") && !groupData.Intl.includes(mainObj)) {
+  // Special case for Intl, we should make sure that the main object is Intl
+  // as Intl owns some methods (e.g. Intl.getCanonicalLocales)
   mainObj = "Intl";
 }
 
@@ -89,16 +85,16 @@ for(const key in groupData) {
   }
 }
 
-const mainObjSlug = mainObj.replace(/\./g, '/'); // e.g. Intl.Collator -> Intl/Collator
+const mainObjPath = mainObj.replaceAll(".", "/"); // e.g. Intl.Collator -> Intl/Collator
 
 // Collect pages
 const source = {};
-source[mainObj] = await page.subpagesExpand(`/en-US/docs/Web/JavaScript/Reference/Global_Objects/${mainObjSlug}`);
+source[mainObj] = await page.subpagesExpand(`/en-US/docs/Web/JavaScript/Reference/Global_Objects/${mainObjPath}`);
 
 const result = {};
 result[mainObj] = {
   title: mainObj,
-  subSlug: mainObjSlug,
+  subPath: mainObjPath,
   constructors: [],
   methods: [],
   properties: [],
@@ -110,7 +106,7 @@ if (inheritance.includes("Function")) {
 
   result.iFunction = {
     title: "Function",
-    subSlug: "Function",
+    subPath: "Function",
     constructors: [],
     methods: [],
     properties: [],
@@ -123,7 +119,7 @@ if (inheritance.includes("Object")) {
 
   result.iObject = {
     title: "Object",
-    subSlug: "Object",
+    subPath: "Object",
     constructors: [],
     methods: [],
     properties: [],
@@ -159,21 +155,21 @@ function isConstructorPage(page) {
   return "javascript-constructor" === page.pageType;
 }
 
-for (const object in source) {
-  let pageList = source[object];
-  if (object === "iObject") {
+for (const key in source) {
+  let pageList = source[key];
+  if (key === "iObject") {
     // For objects, we're only interested in prototype members.
     pageList = pageList.filter(page => isPrototypeMemberPage(page));
   }
   for (const page of pageList) {
     if (isConstructorPage(page)) {
-      result[object].constructors.push(page);
+      result[key].constructors.push(page);
     }
     if (isPropertyPage(page)) {
-      result[object].properties.push(page);
+      result[key].properties.push(page);
     }
     if (isMethodPage(page)) {
-      result[object].methods.push(page);
+      result[key].methods.push(page);
     }
   }
 }
@@ -181,32 +177,29 @@ for (const object in source) {
 // Output helper
 
 async function buildSublist(pages, title, opened) {
-  let result = opened ? "<li><details open>" : "<li><details>";
-
-  result += `<summary>${title}</summary></a><ol>`;
-
   const getTitle = locale === "en-US"
-    ? page => page.title
-    : page => page.translations.find(translation => translation.locale === locale)?.title ?? page.title;
+  ? page => page.title
+  : page => page.translations.find(translation => translation.locale === locale)?.title ?? page.title;
 
   const items = pages.map(async aPage => {
-    const url = aPage.url.replace("en-US", locale);
-    const title = getTitle(aPage);
-    const pageBadges = (await page.badges(aPage)).join("");
+      const url = aPage.url.replace("en-US", locale);
+      const title = getTitle(aPage);
+      const pageBadges = (await page.badges(aPage)).join("");
 
-    return `<li>${web.smartLink(url, null, `<code>${title}</code>`, aPage.slug, slugStdlib, "JSRef")}${pageBadges}</li>`
+      const start = rtlLocales.includes(locale) ? "<li><bdi>" : "<li>";
+      const end = rtlLocales.includes(locale) ? "</bdi></li>" : "</li>";
+      return `${start}${web.smartLink(url, null, `<code>${title}</code>`, aPage.slug, slugStdlib, "JSRef")}${pageBadges}${end}`
   })
 
   // Wait for all the links to be built
-  const itemsResolved = await Promise.all(items);
+  const resolvedItems = await Promise.all(items);
 
-  result += itemsResolved.join("");
-  result += "</ol></details></li>";
+  const start = opened ? "<li><details open>" : "<li><details>";
+  const end = "</details></li>";
+  const result = `${start}<summary>${title}</summary></a><ol>${resolvedItems.join("")}</ol>${end}`
 
   return result;
 }
-
-let len = 0;
 
 // Output
 
@@ -214,21 +207,19 @@ output = '<section class="Quick_links" id="Quick_links"><ol>';
 const link = web.smartLink(slugStdlib, null, text.stdlib, slugStdlib, slugStdlib, "JSRef");
 output += `<li><strong>${link}</strong></li>`;
 
-for (const key in result) {
-  len++;
-  const object = result[key];
-  const resultTitle        = object.title ?? "";
-  const resultSubSlug      = object.subSlug ?? "";
-  const resultConstructors = object.constructors ?? [];
-  const resultProperties   = object.properties ?? [];
-  const resultMethods      = object.methods ?? [];
-  const resultOpen         = object.defaultOpened ?? false;
+for (const [index, item] of Object.values(result).entries()) {
+  const resultTitle        = item.title ?? "";
+  const resultSubPath      = item.subPath ?? "";
+  const resultConstructors = item.constructors ?? [];
+  const resultProperties   = item.properties ?? [];
+  const resultMethods      = item.methods ?? [];
+  const resultOpen         = item.defaultOpened ?? false;
 
-  if (len === 2) {
+  if (index === 1) {
     output += `<li><strong>${text.Inheritance}</strong></li>`;
   }
 
-  const link = web.smartLink(`${slugStdlib}/${resultSubSlug}`, null, `<code>${resultTitle}</code>`, null, slugStdlib, "JSRef");
+  const link = web.smartLink(`${slugStdlib}/${resultSubPath}`, null, `<code>${resultTitle}</code>`, null, slugStdlib, "JSRef");
   output += `<li><strong>${link}</strong></li>`;
 
   if (resultConstructors.length > 0) {
@@ -241,16 +232,16 @@ for (const key in result) {
     output += await buildSublist(resultMethods, text.Methods, resultOpen);
   }
 
-  if (len === 1 && group.length > 0) {
+  if (index === 0 && group.length > 0) {
     output += `<li><strong>${text.Related}</strong></li>`;
-    for (const g of group) {
-      const link = web.smartLink(`${slugStdlib}/${g.replace(".", "/")}`, null, `<code>${g}</code>`, null, slugStdlib, "JSRef");
+    for (const groupItem of group) {
+      const link = web.smartLink(`${slugStdlib}/${groupItem.replace(".", "/")}`, null, `<code>${groupItem}</code>`, null, slugStdlib, "JSRef");
       output += `<li><strong>${link}</strong></li>`;
     }
   }
 }
 
-output += '</ol></section>';
+output += "</ol></section>";
 %>
 
 <%-output%>
