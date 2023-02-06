@@ -24,7 +24,6 @@ const text = {
 
 // Variables
 const slug = env.slug;
-let output = "";
 const locale = env.locale;
 const rtlLocales = ["ar", "he", "fa"];
 const slugStdlib = `/${env.locale}/docs/Web/JavaScript/Reference/Global_Objects`;
@@ -203,45 +202,50 @@ async function buildSublist(pages, title, opened) {
 
 // Output
 
-output = '<section class="Quick_links" id="Quick_links"><ol>';
-const link = web.smartLink(slugStdlib, null, text.stdlib, slugStdlib, slugStdlib, "JSRef");
-output += `<li><strong>${link}</strong></li>`;
-
-for (const [index, item] of Object.values(result).entries()) {
-  const resultTitle        = item.title ?? "";
-  const resultSubPath      = item.subPath ?? "";
-  const resultConstructors = item.constructors ?? [];
-  const resultProperties   = item.properties ?? [];
-  const resultMethods      = item.methods ?? [];
-  const resultOpen         = item.defaultOpened ?? false;
-
-  if (index === 1) {
-    output += `<li><strong>${text.Inheritance}</strong></li>`;
-  }
-
-  const link = web.smartLink(`${slugStdlib}/${resultSubPath}`, null, `<code>${resultTitle}</code>`, null, slugStdlib, "JSRef");
+async function renderOutput() {
+  let output = '<section class="Quick_links" id="Quick_links"><ol>';
+  const link = web.smartLink(slugStdlib, null, text.stdlib, slugStdlib, slugStdlib, "JSRef");
   output += `<li><strong>${link}</strong></li>`;
 
-  if (resultConstructors.length > 0) {
-    output += await buildSublist(resultConstructors, text.Constructor, resultOpen);
-  }
-  if (resultProperties.length > 0) {
-    output += await buildSublist(resultProperties, text.Properties, resultOpen);
-  }
-  if (resultMethods.length > 0) {
-    output += await buildSublist(resultMethods, text.Methods, resultOpen);
-  }
-
-  if (index === 0 && group.length > 0) {
-    output += `<li><strong>${text.Related}</strong></li>`;
-    for (const groupItem of group) {
-      const link = web.smartLink(`${slugStdlib}/${groupItem.replace(".", "/")}`, null, `<code>${groupItem}</code>`, null, slugStdlib, "JSRef");
-      output += `<li><strong>${link}</strong></li>`;
+  for (const [index, item] of Object.values(result).entries()) {
+    const resultTitle        = item.title ?? "";
+    const resultSubPath      = item.subPath ?? "";
+    const resultConstructors = item.constructors ?? [];
+    const resultProperties   = item.properties ?? [];
+    const resultMethods      = item.methods ?? [];
+    const resultOpen         = item.defaultOpened ?? false;
+  
+    if (index === 1) {
+      output += `<li><strong>${text.Inheritance}</strong></li>`;
+    }
+  
+    const link = web.smartLink(`${slugStdlib}/${resultSubPath}`, null, `<code>${resultTitle}</code>`, null, slugStdlib, "JSRef");
+    output += `<li><strong>${link}</strong></li>`;
+  
+    if (resultConstructors.length > 0) {
+      output += await buildSublist(resultConstructors, text.Constructor, resultOpen);
+    }
+    if (resultProperties.length > 0) {
+      output += await buildSublist(resultProperties, text.Properties, resultOpen);
+    }
+    if (resultMethods.length > 0) {
+      output += await buildSublist(resultMethods, text.Methods, resultOpen);
+    }
+  
+    if (index === 0 && group.length > 0) {
+      output += `<li><strong>${text.Related}</strong></li>`;
+      for (const groupItem of group) {
+        const link = web.smartLink(`${slugStdlib}/${groupItem.replace(".", "/")}`, null, `<code>${groupItem}</code>`, null, slugStdlib, "JSRef");
+        output += `<li><strong>${link}</strong></li>`;
+      }
     }
   }
+
+  output += "</ol></section>";
+  return output;
 }
 
-output += "</ol></section>";
+const output = await renderOutput();
 %>
 
 <%-output%>
