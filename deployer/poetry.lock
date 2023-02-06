@@ -57,18 +57,18 @@ uvloop = ["uvloop (>=0.15.2)"]
 
 [[package]]
 name = "boto3"
-version = "1.26.59"
+version = "1.26.64"
 description = "The AWS SDK for Python"
 category = "main"
 optional = false
 python-versions = ">= 3.7"
 files = [
-    {file = "boto3-1.26.59-py3-none-any.whl", hash = "sha256:34ee771a5cc84c16e75d4b9ef4672f51c2bafdce66ec457bbaac630b37d9cd5e"},
-    {file = "boto3-1.26.59.tar.gz", hash = "sha256:7d9cebb507fc96e6eb429621ccb2e731b75e7bbb8d6d9f0cf0c08089ee3c1ab7"},
+    {file = "boto3-1.26.64-py3-none-any.whl", hash = "sha256:777b00e17eddeb92cf5d4674d61453d9bbaeb5bfde4485cb55995bfd07aeefce"},
+    {file = "boto3-1.26.64.tar.gz", hash = "sha256:b0e3d078ec56bc858cc5edae4cda3eed2b1872055828cf5f22d83fc6f79a6d40"},
 ]
 
 [package.dependencies]
-botocore = ">=1.29.59,<1.30.0"
+botocore = ">=1.29.64,<1.30.0"
 jmespath = ">=0.7.1,<2.0.0"
 s3transfer = ">=0.6.0,<0.7.0"
 
@@ -77,14 +77,14 @@ crt = ["botocore[crt] (>=1.21.0,<2.0a0)"]
 
 [[package]]
 name = "botocore"
-version = "1.29.59"
+version = "1.29.64"
 description = "Low-level, data-driven core of boto 3."
 category = "main"
 optional = false
 python-versions = ">= 3.7"
 files = [
-    {file = "botocore-1.29.59-py3-none-any.whl", hash = "sha256:5533644ddefaccfaa98460a63eb73e61a46aad019771226d103b1054b0df6103"},
-    {file = "botocore-1.29.59.tar.gz", hash = "sha256:bc75d41c5eecf624a2f9875483135aa78088a50c8d29847793f92756697cfed5"},
+    {file = "botocore-1.29.64-py3-none-any.whl", hash = "sha256:a1e06b8d6cb65bb8bade392bbc8d11f4431a1658f61c1ff7db5008ac20558862"},
+    {file = "botocore-1.29.64.tar.gz", hash = "sha256:2424c96547eeb9b76eb5bcee5b5bc01741834f525ecc4d538d71d269c7ba6662"},
 ]
 
 [package.dependencies]
@@ -93,7 +93,7 @@ python-dateutil = ">=2.1,<3.0.0"
 urllib3 = ">=1.25.4,<1.27"
 
 [package.extras]
-crt = ["awscrt (==0.15.3)"]
+crt = ["awscrt (==0.16.9)"]
 
 [[package]]
 name = "certifi"
@@ -917,4 +917,4 @@ testing = ["func-timeout", "jaraco.itertools", "pytest (>=4.6)", "pytest-black (
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.7"
-content-hash = "e7a25af0315688d7df6a73b459981987445e819e8e76bf5e8e0fc44f7af79ecc"
+content-hash = "7f66697861b35abb075cfa1bb945d58655fcce76cb596c97ea5a64c7a6517592"
