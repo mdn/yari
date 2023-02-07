@@ -53,10 +53,11 @@ function composeUrl({
         params.set(key, value);
         break;
 
-      case "show":
+      case "collections":
         if (isAuthenticated) {
           // Different endpoint for uncached personalized data.
-          url += "watched/";
+          url += "collections/";
+          params.set(key, value);
         }
         break;
 
@@ -80,7 +81,7 @@ export function useUpdates() {
   const [searchParams] = useSearchParams();
 
   const url = composeUrl({
-    isAuthenticated: user && user.isAuthenticated,
+    isAuthenticated: user?.isAuthenticated || false,
     searchParams,
   });
 

@@ -23,12 +23,8 @@
     order: 2;
   }
 
-  .notifications-menu {
-    order: 3;
-  }
-
   .user-menu {
-    order: 4;
+    order: 3;
   }
 
   .top-level-entry-container {
@@ -180,16 +176,12 @@
       order: 1;
     }
 
-    .notifications-menu {
+    .auth-container {
       order: 2;
     }
 
-    .auth-container {
-      order: 3;
-    }
-
     .user-menu {
-      order: 4;
+      order: 3;
     }
 
     .menu-toggle + .top-level-entry {

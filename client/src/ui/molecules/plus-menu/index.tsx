@@ -36,13 +36,6 @@ export const PlusMenu = ({ visibleSubMenuId, toggleMenu }) => {
               label: "Collections",
               url: `/${locale}/plus/collections`,
             },
-            {
-              description: "Updates from the pages you’re watching",
-              hasIcon: true,
-              iconClasses: "submenu-icon",
-              label: "Notifications",
-              url: `/${locale}/plus/notifications`,
-            },
           ]
         : []),
       {

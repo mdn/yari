@@ -12,7 +12,6 @@ import { Loading } from "../../ui/atoms/loading";
 import Mandala from "../../ui/molecules/mandala";
 import { Paginator } from "../../ui/molecules/paginator";
 import BookmarkMenu from "../../ui/organisms/article-actions/bookmark-menu";
-import { NotificationsWatchMenu } from "../../ui/organisms/article-actions/notifications-watch-menu";
 import { useUserData } from "../../user-context";
 import { camelWrap, range } from "../../utils";
 import { Event, Group, useBCD, useUpdates } from "./api";
@@ -24,6 +23,7 @@ import { LoginBanner } from "./login-banner";
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { DataError } from "../common";
+import { useCollections } from "../collections/api";
 
 type EventWithStatus = Event & { status: Status };
 type Status = "added" | "removed";
@@ -90,19 +90,13 @@ const FILTERS: AnyFilter[] = [
   },
   {
     type: "select",
-    label: "Show",
-    key: "show",
-    options: [
-      {
-        label: "All pages",
-        value: "all",
-        isDefault: true,
-      },
-      {
-        label: "Pages I'm watching",
-        value: "watched",
-      },
-    ],
+    label: "Collections",
+    key: "collections",
+    multiple: {
+      encode: (...values: string[]) => values.join(","),
+      decode: (value: string) => value.split(","),
+    },
+    options: [],
   },
 ];
 
@@ -122,6 +116,37 @@ export default function Updates() {
   return <UpdatesLayout />;
 }
 
+const useFilters = (canFilter: boolean) => {
+  const [filters, setFilters] = useState(FILTERS);
+  const { data, isLoading, error } = useCollections();
+  useEffect(() => {
+    if (!isLoading && data?.length && !error) {
+      setFilters((old) =>
+        old.map((val) => {
+          if (val.key === "collections") {
+            return {
+              ...val,
+              options: data
+                ?.filter((collection) => collection.article_count > 0)
+                .map((info) => {
+                  const label =
+                    info.name === "Default" ? "Saved Articles" : info.name;
+                  return {
+                    label,
+                    value: info.id,
+                  };
+                }),
+            };
+          } else {
+            return val;
+          }
+        })
+      );
+    }
+  }, [isLoading, canFilter, data, error]);
+  return filters;
+};
+
 function UpdatesLayout() {
   document.title = `Updates | ${MDN_PLUS_TITLE}`;
   useScrollToTop();
@@ -129,13 +154,13 @@ function UpdatesLayout() {
   const { data, error } = useUpdates();
   const gleanClick = useGleanClick();
   const [searchParams, setSearchParams] = useSearchParams();
-
   const { setViewed } = useViewedState();
   useEffect(() => setViewed(FeatureId.PLUS_UPDATES_V2));
 
   const hasFilters = [...searchParams.keys()].some((key) => key !== "page");
 
   const canFilter = user?.isAuthenticated === true;
+  const filters = useFilters(canFilter);
 
   return (
     <div className="updates">
@@ -164,7 +189,7 @@ function UpdatesLayout() {
       </header>
       <Container>
         <SearchFilter
-          filters={FILTERS}
+          filters={filters}
           sorts={SORTS}
           isDisabled={!canFilter}
           onChange={(key, newValue, oldValue) =>
@@ -377,7 +402,6 @@ function ArticleActions({ path, mdn_url }: { path: string; mdn_url?: string }) {
       </Button>
       {url && (
         <>
-          <NotificationsWatchMenu doc={doc} />
           <BookmarkMenu doc={doc} />
         </>
       )}

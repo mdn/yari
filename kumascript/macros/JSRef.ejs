@@ -15,6 +15,7 @@ var jsl10n = web.getJSONData('L10n-JavaScript');
 
 var text = {
     'stdlib': mdn.getLocalString(jsl10n, 'stdlib'),
+    'Constructor': mdn.getLocalString(commonl10n, 'Constructor'),
     'Properties': mdn.getLocalString(commonl10n, 'Properties'),
     'Methods': mdn.getLocalString(commonl10n, 'Methods'),
     'Inheritance': mdn.getLocalString(commonl10n, 'Inheritance'),
@@ -93,6 +94,7 @@ if  (inheritance.indexOf("Object") > -1) {
 var result = {};
 result[mainObj] = {
     title: mainObj,
+    constructors: [],
     methods: [],
     properties: [],
     defaultOpened: true
@@ -100,6 +102,7 @@ result[mainObj] = {
 if  (inheritance.indexOf("Function") > -1) {
 result['iFunction'] = {
     title: 'Function',
+    constructors: [],
     methods: [],
     properties: [],
     defaultOpened: false
@@ -108,6 +111,7 @@ result['iFunction'] = {
 if  (inheritance.indexOf("Object") > -1) {
 result['iObject'] = {
     title: 'Object',
+    constructors: [],
     methods: [],
     properties: [],
     defaultOpened: false
@@ -140,6 +144,10 @@ function isMethodPage(page) {
     ].includes(page.pageType);
 }
 
+function isConstructorPage(page) {
+    return "javascript-constructor" === page.pageType;
+}
+
 for (var object in source) {
     pageList = source[object];
     if (object === "iObject") {
@@ -147,6 +155,9 @@ for (var object in source) {
         pageList = pageList.filter(page => isPrototypeMemberPage(page));
     }
     for (const page of pageList) {
+        if (isConstructorPage(page)) {
+            result[object].constructors.push(page);
+        }
         if (isPropertyPage(page)) {
             result[object].properties.push(page);
           }
@@ -158,14 +169,7 @@ for (var object in source) {
 
 // Output helper
 
-var badges = {
-  ExperimentalBadge : await template("ExperimentalBadge"),
-  NonStandardBadge  : await template("NonStandardBadge"),
-  DeprecatedBadge   : await template("DeprecatedBadge"),
-  ObsoleteBadge     : await template("ObsoleteBadge"),
-}
-
-function buildSublist(pages, title, opened) {
+async function buildSublist(pages, title, opened) {
   var result = '<li><details>';
   if (opened !== '') {
     result = '<li><details open>';
@@ -188,36 +192,17 @@ function buildSublist(pages, title, opened) {
         });
     }
 
-    var pageBadges = '';
-    if (containsTag(aPage, 'Experimental')) {
-        pageBadges += badges.ExperimentalBadge;
-    }
-
-    if (containsTag(aPage, 'Non-standard') || containsTag(aPage, 'Non Standard')) {
-        pageBadges += badges.NonStandardBadge;
-    }
-
-    if (containsTag(aPage, 'Deprecated')) {
-        pageBadges += badges.DeprecatedBadge;
-    }
-
-    if (containsTag(aPage, 'Obsolete')) {
-        pageBadges += badges.ObsoleteBadge;
-        result += '<s class="obsoleteElement">';
-    }
+    const pageBadges = (await page.badges(aPage)).join("");
 
     if (rtlLocales.indexOf(locale) != -1) {
         result += '<bdi>';
     }
 
-    result += pageBadges + web.smartLink(url, null, `<code>${title}</code>`, aPage.slug, slug_stdlib, "JSRef");
+    result += web.smartLink(url, null, `<code>${title}</code>`, aPage.slug, slug_stdlib, "JSRef");
+    result += pageBadges;
 
     if (rtlLocales.indexOf(locale) != -1) {
         result += '</bdi>';
-    }
-
-    if (containsTag(aPage, 'Obsolete')) {
-        result += '</s>';
     }
 
     result += '</li>';
@@ -230,6 +215,7 @@ function buildSublist(pages, title, opened) {
 
 
 var resultTitle;
+var resultConstructors;
 var resultProperties;
 var resultMethods;
 var resultOpen;
@@ -243,10 +229,11 @@ output += `<li><strong>${link}</strong></li>`;
 
 for (object in result) {
     len++;
-    resultTitle      = result[object].title || '';
-    resultProperties = result[object].properties || '';
-    resultMethods    = result[object].methods || '';
-    resultOpen       = result[object].defaultOpened || '';
+    resultTitle        = result[object].title || '';
+    resultConstructors = result[object].constructors || '';
+    resultProperties   = result[object].properties || '';
+    resultMethods      = result[object].methods || '';
+    resultOpen         = result[object].defaultOpened || '';
 
     if (len == 2) {
         output += '<li><strong>'+text['Inheritance']+'</strong></li>';
@@ -255,11 +242,14 @@ for (object in result) {
     const link = web.smartLink(`${slug_stdlib}/${resultTitle}`, null, `<code>${resultTitle}</code>`, null, slug_stdlib, "JSRef");
     output += `<li><strong>${link}</strong></li>`;
 
+    if (resultConstructors) {
+        output += buildSublist(resultConstructors, text['Constructor'], resultOpen);
+    }
     if (resultProperties.length > 0) {
-        output += buildSublist(resultProperties, text['Properties'], resultOpen);
+        output += await buildSublist(resultProperties, text['Properties'], resultOpen);
     }
     if (resultMethods.length > 0) {
-        output += buildSublist(resultMethods, text['Methods'], resultOpen);
+        output += await buildSublist(resultMethods, text['Methods'], resultOpen);
     }
 
     if (len == 1 && group.length > 0) {

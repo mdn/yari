@@ -1,5 +1,5 @@
 import { createRequire } from "node:module";
-/* eslint-disable n/no-missing-import */
+
 import { resolveFundamental } from "@yari-internal/fundamental-redirects";
 import { getLocale } from "@yari-internal/locale-utils";
 import {
@@ -241,9 +241,13 @@ export async function handler(event) {
     // considered a "custom" origin because we're using S3 as a website.
     request.headers.host[0].value = request.origin.custom.domainName;
     // Conditionally rewrite the path (prefix) of the origin.
-    if (host.endsWith(CONTENT_DEVELOPMENT_DOMAIN)) {
+    if (
+      host.endsWith(CONTENT_DEVELOPMENT_DOMAIN) &&
+      !decodedUri.startsWith("/bcd/")
+    ) {
       // When reviewing PR's, each PR gets its own subdomain, and
-      // all of its content is prefixed with that subdomain in S3.
+      // all of its content is prefixed with that subdomain in S3,
+      // apart from the bcd data
       request.origin.custom.path = `/${host.split(".")[0]}`;
     } else {
       request.origin.custom.path = "/main";

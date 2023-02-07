@@ -13,6 +13,8 @@ export const BANNER_MULTIPLE_COLLECTIONS_DISMISSED =
   "banner_multiple_collections_dismissed";
 export const BANNER_MULTIPLE_COLLECTIONS_LINK =
   "banner_multiple_collections_link";
+export const BANNER_NEWSLETTER_DISMISSED = "banner_newsletter_dismissed";
+export const BANNER_NEWSLETTER_LINK = "banner_newsletter_link";
 export const NEW_COLLECTION_MODAL_SUBMIT_ARTICLE_ACTIONS =
   "new_collection_modal_submit_article_actions";
 export const NEW_COLLECTION_MODAL_SUBMIT_COLLECTIONS_PAGE =
