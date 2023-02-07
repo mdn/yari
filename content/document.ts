@@ -138,6 +138,11 @@ export function saveFile(
     throw new Error("newSlug can not contain the '#' character");
   }
 
+  const folderPath = path.dirname(filePath);
+  if (!fs.existsSync(folderPath)) {
+    fs.mkdirSync(folderPath, { recursive: true });
+  }
+
   const combined = `---\n${yaml.dump(saveMetadata)}---\n\n${rawBody.trim()}\n`;
   fs.writeFileSync(filePath, combined);
 }
@@ -152,8 +157,6 @@ export function trimLineEndings(string) {
 export function createHTML(html: string, metadata, root = null) {
   const folderPath = getFolderPath(metadata, root);
 
-  fs.mkdirSync(folderPath, { recursive: true });
-
   saveFile(getHTMLPath(folderPath), trimLineEndings(html), metadata);
   return folderPath;
 }
@@ -164,8 +167,6 @@ export function createMarkdown(
   root: string | null = null
 ) {
   const folderPath = getFolderPath(metadata, root);
-
-  fs.mkdirSync(folderPath, { recursive: true });
 
   saveFile(getMarkdownPath(folderPath), trimLineEndings(md), metadata);
   return folderPath;
