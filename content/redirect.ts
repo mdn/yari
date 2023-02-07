@@ -153,12 +153,9 @@ function fixRedirectsCase(oldPairs: Pairs, caseChangedTargets: string[]) {
   const newTargets = new Map(
     caseChangedTargets.map((p) => [p.toLowerCase(), p])
   );
-  const newPairs = oldPairs.map(([from, to]) => {
-    const toLower = to.toLowerCase();
-    if (newTargets.has(toLower)) {
-      return [from, newTargets.get(toLower)] as Pair;
-    }
-    return [from, to] as Pair;
+  const newPairs = oldPairs.map(([from, to]): Pair => {
+    const target = newTargets.get(to.toLowerCase()) ?? to;
+    return [from, to];
   });
   return newPairs;
 }

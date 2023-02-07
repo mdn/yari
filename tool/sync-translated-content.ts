@@ -195,7 +195,7 @@ export function syncTranslatedContent(inFilePath: string, locale: string) {
       throw new Error(`file: ${filePath} already exists!`);
     }
   } else if (filePathChanged && mdOrHtmlExists(filePath)) {
-    `unrooting ${inFilePath} (conflicting translation)`;
+    console.log(`unrooting ${inFilePath} (conflicting translation)`);
     metadata.slug = `${CONFLICTING}/${metadata.slug}`;
     status.conflicting = true;
     status.moved = true;
