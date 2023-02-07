@@ -17,7 +17,7 @@
     "build": "cross-env NODE_ENV=production ts-node build/cli.ts",
     "build:client": "cd client && cross-env NODE_ENV=production BABEL_ENV=production INLINE_RUNTIME_CHUNK=false node scripts/build.js",
     "build:dist": "tsc -p tsconfig.dist.json",
-    "build:fast": "./build-fast.sh",
+    "build:fast": "time ./build-fast.sh",
     "build:glean": "cd client && cross-env VIRTUAL_ENV=venv glean translate src/telemetry/metrics.yaml src/telemetry/pings.yaml -f typescript -o src/telemetry/generated",
     "build:prepare": "yarn build:client && yarn build:ssr && yarn tool optimize-client-build && yarn tool google-analytics-code && yarn tool popularities && yarn tool spas && yarn tool gather-git-history && yarn tool build-robots-txt",
     "build:ssr": "cd ssr && webpack --mode=production",
