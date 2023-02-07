@@ -1,0 +1,9 @@
+en-us: yarn build --locale en-us
+es: yarn build --locale es
+fr: yarn build --locale fr
+ko: yarn build --locale ko
+ja: yarn build --locale ja
+pt-br: yarn build --locale pt-br
+ru: yarn build --locale ru
+zh-cn: yarn build --locale zh-cn
+zh-tw: yarn build --locale zh-tw

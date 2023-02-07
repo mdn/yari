@@ -14,6 +14,7 @@
     "analyze": "source-map-explorer 'client/build/static/js/*.js'",
     "analyze:css": "source-map-explorer 'client/build/static/css/*.css'",
     "build": "cross-env NODE_ENV=production ts-node build/cli.ts",
+    "build:all": "time nf -j Procfile.build start",
     "build:client": "cd client && cross-env INLINE_RUNTIME_CHUNK=false node scripts/build.js",
     "build:dist": "tsc -p tsconfig.dist.json",
     "build:glean": "cd client && cross-env VIRTUAL_ENV=venv glean translate src/telemetry/metrics.yaml src/telemetry/pings.yaml -f typescript -o src/telemetry/generated",
