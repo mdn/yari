@@ -37,59 +37,45 @@ export function Placement() {
     [pong]
   );
 
+  const { click, image, copy } = pong?.fallback || pong || {};
   useEffect(() => {
     return () => observer.current?.disconnect();
   }, []);
 
   return (
     <>
-      {!isServer && pong && (
+      {!isServer && click && image && copy && (
         <>
           <section ref={place} className="place">
-            {pong?.fallback ? (
-              <p className="pong-box">
-                <a
-                  className="pong"
-                  href={`/pong/click?code=${encodeURIComponent(
-                    pong?.click
-                  )}&fallback=${encodeURIComponent(pong?.fallback?.click)}`}
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  <img
-                    src={`/pimg/${encodeURIComponent(pong?.fallback?.image)}`}
-                    alt="an ad"
-                  ></img>
-                  {pong?.fallback?.copy}
-                </a>
-                <a className="pong-note" href={pong?.fallback?.by}>
-                  Ads by Carbon
-                </a>
-              </p>
-            ) : (
-              <p className="pong-box">
-                <a
-                  className="pong"
-                  href={`/pong/click?code=${encodeURIComponent(pong?.click)}`}
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  <img
-                    src={`/pimg/${encodeURIComponent(pong?.image || "")}`}
-                    alt="an ad"
-                  ></img>
-                  {pong?.copy}
-                </a>
-                <a href="/" className="pong-note">
-                  Ads by Mozilla
-                </a>
-              </p>
-            )}
-            {user?.isSubscriber && (
-              <a className="no-pong" href="/en-US/plus/settings">
-                Don't wanna see ads?
+            <p className="pong-box">
+              <a
+                className="pong"
+                href={`/pong/click?code=${encodeURIComponent(click)}`}
+                target="_blank"
+                rel="noreferrer"
+              >
+                <img
+                  src={`/pimg/${encodeURIComponent(image || "")}`}
+                  alt="an ad"
+                ></img>
+                {pong?.copy}
               </a>
-            )}
+              <a
+                href={pong?.fallback?.by || "/"}
+                className="pong-note"
+                target="_blank"
+                rel="noreferrer"
+              >
+                {pong?.fallback?.by ? "Ads by Carbon" : "Ads by Mozilla"}
+              </a>
+            </p>
+
+            <a
+              className="no-pong"
+              href={user?.isSubscriber ? "/en-US/plus/settings" : "/en-US/plus"}
+            >
+              Don't wanna see ads?
+            </a>
           </section>
         </>
       )}
