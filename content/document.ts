@@ -29,9 +29,9 @@ import {
   toPrettyJSON,
   MEMOIZE_INVALIDATE,
 } from "./utils";
-export { urlToFolderPath, MEMOIZE_INVALIDATE } from "./utils";
 import * as Redirect from "./redirect";
 import { DocFrontmatter } from "../libs/types";
+export { urlToFolderPath, MEMOIZE_INVALIDATE } from "./utils";
 
 function buildPath(localeFolder: string, slug: string) {
   return path.join(localeFolder, slugToFolder(slug));
@@ -139,9 +139,7 @@ export function saveFile(
   }
 
   const folderPath = path.dirname(filePath);
-  if (!fs.existsSync(folderPath)) {
-    fs.mkdirSync(folderPath, { recursive: true });
-  }
+  fs.mkdirSync(folderPath, { recursive: true });
 
   const combined = `---\n${yaml.dump(saveMetadata)}---\n\n${rawBody.trim()}\n`;
   fs.writeFileSync(filePath, combined);
