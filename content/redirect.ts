@@ -155,7 +155,7 @@ function fixRedirectsCase(oldPairs: Pairs, caseChangedTargets: string[]) {
   );
   const newPairs = oldPairs.map(([from, to]): Pair => {
     const target = newTargets.get(to.toLowerCase()) ?? to;
-    return [from, to];
+    return [from, target];
   });
   return newPairs;
 }
