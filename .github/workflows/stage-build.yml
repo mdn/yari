@@ -229,6 +229,8 @@ jobs:
 
           DEPLOYER_ELASTICSEARCH_URL: ${{ secrets.DEPLOYER_STAGE_ELASTICSEARCH_URL }}
 
+          LAMBDA_PREFIX: stage-
+
         run: |
 
           # Info about which CONTENT_* environment variables were set and to what.
