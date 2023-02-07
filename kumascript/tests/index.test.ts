@@ -5,18 +5,13 @@ import {
   MacroNotFoundError,
   MacroBrokenLinkError,
   MacroRedirectedLinkError,
-  MacroExecutionError,
 } from "../src/errors.js";
 
 const source = `
-  {{cssxref("bigfoot")}}
-  {{nonExistentMacro("yada")}}
-  {{cssxref("dumber")}}
-  {{cssxref("number")}}
-  {{page("bogus")}}
-  {{page("/en-US/docs/Web/B")}}
-  {{page("/en-US/docs/Web/B", "bogus-section")}}
-  {{page("/en-US/docs/Web/C")}}
+{{cssxref("bigfoot")}}
+{{nonExistentMacro("yada")}}
+{{cssxref("dumber")}}
+{{cssxref("number")}}
 `.trim();
 
 const findByURL = jest.fn((url: string) => {
@@ -51,21 +46,6 @@ const findByURL = jest.fn((url: string) => {
         frontMatterOffset: 4,
       },
     },
-    "/en-us/docs/web/c": {
-      url: "/en-US/docs/Web/C",
-      metadata: {
-        title: "C",
-        locale: "en-US",
-        slug: "Web/C",
-        tags: ["Web"],
-      },
-      rawBody: '{{page("/en-US/docs/Web/B")}}',
-      isMarkdown: false,
-      fileInfo: {
-        path: "testing/content/files/en-us/web/c",
-        frontMatterOffset: 5,
-      },
-    },
     "/en-us/docs/web/css/number": {
       url: "/en-US/docs/Web/CSS/number",
       metadata: {
@@ -94,6 +74,7 @@ jest.unstable_mockModule("../../content/index.js", () => ({
 
 // Depends on mocking Document.findByURL
 const { default: info } = await import("../src/info.js");
+
 const cleanURL = jest.fn((url: string) => {
   const result = url.toLowerCase();
   if (result === "/en-us/docs/web/css/dumber") {
@@ -101,6 +82,7 @@ const cleanURL = jest.fn((url: string) => {
   }
   return result;
 });
+
 jest.unstable_mockModule("../src/info.js", () => ({
   default: {
     ...info,
@@ -123,103 +105,53 @@ describe("testing the main render() function", () => {
     expect(result).toEqual(
       expect.stringContaining('{{nonExistentMacro("yada")}}')
     );
-    expect(result).toEqual(expect.stringContaining('{{page("bogus")}}'));
-    expect(result).toEqual(
-      expect.stringContaining('{{page("/en-US/docs/Web/B", "bogus-section")}}')
-    );
     const brokenLink = $(
       'a.page-not-created[title^="The documentation about this has not yet been written"]'
     );
-    expect(brokenLink).toHaveLength(3);
+    expect(brokenLink).toHaveLength(1);
     expect(brokenLink.html()).toBe("<code>bigfoot</code>");
     const otherLinks = $(`a[href="/en-US/docs/Web/CSS/number"]`);
     expect(otherLinks).toHaveLength(2);
     expect(otherLinks.eq(0).html()).toBe("<code>&lt;dumber&gt;</code>");
     expect(otherLinks.eq(1).html()).toBe("<code>&lt;number&gt;</code>");
     // Next, let's check the errors.
-    expect(errors).toHaveLength(6);
+    expect(errors).toHaveLength(3);
+
     expect(errors[0]).toBeInstanceOf(MacroBrokenLinkError);
-    expect(errors[0]).toHaveProperty("line", 4);
-    expect(errors[0]).toHaveProperty("column", 4);
-    expect(errors[0]).toHaveProperty(
-      "filepath",
-      "testing/content/files/en-us/web/b"
-    );
-    expect(errors[0]).toHaveProperty(
-      "errorStack",
-      expect.stringContaining("/en-US/docs/Web/CSS/bigfoot does not exist")
-    );
-    expect(errors[0]).toHaveProperty("macroName", "cssxref");
-    expect(errors[0]).toHaveProperty("macroSource", '{{cssxref("bigfoot")}}');
-    expect(errors[1]).toBeInstanceOf(MacroBrokenLinkError);
-    expect(errors[1]).toHaveProperty("line", 8);
-    expect(errors[1]).toHaveProperty("column", 1);
-    expect(errors[1]).toHaveProperty(
-      "filepath",
-      "testing/content/files/en-us/web/a"
-    );
-    expect(errors[1]).toHaveProperty(
-      "errorStack",
-      expect.stringContaining("/en-US/docs/Web/CSS/bigfoot does not exist")
-    );
-    expect(errors[1]).toHaveProperty("macroName", "cssxref");
-    expect(errors[1]).toHaveProperty("macroSource", '{{cssxref("bigfoot")}}');
-    expect(errors[2]).toBeInstanceOf(MacroNotFoundError);
-    expect(errors[2]).toHaveProperty("line", 9);
-    expect(errors[2]).toHaveProperty("column", 3);
-    expect(errors[2]).toHaveProperty(
-      "filepath",
-      "testing/content/files/en-us/web/a"
-    );
-    expect(errors[2]).toHaveProperty("macroName", "nonExistentMacro");
-    expect(errors[2]).toHaveProperty(
-      "errorStack",
-      expect.stringContaining("Unknown macro nonexistentmacro")
-    );
-    expect(errors[3]).toBeInstanceOf(MacroRedirectedLinkError);
-    expect(errors[3]).toHaveProperty("line", 10);
-    expect(errors[3]).toHaveProperty("column", 3);
-    expect(errors[3]).toHaveProperty(
-      "filepath",
-      "testing/content/files/en-us/web/a"
-    );
-    expect(errors[3]).toHaveProperty(
-      "errorStack",
-      expect.stringContaining(
+    expect(errors[0]).toMatchObject({
+      line: 8,
+      column: 1,
+      filepath: "testing/content/files/en-us/web/a",
+      errorStack: expect.stringContaining(
+        "/en-US/docs/Web/CSS/bigfoot does not exist"
+      ),
+      macroName: "cssxref",
+      macroSource: '{{cssxref("bigfoot")}}',
+    });
+
+    expect(errors[1]).toBeInstanceOf(MacroNotFoundError);
+    expect(errors[1]).toMatchObject({
+      line: 9,
+      column: 1,
+      filepath: "testing/content/files/en-us/web/a",
+      macroName: "nonExistentMacro",
+      errorStack: expect.stringContaining("Unknown macro nonexistentmacro"),
+    });
+
+    expect(errors[2]).toBeInstanceOf(MacroRedirectedLinkError);
+    expect(errors[2]).toMatchObject({
+      line: 10,
+      column: 1,
+      filepath: "testing/content/files/en-us/web/a",
+      errorStack: expect.stringContaining(
         "/en-US/docs/Web/CSS/dumber redirects to /en-US/docs/Web/CSS/number"
-      )
-    );
-    expect(errors[3]).toHaveProperty("macroName", "cssxref");
-    expect(errors[3]).toHaveProperty("macroSource", '{{cssxref("dumber")}}');
-    expect(errors[3]).toHaveProperty("redirectInfo.current", "dumber");
-    expect(errors[3]).toHaveProperty("redirectInfo.suggested", "number");
-    expect(errors[4]).toBeInstanceOf(MacroExecutionError);
-    expect(errors[4]).toHaveProperty("line", 12);
-    expect(errors[4]).toHaveProperty("column", 3);
-    expect(errors[4]).toHaveProperty(
-      "filepath",
-      "testing/content/files/en-us/web/a"
-    );
-    expect(errors[4]).toHaveProperty("macroName", "page");
-    expect(errors[4]).toHaveProperty(
-      "errorStack",
-      expect.stringContaining(
-        '/en-us/docs/web/a references /en-us/docs/bogus (derived from "bogus"), which does not exist'
-      )
-    );
-    expect(errors[5]).toBeInstanceOf(MacroExecutionError);
-    expect(errors[5]).toHaveProperty("line", 14);
-    expect(errors[5]).toHaveProperty("column", 3);
-    expect(errors[5]).toHaveProperty(
-      "filepath",
-      "testing/content/files/en-us/web/a"
-    );
-    expect(errors[5]).toHaveProperty("macroName", "page");
-    expect(errors[5]).toHaveProperty(
-      "errorStack",
-      expect.stringContaining(
-        'unable to find an HTML element with an "id" of "bogus-section" within /en-us/docs/web/b'
-      )
-    );
+      ),
+      macroName: "cssxref",
+      macroSource: '{{cssxref("dumber")}}',
+      redirectInfo: {
+        current: "dumber",
+        suggested: "number",
+      },
+    });
   });
 });

@@ -12,7 +12,6 @@ import { Loading } from "../../ui/atoms/loading";
 import Mandala from "../../ui/molecules/mandala";
 import { Paginator } from "../../ui/molecules/paginator";
 import BookmarkMenu from "../../ui/organisms/article-actions/bookmark-menu";
-import { NotificationsWatchMenu } from "../../ui/organisms/article-actions/notifications-watch-menu";
 import { useUserData } from "../../user-context";
 import { camelWrap, range } from "../../utils";
 import { Event, Group, useBCD, useUpdates } from "./api";
@@ -403,7 +402,6 @@ function ArticleActions({ path, mdn_url }: { path: string; mdn_url?: string }) {
       </Button>
       {url && (
         <>
-          <NotificationsWatchMenu doc={doc} />
           <BookmarkMenu doc={doc} />
         </>
       )}

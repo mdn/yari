@@ -449,10 +449,6 @@ const text = mdn.localStringMap({
     'Complete_beginners_start_here': 'Complete beginners start here!',
     'Getting_started_with_the_web': 'Getting started with the web',
   },
-  'de': {
-    'Complete_beginners_start_here': 'Anfänger starten hier!',
-    'Getting_started_with_the_web': 'Lernen Sie das Internet kennen',
-  },
   'fr': {
     'Complete_beginners_start_here': 'Bienvenue aux débutants !',
     'Getting_started_with_the_web': 'Commencer avec le Web',
@@ -470,8 +466,8 @@ appropriate locale. If a string is missing for a locale, it will fall back to
 <%
 const s_title = mdn.localString({
   "en-US": "Firefox for Developers",
-  "de": "Firefox für Entwickler",
-  "es": "Firefox para desarrolladores"
+  "es": "Firefox para desarrolladores",
+  "fr": "Firefox pour les développeurs",
 });
 
 const body = mdn.localString({
@@ -479,22 +475,22 @@ const body = mdn.localString({
     "hello": "Hello!",
     "goodbye": "Goodbye!",
   },
-  "de": {
-    "hello": "Hallo!",
-    "goodbye": "Auf Wiedersehen!",
-  },
   "es": {
     "hello": "¡Hola!"
+  },
+  "fr": {
+    "hello": "Bonjour !",
+    "goodbye": "Au revoir !",
   }
 });
 %>
 <%= s_title %> / <%= body['hello'] %> / <%= body['goodbye'] %>
 ```
 
-Will render, for `de`:
+Will render, for `fr`:
 
 ```plain
-Firefox für Entwickler / Hallo! / Auf Wiedersehen!
+Firefox pour les développeurs / Bonjour ! / Au revoir !
 ```
 
 ...and for `es`:

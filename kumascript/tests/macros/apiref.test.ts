@@ -137,12 +137,7 @@ const expectedStaticMethods = {
         "The MyTestStaticMethod2 property of the TestInterface interface is deprecated and non-standard.",
     },
     {
-      badges: [
-        "icon-experimental",
-        "icon-deprecated",
-        "icon-nonstandard",
-        "obsolete",
-      ],
+      badges: ["icon-experimental", "icon-deprecated", "icon-nonstandard"],
       text: "MyTestStaticMethod3",
       target: "/en-US/docs/Web/API/TestInterface/MyTestStaticMethod3",
       title:
@@ -165,12 +160,7 @@ const expectedStaticMethods = {
         "The MyTestStaticMethod2 property of the TestInterface interface is deprecated and non-standard.",
     },
     {
-      badges: [
-        "icon-experimental",
-        "icon-deprecated",
-        "icon-nonstandard",
-        "obsolete",
-      ],
+      badges: ["icon-experimental", "icon-deprecated", "icon-nonstandard"],
       text: "MyTestStaticMethod3",
       target: "/fr/docs/Web/API/TestInterface/MyTestStaticMethod3",
       title:
@@ -193,12 +183,7 @@ const expectedStaticMethods = {
         "The MyTestStaticMethod2 property of the TestInterface interface is deprecated and non-standard (ja translation).",
     },
     {
-      badges: [
-        "icon-experimental",
-        "icon-deprecated",
-        "icon-nonstandard",
-        "obsolete",
-      ],
+      badges: ["icon-experimental", "icon-deprecated", "icon-nonstandard"],
       text: "MyTestStaticMethod3",
       target: "/ja/docs/Web/API/TestInterface/MyTestStaticMethod3",
       title:
@@ -224,12 +209,7 @@ const expectedInstanceMethods = {
         "The MyTestInstanceMethod2 property of the TestInterface interface is deprecated and non-standard.",
     },
     {
-      badges: [
-        "icon-experimental",
-        "icon-deprecated",
-        "icon-nonstandard",
-        "obsolete",
-      ],
+      badges: ["icon-experimental", "icon-deprecated", "icon-nonstandard"],
       text: "MyTestInstanceMethod3",
       target: "/en-US/docs/Web/API/TestInterface/MyTestInstanceMethod3",
       title:
@@ -252,12 +232,7 @@ const expectedInstanceMethods = {
         "The MyTestInstanceMethod2 property of the TestInterface interface is deprecated and non-standard.",
     },
     {
-      badges: [
-        "icon-experimental",
-        "icon-deprecated",
-        "icon-nonstandard",
-        "obsolete",
-      ],
+      badges: ["icon-experimental", "icon-deprecated", "icon-nonstandard"],
       text: "MyTestInstanceMethod3",
       target: "/fr/docs/Web/API/TestInterface/MyTestInstanceMethod3",
       title:
@@ -280,12 +255,7 @@ const expectedInstanceMethods = {
         "The MyTestInstanceMethod2 property of the TestInterface interface is deprecated and non-standard (ja translation).",
     },
     {
-      badges: [
-        "icon-experimental",
-        "icon-deprecated",
-        "icon-nonstandard",
-        "obsolete",
-      ],
+      badges: ["icon-experimental", "icon-deprecated", "icon-nonstandard"],
       text: "MyTestInstanceMethod3",
       target: "/ja/docs/Web/API/TestInterface/MyTestInstanceMethod3",
       title:

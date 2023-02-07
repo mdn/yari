@@ -23,9 +23,16 @@ const groupDataFixture = JSON.parse(
 const overviewPages = {
   "/en-US/docs/Web/API/An_overview_page_for_ATestInterface_API": {
     tags: ["foo", "bar"],
+    status: [],
   },
-  "/en-US/docs/Web/API/A2TestInterface_overview": { tags: ["experimental"] },
-  "/en-US/docs/Web/API/An_overview_page_for_BTestInterface_API": { tags: [] },
+  "/en-US/docs/Web/API/A2TestInterface_overview": {
+    tags: ["experimental"],
+    status: [],
+  },
+  "/en-US/docs/Web/API/An_overview_page_for_BTestInterface_API": {
+    tags: [],
+    status: [],
+  },
 };
 
 /**
