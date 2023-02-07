@@ -116,10 +116,8 @@ export interface BuiltDocuments {
 
 async function buildDocuments(
   files: string[] = null,
-  quiet = false,
-  interactive = false,
-  noHTML = false,
-  locales: Map<string, string> = new Map()
+  locales: Map<string, string> = new Map(),
+  { quiet = false, interactive = false, noHTML = false, chunk = 1, chunks = 1 }
 ): Promise<BuiltDocuments> {
   // If a list of files was set, it came from the CLI.
   // Override whatever was in the build options.
@@ -127,6 +125,10 @@ async function buildDocuments(
     ...options,
     locales,
   };
+  if (chunks > 1 && chunk <= chunks) {
+    findAllOptions.chunk = chunk;
+    findAllOptions.chunks = chunks;
+  }
   if (files) {
     findAllOptions.files = new Set(files);
   }
@@ -332,6 +334,8 @@ interface BuildArgsAndOptions {
     files?: string[];
   };
   options: {
+    chunk?: number;
+    chunks?: number;
     quiet?: boolean;
     interactive?: boolean;
     nohtml?: boolean;
@@ -356,6 +360,14 @@ program
   .option("--not-locale <locale...>", "Exclude specific locales", {
     default: [],
     validator: [...VALID_LOCALES.keys()],
+  })
+  .option("--chunk <number>", "Current chunk (if chunking)", {
+    default: 1,
+    validator: program.NUMBER,
+  })
+  .option("--chunks <number>", "Number of chunks (if chunking)", {
+    default: 1,
+    validator: program.NUMBER,
   })
   .option("--sitemap-index", "Build a sitemap index file", {
     default: false,
@@ -449,10 +461,14 @@ program
       const t0 = new Date();
       const { slugPerLocale, peakHeapBytes, totalFlaws } = await buildDocuments(
         files,
-        Boolean(options.quiet),
-        Boolean(options.interactive),
-        Boolean(options.nohtml),
-        locales
+        locales,
+        {
+          chunk: Number(options.chunk),
+          chunks: Number(options.chunks),
+          quiet: Boolean(options.quiet),
+          interactive: Boolean(options.interactive),
+          noHTML: Boolean(options.nohtml),
+        }
       );
       const t1 = new Date();
       const count = Object.values(slugPerLocale).reduce(
