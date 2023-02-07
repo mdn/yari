@@ -100,10 +100,6 @@ const pongProxy = createProxyMiddleware({
   headers: {
     Connection: "keep-alive",
   },
-  logLevel: "debug",
-  onProxyReq: (req) => {
-    console.log(req.path);
-  },
 });
 
 const contentProxy =

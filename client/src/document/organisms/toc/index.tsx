@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import "./index.scss";
 import { Toc } from "../../../../../libs/types/document";
 import { useFirstVisibleElement } from "../../hooks";
-import { Place } from "./place";
+import { Placement } from "./placement";
 
 export function TOC({ toc }: { toc: Toc[] }) {
   const [currentViewedTocItem, setCurrentViewedTocItem] = useState("");
@@ -60,7 +60,7 @@ export function TOC({ toc }: { toc: Toc[] }) {
           </ul>
         </section>
       </div>
-      <Place></Place>
+      <Placement />
     </>
   );
 }

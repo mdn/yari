@@ -8,15 +8,22 @@ import {
   KEVEL_NETWORK_ID,
   SIGN_SECRET,
   CARBON_ZONE_KEY,
+  FALLBACK_ENABLED,
 } from "./env.js";
 import cc2ip from "./cc2ip.js";
-import { downloadAndResizeImage } from "./img.js";
 
 const siteId = KEVEL_SITE_ID;
 const networkId = KEVEL_NETWORK_ID;
 const client = new Client({ networkId, siteId });
 
-function encodeAndSign(s) {
+export async function fetchImage(src) {
+  const imageResponse = await fetch(src);
+  const imageBuffer = await imageResponse.arrayBuffer();
+  const contentType = imageResponse.headers.get("content-type");
+  return { buf: imageBuffer, contentType };
+}
+
+function encodeAndSign(s = "") {
   const hmac = createHmac("sha256", SIGN_SECRET);
   hmac.update(s);
   return `${Buffer.from(s, "utf-8").toString("base64")}.${hmac.digest(
@@ -69,15 +76,19 @@ export async function handler(event) {
       ip: anonymousIp,
     });
     const { decisions: { div0 } = {} } = decisionRes;
-    if (div0 === null) {
+    if (div0 === null || div0?.[0] === null) {
       return {
-        status: 400,
-        statusDescription: "BAD_REQUEST",
+        status: 404,
+        statusDescription: "NOT_FOUND",
       };
     }
 
     const [{ contents, clickUrl, impressionUrl }] = div0;
-    if (contents?.[0]?.data?.customData?.fallback) {
+    if (
+      FALLBACK_ENABLED &&
+      CARBON_ZONE_KEY &&
+      contents?.[0]?.data?.customData?.fallback
+    ) {
       // fall back to carbon
       try {
         const {
@@ -94,10 +105,10 @@ export async function handler(event) {
         payload = {
           contents,
           click: encodeAndSign(clickUrl),
-          impression: encodeAndSign(impressionUrl),
+          view: encodeAndSign(impressionUrl),
           fallback: {
             click: encodeAndSign(statlink),
-            impression: encodeAndSign(statimp),
+            view: encodeAndSign(statimp),
             image: encodeAndSign(smallImage),
             copy: description,
             by: ad_via_link,
@@ -112,10 +123,10 @@ export async function handler(event) {
       }
     } else {
       payload = {
-        contents,
+        copy: contents?.[0]?.data?.title || "🦖",
         image: encodeAndSign(contents[0]?.data?.imageUrl),
         click: encodeAndSign(clickUrl),
-        impression: encodeAndSign(impressionUrl),
+        view: encodeAndSign(impressionUrl),
       };
     }
     const response = {
@@ -199,7 +210,7 @@ export async function handler(event) {
     }
   } else if (request.uri.startsWith("/pimg/")) {
     const src = decodeAndVerify(decodeURIComponent(request.uri.substring(6)));
-    const { buf, contentType } = downloadAndResizeImage(src);
+    const { buf, contentType } = await fetchImage(src);
     return {
       status: 200,
       statusDescription: "OK",

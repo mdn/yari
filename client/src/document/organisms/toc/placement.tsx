@@ -3,11 +3,10 @@ import { useIsServer } from "../../../hooks";
 import { usePlacementStatus } from "../../../placement-context";
 import { useUserData } from "../../../user-context";
 
-export function Place() {
+export function Placement() {
   const isServer = useIsServer();
   const user = useUserData();
   const pong = usePlacementStatus();
-  const category = null;
 
   const observer = useRef<IntersectionObserver | null>(null);
   const place = useCallback(
@@ -22,9 +21,9 @@ export function Place() {
           const [{ isIntersecting = false } = {}] = entries;
           if (isIntersecting && typeof navigator !== "undefined") {
             navigator?.sendBeacon(
-              `/pong/viewed?code=${encodeURIComponent(pong?.impression)}${
+              `/pong/viewed?code=${encodeURIComponent(pong?.view)}${
                 pong?.fallback
-                  ? `&fallback=${encodeURIComponent(pong?.fallback?.click)}`
+                  ? `&fallback=${encodeURIComponent(pong?.fallback?.view)}`
                   : ""
               }`
             );
@@ -79,7 +78,7 @@ export function Place() {
                     src={`/pimg/${encodeURIComponent(pong?.image || "")}`}
                     alt="an ad"
                   ></img>
-                  {pong?.contents?.[0]?.data?.title}
+                  {pong?.copy}
                 </a>
                 <a href="/" className="pong-note">
                   Ads by Mozilla

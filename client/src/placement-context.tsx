@@ -2,12 +2,20 @@ import React from "react";
 import useSWR from "swr";
 import { useUserData } from "./user-context";
 
-interface PlacementStatus {
-  contents: any[];
+interface Fallback {
+  copy: string;
   click: string;
-  impression: string;
-  fallback?: any;
-  image?: string;
+  view: string;
+  image: string;
+  by: string;
+}
+
+interface PlacementStatus {
+  copy: string;
+  click: string;
+  view: string;
+  fallback?: Fallback;
+  image: string;
 }
 
 export const PlacementContext = React.createContext<
