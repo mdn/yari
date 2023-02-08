@@ -26,11 +26,10 @@ let badgeTemplatesLoaded = false;
 
 export async function getBadgeTemplates(kuma: KumaThis, aPage: any) {
   await assertTemplatesLoaded(kuma);
-
   return badges
     .filter(
       ({ status, tag }) =>
-        (status && aPage.status.includes(status)) || page.hasTag(aPage, tag)
+        (status && aPage.status?.includes(status)) || page.hasTag(aPage, tag)
     )
     .map(({ template }) => template);
 }
