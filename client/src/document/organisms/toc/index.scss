@@ -61,44 +61,51 @@
 .place {
   display: flex;
   flex-direction: column;
+  margin: 1rem 0;
   max-width: 12rem;
   min-height: 20rem;
-  margin: 1rem 0;
 
   .pong-box {
-    padding: 1rem;
     border: 1px solid var(--border-primary);
     margin: 0 0 0.125rem;
+    max-width: 8.125rem;
+    padding: 0;
 
     .pong {
       align-items: center;
       display: flex;
       flex-direction: column;
-      font-size: 0.8rem;
 
       img {
-        max-height: 100px;
-        max-width: 130px;
-        margin-bottom: 1rem;
+        max-height: 6.25rem;
+        max-width: 8.125rem;
+      }
+
+      span {
+        color: var(--text-secondary);
+        font-size: 0.75rem;
+        padding: 0.5rem;
       }
     }
 
     .pong-note {
+      color: var(--text-secondary);
       display: flex;
-      font-size: 0.6rem;
+      font-size: 0.625rem;
       justify-content: space-between;
-      margin: 1rem 0 0;
-      margin-left: auto;
+      margin: 1rem 0.25rem 0 auto;
+      text-decoration: underline;
       width: max-content;
     }
   }
 }
 
 .no-pong {
+  color: var(--text-secondary);
   font-size: 0.6rem;
   margin-bottom: 0.5rem;
-  text-align: center;
-  width: 100%;
-  padding: 0 1rem;
   max-width: 12rem;
+  padding: 0;
+  text-decoration: underline;
+  width: 100%;
 }

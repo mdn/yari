@@ -58,7 +58,7 @@ export function Placement() {
                   src={`/pimg/${encodeURIComponent(image || "")}`}
                   alt="an ad"
                 ></img>
-                {pong?.copy}
+                <span>{pong?.copy}</span>
               </a>
               <a
                 href={pong?.fallback?.by || "/"}
@@ -66,7 +66,7 @@ export function Placement() {
                 target="_blank"
                 rel="noreferrer"
               >
-                {pong?.fallback?.by ? "Ads by Carbon" : "Ads by Mozilla"}
+                {pong?.fallback?.by ? "Ads by Carbon" : "Mozilla ads"}
               </a>
             </p>
 
@@ -74,7 +74,7 @@ export function Placement() {
               className="no-pong"
               href={user?.isSubscriber ? "/en-US/plus/settings" : "/en-US/plus"}
             >
-              Don't wanna see ads?
+              Don't want to see ads?
             </a>
           </section>
         </>
