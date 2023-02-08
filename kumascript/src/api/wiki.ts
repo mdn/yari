@@ -1,5 +1,5 @@
-import { KumaThis } from "../environment";
-import * as util from "./util";
+import { KumaThis } from "../environment.js";
+import * as util from "./util.js";
 
 const wiki = {
   //

@@ -1,5 +1,5 @@
-const { readGitignoreFiles } = require("eslint-gitignore");
 const path = require("node:path");
+const { readGitignoreFiles } = require("eslint-gitignore");
 
 const ignores = readGitignoreFiles({
   cwd: path.join(".git", "info"),
@@ -39,6 +39,12 @@ module.exports = {
         "@typescript-eslint/no-unused-vars": [
           "warn",
           { ignoreRestSiblings: true },
+        ],
+        "n/no-extraneous-import": [
+          "error",
+          {
+            allowModules: ["@jest/globals"],
+          },
         ],
         "n/no-missing-import": "off",
         "n/no-unpublished-import": "off",

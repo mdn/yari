@@ -1,19 +1,16 @@
 import fs from "node:fs";
-import path from "node:path";
 
 import fromMarkdown from "mdast-util-from-markdown";
 import visit from "unist-util-visit";
 
-import { Document, Redirect, Image } from "../../content";
-import { findMatchesInText } from "../matches-in-text";
+import { Document, Redirect, Image } from "../../content/index.js";
+import { findMatchesInText } from "../matches-in-text.js";
 import {
   DEFAULT_LOCALE,
   FLAW_LEVELS,
   VALID_LOCALES,
-} from "../../libs/constants";
-import { isValidLocale } from "../../libs/locale-utils";
-
-const dirname = __dirname;
+} from "../../libs/constants/index.js";
+import { isValidLocale } from "../../libs/locale-utils/index.js";
 
 function findMatchesInMarkdown(rawContent, href) {
   const matches = [];
@@ -27,10 +24,14 @@ function findMatchesInMarkdown(rawContent, href) {
 }
 
 const _safeToHttpsDomains = new Map();
+
 function getSafeToHttpDomains() {
   if (!_safeToHttpsDomains.size) {
     const fileParsed = JSON.parse(
-      fs.readFileSync(path.join(dirname, "safe-to-https-domains.json"), "utf-8")
+      fs.readFileSync(
+        new URL("safe-to-https-domains.json", import.meta.url),
+        "utf-8"
+      )
     );
     Object.entries(fileParsed).forEach(([key, value]) =>
       _safeToHttpsDomains.set(key, value)

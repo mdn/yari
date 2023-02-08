@@ -5,9 +5,9 @@ import readChunk from "read-chunk";
 import imageType from "image-type";
 import isSvg from "is-svg";
 
-import { DEFAULT_LOCALE } from "../libs/constants";
-import { ROOTS } from "../libs/env";
-import { memoize, slugToFolder } from "./utils";
+import { DEFAULT_LOCALE } from "../libs/constants/index.js";
+import { ROOTS } from "../libs/env/index.js";
+import { memoize, slugToFolder } from "./utils.js";
 
 function isImage(filePath) {
   if (fs.statSync(filePath).isDirectory()) {
@@ -16,7 +16,6 @@ function isImage(filePath) {
   if (filePath.toLowerCase().endsWith(".svg")) {
     return isSvg(fs.readFileSync(filePath));
   }
-
   const buffer = readChunk.sync(filePath, 0, 12);
   if (buffer.length === 0) {
     return false;

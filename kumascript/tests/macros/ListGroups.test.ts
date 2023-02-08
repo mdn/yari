@@ -1,17 +1,17 @@
+import fs from "node:fs";
+
+import { jest } from "@jest/globals";
 import { JSDOM } from "jsdom";
 
-import { beforeEachMacro, describeMacro, itMacro, lintHTML } from "./utils";
-
-const dirname = __dirname;
+import { beforeEachMacro, describeMacro, itMacro, lintHTML } from "./utils.js";
 
 /**
  * Load all the fixtures.
  */
-import fs from "node:fs";
-import path from "node:path";
-const groupDataFixturePath = path.resolve(
-  dirname,
-  "fixtures/listgroups/groupdata.json"
+
+const groupDataFixturePath = new URL(
+  "./fixtures/listgroups/groupdata.json",
+  import.meta.url
 );
 const groupDataFixture = JSON.parse(
   fs.readFileSync(groupDataFixturePath, "utf-8")
@@ -108,7 +108,7 @@ describeMacro("ListGroups", () => {
   beforeEachMacro((macro) => {
     macro.ctx.env.locale = "en-US";
     // Mock calls to wiki.page
-    macro.ctx.wiki.getPage = jest.fn((name) => {
+    macro.ctx.wiki.getPage = jest.fn((name: string) => {
       return overviewPages[name];
     });
     // Mock calls to GroupData
