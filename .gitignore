@@ -22,6 +22,7 @@ node_modules/
 /client/.env
 __pycache__/
 .idea/
+Procfile.tmp
 
 *.log
 npm-debug.log*
