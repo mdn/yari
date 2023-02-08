@@ -83,7 +83,7 @@
     "html-react-parser": "^3.0.8",
     "http-proxy-middleware": "^2.0.6",
     "image-size": "^1.0.2",
-    "image-type": "^4.1.0",
+    "image-type": "^5.2.0",
     "imagemin": "^7.0.1",
     "imagemin-gifsicle": "^7.0.0",
     "imagemin-mozjpeg": "^9.0.0",
