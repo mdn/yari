@@ -661,22 +661,24 @@ program
   .action(
     tryOrExit(
       async ({ args, options }: SyncTranslatedContentActionParameters) => {
-        const { locale } = args;
+        const { locale: locales } = args;
         const { verbose } = options;
         if (verbose) {
           log.setDefaultLevel(log.levels.DEBUG);
         }
-        for (const l of locale) {
+        for (const locale of locales) {
           const {
             movedDocs,
             conflictingDocs,
             orphanedDocs,
             redirectedDocs,
+            renamedDocs,
             totalDocs,
-          } = syncAllTranslatedContent(l);
-          console.log(chalk.green(`Syncing ${l}:`));
+          } = syncAllTranslatedContent(locale);
+          console.log(chalk.green(`Syncing ${locale}:`));
           console.log(chalk.green(`Total of ${totalDocs} documents`));
           console.log(chalk.green(`Moved ${movedDocs} documents`));
+          console.log(chalk.green(`Renamed ${renamedDocs} documents`));
           console.log(chalk.green(`Conflicting ${conflictingDocs} documents.`));
           console.log(chalk.green(`Orphaned ${orphanedDocs} documents.`));
           console.log(
