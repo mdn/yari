@@ -1,7 +1,5 @@
 import { test, expect } from "@playwright/test";
-import gotPkg from "got";
-
-const { default: got } = gotPkg;
+import got from "got";
 
 export {};
 
