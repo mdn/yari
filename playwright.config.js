@@ -1,4 +1,4 @@
-const config = {
+export default {
   use: {
     channel: "chrome",
     // See more interesting options at https://playwright.dev/docs/test-configuration/
@@ -6,5 +6,3 @@ const config = {
     // video: "retain-on-failure",
   },
 };
-
-module.exports = config;

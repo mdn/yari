@@ -1,8 +1,7 @@
 {
   "extends": "./tsconfig.json",
   "compilerOptions": {
-    "module": "CommonJS",
-    "sourceMap": true
+    "noEmit": false
   },
   "include": ["build", "content", "filecheck", "markdown", "server", "tool"]
 }

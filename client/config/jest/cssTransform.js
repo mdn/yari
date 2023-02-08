@@ -1,7 +1,7 @@
 // This is a custom Jest transformer turning style imports into empty objects.
 // http://facebook.github.io/jest/docs/en/webpack.html
 
-module.exports = {
+const transform = {
   process() {
     return { code: "module.exports = {};" };
   },
@@ -10,3 +10,5 @@ module.exports = {
     return "cssTransform";
   },
 };
+
+export default transform;

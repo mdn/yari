@@ -85,9 +85,9 @@ export class MDNOfflineDB extends Dexie {
   }
 }
 
-const offlineDb = new MDNOfflineDB();
+export const offlineDb = new MDNOfflineDB();
 
-async function getContentStatus(): Promise<ContentStatus> {
+export async function getContentStatus(): Promise<ContentStatus> {
   const current = await offlineDb.contentStatusHistory.toCollection().last();
 
   return (
@@ -101,7 +101,7 @@ async function getContentStatus(): Promise<ContentStatus> {
   );
 }
 
-async function patchContentStatus(
+export async function patchContentStatus(
   changes: Omit<Partial<ContentStatus>, "id" | "timestamp">
 ) {
   const db = offlineDb;
@@ -129,5 +129,3 @@ async function patchContentStatus(
     }
   });
 }
-
-export { offlineDb, getContentStatus, patchContentStatus };

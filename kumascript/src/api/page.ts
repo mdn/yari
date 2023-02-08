@@ -1,5 +1,5 @@
-import { KumaThis } from "../environment";
-import { getBadgeTemplates } from "../lib/badges";
+import { KumaThis } from "../environment.js";
+import { getBadgeTemplates } from "../lib/badges.js";
 
 const page = {
   // Determines whether or not the page has the specified tag. Returns

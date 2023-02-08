@@ -57,7 +57,9 @@ jobs:
           ls -lh $TARBALL
           mv $TARBALL mdn/content/
           cd mdn/content
+          yarn cache clean --all
           yarn add file:$TARBALL
+          yarn install
 
       - name: (mdn/content) yarn yari-build --help
         working-directory: mdn/content
