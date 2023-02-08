@@ -61,7 +61,7 @@ export function Placement() {
                 <span>{pong?.copy}</span>
               </a>
               <a
-                href={pong?.fallback?.by || "/"}
+                href={pong?.fallback?.by || "/en-US/advertisement"}
                 className="pong-note"
                 target="_blank"
                 rel="noreferrer"
@@ -72,7 +72,11 @@ export function Placement() {
 
             <a
               className="no-pong"
-              href={user?.isSubscriber ? "/en-US/plus/settings" : "/en-US/plus"}
+              href={
+                user?.isSubscriber
+                  ? "/en-US/plus/settings?ref=nope"
+                  : "/en-US/plus?ref=nope#subscribe"
+              }
             >
               Don't want to see ads?
             </a>

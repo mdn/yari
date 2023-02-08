@@ -14,6 +14,7 @@ import { getStripePlans } from "../../common/api";
 import { useOnlineStatus } from "../../../hooks";
 import { useGleanClick } from "../../../telemetry/glean-context";
 import { OFFER_OVERVIEW_CLICK } from "../../../telemetry/constants";
+import SignInLink from "../../../ui/atoms/signin-link";
 
 export enum Period {
   Month,
@@ -73,6 +74,7 @@ const PLUS_FEATURES = [
   ["updates", "Filter and sort updates"],
   ["collections", "Collections of articles"],
   ["offline", "MDN Offline"],
+  [null, "Ads free", "new"],
 ];
 
 const CORE: OfferDetailsProps = {
@@ -206,9 +208,19 @@ function OfferDetails({
           )}
         <p className="includes">{offerDetails.includes}</p>
         <ul>
-          {offerDetails.features.map(([href, text], index) => (
+          {offerDetails.features.map(([href, text, sup], index) => (
             <li key={index}>
-              {(href && <a href={`#${href}`}>{text}</a>) || text}
+              {(href && (
+                <a href={`#${href}`}>
+                  {text}
+                  {sup && <sup>{sup}</sup>}
+                </a>
+              )) || (
+                <>
+                  {text}
+                  {sup && <sup>{sup}</sup>}
+                </>
+              )}
             </li>
           ))}
         </ul>
@@ -325,9 +337,17 @@ function OfferOverviewSubscribe() {
         )}
         {isOnline && (
           <>
-            {(offerDetails && <h2>Choose a plan</h2>) || (
-              <h2>Loading available plans…</h2>
-            )}
+            {(offerDetails && (
+              <h2>
+                Choose a plan
+                {!activeSubscription && (
+                  <>
+                    {" "}
+                    or <SignInLink cta="log in" />
+                  </>
+                )}
+              </h2>
+            )) || <h2>Loading available plans…</h2>}
             {offerDetails &&
               /** Only display discount switch if paid plans available  */
               offerDetails.PLUS_5 && (

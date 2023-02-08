@@ -1,0 +1,55 @@
+@use "../../ui/vars" as *;
+
+.about {
+  width: 100%;
+
+  .about-container {
+    margin: 0 auto;
+    max-width: 52rem;
+    padding: 0 1rem 2rem;
+
+    h1 {
+      margin-top: 3rem;
+    }
+
+    @media screen and (min-width: $screen-md) {
+      h1 {
+        font-size: 3.5rem;
+      }
+    }
+
+    header {
+      align-items: center;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      padding: 2rem 0;
+
+      .headline {
+        font-family: var(--font-heading);
+        font-size: 1.313rem;
+        font-style: normal;
+        font-weight: normal;
+        line-height: 175%;
+        margin: 0;
+      }
+    }
+
+    p {
+      font-size: 1rem;
+      font-weight: 350;
+      line-height: 175%;
+    }
+
+    h2 {
+      font-size: 1.3rem;
+    }
+
+    .heading-break {
+      display: none;
+      @media screen and (min-width: $screen-md) {
+        display: block;
+      }
+    }
+  }
+}
