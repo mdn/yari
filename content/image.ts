@@ -16,7 +16,7 @@ function isImage(filePath) {
   if (filePath.toLowerCase().endsWith(".svg")) {
     return isSvg(fs.readFileSync(filePath));
   }
-  const buffer = readChunkSync(filePath, { startPosition: 0, length: 12 });
+  const buffer = readChunkSync(filePath, { length: 12 });
   if (buffer.length === 0) {
     return false;
   }
