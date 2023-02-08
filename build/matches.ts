@@ -1,5 +1,5 @@
 import fromMarkdown from "mdast-util-from-markdown";
-import visit from "unist-util-visit";
+import { visit } from "unist-util-visit";
 
 const ESCAPE_CHARS_RE = /[.*+?^${}()|[\]\\]/g;
 

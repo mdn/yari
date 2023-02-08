@@ -12,9 +12,7 @@
 import fs from "node:fs";
 
 import * as csv from "@fast-csv/parse";
-import gotPkg from "got";
-
-const { default: got } = gotPkg;
+import got from "got";
 
 const CURRENT_URL =
   "https://mdn-popularities-prod.s3.amazonaws.com/current.txt";

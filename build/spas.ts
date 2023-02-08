@@ -5,7 +5,7 @@ import { fileURLToPath } from "node:url";
 import cheerio from "cheerio";
 import frontmatter from "front-matter";
 import { fdir, PathsOutput } from "fdir";
-import gotPkg from "got";
+import got from "got";
 
 import { m2h } from "../markdown/index.js";
 
@@ -24,8 +24,6 @@ import { renderHTML } from "../ssr/dist/main.js";
 import { splitSections } from "./utils.js";
 import { findByURL } from "../content/document.js";
 import { buildDocument } from "./index.js";
-
-const { default: got } = gotPkg;
 
 const FEATURED_ARTICLES = [
   "Web/API/WebGL_API/Tutorial/Getting_started_with_WebGL",
