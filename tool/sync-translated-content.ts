@@ -176,8 +176,7 @@ export function syncTranslatedContent(inFilePath: string, locale: string) {
     path.join(
       CONTENT_ROOT,
       DEFAULT_LOCALE_LC,
-      slugToFolder(metadata.slug),
-      bareFileName
+      slugToFolder(metadata.slug)
     )
   );
 
