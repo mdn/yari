@@ -120,6 +120,10 @@ describeMacro("ListGroups", () => {
         return originalgetJSONData(name);
       }
     });
+    // Mock calls to smartLink
+    macro.ctx.web.smartLink = jest.fn((groupUrl, _, text) => {
+      return `<a href='${groupUrl}'>${text}</a>`;
+    });
   });
 
   testMacro();
