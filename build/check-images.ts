@@ -46,10 +46,10 @@ export function checkImageReferences(doc, $, options, { url, rawContent }) {
       ? findMatchesInMarkdown(src, rawContent, { type: "image" })
       : findMatchesInText(src, rawContent, { attribute: "src" });
     const checkedBefore = checked.get(src) ?? 0;
-    const match = matches?.[checkedBefore];
-    if (!match) {
+    if (matches.length <= checkedBefore) {
       return; // we haven't found the match. We may need to deal with the match finder function.
     }
+    const match = matches[checkedBefore];
     if (!("images" in doc.flaws)) {
       doc.flaws.images = [];
     }
