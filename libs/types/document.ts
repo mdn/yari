@@ -168,7 +168,11 @@ export interface DocFrontmatter {
   original_slug?: string;
 }
 
-export type Section = ProseSection | SpecificationsSection | BCDSection;
+export type Section =
+  | ProseSection
+  | SpecificationsSection
+  | BCDSection
+  | MediaFeatureSection;
 
 export interface ProseSection {
   type: "prose";
@@ -205,4 +209,17 @@ export interface BCDSection {
     isH3: boolean;
     query: string;
   };
+}
+
+export interface MediaFeatureSection {
+  type: "media_feature_value";
+  value: MediaFeatureSectionProps;
+}
+
+export interface MediaFeatureSectionProps {
+  id: string;
+  title: string;
+  isH3: boolean;
+  query: string;
+  featureValueType: string;
 }
