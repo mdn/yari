@@ -7049,13 +7049,13 @@ imagemin-pngquant@^9.0.2:
     ow "^0.17.0"
     pngquant-bin "^6.0.0"
 
-imagemin-svgo@^9.0.0:
-  version "9.0.0"
-  resolved "https://registry.yarnpkg.com/imagemin-svgo/-/imagemin-svgo-9.0.0.tgz#749370804608917a67d4ff590f07a87756aec006"
-  integrity sha512-uNgXpKHd99C0WODkrJ8OO/3zW3qjgS4pW7hcuII0RcHN3tnKxDjJWcitdVC/TZyfIqSricU8WfrHn26bdSW62g==
+imagemin-svgo@^10.0.1:
+  version "10.0.1"
+  resolved "https://registry.yarnpkg.com/imagemin-svgo/-/imagemin-svgo-10.0.1.tgz#bc592950831c13998a40cb248f6e82e0b0b5c3dd"
+  integrity sha512-v27/UTGkb3vrm5jvjsMGQ2oxaDfSOTBfJOgmFO2fYepx05bY1IqWCK13aDytVR+l9w9eOlq0NMCLbxJlghYb2g==
   dependencies:
-    is-svg "^4.2.1"
-    svgo "^2.1.0"
+    is-svg "^4.3.1"
+    svgo "^2.5.0"
 
 imagemin@^7.0.1:
   version "7.0.1"
@@ -7519,7 +7519,7 @@ is-string@^1.0.5, is-string@^1.0.7:
   dependencies:
     has-tostringtag "^1.0.0"
 
-is-svg@^4.2.1, is-svg@^4.3.2:
+is-svg@^4.3.1, is-svg@^4.3.2:
   version "4.3.2"
   resolved "https://registry.yarnpkg.com/is-svg/-/is-svg-4.3.2.tgz#a119e9932e1af53f6be1969d1790d6cc5fd947d3"
   integrity sha512-mM90duy00JGMyjqIVHu9gNTjywdZV+8qNasX8cm/EEYZ53PHDgajvbBwNVvty5dwSAxLUD3p3bdo+7sR/UMrpw==
@@ -12275,7 +12275,7 @@ svg-tags@^1.0.0:
   resolved "https://registry.yarnpkg.com/svg-tags/-/svg-tags-1.0.0.tgz#58f71cee3bd519b59d4b2a843b6c7de64ac04764"
   integrity sha512-ovssysQTa+luh7A5Weu3Rta6FJlFBBbInjOh722LIt6klpU2/HtdUbszju/G4devcvk8PGt7FCLv5wftu3THUA==
 
-svgo@^2.1.0, svgo@^2.7.0, svgo@^2.8.0:
+svgo@^2.5.0, svgo@^2.7.0, svgo@^2.8.0:
   version "2.8.0"
   resolved "https://registry.yarnpkg.com/svgo/-/svgo-2.8.0.tgz#4ff80cce6710dc2795f0c7c74101e6764cfccd24"
   integrity sha512-+N/Q9kV1+F+UeWYoSiULYo4xYSDQlTgb+ayMobAXPwMnLvop7oxKMo9OzIrX5x3eS4L4f2UHhc9axXwY8DpChg==
