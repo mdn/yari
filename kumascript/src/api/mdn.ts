@@ -1,8 +1,6 @@
-import gotPkg from "got";
+import got from "got";
 import { KumaThis } from "../environment.js";
 import * as util from "./util.js";
-
-const { default: got } = gotPkg;
 
 // Module level caching for repeat calls to fetchWebExtExamples().
 let webExtExamples: any = null;
@@ -139,8 +137,8 @@ const mdn = {
         webExtExamples = await got(
           "https://raw.githubusercontent.com/mdn/webextensions-examples/master/examples.json",
           {
-            timeout: 1000,
-            retry: 5,
+            timeout: { request: 1000 },
+            retry: { limit: 5 },
           }
         ).json();
       } catch (error) {
