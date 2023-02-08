@@ -41,9 +41,9 @@ export function TopNavigation() {
           <Logo />
           <Button
             type="action"
-            ariaHasPopup={"menu"}
-            ariaLabel={assistiveText}
-            ariaExpanded={showMainMenu}
+            aria-haspopup={"menu"}
+            aria-label={assistiveText}
+            aria-expanded={showMainMenu}
             title={assistiveText}
             icon={showMainMenu ? "cancel" : "menu"}
             onClickHandler={toggleMainMenu}

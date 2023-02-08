@@ -79,9 +79,9 @@ export const UserMenu = () => {
         type="action"
         id={`${userMenuItems.id}-button`}
         extraClasses="top-level-entry menu-toggle user-menu-toggle"
-        ariaControls={userMenuItems.id}
-        ariaHasPopup="menu"
-        ariaExpanded={isOpen || undefined}
+        aria-controls={userMenuItems.id}
+        aria-haspopup="menu"
+        aria-expanded={isOpen || undefined}
         onClickHandler={() => {
           setIsOpen(!isOpen);
         }}

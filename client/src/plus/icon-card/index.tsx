@@ -50,9 +50,9 @@ export default function WatchedCardListItem({
             <Button
               type="action"
               icon="ellipses"
-              ariaControls="watch-card-dropdown"
-              ariaHasPopup={"menu"}
-              ariaExpanded={show || undefined}
+              aria-controls="watch-card-dropdown"
+              aria-haspopup={"menu"}
+              aria-expanded={show || undefined}
               onClickHandler={() => {
                 setShow(!show);
               }}

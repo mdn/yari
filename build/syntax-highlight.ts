@@ -28,6 +28,7 @@ const loadAllLanguages = lazy(() => {
     "diff",
     "django",
     "glsl",
+    "handlebars",
     "http",
     "ignore",
     "ini",
@@ -62,9 +63,6 @@ const loadAllLanguages = lazy(() => {
 // because Prism is an implementation detail.
 const ALIASES = new Map([
   // ["idl", "webidl"],  // block list
-  ["css-nolint", "css"],
-  ["html-nolint", "html"],
-  ["js-nolint", "js"],
   ["sh", "shell"],
 ]);
 
@@ -97,7 +95,10 @@ export function syntaxHighlight($, doc) {
     if (!match) {
       return;
     }
-    const name = ALIASES.get(match[1]) || match[1];
+    let name = match[1].replace("-nolint", "");
+    if (ALIASES.has(name)) {
+      name = ALIASES.get(name);
+    }
     if (IGNORE.has(name)) {
       // Seems to exist a couple of these in our docs. Just bail.
       return;

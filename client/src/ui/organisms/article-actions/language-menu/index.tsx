@@ -104,8 +104,8 @@ export function LanguageMenu({
       <Button
         id="languages-switcher-button"
         type="action"
-        ariaHasPopup={"menu"}
-        ariaExpanded={isOpen || undefined}
+        aria-haspopup={"menu"}
+        aria-expanded={isOpen || undefined}
         icon="language"
         size="small"
         extraClasses="languages-switcher-menu"
