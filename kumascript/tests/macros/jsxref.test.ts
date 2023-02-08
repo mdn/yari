@@ -1,4 +1,6 @@
-import { assert, itMacro, describeMacro } from "./utils";
+import { jest } from "@jest/globals";
+
+import { assert, itMacro, describeMacro } from "./utils.js";
 
 const js_ref_slug = "Web/JavaScript/Reference/";
 const js_ref_url = `/en-US/docs/${js_ref_slug}`;

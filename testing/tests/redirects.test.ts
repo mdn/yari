@@ -1,5 +1,7 @@
-import got from "got";
+import gotPkg from "got";
 import braces from "braces";
+
+const { default: got } = gotPkg;
 
 function serverURL(pathname = "/") {
   const PORT = parseInt(process.env.SERVER_PORT || "5042");

@@ -1,5 +1,5 @@
-import { KumaThis } from "../environment";
-import page from "../api/page";
+import { KumaThis } from "../environment.js";
+import page from "../api/page.js";
 
 const badges = [
   {

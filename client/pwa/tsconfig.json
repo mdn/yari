@@ -1,15 +1,12 @@
 {
+  "extends": "../tsconfig.json",
   "compilerOptions": {
-    "module": "ES2022",
-    "target": "ES2021",
-    "lib": ["es2021", "webworker"],
-    "jsx": "react",
-    "noImplicitAny": false,
-    "sourceMap": true,
+    "lib": ["dom", "dom.iterable", "es2021", "webworker"],
+    "noEmit": false,
     "preserveConstEnums": true,
-    "outDir": "../public",
-    "skipLibCheck": true,
-    "moduleResolution": "node"
+    "strictNullChecks": false,
+    "target": "ES2021"
   },
-  "include": ["src/*.ts", "src/**/*.ts", "src/*.tsx", "src/**/*.tsx"]
+  "include": ["src"],
+  "exclude": []
 }

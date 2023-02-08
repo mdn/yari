@@ -2,16 +2,19 @@ import fs from "node:fs";
 import path from "node:path";
 
 import * as cheerio from "cheerio";
-import got from "got";
+import gotPkg from "got";
 import FileType from "file-type";
 import imagemin from "imagemin";
-import imageminPngquant from "imagemin-pngquant";
+import imageminPngquantPkg from "imagemin-pngquant";
 import imageminMozjpeg from "imagemin-mozjpeg";
 import imageminGifsicle from "imagemin-gifsicle";
 import imageminSvgo from "imagemin-svgo";
 import sanitizeFilename from "sanitize-filename";
 
-import { VALID_MIME_TYPES } from "../libs/constants";
+import { VALID_MIME_TYPES } from "../libs/constants/index.js";
+
+const { default: got } = gotPkg;
+const { default: imageminPngquant } = imageminPngquantPkg;
 
 export function humanFileSize(size) {
   if (size < 1024) return `${size} B`;

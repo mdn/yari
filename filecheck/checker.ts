@@ -10,17 +10,19 @@ import tempy from "tempy";
 import * as cheerio from "cheerio";
 import FileType from "file-type";
 import imagemin from "imagemin";
-import imageminPngquant from "imagemin-pngquant";
+import imageminPngquantPkg from "imagemin-pngquant";
 import imageminMozjpeg from "imagemin-mozjpeg";
 import imageminGifsicle from "imagemin-gifsicle";
 import imageminSvgo from "imagemin-svgo";
 import isSvg from "is-svg";
 
-import { MAX_FILE_SIZE } from "../libs/env";
+import { MAX_FILE_SIZE } from "../libs/env/index.js";
 import {
   VALID_MIME_TYPES,
   MAX_COMPRESSION_DIFFERENCE_PERCENTAGE,
-} from "../libs/constants";
+} from "../libs/constants/index.js";
+
+const { default: imageminPngquant } = imageminPngquantPkg;
 
 function formatSize(bytes: number): string {
   if (bytes > 1024 * 1024) {

@@ -8,6 +8,7 @@ from pathlib import Path
 
 import boto3
 
+from .constants import LAMBDA_PREFIX
 from .utils import log
 
 
@@ -34,8 +35,9 @@ def get_lambda_function_dirs(directory):
 def get_aws_info(lambda_function_dir):
     with open(lambda_function_dir.joinpath("package.json")) as f:
         aws_config = json.load(f)["aws"]
+    name = aws_config.get("name", lambda_function_dir.name)
     return (
-        aws_config.get("name", lambda_function_dir.name),
+        f"{LAMBDA_PREFIX}{name}",
         aws_config.get("region", "us-east-1"),
     )
 

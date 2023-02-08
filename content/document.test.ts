@@ -1,7 +1,7 @@
 import fs from "node:fs";
 import path from "node:path";
 
-import * as Document from "./document";
+import * as Document from "./document.js";
 
 describe("Document.findAll()", () => {
   it("should always return files that exist", () => {

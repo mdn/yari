@@ -22,6 +22,9 @@
  * from the rest of the file which is well tested.
  */
 
+import { createRequire } from "node:module";
+const require = createRequire(import.meta.url);
+
 // The properties of this object will be globals in the macro
 // execution environment.
 const globalsPrototype = {
@@ -35,12 +38,12 @@ const globalsPrototype = {
   require,
 };
 
-import mdnPrototype from "./api/mdn";
-import wikiPrototype from "./api/wiki";
-import webPrototype from "./api/web";
-import pagePrototype from "./api/page";
-import info from "./info";
-import Templates from "./templates";
+import mdnPrototype from "./api/mdn.js";
+import wikiPrototype from "./api/wiki.js";
+import webPrototype from "./api/web.js";
+import pagePrototype from "./api/page.js";
+import info from "./info.js";
+import Templates from "./templates.js";
 
 export interface KumaThis {
   mdn: typeof mdnPrototype;
