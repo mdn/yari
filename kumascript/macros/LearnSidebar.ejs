@@ -169,6 +169,19 @@ var text = mdn.localStringMap({
       'Accessible_multimedia' : 'Accessible multimedia',
       'Mobile_accessibility' : 'Mobile accessibility',
       'Assessment_Accessibility_troubleshooting' : 'Assessment: Accessibility troubleshooting',
+    'Performance' : 'Performance — Making websites fast and responsive',
+      'Performance_guides' : 'Performance guides',
+        'Performance_overview' : 'Performance overview',
+        'The_why_of_performance' : 'The why of performance',
+        'What_is_performance?' : 'What is performance?',
+        'How_do_users_perceive_performance?' : 'How do users perceive performance?',
+        'Measuring_performance' : 'Measuring performance',
+        'Multimedia_:_Images' : 'Multimedia: Images',
+        'Multimedia_:_Video' : 'Multimedia: Video',
+        'JavaScript_performance_best_practices' : 'JavaScript performance best practices',
+        'HTML_performance_features' : 'HTML performance features',
+        'CSS_performance_features' : 'CSS performance features',
+        'The_business_case_for_performance' : 'The business case for performance',
     'MathML_Writing_mathematics' : 'MathML — Writing mathematics with MathML',
       'MathML_first_steps': 'MathML first steps',
         'MathML_first_steps_overview': 'MathML first steps overview',
@@ -2395,6 +2408,25 @@ var text = mdn.localStringMap({
         <summary><%=text['Accessibility_assessment']%></summary>
         <ol>
             <li><a href="<%=baseURL%>Accessibility/Accessibility_troubleshooting"><%=text['Assessment_Accessibility_troubleshooting']%></a></li>
+        </ol>
+    </details>
+  </li>
+<li><a href="<%=baseURL%>Performance"><strong><%=text['Performance']%></a></strong></li>
+  <li class="toggle">
+    <details <%=currentPageIsUnder('Performance')%>>
+        <summary><%=text['Performance_guides']%></summary>
+        <ol>
+          <li><a href="<%=baseURL%>Performance"><%=text['Performance_overview']%></a></li>
+          <li><a href="<%=baseURL%>Performance/why_web_performance"><%=text['The_why_of_performance']%></a></li>
+          <li><a href="<%=baseURL%>Performance/What_is_web_performance"><%=text['What_is_performance?']%></a></li>
+          <li><a href="<%=baseURL%>Performance/Perceived_performance"><%=text['How_do_users_perceive_performance?']%></a></li>
+          <li><a href="<%=baseURL%>Performance/Measuring_performance"><%=text['Measuring_performance']%></a></li>
+          <li><a href="<%=baseURL%>Performance/Multimedia"><%=text['Multimedia_:_Images']%></a></li>
+          <li><a href="<%=baseURL%>Performance/video"><%=text['Multimedia_:_Video']%></a></li>
+          <li><a href="<%=baseURL%>Performance/JavaScript"><%=text['JavaScript_performance_best_practices']%></a></li>
+          <li><a href="<%=baseURL%>Performance/HTML"><%=text['HTML_performance_features']%></a></li>
+          <li><a href="<%=baseURL%>Performance/CSS"><%=text['CSS_performance_features']%></a></li>
+          <li><a href="<%=baseURL%>Performance/business_case_for_performance"><%=text['The_business_case_for_performance']%></a></li>
         </ol>
     </details>
   </li>
