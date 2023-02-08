@@ -105,7 +105,7 @@
     "read-chunk": "^3.2.0",
     "rehype-format": "^3.1.0",
     "rehype-raw": "^5.1.0",
-    "rehype-remark": "^8.1.1",
+    "rehype-remark": "^9.1.2",
     "rehype-stringify": "^8.0.0",
     "remark-gfm": "^1.0.0",
     "remark-parse": "^9.0.0",
