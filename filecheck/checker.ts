@@ -8,7 +8,7 @@ import { fdir, PathsOutput } from "fdir";
 import fse from "fs-extra";
 import { temporaryDirectory } from "tempy";
 import * as cheerio from "cheerio";
-import FileType from "file-type";
+import { fileTypeFromFile } from "file-type";
 import imagemin from "imagemin";
 import imageminPngquantPkg from "imagemin-pngquant";
 import imageminMozjpeg from "imagemin-mozjpeg";
@@ -106,7 +106,7 @@ export async function checkFile(
     });
   } else {
     // Check that the file extension matches the file header.
-    const fileType = await FileType.fromFile(filePath);
+    const fileType = await fileTypeFromFile(filePath);
     if (!fileType) {
       // This can easily happen if the .png (for example) file is actually just
       // a text file and not a binary.

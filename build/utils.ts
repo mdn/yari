@@ -3,7 +3,7 @@ import path from "node:path";
 
 import * as cheerio from "cheerio";
 import got from "got";
-import FileType from "file-type";
+import { fileTypeFromBuffer } from "file-type";
 import imagemin from "imagemin";
 import imageminPngquantPkg from "imagemin-pngquant";
 import imageminMozjpeg from "imagemin-mozjpeg";
@@ -53,7 +53,7 @@ export async function downloadAndResizeImage(src, out, basePath) {
     retry: { limit: 3 },
   });
   const imageBuffer = imageResponse.body;
-  let fileType = await FileType.fromBuffer(imageBuffer);
+  let fileType = await fileTypeFromBuffer(imageBuffer);
   if (
     !fileType &&
     src.toLowerCase().endsWith(".svg") &&
