@@ -6,7 +6,7 @@ import { eachLimit } from "async";
 import cliProgress from "cli-progress";
 import { fdir, PathsOutput } from "fdir";
 import fse from "fs-extra";
-import tempy from "tempy";
+import { temporaryDirectory } from "tempy";
 import * as cheerio from "cheerio";
 import FileType from "file-type";
 import imagemin from "imagemin";
@@ -177,7 +177,7 @@ export async function checkFile(
     );
   }
 
-  const tempdir = tempy.directory();
+  const tempdir = temporaryDirectory();
   const extension = path.extname(filePath).toLowerCase();
   try {
     const plugins = [];
