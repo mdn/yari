@@ -5635,7 +5635,7 @@ execa@^5.0.0:
     signal-exit "^3.0.3"
     strip-final-newline "^2.0.0"
 
-execa@^6.1.0:
+execa@^6.0.0, execa@^6.1.0:
   version "6.1.0"
   resolved "https://registry.yarnpkg.com/execa/-/execa-6.1.0.tgz#cea16dee211ff011246556388effa0818394fb20"
   integrity sha512-QVWlX2e50heYJcCPG0iWtf8r0xjEYfz/OYLGDYH+IyjWezzPNxz63qNFOu0l4YftGWuizFVZHHs8PrLU5p2IDA==
@@ -7029,14 +7029,14 @@ imagemin-gifsicle@^7.0.0:
     gifsicle "^5.0.0"
     is-gif "^3.0.0"
 
-imagemin-mozjpeg@^9.0.0:
-  version "9.0.0"
-  resolved "https://registry.yarnpkg.com/imagemin-mozjpeg/-/imagemin-mozjpeg-9.0.0.tgz#d1af26d0b43d75a41c211051c1910da59d9d2324"
-  integrity sha512-TwOjTzYqCFRgROTWpVSt5UTT0JeCuzF1jswPLKALDd89+PmrJ2PdMMYeDLYZ1fs9cTovI9GJd68mRSnuVt691w==
+imagemin-mozjpeg@^10.0.0:
+  version "10.0.0"
+  resolved "https://registry.yarnpkg.com/imagemin-mozjpeg/-/imagemin-mozjpeg-10.0.0.tgz#d6771d1ce05ee15e2f6f34a9878c7266abccd9ee"
+  integrity sha512-DK85QNOjS3/GzWYfNB3CACMZD10sIQgFDv1+WTOnZljgltQTEyATjdyUVyjKu5q4sCESQdwvwq7WEZzJ5fFjlg==
   dependencies:
-    execa "^4.0.0"
-    is-jpg "^2.0.0"
-    mozjpeg "^7.0.0"
+    execa "^6.0.0"
+    is-jpg "^3.0.0"
+    mozjpeg "^8.0.0"
 
 imagemin-pngquant@^9.0.2:
   version "9.0.2"
@@ -7368,10 +7368,10 @@ is-interactive@^2.0.0:
   resolved "https://registry.yarnpkg.com/is-interactive/-/is-interactive-2.0.0.tgz#40c57614593826da1100ade6059778d597f16e90"
   integrity sha512-qP1vozQRI+BMOPcjFzrjXuQvdak2pHNUMZoeG2eRbiSqyvbEf/wQtEOTOX1guk6E3t36RkaqiSt8A/6YElNxLQ==
 
-is-jpg@^2.0.0:
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/is-jpg/-/is-jpg-2.0.0.tgz#2e1997fa6e9166eaac0242daae443403e4ef1d97"
-  integrity sha512-ODlO0ruzhkzD3sdynIainVP5eoOFNN85rxA1+cwwnPe4dKyX0r5+hxNO5XpCrxlHcmb9vkOit9mhRD2JVuimHg==
+is-jpg@^3.0.0:
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/is-jpg/-/is-jpg-3.0.0.tgz#f97b4ab6de92401650cb4f54ec0a6ad79c51367f"
+  integrity sha512-Vcd67KWHZblEKEBrtP25qLZ8wN9ICoAhl1pKUqD7SM7hf2qtuRl7loDgP5Zigh2oN/+7uj+KVyC0eRJvgOEFeQ==
 
 is-map@^2.0.1, is-map@^2.0.2:
   version "2.0.2"
@@ -9132,10 +9132,10 @@ mkdirp@^0.5.1:
   dependencies:
     minimist "^1.2.6"
 
-mozjpeg@^7.0.0:
-  version "7.1.1"
-  resolved "https://registry.yarnpkg.com/mozjpeg/-/mozjpeg-7.1.1.tgz#dfb61953536e66fcabd4ae795e7a312d42a51f18"
-  integrity sha512-iIDxWvzhWvLC9mcRJ1uSkiKaj4drF58oCqK2bITm5c2Jt6cJ8qQjSSru2PCaysG+hLIinryj8mgz5ZJzOYTv1A==
+mozjpeg@^8.0.0:
+  version "8.0.0"
+  resolved "https://registry.yarnpkg.com/mozjpeg/-/mozjpeg-8.0.0.tgz#cd990d96581626ca64b877146ce22ba00b3b308c"
+  integrity sha512-Ca2Yhah9hG0Iutgsn8MOrAl37P9ThnKsJatjXoWdUO+8X8GeG/6ahvHZrTyqvbs6leMww1SauWUCao/L9qBuFQ==
   dependencies:
     bin-build "^3.0.0"
     bin-wrapper "^4.0.0"
