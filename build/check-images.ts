@@ -47,7 +47,10 @@ export function checkImageReferences(doc, $, options, { url, rawContent }) {
       : findMatchesInText(src, rawContent, { attribute: "src" });
     const checkedBefore = checked.get(src) ?? 0;
     if (matches.length <= checkedBefore) {
-      return; // we haven't found the match. We may need to deal with the match finder function.
+      console.warn(
+        `Could not find enough matches for src: ${src}, index ${checkedBefore} out of bounds`
+      );
+      return;
     }
     const match = matches[checkedBefore];
     if (!("images" in doc.flaws)) {
