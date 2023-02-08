@@ -10578,10 +10578,10 @@ pretty-format@^29.4.2:
     ansi-styles "^5.0.0"
     react-is "^18.0.0"
 
-prism-svelte@^0.5.0:
-  version "0.5.0"
-  resolved "https://registry.yarnpkg.com/prism-svelte/-/prism-svelte-0.5.0.tgz#c4aeffeaddb179cfef213aab91ee785b66d22992"
-  integrity sha512-db91Bf3pRGKDPz1lAqLFSJXeW13mulUJxhycysFpfXV5MIK7RgWWK2E5aPAa71s8TCzQUXxF5JOV42/iOs6QkA==
+prism-svelte@^0.4.7:
+  version "0.4.7"
+  resolved "https://registry.yarnpkg.com/prism-svelte/-/prism-svelte-0.4.7.tgz#fbc6709450b4e2ed660ddb82c3718817fc584cbe"
+  integrity sha512-yABh19CYbM24V7aS7TuPYRNMqthxwbvx6FF/Rw920YbyBWO3tnyPIqRMgHuSVsLmuHkkBS1Akyof463FVdkeDQ==
 
 prismjs@^1.29.0:
   version "1.29.0"
