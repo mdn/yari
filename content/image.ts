@@ -1,7 +1,7 @@
 import fs from "node:fs";
 import path from "node:path";
 
-import { readChunk } from "read-chunk";
+import { readChunkSync } from "read-chunk";
 import imageType from "image-type";
 import isSvg from "is-svg";
 
@@ -16,7 +16,7 @@ function isImage(filePath) {
   if (filePath.toLowerCase().endsWith(".svg")) {
     return isSvg(fs.readFileSync(filePath));
   }
-  const buffer = readChunk.sync(filePath, 0, 12);
+  const buffer = readChunkSync(filePath, { startPosition: 0, length: 12 });
   if (buffer.length === 0) {
     return false;
   }
