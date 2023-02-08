@@ -229,7 +229,7 @@ jobs:
 
           DEPLOYER_ELASTICSEARCH_URL: ${{ secrets.DEPLOYER_STAGE_ELASTICSEARCH_URL }}
 
-          LAMBDA_PREFIX: stage-
+          DEPLOYER_LAMBDA_PREFIX: stage-
 
         run: |
 
