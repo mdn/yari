@@ -2,7 +2,7 @@ import fs from "node:fs";
 import path from "node:path";
 
 import * as cheerio from "cheerio";
-import gotPkg from "got";
+import got from "got";
 import FileType from "file-type";
 import imagemin from "imagemin";
 import imageminPngquantPkg from "imagemin-pngquant";
@@ -13,7 +13,6 @@ import sanitizeFilename from "sanitize-filename";
 
 import { VALID_MIME_TYPES } from "../libs/constants/index.js";
 
-const { default: got } = gotPkg;
 const { default: imageminPngquant } = imageminPngquantPkg;
 
 export function humanFileSize(size) {
@@ -50,8 +49,8 @@ export function forceExternalURL(url) {
 export async function downloadAndResizeImage(src, out, basePath) {
   const imageResponse = await got(forceExternalURL(src), {
     responseType: "buffer",
-    timeout: 10000,
-    retry: 3,
+    timeout: { request: 10000 },
+    retry: { limit: 3 },
   });
   const imageBuffer = imageResponse.body;
   let fileType = await FileType.fromBuffer(imageBuffer);
