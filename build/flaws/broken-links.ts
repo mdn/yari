@@ -2,7 +2,7 @@ import fs from "node:fs";
 import path from "node:path";
 
 import { Document, Redirect, Image } from "../../content";
-import { findMatchesInText, findMatchesInMarkdown } from "../matches-in-text";
+import { findMatchesInText, findMatchesInMarkdown } from "../matches";
 import {
   DEFAULT_LOCALE,
   FLAW_LEVELS,
@@ -106,15 +106,13 @@ export function getBrokenLinksFlaws(doc, $, { rawContent }, level) {
         href,
 
         doc.isMarkdown
-          ? findMatchesInMarkdown(rawContent, "link", href)
+          ? findMatchesInMarkdown(href, rawContent, { type: "link" })
           : findMatchesInText(href, rawContent, {
               attribute: "href",
             })
       );
     }
-    // findMatchesInText() is a generator function so use `Array.from()`
-    // to turn it into an array so we can use `.forEach()` because that
-    // gives us an `i` for every loop.
+
     matches.get(href).forEach((match, i) => {
       if (i !== index) {
         return;

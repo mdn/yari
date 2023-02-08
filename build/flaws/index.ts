@@ -8,7 +8,7 @@ import { DEFAULT_LOCALE } from "../../libs/constants";
 import {
   replaceMatchesInText,
   replaceMatchingLinksInMarkdown,
-} from "../matches-in-text";
+} from "../matches";
 import { forceExternalURL, downloadAndResizeImage } from "../utils";
 import { getBadBCDQueriesFlaws } from "./bad-bcd-queries";
 import { getBrokenLinksFlaws } from "./broken-links";

@@ -1,6 +1,6 @@
 import { Flaw } from ".";
 
-import { getFirstMatchInText } from "../matches-in-text";
+import { getFirstMatchInText } from "../matches";
 const escapeHTML = (s) =>
   s
     .replace(/&/g, "&amp;")

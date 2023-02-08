@@ -4,7 +4,7 @@ import {
   INTERACTIVE_EXAMPLES_BASE_URL,
   LIVE_SAMPLES_BASE_URL,
 } from "../../libs/env";
-import { findMatchesInText } from "../matches-in-text";
+import { findMatchesInText } from "../matches";
 
 const safeIFrameSrcs = [
   // EmbedGHLiveSample.ejs
